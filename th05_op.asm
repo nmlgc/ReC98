@@ -19,7 +19,7 @@
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16 word
+seg000		segment	word public 'CODE' use16
 		assume cs:seg000
 		assume es:nothing, ss:seg005, ds:nothing, fs:nothing, gs:nothing
 
