@@ -56167,7 +56167,7 @@ loc_1AF24:				; DATA XREF: seg003:5D48o
 		push	offset a_dm09_tx2 ; "_DM09.TX2"
 		call	sub_ED87
 		mov	word ptr dword_2CE9A+2,	ds
-		mov	word ptr dword_2CE9A, 1DE2h
+		mov	word ptr dword_2CE9A, offset aTH05_10
 		mov	eax, dword_2634E
 		mov	dword ptr word_26335+1,	eax
 		mov	word ptr dword_2D066+2,	seg seg003
@@ -56180,7 +56180,7 @@ loc_1AF66:				; CODE XREF: seg003:5CBBj
 		push	offset a_dm08_tx2 ; "_DM08.TX2"
 		call	sub_ED87
 		mov	word ptr dword_2CE9A+2,	ds
-		mov	word ptr dword_2CE9A, 1E0Ah
+		mov	word ptr dword_2CE9A, offset aTH05_11
 		mov	word ptr dword_2D066+2,	seg seg003
 		mov	word ptr dword_2D066, 7298h
 
@@ -72972,9 +72972,9 @@ aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0       ; DATA XREF: sub_104BB+66o
 		db 0EAh	; Í
 		db  56h	; V
 a_dm09_tx2	db '_DM09.TX2',0        ; DATA XREF: seg003:5CBEo
-aRNgvPnpcb@bCri	db 'ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0
+aTH05_10	db 'ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0
 a_dm08_tx2	db '_DM08.TX2',0        ; DATA XREF: seg003:5CE7o
-aCarVsvPnpcb@bJ	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
+aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db 0D7h	; ◊
 		db  62h	; b
 		db 0A8h	; ®
