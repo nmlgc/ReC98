@@ -22268,13 +22268,13 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
-		push	large dword ptr	[bx+0CAh]
+		push	large CHAR_TITLE[bx]
 		call	sub_D197
 		push	large 800134h
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
-		push	large dword ptr	[bx+0CEh]
+		push	large CHAR_NAME[bx]
 		call	sub_D197
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
@@ -22289,13 +22289,13 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
-		push	large dword ptr	[bx+0CAh]
+		push	large CHAR_TITLE[bx]
 		call	sub_D197
 		push	large 1800134h
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
-		push	large dword ptr	[bx+0CEh]
+		push	large CHAR_NAME[bx]
 		call	sub_D197
 		push	1
 		call	sub_536
@@ -31340,24 +31340,24 @@ word_E47E	dw 0			; DATA XREF: start+21w	start+F5w ...
 		dd a@08tx_txt		; "@08TX.TXT"
 off_E4B6	dd a@00dm0_txt		; DATA XREF: _main+130r _main+149r ...
 					; "@00DM0.TXT"
-		dd aCVUUav		; "   夢と伝統を保守する巫女   "
-		dd aFocab@sC		; "   博麗　靈夢"
-		dd aLviuvCVICV		; " 久遠の夢に運命を任せる精神 "
-		dd aCgCv		; "	魅 魔"
-		dd aCvc@vNgcVivcvV	; "   魔法と紅夢からなる存在   "
-		dd aCIjb@cvcan		; "  霧雨　魔理沙 "
-		dd aVVVcvlvrvVC		; "はたらきもので恋を夢見る魔女"
-		dd aB@b@gggmgu		; "　　エレン"
-		dd aTeclvF		; "	弾幕に美を夢みる姫     "
-		dd aPmuexp		; "    小兎姫"
-		dd aCV			; "	夢を失った少女騒霊     "
-		dd aGjgibegagigxgi	; "カナ・アナベラル"
-		dd aB@b@b@cV		; "  　　　夢を探す科学	       "
-		dd aB@tisqb@canboq	; "　朝倉　理香子"
-		dd aB@Ouv		; "　  時をかける夢幻の住人    "
-		dd aCkftiB@vVfvs	; " 北白河　ちゆり"
-		dd aB@B@b@b@cMURrb	; "　  　　　夢幻伝説　　　    "
-		dd aB@iknsb@cF		; " 　岡崎　夢美"
+CHAR_TITLE		dd TITLE_REIMU		; "   夢と伝統を保守する巫女   "
+CHAR_NAME		dd NAME_REIMU		; "   博麗　靈夢"
+		dd TITLE_MIMA		; " 久遠の夢に運命を任せる精神 "
+		dd NAME_MIMA		; "	魅 魔"
+		dd TITLE_MARISA	; "   魔法と紅夢からなる存在   "
+		dd NAME_MARISA		; "  霧雨　魔理沙 "
+		dd TITLE_ELLEN		; "はたらきもので恋を夢見る魔女"
+		dd NAME_ELLEN		; "　　エレン"
+		dd TITLE_KOTOHIME		; "	弾幕に美を夢みる姫     "
+		dd NAME_KOTOHIME		; "    小兎姫"
+		dd TITLE_KANA			; "	夢を失った少女騒霊     "
+		dd NAME_KANA	; "カナ・アナベラル"
+		dd TITLE_RIKAKO		; "  　　　夢を探す科学	       "
+		dd NAME_RIKAKO	; "　朝倉　理香子"
+		dd TITLE_CHIYURI		; "　  時をかける夢幻の住人    "
+		dd NAME_CHIYURI	; " 北白河　ちゆり"
+		dd TITLE_YUMEMI	; "　  　　　夢幻伝説　　　    "
+		dd NAME_YUMEMI		; " 　岡崎　夢美"
 word_E502	dw 38Ah			; DATA XREF: sub_990C+CBr
 word_E504	dw 391h			; DATA XREF: sub_990C+80r sub_990C+91r ...
 a0016_pi	db '0016.pi',0
@@ -31384,24 +31384,24 @@ a@06tx_txt	db '@06TX.TXT',0        ; DATA XREF: dseg:00BAo
 a@07tx_txt	db '@07TX.TXT',0        ; DATA XREF: dseg:00BEo
 a@08tx_txt	db '@08TX.TXT',0        ; DATA XREF: dseg:00C2o
 a@00dm0_txt	db '@00DM0.TXT',0       ; DATA XREF: dseg:off_E4B6o
-aCVUUav		db '   夢と伝統を保守する巫女   ',0 ; DATA XREF: dseg:00CAo
-aFocab@sC	db '   博麗　靈夢',0    ; DATA XREF: dseg:00CEo
-aLviuvCVICV	db ' 久遠の夢に運命を任せる精神 ',0 ; DATA XREF: dseg:00D2o
-aCgCv		db '     魅 魔',0       ; DATA XREF: dseg:00D6o
-aCvc@vNgcVivcvV	db '   魔法と紅夢からなる存在   ',0 ; DATA XREF: dseg:00DAo
-aCIjb@cvcan	db '  霧雨　魔理沙 ',0  ; DATA XREF: dseg:00DEo
-aVVVcvlvrvVC	db 'はたらきもので恋を夢見る魔女',0 ; DATA XREF: dseg:00E2o
-aB@b@gggmgu	db '　　エレン',0       ; DATA XREF: dseg:00E6o
-aTeclvF		db '     弾幕に美を夢みる姫     ',0 ; DATA XREF: dseg:00EAo
-aPmuexp		db '    小兎姫',0       ; DATA XREF: dseg:00EEo
-aCV		db '     夢を失った少女騒霊     ',0 ; DATA XREF: dseg:00F2o
-aGjgibegagigxgi	db 'カナ・アナベラル',0 ; DATA XREF: dseg:00F6o
-aB@b@b@cV	db '  　　　夢を探す科学        ',0 ; DATA XREF: dseg:00FAo
-aB@tisqb@canboq	db '　朝倉　理香子',0   ; DATA XREF: dseg:00FEo
-aB@Ouv		db '　  時をかける夢幻の住人    ',0 ; DATA XREF: dseg:0102o
-aCkftiB@vVfvs	db ' 北白河　ちゆり',0  ; DATA XREF: dseg:0106o
-aB@B@b@b@cMURrb	db '　  　　　夢幻伝説　　　    ',0 ; DATA XREF: dseg:010Ao
-aB@iknsb@cF	db ' 　岡崎　夢美',0    ; DATA XREF: dseg:010Eo
+TITLE_REIMU		db '   夢と伝統を保守する巫女   ',0 ; DATA XREF: dseg:00CAo
+NAME_REIMU	db '   博麗　靈夢',0    ; DATA XREF: dseg:00CEo
+TITLE_MIMA	db ' 久遠の夢に運命を任せる精神 ',0 ; DATA XREF: dseg:00D2o
+NAME_MIMA		db '     魅 魔',0       ; DATA XREF: dseg:00D6o
+TITLE_MARISA	db '   魔法と紅夢からなる存在   ',0 ; DATA XREF: dseg:00DAo
+NAME_MARISA	db '  霧雨　魔理沙 ',0  ; DATA XREF: dseg:00DEo
+TITLE_ELLEN	db 'はたらきもので恋を夢見る魔女',0 ; DATA XREF: dseg:00E2o
+NAME_ELLEN	db '　　エレン',0       ; DATA XREF: dseg:00E6o
+TITLE_KOTOHIME		db '     弾幕に美を夢みる姫     ',0 ; DATA XREF: dseg:00EAo
+NAME_KOTOHIME		db '    小兎姫',0       ; DATA XREF: dseg:00EEo
+TITLE_KANA		db '     夢を失った少女騒霊     ',0 ; DATA XREF: dseg:00F2o
+NAME_KANA	db 'カナ・アナベラル',0 ; DATA XREF: dseg:00F6o
+TITLE_RIKAKO	db '  　　　夢を探す科学        ',0 ; DATA XREF: dseg:00FAo
+NAME_RIKAKO	db '　朝倉　理香子',0   ; DATA XREF: dseg:00FEo
+TITLE_CHIYURI		db '　  時をかける夢幻の住人    ',0 ; DATA XREF: dseg:0102o
+NAME_CHIYURI	db ' 北白河　ちゆり',0  ; DATA XREF: dseg:0106o
+TITLE_YUMEMI	db '　  　　　夢幻伝説　　　    ',0 ; DATA XREF: dseg:010Ao
+NAME_YUMEMI	db ' 　岡崎　夢美',0    ; DATA XREF: dseg:010Eo
 aYume_cfg	db 'YUME.CFG',0         ; DATA XREF: sub_95F3+6o
 aLogo0_rgb	db 'logo0.rgb',0        ; DATA XREF: sub_9624+5o
 aLogo_cd2	db 'logo.cd2',0         ; DATA XREF: sub_9624+15o
