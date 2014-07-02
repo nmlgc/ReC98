@@ -25671,15 +25671,15 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		push	di
-		mov	bx, word_15016
+		mov	bx, allcast_step
 		shl	bx, 2
-		mov	ax, word ptr (off_10920+2)[bx]
-		mov	dx, word ptr off_10920[bx]
+		mov	ax, word ptr (ALLCAST_PTRS+2)[bx]
+		mov	dx, word ptr ALLCAST_PTRS[bx]
 		mov	word ptr [bp+var_4+2], ax
 		mov	word ptr [bp+var_4], dx
-		mov	bx, word_15014
+		mov	bx, allcast_screen_plus_one
 		add	bx, bx
-		mov	ax, [bx+8DAh]
+		mov	ax, word ptr ALLCAST_STRINGS_PER_SCREEN[bx]
 		dec	ax
 		shl	ax, 4
 		mov	dx, 0C0h ; '¿'
@@ -25725,9 +25725,9 @@ loc_B21E:				; CODE XREF: sub_B1B5+40j
 		push	large [bp+var_4]
 		call	far ptr	loc_E914
 		call	sub_B37C
-		inc	word_15016
+		inc	allcast_step
 		inc	word_109EC
-		mov	bx, word_15014
+		mov	bx, allcast_screen_plus_one
 		add	bx, bx
 		mov	ax, [bx+8DAh]
 		cmp	ax, word_109EC
@@ -25765,7 +25765,7 @@ arg_2		= word ptr  6
 		mov	al, byte_15018
 		mov	ah, 0
 		shl	ax, 4
-		mov	dx, word_15014
+		mov	dx, allcast_screen_plus_one
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
@@ -25827,14 +25827,14 @@ loc_B309:				; CODE XREF: sub_B273+79j
 		push	0
 		push	[bp+var_2]
 		call	sub_EFDC
-		inc	word_15014
-		cmp	word_15014, 8
+		inc	allcast_screen_plus_one
+		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
 		push	0
 		mov	al, byte_15018
 		mov	ah, 0
 		shl	ax, 5
-		mov	dx, word_15014
+		mov	dx, allcast_screen_plus_one
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
@@ -25916,7 +25916,7 @@ sub_B37C	endp
 sub_B3CB	proc near		; CODE XREF: _main+78p
 		push	bp
 		mov	bp, sp
-		mov	word_15016, 0
+		mov	allcast_step, 0
 		les	bx, dword_11E6E
 		mov	al, es:[bx+14h]
 		mov	byte_15018, al
@@ -25939,7 +25939,7 @@ sub_B3CB	proc near		; CODE XREF: _main+78p
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
-		mov	word_15014, 0
+		mov	allcast_screen_plus_one, 0
 		push	0
 		mov	al, byte_15018
 		mov	ah, 0
@@ -37373,7 +37373,7 @@ byte_1085E	db 0			; DATA XREF: sub_B37C+Dr sub_B37C+13r	...
 		db    0
 		db    0
 		db    0
-off_10920	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
+ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
 		dd aNo_2Buumx
@@ -37420,13 +37420,8 @@ off_10920	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-		dw 1
-		dw 2
-		dw 6
-		dw 0Ah
-		dw 9
-		dw 0Ch
-		dw 7
+ALLCAST_STRINGS_PER_SCREEN	equ $-2
+		dw 1, 2, 6, 10, 9, 12, 7
 		db    0
 		db    0
 word_109EC	dw 0			; DATA XREF: sub_B1B5+2Er sub_B1B5+9Aw ...
@@ -37459,100 +37454,99 @@ aExed06_pi	db 'EXED06.pi',0        ; DATA XREF: dseg:07D0o
 aExed16_pi_2	db 'EXED16.pi',0        ; DATA XREF: dseg:07D4o
 aExed15_pi_2	db 'EXED15.pi',0        ; DATA XREF: dseg:07D8o
 aProjectOfTouho	db '                  Project of TOUHOU    All Cast',0
-					; DATA XREF: dseg:off_10920o
 aNo_1Buumx	db 'No.1 Åuìåï˚ËÀàŸì`Åv Å` Highly Responsive to Prayers    1996,1997',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakureiSh	db '      Reimu Hakurei                           ( Shaman )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_2Buumx	db 'No.2 Åuìåï˚ïïñÇò^Åv Å` The story of eastern wonderland 1997',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_0	db '      Reimu Hakurei                           ( Shaman )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aRikaEngineer	db '         Rika                                ( Engineer )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMeiraSamurai	db '         Meira                                ( Samurai )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMarisaKirisame	db '     Marisa Kirisame                         ( Sorceress )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMimaGhost	db '         Mima                                 ( Ghost )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_3Buumx	db 'No.3 Åuìåï˚ñ≤éûãÛÅv Å` The Phantasmagoria of Dim.Dream... 1997',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_1	db '      Reimu Hakurei                           ( Shaman )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMarisaKirisa_0	db '     Marisa Kirisame                         ( Sorceress )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMimaGhost_0	db '         Mima                                  ( Ghost )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aEllenWitch	db '        Ellen                                  ( Witch )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aKotohimePrince	db '       Kotohime                               ( Princess )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aKanaAnaberalPo	db '     Kana Anaberal                           ( Poltergeist )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aRikakoAsakuraS	db '     Rikako Asakura                          ( Scientist )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aTiyuriKitashir	db '   Tiyuri Kitashirakawa                  ( Assistant professor )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aYumemiOkazakiP	db '     Yumemi Okazaki                          ( Professor )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_4Buumx	db 'No.4 Åuìåï˚å∂ëzãΩÅv Å` Lotus Land Story                  1998',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_2	db '      Reimu Hakurei                           ( Shaman )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMarisaKirisa_1	db '     Marisa Kirisame                         ( Sorceress )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aOrangeOriental	db '        Orange                             ( Oriental demon )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aKurumiVampire	db '        Kurumi                                ( Vampire )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aElliyGateKeepe	db '        Elliy                                ( Gate keeper )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aYukaOrientalDe	db '         Yuka                              ( Oriental demon )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMugetuMaid	db '        Mugetu                                 ( Maid )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aGengetuDemon	db '        Gengetu                                ( Demon )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_5Buumx	db 'No.5 Åuìåï˚âˆ„YíkÅv Å` Mystic Square                    1998',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_3	db '      Reimu Hakurei                           ( Shaman )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMarisaKirisa_2	db '     Marisa Kirisame                         ( Sorceress )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMimaGhost_1	db '         Mima                                  ( Ghost )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aYukaOriental_0	db '         Yuka                              ( Oriental demon )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aSaraGateKeeper	db '         Sara                                ( Gate keeper )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aLuizeDemon	db '        Luize                                  ( Demon )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aAliceWitchOfDe	db '        Alice                              ( Witch of death )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aYukiBlackWitch	db '         Yuki                                ( Black witch )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMaiWhiteWitch	db '         Mai                                 ( White witch )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aYumekoMaid	db '        Yumeko                                 ( Maid )',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aShinkiGoddessO	db '        Shinki                         ( Goddess of devil',27h,'s wo'
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 		db 'rld )',0
 aProgramerZunJu	db '      Programer                                ZUN (Junya Ota)',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aGraphicsZunJun	db '      Graphics                                 ZUN (Junya Ota)',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aMusicComposeZu	db '    Music Compose                              ZUN (Junya Ota)',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aP_m_d_ProgramM	db '    P.M.D. Program                             M.Kajihara(KAJA)',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aSpecialThanksA	db '    Special Thanks                             Aotaka',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aAmusementMaker	db '                                               Amusement Makers',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aAndAllTestPlay	db '             and all test player and you ... ',0
-					; DATA XREF: dseg:off_10920o
+					; DATA XREF: dseg:ALLCAST_PTRSo
 aExed		db 'EXED',0             ; DATA XREF: sub_B3CB+7Co
 byte_115EE	db 0AAh			; DATA XREF: sub_C1DD+1D9r
 		db 0ABh	; ´
@@ -51557,8 +51551,8 @@ word_1500E	dw ?			; DATA XREF: sub_B37C+27w sub_B37C+2Ar ...
 word_15010	dw ?			; DATA XREF: sub_B37C+1Ew sub_B37C+31r
 word_15012	dw ?			; DATA XREF: sub_B273:loc_B357w
 					; sub_B273+F7w	...
-word_15014	dw ?			; DATA XREF: sub_B1B5+1Br sub_B1B5+9Er ...
-word_15016	dw ?			; DATA XREF: sub_B1B5+6r sub_B1B5+96w	...
+allcast_screen_plus_one	dw ?			; DATA XREF: sub_B1B5+1Br sub_B1B5+9Er ...
+allcast_step	dw ?			; DATA XREF: sub_B1B5+6r sub_B1B5+96w	...
 byte_15018	db ?			; DATA XREF: sub_B273+9r sub_B273+C7r	...
 		nop
 byte_1501A	db ?			; DATA XREF: sub_B4D6+1Fr sub_B4D6+32r ...
