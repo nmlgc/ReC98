@@ -26312,37 +26312,37 @@ loc_B1CD:				; CODE XREF: _main+FCj
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B237
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		cmp	ax, 5
 		jnz	short loc_B202
 		push	large 10000Ch
 		push	ds
-		push	offset aOKKO	; "Æ¡Ωª™œœºΩ™∞Æ"
+		push	offset aExtra_Gaiji	; "Æ¡Ωª™œœºΩ™∞Æ"
 		jmp	short loc_B213
 ; ---------------------------------------------------------------------------
 
 loc_B202:				; CODE XREF: _main+90j
-		mov	al, byte_1F467
+		mov	al, stage1_gaiji_halflen
 		mov	ah, 0
 		mov	dx, 1Ch
 		sub	dx, ax
 		push	dx
 		push	0Ch
 		push	ds
-		push	offset aKOb	; "ºΩ™∞Æ°"
+		push	offset aStage1_Gaiji	; "ºΩ™∞Æ°"
 
 loc_B213:				; CODE XREF: _main+9Cj
 		push	0C1h ; '¡'
 		call	sub_145A
-		mov	al, byte_1F468
+		mov	al, stage_title_halflen
 		mov	ah, 0
 		mov	dx, 1Ch
 		sub	dx, ax
 		push	dx
 		push	0Dh
 		push	ds
-		push	word_1F46A
+		push	stage_title_str
 		push	0E1h ; '·'
 		call	sub_26CA
 		jmp	short loc_B249
@@ -26381,7 +26381,7 @@ loc_B263:				; CODE XREF: _main+F1j
 
 loc_B27A:				; CODE XREF: _main+10Fj
 		les	bx, dword_2026C
-		mov	al, byte_1E365
+		mov	al, stage_id
 		mov	es:[bx+0Bh], al
 		jmp	short loc_B290
 ; ---------------------------------------------------------------------------
@@ -26466,7 +26466,7 @@ loc_B32B:				; CODE XREF: sub_B2AB+79j
 loc_B333:				; CODE XREF: sub_B2AB+7Ej
 		movzx	eax, ax
 		mov	dword_1E598, eax
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		mov	bx, 5
 		cwd
@@ -26540,7 +26540,7 @@ arg_0		= dword	ptr  4
 		mov	byte ptr es:[bx+2], 61h	; 'a'
 		mov	byte ptr es:[bx+3], 67h	; 'g'
 		mov	byte ptr es:[bx+4], 65h	; 'e'
-		mov	al, byte_1E365
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+5], al
 		mov	byte ptr es:[bx+6], 2Eh	; '.'
@@ -26619,10 +26619,10 @@ var_C		= byte ptr -0Ch
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B4BB
 		mov	byte_1F46C, 1
-		mov	al, byte_1E365
+		mov	al, stage_id
 		add	al, al
 		mov	byte_1F46D, al
-		mov	al, byte_1E365
+		mov	al, stage_id
 		add	al, al
 		inc	al
 		mov	byte_1F46E, al
@@ -26651,25 +26651,25 @@ loc_B4D6:				; CODE XREF: sub_B3DA+F4j
 loc_B4D7:				; CODE XREF: sub_B3DA+E9j
 		cmp	si, 80h	; 'Ä'
 		jge	short loc_B4C5
-		mov	byte_1F467, 6
-		mov	al, byte_1E365
+		mov	stage1_gaiji_halflen, 6
+		mov	al, stage_id
 		cbw
 		mov	bx, 5
 		cwd
 		idiv	bx
 		add	dl, 0A1h ; '°'
-		mov	byte ptr aKOb+5, dl
-		mov	al, byte_1E365
+		mov	byte ptr aStage1_Gaiji+5, dl
+		mov	al, stage_id
 		cbw
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+0C8h]
-		mov	word_1F46A, ax
-		mov	al, byte_1E365
+		mov	ax, STAGE_TITLE[bx]
+		mov	stage_title_str, ax
+		mov	al, stage_id
 		cbw
 		mov	bx, ax
 		mov	al, [bx+0D4h]
-		mov	byte_1F468, al
+		mov	stage_title_halflen, al
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -26750,7 +26750,7 @@ loc_B4D7:				; CODE XREF: sub_B3DA+E9j
 		call	sub_C5B0
 		mov	byte_20342, 1
 		mov	byte_1E500, 4
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -27642,7 +27642,7 @@ sub_BF9C	proc far		; DATA XREF: sub_BFD0+75o
 		mov	bp, sp
 		cmp	byte_1F466, 2
 		jnz	short loc_BFCC
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		cmp	ax, 2
 		jnz	short loc_BFC3
@@ -27675,7 +27675,7 @@ sub_BFD0	proc far		; DATA XREF: sub_B3DA+223o
 		cmp	byte_1E501, 1
 		jnz	loc_C05B
 		mov	byte_1F466, 1
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		cmp	ax, 3
 		jnz	short loc_BFF8
@@ -27685,7 +27685,7 @@ sub_BFD0	proc far		; DATA XREF: sub_B3DA+223o
 ; ---------------------------------------------------------------------------
 
 loc_BFF8:				; CODE XREF: sub_BFD0+18j
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		cmp	ax, 2
 		jnz	short loc_C015
@@ -27770,7 +27770,7 @@ sub_C0A8	proc near		; CODE XREF: sub_BCB1+1Bp
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+0B0h]
+		push	word ptr BGM_TITLE[bx]
 		push	0E1h ; '·'
 		call	sub_26CA
 
@@ -27840,7 +27840,7 @@ sub_C13E	proc far		; CODE XREF: _main+63p
 		mov	dword ptr es:[bx+1Ch], 12h
 		cmp	byte ptr es:[bx+27h], 1
 		jnz	short loc_C18A
-		mov	byte_1E365, 3
+		mov	stage_id, 3
 		push	ds
 		push	offset aDemo1_rec ; "DEMO1.REC"
 		call	sub_950
@@ -27853,7 +27853,7 @@ loc_C18A:				; CODE XREF: sub_C13E+31j
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 2
 		jnz	short loc_C1AE
-		mov	byte_1E365, 2
+		mov	stage_id, 2
 		push	ds
 		push	offset aDemo2_rec ; "DEMO2.REC"
 		call	sub_950
@@ -27866,7 +27866,7 @@ loc_C1AE:				; CODE XREF: sub_C13E+55j
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 3
 		jnz	short loc_C1D0
-		mov	byte_1E365, 1
+		mov	stage_id, 1
 		push	ds
 		push	offset aDemo3_rec ; "DEMO3.REC"
 		call	sub_950
@@ -28011,7 +28011,7 @@ var_2		= word ptr -2
 		mov	word ptr dword_2026C, 0
 		les	bx, dword_2026C
 		mov	al, es:[bx+0Bh]
-		mov	byte_1E365, al
+		mov	stage_id, al
 		mov	al, es:[bx+1Ah]
 		mov	byte_1E59C, al
 		mov	al, es:[bx+19h]
@@ -28283,7 +28283,7 @@ loc_C516:				; CODE XREF: sub_C31F+1ECj
 		mov	byte_1E516, 1
 		inc	word ptr es:[bx+12h]
 		call	sub_DD1B
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		mov	bx, 5
 		cwd
@@ -41242,7 +41242,7 @@ sub_1273B	proc far		; DATA XREF: sub_B3DA+357o
 		call	sub_1310B
 		call	sub_FC53
 		call	sub_E162
-		inc	byte_1E365
+		inc	stage_id
 		pop	bp
 		retf
 sub_1273B	endp
@@ -41960,7 +41960,7 @@ var_4		= dword	ptr -4
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 12FBh
 		les	bx, [bp+var_4]
-		mov	al, byte_1E365
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+5], al
 		push	word ptr [bp+var_4+2]
@@ -42587,7 +42587,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		add	ax, ax
 		add	ax, di
@@ -42606,7 +42606,7 @@ loc_13123:				; CODE XREF: sub_1310B+39j
 		inc	si
 
 loc_13134:				; CODE XREF: sub_1310B+16j
-		mov	al, byte_1E365
+		mov	al, stage_id
 		cbw
 		add	ax, ax
 		mov	bx, ax
@@ -43958,7 +43958,7 @@ sub_13B8B	proc far		; DATA XREF: sub_B3DA+292o
 		call	sub_FC53
 		call	sub_F4BC
 		call	sub_E162
-		inc	byte_1E365
+		inc	stage_id
 		mov	word_1EB0A, 0
 		mov	word_1EDA4, 0
 		pop	bp
@@ -46710,7 +46710,7 @@ sub_15218	proc far		; DATA XREF: sub_B3DA+2EEo
 		call	sub_FC53
 		call	sub_F4BC
 		call	sub_E162
-		inc	byte_1E365
+		inc	stage_id
 		mov	word_1EB0A, 0
 		pop	bp
 		retf
@@ -59600,7 +59600,7 @@ sub_1C270	proc far		; DATA XREF: sub_B3DA+3C0o
 
 loc_1C27C:
 		call	sub_E162
-		inc	byte_1E365
+		inc	stage_id
 		pop	bp
 
 locret_1C286:
@@ -59818,7 +59818,7 @@ var_2		= word ptr -2
 		mov	word ptr [bp-0Ch], ds
 		mov	word ptr [bp+dest+2], 111Ah
 		les	bx, [bp+dest+2]
-		mov	al, byte_1E365
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+5], al
 		push	word ptr [bp-0Ch]
@@ -60735,7 +60735,7 @@ loc_1CB0C:				; CODE XREF: sub_1C9FE+79j
 		mov	eax, dword_1E598
 		mov	[bx+7890h], eax
 		mov	bx, [bp+var_2]
-		mov	al, byte_1E365
+		mov	al, stage_id
 		inc	al
 		mov	[bx+7903h], al
 		mov	ax, [bp+var_2]
@@ -62497,50 +62497,32 @@ word_1DAF8	dw 0			; DATA XREF: sub_5A20+6Ew __sbrk+12r ...
 word_1DAFA	dw 0			; DATA XREF: start+8Bw	sub_5A20+6Aw ...
 word_1DAFC	dw 0			; DATA XREF: sub_5A20+7Ew __brk+1Cr ...
 word_1DAFE	dw 0			; DATA XREF: start+21w	start+F5w ...
-aKOb		db 'ºΩ™∞Æ°',0           ; DATA XREF: _main+ACo sub_B3DA+115w
+aStage1_Gaiji		db 'ºΩ™∞Æ°',0           ; DATA XREF: _main+ACo sub_B3DA+115w
 		dd 0
 		dd 0
 		db    0
-aOKKO		db 'Æ¡Ωª™œœºΩ™∞Æ',0     ; DATA XREF: _main+99o
+aExtra_Gaiji		db 'Æ¡Ωª™œœºΩ™∞Æ',0     ; DATA XREF: _main+99o
 		db 0
 		db    0
 		db    0
-		db  18h
-		db    1
-		db  31h	; 1
-		db    1
-		db  4Ah	; J
-		db    1
-		db  63h	; c
-		db    1
-		db  7Ch	; |
-		db    1
-		db  95h	; ï
-		db    1
-		db 0AEh	; Æ
-		db    1
-		db 0C7h	; «
-		db    1
-		db 0E0h	; ‡
-		db    1
-		db 0F9h	; ˘
-		db    1
-		db  12h
-		db    2
-		db  2Bh	; +
-		db    2
-		db  44h	; D
-		db    2
-		db  59h	; Y
-		db    2
-		db  74h	; t
-		db    2
-		db  8Bh	; ã
-		db    2
-		db 0A4h	; §
-		db    2
-		db 0BFh	; ø
-		db    2
+BGM_TITLE		dw offset aTH02_02
+		dw offset aTH02_03
+		dw offset aTH02_04
+		dw offset aTH02_05
+		dw offset aTH02_06
+		dw offset aTH02_07
+		dw offset aTH02_08
+		dw offset aTH02_09
+		dw offset aTH02_10
+		dw offset aTH02_11
+		dw offset aTH02_12
+		dw offset aTH02_13
+STAGE_TITLE		dw offset aSTAGE1_TITLE
+		dw offset aSTAGE2_TITLE
+		dw offset aSTAGE3_TITLE
+		dw offset aSTAGE4_TITLE
+		dw offset aSTAGE5_TITLE
+		dw offset aEXTRA_TITLE
 		db  0Ah
 		db  0Dh
 		db  0Bh
@@ -62568,24 +62550,24 @@ off_1DB7E	dd aB@b@vVvbavtvVV	; DATA XREF: sub_B9E2+12Dr
 					; "Å@Å@ÇÕÇ¢ÅAÇ‚ÇﬂÇ‹Ç∑ÅBÅ@"
 dword_1DB82	dd 0			; DATA XREF: sub_BCB1+7r
 word_1DB86	dw 0			; DATA XREF: sub_C1E4+Ar sub_C1E4+1Bw	...
-aB@Focab@bEaste	db 'Å@ îéóÌÅ@Å`Eastern Wind ',0
-aB@SheSInATempe	db 'Å@  She',27h,'s in a temper!! ',0
-aB@EndOfDayligh	db 'Å@   End of DaylightÅ@  ',0
-aB@VtvVVVivcb@b	db '   Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@  ',0
-aB@b@b@b@b@mCKe	db 'Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@',0
-aB@b@b@oav	db ' Å@Å@Å@éÄÇìqÇµÇƒÅ@Å@Å@ ',0
-aVVrvivmbavVcvV	db 'Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶',0
-aB@C		db '   Å@ óˆêFÉ}ÉWÉbÉN Å@   ',0
-aB@umx		db 'Å@ìåï˚ïïñÇò^Å@Å`óHå∂óêïë',0
-aCompleteDarkne	db '   Complete Darkness    ',0
-aB@Ggglgxgggigi	db '   Å@ ÉGÉLÉXÉgÉâÉâÉu    ',0
-aRaoVVVVVVsvfv	db '  êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ  ',0
-aOzcB@bPurpleDa	db 'éáñÏÅ@Å` Purple Dawn',0
-aClpbb@bMidnigh	db 'óãèbÅ@Å`Midnight Rainstorm',0
-aNgcB@bScarletD	db 'çgñ≤Å@Å` Scarlet Dream',0
-aCCvb@bRevengef	db 'óÏñÇÅ@Å`Revengeful Ghost',0
-aXxcvb@bUmx	db 'ïïñÇÅ@Å`ìåï˚ïïñÇò^ and ...',0
-aIL		db 'àŸãÛÅ@Å`for Lunatic Gamers',0
+aTH02_02	db 'Å@ îéóÌÅ@Å`Eastern Wind ',0
+aTH02_03	db 'Å@  She',27h,'s in a temper!! ',0
+aTH02_04	db 'Å@   End of DaylightÅ@  ',0
+aTH02_05	db '   Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@  ',0
+aTH02_06	db 'Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@',0
+aTH02_07	db ' Å@Å@Å@éÄÇìqÇµÇƒÅ@Å@Å@ ',0
+aTH02_08	db 'Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶',0
+aTH02_09		db '   Å@ óˆêFÉ}ÉWÉbÉN Å@   ',0
+aTH02_10		db 'Å@ìåï˚ïïñÇò^Å@Å`óHå∂óêïë',0
+aTH02_11	db '   Complete Darkness    ',0
+aTH02_12	db '   Å@ ÉGÉLÉXÉgÉâÉâÉu    ',0
+aTH02_13	db '  êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ  ',0
+aSTAGE1_TITLE	db 'éáñÏÅ@Å` Purple Dawn',0
+aSTAGE2_TITLE	db 'óãèbÅ@Å`Midnight Rainstorm',0
+aSTAGE3_TITLE	db 'çgñ≤Å@Å` Scarlet Dream',0
+aSTAGE4_TITLE	db 'óÏñÇÅ@Å`Revengeful Ghost',0
+aSTAGE5_TITLE	db 'ïïñÇÅ@Å`ìåï˚ïïñÇò^ and ...',0
+aEXTRA_TITLE		db 'àŸãÛÅ@Å`for Lunatic Gamers',0
 ; char arg0[3]
 arg0		db 'op',0               ; DATA XREF: _main+138o
 aHuuma_efc	db 'huuma.efc',0        ; DATA XREF: sub_B2AB+8o
@@ -63785,7 +63767,7 @@ byte_1E35D	db 0			; DATA XREF: sub_FA46w	sub_FA52+31w ...
 		db 0F8h	; ¯
 byte_1E364	db 1			; DATA XREF: sub_B2AB:loc_B34Cr
 					; sub_C273+57w	...
-byte_1E365	db 0			; DATA XREF: _main+89r	_main+11Ar ...
+stage_id	db 0			; DATA XREF: _main+89r	_main+11Ar ...
 aHuuma_cfg	db 'huuma.cfg',0        ; DATA XREF: sub_C273+5o
 		db '<',0
 		db '~',0
@@ -67208,11 +67190,11 @@ aC		db '/c',0
 		dd loc_501D
 byte_1F466	db ?			; DATA XREF: sub_B3DA+B3w
 					; sub_BCB1+129w ...
-byte_1F467	db ?			; DATA XREF: _main:loc_B202r
+stage1_gaiji_halflen	db ?			; DATA XREF: _main:loc_B202r
 					; sub_B3DA+103w
-byte_1F468	db ?			; DATA XREF: _main+B7r	sub_B3DA+132w
+stage_title_halflen	db ?			; DATA XREF: _main+B7r	sub_B3DA+132w
 		db ?
-word_1F46A	dw ?			; DATA XREF: _main+C5r	sub_B3DA+125w
+stage_title_str	dw ?			; DATA XREF: _main+C5r	sub_B3DA+125w
 byte_1F46C	db ?			; DATA XREF: sub_B3DA+C8w
 					; sub_B3DA:loc_B4BBw ...
 byte_1F46D	db ?			; DATA XREF: sub_B3DA+D2w sub_BFD0+88w ...
