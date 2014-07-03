@@ -425,15 +425,15 @@ sub_22C		endp
 
 ; ---------------------------------------------------------------------------
 DGROUP@		dw 0			; DATA XREF: start+3w start+B0r ...
+__MMODEL	dw 0C004h
+		db 0
 ; ---------------------------------------------------------------------------
 
-__MMODEL:
-		add	al, 0C0h ; '¿'
-		add	ds:8E2Eh, bl
+loc_272:
 		push	ds
-		pop	di
-		add	cx, word_FCC8
-		push	ds
+		mov	ds, [word ptr cs:35Fh]
+		push	cs
+		call	near ptr sub_2088
 		mov	ax, 0FFF3h
 
 loc_27F:				; CODE XREF: seg000:02D9j seg000:02E1j
@@ -25138,13 +25138,13 @@ _envp		= dword	ptr  0Ch
 		call	sub_2B18
 		mov	word_F9CC, 5208h
 		push	ds
-		push	offset unk_F46C
+		push	offset aKaikidan1_dat0
 		call	sub_DF12
 		add	sp, 4
 		or	ax, ax
 		jz	short loc_AF7D
 		push	ds
-		push	offset unk_F478
+		push	offset aNotEnoughMem
 		call	sub_796
 		call	sub_A002
 
@@ -28128,7 +28128,7 @@ loc_C77F:				; CODE XREF: sub_C490+26Aj
 loc_C790:				; CODE XREF: sub_C490+2F9j
 		call	sub_3858
 		push	ds
-		push	offset unk_117EB
+		push	offset aKaikidan1_dat1
 		call	sub_37B8
 		push	210h
 		call	sub_DC76
@@ -33491,64 +33491,8 @@ aHeck		db 'HECK',0
 		db    0
 		db    0
 		db    0
-		db  42h	; B
-		db  6Fh	; o
-		db  72h	; r
-		db  6Ch	; l
-		db  61h	; a
-		db  6Eh	; n
-		db  64h	; d
-		db  20h
-		db  43h	; C
-		db  2Bh	; +
-		db  2Bh	; +
-		db  20h
-		db  2Dh	; -
-		db  20h
-		db  43h	; C
-		db  6Fh	; o
-		db  70h	; p
-		db  79h	; y
-		db  72h	; r
-		db  69h	; i
-		db  67h	; g
-		db  68h	; h
-		db  74h	; t
-		db  20h
-		db  31h	; 1
-		db  39h	; 9
-		db  39h	; 9
-		db  33h	; 3
-		db  20h
-		db  42h	; B
-		db  6Fh	; o
-		db  72h	; r
-		db  6Ch	; l
-		db  61h	; a
-		db  6Eh	; n
-		db  64h	; d
-		db  20h
-		db  49h	; I
-		db  6Eh	; n
-		db  74h	; t
-		db  6Ch	; l
-		db  2Eh	; .
-		db    0
-		db  44h	; D
-		db  69h	; i
-		db  76h	; v
-		db  69h	; i
-		db  64h	; d
-		db  65h	; e
-		db  20h
-		db  65h	; e
-		db  72h	; r
-		db  72h	; r
-		db  6Fh	; o
-		db  72h	; r
-		db  0Dh
-		db  0Ah
-		db    0
+aBorlandCCopy	db 'Borland C++ - Copyright 1993 Borland Intl.',0
+aDivideError	db 'Divide error',0Dh,0Ah,0
 dword_F03A	dd 0			; DATA XREF: sub_178:loc_17Ew
 					; __restorezero+4r ...
 dword_F03E	dd 0			; DATA XREF: sub_178+13w
@@ -34435,85 +34379,16 @@ aMiko		db 'miko',0             ; DATA XREF: sub_ABCF+E4o
 					; sub_ABCF+20Bo ...
 aOp		db 'op',0               ; DATA XREF: sub_ABCF+F0o
 					; sub_ABCF+1C5o ...
-unk_F46C	db  89h	; â		; DATA XREF: _main+17o
-		db 0F6h	; ˆ
-		db 0E3h	; „
-		db  59h	; Y
-		db  92h	; í
-		db  6Bh	; k
-		db  31h	; 1
-		db  2Eh	; .
-		db  64h	; d
-		db  61h	; a
-		db  74h	; t
-		db    0
-unk_F478	db  0Ah			; DATA XREF: _main+27o
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  82h	; Ç
-		db 0ABh	; ´
-		db  83h	; É
-		db  81h	; Å
-		db  83h	; É
-		db  82h	; Ç
-		db  83h	; É
-		db  8Ah	; ä
-		db  95h	; ï
-		db  73h	; s
-		db  91h	; ë
-		db 0ABh	; ´
-		db  82h	; Ç
-		db 0C5h	; ≈
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db  81h	; Å
-		db  42h	; B
-		db  83h	; É
-		db  81h	; Å
-		db  83h	; É
-		db  82h	; Ç
-		db  83h	; É
-		db  8Ah	; ä
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  82h	; Ç
-		db 0ABh	; ´
-		db  82h	; Ç
-		db 0F0h	; 
-		db  91h	; ë
-		db  9Dh	; ù
-		db  82h	; Ç
-		db 0E2h	; ‚
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  82h	; Ç
-		db 0A9h	; ©
-		db  82h	; Ç
-		db 0E7h	; Á
-		db  8Eh	; é
-		db 0C0h	; ¿
-		db  8Dh	; ç
-		db  73h	; s
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  82h	; Ç
-		db 0CBh	; À
-		db  0Ah
-		db    0
+aKaikidan1_dat0	db 'âˆ„Yík1.dat',0      ; DATA XREF: _main+17o
+aNotEnoughMem	db 0Ah			; DATA XREF: _main+27o
+		db 'ãÛÇ´ÉÅÉÇÉäïsë´Ç≈Ç∑ÅBÉÅÉÇÉäãÛÇ´ÇëùÇ‚ÇµÇƒÇ©ÇÁé¿çsÇµÇƒÇÀ',0Ah,0
 		db    0
 		dw 0
 word_F4B4	dw 0			; DATA XREF: seg000:050Ar
 word_F4B6	dw 0			; DATA XREF: seg000:050Er seg000:0515r
 		db 0
 		db 0
-		db  42h	; B
-		db  46h	; F
-		db  4Eh	; N
-		db  54h	; T
+aBfnt		db 'BFNT'               ; DATA XREF: bfnt_header_read+1Eo
 		db  1Ah
 		db    0
 word_F4C0	dw 0			; DATA XREF: sub_C44+21r sub_CCA+7Br ...
@@ -34573,24 +34448,8 @@ byte_F4F6	db 0			; DATA XREF: sub_B92+4r
 		db  36h	; 6
 		db  3Fh	; ?
 		db    0
-		db  24h	; $
-		db  49h	; I
-		db  42h	; B
-		db  4Dh	; M
-		db  41h	; A
-		db  44h	; D
-		db  53h	; S
-		db  50h	; P
-		db    0
-		db  24h	; $
-		db  49h	; I
-		db  42h	; B
-		db  4Dh	; M
-		db  41h	; A
-		db  46h	; F
-		db  4Eh	; N
-		db  54h	; T
-		db    0
+aIbmadsp	db '$IBMADSP',0
+aIbmafnt	db '$IBMAFNT',0
 dword_F514	dd 0			; DATA XREF: sub_11AC-8Cr
 word_F518	dw 0A800h		; DATA XREF: sub_11C8+9w sub_1216+18r	...
 word_F51A	dw 3E80h		; DATA XREF: sub_11C8+Fw sub_1216+14r	...
@@ -37871,19 +37730,8 @@ aExed		db 'exed',0             ; DATA XREF: dseg:147Ao
 a_music0_txt	db '_MUSIC0.TXT',0
 aMusic_pi	db 'music.pi',0         ; DATA XREF: sub_C490+5Co
 aMusic_dat	db 'music.dat',0        ; DATA XREF: sub_C490+A9o
-unk_117EB	db  89h	; â		; DATA XREF: sub_C490+306o
-		db 0F6h	; ˆ
-		db 0E3h	; „
-		db  59h	; Y
-		db  92h	; í
-		db  6Bh	; k
-		db  31h	; 1
-		db  2Eh	; .
-		db  64h	; d
-		db  61h	; a
-		db  74h	; t
-		db    0
-		db    0
+aKaikidan1_dat1	db 'âˆ„Yík1.dat',0    ; DATA XREF: sub_C490+306o
+		db 0
 aGensou_scr	db 'GENSOU.SCR',0       ; DATA XREF: sub_C8E2+7Eo sub_C9BE+4o ...
 aName		db 'name',0             ; DATA XREF: sub_CC5C+Co
 aHi01_pi	db 'hi01.pi',0          ; DATA XREF: sub_CC5C+3Bo
@@ -38840,40 +38688,15 @@ aStringRefere_0	db 'String reference out of range',0
 aStringRefere_1	db 'String reference out of range',0
 byte_11D7E	db 0			; DATA XREF: sub_A002+2r sub_A002+9w ...
 byte_11D7F	db 0			; DATA XREF: sub_A002+Er
-aPath		db 'PATH',0
-		db '/\',0
-		db    0
-		db  2Eh	; .
-		db  42h	; B
-		db  41h	; A
-		db  54h	; T
-		db    0
-		db  2Eh	; .
-		db  43h	; C
-		db  4Fh	; O
-		db  4Dh	; M
-		db    0
-		db  2Eh	; .
-		db  45h	; E
-		db  58h	; X
-		db  45h	; E
-		db    0
-		db  2Eh	; .
-		db  42h	; B
-		db  41h	; A
-		db  54h	; T
-		db    0
-		db  43h	; C
-		db  4Fh	; O
-		db  4Dh	; M
-		db  53h	; S
-		db  50h	; P
-		db  45h	; E
-		db  43h	; C
-		db    0
-		db  2Fh	; /
-		db  63h	; c
-		db    0
+aPATH		db 'PATH',0             ; DATA XREF: sub_A0B9+38o
+asc_11D85	db '/\',0               ; DATA XREF: _LoadProg+2Fo
+		db 0			; DATA XREF: _LoadProg+6Eo
+a_bat		db '.BAT',0             ; DATA XREF: _LoadProg+90o
+a_com		db '.COM',0             ; DATA XREF: _LoadProg+ACo
+a_exe		db '.EXE',0             ; DATA XREF: _LoadProg+CEo
+a_bat_0		db '.BAT',0             ; DATA XREF: _LoadProg+F0o
+a_comspec		db 'COMSPEC',0          ; DATA XREF: _LoadProg+120o
+aC		db '/c',0               ; DATA XREF: _LoadProg+14Bo
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
