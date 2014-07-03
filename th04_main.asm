@@ -30508,12 +30508,12 @@ loc_CF70:				; CODE XREF: seg001:2471j
 		mov	al, byte_266D4
 		add	al, al
 		add	al, 2
-		mov	byte_259DA, al
+		mov	bgm_title_id, al
 		cmp	byte_266D4, 3
 		jnz	short loc_CFAC
 		cmp	byte_266D8, 0
 		jz	short loc_CFAC
-		mov	byte_259DA, 10h
+		mov	bgm_title_id, 10h
 
 loc_CFAC:				; CODE XREF: seg001:24AEj seg001:24B5j
 		mov	word_259DC, 66A5h
@@ -39025,19 +39025,19 @@ loc_10F99:				; CODE XREF: seg001:649Dj
 loc_10FA1:				; CODE XREF: seg001:64A7j
 		call	sub_10EA5
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	large 16800002h
 		call	sub_10EA5
 		mov	ah, 0Fh
 		call	sub_C162
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	1680h
-		push	word_259C2
+		push	bgm_title_len
 		call	sub_10EA5
-		mov	ax, word_259C0
+		mov	ax, stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -39045,7 +39045,7 @@ loc_10FA1:				; CODE XREF: seg001:64A7j
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	word_259C0
+		push	stage_title_len
 		call	sub_10EA5
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -39059,35 +39059,35 @@ loc_10FED:				; CODE XREF: seg001:644Ej
 		mov	byte_22EF6, 10h
 		mov	al, byte_266D4
 		inc	al
-		mov	byte_259C4, al
+		mov	stage_title_id, al
 		mov	al, byte_266D4
 		add	al, al
 		inc	al
-		mov	byte_259DA, al
+		mov	bgm_title_id, al
 		cmp	byte_266D4, 0
 		jnz	short loc_11023
 		cmp	byte_266D8, 0
 		jnz	short loc_11023
-		mov	byte_259C4, 0
-		mov	byte_259DA, 0
+		mov	stage_title_id, 0
+		mov	bgm_title_id, 0
 
 loc_11023:				; CODE XREF: seg001:6520j seg001:6527j
-		mov	al, byte_259C4
+		mov	al, stage_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BBCh]
+		push	large STAGE_TITLE[bx]
 		call	_strlen
 		add	sp, 4
-		mov	word_259C0, ax
-		mov	al, byte_259DA
+		mov	stage_title_len, ax
+		mov	al, bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BDCh]
+		push	large BGM_TITLE[bx]
 		call	_strlen
 		add	sp, 4
-		mov	word_259C2, ax
+		mov	bgm_title_len, ax
 
 loc_11057:				; CODE XREF: seg001:6502j
 		cmp	byte_22EF6, 10h
@@ -39122,7 +39122,7 @@ loc_11097:				; CODE XREF: seg001:6599j
 loc_110A1:				; CODE XREF: seg001:6592j seg001:65A5j
 		push	0C1h ; '¡'
 		call	sub_1B50
-		mov	ax, word_259C0
+		mov	ax, stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -39130,28 +39130,28 @@ loc_110A1:				; CODE XREF: seg001:6592j seg001:65A5j
 		sub	dx, ax
 		push	dx
 		push	0Dh
-		mov	al, byte_259C4
+		mov	al, stage_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BBCh]
+		push	large STAGE_TITLE[bx]
 		push	0E1h ; '·'
 		call	sub_22F6
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	large 170003h
 		push	0C1h ; '¡'
 		call	sub_1B0C
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	17h
-		mov	al, byte_259DA
+		mov	al, bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BDCh]
+		push	large BGM_TITLE[bx]
 		push	0E1h ; '·'
 		call	sub_22F6
 
@@ -39173,19 +39173,19 @@ loc_11120:				; CODE XREF: seg001:6624j
 loc_11128:				; CODE XREF: seg001:662Ej
 		call	sub_10EA5
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	large 16800002h
 		call	sub_10EA5
 		mov	ah, 0Fh
 		call	sub_C162
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C2
+		sub	ax, bgm_title_len
 		push	ax
 		push	1680h
-		push	word_259C2
+		push	bgm_title_len
 		call	sub_10EA5
-		mov	ax, word_259C0
+		mov	ax, stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -39193,7 +39193,7 @@ loc_11128:				; CODE XREF: seg001:662Ej
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	word_259C0
+		push	stage_title_len
 		call	sub_10EA5
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -39266,11 +39266,11 @@ loc_11211:				; CODE XREF: seg001:66ADj
 		cmp	byte_22EA3, 0
 		jnz	short loc_11237
 		mov	byte_22EF6, 10h
-		mov	al, byte_259DA
+		mov	al, bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BDCh]
+		push	large BGM_TITLE[bx]
 		call	_strlen
 		add	sp, 4
 		mov	word_259C6, ax
@@ -39290,11 +39290,11 @@ loc_11237:				; CODE XREF: seg001:6726j
 		sub	ax, word_259C6
 		push	ax
 		push	17h
-		mov	al, byte_259DA
+		mov	al, bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BDCh]
+		push	large BGM_TITLE[bx]
 		push	0E1h ; '·'
 		call	sub_22F6
 
@@ -50962,7 +50962,7 @@ byte_22EF6	db 0			; DATA XREF: sub_10EA5:loc_10ED1r
 		db 0
 off_22EF8	dd asc_22F6A		; DATA XREF: seg001:6802r seg001:6815r ...
 					; "					  "...
-		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
+STAGE_TITLE		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
 		dd aMCsb@bPhantomN	; "å∂ñÈÅ@Å` Phantom Night"
 		dd aMKib@bLakeOfBl	; "åÕäâÅ@Å` Lake of Blood"
 		dd aCChb@bDarkness	; "ñªóHÅ@Å` Darkness "
@@ -50970,7 +50970,7 @@ off_22EF8	dd asc_22F6A		; DATA XREF: seg001:6802r seg001:6815r ...
 		dd aMSzb@bPhantasm	; "å∂ëzÅ@Å` Phantasmagoria "
 		dd aTMvb@bRaspberr	; "í«åÇÅ@Å` Raspberry Trap "
 		dd aVVVcvVvmnvRViv	; "Ç∑ÇŒÇÁÇµÇ¢åNÇ…ê√Ç©Ç»ù˜ÇËÇÅ@Å` Puckish "...
-		dd aWitchingDream	; "Witching Dream"
+BGM_TITLE		dd aWitchingDream	; "Witching Dream"
 		dd aSeleneSLight	; "Selene's light"
 		dd aSxp			; "ëïè¸êÌÅ@Å` Decoration Battle"
 		dd aBreakTheSabbat	; "Break the Sabbath"
@@ -59585,9 +59585,9 @@ word_259BA	dw ?			; DATA XREF: sub_107E2+19r
 					; sub_10988+2Cw ...
 		dw ?
 		dw ?
-word_259C0	dw ?			; DATA XREF: seg001:64DCr seg001:64EDr ...
-word_259C2	dw ?			; DATA XREF: seg001:64B7r seg001:64CDr ...
-byte_259C4	db ?			; DATA XREF: seg001:650Ew seg001:6529w ...
+stage_title_len	dw ?			; DATA XREF: seg001:64DCr seg001:64EDr ...
+bgm_title_len	dw ?			; DATA XREF: seg001:64B7r seg001:64CDr ...
+stage_title_id	db ?			; DATA XREF: seg001:650Ew seg001:6529w ...
 		db ?
 word_259C6	dw ?			; DATA XREF: seg001:66F3r seg001:6709r ...
 word_259C8	dw ?			; DATA XREF: seg001:6866w seg001:6869r ...
@@ -59607,7 +59607,7 @@ unk_259CC	db    ?	;		; DATA XREF: seg001:6926o
 word_259D6	dw ?			; DATA XREF: seg001:6879w seg001:691Fr ...
 word_259D8	dw ?			; DATA XREF: seg001:688Bw
 					; seg001:loc_11380w ...
-byte_259DA	db ?			; DATA XREF: seg001:24A6w seg001:24B7w ...
+bgm_title_id	db ?			; DATA XREF: seg001:24A6w seg001:24B7w ...
 byte_259DB	db ?			; DATA XREF: sub_EE06+8Bw seg001:67ECr ...
 word_259DC	dw ?			; DATA XREF: sub_AB88+B0r
 					; sub_AED0+2E3w ...

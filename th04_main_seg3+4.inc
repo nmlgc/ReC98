@@ -21061,7 +21061,7 @@ loc_1E801:				; CODE XREF: sub_1E743+9Fj
 		mov	byte_26718, 80h	; '€'
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
-		mov	byte_259DA, 0Fh
+		mov	bgm_title_id, 0Fh
 		mov	word_259DC, 66A5h
 		push	10h
 		call	sub_13A58
