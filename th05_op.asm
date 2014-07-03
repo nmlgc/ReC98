@@ -25588,20 +25588,20 @@ arg_2		= word ptr  6
 		cmp	ax, 2
 		jnz	short loc_B2AB
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E1Dh
+		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION1 ; "ÉXÉeÉåÉIÇeÇlâπåπ"
 		jmp	short loc_B2AB
 ; ---------------------------------------------------------------------------
 
 loc_B293:				; CODE XREF: sub_B270+12j
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E2Eh
+		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION2 ; "Å@ïWèÄÇeÇlâπåπÅ@"
 		add	si, 10h
 		jmp	short loc_B2AB
 ; ---------------------------------------------------------------------------
 
 loc_B2A0:				; CODE XREF: sub_B270+Dj
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E3Fh
+		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION3 ; "Å@Å@âπäyñ≥ÇµÅ@Å@"
 		add	si, 20h	; ' '
 
 loc_B2AB:				; CODE XREF: sub_B270+17j sub_B270+21j ...
@@ -25641,20 +25641,20 @@ arg_2		= word ptr  6
 
 loc_B2DA:				; CODE XREF: sub_B2BF+12j
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E50h
+		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION1 ; "Å@Å@ÇeÇlâπåπÅ@Å@"
 		jmp	short loc_B2FC
 ; ---------------------------------------------------------------------------
 
 loc_B2E4:				; CODE XREF: sub_B2BF+17j
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E61h
+		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION2 ; "Å@ÇaÇÖÇÖÇêâπåπÅ@"
 		add	si, 10h
 		jmp	short loc_B2FC
 ; ---------------------------------------------------------------------------
 
 loc_B2F1:				; CODE XREF: sub_B2BF+Dj
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0E72h
+		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION3 ; "Å@ å¯â âπñ≥Çµ	Å@"
 		add	si, 20h	; ' '
 
 loc_B2FC:				; CODE XREF: sub_B2BF+19j sub_B2BF+23j ...
@@ -25689,7 +25689,7 @@ loc_B31C:				; CODE XREF: sub_B310+28j
 		push	0Fh
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+0AB6h]
+		push	large [SETUP_BGM_BODY+bx]
 		call	far ptr	loc_D436
 		inc	si
 		add	di, 10h
@@ -25724,7 +25724,7 @@ loc_B34A:				; CODE XREF: sub_B33E+28j
 		push	0Fh
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+0ADAh]
+		push	large [SETUP_SFX_BODY+bx]
 		call	far ptr	loc_D436
 		inc	si
 		add	di, 10h
@@ -25754,7 +25754,7 @@ var_2		= word ptr -2
 		push	large 700058h
 		push	0Fh
 		push	ds
-		push	offset unk_FE63
+		push	offset aSETUP_BGM_HEAD ; "Å@Å@Å@Å@Å@égópÇ∑ÇÈâπåπÇëIëÇµÇƒâ∫Ç≥Ç¢Ç"...
 		call	far ptr	loc_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
@@ -25872,7 +25872,7 @@ var_2		= word ptr -2
 		push	large 700058h
 		push	0Fh
 		push	ds
-		push	offset unk_FE8E
+		push	offset aSETUP_SFX_HEAD ; "Å@Å@Å@Å@å¯â âπÇ…égópÇ∑ÇÈâπåπÇëIëÇµÇƒÇ"...
 		call	far ptr	loc_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
@@ -35797,366 +35797,69 @@ dword_FA84	dd 0A8000000h		; DATA XREF: sub_BFB7:loc_BFCAr
 		db    0
 		db 0E0h	; ‡
 byte_FA94	db 0			; DATA XREF: sub_E174w	sub_E17A+54w ...
-		align 2
-		dd aGxgegmgivevliM	; "ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[É"...
-		dd aB@b@b@b@b@b@b@	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA  "...
-		dd aB@b@b@b@b@b@_0	; "Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉ"...
-		dd aB@xwpavevliMBf	; "Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å["...
-		dd aPc9801dausvUrs	; "		     PC-9801DAìôÇ…ì‡ë†ÇÃâπ"...
-		dd aB@b@b@b@b@b@_1	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ "...
-		dd aB@b@iKycVBfb@b	; "Å@Å@âπäyñ≥ÇµÅFÅ@Å@ÇeÇlâπåπÇ™ñ≥Ç¢èÍçá	  "...
-		dd asc_FC27		; "					  "...
-		dd aVVibavVVcvRTsv	; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
-		dd unk_FC85
-		dd unk_FCB4
-		dd unk_FCE3
-		dd aB@B@b@b@b@VVBa	; "Å@ Å@Å@Å@Å@ ÇÃÇ≈ÅAÇaÇfÇlÇ™ê≥èÌÇ…Ç´ÇØÇ»Ç"...
-		dd unk_FD41
-		dd aVevliMVkcVvpNz	; "		 ÇeÇlâπåπÇ™ñ≥Ç¢èÍçáégópÇµÇ"...
-		dd unk_FD9F
-		dd aB@b@b@b@b@b@_2	; "Å@Å@Å@Å@Å@Å@Å@ñ≥Ç¢èÍçá		  "...
-		dd aVVibavVVcvRTsv	; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
-aGxgegmgivevliM	db 'ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[ÉhÅ@Å@Å@',0
-					; DATA XREF: dseg:0AB6o
-aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA         ',0
+		db 0
+SETUP_BGM_BODY	dd aSETUP_BGM_BODY1	; DATA XREF: sub_B310+17r
+					; "ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[É"...
+		dd aSETUP_BGM_BODY2	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA  "...
+		dd aSETUP_BGM_BODY3	; "Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉ"...
+		dd aSETUP_BGM_BODY4	; "Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å["...
+		dd aSETUP_BGM_BODY5	; "		     PC-9801DAìôÇ…ì‡ë†ÇÃâπ"...
+		dd aSETUP_BGM_BODY6	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ "...
+		dd aSETUP_BGM_BODY7	; "Å@Å@âπäyñ≥ÇµÅFÅ@Å@ÇeÇlâπåπÇ™ñ≥Ç¢èÍçá	  "...
+		dd aSETUP_BGM_BODY8	; "					  "...
+		dd aSETUP_TAIL		; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
+SETUP_SFX_BODY	dd aSETUP_SFX_BODY1	; DATA XREF: sub_B33E+17r
+					; "Å@ÇeÇlâπåπÅ@ÅFå¯â âπÇ…ÇeÇlâπåπÇégópÇµÇ"...
+		dd aSETUP_SFX_BODY2	; "Å@Å@Å@Å@Å@Å@Å@ÇaÇfÇlÇ™ÉXÉeÉåÉIÇeÇlâπåπé"...
+		dd aSETUP_SFX_BODY3	; "Å@ Å@ Å@Å@ÅiïWèÄÇeÇlâπåπÇ≈ÇÕÅA3chÇégóp"...
+		dd aSETUP_SFX_BODY4	; "Å@ Å@Å@Å@Å@ ÇÃÇ≈ÅAÇaÇfÇlÇ™ê≥èÌÇ…Ç´ÇØÇ»Ç"...
+		dd aSETUP_SFX_BODY5	; "ÇaÇÖÇÖÇêâπåπÅFå¯â âπÇ…ÇaÇÖÇÖÇêâπåπÇégó"...
+		dd aSETUP_SFX_BODY6	; "		 ÇeÇlâπåπÇ™ñ≥Ç¢èÍçáégópÇµÇ"...
+		dd aSETUP_SFX_BODY7	; " å¯â âπñ≥Çµ ÅFâΩÇÁÇ©ÇÃéñèÓÇ≈å¯â âπÇñ¬Ç"...
+		dd aSETUP_SFX_BODY8	; "Å@Å@Å@Å@Å@Å@Å@ñ≥Ç¢èÍçá		  "...
+		dd aSETUP_TAIL		; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
+aSETUP_BGM_BODY1 db 'ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[ÉhÅ@Å@Å@',0
+					; DATA XREF: dseg:SETUP_BGM_BODYo
+aSETUP_BGM_BODY2 db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA         ',0
 					; DATA XREF: dseg:0ABAo
-aB@b@b@b@b@b@_0	db 'Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉYÉÄâπåπ',0
+aSETUP_BGM_BODY3 db 'Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉYÉÄâπåπ',0
 					; DATA XREF: dseg:0ABEo
-aB@xwpavevliMBf	db 'Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å[Éh     ',0
-aPc9801dausvUrs	db '                  PC-9801DAìôÇ…ì‡ë†ÇÃâπåπÇ»Ç« ',0
+aSETUP_BGM_BODY4 db 'Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å[Éh     ',0
+					; DATA XREF: dseg:0AC2o
+aSETUP_BGM_BODY5 db '                  PC-9801DAìôÇ…ì‡ë†ÇÃâπåπÇ»Ç« ',0
 					; DATA XREF: dseg:0AC6o
-aB@b@b@b@b@b@_1	db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ        ',0
+aSETUP_BGM_BODY6 db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ        ',0
 					; DATA XREF: dseg:0ACAo
-aB@b@iKycVBfb@b	db 'Å@Å@âπäyñ≥ÇµÅFÅ@Å@ÇeÇlâπåπÇ™ñ≥Ç¢èÍçá          ',0
+aSETUP_BGM_BODY7 db 'Å@Å@âπäyñ≥ÇµÅFÅ@Å@ÇeÇlâπåπÇ™ñ≥Ç¢èÍçá          ',0
 					; DATA XREF: dseg:0ACEo
-asc_FC27	db '                                              ',0
+aSETUP_BGM_BODY8 db '                                              ',0
 					; DATA XREF: dseg:0AD2o
-aVVibavVVcvRTsv	db 'Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ¬î\Ç≈Ç∑',0
+aSETUP_TAIL	db 'Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ¬î\Ç≈Ç∑',0
 					; DATA XREF: dseg:0AD6o dseg:0AFAo
-unk_FC85	db  81h	; Å		; DATA XREF: dseg:0ADAo
-		db  40h	; @
-		db  82h	; Ç
-		db  65h	; e
-		db  82h	; Ç
-		db  6Ch	; l
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  46h	; F
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0C9h	; …
-		db  82h	; Ç
-		db  65h	; e
-		db  82h	; Ç
-		db  6Ch	; l
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0F0h	; 
-		db  8Eh	; é
-		db  67h	; g
-		db  97h	; ó
-		db  70h	; p
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0DCh	; ‹
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db    0
-unk_FCB4	db  81h	; Å		; DATA XREF: dseg:0ADEo
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  82h	; Ç
-		db  61h	; a
-		db  82h	; Ç
-		db  66h	; f
-		db  82h	; Ç
-		db  6Ch	; l
-word_FCC8	dw 0AA82h		; DATA XREF: seg000:0277r
-aGxgegmgivevl_0	db 'ÉXÉeÉåÉIÇeÇlâπåπéûêÑèßÅ@',0
-unk_FCE3	db  81h	; Å		; DATA XREF: dseg:0AE2o
-		db  40h	; @
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  69h	; i
-		db  95h	; ï
-		db  57h	; W
-		db  8Fh	; è
-		db  80h	; Ä
-		db  82h	; Ç
-		db  65h	; e
-		db  82h	; Ç
-		db  6Ch	; l
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0C5h	; ≈
-		db  82h	; Ç
-		db 0CDh	; Õ
-		db  81h	; Å
-		db  41h	; A
-		db  33h	; 3
-		db  63h	; c
-		db  68h	; h
-		db  82h	; Ç
-		db 0F0h	; 
-		db  8Eh	; é
-		db  67h	; g
-		db  97h	; ó
-		db  70h	; p
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0DCh	; ‹
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db  20h
-		db    0
-aB@B@b@b@b@VVBa	db 'Å@ Å@Å@Å@Å@ ÇÃÇ≈ÅAÇaÇfÇlÇ™ê≥èÌÇ…Ç´ÇØÇ»Ç¢Ç©Ç‡Åj',0
+aSETUP_SFX_BODY1 db 'Å@ÇeÇlâπåπÅ@ÅFå¯â âπÇ…ÇeÇlâπåπÇégópÇµÇ‹Ç∑Å@Å@',0
+					; DATA XREF: dseg:SETUP_SFX_BODYo
+aSETUP_SFX_BODY2 db 'Å@Å@Å@Å@Å@Å@Å@ÇaÇfÇlÇ™ÉXÉeÉåÉIÇeÇlâπåπéûêÑèßÅ@',0
+					; DATA XREF: dseg:0ADEo
+aSETUP_SFX_BODY3 db 'Å@ Å@ Å@Å@ÅiïWèÄÇeÇlâπåπÇ≈ÇÕÅA3chÇégópÇµÇ‹Ç∑ ',0
+					; DATA XREF: dseg:0AE2o
+aSETUP_SFX_BODY4 db 'Å@ Å@Å@Å@Å@ ÇÃÇ≈ÅAÇaÇfÇlÇ™ê≥èÌÇ…Ç´ÇØÇ»Ç¢Ç©Ç‡Åj',0
 					; DATA XREF: dseg:0AE6o
-unk_FD41	db  82h	; Ç		; DATA XREF: dseg:0AEAo
-		db  61h	; a
-		db  82h	; Ç
-		db  85h	; Ö
-		db  82h	; Ç
-		db  85h	; Ö
-		db  82h	; Ç
-		db  90h	; ê
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  81h	; Å
-		db  46h	; F
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0C9h	; …
-		db  82h	; Ç
-		db  61h	; a
-		db  82h	; Ç
-		db  85h	; Ö
-		db  82h	; Ç
-		db  85h	; Ö
-		db  82h	; Ç
-		db  90h	; ê
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0F0h	; 
-		db  8Eh	; é
-		db  67h	; g
-		db  97h	; ó
-		db  70h	; p
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0DCh	; ‹
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db    0
-aVevliMVkcVvpNz	db '              ÇeÇlâπåπÇ™ñ≥Ç¢èÍçáégópÇµÇ‹Ç∑Å@Å@',0
+aSETUP_SFX_BODY5 db 'ÇaÇÖÇÖÇêâπåπÅFå¯â âπÇ…ÇaÇÖÇÖÇêâπåπÇégópÇµÇ‹Ç∑',0
+					; DATA XREF: dseg:0AEAo
+aSETUP_SFX_BODY6 db '              ÇeÇlâπåπÇ™ñ≥Ç¢èÍçáégópÇµÇ‹Ç∑Å@Å@',0
 					; DATA XREF: dseg:0AEEo
-unk_FD9F	db  20h			; DATA XREF: dseg:0AF2o
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  96h	; ñ
-		db 0B3h	; ≥
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  20h
-		db  81h	; Å
-		db  46h	; F
-		db  89h	; â
-		db 0BDh	; Ω
-		db  82h	; Ç
-		db 0E7h	; Á
-		db  82h	; Ç
-		db 0A9h	; ©
-		db  82h	; Ç
-		db 0CCh	; Ã
-		db  8Eh	; é
-		db  96h	; ñ
-		db  8Fh	; è
-		db 0EEh	; Ó
-		db  82h	; Ç
-		db 0C5h	; ≈
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0F0h	; 
-		db  96h	; ñ
-		db 0C2h	; ¬
-		db  82h	; Ç
-		db 0E7h	; Á
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0BDh	; Ω
-		db  82h	; Ç
-		db 0ADh	; ≠
-		db    0
-aB@b@b@b@b@b@_2	db 'Å@Å@Å@Å@Å@Å@Å@ñ≥Ç¢èÍçá                        ',0
+aSETUP_SFX_BODY7 db ' å¯â âπñ≥Çµ ÅFâΩÇÁÇ©ÇÃéñèÓÇ≈å¯â âπÇñ¬ÇÁÇµÇΩÇ≠',0
+					; DATA XREF: dseg:0AF2o
+aSETUP_SFX_BODY8 db 'Å@Å@Å@Å@Å@Å@Å@ñ≥Ç¢èÍçá                        ',0
 					; DATA XREF: dseg:0AF6o
-aGxgegmgivevl_1	db 'ÉXÉeÉåÉIÇeÇlâπåπ',0
-aB@xwpavevliMB@	db 'Å@ïWèÄÇeÇlâπåπÅ@',0
-aB@b@iKycVB@b@	db 'Å@Å@âπäyñ≥ÇµÅ@Å@',0
-aB@b@vevliMB@b@	db 'Å@Å@ÇeÇlâπåπÅ@Å@',0
-aB@vavevevriMB@	db 'Å@ÇaÇÖÇÖÇêâπåπÅ@',0
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  96h	; ñ
-		db 0B3h	; ≥
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db    0
-unk_FE63	db  81h	; Å		; DATA XREF: sub_B36C+1Co
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  8Eh	; é
-		db  67h	; g
-		db  97h	; ó
-		db  70h	; p
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db  82h	; Ç
-		db 0E9h	; È
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0F0h	; 
-		db  91h	; ë
-		db  49h	; I
-		db  91h	; ë
-		db 0F0h	; 
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  89h	; â
-		db 0BAh	; ∫
-		db  82h	; Ç
-		db 0B3h	; ≥
-		db  82h	; Ç
-		db 0A2h	; ¢
-		db  82h	; Ç
-		db 0CBh	; À
-		db  81h	; Å
-		db  99h	; ô
-		db    0
-unk_FE8E	db  81h	; Å		; DATA XREF: sub_B489+1Co
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  8Ch	; å
-		db 0F8h	; ¯
-		db  89h	; â
-		db 0CAh	;  
-		db  89h	; â
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0C9h	; …
-		db  8Eh	; é
-		db  67h	; g
-		db  97h	; ó
-		db  70h	; p
-		db  82h	; Ç
-		db 0B7h	; ∑
-		db  82h	; Ç
-		db 0E9h	; È
-		db  89h	; â
-		db 0B9h	; π
-		db  8Ch	; å
-		db 0B9h	; π
-		db  82h	; Ç
-		db 0F0h	; 
-		db  91h	; ë
-		db  49h	; I
-		db  91h	; ë
-		db 0F0h	; 
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  82h	; Ç
-		db 0CBh	; À
-		db  81h	; Å
-		db  99h	; ô
-		db    0
+aSETUP_BGM_OPTION1 db 'ÉXÉeÉåÉIÇeÇlâπåπ',0 ; DATA XREF: sub_B270+1Co
+aSETUP_BGM_OPTION2 db 'Å@ïWèÄÇeÇlâπåπÅ@',0 ; DATA XREF: sub_B270+26o
+aSETUP_BGM_OPTION3 db 'Å@Å@âπäyñ≥ÇµÅ@Å@',0 ; DATA XREF: sub_B270+33o
+aSETUP_SFX_OPTION1 db 'Å@Å@ÇeÇlâπåπÅ@Å@',0 ; DATA XREF: sub_B2BF+1Eo
+aSETUP_SFX_OPTION2 db 'Å@ÇaÇÖÇÖÇêâπåπÅ@',0 ; DATA XREF: sub_B2BF+28o
+aSETUP_SFX_OPTION3 db 'Å@ å¯â âπñ≥Çµ Å@',0 ; DATA XREF: sub_B2BF+35o
+aSETUP_BGM_HEAD	db 'Å@Å@Å@Å@Å@égópÇ∑ÇÈâπåπÇëIëÇµÇƒâ∫Ç≥Ç¢ÇÀÅô',0 ; DATA XREF: sub_B36C+1Co
+aSETUP_SFX_HEAD	db 'Å@Å@Å@Å@å¯â âπÇ…égópÇ∑ÇÈâπåπÇëIëÇµÇƒÇÀÅô',0 ; DATA XREF: sub_B489+1Co
 aMswin_bft	db 'mswin.bft',0        ; DATA XREF: sub_B5A6+Fo
 aMs_pi		db 'ms.pi',0            ; DATA XREF: sub_B5A6+20o
 		align 2
