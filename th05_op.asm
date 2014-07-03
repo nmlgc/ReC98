@@ -27132,7 +27132,7 @@ loc_BF05:				; CODE XREF: sub_BE79+79j
 		mov	[bp+var_5], 3
 
 loc_BF14:				; CODE XREF: sub_BE79+95j
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		imul	bx, 78h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -27193,23 +27193,23 @@ loc_BF66:				; CODE XREF: sub_BF4D+15j
 		inc	si
 
 loc_BF6B:				; CODE XREF: sub_BF4D+6j
-		mov	ax, word_1403E
+		mov	ax, musicroom_trackcount
 		add	ax, 2
 		cmp	ax, si
 		jg	short loc_BF55
 		push	large 0C0050h
 		push	5
-		push	large [off_FFAE]
+		push	large [MUSICROOM_UP]
 		call	far ptr	loc_D436
 		push	large 0C0120h
 		push	5
-		push	large [off_FFB2]
+		push	large [MUSICROOM_DOWN]
 		call	far ptr	loc_D436
 		push	large 0C0020h
 		push	3
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		shl	bx, 2
-		push	large dword ptr	[bx+0FDAh]
+		push	large dword ptr	MUSICROOM_GAME[bx]
 		call	far ptr	loc_D436
 		pop	si
 		pop	bp
@@ -27608,7 +27608,7 @@ arg_0		= word ptr  4
 		mov	word ptr [bp+var_4], 27ECh
 		les	bx, [bp+var_4]
 		assume es:nothing
-		mov	al, byte ptr word_1047E
+		mov	al, byte ptr musicroom_game_id
 		add	al, 30h	; '0'
 		mov	es:[bx+6], al
 		push	word ptr [bp+var_4+2]
@@ -27841,10 +27841,10 @@ var_1		= byte ptr -1
 		mov	word_1403A, 0
 		mov	word_1403C, 0
 		mov	byte ptr word_13E94, 0
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		add	bx, bx
 		mov	ax, [bx+14A0h]
-		mov	word_1403E, ax
+		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
 		call	sub_E2CA
 		call	sub_20FE
@@ -27954,12 +27954,12 @@ loc_C5AE:				; CODE XREF: sub_C490+115j
 ; ---------------------------------------------------------------------------
 
 loc_C5D5:				; CODE XREF: sub_C490+106j
-		mov	al, byte ptr word_1403E
+		mov	al, byte ptr musicroom_trackcount
 		mov	byte ptr word_13E94, al
-		mov	ax, word_1403E
+		mov	ax, musicroom_trackcount
 		add	ax, 0FFF5h
 		mov	word_1403A, ax
-		push	word_1403E
+		push	musicroom_trackcount
 		call	sub_C441
 
 loc_C5EB:				; CODE XREF: sub_C490+F9j
@@ -27969,7 +27969,7 @@ loc_C5EB:				; CODE XREF: sub_C490+F9j
 		mov	al, byte ptr word_13E94
 		mov	[bp+var_1], al
 		mov	ah, 0
-		cmp	ax, word_1403E
+		cmp	ax, musicroom_trackcount
 		jge	short loc_C652
 		inc	byte ptr word_13E94
 		mov	al, byte ptr word_13E94
@@ -28020,37 +28020,37 @@ loc_C666:				; CODE XREF: sub_C490+160j
 					; sub_C490+1C0j
 		test	byte ptr word_12A72, 4
 		jz	short loc_C680
-		dec	word_1047E
-		cmp	word_1047E, 0
+		dec	musicroom_game_id
+		cmp	musicroom_game_id, 0
 		jge	short loc_C698
-		mov	word_1047E, 4
+		mov	musicroom_game_id, 4
 		jmp	short loc_C698
 ; ---------------------------------------------------------------------------
 
 loc_C680:				; CODE XREF: sub_C490+1DBj
 		test	byte ptr word_12A72, 8
 		jz	short loc_C6E3
-		inc	word_1047E
-		cmp	word_1047E, 5
+		inc	musicroom_game_id
+		cmp	musicroom_game_id, 5
 		jl	short loc_C698
-		mov	word_1047E, 0
+		mov	musicroom_game_id, 0
 
 loc_C698:				; CODE XREF: sub_C490+1E6j
 					; sub_C490+1EEj ...
 		mov	byte ptr word_13E94, 0
 		mov	word_1403C, 0
 		mov	word_1403A, 0
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		add	bx, bx
 		mov	ax, [bx+14A0h]
-		mov	word_1403E, ax
+		mov	musicroom_trackcount, ax
 		push	0
 		call	sub_C441
 		push	220h
 		call	sub_DC76
 		push	0
 		call	sub_C3F9
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		imul	bx, 78h
 		push	large dword ptr	[bx+1246h]
 		push	600h
@@ -28068,7 +28068,7 @@ loc_C6E3:				; CODE XREF: sub_C490+198j
 loc_C6F1:				; CODE XREF: sub_C490+258j
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
-		cmp	ax, word_1403E
+		cmp	ax, musicroom_trackcount
 		jz	loc_C77F
 		push	220h
 		call	sub_DC76
@@ -28094,7 +28094,7 @@ loc_C6F1:				; CODE XREF: sub_C490+258j
 		mov	ah, 0
 		push	ax
 		call	sub_C3F9
-		mov	bx, word_1047E
+		mov	bx, musicroom_game_id
 		imul	bx, 78h
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
@@ -35823,7 +35823,6 @@ aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA         ',0
 aB@b@b@b@b@b@_0	db 'Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉYÉÄâπåπ',0
 					; DATA XREF: dseg:0ABEo
 aB@xwpavevliMBf	db 'Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å[Éh     ',0
-					; DATA XREF: dseg:0AC2o
 aPc9801dausvUrs	db '                  PC-9801DAìôÇ…ì‡ë†ÇÃâπåπÇ»Ç« ',0
 					; DATA XREF: dseg:0AC6o
 aB@b@b@b@b@b@_1	db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ        ',0
@@ -36198,280 +36197,166 @@ aOp2g_pi	db 'op2g.pi',0          ; DATA XREF: sub_BC8D+55o
 aOp2h_pi	db 'op2h.pi',0          ; DATA XREF: sub_BC8D+60o
 aOp_0		db 'op',0               ; DATA XREF: sub_BC8D+149o
 aOp1_pi_0	db 'op1.pi',0           ; DATA XREF: sub_BC8D+15Eo
-off_FFAE	dd aBg			; DATA XREF: sub_BF4D+30r
+MUSICROOM_UP	dd aMUSICROOM_UP			; DATA XREF: sub_BF4D+30r
 					; "		------ Å£ ------       "
-off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
+MUSICROOM_DOWN	dd aMUSICROOM_DOWN			; DATA XREF: sub_BF4D+42r
 					; "		------ Å• ------       "
 		dd asc_104D5		; "		----------------       "
-		dd unk_104FA
-		dd unk_1051F
-		dd unk_10544
-		dd unk_10569
-		dd unk_1058E
-		dd aNo_1ASacredLot	; "No.1		  A Sacred Lot	       "
-		dd aNo_2IiiuvIPc	; "No.2		   âiâìÇÃõﬁèó	       "
-		dd aNo_3ThePositiv	; "No.3	   The Positive	and Negative   "
-		dd aNo_4HighlyResp	; "No.4	  Highly Responsive to Prayers "
-		dd unk_10647
-		dd aNo_6UvoguRr		; "No.6		    ìVégì`ê‡	       "
-		dd aNo_7OrientalMa	; "No.7	       Oriental	Magician       "
-		dd aNo_8FjoVPmsUb	; "No.8		  îjé◊ÇÃè¨ëæìÅ	       "
-		dd aNo_9Cvl		; "No.9		      ñÇãæ	       "
-		dd aNo_10TheLegend	; "No.10       the Legend of KAGE      "
-		dd aNo_11VvvBauVRV	; "No.11    Ç¢Ç¥ÅAì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈   "
-		dd aNo_12Civilizat	; "No.12      Civilization of Magic    "
-		dd aNo_13Rpchuvog	; "No.13	    êØóHìVég	       "
-		dd aNo_14Gagcgkgx	; "No.14	    ÉAÉCÉäÉX	       "
-		dd aGGcggglvCVs		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		dd unk_107DE
-		dd aNo_2B@Focab@bE	; "No.2	     Å@	îéóÌÅ@Å`Eastern	Wind   "
-		dd aNo_3B@SheSInAT	; "No.3	     Å@	 She's in a temper!!   "
-		dd aNo_4B@EndOfDay	; "No.4	     Å@	  End of DaylightÅ@    "
-		dd aNo_5B@B@VtvVVV	; "No.5	     Å@	 Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@   "
-		dd aNo_6B@b@b@b@b@	; "No.6	     Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@  "
-		dd unk_108BC
-		dd aNo_8VVrvivmbav	; "No.8	     Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶  "
-		dd unk_10906
-		dd unk_1092B
-		dd aNo_11CompleteD	; "No.11	 Complete Darkness     "
-		dd aNo_12B@Ggglgxg	; "No.12	Å@ ÉGÉLÉXÉgÉâÉâÉu      "
-		dd aNo_13RaoVVVVVV	; "No.13	êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ   "
-		dd aNo_14B@b@iucVR	; "No.14	  Å@Å@âìñÏÇÃêXÅ@Å@Å@   "
-		dd unk_109E4
-		dd aCvogcp_1Focar_	; "ñ¢égóp.1	    îéóÌê_é–ã´ì‡       "
-		dd aCvogcp_2B@czco	; "ñ¢égóp.2	    Å@ózóéÇøÇƒ	Å@     "
-		dd aCvogcp_3B@xxcv	; "ñ¢égóp.3	    Å@ïïñÇèIââ	Å@     "
-		dd aGGcggglvCVs		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		dd unk_10A78
-		dd aNo_2B@B@Select	; "No.2	     Å@	Å@ Selection	       "
-		dd unk_10AC2
-		dd aNo_4Reincarnat	; "No.4		 Reincarnation	       "
-		dd aNo_5Dim_Dream	; "No.5		   Dim.	Dream	       "
-		dd unk_10B31
-		dd aNo_7B@Maniacal	; "No.7	    Å@	Maniacal Princess      "
-		dd aNo_8CPOBLostDr	; "No.8	       ñ≤è¡é∏  Å`Lost Dream    "
-		dd aNo_9CMCvlyBDre	; "No.9	      ñ≤å∂óVãY	Å`Dream	War    "
-		dd aNo_10Cvc@mirab	; "No.10    ñÇñ@åàêÌÅIÅ`Fight it out!  "
-		dd aNo_11B@SailorO	; "No.11      Å@ Sailor	of Time	       "
-		dd aNo_12Strawberr	; "No.12       Strawberry Crisis!!     "
-		dd unk_10C34
-		dd aNo_14B@cvc@pri	; "No.14	  Å@ñÇñ@è‡à§	       "
-		dd aNo_15B@lviuvC	; "No.15	  Å@ãvâìÇÃñ≤	       "
-		dd unk_10CA3
-		dd aNo_17IiiuvCumo	; "No.17	   âiâìÇÃñûåé	       "
-		dd aNo_18MapleDrea	; "No.18	 Maple Dream...	       "
-		dd unk_10D12
-		dd aNo_20Pqcsgfgv	; "No.20	    èüóòÉfÉÇ	       "
-		dd aNo_21GqbGagibG	; "No.21	 ÉQÅ[ÉÄÉIÅ[ÉoÅ[	       "
-		dd aCvogcp_1OuvXc	; "ñ¢égóp.1	     éûÇÃïó	       "
-		dd aCvogcp_2GxgBGG	; "ñ¢égóp.2	ÉXÉ^Å[É{ÉEÉhÉäÅ[ÉÄ     "
-		dd aCvogcp_3Phanta	; "ñ¢égóp.3	  Phantasmagoria       "
-		dd aGGcggglvCVs_0	; "		 É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		dd aNo_1MSzlBLotus	; "No.1	   å∂ëzãΩ  Å` Lotus Land Story "
-		dd aNo_2WitchingDr	; "No.2		 Witching Dream	       "
-		dd aNo_3SeleneSLig	; "No.3		 Selene's light        "
-		dd unk_10E84
-		dd aNo_5BreakTheSa	; "No.5		Break the Sabbath      "
-		dd aNo_6NglLBScarl	; "No.6	   çgãøã»  Å` Scarlet Phoneme  "
-		dd aNo_7BadApple	; "No.7		   Bad Apple!!	       "
-		dd aNo_8CRab@bPerd	; "No.8	    óÏêÌÅ@Å` Perdition crisis  "
-		dd aNo_9GagkgxgGgg	; "No.9		ÉAÉäÉXÉ}ÉGÉXÉeÉâ       "
-		dd aNo_10Pnpcuyszl	; "No.10    è≠èó„Yëzã»Å@Å` Capriccio   "
-		dd aNo_11RpvKab@bC	; "No.11   êØÇÃäÌÅ@Å` Casket of	Star   "
-		dd aNo_12LotusLove	; "No.12	   Lotus Love	       "
-		dd aNo_13CVVslXBSl	; "No.13  ñ∞ÇÍÇÈã∞ï| Å`Sleeping	Terror "
-		dd aNo_14DreamLand	; "No.14	   Dream Land	       "
-		dd aNo_15ChcB@bIna	; "No.15    óHñ≤Å@Å` Inanimate Dream   "
-		dd unk_11040
-		dd aNo_17GbgcghmSz	; "No.17  ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic "
-		dd aNo_18Vivavvvvi	; "No.18   Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence  "
-		dd aNo_19Days		; "No.19	      Days	       "
-		dd aNo_20Peaceful	; "No.20	    Peaceful	       "
-		dd aNo_21ArcadianD	; "No.21	 Arcadian Dream	       "
-		dd aNo_22MSzvPzrl	; "No.22	   å∂ëzÇÃèZêl	       "
-		dd aCvogcp_1LotusR	; "ñ¢égóp.1	   Lotus Road	       "
-		dd aCvogcp_2Dreamy	; "ñ¢égóp.2	  Dreamy pilot	       "
-		dd aCvogcp_3Incomp	; "ñ¢égóp.3	 Incomplete Plot       "
-		dd aCvogcp_4Border	; "ñ¢égóp.4	   Border Land	       "
-		dd aCvogcp_5MagicS	; "ñ¢égóp.5   Magic Shop of Raspberry  "
-		dd aCvogcp_6Cresce	; "ñ¢égóp.6	  Crescent Dream       "
-		dd aGGcggglvCVs		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
-		db    0
-		db    0
-		db    0
-		db    0
-		dd unk_11221
-		dd aNo_2DreamExpre	; "No.2		  Dream	Express	       "
-		dd aNo_3Cvc@rwb@bM	; "No.3	     ñÇñ@êwÅ@Å`	Magic Square   "
-		dd unk_11290
-		dd aNo_5CUvb@bSpir	; "No.5	    óÏìVÅ@Å` Spiritual Heaven  "
-		dd aNo_6RomanticCh	; "No.6		Romantic Children      "
-		dd aNo_7GvgigxgGbg	; "No.7	      ÉvÉâÉXÉ`ÉbÉNÉ}ÉCÉìÉh     "
-		dd aNo_8Gbgcgvglgp	; "No.8		 ÉÅÉCÉvÉãÉèÉCÉY	       "
-		dd aNo_9LTfvCvc@BF	; "No.9	 ã÷ífÇÃñÇñ@  Å`	Forbidden Magic"
-		dd aNo_10RNgvPnpcb	; "No.10  ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!"
-		dd aNo_11CarVsvPnp	; "No.11  ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss  "
-		dd aNo_12TheLastJu	; "No.12       the Last	Judgement      "
-		dd aNo_13FVVlrlmB@	; "No.13  îﬂÇµÇ´êlå`Å@Å` Doll of Misery"
-		dd aNo_14RvkevIVB@	; "No.14   ê¢äEÇÃâ ÇƒÅ@Å` World's End  "
-		dd aNo_15R_sbmSzb@	; "No.15   ê_òbå∂ëzÅ@Å`	Infinite Being "
-		dd aNo_16XsovlcvNs	; "No.16       ïsévãcÇÃçëÇÃÉAÉäÉX      "
-		dd aNo_17TheGrimoi	; "No.17     the Grimoire of Alice     "
-		dd aNo_18R_o		; "No.18	      ê_é–	       "
-		dd aNo_19Endless	; "No.19	    Endless	       "
-		dd aNo_20LviuvKyia	; "No.20	  ãvâìÇÃäyâÄ	       "
-		dd aNo_21MysticDre	; "No.21	 Mystic	Dream	       "
-		dd aNo_22PeacefulR	; "No.22       Peaceful	Romancer       "
-		dd aNo_23NVLxvcvPk	; "No.23	 ç∞ÇÃãxÇÁÇﬁèä	       "
-		dd aGGcggglvCVs		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+MUSICROOM_GAME		dd aMUSICROOM_TH01
+		dd aMUSICROOM_TH02
+		dd aMUSICROOM_TH03
+		dd aMUSICROOM_TH04
+		dd aMUSICROOM_TH05
+		dd aTH01_01	; "No.1		  A Sacred Lot	       "
+		dd aTH01_02	; "No.2		   âiâìÇÃõﬁèó	       "
+		dd aTH01_03	; "No.3	   The Positive	and Negative   "
+		dd aTH01_04	; "No.4	  Highly Responsive to Prayers "
+		dd aTH01_05
+		dd aTH01_06		; "No.6		    ìVégì`ê‡	       "
+		dd aTH01_07	; "No.7	       Oriental	Magician       "
+		dd aTH01_08	; "No.8		  îjé◊ÇÃè¨ëæìÅ	       "
+		dd aTH01_09		; "No.9		      ñÇãæ	       "
+		dd aTH01_10	; "No.10       the Legend of KAGE      "
+		dd aTH01_11	; "No.11    Ç¢Ç¥ÅAì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈   "
+		dd aTH01_12	; "No.12      Civilization of Magic    "
+		dd aTH01_13	; "No.13	    êØóHìVég	       "
+		dd aTH01_14	; "No.14	    ÉAÉCÉäÉX	       "
+		dd aMUSICROOM_QUIT1		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd aTH02_01
+		dd aTH02_02	; "No.2	     Å@	îéóÌÅ@Å`Eastern	Wind   "
+		dd aTH02_03	; "No.3	     Å@	 She's in a temper!!   "
+		dd aTH02_04	; "No.4	     Å@	  End of DaylightÅ@    "
+		dd aTH02_05	; "No.5	     Å@	 Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@   "
+		dd aTH02_06	; "No.6	     Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@  "
+		dd aTH02_07
+		dd aTH02_08	; "No.8	     Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶  "
+		dd aTH02_09
+		dd aTH02_10
+		dd aTH02_11	; "No.11	 Complete Darkness     "
+		dd aTH02_12	; "No.12	Å@ ÉGÉLÉXÉgÉâÉâÉu      "
+		dd aTH02_13	; "No.13	êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ   "
+		dd aTH02_14	; "No.14	  Å@Å@âìñÏÇÃêXÅ@Å@Å@   "
+		dd aTH02_15
+		dd aTH02_16	; "ñ¢égóp.1	    îéóÌê_é–ã´ì‡       "
+		dd aTH02_17	; "ñ¢égóp.2	    Å@ózóéÇøÇƒ	Å@     "
+		dd aTH02_18	; "ñ¢égóp.3	    Å@ïïñÇèIââ	Å@     "
+		dd aMUSICROOM_QUIT1		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd aTH03_01
+		dd aTH03_02	; "No.2	     Å@	Å@ Selection	       "
+		dd aTH03_03
+		dd aTH03_04	; "No.4		 Reincarnation	       "
+		dd aTH03_05	; "No.5		   Dim.	Dream	       "
+		dd aTH03_06
+		dd aTH03_07	; "No.7	    Å@	Maniacal Princess      "
+		dd aTH03_08	; "No.8	       ñ≤è¡é∏  Å`Lost Dream    "
+		dd aTH03_09	; "No.9	      ñ≤å∂óVãY	Å`Dream	War    "
+		dd aTH03_10	; "No.10    ñÇñ@åàêÌÅIÅ`Fight it out!  "
+		dd aTH03_11	; "No.11      Å@ Sailor	of Time	       "
+		dd aTH03_12	; "No.12       Strawberry Crisis!!     "
+		dd aTH03_13
+		dd aTH03_14	; "No.14	  Å@ñÇñ@è‡à§	       "
+		dd aTH03_15	; "No.15	  Å@ãvâìÇÃñ≤	       "
+		dd aTH03_16
+		dd aTH03_17	; "No.17	   âiâìÇÃñûåé	       "
+		dd aTH03_18	; "No.18	 Maple Dream...	       "
+		dd aTH03_19
+		dd aTH03_20	; "No.20	    èüóòÉfÉÇ	       "
+		dd aTH03_21	; "No.21	 ÉQÅ[ÉÄÉIÅ[ÉoÅ[	       "
+		dd aTH03_22	; "ñ¢égóp.1	     éûÇÃïó	       "
+		dd aTH03_23	; "ñ¢égóp.2	ÉXÉ^Å[É{ÉEÉhÉäÅ[ÉÄ     "
+		dd aTH03_24	; "ñ¢égóp.3	  Phantasmagoria       "
+		dd aMUSICROOM_QUIT2	; "		 É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd aTH04_01	; "No.1	   å∂ëzãΩ  Å` Lotus Land Story "
+		dd aTH04_02	; "No.2		 Witching Dream	       "
+		dd aTH04_03	; "No.3		 Selene's light        "
+		dd aTH04_04
+		dd aTH04_05	; "No.5		Break the Sabbath      "
+		dd aTH04_06	; "No.6	   çgãøã»  Å` Scarlet Phoneme  "
+		dd aTH04_07	; "No.7		   Bad Apple!!	       "
+		dd aTH04_08	; "No.8	    óÏêÌÅ@Å` Perdition crisis  "
+		dd aTH04_09	; "No.9		ÉAÉäÉXÉ}ÉGÉXÉeÉâ       "
+		dd aTH04_10	; "No.10    è≠èó„Yëzã»Å@Å` Capriccio   "
+		dd aTH04_11	; "No.11   êØÇÃäÌÅ@Å` Casket of	Star   "
+		dd aTH04_12	; "No.12	   Lotus Love	       "
+		dd aTH04_13	; "No.13  ñ∞ÇÍÇÈã∞ï| Å`Sleeping	Terror "
+		dd aTH04_14	; "No.14	   Dream Land	       "
+		dd aTH04_15	; "No.15    óHñ≤Å@Å` Inanimate Dream   "
+		dd aTH04_16
+		dd aTH04_17	; "No.17  ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic "
+		dd aTH04_18	; "No.18   Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence  "
+		dd aTH04_19		; "No.19	      Days	       "
+		dd aTH04_20	; "No.20	    Peaceful	       "
+		dd aTH04_21	; "No.21	 Arcadian Dream	       "
+		dd aTH04_22	; "No.22	   å∂ëzÇÃèZêl	       "
+		dd aTH04_23	; "ñ¢égóp.1	   Lotus Road	       "
+		dd aTH04_24	; "ñ¢égóp.2	  Dreamy pilot	       "
+		dd aTH04_25	; "ñ¢égóp.3	 Incomplete Plot       "
+		dd aTH04_26	; "ñ¢égóp.4	   Border Land	       "
+		dd aTH04_27	; "ñ¢égóp.5   Magic Shop of Raspberry  "
+		dd aTH04_28	; "ñ¢égóp.6	  Crescent Dream       "
+		dd aMUSICROOM_QUIT1		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
+		dd    0
+		dd aTH05_01
+		dd aTH05_02	; "No.2		  Dream	Express	       "
+		dd aTH05_03	; "No.3	     ñÇñ@êwÅ@Å`	Magic Square   "
+		dd aTH05_04
+		dd aTH05_05	; "No.5	    óÏìVÅ@Å` Spiritual Heaven  "
+		dd aTH05_06	; "No.6		Romantic Children      "
+		dd aTH05_07	; "No.7	      ÉvÉâÉXÉ`ÉbÉNÉ}ÉCÉìÉh     "
+		dd aTH05_08	; "No.8		 ÉÅÉCÉvÉãÉèÉCÉY	       "
+		dd aTH05_09	; "No.9	 ã÷ífÇÃñÇñ@  Å`	Forbidden Magic"
+		dd aTH05_10	; "No.10  ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!"
+		dd aTH05_11	; "No.11  ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss  "
+		dd aTH05_12	; "No.12       the Last	Judgement      "
+		dd aTH05_13	; "No.13  îﬂÇµÇ´êlå`Å@Å` Doll of Misery"
+		dd aTH05_14	; "No.14   ê¢äEÇÃâ ÇƒÅ@Å` World's End  "
+		dd aTH05_15	; "No.15   ê_òbå∂ëzÅ@Å`	Infinite Being "
+		dd aTH05_16	; "No.16       ïsévãcÇÃçëÇÃÉAÉäÉX      "
+		dd aTH05_17	; "No.17     the Grimoire of Alice     "
+		dd aTH05_18	; "No.18	      ê_é–	       "
+		dd aTH05_19	; "No.19	    Endless	       "
+		dd aTH05_20	; "No.20	  ãvâìÇÃäyâÄ	       "
+		dd aTH05_21	; "No.21	 Mystic	Dream	       "
+		dd aTH05_22	; "No.22       Peaceful	Romancer       "
+		dd aTH05_23	; "No.23	 ç∞ÇÃãxÇÁÇﬁèä	       "
+		dd aMUSICROOM_QUIT1		; "	       É^ÉCÉgÉãÇ…ñﬂÇÈ	       "
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
 		dd aR_00		; "r_00"
 		dd aR_01		; "r_01"
 		dd aR_02		; "r_02"
@@ -36486,70 +36371,22 @@ off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
 		dd aR_11		; "r_11"
 		dd aR_12		; "r_12"
 		dd aR_13		; "r_13"
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
 		dd aH_op		; "h_op"
 		dd aH_st00		; "h_st00"
 		dd aH_st00b		; "h_st00b"
@@ -36568,54 +36405,18 @@ off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
 		dd aH_ng00		; "h_ng00"
 		dd aH_ng01		; "h_ng01"
 		dd aH_ng02		; "h_ng02"
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
 		dd aY_op		; "y_op"
 		dd aY_select		; "y_select"
 		dd aY_00mm		; "y_00mm"
@@ -36640,30 +36441,12 @@ off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
 		dd aY_ng00		; "y_ng00"
 		dd aY_ng01		; "y_ng01"
 		dd aY_ng02		; "y_ng02"
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
 		dd aG_op		; "g_op"
 		dd aG_st00		; "g_st00"
 		dd aG_st10		; "g_st10"
@@ -36692,14 +36475,8 @@ off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
 		dd aG_ng03		; "g_ng03"
 		dd aG_ng04		; "g_ng04"
 		dd aG_ng05		; "g_ng05"
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd    0
+		dd    0
 		dd aH_op+2
 		dd aH_st00+2
 		dd aH_st00b+2
@@ -36723,921 +36500,135 @@ off_FFB2	dd aBe			; DATA XREF: sub_BF4D+42r
 		dd aH_staff+2
 		dd aExed		; "exed"
 		dd aG_name+2
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_1047E	dw 4			; DATA XREF: sub_BE79:loc_BF14r
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+		dd    0
+musicroom_game_id	dw 4			; DATA XREF: sub_BE79:loc_BF14r
 					; sub_BF4D+54r	...
-		db  0Eh
-		db    0
-		db  12h
-		db    0
-		db  18h
-		db    0
-		db  1Ch
-		db    0
-		db  17h
-		db    0
+MUSICROOM_TRACKCOUNTS dw 14,18,24,28,23
 byte_1048A	db 0			; DATA XREF: sub_C09D+4r sub_C09D+AAw
-aBg		db '             ------ Å£ ------       ',0 ; DATA XREF: dseg:off_FFAEo
-aBe		db '             ------ Å• ------       ',0 ; DATA XREF: dseg:off_FFB2o
+aMUSICROOM_UP		db '             ------ Å£ ------       ',0 ; DATA XREF: dseg:off_FFAEo
+aMUSICROOM_DOWN		db '             ------ Å• ------       ',0 ; DATA XREF: dseg:off_FFB2o
 asc_104D5	db '             ----------------       ',0 ; DATA XREF: dseg:0FD6o
-unk_104FA	db  20h			; DATA XREF: dseg:0FDAo
-		db  20h
-		db  20h
-		db  91h	; ë
-		db 0E6h	; Ê
-		db  82h	; Ç
-		db  50h	; P
-		db  92h	; í
-		db  65h	; e
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db 0E8h	; Ë
-		db 0CBh	; À
-		db  88h	; à
-		db 0D9h	; Ÿ
-		db  93h	; ì
-		db  60h	; `
-		db  20h
-		db  20h
-		db  41h	; A
-		db  72h	; r
-		db  72h	; r
-		db  61h	; a
-		db  6Eh	; n
-		db  67h	; g
-		db  65h	; e
-		db  20h
-		db  76h	; v
-		db  65h	; e
-		db  72h	; r
-		db  20h
-		db  20h
-		db    0
-unk_1051F	db  20h			; DATA XREF: dseg:0FDEo
-		db  20h
-		db  20h
-		db  91h	; ë
-		db 0E6h	; Ê
-		db  82h	; Ç
-		db  51h	; Q
-		db  92h	; í
-		db  65h	; e
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  95h	; ï
-		db  95h	; ï
-		db  96h	; ñ
-		db  82h	; Ç
-		db  98h	; ò
-		db  5Eh	; ^
-		db  20h
-		db  20h
-		db  53h	; S
-		db  70h	; p
-		db  65h	; e
-		db  63h	; c
-		db  69h	; i
-		db  61h	; a
-		db  6Ch	; l
-		db  20h
-		db  4Dh	; M
-		db  49h	; I
-		db  58h	; X
-		db  20h
-		db  20h
-		db    0
-unk_10544	db  20h			; DATA XREF: dseg:0FE2o
-		db  20h
-		db  20h
-		db  91h	; ë
-		db 0E6h	; Ê
-		db  82h	; Ç
-		db  52h	; R
-		db  92h	; í
-		db  65h	; e
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  96h	; ñ
-		db 0B2h	; ≤
-		db  8Eh	; é
-		db  9Eh	; û
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  20h
-		db  20h
-		db  53h	; S
-		db  70h	; p
-		db  65h	; e
-		db  63h	; c
-		db  69h	; i
-		db  61h	; a
-		db  6Ch	; l
-		db  20h
-		db  4Dh	; M
-		db  49h	; I
-		db  58h	; X
-		db  20h
-		db  20h
-		db    0
-unk_10569	db  20h			; DATA XREF: dseg:0FE6o
-		db  20h
-		db  20h
-		db  91h	; ë
-		db 0E6h	; Ê
-		db  82h	; Ç
-		db  53h	; S
-		db  92h	; í
-		db  65h	; e
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  8Ch	; å
-		db 0B6h	; ∂
-		db  91h	; ë
-		db  7Ah	; z
-		db  8Bh	; ã
-		db 0BDh	; Ω
-		db  20h
-		db  20h
-		db  53h	; S
-		db  70h	; p
-		db  65h	; e
-		db  63h	; c
-		db  69h	; i
-		db  61h	; a
-		db  6Ch	; l
-		db  20h
-		db  4Dh	; M
-		db  49h	; I
-		db  58h	; X
-		db  20h
-		db  20h
-		db    0
-unk_1058E	db  20h			; DATA XREF: dseg:0FEAo
-		db  20h
-		db  20h
-		db  91h	; ë
-		db 0E6h	; Ê
-		db  82h	; Ç
-		db  54h	; T
-		db  92h	; í
-		db  65h	; e
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  89h	; â
-		db 0F6h	; ˆ
-		db 0E3h	; „
-		db  59h	; Y
-		db  92h	; í
-		db  6Bh	; k
-		db  20h
-		db  4Dh	; M
-		db  79h	; y
-		db  73h	; s
-		db  74h	; t
-		db  69h	; i
-		db  63h	; c
-		db  53h	; S
-		db  71h	; q
-		db  75h	; u
-		db  61h	; a
-		db  72h	; r
-		db  65h	; e
-		db  20h
-		db  20h
-		db    0
-aNo_1ASacredLot	db 'No.1           A Sacred Lot         ',0 ; DATA XREF: dseg:0FEEo
-aNo_2IiiuvIPc	db 'No.2            âiâìÇÃõﬁèó          ',0 ; DATA XREF: dseg:0FF2o
-aNo_3ThePositiv	db 'No.3    The Positive and Negative   ',0 ; DATA XREF: dseg:0FF6o
-aNo_4HighlyResp	db 'No.4   Highly Responsive to Prayers ',0 ; DATA XREF: dseg:0FFAo
-unk_10647	db  4Eh	; N		; DATA XREF: dseg:0FFEo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  35h	; 5
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  89h	; â
-		db 0F6h	; ˆ
-		db  8Ah	; ä
-		db 0EFh	; Ô
-		db  92h	; í
-		db  6Bh	; k
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_6UvoguRr	db 'No.6             ìVégì`ê‡           ',0 ; DATA XREF: dseg:1002o
-aNo_7OrientalMa	db 'No.7        Oriental Magician       ',0 ; DATA XREF: dseg:1006o
-aNo_8FjoVPmsUb	db 'No.8           îjé◊ÇÃè¨ëæìÅ         ',0 ; DATA XREF: dseg:100Ao
-aNo_9Cvl	db 'No.9               ñÇãæ             ',0 ; DATA XREF: dseg:100Eo
-aNo_10TheLegend	db 'No.10       the Legend of KAGE      ',0 ; DATA XREF: dseg:1012o
-aNo_11VvvBauVRV	db 'No.11    Ç¢Ç¥ÅAì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈   ',0 ; DATA XREF: dseg:1016o
-aNo_12Civilizat	db 'No.12      Civilization of Magic    ',0 ; DATA XREF: dseg:101Ao
-aNo_13Rpchuvog	db 'No.13            êØóHìVég           ',0 ; DATA XREF: dseg:101Eo
-aNo_14Gagcgkgx	db 'No.14            ÉAÉCÉäÉX           ',0 ; DATA XREF: dseg:1022o
-aGGcggglvCVs	db '            É^ÉCÉgÉãÇ…ñﬂÇÈ          ',0 ; DATA XREF: dseg:1026o
+aMUSICROOM_TH01	db '   ëÊÇPíeÅ@ìåï˚ËÀàŸì`  Arrange ver  ',0 ; DATA XREF: dseg:off_FFBAo
+aMUSICROOM_TH02	db '   ëÊÇQíeÅ@ìåï˚ïïñÇò^  Special MIX  ',0 ; DATA XREF: dseg:0FDEo
+aMUSICROOM_TH03	db '   ëÊÇRíeÅ@ìåï˚ñ≤éûãÛ  Special MIX  ',0 ; DATA XREF: dseg:0FE2o
+aMUSICROOM_TH04	db '   ëÊÇSíeÅ@ìåï˚å∂ëzãΩ  Special MIX  ',0 ; DATA XREF: dseg:0FE6o
+aMUSICROOM_TH05	db '   ëÊÇTíeÅ@ìåï˚âˆ„Yík MysticSquare  ',0 ; DATA XREF: dseg:0FEAo
+aTH01_01	db 'No.1           A Sacred Lot         ',0 ; DATA XREF: dseg:off_FFCEo
+aTH01_02	db 'No.2            âiâìÇÃõﬁèó          ',0 ; DATA XREF: dseg:0FF2o
+aTH01_03	db 'No.3    The Positive and Negative   ',0 ; DATA XREF: dseg:0FF6o
+aTH01_04	db 'No.4   Highly Responsive to Prayers ',0 ; DATA XREF: dseg:0FFAo
+aTH01_05	db 'No.5            ìåï˚âˆäÔík          ',0 ; DATA XREF: dseg:0FFEo
+aTH01_06	db 'No.6             ìVégì`ê‡           ',0 ; DATA XREF: dseg:1002o
+aTH01_07	db 'No.7        Oriental Magician       ',0 ; DATA XREF: dseg:1006o
+aTH01_08	db 'No.8           îjé◊ÇÃè¨ëæìÅ         ',0 ; DATA XREF: dseg:100Ao
+aTH01_09	db 'No.9               ñÇãæ             ',0 ; DATA XREF: dseg:100Eo
+aTH01_10	db 'No.10       the Legend of KAGE      ',0 ; DATA XREF: dseg:1012o
+aTH01_11	db 'No.11    Ç¢Ç¥ÅAì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈   ',0 ; DATA XREF: dseg:1016o
+aTH01_12	db 'No.12      Civilization of Magic    ',0 ; DATA XREF: dseg:101Ao
+aTH01_13	db 'No.13            êØóHìVég           ',0 ; DATA XREF: dseg:101Eo
+aTH01_14	db 'No.14            ÉAÉCÉäÉX           ',0 ; DATA XREF: dseg:1022o
+aMUSICROOM_QUIT1	db '            É^ÉCÉgÉãÇ…ñﬂÇÈ          ',0 ; DATA XREF: dseg:1026o
 					; dseg:10AEo ...
-unk_107DE	db  4Eh	; N		; DATA XREF: dseg:1066o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  95h	; ï
-		db  95h	; ï
-		db  96h	; ñ
-		db  82h	; Ç
-		db  98h	; ò
-		db  5Eh	; ^
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  60h	; `
-		db  8Fh	; è
-		db 0F2h	; Ú
-		db  93h	; ì
-		db  79h	; y
-		db  99h	; ô
-		db 0D6h	; ÷
-		db 0E4h	; ‰
-		db 0B6h	; ∂
-		db  97h	; ó
-		db  85h	; Ö
-		db  20h
-		db  20h
-		db    0
-aNo_2B@Focab@bE	db 'No.2      Å@ îéóÌÅ@Å`Eastern Wind   ',0 ; DATA XREF: dseg:106Ao
-aNo_3B@SheSInAT	db 'No.3      Å@  She',27h,'s in a temper!!   ',0 ; DATA XREF: dseg:106Eo
-aNo_4B@EndOfDay	db 'No.4      Å@   End of DaylightÅ@    ',0 ; DATA XREF: dseg:1072o
-aNo_5B@B@VtvVVV	db 'No.5      Å@  Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@   ',0 ; DATA XREF: dseg:1076o
-aNo_6B@b@b@b@b@	db 'No.6      Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@  ',0 ; DATA XREF: dseg:107Ao
-unk_108BC	db  4Eh	; N		; DATA XREF: dseg:107Eo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  37h	; 7
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  8Eh	; é
-		db  80h	; Ä
-		db  82h	; Ç
-		db 0F0h	; 
-		db  93h	; ì
-		db  71h	; q
-		db  82h	; Ç
-		db 0B5h	; µ
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  20h
-		db    0
-aNo_8VVrvivmbav	db 'No.8      Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶  ',0 ; DATA XREF: dseg:1082o
-unk_10906	db  4Eh	; N		; DATA XREF: dseg:1086o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  39h	; 9
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  97h	; ó
-		db 0F6h	; ˆ
-		db  90h	; ê
-		db  46h	; F
-		db  83h	; É
-		db  7Dh	; }
-		db  83h	; É
-		db  57h	; W
-		db  83h	; É
-		db  62h	; b
-		db  83h	; É
-		db  4Eh	; N
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-unk_1092B	db  4Eh	; N		; DATA XREF: dseg:108Ao
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  30h	; 0
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  95h	; ï
-		db  95h	; ï
-		db  96h	; ñ
-		db  82h	; Ç
-		db  98h	; ò
-		db  5Eh	; ^
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  60h	; `
-		db  97h	; ó
-		db  48h	; H
-		db  8Ch	; å
-		db 0B6h	; ∂
-		db  97h	; ó
-		db  90h	; ê
-		db  95h	; ï
-		db  91h	; ë
-		db  20h
-		db  20h
-		db    0
-aNo_11CompleteD	db 'No.11         Complete Darkness     ',0 ; DATA XREF: dseg:108Eo
-aNo_12B@Ggglgxg	db 'No.12        Å@ ÉGÉLÉXÉgÉâÉâÉu      ',0 ; DATA XREF: dseg:1092o
-aNo_13RaoVVVVVV	db 'No.13        êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ   ',0 ; DATA XREF: dseg:1096o
-aNo_14B@b@iucVR	db 'No.14          Å@Å@âìñÏÇÃêXÅ@Å@Å@   ',0 ; DATA XREF: dseg:109Ao
-unk_109E4	db  4Eh	; N		; DATA XREF: dseg:109Eo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  35h	; 5
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  90h	; ê
-		db 0CCh	; Ã
-		db  98h	; ò
-		db  62h	; b
-		db  82h	; Ç
-		db 0EDh	; Ì
-		db  82h	; Ç
-		db 0F1h	; Ò
-		db  82h	; Ç
-		db 0BEh	; æ
-		db  81h	; Å
-		db  5Bh	; [
-		db  82h	; Ç
-		db 0E7h	; Á
-		db  82h	; Ç
-		db 0F1h	; Ò
-		db  82h	; Ç
-		db 0C7h	; «
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aCvogcp_1Focar_	db 'ñ¢égóp.1         îéóÌê_é–ã´ì‡       ',0 ; DATA XREF: dseg:10A2o
-aCvogcp_2B@czco	db 'ñ¢égóp.2         Å@ózóéÇøÇƒ  Å@     ',0 ; DATA XREF: dseg:10A6o
-aCvogcp_3B@xxcv	db 'ñ¢égóp.3         Å@ïïñÇèIââ  Å@     ',0 ; DATA XREF: dseg:10AAo
-unk_10A78	db  4Eh	; N		; DATA XREF: dseg:10DEo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  81h	; Å
-		db  40h	; @
-		db  96h	; ñ
-		db 0B2h	; ≤
-		db  82h	; Ç
-		db 0CDh	; Õ
-		db  8Eh	; é
-		db  9Eh	; û
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  82h	; Ç
-		db 0F0h	; 
-		db  89h	; â
-		db  7Ah	; z
-		db  82h	; Ç
-		db 0A6h	; ¶
-		db  82h	; Ç
-		db 0C4h	; ƒ
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_2B@B@Select	db 'No.2      Å@ Å@ Selection           ',0 ; DATA XREF: dseg:10E2o
-unk_10AC2	db  4Eh	; N		; DATA XREF: dseg:10E6o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  33h	; 3
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  97h	; ó
-		db  64h	; d
-		db  97h	; ó
-		db 0F6h	; ˆ
-		db  92h	; í
-		db  6Bh	; k
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_4Reincarnat	db 'No.4          Reincarnation         ',0 ; DATA XREF: dseg:10EAo
-aNo_5Dim_Dream	db 'No.5            Dim. Dream          ',0 ; DATA XREF: dseg:10EEo
-unk_10B31	db  4Eh	; N		; DATA XREF: dseg:10F2o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  36h	; 6
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  54h	; T
-		db  61h	; a
-		db  62h	; b
-		db  75h	; u
-		db  6Ch	; l
-		db  61h	; a
-		db  20h
-		db  72h	; r
-		db  61h	; a
-		db  73h	; s
-		db  61h	; a
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  60h	; `
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  94h	; î
-		db  92h	; í
-		db  8Fh	; è
-		db 0ADh	; ≠
-		db  8Fh	; è
-		db  97h	; ó
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_7B@Maniacal	db 'No.7     Å@  Maniacal Princess      ',0 ; DATA XREF: dseg:10F6o
-aNo_8CPOBLostDr	db 'No.8        ñ≤è¡é∏  Å`Lost Dream    ',0 ; DATA XREF: dseg:10FAo
-aNo_9CMCvlyBDre	db 'No.9       ñ≤å∂óVãY  Å`Dream War    ',0 ; DATA XREF: dseg:10FEo
-aNo_10Cvc@mirab	db 'No.10    ñÇñ@åàêÌÅIÅ`Fight it out!  ',0 ; DATA XREF: dseg:1102o
-aNo_11B@SailorO	db 'No.11      Å@ Sailor of Time        ',0 ; DATA XREF: dseg:1106o
-aNo_12Strawberr	db 'No.12       Strawberry Crisis!!     ',0 ; DATA XREF: dseg:110Ao
-unk_10C34	db  4Eh	; N		; DATA XREF: dseg:110Eo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  33h	; 3
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  94h	; î
-		db 0F1h	; Ò
-		db  93h	; ì
-		db  9Dh	; ù
-		db  88h	; à
-		db 0EAh	; Í
-		db  96h	; ñ
-		db  82h	; Ç
-		db  96h	; ñ
-		db  40h	; @
-		db  90h	; ê
-		db 0A2h	; ¢
-		db  8Ah	; ä
-		db  45h	; E
-		db  98h	; ò
-		db  5Fh	; _
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_14B@cvc@pri	db 'No.14          Å@ñÇñ@è‡à§           ',0 ; DATA XREF: dseg:1112o
-aNo_15B@lviuvC	db 'No.15          Å@ãvâìÇÃñ≤           ',0 ; DATA XREF: dseg:1116o
-unk_10CA3	db  4Eh	; N		; DATA XREF: dseg:111Ao
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  36h	; 6
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  93h	; ì
-		db  8Ch	; å
-		db  95h	; ï
-		db 0FBh	; ˚
-		db  82h	; Ç
-		db 0CCh	; Ã
-		db  90h	; ê
-		db 0C2h	; ¬
-		db  82h	; Ç
-		db 0A2h	; ¢
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_17IiiuvCumo	db 'No.17           âiâìÇÃñûåé          ',0 ; DATA XREF: dseg:111Eo
-aNo_18MapleDrea	db 'No.18         Maple Dream...        ',0 ; DATA XREF: dseg:1122o
-unk_10D12	db  4Eh	; N		; DATA XREF: dseg:1126o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  39h	; 9
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  97h	; ó
-		db 0ECh	; Ï
-		db  90h	; ê
-		db  6Ch	; l
-		db  82h	; Ç
-		db 0CCh	; Ã
-		db  8Bh	; ã
-		db  78h	; x
-		db  93h	; ì
-		db 0FAh	; ˙
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_20Pqcsgfgv	db 'No.20            èüóòÉfÉÇ           ',0 ; DATA XREF: dseg:112Ao
-aNo_21GqbGagibG	db 'No.21         ÉQÅ[ÉÄÉIÅ[ÉoÅ[        ',0 ; DATA XREF: dseg:112Eo
-aCvogcp_1OuvXc	db 'ñ¢égóp.1          éûÇÃïó            ',0 ; DATA XREF: dseg:1132o
-aCvogcp_2GxgBGG	db 'ñ¢égóp.2     ÉXÉ^Å[É{ÉEÉhÉäÅ[ÉÄ     ',0 ; DATA XREF: dseg:1136o
-aCvogcp_3Phanta	db 'ñ¢égóp.3       Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
-aGGcggglvCVs_0	db '              É^ÉCÉgÉãÇ…ñﬂÇÈ        ',0 ; DATA XREF: dseg:113Eo
-aNo_1MSzlBLotus	db 'No.1    å∂ëzãΩ  Å` Lotus Land Story ',0 ; DATA XREF: dseg:1156o
-aNo_2WitchingDr	db 'No.2          Witching Dream        ',0 ; DATA XREF: dseg:115Ao
-aNo_3SeleneSLig	db 'No.3          Selene',27h,'s light        ',0 ; DATA XREF: dseg:115Eo
-unk_10E84	db  4Eh	; N		; DATA XREF: dseg:1162o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  34h	; 4
-		db  20h
-		db  20h
-		db  20h
-		db  91h	; ë
-		db  95h	; ï
-		db  8Fh	; è
-		db 0FCh	; ¸
-		db  90h	; ê
-		db 0EDh	; Ì
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  60h	; `
-		db  20h
-		db  44h	; D
-		db  65h	; e
-		db  63h	; c
-		db  6Fh	; o
-		db  72h	; r
-		db  61h	; a
-		db  74h	; t
-		db  69h	; i
-		db  6Fh	; o
-		db  6Eh	; n
-		db  20h
-		db  42h	; B
-		db  61h	; a
-		db  74h	; t
-		db  74h	; t
-		db  6Ch	; l
-		db  65h	; e
-		db  20h
-		db    0
-aNo_5BreakTheSa	db 'No.5         Break the Sabbath      ',0 ; DATA XREF: dseg:1166o
-aNo_6NglLBScarl	db 'No.6    çgãøã»  Å` Scarlet Phoneme  ',0 ; DATA XREF: dseg:116Ao
-aNo_7BadApple	db 'No.7            Bad Apple!!         ',0 ; DATA XREF: dseg:116Eo
-aNo_8CRab@bPerd	db 'No.8     óÏêÌÅ@Å` Perdition crisis  ',0 ; DATA XREF: dseg:1172o
-aNo_9GagkgxgGgg	db 'No.9         ÉAÉäÉXÉ}ÉGÉXÉeÉâ       ',0 ; DATA XREF: dseg:1176o
-aNo_10Pnpcuyszl	db 'No.10    è≠èó„Yëzã»Å@Å` Capriccio   ',0 ; DATA XREF: dseg:117Ao
-aNo_11RpvKab@bC	db 'No.11   êØÇÃäÌÅ@Å` Casket of Star   ',0 ; DATA XREF: dseg:117Eo
-aNo_12LotusLove	db 'No.12           Lotus Love          ',0 ; DATA XREF: dseg:1182o
-aNo_13CVVslXBSl	db 'No.13  ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror ',0 ; DATA XREF: dseg:1186o
-aNo_14DreamLand	db 'No.14           Dream Land          ',0 ; DATA XREF: dseg:118Ao
-aNo_15ChcB@bIna	db 'No.15    óHñ≤Å@Å` Inanimate Dream   ',0 ; DATA XREF: dseg:118Eo
-unk_11040	db  4Eh	; N		; DATA XREF: dseg:1192o
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  36h	; 6
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  8Bh	; ã
-		db 0D6h	; ÷
-		db  82h	; Ç
-		db 0B6h	; ∂
-		db  82h	; Ç
-		db 0B4h	; ¥
-		db  82h	; Ç
-		db 0E9h	; È
-		db  82h	; Ç
-		db 0F0h	; 
-		db  82h	; Ç
-		db 0A6h	; ¶
-		db  82h	; Ç
-		db 0C8h	; »
-		db  82h	; Ç
-		db 0A2h	; ¢
-		db  97h	; ó
-		db  56h	; V
-		db  8Bh	; ã
-		db  59h	; Y
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_17GbgcghmSz	db 'No.17  ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic ',0 ; DATA XREF: dseg:1196o
-aNo_18Vivavvvvi	db 'No.18   Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence  ',0 ; DATA XREF: dseg:119Ao
-aNo_19Days	db 'No.19              Days             ',0 ; DATA XREF: dseg:119Eo
-aNo_20Peaceful	db 'No.20            Peaceful           ',0 ; DATA XREF: dseg:11A2o
-aNo_21ArcadianD	db 'No.21         Arcadian Dream        ',0 ; DATA XREF: dseg:11A6o
-aNo_22MSzvPzrl	db 'No.22           å∂ëzÇÃèZêl          ',0 ; DATA XREF: dseg:11AAo
-aCvogcp_1LotusR	db 'ñ¢égóp.1        Lotus Road          ',0 ; DATA XREF: dseg:11AEo
-aCvogcp_2Dreamy	db 'ñ¢égóp.2       Dreamy pilot         ',0 ; DATA XREF: dseg:11B2o
-aCvogcp_3Incomp	db 'ñ¢égóp.3      Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
-aCvogcp_4Border	db 'ñ¢égóp.4        Border Land         ',0 ; DATA XREF: dseg:11BAo
-aCvogcp_5MagicS	db 'ñ¢égóp.5   Magic Shop of Raspberry  ',0 ; DATA XREF: dseg:11BEo
-aCvogcp_6Cresce	db 'ñ¢égóp.6       Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
-unk_11221	db  4Eh	; N		; DATA XREF: dseg:11CEo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  31h	; 1
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  89h	; â
-		db 0F6h	; ˆ
-		db 0E3h	; „
-		db  59h	; Y
-		db  92h	; í
-		db  6Bh	; k
-		db  81h	; Å
-		db  40h	; @
-		db  81h	; Å
-		db  60h	; `
-		db  20h
-		db  4Dh	; M
-		db  79h	; y
-		db  73h	; s
-		db  74h	; t
-		db  69h	; i
-		db  63h	; c
-		db  20h
-		db  53h	; S
-		db  71h	; q
-		db  75h	; u
-		db  61h	; a
-		db  72h	; r
-		db  65h	; e
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_2DreamExpre	db 'No.2           Dream Express        ',0 ; DATA XREF: dseg:11D2o
-aNo_3Cvc@rwb@bM	db 'No.3      ñÇñ@êwÅ@Å` Magic Square   ',0 ; DATA XREF: dseg:11D6o
-unk_11290	db  4Eh	; N		; DATA XREF: dseg:11DAo
-		db  6Fh	; o
-		db  2Eh	; .
-		db  34h	; 4
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  96h	; ñ
-		db 0B2h	; ≤
-		db  91h	; ë
-		db  7Ah	; z
-		db  8Eh	; é
-		db  9Eh	; û
-		db  8Bh	; ã
-		db 0F3h	; Û
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-aNo_5CUvb@bSpir	db 'No.5     óÏìVÅ@Å` Spiritual Heaven  ',0 ; DATA XREF: dseg:11DEo
-aNo_6RomanticCh	db 'No.6         Romantic Children      ',0 ; DATA XREF: dseg:11E2o
-aNo_7GvgigxgGbg	db 'No.7       ÉvÉâÉXÉ`ÉbÉNÉ}ÉCÉìÉh     ',0 ; DATA XREF: dseg:11E6o
-aNo_8Gbgcgvglgp	db 'No.8          ÉÅÉCÉvÉãÉèÉCÉY        ',0 ; DATA XREF: dseg:11EAo
-aNo_9LTfvCvc@BF	db 'No.9  ã÷ífÇÃñÇñ@  Å` Forbidden Magic',0 ; DATA XREF: dseg:11EEo
-aNo_10RNgvPnpcb	db 'No.10  ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0 ; DATA XREF: dseg:11F2o
-aNo_11CarVsvPnp	db 'No.11  ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss  ',0 ; DATA XREF: dseg:11F6o
-aNo_12TheLastJu	db 'No.12       the Last Judgement      ',0 ; DATA XREF: dseg:11FAo
-aNo_13FVVlrlmB@	db 'No.13  îﬂÇµÇ´êlå`Å@Å` Doll of Misery',0 ; DATA XREF: dseg:11FEo
-aNo_14RvkevIVB@	db 'No.14   ê¢äEÇÃâ ÇƒÅ@Å` World',27h,'s End  ',0 ; DATA XREF: dseg:1202o
-aNo_15R_sbmSzb@	db 'No.15   ê_òbå∂ëzÅ@Å` Infinite Being ',0 ; DATA XREF: dseg:1206o
-aNo_16XsovlcvNs	db 'No.16       ïsévãcÇÃçëÇÃÉAÉäÉX      ',0 ; DATA XREF: dseg:120Ao
-aNo_17TheGrimoi	db 'No.17     the Grimoire of Alice     ',0 ; DATA XREF: dseg:120Eo
-aNo_18R_o	db 'No.18              ê_é–             ',0 ; DATA XREF: dseg:1212o
-aNo_19Endless	db 'No.19            Endless            ',0 ; DATA XREF: dseg:1216o
-aNo_20LviuvKyia	db 'No.20          ãvâìÇÃäyâÄ           ',0 ; DATA XREF: dseg:121Ao
-aNo_21MysticDre	db 'No.21         Mystic Dream          ',0 ; DATA XREF: dseg:121Eo
-aNo_22PeacefulR	db 'No.22       Peaceful Romancer       ',0 ; DATA XREF: dseg:1222o
-aNo_23NVLxvcvPk	db 'No.23         ç∞ÇÃãxÇÁÇﬁèä          ',0 ; DATA XREF: dseg:1226o
+aTH02_01	db 'No.1      ìåï˚ïïñÇò^Å@Å`èÚìyô÷‰∂óÖ  ',0 ; DATA XREF: dseg:1066o
+aTH02_02	db 'No.2      Å@ îéóÌÅ@Å`Eastern Wind   ',0 ; DATA XREF: dseg:106Ao
+aTH02_03	db 'No.3      Å@  She',27h,'s in a temper!!   ',0 ; DATA XREF: dseg:106Eo
+aTH02_04	db 'No.4      Å@   End of DaylightÅ@    ',0 ; DATA XREF: dseg:1072o
+aTH02_05	db 'No.5      Å@  Å@ Ç‚Ç›ÇÃÇøÇ©ÇÁÅ@Å@   ',0 ; DATA XREF: dseg:1076o
+aTH02_06	db 'No.6      Å@Å@Å@Å@Å@å∂ñ≤äEÅ@Å@Å@Å@  ',0 ; DATA XREF: dseg:107Ao
+aTH02_07	db 'No.7      Å@Å@Å@Å@éÄÇìqÇµÇƒÅ@Å@Å@  ',0 ; DATA XREF: dseg:107Eo
+aTH02_08	db 'No.8      Ç–Ç‡ÇÎÇ¨ÅAÇﬁÇÁÇ≥Ç´Ç…Ç‡Ç¶  ',0 ; DATA XREF: dseg:1082o
+aTH02_09	db 'No.9      Å@  Å@ óˆêFÉ}ÉWÉbÉN Å@    ',0 ; DATA XREF: dseg:1086o
+aTH02_10	db 'No.10     Å@ìåï˚ïïñÇò^Å@Å`óHå∂óêïë  ',0 ; DATA XREF: dseg:108Ao
+aTH02_11	db 'No.11         Complete Darkness     ',0 ; DATA XREF: dseg:108Eo
+aTH02_12	db 'No.12        Å@ ÉGÉLÉXÉgÉâÉâÉu      ',0 ; DATA XREF: dseg:1092o
+aTH02_13	db 'No.13        êÌé‘ÇﬁÇ∑ÇﬂÇÃÇ›ÇÈÇ‰Çﬂ   ',0 ; DATA XREF: dseg:1096o
+aTH02_14	db 'No.14          Å@Å@âìñÏÇÃêXÅ@Å@Å@   ',0 ; DATA XREF: dseg:109Ao
+aTH02_15	db 'No.15         êÃòbÇÌÇÒÇæÅ[ÇÁÇÒÇ«    ',0 ; DATA XREF: dseg:109Eo
+aTH02_16	db 'ñ¢égóp.1         îéóÌê_é–ã´ì‡       ',0 ; DATA XREF: dseg:10A2o
+aTH02_17	db 'ñ¢égóp.2         Å@ózóéÇøÇƒ  Å@     ',0 ; DATA XREF: dseg:10A6o
+aTH02_18	db 'ñ¢égóp.3         Å@ïïñÇèIââ  Å@     ',0 ; DATA XREF: dseg:10AAo
+aTH03_01	db 'No.1       Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ       ',0 ; DATA XREF: dseg:10DEo
+aTH03_02	db 'No.2      Å@ Å@ Selection           ',0 ; DATA XREF: dseg:10E2o
+aTH03_03	db 'No.3            ìåï˚ódóˆík          ',0 ; DATA XREF: dseg:10E6o
+aTH03_04	db 'No.4          Reincarnation         ',0 ; DATA XREF: dseg:10EAo
+aTH03_05	db 'No.5            Dim. Dream          ',0 ; DATA XREF: dseg:10EEo
+aTH03_06	db 'No.6     Tabula rasaÅ@Å`ãÛîíè≠èó    ',0 ; DATA XREF: dseg:10F2o
+aTH03_07	db 'No.7     Å@  Maniacal Princess      ',0 ; DATA XREF: dseg:10F6o
+aTH03_08	db 'No.8        ñ≤è¡é∏  Å`Lost Dream    ',0 ; DATA XREF: dseg:10FAo
+aTH03_09	db 'No.9       ñ≤å∂óVãY  Å`Dream War    ',0 ; DATA XREF: dseg:10FEo
+aTH03_10	db 'No.10    ñÇñ@åàêÌÅIÅ`Fight it out!  ',0 ; DATA XREF: dseg:1102o
+aTH03_11	db 'No.11      Å@ Sailor of Time        ',0 ; DATA XREF: dseg:1106o
+aTH03_12	db 'No.12       Strawberry Crisis!!     ',0 ; DATA XREF: dseg:110Ao
+aTH03_13	db 'No.13        îÒìùàÍñÇñ@ê¢äEò_       ',0 ; DATA XREF: dseg:110Eo
+aTH03_14	db 'No.14          Å@ñÇñ@è‡à§           ',0 ; DATA XREF: dseg:1112o
+aTH03_15	db 'No.15          Å@ãvâìÇÃñ≤           ',0 ; DATA XREF: dseg:1116o
+aTH03_16	db 'No.16          ìåï˚ÇÃê¬Ç¢ãÛ         ',0 ; DATA XREF: dseg:111Ao
+aTH03_17	db 'No.17           âiâìÇÃñûåé          ',0 ; DATA XREF: dseg:111Eo
+aTH03_18	db 'No.18         Maple Dream...        ',0 ; DATA XREF: dseg:1122o
+aTH03_19	db 'No.19           óÏêlÇÃãxì˙          ',0 ; DATA XREF: dseg:1126o
+aTH03_20	db 'No.20            èüóòÉfÉÇ           ',0 ; DATA XREF: dseg:112Ao
+aTH03_21	db 'No.21         ÉQÅ[ÉÄÉIÅ[ÉoÅ[        ',0 ; DATA XREF: dseg:112Eo
+aTH03_22	db 'ñ¢égóp.1          éûÇÃïó            ',0 ; DATA XREF: dseg:1132o
+aTH03_23	db 'ñ¢égóp.2     ÉXÉ^Å[É{ÉEÉhÉäÅ[ÉÄ     ',0 ; DATA XREF: dseg:1136o
+aTH03_24	db 'ñ¢égóp.3       Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
+aMUSICROOM_QUIT2	db '              É^ÉCÉgÉãÇ…ñﬂÇÈ        ',0 ; DATA XREF: dseg:113Eo
+aTH04_01	db 'No.1    å∂ëzãΩ  Å` Lotus Land Story ',0 ; DATA XREF: dseg:1156o
+aTH04_02	db 'No.2          Witching Dream        ',0 ; DATA XREF: dseg:115Ao
+aTH04_03	db 'No.3          Selene',27h,'s light        ',0 ; DATA XREF: dseg:115Eo
+aTH04_04	db 'No.4   ëïè¸êÌÅ@Å` Decoration Battle ',0 ; DATA XREF: dseg:1162o
+aTH04_05	db 'No.5         Break the Sabbath      ',0 ; DATA XREF: dseg:1166o
+aTH04_06	db 'No.6    çgãøã»  Å` Scarlet Phoneme  ',0 ; DATA XREF: dseg:116Ao
+aTH04_07	db 'No.7            Bad Apple!!         ',0 ; DATA XREF: dseg:116Eo
+aTH04_08	db 'No.8     óÏêÌÅ@Å` Perdition crisis  ',0 ; DATA XREF: dseg:1172o
+aTH04_09	db 'No.9         ÉAÉäÉXÉ}ÉGÉXÉeÉâ       ',0 ; DATA XREF: dseg:1176o
+aTH04_10	db 'No.10    è≠èó„Yëzã»Å@Å` Capriccio   ',0 ; DATA XREF: dseg:117Ao
+aTH04_11	db 'No.11   êØÇÃäÌÅ@Å` Casket of Star   ',0 ; DATA XREF: dseg:117Eo
+aTH04_12	db 'No.12           Lotus Love          ',0 ; DATA XREF: dseg:1182o
+aTH04_13	db 'No.13  ñ∞ÇÍÇÈã∞ï| Å`Sleeping Terror ',0 ; DATA XREF: dseg:1186o
+aTH04_14	db 'No.14           Dream Land          ',0 ; DATA XREF: dseg:118Ao
+aTH04_15	db 'No.15    óHñ≤Å@Å` Inanimate Dream   ',0 ; DATA XREF: dseg:118Eo
+aTH04_16	db 'No.16      ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY     ',0 ; DATA XREF: dseg:1192o
+aTH04_17	db 'No.17  ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic ',0 ; DATA XREF: dseg:1196o
+aTH04_18	db 'No.18   Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence  ',0 ; DATA XREF: dseg:119Ao
+aTH04_19	db 'No.19              Days             ',0 ; DATA XREF: dseg:119Eo
+aTH04_20	db 'No.20            Peaceful           ',0 ; DATA XREF: dseg:11A2o
+aTH04_21	db 'No.21         Arcadian Dream        ',0 ; DATA XREF: dseg:11A6o
+aTH04_22	db 'No.22           å∂ëzÇÃèZêl          ',0 ; DATA XREF: dseg:11AAo
+aTH04_23	db 'ñ¢égóp.1        Lotus Road          ',0 ; DATA XREF: dseg:11AEo
+aTH04_24	db 'ñ¢égóp.2       Dreamy pilot         ',0 ; DATA XREF: dseg:11B2o
+aTH04_25	db 'ñ¢égóp.3      Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
+aTH04_26	db 'ñ¢égóp.4        Border Land         ',0 ; DATA XREF: dseg:11BAo
+aTH04_27	db 'ñ¢égóp.5   Magic Shop of Raspberry  ',0 ; DATA XREF: dseg:11BEo
+aTH04_28	db 'ñ¢égóp.6       Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
+aTH05_01	db 'No.1     âˆ„YíkÅ@Å` Mystic Square   ',0 ; DATA XREF: dseg:11CEo
+aTH05_02	db 'No.2           Dream Express        ',0 ; DATA XREF: dseg:11D2o
+aTH05_03	db 'No.3      ñÇñ@êwÅ@Å` Magic Square   ',0 ; DATA XREF: dseg:11D6o
+aTH05_04	db 'No.4             ñ≤ëzéûãÛ           ',0 ; DATA XREF: dseg:11DAo
+aTH05_05	db 'No.5     óÏìVÅ@Å` Spiritual Heaven  ',0 ; DATA XREF: dseg:11DEo
+aTH05_06	db 'No.6         Romantic Children      ',0 ; DATA XREF: dseg:11E2o
+aTH05_07	db 'No.7       ÉvÉâÉXÉ`ÉbÉNÉ}ÉCÉìÉh     ',0 ; DATA XREF: dseg:11E6o
+aTH05_08	db 'No.8          ÉÅÉCÉvÉãÉèÉCÉY        ',0 ; DATA XREF: dseg:11EAo
+aTH05_09	db 'No.9  ã÷ífÇÃñÇñ@  Å` Forbidden Magic',0 ; DATA XREF: dseg:11EEo
+aTH05_10	db 'No.10  ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0 ; DATA XREF: dseg:11F2o
+aTH05_11	db 'No.11  ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss  ',0 ; DATA XREF: dseg:11F6o
+aTH05_12	db 'No.12       the Last Judgement      ',0 ; DATA XREF: dseg:11FAo
+aTH05_13	db 'No.13  îﬂÇµÇ´êlå`Å@Å` Doll of Misery',0 ; DATA XREF: dseg:11FEo
+aTH05_14	db 'No.14   ê¢äEÇÃâ ÇƒÅ@Å` World',27h,'s End  ',0 ; DATA XREF: dseg:1202o
+aTH05_15	db 'No.15   ê_òbå∂ëzÅ@Å` Infinite Being ',0 ; DATA XREF: dseg:1206o
+aTH05_16	db 'No.16       ïsévãcÇÃçëÇÃÉAÉäÉX      ',0 ; DATA XREF: dseg:120Ao
+aTH05_17	db 'No.17     the Grimoire of Alice     ',0 ; DATA XREF: dseg:120Eo
+aTH05_18	db 'No.18              ê_é–             ',0 ; DATA XREF: dseg:1212o
+aTH05_19	db 'No.19            Endless            ',0 ; DATA XREF: dseg:1216o
+aTH05_20	db 'No.20          ãvâìÇÃäyâÄ           ',0 ; DATA XREF: dseg:121Ao
+aTH05_21	db 'No.21         Mystic Dream          ',0 ; DATA XREF: dseg:121Eo
+aTH05_22	db 'No.22       Peaceful Romancer       ',0 ; DATA XREF: dseg:1222o
+aTH05_23	db 'No.23         ç∞ÇÃãxÇÁÇﬁèä          ',0 ; DATA XREF: dseg:1226o
 aR_00		db 'r_00',0             ; DATA XREF: dseg:1246o
 aR_01		db 'r_01',0             ; DATA XREF: dseg:124Ao
 aR_02		db 'r_02',0             ; DATA XREF: dseg:124Eo
@@ -47500,7 +46491,7 @@ unk_13EAA	db    ?	;		; DATA XREF: sub_C2CF+35o sub_C32D+Fo
 		db    ?	;
 word_1403A	dw ?			; DATA XREF: sub_BE79+Er sub_C490+7w ...
 word_1403C	dw ?			; DATA XREF: sub_BE79+91r sub_C490+Dw	...
-word_1403E	dw ?			; DATA XREF: sub_BF4D:loc_BF6Br
+musicroom_trackcount	dw ?			; DATA XREF: sub_BF4D:loc_BF6Br
 					; sub_C490+22w	...
 byte_14040	db ?			; DATA XREF: sub_C7D5+1Fr sub_C7D5+32r ...
 byte_14041	db ?			; DATA XREF: sub_C7D5+11r sub_C87E+2Dw ...
