@@ -427,15 +427,13 @@ sub_22C		endp
 
 ; ---------------------------------------------------------------------------
 DGROUP@		dw 0			; DATA XREF: start:loc_3w start+B0r ...
+__MMODEL	dw 0C004h
+		db    0
 ; ---------------------------------------------------------------------------
-
-__MMODEL:
-		add	al, 0C0h ; '¿'
-		add	byte_18F2E, bl
 		push	ds
-		pop	di
-		add	cx, word_1A7E8
-		pop	ds
+		mov	ds, cs:word_35F
+		push	cs
+		call	near ptr sub_2222
 		mov	ax, 0FFF3h
 
 loc_27F:				; CODE XREF: seg000:02D9j seg000:02E1j
@@ -24212,7 +24210,7 @@ _envp		= dword	ptr  0Ch
 		jz	loc_A693
 		mov	word_107CA, 5208h
 		push	ds
-		push	offset unk_101A7
+		push	offset aKaikidan1_dat
 		call	sub_F0B4
 		les	bx, dword_11E6E
 		mov	al, es:[bx+12h]
@@ -27974,12 +27972,12 @@ loc_C2BB:				; CODE XREF: sub_C1DD+CEj
 		push	large 7C00C4h
 		push	9
 		push	ds
-		push	offset unk_11676
+		push	offset aGxgnbGvbGhvVGv
 		call	far ptr	loc_E914
 		push	large 7800C0h
 		push	2
 		push	ds
-		push	offset unk_116A9
+		push	offset aGxgnbGvbGhvV_0
 		call	far ptr	loc_E914
 
 loc_C2EB:				; CODE XREF: sub_C1DD+DCj
@@ -28507,7 +28505,7 @@ loc_C6F1:				; CODE XREF: sub_C67F+38j
 		push	[bp+arg_4]
 		push	word_116E4
 		push	ds
-		push	offset unk_11714
+		push	offset aU__0
 		call	far ptr	loc_E914
 		pop	di
 		pop	si
@@ -28618,14 +28616,14 @@ loc_C7B6:				; CODE XREF: sub_C729+7Fj
 		push	di
 		push	word_116E4
 		push	ds
-		push	offset unk_11717
+		push	offset aBd
 		call	far ptr	loc_E914
 		lea	ax, [si+60h]
 		push	ax
 		push	di
 		push	word_116E4
 		push	ds
-		push	offset unk_1171A
+		push	offset aBu
 		call	far ptr	loc_E914
 		pop	di
 		pop	si
@@ -28682,7 +28680,7 @@ arg_6		= word ptr  0Ah
 		push	di
 		push	word_116E4
 		push	ds
-		push	offset unk_1171D
+		push	offset aBd_0
 		call	far ptr	loc_E914
 		pop	di
 		pop	si
@@ -28828,7 +28826,7 @@ loc_C9B3:				; CODE XREF: sub_C8AE+F1j sub_C8AE+FBj
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_11720
+		push	offset aBu_0
 		call	far ptr	loc_E914
 		leave
 		retn
@@ -28979,7 +28977,7 @@ var_4		= dword	ptr -4
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_1174B
+		push	offset aGGxi
 		call	far ptr	loc_E914
 		push	word_116E2
 		mov	ax, word_116E8
@@ -28987,7 +28985,7 @@ var_4		= dword	ptr -4
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_11754
+		push	offset aGGaogcpi
 		call	far ptr	loc_E914
 		push	word_116E2
 		mov	ax, word_116E8
@@ -29011,7 +29009,7 @@ var_4		= dword	ptr -4
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_11779
+		push	offset aGagcgegai
 		call	far ptr	loc_E914
 		push	word_116E2
 		mov	ax, word_116E8
@@ -29114,7 +29112,7 @@ loc_CBE3:				; CODE XREF: sub_CA9B+13Ej
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_117BC
+		push	offset aI
 		call	far ptr	loc_E914
 		mov	ax, word_116E2
 		add	ax, 110h
@@ -29124,7 +29122,7 @@ loc_CBE3:				; CODE XREF: sub_CA9B+13Ej
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_117BF
+		push	offset aI_0
 		call	far ptr	loc_E914
 		mov	byte_1517C, 1
 		les	bx, dword_11E6E
@@ -29464,7 +29462,7 @@ loc_D01A:				; CODE XREF: sub_CA9B+56Bj
 		push	ax
 		push	word_116E4
 		push	ds
-		push	offset unk_117C2
+		push	offset aU_
 		call	far ptr	loc_E914
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
@@ -35533,64 +35531,8 @@ off_1010C	dw offset sub_4B43	; DATA XREF: sub_6CCE+77r sub_6CCE+A1r ...
 		db    0
 		db    0
 		db    0
-		db  42h	; B
-		db  6Fh	; o
-		db  72h	; r
-		db  6Ch	; l
-		db  61h	; a
-		db  6Eh	; n
-		db  64h	; d
-		db  20h
-		db  43h	; C
-		db  2Bh	; +
-		db  2Bh	; +
-		db  20h
-		db  2Dh	; -
-		db  20h
-		db  43h	; C
-		db  6Fh	; o
-		db  70h	; p
-		db  79h	; y
-		db  72h	; r
-		db  69h	; i
-		db  67h	; g
-		db  68h	; h
-		db  74h	; t
-		db  20h
-		db  31h	; 1
-		db  39h	; 9
-		db  39h	; 9
-		db  33h	; 3
-		db  20h
-		db  42h	; B
-		db  6Fh	; o
-		db  72h	; r
-		db  6Ch	; l
-		db  61h	; a
-		db  6Eh	; n
-		db  64h	; d
-		db  20h
-		db  49h	; I
-		db  6Eh	; n
-		db  74h	; t
-		db  6Ch	; l
-		db  2Eh	; .
-		db    0
-		db  44h	; D
-		db  69h	; i
-		db  76h	; v
-		db  69h	; i
-		db  64h	; d
-		db  65h	; e
-		db  20h
-		db  65h	; e
-		db  72h	; r
-		db  72h	; r
-		db  6Fh	; o
-		db  72h	; r
-		db  0Dh
-		db  0Ah
-		db    0
+aBorlandCCopyright1993Bo db 'Borland C++ - Copyright 1993 Borland Intl.',0
+aDivideError	db 'Divide error',0Dh,0Ah,0
 dword_1015A	dd 0			; DATA XREF: sub_178:loc_17Ew
 					; __restorezero+4r ...
 dword_1015E	dd 0			; DATA XREF: sub_178+13w
@@ -35629,18 +35571,7 @@ off_10190	dd a_ed00_txt		; DATA XREF: sub_A5A4+Er sub_A5A4+24r	...
 					; "_ED00.TXT"
 aMiko_cfg	db 'MIKO.CFG',0         ; DATA XREF: sub_A545+6o
 a_ed00_txt	db '_ED00.TXT',0        ; DATA XREF: dseg:off_10190o
-unk_101A7	db  89h	; ÅE	; DATA XREF: _main+13o
-		db 0F6h	; ÅE
-		db 0E3h	; ÅE
-		db  59h	; Y
-		db  92h	; ÅE
-		db  6Bh	; k
-		db  31h	; 1
-		db  2Eh	; .
-		db  64h	; d
-		db  61h	; a
-		db  74h	; t
-		db    0
+aKaikidan1_dat	db 'âˆ„Yík1.dat',0      ; DATA XREF: _main+13o
 aMiko		db 'miko',0             ; DATA XREF: _main+33o
 ; char arg0[]
 arg0		db 'op',0               ; DATA XREF: _main+92o
@@ -35908,10 +35839,7 @@ word_102C0	dw 0			; DATA XREF: seg000:loc_50Er
 					; seg000:0515r
 		db 0
 		db 0
-		db  42h	; B
-		db  46h	; F
-		db  4Eh	; N
-		db  54h	; T
+aBfnt		db 'BFNT'
 		db  1Ah
 		db    0
 word_102CA	dw 0			; DATA XREF: sub_BCE:loc_BE3r
@@ -35971,24 +35899,8 @@ byte_10300	db 0			; DATA XREF: sub_BAE+4r
 		db  36h	; 6
 		db  3Fh	; ?
 		db    0
-		db  24h	; $
-		db  49h	; I
-		db  42h	; B
-		db  4Dh	; M
-		db  41h	; A
-		db  44h	; D
-		db  53h	; S
-		db  50h	; P
-		db    0
-		db  24h	; $
-		db  49h	; I
-		db  42h	; B
-		db  4Dh	; M
-		db  41h	; A
-		db  46h	; F
-		db  4Eh	; N
-		db  54h	; T
-		db    0
+aIbmadsp	db '$IBMADSP',0
+aIbmafnt	db '$IBMAFNT',0
 dword_1031E	dd 0			; DATA XREF: sub_11FE-8Cr
 word_10322	dw 0A800h		; DATA XREF: sub_DCC+7Er sub_12B4+9w ...
 word_10324	dw 3E80h		; DATA XREF: sub_12B4+Fw sub_1302+14r	...
@@ -37134,18 +37046,10 @@ word_107C4	dw 0			; DATA XREF: sub_EB66+1Cw sub_EB66+49r ...
 word_107C6	dw 0			; DATA XREF: sub_EB66+27w sub_EB66+42r ...
 word_107C8	dw 0			; DATA XREF: sub_EB66+32w sub_EB66+3Br ...
 word_107CA	dw 4E20h		; DATA XREF: _main+Cw sub_F0B4+3r
-		db  65h	; e
-		db  66h	; f
-		db  63h	; c
-		db    0
+aEfc		db 'efc',0
 dword_107D0	dd 6Dh			; DATA XREF: sub_ED60+88r
-		db  6Dh	; m
-		db  32h	; 2
-		db    0
-		db  6Dh	; m
-		db  6Dh	; m
-		db  64h	; d
-		db    0
+aM2		db 'm2',0
+aMmd		db 'mmd',0
 byte_107DB	db 0			; DATA XREF: sub_E81A+Dw
 					; sub_E878:loc_E8C4w ...
 byte_107DC	db 0			; DATA XREF: sub_E81A+Aw sub_E878+22w	...
@@ -37610,108 +37514,10 @@ aHi01_pi	db 'hi01.pi',0          ; DATA XREF: sub_C1DD+28o
 aScnum_bft	db 'scnum.bft',0        ; DATA XREF: sub_C1DD+50o
 aSctm0_bft	db 'sctm0.bft',0        ; DATA XREF: sub_C1DD+59o
 aSctm1_bft	db 'sctm1.bft',0        ; DATA XREF: sub_C1DD+62o
-unk_11676	db  83h	; ÅE	; DATA XREF: sub_C1DD+F5o
-		db  58h	; X
-		db  83h	; ÅE
-		db  8Dh	; ÅE
-		db  81h	; ÅE
-		db  5Bh	; [
-		db  83h	; ÅE
-		db  82h	; ÅE
-		db  81h	; ÅE
-		db  5Bh	; [
-		db  83h	; ÅE
-		db  68h	; h
-		db  82h	; ÅE
-		db 0C5h	; ≈
-		db  82h	; ÅE
-		db 0CCh	; Ã
-		db  83h	; ÅE
-		db  76h	; v
-		db  83h	; ÅE
-		db  8Ch	; ÅE
-		db  83h	; ÅE
-		db  43h	; C
-		db  82h	; ÅE
-		db 0C5h	; ≈
-		db  82h	; ÅE
-		db 0CDh	; Õ
-		db  81h	; ÅE
-		db  41h	; A
-		db  83h	; ÅE
-		db  58h	; X
-		db  83h	; ÅE
-		db  52h	; R
-		db  83h	; ÅE
-		db  41h	; A
-		db  82h	; ÅE
-		db 0CDh	; Õ
-		db  8Bh	; ÅE
-		db  4Ch	; L
-		db  98h	; ÅE
-		db  5Eh	; ^
-		db  82h	; ÅE
-		db 0B3h	; ≥
-		db  82h	; ÅE
-		db 0EAh	; ÅE
-		db  82h	; ÅE
-		db 0DCh	; ‹
-		db  82h	; ÅE
-		db 0B9h	; π
-		db  82h	; ÅE
-		db 0F1h	; ÅE
-		db    0
-unk_116A9	db  83h	; ÅE	; DATA XREF: sub_C1DD+106o
-		db  58h	; X
-		db  83h	; ÅE
-		db  8Dh	; ÅE
-		db  81h	; ÅE
-		db  5Bh	; [
-		db  83h	; ÅE
-		db  82h	; ÅE
-		db  81h	; ÅE
-		db  5Bh	; [
-		db  83h	; ÅE
-		db  68h	; h
-		db  82h	; ÅE
-		db 0C5h	; ≈
-		db  82h	; ÅE
-		db 0CCh	; Ã
-		db  83h	; ÅE
-		db  76h	; v
-		db  83h	; ÅE
-		db  8Ch	; ÅE
-		db  83h	; ÅE
-		db  43h	; C
-		db  82h	; ÅE
-		db 0C5h	; ≈
-		db  82h	; ÅE
-		db 0CDh	; Õ
-		db  81h	; ÅE
-		db  41h	; A
-		db  83h	; ÅE
-		db  58h	; X
-		db  83h	; ÅE
-		db  52h	; R
-		db  83h	; ÅE
-		db  41h	; A
-		db  82h	; ÅE
-		db 0CDh	; Õ
-		db  8Bh	; ÅE
-		db  4Ch	; L
-		db  98h	; ÅE
-		db  5Eh	; ^
-		db  82h	; ÅE
-		db 0B3h	; ≥
-		db  82h	; ÅE
-		db 0EAh	; ÅE
-		db  82h	; ÅE
-		db 0DCh	; ‹
-		db  82h	; ÅE
-		db 0B9h	; π
-		db  82h	; ÅE
-		db 0F1h	; ÅE
-		db    0
+aGxgnbGvbGhvVGv	db 'ÉXÉçÅ[ÉÇÅ[ÉhÇ≈ÇÃÉvÉåÉCÇ≈ÇÕÅAÉXÉRÉAÇÕãLò^Ç≥ÇÍÇ‹ÇπÇÒ',0
+					; DATA XREF: sub_C1DD+F5o
+aGxgnbGvbGhvV_0	db 'ÉXÉçÅ[ÉÇÅ[ÉhÇ≈ÇÃÉvÉåÉCÇ≈ÇÕÅAÉXÉRÉAÇÕãLò^Ç≥ÇÍÇ‹ÇπÇÒ',0
+					; DATA XREF: sub_C1DD+106o
 aName		db 'name',0             ; DATA XREF: sub_C1DD+13Fo
 		db 0
 word_116E2	dw 150h			; DATA XREF: sub_C8AE+116r
@@ -37764,76 +37570,26 @@ byte_116EA	db 0			; DATA XREF: sub_C729:loc_C786r
 		db 0AAh	; ™
 		db    0
 byte_11713	db 0			; DATA XREF: sub_C5E7+22r sub_C5E7+58r ...
-unk_11714	db  93h	; ÅE	; DATA XREF: sub_C67F+9Co
-		db  5Fh	; _
-		db    0
-unk_11717	db  81h	; ÅE	; DATA XREF: sub_C729+ECo
-		db  44h	; D
-		db    0
-unk_1171A	db  81h	; ÅE	; DATA XREF: sub_C729+FEo
-		db  93h	; ÅE
-		db    0
-unk_1171D	db  81h	; ÅE	; DATA XREF: sub_C835+6Bo
-		db  44h	; D
-		db    0
-unk_11720	db  81h	; ÅE	; DATA XREF: sub_C8AE+13Eo
-		db  93h	; ÅE
-		db    0
+aU__0		db 'ì_',0               ; DATA XREF: sub_C67F:loc_C71Bo
+aBd		db 'ÅD',0               ; DATA XREF: sub_C729+ECo
+aBu		db 'Åì',0               ; DATA XREF: sub_C729+FEo
+aBd_0		db 'ÅD',0               ; DATA XREF: sub_C835+6Bo
+aBu_0		db 'Åì',0               ; DATA XREF: sub_C8AE+13Eo
 aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@ òrëOîªíË',0 ; DATA XREF: sub_CA9B+21o
 aUqiUx		db 'ìÔà’ìx',0           ; DATA XREF: sub_CA9B+39o
 aNPiuU_		db 'ç≈èIìæì_',0         ; DATA XREF: sub_CA9B+51o
-unk_1174B	db  83h	; ÅE	; DATA XREF: sub_CA9B+69o
-		db  7Eh	; ~
-		db  83h	; ÅE
-		db  58h	; X
-		db  89h	; ÅE
-		db 0F1h	; ÅE
-		db  90h	; ÅE
-		db  94h	; ÅE
-		db    0
-unk_11754	db  83h	; ÅE	; DATA XREF: sub_CA9B+81o
-		db  7Bh	; {
-		db  83h	; ÅE
-		db  80h	; Ä
-		db  8Eh	; ÅE
-		db  67h	; g
-		db  97h	; ÅE
-		db  70h	; p
-		db  89h	; ÅE
-		db 0F1h	; ÅE
-		db  90h	; ÅE
-		db  94h	; ÅE
-		db    0
+aGGxi		db 'É~ÉXâÒêî',0         ; DATA XREF: sub_CA9B+69o
+aGGaogcpi	db 'É{ÉÄégópâÒêî',0     ; DATA XREF: sub_CA9B+81o
 aGqbGatbrmcj	db 'ÉQÅ[ÉÄíBê¨ó¶',0     ; DATA XREF: sub_CA9B+99o
 aIlcSObcj	db 'à´óÏëﬁé°ó¶',0       ; DATA XREF: sub_CA9B+B1o
-unk_11779	db  83h	; ÅE	; DATA XREF: sub_CA9B+C9o
-		db  41h	; A
-		db  83h	; ÅE
-		db  43h	; C
-		db  83h	; ÅE
-		db  65h	; e
-		db  83h	; ÅE
-		db  80h	; Ä
-		db  89h	; ÅE
-		db 0F1h	; ÅE
-		db  8Eh	; ÅE
-		db 0FBh	; ÅE
-		db  97h	; ÅE
-		db 0A6h	; ¶
-		db    0
+aGagcgegai	db 'ÉAÉCÉeÉÄâÒé˚ó¶',0   ; DATA XREF: sub_CA9B+C9o
 aUU_gagcgeganNv	db 'ìæì_ÉAÉCÉeÉÄç≈çÇì_ó¶',0 ; DATA XREF: sub_CA9B+E1o
 aLcnzvv		db 'ãCçáÇ¢',0           ; DATA XREF: sub_CA9B+F9o
 aPicacovCj	db 'èàóùóéÇøó¶',0       ; DATA XREF: sub_CA9B+111o
 aVavVVSrso	db 'Ç†Ç»ÇΩÇÃòrëO',0     ; DATA XREF: sub_CA9B+129o
-unk_117BC	db  89h	; ÅE	; DATA XREF: sub_CA9B+1D8o
-		db 0F1h	; ÅE
-		db    0
-unk_117BF	db  89h	; ÅE	; DATA XREF: sub_CA9B+1F3o
-		db 0F1h	; ÅE
-		db    0
-unk_117C2	db  93h	; ÅE	; DATA XREF: sub_CA9B+5C7o
-		db  5Fh	; _
-		db    0
+aI		db 'âÒ',0               ; DATA XREF: sub_CA9B+1D8o
+aI_0		db 'âÒ',0               ; DATA XREF: sub_CA9B+1F3o
+aU_		db 'ì_',0               ; DATA XREF: sub_CA9B+5C7o
 a_ude_txt	db '_ude.txt',0         ; DATA XREF: sub_CA9B+5D0o
 aBhbhbhbhbhbhu_	db 'ÅHÅHÅHÅHÅHÅHì_',0   ; DATA XREF: sub_CA9B+698o
 aPicacovVVcvsfT	db 'èàóùóéÇøÇ…ÇÊÇÈîªíËïsâ¬',0 ; DATA XREF: sub_CA9B+6B3o
@@ -38816,37 +38572,12 @@ aStringRefere_1	db 'String reference out of range',0
 aPath		db 'PATH',0
 		db '/\',0
 		db    0
-		db  2Eh	; .
-		db  42h	; B
-		db  41h	; A
-		db  54h	; T
-		db    0
-		db  2Eh	; .
-		db  43h	; C
-		db  4Fh	; O
-		db  4Dh	; M
-		db    0
-		db  2Eh	; .
-		db  45h	; E
-		db  58h	; X
-		db  45h	; E
-		db    0
-		db  2Eh	; .
-		db  42h	; B
-		db  41h	; A
-		db  54h	; T
-		db    0
-		db  43h	; C
-		db  4Fh	; O
-		db  4Dh	; M
-		db  53h	; S
-		db  50h	; P
-		db  45h	; E
-		db  43h	; C
-		db    0
-		db  2Fh	; /
-		db  63h	; c
-		db    0
+a_bat		db '.BAT',0
+a_com		db '.COM',0
+a_exe		db '.EXE',0
+a_bat_0		db '.BAT',0
+aComspec	db 'COMSPEC',0
+aC		db '/c',0
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
