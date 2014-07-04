@@ -62551,23 +62551,23 @@ off_1DB7E	dd aB@b@vVvbavtvVV	; DATA XREF: sub_B9E2+12Dr
 					; "　　はい、やめます。　"
 dword_1DB82	dd 0			; DATA XREF: sub_BCB1+7r
 word_1DB86	dw 0			; DATA XREF: sub_C1E4+Ar sub_C1E4+1Bw	...
-aTH02_02	db '　 博麗　～Eastern Wind ',0
-aTH02_03	db '　  She',27h,'s in a temper!! ',0
+aTH02_02	db ' Hakurei ～ Eastern Wind',0
+aTH02_03	db '　  She',27h,'s in a Temper!! ',0
 aTH02_04	db '　   End of Daylight　  ',0
-aTH02_05	db '   　 やみのちから　　  ',0
-aTH02_06	db '　　　　　幻夢界　　　　',0
-aTH02_07	db ' 　　　死を賭して　　　 ',0
-aTH02_08	db 'ひもろぎ、むらさきにもえ',0
-aTH02_09		db '   　 恋色マジック 　   ',0
-aTH02_10		db '　東方封魔録　～幽幻乱舞',0
+aTH02_05	db '　  Power of Darkness   ',0
+aTH02_06	db '　World of Empty Dreams ',0
+aTH02_07	db '　    Bet on Death      ',0
+aTH02_08	db 'Himorogi, Burn in Violet',0
+aTH02_09		db '　 Love-Coloured Magic  ',0
+aTH02_10		db '　A Phantom',027h,'s Wild Dance',0
 aTH02_11	db '   Complete Darkness    ',0
-aTH02_12	db '   　 エキストララブ    ',0
-aTH02_13	db '  戦車むすめのみるゆめ  ',0
+aTH02_12	db '　     Extra Love       ',0
+aTH02_13	db '　The Tank Girl',027h,'s Dream ',0
 aSTAGE1_TITLE	db '紫野　～ Purple Dawn',0
-aSTAGE2_TITLE	db '雷獣　～Midnight Rainstorm',0
+aSTAGE2_TITLE	db 'Raijuu～Midnight Rainstorm',0
 aSTAGE3_TITLE	db '紅夢　～ Scarlet Dream',0
 aSTAGE4_TITLE	db '霊魔　～Revengeful Ghost',0
-aSTAGE5_TITLE	db '封魔　～東方封魔録 and ...',0
+aSTAGE5_TITLE	db 'Sealing of a Demon, and...',0
 aEXTRA_TITLE		db '異空　～for Lunatic Gamers',0
 ; char arg0[3]
 arg0		db 'op',0               ; DATA XREF: _main+138o
@@ -62584,11 +62584,11 @@ aM		db 'm',0                ; DATA XREF: sub_B3DA+4CFo
 		db    0
 		db    0
 aMiko_k_mpn	db 'miko_k.mpn',0       ; DATA XREF: sub_B3DA+528o
-aGqbGapic	db 'ゲーム終了',0       ; DATA XREF: dseg:off_1DB6Co
-aGqbGanKj	db 'ゲーム再開',0       ; DATA XREF: dseg:off_1DB70o
-aVV2		db 'ほんとに終了しちゃうの',0 ; DATA XREF: dseg:off_1DB76o
-aVdvVVBbvVVVV	db 'うそです。すみません。',0 ; DATA XREF: dseg:off_1DB7Ao
-aB@b@vVvbavtvVV	db '　　はい、やめます。　',0 ; DATA XREF: dseg:off_1DB7Eo
+aGqbGapic	db '   Quit   ',0       ; DATA XREF: dseg:off_1DB6Co
+aGqbGanKj	db '  Resume  ',0       ; DATA XREF: dseg:off_1DB70o
+aVV2		db ' Are you really sure? ',0 ; DATA XREF: dseg:off_1DB76o
+aVdvVVBbvVVVV	db 'I was kidding.  Sorry.',0 ; DATA XREF: dseg:off_1DB7Ao
+aB@b@vVvbavtvVV	db '　　Yes, I',027h,'ll quit. 　',0 ; DATA XREF: dseg:off_1DB7Eo
 asc_1DDF7	db '                                                ',0
 					; DATA XREF: sub_C05D+20o sub_C05D+32o
 aDemo1_rec	db 'DEMO1.REC',0        ; DATA XREF: sub_C13E+39o
@@ -63898,22 +63898,22 @@ aHuuma_cfg	db 'huuma.cfg',0        ; DATA XREF: sub_C273+5o
 		db  78h	; x
 asc_1E3F0	db 'ｫｸｶｾｼ',0            ; DATA XREF: sub_FC53+10o
 asc_1E3F6	db 'ｫｸｶｾｼ',0            ; DATA XREF: sub_FE12+10o
-aUqiUx		db ' 難易度',0          ; DATA XREF: sub_FC53+40o
-aGxgebGw	db 'ステージ',0         ; DATA XREF: sub_FC53+57o
-aGGa		db 'ボム',0             ; DATA XREF: sub_FC53+86o
-aGGx		db 'ミス',0             ; DATA XREF: sub_FC53+ABo
-aSMvpik		db '靈撃初期数',0       ; DATA XREF: sub_FC53+BAo
-aSCPik		db '靈夢初期数',0       ; DATA XREF: sub_FC53+DCo
+aUqiUx		db 'Ranking',0          ; DATA XREF: sub_FC53+40o
+aGxgebGw	db 'Stage 　',0         ; DATA XREF: sub_FC53+57o
+aGGa		db 'Bomb',0             ; DATA XREF: sub_FC53+86o
+aGGx		db 'Miss',0             ; DATA XREF: sub_FC53+ABo
+aSMvpik		db 'Init. Bomb',0       ; DATA XREF: sub_FC53+BAo
+aSCPik		db 'Init. Life',0       ; DATA XREF: sub_FC53+DCo
 aU_		db '点',0               ; DATA XREF: sub_FC53+10Eo
 					; sub_FE12+CEo
 aB		db '×',0               ; DATA XREF: sub_FC53+133o
 					; sub_FE12+F3o
 aBb		db '＝',0               ; DATA XREF: sub_FC53+163o
 					; sub_FE12+123o
-aGngkga		db 'クリア',0           ; DATA XREF: sub_FE12+40o
-aGGxi		db 'ミス回数',0         ; DATA XREF: sub_FE12+67o
-aGGai		db 'ボム回数',0         ; DATA XREF: sub_FE12+8Co
-aGngkgagGcga	db 'クリアタイム',0     ; DATA XREF: sub_FE12+BBo
+aGngkga		db 'Clear ',0           ; DATA XREF: sub_FE12+40o
+aGGxi		db 'Lives 　',0         ; DATA XREF: sub_FE12+67o
+aGGai		db 'Bombs 　',0         ; DATA XREF: sub_FE12+8Co
+aGngkgagGcga	db 'Time Bonus　',0     ; DATA XREF: sub_FE12+BBo
 aKOO_0		db 'ｰｪｷｮｸｿｮｻ',0         ; DATA XREF: sub_C31F+3Fo sub_C31F+67o ...
 aMO		db 'ｬｸｶｽｲｶｾｮﾝ',0        ; DATA XREF: sub_C31F+116o
 aO		db 'ﾂｮｼ',0              ; DATA XREF: sub_C2F4+Ao
@@ -63930,16 +63930,16 @@ asc_1E47E	db '                ',0 ; DATA XREF: sub_C31F+30o sub_C31F+53o ...
 		db    0
 		db    1
 		db    0
-NUMERALS	db    0, 38h, 44h, 82h,	82h, 82h, 44h, 38h ; DATA XREF:	numerals_draw+2Fo
-		db    0,   0,	0,   6,	7Eh,   0,   0,	 0
-		db    0, 0Ch, 3Ch,   0,	  0,   6, 7Eh,	 0
-		db    6, 7Eh,	0,   6,	3Ch,   0,   3,0FFh
-		db    0, 7Eh, 5Ah, 7Eh,	42h, 42h, 7Eh,	 0
-		db    0, 7Eh,	8, 10h,	7Ch, 24h, 44h,0FFh
-		db    0, 18h, 7Eh,   0,	  0, 24h, 42h,	 0
-		db    0, 20h, 7Eh, 20h,	20h, 3Ch,   0,	 0
-		db    0,   4, 24h, 22h,	42h, 41h,   0,	 0
-		db    0, 10h, 3Eh, 24h,	26h, 4Ah, 8Eh,	 0
+NUMERALS	db    0, 38h, 44h, 44h,	44h, 44h, 44h, 38h ; DATA XREF:	numerals_draw+2Fo
+		db    0, 38h, 18h, 18h,	18h, 18h, 18h, 18h
+		db    0, 7Ch,	2,   2,	3Eh, 40h, 40h, 7Eh
+		db    0, 7Ch,	2,   2,	3Ch,   2,   2, 7Ch
+		db    0, 42h, 42h, 42h,	7Eh,   2,   2,	 2
+		db    0, 7Eh, 40h, 40h,	7Ch,   2,   2, 7Ch
+		db    0, 7Eh, 40h, 40h,	7Eh, 42h, 42h, 7Eh
+		db    0, 7Eh,	2,   2,	  2,   2,   2,	 2
+		db    0, 3Ch, 42h, 42h,	3Ch, 42h, 42h, 3Ch
+		db    0, 3Ch, 42h, 42h,	3Eh,   2,   2,	 2
 		db    0,   0, 24h, 18h,	18h, 24h,   0,	 0
 		db    0, 18h, 18h,   0,0FFh,   0, 18h, 18h
 		db    0

@@ -33734,46 +33734,46 @@ aMiko_cfg	db 'MIKO.CFG',0         ; DATA XREF: sub_A74C+5o sub_A7F0+5o ...
 aMain		db 'main',0             ; DATA XREF: sub_A8F1+5Do sub_A8F1+61o ...
 ; char path[]
 path		db 'deb',0              ; DATA XREF: sub_A8F1+6Ao sub_A8F1+6Eo
-aGqbGav		db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·',0 ; DATA XREF: dseg:009Eo
-aGgglgxgggigxge	db 'ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚ğŠJn‚µ‚Ü‚·',0 ; DATA XREF: dseg:00A2o
-aMNVGngcgxgrgav	db 'Œ»İ‚ÌƒnƒCƒXƒRƒA‚ğ•\¦‚µ‚Ü‚·',0 ; DATA XREF: dseg:00A6o
-aIKyoVU		db '‰¹Šyº‚É“ü‚è‚Ü‚·',0 ; DATA XREF: dseg:00AAo
-aKeoarTsv	db 'Šeíİ’è‚ğ•ÏXo—ˆ‚Ü‚·',0 ; DATA XREF: dseg:00AEo
-aVcvnvrvCVsvV	db '‚c‚n‚r‚É–ß‚è‚Ü‚·',0 ; DATA XREF: dseg:00B2o
-aUqiUxv		db '“ïˆÕ“x‚ğ‚â‚³‚µ‚­‚µ‚Ü‚·@i‰SÒŒü‚¯A‚T–ÊƒGƒ“ƒhj',0
+aGqbGav		db '    Start the game',0 ; DATA XREF: dseg:009Eo
+aGgglgxgggigxge	db '         Start the Extra stage',0 ; DATA XREF: dseg:00A2o
+aMNVGngcgxgrgav	db '   Show the current Hi-score',0 ; DATA XREF: dseg:00A6o
+aIKyoVU		db 'Go to Music Room',0 ; DATA XREF: dseg:00AAo
+aKeoarTsv	db '  Change settings here',0 ; DATA XREF: dseg:00AEo
+aVcvnvrvCVsvV	db '   Return to DOS',0 ; DATA XREF: dseg:00B2o
+aUqiUxv		db '  Set difficulty to Easy (for beginners, 5 stages)',0
 					; DATA XREF: dseg:00B6o
-aUqiUxv_1	db '“ïˆÕ“x‚ğ•W€‚É‚µ‚Ü‚·@@@iˆê”ÊŒü‚¯A‘S‚U–Êj@@',0
+aUqiUxv_1	db 'Set difficulty to Normal (for most people, 6 stg.)',0
 					; DATA XREF: dseg:00BAo
-aUqiUxv_0	db '“ïˆÕ“x‚ğ“ï‚µ‚­‚µ‚Ü‚·@@@iƒA[ƒP[ƒ_[Œü‚¯j@@',0
+aUqiUxv_0	db '       Set difficulty to Hard (for arcade players)',0
 					; DATA XREF: dseg:00BEo
-aUqiUxv_2	db '“ïˆÕ“x‚ğ”ñí‚É“ï‚µ‚­‚µ‚Ü‚·@iƒVƒ…[ƒ^[Œü‚¯j@@',0
+aUqiUxv_2	db '     Set difficulty to Lunatic (for real shooters)',0
 					; DATA XREF: dseg:00C2o
-aGqbGagxgBGgouv	db 'ƒQ[ƒ€ƒXƒ^[ƒg‚Ìl”‚ğ•ÏXo—ˆ‚Ü‚·iœ‚­ƒGƒLƒXƒgƒ‰j',0
+aGqbGagxgBGgouv	db '        Change amount of init. lives (excluding Extra)',0
 					; DATA XREF: dseg:00C6o
-aGGavOgcpi	db 'ƒ{ƒ€‚Ìg—p‰ñ”‚ğ•ÏXo—ˆ‚Ü‚·iœ‚­ƒGƒLƒXƒgƒ‰j',0
+aGGavOgcpi	db 'Change amount of init. bombs (excluding Extra)',0
 					; DATA XREF: dseg:00CAo
-aVavfvlvCmvVVV	db '‚a‚f‚l‚Í—¬‚ê‚Ü‚¹‚ñ',0 ; DATA XREF: dseg:00CEo
-aVavfvlvVqvuvji	db '‚a‚f‚l‚É‚Q‚U‚j‰¹Œ¹ŒİŠ·‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00D2o
-aVavfvlvVwvuiMM	db '‚a‚f‚l‚É‚W‚U‰¹Œ¹ŒİŠ·‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00D6o
-aM_0		db 'Œø‰Ê‰¹‚Í—¬‚ê‚Ü‚¹‚ñ',0 ; DATA XREF: dseg:00DAo
-aM_2		db 'Œø‰Ê‰¹‚É‚e‚l‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00DEo
-aM_1		db 'Œø‰Ê‰¹‚É‚a‚…‚…‚‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00E2o
-aUgtevSVvpPkvBa	db '“G’e‚Ì‘½‚¢êŠ‚ÅA‚í‚´‚Æˆ——‚¿iƒXƒ[j‚³‚¹‚Ü‚·i‰SÒ—pj',0
+aVavfvlvCmvVVV	db '      Turn BGM off',0 ; DATA XREF: dseg:00CEo
+aVavfvlvVqvuvji	db '   Use 26K-compatible sound device',0 ; DATA XREF: dseg:00D2o
+aVavfvlvVwvuiMM	db '  Use 86-compatible sound device',0 ; DATA XREF: dseg:00D6o
+aM_0		db '      Turn SFX off',0 ; DATA XREF: dseg:00DAo
+aM_2		db '       Use FM device for SFX',0 ; DATA XREF: dseg:00DEo
+aM_1		db '         Use Beep device for SFX',0 ; DATA XREF: dseg:00E2o
+aUgtevSVvpPkvBa	db ' Artificially slow down the game when many bullets are present',0
 					; DATA XREF: dseg:00E6o
-aPicacovV	db 'ˆ——‚¿‚ğƒ}ƒVƒ“‚ÌƒXƒs[ƒh‚É”C‚¹‚Ü‚·i•W€j',0 ; DATA XREF: dseg:00EAo
-aVVGigvgvgzguv	db '‚±‚ÌƒIƒvƒVƒ‡ƒ“‚ğ‘S‚Ä•W€‚É–ß‚µ‚Ü‚·',0 ; DATA XREF: dseg:00EEo
-aGigvgvgzguv	db 'ƒIƒvƒVƒ‡ƒ“‚ğI—¹‚µ‚Ü‚·',0 ; DATA XREF: dseg:00F2o
-aGqbGav_0	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒC[ƒW[j',0 ; DATA XREF: dseg:00F6o
-aGqbGav_1	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒm[ƒ}ƒ‹j',0 ; DATA XREF: dseg:00FAo
-aGqbGav_2	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒn[ƒhj',0 ; DATA XREF: dseg:00FEo
-aGqbGav_3	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒ‹ƒiƒeƒBƒbƒNj',0 ; DATA XREF: dseg:0102o
+aPicacovV	db ' Let the computer handle slowdowns (default)',0 ; DATA XREF: dseg:00EAo
+aVVGigvgvgzguv	db '    Return all settings to default',0 ; DATA XREF: dseg:00EEo
+aGigvgvgzguv	db '   Exit options screen',0 ; DATA XREF: dseg:00F2o
+aGqbGav_0	db '    Start the game (Easy mode)',0 ; DATA XREF: dseg:00F6o
+aGqbGav_1	db '  Start the game (Normal mode)',0 ; DATA XREF: dseg:00FAo
+aGqbGav_2	db '  Start the game (Hard mode)',0 ; DATA XREF: dseg:00FEo
+aGqbGav_3	db '     Start the game (Lunatic mode)',0 ; DATA XREF: dseg:0102o
 aOp1_pi		db 'op1.pi',0           ; DATA XREF: sub_AE96+CCo
 					; sub_AE96+130o
 aOp		db 'op',0               ; DATA XREF: sub_B052+E4o
 					; sub_B052+1B6o ...
 aMSzlEd_dat	db 'Œ¶‘z‹½ed.dat',0     ; DATA XREF: _main+17o
 asc_F7F7	db 0Ah			; DATA XREF: _main+27o
-		db '‹ó‚«ƒƒ‚ƒŠ•s‘«‚Å‚·Bƒƒ‚ƒŠ‹ó‚«‚ğ‘‚â‚µ‚Ä‚©‚çÀs‚µ‚Ä‚Ë',0Ah,0
+		db 'Not enough free memory. Free up some memory & restart.',0Ah,0
 aGameft_bft	db 'GAMEFT.bft',0       ; DATA XREF: _main+3Ao
 aMiko		db 'miko',0             ; DATA XREF: _main+74o
 word_F840	dw 0			; DATA XREF: seg000:048Dr
@@ -35041,48 +35041,48 @@ byte_FD8A	db 0			; DATA XREF: seg002:0BC4w sub_E5E0+Br	...
 		dd aM			; " Œø‰Ê‰¹–³‚µ F‰½‚ç‚©‚Ì–î‚ÅŒø‰Ê‰¹‚ğ–Â‚"...
 		dd aB@b@b@b@b@b@_3	; "@@@@@@@–³‚¢ê‡		  "...
 		dd aVVibavVVcvRTsv	; "‚È‚¨A‚±‚ê‚ç‚Ìİ’è‚Í‚n‚‚”‚‰‚‚‚Å•ÏX‰"...
-aGxgegmgivevliM	db 'ƒXƒeƒŒƒI‚e‚l‰¹Œ¹FPC-9801-86(ŒİŠ·)ƒ{[ƒh@@@',0
+aGxgegmgivevliM	db 'Stereo FM source: PC-9801-86 (or comp.) board ',0
 					; DATA XREF: dseg:0A4Co
-aB@b@b@b@b@b@b@	db '@@@@@@@@@CanBe“à‘ ‰¹Œ¹‚È‚ÇA         ',0
+aB@b@b@b@b@b@b@	db '@@@@@@@@@CanBe internal sound device ',0
 					; DATA XREF: dseg:0A50o
-aB@b@b@b@b@b@_0	db '@@@@@@@‚e‚l‚U‰¹{‚r‚r‚f‚R‰¹{ƒŠƒYƒ€‰¹Œ¹',0
+aB@b@b@b@b@b@_0	db '@@@@@@@  6 FM ch.{3 SSG ch.{Rhythm SD',0
 					; DATA XREF: dseg:0A54o
-aB@xwpavevliMBf	db '@•W€‚e‚l‰¹Œ¹F  PC-9801-26K(ŒİŠ·)ƒ{[ƒh     ',0
+aB@xwpavevliMBf	db 'Non-Stereo FM src:PC-9801-26K (or comp.) board',0
 					; DATA XREF: dseg:0A58o
-aPc9801dausvUrs	db '                  PC-9801DA“™‚É“à‘ ‚Ì‰¹Œ¹‚È‚Ç ',0
+aPc9801dausvUrs	db '                  PC-9801DA models internal SD',0
 					; DATA XREF: dseg:0A5Co
-aB@b@b@b@b@b@_1	db '@@@@@@@@@‚e‚l‚R‰¹{‚r‚r‚f‚R‰¹        ',0
+aB@b@b@b@b@b@_1	db '@@@@@@@@@3 FM ch.{3 SSG ch.         ',0
 					; DATA XREF: dseg:0A60o
-aB@b@iKycVBfb@b	db '@@‰¹Šy–³‚µF@@‚e‚l‰¹Œ¹‚ª–³‚¢ê‡          ',0
+aB@b@iKycVBfb@b	db '@@No Music: @@In case you don',027h,'t have FM SD',0
 					; DATA XREF: dseg:0A64o
 asc_FF1D	db '                                              ',0
 					; DATA XREF: dseg:0A68o
-aVVibavVVcvRTsv	db '‚È‚¨A‚±‚ê‚ç‚Ìİ’è‚Í‚n‚‚”‚‰‚‚‚Å•ÏX‰Â”\‚Å‚·',0
+aVVibavVVcvRTsv	db 'You can change these settings from Option menu',0
 					; DATA XREF: dseg:0A6Co dseg:0A90o
-aB@vevliMB@bfm	db '@‚e‚l‰¹Œ¹@FŒø‰Ê‰¹‚É‚e‚l‰¹Œ¹‚ğg—p‚µ‚Ü‚·@@',0
+aB@vevliMB@bfm	db 'FM SD: Allows to play SFX through FM channels.',0
 					; DATA XREF: dseg:0A70o
-aB@b@b@b@b@b@_2	db '@@@@@@@‚a‚f‚l‚ªƒXƒeƒŒƒI‚e‚l‰¹Œ¹„§@',0
+aB@b@b@b@b@b@_2	db '@@@ Recommended if you have stereo FM SD.@',0
 					; DATA XREF: dseg:0A74o
-aB@B@B@b@bixwpa	db '@ @ @@i•W€‚e‚l‰¹Œ¹‚Å‚ÍA3ch‚ğg—p‚µ‚Ü‚· ',0
+aB@B@B@b@bixwpa	db '@ @  (Non-Stereo FM devices only have 3 chs,',0
 					; DATA XREF: dseg:0A78o
-aB@B@b@b@b@VVBa	db '@ @@@@ ‚Ì‚ÅA‚a‚f‚l‚ª³í‚É‚«‚¯‚È‚¢‚©‚àj',0
+aB@B@b@b@b@VVBa	db '@ @@so you might not be able to hear music)',0
 					; DATA XREF: dseg:0A7Co
-aVavevevriMBfm	db '‚a‚…‚…‚‰¹Œ¹FŒø‰Ê‰¹‚É‚a‚…‚…‚‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0
+aVavevevriMBfm	db 'Beep SD: Plays SFX through Beep device.       ',0
 					; DATA XREF: dseg:0A80o
-aVevliMVkcVvpNz	db '              ‚e‚l‰¹Œ¹‚ª–³‚¢ê‡g—p‚µ‚Ü‚·@@',0
+aVevliMVkcVvpNz	db '         Use if you don',027h,'t have FM sound device',0
 					; DATA XREF: dseg:0A84o
-aM		db ' Œø‰Ê‰¹–³‚µ F‰½‚ç‚©‚Ì–î‚ÅŒø‰Ê‰¹‚ğ–Â‚ç‚µ‚½‚­',0
+aM		db 'No SFX: Use if, for some reason, you don',027h,'t    ',0
 					; DATA XREF: dseg:0A88o
-aB@b@b@b@b@b@_3	db '@@@@@@@–³‚¢ê‡                        ',0
+aB@b@b@b@b@b@_3	db '@@@@want to hear anything.                ',0
 					; DATA XREF: dseg:0A8Co
-aGxgegmgivevl_0	db 'ƒXƒeƒŒƒI‚e‚l‰¹Œ¹',0
-aB@xwpavevliMB@	db '@•W€‚e‚l‰¹Œ¹@',0
-aB@b@iKycVB@b@	db '@@‰¹Šy–³‚µ@@',0
-aB@b@vevliMB@b@	db '@@‚e‚l‰¹Œ¹@@',0
-aB@vavevevriMB@	db '@‚a‚…‚…‚‰¹Œ¹@',0
-aB@M		db '@ Œø‰Ê‰¹–³‚µ @',0
-aB@b@b@b@b@ogcp	db '@@@@@g—p‚·‚é‰¹Œ¹‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢‚Ë™',0 ; DATA XREF: sub_B794+1Co
-aB@b@b@b@m	db '@@@@Œø‰Ê‰¹‚Ég—p‚·‚é‰¹Œ¹‚ğ‘I‘ğ‚µ‚Ä‚Ë™',0 ; DATA XREF: sub_B8B1+1Co
+aGxgegmgivevl_0	db 'Stereo FM SD    ',0
+aB@xwpavevliMB@	db 'Non-Stereo FM SD',0
+aB@b@iKycVB@b@	db 'No Music    @@',0
+aB@b@vevliMB@b@	db 'FM sound device ',0
+aB@vavevevriMB@	db 'Beep SD       @',0
+aB@M		db 'No sound effects',0
+aB@b@b@b@b@ogcp	db '   Please choose a SD that will be used.™',0 ; DATA XREF: sub_B794+1Co
+aB@b@b@b@m	db '@ Please choose a SD for sound effects.™',0 ; DATA XREF: sub_B8B1+1Co
 aMswin_bft	db 'mswin.bft',0        ; DATA XREF: sub_B9CE+Fo
 aMs_pi		db 'ms.pi',0            ; DATA XREF: sub_B9CE+20o
 		db    0
@@ -35140,28 +35140,28 @@ aZun03_bft	db 'zun03.bft',0        ; DATA XREF: sub_BC35+12Do
 		dd aName_0		; "name"
 byte_102AE	db 0			; DATA XREF: sub_C04E+4r sub_C04E+AAw
 byte_102AF	db 0			; DATA XREF: sub_C3B7+61r sub_C3B7+89r ...
-aNo_1MSzlBLotus	db 'No.1   Œ¶‘z‹½  ` Lotus Land Story',0 ; DATA XREF: dseg:0EB6o
+aNo_1MSzlBLotus	db 'No.1  Gensokyo ` Lotus Land Story',0 ; DATA XREF: dseg:0EB6o
 aNo_2WitchingDr	db 'No.2         Witching Dream       ',0 ; DATA XREF: dseg:0EBAo
-aNo_3SeleneSLig	db 'No.3         Selene',27h,'s light       ',0 ; DATA XREF: dseg:0EBEo
-aNo_4Sxp	db 'No.4  ‘•üí@` Decoration Battle',0 ; DATA XREF: dseg:0EC2o
+aNo_3SeleneSLig	db 'No.3         Selene',27h,'s Light       ',0 ; DATA XREF: dseg:0EBEo
+aNo_4Sxp	db 'No.4        Decoration Battle     ',0 ; DATA XREF: dseg:0EC2o
 aNo_5BreakTheSa	db 'No.5        Break the Sabbath     ',0 ; DATA XREF: dseg:0EC6o
-aNo_6NglLBScarl	db 'No.6   g‹¿‹È  ` Scarlet Phoneme ',0 ; DATA XREF: dseg:0ECAo
+aNo_6NglLBScarl	db 'No.6  Scarlet Symphony ` Scar... ',0 ; DATA XREF: dseg:0ECAo
 aNo_7BadApple	db 'No.7           Bad Apple!!        ',0 ; DATA XREF: dseg:0ECEo
-aNo_8CRab@bPerd	db 'No.8    —ìí@` Perdition crisis ',0 ; DATA XREF: dseg:0ED2o
-aNo_9GagkgxgGgg	db 'No.9        ƒAƒŠƒXƒ}ƒGƒXƒeƒ‰      ',0 ; DATA XREF: dseg:0ED6o
-aNo_10Pnpcuyszl	db 'No.10   ­—ãY‘z‹È@` Capriccio  ',0 ; DATA XREF: dseg:0EDAo
-aNo_11RpvKab@bC	db 'No.11  ¯‚ÌŠí@` Casket of Star  ',0 ; DATA XREF: dseg:0EDEo
+aNo_8CRab@bPerd	db 'No.8 Spirit Battle ` Perdition...',0 ; DATA XREF: dseg:0ED2o
+aNo_9GagkgxgGgg	db 'No.9          Alice Maestra       ',0 ; DATA XREF: dseg:0ED6o
+aNo_10Pnpcuyszl	db 'No.10      Maiden',027h,'s Capriccio     ',0 ; DATA XREF: dseg:0EDAo
+aNo_11RpvKab@bC	db 'No.11 Vessel of Stars ` Casket...',0 ; DATA XREF: dseg:0EDEo
 aNo_12LotusLove	db 'No.12          Lotus Love         ',0 ; DATA XREF: dseg:0EE2o
-aNo_13CVVslXBSl	db 'No.13 –°‚ê‚é‹°•| `Sleeping Terror',0 ; DATA XREF: dseg:0EE6o
+aNo_13CVVslXBSl	db 'No.13       Sleeping Terror       ',0 ; DATA XREF: dseg:0EE6o
 aNo_14DreamLand	db 'No.14          Dream Land         ',0 ; DATA XREF: dseg:0EEAo
-aNo_15ChcB@bIna	db 'No.15   —H–²@` Inanimate Dream  ',0 ; DATA XREF: dseg:0EEEo
-aNo_16LVVVsv	db 'No.16     ‹Ö‚¶‚´‚é‚ğ‚¦‚È‚¢—V‹Y    ',0 ; DATA XREF: dseg:0EF2o
-aNo_17GbgcghmSz	db 'No.17 ƒƒCƒhŒ¶‘z@` Icemilk Magic',0 ; DATA XREF: dseg:0EF6o
-aNo_18Vivavvvvi	db 'No.18  ‚©‚í‚¢‚¢ˆ«–‚@` Innocence ',0 ; DATA XREF: dseg:0EFAo
+aNo_15ChcB@bIna	db 'No.15 Faint Dream ` Inanimate... ',0 ; DATA XREF: dseg:0EEEo
+aNo_16LVVVsv	db 'No.16  Inevitably Forbidden Game  ',0 ; DATA XREF: dseg:0EF2o
+aNo_17GbgcghmSz	db 'No.17  Illusion of Maid ` Ice... ',0 ; DATA XREF: dseg:0EF6o
+aNo_18Vivavvvvi	db 'No.18   Cute Devil ` Innocence   ',0 ; DATA XREF: dseg:0EFAo
 aNo_19Days	db 'No.19             Days            ',0 ; DATA XREF: dseg:0EFEo
 aNo_20Peaceful	db 'No.20           Peaceful          ',0 ; DATA XREF: dseg:0F02o
 aNo_21ArcadianD	db 'No.21        Arcadian Dream       ',0 ; DATA XREF: dseg:0F06o
-aNo_22MSzvPzrl	db 'No.22          Œ¶‘z‚ÌZl         ',0 ; DATA XREF: dseg:0F0Ao
+aNo_22MSzvPzrl	db 'No.22 Those Who Live in Illusions ',0 ; DATA XREF: dseg:0F0Ao
 asc_105B2	db '                                  ',0 ; DATA XREF: dseg:0F0Eo
 aB@b@vpvxvivf	db '            @@‚p‚•‚‰‚”          ',0 ; DATA XREF: dseg:0F12o
 aOp_2		db 'op',0               ; DATA XREF: sub_C3B7+1AFo dseg:0F16o
@@ -35217,16 +35217,16 @@ aOp1_pi_1	db 'op1.pi',0           ; DATA XREF: sub_CCD2+187o
 		dd aGpgcghgvgzgbgg	; "    ƒƒCƒhƒVƒ‡ƒbƒg	 "
 		dd aGcgkgebGwgzgug	; "ƒCƒŠƒ…[ƒWƒ‡ƒ“ƒŒ[ƒU["
 		dd aGigsgbghgvgzgb	; "   ƒ‰ƒsƒbƒhƒVƒ‡ƒbƒg	 "
-aB@focasCBiiPcv	db '@”—íèË–²i›Ş—‚³‚ñj ',0 ; DATA XREF: dseg:13D4o
-aNlfINumvmB@	db '     L”ÍˆÍUŒ‚Œ^@    ',0 ; DATA XREF: dseg:13D8o
-aCIjcvcanBicvc@	db ' –¶‰J–‚—¹i–‚–@g‚¢j',0 ; DATA XREF: dseg:13DCo
-aNumvcPdolm	db '     UŒ‚—Íd‹Œ^      ',0 ; DATA XREF: dseg:13E0o
-aB@GtbGGvgzgbgg	db '@  ƒT[ƒ`ƒVƒ‡ƒbƒg@  ',0 ; DATA XREF: dseg:13E4o
-aGpgcghgvgzgbgg	db '    ƒƒCƒhƒVƒ‡ƒbƒg    ',0 ; DATA XREF: dseg:13E8o
-aGcgkgebGwgzgug	db 'ƒCƒŠƒ…[ƒWƒ‡ƒ“ƒŒ[ƒU[',0 ; DATA XREF: dseg:13ECo
-aGigsgbghgvgzgb	db '   ƒ‰ƒsƒbƒhƒVƒ‡ƒbƒg   ',0 ; DATA XREF: dseg:13F0o
+aB@focasCBiiPcv	db '@   Reimu Hakurei     ',0 ; DATA XREF: dseg:13D4o
+aNlfINumvmB@	db '     Wide shot type    ',0 ; DATA XREF: dseg:13D8o
+aCIjcvcanBicvc@	db '    Marisa Kirisame    ',0 ; DATA XREF: dseg:13DCo
+aNumvcPdolm	db '  Power-oriented type  ',0 ; DATA XREF: dseg:13E0o
+aB@GtbGGvgzgbgg	db '@  Search Shot   @  ',0 ; DATA XREF: dseg:13E4o
+aGpgcghgvgzgbgg	db '    Wide Shot         ',0 ; DATA XREF: dseg:13E8o
+aGcgkgebGwgzgug	db '    Illusion Laser    ',0 ; DATA XREF: dseg:13ECo
+aGigsgbghgvgzgb	db '    Rapid Shot        ',0 ; DATA XREF: dseg:13F0o
 aStar		db '™',0               ; DATA XREF: sub_D465+72o sub_D465+F4o
-aGtgugegfgGuvSi	db 'ƒTƒuƒEƒFƒ|ƒ“‚Ì‘I‘ğ',0 ; DATA XREF: sub_D595+AFo
+aGtgugegfgGuvSi	db ' Choose Subweapon ',0 ; DATA XREF: sub_D595+AFo
 aSlb1_pi	db 'slb1.pi',0          ; DATA XREF: sub_D6B2+11o
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db    0

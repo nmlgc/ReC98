@@ -37357,91 +37357,91 @@ aExed14_pi_0	db 'EXED14.pi',0        ; DATA XREF: dseg:07CCo
 aExed06_pi	db 'EXED06.pi',0        ; DATA XREF: dseg:07D0o
 aExed16_pi_2	db 'EXED16.pi',0        ; DATA XREF: dseg:07D4o
 aExed15_pi_2	db 'EXED15.pi',0        ; DATA XREF: dseg:07D8o
-aProjectOfTouho	db '                  Project of TOUHOU    All Cast',0
+aProjectOfTouho	db '                   Touhou Project    All Cast  ',0
 aNo_1Buumx	db 'No.1 「東方靈異伝」 ～ Highly Responsive to Prayers    1996,1997',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakureiSh	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aNo_2Buumx	db 'No.2 「東方封魔録」 ～ The story of eastern wonderland 1997',0
+aNo_2Buumx	db 'No.2 「東方封魔録」 ～ Story of Eastern Wonderland     1997',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_0	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aRikaEngineer	db '         Rika                                ( Engineer )',0
+aRikaEngineer	db '      Rika                                   ( Engineer )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMeiraSamurai	db '         Meira                                ( Samurai )',0
+aMeiraSamurai	db '      Meira                                   ( Samurai )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMarisaKirisame	db '     Marisa Kirisame                         ( Sorceress )',0
+aMarisaKirisame	db '      Marisa Kirisame                        ( Sorceress )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMimaGhost	db '         Mima                                 ( Ghost )',0
+aMimaGhost	db '      Mima                                    ( Ghost )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aNo_3Buumx	db 'No.3 「東方夢時空」 ～ The Phantasmagoria of Dim.Dream... 1997',0
+aNo_3Buumx	db 'No.3 「東方夢時空」 ～ Phantasmagoria of Dim. Dream...    1997',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_1	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMarisaKirisa_0	db '     Marisa Kirisame                         ( Sorceress )',0
+aMarisaKirisa_0	db '      Marisa Kirisame                        ( Sorceress )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMimaGhost_0	db '         Mima                                  ( Ghost )',0
+aMimaGhost_0	db '      Mima                                     ( Ghost )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aEllenWitch	db '        Ellen                                  ( Witch )',0
+aEllenWitch	db '      Ellen                                    ( Witch )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aKotohimePrince	db '       Kotohime                               ( Princess )',0
+aKotohimePrince	db '      Kotohime                                ( Princess )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aKanaAnaberalPo	db '     Kana Anaberal                           ( Poltergeist )',0
+aKanaAnaberalPo	db '      Kana Anaberal                          ( Poltergeist )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aRikakoAsakuraS	db '     Rikako Asakura                          ( Scientist )',0
+aRikakoAsakuraS	db '      Rikako Asakura                         ( Scientist )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aTiyuriKitashir	db '   Tiyuri Kitashirakawa                  ( Assistant professor )',0
+aTiyuriKitashir	db '      Chiyuri Kitashirakawa              ( Assistant professor )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYumemiOkazakiP	db '     Yumemi Okazaki                          ( Professor )',0
+aYumemiOkazakiP	db '      Yumemi Okazaki                         ( Professor )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_4Buumx	db 'No.4 「東方幻想郷」 ～ Lotus Land Story                  1998',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_2	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMarisaKirisa_1	db '     Marisa Kirisame                         ( Sorceress )',0
+aMarisaKirisa_1	db '      Marisa Kirisame                        ( Sorceress )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aOrangeOriental	db '        Orange                             ( Oriental demon )',0
+aOrangeOriental	db '      Orange                               ( Oriental demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aKurumiVampire	db '        Kurumi                                ( Vampire )',0
+aKurumiVampire	db '      Kurumi                                  ( Vampire )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aElliyGateKeepe	db '        Elliy                                ( Gate keeper )',0
+aElliyGateKeepe	db '      Elly                                   ( Gate keeper )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukaOrientalDe	db '         Yuka                              ( Oriental demon )',0
+aYukaOrientalDe	db '      Yuuka                                ( Oriental demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMugetuMaid	db '        Mugetu                                 ( Maid )',0
+aMugetuMaid	db '      Mugetsu                                  ( Maid )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aGengetuDemon	db '        Gengetu                                ( Demon )',0
+aGengetuDemon	db '      Gengetsu                                 ( Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aNo_5Buumx	db 'No.5 「東方怪綺談」 ～ Mystic Square                    1998',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aReimuHakurei_3	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMarisaKirisa_2	db '     Marisa Kirisame                         ( Sorceress )',0
+aMarisaKirisa_2	db '      Marisa Kirisame                        ( Sorceress )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMimaGhost_1	db '         Mima                                  ( Ghost )',0
+aMimaGhost_1	db '      Mima                                     ( Ghost )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukaOriental_0	db '         Yuka                              ( Oriental demon )',0
+aYukaOriental_0	db '      Yuuka                                ( Oriental demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aSaraGateKeeper	db '         Sara                                ( Gate keeper )',0
+aSaraGateKeeper	db '      Sara                                   ( Gate keeper )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aLuizeDemon	db '        Luize                                  ( Demon )',0
+aLuizeDemon	db '      Louise                                   ( Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aAliceWitchOfDe	db '        Alice                              ( Witch of death )',0
+aAliceWitchOfDe	db '      Alice                                ( Witch of death )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukiBlackWitch	db '         Yuki                                ( Black witch )',0
+aYukiBlackWitch	db '      Yuki                                   ( Black witch )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMaiWhiteWitch	db '         Mai                                 ( White witch )',0
+aMaiWhiteWitch	db '      Mai                                    ( White witch )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYumekoMaid	db '        Yumeko                                 ( Maid )',0
+aYumekoMaid	db '      Yumeko                                   ( Maid )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aShinkiGoddessO	db '        Shinki                         ( Goddess of devil',27h,'s wo'
+aShinkiGoddessO	db '      Shinki                           ( Goddess of devil',27h,'s wo'
 					; DATA XREF: dseg:ALLCAST_PTRSo
 		db 'rld )',0
-aProgramerZunJu	db '      Programer                                ZUN (Junya Ota)',0
+aProgramerZunJu	db '    Programmer                                 ZUN (Junya Ota)',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aGraphicsZunJun	db '      Graphics                                 ZUN (Junya Ota)',0
+aGraphicsZunJun	db '    Graphics                                   ZUN (Junya Ota)',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMusicComposeZu	db '    Music Compose                              ZUN (Junya Ota)',0
+aMusicComposeZu	db '    Music Composer                             ZUN (Junya Ota)',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aP_m_d_ProgramM	db '    P.M.D. Program                             M.Kajihara(KAJA)',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
@@ -37449,7 +37449,7 @@ aSpecialThanksA	db '    Special Thanks                             Aotaka',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aAmusementMaker	db '                                               Amusement Makers',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aAndAllTestPlay	db '             and all test player and you ... ',0
+aAndAllTestPlay	db '             and all test players and you... ',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aExed		db 'EXED',0             ; DATA XREF: sub_B3CB+7Co
 byte_115EE	db 0AAh			; DATA XREF: sub_C1DD+1D9r
@@ -37514,9 +37514,9 @@ aHi01_pi	db 'hi01.pi',0          ; DATA XREF: sub_C1DD+28o
 aScnum_bft	db 'scnum.bft',0        ; DATA XREF: sub_C1DD+50o
 aSctm0_bft	db 'sctm0.bft',0        ; DATA XREF: sub_C1DD+59o
 aSctm1_bft	db 'sctm1.bft',0        ; DATA XREF: sub_C1DD+62o
-aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
+aGxgnbGvbGhvVGv	db 'The score will not be recorded for Slow Mode      ',0
 					; DATA XREF: sub_C1DD+F5o
-aGxgnbGvbGhvV_0	db 'スローモードでのプレイでは、スコアは記録されません',0
+aGxgnbGvbGhvV_0	db 'The score will not be recorded for Slow Mode      ',0
 					; DATA XREF: sub_C1DD+106o
 aName		db 'name',0             ; DATA XREF: sub_C1DD+13Fo
 		db 0
@@ -37575,32 +37575,32 @@ aBd		db '．',0               ; DATA XREF: sub_C729+ECo
 aBu		db '％',0               ; DATA XREF: sub_C729+FEo
 aBd_0		db '．',0               ; DATA XREF: sub_C835+6Bo
 aBu_0		db '％',0               ; DATA XREF: sub_C8AE+13Eo
-aB@b@b@b@b@b@b@	db '　　　　　　　 腕前判定',0 ; DATA XREF: sub_CA9B+21o
-aUqiUx		db '難易度',0           ; DATA XREF: sub_CA9B+39o
-aNPiuU_		db '最終得点',0         ; DATA XREF: sub_CA9B+51o
-aGGxi		db 'ミス回数',0         ; DATA XREF: sub_CA9B+69o
-aGGaogcpi	db 'ボム使用回数',0     ; DATA XREF: sub_CA9B+81o
-aGqbGatbrmcj	db 'ゲーム達成率',0     ; DATA XREF: sub_CA9B+99o
-aIlcSObcj	db '悪霊退治率',0       ; DATA XREF: sub_CA9B+B1o
-aGagcgegai	db 'アイテム回収率',0   ; DATA XREF: sub_CA9B+C9o
-aUU_gagcgeganNv	db '得点アイテム最高点率',0 ; DATA XREF: sub_CA9B+E1o
-aLcnzvv		db '気合い',0           ; DATA XREF: sub_CA9B+F9o
-aPicacovCj	db '処理落ち率',0       ; DATA XREF: sub_CA9B+111o
-aVavVVSrso	db 'あなたの腕前',0     ; DATA XREF: sub_CA9B+129o
+aB@b@b@b@b@b@b@	db '　　　　　Skill Verdict',0 ; DATA XREF: sub_CA9B+21o
+aUqiUx		db 'Level ',0           ; DATA XREF: sub_CA9B+39o
+aNPiuU_		db 'F. score',0         ; DATA XREF: sub_CA9B+51o
+aGGxi		db 'Deaths  ',0         ; DATA XREF: sub_CA9B+69o
+aGGaogcpi	db 'Bombs used  ',0     ; DATA XREF: sub_CA9B+81o
+aGqbGatbrmcj	db 'Completion  ',0     ; DATA XREF: sub_CA9B+99o
+aIlcSObcj	db 'Enemies   ',0       ; DATA XREF: sub_CA9B+B1o
+aGagcgegai	db 'Items collect.',0   ; DATA XREF: sub_CA9B+C9o
+aUU_gagcgeganNv	db 'Point items collect.',0 ; DATA XREF: sub_CA9B+E1o
+aLcnzvv		db 'Focus ',0           ; DATA XREF: sub_CA9B+F9o
+aPicacovCj	db 'Slowdown  ',0       ; DATA XREF: sub_CA9B+111o
+aVavVVSrso	db 'Your skill  ',0     ; DATA XREF: sub_CA9B+129o
 aI		db '回',0               ; DATA XREF: sub_CA9B+1D8o
 aI_0		db '回',0               ; DATA XREF: sub_CA9B+1F3o
 aU_		db '点',0               ; DATA XREF: sub_CA9B+5C7o
 a_ude_txt	db '_ude.txt',0         ; DATA XREF: sub_CA9B+5D0o
 aBhbhbhbhbhbhu_	db '？？？？？？点',0   ; DATA XREF: sub_CA9B+698o
-aPicacovVVcvsfT	db '処理落ちによる判定不可',0 ; DATA XREF: sub_CA9B+6B3o
+aPicacovVVcvsfT	db 'Undefined (slowdown)  ',0 ; DATA XREF: sub_CA9B+6B3o
 aUde_pi		db 'ude.pi',0           ; DATA XREF: sub_D1B1+17o
-aB@vpcB@	db '　１面　',0         ; DATA XREF: sub_D21D+16o
-aB@vqcB@	db '　２面　',0         ; DATA XREF: sub_D21D+2Eo
-aB@vrcB@	db '　３面　',0         ; DATA XREF: sub_D21D+46o
-aB@vscB@	db '　４面　',0         ; DATA XREF: sub_D21D+5Eo
-aB@vtcB@	db '　５面　',0         ; DATA XREF: sub_D21D+76o
-aB@vucB@	db '　６面　',0         ; DATA XREF: sub_D21D+8Eo
-aNPiuU__0	db '最終得点',0         ; DATA XREF: sub_D21D+A6o
+aB@vpcB@	db 'Stage 1 ',0         ; DATA XREF: sub_D21D+16o
+aB@vqcB@	db 'Stage 2 ',0         ; DATA XREF: sub_D21D+2Eo
+aB@vrcB@	db 'Stage 3 ',0         ; DATA XREF: sub_D21D+46o
+aB@vscB@	db 'Stage 4 ',0         ; DATA XREF: sub_D21D+5Eo
+aB@vtcB@	db 'Stage 5 ',0         ; DATA XREF: sub_D21D+76o
+aB@vucB@	db 'Stage 6 ',0         ; DATA XREF: sub_D21D+8Eo
+aNPiuU__0	db 'Total   ',0         ; DATA XREF: sub_D21D+A6o
 byte_1183A	db 0			; DATA XREF: sub_D5E1+24Ar
 					; sub_D8F5+33r	...
 		db 0

@@ -33564,40 +33564,40 @@ byte_F0DD	db 0			; DATA XREF: sub_ABCF+4r sub_ABCF+46w	...
 aMain		db 'main',0             ; DATA XREF: sub_A39C+8Bo sub_A39C+8Fo ...
 ; char path[]
 path		db 'deb',0              ; DATA XREF: sub_A39C+98o sub_A39C+9Co
-aMENU_START	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·',0 ; DATA XREF: dseg:0094o
-aMENU_START_EXTRA db 'ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚ğŠJn‚µ‚Ü‚·',0 ; DATA XREF: dseg:0098o
-aMENU_HISCORE	db 'Œ»İ‚ÌƒnƒCƒXƒRƒA‚ğ•\¦‚µ‚Ü‚·',0 ; DATA XREF: dseg:009Co
-aMENU_MUSICROOM		db '‰¹Šyº‚É“ü‚è‚Ü‚·',0 ; DATA XREF: dseg:00A0o
-aMENU_OPTION	db 'Šeíİ’è‚ğ•ÏXo—ˆ‚Ü‚·',0 ; DATA XREF: dseg:00A4o
-aMENU_QUIT	db '‚c‚n‚r‚É–ß‚è‚Ü‚·',0 ; DATA XREF: dseg:00A8o
-aMENU_EASY	db '“ïˆÕ“x‚ğ‚â‚³‚µ‚­‚µ‚Ü‚·@     i‰SÒŒü‚¯j@ ',0
+aMENU_START	db '    Start the game',0 ; DATA XREF: dseg:0094o
+aMENU_START_EXTRA db '         Start the Extra stage',0 ; DATA XREF: dseg:0098o
+aMENU_HISCORE	db '   Show the current Hi-score',0 ; DATA XREF: dseg:009Co
+aMENU_MUSICROOM		db 'Go to Music Room',0 ; DATA XREF: dseg:00A0o
+aMENU_OPTION	db '  Change settings here',0 ; DATA XREF: dseg:00A4o
+aMENU_QUIT	db '   Return to DOS',0 ; DATA XREF: dseg:00A8o
+aMENU_EASY	db '        Set difficulty to Easy (for beginners)',0
 					; DATA XREF: dseg:00ACo
-aMENU_NORMAL	db '“ïˆÕ“x‚ğ•W€‚É‚µ‚Ü‚·@@@    iˆê”ÊŒü‚¯j@@',0
+aMENU_NORMAL	db '    Set difficulty to Normal (for most people)',0
 					; DATA XREF: dseg:00B0o
-aMENU_HARD	db '“ïˆÕ“x‚ğ“ï‚µ‚­‚µ‚Ü‚·@@@iƒA[ƒP[ƒ_[Œü‚¯j',0
+aMENU_HARD	db '   Set difficulty to Hard (for arcade players)',0
 					; DATA XREF: dseg:00B4o
-aMENU_LUNATIC		db '“ïˆÕ“x‚ğ”ñí‚É“ï‚µ‚­‚µ‚Ü‚·@iƒVƒ…[ƒ^[Œü‚¯j',0
+aMENU_LUNATIC		db ' Set difficulty to Lunatic (for real shooters)',0
 					; DATA XREF: dseg:00B8o
-aMENU_LIVES db	'ƒQ[ƒ€ƒXƒ^[ƒg‚Ìl”‚ğ•ÏXo—ˆ‚Ü‚·iœ‚­ƒGƒLƒXƒgƒ‰j',0
+aMENU_LIVES db '        Change amount of init. lives (excluding Extra)',0
 					; DATA XREF: dseg:00BCo
-aMENU_BOMBS	db 'ƒ{ƒ€‚Ìg—p‰ñ”‚ğ•ÏXo—ˆ‚Ü‚·iœ‚­ƒGƒLƒXƒgƒ‰j',0
+aMENU_BOMBS	db 'Change amount of init. bombs (excluding Extra)',0
 					; DATA XREF: dseg:00C0o
-aMENU_BGM_OFF	db '‚a‚f‚l‚Í—¬‚ê‚Ü‚¹‚ñ',0 ; DATA XREF: dseg:00C4o
-aMENU_BGM_26K db '‚a‚f‚l‚É‚Q‚U‚j‰¹Œ¹ŒİŠ·‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00C8o
-aMENU_BGM_86K db '‚a‚f‚l‚É‚W‚U‰¹Œ¹ŒİŠ·‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00CCo
-aMENU_SFX_OFF		db 'Œø‰Ê‰¹‚Í—¬‚ê‚Ü‚¹‚ñ',0 ; DATA XREF: dseg:00D0o
-aMENU_SFX_FM		db 'Œø‰Ê‰¹‚É‚e‚l‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00D4o
-aMENU_SFX_BEEP		db 'Œø‰Ê‰¹‚É‚a‚…‚…‚‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0 ; DATA XREF: dseg:00D8o
-aMENU_SLOW	db '“G’e‚Ì‘½‚¢êŠ‚ÅA‚í‚´‚Æˆ——‚¿iƒXƒ[j‚³‚¹‚Ü‚·i‰SÒ—pj',0
+aMENU_BGM_OFF	db '      Turn BGM off',0 ; DATA XREF: dseg:00C4o
+aMENU_BGM_26K db '   Use 26K-compatible sound device',0 ; DATA XREF: dseg:00C8o
+aMENU_BGM_86K db '  Use 86-compatible sound device',0 ; DATA XREF: dseg:00CCo
+aMENU_SFX_OFF		db '      Turn SFX off',0 ; DATA XREF: dseg:00D0o
+aMENU_SFX_FM		db '       Use FM device for SFX',0 ; DATA XREF: dseg:00D4o
+aMENU_SFX_BEEP		db '         Use Beep device for SFX',0 ; DATA XREF: dseg:00D8o
+aMENU_SLOW	db ' Artificially slow down the game when many bullets are present',0
 					; DATA XREF: dseg:00DCo
-aMENU_TURBO	db 'ˆ——‚¿‚ğƒ}ƒVƒ“‚ÌƒXƒs[ƒh‚É”C‚¹‚Ü‚·i•W€j',0
+aMENU_TURBO	db ' Let the computer handle slowdowns (default)',0
 					; DATA XREF: dseg:off_F0C0o
-aMENU_RESET	db '‚±‚ÌƒIƒvƒVƒ‡ƒ“‚ğ‘S‚Ä•W€‚É–ß‚µ‚Ü‚·',0 ; DATA XREF: dseg:off_F0C4o
-aMENU_OPTION_QUIT	db 'ƒIƒvƒVƒ‡ƒ“‚ğI—¹‚µ‚Ü‚·',0 ; DATA XREF: dseg:off_F0C8o
-aMENU_START_EASY	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒC[ƒW[j',0 ; DATA XREF: dseg:off_F0CCo
-aMENU_START_NORMAL	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒm[ƒ}ƒ‹j',0 ; DATA XREF: dseg:off_F0D0o
-aMENU_START_HARD	db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒn[ƒhj',0 ; DATA XREF: dseg:off_F0D4o
-aMENU_START_LUNATIC		db 'ƒQ[ƒ€‚ğŠJn‚µ‚Ü‚·iƒ‹ƒiƒeƒBƒbƒNj',0 ; DATA XREF: dseg:off_F0D8o
+aMENU_RESET	db '    Return all settings to default',0 ; DATA XREF: dseg:off_F0C4o
+aMENU_OPTION_QUIT	db '   Exit options screen',0 ; DATA XREF: dseg:off_F0C8o
+aMENU_START_EASY	db '    Start the game (Easy mode)',0 ; DATA XREF: dseg:off_F0CCo
+aMENU_START_NORMAL	db '  Start the game (Normal mode)',0 ; DATA XREF: dseg:off_F0D0o
+aMENU_START_HARD	db '  Start the game (Hard mode)',0 ; DATA XREF: dseg:off_F0D4o
+aMENU_START_LUNATIC		db '     Start the game (Lunatic mode)',0 ; DATA XREF: dseg:off_F0D8o
 aOp1_pi		db 'op1.pi',0           ; DATA XREF: sub_A9D6+C7o
 					; sub_A9D6+117o ...
 aMiko		db 'miko',0             ; DATA XREF: sub_ABCF+E4o
@@ -33606,7 +33606,7 @@ aOp		db 'op',0               ; DATA XREF: sub_ABCF+F0o
 					; sub_ABCF+1C5o ...
 aKaikidan1_dat0	db '‰öãY’k1.dat',0      ; DATA XREF: _main+17o
 aNotEnoughMem	db 0Ah			; DATA XREF: _main+27o
-		db '‹ó‚«ƒƒ‚ƒŠ•s‘«‚Å‚·Bƒƒ‚ƒŠ‹ó‚«‚ğ‘‚â‚µ‚Ä‚©‚çÀs‚µ‚Ä‚Ë',0Ah,0
+		db 'Not enough free memory. Free up some memory & restart.',0Ah,0
 		db    0
 		dw 0
 word_F4B4	dw 0			; DATA XREF: seg000:050Ar
@@ -35042,49 +35042,49 @@ SETUP_SFX_BODY	dd aSETUP_SFX_BODY1	; DATA XREF: sub_B33E+17r
 		dd aSETUP_SFX_BODY6	; "		 ‚e‚l‰¹Œ¹‚ª–³‚¢ê‡g—p‚µ‚"...
 		dd aSETUP_SFX_BODY7	; " Œø‰Ê‰¹–³‚µ F‰½‚ç‚©‚Ì–î‚ÅŒø‰Ê‰¹‚ğ–Â‚"...
 		dd aSETUP_SFX_BODY8	; "@@@@@@@–³‚¢ê‡		  "...
-		dd aSETUP_TAIL		; "‚È‚¨A‚±‚ê‚ç‚Ìİ’è‚Í‚n‚‚”‚‰‚‚‚Å•ÏX‰"...
-aSETUP_BGM_BODY1 db 'ƒXƒeƒŒƒI‚e‚l‰¹Œ¹FPC-9801-86(ŒİŠ·)ƒ{[ƒh@@@',0
+		dd aSETUP_TAIL		; "‚È‚¨A‚±‚ê‚ç‚Ìİ’è‚Í‚n‚‚”‚‰‚‚‚Å•ÏXE...
+aSETUP_BGM_BODY1 db 'Stereo FM source: PC-9801-86 (or comp.) board ',0
 					; DATA XREF: dseg:SETUP_BGM_BODYo
-aSETUP_BGM_BODY2 db '@@@@@@@@@CanBe“à‘ ‰¹Œ¹‚È‚ÇA         ',0
+aSETUP_BGM_BODY2 db '@@@@@@@@@CanBe internal sound device ',0
 					; DATA XREF: dseg:0ABAo
-aSETUP_BGM_BODY3 db '@@@@@@@‚e‚l‚U‰¹{‚r‚r‚f‚R‰¹{ƒŠƒYƒ€‰¹Œ¹',0
+aSETUP_BGM_BODY3 db '@@@@@@@  6 FM ch.{3 SSG ch.{Rhythm SD',0
 					; DATA XREF: dseg:0ABEo
-aSETUP_BGM_BODY4 db '@•W€‚e‚l‰¹Œ¹F  PC-9801-26K(ŒİŠ·)ƒ{[ƒh     ',0
+aSETUP_BGM_BODY4 db 'Non-Stereo FM src:PC-9801-26K (or comp.) board',0
 					; DATA XREF: dseg:0AC2o
-aSETUP_BGM_BODY5 db '                  PC-9801DA“™‚É“à‘ ‚Ì‰¹Œ¹‚È‚Ç ',0
+aSETUP_BGM_BODY5 db '                  PC-9801DA models internal SD',0
 					; DATA XREF: dseg:0AC6o
-aSETUP_BGM_BODY6 db '@@@@@@@@@‚e‚l‚R‰¹{‚r‚r‚f‚R‰¹        ',0
+aSETUP_BGM_BODY6 db '@@@@@@@@@3 FM ch.{3 SSG ch.         ',0
 					; DATA XREF: dseg:0ACAo
-aSETUP_BGM_BODY7 db '@@‰¹Šy–³‚µF@@‚e‚l‰¹Œ¹‚ª–³‚¢ê‡          ',0
+aSETUP_BGM_BODY7 db '@@No music: @@In case you don',027h,'t have FM SD',0
 					; DATA XREF: dseg:0ACEo
 aSETUP_BGM_BODY8 db '                                              ',0
 					; DATA XREF: dseg:0AD2o
-aSETUP_TAIL	db '‚È‚¨A‚±‚ê‚ç‚Ìİ’è‚Í‚n‚‚”‚‰‚‚‚Å•ÏX‰Â”\‚Å‚·',0
+aSETUP_TAIL	db 'You can change these settings from Option menu',0
 					; DATA XREF: dseg:0AD6o dseg:0AFAo
-aSETUP_SFX_BODY1 db '@‚e‚l‰¹Œ¹@FŒø‰Ê‰¹‚É‚e‚l‰¹Œ¹‚ğg—p‚µ‚Ü‚·@@',0
+aSETUP_SFX_BODY1 db 'FM SD: Allows to play SFX through FM channels.',0
 					; DATA XREF: dseg:SETUP_SFX_BODYo
-aSETUP_SFX_BODY2 db '@@@@@@@‚a‚f‚l‚ªƒXƒeƒŒƒI‚e‚l‰¹Œ¹„§@',0
+aSETUP_SFX_BODY2 db '@@@ Recommended if you have Stereo FM SD.@',0
 					; DATA XREF: dseg:0ADEo
-aSETUP_SFX_BODY3 db '@ @ @@i•W€‚e‚l‰¹Œ¹‚Å‚ÍA3ch‚ğg—p‚µ‚Ü‚· ',0
+aSETUP_SFX_BODY3 db '@ @  (Non-Stereo FM devices only have 3 chs,',0
 					; DATA XREF: dseg:0AE2o
-aSETUP_SFX_BODY4 db '@ @@@@ ‚Ì‚ÅA‚a‚f‚l‚ª³í‚É‚«‚¯‚È‚¢‚©‚àj',0
+aSETUP_SFX_BODY4 db '@ @@so you might not be able to hear music)',0
 					; DATA XREF: dseg:0AE6o
-aSETUP_SFX_BODY5 db '‚a‚…‚…‚‰¹Œ¹FŒø‰Ê‰¹‚É‚a‚…‚…‚‰¹Œ¹‚ğg—p‚µ‚Ü‚·',0
+aSETUP_SFX_BODY5 db 'Beep SD: Plays SFX through Beep device.       ',0
 					; DATA XREF: dseg:0AEAo
-aSETUP_SFX_BODY6 db '              ‚e‚l‰¹Œ¹‚ª–³‚¢ê‡g—p‚µ‚Ü‚·@@',0
+aSETUP_SFX_BODY6 db '         Use if you don',027h,'t have FM sound device',0
 					; DATA XREF: dseg:0AEEo
-aSETUP_SFX_BODY7 db ' Œø‰Ê‰¹–³‚µ F‰½‚ç‚©‚Ì–î‚ÅŒø‰Ê‰¹‚ğ–Â‚ç‚µ‚½‚­',0
+aSETUP_SFX_BODY7 db 'No SFX: Use if, for some reason, you don',027h,'t    ',0
 					; DATA XREF: dseg:0AF2o
-aSETUP_SFX_BODY8 db '@@@@@@@–³‚¢ê‡                        ',0
+aSETUP_SFX_BODY8 db '@@@@want to hear anything.                ',0
 					; DATA XREF: dseg:0AF6o
-aSETUP_BGM_OPTION1 db 'ƒXƒeƒŒƒI‚e‚l‰¹Œ¹',0 ; DATA XREF: sub_B270+1Co
-aSETUP_BGM_OPTION2 db '@•W€‚e‚l‰¹Œ¹@',0 ; DATA XREF: sub_B270+26o
-aSETUP_BGM_OPTION3 db '@@‰¹Šy–³‚µ@@',0 ; DATA XREF: sub_B270+33o
-aSETUP_SFX_OPTION1 db '@@‚e‚l‰¹Œ¹@@',0 ; DATA XREF: sub_B2BF+1Eo
-aSETUP_SFX_OPTION2 db '@‚a‚…‚…‚‰¹Œ¹@',0 ; DATA XREF: sub_B2BF+28o
-aSETUP_SFX_OPTION3 db '@ Œø‰Ê‰¹–³‚µ @',0 ; DATA XREF: sub_B2BF+35o
-aSETUP_BGM_HEAD	db '@@@@@g—p‚·‚é‰¹Œ¹‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢‚Ë™',0 ; DATA XREF: sub_B36C+1Co
-aSETUP_SFX_HEAD	db '@@@@Œø‰Ê‰¹‚Ég—p‚·‚é‰¹Œ¹‚ğ‘I‘ğ‚µ‚Ä‚Ë™',0 ; DATA XREF: sub_B489+1Co
+aSETUP_BGM_OPTION1 db 'Stereo FM SD    ',0 ; DATA XREF: sub_B270+1Co
+aSETUP_BGM_OPTION2 db 'Non-Stereo FM SD',0 ; DATA XREF: sub_B270+26o
+aSETUP_BGM_OPTION3 db 'No Music    @@',0 ; DATA XREF: sub_B270+33o
+aSETUP_SFX_OPTION1 db 'FM sound device ',0 ; DATA XREF: sub_B2BF+1Eo
+aSETUP_SFX_OPTION2 db 'Beep SD       @',0 ; DATA XREF: sub_B2BF+28o
+aSETUP_SFX_OPTION3 db 'No sound effects',0 ; DATA XREF: sub_B2BF+35o
+aSETUP_BGM_HEAD	db '   Please choose a SD that will be used.™',0 ; DATA XREF: sub_B36C+1Co
+aSETUP_SFX_HEAD	db '@ Please choose a SD for sound effects.™',0 ; DATA XREF: sub_B489+1Co
 aMswin_bft	db 'mswin.bft',0        ; DATA XREF: sub_B5A6+Fo
 aMs_pi		db 'ms.pi',0            ; DATA XREF: sub_B5A6+20o
 		align 2
@@ -35442,121 +35442,121 @@ byte_1048A	db 0			; DATA XREF: sub_C09D+4r sub_C09D+AAw
 aMUSICROOM_UP		db '             ------ £ ------       ',0 ; DATA XREF: dseg:off_FFAEo
 aMUSICROOM_DOWN		db '             ------ ¥ ------       ',0 ; DATA XREF: dseg:off_FFB2o
 asc_104D5	db '             ----------------       ',0 ; DATA XREF: dseg:0FD6o
-aMUSICROOM_TH01	db '   ‘æ‚P’e@“Œ•ûèËˆÙ“`  Arrange ver  ',0 ; DATA XREF: dseg:off_FFBAo
-aMUSICROOM_TH02	db '   ‘æ‚Q’e@“Œ•û••–‚˜^  Special MIX  ',0 ; DATA XREF: dseg:0FDEo
-aMUSICROOM_TH03	db '   ‘æ‚R’e@“Œ•û–²‹ó  Special MIX  ',0 ; DATA XREF: dseg:0FE2o
-aMUSICROOM_TH04	db '   ‘æ‚S’e@“Œ•ûŒ¶‘z‹½  Special MIX  ',0 ; DATA XREF: dseg:0FE6o
-aMUSICROOM_TH05	db '   ‘æ‚T’e@“Œ•û‰öãY’k MysticSquare  ',0 ; DATA XREF: dseg:0FEAo
+aMUSICROOM_TH01	db '   Vol. 1@“Œ•ûèËˆÙ“`  Arrange ver  ',0 ; DATA XREF: dseg:off_FFBAo
+aMUSICROOM_TH02	db '   Vol. 2@“Œ•û••–‚˜^  Special MIX  ',0 ; DATA XREF: dseg:0FDEo
+aMUSICROOM_TH03	db '   Vol. 3@“Œ•û–²‹ó  Special MIX  ',0 ; DATA XREF: dseg:0FE2o
+aMUSICROOM_TH04	db '   Vol. 4@“Œ•ûŒ¶‘z‹½  Special MIX  ',0 ; DATA XREF: dseg:0FE6o
+aMUSICROOM_TH05	db '   Vol. 5@“Œ•û‰öãY’k Mystic Square ',0 ; DATA XREF: dseg:0FEAo
 aTH01_01	db 'No.1           A Sacred Lot         ',0 ; DATA XREF: dseg:off_FFCEo
-aTH01_02	db 'No.2            ‰i‰“‚Ì›Ş—          ',0 ; DATA XREF: dseg:0FF2o
+aTH01_02	db 'No.2       Eternal Shrine Maiden    ',0 ; DATA XREF: dseg:0FF2o
 aTH01_03	db 'No.3    The Positive and Negative   ',0 ; DATA XREF: dseg:0FF6o
 aTH01_04	db 'No.4   Highly Responsive to Prayers ',0 ; DATA XREF: dseg:0FFAo
-aTH01_05	db 'No.5            “Œ•û‰öŠï’k          ',0 ; DATA XREF: dseg:0FFEo
-aTH01_06	db 'No.6             “Vg“`à           ',0 ; DATA XREF: dseg:1002o
+aTH01_05	db 'No.5     Eastern Strange Discourse  ',0 ; DATA XREF: dseg:0FFEo
+aTH01_06	db 'No.6          Angel',027h,'s Legend        ',0 ; DATA XREF: dseg:1002o
 aTH01_07	db 'No.7        Oriental Magician       ',0 ; DATA XREF: dseg:1006o
-aTH01_08	db 'No.8           ”j×‚Ì¬‘¾“         ',0 ; DATA XREF: dseg:100Ao
-aTH01_09	db 'No.9               –‚‹¾             ',0 ; DATA XREF: dseg:100Eo
-aTH01_10	db 'No.10       the Legend of KAGE      ',0 ; DATA XREF: dseg:1012o
-aTH01_11	db 'No.11    ‚¢‚´A“|‚êÀ‚­‚»‚Ì‚Ü‚Å   ',0 ; DATA XREF: dseg:1016o
-aTH01_12	db 'No.12      Civilization of Magic    ',0 ; DATA XREF: dseg:101Ao
-aTH01_13	db 'No.13            ¯—H“Vg           ',0 ; DATA XREF: dseg:101Eo
-aTH01_14	db 'No.14            ƒAƒCƒŠƒX           ',0 ; DATA XREF: dseg:1022o
-aMUSICROOM_QUIT1	db '            ƒ^ƒCƒgƒ‹‚É–ß‚é          ',0 ; DATA XREF: dseg:1026o
+aTH01_08	db 'No.8       Blade of Banishment      ',0 ; DATA XREF: dseg:100Ao
+aTH01_09	db 'No.9           Magic Mirror         ',0 ; DATA XREF: dseg:100Eo
+aTH01_10	db 'No.10       The Legend of KAGE      ',0 ; DATA XREF: dseg:1012o
+aTH01_11	db 'No.11  Now, Until the Moment You Die',0 ; DATA XREF: dseg:1016o
+aTH01_12	db 'No.12  We Shall Die Together ` C...',0 ; DATA XREF: dseg:101Ao
+aTH01_13	db 'No.13     Angel of a Distant Star   ',0 ; DATA XREF: dseg:101Eo
+aTH01_14	db 'No.14              Iris             ',0 ; DATA XREF: dseg:1022o
+aMUSICROOM_QUIT1	db '            Go back to title        ',0 ; DATA XREF: dseg:1026o
 					; dseg:10AEo ...
-aTH02_01	db 'No.1      “Œ•û••–‚˜^@`ò“y™Öä¶—…  ',0 ; DATA XREF: dseg:1066o
-aTH02_02	db 'No.2      @ ”—í@`Eastern Wind   ',0 ; DATA XREF: dseg:106Ao
-aTH02_03	db 'No.3      @  She',27h,'s in a temper!!   ',0 ; DATA XREF: dseg:106Eo
-aTH02_04	db 'No.4      @   End of Daylight@    ',0 ; DATA XREF: dseg:1072o
-aTH02_05	db 'No.5      @  @ ‚â‚İ‚Ì‚¿‚©‚ç@@   ',0 ; DATA XREF: dseg:1076o
-aTH02_06	db 'No.6      @@@@@Œ¶–²ŠE@@@@  ',0 ; DATA XREF: dseg:107Ao
-aTH02_07	db 'No.7      @@@@€‚ğ“q‚µ‚Ä@@@  ',0 ; DATA XREF: dseg:107Eo
-aTH02_08	db 'No.8      ‚Ğ‚à‚ë‚¬A‚Ş‚ç‚³‚«‚É‚à‚¦  ',0 ; DATA XREF: dseg:1082o
-aTH02_09	db 'No.9      @  @ —öFƒ}ƒWƒbƒN @    ',0 ; DATA XREF: dseg:1086o
-aTH02_10	db 'No.10     @“Œ•û••–‚˜^@`—HŒ¶—•‘  ',0 ; DATA XREF: dseg:108Ao
-aTH02_11	db 'No.11         Complete Darkness     ',0 ; DATA XREF: dseg:108Eo
-aTH02_12	db 'No.12        @ ƒGƒLƒXƒgƒ‰ƒ‰ƒu      ',0 ; DATA XREF: dseg:1092o
-aTH02_13	db 'No.13        íÔ‚Ş‚·‚ß‚Ì‚İ‚é‚ä‚ß   ',0 ; DATA XREF: dseg:1096o
-aTH02_14	db 'No.14          @@‰“–ì‚ÌX@@@   ',0 ; DATA XREF: dseg:109Ao
-aTH02_15	db 'No.15         Ì˜b‚í‚ñ‚¾[‚ç‚ñ‚Ç    ',0 ; DATA XREF: dseg:109Eo
-aTH02_16	db '–¢g—p.1         ”—í_Ğ‹«“à       ',0 ; DATA XREF: dseg:10A2o
-aTH02_17	db '–¢g—p.2         @—z—‚¿‚Ä  @     ',0 ; DATA XREF: dseg:10A6o
-aTH02_18	db '–¢g—p.3         @••–‚I‰‰  @     ',0 ; DATA XREF: dseg:10AAo
-aTH03_01	db 'No.1       @–²‚Í‹ó‚ğ‰z‚¦‚Ä       ',0 ; DATA XREF: dseg:10DEo
+aTH02_01	db 'No.1  Fuumaroku ` Pure Land Mandala',0 ; DATA XREF: dseg:1066o
+aTH02_02	db 'No.2      Hakurei ` Eastern Wind   ',0 ; DATA XREF: dseg:106Ao
+aTH02_03	db 'No.3        She',027h,'s in a Temper!     ',0 ; DATA XREF: dseg:106Eo
+aTH02_04	db 'No.4      @  End of Daylight @    ',0 ; DATA XREF: dseg:1072o
+aTH02_05	db 'No.5         Power of Darkness @   ',0 ; DATA XREF: dseg:1076o
+aTH02_06	db 'No.6       World of Empty Dreams    ',0 ; DATA XREF: dseg:107Ao
+aTH02_07	db 'No.7      @   Bet on Death @@@  ',0 ; DATA XREF: dseg:107Eo
+aTH02_08	db 'No.8     Himorogi, Burn in Violet   ',0 ; DATA XREF: dseg:1082o
+aTH02_09	db 'No.9        Love-Coloured Magic     ',0 ; DATA XREF: dseg:1086o
+aTH02_10	db 'No.10  A Phantom',027h,'s Boisterous Dance ',0 ; DATA XREF: dseg:108Ao
+aTH02_11	db 'No.11        Complete Darkness      ',0 ; DATA XREF: dseg:108Eo
+aTH02_12	db 'No.12        @ Extra Love          ',0 ; DATA XREF: dseg:1092o
+aTH02_13	db 'No.13      The Tank Girl',027h,'s Dream    ',0 ; DATA XREF: dseg:1096o
+aTH02_14	db 'No.14         Forest of Tohno  @   ',0 ; DATA XREF: dseg:109Ao
+aTH02_15	db 'No.15      Legendary Wonderland     ',0 ; DATA XREF: dseg:109Eo
+aTH02_16	db 'Unused.1  Hakurei Shrine Grounds    ',0 ; DATA XREF: dseg:10A2o
+aTH02_17	db 'Unused.2         Sunfall     @     ',0 ; DATA XREF: dseg:10A6o
+aTH02_18	db 'Unused.3  Sealed Demon',027h,'s Finale     ',0 ; DATA XREF: dseg:10AAo
+aTH03_01	db 'No.1 A Dream Transcending Space-Time',0 ; DATA XREF: dseg:10DEo
 aTH03_02	db 'No.2      @ @ Selection           ',0 ; DATA XREF: dseg:10E2o
-aTH03_03	db 'No.3            “Œ•û—d—ö’k          ',0 ; DATA XREF: dseg:10E6o
+aTH03_03	db 'No.3  Eastern Mystical Love Consult.',0 ; DATA XREF: dseg:10E6o
 aTH03_04	db 'No.4          Reincarnation         ',0 ; DATA XREF: dseg:10EAo
 aTH03_05	db 'No.5            Dim. Dream          ',0 ; DATA XREF: dseg:10EEo
-aTH03_06	db 'No.6     Tabula rasa@`‹ó”’­—    ',0 ; DATA XREF: dseg:10F2o
-aTH03_07	db 'No.7     @  Maniacal Princess      ',0 ; DATA XREF: dseg:10F6o
-aTH03_08	db 'No.8        –²Á¸  `Lost Dream    ',0 ; DATA XREF: dseg:10FAo
-aTH03_09	db 'No.9       –²Œ¶—V‹Y  `Dream War    ',0 ; DATA XREF: dseg:10FEo
-aTH03_10	db 'No.10    –‚–@ŒˆíI`Fight it out!  ',0 ; DATA XREF: dseg:1102o
+aTH03_06	db 'No.6  Tabula Rasa ` The Empty Girl ',0 ; DATA XREF: dseg:10F2o
+aTH03_07	db 'No.7     @ Maniacal Princess       ',0 ; DATA XREF: dseg:10F6o
+aTH03_08	db 'No.8  Vanishing Dream ` Lost Dream ',0 ; DATA XREF: dseg:10FAo
+aTH03_09	db 'No.9   Visionary Game ` Dream War  ',0 ; DATA XREF: dseg:10FEo
+aTH03_10	db 'No.10 Decisive Magic Battle! ` F...',0 ; DATA XREF: dseg:1102o
 aTH03_11	db 'No.11      @ Sailor of Time        ',0 ; DATA XREF: dseg:1106o
 aTH03_12	db 'No.12       Strawberry Crisis!!     ',0 ; DATA XREF: dseg:110Ao
-aTH03_13	db 'No.13        ”ñ“ˆê–‚–@¢ŠE˜_       ',0 ; DATA XREF: dseg:110Eo
-aTH03_14	db 'No.14          @–‚–@àˆ¤           ',0 ; DATA XREF: dseg:1112o
-aTH03_15	db 'No.15          @‹v‰“‚Ì–²           ',0 ; DATA XREF: dseg:1116o
-aTH03_16	db 'No.16          “Œ•û‚ÌÂ‚¢‹ó         ',0 ; DATA XREF: dseg:111Ao
-aTH03_17	db 'No.17           ‰i‰“‚Ì–Œ          ',0 ; DATA XREF: dseg:111Eo
-aTH03_18	db 'No.18         Maple Dream...        ',0 ; DATA XREF: dseg:1122o
-aTH03_19	db 'No.19           —ìl‚Ì‹x“ú          ',0 ; DATA XREF: dseg:1126o
-aTH03_20	db 'No.20            Ÿ—˜ƒfƒ‚           ',0 ; DATA XREF: dseg:112Ao
-aTH03_21	db 'No.21         ƒQ[ƒ€ƒI[ƒo[        ',0 ; DATA XREF: dseg:112Eo
-aTH03_22	db '–¢g—p.1          ‚Ì•—            ',0 ; DATA XREF: dseg:1132o
-aTH03_23	db '–¢g—p.2     ƒXƒ^[ƒ{ƒEƒhƒŠ[ƒ€     ',0 ; DATA XREF: dseg:1136o
-aTH03_24	db '–¢g—p.3       Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
-aMUSICROOM_QUIT2	db '              ƒ^ƒCƒgƒ‹‚É–ß‚é        ',0 ; DATA XREF: dseg:113Eo
-aTH04_01	db 'No.1    Œ¶‘z‹½  ` Lotus Land Story ',0 ; DATA XREF: dseg:1156o
-aTH04_02	db 'No.2          Witching Dream        ',0 ; DATA XREF: dseg:115Ao
-aTH04_03	db 'No.3          Selene',27h,'s light        ',0 ; DATA XREF: dseg:115Eo
-aTH04_04	db 'No.4   ‘•üí@` Decoration Battle ',0 ; DATA XREF: dseg:1162o
-aTH04_05	db 'No.5         Break the Sabbath      ',0 ; DATA XREF: dseg:1166o
-aTH04_06	db 'No.6    g‹¿‹È  ` Scarlet Phoneme  ',0 ; DATA XREF: dseg:116Ao
-aTH04_07	db 'No.7            Bad Apple!!         ',0 ; DATA XREF: dseg:116Eo
-aTH04_08	db 'No.8     —ìí@` Perdition crisis  ',0 ; DATA XREF: dseg:1172o
-aTH04_09	db 'No.9         ƒAƒŠƒXƒ}ƒGƒXƒeƒ‰       ',0 ; DATA XREF: dseg:1176o
-aTH04_10	db 'No.10    ­—ãY‘z‹È@` Capriccio   ',0 ; DATA XREF: dseg:117Ao
-aTH04_11	db 'No.11   ¯‚ÌŠí@` Casket of Star   ',0 ; DATA XREF: dseg:117Eo
+aTH03_13	db 'No.13 Disunified Field Magic Theory ',0 ; DATA XREF: dseg:110Eo
+aTH03_14	db 'No.14     Love of Magical Chimes    ',0 ; DATA XREF: dseg:1112o
+aTH03_15	db 'No.15        Dream of Eternity      ',0 ; DATA XREF: dseg:1116o
+aTH03_16	db 'No.16         Eastern Blue Sky      ',0 ; DATA XREF: dseg:111Ao
+aTH03_17	db 'No.17        Eternal Full Moon      ',0 ; DATA XREF: dseg:111Eo
+aTH03_18	db 'No.18          Maple Dream...       ',0 ; DATA XREF: dseg:1122o
+aTH03_19	db 'No.19    Ghostly Person',027h,'s Holiday   ',0 ; DATA XREF: dseg:1126o
+aTH03_20	db 'No.20           Victory Demo        ',0 ; DATA XREF: dseg:112Ao
+aTH03_21	db 'No.21            Game Over          ',0 ; DATA XREF: dseg:112Eo
+aTH03_22	db 'Unused.1       Winds of Time        ',0 ; DATA XREF: dseg:1132o
+aTH03_23	db 'Unused.2       Starbow Dream        ',0 ; DATA XREF: dseg:1136o
+aTH03_24	db 'Unused.3       Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
+aMUSICROOM_QUIT2	db '              Go back to title      ',0 ; DATA XREF: dseg:113Eo
+aTH04_01	db 'No.1   Gensokyo ` Lotus Land Story ',0 ; DATA XREF: dseg:1156o
+aTH04_02	db 'No.2         Witching Dream         ',0 ; DATA XREF: dseg:115Ao
+aTH04_03	db 'No.3         Selene',27h,'s Light         ',0 ; DATA XREF: dseg:115Eo
+aTH04_04	db 'No.4        Decoration Battle       ',0 ; DATA XREF: dseg:1162o
+aTH04_05	db 'No.5        Break the Sabbath       ',0 ; DATA XREF: dseg:1166o
+aTH04_06	db 'No.6  Scarlet Symphony ` Scarlet...',0 ; DATA XREF: dseg:116Ao
+aTH04_07	db 'No.7           Bad Apple!!          ',0 ; DATA XREF: dseg:116Eo
+aTH04_08	db 'No.8  Spirit Battle ` Perdition... ',0 ; DATA XREF: dseg:1172o
+aTH04_09	db 'No.9          Alice Maestra         ',0 ; DATA XREF: dseg:1176o
+aTH04_10	db 'No.10       Maiden',027h,'s Capriccio      ',0 ; DATA XREF: dseg:117Ao
+aTH04_11	db 'No.11  Vessel of Stars ` Casket... ',0 ; DATA XREF: dseg:117Eo
 aTH04_12	db 'No.12           Lotus Love          ',0 ; DATA XREF: dseg:1182o
-aTH04_13	db 'No.13  –°‚ê‚é‹°•| `Sleeping Terror ',0 ; DATA XREF: dseg:1186o
+aTH04_13	db 'No.13        Sleeping Terror        ',0 ; DATA XREF: dseg:1186o
 aTH04_14	db 'No.14           Dream Land          ',0 ; DATA XREF: dseg:118Ao
-aTH04_15	db 'No.15    —H–²@` Inanimate Dream   ',0 ; DATA XREF: dseg:118Eo
-aTH04_16	db 'No.16      ‹Ö‚¶‚´‚é‚ğ‚¦‚È‚¢—V‹Y     ',0 ; DATA XREF: dseg:1192o
-aTH04_17	db 'No.17  ƒƒCƒhŒ¶‘z@` Icemilk Magic ',0 ; DATA XREF: dseg:1196o
-aTH04_18	db 'No.18   ‚©‚í‚¢‚¢ˆ«–‚@` Innocence  ',0 ; DATA XREF: dseg:119Ao
+aTH04_15	db 'No.15 Faint Dream ` Inanimate Dream',0 ; DATA XREF: dseg:118Eo
+aTH04_16	db 'No.16 The Inevitably Forbidden Game ',0 ; DATA XREF: dseg:1192o
+aTH04_17	db 'No.17 Illusion of Maid ` Icemilk...',0 ; DATA XREF: dseg:1196o
+aTH04_18	db 'No.18     Cute Devil ` Innocence   ',0 ; DATA XREF: dseg:119Ao
 aTH04_19	db 'No.19              Days             ',0 ; DATA XREF: dseg:119Eo
 aTH04_20	db 'No.20            Peaceful           ',0 ; DATA XREF: dseg:11A2o
 aTH04_21	db 'No.21         Arcadian Dream        ',0 ; DATA XREF: dseg:11A6o
-aTH04_22	db 'No.22           Œ¶‘z‚ÌZl          ',0 ; DATA XREF: dseg:11AAo
-aTH04_23	db '–¢g—p.1        Lotus Road          ',0 ; DATA XREF: dseg:11AEo
-aTH04_24	db '–¢g—p.2       Dreamy pilot         ',0 ; DATA XREF: dseg:11B2o
-aTH04_25	db '–¢g—p.3      Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
-aTH04_26	db '–¢g—p.4        Border Land         ',0 ; DATA XREF: dseg:11BAo
-aTH04_27	db '–¢g—p.5   Magic Shop of Raspberry  ',0 ; DATA XREF: dseg:11BEo
-aTH04_28	db '–¢g—p.6       Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
-aTH05_01	db 'No.1     ‰öãY’k@` Mystic Square   ',0 ; DATA XREF: dseg:11CEo
-aTH05_02	db 'No.2           Dream Express        ',0 ; DATA XREF: dseg:11D2o
-aTH05_03	db 'No.3      –‚–@w@` Magic Square   ',0 ; DATA XREF: dseg:11D6o
-aTH05_04	db 'No.4             –²‘z‹ó           ',0 ; DATA XREF: dseg:11DAo
-aTH05_05	db 'No.5     —ì“V@` Spiritual Heaven  ',0 ; DATA XREF: dseg:11DEo
+aTH04_22	db 'No.22   Those Who Live in Illusions ',0 ; DATA XREF: dseg:11AAo
+aTH04_23	db 'Unused.1        Lotus Road          ',0 ; DATA XREF: dseg:11AEo
+aTH04_24	db 'Unused.2       Dreamy Pilot         ',0 ; DATA XREF: dseg:11B2o
+aTH04_25	db 'Unused.3      Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
+aTH04_26	db 'Unused.4        Border Land         ',0 ; DATA XREF: dseg:11BAo
+aTH04_27	db 'Unused.5  Magic Shop of Raspberry   ',0 ; DATA XREF: dseg:11BEo
+aTH04_28	db 'Unused.6       Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
+aTH05_01	db 'No.1   Wondrous Tales of Romance... ',0 ; DATA XREF: dseg:11CEo
+aTH05_02	db 'No.2          Dream Express         ',0 ; DATA XREF: dseg:11D2o
+aTH05_03	db 'No.3           Magic Square         ',0 ; DATA XREF: dseg:11D6o
+aTH05_04	db 'No.4       Dimension of Reverie     ',0 ; DATA XREF: dseg:11DAo
+aTH05_05	db 'No.5         Spiritual Heaven       ',0 ; DATA XREF: dseg:11DEo
 aTH05_06	db 'No.6         Romantic Children      ',0 ; DATA XREF: dseg:11E2o
-aTH05_07	db 'No.7       ƒvƒ‰ƒXƒ`ƒbƒNƒ}ƒCƒ“ƒh     ',0 ; DATA XREF: dseg:11E6o
-aTH05_08	db 'No.8          ƒƒCƒvƒ‹ƒƒCƒY        ',0 ; DATA XREF: dseg:11EAo
-aTH05_09	db 'No.9  ‹Ö’f‚Ì–‚–@  ` Forbidden Magic',0 ; DATA XREF: dseg:11EEo
-aTH05_10	db 'No.10  ^g‚Ì­—@` Crimson Dead!!',0 ; DATA XREF: dseg:11F2o
-aTH05_11	db 'No.11  — Ø‚è‚Ì­—@` Judas Kiss  ',0 ; DATA XREF: dseg:11F6o
-aTH05_12	db 'No.12       the Last Judgement      ',0 ; DATA XREF: dseg:11FAo
-aTH05_13	db 'No.13  ”ß‚µ‚«lŒ`@` Doll of Misery',0 ; DATA XREF: dseg:11FEo
-aTH05_14	db 'No.14   ¢ŠE‚Ì‰Ê‚Ä@` World',27h,'s End  ',0 ; DATA XREF: dseg:1202o
-aTH05_15	db 'No.15   _˜bŒ¶‘z@` Infinite Being ',0 ; DATA XREF: dseg:1206o
-aTH05_16	db 'No.16       •sv‹c‚Ì‘‚ÌƒAƒŠƒX      ',0 ; DATA XREF: dseg:120Ao
-aTH05_17	db 'No.17     the Grimoire of Alice     ',0 ; DATA XREF: dseg:120Eo
-aTH05_18	db 'No.18              _Ğ             ',0 ; DATA XREF: dseg:1212o
+aTH05_07	db 'No.7           Plastic Mind         ',0 ; DATA XREF: dseg:11E6o
+aTH05_08	db 'No.8            Maple Wise          ',0 ; DATA XREF: dseg:11EAo
+aTH05_09	db 'No.9          Forbidden Magic       ',0 ; DATA XREF: dseg:11EEo
+aTH05_10	db 'No.10 Crimson Maiden ` Crimson D...',0 ; DATA XREF: dseg:11F2o
+aTH05_11	db 'No.11 Treacherous Maiden ` Judas...',0 ; DATA XREF: dseg:11F6o
+aTH05_12	db 'No.12       The Last Judgement      ',0 ; DATA XREF: dseg:11FAo
+aTH05_13	db 'No.13         Doll of Misery        ',0 ; DATA XREF: dseg:11FEo
+aTH05_14	db 'No.14          World',027h,'s End          ',0 ; DATA XREF: dseg:1202o
+aTH05_15	db 'No.15  Legendary Illusion ` Inf... ',0 ; DATA XREF: dseg:1206o
+aTH05_16	db 'No.16      Alice in Wonderland      ',0 ; DATA XREF: dseg:120Ao
+aTH05_17	db 'No.17     The Grimoire of Alice     ',0 ; DATA XREF: dseg:120Eo
+aTH05_18	db 'No.18         Shinto Shrine         ',0 ; DATA XREF: dseg:1212o
 aTH05_19	db 'No.19            Endless            ',0 ; DATA XREF: dseg:1216o
-aTH05_20	db 'No.20          ‹v‰“‚ÌŠy‰€           ',0 ; DATA XREF: dseg:121Ao
+aTH05_20	db 'No.20        Eternal Paradise       ',0 ; DATA XREF: dseg:121Ao
 aTH05_21	db 'No.21         Mystic Dream          ',0 ; DATA XREF: dseg:121Eo
 aTH05_22	db 'No.22       Peaceful Romancer       ',0 ; DATA XREF: dseg:1222o
-aTH05_23	db 'No.23         °‚Ì‹x‚ç‚ŞŠ          ',0 ; DATA XREF: dseg:1226o
+aTH05_23	db 'No.23     Soul',027h,'s Resting Place      ',0 ; DATA XREF: dseg:1226o
 aR_00		db 'r_00',0             ; DATA XREF: dseg:1246o
 aR_01		db 'r_01',0             ; DATA XREF: dseg:124Ao
 aR_02		db 'r_02',0             ; DATA XREF: dseg:124Eo

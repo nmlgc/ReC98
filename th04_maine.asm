@@ -33117,24 +33117,24 @@ aBd		db '．',0               ; DATA XREF: sub_B886+D7o
 aBu		db '％',0               ; DATA XREF: sub_B886+E7o
 aBd_0		db '．',0               ; DATA XREF: sub_B97B+69o
 aBu_0		db '％',0               ; DATA XREF: sub_B9F2+178o
-aB@b@b@b@b@b@b@	db '　　　　　　　 腕前判定',0 ; DATA XREF: sub_BB81+1Eo
-aUqiUx		db '難易度',0           ; DATA XREF: sub_BB81+2Fo
-aNPiuU_		db '最終得点',0         ; DATA XREF: sub_BB81+40o
-aGGxi		db 'ミス回数',0         ; DATA XREF: sub_BB81+51o
-aGGaogcpi	db 'ボム使用回数',0     ; DATA XREF: sub_BB81+62o
-aGqbGatbrmcj	db 'ゲーム達成率',0     ; DATA XREF: sub_BB81+73o
-aIlcSObcj	db '悪霊退治率',0       ; DATA XREF: sub_BB81+84o
-aGagcgegai	db 'アイテム回収率',0   ; DATA XREF: sub_BB81+95o
-aUU_gagcgeganNv	db '得点アイテム最高点率',0 ; DATA XREF: sub_BB81+A6o
-aLcnzvv		db '気合い',0           ; DATA XREF: sub_BB81+B7o
-aPicacovCj	db '処理落ち率',0       ; DATA XREF: sub_BB81+C8o
-aVavVVSrso	db 'あなたの腕前',0     ; DATA XREF: sub_BB81+D9o
+aB@b@b@b@b@b@b@	db '　　　　　Skill verdict',0 ; DATA XREF: sub_BB81+1Eo
+aUqiUx		db 'Level ',0           ; DATA XREF: sub_BB81+2Fo
+aNPiuU_		db 'F. score',0         ; DATA XREF: sub_BB81+40o
+aGGxi		db 'Deaths  ',0         ; DATA XREF: sub_BB81+51o
+aGGaogcpi	db 'Bombs used  ',0     ; DATA XREF: sub_BB81+62o
+aGqbGatbrmcj	db 'Completion  ',0     ; DATA XREF: sub_BB81+73o
+aIlcSObcj	db 'Enemies   ',0       ; DATA XREF: sub_BB81+84o
+aGagcgegai	db 'Items collect.',0   ; DATA XREF: sub_BB81+95o
+aUU_gagcgeganNv	db 'Point items collect.',0 ; DATA XREF: sub_BB81+A6o
+aLcnzvv		db 'Focus ',0           ; DATA XREF: sub_BB81+B7o
+aPicacovCj	db 'Slowdown  ',0       ; DATA XREF: sub_BB81+C8o
+aVavVVSrso	db 'Your skill  ',0     ; DATA XREF: sub_BB81+D9o
 aTimes		db '回',0               ; DATA XREF: sub_BB81+148o
 aTimes_0	db '回',0               ; DATA XREF: sub_BB81+159o
 aPoint		db '点',0               ; DATA XREF: sub_BB81+484o
 a_ude_txt	db '_ude.txt',0         ; DATA XREF: sub_BB81+48Do
 aBhbhbhbhbhbhu_	db '？？？？？？点',0   ; DATA XREF: sub_BB81+536o
-aPicacovVVcvsfT	db '処理落ちによる判定不可',0 ; DATA XREF: sub_BB81+547o
+aPicacovVVcvsfT	db 'Undefined (slowdown)  ',0 ; DATA XREF: sub_BB81+547o
 aUde_pi		db 'ude.pi',0           ; DATA XREF: sub_C0F8+17o
 		db    0
 byte_ED5C	db 0AAh			; DATA XREF: sub_C814+1C3r
@@ -33194,9 +33194,9 @@ aGensou_scr_1	db 'GENSOU.SCR',0       ; DATA XREF: sub_C2AD+11o
 aGensou_scr_2	db 'GENSOU.SCR',0       ; DATA XREF: sub_C316+8o
 aHi01_pi	db 'hi01.pi',0          ; DATA XREF: sub_C814+20o
 aScnum2_bft	db 'scnum2.bft',0       ; DATA XREF: sub_C814+4Fo
-aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
+aGxgnbGvbGhvVGv	db 'The score will not be recorded for Slow Mode      ',0
 					; DATA XREF: sub_C814+DCo
-aGxgnbGvbGhvV_1	db 'スローモードでのプレイでは、スコアは記録されません',0
+aGxgnbGvbGhvV_1	db 'The score will not be recorded for Slow Mode      ',0
 					; DATA XREF: sub_C814+EDo
 aName		db 'name',0             ; DATA XREF: sub_C814+153o
 		db    0

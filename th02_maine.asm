@@ -29134,13 +29134,13 @@ aEd05_pi	db 'ed05.pi',0          ; DATA XREF: sub_A09D+3DDo
 aVer1_00	db 'ver 1.00',0         ; DATA XREF: sub_A8FA+2Co sub_A8FA+7Ao
 aXxcvsB@b@vrvsv	db '封魔録　　ＳＴＡＦＦ',0 ; DATA XREF: sub_A8FA+B4o
 aEd06_pi	db 'ed06.pi',0          ; DATA XREF: sub_A8FA+CBo
-aGvgngogigab@b@	db 'プログラム　　　ＺＵＮ',0 ; DATA XREF: sub_A8FA+10Eo
+aGvgngogigab@b@	db 'ＰＲＯＧＲＡＭ　ＺＵＮ',0 ; DATA XREF: sub_A8FA+10Eo
 aEd06b_rgb	db 'ed06b.rgb',0        ; DATA XREF: sub_A8FA+12Bo
 aEd06c_rgb	db 'ed06c.rgb',0        ; DATA XREF: sub_A8FA+156o
 aEd07_pi	db 'ed07.pi',0          ; DATA XREF: sub_A8FA+173o
-aGogigtgbgbgnb@	db 'グラフィック　ＺＵＮ',0 ; DATA XREF: sub_A8FA+1ADo
+aGogigtgbgbgnb@	db '  GRAPHIC   　ＺＵＮ',0 ; DATA XREF: sub_A8FA+1ADo
 aB@b@b@b@b@b@b@	db '　　　　　　　高附日向',0 ; DATA XREF: sub_A8FA+1C2o
-aB@b@b@b@bigibG	db '　　　　（オールクリア画）',0 ; DATA XREF: sub_A8FA+1D7o
+aB@b@b@b@bigibG	db '　　（All Clear  Picture）',0 ; DATA XREF: sub_A8FA+1D7o
 aEd07a_rgb	db 'ed07a.rgb',0        ; DATA XREF: sub_A8FA+1ECo
 aEd07b_rgb	db 'ed07b.rgb',0        ; DATA XREF: sub_A8FA+20Co
 					; sub_A8FA+262o
@@ -29151,17 +29151,17 @@ aVsvdvrvsb@vovk	db 'ＴＥＳＴ　ＰＬＡＹＥＲ',0 ; DATA XREF: sub_A8FA+2F4o
 aB@b@b@b@vivivs	db '　　　　かおる',0   ; DATA XREF: sub_A8FA+309o
 aB@b@b@b@vbbVv	db '　　　　Ｃ－Ｗ',0   ; DATA XREF: sub_A8FA+31Eo
 aB@b@Orucb@mbiS	db '　　 山田　恵一郎',0 ; DATA XREF: sub_A8FA+333o
-aVVSSxrivVVVV	db ' その他大勢のみなさん',0 ; DATA XREF: sub_A8FA+348o
+aVVSSxrivVVVV	db 'And many other people',0 ; DATA XREF: sub_A8FA+348o
 aEd08b_rgb	db 'ed08b.rgb',0        ; DATA XREF: sub_A8FA+35Do
 aEd08c_rgb	db 'ed08c.rgb',0        ; DATA XREF: sub_A8FA+37Do
 aEd09_pi	db 'ED09.pi',0          ; DATA XREF: sub_A8FA+3A9o
 aVsvivbvovlb@vs	db 'Ｔｈａｎｋ　ｙｏｕ　ｆｏｒ　ｐｌａｙｉｎｇ',0 ; DATA XREF: sub_A8FA+3F5o
-aB@nPiuU_	db '　最終得点',0       ; DATA XREF: sub_A8FA+429o
-aGrgugegbgjgeb	db 'コンティニュー',0   ; DATA XREF: sub_A8FA+46Ao
-aB@Gigugn	db '　 ランク',0        ; DATA XREF: sub_A8FA+4B6o
-aGvgmgcgdbPik	db 'プレイヤー初期',0   ; DATA XREF: sub_A8FA+504o
-aCMvpik		db ' 霊撃初期数',0      ; DATA XREF: sub_A8FA+552o
-aVavVVSrso	db 'あなたの腕前',0     ; DATA XREF: sub_A8FA+5B9o
+aB@nPiuU_	db 'FinalScore',0       ; DATA XREF: sub_A8FA+429o
+aGrgugegbgjgeb	db 'Continues Used',0   ; DATA XREF: sub_A8FA+46Ao
+aB@Gigugn	db 'Ranking  ',0        ; DATA XREF: sub_A8FA+4B6o
+aGvgmgcgdbPik	db 'Init. Lives　 ',0   ; DATA XREF: sub_A8FA+504o
+aCMvpik		db 'Init. Bombs',0      ; DATA XREF: sub_A8FA+552o
+aVavVVSrso	db 'Skill Level ',0     ; DATA XREF: sub_A8FA+5B9o
 aVpvxvxvvb@vyvt	db '１９９７　ＺＵＮ  (Amusement Makers)',0 ; DATA XREF: sub_A8FA+6AEo
 aAll_pi		db 'all.pi',0           ; DATA XREF: sub_AFE7+1Ao sub_B07F+1Ao
 aBut_pi		db 'but.pi',0           ; DATA XREF: sub_AFE7+5Ao

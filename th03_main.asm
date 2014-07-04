@@ -63767,14 +63767,14 @@ word_1DDAC	dw 2AB6h		; DATA XREF: sub_17FCF+46r
 		db    0
 		db    7
 aVlvVwb@vbvpvnv	db 'ＭＡＸ　Ｃｏｍｂｏ　　　×',0 ; DATA XREF: sub_E3F2+30o
-aGqbGwgagGbgni	db 'ゲージアタック回数　　　×',0 ; DATA XREF: sub_E3F2+3Fo
-aGGxgagGbgni	db 'ボスアタック回数　　　　×',0 ; DATA XREF: sub_E3F2+4Eo
-aGGxgkgobGtgli	db 'ボスリバーサル回数　　　×',0 ; DATA XREF: sub_E3F2+5Do
-aGGxgpgjgbgni	db 'ボスパニック回数　　　　×',0 ; DATA XREF: sub_E3F2+6Co
+aGqbGwgagGbgni	db 'ＧＡＵＧＥ　Ａｔｋ　　　×',0 ; DATA XREF: sub_E3F2+3Fo
+aGGxgagGbgni	db 'ＢＯＳＳ　Ａｔｋ　　　　×',0 ; DATA XREF: sub_E3F2+4Eo
+aGGxgkgobGtgli	db 'ＢＯＳＳ　Ｆｌｉｐ　　　×',0 ; DATA XREF: sub_E3F2+5Do
+aGGxgpgjgbgni	db 'ＢＯＳＳ　Ｐａｎｉｃ　　×',0 ; DATA XREF: sub_E3F2+6Co
 aB@b@b@vsvnvsvV	db '　　　ＴＯＴＡＬ　　　　　',0 ; DATA XREF: sub_E3F2+7Bo
 aB@b@vvvhvmvmvd	db '　　ＷＩＮＮＥＲ　ＢＯＮＵＳ　　',0 ; DATA XREF: sub_E3F2+95o
 aB@b@b@vVkvkb@v	db '　　　ＡＬＬ　ＣＬＥＡＲ！！　　',0 ; DATA XREF: sub_E3F2+9Eo
-aOcvsrlrfb@b@b@	db '残り人数　　　　　　　　×',0 ; DATA XREF: sub_E3F2+ADo
+aOcvsrlrfb@b@b@	db 'ＬＩＶＥＳ　Ｌｅｆｔ　　×',0 ; DATA XREF: sub_E3F2+ADo
 		db 0
 		db '<',0
 		db    0

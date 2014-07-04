@@ -31222,25 +31222,25 @@ byte_DDE0	db 0			; DATA XREF: sub_C59A+7Ar sub_C680+3w	...
 		dd aScore_m		; "score.m"
 byte_DE82	db 0			; DATA XREF: sub_A6A3+4r sub_A6A3+AAw
 byte_DE83	db 0			; DATA XREF: sub_AC06+6Dr sub_AC06+99r ...
-aNo_1B@cVOul	db 'NO.1     Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ     ',0 ; DATA XREF: dseg:05F2o
-aNo_2B@B@Select	db 'NO.2    Å@ Å@ Selection         ',0 ; DATA XREF: dseg:05F6o
-aNo_3Umx	db 'NO.3          ìåï˚ódóˆík        ',0 ; DATA XREF: dseg:05FAo
-aNo_4Reincarnat	db 'NO.4        Reincarnation       ',0 ; DATA XREF: dseg:05FEo
-aNo_5Dim_Dream	db 'NO.5          Dim. Dream        ',0 ; DATA XREF: dseg:0602o
-aNo_6TabulaRasa	db 'NO.6   Tabula rasaÅ@Å`ãÛîíè≠èó  ',0 ; DATA XREF: dseg:0606o
-aNo_7B@Maniacal	db 'NO.7   Å@  Maniacal Princess    ',0 ; DATA XREF: dseg:060Ao
-aNo_8CPOBLostDr	db 'NO.8      ñ≤è¡é∏  Å`Lost Dream  ',0 ; DATA XREF: dseg:060Eo
-aNo_9CMCvlyBDre	db 'NO.9     ñ≤å∂óVãY  Å`Dream War  ',0 ; DATA XREF: dseg:0612o
-aNo_10Cvc@mirab	db 'NO.10  ñÇñ@åàêÌÅIÅ`Fight it out!',0 ; DATA XREF: dseg:0616o
-aNo_11B@SailorO	db 'NO.11    Å@ Sailor of Time      ',0 ; DATA XREF: dseg:061Ao
-aNo_12Strawberr	db 'NO.12     Strawberry Crisis!!   ',0 ; DATA XREF: dseg:061Eo
-aNo_13F		db 'NO.13      îÒìùàÍñÇñ@ê¢äEò_     ',0 ; DATA XREF: dseg:0622o
-aNo_14B@cvc@pri	db 'NO.14        Å@ñÇñ@è‡à§         ',0 ; DATA XREF: dseg:0626o
-aNo_15B@lviuvC	db 'NO.15        Å@ãvâìÇÃñ≤         ',0 ; DATA XREF: dseg:062Ao
-aNo_16Umx	db 'NO.16        ìåï˚ÇÃê¬Ç¢ãÛ       ',0 ; DATA XREF: dseg:062Eo
-aNo_17IiiuvCumo	db 'NO.17         âiâìÇÃñûåé        ',0 ; DATA XREF: dseg:0632o
+aNo_1B@cVOul	db 'NO.1 Dream Transcending Space...',0 ; DATA XREF: dseg:05F2o
+aNo_2B@B@Select	db 'NO.2    Å@ Å@Selection          ',0 ; DATA XREF: dseg:05F6o
+aNo_3Umx	db 'NO.3 Eastern Mystical Love C... ',0 ; DATA XREF: dseg:05FAo
+aNo_4Reincarnat	db 'NO.4       Reincarnation        ',0 ; DATA XREF: dseg:05FEo
+aNo_5Dim_Dream	db 'NO.5         Dim. Dream         ',0 ; DATA XREF: dseg:0602o
+aNo_6TabulaRasa	db 'NO.6 Tabula Rasa Å` The Empty G.',0 ; DATA XREF: dseg:0606o
+aNo_7B@Maniacal	db 'NO.7   Å@ Maniacal Princess     ',0 ; DATA XREF: dseg:060Ao
+aNo_8CPOBLostDr	db 'NO.8 Vanishing Dream Å` Lost... ',0 ; DATA XREF: dseg:060Eo
+aNo_9CMCvlyBDre	db 'NO.9 Visionary Game Å` Dream War',0 ; DATA XREF: dseg:0612o
+aNo_10Cvc@mirab	db 'NO.10   Decisive Magic Battle!  ',0 ; DATA XREF: dseg:0616o
+aNo_11B@SailorO	db 'NO.11    Å@Sailor of Time       ',0 ; DATA XREF: dseg:061Ao
+aNo_12Strawberr	db 'NO.12    Strawberry Crisis!!    ',0 ; DATA XREF: dseg:061Eo
+aNo_13F		db 'NO.13 Disunified Field Theory...',0 ; DATA XREF: dseg:0622o
+aNo_14B@cvc@pri	db 'NO.14   Love of Magical Chimes  ',0 ; DATA XREF: dseg:0626o
+aNo_15B@lviuvC	db 'NO.15     Dream of Eternity     ',0 ; DATA XREF: dseg:062Ao
+aNo_16Umx	db 'NO.16     Eastern Blue Sky      ',0 ; DATA XREF: dseg:062Eo
+aNo_17IiiuvCumo	db 'NO.17      Eternal Full Moon    ',0 ; DATA XREF: dseg:0632o
 aNo_18MapleDrea	db 'NO.18       Maple Dream...      ',0 ; DATA XREF: dseg:0636o
-aNo_19CRlvLxu	db 'NO.19         óÏêlÇÃãxì˙        ',0 ; DATA XREF: dseg:063Ao
+aNo_19CRlvLxu	db 'NO.19 Ghostly Person',027h,'s Holiday  ',0 ; DATA XREF: dseg:063Ao
 aB@b@		db '           Å@Å@                 ',0 ; DATA XREF: dseg:063Eo
 aB@b@vpvxvivf	db '           Å@Å@ÇpÇïÇâÇî         ',0 ; DATA XREF: dseg:0642o
 aOp_m_0		db 'op.m',0             ; DATA XREF: dseg:0646o

@@ -29849,9 +29849,9 @@ aTs1_pi		db 'ts1.pi',0           ; DATA XREF: sub_9FAF+1Bo sub_A0C6+2Do
 aSelect		db 'select',0           ; DATA XREF: sub_9FAF+59o sub_9FAF+5Do ...
 ; char path[]
 path		db 'main',0             ; DATA XREF: sub_9FAF+67o sub_9FAF+6Bo ...
-aIipo		db '‰‰o',0
-aB@tPa		db '@’Êí  ',0         ; DATA XREF: dseg:0158o
-aIXfmym		db 'ˆê•”ŒyŒ¸',0         ; DATA XREF: dseg:015Co
+aIipo		db 'Perf',0
+aB@tPa		db '  Normal',0         ; DATA XREF: dseg:0158o
+aIXfmym		db 'Truncate',0         ; DATA XREF: dseg:015Co
 aMikoft_bft	db 'MIKOFT.bft',0       ; DATA XREF: _main+40o
 aGminit_m	db 'gminit.m',0         ; DATA XREF: _main+BEo
 aTs3_pi		db 'ts3.pi',0           ; DATA XREF: _main+DBo
@@ -30879,10 +30879,10 @@ unk_DCBA	db    1			; DATA XREF: sub_B86E+1Do
 		db    2
 		db    4
 aHuuhi_dat	db 'huuhi.dat',0        ; DATA XREF: dseg:off_DC36o
-aNvl@uo		db '‚‹@“®',0           ; DATA XREF: dseg:0674o
-aChmf		db '–hŒä',0             ; DATA XREF: dseg:0678o
-aNumv		db 'UŒ‚',0             ; DATA XREF: dseg:067Co
-aVicSob@b@b@b@b	db '      ‚¨–¼‘O@@@@@@“¾“_@@@ STAGE  TYPE   “ú•t',0
+aNvl@uo		db 'SPEED ',0           ; DATA XREF: dseg:0674o
+aChmf		db 'DEF ',0             ; DATA XREF: dseg:0678o
+aNumv		db 'ATK ',0             ; DATA XREF: dseg:067Co
+aVicSob@b@b@b@b	db '       NAME@@@@@@ SCORE @@ STAGE  TYPE   DATE',0
 					; DATA XREF: sub_B5B0+35o
 aOp_h_bft	db 'op_h.bft',0         ; DATA XREF: sub_B77E+31o
 aOp_h_rgb	db 'op_h.rgb',0         ; DATA XREF: sub_B77E+3Ao
@@ -30917,23 +30917,23 @@ unk_DD5C	db  80h	; €		; DATA XREF: sub_BD24+1Fo
 		db    0
 		db  80h	; €
 		db    0
-aIaczlVCV	db ' ‰A—z‹Ê‚Ì—Í‚ğg‚í‚È‚¢ ',0 ; DATA XREF: dseg:06F2o
-aNlfIVVivL@uocV	db ' L”ÍˆÍ‚Å‚©‚Â‹@“®—Í‚É ',0 ; DATA XREF: dseg:06F6o
-aB@lnvvnvl@uocG	db '@‹­‚¢‚‹@“®—Íƒ^ƒCƒv@',0 ; DATA XREF: dseg:06FAo
-aB@sMvvkcdvVVvv	db ' @èËŒ‚‚ª—D‚ê‚Ä‚¢‚é @',0 ; DATA XREF: dseg:06FEo
-aB@GogigugxvOcv	db '@ ƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½@ ',0 ; DATA XREF: dseg:0702o
-aB@b@chmfpdolgG	db '@@–hŒäd‹ƒ^ƒCƒv@@',0 ; DATA XREF: dseg:0706o
-aB@iaczlVCVRavd	db ' @‰A—z‹Ê‚Ì—Í‚Åí‚¤   ',0 ; DATA XREF: dseg:070Ao
-aB@numvcVkcdvVV	db '@UŒ‚—Í‚ª—D‚ê‚Ä‚¢‚é@',0 ; DATA XREF: dseg:070Eo
-aB@b@numvpdolgG	db '@@UŒ‚d‹ƒ^ƒCƒv@@',0 ; DATA XREF: dseg:0712o
-aSCVRaumgxgGcgl	db 'èË–²‚Ìí“¬ƒXƒ^ƒCƒ‹‚ğA‰º‚Ì‚R‚Â‚©‚ç‚¦‚ç‚ñ‚Å‚Ë',0
+aIaczlVCV	db '@Highly Mobile Type@',0 ; DATA XREF: dseg:06F2o
+aNlfIVVivL@uocV	db '@ that doesn',027h,'t use @',0 ; DATA XREF: dseg:06F6o
+aB@lnvvnvl@uocG	db '@ the Yin-Yang Orb @',0 ; DATA XREF: dseg:06FAo
+aB@sMvvkcdvVVvv	db '@@Defensive Type@@',0 ; DATA XREF: dseg:06FEo
+aB@GogigugxvOcv	db ' that moderately uses ',0 ; DATA XREF: dseg:0702o
+aB@b@chmfpdolgG	db '@ the Yin-Yang Orb @',0 ; DATA XREF: dseg:0706o
+aB@iaczlVCVRavd	db '@@Offensive Type@@',0 ; DATA XREF: dseg:070Ao
+aB@numvcVkcdvVV	db '@that relies on the@',0 ; DATA XREF: dseg:070Eo
+aB@b@numvpdolgG	db '@@ Yin-Yang Orb @@',0 ; DATA XREF: dseg:0712o
+aSCVRaumgxgGcgl	db 'Select Reimu',027h,'s combat style from the 3 below',0
 					; DATA XREF: dseg:off_DD46o
-aTnbjb@ggglgxgg	db '’j@ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚Å‚ÍA“ïˆÕ“xAƒvƒŒƒCƒ„[Aƒ{ƒ€”‚Í•ÏXo—'
+aTnbjb@ggglgxgg	db 'Note: Lives, Bombs, and Difficulty settings do not apply to this '
 					; DATA XREF: dseg:off_DD4Ao
-		db 'ˆ‚Ü‚¹‚ñ',0
-aB@b@b@vVVVBauq	db '@@@‚»‚ê‚¼‚êA“ïˆÕ“x‚d‚w‚s‚q‚`AƒvƒŒƒCƒ„[‚RlAƒ{ƒ€‚PŒÂ‚Æ‚È‚è‚'
+		db 'stage. ',0
+aB@b@b@vVVVBauq	db '@@@Instead, you start off with 3 lives and 1 bomb on EXTRA mod'
 					; DATA XREF: dseg:off_DD4Eo
-		db 'Ü‚·    ',0
+		db 'e.     ',0
 aBsbsvbvkvdvVqv	db '  ™™‚b‚k‚d‚`‚q‚d‚c™™  ',0 ; DATA XREF: dseg:off_DD52o
 aTselect_pi	db 'TSELECT.pi',0       ; DATA XREF: sub_BBC0+15o
 		dd aNo_1Umx		; "NO.1	   “Œ•û••–‚˜^@`ò“y™Öä¶—…"
@@ -30971,21 +30971,21 @@ aTselect_pi	db 'TSELECT.pi',0       ; DATA XREF: sub_BBC0+15o
 byte_DF96	db 0			; DATA XREF: sub_C1B2+4r
 					; sub_C1B2:loc_C25Ew
 byte_DF97	db 0			; DATA XREF: sub_C7A0+5Ar sub_C7A0+86r ...
-aNo_1Umx	db 'NO.1    “Œ•û••–‚˜^@`ò“y™Öä¶—…',0 ; DATA XREF: dseg:08E6o
-aNo_2B@Focab@bE	db 'NO.2    @ ”—í@`Eastern Wind ',0 ; DATA XREF: dseg:08EAo
-aNo_3B@EndOfDay	db 'NO.3    @   End of Daylight@  ',0 ; DATA XREF: dseg:08EEo
-aNo_4B@b@b@b@b@	db 'NO.4    @@@@@Œ¶–²ŠE@@@@',0 ; DATA XREF: dseg:08F2o
-aNo_5VVrvivmbav	db 'NO.5    ‚Ğ‚à‚ë‚¬A‚Ş‚ç‚³‚«‚É‚à‚¦',0 ; DATA XREF: dseg:08F6o
-aNo_6B@umx	db 'NO.6    @“Œ•û••–‚˜^@`—HŒ¶—•‘',0 ; DATA XREF: dseg:08FAo
-aNo_7B@SheSInAT	db 'NO.7    @  She',27h,'s in a temper!! ',0 ; DATA XREF: dseg:08FEo
-aNo_8B@B@VtvVVV	db 'NO.8    @  @ ‚â‚İ‚Ì‚¿‚©‚ç@@ ',0 ; DATA XREF: dseg:0902o
-aNo_9B@b@b@b@oa	db 'NO.9    @@@@€‚ğ“q‚µ‚Ä@@@',0 ; DATA XREF: dseg:0906o
-aNo_10B@B@C	db 'NO.10    @  @ —öFƒ}ƒWƒbƒN @ ',0 ; DATA XREF: dseg:090Ao
-aNo_11CompleteD	db 'NO.11       Complete Darkness   ',0 ; DATA XREF: dseg:090Eo
-aNo_12B@b@iucVR	db 'NO.12        @@‰“–ì‚ÌX@@@ ',0 ; DATA XREF: dseg:0912o
-aNo_13RSbvav	db 'NO.13       Ì˜b‚í‚ñ‚¾[‚ç‚ñ‚Ç  ',0 ; DATA XREF: dseg:0916o
-aNo_14B@Ggglgxg	db 'NO.14      @ ƒGƒLƒXƒgƒ‰ƒ‰ƒu    ',0 ; DATA XREF: dseg:091Ao
-aNo_15RaoVVVVVV	db 'NO.15      íÔ‚Ş‚·‚ß‚Ì‚İ‚é‚ä‚ß ',0 ; DATA XREF: dseg:091Eo
+aNo_1Umx	db 'NO.1      Pure Land Mandala     ',0 ; DATA XREF: dseg:08E6o
+aNo_2B@Focab@bE	db 'NO.2   Hakurei ` Eastern Wind  ',0 ; DATA XREF: dseg:08EAo
+aNo_3B@EndOfDay	db 'NO.3    @ End of Daylight  @  ',0 ; DATA XREF: dseg:08EEo
+aNo_4B@b@b@b@b@	db 'NO.4    World of Empty Dreams   ',0 ; DATA XREF: dseg:08F2o
+aNo_5VVrvivmbav	db 'NO.5   Himorogi, Burn in Violet ',0 ; DATA XREF: dseg:08F6o
+aNo_6B@umx	db 'NO.6  Phantom',027h,'s Boisterous Dance',0 ; DATA XREF: dseg:08FAo
+aNo_7B@SheSInAT	db 'NO.7     She',27h,'s in a Temper!!    ',0 ; DATA XREF: dseg:08FEo
+aNo_8B@B@VtvVVV	db 'NO.8    @Power of Darkness  @ ',0 ; DATA XREF: dseg:0902o
+aNo_9B@b@b@b@oa	db 'NO.9    @@Bet on Death  @@@',0 ; DATA XREF: dseg:0906o
+aNo_10B@B@C	db 'NO.10    Love-Coloured Magic    ',0 ; DATA XREF: dseg:090Ao
+aNo_11CompleteD	db 'NO.11     Complete Darkness     ',0 ; DATA XREF: dseg:090Eo
+aNo_12B@b@iucVR	db 'NO.12      Forest of Tohno   @ ',0 ; DATA XREF: dseg:0912o
+aNo_13RSbvav	db 'NO.13    Legendary Wonderland   ',0 ; DATA XREF: dseg:0916o
+aNo_14B@Ggglgxg	db 'NO.14      @ Extra Love        ',0 ; DATA XREF: dseg:091Ao
+aNo_15RaoVVVVVV	db 'NO.15   The Tank Girl',027h,'s Dream   ',0 ; DATA XREF: dseg:091Eo
 aB@b@		db '           @@                 ',0 ; DATA XREF: dseg:0922o
 aB@b@vpvxvivf	db '           @@‚p‚•‚‰‚”         ',0 ; DATA XREF: dseg:0926o
 aOp_m_0		db 'op.m',0             ; DATA XREF: dseg:092Ao

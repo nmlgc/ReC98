@@ -46556,95 +46556,95 @@ byte_21CC8	db 0			; DATA XREF: sub_13DAA+33r
 					; sub_19F6E+16w ...
 		db 0
 ; 0
-NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0, 38h,	 0
-		db    0,   0, 1Ch,   0,	22h,   0, 41h,	 0, 41h,   0, 41h,   0,	22h,   0, 1Ch,	 0
-		db    0,   0, 0Eh,   0,	11h,   0, 20h, 80h, 20h, 80h, 20h, 80h,	11h,   0, 0Eh,	 0
-		db    0,   0,	7,   0,	  8, 80h, 10h, 40h, 10h, 40h, 10h, 40h,	  8, 80h,   7,	 0
-		db    0,   0,	3, 80h,	  4, 40h,   8, 20h,   8, 20h,	8, 20h,	  4, 40h,   3, 80h
-		db    0,   0,	1,0C0h,	  2, 20h,   4, 10h,   4, 10h,	4, 10h,	  2, 20h,   1,0C0h
-		db    0,   0,	0,0E0h,	  1, 10h,   2,	 8,   2,   8,	2,   8,	  1, 10h,   0,0E0h
-		db    0,   0,	0, 70h,	  0, 88h,   1,	 4,   1,   4,	1,   4,	  0, 88h,   0, 70h
+NUMERALS	db    0,   0, 38h,   0,	44h,   0, 44h,	 0, 44h,   0, 44h,   0,	44h,   0, 38h,	 0
+		db    0,   0, 1Ch,   0,	22h,   0, 22h,	 0, 22h,   0, 22h,   0,	22h,   0, 1Ch,	 0
+		db    0,   0, 0Eh,   0,	11h,   0, 11h,	 0, 11h,   0, 11h,   0,	11h,   0, 0Eh,	 0
+		db    0,   0,	7,   0,	  8, 80h,   8, 80h,   8, 80h,	8, 80h,	  8, 80h,   7,	 0
+		db    0,   0,	3, 80h,	  4, 40h,   4, 40h,   4, 40h,	4, 40h,	  4, 40h,   3, 80h
+		db    0,   0,	1,0C0h,	  2, 20h,   2, 20h,   2, 20h,	2, 20h,	  2, 20h,   1,0C0h
+		db    0,   0,	0,0E0h,	  1, 10h,   1, 10h,   1, 10h,	1, 10h,	  1, 10h,   0,0E0h
+		db    0,   0,	0, 70h,	  0, 88h,   0, 88h,   0, 88h,	0, 88h,	  0, 88h,   0, 70h
 ; 1
-		db    0,   0,	0,   0,	  0,   0,   6,	 0, 7Eh,   0,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   3,	 0, 3Fh,   0,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   1, 80h, 1Fh, 80h,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   0,0C0h, 0Fh,0C0h,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   0, 60h,   7,0E0h,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   0, 30h,   3,0F0h,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   0, 18h,   1,0F8h,	0,   0,	  0,   0,   0,	 0
-		db    0,   0,	0,   0,	  0,   0,   0, 0Ch,   0,0FCh,	0,   0,	  0,   0,   0,	 0
+		db    0,   0, 38h,   0,	18h,   0, 18h,	 0, 18h,   0, 18h,   0,	18h,   0, 18h,	 0
+		db    0,   0, 1Ch,   0,	0Ch,   0, 0Ch,	 0, 0Ch,   0, 0Ch,   0,	0Ch,   0, 0Ch,	 0
+		db    0,   0, 0Eh,   0,	  6,   0,   6,	 0,   6,   0,	6,   0,	  6,   0,   6,	 0
+		db    0,   0,	7,   0,	  3,   0,   3,	 0,   3,   0,	3,   0,	  3,   0,   3,	 0
+		db    0,   0,	3, 80h,	  1, 80h,   1, 80h,   1, 80h,	1, 80h,	  1, 80h,   1, 80h
+		db    0,   0,	1,0C0h,	  0,0C0h,   0,0C0h,   0,0C0h,	0,0C0h,	  0,0C0h,   0,0C0h
+		db    0,   0,	0,0E0h,	  0, 60h,   0, 60h,   0, 60h,	0, 60h,	  0, 60h,   0, 60h
+		db    0,   0,	0, 70h,	  0, 30h,   0, 30h,   0, 30h,	0, 30h,	  0, 30h,   0, 30h
 ; 2
-		db    0,   0, 0Ch,   0,	3Ch,   0,   0,	 0,   0,   0,	6,   0,	7Eh,   0,   0,	 0
-		db    0,   0,	6,   0,	1Eh,   0,   0,	 0,   0,   0,	3,   0,	3Fh,   0,   0,	 0
-		db    0,   0,	3,   0,	0Fh,   0,   0,	 0,   0,   0,	1, 80h,	1Fh, 80h,   0,	 0
-		db    0,   0,	1, 80h,	  7, 80h,   0,	 0,   0,   0,	0,0C0h,	0Fh,0C0h,   0,	 0
-		db    0,   0,	0,0C0h,	  3,0C0h,   0,	 0,   0,   0,	0, 60h,	  7,0E0h,   0,	 0
-		db    0,   0,	0, 60h,	  1,0E0h,   0,	 0,   0,   0,	0, 30h,	  3,0F0h,   0,	 0
-		db    0,   0,	0, 30h,	  0,0F0h,   0,	 0,   0,   0,	0, 18h,	  1,0F8h,   0,	 0
-		db    0,   0,	0, 18h,	  0, 78h,   0,	 0,   0,   0,	0, 0Ch,	  0,0FCh,   0,	 0
+		db    0,   0, 7Ch,   0,	  2,   0,   2,	 0, 3Eh,   0, 40h,   0,	40h,   0, 7Eh,	 0
+		db    0,   0, 3Eh,   0,	  1,   0,   1,	 0, 1Fh,   0, 20h,   0,	20h,   0, 3Fh,	 0
+		db    0,   0, 1Fh,   0,	  0, 80h,   0, 80h, 0Fh, 80h, 10h,   0,	10h,   0, 1Fh, 80h
+		db    0,   0, 0Fh, 80h,	  0, 40h,   0, 40h,   7,0C0h,	8,   0,	  8,   0, 0Fh,0C0h
+		db    0,   0,	7,0C0h,	  0, 20h,   0, 20h,   3,0E0h,	4,   0,	  4,   0,   7,0E0h
+		db    0,   0,	3,0E0h,	  0, 10h,   0, 10h,   1,0F0h,	2,   0,	  2,   0,   3,0F0h
+		db    0,   0,	1,0F0h,	  0,   8,   0,	 8,   0,0F8h,	1,   0,	  1,   0,   1,0F8h
+		db    0,   0,	0,0F8h,	  0,   4,   0,	 4,   0, 7Ch,	0, 80h,	  0, 80h,   0,0FCh
 ; 3
-		db    6,   0, 7Eh,   0,	  0,   0,   6,	 0, 3Ch,   0,	0,   0,	  3,   0,0FFh,	 0
-		db    3,   0, 3Fh,   0,	  0,   0,   3,	 0, 1Eh,   0,	0,   0,	  1, 80h, 7Fh, 80h
-		db    1, 80h, 1Fh, 80h,	  0,   0,   1, 80h, 0Fh,   0,	0,   0,	  0,0C0h, 3Fh,0C0h
-		db    0,0C0h, 0Fh,0C0h,	  0,   0,   0,0C0h,   7, 80h,	0,   0,	  0, 60h, 1Fh,0E0h
-		db    0, 60h,	7,0E0h,	  0,   0,   0, 60h,   3,0C0h,	0,   0,	  0, 30h, 0Fh,0F0h
-		db    0, 30h,	3,0F0h,	  0,   0,   0, 30h,   1,0E0h,	0,   0,	  0, 18h,   7,0F8h
-		db    0, 18h,	1,0F8h,	  0,   0,   0, 18h,   0,0F0h,	0,   0,	  0, 0Ch,   3,0FCh
-		db    0, 0Ch,	0,0FCh,	  0,   0,   0, 0Ch,   0, 78h,	0,   0,	  0,   6,   1,0FEh
+		db    0,   0, 7Ch,   0,	  2,   0,   2,	 0, 3Ch,   0,	2,   0,	  2,   0, 7Ch,	 0
+		db    0,   0, 3Eh,   0,	  1,   0,   1,	 0, 1Eh,   0,	1,   0,	  1,   0, 3Eh,	 0
+		db    0,   0, 1Fh,   0,	  0, 80h,   0, 80h, 0Fh,   0,	0, 80h,	  0, 80h, 1Fh,	 0
+		db    0,   0, 0Fh, 80h,	  0, 40h,   0, 40h,   7, 80h,	0, 40h,	  0, 40h, 0Fh, 80h
+		db    0,   0,	7,0C0h,	  0, 20h,   0, 20h,   3,0C0h,	0, 20h,	  0, 20h,   7,0C0h
+		db    0,   0,	3,0E0h,	  0, 10h,   0, 10h,   1,0E0h,	0, 10h,	  0, 10h,   3,0E0h
+		db    0,   0,	1,0F0h,	  0,   8,   0,	 8,   0,0F0h,	0,   8,	  0,   8,   1,0F0h
+		db    0,   0,	0,0F8h,	  0,   4,   0,	 4,   0, 78h,	0,   4,	  0,   4,   0,0F8h
 ; 4
-		db    0,   0, 7Eh,   0,	5Ah,   0, 7Eh,	 0, 42h,   0, 42h,   0,	7Eh,   0,   0,	 0
-		db    0,   0, 3Fh,   0,	2Dh,   0, 3Fh,	 0, 21h,   0, 21h,   0,	3Fh,   0,   0,	 0
-		db    0,   0, 1Fh, 80h,	16h, 80h, 1Fh, 80h, 10h, 80h, 10h, 80h,	1Fh, 80h,   0,	 0
-		db    0,   0, 0Fh,0C0h,	0Bh, 40h, 0Fh,0C0h,   8, 40h,	8, 40h,	0Fh,0C0h,   0,	 0
-		db    0,   0,	7,0E0h,	  5,0A0h,   7,0E0h,   4, 20h,	4, 20h,	  7,0E0h,   0,	 0
-		db    0,   0,	3,0F0h,	  2,0D0h,   3,0F0h,   2, 10h,	2, 10h,	  3,0F0h,   0,	 0
-		db    0,   0,	1,0F8h,	  1, 68h,   1,0F8h,   1,   8,	1,   8,	  1,0F8h,   0,	 0
-		db    0,   0,	0,0FCh,	  0,0B4h,   0,0FCh,   0, 84h,	0, 84h,	  0,0FCh,   0,	 0
+		db    0,   0, 42h,   0,	42h,   0, 42h,	 0, 7Eh,   0,	2,   0,	  2,   0,   2,	 0
+		db    0,   0, 21h,   0,	21h,   0, 21h,	 0, 3Fh,   0,	1,   0,	  1,   0,   1,	 0
+		db    0,   0, 10h, 80h,	10h, 80h, 10h, 80h, 1Fh, 80h,	0, 80h,	  0, 80h,   0, 80h
+		db    0,   0,	8, 40h,	  8, 40h,   8, 40h, 0Fh,0C0h,	0, 40h,	  0, 40h,   0, 40h
+		db    0,   0,	4, 20h,	  4, 20h,   4, 20h,   7,0E0h,	0, 20h,	  0, 20h,   0, 20h
+		db    0,   0,	2, 10h,	  2, 10h,   2, 10h,   3,0F0h,	0, 10h,	  0, 10h,   0, 10h
+		db    0,   0,	1,   8,	  1,   8,   1,	 8,   1,0F8h,	0,   8,	  0,   8,   0,	 8
+		db    0,   0,	0, 84h,	  0, 84h,   0, 84h,   0,0FCh,	0,   4,	  0,   4,   0,	 4
 ; 5
-		db    0,   0, 7Eh,   0,	  8,   0, 10h,	 0, 7Ch,   0, 24h,   0,	44h,   0,0FFh,	 0
-		db    0,   0, 3Fh,   0,	  4,   0,   8,	 0, 3Eh,   0, 12h,   0,	22h,   0, 7Fh, 80h
-		db    0,   0, 1Fh, 80h,	  2,   0,   4,	 0, 1Fh,   0,	9,   0,	11h,   0, 3Fh,0C0h
-		db    0,   0, 0Fh,0C0h,	  1,   0,   2,	 0, 0Fh, 80h,	4, 80h,	  8, 80h, 1Fh,0E0h
-		db    0,   0,	7,0E0h,	  0, 80h,   1,	 0,   7,0C0h,	2, 40h,	  4, 40h, 0Fh,0F0h
-		db    0,   0,	3,0F0h,	  0, 40h,   0, 80h,   3,0E0h,	1, 20h,	  2, 20h,   7,0F8h
-		db    0,   0,	1,0F8h,	  0, 20h,   0, 40h,   1,0F0h,	0, 90h,	  1, 10h,   3,0FCh
-		db    0,   0,	0,0FCh,	  0, 10h,   0, 20h,   0,0F8h,	0, 48h,	  0, 88h,   1,0FEh
+		db    0,   0, 7Eh,   0,	40h,   0, 40h,	 0, 7Ch,   0,	2,   0,	  2,   0, 7Ch,	 0
+		db    0,   0, 3Fh,   0,	20h,   0, 20h,	 0, 3Eh,   0,	1,   0,	  1,   0, 3Eh,	 0
+		db    0,   0, 1Fh, 80h,	10h,   0, 10h,	 0, 1Fh,   0,	0, 80h,	  0, 80h, 1Fh,	 0
+		db    0,   0, 0Fh,0C0h,	  8,   0,   8,	 0, 0Fh, 80h,	0, 40h,	  0, 40h, 0Fh, 80h
+		db    0,   0,	7,0E0h,	  4,   0,   4,	 0,   7,0C0h,	0, 20h,	  0, 20h,   7,0C0h
+		db    0,   0,	3,0F0h,	  2,   0,   2,	 0,   3,0E0h,	0, 10h,	  0, 10h,   3,0E0h
+		db    0,   0,	1,0F8h,	  1,   0,   1,	 0,   1,0F0h,	0,   8,	  0,   8,   1,0F0h
+		db    0,   0,	0,0FCh,	  0, 80h,   0, 80h,   0,0F8h,	0,   4,	  0,   4,   0,0F8h
 ; 6
-		db    0,   0, 18h,   0,	7Eh,   0,   0,	 0,   0,   0, 24h,   0,	42h,   0,   0,	 0
-		db    0,   0, 0Ch,   0,	3Fh,   0,   0,	 0,   0,   0, 12h,   0,	21h,   0,   0,	 0
-		db    0,   0,	6,   0,	1Fh, 80h,   0,	 0,   0,   0,	9,   0,	10h, 80h,   0,	 0
-		db    0,   0,	3,   0,	0Fh,0C0h,   0,	 0,   0,   0,	4, 80h,	  8, 40h,   0,	 0
-		db    0,   0,	1, 80h,	  7,0E0h,   0,	 0,   0,   0,	2, 40h,	  4, 20h,   0,	 0
-		db    0,   0,	0,0C0h,	  3,0F0h,   0,	 0,   0,   0,	1, 20h,	  2, 10h,   0,	 0
-		db    0,   0,	0, 60h,	  1,0F8h,   0,	 0,   0,   0,	0, 90h,	  1,   8,   0,	 0
-		db    0,   0,	0, 30h,	  0,0FCh,   0,	 0,   0,   0,	0, 48h,	  0, 84h,   0,	 0
+		db    0,   0, 7Eh,   0,	40h,   0, 40h,	 0, 7Eh,   0, 42h,   0,	42h,   0, 7Eh,	 0
+		db    0,   0, 3Fh,   0,	20h,   0, 20h,	 0, 3Fh,   0, 21h,   0,	21h,   0, 3Fh,	 0
+		db    0,   0, 1Fh, 80h,	10h,   0, 10h,	 0, 1Fh, 80h, 10h, 80h,	10h, 80h, 1Fh, 80h
+		db    0,   0, 0Fh,0C0h,	  8,   0,   8,	 0, 0Fh,0C0h,	8, 40h,	  8, 40h, 0Fh,0C0h
+		db    0,   0,	7,0E0h,	  4,   0,   4,	 0,   7,0E0h,	4, 20h,	  4, 20h,   7,0E0h
+		db    0,   0,	3,0F0h,	  2,   0,   2,	 0,   3,0F0h,	2, 10h,	  2, 10h,   3,0F0h
+		db    0,   0,	1,0F8h,	  1,   0,   1,	 0,   1,0F8h,	1,   8,	  1,   8,   1,0F8h
+		db    0,   0,	0,0FCh,	  0, 80h,   0, 80h,   0,0FCh,	0, 84h,	  0, 84h,   0,0FCh
 ; 7
-		db    0,   0, 20h,   0,	7Eh,   0, 20h,	 0, 20h,   0, 3Ch,   0,	  0,   0,   0,	 0
-		db    0,   0, 10h,   0,	3Fh,   0, 10h,	 0, 10h,   0, 1Eh,   0,	  0,   0,   0,	 0
-		db    0,   0,	8,   0,	1Fh, 80h,   8,	 0,   8,   0, 0Fh,   0,	  0,   0,   0,	 0
-		db    0,   0,	4,   0,	0Fh,0C0h,   4,	 0,   4,   0,	7, 80h,	  0,   0,   0,	 0
-		db    0,   0,	2,   0,	  7,0E0h,   2,	 0,   2,   0,	3,0C0h,	  0,   0,   0,	 0
-		db    0,   0,	1,   0,	  3,0F0h,   1,	 0,   1,   0,	1,0E0h,	  0,   0,   0,	 0
-		db    0,   0,	0, 80h,	  1,0F8h,   0, 80h,   0, 80h,	0,0F0h,	  0,   0,   0,	 0
-		db    0,   0,	0, 40h,	  0,0FCh,   0, 40h,   0, 40h,	0, 78h,	  0,   0,   0,	 0
+		db    0,   0, 7Eh,   0,	  2,   0,   2,	 0,   2,   0,	2,   0,	  2,   0,   2,	 0
+		db    0,   0, 3Fh,   0,	  1,   0,   1,	 0,   1,   0,	1,   0,	  1,   0,   1,	 0
+		db    0,   0, 1Fh, 80h,	  0, 80h,   0, 80h,   0, 80h,	0, 80h,	  0, 80h,   0, 80h
+		db    0,   0, 0Fh,0C0h,	  0, 40h,   0, 40h,   0, 40h,	0, 40h,	  0, 40h,   0, 40h
+		db    0,   0,	7,0E0h,	  0, 20h,   0, 20h,   0, 20h,	0, 20h,	  0, 20h,   0, 20h
+		db    0,   0,	3,0F0h,	  0, 10h,   0, 10h,   0, 10h,	0, 10h,	  0, 10h,   0, 10h
+		db    0,   0,	1,0F8h,	  0,   8,   0,	 8,   0,   8,	0,   8,	  0,   8,   0,	 8
+		db    0,   0,	0,0FCh,	  0,   4,   0,	 4,   0,   4,	0,   4,	  0,   4,   0,	 4
 ; 8
-		db    0,   0,	4,   0,	24h,   0, 22h,	 0, 42h,   0, 41h,   0,	  0,   0,   0,	 0
-		db    0,   0,	2,   0,	12h,   0, 11h,	 0, 21h,   0, 20h, 80h,	  0,   0,   0,	 0
-		db    0,   0,	1,   0,	  9,   0,   8, 80h, 10h, 80h, 10h, 40h,	  0,   0,   0,	 0
-		db    0,   0,	0, 80h,	  4, 80h,   4, 40h,   8, 40h,	8, 20h,	  0,   0,   0,	 0
-		db    0,   0,	0, 40h,	  2, 40h,   2, 20h,   4, 20h,	4, 10h,	  0,   0,   0,	 0
-		db    0,   0,	0, 20h,	  1, 20h,   1, 10h,   2, 10h,	2,   8,	  0,   0,   0,	 0
-		db    0,   0,	0, 10h,	  0, 90h,   0, 88h,   1,   8,	1,   4,	  0,   0,   0,	 0
-		db    0,   0,	0,   8,	  0, 48h,   0, 44h,   0, 84h,	0, 82h,	  0,   0,   0,	 0
+		db    0,   0, 3Ch,   0,	42h,   0, 42h,	 0, 3Ch,   0, 42h,   0,	42h,   0, 3Ch,	 0
+		db    0,   0, 1Eh,   0,	21h,   0, 21h,	 0, 1Eh,   0, 21h,   0,	21h,   0, 1Eh,	 0
+		db    0,   0, 0Fh,   0,	10h, 80h, 10h, 80h, 0Fh,   0, 10h, 80h,	10h, 80h, 0Fh,	 0
+		db    0,   0,	7, 80h,	  8, 40h,   8, 40h,   7, 80h,	8, 40h,	  8, 40h,   7, 80h
+		db    0,   0,	3,0C0h,	  4, 20h,   4, 20h,   3,0C0h,	4, 20h,	  4, 20h,   3,0C0h
+		db    0,   0,	1,0E0h,	  2, 10h,   2, 10h,   1,0E0h,	2, 10h,	  2, 10h,   1,0E0h
+		db    0,   0,	0,0F0h,	  1,   8,   1,	 8,   0,0F0h,	1,   8,	  1,   8,   0,0F0h
+		db    0,   0,	0, 78h,	  0, 84h,   0, 84h,   0, 78h,	0, 84h,	  0, 84h,   0, 78h
 ; 9
-		db    0,   0, 10h,   0,	3Eh,   0, 24h,	 0, 26h,   0, 4Ah,   0,	8Eh,   0,   0,	 0
-		db    0,   0,	8,   0,	1Fh,   0, 12h,	 0, 13h,   0, 25h,   0,	47h,   0,   0,	 0
-		db    0,   0,	4,   0,	0Fh, 80h,   9,	 0,   9, 80h, 12h, 80h,	23h, 80h,   0,	 0
-		db    0,   0,	2,   0,	  7,0C0h,   4, 80h,   4,0C0h,	9, 40h,	11h,0C0h,   0,	 0
-		db    0,   0,	1,   0,	  3,0E0h,   2, 40h,   2, 60h,	4,0A0h,	  8,0E0h,   0,	 0
-		db    0,   0,	0, 80h,	  1,0F0h,   1, 20h,   1, 30h,	2, 50h,	  4, 70h,   0,	 0
-		db    0,   0,	0, 40h,	  0,0F8h,   0, 90h,   0, 98h,	1, 28h,	  2, 38h,   0,	 0
-		db    0,   0,	0, 20h,	  0, 7Ch,   0, 48h,   0, 4Ch,	0, 94h,	  1, 1Ch,   0,	 0
+		db    0,   0, 3Ch,   0,	42h,   0, 42h,	 0, 3Eh,   0,	2,   0,	  2,   0,   2,	 0
+		db    0,   0, 1Eh,   0,	21h,   0, 21h,	 0, 1Fh,   0,	1,   0,	  1,   0,   1,	 0
+		db    0,   0, 0Fh,   0,	10h, 80h, 10h, 80h, 0Fh, 80h,	0, 80h,	  0, 80h,   0, 80h
+		db    0,   0,	7, 80h,	  8, 40h,   8, 40h,   7,0C0h,	0, 40h,	  0, 40h,   0, 40h
+		db    0,   0,	3,0C0h,	  4, 20h,   4, 20h,   3,0E0h,	0, 20h,	  0, 20h,   0, 20h
+		db    0,   0,	1,0E0h,	  2, 10h,   2, 10h,   1,0F0h,	0, 10h,	  0, 10h,   0, 10h
+		db    0,   0,	0,0F0h,	  1,   8,   1,	 8,   0,0F8h,	0,   8,	  0,   8,   0,	 8
+		db    0,   0,	0, 78h,	  0, 84h,   0, 84h,   0, 7Ch,	0,   4,	  0,   4,   0,	 4
 ; x
 		db  81h,   0, 42h,   0,	24h,   0, 18h,	 0, 18h,   0, 24h,   0,	42h,   0, 81h,	 0
 		db  40h, 80h, 21h,   0,	12h,   0, 0Ch,	 0, 0Ch,   0, 12h,   0,	21h,   0, 40h, 80h
@@ -49575,29 +49575,29 @@ asc_22F6A	db '                                                ',0
 					; DATA XREF: dseg:off_22EF8o
 aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0 ; DATA XREF: dseg:1BBCo
 aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0 ; DATA XREF: dseg:1BC0o
-aMKib@bLakeOfBl	db 'åÕäâÅ@Å` Lake of Blood',0 ; DATA XREF: dseg:1BC4o
+aMKib@bLakeOfBl	db 'FamineÅ` Lake of Blood',0 ; DATA XREF: dseg:1BC4o
 aCChb@bDarkness	db 'ñªóHÅ@Å` Darkness ',0 ; DATA XREF: dseg:1BC8o
 aCMB@bDreamOfFr	db 'ñ≤å∂Å@Å` Dream of Frail Girl',0 ; DATA XREF: dseg:1BCCo
 aMSzb@bPhantasm	db 'å∂ëzÅ@Å` Phantasmagoria ',0 ; DATA XREF: dseg:1BD0o
-aTMvb@bRaspberr	db 'í«åÇÅ@Å` Raspberry Trap ',0 ; DATA XREF: dseg:1BD4o
-aVVVcvVvmnvRViv	db 'Ç∑ÇŒÇÁÇµÇ¢åNÇ…ê√Ç©Ç»ù˜ÇËÇÅ@Å` Puckish Angel',0 ; DATA XREF: dseg:1BD8o
+aTMvb@bRaspberr	db 'Chase Å` Raspberry Trap ',0 ; DATA XREF: dseg:1BD4o
+aVVVcvVvmnvRViv	db 'Quiet Final for Wondrous YouÅ` Puckish Angel',0 ; DATA XREF: dseg:1BD8o
 aWitchingDream	db 'Witching Dream',0   ; DATA XREF: dseg:1BDCo
-aSeleneSLight	db 'Selene',27h,'s light',0 ; DATA XREF: dseg:1BE0o
-aSxp		db 'ëïè¸êÌÅ@Å` Decoration Battle',0 ; DATA XREF: dseg:1BE4o
+aSeleneSLight	db 'Selene',27h,'s Light',0 ; DATA XREF: dseg:1BE0o
+aSxp		db '      Decoration Battle     ',0 ; DATA XREF: dseg:1BE4o
 aBreakTheSabbat	db 'Break the Sabbath',0 ; DATA XREF: dseg:1BE8o
 aNglLB@bScarlet	db 'çgãøã»Å@Å` Scarlet Phoneme',0 ; DATA XREF: dseg:1BECo
-aBadApple	db 'BAD Apple!!',0      ; DATA XREF: dseg:1BF0o
+aBadApple	db 'Bad Apple!!',0      ; DATA XREF: dseg:1BF0o
 aCRab@bPerditio	db 'óÏêÌÅ@Å` Perdition crisis ',0 ; DATA XREF: dseg:1BF4o
-aGagkgxgGggxgeg	db 'ÉAÉäÉXÉ}ÉGÉXÉeÉâ',0 ; DATA XREF: dseg:1BF8o
+aGagkgxgGggxgeg	db '  Alice Maestra ',0 ; DATA XREF: dseg:1BF8o
 aRpvKab@bCasket	db 'êØÇÃäÌÅ@Å` Casket of Star ',0 ; DATA XREF: dseg:1BFCo
 aLotusLove	db 'Lotus Love',0       ; DATA XREF: dseg:1C00o
-aCVVslXB@bSleep	db 'ñ∞ÇÍÇÈã∞ï|Å@Å` Sleeping Terror',0 ; DATA XREF: dseg:1C04o
+aCVVslXB@bSleep	db '        Sleeping Terror       ',0 ; DATA XREF: dseg:1C04o
 aDreamLand	db 'Dream Land',0       ; DATA XREF: dseg:1C08o
 aChcB@bInanimat	db 'óHñ≤Å@Å` Inanimate Dream ',0 ; DATA XREF: dseg:1C0Co
-aLVVVsv		db 'ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY ',0 ; DATA XREF: dseg:1C10o
+aLVVVsv		db ' Inev. Forbidden Game',0 ; DATA XREF: dseg:1C10o
 aGbgcghmSzb@bIc	db 'ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic ',0 ; DATA XREF: dseg:1C14o
-aVivavvvvilcvb@	db 'Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence',0 ; DATA XREF: dseg:1C18o
-aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0 ; DATA XREF: dseg:1C1Co
+aVivavvvvilcvb@	db '  Cute DevilÅ@Å` Innocence',0 ; DATA XREF: dseg:1C18o
+aPnpcuyszlB@bCa	db '      Maiden',027h,'s Capriccio ',0 ; DATA XREF: dseg:1C1Co
 aTxt_bb		db 'txt.bb',0           ; DATA XREF: sub_11551+Fo
 aTxt2_bb	db 'txt2.bb',0          ; DATA XREF: sub_11551+2Co
 		db    0
@@ -49711,32 +49711,32 @@ unk_232A6	db  4Dh	; M		; DATA XREF: sub_1D6C1+17o
 		db  5Bh	; [
 		db    0
 a_Abcd		db '\]^_`abcd',0        ; DATA XREF: sub_1D896+1Co
-aIlcGGxsOboFsbi	db 'à´óÏÉ{ÉXëﬁé°é∏îsÅIÅIÅ@Å@Å@Å@Å@Å@Å@Å~Å@ÇOÅDÇO',0 ; DATA XREF: dseg:1F3Ao
-aGvgmgcgdbRfgyg	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇUêlÅjÅ~Å@ÇOÅDÇR',0 ; DATA XREF: dseg:1F3Eo
-aGvgmgcgdbRfg_0	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇTêlÅjÅ~Å@ÇOÅDÇT',0 ; DATA XREF: dseg:1F42o
-aGvgmgcgdbRfg_1	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇSêlÅjÅ~Å@ÇOÅDÇV',0 ; DATA XREF: dseg:1F46o
-aGrgugegbgjgebG	db 'ÉRÉìÉeÉBÉjÉÖÅ[ÉyÉiÉãÉeÉBÅiÇPâÒÅjÅ@Å~Å@ÇOÅDÇW',0 ; DATA XREF: dseg:1F4Ao
-aGrgugegbgjge_0	db 'ÉRÉìÉeÉBÉjÉÖÅ[ÉyÉiÉãÉeÉBÅiÇQâÒÅjÅ@Å~Å@ÇOÅDÇU',0 ; DATA XREF: dseg:1F4Eo
-aGrgugegbgjge_1	db 'ÉRÉìÉeÉBÉjÉÖÅ[ÉyÉiÉãÉeÉBÅiÇRâÒÅjÅ@Å~Å@ÇOÅDÇS',0 ; DATA XREF: dseg:1F52o
-aUqiUxgBGigxbiv	db 'ìÔà’ìxÉ{Å[ÉiÉXÅiÇdÇÅÇìÇôÅjÅ@Å@Å@Å@Å~Å@ÇOÅDÇT',0 ; DATA XREF: dseg:1F56o
-aUqiUxgBGigxb_0	db 'ìÔà’ìxÉ{Å[ÉiÉXÅiÇmÇèÇíÇçÇÅÇåÅjÅ@Å@Å~Å@ÇPÅDÇO',0 ; DATA XREF: dseg:1F5Ao
-aUqiUxgBGigxb_1	db 'ìÔà’ìxÉ{Å[ÉiÉXÅiÇgÇÅÇíÇÑÅjÅ@Å@Å@Å@Å~Å@ÇPÅDÇQ',0 ; DATA XREF: dseg:1F5Eo
-aUqiUxgBGigxb_2	db 'ìÔà’ìxÉ{Å[ÉiÉXÅiÇkÇïÇéÇÅÇîÇâÇÉÅjÅ@Å~Å@ÇPÅDÇS',0 ; DATA XREF: dseg:1F62o
-aVrvsvVfvdb@vav	db 'ÇrÇsÇ`ÇfÇdÅ@ÇaÇèÇéÇïÇì',0 ; DATA XREF: sub_1D6C1+29o
-aVovnvvvdvqb@bB	db 'ÇoÇnÇvÇdÇqÅ@Å~Å@Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+3Bo
-aVcvqvdvVlb@vav	db 'ÇcÇqÇdÇ`ÇlÅ@ÇaÇèÇéÇïÇì',0 ; DATA XREF: sub_1D6C1+4Do
-aGjgxgkterfb@bB	db 'ÉJÉXÉäíeêîÅ@Å~Å@Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+5Fo
-aVovnvhvmvsb@va	db 'ÇoÇnÇhÇmÇsÅ@ÇaÇèÇéÇïÇìÅ@Å@Å@Å@Å@Å@Å~',0 ; DATA XREF: sub_1D6C1+71o
-aB@b@b@vsvnvsvV	db 'Å@Å@Å@ÇsÇnÇsÇ`Çk',0 ; DATA XREF: sub_1D6C1+83o
+aIlcGGxsOboFsbi	db 'Boss',027h,'s final phase was timed out: Å~Å@ÇOÅDÇO',0 ; DATA XREF: dseg:1F3Ao
+aGvgmgcgdbRfgyg db 'Player Penalty (6 Initial Lives): Å~Å@ÇOÅDÇR',0 ; DATA XREF: dseg:1F3Eo
+aGvgmgcgdbRfg_0	db 'Player Penalty (5 Initial Lives): Å~Å@ÇOÅDÇT',0 ; DATA XREF: dseg:1F42o
+aGvgmgcgdbRfg_1	db 'Player Penalty (4 Initial Lives): Å~Å@ÇOÅDÇV',0 ; DATA XREF: dseg:1F46o
+aGrgugegbgjgebG	db '1 Continue Used:                Å@Å~Å@ÇOÅDÇW',0 ; DATA XREF: dseg:1F4Ao
+aGrgugegbgjge_0	db '2 Continues Used:               Å@Å~Å@ÇOÅDÇU',0 ; DATA XREF: dseg:1F4Eo
+aGrgugegbgjge_1	db '3 Continues Used:               Å@Å~Å@ÇOÅDÇS',0 ; DATA XREF: dseg:1F52o
+aUqiUxgBGigxbiv	db 'Easy Rank:                Å@Å@Å@Å@Å~Å@ÇOÅDÇT',0 ; DATA XREF: dseg:1F56o
+aUqiUxgBGigxb_0	db 'Normal Rank:                  Å@Å@Å~Å@ÇPÅDÇO',0 ; DATA XREF: dseg:1F5Ao
+aUqiUxgBGigxb_1	db 'Hard Rank:                Å@Å@Å@Å@Å~Å@ÇPÅDÇQ',0 ; DATA XREF: dseg:1F5Eo
+aUqiUxgBGigxb_2	db 'Lunatic Rank:                   Å@Å~Å@ÇPÅDÇS',0 ; DATA XREF: dseg:1F62o
+aVrvsvVfvdb@vav	db 'Stage Bonus:          ',0 ; DATA XREF: sub_1D6C1+29o
+aVovnvvvdvqb@bB	db 'Power Level:  Å~Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+3Bo
+aVcvqvdvVlb@vav	db 'Dream Bonus Åiñ≤Åj:   ',0 ; DATA XREF: sub_1D6C1+4Do
+aGjgxgkterfb@bB	db 'Graze Count:  Å~Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+5Fo
+aVovnvhvmvsb@va	db 'Point Items Collected:Å@Å@Å@Å@Å@Å@Å~',0 ; DATA XREF: sub_1D6C1+71o
+aB@b@b@vsvnvsvV	db 'Bonus Total:    ',0 ; DATA XREF: sub_1D6C1+83o
 aB@b@b@b@b@vavp	db 'Å@Å@Å@Å@Å@ÇaÇèÇçÇÇÅ@ÇdÇòÇîÇÖÇéÇÑÅIÅI',0 ; DATA XREF: sub_1D6C1+95o
-aVVkvkb@vbvmvev	db 'Ç`ÇkÇkÅ@ÇbÇåÇÖÇÅÇíÅ@Å@',0 ; DATA XREF: sub_1D896+2Eo
-aVovnvvvdvqb@_0	db 'ÇoÇnÇvÇdÇqÅ@Å~Å@Å@ÇTÇO',0 ; DATA XREF: sub_1D896+40o
-aVcvqvdvVlb@v_0	db 'ÇcÇqÇdÇ`ÇlÅ@ÇaÇèÇéÇïÇì',0 ; DATA XREF: sub_1D896+52o
-aGjgxgkterfb@_0	db 'ÉJÉXÉäíeêîÅ@Å~Å@Å@ÇTÇO',0 ; DATA XREF: sub_1D896+64o
-aOcvsrlrfb@bVpv	db 'écÇËêlêîÅ@Å~ÇPÇOÇOÇOÇO',0 ; DATA XREF: sub_1D896+7Do
-aOcvsrlrfb@bVrv	db 'écÇËêlêîÅ@Å~ÇRÇOÇOÇOÇO',0 ; DATA XREF: sub_1D896+89o
-aVovnvhvmvsb@_0	db 'ÇoÇnÇhÇmÇsÅ@ÇaÇèÇéÇïÇìÅ@Å@Å@Å@Å@Å@Å~',0 ; DATA XREF: sub_1D896+9Bo
-aB@b@b@vsvnvs_0	db 'Å@Å@Å@ÇsÇnÇsÇ`Çk',0 ; DATA XREF: sub_1D896+ADo
+aVVkvkb@vbvmvev	db 'All Clear:        Å@Å@',0 ; DATA XREF: sub_1D896+2Eo
+aVovnvvvdvqb@_0	db 'Power Level:  Å~Å@ÇTÇO',0 ; DATA XREF: sub_1D896+40o
+aVcvqvdvVlb@v_0	db 'Dream Bonus Åiñ≤Åj:   ',0 ; DATA XREF: sub_1D896+52o
+aGjgxgkterfb@_0	db 'Graze Count Å~Å@ÇTÇO: ',0 ; DATA XREF: sub_1D896+64o
+aOcvsrlrfb@bVpv	db 'Player  Å@Å~ÇPÇOÇOÇOÇO',0 ; DATA XREF: sub_1D896+7Do
+aOcvsrlrfb@bVrv	db 'Player  Å@Å~ÇRÇOÇOÇOÇO',0 ; DATA XREF: sub_1D896+89o
+aVovnvhvmvsb@_0	db 'Point Items Collected:Å@Å@Å@Å@Å@Å@Å~',0 ; DATA XREF: sub_1D896+9Bo
+aB@b@b@vsvnvs_0	db 'Bonus Total:    ',0 ; DATA XREF: sub_1D896+ADo
 		db    0
 		db    0
 		db    1
