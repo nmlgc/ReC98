@@ -27770,12 +27770,12 @@ loc_BDBB:				; CODE XREF: seg001:12C2j
 loc_BDC6:				; CODE XREF: seg001:12DFj
 		xor	cx, cx
 		mov	cl, [si]
-		call	sub_BDFE
+		call	numerals_draw
 		dec	si
 		dec	bp
 		jnz	short loc_BDC6
 		xor	cx, cx
-		call	sub_BDFE
+		call	numerals_draw
 ; ---------------------------------------------------------------------------
 		db 0C7h, 44h, 5
 word_BDD9	dw 28h			; DATA XREF: seg001:12D1w
@@ -27784,9 +27784,9 @@ word_BDD9	dw 28h			; DATA XREF: seg001:12D1w
 		jz	short loc_BDF1
 		add	word ptr [si+5], 10h
 		mov	cx, 0Ah
-		call	sub_BDFE
+		call	numerals_draw
 		mov	cx, 0Bh
-		call	sub_BDFE
+		call	numerals_draw
 
 loc_BDF1:				; CODE XREF: seg001:12EFj
 		add	di, 2
@@ -27802,8 +27802,9 @@ loc_BDFA:				; CODE XREF: seg001:128Fj
 
 ; =============== S U B	R O U T	I N E =======================================
 
+; (identical to the th05 version)
 
-sub_BDFE	proc near		; CODE XREF: seg001:12DAp seg001:12E3p ...
+numerals_draw	proc near		; CODE XREF: seg001:12DAp seg001:12E3p ...
 		push	si
 		push	di
 		push	ax
@@ -27819,7 +27820,7 @@ sub_BDFE	proc near		; CODE XREF: seg001:12DAp seg001:12E3p ...
 		and	si, 7
 		mov	ax, si
 		shl	si, 4
-		add	si, 98Ah
+		add	si, offset NUMERALS
 		shl	cx, 7
 		add	si, cx
 		cmp	bx, 188h
@@ -27829,14 +27830,14 @@ sub_BDFE	proc near		; CODE XREF: seg001:12DAp seg001:12E3p ...
 		jmp	short loc_BE3E
 ; ---------------------------------------------------------------------------
 
-loc_BE33:				; CODE XREF: sub_BDFE+2Cj
+loc_BE33:				; CODE XREF: numerals_draw+2Cj
 		mov	cx, 190h	; value	table for switch statement
 		sub	cx, bx
 		mov	bx, 8
 		sub	bx, cx		; jump table for switch	statement
 		nop
 
-loc_BE3E:				; CODE XREF: sub_BDFE+33j sub_BDFE+54j ...
+loc_BE3E:				; CODE XREF: numerals_draw+33j numerals_draw+54j ...
 		lodsw
 		or	ah, ah
 		jz	short loc_BE48
@@ -27844,12 +27845,12 @@ loc_BE3E:				; CODE XREF: sub_BDFE+33j sub_BDFE+54j ...
 		jmp	short loc_BE4F
 ; ---------------------------------------------------------------------------
 
-loc_BE48:				; CODE XREF: sub_BDFE+43j
+loc_BE48:				; CODE XREF: numerals_draw+43j
 		or	al, al
 		jz	short loc_BE4F
 		mov	es:[di], al
 
-loc_BE4F:				; CODE XREF: sub_BDFE+48j sub_BDFE+4Cj
+loc_BE4F:				; CODE XREF: numerals_draw+48j numerals_draw+4Cj
 		add	di, 50h	; 'P'
 		loop	loc_BE3E
 		or	bx, bx
@@ -27859,14 +27860,14 @@ loc_BE4F:				; CODE XREF: sub_BDFE+48j sub_BDFE+4Cj
 		jmp	short loc_BE3E
 ; ---------------------------------------------------------------------------
 
-loc_BE60:				; CODE XREF: sub_BDFE+58j
+loc_BE60:				; CODE XREF: numerals_draw+58j
 		pop	dx
 		pop	ax
 		add	dx, 8
 		pop	di
 		pop	si
 		retn
-sub_BDFE	endp
+numerals_draw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -46554,1542 +46555,115 @@ aSt00_map	db 'ST00.MAP',0         ; DATA XREF: dseg:off_21CBAo
 byte_21CC8	db 0			; DATA XREF: sub_13DAA+33r
 					; sub_19F6E+16w ...
 		db 0
-		db    0
-		db    0
-		db  38h	; 8
-		db    0
-		db  44h	; D
-		db    0
-		db  82h	; Ç
-		db    0
-		db  82h	; Ç
-		db    0
-		db  82h	; Ç
-		db    0
-		db  44h	; D
-		db    0
-		db  38h	; 8
-		db    0
-		db    0
-		db    0
-		db  1Ch
-		db    0
-		db  22h	; "
-		db    0
-		db  41h	; A
-		db    0
-		db  41h	; A
-		db    0
-		db  41h	; A
-		db    0
-		db  22h	; "
-		db    0
-		db  1Ch
-		db    0
-		db    0
-		db    0
-		db  0Eh
-		db    0
-		db  11h
-		db    0
-		db  20h
-		db  80h	; Ä
-		db  20h
-		db  80h	; Ä
-		db  20h
-		db  80h	; Ä
-		db  11h
-		db    0
-		db  0Eh
-		db    0
-		db    0
-		db    0
-		db    7
-		db    0
-		db    8
-		db  80h	; Ä
-		db  10h
-		db  40h	; @
-		db  10h
-		db  40h	; @
-		db  10h
-		db  40h	; @
-		db    8
-		db  80h	; Ä
-		db    7
-		db    0
-		db    0
-		db    0
-		db    3
-		db  80h	; Ä
-		db    4
-		db  40h	; @
-		db    8
-		db  20h
-		db    8
-		db  20h
-		db    8
-		db  20h
-		db    4
-		db  40h	; @
-		db    3
-		db  80h	; Ä
-		db    0
-		db    0
-		db    1
-		db 0C0h	; ¿
-		db    2
-		db  20h
-		db    4
-		db  10h
-		db    4
-		db  10h
-		db    4
-		db  10h
-		db    2
-		db  20h
-		db    1
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db 0E0h	; ‡
-		db    1
-		db  10h
-		db    2
-		db    8
-		db    2
-		db    8
-		db    2
-		db    8
-		db    1
-		db  10h
-		db    0
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db  70h	; p
-		db    0
-		db  88h	; à
-		db    1
-		db    4
-		db    1
-		db    4
-		db    1
-		db    4
-		db    0
-		db  88h	; à
-		db    0
-		db  70h	; p
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db  1Fh
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db  0Fh
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    3
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db  1Fh
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db    7
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db  0Fh
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db    3
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db    1
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    3
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    6
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db 0FFh
-		db    0
-		db    3
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db  7Fh	; 
-		db  80h	; Ä
-		db    1
-		db  80h	; Ä
-		db  1Fh
-		db  80h	; Ä
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db  3Fh	; ?
-		db 0C0h	; ¿
-		db    0
-		db 0C0h	; ¿
-		db  0Fh
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db    7
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db  1Fh
-		db 0E0h	; ‡
-		db    0
-		db  60h	; `
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db    3
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db  0Fh
-		db 0F0h	; 
-		db    0			; jumptable 0001BDDE case 48075
-		db  30h	; 0
-		db    3
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    1
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    7
-		db 0F8h	; ¯
-		db    0
-		db  18h
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    0
-		db  18h
-		db    0
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    3
-		db 0FCh	; ¸
-		db    0
-		db  0Ch
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    0
-		db    6
-		db    1
-		db 0FEh	; ˛
-		db    0
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  5Ah	; Z
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  42h	; B
-		db    0
-		db  42h	; B
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  2Dh	; -
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  21h	; !
-		db    0
-		db  21h	; !
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  1Fh
-		db  80h	; Ä
-		db  16h
-		db  80h	; Ä
-		db  1Fh
-		db  80h	; Ä
-		db  10h
-		db  80h	; Ä
-		db  10h
-		db  80h	; Ä
-		db  1Fh
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Fh
-		db 0C0h	; ¿
-		db  0Bh
-		db  40h	; @
-		db  0Fh
-		db 0C0h	; ¿
-		db    8
-		db  40h	; @
-		db    8
-		db  40h	; @
-		db  0Fh
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    7
-		db 0E0h	; ‡
-		db    5
-		db 0A0h	; †
-		db    7
-		db 0E0h	; ‡
-		db    4
-		db  20h
-		db    4
-		db  20h
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    3
-		db 0F0h	; 
-		db    2
-		db 0D0h	; –
-		db    3
-		db 0F0h	; 
-		db    2
-		db  10h
-		db    2
-		db  10h
-		db    3
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db 0F8h	; ¯
-		db    1
-		db  68h	; h
-		db    1
-		db 0F8h	; ¯
-		db    1
-		db    8
-		db    1
-		db    8
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db 0B4h	; ¥
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  84h	; Ñ
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    0
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    8
-		db    0
-		db  10h
-		db    0
-		db  7Ch	; |
-		db    0
-		db  24h	; $
-		db    0
-		db  44h	; D
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    4
-		db    0
-		db    8
-		db    0
-		db  3Eh	; >
-		db    0
-		db  12h
-		db    0
-		db  22h	; "
-		db    0
-		db  7Fh	; 
-		db  80h	; Ä
-		db    0
-		db    0
-		db  1Fh
-		db  80h	; Ä
-		db    2
-		db    0
-		db    4
-		db    0
-		db  1Fh
-		db    0
-		db    9
-		db    0
-		db  11h
-		db    0
-		db  3Fh	; ?
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db  0Fh
-		db 0C0h	; ¿
-		db    1
-		db    0
-		db    2
-		db    0
-		db  0Fh
-		db  80h	; Ä
-		db    4
-		db  80h	; Ä
-		db    8
-		db  80h	; Ä
-		db  1Fh
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db  80h	; Ä
-		db    1
-		db    0
-		db    7
-		db 0C0h	; ¿
-		db    2
-		db  40h	; @
-		db    4
-		db  40h	; @
-		db  0Fh
-		db 0F0h	; 
-		db    0
-		db    0
-		db    3
-		db 0F0h	; 
-		db    0
-		db  40h	; @
-		db    0
-		db  80h	; Ä
-		db    3
-		db 0E0h	; ‡
-		db    1
-		db  20h
-		db    2
-		db  20h
-		db    7
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db  20h
-		db    0
-		db  40h	; @
-		db    1
-		db 0F0h	; 
-		db    0
-		db  90h	; ê
-		db    1
-		db  10h
-		db    3
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db  10h
-		db    0
-		db  20h
-		db    0
-		db 0F8h	; ¯
-		db    0
-		db  48h	; H
-		db    0
-		db  88h	; à
-		db    1
-		db 0FEh	; ˛
-		db    0
-		db    0
-		db  18h
-		db    0
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db    0
-		db  42h	; B
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db  3Fh	; ?
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  12h
-		db    0
-		db  21h	; !
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    6
-		db    0
-		db  1Fh
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    9
-		db    0
-		db  10h
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db  0Fh
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    4
-		db  80h	; Ä
-		db    8
-		db  40h	; @
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db  80h	; Ä
-		db    7
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db  40h	; @
-		db    4
-		db  20h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C0h	; ¿
-		db    3
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db  20h
-		db    2
-		db  10h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  60h	; `
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  90h	; ê
-		db    1
-		db    8
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  30h	; 0
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  48h	; H
-		db    0
-		db  84h	; Ñ
-		db    0
-		db    0
-		db    0
-		db    0
-		db  20h
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  20h
-		db    0
-		db  20h
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    8
-		db    0
-		db  1Fh
-		db  80h	; Ä
-		db    8
-		db    0
-		db    8
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    4
-		db    0
-		db  0Fh
-		db 0C0h	; ¿
-		db    4
-		db    0
-		db    4
-		db    0
-		db    7
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db    0
-		db    7
-		db 0E0h	; ‡
-		db    2
-		db    0
-		db    2
-		db    0
-		db    3
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    3
-		db 0F0h	; 
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  80h	; Ä
-		db    1
-		db 0F8h	; ¯
-		db    0
-		db  80h	; Ä
-		db    0
-		db  80h	; Ä
-		db    0
-		db 0F0h	; 
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  40h	; @
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db  40h	; @
-		db    0
-		db  40h	; @
-		db    0
-		db  78h	; x
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    4
-		db    0
-		db  24h	; $
-		db    0
-		db  22h	; "
-		db    0
-		db  42h	; B
-		db    0
-		db  41h	; A
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db    0
-		db  12h
-		db    0
-		db  11h
-		db    0
-		db  21h	; !
-		db    0
-		db  20h
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    9
-		db    0
-		db    8
-		db  80h	; Ä
-		db  10h
-		db  80h	; Ä
-		db  10h
-		db  40h	; @
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  80h	; Ä
-		db    4
-		db  80h	; Ä
-		db    4
-		db  40h	; @
-		db    8
-		db  40h	; @
-		db    8
-		db  20h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  40h	; @
-		db    2
-		db  40h	; @
-		db    2
-		db  20h
-		db    4
-		db  20h
-		db    4
-		db  10h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  20h
-		db    1
-		db  20h
-		db    1
-		db  10h
-		db    2
-		db  10h
-		db    2
-		db    8
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db    0
-		db  90h	; ê
-		db    0
-		db  88h	; à
-		db    1
-		db    8
-		db    1
-		db    4
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    8
-		db    0
-		db  48h	; H
-		db    0
-		db  44h	; D
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  82h	; Ç
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db    0
-		db  3Eh	; >
-		db    0
-		db  24h	; $
-		db    0
-		db  26h	; &
-		db    0
-		db  4Ah	; J
-		db    0
-		db  8Eh	; é
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    8
-		db    0
-		db  1Fh
-		db    0
-		db  12h
-		db    0
-		db  13h
-		db    0
-		db  25h	; %
-		db    0
-		db  47h	; G
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    4
-		db    0
-		db  0Fh
-		db  80h	; Ä
-		db    9
-		db    0
-		db    9
-		db  80h	; Ä
-		db  12h
-		db  80h	; Ä
-		db  23h	; #
-		db  80h	; Ä
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db    0
-		db    7
-		db 0C0h	; ¿
-		db    4
-		db  80h	; Ä
-		db    4
-		db 0C0h	; ¿
-		db    9
-		db  40h	; @
-		db  11h
-		db 0C0h	; ¿
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    3
-		db 0E0h	; ‡
-		db    2
-		db  40h	; @
-		db    2
-		db  60h	; `
-		db    4
-		db 0A0h	; †
-		db    8
-		db 0E0h	; ‡
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  80h	; Ä
-		db    1
-		db 0F0h	; 
-		db    1
-		db  20h
-		db    1
-		db  30h	; 0
-		db    2
-		db  50h	; P
-		db    4
-		db  70h	; p
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  40h	; @
-		db    0
-		db 0F8h	; ¯
-		db    0
-		db  90h	; ê
-		db    0
-		db  98h	; ò
-		db    1
-		db  28h	; (
-		db    2
-		db  38h	; 8
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  20h
-		db    0
-		db  7Ch	; |
-		db    0
-		db  48h	; H
-		db    0
-		db  4Ch	; L
-		db    0
-		db  94h	; î
-		db    1
-		db  1Ch
-		db    0
-		db    0
-		db  81h	; Å
-		db    0
-		db  42h	; B
-		db    0
-		db  24h	; $
-		db    0
-		db  18h
-		db    0
-		db  18h
-		db    0
-		db  24h	; $
-		db    0
-		db  42h	; B
-		db    0
-		db  81h	; Å
-		db    0
-		db  40h	; @
-		db  80h	; Ä
-		db  21h	; !
-		db    0
-		db  12h
-		db    0
-		db  0Ch
-		db    0
-		db  0Ch
-		db    0
-		db  12h
-		db    0
-		db  21h	; !
-		db    0
-		db  40h	; @
-		db  80h	; Ä
-		db  20h
-		db  40h	; @
-		db  10h
-		db  80h	; Ä
-		db    9
-		db    0
-		db    6
-		db    0
-		db    6
-		db    0
-		db    9
-		db    0
-		db  10h
-		db  80h	; Ä
-		db  20h
-		db  40h	; @
-		db  10h
-		db  20h
-		db    8
-		db  40h	; @
-		db    4
-		db  80h	; Ä
-		db    3
-		db    0
-		db    3
-		db    0
-		db    4
-		db  80h	; Ä
-		db    8
-		db  40h	; @
-		db  10h
-		db  20h
-		db    8
-		db  10h
-		db    4
-		db  20h
-		db    2
-		db  40h	; @
-		db    1
-		db  80h	; Ä
-		db    1
-		db  80h	; Ä
-		db    2
-		db  40h	; @
-		db    4
-		db  20h
-		db    8
-		db  10h
-		db    4
-		db    8
-		db    2
-		db  10h
-		db    1
-		db  20h
-		db    0
-		db 0C0h	; ¿
-		db    0
-		db 0C0h	; ¿
-		db    1
-		db  20h
-		db    2
-		db  10h
-		db    4
-		db    8
-		db    2
-		db    4
-		db    1
-		db    8
-		db    0
-		db  90h	; ê
-		db    0
-		db  60h	; `
-		db    0
-		db  60h	; `
-		db    0
-		db  90h	; ê
-		db    1
-		db    8
-		db    2
-		db    4
-		db    1
-		db    2
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  48h	; H
-		db    0
-		db  30h	; 0
-		db    0
-		db  30h	; 0
-		db    0
-		db  48h	; H
-		db    0
-		db  84h	; Ñ
-		db    1
-		db    2
-		db  3Ch	; <
-		db    0
-		db  46h	; F
-		db    0
-		db  46h	; F
-		db    0
-		db    6
-		db    0
-		db  3Ch	; <
-		db    0
-		db  60h	; `
-		db    0
-		db 0C1h	; ¡
-		db    0
-		db 0FFh
-		db    0
-		db  1Eh
-		db    0
-		db  23h	; #
-		db    0
-		db  23h	; #
-		db    0
-		db    3
-		db    0
-		db  1Eh
-		db    0
-		db  30h	; 0
-		db    0
-		db  60h	; `
-		db  80h	; Ä
-		db  7Fh	; 
-		db  80h	; Ä
-		db  0Fh
-		db    0
-		db  11h
-		db  80h	; Ä
-		db  11h
-		db  80h	; Ä
-		db    1
-		db  80h	; Ä
-		db  0Fh
-		db    0
-		db  18h
-		db    0
-		db  30h	; 0
-		db  40h	; @
-		db  3Fh	; ?
-		db 0C0h	; ¿
-		db    7
-		db  80h	; Ä
-		db    8
-		db 0C0h	; ¿
-		db    8
-		db 0C0h	; ¿
-		db    0
-		db 0C0h	; ¿
-		db    7
-		db  80h	; Ä
-		db  0Ch
-		db    0
-		db  18h
-		db  20h
-		db  1Fh
-		db 0E0h	; ‡
-		db    3
-		db 0C0h	; ¿
-		db    4
-		db  60h	; `
-		db    4
-		db  60h	; `
-		db    0
-		db  60h	; `
-		db    3
-		db 0C0h	; ¿
-		db    6
-		db    0
-		db  0Ch
-		db  10h
-		db  0Fh
-		db 0F0h	; 
-		db    1
-		db 0E0h	; ‡
-		db    2
-		db  30h	; 0
-		db    2
-		db  30h	; 0
-		db    0
-		db  30h	; 0
-		db    1
-		db 0E0h	; ‡
-		db    3
-		db    0
-		db    6
-		db    8
-		db    7
-		db 0F8h	; ¯
-		db    0
-		db 0F0h	; 
-		db    1
-		db  18h
-		db    1
-		db  18h
-		db    0
-		db  18h
-		db    0
-		db 0F0h	; 
-		db    1
-		db  80h	; Ä
-		db    3
-		db    4
-		db    3
-		db 0FCh	; ¸
-		db    0
-		db  78h	; x
-		db    0
-		db  8Ch	; å
-		db    0
-		db  8Ch	; å
-		db    0
-		db  0Ch
-		db    0
-		db  78h	; x
-		db    0
-		db 0C0h	; ¿
-		db    1
-		db  82h	; Ç
-		db    1
-		db 0FEh	; ˛
+; 0
+NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0, 38h,	 0
+		db    0,   0, 1Ch,   0,	22h,   0, 41h,	 0, 41h,   0, 41h,   0,	22h,   0, 1Ch,	 0
+		db    0,   0, 0Eh,   0,	11h,   0, 20h, 80h, 20h, 80h, 20h, 80h,	11h,   0, 0Eh,	 0
+		db    0,   0,	7,   0,	  8, 80h, 10h, 40h, 10h, 40h, 10h, 40h,	  8, 80h,   7,	 0
+		db    0,   0,	3, 80h,	  4, 40h,   8, 20h,   8, 20h,	8, 20h,	  4, 40h,   3, 80h
+		db    0,   0,	1,0C0h,	  2, 20h,   4, 10h,   4, 10h,	4, 10h,	  2, 20h,   1,0C0h
+		db    0,   0,	0,0E0h,	  1, 10h,   2,	 8,   2,   8,	2,   8,	  1, 10h,   0,0E0h
+		db    0,   0,	0, 70h,	  0, 88h,   1,	 4,   1,   4,	1,   4,	  0, 88h,   0, 70h
+; 1
+		db    0,   0,	0,   0,	  0,   0,   6,	 0, 7Eh,   0,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   3,	 0, 3Fh,   0,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   1, 80h, 1Fh, 80h,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   0,0C0h, 0Fh,0C0h,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   0, 60h,   7,0E0h,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   0, 30h,   3,0F0h,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   0, 18h,   1,0F8h,	0,   0,	  0,   0,   0,	 0
+		db    0,   0,	0,   0,	  0,   0,   0, 0Ch,   0,0FCh,	0,   0,	  0,   0,   0,	 0
+; 2
+		db    0,   0, 0Ch,   0,	3Ch,   0,   0,	 0,   0,   0,	6,   0,	7Eh,   0,   0,	 0
+		db    0,   0,	6,   0,	1Eh,   0,   0,	 0,   0,   0,	3,   0,	3Fh,   0,   0,	 0
+		db    0,   0,	3,   0,	0Fh,   0,   0,	 0,   0,   0,	1, 80h,	1Fh, 80h,   0,	 0
+		db    0,   0,	1, 80h,	  7, 80h,   0,	 0,   0,   0,	0,0C0h,	0Fh,0C0h,   0,	 0
+		db    0,   0,	0,0C0h,	  3,0C0h,   0,	 0,   0,   0,	0, 60h,	  7,0E0h,   0,	 0
+		db    0,   0,	0, 60h,	  1,0E0h,   0,	 0,   0,   0,	0, 30h,	  3,0F0h,   0,	 0
+		db    0,   0,	0, 30h,	  0,0F0h,   0,	 0,   0,   0,	0, 18h,	  1,0F8h,   0,	 0
+		db    0,   0,	0, 18h,	  0, 78h,   0,	 0,   0,   0,	0, 0Ch,	  0,0FCh,   0,	 0
+; 3
+		db    6,   0, 7Eh,   0,	  0,   0,   6,	 0, 3Ch,   0,	0,   0,	  3,   0,0FFh,	 0
+		db    3,   0, 3Fh,   0,	  0,   0,   3,	 0, 1Eh,   0,	0,   0,	  1, 80h, 7Fh, 80h
+		db    1, 80h, 1Fh, 80h,	  0,   0,   1, 80h, 0Fh,   0,	0,   0,	  0,0C0h, 3Fh,0C0h
+		db    0,0C0h, 0Fh,0C0h,	  0,   0,   0,0C0h,   7, 80h,	0,   0,	  0, 60h, 1Fh,0E0h
+		db    0, 60h,	7,0E0h,	  0,   0,   0, 60h,   3,0C0h,	0,   0,	  0, 30h, 0Fh,0F0h
+		db    0, 30h,	3,0F0h,	  0,   0,   0, 30h,   1,0E0h,	0,   0,	  0, 18h,   7,0F8h
+		db    0, 18h,	1,0F8h,	  0,   0,   0, 18h,   0,0F0h,	0,   0,	  0, 0Ch,   3,0FCh
+		db    0, 0Ch,	0,0FCh,	  0,   0,   0, 0Ch,   0, 78h,	0,   0,	  0,   6,   1,0FEh
+; 4
+		db    0,   0, 7Eh,   0,	5Ah,   0, 7Eh,	 0, 42h,   0, 42h,   0,	7Eh,   0,   0,	 0
+		db    0,   0, 3Fh,   0,	2Dh,   0, 3Fh,	 0, 21h,   0, 21h,   0,	3Fh,   0,   0,	 0
+		db    0,   0, 1Fh, 80h,	16h, 80h, 1Fh, 80h, 10h, 80h, 10h, 80h,	1Fh, 80h,   0,	 0
+		db    0,   0, 0Fh,0C0h,	0Bh, 40h, 0Fh,0C0h,   8, 40h,	8, 40h,	0Fh,0C0h,   0,	 0
+		db    0,   0,	7,0E0h,	  5,0A0h,   7,0E0h,   4, 20h,	4, 20h,	  7,0E0h,   0,	 0
+		db    0,   0,	3,0F0h,	  2,0D0h,   3,0F0h,   2, 10h,	2, 10h,	  3,0F0h,   0,	 0
+		db    0,   0,	1,0F8h,	  1, 68h,   1,0F8h,   1,   8,	1,   8,	  1,0F8h,   0,	 0
+		db    0,   0,	0,0FCh,	  0,0B4h,   0,0FCh,   0, 84h,	0, 84h,	  0,0FCh,   0,	 0
+; 5
+		db    0,   0, 7Eh,   0,	  8,   0, 10h,	 0, 7Ch,   0, 24h,   0,	44h,   0,0FFh,	 0
+		db    0,   0, 3Fh,   0,	  4,   0,   8,	 0, 3Eh,   0, 12h,   0,	22h,   0, 7Fh, 80h
+		db    0,   0, 1Fh, 80h,	  2,   0,   4,	 0, 1Fh,   0,	9,   0,	11h,   0, 3Fh,0C0h
+		db    0,   0, 0Fh,0C0h,	  1,   0,   2,	 0, 0Fh, 80h,	4, 80h,	  8, 80h, 1Fh,0E0h
+		db    0,   0,	7,0E0h,	  0, 80h,   1,	 0,   7,0C0h,	2, 40h,	  4, 40h, 0Fh,0F0h
+		db    0,   0,	3,0F0h,	  0, 40h,   0, 80h,   3,0E0h,	1, 20h,	  2, 20h,   7,0F8h
+		db    0,   0,	1,0F8h,	  0, 20h,   0, 40h,   1,0F0h,	0, 90h,	  1, 10h,   3,0FCh
+		db    0,   0,	0,0FCh,	  0, 10h,   0, 20h,   0,0F8h,	0, 48h,	  0, 88h,   1,0FEh
+; 6
+		db    0,   0, 18h,   0,	7Eh,   0,   0,	 0,   0,   0, 24h,   0,	42h,   0,   0,	 0
+		db    0,   0, 0Ch,   0,	3Fh,   0,   0,	 0,   0,   0, 12h,   0,	21h,   0,   0,	 0
+		db    0,   0,	6,   0,	1Fh, 80h,   0,	 0,   0,   0,	9,   0,	10h, 80h,   0,	 0
+		db    0,   0,	3,   0,	0Fh,0C0h,   0,	 0,   0,   0,	4, 80h,	  8, 40h,   0,	 0
+		db    0,   0,	1, 80h,	  7,0E0h,   0,	 0,   0,   0,	2, 40h,	  4, 20h,   0,	 0
+		db    0,   0,	0,0C0h,	  3,0F0h,   0,	 0,   0,   0,	1, 20h,	  2, 10h,   0,	 0
+		db    0,   0,	0, 60h,	  1,0F8h,   0,	 0,   0,   0,	0, 90h,	  1,   8,   0,	 0
+		db    0,   0,	0, 30h,	  0,0FCh,   0,	 0,   0,   0,	0, 48h,	  0, 84h,   0,	 0
+; 7
+		db    0,   0, 20h,   0,	7Eh,   0, 20h,	 0, 20h,   0, 3Ch,   0,	  0,   0,   0,	 0
+		db    0,   0, 10h,   0,	3Fh,   0, 10h,	 0, 10h,   0, 1Eh,   0,	  0,   0,   0,	 0
+		db    0,   0,	8,   0,	1Fh, 80h,   8,	 0,   8,   0, 0Fh,   0,	  0,   0,   0,	 0
+		db    0,   0,	4,   0,	0Fh,0C0h,   4,	 0,   4,   0,	7, 80h,	  0,   0,   0,	 0
+		db    0,   0,	2,   0,	  7,0E0h,   2,	 0,   2,   0,	3,0C0h,	  0,   0,   0,	 0
+		db    0,   0,	1,   0,	  3,0F0h,   1,	 0,   1,   0,	1,0E0h,	  0,   0,   0,	 0
+		db    0,   0,	0, 80h,	  1,0F8h,   0, 80h,   0, 80h,	0,0F0h,	  0,   0,   0,	 0
+		db    0,   0,	0, 40h,	  0,0FCh,   0, 40h,   0, 40h,	0, 78h,	  0,   0,   0,	 0
+; 8
+		db    0,   0,	4,   0,	24h,   0, 22h,	 0, 42h,   0, 41h,   0,	  0,   0,   0,	 0
+		db    0,   0,	2,   0,	12h,   0, 11h,	 0, 21h,   0, 20h, 80h,	  0,   0,   0,	 0
+		db    0,   0,	1,   0,	  9,   0,   8, 80h, 10h, 80h, 10h, 40h,	  0,   0,   0,	 0
+		db    0,   0,	0, 80h,	  4, 80h,   4, 40h,   8, 40h,	8, 20h,	  0,   0,   0,	 0
+		db    0,   0,	0, 40h,	  2, 40h,   2, 20h,   4, 20h,	4, 10h,	  0,   0,   0,	 0
+		db    0,   0,	0, 20h,	  1, 20h,   1, 10h,   2, 10h,	2,   8,	  0,   0,   0,	 0
+		db    0,   0,	0, 10h,	  0, 90h,   0, 88h,   1,   8,	1,   4,	  0,   0,   0,	 0
+		db    0,   0,	0,   8,	  0, 48h,   0, 44h,   0, 84h,	0, 82h,	  0,   0,   0,	 0
+; 9
+		db    0,   0, 10h,   0,	3Eh,   0, 24h,	 0, 26h,   0, 4Ah,   0,	8Eh,   0,   0,	 0
+		db    0,   0,	8,   0,	1Fh,   0, 12h,	 0, 13h,   0, 25h,   0,	47h,   0,   0,	 0
+		db    0,   0,	4,   0,	0Fh, 80h,   9,	 0,   9, 80h, 12h, 80h,	23h, 80h,   0,	 0
+		db    0,   0,	2,   0,	  7,0C0h,   4, 80h,   4,0C0h,	9, 40h,	11h,0C0h,   0,	 0
+		db    0,   0,	1,   0,	  3,0E0h,   2, 40h,   2, 60h,	4,0A0h,	  8,0E0h,   0,	 0
+		db    0,   0,	0, 80h,	  1,0F0h,   1, 20h,   1, 30h,	2, 50h,	  4, 70h,   0,	 0
+		db    0,   0,	0, 40h,	  0,0F8h,   0, 90h,   0, 98h,	1, 28h,	  2, 38h,   0,	 0
+		db    0,   0,	0, 20h,	  0, 7Ch,   0, 48h,   0, 4Ch,	0, 94h,	  1, 1Ch,   0,	 0
+; x
+		db  81h,   0, 42h,   0,	24h,   0, 18h,	 0, 18h,   0, 24h,   0,	42h,   0, 81h,	 0
+		db  40h, 80h, 21h,   0,	12h,   0, 0Ch,	 0, 0Ch,   0, 12h,   0,	21h,   0, 40h, 80h
+		db  20h, 40h, 10h, 80h,	  9,   0,   6,	 0,   6,   0,	9,   0,	10h, 80h, 20h, 40h
+		db  10h, 20h,	8, 40h,	  4, 80h,   3,	 0,   3,   0,	4, 80h,	  8, 40h, 10h, 20h
+		db    8, 10h,	4, 20h,	  2, 40h,   1, 80h,   1, 80h,	2, 40h,	  4, 20h,   8, 10h
+		db    4,   8,	2, 10h,	  1, 20h,   0,0C0h,   0,0C0h,	1, 20h,	  2, 10h,   4,	 8
+		db    2,   4,	1,   8,	  0, 90h,   0, 60h,   0, 60h,	0, 90h,	  1,   8,   2,	 4
+		db    1,   2,	0, 84h,	  0, 48h,   0, 30h,   0, 30h,	0, 48h,	  0, 84h,   1,	 2
+; 2 (multiplier)
+		db  3Ch,   0, 46h,   0,	46h,   0,   6,	 0, 3Ch,   0, 60h,   0,0C1h,   0,0FFh,	 0
+		db  1Eh,   0, 23h,   0,	23h,   0,   3,	 0, 1Eh,   0, 30h,   0,	60h, 80h, 7Fh, 80h
+		db  0Fh,   0, 11h, 80h,	11h, 80h,   1, 80h, 0Fh,   0, 18h,   0,	30h, 40h, 3Fh,0C0h
+		db    7, 80h,	8,0C0h,	  8,0C0h,   0,0C0h,   7, 80h, 0Ch,   0,	18h, 20h, 1Fh,0E0h
+		db    3,0C0h,	4, 60h,	  4, 60h,   0, 60h,   3,0C0h,	6,   0,	0Ch, 10h, 0Fh,0F0h
+		db    1,0E0h,	2, 30h,	  2, 30h,   0, 30h,   1,0E0h,	3,   0,	  6,   8,   7,0F8h
+		db    0,0F0h,	1, 18h,	  1, 18h,   0, 18h,   0,0F0h,	1, 80h,	  3,   4,   3,0FCh
+		db    0, 78h,	0, 8Ch,	  0, 8Ch,   0, 0Ch,   0, 78h,	0,0C0h,	  1, 82h,   1,0FEh
+
 		db  18h
 		db  3Ch	; <
 		db  7Eh	; ~
