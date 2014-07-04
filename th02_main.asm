@@ -28732,7 +28732,7 @@ loc_C8CC:				; CODE XREF: sub_C88D+37j
 		mov	al, [bp+var_2]
 		cbw
 		push	ax
-		call	sub_C9A6
+		call	numerals_draw
 
 loc_C8DC:				; CODE XREF: sub_C88D+3Dj
 		inc	si
@@ -28744,21 +28744,21 @@ loc_C8E0:				; CODE XREF: sub_C88D+11j
 		push	di
 		push	[bp+arg_2]
 		push	0
-		call	sub_C9A6
+		call	numerals_draw
 		lea	ax, [di+8]
 		push	ax
 		push	[bp+arg_2]
 		mov	al, byte_20340
 		mov	ah, 0
 		push	ax
-		call	sub_C9A6
+		call	numerals_draw
 		lea	ax, [di+10h]
 		push	ax
 		push	[bp+arg_2]
 		mov	al, byte_20341
 		mov	ah, 0
 		push	ax
-		call	sub_C9A6
+		call	numerals_draw
 		pop	di
 		pop	si
 		leave
@@ -28849,9 +28849,10 @@ sub_C914	endp
 
 ; Attributes: bp-based frame
 
-sub_C9A6	proc near		; CODE XREF: sub_C88D+4Cp sub_C88D+5Ep ...
+; int __stdcall	numerals_draw(int numeral, int,	int)
+numerals_draw	proc near		; CODE XREF: sub_C88D+4Cp sub_C88D+5Ep ...
 
-arg_0		= word ptr  4
+numeral		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -28872,26 +28873,26 @@ arg_4		= word ptr  8
 		mov	bl, 8
 		sub	bl, al
 		mov	dh, bl
-		mov	si, [bp+arg_0]
+		mov	si, [bp+numeral]
 		shl	si, 3
-		add	si, 0A28h
+		add	si, offset NUMERALS
 		mov	cx, 8
 		cmp	ax, 0
 		jnz	short loc_C9F3
 
-loc_C9E1:				; CODE XREF: sub_C9A6:loc_C9EFj
+loc_C9E1:				; CODE XREF: numerals_draw:loc_C9EFj
 		movsb
 		add	di, 4Fh	; 'O'
 		cmp	di, 7D00h
 		jl	short loc_C9EF
 		sub	di, 7D00h
 
-loc_C9EF:				; CODE XREF: sub_C9A6+43j
+loc_C9EF:				; CODE XREF: numerals_draw+43j
 		loop	loc_C9E1
 		jmp	short loc_CA16
 ; ---------------------------------------------------------------------------
 
-loc_C9F3:				; CODE XREF: sub_C9A6+39j sub_C9A6+6Ej
+loc_C9F3:				; CODE XREF: numerals_draw+39j numerals_draw+6Ej
 		mov	al, [si]
 		mov	ah, al
 		mov	bx, cx
@@ -28901,21 +28902,21 @@ loc_C9F3:				; CODE XREF: sub_C9A6+39j sub_C9A6+6Ej
 		shl	ah, cl
 		mov	cx, bx
 		mov	es:[di], ax
-		add	di, 50h	; 'P'
+		add	di, 80
 		cmp	di, 7D00h
 		jl	short loc_CA13
 		sub	di, 7D00h
 
-loc_CA13:				; CODE XREF: sub_C9A6+67j
+loc_CA13:				; CODE XREF: numerals_draw+67j
 		inc	si
 		loop	loc_C9F3
 
-loc_CA16:				; CODE XREF: sub_C9A6+4Bj
+loc_CA16:				; CODE XREF: numerals_draw+4Bj
 		pop	di
 		pop	si
 		leave
 		retn	6
-sub_C9A6	endp
+numerals_draw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -63929,102 +63930,18 @@ asc_1E47E	db '                ',0 ; DATA XREF: sub_C31F+30o sub_C31F+53o ...
 		db    0
 		db    1
 		db    0
-		db    0
-		db  38h	; 8
-		db  44h	; D
-		db  82h	; ‚
-		db  82h	; ‚
-		db  82h	; ‚
-		db  44h	; D
-		db  38h	; 8
-		db    0
-		db    0
-		db    0
-		db    6
-		db  7Eh	; ~
-		db    0
-		db    0
-		db    0
-		db    0
-		db  0Ch
-		db  3Ch	; <
-		db    0
-		db    0
-		db    6
-		db  7Eh	; ~
-		db    0
-		db    6
-		db  7Eh	; ~
-		db    0
-		db    6
-		db  3Ch	; <
-		db    0
-		db    3
-		db 0FFh
-		db    0
-		db  7Eh	; ~
-		db  5Ah	; Z
-		db  7Eh	; ~
-		db  42h	; B
-		db  42h	; B
-		db  7Eh	; ~
-		db    0
-		db    0
-		db  7Eh	; ~
-		db    8
-		db  10h
-		db  7Ch	; |
-		db  24h	; $
-		db  44h	; D
-		db 0FFh
-		db    0
-		db  18h
-		db  7Eh	; ~
-		db    0
-		db    0
-		db  24h	; $
-		db  42h	; B
-		db    0
-		db    0
-		db  20h
-		db  7Eh	; ~
-		db  20h
-		db  20h
-		db  3Ch	; <
-		db    0
-		db    0
-		db    0
-		db    4
-		db  24h	; $
-		db  22h	; "
-		db  42h	; B
-		db  41h	; A
-		db    0
-		db    0
-		db    0
-		db  10h
-		db  3Eh	; >
-		db  24h	; $
-		db  26h	; &
-		db  4Ah	; J
-		db  8Eh	; Ž
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  18h
-		db  18h
-		db  24h	; $
-		db    0
-		db    0
-		db    0
-		db  18h
-		db  18h
-		db    0
-		db 0FFh
-		db    0
-		db  18h
-		db  18h
+NUMERALS	db    0, 38h, 44h, 82h,	82h, 82h, 44h, 38h ; DATA XREF:	numerals_draw+2Fo
+		db    0,   0,	0,   6,	7Eh,   0,   0,	 0
+		db    0, 0Ch, 3Ch,   0,	  0,   6, 7Eh,	 0
+		db    6, 7Eh,	0,   6,	3Ch,   0,   3,0FFh
+		db    0, 7Eh, 5Ah, 7Eh,	42h, 42h, 7Eh,	 0
+		db    0, 7Eh,	8, 10h,	7Ch, 24h, 44h,0FFh
+		db    0, 18h, 7Eh,   0,	  0, 24h, 42h,	 0
+		db    0, 20h, 7Eh, 20h,	20h, 3Ch,   0,	 0
+		db    0,   4, 24h, 22h,	42h, 41h,   0,	 0
+		db    0, 10h, 3Eh, 24h,	26h, 4Ah, 8Eh,	 0
+		db    0,   0, 24h, 18h,	18h, 24h,   0,	 0
+		db    0, 18h, 18h,   0,0FFh,   0, 18h, 18h
 		db    0
 		db    0
 		db    0
