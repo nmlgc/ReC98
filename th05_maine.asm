@@ -25677,12 +25677,12 @@ var_4		= dword	ptr -4
 		mov	word ptr [bp+var_4], dx
 		mov	bx, allcast_screen_plus_one
 		add	bx, bx
-		mov	ax, word ptr ALLCAST_STRINGS_PER_SCREEN[bx]
+		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
 		dec	ax
 		shl	ax, 4
 		mov	dx, 0C0h ; 'À'
 		sub	dx, ax
-		mov	ax, word_109EC
+		mov	ax, allcast_line_on_screen
 		shl	ax, 5
 		add	dx, ax
 		mov	si, dx
@@ -25724,13 +25724,13 @@ loc_B21E:				; CODE XREF: sub_B1B5+40j
 		call	far ptr	loc_E914
 		call	sub_B37C
 		inc	allcast_step
-		inc	word_109EC
+		inc	allcast_line_on_screen
 		mov	bx, allcast_screen_plus_one
 		add	bx, bx
-		mov	ax, [bx+8DAh]
-		cmp	ax, word_109EC
+		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
+		cmp	ax, allcast_line_on_screen
 		jg	short loc_B26D
-		mov	word_109EC, 0
+		mov	allcast_line_on_screen, 0
 		mov	al, 1
 		jmp	short loc_B26F
 ; ---------------------------------------------------------------------------
@@ -37324,11 +37324,11 @@ ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-ALLCAST_STRINGS_PER_SCREEN	equ $-2
+ALLCAST_LINES_PER_SCREEN	equ $-2
 		dw 1, 2, 6, 10, 9, 12, 7
 		db    0
 		db    0
-word_109EC	dw 0			; DATA XREF: sub_B1B5+2Er sub_B1B5+9Aw ...
+allcast_line_on_screen	dw 0			; DATA XREF: sub_B1B5+2Er sub_B1B5+9Aw ...
 aExed01_pi	db 'EXED01.pi',0        ; DATA XREF: dseg:0760o
 aExed07_pi	db 'EXED07.pi',0        ; DATA XREF: dseg:0764o
 aExed08_pi	db 'EXED08.pi',0        ; DATA XREF: dseg:0768o
