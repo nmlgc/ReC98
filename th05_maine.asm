@@ -37277,7 +37277,7 @@ byte_1085E	db 0			; DATA XREF: sub_B37C+Dr sub_B37C+13r	...
 		db    0
 		db    0
 		db    0
-ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
+u_ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
 		dd aNo_2Buumx
@@ -37324,7 +37324,7 @@ ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-ALLCAST_LINES_PER_SCREEN	equ $-2
+u_ALLCAST_LINES_PER_SCREEN	equ $-2
 		dw 1, 2, 6, 10, 9, 12, 7
 		db    0
 		db    0
@@ -51390,6 +51390,82 @@ dword_1C664	dd ?			; DATA XREF: sub_8245+ACw sub_8245+C2r ...
 dword_1C668	dd ?			; DATA XREF: __ExceptionHandler+2BEw
 					; __ExceptionHandler+2D1r ...
 		dd ?
+		
+; ========================
+; English patch data below
+; ========================
+
+	; Adding th01 bosses to the All Cast
+ALLCAST_LINES_PER_SCREEN	equ $-2
+		dw 1, 9, 6, 10, 9, 12, 7
+; Intro (1 line)
+ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
+	; th01 (9 lines) 
+		dd aNo_1Buumx
+		dd aReimuHakureiSh
+		dd aShingyokuGatek
+		dd aYuugenMaganEvi
+		dd aElisInnocentDe
+		dd aSarielAngelOfD
+		dd aMimaRevengeful
+		dd aKikuriMoonOfHe
+		dd aKonngaraAstral
+	; th02 (6 lines)
+		dd aNo_2Buumx
+		dd aReimuHakurei_0
+		dd aRikaEngineer
+		dd aMeiraSamurai
+		dd aMarisaKirisame
+		dd aMimaGhost
+	; th03 (10 lines)
+		dd aNo_3Buumx
+		dd aReimuHakurei_1
+		dd aMarisaKirisa_0
+		dd aMimaGhost_0
+		dd aEllenWitch
+		dd aKotohimePrince
+		dd aKanaAnaberalPo
+		dd aRikakoAsakuraS
+		dd aTiyuriKitashir
+		dd aYumemiOkazakiP
+	; th04 (9 lines)
+		dd aNo_4Buumx
+		dd aReimuHakurei_2
+		dd aMarisaKirisa_1
+		dd aOrangeOriental
+		dd aKurumiVampire
+		dd aElliyGateKeepe
+		dd aYukaOrientalDe
+		dd aMugetuMaid
+		dd aGengetuDemon
+	; th05 (12 lines)
+		dd aNo_5Buumx
+		dd aReimuHakurei_3
+		dd aMarisaKirisa_2
+		dd aMimaGhost_1
+		dd aYukaOriental_0
+		dd aSaraGateKeeper
+		dd aLuizeDemon
+		dd aAliceWitchOfDe
+		dd aYukiBlackWitch
+		dd aMaiWhiteWitch
+		dd aYumekoMaid
+		dd aShinkiGoddessO
+	; Credits (7 lines)
+		dd aProgramerZunJu
+		dd aGraphicsZunJun
+		dd aMusicComposeZu
+		dd aP_m_d_ProgramM
+		dd aSpecialThanksA
+		dd aAmusementMaker
+		dd aAndAllTestPlay
+aShingyokuGatek	db '        Shingyoku                           ( Gatekeeper )',0
+aYuugenMaganEvi	db '       Yuugenmagan                          ( Evil Eyes )',0
+aElisInnocentDe	db '          Elis                            ( Innocent Devil )',0
+aSarielAngelOfD	db '         Sariel                           ( Angel of Death )',0
+aMimaRevengeful	db '          Mima                           ( Revengeful Ghost )',0
+aKikuriMoonOfHe	db '         Kikuri                            ( Moon of Hell )',0
+aKonngaraAstral	db '        Konngara                          ( Astral Knight )',0
 dseg		ends
 
 ; ===========================================================================
