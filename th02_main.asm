@@ -27754,42 +27754,71 @@ sub_C05D	endp
 
 ; Attributes: bp-based frame
 
+; In order to fit the strlen() call and the corresponding subtractions into
+; this function, we have to optimize the original code quite significantly.
+; The most effective way is to carefully optimize stack usage: We avoid
+; pushing most parameters to the 4 functions more than once, re-use them as
+; efficiently as possible, and directly write to the stack when we need to
+; change them. A further optimization of the read and write instructions to
+; [bgm_show_timer] then buys us another 6 bytes.
+
+; However, the code does leave one minor flaw. gaiji_putca() *must* be called
+; with an even number for the X coordinate. An odd number glitches the gaiji
+; output, putting its right 8 pixels before its left 8 pixels.
+; Unfortunately, the space didn't suffice to round the calculated string
+; lengths accordingly. This means that the BGM strings *must* be hardcoded to
+; have an *odd* number of characters.
+
 bgm_show	proc near		; CODE XREF: sub_BCB1+1Bp
 		push	bp
 		mov	bp, sp
-		cmp	bgm_show_timer, 0
-		jz	short loc_C108
-		cmp	bgm_show_timer, 1
-		jnz	short loc_C0E6
-		push	large 180017h
-		push	large 0D800C1h
-		call	sub_1416
-		push	large 1A0017h
+		mov	al, bgm_show_timer
+		cmp	al, 0
+		jz	loc_C108
+		push	033h ; Right edge
+		push	017h
 		push	ds
-		mov	al, bgm_title_id
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr BGM_TITLE[bx]
-		push	0E1h ; 'á'
+		cmp	al, 1
+		jnz	short loc_C0E6
+		movzx	bx, bgm_title_id
+		add	bx, bx
+		push	BGM_TITLE[bx]
+		call	far ptr _strlen
+		; strlen() is __cdecl and doesn't clear its stack...
+		sub	word ptr ss:[bp-2], ax
+		push	0E1h	; atrb
 		call	sub_26CA
+		; ... while the master.lib functions are __pascal and therefore do.
+		; (Of course, this still assumes that text_putsa() doesn't overwrite
+		; its own parameters, which, luckily, it doesn't.)
+
+		; Draw the note glyph
+		sub	sp, 4	; Re-use X and Y coordinates from above
+		sub	word ptr ss:[bp-2], 3	; 3 spaces left of the title
+		push	0D8h	; chr
+		push	0C1h	; atrb
+		call	sub_1416
+		mov al, 1
 
 loc_C0E6:				; CODE XREF: bgm_show+Fj
-		inc	bgm_show_timer
-		cmp	bgm_show_timer, 0A0h ; ' '
+		inc	ax
+		cmp	al, 0A0h ; ' '
 		jb	short loc_C108
-		push	large 180017h
-		push	ds
-		push	(offset	aEMPTY+16h)
-		push	0E1h ; 'á'
+		; Just clear the entire 17th line inside the playing field
+		mov	word ptr ss:[bp-2], 4
+		push	offset aEMPTY
+		push	0E1h	; atrb
 		call	sub_26CA
-		mov	bgm_show_timer, 0
+		mov	al, 0
 
 loc_C108:				; CODE XREF: bgm_show+8j bgm_show+47j
+		mov	sp, bp
+		mov	bgm_show_timer, al
 		pop	bp
 		retn
 bgm_show	endp
-
+	nop
+	nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
