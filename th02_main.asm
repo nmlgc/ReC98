@@ -62553,12 +62553,12 @@ STAGE_TITLE		dw offset aSTAGE1_TITLE
 		dw offset aSTAGE4_TITLE
 		dw offset aSTAGE5_TITLE
 		dw offset aEXTRA_TITLE
-STAGE_TITLE_HALFLENGTHS		db  0Ah
-		db  0Dh
-		db  0Bh
-		db  0Ch
-		db  0Dh
-		db  0Dh
+STAGE_TITLE_HALFLENGTHS		db  14
+		db  14
+		db  7
+		db  16
+		db  17
+		db  19
 aNoK		db '≠Æ∑∏œπµ™¬',0        ; DATA XREF: _main+DAo
 aKOO		db 'π™æºÆœ∑Æ∂æ',0       ; DATA XREF: sub_B9E2+4Co
 asc_1DB5F	db 'œœœœœœœœœœœ',0      ; DATA XREF: sub_B9E2+58o
@@ -62580,24 +62580,29 @@ off_1DB7E	dd aB@b@vVvbavtvVV	; DATA XREF: sub_B9E2+12Dr
 					; "Å@Å@ÇÕÇ¢ÅAÇ‚ÇﬂÇ‹Ç∑ÅBÅ@"
 dword_1DB82	dd 0			; DATA XREF: sub_BCB1+7r
 word_1DB86	dw 0			; DATA XREF: sub_C1E4+Ar sub_C1E4+1Bw	...
-aTH02_02	db ' Hakurei Å` Eastern Wind',0
-aTH02_03	db 'Å@  She',27h,'s in a Temper!! ',0
-aTH02_04	db 'Å@   End of DaylightÅ@  ',0
-aTH02_05	db 'Å@  Power of Darkness   ',0
-aTH02_06	db 'Å@World of Empty Dreams ',0
-aTH02_07	db 'Å@    Bet on Death      ',0
+
+; These must have an odd number of characters in order for the note glyph to
+; be correctly printed on a word boundary - it glitches out otherwise.
+aTH02_02	db 'Hakurei Å` Eastern Wind ',0
+aTH02_03	db 'She',27h,'s in a Temper!! ',0
+aTH02_04	db 'End of Daylight ',0
+aTH02_05	db 'Power of Darkness ',0
+aTH02_06	db 'World of Empty Dreams ',0
+aTH02_07	db 'Bet on Death',0
 aTH02_08	db 'Himorogi, Burn in Violet',0
-aTH02_09		db 'Å@ Love-Coloured Magic  ',0
-aTH02_10		db 'Å@A Phantom',027h,'s Wild Dance',0
-aTH02_11	db '   Complete Darkness    ',0
-aTH02_12	db 'Å@     Extra Love       ',0
-aTH02_13	db 'Å@The Tank Girl',027h,'s Dream ',0
-aSTAGE1_TITLE	db 'éáñÏÅ@Å` Purple Dawn',0
-aSTAGE2_TITLE	db 'RaijuuÅ`Midnight Rainstorm',0
-aSTAGE3_TITLE	db 'çgñ≤Å@Å` Scarlet Dream',0
-aSTAGE4_TITLE	db 'óÏñÇÅ@Å`Revengeful Ghost',0
-aSTAGE5_TITLE	db 'Sealing of a Demon, and...',0
-aEXTRA_TITLE		db 'àŸãÛÅ@Å`for Lunatic Gamers',0
+aTH02_09	db 'Love-Coloured Magic ',0
+aTH02_10	db 'A Phantom',027h,'s Boisterous Dance',0
+aTH02_11	db 'Complete Darkness ',0
+aTH02_12	db 'Extra Love',0
+aTH02_13	db 'The Tank Girl',027h,'s Dream ',0
+	db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+aSTAGE1_TITLE	db 'Purple Field Å` Purple Dawn',0
+aSTAGE2_TITLE	db 'Raijuu Å` Midnight Rainstorm',0
+aSTAGE3_TITLE	db 'Scarlet Dream',0
+aSTAGE4_TITLE	db 'Evil Spirit Å` Revengeful Ghost',0
+aSTAGE5_TITLE	db 'Eastern Sealing of a Demon, and...',0
+aEXTRA_TITLE	db 'A Different Sky Å` for Lunatic Gamers',0
 ; char arg0[3]
 arg0		db 'op',0               ; DATA XREF: _main+138o
 aHuuma_efc	db 'huuma.efc',0        ; DATA XREF: sub_B2AB+8o
