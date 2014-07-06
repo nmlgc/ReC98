@@ -29138,7 +29138,7 @@ aGvgngogigab@b@	db 'ÇoÇqÇnÇfÇqÇ`ÇlÅ@ÇyÇtÇm',0 ; DATA XREF: sub_A8FA+10Eo
 aEd06b_rgb	db 'ed06b.rgb',0        ; DATA XREF: sub_A8FA+12Bo
 aEd06c_rgb	db 'ed06c.rgb',0        ; DATA XREF: sub_A8FA+156o
 aEd07_pi	db 'ed07.pi',0          ; DATA XREF: sub_A8FA+173o
-aGogigtgbgbgnb@	db '  GRAPHIC   Å@ÇyÇtÇm',0 ; DATA XREF: sub_A8FA+1ADo
+aGogigtgbgbgnb@	db 'ÇfÇqÇ`ÇoÇgÇhÇbÅ@ÇyÇtÇm',0 ; DATA XREF: sub_A8FA+1ADo
 aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@çÇïçì˙å¸',0 ; DATA XREF: sub_A8FA+1C2o
 aB@b@b@b@bigibG	db 'Å@Å@ÅiAll Clear  PictureÅj',0 ; DATA XREF: sub_A8FA+1D7o
 aEd07a_rgb	db 'ed07a.rgb',0        ; DATA XREF: sub_A8FA+1ECo
@@ -29156,10 +29156,10 @@ aEd08b_rgb	db 'ed08b.rgb',0        ; DATA XREF: sub_A8FA+35Do
 aEd08c_rgb	db 'ed08c.rgb',0        ; DATA XREF: sub_A8FA+37Do
 aEd09_pi	db 'ED09.pi',0          ; DATA XREF: sub_A8FA+3A9o
 aVsvivbvovlb@vs	db 'ÇsÇàÇÅÇéÇãÅ@ÇôÇèÇïÅ@ÇÜÇèÇíÅ@ÇêÇåÇÅÇôÇâÇéÇá',0 ; DATA XREF: sub_A8FA+3F5o
-aB@nPiuU_	db 'FinalScore',0       ; DATA XREF: sub_A8FA+429o
+aB@nPiuU_	db 'Final Score',0       ; DATA XREF: sub_A8FA+429o
 aGrgugegbgjgeb	db 'Continues Used',0   ; DATA XREF: sub_A8FA+46Ao
-aB@Gigugn	db 'Ranking  ',0        ; DATA XREF: sub_A8FA+4B6o
-aGvgmgcgdbPik	db 'Init. LivesÅ@ ',0   ; DATA XREF: sub_A8FA+504o
+aB@Gigugn	db 'Ranking ',0        ; DATA XREF: sub_A8FA+4B6o
+aGvgmgcgdbPik	db 'Init. Lives ',0   ; DATA XREF: sub_A8FA+504o
 aCMvpik		db 'Init. Bombs',0      ; DATA XREF: sub_A8FA+552o
 aVavVVSrso	db 'Skill Level ',0     ; DATA XREF: sub_A8FA+5B9o
 aVpvxvxvvb@vyvt	db 'ÇPÇXÇXÇVÅ@ÇyÇtÇm  (Amusement Makers)',0 ; DATA XREF: sub_A8FA+6AEo
