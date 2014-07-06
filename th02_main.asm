@@ -3414,7 +3414,7 @@ sub_1380	endp
 
 ; Attributes: bp-based frame
 
-sub_1416	proc far		; CODE XREF: sub_C0A8+1DP
+sub_1416	proc far		; CODE XREF: bgm_show+1DP
 					; sub_C31F+153P ...
 
 arg_0		= word ptr  4
@@ -26618,10 +26618,10 @@ var_C		= byte ptr -0Ch
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B4BB
-		mov	byte_1F46C, 1
+		mov	bgm_show_timer, 1
 		mov	al, stage_id
 		add	al, al
-		mov	byte_1F46D, al
+		mov	bgm_title_id, al
 		mov	al, stage_id
 		add	al, al
 		inc	al
@@ -26630,7 +26630,7 @@ var_C		= byte ptr -0Ch
 ; ---------------------------------------------------------------------------
 
 loc_B4BB:				; CODE XREF: sub_B3DA+C6j
-		mov	byte_1F46C, 0
+		mov	bgm_show_timer, 0
 
 loc_B4C0:				; CODE XREF: sub_B3DA+DFj
 		mov	si, 0C0h ; '¿'
@@ -26668,7 +26668,7 @@ loc_B4D7:				; CODE XREF: sub_B3DA+E9j
 		mov	al, stage_id
 		cbw
 		mov	bx, ax
-		mov	al, [bx+0D4h]
+		mov	al, STAGE_TITLE_HALFLENGTHS[bx]
 		mov	stage_title_halflen, al
 		push	ss
 		lea	ax, [bp+var_C]
@@ -27307,7 +27307,7 @@ var_2		= word ptr -2
 loc_BCC3:				; CODE XREF: sub_BCB1+2B7j
 		call	sub_FA8A
 		call	dword_1F498
-		call	sub_C0A8
+		call	bgm_show
 		mov	si, word_20344
 		mov	al, byte_20618
 		mov	ah, 0
@@ -27707,9 +27707,9 @@ loc_C015:				; CODE XREF: sub_BFD0+26j sub_BFD0+2Fj
 		mov	word ptr dword_1F48C+2,	seg seg001
 		mov	word ptr dword_1F48C, offset sub_BF9C
 		mov	byte_20343, 0FFh
-		mov	byte_1F46C, 1
+		mov	bgm_show_timer, 1
 		mov	al, byte_1F46E
-		mov	byte_1F46D, al
+		mov	bgm_title_id, al
 
 loc_C05B:				; CODE XREF: sub_BFD0+8j
 		pop	bp
@@ -27731,12 +27731,12 @@ sub_C05D	proc far		; DATA XREF: sub_B3DA+22Fo
 		jnz	short loc_C09A
 		push	large 4000Ch
 		push	ds
-		push	offset asc_1DDF7 ; "					   "...
+		push	offset aEMPTY ; "					   "...
 		push	0E1h ; '·'
 		call	sub_26CA
 		push	large 4000Dh
 		push	ds
-		push	offset asc_1DDF7 ; "					   "...
+		push	offset aEMPTY ; "					   "...
 		push	0E1h ; '·'
 		call	sub_26CA
 
@@ -27754,19 +27754,19 @@ sub_C05D	endp
 
 ; Attributes: bp-based frame
 
-sub_C0A8	proc near		; CODE XREF: sub_BCB1+1Bp
+bgm_show	proc near		; CODE XREF: sub_BCB1+1Bp
 		push	bp
 		mov	bp, sp
-		cmp	byte_1F46C, 0
+		cmp	bgm_show_timer, 0
 		jz	short loc_C108
-		cmp	byte_1F46C, 1
+		cmp	bgm_show_timer, 1
 		jnz	short loc_C0E6
 		push	large 180017h
 		push	large 0D800C1h
 		call	sub_1416
 		push	large 1A0017h
 		push	ds
-		mov	al, byte_1F46D
+		mov	al, bgm_title_id
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -27774,21 +27774,21 @@ sub_C0A8	proc near		; CODE XREF: sub_BCB1+1Bp
 		push	0E1h ; '·'
 		call	sub_26CA
 
-loc_C0E6:				; CODE XREF: sub_C0A8+Fj
-		inc	byte_1F46C
-		cmp	byte_1F46C, 0A0h ; '†'
+loc_C0E6:				; CODE XREF: bgm_show+Fj
+		inc	bgm_show_timer
+		cmp	bgm_show_timer, 0A0h ; '†'
 		jb	short loc_C108
 		push	large 180017h
 		push	ds
-		push	(offset	asc_1DDF7+16h)
+		push	(offset	aEMPTY+16h)
 		push	0E1h ; '·'
 		call	sub_26CA
-		mov	byte_1F46C, 0
+		mov	bgm_show_timer, 0
 
-loc_C108:				; CODE XREF: sub_C0A8+8j sub_C0A8+47j
+loc_C108:				; CODE XREF: bgm_show+8j bgm_show+47j
 		pop	bp
 		retn
-sub_C0A8	endp
+bgm_show	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -62524,7 +62524,7 @@ STAGE_TITLE		dw offset aSTAGE1_TITLE
 		dw offset aSTAGE4_TITLE
 		dw offset aSTAGE5_TITLE
 		dw offset aEXTRA_TITLE
-		db  0Ah
+STAGE_TITLE_HALFLENGTHS		db  0Ah
 		db  0Dh
 		db  0Bh
 		db  0Ch
@@ -62589,7 +62589,7 @@ aGqbGanKj	db '  Resume  ',0       ; DATA XREF: dseg:off_1DB70o
 aVV2		db ' Are you really sure? ',0 ; DATA XREF: dseg:off_1DB76o
 aVdvVVBbvVVVV	db 'I was kidding.  Sorry.',0 ; DATA XREF: dseg:off_1DB7Ao
 aB@b@vVvbavtvVV	db 'Å@Å@Yes, I',027h,'ll quit. Å@',0 ; DATA XREF: dseg:off_1DB7Eo
-asc_1DDF7	db '                                                ',0
+aEMPTY	db '                                                ',0
 					; DATA XREF: sub_C05D+20o sub_C05D+32o
 aDemo1_rec	db 'DEMO1.REC',0        ; DATA XREF: sub_C13E+39o
 aDemo2_rec	db 'DEMO2.REC',0        ; DATA XREF: sub_C13E+5Do
@@ -67112,9 +67112,9 @@ stage1_gaiji_halflen	db ?			; DATA XREF: _main:loc_B202r
 stage_title_halflen	db ?			; DATA XREF: _main+B7r	sub_B3DA+132w
 		db ?
 stage_title_str	dw ?			; DATA XREF: _main+C5r	sub_B3DA+125w
-byte_1F46C	db ?			; DATA XREF: sub_B3DA+C8w
+bgm_show_timer	db ?			; DATA XREF: sub_B3DA+C8w
 					; sub_B3DA:loc_B4BBw ...
-byte_1F46D	db ?			; DATA XREF: sub_B3DA+D2w sub_BFD0+88w ...
+bgm_title_id	db ?			; DATA XREF: sub_B3DA+D2w sub_BFD0+88w ...
 byte_1F46E	db ?			; DATA XREF: sub_B3DA+DCw sub_BFD0+85r
 		db ?
 dword_1F470	dd ?			; DATA XREF: sub_B3DA+27Aw
