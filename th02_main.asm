@@ -26668,7 +26668,7 @@ loc_B4D7:				; CODE XREF: sub_B3DA+E9j
 		mov	al, stage_id
 		cbw
 		mov	bx, ax
-		mov	al, [bx+0D4h]
+		mov	al, STAGE_TITLE_HALFLENGTHS[bx]
 		mov	stage_title_halflen, al
 		push	ss
 		lea	ax, [bp+var_C]
@@ -62524,7 +62524,7 @@ STAGE_TITLE		dw offset aSTAGE1_TITLE
 		dw offset aSTAGE4_TITLE
 		dw offset aSTAGE5_TITLE
 		dw offset aEXTRA_TITLE
-		db  0Ah
+STAGE_TITLE_HALFLENGTHS		db  0Ah
 		db  0Dh
 		db  0Bh
 		db  0Ch
