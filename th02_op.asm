@@ -23418,8 +23418,8 @@ sub_A481	proc near		; CODE XREF: sub_A74A+27p
 		push	offset aLL	; "´∏∑´"
 		push	0
 		call	sub_13D0
-		push	seg_D786
-		push	word_D784
+		push	word ptr PERF_TITLE+2
+		push	word ptr PERF_TITLE
 		push	0
 		push	144h
 		push	0C4h ; 'ƒ'
@@ -23604,8 +23604,8 @@ loc_A656:				; CODE XREF: sub_A510+FDj
 		jnz	short loc_A6C7
 		push	18h
 		push	14h
-		push	seg_D786
-		push	word_D784
+		push	word ptr PERF_TITLE+2
+		push	word ptr PERF_TITLE
 		push	si
 		call	sub_2520
 		push	2Dh ; '-'
@@ -23615,8 +23615,8 @@ loc_A656:				; CODE XREF: sub_A510+FDj
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+15Ah]
-		push	word ptr [bx+158h]
+		push	word ptr (PERF_OPTION+2)[bx]
+		push	word ptr PERF_OPTION[bx]
 		push	si
 		call	sub_2520
 		push	168h
@@ -23629,8 +23629,8 @@ loc_A656:				; CODE XREF: sub_A510+FDj
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	word ptr [bx+15Ah]
-		push	word ptr [bx+158h]
+		push	word ptr (PERF_OPTION+2)[bx]
+		push	word ptr PERF_OPTION[bx]
 		push	0
 		push	144h
 		push	16Ch
@@ -29825,12 +29825,9 @@ aOO		db 'ªÆºÆΩ',0            ; DATA XREF: sub_A481+70o
 		db 0ADh	; ≠
 		db 0B2h	; ≤
 		db    0
-word_D784	dw 1B8h			; DATA XREF: sub_A481+53r
-					; sub_A510+153r
-seg_D786	dw seg dseg		; DATA XREF: sub_A481+4Fr
-					; sub_A510+14Fr
-		dd aB@tPa		; "Å@í èÌ  "
-		dd aIXfmym		; "àÍïîåyå∏"
+PERF_TITLE	dd aPERF_TITLE
+PERF_OPTION	dd aPERF_NORMAL
+		dd aPERF_TRUNCATE
 byte_D790	db 0			; DATA XREF: sub_A2FB+4r sub_A2FB+10w	...
 byte_D791	db 0			; DATA XREF: sub_A74A+Bw sub_A74A+5Cw	...
 byte_D792	db 0			; DATA XREF: sub_A74A+4r sub_A74A+10w	...
@@ -29849,9 +29846,9 @@ aTs1_pi		db 'ts1.pi',0           ; DATA XREF: sub_9FAF+1Bo sub_A0C6+2Do
 aSelect		db 'select',0           ; DATA XREF: sub_9FAF+59o sub_9FAF+5Do ...
 ; char path[]
 path		db 'main',0             ; DATA XREF: sub_9FAF+67o sub_9FAF+6Bo ...
-aIipo		db 'ââèo',0
-aB@tPa		db 'Å@í èÌ  ',0         ; DATA XREF: dseg:0158o
-aIXfmym		db 'àÍïîåyå∏',0         ; DATA XREF: dseg:015Co
+aPERF_TITLE	db 'ââèo',0
+aPERF_NORMAL	db 'Å@í èÌ  ',0         ; DATA XREF: dseg:0158o
+aPERF_TRUNCATE	db 'àÍïîåyå∏',0         ; DATA XREF: dseg:015Co
 aMikoft_bft	db 'MIKOFT.bft',0       ; DATA XREF: _main+40o
 aGminit_m	db 'gminit.m',0         ; DATA XREF: _main+BEo
 aTs3_pi		db 'ts3.pi',0           ; DATA XREF: _main+DBo
