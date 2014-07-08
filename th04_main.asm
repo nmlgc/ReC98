@@ -49573,31 +49573,33 @@ byte_22F60	db 0ADh			; DATA XREF: seg001:62E3o
 		db    0
 asc_22F6A	db '                                                ',0
 					; DATA XREF: dseg:off_22EF8o
-aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0 ; DATA XREF: dseg:1BBCo
-aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0 ; DATA XREF: dseg:1BC0o
-aMKib@bLakeOfBl	db 'FamineÅ` Lake of Blood',0 ; DATA XREF: dseg:1BC4o
-aCChb@bDarkness	db 'ñªóHÅ@Å` Darkness ',0 ; DATA XREF: dseg:1BC8o
-aCMB@bDreamOfFr	db 'ñ≤å∂Å@Å` Dream of Frail Girl',0 ; DATA XREF: dseg:1BCCo
-aMSzb@bPhantasm	db 'å∂ëzÅ@Å` Phantasmagoria ',0 ; DATA XREF: dseg:1BD0o
-aTMvb@bRaspberr	db 'Chase Å` Raspberry Trap ',0 ; DATA XREF: dseg:1BD4o
-aVVVcvVvmnvRViv	db 'Quiet Final for Wondrous YouÅ` Puckish Angel',0 ; DATA XREF: dseg:1BD8o
+aMCB@bPhantomLa	db 'Phantom Land',0 ; DATA XREF: dseg:1BBCo
+aMCsb@bPhantomN	db 'Phantom Night',0 ; DATA XREF: dseg:1BC0o
+aMKib@bLakeOfBl	db 'Famine Å` Lake of Blood',0 ; DATA XREF: dseg:1BC4o
+aCChb@bDarkness	db 'Darkness',0 ; DATA XREF: dseg:1BC8o
+aCMB@bDreamOfFr	db 'Dream of Frail Girl',0 ; DATA XREF: dseg:1BCCo
+aMSzb@bPhantasm	db 'Phantasmagoria',0 ; DATA XREF: dseg:1BD0o
+aTMvb@bRaspberr	db 'Pursuit Å` Raspberry Trap',0 ; DATA XREF: dseg:1BD4o
+aVVVcvVvmnvRViv	db 'Quiet Closing for Wonderful You Å` Puckish Angel',0 ; DATA XREF: dseg:1BD8o
 aWitchingDream	db 'Witching Dream',0   ; DATA XREF: dseg:1BDCo
 aSeleneSLight	db 'Selene',27h,'s Light',0 ; DATA XREF: dseg:1BE0o
-aSxp		db '      Decoration Battle     ',0 ; DATA XREF: dseg:1BE4o
+aSxp		db 'Decoration Battle',0 ; DATA XREF: dseg:1BE4o
 aBreakTheSabbat	db 'Break the Sabbath',0 ; DATA XREF: dseg:1BE8o
-aNglLB@bScarlet	db 'çgãøã»Å@Å` Scarlet Phoneme',0 ; DATA XREF: dseg:1BECo
+aNglLB@bScarlet	db 'Scarlet Symphony Å` Scarlet Phoneme',0 ; DATA XREF: dseg:1BECo
 aBadApple	db 'Bad Apple!!',0      ; DATA XREF: dseg:1BF0o
-aCRab@bPerditio	db 'óÏêÌÅ@Å` Perdition crisis ',0 ; DATA XREF: dseg:1BF4o
-aGagkgxgGggxgeg	db '  Alice Maestra ',0 ; DATA XREF: dseg:1BF8o
-aRpvKab@bCasket	db 'êØÇÃäÌÅ@Å` Casket of Star ',0 ; DATA XREF: dseg:1BFCo
+aCRab@bPerditio	db 'Spirit Battle Å` Perdition Crisis',0 ; DATA XREF: dseg:1BF4o
+aGagkgxgGggxgeg	db 'Alice Maestra',0 ; DATA XREF: dseg:1BF8o
+aRpvKab@bCasket	db 'Vessel of Stars Å` Casket of Star',0 ; DATA XREF: dseg:1BFCo
 aLotusLove	db 'Lotus Love',0       ; DATA XREF: dseg:1C00o
-aCVVslXB@bSleep	db '        Sleeping Terror       ',0 ; DATA XREF: dseg:1C04o
+aCVVslXB@bSleep	db 'Sleeping Terror',0 ; DATA XREF: dseg:1C04o
 aDreamLand	db 'Dream Land',0       ; DATA XREF: dseg:1C08o
-aChcB@bInanimat	db 'óHñ≤Å@Å` Inanimate Dream ',0 ; DATA XREF: dseg:1C0Co
-aLVVVsv		db ' Inev. Forbidden Game',0 ; DATA XREF: dseg:1C10o
-aGbgcghmSzb@bIc	db 'ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic ',0 ; DATA XREF: dseg:1C14o
-aVivavvvvilcvb@	db '  Cute DevilÅ@Å` Innocence',0 ; DATA XREF: dseg:1C18o
-aPnpcuyszlB@bCa	db '      Maiden',027h,'s Capriccio ',0 ; DATA XREF: dseg:1C1Co
+aChcB@bInanimat	db 'Faint Dream Å` Inanimate Dream',0 ; DATA XREF: dseg:1C0Co
+aLVVVsv		db 'The Inevitably Forbidden Game',0 ; DATA XREF: dseg:1C10o
+aGbgcghmSzb@bIc	db 'Illusion of a Maid Å` Icemilk Magic ',0 ; DATA XREF: dseg:1C14o
+aVivavvvvilcvb@	db 'Cute Devil Å` Innocence',0 ; DATA XREF: dseg:1C18o
+aPnpcuyszlB@bCa	db 'Maiden',027h,'s Capriccio',0 ; DATA XREF: dseg:1C1Co
+	db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
 aTxt_bb		db 'txt.bb',0           ; DATA XREF: sub_11551+Fo
 aTxt2_bb	db 'txt2.bb',0          ; DATA XREF: sub_11551+2Co
 		db    0

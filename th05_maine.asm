@@ -37390,7 +37390,7 @@ aKanaAnaberalPo	db '      Kana Anaberal                          ( Poltergeist )
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aRikakoAsakuraS	db '      Rikako Asakura                         ( Scientist )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aTiyuriKitashir	db '      Chiyuri Kitashirakawa              ( Assistant professor )',0
+aTiyuriKitashir	db '      Chiyuri Kitashirakawa              ( Assistant Professor )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aYumemiOkazakiP	db '      Yumemi Okazaki                         ( Professor )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
@@ -37400,13 +37400,13 @@ aReimuHakurei_2	db '      Reimu Hakurei                           ( Shaman )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aMarisaKirisa_1	db '      Marisa Kirisame                        ( Sorceress )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aOrangeOriental	db '      Orange                               ( Oriental demon )',0
+aOrangeOriental	db '      Orange                               ( Oriental Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aKurumiVampire	db '      Kurumi                                  ( Vampire )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aElliyGateKeepe	db '      Elly                                   ( Gate keeper )',0
+aElliyGateKeepe	db '      Elly                                   ( Gate Keeper )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukaOrientalDe	db '      Yuuka                                ( Oriental demon )',0
+aYukaOrientalDe	db '      Yuuka Kazami                         ( Oriental Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aMugetuMaid	db '      Mugetsu                                  ( Maid )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
@@ -37420,21 +37420,21 @@ aMarisaKirisa_2	db '      Marisa Kirisame                        ( Sorceress )',
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aMimaGhost_1	db '      Mima                                     ( Ghost )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukaOriental_0	db '      Yuuka                                ( Oriental demon )',0
+aYukaOriental_0	db '      Yuuka Kazami                         ( Oriental Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aSaraGateKeeper	db '      Sara                                   ( Gate keeper )',0
+aSaraGateKeeper	db '      Sara                                   ( Gate Keeper )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aLuizeDemon	db '      Louise                                   ( Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aAliceWitchOfDe	db '      Alice                                ( Witch of death )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aYukiBlackWitch	db '      Yuki                                   ( Black witch )',0
+aYukiBlackWitch	db '      Yuki                                   ( Black Witch )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aMaiWhiteWitch	db '      Mai                                    ( White witch )',0
+aMaiWhiteWitch	db '      Mai                                    ( White Witch )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aYumekoMaid	db '      Yumeko                                   ( Maid )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aShinkiGoddessO	db '      Shinki                           ( Goddess of devil',27h,'s wo'
+aShinkiGoddessO	db '      Shinki                           ( Goddess of Devil',27h,'s Wo'
 					; DATA XREF: dseg:ALLCAST_PTRSo
 		db 'rld )',0
 aProgramerZunJu	db '    Programmer                                 ZUN (Junya Ota)',0
@@ -37576,14 +37576,14 @@ aBu		db '％',0               ; DATA XREF: sub_C729+FEo
 aBd_0		db '．',0               ; DATA XREF: sub_C835+6Bo
 aBu_0		db '％',0               ; DATA XREF: sub_C8AE+13Eo
 aB@b@b@b@b@b@b@	db '　　　　　Skill Verdict',0 ; DATA XREF: sub_CA9B+21o
-aUqiUx		db 'Level ',0           ; DATA XREF: sub_CA9B+39o
-aNPiuU_		db 'F. score',0         ; DATA XREF: sub_CA9B+51o
+aUqiUx		db 'Rank  ',0           ; DATA XREF: sub_CA9B+39o
+aNPiuU_		db 'Score   ',0         ; DATA XREF: sub_CA9B+51o
 aGGxi		db 'Deaths  ',0         ; DATA XREF: sub_CA9B+69o
 aGGaogcpi	db 'Bombs used  ',0     ; DATA XREF: sub_CA9B+81o
 aGqbGatbrmcj	db 'Completion  ',0     ; DATA XREF: sub_CA9B+99o
 aIlcSObcj	db 'Enemies   ',0       ; DATA XREF: sub_CA9B+B1o
-aGagcgegai	db 'Items collect.',0   ; DATA XREF: sub_CA9B+C9o
-aUU_gagcgeganNv	db 'Point items collect.',0 ; DATA XREF: sub_CA9B+E1o
+aGagcgegai	db 'Items         ',0   ; DATA XREF: sub_CA9B+C9o
+aUU_gagcgeganNv	db 'Points              ',0 ; DATA XREF: sub_CA9B+E1o
 aLcnzvv		db 'Focus ',0           ; DATA XREF: sub_CA9B+F9o
 aPicacovCj	db 'Slowdown  ',0       ; DATA XREF: sub_CA9B+111o
 aVavVVSrso	db 'Your skill  ',0     ; DATA XREF: sub_CA9B+129o
@@ -51459,13 +51459,13 @@ ALLCAST_PTRS	dd aProjectOfTouho	; DATA XREF: sub_B1B5+11r sub_B1B5+Dr
 		dd aSpecialThanksA
 		dd aAmusementMaker
 		dd aAndAllTestPlay
-aShingyokuGatek	db '        Shingyoku                           ( Gatekeeper )',0
-aYuugenMaganEvi	db '       Yuugenmagan                          ( Evil Eyes )',0
-aElisInnocentDe	db '          Elis                            ( Innocent Devil )',0
-aSarielAngelOfD	db '         Sariel                           ( Angel of Death )',0
-aMimaRevengeful	db '          Mima                           ( Revengeful Ghost )',0
-aKikuriMoonOfHe	db '         Kikuri                            ( Moon of Hell )',0
-aKonngaraAstral	db '        Konngara                          ( Astral Knight )',0
+aShingyokuGatek	db '      Shingyoku                             ( Gatekeeper )',0
+aYuugenMaganEvi	db '      Yuugenmagan                           ( Evil Eyes )',0
+aElisInnocentDe	db '      Elis                                ( Innocent Devil )',0
+aSarielAngelOfD	db '      Sariel                              ( Angel of Death )',0
+aMimaRevengeful	db '      Mima                               ( Revengeful Ghost )',0
+aKikuriMoonOfHe	db '      Kikuri                               ( Moon of Hell )',0
+aKonngaraAstral	db '      Konngara                            ( Astral Knight )',0
 dseg		ends
 
 ; ===========================================================================

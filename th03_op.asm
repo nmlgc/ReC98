@@ -31234,11 +31234,11 @@ aNo_9CMCvlyBDre	db 'NO.9 Visionary Game Å` Dream War',0 ; DATA XREF: dseg:0612o
 aNo_10Cvc@mirab	db 'NO.10   Decisive Magic Battle!  ',0 ; DATA XREF: dseg:0616o
 aNo_11B@SailorO	db 'NO.11    Å@Sailor of Time       ',0 ; DATA XREF: dseg:061Ao
 aNo_12Strawberr	db 'NO.12    Strawberry Crisis!!    ',0 ; DATA XREF: dseg:061Eo
-aNo_13F		db 'NO.13 Disunified Field Theory...',0 ; DATA XREF: dseg:0622o
+aNo_13F		db 'NO.13 Non-Unified Magic World...',0 ; DATA XREF: dseg:0622o
 aNo_14B@cvc@pri	db 'NO.14   Love of Magical Chimes  ',0 ; DATA XREF: dseg:0626o
 aNo_15B@lviuvC	db 'NO.15     Dream of Eternity     ',0 ; DATA XREF: dseg:062Ao
-aNo_16Umx	db 'NO.16     Eastern Blue Sky      ',0 ; DATA XREF: dseg:062Eo
-aNo_17IiiuvCumo	db 'NO.17      Eternal Full Moon    ',0 ; DATA XREF: dseg:0632o
+aNo_16Umx	db 'NO.16      Eastern Blue Sky     ',0 ; DATA XREF: dseg:062Eo
+aNo_17IiiuvCumo	db 'NO.17     Eternal Full Moon     ',0 ; DATA XREF: dseg:0632o
 aNo_18MapleDrea	db 'NO.18       Maple Dream...      ',0 ; DATA XREF: dseg:0636o
 aNo_19CRlvLxu	db 'NO.19 Ghostly Person',027h,'s Holiday  ',0 ; DATA XREF: dseg:063Ao
 aB@b@		db '           Å@Å@                 ',0 ; DATA XREF: dseg:063Eo

@@ -31384,24 +31384,24 @@ a@06tx_txt	db '@06TX.TXT',0        ; DATA XREF: dseg:00BAo
 a@07tx_txt	db '@07TX.TXT',0        ; DATA XREF: dseg:00BEo
 a@08tx_txt	db '@08TX.TXT',0        ; DATA XREF: dseg:00C2o
 a@00dm0_txt	db '@00DM0.TXT',0       ; DATA XREF: dseg:off_E4B6o
-TITLE_REIMU		db '   夢と伝統を保守する巫女   ',0 ; DATA XREF: dseg:00CAo
-NAME_REIMU	db 'Reimu Hakurei',0    ; DATA XREF: dseg:00CEo
-TITLE_MIMA	db ' 久遠の夢に運命を任せる精神 ',0 ; DATA XREF: dseg:00D2o
-NAME_MIMA		db '     Mima ',0       ; DATA XREF: dseg:00D6o
-TITLE_MARISA	db '   魔法と紅夢からなる存在   ',0 ; DATA XREF: dseg:00DAo
-NAME_MARISA	db 'Marisa Kirisame',0  ; DATA XREF: dseg:00DEo
-TITLE_ELLEN	db 'はたらきもので恋を夢見る魔女',0 ; DATA XREF: dseg:00E2o
-NAME_ELLEN	db '　　Ellen ',0       ; DATA XREF: dseg:00E6o
-TITLE_KOTOHIME		db '     弾幕に美を夢みる姫     ',0 ; DATA XREF: dseg:00EAo
-NAME_KOTOHIME		db '  Kotohime',0       ; DATA XREF: dseg:00EEo
-TITLE_KANA		db '     夢を失った少女騒霊     ',0 ; DATA XREF: dseg:00F2o
-NAME_KANA	db '  Kana Anaberal ',0 ; DATA XREF: dseg:00F6o
-TITLE_RIKAKO	db '  　　　夢を探す科学        ',0 ; DATA XREF: dseg:00FAo
-NAME_RIKAKO	db 'Rikako Asakura',0   ; DATA XREF: dseg:00FEo
-TITLE_CHIYURI		db '　  時をかける夢幻の住人    ',0 ; DATA XREF: dseg:0102o
-NAME_CHIYURI	db 'Chiyuri Kitash.',0  ; DATA XREF: dseg:0106o
-TITLE_YUMEMI	db '　  　　　夢幻伝説　　　    ',0 ; DATA XREF: dseg:010Ao
-NAME_YUMEMI	db 'YumemiOkazaki',0    ; DATA XREF: dseg:010Eo
+TITLE_REIMU		db ' Miko Who Protects Dream    ',0 ; DATA XREF: dseg:00CAo
+NAME_REIMU	db 'and Tradition',0    ; DATA XREF: dseg:00CEo
+TITLE_MIMA	db 'Spirit Who Left Fate to Eter',0 ; DATA XREF: dseg:00D2o
+NAME_MIMA		db ' nal Dream',0       ; DATA XREF: dseg:00D6o
+TITLE_MARISA	db '   A Being Made of Magic    ',0 ; DATA XREF: dseg:00DAo
+NAME_MARISA	db ' and Red Dreams',0  ; DATA XREF: dseg:00DEo
+TITLE_ELLEN	db 'Hardworking Witch Who Dreams',0 ; DATA XREF: dseg:00E2o
+NAME_ELLEN	db '   of Love',0       ; DATA XREF: dseg:00E6o
+TITLE_KOTOHIME		db 'Princess Dreaming of Beauty ',0 ; DATA XREF: dseg:00EAo
+NAME_KOTOHIME		db 'in Danmaku',0       ; DATA XREF: dseg:00EEo
+TITLE_KANA		db ' Poltergeist Maiden Who Has ',0 ; DATA XREF: dseg:00F2o
+NAME_KANA	db 'Lost Her Dreams  ',0 ; DATA XREF: dseg:00F6o
+TITLE_RIKAKO	db '     Scientist Searching    ',0 ; DATA XREF: dseg:00FAo
+NAME_RIKAKO	db '    For Dreams',0   ; DATA XREF: dseg:00FEo
+TITLE_CHIYURI		db 'Resident of Fantasy Who Runs',0 ; DATA XREF: dseg:0102o
+NAME_CHIYURI	db '  Through Time ',0  ; DATA XREF: dseg:0106o
+TITLE_YUMEMI	db '       Fantasy Legend       ',0 ; DATA XREF: dseg:010Ao
+NAME_YUMEMI	db '            ',0    ; DATA XREF: dseg:010Eo
 aYume_cfg	db 'YUME.CFG',0         ; DATA XREF: sub_95F3+6o
 aLogo0_rgb	db 'logo0.rgb',0        ; DATA XREF: sub_9624+5o
 aLogo_cd2	db 'logo.cd2',0         ; DATA XREF: sub_9624+15o
@@ -32721,15 +32721,15 @@ unk_ED6A	db    0			; DATA XREF: sub_B46B+10o
 		db    0
 		db    0
 aNoEntry	db '  No Entry! ',0     ; DATA XREF: dseg:0906o
-aB@b@sCB@b@	db '　　Reimu 　',0     ; DATA XREF: dseg:090Ao
-aB@b@cgcvb@b@	db '　　Mima　　',0     ; DATA XREF: dseg:090Eo
-aB@cvcanB@	db ' 　Marisa　 ',0     ; DATA XREF: dseg:0912o
-aB@gggmgub@	db ' 　Ellen 　 ',0     ; DATA XREF: dseg:0916o
+aB@b@sCB@b@	db '  Reimu     ',0     ; DATA XREF: dseg:090Ao
+aB@b@cgcvb@b@	db '  Mima      ',0     ; DATA XREF: dseg:090Eo
+aB@cvcanB@	db '  Marisa    ',0     ; DATA XREF: dseg:0912o
+aB@gggmgub@	db '  Ellen     ',0     ; DATA XREF: dseg:0916o
 aB@pmuexpb@	db '  Kotohime  ',0     ; DATA XREF: dseg:091Ao
-aB@Gjgi		db ' 　 Kana    ',0     ; DATA XREF: dseg:091Eo
-aB@canboq	db ' 　Rikako   ',0     ; DATA XREF: dseg:0922o
-aB@vVfvsb@	db '  Chiyuri　 ',0     ; DATA XREF: dseg:0926o
-aB@CF		db ' 　Yumemi   ',0     ; DATA XREF: dseg:092Ao
+aB@Gjgi		db '  Kana      ',0     ; DATA XREF: dseg:091Eo
+aB@canboq	db '  Rikako    ',0     ; DATA XREF: dseg:0922o
+aB@vVfvsb@	db '  Chiyuri   ',0     ; DATA XREF: dseg:0926o
+aB@CF		db '  Yumemi    ',0     ; DATA XREF: dseg:092Ao
 aYume_nem	db 'YUME.NEM',0
 aRft0_cdg	db 'rft0.cdg',0
 aRegib_pi	db 'regib.pi',0         ; DATA XREF: sub_AFAC+1Bo
@@ -32899,15 +32899,15 @@ a@99ed_txt	db '@99ED.TXT',0        ; DATA XREF: sub_B972+E8o
 ; char aOp_0[]
 aOp_0		db 'op',0               ; DATA XREF: sub_B972+107o
 					; sub_B972+10Bo
-aFocab@sC_0	db '  Reimu      ',0    ; DATA XREF: dseg:0AE2o
-aCgCv_0		db '  Mima  魔',0       ; DATA XREF: dseg:0AE6o
-aCIjb@cvcan_0	db '  Marisa       ',0  ; DATA XREF: dseg:0AEAo
-aB@b@gggmgu_0	db '　Ellen   ',0       ; DATA XREF: dseg:0AEEo
+aFocab@sC_0	db 'Reimu Hakurei',0    ; DATA XREF: dseg:0AE2o
+aCgCv_0		db '      Mima',0       ; DATA XREF: dseg:0AE6o
+aCIjb@cvcan_0	db 'Marisa Kirisame',0  ; DATA XREF: dseg:0AEAo
+aB@b@gggmgu_0	db '     Ellen',0       ; DATA XREF: dseg:0AEEo
 aPmuexp_0	db '  Kotohime',0       ; DATA XREF: dseg:0AF2o
-aGjgibegagigx_0	db '  Kana          ',0 ; DATA XREF: dseg:0AF6o
-aB@tisqb@canb_0	db '　Rikako      ',0   ; DATA XREF: dseg:0AFAo
-aCkftiB@vVfvs_0	db '  Chiyuri      ',0  ; DATA XREF: dseg:0AFEo
-aB@iknsb@cF_0	db '  Yumemi     ',0    ; DATA XREF: dseg:0B02o
+aGjgibegagigx_0	db '   Kana Anaberal',0 ; DATA XREF: dseg:0AF6o
+aB@tisqb@canb_0	db 'Rikako Asakura',0   ; DATA XREF: dseg:0AFAo
+uCkftiB@vVfvs_0	db 'Chiyuri Kitash.',0  ; DATA XREF: dseg:0AFEo
+uB@iknsb@cF_0	db 'YumemiOkazaki',0    ; DATA XREF: dseg:0B02o
 aVdvbvuvs	db '   Ｅａｓｙ',0      ; DATA XREF: dseg:0B06o
 aVmvpvtvnvbvm	db ' Ｎｏｒｍａｌ',0    ; DATA XREF: dseg:0B0Ao
 aVgvbvtvd	db '   Ｈａｒｄ',0      ; DATA XREF: dseg:0B0Eo
@@ -35626,6 +35626,8 @@ dword_10C66	dd ?			; DATA XREF: sub_72B3+ACw sub_72B3+C2r ...
 dword_10C6A	dd ?			; DATA XREF: __ExceptionHandler+2BEw
 					; __ExceptionHandler+2D1r ...
 		dw ?
+aCkftiB@vVfvs_0	db 'Chiyuri Kitashirakawa',0  ; DATA XREF: dseg:0AFEo
+aB@iknsb@cF_0	db 'Yumemi Okazaki',0    ; DATA XREF: dseg:0B02o
 dseg		ends
 
 ; ===========================================================================

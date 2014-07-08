@@ -35447,8 +35447,8 @@ aMUSICROOM_TH04	db '   Vol. 4Å@ìåï˚å∂ëzãΩ  Special MIX  ',0 ; DATA XREF: dseg:0F
 aMUSICROOM_TH05	db '   Vol. 5Å@ìåï˚âˆ„Yík Mystic Square ',0 ; DATA XREF: dseg:0FEAo
 aTH01_01	db 'No.1           A Sacred Lot         ',0 ; DATA XREF: dseg:off_FFCEo
 aTH01_02	db 'No.2       Eternal Shrine Maiden    ',0 ; DATA XREF: dseg:0FF2o
-aTH01_03	db 'No.3    The Positive and Negative   ',0 ; DATA XREF: dseg:0FF6o
-aTH01_04	db 'No.4   Highly Responsive to Prayers ',0 ; DATA XREF: dseg:0FFAo
+aTH01_03	db 'No.3   Yin and Yang Å` The Posit... ',0 ; DATA XREF: dseg:0FF6o
+aTH01_04	db 'No.4   Soul Devoted to God Å` H...  ',0 ; DATA XREF: dseg:0FFAo
 aTH01_05	db 'No.5     Eastern Strange Discourse  ',0 ; DATA XREF: dseg:0FFEo
 aTH01_06	db 'No.6          Angel',027h,'s Legend        ',0 ; DATA XREF: dseg:1002o
 aTH01_07	db 'No.7        Oriental Magician       ',0 ; DATA XREF: dseg:1006o
@@ -35476,9 +35476,9 @@ aTH02_12	db 'No.12        Å@ Extra Love          ',0 ; DATA XREF: dseg:1092o
 aTH02_13	db 'No.13      The Tank Girl',027h,'s Dream    ',0 ; DATA XREF: dseg:1096o
 aTH02_14	db 'No.14         Forest of Tohno  Å@   ',0 ; DATA XREF: dseg:109Ao
 aTH02_15	db 'No.15      Legendary Wonderland     ',0 ; DATA XREF: dseg:109Eo
-aTH02_16	db 'Unused.1  Hakurei Shrine Grounds    ',0 ; DATA XREF: dseg:10A2o
-aTH02_17	db 'Unused.2         Sunfall     Å@     ',0 ; DATA XREF: dseg:10A6o
-aTH02_18	db 'Unused.3  Sealed Demon',027h,'s Finale     ',0 ; DATA XREF: dseg:10AAo
+aTH02_16	db 'No.16     Hakurei Shrine Grounds    ',0 ; DATA XREF: dseg:10A2o
+aTH02_17	db 'No.17            Sunfall     Å@     ',0 ; DATA XREF: dseg:10A6o
+aTH02_18	db 'No.18     Sealed Demon',027h,'s Finale     ',0 ; DATA XREF: dseg:10AAo
 aTH03_01	db 'No.1 A Dream Transcending Space-Time',0 ; DATA XREF: dseg:10DEo
 aTH03_02	db 'No.2      Å@ Å@ Selection           ',0 ; DATA XREF: dseg:10E2o
 aTH03_03	db 'No.3  Eastern Mystical Love Consult.',0 ; DATA XREF: dseg:10E6o
@@ -35491,7 +35491,7 @@ aTH03_09	db 'No.9   Visionary Game Å` Dream War  ',0 ; DATA XREF: dseg:10FEo
 aTH03_10	db 'No.10 Decisive Magic Battle! Å` F...',0 ; DATA XREF: dseg:1102o
 aTH03_11	db 'No.11      Å@ Sailor of Time        ',0 ; DATA XREF: dseg:1106o
 aTH03_12	db 'No.12       Strawberry Crisis!!     ',0 ; DATA XREF: dseg:110Ao
-aTH03_13	db 'No.13 Disunified Field Magic Theory ',0 ; DATA XREF: dseg:110Eo
+aTH03_13	db 'No.13 Non-Unified Magic World Theory',0 ; DATA XREF: dseg:110Eo
 aTH03_14	db 'No.14     Love of Magical Chimes    ',0 ; DATA XREF: dseg:1112o
 aTH03_15	db 'No.15        Dream of Eternity      ',0 ; DATA XREF: dseg:1116o
 aTH03_16	db 'No.16         Eastern Blue Sky      ',0 ; DATA XREF: dseg:111Ao
@@ -35500,9 +35500,9 @@ aTH03_18	db 'No.18          Maple Dream...       ',0 ; DATA XREF: dseg:1122o
 aTH03_19	db 'No.19    Ghostly Person',027h,'s Holiday   ',0 ; DATA XREF: dseg:1126o
 aTH03_20	db 'No.20           Victory Demo        ',0 ; DATA XREF: dseg:112Ao
 aTH03_21	db 'No.21            Game Over          ',0 ; DATA XREF: dseg:112Eo
-aTH03_22	db 'Unused.1       Winds of Time        ',0 ; DATA XREF: dseg:1132o
-aTH03_23	db 'Unused.2       Starbow Dream        ',0 ; DATA XREF: dseg:1136o
-aTH03_24	db 'Unused.3       Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
+aTH03_22	db 'No.22          Winds of Time        ',0 ; DATA XREF: dseg:1132o
+aTH03_23	db 'No.23          Starbow Dream        ',0 ; DATA XREF: dseg:1136o
+aTH03_24	db 'No.24          Phantasmagoria       ',0 ; DATA XREF: dseg:113Ao
 aMUSICROOM_QUIT2	db '              Go back to title      ',0 ; DATA XREF: dseg:113Eo
 aTH04_01	db 'No.1   Gensokyo Å` Lotus Land Story ',0 ; DATA XREF: dseg:1156o
 aTH04_02	db 'No.2         Witching Dream         ',0 ; DATA XREF: dseg:115Ao
@@ -35526,12 +35526,12 @@ aTH04_19	db 'No.19              Days             ',0 ; DATA XREF: dseg:119Eo
 aTH04_20	db 'No.20            Peaceful           ',0 ; DATA XREF: dseg:11A2o
 aTH04_21	db 'No.21         Arcadian Dream        ',0 ; DATA XREF: dseg:11A6o
 aTH04_22	db 'No.22   Those Who Live in Illusions ',0 ; DATA XREF: dseg:11AAo
-aTH04_23	db 'Unused.1        Lotus Road          ',0 ; DATA XREF: dseg:11AEo
-aTH04_24	db 'Unused.2       Dreamy Pilot         ',0 ; DATA XREF: dseg:11B2o
-aTH04_25	db 'Unused.3      Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
-aTH04_26	db 'Unused.4        Border Land         ',0 ; DATA XREF: dseg:11BAo
-aTH04_27	db 'Unused.5  Magic Shop of Raspberry   ',0 ; DATA XREF: dseg:11BEo
-aTH04_28	db 'Unused.6       Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
+aTH04_23	db 'No.23           Lotus Road          ',0 ; DATA XREF: dseg:11AEo
+aTH04_24	db 'No.24          Dreamy Pilot         ',0 ; DATA XREF: dseg:11B2o
+aTH04_25	db 'No.25         Incomplete Plot       ',0 ; DATA XREF: dseg:11B6o
+aTH04_26	db 'No.26           Border Land         ',0 ; DATA XREF: dseg:11BAo
+aTH04_27	db 'No.27     Magic Shop of Raspberry   ',0 ; DATA XREF: dseg:11BEo
+aTH04_28	db 'No.28          Crescent Dream       ',0 ; DATA XREF: dseg:11C2o
 aTH05_01	db 'No.1   Wondrous Tales of Romance... ',0 ; DATA XREF: dseg:11CEo
 aTH05_02	db 'No.2          Dream Express         ',0 ; DATA XREF: dseg:11D2o
 aTH05_03	db 'No.3           Magic Square         ',0 ; DATA XREF: dseg:11D6o

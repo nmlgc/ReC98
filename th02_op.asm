@@ -29846,7 +29846,7 @@ aTs1_pi		db 'ts1.pi',0           ; DATA XREF: sub_9FAF+1Bo sub_A0C6+2Do
 aSelect		db 'select',0           ; DATA XREF: sub_9FAF+59o sub_9FAF+5Do ...
 ; char path[]
 path		db 'main',0             ; DATA XREF: sub_9FAF+67o sub_9FAF+6Bo ...
-aPERF_TITLE	db 'Perf',0
+uPERF_TITLE	db 'Perf',0
 aPERF_NORMAL	db '  Normal',0         ; DATA XREF: dseg:0158o
 aPERF_TRUNCATE	db 'Truncate',0         ; DATA XREF: dseg:015Co
 aMikoft_bft	db 'MIKOFT.bft',0       ; DATA XREF: _main+40o
@@ -30876,10 +30876,10 @@ unk_DCBA	db    1			; DATA XREF: sub_B86E+1Do
 		db    2
 		db    4
 aHuuhi_dat	db 'huuhi.dat',0        ; DATA XREF: dseg:off_DC36o
-aNvl@uo		db 'SPEED ',0           ; DATA XREF: dseg:0674o
-aChmf		db 'DEF ',0             ; DATA XREF: dseg:0678o
-aNumv		db 'ATK ',0             ; DATA XREF: dseg:067Co
-aVicSob@b@b@b@b	db '       NAME　　　　　　 SCORE 　　 STAGE  TYPE   DATE',0
+aNvl@uo		db ' SPD  ',0           ; DATA XREF: dseg:0674o
+aChmf		db ' DEF',0             ; DATA XREF: dseg:0678o
+aNumv		db ' ATK',0             ; DATA XREF: dseg:067Co
+aVicSob@b@b@b@b	db '       NAME　　　　　　 SCORE　　 STAGE  TYPE    DATE',0
 					; DATA XREF: sub_B5B0+35o
 aOp_h_bft	db 'op_h.bft',0         ; DATA XREF: sub_B77E+31o
 aOp_h_rgb	db 'op_h.rgb',0         ; DATA XREF: sub_B77E+3Ao
@@ -33382,6 +33382,7 @@ dword_F966	dd ?			; DATA XREF: sub_78B0+ACw sub_78B0+C2r ...
 dword_F96A	dd ?			; DATA XREF: __ExceptionHandler+2BEw
 					; __ExceptionHandler+2D1r ...
 		dw ?
+aPERF_TITLE	db 'Performance',0
 dseg		ends
 
 ; ===========================================================================

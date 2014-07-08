@@ -29156,12 +29156,12 @@ aEd08b_rgb	db 'ed08b.rgb',0        ; DATA XREF: sub_A8FA+35Do
 aEd08c_rgb	db 'ed08c.rgb',0        ; DATA XREF: sub_A8FA+37Do
 aEd09_pi	db 'ED09.pi',0          ; DATA XREF: sub_A8FA+3A9o
 aVsvivbvovlb@vs	db 'ÇsÇàÇÅÇéÇãÅ@ÇôÇèÇïÅ@ÇÜÇèÇíÅ@ÇêÇåÇÅÇôÇâÇéÇá',0 ; DATA XREF: sub_A8FA+3F5o
-aB@nPiuU_	db 'Final Score',0       ; DATA XREF: sub_A8FA+429o
+aB@nPiuU_	db 'Score      ',0       ; DATA XREF: sub_A8FA+429o
 aGrgugegbgjgeb	db 'Continues Used',0   ; DATA XREF: sub_A8FA+46Ao
-aB@Gigugn	db 'Ranking ',0        ; DATA XREF: sub_A8FA+4B6o
+aB@Gigugn	db 'Rank    ',0        ; DATA XREF: sub_A8FA+4B6o
 aGvgmgcgdbPik	db 'Init. Lives ',0   ; DATA XREF: sub_A8FA+504o
 aCMvpik		db 'Init. Bombs',0      ; DATA XREF: sub_A8FA+552o
-aVavVVSrso	db 'Skill Level ',0     ; DATA XREF: sub_A8FA+5B9o
+aVavVVSrso	db 'Your Skill  ',0     ; DATA XREF: sub_A8FA+5B9o
 aVpvxvxvvb@vyvt	db 'ÇPÇXÇXÇVÅ@ÇyÇtÇm  (Amusement Makers)',0 ; DATA XREF: sub_A8FA+6AEo
 aAll_pi		db 'all.pi',0           ; DATA XREF: sub_AFE7+1Ao sub_B07F+1Ao
 aBut_pi		db 'but.pi',0           ; DATA XREF: sub_AFE7+5Ao

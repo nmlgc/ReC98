@@ -35218,9 +35218,9 @@ aOp1_pi_1	db 'op1.pi',0           ; DATA XREF: sub_CCD2+187o
 		dd aGcgkgebGwgzgug	; "イリュージョンレーザー"
 		dd aGigsgbghgvgzgb	; "   ラピッドショット	 "
 aB@focasCBiiPcv	db '　   Reimu Hakurei     ',0 ; DATA XREF: dseg:13D4o
-aNlfINumvmB@	db '     Wide shot type    ',0 ; DATA XREF: dseg:13D8o
+aNlfINumvmB@	db '     Wide Shot Type    ',0 ; DATA XREF: dseg:13D8o
 aCIjcvcanBicvc@	db '    Marisa Kirisame    ',0 ; DATA XREF: dseg:13DCo
-aNumvcPdolm	db '  Power-oriented type  ',0 ; DATA XREF: dseg:13E0o
+aNumvcPdolm	db '  Power-Oriented Type  ',0 ; DATA XREF: dseg:13E0o
 aB@GtbGGvgzgbgg	db '　  Search Shot   　  ',0 ; DATA XREF: dseg:13E4o
 aGpgcghgvgzgbgg	db '    Wide Shot         ',0 ; DATA XREF: dseg:13E8o
 aGcgkgebGwgzgug	db '    Illusion Laser    ',0 ; DATA XREF: dseg:13ECo

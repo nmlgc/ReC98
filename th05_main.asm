@@ -50826,9 +50826,9 @@ aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0       ; DATA XREF: sub_104BB+66o
 		db 0EAh	; Í
 		db  56h	; V
 a_dm09_tx2	db '_DM09.TX2',0        ; DATA XREF: seg003:5CBEo
-aTH05_10	db 'Crimson MaidenÅ`Crimson Dead!',0
 a_dm08_tx2	db '_DM08.TX2',0        ; DATA XREF: seg003:5CE7o
-aTH05_11	db 'Treach. MaidenÅ` Judas Kiss',0
+uTH05_10	db 'Crimson MaidenÅ`Crimson Dead!',0
+uTH05_11	db 'Treach. MaidenÅ` Judas Kiss',0
 		db 0D7h	; ◊
 		db  62h	; b
 		db 0A8h	; ®
@@ -64859,6 +64859,8 @@ dword_2D122	dd ?			; DATA XREF: __ExceptionHandler+2BEw
 		dd ?
 		dd ?
 		dw ?
+aTH05_10	db 'Crimson Maiden Å` Crimson Dead!!',0
+aTH05_11	db 'Treacherous Maiden Å` Judas Kiss',0
 dseg		ends
 
 ; ===========================================================================

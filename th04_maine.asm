@@ -33117,15 +33117,15 @@ aBd		db '．',0               ; DATA XREF: sub_B886+D7o
 aBu		db '％',0               ; DATA XREF: sub_B886+E7o
 aBd_0		db '．',0               ; DATA XREF: sub_B97B+69o
 aBu_0		db '％',0               ; DATA XREF: sub_B9F2+178o
-aB@b@b@b@b@b@b@	db '　　　　　Skill verdict',0 ; DATA XREF: sub_BB81+1Eo
-aUqiUx		db 'Level ',0           ; DATA XREF: sub_BB81+2Fo
-aNPiuU_		db 'F. score',0         ; DATA XREF: sub_BB81+40o
+aB@b@b@b@b@b@b@	db '　　　　　Skill Verdict',0 ; DATA XREF: sub_BB81+1Eo
+aUqiUx		db 'Rank  ',0           ; DATA XREF: sub_BB81+2Fo
+aNPiuU_		db 'Score   ',0         ; DATA XREF: sub_BB81+40o
 aGGxi		db 'Deaths  ',0         ; DATA XREF: sub_BB81+51o
 aGGaogcpi	db 'Bombs used  ',0     ; DATA XREF: sub_BB81+62o
 aGqbGatbrmcj	db 'Completion  ',0     ; DATA XREF: sub_BB81+73o
 aIlcSObcj	db 'Enemies   ',0       ; DATA XREF: sub_BB81+84o
-aGagcgegai	db 'Items collect.',0   ; DATA XREF: sub_BB81+95o
-aUU_gagcgeganNv	db 'Point items collect.',0 ; DATA XREF: sub_BB81+A6o
+aGagcgegai	db 'Items         ',0   ; DATA XREF: sub_BB81+95o
+aUU_gagcgeganNv	db 'Points              ',0 ; DATA XREF: sub_BB81+A6o
 aLcnzvv		db 'Focus ',0           ; DATA XREF: sub_BB81+B7o
 aPicacovCj	db 'Slowdown  ',0       ; DATA XREF: sub_BB81+C8o
 aVavVVSrso	db 'Your skill  ',0     ; DATA XREF: sub_BB81+D9o

@@ -63771,7 +63771,7 @@ aGqbGwgagGbgni	db 'ＧＡＵＧＥ　Ａｔｋ　　　×',0 ; DATA XREF: sub_E3F2+3Fo
 aGGxgagGbgni	db 'ＢＯＳＳ　Ａｔｋ　　　　×',0 ; DATA XREF: sub_E3F2+4Eo
 aGGxgkgobGtgli	db 'ＢＯＳＳ　Ｆｌｉｐ　　　×',0 ; DATA XREF: sub_E3F2+5Do
 aGGxgpgjgbgni	db 'ＢＯＳＳ　Ｐａｎｉｃ　　×',0 ; DATA XREF: sub_E3F2+6Co
-aB@b@b@vsvnvsvV	db '　　　ＴＯＴＡＬ　　　　　',0 ; DATA XREF: sub_E3F2+7Bo
+aB@b@b@vsvnvsvV	db 'ＴＯＴＡＬ　　　　　　　　',0 ; DATA XREF: sub_E3F2+7Bo
 aB@b@vvvhvmvmvd	db '　　ＷＩＮＮＥＲ　ＢＯＮＵＳ　　',0 ; DATA XREF: sub_E3F2+95o
 aB@b@b@vVkvkb@v	db '　　　ＡＬＬ　ＣＬＥＡＲ！！　　',0 ; DATA XREF: sub_E3F2+9Eo
 aOcvsrlrfb@b@b@	db 'ＬＩＶＥＳ　Ｌｅｆｔ　　×',0 ; DATA XREF: sub_E3F2+ADo

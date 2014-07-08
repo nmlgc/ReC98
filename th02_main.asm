@@ -63932,12 +63932,14 @@ aHuuma_cfg	db 'huuma.cfg',0        ; DATA XREF: sub_C273+5o
 		db  78h	; x
 asc_1E3F0	db '´∏∂æº',0            ; DATA XREF: sub_FC53+10o
 asc_1E3F6	db '´∏∂æº',0            ; DATA XREF: sub_FE12+10o
-aUqiUx		db 'Ranking',0          ; DATA XREF: sub_FC53+40o
-aGxgebGw	db 'Stage Å@',0         ; DATA XREF: sub_FC53+57o
-aGGa		db 'Bomb',0             ; DATA XREF: sub_FC53+86o
-aGGx		db 'Miss',0             ; DATA XREF: sub_FC53+ABo
-aSMvpik		db 'Init. Bomb',0       ; DATA XREF: sub_FC53+BAo
-aSCPik		db 'Init. Life',0       ; DATA XREF: sub_FC53+DCo
+aUqiUx		db 'Rank',0          ; DATA XREF: sub_FC53+40o
+aGxgebGw	db 'Stage',0         ; DATA XREF: sub_FC53+57o
+aGGa		db 'Bombs',0             ; DATA XREF: sub_FC53+86o
+aGGx		db 'Lives',0             ; DATA XREF: sub_FC53+ABo
+aSMvpik		db 'Init. Bombs',0       ; DATA XREF: sub_FC53+BAo
+aSCPik		db 'Init. Lives',0       ; DATA XREF: sub_FC53+DCo
+	db 0,0
+
 aU_		db 'ì_',0               ; DATA XREF: sub_FC53+10Eo
 					; sub_FE12+CEo
 aB		db 'Å~',0               ; DATA XREF: sub_FC53+133o
