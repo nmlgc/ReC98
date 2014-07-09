@@ -35463,7 +35463,7 @@ aMUSICROOM_QUIT1	db '            Go back to title        ',0 ; DATA XREF: dseg:1
 					; dseg:10AEo ...
 aTH02_01	db 'No.1  Fuumaroku Å` Pure Land Mandala',0 ; DATA XREF: dseg:1066o
 aTH02_02	db 'No.2      Hakurei Å` Eastern Wind   ',0 ; DATA XREF: dseg:106Ao
-aTH02_03	db 'No.3        She',027h,'s in a Temper!     ',0 ; DATA XREF: dseg:106Eo
+aTH02_03	db 'No.3        She',027h,'s in a Temper!      ',0 ; DATA XREF: dseg:106Eo
 aTH02_04	db 'No.4      Å@  End of Daylight Å@    ',0 ; DATA XREF: dseg:1072o
 aTH02_05	db 'No.5         Power of Darkness Å@   ',0 ; DATA XREF: dseg:1076o
 aTH02_06	db 'No.6       World of Empty Dreams    ',0 ; DATA XREF: dseg:107Ao
