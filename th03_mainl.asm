@@ -22225,8 +22225,12 @@ sub_990C	endp
 ;
 ; Unfortunately though, the "Next Dream" label in the background image
 ; (STNX0.pi) is positioned just a bit too high, and it looks rather squashed
-; with 3 lines being displayed. This will require an edit of that image in
-; order to look nice...
+; with 3 lines being displayed.
+; To work around this, we first move up all the pictures on the screen (stage
+; number by 23 pixels, everything else by 16 pixels), then include edited
+; versions of the other STNX?.pi files in the English patch, whose text is
+; moved up by 23 pixels. Combined, this looks much nicer than simply moving
+; down "Next Dream" in STNX0.pi.
 
 sub_9A2C	proc near		; CODE XREF: _main:loc_9E75p
 					; _main+199p
@@ -22249,15 +22253,15 @@ var_2		= word ptr -2
 		push	large [dword_102FE]
 		call	sub_FEC
 		push	60h
-		push	60h
+		push	50h
 		push	0
 		call	far ptr	loc_C9D4
-		push	large 1600060h
+		push	large 1600050h
 		push	1
 		call	far ptr	loc_CA88
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
-		push	large 180002Eh
+		push	large 1800017h
 		push	2
 		call	far ptr	loc_C9D4
 
@@ -22279,19 +22283,19 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 
 		push	bx
 		push	50h
-		push	124h
+		push	114h
 		push	2Fh ; '/'
 		push	ds
 		push	word ptr CHAR_TITLE1[bx]
 		call	sub_D197
 		pop	bx
 		sub	sp, 0Ah ; 8 + the BX we just popped
-		mov	word ptr ss:[bp-0Ch], 134h
+		mov	word ptr ss:[bp-0Ch], 124h
 		push	word ptr CHAR_TITLE2[bx]
 		call	sub_D197
 		pop	bx
 		sub	sp, 0Ah
-		mov	word ptr ss:[bp-0Ch], 144h
+		mov	word ptr ss:[bp-0Ch], 134h
 		push	word ptr CHAR_NAME[bx]
 		call	sub_D197
 		pop	bx
@@ -22305,19 +22309,19 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		mov	bx, ax
 		push	bx
 		push	150h
-		push	124h
+		push	114h
 		push	2Fh ; '/'
 		push	ds
 		push	word ptr CHAR_TITLE1[bx]
 		call	sub_D197
 		pop	bx
 		sub	sp, 0Ah
-		mov	word ptr ss:[bp-0Ch], 134h
+		mov	word ptr ss:[bp-0Ch], 124h
 		push	word ptr CHAR_TITLE2[bx]
 		call	sub_D197
 		pop	bx
 		sub	sp, 0Ah
-		mov	word ptr ss:[bp-0Ch], 144h
+		mov	word ptr ss:[bp-0Ch], 134h
 		push	word ptr CHAR_NAME[bx]
 		call	sub_D197
 		pop	bx
