@@ -22216,6 +22216,18 @@ sub_990C	endp
 
 ; Attributes: bp-based frame
 
+; Since English is longer, we'd like to have a third line under the portrait
+; of each character to fit both their titles and their names. Adding those two
+; text output calls to the function is fairly easy: We just do some basic
+; substitution of single large instructions with shorter ones, spill the byte
+; index into the string pointer tables for each character to the stack, re-use
+; function parameters where possible, and thus easily gain enough space.
+;
+; Unfortunately though, the "Next Dream" label in the background image
+; (STNX0.pi) is positioned just a bit too high, and it looks rather squashed
+; with 3 lines being displayed. This will require an edit of that image in
+; order to look nice...
+
 sub_9A2C	proc near		; CODE XREF: _main:loc_9E75p
 					; _main+199p
 
@@ -22236,7 +22248,8 @@ var_2		= word ptr -2
 		push	offset unk_10316
 		push	large [dword_102FE]
 		call	sub_FEC
-		push	large 600060h
+		push	60h
+		push	60h
 		push	0
 		call	far ptr	loc_C9D4
 		push	large 1600060h
@@ -22256,53 +22269,64 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		push	2
 		call	sub_D130
 		les	bx, dword_105DA
-		mov	al, es:[bx+0Ch]
-		mov	ah, 0
+		movzx	ax, byte ptr es:[bx+0Ch]
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, ax
-		mov	[bp+var_4], ax
-		push	large 500124h
+		shl	ax, 3
+		mov	bx, ax
+
+		push	bx
+		push	50h
+		push	124h
 		push	2Fh ; '/'
-		mov	bx, [bp+var_4]
-		shl	bx, 2
-		push	large CHAR_TITLE[bx]
+		push	ds
+		push	word ptr CHAR_TITLE1[bx]
 		call	sub_D197
-		push	large 800134h
-		push	2Fh ; '/'
-		mov	bx, [bp+var_4]
-		shl	bx, 2
-		push	large CHAR_NAME[bx]
+		pop	bx
+		sub	sp, 0Ah ; 8 + the BX we just popped
+		mov	word ptr ss:[bp-0Ch], 134h
+		push	word ptr CHAR_TITLE2[bx]
 		call	sub_D197
+		pop	bx
+		sub	sp, 0Ah
+		mov	word ptr ss:[bp-0Ch], 144h
+		push	word ptr CHAR_NAME[bx]
+		call	sub_D197
+		pop	bx
 		les	bx, dword_105DA
-		mov	al, es:[bx+0Dh]
-		mov	ah, 0
+		movzx	ax, byte ptr es:[bx+0Dh]
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, ax
-		mov	[bp+var_4], ax
-		push	large 1500124h
+		shl	ax, 3
+		mov	bx, ax
+		push	bx
+		push	150h
+		push	124h
 		push	2Fh ; '/'
-		mov	bx, [bp+var_4]
-		shl	bx, 2
-		push	large CHAR_TITLE[bx]
+		push	ds
+		push	word ptr CHAR_TITLE1[bx]
 		call	sub_D197
-		push	large 1800134h
-		push	2Fh ; '/'
-		mov	bx, [bp+var_4]
-		shl	bx, 2
-		push	large CHAR_NAME[bx]
+		pop	bx
+		sub	sp, 0Ah
+		mov	word ptr ss:[bp-0Ch], 134h
+		push	word ptr CHAR_TITLE2[bx]
 		call	sub_D197
+		pop	bx
+		sub	sp, 0Ah
+		mov	word ptr ss:[bp-0Ch], 144h
+		push	word ptr CHAR_NAME[bx]
+		call	sub_D197
+		pop	bx
+
 		push	1
 		call	sub_536
 		mov	word_F83E, 0
-		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		call	sub_E72
 		push	0
 		call	sub_9D20
@@ -22312,7 +22336,8 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		push	ds
 		push	offset aEn2_pi	; "EN2.pi"
 		call	sub_D4AB
-		push	large 118h
+		push	0
+		push	118h
 		push	0
 		call	sub_CDB7
 		push	ds
@@ -22320,8 +22345,7 @@ loc_9A8E:				; CODE XREF: sub_9A2C+53j
 		push	large [dword_102FE]
 		call	sub_FEC
 		les	bx, dword_105DA
-		mov	al, es:[bx+0Dh]
-		mov	ah, 0
+		movzx	ax, byte ptr es:[bx+0Dh]
 		dec	ax
 		cwd
 		sub	ax, dx
@@ -22376,18 +22400,18 @@ loc_9BBD:				; CODE XREF: sub_9A2C+171j
 		call	sub_D4AB
 
 loc_9BC2:				; CODE XREF: sub_9A2C+162j
-		push	large 130h
+		push	0
+		push	130h
 		push	0
 		call	sub_CDB7
 		les	bx, dword_105DA
-		mov	al, es:[bx+0Dh]
-		mov	ah, 0
+		movzx	ax, byte ptr es:[bx+0Dh]
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_4], ax
-		cmp	[bp+var_4], 0Ah
+		cmp	ax, 0Ah
 		jl	short loc_9BFB
 		mov	bx, 0Ah
 		cwd
@@ -22447,13 +22471,13 @@ loc_9C50:				; CODE XREF: sub_9A2C+21Dj
 loc_9C5E:				; CODE XREF: sub_9A2C+229j
 		push	1
 		call	sub_20CA
-		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		call	sub_E72
 		push	1
 		call	sub_208A
-		push	large 200005h
+		push	20h
+		push	05h
 		call	sub_1F32
 		push	0
 		call	sub_CD0A
@@ -31340,23 +31364,23 @@ word_E47E	dw 0			; DATA XREF: start+21w	start+F5w ...
 		dd a@08tx_txt		; "@08TX.TXT"
 off_E4B6	dd a@00dm0_txt		; DATA XREF: _main+130r _main+149r ...
 					; "@00DM0.TXT"
-CHAR_TITLE		dd TITLE_REIMU		; "   夢と伝統を保守する巫女   "
+CHAR_TITLE1		dd TITLE1_REIMU
 CHAR_NAME		dd NAME_REIMU		; "   博麗　靈夢"
-		dd TITLE_MIMA		; " 久遠の夢に運命を任せる精神 "
+		dd TITLE1_MIMA
 		dd NAME_MIMA		; "	魅 魔"
-		dd TITLE_MARISA	; "   魔法と紅夢からなる存在   "
+		dd TITLE1_MARISA
 		dd NAME_MARISA		; "  霧雨　魔理沙 "
-		dd TITLE_ELLEN		; "はたらきもので恋を夢見る魔女"
+		dd TITLE1_ELLEN
 		dd NAME_ELLEN		; "　　エレン"
-		dd TITLE_KOTOHIME		; "	弾幕に美を夢みる姫     "
+		dd TITLE1_KOTOHIME
 		dd NAME_KOTOHIME		; "    小兎姫"
-		dd TITLE_KANA			; "	夢を失った少女騒霊     "
+		dd TITLE1_KANA
 		dd NAME_KANA	; "カナ・アナベラル"
-		dd TITLE_RIKAKO		; "  　　　夢を探す科学	       "
+		dd TITLE1_RIKAKO
 		dd NAME_RIKAKO	; "　朝倉　理香子"
-		dd TITLE_CHIYURI		; "　  時をかける夢幻の住人    "
+		dd TITLE1_CHIYURI
 		dd NAME_CHIYURI	; " 北白河　ちゆり"
-		dd TITLE_YUMEMI	; "　  　　　夢幻伝説　　　    "
+		dd TITLE1_YUMEMI
 		dd NAME_YUMEMI		; " 　岡崎　夢美"
 word_E502	dw 38Ah			; DATA XREF: sub_990C+CBr
 word_E504	dw 391h			; DATA XREF: sub_990C+80r sub_990C+91r ...
@@ -31384,24 +31408,24 @@ a@06tx_txt	db '@06TX.TXT',0        ; DATA XREF: dseg:00BAo
 a@07tx_txt	db '@07TX.TXT',0        ; DATA XREF: dseg:00BEo
 a@08tx_txt	db '@08TX.TXT',0        ; DATA XREF: dseg:00C2o
 a@00dm0_txt	db '@00DM0.TXT',0       ; DATA XREF: dseg:off_E4B6o
-TITLE_REIMU		db ' Miko Who Protects Dream    ',0 ; DATA XREF: dseg:00CAo
-NAME_REIMU	db 'and Tradition',0    ; DATA XREF: dseg:00CEo
-TITLE_MIMA	db 'Spirit Who Left Fate to Eter',0 ; DATA XREF: dseg:00D2o
-NAME_MIMA		db ' nal Dream',0       ; DATA XREF: dseg:00D6o
-TITLE_MARISA	db '   A Being Made of Magic    ',0 ; DATA XREF: dseg:00DAo
-NAME_MARISA	db ' and Red Dreams',0  ; DATA XREF: dseg:00DEo
-TITLE_ELLEN	db 'Hardworking Witch Who Dreams',0 ; DATA XREF: dseg:00E2o
-NAME_ELLEN	db '   of Love',0       ; DATA XREF: dseg:00E6o
-TITLE_KOTOHIME		db 'Princess Dreaming of Beauty ',0 ; DATA XREF: dseg:00EAo
-NAME_KOTOHIME		db 'in Danmaku',0       ; DATA XREF: dseg:00EEo
-TITLE_KANA		db ' Poltergeist Maiden Who Has ',0 ; DATA XREF: dseg:00F2o
-NAME_KANA	db 'Lost Her Dreams  ',0 ; DATA XREF: dseg:00F6o
-TITLE_RIKAKO	db '     Scientist Searching    ',0 ; DATA XREF: dseg:00FAo
-NAME_RIKAKO	db '    For Dreams',0   ; DATA XREF: dseg:00FEo
-TITLE_CHIYURI		db 'Resident of Fantasy Who Runs',0 ; DATA XREF: dseg:0102o
-NAME_CHIYURI	db '  Through Time ',0  ; DATA XREF: dseg:0106o
-TITLE_YUMEMI	db '       Fantasy Legend       ',0 ; DATA XREF: dseg:010Ao
-NAME_YUMEMI	db '            ',0    ; DATA XREF: dseg:010Eo
+uTITLE_REIMU		db ' Miko Who Protects Dream    ',0
+uNAME_REIMU	db 'and Tradition',0
+uTITLE_MIMA	db 'Spirit Who Left Fate to Eter',0
+uNAME_MIMA		db ' nal Dream',0
+uTITLE_MARISA	db '   A Being Made of Magic    ',0
+uNAME_MARISA	db ' and Red Dreams',0
+uTITLE_ELLEN	db 'Hardworking Witch Who Dreams',0
+uNAME_ELLEN	db '   of Love',0
+uTITLE_KOTOHIME		db 'Princess Dreaming of Beauty ',0
+uNAME_KOTOHIME		db 'in Danmaku',0
+uTITLE_KANA		db ' Poltergeist Maiden Who Has ',0
+uNAME_KANA	db 'Lost Her Dreams  ',0
+uTITLE_RIKAKO	db '     Scientist Searching    ',0
+uNAME_RIKAKO	db '    For Dreams',0
+uTITLE_CHIYURI		db 'Resident of Fantasy Who Runs',0
+uNAME_CHIYURI	db '  Through Time ',0
+uTITLE_YUMEMI	db '       Fantasy Legend       ',0
+uNAME_YUMEMI	db '            ',0
 aYume_cfg	db 'YUME.CFG',0         ; DATA XREF: sub_95F3+6o
 aLogo0_rgb	db 'logo0.rgb',0        ; DATA XREF: sub_9624+5o
 aLogo_cd2	db 'logo.cd2',0         ; DATA XREF: sub_9624+15o
@@ -35626,8 +35650,59 @@ dword_10C66	dd ?			; DATA XREF: sub_72B3+ACw sub_72B3+C2r ...
 dword_10C6A	dd ?			; DATA XREF: __ExceptionHandler+2BEw
 					; __ExceptionHandler+2D1r ...
 		dw ?
+
+; ========================
+; English patch data below
+; ========================
 aCkftiB@vVfvs_0	db 'Chiyuri Kitashirakawa',0  ; DATA XREF: dseg:0AFEo
 aB@iknsb@cF_0	db 'Yumemi Okazaki',0    ; DATA XREF: dseg:0B02o
+
+; The original title/name arrays are interleaved, and we're re-using the byte
+; index, so we have to compensate by padding out every other dword.
+CHAR_TITLE2		dd TITLE2_REIMU
+		dd 0
+		dd TITLE2_MIMA
+		dd 0
+		dd TITLE2_MARISA
+		dd 0
+		dd TITLE2_ELLEN
+		dd 0
+		dd TITLE2_KOTOHIME
+		dd 0
+		dd TITLE2_KANA
+		dd 0
+		dd TITLE2_RIKAKO
+		dd 0
+		dd TITLE2_CHIYURI
+		dd 0
+		dd TITLE2_YUMEMI
+TITLE1_REIMU	db '   Miko Who Protects Dream  ',0
+TITLE2_REIMU	db '        and Tradition       ',0
+TITLE1_MIMA	db '  Spirit Who Leaves Fate to ',0
+TITLE2_MIMA	db '    the Dream of Eternity   ',0
+TITLE1_MARISA	db '   A Being Made of Magic    ',0
+TITLE2_MARISA	db '       and Red Dreams       ',0
+TITLE1_ELLEN	db '   Hardworking Witch Who    ',0
+TITLE2_ELLEN	db '       Dreams of Love       ',0
+TITLE1_KOTOHIME	db 'Princess Dreaming of Beauty ',0
+TITLE2_KOTOHIME	db '         in Danmaku         ',0
+TITLE1_KANA	db ' Poltergeist Maiden Who Has ',0
+TITLE2_KANA	db '       Lost Her Dreams      ',0
+TITLE1_RIKAKO	db '     Scientist Searching    ',0
+TITLE2_RIKAKO	db '         For Dreams         ',0
+TITLE1_CHIYURI	db 'Resident of Fantasy Who Runs',0
+TITLE2_CHIYURI	db '        Through Time        ',0
+TITLE1_YUMEMI	db '       Fantasy Legend       ',0
+TITLE2_YUMEMI	db '                            ',0
+NAME_REIMU	db '     ― Reimu Hakurei ―    ',0
+NAME_MIMA	db '         ― Mima ―         ',0
+NAME_MARISA	db '    ― Marisa Kirisame ―   ',0
+NAME_ELLEN	db '        ― Ellen ―         ',0
+NAME_KOTOHIME	db '       ― Kotohime ―       ',0
+NAME_KANA	db '     ― Kana Anaberal ―    ',0
+NAME_RIKAKO	db '    ― Rikako Asakura ―    ',0
+NAME_CHIYURI	db ' ― Chiyuri Kitashirakawa ―',0
+NAME_YUMEMI	db '    ― Yumemi Okazaki ―    ',0
 dseg		ends
 
 ; ===========================================================================
