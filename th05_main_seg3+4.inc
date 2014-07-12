@@ -2353,29 +2353,29 @@ loc_1654F:				; CODE XREF: sub_16510+3Bj
 		call	sub_1DBE
 		push	large 60008h
 		push	ds
-		push	word_2228C
+		push	BONUS_STAGE
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Ah
 		push	ds
-		push	word_2228E
+		push	BONUS_DREAM
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Ch
 		push	ds
-		push	word_22290
+		push	GRAZEX50
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Eh
 		push	ds
-		push	word_22292
+		push	POINT_ITEMS
 		push	0E1h ; 'á'
 		call	sub_2598
 		cmp	[bp+var_5], 0
 		jz	short loc_165DF
 		push	large 60010h
 		push	ds
-		push	word_22294
+		push	BONUS_NOMISS
 		push	0A1h ; '¡'
 		call	sub_2598
 
@@ -2384,14 +2384,14 @@ loc_165DF:				; CODE XREF: sub_16510+BAj
 		jz	short loc_165F8
 		push	large 60011h
 		push	ds
-		push	word_22296
+		push	BONUS_NOBOMB
 		push	0A1h ; '¡'
 		call	sub_2598
 
 loc_165F8:				; CODE XREF: sub_16510+D3j
 		push	large 60015h
 		push	ds
-		push	word_22298
+		push	BONUS_TOTAL
 		push	0E1h ; 'á'
 		call	sub_2598
 		mov	al, byte_25FEA
@@ -2580,34 +2580,34 @@ loc_1677D:				; CODE XREF: sub_1673E+3Bj
 		call	sub_1DBE
 		push	large 60006h
 		push	ds
-		push	word_2229A
+		push	ALL_CLEAR
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 60008h
 		push	ds
-		push	word_2228E
+		push	BONUS_DREAM
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Ah
 		push	ds
-		push	word_22290
+		push	GRAZEX50
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Ch
 		push	ds
-		push	word_2229C
+		push	PLAYER_REM
 		push	0E1h ; 'á'
 		call	sub_2598
 		push	large 6000Eh
 		push	ds
-		push	word_22292
+		push	POINT_ITEMS
 		push	0E1h ; 'á'
 		call	sub_2598
 		cmp	[bp+var_9], 0
 		jz	short loc_16825
 		push	large 60010h
 		push	ds
-		push	word_22294
+		push	BONUS_NOMISS
 		push	0A1h ; '¡'
 		call	sub_2598
 
@@ -2616,19 +2616,19 @@ loc_16825:				; CODE XREF: sub_1673E+D2j
 		jz	short loc_1683E
 		push	large 60011h
 		push	ds
-		push	word_22296
+		push	BONUS_NOBOMB
 		push	0A1h ; '¡'
 		call	sub_2598
 
 loc_1683E:				; CODE XREF: sub_1673E+EBj
 		push	large 60012h
 		push	ds
-		push	word_2229E
+		push	POINT_TOTAL
 		push	0A1h ; '¡'
 		call	sub_2598
 		push	large 60015h
 		push	ds
-		push	word_22298
+		push	BONUS_TOTAL
 		push	0E1h ; 'á'
 		call	sub_2598
 		mov	si, 3E8h
