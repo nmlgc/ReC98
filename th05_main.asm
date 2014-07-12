@@ -49648,26 +49648,26 @@ unk_222A0	db  4Dh	; M		; DATA XREF: sub_16510+5Fo
 		db    0
 a_Abcd		db '\]^_`abcd',0        ; DATA XREF: sub_1673E+64o
 aBOSS_FINAL_TIMEOUT	db 'Boss',027h,'s final phase was timed out: ×　０．０',0
-aPENALTY_6	db 'プレイヤー数ペナルティ（初期６人）×　０．３',0
-aPENALTY_5	db 'プレイヤー数ペナルティ（初期５人）×　０．５',0
-aPENALTY_4	db 'プレイヤー数ペナルティ（初期４人）×　０．７',0
-aPENALTY_CONT_1	db 'コンティニューペナルティ（１回）　×　０．８',0
-aPENALTY_CONT_2	db 'コンティニューペナルティ（２回）　×　０．６',0
-aPENALTY_CONT_3	db 'コンティニューペナルティ（３回）　×　０．４',0
-aBONUS_EASY	db '難易度ボーナス（Ｅａｓｙ）　　　　×　０．５',0
-aBONUS_NORMAL	db '難易度ボーナス（Ｎｏｒｍａｌ）　　×　１．０',0
-aBONUS_HARD	db '難易度ボーナス（Ｈａｒｄ）　　　　×　１．２',0
-aBONUS_LUNATIC	db '難易度ボーナス（Ｌｕｎａｔｉｃ）　×　１．４',0
-aBONUS_STAGE	db 'ＳＴＡＧＥ　Ｂｏｎｕｓ',0
-aBONUS_DREAM	db 'ＤＲＥＡＭ　Ｂｏｎｕｓ',0
-aGRAZEX50	db 'カスリ弾数　×　　５０',0
-aPOINT_ITEMS	db '　×　得点アイテム数　',0
-aBONUS_NOMISS	db '　＋　ノーミスボーナス',0
-aBONUS_NOBOMB	db '　＋　ノーボムボーナス',0
-aBONUS_TOTAL	db '　　　ＴＯＴＡＬ',0
-aALL_CLEAR	db 'ＡＬＬ　Ｃｌｅａｒ　　',0
-aPLAYER_REM	db '残り人数　×１００００',0
-aPOINT_TOTAL	db '総得点アイテムボーナス',0
+aPENALTY_6	db 'Player Penalty (6 Initial Lives): ×　０．３',0
+aPENALTY_5	db 'Player Penalty (5 Initial Lives): ×　０．５',0
+aPENALTY_4	db 'Player Penalty (4 Initial Lives): ×　０．７',0
+aPENALTY_CONT_1	db '1 Continue Used:                　×　０．８',0
+aPENALTY_CONT_2	db '2 Continues Used:               　×　０．６',0
+aPENALTY_CONT_3	db '3 Continues Used:               　×　０．４',0
+aBONUS_EASY	db 'Easy Rank:                　　　　×　０．５',0
+aBONUS_NORMAL	db 'Normal Rank:                  　　×　１．０',0
+aBONUS_HARD	db 'Hard Rank:                　　　　×　１．２',0
+aBONUS_LUNATIC	db 'Lunatic Rank:                   　×　１．４',0
+aBONUS_STAGE	db 'Stage Bonus:          ',0
+aBONUS_DREAM	db 'Dream Bonus （夢）:   ',0
+aGRAZEX50	db 'Graze Count ×  ５０: ',0
+aPOINT_ITEMS	db 'Point Items Collected:',0
+aBONUS_NOMISS	db '　＋　No Miss Bonus:  ',0
+aBONUS_NOBOMB	db '　＋　No Bomb Bonus:  ',0
+aBONUS_TOTAL	db 'Bonus Total:    ',0
+aALL_CLEAR	db 'All Clear:        　　',0
+aPLAYER_REM	db 'Player  ×  １００００',0
+aPOINT_TOTAL	db 'Point Items Total:    ',0
 word_22582	dw 200h			; DATA XREF: sub_16BD9+C3r
 					; sub_16BD9+C9r ...
 word_22584	dw 1600h		; DATA XREF: sub_16BD9+D1r
