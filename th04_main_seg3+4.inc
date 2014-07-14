@@ -15379,20 +15379,33 @@ loc_1B81C:				; CODE XREF: seg003:7D79j
 		mov	byte_266ED, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
-		db 0E8h, 34h, 0FAh, 0E8h, 0FDh,	2Dh, 0Ah, 0C0h,	75h, 0Ah
-		db 81h,	3Eh, 0DAh, 53h,	0C4h, 9, 0Fh, 8Ch, 8Bh,	0, 6Ah
-		db 1, 0E8h, 18h, 0A4h, 0FEh, 6,	0D9h, 53h, 81h,	3Eh, 0DAh
-		db 53h,	0C4h, 9, 7Dh, 7, 0C6h, 6, 0DFh,	53h, 1,	0EBh, 5
-		db 0C6h, 6, 0DFh, 53h, 0, 0C7h,	6, 0DAh, 53h, 2	dup(0)
-		db 0C6h, 6, 0DDh, 53h, 0, 0C7h,	6, 0A4h, 3, 64h, 0, 0C6h
-		db 6, 93h
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1CD6E
+		call	sub_1B282
+		call	sub_1E64E
+		or	al, al
+		jnz	short loc_1B85F
+		cmp	word_2671A, 9C4h
+		jl	loc_1B8EA
 
-loc_1B890:				; CODE XREF: sub_1CD6E:loc_1CD8Fj
-		push	bx		; jumptable 0001CD8F case 0
-		add	bx, bp
-		push	si
+loc_1B85F:
+		push	1
+		call	sub_15C7C
+		inc	byte_26719
+		cmp	word_2671A, 9C4h
+		jge	short loc_1B877
+		mov	byte_2671F, 1
+		jmp	short loc_1B87C
+; ---------------------------------------------------------------------------
+
+loc_1B877:
+		mov	byte_2671F, 0
+
+loc_1B87C:
+		mov	word_2671A, 0
+		mov	byte_2671D, 0
+		mov	word_216E4, 64h
+		mov	byte_266D3, 1
+		jmp	short loc_1B8EA
+; ---------------------------------------------------------------------------
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1B8A4
