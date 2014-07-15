@@ -35688,14 +35688,14 @@ TITLE1_MARISA	db '   A Being Made of Magic    ',0
 TITLE2_MARISA	db '       and Red Dreams       ',0
 TITLE1_ELLEN	db '   Hardworking Witch Who    ',0
 TITLE2_ELLEN	db '       Dreams of Love       ',0
-TITLE1_KOTOHIME	db 'Princess Dreaming of Beauty ',0
-TITLE2_KOTOHIME	db '         in Danmaku         ',0
+TITLE1_KOTOHIME	db '    Princess Dreaming of    ',0
+TITLE2_KOTOHIME	db '      Beauty in Danmaku     ',0
 TITLE1_KANA	db ' Poltergeist Maiden Who Has ',0
 TITLE2_KANA	db '       Lost Her Dreams      ',0
 TITLE1_RIKAKO	db '     Scientist Searching    ',0
 TITLE2_RIKAKO	db '         For Dreams         ',0
-TITLE1_CHIYURI	db 'Resident of Fantasy Who Runs',0
-TITLE2_CHIYURI	db '        Through Time        ',0
+TITLE1_CHIYURI	db '  Resident of Fantasy Who   ',0
+TITLE2_CHIYURI	db '     Runs Through Time      ',0
 TITLE1_YUMEMI	db '       Fantasy Legend       ',0
 TITLE2_YUMEMI	db '                            ',0
 NAME_REIMU	db '     Å\ Reimu Hakurei Å\    ',0
