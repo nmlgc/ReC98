@@ -29139,8 +29139,8 @@ aEd06b_rgb	db 'ed06b.rgb',0        ; DATA XREF: sub_A8FA+12Bo
 aEd06c_rgb	db 'ed06c.rgb',0        ; DATA XREF: sub_A8FA+156o
 aEd07_pi	db 'ed07.pi',0          ; DATA XREF: sub_A8FA+173o
 aGogigtgbgbgnb@	db 'ＧＲＡＰＨＩＣ　ＺＵＮ',0 ; DATA XREF: sub_A8FA+1ADo
-aB@b@b@b@b@b@b@	db '　　　　　　　高附日向',0 ; DATA XREF: sub_A8FA+1C2o
-aB@b@b@b@bigibG	db '　　（All Clear  Picture）',0 ; DATA XREF: sub_A8FA+1D7o
+aB@b@b@b@b@b@b@	db ' All Clear              ',0
+aB@b@b@b@bigibG	db 'Picture by    高附日向  ',0
 aEd07a_rgb	db 'ed07a.rgb',0        ; DATA XREF: sub_A8FA+1ECo
 aEd07b_rgb	db 'ed07b.rgb',0        ; DATA XREF: sub_A8FA+20Co
 					; sub_A8FA+262o
