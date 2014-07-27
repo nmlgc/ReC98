@@ -29847,7 +29847,7 @@ aSelect		db 'select',0           ; DATA XREF: sub_9FAF+59o sub_9FAF+5Do ...
 ; char path[]
 path		db 'main',0             ; DATA XREF: sub_9FAF+67o sub_9FAF+6Bo ...
 uPERF_TITLE	db 'Perf',0
-aPERF_NORMAL	db '  Normal',0         ; DATA XREF: dseg:0158o
+aPERF_NORMAL	db ' Normal ',0         ; DATA XREF: dseg:0158o
 aPERF_TRUNCATE	db 'Truncate',0         ; DATA XREF: dseg:015Co
 aMikoft_bft	db 'MIKOFT.bft',0       ; DATA XREF: _main+40o
 aGminit_m	db 'gminit.m',0         ; DATA XREF: _main+BEo

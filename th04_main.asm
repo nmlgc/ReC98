@@ -49725,9 +49725,9 @@ aUqiUxgBGigxb_0	db 'Normal Rank:                  Å@Å@Å~Å@ÇPÅDÇO',0 ; DATA XREF:
 aUqiUxgBGigxb_1	db 'Hard Rank:                Å@Å@Å@Å@Å~Å@ÇPÅDÇQ',0 ; DATA XREF: dseg:1F5Eo
 aUqiUxgBGigxb_2	db 'Lunatic Rank:                   Å@Å~Å@ÇPÅDÇS',0 ; DATA XREF: dseg:1F62o
 aVrvsvVfvdb@vav	db 'Stage Bonus:          ',0 ; DATA XREF: sub_1D6C1+29o
-aVovnvvvdvqb@bB	db 'Power Level:  Å~Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+3Bo
+aVovnvvvdvqb@bB	db 'Power Level  Å~Å@ÇTÇO:',0 ; DATA XREF: sub_1D6C1+3Bo
 aVcvqvdvVlb@vav	db 'Dream Bonus Åiñ≤Åj:   ',0 ; DATA XREF: sub_1D6C1+4Do
-aGjgxgkterfb@bB	db 'Graze Count:  Å~Å@ÇTÇO',0 ; DATA XREF: sub_1D6C1+5Fo
+aGjgxgkterfb@bB	db 'Graze Count Å~Å@ÇTÇO: ',0 ; DATA XREF: sub_1D6C1+5Fo
 aVovnvhvmvsb@va	db 'Point Items Collected:Å@Å@Å@Å@Å@Å@Å~',0 ; DATA XREF: sub_1D6C1+71o
 aB@b@b@vsvnvsvV	db 'Bonus Total:    ',0 ; DATA XREF: sub_1D6C1+83o
 aB@b@b@b@b@vavp	db 'Å@Å@Å@Å@Å@ÇaÇèÇçÇÇÅ@ÇdÇòÇîÇÖÇéÇÑÅIÅI',0 ; DATA XREF: sub_1D6C1+95o

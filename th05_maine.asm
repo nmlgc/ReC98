@@ -37404,7 +37404,7 @@ aOrangeOriental	db '      Orange                               ( Oriental Demon 
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aKurumiVampire	db '      Kurumi                                  ( Vampire )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aElliyGateKeepe	db '      Elly                                   ( Gate Keeper )',0
+aElliyGateKeepe	db '      Elly                                   ( Gatekeeper ) ',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aYukaOrientalDe	db '      Yuuka Kazami                         ( Oriental Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
@@ -37422,7 +37422,7 @@ aMimaGhost_1	db '      Mima                                     ( Ghost )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aYukaOriental_0	db '      Yuuka Kazami                         ( Oriental Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
-aSaraGateKeeper	db '      Sara                                   ( Gate Keeper )',0
+aSaraGateKeeper	db '      Sara                                   ( Gatekeeper ) ',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
 aLuizeDemon	db '      Louise                                   ( Demon )',0
 					; DATA XREF: dseg:ALLCAST_PTRSo
