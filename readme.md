@@ -42,7 +42,7 @@ Still, it will no doubt take a long time until this project will have made any v
 ### Reconstruction phase
 First, we have to accurately reconstruct understandable C/C++ source code for all the games from the original binaries, while still staying on the PC-98 platform. To ensure the correctness of the process, each commit during this phase should result in a build that ideally is byte-identical to the previous commit.
 
-##### Step 1: Dumping (current)
+##### Step 1: Dumping (done)
 Based on the auto-analysis done by IDA, create assembly dumps for all 16 necessary executables, and edit them until they successfully recompile back into working binaries equivalent to ZUN's builds.
 
 Note that we don't dump the `ZUN.COM` executables of TH02 and later. This file is essentially a package of multiple smaller executables, doing the following:
@@ -53,10 +53,7 @@ Note that we don't dump the `ZUN.COM` executables of TH02 and later. This file i
 
 The first two functions are not necessary in a cross-platform scenario, while the last two need to be completely rewritten for the ports anyway. Therefore, the `ZUN.COM` files will be this project's "required proprietary element" as long as we stay on the PC-98 platform.
 
-###### Progress
-Only TH01's `REIIDEN.EXE` is missing, everything else is done.
-
-##### Step 2: Reduction
+##### Step 2: Reduction (current)
 Identify duplicated functions and either replace them with references to the original libraries or move them to separate include files. In the end, only ZUN's own code and data will remain in the dumps created in Step 1.
 
 ##### Step 3: Reverse-engineering
