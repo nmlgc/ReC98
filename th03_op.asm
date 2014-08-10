@@ -695,47 +695,7 @@ arg_0		= word ptr  6
 		retf	2
 sub_472		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_48A		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		mov	ds, [bp+arg_0]
-		mov	bx, word_D7F0
-		mov	cx, word_D7F6
-		mov	dx, 8
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short loc_4BA
-		or	ax, ax
-		jz	short loc_4BA
-		dec	ax
-		mov	word_D7F2, ax
-		mov	word_D7F4, 1
-		mov	al, byte ptr off_D7F8
-		xor	ah, ah
-		pop	ds
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_4BA:
-		xor	ax, ax
-		mov	word_D7F2, ax
-		dec	ax
-		pop	ds
-		pop	bp
-		retf	2
-sub_48A		endp
+include libs/master.lib/bfill.asm
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -824,7 +784,7 @@ loc_52E:
 
 loc_52F:
 					; sub_C1B4:loc_C337r ...
-		call	near ptr sub_48A
+		call	near ptr bfill
 
 loc_532:
 		pop	bp
