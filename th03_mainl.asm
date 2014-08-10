@@ -86,7 +86,7 @@ loc_75:
 loc_7E:
 		nop
 		push	cs
-		call	near ptr sub_2D32
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_83:
@@ -164,7 +164,7 @@ loc_D7:
 loc_10B:
 		nop
 		push	cs
-		call	near ptr sub_2D32
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_110:
@@ -6393,32 +6393,7 @@ loc_2CB6:
 		retf	0Ah
 sub_2C6E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn
-
-sub_2D32	proc far
-		push	si
-		push	di
-		push	ds
-		mov	ax, 0CA6h
-		push	ax		; buf
-		nop
-		push	cs
-		call	near ptr ___ErrorMessage
-		mov	ax, 3
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-sub_2D32	endp
-
-; ---------------------------------------------------------------------------
-		add	sp, 6
-		pop	di
-		pop	si
-		retf
+include libs/BorlandC/__abort.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6483,7 +6458,7 @@ _abort		proc far
 		pop	cx
 		nop
 		push	cs
-		call	near ptr sub_2D32
+		call	near ptr __abort
 _abort		endp
 
 ; ---------------------------------------------------------------------------
@@ -9881,7 +9856,7 @@ loc_4275:
 		jnz	short loc_4298
 		nop
 		push	cs
-		call	near ptr sub_2D32
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_428F:
@@ -20597,7 +20572,7 @@ _setblock	endp
 		jnz	short loc_8EA3
 		nop
 		nop
-		jmp	near ptr sub_2D32
+		jmp	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_8EA3:

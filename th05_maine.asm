@@ -88,7 +88,7 @@ loc_75:
 loc_7E:
 		nop
 		push	cs
-		call	near ptr sub_3CE0
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_83:
@@ -166,7 +166,7 @@ loc_D7:
 loc_10B:
 		nop
 		push	cs
-		call	near ptr sub_3CE0
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_110:
@@ -8924,32 +8924,7 @@ loc_3CD8:
 		retn	8
 sub_3CA8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn
-
-sub_3CE0	proc far
-		push	si
-		push	di
-		push	ds
-		mov	ax, 17DAh
-		push	ax		; buf
-		nop
-		push	cs
-		call	near ptr ___ErrorMessage
-		mov	ax, 3
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		add	sp, 6
-		pop	di
-		pop	si
-		retf
-sub_3CE0	endp
-
+include libs/BorlandC/__abort.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9014,7 +8989,7 @@ _abort		proc far
 		pop	cx
 		nop
 		push	cs
-		call	near ptr sub_3CE0
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 		pop	di
 		pop	si
@@ -12393,7 +12368,7 @@ loc_5207:
 		jnz	short loc_522A
 		nop
 		push	cs
-		call	near ptr sub_3CE0
+		call	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_5221:
@@ -23036,7 +23011,7 @@ _setblock	endp
 		jnz	short loc_9E35
 		nop
 		nop
-		jmp	near ptr sub_3CE0
+		jmp	near ptr __abort
 ; ---------------------------------------------------------------------------
 
 loc_9E35:

@@ -96,7 +96,7 @@ loc_190:
 ; ---------------------------------------------------------------------------
 
 loc_19B:
-		call	sub_16DC
+		call	__abort
 ; ---------------------------------------------------------------------------
 
 loc_19E:
@@ -165,7 +165,7 @@ loc_1E8:
 		jnb	short loc_21F
 
 loc_21C:
-		call	sub_16DC
+		call	__abort
 ; ---------------------------------------------------------------------------
 
 loc_21F:
@@ -3588,28 +3588,7 @@ sub_16B2	proc near
 		retn
 sub_16B2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn
-
-sub_16DC	proc near
-		push	si
-		push	di
-		mov	ax, 266Ch
-		push	ax		; buf
-		call	___ErrorMessage
-		mov	ax, 3
-		push	ax		; status
-		call	__exit
-sub_16DC	endp
-
-; ---------------------------------------------------------------------------
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		retn
+include libs/BorlandC/__abort.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
