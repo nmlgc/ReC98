@@ -13746,43 +13746,7 @@ s2		= dword	ptr  0Ah
 		retf
 _strcmp		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	strcpy(char *dest, const char *src)
-_strcpy		proc far
-					; sub_5205+2BBp ...
-
-dest		= dword	ptr  6
-src		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		les	di, [bp+src]
-		mov	si, di
-		xor	al, al
-		mov	cx, 0FFFFh
-		repne scasb
-		not	cx
-		push	ds
-		mov	ax, es
-		mov	ds, ax
-		les	di, [bp+dest]
-		rep movsb
-		pop	ds
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_strcpy		endp
-
+include libs/BorlandC/_strcpy.asm
 include libs/BorlandC/_stricmp.asm
 include libs/BorlandC/_strlen.asm
 
