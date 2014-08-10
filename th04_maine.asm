@@ -13783,62 +13783,7 @@ src		= dword	ptr  0Ah
 		retf
 _strcpy		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl stricmp(const char *s1, const char *s2)
-_stricmp	proc far
-
-s1		= dword	ptr  6
-s2		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		cld
-		lds	si, [bp+s1]
-		les	di, [bp+s2]
-		xor	ax, ax
-		mov	bx, ax
-		mov	cx, 617Ah
-
-loc_5A5D:
-		lodsb
-		mov	bl, es:[di]
-		or	al, al
-		jz	short loc_5A81
-		scasb
-		jz	short loc_5A5D
-		cmp	al, ch
-		jb	short loc_5A72
-		cmp	al, cl
-		ja	short loc_5A72
-		sub	al, 20h	; ' '
-
-loc_5A72:
-		cmp	bl, ch
-		jb	short loc_5A7D
-		cmp	bl, cl
-		ja	short loc_5A7D
-		sub	bl, 20h	; ' '
-
-loc_5A7D:
-		cmp	al, bl
-		jz	short loc_5A5D
-
-loc_5A81:
-		sub	ax, bx
-		mov	ds, dx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_stricmp	endp
-
+include libs/BorlandC/_stricmp.asm
 include libs/BorlandC/_strlen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
