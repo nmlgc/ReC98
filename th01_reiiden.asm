@@ -18819,42 +18819,7 @@ loc_6BC9:
 		retf
 _stricmp	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; size_t __cdecl strlen(const char *s)
-_strlen		proc far
-
-_s		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	di, [bp+_s]
-		xor	ax, ax
-		cmp	ax, word ptr [bp+_s+2]
-		jnz	short loc_6BE4
-		cmp	ax, di
-		jz	short loc_6BEE
-
-loc_6BE4:
-		cld
-		mov	cx, 0FFFFh
-		repne scasb
-		xchg	ax, cx
-		not	ax
-		dec	ax
-
-loc_6BEE:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_strlen		endp
-
+include libs/BorlandC/_strlen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

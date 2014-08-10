@@ -5259,36 +5259,7 @@ loc_1F8E:
 		retn
 _setvbuf	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; size_t __cdecl strlen(const char *s)
-_strlen		proc near
-
-s		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, ds
-		mov	es, ax
-		mov	di, [bp+s]
-		xor	ax, ax
-		cld
-		mov	cx, 0FFFFh
-		repne scasb
-		xchg	ax, cx
-		not	ax
-		dec	ax
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_strlen		endp
-
+include libs/BorlandC/_strlen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
