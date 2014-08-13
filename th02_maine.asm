@@ -15,6 +15,7 @@
 
 		.386
 		.model large
+		locals
 
 ; ===========================================================================
 
@@ -6939,7 +6940,7 @@ arg_2		= word ptr  8
 		push	[bp+driver]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		pop	di
@@ -7056,7 +7057,7 @@ loc_2E27:
 		push	ax
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -8078,7 +8079,7 @@ loc_3331:
 		push	[bp+arg_0]
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
@@ -8997,680 +8998,8 @@ unknown_libname_1:			; BCC v4.x/5.x DOS runtime
 locret_39C4:
 		retn
 ; ---------------------------------------------------------------------------
-word_39C5	dw 0
-word_39C7	dw 0
-word_39C9	dw 0
-word_39CB	dw 0
-					; sub_39D1:loc_3A24r ...
-word_39CD	dw 0
-word_39CF	dw 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_39D1	proc near
-		cmp	dx, cs:word_39C5
-		jz	short loc_3A0F
-		mov	ds, dx
-		mov	ds, word_CF82
-		cmp	word_CF82, 0
-		jz	short loc_39EC
-		mov	cs:word_39C7, ds
-		jmp	short loc_3A24
-; ---------------------------------------------------------------------------
-
-loc_39EC:
-		mov	ax, ds
-		cmp	ax, cs:word_39C5
-		jz	short loc_3A0A
-		mov	ax, off_CF88
-		mov	cs:word_39C7, ax
-		push	ds
-		xor	ax, ax
-		push	ax
-		call	sub_3AA5
-		mov	ds, cs:word_39CB
-		jmp	short loc_3A2D
-; ---------------------------------------------------------------------------
-
-loc_3A0A:
-		mov	dx, cs:word_39C5
-
-loc_3A0F:
-		mov	cs:word_39C5, 0
-		mov	cs:word_39C7, 0
-		mov	cs:word_39C9, 0
-
-loc_3A24:
-		mov	ds, cs:word_39CB
-		push	dx
-		xor	ax, ax
-		push	ax
-
-loc_3A2D:
-		call	__brk
-		add	sp, 4
-		retn
-sub_39D1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3A34	proc near
-		mov	ds, dx
-		push	ds
-		mov	es, word_CF82
-		mov	word_CF82, 0
-		mov	off_CF88, es
-		cmp	dx, cs:word_39C5
-		jz	short loc_3A7A
-		cmp	word ptr es:2, 0
-		jnz	short loc_3A7A
-		mov	ax, word_CF80
-		pop	bx
-		push	es
-		add	es:0, ax
-		mov	cx, es
-		add	dx, ax
-		mov	es, dx
-		cmp	word ptr es:2, 0
-		jnz	short loc_3A73
-		mov	es:8, cx
-		jmp	short loc_3A7D
-; ---------------------------------------------------------------------------
-
-loc_3A73:
-		mov	es:2, cx
-		jmp	short loc_3A7D
-; ---------------------------------------------------------------------------
-
-loc_3A7A:
-		call	sub_3ACE
-
-loc_3A7D:
-		pop	es
-		mov	ax, es
-		add	ax, es:0
-		mov	ds, ax
-		cmp	word_CF82, 0
-		jz	short loc_3A8F
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3A8F:
-		mov	ax, word_CF80
-		add	es:0, ax
-		mov	ax, es
-		mov	bx, ds
-		add	bx, word_CF80
-		mov	es, bx
-		mov	es:2, ax
-sub_3A34	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3AA5	proc near
-		mov	bx, ds
-		cmp	bx, word_CF86
-		jz	short loc_3AC6
-		mov	es, word_CF86
-		mov	ds, word_CF84
-		mov	word_CF86, es
-		mov	word ptr es:4, ds
-		mov	cs:word_39C9, ds
-		mov	ds, bx
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3AC6:
-		mov	cs:word_39C9, 0
-		retn
-sub_3AA5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3ACE	proc near
-		mov	ax, cs:word_39C9
-		or	ax, ax
-		jz	short loc_3AF7
-		mov	bx, ss
-		pushf
-		cli
-		mov	ss, ax
-		mov	es, word ptr ss:6
-		mov	word ptr ss:6, ds
-		mov	word_CF84, ss
-		mov	ss, bx
-		popf
-		mov	word ptr es:4, ds
-		mov	word_CF86, es
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3AF7:
-		mov	cs:word_39C9, ds
-		mov	word_CF84, ds
-		mov	word_CF86, ds
-		retn
-sub_3ACE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3B05	proc far
-					; sub_3CBF+71p	...
-
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cs:word_39CB, ds
-		mov	dx, [bp+arg_2]
-		or	dx, dx
-		jz	short loc_3B25
-		cmp	dx, cs:word_39C7
-		jnz	short loc_3B22
-		call	sub_39D1
-		jmp	short loc_3B25
-; ---------------------------------------------------------------------------
-
-loc_3B22:
-		call	sub_3A34
-
-loc_3B25:
-		mov	ds, cs:word_39CB
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3B05	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3B2E	proc near
-		push	ax
-		mov	ds, cs:word_39CB
-		xor	ax, ax
-		push	ax
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		and	ax, 0Fh
-		jz	short loc_3B57
-		mov	dx, 10h
-		sub	dx, ax
-		xor	ax, ax
-		mov	ds, cs:word_39CB
-		push	ax
-		push	dx
-		call	__sbrk
-		add	sp, 4
-
-loc_3B57:
-		pop	ax
-		push	ax
-		xor	bx, bx
-		mov	bl, ah
-		mov	cl, 4
-		shr	bx, cl
-		shl	ax, cl
-		mov	ds, cs:word_39CB
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_3B8E
-		mov	cs:word_39C5, dx
-		mov	cs:word_39C7, dx
-		mov	ds, dx
-		mov	word_CF80, bx
-		mov	word_CF82, dx
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3B8E:
-		xor	ax, ax
-		cwd
-		retn
-sub_3B2E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3B92	proc near
-		push	ax
-		mov	ds, cs:word_39CB
-		xor	ax, ax
-		push	ax
-		push	ax
-		call	__sbrk
-		pop	bx
-		pop	bx
-		and	ax, 0Fh
-		jz	short loc_3BBA
-		mov	dx, 10h
-		sub	dx, ax
-		xor	ax, ax
-		mov	ds, cs:word_39CB
-		push	ax
-		push	dx
-		call	__sbrk
-		add	sp, 4
-
-loc_3BBA:
-		pop	ax
-		push	ax
-		xor	bx, bx
-		mov	bl, ah
-		mov	cl, 4
-		shr	bx, cl
-		shl	ax, cl
-		mov	ds, cs:word_39CB
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_3C11
-		and	ax, 0Fh
-		jnz	short loc_3BF6
-
-loc_3BDE:
-		mov	cx, cs:word_39C7
-		mov	cs:word_39C7, dx
-		mov	ds, dx
-		mov	word_CF80, bx
-		mov	word_CF82, cx
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3BF6:
-		push	bx
-		push	dx
-		neg	ax
-		add	ax, 10h
-		xor	bx, bx
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	dx
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_3C11
-		inc	dx
-		jmp	short loc_3BDE
-; ---------------------------------------------------------------------------
-
-loc_3C11:
-		xor	ax, ax
-		cwd
-		retn
-sub_3B92	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3C15	proc near
-		mov	bx, dx
-		sub	word_CF80, ax
-		add	dx, word_CF80
-		mov	ds, dx
-		mov	word_CF80, ax
-		mov	word_CF82, bx
-		mov	bx, dx
-		add	bx, word_CF80
-		mov	ds, bx
-		mov	word_CF82, dx
-		mov	ax, 4
-		retn
-sub_3C15	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3C38	proc far
-					; operator new(uint)+2Ep ...
-
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		mov	ax, [bp+arg_2]
-		jmp	short loc_3C4B
-sub_3C38	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3C42	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-
-loc_3C4B:
-		mov	cx, ax
-		or	cx, dx
-		push	si
-		push	di
-		mov	cs:word_39CB, ds
-		jz	short loc_3CB6
-		add	ax, 13h
-		adc	dx, 0
-		jb	short loc_3CA1
-		test	dx, 0FFF0h
-		jnz	short loc_3CA1
-		mov	cl, 4
-		shr	ax, cl
-		shl	dx, cl
-		or	ah, dl
-		mov	dx, cs:word_39C5
-		or	dx, dx
-		jz	short loc_3C97
-		mov	dx, cs:word_39C9
-		or	dx, dx
-		jz	short loc_3C92
-		mov	bx, dx
-
-loc_3C82:
-		mov	ds, dx
-		cmp	word_CF80, ax
-		jnb	short loc_3CA6
-		mov	dx, word_CF86
-		cmp	dx, bx
-		jnz	short loc_3C82
-
-loc_3C92:
-		call	sub_3B92
-		jmp	short loc_3CB6
-; ---------------------------------------------------------------------------
-
-loc_3C97:
-		call	sub_3B2E
-		jmp	short loc_3CB6
-; ---------------------------------------------------------------------------
-
-loc_3C9C:
-		call	sub_3C15
-		jmp	short loc_3CB6
-; ---------------------------------------------------------------------------
-
-loc_3CA1:
-		xor	ax, ax
-		cwd
-		jmp	short loc_3CB6
-; ---------------------------------------------------------------------------
-
-loc_3CA6:
-		ja	short loc_3C9C
-		call	sub_3AA5
-		mov	bx, off_CF88
-		mov	word_CF82, bx
-		mov	ax, offset word_CF84
-
-loc_3CB6:
-		mov	ds, cs:word_39CB
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3C42	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3CBF	proc near
-		push	bx
-		mov	si, cs:word_39CD
-		push	si
-		mov	si, cs:word_39CF
-		push	si
-		push	cs
-		call	near ptr sub_3C42
-		add	sp, 4
-		or	dx, dx
-		jnz	short loc_3CD9
-		pop	bx
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3CD9:
-		pop	ds
-		mov	es, dx
-		push	es
-		push	ds
-		push	bx
-		mov	dx, word_CF80
-		cld
-		dec	dx
-		mov	di, 4
-		mov	si, di
-		mov	cx, 6
-		rep movsw
-		or	dx, dx
-		jz	short loc_3D2A
-		mov	ax, es
-		inc	ax
-		mov	es, ax
-		assume es:seg000
-		mov	ax, ds
-		inc	ax
-		mov	ds, ax
-		assume ds:nothing
-
-loc_3CFD:
-		xor	di, di
-		mov	si, di
-		mov	cx, dx
-		cmp	cx, 1000h
-		jbe	short loc_3D0C
-		mov	cx, 1000h
-
-loc_3D0C:
-		shl	cx, 1
-		shl	cx, 1
-		shl	cx, 1
-		rep movsw
-		sub	dx, 1000h
-		jbe	short loc_3D2A
-		mov	ax, es
-		add	ax, 1000h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, ds
-		add	ax, 1000h
-		mov	ds, ax
-		assume ds:nothing
-		jmp	short loc_3CFD
-; ---------------------------------------------------------------------------
-
-loc_3D2A:
-		mov	ds, cs:word_39CB
-		assume ds:dseg
-		push	cs
-		call	near ptr sub_3B05
-		add	sp, 4
-		pop	dx
-		mov	ax, 4
-		retn
-sub_3CBF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3D3B	proc near
-		cmp	bx, cs:word_39C7
-		jz	short loc_3D87
-		mov	di, bx
-		add	di, ax
-		mov	es, di
-		assume es:nothing
-		mov	si, cx
-		sub	si, ax
-		mov	es:0, si
-		mov	es:2, bx
-		push	es
-		push	ax
-		mov	es, bx
-		mov	es:0, ax
-		mov	dx, bx
-		add	dx, cx
-		mov	es, dx
-		cmp	word ptr es:2, 0
-		jz	short loc_3D73
-		mov	es:2, di
-		jmp	short loc_3D78
-; ---------------------------------------------------------------------------
-
-loc_3D73:
-		mov	es:8, di
-
-loc_3D78:
-		mov	si, bx
-		push	cs
-		call	near ptr sub_3B05
-		add	sp, 4
-		mov	dx, si
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3D87:
-		push	bx
-		mov	es, bx
-		mov	es:0, ax
-		add	bx, ax
-		push	bx
-		xor	ax, ax
-		push	ax
-		call	__brk
-		add	sp, 4
-		pop	dx
-		mov	ax, 4
-		retn
-sub_3D3B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3D9F	proc far
-					; seg006:0751P	...
-
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_3DAC
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-
-loc_3DAC:
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		push	si
-		push	di
-		mov	cs:word_39CB, ds
-		mov	cs:word_39CD, dx
-		mov	cs:word_39CF, ax
-		or	bx, bx
-		jz	short loc_3E00
-		mov	cx, ax
-		or	cx, dx
-		jz	short loc_3E0B
-		add	ax, 13h
-		adc	dx, 0
-		jb	short loc_3E14
-		test	dx, 0FFF0h
-		jnz	short loc_3E14
-		mov	cl, 4
-		shr	ax, cl
-		shl	dx, cl
-		or	ah, dl
-		mov	es, bx
-		mov	cx, es:0
-		cmp	cx, ax
-		jb	short loc_3DFB
-		ja	short loc_3DF6
-		mov	dx, bx
-		mov	ax, 4
-		jmp	short loc_3E17
-; ---------------------------------------------------------------------------
-
-loc_3DF6:
-		call	sub_3D3B
-		jmp	short loc_3E17
-; ---------------------------------------------------------------------------
-
-loc_3DFB:
-		call	sub_3CBF
-		jmp	short loc_3E17
-; ---------------------------------------------------------------------------
-
-loc_3E00:
-		push	dx
-		push	ax
-		push	cs
-		call	near ptr sub_3C42
-		add	sp, 4
-		jmp	short loc_3E17
-; ---------------------------------------------------------------------------
-
-loc_3E0B:
-		push	bx
-		push	ax
-		push	cs
-		call	near ptr sub_3B05
-		add	sp, 4
-
-loc_3E14:
-		xor	ax, ax
-		cwd
-
-loc_3E17:
-		mov	ds, cs:word_39CB
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3D9F	endp
-
+include libs/BorlandC/FARHEAP.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9756,7 +9085,6 @@ sub_3E20	endp
 ; Attributes: library function bp-based	frame
 
 __brk		proc near
-					; sub_3D3B+59p
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -11151,7 +10479,7 @@ arg_8		= word ptr  0Eh
 		push	ax
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+s+2], dx
 		mov	word ptr [bp+s], ax
@@ -11225,7 +10553,7 @@ loc_4784:
 		push	word ptr [bp+s]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	loc_4971
@@ -11357,7 +10685,7 @@ loc_4877:
 		push	word ptr [bp+s]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	loc_4971
@@ -11440,7 +10768,7 @@ loc_495F:
 		push	word ptr [bp+s]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -11502,7 +10830,7 @@ loc_49BC:
 		push	word ptr [bp+s]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		add	sp, 0Ch
 		mov	dx, [bp+arg_2]
 		mov	ax, [bp+arg_0]
@@ -11515,7 +10843,7 @@ loc_49E3:
 		push	word ptr [bp+s]
 		nop
 		push	cs
-		call	near ptr sub_3D9F
+		call	near ptr _realloc
 		add	sp, 6
 
 loc_49F2:
@@ -11597,7 +10925,7 @@ loc_4A4F:
 		push	[bp+len]
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -12184,7 +11512,7 @@ loc_4D54:
 		push	[bp+var_4]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		add	sp, 0Ch
 
 loc_4D93:
@@ -12272,7 +11600,7 @@ loc_4E07:
 		push	word ptr es:[bx+8]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -12299,7 +11627,7 @@ loc_4E20:
 		push	[bp+_size]
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+buf+2], dx
 		mov	word ptr [bp+buf], ax
@@ -14045,7 +13373,7 @@ arg_0		= word ptr  6
 		push	[bp+arg_0]
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
@@ -14107,7 +13435,7 @@ loc_5BD6:
 		push	word ptr [bp+6]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -20256,7 +19584,7 @@ loc_895E:
 		push	[bp+var_2]
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+var_A+2], dx
 		mov	word ptr [bp+var_A], ax
@@ -20791,7 +20119,7 @@ sub_8E2A	proc far
 		push	word_CFF8
 		nop
 		push	cs
-		call	near ptr sub_3C38
+		call	near ptr _malloc
 		pop	bx
 		mov	bx, ax
 		pop	es
@@ -21722,7 +21050,7 @@ loc_94CE:
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	short loc_954D
@@ -21767,7 +21095,7 @@ loc_9526:
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -21804,12 +21132,12 @@ loc_9576:
 		push	word ptr [bp+var_14]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_3B05
+		call	near ptr _farfree
 		add	sp, 8
 		mov	ax, [bp+var_16]
 
@@ -28050,7 +27378,7 @@ loc_C919:
 		mov	ax, es:[bx+8]
 		inc	ax
 		push	ax
-		call	sub_3C38
+		call	_malloc
 		pop	cx
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -28138,7 +27466,7 @@ arg_4		= byte ptr  0Ah
 		les	bx, [bp+driver]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3B05
+		call	_farfree
 		pop	cx
 		pop	cx
 		test	[bp+arg_4], 1
@@ -28191,7 +27519,7 @@ sub_C9DB	endp
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3D9F
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+6]
 		mov	es:[bx+4], dx
@@ -28236,7 +27564,7 @@ loc_CA9B:
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3D9F
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+6]
 		mov	es:[bx+4], dx
@@ -28282,7 +27610,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3D9F
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -28398,7 +27726,7 @@ loc_CBFA:
 		mov	ax, [bp-26h]
 		inc	ax
 		push	ax
-		call	sub_3C38
+		call	_malloc
 		pop	cx
 		mov	[bp-20h], dx
 		mov	[bp-22h], ax
@@ -28523,7 +27851,7 @@ loc_CD3F:
 		les	bx, [bp+6]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3B05
+		call	_farfree
 		pop	cx
 		pop	cx
 		les	bx, [bp+6]
@@ -28698,13 +28026,7 @@ dseg		segment	para public 'DATA' use16
 		assume cs:dseg
 word_CF80	dw 0
 word_CF82	dw 0
-word_CF84	dw 554Eh
-word_CF86	dw 4C4Ch
-off_CF88	dw offset sub_4320
-		dw offset sub_4548
-		db  43h	; C
-		db  4Bh	; K
-		db    0
+CheckStr	db 'NULL CHECK',0
 		db    0
 		db    0
 		db    0

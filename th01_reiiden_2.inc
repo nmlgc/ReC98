@@ -9151,7 +9151,7 @@ loc_203A9:
 		cmp	off_39E7C, 0
 		jz	short loc_203BE
 		push	large [off_39E7C]
-		call	sub_441B
+		call	_farfree
 		add	sp, 4
 
 loc_203BE:
@@ -9260,7 +9260,7 @@ sub_20468	proc far
 		cmp	off_39E7C, 0
 		jz	short loc_20492
 		push	large [off_39E7C]
-		call	sub_441B
+		call	_farfree
 		add	sp, 4
 		mov	dword_39E80, 0
 		mov	off_39E7C, 0
@@ -48549,7 +48549,7 @@ loc_34336:
 		mov	ax, es:[bx+8]
 		inc	ax
 		push	ax
-		call	sub_454E
+		call	_malloc
 		pop	cx
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -48637,7 +48637,7 @@ arg_4		= byte ptr  0Ah
 		les	bx, [bp+driver]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_441B
+		call	_farfree
 		pop	cx
 		pop	cx
 		test	[bp+arg_4], 1
@@ -48701,7 +48701,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_46B5
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -48758,7 +48758,7 @@ arg_0		= dword	ptr  6
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_46B5
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -48806,7 +48806,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_46B5
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -48937,7 +48937,7 @@ loc_34617:
 		mov	ax, [bp+var_26]
 		inc	ax
 		push	ax
-		call	sub_454E
+		call	_malloc
 		pop	cx
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -49062,7 +49062,7 @@ loc_3475C:
 		les	bx, [bp+arg_0]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_441B
+		call	_farfree
 		pop	cx
 		pop	cx
 		les	bx, [bp+arg_0]

@@ -58,6 +58,7 @@ SREGS		ends
 
 		.386
 		.model large
+		locals
 
 ; ===========================================================================
 
@@ -4808,7 +4809,7 @@ arg_2		= word ptr  8
 		push	[bp+driver]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		pop	di
@@ -4926,7 +4927,7 @@ loc_1D8A:
 		push	ax
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -6239,7 +6240,7 @@ loc_240D:
 		push	[bp+arg_0]
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
@@ -8216,680 +8217,8 @@ unknown_libname_2:			; BCC v4.x/5.x DOS runtime
 locret_304D:
 		retn
 ; ---------------------------------------------------------------------------
-word_304E	dw 0
-word_3050	dw 0
-word_3052	dw 0
-word_3054	dw 0
-					; sub_305A:loc_30ADr ...
-word_3056	dw 0
-word_3058	dw 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_305A	proc near
-		cmp	dx, cs:word_304E
-		jz	short loc_3098
-		mov	ds, dx
-		mov	ds, word_12292
-		cmp	word_12292, 0
-		jz	short loc_3075
-		mov	cs:word_3050, ds
-		jmp	short loc_30AD
-; ---------------------------------------------------------------------------
-
-loc_3075:
-		mov	ax, ds
-		cmp	ax, cs:word_304E
-		jz	short loc_3093
-		mov	ax, word ptr aNullCheck+4
-		mov	cs:word_3050, ax
-		push	ds
-		xor	ax, ax
-		push	ax
-		call	sub_312E
-		mov	ds, cs:word_3054
-		jmp	short loc_30B6
-; ---------------------------------------------------------------------------
-
-loc_3093:
-		mov	dx, cs:word_304E
-
-loc_3098:
-		mov	cs:word_304E, 0
-		mov	cs:word_3050, 0
-		mov	cs:word_3052, 0
-
-loc_30AD:
-		mov	ds, cs:word_3054
-		push	dx
-		xor	ax, ax
-		push	ax
-
-loc_30B6:
-		call	__brk
-		add	sp, 4
-		retn
-sub_305A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_30BD	proc near
-		mov	ds, dx
-		push	ds
-		mov	es, word_12292
-		mov	word_12292, 0
-		mov	word ptr aNullCheck+4, es
-		cmp	dx, cs:word_304E
-		jz	short loc_3103
-		cmp	word ptr es:2, 0
-		jnz	short loc_3103
-		mov	ax, word_12290
-		pop	bx
-		push	es
-		add	es:0, ax
-		mov	cx, es
-		add	dx, ax
-		mov	es, dx
-		cmp	word ptr es:2, 0
-		jnz	short loc_30FC
-		mov	es:8, cx
-		jmp	short loc_3106
-; ---------------------------------------------------------------------------
-
-loc_30FC:
-		mov	es:2, cx
-		jmp	short loc_3106
-; ---------------------------------------------------------------------------
-
-loc_3103:
-		call	sub_3157
-
-loc_3106:
-		pop	es
-		mov	ax, es
-		add	ax, es:0
-		mov	ds, ax
-		cmp	word_12292, 0
-		jz	short loc_3118
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3118:
-		mov	ax, word_12290
-		add	es:0, ax
-		mov	ax, es
-		mov	bx, ds
-		add	bx, word_12290
-		mov	es, bx
-		mov	es:2, ax
-sub_30BD	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_312E	proc near
-		mov	bx, ds
-		cmp	bx, word ptr aNullCheck+2
-		jz	short loc_314F
-		mov	es, word ptr aNullCheck+2
-		mov	ds, word ptr aNullCheck	; "NULL	CHECK"
-		mov	word ptr aNullCheck+2, es
-		mov	word ptr es:4, ds
-		mov	cs:word_3052, ds
-		mov	ds, bx
-		retn
-; ---------------------------------------------------------------------------
-
-loc_314F:
-		mov	cs:word_3052, 0
-		retn
-sub_312E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3157	proc near
-		mov	ax, cs:word_3052
-		or	ax, ax
-		jz	short loc_3180
-		mov	bx, ss
-		pushf
-		cli
-		mov	ss, ax
-		mov	es, word ptr ss:6
-		mov	word ptr ss:6, ds
-		mov	word ptr aNullCheck, ss	; "NULL	CHECK"
-		mov	ss, bx
-		popf
-		mov	word ptr es:4, ds
-		mov	word ptr aNullCheck+2, es
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3180:
-		mov	cs:word_3052, ds
-		mov	word ptr aNullCheck, ds	; "NULL	CHECK"
-		mov	word ptr aNullCheck+2, ds
-		retn
-sub_3157	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_318E	proc far
-					; sub_3348+71p	...
-
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cs:word_3054, ds
-		mov	dx, [bp+arg_2]
-		or	dx, dx
-		jz	short loc_31AE
-		cmp	dx, cs:word_3050
-		jnz	short loc_31AB
-		call	sub_305A
-		jmp	short loc_31AE
-; ---------------------------------------------------------------------------
-
-loc_31AB:
-		call	sub_30BD
-
-loc_31AE:
-		mov	ds, cs:word_3054
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_318E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_31B7	proc near
-		push	ax
-		mov	ds, cs:word_3054
-		xor	ax, ax
-		push	ax
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		and	ax, 0Fh
-		jz	short loc_31E0
-		mov	dx, 10h
-		sub	dx, ax
-		xor	ax, ax
-		mov	ds, cs:word_3054
-		push	ax
-		push	dx
-		call	__sbrk
-		add	sp, 4
-
-loc_31E0:
-		pop	ax
-		push	ax
-		xor	bx, bx
-		mov	bl, ah
-		mov	cl, 4
-		shr	bx, cl
-		shl	ax, cl
-		mov	ds, cs:word_3054
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_3217
-		mov	cs:word_304E, dx
-		mov	cs:word_3050, dx
-		mov	ds, dx
-		mov	word_12290, bx
-		mov	word_12292, dx
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3217:
-		xor	ax, ax
-		cwd
-		retn
-sub_31B7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_321B	proc near
-		push	ax
-		mov	ds, cs:word_3054
-		xor	ax, ax
-		push	ax
-		push	ax
-		call	__sbrk
-		pop	bx
-		pop	bx
-		and	ax, 0Fh
-		jz	short loc_3243
-		mov	dx, 10h
-		sub	dx, ax
-		xor	ax, ax
-		mov	ds, cs:word_3054
-		push	ax
-		push	dx
-		call	__sbrk
-		add	sp, 4
-
-loc_3243:
-		pop	ax
-		push	ax
-		xor	bx, bx
-		mov	bl, ah
-		mov	cl, 4
-		shr	bx, cl
-		shl	ax, cl
-		mov	ds, cs:word_3054
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_329A
-		and	ax, 0Fh
-		jnz	short loc_327F
-
-loc_3267:
-		mov	cx, cs:word_3050
-		mov	cs:word_3050, dx
-		mov	ds, dx
-		mov	word_12290, bx
-		mov	word_12292, cx
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_327F:
-		push	bx
-		push	dx
-		neg	ax
-		add	ax, 10h
-		xor	bx, bx
-		push	bx
-		push	ax
-		call	__sbrk
-		add	sp, 4
-		pop	dx
-		pop	bx
-		cmp	ax, 0FFFFh
-		jz	short loc_329A
-		inc	dx
-		jmp	short loc_3267
-; ---------------------------------------------------------------------------
-
-loc_329A:
-		xor	ax, ax
-		cwd
-		retn
-sub_321B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_329E	proc near
-		mov	bx, dx
-		sub	word_12290, ax
-		add	dx, word_12290
-		mov	ds, dx
-		mov	word_12290, ax
-		mov	word_12292, bx
-		mov	bx, dx
-		add	bx, word_12290
-		mov	ds, bx
-		mov	word_12292, dx
-		mov	ax, 4
-		retn
-sub_329E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_32C1	proc far
-					; operator new(uint)+2Ep ...
-
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		mov	ax, [bp+arg_2]
-		jmp	short loc_32D4
-sub_32C1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_32CB	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-
-loc_32D4:
-		mov	cx, ax
-		or	cx, dx
-		push	si
-		push	di
-		mov	cs:word_3054, ds
-		jz	short loc_333F
-		add	ax, 13h
-		adc	dx, 0
-		jb	short loc_332A
-		test	dx, 0FFF0h
-		jnz	short loc_332A
-		mov	cl, 4
-		shr	ax, cl
-		shl	dx, cl
-		or	ah, dl
-		mov	dx, cs:word_304E
-		or	dx, dx
-		jz	short loc_3320
-		mov	dx, cs:word_3052
-		or	dx, dx
-		jz	short loc_331B
-		mov	bx, dx
-
-loc_330B:
-		mov	ds, dx
-		cmp	word_12290, ax
-		jnb	short loc_332F
-		mov	dx, word ptr aNullCheck+2
-		cmp	dx, bx
-		jnz	short loc_330B
-
-loc_331B:
-		call	sub_321B
-		jmp	short loc_333F
-; ---------------------------------------------------------------------------
-
-loc_3320:
-		call	sub_31B7
-		jmp	short loc_333F
-; ---------------------------------------------------------------------------
-
-loc_3325:
-		call	sub_329E
-		jmp	short loc_333F
-; ---------------------------------------------------------------------------
-
-loc_332A:
-		xor	ax, ax
-		cwd
-		jmp	short loc_333F
-; ---------------------------------------------------------------------------
-
-loc_332F:
-		ja	short loc_3325
-		call	sub_312E
-		mov	bx, word ptr aNullCheck+4
-		mov	word_12292, bx
-		mov	ax, offset aNullCheck ;	"NULL CHECK"
-
-loc_333F:
-		mov	ds, cs:word_3054
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_32CB	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3348	proc near
-		push	bx
-		mov	si, cs:word_3056
-		push	si
-		mov	si, cs:word_3058
-		push	si
-		push	cs
-		call	near ptr sub_32CB
-		add	sp, 4
-		or	dx, dx
-		jnz	short loc_3362
-		pop	bx
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3362:
-		pop	ds
-		mov	es, dx
-		push	es
-		push	ds
-		push	bx
-		mov	dx, word_12290
-		cld
-		dec	dx
-		mov	di, 4
-		mov	si, di
-		mov	cx, 6
-		rep movsw
-		or	dx, dx
-		jz	short loc_33B3
-		mov	ax, es
-		inc	ax
-		mov	es, ax
-		assume es:seg000
-		mov	ax, ds
-		inc	ax
-		mov	ds, ax
-		assume ds:nothing
-
-loc_3386:
-		xor	di, di
-		mov	si, di
-		mov	cx, dx
-		cmp	cx, 1000h
-		jbe	short loc_3395
-		mov	cx, 1000h
-
-loc_3395:
-		shl	cx, 1
-		shl	cx, 1
-		shl	cx, 1
-		rep movsw
-		sub	dx, 1000h
-		jbe	short loc_33B3
-		mov	ax, es
-		add	ax, 1000h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, ds
-		add	ax, 1000h
-		mov	ds, ax
-		assume ds:nothing
-		jmp	short loc_3386
-; ---------------------------------------------------------------------------
-
-loc_33B3:
-		mov	ds, cs:word_3054
-		assume ds:dseg
-		push	cs
-		call	near ptr sub_318E
-		add	sp, 4
-		pop	dx
-		mov	ax, 4
-		retn
-sub_3348	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_33C4	proc near
-		cmp	bx, cs:word_3050
-		jz	short loc_3410
-		mov	di, bx
-		add	di, ax
-		mov	es, di
-		assume es:nothing
-		mov	si, cx
-		sub	si, ax
-		mov	es:0, si
-		mov	es:2, bx
-		push	es
-		push	ax
-		mov	es, bx
-		mov	es:0, ax
-		mov	dx, bx
-		add	dx, cx
-		mov	es, dx
-		cmp	word ptr es:2, 0
-		jz	short loc_33FC
-		mov	es:2, di
-		jmp	short loc_3401
-; ---------------------------------------------------------------------------
-
-loc_33FC:
-		mov	es:8, di
-
-loc_3401:
-		mov	si, bx
-		push	cs
-		call	near ptr sub_318E
-		add	sp, 4
-		mov	dx, si
-		mov	ax, 4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3410:
-		push	bx
-		mov	es, bx
-		mov	es:0, ax
-		add	bx, ax
-		push	bx
-		xor	ax, ax
-		push	ax
-		call	__brk
-		add	sp, 4
-		pop	dx
-		mov	ax, 4
-		retn
-sub_33C4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3428	proc far
-					; seg015:074EP	...
-
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_3435
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-
-loc_3435:
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		push	si
-		push	di
-		mov	cs:word_3054, ds
-		mov	cs:word_3056, dx
-		mov	cs:word_3058, ax
-		or	bx, bx
-		jz	short loc_3489
-		mov	cx, ax
-		or	cx, dx
-		jz	short loc_3494
-		add	ax, 13h
-		adc	dx, 0
-		jb	short loc_349D
-		test	dx, 0FFF0h
-		jnz	short loc_349D
-		mov	cl, 4
-		shr	ax, cl
-		shl	dx, cl
-		or	ah, dl
-		mov	es, bx
-		mov	cx, es:0
-		cmp	cx, ax
-		jb	short loc_3484
-		ja	short loc_347F
-		mov	dx, bx
-		mov	ax, 4
-		jmp	short loc_34A0
-; ---------------------------------------------------------------------------
-
-loc_347F:
-		call	sub_33C4
-		jmp	short loc_34A0
-; ---------------------------------------------------------------------------
-
-loc_3484:
-		call	sub_3348
-		jmp	short loc_34A0
-; ---------------------------------------------------------------------------
-
-loc_3489:
-		push	dx
-		push	ax
-		push	cs
-		call	near ptr sub_32CB
-		add	sp, 4
-		jmp	short loc_34A0
-; ---------------------------------------------------------------------------
-
-loc_3494:
-		push	bx
-		push	ax
-		push	cs
-		call	near ptr sub_318E
-		add	sp, 4
-
-loc_349D:
-		xor	ax, ax
-		cwd
-
-loc_34A0:
-		mov	ds, cs:word_3054
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3428	endp
-
+include libs/BorlandC/FARHEAP.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8975,7 +8304,6 @@ sub_34A9	endp
 ; Attributes: library function bp-based	frame
 
 __brk		proc near
-					; sub_33C4+59p
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -10424,7 +9752,7 @@ loc_3D70:
 		push	word ptr es:[bx+8]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -11818,7 +11146,7 @@ arg_8		= word ptr  0Eh
 		push	ax
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+_s+2], dx
 		mov	word ptr [bp+_s], ax
@@ -11892,7 +11220,7 @@ loc_465C:
 		push	word ptr [bp+_s]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	loc_4849
@@ -12024,7 +11352,7 @@ loc_474F:
 		push	word ptr [bp+_s]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	loc_4849
@@ -12107,7 +11435,7 @@ loc_4837:
 		push	word ptr [bp+_s]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -12169,7 +11497,7 @@ loc_4894:
 		push	word ptr [bp+_s]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		add	sp, 0Ch
 		mov	dx, [bp+arg_2]
 		mov	ax, [bp+arg_0]
@@ -12182,7 +11510,7 @@ loc_48BB:
 		push	word ptr [bp+_s]
 		nop
 		push	cs
-		call	near ptr sub_3428
+		call	near ptr _realloc
 		add	sp, 6
 
 loc_48CA:
@@ -12575,7 +11903,7 @@ loc_4B0C:
 		push	[bp+len]
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -14291,7 +13619,7 @@ loc_5504:
 		push	[bp+var_4]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		add	sp, 0Ch
 
 loc_5543:
@@ -14387,7 +13715,7 @@ loc_55B7:
 		push	word ptr es:[bx+8]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -14414,7 +13742,7 @@ loc_55D0:
 		push	word ptr [bp+10h]
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	[bp+0Ch], dx
 		mov	[bp+0Ah], ax
@@ -16310,7 +15638,7 @@ arg_0		= word ptr  6
 		push	[bp+arg_0]
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
@@ -16372,7 +15700,7 @@ loc_6458:
 		push	word ptr [bp+6]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -22577,7 +21905,7 @@ loc_91FF:
 		push	[bp+var_2]
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	cx
 		mov	word ptr [bp+var_A+2], dx
 		mov	word ptr [bp+var_A], ax
@@ -23321,7 +22649,7 @@ _setblock	endp
 		push	word_12308
 		nop
 		push	cs
-		call	near ptr sub_32C1
+		call	near ptr _malloc
 		pop	bx
 		mov	bx, ax
 		pop	es
@@ -24662,7 +23990,7 @@ loc_A0EF:
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 		jmp	short loc_A16E
@@ -24707,7 +24035,7 @@ loc_A147:
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		pop	cx
 		pop	cx
 
@@ -24747,12 +24075,12 @@ loc_A197:
 		push	word ptr [bp+var_14]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
 		push	cs
-		call	near ptr sub_318E
+		call	near ptr _farfree
 		add	sp, 8
 		mov	ax, [bp+var_16]
 
@@ -33548,7 +32876,7 @@ _path		= dword	ptr  6
 		mov	[bp+var_4], ax
 		movsx	eax, [bp+var_4]
 		push	eax
-		call	sub_32CB
+		call	_farmalloc
 		add	sp, 4
 		mov	[bp+var_A], dx
 		mov	[bp+var_C], ax
@@ -33577,7 +32905,7 @@ _path		= dword	ptr  6
 		pop	ds
 		push	[bp+var_A]
 		push	[bp+var_C]
-		call	sub_318E
+		call	_farfree
 		add	sp, 4
 
 loc_E4D4:
@@ -41679,7 +41007,7 @@ loc_11C26:
 		mov	ax, es:[bx+8]
 		inc	ax
 		push	ax
-		call	sub_32C1
+		call	_malloc
 		pop	cx
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -41767,7 +41095,7 @@ arg_4		= byte ptr  0Ah
 		les	bx, [bp+driver]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_318E
+		call	_farfree
 		pop	cx
 		pop	cx
 		test	[bp+arg_4], 1
@@ -41821,7 +41149,7 @@ sub_11CE8	endp
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3428
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+6]
 		mov	es:[bx+4], dx
@@ -41866,7 +41194,7 @@ loc_11DA8:
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3428
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+6]
 		mov	es:[bx+4], dx
@@ -41912,7 +41240,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_3428
+		call	_realloc
 		add	sp, 6
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], dx
@@ -42028,7 +41356,7 @@ loc_11F07:
 		mov	ax, [bp-26h]
 		inc	ax
 		push	ax
-		call	sub_32C1
+		call	_malloc
 		pop	cx
 		mov	[bp-20h], dx
 		mov	[bp-22h], ax
@@ -42153,7 +41481,7 @@ loc_1204C:
 		les	bx, [bp+6]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+2]
-		call	sub_318E
+		call	_farfree
 		pop	cx
 		pop	cx
 		les	bx, [bp+6]
@@ -42330,7 +41658,7 @@ dseg		segment	para public 'DATA' use16
 word_12290	dw 0
 					; sub_30BD:loc_3118r ...
 word_12292	dw 0
-aNullCheck	db 'NULL CHECK',0
+CheckStr	db 'NULL CHECK',0
 		dd    0
 		dd    0
 		dd    0
