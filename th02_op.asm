@@ -11958,52 +11958,7 @@ loc_553E:
 		retf
 _strcat		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl strcmp(const char	*s1, const char	*s2)
-_strcmp		proc near
-
-s1		= dword	ptr  4
-s2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		cld
-_strcmp		endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_554E	proc far
-		xor	ax, ax
-		mov	bx, ax
-		les	di, [bp+0Ah]
-		mov	si, di
-		xor	al, al
-		mov	cx, 0FFFFh
-		repne scasb
-		not	cx
-		mov	di, si
-		lds	si, [bp+6]
-		repe cmpsb
-		mov	al, [si-1]
-		mov	bl, es:[di-1]
-		sub	ax, bx
-		mov	ds, dx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_554E	endp ; sp-analysis failed
-
+include libs/BorlandC/_strcmp.asm
 include libs/BorlandC/_strcpy.asm
 include libs/BorlandC/_stricmp.asm
 include libs/BorlandC/_strlen.asm
@@ -19117,7 +19072,6 @@ loc_8A3B:
 		push	dx		; s2
 		push	ax
 		nop
-		push	cs		; s1
 		call	_strcmp
 		add	sp, 8
 		or	ax, ax
