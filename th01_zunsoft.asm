@@ -3816,37 +3816,7 @@ __c_exit	proc near
 		retn
 __c_exit	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LXRSH@	proc far
-		pop	bx
-		push	cs
-		push	bx
-
-LXRSH@:
-		cmp	cl, 10h
-		jnb	short loc_17F0
-		mov	bx, dx
-		shr	ax, cl
-		sar	dx, cl
-		neg	cl
-		add	cl, 10h
-		shl	bx, cl
-		or	ax, bx
-		retf
-; ---------------------------------------------------------------------------
-
-loc_17F0:
-		sub	cl, 10h
-		xchg	ax, dx
-		cwd
-		sar	ax, cl
-		retf
-N_LXRSH@	endp ; sp-analysis failed
-
+include libs/BorlandC/H_LRSH.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
 

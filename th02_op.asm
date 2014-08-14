@@ -7768,39 +7768,7 @@ _setvect	endp
 
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
-
-; ---------------------------------------------------------------------------
-
-N_LXRSH@:
-		pop	bx
-		push	cs
-		push	bx
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-LXRSH@		proc far
-		cmp	cl, 10h
-		jnb	short loc_37A4
-		mov	bx, dx
-		shr	ax, cl
-		sar	dx, cl
-		neg	cl
-		add	cl, 10h
-		shl	bx, cl
-		or	ax, bx
-		retf
-; ---------------------------------------------------------------------------
-
-loc_37A4:
-		sub	cl, 10h
-		xchg	ax, dx
-		cwd
-		sar	ax, cl
-		retf
-LXRSH@		endp
-
+include libs/BorlandC/H_LRSH.ASM
 include libs/BorlandC/H_PADD.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
@@ -25861,7 +25829,7 @@ loc_C124:
 		pop	bx
 		call	LXMUL@
 		mov	cl, 8
-		call	LXRSH@
+		call	far ptr LXRSH@
 		add	ax, [bp+arg_8]
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -25879,7 +25847,7 @@ loc_C124:
 		pop	bx
 		call	LXMUL@
 		mov	cl, 8
-		call	LXRSH@
+		call	far ptr LXRSH@
 		add	ax, [bp+arg_6]
 		mov	bx, [bp+var_2]
 		shl	bx, 2
