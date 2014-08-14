@@ -7925,78 +7925,7 @@ loc_3488:
 		retf
 N_LXLSH@	endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_PADD@		proc far
-		pop	es
-		push	cs
-		push	es
-
-F_PADD@:
-		or	cx, cx
-		jge	short loc_34A4
-		not	bx
-		not	cx
-		add	bx, 1
-		adc	cx, 0
-		jmp	short loc_34D3
-; ---------------------------------------------------------------------------
-
-loc_34A4:
-		add	ax, bx
-		jnb	short loc_34AC
-		add	dx, 1000h
-
-loc_34AC:
-		mov	ch, cl
-		mov	cl, 4
-		shl	ch, cl
-		add	dh, ch
-		mov	ch, al
-		shr	ax, cl
-		add	dx, ax
-		mov	al, ch
-		and	ax, 0Fh
-		retf
-; ---------------------------------------------------------------------------
-
-N_PSUB@:
-		pop	es
-		push	cs
-		push	es
-
-F_PSUB@:
-		or	cx, cx
-		jge	short loc_34D3
-		not	bx
-		not	cx
-		add	bx, 1
-		adc	cx, 0
-		jmp	short loc_34A4
-; ---------------------------------------------------------------------------
-
-loc_34D3:
-		sub	ax, bx
-		jnb	short loc_34DB
-		sub	dx, 1000h
-
-loc_34DB:
-		mov	bh, cl
-		mov	cl, 4
-		shl	bh, cl
-		xor	bl, bl
-		sub	dx, bx
-		mov	ch, al
-		shr	ax, cl
-		add	dx, ax
-		mov	al, ch
-		and	ax, 0Fh
-		retf
-N_PADD@		endp ; sp-analysis failed
-
+include libs/BorlandC/H_PADD.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
 
