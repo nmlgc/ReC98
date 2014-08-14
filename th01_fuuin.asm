@@ -13783,60 +13783,7 @@ _arglist		= word ptr  0Eh
 		retf
 _vsprintf	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	strcat(char *dest, const char *src)
-_strcat		proc far
-
-dest		= dword	ptr  6
-_src		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		push	ds
-		les	di, [bp+dest]
-		mov	dx, di
-		xor	al, al
-		mov	cx, 0FFFFh
-		repne scasb
-		push	es
-		lea	si, [di-1]
-		les	di, [bp+_src]
-		mov	cx, 0FFFFh
-		repne scasb
-		not	cx
-		sub	di, cx
-		push	es
-		pop	ds
-		pop	es
-		xchg	si, di
-		test	si, 1
-		jz	short loc_54AC
-		movsb
-		dec	cx
-
-loc_54AC:
-		shr	cx, 1
-		rep movsw
-		jnb	short loc_54B3
-		movsb
-
-loc_54B3:
-		xchg	ax, dx
-		mov	dx, es
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_strcat		endp
-
+include libs/BorlandC/_strcat.asm
 include libs/BorlandC/_strcmp.asm
 include libs/BorlandC/_strcpy.asm
 include libs/BorlandC/_stricmp.asm
