@@ -3848,32 +3848,7 @@ loc_17F0:
 N_LXRSH@	endp ; sp-analysis failed
 
 include libs/BorlandC/__IOERROR.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl isatty(int handle)
-_isatty		proc near
-
-handle		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 4400h
-		mov	bx, [bp+handle]
-		int	21h		; DOS -	2+ - IOCTL - GET DEVICE	INFORMATION
-					; BX = file or device handle
-		xchg	ax, dx
-		and	ax, 80h
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_isatty		endp
-
+include libs/BorlandC/_isatty.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
