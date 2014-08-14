@@ -18,6 +18,7 @@
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -3685,242 +3686,7 @@ loc_187D:
 ; END OF FUNCTION CHUNK	FOR sub_1A1A
 ; ---------------------------------------------------------------------------
 		nop
-; START	OF FUNCTION CHUNK FOR sub_1A1A
-
-loc_1884:
-		push	cs
-		call	near ptr check_machine_fmr
-		jnz	short loc_1890
-		mov	ax, 80h	; '€'
-		jmp	loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_1890:
-		xor	bx, bx
-		mov	ax, 4F01h
-		int	2Fh
-		or	bx, bx
-		jz	short loc_18C1
-		push	ds
-		mov	ax, 0F000h
-		mov	ds, ax
-		assume ds:nothing
-		mov	al, ds:0E010h
-		cmp	al, 54h	; 'T'
-		jnz	short loc_18BB
-		xor	ax, ax
-		mov	ds, ax
-		assume ds:seg000
-		mov	al, byte_4D0
-		not	al
-		and	al, 1
-		or	al, 16h
-		xor	ah, ah
-		pop	ds
-		assume ds:dseg
-		jmp	loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_18BB:
-		pop	ds
-
-loc_18BC:
-		mov	bx, 1Ah
-		jmp	short loc_190C
-; ---------------------------------------------------------------------------
-
-loc_18C1:
-		xor	bx, bx
-		mov	ax, 5001h
-		int	10h		; - VIDEO - SCROLOCK.COM - INSTALLATION	CHECK
-					; Return: BX = 1954h if	installed
-					; AL = 00 if inactive, nonzero if active
-		or	bl, bl
-		jz	short loc_18DC
-		mov	ax, 14h
-		cmp	bx, 51h	; 'Q'
-		jnz	short loc_18D7
-		jmp	loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_18D7:
-		or	ax, bx
-		jmp	loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_18DC:
-		mov	ax, 3000h
-		int	21h		; DOS -	GET DOS	VERSION
-					; Return: AL = major version number (00h for DOS 1.x)
-		cmp	bh, 0FFh
-		jz	short loc_18BC
-		and	bh, 0FEh
-		cmp	bh, 0EEh ; 'î'
-		jnz	short loc_18F2
-		mov	dl, 18h
-		jmp	short loc_190C
-; ---------------------------------------------------------------------------
-
-loc_18F2:
-		mov	ax, 4900h
-		pushf
-		int	15h
-		sbb	ax, ax
-		popf
-		test	ax, ax
-		jz	short loc_1902
-		jmp	loc_19A4
-; ---------------------------------------------------------------------------
-
-loc_1902:
-		or	bl, bl
-		jz	short loc_1909
-		jmp	loc_19A4
-; ---------------------------------------------------------------------------
-
-loc_1909:
-		mov	bx, 12h
-
-loc_190C:
-					; sub_1A1A-12Aj
-		push	ds
-		push	si
-		xor	ax, ax
-		mov	ds, ax
-		assume ds:seg000
-		mov	ax, 6300h
-		int	21h		; DOS -	3.2+ only - GET	DOUBLE BYTE CHARACTER SET LEAD TABLE
-		mov	ax, [si]
-		not	ax
-		and	ax, 1
-		or	bx, ax
-		pop	si
-		pop	ds
-		assume ds:dseg
-		pushf
-		push	bx
-		mov	ax, 5010h
-		int	15h
-		cmp	ah, 86h	; '†'
-		jnz	short loc_1932
-		xor	ax, ax
-		jmp	short loc_1939
-; ---------------------------------------------------------------------------
-
-loc_1932:
-		mov	ax, es:[bx+2]
-		and	ax, 1
-
-loc_1939:
-		pop	bx
-		popf
-		jb	short loc_1967
-		ror	al, 1
-		ror	al, 1
-		or	ax, bx
-		test	ax, 40h
-		jz	short loc_1967
-		mov	bx, ax
-		mov	dx, 36Eh
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jnb	short loc_195B
-		xor	bx, 40h
-		mov	ax, bx
-		jmp	short loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_195B:
-		push	bx
-		mov	bx, ax
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	bx
-		mov	ax, bx
-		jmp	short loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_1967:
-		push	bx
-		mov	dx, 377h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jb	short loc_199F
-		push	ax
-		mov	dx, 380h
-		mov	cx, 4
-		mov	bx, ax
-		mov	ax, 4402h
-		int	21h		; DOS -	2+ - IOCTL - READ CHARACTER DEVICE CONTROL STRING
-					; BX = device handle, CX = number of bytes to read DS:DX -> buffer
-		pop	ax
-		pushf
-		mov	bx, ax
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		popf
-		jb	short loc_199F
-		mov	ax, 50F1h
-		call	dword_216C0
-		or	ah, ah
-		jnz	short loc_199F
-		pop	bx
-		or	bx, 200h
-		mov	ax, bx
-		jmp	short loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_199F:
-		pop	bx
-		mov	ax, bx
-		jmp	short loc_19B9
-; ---------------------------------------------------------------------------
-
-loc_19A4:
-					; sub_1A1A-114j
-		push	ds
-		xor	ax, ax
-		mov	ds, ax
-		assume ds:seg000
-		mov	ax, word ptr loc_1F3+1
-		or	ax, word ptr loc_1F3+3
-		pop	ds
-		assume ds:dseg
-		mov	ax, 10h
-		jnz	short loc_19B9
-		mov	ax, 11h
-
-loc_19B9:
-					; sub_1A1A-162j ...
-		mov	dx, ax
-		mov	ax, 1A00h
-		xor	bx, bx
-		xor	cx, cx
-		int	2Fh		; - Multiplex -	DOS 4+ ANSI.SYS	internal - INSTALLATION	CHECK
-					; Return: AL = FFh if installed
-		mov	ah, al
-		cmp	ax, 0FFFFh
-		jnz	short loc_19D0
-		and	ax, 110h
-		or	dx, ax
-
-loc_19D0:
-		mov	Machine_State, dx
-		mov	ax, dx
-		; Hack
-		db 0e9h
-		db 001h
-		db 000h
-; END OF FUNCTION CHUNK	FOR sub_1A1A
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine_at.asm
 		nop
 include libs/master.lib/get_machine_dosbox.asm
 		nop
@@ -3951,7 +3717,7 @@ sub_1A1A	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1A2E:
-		jmp	loc_1884
+		jmp	get_machine_at
 ; ---------------------------------------------------------------------------
 
 loc_1A31:
@@ -43897,9 +43663,7 @@ byte_216A2	db 0
 		db  36h	; 6
 		db  3Fh	; ?
 		db    0
-aIbmadsp	db '$IBMADSP',0
-aIbmafnt	db '$IBMAFNT',0
-dword_216C0	dd 0
+include libs/master.lib/get_machine_at[data].asm
 word_216C4	dw 0
 		db  10h
 		db    0
