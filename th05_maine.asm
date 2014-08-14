@@ -2555,41 +2555,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 		nop
 include libs/master.lib/check_machine_fmr.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11FE	proc far
-
-; FUNCTION CHUNK AT 0FEA SIZE 0000007D BYTES
-; FUNCTION CHUNK AT 1068 SIZE 00000155 BYTES
-; FUNCTION CHUNK AT 11BE SIZE 00000031 BYTES
-
-		push	cs
-		call	near ptr check_machine_fmr
-		jz	short loc_1215
-		mov	ah, 0Fh
-		int	10h		; - VIDEO - GET	CURRENT	VIDEO MODE
-					; Return: AH = number of columns on screen
-					; AL = current video mode
-					; BH = current active display page
-		cmp	ah, 0Fh
-		jnz	short loc_1212
-		nop
-		nop
-		jmp	get_machine_98
-; ---------------------------------------------------------------------------
-
-loc_1212:
-		jmp	get_machine_at
-; ---------------------------------------------------------------------------
-
-loc_1215:
-		mov	ax, 40h	; '@'
-		retf
-sub_11FE	endp
-
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine.asm
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7617,7 +7583,7 @@ arg_0		= word ptr  6
 		push	di
 		nop
 		push	cs
-		call	near ptr sub_11FE
+		call	near ptr get_machine
 		cmp	word_10758, 0
 		jz	short loc_3572
 		xor	ax, ax
