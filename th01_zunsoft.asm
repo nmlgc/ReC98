@@ -3847,74 +3847,7 @@ loc_17F0:
 		retf
 N_LXRSH@	endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__IOERROR	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		or	dx, dx
-		jl	short loc_181B
-		cmp	dx, 58h
-		jle	short loc_180C
-
-loc_1809:
-		mov	dx, 57h
-
-loc_180C:
-		mov	word_2800, dx
-		mov	bx, dx
-		mov	al, [bx+2802h]
-		cbw
-		mov	dx, ax
-		jmp	short loc_1829
-; ---------------------------------------------------------------------------
-
-loc_181B:
-		neg	dx
-		cmp	dx, word_2868
-		jg	short loc_1809
-		mov	word_2800, 0FFFFh
-
-loc_1829:
-		mov	word_21BA, dx
-		mov	ax, 0FFFFh
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-__IOERROR	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__DOSERROR	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_0]
-		call	__IOERROR
-		mov	ax, [bp+arg_0]
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-__DOSERROR	endp
-
+include libs/BorlandC/__IOERROR.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4130,7 +4063,7 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_1957:
-		mov	word_21BA, 8
+		mov	__errno, 8
 		mov	ax, 0FFFFh
 
 loc_1960:
@@ -4170,7 +4103,7 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_198C:
-		mov	word_21BA, 8
+		mov	__errno, 8
 		mov	ax, 0FFFFh
 
 loc_1995:
@@ -5579,7 +5512,7 @@ word_21B2	dw 0
 word_21B4	dw 0
 word_21B6	dw 0
 word_21B8	dw 0
-word_21BA	dw 0
+__errno	dw 0
 		db 2 dup(0FFh),	0A0h, 33h
 word_21C0	dw 33A0h
 		dw 0
@@ -6586,96 +6519,7 @@ byte_26B8	db 2
 word_27D4	dw 14h
 		db 1, 60h, 2, 60h, 2, 60h, 4, 0A0h, 2, 0A0h, 1Eh dup(0)
 word_27FE	dw 0
-word_2800	dw 0
-		db    0
-		db  13h
-		db    2
-		db    2
-		db    4
-		db    5
-		db    6
-		db    8
-		db    8
-		db    8
-		db  14h
-		db  15h
-		db    5
-		db  13h
-		db  0Eh
-		db    5
-		db    5
-		db  11h
-		db    2
-		db  1Eh
-		db  29h	; )
-		db  2Ch	; ,
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  29h	; )
-		db  2Ch	; ,
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db    5
-		db    5
-		db  29h	; )
-		db  17h
-		db  17h
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Fh
-		db  2Ch	; ,
-		db  23h	; #
-		db    2
-		db  2Ch	; ,
-		db  0Fh
-		db  2Ah	; *
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  13h
-		db  1Bh
-		db  1Ch
-		db    2
-		db    2
-		db    5
-		db  0Fh
-		db    2
-		db  17h
-		db  28h	; (
-		db  2Ah	; *
-		db  13h
-		db  2Ah	; *
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  23h	; #
-		db  0Eh
-		db  1Ch
-		db  28h	; (
-		db  17h
-		db  23h	; #
-		db  25h	; %
-		db  13h
-		db  28h	; (
+include libs/BorlandC/__IOERROR[data].asm
 		db    0
 word_285C	dw 1000h
 word_285E	dw 0
@@ -6683,7 +6527,7 @@ word_2860	dw 0
 word_2862	dw 0
 word_2864	dw 0
 word_2866	dw 0
-word_2868	dw 30h
+include libs/BorlandC/sysnerr[data].asm
 		db 0, 2, 0A3h, 18h, 2 dup(0)
 seg000		ends
 

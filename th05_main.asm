@@ -11104,74 +11104,7 @@ loc_4A63:
 		retf
 N_PADD@		endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__IOERROR	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		or	dx, dx
-		jl	short loc_4A9C
-		cmp	dx, 58h	; 'X'
-		jle	short loc_4A8D
-
-loc_4A8A:
-		mov	dx, 57h	; 'W'
-
-loc_4A8D:
-		mov	word_22C60, dx
-		mov	bx, dx
-		mov	al, [bx+2282h]
-		cbw
-		mov	dx, ax
-		jmp	short loc_4AAA
-; ---------------------------------------------------------------------------
-
-loc_4A9C:
-		neg	dx
-		cmp	dx, word_22F42
-		jg	short loc_4A8A
-		mov	word_22C60, 0FFFFh
-
-loc_4AAA:
-		mov	word_20A5E, dx
-		mov	ax, 0FFFFh
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-__IOERROR	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__DOSERROR	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_0]
-		call	__IOERROR
-		mov	ax, [bp+arg_0]
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-__DOSERROR	endp
-
+include libs/BorlandC/__IOERROR.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12768,7 +12701,7 @@ loc_59E2:
 		mov	[bp-2],	ax
 		cmp	ax, 0FFFFh
 		jnz	short loc_5A01
-		mov	word_20A5E, 13h
+		mov	__errno, 13h
 		mov	dx, 0FFFFh
 		mov	ax, 0FFFFh
 		jmp	loc_5A9E
@@ -13002,7 +12935,7 @@ loc_5B65:
 ; ---------------------------------------------------------------------------
 
 loc_5B69:
-		mov	word_20A5E, 5
+		mov	__errno, 5
 		mov	ax, 0FFFFh
 
 loc_5B72:
@@ -14201,7 +14134,7 @@ loc_62CE:
 		pop	cx
 		cmp	ax, [bp+len]
 		jb	short loc_6309
-		mov	word_20A5E, 22h	; '"'
+		mov	__errno, 22h	; '"'
 		jmp	short loc_632A
 ; ---------------------------------------------------------------------------
 
@@ -14218,7 +14151,7 @@ loc_6309:
 		mov	word ptr [bp+dest], ax
 		or	ax, dx
 		jnz	short loc_6330
-		mov	word_20A5E, 8
+		mov	__errno, 8
 
 loc_632A:
 					; __getdcwd+55j
@@ -24072,7 +24005,7 @@ loc_ACD6:
 		jnz	short loc_AD01
 
 loc_ACF8:
-		mov	word_20A5E, 2
+		mov	__errno, 2
 		jmp	loc_ADC7
 ; ---------------------------------------------------------------------------
 
@@ -24109,7 +24042,7 @@ loc_AD2E:
 		mov	ax, [bp+var_8]
 		or	ax, [bp+var_6]
 		jnz	short loc_AD48
-		mov	word_20A5E, 8
+		mov	__errno, 8
 		jmp	loc_ADC7
 ; ---------------------------------------------------------------------------
 
@@ -24125,7 +24058,7 @@ loc_AD48:
 		pop	cx
 		cmp	ax, 80h	; '€'
 		jb	short loc_AD71
-		mov	word_20A5E, 14h
+		mov	__errno, 14h
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -24170,7 +24103,7 @@ loc_ADA0:
 		mov	[bp+var_C], ax
 		or	ax, dx
 		jnz	short loc_ADCC
-		mov	word_20A5E, 8
+		mov	__errno, 8
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -43946,7 +43879,7 @@ word_20A58	dw 0
 ; unsigned int segx
 segx		dw 0
 word_20A5C	dw 0
-word_20A5E	dw 0
+__errno	dw 0
 					; seg000:59F2w	...
 		db 0FFh
 		db 0FFh
@@ -49388,97 +49321,7 @@ word_22C36	dw 14h
 		db    0
 		db    0
 		db    0
-word_22C60	dw 0
-					; __IOERROR+2Bw
-		db    0
-		db  13h
-		db    2
-		db    2
-		db    4
-		db    5
-		db    6
-		db    8
-		db    8
-		db    8
-		db  14h
-		db  15h
-		db    5
-		db  13h
-		db  0Eh
-		db    5
-		db    5
-		db  11h
-		db    2
-		db  1Eh
-		db  29h	; )
-		db  2Ch	; ,
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  29h	; )
-		db  2Ch	; ,
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db    5
-		db    5
-		db  29h	; )
-		db  17h
-		db  17h
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Fh
-		db  2Ch	; ,
-		db  23h	; #
-		db    2
-		db  2Ch	; ,
-		db  0Fh
-		db  2Ah	; *
-		db  28h	; (
-		db  28h	; (
-		db  28h	; (
-		db  13h
-		db  1Bh
-		db  1Ch
-		db    2
-		db    2
-		db    5
-		db  0Fh
-		db    2
-		db  17h
-		db  28h	; (
-		db  2Ah	; *
-		db  13h
-		db  2Ah	; *
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  23h	; #
-		db  0Eh
-		db  1Ch
-		db  28h	; (
-		db  17h
-		db  23h	; #
-		db  25h	; %
-		db  13h
-		db  28h	; (
+include libs/BorlandC/__IOERROR[data].asm
 		db    0
 unk_22CBC	db    0
 		db    0
@@ -49874,7 +49717,7 @@ word_22F3E	dw 0
 					; _setvbuf+4Bw
 word_22F40	dw 0
 					; _setvbuf+35w
-word_22F42	dw 30h
+include libs/BorlandC/sysnerr[data].asm
 aNotype		db '<notype>',0
 aBccxh1		db '**BCCxh1',0
 dword_22F56	dd 0
