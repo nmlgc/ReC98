@@ -15083,68 +15083,7 @@ include libs/BorlandC/_strcmp.asm
 include libs/BorlandC/_strcpy.asm
 include libs/BorlandC/_stricmp.asm
 include libs/BorlandC/_strlen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_6542(char *s, char)
-sub_6542	proc far
-
-var_4		= dword	ptr -4
-s		= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		push	word ptr [bp+s+2]
-		push	word ptr [bp+s]	; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		inc	ax
-		mov	cx, ax
-		mov	dx, word ptr [bp+s+2]
-		mov	ax, word ptr [bp+s]
-		add	ax, cx
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		jmp	short loc_6581
-; ---------------------------------------------------------------------------
-
-loc_656A:
-		dec	word ptr [bp+var_4]
-		les	bx, [bp+var_4]
-		mov	al, es:[bx]
-		cmp	al, [bp+arg_4]
-		jnz	short loc_6580
-		mov	dx, word ptr [bp+var_4+2]
-		mov	ax, word ptr [bp+var_4]
-		jmp	short loc_6589
-; ---------------------------------------------------------------------------
-
-loc_6580:
-		dec	cx
-
-loc_6581:
-		or	cx, cx
-		jnz	short loc_656A
-		xor	dx, dx
-		xor	ax, ax
-
-loc_6589:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_6542	endp
-
+include libs/BorlandC/strrchr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24193,7 +24132,7 @@ loc_A8E0:
 		push	word ptr [bp+s]	; s
 		nop
 		push	cs
-		call	near ptr sub_6542
+		call	near ptr strrchr
 		add	sp, 6
 		mov	word ptr [bp+s1+2], dx
 		mov	word ptr [bp+s1], ax
