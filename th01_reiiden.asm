@@ -8315,33 +8315,7 @@ arg_2		= word ptr  8
 		retf
 sub_2F0A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LXMUL@	proc near
-		push	si
-		xchg	ax, si
-		xchg	ax, dx
-		test	ax, ax
-		jz	short loc_2F29
-		mul	bx
-
-loc_2F29:
-		jcxz	short loc_2F30
-		xchg	ax, cx
-		mul	si
-		add	ax, cx
-
-loc_2F30:
-		xchg	ax, si
-		mul	bx
-		add	dx, si
-		pop	si
-		retn
-N_LXMUL@	endp
-
+include libs/BorlandC/N_LXMUL.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -8067,32 +8067,7 @@ loc_368B:
 		dw seg seg000
 		db 5, 0, 34h, 0, 78h, 6Dh, 73h,	67h, 0Eh dup(0)
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LXMUL@	proc near
-		push	si
-		xchg	ax, si
-		xchg	ax, dx
-		test	ax, ax
-		jz	short loc_36D0
-		mul	bx
-
-loc_36D0:
-		jcxz	short loc_36D7
-		xchg	ax, cx
-		mul	si
-		add	ax, cx
-
-loc_36D7:
-		xchg	ax, si
-		mul	bx
-		add	dx, si
-		pop	si
-		retn
-N_LXMUL@	endp
-
+include libs/BorlandC/N_LXMUL.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 

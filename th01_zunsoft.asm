@@ -3893,33 +3893,7 @@ loc_1888:
 		retn
 _lseek		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LXMUL@	proc near
-		push	si
-		xchg	ax, si
-		xchg	ax, dx
-		test	ax, ax
-		jz	short loc_1895
-		mul	bx
-
-loc_1895:
-		jcxz	short loc_189C
-		xchg	ax, cx
-		mul	si
-		add	ax, cx
-
-loc_189C:
-		xchg	ax, si
-		mul	bx
-		add	dx, si
-		pop	si
-		retn
-N_LXMUL@	endp
-
+include libs/BorlandC/N_LXMUL.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 
