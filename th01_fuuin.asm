@@ -5556,159 +5556,7 @@ _isr		= dword	ptr  8
 		retf
 _setvect	endp
 
-; ---------------------------------------------------------------------------
-
-N_LDIV@:
-		pop	cx
-		push	cs
-		push	cx
-
-LDIV@:
-		xor	cx, cx
-		jmp	short loc_1F7E
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LUDIV@	proc near
-		pop	cx
-		push	cs
-		push	cx
-N_LUDIV@	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-F_LUDIV@	proc far
-		mov	cx, 1
-		jmp	short loc_1F7E
-F_LUDIV@	endp
-
-; ---------------------------------------------------------------------------
-
-N_LMOD@:
-		pop	cx
-		push	cs
-		push	cx
-
-F_LMOD@:
-		mov	cx, 2
-		jmp	short loc_1F7E
-; ---------------------------------------------------------------------------
-
-N_LUMOD@:
-		pop	cx
-		push	cs
-		push	cx
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-LUMOD@		proc far
-
-arg_0		= word ptr  0Ah
-arg_2		= word ptr  0Ch
-arg_4		= word ptr  0Eh
-arg_6		= word ptr  10h
-
-		mov	cx, 3
-
-loc_1F7E:
-		push	bp
-		push	si
-		push	di
-		mov	bp, sp
-		mov	di, cx
-		mov	ax, [bp+arg_0]
-		mov	dx, [bp+arg_2]
-		mov	bx, [bp+arg_4]
-		mov	cx, [bp+arg_6]
-		or	cx, cx
-		jnz	short loc_1F9D
-		or	dx, dx
-		jz	short loc_2002
-		or	bx, bx
-		jz	short loc_2002
-
-loc_1F9D:
-		test	di, 1
-		jnz	short loc_1FBF
-		or	dx, dx
-		jns	short loc_1FB1
-		neg	dx
-		neg	ax
-		sbb	dx, 0
-		or	di, 0Ch
-
-loc_1FB1:
-		or	cx, cx
-		jns	short loc_1FBF
-		neg	cx
-		neg	bx
-		sbb	cx, 0
-		xor	di, 4
-
-loc_1FBF:
-		mov	bp, cx
-		mov	cx, 20h	; ' '
-		push	di
-		xor	di, di
-		xor	si, si
-
-loc_1FC9:
-		shl	ax, 1
-		rcl	dx, 1
-		rcl	si, 1
-		rcl	di, 1
-		cmp	di, bp
-		jb	short loc_1FE0
-		ja	short loc_1FDB
-		cmp	si, bx
-		jb	short loc_1FE0
-
-loc_1FDB:
-		sub	si, bx
-		sbb	di, bp
-		inc	ax
-
-loc_1FE0:
-		loop	loc_1FC9
-		pop	bx
-		test	bx, 2
-		jz	short loc_1FEF
-		mov	ax, si
-		mov	dx, di
-		shr	bx, 1
-
-loc_1FEF:
-		test	bx, 4
-		jz	short loc_1FFC
-		neg	dx
-		neg	ax
-		sbb	dx, 0
-
-loc_1FFC:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_2002:
-		div	bx
-		test	di, 2
-		jz	short loc_200B
-		xchg	ax, dx
-
-loc_200B:
-		xor	dx, dx
-		jmp	short loc_1FFC
-LUMOD@		endp
-
+include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
 include libs/BorlandC/H_PADD.ASM
 include libs/BorlandC/__IOERROR.ASM
@@ -24049,7 +23897,7 @@ loc_A1AC:
 		push	0Ah
 		push	[bp+var_6]
 		push	[bp+var_8]
-		call	F_LUDIV@
+		call	far ptr F_LUDIV@
 		mov	[bp+var_6], dx
 		mov	[bp+var_8], ax
 		cmp	si, 270h
@@ -24064,10 +23912,10 @@ loc_A1CA:
 		push	[bp+var_8]
 		push	[bp+arg_A]
 		push	[bp+arg_8]
-		call	F_LUDIV@
+		call	far ptr F_LUDIV@
 		push	dx
 		push	ax
-		call	LUMOD@
+		call	far ptr LUMOD@
 		mov	[bp+var_2], ax
 		push	0
 		push	0Ah
@@ -24075,10 +23923,10 @@ loc_A1CA:
 		push	[bp+var_8]
 		push	[bp+arg_E]
 		push	[bp+arg_C]
-		call	F_LUDIV@
+		call	far ptr F_LUDIV@
 		push	dx
 		push	ax
-		call	LUMOD@
+		call	far ptr LUMOD@
 		mov	[bp+var_4], ax
 		cmp	[bp+var_2], 0
 		jz	short loc_A213

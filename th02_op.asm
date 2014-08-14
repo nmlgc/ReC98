@@ -7766,153 +7766,7 @@ isr		= dword	ptr  8
 		retf
 _setvect	endp
 
-; ---------------------------------------------------------------------------
-
-N_LDIV@:
-		pop	cx
-		push	cs
-		push	cx
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-LDIV@		proc far
-		xor	cx, cx
-		jmp	short loc_36DA
-LDIV@		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LUDIV@	proc far
-		pop	cx
-		push	cs
-		push	cx
-
-F_LUDIV@:
-		mov	cx, 1
-		jmp	short loc_36DA
-N_LUDIV@	endp
-
-; ---------------------------------------------------------------------------
-
-N_LMOD@:
-		pop	cx
-		push	cs
-		push	cx
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-F_LMOD@		proc far
-		mov	cx, 2
-		jmp	short loc_36DA
-; ---------------------------------------------------------------------------
-
-N_LUMOD@:
-		pop	cx
-		push	cs
-		push	cx
-
-LUMOD@:
-		mov	cx, 3
-
-loc_36DA:
-		push	bp
-		push	si
-		push	di
-		mov	bp, sp
-		mov	di, cx
-		mov	ax, [bp+0Ah]
-		mov	dx, [bp+0Ch]
-		mov	bx, [bp+0Eh]
-		mov	cx, [bp+10h]
-		or	cx, cx
-		jnz	short loc_36F9
-		or	dx, dx
-		jz	short loc_375E
-		or	bx, bx
-		jz	short loc_375E
-
-loc_36F9:
-		test	di, 1
-		jnz	short loc_371B
-		or	dx, dx
-		jns	short loc_370D
-		neg	dx
-		neg	ax
-		sbb	dx, 0
-		or	di, 0Ch
-
-loc_370D:
-		or	cx, cx
-		jns	short loc_371B
-		neg	cx
-		neg	bx
-		sbb	cx, 0
-		xor	di, 4
-
-loc_371B:
-		mov	bp, cx
-		mov	cx, 20h	; ' '
-		push	di
-		xor	di, di
-		xor	si, si
-
-loc_3725:
-		shl	ax, 1
-		rcl	dx, 1
-		rcl	si, 1
-		rcl	di, 1
-		cmp	di, bp
-		jb	short loc_373C
-		ja	short loc_3737
-		cmp	si, bx
-		jb	short loc_373C
-
-loc_3737:
-		sub	si, bx
-		sbb	di, bp
-		inc	ax
-
-loc_373C:
-		loop	loc_3725
-		pop	bx
-		test	bx, 2
-		jz	short loc_374B
-		mov	ax, si
-		mov	dx, di
-		shr	bx, 1
-
-loc_374B:
-		test	bx, 4
-		jz	short loc_3758
-		neg	dx
-		neg	ax
-		sbb	dx, 0
-
-loc_3758:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_375E:
-		div	bx
-		test	di, 2
-		jz	short loc_3767
-		xchg	ax, dx
-
-loc_3767:
-		xor	dx, dx
-		jmp	short loc_3758
-F_LMOD@		endp ; sp-analysis failed
-
+include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
 
 ; ---------------------------------------------------------------------------
@@ -24259,7 +24113,7 @@ loc_B418:
 		push	[bp+var_4]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		call	LDIV@
+		call	far ptr LDIV@
 		push	dx
 		push	ax
 		jmp	short loc_B443
@@ -24272,14 +24126,14 @@ loc_B439:
 		push	[bp+arg_2]
 
 loc_B443:
-		call	F_LMOD@
+		call	far ptr F_LMOD@
 		mov	[bp+var_6], dx
 		mov	[bp+var_8], ax
 		push	0
 		push	0Ah
 		push	[bp+var_2]
 		push	[bp+var_4]
-		call	LDIV@
+		call	far ptr LDIV@
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_8]
