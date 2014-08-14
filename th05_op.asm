@@ -2731,42 +2731,8 @@ loc_1162:
 ; END OF FUNCTION CHUNK	FOR sub_11AC
 ; ---------------------------------------------------------------------------
 		nop
-; START	OF FUNCTION CHUNK FOR sub_11AC
-
-loc_116C:
-					; sub_11AC-44j
-		mov	ax, 3306h
-		int	21h		; DOS -	5+ Get TRUE Version Number (BL major, BH minor,	DL revision, DH	flags)
-		cmp	al, 0FFh
-		jz	short loc_118A
-		cmp	bx, 3205h
-		jz	short loc_1193
-		cmp	bl, 0Ah
-		jz	short loc_1193
-		cmp	bl, 14h
-		jz	short loc_1193
-		cmp	bl, 1Eh
-		jz	short loc_1193
-
-loc_118A:
-		mov	ax, 1600h
-		int	2Fh		; - Multiplex -	MS WINDOWS - ENHANCED WINDOWS INSTALLATION CHECK
-					; Return: AL = anything	else
-					; AL = Windows major version number >= 3
-					; AH = Windows minor version number
-		and	al, 7Fh
-		jz	short loc_1199
-
-loc_1193:
-		or	Machine_State, 8000h
-
-loc_1199:
-		mov	ax, Machine_State
-		retf
-; END OF FUNCTION CHUNK	FOR sub_11AC
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine_dosbox.asm
 		nop
-
 include libs/master.lib/check_machine_fmr.asm
 
 ; =============== S U B	R O U T	I N E =======================================

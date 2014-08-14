@@ -2617,7 +2617,7 @@ loc_104B:
 
 loc_1061:
 		mov	Machine_State, ax
-		jmp	loc_11BE
+		jmp	get_machine_dosbox
 ; END OF FUNCTION CHUNK	FOR sub_11FE
 ; ---------------------------------------------------------------------------
 		nop
@@ -2858,42 +2858,8 @@ loc_11B4:
 ; END OF FUNCTION CHUNK	FOR sub_11FE
 ; ---------------------------------------------------------------------------
 		nop
-; START	OF FUNCTION CHUNK FOR sub_11FE
-
-loc_11BE:
-					; sub_11FE-44j
-		mov	ax, 3306h
-		int	21h		; DOS -	5+ Get TRUE Version Number (BL major, BH minor,	DL revision, DH	flags)
-		cmp	al, 0FFh
-		jz	short loc_11DC
-		cmp	bx, 3205h
-		jz	short loc_11E5
-		cmp	bl, 0Ah
-		jz	short loc_11E5
-		cmp	bl, 14h
-		jz	short loc_11E5
-		cmp	bl, 1Eh
-		jz	short loc_11E5
-
-loc_11DC:
-		mov	ax, 1600h
-		int	2Fh		; - Multiplex -	MS WINDOWS - ENHANCED WINDOWS INSTALLATION CHECK
-					; Return: AL = anything	else
-					; AL = Windows major version number >= 3
-					; AH = Windows minor version number
-		and	al, 7Fh
-		jz	short loc_11EB
-
-loc_11E5:
-		or	Machine_State, 8000h
-
-loc_11EB:
-		mov	ax, Machine_State
-		retf
-; END OF FUNCTION CHUNK	FOR sub_11FE
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine_dosbox.asm
 		nop
-
 include libs/master.lib/check_machine_fmr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
