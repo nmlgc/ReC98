@@ -3996,7 +3996,7 @@ sub_1B3E	endp
 
 loc_1B4A:
 		push	cs
-		call	near ptr sub_1D50
+		call	near ptr check_machine_fmr
 		jnz	short loc_1B55
 		mov	ax, 40h	; '@'
 		jmp	short loc_1BC1
@@ -4070,7 +4070,7 @@ loc_1BC1:
 
 loc_1BC8:
 		push	cs
-		call	near ptr sub_1D50
+		call	near ptr check_machine_fmr
 		jnz	short loc_1BD4
 		mov	ax, 80h	; '€'
 		jmp	loc_1CFD
@@ -4339,19 +4339,7 @@ loc_1D4B:
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D50	proc far
-					; sub_1D5E-195p ...
-		mov	ax, 0FFFFh
-		mov	es, ax
-		assume es:nothing
-		mov	ax, 0FC00h
-		sub	ax, es:3
-		retf
-sub_1D50	endp
-
+include libs/master.lib/check_machine_fmr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4363,7 +4351,7 @@ sub_1D5E	proc far
 ; FUNCTION CHUNK AT 1D1E SIZE 00000031 BYTES
 
 		push	cs
-		call	near ptr sub_1D50
+		call	near ptr check_machine_fmr
 		jz	short loc_1D75
 		mov	ah, 0Fh
 		int	10h		; - VIDEO - GET	CURRENT	VIDEO MODE

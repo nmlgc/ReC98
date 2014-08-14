@@ -2632,7 +2632,7 @@ sub_10D2	endp
 
 loc_1102:
 		push	cs
-		call	near ptr sub_1308
+		call	near ptr check_machine_fmr
 		jnz	short loc_110D
 		mov	ax, 40h	; '@'
 		jmp	short loc_1179
@@ -2706,7 +2706,7 @@ loc_1179:
 
 loc_1180:
 		push	cs
-		call	near ptr sub_1308
+		call	near ptr check_machine_fmr
 		jnz	short loc_118C
 		mov	ax, 80h	; '€'
 		jmp	loc_12B5
@@ -2975,19 +2975,7 @@ loc_1303:
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1308	proc far
-					; sub_1316-195p ...
-		mov	ax, 0FFFFh
-		mov	es, ax
-		assume es:nothing
-		mov	ax, 0FC00h
-		sub	ax, es:3
-		retf
-sub_1308	endp
-
+include libs/master.lib/check_machine_fmr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2999,7 +2987,7 @@ sub_1316	proc far
 ; FUNCTION CHUNK AT 12D6 SIZE 00000031 BYTES
 
 		push	cs
-		call	near ptr sub_1308
+		call	near ptr check_machine_fmr
 		jz	short loc_132D
 		mov	ah, 0Fh
 		int	10h		; - VIDEO - GET	CURRENT	VIDEO MODE

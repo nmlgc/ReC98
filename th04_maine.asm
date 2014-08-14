@@ -2049,7 +2049,7 @@ sub_CB2		endp
 
 loc_CBE:
 		push	cs
-		call	near ptr sub_EC4
+		call	near ptr check_machine_fmr
 		jnz	short loc_CC9
 		mov	ax, 40h	; '@'
 		jmp	short loc_D35
@@ -2122,7 +2122,7 @@ loc_D35:
 
 loc_D3C:
 		push	cs
-		call	near ptr sub_EC4
+		call	near ptr check_machine_fmr
 		jnz	short loc_D48
 		mov	ax, 80h	; '€'
 		jmp	loc_E71
@@ -2387,18 +2387,7 @@ loc_EBF:
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EC4		proc far
-		mov	ax, 0FFFFh
-		mov	es, ax
-		assume es:nothing
-		mov	ax, 0FC00h
-		sub	ax, es:3
-		retf
-sub_EC4		endp
-
+include libs/master.lib/check_machine_fmr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2410,7 +2399,7 @@ sub_ED2		proc far
 ; FUNCTION CHUNK AT 0E92 SIZE 00000031 BYTES
 
 		push	cs
-		call	near ptr sub_EC4
+		call	near ptr check_machine_fmr
 		jz	short loc_EE9
 		mov	ah, 0Fh
 		int	10h		; - VIDEO - GET	CURRENT	VIDEO MODE
