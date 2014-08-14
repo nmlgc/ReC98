@@ -4061,7 +4061,7 @@ loc_1BAB:
 		xor	al, 1
 
 loc_1BC1:
-		mov	word_20DCA, ax
+		mov	Machine_State, ax
 		jmp	loc_1D1E
 ; END OF FUNCTION CHUNK	FOR sub_1D5E
 ; ---------------------------------------------------------------------------
@@ -4294,7 +4294,7 @@ loc_1CFD:
 		or	dx, ax
 
 loc_1D14:
-		mov	word_20DCA, dx
+		mov	Machine_State, dx
 		mov	ax, dx
 		; Hack
 		db 0e9h
@@ -4330,10 +4330,10 @@ loc_1D3C:
 		jz	short loc_1D4B
 
 loc_1D45:
-		or	word_20DCA, 8000h
+		or	Machine_State, 8000h
 
 loc_1D4B:
-		mov	ax, word_20DCA
+		mov	ax, Machine_State
 		retf
 ; END OF FUNCTION CHUNK	FOR sub_1D5E
 ; ---------------------------------------------------------------------------
@@ -8198,7 +8198,7 @@ sub_367A	endp
 
 
 sub_3690	proc far
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jnz	short loc_36B8
 		xor	ax, ax
 		mov	es, ax
@@ -8654,7 +8654,7 @@ sub_3812	endp
 
 
 sub_3952	proc far
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jnz	short loc_398C
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
@@ -8699,7 +8699,7 @@ sub_3952	endp
 
 sub_3996	proc far
 		cli
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jnz	short loc_39B5
 		push	8
 		push	word_23984
@@ -8757,7 +8757,7 @@ loc_39FE:
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jz	short loc_3A26
 		mov	ax, word_210D4
 		add	ax, 4
@@ -8839,7 +8839,7 @@ loc_3A9A:
 		pop	cx
 		pop	bx
 		pop	dx
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jnz	short loc_3A6C
 		mov	al, 20h	; ' '
 		out	0, al
@@ -8873,7 +8873,7 @@ loc_3ACA:
 		shr	bx, cl
 
 loc_3AD1:
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jz	short loc_3AEA
 		in	al, 61h		; PC/XT	PPI port B bits:
 					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
@@ -9158,7 +9158,7 @@ sub_3C8E	proc far
 		mov	bx, ax
 		jcxz	short loc_3CF4
 		add	word ptr [bx+2FE8h], 2
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jz	short loc_3CC0
 		in	al, 61h		; PC/XT	PPI port B bits:
 					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
@@ -9384,7 +9384,7 @@ loc_3DDE:
 		mov	word_211E6, 0
 		mov	word_211E8, 1
 		mov	word_211EA, 1
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jz	short loc_3E56
 		mov	ax, 10h
 		jmp	short loc_3E68
@@ -9429,7 +9429,7 @@ loc_3E85:
 		nop
 		push	cs
 		call	near ptr sub_3952
-		test	word_20DCA, 10h
+		test	Machine_State, 10h
 		jz	short loc_3EBC
 		mov	ax, 254h
 		mov	cx, ax
@@ -44779,8 +44779,7 @@ word_20DC2	dw 0
 		db    0
 		db    0
 		db    0
-word_20DCA	dw 0
-					; sub_1D5E:loc_1D14w ...
+include libs/master.lib/machine[data].asm
 word_20DCC	dw 64h
 					; sub_600:loc_627w ...
 		db    0

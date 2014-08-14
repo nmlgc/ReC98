@@ -2616,7 +2616,7 @@ loc_104B:
 		xor	al, 1
 
 loc_1061:
-		mov	word_10336, ax
+		mov	Machine_State, ax
 		jmp	loc_11BE
 ; END OF FUNCTION CHUNK	FOR sub_11FE
 ; ---------------------------------------------------------------------------
@@ -2849,7 +2849,7 @@ loc_119D:
 		or	dx, ax
 
 loc_11B4:
-		mov	word_10336, dx
+		mov	Machine_State, dx
 		mov	ax, dx
 		; Hack
 		db 0e9h
@@ -2885,10 +2885,10 @@ loc_11DC:
 		jz	short loc_11EB
 
 loc_11E5:
-		or	word_10336, 8000h
+		or	Machine_State, 8000h
 
 loc_11EB:
-		mov	ax, word_10336
+		mov	ax, Machine_State
 		retf
 ; END OF FUNCTION CHUNK	FOR sub_11FE
 ; ---------------------------------------------------------------------------
@@ -6864,7 +6864,7 @@ sub_2E82	endp
 
 
 sub_2E98	proc far
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jnz	short loc_2EC0
 		xor	ax, ax
 		mov	es, ax
@@ -7320,7 +7320,7 @@ sub_301A	endp
 
 
 sub_315A	proc far
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jnz	short loc_3194
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
@@ -7365,7 +7365,7 @@ sub_315A	endp
 
 sub_319E	proc far
 		cli
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jnz	short loc_31BD
 		push	8
 		push	word_127E2
@@ -7423,7 +7423,7 @@ loc_3206:
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jz	short loc_322E
 		mov	ax, word_10640
 		add	ax, 4
@@ -7505,7 +7505,7 @@ loc_32A2:
 		pop	cx
 		pop	bx
 		pop	dx
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jnz	short loc_3274
 		mov	al, 20h	; ' '
 		out	0, al
@@ -7539,7 +7539,7 @@ loc_32D2:
 		shr	bx, cl
 
 loc_32D9:
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jz	short loc_32F2
 		in	al, 61h		; PC/XT	PPI port B bits:
 					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
@@ -7824,7 +7824,7 @@ sub_3496	proc far
 		mov	bx, ax
 		jcxz	short loc_34FC
 		add	word ptr [bx+2726h], 2
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jz	short loc_34C8
 		in	al, 61h		; PC/XT	PPI port B bits:
 					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
@@ -8049,7 +8049,7 @@ loc_35E6:
 		mov	word_10752, 0
 		mov	word_10754, 1
 		mov	word_10756, 1
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jz	short loc_365E
 		mov	ax, 10h
 		jmp	short loc_3670
@@ -8094,7 +8094,7 @@ loc_368D:
 		nop
 		push	cs
 		call	near ptr sub_315A
-		test	word_10336, 10h
+		test	Machine_State, 10h
 		jz	short loc_36C4
 		mov	ax, 254h
 		mov	cx, ax
@@ -34726,8 +34726,7 @@ word_1032E	dw 0
 		db    0
 		db    0
 		db    0
-word_10336	dw 0
-					; sub_11FE:loc_11B4w ...
+include libs/master.lib/machine[data].asm
 word_10338	dw 64h
 					; sub_600:loc_627w ...
 		db    0
