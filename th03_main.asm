@@ -7805,37 +7805,7 @@ loc_32BC:
 		jmp	short loc_32AD
 N_LUDIV@	endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_LXLSH@	proc far
-		pop	bx
-		push	cs
-		push	bx
-
-LXLSH@:
-		cmp	cl, 10h
-		jnb	short loc_32D8
-		mov	bx, ax
-		shl	ax, cl
-		shl	dx, cl
-		neg	cl
-		add	cl, 10h
-		shr	bx, cl
-		or	dx, bx
-		retf
-; ---------------------------------------------------------------------------
-
-loc_32D8:
-		sub	cl, 10h
-		xchg	ax, dx
-		xor	ax, ax
-		shl	dx, cl
-		retf
-N_LXLSH@	endp ; sp-analysis failed
-
+include libs/BorlandC/H_LLSH.ASM
 include libs/BorlandC/H_PADD.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
