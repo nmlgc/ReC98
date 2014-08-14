@@ -3611,80 +3611,7 @@ sub_17FA	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1A1A
-
-loc_1806:
-		push	cs
-		call	near ptr check_machine_fmr
-		jnz	short loc_1811
-		mov	ax, 40h	; '@'
-		jmp	short loc_187D
-; ---------------------------------------------------------------------------
-
-loc_1811:
-		xor	al, al
-		mov	dx, 0FFF7h
-		mov	es, dx
-		assume es:nothing
-		mov	dx, 1827h
-		cmp	dx, es:0
-		jnz	short loc_1826
-		or	al, 2Ah
-		jmp	short loc_1867
-; ---------------------------------------------------------------------------
-
-loc_1826:
-		mov	dx, 0FD80h
-		mov	es, dx
-		assume es:nothing
-		mov	dx, 2A27h
-		cmp	dx, es:2
-		jnz	short loc_184E
-		mov	ah, es:4
-		mov	bx, 364h
-		or	al, 22h
-
-loc_183F:
-		mov	dl, [bx]
-		or	dl, dl
-		jz	short loc_1867
-		inc	bx
-		cmp	ah, dl
-		jnz	short loc_183F
-		or	al, 21h
-		jmp	short loc_1867
-; ---------------------------------------------------------------------------
-
-loc_184E:
-		xor	bx, bx
-		mov	es, bx
-		assume es:seg000
-		or	al, es:byte_501
-		and	al, 8
-		or	al, 20h
-		mov	dh, byte ptr es:loc_400
-		and	dh, 80h
-		rol	dh, 1
-		or	al, dh
-
-loc_1867:
-					; sub_1A1A-1D7j ...
-		mov	dh, byte ptr es:loc_45B+1
-		and	dh, 40h
-		ror	dh, 1
-		ror	dh, 1
-		ror	dh, 1
-		ror	dh, 1
-		or	al, dh
-		xor	ah, ah
-		xor	al, 1
-
-loc_187D:
-		mov	Machine_State, ax
-		jmp	get_machine_dosbox
-; END OF FUNCTION CHUNK	FOR sub_1A1A
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine_98.asm
 		nop
 include libs/master.lib/get_machine_at.asm
 		nop
@@ -3713,7 +3640,7 @@ sub_1A1A	proc far
 		jnz	short loc_1A2E
 		nop
 		nop
-		jmp	loc_1806
+		jmp	get_machine_98
 ; ---------------------------------------------------------------------------
 
 loc_1A2E:
@@ -43653,16 +43580,7 @@ word_2169E	dw 0
 word_216A0	dw 0FFFFh
 byte_216A2	db 0
 		db 0
-		db  0Dh
-		db  16h
-		db  20h
-		db  22h	; "
-		db  27h	; '
-		db  2Ah	; *
-		db  2Eh	; .
-		db  36h	; 6
-		db  3Fh	; ?
-		db    0
+include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 word_216C4	dw 0
 		db  10h

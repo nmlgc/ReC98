@@ -2418,82 +2418,7 @@ sub_F12		endp
 
 ; ---------------------------------------------------------------------------
 		nop
-; START	OF FUNCTION CHUNK FOR sub_11AC
-
-loc_F98:
-		push	cs
-		call	near ptr check_machine_fmr
-		jnz	short loc_FA3
-		mov	ax, 40h	; '@'
-		jmp	short loc_100F
-; ---------------------------------------------------------------------------
-
-loc_FA3:
-		xor	al, al
-		mov	dx, 0FFF7h
-		mov	es, dx
-		assume es:nothing
-		mov	dx, 1827h
-		cmp	dx, es:0
-		jnz	short loc_FB8
-		or	al, 2Ah
-		jmp	short loc_FF9
-; ---------------------------------------------------------------------------
-
-loc_FB8:
-		mov	dx, 0FD80h
-		mov	es, dx
-		assume es:nothing
-		mov	dx, 2A27h
-		cmp	dx, es:2
-		jnz	short loc_FE0
-		mov	ah, es:4
-		mov	bx, 518h
-		or	al, 22h
-
-loc_FD1:
-		mov	dl, [bx]
-		or	dl, dl
-		jz	short loc_FF9
-		inc	bx
-		cmp	ah, dl
-		jnz	short loc_FD1
-		or	al, 21h
-		jmp	short loc_FF9
-; ---------------------------------------------------------------------------
-
-loc_FE0:
-		xor	bx, bx
-		mov	es, bx
-		assume es:seg000
-		or	al, es:byte_501
-		and	al, 8
-		or	al, 20h
-		mov	dh, byte ptr es:loc_400
-		and	dh, 80h
-		rol	dh, 1
-		or	al, dh
-
-loc_FF9:
-					; sub_11AC-1D7j ...
-		mov	dh, es:byte_45C
-		and	dh, 40h
-		ror	dh, 1
-		ror	dh, 1
-		ror	dh, 1
-		ror	dh, 1
-		or	al, dh
-		xor	ah, ah
-		xor	al, 1
-
-loc_100F:
-		mov	Machine_State, ax
-		; Hack
-		db 0e9h
-		db 057h
-		db 001h
-; END OF FUNCTION CHUNK	FOR sub_11AC
-; ---------------------------------------------------------------------------
+include libs/master.lib/get_machine_98.asm
 		nop
 include libs/master.lib/get_machine_at.asm
 		nop
@@ -2522,7 +2447,7 @@ sub_11AC	proc far
 		jnz	short loc_11C0
 		nop
 		nop
-		jmp	loc_F98
+		jmp	get_machine_98
 ; ---------------------------------------------------------------------------
 
 loc_11C0:
@@ -32209,16 +32134,7 @@ word_F4F2	dw 0
 word_F4F4	dw 0FFFFh
 byte_F4F6	db 0
 		db    0
-		db  0Dh
-		db  16h
-		db  20h
-		db  22h	; "
-		db  27h	; '
-		db  2Ah	; *
-		db  2Eh	; .
-		db  36h	; 6
-		db  3Fh	; ?
-		db    0
+include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 word_F518	dw 0A800h
 word_F51A	dw 3E80h
