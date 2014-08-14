@@ -7420,39 +7420,7 @@ loc_28D4:
 N_PADA@		endp ; sp-analysis failed
 
 include libs/BorlandC/H_PADD.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_PSBP@		proc far
-		pop	es
-		push	cs
-		push	es
-
-PSBP@:
-		push	di
-		mov	di, cx
-		mov	ch, dh
-		mov	cl, 4
-		shl	dx, cl
-		shr	ch, cl
-		add	dx, ax
-		adc	ch, 0
-		mov	ax, di
-		shl	di, cl
-		shr	ah, cl
-		add	bx, di
-		adc	ah, 0
-		sub	dx, bx
-		sbb	ch, ah
-		mov	al, ch
-		cbw
-		xchg	ax, dx
-		pop	di
-		retf
-N_PSBP@		endp ; sp-analysis failed
-
+include libs/BorlandC/H_PSBP.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
 
