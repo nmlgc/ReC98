@@ -8316,33 +8316,7 @@ arg_2		= word ptr  8
 sub_2F0A	endp
 
 include libs/BorlandC/N_LXMUL.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_PCMP@		proc near
-		push	cx
-		mov	ch, al
-		mov	cl, 4
-		shr	ax, cl
-		add	dx, ax
-		mov	al, ch
-		mov	ah, bl
-		shr	bx, cl
-		pop	cx
-		add	cx, bx
-		mov	bl, ah
-		and	ax, 0Fh
-		and	bx, 0Fh
-		cmp	dx, cx
-		jnz	short locret_2F57
-		cmp	ax, bx
-
-locret_2F57:
-		retn
-N_PCMP@		endp
-
+include libs/BorlandC/N_PCMP.ASM
 
 ; =============== S U B	R O U T	I N E =======================================
 

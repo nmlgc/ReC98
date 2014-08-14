@@ -8068,32 +8068,7 @@ loc_368B:
 		db 5, 0, 34h, 0, 78h, 6Dh, 73h,	67h, 0Eh dup(0)
 
 include libs/BorlandC/N_LXMUL.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-N_PCMP@		proc near
-		push	cx
-		mov	ch, al
-		mov	cl, 4
-		shr	ax, cl
-		add	dx, ax
-		mov	al, ch
-		mov	ah, bl
-		shr	bx, cl
-		pop	cx
-		add	cx, bx
-		mov	bl, ah
-		and	ax, 0Fh
-		and	bx, 0Fh
-		cmp	dx, cx
-		jnz	short locret_36FE
-		cmp	ax, bx
-
-locret_36FE:
-		retn
-N_PCMP@		endp
+include libs/BorlandC/N_PCMP.ASM
 
 ; ---------------------------------------------------------------------------
 
