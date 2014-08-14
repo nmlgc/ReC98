@@ -15,6 +15,8 @@
 		.386
 		.model tiny
 
+include libs/BorlandC/RULES.ASI
+
 ; ===========================================================================
 
 ; Segment type:	Pure code

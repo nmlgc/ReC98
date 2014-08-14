@@ -60,6 +60,8 @@ SREGS		ends
 		.model large
 		locals
 
+include libs/BorlandC/RULES.ASI
+
 ; ===========================================================================
 
 ; Segment type:	Pure code

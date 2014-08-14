@@ -1,8 +1,8 @@
 ; *Not* the original file, but an edit to turn it into an includable slice.
 ; Changes include:
-; * removal of RULES.ASI, due to its segment declarations
+; * removal of RULES.ASI to eliminate redundancy
 ; * removal of the 'CODE' segment declaration (for obvious reasons)
-; * the removal of the ARG directives (they don't compile correctly for some
+; * removal of the ARG directives (they don't compile correctly for some
 ;   reason)
 ; * the "PROC Generic* DIST" directives (apparently invalid TASM syntax?!?)
 ; * and a small section of code in ExtendHeap, which is present in the 
@@ -19,28 +19,6 @@
 ;       Copyright (c) 1987, 1992 by Borland International
 ;       All Rights Reserved.
 ; 
-
-; Necessary parts from RULES.ASI
-; ------------------------------
-false   equ     0       ; Beware !  For incoming parameters, non-false = true.
-true    equ     1       ; For results, we generate the proper numbers.
-
-IFDEF   __TINY__                ; Small Code - Small Data
-        LPROG           equ     false
-        LDATA           equ     false
-ENDIF
-
-IFDEF   __LARGE__               ; Large Code - Large Data
-        LPROG           equ     true
-        LDATA           equ     true
-ENDIF
-
-IF      LPROG
-        DIST            equ     FAR
-ELSE
-        DIST            equ     NEAR
-ENDIF
-; ------------------------------
 
 ;-----------------------------------------------------------------------
 ; Memory Block Header (far heap)
