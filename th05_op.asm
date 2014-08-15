@@ -2594,7 +2594,7 @@ sub_12A6	proc far
 		int	18h		; TRANSFER TO ROM BASIC
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
-		test	word_F7F6, 1
+		test	TextShown, 1
 		jz	short loc_12E0
 		mov	ah, 0Ch
 		int	18h		; TRANSFER TO ROM BASIC
@@ -32444,13 +32444,7 @@ word_F56E	dw 0
 		db    1
 		db    0
 		db    1
-		db    0
-		db    0
-		db    0
-		db 0A0h	;  
-		db  50h	; P
-		db    0
-word_F7F6	dw 1
+include libs/master.lib/tx[data].asm
 unk_F7F8	db    0
 		db    0
 word_F7FA	dw 0

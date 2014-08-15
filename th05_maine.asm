@@ -2579,7 +2579,7 @@ arg_6		= word ptr  0Ah
 		shl	ax, 1
 		add	di, ax
 		shl	di, 1
-		add	di, word_105FC
+		add	di, TextVramSeg
 		mov	es, di
 		assume es:nothing
 		mov	di, [bp+arg_6]
@@ -2624,7 +2624,7 @@ arg_8		= word ptr  0Ch
 		shl	ax, 1
 		add	di, ax
 		shl	di, 1
-		add	di, word_105FC
+		add	di, TextVramSeg
 		mov	es, di
 		mov	di, [bp+arg_8]
 		shl	di, 1
@@ -2831,7 +2831,7 @@ sub_1392	proc far
 		int	18h		; TRANSFER TO ROM BASIC
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
-		test	word_10600, 1
+		test	TextShown, 1
 		jz	short loc_13CC
 		mov	ah, 0Ch
 		int	18h		; TRANSFER TO ROM BASIC
@@ -4664,7 +4664,7 @@ arg_8		= word ptr  0Ch
 		shl	ax, 1
 		add	di, ax
 		shl	di, 1
-		add	di, word_105FC
+		add	di, TextVramSeg
 		mov	es, di
 		mov	di, [bp+arg_8]
 		shl	di, 1
@@ -34663,12 +34663,7 @@ dword_10376	dd 1
 		db    1
 		db    0
 		db    1
-		db    0
-		db    0
-word_105FC	dw 0A000h
-		db  50h	; P
-		db    0
-word_10600	dw 1
+include libs/master.lib/tx[data].asm
 unk_10602	db    0
 		db    0
 word_10604	dw 0

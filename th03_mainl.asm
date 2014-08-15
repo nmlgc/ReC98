@@ -2513,7 +2513,7 @@ sub_F02		proc far
 		int	18h		; TRANSFER TO ROM BASIC
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
-		test	word_EC30, 1
+		test	TextShown, 1
 		jz	short loc_F3C
 		mov	ah, 0Ch
 		int	18h		; TRANSFER TO ROM BASIC
@@ -4492,7 +4492,7 @@ arg_2		= word ptr  6
 		mov	cl, 4
 		shl	dx, cl
 		mov	cx, dx
-		mov	es, word_EC2C
+		mov	es, TextVramSeg
 		assume es:nothing
 		xor	di, di
 		mov	ax, [bp+arg_2]
@@ -30955,12 +30955,7 @@ dword_E9A6	dd 1
 		db    1
 		db    0
 		db    1
-		db    0
-		db    0
-word_EC2C	dw 0A000h
-		db  50h	; P
-		db    0
-word_EC30	dw 1
+include libs/master.lib/tx[data].asm
 unk_EC32	db    0
 		db    0
 word_EC34	dw 0

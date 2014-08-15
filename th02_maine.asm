@@ -2866,7 +2866,7 @@ arg_6		= word ptr  0Ah
 		shl	ax, 1
 		add	di, ax
 		shl	di, 1
-		add	di, word_D670
+		add	di, TextVramSeg
 		mov	es, di
 		mov	di, [bp+arg_6]
 		shl	di, 1
@@ -2910,7 +2910,7 @@ arg_8		= word ptr  0Ch
 		shl	ax, 1
 		add	di, ax
 		shl	di, 1
-		add	di, word_D670
+		add	di, TextVramSeg
 		mov	es, di
 		mov	di, [bp+arg_8]
 		shl	di, 1
@@ -3285,7 +3285,7 @@ sub_12CC	proc far
 		int	18h		; TRANSFER TO ROM BASIC
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
-		test	word_D674, 1
+		test	TextShown, 1
 		jz	short loc_1306
 		mov	ah, 0Ch
 		int	18h		; TRANSFER TO ROM BASIC
@@ -28457,12 +28457,7 @@ byte_D3EC	db 0
 		db    1
 		db    0
 		db    1
-		db    0
-		db    0
-word_D670	dw 0A000h
-		db  50h	; P
-		db    0
-word_D674	dw 1
+include libs/master.lib/tx[data].asm
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
 		db 'man,iR,All rights reserved.',0
 		db 0
