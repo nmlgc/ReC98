@@ -1,6 +1,6 @@
 ; *Not* the original file. Changes include:
-; * replacement of DATASIZE and CODESIZE with TASM's @DataSize and @CodeSize
-;   variables
+; * a rewrite of the memory model conditional branches at the beginning to
+;   refer to TASM's @MODEL symbol
 ; * removal of the FUNC and ENDFUNC macros, which don't work with TASM's
 ;   strict alignment constraints. In turn, this means that we also need to
 ;   edit all source code files to not use these macros.
@@ -25,22 +25,19 @@
 ;	93/ 2/12 COMPACTMODEL, MEDIUMMODEL
 
 .list
-IFDEF NEARMODEL
+IF @MODEL LE 2
   CALLMODEL equ NEAR
   RETSIZE EQU 1
   DATASIZE EQU 1
-ENDIF
-IFDEF COMPACTMODEL
+ELSEIF @MODEL EQ 3
   CALLMODEL equ NEAR
   RETSIZE EQU 1
   DATASIZE EQU 2
-ENDIF
-IFDEF MEDIUMMODEL
+ELSEIF @MODEL EQ 4
   CALLMODEL equ FAR
   RETSIZE EQU 2
   DATASIZE EQU 1
-ENDIF
-IFDEF FARMODEL
+ELSEIF @MODEL EQ 5
   CALLMODEL equ FAR
   RETSIZE EQU 2
   DATASIZE EQU 2
@@ -86,7 +83,7 @@ lab	dw	?
 	ENDM
 
 
-IF @DataSize EQ 1
+IF DATASIZE EQ 2
 _push	MACRO reg
 	push reg
 	ENDM
@@ -159,7 +156,7 @@ ENDIF
 
 	; _call: かならず同一セグメントにあると判っているルーチンをcallする
 	; ときに使用するマクロ (94/1/1追加)
-IF @CodeSize EQ 1
+IF RETSIZE EQ 2
 _call	MACRO place
 	push	CS
 	call	near ptr place

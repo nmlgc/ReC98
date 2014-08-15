@@ -18,6 +18,7 @@
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -2484,66 +2485,7 @@ sub_EAC		endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F02		proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		test	byte ptr es:loc_45B+1, 40h
-		jz	short locret_F55
-		mov	bx, sp
-		mov	cx, ss:[bx+6]
-		mov	dx, ss:[bx+4]
-		mov	ah, 31h	; '1'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ah, bh
-		jcxz	short locret_F55
-		and	dx, cx
-		not	cx
-		and	ax, cx
-		or	ax, dx
-		mov	cx, ax
-		mov	bh, ah
-		mov	ah, 30h	; '0'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	TextShown, 1
-		jz	short loc_F3C
-		mov	ah, 0Ch
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_F3C:
-		test	cl, 1
-		jz	short loc_F47
-		mov	ah, 0Eh
-		xor	dx, dx
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_F47:
-		test	byte ptr es:loc_710+1, 1
-		jz	short loc_F53
-		mov	ah, 11h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_F53:
-		mov	ax, cx
-
-locret_F55:
-		retf	4
-sub_F02		endp
-
+include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4519,7 +4461,7 @@ sub_1F6E	proc far
 		push	ax
 		push	ax
 		push	cs
-		call	near ptr sub_F02
+		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
 		mov	word_EC36, 33FFh

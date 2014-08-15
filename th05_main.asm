@@ -665,7 +665,6 @@ loc_454:
 ; ---------------------------------------------------------------------------
 		db 89h
 byte_45C	db 87h
-					; sub_1E86+4r
 		db 72h,	3, 0A1h, 72h, 3, 0Bh, 6, 74h, 3, 5, 2 dup(0FFh)
 		db 1Bh,	0C0h, 3Bh, 6, 70h, 3, 74h, 29h,	0A3h, 70h, 3, 77h
 		db 26h,	0FAh, 0B0h, 0Bh, 0E6h, 70h, 0A0h, 77h, 3, 0E6h
@@ -4175,66 +4174,7 @@ sub_1E62	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1E86	proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		test	es:byte_45C, 40h
-		jz	short locret_1ED9
-		mov	bx, sp
-		mov	cx, ss:[bx+6]
-		mov	dx, ss:[bx+4]
-		mov	ah, 31h	; '1'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ah, bh
-		jcxz	short locret_1ED9
-		and	dx, cx
-		not	cx
-		and	ax, cx
-		or	ax, dx
-		mov	cx, ax
-		mov	bh, ah
-		mov	ah, 30h	; '0'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	TextShown, 1
-		jz	short loc_1EC0
-		mov	ah, 0Ch
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1EC0:
-		test	cl, 1
-		jz	short loc_1ECB
-		mov	ah, 0Eh
-		xor	dx, dx
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1ECB:
-		test	byte ptr es:loc_710+1, 1
-		jz	short loc_1ED7
-		mov	ah, 11h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1ED7:
-		mov	ax, cx
-
-locret_1ED9:
-		retf	4
-sub_1E86	endp
-
+include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5400,7 +5340,7 @@ sub_260E	proc far
 		push	ax
 		push	ax
 		push	cs
-		call	near ptr sub_1E86
+		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
 		mov	word_2109A, 33FFh

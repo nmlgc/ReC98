@@ -657,7 +657,6 @@ loc_459:
 		xor	ax, ax
 
 loc_45B:
-					; sub_1CF4+4r
 		jmp	short loc_464
 ; ---------------------------------------------------------------------------
 		nop
@@ -4107,66 +4106,7 @@ sub_1CD0	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1CF4	proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		test	byte ptr es:loc_45B+1, 40h
-		jz	short locret_1D47
-		mov	bx, sp
-		mov	cx, ss:[bx+6]
-		mov	dx, ss:[bx+4]
-		mov	ah, 31h	; '1'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ah, bh
-		jcxz	short locret_1D47
-		and	dx, cx
-		not	cx
-		and	ax, cx
-		or	ax, dx
-		mov	cx, ax
-		mov	bh, ah
-		mov	ah, 30h	; '0'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	TextShown, 1
-		jz	short loc_1D2E
-		mov	ah, 0Ch
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1D2E:
-		test	cl, 1
-		jz	short loc_1D39
-		mov	ah, 0Eh
-		xor	dx, dx
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1D39:
-		test	byte ptr es:loc_711, 1
-		jz	short loc_1D45
-		mov	ah, 11h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1D45:
-		mov	ax, cx
-
-locret_1D47:
-		retf	4
-sub_1CF4	endp
-
+include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5202,7 +5142,7 @@ sub_236C	proc far
 		push	ax
 		push	ax
 		push	cs
-		call	near ptr sub_1CF4
+		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
 		mov	word_21AB2, 33FFh

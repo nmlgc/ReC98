@@ -18,6 +18,7 @@
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -3256,66 +3257,7 @@ sub_1276	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12CC	proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		test	byte ptr es:loc_45B+1, 40h
-		jz	short locret_131F
-		mov	bx, sp
-		mov	cx, ss:[bx+6]
-		mov	dx, ss:[bx+4]
-		mov	ah, 31h	; '1'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ah, bh
-		jcxz	short locret_131F
-		and	dx, cx
-		not	cx
-		and	ax, cx
-		or	ax, dx
-		mov	cx, ax
-		mov	bh, ah
-		mov	ah, 30h	; '0'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	TextShown, 1
-		jz	short loc_1306
-		mov	ah, 0Ch
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1306:
-		test	cl, 1
-		jz	short loc_1311
-		mov	ah, 0Eh
-		xor	dx, dx
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_1311:
-		test	byte ptr es:loc_70E+3, 1
-		jz	short loc_131D
-		mov	ah, 11h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-
-loc_131D:
-		mov	ax, cx
-
-locret_131F:
-		retf	4
-sub_12CC	endp
-
+include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5296,7 +5238,7 @@ sub_233E	proc far
 		push	ax
 		push	ax
 		push	cs
-		call	near ptr sub_12CC
+		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
 		mov	word_D6D8, 33FFh
