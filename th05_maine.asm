@@ -45,9 +45,9 @@ loc_3:
 		mov	ds, dx
 		assume ds:dseg
 		mov	word_1017C, ax
-		mov	segx, es
+		mov	__psp, es
 		mov	word_10176, bx
-		mov	word_1018E, bp
+		mov	word ptr _heaptop@ + 2, bp
 		call	sub_178
 		mov	ax, word_10176
 		mov	es, ax
@@ -98,9 +98,9 @@ loc_7E:
 loc_83:
 		mov	bx, di
 		add	bx, dx
-		mov	word_10186, bx
-		mov	word_1018A, bx
-		mov	ax, segx
+		mov	word ptr _heapbase@ + 2, bx
+		mov	word ptr _brklvl@ + 2, bx
+		mov	ax, __psp
 		sub	bx, ax
 		mov	es, ax
 		assume es:nothing
@@ -153,7 +153,7 @@ loc_D7:
 					; BX = number of 16-byte paragraphs desired
 		jb	short loc_10B
 		inc	ax
-		mov	word_1018E, ax
+		mov	word ptr _heaptop@ + 2, ax
 		dec	ax
 		mov	es, ax
 		assume es:nothing
@@ -10210,210 +10210,7 @@ locret_49A6:
 ; ---------------------------------------------------------------------------
 
 include libs/BorlandC/FARHEAP.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_4E02	proc near
-
-newsize		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		inc	ax
-		mov	[bp+newsize], ax
-		mov	ax, segx
-		sub	[bp+newsize], ax
-		mov	ax, [bp+newsize]
-		add	ax, 3Fh	; '?'
-		mov	cl, 6
-		shr	ax, cl
-		mov	[bp+newsize], ax
-		cmp	ax, word_11D64
-		jz	short loc_4E66
-		mov	cl, 6
-		shl	[bp+newsize], cl
-		mov	dx, word_1018E
-		mov	ax, [bp+newsize]
-		add	ax, segx
-		cmp	ax, dx
-		jbe	short loc_4E47
-		mov	ax, dx
-		sub	ax, segx
-		mov	[bp+newsize], ax
-
-loc_4E47:
-		push	[bp+newsize]	; newsize
-		push	segx		; segx
-		nop
-		push	cs
-		call	near ptr _setblock
-		pop	cx
-		pop	cx
-		mov	dx, ax
-		cmp	dx, 0FFFFh
-		jnz	short loc_4E78
-		mov	ax, [bp+newsize]
-		mov	cl, 6
-		shr	ax, cl
-		mov	word_11D64, ax
-
-loc_4E66:
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		mov	word_1018A, dx
-		mov	word_10188, ax
-		mov	ax, 1
-		jmp	short loc_4E88
-; ---------------------------------------------------------------------------
-
-loc_4E78:
-		mov	ax, segx
-		add	ax, dx
-		mov	word_1018E, ax
-		mov	word_1018C, 0
-		xor	ax, ax
-
-loc_4E88:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn	4
-sub_4E02	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__brk		proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cx, word_10186
-		mov	bx, word_10184
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		call	N_PCMP@
-		jb	short loc_4EC8
-		mov	cx, word_1018E
-		mov	bx, word_1018C
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		call	N_PCMP@
-		ja	short loc_4EC8
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_4E02
-		or	ax, ax
-		jnz	short loc_4ECD
-
-loc_4EC8:
-		mov	ax, 0FFFFh
-		jmp	short loc_4ECF
-; ---------------------------------------------------------------------------
-
-loc_4ECD:
-		xor	ax, ax
-
-loc_4ECF:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-__brk		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__sbrk		proc near
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		push	si
-		push	di
-		mov	ax, word_1018A
-		xor	dx, dx
-		mov	cl, 4
-		call	near ptr N_LXLSH@
-		add	ax, word_10188
-		adc	dx, 0
-		add	ax, [bp+arg_0]
-		adc	dx, [bp+arg_2]
-		cmp	dx, 0Fh
-		jl	short loc_4EFE
-		jg	short loc_4F4E
-		cmp	ax, 0FFFFh
-		ja	short loc_4F4E
-
-loc_4EFE:
-		mov	dx, word_1018A
-		mov	ax, word_10188
-		mov	cx, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		call	near ptr N_PADD@
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		mov	cx, word_10186
-		mov	bx, word_10184
-		call	N_PCMP@
-		jb	short loc_4F4E
-		mov	cx, word_1018E
-		mov	bx, word_1018C
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		call	N_PCMP@
-		ja	short loc_4F4E
-		mov	dx, word_1018A
-		mov	ax, word_10188
-		mov	[bp+var_6], dx
-		mov	[bp+var_8], ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		call	sub_4E02
-		or	ax, ax
-		jnz	short loc_4F56
-
-loc_4F4E:
-		mov	dx, 0FFFFh
-		mov	ax, 0FFFFh
-		jmp	short loc_4F5C
-; ---------------------------------------------------------------------------
-
-loc_4F56:
-		mov	dx, [bp+var_6]
-		mov	ax, [bp+var_8]
-
-loc_4F5C:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn
-__sbrk		endp ; sp-analysis failed
+include libs/BorlandC/fbrk.asm
 
 ; ---------------------------------------------------------------------------
 		push	ax
@@ -20791,7 +20588,7 @@ arg_A		= word ptr  0Eh
 ; ---------------------------------------------------------------------------
 
 loc_9BAF:
-		mov	es, segx
+		mov	es, __psp
 		mov	cs:word_9AB3, es
 		mov	ax, es:2Ch
 		mov	[bp+var_C], ax
@@ -21125,10 +20922,10 @@ _execl		endp
 
 ; Attributes: library function bp-based	frame
 
-; int __cdecl setblock(unsigned	int segx, unsigned int newsize)
+; int __cdecl setblock(unsigned	int __psp, unsigned int newsize)
 _setblock	proc far
 
-_segx		= word ptr  6
+___psp		= word ptr  6
 newsize		= word ptr  8
 
 		push	bp
@@ -21137,7 +20934,7 @@ newsize		= word ptr  8
 		push	di
 		mov	ah, 4Ah	; 'J'
 		mov	bx, [bp+newsize]
-		mov	es, [bp+_segx]
+		mov	es, [bp+___psp]
 		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
 					; ES = segment address of block	to change
 					; BX = new size	in paragraphs
@@ -33550,8 +33347,7 @@ word_10172	dw 0
 word_10174	dw 0
 word_10176	dw 0
 word_10178	dw 0
-; unsigned int segx
-segx		dw 0
+PubSym@         _psp,           <dw     0>,             __CDECL__
 word_1017C	dw 0
 __errno	dw 0
 					; seg000:511Aw	...
@@ -33559,12 +33355,9 @@ __errno	dw 0
 		db 0FFh
 		db  6Eh	; n
 		db 0C5h	; Å
-word_10184	dw 0
-word_10186	dw 0
-word_10188	dw 0
-word_1018A	dw 0
-word_1018C	dw 0
-word_1018E	dw 0
+PubSym@         _heapbase,      <dd   0>,       __CDECL__
+PubSym@         _brklvl,        <dd   0>,       __CDECL__
+PubSym@         _heaptop,       <dd   0>,       __CDECL__
 off_10190	dd a_ed00_txt
 					; "_ED00.TXT"
 aMiko_cfg	db 'MIKO.CFG',0
@@ -36353,7 +36146,7 @@ word_11C4E	dw 0
 		db    0
 		db    0
 word_11D62	dw 0
-word_11D64	dw 0
+include libs/BorlandC/fbrk[data].asm
 byte_11D66	db 0
 byte_11D67	db 0
 word_11D68	dw 0
