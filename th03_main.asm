@@ -42,12 +42,12 @@ start		proc far
 		mov	bx, ds:2Ch
 		mov	ds, dx
 		assume ds:dseg
-		mov	word_1D5DC, ax
+		mov	_version@, ax
 		mov	__psp, es
-		mov	word_1D5D6, bx
+		mov	_envseg@, bx
 		mov	word ptr _heaptop@ + 2, bp
 		call	sub_178
-		mov	ax, word_1D5D6
+		mov	ax, _envseg@
 		mov	es, ax
 		xor	ax, ax
 		mov	bx, ax
@@ -128,10 +128,10 @@ loc_83:
 		rep stosb
 		cmp	word_1E30C, 14h
 		jbe	short loc_110
-		cmp	byte ptr word_1D5DC, 3
+		cmp	_osmajor@, 3
 		jb	short loc_110
 		ja	short loc_D7
-		cmp	byte ptr word_1D5DC+1, 1Eh
+		cmp	_osminor@, 1Eh
 		jb	short loc_110
 
 loc_D7:
@@ -183,8 +183,8 @@ loc_110:
 		mov	si, 115Eh
 		mov	di, 117Ch
 		call	sub_1E8
-		push	word_1D5D2
-		push	envp		; envp
+		push	word ptr __C0environ+2
+		push	word ptr __C0environ
 		push	word_1D5CE
 		push	argv		; argv
 		push	argc		; argc
@@ -424,7 +424,7 @@ locret_26C:
 sub_22C		endp
 
 ; ---------------------------------------------------------------------------
-DGROUP@		dw 0
+PubSym@         DGROUP@, <dw    ?>, __PASCAL__
 __MMODEL	db 4, 0C0h, 0, 1Eh, 2Eh, 8Eh, 1Eh, 5Fh,	3, 0Eh,	0E8h, 9Ah
 		db 1Ch,	0B8h, 0F3h, 0FFh
 ; ---------------------------------------------------------------------------
@@ -19006,362 +19006,7 @@ loc_8BBC:
 		retn	0Ch
 __DOSCMD	endp
 
-; ---------------------------------------------------------------------------
-		db 8Fh dup(0)
-word_8C53	dw 0
-		db 50h dup(0)
-byte_8CA5	db 0
-byte_8CA6	db 0
-		db 1Ch dup(0), 33h, 0FFh, 8Ch, 0C8h, 8Eh, 0D8h,	8Eh, 0C0h
-		db 0FAh, 8Eh, 0D0h, 8Dh, 0A5h, 8Fh, 0, 0FBh, 51h, 52h
-		db 0B8h, 3, 4Bh, 8Dh, 9Dh, 0FBh, 0, 8Dh, 95h, 91h, 0, 0CDh
-		db 21h,	5Ah, 59h, 72h, 2Dh, 33h, 0FFh, 0FAh, 8Eh, 95h
-		db 0F1h, 0, 8Bh, 0A5h, 0F3h, 0,	0FBh, 8Bh, 0ECh, 33h, 0C0h
-		db 50h,	8Bh, 85h, 8Fh, 0, 8Eh, 0D8h, 8Eh, 0C0h,	26h, 89h
-		db 16h,	2, 0, 26h, 89h,	0Eh, 2Ch, 0, 2Eh, 8Bh, 85h, 0E1h
-		db 0, 2Eh, 0FFh, 2Eh, 0F7h, 0, 0B4h, 40h, 0BBh,	2, 0, 0B9h
-		db 0Fh,	0, 33h,	0D2h, 0CDh, 21h, 0B8h, 2, 4Ch, 0CDh, 21h
-byte_8D24	db 0FFh, 0
-word_8D26	dw 0
-word_8D28	dw 0
-					; __exec:loc_8F24r ...
-byte_8D2A	db 1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__exec		proc near
-
-var_C		= word ptr -0Ch
-var_A		= dword	ptr -0Ah
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= dword	ptr  8
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ch
-		cld
-		push	si
-		push	ds
-		push	di
-		push	es
-		mov	ax, word_1D5D6
-		mov	cs:word_8D28, ax
-		mov	ax, 3D00h
-		push	ds
-		lds	dx, [bp+arg_0]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		mov	[bp+var_2], ax
-		jnb	short loc_8D4F
-		jmp	loc_8F5D
-; ---------------------------------------------------------------------------
-
-loc_8D4F:
-		mov	es, __psp
-		mov	cs:word_8C53, es
-		mov	ax, es:2Ch
-		mov	[bp+var_C], ax
-		mov	di, 80h	; '€'
-		push	ds
-		lds	si, [bp+arg_4]
-		lodsb
-		mov	dx, si
-		stosb
-		xor	cx, cx
-		mov	cl, al
-		inc	cx
-		rep movsb
-		mov	ax, 2901h
-		mov	si, dx
-		mov	di, 5Ch	; '\'
-		int	21h		; DOS -	PARSE FILENAME
-					; DS:SI	-> string to parse
-					; ES:DI	-> buffer to fill with unopened	FCB
-					; AL = bit mask	to control parsing
-		mov	cs:byte_8CA5, al
-
-loc_8D7F:
-		mov	al, [si]
-		cmp	al, 20h	; ' '
-		jz	short loc_8D90
-		cmp	al, 9
-		jz	short loc_8D90
-		cmp	al, 0Dh
-		jz	short loc_8D90
-		inc	si
-		jmp	short loc_8D7F
-; ---------------------------------------------------------------------------
-
-loc_8D90:
-		mov	ax, 2901h
-		mov	di, 6Ch	; 'l'
-		int	21h		; DOS -	PARSE FILENAME
-					; DS:SI	-> string to parse
-					; ES:DI	-> buffer to fill with unopened	FCB
-					; AL = bit mask	to control parsing
-		mov	cs:byte_8CA6, al
-		pop	ds
-		mov	ah, 4Ah	; 'J'
-		mov	bx, 0FFFFh
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		cmp	byte ptr word_1D5DC, 3
-		jnb	short loc_8DAF
-		sub	bx, 280h
-
-loc_8DAF:
-		mov	[bp+var_4], bx
-		mov	ax, [bp+arg_8]
-		mov	dx, [bp+arg_A]
-		mov	bx, ax
-		or	bx, dx
-		jnz	short loc_8DC4
-		xor	ax, ax
-		mov	di, ax
-		jmp	short loc_8DE1
-; ---------------------------------------------------------------------------
-
-loc_8DC4:
-		mov	es, dx
-		mov	di, ax
-		push	di
-		mov	cx, 0FFFFh
-		xor	ax, ax
-
-loc_8DCE:
-		repne scasb
-		cmp	es:[di], al
-		jnz	short loc_8DCE
-		dec	cx
-		add	di, 3
-		repne scasb
-		dec	cx
-		mov	ax, cx
-		neg	ax
-		pop	di
-
-loc_8DE1:
-		mov	word ptr [bp+var_A], di
-		mov	word ptr [bp+var_A+2], es
-		add	ax, 0Fh
-		mov	cx, 4
-		shr	ax, cl
-		mov	[bp+var_6], ax
-		mov	si, word_1D5D6
-		dec	si
-		mov	es, si
-		cmp	ax, es:3
-		jbe	short loc_8E09
-		dec	cs:byte_8D2A
-		inc	ax
-		sub	[bp+var_4], ax
-
-loc_8E09:
-		lds	si, [bp+arg_0]
-		push	cs
-		pop	es
-		assume es:seg000
-		mov	di, 8C55h
-
-loc_8E11:
-		lodsb
-		stosb
-		or	al, al
-		jnz	short loc_8E11
-		mov	bx, [bp+var_2]
-		push	ds
-		pop	es
-		assume es:dseg
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	di, 8BC4h
-		mov	ah, 3Fh	; '?'
-		mov	cx, 18h
-		lea	dx, [di+0E3h]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short loc_8E53
-		cmp	word ptr [di+0E3h], 5A4Dh
-		jz	short loc_8E5F
-		mov	ax, es:[si-5]
-		or	ah, 20h
-		cmp	ax, 632Eh
-		jnz	short loc_8E50
-		mov	ax, es:[si-3]
-		or	ax, 2020h
-		cmp	ax, 6D6Fh
-		jnz	short loc_8E50
-		jmp	short loc_8E9B
-; ---------------------------------------------------------------------------
-
-loc_8E50:
-		mov	ax, 0Bh
-
-loc_8E53:
-		push	ax
-		mov	ah, 3Eh	; '>'
-		mov	bx, [bp+var_2]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ax
-		jmp	loc_8F5D
-; ---------------------------------------------------------------------------
-
-loc_8E5F:
-		mov	ax, [di+0E7h]
-		xor	dx, dx
-		mov	dl, ah
-		mov	ah, al
-		xor	al, al
-		shl	ax, 1
-		rcl	dx, 1
-		add	ax, [di+0E5h]
-		adc	dx, 0
-		mov	cx, 4
-
-loc_8E79:
-		shr	dx, 1
-		rcr	ax, 1
-		loop	loc_8E79
-		inc	ax
-		sub	ax, [di+0EBh]
-		add	ax, [di+0EDh]
-		xchg	ax, bx
-		mov	ax, [di+8Fh]
-		add	ax, 10h
-		add	[di+0F9h], ax
-		add	[di+0F1h], ax
-		xchg	ax, bx
-		jmp	short loc_8EC5
-; ---------------------------------------------------------------------------
-
-loc_8E9B:
-		mov	ax, 4202h
-		xor	cx, cx
-		xor	dx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	cx, 4
-
-loc_8EA7:
-		shr	dx, 1
-		rcr	ax, 1
-		loop	loc_8EA7
-		inc	ax
-		xchg	ax, bx
-		mov	ax, [di+8Fh]
-		mov	[di+0F9h], ax
-		mov	word ptr [di+0F7h], 100h
-		mov	[di+0F1h], ax
-		add	ax, 10h
-		xchg	ax, bx
-
-loc_8EC5:
-		mov	[di+0FBh], bx
-		mov	[di+0FDh], bx
-		add	ax, 16h
-		cmp	ax, [bp+var_4]
-		mov	ax, 8
-		jbe	short loc_8EDB
-		jmp	loc_8E53
-; ---------------------------------------------------------------------------
-
-loc_8EDB:
-		mov	ah, 3Eh	; '>'
-		mov	bx, [bp+var_2]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	es, word ptr [di+8Fh]
-		assume es:nothing
-		mov	ah, 4Ah	; 'J'
-		mov	bx, [bp+var_4]
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		jnb	short loc_8EF2
-		jmp	loc_8E53
-; ---------------------------------------------------------------------------
-
-loc_8EF2:
-		add	bx, [di+8Fh]
-		mov	dx, bx
-		sub	bx, 17h
-		mov	cs:word_8D26, bx
-		mov	es, bx
-		mov	cx, 0B0h ; '°'
-		mov	si, 8BC4h
-		xor	di, di
-		rep movsw
-		mov	es, [bp+var_C]
-		mov	cx, [bp+var_6]
-		cmp	cs:byte_8D2A, 0
-		jnz	short loc_8F24
-		mov	ah, 48h	; 'H'
-		mov	bx, cx
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_8F5D
-		jmp	short loc_8F28
-; ---------------------------------------------------------------------------
-
-loc_8F24:
-		mov	ax, cs:word_8D28
-
-loc_8F28:
-		mov	es, ax
-		xor	di, di
-		lds	si, [bp+var_A]
-		assume ds:dseg
-		add	cx, cx
-		add	cx, cx
-		add	cx, cx
-		rep movsw
-		push	es
-		push	dx
-		push	ds
-		mov	ds, cs:DGROUP@
-		nop
-		push	cs
-		call	near ptr __cexit
-		pop	ds
-		pop	dx
-		cmp	cs:byte_8D2A, 0
-		jnz	short loc_8F57
-		mov	es, cs:word_8D28
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-
-loc_8F57:
-		pop	cx
-		jmp	dword ptr cs:byte_8D24
-; ---------------------------------------------------------------------------
-
-loc_8F5D:
-		pop	es
-		pop	di
-		pop	ds
-		pop	si
-		push	ax
-		call	__IOERROR
-		mov	sp, bp
-		pop	bp
-		retn
-__exec		endp
-
+include libs/BorlandC/exec.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19438,7 +19083,7 @@ _setblock	endp
 ; ---------------------------------------------------------------------------
 		push	si
 		push	di
-		mov	es, word_1D5D6
+		mov	es, _envseg@
 		xor	di, di
 		push	es
 		push	word_1D5D8
@@ -19480,9 +19125,9 @@ loc_8FEF:
 		pop	di
 		pop	si
 		mov	ax, word ptr dword_1E62C+2
-		mov	word_1D5D2, ax
+		mov	word ptr __C0environ+2, ax
 		mov	ax, word ptr dword_1E62C
-		mov	envp, ax
+		mov	word ptr __C0environ, ax
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -59987,14 +59632,15 @@ argc		dw 0
 ; char **argv
 argv		dw 0
 word_1D5CE	dw 0
-; char **envp
-envp		dw 0
-word_1D5D2	dw 0
+dPtrPub@        _C0environ,     0,                      __CDECL__
 word_1D5D4	dw 0
-word_1D5D6	dw 0
+PubSym@         _envseg,        <dw     0>,             __CDECL__
 word_1D5D8	dw 0
 PubSym@         _psp,           <dw     0>,             __CDECL__
-word_1D5DC	dw 0
+PubSym@         _version,       <label word>,           __CDECL__
+PubSym@         _osversion,     <label word>,           __CDECL__
+PubSym@         _osmajor,       <db     0>,             __CDECL__
+PubSym@         _osminor,       <db     0>,             __CDECL__
 __errno	dw 0
 					; seg000:42BAw	...
 		db 0FFh

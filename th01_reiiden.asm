@@ -86,12 +86,12 @@ loc_3:
 		mov	bx, ds:2Ch
 		mov	ds, dx
 		assume ds:dseg
-		mov	word_34A1C, ax
+		mov	_version@, ax
 		mov	__psp, es
-		mov	word_34A16, bx
+		mov	_envseg@, bx
 		mov	word ptr _heaptop@ + 2, bp
 		call	sub_178
-		mov	ax, word_34A16
+		mov	ax, _envseg@
 		mov	es, ax
 		xor	ax, ax
 		mov	bx, ax
@@ -172,10 +172,10 @@ loc_83:
 		rep stosb
 		cmp	word_36586, 14h
 		jbe	short loc_110
-		cmp	byte ptr word_34A1C, 3
+		cmp	_osmajor@, 3
 		jb	short loc_110
 		ja	short loc_D7
-		cmp	byte ptr word_34A1C+1, 1Eh
+		cmp	_osminor@, 1Eh
 		jb	short loc_110
 
 loc_D7:
@@ -227,8 +227,8 @@ loc_110:
 		mov	si, 221Ah
 		mov	di, 2268h
 		call	sub_1E8
-		push	word_34A12
-		push	envp		; envp
+		push	word ptr __C0environ+2
+		push	word ptr __C0environ
 		push	word_34A0E
 		push	argv		; argv
 		push	argc		; argc
@@ -466,7 +466,7 @@ locret_26C:
 sub_22C		endp
 
 ; ---------------------------------------------------------------------------
-DGROUP@		dw 0
+PubSym@         DGROUP@, <dw    ?>, __PASCAL__
 __MMODEL	db 4, 0C0h, 6 dup(0), 2	dup(7),	2 dup(0), 7, 0,	7, 0, 7
 		db 2 dup(0), 4 dup(7), 0, 3 dup(7), 5 dup(0), 2	dup(0Fh)
 		db 2 dup(0), 0Fh, 0, 0Fh, 0, 0Fh, 2 dup(0), 4 dup(0Fh)
@@ -4331,7 +4331,7 @@ loc_188A:
 		assume ds:dseg
 		cmp	word_36270, 0
 		jz	short loc_18DB
-		mov	ax, word_34A1C
+		mov	ax, _version@
 		xchg	ah, al
 		cmp	ax, 1403h
 		jnz	short loc_18DB
@@ -24875,361 +24875,7 @@ loc_A74E:
 		retn	0Ch
 __DOSCMD	endp
 
-; ---------------------------------------------------------------------------
-		db 8Fh dup(0)
-word_A7E5	dw 0
-		db 50h dup(0)
-byte_A837	db 0
-byte_A838	db 0
-		db 1Ch dup(0), 33h, 0FFh, 8Ch, 0C8h, 8Eh, 0D8h,	8Eh, 0C0h
-		db 0FAh, 8Eh, 0D0h, 8Dh, 0A5h, 8Fh, 0, 0FBh, 51h, 52h
-		db 0B8h, 3, 4Bh, 8Dh, 9Dh, 0FBh, 0, 8Dh, 95h, 91h, 0, 0CDh
-		db 21h,	5Ah, 59h, 72h, 2Dh, 33h, 0FFh, 0FAh, 8Eh, 95h
-		db 0F1h, 0, 8Bh, 0A5h, 0F3h, 0,	0FBh, 8Bh, 0ECh, 33h, 0C0h
-		db 50h,	8Bh, 85h, 8Fh, 0, 8Eh, 0D8h, 8Eh, 0C0h,	26h, 89h
-		db 16h,	2, 0, 26h, 89h,	0Eh, 2Ch, 0, 2Eh, 8Bh, 85h, 0E1h
-		db 0, 2Eh, 0FFh, 2Eh, 0F7h, 0, 0B4h, 40h, 0BBh,	2, 0, 0B9h
-		db 0Fh,	0, 33h,	0D2h, 0CDh, 21h, 0B8h, 2, 4Ch, 0CDh, 21h
-word_A8B6	dw 0FFh
-word_A8B8	dw 0
-word_A8BA	dw 0
-byte_A8BC	db 1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__exec		proc near
-
-var_C		= word ptr -0Ch
-var_A		= dword	ptr -0Ah
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= dword	ptr  8
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ch
-		cld
-		push	si
-		push	ds
-		push	di
-		push	es
-		mov	ax, word_34A16
-		mov	cs:word_A8BA, ax
-		mov	ax, 3D00h
-		push	ds
-		lds	dx, [bp+arg_0]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		mov	[bp+var_2], ax
-		jnb	short loc_A8E1
-		jmp	loc_AAEF
-; ---------------------------------------------------------------------------
-
-loc_A8E1:
-		mov	es, __psp
-		mov	cs:word_A7E5, es
-		mov	ax, es:2Ch
-		mov	[bp+var_C], ax
-		mov	di, 80h	; '€'
-		push	ds
-		lds	si, [bp+arg_4]
-		lodsb
-		mov	dx, si
-		stosb
-		xor	cx, cx
-		mov	cl, al
-		inc	cx
-		rep movsb
-		mov	ax, 2901h
-		mov	si, dx
-		mov	di, 5Ch	; '\'
-		int	21h		; DOS -	PARSE FILENAME
-					; DS:SI	-> string to parse
-					; ES:DI	-> buffer to fill with unopened	FCB
-					; AL = bit mask	to control parsing
-		mov	cs:byte_A837, al
-
-loc_A911:
-		mov	al, [si]
-		cmp	al, 20h	; ' '
-		jz	short loc_A922
-		cmp	al, 9
-		jz	short loc_A922
-		cmp	al, 0Dh
-		jz	short loc_A922
-		inc	si
-		jmp	short loc_A911
-; ---------------------------------------------------------------------------
-
-loc_A922:
-		mov	ax, 2901h
-		mov	di, 6Ch	; 'l'
-		int	21h		; DOS -	PARSE FILENAME
-					; DS:SI	-> string to parse
-					; ES:DI	-> buffer to fill with unopened	FCB
-					; AL = bit mask	to control parsing
-		mov	cs:byte_A838, al
-		pop	ds
-		mov	ah, 4Ah	; 'J'
-		mov	bx, 0FFFFh
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		cmp	byte ptr word_34A1C, 3
-		jnb	short loc_A941
-		sub	bx, 280h
-
-loc_A941:
-		mov	[bp+var_4], bx
-		mov	ax, [bp+arg_8]
-		mov	dx, [bp+arg_A]
-		mov	bx, ax
-		or	bx, dx
-		jnz	short loc_A956
-		xor	ax, ax
-		mov	di, ax
-		jmp	short loc_A973
-; ---------------------------------------------------------------------------
-
-loc_A956:
-		mov	es, dx
-		mov	di, ax
-		push	di
-		mov	cx, 0FFFFh
-		xor	ax, ax
-
-loc_A960:
-		repne scasb
-		cmp	es:[di], al
-		jnz	short loc_A960
-		dec	cx
-		add	di, 3
-		repne scasb
-		dec	cx
-		mov	ax, cx
-		neg	ax
-		pop	di
-
-loc_A973:
-		mov	word ptr [bp+var_A], di
-		mov	word ptr [bp+var_A+2], es
-		add	ax, 0Fh
-		mov	cx, 4
-		shr	ax, cl
-		mov	[bp+var_6], ax
-		mov	si, word_34A16
-		dec	si
-		mov	es, si
-		cmp	ax, es:3
-		jbe	short loc_A99B
-		dec	cs:byte_A8BC
-		inc	ax
-		sub	[bp+var_4], ax
-
-loc_A99B:
-		lds	si, [bp+arg_0]
-		push	cs
-		pop	es
-		assume es:seg000
-		mov	di, 0A7E7h
-
-loc_A9A3:
-		lodsb
-		stosb
-		or	al, al
-		jnz	short loc_A9A3
-		mov	bx, [bp+var_2]
-		push	ds
-		pop	es
-		assume es:dseg
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	di, 0A756h
-		mov	ah, 3Fh	; '?'
-		mov	cx, 18h
-		lea	dx, [di+0E3h]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short loc_A9E5
-		cmp	word ptr [di+0E3h], 5A4Dh
-		jz	short loc_A9F1
-		mov	ax, es:[si-5]
-		or	ah, 20h
-		cmp	ax, 632Eh
-		jnz	short loc_A9E2
-		mov	ax, es:[si-3]
-		or	ax, 2020h
-		cmp	ax, 6D6Fh
-		jnz	short loc_A9E2
-		jmp	short loc_AA2D
-; ---------------------------------------------------------------------------
-
-loc_A9E2:
-		mov	ax, 0Bh
-
-loc_A9E5:
-		push	ax
-		mov	ah, 3Eh	; '>'
-		mov	bx, [bp+var_2]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ax
-		jmp	loc_AAEF
-; ---------------------------------------------------------------------------
-
-loc_A9F1:
-		mov	ax, [di+0E7h]
-		xor	dx, dx
-		mov	dl, ah
-		mov	ah, al
-		xor	al, al
-		shl	ax, 1
-		rcl	dx, 1
-		add	ax, [di+0E5h]
-		adc	dx, 0
-		mov	cx, 4
-
-loc_AA0B:
-		shr	dx, 1
-		rcr	ax, 1
-		loop	loc_AA0B
-		inc	ax
-		sub	ax, [di+0EBh]
-		add	ax, [di+0EDh]
-		xchg	ax, bx
-		mov	ax, [di+8Fh]
-		add	ax, 10h
-		add	[di+0F9h], ax
-		add	[di+0F1h], ax
-		xchg	ax, bx
-		jmp	short loc_AA57
-; ---------------------------------------------------------------------------
-
-loc_AA2D:
-		mov	ax, 4202h
-		xor	cx, cx
-		xor	dx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	cx, 4
-
-loc_AA39:
-		shr	dx, 1
-		rcr	ax, 1
-		loop	loc_AA39
-		inc	ax
-		xchg	ax, bx
-		mov	ax, [di+8Fh]
-		mov	[di+0F9h], ax
-		mov	word ptr [di+0F7h], 100h
-		mov	[di+0F1h], ax
-		add	ax, 10h
-		xchg	ax, bx
-
-loc_AA57:
-		mov	[di+0FBh], bx
-		mov	[di+0FDh], bx
-		add	ax, 16h
-		cmp	ax, [bp+var_4]
-		mov	ax, 8
-		jbe	short loc_AA6D
-		jmp	loc_A9E5
-; ---------------------------------------------------------------------------
-
-loc_AA6D:
-		mov	ah, 3Eh	; '>'
-		mov	bx, [bp+var_2]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	es, word ptr [di+8Fh]
-		assume es:nothing
-		mov	ah, 4Ah	; 'J'
-		mov	bx, [bp+var_4]
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		jnb	short loc_AA84
-		jmp	loc_A9E5
-; ---------------------------------------------------------------------------
-
-loc_AA84:
-		add	bx, [di+8Fh]
-		mov	dx, bx
-		sub	bx, 17h
-		mov	cs:word_A8B8, bx
-		mov	es, bx
-		mov	cx, 0B0h ; '°'
-		mov	si, 0A756h
-		xor	di, di
-		rep movsw
-		mov	es, [bp+var_C]
-		mov	cx, [bp+var_6]
-		cmp	cs:byte_A8BC, 0
-		jnz	short loc_AAB6
-		mov	ah, 48h	; 'H'
-		mov	bx, cx
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_AAEF
-		jmp	short loc_AABA
-; ---------------------------------------------------------------------------
-
-loc_AAB6:
-		mov	ax, cs:word_A8BA
-
-loc_AABA:
-		mov	es, ax
-		xor	di, di
-		lds	si, [bp+var_A]
-		assume ds:dseg
-		add	cx, cx
-		add	cx, cx
-		add	cx, cx
-		rep movsw
-		push	es
-		push	dx
-		push	ds
-		mov	ds, cs:DGROUP@
-		nop
-		push	cs
-		call	near ptr __cexit
-		pop	ds
-		pop	dx
-		cmp	cs:byte_A8BC, 0
-		jnz	short loc_AAE9
-		mov	es, cs:word_A8BA
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-
-loc_AAE9:
-		pop	cx
-		jmp	dword ptr cs:word_A8B6
-; ---------------------------------------------------------------------------
-
-loc_AAEF:
-		pop	es
-		pop	di
-		pop	ds
-		pop	si
-		push	ax
-		call	__IOERROR
-		mov	sp, bp
-		pop	bp
-		retn
-__exec		endp
-
+include libs/BorlandC/exec.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25342,7 +24988,7 @@ _setblock	endp
 ; ---------------------------------------------------------------------------
 		push	si
 		push	di
-		mov	es, word_34A16
+		mov	es, _envseg@
 		xor	di, di
 		push	es
 		push	word_34A18
@@ -25384,9 +25030,9 @@ loc_AB91:
 		pop	di
 		pop	si
 		mov	ax, word ptr dword_36A0E+2
-		mov	word_34A12, ax
+		mov	word ptr __C0environ+2, ax
 		mov	ax, word ptr dword_36A0E
-		mov	envp, ax
+		mov	word ptr __C0environ, ax
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -58966,14 +58612,15 @@ argc		dw 0
 ; char **argv
 argv		dw 0
 word_34A0E	dw 0
-; char **envp
-envp		dw 0
-word_34A12	dw 0
+dPtrPub@        _C0environ,     0,                      __CDECL__
 word_34A14	dw 0
-word_34A16	dw 0
+PubSym@         _envseg,        <dw     0>,             __CDECL__
 word_34A18	dw 0
 PubSym@         _psp,           <dw     0>,             __CDECL__
-word_34A1C	dw 0
+PubSym@         _version,       <label word>,           __CDECL__
+PubSym@         _osversion,     <label word>,           __CDECL__
+PubSym@         _osmajor,       <db     0>,             __CDECL__
+PubSym@         _osminor,       <db     0>,             __CDECL__
 __errno	dw 0
 		db 0FFh
 		db 0FFh
