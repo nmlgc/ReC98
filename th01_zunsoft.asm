@@ -122,8 +122,8 @@ loc_19E:
 		sti
 		xor	ax, ax
 		mov	es, cs:DGROUP@
-		mov	di, 2870h
-		mov	cx, 33A0h
+		mov	di, offset bdata@
+		mov	cx, offset edata@
 		sub	cx, di
 		cld
 		rep stosb
@@ -174,8 +174,8 @@ loc_21F:
 		xor	bp, bp
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	si, 286Ah
-		mov	di, 2870h
+		mov	si, offset InitStart
+		mov	di, offset InitEnd
 		call	sub_2DE
 		push	envp		; envp
 		push	argv		; argv
@@ -189,8 +189,8 @@ __cleanup:
 		mov	es, cs:DGROUP@
 		push	si
 		push	di
-		mov	si, 2870h
-		mov	di, 2870h
+		mov	si, offset ExitStart
+		mov	di, offset ExitEnd
 		call	sub_322
 		pop	di
 		pop	si
@@ -6447,7 +6447,18 @@ word_2862	dw 0
 word_2864	dw 0
 word_2866	dw 0
 include libs/BorlandC/sysnerr[data].asm
+
+InitStart	label byte
 		db 0, 2, 0A3h, 18h, 2 dup(0)
+InitEnd	label byte
+
+ExitStart	label byte
+ExitEnd	label byte
+
+bdata@	label byte
+		dd 2CCh dup(?)
+edata@	label byte
+
 seg000		ends
 
 

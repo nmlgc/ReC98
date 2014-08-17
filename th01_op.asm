@@ -163,8 +163,8 @@ loc_83:
 		xor	ax, ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	di, 1188h
-		mov	cx, 1D2Ah
+		mov	di, offset bdata@
+		mov	cx, offset edata@
 		sub	cx, di
 		cld
 		rep stosb
@@ -222,8 +222,8 @@ loc_110:
 		pop	ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	si, 1146h
-		mov	di, 117Ch
+		mov	si, offset InitStart
+		mov	di, offset InitEnd
 		call	sub_1E8
 		push	word ptr __C0environ+2
 		push	word ptr __C0environ
@@ -241,8 +241,8 @@ __cleanup:
 		mov	es, cs:DGROUP@
 		push	si
 		push	di
-		mov	si, 117Ch
-		mov	di, 1188h
+		mov	si, offset ExitStart
+		mov	di, offset ExitEnd
 		call	sub_22C
 		pop	di
 		pop	si
@@ -42088,7 +42088,10 @@ word_132A0	dw 0
 		db  63h	; c
 		db    0
 off_133CC	dw offset sub_16DE
-aNstststs	db '‘’‘’‘’‘',0
+aNstststs	db '‘’‘’‘’‘'
+
+InitStart	label byte
+		db    0
 		db  10h
 		db 0E4h	; ä
 		db  13h
@@ -42133,6 +42136,9 @@ aNstststs	db '‘’‘’‘’‘',0
 		db    0
 		db  0Fh
 		dd loc_9DF3
+InitEnd	label byte
+
+ExitStart	label byte
 		db    0
 		db  10h
 		db  4Bh	; K
@@ -42142,6 +42148,9 @@ aNstststs	db '‘’‘’‘’‘',0
 		db    1
 		db  20h
 		dd loc_24F9
+ExitEnd	label byte
+
+bdata@	label byte
 dword_13418	dd ?
 		dd    ?
 		dd    ?
@@ -42939,8 +42948,10 @@ byte_13FAE	db ?
 		db ?
 dword_13FB0	dd ?
 dword_13FB4	dd ?
-					; __ExceptionHandler+2D1r ...
-		dd ?
+		dw ?
+edata@	label byte
+
+		dw ?
 		dd ?
 dseg		ends
 

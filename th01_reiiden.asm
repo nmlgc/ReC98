@@ -165,8 +165,8 @@ loc_83:
 		xor	ax, ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	di, 2274h
-		mov	cx, 6C3Ah
+		mov	di, offset bdata@
+		mov	cx, offset edata@
 		sub	cx, di
 		cld
 		rep stosb
@@ -224,8 +224,8 @@ loc_110:
 		pop	ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	si, 221Ah
-		mov	di, 2268h
+		mov	si, offset InitStart
+		mov	di, offset InitEnd
 		call	sub_1E8
 		push	word ptr __C0environ+2
 		push	word ptr __C0environ
@@ -243,8 +243,8 @@ __cleanup:
 		mov	es, cs:DGROUP@
 		push	si
 		push	di
-		mov	si, 2268h
-		mov	di, 2274h
+		mov	si, offset ExitStart
+		mov	di, offset ExitEnd
 		call	sub_22C
 		pop	di
 		pop	si
@@ -62060,6 +62060,8 @@ off_36BB2	dw offset sub_1F7C
 		db 0A6h	; ¦
 		db    5
 		db 0A6h	; ¦
+
+InitStart	label byte
 		db    1
 		db  20h
 		dd sub_E319
@@ -62116,6 +62118,9 @@ off_36BB2	dw offset sub_1F7C
 		db    0
 		db  0Fh
 		dd sub_B11B
+InitEnd	label byte
+
+ExitStart	label byte
 		db    0
 		db  10h
 		db  1Bh
@@ -62126,6 +62131,9 @@ off_36BB2	dw offset sub_1F7C
 		db  20h
 		dw 2D7Bh
 		dw seg seg000
+ExitEnd	label byte
+
+bdata@	label byte
 byte_36C14	db ?
 byte_36C15	db ?
 dword_36C16	dd ?
@@ -67257,7 +67265,10 @@ byte_3B5CE	db ?
 		db ?
 dword_3B5D0	dd ?
 dword_3B5D4	dd ?
-		dd ?
+		dw ?
+edata@	label byte
+
+		dw ?		
 		dd ?
 dseg		ends
 

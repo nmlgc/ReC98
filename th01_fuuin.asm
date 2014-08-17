@@ -163,8 +163,8 @@ loc_83:
 		xor	ax, ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	di, 1438h
-		mov	cx, 1CBAh
+		mov	di, offset bdata@
+		mov	cx, offset edata@
 		sub	cx, di
 		cld
 		rep stosb
@@ -226,8 +226,8 @@ loc_110:
 		pop	ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	si, 13F6h
-		mov	di, 142Ch
+		mov	si, offset InitStart
+		mov	di, offset InitEnd
 		call	sub_1E8
 		push	word ptr __C0environ+2
 		push	word ptr __C0environ
@@ -245,8 +245,8 @@ __cleanup:
 		mov	es, cs:DGROUP@
 		push	si
 		push	di
-		mov	si, 142Ch
-		mov	di, 1438h
+		mov	si, offset ExitStart
+		mov	di, offset ExitEnd
 		call	sub_22C
 		pop	di
 		pop	si
@@ -44303,6 +44303,8 @@ off_13E8C	dw offset sub_161E
 		db  8Fh	; è
 		db  17h
 		db  8Fh	; è
+
+InitStart	label byte
 		db    0
 		db  10h
 		db  24h	; $
@@ -44348,6 +44350,9 @@ off_13E8C	dw offset sub_161E
 		db    0
 		db  0Fh
 		dd sub_9B78
+InitEnd	label byte
+
+ExitStart	label byte
 		db    0
 		db  10h
 		db  8Bh	; ã
@@ -44357,6 +44362,9 @@ off_13E8C	dw offset sub_161E
 		db    1
 		db  20h
 		dd loc_2491
+ExitEnd	label byte
+
+bdata@	label byte
 ; char word_13ED8[]
 word_13ED8	dw ?
 word_13EDA	dw ?
@@ -44950,8 +44958,11 @@ byte_1474E	db ?
 		db ?
 dword_14750	dd ?
 dword_14754	dd ?
+		dw ?
+edata@	label byte
+
 		dd ?
-		dd ?
+		dw ?
 dseg		ends
 
 ; ===========================================================================

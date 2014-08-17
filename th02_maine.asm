@@ -121,8 +121,8 @@ loc_83:
 		xor	ax, ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	di, 0EB2h
-		mov	cx, 2CE2h
+		mov	di, offset bdata@
+		mov	cx, offset edata@
 		sub	cx, di
 		cld
 		rep stosb
@@ -180,8 +180,8 @@ loc_110:
 		pop	ax
 		mov	es, cs:DGROUP@
 		assume es:nothing
-		mov	si, 0E8Eh
-		mov	di, 0EACh
+		mov	si, offset InitStart
+		mov	di, offset InitEnd
 		call	sub_1E8
 		push	word ptr __C0environ+2
 		push	word ptr __C0environ
@@ -199,8 +199,8 @@ __cleanup:
 		mov	es, cs:DGROUP@
 		push	si
 		push	di
-		mov	si, 0EACh
-		mov	di, 0EB2h
+		mov	si, offset ExitStart
+		mov	di, offset ExitEnd
 		call	sub_22C
 		pop	di
 		pop	si
@@ -29063,6 +29063,8 @@ a_exe_0		db '.EXE',0
 a_bat_0		db '.BAT',0
 aComspec	db 'COMSPEC',0
 aC		db '/c',0
+
+InitStart	label byte
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
@@ -29090,9 +29092,15 @@ aC		db '/c',0
 		db  8Eh	; Ž
 		db    0
 		db    0
+InitEnd	label byte
+
+ExitStart	label byte
 		db    1
 		db  20h
 		dd loc_341D
+ExitEnd	label byte
+
+bdata@	label byte
 unk_DE32	db    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -31167,11 +31175,13 @@ word_FC54	dw ?
 word_FC56	dw ?
 dword_FC58	dd ?
 dword_FC5C	dd ?
-					; __ExceptionHandler+2D1r ...
+		dw    ?
+edata@	label byte
+
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
+		dw    ?	;
 dseg		ends
 
 ; ===========================================================================
