@@ -36,7 +36,7 @@ __IOERROR	proc near
 		mov	__doserrno, 0FFFFh
 
 @@ser_end:
-		mov	__errno, dx
+		mov	_errno, dx
 		mov	ax, 0FFFFh
 		pop	di
 		pop	si

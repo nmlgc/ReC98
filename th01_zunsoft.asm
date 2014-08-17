@@ -3982,7 +3982,7 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_1957:
-		mov	__errno, 8
+		mov	_errno, 8
 		mov	ax, 0FFFFh
 
 loc_1960:
@@ -4022,7 +4022,7 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_198C:
-		mov	__errno, 8
+		mov	_errno, 8
 		mov	ax, 0FFFFh
 
 loc_1995:
@@ -5431,7 +5431,7 @@ word_21B2	dw 0
 word_21B4	dw 0
 word_21B6	dw 0
 word_21B8	dw 0
-__errno	dw 0
+PubSym@         errno,          <dw     0>,             __CDECL__
 		db 2 dup(0FFh),	0A0h, 33h
 word_21C0	dw 33A0h
 		dw 0

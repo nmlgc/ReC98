@@ -8832,7 +8832,7 @@ loc_4128:
 		mov	[bp-2],	ax
 		cmp	ax, 0FFFFh
 		jnz	short loc_4147
-		mov	__errno, 13h
+		mov	_errno, 13h
 		mov	dx, 0FFFFh
 		mov	ax, 0FFFFh
 		jmp	loc_41E4
@@ -9066,7 +9066,7 @@ loc_42AB:
 ; ---------------------------------------------------------------------------
 
 loc_42AF:
-		mov	__errno, 5
+		mov	_errno, 5
 		mov	ax, 0FFFFh
 
 loc_42B8:
@@ -10278,7 +10278,7 @@ loc_4A14:
 		pop	cx
 		cmp	ax, [bp+len]
 		jb	short loc_4A4F
-		mov	__errno, 22h ; '"'
+		mov	_errno, 22h ; '"'
 		jmp	short loc_4A70
 ; ---------------------------------------------------------------------------
 
@@ -10295,7 +10295,7 @@ loc_4A4F:
 		mov	word ptr [bp+dest], ax
 		or	ax, dx
 		jnz	short loc_4A76
-		mov	__errno, 8
+		mov	_errno, 8
 
 loc_4A70:
 					; __getdcwd+55j
@@ -19850,7 +19850,7 @@ loc_945C:
 		jnz	short loc_9487
 
 loc_947E:
-		mov	__errno, 2
+		mov	_errno, 2
 		jmp	loc_954D
 ; ---------------------------------------------------------------------------
 
@@ -19887,7 +19887,7 @@ loc_94B4:
 		mov	ax, [bp+var_8]
 		or	ax, [bp+var_6]
 		jnz	short loc_94CE
-		mov	__errno, 8
+		mov	_errno, 8
 		jmp	loc_954D
 ; ---------------------------------------------------------------------------
 
@@ -19903,7 +19903,7 @@ loc_94CE:
 		pop	cx
 		cmp	ax, 80h	; '€'
 		jb	short loc_94F7
-		mov	__errno, 14h
+		mov	_errno, 14h
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -19948,7 +19948,7 @@ loc_9526:
 		mov	[bp+var_C], ax
 		or	ax, dx
 		jnz	short loc_9552
-		mov	__errno, 8
+		mov	_errno, 8
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -26926,8 +26926,7 @@ PubSym@         _version,       <label word>,           __CDECL__
 PubSym@         _osversion,     <label word>,           __CDECL__
 PubSym@         _osmajor,       <db     0>,             __CDECL__
 PubSym@         _osminor,       <db     0>,             __CDECL__
-__errno	dw 0
-					; seg000:4138w	...
+PubSym@         errno,          <dw     0>,             __CDECL__
 		db 0FFh
 		db 0FFh
 		db 0E2h	; â

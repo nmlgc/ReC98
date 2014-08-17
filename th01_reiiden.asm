@@ -4701,7 +4701,7 @@ loc_1A5D:
 		db 0e0h
 
 loc_1A64:
-		mov	__errno, 22h	; '"'
+		mov	_errno, 22h	; '"'
 		mov	sp, bp
 		pop	bp
 		retn	14h
@@ -12312,7 +12312,7 @@ loc_4F49:
 		mov	[bp+var_2], ax
 		cmp	ax, 0FFFFh
 		jnz	short loc_4F68
-		mov	__errno, 13h
+		mov	_errno, 13h
 		mov	dx, 0FFFFh
 		mov	ax, 0FFFFh
 		jmp	loc_5005
@@ -12548,7 +12548,7 @@ loc_50CC:
 ; ---------------------------------------------------------------------------
 
 loc_50D0:
-		mov	__errno, 5
+		mov	_errno, 5
 		mov	ax, 0FFFFh
 
 loc_50D9:
@@ -14830,7 +14830,7 @@ loc_5E47:
 		pop	cx
 		cmp	ax, [bp+len]
 		jb	short loc_5E82
-		mov	__errno, 22h	; '"'
+		mov	_errno, 22h	; '"'
 		jmp	short loc_5EA3
 ; ---------------------------------------------------------------------------
 
@@ -14847,7 +14847,7 @@ loc_5E82:
 		mov	word ptr [bp+dest], ax
 		or	ax, dx
 		jnz	short loc_5EA9
-		mov	__errno, 8
+		mov	_errno, 8
 
 loc_5EA3:
 		xor	dx, dx
@@ -15288,7 +15288,7 @@ arg_6		= word ptr  0Ch
 		or	[bp+0Ah], ax
 
 loc_608F:
-		mov	ax, __errno
+		mov	ax, _errno
 		mov	[bp+var_6], ax
 		xor	ax, ax
 		push	ax		; func
@@ -15300,7 +15300,7 @@ loc_608F:
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	ax, [bp+var_6]
-		mov	__errno, ax
+		mov	_errno, ax
 		test	byte ptr [bp+access+1],	1
 		jnz	short loc_60B8
 		jmp	loc_6140
@@ -26301,7 +26301,7 @@ loc_B3BB:
 		jnz	short loc_B3E6
 
 loc_B3DD:
-		mov	__errno, 2
+		mov	_errno, 2
 		jmp	loc_B4AC
 ; ---------------------------------------------------------------------------
 
@@ -26337,7 +26337,7 @@ loc_B413:
 		mov	ax, [bp+var_8]
 		or	ax, [bp+var_6]
 		jnz	short loc_B42D
-		mov	__errno, 8
+		mov	_errno, 8
 		jmp	loc_B4AC
 ; ---------------------------------------------------------------------------
 
@@ -26353,7 +26353,7 @@ loc_B42D:
 		pop	cx
 		cmp	ax, 80h	; '€'
 		jb	short loc_B456
-		mov	__errno, 14h
+		mov	_errno, 14h
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -26398,7 +26398,7 @@ loc_B485:
 		mov	[bp+var_C], ax
 		or	ax, dx
 		jnz	short loc_B4B1
-		mov	__errno, 8
+		mov	_errno, 8
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -58621,7 +58621,7 @@ PubSym@         _version,       <label word>,           __CDECL__
 PubSym@         _osversion,     <label word>,           __CDECL__
 PubSym@         _osmajor,       <db     0>,             __CDECL__
 PubSym@         _osminor,       <db     0>,             __CDECL__
-__errno	dw 0
+PubSym@         errno,          <dw     0>,             __CDECL__
 		db 0FFh
 		db 0FFh
 		db  3Ah	; :

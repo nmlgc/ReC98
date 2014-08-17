@@ -8576,7 +8576,7 @@ loc_38D7:
 		mov	[bp-2],	ax
 		cmp	ax, 0FFFFh
 		jnz	short loc_38F6
-		mov	__errno, 13h
+		mov	_errno, 13h
 		mov	dx, 0FFFFh
 		mov	ax, 0FFFFh
 		jmp	loc_3993
@@ -8810,7 +8810,7 @@ loc_3A5A:
 ; ---------------------------------------------------------------------------
 
 loc_3A5E:
-		mov	__errno, 5
+		mov	_errno, 5
 		mov	ax, 0FFFFh
 
 loc_3A67:
@@ -11103,7 +11103,7 @@ loc_47EF:
 		pop	cx
 		cmp	ax, [bp+len]
 		jb	short loc_482A
-		mov	__errno, 22h	; '"'
+		mov	_errno, 22h	; '"'
 		jmp	short loc_484B
 ; ---------------------------------------------------------------------------
 
@@ -11120,7 +11120,7 @@ loc_482A:
 		mov	word ptr [bp+dest], ax
 		or	ax, dx
 		jnz	short loc_4851
-		mov	__errno, 8
+		mov	_errno, 8
 
 loc_484B:
 		xor	dx, dx
@@ -11561,7 +11561,7 @@ arg_8		= word ptr  0Ch
 		or	[bp+0Ah], ax
 
 loc_4A37:
-		mov	ax, __errno
+		mov	ax, _errno
 		mov	[bp+var_6], ax
 		xor	ax, ax
 		push	ax		; func
@@ -11573,7 +11573,7 @@ loc_4A37:
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	ax, [bp+var_6]
-		mov	__errno, ax
+		mov	_errno, ax
 		test	byte ptr [bp+access+1],	1
 		jnz	short loc_4A60
 		jmp	loc_4AE8
@@ -22736,7 +22736,7 @@ loc_9E02:
 		jnz	short loc_9E2D
 
 loc_9E24:
-		mov	__errno, 2
+		mov	_errno, 2
 		jmp	loc_9EF3
 ; ---------------------------------------------------------------------------
 
@@ -22772,7 +22772,7 @@ loc_9E5A:
 		mov	ax, [bp+var_8]
 		or	ax, [bp+var_6]
 		jnz	short loc_9E74
-		mov	__errno, 8
+		mov	_errno, 8
 		jmp	loc_9EF3
 ; ---------------------------------------------------------------------------
 
@@ -22788,7 +22788,7 @@ loc_9E74:
 		pop	cx
 		cmp	ax, 80h	; '€'
 		jb	short loc_9E9D
-		mov	__errno, 14h
+		mov	_errno, 14h
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -22833,7 +22833,7 @@ loc_9ECC:
 		mov	[bp+var_C], ax
 		or	ax, dx
 		jnz	short loc_9EF8
-		mov	__errno, 8
+		mov	_errno, 8
 		push	[bp+var_6]
 		push	[bp+var_8]
 		nop
@@ -43012,7 +43012,7 @@ PubSym@         _version,       <label word>,           __CDECL__
 PubSym@         _osversion,     <label word>,           __CDECL__
 PubSym@         _osmajor,       <db     0>,             __CDECL__
 PubSym@         _osminor,       <db     0>,             __CDECL__
-__errno	dw 0
+PubSym@         errno,          <dw     0>,             __CDECL__
 		db 0FFh
 		db 0FFh
 		db 0BAh	; º
