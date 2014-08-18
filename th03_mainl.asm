@@ -68,7 +68,7 @@ loc_37:
 		shl	bx, cl
 		add	bx, 10h
 		and	bx, 0FFF0h
-		mov	word_E468, bx
+		mov	_envSize@, bx
 		mov	dx, ss
 		sub	bp, dx
 		mov	di, seg	dseg
@@ -9899,7 +9899,7 @@ _name		= dword	ptr  6
 		not	cx
 		dec	cx
 		jz	short loc_4B16
-		les	di, dword_F574
+		les	di, environ@
 		mov	word ptr [bp+var_4+2], es
 		mov	bx, es
 		or	bx, di
@@ -18571,56 +18571,7 @@ loc_8E76:
 		retf
 _setblock	endp
 
-; ---------------------------------------------------------------------------
-		push	si
-		push	di
-		mov	es, _envseg@
-		xor	di, di
-		push	es
-		push	word_E468
-		nop
-		push	cs
-		call	near ptr _malloc
-		pop	bx
-		mov	bx, ax
-		pop	es
-		mov	word ptr dword_F574, ax
-		mov	word ptr dword_F574+2, dx
-		push	ds
-		mov	ds, dx
-		or	ax, dx
-		jnz	short loc_8EA3
-		nop
-		nop
-		jmp	near ptr __abort
-; ---------------------------------------------------------------------------
-
-loc_8EA3:
-		xor	ax, ax
-		mov	cx, 0FFFFh
-		cmp	byte ptr es:[di], 0
-		jz	short loc_8EBD
-
-loc_8EAE:
-		mov	[bx], di
-		mov	word ptr [bx+2], es
-		add	bx, 4
-		repne scasb
-		cmp	es:[di], al
-		jnz	short loc_8EAE
-
-loc_8EBD:
-		mov	[bx], ax
-		mov	[bx+2],	ax
-		pop	ds
-		pop	di
-		pop	si
-		mov	ax, word ptr dword_F574+2
-		mov	word ptr __C0environ+2, ax
-		mov	ax, word ptr dword_F574
-		mov	word ptr __C0environ, ax
-		retn
-; ---------------------------------------------------------------------------
+include libs/BorlandC/setenvp.asm
 
 unknown_libname_2:			; BCC v4.x/5.x DOS runtime
 		push	si
@@ -19519,8 +19470,8 @@ loc_9547:
 		mov	ax, [bp+arg_A]
 		or	ax, [bp+arg_C]
 		jnz	short loc_955C
-		mov	dx, word ptr dword_F574+2
-		mov	ax, word ptr dword_F574
+		mov	dx, word ptr environ@+2
+		mov	ax, word ptr environ@
 		mov	[bp+arg_C], dx
 		mov	[bp+arg_A], ax
 
@@ -29177,7 +29128,7 @@ word_E45E	dw 0
 dPtrPub@        _C0environ,     0,                      __CDECL__
 word_E464	dw 0
 PubSym@         _envseg,        <dw     0>,             __CDECL__
-word_E468	dw 0
+PubSym@         _envSize,       <dw     0>,             __CDECL__
 PubSym@         _psp,           <dw     0>,             __CDECL__
 PubSym@         _version,       <label word>,           __CDECL__
 PubSym@         _osversion,     <label word>,           __CDECL__
@@ -31658,7 +31609,7 @@ word_F55E	dw 0
 include libs/BorlandC/sysnerr[data].asm
 aNotype		db '<notype>',0
 aBccxh1		db '**BCCxh1',0
-dword_F574	dd 0
+include libs/BorlandC/setenvp[data].asm
 word_F578	dw 1
 word_F57A	dw 0
 word_F57C	dw 1
@@ -31958,12 +31909,7 @@ InitStart	label byte
 		db  43h	; C
 		db    0
 		db    0
-		db    0
-		db  10h
-		db  7Ah	; z
-		db  8Eh	; Ž
-		db    0
-		db    0
+include libs/BorlandC/setenvp[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte
