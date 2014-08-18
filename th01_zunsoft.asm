@@ -127,7 +127,7 @@ loc_19E:
 		sub	cx, di
 		cld
 		rep stosb
-		cmp	word_27D4, 14h
+		cmp	__nfile, 14h
 		jbe	short loc_21F
 		cmp	byte ptr word_21B8, 3
 		jb	short loc_21F
@@ -142,7 +142,7 @@ loc_1E8:
 					; AL = function	code: set allocation strategy
 		jb	short loc_21C
 		mov	ah, 67h
-		mov	bx, word_27D4
+		mov	bx, __nfile
 		int	21h		; DOS -	3.3+ - SET HANDLE COUNT
 					; BX = desired number of handles (max 255)
 		jb	short loc_21C
@@ -3645,7 +3645,7 @@ buf		= word ptr  4
 		pop	cx
 		push	ax		; len
 		push	[bp+buf]	; buf
-		mov	al, byte_26B8
+		mov	al, stderr.fd
 		cbw
 		push	ax		; handle
 		call	__rtl_write
@@ -3893,21 +3893,21 @@ loc_18AA:
 		inc	dx
 
 loc_18CF:
-		cmp	dx, word_27D4
+		cmp	dx, __nfile
 		jb	short loc_18AA
-		mov	al, byte_2698
+		mov	al, stdin.fd
 		cbw
 		push	ax		; handle
 		call	_isatty
 		pop	cx
 		or	ax, ax
 		jnz	short loc_18E8
-		and	word_2696, 0FDFFh
+		and	stdin.flags, 0FDFFh
 
 loc_18E8:
 		mov	ax, 200h
 		push	ax		; size
-		test	byte ptr word_2696+1, 2
+		test	byte ptr stdin.flags+1, 2
 		jz	short loc_18F8
 		mov	ax, 1
 		jmp	short loc_18FA
@@ -3924,19 +3924,19 @@ loc_18FA:
 		push	ax		; stream
 		call	_setvbuf
 		add	sp, 8
-		mov	al, byte_26A8
+		mov	al, stdout.fd
 		cbw
 		push	ax		; handle
 		call	_isatty
 		pop	cx
 		or	ax, ax
 		jnz	short loc_191B
-		and	word_26A6, 0FDFFh
+		and	stdout.flags, 0FDFFh
 
 loc_191B:
 		mov	ax, 200h
 		push	ax		; size
-		test	byte ptr word_26A6+1, 2
+		test	byte ptr stdout.flags+1, 2
 		jz	short loc_192B
 		mov	ax, 2
 		jmp	short loc_192D
@@ -4684,7 +4684,7 @@ stream		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_6], 0
-		mov	ax, word_27D4
+		mov	ax, __nfile
 		mov	[bp+var_4], ax
 		mov	[bp+stream], 2694h
 		jmp	short loc_1CF4
@@ -5137,7 +5137,7 @@ len		= word ptr  8
 		push	si
 		push	di
 		mov	ax, [bp+handle]
-		cmp	ax, word_27D4
+		cmp	ax, __nfile
 		jb	short loc_1FCA
 		mov	ax, 6
 		push	ax
@@ -6424,19 +6424,7 @@ word_268C	dw 0
 off_268E	dw offset sub_1738
 off_2690	dw offset sub_1738
 off_2692	dw offset sub_1738
-		db 2 dup(0)
-word_2696	dw 209h
-byte_2698	db 0
-		db 9 dup(0), 94h, 26h, 2 dup(0)
-word_26A6	dw 20Ah
-byte_26A8	db 1
-		db 9 dup(0), 0A4h, 26h,	2 dup(0), 2 dup(2)
-byte_26B8	db 2
-		db 9 dup(0), 0B4h, 26h,	2 dup(0), 43h, 2, 3, 9 dup(0)
-		db 0C4h, 26h, 2	dup(0),	42h, 2,	4, 9 dup(0), 0D4h, 26h
-		db 0F0h	dup(0)
-word_27D4	dw 14h
-		db 1, 60h, 2, 60h, 2, 60h, 4, 0A0h, 2, 0A0h, 1Eh dup(0)
+include libs/BorlandC/files[data].asm
 word_27FE	dw 0
 include libs/BorlandC/__IOERROR[data].asm
 		db    0

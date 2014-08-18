@@ -126,7 +126,7 @@ loc_83:
 		sub	cx, di
 		cld
 		rep stosb
-		cmp	word_22C36, 14h
+		cmp	__nfile, 14h
 		jbe	short loc_110
 		cmp	_osmajor@, 3
 		jb	short loc_110
@@ -141,7 +141,7 @@ loc_D7:
 					; AL = function	code: set allocation strategy
 		jb	short loc_10B
 		mov	ah, 67h	; 'g'
-		mov	bx, word_22C36
+		mov	bx, __nfile
 		int	21h		; DOS -	3.3+ - SET HANDLE COUNT
 					; BX = desired number of handles (max 255)
 		jb	short loc_10B
@@ -10568,7 +10568,7 @@ buf		= dword	ptr  6
 		push	ax		; len
 		push	word ptr [bp+buf+2]
 		push	word ptr [bp+buf] ; buf
-		mov	al, byte_22AD2
+		mov	al, stderr.fd
 		cbw
 		push	ax		; handle
 		nop
@@ -11229,9 +11229,9 @@ loc_4E3E:
 		inc	cx
 
 loc_4E60:
-		cmp	cx, word_22C36
+		cmp	cx, __nfile
 		jb	short loc_4E3E
-		mov	al, byte_22AAA
+		mov	al, stdin.fd
 		cbw
 		push	ax
 		nop
@@ -11240,12 +11240,12 @@ loc_4E60:
 		pop	cx
 		or	ax, ax
 		jnz	short loc_4E7B
-		and	word_22AA8, 0FDFFh
+		and	stdin.flags, 0FDFFh
 
 loc_4E7B:
 		mov	ax, 200h
 		push	ax
-		test	byte ptr word_22AA8+1, 2
+		test	byte ptr stdin.flags+1, 2
 		jz	short loc_4E8B
 		mov	ax, 1
 		jmp	short loc_4E8D
@@ -11266,7 +11266,7 @@ loc_4E8D:
 		push	cs
 		call	near ptr _setvbuf
 		add	sp, 0Ch
-		mov	al, byte_22ABE
+		mov	al, stdout.fd
 		cbw
 		push	ax
 		nop
@@ -11275,12 +11275,12 @@ loc_4E8D:
 		pop	cx
 		or	ax, ax
 		jnz	short loc_4EB4
-		and	word_22ABC, 0FDFFh
+		and	stdout.flags, 0FDFFh
 
 loc_4EB4:
 		mov	ax, 200h
 		push	ax
-		test	byte ptr word_22ABC+1, 2
+		test	byte ptr stdout.flags+1, 2
 		jz	short loc_4EC4
 		mov	ax, 2
 		jmp	short loc_4EC6
@@ -12683,7 +12683,7 @@ stream		= dword	ptr -4
 		push	si
 		push	di
 		mov	[bp+var_8], 0
-		mov	ax, word_22C36
+		mov	ax, __nfile
 		mov	[bp+var_6], ax
 		mov	word ptr [bp+stream+2],	ds
 		mov	word ptr [bp+stream], 20C6h
@@ -14344,7 +14344,7 @@ len		= word ptr  0Ch
 		push	si
 		push	di
 		mov	ax, [bp+handle]
-		cmp	ax, word_22C36
+		cmp	ax, __nfile
 		jb	short loc_68D7
 		mov	ax, 6
 		push	ax
@@ -47906,435 +47906,7 @@ word_22A98	dw 0
 off_22A9A	dd sub_4878
 off_22A9E	dd sub_4878
 off_22AA2	dd sub_4878
-		dw 0
-word_22AA8	dw 209h
-byte_22AAA	db 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0C6h	; Æ
-		db  20h
-		db    0
-		db    0
-word_22ABC	dw 20Ah
-byte_22ABE	db 1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0DAh	; Ú
-		db  20h
-		db    0
-		db    0
-		db    2
-		db    2
-byte_22AD2	db 2
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db 0EEh	; î
-		db  20h
-		db    0
-		db    0
-		db  43h	; C
-		db    2
-		db    3
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db  21h	; !
-		db    0
-		db    0
-		db  42h	; B
-		db    2
-		db    4
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  16h
-		db  21h	; !
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_22C36	dw 14h
-		db    1
-		db  60h	; `
-		db    2
-		db  60h	; `
-		db    2
-		db  60h	; `
-		db    4
-		db 0A0h	;  
-		db    2
-		db 0A0h	;  
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/BorlandC/files[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
 unk_22CBC	db    0

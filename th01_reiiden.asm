@@ -20,8 +20,8 @@ _cx		dw ?
 _dx		dw ?
 _si		dw ?
 _di		dw ?
-cflag		dw ?
-flags		dw ?
+_cflag		dw ?
+_flags		dw ?
 WORDREGS	ends
 
 ; ---------------------------------------------------------------------------
@@ -170,7 +170,7 @@ loc_83:
 		sub	cx, di
 		cld
 		rep stosb
-		cmp	word_36586, 14h
+		cmp	__nfile, 14h
 		jbe	short loc_110
 		cmp	_osmajor@, 3
 		jb	short loc_110
@@ -185,7 +185,7 @@ loc_D7:
 					; AL = function	code: set allocation strategy
 		jb	short loc_10B
 		mov	ah, 67h	; 'g'
-		mov	bx, word_36586
+		mov	bx, __nfile
 		int	21h		; DOS -	3.3+ - SET HANDLE COUNT
 					; BX = desired number of handles (max 255)
 		jb	short loc_10B
@@ -7034,7 +7034,7 @@ buf		= dword	ptr  6
 		push	ax		; len
 		push	word ptr [bp+buf+2]
 		push	word ptr [bp+buf] ; buf
-		mov	al, byte_36422
+		mov	al, stderr.fd
 		cbw
 		push	ax		; handle
 		nop
@@ -9617,9 +9617,9 @@ loc_36A2:
 		inc	cx
 
 loc_36C4:
-		cmp	cx, word_36586
+		cmp	cx, __nfile
 		jb	short loc_36A2
-		mov	al, byte_363FA
+		mov	al, stdin.fd
 		cbw
 		push	ax
 		nop
@@ -9628,12 +9628,12 @@ loc_36C4:
 		pop	cx
 		or	ax, ax
 		jnz	short loc_36DF
-		and	word_363F8, 0FDFFh
+		and	stdin.flags, 0FDFFh
 
 loc_36DF:
 		mov	ax, 200h
 		push	ax
-		test	byte ptr word_363F8+1, 2
+		test	byte ptr stdin.flags+1, 2
 		jz	short loc_36EF
 		mov	ax, 1
 		jmp	short loc_36F1
@@ -9654,7 +9654,7 @@ loc_36F1:
 		push	cs
 		call	near ptr _setvbuf
 		add	sp, 0Ch
-		mov	al, byte_3640E
+		mov	al, stdout.fd
 		cbw
 		push	ax
 		nop
@@ -9663,12 +9663,12 @@ loc_36F1:
 		pop	cx
 		or	ax, ax
 		jnz	short loc_3718
-		and	word_3640C, 0FDFFh
+		and	stdout.flags, 0FDFFh
 
 loc_3718:
 		mov	ax, 200h
 		push	ax
-		test	byte ptr word_3640C+1, 2
+		test	byte ptr stdout.flags+1, 2
 		jz	short loc_3728
 		mov	ax, 2
 		jmp	short loc_372A
@@ -11035,7 +11035,7 @@ loc_3F42:
 
 loc_3F4E:
 		mov	ax, [bp+handle]
-		cmp	ax, word_36586
+		cmp	ax, __nfile
 		jb	short loc_3F42
 		pop	di
 		pop	si
@@ -12786,7 +12786,7 @@ handle		= word ptr  6
 		push	si
 		push	di
 		mov	dx, [bp+handle]
-		cmp	dx, word_36586
+		cmp	dx, __nfile
 		jb	short loc_51E5
 		mov	ax, 6
 		push	ax
@@ -12889,7 +12889,7 @@ handle		= word ptr  6
 		push	si
 		push	di
 		mov	ax, [bp+handle]
-		cmp	ax, word_36586
+		cmp	ax, __nfile
 		jb	short loc_5244
 		mov	ax, 6
 		push	ax
@@ -13261,7 +13261,7 @@ stream		= dword	ptr -4
 		push	si
 		push	di
 		mov	[bp+var_8], 0
-		mov	ax, word_36586
+		mov	ax, __nfile
 		mov	[bp+var_6], ax
 		mov	word ptr [bp+stream+2],	ds
 		mov	word ptr [bp+stream], 1A56h
@@ -13576,7 +13576,7 @@ loc_5682:
 		add	word ptr [bp+var_4], 14h
 		push	ax
 		mov	ax, 14h
-		imul	word_36586
+		imul	__nfile
 		add	ax, 1A56h
 		pop	dx
 		cmp	dx, ax
@@ -16256,7 +16256,7 @@ len		= word ptr  0Ch
 		push	si
 		push	di
 		mov	ax, [bp+handle]
-		cmp	ax, word_36586
+		cmp	ax, __nfile
 		jb	short loc_66E3
 		mov	ax, 6
 		push	ax
@@ -17018,7 +17018,7 @@ len		= word ptr  0Ch
 		push	si
 		push	di
 		mov	ax, [bp+handle]
-		cmp	ax, word_36586
+		cmp	ax, __nfile
 		jb	short loc_6CCD
 		mov	ax, 6
 		push	ax
@@ -17332,7 +17332,7 @@ loc_6EA1:
 
 loc_6EA8:
 		mov	ax, [bp+var_6]
-		cmp	ax, word_36586
+		cmp	ax, __nfile
 		jb	short loc_6E8C
 		pop	di
 		pop	si
@@ -61186,153 +61186,7 @@ word_363E8	dw 0
 off_363EA	dd sub_2696
 off_363EE	dd sub_2696
 off_363F2	dd sub_2696
-		dw 0
-word_363F8	dw 209h
-byte_363FA	db 0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db  56h	; V
-		db  1Ah
-		db    0
-		db    0
-word_3640C	dw 20Ah
-byte_3640E	db 1
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db  6Ah	; j
-		db  1Ah
-		db    0
-		db    0
-		db    2
-		db    2
-byte_36422	db 2
-		dd 0
-		dd 0
-		dd 0
-		db 0
-		db  7Eh	; ~
-		db  1Ah
-		db    0
-		db    0
-		db  43h	; C
-		db    2
-		db    3
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db  92h	; ÅE
-		db  1Ah
-		db    0
-		db    0
-		db  42h	; B
-		db    2
-		db    4
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db 0A6h	; ¶
-		db  1Ah
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-word_36586	dw 14h
-		db    1
-		db  60h	; `
-		db    2
-		db  60h	; `
-		db    2
-		db  60h	; `
-		db    4
-		db 0A0h	; †
-		db    2
-		db 0A0h	; †
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db    0
+include libs/BorlandC/files[data].asm
 word_365B0	dw 4000h
 word_365B2	dw 0FFFFh
 		db 0CCh	; Ã
