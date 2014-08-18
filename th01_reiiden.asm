@@ -9593,105 +9593,7 @@ segp		= dword	ptr  6
 		retf
 _segread	endp
 
-; ---------------------------------------------------------------------------
-
-__setupio:
-		push	si
-		push	di
-		mov	cx, 5
-		jmp	short loc_36C4
-; ---------------------------------------------------------------------------
-
-loc_36A2:
-		mov	bx, cx
-		add	bx, bx
-		mov	word ptr [bx+1BE8h], 0
-		mov	ax, 14h
-		imul	cx
-		mov	dx, ax
-		mov	bx, ax
-		mov	byte ptr [bx+1A5Ah], 0FFh
-		add	ax, 1A56h
-		mov	bx, dx
-		mov	[bx+1A68h], ax
-		inc	cx
-
-loc_36C4:
-		cmp	cx, __nfile
-		jb	short loc_36A2
-		mov	al, stdin.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_36DF
-		and	stdin.flags, 0FDFFh
-
-loc_36DF:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdin.flags+1, 2
-		jz	short loc_36EF
-		mov	ax, 1
-		jmp	short loc_36F1
-; ---------------------------------------------------------------------------
-
-loc_36EF:
-		xor	ax, ax
-
-loc_36F1:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 1A56h
-		push	ax
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-		mov	al, stdout.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_3718
-		and	stdout.flags, 0FDFFh
-
-loc_3718:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdout.flags+1, 2
-		jz	short loc_3728
-		mov	ax, 2
-		jmp	short loc_372A
-; ---------------------------------------------------------------------------
-
-loc_3728:
-		xor	ax, ax
-
-loc_372A:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 1A6Ah
-		push	ax
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-		pop	di
-		pop	si
-		retn
+include libs/BorlandC/setupio.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -61891,12 +61793,7 @@ InitStart	label byte
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
-		db    0
-		db    2
-		db  9Bh	; ÅE
-		db  36h	; 6
-		db    0
-		db    0
+include libs/BorlandC/setupio[initdata].asm
 		db    0
 		db  10h
 		db  7Fh	; 

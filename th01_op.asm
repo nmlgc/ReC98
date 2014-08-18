@@ -6255,105 +6255,7 @@ segp		= dword	ptr  6
 		retf
 _segread	endp
 
-; ---------------------------------------------------------------------------
-
-__setupio:
-		push	si
-		push	di
-		mov	cx, 5
-		jmp	short loc_2704
-; ---------------------------------------------------------------------------
-
-loc_26E2:
-		mov	bx, cx
-		add	bx, bx
-		mov	word ptr [bx+0B8Ch], 0
-		mov	ax, 14h
-		imul	cx
-		mov	dx, ax
-		mov	bx, ax
-		mov	byte ptr [bx+9FEh], 0FFh
-		add	ax, 9FAh
-		mov	bx, dx
-		mov	[bx+0A0Ch], ax
-		inc	cx
-
-loc_2704:
-		cmp	cx, __nfile
-		jb	short loc_26E2
-		mov	al, stdin.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_271F
-		and	stdin.flags, 0FDFFh
-
-loc_271F:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdin.flags+1, 2
-		jz	short loc_272F
-		mov	ax, 1
-		jmp	short loc_2731
-; ---------------------------------------------------------------------------
-
-loc_272F:
-		xor	ax, ax
-
-loc_2731:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 9FAh
-		push	ax
-		nop
-		push	cs
-		call	_setvbuf
-		add	sp, 0Ch
-		mov	al, stdout.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_2758
-		and	stdout.flags, 0FDFFh
-
-loc_2758:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdout.flags+1, 2
-		jz	short loc_2768
-		mov	ax, 2
-		jmp	short loc_276A
-; ---------------------------------------------------------------------------
-
-loc_2768:
-		xor	ax, ax
-
-loc_276A:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 0A0Eh
-		push	ax
-		nop
-		push	cs
-		call	_setvbuf
-		add	sp, 0Ch
-		pop	di
-		pop	si
-		retn
+include libs/BorlandC/setupio.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9662,7 +9564,6 @@ loc_40B1:
 		push	word ptr [bp+buf+2] ; buf
 		push	word ptr [bp+buf]
 		nop
-		push	cs		; stream
 		call	_setvbuf
 		add	sp, 0Ch
 		or	ax, ax
@@ -13055,7 +12956,7 @@ sub_5407	endp
 ; Attributes: library function bp-based	frame
 
 ; int __cdecl setvbuf(FILE *stream, char *buf, int type, size_t	size)
-_setvbuf	proc near
+_setvbuf	proc far
 
 stream		= dword	ptr  4
 buf		= dword	ptr  8
@@ -41905,12 +41806,7 @@ InitStart	label byte
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
-		db    0
-		db    2
-		db 0DBh	; Û
-		db  26h	; &
-		db    0
-		db    0
+include libs/BorlandC/setupio[initdata].asm
 		db    0
 		db  10h
 		db 0F2h	; ò

@@ -9235,106 +9235,7 @@ loc_430F:
 
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
-
-; ---------------------------------------------------------------------------
-
-__setupio:
-		push	si
-		push	di
-		mov	cx, 5
-		jmp	short loc_43AC
-; ---------------------------------------------------------------------------
-
-loc_438A:
-		mov	bx, cx
-		add	bx, bx
-		mov	word ptr [bx+2A16h], 0
-		mov	ax, 14h
-		imul	cx
-		mov	dx, ax
-		mov	bx, ax
-		mov	byte ptr [bx+2888h], 0FFh
-		add	ax, 2884h
-		mov	bx, dx
-		mov	[bx+2896h], ax
-		inc	cx
-
-loc_43AC:
-		cmp	cx, __nfile
-		jb	short loc_438A
-		mov	al, stdin.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_43C7
-		and	stdin.flags, 0FDFFh
-
-loc_43C7:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdin.flags+1, 2
-		jz	short loc_43D7
-		mov	ax, 1
-		jmp	short loc_43D9
-; ---------------------------------------------------------------------------
-
-loc_43D7:
-		xor	ax, ax
-
-loc_43D9:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 2884h
-		push	ax
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-		mov	al, stdout.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_4400
-		and	stdout.flags, 0FDFFh
-
-loc_4400:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdout.flags+1, 2
-		jz	short loc_4410
-		mov	ax, 2
-		jmp	short loc_4412
-; ---------------------------------------------------------------------------
-
-loc_4410:
-		xor	ax, ax
-
-loc_4412:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 2898h
-		push	ax
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-		pop	di
-		pop	si
-		retn
+include libs/BorlandC/setupio.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33442,12 +33343,7 @@ InitStart	label byte
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
-		db    0
-		db    2
-		db  83h	; ƒ
-		db  43h	; C
-		db    0
-		db    0
+include libs/BorlandC/setupio[initdata].asm
 		db    0
 		db  10h
 		db  6Fh	; o

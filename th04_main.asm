@@ -10873,114 +10873,7 @@ loc_4A67:
 
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
-
-; ---------------------------------------------------------------------------
-
-__setupio:
-		push	si
-		push	di
-		mov	cx, 5
-		jmp	short loc_4B04
-; ---------------------------------------------------------------------------
-
-loc_4AE2:
-		mov	bx, cx
-		add	bx, bx
-		mov	word ptr [bx+267Ah], 0
-		mov	ax, 14h
-		imul	cx
-		mov	dx, ax
-		mov	bx, ax
-		mov	byte ptr [bx+24ECh], 0FFh
-		add	ax, 24E8h
-		mov	bx, dx
-		mov	[bx+24FAh], ax
-		inc	cx
-
-loc_4B04:
-		cmp	cx, __nfile
-		jb	short loc_4AE2
-		mov	al, stdin.fd
-		cbw
-		push	ax
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_4B1F
-		and	stdin.flags, 0FDFFh
-
-loc_4B1F:
-		mov	ax, 200h
-		push	ax
-		test	byte ptr stdin.flags+1, 2
-		jz	short loc_4B2F
-		mov	ax, 1
-		jmp	short loc_4B31
-; ---------------------------------------------------------------------------
-
-loc_4B2F:
-		xor	ax, ax
-
-loc_4B31:
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	ds
-		mov	ax, 24E8h
-		push	ax
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4B43	proc near
-		mov	al, stdout.fd
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr _isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_4B58
-		and	stdout.flags, 0FDFFh
-
-loc_4B58:
-		mov	ax, 200h
-		push	ax		; size
-		test	byte ptr stdout.flags+1, 2
-		jz	short loc_4B68
-		mov	ax, 2
-		jmp	short loc_4B6A
-; ---------------------------------------------------------------------------
-
-loc_4B68:
-		xor	ax, ax
-
-loc_4B6A:
-		push	ax		; type
-		xor	ax, ax
-		push	ax
-		push	ax		; buf
-		push	ds
-		mov	ax, 24FCh
-		push	ax		; stream
-		nop
-		push	cs
-		call	near ptr _setvbuf
-		add	sp, 0Ch
-		pop	di
-		pop	si
-		retn
-sub_4B43	endp ; sp-analysis failed
-
+include libs/BorlandC/setupio.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -47857,12 +47750,7 @@ InitStart	label byte
 		db    1
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
-		db    0
-		db    2
-		db 0DBh	; Û
-		db  4Ah	; J
-		db    0
-		db    0
+include libs/BorlandC/setupio[initdata].asm
 		db    0
 		db  10h
 		db 0F7h	; ÷

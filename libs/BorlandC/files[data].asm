@@ -1,3 +1,5 @@
+_NFILE	equ 20
+
 FILE	struc ; (standard type)
 level		dw ?
 flags		dw ?
@@ -20,7 +22,7 @@ stdprn		FILE <0, 242h, 4, 0, 0, 0, 0, 0, offset stdprn>
 files		FILE 15 dup(<0>)
 
  ; unsigned int _nfile
-__nfile		dw 20
+__nfile		dw _NFILE
 ; unsigned int _openfd[_NFILE_]
 _openfd		dw 6001h
 		dw 6002h

@@ -3864,100 +3864,7 @@ loc_1888:
 _lseek		endp
 
 include libs/BorlandC/N_LXMUL.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-__setupio	proc near
-		push	si
-		push	di
-		mov	dx, 5
-		jmp	short loc_18CF
-; ---------------------------------------------------------------------------
-
-loc_18AA:
-		mov	bx, dx
-		add	bx, bx
-		mov	word ptr [bx+27D6h], 0
-		mov	bx, dx
-		mov	cl, 4
-		shl	bx, cl
-		mov	byte ptr [bx+2698h], 0FFh
-		mov	ax, dx
-		shl	ax, cl
-		add	ax, 2694h
-		mov	bx, dx
-		shl	bx, cl
-		mov	[bx+26A2h], ax
-		inc	dx
-
-loc_18CF:
-		cmp	dx, __nfile
-		jb	short loc_18AA
-		mov	al, stdin.fd
-		cbw
-		push	ax		; handle
-		call	_isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_18E8
-		and	stdin.flags, 0FDFFh
-
-loc_18E8:
-		mov	ax, 200h
-		push	ax		; size
-		test	byte ptr stdin.flags+1, 2
-		jz	short loc_18F8
-		mov	ax, 1
-		jmp	short loc_18FA
-; ---------------------------------------------------------------------------
-
-loc_18F8:
-		xor	ax, ax
-
-loc_18FA:
-		push	ax		; type
-		xor	ax, ax
-		push	ax		; buf
-		mov	ax, 2694h
-		push	ax		; stream
-		call	_setvbuf
-		add	sp, 8
-		mov	al, stdout.fd
-		cbw
-		push	ax		; handle
-		call	_isatty
-		pop	cx
-		or	ax, ax
-		jnz	short loc_191B
-		and	stdout.flags, 0FDFFh
-
-loc_191B:
-		mov	ax, 200h
-		push	ax		; size
-		test	byte ptr stdout.flags+1, 2
-		jz	short loc_192B
-		mov	ax, 2
-		jmp	short loc_192D
-; ---------------------------------------------------------------------------
-
-loc_192B:
-		xor	ax, ax
-
-loc_192D:
-		push	ax		; type
-		xor	ax, ax
-		push	ax		; buf
-		mov	ax, 26A4h
-		push	ax		; stream
-		call	_setvbuf
-		add	sp, 8
-		pop	di
-		pop	si
-		retn
-__setupio	endp
-
+include libs/BorlandC/setupio.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6437,7 +6344,7 @@ word_2866	dw 0
 include libs/BorlandC/sysnerr[data].asm
 
 InitStart	label byte
-		db 0, 2, 0A3h, 18h, 2 dup(0)
+include libs/BorlandC/setupio[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte
