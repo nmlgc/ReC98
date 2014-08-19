@@ -67,409 +67,11 @@ include libs/BorlandC/RULES.ASI
 ; Segment type:	Pure code
 seg000		segment	byte public 'CODE' use16
 		assume cs:seg000
-		assume es:nothing, ss:seg018, ds:nothing, fs:nothing, gs:nothing
+		assume es:nothing, ss:seg018, ds:dseg, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
+include libs/BorlandC/c0.asm
 
-; Attributes: library function noreturn
-
-		public start
-start		proc far
-		mov	dx, seg	dseg
-		mov	cs:DGROUP@, dx
-		mov	ah, 30h
-		int	21h		; DOS -	GET DOS	VERSION
-					; Return: AL = major version number (00h for DOS 1.x)
-		mov	bp, ds:2
-		mov	bx, ds:2Ch
-		mov	ds, dx
-		assume ds:dseg
-		mov	_version@, ax
-		mov	__psp, es
-		mov	_envseg@, bx
-		mov	word ptr _heaptop@ + 2, bp
-		call	sub_178
-		mov	ax, _envseg@
-		mov	es, ax
-		xor	ax, ax
-		mov	bx, ax
-		mov	di, ax
-		mov	cx, 7FFFh
-		cld
-
-loc_37:
-		repne scasb
-		jcxz	short loc_7E
-		inc	bx
-		cmp	es:[di], al
-		jnz	short loc_37
-		or	ch, 80h
-		neg	cx
-		mov	word_12B14, cx
-		mov	cx, 2
-		shl	bx, cl
-		add	bx, 10h
-		and	bx, 0FFF0h
-		mov	_envSize@, bx
-		mov	dx, ss
-		sub	bp, dx
-		mov	di, seg	dseg
-		mov	es, di
-		assume es:dseg
-		mov	di, es:word_13988
-		cmp	di, 200h
-		jnb	short loc_75
-		mov	di, 200h
-		mov	es:word_13988, di
-
-loc_75:
-		mov	cl, 4
-		shr	di, cl
-		inc	di
-		cmp	bp, di
-		jnb	short loc_83
-
-loc_7E:
-		nop
-		push	cs
-		call	near ptr __abort
-; ---------------------------------------------------------------------------
-
-loc_83:
-		mov	bx, di
-		add	bx, dx
-		mov	word ptr _heapbase@ + 2, bx
-		mov	word ptr _brklvl@ + 2, bx
-		mov	ax, __psp
-		sub	bx, ax
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 4Ah	; 'J'
-		push	di
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		pop	di
-		shl	di, cl
-		cli
-		mov	ss, dx
-		assume ss:nothing
-		mov	sp, di
-		sti
-		mov	ax, seg	dseg
-		mov	es, ax
-		assume es:dseg
-		mov	es:word_13988, di
-		xor	ax, ax
-		mov	es, cs:DGROUP@
-		assume es:nothing
-		mov	di, offset bdata@
-		mov	cx, offset edata@
-		sub	cx, di
-		cld
-		rep stosb
-		cmp	__nfile, 14h
-		jbe	short loc_110
-		cmp	_osmajor@, 3
-		jb	short loc_110
-		ja	short loc_D7
-		cmp	_osminor@, 1Eh
-		jb	short loc_110
-
-loc_D7:
-		mov	ax, 5801h
-		mov	bx, 2
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		jb	short loc_10B
-		mov	ah, 67h	; 'g'
-		mov	bx, __nfile
-		int	21h		; DOS -	3.3+ - SET HANDLE COUNT
-					; BX = desired number of handles (max 255)
-		jb	short loc_10B
-		mov	ah, 48h	; 'H'
-		mov	bx, 1
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_10B
-		inc	ax
-
-loc_F5:
-		mov	word ptr _heaptop@ + 2, ax
-		dec	ax
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-
-loc_FF:
-		jb	short loc_10B
-		mov	ax, 5801h
-		mov	bx, 0
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		jnb	short loc_110
-
-loc_10B:
-		nop
-		push	cs
-		call	near ptr __abort
-; ---------------------------------------------------------------------------
-
-loc_110:
-		xor	bp, bp
-		push	bp
-		nop
-		push	cs
-		call	near ptr __ExceptInit
-		pop	ax
-		mov	es, cs:DGROUP@
-		assume es:nothing
-		mov	si, offset InitStart
-		mov	di, offset InitEnd
-		call	sub_1E8
-		push	word ptr __C0environ+2
-		push	word ptr __C0environ
-		push	word_12B0E
-		push	argv		; argv
-		push	argc		; argc
-		call	_main
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr _exit
-; ---------------------------------------------------------------------------
-
-__cleanup:
-		mov	es, cs:DGROUP@
-		push	si
-		push	di
-		mov	si, offset ExitStart
-		mov	di, offset ExitEnd
-		call	sub_22C
-		pop	di
-		pop	si
-		retf
-start		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-__checknull	proc far
-		retf
-__checknull	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-__terminate	proc near
-
-arg_2		= byte ptr  4
-
-		mov	bp, sp
-		mov	ah, 4Ch	; 'L'
-		mov	al, [bp+arg_2]
-		int	21h		; DOS -	2+ - QUIT WITH EXIT CODE (EXIT)
-__terminate	endp			; AL = exit code
-
-; ---------------------------------------------------------------------------
-		mov	dx, 4Bh	; 'K'
-		push	ds
-		push	dx
-		nop
-		push	cs
-		call	near ptr ___ErrorMessage
-		pop	dx
-		pop	ds
-		mov	ax, 3
-		push	ax
-		nop
-		push	cs
-		call	near ptr __exit
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_178		proc near
-		push	ds
-		mov	ax, 3500h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr dword_12AFA, bx
-		mov	word ptr dword_12AFA+2,	es
-		mov	ax, 3504h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr dword_12AFE, bx
-		mov	word ptr dword_12AFE+2,	es
-		mov	ax, 3505h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr dword_12B02, bx
-		mov	word ptr dword_12B02+2,	es
-		mov	ax, 3506h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr dword_12B06, bx
-		mov	word ptr dword_12B06+2,	es
-		mov	ax, 2500h
-		mov	dx, cs
-		mov	ds, dx
-		assume ds:seg000
-		mov	dx, 163h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-		retn
-sub_178		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-__restorezero	proc far
-		push	ds
-		mov	ax, 2500h
-		lds	dx, dword_12AFA
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		push	ds
-		mov	ax, 2504h
-		lds	dx, dword_12AFE
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		push	ds
-		mov	ax, 2505h
-		lds	dx, dword_12B02
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		push	ds
-		mov	ax, 2506h
-		lds	dx, dword_12B06
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		retf
-__restorezero	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1E8		proc near
-		mov	ax, 100h
-		mov	dx, di
-		mov	bx, si
-
-loc_1EF:
-		cmp	bx, di
-		jz	short loc_20C
-		cmp	byte ptr es:[bx], 0FFh
-		jz	short loc_207
-		mov	cl, es:[bx+1]
-		xor	ch, ch
-		cmp	cx, ax
-		jnb	short loc_207
-		mov	ax, cx
-		mov	dx, bx
-
-loc_207:
-		add	bx, 6
-		jmp	short loc_1EF
-; ---------------------------------------------------------------------------
-
-loc_20C:
-		cmp	dx, di
-		jz	short locret_22B
-		mov	bx, dx
-		cmp	byte ptr es:[bx], 0
-		mov	byte ptr es:[bx], 0FFh
-		push	es
-		jz	short loc_224
-		call	dword ptr es:[bx+2]
-		pop	es
-		jmp	short sub_1E8
-; ---------------------------------------------------------------------------
-
-loc_224:
-		call	word ptr es:[bx+2]
-		pop	es
-		jmp	short sub_1E8
-; ---------------------------------------------------------------------------
-
-locret_22B:
-		retn
-sub_1E8		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_22C		proc near
-		mov	ah, 0
-		mov	dx, di
-		mov	bx, si
-
-loc_232:
-		cmp	bx, di
-		jz	short loc_24D
-		cmp	byte ptr es:[bx], 0FFh
-		jz	short loc_248
-		cmp	es:[bx+1], ah
-		jb	short loc_248
-		mov	ah, es:[bx+1]
-		mov	dx, bx
-
-loc_248:
-		add	bx, 6
-		jmp	short loc_232
-; ---------------------------------------------------------------------------
-
-loc_24D:
-		cmp	dx, di
-		jz	short locret_26C
-		mov	bx, dx
-		cmp	byte ptr es:[bx], 0
-		mov	byte ptr es:[bx], 0FFh
-		push	es
-		jz	short loc_265
-		call	dword ptr es:[bx+2]
-		pop	es
-		jmp	short sub_22C
-; ---------------------------------------------------------------------------
-
-loc_265:
-		call	word ptr es:[bx+2]
-		pop	es
-		jmp	short sub_22C
-; ---------------------------------------------------------------------------
-
-locret_26C:
-		retn
-sub_22C		endp
-
-; ---------------------------------------------------------------------------
-PubSym@         DGROUP@, <dw    ?>, __PASCAL__
-__MMODEL	db 4, 0C0h, 6 dup(0), 2	dup(7),	2 dup(0), 7, 0,	7, 0, 7
+		db 6 dup(0), 2	dup(7),	2 dup(0), 7, 0,	7, 0, 7
 		db 2 dup(0), 4 dup(7), 0, 3 dup(7), 5 dup(0), 2	dup(0Fh)
 		db 2 dup(0), 0Fh, 0, 0Fh, 0, 0Fh, 2 dup(0), 4 dup(0Fh)
 		db 0, 3	dup(0Fh)
@@ -5319,17 +4921,14 @@ loc_1E7E:
 		cmp	word_1373C, 0
 		jnz	short loc_1E6E
 		nop
-		push	cs
 		call	__cleanup
 		call	off_1373E
 
 loc_1E8E:
 		nop
-		push	cs
-		call	near ptr __restorezero
+		call	__restorezero
 		nop
-		push	cs
-		call	near ptr __checknull
+		call	__checknull
 		cmp	[bp+arg_2], 0
 		jnz	short loc_1EB5
 		cmp	[bp+arg_4], 0
@@ -5340,7 +4939,6 @@ loc_1E8E:
 loc_1EAC:
 		push	[bp+arg_0]
 		nop
-		push	cs
 		call	__terminate
 ; ---------------------------------------------------------------------------
 		pop	cx
@@ -21064,7 +20662,7 @@ unknown_libname_4:			; BCC v4.x/5.x DOS runtime
 		mov	bp, es
 		xchg	dx, si
 		xchg	ax, bx
-		mov	si, word_12B14
+		mov	si, _envLng@
 		inc	si
 		inc	si
 		mov	cx, 1
@@ -21240,11 +20838,11 @@ loc_9558:
 		push	word_13CEC
 		push	word_13CEA
 		mov	ax, word_13CE2
-		mov	argc, ax
+		mov	__C0argc, ax
 		mov	ax, word_13CE6
-		mov	word_12B0E, ax
+		mov	word ptr __C0argv+2, ax
 		mov	ax, word_13CE4
-		mov	argv, ax
+		mov	word ptr __C0argv, ax
 		jmp	word_13CE8
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22620,7 +22218,8 @@ loc_9E5A:
 		or	ax, [bp+var_6]
 		jnz	short loc_9E74
 		mov	_errno, 8
-		jmp	loc_9EF3
+		; Hack (jmp loc_9EF3)
+		db 0e9h, 07fh, 000h
 ; ---------------------------------------------------------------------------
 
 loc_9E74:
@@ -42831,42 +42430,9 @@ seg016		ends
 ; Segment type:	Pure data
 dseg		segment	para public 'DATA' use16
 		assume cs:dseg
-word_12AA0	dw 0
-word_12AA2	dw 0
-CheckStr	db 'NULL CHECK',0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-aBorlandCCopyri	db 'Borland C++ - Copyright 1993 Borland Intl.',0
-aDivideError	db 'Divide error',0Dh,0Ah,0
-dword_12AFA	dd 0
-dword_12AFE	dd 0
-dword_12B02	dd 0
-dword_12B06	dd 0
-; int argc
-argc		dw 0
-; char **argv
-argv		dw 0
-word_12B0E	dw 0
-dPtrPub@        _C0environ,     0,                      __CDECL__
-word_12B14	dw 0
-PubSym@         _envseg,        <dw     0>,             __CDECL__
-PubSym@         _envSize,       <dw     0>,             __CDECL__
-PubSym@         _psp,           <dw     0>,             __CDECL__
-PubSym@         _version,       <label word>,           __CDECL__
-PubSym@         _osversion,     <label word>,           __CDECL__
-PubSym@         _osmajor,       <db     0>,             __CDECL__
-PubSym@         _osminor,       <db     0>,             __CDECL__
-PubSym@         errno,          <dw     0>,             __CDECL__
-		db 0FFh
-		db 0FFh
-		db 0BAh	; º
-		db  1Ch
-PubSym@         _heapbase,      <dd   0>,       __CDECL__
-PubSym@         _brklvl,        <dd   0>,       __CDECL__
-PubSym@         _heaptop,       <dd   0>,       __CDECL__
+
+include libs/BorlandC/c0[data].asm
+
 ; char word_12B30[]
 word_12B30	dw 86A0h
 word_12B32	dw 1
@@ -43510,7 +43076,7 @@ word_13974	dw 0
 word_13976	dw 22E3h
 seg_13978	dw seg seg000
 aOutOfMemory	db 'Out of memory',0
-word_13988	dw 1000h
+__stklen	dw 1000h
 		public __ctype
 ; unsigned __int8 _ctype[257]
 __ctype		db    0, 20h, 20h, 20h,	20h, 20h, 20h, 20h
