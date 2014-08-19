@@ -8075,8 +8075,7 @@ arg_4		= byte ptr  0Ah
 		push	word ptr [bp+pathname+2]
 		push	word ptr [bp+pathname] ; pathname
 		nop
-		push	cs
-		call	near ptr __chmod
+		call	__chmod
 		add	sp, 6
 		mov	dx, ax
 		cmp	dx, 0FFFFh
@@ -8350,44 +8349,7 @@ sub_3BA3	endp
 		pop	bp
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int _chmod(const char	*pathname, int func, ...)
-__chmod		proc far
-
-pathname	= dword	ptr  6
-func		= byte ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	cx, [bp+arg_6]
-		mov	ah, 43h	; 'C'
-		mov	al, [bp+func]
-		lds	dx, [bp+pathname]
-		int	21h		; DOS -
-		pop	ds
-		jb	short loc_3C46
-		xchg	ax, cx
-		jmp	short loc_3C4A
-; ---------------------------------------------------------------------------
-
-loc_3C46:
-		push	ax
-		call	__IOERROR
-
-loc_3C4A:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__chmod		endp
-
+include libs/BorlandC/chmoda.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11262,8 +11224,7 @@ loc_4D19:
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path] ; pathname
 		nop
-		push	cs
-		call	near ptr __chmod
+		call	__chmod
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	ax, [bp+var_6]
@@ -11411,8 +11372,7 @@ loc_4E28:
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path] ; pathname
 		nop
-		push	cs
-		call	near ptr __chmod
+		call	__chmod
 		add	sp, 8
 
 loc_4E4D:
