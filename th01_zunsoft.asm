@@ -3866,130 +3866,7 @@ _lseek		endp
 
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/setupio.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-___brk		proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	dx, sp
-		sub	dx, 200h
-		cmp	ax, dx
-		jnb	short loc_1957
-		mov	word_21C0, ax
-		xor	ax, ax
-		jmp	short loc_1960
-; ---------------------------------------------------------------------------
-
-loc_1957:
-		mov	_errno, 8
-		mov	ax, 0FFFFh
-
-loc_1960:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-___brk		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-___sbrk		proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	dx, [bp+arg_2]
-		add	ax, word_21C0
-		adc	dx, 0
-		mov	cx, ax
-		or	dx, dx
-		jnz	short loc_198C
-		add	cx, 200h
-		jb	short loc_198C
-		cmp	cx, sp
-		jnb	short loc_198C
-		xchg	ax, word_21C0
-		jmp	short loc_1995
-; ---------------------------------------------------------------------------
-
-loc_198C:
-		mov	_errno, 8
-		mov	ax, 0FFFFh
-
-loc_1995:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-___sbrk		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl brk(void *addr)
-_brk		proc near
-
-addr		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+addr]
-		call	___brk
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_brk		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void *__cdecl	sbrk(int incr)
-_sbrk		proc near
-
-incr		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+incr]
-		cwd
-		push	dx
-		push	ax
-		call	___sbrk
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_sbrk		endp
-
+include libs/BorlandC/brk.asm
 include libs/BorlandC/nearheap.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4846,7 +4723,7 @@ word_21B6	dw 0
 word_21B8	dw 0
 PubSym@         errno,          <dw     0>,             __CDECL__
 		db 2 dup(0FFh),	0A0h, 33h
-word_21C0	dw 33A0h
+PubSym@         __brklvl,       <dw   edata@>,          __CDECL__
 		dw 0
 word_21C4	dw 0
 		dw 0
