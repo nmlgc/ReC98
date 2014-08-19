@@ -2915,14 +2915,14 @@ loc_1770:
 		call	sub_1C1A
 		mov	al, dl
 		stosw
-		mov	word_13340, ax
+		mov	ds:[4000h], ax
 		mov	bx, ax
 		call	sub_1C1A
 		mov	ah, dl
 		call	sub_1C1A
 		mov	al, dl
 		stosw
-		mov	word_13342, ax
+		mov	ds:[4002h], ax
 		add	ax, 2
 		mul	bx
 		shr	dx, 1
@@ -2948,10 +2948,10 @@ loc_1770:
 
 loc_17BE:
 		mov	ax, bx
-		mov	word ptr dword_13344, 0
-		mov	word ptr dword_13344+2,	ax
+		mov	word ptr ds:[4004h], 0
+		mov	word ptr ds:[4006h], ax
 		add	word_1334A, ax
-		mov	cx, word_13340
+		mov	cx, ds:[4000h]
 		push	es
 		les	bx, [bp+arg_0]
 		mov	es:[bx], cx
@@ -2977,8 +2977,8 @@ loc_17F0:
 		shl	al, 4
 		call	sub_1B2C
 		or	al, dl
-		les	di, dword_13344
-		mov	cx, word_13340
+		les	di, ds:[4004h]
+		mov	cx, ds:[4000h]
 		rep stosb
 		mov	cl, 0FFh
 		nop
@@ -3230,7 +3230,7 @@ loc_19D6:
 
 loc_19DF:
 		mov	bh, 0
-		mov	ax, word_13340
+		mov	ax, ds:[4000h]
 		cmp	bl, 1
 		jz	short loc_19FE
 		cmp	bl, 2
@@ -8171,43 +8171,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_1082E, 20h	; ' '
-		jnz	short loc_3F45
-		mov	ax, 1
-		jmp	short loc_3F61
-; ---------------------------------------------------------------------------
-
-loc_3F45:
-		mov	bx, word_1082E
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+3F88h], dx
-		mov	[bx+3F86h], ax
-		inc	word_1082E
-		xor	ax, ax
-
-loc_3F61:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8578,14 +8542,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_416A:
-		dec	word_1082E
-		mov	bx, word_1082E
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+3F86h]
 
 loc_417A:
-		cmp	word_1082E, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_416A
 		nop
 		call	__cleanup
@@ -10021,7 +9985,7 @@ sub_5299	endp
 		cmp	byte_10C9B, 0
 		jnz	short loc_52DE
 		mov	word_13348, seg	seg000
-		mov	word ptr dword_13344+2,	52BEh
+		mov	word ptr ds:[4006h], 52BEh
 		mov	byte_10C9B, 1
 
 loc_52DE:
@@ -32048,8 +32012,7 @@ aGtgugegfgGuvSi	db 'サブウェポンの選択',0
 aSlb1_pi	db 'slb1.pi',0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db    0
-word_1082E	dw 0
-					; _atexit:loc_3F45r ...
+include libs/BorlandC/atexit[data].asm
 off_10830	dd sub_4158
 off_10834	dd sub_4158
 off_10838	dd sub_4158
@@ -37285,43 +37248,8 @@ byte_132C2	db ?
 byte_132C3	db ?
 byte_132C4	db ?
 byte_132C5	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-word_13340	dw ?
-					; sub_1670+15Dr ...
-word_13342	dw ?
-dword_13344	dd ?
-					; sub_1670+191r ...
+include libs/BorlandC/atexit[bss].asm
+		dw    ?
 word_13348	dw ?
 					; sub_1670:loc_1AFAr ...
 word_1334A	dw ?

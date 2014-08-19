@@ -6421,43 +6421,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_D7BC, 20h ; ' '
-		jnz	short loc_2D61
-		mov	ax, 1
-		jmp	short loc_2D7D
-; ---------------------------------------------------------------------------
-
-loc_2D61:
-		mov	bx, word_D7BC
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+2C4Eh], dx
-		mov	[bx+2C4Ch], ax
-		inc	word_D7BC
-		xor	ax, ax
-
-loc_2D7D:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6828,14 +6792,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_2F86:
-		dec	word_D7BC
-		mov	bx, word_D7BC
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+2C4Ch]
 
 loc_2F96:
-		cmp	word_D7BC, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_2F86
 		nop
 		call	__cleanup
@@ -27349,8 +27313,7 @@ unk_D78C	db    0
 asc_D796	db ')))))',0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_D7BC	dw 0
-					; _atexit:loc_2D61r ...
+include libs/BorlandC/atexit[data].asm
 off_D7BE	dd sub_2F74
 off_D7C2	dd sub_2F74
 off_D7C6	dd sub_2F74
@@ -30084,38 +30047,7 @@ byte_FB95	db ?
 		db    ?	;
 		db    ?	;
 dword_FBC8	dd ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include libs/BorlandC/atexit[bss].asm
 word_FC4C	dw ?
 word_FC4E	dw ?
 		dd    ?	;

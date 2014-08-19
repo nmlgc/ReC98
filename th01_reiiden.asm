@@ -6199,43 +6199,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_363E8, 20h	; ' '
-		jnz	short loc_243E
-		mov	ax, 1
-		jmp	short loc_245A
-; ---------------------------------------------------------------------------
-
-loc_243E:
-		mov	bx, word_363E8
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+6B94h], dx
-		mov	[bx+6B92h], ax
-		inc	word_363E8
-		xor	ax, ax
-
-loc_245A:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6685,14 +6649,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_26A8:
-		dec	word_363E8
-		mov	bx, word_363E8
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+6B92h]
 
 loc_26B8:
-		cmp	word_363E8, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_26A8
 		nop
 		call	__cleanup
@@ -60652,7 +60616,7 @@ tbyte_363BA	db 09bh, 097h, 020h, 08ah, 002h, 052h, 060h, 0c4h, 025h, 075h
 flt_363C4	dd 3.4028237e38
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_363E8	dw 0
+include libs/BorlandC/atexit[data].asm
 off_363EA	dd sub_2696
 off_363EE	dd sub_2696
 off_363F2	dd sub_2696
@@ -66482,38 +66446,7 @@ word_3B52B	dw ?
 word_3B52D	dw ?
 byte_3B52F	db ?
 word_3B530	dw ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
+include libs/BorlandC/atexit[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

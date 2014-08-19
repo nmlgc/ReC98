@@ -7809,43 +7809,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_11856, 20h	; ' '
-		jnz	short loc_3B95
-		mov	ax, 1
-		jmp	short loc_3BB1
-; ---------------------------------------------------------------------------
-
-loc_3B95:
-		mov	bx, word_11856
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+514Ah], dx
-		mov	[bx+5148h], ax
-		inc	word_11856
-		xor	ax, ax
-
-loc_3BB1:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8216,14 +8180,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_3DBA:
-		dec	word_11856
-		mov	bx, word_11856
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+5148h]
 
 loc_3DCA:
-		cmp	word_11856, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_3DBA
 		nop
 		call	__cleanup
@@ -32457,8 +32421,7 @@ aHi_m_bft	db 'hi_m.bft',0
 aSlb1_pi	db 'slb1.pi',0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_11856	dw 0
-					; _atexit:loc_3B95r ...
+include libs/BorlandC/atexit[data].asm
 off_11858	dd sub_3DA8
 off_1185C	dd sub_3DA8
 off_11860	dd sub_3DA8
@@ -37169,39 +37132,8 @@ byte_14120	db ?
 byte_14121	db ?
 byte_14122	db ?
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
+include libs/BorlandC/atexit[bss].asm
 word_141A8	dw ?
 word_141AA	dw ?
 		dd ?

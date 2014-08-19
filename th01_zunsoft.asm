@@ -3206,41 +3206,7 @@ sub_16B2	proc near
 sub_16B2	endp
 
 include libs/BorlandC/__abort.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc near
-
-func		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_268C, 20h
-		jnz	short loc_1702
-		mov	ax, 1
-		jmp	short loc_1715
-; ---------------------------------------------------------------------------
-
-loc_1702:
-		mov	bx, word_268C
-		add	bx, bx
-		mov	ax, [bp+func]
-		mov	[bx+3360h], ax
-		inc	word_268C
-		xor	ax, ax
-
-loc_1715:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3305,13 +3271,13 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_174A:
-		dec	word_268C
-		mov	bx, word_268C
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		add	bx, bx
 		call	word ptr [bx+3360h]
 
 loc_1758:
-		cmp	word_268C, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_174A
 		call	__cleanup
 		call	off_268E
@@ -5299,7 +5265,7 @@ word_2668	dw 1
 word_266A	dw 0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_268C	dw 0
+include libs/BorlandC/atexit[data].asm
 off_268E	dw offset sub_1738
 off_2690	dw offset sub_1738
 off_2692	dw offset sub_1738
@@ -5321,7 +5287,8 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
-		dd 2CCh dup(?)
+		dd 2BCh dup(?)
+include libs/BorlandC/atexit[bss].asm
 edata@	label byte
 
 seg000		ends

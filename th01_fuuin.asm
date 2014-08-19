@@ -4425,43 +4425,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_1373C, 20h	; ' '
-		jnz	short loc_1C04
-		mov	ax, 1
-		jmp	short loc_1C20
-; ---------------------------------------------------------------------------
-
-loc_1C04:
-		mov	bx, word_1373C
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+1C14h], dx
-		mov	[bx+1C12h], ax
-		inc	word_1373C
-		xor	ax, ax
-
-loc_1C20:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4911,14 +4875,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_1E6E:
-		dec	word_1373C
-		mov	bx, word_1373C
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+1C12h]
 
 loc_1E7E:
-		cmp	word_1373C, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_1E6E
 		nop
 		call	__cleanup
@@ -43050,7 +43014,7 @@ tbyte_12C4E	db 09bh, 097h, 020h, 08ah, 002h, 052h, 060h, 0c4h, 025h, 075h
 flt_13718	dd 3.4028237e38
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_1373C	dw 0
+include libs/BorlandC/atexit[data].asm
 off_1373E	dd sub_1E5C
 off_13742	dd sub_1E5C
 off_13746	dd sub_1E5C
@@ -44168,38 +44132,7 @@ word_146A0	dw ?
 		dd    ?
 		dd    ?
 		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
+include libs/BorlandC/atexit[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

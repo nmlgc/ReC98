@@ -9420,43 +9420,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_2381A, 20h	; ' '
-		jnz	short loc_42ED
-		mov	ax, 1
-		jmp	short loc_4309
-; ---------------------------------------------------------------------------
-
-loc_42ED:
-		mov	bx, word_2381A
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx-42E2h], dx
-		mov	[bx-42E4h], ax
-		inc	word_2381A
-		xor	ax, ax
-
-loc_4309:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9836,14 +9800,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_4512:
-		dec	word_2381A
-		mov	bx, word_2381A
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx-42E4h]
 
 loc_4522:
-		cmp	word_2381A, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_4512
 		nop
 		call	__cleanup
@@ -46866,8 +46830,7 @@ byte_237F7	db 0
 word_237F8	dw 0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
-word_2381A	dw 0
-					; _atexit:loc_42EDr ...
+include libs/BorlandC/atexit[data].asm
 off_2381C	dd sub_4500
 off_23820	dd sub_4500
 off_23824	dd sub_4500
@@ -59588,38 +59551,7 @@ byte_2D058	db ?
 					; seg001:8525r
 		db ?
 word_2D05A	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include libs/BorlandC/atexit[bss].asm
 word_2D0DC	dw ?
 word_2D0DE	dw ?
 		dd    ?	;

@@ -7365,43 +7365,7 @@ _abort		endp
 		pop	si
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl atexit(void (*func)(void))
-_atexit		proc far
-
-func		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	word_EE5A, 20h ; ' '
-		jnz	short loc_3871
-		mov	ax, 1
-		jmp	short loc_388D
-; ---------------------------------------------------------------------------
-
-loc_3871:
-		mov	bx, word_EE5A
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, word ptr [bp+func+2]
-		mov	ax, word ptr [bp+func]
-		mov	[bx+408Ch], dx
-		mov	[bx+408Ah], ax
-		inc	word_EE5A
-		xor	ax, ax
-
-loc_388D:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_atexit		endp
-
+include libs/BorlandC/atexit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7772,14 +7736,14 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_3A96:
-		dec	word_EE5A
-		mov	bx, word_EE5A
+		dec	_atexitcnt
+		mov	bx, _atexitcnt
 		mov	cl, 2
 		shl	bx, cl
 		call	dword ptr [bx+408Ah]
 
 loc_3AA6:
-		cmp	word_EE5A, 0
+		cmp	_atexitcnt, 0
 		jnz	short loc_3A96
 		nop
 		call	__cleanup
@@ -30058,8 +30022,7 @@ aName		db 'name',0
 		db    0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db    0
-word_EE5A	dw 0
-					; _atexit:loc_3871r ...
+include libs/BorlandC/atexit[data].asm
 off_EE5C	dd sub_3A84
 off_EE60	dd sub_3A84
 off_EE64	dd sub_3A84
@@ -36122,38 +36085,7 @@ byte_125A0	db ?
 byte_125B6	db ?
 byte_125B7	db ?
 word_125B8	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include libs/BorlandC/atexit[bss].asm
 word_1263A	dw ?
 word_1263C	dw ?
 					; sub_12CC+16Dw ...
