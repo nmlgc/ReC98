@@ -32320,8 +32320,8 @@ loc_E900:
 ; ---------------------------------------------------------------------------
 
 loc_E909:
-		mov	al, byte ptr aBorlandCCopyri+2
-		mov	ah, byte ptr aBorlandCCopyri ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	al, byte ptr ds:[022h]
+		mov	ah, byte ptr ds:[020h]
 		; Hack (fnclex)
 		db 0cdh
 		db 037h
@@ -32372,7 +32372,7 @@ sub_E940	proc far
 		push	es
 		push	di
 		mov	ds, ax
-		mov	al, byte ptr aBorlandCCopyri+6
+		mov	al, byte ptr ds:[026h]
 		or	al, al
 		mov	bx, ax
 		jz	short loc_E909
@@ -32398,7 +32398,7 @@ sub_E940	proc far
 		fldenv	byte ptr [si]
 		not	al
 		and	al, dh
-		or	bx, word ptr aBorlandCCopyri+7
+		or	bx, word ptr ds:[027h]
 		cmp	bl, 3
 		jge	short loc_E91F
 		mov	bx, [si+8]
@@ -32472,7 +32472,7 @@ loc_E9EB:
 
 loc_E9F1:
 		wait
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		jmp	short loc_EA2B
 ; ---------------------------------------------------------------------------
 
@@ -32481,7 +32481,7 @@ loc_E9F8:
 ; ---------------------------------------------------------------------------
 
 loc_E9FA:
-		mov	ah, byte ptr aBorlandCCopyri+2
+		mov	ah, byte ptr ds:[022h]
 		not	ah
 		and	ah, al
 		and	ah, 7Fh
@@ -32516,7 +32516,7 @@ loc_EA2B:
 		fclex
 		mov	ax, word ptr ds:051h
 		and	al, 3Fh
-		or	byte ptr aBorlandCCopyri+25h, al
+		or	byte ptr ds:[045h], al
 
 loc_EA43:
 		wait
@@ -32550,7 +32550,7 @@ loc_EA59:
 		inc	dx
 		shr	bx, 1
 		jnb	short loc_EA59
-		mov	word ptr aBorlandCCopyri+9, dx
+		mov	word ptr ds:[029h], dx
 		mov	ax, 29h	; ')'
 		stc
 		jmp	short loc_EA47
@@ -32566,7 +32566,7 @@ sub_EA68	proc near
 		fxam
 		fstsw	word ptr ds:051h
 		wait
-		mov	ah, byte ptr aDivideError+7
+		mov	ah, byte ptr ds:[052h]
 		sahf
 		jnb	short loc_EA7B
 		jnz	short loc_EA7D
@@ -32594,22 +32594,22 @@ loc_EA82:
 
 loc_EA89:
 		wait
-		fstp	tbyte ptr aBorlandCCopyri+27h
+		fstp	tbyte ptr ds:[047h]
 		wait
-		fild	qword ptr aBorlandCCopyri+27h
-		mov	ax, word ptr aDivideError+4
+		fild	qword ptr ds:[047h]
+		mov	ax, word ptr ds:[04Fh]
 		mov	dx, ax
 		and	dh, 80h
 		wait
-		fstp	tbyte ptr aBorlandCCopyri+27h
+		fstp	tbyte ptr ds:[047h]
 		xor	ah, dh
 		wait
-		add	ax, word ptr aDivideError+4
+		add	ax, word ptr ds:[04Fh]
 		sub	ax, 403Eh
 		xor	ah, dh
-		mov	word ptr aDivideError+4, ax
+		mov	word ptr ds:[04Fh], ax
 		wait
-		fld	tbyte ptr aBorlandCCopyri+27h
+		fld	tbyte ptr ds:[047h]
 		retn
 sub_EA68	endp
 
@@ -32618,7 +32618,7 @@ sub_EA68	endp
 
 
 sub_EAB5	proc far
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		mov	dx, 0EA90h
 		push	dx
 		mov	dx, bx
@@ -32634,7 +32634,7 @@ loc_EACA:
 		mov	dx, 269Bh
 		push	dx
 		mov	dx, ss
-		xor	dx, word ptr aBorlandCCopyri+7
+		xor	dx, word ptr ds:[027h]
 		push	dx
 		mov	dx, sp
 		add	dx, 2
@@ -34456,7 +34456,7 @@ loc_F6AD:
 		jmp	short loc_F64E
 ; END OF FUNCTION CHUNK	FOR sub_F34A
 ; ---------------------------------------------------------------------------
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		push	bp
 		mov	bp, sp
 		push	si
@@ -34470,7 +34470,7 @@ loc_F6AD:
 		jnz	short loc_F709
 		call	sub_FD2B
 		call	sub_F71A
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		push	si
 		push	di
 		push	si
@@ -34480,7 +34480,7 @@ loc_F6AD:
 		push	si
 		call	sub_EFB3
 		dec	word ptr [si+8]
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 
 loc_F6FB:
 		pop	di
@@ -34510,7 +34510,7 @@ loc_F709:
 sub_F71A	proc near
 		push	si
 		push	di
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		mov	bx, [di+8]
 		mov	dx, [di+6]
 		mov	ax, [di+4]
@@ -34695,7 +34695,7 @@ loc_F80A:
 		stosw
 		mov	al, [bp+var_2]
 		stosb
-		and	byte ptr aBorlandCCopyri+1, 0B8h
+		and	byte ptr ds:[021h], 0B8h
 		mov	di, 7
 		mov	ax, [bp+var_4]
 		cmp	[bp+var_2], 1
@@ -34705,7 +34705,7 @@ loc_F80A:
 loc_F82E:
 		and	di, ax
 		mov	dl, cs:[di+8C9h]
-		or	byte ptr aBorlandCCopyri+1, dl
+		or	byte ptr ds:[021h], dl
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -34812,7 +34812,7 @@ loc_F8BD:
 		cmp	ax, [di+6]
 		jnz	short loc_F903
 		mov	ch, 3
-		and	ch, byte ptr aBorlandCCopyri+3
+		and	ch, byte ptr ds:[023h]
 		jz	short loc_F921
 		mov	ax, [si+4]
 		cmp	ax, [di+4]
@@ -34852,7 +34852,7 @@ loc_F914:
 		mov	ax, 0
 
 loc_F917:
-		mov	byte ptr aBorlandCCopyri+1, ah
+		mov	byte ptr ds:[021h], ah
 		pop	di
 		pop	si
 		pop	bp
@@ -34914,7 +34914,7 @@ loc_F96A:
 		mov	ax, 0
 
 loc_F976:
-		mov	byte ptr aBorlandCCopyri+1, ah
+		mov	byte ptr ds:[021h], ah
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -34950,7 +34950,7 @@ loc_F9A9:
 		or	ax, 200h
 
 loc_F9B2:
-		mov	byte ptr aBorlandCCopyri+1, ah
+		mov	byte ptr ds:[021h], ah
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -35531,8 +35531,8 @@ sub_FD2B	proc near
 		mov	di, ss
 		mov	es, di
 		assume es:nothing
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		cld
 		mov	cx, 5
 		rep movsw
@@ -35551,8 +35551,8 @@ sub_FD47	proc near
 					; sub_106E6+1Ep ...
 		push	si
 		push	di
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		push	ds
 		push	es
 		push	ds
@@ -35580,13 +35580,13 @@ sub_FD47	endp
 
 sub_FD64	proc near
 		push	si
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		cld
 		mov	cx, 5
 		rep movsw
 		movsb
 		inc	si
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		sub	di, 0Bh
 		pop	si
 		retn
@@ -35601,9 +35601,9 @@ sub_FD7A	proc near
 		push	si
 		push	di
 		push	es
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		cld
 		mov	cx, ss
 		mov	es, cx
@@ -35624,7 +35624,7 @@ sub_FD97	proc near
 					; seg014:loc_10C2Bp
 		push	si
 		push	di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		mov	di, si
 		cld
 		push	es
@@ -35731,7 +35731,7 @@ loc_FE25:
 		or	bl, dh
 		or	bl, dl
 		mov	cl, 0Ch
-		and	cl, byte ptr aBorlandCCopyri+3
+		and	cl, byte ptr ds:[023h]
 		cmp	cl, 0Ch
 		jz	short loc_FE63
 		cmp	cl, 0
@@ -35760,7 +35760,7 @@ loc_FE63:
 		jz	short loc_FE81
 		sahf
 		jns	short loc_FE87
-		cmp	byte ptr dword_122EA+2,	1
+		cmp	byte ptr ds:[05Ch], 1
 		jz	short loc_FE87
 
 loc_FE73:
@@ -35782,13 +35782,13 @@ loc_FE81:
 		jns	short loc_FE73
 
 loc_FE87:
-		mov	byte ptr dword_122EA+2,	0
+		mov	byte ptr ds:[05Ch], 0
 		mov	es:[di], ax
 		retn
 sub_FDFB	endp
 
 ; ---------------------------------------------------------------------------
-		mov	byte ptr dword_122EA+2,	1
+		mov	byte ptr ds:[05Ch], 1
 		mov	cx, [si+8]
 		cmp	cx, 10h
 		jmp	loc_FE01
@@ -35957,7 +35957,7 @@ loc_FF90:
 sub_FF4A	endp
 
 ; ---------------------------------------------------------------------------
-		mov	byte ptr dword_122EA+2,	1
+		mov	byte ptr ds:[05Ch], 1
 		mov	cx, [si+8]
 		cmp	cx, 20h	; ' '
 		jmp	short loc_FFA8
@@ -35976,7 +35976,7 @@ loc_FFA8:
 		cmp	cx, 0C001h
 		jle	short loc_FFC7
 		mov	bl, 0Ch
-		and	bl, byte ptr aBorlandCCopyri+3
+		and	bl, byte ptr ds:[023h]
 		add	bl, [si+0Ah]
 		cmp	bl, 5
 		jz	short loc_FFCD
@@ -36049,7 +36049,7 @@ loc_1000D:
 
 loc_1002C:
 		mov	cl, 0Ch
-		and	cl, byte ptr aBorlandCCopyri+3
+		and	cl, byte ptr ds:[023h]
 		cmp	cl, 0Ch
 		jz	short loc_10074
 		cmp	cl, 0
@@ -36093,8 +36093,7 @@ loc_10074:
 		sbb	dx, 0FFFFh
 
 loc_10081:
-					; sub_FFA2+D6j
-		mov	byte ptr dword_122EA+2,	0
+		mov	byte ptr ds:[05Ch], 0
 		mov	es:[di], ax
 		mov	es:[di+2], dx
 		retn
@@ -36190,7 +36189,7 @@ sub_10101	proc near
 		cmp	cx, 0C001h
 		jle	short loc_10128
 		mov	bl, 0Ch
-		and	bl, byte ptr aBorlandCCopyri+3
+		and	bl, byte ptr ds:[023h]
 		add	bl, [si+0Ah]
 		cmp	bl, 5
 		jz	short loc_1012C
@@ -36270,7 +36269,7 @@ loc_10184:
 
 loc_10192:
 		mov	cl, 0Ch
-		and	cl, byte ptr aBorlandCCopyri+3
+		and	cl, byte ptr ds:[023h]
 		cmp	cl, 0Ch
 		jz	short loc_101CD
 		cmp	cl, 0
@@ -36333,7 +36332,7 @@ loc_101E6:
 sub_10101	endp
 
 ; ---------------------------------------------------------------------------
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -36353,7 +36352,7 @@ sub_101F7	proc near
 		mov	ch, 20h	; ' '
 		call	sub_115C9
 		mov	cl, 0Ch
-		and	cl, byte ptr aBorlandCCopyri+3
+		and	cl, byte ptr ds:[023h]
 		add	cl, [bp+0Ah]
 		cmp	cl, 5
 		jz	short loc_1022D
@@ -36442,7 +36441,7 @@ loc_10291:
 		call	sub_115C9
 		xor	ax, dx
 		mov	cl, 0Ch
-		and	cl, byte ptr aBorlandCCopyri+3
+		and	cl, byte ptr ds:[023h]
 		cmp	cl, 0Ch
 		jz	short loc_102BB
 		cmp	cl, 0
@@ -36526,7 +36525,7 @@ sub_10306	proc near
 		push	bp
 		push	si
 		push	di
-		mov	bp, word ptr aBorlandCCopyri+0Dh
+		mov	bp, word ptr ds:[02Dh]
 		mov	ax, [bp+0]
 		mov	bx, [bp+2]
 		mov	cx, [bp+4]
@@ -36680,7 +36679,7 @@ loc_10426:
 		dec	byte ptr [bp+arg_2]
 		jle	short loc_104A3
 		push	bp
-		mov	bp, word ptr aBorlandCCopyri+0Dh
+		mov	bp, word ptr ds:[02Dh]
 		mov	al, [bp+arg_12]
 		xor	[bp+arg_6], al
 		call	sub_F213
@@ -36731,7 +36730,7 @@ loc_10494:
 ; ---------------------------------------------------------------------------
 
 loc_104A3:
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		cld
 		lodsw
 		xchg	ax, bx
@@ -36744,7 +36743,7 @@ loc_104A3:
 		lodsw
 		lodsb
 		inc	si
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		xchg	si, di
 		sub	di, di
 		cmp	al, 1
@@ -36773,7 +36772,7 @@ loc_104D0:
 		inc	di
 
 loc_104E2:
-		mov	ax, word ptr aBorlandCCopyri+0Dh
+		mov	ax, word ptr ds:[02Dh]
 		xchg	ax, di
 		xchg	ax, bx
 		stosw
@@ -36832,11 +36831,11 @@ sub_105C5	proc near
 		mov	ax, 163Dh
 		push	ax
 		call	sub_1040E
-		push	word ptr aBorlandCCopyri+0Dh
+		push	word ptr ds:[02Dh]
 		push	si
 		push	si
 		call	sub_F17D
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		retn
 sub_105C5	endp
 
@@ -36919,9 +36918,9 @@ loc_106FC:
 		call	sub_FD47
 		xchg	di, si
 		push	si
-		push	word ptr aBorlandCCopyri+0Dh
+		push	word ptr ds:[02Dh]
 		call	sub_F899
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		cmp	ax, 0
 		jnz	short loc_10723
 		inc	[bp+var_2]
@@ -36953,10 +36952,10 @@ loc_1072E:
 		call	sub_FD47
 		xchg	di, si
 		push	si
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		push	di
 		lea	ax, [di-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, ax
+		mov	word ptr ds:[02Dh], ax
 		push	ax
 		call	sub_EFAF
 		push	si
@@ -36968,22 +36967,22 @@ loc_1072E:
 		push	si
 		push	si
 		call	sub_EFB3
-		push	word ptr aBorlandCCopyri+0Dh
+		push	word ptr ds:[02Dh]
 		push	si
 		push	si
 		call	sub_F34A
-		add	word ptr aBorlandCCopyri+0Dh, 18h
+		add	word ptr ds:[02Dh], 18h
 		call	sub_10799
 		mov	di, [bp+var_2]
 		add	di, 17DEh
 		xchg	si, di
 		call	sub_FD47
 		xchg	di, si
-		push	word ptr aBorlandCCopyri+0Dh
+		push	word ptr ds:[02Dh]
 		push	si
 		push	si
 		call	sub_EFB3
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 
 loc_10793:
 		pop	di
@@ -37010,7 +37009,7 @@ sub_10799	proc near
 ; ---------------------------------------------------------------------------
 
 loc_107AB:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		add	word ptr [di+8], 3
 		call	sub_10306
 		push	cs:word_1060C
@@ -37021,7 +37020,7 @@ loc_107AB:
 		push	si
 		push	si
 		call	sub_F17D
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 
 loc_107CD:
 		pop	di
@@ -37047,15 +37046,15 @@ sub_1086E	proc near
 		push	bp
 		push	si
 		push	di
-		mov	bp, word ptr aBorlandCCopyri+0Dh
+		mov	bp, word ptr ds:[02Dh]
 		lea	di, [bp-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	sub_FCD6
 		push	di
 		push	si
 		push	si
 		call	sub_F17D
-		mov	word ptr aBorlandCCopyri+0Dh, bp
+		mov	word ptr ds:[02Dh], bp
 		mov	di, [si+8]
 		cmp	di, 0FFC0h
 		jle	short loc_108E8
@@ -37079,9 +37078,9 @@ loc_1089F:
 		adc	dx, 0
 
 loc_108B6:
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
+		sub	word ptr ds:[02Dh], 0Ch
 		cld
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		stosw
 		xchg	ax, bx
 		stosw
@@ -37097,12 +37096,12 @@ loc_108B6:
 		mov	ax, 1912h
 		push	ax
 		call	sub_1040E
-		mov	ax, word ptr aBorlandCCopyri+0Dh
+		mov	ax, word ptr ds:[02Dh]
 		push	ax
 		push	si
 		push	si
 		call	sub_F17D
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 
 loc_108E8:
 		pop	di
@@ -37173,8 +37172,8 @@ loc_109A6:
 		sub	di, 10h
 		cmp	di, 0FFC0h
 		jg	short loc_109A6
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		call	sub_FCE7
 		jmp	short loc_109F0
 ; ---------------------------------------------------------------------------
@@ -37201,7 +37200,7 @@ loc_109D0:
 		call	sub_10A56
 		mov	si, 1A2Ch
 		call	sub_FD47
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		mov	ax, sp
 		push	si
 		push	ax
@@ -37211,8 +37210,8 @@ loc_109D0:
 
 loc_109F0:
 		lea	si, [bp+var_2]
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		call	sub_FDB8
 		lea	si, [di+0Ch]
 		push	si
@@ -37223,7 +37222,7 @@ loc_109F0:
 		push	[bp+var_4]
 		push	[bp+var_4]
 		call	sub_F17D
-		add	word ptr aBorlandCCopyri+0Dh, 18h
+		add	word ptr ds:[02Dh], 18h
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -37238,11 +37237,11 @@ sub_10966	endp
 		push	di
 		mov	si, di
 		call	sub_FD2B
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		call	sub_10A56
 		mov	si, 1A2Ch
 		call	sub_FD47
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		push	si
 		lea	si, [si+0Ch]
 		push	si
@@ -37252,7 +37251,7 @@ sub_10966	endp
 		push	word ptr [bp-2]
 		push	word ptr [bp-2]
 		call	sub_F17D
-		add	word ptr aBorlandCCopyri+0Dh, 18h
+		add	word ptr ds:[02Dh], 18h
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -37271,8 +37270,8 @@ sub_10A56	proc near
 		push	di
 		cmp	word ptr [si+8], 0FFC0h
 		jle	short loc_10AA7
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		call	sub_FC81
 		inc	word ptr [di+8]
 		push	si
@@ -37284,19 +37283,19 @@ sub_10A56	proc near
 		push	di
 		call	sub_F34A
 		call	sub_FD7A
-		mov	bx, word ptr aBorlandCCopyri+0Dh
+		mov	bx, word ptr ds:[02Dh]
 		add	word ptr [bx+8], 2
 		call	sub_10306
 		push	cs:word_108F8
 		mov	ax, 1A3Ah
 		push	ax
 		call	sub_1040E
-		push	word ptr aBorlandCCopyri+0Dh
+		push	word ptr ds:[02Dh]
 		push	di
 		push	si
 		call	sub_F17D
 		inc	word ptr [si+8]
-		add	word ptr aBorlandCCopyri+0Dh, 18h
+		add	word ptr ds:[02Dh], 18h
 
 loc_10AA7:
 		pop	di
@@ -37318,7 +37317,7 @@ sub_10A56	endp
 loc_10AB7:
 		mov	es, di
 		mov	bp, sp
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		mov	ch, [di+0Ah]
 		push	cx
 		push	ax
@@ -37343,7 +37342,7 @@ loc_10AD5:
 loc_10AE6:
 		mov	byte ptr [di+0Ah], 0
 		lea	si, [di-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		xchg	di, si
 		call	sub_FCB4
 		xchg	di, si
@@ -37369,7 +37368,7 @@ loc_10AE6:
 		call	sub_EFAF
 
 loc_10B2A:
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		mov	si, di
 		test	byte ptr [bp-4], 3
 		jp	short loc_10B3B
@@ -37400,7 +37399,7 @@ loc_10B47:
 		call	sub_EFAF
 
 loc_10B5E:
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		mov	si, di
 		call	sub_105F0
 		lea	di, [si-0Ch]
@@ -37429,14 +37428,14 @@ loc_10B8C:
 
 loc_10B8F:
 					; seg014:1C23j
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		mov	sp, bp
 		retn
 ; ---------------------------------------------------------------------------
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	sub_FC81
 		mov	ax, [si+8]
 		cmp	ax, 4001h
@@ -37472,7 +37471,7 @@ loc_10BDE:
 		mov	[si+0Ah], ch
 
 loc_10BE1:
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -37486,23 +37485,23 @@ loc_10BE6:
 		jmp	short loc_10BE1
 ; ---------------------------------------------------------------------------
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	sub_FCD6
 		jmp	short loc_10C2B
 ; ---------------------------------------------------------------------------
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	sub_FC81
 		jmp	short loc_10C2B
 ; ---------------------------------------------------------------------------
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	near ptr byte_FCB9+0Ch
 
 loc_10C2B:
@@ -37517,7 +37516,7 @@ loc_10C2B:
 		call	sub_10966
 
 loc_10C44:
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -37544,7 +37543,7 @@ loc_10C4F:
 		jmp	short loc_10C7B
 ; ---------------------------------------------------------------------------
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
 		jmp	short loc_10C94
 ; ---------------------------------------------------------------------------
@@ -37552,15 +37551,15 @@ loc_10C4F:
 
 loc_10C7B:
 		mov	es, di
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		lea	di, [si-0Ch]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		call	ax
 		push	si
 		push	di
 		push	si
 		call	sub_F17D
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 
 loc_10C94:
 		mov	bp, sp
@@ -37573,12 +37572,12 @@ loc_10C94:
 		jle	short loc_10D1C
 		call	sub_FD7A
 		inc	word ptr [di+8]
-		push	word ptr aBorlandCCopyri+2
-		and	byte ptr aBorlandCCopyri+3, 0F3h
-		or	byte ptr aBorlandCCopyri+3, 4
+		push	word ptr ds:[022h]
+		and	byte ptr ds:[023h], 0F3h
+		or	byte ptr ds:[023h], 4
 		mov	si, di
 		call	sub_101F7
-		pop	word ptr aBorlandCCopyri+2
+		pop	word ptr ds:[022h]
 		push	ax
 		mov	di, sp
 		call	sub_FDFB
@@ -37666,7 +37665,7 @@ loc_10D4B:
 		xor	byte ptr [si+0Ah], 1
 
 loc_10D71:
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		mov	sp, bp
 		retn
 
@@ -38240,9 +38239,9 @@ loc_110DC:
 		xchg	ax, bp
 		cmp	ch, 0C0h ; 'À'
 		jnb	short loc_11115
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		sub	di, 0Ch
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		mov	bx, 6
 		and	bl, cl
 		call	cs:off_10F74[bx]
@@ -38264,7 +38263,7 @@ loc_11115:
 		db 09fh
 		db 002h
 		db 000h
-		mov	ax, word ptr aBorlandCCopyri+0Dh
+		mov	ax, word ptr ds:[02Dh]
 		add	bx, ax
 		test	cl, 4
 		mov	dx, ax
@@ -38374,17 +38373,17 @@ loc_11163:
 		jnz	short loc_1118C
 		test	ch, 8
 		jnz	short loc_111CB
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		mov	ax, 0FFF4h
 		add	di, ax
-		mov	word ptr aBorlandCCopyri+4, ax
+		mov	word ptr ds:[024h], ax
 		mov	ax, 2687h
 		push	ax
 		jmp	cs:off_10F8C[bp]
 ; ---------------------------------------------------------------------------
 
 loc_1118C:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		xchg	si, di
 		test	ch, 8
 		jnz	short loc_111A0
@@ -38394,7 +38393,7 @@ loc_1118C:
 ; ---------------------------------------------------------------------------
 
 loc_111A0:
-		mov	word ptr aBorlandCCopyri+4, 0Ch
+		mov	word ptr ds:[024h], 0Ch
 		mov	ax, 2687h
 		push	ax
 		jmp	cs:off_10F94[bp]
@@ -38435,7 +38434,7 @@ sub_111CE	endp
 sub_111D4	proc near
 		mov	cl, 4
 		mov	ax, es:[si+2]
-		mov	word ptr aBorlandCCopyri, ax ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	word ptr ds:[020h], ax
 sub_111D4	endp ; sp-analysis failed
 
 
@@ -38444,7 +38443,7 @@ sub_111D4	endp ; sp-analysis failed
 
 sub_111DD	proc near
 		mov	ax, es:[si]
-		mov	word ptr aBorlandCCopyri+2, ax
+		mov	word ptr ds:[022h], ax
 		mov	ch, 0
 		jmp	sub_115C9
 sub_111DD	endp
@@ -38456,8 +38455,8 @@ sub_111DD	endp
 sub_111E8	proc near
 		call	sub_11267
 		call	sub_1126C
-		mov	ax, word ptr aBorlandCCopyri+11h
-		sub	ax, word ptr aBorlandCCopyri+0Dh
+		mov	ax, word ptr ds:[031h]
+		sub	ax, word ptr ds:[02Dh]
 		mov	cx, 60h	; '`'
 		cmp	ax, cx
 		jb	short loc_111FD
@@ -38485,7 +38484,7 @@ sub_111E8	endp
 
 sub_11211	proc near
 		call	sub_111E8
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		mov	bp, es:[di-0Ah]
 		neg	bp
 		dec	bp
@@ -38501,7 +38500,7 @@ loc_1121F:
 ; ---------------------------------------------------------------------------
 
 loc_11230:
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		retn
 sub_11211	endp
 
@@ -38510,7 +38509,7 @@ sub_11211	endp
 
 
 sub_11235	proc near
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		mov	bp, es:[si+4]
 		neg	bp
 		dec	bp
@@ -38531,7 +38530,7 @@ loc_1124E:
 		shr	bp, 1
 		jb	short loc_1124E
 		add	si, 0FFFCh
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		jmp	sub_111D4
 sub_11235	endp
 
@@ -38540,7 +38539,7 @@ sub_11235	endp
 
 
 sub_11267	proc near
-		mov	ax, word ptr aBorlandCCopyri+2
+		mov	ax, word ptr ds:[022h]
 		stosw
 		retn
 sub_11267	endp
@@ -38550,8 +38549,8 @@ sub_11267	endp
 
 
 sub_1126C	proc near
-		mov	ax, word ptr aBorlandCCopyri+11h
-		sub	ax, word ptr aBorlandCCopyri+0Dh
+		mov	ax, word ptr ds:[031h]
+		sub	ax, word ptr ds:[02Dh]
 		mov	cx, 60h	; '`'
 		cmp	ax, cx
 		jb	short loc_1127B
@@ -38564,7 +38563,7 @@ loc_1127B:
 		and	al, 7
 		mov	cl, 3
 		shl	al, cl
-		mov	cx, word ptr aBorlandCCopyri ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	cx, word ptr ds:[020h]
 		and	ch, 0C7h
 		or	ch, al
 		xchg	ax, cx
@@ -38577,10 +38576,10 @@ sub_1126C	endp
 
 
 sub_11293	proc near
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		sub	di, 0Ch
 		call	sub_1008E
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
+		sub	word ptr ds:[02Dh], 0Ch
 		retn
 sub_11293	endp
 
@@ -38589,10 +38588,10 @@ sub_11293	endp
 
 
 sub_112A3	proc near
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		sub	di, 0Ch
 		call	sub_10DA7
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
+		sub	word ptr ds:[02Dh], 0Ch
 		retn
 sub_112A3	endp
 
@@ -38601,10 +38600,10 @@ sub_112A3	endp
 
 
 sub_112B3	proc near
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		sub	di, 0Ch
 		call	sub_FC38
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
+		sub	word ptr ds:[02Dh], 0Ch
 		retn
 sub_112B3	endp
 
@@ -38613,9 +38612,9 @@ sub_112B3	endp
 
 
 sub_112C3	proc near
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		call	sub_10101
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		retn
 sub_112C3	endp
 
@@ -38624,9 +38623,9 @@ sub_112C3	endp
 
 
 sub_112D0	proc near
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		call	sub_10E90
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		retn
 sub_112D0	endp
 
@@ -38635,9 +38634,9 @@ sub_112D0	endp
 
 
 sub_112DD	proc near
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		call	sub_FC0B
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		retn
 sub_112DD	endp
 
@@ -38668,7 +38667,7 @@ loc_1130A:
 		db 09fh
 		db 002h
 		db 000h
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		add	si, bx
 		mov	bl, 18h
 		and	bl, ch
@@ -38679,8 +38678,8 @@ loc_1130A:
 		jmp	cs:off_112EA[bx]
 
 loc_11329:
-		sub	word ptr aBorlandCCopyri+0Dh, 0Ch
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		sub	word ptr ds:[02Dh], 0Ch
+		mov	di, word ptr ds:[02Dh]
 		rep movsw
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
@@ -38694,7 +38693,7 @@ loc_1133C:
 		mov	di, 0
 
 loc_1133F:
-		mov	ax, word ptr aBorlandCCopyri+11h
+		mov	ax, word ptr ds:[031h]
 		sub	ax, 0Ch
 		cmp	si, ax
 		jz	short loc_11359
@@ -38702,7 +38701,7 @@ loc_1133F:
 		mov	ax, 4001h
 		mov	cl, 0
 		call	sub_FCFD
-		add	word ptr aBorlandCCopyri+0Dh, si
+		add	word ptr ds:[02Dh], si
 		jmp	short loc_113B2
 ; ---------------------------------------------------------------------------
 
@@ -38710,12 +38709,12 @@ loc_11359:
 		add	di, 0Ch
 		mov	dx, di
 		mov	cx, si
-		sub	cx, word ptr aBorlandCCopyri+0Dh
+		sub	cx, word ptr ds:[02Dh]
 		jz	short loc_11378
 		push	ss
 		pop	es
 		sub	si, 2
-		mov	di, word ptr aBorlandCCopyri+11h
+		mov	di, word ptr ds:[031h]
 		sub	di, 2
 		std
 		shr	cx, 1
@@ -38723,7 +38722,7 @@ loc_11359:
 		cld
 
 loc_11378:
-		add	word ptr aBorlandCCopyri+0Dh, dx
+		add	word ptr ds:[02Dh], dx
 		jmp	short loc_113B2
 ; ---------------------------------------------------------------------------
 
@@ -38738,7 +38737,7 @@ loc_11383:
 ; ---------------------------------------------------------------------------
 
 loc_1138A:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 
 loc_1138E:
 		mov	ax, [di]
@@ -38751,16 +38750,16 @@ loc_1138E:
 
 loc_1139B:
 		mov	di, si
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		rep movsw
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
 
 loc_113A6:
 		mov	di, si
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		rep movsw
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 
 loc_113B2:
 		jmp	loc_11551
@@ -38839,15 +38838,15 @@ loc_1143C:
 		jmp	cs:off_11430[di]
 
 loc_1144F:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		sub	di, 0Ch
 		call	cs:off_113D5[bx]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
 
 loc_11462:
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		mov	di, si
 		mov	ax, 2691h
 		push	ax
@@ -38855,29 +38854,29 @@ loc_11462:
 ; ---------------------------------------------------------------------------
 
 loc_11471:
-		mov	si, word ptr aBorlandCCopyri+0Dh
+		mov	si, word ptr ds:[02Dh]
 		mov	di, si
 		sub	di, 0Ch
 		call	cs:off_113D5[bx]
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	word ptr ds:[02Dh], di
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
 
 loc_11486:
-		add	word ptr aBorlandCCopyri+0Dh, 0Ch
+		add	word ptr ds:[02Dh], 0Ch
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
 
 loc_1148E:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		lea	si, [di+0Ch]
 		call	cs:off_113D5[bx]
-		mov	word ptr aBorlandCCopyri+0Dh, si
+		mov	word ptr ds:[02Dh], si
 		jmp	loc_11551
 ; ---------------------------------------------------------------------------
 
 loc_114A1:
-		mov	di, word ptr aBorlandCCopyri+0Dh
+		mov	di, word ptr ds:[02Dh]
 		lea	si, [di+0Ch]
 		mov	ax, 2691h
 		push	ax
@@ -38888,13 +38887,13 @@ loc_114B1:
 		and	ch, 1Fh
 		cmp	ch, 3
 		jnz	short loc_1150E
-		mov	word ptr aDivideError+0Eh, 2
-		mov	word ptr aDivideError+0Ah, 6D65h
-		mov	word ptr aDivideError+0Ch, 8775h
-		mov	word ptr aBorlandCCopyri+4, 0
-		mov	di, word ptr aBorlandCCopyri+11h
-		mov	word ptr aBorlandCCopyri+0Dh, di
-		mov	bx, word ptr aBorlandCCopyri+0Fh
+		mov	word ptr ds:[059h], 2
+		mov	word ptr ds:[055h], 6D65h
+		mov	word ptr ds:[057h], 8775h
+		mov	word ptr ds:[024h], 0
+		mov	di, word ptr ds:[031h]
+		mov	word ptr ds:[02Dh], di
+		mov	bx, word ptr ds:[02Fh]
 		sub	bx, di
 		neg	bx
 		mov	ax, 4001h
@@ -38903,21 +38902,21 @@ loc_114B1:
 		mov	byte ptr [di+7], 0C0h ;	'À'
 		lea	si, [di+0Ah]
 		sub	di, 2
-		mov	cx, word ptr aBorlandCCopyri+0Fh
+		mov	cx, word ptr ds:[02Fh]
 		sub	cx, di
 		neg	cx
 		shr	cx, 1
 		std
 		rep movsw
-		mov	word ptr aBorlandCCopyri, 4100h	; "Borland C++ - Copyright 1993	Borland	In"...
-		mov	word ptr aBorlandCCopyri+2, 33Fh
+		mov	word ptr ds:[020h], 4100h
+		mov	word ptr ds:[022h], 33Fh
 		jmp	short loc_1151F
 ; ---------------------------------------------------------------------------
 
 loc_1150E:
 		cmp	ch, 2
 		jnz	short loc_1151A
-		mov	byte ptr aBorlandCCopyri, 0 ; "Borland C++ - Copyright 1993 Borland In"...
+		mov	byte ptr ds:[020h], 0
 		jmp	short loc_1151F
 ; ---------------------------------------------------------------------------
 
@@ -38938,14 +38937,14 @@ loc_11521:
 loc_11523:
 		test	ch, 1Fh
 		jnz	short loc_1151A
-		mov	ax, word ptr aBorlandCCopyri+0Dh
-		sub	ax, word ptr aBorlandCCopyri+11h
+		mov	ax, word ptr ds:[02Dh]
+		sub	ax, word ptr ds:[031h]
 		mov	cl, 0Ch
 		idiv	cl
 		and	al, 7
 		mov	cl, 3
 		shl	al, cl
-		mov	cx, word ptr aBorlandCCopyri ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	cx, word ptr ds:[020h]
 		and	ch, 0C7h
 		or	ch, al
 		mov	[bp+10h], cx
@@ -38975,8 +38974,8 @@ loc_1155C:
 
 loc_1156B:
 		mov	ch, 40h	; '@'
-		mov	di, word ptr aBorlandCCopyri+11h
-		mov	word ptr aBorlandCCopyri+0Dh, di
+		mov	di, word ptr ds:[031h]
+		mov	word ptr ds:[02Dh], di
 		call	sub_115C9
 		int	3		; Trap to Debugger
 		jmp	short loc_1155C
@@ -39040,8 +39039,8 @@ sub_115C9	proc near
 		push	ds
 		push	ss
 		pop	ds
-		mov	al, byte ptr aBorlandCCopyri ; "Borland	C++ - Copyright	1993 Borland In"...
-		mov	cl, byte ptr aBorlandCCopyri+2
+		mov	al, byte ptr ds:[020h]
+		mov	cl, byte ptr ds:[022h]
 		and	cl, 7Fh
 		xor	cl, 7Fh
 		or	al, ch
@@ -39056,7 +39055,7 @@ loc_115EA:
 		test	al, cl
 		jz	short loc_115FD
 		or	al, 80h
-		mov	byte ptr aBorlandCCopyri, al ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	byte ptr ds:[020h], al
 		and	al, cl
 		cmp	al, 20h	; ' '
 		jnz	short loc_11606
@@ -39068,7 +39067,7 @@ loc_115EA:
 
 loc_115FD:
 		and	al, 7Fh
-		mov	byte ptr aBorlandCCopyri, al ; "Borland	C++ - Copyright	1993 Borland In"...
+		mov	byte ptr ds:[020h], al
 		pop	ds
 		pop	cx
 		pop	ax
