@@ -4733,35 +4733,7 @@ buf		= dword	ptr  6
 ___ErrorMessage	endp
 
 include libs/BorlandC/exit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-SCOPY@		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		lds	si, [bp+arg_0]
-		les	di, [bp+arg_4]
-		cld
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-SCOPY@		endp
-
+include libs/BorlandC/f_scopy.asm
 include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
