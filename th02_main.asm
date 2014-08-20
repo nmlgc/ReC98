@@ -10934,62 +10934,7 @@ timep		= dword	ptr  6
 		retf
 _gettime	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void (__cdecl	__interrupt far	*__cdecl getvect(int interruptno))()
-_getvect	proc far
-
-interruptno	= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 35h	; '5'
-		mov	al, [bp+interruptno]
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		xchg	ax, bx
-		mov	dx, es
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_getvect	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl setvect(int interruptno,	void (__interrupt far *isr)())
-_setvect	proc far
-
-interruptno	= byte ptr  6
-isr		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 25h	; '%'
-		mov	al, [bp+interruptno]
-		push	ds
-		lds	dx, [bp+isr]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setvect	endp
-
+include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
 include libs/BorlandC/H_PADD.ASM
@@ -12135,8 +12080,7 @@ loc_5CAD:
 		mov	ax, 23h	; '#'
 		push	ax
 		nop
-		push	cs
-		call	near ptr _setvect
+		call	_setvect
 		mov	ax, 2
 		push	ax
 		call	dword ptr [bp-4]
@@ -12242,8 +12186,7 @@ loc_5D47:
 		mov	ax, 23h	; '#'
 		push	ax
 		nop
-		push	cs
-		call	near ptr _getvect
+		call	_getvect
 		pop	cx
 		mov	word_26E1E, dx
 		mov	word_26E1C, ax
@@ -12279,8 +12222,7 @@ loc_5DB1:
 		xor	ax, ax
 		push	ax
 		nop
-		push	cs
-		call	near ptr _setvect
+		call	_setvect
 		add	sp, 6
 		mov	ax, seg	seg000
 		push	ax
@@ -12291,8 +12233,7 @@ loc_5DB1:
 loc_5DD5:
 		push	ax
 		nop
-		push	cs
-		call	near ptr _setvect
+		call	_setvect
 		add	sp, 6
 
 loc_5DDE:
