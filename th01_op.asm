@@ -7551,53 +7551,7 @@ loc_3766:
 		retf
 _intdosx	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int ioctl(int	handle,	int func, ...)
-_ioctl		proc far
-
-handle		= word ptr  6
-func		= word ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		lds	dx, [bp+arg_4]
-		mov	ah, 44h	; 'D'
-		mov	al, byte ptr [bp+func]
-		mov	bx, [bp+handle]
-		mov	cx, [bp+arg_8]
-		int	21h		; DOS -	2+ - IOCTL -
-		pop	ds
-		jb	short loc_378F
-		cmp	[bp+func], 0
-		jnz	short loc_378D
-		mov	ax, dx
-		jmp	short loc_3793
-; ---------------------------------------------------------------------------
-
-loc_378D:
-		jmp	short loc_3793
-; ---------------------------------------------------------------------------
-
-loc_378F:
-		push	ax
-		call	__IOERROR
-
-loc_3793:
-					; _ioctl:loc_378Dj
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_ioctl		endp
+include libs/BorlandC/ioctl.asm
 
 ; ---------------------------------------------------------------------------
 		push	ax
@@ -11328,8 +11282,7 @@ loc_4DCA:
 		push	ax		; func
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr _ioctl
+		call	_ioctl
 		pop	cx
 		pop	cx
 		mov	[bp+var_4], ax
@@ -11347,8 +11300,7 @@ loc_4DCA:
 		push	ax		; func
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr _ioctl
+		call	_ioctl
 		add	sp, 8
 		jmp	short loc_4E28
 ; ---------------------------------------------------------------------------
