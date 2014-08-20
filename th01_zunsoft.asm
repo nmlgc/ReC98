@@ -18,6 +18,7 @@
 		DGROUP group seg000
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -62,8 +63,8 @@ sub_384		proc near
 		call	sub_1344
 		call	sub_958
 		call	sub_AB6
-		call	sub_8B8
-		call	sub_8AC
+		call	text_systemline_hide
+		call	text_cursor_hide
 		call	sub_155E
 		call	sub_367
 		call	sub_87A
@@ -738,90 +739,7 @@ sub_87A		proc near
 		retn
 sub_87A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_88C		proc near
-		xor	ax, ax
-		mov	es, ax
-		mov	al, byte ptr es:loc_711+1
-		inc	ax
-		retn
-sub_88C		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_896		proc near
-		xor	ax, ax
-		mov	es, ax
-		mov	al, byte ptr es:loc_711
-		retn
-sub_896		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 336Ch
-		jmp	short loc_8C4
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 3368h
-		jmp	short loc_8C4
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8AC		proc near
-		mov	dx, 3568h
-		jmp	short loc_8C4
-sub_8AC		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 356Ch
-		jmp	short loc_8C4
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8B8		proc near
-		mov	dx, 3168h
-		jmp	short loc_8C4
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 316Ch
-		jmp	short loc_8C4
-; ---------------------------------------------------------------------------
-		nop
-
-loc_8C4:
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 3Eh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, dh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, dl
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retn
-sub_8B8		endp
-
-; ---------------------------------------------------------------------------
+include libs/BorlandC/txesc.asm
 		db    0
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -3843,92 +3843,7 @@ sub_20FE	proc far
 		retf
 sub_20FE	endp
 
-; ---------------------------------------------------------------------------
-		nop
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		mov	al, byte ptr es:loc_710+2
-		inc	ax
-		retf
-; ---------------------------------------------------------------------------
-		xor	ax, ax
-		mov	es, ax
-		mov	al, byte ptr es:loc_710+1
-		retf
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 336Ch
-		jmp	short loc_2148
-; ---------------------------------------------------------------------------
-		nop
-		mov	dx, 3368h
-		jmp	short loc_2148
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2130	proc far
-		mov	dx, 3568h
-		jmp	short loc_2148
-sub_2130	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2136	proc far
-		mov	dx, 356Ch
-		jmp	short loc_2148
-sub_2136	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_213C	proc far
-		mov	dx, 3168h
-		jmp	short loc_2148
-sub_213C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2142	proc far
-		mov	dx, 316Ch
-		jmp	short loc_2148
-; ---------------------------------------------------------------------------
-		nop
-
-loc_2148:
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 3Eh	; '>'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, dh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, dl
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_2142	endp
-
-; ---------------------------------------------------------------------------
+include libs/BorlandC/txesc.asm
 		db 0
 dword_215E	dd 0
 
@@ -26651,8 +26566,8 @@ sub_D41C	proc far
 		push	cs
 		call	near ptr sub_D7EC
 		call	sub_197A
-		call	sub_2142
-		call	sub_2136
+		call	text_systemline_show
+		call	text_cursor_show
 		pop	bp
 		retf
 sub_D41C	endp
@@ -28274,8 +28189,8 @@ loc_DF27:
 		mov	word_F566, 2000h
 		call	sub_2162
 		call	sub_196E
-		call	sub_213C
-		call	sub_2130
+		call	text_systemline_hide
+		call	text_cursor_hide
 		call	sub_84C
 		call	sub_2BAC
 		les	bx, [bp+arg_0]
