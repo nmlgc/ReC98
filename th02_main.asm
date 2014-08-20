@@ -5228,28 +5228,7 @@ loc_261C:
 		retf	0Ah
 sub_25DA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2628	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_2628	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24880,7 +24859,7 @@ sub_BCB1	endp
 sub_BF7B	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_2628
+		call	text_clear
 		push	large 200005h
 		call	sub_263A
 		pop	bp
@@ -25604,7 +25583,7 @@ _arg0		= dword	ptr  6
 		call	sub_1C608
 		call	sub_2B50
 		call	sub_15DA
-		call	sub_2628
+		call	text_clear
 		call	sub_DC4B
 		call	sub_F70E
 		push	large 0
@@ -32250,7 +32229,7 @@ sub_F70E	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_27EE
 		call	sub_2B2C
-		call	sub_2628
+		call	text_clear
 		call	sub_784
 		pop	bp
 		retf

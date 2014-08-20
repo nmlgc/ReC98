@@ -4569,28 +4569,7 @@ loc_2429:
 		retf	2
 sub_23FA	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2430	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_2430	endp
-
+include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db 0
 
@@ -19654,7 +19633,7 @@ sub_9CA2	endp
 sub_9D0A	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_2430
+		call	text_clear
 		push	20h ; ' '
 		push	5
 		call	sub_2490
@@ -19945,7 +19924,7 @@ sub_9FAF	proc far
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
 		call	sub_ADD5
-		call	sub_2430
+		call	text_clear
 		call	sub_BD24
 		push	20Fh
 		call	sub_B203
@@ -20003,7 +19982,7 @@ sub_A027	proc far
 		mov	byte ptr es:[bx+26h], 0
 		push	cs
 		call	near ptr sub_9CA2
-		call	sub_2430
+		call	text_clear
 		push	ds
 		push	offset unk_F194
 		push	word_F17E
@@ -20056,7 +20035,7 @@ sub_A0C6	proc far
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
 		call	sub_ADD5
-		call	sub_2430
+		call	text_clear
 		call	sub_BD24
 		push	20Fh
 		call	sub_B203
@@ -20338,7 +20317,7 @@ sub_A2FB	proc far
 		jnz	short loc_A356
 		mov	byte_E8F8, 0
 		mov	byte_D790, 1
-		call	sub_2430
+		call	text_clear
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20436,7 +20415,7 @@ loc_A3B5:
 
 loc_A3BC:
 		mov	word_F4A4, 7D0h
-		call	sub_2430
+		call	text_clear
 		call	sub_B77E
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -20483,7 +20462,7 @@ loc_A42B:
 ; ---------------------------------------------------------------------------
 
 loc_A437:
-		call	sub_2430
+		call	text_clear
 		call	sub_C7A0
 		jmp	short loc_A424
 ; ---------------------------------------------------------------------------
@@ -20871,7 +20850,7 @@ sub_A74A	proc far
 		jnz	short loc_A79F
 		mov	byte_D791, 0
 		mov	byte_D792, 1
-		call	sub_2430
+		call	text_clear
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -21308,7 +21287,7 @@ loc_AAF0:
 		mov	word_E900, 0
 		push	cs
 		call	near ptr sub_9CA2
-		call	sub_2430
+		call	text_clear
 		call	sub_1256
 		call	sub_AB28
 		call	sub_FE0
@@ -22057,7 +22036,7 @@ sub_B019	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_2644
 		call	sub_2942
-		call	sub_2430
+		call	text_clear
 		call	sub_71C
 		pop	bp
 		retf

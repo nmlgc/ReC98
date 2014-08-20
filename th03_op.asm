@@ -4419,26 +4419,7 @@ loc_21EB:
 		retn
 sub_21E0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21F4	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_21F4	endp
-
+include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
 
@@ -19951,7 +19932,7 @@ var_2		= word ptr -2
 		les	bx, dword_FC54
 		cmp	byte ptr es:[bx+28h], 80h ; '€'
 		jnb	loc_9C8B
-		call	sub_21F4
+		call	text_clear
 		call	sub_B0AF
 		mov	[bp+var_2], 0
 		push	large 0E1h ; 'á'
@@ -20583,7 +20564,7 @@ sub_A0E0	proc near
 		push	si
 		cmp	byte_D954, 0
 		jnz	short loc_A133
-		call	sub_21F4
+		call	text_clear
 		cmp	byte_D953, 0
 		jnz	short loc_A0FA
 		call	sub_B0DB
@@ -20724,7 +20705,7 @@ sub_A203	proc near
 		push	si
 		cmp	byte_D955, 0
 		jnz	short loc_A24A
-		call	sub_21F4
+		call	text_clear
 		call	sub_B0AF
 		mov	byte_E97B, 0
 		xor	si, si
@@ -20974,7 +20955,7 @@ _envp		= dword	ptr  0Ch
 		push	bp
 		mov	bp, sp
 		call	sub_10FE
-		call	sub_21F4
+		call	text_clear
 		call	sub_2AC6
 		cmp	word_DAB8, 0
 		jz	short loc_A452
@@ -21076,7 +21057,7 @@ loc_A4FE:
 		jz	short loc_A4D2
 		call	sub_99C3
 		call	sub_F1A
-		call	sub_21F4
+		call	text_clear
 		call	sub_BEB8
 		call	sub_2B3C
 		pop	bp
@@ -21972,7 +21953,7 @@ loc_AC15:
 		cmp	si, 20h	; ' '
 		jl	short loc_AC0E
 		call	sub_269A
-		call	sub_21F4
+		call	text_clear
 		mov	byte ptr word_F828+1, 1
 		mov	word_DAC4, 0
 		call	far ptr	loc_1AA4
@@ -23034,7 +23015,7 @@ sub_B424	proc near
 		assume es:nothing
 		mov	eax, es:[bx+10h]
 		mov	dword_DB02, eax
-		call	sub_21F4
+		call	text_clear
 		call	sub_269A
 		push	ds
 		push	offset aChname_bft ; "chname.bft"
@@ -23848,7 +23829,7 @@ sub_BA88	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_B424
-		call	sub_21F4
+		call	text_clear
 		les	bx, dword_FC54
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -23940,7 +23921,7 @@ loc_BB37:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_21F4
+		call	text_clear
 		call	sub_B4D7
 		push	100h
 		call	sub_C403
@@ -23954,7 +23935,7 @@ loc_BB82:
 		jz	short loc_BBB7
 		cmp	byte_FC5B, 0
 		jz	short loc_BBB7
-		call	sub_21F4
+		call	text_clear
 		cmp	word_FC62, 10h
 		jb	short loc_BBB0
 		mov	ax, word_FC62
@@ -24094,7 +24075,7 @@ loc_BCAE:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_21F4
+		call	text_clear
 		call	sub_B4D7
 		push	100h
 		call	sub_C403
@@ -24115,7 +24096,7 @@ loc_BCF7:
 		jz	short loc_BD29
 		cmp	byte_FC5B, 0
 		jz	short loc_BD29
-		call	sub_21F4
+		call	text_clear
 		cmp	word_FC62, 10h
 		jb	short loc_BD22
 		mov	ax, word_FC62
@@ -24226,7 +24207,7 @@ loc_BDDF:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_21F4
+		call	text_clear
 		call	sub_B4D7
 		push	100h
 		call	sub_C403
@@ -24238,7 +24219,7 @@ loc_BDDF:
 loc_BE21:
 		cmp	byte_FC5A, 0
 		jz	short loc_BE4F
-		call	sub_21F4
+		call	text_clear
 		cmp	word_FC62, 10h
 		jb	short loc_BE48
 		mov	ax, word_FC62
@@ -24483,7 +24464,7 @@ sub_BFC2	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_2378
 		call	sub_2676
-		call	sub_21F4
+		call	text_clear
 		call	sub_1A1C
 		call	sub_708
 		pop	bp

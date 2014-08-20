@@ -3986,28 +3986,7 @@ loc_1F17:
 		retn
 sub_1F0C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F20	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_1F20	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19919,7 +19898,7 @@ loc_9DAD:
 		cmp	byte ptr es:[bx+35h], 0
 		jz	short loc_9E04
 		call	sub_B7D2
-		call	sub_1F20
+		call	text_clear
 		call	sub_C96
 		call	sub_C990
 		push	large 0
@@ -20074,7 +20053,7 @@ loc_9F58:
 		call	sub_FEC
 
 loc_9F69:
-		call	sub_1F20
+		call	text_clear
 		call	sub_C96
 		call	sub_C990
 		push	large 0
@@ -23505,7 +23484,7 @@ loc_B9DD:
 		call	sub_A174
 
 loc_BA66:
-		call	sub_1F20
+		call	text_clear
 		call	sub_C96
 		call	sub_C990
 		push	large 0
@@ -25367,7 +25346,7 @@ sub_C990	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_201C
 		call	sub_235A
-		call	sub_1F20
+		call	text_clear
 		call	sub_17CA
 		call	sub_75A
 		pop	bp

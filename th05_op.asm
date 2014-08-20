@@ -3823,26 +3823,7 @@ loc_20F5:
 		retn
 sub_20EA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_20FE	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_20FE	endp
-
+include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db 0
 dword_215E	dd 0
@@ -21890,7 +21871,7 @@ _envp		= dword	ptr  0Ch
 		mov	bp, sp
 		push	si
 		xor	si, si
-		call	sub_20FE
+		call	text_clear
 		call	sub_2B18
 		mov	word_F9CC, 5208h
 		push	ds
@@ -22004,7 +21985,7 @@ loc_B058:
 		jz	short loc_B00E
 		call	sub_BC83
 		call	sub_BB91
-		call	sub_20FE
+		call	text_clear
 		call	sub_D41C
 		call	sub_2B8E
 		pop	si
@@ -24593,7 +24574,7 @@ var_1		= byte ptr -1
 		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
 		call	sub_E2CA
-		call	sub_20FE
+		call	text_clear
 		mov	byte ptr word_13E94+1, 1
 		mov	word_F52E, 0
 		call	far ptr	loc_19F0
@@ -27143,7 +27124,7 @@ sub_D7EC	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_24CE
 		call	sub_2210
-		call	sub_20FE
+		call	text_clear
 		call	sub_1968
 		call	sub_84C
 		call	sub_3532

@@ -4713,28 +4713,7 @@ locret_24F3:
 		retf	0Ah
 sub_24A8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24F6	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_24F6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22654,7 +22633,7 @@ _envp		= dword	ptr  0Ch
 		mov	eax, es:[bx+28h]
 		mov	dword_20E0A, eax
 		call	sub_B827
-		call	sub_24F6
+		call	text_clear
 		les	bx, dword_23EF0
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -32617,7 +32596,7 @@ loc_F71C:
 		call	sub_BB82
 		call	sub_29EA
 		call	sub_1EDC
-		call	sub_24F6
+		call	text_clear
 		call	sub_14E08
 		push	large 0
 		push	large [bp+_arg0]	; arg0
@@ -38370,7 +38349,7 @@ sub_1240B	endp
 		dw offset loc_2456 - (offset loc_AE0E+2)
 		dw offset loc_24EE - (offset loc_AE0E+2)
 		dw offset locret_24F3 -	(offset	loc_AE0E+2)
-		dw offset sub_24F6 - (offset loc_AE0E+2)
+		dw offset text_clear - (offset loc_AE0E+2)
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -41529,7 +41508,7 @@ sub_14E08	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_29C6
 		call	sub_26BC
-		call	sub_24F6
+		call	text_clear
 		call	sub_1FA6
 		call	sub_87E
 		call	sub_3EF2

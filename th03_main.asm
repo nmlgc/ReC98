@@ -4598,28 +4598,7 @@ loc_1FCE:
 		retf	0Ah
 sub_1F8C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1FDA	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_1FDA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22194,7 +22173,7 @@ _arg0		= dword	ptr  6
 		call	sub_1596
 		call	sub_248C
 		call	sub_1590
-		call	sub_1FDA
+		call	text_clear
 		call	sub_11DA
 		push	0
 		call	sub_EF1C
@@ -29368,7 +29347,7 @@ sub_EA1A	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_21AA
 		call	sub_2468
-		call	sub_1FDA
+		call	text_clear
 		call	sub_1C42
 		call	sub_73A
 		pop	bp

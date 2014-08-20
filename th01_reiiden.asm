@@ -61,6 +61,7 @@ SREGS		ends
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -1802,28 +1803,7 @@ sub_BE3		endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C6A		proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_C6A		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -54660,7 +54640,7 @@ loc_19595:
 		push	1Bh
 		call	sub_E364
 		pop	cx
-		call	sub_C6A
+		call	text_clear
 		pop	di
 		pop	si
 		leave

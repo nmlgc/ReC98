@@ -4510,28 +4510,7 @@ loc_224B:
 		retn
 sub_2240	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2254	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_2254	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/BorlandC/text_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22432,7 +22411,7 @@ _envp		= dword	ptr  0Ch
 		mov	eax, es:[bx+14h]
 		mov	dword_21722, eax
 		call	sub_B488
-		call	sub_2254
+		call	text_clear
 		call	sub_1A36
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
@@ -30684,7 +30663,7 @@ loc_E813:
 		call	sub_B9BB
 		call	sub_2748
 		call	sub_1D4A
-		call	sub_2254
+		call	text_clear
 		call	sub_1A5A
 		call	sub_1361E
 		push	large 0
@@ -40836,7 +40815,7 @@ sub_1361E	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_2724
 		call	sub_241A
-		call	sub_2254
+		call	text_clear
 		call	sub_1E14
 		call	sub_8F0
 		call	sub_3F58

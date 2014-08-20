@@ -67,7 +67,7 @@ sub_384		proc near
 		call	text_cursor_hide
 		call	sub_155E
 		call	sub_367
-		call	sub_87A
+		call	text_clear
 		mov	byte ptr ds:2870h, 0
 		mov	byte ptr ds:2871h, 1
 		push	60h
@@ -97,7 +97,7 @@ sub_3D0		proc near
 		call	sub_F68
 		call	sub_367
 		call	sub_136A
-		call	sub_87A
+		call	text_clear
 		call	sub_155E
 		pop	bp
 		retn
@@ -719,26 +719,7 @@ loc_873:
 		retn
 _main		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_87A		proc near
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retn
-sub_87A		endp
-
+include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
 

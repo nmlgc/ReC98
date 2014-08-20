@@ -3900,29 +3900,7 @@ loc_20F1:
 		retn
 sub_20E6	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_20FA	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_20FA	endp
-
-; ---------------------------------------------------------------------------
-		nop
-; ---------------------------------------------------------------------------
+include libs/BorlandC/text_clear.asm
 dword_210C	dd 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20263,7 +20241,7 @@ _arg0		= dword	ptr  4
 		mov	bp, sp
 		call	sub_D8CE
 		call	sub_126E
-		call	sub_20FA
+		call	text_clear
 		call	sub_F12
 		call	sub_D3F4
 		push	large 0
@@ -25337,7 +25315,7 @@ loc_CB7F:
 
 loc_CB89:
 		call	sub_2520
-		call	sub_20FA
+		call	text_clear
 		push	1
 		call	sub_666
 		pop	di
@@ -26600,7 +26578,7 @@ sub_D3F4	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_24FC
 		call	sub_21BE
-		call	sub_20FA
+		call	text_clear
 		call	sub_19E6
 		call	sub_87C
 		call	sub_3574

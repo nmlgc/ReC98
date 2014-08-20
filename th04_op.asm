@@ -4436,26 +4436,7 @@ loc_24E5:
 		retn
 sub_24DA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24EE	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_24EE	endp
-
+include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
 dword_254E	dd 0
@@ -22404,7 +22385,7 @@ _envp		= dword	ptr  0Ch
 		mov	bp, sp
 		push	si
 		xor	si, si
-		call	sub_24EE
+		call	text_clear
 		call	sub_2F48
 		mov	word_11A4E, 5208h
 		push	ds
@@ -22512,7 +22493,7 @@ loc_B47B:
 		call	sub_CCC8
 		call	sub_A873
 		call	sub_1356
-		call	sub_24EE
+		call	text_clear
 		call	sub_DDB1
 		call	sub_2FBE
 		pop	si
@@ -24528,7 +24509,7 @@ sub_C3B7	proc near
 		mov	bp, sp
 		mov	byte_12DBE, 0
 		call	sub_E6D0
-		call	sub_24EE
+		call	text_clear
 		mov	byte ptr word_12DBC+1, 1
 		mov	word_F8C6, 0
 		call	far ptr	loc_1DE0
@@ -28204,7 +28185,7 @@ sub_E0AC	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_28FE
 		call	sub_2600
-		call	sub_24EE
+		call	text_clear
 		call	sub_1D58
 		call	sub_86E
 		call	sub_3D12

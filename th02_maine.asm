@@ -4792,31 +4792,7 @@ loc_2321:
 		retf	2
 sub_22F2	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2328	proc far
-		mov	al, 1Bh
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 5Bh	; '['
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 32h	; '2'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		mov	al, 4Ah	; 'J'
-		int	29h		; DOS 2+ internal - FAST PUTCHAR
-					; AL = character to display
-		retf
-sub_2328	endp
-
-; ---------------------------------------------------------------------------
-		nop
-; ---------------------------------------------------------------------------
+include libs/BorlandC/text_clear.asm
 dword_233A	dd 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23187,7 +23163,7 @@ sub_B616	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_23EC
 		call	sub_272A
-		call	sub_2328
+		call	text_clear
 		call	sub_7C8
 		pop	bp
 		retf
