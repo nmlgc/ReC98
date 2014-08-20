@@ -6557,62 +6557,7 @@ driver		= dword	ptr  6
 _registerbgifont endp
 
 include libs/BorlandC/dosenv.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl _dos_getdrive(unsigned int *drive)
-__dos_getdrive	proc far
-
-drive		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 19h
-		int	21h		; DOS -	GET DEFAULT DISK NUMBER
-		mov	ah, 0
-		inc	ax
-		les	bx, [bp+drive]
-		mov	es:[bx], ax
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__dos_getdrive	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl _dos_setdrive(unsigned int drive, unsigned int *ndrives)
-__dos_setdrive	proc far
-
-drive		= word ptr  6
-ndrives		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dl, byte ptr [bp+drive]
-		dec	dl
-		mov	ah, 0Eh
-		int	21h		; DOS -	SELECT DISK
-					; DL = new default drive number	(0 = A,	1 = B, etc.)
-					; Return: AL = number of logical drives
-		mov	ah, 0
-		les	bx, [bp+ndrives]
-		mov	es:[bx], ax
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__dos_setdrive	endp
-
+include libs/BorlandC/dosgdriv.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
 
@@ -8758,8 +8703,7 @@ loc_4DBB:
 		lea	ax, [bp+drive]
 		push	ax		; drive
 		nop
-		push	cs
-		call	near ptr __dos_getdrive
+		call	__dos_getdrive
 		pop	cx
 		pop	cx
 		mov	ax, [bp+drive]
