@@ -6549,171 +6549,7 @@ buf		= dword	ptr  6
 		retf
 ___ErrorMessage	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_2696	proc far
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retf
-sub_2696	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_269B	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	[bp+arg_4], 0
-		jnz	short loc_26C8
-		jmp	short loc_26B8
-; ---------------------------------------------------------------------------
-
-loc_26A8:
-		dec	_atexitcnt
-		mov	bx, _atexitcnt
-		mov	cl, 2
-		shl	bx, cl
-		call	dword ptr [bx+6B92h]
-
-loc_26B8:
-		cmp	_atexitcnt, 0
-		jnz	short loc_26A8
-		nop
-		call	__cleanup
-		call	off_363EA
-
-loc_26C8:
-		nop
-		call	__restorezero
-		nop
-		call	__checknull
-		cmp	[bp+arg_2], 0
-		jnz	short loc_26EF
-		cmp	[bp+arg_4], 0
-		jnz	short loc_26E6
-		call	off_363EE
-		call	off_363F2
-
-loc_26E6:
-		push	[bp+arg_0]
-		nop
-		call	__terminate
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_26EF:
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_269B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl exit(int	status)
-_exit		proc far
-
-status		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	[bp+status]
-		call	sub_269B
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_exit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl _exit(int status)
-__exit		proc far
-
-status		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	[bp+status]
-		call	sub_269B
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__exit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; void _cexit(void)
-__cexit		proc far
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_269B
-		pop	di
-		pop	si
-		retf
-__cexit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; void _c_exit(void)
-__c_exit	proc far
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_269B
-		pop	di
-		pop	si
-		retf
-__c_exit	endp
-
+include libs/BorlandC/exit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12723,8 +12559,8 @@ loc_5576:
 		or	[bp+var_4], 40h
 
 loc_557A:
-		mov	word ptr off_363EE+2, seg seg000
-		mov	word ptr off_363EE, 6E75h
+		mov	word ptr _exitfopen+2, seg seg000
+		mov	word ptr _exitfopen, 6E75h
 		les	bx, [bp+arg_4]
 		mov	es:[bx], dx
 		les	bx, [bp+arg_0]
@@ -14761,8 +14597,8 @@ loc_619E:
 loc_61C3:
 		cmp	[bp+handle], 0
 		jl	short loc_6205
-		mov	word ptr off_363F2+2, seg seg000
-		mov	word ptr off_363F2, 3F33h
+		mov	word ptr _exitopen+2, seg seg000
+		mov	word ptr _exitopen, 3F33h
 		test	byte ptr [bp+access+1],	3
 		jz	short loc_61E0
 		mov	ax, 1000h
@@ -16060,8 +15896,8 @@ loc_69CE:
 		jz	short loc_6A62
 		cmp	[bp+_size], 0
 		jbe	short loc_6A62
-		mov	word ptr off_363EA+2, seg seg000
-		mov	word ptr off_363EA, 6EB7h
+		mov	word ptr _exitbuf+2, seg seg000
+		mov	word ptr _exitbuf, 6EB7h
 		mov	ax, [bp+buf]
 		or	ax, [bp+arg_6]
 		jnz	short loc_6A37
@@ -25673,7 +25509,7 @@ loc_B4AC:
 ; ---------------------------------------------------------------------------
 
 loc_B4B1:
-		call	off_363EA
+		call	_exitbuf
 		push	[bp+var_A]
 		push	[bp+var_C]
 		push	[bp+var_6]
@@ -60459,9 +60295,7 @@ flt_363C4	dd 3.4028237e38
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
 include libs/BorlandC/atexit[data].asm
-off_363EA	dd sub_2696
-off_363EE	dd sub_2696
-off_363F2	dd sub_2696
+include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 word_365B0	dw 4000h
 word_365B2	dw 0FFFFh

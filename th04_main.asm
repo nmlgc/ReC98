@@ -9688,183 +9688,7 @@ buf		= dword	ptr  6
 		retf
 ___ErrorMessage	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4500	proc far
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retf
-sub_4500	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-sub_4505	proc near
-
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	[bp+arg_4], 0
-		jnz	short loc_4532
-		jmp	short loc_4522
-; ---------------------------------------------------------------------------
-
-loc_4512:
-		dec	_atexitcnt
-		mov	bx, _atexitcnt
-		mov	cl, 2
-		shl	bx, cl
-		call	dword ptr [bx-42E4h]
-
-loc_4522:
-		cmp	_atexitcnt, 0
-		jnz	short loc_4512
-		nop
-		call	__cleanup
-; ---------------------------------------------------------------------------
-		call	off_2381C
-
-loc_4532:
-		nop
-		call	__restorezero
-		nop
-		call	__checknull
-		cmp	[bp+arg_2], 0
-		jnz	short loc_4559
-		cmp	[bp+arg_4], 0
-		jnz	short loc_4550
-sub_4505	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn
-
-sub_4548	proc near
-		call	off_23820
-		call	off_23824
-
-loc_4550:
-		push	word ptr [bp+4]
-		nop
-		call	__terminate
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_4559:
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_4548	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl exit(int	status)
-_exit		proc far
-
-status		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	[bp+status]
-		call	sub_4505
-_exit		endp
-
-; ---------------------------------------------------------------------------
-		pop	di
-		pop	si
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl _exit(int status)
-__exit		proc far
-
-status		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	[bp+status]
-		call	sub_4505
-__exit		endp
-
-; ---------------------------------------------------------------------------
-		pop	di
-		pop	si
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn
-
-; void _cexit(void)
-__cexit		proc far
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_4505
-__cexit		endp
-
-; ---------------------------------------------------------------------------
-		pop	di
-		pop	si
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn
-
-; void _c_exit(void)
-__c_exit	proc near
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_4505
-__c_exit	endp
-
-; ---------------------------------------------------------------------------
-		pop	di
-		pop	si
-		retf
+include libs/BorlandC/exit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13333,8 +13157,8 @@ loc_63AE:
 		jz	short loc_6442
 		cmp	[bp+_size], 0
 		jbe	short loc_6442
-		mov	word ptr off_2381C+2, seg seg000
-		mov	word ptr off_2381C, 6750h
+		mov	word ptr _exitbuf+2, seg seg000
+		mov	word ptr _exitbuf, 6750h
 		mov	ax, [bp+buf]
 		or	ax, [bp+arg_6]
 		jnz	short loc_6417
@@ -22260,7 +22084,7 @@ loc_AA9B:
 ; ---------------------------------------------------------------------------
 
 loc_AAA0:
-		call	off_2381C
+		call	_exitbuf
 		push	[bp+var_A]
 		push	[bp+var_C]
 		push	[bp+var_6]
@@ -46711,9 +46535,7 @@ word_237F8	dw 0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
 include libs/BorlandC/atexit[data].asm
-off_2381C	dd sub_4500
-off_23820	dd sub_4500
-off_23824	dd sub_4500
+include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0

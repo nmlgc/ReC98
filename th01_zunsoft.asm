@@ -3136,166 +3136,7 @@ buf		= word ptr  4
 		retn
 ___ErrorMessage	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_1738	proc near
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retn
-sub_1738	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_173D	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	[bp+arg_4], 0
-		jnz	short loc_1766
-		jmp	short loc_1758
-; ---------------------------------------------------------------------------
-
-loc_174A:
-		dec	_atexitcnt
-		mov	bx, _atexitcnt
-		add	bx, bx
-		call	word ptr [bx+3360h]
-
-loc_1758:
-		cmp	_atexitcnt, 0
-		jnz	short loc_174A
-		call	__cleanup
-		call	off_268E
-
-loc_1766:
-		call	__restorezero
-		call	__checknull
-		cmp	[bp+arg_2], 0
-		jnz	short loc_1787
-		cmp	[bp+arg_4], 0
-		jnz	short loc_1780
-		call	off_2690
-		call	off_2692
-
-loc_1780:
-		push	[bp+arg_0]
-		call	__terminate
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_1787:
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_173D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl exit(int	status)
-_exit		proc near
-
-status		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	[bp+status]
-		call	sub_173D
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_exit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn	bp-based frame
-
-; void __cdecl _exit(int status)
-__exit		proc near
-
-status		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		push	[bp+status]
-		call	sub_173D
-		pop	di
-		pop	si
-		pop	bp
-		retn
-__exit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; void _cexit(void)
-__cexit		proc near
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_173D
-		pop	di
-		pop	si
-		retn
-__cexit		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; void _c_exit(void)
-__c_exit	proc near
-		push	si
-		push	di
-		mov	ax, 1
-		push	ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	sub_173D
-		pop	di
-		pop	si
-		retn
-__c_exit	endp
-
+include libs/BorlandC/exit.asm
 include libs/BorlandC/H_LRSH.ASM
 include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
@@ -3842,7 +3683,7 @@ loc_1F24:
 		jz	short loc_1F8C
 		cmp	[bp+_size], 0
 		jbe	short loc_1F8C
-		mov	off_268E, 2128h
+		mov	_exitbuf, 2128h
 		cmp	[bp+buf], 0
 		jnz	short loc_1F70
 		push	[bp+_size]	; size
@@ -5165,9 +5006,7 @@ word_266A	dw 0
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
 include libs/BorlandC/atexit[data].asm
-off_268E	dw offset sub_1738
-off_2690	dw offset sub_1738
-off_2692	dw offset sub_1738
+include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 __heaplen	dw 0
 include libs/BorlandC/__IOERROR[data].asm
