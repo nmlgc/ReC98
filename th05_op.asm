@@ -7947,43 +7947,7 @@ ndrives		= dword	ptr  8
 		retf
 __dos_setdrive	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __far __ErrorMessage(char	*buf)
-___ErrorMessage	proc far
-
-buf		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		push	ax		; len
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		mov	al, stderr.fd
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr __rtl_write
-		add	sp, 8
-		pop	di
-		pop	si
-		pop	bp
-		retf
-___ErrorMessage	endp
-
+include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
 include libs/BorlandC/f_scopy.asm
 include libs/BorlandC/getvect.asm

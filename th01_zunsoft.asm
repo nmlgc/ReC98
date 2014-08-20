@@ -3106,36 +3106,7 @@ sub_16B2	endp
 
 include libs/BorlandC/__abort.asm
 include libs/BorlandC/atexit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __ErrorMessage(char *buf)
-___ErrorMessage	proc near
-
-buf		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+buf]	; s
-		call	_strlen
-		pop	cx
-		push	ax		; len
-		push	[bp+buf]	; buf
-		mov	al, stderr.fd
-		cbw
-		push	ax		; handle
-		call	__rtl_write
-		add	sp, 6
-		pop	di
-		pop	si
-		pop	bp
-		retn
-___ErrorMessage	endp
-
+include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
 include libs/BorlandC/H_LRSH.ASM
 include libs/BorlandC/__IOERROR.ASM
