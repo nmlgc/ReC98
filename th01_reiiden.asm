@@ -6109,51 +6109,7 @@ var_2		= word ptr -2
 sub_2395	endp
 
 include libs/BorlandC/__abort.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	stpcpy(char *dest, const char *src)
-_stpcpy		proc far
-
-var_2		= word ptr -2
-dest		= dword	ptr  6
-_s		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		push	word ptr [bp+_s+2]
-		push	word ptr [bp+_s]	; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		mov	[bp+var_2], ax
-		inc	ax
-		push	ax		; n
-		push	word ptr [bp+_s+2]
-		push	word ptr [bp+_s]	; src
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
-		add	sp, 0Ah
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		add	ax, [bp+var_2]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_stpcpy		endp
-
+include libs/BorlandC/stpcpy.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6353,8 +6309,7 @@ loc_2551:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -6393,8 +6348,7 @@ loc_259E:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -7256,8 +7210,7 @@ loc_2B22:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		push	dx
 		push	ax
@@ -24167,8 +24120,7 @@ loc_A698:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -24194,8 +24146,7 @@ loc_A6F1:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax

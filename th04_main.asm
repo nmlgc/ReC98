@@ -9316,52 +9316,7 @@ locret_426F:
 sub_4258	endp
 
 include libs/BorlandC/__abort.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	stpcpy(char *dest, const char *src)
-_stpcpy		proc far
-					; __DOSENV+140p ...
-
-var_2		= word ptr -2
-dest		= dword	ptr  6
-s		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		push	word ptr [bp+s+2]
-		push	word ptr [bp+s]	; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		mov	[bp+var_2], ax
-		inc	ax
-		push	ax		; n
-		push	word ptr [bp+s+2]
-		push	word ptr [bp+s]	; src
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
-		add	sp, 0Ah
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		add	ax, [bp+var_2]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_stpcpy		endp
-
+include libs/BorlandC/stpcpy.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9573,8 +9528,7 @@ loc_4400:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -9614,8 +9568,7 @@ loc_444D:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -21275,8 +21228,7 @@ loc_9F12:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
@@ -21302,8 +21254,7 @@ loc_9F6B:
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; dest
 		nop
-		push	cs
-		call	near ptr _stpcpy
+		call	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+dest+2], dx
 		mov	word ptr [bp+dest], ax
