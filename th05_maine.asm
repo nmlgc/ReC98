@@ -10015,118 +10015,7 @@ loc_5368:
 sub_530C	endp
 
 include libs/BorlandC/chmoda.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl fflush(FILE *stream)
-_fflush		proc far
-
-var_2		= word ptr -2
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, word ptr [bp+stream]
-		or	ax, word ptr [bp+stream+2]
-		jnz	short loc_53A7
-		nop
-		push	cs
-		call	near ptr _flushall
-		jmp	loc_5458
-; ---------------------------------------------------------------------------
-
-loc_53A7:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+stream]
-		jz	short loc_53B6
-		jmp	loc_5453
-; ---------------------------------------------------------------------------
-
-loc_53B6:
-		les	bx, [bp+stream]
-		cmp	word ptr es:[bx], 0
-		jl	short loc_540D
-		test	byte ptr es:[bx+2], 8
-		jnz	short loc_53DE
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jz	short loc_53D8
-		jmp	loc_5458
-; ---------------------------------------------------------------------------
-
-loc_53D8:
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_5458
-
-loc_53DE:
-		les	bx, [bp+stream]
-		mov	word ptr es:[bx], 0
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jnz	short loc_5458
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_5458
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		jmp	short loc_5458
-; ---------------------------------------------------------------------------
-
-loc_540D:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+6]
-		add	ax, es:[bx]
-		inc	ax
-		mov	[bp+var_2], ax
-		sub	es:[bx], ax
-		push	ax		; len
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		push	dx
-		push	ax		; buf
-		mov	al, es:[bx+4]
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___write
-		add	sp, 8
-		cmp	ax, [bp+var_2]
-		jz	short loc_5458
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+3], 2
-		jnz	short loc_5458
-		or	word ptr es:[bx+2], 10h
-
-loc_5453:
-		mov	ax, 0FFFFh
-		jmp	short loc_545A
-; ---------------------------------------------------------------------------
-
-loc_5458:
-		xor	ax, ax
-
-loc_545A:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fflush		endp
-
+include libs/BorlandC/fflush.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10160,8 +10049,7 @@ loc_547D:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		inc	[bp+var_8]
@@ -10286,8 +10174,7 @@ whence		= word ptr  0Ch
 		push	word ptr [bp+_offset+2]
 		push	word ptr [bp+_offset] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -12108,8 +11995,7 @@ loc_61BB:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 

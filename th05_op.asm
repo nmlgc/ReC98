@@ -9619,118 +9619,7 @@ loc_518C:
 sub_5130	endp
 
 include libs/BorlandC/chmoda.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl fflush(FILE *stream)
-_fflush		proc far
-
-var_2		= word ptr -2
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, word ptr [bp+stream]
-		or	ax, word ptr [bp+stream+2]
-		jnz	short loc_51CB
-		nop
-		push	cs
-		call	near ptr _flushall
-		jmp	loc_527C
-; ---------------------------------------------------------------------------
-
-loc_51CB:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+stream]
-		jz	short loc_51DA
-		jmp	loc_5277
-; ---------------------------------------------------------------------------
-
-loc_51DA:
-		les	bx, [bp+stream]
-		cmp	word ptr es:[bx], 0
-		jl	short loc_5231
-		test	byte ptr es:[bx+2], 8
-		jnz	short loc_5202
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jz	short loc_51FC
-		jmp	loc_527C
-; ---------------------------------------------------------------------------
-
-loc_51FC:
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_527C
-
-loc_5202:
-		les	bx, [bp+stream]
-		mov	word ptr es:[bx], 0
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jnz	short loc_527C
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_527C
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		jmp	short loc_527C
-; ---------------------------------------------------------------------------
-
-loc_5231:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+6]
-		add	ax, es:[bx]
-		inc	ax
-		mov	[bp+var_2], ax
-		sub	es:[bx], ax
-		push	ax		; len
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		push	dx
-		push	ax		; buf
-		mov	al, es:[bx+4]
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___write
-		add	sp, 8
-		cmp	ax, [bp+var_2]
-		jz	short loc_527C
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+3], 2
-		jnz	short loc_527C
-		or	word ptr es:[bx+2], 10h
-
-loc_5277:
-		mov	ax, 0FFFFh
-		jmp	short loc_527E
-; ---------------------------------------------------------------------------
-
-loc_527C:
-		xor	ax, ax
-
-loc_527E:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fflush		endp
-
+include libs/BorlandC/fflush.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9764,8 +9653,7 @@ loc_52A1:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		inc	[bp+var_8]
@@ -9891,8 +9779,7 @@ whence		= word ptr  0Eh
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -11709,8 +11596,7 @@ loc_5FDF:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 

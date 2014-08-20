@@ -12096,8 +12096,7 @@ loc_52D1:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -12164,118 +12163,7 @@ loc_5361:
 		retf
 _fclose		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl fflush(FILE *stream)
-_fflush		proc far
-
-var_2		= word ptr -2
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, word ptr [bp+stream]
-		or	ax, word ptr [bp+stream+2]
-		jnz	short loc_5382
-		nop
-		push	cs
-		call	near ptr _flushall
-		jmp	loc_5433
-; ---------------------------------------------------------------------------
-
-loc_5382:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+stream]
-		jz	short loc_5391
-		jmp	loc_542E
-; ---------------------------------------------------------------------------
-
-loc_5391:
-		les	bx, [bp+stream]
-		cmp	word ptr es:[bx], 0
-		jl	short loc_53E8
-		test	byte ptr es:[bx+2], 8
-		jnz	short loc_53B9
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jz	short loc_53B3
-		jmp	loc_5433
-; ---------------------------------------------------------------------------
-
-loc_53B3:
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_5433
-
-loc_53B9:
-		les	bx, [bp+stream]
-		mov	word ptr es:[bx], 0
-		mov	dx, es:[bx+0Eh]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		cmp	dx, word ptr [bp+stream+2]
-		jnz	short loc_5433
-		cmp	es:[bx+0Ch], ax
-		jnz	short loc_5433
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		jmp	short loc_5433
-; ---------------------------------------------------------------------------
-
-loc_53E8:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+6]
-		add	ax, es:[bx]
-		inc	ax
-		mov	[bp+var_2], ax
-		sub	es:[bx], ax
-		push	ax		; len
-		mov	dx, es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		push	dx
-		push	ax		; buf
-		mov	al, es:[bx+4]
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___write
-		add	sp, 8
-		cmp	ax, [bp+var_2]
-		jz	short loc_5433
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+3], 2
-		jnz	short loc_5433
-		or	word ptr es:[bx+2], 10h
-
-loc_542E:
-		mov	ax, 0FFFFh
-		jmp	short loc_5435
-; ---------------------------------------------------------------------------
-
-loc_5433:
-		xor	ax, ax
-
-loc_5435:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fflush		endp
-
+include libs/BorlandC/fflush.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12366,8 +12254,7 @@ loc_549D:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		inc	[bp+var_8]
@@ -12881,8 +12768,7 @@ whence		= word ptr  0Eh
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -13581,8 +13467,7 @@ loc_5C5D:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 
@@ -14765,8 +14650,7 @@ loc_62FF:
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -14801,8 +14685,7 @@ loc_6332:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -14839,8 +14722,7 @@ loc_6398:
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -15033,8 +14915,7 @@ loc_64BA:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -15102,8 +14983,7 @@ loc_6549:
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 		or	ax, ax
@@ -16456,8 +16336,7 @@ loc_6ECE:
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
 		nop
-		push	cs
-		call	near ptr _fflush
+		call	_fflush
 		pop	cx
 		pop	cx
 
