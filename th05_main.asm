@@ -880,88 +880,7 @@ loc_83C:
 		retf	6
 sub_828		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_848		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_848		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_85E		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_85E		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_87E		proc far
-					; sub_14F86+22P
-		push	cs
-		call	near ptr sub_848
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_85E
-		retf
-sub_87E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 loc_8AA:
 		push	bp
@@ -23569,7 +23488,7 @@ loc_BC00:
 		sub	bx, 70h	; 'p'
 		sub	di, 530h
 		jge	short loc_BBF8
-		call	sub_85E
+		call	egc_off
 		pop	di
 		pop	si
 		retn
@@ -23791,7 +23710,7 @@ loc_BDB7:
 		call	sub_BC2A
 		call	sub_BC6A
 		mov	byte_23EFC, 0
-		call	sub_85E
+		call	egc_off
 
 loc_BDE8:
 		pop	di
@@ -24059,7 +23978,7 @@ loc_BF9C:
 		sub	bx, 38h	; '8'
 		sub	di, 2B0h
 		jge	short loc_BF5B
-		call	sub_85E
+		call	egc_off
 		pop	di
 		pop	si
 		retn
@@ -30853,7 +30772,7 @@ loc_EF0A:
 		sub	di, 80h	; '€'
 		jge	short loc_EF07
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_85E
+		call	egc_off
 		pop	di
 		pop	bp
 		retn
@@ -30901,7 +30820,7 @@ loc_EF54:
 		loop	loc_EF54
 		sub	di, 60h	; '`'
 		jge	short loc_EF51
-		call	sub_85E
+		call	egc_off
 		pop	di
 		pop	bp
 		retn	4
@@ -40848,7 +40767,7 @@ sub_14E08	proc far
 		call	sub_26BC
 		call	text_clear
 		call	sub_1FA6
-		call	sub_87E
+		call	egc_start
 		call	sub_3EF2
 		pop	bp
 		retf
@@ -41071,7 +40990,7 @@ arg_0		= dword	ptr  6
 loc_14F9D:
 		mov	word_20E04, 1000h
 		call	sub_260E
-		call	sub_87E
+		call	egc_start
 		call	sub_1E14
 		call	sub_363E
 		push	large [bp+arg_0]

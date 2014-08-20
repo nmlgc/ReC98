@@ -3196,87 +3196,7 @@ locret_14AA:
 		retf	4
 sub_146A	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14AE	proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_14AE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14C4	proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_14C4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14E4	proc far
-		push	cs
-		call	near ptr sub_14AE
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_14C4
-		retf
-sub_14E4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31448,7 +31368,7 @@ sub_E7E4	proc far
 		add	sp, 6
 		call	sub_E3BE
 		call	sub_E46D
-		call	sub_14E4
+		call	egc_start
 		call	sub_D2C
 		call	sub_ECC
 		call	sub_102BB
@@ -31523,7 +31443,7 @@ sub_E87F	proc far
 		call	sub_E510
 		call	sub_EE35
 		call	sub_E9CB
-		call	sub_14E4
+		call	egc_start
 		push	large [off_3891E] ; isr
 		push	6		; interruptno
 		call	_setvect
@@ -35486,7 +35406,7 @@ sub_103D6	endp
 sub_103FF	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_14AE
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -35582,7 +35502,7 @@ loc_104B1:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+arg_6]
 		jl	short loc_10467
-		call	sub_14C4
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -38262,7 +38182,7 @@ arg_2		= word ptr  8
 		mov	ax, [bp+arg_0]
 		imul	ax, 50h
 		mov	si, ax
-		call	sub_14AE
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -38316,7 +38236,7 @@ loc_1188D:
 loc_11894:
 		cmp	di, [bp+arg_2]
 		jl	short loc_11857
-		call	sub_14C4
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -41052,7 +40972,7 @@ loc_12D73:
 loc_12D90:
 		cmp	si, 190h
 		jb	short loc_12D73
-		call	sub_14AE
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -41239,7 +41159,7 @@ loc_12F42:
 		push	large [bp+var_8] ; font
 		call	_registerbgifont
 		add	sp, 8
-		call	sub_14C4
+		call	egc_off
 		pop	di
 		pop	si
 		leave

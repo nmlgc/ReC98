@@ -970,106 +970,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_89A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8BA		proc far
-		mov	al, 0
-
-loc_8BC:
-		out	7Ch, al
-		mov	al, 7
-
-loc_8C0:
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-
-loc_8C8:
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_8BA		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8D0		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-
-loc_8D7:
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-
-loc_8DE:
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-
-loc_8EC:
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_8D0		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8F0		proc far
-					; sub_13666+27P
-		push	cs
-		call	near ptr sub_8BA
-
-loc_8F4:
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-
-loc_8FB:
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-
-loc_905:
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_8D0
-		retf
-sub_8F0		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 loc_91C:
 		push	bp
@@ -23180,7 +23081,7 @@ loc_B8CE:
 		call	sub_CBFA
 		call	sub_BAEE
 		mov	byte_25104, 0
-		call	sub_8D0
+		call	egc_off
 
 loc_B8F8:
 		pop	di
@@ -23619,7 +23520,7 @@ loc_BBFA:
 		sub	bx, 38h	; '8'
 		sub	di, 2B0h
 		jge	short loc_BBB9
-		call	sub_8D0
+		call	egc_off
 		pop	di
 		pop	si
 		retn
@@ -26196,7 +26097,7 @@ loc_CBD0:
 		sub	bx, 70h	; 'p'
 		sub	di, 530h
 		jge	short loc_CBC8
-		call	sub_8D0
+		call	egc_off
 		pop	di
 		pop	si
 		retn
@@ -26757,7 +26658,7 @@ loc_D02E:
 		sub	di, 80h	; '€'
 		jge	short loc_D02B
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_8D0
+		call	egc_off
 		pop	di
 		pop	bp
 		retn
@@ -26806,7 +26707,7 @@ loc_D078:
 		loop	loc_D078
 		sub	di, 60h	; '`'
 		jge	short loc_D075
-		call	sub_8D0
+		call	egc_off
 		pop	di
 		pop	bp
 		retn	4
@@ -34197,7 +34098,7 @@ arg_0		= word ptr  4
 		mov	ax, [bp+arg_0]
 		mov	[bp+var_2], ax
 		mov	cx, 0Dh		; switch 13 cases
-		mov	bx, (offset loc_91C - offset locret_AAF0)
+		mov	bx, offset table_10898
 
 loc_108AA:
 		mov	ax, cs:[bx]
@@ -34210,6 +34111,8 @@ loc_108AA:
 
 loc_108B9:
 		jmp	word ptr cs:[bx+1Ah] ; switch jump
+
+loc_108BD:
 		mov	dl, 2		; jumptable 000108B9 case 0
 		jmp	short loc_10915
 ; ---------------------------------------------------------------------------
@@ -34271,23 +34174,23 @@ sub_10898	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-		dw	0,     1,     2,     4 ; value table for switch	statement
+table_10898	dw	0,     1,     2,     4 ; value table for switch	statement
 		dw	5,     6,     8,     9
 		dw    0Ah,  100h,  200h,  400h
 		dw   800h
-		dw offset loc_8BC+1 - offset locret_AAF0 ; jump	table for switch statement
-		dw offset loc_8FB+2 - offset locret_AAF0
-		dw offset loc_8D7 - offset locret_AAF0
-		dw offset loc_8C0+1 - offset locret_AAF0
-		dw offset loc_905 - offset locret_AAF0
-		dw offset loc_8C8+1 - offset locret_AAF0
-		dw offset loc_8EC+1 - offset locret_AAF0
-		dw offset loc_8F4+1 - offset locret_AAF0
-		dw offset loc_8DE+1 - offset locret_AAF0
-		dw offset loc_905 - offset locret_AAF0
-		dw offset loc_8F4+1 - offset locret_AAF0
-		dw offset loc_8C8+1 - offset locret_AAF0
-		dw offset loc_8DE+1 - offset locret_AAF0
+		dw offset loc_108BD ; jump table for switch statement
+		dw offset loc_108FD
+		dw offset loc_108D7
+		dw offset loc_108C1
+		dw offset loc_10905
+		dw offset loc_108C9
+		dw offset loc_108ED
+		dw offset loc_108F5
+		dw offset loc_108DF
+		dw offset loc_10905
+		dw offset loc_108F5
+		dw offset loc_108C9
+		dw offset loc_108DF
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40113,7 +40016,7 @@ sub_1361E	proc far
 		call	sub_241A
 		call	text_clear
 		call	sub_1E14
-		call	sub_8F0
+		call	egc_start
 		call	sub_3F58
 		pop	bp
 		retf
@@ -40147,7 +40050,7 @@ loc_1367D:
 loc_13685:
 		call	near ptr sub_130EE
 		call	sub_236C
-		call	sub_8F0
+		call	egc_start
 		call	sub_1C82
 		call	sub_34DC
 		push	large [bp+arg_0]

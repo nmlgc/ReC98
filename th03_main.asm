@@ -697,92 +697,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_6E4		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_704		proc far
-					; sub_9778:loc_986CP ...
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-
-loc_710:
-		mov	al, 80h	; '€'
-
-loc_712:
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_704		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_71A		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_71A		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_73A		proc far
-		push	cs
-		call	near ptr sub_704
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_71A
-		retf
-sub_73A		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4615,7 +4530,7 @@ arg_2		= word ptr  6
 		xor	ax, ax
 		mov	es, ax
 		assume es:seg000
-		mov	al, byte ptr es:loc_712
+		mov	al, byte ptr es:[0712h]
 		inc	ax
 		mov	dx, ax
 		shl	dx, 1
@@ -18926,7 +18841,7 @@ loc_9845:
 		jz	loc_9A62
 
 loc_986C:
-		call	sub_704
+		call	egc_on
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
 		call	dword_205D6
@@ -18957,7 +18872,7 @@ loc_986C:
 		mov	byte ptr word_23AF0, 1
 		push	6626h
 		call	sub_DE95
-		call	sub_71A
+		call	egc_off
 		mov	byte ptr word_23AF0, 0
 		push	65A6h
 		call	sub_DF18
@@ -24123,9 +24038,9 @@ sub_C830	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_704
+		call	egc_on
 		call	sub_B3A2
-		call	sub_71A
+		call	egc_off
 		cmp	byte_23B24, 0
 		jz	short loc_C881
 		test	byte ptr word_23AF6, 1
@@ -25399,7 +25314,7 @@ loc_D16B:
 		cmp	si, 18h
 		jb	short loc_D16B
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 
 loc_D195:
 		call	sub_1EEC
@@ -25426,7 +25341,7 @@ loc_D195:
 		mov	word ptr dword_20F24, 3B07h
 
 loc_D1DE:
-		call	sub_71A
+		call	egc_off
 		pop	di
 		pop	si
 		pop	bp
@@ -25538,7 +25453,7 @@ loc_D2AB:
 		cmp	si, 18h
 		jb	short loc_D2AB
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 
 loc_D2C1:
 		mov	ax, [di]
@@ -25553,7 +25468,7 @@ loc_D2C1:
 		inc	si
 		cmp	si, 30h	; '0'
 		jb	short loc_D2C1
-		call	sub_71A
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -25649,7 +25564,7 @@ loc_D376:
 		cmp	si, 18h
 		jb	short loc_D376
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 
 loc_D3A0:
 		xor	ax, ax
@@ -25681,7 +25596,7 @@ loc_D3AF:
 		mov	word ptr dword_20F24, 3D19h
 
 loc_D3F0:
-		call	sub_71A
+		call	egc_off
 		pop	di
 		pop	si
 		pop	bp
@@ -25793,7 +25708,7 @@ loc_D4BD:
 		cmp	si, 18h
 		jb	short loc_D4BD
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 
 loc_D4D3:
 		xor	dx, dx
@@ -25822,7 +25737,7 @@ loc_D4E6:
 		inc	si
 		cmp	si, 32h	; '2'
 		jb	short loc_D4D3
-		call	sub_71A
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -28687,7 +28602,7 @@ sub_EA1A	proc far
 		call	sub_2468
 		call	text_clear
 		call	sub_1C42
-		call	sub_73A
+		call	egc_start
 		pop	bp
 		retf
 sub_EA1A	endp
@@ -29056,7 +28971,7 @@ loc_ECE6:
 		push	cs
 		call	near ptr sub_E8F8
 		call	sub_20FC
-		call	sub_73A
+		call	egc_start
 		call	sub_145C
 		call	sub_2BC4
 		push	large [bp+arg_0]
@@ -32615,7 +32530,7 @@ loc_10981:
 loc_1098A:
 		push	0BFh ; '¿'
 		call	sub_C40
-		call	sub_71A
+		call	egc_off
 		push	large 0C0000Ah
 		call	sub_F5C
 		push	word_20E50
@@ -32656,7 +32571,7 @@ loc_109D2:
 
 loc_109FB:
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40
@@ -39919,7 +39834,7 @@ var_2		= word ptr -2
 		mov	bx, word_1FE4E
 		cmp	byte ptr [bx], 0
 		jz	loc_146AB
-		call	sub_71A
+		call	egc_off
 		push	0C0h ; 'À'
 		push	large 0AA0055AAh
 		call	sub_F8C
@@ -40068,7 +39983,7 @@ loc_1465C:
 		push	[bp+var_2]
 		call	sub_908
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 
 loc_146AB:
 		pop	di
@@ -40367,7 +40282,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	loc_14A72
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -40505,7 +40420,7 @@ loc_149E8:
 
 loc_14A1C:
 					; sub_148B5+11Aj
-		call	sub_704
+		call	egc_on
 		cmp	[bp+var_1], 40h	; '@'
 		jb	short loc_14A72
 		cmp	[bp+var_1], 80h	; '€'
@@ -41505,7 +41420,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	locret_153B9
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -41678,7 +41593,7 @@ loc_153A6:
 
 loc_153AB:
 					; sub_151E1+17Dj
-		call	sub_704
+		call	egc_on
 		cmp	[bp+var_1], 60h	; '`'
 		jnb	short locret_153B9
 		call	sub_1515D
@@ -42527,7 +42442,7 @@ var_2		= word ptr -2
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	loc_15CB5
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -42788,7 +42703,7 @@ loc_15C7E:
 		mov	byte_23B01, 1
 
 loc_15CB0:
-		call	sub_704
+		call	egc_on
 
 loc_15CB5:
 		pop	di
@@ -45517,7 +45432,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	locret_17382
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -45560,7 +45475,7 @@ loc_17202:
 		mov	bx, ax
 		mov	[bx+11BCh], dl
 		mov	byte_23B01, 1
-		call	sub_704
+		call	egc_on
 		call	sub_1714F
 		jmp	loc_1737D
 ; ---------------------------------------------------------------------------
@@ -45687,7 +45602,7 @@ loc_17332:
 
 loc_1737D:
 					; sub_171BA+176j
-		call	sub_704
+		call	egc_on
 
 locret_17382:
 		leave
@@ -46873,7 +46788,7 @@ var_2		= word ptr -2
 		sub	sp, 0Eh
 		push	si
 		push	di
-		call	sub_704
+		call	egc_on
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		mov	byte_1F2EA, 1
@@ -47022,7 +46937,7 @@ loc_17D48:
 		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
 
 loc_17D56:
-		call	sub_71A
+		call	egc_off
 		push	large 0C0000Fh
 		call	sub_F5C
 		mov	ax, 0A800h
@@ -47856,7 +47771,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	loc_185A8
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -48034,7 +47949,7 @@ loc_1853F:
 
 loc_185A3:
 					; sub_183C1+91j ...
-		call	sub_704
+		call	egc_on
 
 loc_185A8:
 		pop	si
@@ -48266,7 +48181,7 @@ var_2		= word ptr -2
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	loc_189A7
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -48453,7 +48368,7 @@ loc_18911:
 
 loc_18964:
 					; sub_18766+170j ...
-		call	sub_704
+		call	egc_on
 		cmp	[bp+var_3], 40h	; '@'
 		jb	short loc_189A7
 		cmp	[bp+var_3], 80h	; '€'
@@ -48538,7 +48453,7 @@ loc_18A08:
 loc_18A10:
 		cmp	[bp+var_1], 80h	; '€'
 		jnb	loc_18B5B
-		call	sub_71A
+		call	egc_off
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 3
@@ -48656,7 +48571,7 @@ loc_18B3D:
 		mov	ah, 0
 		push	ax
 		call	sub_EFF4
-		call	sub_704
+		call	egc_on
 		jmp	short loc_18BB4
 ; ---------------------------------------------------------------------------
 
@@ -48722,7 +48637,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		cmp	byte ptr [bx+6580h], 0
 		jz	loc_18DC4
-		call	sub_71A
+		call	egc_off
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -48919,7 +48834,7 @@ loc_18D5B:
 
 loc_18DBF:
 					; sub_18BB8+DAj ...
-		call	sub_704
+		call	egc_on
 
 loc_18DC4:
 		pop	di
@@ -48951,7 +48866,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		mov	al, [bx+307Eh]
 		mov	[bp+var_1], al
-		call	sub_71A
+		call	egc_off
 		cmp	[bp+var_1], 40h	; '@'
 		jnb	short loc_18E39
 		push	0C0h ; 'À'
@@ -49148,7 +49063,7 @@ loc_18F89:
 
 loc_18FE2:
 					; sub_18DC8+1B6j ...
-		call	sub_704
+		call	egc_on
 
 loc_18FE7:
 		pop	si
@@ -49275,7 +49190,7 @@ var_1		= byte ptr -1
 		sub	si, 20h	; ' '
 		cmp	byte ptr [si], 1
 		jnz	loc_1920B
-		call	sub_71A
+		call	egc_off
 		cmp	[bp+var_1], 10h
 		jb	loc_191E4
 		cmp	[bp+var_1], 28h	; '('
@@ -49410,7 +49325,7 @@ loc_191E4:
 loc_191FF:
 					; sub_1905A+10Fj
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 		jmp	short loc_1925C
 ; ---------------------------------------------------------------------------
 
@@ -52806,7 +52721,7 @@ loc_1AA24:
 		mov	bx, [bp+var_A]
 		cmp	byte ptr [bx+1], 10h
 		ja	loc_1AB7B
-		call	sub_71A
+		call	egc_off
 		push	large 0C00006h
 		call	sub_F5C
 		mov	bx, [bp+var_A]
@@ -52953,7 +52868,7 @@ loc_1AA24:
 ; ---------------------------------------------------------------------------
 
 loc_1AB7B:
-		call	sub_71A
+		call	egc_off
 		mov	bx, [bp+var_A]
 		mov	al, [bx+0Eh]
 		add	al, 0F8h ; 'ø'
@@ -53113,7 +53028,7 @@ loc_1ACCF:
 		push	dx
 		call	sub_109A
 		call	sub_F86
-		call	sub_704
+		call	egc_on
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40

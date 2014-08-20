@@ -746,87 +746,7 @@ loc_712:
 		retf	6
 sub_704		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_724		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_724		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_73A		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_73A		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_75A		proc far
-		push	cs
-		call	near ptr sub_724
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_73A
-		retf
-sub_75A		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19620,7 +19540,7 @@ sub_A174	endp
 sub_A193	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_724
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -19704,7 +19624,7 @@ loc_A21B:
 loc_A225:
 		cmp	di, 0C8h ; 'È'
 		jl	short loc_A1EC
-		call	sub_73A
+		call	egc_off
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19824,7 +19744,7 @@ loc_A301:
 loc_A31E:
 		cmp	[bp+var_2], 14h
 		jl	short loc_A301
-		call	sub_73A
+		call	egc_off
 		add	si, 28h	; '('
 		add	word ptr [bp+var_8], 140h
 		mov	eax, [bp+var_8]
@@ -24657,7 +24577,7 @@ sub_C990	proc far
 		call	sub_235A
 		call	text_clear
 		call	sub_17CA
-		call	sub_75A
+		call	egc_start
 		pop	bp
 		retf
 sub_C990	endp
@@ -25290,7 +25210,7 @@ loc_CEF6:
 		push	cs
 		call	near ptr sub_C7E2
 		call	sub_1F6E
-		call	sub_75A
+		call	egc_start
 		call	sub_E24
 		call	sub_2AAE
 		push	large [bp+arg_0]
@@ -25624,7 +25544,7 @@ sub_D16F	proc far
 		call	sub_201C
 		call	sub_235A
 		call	sub_17CA
-		call	sub_75A
+		call	egc_start
 		pop	bp
 		retf
 sub_D16F	endp

@@ -859,87 +859,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_7F6		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_816		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_816		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_82C		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_82C		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_84C		proc far
-		push	cs
-		call	near ptr sub_816
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_82C
-		retf
-sub_84C		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26436,7 +26356,7 @@ sub_D7EC	proc far
 		call	sub_2210
 		call	text_clear
 		call	sub_1968
-		call	sub_84C
+		call	egc_start
 		call	sub_3532
 		pop	bp
 		retf
@@ -27186,7 +27106,7 @@ loc_DD62:
 		mov	cx, [bp+arg_2]
 		shr	cx, 4
 		rep movsw
-		call	sub_82C
+		call	egc_off
 		pop	si
 		pop	di
 		pop	ds
@@ -27210,7 +27130,7 @@ sub_DD10	endp
 
 
 sub_DD97	proc near
-		call	sub_816
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -27482,7 +27402,7 @@ loc_DF27:
 		call	sub_196E
 		call	text_systemline_hide
 		call	text_cursor_hide
-		call	sub_84C
+		call	egc_start
 		call	sub_2BAC
 		les	bx, [bp+arg_0]
 		assume es:nothing
@@ -28117,7 +28037,7 @@ loc_E33F:
 		add	di, bp
 		dec	bx
 		jns	short loc_E323
-		call	sub_82C
+		call	egc_off
 		pop	di
 		pop	bp
 		retf	8

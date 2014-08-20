@@ -958,87 +958,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_772		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_792		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_792		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_7A8		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_7A8		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_7C8		proc far
-		push	cs
-		call	near ptr sub_792
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_7A8
-		retf
-sub_7C8		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19194,7 +19114,7 @@ loc_9921:
 loc_9930:
 		cmp	[bp+var_2], 0C8h ; 'È'
 		jl	short loc_98EF
-		call	sub_7A8
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -19291,7 +19211,7 @@ loc_99C3:
 loc_99D2:
 		cmp	[bp+var_2], 0C8h ; 'È'
 		jl	short loc_9991
-		call	sub_7A8
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -19385,7 +19305,7 @@ loc_9A68:
 		add	ax, [bp+arg_2]
 		cmp	ax, [bp+var_2]
 		jg	short loc_9A27
-		call	sub_7A8
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -22474,7 +22394,7 @@ sub_B616	proc far
 		call	sub_23EC
 		call	sub_272A
 		call	text_clear
-		call	sub_7C8
+		call	egc_start
 		pop	bp
 		retf
 sub_B616	endp
@@ -22661,7 +22581,7 @@ loc_B76A:
 		push	cs
 		call	near ptr sub_B4CC
 		call	sub_233E
-		call	sub_7C8
+		call	egc_start
 		call	sub_11EE
 		mov	byte_D3EC, 12h
 		push	ds
@@ -23985,7 +23905,7 @@ sub_C045	endp
 sub_C10B	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_792
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -24065,7 +23985,7 @@ loc_C1B5:
 		mov	ax, [bp-2]
 		cmp	ax, [bp+0Ch]
 		jl	short loc_C173
-		call	sub_7A8
+		call	egc_off
 		pop	di
 		pop	si
 		leave

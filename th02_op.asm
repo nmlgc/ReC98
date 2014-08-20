@@ -668,86 +668,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_6C6		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_6E6		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_6E6		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-loc_6FC:
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-; ---------------------------------------------------------------------------
-		db 0E6h
-byte_711	db 6Ah
-					; seg000:2450r
-byte_712	db 0B0h
-		db 0
-; ---------------------------------------------------------------------------
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_71C		proc far
-		push	cs
-		call	near ptr sub_6E6
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	loc_6FC
-		retf
-sub_71C		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4587,7 +4508,7 @@ arg_2		= word ptr  6
 		push	di
 		xor	ax, ax
 		mov	es, ax
-		mov	al, es:byte_712
+		mov	al, es:[0712h]
 		inc	ax
 		mov	dx, ax
 		shl	dx, 1
@@ -21312,7 +21233,7 @@ loc_AFC4:
 		call	sub_1BBA
 		call	text_systemline_hide
 		call	text_cursor_hide
-		call	sub_71C
+		call	egc_start
 		mov	byte_D8B2, 12h
 		push	ds
 		push	offset aUmx	; "“Œ•û••–‚.˜^"
@@ -21347,7 +21268,7 @@ sub_B019	proc far
 		call	sub_2644
 		call	sub_2942
 		call	text_clear
-		call	sub_71C
+		call	egc_start
 		pop	bp
 		retf
 sub_B019	endp

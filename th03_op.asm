@@ -695,92 +695,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_6B2		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_6D2		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_6D2		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_6E8		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_6E8		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_708		proc far
-		push	cs
-		call	near ptr sub_6D2
-		mov	dx, 4A0h
-
-loc_70F:
-					; seg000:2214r
-		mov	ax, 0FFF0h
-
-loc_712:
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_6E8
-		retf
-sub_708		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23776,7 +23691,7 @@ sub_BFC2	proc far
 		call	sub_2676
 		call	text_clear
 		call	sub_1A1C
-		call	sub_708
+		call	egc_start
 		pop	bp
 		retf
 sub_BFC2	endp
@@ -24400,7 +24315,7 @@ loc_C435:
 		call	sub_1A22
 		call	text_systemline_hide
 		call	text_cursor_hide
-		call	sub_708
+		call	egc_start
 		call	sub_2DB8
 		push	large [bp+arg_0]
 		call	sub_2B60

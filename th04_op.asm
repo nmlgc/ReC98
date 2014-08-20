@@ -877,87 +877,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_818		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_838		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_838		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_84E		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_84E		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_86E		proc far
-		push	cs
-		call	near ptr sub_838
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_84E
-		retf
-sub_86E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27497,7 +27417,7 @@ sub_E0AC	proc far
 		call	sub_2600
 		call	text_clear
 		call	sub_1D58
-		call	sub_86E
+		call	egc_start
 		call	sub_3D12
 		pop	bp
 		retf
@@ -27546,7 +27466,7 @@ loc_E109:
 		call	sub_1D5E
 		call	text_systemline_hide
 		call	text_cursor_hide
-		call	sub_86E
+		call	egc_start
 		call	sub_323A
 		les	bx, [bp+arg_0]
 		cmp	byte ptr es:[bx], 0
@@ -27918,7 +27838,7 @@ loc_E3C8:
 		add	di, bp
 		dec	bx
 		jns	short loc_E3C4
-		call	sub_84E
+		call	egc_off
 		pop	di
 		pop	bp
 		retf	8

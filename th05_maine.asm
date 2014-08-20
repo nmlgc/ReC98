@@ -867,87 +867,7 @@ locret_820:
 		retf	6
 sub_804		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_824		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_824		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_83A		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_83A		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_85A		proc far
-		push	cs
-		call	near ptr sub_824
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_83A
-		retf
-sub_85A		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20490,7 +20410,7 @@ sub_A695	endp
 sub_A6D1	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_824
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -20816,7 +20736,7 @@ loc_A912:
 loc_A917:
 		push	4
 		call	sub_A866
-		call	sub_83A
+		call	egc_off
 		push	1
 		call	sub_F282
 		pop	si
@@ -29124,7 +29044,7 @@ sub_EC36	proc far
 		call	sub_23CE
 		call	text_clear
 		call	sub_1B84
-		call	sub_85A
+		call	egc_start
 		call	sub_36FA
 		pop	bp
 		retf
@@ -29490,7 +29410,7 @@ loc_EF04:
 		mov	cx, [bp+arg_2]
 		shr	cx, 4
 		rep movsw
-		call	sub_83A
+		call	egc_off
 		pop	si
 		pop	di
 		pop	ds
@@ -29514,7 +29434,7 @@ sub_EEB2	endp
 
 
 sub_EF39	proc near
-		call	sub_824
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -29788,7 +29708,7 @@ locret_F0C8:
 loc_F0CB:
 		mov	word_10370, 1000h
 		call	sub_2320
-		call	sub_85A
+		call	egc_start
 		call	sub_12B4
 		call	sub_2E46
 		push	large [bp+arg_0]
@@ -30348,7 +30268,7 @@ loc_F463:
 		add	di, bp
 		dec	bx
 		jns	short loc_F447
-		call	sub_83A
+		call	egc_off
 		pop	di
 		pop	bp
 		retf	8

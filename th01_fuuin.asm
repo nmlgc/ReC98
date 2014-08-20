@@ -61,6 +61,7 @@ SREGS		ends
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -2726,85 +2727,7 @@ loc_1204:
 		retf	4
 sub_11F0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_120A	proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_120A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1220	proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_1220	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1240	proc far
-		push	cs
-		call	near ptr sub_120A
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_1220
-		retf
-sub_1240	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26698,7 +26621,7 @@ sub_C73A	endp
 sub_C757	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_120A
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -26800,7 +26723,7 @@ loc_C80E:
 loc_C81D:
 		cmp	[bp+var_8], 0C8h ; 'È'
 		jl	short loc_C7D6
-		call	sub_1220
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -28028,7 +27951,7 @@ sub_CEAD	proc far
 		add	sp, 6
 		call	sub_CA87
 		call	sub_CB36
-		call	sub_1240
+		call	egc_start
 		call	sub_CE2
 		call	sub_EDA
 		call	sub_E984
@@ -28103,7 +28026,7 @@ sub_CF48	proc far
 		call	sub_CBD9
 		call	sub_D4FE
 		call	sub_D094
-		call	sub_1240
+		call	egc_start
 		push	large [off_14150] ; isr
 		push	6		; interruptno
 		call	_setvect
@@ -32380,7 +32303,7 @@ sub_EC46	endp
 sub_EC6F	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_120A
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -32476,7 +32399,7 @@ loc_ED21:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+arg_6]
 		jl	short loc_ECD7
-		call	sub_1220
+		call	egc_off
 		pop	di
 		pop	si
 		leave

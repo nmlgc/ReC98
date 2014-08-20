@@ -886,87 +886,7 @@ arg_4		= byte ptr  0Ah
 		retf	6
 sub_72E		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_74E		proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_74E		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_764		proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_764		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_784		proc far
-		push	cs
-		call	near ptr sub_74E
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_764
-		retf
-sub_784		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9650,7 +9570,7 @@ sub_4344	endp
 sub_43B0	proc far
 		nop
 		push	cs
-		call	near ptr sub_74E
+		call	near ptr egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -10344,7 +10264,7 @@ loc_47E6:
 loc_4803:
 		nop
 		push	cs
-		call	near ptr sub_764
+		call	near ptr egc_off
 		pop	di
 		pop	si
 		leave
@@ -10415,7 +10335,7 @@ arg_4		= word ptr  0Ah
 		call	sub_43E0
 		nop
 		push	cs
-		call	near ptr sub_764
+		call	near ptr egc_off
 		pop	di
 		pop	si
 		leave
@@ -24361,7 +24281,7 @@ sub_C10A	proc near
 					; sub_BCB1:loc_BE3Bp
 		push	bp
 		mov	bp, sp
-		call	sub_74E
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -31531,7 +31451,7 @@ sub_F70E	proc far
 		call	sub_27EE
 		call	sub_2B2C
 		call	text_clear
-		call	sub_784
+		call	egc_start
 		pop	bp
 		retf
 sub_F70E	endp
@@ -31842,7 +31762,7 @@ loc_F927:
 		push	cs
 		call	near ptr sub_F50E
 		call	sub_2740
-		call	sub_784
+		call	egc_start
 		call	sub_158C
 		mov	byte_1DFD6, 12h
 		push	ds
@@ -32791,7 +32711,7 @@ loc_10025:
 		push	2
 		call	sub_1C341
 		add	[bp+arg_0], 2
-		call	sub_764
+		call	egc_off
 
 loc_1005C:
 		cmp	[bp+arg_0], 1Eh
@@ -32891,7 +32811,7 @@ loc_1015A:
 		jl	loc_100DB
 		add	[bp+arg_0], 2
 		call	sub_4692
-		call	sub_764
+		call	egc_off
 
 loc_10171:
 		mov	byte_2066D, 1
@@ -34782,7 +34702,7 @@ loc_10FF0:
 loc_10FF6:
 					; sub_10E95+8Aj ...
 		call	far ptr	loc_1EF6
-		call	sub_764
+		call	egc_off
 		push	large 0C00007h
 		call	sub_127E
 		xor	di, di
@@ -37165,7 +37085,7 @@ loc_122A1:
 loc_122A7:
 		cmp	di, 18h
 		jl	short loc_12257
-		call	sub_764
+		call	egc_off
 		pop	di
 		pop	si
 		leave
@@ -38475,7 +38395,7 @@ sub_12CB1	proc near
 					; sub_12E95+41p
 		push	bp
 		mov	bp, sp
-		call	sub_74E
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -38718,7 +38638,7 @@ loc_12E4F:
 		push	large 1800050h
 		call	sub_45FC
 		call	sub_4692
-		call	sub_764
+		call	egc_off
 		call	sub_12CE5
 		push	ss
 		lea	ax, [bp+var_2]
@@ -38781,7 +38701,7 @@ loc_12EC5:
 		push	large 1800050h
 		call	sub_45FC
 		call	sub_4692
-		call	sub_764
+		call	egc_off
 		call	sub_12CE5
 		push	ss
 		lea	ax, [bp+var_2]
@@ -39970,7 +39890,7 @@ loc_13739:
 		mov	word_1ED94, 3E8h
 
 loc_13771:
-		call	sub_764
+		call	egc_off
 		push	large 0C00008h
 		call	sub_127E
 		call	sub_135BB
@@ -41082,7 +41002,7 @@ loc_140D4:
 
 loc_140F2:
 		call	sub_1403E
-		call	sub_764
+		call	egc_off
 		push	large 0C00003h
 		call	sub_127E
 		call	sub_135BB
@@ -44146,7 +44066,7 @@ var_2		= word ptr -2
 		mov	ax, [bx+2BE6h]
 		mov	bx, word_2065E
 		mov	[bx], ax
-		call	sub_764
+		call	egc_off
 		push	large 0C00000h
 		call	sub_127E
 		push	large 40010h
@@ -48116,7 +48036,7 @@ var_1		= byte ptr -1
 		mov	ax, [bx+2BE6h]
 		mov	bx, word_2065E
 		mov	[bx], ax
-		call	sub_764
+		call	egc_off
 		push	large 0C00000h
 		call	sub_127E
 		push	large 40010h
@@ -51880,7 +51800,7 @@ var_2		= word ptr -2
 		push	di
 		cmp	byte_20618, 0
 		jnz	loc_19EEF
-		call	sub_74E
+		call	egc_on
 		mov	ax, 0FFF7h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -51948,7 +51868,7 @@ loc_19EE0:
 loc_19EE4:
 		cmp	[bp+var_2], 60h	; '`'
 		jl	short loc_19EB4
-		call	sub_764
+		call	egc_off
 
 loc_19EEF:
 		pop	di
@@ -55951,7 +55871,7 @@ sub_1C16A	proc far
 		add	ax, ax
 		add	ax, 2BE6h
 		mov	word_2065E, ax
-		call	sub_764
+		call	egc_off
 		push	large 0C00000h
 		call	sub_127E
 		push	large 40010h

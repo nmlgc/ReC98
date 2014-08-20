@@ -61,6 +61,7 @@ SREGS		ends
 		locals
 
 include libs/BorlandC/RULES.ASI
+include libs/master.lib/func.inc
 
 ; ===========================================================================
 
@@ -2802,85 +2803,7 @@ loc_12D0:
 		retf	4
 sub_12BC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12D6	proc far
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_12D6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12EC	proc far
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		retf
-sub_12EC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_130C	proc far
-		push	cs
-		call	near ptr sub_12D6
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		xor	ax, ax
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
-		push	cs
-		call	near ptr sub_12EC
-		retf
-sub_130C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24493,7 +24416,7 @@ sub_B6E9	proc far
 		add	sp, 6
 		call	sub_B2C3
 		call	sub_B372
-		call	sub_130C
+		call	egc_start
 		call	sub_CE2
 		call	sub_E82
 		call	sub_D1C0
@@ -24568,7 +24491,7 @@ sub_B784	proc far
 		call	sub_B415
 		call	sub_BD3A
 		call	sub_B8D0
-		call	sub_130C
+		call	egc_start
 		push	large [dword ptr word_13667+1] ; isr
 		push	6		; interruptno
 		call	_setvect
@@ -28272,7 +28195,7 @@ sub_D2DB	endp
 sub_D304	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_12D6
+		call	egc_on
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -28368,7 +28291,7 @@ loc_D3B6:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+arg_6]
 		jl	short loc_D36C
-		call	sub_12EC
+		call	egc_off
 		pop	di
 		pop	si
 		leave
