@@ -23,7 +23,7 @@ include libs/master.lib/func.inc
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16
+seg000		segment	word public 'CODE' use16
 		assume cs:seg000
 		assume es:nothing, ss:seg005, ds:dseg, fs:nothing, gs:nothing
 
@@ -371,9 +371,6 @@ loc_54D:
 sub_53C		endp
 
 include libs/master.lib/bfill.asm
-
-; ---------------------------------------------------------------------------
-		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2014,17 +2011,11 @@ loc_F92:
 		retf	6
 sub_F12		endp
 
-; ---------------------------------------------------------------------------
-		nop
 include libs/master.lib/get_machine_98.asm
-		nop
 include libs/master.lib/get_machine_at.asm
-		nop
 include libs/master.lib/get_machine_dosbox.asm
-		nop
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2161,8 +2152,6 @@ locret_12A2:
 		retf	2
 sub_1250	endp
 
-; ---------------------------------------------------------------------------
-		nop
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================

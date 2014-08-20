@@ -1,9 +1,5 @@
-; *Not* the original file. Changes include:
-; * a rewrite of the memory model conditional branches at the beginning to
-;   refer to TASM's @MODEL symbol
-; * removal of the FUNC and ENDFUNC macros, which don't work with TASM's
-;   strict alignment constraints. In turn, this means that we also need to
-;   edit all source code files to not use these macros.
+; *Not* the original file. The memory model conditional branches at the
+; beginning had to be rewritten to refer to TASM's @MODEL symbol instead.
 
 .xlist
 ; Description
@@ -44,6 +40,31 @@ ELSEIF @MODEL EQ 5
 ENDIF
 
 .xlist
+
+; FUNC:
+; 関数の入り口を指示するマクロ
+; <実行するとマクロENDFUNCが生成される。これを用いて関数の終りを指示する>
+func	macro	name
+	public name
+	EVEN
+	name proc CALLMODEL
+	endfunc macro
+		EVEN
+		name endp
+	endm
+endm
+
+; RETFUNC:
+; funcの外に、復帰処理をするPROCを置くときに、その先頭を指示するマクロ
+; <実行するとマクロENDFUNCが生成される。これを用いて関数の終りを指示する>
+retfunc	macro name
+	name proc CALLMODEL
+	EVEN
+	endfunc macro
+		EVEN
+		name endp
+	endm
+endm
 
 ; リングバッファのポインタを次に進める
 ; 処理内容:

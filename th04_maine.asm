@@ -23,7 +23,7 @@ include libs/master.lib/func.inc
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16
+seg000		segment	word public 'CODE' use16
 		assume cs:seg000
 		assume es:nothing, ss:seg005, ds:dseg, fs:nothing, gs:nothing
 
@@ -395,9 +395,6 @@ arg_0		= word ptr  6
 sub_55E		endp
 
 include libs/master.lib/bfill.asm
-
-; ---------------------------------------------------------------------------
-		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1640,17 +1637,11 @@ sub_CB2		proc near
 		retn
 sub_CB2		endp
 
-; ---------------------------------------------------------------------------
-		db    0
 include libs/master.lib/get_machine_98.asm
-		nop
 include libs/master.lib/get_machine_at.asm
-		nop
 include libs/master.lib/get_machine_dosbox.asm
-		nop
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2205,8 +2196,6 @@ locret_1214:
 		retf	2
 sub_11C2	endp
 
-; ---------------------------------------------------------------------------
-		nop
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================

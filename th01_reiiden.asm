@@ -65,7 +65,7 @@ include libs/BorlandC/RULES.ASI
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16
+seg000		segment	word public 'CODE' use16
 		assume cs:seg000
 		assume es:nothing, ss:seg043, ds:dseg, fs:nothing, gs:nothing
 

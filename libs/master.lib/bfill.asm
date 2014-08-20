@@ -1,7 +1,7 @@
 ; int bfill(bf_t bf);
 public bfill
 
-bfill		proc far
+func BFILL	; bfill() {
 
 @@bf		= word ptr  6
 
@@ -36,4 +36,4 @@ bfill		proc far
 		pop	ds
 		pop	bp
 		retf	2
-bfill		endp
+endfunc		; }

@@ -77,7 +77,7 @@
 
 FMR_MACHINE	EQU	01000000b
 
-get_machine proc	; get_machine(void)
+func GET_MACHINE	; get_machine(void)
 	_call	CHECK_MACHINE_FMR
 	jz	short @@FMR_RET
 	mov	ah,0fh
@@ -92,4 +92,4 @@ get_machine proc	; get_machine(void)
 @@FMR_RET:
 	mov	AX,FMR_MACHINE
 	ret
-endp
+endfunc

@@ -31,10 +31,10 @@
 ; Revision History:
 ;	94/ 3/25 Initial
 
-check_machine_fmr proc
+func CHECK_MACHINE_FMR
 	mov	AX,0ffffh
 	mov	ES,AX
 	mov	AX,0fc00h
 	sub	AX,ES:[0003h]
 	ret
-endp
+endfunc

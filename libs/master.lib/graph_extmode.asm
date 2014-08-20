@@ -58,7 +58,7 @@
 ; Revision History:
 ;	94/ 1/ 8 Initial: grpextmd.asm/master.lib 0.22
 
-graph_extmode proc	; graph_extmode() {
+func GRAPH_EXTMODE	; graph_extmode() {
 	xor	AX,AX
 	mov	ES,AX
 	test	byte ptr ES:[045ch],40h
@@ -103,4 +103,4 @@ CURSOR_HIDDEN:
 EXT_DONE:
 G31_NOTMATE:
 	ret	4
-endp		; }
+endfunc		; }

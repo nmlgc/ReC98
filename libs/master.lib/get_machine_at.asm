@@ -100,7 +100,7 @@ SUPERD	EQU	0000001000000000b		; SUPERDRIVERS(32)
 
 ANSISYS	EQU	0000000100000000b or PCAT	; ANSI.SYS
 
-get_machine_at proc	; get_machine_at() {
+func GET_MACHINE_AT	; get_machine_at() {
 	_call	CHECK_MACHINE_FMR
 	jnz	short @@NOT_FMR
 	mov	AX,FMR_AT
@@ -320,4 +320,4 @@ get_machine_at proc	; get_machine_at() {
 	mov	AX,DX
 	; Hack (jmp GET_MACHINE_DOSBOX)
 	db 0e9h, 001h, 000h
-endp			; }
+endfunc			; }

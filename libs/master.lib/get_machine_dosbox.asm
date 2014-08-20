@@ -40,7 +40,7 @@
 
 DOSBOX	EQU	8000h
 
-get_machine_dosbox proc	; get_machine_dosbox() {
+func GET_MACHINE_DOSBOX	; get_machine_dosbox() {
 	; DOS互換BOX内かどうかの判定
 	mov	AX,3306h
 	int	21h
@@ -64,4 +64,4 @@ IN_DOSBOX:
 RAW_DOS:
 	mov	AX,Machine_State
 	ret
-endp			; }
+endfunc		; }
