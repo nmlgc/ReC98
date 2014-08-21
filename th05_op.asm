@@ -549,7 +549,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		mov	word_F80C, 6
+		mov	mem_AllocID, 6
 		mov	ax, word_F566
 		add	ax, 9
 		push	ax
@@ -2243,7 +2243,7 @@ loc_1403:
 		push	bx
 		push	seg dseg
 		pop	ds
-		mov	word_F80C, 0Ah
+		mov	mem_AllocID, 0Ah
 		nop
 		push	cs
 		call	near ptr sub_227E
@@ -2291,7 +2291,7 @@ loc_1454:
 		mov	word_12FEA, dx
 		push	seg dseg
 		pop	ds
-		mov	word_F80C, 0Ah
+		mov	mem_AllocID, 0Ah
 		nop
 		push	cs
 		call	near ptr sub_227E
@@ -3614,7 +3614,7 @@ sub_2088	proc far
 		push	bx
 		mov	bx, sp
 		mov	bx, ss:[bx+6]
-		mov	word_11E3E, bx
+		mov	mem_EndMark, bx
 		pop	bx
 		retf	2
 sub_2088	endp
@@ -3636,7 +3636,7 @@ sub_209E	proc far
 
 ; FUNCTION CHUNK AT 2098 SIZE 00000006 BYTES
 
-		cmp	word_F808, 0
+		cmp	mem_TopSeg, 0
 		jz	short loc_2098
 		push	bx
 		mov	bx, sp
@@ -3646,12 +3646,12 @@ sub_209E	proc far
 		shr	bx, 1
 		shr	bx, 1
 		shr	bx, 1
-		mov	ax, word_11E3E
+		mov	ax, mem_EndMark
 		add	bx, ax
 		jb	short loc_20CC
-		cmp	word_11E3A, bx
+		cmp	mem_TopHeap, bx
 		jb	short loc_20CC
-		mov	word_11E3E, bx
+		mov	mem_EndMark, bx
 		pop	bx
 		retf	2
 ; ---------------------------------------------------------------------------
@@ -3955,7 +3955,7 @@ sub_22B2	proc far
 		push	cs
 		call	near ptr sub_22D4
 		xor	ax, ax
-		mov	word_F80A, 1
+		mov	mem_MyOwn, 1
 
 loc_22CD:
 		neg	ax
@@ -3978,13 +3978,13 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	ax, [bp+arg_2]
-		mov	word_F808, ax
-		mov	word_11E3E, ax
+		mov	mem_TopSeg, ax
+		mov	mem_EndMark, ax
 		add	ax, [bp+arg_0]
-		mov	word_11E38, ax
-		mov	word_11E3A, ax
-		mov	word_11E3C, 0
-		mov	word_F80A, 0
+		mov	mem_OutSeg, ax
+		mov	mem_TopHeap, ax
+		mov	mem_FirstHole, 0
+		mov	mem_MyOwn, 0
 		clc
 		pop	bp
 		retf	4
@@ -4000,7 +4000,7 @@ sub_22FA	proc far
 		mov	ah, 48h
 		int	21h		; DOS -	2+ - ALLOCATE MEMORY
 					; BX = number of 16-byte paragraphs desired
-		mov	ax, word_F80E
+		mov	ax, mem_Reserve
 		cmp	bx, ax
 		jbe	short loc_230B
 		sub	bx, ax
@@ -4015,7 +4015,7 @@ loc_230B:
 		push	bx
 		push	cs
 		call	near ptr sub_22D4
-		mov	word_F80A, 1
+		mov	mem_MyOwn, 1
 		pop	ax
 
 loc_231F:
@@ -4051,7 +4051,7 @@ sub_2336	proc far
 		mov	bx, ss:[bx+6]
 
 loc_233D:
-		cmp	word_F808, 0
+		cmp	mem_TopSeg, 0
 		jnz	short loc_2348
 		push	cs
 		call	near ptr sub_22FA
@@ -4061,15 +4061,15 @@ loc_2348:
 		push	es
 		test	bx, bx
 		jz	short loc_23A9
-		mov	ax, word_11E38
-		sub	ax, word_11E3E
+		mov	ax, mem_OutSeg
+		sub	ax, mem_EndMark
 		cmp	bx, ax
 		jnb	short loc_23A9
 		inc	bx
-		mov	ax, word_11E3C
+		mov	ax, mem_FirstHole
 		test	ax, ax
 		jz	short loc_2385
-		mov	cx, word_11E38
+		mov	cx, mem_OutSeg
 
 loc_2365:
 		mov	es, ax
@@ -4083,20 +4083,20 @@ loc_2365:
 		jbe	short loc_23B6
 
 loc_237D:
-		mov	cx, word_11E38
+		mov	cx, mem_OutSeg
 
 loc_2381:
 		cmp	ax, cx
 		jnz	short loc_2365
 
 loc_2385:
-		mov	ax, word_11E3A
+		mov	ax, mem_TopHeap
 		mov	cx, ax
 		sub	ax, bx
 		jb	short loc_23A9
-		cmp	ax, word_11E3E
+		cmp	ax, mem_EndMark
 		jb	short loc_23A9
-		mov	word_11E3A, ax
+		mov	mem_TopHeap, ax
 		mov	es, ax
 		mov	es:2, cx
 		mov	word ptr es:0, 1
@@ -4106,7 +4106,7 @@ loc_2385:
 
 loc_23A9:
 		mov	ax, 0
-		mov	word_F80C, ax
+		mov	mem_AllocID, ax
 		stc
 		pop	es
 		pop	cx
@@ -4125,18 +4125,18 @@ loc_23B6:
 		mov	es, cx
 		mov	es:2, ax
 		mov	word ptr es:0, 0
-		cmp	bx, word_11E3C
+		cmp	bx, mem_FirstHole
 		jnz	short loc_240F
-		mov	word_11E3C, cx
+		mov	mem_FirstHole, cx
 		jmp	short loc_240F
 ; ---------------------------------------------------------------------------
 
 loc_23E6:
 		mov	word ptr es:0, 1
 		mov	bx, es
-		cmp	bx, word_11E3C
+		cmp	bx, mem_FirstHole
 		jnz	short loc_240F
-		mov	ax, word_11E38
+		mov	ax, mem_OutSeg
 		mov	cx, bx
 		push	bx
 
@@ -4149,13 +4149,13 @@ loc_23FB:
 		xor	bx, bx
 
 loc_240A:
-		mov	word_11E3C, bx
+		mov	mem_FirstHole, bx
 		pop	bx
 
 loc_240F:
 		mov	es, bx
 		mov	ax, 0
-		xchg	ax, word_F80C
+		xchg	ax, mem_AllocID
 		mov	es:4, ax
 		lea	ax, [bx+1]
 		clc
@@ -4180,26 +4180,26 @@ sub_2426	proc far
 		mov	bx, ss:[bx+6]
 		dec	bx
 		mov	es, bx
-		cmp	bx, word_11E3A
+		cmp	bx, mem_TopHeap
 		jz	short loc_248A
 		jb	short loc_2420
 		xor	bx, bx
 		cmp	word ptr es:[bx], 1
 		jnz	short loc_2420
 		mov	es:[bx], bx
-		mov	cx, word_11E3C
+		mov	cx, mem_FirstHole
 		mov	ax, es
-		mov	word_11E3C, ax
+		mov	mem_FirstHole, ax
 		jcxz	short loc_24C7
 		cmp	ax, cx
 		jb	short loc_2459
 		mov	ax, cx
-		mov	word_11E3C, ax
+		mov	mem_FirstHole, ax
 
 loc_2459:
 		mov	cx, ax
 		mov	ax, es:[bx+2]
-		cmp	ax, word_11E38
+		cmp	ax, mem_OutSeg
 		jnz	short loc_2467
 		mov	ax, es
 
@@ -4231,15 +4231,15 @@ loc_2487:
 loc_248A:
 		xor	bx, bx
 		mov	ax, es:[bx+2]
-		mov	word_11E3A, ax
-		cmp	ax, word_11E38
+		mov	mem_TopHeap, ax
+		cmp	ax, mem_OutSeg
 		jz	short loc_24C7
 		mov	es, ax
 		cmp	es:[bx], bx
 		jnz	short loc_24C7
 		mov	ax, es:[bx+2]
-		mov	word_11E3A, ax
-		mov	cx, word_11E38
+		mov	mem_TopHeap, ax
+		mov	cx, mem_OutSeg
 		cmp	ax, cx
 		jz	short loc_24C3
 		jmp	short loc_24BA
@@ -4258,7 +4258,7 @@ loc_24BA:
 		mov	bx, es
 
 loc_24C3:
-		mov	word_11E3C, bx
+		mov	mem_FirstHole, bx
 
 loc_24C7:
 		clc
@@ -4273,13 +4273,13 @@ sub_2426	endp
 
 
 sub_24CE	proc far
-		cmp	word_F808, 0
+		cmp	mem_TopSeg, 0
 		jz	short loc_24E9
-		mov	ax, word_F808
+		mov	ax, mem_TopSeg
 		mov	es, ax
 		xor	ax, ax
-		cmp	word_F80A, ax
-		mov	word_F808, ax
+		cmp	mem_MyOwn, ax
+		mov	mem_TopSeg, ax
 		jz	short loc_24E9
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
@@ -4380,7 +4380,7 @@ arg_6		= word ptr  0Ch
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
-		mov	word_F80C, 4
+		mov	mem_AllocID, 4
 		push	ax
 		push	cs
 		call	near ptr sub_2322
@@ -4502,7 +4502,7 @@ arg_4		= word ptr  0Ah
 		jb	short loc_2651
 		cmp	word_F830, 0
 		jnz	short loc_2622
-		mov	word_F80C, 4
+		mov	mem_AllocID, 4
 		push	240h
 		push	cs
 		call	near ptr sub_2336
@@ -6521,7 +6521,7 @@ loc_33B9:
 		mov	di, 3768h
 
 loc_33C2:
-		mov	word_F80C, 8
+		mov	mem_AllocID, 8
 		push	[bp+var_2]
 		nop
 		push	cs
@@ -6544,7 +6544,7 @@ loc_33E4:
 		mov	di, 37AAh
 
 loc_33F0:
-		mov	word_F80C, 9
+		mov	mem_AllocID, 9
 		push	201h
 		nop
 		push	cs
@@ -29783,10 +29783,7 @@ byte_F7FE	db 0
 		db    7
 		db    3
 		db    1
-word_F808	dw 0
-word_F80A	dw 0
-word_F80C	dw 0
-word_F80E	dw 100h
+include libs/master.lib/mem[data].asm
 		db    0
 		db    0
 		db    0
@@ -31512,10 +31509,7 @@ word_11E30	dw 0
 word_11E32	dw 0
 word_11E34	dw 0
 word_11E36	dw 0
-word_11E38	dw 0
-word_11E3A	dw 0
-word_11E3C	dw 0
-word_11E3E	dw 0
+include libs/master.lib/mem[bss].asm
 		db    0
 		db    0
 		db    0

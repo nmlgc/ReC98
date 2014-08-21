@@ -1651,7 +1651,7 @@ arg_6		= word ptr  0Ah
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
-		mov	word_22B2, 4
+		mov	mem_AllocID, 4
 		push	ax
 		call	sub_1172
 		jb	short loc_DE8
@@ -1939,7 +1939,7 @@ arg_4		= word ptr  8
 		jb	short loc_1003
 		cmp	word_22A8, 0
 		jnz	short loc_FD5
-		mov	word_22B2, 4
+		mov	mem_AllocID, 4
 		push	240h
 		call	sub_1186
 		mov	word_22A8, ax
@@ -2166,7 +2166,7 @@ sub_112C	proc near
 
 ; FUNCTION CHUNK AT 1126 SIZE 00000006 BYTES
 
-		cmp	word_22AE, 0
+		cmp	mem_TopSeg, 0
 		jz	short loc_1126
 		push	bx
 		mov	bx, sp
@@ -2237,7 +2237,7 @@ sub_1186	proc near
 		mov	bx, ss:[bx+4]
 
 loc_118D:
-		cmp	word_22AE, 0
+		cmp	mem_TopSeg, 0
 		jnz	short loc_1197
 		call	sub_1344
 
@@ -2292,7 +2292,7 @@ loc_11D4:
 
 loc_11F8:
 		mov	ax, 0
-		mov	word_22B2, ax
+		mov	mem_AllocID, ax
 		stc
 		pop	es
 		pop	cx
@@ -2341,7 +2341,7 @@ loc_1259:
 loc_125E:
 		mov	es, bx
 		mov	ax, 0
-		xchg	ax, word_22B2
+		xchg	ax, mem_AllocID
 		mov	es:4, ax
 		lea	ax, [bx+1]
 		clc
@@ -2468,13 +2468,13 @@ arg_2		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	ax, [bp+arg_2]
-		mov	word_22AE, ax
+		mov	mem_TopSeg, ax
 		mov	ds:334Eh, ax
 		add	ax, [bp+arg_0]
 		mov	ds:3348h, ax
 		mov	ds:334Ah, ax
 		mov	word ptr ds:334Ch, 0
-		mov	word_22B0, 0
+		mov	mem_MyOwn, 0
 		clc
 		pop	bp
 		retn	4
@@ -2490,7 +2490,7 @@ sub_1344	proc near
 		mov	ah, 48h
 		int	21h		; DOS -	2+ - ALLOCATE MEMORY
 					; BX = number of 16-byte paragraphs desired
-		mov	ax, word_22B4
+		mov	ax, mem_Reserve
 		cmp	bx, ax
 		jbe	short loc_1355
 		sub	bx, ax
@@ -2504,7 +2504,7 @@ loc_1355:
 		push	ax
 		push	bx
 		call	sub_131E
-		mov	word_22B0, 1
+		mov	mem_MyOwn, 1
 		pop	ax
 
 loc_1368:
@@ -2517,18 +2517,18 @@ sub_1344	endp
 
 
 sub_136A	proc near
-		cmp	word_22AE, 0
+		cmp	mem_TopSeg, 0
 		jz	short loc_1394
 		mov	ax, ds:3348h
 		cmp	ds:334Ah, ax
 		jnz	short loc_1398
-		mov	ax, word_22AE
+		mov	ax, mem_TopSeg
 		cmp	ds:334Eh, ax
 		jnz	short loc_1398
 		mov	es, ax
 		xor	ax, ax
-		cmp	word_22B0, ax
-		mov	word_22AE, ax
+		cmp	mem_MyOwn, ax
+		mov	mem_TopSeg, ax
 		jz	short loc_1394
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
@@ -3843,10 +3843,7 @@ word_22A4	dw 0
 word_22A8	dw 0
 word_22AA	dw 0
 word_22AC	dw 0
-word_22AE	dw 0
-word_22B0	dw 0
-word_22B2	dw 0
-word_22B4	dw 100h
+include libs/master.lib/mem[data].asm
 word_22B6	dw 0
 word_22B8	dw 27Fh
 word_22BA	dw 27Fh
@@ -4809,7 +4806,12 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
-		dd 2BCh dup(?)
+		dd 2B6h dup(?)
+include libs/master.lib/mem[bss].asm
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include libs/BorlandC/atexit[bss].asm
 edata@	label byte
 
