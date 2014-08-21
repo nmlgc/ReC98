@@ -19,6 +19,7 @@
 
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
+include libs/master.lib/super.inc
 
 ; ===========================================================================
 
@@ -445,8 +446,7 @@ sub_536		endp
 		mov	es, ax
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_8E8
+		call	dos_ropen
 		jb	short loc_5B7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
@@ -893,8 +893,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_8E8
+		call	dos_ropen
 		sbb	bx, bx
 		or	ax, bx
 		mov	word_1D812, ax
@@ -932,31 +931,7 @@ locret_8E4:
 		retf	2
 sub_8D2		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8E8		proc far
-		mov	bx, sp
-		mov	ah, 3Dh	; '='
-		mov	al, byte_1D814
-		push	ds
-		lds	dx, ss:[bx+4]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		jb	short loc_8FC
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_8FC:
-		mov	ax, 0FFFEh
-		retf	4
-sub_8E8		endp
+include libs/master.lib/dos_ropen.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_908
@@ -2375,8 +2350,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_8E8
+		call	dos_ropen
 		mov	bp, ax
 		mov	ax, 0
 		jb	short loc_1283
@@ -3005,8 +2979,7 @@ arg_A		= word ptr  10h
 		push	[bp+arg_A]
 		push	[bp+arg_8]
 		nop
-		push	cs
-		call	near ptr sub_8E8
+		call	dos_ropen
 		jb	short loc_15E2
 		mov	bx, ax
 		push	4114h
@@ -5564,8 +5537,7 @@ arg_2		= word ptr  8
 		push	di
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_8E8
+		call	dos_ropen
 		jb	short loc_2672
 		mov	bx, ax
 		mov	cx, 5B6h
@@ -58225,8 +58197,7 @@ word_1D7EC	dw 7CB0h
 		db 0FFh
 word_1D810	dw 0
 word_1D812	dw 0FFFFh
-byte_1D814	db 0
-		db 0
+include libs/master.lib/dos_ropen[data].asm
 word_1D816	dw 0
 		db  10h
 		db    0

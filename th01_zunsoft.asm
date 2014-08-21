@@ -19,6 +19,7 @@
 
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
+include libs/master.lib/super.inc
 
 ; ===========================================================================
 
@@ -1465,30 +1466,7 @@ locret_CFA:
 		retn	2
 sub_CE8		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CFE		proc near
-		mov	bx, sp
-		mov	ah, 3Dh
-		mov	al, byte_2286
-		mov	dx, ss:[bx+2]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jb	short loc_D10
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_D10:
-		mov	ax, 0FFFEh
-		retn	2
-sub_CFE		endp
-
+include libs/master.lib/dos_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1504,7 +1482,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		push	[bp+arg_0]
-		call	sub_CFE
+		call	dos_ropen
 		jb	short loc_D8B
 		mov	bx, ax
 		mov	cx, 2288h
@@ -3853,8 +3831,8 @@ word_227A	dw 0
 aBfnt		db 'BFNT'
 		db  1Ah
 		db    0
-byte_2286	db 0
-		db 6 dup(0)
+include libs/master.lib/dos_ropen[data].asm
+		db 5 dup(0)
 byte_228D	db 0
 		db 6 dup(0)
 word_2294	dw 0

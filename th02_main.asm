@@ -19,6 +19,7 @@
 
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
+include libs/master.lib/super.inc
 
 ; ===========================================================================
 
@@ -573,8 +574,7 @@ arg_2		= word ptr  8
 		mov	es, ax
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		jb	short loc_5B7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
@@ -1015,8 +1015,7 @@ sub_880		proc far
 		push	word ptr ss:[bx+6]
 		push	word ptr ss:[bx+4]
 		nop
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		jb	short loc_896
 		xchg	ax, bx
 		mov	ah, 3Eh
@@ -1152,8 +1151,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		sbb	bx, bx
 		or	ax, bx
 		mov	word_1DF80, ax
@@ -1339,31 +1337,7 @@ locret_A94:
 		retf	2
 sub_A82		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A98		proc far
-		mov	bx, sp
-		mov	ah, 3Dh	; '='
-		mov	al, byte_1DF82
-		push	ds
-		lds	dx, ss:[bx+4]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		jb	short loc_AAC
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_AAC:
-		mov	ax, 0FFFEh
-		retf	4
-sub_A98		endp
+include libs/master.lib/dos_ropen.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_AB8
@@ -2799,8 +2773,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		mov	bp, ax
 		mov	ax, 0
 		jb	short loc_140D
@@ -3386,8 +3359,7 @@ arg_A		= word ptr  10h
 		push	[bp+arg_A]
 		push	[bp+arg_8]
 		nop
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		jb	short loc_170C
 		mov	bx, ax
 		push	4114h
@@ -6570,8 +6542,7 @@ arg_2		= word ptr  8
 		push	di
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_A98
+		call	dos_ropen
 		jb	short loc_2EFE
 		mov	bx, ax
 		mov	cx, 86Ah
@@ -58752,8 +58723,7 @@ word_1DF5A	dw 7CB0h
 		db 0FFh
 word_1DF7E	dw 0
 word_1DF80	dw 0FFFFh
-byte_1DF82	db 0
-		db 0
+include libs/master.lib/dos_ropen[data].asm
 word_1DF84	dw 0
 		db  10h
 		db    0

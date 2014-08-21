@@ -62,6 +62,7 @@ SREGS		ends
 
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
+include libs/master.lib/super.inc
 
 ; ===========================================================================
 
@@ -2626,8 +2627,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_11F0
+		call	dos_ropen
 		sbb	bx, bx
 		or	ax, bx
 		mov	word_135D0, ax
@@ -2701,32 +2701,7 @@ sub_11DE	proc far
 		retf	2
 sub_11DE	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11F0	proc far
-		mov	bx, sp
-		mov	ah, 3Dh	; '='
-		mov	al, byte_135D2
-		push	ds
-		lds	dx, ss:[bx+4]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		jb	short loc_1204
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_1204:
-		mov	ax, 0FFFEh
-		retf	4
-sub_11F0	endp
-
+include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -41516,8 +41491,7 @@ aPal98Grb_0	db 'pal98 grb',0
 aPal98Grb_1	db 'pal98 grb',0
 word_135CE	dw 0
 word_135D0	dw 0FFFFh
-byte_135D2	db 0
-		db 0
+include libs/master.lib/dos_ropen[data].asm
 word_135D4	dw 0
 word_135D6	dw 27Fh
 word_135D8	dw 27Fh

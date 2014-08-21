@@ -62,6 +62,7 @@ SREGS		ends
 
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
+include libs/master.lib/super.inc
 
 ; ===========================================================================
 
@@ -2618,8 +2619,7 @@ sub_1152	proc far
 		push	word ptr ss:[bx+6]
 		push	word ptr ss:[bx+4]
 		nop
-		push	cs
-		call	near ptr sub_1420
+		call	dos_ropen
 		jb	short loc_1168
 		xchg	ax, bx
 		mov	ah, 3Eh
@@ -2651,8 +2651,7 @@ arg_2		= word ptr  8
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		nop
-		push	cs
-		call	near ptr sub_1420
+		call	dos_ropen
 		sbb	bx, bx
 		or	ax, bx
 		mov	word_351AA, ax
@@ -3088,32 +3087,7 @@ sub_140E	proc far
 		retf	2
 sub_140E	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1420	proc far
-		mov	bx, sp
-		mov	ah, 3Dh	; '='
-		mov	al, byte_35208
-		push	ds
-		lds	dx, ss:[bx+4]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		pop	ds
-		jb	short loc_1434
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_1434:
-		mov	ax, 0FFFEh
-		retf	4
-sub_1420	endp
-
+include libs/master.lib/dos_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -57092,8 +57066,7 @@ word_351AA	dw 0FFFFh
 		db    0
 word_35204	dw 0
 word_35206	dw 0
-byte_35208	db 0
-		db 0
+include libs/master.lib/dos_ropen[data].asm
 word_3520A	dw 0
 word_3520C	dw 27Fh
 word_3520E	dw 27Fh
