@@ -3948,8 +3948,7 @@ sub_2222	endp
 ; START	OF FUNCTION CHUNK FOR sub_2238
 
 loc_2232:
-		push	cs
-		call	near ptr sub_2538
+		call	mem_assign_all
 		jb	short loc_2267
 ; END OF FUNCTION CHUNK	FOR sub_2238
 
@@ -4433,8 +4432,7 @@ sub_24F0	proc far
 		jb	short loc_250B
 		push	ax
 		push	bx
-		push	cs
-		call	near ptr sub_2512
+		call	mem_assign
 		xor	ax, ax
 		mov	mem_MyOwn, 1
 
@@ -4444,68 +4442,7 @@ loc_250B:
 		retf	2
 sub_24F0	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2512	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_2]
-		mov	mem_TopSeg, ax
-		mov	mem_EndMark, ax
-		add	ax, [bp+arg_0]
-		mov	mem_OutSeg, ax
-		mov	mem_TopHeap, ax
-		mov	mem_FirstHole, 0
-		mov	mem_MyOwn, 0
-		clc
-		pop	bp
-		retf	4
-sub_2512	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2538	proc far
-		push	bx
-		mov	bx, 0FFFFh
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	ax, mem_Reserve
-		cmp	bx, ax
-		jbe	short loc_2549
-		sub	bx, ax
-
-loc_2549:
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_255D
-		push	ax
-		push	ax
-		push	bx
-		push	cs
-		call	near ptr sub_2512
-		mov	mem_MyOwn, 1
-		pop	ax
-
-loc_255D:
-		pop	bx
-		retf
-sub_2538	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4534,8 +4471,7 @@ sub_2574	proc far
 loc_257B:
 		cmp	mem_TopSeg, 0
 		jnz	short loc_2586
-		push	cs
-		call	near ptr sub_2538
+		call	mem_assign_all
 
 loc_2586:
 		push	cx

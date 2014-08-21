@@ -61,7 +61,7 @@ sub_367		endp
 sub_384		proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1344
+		call	mem_assign_all
 		call	sub_958
 		call	sub_AB6
 		call	text_systemline_hide
@@ -2154,7 +2154,7 @@ sub_10E0	endp
 ; START	OF FUNCTION CHUNK FOR sub_112C
 
 loc_1126:
-		call	sub_1344
+		call	mem_assign_all
 		jb	short loc_115B
 		nop
 ; END OF FUNCTION CHUNK	FOR sub_112C
@@ -2239,7 +2239,7 @@ sub_1186	proc near
 loc_118D:
 		cmp	mem_TopSeg, 0
 		jnz	short loc_1197
-		call	sub_1344
+		call	mem_assign_all
 
 loc_1197:
 		push	cx
@@ -2455,63 +2455,7 @@ loc_1317:
 		retn	2
 sub_1276	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_131E	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_2]
-		mov	mem_TopSeg, ax
-		mov	ds:334Eh, ax
-		add	ax, [bp+arg_0]
-		mov	ds:3348h, ax
-		mov	ds:334Ah, ax
-		mov	word ptr ds:334Ch, 0
-		mov	mem_MyOwn, 0
-		clc
-		pop	bp
-		retn	4
-sub_131E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1344	proc near
-		push	bx
-		mov	bx, 0FFFFh
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	ax, mem_Reserve
-		cmp	bx, ax
-		jbe	short loc_1355
-		sub	bx, ax
-
-loc_1355:
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_1368
-		push	ax
-		push	ax
-		push	bx
-		call	sub_131E
-		mov	mem_MyOwn, 1
-		pop	ax
-
-loc_1368:
-		pop	bx
-		retn
-sub_1344	endp
-
+include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
