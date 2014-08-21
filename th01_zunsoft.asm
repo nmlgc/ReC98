@@ -4838,4 +4838,4 @@ edata@	label byte
 seg000		ends
 
 
-		end start
+		end startx

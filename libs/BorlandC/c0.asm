@@ -3,7 +3,6 @@
 ; * removal of RULES.ASI to eliminate redundancy
 ; * data declarations being moved to a separate file
 ; * removal of the segment declarations (for obvious reasons)
-; * STARTX being renamed to START to provide a valid entry point
 ; * additional NOPs before far calls to ensure binary compatibility to the
 ;   original builds of the PC-98 Touhou games.
 
@@ -50,8 +49,8 @@ ENDIF
 IFDEF           __TINY__
                 ORG     100h
 ENDIF
-PUBLIC START
-START           PROC    NEAR
+PUBLIC STARTX
+STARTX          PROC    NEAR
 ;       Save general information, such as :
 ;               DGROUP segment address
 ;               DOS version number
@@ -365,7 +364,7 @@ __terminate     PROC    DIST
                 int     21h                     ; Exit to DOS
 __terminate     ENDP
 
-START           ENDP
+STARTX          ENDP
 
         SUBTTL  Vector save/restore & default Zero divide routines
         PAGE

@@ -64953,4 +64953,4 @@ byte_3B5E0	db 80h dup(?)
 seg043		ends
 
 
-		end start
+		end startx

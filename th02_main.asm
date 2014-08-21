@@ -70799,4 +70799,4 @@ byte_26E30	db 80h dup(?)
 seg009		ends
 
 
-		end start
+		end startx

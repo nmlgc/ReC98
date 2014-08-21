@@ -68957,4 +68957,4 @@ seg014		segment	byte stack 'STACK' use16
 seg014		ends
 
 
-		end start
+		end startx
