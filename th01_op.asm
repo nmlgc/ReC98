@@ -4405,50 +4405,7 @@ arg_4		= word ptr  8
 		retn	6
 __UTOA		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; __int32 __cdecl lseek(int handle, __int32 offset, int	fromwhere)
-_lseek		proc far
-
-handle		= word ptr  6
-_offset		= word ptr  8
-arg_4		= word ptr  0Ah
-fromwhere	= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+handle]
-		add	bx, bx
-		and	word ptr [bx+0B8Ch], 0FDFFh
-		mov	ah, 42h	; 'B'
-		mov	al, [bp+fromwhere]
-		mov	bx, [bp+handle]
-		mov	cx, [bp+arg_4]
-		mov	dx, [bp+_offset]
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		jb	short loc_226A
-		jmp	short loc_226F
-; ---------------------------------------------------------------------------
-
-loc_226A:
-		push	ax
-		call	__IOERROR
-		cwd
-
-loc_226F:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_lseek		endp
-
+include libs/BorlandC/lseek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
