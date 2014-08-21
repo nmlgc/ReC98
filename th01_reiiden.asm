@@ -3437,7 +3437,7 @@ loc_16A9:
 		xchg	ax, bx
 		mov	ax, seg	dseg
 		mov	ds, ax
-		call	sub_221A
+		call	fperror
 		pop	ax
 
 locret_16B3:
@@ -5656,99 +5656,7 @@ loc_2202:
 		retn	10h
 sub_2006	endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_221A	proc near
-
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		mov	word ptr [bp+var_4+2], ss
-		mov	word ptr [bp+var_4], bx
-		mov	ax, word ptr __SignalPtr
-		or	ax, word ptr __SignalPtr+2
-		jz	short loc_228E
-		xor	ax, ax
-		push	ax
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		add	sp, 6
-		mov	word ptr [bp+var_8+2], dx
-		mov	word ptr [bp+var_8], ax
-		push	dx
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		add	sp, 6
-		cmp	word ptr [bp+var_8+2], 0
-		jnz	short loc_225D
-		cmp	word ptr [bp+var_8], 1
-		jz	short loc_22BD
-
-loc_225D:
-		mov	ax, word ptr [bp+var_8]
-		or	ax, word ptr [bp+var_8+2]
-		jz	short loc_228E
-		xor	ax, ax
-		push	ax
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		les	bx, [bp+var_4]
-		mov	ax, 6
-		imul	word ptr es:[bx]
-		mov	bx, ax
-		push	word ptr [bx+1908h]
-		mov	ax, 8
-		push	ax
-		call	[bp+var_8]
-		add	sp, 0Ah
-		mov	sp, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_228E:
-		les	bx, [bp+var_4]
-		mov	ax, 6
-		imul	word ptr es:[bx]
-		mov	dx, 1908h
-		add	dx, 2
-		add	ax, dx
-		mov	bx, ax
-		push	word ptr [bx+2]
-		push	word ptr [bx]
-		push	ds
-		mov	ax, 198Dh
-		push	ax		; format
-		push	ds
-		mov	ax, 1A7Eh
-		push	ax		; stream
-		nop
-		push	cs
-		call	near ptr _fprintf
-		add	sp, 0Ch
-		nop
-		push	cs
-		call	near ptr _abort
-; ---------------------------------------------------------------------------
-
-loc_22BD:
-		mov	sp, bp
-		pop	bp
-		retn
-sub_221A	endp
-
+include libs/BorlandC/fperr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -59162,35 +59070,7 @@ flt_3629A	dd -3.4028237e38
 flt_3629E	dd 5.1042355e38
 flt_362A2	dd -5.1042355e38
 dbl_362A6	dq 1.797693134862316e308
-		db  81h	; ・
-		db    0
-		dd aDomain		; "Domain"
-		db  82h	; ・
-		db    0
-		dd aDenormal		; "Denormal"
-		db  83h	; ・
-		db    0
-		dd aDivideBy0		; "Divide by 0"
-		db  84h	; ・
-		db    0
-		dd aOverflow		; "Overflow"
-		db  85h	; ・
-		db    0
-		dd aUnderflow		; "Underflow"
-		db  86h	; ・
-		db    0
-		dd aPartialLossOfP	; "Partial loss	of precision"
-		db  87h	; ・
-		db    0
-		dd aStackFault		; "Stack fault"
-aDomain		db 'Domain',0
-aDenormal	db 'Denormal',0
-aDivideBy0	db 'Divide by 0',0
-aOverflow	db 'Overflow',0
-aUnderflow	db 'Underflow',0
-aPartialLossOfP	db 'Partial loss of precision',0
-aStackFault	db 'Stack fault',0
-aFloatingPointE	db 'Floating point error: %s.',0Ah,0
+include libs/BorlandC/fperr[data].asm
 flt_36348	dd 1.0
 		db    0
 		db    0

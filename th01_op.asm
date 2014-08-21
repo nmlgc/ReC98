@@ -2856,7 +2856,7 @@ loc_13D9:
 		xchg	ax, bx
 		mov	ax, seg	dseg
 		mov	ds, ax
-		call	sub_1AA0
+		call	fperror
 		pop	ax
 
 locret_13E3:
@@ -3837,99 +3837,7 @@ loc_1A88:
 		retn	10h
 sub_188C	endp ; sp-analysis failed
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1AA0	proc near
-
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		mov	word ptr [bp+var_4+2], ss
-		mov	word ptr [bp+var_4], bx
-		mov	ax, word ptr __SignalPtr
-		or	ax, word ptr __SignalPtr+2
-		jz	short loc_1B14
-		xor	ax, ax
-		push	ax
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		add	sp, 6
-		mov	word ptr [bp+var_8+2], dx
-		mov	word ptr [bp+var_8], ax
-		push	dx
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		add	sp, 6
-		cmp	word ptr [bp+var_8+2], 0
-		jnz	short loc_1AE3
-		cmp	word ptr [bp+var_8], 1
-		jz	short loc_1B43
-
-loc_1AE3:
-		mov	ax, word ptr [bp+var_8]
-		or	ax, word ptr [bp+var_8+2]
-		jz	short loc_1B14
-		xor	ax, ax
-		push	ax
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	__SignalPtr
-		les	bx, [bp+var_4]
-		mov	ax, 6
-		imul	word ptr es:[bx]
-		mov	bx, ax
-		push	word ptr [bx+8ACh]
-		mov	ax, 8
-		push	ax
-		call	[bp+var_8]
-		add	sp, 0Ah
-		mov	sp, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1B14:
-		les	bx, [bp+var_4]
-		mov	ax, 6
-		imul	word ptr es:[bx]
-		mov	dx, 8ACh
-		add	dx, 2
-		add	ax, dx
-		mov	bx, ax
-		push	word ptr [bx+2]
-		push	word ptr [bx]
-		push	ds
-		mov	ax, 931h
-		push	ax		; format
-		push	ds
-		mov	ax, 0A22h
-		push	ax		; stream
-		nop
-		push	cs
-		call	near ptr _fprintf
-		add	sp, 0Ch
-		nop
-		push	cs
-		call	near ptr _abort
-; ---------------------------------------------------------------------------
-
-loc_1B43:
-		mov	sp, bp
-		pop	bp
-		retn
-sub_1AA0	endp
-
+include libs/BorlandC/fperr.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39336,35 +39244,7 @@ word_12B20	dw 1330h
 		dd 0
 		dw 0
 word_12B40	dw 0FFFFh
-		db  81h	; Å
-		db    0
-		dd aDomain		; "Domain"
-		db  82h	; Ç
-		db    0
-		dd aDenormal		; "Denormal"
-		db  83h	; É
-		db    0
-		dd aDivideBy0		; "Divide by 0"
-		db  84h	; Ñ
-		db    0
-		dd aOverflow		; "Overflow"
-		db  85h	; Ö
-		db    0
-		dd aUnderflow		; "Underflow"
-		db  86h	; Ü
-		db    0
-		dd aPartialLossOfP	; "Partial loss	of precision"
-		db  87h	; á
-		db    0
-		dd aStackFault		; "Stack fault"
-aDomain		db 'Domain',0
-aDenormal	db 'Denormal',0
-aDivideBy0	db 'Divide by 0',0
-aOverflow	db 'Overflow',0
-aUnderflow	db 'Underflow',0
-aPartialLossOfP	db 'Partial loss of precision',0
-aStackFault	db 'Stack fault',0
-aFloatingPointE	db 'Floating point error: %s.',0Ah,0
+include libs/BorlandC/fperr[data].asm
 flt_12BDC	dd 1.0
 		db    0
 		db    0
