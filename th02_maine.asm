@@ -4980,30 +4980,7 @@ loc_2506:
 		retf	4
 sub_24DA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_250E	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_2529
-		push	ax
-		push	bx
-		call	mem_assign
-		xor	ax, ax
-		mov	mem_MyOwn, 1
-
-loc_2529:
-		neg	ax
-		pop	bx
-		retf	2
-sub_250E	endp
-
+include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22021,7 +21998,7 @@ sub_B756	proc far
 		push	bp
 		mov	bp, sp
 		push	4650h
-		call	sub_250E
+		call	mem_assign_dos
 		or	ax, ax
 		jz	short loc_B76A
 		mov	ax, 1

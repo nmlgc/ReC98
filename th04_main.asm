@@ -4833,32 +4833,7 @@ loc_24EC:
 		retf	2
 sub_24C8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2508	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_2523
-		push	ax
-		push	bx
-		call	mem_assign
-		xor	ax, ax
-
-loc_251D:
-		mov	mem_MyOwn, 1
-
-loc_2523:
-		neg	ax
-		pop	bx
-		retf	2
-sub_2508	endp
-
+include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36997,7 +36972,7 @@ var_2		= word ptr -2
 		cmp	bx, 0Ch
 		ja	short loc_12492
 		add	bx, bx
-		jmp	word ptr cs:(loc_289F -	locret_AAF0)[bx]
+		jmp	word ptr cs:table_1289F[bx]
 
 loc_12484:
 		mov	word_2CF2C, 7937h
@@ -37074,7 +37049,9 @@ loc_12508:
 		cmp	bx, 10h
 		ja	loc_127EC
 		add	bx, bx
-		jmp	word ptr cs:(loc_287D -	locret_AAF0)[bx]
+		jmp	word ptr cs:table_1287D[bx]
+		
+loc_12522:
 		cmp	byte_26719, 2
 		jbe	short loc_12567
 		inc	byte_2CDD1
@@ -37481,36 +37458,36 @@ sub_12461	endp ; sp-analysis failed
 
 ; ---------------------------------------------------------------------------
 		db 0
-		dw offset loc_251D+5 - offset locret_AAF0
-		dw offset loc_251D+5 - offset locret_AAF0
-		dw offset loc_251D+5 - offset locret_AAF0
-		dw offset loc_251D+5 - offset locret_AAF0
-		dw offset loc_25A4+1 - offset locret_AAF0
-		dw offset loc_25A4+1 - offset locret_AAF0
-		dw offset locret_2609+2	- offset locret_AAF0
-		dw offset locret_2609+2	- offset locret_AAF0
-		dw offset loc_2690+1 - offset locret_AAF0
-		dw offset loc_2690+1 - offset locret_AAF0
-		dw offset locret_2609+2	- offset locret_AAF0
-		dw offset locret_2609+2	- offset locret_AAF0
-		dw offset loc_2690+1 - offset locret_AAF0
-		dw offset loc_2690+1 - offset locret_AAF0
-		dw offset locret_2721+1	- offset locret_AAF0
-		dw offset locret_2721+1	- offset locret_AAF0
-		dw offset loc_27B4+3 - offset locret_AAF0
-		dw offset loc_2481+3 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_248C - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2481+3 - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_248C - offset locret_AAF0
-		dw offset loc_2490+2 - offset locret_AAF0
-		dw offset loc_2481+3 - offset locret_AAF0
+table_1287D	dw loc_12522
+		dw loc_12522
+		dw loc_12522
+		dw loc_12522
+		dw loc_125A5
+		dw loc_125A5
+		dw loc_1260B
+		dw loc_1260B
+		dw loc_12691
+		dw loc_12691
+		dw loc_1260B
+		dw loc_1260B
+		dw loc_12691
+		dw loc_12691
+		dw loc_12722
+		dw loc_12722
+		dw loc_127B7
+table_1289F	dw loc_12484
+		dw loc_12492
+		dw loc_12492
+		dw loc_12492
+		dw loc_12492
+		dw loc_12492
+		dw loc_1248C
+		dw loc_12492
+		dw loc_12484
+		dw loc_12492
+		dw loc_1248C
+		dw loc_12492
+		dw loc_12484
 ; ---------------------------------------------------------------------------
 		enter	2, 0
 		push	si
@@ -39478,7 +39455,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	word_24CB2
-		call	sub_2508
+		call	mem_assign_dos
 		or	ax, ax
 		jz	short loc_1367D
 		mov	ax, 1

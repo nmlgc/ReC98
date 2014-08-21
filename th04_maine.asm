@@ -4088,30 +4088,7 @@ loc_22D8:
 		retf	4
 sub_22AC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_22E0	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	ah, 48h
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		jb	short loc_22FB
-		push	ax
-		push	bx
-		call	mem_assign
-		xor	ax, ax
-		mov	mem_MyOwn, 1
-
-loc_22FB:
-		neg	ax
-		pop	bx
-		retf	2
-sub_22E0	endp
-
+include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -25301,7 +25278,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	word_10070
-		call	sub_22E0
+		call	mem_assign_dos
 		or	ax, ax
 		jz	short loc_D453
 		mov	ax, 1
