@@ -5671,15 +5671,15 @@ var_4		= dword	ptr -4
 		sub	sp, 8
 		mov	word ptr [bp+var_4+2], ss
 		mov	word ptr [bp+var_4], bx
-		mov	ax, word ptr dword_3B5C0
-		or	ax, word ptr dword_3B5C0+2
+		mov	ax, word ptr __SignalPtr
+		or	ax, word ptr __SignalPtr+2
 		jz	short loc_228E
 		xor	ax, ax
 		push	ax
 		push	ax
 		mov	ax, 8
 		push	ax
-		call	dword_3B5C0
+		call	__SignalPtr
 		add	sp, 6
 		mov	word ptr [bp+var_8+2], dx
 		mov	word ptr [bp+var_8], ax
@@ -5687,7 +5687,7 @@ var_4		= dword	ptr -4
 		push	ax
 		mov	ax, 8
 		push	ax
-		call	dword_3B5C0
+		call	__SignalPtr
 		add	sp, 6
 		cmp	word ptr [bp+var_8+2], 0
 		jnz	short loc_225D
@@ -5703,7 +5703,7 @@ loc_225D:
 		push	ax
 		mov	ax, 8
 		push	ax
-		call	dword_3B5C0
+		call	__SignalPtr
 		les	bx, [bp+var_4]
 		mov	ax, 6
 		imul	word ptr es:[bx]
@@ -6042,8 +6042,7 @@ _abort		proc far
 		mov	ax, 16h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_500B
+		call	raise
 		pop	cx
 		nop
 		push	cs
@@ -10758,503 +10757,7 @@ loc_4D70:
 _intdosx	endp
 
 include libs/BorlandC/ioctl.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4DA1	proc far
-
-var_4		= dword	ptr -4
-
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		mov	dx, word_36994
-		mov	ax, word_36992
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		or	dx, dx
-		jnz	short loc_4DCA
-		cmp	ax, 1
-		jz	short loc_4E07
-
-loc_4DCA:
-		mov	ax, word ptr [bp+var_4]
-		or	ax, word ptr [bp+var_4+2]
-		jz	short loc_4DDE
-		cmp	word ptr [bp+var_4+2], 0FFFFh
-		jnz	short loc_4DE8
-		cmp	word ptr [bp+var_4], 0FFFFh
-		jnz	short loc_4DE8
-
-loc_4DDE:
-		mov	ax, 1
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_4DE8:
-		mov	word_36994, 0
-		mov	word_36992, 0
-		push	ss
-		lea	ax, [bp+0]
-		push	ax
-		mov	ax, 7Fh	; ''
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	[bp+var_4]
-		add	sp, 8
-
-loc_4E07:
-		mov	sp, bp
-		pop	bp
-		pop	di
-		pop	si
-		pop	ds
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		iret
-sub_4DA1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4E13	proc far
-
-var_4		= dword	ptr -4
-
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		mov	dx, word_36994
-		mov	ax, word_36992
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		or	dx, dx
-		jnz	short loc_4E3C
-		cmp	ax, 1
-		jz	short loc_4E79
-
-loc_4E3C:
-		mov	ax, word ptr [bp+var_4]
-		or	ax, word ptr [bp+var_4+2]
-		jz	short loc_4E50
-		cmp	word ptr [bp+var_4+2], 0FFFFh
-		jnz	short loc_4E5A
-		cmp	word ptr [bp+var_4], 0FFFFh
-		jnz	short loc_4E5A
-
-loc_4E50:
-		mov	ax, 1
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_4E5A:
-		mov	word_36994, 0
-		mov	word_36992, 0
-		push	ss
-		lea	ax, [bp+0]
-		push	ax
-		mov	ax, 7Eh	; '~'
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	[bp+var_4]
-		add	sp, 8
-
-loc_4E79:
-		mov	sp, bp
-		pop	bp
-		pop	di
-		pop	si
-		pop	ds
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		iret
-sub_4E13	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4E85	proc far
-
-var_4		= dword	ptr -4
-
-		push	ax
-		push	cx
-		push	dx
-		push	bx
-		push	sp
-		push	bp
-		push	si
-		push	di
-		push	ds
-		push	es
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		pushf
-		mov	dx, word_3698C
-		mov	ax, word_3698A
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		or	dx, dx
-		jnz	short loc_4EB0
-		cmp	ax, 1
-		jz	short loc_4EF5
-
-loc_4EB0:
-		mov	ax, word ptr [bp+var_4]
-		or	ax, word ptr [bp+var_4+2]
-		jz	short loc_4EC4
-		cmp	word ptr [bp+var_4+2], 0FFFFh
-		jnz	short loc_4ECE
-		cmp	word ptr [bp+var_4], 0FFFFh
-		jnz	short loc_4ECE
-
-loc_4EC4:
-		mov	ax, 1
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_4ECE:
-		mov	word_3698C, 0
-		mov	word_3698A, 0
-		push	word_3B5CA
-		push	off_3B5C8	; isr
-		mov	ax, 23h	; '#'
-		push	ax		; interruptno
-		nop
-		call	_setvect
-		mov	ax, 2
-		push	ax
-		call	[bp+var_4]
-		add	sp, 8
-
-loc_4EF5:
-		popf
-		clc
-		mov	sp, bp
-		pop	es
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		pop	bx
-		pop	bx
-		pop	dx
-		pop	cx
-		pop	ax
-		retf
-sub_4E85	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4F04	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	dx, dx
-
-loc_4F0B:
-		mov	bx, dx
-		mov	al, [bx+2002h]
-		mov	ah, 0
-		cmp	ax, [bp+arg_0]
-		jnz	short loc_4F1C
-		mov	ax, dx
-		jmp	short loc_4F25
-; ---------------------------------------------------------------------------
-
-loc_4F1C:
-		inc	dx
-		cmp	dx, 6
-		jl	short loc_4F0B
-		mov	ax, 0FFFFh
-
-loc_4F25:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_4F04	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4F29	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		cmp	byte_36989, 0
-		jnz	short loc_4F49
-		mov	word ptr dword_3B5C0+2,	seg seg000
-		mov	word ptr dword_3B5C0, offset sub_4F29
-		mov	byte_36989, 1
-
-loc_4F49:
-		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_4F04
-		pop	cx
-		mov	[bp+var_2], ax
-		cmp	ax, 0FFFFh
-		jnz	short loc_4F68
-		mov	_errno, 13h
-		mov	dx, 0FFFFh
-		mov	ax, 0FFFFh
-		jmp	loc_5005
-; ---------------------------------------------------------------------------
-
-loc_4F68:
-		mov	bx, [bp+var_2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, [bx+1FECh]
-		mov	ax, [bx+1FEAh]
-		mov	[bp+var_4], dx
-		mov	[bp+var_6], ax
-		mov	bx, [bp+var_2]
-		shl	bx, cl
-		mov	dx, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-		mov	[bx+1FECh], dx
-		mov	[bx+1FEAh], ax
-		cmp	[bp+arg_0], 2
-		jnz	short loc_4FD2
-		cmp	byte_36988, 0
-		jnz	short loc_4FB3
-		mov	ax, 23h	; '#'
-		push	ax		; interruptno
-		nop
-		call	_getvect
-		pop	cx
-		mov	word_3B5CA, dx
-		mov	off_3B5C8, ax
-		mov	byte_36988, 1
-
-loc_4FB3:
-		mov	ax, [bp+arg_2]
-		or	ax, [bp+arg_4]
-		jnz	short loc_4FC5
-		push	word_3B5CA
-		push	off_3B5C8
-		jmp	short loc_4FCD
-; ---------------------------------------------------------------------------
-
-loc_4FC5:
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 4E85h
-		push	ax
-
-loc_4FCD:
-		mov	ax, 23h	; '#'
-		jmp	short loc_4FF6
-; ---------------------------------------------------------------------------
-
-loc_4FD2:
-		cmp	[bp+arg_0], 8
-		jnz	short loc_4FFF
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 4DA1h
-		push	ax		; isr
-		xor	ax, ax
-		push	ax		; interruptno
-		nop
-		call	_setvect
-		add	sp, 6
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 4E13h
-		push	ax		; isr
-		mov	ax, 4
-
-loc_4FF6:
-		push	ax		; interruptno
-		nop
-		call	_setvect
-		add	sp, 6
-
-loc_4FFF:
-		mov	dx, [bp+var_4]
-		mov	ax, [bp+var_6]
-
-loc_5005:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_4F29	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_500B	proc far
-
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_4F04
-		pop	cx
-		mov	[bp+var_2], ax
-		cmp	ax, 0FFFFh
-		jnz	short loc_5028
-		mov	ax, 1
-		jmp	short loc_509C
-; ---------------------------------------------------------------------------
-
-loc_5028:
-		mov	bx, [bp+var_2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, [bx+1FECh]
-		mov	ax, [bx+1FEAh]
-		mov	word ptr [bp+var_6+2], dx
-		mov	word ptr [bp+var_6], ax
-		or	dx, dx
-		jnz	short loc_5046
-		cmp	ax, 1
-		jz	short loc_509A
-
-loc_5046:
-		mov	ax, word ptr [bp+var_6]
-		or	ax, word ptr [bp+var_6+2]
-		jnz	short loc_5075
-		mov	ax, [bp+arg_0]
-		cmp	ax, 2
-		jz	short loc_5060
-		cmp	ax, 16h
-		jnz	short loc_5069
-		nop
-		push	cs
-		call	near ptr __abort
-; ---------------------------------------------------------------------------
-
-loc_5060:
-		xor	ax, ax
-		int	23h		; DOS -	CONTROL	"C" EXIT ADDRESS
-					; Return: return via RETF 2 with CF set
-					; DOS will abort program with errorlevel 0
-					; else
-					; interrupted DOS call continues
-		mov	ax, 4C03h
-		int	21h		; DOS -	2+ - QUIT WITH EXIT CODE (EXIT)
-					; AL = exit code
-; ---------------------------------------------------------------------------
-
-loc_5069:
-		mov	ax, 1
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-		jmp	short loc_509A
-; ---------------------------------------------------------------------------
-
-loc_5075:
-		mov	bx, [bp+var_2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	word ptr [bx+1FECh], 0
-		mov	word ptr [bx+1FEAh], 0
-		mov	bx, [bp+var_2]
-		mov	al, [bx+2008h]
-		mov	ah, 0
-		push	ax
-		push	[bp+arg_0]
-		call	[bp+var_6]
-		pop	cx
-		pop	cx
-
-loc_509A:
-		xor	ax, ax
-
-loc_509C:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_500B	endp
-
+include libs/BorlandC/signal.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -60131,28 +59634,7 @@ word_36870	dw 0
 		db    0
 word_36984	dw 0
 include libs/BorlandC/fbrk[data].asm
-byte_36988	db 0
-byte_36989	db 0
-word_3698A	dw 0
-word_3698C	dw 0
-		dd    0
-word_36992	dw 0
-word_36994	dw 0
-		dd    0
-		dd    0
-		dd    0
-		db    2
-		db    4
-		db    8
-		db  0Bh
-		db  0Fh
-		db  16h
-		db    0
-		db  15h
-		db  8Ch	; ÅE
-		db  0Bh
-		db    0
-		db    0
+include libs/BorlandC/signal[data].asm
 dword_369AE	dd 0
 		dd    0
 		dd    0
@@ -65565,11 +65047,9 @@ include libs/BorlandC/atexit[bss].asm
 		dd    ?
 		db    ?	;
 		db    ?	;
-dword_3B5C0	dd ?
+include libs/BorlandC/sigdata[bss].asm
 		dd ?
-; void (__interrupt far	*off_3B5C8)()
-off_3B5C8	dw ?
-word_3B5CA	dw ?
+include libs/BorlandC/signal[bss].asm
 byte_3B5CC	db ?
 		db ?
 byte_3B5CE	db ?

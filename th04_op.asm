@@ -2841,8 +2841,8 @@ loc_1770:
 		push	dx
 		push	ax
 		shl	dx, 0Ch
-		mov	word_13348, ax
-		mov	word_1334A, dx
+		mov	ds:[4008h], ax
+		mov	ds:[400Ah], dx
 		push	seg dseg
 		pop	ds
 		mov	word_FBA4, 0Ah
@@ -2860,7 +2860,7 @@ loc_17BE:
 		mov	ax, bx
 		mov	word ptr ds:[4004h], 0
 		mov	word ptr ds:[4006h], ax
-		add	word_1334A, ax
+		add	ds:[400Ah], ax
 		mov	cx, ds:[4000h]
 		push	es
 		les	bx, [bp+arg_0]
@@ -3339,14 +3339,14 @@ loc_1AF8:
 		mov	cl, bl
 
 loc_1AFA:
-		cmp	word_13348, di
+		cmp	ds:[4008h], di
 		jbe	short loc_1B03
 		jmp	loc_180E
 ; ---------------------------------------------------------------------------
 
 loc_1B03:
 		mov	ax, es
-		cmp	word_1334A, ax
+		cmp	ds:[400Ah], ax
 		jbe	short loc_1B0E
 		jmp	loc_180E
 ; ---------------------------------------------------------------------------
@@ -7919,8 +7919,7 @@ _abort		proc far
 		mov	ax, 16h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_53A0
+		call	raise
 		pop	cx
 		nop
 		push	cs
@@ -8969,459 +8968,7 @@ sub_4B43	endp
 
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
-
-; ---------------------------------------------------------------------------
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		mov	dx, word_10CA6
-		mov	ax, word_10CA4
-		mov	[bp-2],	dx
-		mov	[bp-4],	ax
-		or	dx, dx
-		jnz	short loc_515F
-		cmp	ax, 1
-		jz	short loc_519C
-
-loc_515F:
-		mov	ax, [bp-4]
-		or	ax, [bp-2]
-		jz	short loc_5173
-		cmp	word ptr [bp-2], 0FFFFh
-		jnz	short loc_517D
-		cmp	word ptr [bp-4], 0FFFFh
-		jnz	short loc_517D
-
-loc_5173:
-		mov	ax, 1
-		push	ax
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_517D:
-		mov	word_10CA6, 0
-		mov	word_10CA4, 0
-		push	ss
-		lea	ax, [bp+0]
-		push	ax
-		mov	ax, 7Fh	; ''
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	dword ptr [bp-4]
-		add	sp, 8
-
-loc_519C:
-		mov	sp, bp
-		pop	bp
-		pop	di
-		pop	si
-		pop	ds
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		iret
-; ---------------------------------------------------------------------------
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		mov	dx, word_10CA6
-		mov	ax, word_10CA4
-		mov	[bp-2],	dx
-		mov	[bp-4],	ax
-		or	dx, dx
-		jnz	short loc_51D1
-		cmp	ax, 1
-		jz	short loc_520E
-
-loc_51D1:
-		mov	ax, [bp-4]
-		or	ax, [bp-2]
-		jz	short loc_51E5
-		cmp	word ptr [bp-2], 0FFFFh
-		jnz	short loc_51EF
-		cmp	word ptr [bp-4], 0FFFFh
-		jnz	short loc_51EF
-
-loc_51E5:
-		mov	ax, 1
-		push	ax
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_51EF:
-		mov	word_10CA6, 0
-		mov	word_10CA4, 0
-		push	ss
-		lea	ax, [bp+0]
-		push	ax
-		mov	ax, 7Eh	; '~'
-		push	ax
-		mov	ax, 8
-		push	ax
-		call	dword ptr [bp-4]
-		add	sp, 8
-
-loc_520E:
-		mov	sp, bp
-		pop	bp
-		pop	di
-		pop	si
-		pop	ds
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		iret
-; ---------------------------------------------------------------------------
-		push	ax
-		push	cx
-		push	dx
-		push	bx
-		push	sp
-		push	bp
-		push	si
-		push	di
-		push	ds
-		push	es
-		mov	bp, seg	dseg
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		pushf
-		mov	dx, word_10C9E
-		mov	ax, word_10C9C
-		mov	[bp-2],	dx
-		mov	[bp-4],	ax
-		or	dx, dx
-		jnz	short loc_5245
-		cmp	ax, 1
-		jz	short loc_528A
-
-loc_5245:
-		mov	ax, [bp-4]
-		or	ax, [bp-2]
-		jz	short loc_5259
-		cmp	word ptr [bp-2], 0FFFFh
-		jnz	short loc_5263
-		cmp	word ptr [bp-4], 0FFFFh
-		jnz	short loc_5263
-
-loc_5259:
-		mov	ax, 1
-		push	ax
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-
-loc_5263:
-		mov	word_10C9E, 0
-		mov	word_10C9C, 0
-		push	word_13350
-		push	word_1334E
-		mov	ax, 23h	; '#'
-		push	ax
-		nop
-		call	_setvect
-		mov	ax, 2
-		push	ax
-		call	dword ptr [bp-4]
-		add	sp, 8
-
-loc_528A:
-		popf
-		clc
-		mov	sp, bp
-		pop	es
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		pop	bx
-		pop	bx
-		pop	dx
-		pop	cx
-		pop	ax
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_5299	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	dx, dx
-
-loc_52A0:
-		mov	bx, dx
-		mov	al, [bx+1974h]
-		mov	ah, 0
-		cmp	ax, [bp+arg_0]
-		jnz	short loc_52B1
-		mov	ax, dx
-		jmp	short loc_52BA
-; ---------------------------------------------------------------------------
-
-loc_52B1:
-		inc	dx
-		cmp	dx, 6
-		jl	short loc_52A0
-		mov	ax, 0FFFFh
-
-loc_52BA:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_5299	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		cmp	byte_10C9B, 0
-		jnz	short loc_52DE
-		mov	word_13348, seg	seg000
-		mov	word ptr ds:[4006h], 52BEh
-		mov	byte_10C9B, 1
-
-loc_52DE:
-		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_5299
-		pop	cx
-		mov	[bp-2],	ax
-		cmp	ax, 0FFFFh
-		jnz	short loc_52FD
-		mov	_errno, 13h
-		mov	dx, 0FFFFh
-		mov	ax, 0FFFFh
-		jmp	loc_539A
-; ---------------------------------------------------------------------------
-
-loc_52FD:
-		mov	bx, [bp-2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, [bx+195Eh]
-		mov	ax, [bx+195Ch]
-		mov	[bp-4],	dx
-		mov	[bp-6],	ax
-		mov	bx, [bp-2]
-		shl	bx, cl
-		mov	dx, [bp+0Ah]
-		mov	ax, [bp+8]
-		mov	[bx+195Eh], dx
-		mov	[bx+195Ch], ax
-		cmp	word ptr [bp+6], 2
-		jnz	short loc_5367
-		cmp	byte_10C9A, 0
-		jnz	short loc_5348
-		mov	ax, 23h	; '#'
-		push	ax
-		nop
-		call	_getvect
-		pop	cx
-		mov	word_13350, dx
-		mov	word_1334E, ax
-		mov	byte_10C9A, 1
-
-loc_5348:
-		mov	ax, [bp+8]
-		or	ax, [bp+0Ah]
-		jnz	short loc_535A
-		push	word_13350
-		push	word_1334E
-		jmp	short loc_5362
-; ---------------------------------------------------------------------------
-
-loc_535A:
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 521Ah
-		push	ax
-
-loc_5362:
-		mov	ax, 23h	; '#'
-		jmp	short loc_538B
-; ---------------------------------------------------------------------------
-
-loc_5367:
-		cmp	word ptr [bp+6], 8
-		jnz	short loc_5394
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 5136h
-		push	ax
-		xor	ax, ax
-		push	ax
-		nop
-		call	_setvect
-		add	sp, 6
-		mov	ax, seg	seg000
-		push	ax
-		mov	ax, 51A8h
-		push	ax
-		mov	ax, 4
-
-loc_538B:
-		push	ax
-		nop
-		call	_setvect
-		add	sp, 6
-
-loc_5394:
-		mov	dx, [bp-4]
-		mov	ax, [bp-6]
-
-loc_539A:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_53A0	proc far
-
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_5299
-		pop	cx
-		mov	[bp+var_2], ax
-		cmp	ax, 0FFFFh
-		jnz	short loc_53BD
-		mov	ax, 1
-		jmp	short loc_5431
-; ---------------------------------------------------------------------------
-
-loc_53BD:
-		mov	bx, [bp+var_2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	dx, [bx+195Eh]
-		mov	ax, [bx+195Ch]
-		mov	word ptr [bp+var_6+2], dx
-		mov	word ptr [bp+var_6], ax
-		or	dx, dx
-		jnz	short loc_53DB
-		cmp	ax, 1
-		jz	short loc_542F
-
-loc_53DB:
-		mov	ax, word ptr [bp+var_6]
-		or	ax, word ptr [bp+var_6+2]
-		jnz	short loc_540A
-		mov	ax, [bp+arg_0]
-		cmp	ax, 2
-		jz	short loc_53F5
-		cmp	ax, 16h
-		jnz	short loc_53FE
-		nop
-		push	cs
-		call	near ptr __abort
-; ---------------------------------------------------------------------------
-
-loc_53F5:
-		xor	ax, ax
-		int	23h		; DOS -	CONTROL	"C" EXIT ADDRESS
-					; Return: return via RETF 2 with CF set
-					; DOS will abort program with errorlevel 0
-					; else
-					; interrupted DOS call continues
-		mov	ax, 4C03h
-		int	21h		; DOS -	2+ - QUIT WITH EXIT CODE (EXIT)
-					; AL = exit code
-; ---------------------------------------------------------------------------
-
-loc_53FE:
-		mov	ax, 1
-		push	ax		; status
-		nop
-		push	cs
-		call	near ptr __exit
-; ---------------------------------------------------------------------------
-		pop	cx
-		jmp	short loc_542F
-; ---------------------------------------------------------------------------
-
-loc_540A:
-		mov	bx, [bp+var_2]
-		mov	cl, 2
-		shl	bx, cl
-		mov	word ptr [bx+195Eh], 0
-		mov	word ptr [bx+195Ch], 0
-		mov	bx, [bp+var_2]
-		mov	al, [bx+197Ah]
-		mov	ah, 0
-		push	ax
-		push	[bp+arg_0]
-		call	[bp+var_6]
-		pop	cx
-		pop	cx
-
-loc_542F:
-		xor	ax, ax
-
-loc_5431:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_53A0	endp
-
+include libs/BorlandC/signal.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31431,42 +30978,7 @@ word_10B82	dw 0
 		db    0
 word_10C96	dw 0
 include libs/BorlandC/fbrk[data].asm
-byte_10C9A	db 0
-byte_10C9B	db 0
-word_10C9C	dw 0
-word_10C9E	dw 0
-					; seg000:loc_5263w
-		db    0
-		db    0
-		db    0
-		db    0
-word_10CA4	dw 0
-word_10CA6	dw 0
-					; seg000:loc_517Dw ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db    4
-		db    8
-		db  0Bh
-		db  0Fh
-		db  16h
-		db    0
-		db  15h
-		db  8Ch	; Œ
-		db  0Bh
-		db    0
-		db    0
+include libs/BorlandC/signal[data].asm
 dword_10CC0	dd 0
 		db    0
 		db    0
@@ -36324,15 +35836,12 @@ byte_132C3	db ?
 byte_132C4	db ?
 byte_132C5	db ?
 include libs/BorlandC/atexit[bss].asm
-		dw    ?
-word_13348	dw ?
-					; sub_1670:loc_1AFAr ...
+include libs/BorlandC/sigdata[bss].asm
 word_1334A	dw ?
 					; sub_1670+159w ...
 		db    ?	;
 		db    ?	;
-word_1334E	dw ?
-word_13350	dw ?
+include libs/BorlandC/signal[bss].asm
 dword_13352	dd ?
 dword_13356	dd ?
 		dw ?
