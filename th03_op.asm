@@ -78,13 +78,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -218,8 +216,7 @@ arg_4		= word ptr  0Ah
 		mov	ax, 0
 		jcxz	short loc_46C
 		push	cx
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		jb	short loc_46C
 		push	ds
 		mov	ds, ax
@@ -1922,8 +1919,7 @@ arg_2		= word ptr  8
 		mov	ax, 2000h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		mov	si, ax
 		mov	ax, 0
 		jb	short loc_FBB
@@ -2316,8 +2312,7 @@ sub_1186	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_11D8
 		xor	al, al
@@ -2549,8 +2544,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_2194
+		call	smem_wget
 		jb	short loc_1328
 		mov	ds, ax
 		mov	ds:410Eh, bx
@@ -4185,50 +4179,7 @@ sub_1D3C	endp
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_2194
-
-loc_218E:
-		call	mem_assign_all
-		jb	short loc_21C3
-; END OF FUNCTION CHUNK	FOR sub_2194
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2194	proc far
-
-; FUNCTION CHUNK AT 218E SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_218E
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_21C2
-		cmp	mem_TopHeap, bx
-		jb	short loc_21C2
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_21C2:
-		pop	bx
-
-loc_21C3:
-		mov	ax, 0FFF8h
-		retf	2
-sub_2194	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

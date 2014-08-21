@@ -78,13 +78,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -198,8 +196,7 @@ loc_400:
 		mov	ax, 0
 		jcxz	short loc_44A
 		push	cx
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		jb	short loc_44A
 		push	ds
 		mov	ds, ax
@@ -2001,8 +1998,7 @@ sub_1250	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_12A2
 		xor	al, al
@@ -2128,8 +2124,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		jb	short loc_1348
 		mov	ds, ax
 		mov	word_130EE, bx
@@ -3595,51 +3590,7 @@ sub_1C5E	endp
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
 include libs/master.lib/smem_release.asm
-
-; START	OF FUNCTION CHUNK FOR sub_209E
-
-loc_2098:
-		call	mem_assign_all
-		jb	short loc_20CD
-; END OF FUNCTION CHUNK	FOR sub_209E
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_209E	proc far
-
-; FUNCTION CHUNK AT 2098 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_2098
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_20CC
-		cmp	mem_TopHeap, bx
-		jb	short loc_20CC
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_20CC:
-		pop	bx
-
-loc_20CD:
-		mov	ax, 0FFF8h
-		retf	2
-sub_209E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5361,8 +5312,7 @@ loc_2E78:
 		call	near ptr sub_7DA
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_209E
+		call	smem_wget
 		jb	short loc_2E6F
 		mov	[bp+var_2], ax
 		push	si

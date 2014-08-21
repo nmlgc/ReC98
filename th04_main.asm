@@ -77,13 +77,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_21F4
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_21F4
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -219,8 +217,7 @@ arg_4		= word ptr  0Ah
 		mov	ax, 0
 		jcxz	short loc_46C
 		push	cx
-		push	cs
-		call	near ptr sub_21F4
+		call	smem_wget
 		jb	short loc_46C
 		push	ds
 		mov	ds, ax
@@ -3150,8 +3147,7 @@ arg_2		= word ptr  8
 		mov	ax, 2000h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_21F4
+		call	smem_wget
 		mov	si, ax
 		mov	ax, 0
 		jb	short loc_1AFB
@@ -4267,50 +4263,7 @@ locret_21DB:
 sub_219C	endp
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_21F4
-
-loc_21EE:
-		call	mem_assign_all
-		jb	short loc_2223
-; END OF FUNCTION CHUNK	FOR sub_21F4
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21F4	proc far
-
-; FUNCTION CHUNK AT 21EE SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_21EE
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_2222
-		cmp	mem_TopHeap, bx
-		jb	short loc_2222
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_2222:
-		pop	bx
-
-loc_2223:
-		mov	ax, 0FFF8h
-		retf	2
-sub_21F4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7326,8 +7279,7 @@ loc_389E:
 		call	near ptr sub_87E
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_21F4
+		call	smem_wget
 		jb	short loc_3895
 		mov	[bp+var_2], ax
 		push	si

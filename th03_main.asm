@@ -73,13 +73,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -213,8 +211,7 @@ arg_4		= word ptr  0Ah
 		mov	ax, 0
 		jcxz	short loc_46C
 		push	cx
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		jb	short loc_46C
 		push	ds
 		mov	ds, ax
@@ -2351,8 +2348,7 @@ arg_2		= word ptr  8
 		mov	ax, 2000h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		mov	si, ax
 		mov	ax, 0
 		jb	short loc_127B
@@ -2832,8 +2828,7 @@ sub_14E4	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_1536
 		xor	al, al
@@ -2973,8 +2968,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		jb	short loc_15E2
 		mov	ds, ax
 		mov	word_2166E, bx
@@ -4315,50 +4309,7 @@ sub_1EEC	proc far
 sub_1EEC	endp
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_1F2C
-
-loc_1F26:
-		call	mem_assign_all
-		jb	short loc_1F5B
-; END OF FUNCTION CHUNK	FOR sub_1F2C
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F2C	proc far
-
-; FUNCTION CHUNK AT 1F26 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_1F26
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_1F5A
-		cmp	mem_TopHeap, bx
-		jb	short loc_1F5A
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_1F5A:
-		pop	bx
-
-loc_1F5B:
-		mov	ax, 0FFF8h
-		retf	2
-sub_1F2C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5891,8 +5842,7 @@ sub_2C42	proc far
 		mov	bx, 3E80h
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_1F2C
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_2C89
 		mov	bx, sp

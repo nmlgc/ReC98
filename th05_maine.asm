@@ -76,13 +76,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -196,8 +194,7 @@ loc_400:
 		mov	ax, 0
 		jcxz	short loc_44A
 		push	cx
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		jb	short loc_44A
 		push	ds
 		mov	ds, ax
@@ -2237,8 +2234,7 @@ sub_133C	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_138E
 		xor	al, al
@@ -2378,8 +2374,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		jb	short loc_143A
 		mov	ds, ax
 		mov	word_1420E, bx
@@ -3919,50 +3914,7 @@ sub_1DF8	endp
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_2238
-
-loc_2232:
-		call	mem_assign_all
-		jb	short loc_2267
-; END OF FUNCTION CHUNK	FOR sub_2238
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2238	proc far
-
-; FUNCTION CHUNK AT 2232 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_2232
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_2266
-		cmp	mem_TopHeap, bx
-		jb	short loc_2266
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_2266:
-		pop	bx
-
-loc_2267:
-		mov	ax, 0FFF8h
-		retf	2
-sub_2238	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5841,8 +5793,7 @@ loc_3040:
 		call	near ptr sub_7E8
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_2238
+		call	smem_wget
 		jb	short loc_3037
 		mov	[bp+var_2], ax
 		push	si

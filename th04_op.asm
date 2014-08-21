@@ -78,13 +78,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -220,8 +218,7 @@ arg_4		= word ptr  0Ah
 		mov	ax, 0
 		jcxz	short loc_46C
 		push	cx
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		jb	short loc_46C
 		push	ds
 		mov	ds, ax
@@ -2191,8 +2188,7 @@ arg_2		= word ptr  8
 		mov	ax, 2000h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		mov	si, ax
 		mov	ax, 0
 		jb	short loc_13F7
@@ -2526,8 +2522,7 @@ sub_156C	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_15BE
 		xor	al, al
@@ -2653,8 +2648,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		jb	short loc_1664
 		mov	ds, ax
 		mov	ds:410Eh, bx
@@ -4207,50 +4201,7 @@ sub_204E	endp
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_248E
-
-loc_2488:
-		call	mem_assign_all
-		jb	short loc_24BD
-; END OF FUNCTION CHUNK	FOR sub_248E
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_248E	proc far
-
-; FUNCTION CHUNK AT 2488 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_2488
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_24BC
-		cmp	mem_TopHeap, bx
-		jb	short loc_24BC
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_24BC:
-		pop	bx
-
-loc_24BD:
-		mov	ax, 0FFF8h
-		retf	2
-sub_248E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6275,8 +6226,7 @@ loc_3658:
 		call	near ptr sub_7FC
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_248E
+		call	smem_wget
 		jb	short loc_364F
 		mov	[bp+var_2], ax
 		push	si

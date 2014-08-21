@@ -78,13 +78,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_2448
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_2448
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -198,8 +196,7 @@ loc_400:
 		mov	ax, 0
 		jcxz	short loc_44A
 		push	cx
-		push	cs
-		call	near ptr sub_2448
+		call	smem_wget
 		jb	short loc_44A
 		push	ds
 		mov	ds, ax
@@ -4435,52 +4432,7 @@ sub_23F0	endp
 
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_2448
-
-loc_2442:
-		call	mem_assign_all
-		jb	short loc_2477
-; END OF FUNCTION CHUNK	FOR sub_2448
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2448	proc far
-
-; FUNCTION CHUNK AT 2442 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_2442
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-
-loc_2456:
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_2476
-		cmp	mem_TopHeap, bx
-		jb	short loc_2476
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_2476:
-		pop	bx
-
-loc_2477:
-		mov	ax, 0FFF8h
-		retf	2
-sub_2448	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7173,8 +7125,7 @@ loc_3838:
 		call	near ptr sub_80C
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_2448
+		call	smem_wget
 		jb	short loc_382F
 		mov	[bp+var_2], ax
 		push	si
@@ -36561,7 +36512,9 @@ loc_12432:
 		cmp	bx, 3
 		ja	loc_124FA
 		add	bx, bx
-		jmp	word ptr cs:(loc_259A+1	- (loc_AE0E+2))[bx]
+		jmp	word ptr cs:table_1259B[bx]
+
+loc_12456:
 		cmp	byte ptr [si+1], 10h
 		jb	short loc_12460
 		mov	byte ptr [si+0Fh], 0
@@ -36743,10 +36696,10 @@ loc_12591:
 sub_1240B	endp
 
 ; ---------------------------------------------------------------------------
-		dw offset loc_2456 - (offset loc_AE0E+2)
-		dw offset loc_24EE - (offset loc_AE0E+2)
-		dw offset locret_24F3 -	(offset	loc_AE0E+2)
-		dw offset text_clear - (offset loc_AE0E+2)
+table_1259B	dw loc_12456
+		dw loc_124EE
+		dw loc_124F3
+		dw loc_124F6
 
 ; =============== S U B	R O U T	I N E =======================================
 

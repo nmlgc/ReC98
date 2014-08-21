@@ -78,13 +78,11 @@ loc_286:
 		mov	cs:word_2E8, ax
 		xchg	ax, bx
 		push	bx
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		jb	short loc_27F
 		xchg	ax, cx
 		push	bx
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		jb	short loc_27F
 		mov	es, ax
 		mov	ds, cx
@@ -220,8 +218,7 @@ arg_4		= word ptr  0Ah
 		mov	ax, 0
 		jcxz	short loc_46C
 		push	cx
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		jb	short loc_46C
 		push	ds
 		mov	ds, ax
@@ -1605,8 +1602,7 @@ arg_2		= word ptr  8
 		mov	ax, 2000h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		mov	si, ax
 		mov	ax, 0
 		jb	short loc_FB3
@@ -2044,8 +2040,7 @@ sub_11C2	proc far
 		shl	bx, 1
 		push	bx
 		nop
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		xchg	ax, dx
 		jb	short locret_1214
 		xor	al, al
@@ -2185,8 +2180,7 @@ arg_A		= word ptr  10h
 		mov	bx, ax
 		push	4114h
 		nop
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		jb	short loc_12C0
 		mov	ds, ax
 		mov	word_1263E, bx
@@ -3671,50 +3665,7 @@ sub_1C5A	endp
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
 include libs/master.lib/smem_release.asm
-; START	OF FUNCTION CHUNK FOR sub_209A
-
-loc_2094:
-		call	mem_assign_all
-		jb	short loc_20C9
-; END OF FUNCTION CHUNK	FOR sub_209A
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_209A	proc far
-
-; FUNCTION CHUNK AT 2094 SIZE 00000006 BYTES
-
-		cmp	mem_TopSeg, 0
-		jz	short loc_2094
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		mov	ax, mem_EndMark
-		add	bx, ax
-		jb	short loc_20C8
-		cmp	mem_TopHeap, bx
-		jb	short loc_20C8
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_20C8:
-		pop	bx
-
-loc_20C9:
-		mov	ax, 0FFF8h
-		retf	2
-sub_209A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_wget.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5429,8 +5380,7 @@ loc_2EBA:
 		call	near ptr sub_80A
 		push	di
 		nop
-		push	cs
-		call	near ptr sub_209A
+		call	smem_wget
 		jb	short loc_2EB1
 		mov	[bp+var_2], ax
 		push	si
