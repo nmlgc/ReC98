@@ -36,8 +36,7 @@ include libs/BorlandC/c0.asm
 loc_272:
 		push ds
 		mov	ds, word ptr cs:035fh
-		push	cs
-		call	near ptr sub_2432
+		call	smem_release
 		mov	ax, 0fff3h
 
 loc_27F:
@@ -245,8 +244,7 @@ loc_442:
 		mov	bx, ds
 		pop	ds
 		push	bx
-		push	cs
-		call	near ptr sub_2432
+		call	smem_release
 
 loc_44A:
 		pop	si
@@ -4436,20 +4434,7 @@ locret_242F:
 sub_23F0	endp
 
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2432	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-sub_2432	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_release.asm
 ; START	OF FUNCTION CHUNK FOR sub_2448
 
 loc_2442:
@@ -7315,8 +7300,7 @@ loc_3937:
 loc_3944:
 		push	[bp+var_2]
 		nop
-		push	cs
-		call	near ptr sub_2432
+		call	smem_release
 		pop	si
 		pop	di
 		leave

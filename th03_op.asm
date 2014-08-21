@@ -36,7 +36,7 @@ include libs/BorlandC/c0.asm
 loc_272:
 		push ds
 		mov	ds, word ptr cs:035fh
-		call	sub_217E
+		call	smem_release
 		mov	ax, 0FFF3h
 
 loc_27F:
@@ -267,8 +267,7 @@ loc_464:
 		mov	bx, ds
 		pop	ds
 		push	bx
-		push	cs
-		call	near ptr sub_217E
+		call	smem_release
 
 loc_46C:
 		pop	si
@@ -1983,8 +1982,7 @@ loc_FB3:
 		push	ax
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_217E
+		call	smem_release
 		pop	ax
 
 loc_FBB:
@@ -2347,8 +2345,7 @@ sub_1186	proc far
 		pop	si
 		push	dx
 		nop
-		push	cs
-		call	near ptr sub_217E
+		call	smem_release
 		mov	ax, 1
 
 locret_11D8:
@@ -3219,8 +3216,7 @@ loc_17D2:
 		mov	bx, seg	dseg
 		mov	ds, bx
 		nop
-		push	cs
-		call	near ptr sub_217E
+		call	smem_release
 		clc
 		mov	ax, 0
 		pop	di
@@ -4188,20 +4184,7 @@ sub_1D3C	endp
 		db 2 dup(3), 2 dup(2), 3, 2, 3,	2, 3 dup(3), 2,	3, 2 dup(2)
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_217E	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-sub_217E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_release.asm
 ; START	OF FUNCTION CHUNK FOR sub_2194
 
 loc_218E:

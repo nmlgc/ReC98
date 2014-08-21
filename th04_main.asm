@@ -35,7 +35,7 @@ include libs/BorlandC/c0.asm
 loc_272:
 		push ds
 		mov	ds, word ptr cs:035fh
-		call	sub_21DE
+		call	smem_release
 		mov	ax, 0fff3h
 
 loc_27F:
@@ -268,8 +268,7 @@ loc_464:
 		mov	bx, ds
 		pop	ds
 		push	bx
-		push	cs
-		call	near ptr sub_21DE
+		call	smem_release
 
 loc_46C:
 		pop	si
@@ -3212,8 +3211,7 @@ loc_1AF3:
 		push	ax
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_21DE
+		call	smem_release
 		pop	ax
 
 loc_1AFB:
@@ -4268,21 +4266,7 @@ locret_21DB:
 		retf	4
 sub_219C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21DE	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-sub_21DE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_release.asm
 ; START	OF FUNCTION CHUNK FOR sub_21F4
 
 loc_21EE:
@@ -7469,8 +7453,7 @@ loc_399D:
 loc_39AA:
 		push	[bp+var_2]
 		nop
-		push	cs
-		call	near ptr sub_21DE
+		call	smem_release
 		pop	si
 		pop	di
 		leave

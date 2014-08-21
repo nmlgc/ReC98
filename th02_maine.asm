@@ -37,8 +37,7 @@ include libs/BorlandC/c0.asm
 loc_272:
 		push	ds
 		mov	ds, word ptr cs:loc_35E+1
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
 		mov	ax, 0FFF3h
 
 loc_27F:
@@ -216,10 +215,8 @@ loc_37E:
 		mov	ds, word ptr cs:loc_35E+1
 		mov	cx, ax
 		push	es
-		push	cs
-		call	near ptr sub_22DC
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
+		call	smem_release
 		mov	ax, cx
 		stc
 		pop	si
@@ -234,10 +231,8 @@ loc_39A:
 		push	ds
 		mov	ds, word ptr cs:loc_35E+1
 		push	es
-		push	cs
-		call	near ptr sub_22DC
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
+		call	smem_release
 		mov	ax, 0
 		clc
 		pop	si
@@ -393,8 +388,7 @@ loc_464:
 		mov	bx, ds
 		pop	ds
 		push	bx
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
 
 loc_46C:
 		pop	si
@@ -2305,8 +2299,7 @@ loc_105F:
 		push	ax
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
 		pop	ax
 
 loc_1067:
@@ -2726,8 +2719,7 @@ sub_1276	proc far
 		pop	si
 		push	dx
 		nop
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
 		mov	ax, 1
 
 locret_12C8:
@@ -3688,8 +3680,7 @@ loc_1956:
 		mov	bx, seg	dseg
 		mov	ds, bx
 		nop
-		push	cs
-		call	near ptr sub_22DC
+		call	smem_release
 		clc
 		mov	ax, 0
 		pop	di
@@ -4617,20 +4608,7 @@ sub_1E9A	endp
 		db 2 dup(3), 2 dup(2), 3, 2, 3,	2, 3 dup(3), 2,	3, 2 dup(2)
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_22DC	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-sub_22DC	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_release.asm
 ; START	OF FUNCTION CHUNK FOR sub_22F2
 
 loc_22EC:

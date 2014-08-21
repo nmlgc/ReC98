@@ -262,8 +262,7 @@ loc_464:
 		mov	bx, ds
 		pop	ds
 		push	bx
-		push	cs
-		call	near ptr sub_1EAA
+		call	smem_release
 
 loc_46C:
 		pop	si
@@ -1660,8 +1659,7 @@ loc_D2F:
 		push	ax
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_1EAA
+		call	smem_release
 		pop	ax
 
 loc_D37:
@@ -1964,8 +1962,7 @@ sub_EAC		proc far
 		pop	si
 		push	dx
 		nop
-		push	cs
-		call	near ptr sub_1EAA
+		call	smem_release
 		mov	ax, 1
 
 locret_EFE:
@@ -2819,8 +2816,7 @@ loc_14E2:
 		mov	bx, seg	dseg
 		mov	ds, bx
 		nop
-		push	cs
-		call	near ptr sub_1EAA
+		call	smem_release
 		clc
 		mov	ax, 0
 		pop	di
@@ -3760,20 +3756,7 @@ sub_1A68	endp
 		db 2 dup(3), 2 dup(2), 3, 2, 3,	2, 3 dup(3), 2,	3, 2 dup(2)
 		db 3 dup(3), 2,	2 dup(3), 2, 7 dup(3)
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1EAA	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		mov	mem_EndMark, bx
-		pop	bx
-		retf	2
-sub_1EAA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/smem_release.asm
 ; START	OF FUNCTION CHUNK FOR sub_1EC0
 
 loc_1EBA:
