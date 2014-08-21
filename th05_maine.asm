@@ -2479,8 +2479,7 @@ loc_14F5:
 		pop	ds
 		mov	mem_AllocID, 0Ah
 		nop
-		push	cs
-		call	near ptr sub_24BC
+		call	hmem_lallocate
 		pop	ds
 		stosw
 		jb	short loc_1546
@@ -2527,8 +2526,7 @@ loc_1546:
 		pop	ds
 		mov	mem_AllocID, 0Ah
 		nop
-		push	cs
-		call	near ptr sub_24BC
+		call	hmem_lallocate
 		pop	ds
 		mov	bx, ax
 		mov	ax, 0FFF8h
@@ -4309,40 +4307,7 @@ loc_24A0:
 		retf	2
 sub_247C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24BC	proc far
-					; sub_1446+140p
-		push	bx
-		mov	bx, sp
-		mov	ax, ss:[bx+8]
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		adc	ax, 0
-		shr	ax, 1
-		rcr	bx, 1
-		shr	ax, 1
-		rcr	bx, 1
-		shr	ax, 1
-		rcr	bx, 1
-		shr	ax, 1
-		jnz	short loc_24E8
-		rcr	bx, 1
-		push	bx
-		call	hmem_alloc
-		pop	bx
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_24E8:
-		mov	ax, 0
-		stc
-		pop	bx
-		retf	4
-sub_24BC	endp
-
+include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
 include libs/master.lib/memheap.asm
