@@ -20059,7 +20059,7 @@ arg_0		= dword	ptr  4
 		push	large [bp+arg_0]
 		call	sub_F14
 		push	800h
-		call	sub_2578
+		call	hmem_allocbyte
 		mov	word_2D02E, ax
 		push	ax
 		push	large 800h
@@ -20080,7 +20080,7 @@ sub_1DFD4	proc far
 		cmp	word_2D02E, 0
 		jz	short loc_1DFED
 		push	word_2D02E
-		call	sub_267C
+		call	hmem_free
 		mov	word_2D02E, 0
 
 loc_1DFED:

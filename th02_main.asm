@@ -422,8 +422,7 @@ arg_0		= word ptr  6
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
 		push	es
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		pop	bp
 		retf	2
 sub_472		endp
@@ -568,8 +567,7 @@ arg_2		= word ptr  8
 		mov	ax, word_1DFD2
 		add	ax, 9
 		push	ax
-		push	cs
-		call	near ptr sub_2980
+		call	hmem_allocbyte
 		jb	short loc_5B0
 		mov	es, ax
 		push	[bp+arg_2]
@@ -592,8 +590,7 @@ loc_5B0:
 
 loc_5B7:
 		push	es
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	byte ptr word_1DFD4, 1
 
 loc_5C1:
@@ -2715,8 +2712,7 @@ sub_1340	proc far
 		mov	ax, 200h
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_2994
+		call	hmem_alloc
 		or	ax, ax
 		jz	short locret_1363
 		mov	word_1DF84, ax
@@ -2747,8 +2743,7 @@ sub_1364	proc far
 		push	cs
 		call	near ptr sub_1566
 		nop
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	ax, 1
 
 locret_137F:
@@ -3291,8 +3286,7 @@ arg_4		= dword	ptr  0Ah
 		jz	short loc_16E1
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	es:[bx+4], cx
 		mov	es:[bx+2], cx
 		mov	es:[bx], cx
@@ -3303,8 +3297,7 @@ loc_16E1:
 		jz	short loc_16FB
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	es:[bx+0Eh], cx
 		mov	es:[bx+12h], cx
 		mov	es:[bx+10h], cx
@@ -3315,8 +3308,7 @@ loc_16FB:
 		jz	short loc_1708
 		push	ax
 		nop
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 
 loc_1708:
 		pop	bp
@@ -4721,8 +4713,7 @@ arg_0		= word ptr  6
 		push	cs
 		call	near ptr sub_472
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		pop	bp
 		retf	2
 sub_2000	endp
@@ -5601,8 +5592,7 @@ sub_28DC	proc far
 		jnz	short loc_2908
 		rcr	bx, 1
 		push	bx
-		push	cs
-		call	near ptr sub_2994
+		call	hmem_alloc
 		pop	bx
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -5616,247 +5606,7 @@ sub_28DC	endp
 
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2980	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		jmp	short loc_299B
-sub_2980	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2994	proc far
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+6]
-
-loc_299B:
-		cmp	mem_TopSeg, 0
-		jnz	short loc_29A6
-		call	mem_assign_all
-
-loc_29A6:
-		push	cx
-		push	es
-		test	bx, bx
-		jz	short loc_2A07
-		mov	ax, mem_OutSeg
-		sub	ax, mem_EndMark
-		cmp	bx, ax
-		jnb	short loc_2A07
-		inc	bx
-		mov	ax, mem_FirstHole
-		test	ax, ax
-		jz	short loc_29E3
-		mov	cx, mem_OutSeg
-
-loc_29C3:
-		mov	es, ax
-		mov	ax, es:2
-		cmp	word ptr es:0, 0
-		jnz	short loc_29DF
-		mov	cx, es
-		add	cx, bx
-		jb	short loc_29DB
-		cmp	cx, ax
-		jbe	short loc_2A14
-
-loc_29DB:
-		mov	cx, mem_OutSeg
-
-loc_29DF:
-		cmp	ax, cx
-		jnz	short loc_29C3
-
-loc_29E3:
-		mov	ax, mem_TopHeap
-		mov	cx, ax
-		sub	ax, bx
-		jb	short loc_2A07
-		cmp	ax, mem_EndMark
-		jb	short loc_2A07
-		mov	mem_TopHeap, ax
-		mov	es, ax
-		mov	es:2, cx
-		mov	word ptr es:0, 1
-		mov	bx, ax
-		jmp	short loc_2A6D
-; ---------------------------------------------------------------------------
-
-loc_2A07:
-		mov	ax, 0
-		mov	mem_AllocID, ax
-		stc
-		pop	es
-		pop	cx
-		pop	bx
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_2A14:
-		sub	ax, cx
-		cmp	ax, 1
-		jbe	short loc_2A44
-		add	ax, cx
-		mov	word ptr es:0, 1
-		mov	es:2, cx
-		mov	bx, es
-		mov	es, cx
-		mov	es:2, ax
-		mov	word ptr es:0, 0
-		cmp	bx, mem_FirstHole
-		jnz	short loc_2A6D
-		mov	mem_FirstHole, cx
-		jmp	short loc_2A6D
-; ---------------------------------------------------------------------------
-
-loc_2A44:
-		mov	word ptr es:0, 1
-		mov	bx, es
-		cmp	bx, mem_FirstHole
-		jnz	short loc_2A6D
-		mov	ax, mem_OutSeg
-		mov	cx, bx
-		push	bx
-
-loc_2A59:
-		les	cx, es:0
-		jcxz	short loc_2A68
-		mov	bx, es
-		cmp	bx, ax
-		jb	short loc_2A59
-		xor	bx, bx
-
-loc_2A68:
-		mov	mem_FirstHole, bx
-		pop	bx
-
-loc_2A6D:
-		mov	es, bx
-		mov	ax, 0
-		xchg	ax, mem_AllocID
-		mov	es:4, ax
-		lea	ax, [bx+1]
-		clc
-
-loc_2A7E:
-		pop	es
-		pop	cx
-		pop	bx
-		retf	2
-sub_2994	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2A84	proc far
-		push	bx
-		mov	bx, sp
-		push	cx
-		push	es
-		mov	bx, ss:[bx+6]
-		dec	bx
-		mov	es, bx
-		cmp	bx, mem_TopHeap
-		jz	short loc_2AE8
-		jb	short loc_2A7E
-		xor	bx, bx
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_2A7E
-		mov	es:[bx], bx
-		mov	cx, mem_FirstHole
-		mov	ax, es
-		mov	mem_FirstHole, ax
-		jcxz	short loc_2B25
-		cmp	ax, cx
-		jb	short loc_2AB7
-		mov	ax, cx
-		mov	mem_FirstHole, ax
-
-loc_2AB7:
-		mov	cx, ax
-		mov	ax, es:[bx+2]
-		cmp	ax, mem_OutSeg
-		jnz	short loc_2AC5
-		mov	ax, es
-
-loc_2AC5:
-		push	ds
-
-loc_2AC6:
-		mov	ds, cx
-		mov	cx, [bx+2]
-		cmp	cx, ax
-		ja	short loc_2AE5
-		cmp	[bx], bx
-		jnz	short loc_2AC6
-
-loc_2AD3:
-		mov	es, cx
-		cmp	es:[bx], bx
-		jnz	short loc_2AC6
-		mov	cx, es:[bx+2]
-		mov	[bx+2],	cx
-		cmp	cx, ax
-		jbe	short loc_2AD3
-
-loc_2AE5:
-		pop	ds
-		jmp	short loc_2B25
-; ---------------------------------------------------------------------------
-
-loc_2AE8:
-		xor	bx, bx
-		mov	ax, es:[bx+2]
-		mov	mem_TopHeap, ax
-		cmp	ax, mem_OutSeg
-		jz	short loc_2B25
-		mov	es, ax
-		cmp	es:[bx], bx
-		jnz	short loc_2B25
-		mov	ax, es:[bx+2]
-		mov	mem_TopHeap, ax
-		mov	cx, mem_OutSeg
-		cmp	ax, cx
-		jz	short loc_2B21
-		jmp	short loc_2B18
-; ---------------------------------------------------------------------------
-		nop
-
-loc_2B10:
-		mov	ax, es:[bx+2]
-		cmp	ax, cx
-		jz	short loc_2B21
-
-loc_2B18:
-		mov	es, ax
-		cmp	es:[bx], bx
-		jnz	short loc_2B10
-		mov	bx, es
-
-loc_2B21:
-		mov	mem_FirstHole, bx
-
-loc_2B25:
-		clc
-		pop	es
-		pop	cx
-		pop	bx
-		retf	2
-sub_2A84	endp
-
+include libs/master.lib/memheap.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5899,8 +5649,7 @@ sub_2B50	proc far
 		cmp	word_1E2FA, 0
 		jz	short locret_2B7F
 		push	word_1E2FA
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	word_1E2FA, 0
 		jmp	short loc_2B6D
 ; ---------------------------------------------------------------------------
@@ -5929,8 +5678,7 @@ sub_2B50	endp
 loc_2B80:
 		push	ax
 		push	es
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		pop	ax
 		jmp	short loc_2B8D
 ; END OF FUNCTION CHUNK	FOR sub_2B94
@@ -5976,8 +5724,7 @@ arg_6		= word ptr  0Ch
 		add	ax, bx
 		mov	mem_AllocID, 4
 		push	ax
-		push	cs
-		call	near ptr sub_2980
+		call	hmem_allocbyte
 		jb	short loc_2B8A
 		mov	es, ax
 		push	word_1E2FC
@@ -6388,8 +6135,7 @@ arg_4		= word ptr  0Ah
 		jnz	short loc_2E48
 		mov	mem_AllocID, 4
 		push	240h
-		push	cs
-		call	near ptr sub_2994
+		call	hmem_alloc
 		mov	word_1E2FA, ax
 		mov	ax, 0FFF8h
 		jb	short loc_2E77
@@ -6416,8 +6162,7 @@ loc_2E48:
 		cmp	word ptr [bx+1EDAh], 0
 		jz	short loc_2E67
 		push	word ptr [bx+1ADAh]
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		jmp	short loc_2E67
 ; ---------------------------------------------------------------------------
 
@@ -6560,8 +6305,7 @@ sub_2F06	proc far
 		or	ax, ax
 		jz	short loc_2F4E
 		push	word ptr [bx+1ADAh]
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		mov	[bx+1ADAh], dx
 		mov	[bx+1EDAh], dx
 		inc	cx
@@ -8260,8 +8004,7 @@ arg_10		= word ptr  16h
 		push	di
 		mov	mem_AllocID, 7
 		push	1Fh
-		push	cs
-		call	near ptr sub_2980
+		call	hmem_allocbyte
 		jnb	short loc_3C17
 		jmp	loc_3CD2
 ; ---------------------------------------------------------------------------
@@ -8340,8 +8083,7 @@ loc_3CBF:
 
 loc_3CCB:
 		push	si
-		push	cs
-		call	near ptr sub_2A84
+		call	hmem_free
 		jmp	short loc_3CD7
 ; ---------------------------------------------------------------------------
 
@@ -22306,7 +22048,7 @@ loc_B27A:
 
 loc_B287:
 		push	word ptr dword_1F4A8+2
-		call	sub_2A84
+		call	hmem_free
 
 loc_B290:
 		mov	word_1DF9A, 0
@@ -23744,7 +23486,7 @@ sub_C13E	proc far
 		push	bp
 		mov	bp, sp
 		push	36B0h
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	word ptr dword_1F4A8+2,	ax
 		mov	word ptr dword_1F4A8, 0
 		mov	byte_1E516, 50h	; 'P'
@@ -28167,7 +27909,7 @@ sub_E178	proc near
 		push	0
 		call	sub_98C
 		push	438h
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	word_218C0, ax
 		mov	word_218BE, 0
 		push	ax
@@ -28218,7 +27960,7 @@ loc_E1F3:
 		push	0
 		call	sub_98C
 		push	1440h
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	word ptr dword_218BA+2,	ax
 		mov	word ptr dword_218BA, 0
 		push	ax
@@ -28249,7 +27991,7 @@ sub_E24A	proc near
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	short loc_E26F
 		push	word ptr dword_218BA+2
-		call	sub_2A84
+		call	hmem_free
 
 loc_E26F:
 		pop	bp
@@ -30540,7 +30282,7 @@ sub_F4EF	proc far
 		cmp	dword_1FFBC, 0
 		jz	short loc_F503
 		push	word ptr dword_1FFBC+2
-		call	sub_2A84
+		call	hmem_free
 
 loc_F503:
 		mov	dword_1FFBC, 0
@@ -31146,7 +30888,7 @@ loc_F8C8:
 		inc	ax
 		shl	ax, 7
 		push	ax
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	word ptr dword_1FFBC+2,	ax
 		mov	word ptr dword_1FFBC, 0
 		cmp	dword_1FFBC, 0
@@ -55635,7 +55377,7 @@ var_2		= word ptr -2
 		push	4
 		call	sub_89C
 		push	[bp+var_A]
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	[bp+var_6], ax
 		mov	word ptr [bp+src+2], ax
 		mov	word ptr [bp+src], 0
@@ -55783,7 +55525,7 @@ loc_1C579:
 		mov	ax, [bp+var_2]
 		add	ax, ax
 		push	ax
-		call	sub_2980
+		call	hmem_allocbyte
 		mov	bx, di
 		shl	bx, 2
 		mov	[bx-6EF8h], ax
@@ -55849,7 +55591,7 @@ loc_1C5F7:
 		cmp	di, [bp+var_2]
 		jl	short loc_1C59D
 		push	[bp+var_6]
-		call	sub_2A84
+		call	hmem_free
 		pop	di
 		pop	si
 		leave
@@ -55879,7 +55621,7 @@ loc_1C610:
 		mov	bx, si
 		shl	bx, 2
 		push	word ptr [bx-6EF8h]
-		call	sub_2A84
+		call	hmem_free
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx-6EF8h], 0

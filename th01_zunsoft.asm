@@ -269,8 +269,6 @@ loc_50C:
 		mov	ax, [bx+295Ah]
 		mov	bx, si
 		shl	bx, 2
-
-loc_54D:
 		add	[bx+287Ah], ax
 		mov	bx, si
 		shl	bx, 2
@@ -644,7 +642,7 @@ _envp		= word ptr  8
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		and	byte ptr es:loc_54D, 7Fh
+		and	byte ptr es:[54Dh], 7Fh
 
 loc_7F0:
 		call	sub_384
@@ -741,7 +739,7 @@ sub_8DA		proc near
 		mov	word_22B6, ax
 		mov	word_22BC, ax
 		mov	es, ax
-		mov	ah, byte ptr es:loc_54D
+		mov	ah, byte ptr es:[54Dh]
 		and	ah, 4
 		add	ah, 3Fh
 		and	ah, 40h
@@ -1576,7 +1574,7 @@ sub_D92		proc near
 		or	ax, ax
 		jz	short loc_DD8
 		push	word ptr [bx+29C6h]
-		call	sub_1276
+		call	hmem_free
 		mov	[bx+29C6h], dx
 		mov	[bx+2DC6h], dx
 		inc	cx
@@ -1611,7 +1609,7 @@ sub_D92		endp
 loc_DE0:
 		push	ax
 		push	es
-		call	sub_1276
+		call	hmem_free
 		pop	ax
 		jmp	short loc_DEB
 ; ---------------------------------------------------------------------------
@@ -1653,7 +1651,7 @@ arg_6		= word ptr  0Ah
 		add	ax, bx
 		mov	mem_AllocID, 4
 		push	ax
-		call	sub_1172
+		call	hmem_allocbyte
 		jb	short loc_DE8
 		mov	es, ax
 		push	word_22AA
@@ -1895,7 +1893,7 @@ sub_F68		proc near
 		cmp	word_22A8, 0
 		jz	short locret_F95
 		push	word_22A8
-		call	sub_1276
+		call	hmem_free
 		mov	word_22A8, 0
 		jmp	short loc_F83
 ; ---------------------------------------------------------------------------
@@ -1941,7 +1939,7 @@ arg_4		= word ptr  8
 		jnz	short loc_FD5
 		mov	mem_AllocID, 4
 		push	240h
-		call	sub_1186
+		call	hmem_alloc
 		mov	word_22A8, ax
 		mov	ax, 0FFF8h
 		jb	short loc_1003
@@ -1968,7 +1966,7 @@ loc_FD5:
 		cmp	word ptr [bx+2DC6h], 0
 		jz	short loc_FF3
 		push	word ptr [bx+29C6h]
-		call	sub_1276
+		call	hmem_free
 		jmp	short loc_FF3
 ; ---------------------------------------------------------------------------
 
@@ -2209,252 +2207,7 @@ sub_1162	proc near
 		retn	2
 sub_1162	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1172	proc near
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		add	bx, 0Fh
-		rcr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		shr	bx, 1
-		jmp	short loc_118D
-sub_1172	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1186	proc near
-		push	bx
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-
-loc_118D:
-		cmp	mem_TopSeg, 0
-		jnz	short loc_1197
-		call	mem_assign_all
-
-loc_1197:
-		push	cx
-		push	es
-		test	bx, bx
-		jz	short loc_11F8
-		mov	ax, ds:3348h
-		sub	ax, ds:334Eh
-		cmp	bx, ax
-		jnb	short loc_11F8
-		inc	bx
-		mov	ax, ds:334Ch
-		test	ax, ax
-		jz	short loc_11D4
-		mov	cx, ds:3348h
-
-loc_11B4:
-		mov	es, ax
-		assume es:nothing
-		mov	ax, es:2
-		cmp	word ptr es:0, 0
-		jnz	short loc_11D0
-		mov	cx, es
-		add	cx, bx
-		jb	short loc_11CC
-		cmp	cx, ax
-		jbe	short loc_1205
-
-loc_11CC:
-		mov	cx, ds:3348h
-
-loc_11D0:
-		cmp	ax, cx
-		jnz	short loc_11B4
-
-loc_11D4:
-		mov	ax, ds:334Ah
-		mov	cx, ax
-		sub	ax, bx
-		jb	short loc_11F8
-		cmp	ax, ds:334Eh
-		jb	short loc_11F8
-		mov	ds:334Ah, ax
-		mov	es, ax
-		mov	es:2, cx
-		mov	word ptr es:0, 1
-		mov	bx, ax
-		jmp	short loc_125E
-; ---------------------------------------------------------------------------
-
-loc_11F8:
-		mov	ax, 0
-		mov	mem_AllocID, ax
-		stc
-		pop	es
-		pop	cx
-		pop	bx
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_1205:
-		sub	ax, cx
-		cmp	ax, 1
-		jbe	short loc_1235
-		add	ax, cx
-		mov	word ptr es:0, 1
-		mov	es:2, cx
-		mov	bx, es
-		mov	es, cx
-		mov	es:2, ax
-		mov	word ptr es:0, 0
-		cmp	bx, ds:334Ch
-		jnz	short loc_125E
-		mov	ds:334Ch, cx
-		jmp	short loc_125E
-; ---------------------------------------------------------------------------
-
-loc_1235:
-		mov	word ptr es:0, 1
-		mov	bx, es
-		cmp	bx, ds:334Ch
-		jnz	short loc_125E
-		mov	ax, ds:3348h
-		mov	cx, bx
-		push	bx
-
-loc_124A:
-		les	cx, es:0
-		jcxz	short loc_1259
-		mov	bx, es
-		cmp	bx, ax
-		jb	short loc_124A
-		xor	bx, bx
-
-loc_1259:
-		mov	ds:334Ch, bx
-		pop	bx
-
-loc_125E:
-		mov	es, bx
-		mov	ax, 0
-		xchg	ax, mem_AllocID
-		mov	es:4, ax
-		lea	ax, [bx+1]
-		clc
-
-loc_126F:
-		pop	es
-		pop	cx
-		pop	bx
-		retn	2
-sub_1186	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1276	proc near
-		push	bx
-		mov	bx, sp
-		push	cx
-		push	es
-		mov	bx, ss:[bx+4]
-		dec	bx
-		mov	es, bx
-		cmp	bx, ds:334Ah
-		jz	short loc_12DA
-		jb	short loc_126F
-		xor	bx, bx
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_126F
-		mov	es:[bx], bx
-		mov	cx, ds:334Ch
-		mov	ax, es
-		mov	ds:334Ch, ax
-		jcxz	short loc_1317
-		cmp	ax, cx
-		jb	short loc_12A9
-		mov	ax, cx
-		mov	ds:334Ch, ax
-
-loc_12A9:
-		mov	cx, ax
-		mov	ax, es:[bx+2]
-		cmp	ax, ds:3348h
-		jnz	short loc_12B7
-		mov	ax, es
-
-loc_12B7:
-		push	ds
-
-loc_12B8:
-		mov	ds, cx
-		mov	cx, [bx+2]
-		cmp	cx, ax
-		ja	short loc_12D7
-		cmp	[bx], bx
-		jnz	short loc_12B8
-
-loc_12C5:
-		mov	es, cx
-		cmp	es:[bx], bx
-		jnz	short loc_12B8
-		mov	cx, es:[bx+2]
-		mov	[bx+2],	cx
-		cmp	cx, ax
-		jbe	short loc_12C5
-
-loc_12D7:
-		pop	ds
-		jmp	short loc_1317
-; ---------------------------------------------------------------------------
-
-loc_12DA:
-		xor	bx, bx
-		mov	ax, es:[bx+2]
-		mov	ds:334Ah, ax
-		cmp	ax, ds:3348h
-		jz	short loc_1317
-		mov	es, ax
-		cmp	es:[bx], bx
-		jnz	short loc_1317
-		mov	ax, es:[bx+2]
-		mov	ds:334Ah, ax
-		mov	cx, ds:3348h
-		cmp	ax, cx
-		jz	short loc_1313
-		jmp	short loc_130A
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1302:
-		mov	ax, es:[bx+2]
-		cmp	ax, cx
-		jz	short loc_1313
-
-loc_130A:
-		mov	es, ax
-		cmp	es:[bx], bx
-		jnz	short loc_1302
-		mov	bx, es
-
-loc_1313:
-		mov	ds:334Ch, bx
-
-loc_1317:
-		clc
-		pop	es
-		pop	cx
-		pop	bx
-		retn	2
-sub_1276	endp
-
+include libs/master.lib/memheap.asm
 include libs/master.lib/mem_assign.asm
 
 ; =============== S U B	R O U T	I N E =======================================
