@@ -3253,54 +3253,7 @@ locret_1666:
 sub_1614	endp
 
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16C0	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		assume es:nothing
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_16E1
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_16E1:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_16FB
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_16FB:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_1708
-		push	ax
-		nop
-		call	hmem_free
-
-loc_1708:
-		pop	bp
-		retf	8
-sub_16C0	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_1718
@@ -23865,7 +23818,7 @@ _arg0		= dword	ptr  6
 		push	ds
 		push	offset unk_1FD74
 		push	large [dword_1FD5C]
-		call	sub_16C0
+		call	graph_pi_free
 		call	sub_E24A
 		call	sub_F4EF
 		call	sub_1C608
@@ -27880,7 +27833,7 @@ sub_E24A	proc near
 		push	ds
 		push	offset unk_1FDBC
 		push	large [dword_1FD60]
-		call	sub_16C0
+		call	graph_pi_free
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	short loc_E26F

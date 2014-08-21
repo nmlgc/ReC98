@@ -2034,54 +2034,7 @@ locret_12A2:
 sub_1250	endp
 
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12FC	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		assume es:nothing
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_131D
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_131D:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_1337
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_1337:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_1344
-		push	ax
-		nop
-		call	hmem_free
-
-loc_1344:
-		pop	bp
-		retf	8
-sub_12FC	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_1354
@@ -26416,7 +26369,7 @@ sub_DEE0	proc far
 		push	word ptr [bx+2]
 		push	word ptr [bx]
 		mov	dword ptr [bx],	0
-		call	sub_12FC
+		call	graph_pi_free
 
 locret_DF0E:
 		retf	2

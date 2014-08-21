@@ -2558,54 +2558,7 @@ locret_15BE:
 sub_156C	endp
 
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1618	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		assume es:nothing
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_1639
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_1639:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_1653
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_1653:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_1660
-		push	ax
-		nop
-		call	hmem_free
-
-loc_1660:
-		pop	bp
-		retf	8
-sub_1618	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_1670
@@ -19664,7 +19617,7 @@ loc_AA6E:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		call	sub_CCC8
 		call	sub_A7F0
 		call	sub_1356
@@ -20225,7 +20178,7 @@ loc_AF56:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		mov	word_F8C6, 64h ; 'd'
@@ -20262,7 +20215,7 @@ loc_AFBD:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		mov	word_F8C6, 64h ; 'd'
@@ -21539,7 +21492,7 @@ sub_B9CE	proc near
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		push	1
@@ -21861,7 +21814,7 @@ var_1		= byte ptr -1
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		call	sub_E428
@@ -22826,7 +22779,7 @@ sub_C3B7	proc near
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		mov	al, byte_102AF
 		mov	byte ptr word_12DBC, al
 		push	word_12DBC
@@ -23737,7 +23690,7 @@ loc_CB58:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -23753,7 +23706,7 @@ loc_CB58:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		push	1
@@ -24014,27 +23967,27 @@ loc_CDC4:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	ds
 		push	offset unk_11710
 		push	large [dword_116B4]
-		call	sub_1618
+		call	graph_pi_free
 		push	ds
 		push	offset unk_11758
 		push	large [dword_116B8]
-		call	sub_1618
+		call	graph_pi_free
 		push	ds
 		push	offset unk_117A0
 		push	large [dword_116BC]
-		call	sub_1618
+		call	graph_pi_free
 		push	ds
 		push	offset unk_117E8
 		push	large [dword_116C0]
-		call	sub_1618
+		call	graph_pi_free
 		push	ds
 		push	offset unk_11830
 		push	large [dword_116C4]
-		call	sub_1618
+		call	graph_pi_free
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_CE50
@@ -24061,7 +24014,7 @@ loc_CE50:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		push	0
 		call	sub_156C
 		xor	si, si
@@ -25311,7 +25264,7 @@ loc_D8B2:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		mov	ax, 1
 		jmp	loc_DA0D
 ; ---------------------------------------------------------------------------
@@ -25410,7 +25363,7 @@ loc_D994:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		xor	ax, ax
 		jmp	short loc_DA0D
 ; ---------------------------------------------------------------------------
@@ -25422,7 +25375,7 @@ loc_D9D5:
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
-		call	sub_1618
+		call	graph_pi_free
 		jmp	loc_D7B8
 ; ---------------------------------------------------------------------------
 
@@ -25620,7 +25573,7 @@ arg_4		= word ptr  0Ah
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+2370h]
-		call	sub_1618
+		call	graph_pi_free
 		push	large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 48h

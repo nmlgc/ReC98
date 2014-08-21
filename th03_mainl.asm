@@ -2055,53 +2055,7 @@ sub_F58		endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FEC		proc far
-					; sub_9A2C+2FP	...
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_100D
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_100D:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_1027
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_1027:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_1034
-		push	ax
-		nop
-		call	hmem_free
-
-loc_1034:
-		pop	bp
-		retf	8
-sub_FEC		endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_1044
@@ -17769,7 +17723,7 @@ loc_99F1:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		push	0
 		push	ds
 		push	word_E504
@@ -17805,7 +17759,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		push	large 600060h
 		push	0
 		call	far ptr	loc_C9D4
@@ -17888,7 +17842,7 @@ loc_9A8E:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
@@ -18026,7 +17980,7 @@ loc_9C5E:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		call	sub_2820
 		pop	si
 		leave
@@ -18068,7 +18022,7 @@ arg_4		= word ptr  8
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 65h	; 'e'
 		mov	byte ptr es:[bx+3], 78h	; 'x'
@@ -18084,7 +18038,7 @@ arg_4		= word ptr  8
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		pop	si
 		pop	bp
 		retn	6
@@ -18261,7 +18215,7 @@ loc_9E89:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		mov	al, byte_F7E3
 		mov	ah, 0
 		cwd
@@ -18334,7 +18288,7 @@ loc_9F38:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		call	sub_B7D2
 		call	sub_9F8D
 		or	ax, ax
@@ -18348,7 +18302,7 @@ loc_9F58:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 
 loc_9F69:
 		call	text_clear
@@ -18526,7 +18480,7 @@ loc_A0C5:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		push	100h
 		call	sub_CEC2
 		les	bx, dword_105DA
@@ -19657,7 +19611,7 @@ loc_AA1B:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -20400,7 +20354,7 @@ sub_AFAC	proc near
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
 		mov	bx, word_ED68
@@ -21626,7 +21580,7 @@ loc_B879:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		push	0
 		push	ds
 		push	offset aConti_cd2 ; "conti.cd2"
@@ -21648,7 +21602,7 @@ loc_B8F1:
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		push	0FFh
 		call	sub_C864
 		pop	cx
@@ -21706,7 +21660,7 @@ var_1		= byte ptr -1
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
-		call	sub_FEC
+		call	graph_pi_free
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -25093,7 +25047,7 @@ arg_4		= word ptr  0Ah
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1F0Eh]
-		call	sub_FEC
+		call	graph_pi_free
 		push	large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 48h

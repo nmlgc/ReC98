@@ -2919,53 +2919,7 @@ sub_13B6	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1460	proc far
-					; sub_9B64+2ABP ...
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_1481
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_1481:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_149B
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_149B:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_14A8
-		push	ax
-		nop
-		call	hmem_free
-
-loc_14A8:
-		pop	bp
-		retf	8
-sub_1460	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_14B8
@@ -18539,7 +18493,7 @@ sub_9B64	proc near
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_536
 		push	28h ; '('
@@ -18783,7 +18737,7 @@ loc_9D96:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_57A
 		les	bx, dword_FB02
@@ -19098,7 +19052,7 @@ sub_A09D	proc near
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_536
 		push	28h ; '('
@@ -19135,7 +19089,7 @@ sub_A09D	proc near
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	0
 		call	sub_98B5
 		push	1
@@ -19266,7 +19220,7 @@ loc_A247:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19488,7 +19442,7 @@ loc_A451:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	0
 		call	sub_98B5
 		push	2
@@ -19657,7 +19611,7 @@ loc_A620:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	1
 		call	sub_98B5
 		push	2
@@ -19811,7 +19765,7 @@ loc_A6B6:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_98B5
 		push	2
@@ -20047,7 +20001,7 @@ loc_A992:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20102,7 +20056,7 @@ loc_A992:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20199,7 +20153,7 @@ loc_A992:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	0F8h ; 'ø'
 		push	0
 		push	0E9h ; 'é'
@@ -20291,7 +20245,7 @@ loc_A992:
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	0
 		call	sub_1276
 		push	4
@@ -20644,7 +20598,7 @@ sub_AFE7	proc far
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_536
 		push	96h ; '–'
@@ -20664,7 +20618,7 @@ sub_AFE7	proc far
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		call	sub_B4B7
 		push	5
 		call	sub_57A
@@ -20702,7 +20656,7 @@ sub_B07F	proc far
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		push	2
 		call	sub_536
 		push	96h ; '–'
@@ -20722,7 +20676,7 @@ sub_B07F	proc far
 		push	ds
 		push	offset unk_F8BA
 		push	large [dword_F8A2]
-		call	sub_1460
+		call	graph_pi_free
 		call	sub_B4B7
 		push	5
 		call	sub_57A

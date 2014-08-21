@@ -2879,53 +2879,7 @@ sub_1590	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1596	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		assume es:nothing
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_15B7
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_15B7:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_15D1
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_15D1:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_15DE
-		push	ax
-		nop
-		call	hmem_free
-
-loc_15DE:
-		pop	bp
-		retf	8
-sub_1596	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_15EE
@@ -20484,7 +20438,7 @@ _arg0		= dword	ptr  6
 		push	ds
 		push	offset unk_1F014
 		push	large [dword_1EFFC]
-		call	sub_1596
+		call	graph_pi_free
 		call	sub_248C
 		call	sub_1590
 		call	text_clear
@@ -28064,7 +28018,7 @@ arg_4		= word ptr  0Ah
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1A9Ch]
-		call	sub_1596
+		call	graph_pi_free
 		push	large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 48h

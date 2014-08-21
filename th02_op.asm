@@ -2663,52 +2663,7 @@ sub_13D0	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_147A	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_149B
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_149B:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_14B5
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_14B5:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_14C2
-		push	ax
-		nop
-		call	hmem_free
-
-loc_14C2:
-		pop	bp
-		retf	8
-sub_147A	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_14D2
@@ -17977,7 +17932,7 @@ arg_2		= word ptr  6
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		pop	bp
 		retn	4
 sub_9D1D	endp
@@ -18293,17 +18248,17 @@ sub_A027	proc far
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F1DC
 		push	word_F182
 		push	word_F180
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F224
 		push	word_F186
 		push	word_F184
-		call	sub_147A
+		call	graph_pi_free
 		call	sub_FE0
 		call	sub_2966
 		call	sub_B019
@@ -18744,7 +18699,7 @@ loc_A3BC:
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset aOp_rgb	; "op.rgb"
 		call	sub_1FA2
@@ -20876,17 +20831,17 @@ loc_B370:
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F1DC
 		push	word_F182
 		push	word_F180
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F224
 		push	word_F186
 		push	word_F184
-		call	sub_147A
+		call	graph_pi_free
 		pop	si
 		leave
 		retf
@@ -22096,7 +22051,7 @@ sub_BBC0	proc far
 		push	offset unk_F26C
 		push	word_F18A
 		push	word_F188
-		call	sub_147A
+		call	graph_pi_free
 		push	1
 		call	sub_1290
 		mov	dx, 0A6h ; '¦'
@@ -22526,17 +22481,17 @@ loc_BFB7:
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F1DC
 		push	word_F182
 		push	word_F180
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset unk_F224
 		push	word_F186
 		push	word_F184
-		call	sub_147A
+		call	graph_pi_free
 		push	1
 		call	sub_57A
 		pop	di
@@ -23568,7 +23523,7 @@ var_1		= byte ptr -1
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		mov	al, byte_DF97
 		mov	byte ptr word_F57C, al
 		push	word_F57C
@@ -23760,7 +23715,7 @@ loc_C978:
 		push	offset unk_F194
 		push	word_F17E
 		push	word_F17C
-		call	sub_147A
+		call	graph_pi_free
 		push	ds
 		push	offset aOp_rgb_0 ; "op.rgb"
 		call	sub_1FA2

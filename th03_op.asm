@@ -2456,52 +2456,7 @@ sub_1232	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12DC	proc far
-
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		xor	cx, cx
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx+2]
-		test	ax, ax
-		jz	short loc_12FD
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+4], cx
-		mov	es:[bx+2], cx
-		mov	es:[bx], cx
-
-loc_12FD:
-		mov	ax, es:[bx+12h]
-		test	ax, ax
-		jz	short loc_1317
-		push	ax
-		nop
-		call	hmem_free
-		mov	es:[bx+0Eh], cx
-		mov	es:[bx+12h], cx
-		mov	es:[bx+10h], cx
-
-loc_1317:
-		mov	ax, [bp+arg_2]
-		test	ax, ax
-		jz	short loc_1324
-		push	ax
-		nop
-		call	hmem_free
-
-loc_1324:
-		pop	bp
-		retf	8
-sub_12DC	endp
+include libs/master.lib/graph_pi_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_1334
@@ -20258,7 +20213,7 @@ loc_AC15:
 		push	ds
 		push	offset unk_F4B0
 		push	large [dword_F498]
-		call	sub_12DC
+		call	graph_pi_free
 		mov	al, byte_DE83
 		mov	byte ptr word_F828, al
 		push	word_F828
@@ -20477,7 +20432,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset unk_F4B0
 		push	large [dword_F498]
-		call	sub_12DC
+		call	graph_pi_free
 		push	0
 		push	ds
 		push	offset aTl02_pi	; "TL02.PI"
@@ -20619,7 +20574,7 @@ loc_AFD9:
 		push	ds
 		push	offset unk_F4B0
 		push	large [dword_F498]
-		call	sub_12DC
+		call	graph_pi_free
 		call	sub_B38D
 		pop	si
 		leave
@@ -20676,7 +20631,7 @@ sub_B008	proc near
 		push	ds
 		push	offset unk_F4B0
 		push	large [dword_F498]
-		call	sub_12DC
+		call	graph_pi_free
 		call	sub_B38D
 		push	0
 		call	sub_C403
@@ -24017,7 +23972,7 @@ arg_4		= word ptr  0Ah
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1CA8h]
-		call	sub_12DC
+		call	graph_pi_free
 		push	large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 48h
