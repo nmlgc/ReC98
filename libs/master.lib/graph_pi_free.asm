@@ -73,10 +73,7 @@ func GRAPH_PI_FREE	; graph_pi_free() {
 	test	AX,AX
 	jz	short NO_COMMENT
 	push	AX
-if LDATA
-	nop	; Touhou PC-98 compatibility
-endif
-	call	HMEM_FREE
+	nopcall	HMEM_FREE
 	mov	(PiHeader ptr ES:[BX]).commentlen,CX
 	mov	(PiHeader ptr ES:[BX]).comment_segment,CX
 	mov	(PiHeader ptr ES:[BX]).comment_offset,CX
@@ -86,10 +83,7 @@ NO_COMMENT:
 	test	AX,AX
 	jz	short NO_MACHINEINFO
 	push	AX
-if LDATA
-	nop	; Touhou PC-98 compatibility
-endif
-	call	HMEM_FREE
+	nopcall	HMEM_FREE
 	mov	(PiHeader ptr ES:[BX]).maexlen,CX
 	mov	(PiHeader ptr ES:[BX]).maex_segment,CX
 	mov	(PiHeader ptr ES:[BX]).maex_offset,CX
@@ -99,10 +93,7 @@ NO_MACHINEINFO:
 	test	AX,AX
 	jz	short NO_IMAGE
 	push	AX
-if LDATA
-	nop	; Touhou PC-98 compatibility
-endif
-	call	HMEM_FREE
+	nopcall	HMEM_FREE
 
 NO_IMAGE:
 

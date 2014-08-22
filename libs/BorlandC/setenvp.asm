@@ -4,8 +4,8 @@
 ; * removal of external data and function references (and subsequent
 ;   correction of their symbols in the code)
 ; * removal of the segment declarations (for obvious reasons)
-; * and three additional NOPs to ensure binary compatibility to the original
-;   builds of the PC-98 Touhou games.
+; * nopcall to ensure binary compatibility to the original builds of the PC-98
+;   Touhou games
 
 ;[]-----------------------------------------------------------------[]
 ;|      SETENVP.ASM -- Prepare Environment                           |
@@ -53,8 +53,7 @@ ENDIF
 
                 push    es              ; Save Environment Segment address
                 push    _envSize@
-                nop                     ; Touhou PC-98 compatibility
-                call    _malloc
+                nopcall _malloc
                 pop     bx
                 mov     bx, ax
                 pop     es              ; Restore Environment Segment address

@@ -39,21 +39,12 @@ endif
 @@exit_slow:
 		cmp	_atexitcnt, 0
 		jnz	short @@atexit_loop
-if LDATA
-		nop
-endif
-		call	__cleanup
+		nopcall	__cleanup
 		call	_exitbuf
 
 @@exit_part2:
-if LDATA
-		nop
-endif
-		call	__restorezero
-if LDATA
-		nop
-endif
-		call	__checknull
+		nopcall	__restorezero
+		nopcall	__checknull
 		cmp	[bp+@@dontexit], 0
 		jnz	short @@___exit_ret
 		cmp	[bp+@@quick], 0
@@ -63,10 +54,7 @@ endif
 
 @@exit_terminate:
 		push	[bp+@@errcode]
-if LDATA
-		nop
-endif
-		call	__terminate
+		nopcall	__terminate
 		pop	cx
 
 @@___exit_ret:

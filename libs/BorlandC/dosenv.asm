@@ -29,8 +29,7 @@ __DOSENV	proc near
 		add	word ptr [bp+@@envW], 4
 		push	word ptr es:[bx+2]
 		push	word ptr es:[bx]
-		nop
-		call	_strlen
+		nopcall	_strlen
 		pop	cx
 		pop	cx
 		inc	ax
@@ -52,8 +51,7 @@ __DOSENV	proc near
 		jz	short @@DOSENV_size_check
 		push	word ptr [bp+@@pathP+2]
 		push	word ptr [bp+@@pathP]
-		nop
-		call	_strlen
+		nopcall	_strlen
 		pop	cx
 		pop	cx
 		add	ax, 3
@@ -68,8 +66,7 @@ __DOSENV	proc near
 		mov	ax, [bp+@@envS]
 		add	ax, 0Fh
 		push	ax
-		nop
-		call	_malloc
+		nopcall	_malloc
 		pop	cx
 		mov	word ptr [bp+@@bufP+2], dx
 		mov	word ptr [bp+@@bufP], ax
@@ -103,8 +100,7 @@ __DOSENV	proc near
 		push	word ptr es:[bx]
 		push	word ptr [bp+@@bufP+2]
 		push	word ptr [bp+@@bufP]
-		nop
-		call	_stpcpy
+		nopcall	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+@@bufP+2], dx
 		mov	word ptr [bp+@@bufP], ax
@@ -141,8 +137,7 @@ __DOSENV	proc near
 		push	word ptr [bp+@@pathP]
 		push	word ptr [bp+@@bufP+2]
 		push	word ptr [bp+@@bufP]
-		nop
-		call	_stpcpy
+		nopcall	_stpcpy
 		add	sp, 8
 		mov	word ptr [bp+@@bufP+2], dx
 		mov	word ptr [bp+@@bufP], ax

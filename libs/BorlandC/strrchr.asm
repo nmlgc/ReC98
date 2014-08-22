@@ -13,9 +13,7 @@ strrchr	proc far
 		push	di
 		push	word ptr [bp+@@s+2]
 		push	word ptr [bp+@@s]	; s
-		nop
-		push	cs
-		call	near ptr _strlen
+		nopcall	_strlen
 		pop	cx
 		pop	cx
 		inc	ax

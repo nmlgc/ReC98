@@ -36,8 +36,7 @@ Int0Catcher	proc far
 @@Int0Catcher_exit:
 		mov	ax, 1
 		push	ax
-		nop
-		call	__exit
+		nopcall	__exit
 		pop	cx
 
 @@Int0Catcher_call:
@@ -105,8 +104,7 @@ Int4Catcher	proc far
 @@Int4Catcher_exit:
 		mov	ax, 1
 		push	ax
-		nop
-		call	__exit
+		nopcall	__exit
 		pop	cx
 
 @@Int4Catcher_call:
@@ -176,8 +174,7 @@ Int23Catcher	proc far
 @@Int23Catcher_exit:
 		mov	ax, 1
 		push	ax
-		nop
-		call	__exit
+		nopcall	__exit
 		pop	cx
 
 @@Int23Catcher_call:
@@ -187,8 +184,7 @@ Int23Catcher	proc far
 		push	word ptr OldInt23
 		mov	ax, 23h
 		push	ax
-		nop
-		call	_setvect
+		nopcall	_setvect
 		mov	ax, 2
 		push	ax
 		call	[bp+@@action]
@@ -293,8 +289,7 @@ signal		proc DIST
 		jnz	short @@signal_new_check
 		mov	ax, 23h
 		push	ax
-		nop
-		call	_getvect
+		nopcall	_getvect
 		pop	cx
 		mov	word ptr OldInt23+2, dx
 		mov	word ptr OldInt23, ax
@@ -327,8 +322,7 @@ signal		proc DIST
 		push	ax
 		xor	ax, ax
 		push	ax
-		nop
-		call	_setvect
+		nopcall	_setvect
 		add	sp, 6
 		mov	ax, seg	Int4Catcher
 		push	ax
@@ -338,8 +332,7 @@ signal		proc DIST
 
 @@signal_last_vector:
 		push	ax
-		nop
-		call	_setvect
+		nopcall	_setvect
 		add	sp, 6
 
 @@signal_ret_oldvar:
@@ -396,8 +389,7 @@ raise	proc DIST
 		jz	short @@raise_SIGINT
 		cmp	ax, 16h
 		jnz	short @@raise_default
-		nop
-		call	__abort
+		nopcall	__abort
 
 @@raise_SIGINT:
 		xor	ax, ax
@@ -408,8 +400,7 @@ raise	proc DIST
 @@raise_default:
 		mov	ax, 1
 		push	ax
-		nop
-		call	__exit
+		nopcall	__exit
 		pop	cx
 		jmp	short @@raise_ret_0
 

@@ -460,11 +460,7 @@ CopyEnv:        mov     es, ax
                 push    dx
                 push    ds
                 mov     ds, cs:DGROUP@@         ; Get DS
-; PC-98 / Japanese-specific code below...
-; ---
-                nop
-; ---
-                call    __cexit
+                nopcall __cexit
                 pop     ds
                 pop     dx
 

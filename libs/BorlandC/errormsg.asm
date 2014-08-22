@@ -10,8 +10,7 @@ ___ErrorMessage	proc DIST
 if LDATA
 		push	word ptr [bp+@@msg+2]
 		push	word ptr [bp+@@msg]
-		nop
-		call	_strlen
+		nopcall	_strlen
 		pop	cx
 else
 		push	[bp+@@msg]
@@ -26,14 +25,8 @@ endif
 		mov	al, stderr.fd
 		cbw
 		push	ax
-if LDATA
-		nop
-		call	__rtl_write
-		add	sp, 8
-else
-		call	__rtl_write
-		add	sp, 6
-endif
+		nopcall	__rtl_write
+		add	sp, 4 + dPtrSize
 		pop	di
 		pop	si
 		pop	bp

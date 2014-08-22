@@ -35,9 +35,7 @@ cp		= dword ptr  4
 @@loc_4C6B:
 		push	[bp+_size]	; newsize
 		push	__psp		; __psp
-		nop
-		push	cs
-		call	near ptr _setblock
+		nopcall	_setblock
 		pop	cx
 		pop	cx
 		mov	dx, ax

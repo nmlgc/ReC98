@@ -70,11 +70,9 @@ fperror	proc near
 		push	ds
 		mov	ax, offset stderr
 		push	ax
-		nop
-		call	_fprintf
+		nopcall	_fprintf
 		add	sp, 0Ch
-		nop
-		call	_abort
+		nopcall	_abort
 
 @@fperror_ret:
 		mov	sp, bp

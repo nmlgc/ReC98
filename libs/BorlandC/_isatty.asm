@@ -1,13 +1,7 @@
 ; int __cdecl isatty(int handle)
 public _isatty
-
 _isatty		proc DIST
-
-if LDATA
-@@handle		= word ptr  6
-else
-@@handle		= word ptr  4
-endif
+@@handle		= word ptr  dPtrSize + 2
 
 		push	bp
 		mov	bp, sp

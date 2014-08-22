@@ -13,8 +13,7 @@ _stpcpy		proc DIST
 		push	di
 		push	word ptr [bp+@@from+2]
 		push	word ptr [bp+@@from]	; s
-		nop
-		call	_strlen
+		nopcall	_strlen
 		pop	cx
 		pop	cx
 		mov	[bp+@@len], ax
@@ -24,8 +23,7 @@ _stpcpy		proc DIST
 		push	word ptr [bp+@@from]	; src
 		push	word ptr [bp+@@to+2]
 		push	word ptr [bp+@@to] ; dest
-		nop
-		call	_memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 		mov	dx, word ptr [bp+@@to+2]
 		mov	ax, word ptr [bp+@@to]

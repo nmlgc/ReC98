@@ -3,8 +3,8 @@
 ; * removal of RULES.ASI to eliminate redundancy
 ; * data declarations being moved to a separate file
 ; * removal of the segment declarations (for obvious reasons)
-; * additional NOPs before far calls to ensure binary compatibility to the
-;   original builds of the PC-98 Touhou games.
+; * nopcall to ensure binary compatibility to the original builds of the PC-98
+;   Touhou games.
 
 ;[]------------------------------------------------------------[]
 ;|      C0.ASM -- Start Up Code for DOS                         |
@@ -164,10 +164,7 @@ ENDIF
 ;       All initialization errors arrive here
 
 InitFailed      label   near
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    __abort
+                nopcall __abort
 
 ;       Return to DOS the amount of memory in excess
 ;       Set far heap base and pointer
@@ -250,10 +247,7 @@ ENDIF
                 jnc     @@NoChange
 
 @@BadInit:
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    __abort
+                nopcall __abort
 
 @@NoChange:
 
@@ -263,8 +257,7 @@ endif
 
 IFNDEF __TINY__
                 push    bp
-                nop                             ; Touhou PC-98 compatibility
-                call    __ExceptInit
+                nopcall __ExceptInit
                 pop     ax
 ENDIF
                 mov     es, cs:DGROUP@@
@@ -289,10 +282,7 @@ ENDIF
 ;       Flush and close streams and files
 
                 push    ax
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    _exit
+                nopcall _exit
 
 ;---------------------------------------------------------------------------
 ;       _cleanup()      call all #pragma exit cleanup routines.
@@ -341,10 +331,7 @@ ComputeChecksum label   near
                 mov     dx, offset DGROUP:NullCheck
                 pushDS_
                 push    dx
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    ___ErrorMessage
+                nopcall ___ErrorMessage
                 pop     dx
                 popDS_
 @@SumOK:        pop     di
@@ -379,18 +366,12 @@ ZeroDivision    PROC    FAR
                 mov     dx, offset DGROUP:ZeroDivMSG
                 pushDS_
                 push    dx
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    ___ErrorMessage
+                nopcall ___ErrorMessage
                 pop     dx
                 popDS_
                 mov     ax, 3
                 push    ax
-if LDATA
-                nop                     ; Touhou PC-98 compatibility
-endif
-                call    __exit           ; _exit(3);
+                nopcall __exit           ; _exit(3);
 ZeroDivision    ENDP
 
 ;--------------------------------------------------------------------------

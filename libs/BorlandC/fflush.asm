@@ -13,8 +13,7 @@ if LDATA
 		mov	ax, word ptr [bp+@@fp]
 		or	ax, word ptr [bp+@@fp+2]
 		jnz	short @@fflush_fp
-		nop
-		call	_flushall
+		nopcall	_flushall
 		jmp	@@fflush_ret_0
 
 @@fflush_fp:
@@ -74,8 +73,7 @@ if LDATA
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		nop
-		call	___write
+		nopcall	___write
 		add	sp, 8
 		cmp	ax, [bp+@@count]
 		jz	short @@fflush_ret_0

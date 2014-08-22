@@ -54,10 +54,7 @@ endif
 		mov	al, stdin.fd
 		cbw
 		push	ax		; handle
-if LDATA
-		nop
-endif
-		call	_isatty
+		nopcall	_isatty
 		pop	cx
 		or	ax, ax
 		jnz	short @@loc_43C7
@@ -84,8 +81,7 @@ if LDATA
 		push	ds
 		mov	ax, offset stdin
 		push	ax		; stream
-		nop
-		call	_setvbuf
+		nopcall	_setvbuf
 		add	sp, 0Ch
 else
 		mov	ax, offset stdin
@@ -96,10 +92,7 @@ endif
 		mov	al, stdout.fd
 		cbw
 		push	ax		; handle
-if LDATA
-		nop
-endif
-		call	_isatty
+		nopcall	_isatty
 		pop	cx
 		or	ax, ax
 		jnz	short @@loc_4400
@@ -126,8 +119,7 @@ if LDATA
 		push	ds
 		mov	ax, offset stdout
 		push	ax		; stream
-		nop
-		call	_setvbuf
+		nopcall	_setvbuf
 		add	sp, 0Ch
 else
 		mov	ax, offset stdout
