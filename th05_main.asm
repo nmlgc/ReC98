@@ -1618,23 +1618,7 @@ sub_E2E		endp
 		adc	dx, word_2302A
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E70		proc far
-		mov	bx, sp
-		mov	ah, 3Eh	; '>'
-		mov	bx, ss:[bx+4]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jnb	short locret_E82
-		mov	ax, 0FFF3h
-
-locret_E82:
-		retf	2
-sub_E70		endp
-
+include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 
 ; ---------------------------------------------------------------------------
@@ -5362,8 +5346,7 @@ loc_2D70:
 		pop	bx
 		jb	short loc_2D90
 		push	bx
-		push	cs
-		call	near ptr sub_E70
+		call	dos_close
 		mov	ax, word_210BC
 		sub	ax, word_210BA
 		inc	ax
@@ -5377,8 +5360,7 @@ loc_2D70:
 loc_2D90:
 		push	ax
 		push	bx
-		push	cs
-		call	near ptr sub_E70
+		call	dos_close
 		pop	ax
 		stc
 
@@ -6839,8 +6821,7 @@ loc_3838:
 		mov	byte ptr es:[bx], 0FFh
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_E70
+		call	dos_close
 		cld
 		mov	ax, word_211E4
 		mov	[bp+var_4], ax

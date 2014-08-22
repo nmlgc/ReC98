@@ -1303,24 +1303,7 @@ loc_B74:
 		retf	6
 sub_AD6		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B7C		proc far
-		mov	bx, sp
-		mov	ah, 3Eh	; '>'
-		mov	bx, ss:[bx+4]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jnb	short locret_B8E
-		mov	ax, 0FFF3h
-
-locret_B8E:
-		retf	2
-sub_B7C		endp
-
+include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2989,8 +2972,7 @@ loc_26B0:
 		pop	bx
 		jb	short loc_26D0
 		push	bx
-		push	cs
-		call	near ptr sub_B7C
+		call	dos_close
 		mov	ax, word_F81E
 		sub	ax, word_F81C
 		inc	ax
@@ -3004,8 +2986,7 @@ loc_26B0:
 loc_26D0:
 		push	ax
 		push	bx
-		push	cs
-		call	near ptr sub_B7C
+		call	dos_close
 		pop	ax
 		stc
 
@@ -4045,8 +4026,7 @@ loc_2E78:
 		mov	byte ptr es:[bx], 0FFh
 		push	si
 		nop
-		push	cs
-		call	near ptr sub_B7C
+		call	dos_close
 		cld
 		mov	ax, word_F952
 		mov	[bp+var_4], ax

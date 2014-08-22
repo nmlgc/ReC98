@@ -1443,24 +1443,7 @@ loc_CE4:
 		retn	4
 sub_CAA		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE8		proc near
-		mov	bx, sp
-		mov	ah, 3Eh
-		mov	bx, ss:[bx+2]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jnb	short locret_CFA
-		mov	ax, 0FFF3h
-
-locret_CFA:
-		retn	2
-sub_CE8		endp
-
+include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1528,7 +1511,7 @@ loc_D66:
 		pop	bx
 		jb	short loc_D84
 		push	bx
-		call	sub_CE8
+		call	dos_close
 		mov	ax, word_2296
 		sub	ax, word_2294
 		inc	ax
@@ -1543,7 +1526,7 @@ loc_D66:
 loc_D84:
 		push	ax
 		push	bx
-		call	sub_CE8
+		call	dos_close
 		pop	ax
 		stc
 
