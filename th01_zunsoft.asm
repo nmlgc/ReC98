@@ -1282,7 +1282,7 @@ loc_C04:
 loc_C0D:
 		mov	ax, 1234h
 		push	ax
-		call	sub_DF2
+		call	super_entry_pat
 		pop	es
 		pop	ds
 		assume ds:seg000
@@ -1556,149 +1556,7 @@ loc_D8B:
 sub_D16		endp
 
 include libs/master.lib/super_cancel_pat.asm
-; START	OF FUNCTION CHUNK FOR sub_DF2
-
-loc_DE0:
-		push	ax
-		push	es
-		call	hmem_free
-		pop	ax
-		jmp	short loc_DEB
-; ---------------------------------------------------------------------------
-
-loc_DE8:
-		mov	ax, 0FFF8h
-
-loc_DEB:
-		stc
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-; END OF FUNCTION CHUNK	FOR sub_DF2
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DF2		proc near
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-
-; FUNCTION CHUNK AT 0DE0 SIZE 00000012 BYTES
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, super_patnum
-		shl	di, 1
-		mov	ax, [bp+arg_6]
-		mov	dx, ax
-		mul	ah
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		mov	mem_AllocID, 4
-		push	ax
-		call	hmem_allocbyte
-		jb	short loc_DE8
-		mov	es, ax
-		push	super_patnum
-		push	dx
-		push	ax
-		call	super_entry_at
-		jb	short loc_DE0
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	di, bx
-		mov	cx, bx
-		shl	cx, 1
-		rep movsw
-		push	es
-		pop	ds
-		mov	si, bx
-		mov	dx, [bp+arg_0]
-		mov	dh, dl
-		mov	cx, bx
-		xor	di, di
-		shr	dh, 1
-		jb	short loc_E46
-		rep movsb
-		jmp	short loc_E4C
-; ---------------------------------------------------------------------------
-		nop
-
-loc_E46:
-		lodsb
-		not	al
-		stosb
-		loop	loc_E46
-
-loc_E4C:
-		mov	cx, bx
-		xor	di, di
-		shr	dh, 1
-		sbb	ah, ah
-
-loc_E54:
-		lodsb
-		xor	al, ah
-		or	[di], al
-		inc	di
-		loop	loc_E54
-		mov	cx, bx
-		xor	di, di
-		shr	dh, 1
-		sbb	ah, ah
-
-loc_E64:
-		lodsb
-		xor	al, ah
-		or	[di], al
-		inc	di
-		loop	loc_E64
-		mov	cx, bx
-		xor	di, di
-		shr	dh, 1
-		sbb	ah, ah
-
-loc_E74:
-		lodsb
-		xor	al, ah
-		or	[di], al
-		inc	di
-		loop	loc_E74
-		test	dl, dl
-		jz	short loc_E90
-		mov	ah, 4
-
-loc_E82:
-		xor	si, si
-		mov	cx, bx
-
-loc_E86:
-		lodsb
-		and	[di], al
-		inc	di
-		loop	loc_E86
-		dec	ah
-		jnz	short loc_E82
-
-loc_E90:
-		pop	ds
-		mov	ax, super_patnum
-		dec	ax
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-sub_DF2		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_entry_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
