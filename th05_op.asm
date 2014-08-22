@@ -749,38 +749,7 @@ loc_7B9:
 		retf	4
 sub_796		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_7C0		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		mov	bx, [bp+arg_6]
-		lds	dx, [bp+arg_2]
-		mov	cx, [bp+arg_0]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		jnb	short loc_7D6
-		neg	ax
-
-loc_7D6:
-		pop	bp
-		retf	8
-sub_7C0		endp
-
+include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3984,9 +3953,7 @@ loc_2E78:
 		push	ax
 		push	cx
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_7C0
+		nopcall	dos_read
 		mov	es, [bp+var_2]
 		mov	bx, ax
 		mov	byte ptr es:[bx], 0FFh
