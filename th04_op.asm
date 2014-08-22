@@ -303,9 +303,7 @@ loc_493:
 		push	70h ; 'p'
 		push	cs:word_474
 		push	cs:word_472
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		in	al, 0A1h	; Interrupt Controller #2, 8259A
 		or	al, byte_F846
 		out	0A1h, al	; Interrupt Controller #2, 8259A
@@ -321,9 +319,7 @@ loc_4BE:
 		push	70h ; 'p'
 		push	cs
 		push	offset byte_51A
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		mov	cs:word_474, dx
 ; ---------------------------------------------------------------------------
 		db 2Eh
@@ -771,40 +767,7 @@ sub_7B8		endp
 
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_818		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	bx
-		push	es
-		mov	al, [bp+arg_4]
-		lds	dx, [bp+arg_0]
-		mov	ah, 35h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	ah, 25h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		mov	ax, bx
-		mov	dx, es
-		pop	es
-		pop	bx
-		pop	ds
-		pop	bp
-		retf	6
-sub_818		endp
-
+include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3255,9 +3218,7 @@ loc_256E:
 		push	cs
 		mov	ax, 25C6h
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		mov	word_10E0A, ax
 		mov	word_10E0C, dx
 		pushf
@@ -3277,9 +3238,7 @@ loc_256E:
 		push	cs
 		mov	ax, 25BCh
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		mov	word ptr cs:dword_254E,	ax
 		mov	word ptr cs:dword_254E+2, dx
 		out	64h, al		; AT Keyboard controller 8042.
@@ -3341,9 +3300,7 @@ sub_2600	proc far
 		push	ax
 		push	word ptr cs:dword_254E+2
 		push	word ptr cs:dword_254E
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -3357,9 +3314,7 @@ sub_2600	proc far
 		push	ax
 		push	word_10E0C
 		push	word_10E0A
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -5008,9 +4963,7 @@ sub_3772	proc far
 		push	8
 		push	seg seg000
 		push	offset loc_381E
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		mov	word_1197C, dx
 		mov	word_1197A, ax
 		mov	al, 36h	; '6'
@@ -5048,9 +5001,7 @@ sub_37B6	proc far
 		push	8
 		push	word_1197C
 		push	word_1197A
-		nop
-		push	cs
-		call	near ptr sub_818
+		nopcall	dos_setvect
 		mov	al, byte ptr word_FC92
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address

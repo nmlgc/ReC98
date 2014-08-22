@@ -906,42 +906,7 @@ loc_76A:
 		retf	2
 sub_73A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_772		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	bx
-		push	es
-		mov	al, [bp+arg_4]
-		lds	dx, [bp+arg_0]
-		mov	ah, 35h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	ah, 25h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		mov	ax, bx
-		mov	dx, es
-		pop	es
-		pop	bx
-		pop	ds
-		pop	bp
-		retf	6
-sub_772		endp
-
+include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3667,9 +3632,7 @@ loc_235A:
 		push	cs
 		mov	ax, 23B2h
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_772
+		nopcall	dos_setvect
 		mov	word_F084, ax
 		mov	word_F086, dx
 		pushf
@@ -3689,9 +3652,7 @@ loc_235A:
 		push	cs
 		mov	ax, 23A8h
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_772
+		nopcall	dos_setvect
 		mov	word ptr cs:dword_233A,	ax
 		mov	word ptr cs:dword_233A+2, dx
 		out	64h, al		; AT Keyboard controller 8042.
@@ -3752,9 +3713,7 @@ sub_23EC	proc far
 		push	ax
 		push	word ptr cs:dword_233A+2
 		push	word ptr cs:dword_233A
-		nop
-		push	cs
-		call	near ptr sub_772
+		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -3768,9 +3727,7 @@ sub_23EC	proc far
 		push	ax
 		push	word_F086
 		push	word_F084
-		nop
-		push	cs
-		call	near ptr sub_772
+		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
