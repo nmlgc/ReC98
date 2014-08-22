@@ -10298,8 +10298,7 @@ loc_5065:
 		cbw
 		push	ax		; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		cmp	ax, 1
 		jnz	short loc_50B1
@@ -10315,8 +10314,7 @@ loc_5092:
 		cbw
 		push	ax		; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		cmp	ax, 1
 		jz	short loc_50C5
@@ -10482,8 +10480,7 @@ loc_5191:
 		cbw
 		push	ax		; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		cmp	ax, [bp+len]
 		jnz	short loc_51B3
@@ -10570,8 +10567,7 @@ loc_5245:
 		cbw
 		push	ax		; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		cmp	ax, [bp+len]
 		jnz	short loc_5267
@@ -11367,8 +11363,7 @@ loc_588A:
 		push	word ptr [bp+buf] ; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		jmp	loc_59A1
 ; ---------------------------------------------------------------------------
@@ -11426,8 +11421,7 @@ loc_590F:
 		push	ax		; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		mov	dx, ax
 		cmp	ax, [bp+var_2]
@@ -11471,8 +11465,7 @@ loc_595A:
 		push	ax		; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		mov	dx, ax
 		cmp	ax, [bp+var_2]
@@ -11507,92 +11500,7 @@ loc_59A1:
 		retf
 ___write	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _rtl_write(int handle, const void	*buf, unsigned int len)
-__rtl_write	proc far
-					; _fputc+144p ...
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+0B8Ch], 1
-		jz	short loc_59BE
-		mov	ax, 5
-		push	ax
-		jmp	short loc_59DF
-; ---------------------------------------------------------------------------
-
-loc_59BE:
-		push	ds
-		mov	ah, 40h	; '@'
-		mov	bx, [bp+handle]
-		mov	cx, [bp+len]
-		lds	dx, [bp+buf]
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_59DE
-		push	ax
-		mov	bx, [bp+handle]
-		add	bx, bx
-		or	word ptr [bx+0B8Ch], 1000h
-		pop	ax
-		jmp	short loc_59E2
-; ---------------------------------------------------------------------------
-
-loc_59DE:
-		push	ax
-
-loc_59DF:
-		call	__IOERROR
-
-loc_59E2:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__rtl_write	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _write(int handle, const void *buf, unsigned int len)
-__write		proc far
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+len]	; len
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	[bp+handle]	; handle
-		push	cs
-		call	near ptr __rtl_write
-		add	sp, 8
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__write		endp
-
+include libs/BorlandC/writea.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

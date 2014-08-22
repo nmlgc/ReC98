@@ -11742,8 +11742,7 @@ loc_65D8:
 		push	word ptr [bp+buf] ; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		jmp	loc_66EF
 ; ---------------------------------------------------------------------------
@@ -11801,8 +11800,7 @@ loc_665D:
 		push	ax		; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		mov	dx, ax
 		cmp	ax, [bp+var_2]
@@ -11846,8 +11844,7 @@ loc_66A8:
 		push	ax		; buf
 		push	[bp+handle]	; handle
 		nop
-		push	cs
-		call	near ptr __rtl_write
+		call	__rtl_write
 		add	sp, 8
 		mov	dx, ax
 		cmp	ax, [bp+var_2]
@@ -11882,92 +11879,7 @@ loc_66EF:
 		retf
 ___write	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _rtl_write(int handle, const void	*buf, unsigned int len)
-__rtl_write	proc far
-					; ___write+63p	...
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+267Ah], 1
-		jz	short loc_670C
-		mov	ax, 5
-		push	ax
-		jmp	short loc_672D
-; ---------------------------------------------------------------------------
-
-loc_670C:
-		push	ds
-		mov	ah, 40h	; '@'
-		mov	bx, [bp+handle]
-		mov	cx, [bp+len]
-		lds	dx, [bp+buf]
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_672C
-		push	ax
-		mov	bx, [bp+handle]
-		add	bx, bx
-		or	word ptr [bx+267Ah], 1000h
-		pop	ax
-		jmp	short loc_6730
-; ---------------------------------------------------------------------------
-
-loc_672C:
-		push	ax
-
-loc_672D:
-		call	__IOERROR
-
-loc_6730:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__rtl_write	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _write(int handle, const void *buf, unsigned int len)
-__write		proc far
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+len]	; len
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	[bp+handle]	; handle
-		push	cs
-		call	near ptr __rtl_write
-		add	sp, 8
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__write		endp
-
+include libs/BorlandC/writea.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
