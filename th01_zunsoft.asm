@@ -1563,7 +1563,7 @@ sub_D92		proc near
 		mov	bx, sp
 		xor	dx, dx
 		mov	bx, ss:[bx+2]
-		cmp	bx, word_22AA
+		cmp	bx, super_patnum
 		jnb	short loc_DD8
 		mov	cx, bx
 		shl	bx, 1
@@ -1575,11 +1575,11 @@ sub_D92		proc near
 		mov	[bx+29C6h], dx
 		mov	[bx+2DC6h], dx
 		inc	cx
-		cmp	cx, word_22AA
+		cmp	cx, super_patnum
 		jnz	short loc_DD0
 
 loc_DC2:
-		dec	word_22AA
+		dec	super_patnum
 		jz	short loc_DD0
 		dec	bx
 		dec	bx
@@ -1638,7 +1638,7 @@ arg_6		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, word_22AA
+		mov	di, super_patnum
 		shl	di, 1
 		mov	ax, [bp+arg_6]
 		mov	dx, ax
@@ -1651,7 +1651,7 @@ arg_6		= word ptr  0Ah
 		call	hmem_allocbyte
 		jb	short loc_DE8
 		mov	es, ax
-		push	word_22AA
+		push	super_patnum
 		push	dx
 		push	ax
 		call	sub_F96
@@ -1734,7 +1734,7 @@ loc_E86:
 
 loc_E90:
 		pop	ds
-		mov	ax, word_22AA
+		mov	ax, super_patnum
 		dec	ax
 		pop	di
 		pop	si
@@ -1887,11 +1887,11 @@ sub_F18		endp
 
 
 sub_F68		proc near
-		cmp	word_22A8, 0
+		cmp	super_buffer, 0
 		jz	short locret_F95
-		push	word_22A8
+		push	super_buffer
 		call	hmem_free
-		mov	word_22A8, 0
+		mov	super_buffer, 0
 		jmp	short loc_F83
 ; ---------------------------------------------------------------------------
 
@@ -1901,12 +1901,12 @@ loc_F7E:
 		call	sub_D92
 
 loc_F83:
-		mov	ax, word_22AA
+		mov	ax, super_patnum
 		test	ax, ax
 		jnz	short loc_F7E
-		cmp	word_22AC, 0
+		cmp	super_charfree, 0
 		jz	short locret_F95
-		call	word_22AC
+		call	super_charfree
 
 locret_F95:
 		retn
@@ -1932,12 +1932,12 @@ arg_4		= word ptr  8
 		cmc
 		mov	ax, 0FFE1h
 		jb	short loc_1003
-		cmp	word_22A8, 0
+		cmp	super_buffer, 0
 		jnz	short loc_FD5
 		mov	mem_AllocID, 4
 		push	240h
 		call	hmem_alloc
-		mov	word_22A8, ax
+		mov	super_buffer, ax
 		mov	ax, 0FFF8h
 		jb	short loc_1003
 		push	es
@@ -1958,7 +1958,7 @@ arg_4		= word ptr  8
 loc_FD5:
 		mov	ax, bx
 		shl	bx, 1
-		cmp	ax, word_22AA
+		cmp	ax, super_patnum
 		jnb	short loc_FEF
 		cmp	word ptr [bx+2DC6h], 0
 		jz	short loc_FF3
@@ -1969,7 +1969,7 @@ loc_FD5:
 
 loc_FEF:
 		inc	ax
-		mov	word_22AA, ax
+		mov	super_patnum, ax
 
 loc_FF3:
 		mov	ax, [bp+arg_2]
@@ -3239,9 +3239,7 @@ word_2296	dw 0
 		db 0Ch dup(0)
 word_22A4	dw 0
 		dw 0
-word_22A8	dw 0
-word_22AA	dw 0
-word_22AC	dw 0
+include libs/master.lib/superpa[data].asm
 include libs/master.lib/mem[data].asm
 word_22B6	dw 0
 word_22B8	dw 27Fh
@@ -4205,7 +4203,9 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
-		dd 2B6h dup(?)
+		db 156h dup(?)
+include libs/master.lib/superpa[bss].asm
+		db 182h dup(?)
 include libs/master.lib/mem[bss].asm
 		dd ?
 		dd ?

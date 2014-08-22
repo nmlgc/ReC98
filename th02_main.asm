@@ -4593,11 +4593,11 @@ sub_2B4B	endp
 
 
 sub_2B50	proc far
-		cmp	word_1E2FA, 0
+		cmp	super_buffer, 0
 		jz	short locret_2B7F
-		push	word_1E2FA
+		push	super_buffer
 		call	hmem_free
-		mov	word_1E2FA, 0
+		mov	super_buffer, 0
 		jmp	short loc_2B6D
 ; ---------------------------------------------------------------------------
 
@@ -4608,12 +4608,12 @@ loc_2B67:
 		call	near ptr sub_2F06
 
 loc_2B6D:
-		mov	ax, word_1E2FC
+		mov	ax, super_patnum
 		test	ax, ax
 		jnz	short loc_2B67
-		cmp	word_1E2FE, 0
+		cmp	super_charfree, 0
 		jz	short locret_2B7F
-		call	word_1E2FE
+		call	super_charfree
 
 locret_2B7F:
 		retf
@@ -4661,7 +4661,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, word_1E2FC
+		mov	di, super_patnum
 		shl	di, 1
 		mov	ax, [bp+arg_6]
 		mov	dx, ax
@@ -4674,7 +4674,7 @@ arg_6		= word ptr  0Ch
 		call	hmem_allocbyte
 		jb	short loc_2B8A
 		mov	es, ax
-		push	word_1E2FC
+		push	super_patnum
 		push	dx
 		push	ax
 		push	cs
@@ -4758,7 +4758,7 @@ loc_2C2A:
 
 loc_2C34:
 		pop	ds
-		mov	ax, word_1E2FC
+		mov	ax, super_patnum
 		dec	ax
 		pop	di
 		pop	si
@@ -5078,12 +5078,12 @@ arg_4		= word ptr  0Ah
 		cmc
 		mov	ax, 0FFE1h
 		jb	short loc_2E77
-		cmp	word_1E2FA, 0
+		cmp	super_buffer, 0
 		jnz	short loc_2E48
 		mov	mem_AllocID, 4
 		push	240h
 		call	hmem_alloc
-		mov	word_1E2FA, ax
+		mov	super_buffer, ax
 		mov	ax, 0FFF8h
 		jb	short loc_2E77
 		push	es
@@ -5104,7 +5104,7 @@ arg_4		= word ptr  0Ah
 loc_2E48:
 		mov	ax, bx
 		shl	bx, 1
-		cmp	ax, word_1E2FC
+		cmp	ax, super_patnum
 		jnb	short loc_2E63
 		cmp	word ptr [bx+1EDAh], 0
 		jz	short loc_2E67
@@ -5115,7 +5115,7 @@ loc_2E48:
 
 loc_2E63:
 		inc	ax
-		mov	word_1E2FC, ax
+		mov	super_patnum, ax
 
 loc_2E67:
 		mov	ax, [bp+arg_2]
@@ -5244,7 +5244,7 @@ sub_2F06	proc far
 		mov	bx, sp
 		xor	dx, dx
 		mov	bx, ss:[bx+4]
-		cmp	bx, word_1E2FC
+		cmp	bx, super_patnum
 		jnb	short loc_2F4E
 		mov	cx, bx
 		shl	bx, 1
@@ -5256,11 +5256,11 @@ sub_2F06	proc far
 		mov	[bx+1ADAh], dx
 		mov	[bx+1EDAh], dx
 		inc	cx
-		cmp	cx, word_1E2FC
+		cmp	cx, super_patnum
 		jnz	short loc_2F46
 
 loc_2F37:
-		dec	word_1E2FC
+		dec	super_patnum
 		jz	short loc_2F46
 		dec	bx
 		dec	bx
@@ -5293,9 +5293,9 @@ sub_2F56	proc far
 		mov	si, sp
 		push	di
 		mov	di, ss:[si+6]
-		cmp	di, word_1E2FC
+		cmp	di, super_patnum
 		jl	short loc_2F69
-		mov	di, word_1E2FC
+		mov	di, super_patnum
 		dec	di
 
 loc_2F69:
@@ -6380,7 +6380,7 @@ arg_0		= word ptr  6
 		mov	ax, 4
 		push	ax
 		mov	bx, [bp+arg_0]
-		cmp	bx, word_1E2FC
+		cmp	bx, super_patnum
 		jnb	short loc_38AF
 		shl	bx, 1
 		mov	cx, [bx+1ADAh]
@@ -6388,7 +6388,7 @@ arg_0		= word ptr  6
 		mov	ax, [bx+1EDAh]
 		mul	ah
 		mov	bp, ax
-		mov	es, word_1E2FA
+		mov	es, super_buffer
 		assume es:nothing
 		mov	ds, cx
 		mov	bh, 0FFh
@@ -43632,7 +43632,7 @@ sub_1696B	proc far
 		call	sub_12DE0
 		push	large 8000C0h
 		call	sub_2F56
-		mov	word_1E2FC, 80h	; '€'
+		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aStage5b1_bft ; "stage5b1.bft"
 		call	sub_2E7C
@@ -49188,7 +49188,7 @@ sub_199B3	proc far
 		call	sub_1A529
 		push	large 8000C0h
 		call	sub_2F56
-		mov	word_1E2FC, 80h	; '€'
+		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima1_bft ; "mima1.bft"
 		call	sub_2E7C
@@ -49483,7 +49483,7 @@ sub_19C8D	proc near
 loc_19D48:
 		push	large 8000C0h
 		call	sub_2F56
-		mov	word_1E2FC, 80h	; '€'
+		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima2_bft ; "mima2.bft"
 		call	sub_2E7C
@@ -50711,7 +50711,7 @@ sub_1A7D5	proc far
 		call	sub_12DE0
 		push	large 8000C0h
 		call	sub_2F56
-		mov	word_1E2FC, 80h	; '€'
+		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima_bft_0 ; "mima.bft"
 		call	sub_2E7C
@@ -50724,7 +50724,7 @@ sub_1A7D5	proc far
 		call	sub_1310B
 		push	large 8001FFh
 		call	sub_2F56
-		mov	word_1E2FC, 80h	; '€'
+		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aStage3_b_bft ; "stage3_b.bft"
 		call	sub_2E7C
@@ -57759,10 +57759,7 @@ word_1E2E8	dw 0
 word_1E2F6	dw 0
 		db    0
 		db    0
-word_1E2FA	dw 0
-word_1E2FC	dw 0
-					; sub_2B94+5r ...
-word_1E2FE	dw 0
+include libs/master.lib/superpa[data].asm
 byte_1E300	db 5
 byte_1E301	db 3
 byte_1E302	db 0
@@ -60737,518 +60734,7 @@ word_1F53C	dw ?
 word_1F53E	dw ?
 word_1F540	dw ?
 include libs/master.lib/mem[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include libs/master.lib/superpa[bss].asm
 word_1FD4A	dw ?
 dword_1FD4C	dd ?
 dword_1FD50	dd ?
