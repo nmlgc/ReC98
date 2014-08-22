@@ -4853,8 +4853,7 @@ loc_27B4:
 		push	super_patnum
 		push	dx
 		push	ax
-		push	cs
-		call	near ptr sub_2A00
+		call	super_entry_at
 		jb	short loc_2778
 		push	ds
 		lds	si, [bp+arg_2]
@@ -5220,77 +5219,7 @@ loc_29F5:
 		pop	bp
 		retf	0Ah
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A00	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	bx
-		cld
-		mov	bx, [bp+arg_4]
-		cmp	bx, 200h
-		cmc
-		mov	ax, 0FFE1h
-		jb	short loc_2A6F
-		cmp	super_buffer, 0
-		jnz	short loc_2A40
-		mov	mem_AllocID, 4
-		push	240h
-		call	hmem_alloc
-		mov	super_buffer, ax
-		mov	ax, 0FFF8h
-		jb	short loc_2A6F
-		push	es
-		push	cx
-		push	di
-		push	ds
-		pop	es
-		assume es:dseg
-		xor	ax, ax
-		mov	di, 2EC4h
-		mov	cx, 200h
-		rep stosw
-		pop	di
-		pop	cx
-		pop	es
-		assume es:nothing
-
-loc_2A40:
-		mov	ax, bx
-		shl	bx, 1
-		cmp	ax, super_patnum
-		jnb	short loc_2A5B
-		cmp	word ptr [bx+2EC4h], 0
-		jz	short loc_2A5F
-		push	word ptr [bx+2AC4h]
-		call	hmem_free
-		jmp	short loc_2A5F
-; ---------------------------------------------------------------------------
-
-loc_2A5B:
-		inc	ax
-		mov	super_patnum, ax
-
-loc_2A5F:
-		mov	ax, [bp+arg_2]
-		mov	[bx+2EC4h], ax
-		mov	ax, [bp+arg_0]
-		mov	[bx+2AC4h], ax
-		xor	ax, ax
-
-loc_2A6F:
-		pop	bx
-		pop	bp
-		retf	6
-sub_2A00	endp
-
+include libs/master.lib/super_entry_at.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
