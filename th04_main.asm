@@ -4808,8 +4808,7 @@ sub_2748	proc far
 loc_275F:
 		dec	ax
 		push	ax
-		push	cs
-		call	near ptr sub_2AFE
+		call	super_cancel_pat
 
 loc_2765:
 		mov	ax, super_patnum
@@ -5426,55 +5425,7 @@ loc_2AF6:
 		retf	4
 sub_2A74	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2AFE	proc far
-		mov	bx, sp
-		xor	dx, dx
-		mov	bx, ss:[bx+4]
-		cmp	bx, super_patnum
-		jnb	short loc_2B46
-		mov	cx, bx
-		shl	bx, 1
-		mov	ax, [bx+2EC4h]
-		or	ax, ax
-		jz	short loc_2B46
-		push	word ptr [bx+2AC4h]
-		call	hmem_free
-		mov	[bx+2AC4h], dx
-		mov	[bx+2EC4h], dx
-		inc	cx
-		cmp	cx, super_patnum
-		jnz	short loc_2B3E
-
-loc_2B2F:
-		dec	super_patnum
-		jz	short loc_2B3E
-		dec	bx
-		dec	bx
-		mov	cx, [bx+2AC4h]
-		jcxz	short loc_2B2F
-		nop
-
-loc_2B3E:
-		mov	ax, 0
-		clc
-		retf	2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_2B46:
-		stc
-		mov	ax, 0FFE1h
-		retf	2
-sub_2AFE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5497,8 +5448,7 @@ loc_2B61:
 
 loc_2B69:
 		push	si
-		push	cs
-		call	near ptr sub_2AFE
+		call	super_cancel_pat
 		inc	si
 		cmp	si, di
 		jbe	short loc_2B69

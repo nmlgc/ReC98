@@ -3910,8 +3910,7 @@ sub_2966	proc far
 loc_297D:
 		dec	ax
 		push	ax
-		push	cs
-		call	near ptr sub_2B54
+		call	super_cancel_pat
 
 loc_2983:
 		mov	ax, super_patnum
@@ -4250,55 +4249,7 @@ loc_2B4C:
 		retf	4
 sub_2ACA	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B54	proc far
-		mov	bx, sp
-		xor	dx, dx
-		mov	bx, ss:[bx+4]
-		cmp	bx, super_patnum
-		jnb	short loc_2B9C
-		mov	cx, bx
-		shl	bx, 1
-		mov	ax, [bx+173Ah]
-		or	ax, ax
-		jz	short loc_2B9C
-		push	word ptr [bx+133Ah]
-		call	hmem_free
-		mov	[bx+133Ah], dx
-		mov	[bx+173Ah], dx
-		inc	cx
-		cmp	cx, super_patnum
-		jnz	short loc_2B94
-
-loc_2B85:
-		dec	super_patnum
-		jz	short loc_2B94
-		dec	bx
-		dec	bx
-		mov	cx, [bx+133Ah]
-		jcxz	short loc_2B85
-		nop
-
-loc_2B94:
-		mov	ax, 0
-		clc
-		retf	2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_2B9C:
-		stc
-		mov	ax, 0FFE1h
-		retf	2
-sub_2B54	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_cancel_pat.asm
 
 loc_2BA4:
 		pop	di

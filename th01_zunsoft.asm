@@ -1555,52 +1555,7 @@ loc_D8B:
 		retn	2
 sub_D16		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D92		proc near
-		mov	bx, sp
-		xor	dx, dx
-		mov	bx, ss:[bx+2]
-		cmp	bx, super_patnum
-		jnb	short loc_DD8
-		mov	cx, bx
-		shl	bx, 1
-		mov	ax, [bx+2DC6h]
-		or	ax, ax
-		jz	short loc_DD8
-		push	word ptr [bx+29C6h]
-		call	hmem_free
-		mov	[bx+29C6h], dx
-		mov	[bx+2DC6h], dx
-		inc	cx
-		cmp	cx, super_patnum
-		jnz	short loc_DD0
-
-loc_DC2:
-		dec	super_patnum
-		jz	short loc_DD0
-		dec	bx
-		dec	bx
-		mov	cx, [bx+29C6h]
-		jcxz	short loc_DC2
-
-loc_DD0:
-		mov	ax, 0
-		clc
-		retn	2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_DD8:
-		stc
-		mov	ax, 0FFE1h
-		retn	2
-sub_D92		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_cancel_pat.asm
 ; START	OF FUNCTION CHUNK FOR sub_DF2
 
 loc_DE0:
@@ -1898,7 +1853,7 @@ sub_F68		proc near
 loc_F7E:
 		dec	ax
 		push	ax
-		call	sub_D92
+		call	super_cancel_pat
 
 loc_F83:
 		mov	ax, super_patnum
