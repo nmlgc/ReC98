@@ -801,37 +801,7 @@ loc_7F8:
 		retf	8
 sub_7E2		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_7FC		proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_6]
-		mov	dx, [bp+arg_2]
-		mov	cx, [bp+arg_4]
-		mov	al, [bp+arg_0]
-		mov	ah, 42h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		jnb	short loc_814
-		neg	ax
-		cwd
-
-loc_814:
-		pop	bp
-		retf	8
-sub_7FC		endp
-
+include libs/master.lib/dos_seek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4915,17 +4885,13 @@ loc_3658:
 		push	0
 		push	0
 		push	2
-		nop
-		push	cs
-		call	near ptr sub_7FC
+		nopcall	dos_seek
 		mov	di, ax
 		push	si
 		push	0
 		push	0
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_7FC
+		nopcall	dos_seek
 		push	di
 		nop
 		call	smem_wget
