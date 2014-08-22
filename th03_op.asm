@@ -613,42 +613,7 @@ sub_682		proc far
 		retf
 sub_682		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_688		proc far
-		mov	bx, sp
-		mov	cx, si
-		push	ds
-		lds	si, ss:[bx+4]
-		lodsb
-		or	al, al
-		jz	short loc_6AB
-		mov	ah, 2
-
-loc_698:
-		cmp	al, 0Ah
-		jnz	short loc_6A2
-		mov	dl, 0Dh
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		mov	al, 0Ah
-
-loc_6A2:
-		mov	dl, al
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		lodsb
-		or	al, al
-		jnz	short loc_698
-
-loc_6AB:
-		pop	ds
-		mov	si, cx
-		retf	4
-sub_688		endp
-
+include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 
@@ -17603,15 +17568,15 @@ _envp		= dword	ptr  0Ch
 		jz	short loc_A452
 		push	ds
 		push	offset aVfvcvbgngngbgn ; "‚f‚c‚bƒNƒƒbƒN‚ª‚T‚l‚g‚š‚É‚È‚Á‚Ä‚¢‚Ü‚·"...
-		call	sub_688
+		call	dos_puts2
 		push	ds
 		push	offset aUmx	; "“Œ•û–²‹ó‚Í‚QD‚T‚l‚g‚š‚Å‚È‚¢‚Æ³í‚Éƒ"...
-		call	sub_688
+		call	dos_puts2
 		push	ds
 		push	offset aViosrfvVVkvqbd ; "\n‚¨è”‚Å‚·‚ª‚QD‚T‚l‚g‚š‚ÉØ‚è‘Ö‚¦‚ÄA"...
 
 loc_A446:
-		call	sub_688
+		call	dos_puts2
 		call	sub_952E
 		pop	bp
 		retf

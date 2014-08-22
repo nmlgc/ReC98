@@ -713,42 +713,7 @@ sub_790		proc far
 		retf
 sub_790		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_796		proc far
-		mov	bx, sp
-		mov	cx, si
-		push	ds
-		lds	si, ss:[bx+4]
-		lodsb
-		or	al, al
-		jz	short loc_7B9
-		mov	ah, 2
-
-loc_7A6:
-		cmp	al, 0Ah
-		jnz	short loc_7B0
-		mov	dl, 0Dh
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		mov	al, 0Ah
-
-loc_7B0:
-		mov	dl, al
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		lodsb
-		or	al, al
-		jnz	short loc_7A6
-
-loc_7B9:
-		pop	ds
-		mov	si, cx
-		retf	4
-sub_796		endp
-
+include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
@@ -18462,7 +18427,7 @@ _envp		= dword	ptr  0Ch
 		jz	short loc_AF7D
 		push	ds
 		push	offset aNotEnoughMem
-		call	sub_796
+		call	dos_puts2
 		call	sub_A002
 
 loc_AF7D:

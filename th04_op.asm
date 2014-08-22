@@ -729,42 +729,7 @@ sub_7B2		proc far
 		retf
 sub_7B2		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_7B8		proc far
-		mov	bx, sp
-		mov	cx, si
-		push	ds
-		lds	si, ss:[bx+4]
-		lodsb
-		or	al, al
-		jz	short loc_7DB
-		mov	ah, 2
-
-loc_7C8:
-		cmp	al, 0Ah
-		jnz	short loc_7D2
-		mov	dl, 0Dh
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		mov	al, 0Ah
-
-loc_7D2:
-		mov	dl, al
-		int	21h		; DOS -	DISPLAY	OUTPUT
-					; DL = character to send to standard output
-		lodsb
-		or	al, al
-		jnz	short loc_7C8
-
-loc_7DB:
-		pop	ds
-		mov	si, cx
-		retf	4
-sub_7B8		endp
-
+include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
@@ -18974,7 +18939,7 @@ _envp		= dword	ptr  0Ch
 		jz	short loc_B3AB
 		push	ds
 		push	offset asc_F7F7	; "\n‹ó‚«ƒƒ‚ƒŠ•s‘«‚Å‚·Bƒƒ‚ƒŠ‹ó‚«‚ğ‘‚â‚µ"...
-		call	sub_7B8
+		call	dos_puts2
 		call	sub_A3B2
 
 loc_B3AB:
