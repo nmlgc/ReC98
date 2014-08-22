@@ -3637,37 +3637,8 @@ sub_2676	endp
 		xor	ax, ax
 		stc
 		retf
-; ---------------------------------------------------------------------------
-		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_269A	proc far
-		cmp	super_buffer, 0
-		jz	short locret_26C9
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_26B7
-; ---------------------------------------------------------------------------
-
-loc_26B1:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_26B7:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_26B1
-		cmp	super_charfree, 0
-		jz	short locret_26C9
-		call	super_charfree
-
-locret_26C9:
-		retf
-sub_269A	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_26DE
@@ -17202,7 +17173,7 @@ loc_9EA6:
 		call	sub_F1A
 		push	100h
 		call	sub_C403
-		call	sub_269A
+		call	super_free
 		call	sub_BFC2
 		push	large 0
 		push	ds
@@ -18905,7 +18876,7 @@ loc_AC0E:
 loc_AC15:
 		cmp	si, 20h	; ' '
 		jl	short loc_AC0E
-		call	sub_269A
+		call	super_free
 		call	text_clear
 		mov	byte ptr word_F828+1, 1
 		mov	word_DAC4, 0
@@ -19969,7 +19940,7 @@ sub_B424	proc near
 		mov	eax, es:[bx+10h]
 		mov	dword_DB02, eax
 		call	text_clear
-		call	sub_269A
+		call	super_free
 		push	ds
 		push	offset aChname_bft ; "chname.bft"
 		call	sub_27FE
@@ -20040,7 +20011,7 @@ loc_B4DF:
 loc_B4E6:
 		cmp	si, 16h
 		jl	short loc_B4DF
-		call	sub_269A
+		call	super_free
 		pop	si
 		pop	bp
 		retn

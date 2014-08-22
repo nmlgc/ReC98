@@ -92,7 +92,7 @@ sub_384		endp
 sub_3D0		proc near
 		push	bp
 		mov	bp, sp
-		call	sub_F68
+		call	super_free
 		call	sub_367
 		call	sub_136A
 		call	text_clear
@@ -1835,38 +1835,7 @@ loc_F58:
 		retn
 sub_F18		endp
 
-; ---------------------------------------------------------------------------
-		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F68		proc near
-		cmp	super_buffer, 0
-		jz	short locret_F95
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_F83
-; ---------------------------------------------------------------------------
-
-loc_F7E:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_F83:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_F7E
-		cmp	super_charfree, 0
-		jz	short locret_F95
-		call	super_charfree
-
-locret_F95:
-		retn
-sub_F68		endp
-
+include libs/master.lib/super_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

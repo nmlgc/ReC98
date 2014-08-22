@@ -5009,37 +5009,8 @@ sub_29C6	endp
 		xor	ax, ax
 		stc
 		retf
-; ---------------------------------------------------------------------------
-		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_29EA	proc far
-		cmp	super_buffer, 0
-		jz	short locret_2A19
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_2A07
-; ---------------------------------------------------------------------------
-
-loc_2A01:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_2A07:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_2A01
-		cmp	super_charfree, 0
-		jz	short locret_2A19
-		call	super_charfree
-
-locret_2A19:
-		retf
-sub_29EA	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_2A2E
@@ -30556,7 +30527,7 @@ loc_F71C:
 		call	sub_CE68
 		call	sub_BEA4
 		call	sub_BB82
-		call	sub_29EA
+		call	super_free
 		call	sub_1EDC
 		call	text_clear
 		call	sub_14E08

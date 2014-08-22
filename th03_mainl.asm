@@ -3191,37 +3191,8 @@ sub_235A	endp
 		xor	ax, ax
 		stc
 		retf
-; ---------------------------------------------------------------------------
-		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_237E	proc far
-		cmp	super_buffer, 0
-		jz	short locret_23AD
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_239B
-; ---------------------------------------------------------------------------
-
-loc_2395:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_239B:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_2395
-		cmp	super_charfree, 0
-		jz	short locret_23AD
-		call	super_charfree
-
-locret_23AD:
-		retf
-sub_237E	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_23C2
@@ -20273,7 +20244,7 @@ loc_B879:
 		mov	ah, 0
 		push	ax
 		call	sub_AEF0
-		call	sub_237E
+		call	super_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

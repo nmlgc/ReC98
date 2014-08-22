@@ -4586,37 +4586,7 @@ sub_2B4B	proc far
 		retf
 sub_2B4B	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B50	proc far
-		cmp	super_buffer, 0
-		jz	short locret_2B7F
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_2B6D
-; ---------------------------------------------------------------------------
-
-loc_2B67:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_2B6D:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_2B67
-		cmp	super_charfree, 0
-		jz	short locret_2B7F
-		call	super_charfree
-
-locret_2B7F:
-		retf
-sub_2B50	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_2B94
@@ -22539,7 +22509,7 @@ _arg0		= dword	ptr  6
 		call	sub_E24A
 		call	sub_F4EF
 		call	sub_1C608
-		call	sub_2B50
+		call	super_free
 		call	sub_15DA
 		call	text_clear
 		call	sub_DC4B

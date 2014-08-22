@@ -3561,37 +3561,8 @@ sub_28FE	endp
 		xor	ax, ax
 		stc
 		retf
-; ---------------------------------------------------------------------------
-		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2922	proc far
-		cmp	super_buffer, 0
-		jz	short locret_2951
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_293F
-; ---------------------------------------------------------------------------
-
-loc_2939:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_293F:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_2939
-		cmp	super_charfree, 0
-		jz	short locret_2951
-		call	super_charfree
-
-locret_2951:
-		retf
-sub_2922	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_2966
@@ -18331,7 +18302,7 @@ loc_AA56:
 loc_AA6E:
 		push	1
 		call	sub_666
-		call	sub_2922
+		call	super_free
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
@@ -20223,7 +20194,7 @@ sub_B9CE	proc near
 		call	sub_B8B1
 		push	1
 		call	sub_666
-		call	sub_2922
+		call	super_free
 		pop	bp
 		retn
 sub_B9CE	endp
@@ -20782,7 +20753,7 @@ loc_BE87:
 		call	sub_666
 
 loc_BE96:
-		call	sub_2922
+		call	super_free
 		call	sub_E4C6
 		pop	di
 		pop	si

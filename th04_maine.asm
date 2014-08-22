@@ -3060,37 +3060,8 @@ sub_24FC	endp
 		xor	ax, ax
 		stc
 		retf
-; ---------------------------------------------------------------------------
-		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2520	proc far
-		cmp	super_buffer, 0
-		jz	short locret_254F
-		push	super_buffer
-		call	hmem_free
-		mov	super_buffer, 0
-		jmp	short loc_253D
-; ---------------------------------------------------------------------------
-
-loc_2537:
-		dec	ax
-		push	ax
-		call	super_cancel_pat
-
-loc_253D:
-		mov	ax, super_patnum
-		test	ax, ax
-		jnz	short loc_2537
-		cmp	super_charfree, 0
-		jz	short locret_254F
-		call	super_charfree
-
-locret_254F:
-		retf
-sub_2520	endp
+include libs/master.lib/super_free.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_2564
@@ -22296,7 +22267,7 @@ loc_CB7F:
 		call	sub_CE7A
 
 loc_CB89:
-		call	sub_2520
+		call	super_free
 		call	text_clear
 		push	1
 		call	sub_666
