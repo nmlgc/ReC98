@@ -15,11 +15,8 @@
 
 		.386
 		.model large
-		locals
 
-include libs/BorlandC/RULES.ASI
-include libs/master.lib/func.inc
-include libs/master.lib/super.inc
+include ReC98.inc
 
 ; ===========================================================================
 
