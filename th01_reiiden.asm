@@ -13999,7 +13999,8 @@ loc_65BB:
 		add	sp, 8
 		cmp	ax, [bp+len]
 		jnz	short loc_65DD
-		jmp	loc_665C
+		; Hack (jmp loc_665C)
+		db 0e9h, 07fh, 000h
 ; ---------------------------------------------------------------------------
 
 loc_65DD:
@@ -14060,9 +14061,7 @@ loc_6639:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___write
+		nopcall	___write
 		add	sp, 8
 		cmp	ax, [bp+len]
 		jz	short loc_665C
@@ -14913,208 +14912,7 @@ loc_6CAD:
 		retf
 _ungetc		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __far __write(int	handle,	void *buf, unsigned int	len)
-___write	proc far
-
-var_90		= byte ptr -90h
-var_E		= dword	ptr -0Eh
-var_9		= byte ptr -9
-var_8		= word ptr -8
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 90h
-		push	si
-		push	di
-		mov	ax, [bp+handle]
-		cmp	ax, __nfile
-		jb	short loc_6CCD
-		mov	ax, 6
-		push	ax
-		call	__IOERROR
-		jmp	loc_6E11
-; ---------------------------------------------------------------------------
-
-loc_6CCD:
-		mov	ax, [bp+len]
-		inc	ax
-		cmp	ax, 2
-		jnb	short loc_6CDB
-		xor	ax, ax
-		jmp	loc_6E11
-; ---------------------------------------------------------------------------
-
-loc_6CDB:
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+1BE9h], 8
-		jz	short loc_6CFA
-		mov	ax, 2
-		push	ax		; fromwhere
-		xor	ax, ax
-		push	ax
-		push	ax		; offset
-		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr _lseek
-		add	sp, 8
-
-loc_6CFA:
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+1BE9h], 40h
-		jnz	short loc_6D1D
-		push	[bp+len]	; len
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	[bp+handle]	; handle
-		nop
-		call	__rtl_write
-		add	sp, 8
-		jmp	loc_6E11
-; ---------------------------------------------------------------------------
-
-loc_6D1D:
-		mov	bx, [bp+handle]
-		add	bx, bx
-		and	word ptr [bx+1BE8h], 0FDFFh
-		mov	dx, word ptr [bp+buf+2]
-		mov	ax, word ptr [bp+buf]
-		mov	word ptr [bp+var_E+2], dx
-		mov	word ptr [bp+var_E], ax
-		mov	ax, [bp+len]
-		mov	[bp+var_8], ax
-		jmp	short loc_6DB7
-; ---------------------------------------------------------------------------
-
-loc_6D3C:
-		dec	[bp+var_8]
-		les	bx, [bp+var_E]
-		inc	word ptr [bp+var_E]
-		mov	al, es:[bx]
-		mov	[bp+var_9], al
-		cmp	al, 0Ah
-		jnz	short loc_6D59
-		les	bx, [bp+var_6]
-		mov	byte ptr es:[bx], 0Dh
-		inc	word ptr [bp+var_6]
-
-loc_6D59:
-		les	bx, [bp+var_6]
-		mov	al, [bp+var_9]
-		mov	es:[bx], al
-		inc	word ptr [bp+var_6]
-		lea	ax, [bp+var_90]
-		mov	dx, word ptr [bp+var_6]
-		xor	bx, bx
-		sub	dx, ax
-		sbb	bx, 0
-		or	bx, bx
-		jl	short loc_6DC1
-		jnz	short loc_6D7F
-		cmp	dx, 80h	; '€'
-		jb	short loc_6DC1
-
-loc_6D7F:
-		lea	ax, [bp+var_90]
-		mov	dx, word ptr [bp+var_6]
-		xor	bx, bx
-		sub	dx, ax
-		sbb	bx, 0
-		mov	[bp+var_2], dx
-		push	dx		; len
-		push	ss
-		push	ax		; buf
-		push	[bp+handle]	; handle
-		nop
-		call	__rtl_write
-		add	sp, 8
-		mov	dx, ax
-		cmp	ax, [bp+var_2]
-		jz	short loc_6DB7
-		cmp	dx, 0FFFFh
-		jnz	short loc_6DAF
-		mov	ax, 0FFFFh
-		jmp	short loc_6E0C
-; ---------------------------------------------------------------------------
-
-loc_6DAF:
-		mov	ax, [bp+len]
-		sub	ax, [bp+var_8]
-		jmp	short loc_6E07
-; ---------------------------------------------------------------------------
-
-loc_6DB7:
-		lea	ax, [bp+var_90]
-		mov	word ptr [bp+var_6+2], ss
-		mov	word ptr [bp+var_6], ax
-
-loc_6DC1:
-		cmp	[bp+var_8], 0
-		jz	short loc_6DCA
-		jmp	loc_6D3C
-; ---------------------------------------------------------------------------
-
-loc_6DCA:
-		lea	ax, [bp+var_90]
-		mov	dx, word ptr [bp+var_6]
-		xor	bx, bx
-		sub	dx, ax
-		sbb	bx, 0
-		mov	[bp+var_2], dx
-		mov	ax, dx
-		or	ax, ax
-		jbe	short loc_6E0E
-		push	dx		; len
-		push	ss
-		lea	ax, [bp+var_90]
-		push	ax		; buf
-		push	[bp+handle]	; handle
-		nop
-		call	__rtl_write
-		add	sp, 8
-		mov	dx, ax
-		cmp	ax, [bp+var_2]
-		jz	short loc_6E0E
-		cmp	dx, 0FFFFh
-		jnz	short loc_6E04
-		mov	ax, 0FFFFh
-		jmp	short loc_6E0C
-; ---------------------------------------------------------------------------
-
-loc_6E04:
-		mov	ax, [bp+len]
-
-loc_6E07:
-		add	ax, dx
-		sub	ax, [bp+var_2]
-
-loc_6E0C:
-		jmp	short loc_6E11
-; ---------------------------------------------------------------------------
-
-loc_6E0E:
-		mov	ax, [bp+len]
-
-loc_6E11:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-___write	endp
-
+include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
 
 ; =============== S U B	R O U T	I N E =======================================

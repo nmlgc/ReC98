@@ -13,3 +13,9 @@ if LDATA
 endif
 	call func
 endm
+
+pushSS_ macro
+if LDATA
+	push ss
+endif
+endm
