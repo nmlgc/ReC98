@@ -744,19 +744,7 @@ loc_7C0:
 		retf	2
 sub_790		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_7C8		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_7C8		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
@@ -2425,9 +2413,7 @@ sub_1AF8	endp
 
 
 sub_1B84	proc far
-		nop
-		push	cs
-		call	near ptr sub_7C8
+		nopcall	dos_keyclear
 		retf
 sub_1B84	endp
 

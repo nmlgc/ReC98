@@ -766,19 +766,7 @@ loc_7E2:
 		retf	2
 sub_7B2		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_7EA		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_7EA		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
@@ -2172,9 +2160,7 @@ sub_19E0	endp
 
 
 sub_19E6	proc far
-		nop
-		push	cs
-		call	near ptr sub_7EA
+		nopcall	dos_keyclear
 		retf
 sub_19E6	endp
 

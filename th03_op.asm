@@ -600,19 +600,7 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_66A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_682		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_682		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
@@ -2536,9 +2524,7 @@ sub_19F6	endp
 
 
 sub_1A1C	proc far
-		nop
-		push	cs
-		call	near ptr sub_682
+		nopcall	dos_keyclear
 		retf
 sub_1A1C	endp
 

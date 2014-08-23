@@ -848,19 +848,7 @@ loc_856:
 		retf	2
 sub_826		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_85E		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_85E		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
@@ -3594,9 +3582,7 @@ sub_1DA8	endp
 
 
 sub_1E14	proc far
-		nop
-		push	cs
-		call	near ptr sub_85E
+		nopcall	dos_keyclear
 		retf
 sub_1E14	endp
 

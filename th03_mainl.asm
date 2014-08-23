@@ -685,19 +685,7 @@ loc_6F6:
 		retf	2
 sub_6C6		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_6FE		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_6FE		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 
@@ -2277,9 +2265,7 @@ sub_175E	endp
 
 
 sub_17CA	proc far
-		nop
-		push	cs
-		call	near ptr sub_6FE
+		nopcall	dos_keyclear
 		retf
 sub_17CA	endp
 

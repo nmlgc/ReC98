@@ -700,19 +700,7 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_778		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_790		proc far
-		mov	ax, 0C00h
-		int	21h		; DOS -	CLEAR KEYBOARD BUFFER
-					; AL must be 01h, 06h, 07h, 08h, or 0Ah.
-		retf
-sub_790		endp
-
+include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
@@ -1933,9 +1921,7 @@ sub_1942	endp
 
 
 sub_1968	proc far
-		nop
-		push	cs
-		call	near ptr sub_790
+		nopcall	dos_keyclear
 		retf
 sub_1968	endp
 
