@@ -2162,14 +2162,7 @@ loc_1B80:
 		retf	4
 sub_1AF8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1B84	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1B84	endp
+include libs/master.lib/js_end.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -26064,7 +26057,7 @@ sub_EC36	proc far
 		call	sub_270C
 		call	sub_23CE
 		call	text_clear
-		call	sub_1B84
+		call	js_end
 		call	egc_start
 		call	sub_36FA
 		pop	bp

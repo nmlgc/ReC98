@@ -2656,17 +2656,7 @@ loc_1C3D:
 		retf	4
 sub_1BD6	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1C42	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1C42	endp
-
+include libs/master.lib/js_end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25766,7 +25756,7 @@ sub_EA1A	proc far
 		call	sub_21AA
 		call	sub_2468
 		call	text_clear
-		call	sub_1C42
+		call	js_end
 		call	egc_start
 		pop	bp
 		retf

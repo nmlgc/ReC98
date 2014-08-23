@@ -1877,16 +1877,7 @@ sub_19E0	proc far
 		retf
 sub_19E0	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_19E6	proc far
-		nopcall	dos_keyclear
-		retf
-sub_19E6	endp
+include libs/master.lib/js_end.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -22816,7 +22807,7 @@ sub_D3F4	proc far
 		call	sub_24FC
 		call	sub_21BE
 		call	text_clear
-		call	sub_19E6
+		call	js_end
 		call	egc_start
 		call	sub_3574
 		pop	bp

@@ -3300,16 +3300,7 @@ loc_1E0F:
 		retf	4
 sub_1DA8	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1E14	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1E14	endp
+include libs/master.lib/js_end.asm
 
 ; ---------------------------------------------------------------------------
 		db 0, 3, 0Ch, 0Fh, 30h,	33h, 3Ch, 3Fh, 0C0h, 0C3h, 0CCh
@@ -38038,7 +38029,7 @@ sub_1361E	proc far
 		call	sub_2724
 		call	sub_241A
 		call	text_clear
-		call	sub_1E14
+		call	js_end
 		call	egc_start
 		call	sub_3F58
 		pop	bp

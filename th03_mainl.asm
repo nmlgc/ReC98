@@ -1989,16 +1989,7 @@ loc_17C5:
 		retf	4
 sub_175E	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_17CA	proc far
-		nopcall	dos_keyclear
-		retf
-sub_17CA	endp
+include libs/master.lib/js_end.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -21650,7 +21641,7 @@ sub_C990	proc far
 		call	sub_201C
 		call	sub_235A
 		call	text_clear
-		call	sub_17CA
+		call	js_end
 		call	egc_start
 		pop	bp
 		retf
@@ -22617,7 +22608,7 @@ sub_D16F	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_201C
 		call	sub_235A
-		call	sub_17CA
+		call	js_end
 		call	egc_start
 		pop	bp
 		retf

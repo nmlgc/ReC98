@@ -2282,17 +2282,7 @@ sub_1D32	proc far
 		retf
 sub_1D32	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D58	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1D58	endp
-
+include libs/master.lib/js_end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24370,7 +24360,7 @@ sub_E0AC	proc far
 		call	sub_28FE
 		call	sub_2600
 		call	text_clear
-		call	sub_1D58
+		call	js_end
 		call	egc_start
 		call	sub_3D12
 		pop	bp

@@ -2245,17 +2245,7 @@ sub_19F6	proc far
 		retf
 sub_19F6	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A1C	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1A1C	endp
-
+include libs/master.lib/js_end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20715,7 +20705,7 @@ sub_BFC2	proc far
 		call	sub_2378
 		call	sub_2676
 		call	text_clear
-		call	sub_1A1C
+		call	js_end
 		call	egc_start
 		pop	bp
 		retf

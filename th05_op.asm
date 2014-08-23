@@ -1669,17 +1669,7 @@ sub_1942	proc far
 		retf
 sub_1942	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1968	proc far
-		nopcall	dos_keyclear
-		retf
-sub_1968	endp
-
+include libs/master.lib/js_end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23340,7 +23330,7 @@ sub_D7EC	proc far
 		call	sub_24CE
 		call	sub_2210
 		call	text_clear
-		call	sub_1968
+		call	js_end
 		call	egc_start
 		call	sub_3532
 		pop	bp
