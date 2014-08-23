@@ -121,8 +121,12 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 
 	mov	AH,3fh
 	int	21h			;read handle
+if LDATA	
 	jnb	@@NEXT_PATTERN_1
 	jmp	BFTENTRY_INVAL
+else
+	jb	BFTENTRY_INVAL
+endif
 @@NEXT_PATTERN_1:
 	cmp	AX,CX
 	jz	@@NEXT_PATTERN_2
