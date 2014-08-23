@@ -6826,87 +6826,7 @@ sub_2F0A	endp
 
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _rtl_read(int handle, void *buf, unsigned	int len)
-__rtl_read	proc far
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+1BE8h], 2
-		jz	short loc_2F6F
-		mov	ax, 5
-		push	ax
-		jmp	short loc_2F83
-; ---------------------------------------------------------------------------
-
-loc_2F6F:
-		push	ds
-		mov	ah, 3Fh	; '?'
-		mov	bx, [bp+handle]
-		mov	cx, [bp+len]
-		lds	dx, [bp+buf]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		jb	short loc_2F82
-		jmp	short loc_2F86
-; ---------------------------------------------------------------------------
-
-loc_2F82:
-		push	ax
-
-loc_2F83:
-		call	__IOERROR
-
-loc_2F86:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__rtl_read	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _read(int	handle,	void *buf, unsigned int	len)
-__read		proc far
-
-handle		= word ptr  6
-buf		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+len]	; len
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	[bp+handle]	; handle
-		push	cs
-		call	near ptr __rtl_read
-		add	sp, 8
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__read		endp
-
+include libs/BorlandC/reada.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13874,9 +13794,7 @@ loc_66FD:
 		push	word ptr [bp+buf+2]
 		push	word ptr [bp+buf] ; buf
 		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr __rtl_read
+		nopcall	__rtl_read
 		add	sp, 8
 		mov	[bp+var_2], ax
 		inc	ax
@@ -13920,9 +13838,7 @@ loc_6745:
 		push	ss
 		push	ax		; buf
 		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr __read
+		nopcall	__read
 		add	sp, 8
 		pop	bx
 		pop	es

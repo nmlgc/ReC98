@@ -1,6 +1,6 @@
-; int _CType _FARFUNC _write(int fd, const void *buf, unsigned len)
+; int _CType _read( int fd, void *buf, unsigned len )
 public __rtl_write
-__rtl_write	proc DIST
+__rtl_read	proc DIST
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize
@@ -11,44 +11,39 @@ __rtl_write	proc DIST
 		push	di
 		mov	bx, [bp+@@fd]
 		add	bx, bx
-		test	byte ptr _openfd[bx], 1
-		jz	short @@writeDo
+		test	byte ptr _openfd[bx], 2
+		jz	short @@readDo
 		mov	ax, 5
 		push	ax
-		jmp	short @@writeDenied
+		jmp	short @@readDenied
 
-@@writeDo:
+@@readDo:
 		pushDS_
-		mov	ah, 40h
+		mov	ah, 3Fh
 		mov	bx, [bp+@@fd]
 		mov	cx, [bp+@@len]
 		LDS_	dx, [bp+@@buf]
 		int	21h
 		popDS_
-		jb	short @@writeFailed
-		push	ax
-		mov	bx, [bp+@@fd]
-		add	bx, bx
-		or	_openfd[bx], 1000h
-		pop	ax
-		jmp	short @@writeRet
+		jb	short @@readFailed
+		jmp	short @@readRet
 
-@@writeFailed:
+@@readFailed:
 		push	ax
 
-@@writeDenied:
+@@readDenied:
 		call	__IOERROR
 
-@@writeRet:
+@@readRet:
 		pop	di
 		pop	si
 		pop	bp
 		ret
-__rtl_write	endp
+__rtl_read	endp
 
-; int __cdecl _write(int fd, const void *buf, unsigned len)
-public __write
-__write	proc DIST
+; int __cdecl _read(int fd, const void *buf, unsigned len)
+public __read
+__read		proc DIST
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize
@@ -63,10 +58,10 @@ if LDATA
 endif
 		push	word ptr [bp+@@buf]
 		push	[bp+@@fd]
-		call	__rtl_write
+		call	__rtl_read
 		add	sp, 4 + dPtrSize
 		pop	di
 		pop	si
 		pop	bp
 		ret
-__write		endp
+__read		endp
