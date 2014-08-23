@@ -50,61 +50,7 @@ locret_3D3:
 		retf	6
 sub_3B4		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3D6		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	bx, [bp+arg_4]
-		mov	ah, 3Fh	; '?'
-		mov	cx, 20h	; ' '
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		push	ds
-		pop	es
-		assume es:dseg
-		pop	ds
-		sbb	cx, cx
-		xor	ax, cx
-		sub	ax, cx
-		jb	short loc_40D
-		push	si
-		push	di
-		mov	si, 508h
-		mov	di, dx
-		mov	cx, 5
-		repe cmpsb
-		pop	di
-		pop	si
-
-loc_400:
-		jnz	short loc_409
-		mov	ax, 0
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_409:
-		mov	ax, 0FFF3h
-		stc
-
-loc_40D:
-		pop	bp
-		retf	6
-sub_3D6		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bfnt_header_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1915,9 +1861,7 @@ arg_2		= word ptr  8
 		push	bp
 		push	ss
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_3D6
+		nopcall	bfnt_header_read
 		jb	short loc_13ED
 		mov	di, sp
 		push	ss
@@ -3236,8 +3180,7 @@ arg_2		= word ptr  8
 		push	bx
 		push	ds
 		push	cx
-		push	cs
-		call	near ptr sub_3D6
+		call	bfnt_header_read
 		pop	cx
 		pop	bx
 		jb	short loc_2B00
@@ -26790,9 +26733,7 @@ word_F842	dw 0
 word_F844	dw 0
 byte_F846	db 0
 byte_F847	db 0
-aBfnt		db 'BFNT'
-		db  1Ah
-		db    0
+include libs/master.lib/bfnt_id[data].asm
 word_F84E	dw 0
 					; sub_D3C+21r ...
 word_F850	dw 27Fh

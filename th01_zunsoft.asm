@@ -1068,58 +1068,7 @@ sub_ACE		proc near
 		retn	2
 sub_ACE		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AE0		proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		mov	ah, 3Fh
-		mov	cx, 20h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		push	ds
-		pop	es
-		sbb	cx, cx
-		xor	ax, cx
-		sub	ax, cx
-		jb	short loc_B15
-		push	si
-		push	di
-		mov	si, 2280h
-		mov	di, dx
-		mov	cx, 5
-		repe cmpsb
-		pop	di
-		pop	si
-		jnz	short loc_B11
-		mov	ax, 0
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_B11:
-		mov	ax, 0FFF3h
-		stc
-
-loc_B15:
-		pop	bp
-		retn	4
-sub_AE0		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bfnt_header_read.asm
 ; START	OF FUNCTION CHUNK FOR sub_B2E
 
 loc_B1A:
@@ -1468,7 +1417,7 @@ arg_0		= word ptr  4
 		push	cx
 		push	bx
 		push	cx
-		call	sub_AE0
+		call	bfnt_header_read
 		pop	cx
 		pop	bx
 		jb	short loc_D84
@@ -2921,9 +2870,7 @@ word_2248	dw 64h
 word_227A	dw 0
 		dw 0
 		dw 0
-aBfnt		db 'BFNT'
-		db  1Ah
-		db    0
+include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/dos_ropen[data].asm
 		db 5 dup(0)
 byte_228D	db 0

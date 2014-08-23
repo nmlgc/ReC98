@@ -28,59 +28,7 @@ seg000		segment	word public 'CODE' use16
 include libs/BorlandC/c0.asm
 		db    0
 include libs/master.lib/bfnt_entry_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3B4		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	bx, [bp+arg_4]
-		mov	ah, 3Fh	; '?'
-		mov	cx, 20h	; ' '
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		push	ds
-		pop	es
-		assume es:dseg
-		pop	ds
-		sbb	cx, cx
-		xor	ax, cx
-		sub	ax, cx
-		jb	short loc_3EB
-		push	si
-		push	di
-		mov	si, 1C4h
-		mov	di, dx
-		mov	cx, 5
-		repe cmpsb
-		pop	di
-		pop	si
-		jnz	short loc_3E7
-		mov	ax, 0
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_3E7:
-		mov	ax, 0FFF3h
-		stc
-
-loc_3EB:
-		pop	bp
-		retf	6
-sub_3B4		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bfnt_header_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3103,8 +3051,7 @@ arg_2		= word ptr  8
 		push	bx
 		push	ds
 		push	cx
-		push	cs
-		call	near ptr sub_3B4
+		call	bfnt_header_read
 		pop	cx
 		pop	bx
 		jb	short loc_290E
@@ -28975,9 +28922,7 @@ word_102C0	dw 0
 					; seg000:0515r
 		db 0
 		db 0
-aBfnt		db 'BFNT'
-		db  1Ah
-		db    0
+include libs/master.lib/bfnt_id[data].asm
 word_102CA	dw 0
 					; sub_DCC+2Dw ...
 word_102CC	dw 27Fh
