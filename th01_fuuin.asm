@@ -1904,8 +1904,7 @@ sub_CE2		proc far
 		call	near ptr sub_C6A
 		push	cs
 		call	near ptr sub_CB8
-		push	cs
-		call	near ptr sub_E6A
+		call	palette_init
 		retf
 sub_CE2		endp
 
@@ -1965,41 +1964,7 @@ loc_D28:
 sub_D08		endp
 
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E6A		proc far
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	di, 1BBEh
-		mov	si, 0AE4h
-		mov	cx, 18h
-		rep movsw
-		pop	di
-		pop	si
-		mov	al, 0
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		mov	al, 26h	; '&'
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, 15h
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		mov	al, 37h	; '7'
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		mov	al, 1
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	PaletteTone, 64h	; 'd'
-		call	palette_show
-		retf
-sub_E6A		endp
-
+include libs/master.lib/palette_init.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

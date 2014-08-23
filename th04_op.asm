@@ -2268,8 +2268,7 @@ sub_1D32	proc far
 		call	near ptr sub_14E4
 		push	cs
 		call	near ptr sub_1532
-		push	cs
-		call	near ptr sub_1DAC
+		call	palette_init
 		retf
 sub_1D32	endp
 
@@ -2305,43 +2304,7 @@ sub_1D76	proc near
 		retn
 sub_1D76	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1DAC	proc far
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	di, 1A96h
-		mov	si, 588h
-		mov	cx, 18h
-		rep movsw
-		pop	di
-		pop	si
-		mov	al, 0
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		mov	al, 26h	; '&'
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, 15h
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		mov	al, 37h	; '7'
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		mov	al, 1
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		retf
-sub_1DAC	endp
-
+include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================

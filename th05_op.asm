@@ -1655,8 +1655,7 @@ sub_1942	proc far
 		call	near ptr sub_11C8
 		push	cs
 		call	near ptr sub_1216
-		push	cs
-		call	near ptr sub_19BC
+		call	palette_init
 		retf
 sub_1942	endp
 
@@ -1692,43 +1691,7 @@ sub_1986	proc near
 		retn
 sub_1986	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_19BC	proc far
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	di, 2E1Eh
-		mov	si, 550h
-		mov	cx, 18h
-		rep movsw
-		pop	di
-		pop	si
-		mov	al, 0
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		mov	al, 26h	; '&'
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, 15h
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		mov	al, 37h	; '7'
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		mov	al, 1
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		retf
-sub_19BC	endp
-
+include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -2488,8 +2488,7 @@ sub_1B94	proc far
 		call	near ptr sub_1208
 		push	cs
 		call	near ptr sub_1256
-		push	cs
-		call	near ptr sub_1CD6
+		call	palette_init
 		retf
 sub_1B94	endp
 
@@ -2571,43 +2570,7 @@ sub_1CA0	proc near
 		retn
 sub_1CA0	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1CD6	proc far
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	di, 12F8h
-		mov	si, 248h
-		mov	cx, 18h
-		rep movsw
-		pop	di
-		pop	si
-		mov	al, 0
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		mov	al, 26h	; '&'
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, 15h
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		mov	al, 37h	; '7'
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		mov	al, 1
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		retf
-sub_1CD6	endp
-
+include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================

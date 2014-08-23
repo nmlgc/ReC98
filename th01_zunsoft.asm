@@ -828,46 +828,12 @@ sub_958		proc near
 		call	sub_952
 		call	sub_8DA
 		call	sub_928
-		call	sub_A82
+		call	palette_init
 		retn
 sub_958		endp
 
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A82		proc near
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:seg000
-		mov	di, 2996h
-		mov	si, 224Ah
-		mov	cx, 18h
-		rep movsw
-		pop	di
-		pop	si
-		mov	al, 0
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		mov	al, 26h
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, 15h
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		mov	al, 37h
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		mov	al, 1
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	PaletteTone, 64h
-		call	palette_show
-		retn
-sub_A82		endp
-
+include libs/master.lib/palette_init.asm
 include libs/master.lib/keybeep.asm
 
 ; =============== S U B	R O U T	I N E =======================================
