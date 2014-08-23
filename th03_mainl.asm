@@ -157,7 +157,7 @@ sub_536		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	near ptr sub_2064
@@ -180,10 +180,10 @@ loc_555:
 		jnz	short loc_555
 
 loc_55D:
-		add	word_E968, 6
-		cmp	word_E968, 64h ; 'd'
+		add	PaletteTone, 6
+		cmp	PaletteTone, 64h ; 'd'
 		jl	short loc_549
-		mov	word_E968, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		nop
 		push	cs
 		call	loc_17D0
@@ -204,7 +204,7 @@ sub_57A		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_E968, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		nop
 		push	cs
 		call	near ptr sub_2064
@@ -225,9 +225,9 @@ loc_599:
 		jnz	short loc_599
 
 loc_5A1:
-		sub	word_E968, 6
+		sub	PaletteTone, 6
 		jg	short loc_58D
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	loc_17D0
@@ -1997,7 +1997,7 @@ loc_17D0:
 					; sub_536+3Bp ...
 		cld
 		push	si
-		mov	ax, word_E968
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -2017,7 +2017,7 @@ loc_17D0:
 loc_17F6:
 		mov	si, 141Eh
 		mov	dl, 64h	; 'd'
-		cmp	word_E99A, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_183A
 
 loc_1801:
@@ -2669,7 +2669,7 @@ sub_208A	proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_E968, 0C8h	; 'È'
+		mov	PaletteTone, 0C8h	; 'È'
 		push	cs
 		call	near ptr sub_2064
 
@@ -2687,10 +2687,10 @@ loc_20A7:
 		jnz	short loc_20A7
 
 loc_20AE:
-		sub	word_E968, 6
-		cmp	word_E968, 64h ; 'd'
+		sub	PaletteTone, 6
+		cmp	PaletteTone, 64h ; 'd'
 		jg	short loc_209C
-		mov	word_E968, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		push	cs
 		call	loc_17D0
 		pop	di
@@ -2710,7 +2710,7 @@ sub_20CA	proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_E968, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		push	cs
 		call	near ptr sub_2064
 
@@ -2728,10 +2728,10 @@ loc_20E7:
 		jnz	short loc_20E7
 
 loc_20EE:
-		add	word_E968, 6
-		cmp	word_E968, 0C8h	; 'È'
+		add	PaletteTone, 6
+		cmp	PaletteTone, 0C8h	; 'È'
 		jl	short loc_20DC
-		mov	word_E968, 0C8h	; 'È'
+		mov	PaletteTone, 0C8h	; 'È'
 		push	cs
 		call	loc_17D0
 		pop	di
@@ -3067,7 +3067,7 @@ loc_2791:
 
 loc_27A2:
 		mov	ax, bx
-		mov	word_E99C, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -3093,11 +3093,11 @@ sub_2820	proc far
 		push	si
 		push	di
 		cld
-		mov	ax, word_E99C
+		mov	ax, ResPalSeg
 		or	ax, ax
 		jz	short loc_284C
 		mov	es, ax
-		mov	ax, word_E968
+		mov	ax, PaletteTone
 		mov	es:0Ah,	al
 		mov	si, 141Eh
 		mov	di, 10h
@@ -15499,7 +15499,7 @@ sub_978D	proc near
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		call	sub_1758
 		push	large 160012Ch
@@ -15528,7 +15528,7 @@ loc_97FC:
 		jl	short loc_97E8
 		push	large 0A0040h
 		call	sub_D3FC
-		mov	word_E968, 0C8h	; 'È'
+		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	loc_17D0
 		push	large 0E00040h
 		push	6
@@ -15792,7 +15792,7 @@ var_2		= word ptr -2
 		push	si
 		mov	si, 3A3h
 		mov	[bp+var_2], 3AAh
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		push	0
 		call	sub_CD0A
@@ -16508,7 +16508,7 @@ loc_A0C5:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		push	0
 		push	ds
@@ -17466,7 +17466,7 @@ loc_A85F:
 
 loc_A87B:
 		mov	ax, [bp+var_2]
-		mov	word_E968, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_17D0
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
@@ -18377,7 +18377,7 @@ sub_AEF0	endp
 sub_AFAC	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
@@ -19603,7 +19603,7 @@ loc_B879:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+36h], 0
@@ -19736,7 +19736,7 @@ loc_B9DD:
 		les	bx, off_EE4E
 		mov	al, [bp+var_1]
 		add	es:[bx+2], al
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		push	60h ; '`'
 		call	sub_CB52
@@ -21114,7 +21114,7 @@ loc_C4D8:
 		push	offset aEd_m	; "ed.m"
 		call	sub_C880
 		add	sp, 6
-		mov	word_E968, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_17D0
 		push	ds
 		push	offset aEdbk1_rgb ; "edbk1.rgb"
@@ -21218,7 +21218,7 @@ loc_C4D8:
 		mov	eax, es:[bx+10h]
 		mov	dword_E9A6, eax
 		mov	byte_10BB4, 0
-		mov	word_E968, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_17D0
 		push	0
 		call	sub_CEC2
@@ -21316,7 +21316,7 @@ loc_C781:
 		inc	word_10BB2
 		or	di, di
 		jz	short loc_C7AB
-		mov	word_E968, di
+		mov	PaletteTone, di
 		call	far ptr	loc_17D0
 		test	byte ptr word_10BB2, 1
 		jz	short loc_C781
@@ -21991,7 +21991,7 @@ arg_0		= word ptr  6
 		add	ax, 1F3Eh
 		push	ax		; src
 		push	ds
-		push	offset unk_F80E	; dest
+		push	offset Palettes	; dest
 		call	_memcpy
 		add	sp, 0Ah
 		call	far ptr	loc_17D0
@@ -25227,60 +25227,7 @@ word_E960	dw 0
 		db    0
 		db    0
 		db    0
-word_E968	dw 64h
-					; sub_536:loc_55Dw ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_E99A	dw 0
-word_E99C	dw 0
-		db 0
-		db    0
+include libs/master.lib/pal[data].asm
 word_E9A0	dw 200h
 byte_E9A2	db 0
 					; sub_5B8+48w
@@ -27154,21 +27101,7 @@ word_F80A	dw ?
 					; sub_CB68+Bw ...
 		db    ?	;
 		db    ?	;
-unk_F80E	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include libs/master.lib/pal[bss].asm
 word_F83E	dw ?
 word_F840	dw ?
 word_F842	dw ?

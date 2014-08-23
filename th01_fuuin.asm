@@ -1893,7 +1893,7 @@ sub_CE2		proc far
 		mov	al, 41h	; 'A'
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
-		mov	word_13582, 0
+		mov	PaletteTone, 0
 		push	cs
 		call	loc_D60
 		mov	al, 0
@@ -1970,7 +1970,7 @@ sub_D08		endp
 loc_D60:
 		cld
 		push	si
-		mov	ax, word_13582
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -1990,7 +1990,7 @@ loc_D60:
 loc_D86:
 		mov	si, 1BBEh
 		mov	dl, 64h	; 'd'
-		cmp	word_135B4, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_DCA
 
 loc_D91:
@@ -2148,7 +2148,7 @@ sub_E6A		proc far
 		mov	al, 1
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	word_13582, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		push	cs
 		call	loc_D60
 		retf
@@ -2190,7 +2190,7 @@ loc_EC1:
 
 loc_ED2:
 		mov	ax, bx
-		mov	word_135B6, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -2241,7 +2241,7 @@ sub_EDA		proc far
 
 loc_F1D:
 		mov	cx, ax
-		mov	word_135B6, ax
+		mov	ResPalSeg, ax
 		dec	cx
 		mov	es, cx
 		assume es:nothing
@@ -2279,7 +2279,7 @@ sub_EDA		endp
 
 
 sub_F4E		proc far
-		mov	ax, word_135B6
+		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_F5D
 		push	cs
@@ -2293,7 +2293,7 @@ loc_F5D:
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
 					; ES = segment address of area to be freed
-		mov	word_135B6, 0
+		mov	ResPalSeg, 0
 
 locret_F69:
 		retf
@@ -41098,56 +41098,7 @@ word_1357A	dw 190h
 word_1357E	dw 0
 		db  55h	; U
 		db    0
-word_13582	dw 64h
-		dd    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_135B4	dw 0
-word_135B6	dw 0
-		db    0
-		db    0
+include libs/master.lib/pal[data].asm
 aPal98Grb_0	db 'pal98 grb',0
 aPal98Grb_1	db 'pal98 grb',0
 word_135CE	dw 0
@@ -42286,18 +42237,7 @@ dword_1464E	dd ?
 dword_14652	dd ?
 dword_14656	dd ?
 dword_1465A	dd ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
+include libs/master.lib/pal[bss].asm
 		dd    ?
 dword_14692	dd ?
 word_14696	dw ?

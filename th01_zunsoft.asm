@@ -77,7 +77,7 @@ sub_384		proc near
 		push	21CEh
 		call	sub_D16
 		call	sub_978
-		mov	word_2248, 0
+		mov	PaletteTone, 0
 		call	sub_978
 		call	sub_952
 		pop	bp
@@ -664,7 +664,7 @@ loc_80C:
 loc_818:
 		mov	ds:2872h, al
 		cbw
-		mov	word_2248, ax
+		mov	PaletteTone, ax
 		call	sub_978
 
 loc_822:
@@ -820,7 +820,7 @@ sub_958		proc near
 		mov	al, 41h
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
-		mov	word_2248, 0
+		mov	PaletteTone, 0
 		call	sub_978
 		mov	al, 0
 		out	0A4h, al	; Interrupt Controller #2, 8259A
@@ -839,7 +839,7 @@ sub_958		endp
 sub_978		proc near
 		cld
 		push	si
-		mov	ax, word_2248
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -859,7 +859,7 @@ sub_978		proc near
 loc_99E:
 		mov	si, 2996h
 		mov	dl, 64h
-		cmp	word_227A, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_9E2
 
 loc_9A9:
@@ -1019,7 +1019,7 @@ sub_A82		proc near
 		mov	al, 1
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	word_2248, 64h
+		mov	PaletteTone, 64h
 		call	sub_978
 		retn
 sub_A82		endp
@@ -2835,14 +2835,7 @@ word_2240	dw 190h
 word_2242	dw 50h
 word_2244	dw 0
 		db 55h,	0
-word_2248	dw 64h
-		db 5 dup(0), 2 dup(0FFh), 2 dup(0), 0FFh, 0, 0FFh, 0, 0FFh
-		db 2 dup(0), 4 dup(0FFh), 0, 3 dup(0FFh), 3 dup(77h), 2	dup(0)
-		db 2 dup(0AAh),	2 dup(0), 0AAh,	0, 0AAh, 0, 0AAh, 2 dup(0)
-		db 4 dup(0AAh),	0, 3 dup(0AAh)
-word_227A	dw 0
-		dw 0
-		dw 0
+include libs/master.lib/pal[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/dos_ropen[data].asm
 		db 5 dup(0)
@@ -3817,7 +3810,8 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
-		db 156h dup(?)
+		db 126h dup(?)
+include libs/master.lib/pal[bss].asm
 include libs/master.lib/superpa[bss].asm
 		db 182h dup(?)
 include libs/master.lib/mem[bss].asm

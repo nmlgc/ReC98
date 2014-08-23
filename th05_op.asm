@@ -233,7 +233,7 @@ sub_600		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	near ptr sub_2258
@@ -254,10 +254,10 @@ loc_61F:
 		jnz	short loc_61F
 
 loc_627:
-		add	word_F52E, 6
-		cmp	word_F52E, 64h ; 'd'
+		add	PaletteTone, 6
+		cmp	PaletteTone, 64h ; 'd'
 		jl	short loc_613
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		nop
 		push	cs
 		call	loc_19F0
@@ -277,7 +277,7 @@ sub_644		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		nop
 		push	cs
 		call	near ptr sub_2258
@@ -298,9 +298,9 @@ loc_663:
 		jnz	short loc_663
 
 loc_66B:
-		sub	word_F52E, 6
+		sub	PaletteTone, 6
 		jg	short loc_657
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	loc_19F0
@@ -1652,7 +1652,7 @@ sub_1942	proc far
 		mov	al, 41h	; 'A'
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		push	cs
 		call	loc_19F0
 		mov	al, 0
@@ -1733,7 +1733,7 @@ sub_19BC	proc far
 		mov	al, 1
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		push	cs
 		call	loc_19F0
 		retf
@@ -1744,7 +1744,7 @@ sub_19BC	endp
 loc_19F0:
 		cld
 		push	si
-		mov	ax, word_F52E
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -1764,7 +1764,7 @@ loc_19F0:
 loc_1A16:
 		mov	si, 2E1Eh
 		mov	dl, 64h	; 'd'
-		cmp	word_F560, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_1A5A
 
 loc_1A21:
@@ -2947,7 +2947,7 @@ loc_2AFF:
 
 loc_2B10:
 		mov	ax, bx
-		mov	word_F562, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -2999,7 +2999,7 @@ sub_2B18	proc far
 
 loc_2B5C:
 		mov	cx, ax
-		mov	word_F562, ax
+		mov	ResPalSeg, ax
 		dec	cx
 		mov	es, cx
 		assume es:nothing
@@ -3039,7 +3039,7 @@ sub_2B18	endp
 
 
 sub_2B8E	proc far
-		mov	ax, word_F562
+		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_2B9E
 		nop
@@ -3054,7 +3054,7 @@ loc_2B9E:
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
 					; ES = segment address of area to be freed
-		mov	word_F562, 0
+		mov	ResPalSeg, 0
 
 locret_2BAA:
 		retf
@@ -17547,7 +17547,7 @@ loc_AA91:
 		call	sub_DEE0
 		push	0
 		call	sub_1250
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_19F0
 		mov	byte_F0DC, 0
 		mov	byte_11DD0, 0
@@ -17573,7 +17573,7 @@ loc_AAE1:
 		call	sub_DEE0
 		push	0
 		call	sub_1250
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_19F0
 		mov	byte_F0DC, 0
 		mov	byte_11DD0, 0
@@ -17606,7 +17606,7 @@ loc_AB3B:
 		call	sub_DEE0
 		push	0
 		call	sub_1250
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_19F0
 		mov	byte_F0DC, 0
 		mov	byte_11DD0, 0
@@ -18898,7 +18898,7 @@ sub_B489	endp
 sub_B5A6	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		push	ds
 		push	offset aMswin_bft ; "mswin.bft"
@@ -19221,7 +19221,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_2], 0
 		mov	[bp+var_3], 0
 		mov	[bp+var_4], 64h	; 'd'
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -19307,7 +19307,7 @@ loc_B8F4:
 		jl	short loc_B8E8
 		push	large 20000h
 		call	sub_E0F1
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_19F0
 		push	ds
 		push	offset aZun02_bft ; "zun02.bft"
@@ -19470,7 +19470,7 @@ loc_BA26:
 		mov	[bp+var_4], al
 		mov	al, [bp+var_4]
 		mov	ah, 0
-		mov	word_F52E, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_19F0
 
 loc_BA41:
@@ -19764,7 +19764,7 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		push	0
 		push	ds
@@ -19867,7 +19867,7 @@ loc_BD81:
 		sub	al, [bp+var_2]
 		mov	[bp+var_2], al
 		lea	ax, [si+24h]
-		mov	word_F52E, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_19F0
 		inc	si
 
@@ -20755,7 +20755,7 @@ var_1		= byte ptr -1
 		call	sub_E2CA
 		call	text_clear
 		mov	byte ptr word_13E94+1, 1
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
@@ -20798,7 +20798,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		push	ax
 		call	sub_C3F9
-		mov	word_F52E, 64h ; 'd'
+		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	loc_19F0
 
 loc_C555:
@@ -21784,7 +21784,7 @@ loc_CCA9:
 		cmp	byte_14101, 0
 		jz	short loc_CCF8
 		dec	byte_14101
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		call	sub_CBDC
 		push	1
@@ -21796,7 +21796,7 @@ loc_CCF8:
 		cmp	byte_14101, 4
 		jnb	short loc_CCA9
 		inc	byte_14101
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		jmp	short loc_CC9F
 ; ---------------------------------------------------------------------------
@@ -22258,7 +22258,7 @@ var_2		= word ptr -2
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	word_F52E, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_19F0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -26496,60 +26496,7 @@ word_F524	dw 0
 		db    0
 		db    0
 include libs/master.lib/machine[data].asm
-word_F52E	dw 64h
-					; sub_600:loc_627w ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_F560	dw 0
-word_F562	dw 0
-		db    0
-		db    0
+include libs/master.lib/pal[data].asm
 word_F566	dw 200h
 byte_F568	db 0
 					; sub_682+48w
@@ -28883,54 +28830,7 @@ word_11DF8	dw 0
 word_11DFA	dw 0
 		db    0
 		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/pal[bss].asm
 word_11E2E	dw 0
 word_11E30	dw 0
 word_11E32	dw 0

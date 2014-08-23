@@ -231,7 +231,7 @@ sub_622		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_216E4, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	near ptr sub_2462
@@ -252,10 +252,10 @@ loc_641:
 		jnz	short loc_641
 
 loc_649:
-		add	word_216E4, 6
-		cmp	word_216E4, 64h	; 'd'
+		add	PaletteTone, 6
+		cmp	PaletteTone, 64h	; 'd'
 		jl	short loc_635
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		nop
 		push	cs
 		call	loc_1F04
@@ -276,7 +276,7 @@ sub_666		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		nop
 		push	cs
 		call	near ptr sub_2462
@@ -297,9 +297,9 @@ loc_685:
 		jnz	short loc_685
 
 loc_68D:
-		sub	word_216E4, 6
+		sub	PaletteTone, 6
 		jg	short loc_679
-		mov	word_216E4, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	loc_1F04
@@ -3422,7 +3422,7 @@ word_1EFA	dw 1111h
 loc_1F04:
 		cld
 		push	si
-		mov	ax, word_216E4
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -3442,7 +3442,7 @@ loc_1F04:
 loc_1F2A:
 		mov	si, 2A82h
 		mov	dl, 64h	; 'd'
-		cmp	word_21716, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_1F6E
 
 loc_1F35:
@@ -4273,7 +4273,7 @@ loc_248C:
 		mov	si, ss:[bx+4]
 
 loc_2490:
-		mov	word_216E4, 0C8h ; 'È'
+		mov	PaletteTone, 0C8h ; 'È'
 		push	cs
 		call	near ptr sub_2462
 
@@ -4291,10 +4291,10 @@ loc_24A5:
 		jnz	short loc_24A5
 
 loc_24AC:
-		sub	word_216E4, 6
-		cmp	word_216E4, 64h	; 'd'
+		sub	PaletteTone, 6
+		cmp	PaletteTone, 64h	; 'd'
 		jg	short loc_249A
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		push	cs
 		call	loc_1F04
 		pop	di
@@ -4313,7 +4313,7 @@ sub_24C8	proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		push	cs
 		call	near ptr sub_2462
 
@@ -4331,10 +4331,10 @@ loc_24E5:
 		jnz	short loc_24E5
 
 loc_24EC:
-		add	word_216E4, 6
-		cmp	word_216E4, 0C8h ; 'È'
+		add	PaletteTone, 6
+		cmp	PaletteTone, 0C8h ; 'È'
 		jl	short loc_24DA
-		mov	word_216E4, 0C8h ; 'È'
+		mov	PaletteTone, 0C8h ; 'È'
 		push	cs
 		call	loc_1F04
 		pop	di
@@ -20043,7 +20043,7 @@ loc_AF4A:
 		push	offset aEye_rgb	; "eye.rgb"
 		call	sub_219C
 		call	far ptr	loc_1F04
-		mov	word_216E4, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_1F04
 		call	sub_12024
 		call	sub_10D4B
@@ -20255,7 +20255,7 @@ loc_B156:
 		jb	short loc_B156
 		push	1
 		call	sub_666
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1F04
 		call	sub_10D77
 		call	sub_CBB8
@@ -20773,7 +20773,7 @@ loc_B64C:
 		call	sub_13938
 
 loc_B65A:
-		mov	word_216E4, 0
+		mov	PaletteTone, 0
 		call	far ptr	loc_1F04
 		push	large 200070h
 		push	1Fh
@@ -24947,7 +24947,7 @@ loc_D20A:
 		push	1
 		call	sub_131B7
 		mov	ax, [bp+var_2]
-		mov	word_216E4, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_1F04
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
@@ -25517,7 +25517,7 @@ sub_D6EB	proc far
 		mov	bp, sp
 		call	sub_D729
 		call	sub_10D4B
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1F04
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_25A3D
@@ -25919,7 +25919,7 @@ loc_D9FF:
 		jge	short loc_DA19
 		test	byte ptr word_22C18, 1
 		jz	short loc_DA19
-		mov	word_216E4, 96h	; '–'
+		mov	PaletteTone, 96h	; '–'
 		jmp	short loc_DA36
 ; ---------------------------------------------------------------------------
 
@@ -25932,7 +25932,7 @@ loc_DA19:
 		imul	ax, 6
 		mov	dx, 0C4h ; 'Ä'
 		sub	dx, ax
-		mov	word_216E4, dx
+		mov	PaletteTone, dx
 
 loc_DA36:
 		mov	byte_266D3, 1
@@ -25940,7 +25940,7 @@ loc_DA36:
 ; ---------------------------------------------------------------------------
 
 loc_DA3D:
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		jmp	short loc_DA36
 ; ---------------------------------------------------------------------------
 
@@ -27516,7 +27516,7 @@ loc_E556:
 ; ---------------------------------------------------------------------------
 
 loc_E566:
-		mov	word_216E4, 32h	; '2'
+		mov	PaletteTone, 32h	; '2'
 		call	far ptr	loc_1F04
 
 loc_E571:
@@ -27598,7 +27598,7 @@ loc_E61E:
 loc_E62E:
 		cmp	[bp+var_2], 0
 		jnz	short loc_E654
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1F04
 
 loc_E63F:
@@ -31080,7 +31080,7 @@ sub_1002A	endp
 		imul	ax, 3
 		mov	dx, 0C4h ; 'Ä'
 		sub	dx, ax
-		mov	word_216E4, dx
+		mov	PaletteTone, dx
 		mov	byte_266D3, 1
 		jmp	short loc_100FE
 ; ---------------------------------------------------------------------------
@@ -31154,7 +31154,7 @@ loc_100FE:
 		imul	ax, 3
 		mov	dx, 0C4h ; 'Ä'
 		sub	dx, ax
-		mov	word_216E4, dx
+		mov	PaletteTone, dx
 		mov	byte_266D3, 1
 		jmp	loc_101F4
 ; ---------------------------------------------------------------------------
@@ -31279,15 +31279,15 @@ loc_10245:
 		push	0
 		call	sub_1D50
 		mov	word_255AA, 11BEh
-		mov	al, byte_23DEC
+		mov	al, Palettes+42
 		mov	byte_257D6, al
-		mov	al, byte_23DED
+		mov	al, Palettes+43
 		mov	byte_257D7, al
-		mov	al, byte_23DEE
+		mov	al, Palettes+44
 		mov	byte_257D8, al
-		mov	byte_23DEC, 0F0h ; 'ð'
-		mov	byte_23DED, 0B0h ; '°'
-		mov	byte_23DEE, 0C0h ; 'À'
+		mov	Palettes+42, 0F0h ; 'ð'
+		mov	Palettes+43, 0B0h ; '°'
+		mov	Palettes+44, 0C0h ; 'À'
 		jmp	short loc_10288
 ; ---------------------------------------------------------------------------
 
@@ -31316,11 +31316,11 @@ loc_102A8:
 
 loc_102AF:
 		mov	al, byte_257D6
-		mov	byte_23DEC, al
+		mov	Palettes+42, al
 		mov	al, byte_257D7
-		mov	byte_23DED, al
+		mov	Palettes+43, al
 		mov	al, byte_257D8
-		mov	byte_23DEE, al
+		mov	Palettes+44, al
 		mov	ax, word_255AC
 		mov	word_255AA, ax
 		mov	al, byte_256A9
@@ -31329,7 +31329,7 @@ loc_102AF:
 		add	ax, ax
 		mov	dx, 0C8h ; 'È'
 		sub	dx, ax
-		mov	word_216E4, dx
+		mov	PaletteTone, dx
 		mov	byte_266D3, 1
 		cmp	byte_256A9, 0B1h ; '±'
 		jnz	short loc_10307
@@ -31340,7 +31340,7 @@ loc_102AF:
 
 loc_102F2:
 		mov	byte_256A8, 0
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_266D3, 1
 		mov	byte_25592, 0Dh
 
@@ -32322,12 +32322,12 @@ loc_10A25:
 		jbe	short loc_10A60
 		test	byte_259AA, 1
 		jz	short loc_10A55
-		mov	word_216E4, 96h	; '–'
+		mov	PaletteTone, 96h	; '–'
 		jmp	short loc_10A5B
 ; ---------------------------------------------------------------------------
 
 loc_10A55:
-		mov	word_216E4, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 
 loc_10A5B:
 		mov	byte_266D3, 1
@@ -35598,7 +35598,7 @@ loc_124A7:
 		test	byte_2CDD0, 1
 		jz	short loc_124C5
 		mov	al, [bp+var_9]
-		mov	byte_23DC2, al
+		mov	Palettes, al
 		jmp	short loc_124D2
 ; ---------------------------------------------------------------------------
 
@@ -35611,7 +35611,7 @@ loc_124C5:
 		sar	ax, 1
 
 loc_124D2:
-		mov	byte_23DC4, al
+		mov	Palettes+2, al
 		jmp	short loc_12508
 ; ---------------------------------------------------------------------------
 
@@ -35620,15 +35620,15 @@ loc_124D7:
 		call	sub_C162
 		cmp	byte_23242, 0
 		jnz	short loc_12508
-		mov	byte_23DC2, 0
-		mov	byte_23DC3, 0
+		mov	Palettes, 0
+		mov	Palettes+1, 0
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		imul	ax, 3
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_23DC4, al
+		mov	Palettes+2, al
 		cmp	[bp+var_9], 7Fh	; ''
 		jb	short loc_12508
 		mov	byte_23242, 1
@@ -37453,7 +37453,7 @@ arg_0		= word ptr  6
 		add	ax, 3460h
 		push	ax		; src
 		push	ds
-		push	offset byte_23DC2 ; dest
+		push	offset Palettes ; dest
 		call	_memcpy
 		add	sp, 0Ah
 		call	far ptr	loc_1F04
@@ -39070,61 +39070,7 @@ word_216DA	dw 0
 		db    0
 		db    0
 include libs/master.lib/machine[data].asm
-word_216E4	dw 64h
-					; sub_622:loc_649w ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_21716	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/pal[data].asm
 word_2171C	dw 200h
 word_2171E	dw 0
 					; sub_6A4+48w ...
@@ -44420,60 +44366,7 @@ word_23DBC	dw 0
 word_23DBE	dw 0
 		db    0
 		db    0
-byte_23DC2	db 0
-					; sub_12461+82w ...
-byte_23DC3	db 0
-					; seg003:2C01w	...
-byte_23DC4	db 0
-					; sub_12461+99w ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_23DEC	db 0
-					; sub_1020A+66w ...
-byte_23DED	db 0
-					; sub_1020A+6Bw ...
-byte_23DEE	db 0
-					; sub_1020A+70w ...
-		db    0
-		db    0
-		db    0
+include libs/master.lib/pal[bss].asm
 word_23DF2	dw 0
 word_23DF4	dw 0
 word_23DF6	dw 0

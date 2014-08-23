@@ -156,7 +156,7 @@ sub_536		proc far
 		push	si
 		push	di
 		mov	si, ss:[bx+4]
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		nop
 		push	cs
 		call	near ptr sub_21F2
@@ -179,9 +179,9 @@ loc_555:
 		jnz	short loc_555
 
 loc_55D:
-		sub	word_1D834, 6
+		sub	PaletteTone, 6
 		jg	short loc_549
-		mov	word_1D834, 0
+		mov	PaletteTone, 0
 		nop
 		push	cs
 		call	loc_1C7E
@@ -2694,7 +2694,7 @@ loc_1C7E:
 					; sub_536+36p ...
 		cld
 		push	si
-		mov	ax, word_1D834
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -2714,7 +2714,7 @@ loc_1C7E:
 loc_1CA4:
 		mov	si, 11BAh
 		mov	dl, 64h	; 'd'
-		cmp	word_1D866, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_1CE8
 
 loc_1CAF:
@@ -3851,7 +3851,7 @@ loc_289F:
 
 loc_28B0:
 		mov	ax, bx
-		mov	word_1D868, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -3888,7 +3888,7 @@ sub_292E	proc far
 		mov	ds, ax
 		mov	al, ds:[10]
 		xor	ah, ah
-		mov	es:word_1D834, ax
+		mov	es:PaletteTone, ax
 		mov	si, 10h
 		mov	di, 11BAh
 		mov	cx, si
@@ -15873,7 +15873,7 @@ loc_970F:
 		call	dword_20F20
 
 loc_9724:
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1C7E
 		call	sub_9778
 		mov	ah, 0
@@ -20209,7 +20209,7 @@ loc_C159:
 		mov	bx, ax
 		mov	word ptr [bx+659Ch], 0
 		mov	byte ptr [si+1Fh], 0FFh
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1C7E
 		mov	byte_20E3C, 2
 		mov	al, byte ptr word_23AF0
@@ -20236,7 +20236,7 @@ loc_C1CD:
 		and	ax, 1
 		imul	ax, 1Eh
 		add	ax, 64h	; 'd'
-		mov	word_1D834, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_1C7E
 
 loc_C1E1:
@@ -21540,7 +21540,7 @@ loc_CAA8:
 		and	ax, 1
 		imul	ax, 32h
 		add	ax, 64h	; 'd'
-		mov	word_1D834, ax
+		mov	PaletteTone, ax
 		call	far ptr	loc_1C7E
 		inc	si
 
@@ -38664,7 +38664,7 @@ loc_152D7:
 		and	ax, 1
 		imul	ax, 50h
 		add	ax, 64h	; 'd'
-		mov	word_1D834, ax
+		mov	PaletteTone, ax
 		mov	byte_23B01, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -38684,7 +38684,7 @@ loc_152D7:
 ; ---------------------------------------------------------------------------
 
 loc_15318:
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_23B01, 1
 
 loc_15323:
@@ -39765,7 +39765,7 @@ loc_15BB9:
 		jnz	short loc_15BEC
 		push	5
 		call	sub_EC3A
-		mov	word_1D834, 8Ch	; 'Œ'
+		mov	PaletteTone, 8Ch	; 'Œ'
 		call	far ptr	loc_1C7E
 		push	large 9000B80h
 		mov	al, byte ptr word_1FE88
@@ -39776,7 +39776,7 @@ loc_15BB9:
 ; ---------------------------------------------------------------------------
 
 loc_15BEC:
-		mov	word_1D834, 3Ch	; '<'
+		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	loc_1C7E
 
 loc_15BF7:
@@ -39825,7 +39825,7 @@ loc_15C32:
 ; ---------------------------------------------------------------------------
 
 loc_15C57:
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	loc_1C7E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -44981,7 +44981,7 @@ loc_18455:
 		and	ax, 3
 		cmp	ax, 2
 		jge	short loc_1848B
-		mov	word_1D834, 3Ch	; '<'
+		mov	PaletteTone, 3Ch	; '<'
 		mov	byte_23B01, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -44997,7 +44997,7 @@ loc_1848B:
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+659Ch], 0FFFCh
-		mov	word_1D834, 78h	; 'x'
+		mov	PaletteTone, 78h	; 'x'
 		mov	byte_23B01, 1
 
 loc_184A5:
@@ -45068,7 +45068,7 @@ loc_18526:
 ; ---------------------------------------------------------------------------
 
 loc_1853F:
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_23B01, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -45876,7 +45876,7 @@ loc_18C95:
 		jge	short loc_18CD2
 		push	0Ah
 		call	sub_EC3A
-		mov	word_1D834, 0AAh ; 'ª'
+		mov	PaletteTone, 0AAh ; 'ª'
 		mov	byte_23B01, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -45892,7 +45892,7 @@ loc_18CD2:
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+659Ch], 0FFFCh
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_23B01, 1
 
 loc_18CEC:
@@ -45953,7 +45953,7 @@ loc_18D42:
 ; ---------------------------------------------------------------------------
 
 loc_18D5B:
-		mov	word_1D834, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_23B01, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -55864,59 +55864,7 @@ word_1D82C	dw 0
 		db    0
 		db    0
 		db    0
-word_1D834	dw 64h
-					; sub_536:loc_55Dw ...
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_1D866	dw 0
-word_1D868	dw 0
-		dw 0
+include libs/master.lib/pal[data].asm
 word_1D86C	dw 200h
 byte_1D86E	db 0
 					; seg000:05BCw
@@ -58205,21 +58153,9 @@ word_1E712	dw ?
 					; seg000:loc_A7Cr ...
 word_1E714	dw ?
 word_1E716	dw ?
-					; sub_EA8C+Bw ...
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
 		db    ?	;
+include libs/master.lib/pal[bss].asm
 word_1E74A	dw ?
 word_1E74C	dw ?
 word_1E74E	dw ?

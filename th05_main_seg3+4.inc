@@ -2344,7 +2344,7 @@ loc_1654F:
 		les	bx, dword_23EF0
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
-		mov	word_20DCC, 3Ch	; '<'
+		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	loc_2158
 		push	large 140004h
 		push	ds
@@ -2570,7 +2570,7 @@ loc_1677D:
 		les	bx, dword_23EF0
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
-		mov	word_20DCC, 3Ch	; '<'
+		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	loc_2158
 		mov	byte_226C4, 0Ah
 		push	large 130004h
@@ -10794,7 +10794,7 @@ loc_1AF0E:
 ; ---------------------------------------------------------------------------
 
 loc_1AF24:				; DATA XREF: seg003:5D48o
-		mov	word_20DCC, 3Ch	; '<' ; jumptable 0001AC18 case 255
+		mov	PaletteTone, 3Ch	; '<' ; jumptable 0001AC18 case 255
 		mov	byte_25FE9, 1
 		cmp	word_26346, 1
 		jnz	short loc_1AFA7	; default
@@ -15293,7 +15293,7 @@ loc_1D8F7:
 		mov	byte_2608A, al
 		mov	al, byte_2D084
 		mov	ah, 0
-		mov	word_20DCC, ax
+		mov	PaletteTone, ax
 		mov	byte_25FE9, 1
 		inc	byte_2D084
 		jmp	loc_1DA17
@@ -15358,18 +15358,18 @@ loc_1D9C1:
 loc_1D9D5:
 		cmp	byte_25FE2, 0
 		jz	short loc_1D9E4
-		mov	word_20DCC, 96h	; '–'
+		mov	PaletteTone, 96h	; '–'
 		jmp	short loc_1D9EA
 ; ---------------------------------------------------------------------------
 
 loc_1D9E4:
-		mov	word_20DCC, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 
 loc_1D9EA:
 		mov	byte_25FE9, 1
 		cmp	byte_2D085, 8
 		jb	short loc_1DA13
-		mov	word_20DCC, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		mov	byte_25FE9, 1
 		xor	si, si
 		jmp	short loc_1DA0A
@@ -16189,9 +16189,9 @@ loc_1E247:
 		call	sub_1FB07
 		cmp	word_26346, 20h	; ' '
 		jnz	short loc_1E265
-		mov	byte_2303C, 0
-		mov	byte_2303D, 0
-		mov	byte_2303E, 0
+		mov	Palettes, 0
+		mov	Palettes+1, 0
+		mov	Palettes+2, 0
 		mov	byte_25FE9, 1
 
 loc_1E265:
@@ -16302,11 +16302,11 @@ loc_1E36F:
 
 loc_1E377:
 					; DATA XREF: seg003:92C8o ...
-		cmp	byte_2303E, 80h	; '€'
+		cmp	Palettes+2, 80h	; '€'
 		jnb	short loc_1E38E
 		cmp	byte_25FE5, 0
 		jnz	short loc_1E389
-		inc	byte_2303E
+		inc	Palettes+2
 
 loc_1E389:
 		mov	byte_25FE9, 1
@@ -16339,11 +16339,11 @@ loc_1E3C4:
 
 loc_1E3D0:
 					; DATA XREF: seg003:92CCo
-		cmp	byte_2303E, 0
+		cmp	Palettes+2, 0
 		jbe	short loc_1E3E7
 		cmp	byte_25FE4, 0
 		jnz	short loc_1E3E2
-		dec	byte_2303E
+		dec	Palettes+2
 
 loc_1E3E2:
 		mov	byte_25FE9, 1
@@ -16361,20 +16361,20 @@ loc_1E3E7:
 
 loc_1E406:
 					; DATA XREF: seg003:92CEo ...
-		cmp	byte_2303E, 0
+		cmp	Palettes+2, 0
 		jbe	short loc_1E41A
 		cmp	byte_25FE4, 0
 		jnz	short loc_1E42C
-		dec	byte_2303E
+		dec	Palettes+2
 		jmp	short loc_1E42C
 ; ---------------------------------------------------------------------------
 
 loc_1E41A:
-		cmp	byte_2303C, 80h	; '€'
+		cmp	Palettes, 80h	; '€'
 		jnb	short loc_1E431
 		cmp	byte_25FE5, 0
 		jnz	short loc_1E42C
-		inc	byte_2303C
+		inc	Palettes
 
 loc_1E42C:
 		mov	byte_25FE9, 1
@@ -16440,12 +16440,12 @@ loc_1E4AD:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E4C5
-		mov	word_20DCC, 96h	; '–'
+		mov	PaletteTone, 96h	; '–'
 		jmp	short loc_1E4CB
 ; ---------------------------------------------------------------------------
 
 loc_1E4C5:
-		mov	word_20DCC, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 
 loc_1E4CB:
 		mov	byte_25FE9, 1
@@ -16454,8 +16454,8 @@ loc_1E4CB:
 		inc	byte_26345
 		mov	byte_26344, 0B4h ; '´'
 		mov	word_2D088, 180h
-		mov	byte_2303C, 60h	; '`'
-		mov	byte_2303E, 0
+		mov	Palettes, 60h	; '`'
+		mov	Palettes+2, 0
 		push	0Dh
 		call	sub_14CEE
 		jmp	short loc_1E527
@@ -18071,9 +18071,9 @@ loc_1F333:
 		inc	byte_26345
 		push	0Dh
 		call	sub_14CEE
-		mov	byte_2303C, 0
-		mov	byte_2303D, 0
-		mov	byte_2303E, 0
+		mov	Palettes, 0
+		mov	Palettes+1, 0
+		mov	Palettes+2, 0
 		mov	byte_25FE9, 1
 		mov	word_2CE64, 0C4h ; 'Ä'
 		mov	word_23F5A, 2ECBh
@@ -18184,11 +18184,11 @@ loc_1F45D:
 ; ---------------------------------------------------------------------------
 
 loc_1F46F:
-		cmp	byte_2303C, 60h	; '`'
+		cmp	Palettes, 60h	; '`'
 		jnb	short loc_1F483
-		mov	al, byte_2303C
+		mov	al, Palettes
 		add	al, 2
-		mov	byte_2303C, al
+		mov	Palettes, al
 		mov	byte_25FE9, 1
 
 loc_1F483:
@@ -18207,11 +18207,11 @@ loc_1F49F:
 ; ---------------------------------------------------------------------------
 
 loc_1F4A6:
-		cmp	byte_2303C, 60h	; '`'
+		cmp	Palettes, 60h	; '`'
 		jnb	short loc_1F4BA
-		mov	al, byte_2303C
+		mov	al, Palettes
 		add	al, 2
-		mov	byte_2303C, al
+		mov	Palettes, al
 		mov	byte_25FE9, 1
 
 loc_1F4BA:
@@ -18272,14 +18272,14 @@ loc_1F523:
 ; ---------------------------------------------------------------------------
 
 loc_1F536:
-		cmp	byte_2303E, 60h	; '`'
+		cmp	Palettes+2, 60h	; '`'
 		jnb	short loc_1F552
-		mov	al, byte_2303E
+		mov	al, Palettes+2
 		add	al, 2
-		mov	byte_2303E, al
-		mov	al, byte_2303C
+		mov	Palettes+2, al
+		mov	al, Palettes
 		add	al, 0FEh ; 'þ'
-		mov	byte_2303C, al
+		mov	Palettes, al
 		mov	byte_25FE9, 1
 
 loc_1F552:
@@ -18289,10 +18289,10 @@ loc_1F552:
 ; ---------------------------------------------------------------------------
 
 loc_1F55E:
-		cmp	byte_2303C, 30h	; '0'
+		cmp	Palettes, 30h	; '0'
 		jnb	short loc_1F572
-		inc	byte_2303C
-		dec	byte_2303E
+		inc	Palettes
+		dec	Palettes+2
 		mov	byte_25FE9, 1
 
 loc_1F572:
@@ -18302,17 +18302,17 @@ loc_1F572:
 ; ---------------------------------------------------------------------------
 
 loc_1F57E:
-		cmp	byte_2303D, 40h	; '@'
+		cmp	Palettes+1, 40h	; '@'
 		jnb	short loc_1F5A4
-		cmp	byte_2303C, 0
+		cmp	Palettes, 0
 		jbe	short loc_1F590
-		dec	byte_2303C
+		dec	Palettes
 
 loc_1F590:
-		inc	byte_2303D
-		cmp	byte_2303E, 0
+		inc	Palettes+1
+		cmp	Palettes+2, 0
 		jbe	short loc_1F59F
-		dec	byte_2303E
+		dec	Palettes+2
 
 loc_1F59F:
 		mov	byte_25FE9, 1
@@ -18336,37 +18336,37 @@ loc_1F5B0:
 loc_1F5C9:
 		cmp	byte_2D080, 0
 		jnz	short loc_1F5DD
-		cmp	byte_2303D, 0
+		cmp	Palettes+1, 0
 		jbe	short loc_1F621
-		dec	byte_2303D
+		dec	Palettes+1
 		jmp	short loc_1F626
 ; ---------------------------------------------------------------------------
 
 loc_1F5DD:
 		cmp	byte_2D080, 1
 		jnz	short loc_1F606
-		mov	al, byte_2303C
+		mov	al, Palettes
 		add	al, 2
-		mov	byte_2303C, al
-		inc	byte_2303D
-		mov	al, byte_2303E
+		mov	Palettes, al
+		inc	Palettes+1
+		mov	al, Palettes+2
 		add	al, 2
-		mov	byte_2303E, al
-		cmp	byte_2303C, 80h	; '€'
+		mov	Palettes+2, al
+		cmp	Palettes, 80h	; '€'
 		jb	short loc_1F626
 		mov	byte_2D080, 2
 		jmp	short loc_1F626
 ; ---------------------------------------------------------------------------
 
 loc_1F606:
-		mov	al, byte_2303C
+		mov	al, Palettes
 		add	al, 0FEh ; 'þ'
-		mov	byte_2303C, al
-		dec	byte_2303D
-		mov	al, byte_2303E
+		mov	Palettes, al
+		dec	Palettes+1
+		mov	al, Palettes+2
 		add	al, 0FEh ; 'þ'
-		mov	byte_2303E, al
-		cmp	byte_2303C, 0
+		mov	Palettes+2, al
+		cmp	Palettes, 0
 		jnz	short loc_1F626
 
 loc_1F621:
@@ -19224,7 +19224,7 @@ loc_1FC55:
 ; ---------------------------------------------------------------------------
 
 loc_1FC95:
-		mov	word_20DCC, 3Ch	; '<'
+		mov	PaletteTone, 3Ch	; '<'
 		mov	byte_25FE9, 1
 		cmp	word_26346, 1
 		jnz	short loc_1FCD6

@@ -1932,7 +1932,7 @@ sub_D2C		proc far
 		mov	al, 41h	; 'A'
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
-		mov	word_3515C, 0
+		mov	PaletteTone, 0
 		push	cs
 		call	near ptr sub_D52
 		mov	al, 0
@@ -1958,7 +1958,7 @@ sub_D2C		endp
 sub_D52		proc far
 		cld
 		push	si
-		mov	ax, word_3515C
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -1978,7 +1978,7 @@ sub_D52		proc far
 loc_D78:
 		mov	si, 448Ch
 		mov	dl, 64h	; 'd'
-		cmp	word_3518E, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_DBC
 
 loc_D83:
@@ -2138,7 +2138,7 @@ sub_E5C		proc far
 		mov	al, 1
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	word_3515C, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		push	cs
 		call	near ptr sub_D52
 		retf
@@ -2180,7 +2180,7 @@ loc_EB3:
 
 loc_EC4:
 		mov	ax, bx
-		mov	word_35190, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -2231,7 +2231,7 @@ sub_ECC		proc far
 
 loc_F0F:
 		mov	cx, ax
-		mov	word_35190, ax
+		mov	ResPalSeg, ax
 		dec	cx
 		mov	es, cx
 		assume es:nothing
@@ -2269,7 +2269,7 @@ sub_ECC		endp
 
 
 sub_F40		proc far
-		mov	ax, word_35190
+		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_F4F
 		push	cs
@@ -2283,7 +2283,7 @@ loc_F4F:
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
 					; ES = segment address of area to be freed
-		mov	word_35190, 0
+		mov	ResPalSeg, 0
 
 locret_F5B:
 		retf
@@ -56589,26 +56589,7 @@ word_35154	dw 190h
 word_35158	dw 0
 		db  55h	; U
 		db    0
-word_3515C	dw 64h
-		db 0, 0, 0
-		db 0, 0, 0FFh
-		db 0FFh, 0, 0
-		db 0FFh, 0, 0FFh
-		db 0, 0FFh, 0
-		db 0, 0FFh, 0FFh
-		db 0FFh, 0FFh, 0
-		db 0FFh, 0FFh, 0FFh
-		db 77h,	77h, 77h
-		db 0, 0, 0AAh
-		db 0AAh, 0, 0
-		db 0AAh, 0, 0AAh
-		db 0, 0AAh, 0
-		db 0, 0AAh, 0AAh
-		db 0AAh, 0AAh, 0
-		db 0AAh, 0AAh, 0AAh
-word_3518E	dw 0
-word_35190	dw 0
-		dw 0
+include libs/master.lib/pal[data].asm
 aPal98Grb_0	db 'pal98 grb',0
 aPal98Grb_1	db 'pal98 grb',0
 word_351A8	dw 0
@@ -61691,18 +61672,7 @@ unk_38988	db    ?	;
 		db    ?	;
 ; void (*off_38E28)(void)
 off_38E28	dd ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
+include libs/master.lib/pal[bss].asm
 		dd    ?
 dword_38E60	dd ?
 word_38E64	dw ?

@@ -1809,7 +1809,7 @@ sub_CE2		proc far
 		mov	al, 41h	; 'A'
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
-		mov	word_12A3E, 0
+		mov	PaletteTone, 0
 		push	cs
 		call	loc_D08
 		mov	al, 0
@@ -1832,7 +1832,7 @@ sub_CE2		endp
 loc_D08:
 		cld
 		push	si
-		mov	ax, word_12A3E
+		mov	ax, PaletteTone
 		cwd
 		not	dx
 		and	ax, dx
@@ -1852,7 +1852,7 @@ loc_D08:
 loc_D2E:
 		mov	si, 18E6h
 		mov	dl, 64h	; 'd'
-		cmp	word_12A70, bx
+		cmp	PaletteNote, bx
 		jnz	short loc_D72
 
 loc_D39:
@@ -2011,7 +2011,7 @@ sub_E12		proc far
 		mov	al, 1
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	word_12A3E, 64h	; 'd'
+		mov	PaletteTone, 64h	; 'd'
 		push	cs
 		call	loc_D08
 		retf
@@ -2053,7 +2053,7 @@ loc_E69:
 
 loc_E7A:
 		mov	ax, bx
-		mov	word_12A72, ax
+		mov	ResPalSeg, ax
 		pop	di
 		pop	si
 		retf
@@ -2104,7 +2104,7 @@ sub_E82		proc far
 
 loc_EC5:
 		mov	cx, ax
-		mov	word_12A72, ax
+		mov	ResPalSeg, ax
 		dec	cx
 		mov	es, cx
 		assume es:nothing
@@ -2142,7 +2142,7 @@ sub_E82		endp
 
 
 sub_EF6		proc far
-		mov	ax, word_12A72
+		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_F05
 		push	cs
@@ -2156,7 +2156,7 @@ loc_F05:
 		mov	ah, 49h
 		int	21h		; DOS -	2+ - FREE MEMORY
 					; ES = segment address of area to be freed
-		mov	word_12A72, 0
+		mov	ResPalSeg, 0
 
 locret_F11:
 		retf
@@ -38691,56 +38691,7 @@ word_12A36	dw 190h
 word_12A3A	dw 0
 		db  55h	; U
 		db    0
-word_12A3E	dw 64h
-		dd    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db  77h	; w
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db    0
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db    0
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db 0AAh	; ª
-word_12A70	dw 0
-word_12A72	dw 0
-		db    0
-		db    0
+include libs/master.lib/pal[data].asm
 		db  70h	; p
 		db  61h	; a
 		db  6Ch	; l
@@ -40034,18 +39985,7 @@ unk_136D2	db    ?	;
 		db    ?	;
 ; void (*font)(void)
 font		dd ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
+include libs/master.lib/pal[bss].asm
 		dd    ?
 dword_13BAA	dd ?
 word_13BAE	dw ?
