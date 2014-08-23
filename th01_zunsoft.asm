@@ -1128,53 +1128,7 @@ loc_CA5:
 		retn	4
 sub_C50		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CAA		proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		test	byte ptr [bx+5], 80h
-		jz	short loc_CE0
-		mov	ah, 3Fh
-		mov	bx, [bp+arg_2]
-		mov	cx, 30h
-		mov	dx, 2996h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short loc_CE0
-		mov	bx, dx
-		mov	cx, 1004h
-
-loc_CCA:
-		mov	dl, [bx]
-		mov	ax, [bx+1]
-		mov	[bx], ax
-		mov	[bx+2],	dl
-		add	bx, 3
-		dec	ch
-		jnz	short loc_CCA
-		mov	ax, 0
-		jmp	short loc_CE4
-; ---------------------------------------------------------------------------
-
-loc_CE0:
-		stc
-		mov	ax, 0FFF3h
-
-loc_CE4:
-		pop	bp
-		retn	4
-sub_CAA		endp
-
+include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 
@@ -1229,7 +1183,7 @@ loc_D54:
 		push	cx
 		push	bx
 		push	cx
-		call	sub_CAA
+		call	bfnt_palette_set
 		pop	cx
 		pop	bx
 		jb	short loc_D84

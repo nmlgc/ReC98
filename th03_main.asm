@@ -55,55 +55,7 @@ arg_0		= word ptr  6
 sub_472		endp
 
 include libs/master.lib/bfill.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4C6		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	bx, [bp+arg_0]
-		test	byte ptr [bx+5], 80h
-		pop	ds
-		jz	short loc_4FE
-		mov	ah, 3Fh	; '?'
-		mov	bx, [bp+arg_4]
-		mov	cx, 30h	; '0'
-		mov	dx, 11BAh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short loc_4FE
-		mov	bx, dx
-		mov	cx, 1004h
-
-loc_4E8:
-		mov	dl, [bx]
-		mov	ax, [bx+1]
-		mov	[bx], ax
-		mov	[bx+2],	dl
-		add	bx, 3
-		dec	ch
-		jnz	short loc_4E8
-		mov	ax, 0
-		jmp	short loc_502
-; ---------------------------------------------------------------------------
-
-loc_4FE:
-		stc
-		mov	ax, 0FFF3h
-
-loc_502:
-		pop	bp
-		retf	6
-sub_4C6		endp
-
+include libs/master.lib/bfnt_palette_set.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3452,8 +3404,7 @@ loc_2636:
 		push	bx
 		push	ds
 		push	cx
-		push	cs
-		call	near ptr sub_4C6
+		call	bfnt_palette_set
 		pop	cx
 		pop	bx
 		jb	short loc_266A
