@@ -9615,9 +9615,7 @@ loc_6384:
 		push	word ptr [bp+s+2]
 		push	word ptr [bp+s]	; buf
 		push	[bp+drive]	; drive
-		nop
-		push	cs
-		call	near ptr __getdcwd
+		nopcall	__getdcwd
 		add	sp, 8
 		or	ax, dx
 		jnz	short loc_63BC
@@ -9927,113 +9925,7 @@ loc_65F2:
 		retf
 sub_630F	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	_getdcwd(int drive, char *buf, int len)
-__getdcwd	proc far
-
-s		= byte ptr -48h
-var_47		= byte ptr -47h
-var_46		= byte ptr -46h
-var_45		= byte ptr -45h
-var_2		= word ptr -2
-drive		= word ptr  6
-dest		= dword	ptr  8
-len		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 48h
-		push	si
-		push	di
-		mov	ax, [bp+drive]
-		mov	[bp+var_2], ax
-		or	ax, ax
-		jnz	short loc_6614
-		mov	ah, 19h
-		int	21h		; DOS -	GET DEFAULT DISK NUMBER
-		mov	ah, 0
-		inc	ax
-		mov	[bp+var_2], ax
-
-loc_6614:
-		mov	al, byte ptr [bp+var_2]
-		add	al, 40h	; '@'
-		mov	[bp+s],	al
-		mov	[bp+var_47], 3Ah ; ':'
-		mov	[bp+var_46], 5Ch ; '\'
-		push	ds
-		mov	ax, ss
-		mov	ds, ax
-		lea	si, [bp+var_45]
-		mov	ah, 47h	; 'G'
-		mov	dl, byte ptr [bp+var_2]
-		int	21h		; DOS -	2+ - GET CURRENT DIRECTORY
-					; DL = drive (0=default, 1=A, etc.)
-					; DS:SI	points to 64-byte buffer area
-		pop	ds
-		jb	short loc_6670
-		push	ss
-		lea	ax, [bp+s]
-		push	ax		; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		cmp	ax, [bp+len]
-		jb	short loc_664F
-		mov	_errno, 22h	; '"'
-		jmp	short loc_6670
-; ---------------------------------------------------------------------------
-
-loc_664F:
-		mov	ax, word ptr [bp+dest]
-		or	ax, word ptr [bp+dest+2]
-		jnz	short loc_6676
-		push	[bp+len]
-		nop
-		push	cs
-		call	near ptr _malloc
-		pop	cx
-		mov	word ptr [bp+dest+2], dx
-		mov	word ptr [bp+dest], ax
-		or	ax, dx
-		jnz	short loc_6676
-		mov	_errno, 8
-
-loc_6670:
-					; __getdcwd+55j
-		xor	dx, dx
-		xor	ax, ax
-		jmp	short loc_668F
-; ---------------------------------------------------------------------------
-
-loc_6676:
-					; __getdcwd+70j
-		push	ss
-		lea	ax, [bp+s]
-		push	ax		; src
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		nop
-		push	cs
-		call	near ptr _strcpy
-		add	sp, 8
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-
-loc_668F:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__getdcwd	endp
-
+include libs/BorlandC/getdcwd.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10432,9 +10324,7 @@ pathname	= dword	ptr  0Eh
 		push	word ptr [bp+pathname] ; buf
 		xor	ax, ax
 		push	ax		; drive
-		nop
-		push	cs
-		call	near ptr __getdcwd
+		nopcall	__getdcwd
 		add	sp, 8
 		or	ax, dx
 		jnz	short loc_687C
