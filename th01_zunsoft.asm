@@ -60,7 +60,7 @@ sub_384		proc near
 		mov	bp, sp
 		call	mem_assign_all
 		call	sub_958
-		call	sub_AB6
+		call	key_beep_off
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
@@ -1024,34 +1024,7 @@ sub_A82		proc near
 		retn
 sub_A82		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AB6		proc near
-		xor	ax, ax
-		mov	es, ax
-		or	byte ptr es:loc_500, 20h
-		retn
-sub_AB6		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AC2		proc near
-		xor	ax, ax
-		mov	es, ax
-		and	byte ptr es:loc_500, 0DFh
-		retn
-sub_AC2		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/keybeep.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

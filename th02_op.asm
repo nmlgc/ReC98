@@ -2500,35 +2500,7 @@ sub_1B94	proc far
 		retf
 sub_1B94	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1BBA	proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		or	byte ptr es:loc_4FF+1, 20h
-		retf
-sub_1BBA	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1BC6	proc far
-		xor	ax, ax
-		mov	es, ax
-		and	byte ptr es:loc_4FF+1, 0DFh
-		retf
-sub_1BC6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/keybeep.asm
 
 loc_1BD2:
 		mov	ax, word_D836
@@ -17640,7 +17612,7 @@ sub_AB28	proc far
 		nop
 		push	cs
 		call	near ptr sub_B019
-		call	sub_1BC6
+		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
 		pop	bp
@@ -18321,7 +18293,7 @@ loc_AFC4:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_2596
-		call	sub_1BBA
+		call	key_beep_off
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start

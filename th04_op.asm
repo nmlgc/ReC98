@@ -2283,33 +2283,7 @@ sub_1D32	proc far
 sub_1D32	endp
 
 include libs/master.lib/js_end.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D5E	proc far
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		or	es:byte_500, 20h
-		retf
-sub_1D5E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D6A	proc far
-		xor	ax, ax
-		mov	es, ax
-		and	es:byte_500, 0DFh
-		retf
-sub_1D6A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/keybeep.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23931,7 +23905,7 @@ sub_DDB1	proc far
 		nop
 		push	cs
 		call	near ptr sub_E0AC
-		call	sub_1D6A
+		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
 		pop	bp
@@ -24407,7 +24381,7 @@ loc_E109:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	word_F8FE, 2000h
 		call	sub_2552
-		call	sub_1D5E
+		call	key_beep_off
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
