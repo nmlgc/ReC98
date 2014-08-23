@@ -779,34 +779,7 @@ loc_804:
 		retn
 sub_79A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_80E		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		int	21h		; DOS -
-		pop	ds
-		sbb	dx, dx
-		xor	ax, dx
-		sub	ax, dx
-		pop	bp
-		retf	6
-sub_80E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/dos_axdx.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1367,8 +1340,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_80E
+		call	dos_axdx
 		or	ax, dx
 		mov	ds:360h, ax
 		mov	cx, ax
@@ -1488,9 +1460,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_80E
+		nopcall	dos_axdx
 		or	ax, dx
 		mov	word_216A0, ax
 		xor	ax, ax

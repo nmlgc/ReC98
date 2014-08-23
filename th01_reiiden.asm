@@ -2782,9 +2782,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_12E2
+		nopcall	dos_axdx
 		or	ax, dx
 		mov	word_351AA, ax
 		xor	ax, ax
@@ -2861,32 +2859,7 @@ arg_0		= word ptr  8
 		retf	2
 sub_12D2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12E2	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		int	21h		; DOS -
-		pop	ds
-		sbb	dx, dx
-		xor	ax, dx
-		sub	ax, dx
-		pop	bp
-		retf	6
-sub_12E2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/dos_axdx.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -778,34 +778,7 @@ loc_6D4:
 		retn
 sub_66A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_6DE		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		int	21h		; DOS -
-		pop	ds
-		sbb	dx, dx
-		xor	ax, dx
-		sub	ax, dx
-		pop	bp
-		retf	6
-sub_6DE		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/dos_axdx.asm
 
 loc_6F6:
 		mov	bx, sp
@@ -857,8 +830,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_6DE
+		call	dos_axdx
 		or	ax, dx
 		mov	word_1DF80, ax
 		mov	cx, ax
