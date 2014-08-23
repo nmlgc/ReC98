@@ -28,28 +28,7 @@ seg000		segment	word public 'CODE' use16
 include libs/BorlandC/c0.asm
 		db 0
 include libs/master.lib/bfnt_entry_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3B4		proc far
-		mov	bx, sp
-		mov	cx, ss:[bx+8]
-		les	bx, ss:[bx+4]
-		mov	dx, es:[bx+1Ch]
-		mov	ax, 4201h
-		mov	bx, cx
-		xor	cx, cx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		mov	ax, 0FFF3h
-		jb	short locret_3D3
-		mov	ax, 0
-
-locret_3D3:
-		retf	6
-sub_3B4		endp
-
+include libs/master.lib/bfnt_extend_header_skip.asm
 include libs/master.lib/bfnt_header_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1329,9 +1308,7 @@ arg_2		= word ptr  8
 		push	bp
 		push	ss
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_3B4
+		nopcall	bfnt_extend_header_skip
 		push	ds
 		mov	ds, si
 		mov	bx, bp
