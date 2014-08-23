@@ -2345,7 +2345,7 @@ loc_1654F:
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
 		mov	PaletteTone, 3Ch	; '<'
-		call	far ptr	loc_2158
+		call	far ptr	palette_show
 		push	large 140004h
 		push	ds
 		push	offset unk_222A0
@@ -2571,7 +2571,7 @@ loc_1677D:
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
 		mov	PaletteTone, 3Ch	; '<'
-		call	far ptr	loc_2158
+		call	far ptr	palette_show
 		mov	byte_226C4, 0Ah
 		push	large 130004h
 		push	ds

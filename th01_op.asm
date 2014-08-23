@@ -1810,8 +1810,7 @@ sub_CE2		proc far
 		out	6Ah, al		; PC-98	GDC (6a):
 					; Set display mode to LCD
 		mov	PaletteTone, 0
-		push	cs
-		call	loc_D08
+		call	palette_show
 		mov	al, 0
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
@@ -1826,161 +1825,7 @@ sub_CE2		proc far
 		retf
 sub_CE2		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-loc_D08:
-		cld
-		push	si
-		mov	ax, PaletteTone
-		cwd
-		not	dx
-		and	ax, dx
-		sub	ax, 0C8h ; 'È'
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, 0C8h ; 'È'
-		mov	dh, al
-		xor	bx, bx
-		mov	ch, bl
-		cmp	dh, 64h	; 'd'
-		jbe	short loc_D2E
-		mov	ch, 0Fh
-		sub	dh, 0C8h ; 'È'
-		neg	dh
-
-loc_D2E:
-		mov	si, 18E6h
-		mov	dl, 64h	; 'd'
-		cmp	PaletteNote, bx
-		jnz	short loc_D72
-
-loc_D39:
-		mov	al, bl
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		shr	ax, 4
-		mov	cl, ah
-		and	al, 0Fh
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, cl
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		lodsb
-		shr	al, 4
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		inc	bx
-		cmp	bx, 10h
-		jl	short loc_D39
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_D72:
-		mov	bx, dx
-		mov	dx, 871Eh
-		mov	al, 0A0h ; ' '
-		out	0F6h, al
-		in	al, dx
-		cmp	al, 0FFh
-		jnz	short loc_D87
-		mov	dx, 0AE8Eh
-		in	al, dx
-		shr	al, 2
-
-loc_D87:
-		shr	al, 1
-		cmc
-		sbb	al, al
-		mov	cs:byte_DF0, al
-		mov	dx, bx
-		push	di
-		mov	di, 0
-
-loc_D96:
-		mov	ax, di
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		mov	bx, ax
-		shr	bx, 4
-		and	bl, ch
-		lodsb
-		and	al, ch
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bh
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bl
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bl
-		mov	ah, bh
-		cmp	bh, al
-		ja	short loc_DCB
-		mov	bh, al
-
-loc_DCB:
-		cmp	bh, bl
-		ja	short loc_DD1
-		mov	bh, bl
-
-loc_DD1:
-		shl	al, 1
-		add	al, bl
-		shl	al, 1
-		add	al, ah
-		add	al, bh
-		mov	cl, 3
-		mul	cl
-		mov	cl, 14h
-		div	cl
-		shr	al, 1
-		adc	al, 0
-		sub	al, 2
-		cmc
-		sbb	ah, ah
-		and	ah, al
-; ---------------------------------------------------------------------------
-		db 80h,	0F4h
-byte_DF0	db 0
-; ---------------------------------------------------------------------------
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		inc	di
-		cmp	di, 10h
-		jl	short loc_D96
-		pop	di
-		pop	si
-		retf
+include libs/master.lib/palette_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2012,8 +1857,7 @@ sub_E12		proc far
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
 		mov	PaletteTone, 64h	; 'd'
-		push	cs
-		call	loc_D08
+		call	palette_show
 		retf
 sub_E12		endp
 
@@ -26891,7 +26735,7 @@ loc_D009:
 
 loc_D016:
 		mov	word ptr [bp-4], 0
-		jmp	short loc_D085
+		jmp	short palette_show5
 ; ---------------------------------------------------------------------------
 
 loc_D01D:
@@ -26905,7 +26749,7 @@ loc_D01D:
 		imul	bx, 3
 		add	bx, [bp-4]
 		cmp	al, [bx+6EAh]
-		jz	short loc_D082
+		jz	short palette_show2
 		mov	bx, [bp-2]
 		imul	bx, 3
 		add	bx, [bp-4]
@@ -26937,10 +26781,10 @@ loc_D063:
 		add	bx, dx
 		mov	ss:[bx], al
 
-loc_D082:
+palette_show2:
 		inc	word ptr [bp-4]
 
-loc_D085:
+palette_show5:
 		cmp	word ptr [bp-4], 3
 		jl	short loc_D01D
 		mov	bx, [bp-2]

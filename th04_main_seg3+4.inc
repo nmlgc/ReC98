@@ -19022,7 +19022,7 @@ var_4		= dword	ptr -4
 		enter	8, 0
 		push	si
 		mov	PaletteTone, 3Ch	; '<'
-		call	far ptr	loc_1F04
+		call	far ptr	palette_show
 		push	large 140004h
 		push	ds
 		push	offset unk_232A6
@@ -19200,7 +19200,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		mov	PaletteTone, 3Ch	; '<'
-		call	far ptr	loc_1F04
+		call	far ptr	palette_show
 		mov	byte_22DA6, 0Ah
 		push	large 130004h
 		push	ds

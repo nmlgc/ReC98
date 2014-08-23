@@ -150,11 +150,7 @@ sub_536		proc far
 		call	near ptr sub_2434
 
 loc_549:
-		nop
-		push	cs
-
-loc_54B:
-		call	loc_1C2C
+		nopcall	palette_show
 		mov	di, si
 		cmp	di, 0
 		jle	short loc_55D
@@ -171,9 +167,7 @@ loc_55D:
 		cmp	PaletteTone, 64h ; 'd'
 		jl	short loc_549
 		mov	PaletteTone, 64h ; 'd'
-		nop
-		push	cs
-		call	loc_1C2C
+		nopcall	palette_show
 		pop	di
 		pop	si
 		retf	2
@@ -197,9 +191,7 @@ sub_57A		proc far
 		call	near ptr sub_2434
 
 loc_58D:
-		nop
-		push	cs
-		call	loc_1C2C
+		nopcall	palette_show
 		mov	di, si
 		cmp	di, 0
 		jle	short loc_5A1
@@ -215,9 +207,7 @@ loc_5A1:
 		sub	PaletteTone, 6
 		jg	short loc_58D
 		mov	PaletteTone, 0
-		nop
-		push	cs
-		call	loc_1C2C
+		nopcall	palette_show
 		pop	di
 		pop	si
 		retf	2
@@ -2159,7 +2149,7 @@ sub_11EE	proc far
 		mov	word_D368, ax
 		mov	es, ax
 		assume es:seg000
-		mov	ah, byte ptr es:loc_54B+2
+		mov	ah, byte ptr es:[54Dh]
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
@@ -2729,161 +2719,7 @@ loc_1C1E:
 		retn
 sub_1BDC	endp
 
-; ---------------------------------------------------------------------------
-
-loc_1C2C:
-					; sub_536+3Bp ...
-		cld
-		push	si
-		mov	ax, PaletteTone
-		cwd
-		not	dx
-		and	ax, dx
-		sub	ax, 0C8h ; 'È'
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, 0C8h ; 'È'
-		mov	dh, al
-		xor	bx, bx
-		mov	ch, bl
-		cmp	dh, 64h	; 'd'
-		jbe	short loc_1C52
-		mov	ch, 0Fh
-		sub	dh, 0C8h ; 'È'
-		neg	dh
-
-loc_1C52:
-		mov	si, 20D0h
-		mov	dl, 64h	; 'd'
-		cmp	PaletteNote, bx
-		jnz	short loc_1C96
-
-loc_1C5D:
-		mov	al, bl
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		shr	ax, 4
-		mov	cl, ah
-		and	al, 0Fh
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		mov	al, cl
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		lodsb
-		shr	al, 4
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		inc	bx
-		cmp	bx, 10h
-		jl	short loc_1C5D
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1C96:
-		mov	bx, dx
-		mov	dx, 871Eh
-		mov	al, 0A0h ; ' '
-		out	0F6h, al
-		in	al, dx
-		cmp	al, 0FFh
-		jnz	short loc_1CAB
-		mov	dx, 0AE8Eh
-		in	al, dx
-		shr	al, 2
-
-loc_1CAB:
-		shr	al, 1
-		cmc
-		sbb	al, al
-		mov	cs:byte_1D14, al
-		mov	dx, bx
-		push	di
-		mov	di, 0
-
-loc_1CBA:
-		mov	ax, di
-		out	0A8h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		mov	bx, ax
-		shr	bx, 4
-		and	bl, ch
-		lodsb
-		and	al, ch
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bh
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bl
-		xor	al, ch
-		mul	dh
-		div	dl
-		xor	al, ch
-		xchg	al, bl
-		mov	ah, bh
-		cmp	bh, al
-		ja	short loc_1CEF
-		mov	bh, al
-
-loc_1CEF:
-		cmp	bh, bl
-		ja	short loc_1CF5
-		mov	bh, bl
-
-loc_1CF5:
-		shl	al, 1
-		add	al, bl
-		shl	al, 1
-		add	al, ah
-		add	al, bh
-		mov	cl, 3
-		mul	cl
-		mov	cl, 14h
-		div	cl
-		shr	al, 1
-		adc	al, 0
-		sub	al, 2
-		cmc
-		sbb	ah, ah
-		and	ah, al
-; ---------------------------------------------------------------------------
-		db 80h,	0F4h
-byte_1D14	db 0
-; ---------------------------------------------------------------------------
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0AEh, al	; Interrupt Controller #2, 8259A
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0ACh, al	; Interrupt Controller #2, 8259A
-		shr	ah, 1
-		sbb	al, al
-		and	al, 0Fh
-		out	0AAh, al	; Interrupt Controller #2, 8259A
-		inc	di
-		cmp	di, 10h
-		jl	short loc_1CBA
-		pop	di
-		pop	si
-		retf
+include libs/master.lib/palette_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3333,8 +3169,7 @@ sub_245A	proc far
 		call	near ptr sub_2434
 
 loc_246C:
-		push	cs
-		call	loc_1C2C
+		call	palette_show
 		mov	di, si
 		cmp	di, 0
 		jle	short loc_247E
@@ -3350,8 +3185,7 @@ loc_247E:
 		cmp	PaletteTone, 64h ; 'd'
 		jg	short loc_246C
 		mov	PaletteTone, 64h ; 'd'
-		push	cs
-		call	loc_1C2C
+		call	palette_show
 		pop	di
 		pop	si
 		retf	2
@@ -3373,8 +3207,7 @@ sub_249A	proc far
 		call	near ptr sub_2434
 
 loc_24AC:
-		push	cs
-		call	loc_1C2C
+		call	palette_show
 		mov	di, si
 		cmp	di, 0
 		jle	short loc_24BE
@@ -3390,8 +3223,7 @@ loc_24BE:
 		cmp	PaletteTone, 0C8h	; 'È'
 		jl	short loc_24AC
 		mov	PaletteTone, 0C8h	; 'È'
-		push	cs
-		call	loc_1C2C
+		call	palette_show
 		pop	di
 		pop	si
 		retf	2
@@ -16496,7 +16328,7 @@ sub_9B64	proc near
 		call	sub_B839
 		pop	cx
 		mov	PaletteTone, 0
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17055,7 +16887,7 @@ sub_A09D	proc near
 		call	sub_B839
 		pop	cx
 		mov	PaletteTone, 0
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17201,7 +17033,7 @@ loc_A212:
 		push	ds
 		push	offset aEd03a_rgb ; "ed03a.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		mov	byte_F02A, 29h ; ')'
 		mov	si, 0Eh
 		jmp	short loc_A247
@@ -17914,7 +17746,7 @@ arg_4		= word ptr  8
 		push	4
 		call	sub_B520
 		mov	PaletteTone, 64h ; 'd'
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		pop	bp
 		retn	6
 sub_A8CA	endp
@@ -18044,7 +17876,7 @@ loc_A992:
 		push	ds
 		push	offset aEd06b_rgb ; "ed06b.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	0FCh ; 'ü'
 		push	2
 		push	29h ; ')'
@@ -18058,7 +17890,7 @@ loc_A992:
 		push	ds
 		push	offset aEd06c_rgb ; "ed06c.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	4
 		push	3
 		push	29h ; ')'
@@ -18107,7 +17939,7 @@ loc_A992:
 		push	ds
 		push	offset aEd07a_rgb ; "ed07a.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	0FCh ; 'ü'
 		push	0
 		push	29h ; ')'
@@ -18118,7 +17950,7 @@ loc_A992:
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	8
 		push	1
 		push	0E9h ; 'é'
@@ -18146,7 +17978,7 @@ loc_A992:
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	8
 		push	3
 		push	0E9h ; 'é'
@@ -18186,7 +18018,7 @@ loc_A992:
 		push	ds
 		push	offset aEd08a_rgb ; "ed08a.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	0Ch
 		push	1
 		push	29h ; ')'
@@ -18228,7 +18060,7 @@ loc_A992:
 		push	ds
 		push	offset aEd08b_rgb ; "ed08b.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	0F4h ; 'ô'
 		push	2
 		push	29h ; ')'
@@ -18239,7 +18071,7 @@ loc_A992:
 		push	ds
 		push	offset aEd08c_rgb ; "ed08c.rgb"
 		call	sub_1E9A
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	0Ch
 		push	3
 		push	29h ; ')'
@@ -18662,7 +18494,7 @@ sub_B07F	proc far
 		or	ax, ax
 		jz	loc_B115
 		mov	PaletteTone, 0
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		push	ds
 		push	offset aAll_pi	; "all.pi"
 		push	0
@@ -18794,10 +18626,10 @@ loc_B1C2:
 
 loc_B1C6:
 		mov	PaletteTone, 32h ; '2'
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		call	sub_BC9E
 		mov	PaletteTone, 0
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		call	sub_FC6
 		call	sub_B616
 		push	large 0
@@ -19660,7 +19492,7 @@ arg_0		= word ptr  6
 		push	offset Palettes	; dest
 		call	_memcpy
 		add	sp, 0Ah
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		pop	bp
 		retf
 sub_B790	endp
@@ -21171,7 +21003,7 @@ loc_C2AE:
 		call	sub_DD4
 		call	sub_F9C
 		mov	PaletteTone, 0C8h	; 'È'
-		call	far ptr	loc_1C2C
+		call	far ptr	palette_show
 		pop	di
 		pop	si
 		leave
