@@ -26,96 +26,8 @@ seg000		segment	word public 'CODE' use16
 		assume es:nothing, ss:seg009, ds:dseg, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
-
 		db 0
-; ---------------------------------------------------------------------------
-
-loc_272:
-		push ds
-		mov	ds, word ptr cs:035fh
-		call	smem_release
-		mov	ax, 0fff3h
-
-loc_27F:
-		pop	si
-		pop	di
-		pop	ds
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_286:
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	ax, [bp+6]
-		mov	cs:word_36D, ax
-		mov	cs:word_35F, ds
-		mov	ax, [bp+0Ch]
-		mov	cs:word_2ED, ax
-		push	ds
-		lds	bx, [bp+8]
-		mov	ax, [bx+8]
-		mov	cx, [bx+0Ah]
-		mov	bp, [bx+0Eh]
-		sub	bp, [bx+0Ch]
-		inc	bp
-		pop	ds
-		shr	ax, 3
-		mov	cs:byte_309, al
-		mov	dh, al
-		mov	dl, cl
-		mov	cs:word_364, dx
-		mov	cs:byte_307, cl
-		mul	cx
-		mov	cs:word_302, ax
-		shl	ax, 2
-		mov	cs:word_2E8, ax
-		xchg	ax, bx
-		push	bx
-		call	smem_wget
-		jb	short loc_27F
-		xchg	ax, cx
-		push	bx
-		call	smem_wget
-		jb	short loc_27F
-		mov	es, ax
-		mov	ds, cx
-; ---------------------------------------------------------------------------
-		db 0B9h
-word_2E8	dw 1234h
-		db 33h,	0D2h, 0BBh
-word_2ED	dw 1234h
-		db 0B4h, 3Fh, 0CDh, 21h, 73h, 3, 0E9h, 7Ah, 0FFh, 3Bh
-		db 0C1h, 74h, 3, 0E9h, 73h, 0FFh, 33h, 0F6h, 0BAh
-word_302	dw 1234h
-		db 33h,	0DBh, 0B5h
-byte_307	db 11h
-		db 0B1h
-byte_309	db 11h
-		db 51h,	52h, 53h, 0ADh,	8Bh, 0D8h, 0ADh, 8Bh, 0D0h, 0BFh
-		db 4, 0, 0D0h, 0C3h, 0D0h, 0D5h, 0D0h, 0C3h, 0D0h, 0D1h
-		db 0D0h, 0C3h, 0D0h, 0D4h, 0D0h, 0C3h, 3 dup(0D0h), 0C3h
-		db 0D0h, 0D5h, 0D0h, 0C3h, 0D0h, 0D1h, 0D0h, 0C3h, 0D0h
-		db 0D4h, 0D0h, 0C3h, 2 dup(0D0h), 8Ah, 0DFh, 8Ah, 0FAh
-		db 8Ah,	0D6h, 4Fh, 75h,	0D7h, 5Bh, 5Ah,	26h, 88h, 1, 3
-		db 0FAh, 26h, 88h, 21h,	3, 0FAh, 26h, 88h, 9, 3, 0FAh
-		db 26h,	88h, 29h, 59h, 43h, 0FEh, 0C9h,	75h, 0B1h, 0FEh
-		db 0CDh, 75h, 0ABh, 1Eh, 0B8h
-word_35F	dw 1234h
-		db 8Eh,	0D8h, 0B8h
-word_364	dw 1234h
-		db 6, 50h, 6, 33h, 0C0h, 50h, 0B8h
-word_36D	dw 1234h
-		db 50h,	0Eh, 0E8h, 36h,	26h, 7,	1Fh, 72h, 6, 4Dh, 74h
-		db 1Fh,	0E9h, 69h, 0FFh, 1Eh, 2Eh, 8Eh,	1Eh, 5Fh, 3, 8Bh
-		db 0C8h, 6, 0Eh, 0E8h, 59h, 20h, 0Eh, 0E8h, 55h, 20h, 8Bh
-		db 0C1h, 0F9h, 5Eh, 5Fh, 1Fh, 5Dh, 0CAh, 8, 0, 90h, 1Eh
-		db 2Eh,	8Eh, 1Eh, 5Fh, 3, 6, 0Eh, 0E8h,	3Fh, 20h, 0Eh
-		db 0E8h, 3Bh, 20h, 0B8h, 2 dup(0), 0F8h, 5Eh, 5Fh, 1Fh
-		db 5Dh,	0CAh, 8, 0
+include libs/master.lib/bfnt_entry_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3808,8 +3720,7 @@ loc_2B24:
 		push	ds
 		push	cx
 		push	si
-		push	cs
-		call	loc_286
+		call	bfnt_entry_pat
 		pop	bx
 		jb	short loc_2B44
 		push	bx
