@@ -30,86 +30,7 @@ include libs/BorlandC/c0.asm
 include libs/master.lib/bfnt_entry_pat.asm
 include libs/master.lib/bfnt_extend_header_skip.asm
 include libs/master.lib/bfnt_header_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_412		proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		cld
-		push	ds
-		lds	bx, [bp+arg_0]
-		mov	cx, [bx+1Ch]
-		mov	si, [bx+1Eh]
-		pop	ds
-		mov	ax, 0
-		jcxz	short loc_46C
-		push	cx
-		call	smem_wget
-		jb	short loc_46C
-		push	ds
-		mov	ds, ax
-		xor	dx, dx
-		mov	bx, [bp+arg_4]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ax, 0FFF3h
-		jb	short loc_464
-		mov	dx, si
-		xor	si, si
-		nop
-
-loc_444:
-		lodsb
-		cmp	al, 10h
-		jz	short loc_45E
-		add	si, dx
-		sub	si, 3
-		lodsw
-		or	ax, ax
-		jz	short loc_459
-		sub	cx, dx
-		mov	dx, ax
-		ja	short loc_444
-
-loc_459:
-		xor	ax, ax
-
-loc_45B:
-		jmp	short loc_464
-; ---------------------------------------------------------------------------
-		nop
-
-loc_45E:
-		lodsw
-		lodsb
-		and	ax, 0Fh
-		nop
-
-loc_464:
-					; sub_412:loc_45Bj
-		mov	bx, ds
-		pop	ds
-		push	bx
-		call	smem_release
-
-loc_46C:
-		pop	si
-		pop	bp
-		retf	6
-sub_412		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bfnt_header_analysis.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3616,8 +3537,7 @@ arg_2		= word ptr  8
 		push	bx
 		push	ds
 		push	cx
-		push	cs
-		call	near ptr sub_412
+		call	bfnt_extend_header_analysis
 		pop	cx
 		pop	bx
 		mov	si, ax
