@@ -2726,104 +2726,7 @@ sub_270C	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2894	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2916
-		mov	bx, ax
-		mov	cx, 51Ah
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_290E
-		mov	al, byte_1061F
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_290E
-		xor	si, si
-		mov	ax, word_10636
-		or	ax, ax
-		jz	short loc_28DA
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_28DA:
-		test	byte_1061F, 80h
-		jz	short loc_28EE
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_290E
-
-loc_28EE:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_290E
-		push	bx
-		call	dos_close
-		mov	ax, word_10628
-		sub	ax, word_10626
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_290E:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2916:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2894	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 loc_296E:
@@ -20765,13 +20668,13 @@ var_2		= word ptr -2
 		call	sub_133C
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
-		call	sub_2894
+		call	super_entry_bfnt
 		push	ds
 		push	offset aSctm0_bft ; "sctm0.bft"
-		call	sub_2894
+		call	super_entry_bfnt
 		push	ds
 		push	offset aSctm1_bft ; "sctm1.bft"
-		call	sub_2894
+		call	super_entry_bfnt
 		les	bx, dword_11E6E
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_C256
@@ -24879,10 +24782,10 @@ var_2		= word ptr -2
 		call	sub_F356
 		push	ds
 		push	offset aStf01_bft ; "stf01.bft"
-		call	sub_2894
+		call	super_entry_bfnt
 		push	ds
 		push	offset aStf00_bft ; "stf00.bft"
-		call	sub_2894
+		call	super_entry_bfnt
 		xor	si, si
 		jmp	short loc_E550
 ; ---------------------------------------------------------------------------
@@ -29349,36 +29252,7 @@ byte_10608	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_1061F	db 0
-					; sub_2894:loc_28DAr
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_10626	dw 0
-word_10628	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_10636	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 word_10640	dw 1
 		db  48h	; H

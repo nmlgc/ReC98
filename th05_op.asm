@@ -2147,105 +2147,7 @@ sub_24CE	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2656	proc far
-					; sub_B806+10EP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_26D8
-		mov	bx, ax
-		mov	cx, 830h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_26D0
-		mov	al, byte_F815
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_26D0
-		xor	si, si
-		mov	ax, word_F82C
-		or	ax, ax
-		jz	short loc_269C
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_269C:
-		test	byte_F815, 80h
-		jz	short loc_26B0
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_26D0
-
-loc_26B0:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_26D0
-		push	bx
-		call	dos_close
-		mov	ax, word_F81E
-		sub	ax, word_F81C
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_26D0:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_26D8:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2656	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 loc_2730:
@@ -18653,7 +18555,7 @@ sub_B5A6	proc near
 		call	far ptr	palette_show
 		push	ds
 		push	offset aMswin_bft ; "mswin.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19062,16 +18964,16 @@ loc_B8F4:
 		call	far ptr	palette_show
 		push	ds
 		push	offset aZun02_bft ; "zun02.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		push	ds
 		push	offset aZun04_bft ; "zun04.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		push	ds
 		push	offset aZun01_bft ; "zun01.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		push	ds
 		push	offset aZun03_bft ; "zun03.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		mov	[bp+var_1], 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -21670,10 +21572,10 @@ loc_CE0E:
 		mov	byte_14101, al
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		push	ds
 		push	offset aHi_m_bft ; "hi_m.bft"
-		call	sub_2656
+		call	super_entry_bfnt
 		xor	si, si
 		jmp	short loc_CE5D
 ; ---------------------------------------------------------------------------
@@ -26912,35 +26814,7 @@ byte_F7FE	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_F815	db 0
-					; sub_2656:loc_269Cr
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_F81C	dw 0
-word_F81E	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_F82C	dw 0
-		dw 0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 aPal98Grb	db 'pal98 grb',0
 		dw 0FFFFh

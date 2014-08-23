@@ -2361,104 +2361,7 @@ sub_24FC	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2684	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2706
-		mov	bx, ax
-		mov	cx, 414h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_26FE
-		mov	al, byte_E949
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_26FE
-		xor	si, si
-		mov	ax, word_E960
-		or	ax, ax
-		jz	short loc_26CA
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_26CA:
-		test	byte_E949, 80h
-		jz	short loc_26DE
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_26FE
-
-loc_26DE:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_26FE
-		push	bx
-		call	dos_close
-		mov	ax, word_E952
-		sub	ax, word_E950
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_26FE:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2706:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2684	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20937,7 +20840,7 @@ var_2		= word ptr -2
 		call	sub_11C2
 		push	ds
 		push	offset aScnum2_bft ; "scnum2.bft"
-		call	sub_2684
+		call	super_entry_bfnt
 		les	bx, dword_F3CE
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_C87A
@@ -25233,26 +25136,7 @@ byte_E932	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_E949	db 0
-					; sub_2684:loc_26CAr
-		dw 0
-		dw 0
-		dw 0
-word_E950	dw 0
-word_E952	dw 0
-		dw 0
-		dw 0
-		dw 0
-		dw 0
-		dw 0
-		dw 0
-word_E960	dw 0
-		dw 0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 a_exe		db '.exe',0
 		db    0

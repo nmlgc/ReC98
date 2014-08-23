@@ -2556,104 +2556,7 @@ sub_235A	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24E2	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2564
-		mov	bx, ax
-		mov	cx, 85Ah
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_255C
-		mov	al, byte_EC4F
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_255C
-		xor	si, si
-		mov	ax, word_EC66
-		or	ax, ax
-		jz	short loc_2528
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2528:
-		test	byte_EC4F, 80h
-		jz	short loc_253C
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_255C
-
-loc_253C:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_255C
-		push	bx
-		call	dos_close
-		mov	ax, word_EC58
-		sub	ax, word_EC56
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_255C:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2564:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_24E2	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18195,10 +18098,10 @@ sub_AFAC	proc near
 		call	sub_D130
 		push	ds
 		push	offset aRegi2_bft ; "regi2.bft"
-		call	sub_24E2
+		call	super_entry_bfnt
 		push	ds
 		push	offset aRegi1_bft ; "regi1.bft"
-		call	sub_24E2
+		call	super_entry_bfnt
 		push	1
 		call	sub_EAC
 		mov	dx, 0A6h ; '¦'
@@ -25673,36 +25576,7 @@ byte_EC38	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_EC4F	db 0
-					; sub_24E2:loc_2528r
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_EC56	dw 0
-word_EC58	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_EC66	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_EC70	db 0
 					; sub_C80C:loc_C822w ...

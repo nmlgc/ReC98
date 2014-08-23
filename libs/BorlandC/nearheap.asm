@@ -3,6 +3,8 @@
 ; * removal of RULES.ASI to eliminate redundancy
 ; * data declarations being moved to a separate file
 ; * removal of the segment declarations (for obvious reasons)
+; * the "Header" structure being renamed to "NEARHEAP_Header" to avoid
+;   collisions with master.lib's global bfnt_header structure
 
 ;[]-----------------------------------------------------------------[]
 ;|      NEARHEAP.ASM                                                 |
@@ -38,7 +40,7 @@ IF LDATA EQ false
 ; in this queue is logical rather than physical.  If there is only one
 ; free block on the heap prev_free and next_free point to itself.
 ;-----------------------------------------------------------------------
-Header          STRUC
+NEARHEAP_Header STRUC
 bsize           dw      ?
 prev_real       dw      ?
 prev_free       dw      ?

@@ -4712,105 +4712,7 @@ loc_2C97:
 		retf	0Ah
 
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D16	proc far
-					; sub_B237+126P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2D98
-		mov	bx, ax
-		mov	cx, 6CEh
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_2D90
-		mov	al, byte_210B3
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_2D90
-		xor	si, si
-		mov	ax, word_210CA
-		or	ax, ax
-		jz	short loc_2D5C
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2D5C:
-		test	byte_210B3, 80h
-		jz	short loc_2D70
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_2D90
-
-loc_2D70:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_2D90
-		push	bx
-		call	dos_close
-		mov	ax, word_210BC
-		sub	ax, word_210BA
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_2D90:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2D98:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2D16	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20273,15 +20175,15 @@ loc_B350:
 
 loc_B354:
 					; sub_B237+111j ...
-		call	sub_2D16
+		call	super_entry_bfnt
 
 loc_B359:
 		push	ds
 		push	offset aMikod_bft ; "mikod.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMiko32_bft ; "miko32.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		mov	al, byte_25FEF
 		mov	ah, 0
 		mov	bx, ax
@@ -20314,12 +20216,12 @@ loc_B390:
 
 loc_B394:
 					; sub_B237+151j ...
-		call	sub_2D16
+		call	super_entry_bfnt
 
 loc_B399:
 		push	ds
 		push	offset aMiko16_bft ; "miko16.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		mov	si, 0Ch
 		jmp	short loc_B3AE
 ; ---------------------------------------------------------------------------
@@ -20344,7 +20246,7 @@ loc_B3C1:
 		push	offset aBomb0_bft ; "bomb0.bft"
 
 loc_B3C5:
-		call	sub_2D16
+		call	super_entry_bfnt
 
 loc_B3CA:
 		nop
@@ -20365,7 +20267,7 @@ loc_B3EA:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt00_bft ; "st00.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_14544
 		push	ds
 		push	offset aSt00_mpn ; "st00.mpn"
@@ -20378,7 +20280,7 @@ loc_B404:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt01_bft ; "st01.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_14613
 		push	ds
 		push	offset aSt01_mpn ; "st01.mpn"
@@ -20391,7 +20293,7 @@ loc_B41E:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt02_bft ; "st02.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_146D0
 		push	ds
 		push	offset aSt02_mpn ; "st02.mpn"
@@ -20404,7 +20306,7 @@ loc_B437:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt03_bft ; "st03.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_1479F
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
@@ -20417,7 +20319,7 @@ loc_B450:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt04_bft ; "st04.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_14879
 		push	ds
 		push	offset aSt04_mpn ; "st04.mpn"
@@ -20430,7 +20332,7 @@ loc_B469:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt04_bft_0 ; "st04.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_14976
 		mov	word_23F56, 2C76h
 		mov	word_23F5A, 2C76h
@@ -20445,7 +20347,7 @@ loc_B469:
 		call	sub_B9CC
 		push	ds
 		push	offset aSt06_bft ; "st06.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		call	sub_14A06
 		push	ds
 		push	offset aSt06_mpn ; "st06.mpn"
@@ -28837,7 +28739,7 @@ loc_F057:
 		mov	eax, dword_2C930
 		mov	[bp+s],	eax
 		push	large [bp+s]
-		call	sub_2D16
+		call	super_entry_bfnt
 
 loc_F068:
 		push	large [bp+s]	; s
@@ -29126,10 +29028,10 @@ sub_F2B4	proc far
 		call	sub_F4DD
 		push	ds
 		push	offset aSt06_bb1 ; "st06.bb1"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	ds
 		push	offset aSt06_bb2 ; "st06.bb2"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	ds
 		push	offset aSt06b	; "st06b"
 		push	600h
@@ -29387,7 +29289,7 @@ sub_F4DD	proc near
 		call	sub_2DF0
 		push	ds
 		push	offset aSt06_16_bft ; "st06_16.bft"
-		call	sub_2D16
+		call	super_entry_bfnt
 		mov	si, 24h	; '$'
 		jmp	short loc_F501
 ; ---------------------------------------------------------------------------
@@ -29412,7 +29314,7 @@ loc_F514:
 		push	offset aBomb0_bft_0 ; "bomb0.bft"
 
 loc_F518:
-		call	sub_2D16
+		call	super_entry_bfnt
 		pop	si
 		pop	bp
 		retn
@@ -37754,7 +37656,7 @@ sub_14544	proc near
 		mov	word_2449A, 2F32h
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt00bk_cdg ; "st00bk.cdg"
@@ -37803,7 +37705,7 @@ sub_14613	proc near
 		mov	word_2449A, 3096h
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt01bk_cdg ; "st01bk.cdg"
@@ -37855,7 +37757,7 @@ sub_146D0	proc near
 		mov	word_2C972, 0B4h ; '´'
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt02bk_cdg ; "st02bk.cdg"
@@ -37909,7 +37811,7 @@ sub_1479F	proc near
 		mov	word_2449A, 30B2h
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt03bk_cdg ; "st03bk.cdg"
@@ -37962,7 +37864,7 @@ sub_14879	proc near
 		mov	word_2449A, 320Eh
 		push	ds
 		push	offset aSt04_bmt ; "st04.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt04bk_cdg ; "st04bk.cdg"
@@ -38064,7 +37966,7 @@ sub_14A06	proc near
 		mov	word_2449A, 3B04h
 		push	ds
 		push	offset aSt06_bmt ; "st06.bmt"
-		call	sub_2D16
+		call	super_entry_bfnt
 		push	ds
 		push	offset aSt03_bb_0 ; "st03.bb"
 		call	sub_14518
@@ -40409,36 +40311,7 @@ byte_2109C	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_210B3	db 0
-					; sub_2D16:loc_2D5Cr
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_210BA	dw 0
-word_210BC	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_210CA	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 word_210D4	dw 1
 		db  48h	; H

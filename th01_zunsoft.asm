@@ -75,7 +75,7 @@ sub_384		proc near
 		call	sub_139C
 		call	sub_94C
 		push	21CEh
-		call	sub_D16
+		call	super_entry_bfnt
 		call	palette_show
 		mov	PaletteTone, 0
 		call	palette_show
@@ -857,99 +857,7 @@ include libs/master.lib/bfnt_header_analysis.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D16		proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_D8B
-		mov	bx, ax
-		mov	cx, 2288h
-		push	bx
-		push	cx
-		push	bx
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_D84
-		mov	al, byte_228D
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_D84
-		xor	si, si
-		mov	ax, word_22A4
-		or	ax, ax
-		jz	short loc_D54
-		push	bx
-		push	cx
-		push	bx
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_D54:
-		test	byte_228D, 80h
-		jz	short loc_D66
-		push	bx
-		push	cx
-		push	bx
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_D84
-
-loc_D66:
-		push	bx
-		push	bx
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_D84
-		push	bx
-		call	dos_close
-		mov	ax, word_2296
-		sub	ax, word_2294
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_D84:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_D8B:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retn	2
-sub_D16		endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_entry_pat.asm
 
@@ -2271,14 +2179,7 @@ word_2244	dw 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/dos_ropen[data].asm
-		db 5 dup(0)
-byte_228D	db 0
-		db 6 dup(0)
-word_2294	dw 0
-word_2296	dw 0
-		db 0Ch dup(0)
-word_22A4	dw 0
-		dw 0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/mem[data].asm
 word_22B6	dw 0

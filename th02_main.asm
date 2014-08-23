@@ -4146,104 +4146,7 @@ loc_2DFD:
 sub_2C40	endp
 
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2E7C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2EFE
-		mov	bx, ax
-		mov	cx, 86Ah
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_2EF6
-		mov	al, byte_1E2DF
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_2EF6
-		xor	si, si
-		mov	ax, word_1E2F6
-		or	ax, ax
-		jz	short loc_2EC2
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2EC2:
-		test	byte_1E2DF, 80h
-		jz	short loc_2ED6
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_2EF6
-
-loc_2ED6:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_2EF6
-		push	bx
-		call	dos_close
-		mov	ax, word_1E2E8
-		sub	ax, word_1E2E6
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_2EF6:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2EFE:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2E7C	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19660,13 +19563,13 @@ sub_B2AB	proc near
 		add	sp, 0Ch
 		push	ds
 		push	offset aMiko_bft ; "miko.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMiko32_bft ; "miko32.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMiko16_bft ; "miko16.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		mov	si, 30h	; '0'
 		jmp	short loc_B2F5
 ; ---------------------------------------------------------------------------
@@ -19908,7 +19811,7 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -19918,7 +19821,7 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -19928,7 +19831,7 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -42596,10 +42499,10 @@ sub_1696B	proc far
 		mov	super_patnum, 80h	; 'Ä'
 		push	ds
 		push	offset aStage5b1_bft ; "stage5b1.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ds
 		push	offset aStage5b2_bft ; "stage5b2.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	large 200000h
 		push	large 1A0018Fh
 		call	sub_F1E
@@ -48141,7 +48044,7 @@ sub_199B3	proc far
 		call	sub_2F56
 		push	ds
 		push	offset aMima_bft ; "mima.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		call	sub_13328
 		mov	word_1F538, 0
 		push	0Ah
@@ -48152,10 +48055,10 @@ sub_199B3	proc far
 		mov	super_patnum, 80h	; 'Ä'
 		push	ds
 		push	offset aMima1_bft ; "mima1.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ds
 		push	offset aStage3_b_btt ; "stage3_b.btt"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		mov	word_20652, 90h	; 'ê'
 		mov	ax, word_20652
 		mov	word_20654, ax
@@ -48447,7 +48350,7 @@ loc_19D48:
 		mov	super_patnum, 80h	; 'Ä'
 		push	ds
 		push	offset aMima2_bft ; "mima2.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		call	sub_12E95
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_20619
@@ -49675,7 +49578,7 @@ sub_1A7D5	proc far
 		mov	super_patnum, 80h	; 'Ä'
 		push	ds
 		push	offset aMima_bft_0 ; "mima.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		call	sub_1315B
 		mov	word_1F538, 0
 		push	0Ah
@@ -49688,10 +49591,10 @@ sub_1A7D5	proc far
 		mov	super_patnum, 80h	; 'Ä'
 		push	ds
 		push	offset aStage3_b_bft ; "stage3_b.bft"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		push	ds
 		push	offset aStage3_b_btt_0 ; "stage3_b.btt"
-		call	sub_2E7C
+		call	super_entry_bfnt
 		mov	word_20652, 0B0h ; '∞'
 		mov	ax, word_20652
 		mov	word_20654, ax
@@ -56634,36 +56537,7 @@ byte_1E2C8	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_1E2DF	db 0
-					; sub_2E7C:loc_2EC2r
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_1E2E6	dw 0
-word_1E2E8	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_1E2F6	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_1E300	db 5
 byte_1E301	db 3

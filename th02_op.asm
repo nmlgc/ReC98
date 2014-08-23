@@ -3215,104 +3215,7 @@ sub_2942	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2ACA	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2B4C
-		mov	bx, ax
-		mov	cx, 586h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_2B44
-		mov	al, byte_DBBB
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_2B44
-		xor	si, si
-		mov	ax, word_DBD2
-		or	ax, ax
-		jz	short loc_2B10
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2B10:
-		test	byte_DBBB, 80h
-		jz	short loc_2B24
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_2B44
-
-loc_2B24:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_2B44
-		push	bx
-		call	dos_close
-		mov	ax, word_DBC4
-		sub	ax, word_DBC2
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_2B44:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2B4C:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2ACA	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 loc_2BA4:
@@ -19241,7 +19144,7 @@ var_1		= byte ptr -1
 		mov	byte_DCB2, 0
 		push	ds
 		push	offset aOp_h_bft ; "op_h.bft"
-		call	sub_2ACA
+		call	super_entry_bfnt
 
 loc_B7B7:
 		push	ds
@@ -23674,36 +23577,7 @@ byte_DBA4	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_DBBB	db 0
-					; sub_2ACA:loc_2B10r
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_DBC2	dw 0
-word_DBC4	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_DBD2	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 a_exe		db '.exe',0
 		db 0

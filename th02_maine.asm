@@ -3215,106 +3215,7 @@ sub_272A	endp
 		nop
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2882	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2904
-		mov	bx, ax
-		mov	cx, 764h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_28FC
-		mov	al, byte_D6E9
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_28FC
-		xor	si, si
-		mov	ax, word_D700
-		or	ax, ax
-		jz	short loc_28C8
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_28C8:
-		test	byte_D6E9, 80h
-		jz	short loc_28DC
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_28FC
-
-loc_28DC:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_28FC
-		push	bx
-		call	dos_close
-		mov	ax, word_D6F2
-		sub	ax, word_D6F0
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_28FC:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2904:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2882	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_entry_bfnt.asm
 ; ---------------------------------------------------------------------------
 dword_290C	dd 0
 byte_2910	db 0, 90h
@@ -18551,7 +18452,7 @@ loc_B189:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	ds
 		push	offset aEndft_bft ; "endft.bft"
-		call	sub_2882
+		call	super_entry_bfnt
 		push	64h ; 'd'
 		call	sub_B520
 		les	bx, dword_FB02
@@ -23134,23 +23035,7 @@ word_D6D8	dw 0
 byte_D6DA	db 0
 		db  90h	; ê
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_D6E9	db 0
-					; sub_2882:loc_28C8r
-		dw 0
-		dw 0
-		dw 0
-word_D6F0	dw 0
-word_D6F2	dw 0
-		dd 0
-		dd 0
-		dd 0
-word_D700	dw 0
-		dw 0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_D70A	db 5
 byte_D70B	db 3

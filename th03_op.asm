@@ -2910,104 +2910,7 @@ sub_2676	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_27FE	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2880
-		mov	bx, ax
-		mov	cx, 5B6h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_2878
-		mov	al, byte_DDAB
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_2878
-		xor	si, si
-		mov	ax, word_DDC2
-		or	ax, ax
-		jz	short loc_2844
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2844:
-		test	byte_DDAB, 80h
-		jz	short loc_2858
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_2878
-
-loc_2858:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_2878
-		push	bx
-		call	dos_close
-		mov	ax, word_DDB4
-		sub	ax, word_DDB2
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_2878:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2880:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_27FE	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18123,7 +18026,7 @@ var_2		= word ptr -2
 		mov	[bp+var_3], 0
 		push	ds
 		push	offset aOpwin_bft ; "opwin.bft"
-		call	sub_27FE
+		call	super_entry_bfnt
 		push	100h
 		call	sub_C403
 		push	600h
@@ -18325,7 +18228,7 @@ sub_B008	proc near
 		push	si
 		push	ds
 		push	offset aOpwin_bft ; "opwin.bft"
-		call	sub_27FE
+		call	super_entry_bfnt
 		push	100h
 		call	sub_C403
 		push	600h
@@ -18986,7 +18889,7 @@ sub_B424	proc near
 		call	super_free
 		push	ds
 		push	offset aChname_bft ; "chname.bft"
-		call	sub_27FE
+		call	super_entry_bfnt
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -24158,36 +24061,7 @@ byte_DD94	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_DDAB	db 0
-					; sub_27FE:loc_2844r
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_DDB2	dw 0
-word_DDB4	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_DDC2	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_DDCC	db 0
 		db 0

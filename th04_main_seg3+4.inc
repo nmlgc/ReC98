@@ -20122,7 +20122,7 @@ sub_1DFEF	proc far
 		mov	word_2CDCC, 42F2h
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt00bk_cdg ; "st00bk.cdg"
@@ -20174,7 +20174,7 @@ sub_1E0B3	proc far
 		mov	word_2CDCC, 3F80h
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt01bk_cdg ; "st01bk.cdg"
@@ -20228,7 +20228,7 @@ sub_1E186	proc far
 		mov	word_2CDCC, 13DCh
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	10h
 		push	ds
 		push	offset aSt02bk_cdg ; "st02bk.cdg"
@@ -20318,7 +20318,7 @@ loc_1E371:
 		mov	word_2CDCC, 13EAh
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
-		call	sub_2A74
+		call	super_entry_bfnt
 		cmp	byte_266D8, 0
 		jz	short loc_1E3A0
 		push	10h

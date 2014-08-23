@@ -3346,105 +3346,7 @@ sub_2468	endp
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25F0	proc far
-					; sub_9B14+324P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2672
-		mov	bx, ax
-		mov	cx, 5B6h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_266A
-		mov	al, byte_1DB1B
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_266A
-		xor	si, si
-		mov	ax, word_1DB32
-		or	ax, ax
-		jz	short loc_2636
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2636:
-		test	byte_1DB1B, 80h
-		jz	short loc_264A
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_266A
-
-loc_264A:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_266A
-		push	bx
-		call	dos_close
-		mov	ax, word_1DB24
-		sub	ax, word_1DB22
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_266A:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2672:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_25F0	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16414,13 +16316,13 @@ loc_9E24:
 		jl	loc_9D85
 		push	ds
 		push	offset aLose_bf2 ; "lose.bf2"
-		call	sub_25F0
+		call	super_entry_bfnt
 		push	ds
 		push	offset aRound_bf2 ; "round.bf2"
-		call	sub_25F0
+		call	super_entry_bfnt
 		push	ds
 		push	offset aZikicw_bf2 ; "zikicw.bf2"
-		call	sub_25F0
+		call	super_entry_bfnt
 		call	sub_E266
 		nop
 		push	cs
@@ -17236,7 +17138,7 @@ arg_4		= word ptr  8
 		push	si
 		mov	si, [bp+arg_4]
 		push	large [bp+arg_0]
-		call	sub_25F0
+		call	super_entry_bfnt
 		les	bx, [bp+arg_0]
 		assume es:nothing
 		mov	byte ptr es:[bx+2], 65h	; 'e'
@@ -56318,36 +56220,7 @@ byte_1DB04	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_1DB1B	db 0
-					; sub_25F0:loc_2636r
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_1DB22	dw 0
-word_1DB24	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_1DB32	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_1DB3C	db 0
 					; sub_ECB2+3r

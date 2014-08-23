@@ -4438,105 +4438,7 @@ loc_29F5:
 		retf	0Ah
 
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A74	proc far
-					; sub_AED0+DDP	...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_2AF6
-		mov	bx, ax
-		mov	cx, 786h
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_header_read
-		pop	cx
-		pop	bx
-		jb	short loc_2AEE
-		mov	al, byte_21ACB
-		and	al, 7Fh
-		cmp	al, 3
-		mov	ax, 0FFF3h
-		jnz	short loc_2AEE
-		xor	si, si
-		mov	ax, word_21AE2
-		or	ax, ax
-		jz	short loc_2ABA
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_extend_header_analysis
-		pop	cx
-		pop	bx
-		mov	si, ax
-
-loc_2ABA:
-		test	byte_21ACB, 80h
-		jz	short loc_2ACE
-		push	bx
-		push	cx
-		push	bx
-		push	ds
-		push	cx
-		call	bfnt_palette_set
-		pop	cx
-		pop	bx
-		jb	short loc_2AEE
-
-loc_2ACE:
-		push	bx
-		push	bx
-		push	ds
-		push	cx
-		push	si
-		call	bfnt_entry_pat
-		pop	bx
-		jb	short loc_2AEE
-		push	bx
-		call	dos_close
-		mov	ax, word_21AD4
-		sub	ax, word_21AD2
-		inc	ax
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_2AEE:
-		push	ax
-		push	bx
-		call	dos_close
-		pop	ax
-		stc
-
-loc_2AF6:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	4
-sub_2A74	endp
-
+include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19855,16 +19757,16 @@ loc_AFA0:
 		push	offset aMari_bft ; "mari.bft"
 
 loc_AFA4:
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMikod_bft ; "mikod.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMiko32_bft ; "miko32.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	ds
 		push	offset aMiko16_bft ; "miko16.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		mov	si, 14h
 		jmp	short loc_AFD0
 ; ---------------------------------------------------------------------------
@@ -19905,7 +19807,7 @@ loc_B003:
 		mov	es:[bx+2], al
 		push	ds
 		push	offset aSt00_bft ; "st00.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		call	sub_1DFEF
 		les	bx, dword_2CDC6
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
@@ -19929,7 +19831,7 @@ loc_B04B:
 		call	sub_139FC
 		push	ds
 		push	offset aSt01_bft ; "st01.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		call	sub_1E0B3
 		push	ds
 		push	offset aSt01_mpn ; "st01.mpn"
@@ -19944,7 +19846,7 @@ loc_B071:
 		call	sub_139FC
 		push	ds
 		push	offset aSt02_bft ; "st02.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		call	sub_1E186
 		push	ds
 		push	offset aSt02_mpn ; "st02.mpn"
@@ -19970,7 +19872,7 @@ loc_B0B2:
 		call	sub_139FC
 		push	ds
 		push	offset aSt03_bft ; "st03.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		call	sub_1E245
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
@@ -19987,7 +19889,7 @@ loc_B0D4:
 		call	sub_139FC
 		push	ds
 		push	offset aSt04_bft ; "st04.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		call	sub_1E3C2
 		push	ds
 		push	offset aSt04_mpn ; "st04.mpn"
@@ -19998,7 +19900,7 @@ loc_B0F9:
 		mov	word_2CFF4, 9
 		push	ds
 		push	offset aSt05_bft ; "st05.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	8
 		push	ds
 		push	offset aBss5_cd2 ; "BSS5.CD2"
@@ -20013,7 +19915,7 @@ loc_B11E:
 		mov	word_2CFF4, 9
 		push	ds
 		push	offset aSt06_bft ; "st06.bft"
-		call	sub_2A74
+		call	super_entry_bfnt
 		push	8
 		push	ds
 		push	offset aBss6_cd2 ; "BSS6.CD2"
@@ -25052,7 +24954,7 @@ loc_D4F4:
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		call	sub_2A74
+		call	super_entry_bfnt
 
 loc_D508:
 		jmp	short loc_D528	; default
@@ -39775,36 +39677,7 @@ byte_21AB4	db 0
 		db    3
 		db    1
 include libs/master.lib/mem[data].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_21ACB	db 0
-					; sub_2A74:loc_2ABAr
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_21AD2	dw 0
-word_21AD4	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_21AE2	dw 0
-		db    0
-		db    0
+include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 a_exe		db '.exe',0
 		db 0

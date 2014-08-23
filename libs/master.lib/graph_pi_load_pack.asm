@@ -252,15 +252,15 @@ func GRAPH_PI_LOAD_PACK	; graph_pi_load_pack() {
 	CLD
 
 	; 引数
-	filename = (RETSIZE+1+DATASIZE+DATASIZE)*2
-	header	 = (RETSIZE+1+DATASIZE)*2
-	bufptr	 = (RETSIZE+1)*2
+	@@filename = (RETSIZE+1+DATASIZE+DATASIZE)*2
+	@@header	 = (RETSIZE+1+DATASIZE)*2
+	@@bufptr	 = (RETSIZE+1)*2
 
 ; file open
 if LDATA
-	push	word ptr [bp+filename+2]
+	push	word ptr [bp+@@filename+2]
 endif
-	push	word ptr [bp+filename]
+	push	word ptr [bp+@@filename]
 	nopcall	DOS_ROPEN
 	jc	_errorA
 	mov	BX,AX		; handle
@@ -309,7 +309,7 @@ _ctinit_loop:
 	cmp	DL,'i'
 	jnz	_errorA
 
-	_les	DI,[BP+header]
+	_les	DI,[BP+@@header]
 	s_mov	AX,<seg DGROUP>
 	s_mov	ES,AX
 	xor	AX,AX
@@ -440,7 +440,7 @@ _minfo_skipB:
 	mov	CX,DS:xwidth
 	;add	CX,gbuffer_off
 	_push	ES
-	_les	BX,[BP+bufptr]
+	_les	BX,[BP+@@bufptr]
 	mov	ES:[BX],CX
 	mov	ES:[BX+2],AX	; gbuffer_seg
 	_pop	ES

@@ -60,15 +60,15 @@ func GRAPH_PI_FREE	; graph_pi_free() {
 	push	BP
 	mov	BP,SP
 	; 引数
-	header = (RETSIZE+3)*2
-	image_segment = (RETSIZE+2)*2
-	image_offset = (RETSIZE+1)*2
+	@@header = (RETSIZE+3)*2
+	@@image_segment = (RETSIZE+2)*2
+	@@image_offset = (RETSIZE+1)*2
 
 	xor	CX,CX
 
     s_ <push	DS>
     s_ <pop	ES>
-	_les	BX,[BP+header]
+	_les	BX,[BP+@@header]
 	mov	AX,(PiHeader ptr ES:[BX]).comment_segment
 	test	AX,AX
 	jz	short NO_COMMENT
@@ -89,7 +89,7 @@ NO_COMMENT:
 	mov	(PiHeader ptr ES:[BX]).maex_offset,CX
 
 NO_MACHINEINFO:
-	mov	AX,[BP+image_segment]
+	mov	AX,[BP+@@image_segment]
 	test	AX,AX
 	jz	short NO_IMAGE
 	push	AX
