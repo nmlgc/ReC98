@@ -7559,69 +7559,7 @@ arg_8		= byte ptr  0Eh
 		retf
 _fprintf	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl fputs(const char *s, FILE	*stream)
-_fputs		proc far
-
-len		= word ptr -2
-buf		= dword	ptr  6
-stream		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, word ptr [bp+buf]
-		or	ax, word ptr [bp+buf+2]
-		jz	short loc_41BC
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		mov	[bp+len], ax
-		or	ax, ax
-		jnz	short loc_41C0
-
-loc_41BC:
-		xor	ax, ax
-		jmp	short loc_41E7
-; ---------------------------------------------------------------------------
-
-loc_41C0:
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	[bp+len]	; len
-		push	word ptr [bp+stream+2]
-		push	word ptr [bp+stream] ; stream
-		call	__FPUTN
-		or	ax, ax
-		jz	short loc_41E4
-		les	bx, [bp+buf]
-		add	bx, [bp+len]
-		mov	al, es:[bx-1]
-		mov	ah, 0
-		jmp	short loc_41E7
-; ---------------------------------------------------------------------------
-
-loc_41E4:
-		mov	ax, 0FFFFh
-
-loc_41E7:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fputs		endp
-
+include libs/BorlandC/fputs.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
