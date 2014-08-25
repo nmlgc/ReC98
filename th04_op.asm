@@ -4065,45 +4065,7 @@ loc_38BA:
 ; ---------------------------------------------------------------------------
 		nop
 include libs/master.lib/bgm_play.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3A64	proc far
-		mov	bx, sp
-		push	si
-		mov	si, ss:[bx+4]
-		cmp	si, 1
-		jl	short loc_3A76
-		cmp	si, glb.snum
-		jle	short loc_3A7D
-
-loc_3A76:
-		mov	ax, 0FFF3h
-		pop	si
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_3A7D:
-		cmp	glb.sound, 1
-		jnz	short loc_3AA7
-		nopcall	_bgm_bell_org
-		mov	glb.scnt, si
-		mov	bx, si
-		shl	bx, 3
-		mov	ax, 2678h
-		add	bx, ax
-		mov	ax, [bx+6]
-		mov	[bx+2],	ax
-		mov	word ptr [bx], 0
-		mov	glb.effect, 1
-
-loc_3AA7:
-		xor	ax, ax
-		pop	si
-		retf	2
-sub_3A64	endp
-
+include libs/master.lib/bgm_sound.asm
 include libs/master.lib/bgm_effect_sound.asm
 include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
@@ -23506,7 +23468,7 @@ sub_E32C	proc far
 loc_E351:
 		xor	ah, ah
 		push	ax
-		call	sub_3A64
+		call	bgm_sound
 
 loc_E359:
 		inc	byte_FD81

@@ -6262,45 +6262,7 @@ loc_3B00:
 ; ---------------------------------------------------------------------------
 		nop
 include libs/master.lib/bgm_play.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3CAA	proc far
-		mov	bx, sp
-		push	si
-		mov	si, ss:[bx+4]
-		cmp	si, 1
-		jl	short loc_3CBC
-		cmp	si, glb.snum
-		jle	short loc_3CC3
-
-loc_3CBC:
-		mov	ax, 0FFF3h
-		pop	si
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_3CC3:
-		cmp	glb.sound, 1
-		jnz	short loc_3CED
-		nopcall	_bgm_bell_org
-		mov	glb.scnt, si
-		mov	bx, si
-		shl	bx, 3
-		mov	ax, 369Ah
-		add	bx, ax
-		mov	ax, [bx+6]
-		mov	[bx+2],	ax
-		mov	word ptr [bx], 0
-		mov	glb.effect, 1
-
-loc_3CED:
-		xor	ax, ax
-		pop	si
-		retf	2
-sub_3CAA	endp
-
+include libs/master.lib/bgm_sound.asm
 include libs/master.lib/bgm_effect_sound.asm
 include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
@@ -37289,7 +37251,7 @@ sub_138EC	proc far
 loc_13911:
 		xor	ah, ah
 		push	ax
-		call	sub_3CAA
+		call	bgm_sound
 
 loc_13919:
 					; sub_138EC+23j
