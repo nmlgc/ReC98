@@ -6238,9 +6238,7 @@ loc_3AD6:
 		jnz	short loc_3B00
 		cmp	glb.effect, 1
 		jnz	short loc_3B00
-		nop
-		push	cs
-		call	near ptr sub_3CF4
+		nopcall	_bgm_effect_sound
 		dec	ax
 		jnz	short loc_3B00
 		mov	glb.effect, 0
@@ -6303,90 +6301,7 @@ loc_3CED:
 		retf	2
 sub_3CAA	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3CF4	proc far
-		mov	ax, glb.scnt
-		dec	ax
-		shl	ax, 3
-		mov	bx, ax
-		les	bx, [bx+36A2h]
-		assume es:nothing
-		mov	cx, es:[bx]
-		mov	bx, ax
-		jcxz	short loc_3D5A
-		add	word ptr [bx+36A2h], 2
-		test	Machine_State, 10h
-		jz	short loc_3D26
-		in	al, 61h		; PC/XT	PPI port B bits:
-					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
-					; 1: Tmr 2 data	Í¼  AND	0fcH=spkr OFF
-					; 3: 1=read high switches
-					; 4: 0=enable RAM parity checking
-					; 5: 0=enable I/O channel check
-					; 6: 0=hold keyboard clock low
-					; 7: 0=enable kbrd
-		or	al, 3
-		out	61h, al		; PC/XT	PPI port B bits:
-					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
-					; 1: Tmr 2 data	Í¼  AND	0fcH=spkr OFF
-					; 3: 1=read high switches
-					; 4: 0=enable RAM parity checking
-					; 5: 0=enable I/O channel check
-					; 6: 0=hold keyboard clock low
-					; 7: 0=enable kbrd
-		mov	dx, 12h
-		mov	ax, 34DCh
-		mov	bx, 42h	; 'B'
-		jmp	short loc_3D45
-; ---------------------------------------------------------------------------
-
-loc_3D26:
-		mov	al, 6
-		out	37h, al
-		mov	bx, 3FDBh
-		xor	dx, dx
-		mov	es, dx
-		assume es:seg000
-		test	es:byte_501, 80h
-		mov	dx, 1Eh
-		mov	ax, 7800h
-		jnz	short loc_3D45
-		mov	dx, 25h	; '%'
-		mov	ax, 8000h
-
-loc_3D45:
-		cmp	cx, dx
-		ja	short loc_3D4E
-		mov	ax, 0FFFFh
-		jmp	short loc_3D50
-; ---------------------------------------------------------------------------
-
-loc_3D4E:
-		div	cx
-
-loc_3D50:
-		mov	dx, bx
-		out	dx, al
-		mov	al, ah
-		out	dx, al
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_3D5A:
-		mov	ax, [bx+36A8h]
-		mov	[bx+36A4h], ax
-		mov	word ptr [bx+36A2h], 0
-		mov	ax, 1
-		retf
-sub_3CF4	endp
-
+include libs/master.lib/bgm_effect_sound.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
