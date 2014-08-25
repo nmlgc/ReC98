@@ -3431,9 +3431,7 @@ sub_3532	proc far
 		cmp	glb.init, 0
 		jz	short loc_354F
 		nopcall	bgm_stop_play
-		nop
-		push	cs
-		call	near ptr sub_3590
+		nopcall	bgm_stop_sound
 		nop
 		push	cs
 		call	near ptr sub_2FD6
@@ -3474,26 +3472,7 @@ loc_3584:
 		retf
 sub_3532	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3590	proc far
-		cmp	glb.effect, 1
-		jnz	short loc_35A6
-		mov	glb.effect, 0
-		nopcall	_bgm_bell_org
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_35A6:
-		mov	ax, 0FFE1h
-		retf
-sub_3590	endp
+include libs/master.lib/bgm_stop_sound.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_35B0

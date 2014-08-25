@@ -6419,9 +6419,7 @@ sub_3EF2	proc far
 		cmp	glb.init, 0
 		jz	short loc_3F0F
 		nopcall	bgm_stop_play
-		nop
-		push	cs
-		call	near ptr sub_3F50
+		nopcall	bgm_stop_sound
 		nop
 		push	cs
 		call	near ptr sub_3996
@@ -6462,27 +6460,7 @@ loc_3F44:
 		retf
 sub_3EF2	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3F50	proc far
-		cmp	glb.effect, 1
-		jnz	short loc_3F66
-		mov	glb.effect, 0
-		nopcall	_bgm_bell_org
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_3F66:
-		mov	ax, 0FFE1h
-		retf
-sub_3F50	endp
-
+include libs/master.lib/bgm_stop_sound.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
