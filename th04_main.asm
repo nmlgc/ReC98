@@ -6201,7 +6201,7 @@ loc_389E:
 		nop
 		call	dos_close
 		cld
-		mov	ax, word_21C04
+		mov	ax, glb.snum
 		mov	[bp+var_4], ax
 		mov	bx, ax
 		shl	bx, 3
@@ -6264,7 +6264,7 @@ loc_393C:
 		pop	ds
 		cmp	al, 0FFh
 		jz	short loc_399D
-		mov	bx, word_21C04
+		mov	bx, glb.snum
 		shl	bx, 3
 		mov	dx, bx
 		les	bx, [bx+36A2h]
@@ -6278,15 +6278,15 @@ loc_393C:
 		jnz	short loc_3996
 
 loc_3966:
-		mov	bx, word_21C04
+		mov	bx, glb.snum
 		shl	bx, 3
 		les	bx, [bx+36A2h]
 		xor	di, di
 		mov	es:[bx], di
-		inc	word_21C04
-		cmp	word_21C04, 10h
+		inc	glb.snum
+		cmp	glb.snum, 10h
 		jz	short loc_399D
-		mov	bx, word_21C04
+		mov	bx, glb.snum
 		shl	bx, 3
 		mov	word ptr [bx+36A2h], 0
 		mov	cx, [bx+36A8h]
@@ -6300,7 +6300,7 @@ loc_3996:
 
 loc_399D:
 					; sub_3878+107j ...
-		mov	ax, word_21C04
+		mov	ax, glb.snum
 		cmp	[bp+var_4], ax
 		mov	ax, 0FFF5h
 		jz	short loc_39AA
@@ -6326,23 +6326,23 @@ sub_39B8	proc far
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
 		mov	ah, 0
-		mov	word_21BA6, ax
+		mov	glb.simr, ax
 		cli
 		push	8
 		push	seg seg000
 		push	offset loc_3A64
 		nopcall	dos_setvect
-		mov	word_2499E, dx
-		mov	word_2499C, ax
+		mov	word ptr timerorg+2, dx
+		mov	word ptr timerorg, ax
 		mov	al, 36h	; '6'
 		out	77h, al
-		mov	ax, word_21BA8
+		mov	ax, glb.tval
 		out	71h, al		; CMOS Memory:
 					; used by real-time clock
 		mov	al, ah
 		out	71h, al		; CMOS Memory:
 					; used by real-time clock
-		mov	al, byte ptr word_21BA6
+		mov	al, byte ptr glb.simr
 		and	al, 0FEh
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
@@ -6367,10 +6367,10 @@ sub_39FC	proc far
 		test	Machine_State, 10h
 		jnz	short loc_3A1B
 		push	8
-		push	word_2499E
-		push	word_2499C
+		push	word ptr timerorg+2
+		push	word ptr timerorg
 		nopcall	dos_setvect
-		mov	al, byte ptr word_21BA6
+		mov	al, byte ptr glb.simr
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
@@ -6394,7 +6394,7 @@ sub_39FC	endp
 sub_3A26	proc far
 		mov	bx, sp
 		mov	dx, ss:[bx+4]
-		mov	bx, word_21BBE
+		mov	bx, glb.mcnt
 		dec	bx
 		shl	bx, 1
 		mov	ax, [bx+880h]
@@ -6424,10 +6424,10 @@ loc_3A64:
 		jz	short loc_3A8C
 		mov	ax, word_21AF4
 		add	ax, 4
-		cmp	ax, word_21BA8
+		cmp	ax, glb.tval
 		mov	word_21AF4, ax
 		jbe	short loc_3AD2
-		mov	ax, word_21BA8
+		mov	ax, glb.tval
 		inc	ax
 		sub	word_21AF4, ax
 		jmp	short loc_3A96
@@ -6435,7 +6435,7 @@ loc_3A64:
 
 loc_3A8C:
 		cld
-		mov	ax, word_21BA8
+		mov	ax, glb.tval
 		out	71h, al		; CMOS Memory:
 					; used by real-time clock
 		mov	al, ah
@@ -6447,12 +6447,12 @@ loc_3A96:
 		push	bx
 		push	cx
 		push	es
-		inc	word_21BB6
-		cmp	word_21BB6, 14h
+		inc	glb.tcnt
+		cmp	glb.tcnt, 14h
 		jnz	short loc_3AD6
 		xor	ax, ax
-		mov	word_21BB6, ax
-		cmp	word_21BAC, 1
+		mov	glb.tcnt, ax
+		cmp	glb.rflg, 1
 		jnz	short loc_3B00
 		push	ax
 		push	3
@@ -6462,9 +6462,9 @@ loc_3A96:
 		call	near ptr sub_3B7C
 		dec	ax
 		jnz	short loc_3B00
-		cmp	word_21BB4, 0
+		cmp	glb.repsw, 0
 		jnz	short loc_3B00
-		mov	word_21BAC, 0
+		mov	glb.rflg, 0
 		nopcall	_bgm_bell_org
 		jmp	short loc_3B00
 ; ---------------------------------------------------------------------------
@@ -6478,17 +6478,17 @@ loc_3AD2:
 		nop
 
 loc_3AD6:
-		test	word_21BB6, 3
+		test	glb.tcnt, 3
 		jnz	short loc_3B00
-		cmp	word_21C02, 1
+		cmp	glb.effect, 1
 		jnz	short loc_3B00
 		nop
 		push	cs
 		call	near ptr sub_3CF4
 		dec	ax
 		jnz	short loc_3B00
-		mov	word_21C02, 0
-		cmp	word_21BAC, 0
+		mov	glb.effect, 0
+		cmp	glb.rflg, 0
 		jnz	short loc_3B00
 		nopcall	_bgm_bell_org
 		nop
@@ -6604,7 +6604,7 @@ arg_4		= word ptr  0Ah
 		enter	4, 0
 		push	di
 		push	si
-		mov	ax, word_21BB0
+		mov	ax, glb.pcnt
 		imul	bx, ax,	16h
 		cmp	word ptr [bx+3670h], 1
 		jnz	short loc_3BA2
@@ -6693,7 +6693,7 @@ loc_3C22:
 		nop
 
 loc_3C26:
-		imul	bx, word_21BB0,	16h
+		imul	bx, glb.pcnt,	16h
 		dec	word ptr [bx+3670h]
 		jnz	short loc_3C4A
 		add	bx, 3660h
@@ -6703,22 +6703,22 @@ loc_3C26:
 		call	near ptr sub_374E
 		or	ax, ax
 		jnz	short loc_3C4A
-		mov	cl, byte ptr word_21BB0
+		mov	cl, byte ptr glb.pcnt
 		inc	ax
 		shl	ax, cl
-		or	word_21BB2, ax
+		or	glb.fin, ax
 
 loc_3C4A:
 		mov	ax, [bp+arg_2]
-		inc	word_21BB0
-		cmp	word_21BB0, ax
+		inc	glb.pcnt
+		cmp	glb.pcnt, ax
 		jnz	short loc_3CA2
 		mov	ax, [bp+arg_0]
-		mov	word_21BB0, ax
-		cmp	word_21BB2, 7
+		mov	glb.pcnt, ax
+		cmp	glb.fin, 7
 		jnz	short loc_3CA2
 		xor	di, di
-		mov	word_21BB2, di
+		mov	glb.fin, di
 		mov	si, 3660h
 		nop
 
@@ -6730,7 +6730,7 @@ loc_3C6E:
 		mov	cx, di
 		mov	ax, 1
 		shl	ax, cl
-		and	ax, word_21BE0
+		and	ax, glb.pmask
 		cmp	ax, 1
 		sbb	ax, ax
 		inc	ax
@@ -6769,7 +6769,7 @@ sub_3CAA	proc far
 		mov	si, ss:[bx+4]
 		cmp	si, 1
 		jl	short loc_3CBC
-		cmp	si, word_21C04
+		cmp	si, glb.snum
 		jle	short loc_3CC3
 
 loc_3CBC:
@@ -6779,10 +6779,10 @@ loc_3CBC:
 ; ---------------------------------------------------------------------------
 
 loc_3CC3:
-		cmp	word_21C0A, 1
+		cmp	glb.sound, 1
 		jnz	short loc_3CED
 		nopcall	_bgm_bell_org
-		mov	word_21C06, si
+		mov	glb.scnt, si
 		mov	bx, si
 		shl	bx, 3
 		mov	ax, 369Ah
@@ -6790,7 +6790,7 @@ loc_3CC3:
 		mov	ax, [bx+6]
 		mov	[bx+2],	ax
 		mov	word ptr [bx], 0
-		mov	word_21C02, 1
+		mov	glb.effect, 1
 
 loc_3CED:
 		xor	ax, ax
@@ -6805,7 +6805,7 @@ sub_3CAA	endp
 
 
 sub_3CF4	proc far
-		mov	ax, word_21C06
+		mov	ax, glb.scnt
 		dec	ax
 		shl	ax, 3
 		mov	bx, ax
@@ -6887,9 +6887,9 @@ sub_3CF4	endp
 
 
 sub_3D6C	proc far
-		cmp	word_21BAC, 1
+		cmp	glb.rflg, 1
 		jnz	short loc_3D82
-		mov	word_21BAC, 0
+		mov	glb.rflg, 0
 		nopcall	_bgm_bell_org
 		xor	ax, ax
 		retf
@@ -6914,11 +6914,11 @@ sub_3D86	proc far
 		cmp	cx, 0F0h ; 'ð'
 		jg	short loc_3DAE
 		cli
-		mov	word_21BAA, cx
-		mov	ax, word_21C0E
-		mov	dx, word_21C10
+		mov	glb.tp, cx
+		mov	ax, word ptr glb.clockbase
+		mov	dx, word ptr glb.clockbase+2
 		div	cx
-		mov	word_21BA8, ax
+		mov	glb.tval, ax
 		sti
 		xor	ax, ax
 		retf	2
@@ -6947,7 +6947,7 @@ arg_0		= word ptr  6
 		nop
 		push	cs
 		call	near ptr get_machine
-		cmp	word_21C0C, 0
+		cmp	glb.init, 0
 		jz	short loc_3DD0
 		xor	ax, ax
 		pop	di
@@ -6965,7 +6965,7 @@ loc_3DD0:
 
 loc_3DDF:
 		mov	ax, [bp+var_2]
-		mov	word_21BB8, ax
+		mov	glb.bufsiz, ax
 		mov	di, 3660h
 
 loc_3DE8:
@@ -7013,15 +7013,15 @@ loc_3E44:
 		add	di, 8
 		cmp	di, 3722h
 		jnz	short loc_3E16
-		mov	word_21BAC, 0
-		mov	word_21BBC, 0
-		mov	word_21BBE, 0
-		mov	word_21BAE, 3
-		mov	word_21BB0, 0
-		mov	word_21BB2, 0
-		mov	word_21BB4, 1
-		mov	word_21BB6, 0
-		mov	word_21BBA, 0
+		mov	glb.rflg, 0
+		mov	glb.mnum, 0
+		mov	glb.mcnt, 0
+		mov	glb.pnum, 3
+		mov	glb.pcnt, 0
+		mov	glb.fin, 0
+		mov	glb.repsw, 1
+		mov	glb.tcnt, 0
+		mov	glb.buflast, 0
 		cld
 		mov	cx, 10h
 		mov	di, 8A2h
@@ -7030,11 +7030,11 @@ loc_3E44:
 		assume es:dseg
 		mov	ax, 78h	; 'x'
 		rep stosw
-		mov	word_21C02, 0
-		mov	word_21C04, 0
-		mov	word_21C06, 0
-		mov	word_21C08, 1
-		mov	word_21C0A, 1
+		mov	glb.effect, 0
+		mov	glb.snum, 0
+		mov	glb.scnt, 0
+		mov	glb.music, 1
+		mov	glb.sound, 1
 		test	Machine_State, 10h
 		jz	short loc_3EBC
 		mov	ax, 10h
@@ -7055,8 +7055,8 @@ loc_3ECE:
 		and	ax, 0FFFEh
 		mov	dx, 78h	; 'x'
 		mul	dx
-		mov	word_21C10, dx
-		mov	word_21C0E, ax
+		mov	word ptr glb.clockbase+2, dx
+		mov	word ptr glb.clockbase, ax
 		push	78h ; 'x'
 		nop
 		push	cs
@@ -7068,7 +7068,7 @@ loc_3ECE:
 loc_3EEB:
 		les	di, [bx]
 		assume es:nothing
-		mov	cx, word_21BB8
+		mov	cx, glb.bufsiz
 		shr	cx, 1
 		rep stosw
 		adc	cx, cx
@@ -7116,7 +7116,7 @@ loc_3F34:
 		out	dx, al
 
 loc_3F49:
-		mov	word_21C0C, 1
+		mov	glb.init, 1
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -7132,7 +7132,7 @@ sub_3DB4	endp
 
 sub_3F58	proc far
 		push	si
-		cmp	word_21C0C, 0
+		cmp	glb.init, 0
 		jz	short loc_3F75
 		nop
 		push	cs
@@ -7143,7 +7143,7 @@ sub_3F58	proc far
 		nop
 		push	cs
 		call	near ptr sub_39FC
-		mov	word_21C0C, 0
+		mov	glb.init, 0
 
 loc_3F75:
 		mov	si, 3660h
@@ -7187,9 +7187,9 @@ sub_3F58	endp
 
 
 sub_3FB6	proc far
-		cmp	word_21C02, 1
+		cmp	glb.effect, 1
 		jnz	short loc_3FCC
-		mov	word_21C02, 0
+		mov	glb.effect, 0
 		nopcall	_bgm_bell_org
 		xor	ax, ax
 		retf
@@ -39514,274 +39514,7 @@ a_exe		db '.exe',0
 byte_21AF2	db 1
 		db 0
 word_21AF4	dw 1
-		db  48h	; H
-		db  57h	; W
-		db 0C0h	; À
-		db  4Dh	; M
-		db 0D8h	; Ø
-		db  92h	; ’
-		db 0D8h	; Ø
-		db  82h	; ‚
-		db  88h	; ˆ
-		db  74h	; t
-		db    8
-		db  6Eh	; n
-		db 0F8h	; ø
-		db  61h	; a
-		db  64h	; d
-		db    0
-		db  68h	; h
-		db  52h	; R
-		db  64h	; d
-		db    0
-		db 0A0h	;  
-		db  8Ah	; Š
-		db  78h	; x
-		db  7Bh	; {
-		db  64h	; d
-		db    0
-		db 0C8h	; È
-		db  67h	; g
-		db  68h	; h
-		db  5Ch	; \
-		db  64h	; d
-		db    0
-		db  68h	; h
-		db  5Ch	; \
-		db  68h	; h
-		db  52h	; R
-		db  64h	; d
-		db    0
-		db 0A0h	;  
-		db  8Ah	; Š
-		db  78h	; x
-		db  7Bh	; {
-		db  64h	; d
-		db    0
-		db 0C8h	; È
-		db  67h	; g
-		db  64h	; d
-		db    0
-		db  40h	; @
-		db    0
-		db  20h
-		db    0
-		db  20h
-		db    0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    8
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    4
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    1
-		db    0
-word_21BA6	dw 0
-word_21BA8	dw 0
-word_21BAA	dw 0
-word_21BAC	dw 0
-word_21BAE	dw 0
-word_21BB0	dw 0
-					; sub_3B7C:loc_3C26r ...
-word_21BB2	dw 0
-word_21BB4	dw 0
-word_21BB6	dw 0
-word_21BB8	dw 0
-					; sub_3DB4+139r
-word_21BBA	dw 0
-word_21BBC	dw 0
-word_21BBE	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_21BE0	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_21C02	dw 0
-word_21C04	dw 0
-word_21C06	dw 0
-word_21C08	dw 0
-word_21C0A	dw 0
-					; sub_3DB4+F5w
-word_21C0C	dw 0
-					; sub_3DB4:loc_3F49w ...
-word_21C0E	dw 0
-					; sub_3DB4+126w
-word_21C10	dw 0
-					; sub_3DB4+122w
+include libs/master.lib/bgm[data].asm
 		dw 0
 		db  20h
 		db  10h
@@ -44769,202 +44502,7 @@ word_24698	dw 0
 byte_2499A	db 0
 					; sub_133AC+1Ew
 		db 0
-word_2499C	dw 0
-word_2499E	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/bgm[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
