@@ -3013,9 +3013,7 @@ loc_2DF2:
 loc_2E00:
 		call	sub_2D00
 		push	cx
-		nop
-		push	cs
-		call	near ptr sub_3360
+		nopcall	bgm_set_tempo
 		jmp	short loc_2DE1
 ; ---------------------------------------------------------------------------
 		nop
@@ -3824,34 +3822,7 @@ loc_335C:
 		retf
 sub_3346	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3360	proc far
-					; sub_338E+12Dp
-		mov	bx, sp
-		mov	cx, ss:[bx+4]
-		cmp	cx, 1Eh
-		jl	short loc_3388
-		cmp	cx, 0F0h ; 'ð'
-		jg	short loc_3388
-		cli
-		mov	glb.tp, cx
-		mov	ax, word ptr glb.clockbase
-		mov	dx, word ptr glb.clockbase+2
-		div	cx
-		mov	glb.tval, ax
-		sti
-		xor	ax, ax
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_3388:
-		mov	ax, 0FFF3h
-		retf	2
-sub_3360	endp
-
+include libs/master.lib/bgm_set_tempo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3981,9 +3952,7 @@ loc_34A8:
 		mov	word ptr glb.clockbase+2, dx
 		mov	word ptr glb.clockbase, ax
 		push	78h ; 'x'
-		nop
-		push	cs
-		call	near ptr sub_3360
+		nopcall	bgm_set_tempo
 		mov	bx, 376Ch
 		xor	dx, dx
 		xor	ax, ax

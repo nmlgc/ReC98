@@ -3147,9 +3147,7 @@ loc_2E34:
 loc_2E42:
 		call	sub_2D42
 		push	cx
-		nop
-		push	cs
-		call	near ptr sub_33A2
+		nopcall	bgm_set_tempo
 		jmp	short loc_2E23
 ; ---------------------------------------------------------------------------
 		nop
@@ -3958,34 +3956,7 @@ loc_339E:
 		retf
 sub_3388	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_33A2	proc far
-					; sub_33D0+12Dp
-		mov	bx, sp
-		mov	cx, ss:[bx+4]
-		cmp	cx, 1Eh
-		jl	short loc_33CA
-		cmp	cx, 0F0h ; 'ð'
-		jg	short loc_33CA
-		cli
-		mov	glb.tp, cx
-		mov	ax, word ptr glb.clockbase
-		mov	dx, word ptr glb.clockbase+2
-		div	cx
-		mov	glb.tval, ax
-		sti
-		xor	ax, ax
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_33CA:
-		mov	ax, 0FFF3h
-		retf	2
-sub_33A2	endp
-
+include libs/master.lib/bgm_set_tempo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4115,9 +4086,7 @@ loc_34EA:
 		mov	word ptr glb.clockbase+2, dx
 		mov	word ptr glb.clockbase, ax
 		push	78h ; 'x'
-		nop
-		push	cs
-		call	near ptr sub_33A2
+		nopcall	bgm_set_tempo
 		mov	bx, 1A74h
 		xor	dx, dx
 		xor	ax, ax

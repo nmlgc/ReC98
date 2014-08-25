@@ -3593,9 +3593,7 @@ loc_2FBA:
 loc_2FC8:
 		call	sub_2EC8
 		push	cx
-		nop
-		push	cs
-		call	near ptr sub_3528
+		nopcall	bgm_set_tempo
 		jmp	short loc_2FA9
 ; ---------------------------------------------------------------------------
 		nop
@@ -4404,34 +4402,7 @@ loc_3524:
 		retf
 sub_350E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3528	proc far
-					; sub_3556+12Dp
-		mov	bx, sp
-		mov	cx, ss:[bx+4]
-		cmp	cx, 1Eh
-		jl	short loc_3550
-		cmp	cx, 0F0h ; 'ÅE
-		jg	short loc_3550
-		cli
-		mov	glb.tp, cx
-		mov	ax, word ptr glb.clockbase
-		mov	dx, word ptr glb.clockbase+2
-		div	cx
-		mov	glb.tval, ax
-		sti
-		xor	ax, ax
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_3550:
-		mov	ax, 0FFF3h
-		retf	2
-sub_3528	endp
-
+include libs/master.lib/bgm_set_tempo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4561,9 +4532,7 @@ loc_3670:
 		mov	word ptr glb.clockbase+2, dx
 		mov	word ptr glb.clockbase, ax
 		push	78h ; 'x'
-		nop
-		push	cs
-		call	near ptr sub_3528
+		nopcall	bgm_set_tempo
 		mov	bx, 26E8h
 		xor	dx, dx
 		xor	ax, ax
