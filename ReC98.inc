@@ -6,6 +6,7 @@ locals
 include libs/BorlandC/RULES.ASI
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
+include libs/master.lib/bgm.inc
 
 nopcall macro func
 if LDATA

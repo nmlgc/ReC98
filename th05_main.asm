@@ -5826,56 +5826,8 @@ sub_367A	endp
 		not	al
 		retn
 ; ---------------------------------------------------------------------------
-		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3690	proc far
-		test	Machine_State, 10h
-		jnz	short loc_36B8
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		test	es:byte_501, 80h
-		mov	bx, 3E6h
-		jnz	short loc_36AA
-		mov	bx, 4CDh
-
-loc_36AA:
-		mov	dx, 3FDBh
-		mov	al, bl
-		out	dx, al
-		mov	al, bh
-		out	dx, al
-		mov	al, 7
-		out	37h, al
-		retf
-; ---------------------------------------------------------------------------
-
-loc_36B8:
-		in	al, 61h		; PC/XT	PPI port B bits:
-					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
-					; 1: Tmr 2 data	Í¼  AND	0fcH=spkr OFF
-					; 3: 1=read high switches
-					; 4: 0=enable RAM parity checking
-					; 5: 0=enable I/O channel check
-					; 6: 0=hold keyboard clock low
-					; 7: 0=enable kbrd
-		and	al, 0FCh
-		out	61h, al		; PC/XT	PPI port B bits:
-					; 0: Tmr 2 gate	ÍËÍ OR	03H=spkr ON
-					; 1: Tmr 2 data	Í¼  AND	0fcH=spkr OFF
-					; 3: 1=read high switches
-					; 4: 0=enable RAM parity checking
-					; 5: 0=enable I/O channel check
-					; 6: 0=hold keyboard clock low
-					; 7: 0=enable kbrd
-		retf
-sub_3690	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bgm_bell_org.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6422,9 +6374,7 @@ loc_3A30:
 		cmp	word_21194, 0
 		jnz	short loc_3A9A
 		mov	word_2118C, 0
-		nop
-		push	cs
-		call	near ptr sub_3690
+		nopcall	_bgm_bell_org
 		jmp	short loc_3A9A
 ; ---------------------------------------------------------------------------
 		nop
@@ -6449,9 +6399,7 @@ loc_3A70:
 		mov	word_211E2, 0
 		cmp	word_2118C, 0
 		jnz	short loc_3A9A
-		nop
-		push	cs
-		call	near ptr sub_3690
+		nopcall	_bgm_bell_org
 		nop
 
 loc_3A9A:
@@ -6742,9 +6690,7 @@ loc_3C56:
 loc_3C5D:
 		cmp	word_211EA, 1
 		jnz	short loc_3C87
-		nop
-		push	cs
-		call	near ptr sub_3690
+		nopcall	_bgm_bell_org
 		mov	word_211E6, si
 		mov	bx, si
 		shl	bx, 3
@@ -6853,9 +6799,7 @@ sub_3D06	proc far
 		cmp	word_2118C, 1
 		jnz	short loc_3D1C
 		mov	word_2118C, 0
-		nop
-		push	cs
-		call	near ptr sub_3690
+		nopcall	_bgm_bell_org
 		xor	ax, ax
 		retf
 ; ---------------------------------------------------------------------------
@@ -7157,9 +7101,7 @@ sub_3F50	proc far
 		cmp	word_211E2, 1
 		jnz	short loc_3F66
 		mov	word_211E2, 0
-		nop
-		push	cs
-		call	near ptr sub_3690
+		nopcall	_bgm_bell_org
 		xor	ax, ax
 		retf
 ; ---------------------------------------------------------------------------
