@@ -3225,25 +3225,7 @@ loc_32C7:
 sub_3284	endp
 
 include libs/master.lib/bgm_effect_sound.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3346	proc far
-		cmp	glb.rflg, 1
-		jnz	short loc_335C
-		mov	glb.rflg, 0
-		nopcall	_bgm_bell_org
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_335C:
-		mov	ax, 0FFE1h
-		retf
-sub_3346	endp
-
+include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3448,9 +3430,7 @@ sub_3532	proc far
 		push	si
 		cmp	glb.init, 0
 		jz	short loc_354F
-		nop
-		push	cs
-		call	near ptr sub_3346
+		nopcall	bgm_stop_play
 		nop
 		push	cs
 		call	near ptr sub_3590

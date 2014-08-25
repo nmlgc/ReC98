@@ -6302,25 +6302,7 @@ loc_3CED:
 sub_3CAA	endp
 
 include libs/master.lib/bgm_effect_sound.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3D6C	proc far
-		cmp	glb.rflg, 1
-		jnz	short loc_3D82
-		mov	glb.rflg, 0
-		nopcall	_bgm_bell_org
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_3D82:
-		mov	ax, 0FFE1h
-		retf
-sub_3D6C	endp
-
+include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6525,9 +6507,7 @@ sub_3F58	proc far
 		push	si
 		cmp	glb.init, 0
 		jz	short loc_3F75
-		nop
-		push	cs
-		call	near ptr sub_3D6C
+		nopcall	bgm_stop_play
 		nop
 		push	cs
 		call	near ptr sub_3FB6
