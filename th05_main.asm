@@ -6078,33 +6078,7 @@ loc_39B5:
 		retf
 sub_3996	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_39C0	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		mov	bx, glb.mcnt
-		dec	bx
-		shl	bx, 1
-		mov	ax, [bx+7C0h]
-		mov	bx, dx
-		add	ax, [bx+4]
-		mov	[bx], ax
-		mov	ax, [bx+6]
-		mov	[bx+2],	ax
-		mov	word ptr [bx+0Ah], 4
-		mov	word ptr [bx+8], 48h ; 'H'
-		mov	ax, 4
-		mov	[bx+0Eh], ax
-		mov	[bx+0Ch], ax
-		mov	word ptr [bx+10h], 8
-		mov	word ptr [bx+14h], 0
-		retf	2
-sub_39C0	endp
+include libs/master.lib/bgm_pinit.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -6415,9 +6389,7 @@ loc_3BE4:
 
 loc_3C08:
 		push	si
-		nop
-		push	cs
-		call	near ptr sub_39C0
+		nopcall	_bgm_pinit
 		mov	cx, di
 		mov	ax, 1
 		shl	ax, cl
