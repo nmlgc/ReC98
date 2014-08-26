@@ -3519,46 +3519,7 @@ sub_22F6	endp
 
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2488	proc far
-		mov	bx, sp
-		push	si
-		push	di
-
-loc_248C:
-		mov	si, ss:[bx+4]
-
-loc_2490:
-		mov	PaletteTone, 0C8h ; 'È'
-		call	vsync_wait
-
-loc_249A:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_24AC
-
-loc_24A5:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_24A5
-
-loc_24AC:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h	; 'd'
-		jg	short loc_249A
-		mov	PaletteTone, 64h	; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_2488	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_white_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22710,7 +22671,7 @@ loc_D28B:
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_D2AE
 		push	[bp+var_2]
-		call	sub_2488
+		call	palette_white_in
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 

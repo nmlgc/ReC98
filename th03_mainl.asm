@@ -1993,43 +1993,7 @@ include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_208A	proc far
-					; sub_9A2C+246P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0C8h	; 'È'
-		call	vsync_wait
-
-loc_209C:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_20AE
-
-loc_20A7:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_20A7
-
-loc_20AE:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jg	short loc_209C
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_208A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_white_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14662,7 +14626,7 @@ loc_97FC:
 		push	large 0B0004h
 		call	sub_D3FC
 		push	1
-		call	sub_208A
+		call	palette_white_in
 		push	8
 		call	sub_CB52
 		call	sub_973E
@@ -15132,7 +15096,7 @@ loc_9C5E:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_E72
 		push	1
-		call	sub_208A
+		call	palette_white_in
 		push	large 200005h
 		call	text_fillca
 		push	0
@@ -16471,7 +16435,7 @@ loc_A75E:
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_A781
 		push	[bp+var_2]
-		call	sub_208A
+		call	palette_white_in
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 

@@ -2450,44 +2450,7 @@ sub_2254	endp
 
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_23E6	proc far
-					; sub_B908+116P
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0C8h	; 'È'
-		call	vsync_wait
-
-loc_23F8:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_240A
-
-loc_2403:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_2403
-
-loc_240A:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jg	short loc_23F8
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_23E6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/palette_white_in.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -19089,7 +19052,7 @@ loc_B974:
 		inc	al
 		mov	es:[bx+0Ch], al
 		push	1
-		call	sub_23E6
+		call	palette_white_in
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
@@ -19144,7 +19107,7 @@ loc_B9FB:
 		add	al, 2
 		mov	es:[bx+0Ch], al
 		push	1
-		call	sub_23E6
+		call	palette_white_in
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0

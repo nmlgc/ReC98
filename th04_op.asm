@@ -2199,43 +2199,7 @@ include libs/BorlandC/txesc.asm
 		db    0
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_266E	proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0C8h	; 'È'
-		call	vsync_wait
-
-loc_2680:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_2692
-
-loc_268B:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_268B
-
-loc_2692:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jg	short loc_2680
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_266E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/palette_white_in.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -20870,7 +20834,7 @@ loc_D881:
 		push	0
 		call	sub_156C
 		push	1
-		call	sub_266E
+		call	palette_white_in
 
 loc_D8B0:
 		jmp	short loc_D8F4

@@ -2691,43 +2691,7 @@ sub_2520	endp
 
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_26B2	proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0C8h	; 'È'
-		call	vsync_wait
-
-loc_26C4:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_26D6
-
-loc_26CF:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_26CF
-
-loc_26D6:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jg	short loc_26C4
-		mov	PaletteTone, 64h ; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_26B2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/palette_white_in.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -15243,7 +15207,7 @@ loc_9F16:
 		call	sub_1FA2
 		call	far ptr	palette_show
 		push	6
-		call	sub_26B2
+		call	palette_white_in
 		pop	si
 		leave
 		retf

@@ -3312,43 +3312,7 @@ sub_26CA	endp
 
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_285C	proc far
-					; sub_1523C+78P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0C8h ; 'È'
-		call	vsync_wait
-
-loc_286E:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_2880
-
-loc_2879:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_2879
-
-loc_2880:
-		sub	PaletteTone, 6
-		cmp	PaletteTone, 64h	; 'd'
-		jg	short loc_286E
-		mov	PaletteTone, 64h	; 'd'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_285C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_white_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35593,7 +35557,7 @@ sub_13414	proc near
 		pop	cx
 		call	sub_FA8A
 		push	0
-		call	sub_285C
+		call	palette_white_in
 		pop	bp
 		retn
 sub_13414	endp
@@ -39274,7 +39238,7 @@ loc_15296:
 		call	near ptr sub_13ABB
 		add	sp, 4
 		push	1
-		call	sub_285C
+		call	palette_white_in
 		push	0
 		call	sub_1310B
 		call	sub_12E95
@@ -41986,7 +41950,7 @@ sub_1696B	proc far
 		call	near ptr sub_13ABB
 		add	sp, 4
 		push	1
-		call	sub_285C
+		call	palette_white_in
 		push	0
 		call	sub_1310B
 		call	sub_12E95
@@ -47609,7 +47573,7 @@ sub_199B3	proc far
 		call	sub_FA8A
 		call	sub_1A46B
 		push	3
-		call	sub_285C
+		call	palette_white_in
 		push	ds
 		push	offset aMima_m	; "mima.m"
 		nop
@@ -49114,7 +49078,7 @@ sub_1A7D5	proc far
 		call	sub_FA8A
 		call	sub_1A46B
 		push	1
-		call	sub_285C
+		call	palette_white_in
 		push	ds
 		push	offset aBoss3_m	; "boss3.m"
 		nop
