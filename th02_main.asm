@@ -121,38 +121,7 @@ loc_5C1:
 sub_574		endp
 
 include libs/master.lib/bread.asm
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	es, word ptr [bp+0Ah]
-		mov	ax, es:2
-		mov	dx, [bp+6]
-		mov	cx, [bp+8]
-		or	cx, cx
-		jnz	short loc_620
-		cmp	dx, ax
-		ja	short loc_620
-		sub	es:2, dx
-		add	es:4, dx
-		xor	ax, ax
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_620:
-		mov	bx, es:0
-		sub	dx, ax
-		sbb	cx, 0
-		mov	ax, 4201h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		sbb	ax, ax
-		mov	es:2, ax
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bseek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -162,49 +162,7 @@ loc_605:
 sub_5B8		endp
 
 include libs/master.lib/bread.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_63C		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_4]
-		mov	ax, es:2
-		mov	dx, [bp+arg_0]
-		mov	cx, [bp+arg_2]
-		or	cx, cx
-		jnz	short loc_664
-		cmp	dx, ax
-		ja	short loc_664
-		sub	es:2, dx
-		add	es:4, dx
-		xor	ax, ax
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_664:
-		mov	bx, es:0
-		sub	dx, ax
-		sbb	cx, 0
-		mov	ax, 4201h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		sbb	ax, ax
-		mov	es:2, ax
-		pop	bp
-		retf	6
-sub_63C		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bseek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
