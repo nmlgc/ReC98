@@ -5935,7 +5935,7 @@ sub_39B8	proc far
 		cli
 		push	8
 		push	seg seg000
-		push	offset loc_3A64
+		push	offset _bgm_timerhook
 		nopcall	dos_setvect
 		mov	word ptr timerorg+2, dx
 		mov	word ptr timerorg, ax
@@ -5991,97 +5991,7 @@ loc_3A1B:
 sub_39FC	endp
 
 include libs/master.lib/bgm_pinit.asm
-
-; ---------------------------------------------------------------------------
-
-loc_3A64:
-		push	ax
-		push	ds
-		mov	ax, seg	dseg
-		mov	ds, ax
-		test	Machine_State, 10h
-		jz	short loc_3A8C
-		mov	ax, word_21AF4
-		add	ax, 4
-		cmp	ax, glb.tval
-		mov	word_21AF4, ax
-		jbe	short loc_3AD2
-		mov	ax, glb.tval
-		inc	ax
-		sub	word_21AF4, ax
-		jmp	short loc_3A96
-; ---------------------------------------------------------------------------
-
-loc_3A8C:
-		cld
-		mov	ax, glb.tval
-		out	71h, al		; CMOS Memory:
-					; used by real-time clock
-		mov	al, ah
-		out	71h, al		; CMOS Memory:
-					; used by real-time clock
-
-loc_3A96:
-		push	dx
-		push	bx
-		push	cx
-		push	es
-		inc	glb.tcnt
-		cmp	glb.tcnt, 14h
-		jnz	short loc_3AD6
-		xor	ax, ax
-		mov	glb.tcnt, ax
-		cmp	glb.rflg, 1
-		jnz	short loc_3B00
-		push	ax
-		push	3
-		push	ax
-		nopcall	_bgm_play
-		dec	ax
-		jnz	short loc_3B00
-		cmp	glb.repsw, 0
-		jnz	short loc_3B00
-		mov	glb.rflg, 0
-		nopcall	_bgm_bell_org
-		jmp	short loc_3B00
-; ---------------------------------------------------------------------------
-		nop
-
-loc_3AD2:
-		pop	ds
-		pop	ax
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_3AD6:
-		test	glb.tcnt, 3
-		jnz	short loc_3B00
-		cmp	glb.effect, 1
-		jnz	short loc_3B00
-		nopcall	_bgm_effect_sound
-		dec	ax
-		jnz	short loc_3B00
-		mov	glb.effect, 0
-		cmp	glb.rflg, 0
-		jnz	short loc_3B00
-		nopcall	_bgm_bell_org
-		nop
-
-loc_3B00:
-		pop	es
-		pop	cx
-		pop	bx
-		pop	dx
-		test	Machine_State, 10h
-		jnz	short loc_3AD2
-		mov	al, 20h	; ' '
-		out	0, al
-		pop	ds
-		pop	ax
-		iret
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/bgm_timerhook.asm
 include libs/master.lib/bgm_play.asm
 include libs/master.lib/bgm_sound.asm
 include libs/master.lib/bgm_effect_sound.asm
@@ -38645,7 +38555,7 @@ a_exe		db '.exe',0
 		db 0
 byte_21AF2	db 1
 		db 0
-word_21AF4	dw 1
+include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 		dw 0
 		db  20h
