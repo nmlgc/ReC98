@@ -161,35 +161,7 @@ loc_6CF:
 		retf	4
 sub_682		endp
 
-; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+0Ah]
-		mov	si, [bp+8]
-		cmp	si, 0
-		jle	short loc_6FB
-
-loc_6E6:
-		push	word ptr [bp+6]
-		call	bgetc
-		inc	ah
-		jz	short loc_6FB
-		mov	es, word ptr [bp+0Ch]
-		mov	es:[di], al
-		inc	di
-		dec	si
-		jnz	short loc_6E6
-
-loc_6FB:
-		mov	ax, di
-		sub	ax, [bp+0Ah]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
+include libs/master.lib/bread.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp

@@ -162,37 +162,7 @@ loc_6F1:
 sub_6A4		endp
 
 ; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+0Ah]
-		mov	si, [bp+8]
-		cmp	si, 0
-		jle	short loc_71D
-
-loc_708:
-		push	word ptr [bp+6]
-		call	bgetc
-		inc	ah
-
-loc_711:
-		jz	short loc_71D
-		mov	es, word ptr [bp+0Ch]
-		mov	es:[di], al
-		inc	di
-		dec	si
-		jnz	short loc_708
-
-loc_71D:
-					; seg000:loc_711j
-		mov	ax, di
-		sub	ax, [bp+0Ah]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
+include libs/master.lib/bread.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp

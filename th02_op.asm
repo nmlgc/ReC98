@@ -152,34 +152,7 @@ loc_605:
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+0Ah]
-		mov	si, [bp+8]
-		cmp	si, 0
-		jle	short loc_631
-
-loc_61C:
-		push	word ptr [bp+6]
-		call	bgetc
-		inc	ah
-		jz	short loc_631
-		mov	es, word ptr [bp+0Ch]
-		mov	es:[di], al
-		inc	di
-		dec	si
-		jnz	short loc_61C
-
-loc_631:
-		mov	ax, di
-		sub	ax, [bp+0Ah]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
+include libs/master.lib/bread.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp

@@ -161,49 +161,7 @@ loc_605:
 		retf	4
 sub_5B8		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_60C		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	si, [bp+arg_2]
-		cmp	si, 0
-		jle	short loc_631
-
-loc_61C:
-		push	[bp+arg_0]
-		call	bgetc
-		inc	ah
-		jz	short loc_631
-		mov	es, [bp+arg_6]
-		mov	es:[di], al
-		inc	di
-		dec	si
-		jnz	short loc_61C
-
-loc_631:
-		mov	ax, di
-		sub	ax, [bp+arg_4]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_60C		endp
-
+include libs/master.lib/bread.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3588,8 +3546,7 @@ loc_2C26:
 		push	di
 		push	20h ; ' '
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_60C
+		call	bread
 		inc	byte_D713
 		cmp	byte_D713, 0FFh
 		mov	bx, 2
