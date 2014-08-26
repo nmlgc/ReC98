@@ -34,37 +34,7 @@ include libs/master.lib/atrtcmod.asm
 include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_5D0		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		cmp	word ptr es:2, 0
-		jz	short loc_5F7
-		dec	word ptr es:2
-		mov	bx, es:4
-		inc	word ptr es:4
-		mov	al, es:[bx+8]
-		xor	ah, ah
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_5F7:
-		push	es
-		push	cs
-		call	near ptr bfill
-		pop	bp
-		retf	2
-sub_5D0		endp
-
+include libs/master.lib/bgetc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -203,8 +173,7 @@ sub_682		endp
 
 loc_6E6:
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_5D0
+		call	bgetc
 		inc	ah
 		jz	short loc_6FB
 		mov	es, word ptr [bp+0Ch]
@@ -1619,8 +1588,7 @@ loc_1B8F:
 		adc	word ptr es:14h, 0
 		push	es
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_5D0
+		call	bgetc
 		pop	es
 		retn
 sub_1B72	endp

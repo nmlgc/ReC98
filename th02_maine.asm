@@ -34,37 +34,7 @@ include libs/master.lib/bfnt_header_analysis.asm
 include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_506		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		cmp	word ptr es:2, 0
-		jz	short loc_52D
-		dec	word ptr es:2
-		mov	bx, es:4
-		inc	word ptr es:4
-		mov	al, es:[bx+8]
-		xor	ah, ah
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_52D:
-		push	es
-		push	cs
-		call	near ptr bfill
-		pop	bp
-		retf	2
-sub_506		endp
-
+include libs/master.lib/bgetc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -216,8 +186,7 @@ arg_6		= word ptr  0Ch
 
 loc_61C:
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_506
+		call	bgetc
 		inc	ah
 		jz	short loc_631
 		mov	es, [bp+arg_6]
@@ -2735,8 +2704,7 @@ loc_1DCB:
 		adc	word ptr es:14h, 0
 		push	es
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_506
+		call	bgetc
 		pop	es
 		retn
 sub_1DAE	endp

@@ -34,49 +34,7 @@ include libs/master.lib/bfnt_header_analysis.asm
 include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_506		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		cmp	word ptr es:2, 0
-		jz	short loc_52D
-		dec	word ptr es:2
-		mov	bx, es:4
-		inc	word ptr es:4
-		mov	al, es:[bx+8]
-		xor	ah, ah
-		pop	bp
-
-locret_52A:
-					; sub_CB68:loc_CC9Br
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_52D:
-		push	es
-
-loc_52E:
-		push	cs
-
-loc_52F:
-					; sub_CB68:loc_CCEBr ...
-		call	near ptr bfill
-
-loc_532:
-		pop	bp
-
-locret_533:
-		retf	2
-sub_506		endp
-
+include libs/master.lib/bgetc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -217,8 +175,7 @@ sub_5B8		endp
 
 loc_61C:
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_506
+		call	bgetc
 		inc	ah
 		jz	short loc_631
 		mov	es, word ptr [bp+0Ch]
@@ -1997,8 +1954,7 @@ loc_196F:
 		adc	word ptr es:14h, 0
 		push	es
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_506
+		call	bgetc
 		pop	es
 		retn
 sub_1952	endp
@@ -21354,10 +21310,9 @@ sub_CB68	proc far
 		mov	bl, 2
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
 
 loc_CB7E:
-		mov	ah, byte ptr es:loc_52F+2
+		mov	ah, byte ptr es:[531h]
 		test	ah, 4
 		jz	short loc_CB8D
 		or	word_100FC, 1
@@ -21380,7 +21335,7 @@ loc_CBA6:
 		or	word_100FC, 8
 
 loc_CBB5:
-		mov	ah, byte ptr es:locret_533
+		mov	ah, byte ptr es:[533h]
 		test	ah, 1
 		jz	short loc_CBC9
 		or	word_100FA, 8
@@ -21405,7 +21360,7 @@ loc_CBE9:
 		or	word_100FC, 800h
 
 loc_CBFA:
-		mov	ah, byte ptr es:loc_532
+		mov	ah, byte ptr es:[532h]
 		test	ah, 40h
 		jz	short loc_CC0E
 		or	word_100FA, 4
@@ -21430,7 +21385,7 @@ loc_CC2E:
 		or	word_100FC, 400h
 
 loc_CC3F:
-		mov	ah, byte ptr es:loc_52F
+		mov	ah, byte ptr es:[52Fh]
 		test	ah, 2
 		jz	short loc_CC53
 		or	word_100F8, 20h
@@ -21458,7 +21413,7 @@ loc_CC77:
 		or	word_100F8, 800h
 
 loc_CC82:
-		mov	ah, byte ptr es:loc_52E
+		mov	ah, byte ptr es:[52Eh]
 		test	ah, 1
 		jz	short loc_CC91
 		or	word_100F8, 4
@@ -21469,7 +21424,7 @@ loc_CC91:
 		or	word_100F8, 8
 
 loc_CC9B:
-		mov	ah, byte ptr es:locret_52A+2
+		mov	ah, byte ptr es:[52Ch]
 		test	ah, 8
 		jz	short loc_CCAB
 		or	word_100F8, 100h
@@ -21490,19 +21445,19 @@ loc_CCC0:
 		or	word_100FC, 4000h
 
 loc_CCCB:
-		mov	ah, byte ptr es:locret_52A
+		mov	ah, byte ptr es:[52Ah]
 		test	ah, 1
 		jz	short loc_CCDB
 		or	word_100FC, 1000h
 
 loc_CCDB:
-		mov	ah, byte ptr es:loc_52D
+		mov	ah, byte ptr es:[52Dh]
 		test	ah, 10h
 		jz	short loc_CCEB
 		or	word_100FC, 2000h
 
 loc_CCEB:
-		mov	ah, byte ptr es:loc_52F+1
+		mov	ah, byte ptr es:[530h]
 		test	ah, 10h
 		jz	short loc_CCFA
 		or	word_100FC, 20h
