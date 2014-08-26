@@ -162,42 +162,7 @@ sub_682		endp
 
 include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_748		proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_6]
-		mov	bx, 0
-		xchg	bx, es:2
-		mov	al, [bp+arg_0]
-		mov	dx, [bp+arg_2]
-		mov	cx, [bp+arg_4]
-		cmp	al, 1
-		jnz	short loc_768
-		sub	dx, bx
-		sbb	cx, 0
-
-loc_768:
-		mov	bx, es:0
-		mov	ah, 42h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		sbb	ax, ax
-		pop	bp
-		retf	8
-sub_748		endp
-
+include libs/master.lib/bseek_.asm
 include libs/master.lib/dos_axdx.asm
 include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_puts2.asm
@@ -1606,8 +1571,7 @@ arg_0		= word ptr  6
 		push	word ptr es:10h
 		push	word ptr es:0Eh
 		push	ax
-		push	cs
-		call	near ptr sub_748
+		call	bseek_
 		pop	bp
 		retf	2
 sub_1BF2	endp
@@ -3279,8 +3243,7 @@ loc_3A3A:
 		push	word ptr es:0
 		push	eax
 		push	0
-		push	cs
-		call	near ptr sub_748
+		call	bseek_
 		mov	ax, 1B72h
 		mov	dl, fs:[di+2]
 		or	dl, dl
