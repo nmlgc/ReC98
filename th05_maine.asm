@@ -2213,15 +2213,15 @@ sub_2320	proc far
 		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
-		mov	word_10606, 33FFh
+		mov	vsync_Delay, 33FFh
 		jz	short loc_233C
-		mov	word_10606, 0
+		mov	vsync_Delay, 0
 
 loc_233C:
 		xor	ax, ax
-		mov	word_11ECA, ax
-		mov	word_11ECC, ax
-		cmp	byte_10608, al
+		mov	vsync_Count1, ax
+		mov	vsync_Count2, ax
+		cmp	vsync_OldMask, al
 		jnz	short locret_2389
 		mov	al, 0Ah
 		push	ax
@@ -2229,8 +2229,8 @@ loc_233C:
 		mov	ax, 2394h
 		push	ax
 		nopcall	dos_setvect
-		mov	word_11ECE, ax
-		mov	word_11ED0, dx
+		mov	word ptr vsync_OldVect, ax
+		mov	word ptr vsync_OldVect+2, dx
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -2242,7 +2242,7 @@ loc_233C:
 					; (also	sets current address)
 		popf
 		or	ah, 0FBh
-		mov	byte_10608, ah
+		mov	vsync_OldMask, ah
 		mov	ax, 18h
 		push	ax
 		push	cs
@@ -2268,12 +2268,12 @@ sub_2320	endp
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		mov	ax, word_10606
+		mov	ax, vsync_Delay
 		add	word_11ED2, ax
 		jb	short loc_23C5
-		inc	word_11ECA
-		inc	word_11ECC
-		cmp	word_10604, 0
+		inc	vsync_Count1
+		inc	vsync_Count2
+		cmp	word ptr vsync_Proc+2, 0
 		jz	short loc_23C5
 		push	bx
 		push	cx
@@ -2282,7 +2282,7 @@ sub_2320	endp
 		push	di
 		push	es
 		cld
-		call	dword ptr unk_10602
+		call	vsync_Proc
 		pop	es
 		pop	di
 		pop	si
@@ -2303,7 +2303,7 @@ loc_23C5:
 
 
 sub_23CE	proc far
-		cmp	byte_10608, 0
+		cmp	vsync_OldMask, 0
 		jz	short locret_2414
 		mov	ax, 18h
 		push	ax
@@ -2321,21 +2321,21 @@ sub_23CE	proc far
 		popf
 		mov	ax, 0Ah
 		push	ax
-		push	word_11ED0
-		push	word_11ECE
+		push	word ptr vsync_OldVect+2
+		push	word ptr vsync_OldVect
 		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
-		and	al, byte_10608
+		and	al, vsync_OldMask
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
 		popf
 		out	64h, al		; AT Keyboard controller 8042.
 		xor	al, al
-		mov	byte_10608, al
+		mov	vsync_OldMask, al
 
 locret_2414:
 		retf
@@ -2348,7 +2348,7 @@ sub_23CE	endp
 
 
 sub_2416	proc far
-		cmp	byte_10608, 0
+		cmp	vsync_OldMask, 0
 		jnz	short loc_2432
 
 loc_241D:
@@ -2368,10 +2368,10 @@ loc_2427:
 ; ---------------------------------------------------------------------------
 
 loc_2432:
-		mov	ax, word_11ECA
+		mov	ax, vsync_Count1
 
 loc_2435:
-		cmp	ax, word_11ECA
+		cmp	ax, vsync_Count1
 		jz	short loc_2435
 		retf
 sub_2416	endp
@@ -24918,10 +24918,10 @@ loc_F220:
 		call	near ptr sub_F202
 		or	ax, ax
 		jnz	short loc_F238
-		mov	ax, word_11ECA
+		mov	ax, vsync_Count1
 
 loc_F22B:
-		cmp	ax, word_11ECA
+		cmp	ax, vsync_Count1
 		jz	short loc_F22B
 		or	bp, bp
 		jz	short loc_F220
@@ -25014,10 +25014,10 @@ sub_F25F	endp
 sub_F282	proc far
 		mov	bx, sp
 		mov	bx, ss:[bx+4]
-		mov	word_11ECA, 0
+		mov	vsync_Count1, 0
 
 loc_F28E:
-		cmp	word_11ECA, bx
+		cmp	vsync_Count1, bx
 		jb	short loc_F28E
 		retf	2
 sub_F282	endp
@@ -27549,12 +27549,7 @@ dword_10376	dd 1
 		db    0
 		db    1
 include libs/master.lib/tx[data].asm
-unk_10602	db    0
-		db    0
-word_10604	dw 0
-word_10606	dw 0
-byte_10608	db 0
-		db  90h	; ÅE
+include libs/master.lib/vs[data].asm
 		db 0FFh
 		db  7Fh	; 
 		db  3Fh	; ?
@@ -28661,10 +28656,7 @@ word_11E96	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[bss].asm
-word_11ECA	dw 0
-word_11ECC	dw 0
-word_11ECE	dw 0
-word_11ED0	dw 0
+include libs/master.lib/vs[bss].asm
 word_11ED2	dw 0
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm

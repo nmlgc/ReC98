@@ -1852,15 +1852,15 @@ sub_2110	proc far
 		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
-		mov	word_E930, 33FFh
+		mov	vsync_Delay, 33FFh
 		jz	short loc_212C
-		mov	word_E930, 0
+		mov	vsync_Delay, 0
 
 loc_212C:
 		xor	ax, ax
-		mov	word_F42A, ax
-		mov	word_F42C, ax
-		cmp	byte_E932, al
+		mov	vsync_Count1, ax
+		mov	vsync_Count2, ax
+		cmp	vsync_OldMask, al
 		jnz	short locret_2179
 		mov	al, 0Ah
 		push	ax
@@ -1868,8 +1868,8 @@ loc_212C:
 		mov	ax, 2184h
 		push	ax
 		nopcall	dos_setvect
-		mov	word_F42E, ax
-		mov	word_F430, dx
+		mov	word ptr vsync_OldVect, ax
+		mov	word ptr vsync_OldVect+2, dx
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -1881,7 +1881,7 @@ loc_212C:
 					; (also	sets current address)
 		popf
 		or	ah, 0FBh
-		mov	byte_E932, ah
+		mov	vsync_OldMask, ah
 		mov	ax, 18h
 		push	ax
 		push	cs
@@ -1907,12 +1907,12 @@ sub_2110	endp
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		mov	ax, word_E930
+		mov	ax, vsync_Delay
 		add	word_F432, ax
 		jb	short loc_21B5
-		inc	word_F42A
-		inc	word_F42C
-		cmp	word_E92E, 0
+		inc	vsync_Count1
+		inc	vsync_Count2
+		cmp	word ptr vsync_Proc+2, 0
 		jz	short loc_21B5
 		push	bx
 		push	cx
@@ -1921,7 +1921,7 @@ sub_2110	endp
 		push	di
 		push	es
 		cld
-		call	dword ptr unk_E92C
+		call	vsync_Proc
 		pop	es
 		pop	di
 		pop	si
@@ -1942,7 +1942,7 @@ loc_21B5:
 
 
 sub_21BE	proc far
-		cmp	byte_E932, 0
+		cmp	vsync_OldMask, 0
 		jz	short locret_2204
 		mov	ax, 18h
 		push	ax
@@ -1960,21 +1960,21 @@ sub_21BE	proc far
 		popf
 		mov	ax, 0Ah
 		push	ax
-		push	word_F430
-		push	word_F42E
+		push	word ptr vsync_OldVect+2
+		push	word ptr vsync_OldVect
 		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
-		and	al, byte_E932
+		and	al, vsync_OldMask
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
 		popf
 		out	64h, al		; AT Keyboard controller 8042.
 		xor	al, al
-		mov	byte_E932, al
+		mov	vsync_OldMask, al
 
 locret_2204:
 		retf
@@ -1987,7 +1987,7 @@ sub_21BE	endp
 
 
 sub_2206	proc far
-		cmp	byte_E932, 0
+		cmp	vsync_OldMask, 0
 		jnz	short loc_2222
 
 loc_220D:
@@ -2007,10 +2007,10 @@ loc_2217:
 ; ---------------------------------------------------------------------------
 
 loc_2222:
-		mov	ax, word_F42A
+		mov	ax, vsync_Count1
 
 loc_2225:
-		cmp	ax, word_F42A
+		cmp	ax, vsync_Count1
 		jz	short loc_2225
 		retf
 sub_2206	endp
@@ -16689,9 +16689,9 @@ loc_B2AF:
 		call	word_124C8
 
 loc_B2E8:
-		cmp	word_F42A, 2
+		cmp	vsync_Count1, 2
 		jb	short loc_B2E8
-		mov	word_F42A, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A4h ; '§'
 		mov	al, byte ptr [bp+var_2]
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16765,9 +16765,9 @@ loc_B339:
 		call	word_124C8
 
 loc_B375:
-		cmp	word_F42A, 2
+		cmp	vsync_Count1, 2
 		jb	short loc_B375
-		mov	word_F42A, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A4h ; '§'
 		mov	al, byte ptr [bp+var_2]
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16848,9 +16848,9 @@ loc_B3C7:
 		call	word_124C8
 
 loc_B416:
-		cmp	word_F42A, 2
+		cmp	vsync_Count1, 2
 		jb	short loc_B416
-		mov	word_F42A, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A4h ; '§'
 		mov	al, byte ptr [bp+var_2]
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19732,10 +19732,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_F42A, 0
+		mov	vsync_Count1, 0
 
 loc_CCAC:
-		mov	ax, word_F42A
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_CCAC
 		pop	bp
@@ -23439,12 +23439,7 @@ word_E8E4	dw 0B5h
 		db    0
 		db    1
 include libs/master.lib/tx[data].asm
-unk_E92C	db    0
-		db    0
-word_E92E	dw 0
-word_E930	dw 0
-byte_E932	db 0
-		db  90h	; ê
+include libs/master.lib/vs[data].asm
 		db 0FFh
 		db  7Fh	; 
 		db  3Fh	; ?
@@ -24284,10 +24279,7 @@ word_F3F6	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[bss].asm
-word_F42A	dw 0
-word_F42C	dw 0
-word_F42E	dw 0
-word_F430	dw 0
+include libs/master.lib/vs[bss].asm
 word_F432	dw 0
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm

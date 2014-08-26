@@ -2284,15 +2284,15 @@ sub_2552	proc far
 		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
-		mov	word_FB94, 33FFh
+		mov	vsync_Delay, 33FFh
 		jz	short loc_256E
-		mov	word_FB94, 0
+		mov	vsync_Delay, 0
 
 loc_256E:
 		xor	ax, ax
-		mov	word_10E06, ax
-		mov	word_10E08, ax
-		cmp	byte_FB96, al
+		mov	vsync_Count1, ax
+		mov	vsync_Count2, ax
+		cmp	vsync_OldMask, al
 		jnz	short locret_25BB
 		mov	al, 0Ah
 		push	ax
@@ -2300,8 +2300,8 @@ loc_256E:
 		mov	ax, 25C6h
 		push	ax
 		nopcall	dos_setvect
-		mov	word_10E0A, ax
-		mov	word_10E0C, dx
+		mov	word ptr vsync_OldVect, ax
+		mov	word ptr vsync_OldVect+2, dx
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -2313,7 +2313,7 @@ loc_256E:
 					; (also	sets current address)
 		popf
 		or	ah, 0FBh
-		mov	byte_FB96, ah
+		mov	vsync_OldMask, ah
 		mov	ax, 18h
 		push	ax
 		push	cs
@@ -2339,12 +2339,12 @@ sub_2552	endp
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		mov	ax, word_FB94
+		mov	ax, vsync_Delay
 		add	word_10E0E, ax
 		jb	short loc_25F7
-		inc	word_10E06
-		inc	word_10E08
-		cmp	word_FB92, 0
+		inc	vsync_Count1
+		inc	vsync_Count2
+		cmp	word ptr vsync_Proc+2, 0
 		jz	short loc_25F7
 		push	bx
 		push	cx
@@ -2353,7 +2353,7 @@ sub_2552	endp
 		push	di
 		push	es
 		cld
-		call	dword ptr unk_FB90
+		call	vsync_Proc
 		pop	es
 		assume es:nothing
 		pop	di
@@ -2375,7 +2375,7 @@ loc_25F7:
 
 
 sub_2600	proc far
-		cmp	byte_FB96, 0
+		cmp	vsync_OldMask, 0
 		jz	short locret_2646
 		mov	ax, 18h
 		push	ax
@@ -2393,21 +2393,21 @@ sub_2600	proc far
 		popf
 		mov	ax, 0Ah
 		push	ax
-		push	word_10E0C
-		push	word_10E0A
+		push	word ptr vsync_OldVect+2
+		push	word ptr vsync_OldVect
 		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
-		and	al, byte_FB96
+		and	al, vsync_OldMask
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
 		popf
 		out	64h, al		; AT Keyboard controller 8042.
 		xor	al, al
-		mov	byte_FB96, al
+		mov	vsync_OldMask, al
 
 locret_2646:
 		retf
@@ -2420,7 +2420,7 @@ sub_2600	endp
 
 
 sub_2648	proc far
-		cmp	byte_FB96, 0
+		cmp	vsync_OldMask, 0
 		jnz	short loc_2664
 
 loc_264F:
@@ -2440,10 +2440,10 @@ loc_2659:
 ; ---------------------------------------------------------------------------
 
 loc_2664:
-		mov	ax, word_10E06
+		mov	ax, vsync_Count1
 
 loc_2667:
-		cmp	ax, word_10E06
+		cmp	ax, vsync_Count1
 		jz	short loc_2667
 		retf
 sub_2648	endp
@@ -17884,9 +17884,9 @@ loc_BE15:
 		call	far ptr	sub_E1DC
 
 loc_BE22:
-		cmp	word_10E06, 2
+		cmp	vsync_Count1, 2
 		jb	short loc_BE22
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, [bp+var_1]
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -21068,7 +21068,7 @@ loc_D816:
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_D3A2
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B
 		mov	dx, 0A4h ; '§'
@@ -21076,7 +21076,7 @@ loc_D816:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
 		call	sub_156C
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B
 		mov	dx, 0A4h ; '§'
@@ -21193,7 +21193,7 @@ loc_D939:
 		mov	ah, 0
 		push	ax
 		call	sub_D465
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B
 		mov	dx, 0A4h ; '§'
@@ -21201,7 +21201,7 @@ loc_D939:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
 		call	sub_156C
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B
 		mov	dx, 0A4h ; '§'
@@ -21314,10 +21314,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 
 loc_DA44:
-		mov	ax, word_10E06
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_DA44
 		pop	bp
@@ -23148,10 +23148,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_10E06, 0
+		mov	vsync_Count1, 0
 
 loc_E6E7:
-		mov	ax, word_10E06
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_E6E7
 		pop	bp
@@ -25282,12 +25282,7 @@ word_F906	dw 0
 		db    0
 		db    1
 include libs/master.lib/tx[data].asm
-unk_FB90	db    0
-		db    0
-word_FB92	dw 0
-word_FB94	dw 0
-byte_FB96	db 0
-		db  90h	; ê
+include libs/master.lib/vs[data].asm
 		db 0FFh
 		db  7Fh	; 
 		db  3Fh	; ?
@@ -26061,10 +26056,7 @@ word_10DD2	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[bss].asm
-word_10E06	dw 0
-word_10E08	dw 0
-word_10E0A	dw 0
-word_10E0C	dw 0
+include libs/master.lib/vs[bss].asm
 word_10E0E	dw 0
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm

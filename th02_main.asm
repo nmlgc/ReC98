@@ -3360,15 +3360,15 @@ sub_2740	proc far
 		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
-		mov	word_1E2C6, 33FFh
+		mov	vsync_Delay, 33FFh
 		jz	short loc_275C
-		mov	word_1E2C6, 0
+		mov	vsync_Delay, 0
 
 loc_275C:
 		xor	ax, ax
-		mov	word_1F538, ax
-		mov	word_1F53A, ax
-		cmp	byte_1E2C8, al
+		mov	vsync_Count1, ax
+		mov	vsync_Count2, ax
+		cmp	vsync_OldMask, al
 		jnz	short locret_27A9
 		mov	al, 0Ah
 		push	ax
@@ -3376,8 +3376,8 @@ loc_275C:
 		mov	ax, 27B4h
 		push	ax
 		nopcall	dos_setvect
-		mov	word_1F53C, ax
-		mov	word_1F53E, dx
+		mov	word ptr vsync_OldVect, ax
+		mov	word ptr vsync_OldVect+2, dx
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -3389,7 +3389,7 @@ loc_275C:
 					; (also	sets current address)
 		popf
 		or	ah, 0FBh
-		mov	byte_1E2C8, ah
+		mov	vsync_OldMask, ah
 		mov	ax, 18h
 		push	ax
 		push	cs
@@ -3426,12 +3426,12 @@ sub_27B4	proc far
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		mov	ax, word_1E2C6
+		mov	ax, vsync_Delay
 		add	word_1F540, ax
 		jb	short loc_27E5
-		inc	word_1F538
-		inc	word_1F53A
-		cmp	word_1E2C4, 0
+		inc	vsync_Count1
+		inc	vsync_Count2
+		cmp	word ptr vsync_Proc+2, 0
 		jz	short loc_27E5
 		push	bx
 		push	cx
@@ -3440,7 +3440,7 @@ sub_27B4	proc far
 		push	di
 		push	es
 		cld
-		call	dword ptr unk_1E2C2
+		call	vsync_Proc
 		pop	es
 		pop	di
 		pop	si
@@ -3463,7 +3463,7 @@ sub_27B4	endp
 
 
 sub_27EE	proc far
-		cmp	byte_1E2C8, 0
+		cmp	vsync_OldMask, 0
 		jz	short locret_2834
 		mov	ax, 18h
 		push	ax
@@ -3481,21 +3481,21 @@ sub_27EE	proc far
 		popf
 		mov	ax, 0Ah
 		push	ax
-		push	word_1F53E
-		push	word_1F53C
+		push	word ptr vsync_OldVect+2
+		push	word ptr vsync_OldVect
 		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
-		and	al, byte_1E2C8
+		and	al, vsync_OldMask
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
 		popf
 		out	64h, al		; AT Keyboard controller 8042.
 		xor	al, al
-		mov	byte_1E2C8, al
+		mov	vsync_OldMask, al
 
 locret_2834:
 		retf
@@ -3508,7 +3508,7 @@ sub_27EE	endp
 
 
 sub_2836	proc far
-		cmp	byte_1E2C8, 0
+		cmp	vsync_OldMask, 0
 		jnz	short loc_2852
 
 loc_283D:
@@ -3528,10 +3528,10 @@ loc_2847:
 ; ---------------------------------------------------------------------------
 
 loc_2852:
-		mov	ax, word_1F538
+		mov	ax, vsync_Count1
 
 loc_2855:
-		cmp	ax, word_1F538
+		cmp	ax, vsync_Count1
 		jz	short loc_2855
 		retf
 sub_2836	endp
@@ -19387,7 +19387,7 @@ var_C		= byte ptr -0Ch
 		lea	ax, [bp+var_C]
 		push	ax
 		call	sub_B396
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 		call	sub_BF7B
 		push	0
 		call	sub_1DD4
@@ -19723,7 +19723,7 @@ loc_B8AF:
 		call	sub_DCD1
 
 loc_B8B5:
-		cmp	word_1F538, 64h	; 'd'
+		cmp	vsync_Count1, 64h	; 'd'
 		jb	short loc_B8B5
 		push	large 40001h
 		push	large 330017h
@@ -20343,15 +20343,15 @@ loc_BEE0:
 					; sub_BCB1+229j
 		cmp	byte_2066D, 1
 		jnz	short loc_BEED
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 
 loc_BEED:
 					; sub_BCB1+245j
 		mov	al, byte_2066D
 		mov	ah, 0
-		cmp	ax, word_1F538
+		cmp	ax, vsync_Count1
 		ja	short loc_BEED
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 		mov	al, byte_20618
 		mov	byte_20619, al
 		out	0A4h, al	; Interrupt Controller #2, 8259A
@@ -27608,10 +27608,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 
 loc_F621:
-		mov	ax, word_1F538
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_F621
 		pop	bp
@@ -47728,7 +47728,7 @@ sub_199B3	proc far
 		push	offset aMima_bft ; "mima.bft"
 		call	super_entry_bfnt
 		call	sub_13328
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 		push	0Ah
 		call	sub_F618
 		call	sub_1A529
@@ -49168,7 +49168,7 @@ sub_1A6C5	proc near
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_15DA
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 		push	1
 		call	sub_F618
 		push	0
@@ -49262,7 +49262,7 @@ sub_1A7D5	proc far
 		push	offset aMima_bft_0 ; "mima.bft"
 		call	super_entry_bfnt
 		call	sub_1315B
-		mov	word_1F538, 0
+		mov	vsync_Count1, 0
 		push	0Ah
 		call	sub_F618
 		call	sub_1A529
@@ -56204,12 +56204,7 @@ include libs/master.lib/tx[data].asm
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
 		db 'man,iR,All rights reserved.',0
 		db 0
-unk_1E2C2	db    0
-		db    0
-word_1E2C4	dw 0
-word_1E2C6	dw 0
-byte_1E2C8	db 0
-		db  90h	; ê
+include libs/master.lib/vs[data].asm
 		db 0FFh
 		db  7Fh	; 
 		db  3Fh	; ?
@@ -59162,10 +59157,7 @@ word_1F502	dw ?
 word_1F504	dw ?
 word_1F506	dw ?
 include libs/master.lib/pal[bss].asm
-word_1F538	dw ?
-word_1F53A	dw ?
-word_1F53C	dw ?
-word_1F53E	dw ?
+include libs/master.lib/vs[bss].asm
 word_1F540	dw ?
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm

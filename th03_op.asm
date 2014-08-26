@@ -2501,15 +2501,15 @@ sub_22CA	proc far
 		call	near ptr graph_extmode
 		and	ax, 0Ch
 		cmp	ax, 0Ch
-		mov	word_DD92, 33FFh
+		mov	vsync_Delay, 33FFh
 		jz	short loc_22E6
-		mov	word_DD92, 0
+		mov	vsync_Delay, 0
 
 loc_22E6:
 		xor	ax, ax
-		mov	word_E9D8, ax
-		mov	word_E9DA, ax
-		cmp	byte_DD94, al
+		mov	vsync_Count1, ax
+		mov	vsync_Count2, ax
+		cmp	vsync_OldMask, al
 		jnz	short locret_2333
 		mov	al, 0Ah
 		push	ax
@@ -2517,8 +2517,8 @@ loc_22E6:
 		mov	ax, offset sub_233E
 		push	ax
 		nopcall	dos_setvect
-		mov	word_E9DC, ax
-		mov	word_E9DE, dx
+		mov	word ptr vsync_OldVect, ax
+		mov	word ptr vsync_OldVect+2, dx
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
@@ -2530,7 +2530,7 @@ loc_22E6:
 					; (also	sets current address)
 		popf
 		or	ah, 0FBh
-		mov	byte_DD94, ah
+		mov	vsync_OldMask, ah
 		mov	ax, 18h
 		push	ax
 		push	cs
@@ -2567,12 +2567,12 @@ sub_233E	proc far
 		push	ds
 		mov	ax, seg	dseg
 		mov	ds, ax
-		mov	ax, word_DD92
+		mov	ax, vsync_Delay
 		add	word_E9E0, ax
 		jb	short loc_236F
-		inc	word_E9D8
-		inc	word_E9DA
-		cmp	word_DD90, 0
+		inc	vsync_Count1
+		inc	vsync_Count2
+		cmp	word ptr vsync_Proc+2, 0
 		jz	short loc_236F
 		push	bx
 		push	cx
@@ -2581,7 +2581,7 @@ sub_233E	proc far
 		push	di
 		push	es
 		cld
-		call	dword ptr unk_DD8E
+		call	vsync_Proc
 		pop	es
 		pop	di
 		pop	si
@@ -2604,7 +2604,7 @@ sub_233E	endp
 
 
 sub_2378	proc far
-		cmp	byte_DD94, 0
+		cmp	vsync_OldMask, 0
 		jz	short locret_23BE
 		mov	ax, 18h
 		push	ax
@@ -2622,21 +2622,21 @@ sub_2378	proc far
 		popf
 		mov	ax, 0Ah
 		push	ax
-		push	word_E9DE
-		push	word_E9DC
+		push	word ptr vsync_OldVect+2
+		push	word ptr vsync_OldVect
 		nopcall	dos_setvect
 		pushf
 		cli
 		in	al, 2		; DMA controller, 8237A-5.
 					; channel 1 current address
-		and	al, byte_DD94
+		and	al, vsync_OldMask
 		out	2, al		; DMA controller, 8237A-5.
 					; channel 1 base address
 					; (also	sets current address)
 		popf
 		out	64h, al		; AT Keyboard controller 8042.
 		xor	al, al
-		mov	byte_DD94, al
+		mov	vsync_OldMask, al
 
 locret_23BE:
 		retf
@@ -2649,7 +2649,7 @@ sub_2378	endp
 
 
 sub_23C0	proc far
-		cmp	byte_DD94, 0
+		cmp	vsync_OldMask, 0
 		jnz	short loc_23DC
 
 loc_23C7:
@@ -2669,10 +2669,10 @@ loc_23D1:
 ; ---------------------------------------------------------------------------
 
 loc_23DC:
-		mov	ax, word_E9D8
+		mov	ax, vsync_Count1
 
 loc_23DF:
-		cmp	ax, word_E9D8
+		cmp	ax, vsync_Count1
 		jz	short loc_23DF
 		retf
 sub_23C0	endp
@@ -17864,11 +17864,11 @@ loc_AF09:
 loc_AF25:
 		cmp	[bp+var_2], 0FFh
 		jl	short loc_AF09
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 		call	sub_B3EF
 
 loc_AF35:
-		cmp	word_E9D8, 10h
+		cmp	vsync_Count1, 10h
 		jb	short loc_AF35
 		xor	si, si
 		jmp	short loc_AF65
@@ -18599,7 +18599,7 @@ sub_B424	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 		push	100h
 		call	sub_C403
 		push	600h
@@ -18654,7 +18654,7 @@ loc_B4BC:
 		jl	short loc_B4A6
 
 loc_B4C1:
-		cmp	word_E9D8, 1Eh
+		cmp	vsync_Count1, 1Eh
 		jb	short loc_B4C1
 		mov	word_FC66, 8
 		call	sub_B35D
@@ -19550,9 +19550,9 @@ loc_BBB0:
 
 loc_BBB7:
 					; sub_BA88+106j ...
-		cmp	word_E9D8, 3
+		cmp	vsync_Count1, 3
 		jb	short loc_BBB7
-		cmp	word_E9D8, 4
+		cmp	vsync_Count1, 4
 		jbe	short loc_BBD0
 		cmp	word_FC66, 1
 		jle	short loc_BBD0
@@ -19560,7 +19560,7 @@ loc_BBB7:
 
 loc_BBD0:
 					; sub_BA88+142j
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_FC5C
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19710,9 +19710,9 @@ loc_BD22:
 		ja	short loc_BD8A
 
 loc_BD29:
-		cmp	word_E9D8, 3
+		cmp	vsync_Count1, 3
 		jb	short loc_BD29
-		cmp	word_E9D8, 4
+		cmp	vsync_Count1, 4
 		jbe	short loc_BD42
 		cmp	word_FC66, 1
 		jle	short loc_BD42
@@ -19720,7 +19720,7 @@ loc_BD29:
 
 loc_BD42:
 					; sub_BC1F+11Dj
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_FC5C
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19833,16 +19833,16 @@ loc_BE48:
 		ja	short loc_BEB0
 
 loc_BE4F:
-		cmp	word_E9D8, 3
+		cmp	vsync_Count1, 3
 		jb	short loc_BE4F
-		cmp	word_E9D8, 4
+		cmp	vsync_Count1, 4
 		jbe	short loc_BE68
 		cmp	word_FC66, 1
 		jle	short loc_BE68
 		dec	word_FC66
 
 loc_BE68:
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_FC5C
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20326,10 +20326,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 
 loc_C1A7:
-		mov	ax, word_E9D8
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_C1A7
 		pop	bp
@@ -21629,10 +21629,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	word_E9D8, 0
+		mov	vsync_Count1, 0
 
 loc_CB8F:
-		mov	ax, word_E9D8
+		mov	ax, vsync_Count1
 		cmp	ax, [bp+arg_0]
 		jb	short loc_CB8F
 		pop	bp
@@ -23774,12 +23774,7 @@ dword_DB02	dd 1
 		db    0
 		db    1
 include libs/master.lib/tx[data].asm
-unk_DD8E	db    0
-		db    0
-word_DD90	dw 0
-word_DD92	dw 0
-byte_DD94	db 0
-		db  90h	; ê
+include libs/master.lib/vs[data].asm
 		db 0FFh
 		db  7Fh	; 
 		db  3Fh	; ?
@@ -24665,10 +24660,7 @@ word_E9A4	dw ?
 		db ?
 		db    ?	;
 include libs/master.lib/pal[bss].asm
-word_E9D8	dw ?
-word_E9DA	dw ?
-word_E9DC	dw ?
-word_E9DE	dw ?
+include libs/master.lib/vs[bss].asm
 word_E9E0	dw ?
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
