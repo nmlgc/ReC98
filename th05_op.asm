@@ -1694,150 +1694,7 @@ sub_20EA	endp
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db 0
-dword_215E	dd 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2162	proc far
-		xor	ax, ax
-		push	ax
-		push	ax
-		push	cs
-		call	near ptr graph_extmode
-		and	ax, 0Ch
-		cmp	ax, 0Ch
-		mov	vsync_Delay, 33FFh
-		jz	short loc_217E
-		mov	vsync_Delay, 0
-
-loc_217E:
-		xor	ax, ax
-		mov	vsync_Count1, ax
-		mov	vsync_Count2, ax
-		cmp	vsync_OldMask, al
-		jnz	short locret_21CB
-		mov	al, 0Ah
-		push	ax
-		push	cs
-		mov	ax, 21D6h
-		push	ax
-		nopcall	dos_setvect
-		mov	word ptr vsync_OldVect, ax
-		mov	word ptr vsync_OldVect+2, dx
-		pushf
-		cli
-		in	al, 2		; DMA controller, 8237A-5.
-					; channel 1 current address
-		mov	ah, al
-		and	al, 0FBh
-		out	2, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		popf
-		or	ah, 0FBh
-		mov	vsync_OldMask, ah
-		mov	ax, 18h
-		push	ax
-		push	cs
-		mov	ax, 21CCh
-		push	ax
-		nopcall	dos_setvect
-		mov	word ptr cs:dword_215E,	ax
-		mov	word ptr cs:dword_215E+2, dx
-		out	64h, al		; AT Keyboard controller 8042.
-
-locret_21CB:
-		retf
-sub_2162	endp
-
-; ---------------------------------------------------------------------------
-		pushf
-		call	cs:dword_215E
-		out	64h, al		; AT Keyboard controller 8042.
-		iret
-; ---------------------------------------------------------------------------
-		nop
-		push	ax
-		push	ds
-		mov	ax, seg	dseg
-		mov	ds, ax
-		mov	ax, vsync_Delay
-		add	word_11E36, ax
-		jb	short loc_2207
-		inc	vsync_Count1
-		inc	vsync_Count2
-		cmp	word ptr vsync_Proc+2, 0
-		jz	short loc_2207
-		push	bx
-		push	cx
-		push	dx
-		push	si
-		push	di
-		push	es
-		cld
-		call	vsync_Proc
-		pop	es
-		assume es:nothing
-		pop	di
-		pop	si
-		pop	dx
-		pop	cx
-		pop	bx
-		cli
-
-loc_2207:
-		pop	ds
-		mov	al, 20h	; ' '
-		out	0, al
-		out	64h, al		; AT Keyboard controller 8042.
-		pop	ax
-		iret
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2210	proc far
-		cmp	vsync_OldMask, 0
-		jz	short locret_2256
-		mov	ax, 18h
-		push	ax
-		push	word ptr cs:dword_215E+2
-		push	word ptr cs:dword_215E
-		nopcall	dos_setvect
-		pushf
-		cli
-		in	al, 2		; DMA controller, 8237A-5.
-					; channel 1 current address
-		or	al, 4
-		out	2, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		popf
-		mov	ax, 0Ah
-		push	ax
-		push	word ptr vsync_OldVect+2
-		push	word ptr vsync_OldVect
-		nopcall	dos_setvect
-		pushf
-		cli
-		in	al, 2		; DMA controller, 8237A-5.
-					; channel 1 current address
-		and	al, vsync_OldMask
-		out	2, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		popf
-		out	64h, al		; AT Keyboard controller 8042.
-		xor	al, al
-		mov	vsync_OldMask, al
-
-locret_2256:
-		retf
-sub_2210	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/vsync.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21274,7 +21131,7 @@ sub_D7EC	proc far
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_24CE
-		call	sub_2210
+		call	vsync_end
 		call	text_clear
 		call	js_end
 		call	egc_start
@@ -22319,7 +22176,7 @@ loc_DF27:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	word_F566, 2000h
-		call	sub_2162
+		call	vsync_start
 		call	key_beep_off
 		call	text_systemline_hide
 		call	text_cursor_hide
@@ -26498,7 +26355,7 @@ word_11DFA	dw 0
 		db    0
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
-word_11E36	dw 0
+include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 word_12640	dw 0
