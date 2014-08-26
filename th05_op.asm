@@ -45,9 +45,7 @@ sub_600		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0
-		nop
-		push	cs
-		call	near ptr sub_2258
+		nopcall	vsync_wait
 
 loc_613:
 		nopcall	palette_show
@@ -56,9 +54,7 @@ loc_613:
 		jle	short loc_627
 
 loc_61F:
-		nop
-		push	cs
-		call	near ptr sub_2258
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_61F
 
@@ -85,9 +81,7 @@ sub_644		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_2258
+		nopcall	vsync_wait
 
 loc_657:
 		nopcall	palette_show
@@ -96,9 +90,7 @@ loc_657:
 		jle	short loc_66B
 
 loc_663:
-		nop
-		push	cs
-		call	near ptr sub_2258
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_663
 
@@ -1695,39 +1687,7 @@ include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db 0
 include libs/master.lib/vsync.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2258	proc far
-		cmp	vsync_OldMask, 0
-		jnz	short loc_2274
-
-loc_225F:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_225F
-
-loc_2269:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_2269
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2274:
-		mov	ax, vsync_Count1
-
-loc_2277:
-		cmp	ax, vsync_Count1
-		jz	short loc_2277
-		retf
-sub_2258	endp
-
+include libs/master.lib/vsync_wait.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm

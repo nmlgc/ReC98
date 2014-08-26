@@ -44,9 +44,7 @@ loc_536:
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0
-		nop
-		push	cs
-		call	near ptr sub_268C
+		nopcall	vsync_wait
 
 loc_549:
 		nop
@@ -60,9 +58,7 @@ byte_54D	db 17h
 		jle	short loc_55D
 
 loc_555:
-		nop
-		push	cs
-		call	near ptr sub_268C
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_555
 
@@ -87,9 +83,7 @@ sub_57A		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_268C
+		nopcall	vsync_wait
 
 loc_58D:
 		nopcall	palette_show
@@ -98,9 +92,7 @@ loc_58D:
 		jle	short loc_5A1
 
 loc_599:
-		nop
-		push	cs
-		call	near ptr sub_268C
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_599
 
@@ -2767,39 +2759,7 @@ loc_257F:
 sub_2520	endp
 
 include libs/master.lib/vsync.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_268C	proc far
-		cmp	vsync_OldMask, 0
-		jnz	short loc_26A8
-
-loc_2693:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_2693
-
-loc_269D:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_269D
-		retf
-; ---------------------------------------------------------------------------
-
-loc_26A8:
-		mov	ax, vsync_Count1
-
-loc_26AB:
-		cmp	ax, vsync_Count1
-		jz	short loc_26AB
-		retf
-sub_268C	endp
-
+include libs/master.lib/vsync_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2810,8 +2770,7 @@ sub_26B2	proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0C8h	; 'È'
-		push	cs
-		call	near ptr sub_268C
+		call	vsync_wait
 
 loc_26C4:
 		call	palette_show
@@ -2820,8 +2779,7 @@ loc_26C4:
 		jle	short loc_26D6
 
 loc_26CF:
-		push	cs
-		call	near ptr sub_268C
+		call	vsync_wait
 		dec	di
 		jnz	short loc_26CF
 

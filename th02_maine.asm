@@ -45,9 +45,7 @@ sub_536		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0
-		nop
-		push	cs
-		call	near ptr sub_2434
+		nopcall	vsync_wait
 
 loc_549:
 		nopcall	palette_show
@@ -56,9 +54,7 @@ loc_549:
 		jle	short loc_55D
 
 loc_555:
-		nop
-		push	cs
-		call	near ptr sub_2434
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_555
 
@@ -86,9 +82,7 @@ sub_57A		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_2434
+		nopcall	vsync_wait
 
 loc_58D:
 		nopcall	palette_show
@@ -97,9 +91,7 @@ loc_58D:
 		jle	short loc_5A1
 
 loc_599:
-		nop
-		push	cs
-		call	near ptr sub_2434
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_599
 
@@ -2755,39 +2747,7 @@ include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/vsync.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2434	proc far
-		cmp	vsync_OldMask, 0
-		jnz	short loc_2450
-
-loc_243B:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_243B
-
-loc_2445:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_2445
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2450:
-		mov	ax, vsync_Count1
-
-loc_2453:
-		cmp	ax, vsync_Count1
-		jz	short loc_2453
-		retf
-sub_2434	endp
-
+include libs/master.lib/vsync_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2798,8 +2758,7 @@ sub_245A	proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0C8h	; 'È'
-		push	cs
-		call	near ptr sub_2434
+		call	vsync_wait
 
 loc_246C:
 		call	palette_show
@@ -2808,8 +2767,7 @@ loc_246C:
 		jle	short loc_247E
 
 loc_2477:
-		push	cs
-		call	near ptr sub_2434
+		call	vsync_wait
 		dec	di
 		jnz	short loc_2477
 
@@ -2836,8 +2794,7 @@ sub_249A	proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		push	cs
-		call	near ptr sub_2434
+		call	vsync_wait
 
 loc_24AC:
 		call	palette_show
@@ -2846,8 +2803,7 @@ loc_24AC:
 		jle	short loc_24BE
 
 loc_24B7:
-		push	cs
-		call	near ptr sub_2434
+		call	vsync_wait
 		dec	di
 		jnz	short loc_24B7
 

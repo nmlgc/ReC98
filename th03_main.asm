@@ -45,9 +45,7 @@ sub_536		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h	; 'd'
-		nop
-		push	cs
-		call	near ptr sub_21F2
+		nopcall	vsync_wait
 
 loc_549:
 		nopcall	palette_show
@@ -56,9 +54,7 @@ loc_549:
 		jle	short loc_55D
 
 loc_555:
-		nop
-		push	cs
-		call	near ptr sub_21F2
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_555
 
@@ -2934,39 +2930,7 @@ loc_20E5:
 sub_2086	endp
 
 include libs/master.lib/vsync.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21F2	proc far
-		cmp	vsync_OldMask, 0
-		jnz	short loc_220E
-
-loc_21F9:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_21F9
-
-loc_2203:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_2203
-		retf
-; ---------------------------------------------------------------------------
-
-loc_220E:
-		mov	ax, vsync_Count1
-
-loc_2211:
-		cmp	ax, vsync_Count1
-		jz	short loc_2211
-		retf
-sub_21F2	endp
-
+include libs/master.lib/vsync_wait.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm

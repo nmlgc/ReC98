@@ -46,9 +46,7 @@ sub_536		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0
-		nop
-		push	cs
-		call	near ptr sub_2064
+		nopcall	vsync_wait
 
 loc_549:
 		nopcall	palette_show
@@ -57,9 +55,7 @@ loc_549:
 		jle	short loc_55D
 
 loc_555:
-		nop
-		push	cs
-		call	near ptr sub_2064
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_555
 
@@ -87,9 +83,7 @@ sub_57A		proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_2064
+		nopcall	vsync_wait
 
 loc_58D:
 		nopcall	palette_show
@@ -98,9 +92,7 @@ loc_58D:
 		jle	short loc_5A1
 
 loc_599:
-		nop
-		push	cs
-		call	near ptr sub_2064
+		nopcall	vsync_wait
 		dec	di
 		jnz	short loc_599
 
@@ -2069,39 +2061,7 @@ sub_1F0C	endp
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/vsync.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2064	proc far
-		cmp	vsync_OldMask, 0
-		jnz	short loc_2080
-
-loc_206B:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_206B
-
-loc_2075:
-		jmp	short $+2
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_2075
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2080:
-		mov	ax, vsync_Count1
-
-loc_2083:
-		cmp	ax, vsync_Count1
-		jz	short loc_2083
-		retf
-sub_2064	endp
-
+include libs/master.lib/vsync_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2113,8 +2073,7 @@ sub_208A	proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 0C8h	; 'È'
-		push	cs
-		call	near ptr sub_2064
+		call	vsync_wait
 
 loc_209C:
 		call	palette_show
@@ -2123,8 +2082,7 @@ loc_209C:
 		jle	short loc_20AE
 
 loc_20A7:
-		push	cs
-		call	near ptr sub_2064
+		call	vsync_wait
 		dec	di
 		jnz	short loc_20A7
 
@@ -2152,8 +2110,7 @@ sub_20CA	proc far
 		push	di
 		mov	si, ss:[bx+4]
 		mov	PaletteTone, 64h ; 'd'
-		push	cs
-		call	near ptr sub_2064
+		call	vsync_wait
 
 loc_20DC:
 		call	palette_show
@@ -2162,8 +2119,7 @@ loc_20DC:
 		jle	short loc_20EE
 
 loc_20E7:
-		push	cs
-		call	near ptr sub_2064
+		call	vsync_wait
 		dec	di
 		jnz	short loc_20E7
 
