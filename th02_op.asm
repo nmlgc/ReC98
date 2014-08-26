@@ -35,44 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; ---------------------------------------------------------------------------
-
-loc_536:
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_549:
-		nop
-		push	cs
-; ---------------------------------------------------------------------------
-		db 0E8h, 0BCh
-byte_54D	db 17h
-; ---------------------------------------------------------------------------
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_55D
-
-loc_555:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_555
-
-loc_55D:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jl	short loc_549
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1815,8 +1778,7 @@ sub_1208	proc far
 		mov	word_D828, ax
 		mov	word_D82E, ax
 		mov	es, ax
-		assume es:seg000
-		mov	ah, es:byte_54D
+		mov	ah, es:[54Dh]
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
@@ -19352,7 +19314,7 @@ loc_BCBA:
 		push	cs
 		call	near ptr sub_BAFC
 		push	2
-		call	far ptr	loc_536
+		call	palette_black_in
 		pop	bp
 		retf
 sub_BBC0	endp

@@ -36,42 +36,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_622		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_635:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_649
-
-loc_641:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_641
-
-loc_649:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jl	short loc_635
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_622		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14414,7 +14379,7 @@ loc_A187:
 		push	0
 		call	sub_11C2
 		push	1
-		call	sub_622
+		call	palette_black_in
 		push	0
 		call	sub_CE7A
 		push	4
@@ -14458,7 +14423,7 @@ loc_A1FE:
 		push	0
 		call	sub_11C2
 		push	1
-		call	sub_622
+		call	palette_black_in
 		push	0
 		call	sub_CE7A
 		push	4
@@ -15507,7 +15472,7 @@ loc_AA55:
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_AA78
 		push	[bp+var_2]
-		call	sub_622
+		call	palette_black_in
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -16725,7 +16690,7 @@ sub_B44D	proc near
 		push	0
 		call	sub_CF8C
 		push	0Ch
-		call	sub_622
+		call	palette_black_in
 		push	0
 		push	ds
 		push	offset aSff1_cdg ; "sff1.cdg"
@@ -16808,7 +16773,7 @@ sub_B44D	proc near
 		call	sub_11C2
 		call	sub_D626
 		push	4
-		call	sub_622
+		call	palette_black_in
 		push	2
 		push	ds
 		push	offset aSff4_cdg ; "sff4.cdg"
@@ -17927,7 +17892,7 @@ sub_C0F8	proc near
 		push	0
 		call	sub_11C2
 		push	4
-		call	sub_622
+		call	palette_black_in
 		call	sub_BB81
 		pop	bp
 		retn
@@ -19105,7 +19070,7 @@ loc_C95E:
 		push	0
 		call	sub_CF8C
 		push	2
-		call	sub_622
+		call	palette_black_in
 		cmp	byte_125B6, 0FFh
 		jz	loc_CB7F
 		mov	[bp+var_6], 0

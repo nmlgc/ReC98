@@ -35,43 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_600		proc far
-					; sub_C1DD+153P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_613:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_627
-
-loc_61F:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_61F
-
-loc_627:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h	; 'd'
-		jl	short loc_613
-		mov	PaletteTone, 64h	; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_600		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15916,7 +15880,7 @@ loc_ABF3:
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_AC16
 		push	[bp+var_2]
-		call	sub_600
+		call	palette_black_in
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -18903,7 +18867,7 @@ loc_C307:
 		push	0
 		call	sub_EE18
 		push	2
-		call	sub_600
+		call	palette_black_in
 		cmp	byte_15176, 0FFh
 		jz	loc_C5C3
 		mov	al, byte_15176
@@ -20528,7 +20492,7 @@ sub_D1B1	proc near
 		push	0
 		call	sub_133C
 		push	4
-		call	sub_600
+		call	palette_black_in
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

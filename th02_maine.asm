@@ -35,42 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_536		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_549:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_55D
-
-loc_555:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_555
-
-loc_55D:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jl	short loc_549
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_536		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15725,7 +15690,7 @@ sub_9B64	proc near
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	2
-		call	sub_536
+		call	palette_black_in
 		push	28h ; '('
 		call	sub_B520
 		push	0
@@ -15745,7 +15710,7 @@ sub_9B64	proc near
 		push	1
 		call	sub_98B5
 		push	1
-		call	sub_536
+		call	palette_black_in
 		mov	si, 1
 		jmp	short loc_9C2D
 ; ---------------------------------------------------------------------------
@@ -15992,7 +15957,7 @@ loc_9E3B:
 					; sub_9B64+2D3j
 		call	sub_98B5
 		push	2
-		call	sub_536
+		call	palette_black_in
 		mov	byte_F02A, 26h ; '&'
 		push	large 90014Ch
 		push	2Ch ; ','
@@ -16284,7 +16249,7 @@ sub_A09D	proc near
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	2
-		call	sub_536
+		call	palette_black_in
 		push	28h ; '('
 		call	sub_B520
 		push	0
@@ -16323,7 +16288,7 @@ sub_A09D	proc near
 		push	0
 		call	sub_98B5
 		push	1
-		call	sub_536
+		call	palette_black_in
 		mov	si, 1
 		jmp	short loc_A19D
 ; ---------------------------------------------------------------------------
@@ -16457,7 +16422,7 @@ loc_A247:
 		push	0
 		call	sub_98B5
 		push	2
-		call	sub_536
+		call	palette_black_in
 		mov	byte_F02A, 2Fh ; '/'
 		push	large 90014Ch
 		push	2Ch ; ','
@@ -16676,7 +16641,7 @@ loc_A451:
 		push	0
 		call	sub_98B5
 		push	2
-		call	sub_536
+		call	palette_black_in
 		mov	si, 28h	; '('
 		jmp	short loc_A4D3
 ; ---------------------------------------------------------------------------
@@ -16845,7 +16810,7 @@ loc_A620:
 		push	1
 		call	sub_98B5
 		push	2
-		call	sub_536
+		call	palette_black_in
 		mov	si, 43h	; 'C'
 		jmp	short loc_A68C
 ; ---------------------------------------------------------------------------
@@ -16999,7 +16964,7 @@ loc_A6B6:
 		push	2
 		call	sub_98B5
 		push	2
-		call	sub_536
+		call	palette_black_in
 		mov	si, 54h	; 'T'
 		jmp	short loc_A842
 ; ---------------------------------------------------------------------------
@@ -17479,7 +17444,7 @@ loc_A992:
 		push	0
 		call	sub_1276
 		push	4
-		call	sub_536
+		call	palette_black_in
 		push	64h ; 'd'
 		call	sub_B520
 		mov	dx, 0A6h ; '¦'
@@ -17830,7 +17795,7 @@ sub_AFE7	proc far
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	2
-		call	sub_536
+		call	palette_black_in
 		push	96h ; '–'
 		call	sub_B520
 		push	ds
@@ -17888,7 +17853,7 @@ sub_B07F	proc far
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	2
-		call	sub_536
+		call	palette_black_in
 		push	96h ; '–'
 		call	sub_B520
 		push	ds

@@ -35,42 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_600		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_613:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_627
-
-loc_61F:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_61F
-
-loc_627:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jl	short loc_613
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_600		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16709,7 +16674,7 @@ sub_B5A6	proc near
 		push	0
 		call	sub_1250
 		push	1
-		call	sub_600
+		call	palette_black_in
 		call	sub_B36C
 		push	1
 		call	sub_E15E
@@ -19554,7 +19519,7 @@ sub_CC5C	proc near
 loc_CC9F:
 		call	sub_CBDC
 		push	1
-		call	sub_600
+		call	palette_black_in
 
 loc_CCA9:
 		call	sub_E094
@@ -19577,7 +19542,7 @@ loc_CCA9:
 		call	far ptr	palette_show
 		call	sub_CBDC
 		push	1
-		call	sub_600
+		call	palette_black_in
 
 loc_CCF8:
 		test	byte ptr word_12A72, 8
@@ -19614,7 +19579,7 @@ loc_CD17:
 		push	0
 		call	sub_1250
 		push	1
-		call	sub_600
+		call	palette_black_in
 
 loc_CD64:
 		call	sub_E094
@@ -20103,7 +20068,7 @@ loc_D111:
 		push	0
 		call	sub_1250
 		push	1
-		call	sub_600
+		call	palette_black_in
 		pop	si
 		leave
 		retn

@@ -35,43 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_536		proc far
-					; sub_9A2C+103P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 0
-		nopcall	vsync_wait
-
-loc_549:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_55D
-
-loc_555:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_555
-
-loc_55D:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 64h ; 'd'
-		jl	short loc_549
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_536		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/palette_black_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14695,7 +14659,7 @@ sub_978D	proc near
 		push	0
 		call	sub_CEC2
 		push	2
-		call	sub_536
+		call	palette_black_in
 		push	large 60010h
 		call	sub_D3FC
 		mov	si, 1
@@ -15051,7 +15015,7 @@ loc_9A8E:
 		push	large CHAR_NAME[bx]
 		call	sub_D197
 		push	1
-		call	sub_536
+		call	palette_black_in
 		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -15610,7 +15574,7 @@ loc_9FC8:
 		push	bx
 		call	sub_D197
 		push	1
-		call	sub_536
+		call	palette_black_in
 
 loc_A00B:
 		call	sub_D5A2
@@ -16679,7 +16643,7 @@ loc_A8A7:
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_A8CA
 		push	[bp+var_2]
-		call	sub_536
+		call	palette_black_in
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -18745,7 +18709,7 @@ loc_B81F:
 		jnz	short loc_B835
 		call	sub_B429
 		push	2
-		call	sub_536
+		call	palette_black_in
 		jmp	short loc_B858
 ; ---------------------------------------------------------------------------
 
@@ -18758,7 +18722,7 @@ loc_B835:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_B187
 		push	2
-		call	sub_536
+		call	palette_black_in
 		call	sub_B46B
 		call	sub_B74E
 		call	sub_B429
@@ -18859,7 +18823,7 @@ sub_B92E	proc near
 		push	0
 		call	sub_CEC2
 		push	1
-		call	sub_536
+		call	palette_black_in
 		push	large 30040h
 		call	sub_D3FC
 		push	1
