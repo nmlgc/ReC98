@@ -2762,245 +2762,7 @@ include libs/master.lib/bgm_sound.asm
 include libs/master.lib/bgm_effect_sound.asm
 include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_338E	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		nop
-		push	cs
-		call	near ptr get_machine
-		cmp	glb.init, 0
-		jz	short loc_33AA
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_33AA:
-		mov	dx, [bp+arg_0]
-		mov	[bp+var_2], dx
-		or	dx, dx
-		jg	short loc_33B9
-		mov	[bp+var_2], 1000h
-
-loc_33B9:
-		mov	ax, [bp+var_2]
-		mov	glb.bufsiz, ax
-		mov	di, 3768h
-
-loc_33C2:
-		mov	mem_AllocID, 8
-		push	[bp+var_2]
-		nop
-		call	hmem_allocbyte
-		mov	[di+6],	ax
-		mov	word ptr [di+4], 0
-		jnb	short loc_33E4
-		mov	ax, 0FFF8h
-		pop	di
-		pop	si
-		leave
-		retf	2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_33E4:
-		add	di, 16h
-		cmp	di, 37AAh
-		jnz	short loc_33C2
-		mov	di, 37AAh
-
-loc_33F0:
-		mov	mem_AllocID, 9
-		push	201h
-		nop
-		call	hmem_allocbyte
-		mov	[di+6],	ax
-		mov	word ptr [di+4], 0
-		jnb	short loc_341E
-		push	word ptr [di+6]
-		mov	word ptr [di+6], 0
-		nop
-		call	hmem_free
-		mov	ax, 0FFF8h
-		pop	di
-		pop	si
-		leave
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_341E:
-		add	di, 8
-		cmp	di, 382Ah
-		jnz	short loc_33F0
-		mov	glb.rflg, 0
-		mov	glb.mnum, 0
-		mov	glb.mcnt, 0
-		mov	glb.pnum, 3
-		mov	glb.pcnt, 0
-		mov	glb.fin, 0
-		mov	glb.repsw, 1
-		mov	glb.tcnt, 0
-		mov	glb.buflast, 0
-		cld
-		mov	cx, 10h
-		mov	di, 950h
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	ax, 78h	; 'x'
-		rep stosw
-		mov	glb.effect, 0
-		mov	glb.snum, 0
-		mov	glb.scnt, 0
-		mov	glb.music, 1
-		mov	glb.sound, 1
-		test	Machine_State, 10h
-		jz	short loc_3496
-		mov	ax, 10h
-		jmp	short loc_34A8
-; ---------------------------------------------------------------------------
-
-loc_3496:
-		xor	ax, ax
-		mov	es, ax
-		test	byte ptr es:[501h], 80h
-		mov	ax, 7CDh
-		jnz	short loc_34A8
-		mov	ax, 99Ah
-
-loc_34A8:
-					; sub_338E+115j
-		and	ax, 0FFFEh
-		mov	dx, 78h	; 'x'
-		mul	dx
-		mov	word ptr glb.clockbase+2, dx
-		mov	word ptr glb.clockbase, ax
-		push	78h ; 'x'
-		nopcall	bgm_set_tempo
-		mov	bx, 376Ch
-		xor	dx, dx
-		xor	ax, ax
-
-loc_34C5:
-		les	di, [bx]
-		assume es:nothing
-		mov	cx, glb.bufsiz
-		shr	cx, 1
-		rep stosw
-		adc	cx, cx
-		rep stosb
-		add	bx, 16h
-		inc	dx
-		cmp	dx, 3
-		jl	short loc_34C5
-		nopcall	_bgm_timer_init
-		test	Machine_State, 10h
-		jz	short loc_34FC
-		mov	ax, 254h
-		mov	cx, ax
-		mov	al, 0B6h ; '¶'
-		out	43h, al		; Timer	8253-5 (AT: 8254.2).
-		mov	al, cl
-		out	42h, al		; Timer	8253-5 (AT: 8254.2).
-		mov	al, ch
-		out	42h, al		; Timer	8253-5 (AT: 8254.2).
-		jmp	short loc_3523
-; ---------------------------------------------------------------------------
-
-loc_34FC:
-		xor	ax, ax
-		mov	es, ax
-		test	byte ptr es:[501h], 80h
-		mov	ax, 3E6h
-		jnz	short loc_350E
-		mov	ax, 4CDh
-
-loc_350E:
-		mov	cx, ax
-		mov	al, 3
-		shl	al, 1
-		or	al, 70h
-		mov	dx, 3FDFh
-		out	dx, al
-		mov	al, cl
-		mov	dx, 3FDBh
-		out	dx, al
-		mov	al, ch
-		out	dx, al
-
-loc_3523:
-		mov	glb.init, 1
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_338E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3532	proc far
-		push	si
-		cmp	glb.init, 0
-		jz	short loc_354F
-		nopcall	bgm_stop_play
-		nopcall	bgm_stop_sound
-		nopcall	_bgm_timer_finish
-		mov	glb.init, 0
-
-loc_354F:
-		mov	si, 3768h
-
-loc_3552:
-		mov	ax, [si+6]
-		cmp	ax, 0
-		jz	short loc_3565
-		push	ax
-		nop
-		call	hmem_free
-		mov	word ptr [si+6], 0
-
-loc_3565:
-		add	si, 16h
-		cmp	si, 37AAh
-		jnz	short loc_3552
-		mov	si, 37AAh
-
-loc_3571:
-		mov	ax, [si+6]
-		cmp	ax, 0
-		jz	short loc_3584
-		push	ax
-		nop
-		call	hmem_free
-		mov	word ptr [si+6], 0
-
-loc_3584:
-		add	si, 8
-		cmp	si, 382Ah
-		jnz	short loc_3571
-		pop	si
-		retf
-sub_3532	endp
-
+include libs/master.lib/bgm_init_finish.asm
 include libs/master.lib/bgm_stop_sound.asm
 
 ; ---------------------------------------------------------------------------
@@ -21670,7 +21432,7 @@ sub_D7EC	proc far
 		call	text_clear
 		call	js_end
 		call	egc_start
-		call	sub_3532
+		call	bgm_finish
 		pop	bp
 		retf
 sub_D7EC	endp
@@ -22196,9 +21958,9 @@ arg_2		= dword	ptr  8
 		cmp	byte_FA41, 2
 		jnz	short loc_DC2F
 		mov	dword ptr [di],	736665h
-		call	sub_3532
+		call	bgm_finish
 		push	800h
-		call	sub_338E
+		call	bgm_init
 		push	ds
 		push	offset unk_1281E
 		call	bgm_read_sdata
@@ -22727,7 +22489,7 @@ loc_DF27:
 
 loc_DF82:
 		push	400h
-		call	sub_338E
+		call	bgm_init
 		xor	ax, ax
 		pop	bp
 		retf
