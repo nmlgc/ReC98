@@ -31,93 +31,7 @@ include libs/master.lib/bfnt_entry_pat.asm
 include libs/master.lib/bfnt_extend_header_skip.asm
 include libs/master.lib/bfnt_header_read.asm
 include libs/master.lib/bfnt_header_analysis.asm
-; ---------------------------------------------------------------------------
-word_472	dw 0
-word_474	dw 0
-; ---------------------------------------------------------------------------
-
-loc_476:
-		cmp	bx, 2
-		jnb	short locret_4BC
-		shl	bx, 1
-		mov	[bx+320h], ax
-		mov	ax, word_21660
-		or	ax, word_21662
-		add	ax, 0FFFFh
-		sbb	ax, ax
-		cmp	ax, word_2165E
-		jz	short locret_4BC
-		mov	word_2165E, ax
-		ja	short loc_4BE
-		cli
-		mov	al, 0Bh
-		out	70h, al		; CMOS Memory:
-					; used by real-time clock
-		mov	al, byte_21665
-		out	71h, al		; CMOS Memory:
-					; used by real-time clock
-		push	70h ; 'p'
-		push	cs:word_474
-		push	cs:word_472
-		nopcall	dos_setvect
-		in	al, 0A1h	; Interrupt Controller #2, 8259A
-		or	al, byte_21664
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		sti
-
-locret_4BC:
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_4BE:
-		cli
-		push	70h ; 'p'
-		push	cs
-		push	offset byte_51A
-		nopcall	dos_setvect
-		mov	cs:word_474, dx
-; ---------------------------------------------------------------------------
-		db 2Eh
-byte_4D0	db 0A3h
-		db 72h,	4, 0B4h, 0Ah, 0BBh, 4, 0F0h, 0E8h, 2Ch,	0, 0B0h
-		db 0Bh,	0E6h, 70h, 0E4h, 71h, 0A2h, 25h, 3, 0Ch, 40h, 8Ah
-		db 0E0h, 0B0h, 0Bh, 0E6h, 70h, 8Ah, 0C4h, 0E6h,	71h, 0E4h
-		db 0A1h, 8Ah, 0E0h, 24h, 0FEh, 0E6h, 0A1h, 32h,	0C4h, 0A2h
-		db 24h,	3, 0FBh, 0FAh, 0B0h, 0Ch
-byte_501	db 0E6h
-		db 70h,	0E4h, 71h, 0FBh, 0C3h, 8Ah, 0C4h, 0E6h,	70h, 0E4h
-		db 71h,	22h, 0C7h, 0Ah,	0C3h, 86h, 0E0h, 0E6h, 70h, 86h
-		db 0E0h, 0E6h, 71h, 0C3h
-byte_51A	db 50h,	1Eh, 0B8h
-		dw seg dseg
-		db 8Eh,	0D8h, 0FCh, 68h, 3Ch, 5, 83h, 3Eh, 20h,	3, 0
-byte_52A	db 74h
-		db 4
-byte_52C	db 0FFh
-byte_52D	db 36h
-		db 20h
-byte_52F	db 3
-byte_530	db 83h
-byte_531	db 3Eh
-byte_532	db 22h
-byte_533	db 3
-		db 0, 74h, 4, 0FFh, 36h, 22h, 3, 0C3h, 80h, 3Eh, 24h, 3
-		db 0, 1Fh, 75h,	6, 58h,	2Eh, 0FFh, 2Eh,	72h, 4,	0B0h, 20h
-		db 0E6h
-byte_54D	db 0A0h
-; ---------------------------------------------------------------------------
-		out	20h, al		; Interrupt controller,	8259A.
-		mov	al, 0Ch
-		out	70h, al		; CMOS Memory:
-					; used by real-time clock
-		in	al, 71h		; CMOS Memory
-		mov	al, 0Ch
-		out	70h, al		; CMOS Memory:
-					; used by real-time clock
-		in	al, 71h		; CMOS Memory
-		pop	ax
-		iret
+include libs/master.lib/atrtcmod.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3046,8 +2960,7 @@ sub_1C82	proc far
 		mov	word_2166C, ax
 		mov	word_21672, ax
 		mov	es, ax
-		assume es:seg000
-		mov	ah, es:byte_54D
+		mov	ah, byte ptr es:[54Dh]
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
@@ -5959,7 +5872,7 @@ sub_39B8	proc far
 loc_39F2:
 		mov	ax, 3A64h
 		mov	bx, 0
-		call	loc_476
+		call	rtc_int_set
 		retf
 sub_39B8	endp
 
@@ -5986,7 +5899,7 @@ sub_39FC	proc far
 loc_3A1B:
 		mov	ax, 0
 		mov	bx, 0
-		call	loc_476
+		call	rtc_int_set
 		retf
 sub_39FC	endp
 
@@ -6112,8 +6025,7 @@ loc_3E44:
 loc_3EBC:
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
-		test	es:byte_501, 80h
+		test	byte ptr es:[501h], 80h
 		mov	ax, 7CDh
 		jnz	short loc_3ECE
 		mov	ax, 99Ah
@@ -6162,8 +6074,7 @@ loc_3EEB:
 loc_3F22:
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
-		test	es:byte_501, 80h
+		test	byte ptr es:[501h], 80h
 		mov	ax, 3E6h
 		jnz	short loc_3F34
 		mov	ax, 4CDh
@@ -36794,8 +36705,7 @@ sub_137A4	proc far
 					; sub_E67A:loc_E703P ...
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
-		mov	ah, es:byte_531
+		mov	ah, byte ptr es:[531h]
 		test	ah, 4
 		jz	short loc_137B7
 		or	word_24CB4, 1
@@ -36816,7 +36726,7 @@ loc_137CB:
 		or	word_24CB4, 8
 
 loc_137D5:
-		mov	ah, es:byte_533
+		mov	ah, byte ptr es:[533h]
 		test	ah, 1
 		jz	short loc_137E4
 		or	word_24CB4, 8
@@ -36837,7 +36747,7 @@ loc_137F9:
 		or	word_24CB4, 800h
 
 loc_13804:
-		mov	ah, es:byte_532
+		mov	ah, byte ptr es:[532h]
 		test	ah, 40h
 		jz	short loc_13813
 		or	word_24CB4, 4
@@ -36858,7 +36768,7 @@ loc_13828:
 		or	word_24CB4, 200h
 
 loc_13833:
-		mov	ah, es:byte_52F
+		mov	ah, byte ptr es:[52Fh]
 		test	ah, 2
 		jz	short loc_13842
 		or	word_24CB4, 20h
@@ -36869,19 +36779,19 @@ loc_13842:
 		or	word_24CB4, 10h
 
 loc_1384C:
-		mov	ah, es:byte_52C
+		mov	ah, byte ptr es:[52Ch]
 		test	ah, 1
 		jz	short loc_1385C
 		or	word_24CB4, 4000h
 
 loc_1385C:
-		mov	ah, es:byte_52A
+		mov	ah, byte ptr es:[52Ah]
 		test	ah, 1
 		jz	short loc_1386C
 		or	word_24CB4, 1000h
 
 loc_1386C:
-		mov	ah, es:byte_52D
+		mov	ah, byte ptr es:[52Dh]
 		test	ah, 10h
 		jz	short loc_1387C
 
@@ -36889,7 +36799,7 @@ loc_13876:
 		or	word_24CB4, 2000h
 
 loc_1387C:
-		mov	ah, es:byte_530
+		mov	ah, byte ptr es:[530h]
 		test	ah, 10h
 		jz	short loc_1388B
 		or	word_24CB4, 20h
@@ -37550,11 +37460,7 @@ aKao1_cd2	db 'KAO1.cd2',0
 		db  20h
 		db  20h
 		db  20h
-word_2165E	dw 0
-word_21660	dw 0
-word_21662	dw 0
-byte_21664	db 0
-byte_21665	db 0
+include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 word_2166C	dw 0
 word_2166E	dw 27Fh
