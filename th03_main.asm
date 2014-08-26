@@ -2843,47 +2843,7 @@ loc_1FCE:
 sub_1F8C	endp
 
 include libs/BorlandC/text_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FEC	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		push	di
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		mov	al, byte ptr es:[0712h]
-		inc	ax
-		mov	dx, ax
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, ax
-		mov	cl, 4
-		shl	dx, cl
-		mov	cx, dx
-		mov	es, TextVramSeg
-		assume es:nothing
-		xor	di, di
-		mov	ax, [bp+arg_2]
-		rep stosw
-		mov	cx, dx
-		mov	di, 2000h
-		mov	ax, [bp+arg_0]
-		rep stosw
-		pop	di
-		mov	bp, bx
-		retf	4
-sub_1FEC	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/text_fillca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15760,7 +15720,7 @@ var_2		= word ptr -2
 		mov	eax, es:[bx+10h]
 		mov	dword_1D872, eax
 		push	large 200005h
-		call	sub_1FEC
+		call	text_fillca
 		push	0
 		call	sub_14E4
 		call	sub_13CDD
@@ -18613,7 +18573,7 @@ sub_B8F7	proc far
 		push	bp
 		mov	bp, sp
 		push	large 200005h
-		call	sub_1FEC
+		call	text_fillca
 		push	large 20001h
 		push	large 250018h
 		push	0E1h ; 'á'

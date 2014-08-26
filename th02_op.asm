@@ -2690,46 +2690,7 @@ include libs/master.lib/smem_wget.asm
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2490	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		push	di
-		xor	ax, ax
-		mov	es, ax
-		mov	al, es:[0712h]
-		inc	ax
-		mov	dx, ax
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, ax
-		mov	cl, 4
-		shl	dx, cl
-		mov	cx, dx
-		mov	es, TextVramSeg
-		assume es:nothing
-		xor	di, di
-		mov	ax, [bp+arg_2]
-		rep stosw
-		mov	cx, dx
-		mov	di, 2000h
-		mov	ax, [bp+arg_0]
-		rep stosw
-		pop	di
-		mov	bp, bx
-		retf	4
-sub_2490	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/text_fillca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15391,7 +15352,7 @@ sub_9D0A	proc far
 		call	text_clear
 		push	20h ; ' '
 		push	5
-		call	sub_2490
+		call	text_fillca
 		pop	bp
 		retf
 sub_9D0A	endp

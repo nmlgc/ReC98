@@ -3274,47 +3274,7 @@ loc_261C:
 sub_25DA	endp
 
 include libs/BorlandC/text_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_263A	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		push	di
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		mov	al, es:byte_712
-		inc	ax
-		mov	dx, ax
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, ax
-		mov	cl, 4
-		shl	dx, cl
-		mov	cx, dx
-		mov	es, TextVramSeg
-		assume es:nothing
-		xor	di, di
-		mov	ax, [bp+arg_2]
-		rep stosw
-		mov	cx, dx
-		mov	di, 2000h
-		mov	ax, [bp+arg_0]
-		rep stosw
-		pop	di
-		mov	bp, bx
-		retf	4
-sub_263A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/text_fillca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20525,7 +20485,7 @@ sub_BF7B	proc near
 		mov	bp, sp
 		call	text_clear
 		push	large 200005h
-		call	sub_263A
+		call	text_fillca
 		pop	bp
 		retn
 sub_BF7B	endp

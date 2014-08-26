@@ -3802,47 +3802,7 @@ locret_24F3:
 sub_24A8	endp
 
 include libs/BorlandC/text_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2508	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		push	di
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		mov	al, byte ptr es:loc_710+2
-		inc	ax
-		mov	dx, ax
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, ax
-		mov	cl, 4
-		shl	dx, cl
-		mov	cx, dx
-		mov	es, TextVramSeg
-		assume es:nothing
-		xor	di, di
-		mov	ax, [bp+arg_2]
-		rep stosw
-		mov	cx, dx
-		mov	di, 2000h
-		mov	ax, [bp+arg_0]
-		rep stosw
-		pop	di
-		mov	bp, bx
-		retf	4
-sub_2508	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/text_fillca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18470,7 +18430,7 @@ sub_B237	proc near
 loc_B260:
 		mov	word_20A84, 1
 		push	large 200005h
-		call	sub_2508
+		call	text_fillca
 		mov	word_2300E, 1240h
 		call	sub_B063
 		les	bx, dword_23EF0
