@@ -35,38 +35,7 @@ include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_536		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h	; 'd'
-		nopcall	vsync_wait
-
-loc_549:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_55D
-
-loc_555:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_555
-
-loc_55D:
-		sub	PaletteTone, 6
-		jg	short loc_549
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_536		endp
+include libs/master.lib/palette_black_out.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -20333,7 +20302,7 @@ sub_C7A5	proc near
 		cmp	byte ptr es:[bx+0Fh], 0
 		jz	short loc_C7C8
 		push	1
-		call	sub_536
+		call	palette_black_out
 
 loc_C7C1:
 		mov	byte_23B00, 1

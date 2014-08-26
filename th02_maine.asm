@@ -36,40 +36,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_57A		proc far
-					; sub_9B64+2B2P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	vsync_wait
-
-loc_58D:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_5A1
-
-loc_599:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_599
-
-loc_5A1:
-		sub	PaletteTone, 6
-		jg	short loc_58D
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_57A		endp
-
+include libs/master.lib/palette_black_out.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15706,7 +15673,7 @@ sub_9B64	proc near
 		push	14h
 		call	sub_B520
 		push	1
-		call	sub_57A
+		call	palette_black_out
 		push	1
 		call	sub_98B5
 		push	1
@@ -15934,7 +15901,7 @@ loc_9D96:
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	2
-		call	sub_57A
+		call	palette_black_out
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 0
 		jnz	short loc_9E2A
@@ -16265,7 +16232,7 @@ sub_A09D	proc near
 		push	14h
 		call	sub_B520
 		push	1
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16396,7 +16363,7 @@ loc_A247:
 		cmp	si, 0Fh
 		jle	short loc_A22F
 		push	2
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16618,7 +16585,7 @@ loc_A451:
 		push	6
 		call	sub_9643
 		push	2
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16787,7 +16754,7 @@ loc_A620:
 		cmp	si, 42h	; 'B'
 		jle	short loc_A608
 		push	2
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16941,7 +16908,7 @@ loc_A6B6:
 		push	6
 		call	sub_9643
 		push	2
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17421,7 +17388,7 @@ loc_A992:
 		call	sub_B855
 		pop	cx
 		push	4
-		call	sub_57A
+		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17753,7 +17720,7 @@ loc_AF56:
 		add	sp, 6
 		call	sub_B4B7
 		push	5
-		call	sub_57A
+		call	palette_black_out
 		nop
 		push	cs
 		call	near ptr sub_AFE7
@@ -17816,7 +17783,7 @@ sub_AFE7	proc far
 		call	graph_pi_free
 		call	sub_B4B7
 		push	5
-		call	sub_57A
+		call	palette_black_out
 
 loc_B07D:
 		pop	bp
@@ -17874,7 +17841,7 @@ sub_B07F	proc far
 		call	graph_pi_free
 		call	sub_B4B7
 		push	5
-		call	sub_57A
+		call	palette_black_out
 
 loc_B115:
 		pop	bp

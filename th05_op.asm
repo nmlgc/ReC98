@@ -36,39 +36,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_644		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	vsync_wait
-
-loc_657:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_66B
-
-loc_663:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_663
-
-loc_66B:
-		sub	PaletteTone, 6
-		jg	short loc_657
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_644		endp
-
+include libs/master.lib/palette_black_out.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14742,7 +14710,7 @@ loc_A5BF:
 		call	sub_BC83
 		call	sub_BB0E
 		push	1
-		call	sub_644
+		call	palette_black_out
 		call	sub_D7EC
 		push	large 0
 		push	ds
@@ -16682,7 +16650,7 @@ sub_B5A6	proc near
 		call	sub_1250
 		call	sub_B489
 		push	1
-		call	sub_644
+		call	palette_black_out
 		call	super_free
 		pop	bp
 		retn
@@ -17235,7 +17203,7 @@ loc_BA47:
 		cmp	di, 0AAh ; 'ª'
 		jl	loc_B949
 		push	1
-		call	sub_644
+		call	palette_black_out
 
 loc_BA56:
 		call	super_free
@@ -18799,7 +18767,7 @@ loc_C790:
 		mov	dx, 0A6h ; '¦'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	1
-		call	sub_644
+		call	palette_black_out
 		call	sub_D726
 		push	ds
 		push	(offset	aH_op+2)
@@ -19507,7 +19475,7 @@ sub_CC5C	proc near
 		push	280h
 		call	sub_DC76
 		push	1
-		call	sub_644
+		call	palette_black_out
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	byte_14101, al
@@ -19559,7 +19527,7 @@ loc_CD17:
 		push	201h
 		call	sub_DC76
 		push	1
-		call	sub_644
+		call	palette_black_out
 		push	0
 		call	sub_DEE0
 		mov	dx, 0A6h ; '¦'
@@ -20237,7 +20205,7 @@ loc_D292:
 		mov	al, byte ptr word_14118
 		mov	es:[bx+14h], al
 		push	1
-		call	sub_644
+		call	palette_black_out
 		call	sub_D726
 		xor	ax, ax
 		leave
@@ -20249,7 +20217,7 @@ loc_D2CC:
 		test	byte ptr word_12A72+1, 10h
 		jz	short loc_D2E4
 		push	1
-		call	sub_644
+		call	palette_black_out
 		call	sub_D726
 		mov	ax, 1
 		leave

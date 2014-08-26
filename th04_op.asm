@@ -37,38 +37,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_666		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	vsync_wait
-
-loc_679:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_68D
-
-loc_685:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_685
-
-loc_68D:
-		sub	PaletteTone, 6
-		jg	short loc_679
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_666		endp
+include libs/master.lib/palette_black_out.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -15264,7 +15233,7 @@ loc_AA56:
 
 loc_AA6E:
 		push	1
-		call	sub_666
+		call	palette_black_out
 		call	super_free
 		push	ds
 		push	offset unk_116C8
@@ -17156,7 +17125,7 @@ sub_B9CE	proc near
 		call	sub_156C
 		call	sub_B8B1
 		push	1
-		call	sub_666
+		call	palette_black_out
 		call	super_free
 		pop	bp
 		retn
@@ -17713,7 +17682,7 @@ loc_BE87:
 		cmp	di, 0AAh ; 'ª'
 		jl	loc_BD84
 		push	1
-		call	sub_666
+		call	palette_black_out
 
 loc_BE96:
 		call	super_free
@@ -18568,7 +18537,7 @@ loc_C544:
 		mov	dx, 0A6h ; '¦'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	1
-		call	sub_666
+		call	palette_black_out
 		call	sub_E4C6
 		push	ds
 		push	offset aOp_2	; "op"
@@ -19282,7 +19251,7 @@ sub_CA94	proc near
 		push	280h
 		call	sub_DC74
 		push	1
-		call	sub_666
+		call	palette_black_out
 		les	bx, dword_10DA4
 		assume es:nothing
 		mov	al, es:[bx+0Fh]
@@ -19338,7 +19307,7 @@ loc_CB58:
 		push	201h
 		call	sub_DC74
 		push	1
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset unk_116C8
 		push	large [dword_116B0]
@@ -20911,7 +20880,7 @@ loc_D8B2:
 		test	byte ptr word_11A50+1, 10h
 		jz	short loc_D8D7
 		push	1
-		call	sub_666
+		call	palette_black_out
 		call	sub_D1F3
 		push	ds
 		push	offset unk_116C8
@@ -21010,7 +20979,7 @@ loc_D994:
 		add	al, 30h	; '0'
 		mov	es:[bx+12h], al
 		push	1
-		call	sub_666
+		call	palette_black_out
 		call	sub_D1F3
 		push	ds
 		push	offset unk_116C8

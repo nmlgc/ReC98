@@ -36,38 +36,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_57A		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	vsync_wait
-
-loc_58D:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_5A1
-
-loc_599:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_599
-
-loc_5A1:
-		sub	PaletteTone, 6
-		jg	short loc_58D
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_57A		endp
+include libs/master.lib/palette_black_out.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -19646,7 +19615,7 @@ loc_BFB7:
 		push	word_F184
 		call	graph_pi_free
 		push	1
-		call	sub_57A
+		call	palette_black_out
 		pop	di
 		pop	si
 		leave

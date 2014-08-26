@@ -37,39 +37,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_666		proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		nopcall	vsync_wait
-
-loc_679:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_68D
-
-loc_685:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_685
-
-loc_68D:
-		sub	PaletteTone, 6
-		jg	short loc_679
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_666		endp
-
+include libs/master.lib/palette_black_out.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14383,7 +14351,7 @@ loc_A187:
 		push	0
 		call	sub_CE7A
 		push	4
-		call	sub_666
+		call	palette_black_out
 
 loc_A1E9:
 		push	204h
@@ -14427,7 +14395,7 @@ loc_A1FE:
 		push	0
 		call	sub_CE7A
 		push	4
-		call	sub_666
+		call	palette_black_out
 		jmp	short loc_A27E
 ; ---------------------------------------------------------------------------
 
@@ -15478,7 +15446,7 @@ loc_AA55:
 
 loc_AA78:
 		push	[bp+var_2]
-		call	sub_666
+		call	palette_black_out
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -16751,7 +16719,7 @@ sub_B44D	proc near
 		push	large 12000C8h
 		call	sub_B3AC
 		push	4
-		call	sub_666
+		call	palette_black_out
 		call	sub_D8CE
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -16886,7 +16854,7 @@ sub_B44D	proc near
 		call	sub_D6C4
 		call	sub_D8CE
 		push	4
-		call	sub_666
+		call	palette_black_out
 		pop	bp
 		retn
 sub_B44D	endp
@@ -17844,7 +17812,7 @@ loc_C0CB:
 		push	0
 		call	sub_CE7A
 		push	2
-		call	sub_666
+		call	palette_black_out
 		pop	si
 		leave
 		retn
@@ -19335,7 +19303,7 @@ loc_CB89:
 		call	super_free
 		call	text_clear
 		push	1
-		call	sub_666
+		call	palette_black_out
 		pop	di
 		pop	si
 		leave

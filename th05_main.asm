@@ -36,40 +36,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_644		proc far
-					; seg001:0A07P	...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h	; 'd'
-		nopcall	vsync_wait
-
-loc_657:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_66B
-
-loc_663:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_663
-
-loc_66B:
-		sub	PaletteTone, 6
-		jg	short loc_657
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_644		endp
-
+include libs/master.lib/palette_black_out.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18422,7 +18389,7 @@ loc_B4BB:
 		cmp	vsync_Count2, 80h	; '€'
 		jb	short loc_B4BB
 		push	1
-		call	sub_644
+		call	palette_black_out
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	sub_118F3
@@ -18771,7 +18738,7 @@ loc_B80C:
 		push	word ptr dword_25FF4+2
 		call	hmem_free
 		push	8
-		call	sub_644
+		call	palette_black_out
 		push	ds
 		push	offset aOp_1	; "op"
 		nop
@@ -24965,7 +24932,7 @@ loc_E466:
 		push	204h
 		call	sub_14F68
 		push	10h
-		call	sub_644
+		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
 		nop
@@ -24988,7 +24955,7 @@ sub_E480	proc far
 		push	204h
 		call	sub_14F68
 		push	10h
-		call	sub_644
+		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
 		nop
@@ -27107,7 +27074,7 @@ loc_F318:
 		push	word ptr dword_25FF4+2
 		call	hmem_free
 		push	8
-		call	sub_644
+		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
 		nop
@@ -28097,7 +28064,7 @@ loc_FA7D:
 		push	204h
 		call	sub_14F68
 		push	4
-		call	sub_644
+		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
 		nop

@@ -37,40 +37,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_666		proc far
-					; seg001:0988P	...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h	; 'd'
-		nopcall	vsync_wait
-
-loc_679:
-		nopcall	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_68D
-
-loc_685:
-		nopcall	vsync_wait
-		dec	di
-		jnz	short loc_685
-
-loc_68D:
-		sub	PaletteTone, 6
-		jg	short loc_679
-		mov	PaletteTone, 0
-		nopcall	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_666		endp
-
+include libs/master.lib/palette_black_out.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17997,7 +17964,7 @@ loc_B156:
 		cmp	vsync_Count2, 80h	; '€'
 		jb	short loc_B156
 		push	1
-		call	sub_666
+		call	palette_black_out
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	sub_10D77
@@ -18308,7 +18275,7 @@ loc_B46D:
 		push	word ptr dword_23D92+2
 		call	hmem_free
 		push	0Ah
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
 		nop
@@ -18698,7 +18665,7 @@ sub_B7B9	proc far
 		push	204h
 		call	sub_133DC
 		push	10h
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
 		nop
@@ -18722,7 +18689,7 @@ sub_B7E4	proc far
 		push	204h
 		call	sub_133DC
 		push	10h
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
 		nop
@@ -18745,7 +18712,7 @@ sub_B80F	proc far
 		push	204h
 		call	sub_133DC
 		push	10h
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
 		nop
@@ -22720,7 +22687,7 @@ loc_D245:
 
 loc_D268:
 		push	[bp+var_2]
-		call	sub_666
+		call	palette_black_out
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -25365,7 +25332,7 @@ loc_E654:
 		push	204h
 		call	sub_133DC
 		push	4
-		call	sub_666
+		call	palette_black_out
 		push	ds
 		push	offset aMaine_2	; "maine"
 		nop
