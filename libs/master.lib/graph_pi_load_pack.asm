@@ -70,7 +70,7 @@
 ;	95/ 4/ 1 [M0.22k] mem_AllocID対応
 
 	BUFF_LEN EQU 1024*16
-	EOF EQU 26
+	PI_EOF EQU 26
 
 ;	debug = 1
 
@@ -319,7 +319,7 @@ _ctinit_loop:
 _comment_skip:
 	inc	AX
 	call	byte_load
-	cmp	DL,EOF
+	cmp	DL,PI_EOF
 	jnz	_comment_skip
 	stosw
 _dummy_skip:

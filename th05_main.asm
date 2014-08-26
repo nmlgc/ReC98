@@ -31,29 +31,7 @@ include libs/master.lib/bfnt_entry_pat.asm
 include libs/master.lib/bfnt_header_read.asm
 include libs/master.lib/bfnt_header_analysis.asm
 include libs/master.lib/atrtcmod.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_53C		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		assume es:nothing
-		mov	bx, es:0
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		push	es
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_53C		endp
-
+include libs/master.lib/bcloser.asm
 include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 
@@ -3514,8 +3492,7 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		mov	es, [bp+arg_0]
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_53C
+		call	bcloser
 		push	[bp+arg_0]
 		call	hmem_free
 		pop	bp
@@ -6687,8 +6664,7 @@ loc_456D:
 loc_4596:
 		mov	es, si
 		push	word ptr es:0
-		push	cs
-		call	near ptr sub_53C
+		call	bcloser
 
 loc_45A1:
 		push	si
