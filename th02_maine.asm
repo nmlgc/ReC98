@@ -2681,40 +2681,7 @@ include libs/BorlandC/text_clear.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_249A	proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		call	vsync_wait
-
-loc_24AC:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_24BE
-
-loc_24B7:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_24B7
-
-loc_24BE:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 0C8h	; 'È'
-		jl	short loc_24AC
-		mov	PaletteTone, 0C8h	; 'È'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_249A	endp
-
+include libs/master.lib/palette_white_out.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -15532,7 +15499,7 @@ sub_9AD4	proc near
 		push	1Eh
 		call	sub_B520
 		push	1
-		call	sub_249A
+		call	palette_white_out
 		push	600h
 		push	ds
 		push	offset aEnding_m ; "ending.m"

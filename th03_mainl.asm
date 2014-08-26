@@ -1994,41 +1994,7 @@ include libs/master.lib/text_fillca.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_20CA	proc far
-					; sub_A64D+137P
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h ; 'd'
-		call	vsync_wait
-
-loc_20DC:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_20EE
-
-loc_20E7:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_20E7
-
-loc_20EE:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 0C8h	; 'È'
-		jl	short loc_20DC
-		mov	PaletteTone, 0C8h	; 'È'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_20CA	endp
-
+include libs/master.lib/palette_white_out.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -15090,7 +15056,7 @@ loc_9C50:
 
 loc_9C5E:
 		push	1
-		call	sub_20CA
+		call	palette_white_out
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16441,7 +16407,7 @@ loc_A75E:
 
 loc_A781:
 		push	[bp+var_2]
-		call	sub_20CA
+		call	palette_white_out
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 

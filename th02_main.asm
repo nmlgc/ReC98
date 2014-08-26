@@ -3313,41 +3313,7 @@ sub_26CA	endp
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_289C	proc far
-					; sub_13439+60P ...
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		mov	PaletteTone, 64h	; 'd'
-		call	vsync_wait
-
-loc_28AE:
-		call	palette_show
-		mov	di, si
-		cmp	di, 0
-		jle	short loc_28C0
-
-loc_28B9:
-		call	vsync_wait
-		dec	di
-		jnz	short loc_28B9
-
-loc_28C0:
-		add	PaletteTone, 6
-		cmp	PaletteTone, 0C8h ; 'È'
-		jl	short loc_28AE
-		mov	PaletteTone, 0C8h ; 'È'
-		call	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_289C	endp
-
+include libs/master.lib/palette_white_out.asm
 include libs/master.lib/hmem_lallocate.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
@@ -35550,7 +35516,7 @@ sub_13414	proc near
 		push	bp
 		mov	bp, sp
 		push	0
-		call	sub_289C
+		call	palette_white_out
 		call	sub_FA46
 		push	5
 		call	sub_FA52
@@ -35602,7 +35568,7 @@ sub_13439	proc near
 		call	sub_F618
 		call	sub_13414
 		push	3
-		call	sub_289C
+		call	palette_white_out
 		pop	bp
 		retn
 sub_13439	endp
@@ -39218,7 +39184,7 @@ sub_1523C	proc far
 		add	ax, 2BE6h
 		mov	word_2065E, ax
 		push	1
-		call	sub_289C
+		call	palette_white_out
 		mov	si, 30h	; '0'
 		add	si, word_20344
 		cmp	si, 190h
@@ -41941,7 +41907,7 @@ sub_1696B	proc far
 		call	near ptr sub_10E0A
 		call	sub_D376
 		push	1
-		call	sub_289C
+		call	palette_white_out
 		call	sub_158DC
 		push	ds
 		push	offset aBoss5_m	; "boss5.m"
@@ -47486,7 +47452,7 @@ sub_199B3	proc far
 		mov	word_2064E, 80h	; '€'
 		call	sub_13337
 		push	1
-		call	sub_289C
+		call	palette_white_out
 		push	large 200000h
 		push	large 1A0018Fh
 		call	sub_F1E
@@ -47752,7 +47718,7 @@ sub_19C8D	proc near
 		call	sub_F9F6
 		pop	cx
 		push	0Ah
-		call	sub_289C
+		call	palette_white_out
 		push	32h ; '2'
 		call	sub_F618
 		add	dword_1E598, 0C350h
@@ -49023,7 +48989,7 @@ sub_1A7D5	proc far
 		mov	word_26D78, 40h	; '@'
 		mov	word_2064E, 80h	; '€'
 		push	1
-		call	sub_289C
+		call	palette_white_out
 		push	large 0C00000h
 		call	sub_127E
 		call	sub_FB0
