@@ -2754,75 +2754,7 @@ sub_2CBA	endp
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2F92	proc far
-		test	Machine_State, 10h
-		jnz	short loc_2FCC
-		in	al, 2		; DMA controller, 8237A-5.
-					; channel 1 current address
-		mov	ah, 0
-		mov	glb.simr, ax
-		cli
-		push	8
-		push	seg seg000
-		push	offset _bgm_timerhook
-		nopcall	dos_setvect
-		mov	word ptr timerorg+2, dx
-		mov	word ptr timerorg, ax
-		mov	al, 36h	; '6'
-		out	77h, al
-		mov	ax, glb.tval
-		out	71h, al		; CMOS Memory:
-					; used by real-time clock
-		mov	al, ah
-		out	71h, al		; CMOS Memory:
-					; used by real-time clock
-		mov	al, byte ptr glb.simr
-		and	al, 0FEh
-		out	2, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		sti
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2FCC:
-		mov	ax, 303Eh
-		mov	bx, 0
-		call	rtc_int_set
-		retf
-sub_2F92	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2FD6	proc far
-		cli
-		test	Machine_State, 10h
-		jnz	short loc_2FF5
-		push	8
-		push	word ptr timerorg+2
-		push	word ptr timerorg
-		nopcall	dos_setvect
-		mov	al, byte ptr glb.simr
-		out	2, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		sti
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2FF5:
-		mov	ax, 0
-		mov	bx, 0
-		call	rtc_int_set
-		retf
-sub_2FD6	endp
-
+include libs/master.lib/bgm_timer.asm
 include libs/master.lib/bgm_pinit.asm
 include libs/master.lib/bgm_timerhook.asm
 include libs/master.lib/bgm_play.asm
@@ -2975,9 +2907,7 @@ loc_34C5:
 		inc	dx
 		cmp	dx, 3
 		jl	short loc_34C5
-		nop
-		push	cs
-		call	near ptr sub_2F92
+		nopcall	_bgm_timer_init
 		test	Machine_State, 10h
 		jz	short loc_34FC
 		mov	ax, 254h
@@ -3033,9 +2963,7 @@ sub_3532	proc far
 		jz	short loc_354F
 		nopcall	bgm_stop_play
 		nopcall	bgm_stop_sound
-		nop
-		push	cs
-		call	near ptr sub_2FD6
+		nopcall	_bgm_timer_finish
 		mov	glb.init, 0
 
 loc_354F:
