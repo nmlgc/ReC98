@@ -2027,95 +2027,7 @@ locret_1740:
 sub_1700	endp
 
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1774	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	ax, ClipYT
-		mov	cx, ClipYH
-		mov	bx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		cmp	bx, dx
-		jl	short loc_178B
-		xchg	bx, dx
-
-loc_178B:
-		sub	dx, ax
-		jl	short loc_17F4
-		sub	bx, ax
-		cmp	bh, 80h	; '€'
-		sbb	di, di
-		and	bx, di
-		cmp	bx, cx
-		jg	short loc_17F4
-		sub	dx, cx
-		sbb	di, di
-		and	dx, di
-		add	dx, cx
-		mov	ax, [bp+arg_4]
-		cmp	ax, ClipXL
-		jl	short loc_17F4
-		cmp	ax, ClipXR
-		jg	short loc_17F4
-		mov	cx, ax
-		and	cl, 7
-		shr	ax, 3
-		mov	di, ax
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	cx, dx
-		mov	dx, 4Fh	; 'O'
-		sub	cx, bx
-		imul	bx, 50h
-		add	di, bx
-		mov	es, ClipYT_seg
-		inc	cx
-		shr	cx, 1
-		jnb	short loc_17D9
-		stosb
-		add	di, dx
-
-loc_17D9:
-		shr	cx, 1
-		jnb	short loc_17E3
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-
-loc_17E3:
-		jcxz	short loc_17F4
-		nop
-
-loc_17E6:
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		loop	loc_17E6
-
-loc_17F4:
-		pop	di
-		pop	bp
-		retf	6
-sub_1774	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_vline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24348,7 +24260,7 @@ loc_E2D6:
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	17Fh
-		call	sub_1774
+		call	grcg_vline
 		jmp	loc_E449
 ; ---------------------------------------------------------------------------
 
@@ -34343,7 +34255,7 @@ loc_130C4:
 		push	ax
 		push	bx
 		push	17Fh
-		call	sub_1774
+		call	grcg_vline
 		inc	si
 		add	word ptr [bp-2], 1Ah
 

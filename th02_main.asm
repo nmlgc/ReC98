@@ -1621,95 +1621,7 @@ locret_127A:
 sub_123A	endp
 
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12AE	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	ax, ClipYT
-		mov	cx, ClipYH
-		mov	bx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		cmp	bx, dx
-		jl	short loc_12C5
-		xchg	bx, dx
-
-loc_12C5:
-		sub	dx, ax
-		jl	short loc_132E
-		sub	bx, ax
-		cmp	bh, 80h	; '€'
-		sbb	di, di
-		and	bx, di
-		cmp	bx, cx
-		jg	short loc_132E
-		sub	dx, cx
-		sbb	di, di
-		and	dx, di
-		add	dx, cx
-		mov	ax, [bp+arg_4]
-		cmp	ax, ClipXL
-		jl	short loc_132E
-		cmp	ax, ClipXR
-		jg	short loc_132E
-		mov	cx, ax
-		and	cl, 7
-		shr	ax, 3
-		mov	di, ax
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	cx, dx
-		mov	dx, 4Fh	; 'O'
-		sub	cx, bx
-		imul	bx, 50h
-		add	di, bx
-		mov	es, ClipYT_seg
-		inc	cx
-		shr	cx, 1
-		jnb	short loc_1313
-		stosb
-		add	di, dx
-
-loc_1313:
-		shr	cx, 1
-		jnb	short loc_131D
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-
-loc_131D:
-		jcxz	short loc_132E
-		nop
-
-loc_1320:
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		loop	loc_1320
-
-loc_132E:
-		pop	di
-		pop	bp
-		retf	6
-sub_12AE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_vline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39500,7 +39412,7 @@ loc_15A8A:
 		add	ax, 40h	; '@'
 		push	ax
 		push	large 10017Fh
-		call	sub_12AE
+		call	grcg_vline
 		call	grcg_off
 
 loc_15ABA:

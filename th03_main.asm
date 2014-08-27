@@ -1384,96 +1384,7 @@ loc_105C:
 		retf	0Ch
 sub_FAC		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_109A	proc far
-					; sub_18DC8+112P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	ax, ClipYT
-		mov	cx, ClipYH
-		mov	bx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		cmp	bx, dx
-		jl	short loc_10B1
-		xchg	bx, dx
-
-loc_10B1:
-		sub	dx, ax
-		jl	short loc_111A
-		sub	bx, ax
-		cmp	bh, 80h	; '€'
-		sbb	di, di
-		and	bx, di
-		cmp	bx, cx
-		jg	short loc_111A
-		sub	dx, cx
-		sbb	di, di
-		and	dx, di
-		add	dx, cx
-		mov	ax, [bp+arg_4]
-		cmp	ax, ClipXL
-		jl	short loc_111A
-		cmp	ax, ClipXR
-		jg	short loc_111A
-		mov	cx, ax
-		and	cl, 7
-		shr	ax, 3
-		mov	di, ax
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	cx, dx
-		mov	dx, 4Fh	; 'O'
-		sub	cx, bx
-		imul	bx, 50h
-		add	di, bx
-		mov	es, ClipYT_seg
-		inc	cx
-		shr	cx, 1
-		jnb	short loc_10FF
-		stosb
-		add	di, dx
-
-loc_10FF:
-		shr	cx, 1
-		jnb	short loc_1109
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-
-loc_1109:
-		jcxz	short loc_111A
-		nop
-
-loc_110C:
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		stosb
-		add	di, dx
-		loop	loc_110C
-
-loc_111A:
-		pop	di
-		pop	bp
-		retf	6
-sub_109A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_vline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -44705,7 +44616,7 @@ loc_18E7C:
 		mov	si, ax
 		push	ax
 		push	large 800C0h
-		call	sub_109A
+		call	grcg_vline
 		mov	ax, word_220EC
 		add	ax, 900h
 		push	ax
@@ -44716,7 +44627,7 @@ loc_18E7C:
 		mov	si, ax
 		push	ax
 		push	large 800C0h
-		call	sub_109A
+		call	grcg_vline
 		mov	ax, word_220EC
 		add	ax, ax
 		mov	dx, 900h
@@ -44729,7 +44640,7 @@ loc_18E7C:
 		mov	si, ax
 		push	ax
 		push	large 800C0h
-		call	sub_109A
+		call	grcg_vline
 		mov	ax, word_220EC
 		add	ax, ax
 		add	ax, 900h
@@ -44741,7 +44652,7 @@ loc_18E7C:
 		mov	si, ax
 		push	ax
 		push	large 800C0h
-		call	sub_109A
+		call	grcg_vline
 		add	word_220EC, 41h	; 'A'
 		cmp	word_220EC, 480h
 		jl	short loc_18F38
@@ -48545,7 +48456,7 @@ loc_1AA24:
 		lea	dx, [si+34h]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		lea	dx, [di+20h]
@@ -48561,7 +48472,7 @@ loc_1AA24:
 		lea	dx, [si+34h]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48609,7 +48520,7 @@ loc_1AA24:
 		lea	dx, [si+10h]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		lea	dx, [di+50h]
@@ -48703,7 +48614,7 @@ loc_1ABA2:
 		lea	dx, [si+2Ch]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		lea	dx, [di+10h]
@@ -48719,7 +48630,7 @@ loc_1ABA2:
 		lea	dx, [si+2Ch]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48767,7 +48678,7 @@ loc_1ABA2:
 		lea	dx, [si+8]
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		mov	al, [bp+var_7]
 		cbw
 		lea	dx, [di+40h]
@@ -48786,7 +48697,7 @@ loc_1ABA2:
 loc_1ACCF:
 		sub	dx, ax
 		push	dx
-		call	sub_109A
+		call	grcg_vline
 		call	grcg_off
 		call	egc_on
 		push	large 0
