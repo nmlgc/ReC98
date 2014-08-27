@@ -1879,35 +1879,7 @@ sub_CB4		proc far
 		retf
 sub_CB4		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D02		proc far
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_D02		endp
-
+include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1925,8 +1897,7 @@ sub_D2C		proc far
 		call	graph_show
 		push	cs
 		call	near ptr sub_CB4
-		push	cs
-		call	near ptr sub_D02
+		call	graph_clear
 		call	palette_init
 		retf
 sub_D2C		endp

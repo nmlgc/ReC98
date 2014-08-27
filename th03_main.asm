@@ -2174,37 +2174,7 @@ sub_145C	proc far
 		retf
 sub_145C	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14AA	proc far
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_14AA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24826,11 +24796,11 @@ sub_EA1A	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_14AA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_14AA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

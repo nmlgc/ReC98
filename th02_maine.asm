@@ -1821,37 +1821,7 @@ sub_11EE	proc far
 		retf
 sub_11EE	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_123C	proc far
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_123C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17588,7 +17558,7 @@ loc_AF56:
 		nop
 		push	cs
 		call	near ptr sub_AFE7
-		call	sub_123C
+		call	graph_clear
 		pop	di
 		pop	si
 		leave
@@ -18431,11 +18401,11 @@ sub_B616	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_123C
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_123C
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

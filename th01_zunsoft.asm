@@ -38,11 +38,11 @@ sub_367		proc near
 		mov	dx, 0A6h
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_928
+		call	graph_clear
 		mov	dx, 0A6h
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_928
+		call	graph_clear
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -753,37 +753,7 @@ sub_8DA		proc near
 		retn
 sub_8DA		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_928		proc near
-		mov	al, 80h
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retn
-sub_928		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -812,7 +782,7 @@ sub_958		proc near
 		out	0A6h, al	; Interrupt Controller #2, 8259A
 		call	graph_show
 		call	sub_8DA
-		call	sub_928
+		call	graph_clear
 		call	palette_init
 		retn
 sub_958		endp

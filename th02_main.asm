@@ -2409,37 +2409,7 @@ sub_158C	proc far
 		retf
 sub_158C	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15DA	proc far
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_15DA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19027,11 +18997,11 @@ var_C		= byte ptr -0Ch
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20769,7 +20739,7 @@ _arg0		= dword	ptr  6
 		call	sub_F4EF
 		call	sub_1C608
 		call	super_free
-		call	sub_15DA
+		call	graph_clear
 		call	text_clear
 		call	sub_DC4B
 		call	sub_F70E
@@ -27404,11 +27374,11 @@ sub_F70E	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -47496,11 +47466,11 @@ sub_199B3	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		push	large 0C0000Bh
 		call	sub_127E
 		push	large 1A00000h
@@ -48796,11 +48766,11 @@ sub_1A6C5	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_15DA
+		call	graph_clear
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_F618
@@ -48983,7 +48953,7 @@ sub_1A7D5	proc far
 		call	near ptr sub_13ABB
 		add	sp, 6
 		call	sub_13187
-		call	sub_15DA
+		call	graph_clear
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E

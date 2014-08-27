@@ -1756,35 +1756,7 @@ sub_C6A		proc far
 		retf
 sub_C6A		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CB8		proc far
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_CB8		endp
-
+include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1802,8 +1774,7 @@ sub_CE2		proc far
 		call	graph_show
 		push	cs
 		call	near ptr sub_C6A
-		push	cs
-		call	near ptr sub_CB8
+		call	graph_clear
 		call	palette_init
 		retf
 sub_CE2		endp

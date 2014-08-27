@@ -1159,38 +1159,7 @@ sub_113A	proc far
 		retf
 sub_113A	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1188	proc far
-					; sub_A847+312P ...
-		mov	al, 80h	; '€'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		xor	ax, ax
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		mov	bx, di
-		xor	di, di
-		mov	cx, graph_VramWords
-		mov	es, graph_VramSeg
-		assume es:nothing
-		rep stosw
-		mov	di, bx
-		out	7Ch, al
-		retf
-sub_1188	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15395,11 +15364,11 @@ loc_AB48:
 		mov	dx, 0A6h ; '¦'  ; jumptable 0000A876 case 64
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_1188
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_1188
+		call	graph_clear
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -20404,11 +20373,11 @@ sub_D3F4	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_1188
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_1188
+		call	graph_clear
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
