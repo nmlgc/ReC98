@@ -1991,40 +1991,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/clip[data].asm
-		db 0
-		db    0
-		db  80h	; €
-		db    0
-		db 0C0h	; À
-		db    0
-		db 0E0h	; à
-		db    0
-		db 0F0h	; ð
-		db    0
-		db 0F8h	; ø
-		db    0
-		db 0FCh	; ü
-		db    0
-		db 0FEh	; þ
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db  80h	; €
-		db 0FFh
-		db 0C0h	; À
-		db 0FFh
-		db 0E0h	; à
-		db 0FFh
-		db 0F0h	; ð
-		db 0FFh
-		db 0F8h	; ø
-		db 0FFh
-		db 0FCh	; ü
-		db 0FFh
-		db 0FEh	; þ
-		db 0FFh
-		db 0FFh
+include libs/master.lib/edges[data].asm
 		db    0
 		db    0
 		db    6

@@ -21753,40 +21753,7 @@ aTs2_pi		db 'ts2.pi',0
 		db 0
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
-		db    0
-		db    0
-		db  80h	; €
-		db    0
-		db 0C0h	; À
-		db    0
-		db 0E0h	; à
-		db    0
-		db 0F0h	; ð
-		db    0
-		db 0F8h	; ø
-		db    0
-		db 0FCh	; ü
-		db    0
-		db 0FEh	; þ
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db  80h	; €
-		db 0FFh
-		db 0C0h	; À
-		db 0FFh
-		db 0E0h	; à
-		db 0FFh
-		db 0F0h	; ð
-		db 0FFh
-		db 0F8h	; ø
-		db 0FFh
-		db 0FCh	; ü
-		db 0FFh
-		db 0FEh	; þ
-		db 0FFh
-		db 0FFh
+include libs/master.lib/edges[data].asm
 word_D85A	dw 0
 word_D85C	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm

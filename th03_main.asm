@@ -54478,39 +54478,7 @@ aZikicw_bf2	db 'zikicw.bf2',0
 		db  20h
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
-		dw 0
-		db  80h	; €
-		db    0
-		db 0C0h	; À
-		db    0
-		db 0E0h	; à
-		db    0
-		db 0F0h	; ð
-		db    0
-		db 0F8h	; ø
-		db    0
-		db 0FCh	; ü
-		db    0
-		db 0FEh	; þ
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db  80h	; €
-		db 0FFh
-		db 0C0h	; À
-		db 0FFh
-		db 0E0h	; à
-		db 0FFh
-		db 0F0h	; ð
-		db 0FFh
-		db 0F8h	; ø
-		db 0FFh
-		db 0FCh	; ü
-		db 0FFh
-		db 0FEh	; þ
-		db 0FFh
-		db 0FFh
+include libs/master.lib/edges[data].asm
 word_1D810	dw 0
 word_1D812	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm

@@ -36232,40 +36232,7 @@ aKao1_cd2	db 'KAO1.cd2',0
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
-		db    0
-		db    0
-		db  80h	; €
-		db    0
-		db 0C0h	; À
-		db    0
-		db 0E0h	; à
-		db    0
-		db 0F0h	; ð
-		db    0
-		db 0F8h	; ø
-		db    0
-		db 0FCh	; ü
-		db    0
-		db 0FEh	; þ
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db  80h	; €
-		db 0FFh
-		db 0C0h	; À
-		db 0FFh
-		db 0E0h	; à
-		db 0FFh
-		db 0F0h	; ð
-		db 0FFh
-		db 0F8h	; ø
-		db 0FFh
-		db 0FCh	; ü
-		db 0FFh
-		db 0FEh	; þ
-		db 0FFh
-		db 0FFh
+include libs/master.lib/edges[data].asm
 word_2169E	dw 0
 word_216A0	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm

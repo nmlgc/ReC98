@@ -25942,39 +25942,7 @@ arg0		db 'op',0
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
-		dw    0
-		db  80h	; Ä
-		db    0
-		db 0C0h	; ¿
-		db    0
-		db 0E0h	; ÅE
-		db    0
-		db 0F0h	; ÅE
-		db    0
-		db 0F8h	; ÅE
-		db    0
-		db 0FCh	; ÅE
-		db    0
-		db 0FEh	; ˛
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db  80h	; Ä
-		db 0FFh
-		db 0C0h	; ¿
-		db 0FFh
-		db 0E0h	; ÅE
-		db 0FFh
-		db 0F0h	; ÅE
-		db 0FFh
-		db 0F8h	; ÅE
-		db 0FFh
-		db 0FCh	; ÅE
-		db 0FFh
-		db 0FEh	; ˛
-		db 0FFh
-		db 0FFh
+include libs/master.lib/edges[data].asm
 word_102FC	dw 0
 word_102FE	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm
