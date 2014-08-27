@@ -42,7 +42,7 @@ include libs/master.lib/palette_black_out.asm
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_D8AE
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -54,7 +54,7 @@ include libs/master.lib/palette_black_out.asm
 		jb	short loc_5FB
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_D8AE
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -62,14 +62,14 @@ include libs/master.lib/palette_black_out.asm
 ; ---------------------------------------------------------------------------
 
 loc_5F4:
-		mov	byte_D8B0, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_605
 ; ---------------------------------------------------------------------------
 
 loc_5FB:
 		push	es
 		call	hmem_free
-		mov	byte_D8B0, 1
+		mov	byte ptr pferrno, 1
 
 loc_605:
 		xor	ax, ax
@@ -17350,7 +17350,7 @@ loc_AFC4:
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
-		mov	byte_D8B2, 12h
+		mov	pfkey, 12h
 		push	ds
 		push	offset aUmx	; "“Œ•û••–‚.˜^"
 		call	sub_2F56
@@ -22311,11 +22311,7 @@ word_D872	dw 0
 		db  55h	; U
 		db    0
 include libs/master.lib/pal[data].asm
-word_D8AE	dw 200h
-byte_D8B0	db 0
-					; seg000:0600w
-		db 0
-byte_D8B2	db 0
+include libs/master.lib/pf[data].asm
 		db 0
 word_D8B4	dw 1
 word_D8B6	dw 0

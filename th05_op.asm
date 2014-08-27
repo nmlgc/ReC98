@@ -50,7 +50,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_F566
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -62,7 +62,7 @@ arg_2		= word ptr  8
 		jb	short loc_6C5
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_F566
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -70,14 +70,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_6BE:
-		mov	byte_F568, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_6CF
 ; ---------------------------------------------------------------------------
 
 loc_6C5:
 		push	es
 		call	hmem_free
-		mov	byte_F568, 1
+		mov	byte ptr pferrno, 1
 
 loc_6CF:
 		xor	ax, ax
@@ -22068,7 +22068,7 @@ loc_DF27:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	word_F566, 2000h
+		mov	bbufsiz, 2000h
 		call	vsync_start
 		call	key_beep_off
 		call	text_systemline_hide
@@ -24213,11 +24213,7 @@ word_F524	dw 0
 		db    0
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
-word_F566	dw 200h
-byte_F568	db 0
-					; sub_682+48w
-		db 0
-		db 0
+include libs/master.lib/pf[data].asm
 		db 0
 word_F56C	dw 1
 word_F56E	dw 0

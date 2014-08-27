@@ -50,7 +50,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_E9A0
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -62,7 +62,7 @@ arg_2		= word ptr  8
 		jb	short loc_5FB
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_E9A0
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -70,14 +70,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_5F4:
-		mov	byte_E9A2, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_605
 ; ---------------------------------------------------------------------------
 
 loc_5FB:
 		push	es
 		call	hmem_free
-		mov	byte_E9A2, 1
+		mov	byte ptr pferrno, 1
 
 loc_605:
 		xor	ax, ax
@@ -24275,11 +24275,7 @@ word_E960	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[data].asm
-word_E9A0	dw 200h
-byte_E9A2	db 0
-					; sub_5B8+48w
-		db    0
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 dword_E9A6	dd 1
 		db 0

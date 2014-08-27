@@ -50,7 +50,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_D3E8
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -62,7 +62,7 @@ arg_2		= word ptr  8
 		jb	short loc_5FB
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_D3E8
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -70,14 +70,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_5F4:
-		mov	byte ptr word_D3EA, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_605
 ; ---------------------------------------------------------------------------
 
 loc_5FB:
 		push	es
 		call	hmem_free
-		mov	byte ptr word_D3EA, 1
+		mov	byte ptr pferrno, 1
 
 loc_605:
 		xor	ax, ax
@@ -3021,7 +3021,7 @@ loc_2B30:
 		jnz	short loc_2BC5
 		mov	ax, 1DF2h
 		mov	es:4, ax
-		mov	al, byte_D3EC
+		mov	al, pfkey
 		mov	es:1Eh,	al
 		mov	ax, ss:[di]
 		cmp	ax, 0F388h
@@ -3062,7 +3062,7 @@ loc_2B8D:
 ; ---------------------------------------------------------------------------
 
 loc_2BC5:
-		mov	word_D3EA, ax
+		mov	pferrno, ax
 		push	word ptr es:0
 		call	bcloser
 
@@ -3073,7 +3073,7 @@ loc_2BD1:
 ; ---------------------------------------------------------------------------
 
 loc_2BD8:
-		mov	byte ptr word_D3EA, 3
+		mov	byte ptr pferrno, 3
 
 loc_2BDD:
 		xor	ax, ax
@@ -18701,7 +18701,7 @@ loc_B76A:
 		call	vsync_start
 		call	egc_start
 		call	sub_11EE
-		mov	byte_D3EC, 12h
+		mov	pfkey, 12h
 		push	ds
 		push	offset aUmx	; "“Œ•û••–‚.˜^"
 		call	sub_2912
@@ -21767,10 +21767,7 @@ word_D3AC	dw 0
 		db  55h	; U
 		db    0
 include libs/master.lib/pal[data].asm
-word_D3E8	dw 200h
-word_D3EA	dw 0
-					; sub_5B8+48w ...
-byte_D3EC	db 0
+include libs/master.lib/pf[data].asm
 		db 0
 		db    0
 		db    0

@@ -51,7 +51,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_E69A
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -63,7 +63,7 @@ arg_2		= word ptr  8
 		jb	short loc_6E7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_E69A
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -71,14 +71,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_6E0:
-		mov	byte ptr word_E69C, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_6F1
 ; ---------------------------------------------------------------------------
 
 loc_6E7:
 		push	es
 		call	hmem_free
-		mov	byte ptr word_E69C, 1
+		mov	byte ptr pferrno, 1
 
 loc_6F1:
 		xor	ax, ax
@@ -2297,7 +2297,7 @@ loc_2C61:
 ; ---------------------------------------------------------------------------
 
 loc_2C91:
-		mov	word_E69C, ax
+		mov	pferrno, ax
 		push	word ptr es:0
 		call	bcloser
 
@@ -2308,7 +2308,7 @@ loc_2C9D:
 ; ---------------------------------------------------------------------------
 
 loc_2CA4:
-		mov	byte ptr word_E69C, 3
+		mov	byte ptr pferrno, 3
 
 loc_2CA9:
 		xor	ax, ax
@@ -20525,7 +20525,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_D453:
-		mov	word_E69A, 1000h
+		mov	bbufsiz, 1000h
 		nop
 		push	cs
 		call	near ptr sub_CC7A
@@ -22480,10 +22480,7 @@ word_E658	dw 0
 		dw 0
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
-word_E69A	dw 200h
-word_E69C	dw 0
-					; sub_6A4+48w ...
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 dword_E6A0	dd 1
 word_E6A4	dw 0

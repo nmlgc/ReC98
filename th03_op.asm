@@ -49,7 +49,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_DAFC
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -61,7 +61,7 @@ arg_2		= word ptr  8
 		jb	short loc_5B7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_DAFC
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -69,14 +69,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_5B0:
-		mov	byte ptr word_DAFE, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_5C1
 ; ---------------------------------------------------------------------------
 
 loc_5B7:
 		push	es
 		call	hmem_free
-		mov	byte ptr word_DAFE, 1
+		mov	byte ptr pferrno, 1
 
 loc_5C1:
 		xor	ax, ax
@@ -3349,7 +3349,7 @@ loc_2FBB:
 ; ---------------------------------------------------------------------------
 
 loc_2FEB:
-		mov	word_DAFE, ax
+		mov	pferrno, ax
 		push	word ptr es:0
 		call	bcloser
 
@@ -3360,7 +3360,7 @@ loc_2FF7:
 ; ---------------------------------------------------------------------------
 
 loc_2FFE:
-		mov	byte ptr word_DAFE, 3
+		mov	byte ptr pferrno, 3
 
 loc_3003:
 		xor	ax, ax
@@ -22862,10 +22862,7 @@ word_DABC	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[data].asm
-word_DAFC	dw 200h
-word_DAFE	dw 0
-					; sub_574+48w ...
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 dword_DB02	dd 1
 		dw 0

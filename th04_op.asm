@@ -43,7 +43,7 @@ include libs/master.lib/palette_black_out.asm
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_F8FE
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -55,7 +55,7 @@ include libs/master.lib/palette_black_out.asm
 		jb	short loc_6E7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_F8FE
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -63,14 +63,14 @@ include libs/master.lib/palette_black_out.asm
 ; ---------------------------------------------------------------------------
 
 loc_6E0:
-		mov	byte_F900, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_6F1
 ; ---------------------------------------------------------------------------
 
 loc_6E7:
 		push	es
 		call	hmem_free
-		mov	byte_F900, 1
+		mov	byte ptr pferrno, 1
 
 loc_6F1:
 		xor	ax, ax
@@ -22061,7 +22061,7 @@ loc_E109:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	word_F8FE, 2000h
+		mov	bbufsiz, 2000h
 		call	vsync_start
 		call	key_beep_off
 		call	text_systemline_hide
@@ -24346,11 +24346,7 @@ word_F8BC	dw 0
 		db    0
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
-word_F8FE	dw 200h
-byte_F900	db 0
-					; seg000:06ECw
-		db    0
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 word_F904	dw 1
 word_F906	dw 0

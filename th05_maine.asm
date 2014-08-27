@@ -50,7 +50,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_10370
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -62,7 +62,7 @@ arg_2		= word ptr  8
 		jb	short loc_6C5
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_10370
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -70,14 +70,14 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_6BE:
-		mov	byte_10372, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_6CF
 ; ---------------------------------------------------------------------------
 
 loc_6C5:
 		push	es
 		call	hmem_free
-		mov	byte_10372, 1
+		mov	byte ptr pferrno, 1
 
 loc_6CF:
 		xor	ax, ax
@@ -24404,7 +24404,7 @@ locret_F0C8:
 ; ---------------------------------------------------------------------------
 
 loc_F0CB:
-		mov	word_10370, 1000h
+		mov	bbufsiz, 1000h
 		call	vsync_start
 		call	egc_start
 		call	sub_12B4
@@ -26578,11 +26578,7 @@ word_1032E	dw 0
 		db    0
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
-word_10370	dw 200h
-byte_10372	db 0
-					; sub_682+48w
-		db    0
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 dword_10376	dd 1
 		dw    0

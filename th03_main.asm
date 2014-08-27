@@ -41,7 +41,7 @@ include libs/master.lib/palette_black_out.asm
 		push	bp
 		mov	bp, sp
 		mov	mem_AllocID, 6
-		mov	ax, word_1D86C
+		mov	ax, bbufsiz
 		add	ax, 9
 		push	ax
 		call	hmem_allocbyte
@@ -53,7 +53,7 @@ include libs/master.lib/palette_black_out.asm
 		jb	short loc_5B7
 		mov	es:0, ax
 		mov	word ptr es:2, 0
-		mov	ax, word_1D86C
+		mov	ax, bbufsiz
 		mov	es:6, ax
 		mov	ax, es
 		pop	bp
@@ -61,14 +61,14 @@ include libs/master.lib/palette_black_out.asm
 ; ---------------------------------------------------------------------------
 
 loc_5B0:
-		mov	byte_1D86E, 3
+		mov	byte ptr pferrno, 3
 		jmp	short loc_5C1
 ; ---------------------------------------------------------------------------
 
 loc_5B7:
 		push	es
 		call	hmem_free
-		mov	byte_1D86E, 1
+		mov	byte ptr pferrno, 1
 
 loc_5C1:
 		xor	ax, ax
@@ -55034,11 +55034,7 @@ word_1D82C	dw 0
 		db    0
 		db    0
 include libs/master.lib/pal[data].asm
-word_1D86C	dw 200h
-byte_1D86E	db 0
-					; seg000:05BCw
-		db    0
-		db    0
+include libs/master.lib/pf[data].asm
 		db    0
 dword_1D872	dd 1
 		db 0
