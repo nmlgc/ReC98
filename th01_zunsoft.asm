@@ -73,7 +73,7 @@ sub_384		proc near
 		push	21Fh
 		push	12Bh
 		call	sub_139C
-		call	sub_94C
+		call	graph_hide
 		push	21CEh
 		call	super_entry_bfnt
 		call	palette_show
@@ -720,18 +720,7 @@ include libs/BorlandC/txesc.asm
 		db    0
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_94C		proc near
-		mov	ah, 41h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retn
-sub_94C		endp
-
+include libs/master.lib/graph_hide.asm
 include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================

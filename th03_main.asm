@@ -1927,21 +1927,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1590	proc far
-		mov	ah, 41h	; 'A'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_1590	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/graph_hide.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
 
@@ -17060,7 +17046,7 @@ _arg0		= dword	ptr  6
 		push	large [dword_1EFFC]
 		call	graph_pi_free
 		call	super_free
-		call	sub_1590
+		call	graph_hide
 		call	text_clear
 		call	sub_11DA
 		push	0

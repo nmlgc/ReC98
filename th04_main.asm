@@ -2459,20 +2459,7 @@ sub_1C5C	endp
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D4A	proc far
-		mov	ah, 41h	; 'A'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_1D4A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_hide.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24909,7 +24896,7 @@ loc_E813:
 		call	sub_B79E
 		call	sub_B9BB
 		call	super_free
-		call	sub_1D4A
+		call	graph_hide
 		call	text_clear
 		call	sub_1A5A
 		call	sub_1361E
