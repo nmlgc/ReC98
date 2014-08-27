@@ -22490,14 +22490,7 @@ word_E8E4	dw 0B5h
 		db    1
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm
-		db 0FFh
-		db  7Fh	; 
-		db  3Fh	; ?
-		db  1Fh
-		db  0Fh
-		db    7
-		db    3
-		db    1
+include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm

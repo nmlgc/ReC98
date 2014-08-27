@@ -22282,14 +22282,7 @@ aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,
 		db 'man,iR,All rights reserved.',0
 		db 0
 include libs/master.lib/vs[data].asm
-		db 0FFh
-		db  7Fh	; 
-		db  3Fh	; ?
-		db  1Fh
-		db  0Fh
-		db    7
-		db    3
-		db    1
+include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
