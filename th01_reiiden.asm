@@ -1844,26 +1844,7 @@ sub_C7C		endp
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D2C		proc far
-		mov	al, 41h	; 'A'
-		out	6Ah, al		; PC-98	GDC (6a):
-					; Set display mode to LCD
-		mov	PaletteTone, 0
-		call	palette_show
-		mov	al, 0
-		out	0A4h, al	; Interrupt Controller #2, 8259A
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		call	graph_show
-		call	graph_400line
-		call	graph_clear
-		call	palette_init
-		retf
-sub_D2C		endp
-
+include libs/master.lib/graph_start.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 
@@ -28927,7 +28908,7 @@ sub_E7E4	proc far
 		call	sub_E3BE
 		call	sub_E46D
 		call	egc_start
-		call	sub_D2C
+		call	graph_start
 		call	sub_ECC
 		call	sub_102BB
 		call	sub_103D6

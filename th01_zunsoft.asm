@@ -59,7 +59,7 @@ sub_384		proc near
 		push	bp
 		mov	bp, sp
 		call	mem_assign_all
-		call	sub_958
+		call	graph_start
 		call	key_beep_off
 		call	text_systemline_hide
 		call	text_cursor_hide
@@ -722,26 +722,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_hide.asm
 include libs/master.lib/graph_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_958		proc near
-		mov	al, 41h
-		out	6Ah, al		; PC-98	GDC (6a):
-					; Set display mode to LCD
-		mov	PaletteTone, 0
-		call	palette_show
-		mov	al, 0
-		out	0A4h, al	; Interrupt Controller #2, 8259A
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		call	graph_show
-		call	graph_400line
-		call	graph_clear
-		call	palette_init
-		retn
-sub_958		endp
-
+include libs/master.lib/graph_start.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/keybeep.asm

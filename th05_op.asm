@@ -790,26 +790,7 @@ include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1942	proc far
-		mov	al, 41h	; 'A'
-		out	6Ah, al		; PC-98	GDC (6a):
-					; Set display mode to LCD
-		mov	PaletteTone, 0
-		call	palette_show
-		mov	al, 0
-		out	0A4h, al	; Interrupt Controller #2, 8259A
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		call	graph_show
-		call	graph_400line
-		call	graph_clear
-		call	palette_init
-		retf
-sub_1942	endp
-
+include libs/master.lib/graph_start.asm
 include libs/master.lib/js_end.asm
 include libs/master.lib/keybeep.asm
 include libs/master.lib/make_linework.asm
@@ -21260,7 +21241,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_DF27:
-		call	sub_1942
+		call	graph_start
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
