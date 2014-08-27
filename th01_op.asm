@@ -1731,9 +1731,9 @@ sub_C6A		proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_12A32, ax
+		mov	graph_VramSeg, ax
 		mov	word_12AF8, ax
-		mov	word_12A34, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_12AEC, ax
 		mov	word_12AF2, ax
@@ -1743,12 +1743,12 @@ sub_C6A		proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_12A3A, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_12AF0, ax
 		mov	word_12AEE, ax
 		mov	ax, 190h
-		mov	word_12A36, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_12AF6, ax
 		mov	word_12AF4, ax
@@ -1776,8 +1776,8 @@ sub_CB8		proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_12A34
-		mov	es, word_12A32
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -37254,13 +37254,7 @@ aHgrz		db 'HGRZ',0
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
 		db 'man,iR,All rights reserved.',0
 		db 0
-word_12A32	dw 0A800h
-word_12A34	dw 3E80h
-word_12A36	dw 190h
-		db  50h	; P
-		db    0
-word_12A3A	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 		db  70h	; p

@@ -1269,7 +1269,7 @@ arg_4		= word ptr  0Ah
 		or	si, si
 		jz	short loc_10A9
 		push	di
-		mov	al, byte ptr word_20DBE
+		mov	al, byte ptr graph_VramZoom
 		mov	cs:byte_114F, al
 		mov	cs:byte_11BB, al
 		mov	es, word_20D6A
@@ -1387,7 +1387,7 @@ loc_121C:
 		mov	dx, [bp+6]
 		test	dx, dx
 		jz	short loc_1256
-		mov	al, byte ptr word_20DBE
+		mov	al, byte ptr graph_VramZoom
 		mov	cs:byte_1277, al
 		mov	cs:byte_12C1, al
 		mov	ax, [bp+8]
@@ -1505,7 +1505,7 @@ loc_131E:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_20DBC
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -1530,7 +1530,7 @@ loc_1354:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_20DBA
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -1543,14 +1543,14 @@ loc_1354:
 		mov	word_20D66, bx
 		add	ax, bx
 		mov	word_20D68, ax
-		mov	ax, word_20DBC
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_20D6C, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_20DB6
+		add	ax, graph_VramSeg
 		mov	word_20D6A, ax
 		mov	ax, 1
 		pop	bp
@@ -2830,9 +2830,9 @@ sub_1E14	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_20DB6, ax
+		mov	graph_VramSeg, ax
 		mov	word_20D6A, ax
-		mov	word_20DB8, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_20D5E, ax
 		mov	word_20D64, ax
@@ -2841,12 +2841,12 @@ sub_1E14	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_20DBE, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_20D62, ax
 		mov	word_20D60, ax
 		mov	ax, 190h
-		mov	word_20DBA, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_20D68, ax
 		mov	word_20D66, ax
@@ -2875,8 +2875,8 @@ sub_1E62	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_20DB8
-		mov	es, word_20DB6
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -2911,14 +2911,14 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, word_20DBA
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
 		mov	bp, bx
-		mov	cx, word_20DBE
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -3118,7 +3118,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		push	si
 		push	di
-		mov	es, word_20DB6
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	cx, [bp+arg_4]
 		mov	di, [bp+arg_2]
@@ -37482,12 +37482,7 @@ word_20D92	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
-word_20DB6	dw 0A800h
-word_20DB8	dw 3E80h
-word_20DBA	dw 190h
-word_20DBC	dw 50h
-word_20DBE	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 word_20DC2	dw 0
 					; sub_14FD6+E9r

@@ -729,9 +729,9 @@ sub_8DA		proc near
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_223C, ax
+		mov	graph_VramSeg, ax
 		mov	word_22C2, ax
-		mov	word_223E, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_22B6, ax
 		mov	word_22BC, ax
@@ -740,12 +740,12 @@ sub_8DA		proc near
 		and	ah, 4
 		add	ah, 3Fh
 		and	ah, 40h
-		mov	word_2244, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_22BA, ax
 		mov	word_22B8, ax
 		mov	ax, 190h
-		mov	word_2240, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_22C0, ax
 		mov	word_22BE, ax
@@ -773,8 +773,8 @@ sub_928		proc near
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_223E
-		mov	es, word_223C
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1207,7 +1207,7 @@ loc_13AE:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_2242
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -1232,7 +1232,7 @@ loc_13E4:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_2240
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -1245,14 +1245,14 @@ loc_13E4:
 		mov	word_22BE, bx
 		add	ax, bx
 		mov	word_22C0, ax
-		mov	ax, word_2242
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_22C4, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_223C
+		add	ax, graph_VramSeg
 		mov	word_22C2, ax
 		mov	ax, 1
 		pop	bp
@@ -2155,12 +2155,8 @@ aTouhou_dat	db 'touhou.dat',0
 aMasters_libVer	db 'MASTERS.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
 		db 'man,iR,All rights reserved.',0
 		db 0
-word_223C	dw 0A800h
-word_223E	dw 3E80h
-word_2240	dw 190h
-word_2242	dw 50h
-word_2244	dw 0
-		db 55h,	0
+include libs/master.lib/grp[data].asm
+		db 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/dos_ropen[data].asm

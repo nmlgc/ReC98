@@ -1464,9 +1464,9 @@ sub_10FE	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_DAB0, ax
+		mov	graph_VramSeg, ax
 		mov	word_DA7A, ax
-		mov	word_DAB2, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_DA6E, ax
 		mov	word_DA74, ax
@@ -1475,12 +1475,12 @@ sub_10FE	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_DAB8, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_DA72, ax
 		mov	word_DA70, ax
 		mov	ax, 190h
-		mov	word_DAB4, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_DA78, ax
 		mov	word_DA76, ax
@@ -1508,8 +1508,8 @@ sub_114C	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_DAB2
-		mov	es, word_DAB0
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1545,7 +1545,7 @@ sub_1170	endp
 
 sub_1186	proc far
 		xor	dx, dx
-		mov	cx, word_DAB2
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -1604,7 +1604,7 @@ arg_A		= word ptr  10h
 		push	si
 		push	di
 		push	ds
-		mov	es, word_DAB0
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	cx, [bp+arg_A]
 		mov	di, [bp+arg_8]
@@ -16084,7 +16084,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_10FE
 		call	text_clear
 		call	sub_2AC6
-		cmp	word_DAB8, 0
+		cmp	graph_VramZoom, 0
 		jz	short loc_A452
 		push	ds
 		push	offset aVfvcvbgngngbgn ; "ÇfÇcÇbÉNÉçÉbÉNÇ™ÇTÇlÇgÇöÇ…Ç»Ç¡ÇƒÇ¢Ç‹Ç∑Å"...
@@ -22639,13 +22639,7 @@ word_DAA6	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_DAB0	dw 0A800h
-word_DAB2	dw 3E80h
-word_DAB4	dw 190h
-		db  50h	; P
-		db    0
-word_DAB8	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 word_DABC	dw 0
 					; sub_2DF4+5r ...

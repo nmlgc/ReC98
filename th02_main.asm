@@ -978,7 +978,7 @@ arg_4		= word ptr  0Ah
 		or	si, si
 		jz	short loc_CBB
 		push	di
-		mov	al, byte ptr word_1DF96
+		mov	al, byte ptr graph_VramZoom
 		mov	byte ptr cs:loc_D5F+2, al
 		mov	byte ptr cs:loc_DCB+2, al
 		mov	es, word_1DF58
@@ -1150,7 +1150,7 @@ loc_E2E:
 		mov	dx, [bp+6]
 		test	dx, dx
 		jz	short loc_E68
-		mov	al, byte ptr word_1DF96
+		mov	al, byte ptr graph_VramZoom
 		mov	byte ptr cs:loc_E87+2, al
 		mov	byte ptr cs:loc_ED1+2, al
 		mov	ax, [bp+8]
@@ -1297,7 +1297,7 @@ loc_F30:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_1DF94
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -1322,7 +1322,7 @@ loc_F66:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_1DF92
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -1335,14 +1335,14 @@ loc_F66:
 		mov	word_1DF54, bx
 		add	ax, bx
 		mov	word_1DF56, ax
-		mov	ax, word_1DF94
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_1DF5A, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_1DF8E
+		add	ax, graph_VramSeg
 		mov	word_1DF58, ax
 		mov	ax, 1
 		pop	bp
@@ -2384,9 +2384,9 @@ sub_158C	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_1DF8E, ax
+		mov	graph_VramSeg, ax
 		mov	word_1DF58, ax
-		mov	word_1DF90, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_1DF4C, ax
 		mov	word_1DF52, ax
@@ -2396,12 +2396,12 @@ sub_158C	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_1DF96, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_1DF50, ax
 		mov	word_1DF4E, ax
 		mov	ax, 190h
-		mov	word_1DF92, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_1DF56, ax
 		mov	word_1DF54, ax
@@ -2429,8 +2429,8 @@ sub_15DA	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_1DF90
-		mov	es, word_1DF8E
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -2466,7 +2466,7 @@ sub_15FE	endp
 
 sub_1614	proc far
 		xor	dx, dx
-		mov	cx, word_1DF90
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -2644,14 +2644,14 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, word_1DF92
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
 		mov	bp, bx
-		mov	cx, word_1DF96
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -2700,13 +2700,13 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_4]
-		mov	dx, word_1DF92
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
-		mov	cx, word_1DF96
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -19928,7 +19928,7 @@ loc_BE77:
 		mov	[bp+var_2], ax
 		mov	ax, word_20348
 		mov	[bp+var_4], ax
-		mov	cx, word_1DF96
+		mov	cx, graph_VramZoom
 		mov	cl, 4
 
 loc_BE8D:
@@ -55179,12 +55179,7 @@ word_1DF84	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_1DF8E	dw 0A800h
-word_1DF90	dw 3E80h
-word_1DF92	dw 190h
-word_1DF94	dw 50h
-word_1DF96	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm

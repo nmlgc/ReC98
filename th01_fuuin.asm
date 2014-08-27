@@ -1815,9 +1815,9 @@ sub_C6A		proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_13576, ax
+		mov	graph_VramSeg, ax
 		mov	word_135E0, ax
-		mov	word_13578, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_135D4, ax
 		mov	word_135DA, ax
@@ -1827,12 +1827,12 @@ sub_C6A		proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_1357E, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_135D8, ax
 		mov	word_135D6, ax
 		mov	ax, 190h
-		mov	word_1357A, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_135DE, ax
 		mov	word_135DC, ax
@@ -1860,8 +1860,8 @@ sub_CB8		proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_13578
-		mov	es, word_13576
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1906,14 +1906,14 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, word_1357A
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
 		mov	bp, bx
-		mov	cx, word_1357E
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -40003,13 +40003,7 @@ aMdrv2system	db 'Mdrv2System',0
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
 		db 'man,iR,All rights reserved.',0
 		db 0
-word_13576	dw 0A800h
-word_13578	dw 3E80h
-word_1357A	dw 190h
-		db  50h	; P
-		db    0
-word_1357E	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 aPal98Grb_0	db 'pal98 grb',0

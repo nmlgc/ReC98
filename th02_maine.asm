@@ -1796,9 +1796,9 @@ sub_11EE	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_D3A4, ax
+		mov	graph_VramSeg, ax
 		mov	word_D36E, ax
-		mov	word_D3A6, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_D362, ax
 		mov	word_D368, ax
@@ -1808,12 +1808,12 @@ sub_11EE	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_D3AC, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_D366, ax
 		mov	word_D364, ax
 		mov	ax, 190h
-		mov	word_D3A8, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_D36C, ax
 		mov	word_D36A, ax
@@ -1841,8 +1841,8 @@ sub_123C	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_D3A6
-		mov	es, word_D3A4
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1878,7 +1878,7 @@ sub_1260	endp
 
 sub_1276	proc far
 		xor	dx, dx
-		mov	cx, word_D3A6
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -1968,7 +1968,7 @@ arg_6		= word ptr  0Ch
 		and	cx, 7
 		shr	ax, 3
 		add	di, ax
-		mov	es, word_D3A4
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	ax, bp
 		out	0A1h, al	; Interrupt Controller #2, 8259A
@@ -2027,7 +2027,7 @@ arg_A		= word ptr  10h
 		push	si
 		push	di
 		push	ds
-		mov	es, word_D3A4
+		mov	es, graph_VramSeg
 		mov	cx, [bp+arg_A]
 		mov	di, [bp+arg_8]
 		mov	bx, [bp+arg_6]
@@ -21690,13 +21690,7 @@ word_D39A	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_D3A4	dw 0A800h
-word_D3A6	dw 3E80h
-word_D3A8	dw 190h
-		db  50h	; P
-		db    0
-word_D3AC	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm

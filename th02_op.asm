@@ -608,7 +608,7 @@ loc_B10:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_D870
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -633,7 +633,7 @@ loc_B46:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_D86E
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -646,14 +646,14 @@ loc_B46:
 		mov	word_D830, bx
 		add	ax, bx
 		mov	word_D832, ax
-		mov	ax, word_D870
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_D836, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_D86A
+		add	ax, graph_VramSeg
 		mov	word_D834, ax
 		mov	ax, 1
 		pop	bp
@@ -1702,9 +1702,9 @@ sub_1208	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_D86A, ax
+		mov	graph_VramSeg, ax
 		mov	word_D834, ax
-		mov	word_D86C, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_D828, ax
 		mov	word_D82E, ax
@@ -1713,12 +1713,12 @@ sub_1208	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_D872, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_D82C, ax
 		mov	word_D82A, ax
 		mov	ax, 190h
-		mov	word_D86E, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_D832, ax
 		mov	word_D830, ax
@@ -1746,8 +1746,8 @@ sub_1256	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_D86C
-		mov	es, word_D86A
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1784,7 +1784,7 @@ sub_127A	endp
 sub_1290	proc far
 					; sub_A2FB+22P	...
 		xor	dx, dx
-		mov	cx, word_D86C
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -1874,7 +1874,7 @@ arg_6		= word ptr  0Ch
 		and	cx, 7
 		shr	ax, 3
 		add	di, ax
-		mov	es, word_D86A
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	ax, bp
 		out	0A1h, al	; Interrupt Controller #2, 8259A
@@ -1933,7 +1933,7 @@ arg_A		= word ptr  10h
 		push	si
 		push	di
 		push	ds
-		mov	es, word_D86A
+		mov	es, graph_VramSeg
 		mov	cx, [bp+arg_A]
 		mov	di, [bp+arg_8]
 		mov	bx, [bp+arg_6]
@@ -22203,12 +22203,7 @@ word_D860	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_D86A	dw 0A800h
-word_D86C	dw 3E80h
-word_D86E	dw 190h
-word_D870	dw 50h
-word_D872	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm

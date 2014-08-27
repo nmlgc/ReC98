@@ -1854,9 +1854,9 @@ sub_CB4		proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_35150, ax
+		mov	graph_VramSeg, ax
 		mov	word_35216, ax
-		mov	word_35152, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_3520A, ax
 		mov	word_35210, ax
@@ -1866,12 +1866,12 @@ sub_CB4		proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_35158, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_3520E, ax
 		mov	word_3520C, ax
 		mov	ax, 190h
-		mov	word_35154, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_35214, ax
 		mov	word_35212, ax
@@ -1899,8 +1899,8 @@ sub_D02		proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_35152
-		mov	es, word_35150
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -55488,13 +55488,7 @@ word_3514A	dw 0A000h
 		db    0
 		db    1
 		db    0
-word_35150	dw 0A800h
-word_35152	dw 3E80h
-word_35154	dw 190h
-		db  50h	; P
-		db    0
-word_35158	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 aPal98Grb_0	db 'pal98 grb',0

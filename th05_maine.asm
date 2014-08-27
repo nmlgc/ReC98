@@ -918,7 +918,7 @@ loc_DDE:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_10328
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -943,7 +943,7 @@ loc_E14:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_10326
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -956,14 +956,14 @@ loc_E14:
 		mov	word_102D2, bx
 		add	ax, bx
 		mov	word_102D4, ax
-		mov	ax, word_10328
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_102D8, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_10322
+		add	ax, graph_VramSeg
 		mov	word_102D6, ax
 		mov	ax, 1
 		pop	bp
@@ -1355,9 +1355,9 @@ sub_12B4	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_10322, ax
+		mov	graph_VramSeg, ax
 		mov	word_102D6, ax
-		mov	word_10324, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_102CA, ax
 		mov	word_102D0, ax
@@ -1366,12 +1366,12 @@ sub_12B4	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_1032A, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_102CE, ax
 		mov	word_102CC, ax
 		mov	ax, 190h
-		mov	word_10326, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_102D4, ax
 		mov	word_102D2, ax
@@ -1400,8 +1400,8 @@ sub_1302	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_10324
-		mov	es, word_10322
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1438,7 +1438,7 @@ sub_1326	endp
 sub_133C	proc far
 					; sub_C1DD+4AP	...
 		xor	dx, dx
-		mov	cx, word_10324
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -1509,14 +1509,14 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, word_10326
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
 		mov	bp, bx
-		mov	cx, word_1032A
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -2624,7 +2624,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		push	si
 		push	di
-		mov	es, word_10322
+		mov	es, graph_VramSeg
 		mov	cx, [bp+arg_4]
 		mov	di, [bp+arg_2]
 		mov	bx, [bp+arg_0]
@@ -2926,7 +2926,7 @@ arg_A		= word ptr  10h
 		push	si
 		push	di
 		push	ds
-		mov	es, word_10322
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	cx, [bp+arg_A]
 		mov	di, [bp+arg_8]
@@ -3064,7 +3064,7 @@ arg_6		= word ptr  0Ch
 		and	cx, 7
 		shr	ax, 3
 		add	di, ax
-		mov	es, word_10322
+		mov	es, graph_VramSeg
 		mov	ax, bp
 		out	0A1h, al	; Interrupt Controller #2, 8259A
 		mov	al, ah
@@ -26480,12 +26480,7 @@ word_102FE	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
-word_10322	dw 0A800h
-word_10324	dw 3E80h
-word_10326	dw 190h
-word_10328	dw 50h
-word_1032A	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 word_1032E	dw 0
 					; sub_F104+E9r

@@ -1589,9 +1589,9 @@ sub_14E4	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_F8B0, ax
+		mov	graph_VramSeg, ax
 		mov	word_F85A, ax
-		mov	word_F8B2, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_F84E, ax
 		mov	word_F854, ax
@@ -1600,12 +1600,12 @@ sub_14E4	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_F8B8, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_F852, ax
 		mov	word_F850, ax
 		mov	ax, 190h
-		mov	word_F8B4, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_F858, ax
 		mov	word_F856, ax
@@ -1633,8 +1633,8 @@ sub_1532	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_F8B2
-		mov	es, word_F8B0
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -1671,7 +1671,7 @@ sub_1556	endp
 sub_156C	proc far
 					; sub_AE96+159P ...
 		xor	dx, dx
-		mov	cx, word_F8B2
+		mov	cx, graph_VramWords
 		mov	bx, cx
 		shl	bx, 1
 		push	bx
@@ -3122,7 +3122,7 @@ arg_A		= word ptr  10h
 		push	si
 		push	di
 		push	ds
-		mov	es, word_F8B0
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	cx, [bp+arg_A]
 		mov	di, [bp+arg_8]
@@ -3259,7 +3259,7 @@ arg_6		= word ptr  0Ch
 		and	cx, 7
 		shr	ax, 3
 		add	di, ax
-		mov	es, word_F8B0
+		mov	es, graph_VramSeg
 		mov	ax, bp
 		out	0A1h, al	; Interrupt Controller #2, 8259A
 		mov	al, ah
@@ -24227,13 +24227,7 @@ word_F8A6	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_F8B0	dw 0A800h
-word_F8B2	dw 3E80h
-word_F8B4	dw 190h
-		db  50h	; P
-		db    0
-word_F8B8	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 word_F8BC	dw 0
 					; sub_E1E4+F0r

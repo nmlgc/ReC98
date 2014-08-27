@@ -1431,7 +1431,7 @@ arg_4		= word ptr  0Ah
 		or	si, si
 		jz	short loc_11E7
 		push	di
-		mov	al, byte ptr word_216D6
+		mov	al, byte ptr graph_VramZoom
 		mov	cs:byte_128D, al
 		mov	cs:byte_12F9, al
 		mov	es, word_21678
@@ -1550,7 +1550,7 @@ loc_135A:
 		mov	dx, [bp+6]
 		test	dx, dx
 		jz	short loc_1394
-		mov	al, byte ptr word_216D6
+		mov	al, byte ptr graph_VramZoom
 		mov	cs:byte_13B5, al
 		mov	cs:byte_13FF, al
 		mov	ax, [bp+8]
@@ -1668,7 +1668,7 @@ loc_145C:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_216D4
+		mov	cx, graph_VramWidth
 		shl	cx, 3
 		dec	cx
 		sub	bx, cx
@@ -1693,7 +1693,7 @@ loc_1492:
 		cmp	ax, 8000h
 		sbb	dx, dx
 		and	ax, dx
-		mov	cx, word_216D2
+		mov	cx, graph_VramLines
 		dec	cx
 		sub	bx, cx
 		sbb	dx, dx
@@ -1706,14 +1706,14 @@ loc_1492:
 		mov	word_21674, bx
 		add	ax, bx
 		mov	word_21676, ax
-		mov	ax, word_216D4
+		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
 		mov	word_2167A, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
-		add	ax, word_216CE
+		add	ax, graph_VramSeg
 		mov	word_21678, ax
 		mov	ax, 1
 		pop	bp
@@ -2678,9 +2678,9 @@ sub_1C82	proc far
 					; causes transfer to ROM-based BASIC (IBM-PC)
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
-		mov	word_216CE, ax
+		mov	graph_VramSeg, ax
 		mov	word_21678, ax
-		mov	word_216D0, 3E80h
+		mov	graph_VramWords, 3E80h
 		xor	ax, ax
 		mov	word_2166C, ax
 		mov	word_21672, ax
@@ -2689,12 +2689,12 @@ sub_1C82	proc far
 		and	ah, 4
 		add	ah, 3Fh	; '?'
 		and	ah, 40h
-		mov	word_216D6, ax
+		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
 		mov	word_21670, ax
 		mov	word_2166E, ax
 		mov	ax, 190h
-		mov	word_216D2, ax
+		mov	graph_VramLines, ax
 		dec	ax
 		mov	word_21676, ax
 		mov	word_21674, ax
@@ -2723,8 +2723,8 @@ sub_1CD0	proc far
 		out	dx, al
 		mov	bx, di
 		xor	di, di
-		mov	cx, word_216D0
-		mov	es, word_216CE
+		mov	cx, graph_VramWords
+		mov	es, graph_VramSeg
 		assume es:nothing
 		rep stosw
 		mov	di, bx
@@ -2760,14 +2760,14 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, word_216D2
+		mov	dx, graph_VramLines
 		sub	bx, dx
 		sbb	ax, ax
 		and	bx, ax
 		add	bx, dx
 		sub	dx, bx
 		mov	bp, bx
-		mov	cx, word_216D6
+		mov	cx, graph_VramZoom
 		shl	bx, cl
 		shl	dx, cl
 		mov	cl, 4
@@ -2903,7 +2903,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		push	si
 		push	di
-		mov	es, word_216CE
+		mov	es, graph_VramSeg
 		assume es:nothing
 		mov	cx, [bp+arg_4]
 		mov	di, [bp+arg_2]
@@ -36618,12 +36618,7 @@ word_216C4	dw 0
 		db    0
 		db 0FFh
 		db    0
-word_216CE	dw 0A800h
-word_216D0	dw 3E80h
-word_216D2	dw 190h
-word_216D4	dw 50h
-word_216D6	dw 0
-		db  55h	; U
+include libs/master.lib/grp[data].asm
 		db    0
 word_216DA	dw 0
 					; sub_137A4+F0r
