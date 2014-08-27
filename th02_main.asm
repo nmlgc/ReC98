@@ -51,13 +51,13 @@ sub_66A		proc near
 		jz	short loc_6AA
 		test	bl, 1
 		jz	short loc_67E
-		mov	ax, word_1DF4C
+		mov	ax, ClipXL
 		jmp	short loc_681
 ; ---------------------------------------------------------------------------
 		nop
 
 loc_67E:
-		mov	ax, word_1DF50
+		mov	ax, ClipXR
 
 loc_681:
 		sub	cx, si
@@ -74,7 +74,7 @@ loc_681:
 		xor	ax, ax
 		or	di, di
 		js	short loc_6B4
-		mov	ax, word_1DF54
+		mov	ax, ClipYH
 		cmp	di, ax
 		jg	short loc_6B4
 
@@ -91,7 +91,7 @@ loc_6AA:
 		xor	ax, ax
 		test	bl, 4
 		jz	short loc_6B4
-		mov	ax, word_1DF54
+		mov	ax, ClipYH
 
 loc_6B4:
 		sub	di, bp
@@ -105,7 +105,7 @@ loc_6B4:
 		add	ax, si
 		mov	di, cx
 		mov	cx, ax
-		cmp	word_1DF4C, cx
+		cmp	ClipXL, cx
 		jle	short loc_6D4
 		mov	bl, 1
 		retn
@@ -113,7 +113,7 @@ loc_6B4:
 		nop
 
 loc_6D4:
-		cmp	cx, word_1DF50
+		cmp	cx, ClipXR
 		jle	short loc_6A4
 		mov	bl, 2
 		retn
@@ -619,8 +619,8 @@ sub_AB8		proc far
 		xchg	bx, si
 
 loc_ACD:
-		mov	bp, word_1DF4C
-		mov	dx, word_1DF4E
+		mov	bp, ClipXL
+		mov	dx, ClipXW
 		sub	si, bp
 		jl	short loc_AB2
 		sub	bx, bp
@@ -639,8 +639,8 @@ loc_ACD:
 		xchg	ax, di
 
 loc_AF6:
-		mov	dx, word_1DF52
-		mov	bp, word_1DF54
+		mov	dx, ClipYT
+		mov	bp, ClipYH
 		sub	di, dx
 		js	short loc_AB2
 		sub	ax, dx
@@ -656,7 +656,7 @@ loc_AF6:
 		mov	dx, ax
 		shl	ax, 2
 		add	ax, dx
-		add	ax, word_1DF58
+		add	ax, ClipYT_seg
 		mov	es, ax
 		mov	dx, di
 		shl	di, 2
@@ -723,7 +723,7 @@ sub_AB8		endp
 sub_B88		proc far
 		push	di
 		mov	di, sp
-		mov	ax, word_1DF52
+		mov	ax, ClipYT
 		mov	cx, ax
 		mov	bx, ss:[di+0Ah]
 		sub	bx, ax
@@ -734,9 +734,9 @@ loc_B9A:
 		mov	ax, bx
 		shl	ax, 2
 		add	ax, bx
-		add	ax, word_1DF58
+		add	ax, ClipYT_seg
 		mov	es, ax
-		mov	ax, word_1DF54
+		mov	ax, ClipYH
 		mov	dx, ss:[di+6]
 		sub	dx, cx
 		cmp	dx, ax
@@ -948,31 +948,31 @@ arg_4		= word ptr  0Ah
 		mov	si, [bp+arg_0]
 		xor	cx, cx
 		mov	ax, [bp+arg_2]
-		sub	ax, word_1DF52
+		sub	ax, ClipYT
 		mov	dx, ax
 		sub	ax, si
-		cmp	ax, word_1DF54
+		cmp	ax, ClipYH
 		jg	short loc_CBB
 		shl	ax, 1
 		rcl	cx, 1
 		mov	ax, dx
 		add	ax, si
 		js	short loc_CBB
-		cmp	word_1DF54, ax
+		cmp	ClipYH, ax
 		rcl	cx, 1
 		mov	ax, [bp+arg_4]
 		mov	bx, ax
 		sub	ax, si
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short loc_CBB
-		sub	ax, word_1DF4C
+		sub	ax, ClipXL
 		shl	ax, 1
 		rcl	cx, 1
 		mov	ax, bx
 		add	ax, si
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short loc_CBB
-		cmp	word_1DF50, ax
+		cmp	ClipXR, ax
 		rcl	cx, 1
 		jcxz	short loc_CB6
 		or	si, si
@@ -981,7 +981,7 @@ arg_4		= word ptr  0Ah
 		mov	al, byte ptr graph_VramZoom
 		mov	byte ptr cs:loc_D5F+2, al
 		mov	byte ptr cs:loc_DCB+2, al
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 		mov	ax, bx
 		mov	word_1F504, ax
 		mov	word_1F506, dx
@@ -1042,7 +1042,7 @@ loc_D5F:
 		jz	short loc_DD0
 		sub	ax, bx
 		js	short loc_DC6
-		cmp	ax, word_1DF54
+		cmp	ax, ClipYH
 		jg	short nullsub_1
 		mov	dx, ax
 		shl	dx, 2
@@ -1052,9 +1052,9 @@ loc_D5F:
 		or	si, si
 		jz	short loc_DA7
 		sub	ax, si
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short loc_DA2
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short nullsub_1
 		mov	bx, ax
 		mov	cx, ax
@@ -1070,9 +1070,9 @@ loc_DA2:
 		add	ax, si
 
 loc_DA7:
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short loc_DC6
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short loc_DC6
 		mov	bx, ax
 		mov	cx, bx
@@ -1092,7 +1092,7 @@ loc_DCB:
 		add	ax, bx
 
 loc_DD0:
-		cmp	ax, word_1DF54
+		cmp	ax, ClipYH
 		jnb	short locret_E2C
 		mov	dx, ax
 		shl	dx, 2
@@ -1102,9 +1102,9 @@ loc_DD0:
 		or	si, si
 		jz	short loc_E0D
 		sub	ax, si
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short loc_E08
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short locret_E2C
 		mov	bx, ax
 		mov	cx, ax
@@ -1120,9 +1120,9 @@ loc_E08:
 		add	ax, si
 
 loc_E0D:
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short locret_E2C
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short locret_E2C
 		mov	bx, ax
 		mov	cx, bx
@@ -1154,9 +1154,9 @@ loc_E2E:
 		mov	byte ptr cs:loc_E87+2, al
 		mov	byte ptr cs:loc_ED1+2, al
 		mov	ax, [bp+8]
-		sub	ax, word_1DF52
+		sub	ax, ClipYT
 		mov	bx, [bp+0Ah]
-		mov	ds, word_1DF58
+		mov	ds, ClipYT_seg
 		mov	word ptr cs:loc_E82+1, bx
 		mov	word ptr cs:loc_E8A+1, ax
 		mov	word ptr cs:loc_ED4+1, ax
@@ -1306,10 +1306,10 @@ loc_F30:
 		add	bx, cx
 		sub	bx, ax
 		jl	short loc_FAA
-		mov	word_1DF4C, ax
-		mov	word_1DF4E, bx
+		mov	ClipXL, ax
+		mov	ClipXW, bx
 		add	ax, bx
-		mov	word_1DF50, ax
+		mov	ClipXR, ax
 		mov	ax, [bp+arg_4]
 		mov	bx, [bp+arg_0]
 		test	ax, bx
@@ -1330,20 +1330,20 @@ loc_F66:
 		add	bx, cx
 		sub	bx, ax
 		jl	short loc_FAA
-		mov	word_1DF52, ax
+		mov	ClipYT, ax
 		mov	cx, ax
-		mov	word_1DF54, bx
+		mov	ClipYH, bx
 		add	ax, bx
-		mov	word_1DF56, ax
+		mov	ClipYB, ax
 		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
-		mov	word_1DF5A, ax
+		mov	ClipYB_adr, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
 		add	ax, graph_VramSeg
-		mov	word_1DF58, ax
+		mov	ClipYT_seg, ax
 		mov	ax, 1
 		pop	bp
 		retf	8
@@ -1364,19 +1364,19 @@ sub_FB0		proc far
 		push	bp
 		push	si
 		push	di
-		mov	ax, word_1DF58
+		mov	ax, ClipYT_seg
 		mov	es, ax
-		mov	bx, word_1DF4C
+		mov	bx, ClipXL
 		mov	di, bx
 		shr	di, 4
 		shl	di, 1
-		add	di, word_1DF5A
+		add	di, ClipYB_adr
 		and	bx, 0Fh
 		lea	si, [bx-10h]
 		shl	bx, 1
 		mov	dx, [bx+4ECh]
 		not	dx
-		add	si, word_1DF4E
+		add	si, ClipXW
 		mov	bx, si
 		and	bx, 0Fh
 		shl	bx, 1
@@ -1436,8 +1436,8 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	di
 		mov	dx, [bp+arg_0]
-		sub	dx, word_1DF52
-		cmp	dx, word_1DF54
+		sub	dx, ClipYT
+		cmp	dx, ClipYH
 		ja	short loc_1096
 		mov	cx, [bp+arg_4]
 		mov	bx, [bp+arg_2]
@@ -1445,7 +1445,7 @@ arg_4		= word ptr  0Ah
 		shl	bp, 2
 		add	bp, dx
 		shl	bp, 4
-		mov	ax, word_1DF4C
+		mov	ax, ClipXL
 		sub	cx, ax
 		sub	bx, ax
 		test	cx, bx
@@ -1458,14 +1458,14 @@ loc_1048:
 		cmp	bx, 8000h
 		sbb	dx, dx
 		and	bx, dx
-		mov	di, word_1DF4E
+		mov	di, ClipXW
 		sub	cx, di
 		sbb	dx, dx
 		and	cx, dx
 		add	cx, di
 		sub	cx, bx
 		jl	short loc_1096
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 		add	bx, ax
 		mov	di, bx
 		shr	di, 4
@@ -1515,16 +1515,16 @@ sub_109C	proc far
 		pop	cx
 		sub	sp, 12h
 		sti
-		mov	ax, word_1DF52
+		mov	ax, ClipYT
 		sub	di, ax
 		sub	bp, ax
-		mov	ax, word_1DF4C
-		mov	dx, word_1DF54
+		mov	ax, ClipXL
+		mov	dx, ClipYH
 		mov	bx, 505h
 		cmp	ax, cx
 		jg	short loc_10CC
 		xor	bl, 3
-		cmp	cx, word_1DF50
+		cmp	cx, ClipXR
 		jg	short loc_10CC
 		xor	bl, 2
 
@@ -1540,7 +1540,7 @@ loc_10DA:
 		cmp	ax, si
 		jg	short loc_10EA
 		xor	bh, 3
-		cmp	si, word_1DF50
+		cmp	si, ClipXR
 		jg	short loc_10EA
 		xor	bh, 2
 
@@ -1566,7 +1566,7 @@ loc_10F8:
 		jnz	short loc_1163
 
 loc_1110:
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 		sub	si, cx
 		jnb	short loc_111E
 		add	cx, si
@@ -1778,18 +1778,18 @@ arg_2		= word ptr  6
 		mov	cx, [bp+arg_2]
 		mov	dx, [bp+arg_0]
 		mov	bp, bx
-		cmp	cx, word_1DF4C
+		cmp	cx, ClipXL
 		jl	short locret_127A
-		cmp	cx, word_1DF50
+		cmp	cx, ClipXR
 		jg	short locret_127A
-		sub	dx, word_1DF52
+		sub	dx, ClipYT
 		jl	short locret_127A
-		cmp	dx, word_1DF54
+		cmp	dx, ClipYH
 		jg	short locret_127A
 		mov	ax, dx
 		shl	ax, 2
 		add	dx, ax
-		add	dx, word_1DF58
+		add	dx, ClipYT_seg
 		mov	es, dx
 		mov	bx, cx
 		shr	bx, 3
@@ -1817,8 +1817,8 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		push	di
-		mov	ax, word_1DF52
-		mov	cx, word_1DF54
+		mov	ax, ClipYT
+		mov	cx, ClipYH
 		mov	bx, [bp+arg_2]
 		mov	dx, [bp+arg_0]
 		cmp	bx, dx
@@ -1839,9 +1839,9 @@ loc_12C5:
 		and	dx, di
 		add	dx, cx
 		mov	ax, [bp+arg_4]
-		cmp	ax, word_1DF4C
+		cmp	ax, ClipXL
 		jl	short loc_132E
-		cmp	ax, word_1DF50
+		cmp	ax, ClipXR
 		jg	short loc_132E
 		mov	cx, ax
 		and	cl, 7
@@ -1854,7 +1854,7 @@ loc_12C5:
 		sub	cx, bx
 		imul	bx, 50h
 		add	di, bx
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 		inc	cx
 		shr	cx, 1
 		jnb	short loc_1313
@@ -2342,11 +2342,11 @@ sub_158C	proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_1DF58, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_1DF4C, ax
-		mov	word_1DF52, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		assume es:seg000
 		mov	ah, byte ptr es:[54Dh]
@@ -2355,14 +2355,14 @@ sub_158C	proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_1DF50, ax
-		mov	word_1DF4E, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_1DF56, ax
-		mov	word_1DF54, ax
-		mov	word_1DF5A, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_158C	endp
 
@@ -2401,8 +2401,8 @@ arg_8		= word ptr  0Eh
 		push	si
 		push	di
 		mov	ax, [bp+arg_6]
-		sub	ax, word_1DF52
-		cmp	ax, word_1DF54
+		sub	ax, ClipYT
+		cmp	ax, ClipYH
 		ja	short loc_1D00
 		mov	cx, [bp+arg_0]
 		sar	cx, 3
@@ -2430,7 +2430,7 @@ loc_1D45:
 		imul	ax, 50h
 		add	di, ax
 		push	ds
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 		assume es:nothing
 		mov	ds, [bp+arg_4]
 		mov	bp, cx
@@ -3976,17 +3976,17 @@ loc_3362:
 		dec	cx
 		imul	bx
 		mov	cs:word_3552, ax
-		cmp	cx, word_1DF50
+		cmp	cx, ClipXR
 		jg	short loc_33B6
-		mov	dx, word_1DF4C
+		mov	dx, ClipXL
 		cmp	[bp+0Ah], dx
 		jl	short loc_33B6
 		mov	di, [bp+8]
-		cmp	word_1DF52, di
+		cmp	ClipYT, di
 		jg	short loc_33B6
 		mov	ax, bx
 		add	ax, di
-		cmp	ax, word_1DF56
+		cmp	ax, ClipYB
 		jge	short loc_33B6
 		pop	di
 		pop	si
@@ -3995,17 +3995,17 @@ loc_3362:
 ; ---------------------------------------------------------------------------
 
 loc_33B6:
-		cmp	cx, word_1DF4C
+		cmp	cx, ClipXL
 		jl	short loc_335C
-		mov	dx, word_1DF50
+		mov	dx, ClipXR
 		cmp	[bp+0Ah], dx
 		jg	short loc_335C
 		mov	di, [bp+8]
-		cmp	word_1DF56, di
+		cmp	ClipYB, di
 		jl	short loc_335C
 		mov	ax, bx
 		add	ax, di
-		cmp	ax, word_1DF52
+		cmp	ax, ClipYT
 		jle	short loc_335C
 		cmp	cx, dx
 		jle	short loc_33DE
@@ -4016,7 +4016,7 @@ loc_33DE:
 		and	al, 7
 		mov	cs:byte_345B, al
 		xor	si, si
-		mov	ax, word_1DF4C
+		mov	ax, ClipXL
 		cmp	[bp+0Ah], ax
 		jge	short loc_3403
 		mov	dx, ax
@@ -4028,7 +4028,7 @@ loc_33DE:
 		mov	[bp+0Ah], ax
 
 loc_3403:
-		sub	di, word_1DF52
+		sub	di, ClipYT
 		jns	short loc_3414
 		add	bx, di
 		mov	ax, word_1FD4A
@@ -4038,7 +4038,7 @@ loc_3403:
 
 loc_3414:
 		lea	ax, [bx+di-1]
-		sub	ax, word_1DF54
+		sub	ax, ClipYH
 		jle	short loc_341F
 		sub	bx, ax
 
@@ -4064,7 +4064,7 @@ loc_341F:
 
 loc_3451:
 		mov	cs:word_3523, bx
-		mov	es, word_1DF58
+		mov	es, ClipYT_seg
 ; ---------------------------------------------------------------------------
 		assume es:nothing
 		db 0B1h
@@ -54707,16 +54707,7 @@ aDemo3_rec	db 'DEMO3.REC',0
 		db  20h
 		db  20h
 include libs/master.lib/bfnt_id[data].asm
-word_1DF4C	dw 0
-word_1DF4E	dw 27Fh
-word_1DF50	dw 27Fh
-					; sub_66A:loc_6D4r ...
-word_1DF52	dw 0
-					; sub_B88+3r ...
-word_1DF54	dw 18Fh
-word_1DF56	dw 18Fh
-word_1DF58	dw 0A800h
-word_1DF5A	dw 7CB0h
+include libs/master.lib/clip[data].asm
 		db    0
 		db    0
 		db  80h	; €
@@ -58285,6 +58276,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 byte_1F466	db ?
 					; sub_BCB1+129w ...
 stage1_gaiji_halflen	db ?

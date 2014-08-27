@@ -1816,11 +1816,11 @@ sub_C6A		proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_135E0, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_135D4, ax
-		mov	word_135DA, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		assume es:seg000
 		mov	ah, byte ptr es:loc_54B+2
@@ -1829,14 +1829,14 @@ sub_C6A		proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_135D8, ax
-		mov	word_135D6, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_135DE, ax
-		mov	word_135DC, ax
-		mov	word_135E2, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_C6A		endp
 
@@ -39724,14 +39724,7 @@ aPal98Grb_1	db 'pal98 grb',0
 word_135CE	dw 0
 word_135D0	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm
-word_135D4	dw 0
-word_135D6	dw 27Fh
-word_135D8	dw 27Fh
-word_135DA	dw 0
-word_135DC	dw 18Fh
-word_135DE	dw 18Fh
-word_135E0	dw 0A800h
-word_135E2	dw 7CB0h
+include libs/master.lib/clip[data].asm
 word_135E4	dw 1
 word_135E6	dw 0
 word_135E8	dw 1330h
@@ -40335,6 +40328,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 ; char word_13ED8[]
 word_13ED8	dw ?
 word_13EDA	dw ?

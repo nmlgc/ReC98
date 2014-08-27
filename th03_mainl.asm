@@ -592,8 +592,8 @@ sub_ACE		proc far
 		xchg	bx, si
 
 loc_AE3:
-		mov	bp, word_E912
-		mov	dx, word_E914
+		mov	bp, ClipXL
+		mov	dx, ClipXW
 		sub	si, bp
 		jl	short loc_AC8
 		sub	bx, bp
@@ -612,8 +612,8 @@ loc_AE3:
 		xchg	ax, di
 
 loc_B0C:
-		mov	dx, word_E918
-		mov	bp, word_E91A
+		mov	dx, ClipYT
+		mov	bp, ClipYH
 		sub	di, dx
 		js	short loc_AC8
 		sub	ax, dx
@@ -629,7 +629,7 @@ loc_B0C:
 		mov	dx, ax
 		shl	ax, 2
 		add	ax, dx
-		add	ax, word_E91E
+		add	ax, ClipYT_seg
 		mov	es, ax
 		mov	dx, di
 		shl	di, 2
@@ -697,7 +697,7 @@ sub_B9E		proc far
 					; sub_BEC7+A7P	...
 		push	di
 		mov	di, sp
-		mov	ax, word_E918
+		mov	ax, ClipYT
 		mov	cx, ax
 		mov	bx, ss:[di+0Ah]
 		sub	bx, ax
@@ -708,9 +708,9 @@ loc_BB0:
 		mov	ax, bx
 		shl	ax, 2
 		add	ax, bx
-		add	ax, word_E91E
+		add	ax, ClipYT_seg
 		mov	es, ax
-		mov	ax, word_E91A
+		mov	ax, ClipYH
 		mov	dx, ss:[di+6]
 		sub	dx, cx
 		cmp	dx, ax
@@ -1119,11 +1119,11 @@ sub_E24		proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_E91E, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_E912, ax
-		mov	word_E918, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		assume es:seg000
 		mov	ah, byte ptr es:[54Dh]
@@ -1132,14 +1132,14 @@ sub_E24		proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_E916, ax
-		mov	word_E914, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_E91C, ax
-		mov	word_E91A, ax
-		mov	word_E920, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_E24		endp
 
@@ -1268,8 +1268,8 @@ arg_8		= word ptr  0Eh
 		push	si
 		push	di
 		mov	ax, [bp+arg_6]
-		sub	ax, word_E918
-		cmp	ax, word_E91A
+		sub	ax, ClipYT
+		cmp	ax, ClipYH
 		ja	short loc_162C
 		mov	cx, [bp+arg_0]
 		sar	cx, 3
@@ -1297,7 +1297,7 @@ loc_1671:
 		imul	ax, 50h
 		add	di, ax
 		push	ds
-		mov	es, word_E91E
+		mov	es, ClipYT_seg
 		assume es:nothing
 		mov	ds, [bp+arg_4]
 		mov	bp, cx
@@ -2521,7 +2521,7 @@ loc_2CA3:
 		imul	ax, 50h
 		add	di, ax
 		push	ds
-		mov	es, word_E91E
+		mov	es, ClipYT_seg
 		mov	ds, [bp+arg_4]
 		mov	bp, cx
 		cld
@@ -23725,16 +23725,7 @@ aMain		db 'main',0
 		db  20h
 		db  20h
 include libs/master.lib/bfnt_id[data].asm
-word_E912	dw 0
-					; sub_E24+17w
-word_E914	dw 27Fh
-word_E916	dw 27Fh
-word_E918	dw 0
-					; sub_B9E+3r ...
-word_E91A	dw 18Fh
-word_E91C	dw 18Fh
-word_E91E	dw 0A800h
-word_E920	dw 7CB0h
+include libs/master.lib/clip[data].asm
 		dw 0
 		db  80h	; €
 		db    0
@@ -25546,6 +25537,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 unk_F72C	db    ?	;
 		dd    ?	;
 		dd    ?	;

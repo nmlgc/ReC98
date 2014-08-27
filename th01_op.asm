@@ -1732,11 +1732,11 @@ sub_C6A		proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_12AF8, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_12AEC, ax
-		mov	word_12AF2, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		assume es:seg000
 		mov	ah, byte ptr es:loc_54B+2
@@ -1745,14 +1745,14 @@ sub_C6A		proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_12AF0, ax
-		mov	word_12AEE, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_12AF6, ax
-		mov	word_12AF4, ax
-		mov	word_12AFA, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_C6A		endp
 
@@ -37071,14 +37071,7 @@ word_12A8C	dw 0FFFFh
 word_12AE6	dw 0
 word_12AE8	dw 0
 include libs/master.lib/dos_ropen[data].asm
-word_12AEC	dw 0
-word_12AEE	dw 27Fh
-word_12AF0	dw 27Fh
-word_12AF2	dw 0
-word_12AF4	dw 18Fh
-word_12AF6	dw 18Fh
-word_12AF8	dw 0A800h
-word_12AFA	dw 7CB0h
+include libs/master.lib/clip[data].asm
 dword_12AFC	dd 1
 aReiidenconfig	db 'ReiidenConfig',0
 byte_12B0E	db 0
@@ -37763,6 +37756,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 dword_13418	dd ?
 		dd    ?
 		dd    ?

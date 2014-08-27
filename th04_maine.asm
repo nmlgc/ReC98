@@ -569,7 +569,7 @@ include libs/master.lib/dos_ropen.asm
 sub_BEA		proc far
 		push	di
 		mov	di, sp
-		mov	ax, word_E612
+		mov	ax, ClipYT
 		mov	cx, ax
 		mov	bx, ss:[di+0Ah]
 		sub	bx, ax
@@ -580,9 +580,9 @@ loc_BFC:
 		mov	ax, bx
 		shl	ax, 2
 		add	ax, bx
-		add	ax, word_E618
+		add	ax, ClipYT_seg
 		mov	es, ax
-		mov	ax, word_E614
+		mov	ax, ClipYH
 		mov	dx, ss:[di+6]
 		sub	dx, cx
 		cmp	dx, ax
@@ -1099,11 +1099,11 @@ sub_113A	proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_E618, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_E60C, ax
-		mov	word_E612, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		mov	ah, byte ptr es:[54Dh]
 		and	ah, 4
@@ -1111,14 +1111,14 @@ sub_113A	proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_E610, ax
-		mov	word_E60E, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_E616, ax
-		mov	word_E614, ax
-		mov	word_E61A, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_113A	endp
 
@@ -1172,8 +1172,8 @@ arg_8		= word ptr  0Eh
 		push	si
 		push	di
 		mov	ax, [bp+arg_6]
-		sub	ax, word_E612
-		cmp	ax, word_E614
+		sub	ax, ClipYT
+		cmp	ax, ClipYH
 		ja	short loc_18B4
 		mov	cx, [bp+arg_0]
 		sar	cx, 3
@@ -1201,7 +1201,7 @@ loc_18F9:
 		imul	ax, 50h
 		add	di, ax
 		push	ds
-		mov	es, word_E618
+		mov	es, ClipYT_seg
 		assume es:nothing
 		mov	ds, [bp+arg_4]
 		mov	bp, cx
@@ -2270,7 +2270,7 @@ loc_3627:
 		imul	ax, 50h
 		add	di, ax
 		push	ds
-		mov	es, word_E618
+		mov	es, ClipYT_seg
 		assume es:nothing
 		mov	ds, [bp+arg_4]
 		mov	bp, cx
@@ -21974,14 +21974,7 @@ arg0		db 'op',0
 		db    0
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
-word_E60C	dw 0
-word_E60E	dw 27Fh
-word_E610	dw 27Fh
-word_E612	dw 0
-word_E614	dw 18Fh
-word_E616	dw 18Fh
-word_E618	dw 0A800h
-word_E61A	dw 7CB0h
+include libs/master.lib/clip[data].asm
 word_E61C	dw 0
 word_E61E	dw 0FFFFh
 include libs/master.lib/dos_ropen[data].asm
@@ -23447,6 +23440,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 dword_F3CE	dd 0
 		db    0
 		db    0

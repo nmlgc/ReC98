@@ -1855,11 +1855,11 @@ sub_CB4		proc far
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_35216, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_3520A, ax
-		mov	word_35210, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		assume es:seg000
 		mov	ah, byte ptr es:loc_54B+2
@@ -1868,14 +1868,14 @@ sub_CB4		proc far
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_3520E, ax
-		mov	word_3520C, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_35214, ax
-		mov	word_35212, ax
-		mov	word_35218, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retf
 sub_CB4		endp
 
@@ -2834,18 +2834,18 @@ arg_2		= word ptr  6
 		mov	cx, [bp+arg_2]
 		mov	dx, [bp+arg_0]
 		mov	bp, bx
-		cmp	cx, word_3520A
+		cmp	cx, ClipXL
 		jl	short locret_14AA
-		cmp	cx, word_3520E
+		cmp	cx, ClipXR
 		jg	short locret_14AA
-		sub	dx, word_35210
+		sub	dx, ClipYT
 		jl	short locret_14AA
-		cmp	dx, word_35212
+		cmp	dx, ClipYH
 		jg	short locret_14AA
 		mov	ax, dx
 		shl	ax, 2
 		add	dx, ax
-		add	dx, word_35216
+		add	dx, ClipYT_seg
 		mov	es, dx
 		assume es:nothing
 		mov	bx, cx
@@ -55253,14 +55253,7 @@ word_351AA	dw 0FFFFh
 word_35204	dw 0
 word_35206	dw 0
 include libs/master.lib/dos_ropen[data].asm
-word_3520A	dw 0
-word_3520C	dw 27Fh
-word_3520E	dw 27Fh
-word_35210	dw 0
-word_35212	dw 18Fh
-word_35214	dw 18Fh
-word_35216	dw 0A800h
-word_35218	dw 7CB0h
+include libs/master.lib/clip[data].asm
 		db 0
 		db    0
 		db    6
@@ -57997,6 +57990,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 byte_36C14	db ?
 byte_36C15	db ?
 dword_36C16	dd ?

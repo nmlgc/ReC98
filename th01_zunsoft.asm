@@ -730,11 +730,11 @@ sub_8DA		proc near
 					; often	reboots	a compatible; often has	no effect at all
 		mov	ax, 0A800h
 		mov	graph_VramSeg, ax
-		mov	word_22C2, ax
+		mov	ClipYT_seg, ax
 		mov	graph_VramWords, 3E80h
 		xor	ax, ax
-		mov	word_22B6, ax
-		mov	word_22BC, ax
+		mov	ClipXL, ax
+		mov	ClipYT, ax
 		mov	es, ax
 		mov	ah, byte ptr es:[54Dh]
 		and	ah, 4
@@ -742,14 +742,14 @@ sub_8DA		proc near
 		and	ah, 40h
 		mov	graph_VramZoom, ax
 		mov	ax, 27Fh
-		mov	word_22BA, ax
-		mov	word_22B8, ax
+		mov	ClipXR, ax
+		mov	ClipXW, ax
 		mov	ax, 190h
 		mov	graph_VramLines, ax
 		dec	ax
-		mov	word_22C0, ax
-		mov	word_22BE, ax
-		mov	word_22C4, 7CB0h
+		mov	ClipYB, ax
+		mov	ClipYH, ax
+		mov	ClipYB_adr, 7CB0h
 		retn
 sub_8DA		endp
 
@@ -1186,10 +1186,10 @@ loc_13AE:
 		add	bx, cx
 		sub	bx, ax
 		jl	short loc_1428
-		mov	word_22B6, ax
-		mov	word_22B8, bx
+		mov	ClipXL, ax
+		mov	ClipXW, bx
 		add	ax, bx
-		mov	word_22BA, ax
+		mov	ClipXR, ax
 		mov	ax, [bp+arg_4]
 		mov	bx, [bp+arg_0]
 		test	ax, bx
@@ -1210,20 +1210,20 @@ loc_13E4:
 		add	bx, cx
 		sub	bx, ax
 		jl	short loc_1428
-		mov	word_22BC, ax
+		mov	ClipYT, ax
 		mov	cx, ax
-		mov	word_22BE, bx
+		mov	ClipYH, bx
 		add	ax, bx
-		mov	word_22C0, ax
+		mov	ClipYB, ax
 		mov	ax, graph_VramWidth
 		xchg	ax, bx
 		mul	bx
-		mov	word_22C4, ax
+		mov	ClipYB_adr, ax
 		mov	ax, bx
 		shr	ax, 4
 		mul	cx
 		add	ax, graph_VramSeg
-		mov	word_22C2, ax
+		mov	ClipYT_seg, ax
 		mov	ax, 1
 		pop	bp
 		retn	8
@@ -1250,8 +1250,8 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	di
 		mov	dx, [bp+arg_0]
-		sub	dx, word_22BC
-		cmp	dx, word_22BE
+		sub	dx, ClipYT
+		cmp	dx, ClipYH
 		ja	short loc_14AE
 		mov	cx, [bp+arg_4]
 		mov	bx, [bp+arg_2]
@@ -1259,7 +1259,7 @@ arg_4		= word ptr  8
 		shl	bp, 2
 		add	bp, dx
 		shl	bp, 4
-		mov	ax, word_22B6
+		mov	ax, ClipXL
 		sub	cx, ax
 		sub	bx, ax
 		test	cx, bx
@@ -1272,14 +1272,14 @@ loc_1460:
 		cmp	bx, 8000h
 		sbb	dx, dx
 		and	bx, dx
-		mov	di, word_22B8
+		mov	di, ClipXW
 		sub	cx, di
 		sbb	dx, dx
 		and	cx, dx
 		add	cx, di
 		sub	cx, bx
 		jl	short loc_14AE
-		mov	es, word_22C2
+		mov	es, ClipYT_seg
 		add	bx, ax
 		mov	di, bx
 		shr	di, 4
@@ -1326,18 +1326,18 @@ arg_2		= word ptr  4
 		mov	cx, [bp+arg_2]
 		mov	dx, [bp+arg_0]
 		mov	bp, bx
-		cmp	cx, word_22B6
+		cmp	cx, ClipXL
 		jl	short locret_1524
-		cmp	cx, word_22BA
+		cmp	cx, ClipXR
 		jg	short locret_1524
-		sub	dx, word_22BC
+		sub	dx, ClipYT
 		jl	short locret_1524
-		cmp	dx, word_22BE
+		cmp	dx, ClipYH
 		jg	short locret_1524
 		mov	ax, dx
 		shl	ax, 2
 		add	dx, ax
-		add	dx, word_22C2
+		add	dx, ClipYT_seg
 		mov	es, dx
 		mov	bx, cx
 		shr	bx, 3
@@ -1453,7 +1453,7 @@ sub_1588	endp
 sub_161A	proc near
 		push	di
 		mov	di, sp
-		mov	ax, word_22BC
+		mov	ax, ClipYT
 		mov	cx, ax
 		mov	bx, ss:[di+8]
 		sub	bx, ax
@@ -1464,9 +1464,9 @@ loc_162C:
 		mov	ax, bx
 		shl	ax, 2
 		add	ax, bx
-		add	ax, word_22C2
+		add	ax, ClipYT_seg
 		mov	es, ax
-		mov	ax, word_22BE
+		mov	ax, ClipYH
 		mov	dx, ss:[di+4]
 		sub	dx, cx
 		cmp	dx, ax
@@ -2090,14 +2090,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/mem[data].asm
-word_22B6	dw 0
-word_22B8	dw 27Fh
-word_22BA	dw 27Fh
-word_22BC	dw 0
-word_22BE	dw 18Fh
-word_22C0	dw 18Fh
-word_22C2	dw 0A800h
-word_22C4	dw 7CB0h
+include libs/master.lib/clip[data].asm
 		db 0
 		db    0
 		db  80h	; €
@@ -3052,6 +3045,7 @@ ExitStart	label byte
 ExitEnd	label byte
 
 bdata@	label byte
+; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 		db 126h dup(?)
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/superpa[bss].asm
