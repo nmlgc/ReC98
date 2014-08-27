@@ -687,106 +687,7 @@ loc_B92:
 		retf	8
 sub_ACE		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B9E		proc far
-					; sub_BEC7+A7P	...
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_BB0
-		xor	bx, bx
-
-loc_BB0:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_BCC
-		mov	dx, ax
-
-loc_BCC:
-		sub	dx, bx
-		jl	short loc_C02
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_C02
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_C14
-		shr	bx, 1
-		jb	short loc_C06
-		nop
-
-loc_BFA:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_BFA
-
-loc_C02:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C06:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C06
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C14:
-		shr	bx, 1
-		jb	short loc_C28
-		dec	bx
-		nop
-
-loc_C1A:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C1A
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C28:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C28
-		pop	di
-		retf	8
-sub_B9E		endp
-
+include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16308,7 +16209,7 @@ loc_AAD5:
 		call	grcg_setcolor
 		push	large 140040h
 		push	large 3B0107h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
@@ -19070,7 +18971,7 @@ loc_BF57:
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 
 loc_BF78:
@@ -19199,14 +19100,14 @@ loc_C032:
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
 		push	large 0C00000h
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
 		pop	si
@@ -19322,7 +19223,7 @@ loc_C173:
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 
 loc_C194:
@@ -19340,14 +19241,14 @@ loc_C199:
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
 		push	large 0C00000h
 		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
 		pop	di
@@ -19697,13 +19598,13 @@ loc_C4D8:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0
 		push	large 4F018Fh
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0
 		push	large 4F018Fh
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		push	large 0C00000h
 		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
@@ -19711,13 +19612,13 @@ loc_C4D8:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 10008h
 		push	large 4E0187h
-		call	sub_B9E
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1

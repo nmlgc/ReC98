@@ -714,107 +714,7 @@ loc_B7C:
 		retf	8
 sub_AB8		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B88		proc far
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_B9A
-		xor	bx, bx
-
-loc_B9A:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_BB6
-		mov	dx, ax
-
-loc_BB6:
-		sub	dx, bx
-		jl	short loc_BEC
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_BEC
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_BFE
-		shr	bx, 1
-		jb	short loc_BF0
-		nop
-
-loc_BE4:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_BE4
-
-loc_BEC:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_BF0:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_BF0
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_BFE:
-		shr	bx, 1
-		jb	short loc_C12
-		dec	bx
-		nop
-
-loc_C04:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C04
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C12:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C12
-		pop	di
-		retf	8
-sub_B88		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6958,9 +6858,7 @@ loc_47E6:
 		push	10h
 		push	34h ; '4'
 		push	180h
-		nop
-		push	cs
-		call	near ptr sub_B88
+		nopcall	grcg_byteboxfill_x
 		nopcall	grcg_off
 
 loc_4803:
@@ -28190,19 +28088,19 @@ sub_FF91	proc near
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 20000h
 		push	large 3018Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		push	large 340000h
 		push	large 35018Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 20000h
 		push	large 3018Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		push	large 340000h
 		push	large 35018Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		pop	bp
 		retn
@@ -39621,7 +39519,7 @@ var_2		= word ptr -2
 		call	grcg_setcolor
 		push	large 40010h
 		push	large 33017Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_15645
 		leave
@@ -39722,7 +39620,7 @@ loc_15AD0:
 		idiv	bx
 		push	ax
 		push	17Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	al, byte_2558E
 		mov	ah, 0
@@ -39806,7 +39704,7 @@ loc_15BC2:
 		mov	ah, 0
 		push	ax
 		push	17Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_158DC
 		mov	al, byte_20619
@@ -39840,7 +39738,7 @@ loc_15C25:
 		mov	ah, 0
 		push	ax
 		push	17Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	ax, word_20650
 		mov	bx, 0Ah
@@ -39900,7 +39798,7 @@ loc_15CBC:
 		mov	ah, 0
 		push	ax
 		push	17Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	al, byte_20619
 		mov	ah, 0
@@ -39933,7 +39831,7 @@ loc_15D1C:
 		mov	ah, 0
 		push	ax
 		push	17Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		jmp	short loc_15D51
 ; ---------------------------------------------------------------------------
@@ -43591,7 +43489,7 @@ var_1		= byte ptr -1
 		call	grcg_setcolor
 		push	large 40010h
 		push	large 33017Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		mov	al, byte_2066C
 		mov	ah, 0
 		mov	dx, ax
@@ -49097,7 +48995,7 @@ arg_0		= word ptr  4
 		mov	ax, [bx-6D5Eh]
 		add	ax, 20h	; ' '
 		push	ax
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
@@ -51426,7 +51324,7 @@ sub_1C16A	proc far
 		call	grcg_setcolor
 		push	large 40010h
 		push	large 33017Fh
-		call	sub_B88
+		call	grcg_byteboxfill_x
 		call	sub_3EF4
 		mov	al, byte_20619
 		mov	ah, 0

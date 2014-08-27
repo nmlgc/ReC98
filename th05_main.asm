@@ -1006,107 +1006,7 @@ loc_F6A:
 		retf	8
 sub_EA6		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F76		proc far
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_F88
-		xor	bx, bx
-
-loc_F88:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_FA4
-		mov	dx, ax
-
-loc_FA4:
-		sub	dx, bx
-		jl	short loc_FDA
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_FDA
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_FEC
-		shr	bx, 1
-		jb	short loc_FDE
-		nop
-
-loc_FD2:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_FD2
-
-loc_FDA:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_FDE:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_FDE
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_FEC:
-		shr	bx, 1
-		jb	short loc_1000
-		dec	bx
-		nop
-
-loc_FF2:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_FF2
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_1000:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_1000
-		pop	di
-		retf	8
-sub_F76		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31164,7 +31064,7 @@ loc_11701:
 		push	ax
 		lea	ax, [si+0Fh]
 		push	ax
-		call	sub_F76
+		call	grcg_byteboxfill_x
 
 loc_11727:
 		mov	ax, word ptr dword_2CEA0+2
@@ -31197,7 +31097,7 @@ loc_11749:
 		push	33h ; '3'
 		lea	ax, [si+0Fh]
 		push	ax
-		call	sub_F76
+		call	grcg_byteboxfill_x
 
 loc_1176A:
 		mov	ax, word ptr dword_2CEA0+2

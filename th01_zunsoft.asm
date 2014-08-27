@@ -675,7 +675,7 @@ loc_822:
 		push	64h
 		push	43h
 		push	12Bh
-		call	sub_161A
+		call	grcg_byteboxfill_x
 		call	sub_5B6
 		call	sub_502
 		call	sub_698
@@ -1444,107 +1444,7 @@ loc_160A:
 		retn	6
 sub_1588	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_161A	proc near
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jg	short loc_162C
-		xor	bx, bx
-
-loc_162C:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+4]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_1648
-		mov	dx, ax
-
-loc_1648:
-		sub	dx, bx
-		jl	short loc_167E
-		mov	ax, ss:[di+0Ah]
-		mov	bx, ss:[di+6]
-		sub	bx, ax
-		jl	short loc_167E
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_1690
-		shr	bx, 1
-		jb	short loc_1682
-		nop
-
-loc_1676:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_1676
-
-loc_167E:
-		pop	di
-		retn	8
-; ---------------------------------------------------------------------------
-
-loc_1682:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_1682
-		pop	di
-		retn	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1690:
-		shr	bx, 1
-		jb	short loc_16A4
-		dec	bx
-		nop
-
-loc_1696:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_1696
-		pop	di
-		retn	8
-; ---------------------------------------------------------------------------
-
-loc_16A4:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_16A4
-		pop	di
-		retn	8
-sub_161A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

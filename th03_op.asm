@@ -631,108 +631,7 @@ loc_BC6:
 		retf	8
 sub_B02		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BD2		proc far
-					; sub_BC1F+151P ...
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_BE4
-		xor	bx, bx
-
-loc_BE4:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_C00
-		mov	dx, ax
-
-loc_C00:
-		sub	dx, bx
-		jl	short loc_C36
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_C36
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_C48
-		shr	bx, 1
-		jb	short loc_C3A
-		nop
-
-loc_C2E:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C2E
-
-loc_C36:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C3A:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C3A
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C48:
-		shr	bx, 1
-		jb	short loc_C5C
-		dec	bx
-		nop
-
-loc_C4E:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C4E
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C5C:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C5C
-		pop	di
-		retf	8
-sub_BD2		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18706,7 +18605,7 @@ loc_BBD0:
 		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
-		call	sub_BD2
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54
@@ -18866,7 +18765,7 @@ loc_BD42:
 		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
-		call	sub_BD2
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54
@@ -18988,7 +18887,7 @@ loc_BE68:
 		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
-		call	sub_BD2
+		call	grcg_byteboxfill_x
 		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54

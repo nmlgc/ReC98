@@ -633,107 +633,7 @@ loc_C98:
 		retf	8
 sub_BD4		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CA4		proc far
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_CB6
-		xor	bx, bx
-
-loc_CB6:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_CD2
-		mov	dx, ax
-
-loc_CD2:
-		sub	dx, bx
-		jl	short loc_D08
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_D08
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_D1A
-		shr	bx, 1
-		jb	short loc_D0C
-		nop
-
-loc_D00:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_D00
-
-loc_D08:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_D0C:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_D0C
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_D1A:
-		shr	bx, 1
-		jb	short loc_D2E
-		dec	bx
-		nop
-
-loc_D20:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_D20
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_D2E:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_D2E
-		pop	di
-		retf	8
-sub_CA4		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18973,7 +18873,7 @@ var_2		= word ptr -2
 		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -19784,10 +19684,10 @@ sub_D3A2	proc near
 		call	grcg_setcolor
 		push	large 250034h
 		push	large 25011Fh
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		push	large 60120h
 		push	large 250127h
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -19810,10 +19710,10 @@ loc_D407:
 		call	grcg_setcolor
 		push	large 490034h
 		push	large 49011Fh
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		push	large 2A0120h
 		push	large 490127h
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -20084,10 +19984,10 @@ loc_D66C:
 		call	grcg_setcolor
 		push	large 370034h
 		push	large 37011Fh
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		push	large 180120h
 		push	large 370127h
-		call	sub_CA4
+		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al

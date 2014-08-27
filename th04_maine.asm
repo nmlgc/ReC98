@@ -562,103 +562,7 @@ sub_B14		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BEA		proc far
-		push	di
-		mov	di, sp
-		mov	ax, ClipYT
-		mov	cx, ax
-		mov	bx, ss:[di+0Ah]
-		sub	bx, ax
-		jg	short loc_BFC
-		xor	bx, bx
-
-loc_BFC:
-		mov	ax, bx
-		shl	ax, 2
-		add	ax, bx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	ax, ClipYH
-		mov	dx, ss:[di+6]
-		sub	dx, cx
-		cmp	dx, ax
-		jl	short loc_C18
-		mov	dx, ax
-
-loc_C18:
-		sub	dx, bx
-		jl	short loc_C4E
-		mov	ax, ss:[di+0Ch]
-		mov	bx, ss:[di+8]
-		sub	bx, ax
-		jl	short loc_C4E
-		inc	bx
-		mov	di, dx
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		add	di, ax
-		lea	dx, [bx+50h]
-		mov	ax, 0FFFFh
-		test	di, 1
-		jnz	short loc_C60
-		shr	bx, 1
-		jb	short loc_C52
-		nop
-
-loc_C46:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C46
-
-loc_C4E:
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C52:
-		mov	cx, bx
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C52
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C60:
-		shr	bx, 1
-		jb	short loc_C74
-		dec	bx
-		nop
-
-loc_C66:
-		mov	cx, bx
-		stosb
-		rep stosw
-		stosb
-		sub	di, dx
-		jnb	short loc_C66
-		pop	di
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_C74:
-		mov	cx, bx
-		stosb
-		rep stosw
-		sub	di, dx
-		jnb	short loc_C74
-		pop	di
-		retf	8
-sub_BEA		endp
-
+include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15141,7 +15045,7 @@ loc_AC70:
 		call	grcg_setcolor
 		push	large 140040h
 		push	large 3B0107h
-		call	sub_BEA
+		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
