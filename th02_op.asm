@@ -1727,73 +1727,7 @@ sub_1208	proc far
 sub_1208	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_127A	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_127A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1290	proc far
-					; sub_A2FB+22P	...
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_12E2
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_127A
-		call	sub_127A
-		mov	bx, 0B000h
-		call	sub_127A
-		call	sub_127A
-		mov	bx, 0B800h
-		call	sub_127A
-		call	sub_127A
-		mov	bx, 0E000h
-		call	sub_127A
-		call	sub_127A
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_12E2:
-		retf	2
-sub_1290	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15060,7 +14994,7 @@ loc_9E97:
 		push	6
 		call	sub_13D0
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_9F16
@@ -15538,7 +15472,7 @@ sub_A2FB	proc far
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		call	sub_A150
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
@@ -15660,7 +15594,7 @@ loc_A3BC:
 		call	sub_1FA2
 		call	far ptr	palette_show
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16071,7 +16005,7 @@ sub_A74A	proc far
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		call	sub_A481
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
@@ -19008,7 +18942,7 @@ sub_BBC0	proc far
 		push	word_F188
 		call	graph_pi_free
 		push	1
-		call	sub_1290
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20484,7 +20418,7 @@ var_1		= byte ptr -1
 		push	word_F57C
 		call	sub_C070
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20676,7 +20610,7 @@ loc_C978:
 		call	sub_1FA2
 		call	far ptr	palette_show
 		push	0
-		call	sub_1290
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

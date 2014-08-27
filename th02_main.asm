@@ -2410,72 +2410,7 @@ sub_158C	proc far
 sub_158C	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15FE	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_15FE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1614	proc far
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_1666
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_15FE
-		call	sub_15FE
-		mov	bx, 0B000h
-		call	sub_15FE
-		call	sub_15FE
-		mov	bx, 0B800h
-		call	sub_15FE
-		call	sub_15FE
-		mov	bx, 0E000h
-		call	sub_15FE
-		call	sub_15FE
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_1666:
-		retf	2
-sub_1614	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
@@ -48999,7 +48934,7 @@ sub_1A7D5	proc far
 		mov	al, byte_20619
 		mov	ah, 0
 		push	ax
-		call	sub_1614
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al		; Interrupt Controller #2, 8259A

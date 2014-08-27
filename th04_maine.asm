@@ -1160,72 +1160,7 @@ sub_113A	proc far
 sub_113A	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11AC	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_11AC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11C2	proc far
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_1214
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_11AC
-		call	sub_11AC
-		mov	bx, 0B000h
-		call	sub_11AC
-		call	sub_11AC
-		mov	bx, 0B800h
-		call	sub_11AC
-		call	sub_11AC
-		mov	bx, 0E000h
-		call	sub_11AC
-		call	sub_11AC
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_1214:
-		retf	2
-sub_11C2	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14166,7 +14101,7 @@ loc_A187:
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		push	0
@@ -14210,7 +14145,7 @@ loc_A1FE:
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		push	0
@@ -15396,7 +15331,7 @@ loc_AB8D:
 		push	0
 		call	sub_CCDD
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16274,7 +16209,7 @@ loc_B30B:
 		or	si, si
 		jg	short loc_B2AF
 		push	[bp+var_2]
-		call	sub_11C2
+		call	graph_copy_page
 		pop	di
 		pop	si
 		leave
@@ -16351,7 +16286,7 @@ loc_B39A:
 		mov	ax, 1
 		sub	ax, [bp+var_2]
 		push	ax
-		call	sub_11C2
+		call	graph_copy_page
 		pop	di
 		pop	si
 		leave
@@ -16434,7 +16369,7 @@ loc_B43B:
 		mov	ax, 1
 		sub	ax, [bp+var_2]
 		push	ax
-		call	sub_11C2
+		call	graph_copy_page
 		pop	di
 		pop	si
 		leave
@@ -16468,7 +16403,7 @@ sub_B44D	proc near
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		call	sub_D626
 		push	100h
 		call	sub_CF8C
@@ -16559,7 +16494,7 @@ sub_B44D	proc near
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		call	sub_D626
 		push	4
 		call	palette_black_in
@@ -17679,7 +17614,7 @@ sub_C0F8	proc near
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		push	4
 		call	palette_black_in
 		call	sub_BB81
@@ -18728,7 +18663,7 @@ var_2		= word ptr -2
 		push	large [dword_FCD2]
 		call	graph_pi_free
 		push	0
-		call	sub_11C2
+		call	graph_copy_page
 		push	ds
 		push	offset aScnum2_bft ; "scnum2.bft"
 		call	super_entry_bfnt

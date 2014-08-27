@@ -1380,73 +1380,7 @@ sub_12B4	proc far
 sub_12B4	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1326	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_1326	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_133C	proc far
-					; sub_C1DD+4AP	...
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_138E
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_1326
-		call	sub_1326
-		mov	bx, 0B000h
-		call	sub_1326
-		call	sub_1326
-		mov	bx, 0B800h
-		call	sub_1326
-		call	sub_1326
-		mov	bx, 0E000h
-		call	sub_1326
-		call	sub_1326
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_138E:
-		retf	2
-sub_133C	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15780,7 +15714,7 @@ loc_ACF4:
 		push	0
 		call	sub_EFAC
 		push	0
-		call	sub_133C
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -18549,7 +18483,7 @@ var_2		= word ptr -2
 		push	0
 		call	sub_F082
 		push	0
-		call	sub_133C
+		call	graph_copy_page
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt
@@ -18643,7 +18577,7 @@ loc_C2EB:
 loc_C307:
 					; sub_C1DD+123j
 		push	1
-		call	sub_133C
+		call	graph_copy_page
 		call	sub_EB66
 		push	100h
 		call	sub_EE18
@@ -20277,7 +20211,7 @@ sub_D1B1	proc near
 		push	0
 		call	sub_F082
 		push	0
-		call	sub_133C
+		call	graph_copy_page
 		push	4
 		call	palette_black_in
 		mov	dx, 0A6h ; '¦'

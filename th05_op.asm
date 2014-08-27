@@ -1113,73 +1113,7 @@ sub_11C8	proc far
 sub_11C8	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_123A	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_123A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1250	proc far
-					; sub_A9D6+139P ...
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_12A2
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_123A
-		call	sub_123A
-		mov	bx, 0B000h
-		call	sub_123A
-		call	sub_123A
-		mov	bx, 0B800h
-		call	sub_123A
-		call	sub_123A
-		mov	bx, 0E000h
-		call	sub_123A
-		call	sub_123A
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_12A2:
-		retf	2
-sub_1250	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
@@ -15125,7 +15059,7 @@ loc_AA91:
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	byte_F0DC, 0
@@ -15151,7 +15085,7 @@ loc_AAE1:
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	byte_F0DC, 0
@@ -15184,7 +15118,7 @@ loc_AB3B:
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	byte_F0DC, 0
@@ -16497,14 +16431,14 @@ sub_B5A6	proc near
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		call	sub_B36C
 		push	1
 		call	sub_E15E
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		call	sub_B489
 		push	1
 		call	palette_black_out
@@ -16817,7 +16751,7 @@ var_1		= byte ptr -1
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		call	sub_D688
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -17400,7 +17334,7 @@ var_1		= byte ptr -1
 		mov	al, 0
 		out	dx, al
 		push	1
-		call	sub_1250
+		call	graph_copy_page
 		mov	[bp+var_1], 1
 		mov	[bp+var_2], 0
 		mov	dx, 0A6h ; '¦'
@@ -17466,7 +17400,7 @@ loc_BDBE:
 		cmp	si, 8
 		jl	short loc_BDB7
 		push	1
-		call	sub_1250
+		call	graph_copy_page
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_BDE8
@@ -17540,7 +17474,7 @@ loc_BE46:
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		pop	si
 		leave
 		retn
@@ -18362,7 +18296,7 @@ var_1		= byte ptr -1
 		push	word_13E94
 		call	sub_BF4D
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -19402,7 +19336,7 @@ loc_CD17:
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 
@@ -19854,7 +19788,7 @@ var_2		= word ptr -2
 		push	0
 		call	sub_DEE0
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		call	sub_D688
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -19891,7 +19825,7 @@ loc_D111:
 		mov	al, byte ptr [bp+var_2]
 		mov	byte ptr word_14118, al
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		pop	si
@@ -20000,7 +19934,7 @@ loc_D1D0:
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E
@@ -20034,7 +19968,7 @@ loc_D231:
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_1250
+		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E

@@ -1614,73 +1614,7 @@ sub_14E4	proc far
 sub_14E4	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1556	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_1556	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_156C	proc far
-					; sub_AE96+159P ...
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_15BE
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_1556
-		call	sub_1556
-		mov	bx, 0B000h
-		call	sub_1556
-		call	sub_1556
-		mov	bx, 0B800h
-		call	sub_1556
-		call	sub_1556
-		mov	bx, 0E000h
-		call	sub_1556
-		call	sub_1556
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_15BE:
-		retf	2
-sub_156C	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
@@ -15633,7 +15567,7 @@ loc_AF56:
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	byte_F446, 0
@@ -15670,7 +15604,7 @@ loc_AFBD:
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	byte_F446, 0
@@ -16947,14 +16881,14 @@ sub_B9CE	proc near
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		call	sub_B794
 		push	1
 		call	sub_DA3B
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		call	sub_B8B1
 		push	1
 		call	palette_black_out
@@ -17269,7 +17203,7 @@ var_1		= byte ptr -1
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		call	sub_E428
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -18238,7 +18172,7 @@ sub_C3B7	proc near
 		push	word_12DBC
 		call	sub_BF41
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		call	sub_E428
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -19161,7 +19095,7 @@ loc_CB58:
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 
@@ -19333,7 +19267,7 @@ var_2		= word ptr -2
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		push	0
 		push	ds
 		push	offset aOp5b_pi	; "op5b.pi"
@@ -19469,7 +19403,7 @@ loc_CE50:
 		push	large [dword_116B0]
 		call	graph_pi_free
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		xor	si, si
 		jmp	short loc_CEAA
 ; ---------------------------------------------------------------------------
@@ -20487,7 +20421,7 @@ sub_D6B2	proc near
 		call	sub_D338
 		call	sub_D3A2
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		push	1
 		call	palette_black_in
 		pop	bp
@@ -20656,7 +20590,7 @@ loc_D816:
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B
@@ -20700,7 +20634,7 @@ loc_D881:
 		call	sub_DA75
 		call	sub_D650
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		push	1
 		call	palette_white_in
 
@@ -20781,7 +20715,7 @@ loc_D939:
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	0
-		call	sub_156C
+		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_DA3B

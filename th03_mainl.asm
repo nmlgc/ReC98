@@ -1189,73 +1189,7 @@ sub_E24		proc far
 sub_E24		endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E96		proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_E96		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EAC		proc far
-					; sub_A64D+3BDP ...
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_EFE
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_E96
-		call	sub_E96
-		mov	bx, 0B000h
-		call	sub_E96
-		call	sub_E96
-		mov	bx, 0B800h
-		call	sub_E96
-		call	sub_E96
-		mov	bx, 0E000h
-		call	sub_E96
-		call	sub_E96
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_EFE:
-		retf	2
-sub_EAC		endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14734,7 +14668,7 @@ var_2		= word ptr -2
 		push	0
 		call	sub_CD0A
 		push	0
-		call	sub_EAC
+		call	graph_copy_page
 		push	ds
 		push	offset unk_10316
 		push	large [dword_102FE]
@@ -16576,7 +16510,7 @@ loc_A9FE:
 		push	0
 		call	sub_CD2F
 		push	0
-		call	sub_EAC
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17355,7 +17289,7 @@ sub_AFAC	proc near
 		push	offset aRegi1_bft ; "regi1.bft"
 		call	super_entry_bfnt
 		push	1
-		call	sub_EAC
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17939,7 +17873,7 @@ sub_B429	proc near
 		push	si
 		push	di
 		push	0
-		call	sub_EAC
+		call	graph_copy_page
 		xor	si, si
 		mov	di, 68h	; 'h'
 		jmp	short loc_B447
@@ -18502,7 +18436,7 @@ loc_B81F:
 loc_B835:
 		call	sub_B429
 		push	1
-		call	sub_EAC
+		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A

@@ -1822,72 +1822,7 @@ sub_11EE	proc far
 sub_11EE	endp
 
 include libs/master.lib/graph_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1260	proc near
-		xor	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsw
-		mov	cx, di
-		shr	cx, 1
-		xchg	bx, dx
-		retn
-sub_1260	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1276	proc far
-		xor	dx, dx
-		mov	cx, graph_VramWords
-		mov	bx, cx
-		shl	bx, 1
-		push	bx
-		nop
-		call	smem_wget
-		xchg	ax, dx
-		jb	short locret_12C8
-		xor	al, al
-		out	7Ch, al
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		and	al, 1
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0A800h
-		call	sub_1260
-		call	sub_1260
-		mov	bx, 0B000h
-		call	sub_1260
-		call	sub_1260
-		mov	bx, 0B800h
-		call	sub_1260
-		call	sub_1260
-		mov	bx, 0E000h
-		call	sub_1260
-		call	sub_1260
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nop
-		call	smem_release
-		mov	ax, 1
-
-locret_12C8:
-		retf	2
-sub_1276	endp
-
+include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17243,7 +17178,7 @@ loc_A992:
 		push	large [dword_F8A2]
 		call	graph_pi_free
 		push	0
-		call	sub_1276
+		call	graph_copy_page
 		push	4
 		call	palette_black_in
 		push	64h ; 'd'
