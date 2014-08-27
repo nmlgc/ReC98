@@ -1550,20 +1550,7 @@ loc_1A4E:
 		retf	2
 sub_1A2E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A86	proc far
-		mov	ah, 40h	; '@'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_1A86	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14955,7 +14942,7 @@ _envp		= dword	ptr  0Ch
 		push	offset aMiko	; "miko"
 		push	0B00h
 		call	sub_ED60
-		call	sub_1A86
+		call	graph_show
 		les	bx, dword_11E6E
 		mov	eax, es:[bx+28h]
 		mov	dword_10376, eax

@@ -79,7 +79,7 @@ sub_384		proc near
 		call	palette_show
 		mov	PaletteTone, 0
 		call	palette_show
-		call	sub_952
+		call	graph_show
 		pop	bp
 		retn
 sub_384		endp
@@ -796,22 +796,7 @@ sub_94C		proc near
 		retn
 sub_94C		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_952		proc near
-		mov	ah, 40h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retn
-sub_952		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -825,7 +810,7 @@ sub_958		proc near
 		mov	al, 0
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
-		call	sub_952
+		call	graph_show
 		call	sub_8DA
 		call	sub_928
 		call	palette_init

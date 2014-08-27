@@ -2146,20 +2146,7 @@ loc_1B12:
 		retf	0Ah
 sub_1AC0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1B8E	proc far
-		mov	ah, 40h	; '@'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_1B8E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2173,8 +2160,7 @@ sub_1B94	proc far
 		mov	al, 0
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
-		push	cs
-		call	near ptr sub_1B8E
+		call	graph_show
 		push	cs
 		call	near ptr sub_1208
 		push	cs

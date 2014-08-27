@@ -1213,20 +1213,7 @@ sub_1250	endp
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_193C	proc far
-		mov	ah, 40h	; '@'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_193C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1240,8 +1227,7 @@ sub_1942	proc far
 		mov	al, 0
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
-		push	cs
-		call	near ptr sub_193C
+		call	graph_show
 		push	cs
 		call	near ptr sub_11C8
 		push	cs

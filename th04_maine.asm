@@ -1451,18 +1451,7 @@ loc_19A8:
 		retf	2
 sub_1988	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_19E0	proc far
-		mov	ah, 40h	; '@'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_19E0	endp
-
+include libs/master.lib/graph_show.asm
 include libs/master.lib/js_end.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
@@ -14171,7 +14160,7 @@ _envp		= dword	ptr  0Ch
 		mov	ah, 0
 		push	ax
 		call	sub_CFAA
-		call	sub_19E0
+		call	graph_show
 		les	bx, dword_F3CE
 		cmp	byte ptr es:[bx+30h], 0FEh ; 'þ'
 		jb	loc_A1FE

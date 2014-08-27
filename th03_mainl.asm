@@ -1555,20 +1555,7 @@ loc_1720:
 		retf	2
 sub_1700	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1758	proc far
-		mov	ah, 40h	; '@'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-sub_1758	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14481,7 +14468,7 @@ sub_978D	proc near
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_1758
+		call	graph_show
 		push	large 160012Ch
 		push	0
 		call	far ptr	loc_D712
@@ -15281,7 +15268,7 @@ loc_9EF1:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_E72
-		call	sub_1758
+		call	graph_show
 		push	large [off_E4B6]
 		call	sub_A12E
 		call	sub_AC6E
@@ -18726,7 +18713,7 @@ loc_B9DD:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		call	sub_E72
-		call	sub_1758
+		call	graph_show
 		push	large [off_EE4E]
 		call	sub_A12E
 		call	sub_AC6E
