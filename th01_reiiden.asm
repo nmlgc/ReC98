@@ -12390,44 +12390,7 @@ loc_5F32:
 		retf
 _getenv		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl memcmp(const void	*s1, const void	*s2, size_t n)
-_memcmp		proc far
-
-s1		= dword	ptr  6
-_s2		= dword	ptr  0Ah
-n		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+n]
-		mov	cx, ax
-		jcxz	short loc_5F59
-		lds	si, [bp+s1]
-		les	di, [bp+_s2]
-		cld
-		repe cmpsb
-		mov	al, [si-1]
-		xor	ah, ah
-		mov	cl, es:[di-1]
-		xor	ch, ch
-
-loc_5F59:
-		pop	ds
-		sub	ax, cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_memcmp		endp
-
+include libs/BorlandC/memcmp.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20177,9 +20140,7 @@ arg_6		= word ptr  0Ch
 		push	ax		; s2
 		push	word ptr [bp+s1+2]
 		push	word ptr [bp+s1] ; s1
-		nop
-		push	cs
-		call	near ptr _memcmp
+		nopcall	_memcmp
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_9F81
