@@ -36,55 +36,7 @@ include libs/master.lib/bfill.asm
 include libs/master.lib/bfnt_palette_set.asm
 include libs/master.lib/bgetc.asm
 include libs/master.lib/palette_black_out.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_574		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	mem_AllocID, 6
-		mov	ax, bbufsiz
-		add	ax, 9
-		push	ax
-		call	hmem_allocbyte
-		jb	short loc_5B0
-		mov	es, ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_ropen
-		jb	short loc_5B7
-		mov	es:0, ax
-		mov	word ptr es:2, 0
-		mov	ax, bbufsiz
-		mov	es:6, ax
-		mov	ax, es
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_5B0:
-		mov	byte ptr pferrno, 3
-		jmp	short loc_5C1
-; ---------------------------------------------------------------------------
-
-loc_5B7:
-		push	es
-		call	hmem_free
-		mov	byte ptr pferrno, 1
-
-loc_5C1:
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_574		endp
-
-; ---------------------------------------------------------------------------
+include libs/master.lib/bopenr.asm
 include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
@@ -3258,8 +3210,7 @@ arg_6		= word ptr  0Ch
 		mov	si, ax
 		push	[bp+arg_6]
 		push	[bp+arg_4]
-		push	cs
-		call	near ptr sub_574
+		call	bopenr
 		or	ax, ax
 		jz	loc_2FF7
 		mov	es, si
