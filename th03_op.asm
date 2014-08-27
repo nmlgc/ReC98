@@ -45,100 +45,7 @@ include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_734		proc far
-					; sub_ADE2+118P
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 28F0h
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		mov	ax, bx
-		and	ax, 0Fh
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 27Fh
-		sub	ax, bx
-		out	dx, ax
-		cld
-		mov	ax, 0A800h
-		mov	ds, ax
-		assume ds:nothing
-		mov	es, ax
-		assume es:nothing
-		mov	si, 0
-		mov	di, 0FFFEh
-		mov	ax, bx
-		shr	bx, 4
-		mov	bp, 29h	; ')'
-		sub	bp, bx
-		shl	bx, 1
-		dec	ax
-		shr	ax, 4
-		shl	ax, 1
-		add	si, ax
-		mov	dx, 2
-		sub	dx, bx
-		mov	bx, 190h
-		nop
-
-loc_7A2:
-		mov	cx, bp
-		rep movsw
-		sub	si, dx
-		sub	di, dx
-		dec	bx
-		jnz	short loc_7A2
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 0
-		out	7Ch, al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		pop	di
-		pop	si
-		pop	ds
-		assume ds:dseg
-		pop	bp
-		retf	2
-sub_734		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/egc_shift_left_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17448,7 +17355,7 @@ var_2		= word ptr -2
 		push	0
 		call	sub_C37B
 		push	2
-		call	sub_734
+		call	egc_shift_left_all
 		mov	Palettes+45, 0
 		mov	Palettes+46, 0
 		mov	Palettes+47, 0
@@ -17506,7 +17413,7 @@ loc_AEE1:
 		mov	dx, 0A6h ; '¦'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	4
-		call	sub_734
+		call	egc_shift_left_all
 		sub	si, 2
 
 loc_AF02:
