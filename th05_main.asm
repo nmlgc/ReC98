@@ -8187,42 +8187,7 @@ loc_63B9:
 _getenv		endp
 
 include libs/BorlandC/memcmp.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void *__cdecl	memcpy(void *dest, const void *src, size_t n)
-_memcpy		proc far
-
-dest		= dword	ptr  6
-src		= dword	ptr  0Ah
-n		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		les	di, [bp+dest]
-		lds	si, [bp+src]
-		mov	cx, [bp+n]
-		shr	cx, 1
-		cld
-		rep movsw
-		jnb	short loc_63FF
-		movsb
-
-loc_63FF:
-		mov	ds, dx
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_memcpy		endp
-
+include libs/BorlandC/memcpy.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11495,9 +11460,7 @@ loc_7CD0:
 		add	ax, 3Ah	; ':'
 		push	word ptr [bp+var_30+2]
 		push	ax		; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 		test	byte ptr [bp+var_2C], 1
 		jz	short loc_7E5A
@@ -12057,9 +12020,7 @@ loc_8103:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 		popad
 		mov	dx, [bp+var_184]
@@ -12164,9 +12125,7 @@ loc_8241:
 		push	ss
 		lea	ax, [bp+var_166]
 		push	ax		; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 		mov	ax, [bp+var_164]
 		mov	[bp+var_B8], 0
@@ -13104,9 +13063,7 @@ loc_8A81:
 		push	ss
 		les	bx, [bp+arg_6]
 		push	word ptr es:[bx+36h] ; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 		jmp	short loc_8A7A
 ; ---------------------------------------------------------------------------
@@ -13142,9 +13099,7 @@ loc_8AD1:
 		push	ss
 		les	bx, [bp+arg_6]
 		push	word ptr es:[bx+36h] ; dest
-		nop
-		push	cs
-		call	near ptr _memcpy
+		nopcall	_memcpy
 		add	sp, 0Ah
 
 loc_8AE1:
