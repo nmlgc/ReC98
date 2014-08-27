@@ -1742,42 +1742,7 @@ loc_11D7:
 		retf	4
 sub_11C8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11EE	proc far
-		mov	ah, 42h	; 'B'
-		mov	ch, 0C0h ; 'À'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ax, 0A800h
-		mov	graph_VramSeg, ax
-		mov	ClipYT_seg, ax
-		mov	graph_VramWords, 3E80h
-		xor	ax, ax
-		mov	ClipXL, ax
-		mov	ClipYT, ax
-		mov	es, ax
-		assume es:seg000
-		mov	ah, byte ptr es:[54Dh]
-		and	ah, 4
-		add	ah, 3Fh	; '?'
-		and	ah, 40h
-		mov	graph_VramZoom, ax
-		mov	ax, 27Fh
-		mov	ClipXR, ax
-		mov	ClipXW, ax
-		mov	ax, 190h
-		mov	graph_VramLines, ax
-		dec	ax
-		mov	ClipYB, ax
-		mov	ClipYH, ax
-		mov	ClipYB_adr, 7CB0h
-		retf
-sub_11EE	endp
-
+include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
@@ -18238,7 +18203,7 @@ loc_B76A:
 		call	near ptr sub_B4CC
 		call	vsync_start
 		call	egc_start
-		call	sub_11EE
+		call	graph_400line
 		mov	pfkey, 12h
 		push	ds
 		push	offset aUmx	; "“Œ•û••–‚.˜^"

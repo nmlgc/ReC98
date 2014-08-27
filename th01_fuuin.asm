@@ -1804,42 +1804,7 @@ sub_BE3		endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C6A		proc far
-		mov	ah, 42h	; 'B'
-		mov	ch, 0C0h ; 'À'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ax, 0A800h
-		mov	graph_VramSeg, ax
-		mov	ClipYT_seg, ax
-		mov	graph_VramWords, 3E80h
-		xor	ax, ax
-		mov	ClipXL, ax
-		mov	ClipYT, ax
-		mov	es, ax
-		assume es:seg000
-		mov	ah, byte ptr es:loc_54B+2
-		and	ah, 4
-		add	ah, 3Fh	; '?'
-		and	ah, 40h
-		mov	graph_VramZoom, ax
-		mov	ax, 27Fh
-		mov	ClipXR, ax
-		mov	ClipXW, ax
-		mov	ax, 190h
-		mov	graph_VramLines, ax
-		dec	ax
-		mov	ClipYB, ax
-		mov	ClipYH, ax
-		mov	ClipYB_adr, 7CB0h
-		retf
-sub_C6A		endp
-
+include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
 
@@ -1856,8 +1821,7 @@ sub_CE2		proc far
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
 		call	graph_show
-		push	cs
-		call	near ptr sub_C6A
+		call	graph_400line
 		call	graph_clear
 		call	palette_init
 		retf

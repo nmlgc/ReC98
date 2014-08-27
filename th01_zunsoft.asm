@@ -718,41 +718,7 @@ _main		endp
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_8DA		proc near
-		mov	ah, 42h
-		mov	ch, 0C0h
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ax, 0A800h
-		mov	graph_VramSeg, ax
-		mov	ClipYT_seg, ax
-		mov	graph_VramWords, 3E80h
-		xor	ax, ax
-		mov	ClipXL, ax
-		mov	ClipYT, ax
-		mov	es, ax
-		mov	ah, byte ptr es:[54Dh]
-		and	ah, 4
-		add	ah, 3Fh
-		and	ah, 40h
-		mov	graph_VramZoom, ax
-		mov	ax, 27Fh
-		mov	ClipXR, ax
-		mov	ClipXW, ax
-		mov	ax, 190h
-		mov	graph_VramLines, ax
-		dec	ax
-		mov	ClipYB, ax
-		mov	ClipYH, ax
-		mov	ClipYB_adr, 7CB0h
-		retn
-sub_8DA		endp
-
+include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -781,7 +747,7 @@ sub_958		proc near
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
 		call	graph_show
-		call	sub_8DA
+		call	graph_400line
 		call	graph_clear
 		call	palette_init
 		retn

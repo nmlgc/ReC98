@@ -783,41 +783,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11C8	proc far
-		mov	ah, 42h	; 'B'
-		mov	ch, 0C0h ; 'À'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	ax, 0A800h
-		mov	graph_VramSeg, ax
-		mov	ClipYT_seg, ax
-		mov	graph_VramWords, 3E80h
-		xor	ax, ax
-		mov	ClipXL, ax
-		mov	ClipYT, ax
-		mov	es, ax
-		mov	ah, byte ptr es:[54Dh]
-		and	ah, 4
-		add	ah, 3Fh	; '?'
-		and	ah, 40h
-		mov	graph_VramZoom, ax
-		mov	ax, 27Fh
-		mov	ClipXR, ax
-		mov	ClipXW, ax
-		mov	ax, 190h
-		mov	graph_VramLines, ax
-		dec	ax
-		mov	ClipYB, ax
-		mov	ClipYH, ax
-		mov	ClipYB_adr, 7CB0h
-		retf
-sub_11C8	endp
-
+include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
@@ -838,8 +804,7 @@ sub_1942	proc far
 		out	0A4h, al	; Interrupt Controller #2, 8259A
 		out	0A6h, al	; Interrupt Controller #2, 8259A
 		call	graph_show
-		push	cs
-		call	near ptr sub_11C8
+		call	graph_400line
 		call	graph_clear
 		call	palette_init
 		retf
