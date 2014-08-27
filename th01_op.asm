@@ -8685,85 +8685,7 @@ _getenv		endp
 
 include libs/BorlandC/memcmp.asm
 include libs/BorlandC/memcpy.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl setmem(void *dest, unsigned int length, char value)
-_setmem		proc far
-
-dest		= dword	ptr  6
-_length		= word ptr  0Ah
-value		= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	di, [bp+dest]
-		mov	cx, [bp+_length]
-		mov	al, [bp+value]
-		mov	ah, al
-		cld
-		test	di, 1
-		jz	short loc_4C29
-		jcxz	short loc_4C30
-		stosb
-		dec	cx
-
-loc_4C29:
-		shr	cx, 1
-		rep stosw
-		jnb	short loc_4C30
-		stosb
-
-loc_4C30:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setmem		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void *__cdecl	memset(void *s,	int c, size_t n)
-_memset		proc near
-
-dest		= dword	ptr  6
-value		= byte ptr  0Ah
-_length		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+value] ; value
-		push	[bp+_length]	; length
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		push	cs
-		call	near ptr _setmem
-		add	sp, 8
-_memset		endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4C4C	proc far
-		mov	dx, [bp+8]
-		mov	ax, [bp+6]
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_4C4C	endp ; sp-analysis failed
-
+include libs/BorlandC/memset.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14029,9 +13951,7 @@ loc_78EF:
 		push	ss		; c
 		les	bx, [bp+arg_6]
 		push	word ptr es:[bx+36h]
-		nop
-		push	cs		; s
-		call	_memset
+		nopcall	_memset
 		add	sp, 8
 		jmp	loc_7A42
 ; ---------------------------------------------------------------------------
@@ -22694,7 +22614,7 @@ _s		= dword	ptr -4
 		call	near ptr sub_B976
 		push	large 7D0000FFh	; c
 		push	large [bp+_s]	; s
-		call	far ptr	_memset
+		call	_memset
 		add	sp, 0Ah
 		push	cs
 		call	near ptr sub_BA0A
@@ -22735,7 +22655,7 @@ sub_BB3C	endp
 		call	near ptr sub_B976
 		push	large 7D0000FFh
 		push	large dword ptr	[bp-4]
-		call	far ptr	_memset
+		call	_memset
 		add	sp, 0Ah
 		push	cs
 		call	near ptr sub_BA0A
@@ -22891,7 +22811,7 @@ var_2		= word ptr -2
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
-		call	far ptr	_memset
+		call	_memset
 		add	sp, 8
 		mov	[bp+var_2], 0
 		jmp	loc_BD2E
@@ -23109,7 +23029,7 @@ loc_BDF4:
 		push	ss
 		lea	ax, [bp-32h]
 		push	ax
-		call	far ptr	_memset
+		call	_memset
 		add	sp, 8
 		mov	word ptr [bp-2], 0
 		jmp	loc_BE9F
@@ -25269,7 +25189,7 @@ loc_CF49:
 		push	ss
 		lea	ax, [bp-34h]
 		push	ax
-		call	far ptr	_memset
+		call	_memset
 		add	sp, 8
 		xor	di, di
 		jmp	loc_CFFD

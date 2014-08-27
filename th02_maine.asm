@@ -5230,77 +5230,7 @@ _getenv		endp
 
 include libs/BorlandC/memcmp.asm
 include libs/BorlandC/memcpy.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl setmem(void *dest, unsigned int length, char value)
-_setmem		proc far
-
-dest		= dword	ptr  6
-_length		= word ptr  0Ah
-value		= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	di, [bp+dest]
-		mov	cx, [bp+_length]
-		mov	al, [bp+value]
-		mov	ah, al
-		cld
-		test	di, 1
-		jz	short loc_4B6C
-		jcxz	short loc_4B73
-		stosb
-		dec	cx
-
-loc_4B6C:
-		shr	cx, 1
-		rep stosw
-		jnb	short loc_4B73
-		stosb
-
-loc_4B73:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setmem		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void *__cdecl	memset(void *s,	int c, size_t n)
-_memset		proc far
-
-dest		= dword	ptr  6
-value		= byte ptr  0Ah
-_length		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+value] ; value
-		push	[bp+_length]	; length
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		push	cs
-		call	near ptr _setmem
-		add	sp, 8
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_memset		endp
-
+include libs/BorlandC/memset.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9954,9 +9884,7 @@ loc_706D:
 		push	ss
 		les	bx, [bp+arg_6]
 		push	word ptr es:[bx+36h] ; s
-		nop
-		push	cs
-		call	near ptr _memset
+		nopcall	_memset
 		add	sp, 8
 		jmp	loc_71C0
 ; ---------------------------------------------------------------------------
