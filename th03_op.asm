@@ -885,7 +885,7 @@ loc_D6F:
 		mov	cx, [bp+var_6]
 		sub	cx, di
 		mov	bx, 1190h
-		call	sub_1A3A
+		call	make_linework
 		mov	bx, [bp+var_A]
 		mov	cx, [bp+arg_0]
 		mov	ax, word_DA74
@@ -926,7 +926,7 @@ loc_DCB:
 		mov	cx, [bp+var_2]
 		sub	cx, [bp+var_4]
 		mov	bx, 1198h
-		call	sub_1A3A
+		call	make_linework
 		mov	si, [bp+var_4]
 
 loc_DDE:
@@ -965,7 +965,7 @@ loc_E20:
 		mov	[bp+var_6], cx
 		sub	cx, si
 		mov	bx, 1190h
-		call	sub_1A3A
+		call	make_linework
 
 loc_E35:
 		cmp	[bp+var_2], si
@@ -985,7 +985,7 @@ loc_E4A:
 		sub	cx, si
 		mov	bx, 1198h
 		push	0DDEh
-		jmp	sub_1A3A
+		jmp	make_linework
 ; ---------------------------------------------------------------------------
 
 loc_E62:
@@ -1857,36 +1857,7 @@ sub_19F6	endp
 
 include libs/master.lib/js_end.asm
 include libs/master.lib/keybeep.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A3A	proc near
-		push	si
-		mov	[bx], dx
-		sub	ax, dx
-		cmp	cx, 1
-		adc	cx, 0
-		cwd
-		idiv	cx
-		cmp	dx, 8000h
-		adc	ax, 0FFFFh
-		mov	[bx+6],	ax
-		cmp	dx, 8000h
-		cmc
-		sbb	si, si
-		add	dx, si
-		xor	dx, si
-		xor	ax, ax
-		div	cx
-		add	ax, si
-		xor	ax, si
-		mov	[bx+2],	ax
-		mov	word ptr [bx+4], 8000h
-		pop	si
-		retn
-sub_1A3A	endp
-
+include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm

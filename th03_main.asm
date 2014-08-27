@@ -1444,7 +1444,7 @@ loc_FDD:
 		sub	cx, si
 		mov	word_1E714, cx
 		mov	dx, [bp+arg_A]
-		call	sub_1C48
+		call	make_linework
 		mov	dx, [bp+arg_6]
 		mov	bx, 118Ch
 		mov	cx, [bp+arg_4]
@@ -1453,7 +1453,7 @@ loc_FDD:
 		mov	ax, [bp+arg_2]
 		sub	di, cx
 		mov	cx, di
-		call	sub_1C48
+		call	make_linework
 		imul	si, 50h
 		mov	dx, word_1E714
 		push	103Ah
@@ -1474,7 +1474,7 @@ loc_1040:
 		sub	cx, si
 		mov	ax, dx
 		mov	dx, [bp+arg_A]
-		call	sub_1C48
+		call	make_linework
 		imul	si, 50h
 		mov	dx, word_1E714
 		push	103Ah
@@ -1487,7 +1487,7 @@ loc_105C:
 		mov	di, cx
 		mov	ax, dx
 		mov	dx, [bp+arg_A]
-		call	sub_1C48
+		call	make_linework
 		mov	ax, [bp+arg_6]
 		cmp	[bp+arg_2], ax
 		lea	dx, [di-1]
@@ -1499,7 +1499,7 @@ loc_105C:
 		mov	word_1E714, cx
 		mov	dx, [bp+arg_6]
 		mov	bx, 118Ch
-		call	sub_1C48
+		call	make_linework
 		mov	dx, word_1E714
 		call	loc_2C8C
 		pop	si
@@ -1642,13 +1642,13 @@ arg_A		= word ptr  10h
 		mov	cx, di
 		mov	bx, 118Ch
 		mov	dx, [bp+arg_8]
-		call	sub_1C48
+		call	make_linework
 		mov	ax, [bp+arg_0]
 		mov	cx, di
 		mov	bx, 1194h
 		mov	dx, [bp+arg_6]
 		push	11A7h
-		jmp	sub_1C48
+		jmp	make_linework
 ; ---------------------------------------------------------------------------
 
 loc_1175:
@@ -1667,12 +1667,12 @@ loc_1175:
 		mov	cx, di
 		mov	bx, 118Ch
 		mov	dx, [bp+arg_2]
-		call	sub_1C48
+		call	make_linework
 		mov	ax, [bp+arg_6]
 		mov	cx, di
 		mov	bx, 1194h
 		mov	dx, [bp+arg_0]
-		call	sub_1C48
+		call	make_linework
 		imul	si, 50h
 		mov	dx, di
 		call	loc_2C8C
@@ -2371,36 +2371,7 @@ loc_1C3D:
 sub_1BD6	endp
 
 include libs/master.lib/js_end.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1C48	proc near
-		push	si
-		mov	[bx], dx
-		sub	ax, dx
-		cmp	cx, 1
-		adc	cx, 0
-		cwd
-		idiv	cx
-		cmp	dx, 8000h
-		adc	ax, 0FFFFh
-		mov	[bx+6],	ax
-		cmp	dx, 8000h
-		cmc
-		sbb	si, si
-		add	dx, si
-		xor	dx, si
-		xor	ax, ax
-		div	cx
-		add	ax, si
-		xor	ax, si
-		mov	[bx+2],	ax
-		mov	word ptr [bx+4], 8000h
-		pop	si
-		retn
-sub_1C48	endp
-
+include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 

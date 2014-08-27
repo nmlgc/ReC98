@@ -2422,7 +2422,7 @@ loc_1936:
 		sub	cx, ax
 		mov	ax, es:[bx]
 		mov	bx, 2630h
-		call	sub_2122
+		call	make_linework
 		mov	si, [bp+var_C]
 		mov	dx, si
 		inc	si
@@ -2447,7 +2447,7 @@ loc_1989:
 		mov	cx, ax
 		mov	ax, es:[bx+di]
 		mov	bx, 2638h
-		call	sub_2122
+		call	make_linework
 		mov	[bp+var_C], si
 
 loc_199A:
@@ -2493,7 +2493,7 @@ loc_19E3:
 		sub	cx, [bp+var_6]
 		mov	ax, es:[bx]
 		mov	bx, 2630h
-		call	sub_2122
+		call	make_linework
 
 loc_19FE:
 		mov	ax, [bp+var_2]
@@ -3195,35 +3195,7 @@ word_20DF	dw 1111h
 word_2118	dw 1111h
 		db 8Ah,	0F2h, 0FEh, 0CDh, 75h, 0C2h, 0C3h, 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2122	proc near
-		push	si
-		mov	[bx], dx
-		sub	ax, dx
-		cmp	cx, 1
-		adc	cx, 0
-		cwd
-		idiv	cx
-		cmp	dx, 8000h
-		adc	ax, 0FFFFh
-		mov	[bx+6],	ax
-		cmp	dx, 8000h
-		cmc
-		sbb	si, si
-		add	dx, si
-		xor	dx, si
-		xor	ax, ax
-		div	cx
-		add	ax, si
-		xor	ax, si
-		mov	[bx+2],	ax
-		mov	word ptr [bx+4], 8000h
-		pop	si
-		retn
-sub_2122	endp
-
+include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 
