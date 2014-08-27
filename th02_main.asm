@@ -2834,26 +2834,7 @@ sub_1EE4	proc far
 sub_1EE4	endp
 
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2000	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		assume es:nothing
-		push	word ptr es:0
-		call	bcloser
-		push	[bp+arg_0]
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_2000	endp
+include libs/master.lib/pfclose.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -5080,8 +5061,7 @@ sub_3A6C	proc far
 		cmp	word_1FFA4, ax
 		jz	short locret_3A9B
 		push	word_1FFA4
-		push	cs
-		call	near ptr sub_2000
+		call	pfclose
 
 locret_3A9B:
 		retf
@@ -5159,8 +5139,7 @@ loc_3B25:
 
 loc_3B40:
 		push	word_1FFA4
-		push	cs
-		call	near ptr sub_2000
+		call	pfclose
 		mov	word_1FFA4, 0
 		mov	word_1FFA6, 0FFFFh
 		jmp	loc_3BEF

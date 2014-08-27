@@ -1465,26 +1465,7 @@ sub_19E0	endp
 
 include libs/master.lib/js_end.asm
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1AF6	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		assume es:nothing
-		push	word ptr es:0
-		call	bcloser
-		push	[bp+arg_0]
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_1AF6	endp
+include libs/master.lib/pfclose.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -2047,8 +2028,7 @@ sub_29D2	proc far
 		cmp	word_FCCC, ax
 		jz	short locret_2A09
 		push	word_FCCC
-		push	cs
-		call	near ptr sub_1AF6
+		call	pfclose
 		push	word_FCD0
 		call	hmem_free
 

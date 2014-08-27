@@ -3225,25 +3225,7 @@ sub_2122	proc near
 sub_2122	endp
 
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2262	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		push	word ptr es:0
-		call	bcloser
-		push	[bp+arg_0]
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_2262	endp
+include libs/master.lib/pfclose.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -5876,8 +5858,7 @@ loc_434D:
 loc_4355:
 		jz	short locret_435F
 		push	word_23EE0
-		push	cs
-		call	near ptr sub_2262
+		call	pfclose
 
 locret_435F:
 					; sub_4328+2Dj
@@ -5940,8 +5921,7 @@ byte_43C4	db 0
 		cmp	bx, di
 		jnz	loc_4494
 		push	word_23EE0
-		push	cs
-		call	near ptr sub_2262
+		call	pfclose
 		mov	word_23EE0, 0
 		mov	word_23EE2, 0FFFFh
 		jmp	loc_44AF

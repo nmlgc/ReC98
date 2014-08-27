@@ -3000,25 +3000,7 @@ loc_1EC4:
 word_1EFA	dw 1111h
 		db 8Ah,	0F2h, 0FEh, 0CDh, 75h, 0C2h, 0C3h, 0
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_200E	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		push	word ptr es:0
-		call	bcloser
-		push	[bp+arg_0]
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_200E	endp
+include libs/master.lib/pfclose.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -4754,8 +4736,7 @@ sub_3340	proc far
 		cmp	word_24694, ax
 		jz	short locret_3377
 		push	word_24694
-		push	cs
-		call	near ptr sub_200E
+		call	pfclose
 		push	word_24698
 		call	hmem_free
 
@@ -4835,8 +4816,7 @@ loc_3401:
 
 loc_341C:
 		push	word_24694
-		push	cs
-		call	near ptr sub_200E
+		call	pfclose
 		mov	word_24694, 0
 		mov	word_24696, 0FFFFh
 		jmp	loc_34CB

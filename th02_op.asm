@@ -2263,26 +2263,7 @@ sub_1CA0	endp
 
 include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E14	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		assume es:nothing
-		push	word ptr es:0
-		call	bcloser
-		push	[bp+arg_0]
-		call	hmem_free
-		pop	bp
-		retf	2
-sub_1E14	endp
+include libs/master.lib/pfclose.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -3183,8 +3164,7 @@ sub_2FB6	proc far
 		cmp	word_F3C4, ax
 		jz	short locret_2FE5
 		push	word_F3C4
-		push	cs
-		call	near ptr sub_1E14
+		call	pfclose
 
 locret_2FE5:
 		retf
