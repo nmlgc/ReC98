@@ -729,85 +729,7 @@ loc_BEC:
 		retf
 sub_B90		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF6		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_C76
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_C76
-		cmp	cx, bx
-		jg	short loc_C28
-		xchg	cx, bx
-
-loc_C28:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_C76
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+208h]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_C71
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_C71:
-		and	ax, [bx+20Ah]
-		stosw
-
-loc_C76:
-		pop	di
-		pop	bp
-		retf	6
-sub_BF6		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1176,8 +1098,7 @@ loc_F17:
 		mov	ax, [bp+arg_6]
 		sub	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_BF6
+		call	grcg_hline
 		mov	ax, [bp+arg_8]
 		sub	ax, si
 		push	ax
@@ -1187,8 +1108,7 @@ loc_F17:
 		mov	ax, [bp+arg_2]
 		add	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_BF6
+		call	grcg_hline
 		mov	ax, di
 		stc
 		rcl	ax, 1
@@ -1203,8 +1123,7 @@ loc_F17:
 		mov	ax, [bp+arg_6]
 		sub	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_BF6
+		call	grcg_hline
 		mov	ax, [bp+arg_8]
 		sub	ax, di
 		push	ax
@@ -1214,8 +1133,7 @@ loc_F17:
 		mov	ax, [bp+arg_2]
 		add	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_BF6
+		call	grcg_hline
 		dec	si
 		mov	ax, si
 		shl	ax, 1

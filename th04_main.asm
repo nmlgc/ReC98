@@ -1302,8 +1302,7 @@ loc_1161:
 		mov	ax, [bp+arg_2]
 		sub	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_14DC
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, si
@@ -1313,8 +1312,7 @@ loc_1161:
 		mov	ax, [bp+arg_2]
 		add	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_14DC
+		call	grcg_hline
 		mov	ax, di
 		stc
 		rcl	ax, 1
@@ -1329,8 +1327,7 @@ loc_1161:
 		mov	ax, [bp+arg_2]
 		sub	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_14DC
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, di
@@ -1340,8 +1337,7 @@ loc_1161:
 		mov	ax, [bp+arg_2]
 		add	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_14DC
+		call	grcg_hline
 		dec	si
 		mov	ax, si
 		shl	ax, 1
@@ -1726,83 +1722,7 @@ loc_14D6:
 		retf	8
 sub_144A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14DC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_155C
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_155C
-		cmp	cx, bx
-		jg	short loc_150E
-		xchg	cx, bx
-
-loc_150E:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_155C
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+33Ch]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_1557
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_1557:
-		and	ax, [bx+33Eh]
-		stosw
-
-loc_155C:
-		pop	di
-		pop	bp
-		retf	6
-sub_14DC	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

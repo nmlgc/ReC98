@@ -1235,81 +1235,7 @@ loc_1428:
 		retn	8
 sub_139C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_142E	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_14AE
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_14AE
-		cmp	cx, bx
-		jg	short loc_1460
-		xchg	cx, bx
-
-loc_1460:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_14AE
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+22C6h]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_14A9
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_14A9:
-		and	ax, [bx+22C8h]
-		stosw
-
-loc_14AE:
-		pop	di
-		pop	bp
-		retn	6
-sub_142E	endp
-
+include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1383,7 +1309,7 @@ loc_159D:
 		mov	ax, [bp+arg_2]
 		sub	ax, di
 		push	ax
-		call	sub_142E
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, si
@@ -1393,7 +1319,7 @@ loc_159D:
 		mov	ax, [bp+arg_2]
 		add	ax, di
 		push	ax
-		call	sub_142E
+		call	grcg_hline
 		mov	ax, di
 		stc
 		rcl	ax, 1
@@ -1408,7 +1334,7 @@ loc_159D:
 		mov	ax, [bp+arg_2]
 		sub	ax, si
 		push	ax
-		call	sub_142E
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, di
@@ -1418,7 +1344,7 @@ loc_159D:
 		mov	ax, [bp+arg_2]
 		add	ax, si
 		push	ax
-		call	sub_142E
+		call	grcg_hline
 		dec	si
 		mov	ax, si
 		shl	ax, 1

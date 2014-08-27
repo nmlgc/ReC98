@@ -504,83 +504,7 @@ sub_AD6		endp
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C44		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_CC4
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_CC4
-		cmp	cx, bx
-		jg	short loc_C76
-		xchg	cx, bx
-
-loc_C76:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_CC4
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+4F0h]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_CBF
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_CBF:
-		and	ax, [bx+4F2h]
-		stosw
-
-loc_CC4:
-		pop	di
-		pop	bp
-		retf	6
-sub_C44		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17125,11 +17049,11 @@ arg_2		= byte ptr  6
 		push	large 0C012Ch
 		lea	ax, [si+60h]
 		push	ax
-		call	sub_C44
+		call	grcg_hline
 		push	large 0C012Ch
 		lea	ax, [si+6Fh]
 		push	ax
-		call	sub_C44
+		call	grcg_hline
 		push	0Ch
 		lea	ax, [si+60h]
 		push	ax

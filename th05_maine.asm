@@ -724,8 +724,7 @@ loc_D4B:
 		mov	ax, [bp+arg_2]
 		sub	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_E5E
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, si
@@ -735,8 +734,7 @@ loc_D4B:
 		mov	ax, [bp+arg_2]
 		add	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_E5E
+		call	grcg_hline
 		mov	ax, di
 		stc
 		rcl	ax, 1
@@ -751,8 +749,7 @@ loc_D4B:
 		mov	ax, [bp+arg_2]
 		sub	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_E5E
+		call	grcg_hline
 		mov	bx, [bp+arg_4]
 		mov	ax, bx
 		sub	ax, di
@@ -762,8 +759,7 @@ loc_D4B:
 		mov	ax, [bp+arg_2]
 		add	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_E5E
+		call	grcg_hline
 		dec	si
 		mov	ax, si
 		shl	ax, 1
@@ -875,83 +871,7 @@ loc_E58:
 		retf	8
 sub_DCC		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E5E		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_EDE
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_EDE
-		cmp	cx, bx
-		jg	short loc_E90
-		xchg	cx, bx
-
-loc_E90:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_EDE
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+1DAh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_ED9
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_ED9:
-		and	ax, [bx+1DCh]
-		stosw
-
-loc_EDE:
-		pop	di
-		pop	bp
-		retf	6
-sub_E5E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17168,7 +17088,7 @@ loc_BB00:
 		push	ax
 		lea	ax, [di+0Fh]
 		push	ax
-		call	sub_E5E
+		call	grcg_hline
 		lea	ax, [si-2]
 		push	ax
 		lea	ax, [di-1]
@@ -17189,14 +17109,14 @@ loc_BB00:
 		push	ax
 		lea	ax, [di-1]
 		push	ax
-		call	sub_E5E
+		call	grcg_hline
 		lea	ax, [si-2]
 		push	ax
 		lea	ax, [si+132h]
 		push	ax
 		lea	ax, [di+10h]
 		push	ax
-		call	sub_E5E
+		call	grcg_hline
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al

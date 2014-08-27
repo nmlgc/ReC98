@@ -634,83 +634,7 @@ loc_C98:
 sub_BD4		endp
 
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D3C		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_DBC
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_DBC
-		cmp	cx, bx
-		jg	short loc_D6E
-		xchg	cx, bx
-
-loc_D6E:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_DBC
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+51Eh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_DB7
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_DB7:
-		and	ax, [bx+520h]
-		stosw
-
-loc_DBC:
-		pop	di
-		pop	bp
-		retf	6
-sub_D3C		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1079,8 +1003,7 @@ loc_105D:
 		mov	ax, [bp+arg_6]
 		sub	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_D3C
+		call	grcg_hline
 		mov	ax, [bp+arg_8]
 		sub	ax, si
 		push	ax
@@ -1090,8 +1013,7 @@ loc_105D:
 		mov	ax, [bp+arg_2]
 		add	ax, di
 		push	ax
-		push	cs
-		call	near ptr sub_D3C
+		call	grcg_hline
 		mov	ax, di
 		stc
 		rcl	ax, 1
@@ -1106,8 +1028,7 @@ loc_105D:
 		mov	ax, [bp+arg_6]
 		sub	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_D3C
+		call	grcg_hline
 		mov	ax, [bp+arg_8]
 		sub	ax, di
 		push	ax
@@ -1117,8 +1038,7 @@ loc_105D:
 		mov	ax, [bp+arg_2]
 		add	ax, si
 		push	ax
-		push	cs
-		call	near ptr sub_D3C
+		call	grcg_hline
 		dec	si
 		mov	ax, si
 		shl	ax, 1

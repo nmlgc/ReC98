@@ -962,86 +962,7 @@ loc_D2E:
 		retf
 sub_CD2		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D38		proc far
-					; sub_1A9B0+F7P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	dx, [bp+arg_0]
-		sub	dx, ClipYT
-		cmp	dx, ClipYH
-		ja	short loc_DB8
-		mov	cx, [bp+arg_4]
-		mov	bx, [bp+arg_2]
-		mov	bp, dx
-		shl	bp, 2
-		add	bp, dx
-		shl	bp, 4
-		mov	ax, ClipXL
-		sub	cx, ax
-		sub	bx, ax
-		test	cx, bx
-		js	short loc_DB8
-		cmp	cx, bx
-		jg	short loc_D6A
-		xchg	cx, bx
-
-loc_D6A:
-		cmp	bx, 8000h
-		sbb	dx, dx
-		and	bx, dx
-		mov	di, ClipXW
-		sub	cx, di
-		sbb	dx, dx
-		and	cx, dx
-		add	cx, di
-		sub	cx, bx
-		jl	short loc_DB8
-		mov	es, ClipYT_seg
-		add	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, bp
-		and	bx, 0Fh
-		add	cx, bx
-		sub	cx, 10h
-		shl	bx, 1
-		mov	ax, [bx+28Eh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_DB3
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_DB3:
-		and	ax, [bx+290h]
-		stosw
-
-loc_DB8:
-		pop	di
-		pop	bp
-		retf	6
-sub_D38		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -48592,7 +48513,7 @@ loc_1AA24:
 		add	ax, si
 		add	ax, 0FFD8h
 		push	ax
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48608,7 +48529,7 @@ loc_1AA24:
 		lea	dx, [si+34h]
 		sub	dx, ax
 		push	dx
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48656,7 +48577,7 @@ loc_1AA24:
 		add	ax, si
 		add	ax, 0FFF0h
 		push	ax
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48672,7 +48593,7 @@ loc_1AA24:
 		lea	dx, [si+10h]
 		sub	dx, ax
 		push	dx
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48750,7 +48671,7 @@ loc_1ABA2:
 		add	ax, si
 		add	ax, 0FFE0h
 		push	ax
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48766,7 +48687,7 @@ loc_1ABA2:
 		lea	dx, [si+2Ch]
 		sub	dx, ax
 		push	dx
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48814,7 +48735,7 @@ loc_1ABA2:
 		add	ax, si
 		add	ax, 0FFF8h
 		push	ax
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
@@ -48830,7 +48751,7 @@ loc_1ABA2:
 		lea	dx, [si+8]
 		sub	dx, ax
 		push	dx
-		call	sub_D38
+		call	grcg_hline
 		mov	al, [bp+var_7]
 		cbw
 		add	ax, di
