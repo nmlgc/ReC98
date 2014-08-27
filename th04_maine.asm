@@ -659,44 +659,7 @@ loc_C74:
 		retf	8
 sub_BEA		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C82		proc far
-					; seg001:0EA7P	...
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_C82		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xor	al, al
-		out	7Ch, al
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15431,7 +15394,7 @@ loc_AC3F:
 
 loc_AC70:
 		push	large 0C00000h
-		call	sub_C82
+		call	grcg_setcolor
 		push	large 140040h
 		push	large 3B0107h
 		call	sub_BEA
@@ -15731,7 +15694,7 @@ sub_ADFC	endp
 
 loc_AEF1:
 		push	large 0C0000Fh
-		call	sub_C82
+		call	grcg_setcolor
 		mov	bx, 4
 		mov	ax, si
 		cwd
@@ -15877,7 +15840,7 @@ loc_B027:
 
 loc_B04E:
 		push	large 0C0000Fh
-		call	sub_C82
+		call	grcg_setcolor
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -15997,7 +15960,7 @@ loc_B13E:
 
 loc_B165:
 		push	large 0C0000Fh
-		call	sub_C82
+		call	grcg_setcolor
 		mov	ax, si
 		cwd
 		sub	ax, dx

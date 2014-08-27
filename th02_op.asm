@@ -1231,49 +1231,7 @@ loc_F81:
 		retf	0Ah
 sub_EAA		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F8C		proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_F8C		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FB6		proc far
-					; sub_B6BB+15P	...
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_FB6		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16531,7 +16489,7 @@ arg_6		= dword	ptr  0Ch
 		mov	[bp+var_10], ax
 		push	0C0h ; '¿'
 		push	[bp+arg_4]
-		call	sub_F8C
+		call	grcg_setcolor
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
 		out	dx, al
@@ -16797,7 +16755,7 @@ loc_AD9D:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_FB6
+		call	grcg_off
 		pop	di
 		pop	si
 		leave
@@ -18228,9 +18186,9 @@ var_2		= word ptr -2
 		push	di
 		push	0C0h ; '¿'
 		push	0Ah
-		call	sub_F8C
+		call	grcg_setcolor
 		call	sub_B90
-		call	sub_FB6
+		call	grcg_off
 		inc	word_DCB0
 		xor	si, si
 		jmp	short loc_B723
@@ -18362,9 +18320,9 @@ loc_B7B7:
 		call	sub_AFE
 		push	0C0h ; '¿'
 		push	0Ah
-		call	sub_F8C
+		call	grcg_setcolor
 		call	sub_B90
-		call	sub_FB6
+		call	grcg_off
 		push	0FFFFh
 		call	sub_B5B0
 		mov	word_DCB0, 0
@@ -18684,7 +18642,7 @@ arg_2		= word ptr  8
 		mov	[bp+var_2], ax
 		push	0C0h ; '¿'
 		push	0
-		call	sub_F8C
+		call	grcg_setcolor
 		xor	si, si
 		jmp	short loc_BA11
 ; ---------------------------------------------------------------------------
@@ -18719,7 +18677,7 @@ loc_BA07:
 loc_BA11:
 		cmp	si, 90h	; 'ê'
 		jl	short loc_B9E8
-		call	sub_FB6
+		call	grcg_off
 		pop	di
 		pop	si
 		leave
@@ -18771,7 +18729,7 @@ loc_BA48:
 loc_BA4B:
 		push	0C0h ; '¿'
 		push	[bp+arg_2]
-		call	sub_F8C
+		call	grcg_setcolor
 		lea	ax, [si+8]
 		push	ax
 		lea	ax, [di+8]
@@ -18784,7 +18742,7 @@ loc_BA4B:
 		call	sub_EAA
 		push	0C0h ; '¿'
 		push	0
-		call	sub_F8C
+		call	grcg_setcolor
 		push	si
 		push	di
 		lea	ax, [si+0C0h]
@@ -18793,7 +18751,7 @@ loc_BA4B:
 		push	ax
 		push	8
 		call	sub_EAA
-		call	sub_FB6
+		call	grcg_off
 		mov	bx, [bp+arg_0]
 		imul	bx, 0Ch
 		push	word ptr [bx+6F4h]
@@ -18847,7 +18805,7 @@ sub_BAFC	proc far
 		mov	bp, sp
 		push	0C0h ; '¿'
 		push	0Ch
-		call	sub_F8C
+		call	grcg_setcolor
 		push	88h ; 'à'
 		push	18h
 		push	208h
@@ -18856,14 +18814,14 @@ sub_BAFC	proc far
 		call	sub_EAA
 		push	0C0h ; '¿'
 		push	0
-		call	sub_F8C
+		call	grcg_setcolor
 		push	80h ; 'Ä'
 		push	10h
 		push	200h
 		push	30h ; '0'
 		push	8
 		call	sub_EAA
-		call	sub_FB6
+		call	grcg_off
 		push	word ptr off_DD46+2
 		push	word ptr off_DD46
 		push	2Ch ; ','
@@ -18876,7 +18834,7 @@ sub_BAFC	proc far
 		jnz	short loc_BBBE
 		push	0C0h ; '¿'
 		push	0Ch
-		call	sub_F8C
+		call	grcg_setcolor
 		push	18h
 		push	38h ; '8'
 		push	278h
@@ -18885,14 +18843,14 @@ sub_BAFC	proc far
 		call	sub_EAA
 		push	0C0h ; '¿'
 		push	0
-		call	sub_F8C
+		call	grcg_setcolor
 		push	10h
 		push	30h ; '0'
 		push	270h
 		push	60h ; '`'
 		push	8
 		call	sub_EAA
-		call	sub_FB6
+		call	grcg_off
 		push	word ptr off_DD4A+2
 		push	word ptr off_DD4A
 		push	2Fh ; '/'
@@ -19895,9 +19853,9 @@ sub_C3AC	proc near
 		call	sub_C0E4
 		push	0CEh ; 'Œ'
 		push	0Fh
-		call	sub_F8C
+		call	grcg_setcolor
 		call	sub_C1B2
-		call	sub_FB6
+		call	grcg_off
 		mov	dx, 0A4h ; '§'
 		mov	al, byte ptr word_F57C+1
 		out	dx, al		; Interrupt Controller #2, 8259A

@@ -1092,44 +1092,7 @@ locret_F24:
 		retf	4
 sub_EE4		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F28		proc far
-					; sub_B273+2FP	...
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_F28		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xor	al, al
-		out	7Ch, al
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15818,7 +15781,7 @@ loc_AD9A:
 
 loc_ADE3:
 		push	large 0C00000h
-		call	sub_F28
+		call	grcg_setcolor
 		push	large 140040h
 		push	large 3B0107h
 		call	sub_C9E
@@ -16375,7 +16338,7 @@ arg_2		= word ptr  6
 		push	2
 		call	palette_black_out
 		push	large 0C0000Eh
-		call	sub_F28
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -16524,7 +16487,7 @@ sub_B3CB	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	large 0C0000Eh
-		call	sub_F28
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17548,7 +17511,7 @@ loc_BB00:
 		push	7
 		call	sub_38E6
 		push	large 0C00007h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		shl	ax, 4
@@ -21488,7 +21451,7 @@ loc_DBFF:
 		cmp	ax, [bp+arg_2]
 		jge	short loc_DC48
 		push	large 0C00001h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	ax, [bp+arg_A]
 		mov	bx, 8
 		cwd
@@ -22013,7 +21976,7 @@ var_2		= word ptr -2
 		mov	[bp+var_8], 5614h
 		mov	[bp+var_A], 5618h
 		push	large 0C00000h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	ax, word_151CE
 		cwd
 		sub	ax, dx
@@ -22109,7 +22072,7 @@ loc_E0A6:
 		mov	ax, [bp+var_6]
 		inc	[bp+var_6]
 		push	ax
-		call	sub_F28
+		call	grcg_setcolor
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	10h
@@ -22161,7 +22124,7 @@ loc_E0FB:
 
 loc_E161:
 		push	large 0C0000Fh
-		call	sub_F28
+		call	grcg_setcolor
 		mov	ax, [bp+var_2]
 		add	ax, 10h
 		push	ax
@@ -22239,7 +22202,7 @@ loc_E21D:
 		cmp	di, 40h	; '@'
 		jl	loc_E193
 		push	large 0C00001h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	ax, word_151CE
 		cwd
 		sub	ax, dx
@@ -22466,7 +22429,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		push	large 800001h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -22480,7 +22443,7 @@ loc_E3E4:
 		dec	dx
 		jnz	short loc_E3E4
 		push	large 0C0000Dh
-		call	sub_F28
+		call	grcg_setcolor
 		xor	di, di
 		mov	si, [bp+arg_0]
 		add	si, 56D8h
@@ -22521,7 +22484,7 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	large 0C00001h
-		call	sub_F28
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -22535,7 +22498,7 @@ var_2		= word ptr -2
 		push	3700h
 		call	sub_E39F
 		push	large 0C00001h
-		call	sub_F28
+		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
 		call	sub_C9E

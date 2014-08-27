@@ -1043,50 +1043,7 @@ locret_EC2:
 		retf	4
 sub_E82		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EC6		proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_EC6		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EF0		proc far
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_EF0		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16552,9 +16509,9 @@ sub_A899	proc near
 		mov	bp, sp
 		call	sub_A5F6
 		push	large 0CE000Fh
-		call	sub_EC6
+		call	grcg_setcolor
 		call	sub_A6A3
-		call	sub_EF0
+		call	grcg_off
 		mov	dx, 0A4h ; '¤'
 		mov	al, byte ptr word_F828+1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -18221,7 +18178,7 @@ var_2		= word ptr -2
 
 loc_B590:
 		push	large 0C0000Eh
-		call	sub_EC6
+		call	grcg_setcolor
 		mov	[bp+var_2], 0
 		mov	[bp+var_4], 13Bh
 		jmp	short loc_B625
@@ -18293,7 +18250,7 @@ loc_B61E:
 loc_B625:
 		cmp	[bp+var_2], 3
 		jl	loc_B5A7
-		call	sub_EF0
+		call	grcg_off
 		pop	di
 		pop	si
 		leave
@@ -18486,7 +18443,7 @@ loc_B761:
 		add	ax, si
 		mov	[bp+var_2], ax
 		push	large 0C00006h
-		call	sub_EC6
+		call	grcg_setcolor
 		push	word_FC52
 		mov	al, byte ptr word_FC52
 		add	al, al
@@ -18509,7 +18466,7 @@ loc_B761:
 		push	si
 		call	sub_B6C0
 		push	large 0C00005h
-		call	sub_EC6
+		call	grcg_setcolor
 		mov	ax, word_FC66
 		cwd
 		sub	ax, dx
@@ -18565,7 +18522,7 @@ loc_B824:
 		cmp	[bp+var_6], di
 		jle	short loc_B7D4
 		push	large 0C00001h
-		call	sub_EC6
+		call	grcg_setcolor
 		lea	ax, [di+1]
 		mov	[bp+var_6], ax
 		jmp	short loc_B88C
@@ -18612,7 +18569,7 @@ loc_B88C:
 		mov	ax, [bp+var_6]
 		cmp	ax, word_FC66
 		jle	short loc_B83C
-		call	sub_EF0
+		call	grcg_off
 		mov	al, byte ptr word_FC52
 		add	al, 2
 		mov	byte ptr word_FC52, al
@@ -19002,11 +18959,11 @@ loc_BBD0:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00000h
-		call	sub_EC6
+		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
 		call	sub_BD2
-		call	sub_EF0
+		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54
 		inc	dword ptr es:[bx+10h]
@@ -19162,11 +19119,11 @@ loc_BD42:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00000h
-		call	sub_EC6
+		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
 		call	sub_BD2
-		call	sub_EF0
+		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54
 		inc	dword ptr es:[bx+10h]
@@ -19284,11 +19241,11 @@ loc_BE68:
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00000h
-		call	sub_EC6
+		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
 		call	sub_BD2
-		call	sub_EF0
+		call	grcg_off
 		inc	word_FC62
 		les	bx, dword_FC54
 		inc	dword ptr es:[bx+10h]
@@ -19542,7 +19499,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large 0C00000h
-		call	sub_EC6
+		call	grcg_setcolor
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1AA8h
@@ -19646,7 +19603,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large 0C00000h
-		call	sub_EC6
+		call	grcg_setcolor
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1AA8h
@@ -20471,7 +20428,7 @@ arg_8		= word ptr  0Eh
 		mov	ax, [bp+arg_4]
 		and	ax, 0Fh
 		push	ax
-		call	sub_EC6
+		call	grcg_setcolor
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
 		out	dx, al
@@ -20738,7 +20695,7 @@ loc_C92F:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_EF0
+		call	grcg_off
 		pop	di
 		pop	si
 		leave

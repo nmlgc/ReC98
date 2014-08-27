@@ -13723,7 +13723,7 @@ loc_22604:
 		jb	loc_2253F
 		push	0C0h ; '?'
 		push	[bp+arg_2]
-		call	sub_143A
+		call	grcg_setcolor
 		mov	[bp+var_1], 0
 		jmp	short loc_22655
 ; ---------------------------------------------------------------------------

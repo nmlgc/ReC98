@@ -1304,52 +1304,7 @@ loc_F50:
 		retf	8
 sub_DBE		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F5C		proc far
-					; sub_9778+2DAP ...
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_F5C		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F86		proc far
-					; sub_A21F+38P	...
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_F86		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15155,14 +15110,14 @@ loc_9A25:
 		mov	byte_23AEF, al
 		xor	byte_23AEE, 1
 		push	large 0C00000h
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		call	sub_B37C
 		push	large 0C00001h
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 395Ah
 		call	sub_B37C
-		call	sub_F86
+		call	grcg_off
 
 loc_9A62:
 		inc	dword_23AF2
@@ -16022,7 +15977,7 @@ sub_A21F	proc near
 		push	bp
 		mov	bp, sp
 		push	large 0C00002h
-		call	sub_F5C
+		call	grcg_setcolor
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40
@@ -16037,7 +15992,7 @@ sub_A21F	proc near
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_F86
+		call	grcg_off
 		inc	byte_207E3
 		call	sub_9EBF
 		call	dword_20F28
@@ -17626,7 +17581,7 @@ loc_B4E3:
 		add	word_1FBCC, 12h
 		add	word_1FBD2, 17h
 		push	large 0C00002h
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	word_1DB48, 5555h
 		xor	si, si
 		jmp	short loc_B565
@@ -17726,7 +17681,7 @@ loc_B5BD:
 
 loc_B5EE:
 		mov	word_1DB48, 0FFFFh
-		call	sub_F86
+		call	grcg_off
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40
@@ -17764,7 +17719,7 @@ loc_B645:
 		sub	word_1FBCE, 17h
 		add	word_1FBD0, 12h
 		push	large 0C00002h
-		call	sub_F5C
+		call	grcg_setcolor
 		xor	si, si
 		jmp	loc_B706
 ; ---------------------------------------------------------------------------
@@ -17842,7 +17797,7 @@ loc_B706:
 		mov	word_1FBC0, 1DC3h
 
 loc_B724:
-		call	sub_F86
+		call	grcg_off
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40
@@ -18863,7 +18818,7 @@ sub_BE5D	proc near
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	word_20CE4, 3284h
 		xor	si, si
 		jmp	loc_BF41
@@ -19084,7 +19039,7 @@ loc_C08D:
 		cmp	byte_20CE6, 3
 		jnz	short loc_C0D5
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -19111,7 +19066,7 @@ loc_C0CA:
 		jl	short loc_C0AE
 
 loc_C0D0:
-		call	sub_F86
+		call	grcg_off
 
 loc_C0D5:
 		pop	si
@@ -20210,7 +20165,7 @@ loc_C86B:
 loc_C86E:
 		push	0C0h ; 'À'
 		push	si
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 232h
 		call	sub_B398
 		xor	ax, ax
@@ -20243,7 +20198,7 @@ loc_C8AB:
 loc_C8AE:
 		push	0C0h ; 'À'
 		push	si
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 25Ah
 		call	sub_B398
 		xor	ax, ax
@@ -20298,7 +20253,7 @@ loc_C909:
 		push	large 0C0000Fh
 
 loc_C90F:
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+var_4]
 		add	ax, 20h	; ' '
 		mov	dx, ax
@@ -20323,7 +20278,7 @@ loc_C93E:
 		push	large 0C0000Fh
 
 loc_C944:
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+var_6]
 		add	ax, 160h
 		mov	dx, ax
@@ -20369,7 +20324,7 @@ loc_C990:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	dx, 20h	; ' '
 		mov	bx, cx
 		call	sub_B3F6
@@ -20413,7 +20368,7 @@ loc_C9E0:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	dx, 160h
 		mov	bx, cx
 		call	sub_B3F6
@@ -21107,7 +21062,7 @@ var_2		= word ptr -2
 		push	di
 		mov	si, 3946h
 		push	large 0C0000Dh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	[bp+var_2], 0
 		jmp	loc_D013
 ; ---------------------------------------------------------------------------
@@ -21436,7 +21391,7 @@ sub_D135	proc far
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		push	large 0C0000Ah
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -21456,7 +21411,7 @@ loc_D16B:
 		inc	si
 		cmp	si, 18h
 		jb	short loc_D16B
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 
 loc_D195:
@@ -21583,7 +21538,7 @@ loc_D276:
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		push	large 0C0000Ah
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 39CCh
@@ -21595,7 +21550,7 @@ loc_D2AB:
 		inc	si
 		cmp	si, 18h
 		jb	short loc_D2AB
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 
 loc_D2C1:
@@ -21687,7 +21642,7 @@ sub_D340	proc far
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		push	large 0C0000Dh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	byte_2142C, 40h	; '@'
@@ -21706,7 +21661,7 @@ loc_D376:
 		inc	si
 		cmp	si, 18h
 		jb	short loc_D376
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 
 loc_D3A0:
@@ -21838,7 +21793,7 @@ loc_D488:
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		push	large 0C0000Dh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 39CCh
@@ -21850,7 +21805,7 @@ loc_D4BD:
 		inc	si
 		cmp	si, 18h
 		jb	short loc_D4BD
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 
 loc_D4D3:
@@ -21920,7 +21875,7 @@ sub_D50E	endp
 
 sub_D52E	proc near
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A82Dh
 		mov	es, ax
 		assume es:nothing
@@ -21954,7 +21909,7 @@ loc_D554:
 loc_D56B:
 		mov	al, 80h	; '€'
 		call	sub_D50E
-		call	sub_F86
+		call	grcg_off
 		mov	al, byte_220CA
 		cmp	byte_220DC, al
 		jnb	short locret_D5A0
@@ -22071,7 +22026,7 @@ arg_6		= word ptr  0Ch
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+arg_4]
 		mov	dx, ax
 		shl	ax, 2
@@ -22103,7 +22058,7 @@ loc_D645:
 		add	cx, 8
 		xor	ax, ax
 		call	sub_D50E
-		call	sub_F86
+		call	grcg_off
 		pop	di
 		pop	si
 		pop	bp
@@ -22130,7 +22085,7 @@ arg_6		= word ptr  0Ch
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+arg_4]
 		mov	dx, ax
 		shl	ax, 2
@@ -25521,7 +25476,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	0C0h ; 'À'
 		push	0
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		add	ax, 3930h
@@ -28674,7 +28629,7 @@ loc_1098A:
 		call	sub_C40
 		call	egc_off
 		push	large 0C0000Ah
-		call	sub_F5C
+		call	grcg_setcolor
 		push	word_20E50
 		mov	al, [bp+var_7]
 		mov	ah, 0
@@ -28712,7 +28667,7 @@ loc_109D2:
 		call	sub_DBE
 
 loc_109FB:
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 		push	large 0
 		push	large 27F00C7h
@@ -36104,7 +36059,7 @@ loc_1465C:
 		or	si, si
 		jg	short loc_14615
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, word_1FE4E
 		push	word ptr [bx+2]
 		mov	al, byte ptr word_1FE88
@@ -36124,7 +36079,7 @@ loc_1465C:
 		push	ax
 		push	[bp+var_2]
 		call	sub_908
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 
 loc_146AB:
@@ -36436,7 +36391,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_148FF
@@ -36444,7 +36399,7 @@ var_1		= byte ptr -1
 
 loc_148FF:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		shl	al, 2
 		mov	dl, 0
@@ -37574,7 +37529,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_1522B
@@ -37582,7 +37537,7 @@ var_1		= byte ptr -1
 
 loc_1522B:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		cmp	[bp+var_1], 20h	; ' '
 		jnb	short loc_1527D
 		mov	al, byte ptr word_1FE88
@@ -38608,7 +38563,7 @@ loc_15A4A:
 		push	large 0C00007h
 
 loc_15A53:
-		call	sub_F5C
+		call	grcg_setcolor
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_15A77
 		push	large 100008h
@@ -38683,7 +38638,7 @@ loc_15AE6:
 		sub	dx, ax
 		mov	di, dx
 		push	large 0C00008h
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	si, 3
 		jmp	short loc_15B7E
 ; ---------------------------------------------------------------------------
@@ -38738,7 +38693,7 @@ loc_15B9A:
 		push	large 0
 		push	large 27F00C7h
 		call	sub_C40
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_F]
 		shl	al, 2
 		mov	[bp+var_10], al
@@ -41586,7 +41541,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_17202
@@ -41594,7 +41549,7 @@ var_1		= byte ptr -1
 
 loc_17202:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		imul	ax, 3
@@ -43081,7 +43036,7 @@ loc_17D48:
 loc_17D56:
 		call	egc_off
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -43925,7 +43880,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_1840A
@@ -43933,7 +43888,7 @@ var_1		= byte ptr -1
 
 loc_1840A:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		shl	al, 2
 		mov	dl, 0FFh
@@ -44335,7 +44290,7 @@ var_2		= word ptr -2
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_187AF
@@ -44343,7 +44298,7 @@ var_2		= word ptr -2
 
 loc_187AF:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_3]
 		add	al, al
 		mov	[bp+var_4], al
@@ -44791,7 +44746,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_18C04
@@ -44799,7 +44754,7 @@ var_1		= byte ptr -1
 
 loc_18C04:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		imul	ax, 3
@@ -45015,7 +44970,7 @@ var_1		= byte ptr -1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, 3932h
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_18E11
@@ -45023,7 +44978,7 @@ var_1		= byte ptr -1
 
 loc_18E11:
 		call	sub_B39E
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		shl	al, 2
 		mov	[bp+var_2], al
@@ -45076,7 +45031,7 @@ loc_18E7C:
 		push	ax
 		call	sub_EFF4
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, 900h
 		sub	ax, word_220EC
 		push	ax
@@ -45130,7 +45085,7 @@ loc_18E7C:
 		mov	word_220EC, 0
 
 loc_18F38:
-		call	sub_F86
+		call	grcg_off
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, 8
@@ -45347,7 +45302,7 @@ loc_190CF:
 		cmp	[bp+var_1], 70h	; 'p'
 		jnb	loc_19165
 		push	large 0C00009h
-		call	sub_F5C
+		call	grcg_setcolor
 		push	8
 		mov	ax, [bp+var_4]
 		add	ax, 0FFFAh
@@ -45364,7 +45319,7 @@ loc_190CF:
 		push	ax
 		call	sub_1120
 		push	large 0C0000Ah
-		call	sub_F5C
+		call	grcg_setcolor
 		push	8
 		mov	ax, [bp+var_4]
 		add	ax, 0FFFDh
@@ -45381,7 +45336,7 @@ loc_190CF:
 		push	ax
 		call	sub_1120
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		push	8
 		mov	ax, [bp+var_4]
 		dec	ax
@@ -45416,7 +45371,7 @@ loc_19179:
 		idiv	bx
 		mov	di, ax
 		push	large 0C00009h
-		call	sub_F5C
+		call	grcg_setcolor
 		push	8
 		mov	ax, [bp+var_4]
 		sub	ax, di
@@ -45438,7 +45393,7 @@ loc_19179:
 		sar	ax, 1
 		mov	di, ax
 		push	large 0C0000Ah
-		call	sub_F5C
+		call	grcg_setcolor
 		push	8
 		mov	ax, [bp+var_4]
 		sub	ax, di
@@ -45457,7 +45412,7 @@ loc_19179:
 
 loc_191E4:
 		push	large 0C0000Fh
-		call	sub_F5C
+		call	grcg_setcolor
 		push	[bp+var_4]
 		push	8
 		push	[bp+var_8]
@@ -45466,7 +45421,7 @@ loc_191E4:
 
 loc_191FF:
 					; sub_1905A+10Fj
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 		jmp	short loc_1925C
 ; ---------------------------------------------------------------------------
@@ -48865,7 +48820,7 @@ loc_1AA24:
 		ja	loc_1AB7B
 		call	egc_off
 		push	large 0C00006h
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	bx, [bp+var_A]
 		mov	al, [bx+1]
 		mov	[bp+var_7], al
@@ -49026,7 +48981,7 @@ loc_1AB9C:
 		push	large 0C00006h
 
 loc_1ABA2:
-		call	sub_F5C
+		call	grcg_setcolor
 		mov	ax, [bp+var_6]
 		cwd
 		sub	ax, dx
@@ -49169,7 +49124,7 @@ loc_1ACCF:
 		sub	dx, ax
 		push	dx
 		call	sub_109A
-		call	sub_F86
+		call	grcg_off
 		call	egc_on
 		push	large 0
 		push	large 27F00C7h

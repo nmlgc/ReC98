@@ -787,52 +787,7 @@ loc_C28:
 		retf	8
 sub_B9E		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C36		proc far
-					; sub_A64D+48EP ...
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_C36		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C60		proc far
-					; sub_A64D+4A4P ...
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_C60		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15338,11 +15293,11 @@ loc_A069:
 		cmp	si, 1
 		jnz	short loc_A0C5
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 2400173h
 		push	large 2500183h
 		call	sub_ACE
-		call	sub_C60
+		call	grcg_off
 		les	bx, dword_105DA
 		dec	byte ptr es:[bx+36h]
 		les	bx, [bp+var_6]
@@ -16606,11 +16561,11 @@ loc_AAA3:
 
 loc_AAD5:
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 140040h
 		push	large 3B0107h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
@@ -19368,11 +19323,11 @@ loc_BF3B:
 
 loc_BF57:
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 
 loc_BF78:
 		pop	di
@@ -19497,18 +19452,18 @@ loc_C032:
 		or	ax, ax
 		jz	short loc_C032
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		call	sub_BCD5
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		call	sub_BCD5
 		pop	si
 		pop	bp
@@ -19620,11 +19575,11 @@ loc_C155:
 
 loc_C173:
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 
 loc_C194:
 		mov	byte_10BC7, 0
@@ -19638,18 +19593,18 @@ loc_C199:
 		or	ax, ax
 		jz	loc_C114
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		call	sub_BCD5
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		call	sub_BCD5
 		pop	di
 		pop	si
@@ -19992,7 +19947,7 @@ loc_C4D8:
 		call	sub_1A68
 		call	far ptr	palette_show
 		push	large 0C00008h
-		call	sub_C36
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20006,7 +19961,7 @@ loc_C4D8:
 		push	large 4F018Fh
 		call	sub_B9E
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20019,7 +19974,7 @@ loc_C4D8:
 		push	large 10008h
 		push	large 4E0187h
 		call	sub_B9E
-		call	sub_C60
+		call	grcg_off
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -20528,7 +20483,7 @@ loc_C9D4:
 		push	si
 		push	di
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		mov	si, [bp+6]
 		shl	si, 4
 		add	si, 1D0Eh
@@ -20581,7 +20536,7 @@ loc_CA88:
 		push	si
 		push	di
 		push	large 0C00000h
-		call	sub_C36
+		call	grcg_setcolor
 		mov	si, [bp+6]
 		shl	si, 4
 		add	si, 1D0Eh
@@ -21521,7 +21476,7 @@ arg_8		= word ptr  0Eh
 		mov	ax, [bp+arg_4]
 		and	ax, 0Fh
 		push	ax
-		call	sub_C36
+		call	grcg_setcolor
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
 		out	dx, al
@@ -21788,7 +21743,7 @@ loc_D3EB:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_C60
+		call	grcg_off
 		pop	di
 		pop	si
 		leave

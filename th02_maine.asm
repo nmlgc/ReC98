@@ -1319,50 +1319,7 @@ loc_F66:
 		retf	8
 sub_DD4		endp ; sp-analysis failed
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F72		proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_F72		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F9C		proc far
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_F9C		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14792,7 +14749,7 @@ loc_9724:
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		mov	ax, di
 		add	ax, ax
 		les	bx, [bp+arg_4]
@@ -14801,7 +14758,7 @@ loc_9724:
 		les	bx, dword_F892
 		add	bx, si
 		mov	es:[bx], ax
-		call	sub_F9C
+		call	grcg_off
 		mov	ax, di
 		add	ax, ax
 		les	bx, [bp+arg_4]
@@ -15280,7 +15237,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		mov	si, 14Ch
 		jmp	short loc_9AC5
 ; ---------------------------------------------------------------------------
@@ -15313,7 +15270,7 @@ loc_9ABE:
 loc_9AC5:
 		cmp	si, 15Ch
 		jl	short loc_9A94
-		call	sub_F9C
+		call	grcg_off
 		pop	di
 		pop	si
 		leave
@@ -15363,7 +15320,7 @@ loc_9B1B:
 		push	large 12B0004h
 		call	sub_8FA
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		lea	ax, [si+138h]
 		push	ax
 		push	64h ; 'd'
@@ -15371,7 +15328,7 @@ loc_9B1B:
 		push	ax
 		push	12Bh
 		call	sub_D04
-		call	sub_F9C
+		call	grcg_off
 		push	1
 		call	sub_B520
 		sub	si, 4
@@ -16791,11 +16748,11 @@ sub_A8A4	proc near
 		push	bp
 		mov	bp, sp
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		push	large 1A000C0h
 		push	large 27F010Fh
 		call	sub_D04
-		call	sub_F9C
+		call	grcg_off
 		pop	bp
 		retn
 sub_A8A4	endp
@@ -16873,7 +16830,7 @@ loc_A920:
 
 loc_A947:
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		push	210h
 		lea	ax, [si+4]
 		push	ax
@@ -16881,7 +16838,7 @@ loc_A947:
 		lea	ax, [si+13h]
 		push	ax
 		call	sub_D04
-		call	sub_F9C
+		call	grcg_off
 		push	1B0h
 		push	si
 		push	32h ; '2'
@@ -17765,7 +17722,7 @@ arg_6		= dword	ptr  0Ch
 		mov	[bp+var_10], ax
 		push	0C0h ; 'À'
 		push	[bp+arg_4]
-		call	sub_F72
+		call	grcg_setcolor
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
 		out	dx, al
@@ -18031,7 +17988,7 @@ loc_B450:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_F9C
+		call	grcg_off
 		pop	di
 		pop	si
 		leave
@@ -19990,7 +19947,7 @@ loc_C1F9:
 		cmp	si, 5
 		jl	short loc_C1F2
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		push	large 0
 		push	large 180018Fh
 		call	sub_D04
@@ -20000,7 +19957,7 @@ loc_C1F9:
 
 loc_C21C:
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		push	[bp+var_A]
 		push	[bp+var_10]
 		call	sub_C045
@@ -20009,7 +19966,7 @@ loc_C21C:
 		mov	ax, [bp+var_8]
 		mov	[bp+var_A], ax
 		push	large 0C00004h
-		call	sub_F72
+		call	grcg_setcolor
 		mov	di, 1
 		jmp	short loc_C27E
 ; ---------------------------------------------------------------------------
@@ -20041,7 +19998,7 @@ loc_C27E:
 		cmp	di, 4
 		jl	short loc_C24C
 		push	large 0C0000Fh
-		call	sub_F72
+		call	grcg_setcolor
 		cmp	si, 10h
 		jge	short loc_C29D
 		sub	[bp+var_2], 4
@@ -20060,12 +20017,12 @@ loc_C2AE:
 		cmp	si, 14h
 		jl	loc_C21C
 		push	large 0C00000h
-		call	sub_F72
+		call	grcg_setcolor
 		push	large 0
 		push	large 180018Fh
 		call	sub_D04
 		push	large 0C0000Fh
-		call	sub_F72
+		call	grcg_setcolor
 		push	large 1640060h
 		push	large 1640130h
 		call	sub_DD4
@@ -20078,7 +20035,7 @@ loc_C2AE:
 		push	large 1C0060h
 		push	large 1640060h
 		call	sub_DD4
-		call	sub_F9C
+		call	grcg_off
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		pop	di

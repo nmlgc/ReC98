@@ -1234,40 +1234,7 @@ loc_10C7:
 		retf	0Ah
 sub_FF0		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_10D2	proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_10D2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xor	al, al
-		out	7Ch, al
-		retf
-; ---------------------------------------------------------------------------
+include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/get_machine_98.asm
 include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
@@ -15050,7 +15017,7 @@ arg_2		= word ptr  6
 		call	sub_E378
 		push	0C0h ; 'À'
 		push	[bp+arg_0]
-		call	sub_10D2
+		call	grcg_setcolor
 		mov	[bp+var_2], si
 		mov	bx, si
 		cmp	bx, 5
@@ -15074,7 +15041,7 @@ loc_AB12:
 		cmp	byte_13286, 0
 		jnz	short loc_AB24
 		push	large 0C0000Ch
-		call	sub_10D2
+		call	grcg_setcolor
 
 loc_AB24:
 		push	large 11000F4h
@@ -15189,7 +15156,7 @@ loc_ABF7:
 loc_AC08:
 		push	0C0h ; 'À'
 		push	[bp+arg_0]
-		call	sub_10D2
+		call	grcg_setcolor
 		mov	bx, [bp+arg_2]
 		cmp	bx, 7
 		ja	loc_AD9A
@@ -17928,7 +17895,7 @@ sub_C244	proc near
 		mov	bp, sp
 		call	sub_BFA7
 		push	large 0CE000Fh
-		call	sub_10D2
+		call	grcg_setcolor
 		call	sub_C04E
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -19259,7 +19226,7 @@ var_2		= word ptr -2
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C0000Fh
-		call	sub_10D2
+		call	grcg_setcolor
 		push	large 0
 		push	large 4F018Fh
 		call	sub_CA4
@@ -19841,7 +19808,7 @@ loc_D21B:
 
 loc_D21E:
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		mov	[bp+var_6], 0AAAAAAAAh
 		xor	di, di
 		jmp	short loc_D273
@@ -20018,7 +19985,7 @@ loc_D350:
 loc_D353:
 		mov	di, 138h
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		lea	ax, [si+8]
 		push	ax
 		lea	ax, [di+8]
@@ -20030,7 +19997,7 @@ loc_D353:
 		push	8
 		call	sub_FF0
 		push	large 0C00002h
-		call	sub_10D2
+		call	grcg_setcolor
 		push	si
 		push	di
 		lea	ax, [si+0C0h]
@@ -20070,7 +20037,7 @@ sub_D3A2	proc near
 		push	1
 		call	sub_D20A
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		push	large 250034h
 		push	large 25011Fh
 		call	sub_CA4
@@ -20096,7 +20063,7 @@ loc_D407:
 		push	0
 		call	sub_D20A
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		push	large 490034h
 		push	large 49011Fh
 		call	sub_CA4
@@ -20277,7 +20244,7 @@ sub_D595	proc near
 		mov	si, 138h
 		mov	di, 140h
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		lea	ax, [di+8]
 		push	ax
 		lea	ax, [si+8]
@@ -20307,7 +20274,7 @@ sub_D595	proc near
 		push	8
 		call	sub_FF0
 		push	large 0C00002h
-		call	sub_10D2
+		call	grcg_setcolor
 		push	di
 		push	si
 		lea	ax, [di+0C0h]
@@ -20370,7 +20337,7 @@ loc_D664:
 loc_D66C:
 		call	sub_E176
 		push	large 0C00001h
-		call	sub_10D2
+		call	grcg_setcolor
 		push	large 370034h
 		push	large 37011Fh
 		call	sub_CA4

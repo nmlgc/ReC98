@@ -246,7 +246,7 @@ loc_50C:
 		mov	al, [si+21D9h]
 		cbw
 		push	ax
-		call	sub_14B4
+		call	grcg_setcolor
 		mov	bx, si
 		shl	bx, 2
 		push	word ptr [bx+2878h]
@@ -334,7 +334,7 @@ var_2		= word ptr -2
 		push	si
 		push	0C0h
 		push	5
-		call	sub_14B4
+		call	grcg_setcolor
 		xor	si, si
 		jmp	loc_66E
 ; ---------------------------------------------------------------------------
@@ -670,7 +670,7 @@ loc_818:
 loc_822:
 		push	0C0h
 		push	0
-		call	sub_14B4
+		call	grcg_setcolor
 		push	0Ch
 		push	64h
 		push	43h
@@ -1310,50 +1310,7 @@ loc_14AE:
 		retn	6
 sub_142E	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14B4	proc near
-		mov	bx, sp
-		mov	al, ss:[bx+4]
-		mov	ah, ss:[bx+2]
-		mov	dx, 7Eh
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retn	4
-sub_14B4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14DE	proc near
-		xor	al, al
-		out	7Ch, al
-		retn
-sub_14DE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

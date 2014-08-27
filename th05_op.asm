@@ -950,41 +950,7 @@ loc_EC2:
 		retf	6
 sub_CCA		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EE2		proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_EE2		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xor	al, al
-		out	7Ch, al
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14548,7 +14514,7 @@ arg_2		= word ptr  6
 		call	sub_E2D8
 		push	0C0h ; 'À'
 		push	[bp+arg_0]
-		call	sub_EE2
+		call	grcg_setcolor
 		mov	[bp+var_2], si
 		mov	bx, si
 		cmp	bx, 5
@@ -14574,7 +14540,7 @@ loc_A653:
 loc_A658:
 		jnz	short loc_A665
 		push	large 0C00002h
-		call	sub_EE2
+		call	grcg_setcolor
 
 loc_A665:
 		push	large 110010Eh
@@ -14686,7 +14652,7 @@ loc_A737:
 		call	sub_E2D8
 		push	0C0h ; 'À'
 		push	[bp+arg_0]
-		call	sub_EE2
+		call	grcg_setcolor
 		mov	bx, [bp+arg_2]
 		cmp	bx, 7
 		ja	loc_A8DA
@@ -17317,7 +17283,7 @@ var_1		= byte ptr -1
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00001h
-		call	sub_EE2
+		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -17509,7 +17475,7 @@ arg_2		= byte ptr  6
 		cmp	[bp+arg_0], 0
 		jz	short loc_BEF4
 		push	large 0C00005h
-		call	sub_EE2
+		call	grcg_setcolor
 		push	large 0C012Ch
 		lea	ax, [si+60h]
 		push	ax
@@ -17992,7 +17958,7 @@ sub_C293	proc near
 		call	sub_BFF6
 		call	sub_D96E
 		push	large 0CE000Fh
-		call	sub_EE2
+		call	grcg_setcolor
 		call	sub_C09D
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -19506,7 +19472,7 @@ loc_CE8D:
 
 loc_CE90:
 		push	large 0C00001h
-		call	sub_EE2
+		call	grcg_setcolor
 		mov	[bp+var_6], 0AAAAAAAAh
 		xor	di, di
 		jmp	short loc_CEE5
@@ -19641,7 +19607,7 @@ loc_CF82:
 loc_CF8C:
 		call	sub_D590
 		push	large 0C00001h
-		call	sub_EE2
+		call	grcg_setcolor
 		lea	ax, [si+0D8h]
 		mov	bx, 8
 		cwd

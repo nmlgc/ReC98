@@ -2106,50 +2106,7 @@ locret_1740:
 		retf	4
 sub_1700	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1744	proc far
-		mov	bx, sp
-		mov	al, ss:[bx+6]
-		mov	ah, ss:[bx+4]
-		mov	dx, 7Eh	; '~'
-		pushf
-		cli
-		out	7Ch, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		popf
-		retf	4
-sub_1744	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_176E	proc far
-		xor	al, al
-		out	7Ch, al
-		retf
-sub_176E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4565,8 +4522,7 @@ word_326D	dw 1111h
 ; ---------------------------------------------------------------------------
 		dec	cl
 		jnz	short loc_31F7
-		push	cs
-		call	near ptr sub_176E
+		call	grcg_off
 		pop	di
 		pop	si
 		pop	bp
@@ -19605,7 +19561,7 @@ arg_0		= word ptr  4
 		mov	al, byte_2CDCA
 		mov	ah, 0
 		push	ax
-		call	sub_1744
+		call	grcg_setcolor
 		mov	ax, word_2CDCE
 		mov	fs, ax
 		mov	di, [bp+arg_0]
@@ -22141,7 +22097,7 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	di
 		push	large 0C00001h
-		call	sub_1744
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -24724,7 +24680,7 @@ loc_E2D6:
 		add	ax, 10h
 		mov	[bp+var_6], ax
 		push	large 0C0000Fh
-		call	sub_1744
+		call	grcg_setcolor
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	17Fh
@@ -24768,7 +24724,7 @@ loc_E356:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_1744
+		call	grcg_setcolor
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	word ptr [si+14h]
@@ -24803,7 +24759,7 @@ loc_E3B1:
 		mov	ah, 0
 		inc	ax
 		push	ax
-		call	sub_1744
+		call	grcg_setcolor
 		push	[bp+var_4]
 		push	[bp+var_6]
 		mov	ax, di
@@ -24844,7 +24800,7 @@ loc_E416:
 		add	[bp+var_8], di
 		sub	[bp+var_A], di
 		push	large 0C0000Fh
-		call	sub_1744
+		call	grcg_setcolor
 		push	[bp+var_4]
 		push	[bp+var_6]
 		mov	ax, [si+14h]
