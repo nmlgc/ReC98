@@ -3686,7 +3686,7 @@ loc_3362:
 		pop	di
 		pop	si
 		pop	bp
-		jmp	near ptr sub_3556
+		jmp	near ptr super_put
 ; ---------------------------------------------------------------------------
 
 loc_33B6:
@@ -3903,164 +3903,7 @@ word_3552	dw 1234h
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3556	proc far
-					; sub_11766+104P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+1EDAh]
-		mov	cx, [bp+arg_4]
-		mov	bp, [bp+arg_2]
-		mov	ax, bp
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	bp, ax
-		mov	si, cx
-		mov	ch, dh
-		shr	ch, 1
-		mov	al, dl
-		mov	ah, [si+85Ah]
-		mov	cs:word_3703, ax
-		test	bp, 1
-		jnz	short loc_35C6
-		test	dh, 1
-		jnz	short loc_35B0
-		mov	cs:byte_3663, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_3661, al
-		mov	cs:word_3706, 0FF3Eh
-		jmp	short loc_35F8
-; ---------------------------------------------------------------------------
-
-loc_35B0:
-		mov	cs:byte_3691, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_368F, al
-		mov	cs:word_3706, 0FF62h
-		jmp	short loc_35F8
-; ---------------------------------------------------------------------------
-
-loc_35C6:
-		dec	bp
-		test	dh, 1
-		jnz	short loc_35E4
-		dec	ch
-		mov	cs:byte_36C8, ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	cs:byte_36C6, al
-		mov	cs:word_3706, 0FF90h
-		jmp	short loc_35F8
-; ---------------------------------------------------------------------------
-
-loc_35E4:
-		mov	cs:byte_36F9, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_36F7, al
-		mov	cs:word_3706, 0FFC6h
-
-loc_35F8:
-		mov	ds, word ptr [bx+1ADAh]
-		xor	si, si
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	ax, si
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		call	loc_3700
-		mov	ax, 0FFCEh
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_3700
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_3700
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_3700
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_3700
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_3556	endp
-
-; ---------------------------------------------------------------------------
-		db 32h,	0D2h, 0ADh, 0D3h, 0C8h,	8Ah, 0F0h, 22h,	0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_3661	db 50h
-		db 0B5h
-byte_3663	db 11h
-		db 0FEh, 0CBh, 75h, 0E0h, 0C3h,	90h, 32h, 0D2h,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 4Fh, 8Ah
-		db 0D5h, 83h, 0C7h
-byte_368F	db 50h
-		db 0B5h
-byte_3691	db 11h
-		db 0FEh, 0CBh, 75h, 0D6h, 0C3h,	90h, 0ACh, 32h,	0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 8Ah, 0D5h
-		db 83h,	0C7h
-byte_36C6	db 50h
-		db 0B5h
-byte_36C8	db 11h
-		db 0FEh, 0CBh, 75h, 0CBh, 0C3h,	0ACh, 32h, 0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_36F7	db 50h
-		db 0B5h
-byte_36F9	db 11h
-		db 0FEh, 0CBh, 75h, 0D0h, 0C3h,	90h
-; ---------------------------------------------------------------------------
-
-loc_3700:
-		mov	di, bp
-; ---------------------------------------------------------------------------
-		db 0BBh
-word_3703	dw 1234h
-		db 0E9h
-word_3706	dw 0FF3Eh
+include libs/master.lib/super_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30954,7 +30797,7 @@ loc_1185E:
 		push	word ptr [bx+5314h]
 		push	di
 		push	[bp+var_2]
-		call	sub_3556
+		call	super_put
 		xor	ax, ax
 
 loc_11871:
@@ -47797,7 +47640,7 @@ loc_1A438:
 		push	ax
 		lea	ax, [di+80h]
 		push	ax
-		call	sub_3556
+		call	super_put
 		inc	si
 		inc	di
 

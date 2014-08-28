@@ -2491,165 +2491,7 @@ include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26CA	proc far
-					; sub_BE5D+160P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+15FCh]
-		mov	cx, [bp+arg_4]
-		mov	bp, [bp+arg_2]
-		mov	ax, bp
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	bp, ax
-		mov	si, cx
-		mov	ch, dh
-		shr	ch, 1
-		mov	al, dl
-		mov	ah, [si+5A6h]
-		mov	cs:word_2877, ax
-		test	bp, 1
-		jnz	short loc_273A
-		test	dh, 1
-		jnz	short loc_2724
-		mov	cs:byte_27D7, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_27D5, al
-		mov	cs:word_287A, 0FF3Eh
-		jmp	short loc_276C
-; ---------------------------------------------------------------------------
-
-loc_2724:
-		mov	cs:byte_2805, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_2803, al
-		mov	cs:word_287A, 0FF62h
-		jmp	short loc_276C
-; ---------------------------------------------------------------------------
-
-loc_273A:
-		dec	bp
-		test	dh, 1
-		jnz	short loc_2758
-		dec	ch
-		mov	cs:byte_283C, ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	cs:byte_283A, al
-		mov	cs:word_287A, 0FF90h
-		jmp	short loc_276C
-; ---------------------------------------------------------------------------
-
-loc_2758:
-		mov	cs:byte_286D, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_286B, al
-		mov	cs:word_287A, 0FFC6h
-
-loc_276C:
-		mov	ds, word ptr [bx+11FCh]
-		xor	si, si
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	ax, si
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		call	loc_2874
-		mov	ax, 0FFCEh
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_2874
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_2874
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_2874
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_2874
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_26CA	endp
-
-; ---------------------------------------------------------------------------
-		db 32h,	0D2h, 0ADh, 0D3h, 0C8h,	8Ah, 0F0h, 22h,	0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_27D5	db 50h
-		db 0B5h
-byte_27D7	db 11h
-		db 0FEh, 0CBh, 75h, 0E0h, 0C3h,	90h, 32h, 0D2h,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 4Fh, 8Ah
-		db 0D5h, 83h, 0C7h
-byte_2803	db 50h
-		db 0B5h
-byte_2805	db 11h
-		db 0FEh, 0CBh, 75h, 0D6h, 0C3h,	90h, 0ACh, 32h,	0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 8Ah, 0D5h
-		db 83h,	0C7h
-byte_283A	db 50h
-		db 0B5h
-byte_283C	db 11h
-		db 0FEh, 0CBh, 75h, 0CBh, 0C3h,	0ACh, 32h, 0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_286B	db 50h
-		db 0B5h
-byte_286D	db 11h
-		db 0FEh, 0CBh, 75h, 0D0h, 0C3h,	90h
-; ---------------------------------------------------------------------------
-
-loc_2874:
-		mov	di, bp
-; ---------------------------------------------------------------------------
-		db 0BBh
-word_2877	dw 1234h
-		db 0E9h
-word_287A	dw 0FF3Eh
+include libs/master.lib/super_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18449,7 +18291,7 @@ loc_BF51:
 		mov	ah, 0
 		add	ax, 22h	; '"'
 		push	ax
-		call	sub_26CA
+		call	super_put
 		push	large 2200054h
 		mov	al, byte_207E3
 		jmp	short loc_BFD0
@@ -18473,7 +18315,7 @@ loc_BF9B:
 		mov	ah, 0
 		add	ax, 22h	; '"'
 		push	ax
-		call	sub_26CA
+		call	super_put
 		push	large 2200054h
 		les	bx, dword_1F2F0
 		mov	al, es:[bx+33h]
@@ -18482,7 +18324,7 @@ loc_BFD0:
 		mov	ah, 0
 		add	ax, 22h	; '"'
 		push	ax
-		call	sub_26CA
+		call	super_put
 		jmp	short loc_BFF0
 ; ---------------------------------------------------------------------------
 
@@ -18500,7 +18342,7 @@ loc_BFF0:
 		push	word_20CEC
 		push	54h ; 'T'
 		push	word_20CEA
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 20h	; ' '
 		push	ax
@@ -18508,7 +18350,7 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		inc	ax
 		push	ax
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 40h	; '@'
 		push	ax
@@ -18516,7 +18358,7 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		add	ax, 2
 		push	ax
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 60h	; '`'
 		push	ax
@@ -18524,13 +18366,13 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		add	ax, 3
 		push	ax
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 140h
 		push	ax
 		push	54h ; 'T'
 		push	word_20CEA
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 160h
 		push	ax
@@ -18538,7 +18380,7 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		inc	ax
 		push	ax
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 180h
 		push	ax
@@ -18546,7 +18388,7 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		add	ax, 2
 		push	ax
-		call	sub_26CA
+		call	super_put
 		mov	ax, word_20CEC
 		add	ax, 1A0h
 		push	ax
@@ -18554,7 +18396,7 @@ loc_BFF0:
 		mov	ax, word_20CEA
 		add	ax, 3
 		push	ax
-		call	sub_26CA
+		call	super_put
 		jmp	short loc_C0D5
 ; ---------------------------------------------------------------------------
 
@@ -18875,11 +18717,11 @@ var_2		= word ptr -2
 		mov	si, ax
 		push	ax
 		push	large 280012h
-		call	sub_26CA
+		call	super_put
 		lea	ax, [si+40h]
 		push	ax
 		push	large 280013h
-		call	sub_26CA
+		call	super_put
 		mov	al, byte_20E3D
 		mov	ah, 0
 		mov	dx, 1
@@ -18905,12 +18747,12 @@ loc_C355:
 		push	si
 		push	di
 		push	14h
-		call	sub_26CA
+		call	super_put
 		lea	ax, [si+40h]
 		push	ax
 		push	di
 		push	15h
-		call	sub_26CA
+		call	super_put
 		pop	di
 		pop	si
 		leave
@@ -22838,7 +22680,7 @@ loc_DF61:
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	di
-		call	sub_26CA
+		call	super_put
 
 loc_DF7D:
 		cmp	word ptr [si+18h], 100h
@@ -22888,7 +22730,7 @@ loc_DFAB:
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	ax
-		call	sub_26CA
+		call	super_put
 
 loc_DFE3:
 		pop	di
@@ -23292,43 +23134,43 @@ sub_E266	proc near
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 2200148h
 		push	0
-		call	sub_26CA
+		call	super_put
 		push	large 2400148h
 		push	3
-		call	sub_26CA
+		call	super_put
 		push	large 2600148h
 		push	6
-		call	sub_26CA
+		call	super_put
 		push	large 2200168h
 		push	9
-		call	sub_26CA
+		call	super_put
 		push	large 2400168h
 		push	0Ch
-		call	sub_26CA
+		call	super_put
 		push	large 2600168h
 		push	0Fh
-		call	sub_26CA
+		call	super_put
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 2200148h
 		push	0
-		call	sub_26CA
+		call	super_put
 		push	large 2400148h
 		push	3
-		call	sub_26CA
+		call	super_put
 		push	large 2600148h
 		push	6
-		call	sub_26CA
+		call	super_put
 		push	large 2200168h
 		push	9
-		call	sub_26CA
+		call	super_put
 		push	large 2400168h
 		push	0Ch
-		call	sub_26CA
+		call	super_put
 		push	large 2600168h
 		push	0Fh
-		call	sub_26CA
+		call	super_put
 		pop	bp
 		retn
 sub_E266	endp

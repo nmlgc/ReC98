@@ -1449,164 +1449,7 @@ include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_275E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+130Ch]
-		mov	cx, [bp+arg_4]
-		mov	bp, [bp+arg_2]
-		mov	ax, bp
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	bp, ax
-		mov	si, cx
-		mov	ch, dh
-		shr	ch, 1
-		mov	al, dl
-		mov	ah, [si+404h]
-		mov	cs:word_290B, ax
-		test	bp, 1
-		jnz	short loc_27CE
-		test	dh, 1
-		jnz	short loc_27B8
-		mov	cs:byte_286B, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_2869, al
-		mov	cs:word_290E, 0FF3Eh
-		jmp	short loc_2800
-; ---------------------------------------------------------------------------
-
-loc_27B8:
-		mov	cs:byte_2899, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_2897, al
-		mov	cs:word_290E, 0FF62h
-		jmp	short loc_2800
-; ---------------------------------------------------------------------------
-
-loc_27CE:
-		dec	bp
-		test	dh, 1
-		jnz	short loc_27EC
-		dec	ch
-		mov	cs:byte_28D0, ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	cs:byte_28CE, al
-		mov	cs:word_290E, 0FF90h
-		jmp	short loc_2800
-; ---------------------------------------------------------------------------
-
-loc_27EC:
-		mov	cs:byte_2901, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_28FF, al
-		mov	cs:word_290E, 0FFC6h
-
-loc_2800:
-		mov	ds, word ptr [bx+0F0Ch]
-		xor	si, si
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	ax, si
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		call	loc_2908
-		mov	ax, 0FFCEh
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_2908
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_2908
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_2908
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_2908
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_275E	endp
-
-; ---------------------------------------------------------------------------
-		db 32h,	0D2h, 0ADh, 0D3h, 0C8h,	8Ah, 0F0h, 22h,	0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_2869	db 50h
-		db 0B5h
-byte_286B	db 11h
-		db 0FEh, 0CBh, 75h, 0E0h, 0C3h,	90h, 32h, 0D2h,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 4Fh, 8Ah
-		db 0D5h, 83h, 0C7h
-byte_2897	db 50h
-		db 0B5h
-byte_2899	db 11h
-		db 0FEh, 0CBh, 75h, 0D6h, 0C3h,	90h, 0ACh, 32h,	0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 8Ah, 0D5h
-		db 83h,	0C7h
-byte_28CE	db 50h
-		db 0B5h
-byte_28D0	db 11h
-		db 0FEh, 0CBh, 75h, 0CBh, 0C3h,	0ACh, 32h, 0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_28FF	db 50h
-		db 0B5h
-byte_2901	db 11h
-		db 0FEh, 0CBh, 75h, 0D0h, 0C3h,	90h
-; ---------------------------------------------------------------------------
-
-loc_2908:
-		mov	di, bp
-; ---------------------------------------------------------------------------
-		db 0BBh
-word_290B	dw 1234h
-		db 0E9h
-word_290E	dw 0FF3Eh
+include libs/master.lib/super_put.asm
 dword_2910	dd 0
 byte_2914	db 0, 90h
 
@@ -17784,7 +17627,7 @@ loc_C54B:
 		mov	dh, 0
 		add	ax, dx
 		push	ax
-		call	sub_275E
+		call	super_put
 
 loc_C589:
 		lea	ax, [di-10h]
@@ -17802,7 +17645,7 @@ loc_C589:
 		mov	ah, 0
 		add	dx, ax
 		push	dx
-		call	sub_275E
+		call	super_put
 		mov	[bp+var_2], 6
 		jmp	short loc_C5E0
 ; ---------------------------------------------------------------------------
@@ -17820,7 +17663,7 @@ loc_C5B8:
 		add	ax, dx
 		add	ax, 0FF60h
 		push	ax
-		call	sub_275E
+		call	super_put
 		dec	[bp+var_2]
 		add	di, 10h
 

@@ -1814,7 +1814,7 @@ loc_2B66:
 		pop	di
 		pop	si
 		pop	bp
-		jmp	near ptr sub_2D5A
+		jmp	near ptr super_put
 ; ---------------------------------------------------------------------------
 
 loc_2BBA:
@@ -2030,163 +2030,7 @@ word_2D56	dw 1234h
 ; ---------------------------------------------------------------------------
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D5A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+1ED8h]
-		mov	cx, [bp+arg_4]
-		mov	bp, [bp+arg_2]
-		mov	ax, bp
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	bp, ax
-		mov	si, cx
-		mov	ch, dh
-		shr	ch, 1
-		mov	al, dl
-		mov	ah, [si+858h]
-		mov	cs:word_2F07, ax
-		test	bp, 1
-		jnz	short loc_2DCA
-		test	dh, 1
-		jnz	short loc_2DB4
-		mov	cs:byte_2E67, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_2E65, al
-		mov	cs:word_2F0A, 0FF3Eh
-		jmp	short loc_2DFC
-; ---------------------------------------------------------------------------
-
-loc_2DB4:
-		mov	cs:byte_2E95, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_2E93, al
-		mov	cs:word_2F0A, 0FF62h
-		jmp	short loc_2DFC
-; ---------------------------------------------------------------------------
-
-loc_2DCA:
-		dec	bp
-		test	dh, 1
-		jnz	short loc_2DE8
-		dec	ch
-		mov	cs:byte_2ECC, ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	cs:byte_2ECA, al
-		mov	cs:word_2F0A, 0FF90h
-		jmp	short loc_2DFC
-; ---------------------------------------------------------------------------
-
-loc_2DE8:
-		mov	cs:byte_2EFD, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_2EFB, al
-		mov	cs:word_2F0A, 0FFC6h
-
-loc_2DFC:
-		mov	ds, word ptr [bx+1AD8h]
-		xor	si, si
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	ax, si
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		call	loc_2F04
-		mov	ax, 0FFCEh
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_2F04
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_2F04
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_2F04
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_2F04
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_2D5A	endp
-
-; ---------------------------------------------------------------------------
-		db 32h,	0D2h, 0ADh, 0D3h, 0C8h,	8Ah, 0F0h, 22h,	0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_2E65	db 50h
-		db 0B5h
-byte_2E67	db 11h
-		db 0FEh, 0CBh, 75h, 0E0h, 0C3h,	90h, 32h, 0D2h,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 4Fh, 8Ah
-		db 0D5h, 83h, 0C7h
-byte_2E93	db 50h
-		db 0B5h
-byte_2E95	db 11h
-		db 0FEh, 0CBh, 75h, 0D6h, 0C3h,	90h, 0ACh, 32h,	0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 0ACh, 32h, 0E4h, 0D3h, 0C8h,	0Ah, 0C2h, 0ABh, 8Ah, 0D5h
-		db 83h,	0C7h
-byte_2ECA	db 50h
-		db 0B5h
-byte_2ECC	db 11h
-		db 0FEh, 0CBh, 75h, 0CBh, 0C3h,	0ACh, 32h, 0E4h, 0D3h
-		db 0C8h, 8Ah, 0D4h, 86h, 0E0h, 32h, 0C0h, 0ABh,	0Ah, 0EDh
-		db 74h,	12h, 0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 22h, 0C7h, 32h
-		db 0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh, 0CDh, 75h, 0EEh
-		db 26h,	88h, 15h, 8Ah, 0D5h, 83h, 0C7h
-byte_2EFB	db 50h
-		db 0B5h
-byte_2EFD	db 11h
-		db 0FEh, 0CBh, 75h, 0D0h, 0C3h,	90h
-; ---------------------------------------------------------------------------
-
-loc_2F04:
-		mov	di, bp
-; ---------------------------------------------------------------------------
-		db 0BBh
-word_2F07	dw 1234h
-		db 0E9h
-word_2F0A	dw 0FF3Eh
+include libs/master.lib/super_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15636,12 +15480,12 @@ arg_2		= word ptr  6
 		push	si
 		push	di
 		push	2
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	6
-		call	sub_2D5A
+		call	super_put
 		add	si, 10h
 		mov	[bp+var_2], 1
 		jmp	short loc_B4F5
@@ -15651,12 +15495,12 @@ loc_B4DA:
 		push	si
 		push	di
 		push	0
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	3
-		call	sub_2D5A
+		call	super_put
 		inc	[bp+var_2]
 		add	si, 10h
 
@@ -15668,12 +15512,12 @@ loc_B4F5:
 		push	si
 		push	di
 		push	4
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	7
-		call	sub_2D5A
+		call	super_put
 		pop	di
 		pop	si
 		leave
@@ -15707,7 +15551,7 @@ arg_2		= word ptr  6
 		push	si
 		push	di
 		push	6
-		call	sub_2D5A
+		call	super_put
 		add	si, 10h
 		mov	[bp+var_2], 1
 		jmp	short loc_B55A
@@ -15717,7 +15561,7 @@ loc_B54B:
 		push	si
 		push	di
 		push	3
-		call	sub_2D5A
+		call	super_put
 		inc	[bp+var_2]
 		add	si, 10h
 
@@ -15729,7 +15573,7 @@ loc_B55A:
 		push	si
 		push	di
 		push	7
-		call	sub_2D5A
+		call	super_put
 		pop	di
 		pop	si
 		leave
@@ -15756,7 +15600,7 @@ arg_2		= word ptr  6
 		push	ax
 		push	si
 		push	5
-		call	sub_2D5A
+		call	super_put
 		add	[bp+var_2], 10h
 		mov	di, 1
 		jmp	short loc_B5A3
@@ -15766,7 +15610,7 @@ loc_B593:
 		push	[bp+var_2]
 		push	si
 		push	1
-		call	sub_2D5A
+		call	super_put
 		inc	di
 		add	[bp+var_2], 10h
 
@@ -15778,7 +15622,7 @@ loc_B5A3:
 		push	[bp+var_2]
 		push	si
 		push	8
-		call	sub_2D5A
+		call	super_put
 		add	si, 10h
 		mov	di, 1
 		jmp	short loc_B5D0
@@ -15831,12 +15675,12 @@ arg_2		= word ptr  6
 		push	si
 		push	di
 		push	5
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+10h]
 		push	ax
 		push	6
-		call	sub_2D5A
+		call	super_put
 		add	si, 10h
 		mov	[bp+var_2], 1
 		jmp	short loc_B638
@@ -15846,12 +15690,12 @@ loc_B61D:
 		push	si
 		push	di
 		push	1
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+10h]
 		push	ax
 		push	3
-		call	sub_2D5A
+		call	super_put
 		inc	[bp+var_2]
 		add	si, 10h
 
@@ -15863,12 +15707,12 @@ loc_B638:
 		push	si
 		push	di
 		push	8
-		call	sub_2D5A
+		call	super_put
 		push	si
 		lea	ax, [di+10h]
 		push	ax
 		push	7
-		call	sub_2D5A
+		call	super_put
 		pop	di
 		pop	si
 		leave
@@ -18139,7 +17983,7 @@ arg_2		= word ptr  6
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_2D5A
+		call	super_put
 
 loc_C7E0:
 		mov	bx, si
@@ -18160,7 +18004,7 @@ loc_C7E0:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_2D5A
+		call	super_put
 
 loc_C811:
 		push	9Ch ; 'œ'
@@ -18174,7 +18018,7 @@ loc_C811:
 		cwd
 		idiv	bx
 		push	dx
-		call	sub_2D5A
+		call	super_put
 		push	1D0h
 		push	di
 		mov	bx, si
@@ -18186,7 +18030,7 @@ loc_C811:
 		cwd
 		idiv	bx
 		push	dx
-		call	sub_2D5A
+		call	super_put
 		mov	[bp+var_2], 6
 		jmp	short loc_C899
 ; ---------------------------------------------------------------------------
@@ -18203,7 +18047,7 @@ loc_C854:
 		mov	ah, 0
 		add	ax, 0FF60h
 		push	ax
-		call	sub_2D5A
+		call	super_put
 		mov	ax, [bp+var_4]
 		add	ax, 1D0h
 		push	ax
@@ -18215,7 +18059,7 @@ loc_C854:
 		mov	ah, 0
 		add	ax, 0FF60h
 		push	ax
-		call	sub_2D5A
+		call	super_put
 		dec	[bp+var_2]
 		add	[bp+var_4], 10h
 
@@ -18462,14 +18306,14 @@ loc_CA5B:
 		add	ax, ax
 		add	ax, 0Ah
 		push	ax
-		call	sub_2D5A
+		call	super_put
 		push	large 2300178h
 		mov	al, byte_1327B
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 0Bh
 		push	ax
-		call	sub_2D5A
+		call	super_put
 		pop	si
 		pop	bp
 		retn
