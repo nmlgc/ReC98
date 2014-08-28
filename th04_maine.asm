@@ -15253,7 +15253,7 @@ loc_B04E:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E7E4
+		push	_CosTable8+192
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
@@ -15262,7 +15262,7 @@ loc_B04E:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E764
+		push	_CosTable8+64
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15275,12 +15275,12 @@ loc_B04E:
 		call	far ptr	loc_D078
 		push	word ptr [bp+8]
 		push	si
-		push	word_E7A4
+		push	_CosTable8+128
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
 		push	si
-		push	word_E724
+		push	_CosTable8
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15297,7 +15297,7 @@ loc_B04E:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E8E4
+		push	_CosTable8+448
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
@@ -15306,7 +15306,7 @@ loc_B04E:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E864
+		push	_CosTable8+320
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15319,12 +15319,12 @@ loc_B04E:
 		call	far ptr	loc_D078
 		push	word ptr [bp+8]
 		push	si
-		push	word_E8A4
+		push	_CosTable8+384
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
 		push	si
-		push	word_E824
+		push	_CosTable8+256
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15373,7 +15373,7 @@ loc_B165:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E724
+		push	_CosTable8
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
@@ -15382,7 +15382,7 @@ loc_B165:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E6A4
+		push	_SinTable8
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15395,12 +15395,12 @@ loc_B165:
 		call	far ptr	loc_D078
 		push	word ptr [bp+8]
 		push	si
-		push	word_E724
+		push	_CosTable8
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
 		push	si
-		push	word_E6A4
+		push	_SinTable8
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15417,7 +15417,7 @@ loc_B165:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E824
+		push	_CosTable8+256
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
@@ -15426,7 +15426,7 @@ loc_B165:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	word_E7A4
+		push	_CosTable8+128
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -15439,12 +15439,12 @@ loc_B165:
 		call	far ptr	loc_D078
 		push	word ptr [bp+8]
 		push	si
-		push	word_E824
+		push	_CosTable8+256
 		call	sub_CED0
 		mov	di, ax
 		push	word ptr [bp+6]
 		push	si
-		push	word_E7A4
+		push	_CosTable8+128
 		call	sub_CED0
 		mov	[bp-2],	ax
 		push	di
@@ -21659,637 +21659,7 @@ include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
 dword_E6A0	dd 1
-word_E6A4	dw 0
-		db    6
-		db    0
-		db  0Dh
-		db    0
-		db  13h
-		db    0
-		db  19h
-		db    0
-		db  1Fh
-		db    0
-		db  26h	; &
-		db    0
-		db  2Ch	; ,
-		db    0
-		db  32h	; 2
-		db    0
-		db  38h	; 8
-		db    0
-		db  3Eh	; >
-		db    0
-		db  44h	; D
-		db    0
-		db  4Ah	; J
-		db    0
-		db  50h	; P
-		db    0
-		db  56h	; V
-		db    0
-		db  5Ch	; \
-		db    0
-		db  62h	; b
-		db    0
-		db  68h	; h
-		db    0
-		db  6Dh	; m
-		db    0
-		db  73h	; s
-		db    0
-		db  79h	; y
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  89h	; â
-		db    0
-		db  8Eh	; é
-		db    0
-		db  93h	; ì
-		db    0
-		db  98h	; ò
-		db    0
-		db  9Dh	; ù
-		db    0
-		db 0A2h	; ¢
-		db    0
-		db 0A7h	; ß
-		db    0
-		db 0ACh	; ¨
-		db    0
-		db 0B1h	; ±
-		db    0
-		db 0B5h	; µ
-		db    0
-		db 0B9h	; π
-		db    0
-		db 0BEh	; æ
-		db    0
-		db 0C2h	; ¬
-		db    0
-		db 0C6h	; ∆
-		db    0
-		db 0CAh	;  
-		db    0
-		db 0CEh	; Œ
-		db    0
-		db 0D1h	; —
-		db    0
-		db 0D5h	; ’
-		db    0
-		db 0D8h	; ÿ
-		db    0
-		db 0DCh	; ‹
-		db    0
-		db 0DFh	; ﬂ
-		db    0
-		db 0E2h	; ‚
-		db    0
-		db 0E5h	; Â
-		db    0
-		db 0E7h	; Á
-		db    0
-		db 0EAh	; Í
-		db    0
-		db 0EDh	; Ì
-		db    0
-		db 0EFh	; Ô
-		db    0
-		db 0F1h	; Ò
-		db    0
-		db 0F3h	; Û
-		db    0
-		db 0F5h	; ı
-		db    0
-		db 0F7h	; ˜
-		db    0
-		db 0F8h	; ¯
-		db    0
-		db 0FAh	; ˙
-		db    0
-		db 0FBh	; ˚
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db 0FDh	; ˝
-		db    0
-		db 0FEh	; ˛
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    1
-		db    0
-		db    1
-word_E724	dw 100h
-		db    0
-		db    1
-		db    0
-		db    1
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FEh	; ˛
-		db    0
-		db 0FDh	; ˝
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db 0FBh	; ˚
-		db    0
-		db 0FAh	; ˙
-		db    0
-		db 0F8h	; ¯
-		db    0
-		db 0F7h	; ˜
-		db    0
-		db 0F5h	; ı
-		db    0
-		db 0F3h	; Û
-		db    0
-		db 0F1h	; Ò
-		db    0
-		db 0EFh	; Ô
-		db    0
-		db 0EDh	; Ì
-		db    0
-		db 0EAh	; Í
-		db    0
-		db 0E7h	; Á
-		db    0
-		db 0E5h	; Â
-		db    0
-		db 0E2h	; ‚
-		db    0
-		db 0DFh	; ﬂ
-		db    0
-		db 0DCh	; ‹
-		db    0
-		db 0D8h	; ÿ
-		db    0
-		db 0D5h	; ’
-		db    0
-		db 0D1h	; —
-		db    0
-		db 0CEh	; Œ
-		db    0
-		db 0CAh	;  
-		db    0
-		db 0C6h	; ∆
-		db    0
-		db 0C2h	; ¬
-		db    0
-		db 0BEh	; æ
-		db    0
-		db 0B9h	; π
-		db    0
-word_E764	dw 0B5h
-		db 0B1h	; ±
-		db    0
-		db 0ACh	; ¨
-		db    0
-		db 0A7h	; ß
-		db    0
-		db 0A2h	; ¢
-		db    0
-		db  9Dh	; ù
-		db    0
-		db  98h	; ò
-		db    0
-		db  93h	; ì
-		db    0
-		db  8Eh	; é
-		db    0
-		db  89h	; â
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  79h	; y
-		db    0
-		db  73h	; s
-		db    0
-		db  6Dh	; m
-		db    0
-		db  68h	; h
-		db    0
-		db  62h	; b
-		db    0
-		db  5Ch	; \
-		db    0
-		db  56h	; V
-		db    0
-		db  50h	; P
-		db    0
-		db  4Ah	; J
-		db    0
-		db  44h	; D
-		db    0
-		db  3Eh	; >
-		db    0
-		db  38h	; 8
-		db    0
-		db  32h	; 2
-		db    0
-		db  2Ch	; ,
-		db    0
-		db  26h	; &
-		db    0
-		db  1Fh
-		db    0
-		db  19h
-		db    0
-		db  13h
-		db    0
-		db  0Dh
-		db    0
-		db    6
-		db    0
-word_E7A4	dw 0
-		db 0FAh	; ˙
-		db 0FFh
-		db 0F3h	; Û
-		db 0FFh
-		db 0EDh	; Ì
-		db 0FFh
-		db 0E7h	; Á
-		db 0FFh
-		db 0E1h	; ·
-		db 0FFh
-		db 0DAh	; ⁄
-		db 0FFh
-		db 0D4h	; ‘
-		db 0FFh
-		db 0CEh	; Œ
-		db 0FFh
-		db 0C8h	; »
-		db 0FFh
-		db 0C2h	; ¬
-		db 0FFh
-		db 0BCh	; º
-		db 0FFh
-		db 0B6h	; ∂
-		db 0FFh
-		db 0B0h	; ∞
-		db 0FFh
-		db 0AAh	; ™
-		db 0FFh
-		db 0A4h	; §
-		db 0FFh
-		db  9Eh	; û
-		db 0FFh
-		db  98h	; ò
-		db 0FFh
-		db  93h	; ì
-		db 0FFh
-		db  8Dh	; ç
-		db 0FFh
-		db  87h	; á
-		db 0FFh
-		db  82h	; Ç
-		db 0FFh
-		db  7Ch	; |
-		db 0FFh
-		db  77h	; w
-		db 0FFh
-		db  72h	; r
-		db 0FFh
-		db  6Dh	; m
-		db 0FFh
-		db  68h	; h
-		db 0FFh
-		db  63h	; c
-		db 0FFh
-		db  5Eh	; ^
-		db 0FFh
-		db  59h	; Y
-		db 0FFh
-		db  54h	; T
-		db 0FFh
-		db  4Fh	; O
-		db 0FFh
-word_E7E4	dw 0FF4Bh
-		db  47h	; G
-		db 0FFh
-		db  42h	; B
-		db 0FFh
-		db  3Eh	; >
-		db 0FFh
-		db  3Ah	; :
-		db 0FFh
-		db  36h	; 6
-		db 0FFh
-		db  32h	; 2
-		db 0FFh
-		db  2Fh	; /
-		db 0FFh
-		db  2Bh	; +
-		db 0FFh
-		db  28h	; (
-		db 0FFh
-		db  24h	; $
-		db 0FFh
-		db  21h	; !
-		db 0FFh
-		db  1Eh
-		db 0FFh
-		db  1Bh
-		db 0FFh
-		db  19h
-		db 0FFh
-		db  16h
-		db 0FFh
-		db  13h
-		db 0FFh
-		db  11h
-		db 0FFh
-		db  0Fh
-		db 0FFh
-		db  0Dh
-		db 0FFh
-		db  0Bh
-		db 0FFh
-		db    9
-		db 0FFh
-		db    8
-		db 0FFh
-		db    6
-		db 0FFh
-		db    5
-		db 0FFh
-		db    4
-		db 0FFh
-		db    3
-		db 0FFh
-		db    2
-		db 0FFh
-		db    1
-		db 0FFh
-		db    1
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-word_E824	dw 0FF00h
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    1
-		db 0FFh
-		db    1
-		db 0FFh
-		db    2
-		db 0FFh
-		db    3
-		db 0FFh
-		db    4
-		db 0FFh
-		db    5
-		db 0FFh
-		db    6
-		db 0FFh
-		db    8
-		db 0FFh
-		db    9
-		db 0FFh
-		db  0Bh
-		db 0FFh
-		db  0Dh
-		db 0FFh
-		db  0Fh
-		db 0FFh
-		db  11h
-		db 0FFh
-		db  13h
-		db 0FFh
-		db  16h
-		db 0FFh
-		db  19h
-		db 0FFh
-		db  1Bh
-		db 0FFh
-		db  1Eh
-		db 0FFh
-		db  21h	; !
-		db 0FFh
-		db  24h	; $
-		db 0FFh
-		db  28h	; (
-		db 0FFh
-		db  2Bh	; +
-		db 0FFh
-		db  2Fh	; /
-		db 0FFh
-		db  32h	; 2
-		db 0FFh
-		db  36h	; 6
-		db 0FFh
-		db  3Ah	; :
-		db 0FFh
-		db  3Eh	; >
-		db 0FFh
-		db  42h	; B
-		db 0FFh
-		db  47h	; G
-		db 0FFh
-word_E864	dw 0FF4Bh
-		db  4Fh	; O
-		db 0FFh
-		db  54h	; T
-		db 0FFh
-		db  59h	; Y
-		db 0FFh
-		db  5Eh	; ^
-		db 0FFh
-		db  63h	; c
-		db 0FFh
-		db  68h	; h
-		db 0FFh
-		db  6Dh	; m
-		db 0FFh
-		db  72h	; r
-		db 0FFh
-		db  77h	; w
-		db 0FFh
-		db  7Ch	; |
-		db 0FFh
-		db  82h	; Ç
-		db 0FFh
-		db  87h	; á
-		db 0FFh
-		db  8Dh	; ç
-		db 0FFh
-		db  93h	; ì
-		db 0FFh
-		db  98h	; ò
-		db 0FFh
-		db  9Eh	; û
-		db 0FFh
-		db 0A4h	; §
-		db 0FFh
-		db 0AAh	; ™
-		db 0FFh
-		db 0B0h	; ∞
-		db 0FFh
-		db 0B6h	; ∂
-		db 0FFh
-		db 0BCh	; º
-		db 0FFh
-		db 0C2h	; ¬
-		db 0FFh
-		db 0C8h	; »
-		db 0FFh
-		db 0CEh	; Œ
-		db 0FFh
-		db 0D4h	; ‘
-		db 0FFh
-		db 0DAh	; ⁄
-		db 0FFh
-		db 0E1h	; ·
-		db 0FFh
-		db 0E7h	; Á
-		db 0FFh
-		db 0EDh	; Ì
-		db 0FFh
-		db 0F3h	; Û
-		db 0FFh
-		db 0FAh	; ˙
-		db 0FFh
-word_E8A4	dw 0
-		db    6
-		db    0
-		db  0Dh
-		db    0
-		db  13h
-		db    0
-		db  19h
-		db    0
-		db  1Fh
-		db    0
-		db  26h	; &
-		db    0
-		db  2Ch	; ,
-		db    0
-		db  32h	; 2
-		db    0
-		db  38h	; 8
-		db    0
-		db  3Eh	; >
-		db    0
-		db  44h	; D
-		db    0
-		db  4Ah	; J
-		db    0
-		db  50h	; P
-		db    0
-		db  56h	; V
-		db    0
-		db  5Ch	; \
-		db    0
-		db  62h	; b
-		db    0
-		db  68h	; h
-		db    0
-		db  6Dh	; m
-		db    0
-		db  73h	; s
-		db    0
-		db  79h	; y
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  84h	; Ñ
-		db    0
-		db  89h	; â
-		db    0
-		db  8Eh	; é
-		db    0
-		db  93h	; ì
-		db    0
-		db  98h	; ò
-		db    0
-		db  9Dh	; ù
-		db    0
-		db 0A2h	; ¢
-		db    0
-		db 0A7h	; ß
-		db    0
-		db 0ACh	; ¨
-		db    0
-		db 0B1h	; ±
-		db    0
-word_E8E4	dw 0B5h
-		db 0B9h	; π
-		db    0
-		db 0BEh	; æ
-		db    0
-		db 0C2h	; ¬
-		db    0
-		db 0C6h	; ∆
-		db    0
-		db 0CAh	;  
-		db    0
-		db 0CEh	; Œ
-		db    0
-		db 0D1h	; —
-		db    0
-		db 0D5h	; ’
-		db    0
-		db 0D8h	; ÿ
-		db    0
-		db 0DCh	; ‹
-		db    0
-		db 0DFh	; ﬂ
-		db    0
-		db 0E2h	; ‚
-		db    0
-		db 0E5h	; Â
-		db    0
-		db 0E7h	; Á
-		db    0
-		db 0EAh	; Í
-		db    0
-		db 0EDh	; Ì
-		db    0
-		db 0EFh	; Ô
-		db    0
-		db 0F1h	; Ò
-		db    0
-		db 0F3h	; Û
-		db    0
-		db 0F5h	; ı
-		db    0
-		db 0F7h	; ˜
-		db    0
-		db 0F8h	; ¯
-		db    0
-		db 0FAh	; ˙
-		db    0
-		db 0FBh	; ˚
-		db    0
-		db 0FCh	; ¸
-		db    0
-		db 0FDh	; ˝
-		db    0
-		db 0FEh	; ˛
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db    0
-		db    1
-		db    0
-		db    1
+include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm
 include libs/master.lib/wordmask[data].asm
