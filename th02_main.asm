@@ -8322,52 +8322,7 @@ include libs/BorlandC/_strlen.asm
 include libs/BorlandC/strrchr.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xfflush	proc far
-
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_6], 4
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 1490h
-		jmp	short loc_6DF5
-; ---------------------------------------------------------------------------
-
-loc_6DD9:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_6DEE
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nop
-		call	_fflush
-		pop	cx
-		pop	cx
-
-loc_6DEE:
-		dec	[bp+var_6]
-		add	word ptr [bp+stream], 14h
-
-loc_6DF5:
-		cmp	[bp+var_6], 0
-		jnz	short loc_6DD9
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xfflush	endp
-
+include libs/BorlandC/xfflush.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

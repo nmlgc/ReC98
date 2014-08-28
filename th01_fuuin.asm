@@ -9809,52 +9809,7 @@ loc_57BA:
 		retf
 __xfclose	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xfflush	proc far
-
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_6], 4
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 0CAAh
-		jmp	short loc_57FC
-; ---------------------------------------------------------------------------
-
-loc_57E0:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_57F5
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nop
-		call	_fflush
-		pop	cx
-		pop	cx
-
-loc_57F5:
-		dec	[bp+var_6]
-		add	word ptr [bp+stream], 14h
-
-loc_57FC:
-		cmp	[bp+var_6], 0
-		jnz	short loc_57E0
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xfflush	endp
-
+include libs/BorlandC/xfflush.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

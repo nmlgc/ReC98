@@ -1527,47 +1527,7 @@ _setvbuf	endp
 include libs/BorlandC/_strlen.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xfflush	proc near
-
-var_4		= word ptr -4
-stream		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+var_4], 4
-		mov	[bp+stream], 2694h
-		jmp	short loc_2151
-; ---------------------------------------------------------------------------
-
-loc_213C:
-		mov	bx, [bp+stream]
-		test	byte ptr [bx+2], 3
-		jz	short loc_214A
-		push	bx		; stream
-		call	_fflush
-		pop	cx
-
-loc_214A:
-		dec	[bp+var_4]
-		add	[bp+stream], 10h
-
-loc_2151:
-		cmp	[bp+var_4], 0
-		jnz	short loc_213C
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn
-__xfflush	endp
+include libs/BorlandC/xfflush.asm
 
 ; ---------------------------------------------------------------------------
 		db 0
