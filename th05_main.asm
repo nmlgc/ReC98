@@ -2806,189 +2806,7 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_clean.asm
 include libs/master.lib/super_roll_put_1plane.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2FE0	proc far
-					; sub_EFDE+10AP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	si, di
-		shl	di, 2
-		add	di, si
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	bx, cx
-		mov	al, [bx+6BEh]
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+2A9Eh]
-		mov	ch, dh
-		shr	ch, 1
-		mov	ds, word ptr [bx+269Eh]
-		mov	bx, dx
-		xor	bh, bh
-		add	si, bx
-		sub	si, 190h
-		jg	short loc_3025
-		xor	si, si
-
-loc_3025:
-		sub	bx, si
-		mov	cs:word_3103, si
-		mov	cs:word_30FD, bx
-		mov	bp, di
-		test	di, 1
-		jnz	short loc_3072
-		test	dh, 1
-		jnz	short loc_3058
-		mov	cs:byte_3112, al
-		mov	cs:byte_3127, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_3125, al
-		mov	cs:word_3106, 310Ah
-		jmp	short loc_30AC
-; ---------------------------------------------------------------------------
-
-loc_3058:
-		mov	cs:byte_3146, al
-		mov	cs:byte_3161, ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	cs:byte_315F, al
-		mov	cs:word_3106, 313Ah
-		jmp	short loc_30AC
-; ---------------------------------------------------------------------------
-
-loc_3072:
-		dec	bp
-		test	dh, 1
-		jnz	short loc_3094
-		mov	cs:byte_318A, al
-		dec	ch
-		mov	cs:byte_31A4, ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	cs:byte_31A2, al
-		mov	cs:word_3106, 3174h
-		jmp	short loc_30AC
-; ---------------------------------------------------------------------------
-
-loc_3094:
-		mov	cs:byte_31CE, al
-		mov	cs:byte_31E3, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_31E1, al
-		mov	cs:word_3106, 31B8h
-
-loc_30AC:
-		mov	cs:word_3100, bp
-		xor	si, si
-		mov	ax, 0C0h ; 'À'
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, 0A800h
-		mov	es, ax
-		call	near ptr byte_30FC
-		mov	ax, 0FFCEh
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	near ptr byte_30FC
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	near ptr byte_30FC
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	near ptr byte_30FC
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	near ptr byte_30FC
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_2FE0	endp
-
-; ---------------------------------------------------------------------------
-byte_30FC	db 0BBh
-word_30FD	dw 1234h
-		db 0BFh
-word_3100	dw 1234h
-		db 0BDh
-word_3103	dw 1234h
-		db 0B8h
-word_3106	dw 1234h
-; ---------------------------------------------------------------------------
-		jmp	ax
-; ---------------------------------------------------------------------------
-		db 32h,	0D2h, 0ADh, 0D3h, 0C8h,	8Ah, 0F0h, 24h
-byte_3112	db 11h
-		db 32h,	0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh,	0CDh, 75h
-		db 0EEh, 26h, 88h, 15h,	8Ah, 0D5h, 83h,	0C7h
-byte_3125	db 50h
-		db 0B5h
-byte_3127	db 11h
-		db 4Bh,	75h, 0E1h, 0Bh,	0EDh, 75h, 1, 0C3h, 81h, 0EFh
-		db 0, 7Dh, 8Bh,	0DDh, 33h, 0EDh, 0EBh, 0D2h, 32h, 0D2h
-		db 0Ah,	0EDh, 74h, 12h,	0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 24h
-byte_3146	db 11h
-		db 32h,	0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh,	0CDh, 75h
-		db 0EEh, 0ACh, 32h, 0E4h, 0D3h,	0C8h, 0Ah, 0C2h, 0ABh
-		db 4Fh,	8Ah, 0D5h, 83h,	0C7h
-byte_315F	db 50h
-		db 0B5h
-byte_3161	db 11h
-		db 4Bh,	75h, 0D7h, 0Bh,	0EDh, 75h, 1, 0C3h, 81h, 0EFh
-		db 0, 7Dh, 8Bh,	0DDh, 33h, 0EDh, 0EBh, 0C8h, 0ACh, 32h
-		db 0E4h, 0D3h, 0C8h, 8Ah, 0D4h,	86h, 0E0h, 32h,	0C0h, 0ABh
-		db 0Ah,	0EDh, 74h, 12h,	0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 24h
-byte_318A	db 11h
-		db 32h,	0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh,	0CDh, 75h
-		db 0EEh, 0ACh, 32h, 0E4h, 0D3h,	0C8h, 0Ah, 0C2h, 0ABh
-		db 8Ah,	0D5h, 83h, 0C7h
-byte_31A2	db 50h
-		db 0B5h
-byte_31A4	db 11h
-		db 4Bh,	75h, 0CCh, 0Bh,	0EDh, 75h, 2, 0C3h, 90h, 81h, 0EFh
-		db 0, 7Dh, 8Bh,	0DDh, 33h, 0EDh, 0EBh, 0BCh, 0ACh, 32h
-		db 0E4h, 0D3h, 0C8h, 8Ah, 0D4h,	86h, 0E0h, 32h,	0C0h, 0ABh
-		db 0Ah,	0EDh, 74h, 12h,	0ADh, 0D3h, 0C8h, 8Ah, 0F0h, 24h
-byte_31CE	db 11h
-		db 32h,	0F0h, 0Ah, 0C2h, 0ABh, 8Ah, 0D6h, 0FEh,	0CDh, 75h
-		db 0EEh, 26h, 88h, 15h,	8Ah, 0D5h, 83h,	0C7h
-byte_31E1	db 50h
-		db 0B5h
-byte_31E3	db 11h
-		db 4Bh,	75h, 0D1h, 0Bh,	0EDh, 75h, 1, 0C3h, 81h, 0EFh
-		db 0, 7Dh, 8Bh,	0DDh, 33h, 0EDh, 0EBh, 0C2h
+include libs/master.lib/super_roll_put.asm
 ; ---------------------------------------------------------------------------
 
 loc_31F6:
@@ -23877,7 +23695,7 @@ loc_EC1A:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_EC74
 ; ---------------------------------------------------------------------------
 
@@ -24570,7 +24388,7 @@ loc_F0C2:
 		push	[bp+var_4]
 		mov	ah, 0
 		push	ax
-		call	sub_2FE0
+		call	super_roll_put
 
 loc_F0ED:
 		jmp	loc_F181
@@ -25519,7 +25337,7 @@ loc_F816:
 		mov	al, byte_26330
 		mov	ah, 0
 		push	ax
-		call	sub_2FE0
+		call	super_roll_put
 
 loc_F881:
 		inc	[bp+var_2]
@@ -27590,7 +27408,7 @@ sub_10848	proc near
 		push	di
 		push	word ptr [bp-2]
 		push	dx
-		call	sub_2FE0
+		call	super_roll_put
 		mov	ax, word ptr dword_26320
 		sar	ax, 4
 		mov	di, ax
@@ -27613,7 +27431,7 @@ loc_108B6:
 		push	di
 		push	word ptr [bp-2]
 		push	si
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_10900
 ; ---------------------------------------------------------------------------
 
@@ -27778,7 +27596,7 @@ loc_109F0:
 		push	di
 		push	word ptr [bp-2]
 		push	si
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_10A26
 ; ---------------------------------------------------------------------------
 
@@ -27900,7 +27718,7 @@ loc_10AE3:
 		push	di
 		push	word ptr [bp-2]
 		push	si
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_10B19
 ; ---------------------------------------------------------------------------
 
@@ -27999,7 +27817,7 @@ loc_10BA1:
 		push	[bp+var_4]
 		push	di
 		push	[bp+var_6]
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_10BC7
 ; ---------------------------------------------------------------------------
 
@@ -28366,7 +28184,7 @@ loc_10E1F:
 		push	si
 		push	di
 		push	dx
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_10EAE
 ; ---------------------------------------------------------------------------
 
@@ -29313,7 +29131,7 @@ loc_1162C:
 		mov	al, byte_26330
 		mov	ah, 0
 		push	ax
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_11691
 ; ---------------------------------------------------------------------------
 
@@ -29588,7 +29406,7 @@ loc_11862:
 		mov	al, byte_26330
 		mov	ah, 0
 		push	ax
-		call	sub_2FE0
+		call	super_roll_put
 		jmp	short loc_118CD
 ; ---------------------------------------------------------------------------
 
@@ -30774,7 +30592,7 @@ loc_122CB:
 		push	di
 		push	[bp+var_2]
 		push	si
-		call	sub_2FE0
+		call	super_roll_put
 
 loc_122D5:
 		cmp	byte_2CEBF, 2
@@ -30852,7 +30670,7 @@ loc_12342:
 		push	di
 		push	ax
 		push	3
-		call	sub_2FE0
+		call	super_roll_put
 
 loc_12398:
 					; sub_12263+103j ...
