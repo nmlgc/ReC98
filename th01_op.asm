@@ -3828,32 +3828,7 @@ _abort		endp
 
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl registerbgifont(void (*font)(void))
-_registerbgifont proc far
-					; sub_D631+3EP	...
-
-driver		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+driver+2]
-		push	word ptr [bp+driver] ; driver
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_registerbgifont endp
-
+include libs/BorlandC/delarray.asm
 include libs/BorlandC/dosenv.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15860,9 +15835,7 @@ loc_8A52:
 		jz	short loc_8AA5
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; font
-		nop
-		push	cs
-		call	near ptr _registerbgifont
+		nopcall	@$bdla$qnv
 		jmp	short loc_8AA3
 ; ---------------------------------------------------------------------------
 
@@ -25832,7 +25805,7 @@ arg_2		= dword	ptr  8
 		mov	bx, di
 		shl	bx, 2
 		push	large dword ptr	[bx+1472h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_D677:
@@ -25952,7 +25925,7 @@ loc_D76A:
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1472h]
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_D78B:
@@ -26008,7 +25981,7 @@ loc_D7C3:
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1472h]
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 2
@@ -26423,7 +26396,7 @@ loc_DB50:
 loc_DB58:
 		add	sp, 4
 		push	large [font]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	al, [bp+var_1]
 		cbw
@@ -26918,7 +26891,7 @@ loc_DF3B:
 		jg	short loc_DF1E
 		push	word ptr [bp-6]
 		push	bx
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		call	sub_10F8
 		xor	ax, ax
@@ -27006,7 +26979,7 @@ loc_E004:
 		push	di
 		call	sub_FD8
 		push	large dword ptr	[bp-4]
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		call	sub_10F8
 		xor	ax, ax
@@ -27038,7 +27011,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+1492h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 2
@@ -27065,7 +27038,7 @@ loc_E069:
 		shl	ax, 2
 		add	bx, ax
 		push	large dword ptr	[bx+14D2h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 6
@@ -27267,7 +27240,7 @@ loc_E258:
 
 loc_E265:
 		push	large dword ptr	[bp-8]
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		call	sub_10F8
 		xor	ax, ax
@@ -27824,7 +27797,7 @@ loc_E612:
 		push	bp
 		mov	bp, sp
 		push	large [dword_13EEA]
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
 		retf
@@ -28115,7 +28088,7 @@ loc_E80B:
 		push	word ptr es:[bx+10h]
 		call	sub_E6DA
 		push	large [off_13EFC] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		jmp	short loc_E87F
 ; ---------------------------------------------------------------------------
@@ -28195,7 +28168,7 @@ sub_E8D9	proc far
 		push	bp
 		mov	bp, sp
 		push	large [off_13EF8] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
 		retf

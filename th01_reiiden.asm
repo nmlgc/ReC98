@@ -5531,31 +5531,7 @@ _abort		endp
 
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl registerbgifont(void (*font)(void))
-_registerbgifont proc far
-
-driver		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+driver+2]
-		push	word ptr [bp+driver] ; driver
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_registerbgifont endp
-
+include libs/BorlandC/delarray.asm
 include libs/BorlandC/dosenv.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19650,9 +19626,7 @@ loc_9EC5:
 		jz	short loc_9F18
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; font
-		nop
-		push	cs
-		call	near ptr _registerbgifont
+		nopcall	@$bdla$qnv
 		jmp	short loc_9F16
 ; ---------------------------------------------------------------------------
 
@@ -27587,7 +27561,7 @@ loc_DFBC:
 		cmp	font, 0
 		jz	short loc_DFE0
 		push	large [font]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	font, 0
 		jmp	short $+2
@@ -27596,7 +27570,7 @@ loc_DFE0:
 		cmp	off_39E88, 0
 		jz	short loc_E000
 		push	large [off_39E88] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E88, 0
 		jmp	short $+2
@@ -27605,7 +27579,7 @@ loc_E000:
 		cmp	off_39E8C, 0
 		jz	short loc_E020
 		push	large [off_39E8C] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E8C, 0
 		jmp	short $+2
@@ -27614,7 +27588,7 @@ loc_E020:
 		cmp	off_39E92, 0
 		jz	short loc_E040
 		push	large [off_39E92] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E92, 0
 		jmp	short $+2
@@ -27623,7 +27597,7 @@ loc_E040:
 		cmp	off_39E96, 0
 		jz	short loc_E060
 		push	large [off_39E96] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E96, 0
 		jmp	short $+2
@@ -27632,7 +27606,7 @@ loc_E060:
 		cmp	off_39EAC, 0
 		jz	short loc_E080
 		push	large [off_39EAC] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EAC, 0
 		jmp	short $+2
@@ -27641,7 +27615,7 @@ loc_E080:
 		cmp	off_39E9A, 0
 		jz	short loc_E0A0
 		push	large [off_39E9A] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9A, 0
 		jmp	short $+2
@@ -27650,7 +27624,7 @@ loc_E0A0:
 		cmp	off_39E9E, 0
 		jz	short loc_E0C0
 		push	large [off_39E9E] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9E, 0
 		jmp	short $+2
@@ -27659,7 +27633,7 @@ loc_E0C0:
 		cmp	off_39EA2, 0
 		jz	short loc_E0E0
 		push	large [off_39EA2] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA2, 0
 		jmp	short $+2
@@ -27668,7 +27642,7 @@ loc_E0E0:
 		cmp	off_39EA6, 0
 		jz	short loc_E101
 		push	large [off_39EA6] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA6, 0
 		jmp	loc_D7E4
@@ -27682,7 +27656,7 @@ loc_E104:
 		cmp	font, 0
 		jz	short loc_E124
 		push	large [font]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	font, 0
 		jmp	short $+2
@@ -27691,7 +27665,7 @@ loc_E124:
 		cmp	off_39E88, 0
 		jz	short loc_E144
 		push	large [off_39E88] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E88, 0
 		jmp	short $+2
@@ -27700,7 +27674,7 @@ loc_E144:
 		cmp	off_39E8C, 0
 		jz	short loc_E164
 		push	large [off_39E8C] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E8C, 0
 		jmp	short $+2
@@ -27709,7 +27683,7 @@ loc_E164:
 		cmp	off_39E92, 0
 		jz	short loc_E184
 		push	large [off_39E92] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E92, 0
 		jmp	short $+2
@@ -27718,7 +27692,7 @@ loc_E184:
 		cmp	off_39E96, 0
 		jz	short loc_E1A4
 		push	large [off_39E96] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E96, 0
 		jmp	short $+2
@@ -27727,7 +27701,7 @@ loc_E1A4:
 		cmp	off_39EAC, 0
 		jz	short loc_E1C4
 		push	large [off_39EAC] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EAC, 0
 		jmp	short $+2
@@ -27736,7 +27710,7 @@ loc_E1C4:
 		cmp	off_39E9A, 0
 		jz	short loc_E1E4
 		push	large [off_39E9A] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9A, 0
 		jmp	short $+2
@@ -27745,7 +27719,7 @@ loc_E1E4:
 		cmp	off_39E9E, 0
 		jz	short loc_E204
 		push	large [off_39E9E] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9E, 0
 		jmp	short $+2
@@ -27754,7 +27728,7 @@ loc_E204:
 		cmp	off_39EA2, 0
 		jz	short loc_E224
 		push	large [off_39EA2] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA2, 0
 		jmp	short $+2
@@ -27763,7 +27737,7 @@ loc_E224:
 		cmp	off_39EA6, 0
 		jz	short loc_E244
 		push	large [off_39EA6] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA6, 0
 		jmp	short $+2
@@ -33217,7 +33191,7 @@ arg_2		= dword	ptr  8
 		mov	bx, di
 		shl	bx, 2
 		push	large dword ptr	[bx+4018h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_10739:
@@ -33346,7 +33320,7 @@ loc_1082C:
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+4018h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_1084D:
@@ -33424,7 +33398,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+4018h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 2
@@ -33890,7 +33864,7 @@ loc_10C12:
 loc_10C1A:
 		add	sp, 4
 		push	large [off_38E28] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	al, [bp+var_1]
 		cbw
@@ -34429,7 +34403,7 @@ loc_10FFD:
 		jg	short loc_10FE0
 		push	word ptr [bp+_font+2]
 		push	bx		; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		call	sub_1142
 		xor	ax, ax
@@ -34529,7 +34503,7 @@ loc_110C6:
 		push	di
 		call	sub_1022
 		push	large [bp+_font]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		call	sub_1142
 		xor	ax, ax
@@ -34563,7 +34537,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	[bx+4038h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 2
@@ -34590,7 +34564,7 @@ loc_1112B:
 		shl	ax, 2
 		add	bx, ax
 		push	large dword ptr	[bx+4078h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
 		shl	bx, 6
@@ -34807,7 +34781,7 @@ loc_1131A:
 
 loc_11327:
 		push	large [bp+s1]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 
 loc_11330:
 		add	sp, 4
@@ -38559,9 +38533,9 @@ loc_12F39:
 
 loc_12F42:
 		push	large [bp+_font]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		push	large [bp+var_8] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 8
 		call	egc_off
 		pop	di
@@ -41387,16 +41361,16 @@ sub_146BA	proc far
 		push	bp
 		mov	bp, sp
 		push	large [off_39452] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	large [off_3945A] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	large [off_39456] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	large [off_39462] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
 		retf
@@ -43069,31 +43043,31 @@ loc_1557C:
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	large dword ptr	es:[bx]	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	large dword ptr	es:[bx+80h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	large dword ptr	es:[bx+100h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	large dword ptr	es:[bx+180h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	large dword ptr	es:[bx+200h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 14h
 		inc	si
 
@@ -45561,7 +45535,7 @@ loc_169D8:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4ADAh] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16A09:
@@ -45586,7 +45560,7 @@ loc_16A09:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4ACAh] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16A53:
@@ -45611,7 +45585,7 @@ loc_16A53:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4ACEh] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16A9D:
@@ -45636,7 +45610,7 @@ loc_16A9D:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4AD2h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16AE7:
@@ -45661,7 +45635,7 @@ loc_16AE7:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4AD6h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16B31:
@@ -46143,7 +46117,7 @@ loc_16F28:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4D5Ah] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_16F59:
@@ -46160,7 +46134,7 @@ loc_16F59:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4D4Ah] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
 		mov	ax, si
@@ -46174,7 +46148,7 @@ loc_16F59:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4D4Eh] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
 		mov	ax, si
@@ -46188,7 +46162,7 @@ loc_16F59:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4D52h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
 		mov	ax, si
@@ -46202,7 +46176,7 @@ loc_16F59:
 		imul	ax, 14h
 		add	bx, ax
 		push	large dword ptr	[bx+4D56h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 10h
 		mov	bx, di
 		imul	bx, 0A0h
@@ -46400,7 +46374,7 @@ sub_1716F	proc far
 		push	bp
 		mov	bp, sp
 		push	large [off_39A34] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
 		retf
@@ -46693,7 +46667,7 @@ loc_1735E:
 		push	word ptr es:[bx+10h]
 		call	sub_1722D
 		push	large [off_39A46] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		jmp	short loc_173D2
 ; ---------------------------------------------------------------------------
@@ -46783,7 +46757,7 @@ sub_1742C	proc far
 		push	bp
 		mov	bp, sp
 		push	large [off_39A42] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
 		retf
@@ -46892,7 +46866,7 @@ loc_174C8:
 		shl	ax, 2
 		add	bx, ax
 		push	large dword ptr	[bx+50C2h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_174F9:
@@ -47116,7 +47090,7 @@ loc_1768E:
 		shl	ax, 2
 		add	bx, ax
 		push	large dword ptr	[bx+50C2h] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, di
 		imul	bx, 26h

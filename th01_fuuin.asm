@@ -3894,31 +3894,7 @@ _abort		endp
 
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl registerbgifont(void (*font)(void))
-_registerbgifont proc far
-
-driver		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+driver+2]
-		push	word ptr [bp+driver] ; driver
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_registerbgifont endp
-
+include libs/BorlandC/delarray.asm
 include libs/BorlandC/dosenv.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16021,9 +15997,7 @@ loc_87D7:
 		jz	short loc_882A
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; font
-		nop
-		push	cs
-		call	near ptr _registerbgifont
+		nopcall	@$bdla$qnv
 		jmp	short loc_8828
 ; ---------------------------------------------------------------------------
 
@@ -22418,19 +22392,19 @@ loc_B8FC:
 		assume es:seg008
 		push	word ptr font+2
 		push	word ptr font	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	word ptr off_1402C+2
 		push	word ptr off_1402C ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	word ptr off_14028+2
 		push	word ptr off_14028 ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		push	word ptr off_14034+2
 		push	word ptr off_14034 ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 
 loc_B941:
@@ -29738,7 +29712,7 @@ loc_EBAB:
 		add	sp, 4
 		push	word_1464C
 		push	off_1464A	; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	al, [bp+var_1]
 		cbw

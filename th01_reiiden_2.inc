@@ -11115,7 +11115,7 @@ arg_2		= word ptr  8
 		cmp	off_39EB3, 0
 		jz	short loc_2132D
 		push	large [off_39EB3] ; font
-		call	_registerbgifont
+		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EB3, 0
 

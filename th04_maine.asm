@@ -2216,31 +2216,7 @@ _abort		endp
 
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl registerbgifont(void (*font)(void))
-_registerbgifont proc far
-
-driver		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+driver+2]
-		push	word ptr [bp+driver] ; driver
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_registerbgifont endp
-
+include libs/BorlandC/delarray.asm
 include libs/BorlandC/dosenv.asm
 include libs/BorlandC/dosgdriv.asm
 include libs/BorlandC/errormsg.asm
@@ -10968,9 +10944,7 @@ loc_8CC6:
 		jz	short loc_8D19
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; font
-		nop
-		push	cs
-		call	near ptr _registerbgifont
+		nopcall	@$bdla$qnv
 		jmp	short loc_8D17
 ; ---------------------------------------------------------------------------
 
