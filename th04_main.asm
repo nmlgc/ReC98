@@ -93,125 +93,7 @@ include libs/master.lib/egc.asm
 include libs/master.lib/egc_shift_down.asm
 include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/egc_shift_right.asm
-
-loc_C34:
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+0Eh]
-		mov	si, [bp+0Ch]
-		mov	dx, [bp+0Ah]
-		mov	bx, [bp+8]
-		mov	di, [bp+6]
-		mov	ax, di
-		shl	ax, 2
-		add	ax, di
-		shl	ax, 4
-		mov	cs:word_D03, ax
-		sub	bx, si
-		inc	bx
-		mov	ax, si
-		shl	si, 2
-		add	si, ax
-		shl	si, 4
-		mov	ax, cx
-		shr	ax, 3
-		and	ax, 0FFFEh
-		add	si, ax
-		shr	ax, 1
-		mov	bp, dx
-		shr	bp, 4
-		sub	bp, ax
-		inc	bp
-		mov	ax, bp
-		mov	bp, dx
-		sub	bp, cx
-		mov	es, cx
-		assume es:nothing
-		mov	cx, ax
-		mov	ax, es
-		and	ax, 0Fh
-		mov	dx, ax
-		push	bx
-		push	bp
-		mov	bx, bp
-		add	bx, ax
-		shr	bx, 4
-		add	bp, dx
-		shr	bp, 4
-		cmp	al, dl
-		jz	short loc_CAA
-		jl	short loc_CA4
-		cmp	bx, bp
-		jnz	short loc_CAA
-		jmp	short loc_CA8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_CA4:
-		cmp	bx, bp
-		jge	short loc_CAA
-
-loc_CA8:
-		inc	cx
-		nop
-
-loc_CAA:
-		pop	bp
-		pop	bx
-		shl	dl, 4
-		or	dl, al
-		xor	dh, dh
-		mov	di, dx
-		mov	ax, 29h	; ')'
-		sub	ax, cx
-		shl	ax, 1
-		mov	cs:byte_D12, al
-		mov	cs:byte_D15, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 28F0h
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		mov	ax, di
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, bp
-		out	dx, ax
-		mov	ax, 0A800h
-		mov	ds, ax
-		mov	es, ax
-		assume es:nothing
-		mov	di, si
-; ---------------------------------------------------------------------------
-		db 81h,	0EFh
-word_D03	dw 1111h
-		db 8Bh,	0D1h, 90h, 8Bh,	0CAh, 0F3h, 0A5h, 2 dup(4Eh), 2	dup(4Fh)
-		db 83h,	0C6h
-byte_D12	db 50h
-		db 83h,	0C7h
-byte_D15	db 50h
-		db 4Bh,	75h, 0EFh, 0BAh, 0A0h, 4, 0B8h,	0F0h, 0FFh, 0EFh
-		db 0B0h, 4, 0E6h, 6Ah, 0B0h, 0,	0E6h, 7Ch, 0B0h, 6, 0E6h
-		db 6Ah,	5Fh, 5Eh, 1Fh, 5Dh, 0CAh, 0Ah, 0, 90h
+include libs/master.lib/egc_shift_up.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20769,7 +20651,7 @@ loc_CDA9:
 		mov	ax, word_255C0
 		neg	ax
 		push	ax
-		call	far ptr	loc_C34
+		call	egc_shift_up
 		jmp	short loc_CDE5
 ; ---------------------------------------------------------------------------
 
