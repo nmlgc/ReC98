@@ -477,136 +477,7 @@ sub_9DC		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_AB8
-
-loc_AB2:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; END OF FUNCTION CHUNK	FOR sub_AB8
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AB8		proc far
-					; sub_B3DA+573P ...
-
-; FUNCTION CHUNK AT 0AB2 SIZE 00000006 BYTES
-
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	ax
-		pop	bx
-		sub	sp, 12h
-		sti
-		cmp	bx, si
-		jle	short loc_ACD
-		xchg	bx, si
-
-loc_ACD:
-		mov	bp, ClipXL
-		mov	dx, ClipXW
-		sub	si, bp
-		jl	short loc_AB2
-		sub	bx, bp
-		cmp	bx, 8000h
-		sbb	cx, cx
-		and	bx, cx
-		sub	si, dx
-		sbb	cx, cx
-		and	si, cx
-		add	si, dx
-		sub	si, bx
-		jl	short loc_AB2
-		add	bx, bp
-		cmp	ax, di
-		jle	short loc_AF6
-		xchg	ax, di
-
-loc_AF6:
-		mov	dx, ClipYT
-		mov	bp, ClipYH
-		sub	di, dx
-		js	short loc_AB2
-		sub	ax, dx
-		cmp	ax, 8000h
-		sbb	cx, cx
-		and	ax, cx
-		sub	di, bp
-		sbb	cx, cx
-		and	di, cx
-		add	di, bp
-		sub	di, ax
-		jl	short loc_AB2
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	dx, di
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		mov	dx, bx
-		shr	dx, 4
-		shl	dx, 1
-		add	di, dx
-		and	bx, 0Fh
-		add	si, bx
-		sub	si, 10h
-		shl	bx, 1
-		mov	dx, [bx+4ECh]
-		not	dx
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+4EEh]
-		sar	si, 4
-		js	short loc_B74
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_B5C:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_B5C
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B74:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_B7C:
-		stosw
-		sub	di, bp
-		jnb	short loc_B7C
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_AB8		endp
-
+include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4160,8 +4031,7 @@ loc_3959:
 		xor	ah, ah
 		push	ax
 		call	grcg_setcolor
-		push	cs
-		call	near ptr sub_AB8
+		call	grcg_boxfill
 		inc	si
 		pop	es
 		pop	dx
@@ -18415,13 +18285,13 @@ loc_B922:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 1A00000h
 		push	large 23F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 1A00000h
 		push	large 23F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		call	grcg_off
 		mov	byte_20619, 1
 		mov	al, byte_20619
@@ -24325,7 +24195,7 @@ loc_E680:
 		mov	byte_2287E, 2
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		jmp	loc_E892
 ; ---------------------------------------------------------------------------
 
@@ -24340,7 +24210,7 @@ loc_E6CC:
 loc_E6E8:
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		call	grcg_off
 		cmp	word_218B6, 40h	; '@'
 		jg	short loc_E74D
@@ -24543,7 +24413,7 @@ loc_E8C9:
 		mov	byte_2287E, 2
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		mov	[bp+var_4], 0
 		jmp	short loc_E902
 ; ---------------------------------------------------------------------------
@@ -24568,7 +24438,7 @@ loc_E915:
 		jge	loc_E9A6
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		cmp	word_218B6, 50h	; 'P'
 		jl	short loc_E94C
 		mov	ax, word_218B6
@@ -24644,7 +24514,7 @@ loc_E9F3:
 		call	grcg_setcolor
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		jmp	short loc_EA60
 ; ---------------------------------------------------------------------------
 
@@ -24798,7 +24668,7 @@ loc_EB07:
 		mov	byte_2287E, 2
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		jmp	loc_ECA2
 ; ---------------------------------------------------------------------------
 
@@ -24831,7 +24701,7 @@ loc_EB5D:
 loc_EB7C:
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		push	large 0C00004h
 		call	grcg_setcolor
 		call	sub_E512
@@ -24843,7 +24713,7 @@ loc_EB9E:
 		jge	loc_EC56
 		push	large 200000h
 		push	large 19F018Fh
-		call	sub_AB8
+		call	grcg_boxfill
 		mov	byte_2066D, 2
 		cmp	byte_2066C, 0
 		jz	short loc_EBCC
@@ -33753,7 +33623,7 @@ loc_12F6E:
 		push	57h ; 'W'
 		lea	ax, [si+2Fh]
 		push	ax
-		call	sub_AB8
+		call	grcg_boxfill
 		call	grcg_off
 		jmp	short loc_13009
 ; ---------------------------------------------------------------------------

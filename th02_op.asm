@@ -451,137 +451,7 @@ sub_952		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_A2E
-
-loc_A28:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; END OF FUNCTION CHUNK	FOR sub_A2E
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A2E		proc far
-
-; FUNCTION CHUNK AT 0A28 SIZE 00000006 BYTES
-
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	ax
-		pop	bx
-		sub	sp, 12h
-		sti
-		cmp	bx, si
-		jle	short loc_A43
-		xchg	bx, si
-
-loc_A43:
-		mov	bp, ClipXL
-		mov	dx, ClipXW
-		sub	si, bp
-		jl	short loc_A28
-		sub	bx, bp
-		cmp	bx, 8000h
-		sbb	cx, cx
-		and	bx, cx
-		sub	si, dx
-		sbb	cx, cx
-		and	si, cx
-		add	si, dx
-		sub	si, bx
-		jl	short loc_A28
-		add	bx, bp
-		cmp	ax, di
-		jle	short loc_A6C
-		xchg	ax, di
-
-loc_A6C:
-		mov	dx, ClipYT
-		mov	bp, ClipYH
-		sub	di, dx
-		js	short loc_A28
-		sub	ax, dx
-		cmp	ax, 8000h
-		sbb	cx, cx
-		and	ax, cx
-		sub	di, bp
-		sbb	cx, cx
-		and	di, cx
-		add	di, bp
-		sub	di, ax
-		jl	short loc_A28
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	dx, di
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		mov	dx, bx
-		shr	dx, 4
-		shl	dx, 1
-		add	di, dx
-		and	bx, 0Fh
-		add	si, bx
-		sub	si, 10h
-		shl	bx, 1
-		mov	dx, [bx+208h]
-		not	dx
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+20Ah]
-		sar	si, 4
-		js	short loc_AEA
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_AD2:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_AD2
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_AEA:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_AF2:
-		stosw
-		sub	di, bp
-		jnb	short loc_AF2
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_A2E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_boxfill.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1009,8 +879,7 @@ loc_E94:
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+0Ah]
 		push	word ptr [bp+08h]
-		push	cs
-		call	near ptr sub_A2E
+		call	grcg_boxfill
 		pop	di
 		pop	si
 		leave
@@ -1080,8 +949,7 @@ loc_EDD:
 		push	cx
 		push	[bp+arg_4]
 		push	bx
-		push	cs
-		call	near ptr sub_A2E
+		call	grcg_boxfill
 
 loc_F0E:
 		add	[bp+arg_8], si

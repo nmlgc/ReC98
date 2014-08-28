@@ -504,135 +504,7 @@ sub_AF8		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_BD4
-
-loc_BCE:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; END OF FUNCTION CHUNK	FOR sub_BD4
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BD4		proc far
-
-; FUNCTION CHUNK AT 0BCE SIZE 00000006 BYTES
-
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	ax
-		pop	bx
-		sub	sp, 12h
-		sti
-		cmp	bx, si
-		jle	short loc_BE9
-		xchg	bx, si
-
-loc_BE9:
-		mov	bp, ClipXL
-		mov	dx, ClipXW
-		sub	si, bp
-		jl	short loc_BCE
-		sub	bx, bp
-		cmp	bx, 8000h
-		sbb	cx, cx
-		and	bx, cx
-		sub	si, dx
-		sbb	cx, cx
-		and	si, cx
-		add	si, dx
-		sub	si, bx
-		jl	short loc_BCE
-		add	bx, bp
-		cmp	ax, di
-		jle	short loc_C12
-		xchg	ax, di
-
-loc_C12:
-		mov	dx, ClipYT
-		mov	bp, ClipYH
-		sub	di, dx
-		js	short loc_BCE
-		sub	ax, dx
-		cmp	ax, 8000h
-		sbb	cx, cx
-		and	ax, cx
-		sub	di, bp
-		sbb	cx, cx
-		and	di, cx
-		add	di, bp
-		sub	di, ax
-		jl	short loc_BCE
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	dx, di
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		mov	dx, bx
-		shr	dx, 4
-		shl	dx, 1
-		add	di, dx
-		and	bx, 0Fh
-		add	si, bx
-		sub	si, 10h
-		shl	bx, 1
-		mov	dx, [bx+51Eh]
-		not	dx
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+520h]
-		sar	si, 4
-		js	short loc_C90
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_C78:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_C78
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C90:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_C98:
-		stosw
-		sub	di, bp
-		jnb	short loc_C98
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_BD4		endp
-
+include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_hline.asm
 
@@ -914,8 +786,7 @@ loc_FDA:
 		push	word ptr [bp+0ch]
 		push	word ptr [bp+0ah]
 		push	word ptr [bp+08h]
-		push	cs
-		call	near ptr sub_BD4
+		call	grcg_boxfill
 		pop	di
 		pop	si
 		leave
@@ -985,8 +856,7 @@ loc_1023:
 		push	cx
 		push	[bp+arg_4]
 		push	bx
-		push	cs
-		call	near ptr sub_BD4
+		call	grcg_boxfill
 
 loc_1054:
 		add	[bp+arg_8], si

@@ -308,135 +308,7 @@ sub_E2E		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_EA6
-
-loc_EA0:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; END OF FUNCTION CHUNK	FOR sub_EA6
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EA6		proc far
-
-; FUNCTION CHUNK AT 0EA0 SIZE 00000006 BYTES
-
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	ax
-		pop	bx
-		sub	sp, 12h
-		sti
-		cmp	bx, si
-		jle	short loc_EBB
-		xchg	bx, si
-
-loc_EBB:
-		mov	bp, ClipXL
-		mov	dx, ClipXW
-		sub	si, bp
-		jl	short loc_EA0
-		sub	bx, bp
-		cmp	bx, 8000h
-		sbb	cx, cx
-		and	bx, cx
-		sub	si, dx
-		sbb	cx, cx
-		and	si, cx
-		add	si, dx
-		sub	si, bx
-		jl	short loc_EA0
-		add	bx, bp
-		cmp	ax, di
-		jle	short loc_EE4
-		xchg	ax, di
-
-loc_EE4:
-		mov	dx, ClipYT
-		mov	bp, ClipYH
-		sub	di, dx
-		js	short loc_EA0
-		sub	ax, dx
-		cmp	ax, 8000h
-		sbb	cx, cx
-		and	ax, cx
-		sub	di, bp
-		sbb	cx, cx
-		and	di, cx
-		add	di, bp
-		sub	di, ax
-		jl	short loc_EA0
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	dx, di
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		mov	dx, bx
-		shr	dx, 4
-		shl	dx, 1
-		add	di, dx
-		and	bx, 0Fh
-		add	si, bx
-		sub	si, 10h
-		shl	bx, 1
-		mov	dx, [bx+38Eh]
-		not	dx
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+390h]
-		sar	si, 4
-		js	short loc_F62
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_F4A:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_F4A
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F62:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_F6A:
-		stosw
-		sub	di, bp
-		jnb	short loc_F6A
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_EA6		endp
-
+include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19616,7 +19488,7 @@ loc_C8E4:
 		add	ax, [bp+var_6]
 		push	ax
 		push	[bp+var_4]
-		call	sub_EA6
+		call	grcg_boxfill
 		mov	ah, 9
 		call	sub_E6EE
 		dec	[bp+var_6]
@@ -19628,7 +19500,7 @@ loc_C8E4:
 		add	ax, [bp+var_6]
 		push	ax
 		push	[bp+var_4]
-		call	sub_EA6
+		call	grcg_boxfill
 		mov	ah, 0Fh
 		call	sub_E6EE
 		dec	[bp+var_6]
@@ -19640,7 +19512,7 @@ loc_C8E4:
 		add	ax, [bp+var_6]
 		push	ax
 		push	[bp+var_4]
-		call	sub_EA6
+		call	grcg_boxfill
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	word ptr [si+6]

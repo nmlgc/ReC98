@@ -517,135 +517,7 @@ sub_9F2		endp
 
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_ACE
-
-loc_AC8:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; END OF FUNCTION CHUNK	FOR sub_ACE
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_ACE		proc far
-
-; FUNCTION CHUNK AT 0AC8 SIZE 00000006 BYTES
-
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	ax
-		pop	bx
-		sub	sp, 12h
-		sti
-		cmp	bx, si
-		jle	short loc_AE3
-		xchg	bx, si
-
-loc_AE3:
-		mov	bp, ClipXL
-		mov	dx, ClipXW
-		sub	si, bp
-		jl	short loc_AC8
-		sub	bx, bp
-		cmp	bx, 8000h
-		sbb	cx, cx
-		and	bx, cx
-		sub	si, dx
-		sbb	cx, cx
-		and	si, cx
-		add	si, dx
-		sub	si, bx
-		jl	short loc_AC8
-		add	bx, bp
-		cmp	ax, di
-		jle	short loc_B0C
-		xchg	ax, di
-
-loc_B0C:
-		mov	dx, ClipYT
-		mov	bp, ClipYH
-		sub	di, dx
-		js	short loc_AC8
-		sub	ax, dx
-		cmp	ax, 8000h
-		sbb	cx, cx
-		and	ax, cx
-		sub	di, bp
-		sbb	cx, cx
-		and	di, cx
-		add	di, bp
-		sub	di, ax
-		jl	short loc_AC8
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, ClipYT_seg
-		mov	es, ax
-		mov	dx, di
-		shl	di, 2
-		add	di, dx
-		shl	di, 4
-		mov	dx, bx
-		shr	dx, 4
-		shl	dx, 1
-		add	di, dx
-		and	bx, 0Fh
-		add	si, bx
-		sub	si, 10h
-		shl	bx, 1
-		mov	dx, [bx+532h]
-		not	dx
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+534h]
-		sar	si, 4
-		js	short loc_B8A
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_B72:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_B72
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B8A:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_B92:
-		stosw
-		sub	di, bp
-		jnb	short loc_B92
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_ACE		endp
-
+include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_setcolor.asm
 
@@ -14708,7 +14580,7 @@ loc_A069:
 		call	grcg_setcolor
 		push	large 2400173h
 		push	large 2500183h
-		call	sub_ACE
+		call	grcg_boxfill
 		call	grcg_off
 		les	bx, dword_105DA
 		dec	byte ptr es:[bx+36h]
