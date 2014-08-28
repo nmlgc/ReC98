@@ -775,45 +775,7 @@ loc_E62:
 		retf	6
 sub_C6A		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E82		proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_EC2
-		cmp	cx, ClipXR
-		jg	short locret_EC2
-		sub	dx, ClipYT
-		jl	short locret_EC2
-		cmp	dx, ClipYH
-		jg	short locret_EC2
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_EC2:
-		retf	4
-sub_E82		endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17702,7 +17664,7 @@ loc_B6CF:
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
-		call	sub_E82
+		call	grcg_pset
 		inc	[bp+var_6]
 
 loc_B73B:

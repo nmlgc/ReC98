@@ -566,8 +566,7 @@ loc_C9B:
 loc_CA6:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		push	cs
-		call	near ptr sub_123A
+		call	grcg_pset
 		pop	di
 		pop	si
 		leave
@@ -1343,47 +1342,7 @@ loc_122E:
 		retf	8
 sub_109C	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_123A	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_127A
-		cmp	cx, ClipXR
-		jg	short locret_127A
-		sub	dx, ClipYT
-		jl	short locret_127A
-		cmp	dx, ClipYH
-		jg	short locret_127A
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_127A:
-		retf	4
-sub_123A	endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
 
@@ -5336,8 +5295,7 @@ loc_4253:
 		cmp	byte ptr [si+0Eh], 0
 		jnz	short loc_4264
 		nop
-		push	cs
-		call	near ptr sub_123A
+		call	grcg_pset
 		jmp	short loc_4270
 ; ---------------------------------------------------------------------------
 
@@ -29605,7 +29563,7 @@ loc_11013:
 loc_11095:
 		push	[bp+var_2]
 		push	si
-		call	sub_123A
+		call	grcg_pset
 		inc	di
 		mov	al, [bp+var_3]
 		add	al, 4

@@ -617,8 +617,7 @@ loc_11C7:
 loc_11D2:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		push	cs
-		call	near ptr sub_1700
+		call	grcg_pset
 		pop	di
 		pop	si
 		leave
@@ -1246,47 +1245,7 @@ loc_16F4:
 		retf	8
 sub_1562	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1700	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_1740
-		cmp	cx, ClipXR
-		jg	short locret_1740
-		sub	dx, ClipYT
-		jl	short locret_1740
-		cmp	dx, ClipYH
-		jg	short locret_1740
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_1740:
-		retf	4
-sub_1700	endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
 

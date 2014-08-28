@@ -2762,46 +2762,7 @@ sub_140E	endp
 
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_146A	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_14AA
-		cmp	cx, ClipXR
-		jg	short locret_14AA
-		sub	dx, ClipYT
-		jl	short locret_14AA
-		cmp	dx, ClipYH
-		jg	short locret_14AA
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		assume es:nothing
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_14AA:
-		retf	4
-sub_146A	endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -346,7 +346,7 @@ loc_5C8:
 		mov	bx, si
 		shl	bx, 2
 		push	word ptr [bx+288Ah]
-		call	sub_14E4
+		call	grcg_pset
 		lea	ax, [bp+var_2]
 		push	ax
 		lea	ax, [bp+var_4]
@@ -1173,45 +1173,7 @@ sub_139C	endp
 
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14E4	proc near
-
-arg_0		= word ptr  2
-arg_2		= word ptr  4
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_1524
-		cmp	cx, ClipXR
-		jg	short locret_1524
-		sub	dx, ClipYT
-		jl	short locret_1524
-		cmp	dx, ClipYH
-		jg	short locret_1524
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_1524:
-		retn	4
-sub_14E4	endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1299,7 +1261,7 @@ loc_15FF:
 loc_160A:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		call	sub_14E4
+		call	grcg_pset
 		pop	di
 		pop	si
 		leave

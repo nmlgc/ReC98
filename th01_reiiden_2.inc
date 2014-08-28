@@ -13748,7 +13748,7 @@ loc_2261D:
 		mov	ax, [bx+589Dh]
 		sar	ax, 4
 		push	ax
-		call	sub_146A
+		call	grcg_pset
 
 loc_22652:
 		inc	[bp+var_1]

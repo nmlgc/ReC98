@@ -608,8 +608,7 @@ loc_DB1:
 loc_DBC:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		push	cs
-		call	near ptr sub_EE4
+		call	grcg_pset
 		pop	di
 		pop	si
 		leave
@@ -702,45 +701,7 @@ loc_E58:
 sub_DCC		endp
 
 include libs/master.lib/grcg_hline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE4		proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		cmp	cx, ClipXL
-		jl	short locret_F24
-		cmp	cx, ClipXR
-		jg	short locret_F24
-		sub	dx, ClipYT
-		jl	short locret_F24
-		cmp	dx, ClipYH
-		jg	short locret_F24
-		mov	ax, dx
-		shl	ax, 2
-		add	dx, ax
-		add	dx, ClipYT_seg
-		mov	es, dx
-		mov	bx, cx
-		shr	bx, 3
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		mov	es:[bx], al
-
-locret_F24:
-		retf	4
-sub_EE4		endp
-
+include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
 
