@@ -42,47 +42,7 @@ include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
 include libs/master.lib/dos_axdx.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_6C6		proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	ax, 4201h
-		xor	cx, cx
-		mov	dx, cx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		jb	short loc_6F6
-		push	si
-		push	di
-		push	ax
-		push	dx
-		xor	dx, dx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	si, ax
-		mov	di, dx
-		pop	cx
-		pop	dx
-		mov	ax, 4200h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	ax, si
-		mov	dx, di
-		pop	di
-		pop	si
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_6F6:
-		neg	ax
-		sbb	dx, dx
-		retf	2
-sub_6C6		endp
-
+include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
@@ -452,8 +412,7 @@ sub_9A2		endp
 
 sub_9E4		proc far
 		push	word_E946
-		push	cs
-		call	near ptr sub_6C6
+		call	dos_filesize
 		jb	short loc_9EF
 		retf
 ; ---------------------------------------------------------------------------

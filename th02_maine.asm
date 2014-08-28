@@ -43,47 +43,7 @@ include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
 include libs/master.lib/cutline.asm
 include libs/master.lib/dos_axdx.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_73A		proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	ax, 4201h
-		xor	cx, cx
-		mov	dx, cx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		jb	short loc_76A
-		push	si
-		push	di
-		push	ax
-		push	dx
-		xor	dx, dx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	si, ax
-		mov	di, dx
-		pop	cx
-		pop	dx
-		mov	ax, 4200h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	ax, si
-		mov	dx, di
-		pop	di
-		pop	si
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_76A:
-		neg	ax
-		sbb	dx, dx
-		retf	2
-sub_73A		endp
-
+include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/egc_shift_down.asm
@@ -416,8 +376,7 @@ sub_BD8		endp
 
 sub_C1A		proc far
 		push	word_D396
-		push	cs
-		call	near ptr sub_73A
+		call	dos_filesize
 		jb	short loc_C25
 		retf
 ; ---------------------------------------------------------------------------
