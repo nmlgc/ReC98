@@ -47,129 +47,7 @@ include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
-
-loc_8AA:
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+0Eh]
-		mov	dx, [bp+0Ah]
-		mov	si, [bp+8]
-		mov	di, [bp+6]
-		mov	ax, di
-		shl	ax, 2
-		add	ax, di
-		shl	ax, 4
-		mov	cs:word_97F, ax
-		mov	ax, si
-		sub	ax, [bp+0Ch]
-		mov	bx, ax
-		inc	bx
-		mov	ax, si
-		shl	si, 2
-		add	si, ax
-		shl	si, 4
-		mov	ax, dx
-		shr	ax, 3
-		and	ax, 0FFFEh
-		add	si, ax
-		shr	ax, 1
-		mov	bp, cx
-		shr	bp, 4
-		sub	ax, bp
-		inc	ax
-		mov	bp, dx
-		sub	bp, cx
-		mov	cx, ax
-		and	dl, 0Fh
-		mov	dh, 0Fh
-		sub	dh, dl
-		mov	dl, dh
-		xor	dh, dh
-		mov	ax, dx
-		push	bx
-		push	bp
-		mov	bx, bp
-		add	bx, ax
-		shr	bx, 4
-		add	bp, dx
-		shr	bp, 4
-		cmp	al, dl
-		jz	short loc_924
-		jl	short loc_91E
-		cmp	bx, bp
-		jnz	short loc_924
-		jmp	short loc_922
-; ---------------------------------------------------------------------------
-		nop
-
-loc_91E:
-		cmp	bx, bp
-		jge	short loc_924
-
-loc_922:
-		inc	cx
-		nop
-
-loc_924:
-		pop	bp
-		pop	bx
-		shl	dl, 4
-		or	dl, al
-		mov	di, dx
-		mov	ax, 29h	; ')'
-		sub	ax, cx
-		shl	ax, 1
-		mov	cs:byte_98E, al
-		mov	cs:byte_991, al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 80h	; '€'
-		out	7Ch, al
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 28F0h
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
-		mov	ax, di
-		or	ax, 1000h
-		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, bp
-		out	dx, ax
-		std
-		mov	ax, 0A800h
-		mov	ds, ax
-		assume ds:nothing
-		mov	es, ax
-		assume es:nothing
-		mov	di, si
-; ---------------------------------------------------------------------------
-		db 81h,	0C7h
-word_97F	dw 1111h
-		db 8Bh,	0D1h, 90h, 8Bh,	0CAh, 0F3h, 0A5h, 2 dup(46h), 2	dup(47h)
-		db 83h,	0EEh
-byte_98E	db 50h
-		db 83h,	0EFh
-byte_991	db 50h
-		db 4Bh,	75h, 0EFh, 0FCh, 0BAh, 0A0h, 4,	0B8h, 0F0h, 0FFh
-		db 0EFh, 0B0h, 4, 0E6h,	6Ah, 0B0h, 0, 0E6h, 7Ch, 0B0h
-		db 6, 0E6h, 6Ah, 5Fh, 5Eh, 1Fh,	5Dh, 0CAh, 0Ah,	0
-; ---------------------------------------------------------------------------
+include libs/master.lib/egc_shift_down.asm
 
 loc_9B0:
 					; sub_10287+62P
@@ -28142,7 +28020,7 @@ loc_10362:
 
 loc_1036E:
 		push	word_2CE04
-		call	far ptr	loc_8AA
+		call	egc_shift_down
 
 loc_10377:
 		mov	byte_226C2, 2
