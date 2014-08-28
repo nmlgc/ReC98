@@ -2768,297 +2768,7 @@ include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_clean.asm
-
-; ---------------------------------------------------------------------------
-
-loc_2F80:
-					; sub_116EC+4EP ...
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+0Eh]
-		mov	di, [bp+0Ch]
-		mov	ax, [bp+6]
-		out	7Ch, al
-		mov	al, ah
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	ax, di
-		shl	di, 2
-		add	di, ax
-		shl	di, 4
-		mov	bx, cx
-		and	cx, 7
-		shr	bx, 3
-		add	di, bx
-		mov	bx, [bp+0Ah]
-		shl	bx, 1
-		mov	dx, [bx+1EDAh]
-		push	bx
-		mov	bx, cx
-		mov	cx, [bp+8]
-		mov	bp, ax
-		mov	al, dh
-		mul	dl
-		xor	si, si
-		jcxz	short loc_2FCC
-
-loc_2FC8:
-		add	si, ax
-		loop	loc_2FC8
-
-loc_2FCC:
-		mov	al, [bx+85Ah]
-		mov	ch, dh
-		shr	ch, 1
-		mov	cl, bl
-		pop	bx
-		mov	ds, word ptr [bx+1ADAh]
-		mov	bx, 0A800h
-		mov	es, bx
-		assume es:nothing
-		mov	bx, dx
-		xor	bh, bh
-		add	bp, bx
-		sub	bp, 190h
-		jg	short loc_2FEE
-		xor	bp, bp
-
-loc_2FEE:
-		sub	bx, bp
-		test	di, 1
-		jz	short loc_2FF9
-		jmp	loc_308E
-; ---------------------------------------------------------------------------
-
-loc_2FF9:
-		xor	dl, dl
-		test	dh, 1
-		jnz	short loc_3042
-		mov	byte ptr cs:loc_3017+1,	al
-		mov	byte ptr cs:loc_302C+1,	ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	byte ptr cs:loc_3029+2,	al
-		nop
-
-loc_3012:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-
-loc_3017:
-		and	al, 11h
-		xor	dh, al
-		or	al, dl
-		stosw
-		mov	dl, dh
-		dec	ch
-		jnz	short loc_3012
-		mov	es:[di], dl
-		mov	dl, ch
-
-loc_3029:
-		add	di, 50h	; 'P'
-
-loc_302C:
-		mov	ch, 11h
-		dec	bx
-		jnz	short loc_3012
-		or	bp, bp
-		jnz	short loc_3038
-		jmp	loc_313A
-; ---------------------------------------------------------------------------
-
-loc_3038:
-		sub	di, 7D00h
-		mov	bx, bp
-		xor	bp, bp
-		jmp	short loc_3012
-; ---------------------------------------------------------------------------
-
-loc_3042:
-		mov	byte ptr cs:loc_305D+1,	al
-		mov	byte ptr cs:loc_3078+1,	ch
-		mov	al, 50h	; 'P'
-		sub	al, dh
-		mov	byte ptr cs:loc_3075+2,	al
-		nop
-
-loc_3054:
-		or	ch, ch
-		jz	short loc_306A
-
-loc_3058:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-
-loc_305D:
-		and	al, 11h
-		xor	dh, al
-		or	al, dl
-		stosw
-		mov	dl, dh
-		dec	ch
-		jnz	short loc_3058
-
-loc_306A:
-		lodsb
-		xor	ah, ah
-		ror	ax, cl
-		or	al, dl
-		stosw
-		dec	di
-		mov	dl, ch
-
-loc_3075:
-		add	di, 50h	; 'P'
-
-loc_3078:
-		mov	ch, 11h
-		dec	bx
-		jnz	short loc_3054
-		or	bp, bp
-		jnz	short loc_3084
-		jmp	loc_313A
-; ---------------------------------------------------------------------------
-
-loc_3084:
-		sub	di, 7D00h
-		mov	bx, bp
-		xor	bp, bp
-		jmp	short loc_3054
-; ---------------------------------------------------------------------------
-
-loc_308E:
-		dec	di
-		test	dh, 1
-		jnz	short loc_30EA
-		mov	byte ptr cs:loc_30BD+1,	al
-		dec	ch
-		mov	byte ptr cs:loc_30D7+1,	ch
-		mov	al, 4Eh	; 'N'
-		sub	al, dh
-		mov	byte ptr cs:loc_30D4+2,	al
-		nop
-
-loc_30A8:
-		lodsb
-		xor	ah, ah
-		ror	ax, cl
-		mov	dl, ah
-		xchg	ah, al
-		xor	al, al
-		stosw
-		or	ch, ch
-		jz	short loc_30CA
-
-loc_30B8:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-
-loc_30BD:
-		and	al, 11h
-		xor	dh, al
-		or	al, dl
-		stosw
-		mov	dl, dh
-		dec	ch
-		jnz	short loc_30B8
-
-loc_30CA:
-		lodsb
-		xor	ah, ah
-		ror	ax, cl
-		or	al, dl
-		stosw
-		mov	dl, ch
-
-loc_30D4:
-		add	di, 50h	; 'P'
-
-loc_30D7:
-		mov	ch, 11h
-		dec	bx
-		jnz	short loc_30A8
-		or	bp, bp
-		jz	short loc_313A
-		sub	di, 7D00h
-		mov	bx, bp
-		xor	bp, bp
-		jmp	short loc_30A8
-; ---------------------------------------------------------------------------
-
-loc_30EA:
-		mov	cs:byte_3112, al
-		mov	cs:byte_3127, ch
-		mov	al, 4Fh	; 'O'
-		sub	al, dh
-		mov	cs:byte_3125, al
-		nop
-
-loc_30FC:
-		lodsb
-		xor	ah, ah
-		ror	ax, cl
-		mov	dl, ah
-		xchg	ah, al
-		xor	al, al
-		stosw
-		or	ch, ch
-		jz	short loc_311E
-
-loc_310C:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-; ---------------------------------------------------------------------------
-		db 24h
-byte_3112	db 11h
-; ---------------------------------------------------------------------------
-		xor	dh, al
-		or	al, dl
-		stosw
-		mov	dl, dh
-		dec	ch
-		jnz	short loc_310C
-
-loc_311E:
-		mov	es:[di], dl
-		mov	dl, ch
-; ---------------------------------------------------------------------------
-		db 83h,	0C7h
-byte_3125	db 50h
-		db 0B5h
-byte_3127	db 11h
-; ---------------------------------------------------------------------------
-		dec	bx
-		jnz	short loc_30FC
-		or	bp, bp
-		jz	short loc_313A
-		sub	di, 7D00h
-		mov	bx, bp
-		xor	bp, bp
-		jmp	short loc_30FC
-; ---------------------------------------------------------------------------
-		nop
-
-loc_313A:
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	0Ah
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_roll_put_1plane.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29593,7 +29303,7 @@ loc_111AF:
 		push	si
 		push	word_22D4C
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		pop	di
 		pop	si
 		pop	bp
@@ -30247,7 +29957,7 @@ loc_11712:
 		add	bx, bx
 		push	word ptr [bx+52DCh]
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		mov	byte ptr [si+2BF5h], 0
 		jmp	short loc_1175C
 ; ---------------------------------------------------------------------------
@@ -34913,7 +34623,7 @@ loc_13A4B:
 		push	si
 		push	large 940000h
 		push	0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		jmp	short loc_13AB8
 ; ---------------------------------------------------------------------------
 
@@ -35437,7 +35147,7 @@ var_2		= word ptr -2
 		push	word_24E7E
 		push	word_2064E
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		jmp	short loc_13F2B
 ; ---------------------------------------------------------------------------
 
@@ -35928,7 +35638,7 @@ loc_142E1:
 		push	si
 		push	large 880000h
 		push	0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		inc	word_2065A
 		jmp	loc_143E1
 ; ---------------------------------------------------------------------------
@@ -35988,7 +35698,7 @@ loc_1438D:
 		push	si
 		push	large 880000h
 		push	0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		jmp	short loc_143E1
 ; ---------------------------------------------------------------------------
 
@@ -36309,7 +36019,7 @@ loc_14628:
 		push	si
 		push	word_2064E
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		cmp	word_2065A, 960h
 		jl	short loc_14699
 		mov	byte_2066A, 1
@@ -37602,7 +37312,7 @@ loc_150D1:
 		push	[bp+var_4]
 		push	large 930000h
 		push	0FFC1h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 
 loc_150EA:
 					; sub_14F16+19Dj
@@ -42366,7 +42076,7 @@ loc_178C8:
 		add	ax, [bx+12h]
 		push	ax
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		jmp	short loc_17964
 ; ---------------------------------------------------------------------------
 
@@ -46637,7 +46347,7 @@ loc_19F72:
 		push	si
 		push	word_2064E
 		push	large 0FFC0h
-		call	far ptr	loc_2F80
+		call	super_roll_put_1plane
 		mov	byte_2066B, 0
 		jmp	short loc_19FAC
 ; ---------------------------------------------------------------------------
