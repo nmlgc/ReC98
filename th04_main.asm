@@ -3918,43 +3918,7 @@ _abort		endp
 		retf
 
 include libs/BorlandC/atexit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl registerbgidriver(void (*driver)(void))
-_registerbgidriver proc	near
-					; seg000:4A5Cp	...
-
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		nop
-		push	cs
-		call	near ptr _farfree
-		pop	cx
-		pop	cx
-		pop	di
-_registerbgidriver endp	; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4320	proc far
-		pop	si
-		pop	bp
-		retf
-sub_4320	endp ; sp-analysis failed
-
+include libs/BorlandC/del.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3972,9 +3936,7 @@ arg_2		= word ptr  8
 		push	di
 		push	[bp+arg_2]
 		push	[bp+font]
-		nop
-		push	cs		; driver
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		pop	di
@@ -4316,9 +4278,7 @@ byte_49DC	db 6, 0, 3, 0, 26h, 0, 2 dup(0FFh), 7, 0, 2Eh, 0, 3Ah
 		jz	short loc_4A63
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_4A67
@@ -6666,9 +6626,7 @@ byte_68C9	db 6, 0, 3, 0, 26h, 0, 2 dup(0FFh), 7, 0, 2Eh, 0, 3Ah
 		jz	short loc_6950
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_6954
@@ -6934,9 +6892,7 @@ arg_4		= byte ptr  0Ah
 		jz	short loc_6B84
 		push	word ptr [bp+arg_0+2]
 		push	word ptr [bp+arg_0]
-		nop
-		push	cs		; driver
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 
@@ -12803,9 +12759,7 @@ loc_979E:
 		jz	short loc_97B1
 		push	word ptr [bp+font+2]
 		push	word ptr [bp+font]
-		nop
-		push	cs		; driver
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 
 loc_97AF:
 		pop	cx
@@ -13060,9 +13014,7 @@ arg_4		= word ptr  0Ah
 		jz	short loc_9906
 		push	[bp+arg_0+2]
 		push	[bp+arg_0]
-		nop
-		push	cs		; driver
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 
@@ -14119,9 +14071,7 @@ unknown_libname_2:			; BCC v4.x/5.x DOS runtime
 		jz	short loc_A468
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A46C
@@ -14184,9 +14134,7 @@ unknown_libname_3:			; BCC v4.x/5.x DOS runtime
 		jz	short loc_A4EA
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A4EE
@@ -14232,9 +14180,7 @@ loc_A4EE:
 		jz	short loc_A537
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A53B
@@ -14375,9 +14321,7 @@ byte_A65A	db 0E2h, 0FFh, 52h, 0Bh
 		jz	short loc_A6E8
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A6EC
@@ -14423,9 +14367,7 @@ loc_A6EC:
 		jz	short loc_A735
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A739
@@ -14471,9 +14413,7 @@ loc_A739:
 		jz	short loc_A782
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	_registerbgidriver
+		nopcall	@$bdele$qnv
 		pop	cx
 		pop	cx
 		jmp	short loc_A786

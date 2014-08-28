@@ -19619,7 +19619,7 @@ loc_200F7:
 		jz	short loc_2010A
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 
@@ -20106,7 +20106,7 @@ arg_4		= byte ptr  0Ah
 		jz	short loc_20487
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 

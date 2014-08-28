@@ -24645,7 +24645,7 @@ loc_20A56:
 		jz	short loc_20A69
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	far ptr	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 
@@ -25134,7 +25134,7 @@ arg_4		= byte ptr  0Ah
 		jz	short loc_20DE6
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	far ptr	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 

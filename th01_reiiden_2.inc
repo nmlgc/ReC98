@@ -48159,7 +48159,7 @@ loc_340BA:
 		jz	short loc_340CD
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 
@@ -48644,7 +48644,7 @@ arg_4		= byte ptr  0Ah
 		jz	short loc_3444A
 		push	word ptr [bp+driver+2]
 		push	word ptr [bp+driver] ; driver
-		call	_registerbgidriver
+		call	@$bdele$qnv
 		pop	cx
 		pop	cx
 
