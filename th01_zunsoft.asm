@@ -595,14 +595,14 @@ loc_7AE:
 		mov	al, ds:2873h
 		cbw
 		push	ax
-		call	sub_E9C
+		call	super_put_8
 		push	140h
 		push	0C0h
 		mov	al, ds:2873h
 		cbw
 		inc	ax
 		push	ax
-		call	sub_E9C
+		call	super_put_8
 
 loc_7CB:
 		pop	bp
@@ -751,142 +751,7 @@ include libs/master.lib/dos_ropen.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_entry_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E9C		proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		mov	bp, ax
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		shr	cx, 3
-		add	bp, cx
-		shl	bx, 1
-		mov	ax, [bx+2DC6h]
-		xor	si, si
-		mov	ds, word ptr [bx+29C6h]
-		mov	bl, ah
-		xor	bh, bh
-		mov	dx, 50h
-		sub	dl, ah
-		mov	ah, al
-		mov	cx, 0A800h
-		mov	es, cx
-		assume es:nothing
-		mov	al, 0C0h
-		out	7Ch, al
-		mov	al, 0
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_F18
-		mov	al, 0CEh
-		out	7Ch, al
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_F18
-		mov	al, 0CDh
-		out	7Ch, al
-		call	sub_F18
-		mov	al, 0CBh
-		out	7Ch, al
-		call	sub_F18
-		mov	al, 0C7h
-		out	7Ch, al
-		call	sub_F18
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retn	6
-sub_E9C		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F18		proc near
-		mov	di, bp
-		mov	al, ah
-		test	di, 1
-		jnz	short loc_F44
-		shr	bx, 1
-		jb	short loc_F34
-
-loc_F26:
-		mov	cx, bx
-		rep movsw
-		add	di, dx
-		dec	al
-		jnz	short loc_F26
-		shl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F34:
-		mov	cx, bx
-		rep movsw
-		movsb
-		add	di, dx
-		dec	al
-		jnz	short loc_F34
-		stc
-		rcl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F44:
-		shr	bx, 1
-		jb	short loc_F58
-
-loc_F48:
-		mov	cx, bx
-		dec	cx
-		movsb
-		rep movsw
-		movsb
-		add	di, dx
-		dec	al
-		jnz	short loc_F48
-		shl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-
-loc_F58:
-		mov	cx, bx
-		movsb
-		rep movsw
-		add	di, dx
-		dec	al
-		jnz	short loc_F58
-		stc
-		rcl	bx, 1
-		retn
-sub_F18		endp
-
+include libs/master.lib/super_put_8.asm
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_at.asm
 

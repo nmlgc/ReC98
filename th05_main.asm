@@ -4061,143 +4061,7 @@ locret_40E5:
 		retf
 sub_40CE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_40E6	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		mov	bp, ax
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		shr	cx, 3
-		add	bp, cx
-		shl	bx, 1
-		mov	ax, [bx+2A9Eh]
-		xor	si, si
-		mov	ds, word ptr [bx+269Eh]
-		mov	bl, ah
-		xor	bh, bh
-		mov	dx, 50h	; 'P'
-		sub	dl, ah
-		mov	ah, al
-		mov	cx, 0A800h
-		mov	es, cx
-		assume es:nothing
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	al, 0
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_4162
-		mov	al, 0CEh ; 'Î'
-		out	7Ch, al
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_4162
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	sub_4162
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	sub_4162
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	sub_4162
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_40E6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_4162	proc near
-		mov	di, bp
-		mov	al, ah
-		test	di, 1
-		jnz	short loc_418E
-		shr	bx, 1
-		jb	short loc_417E
-
-loc_4170:
-		mov	cx, bx
-		rep movsw
-		add	di, dx
-		dec	al
-		jnz	short loc_4170
-		shl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_417E:
-		mov	cx, bx
-		rep movsw
-		movsb
-		add	di, dx
-		dec	al
-		jnz	short loc_417E
-		stc
-		rcl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_418E:
-		shr	bx, 1
-		jb	short loc_41A2
-
-loc_4192:
-		mov	cx, bx
-		dec	cx
-		movsb
-		rep movsw
-		movsb
-		add	di, dx
-		dec	al
-		jnz	short loc_4192
-		shl	bx, 1
-		retn
-; ---------------------------------------------------------------------------
-
-loc_41A2:
-		mov	cx, bx
-		movsb
-		rep movsw
-		add	di, dx
-		dec	al
-		jnz	short loc_41A2
-		stc
-		rcl	bx, 1
-		retn
-sub_4162	endp
-
-; ---------------------------------------------------------------------------
+include libs/master.lib/super_put_8.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29199,7 +29063,7 @@ loc_1115E:
 		push	si
 		push	word ptr [bp-2]
 		push	di
-		call	sub_40E6
+		call	super_put_8
 		inc	word ptr [bp-4]
 		add	si, 40h	; '@'
 		inc	di
