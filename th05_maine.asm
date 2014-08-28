@@ -521,100 +521,7 @@ include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D36		proc far
-					; sub_DFEC+194P
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		test	ax, ax
-		jz	short loc_DBC
-		mov	si, ax
-		mov	[bp+var_2], ax
-		mov	di, 0
-
-loc_D4B:
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_DB1
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_DB1:
-		inc	di
-		cmp	si, di
-		jnb	short loc_D4B
-		pop	di
-		pop	si
-		leave
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_DBC:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	grcg_pset
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_D36		endp
-
+include libs/master.lib/grcg_circlefill.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21137,7 +21044,7 @@ loc_E0A6:
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	10h
-		call	sub_D36
+		call	grcg_circlefill
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -21195,7 +21102,7 @@ loc_E161:
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
-		call	sub_D36
+		call	grcg_circlefill
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al

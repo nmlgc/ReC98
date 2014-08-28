@@ -530,99 +530,7 @@ sub_FA0		endp
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_114C	proc far
-					; sub_E2C3+114P ...
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		test	ax, ax
-		jz	short loc_11D2
-		mov	si, ax
-		mov	[bp+var_2], ax
-		mov	di, 0
-
-loc_1161:
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_11C7
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_11C7:
-		inc	di
-		cmp	si, di
-		jnb	short loc_1161
-		pop	di
-		pop	si
-		leave
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_11D2:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	grcg_pset
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_114C	endp
+include libs/master.lib/grcg_circlefill.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_11EC
@@ -23322,7 +23230,7 @@ loc_E356:
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	word ptr [si+14h]
-		call	sub_114C
+		call	grcg_circlefill
 		push	[bp+var_8]
 		push	[bp+var_6]
 		mov	ax, di
@@ -23363,7 +23271,7 @@ loc_E3B1:
 		mov	dx, [si+14h]
 		sub	dx, ax
 		push	dx
-		call	sub_114C
+		call	grcg_circlefill
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -23400,7 +23308,7 @@ loc_E416:
 		mov	ax, [si+14h]
 		sub	ax, di
 		push	ax
-		call	sub_114C
+		call	grcg_circlefill
 		push	[bp+var_8]
 		push	[bp+var_6]
 		push	[bp+var_A]
@@ -24105,7 +24013,7 @@ loc_E98E:
 		lea	ax, [di+20h]
 		push	ax
 		push	dx
-		call	sub_114C
+		call	grcg_circlefill
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -24133,7 +24041,7 @@ loc_E9DD:
 		push	si
 		push	di
 		push	10h
-		call	sub_114C
+		call	grcg_circlefill
 		jmp	short loc_EA55
 ; ---------------------------------------------------------------------------
 
@@ -24159,7 +24067,7 @@ loc_EA0D:
 		lea	ax, [di+20h]
 		push	ax
 		push	[bp+var_2]
-		call	sub_114C
+		call	grcg_circlefill
 		push	si
 		push	di
 		push	80h ; '€'
@@ -30526,7 +30434,7 @@ loc_11BD1:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	word ptr [si+10h]
-		call	sub_114C
+		call	grcg_circlefill
 		cmp	byte ptr [si], 1
 		jz	short loc_11C16
 		mov	ah, [si+18h]

@@ -479,99 +479,7 @@ include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C20		proc far
-					; sub_1566F+20BP ...
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		test	ax, ax
-		jz	short loc_CA6
-		mov	si, ax
-		mov	[bp+var_2], ax
-		mov	di, 0
-
-loc_C35:
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_C9B
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_C9B:
-		inc	di
-		cmp	si, di
-		jnb	short loc_C35
-		pop	di
-		pop	si
-		leave
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_CA6:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	grcg_pset
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_C20		endp
+include libs/master.lib/grcg_circlefill.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_CC0
@@ -38585,7 +38493,7 @@ loc_15721:
 		mov	al, es:[bx+9]
 		mov	ah, 0
 		push	ax
-		call	sub_C20
+		call	grcg_circlefill
 		call	grcg_off
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+9]
@@ -38695,7 +38603,7 @@ loc_15849:
 		push	word ptr es:[bx+2]
 		push	word ptr es:[bx+4]
 		push	word ptr es:[bx+6]
-		call	sub_C20
+		call	grcg_circlefill
 		call	grcg_off
 		push	large 0C00000h
 		call	grcg_setcolor
@@ -38705,7 +38613,7 @@ loc_15849:
 		mov	al, es:[bx+9]
 		mov	ah, 0
 		push	ax
-		call	sub_C20
+		call	grcg_circlefill
 		call	grcg_off
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+9]
@@ -38927,7 +38835,7 @@ loc_15A54:
 		add	ax, 40h	; '@'
 		push	ax
 		push	18h
-		call	sub_C20
+		call	grcg_circlefill
 		call	grcg_off
 
 loc_15A8A:
@@ -42785,7 +42693,7 @@ loc_17B24:
 		mov	al, byte_26CC2
 		mov	ah, 0
 		push	ax
-		call	sub_C20
+		call	grcg_circlefill
 		push	0C0h ; 'À'
 		push	si
 		call	grcg_setcolor
@@ -47497,7 +47405,7 @@ loc_1A54E:
 		call	grcg_setcolor
 		push	large 0E00090h
 		push	si
-		call	sub_C20
+		call	grcg_circlefill
 		push	large 0C0000Dh
 		call	grcg_setcolor
 		push	large 0E00090h
@@ -47524,7 +47432,7 @@ loc_1A54E:
 		call	grcg_setcolor
 		push	large 0E00090h
 		push	si
-		call	sub_C20
+		call	grcg_circlefill
 		push	large 0E00090h
 		mov	ax, si
 		mov	bx, 32h	; '2'

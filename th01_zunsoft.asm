@@ -254,7 +254,7 @@ loc_50C:
 		shl	bx, 2
 		push	word ptr [bx+287Ah]
 		push	60h
-		call	sub_1588
+		call	grcg_circlefill
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+2952h]
@@ -1175,99 +1175,7 @@ include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1588	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		test	ax, ax
-		jz	short loc_160A
-		mov	si, ax
-		mov	[bp+var_2], ax
-		mov	di, 0
-
-loc_159D:
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_15FF
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_15FF:
-		inc	di
-		cmp	si, di
-		jnb	short loc_159D
-		pop	di
-		pop	si
-		leave
-		retn	6
-; ---------------------------------------------------------------------------
-
-loc_160A:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	grcg_pset
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_1588	endp
-
+include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================

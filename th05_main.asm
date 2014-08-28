@@ -310,99 +310,7 @@ include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_100E	proc far
-					; sub_CA7B+95P	...
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		test	ax, ax
-		jz	short loc_1094
-		mov	si, ax
-		mov	[bp+var_2], ax
-		mov	di, 0
-
-loc_1023:
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, si
-		push	ax
-		add	bx, si
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_1089
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	bx, [bp+arg_4]
-		mov	ax, bx
-		sub	ax, di
-		push	ax
-		add	bx, di
-		push	bx
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_1089:
-		inc	di
-		cmp	si, di
-		jnb	short loc_1023
-		pop	di
-		pop	si
-		leave
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_1094:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	grcg_pset
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_100E	endp
+include libs/master.lib/grcg_circlefill.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_10AE
@@ -19477,7 +19385,7 @@ loc_C8E4:
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	word ptr [si+6]
-		call	sub_100E
+		call	grcg_circlefill
 		dec	word ptr [si+6]
 		cmp	word ptr [si+6], 4
 		jge	short loc_C989
@@ -19672,7 +19580,7 @@ loc_CAE7:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_100E
+		call	grcg_circlefill
 		sub	word ptr [si+6], 10h
 		cmp	word ptr [si+6], 4
 		jge	short loc_CB23
@@ -26784,7 +26692,7 @@ loc_FD96:
 		mov	al, [bp+var_A]
 		mov	ah, 0
 		push	ax
-		call	sub_100E
+		call	grcg_circlefill
 		mov	al, [bp+var_A]
 		add	al, 0FEh ; 'þ'
 		mov	[bp+var_A], al
@@ -26826,7 +26734,7 @@ loc_FDF4:
 		mov	al, [bp+var_A]
 		mov	ah, 0
 		push	ax
-		call	sub_100E
+		call	grcg_circlefill
 
 loc_FE11:
 		cmp	byte ptr [si+0Bh], 1
@@ -28592,7 +28500,7 @@ loc_10BFD:
 		push	ax
 		push	di
 		push	word ptr [si+10h]
-		call	sub_100E
+		call	grcg_circlefill
 
 loc_10C1F:
 		mov	dx, 7Ch	; '|'
@@ -29199,7 +29107,7 @@ loc_11080:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_100E
+		call	grcg_circlefill
 		jmp	short loc_110D4
 ; ---------------------------------------------------------------------------
 
