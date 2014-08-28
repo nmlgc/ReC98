@@ -20803,7 +20803,7 @@ loc_1E801:
 		cmp	byte_266D4, 6
 		jnz	loc_1E8A4
 		push	large 800100h
-		call	sub_2B4E
+		call	super_clean
 		call	sub_D6EB
 		cmp	byte_2D01E, 0
 		jnz	short loc_1E89B

@@ -2767,38 +2767,7 @@ sub_2C40	endp
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2F56	proc far
-					; sub_199B3+10P ...
-		push	si
-		mov	si, sp
-		push	di
-		mov	di, ss:[si+6]
-		cmp	di, super_patnum
-		jl	short loc_2F69
-		mov	di, super_patnum
-		dec	di
-
-loc_2F69:
-		mov	si, ss:[si+8]
-		cmp	si, di
-		ja	short loc_2F7B
-
-loc_2F71:
-		push	si
-		call	super_cancel_pat
-		inc	si
-		cmp	si, di
-		jbe	short loc_2F71
-
-loc_2F7B:
-		pop	di
-		pop	si
-		retf	4
-sub_2F56	endp
+include libs/master.lib/super_clean.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -40559,7 +40528,7 @@ sub_1696B	proc far
 		mov	byte_2287E, 2
 		call	sub_12DE0
 		push	large 8000C0h
-		call	sub_2F56
+		call	super_clean
 		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aStage5b1_bft ; "stage5b1.bft"
@@ -46105,7 +46074,7 @@ sub_199B3	proc far
 		call	sub_1A6C5
 		call	sub_12DE0
 		push	large 8000C0h
-		call	sub_2F56
+		call	super_clean
 		push	ds
 		push	offset aMima_bft ; "mima.bft"
 		call	super_entry_bfnt
@@ -46115,7 +46084,7 @@ sub_199B3	proc far
 		call	sub_F618
 		call	sub_1A529
 		push	large 8000C0h
-		call	sub_2F56
+		call	super_clean
 		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima1_bft ; "mima1.bft"
@@ -46410,7 +46379,7 @@ sub_19C8D	proc near
 
 loc_19D48:
 		push	large 8000C0h
-		call	sub_2F56
+		call	super_clean
 		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima2_bft ; "mima2.bft"
@@ -47638,7 +47607,7 @@ sub_1A7D5	proc far
 		call	sub_1A6C5
 		call	sub_12DE0
 		push	large 8000C0h
-		call	sub_2F56
+		call	super_clean
 		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aMima_bft_0 ; "mima.bft"
@@ -47651,7 +47620,7 @@ sub_1A7D5	proc far
 		push	0
 		call	sub_1310B
 		push	large 8001FFh
-		call	sub_2F56
+		call	super_clean
 		mov	super_patnum, 80h	; '€'
 		push	ds
 		push	offset aStage3_b_bft ; "stage3_b.bft"

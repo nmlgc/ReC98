@@ -2804,37 +2804,7 @@ loc_2C97:
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2DF0	proc far
-		push	si
-		mov	si, sp
-		push	di
-		mov	di, ss:[si+6]
-		cmp	di, super_patnum
-		jl	short loc_2E03
-		mov	di, super_patnum
-		dec	di
-
-loc_2E03:
-		mov	si, ss:[si+8]
-		cmp	si, di
-		ja	short loc_2E15
-
-loc_2E0B:
-		push	si
-		call	super_cancel_pat
-		inc	si
-		cmp	si, di
-		jbe	short loc_2E0B
-
-loc_2E15:
-		pop	di
-		pop	si
-		retf	4
-sub_2DF0	endp
+include libs/master.lib/super_clean.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -16589,7 +16559,7 @@ sub_B609	proc near
 		call	sub_BEA4
 		call	sub_BB82
 		push	large 0B40100h
-		call	sub_2DF0
+		call	super_clean
 		mov	si, 1
 		jmp	short loc_B630
 ; ---------------------------------------------------------------------------
@@ -24851,7 +24821,7 @@ loc_F07C:
 		cmp	byte_25FEA, 6
 		jz	short loc_F091
 		push	large 0B40140h
-		call	sub_2DF0
+		call	super_clean
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
@@ -25383,7 +25353,7 @@ sub_F4DD	proc near
 		mov	bp, sp
 		push	si
 		push	large 240140h
-		call	sub_2DF0
+		call	super_clean
 		push	ds
 		push	offset aSt06_16_bft ; "st06_16.bft"
 		call	super_entry_bfnt

@@ -2607,38 +2607,7 @@ loc_29F5:
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B4E	proc far
-					; sub_D1BC+2E2P ...
-		push	si
-		mov	si, sp
-		push	di
-		mov	di, ss:[si+6]
-		cmp	di, super_patnum
-		jl	short loc_2B61
-		mov	di, super_patnum
-		dec	di
-
-loc_2B61:
-		mov	si, ss:[si+8]
-		cmp	si, di
-		ja	short loc_2B73
-
-loc_2B69:
-		push	si
-		call	super_cancel_pat
-		inc	si
-		cmp	si, di
-		jbe	short loc_2B69
-
-loc_2B73:
-		pop	di
-		pop	si
-		retf	4
-sub_2B4E	endp
+include libs/master.lib/super_clean.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -16364,7 +16333,7 @@ sub_B29E	proc near
 		call	sub_B79E
 		call	sub_B9BB
 		push	large 800100h
-		call	sub_2B4E
+		call	super_clean
 		mov	si, 8
 		jmp	short loc_B2C7
 ; ---------------------------------------------------------------------------
@@ -21220,7 +21189,7 @@ loc_D47B:
 
 loc_D498:
 		push	large 800100h	; jumptable 0000D1EC case 99
-		call	sub_2B4E
+		call	super_clean
 		jmp	short loc_D508
 ; ---------------------------------------------------------------------------
 
