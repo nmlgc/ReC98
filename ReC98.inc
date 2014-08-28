@@ -8,6 +8,7 @@ include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc
 include libs/master.lib/pf.inc
+include libs/master.lib/clip.inc
 
 ; Manually put dseg into DGROUP if we're not tiny. The alternative, renaming
 ; dseg to _DATA, unfortunately doesn't work because that segment is enforced

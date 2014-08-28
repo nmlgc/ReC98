@@ -41,85 +41,7 @@ include libs/master.lib/bopenr.asm
 include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_778		proc near
-		or	bl, bl
-		jz	short loc_7B4
-		test	bl, 3
-		jz	short loc_7B8
-		test	bl, 1
-		jz	short loc_78C
-		mov	ax, ClipXL
-		jmp	short loc_78F
-; ---------------------------------------------------------------------------
-		nop
-
-loc_78C:
-		mov	ax, ClipXR
-
-loc_78F:
-		sub	cx, si
-		jz	short loc_7B4
-		mov	dx, di
-		sub	dx, bp
-		mov	di, ax
-		sub	ax, si
-		imul	dx
-		idiv	cx
-		add	ax, bp
-		mov	cx, di
-		mov	di, ax
-		xor	ax, ax
-		or	di, di
-		js	short loc_7C2
-		mov	ax, ClipYH
-		cmp	di, ax
-		jg	short loc_7C2
-
-loc_7B2:
-		xor	bl, bl
-
-loc_7B4:
-		or	bx, bx
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_7B8:
-		xor	ax, ax
-		test	bl, 4
-		jz	short loc_7C2
-		mov	ax, ClipYH
-
-loc_7C2:
-		sub	di, bp
-		jz	short loc_7B4
-		mov	dx, cx
-		sub	dx, si
-		mov	cx, ax
-		sub	ax, bp
-		imul	dx
-		idiv	di
-		add	ax, si
-		mov	di, cx
-		mov	cx, ax
-		cmp	ClipXL, cx
-		jle	short loc_7E2
-		mov	bl, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_7E2:
-		cmp	cx, ClipXR
-		jle	short loc_7B2
-		mov	bl, 2
-		retn
-sub_778		endp
-
+include libs/master.lib/cutline.asm
 include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
@@ -1929,12 +1851,12 @@ loc_1772:
 		jnz	short loc_17DD
 		or	bx, bx
 		jz	short loc_178A
-		call	sub_778
+		call	cutline
 		jz	short loc_178A
 		xchg	bh, bl
 		xchg	cx, si
 		xchg	di, bp
-		call	sub_778
+		call	cutline
 		jnz	short loc_17DD
 
 loc_178A:

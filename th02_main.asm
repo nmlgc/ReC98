@@ -40,85 +40,7 @@ include libs/master.lib/bopenr.asm
 include libs/master.lib/bread.asm
 include libs/master.lib/bseek.asm
 include libs/master.lib/bseek_.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_66A		proc near
-		or	bl, bl
-		jz	short loc_6A6
-		test	bl, 3
-		jz	short loc_6AA
-		test	bl, 1
-		jz	short loc_67E
-		mov	ax, ClipXL
-		jmp	short loc_681
-; ---------------------------------------------------------------------------
-		nop
-
-loc_67E:
-		mov	ax, ClipXR
-
-loc_681:
-		sub	cx, si
-		jz	short loc_6A6
-		mov	dx, di
-		sub	dx, bp
-		mov	di, ax
-		sub	ax, si
-		imul	dx
-		idiv	cx
-		add	ax, bp
-		mov	cx, di
-		mov	di, ax
-		xor	ax, ax
-		or	di, di
-		js	short loc_6B4
-		mov	ax, ClipYH
-		cmp	di, ax
-		jg	short loc_6B4
-
-loc_6A4:
-		xor	bl, bl
-
-loc_6A6:
-		or	bx, bx
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_6AA:
-		xor	ax, ax
-		test	bl, 4
-		jz	short loc_6B4
-		mov	ax, ClipYH
-
-loc_6B4:
-		sub	di, bp
-		jz	short loc_6A6
-		mov	dx, cx
-		sub	dx, si
-		mov	cx, ax
-		sub	ax, bp
-		imul	dx
-		idiv	di
-		add	ax, si
-		mov	di, cx
-		mov	cx, ax
-		cmp	ClipXL, cx
-		jle	short loc_6D4
-		mov	bl, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_6D4:
-		cmp	cx, ClipXR
-		jle	short loc_6A4
-		mov	bl, 2
-		retn
-sub_66A		endp
-
+include libs/master.lib/cutline.asm
 include libs/master.lib/dos_axdx.asm
 
 loc_6F6:
@@ -1375,12 +1297,12 @@ loc_10F8:
 		jnz	short loc_1163
 		or	bx, bx
 		jz	short loc_1110
-		call	sub_66A
+		call	cutline
 		jz	short loc_1110
 		xchg	bh, bl
 		xchg	cx, si
 		xchg	di, bp
-		call	sub_66A
+		call	cutline
 		jnz	short loc_1163
 
 loc_1110:
