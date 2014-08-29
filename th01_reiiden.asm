@@ -9509,49 +9509,7 @@ sub_4275	proc far
 		retf
 sub_4275	endp
 
-; ---------------------------------------------------------------------------
-
-unknown_libname_2:			; BCC v4.x/5.x DOS runtime
-		pushf
-		pop	bx
-		mov	ax, 0FFFh
-		and	ax, bx
-		push	ax
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		cmp	ax, 0F000h
-		mov	word_36984, 0
-		jz	short locret_42DA
-		or	bx, 0F000h
-		push	bx
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		mov	word_36984, 2
-		jz	short locret_42DA
-		mov	edx, esp
-		and	sp, 0FFFCh
-		pushfd
-		pop	eax
-		mov	ecx, eax
-		xor	eax, 40000h
-		push	eax
-		popfd
-		pushfd
-		pop	eax
-		xor	eax, ecx
-		mov	word_36984, 3
-		mov	esp, edx
-		jz	short locret_42DA
-		mov	word_36984, 4
-
-locret_42DA:
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 
@@ -15781,7 +15739,7 @@ arg_C		= dword	ptr  24h
 		pushf
 		pop	ax
 		mov	word ptr [bp+_src+2], ax
-		cmp	byte ptr word_36984, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_853E
 		jmp	loc_85F4
 ; ---------------------------------------------------------------------------
@@ -16034,7 +15992,7 @@ loc_87F7:
 ; ---------------------------------------------------------------------------
 
 loc_8817:
-		cmp	byte ptr word_36984, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_8821
 		jmp	loc_8901
 ; ---------------------------------------------------------------------------
@@ -55971,7 +55929,7 @@ word_36870	dw 0
 		dd    0
 		db    0
 		db    0
-word_36984	dw 0
+include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 dword_369AE	dd 0
@@ -56260,12 +56218,7 @@ InitStart	label byte
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
 include libs/BorlandC/setupio[initdata].asm
-		db    0
-		db  10h
-		db  7Fh	; 
-		db  42h	; B
-		db    0
-		db    0
+include libs/BorlandC/cputype[initdata].asm
 		db    0
 		db  0Fh
 		db 0DDh	; Ý

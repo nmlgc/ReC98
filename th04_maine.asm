@@ -3023,49 +3023,7 @@ __ExceptInit	proc far
 		retf
 __ExceptInit	endp
 
-; ---------------------------------------------------------------------------
-
-unknown_libname_1:			; BCC v4.x/5.x DOS runtime
-		pushf
-		pop	bx
-		mov	ax, 0FFFh
-		and	ax, bx
-		push	ax
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		cmp	ax, 0F000h
-		mov	word_F2C2, 0
-		jz	short locret_44BA
-		or	bx, 0F000h
-		push	bx
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		mov	word_F2C2, 2
-		jz	short locret_44BA
-		mov	edx, esp
-		and	sp, 0FFFCh
-		pushfd
-		pop	eax
-		mov	ecx, eax
-		xor	eax, 40000h
-		push	eax
-		popfd
-		pushfd
-		pop	eax
-		xor	eax, ecx
-		mov	word_F2C2, 3
-		mov	esp, edx
-		jz	short locret_44BA
-		mov	word_F2C2, 4
-
-locret_44BA:
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 include libs/BorlandC/signal.asm
@@ -7101,7 +7059,7 @@ arg_C		= dword	ptr  24h
 		pushf
 		pop	ax
 		mov	word ptr [bp+src+2], ax
-		cmp	byte ptr word_F2C2, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_733F
 		jmp	loc_73F5
 ; ---------------------------------------------------------------------------
@@ -7359,7 +7317,7 @@ loc_75F8:
 
 loc_7618:
 					; _RaiseException+2FDj
-		cmp	byte ptr word_F2C2, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_7622
 		jmp	loc_7702
 ; ---------------------------------------------------------------------------
@@ -21446,7 +21404,7 @@ word_F1AE	dw 0
 		db    0
 		db    0
 		db    0
-word_F2C2	dw 0
+include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 dword_F2EC	dd 0
@@ -21500,12 +21458,7 @@ InitStart	label byte
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
 include libs/BorlandC/setupio[initdata].asm
-		db    0
-		db  10h
-		db  5Fh	; _
-		db  44h	; D
-		db    0
-		db    0
+include libs/BorlandC/cputype[initdata].asm
 		db    0
 		db  0Fh
 		db 0B2h	; ²

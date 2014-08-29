@@ -6100,49 +6100,7 @@ __ExceptInit	proc far
 		retf
 __ExceptInit	endp
 
-; ---------------------------------------------------------------------------
-
-unknown_libname_2:			; BCC v4.x/5.x DOS runtime
-		pushf
-		pop	bx
-		mov	ax, 0FFFh
-		and	ax, bx
-		push	ax
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		cmp	ax, 0F000h
-		mov	word_13C58, 0
-		jz	short locret_2FE5
-		or	bx, 0F000h
-		push	bx
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		mov	word_13C58, 2
-		jz	short locret_2FE5
-		mov	edx, esp
-		and	sp, 0FFFCh
-		pushfd
-		pop	eax
-		mov	ecx, eax
-		xor	eax, 40000h
-		push	eax
-		popfd
-		pushfd
-		pop	eax
-		xor	eax, ecx
-		mov	word_13C58, 3
-		mov	esp, edx
-		jz	short locret_2FE5
-		mov	word_13C58, 4
-
-locret_2FE5:
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 
@@ -12159,7 +12117,7 @@ arg_C		= dword	ptr  24h
 		pushf
 		pop	ax
 		mov	word ptr [bp+_src+2], ax
-		cmp	byte ptr word_13C58, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_6E50
 		jmp	loc_6F06
 ; ---------------------------------------------------------------------------
@@ -12412,7 +12370,7 @@ loc_7109:
 ; ---------------------------------------------------------------------------
 
 loc_7129:
-		cmp	byte ptr word_13C58, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_7133
 		jmp	loc_7213
 ; ---------------------------------------------------------------------------
@@ -39037,7 +38995,7 @@ word_13B44	dw 0
 		dd    0
 		db    0
 		db    0
-word_13C58	dw 0
+include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 dword_13C82	dd 0
@@ -39273,12 +39231,7 @@ InitStart	label byte
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
 include libs/BorlandC/setupio[initdata].asm
-		db    0
-		db  10h
-		db  8Ah	; Š
-		db  2Fh	; /
-		db    0
-		db    0
+include libs/BorlandC/cputype[initdata].asm
 		db    0
 		db  0Fh
 		db  6Bh	; k

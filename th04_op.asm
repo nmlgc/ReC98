@@ -3450,57 +3450,7 @@ __ExceptInit	proc far
 		retf
 __ExceptInit	endp
 
-; ---------------------------------------------------------------------------
-
-unknown_libname_1:			; BCC v4.x/5.x DOS runtime
-		pushf
-		pop	bx
-		mov	ax, 0FFFh
-		and	ax, bx
-		push	ax
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-		cmp	ax, 0F000h
-		mov	word_10C96, 0
-		jz	short locret_4B7A
-		or	bx, 0F000h
-		push	bx
-		popf
-		pushf
-		pop	ax
-		and	ax, 0F000h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4B43	proc near
-		mov	word_10C96, 2
-		jz	short locret_4B7A
-		mov	edx, esp
-		and	sp, 0FFFCh
-		pushfd
-		pop	eax
-		mov	ecx, eax
-		xor	eax, 40000h
-		push	eax
-		popfd
-		pushfd
-		pop	eax
-		xor	eax, ecx
-		mov	word_10C96, 3
-		mov	esp, edx
-		jz	short locret_4B7A
-		mov	word_10C96, 4
-
-locret_4B7A:
-		retn
-sub_4B43	endp
-
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 include libs/BorlandC/signal.asm
@@ -7581,7 +7531,7 @@ arg_C		= dword	ptr  24h
 		pushf
 		pop	ax
 		mov	word ptr [bp+src+2], ax
-		cmp	byte ptr word_10C96, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_79FF
 		jmp	loc_7AB5
 ; ---------------------------------------------------------------------------
@@ -7839,7 +7789,7 @@ loc_7CB8:
 
 loc_7CD8:
 					; _RaiseException+2FDj
-		cmp	byte ptr word_10C96, 3
+		cmp	byte ptr __8086, 3
 		jnb	short loc_7CE2
 		jmp	loc_7DC2
 ; ---------------------------------------------------------------------------
@@ -23016,7 +22966,7 @@ word_10B82	dw 0
 		db    0
 		db    0
 		db    0
-word_10C96	dw 0
+include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 dword_10CC0	dd 0
@@ -23072,12 +23022,7 @@ InitStart	label byte
 		db  20h
 		dd @string@contains$xqnxc ; string::contains(char *)
 include libs/BorlandC/setupio[initdata].asm
-		db    0
-		db  10h
-		db  1Fh
-		db  4Bh	; K
-		db    0
-		db    0
+include libs/BorlandC/cputype[initdata].asm
 		db    0
 		db  0Fh
 		db  72h	; r
