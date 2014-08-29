@@ -2803,7 +2803,7 @@ driver		= byte ptr -4
 		push	ss
 		lea	ax, [bp+driver]
 		push	ax		; driver
-		call	sub_F7BD
+		call	@string@$bdtr$qv
 		add	sp, 10h
 		push	[bp+var_22]
 		nopcall	___ExitExceptBlocks
@@ -4911,413 +4911,7 @@ include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
 include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
-
-		db 52h, 67h
-		dw seg seg000
-		db 87h,	20h, 0FCh, 0FFh, 0Ah dup(0), 0DEh, 0FFh, 2 dup(0)
-		db 5, 3	dup(0),	2 dup(0FFh), 6,	0, 5, 3	dup(0),	0E4h, 63h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; xmsg::xmsg(string const &)
-@xmsg@$bctr$qmx6string proc far
-					; seg003:03FDP	...
-
-var_22		= word ptr -22h
-var_16		= word ptr -16h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 22h
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 63F2h
-		nopcall	___InitExceptBlocks
-		mov	ax, word ptr [bp+arg_0]
-		or	ax, word ptr [bp+arg_0+2]
-		jnz	short loc_6437
-		mov	ax, 4
-		push	ax
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
-		or	ax, dx
-		jz	short loc_6489
-
-loc_6437:
-		mov	ax, 4
-		push	ax
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		or	ax, dx
-		jz	short loc_6479
-		mov	[bp+var_16], 0Eh
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	dx
-		push	[bp+var_4]
-		call	@string@$bctr$qmx6string ; string::string(string &)
-		add	sp, 8
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		mov	[bp+var_16], 6
-
-loc_6479:
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-
-loc_6489:
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		push	[bp+var_22]
-		nopcall	___ExitExceptBlocks
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@xmsg@$bctr$qmx6string endp
-
-; ---------------------------------------------------------------------------
-		dd byte_6752
-		db 87h,	20h, 0FCh, 0FFh, 0Ah dup(0), 0DEh, 0FFh, 2 dup(0)
-		db 5, 3	dup(0),	2 dup(0FFh), 6,	0, 5, 3	dup(0),	0AFh, 64h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; xmsg::xmsg(xmsg const	&)
-@xmsg@$bctr$qmx4xmsg proc far
-
-var_22		= word ptr -22h
-var_16		= word ptr -16h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 22h
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 64BDh
-		nopcall	___InitExceptBlocks
-		mov	ax, word ptr [bp+arg_0]
-		or	ax, word ptr [bp+arg_0+2]
-		jnz	short loc_6502
-		mov	ax, 4
-		push	ax
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
-		or	ax, dx
-		jz	short loc_6558
-
-loc_6502:
-		mov	ax, 4
-		push	ax
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		or	ax, dx
-		jz	short loc_6548
-		mov	[bp+var_16], 0Eh
-		les	bx, [bp+arg_4]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx]
-		push	dx
-		push	[bp+var_4]
-		call	@string@$bctr$qmx6string ; string::string(string &)
-		add	sp, 8
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		mov	[bp+var_16], 6
-
-loc_6548:
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-
-loc_6558:
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		push	[bp+var_22]
-		nopcall	___ExitExceptBlocks
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@xmsg@$bctr$qmx4xmsg endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __far xmsg___xmsg(void (*driver)(void), char)
-@xmsg@$bdtr$qv	proc far
-
-driver		= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		mov	ax, word ptr [bp+driver]
-		or	ax, word ptr [bp+driver+2]
-		jz	short loc_65D8
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		mov	ax, 3
-		push	ax		; char
-		les	bx, [bp+driver]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx] ; driver
-		call	sub_F7BD
-		add	sp, 6
-		test	[bp+arg_4], 1
-		jz	short loc_65D8
-		push	word ptr [bp+driver+2]
-		push	word ptr [bp+driver] ; driver
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-
-loc_65D8:
-					; xmsg::~xmsg(void)+4Bj
-		pop	di
-		pop	si
-		pop	bp
-		retf
-@xmsg@$bdtr$qv	endp
-
-; ---------------------------------------------------------------------------
-		dd byte_671A
-		db 4 dup(0), 0DCh, 65h
-		dw seg seg000
-		db 0E2h, 0FFh
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; xmsg::raise(void)
-@xmsg@raise$qv	proc far
-
-src		= byte ptr -22h
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 22h
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 65E4h
-		nopcall	___InitExceptBlocks
-		xor	ax, ax
-		push	ax		; int
-		push	ax		; int
-		push	ax		; int
-		push	ax		; int
-		mov	ax, 5
-		push	ax		; int
-		mov	ax, seg	seg000
-		push	ax		; int
-		mov	ax, 64D3h
-		push	ax		; int
-		xor	ax, ax
-		push	ax		; int
-		push	ax		; int
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	ss
-		lea	ax, [bp+src]
-		push	ax
-		push	cs
-		call	near ptr @xmsg@$bctr$qmx4xmsg ;	xmsg::xmsg(xmsg	&)
-		add	sp, 8
-		lea	ax, [bp+src]
-		push	ss
-		push	ax		; src
-		push	cs		; int
-		mov	ax, 671Ah
-		push	ax		; int
-		nop
-		push	cs
-		call	near ptr @_ThrowException$qnvt1t1t1uiuiuinuc ; _ThrowException(void *,void *,void *,void *,uint,uint,uint,uchar	*)
-		add	sp, 1Ah
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@xmsg@raise$qv	endp
-
-; ---------------------------------------------------------------------------
-		dd byte_6752
-		db 87h,	20h, 0FCh, 0FFh, 0Ah dup(0), 0DEh, 0FFh, 2 dup(0)
-		db 5, 3	dup(0),	2 dup(0FFh), 6,	0, 5, 3	dup(0),	3Dh, 66h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; xmsg::operator=(xmsg const &)
-@xmsg@$basg$qmx4xmsg proc far
-
-var_22		= word ptr -22h
-var_16		= word ptr -16h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 22h
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 664Bh
-		nopcall	___InitExceptBlocks
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		cmp	dx, word ptr [bp+arg_4+2]
-		jnz	short loc_6684
-		cmp	ax, word ptr [bp+arg_4]
-		jz	short loc_6702
-
-loc_6684:
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		mov	ax, 3
-		push	ax		; char
-		les	bx, [bp+arg_0]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx] ; driver
-		call	sub_F7BD
-		add	sp, 6
-		mov	ax, 4
-		push	ax
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		or	ax, dx
-		jz	short loc_66F2
-		mov	[bp+var_16], 0Eh
-		les	bx, [bp+arg_4]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx]
-		push	dx
-		push	[bp+var_4]
-		call	@string@$bctr$qmx6string ; string::string(string &)
-		add	sp, 8
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		mov	[bp+var_16], 6
-
-loc_66F2:
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-
-loc_6702:
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		push	dx
-		push	ax
-		push	[bp+var_22]
-		nopcall	___ExitExceptBlocks
-		pop	ax
-		pop	dx
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@xmsg@$basg$qmx4xmsg endp
-
-; ---------------------------------------------------------------------------
-byte_671A	db 4, 0, 3, 0, 26h, 0, 2 dup(0FFh), 3, 0, 2Ch, 0, 30h
-		db 0Dh dup(0), 1, 0, 1,	0, 7Eh,	65h
-		dw seg seg000
-		db 5, 0, 34h, 0, 78h, 6Dh, 73h,	67h, 0Eh dup(0)
-byte_6752	db 4, 0, 10h, 20h, 0Ah,	0, 65h,	67h
-					; seg000:663Do
-		dw seg seg000
-aString		db 'string *',0
-		db 4, 0, 3, 0, 26h, 0, 2 dup(0FFh), 3, 0, 2Eh, 0, 32h
-		db 0Dh dup(0), 1, 0, 1,	0, 0Dh,	3
-		dw seg seg003
-		db 5, 0, 36h, 0, 73h, 74h, 72h,	69h, 6Eh, 67h, 0Eh dup(0)
+include libs/BorlandC/xmsg.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23459,8 +23053,8 @@ byte_F711	db 4, 0, 3, 0, 26h, 0, 2 dup(0FFh), 3, 0, 2Ch, 0, 30h
 
 ; Attributes: bp-based frame
 
-; int __cdecl __far sub_F7BD(void (*driver)(void), char)
-sub_F7BD	proc far
+; int __cdecl __far string___string(void (*driver)(void), char)
+@string@$bdtr$qv	proc far
 					; xmsg::~xmsg(void)+3FP ...
 
 var_1E		= word ptr -1Eh
@@ -23521,7 +23115,7 @@ loc_F835:
 		mov	sp, bp
 		pop	bp
 		retf
-sub_F7BD	endp
+@string@$bdtr$qv	endp
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -23588,8 +23182,7 @@ loc_F872:
 		push	ss
 		lea	ax, [bp-4]
 		push	ax
-		push	cs
-		call	near ptr sub_F7BD
+		call	@string@$bdtr$qv
 		add	sp, 6
 		mov	word ptr [bp-1Ah], 6
 		call	@__RefDestructorCount$qv ; __RefDestructorCount(void)
@@ -23679,8 +23272,7 @@ loc_F930:
 		push	ss
 		lea	ax, [bp-4]
 		push	ax
-		push	cs
-		call	near ptr sub_F7BD
+		call	@string@$bdtr$qv
 		add	sp, 6
 		mov	word ptr [bp-1Ah], 6
 		call	@__RefDestructorCount$qv ; __RefDestructorCount(void)
@@ -23771,8 +23363,7 @@ loc_F9EF:
 		push	ss
 		lea	ax, [bp-4]
 		push	ax
-		push	cs
-		call	near ptr sub_F7BD
+		call	@string@$bdtr$qv
 		add	sp, 6
 		mov	word ptr [bp-1Ah], 6
 		call	@__RefDestructorCount$qv ; __RefDestructorCount(void)
