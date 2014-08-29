@@ -6111,9 +6111,7 @@ var_2		= word ptr -2
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 2BBFh
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		xor	ax, ax
 		push	ax		; int
 		push	ax		; int
@@ -6140,9 +6138,7 @@ var_2		= word ptr -2
 		add	sp, 8
 		mov	ax, word_36620
 		mov	[bp+var_2], ax
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -6285,9 +6281,7 @@ arg_4		= dword	ptr  0Ah
 		mov	ax, es:[bx+4]
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], ax
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -6327,9 +6321,7 @@ driver		= byte ptr -4
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 2D12h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	[bp+var_16], 6
 		xor	ax, ax
 		push	ax
@@ -6358,9 +6350,7 @@ driver		= byte ptr -4
 		call	@string@$bdtr$qv ; string::~string(void)
 		add	sp, 10h
 		push	[bp+var_22]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -6375,9 +6365,7 @@ driver		= byte ptr -4
 sub_2D7B	proc far
 		push	si
 		push	di
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -6427,9 +6415,7 @@ arg_4		= byte ptr  0Ah
 		mov	ax, word ptr [bp+driver]
 		or	ax, word ptr [bp+driver+2]
 		jz	short loc_2E65
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -7914,9 +7900,7 @@ arg_C		= byte ptr  12h
 		push	di
 		mov	[bp+var_C], 1
 		mov	[bp+var_E], 0
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		mov	dx, es:[bx+2]
@@ -8240,9 +8224,7 @@ loc_39E8:
 loc_39F1:
 		test	byte ptr [bp+arg_A+1], 2
 		jz	short loc_3A0C
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, [bp+var_10]
 		mov	cx, [bp+var_12]
 		mov	es, dx
@@ -9138,98 +9120,7 @@ loc_3F4E:
 		retf
 __xclose	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; __RefDestructorCount(void)
-@__RefDestructorCount$qv proc far
-		mov	dx, ss
-		mov	ax, 10h
-		retf
-@__RefDestructorCount$qv endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; __RefExceptionList(void)
-@__RefExceptionList$qv proc far
-		mov	dx, ss
-		mov	ax, 14h
-		retf
-@__RefExceptionList$qv endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-___InitExceptBlocks proc far
-		mov	es, ax
-		mov	dx, bx
-		mov	cx, bp
-		mov	bx, es:[bx+4]
-		add	bx, cx
-		mov	ss:[bx+6], dx
-		mov	ss:[bx+8], ax
-		mov	ax, sp
-		add	ax, 4
-		mov	ss:[bx+0Ah], ax
-		mov	ax, seg	dseg
-		mov	ss:[bx+0Eh], ax
-		mov	ss:[bx+10h], si
-		mov	word ptr ss:[bx+2], offset __ExceptionHandler
-		mov	word ptr ss:[bx+4], seg	seg000
-		mov	word ptr ss:[bx+0Ch], 0
-		mov	word ptr ss:[bx+12h], 0
-		push	bx
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
-		pop	bx
-		xchg	ax, bx
-		mov	es, dx
-		mov	cx, es:[bx]
-		mov	dx, es:[bx+2]
-		mov	bx, ax
-		mov	ss:[bx+1Ah], cx
-		mov	ss:[bx+1Ch], dx
-		push	bx
-		push	cs
-		call	near ptr @__RefExceptionList$qv	; __RefExceptionList(void)
-		pop	bx
-		xchg	ax, bx
-		mov	es, dx
-		mov	cx, es:[bx]
-		mov	es:[bx], ax
-		mov	bx, ax
-		mov	ss:[bx], cx
-		retf
-___InitExceptBlocks endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-___ExitExceptBlocks proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	cs
-		call	near ptr @__RefExceptionList$qv	; __RefExceptionList(void)
-		mov	bx, [bp+arg_0]
-		xchg	ax, bx
-		mov	es, dx
-		mov	es:[bx], ax
-		pop	bp
-		retf	2
-___ExitExceptBlocks endp
-
+include libs/BorlandC/xxas.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9318,9 +9209,7 @@ var_12		= word ptr -12h
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 4050h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	[bp+var_22], ds
 		nop
 		push	cs
@@ -9360,9 +9249,7 @@ ___call_terminate endp
 
 ; ---------------------------------------------------------------------------
 		push	word ptr [bp-1Eh]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -13430,9 +13317,7 @@ loc_6F17:
 		mov	es:[bx+4], ax
 
 loc_6F35:
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -13473,9 +13358,7 @@ arg_2		= word ptr  8
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 6F67h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		xor	ax, ax
 		push	ax		; int
 		push	ax		; int
@@ -13506,9 +13389,7 @@ arg_2		= word ptr  8
 		les	bx, [bp+var_28]
 		mov	ax, es:[bx+4]
 		mov	[bp+var_2], ax
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -13556,9 +13437,7 @@ arg_4		= dword	ptr  0Ah
 		mov	ax, es:[bx+4]
 		les	bx, [bp+arg_0]
 		mov	es:[bx+4], ax
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -13598,9 +13477,7 @@ arg_4		= byte ptr  0Ah
 		mov	ax, word ptr [bp+driver]
 		or	ax, word ptr [bp+driver+2]
 		jz	short loc_70B9
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -13668,9 +13545,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 7105h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	ax, word ptr [bp+arg_0]
 		or	ax, word ptr [bp+arg_0+2]
 		jnz	short loc_714A
@@ -13703,9 +13578,7 @@ loc_714A:
 		push	[bp+var_4]
 		call	@string@$bctr$qmx6string ; string::string(string &)
 		add	sp, 8
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -13720,17 +13593,13 @@ loc_718C:
 		mov	es:[bx], ax
 
 loc_719C:
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
 		adc	word ptr es:[bx+2], 0
 		push	[bp+var_22]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		mov	dx, word ptr [bp+arg_0+2]
 		mov	ax, word ptr [bp+arg_0]
 		pop	di
@@ -13766,9 +13635,7 @@ arg_4		= dword	ptr  0Ah
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 71D0h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	ax, word ptr [bp+arg_0]
 		or	ax, word ptr [bp+arg_0+2]
 		jnz	short loc_7215
@@ -13802,9 +13669,7 @@ loc_7215:
 		push	[bp+var_4]
 		call	@string@$bctr$qmx6string ; string::string(string &)
 		add	sp, 8
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -13819,17 +13684,13 @@ loc_725B:
 		mov	es:[bx], ax
 
 loc_726B:
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
 		adc	word ptr es:[bx+2], 0
 		push	[bp+var_22]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		mov	dx, word ptr [bp+arg_0+2]
 		mov	ax, word ptr [bp+arg_0]
 		pop	di
@@ -13854,9 +13715,7 @@ arg_4		= byte ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -13864,9 +13723,7 @@ arg_4		= byte ptr  0Ah
 		mov	ax, word ptr [bp+driver]
 		or	ax, word ptr [bp+driver+2]
 		jz	short loc_72EB
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -13917,9 +13774,7 @@ arg_2		= word ptr  8
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 72F7h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		xor	ax, ax
 		push	ax		; int
 		push	ax		; int
@@ -13985,9 +13840,7 @@ arg_4		= dword	ptr  0Ah
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 735Eh
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	dx, word ptr [bp+arg_0+2]
 		mov	ax, word ptr [bp+arg_0]
 		cmp	dx, word ptr [bp+arg_4+2]
@@ -13996,9 +13849,7 @@ arg_4		= dword	ptr  0Ah
 		jz	short loc_7415
 
 loc_7397:
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -14028,9 +13879,7 @@ loc_7397:
 		push	[bp+var_4]
 		call	@string@$bctr$qmx6string ; string::string(string &)
 		add	sp, 8
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -14050,9 +13899,7 @@ loc_7415:
 		push	dx
 		push	ax
 		push	[bp+var_22]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	ax
 		pop	dx
 		pop	di
@@ -15877,9 +15724,7 @@ arg_1E		= word ptr  24h
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 7FE8h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	dx, [bp+arg_2]
 		mov	ax, [bp+arg_0]
 		mov	word ptr [bp+var_22+2],	dx
@@ -16053,9 +15898,7 @@ loc_810B:
 		add	sp, 0Ah
 		test	byte ptr [bp+var_2C], 1
 		jz	short loc_8295
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		mov	dx, es:[bx+2]
@@ -16086,9 +15929,7 @@ loc_810B:
 		call	near ptr @_CatchCleanup$qv ; _CatchCleanup(void)
 
 loc_8280:
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, [bp+var_3A]
 		mov	cx, [bp+var_3C]
 		mov	es, dx
@@ -16158,9 +15999,7 @@ loc_82D9:
 		call	near ptr _RaiseException
 		add	sp, 10h
 		push	[bp+var_1E]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -17011,9 +16850,7 @@ arg_8		= word ptr  0Ch
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 89ACh
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	[bp+var_12], 6
 		mov	ax, 1
 		push	ax
@@ -17039,9 +16876,7 @@ loc_89F6:
 
 loc_8A00:
 		push	[bp+var_1E]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -17071,9 +16906,7 @@ arg_0		= dword	ptr  4
 		les	bx, [bp+arg_0]
 		test	byte ptr es:[bx+16h], 2
 		jz	short loc_8A81
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		mov	dx, es:[bx+2]
@@ -17094,9 +16927,7 @@ arg_0		= dword	ptr  4
 		push	ax
 		call	sub_89BE
 		add	sp, 0Ah
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, word ptr [bp+var_8+2]
 		mov	cx, word ptr [bp+var_8]
 		mov	es, dx
@@ -18524,9 +18355,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		mov	ax, seg	seg000
 		mov	bx, 95A5h
-		nop
-		push	cs
-		call	near ptr ___InitExceptBlocks
+		nopcall	___InitExceptBlocks
 		mov	[bp+var_12], 6
 		mov	[bp+var_12], 12h
 		push	[bp+arg_8]
@@ -18564,9 +18393,7 @@ loc_9611:
 
 loc_9621:
 		push	[bp+var_1E]
-		nop
-		push	cs
-		call	near ptr ___ExitExceptBlocks
+		nopcall	___ExitExceptBlocks
 		pop	di
 		pop	si
 		mov	sp, bp
@@ -19254,9 +19081,7 @@ loc_9B44:
 		mov	ax, ss:[bx+arg_16]
 		mov	[bp+var_2], dx
 		mov	[bp+var_4], ax
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		mov	dx, es:[bx+2]
@@ -20977,9 +20802,7 @@ unknown_libname_4:			; BCC v4.x/5.x DOS runtime
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_AC00
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -21039,9 +20862,7 @@ unknown_libname_5:			; BCC v4.x/5.x DOS runtime
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_AC82
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -21084,9 +20905,7 @@ loc_AC84:
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_ACCF
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -21200,9 +21019,7 @@ unknown_libname_6:			; BCC v4.x/5.x DOS runtime
 		push	cs
 		call	near ptr @xmsg@$bctr$qmx4xmsg ;	xmsg::xmsg(xmsg	&)
 		add	sp, 8
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		add	word ptr es:[bx], 1
@@ -21221,9 +21038,7 @@ unknown_libname_6:			; BCC v4.x/5.x DOS runtime
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_AE80
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -21266,9 +21081,7 @@ loc_AE82:
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_AECD
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
@@ -21311,9 +21124,7 @@ loc_AECF:
 		mov	ax, [bp+6]
 		or	ax, [bp+8]
 		jz	short loc_AF1A
-		nop
-		push	cs
-		call	near ptr @__RefDestructorCount$qv ; __RefDestructorCount(void)
+		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
 		mov	bx, ax
 		mov	es, dx
 		sub	word ptr es:[bx], 1
