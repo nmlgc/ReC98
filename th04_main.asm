@@ -61,22 +61,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F92		proc far
-		push	file_Handle
-		call	dos_filesize
-		jb	short loc_F9D
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F9D:
-		mov	ax, dx
-		retf
-sub_F92		endp
-
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
@@ -11099,7 +11084,7 @@ arg_0		= dword	ptr  4
 		call	hmem_free
 		push	large [bp+arg_0]
 		call	file_ropen
-		call	sub_F92
+		call	file_size
 		mov	si, ax
 		push	ax
 		call	hmem_allocbyte

@@ -55,22 +55,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AE4		proc far
-		push	file_Handle
-		call	dos_filesize
-		jb	short loc_AEF
-		retf
-; ---------------------------------------------------------------------------
-
-loc_AEF:
-		mov	ax, dx
-		retf
-sub_AE4		endp
-
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
@@ -5061,7 +5046,7 @@ arg_0		= dword	ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A6AD:
-		call	sub_AE4
+		call	file_size
 		mov	[bp+var_2], ax
 		mov	word_14F88, 2E88h
 		push	ds

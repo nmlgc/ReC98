@@ -54,22 +54,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C1A		proc far
-		push	file_Handle
-		call	dos_filesize
-		jb	short loc_C25
-		retf
-; ---------------------------------------------------------------------------
-
-loc_C25:
-		mov	ax, dx
-		retf
-sub_C1A		endp
-
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
@@ -4886,7 +4871,7 @@ arg_0		= dword	ptr  4
 		enter	2, 0
 		push	large [bp+arg_0]
 		call	file_ropen
-		call	sub_C1A
+		call	file_size
 		mov	[bp+var_2], ax
 		push	ds
 		push	offset unk_DE32

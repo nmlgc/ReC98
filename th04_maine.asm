@@ -56,22 +56,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B06		proc far
-		push	file_Handle
-		call	dos_filesize
-		jb	short loc_B11
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B11:
-		mov	ax, dx
-		retf
-sub_B06		endp
-
+include libs/master.lib/file_size.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
@@ -4777,7 +4762,7 @@ arg_0		= dword	ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A2AD:
-		call	sub_B06
+		call	file_size
 		mov	[bp+var_2], ax
 		mov	word_12478, 1F48h
 		push	ds
