@@ -57,28 +57,7 @@ include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E44		proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short loc_E5A
-		xchg	ax, bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_E5A:
-		sbb	ax, ax
-		inc	ax
-		retf	4
-sub_E44		endp
-
+include libs/master.lib/file_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23304,7 +23283,7 @@ sub_12AB7	proc near
 		mov	bp, sp
 		push	ds
 		push	offset aGensou_scr_0 ; "GENSOU.SCR"
-		call	sub_E44
+		call	file_exist
 		or	ax, ax
 		jz	short loc_12B19
 		push	ds

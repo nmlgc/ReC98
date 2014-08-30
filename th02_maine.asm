@@ -50,28 +50,7 @@ include libs/master.lib/egc_shift_down.asm
 include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_ACC		proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short loc_AE2
-		xchg	ax, bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_AE2:
-		sbb	ax, ax
-		inc	ax
-		retf	4
-sub_ACC		endp
-
+include libs/master.lib/file_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9954,7 +9933,7 @@ var_2		= word ptr -2
 		push	di
 		xor	si, si
 		push	large [off_D72E]
-		call	sub_ACC
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_BCBA
 		push	cs
@@ -10309,7 +10288,7 @@ sub_BC9E	endp
 		push	bp
 		mov	bp, sp
 		push	large [off_D72E]
-		call	sub_ACC
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_BFCE
 		push	cs

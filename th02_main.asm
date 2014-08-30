@@ -47,28 +47,7 @@ include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_880		proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short loc_896
-		xchg	ax, bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_896:
-		sbb	ax, ax
-		inc	ax
-		retf	4
-sub_880		endp
-
+include libs/master.lib/file_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -42717,7 +42696,7 @@ var_2		= word ptr -2
 		push	di
 		xor	si, si
 		push	large [off_1EDB4]
-		call	sub_880
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CA1A
 		push	cs
@@ -43085,7 +43064,7 @@ sub_1CD36	proc far
 		push	bp
 		mov	bp, sp
 		push	large [off_1EDB4]
-		call	sub_880
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CD4D
 		push	cs

@@ -49,28 +49,7 @@ include libs/master.lib/egc.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_896		proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short loc_8AC
-		xchg	ax, bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_8AC:
-		sbb	ax, ax
-		inc	ax
-		retf	4
-sub_896		endp
-
+include libs/master.lib/file_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7813,7 +7792,7 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	ds
 		push	word_ED66
-		call	sub_896
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_AEB0
 		push	ds

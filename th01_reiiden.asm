@@ -2241,28 +2241,7 @@ loc_10CB:
 sub_1022	endp
 
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1152	proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short loc_1168
-		xchg	ax, bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_1168:
-		sbb	ax, ax
-		inc	ax
-		retf	4
-sub_1152	endp
-
+include libs/master.lib/file_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31445,7 +31424,7 @@ loc_13AB7:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax
-		call	sub_1152
+		call	file_exist
 		or	ax, ax
 		jnz	short loc_13AC9
 		push	cs
