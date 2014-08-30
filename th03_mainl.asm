@@ -863,34 +863,7 @@ loc_19C7:
 		pop	bp
 		retf	2
 ; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	es, word ptr [bp+0Ah]
-		inc	word ptr [bp+8]
-		mov	di, [bp+6]
-		or	di, di
-		jz	short loc_1A2B
-
-loc_1A1F:
-		call	word ptr es:2
-		test	ah, ah
-		jnz	short loc_1A30
-		dec	di
-		jnz	short loc_1A1F
-
-loc_1A2B:
-		dec	word ptr [bp+8]
-		jnz	short loc_1A1F
-
-loc_1A30:
-		mov	ax, es:12h
-		mov	dx, es:14h
-		pop	di
-		pop	bp
-		retf	6
-
+include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================

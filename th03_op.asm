@@ -1097,47 +1097,7 @@ arg_0		= word ptr  6
 		retf	2
 sub_1CA6	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CE2	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	es, [bp+arg_4]
-		inc	[bp+arg_2]
-		mov	di, [bp+arg_0]
-		or	di, di
-		jz	short loc_1CFF
-
-loc_1CF3:
-		call	word ptr es:2
-		test	ah, ah
-		jnz	short loc_1D04
-		dec	di
-		jnz	short loc_1CF3
-
-loc_1CFF:
-		dec	[bp+arg_2]
-		jnz	short loc_1CF3
-
-loc_1D04:
-		mov	ax, es:12h
-		mov	dx, es:14h
-		pop	di
-		pop	bp
-		retf	6
-sub_1CE2	endp
-
+include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1761,8 +1721,7 @@ loc_2D57:
 		push	word_F28C
 		push	cx
 		push	dx
-		push	cs
-		call	near ptr sub_1CE2
+		call	pfseek
 		mov	[bp+0Eh], dx
 		jmp	short loc_2DA7
 ; ---------------------------------------------------------------------------

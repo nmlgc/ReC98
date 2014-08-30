@@ -1724,34 +1724,7 @@ loc_1E75:
 		pop	bp
 		retf	2
 ; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	es, word ptr [bp+0Ah]
-		inc	word ptr [bp+8]
-		mov	di, [bp+6]
-		or	di, di
-		jz	short loc_1ED9
-
-loc_1ECD:
-		call	word ptr es:2
-		test	ah, ah
-		jnz	short loc_1EDE
-		dec	di
-		jnz	short loc_1ECD
-
-loc_1ED9:
-		dec	word ptr [bp+8]
-		jnz	short loc_1ECD
-
-loc_1EDE:
-		mov	ax, es:12h
-		mov	dx, es:14h
-		pop	di
-		pop	bp
-		retf	6
-
+include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm

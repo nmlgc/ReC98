@@ -646,34 +646,7 @@ loc_1D81:
 		pop	bp
 		retf	2
 ; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	es, word ptr [bp+0Ah]
-		inc	word ptr [bp+8]
-		mov	di, [bp+6]
-		or	di, di
-		jz	short loc_1DE5
-
-loc_1DD9:
-		call	word ptr es:2
-		test	ah, ah
-		jnz	short loc_1DEA
-		dec	di
-		jnz	short loc_1DD9
-
-loc_1DE5:
-		dec	word ptr [bp+8]
-		jnz	short loc_1DD9
-
-loc_1DEA:
-		mov	ax, es:12h
-		mov	dx, es:14h
-		pop	di
-		pop	bp
-		retf	6
-
+include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
