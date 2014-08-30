@@ -2343,24 +2343,7 @@ locret_140C:
 		retf
 sub_13EE	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_140E	proc far
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, ah
-		mov	ah, 0
-		retf	2
-sub_140E	endp
-
+include libs/master.lib/key_sense.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_pset.asm
@@ -13738,28 +13721,28 @@ arg_0		= word ptr  6
 
 loc_B559:
 		push	7
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_2], ax
 		push	5
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_4], ax
 		push	8
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_6], ax
 		push	9
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_8], ax
 		push	7
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_2], ax
 		push	5
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_4], ax
 		push	8
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_6], ax
 		push	9
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_8], ax
 		mov	al, byte_386FC
 		mov	ah, 0
@@ -13956,16 +13939,16 @@ loc_B745:
 		and	al, 4
 		mov	byte_38701, al
 		push	0
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_2], ax
 		push	3
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_4], ax
 		push	0
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_2], ax
 		push	3
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_4], ax
 		mov	al, byte_38702
 		mov	ah, 0
@@ -14029,10 +14012,10 @@ loc_B802:
 		cmp	word_34A6C, 1
 		jnz	short locret_B87A
 		push	6
-		call	sub_140E
+		call	key_sense
 		mov	[bp+var_2], ax
 		push	6
-		call	sub_140E
+		call	key_sense
 		or	[bp+var_2], ax
 		mov	al, byte_3870A
 		mov	ah, 0

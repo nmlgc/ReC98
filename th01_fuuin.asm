@@ -2143,22 +2143,7 @@ include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11DE	proc far
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, ah
-		mov	ah, 0
-		retf	2
-sub_11DE	endp
-
+include libs/master.lib/key_sense.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
 
@@ -10868,16 +10853,16 @@ arg_0		= word ptr  6
 
 loc_A2A5:
 		push	7
-		call	sub_11DE
+		call	key_sense
 		mov	[bp+var_2], ax
 		push	5
-		call	sub_11DE
+		call	key_sense
 		mov	[bp+var_4], ax
 		push	7
-		call	sub_11DE
+		call	key_sense
 		or	[bp+var_2], ax
 		push	5
-		call	sub_11DE
+		call	key_sense
 		or	[bp+var_4], ax
 		mov	al, byte_14039
 		mov	ah, 0
@@ -10994,16 +10979,16 @@ loc_A3BB:
 		and	al, 4
 		mov	byte_1403E, al
 		push	0
-		call	sub_11DE
+		call	key_sense
 		mov	[bp+var_2], ax
 		push	3
-		call	sub_11DE
+		call	key_sense
 		mov	[bp+var_4], ax
 		push	0
-		call	sub_11DE
+		call	key_sense
 		or	[bp+var_2], ax
 		push	3
-		call	sub_11DE
+		call	key_sense
 		or	[bp+var_4], ax
 		mov	al, byte_1403F
 		mov	ah, 0

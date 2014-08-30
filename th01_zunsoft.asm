@@ -694,7 +694,7 @@ loc_822:
 
 loc_85D:
 		push	si
-		call	sub_ACE
+		call	key_sense
 		or	di, ax
 		inc	si
 
@@ -726,22 +726,7 @@ include libs/master.lib/graph_start.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/keybeep.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_ACE		proc near
-		mov	bx, sp
-		mov	ax, ss:[bx+2]
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, ah
-		mov	ah, 0
-		retn	2
-sub_ACE		endp
-
+include libs/master.lib/key_sense.asm
 include libs/master.lib/bfnt_header_read.asm
 include libs/master.lib/bfnt_entry_pat.asm
 include libs/master.lib/bfnt_header_analysis.asm

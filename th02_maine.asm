@@ -1083,24 +1083,7 @@ loc_1AF8:
 		retf	0Ah
 sub_1AA6	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1B74	proc far
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, ah
-		mov	ah, 0
-		retf	2
-sub_1B74	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/key_sense.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8406,17 +8389,17 @@ sub_B45F	proc far
 		mov	al, byte_D70A
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		mov	si, ax
 		mov	al, byte_D70B
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		or	si, ax
 		mov	al, byte_D70C
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		or	si, ax
 		push	2
 		nop
@@ -8425,17 +8408,17 @@ sub_B45F	proc far
 		mov	al, byte_D70A
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		or	si, ax
 		mov	al, byte_D70B
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		or	si, ax
 		mov	al, byte_D70C
 		cbw
 		push	ax
-		call	sub_1B74
+		call	key_sense
 		or	si, ax
 		mov	ax, si
 		pop	si

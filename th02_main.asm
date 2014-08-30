@@ -1596,24 +1596,7 @@ loc_1EDF:
 		retf	4
 sub_1E78	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1EE4	proc far
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, ah
-		mov	ah, 0
-		retf	2
-sub_1EE4	endp
-
+include libs/master.lib/key_sense.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 
@@ -16434,17 +16417,17 @@ sub_F464	proc far
 		mov	al, byte_1E300
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		mov	si, ax
 		mov	al, byte_1E301
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		or	si, ax
 		mov	al, byte_1E302
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		or	si, ax
 		push	2
 		nop
@@ -16453,17 +16436,17 @@ sub_F464	proc far
 		mov	al, byte_1E300
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		or	si, ax
 		mov	al, byte_1E301
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		or	si, ax
 		mov	al, byte_1E302
 		cbw
 		push	ax
-		call	sub_1EE4
+		call	key_sense
 		or	si, ax
 		mov	ax, si
 		pop	si
