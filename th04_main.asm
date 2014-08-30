@@ -1180,122 +1180,8 @@ sub_1D50	endp
 
 include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
-
-; ---------------------------------------------------------------------------
-		db 0, 3, 0Ch, 0Fh, 30h,	33h, 3Ch, 3Fh, 0C0h, 0C3h, 0CCh
-		db 0CFh, 0F0h, 0F3h, 0FCh, 0FFh
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E2A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	cx, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	cs:word_1EC1, di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+2EC4h]
-		xor	si, si
-		mov	ds, word ptr [bx+2AC4h]
-		mov	bx, dx
-		xor	bh, bh
-		mov	dl, dh
-		xor	dh, dh
-		mov	cs:byte_1EBF, bl
-		mov	ax, 0A0h ; '†'
-		sub	ax, dx
-		sub	ax, dx
-		mov	cs:word_1EFA, ax
-		mov	al, 0C0h ; '¿'
-		out	7Ch, al
-		xor	al, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	dh, dl
-		call	near ptr byte_1EBE
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	al, 0CEh ; 'Œ'
-		out	7Ch, al
-		call	near ptr byte_1EBE
-		mov	al, 0CDh ; 'Õ'
-		out	7Ch, al
-		call	near ptr byte_1EBE
-		mov	al, 0CBh ; 'À'
-		out	7Ch, al
-		call	near ptr byte_1EBE
-		mov	al, 0C7h ; '«'
-		out	7Ch, al
-		call	near ptr byte_1EBE
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_1E2A	endp
-
-; ---------------------------------------------------------------------------
-byte_1EBE	db 0B5h
-byte_1EBF	db 11h
-		db 0BFh
-word_1EC1	dw 1111h
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1EC4:
-		lodsb
-		mov	bp, ax
-		and	ax, 0F0h
-		shr	ax, 4
-		mov	bx, ax
-		mov	al, cs:[bx+1E1Ah]
-		xor	ah, ah
-		ror	ax, cl
-		mov	es:[di], ax
-		mov	es:[di+50h], ax
-		inc	di
-		and	bp, 0Fh
-		mov	al, cs:[bp+1E1Ah]
-		xor	ah, ah
-		ror	ax, cl
-		mov	es:[di], ax
-		mov	es:[di+50h], ax
-		inc	di
-		dec	dh
-		jnz	short loc_1EC4
-; ---------------------------------------------------------------------------
-		db  81h	; Å
-		db 0C7h	; «
-word_1EFA	dw 1111h
-		db 8Ah,	0F2h, 0FEh, 0CDh, 75h, 0C2h, 0C3h, 0
+include libs/master.lib/large_byte.asm
+include libs/master.lib/super_large_put.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 
@@ -14992,7 +14878,7 @@ loc_EDC3:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_EDD7:
 		call	sub_D88C
@@ -20135,7 +20021,7 @@ loc_11629:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_1163D:
 		call	sub_D88C
@@ -20545,7 +20431,7 @@ loc_1193A:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_11961:
 		call	sub_D88C
@@ -20676,7 +20562,7 @@ loc_11A69:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_11A90:
 		call	sub_D88C
@@ -21178,7 +21064,7 @@ loc_11E5D:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_11E71:
 		cmp	byte_25A27, 1
@@ -23424,7 +23310,7 @@ loc_12F2E:
 		mov	al, byte_26718
 		mov	ah, 0
 		push	ax
-		call	sub_1E2A
+		call	super_large_put
 
 loc_12F55:
 		call	sub_D88C

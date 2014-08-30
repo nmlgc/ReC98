@@ -1559,101 +1559,8 @@ word_202A	dw 1234h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
-		db 0, 3, 0Ch, 0Fh, 30h,	33h, 3Ch, 3Fh, 0C0h, 0C3h, 0CCh
-		db 0CFh, 0F0h, 0F3h, 0FCh, 0FFh
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2048	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	cx, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	cs:word_20DF, di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	dx, [bx+2A9Eh]
-		xor	si, si
-		mov	ds, word ptr [bx+269Eh]
-		mov	bx, dx
-		xor	bh, bh
-		mov	dl, dh
-		xor	dh, dh
-		mov	cs:byte_20DD, bl
-		mov	ax, 0A0h ; ' '
-		sub	ax, dx
-		sub	ax, dx
-		mov	cs:word_2118, ax
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		xor	al, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	dh, dl
-		call	near ptr byte_20DC
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		mov	al, 0CEh ; 'Î'
-		out	7Ch, al
-		call	near ptr byte_20DC
-		mov	al, 0CDh ; 'Í'
-		out	7Ch, al
-		call	near ptr byte_20DC
-		mov	al, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	near ptr byte_20DC
-		mov	al, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	near ptr byte_20DC
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_2048	endp
-
-; ---------------------------------------------------------------------------
-byte_20DC	db 0B5h
-byte_20DD	db 11h
-		db 0BFh
-word_20DF	dw 1111h
-		nop
-		db 0ACh, 8Bh, 0E8h, 25h, 0F0h, 0, 0C1h,	0E8h, 4, 8Bh, 0D8h
-		db 2Eh,	8Ah, 87h, 38h, 20h, 32h, 0E4h, 0D3h, 0C8h, 26h
-		db 89h,	5, 26h,	89h, 45h, 50h, 47h, 83h, 0E5h, 0Fh, 2Eh
-		db 8Ah,	86h, 38h, 20h, 32h, 0E4h, 0D3h,	0C8h, 26h, 89h
-		db 5, 26h, 89h,	45h, 50h, 47h, 0FEh, 0CEh, 75h,	0CCh, 81h
-		db 0C7h
-word_2118	dw 1111h
-		db 8Ah,	0F2h, 0FEh, 0CDh, 75h, 0C2h, 0C3h, 0
-
+include libs/master.lib/large_byte.asm
+include libs/master.lib/super_large_put.asm
 include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
@@ -18691,7 +18598,7 @@ sub_10848	endp
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 
 loc_10932:
 		jmp	short loc_10999
@@ -18843,7 +18750,7 @@ loc_10A26:
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 
 loc_10A57:
 		jmp	short loc_10A94
@@ -19147,7 +19054,7 @@ sub_10B1D	endp
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		jmp	short loc_10D1C
 ; ---------------------------------------------------------------------------
 
@@ -19288,7 +19195,7 @@ sub_10D26	endp
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		jmp	short loc_10E07
 ; ---------------------------------------------------------------------------
 
@@ -19298,7 +19205,7 @@ loc_10DBC:
 		mov	al, byte_2635C
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		push	si
 		push	di
 		mov	al, byte_26344
@@ -19481,7 +19388,7 @@ loc_10F08:
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 
 loc_10F40:
 		jmp	short loc_10F86
@@ -19582,7 +19489,7 @@ loc_10FC9:
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		jmp	short loc_11069
 ; ---------------------------------------------------------------------------
 
@@ -19718,7 +19625,7 @@ loc_110D8:
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		jmp	short loc_1117A
 ; ---------------------------------------------------------------------------
 
@@ -20528,7 +20435,7 @@ loc_117BA:
 		mov	al, byte_26344
 		mov	ah, 0
 		push	ax
-		call	sub_2048
+		call	super_large_put
 		jmp	short loc_11862
 ; ---------------------------------------------------------------------------
 
