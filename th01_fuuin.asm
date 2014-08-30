@@ -1846,17 +1846,17 @@ loc_D28:
 		shl	ax, 1
 		shl	ax, 1
 		shl	ax, 1
-		call	sub_126C
+		call	gdc_outpw
 		mov	ax, dx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_126C
+		call	gdc_outpw
 		xor	ax, ax
-		call	sub_126C
+		call	gdc_outpw
 		mov	ax, bx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_126C
+		call	gdc_outpw
 		pop	bp
 		retf	2
 sub_D08		endp
@@ -2146,20 +2146,7 @@ include libs/master.lib/file_seek.asm
 include libs/master.lib/key_sense.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_126C	proc near
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		mov	al, ah
-		jmp	short $+2
-		jmp	short $+2
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		retn
-sub_126C	endp
-
-; ---------------------------------------------------------------------------
+include libs/master.lib/gdc_outpw.asm
 		db    0
 include libs/master.lib/random.asm
 ; ---------------------------------------------------------------------------

@@ -831,20 +831,7 @@ sub_109C	endp
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1334	proc near
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		mov	al, ah
-		jmp	short $+2
-		jmp	short $+2
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		retn
-sub_1334	endp
-
-; ---------------------------------------------------------------------------
+include libs/master.lib/gdc_outpw.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1436,17 +1423,17 @@ loc_1DF4:
 		shl	ax, 1
 		shl	ax, 1
 		shl	ax, 1
-		call	sub_1334
+		call	gdc_outpw
 		mov	ax, dx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_1334
+		call	gdc_outpw
 		xor	ax, ax
-		call	sub_1334
+		call	gdc_outpw
 		mov	ax, bx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_1334
+		call	gdc_outpw
 		pop	bp
 		retf	2
 sub_1DD4	endp
@@ -1485,17 +1472,17 @@ loc_1E4A:
 		mov	al, 70h	; 'p'
 		out	0A2h, al	; Interrupt Controller #2, 8259A
 		mov	ax, [bp+arg_2]
-		call	sub_1334
+		call	gdc_outpw
 		mov	ax, bx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_1334
+		call	gdc_outpw
 		mov	ax, [bp+arg_0]
-		call	sub_1334
+		call	gdc_outpw
 		mov	ax, dx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_1334
+		call	gdc_outpw
 		pop	bp
 		retf	6
 sub_1E2C	endp

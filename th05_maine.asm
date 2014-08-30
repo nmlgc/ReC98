@@ -151,19 +151,7 @@ include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FDE		proc near
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		mov	al, ah
-		jmp	short $+2
-		jmp	short $+2
-		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		retn
-sub_FDE		endp
-
+include libs/master.lib/gdc_outpw.asm
 include libs/master.lib/get_machine_98.asm
 include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
@@ -321,17 +309,17 @@ loc_1A4E:
 		shl	ax, 1
 		shl	ax, 1
 		shl	ax, 1
-		call	sub_FDE
+		call	gdc_outpw
 		mov	ax, dx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_FDE
+		call	gdc_outpw
 		xor	ax, ax
-		call	sub_FDE
+		call	gdc_outpw
 		mov	ax, bx
 		shl	ax, cl
 		or	ah, ch
-		call	sub_FDE
+		call	gdc_outpw
 		pop	bp
 		retf	2
 sub_1A2E	endp
