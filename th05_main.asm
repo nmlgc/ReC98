@@ -54,45 +54,7 @@ include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E2E		proc far
-					; sub_1512A+47P ...
-		call	file_flush
-		cmp	bx, 0FFFFh
-		jz	short locret_E5F
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+6]
-		mov	ah, 42h	; 'B'
-		mov	dx, [bp+8]
-		mov	cx, [bp+0Ah]
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		pop	bp
-		mov	ax, 4201h
-		mov	dx, 0
-		mov	cx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		mov	file_Eof, 0
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_E5F:
-		retf	6
-sub_E2E		endp
-
-; ---------------------------------------------------------------------------
-		mov	ax, file_BufPtr
-		xor	dx, dx
-		add	ax, word ptr file_BufferPos
-		adc	dx, word ptr file_BufferPos+2
-		retf
-
+include libs/master.lib/file_seek.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -15416,7 +15378,7 @@ loc_ED9D:
 		movzx	eax, word ptr ss:[bx]
 		push	eax
 		push	0
-		call	sub_E2E
+		call	file_seek
 		push	large [dword_2C930]
 		push	si
 		call	file_read
@@ -26093,7 +26055,7 @@ loc_15166:
 		movzx	eax, ax
 		push	eax
 		push	1
-		call	sub_E2E
+		call	file_seek
 		call	sub_1518A
 		call	file_close
 		mov	byte_2123A, 0
@@ -26134,7 +26096,7 @@ loc_151B2:
 		movzx	eax, word ptr [di]
 		push	eax
 		push	1
-		call	sub_E2E
+		call	file_seek
 
 loc_151BF:
 					; sub_1518A+26j

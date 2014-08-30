@@ -50,43 +50,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_98C		proc far
-		call	file_flush
-		cmp	bx, 0FFFFh
-		jz	short locret_9BD
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+6]
-		mov	ah, 42h	; 'B'
-		mov	dx, [bp+8]
-		mov	cx, [bp+0Ah]
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		pop	bp
-		mov	ax, 4201h
-		mov	dx, 0
-		mov	cx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		mov	file_Eof, 0
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_9BD:
-		retf	6
-sub_98C		endp
-
-; ---------------------------------------------------------------------------
-		mov	ax, file_BufPtr
-		xor	dx, dx
-		add	ax, word ptr file_BufferPos
-		adc	dx, word ptr file_BufferPos+2
-		retf
+include libs/master.lib/file_seek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10029,7 +9993,7 @@ var_2		= word ptr -2
 		call	file_ropen
 		push	large 5
 		push	0
-		call	sub_98C
+		call	file_seek
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -14284,7 +14248,7 @@ sub_E178	proc near
 		call	file_ropen
 		push	large 20h ; ' '
 		push	0
-		call	sub_98C
+		call	file_seek
 		push	438h
 		call	hmem_allocbyte
 		mov	word_218C0, ax
@@ -14335,7 +14299,7 @@ loc_E1F3:
 		call	file_ropen
 		push	large 50h ; 'P'
 		push	0
-		call	sub_98C
+		call	file_seek
 		push	1440h
 		call	hmem_allocbyte
 		mov	word ptr dword_218BA+2,	ax
@@ -42110,7 +42074,7 @@ sub_1C6C7	proc near
 		movzx	eax, ax
 		push	eax
 		push	0
-		call	sub_98C
+		call	file_seek
 		push	ds
 		push	offset word_252FE
 		push	0B6h ; '¶'
@@ -42521,7 +42485,7 @@ loc_1C9C5:
 		movzx	eax, ax
 		push	eax
 		push	0
-		call	sub_98C
+		call	file_seek
 		push	ds
 		push	offset word_252FE
 		push	0B6h ; '¶'

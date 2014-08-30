@@ -2233,43 +2233,7 @@ loc_1248:
 sub_11AA	endp
 
 include libs/master.lib/file_create.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1290	proc far
-		call	file_flush
-		cmp	bx, 0FFFFh
-		jz	short locret_12C1
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+6]
-		mov	ah, 42h	; 'B'
-		mov	dx, [bp+8]
-		mov	cx, [bp+0Ah]
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		pop	bp
-		mov	ax, 4201h
-		mov	dx, 0
-		mov	cx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		mov	file_Eof, 0
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_12C1:
-		retf	6
-sub_1290	endp
-
-; ---------------------------------------------------------------------------
-		mov	ax, file_BufPtr
-		xor	dx, dx
-		add	ax, word ptr file_BufferPos
-		adc	dx, word ptr file_BufferPos+2
-		retf
+include libs/master.lib/file_seek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25108,7 +25072,7 @@ arg_0		= dword	ptr  6
 loc_10ABA:
 		push	large 12h
 		push	0
-		call	sub_1290
+		call	file_seek
 		push	ds
 		push	offset unk_38988
 		push	30h ; '0'
@@ -25146,7 +25110,7 @@ arg_0		= dword	ptr  6
 loc_10AF9:
 		push	large 12h
 		push	0
-		call	sub_1290
+		call	file_seek
 		push	ds
 		push	offset unk_38988
 		push	30h ; '0'
@@ -26099,7 +26063,7 @@ loc_111C6:
 		mov	[bp+var_E], eax
 		push	eax
 		push	0
-		call	sub_1290
+		call	file_seek
 		push	large [bp+s1]
 		push	40h ; '@'
 		call	file_read
@@ -38085,7 +38049,7 @@ loc_1730C:
 		les	bx, dword_39A38
 		push	large dword ptr	es:[bx+18h]
 		push	0
-		call	sub_1290
+		call	file_seek
 		les	bx, dword_39A38
 		mov	al, es:[bx]
 		cmp	al, [bp+var_4]

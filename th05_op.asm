@@ -54,43 +54,7 @@ include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A94		proc far
-		call	file_flush
-		cmp	bx, 0FFFFh
-		jz	short locret_AC5
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+6]
-		mov	ah, 42h	; 'B'
-		mov	dx, [bp+8]
-		mov	cx, [bp+0Ah]
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method:
-					; 0-from beginnig,1-from current,2-from	end
-		pop	bp
-		mov	ax, 4201h
-		mov	dx, 0
-		mov	cx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		mov	file_Eof, 0
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_AC5:
-		retf	6
-sub_A94		endp
-
-; ---------------------------------------------------------------------------
-		mov	ax, file_BufPtr
-		xor	dx, dx
-		add	ax, word ptr file_BufferPos
-		adc	dx, word ptr file_BufferPos+2
-		retf
+include libs/master.lib/file_seek.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7706,7 +7670,7 @@ var_2		= byte ptr -2
 		call	file_append
 		push	large 0
 		push	0
-		call	sub_A94
+		call	file_seek
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	[bp+var_8], al
@@ -7727,7 +7691,7 @@ var_2		= byte ptr -2
 		call	sub_AD6
 		push	large 9
 		push	0
-		call	sub_A94
+		call	file_seek
 		mov	al, [bp+var_8]
 		add	al, [bp+var_7]
 		add	al, [bp+var_6]
@@ -7773,7 +7737,7 @@ var_1		= byte ptr -1
 		call	file_append
 		push	large 0
 		push	0
-		call	sub_A94
+		call	file_seek
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	[bp+var_A], al
@@ -8644,7 +8608,7 @@ arg_0		= word ptr  4
 		cwde
 		push	eax
 		push	0
-		call	sub_A94
+		call	file_seek
 		push	ds
 		push	offset unk_13EAA
 		push	190h
@@ -9484,7 +9448,7 @@ arg_0		= word ptr  4
 		movzx	eax, ax
 		push	eax
 		push	0
-		call	sub_A94
+		call	file_seek
 		push	ds
 		push	offset byte_14040
 		push	60h ; '`'
@@ -12870,7 +12834,7 @@ loc_E1B6:
 		movzx	eax, ax
 		push	eax
 		push	1
-		call	sub_A94
+		call	file_seek
 		call	sub_E1DA
 		call	file_close
 		mov	byte_FA94, 0
@@ -12910,7 +12874,7 @@ loc_E202:
 		movzx	eax, word ptr [di]
 		push	eax
 		push	1
-		call	sub_A94
+		call	file_seek
 
 loc_E20F:
 		cmp	byte ptr [di+0Bh], 2
