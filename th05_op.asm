@@ -4608,10 +4608,10 @@ include libs/BorlandC/strings.asm
 sub_A002	proc far
 		push	si
 		push	di
-		cmp	byte_11D7E, 0
+		cmp	_cFlag, 0
 		jz	short loc_A015
-		mov	byte_11D7E, 0
-		mov	al, byte_11D7F
+		mov	_cFlag, 0
+		mov	al, _cChar
 		jmp	short loc_A01A
 ; ---------------------------------------------------------------------------
 
@@ -4626,34 +4626,7 @@ loc_A01A:
 		retf
 sub_A002	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; int kbhit(void)
-_kbhit		proc far
-		push	si
-		push	di
-		cmp	byte_11D7E, 0
-		jz	short loc_A02D
-		mov	ax, 1
-		jmp	short loc_A032
-; ---------------------------------------------------------------------------
-
-loc_A02D:
-		mov	ah, 0Bh
-		int	21h		; DOS -	CHECK STANDARD INPUT STATUS
-					; Return: AL = FFh if character	available
-					; 00h if no character
-		cbw
-
-loc_A032:
-		pop	di
-		pop	si
-		retf
-_kbhit		endp
-
+include libs/BorlandC/kbhit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14918,8 +14891,7 @@ include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
 include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
-byte_11D7E	db 0
-byte_11D7F	db 0
+include libs/BorlandC/kbhit[data].asm
 aPATH		db 'PATH',0
 asc_11D85	db '/\',0
 		db 0

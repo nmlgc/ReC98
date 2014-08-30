@@ -20,7 +20,7 @@ _cx		dw ?
 _dx		dw ?
 _si		dw ?
 _di		dw ?
-_cflag		dw ?
+_cflags		dw ?
 _flags		dw ?
 WORDREGS	ends
 
@@ -13513,34 +13513,7 @@ loc_B142:
 		retn
 sub_B11B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; int kbhit(void)
-_kbhit		proc far
-		push	si
-		push	di
-		cmp	byte_36A7E, 0
-		jz	short loc_B153
-		mov	ax, 1
-		jmp	short loc_B158
-; ---------------------------------------------------------------------------
-
-loc_B153:
-		mov	ah, 0Bh
-		int	21h		; DOS -	CHECK STANDARD INPUT STATUS
-					; Return: AL = FFh if character	available
-					; 00h if no character
-		cbw
-
-loc_B158:
-		pop	di
-		pop	si
-		retf
-_kbhit		endp
-
+include libs/BorlandC/kbhit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -48574,7 +48547,7 @@ include libs/BorlandC/strings[data].asm
 word_36A78	dw 952h
 word_36A7A	dw 0
 word_36A7C	dw 0
-byte_36A7E	db 0
+include libs/BorlandC/kbhit[data].asm
 		dd    0
 		dd    0
 		dd    0
@@ -48591,7 +48564,6 @@ byte_36A7E	db 0
 		dd    0
 		dd    0
 		dd    0
-		db    0
 		db    0
 		db    8
 		db    8
