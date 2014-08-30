@@ -56,99 +56,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AF8		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_B6E
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_B0A:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_B64
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_B80
-		cmp	file_BufferSize, ax
-		jnz	short loc_B80
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_B64:
-		or	bx, bx
-		jnz	short loc_B0A
-		mov	ax, 1
-		jmp	short loc_B96
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B6E:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_B88
-
-loc_B80:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_B88:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_B96:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_AF8		endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -5173,7 +5081,7 @@ var_2		= byte ptr -2
 		lea	ax, [bp+var_8]
 		push	ax
 		push	6
-		call	sub_AF8
+		call	file_write
 		push	large 9
 		push	0
 		call	file_seek
@@ -5188,7 +5096,7 @@ var_2		= byte ptr -2
 		lea	ax, [bp+var_2]
 		push	ax
 		push	1
-		call	sub_AF8
+		call	file_write
 		call	file_close
 		leave
 		retn
@@ -5247,7 +5155,7 @@ var_1		= byte ptr -1
 		lea	ax, [bp+var_A]
 		push	ax
 		push	0Ah
-		call	sub_AF8
+		call	file_write
 		call	file_close
 		leave
 		retn
@@ -8969,7 +8877,7 @@ loc_C712:
 		push	ds
 		push	offset byte_130F2
 		push	0C4h ; 'Ä'
-		call	sub_AF8
+		call	file_write
 		call	sub_C57A
 		inc	si
 

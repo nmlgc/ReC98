@@ -71,99 +71,7 @@ loc_AEF:
 		retf
 sub_AE4		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AF2		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_B68
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_B04:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_B5E
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_B7A
-		cmp	file_BufferSize, ax
-		jnz	short loc_B7A
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_B5E:
-		or	bx, bx
-		jnz	short loc_B04
-		mov	ax, 1
-		jmp	short loc_B90
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B68:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_B82
-
-loc_B7A:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_B82:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_B90:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_AF2		endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -7037,7 +6945,7 @@ loc_B624:
 		push	ds
 		push	offset byte_1501A
 		push	60h ; '`'
-		call	sub_AF2
+		call	file_write
 		call	sub_B4D6
 		inc	[bp+var_2]
 
@@ -7129,7 +7037,7 @@ sub_B6A3	proc near
 		push	ds
 		push	offset byte_1501A
 		push	60h ; '`'
-		call	sub_AF2
+		call	file_write
 		xor	si, si
 		jmp	short loc_B723
 ; ---------------------------------------------------------------------------
@@ -7156,7 +7064,7 @@ loc_B6E2:
 		push	ds
 		push	offset byte_1501A
 		push	60h ; '`'
-		call	sub_AF2
+		call	file_write
 		inc	si
 
 loc_B723:

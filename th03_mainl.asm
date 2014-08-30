@@ -69,99 +69,7 @@ loc_9EF:
 		retf
 sub_9E4		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9F2		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_A68
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_A04:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_A5E
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_A7A
-		cmp	file_BufferSize, ax
-		jnz	short loc_A7A
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_A5E:
-		or	bx, bx
-		jnz	short loc_A04
-		mov	ax, 1
-		jmp	short loc_A90
-; ---------------------------------------------------------------------------
-		nop
-
-loc_A68:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_A82
-
-loc_A7A:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_A82:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_A90:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_9F2		endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -7733,7 +7641,7 @@ loc_AF73:
 		push	ds
 		push	offset word_105DE
 		push	0CEh ; 'Î'
-		call	sub_9F2
+		call	file_write
 		call	file_close
 		pop	di
 		pop	si

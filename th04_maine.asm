@@ -72,99 +72,7 @@ loc_B11:
 		retf
 sub_B06		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B14		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_B8A
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_B26:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_B80
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_B9C
-		cmp	file_BufferSize, ax
-		jnz	short loc_B9C
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_B80:
-		or	bx, bx
-		jnz	short loc_B26
-		mov	ax, 1
-		jmp	short loc_BB2
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B8A:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_BA4
-
-loc_B9C:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_BA4:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_BB2:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_B14		endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
@@ -8492,7 +8400,7 @@ loc_C28C:
 		push	ds
 		push	offset byte_124F2
 		push	0C4h ; 'Ä'
-		call	sub_B14
+		call	file_write
 		call	sub_C149
 		inc	si
 
@@ -8592,7 +8500,7 @@ loc_C350:
 		push	ds
 		push	offset byte_124F2
 		push	0C4h ; 'Ä'
-		call	sub_B14
+		call	file_write
 		xor	si, si
 		jmp	short loc_C3A5
 ; ---------------------------------------------------------------------------
@@ -8619,7 +8527,7 @@ loc_C360:
 		push	ds
 		push	offset byte_124F2
 		push	0C4h ; 'Ä'
-		call	sub_B14
+		call	file_write
 		inc	si
 
 loc_C3A5:

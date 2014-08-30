@@ -2139,99 +2139,7 @@ include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11AA	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_1220
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_11BC:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_1216
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_1232
-		cmp	file_BufferSize, ax
-		jnz	short loc_1232
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_1216:
-		or	bx, bx
-		jnz	short loc_11BC
-		mov	ax, 1
-		jmp	short loc_1248
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1220:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_123A
-
-loc_1232:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_123A:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_1248:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_11AA	endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_seek.asm
 
@@ -31095,7 +31003,7 @@ loc_139BC:
 		jz	loc_13A72
 		push	large [bp+var_12]
 		push	7
-		call	sub_11AA
+		call	file_write
 		mov	[bp+var_2], 0Ah
 		mov	[bp+var_A], 3E8h
 		xor	si, si
@@ -31125,7 +31033,7 @@ loc_139FF:
 loc_13A08:
 		push	large [bp+var_E]
 		push	10h
-		call	sub_11AA
+		call	file_write
 		inc	si
 
 loc_13A14:
@@ -31140,7 +31048,7 @@ loc_13A1D:
 		lea	ax, [bp+var_A]
 		push	ax
 		push	4
-		call	sub_11AA
+		call	file_write
 		mov	eax, [bp+var_A]
 		add	eax, 0FFFFFF9Ch
 		mov	[bp+var_A], eax
@@ -31158,7 +31066,7 @@ loc_13A3F:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	2
-		call	sub_11AA
+		call	file_write
 		mov	ax, [bp+var_2]
 		dec	ax
 		mov	[bp+var_2], ax
@@ -31174,7 +31082,7 @@ loc_13A53:
 loc_13A5C:
 		push	large [bp+var_6]
 		push	2
-		call	sub_11AA
+		call	file_write
 		inc	si
 
 loc_13A68:

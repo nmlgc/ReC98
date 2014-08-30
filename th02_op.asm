@@ -50,99 +50,7 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_952		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_9C8
-		mov	bx, [bp+arg_0]
-		mov	si, word ptr [bp+arg_2]
-
-loc_964:
-		mov	cx, file_BufferSize
-		sub	cx, file_BufPtr
-		sub	cx, bx
-		sbb	ax, ax
-		and	cx, ax
-		add	cx, bx
-		les	di, file_Buffer
-		add	di, file_BufPtr
-		sub	bx, cx
-		add	file_BufPtr, cx
-		push	ds
-		mov	ds, word ptr [bp+arg_2+2]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		or	ax, ax
-		jns	short loc_9BE
-		push	ds
-		push	bx
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	bx
-		pop	ds
-		jb	short loc_9DA
-		cmp	file_BufferSize, ax
-		jnz	short loc_9DA
-		mov	file_BufPtr, 0
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-
-loc_9BE:
-		or	bx, bx
-		jnz	short loc_964
-		mov	ax, 1
-		jmp	short loc_9F0
-; ---------------------------------------------------------------------------
-		nop
-
-loc_9C8:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_9E2
-
-loc_9DA:
-		mov	file_ErrorStat, 1
-		xor	ax, ax
-
-loc_9E2:
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		add	ax, 0FFFFh
-		sbb	ax, ax
-
-loc_9F0:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf	6
-sub_952		endp
-
+include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -5402,16 +5310,16 @@ var_2		= word ptr -2
 		lea	ax, [bp+var_C]
 		push	ax
 		push	5
-		call	sub_952
+		call	file_write
 		push	ds
 		push	offset word_E900
 		push	2
-		call	sub_952
+		call	file_write
 		push	ss
 		lea	ax, [bp+var_5]
 		push	ax
 		push	1
-		call	sub_952
+		call	file_write
 		call	file_close
 		leave
 		retf
