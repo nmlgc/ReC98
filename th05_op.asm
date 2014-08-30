@@ -434,46 +434,7 @@ locret_1BC2:
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1BC4	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_4]
-		test	si, si
-		jz	short loc_1BE7
-
-loc_1BD4:
-		mov	es, [bp+arg_0]
-		call	word ptr es:2
-		inc	ah
-		jz	short loc_1BE7
-		mov	es, [bp+arg_6]
-		stosb
-		dec	si
-		jnz	short loc_1BD4
-
-loc_1BE7:
-		mov	ax, di
-		sub	ax, [bp+arg_4]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_1BC4	endp
-
+include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
@@ -1622,8 +1583,7 @@ byte_38F4	db 0
 		push	dx
 		push	cx
 		push	word_12EF8
-		push	cs
-		call	near ptr sub_1BC4
+		call	pfread
 		jmp	loc_39DF
 ; ---------------------------------------------------------------------------
 		cmp	bx, di

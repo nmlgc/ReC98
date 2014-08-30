@@ -758,34 +758,7 @@ locret_1BBE:
 ; ---------------------------------------------------------------------------
 		db    0
 ; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		mov	si, [bp+8]
-		mov	di, [bp+0Ah]
-		test	si, si
-		jz	short loc_1BE3
-
-loc_1BD0:
-		mov	es, word ptr [bp+6]
-		call	word ptr es:2
-		inc	ah
-		jz	short loc_1BE3
-		mov	es, word ptr [bp+0Ch]
-		stosb
-		dec	si
-		jnz	short loc_1BD0
-
-loc_1BE3:
-		mov	ax, di
-		sub	ax, [bp+0Ah]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm

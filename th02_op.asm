@@ -1499,34 +1499,7 @@ locret_1EDC:
 ; ---------------------------------------------------------------------------
 		db 0
 ; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		mov	si, [bp+8]
-		mov	di, [bp+0Ah]
-		test	si, si
-		jz	short loc_1F01
-
-loc_1EEE:
-		mov	es, word ptr [bp+6]
-		call	word ptr es:2
-		inc	ah
-		jz	short loc_1F01
-		mov	es, word ptr [bp+0Ch]
-		stosb
-		dec	si
-		jnz	short loc_1EEE
-
-loc_1F01:
-		mov	ax, di
-		sub	ax, [bp+0Ah]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm

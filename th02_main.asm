@@ -1666,46 +1666,7 @@ locret_20C8:
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20CA	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cld
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_4]
-		test	si, si
-		jz	short loc_20ED
-
-loc_20DA:
-		mov	es, [bp+arg_0]
-		call	word ptr es:2
-		inc	ah
-		jz	short loc_20ED
-		mov	es, [bp+arg_6]
-		stosb
-		dec	si
-		jnz	short loc_20DA
-
-loc_20ED:
-		mov	ax, di
-		sub	ax, [bp+arg_4]
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_20CA	endp
-
+include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
@@ -3147,8 +3108,7 @@ loc_3B40:
 		push	dx
 		push	cx
 		push	word_1FFA4
-		push	cs
-		call	near ptr sub_20CA
+		call	pfread
 		jmp	loc_3BEF
 ; ---------------------------------------------------------------------------
 		cmp	bx, di
