@@ -48,45 +48,7 @@ include libs/master.lib/egc.asm
 include libs/master.lib/egc_shift_left_all.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_898		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_8D4
-		mov	cx, 20h	; ' '
-		mov	ah, 3Ch	; '<'
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	ax, dx
-		inc	ax
-
-loc_8D4:
-		pop	bp
-		retf	4
-sub_898		endp
-
+include libs/master.lib/file_create.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8542,7 +8504,7 @@ arg_0		= word ptr  4
 		jnz	short loc_B314
 		push	ds
 		push	word_E1F2
-		call	sub_898
+		call	file_create
 		call	file_close
 		jmp	short loc_B34D
 ; ---------------------------------------------------------------------------

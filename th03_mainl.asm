@@ -48,45 +48,7 @@ include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_856		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_892
-		mov	cx, 20h	; ' '
-		mov	ah, 3Ch	; '<'
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	ax, dx
-		inc	ax
-
-loc_892:
-		pop	bp
-		retf	4
-sub_856		endp
-
+include libs/master.lib/file_create.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7856,7 +7818,7 @@ arg_0		= word ptr  4
 		jnz	short loc_AEB0
 		push	ds
 		push	word_ED66
-		call	sub_856
+		call	file_create
 		call	file_close
 		jmp	short loc_AEE9
 ; ---------------------------------------------------------------------------

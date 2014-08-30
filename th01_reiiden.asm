@@ -2395,45 +2395,7 @@ loc_1248:
 		retf	6
 sub_11AA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1250	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_128C
-		mov	cx, 20h	; ' '
-		mov	ah, 3Ch	; '<'
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	ax, dx
-		inc	ax
-
-loc_128C:
-		pop	bp
-		retf	4
-sub_1250	endp
-
+include libs/master.lib/file_create.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31327,7 +31289,7 @@ loc_139BC:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax
-		call	sub_1250
+		call	file_create
 		or	ax, ax
 		jz	loc_13A72
 		push	large [bp+var_12]

@@ -51,45 +51,7 @@ include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_978		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_9B4
-		mov	cx, 20h	; ' '
-		mov	ah, 3Ch	; '<'
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	ax, dx
-		inc	ax
-
-loc_9B4:
-		pop	bp
-		retf	4
-sub_978		endp
-
+include libs/master.lib/file_create.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8722,7 +8684,7 @@ loc_C27A:
 		jl	short loc_C214
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	sub_978
+		call	file_create
 		xor	si, si
 		jmp	short loc_C29F
 ; ---------------------------------------------------------------------------
