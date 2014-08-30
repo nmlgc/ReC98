@@ -52,111 +52,7 @@ include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/egc_shift_right.asm
 include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D3E		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_DC2
-		mov	bx, [bp+arg_0]
-		les	di, [bp+arg_2]
-		assume es:nothing
-
-loc_D50:
-		mov	ax, file_InReadBuf
-		cmp	file_BufPtr, ax
-		jb	short loc_D86
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		push	bx
-		push	ds
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		pop	bx
-		cmc
-		sbb	dx, dx
-		and	ax, dx
-		mov	file_InReadBuf, ax
-		jz	short loc_DE1
-		mov	file_BufPtr, 0
-
-loc_D86:
-		mov	si, file_InReadBuf
-		sub	si, file_BufPtr
-		sub	si, bx
-		sbb	ax, ax
-		and	si, ax
-		add	si, bx
-		mov	ax, es
-		or	ax, di
-		jz	short loc_DB7
-		or	si, si
-		jz	short loc_DB7
-		push	si
-		push	ds
-		mov	cx, si
-		mov	ax, file_BufPtr
-		lds	si, file_Buffer
-		add	si, ax
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	si
-
-loc_DB7:
-		add	file_BufPtr, si
-		sub	bx, si
-		jnz	short loc_D50
-		jmp	short loc_DE7
-; ---------------------------------------------------------------------------
-		nop
-
-loc_DC2:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		mov	bx, cx
-		sub	bx, ax
-		jz	short loc_DE7
-
-loc_DE1:
-		mov	file_Eof, 1
-
-loc_DE7:
-		mov	ax, [bp+arg_0]
-		sub	ax, bx
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_D3E		endp
-
+include libs/master.lib/file_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3640,8 +3536,7 @@ loc_4288:
 		push	ss
 		push	ax
 		push	10h
-		push	cs
-		call	near ptr sub_D3E
+		call	file_read
 		mov	di, [bp-10h]
 		mov	si, [bp-0Ah]
 		push	di
@@ -3650,8 +3545,7 @@ loc_4288:
 		push	ax
 		push	0
 		push	di
-		push	cs
-		call	near ptr sub_D3E
+		call	file_read
 		call	file_close
 		mov	cx, di
 		mov	ax, word_23EE4
@@ -7865,7 +7759,7 @@ loc_B76F:
 		call	sub_DF2
 		push	large [dword_25FF4]
 		push	si
-		call	sub_D3E
+		call	file_read
 		call	file_close
 		pop	si
 		leave
@@ -15532,7 +15426,7 @@ loc_ED9D:
 		lea	ax, [bp+var_A]
 		push	ax
 		push	0Ah
-		call	sub_D3E
+		call	file_read
 		mov	al, byte_25FEF
 		mov	ah, 0
 		add	ax, ax
@@ -15564,7 +15458,7 @@ loc_ED9D:
 		call	sub_E2E
 		push	large [dword_2C930]
 		push	si
-		call	sub_D3E
+		call	file_read
 		call	file_close
 		pop	si
 		leave
@@ -16233,7 +16127,7 @@ sub_F2B4	proc far
 		call	sub_DF2
 		push	large [dword_25FF4]
 		push	9C40h
-		call	sub_D3E
+		call	file_read
 		call	file_close
 		mov	word_25FE0, 0
 		inc	byte_221EC
@@ -26222,7 +26116,7 @@ arg_6		= word ptr  0Ch
 		push	ds
 		push	di
 		push	10h
-		call	sub_D3E
+		call	file_read
 		mov	ax, [di]
 		mov	dx, ax
 		cmp	byte ptr [di+0Bh], 0
@@ -26271,7 +26165,7 @@ loc_1519C:
 		push	ax
 		push	0
 		push	word ptr [di]
-		call	sub_D3E
+		call	file_read
 		jmp	short loc_151BF
 ; ---------------------------------------------------------------------------
 
@@ -26295,7 +26189,7 @@ loc_151BF:
 		mov	ax, [di]
 		shl	ax, 2
 		push	ax
-		call	sub_D3E
+		call	file_read
 
 locret_151E1:
 		retn
@@ -26334,7 +26228,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		push	di
 		push	10h
-		call	sub_D3E
+		call	file_read
 		mov	si, di
 		mov	bp, [bp+arg_4]
 		mov	al, [si+0Ah]

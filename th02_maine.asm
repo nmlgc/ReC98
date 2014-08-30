@@ -51,111 +51,7 @@ include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AE8		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_B6C
-		mov	bx, [bp+arg_0]
-		les	di, [bp+arg_2]
-		assume es:nothing
-
-loc_AFA:
-		mov	ax, file_InReadBuf
-		cmp	file_BufPtr, ax
-		jb	short loc_B30
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		push	bx
-		push	ds
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		pop	bx
-		cmc
-		sbb	dx, dx
-		and	ax, dx
-		mov	file_InReadBuf, ax
-		jz	short loc_B8B
-		mov	file_BufPtr, 0
-
-loc_B30:
-		mov	si, file_InReadBuf
-		sub	si, file_BufPtr
-		sub	si, bx
-		sbb	ax, ax
-		and	si, ax
-		add	si, bx
-		mov	ax, es
-		or	ax, di
-		jz	short loc_B61
-		or	si, si
-		jz	short loc_B61
-		push	si
-		push	ds
-		mov	cx, si
-		mov	ax, file_BufPtr
-		lds	si, file_Buffer
-		add	si, ax
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	si
-
-loc_B61:
-		add	file_BufPtr, si
-		sub	bx, si
-		jnz	short loc_AFA
-		jmp	short loc_B91
-; ---------------------------------------------------------------------------
-		nop
-
-loc_B6C:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		mov	bx, cx
-		sub	bx, ax
-		jz	short loc_B91
-
-loc_B8B:
-		mov	file_Eof, 1
-
-loc_B91:
-		mov	ax, [bp+arg_0]
-		sub	ax, bx
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_AE8		endp
-
+include libs/master.lib/file_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5178,7 +5074,7 @@ arg_0		= dword	ptr  4
 		push	ds
 		push	offset unk_DE32
 		push	ax
-		call	sub_AE8
+		call	file_read
 		call	file_close
 		leave
 		retn	4
@@ -9375,7 +9271,7 @@ var_2		= word ptr -2
 		lea	ax, [bp+var_2]
 		push	ax
 		push	2
-		call	sub_AE8
+		call	file_read
 		call	file_close
 		cmp	[bp+var_2], 0
 		jnz	short loc_B8BA
@@ -9497,7 +9393,7 @@ sub_B967	proc near
 		push	ds
 		push	offset word_FB16
 		push	0B6h ; '¶'
-		call	sub_AE8
+		call	file_read
 		xor	si, si
 		jmp	short loc_B9A5
 ; ---------------------------------------------------------------------------

@@ -45,110 +45,7 @@ include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_7E2		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_866
-		mov	bx, [bp+arg_0]
-		les	di, [bp+arg_2]
-
-loc_7F4:
-		mov	ax, file_InReadBuf
-		cmp	file_BufPtr, ax
-		jb	short loc_82A
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		push	bx
-		push	ds
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		pop	bx
-		cmc
-		sbb	dx, dx
-		and	ax, dx
-		mov	file_InReadBuf, ax
-		jz	short loc_885
-		mov	file_BufPtr, 0
-
-loc_82A:
-		mov	si, file_InReadBuf
-		sub	si, file_BufPtr
-		sub	si, bx
-		sbb	ax, ax
-		and	si, ax
-		add	si, bx
-		mov	ax, es
-		or	ax, di
-		jz	short loc_85B
-		or	si, si
-		jz	short loc_85B
-		push	si
-		push	ds
-		mov	cx, si
-		mov	ax, file_BufPtr
-		lds	si, file_Buffer
-		add	si, ax
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	si
-
-loc_85B:
-		add	file_BufPtr, si
-		sub	bx, si
-		jnz	short loc_7F4
-		jmp	short loc_88B
-; ---------------------------------------------------------------------------
-		nop
-
-loc_866:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		mov	bx, cx
-		sub	bx, ax
-		jz	short loc_88B
-
-loc_885:
-		mov	file_Eof, 1
-
-loc_88B:
-		mov	ax, [bp+arg_0]
-		sub	ax, bx
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_7E2		endp
-
+include libs/master.lib/file_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2346,8 +2243,7 @@ loc_297E:
 		push	ax
 		push	0
 		push	10h
-		push	cs
-		call	near ptr sub_7E2
+		call	file_read
 		mov	ax, di
 		mov	es, ax
 		assume es:nothing
@@ -2361,8 +2257,7 @@ loc_297E:
 		push	ax
 		push	0
 		push	di
-		push	cs
-		call	near ptr sub_7E2
+		call	file_read
 		call	file_close
 		mov	cx, di
 		mov	ax, word_1EFF4
@@ -6925,7 +6820,7 @@ var_3		= word ptr -3
 		lea	ax, [bp+var_8]
 		push	ax
 		push	8
-		call	sub_7E2
+		call	file_read
 		call	file_close
 		mov	si, [bp+var_3]
 		mov	word ptr dword_1F2F0+2,	si
@@ -16173,7 +16068,7 @@ arg_4		= word ptr  0Ah
 		mov	word ptr [bx+1D64h], 0
 		push	large dword ptr	[bx+1D64h]
 		push	8160h
-		call	sub_7E2
+		call	file_read
 		call	file_close
 		pop	bp
 		retf	6
@@ -25587,7 +25482,7 @@ var_4		= word ptr -4
 		lea	ax, [bp+var_4]
 		push	ax
 		push	4
-		call	sub_7E2
+		call	file_read
 		push	[bp+var_4]
 		call	hmem_allocbyte
 		mov	word_1F51E, ax
@@ -25605,7 +25500,7 @@ var_4		= word ptr -4
 		push	ax
 		push	0
 		push	[bp+var_4]
-		call	sub_7E2
+		call	file_read
 		call	file_close
 		xor	si, si
 		mov	[bp+var_A], 0

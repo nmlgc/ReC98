@@ -20063,7 +20063,7 @@ arg_0		= dword	ptr  4
 		mov	word_2D02E, ax
 		push	ax
 		push	large 800h
-		call	sub_E60
+		call	file_read
 		call	file_close
 		pop	bp
 		retn	4

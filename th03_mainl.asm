@@ -50,110 +50,7 @@ include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_8B2		proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	file_BufferSize, 0
-		jz	short loc_936
-		mov	bx, [bp+arg_0]
-		les	di, [bp+arg_2]
-
-loc_8C4:
-		mov	ax, file_InReadBuf
-		cmp	file_BufPtr, ax
-		jb	short loc_8FA
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		push	bx
-		push	ds
-		mov	cx, file_BufferSize
-		mov	bx, file_Handle
-		lds	dx, file_Buffer
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		pop	bx
-		cmc
-		sbb	dx, dx
-		and	ax, dx
-		mov	file_InReadBuf, ax
-		jz	short loc_955
-		mov	file_BufPtr, 0
-
-loc_8FA:
-		mov	si, file_InReadBuf
-		sub	si, file_BufPtr
-		sub	si, bx
-		sbb	ax, ax
-		and	si, ax
-		add	si, bx
-		mov	ax, es
-		or	ax, di
-		jz	short loc_92B
-		or	si, si
-		jz	short loc_92B
-		push	si
-		push	ds
-		mov	cx, si
-		mov	ax, file_BufPtr
-		lds	si, file_Buffer
-		add	si, ax
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	si
-
-loc_92B:
-		add	file_BufPtr, si
-		sub	bx, si
-		jnz	short loc_8C4
-		jmp	short loc_95B
-; ---------------------------------------------------------------------------
-		nop
-
-loc_936:
-		push	ds
-		mov	cx, [bp+arg_0]
-		mov	bx, file_Handle
-		lds	dx, [bp+arg_2]
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		mov	bx, cx
-		sub	bx, ax
-		jz	short loc_95B
-
-loc_955:
-		mov	file_Eof, 1
-
-loc_95B:
-		mov	ax, [bp+arg_0]
-		sub	ax, bx
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_8B2		endp
-
+include libs/master.lib/file_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1457,8 +1354,7 @@ loc_2868:
 		push	ax
 		push	0
 		push	10h
-		push	cs
-		call	near ptr sub_8B2
+		call	file_read
 		mov	ax, di
 		mov	es, ax
 		mov	di, es:0
@@ -1471,8 +1367,7 @@ loc_2868:
 		push	ax
 		push	0
 		push	di
-		push	cs
-		call	near ptr sub_8B2
+		call	file_read
 		call	file_close
 		mov	cx, di
 		mov	ax, word_100F6
@@ -4834,7 +4729,7 @@ var_3		= word ptr -3
 		lea	ax, [bp+var_8]
 		push	ax
 		push	8
-		call	sub_8B2
+		call	file_read
 		call	file_close
 		mov	si, [bp+var_3]
 		mov	word ptr dword_105DA+2,	si
@@ -4960,17 +4855,17 @@ loc_96B7:
 		push	ds
 		push	offset unk_F72C
 		push	3Ch ; '<'
-		call	sub_8B2
+		call	file_read
 		mov	byte_F768, 0
 		push	ds
 		push	offset unk_F769
 		push	3Ch ; '<'
-		call	sub_8B2
+		call	file_read
 		mov	byte_F7A5, 0
 		push	ds
 		push	offset unk_F7A6
 		push	3Ch ; '<'
-		call	sub_8B2
+		call	file_read
 		mov	byte_F7E2, 0
 		call	file_close
 		leave
@@ -6120,7 +6015,7 @@ loc_A147:
 		push	ax
 		push	word ptr dword_105C6
 		push	si
-		call	sub_8B2
+		call	file_read
 		call	file_close
 		xor	ax, ax
 
@@ -7815,7 +7710,7 @@ loc_AEB0:
 		push	ds
 		push	offset word_105DE
 		push	0CEh ; 'Î'
-		call	sub_8B2
+		call	file_read
 		call	file_close
 		call	sub_ADA9
 		call	sub_AE64
@@ -11865,7 +11760,7 @@ arg_6		= word ptr  0Ch
 		push	ds
 		push	si
 		push	10h
-		call	sub_8B2
+		call	file_read
 		mov	ax, [si]
 		imul	ax, 5
 		movzx	eax, ax
@@ -11881,7 +11776,7 @@ arg_6		= word ptr  0Ch
 		push	word ptr [si+0Ch]
 		push	0
 		push	word ptr [si]
-		call	sub_8B2
+		call	file_read
 		mov	ax, [si]
 		shl	ax, 2
 		push	ax
@@ -11892,7 +11787,7 @@ arg_6		= word ptr  0Ch
 		mov	ax, [si]
 		shl	ax, 2
 		push	ax
-		call	sub_8B2
+		call	file_read
 		call	file_close
 		pop	di
 		pop	si
@@ -11930,7 +11825,7 @@ arg_6		= word ptr  0Ch
 		push	ds
 		push	si
 		push	10h
-		call	sub_8B2
+		call	file_read
 		mov	ax, [si]
 		imul	ax, 5
 		movzx	eax, ax
@@ -11955,7 +11850,7 @@ arg_6		= word ptr  0Ch
 		mov	ax, [si]
 		shl	ax, 2
 		push	ax
-		call	sub_8B2
+		call	file_read
 		call	file_close
 		pop	di
 		pop	si
@@ -11991,7 +11886,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		push	ax
 		push	10h
-		call	sub_8B2
+		call	file_read
 		mov	di, si
 		mov	[bp+var_2], 1
 		jmp	short loc_D071
@@ -12037,7 +11932,7 @@ loc_D082:
 		push	word ptr [si+0Ch]
 		push	0
 		push	word ptr [si]
-		call	sub_8B2
+		call	file_read
 		jmp	short loc_D0D9
 ; ---------------------------------------------------------------------------
 
@@ -12059,7 +11954,7 @@ loc_D0D9:
 		mov	ax, [si]
 		shl	ax, 2
 		push	ax
-		call	sub_8B2
+		call	file_read
 		inc	[bp+var_2]
 		add	si, 10h
 
