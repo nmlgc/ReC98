@@ -1178,87 +1178,7 @@ loc_1D70:
 		retf	2
 sub_1D50	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DA8	proc far
-					; sub_12461+177P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	ax, cx
-		or	ax, bp
-		jz	short loc_1E0F
-		mov	ax, cx
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	bx, ax
-		mov	ax, bp
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	dx, ax
-		cmp	dx, bx
-		jz	short loc_1DE4
-		jl	short loc_1DE8
-		mov	ax, bx
-		mov	bx, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 21Eh
-		xlat
-		jmp	short loc_1DFC
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1DE4:
-		mov	al, 20h	; ' '
-		jmp	short loc_1DFC
-; ---------------------------------------------------------------------------
-
-loc_1DE8:
-		mov	ax, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 21Eh
-		xlat
-		neg	al
-		add	al, 40h	; '@'
-
-loc_1DFC:
-		xor	ah, ah
-		or	bp, bp
-		jge	short loc_1E07
-		neg	ax
-		add	ax, 80h	; '€'
-
-loc_1E07:
-		or	cx, cx
-		jge	short loc_1E0D
-		neg	al
-
-loc_1E0D:
-		xor	ah, ah
-
-loc_1E0F:
-		pop	bp
-		retf	4
-sub_1DA8	endp
-
+include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
 
 ; ---------------------------------------------------------------------------
@@ -15851,7 +15771,7 @@ arg_2		= word ptr  6
 		mov	ax, word_25982
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, byte ptr [bp+arg_0]
 		mov	byte ptr [bp+arg_0], al
 		lea	ax, [si+0Ah]
@@ -22222,7 +22142,7 @@ loc_125CB:
 		mov	ax, [si]
 		add	ax, 0F380h
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[si+4],	al
 		mov	byte ptr [si+5], 10h
 		inc	di
@@ -22341,7 +22261,7 @@ loc_126D0:
 		mov	ax, [si]
 		add	ax, 0F380h
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[si+4],	al
 		cmp	byte_2CDD0, 0Eh
 		jz	short loc_126F2
@@ -23774,7 +23694,7 @@ sub_13117	endp
 		mov	ax, [bp+14h]
 		sub	ax, [bp+18h]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, [bp+10h]
 		mov	dl, al
 		movsx	eax, si
@@ -25235,262 +25155,7 @@ aBb0_cdg_0	db 'BB0.CDG',0
 aKao0_cd2	db 'KAO0.cd2',0
 aKao1_cd2	db 'KAO1.cd2',0
 		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
+include libs/master.lib/atan8[data].asm
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm

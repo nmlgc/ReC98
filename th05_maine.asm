@@ -337,89 +337,7 @@ loc_1A4E:
 sub_1A2E	endp
 
 include libs/master.lib/graph_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A8C	proc far
-					; sub_C16C+33P	...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	ax, cx
-		or	ax, bp
-		jz	short loc_1AF3
-		mov	ax, cx
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	bx, ax
-		mov	ax, bp
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	dx, ax
-		cmp	dx, bx
-		jz	short loc_1AC8
-		jl	short loc_1ACC
-		mov	ax, bx
-		mov	bx, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 0BCh ; '¼'
-		xlat
-		jmp	short loc_1AE0
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1AC8:
-		mov	al, 20h	; ' '
-		jmp	short loc_1AE0
-; ---------------------------------------------------------------------------
-
-loc_1ACC:
-		mov	ax, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 0BCh ; '¼'
-		xlat
-		neg	al
-		add	al, 40h	; '@'
-
-loc_1AE0:
-		xor	ah, ah
-		or	bp, bp
-		jge	short loc_1AEB
-		neg	ax
-		add	ax, 80h	; '€'
-
-loc_1AEB:
-		or	cx, cx
-		jge	short loc_1AF1
-		neg	al
-
-loc_1AF1:
-		xor	ah, ah
-
-loc_1AF3:
-		pop	bp
-		retf	4
-sub_1A8C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/iatan2.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8233,7 +8151,7 @@ loc_BFEB:
 		mov	ax, [si+0Eh]
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1A8C
+		call	iatan2
 		mov	[bp+var_8], al
 		mov	al, [si+12h]
 		sub	al, [bp+var_8]
@@ -8450,7 +8368,7 @@ loc_C18C:
 		mov	ax, [si+0Eh]
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1A8C
+		call	iatan2
 		mov	[si+12h], al
 		mov	byte ptr [si+13h], 60h ; '`'
 
@@ -10583,7 +10501,7 @@ loc_D4A9:
 		mov	ax, [si]
 		neg	ax
 		push	ax
-		call	sub_1A8C
+		call	iatan2
 		mov	[si+12h], al
 		push	word ptr [si]
 		push	word ptr [si+4]
@@ -10667,7 +10585,7 @@ loc_D53E:
 		mov	ax, [si]
 		neg	ax
 		push	ax
-		call	sub_1A8C
+		call	iatan2
 		mov	[si+12h], al
 		push	word ptr [si]
 		push	word ptr [si+4]
@@ -14918,262 +14836,7 @@ aMiko		db 'miko',0
 ; char arg0[]
 arg0		db 'op',0
 		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
+include libs/master.lib/atan8[data].asm
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm

@@ -1199,7 +1199,7 @@ sub_14017	endp
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266F4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_26709, al
 		mov	byte_266E2, 2
 		mov	byte_266E3, 39h	; '9'
@@ -2110,7 +2110,7 @@ sub_14C45	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266F4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_26709, al
 
 loc_14C6B:
@@ -2137,7 +2137,7 @@ loc_14C6B:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266F4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EC, 0
@@ -2557,7 +2557,7 @@ loc_15068:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266F4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		jmp	short loc_150A6
 ; ---------------------------------------------------------------------------
 
@@ -2675,7 +2675,7 @@ loc_1517E:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266F4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_26709, al
 
 loc_151A5:
@@ -3156,7 +3156,7 @@ sub_155AA	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, [si+1Eh]
 		mov	[si+1Eh], al
 		lea	ax, [si+0Ah]
@@ -4856,7 +4856,7 @@ sub_1630D	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266E4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 
 loc_1632F:
@@ -6471,7 +6471,7 @@ loc_170C3:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 		cmp	byte_25672, 0
 		jz	short loc_17102
@@ -8776,7 +8776,7 @@ loc_183A7:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 		mov	byte_266F0, 42h	; 'B'
 		leave
@@ -11066,7 +11066,7 @@ sub_19720	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_2671E, al
 		mov	byte_266EE, 10h
 
@@ -12305,7 +12305,7 @@ loc_1A199:
 		mov	ax, word ptr dword_2598E
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[bp+var_5], al
 		mov	al, [si+1]
 		sub	[bp+var_5], al
@@ -14390,7 +14390,7 @@ loc_1B13C:
 		mov	ax, word ptr dword_2670A
 		sub	ax, word ptr dword_2598E
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, 10h
 		mov	byte_266ED, al
 		mov	byte_266E2, 4
@@ -15324,7 +15324,7 @@ loc_1B9CE:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word_25A28
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[bp+var_1], al
 		mov	al, byte ptr word_25A36
 		sub	[bp+var_1], al
@@ -15451,7 +15451,7 @@ loc_1BB0C:
 		mov	ax, word ptr dword_2670A
 		sub	ax, word_25A28
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte ptr word_25A36, al
 		mov	al, byte ptr word_25A36+1
 		add	al, 8
@@ -15567,7 +15567,7 @@ sub_1BC3C	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte ptr word_25A36, al
 		mov	byte_25A26, 1
 		mov	word_25A34, 0
@@ -15842,7 +15842,7 @@ sub_1BE78	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, 0C0h ; 'À'
 		jmp	loc_1BF40
 ; ---------------------------------------------------------------------------
@@ -15985,7 +15985,7 @@ sub_1BFAB	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, 0C0h ; 'À'
 		jmp	short loc_1C033
 ; ---------------------------------------------------------------------------
@@ -16113,7 +16113,7 @@ sub_1C0BF	proc near
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 
 loc_1C0E7:
 		add	al, 40h	; '@'
@@ -16899,7 +16899,7 @@ loc_1C75D:
 		mov	ax, word ptr dword_2598E
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[si+11h], al
 		mov	al, [si+15h]
 		mov	[si+10h], al
@@ -18269,7 +18269,7 @@ loc_1D18D:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266E4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	[bp+var_2], ax
 
 loc_1D1A5:
@@ -19929,7 +19929,7 @@ loc_1DE90:
 		mov	ax, word ptr dword_2598E
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	[bp+var_1], al
 		lea	ax, [si+0Ah]
 		push	ax
@@ -21429,7 +21429,7 @@ var_1		= byte ptr -1
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_2671E, al
 		mov	byte_266EC, 2Dh	; '-'
 		mov	byte_266EF, 6
@@ -21772,7 +21772,7 @@ var_1		= byte ptr -1
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_2670A
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 		mov	byte_266EC, 1Ch
 		mov	byte_266EF, 3
@@ -23038,7 +23038,7 @@ loc_1FB10:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266E4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, 0C0h ; 'À'
 		mov	byte_2D02D, al
 		pop	bp
@@ -23382,7 +23382,7 @@ loc_1FE17:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266E4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		mov	byte_266ED, al
 		pop	bp
 		retn
@@ -23543,7 +23543,7 @@ loc_1FF44:
 		mov	ax, word ptr dword_2598E
 		sub	ax, word ptr dword_266E4
 		push	ax
-		call	sub_1DA8
+		call	iatan2
 		add	al, 0D0h ; 'Ð'
 		mov	byte_2D02D, al
 		jmp	loc_20044

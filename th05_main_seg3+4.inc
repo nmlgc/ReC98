@@ -1059,7 +1059,7 @@ arg_4		= word ptr  8
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, [bp+arg_4]
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		add	al, [bp+arg_0]
 		pop	bp
 		retn	6
@@ -4017,7 +4017,7 @@ loc_1722E:
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		mov	[bp+var_1], al
 		lea	ax, [si+0Ah]
 		push	ax
@@ -5193,7 +5193,7 @@ loc_17A56:
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		mov	[si+11h], al
 		push	si
 		call	sub_17973
@@ -9241,7 +9241,7 @@ loc_19E43:
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, word ptr dword_2630A
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		mov	byte_26312, al
 		call	sub_174C7
 		mov	al, byte_26312
@@ -10182,7 +10182,7 @@ loc_1A771:
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, word ptr dword_2630A
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		mov	byte_26312, al
 		mov	byte_26309, 8
 		mov	byte_26313, 8
@@ -10222,7 +10222,7 @@ loc_1A7E4:
 		mov	ax, word ptr dword_2CEA0
 		sub	ax, word ptr dword_2630A
 		push	ax
-		call	sub_1F3A
+		call	iatan2
 		mov	[bp-1],	al
 		mov	al, byte_26012
 		sub	[bp-1],	al

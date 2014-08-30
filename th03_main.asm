@@ -1511,87 +1511,7 @@ include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_hide.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1BD6	proc far
-					; sub_10405+3EP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	ax, cx
-		or	ax, bp
-		jz	short loc_1C3D
-		mov	ax, cx
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	bx, ax
-		mov	ax, bp
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	dx, ax
-		cmp	dx, bx
-		jz	short loc_1C12
-		jl	short loc_1C16
-		mov	ax, bx
-		mov	bx, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 178h
-		xlat
-		jmp	short loc_1C2A
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1C12:
-		mov	al, 20h	; ' '
-		jmp	short loc_1C2A
-; ---------------------------------------------------------------------------
-
-loc_1C16:
-		mov	ax, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 178h
-		xlat
-		neg	al
-		add	al, 40h	; '@'
-
-loc_1C2A:
-		xor	ah, ah
-		or	bp, bp
-		jge	short loc_1C35
-		neg	ax
-		add	ax, 80h	; '€'
-
-loc_1C35:
-		or	cx, cx
-		jge	short loc_1C3B
-		neg	al
-
-loc_1C3B:
-		xor	ah, ah
-
-loc_1C3D:
-		pop	bp
-		retf	4
-sub_1BD6	endp
-
+include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
 include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_show.asm
@@ -15167,7 +15087,7 @@ arg_12		= word ptr  18h
 		mov	ax, [bp+arg_E]
 		sub	ax, [bp+arg_12]
 		push	ax
-		call	sub_1BD6
+		call	iatan2
 		add	al, [bp+arg_A]
 		mov	dl, al
 		movsx	eax, si
@@ -18561,7 +18481,7 @@ sub_10405	proc near
 		mov	ax, word_1F342
 		sub	ax, word_20E50
 		push	ax
-		call	sub_1BD6
+		call	iatan2
 		mov	byte_20E4E, al
 		mov	word_1F356, 100h
 		mov	byte_1F354, 20h	; ' '
@@ -39009,7 +38929,7 @@ loc_1A7C1:
 loc_1A7D2:
 		push	word ptr [si+8]
 		push	word ptr [si+6]
-		call	sub_1BD6
+		call	iatan2
 		mov	[si+12h], al
 		jmp	short loc_1A7F1
 ; ---------------------------------------------------------------------------
@@ -40260,7 +40180,7 @@ loc_1B146:
 		mov	ax, [bx+65A6h]
 		sub	ax, [si+2]
 		push	ax
-		call	sub_1BD6
+		call	iatan2
 		mov	[bp+var_6], al
 		inc	byte ptr [si+13h]
 		sub	al, [si+12h]
@@ -41172,7 +41092,7 @@ loc_1B7BC:
 		mov	ax, [bp+var_2]
 		sub	ax, [bx+4]
 		push	ax
-		call	sub_1BD6
+		call	iatan2
 		mov	bx, word_1F868
 		mov	[bx+2],	al
 		push	ds
@@ -43614,262 +43534,7 @@ arg0		db 'mainl',0
 aLose_bf2	db 'lose.bf2',0
 aRound_bf2	db 'round.bf2',0
 aZikicw_bf2	db 'zikicw.bf2',0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    3
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    5
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    6
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    7
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Bh
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Dh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  10h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  11h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  13h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  14h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  15h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  16h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  17h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  18h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  19h
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Ah
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Bh
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Ch
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Dh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Eh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  1Fh
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
+include libs/master.lib/atan8[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm

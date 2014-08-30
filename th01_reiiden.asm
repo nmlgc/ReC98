@@ -2348,88 +2348,7 @@ include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1510	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	ax, cx
-		or	ax, bp
-		jz	short loc_1577
-		mov	ax, cx
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	bx, ax
-		mov	ax, bp
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	dx, ax
-		cmp	dx, bx
-		jz	short loc_154C
-		jl	short loc_1550
-		mov	ax, bx
-		mov	bx, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 0AFAh
-		xlat
-		jmp	short loc_1564
-; ---------------------------------------------------------------------------
-		nop
-
-loc_154C:
-		mov	al, 20h	; ' '
-		jmp	short loc_1564
-; ---------------------------------------------------------------------------
-
-loc_1550:
-		mov	ax, dx
-		xor	dh, dh
-		mov	dl, ah
-		mov	ah, al
-		mov	al, dh
-		div	bx
-		mov	bx, 0AFAh
-		xlat
-		neg	al
-		add	al, 40h	; '@'
-
-loc_1564:
-		xor	ah, ah
-		or	bp, bp
-		jge	short loc_156F
-		neg	ax
-		add	ax, 80h	; 'Ä'
-
-loc_156F:
-		or	cx, cx
-		jge	short loc_1575
-		neg	al
-
-loc_1575:
-		xor	ah, ah
-
-loc_1577:
-		pop	bp
-		retf	4
-sub_1510	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/iatan2.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27891,7 +27810,7 @@ loc_11FF4:
 		mov	ax, [bp+arg_4]
 		sub	ax, [bp+arg_0]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		movsx	eax, si
 		mov	dl, [bp+var_1]
@@ -28017,7 +27936,7 @@ arg_12		= word ptr  18h
 		mov	ax, [bp+arg_8]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		mov	ah, 0
 		and	ax, 0FFh
@@ -46323,28 +46242,7 @@ word_35206	dw 0
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/sin8[data].asm
-		db 0, 0, 0, 0, 1, 1, 1,	1, 1, 1, 2, 2, 2, 2, 2,	2, 3, 3
-		db 3, 3, 3, 3, 3, 4, 4,	4, 4, 4, 4, 5, 5, 5, 5,	5, 5, 6
-		db 6, 6, 6, 6, 6, 6, 7,	7, 7, 7, 7, 7, 8, 8, 8,	8, 8, 8
-		db 8, 9, 9, 9, 9, 9, 9,	0Ah, 0Ah, 0Ah, 0Ah, 0Ah, 0Ah, 0Ah
-		db 0Bh,	0Bh, 0Bh, 0Bh, 0Bh, 0Bh, 0Bh, 0Ch, 0Ch,	0Ch, 0Ch
-		db 0Ch,	0Ch, 0Ch, 0Dh, 0Dh, 0Dh, 0Dh, 0Dh, 0Dh,	0Dh, 0Eh
-		db 0Eh,	0Eh, 0Eh, 0Eh, 0Eh, 0Eh, 0Fh, 0Fh, 0Fh,	0Fh, 0Fh
-		db 0Fh,	0Fh, 10h, 10h, 10h, 10h, 10h, 10h, 10h,	11h, 11h
-		db 11h,	11h, 11h, 11h, 11h, 11h, 12h, 12h, 12h,	12h, 12h
-		db 12h,	12h, 13h, 13h, 13h, 13h, 13h, 13h, 13h,	13h, 14h
-		db 14h,	14h, 14h, 14h, 14h, 14h, 14h, 15h, 15h,	15h, 15h
-		db 15h,	15h, 15h, 15h, 15h, 16h, 16h, 16h, 16h,	16h, 16h
-		db 16h,	16h, 17h, 17h, 17h, 17h, 17h, 17h, 17h,	17h, 17h
-		db 18h,	18h, 18h, 18h, 18h, 18h, 18h, 18h, 18h,	19h, 19h
-		db 19h,	19h, 19h, 19h, 19h, 19h, 19h, 19h, 1Ah,	1Ah, 1Ah
-		db 1Ah,	1Ah, 1Ah, 1Ah, 1Ah, 1Ah, 1Bh, 1Bh, 1Bh,	1Bh, 1Bh
-		db 1Bh,	1Bh, 1Bh, 1Bh, 1Bh, 1Ch, 1Ch, 1Ch, 1Ch,	1Ch, 1Ch
-		db 1Ch,	1Ch, 1Ch, 1Ch, 1Ch, 1Dh, 1Dh, 1Dh, 1Dh,	1Dh, 1Dh
-		db 1Dh,	1Dh, 1Dh, 1Dh, 1Dh, 1Eh, 1Eh, 1Eh, 1Eh,	1Eh, 1Eh
-		db 1Eh,	1Eh, 1Eh, 1Eh, 1Eh, 1Fh, 1Fh, 1Fh, 1Fh,	1Fh, 1Fh
-		db 1Fh,	1Fh, 1Fh, 1Fh, 1Fh, 1Fh, 20h, 20h, 20h,	20h, 20h
-		db 20h
+include libs/master.lib/atan8[data].asm
 include libs/master.lib/rand[data].asm
 		db    7
 		db 0E0h	; ÅE

@@ -1860,7 +1860,7 @@ loc_1C1AF:
 		sub	ax, word ptr dword_3988E
 		add	ax, 1Ch
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_39E16, al
 		mov	ax, 190h
 		sub	ax, word_398C2
@@ -1870,7 +1870,7 @@ loc_1C1AF:
 		sub	ax, word_398C0
 		add	ax, 1Ch
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_39E16+1, al
 		mov	al, byte ptr word_39E16
 		add	al, 0F0h ; '·
@@ -2587,7 +2587,7 @@ loc_1C8C2:
 		sub	ax, word ptr dword_3988E
 		add	ax, 1Ch
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_39E16, al
 		mov	ax, 190h
 		sub	ax, word_398C2
@@ -2597,7 +2597,7 @@ loc_1C8C2:
 		sub	ax, word_398C0
 		add	ax, 1Ch
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_39E16+1, al
 		mov	al, byte ptr word_39E16
 		add	al, 0F0h ; '·
@@ -4427,7 +4427,7 @@ loc_1DB5B:
 		mov	ax, [bx+5446h]
 		sub	ax, word_39DFC
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_39E16, al
 		push	large 0
 		push	large 0
@@ -6112,7 +6112,7 @@ loc_1E9C6:
 		mov	ax, ss:[bx]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_13], al
 		push	large 0
 		push	large 0
@@ -6163,7 +6163,7 @@ loc_1EA31:
 		add	ax, 0Ch
 		sub	ax, ss:[bx]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_13], al
 		push	large 0
 		push	large 0
@@ -6611,7 +6611,7 @@ loc_1EDD9:
 		mov	ax, ss:[bx]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_23], al
 		push	large 0
 		push	large 0
@@ -6644,7 +6644,7 @@ loc_1EDD9:
 		mov	ax, ss:[bx]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_23], al
 		push	large 0
 		push	large 0
@@ -12327,7 +12327,7 @@ arg_A		= dword	ptr  10h
 		add	bx, ax
 		push	word ptr es:[bx+1F4h]
 		push	word ptr es:[bx+190h]
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_A], ax
 		; Hack (fild [bp+var_A])
 		db 0cdh
@@ -16842,7 +16842,7 @@ loc_23E9A:
 		mov	ax, word_36C26
 		add	ax, 0FED4h
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_7], al
 		push	large 0E00138h
 		push	large 200005h
@@ -26256,7 +26256,7 @@ arg_8		= dword	ptr  0Ch
 		add	bx, dx
 		sub	ax, es:[bx]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+arg_0], al
 		push	large 0
 		push	large 0
@@ -26507,7 +26507,7 @@ loc_29219:
 		sub	ax, [bx+61FCh]
 		add	ax, 0Ch
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		push	large 0
 		push	large 0
@@ -30195,7 +30195,7 @@ loc_2B21A:
 		idiv	bx
 		sub	dx, word_3B04D
 		push	dx
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		push	large 0
 		push	large 0
@@ -30215,7 +30215,7 @@ loc_2B21A:
 		idiv	bx
 		sub	dx, word_3B04D
 		push	dx
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		push	large 0
 		push	large 0
@@ -30963,7 +30963,7 @@ loc_2B780:
 		mov	ax, word_3B327
 		add	ax, 0FEC0h
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_3B32D, al
 		push	large 0
 		push	large 0
@@ -30993,7 +30993,7 @@ loc_2B7E7:
 		mov	ax, word_3B327
 		add	ax, 0FEC0h
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_3B32D, al
 		push	large 0
 		push	large 0
@@ -31251,7 +31251,7 @@ loc_2BA6F:
 		mov	ax, word_3B338
 		add	ax, 0FEC0h
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_3B33E, al
 		push	large 0
 		push	large 0
@@ -31281,7 +31281,7 @@ loc_2BADA:
 		mov	ax, word_3B338
 		add	ax, 0FEC0h
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_3B33E, al
 		push	large 0
 		push	large 0
@@ -34405,7 +34405,7 @@ loc_2D62C:
 		mov	ax, [bp+var_4]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_7], al
 		push	large 0
 		push	large 0
@@ -34435,7 +34435,7 @@ loc_2D62C:
 		mov	ax, [bp+var_4]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_7], al
 		push	large 0
 		push	large 0
@@ -34465,7 +34465,7 @@ loc_2D62C:
 		mov	ax, [bp+var_4]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_7], al
 		push	large 0
 		push	large 0
@@ -34494,7 +34494,7 @@ loc_2D62C:
 		mov	ax, [bp+var_4]
 		sub	ax, di
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_7], al
 		push	large 0
 		push	large 0
@@ -34723,7 +34723,7 @@ loc_2D935:
 		add	ax, 0Ch
 		sub	ax, word_3B457
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_5], al
 		call	IRand
 		mov	bx, 2
@@ -34836,7 +34836,7 @@ loc_2DA39:
 		imul	bx, 0Ah
 		sub	ax, [bx+6AB7h]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_5], al
 		call	IRand
 		mov	bx, 2
@@ -34981,7 +34981,7 @@ loc_2DB95:
 		add	ax, 0Ch
 		sub	ax, word_3B461
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr [bp+var_5], al
 		call	IRand
 		mov	bx, 2
@@ -35423,7 +35423,7 @@ loc_2DF55:
 		mov	ax, word_36C26
 		add	ax, 0FEEAh
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	byte ptr word_3B49C, al
 		mov	al, byte_3B49B
 		add	byte ptr word_3B49C, al
@@ -35518,7 +35518,7 @@ loc_2E01D:
 		add	ax, 0Ch
 		sub	ax, word_3B4A1
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		call	IRand
 		mov	bx, 2
@@ -35644,7 +35644,7 @@ loc_2E13D:
 		imul	bx, 0Ah
 		sub	ax, [bx+6B01h]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		call	IRand
 		mov	bx, 2
@@ -35789,7 +35789,7 @@ loc_2E299:
 		add	ax, 0Ch
 		sub	ax, word_3B4AB
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		call	IRand
 		mov	bx, 2
@@ -35844,7 +35844,7 @@ loc_2E311:
 		add	ax, 0Ch
 		sub	ax, word_3B4B5
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		call	IRand
 		mov	bx, 2
@@ -35899,7 +35899,7 @@ loc_2E38B:
 		add	ax, 0Ch
 		sub	ax, word_3B4BF
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	[bp+var_1], al
 		call	IRand
 		mov	bx, 2
@@ -39166,7 +39166,7 @@ arg_E		= byte ptr  14h
 		add	ax, 0Ch
 		sub	ax, [bp+arg_0]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		add	al, [bp+arg_E]
 		mov	[bp+arg_E], al
 		movsx	eax, si
@@ -39818,7 +39818,7 @@ loc_3057A:
 		mov	ax, [bx+2]
 		sub	ax, [bx+6]
 		push	ax
-		call	sub_1510
+		call	iatan2
 		mov	bx, word_3B530
 		mov	[bx+26h], ax
 
