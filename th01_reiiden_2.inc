@@ -1842,7 +1842,7 @@ loc_1C191:
 loc_1C1AF:
 		cmp	word_39E08, 0
 		jnz	short loc_1C21E
-		call	sub_1608
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -2569,7 +2569,7 @@ loc_1C8AB:
 loc_1C8C2:
 		cmp	word_39E08, 0
 		jnz	short loc_1C931
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -6798,7 +6798,7 @@ arg_0		= word ptr  6
 		jnz	short loc_1EFB1
 		mov	byte_39E25, 0FFh
 		mov	byte_35B7B, 4
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -7130,13 +7130,13 @@ loc_1F24E:
 loc_1F263:
 		cmp	si, 8
 		jl	short loc_1F24E
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
 		add	dx, 10h
 		mov	word_39E37, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -7144,37 +7144,37 @@ loc_1F263:
 		sub	ax, dx
 		add	ax, 10h
 		mov	word_39E39, ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 0E0h ; '·
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	word_39E3B, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 0E0h ; '·
 		cwd
 		idiv	bx
 		add	dx, 150h
 		mov	word_39E3D, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 0A0h ; '?'
 		cwd
 		idiv	bx
 		add	dx, 80h	; '?'
 		mov	word_39E3F, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 0A0h ; '?'
 		cwd
 		idiv	bx
 		add	dx, 150h
 		mov	word_39E41, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 0E0h ; '·
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	word_39E43, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 0E0h ; '·
 		cwd
 		idiv	bx
@@ -8475,7 +8475,7 @@ loc_1FE6A:
 		movzx	eax, si
 		cmp	edx, eax
 		jnz	loc_1FF7E
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -9982,7 +9982,7 @@ loc_20A27:
 		jmp	short $+2
 
 loc_20A7A:
-		call	sub_1608
+		call	IRand
 		cwd
 		idiv	word_39E90
 		mov	word_39EB0, dx
@@ -11528,7 +11528,7 @@ loc_216D5:
 		cbw
 		cmp	ax, 11h
 		jnz	short loc_216F5
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -11612,13 +11612,13 @@ loc_21777:
 		push	word_39EB9
 		call	sub_197E1
 		add	sp, 6
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
 		mov	word_34A7C, dx
 		push	3		; int
-		call	sub_1608
+		call	IRand
 		mov	bx, 13h
 		cwd
 		idiv	bx
@@ -13350,7 +13350,7 @@ loc_222B5:
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+598Dh], 1
-		call	sub_1608
+		call	IRand
 		cwd
 		idiv	word_3A1EB
 		inc	dl
@@ -13372,7 +13372,7 @@ loc_222B5:
 		jmp	cs:off_22684[bx]
 
 loc_22323:
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -13391,7 +13391,7 @@ loc_22323:
 ; ---------------------------------------------------------------------------
 
 loc_22350:
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -13452,7 +13452,7 @@ loc_223B7:
 		mov	word ptr [bx+584Dh], 0
 
 loc_223C6:
-		call	sub_1608
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -13466,7 +13466,7 @@ loc_223C6:
 ; ---------------------------------------------------------------------------
 
 loc_223E3:
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -14256,7 +14256,7 @@ sub_229D1	proc far
 		mov	bp, sp
 		cmp	word_3A37F, 0Ah
 		jnz	short loc_229F4
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -14826,7 +14826,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_22E62:
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		mov	[bp+var_1], al
 		push	large 0
@@ -14877,12 +14877,12 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_22EBC:
-		call	sub_1608
+		call	IRand
 		mov	bx, 60h	; '`'
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 60h	; '`'
 		cwd
 		idiv	bx
@@ -15250,7 +15250,7 @@ loc_231EA:
 		jnz	short loc_2320E
 		cmp	word_35CE0, 4
 		jnz	short loc_23205
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -17354,7 +17354,7 @@ sub_24316	proc near
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17377,7 +17377,7 @@ loc_24378:
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17400,7 +17400,7 @@ loc_243B7:
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17423,7 +17423,7 @@ loc_243F6:
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17446,7 +17446,7 @@ loc_24434:
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17469,7 +17469,7 @@ loc_24472:
 		push	0Ah
 		push	word_3A6B7
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
@@ -17701,7 +17701,7 @@ loc_246A0:
 		cwd
 		idiv	bx
 		mov	si, ax
-		call	sub_1608
+		call	IRand
 		mov	dx, word_3A6BD+1
 		add	dx, dx
 		inc	dx
@@ -18751,7 +18751,7 @@ sub_24FE0	proc far
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 6
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		xor	si, si
 		jmp	short loc_250B3
 ; ---------------------------------------------------------------------------
@@ -19003,7 +19003,7 @@ loc_252CC:
 		jle	short loc_25310
 
 loc_252DA:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -19012,7 +19012,7 @@ loc_252DA:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5D2Fh], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -19025,7 +19025,7 @@ loc_252DA:
 ; ---------------------------------------------------------------------------
 
 loc_25310:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -19044,7 +19044,7 @@ loc_25310:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5D2Fh], ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -19166,7 +19166,7 @@ var_8		= qword	ptr -8
 		enter	12h, 0
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2546B
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -19552,12 +19552,12 @@ loc_25726:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_257C3
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
 		mov	si, dx
-		call	sub_1608
+		call	IRand
 		cwd
 		idiv	word_3A6CC
 		mov	ax, word_3A6CC
@@ -19669,7 +19669,7 @@ loc_2580F:
 		jnz	short loc_25861
 
 loc_2582D:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -19678,7 +19678,7 @@ loc_2582D:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5D47h], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -19691,7 +19691,7 @@ loc_2582D:
 loc_25861:
 		cmp	word_3A6CA, 0A0h ; '?'
 		jge	short loc_2589A
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -20240,7 +20240,7 @@ arg_0		= word ptr  6
 		jmp	cs:off_25DDE[bx]
 
 loc_25DB9:
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -20972,7 +20972,7 @@ loc_26413:
 		mov	bx, ax
 		pop	ax
 		mov	[bx+5D5Fh], ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C8h ; '?'
 		cwd
 		idiv	bx
@@ -21098,10 +21098,10 @@ loc_26548:
 ; ---------------------------------------------------------------------------
 
 loc_26568:
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		mov	byte ptr [bp+var_3], al
-		call	sub_1608
+		call	IRand
 		add	ax, 18h
 		and	ax, 3Fh
 		mov	[bp+var_3+1], ax
@@ -21269,12 +21269,12 @@ loc_266F4:
 		jnz	short loc_2672E
 		cmp	word_3A6CA, 78h	; 'x'
 		jge	short loc_2672E
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
 		mov	si, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 15h
 		cwd
 		idiv	bx
@@ -21288,18 +21288,18 @@ loc_2672E:
 		jl	loc_267B8
 		cmp	word_3A6CA, 0C8h ; '?'
 		jge	short loc_267B8
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
 		mov	si, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 15h
 		cwd
 		idiv	bx
 		add	dl, 36h	; '6'
 		mov	byte ptr [bp+var_3], dl
-		call	sub_1608
+		call	IRand
 		test	al, 1
 		jz	short loc_2676D
 		mov	al, byte ptr word_3A6CA
@@ -21389,7 +21389,7 @@ loc_26804:
 		jnz	short loc_26856
 
 loc_26822:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -21398,7 +21398,7 @@ loc_26822:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5D89h], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -21411,7 +21411,7 @@ loc_26822:
 loc_26856:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jge	short loc_2688F
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -21484,7 +21484,7 @@ loc_268CB:
 		jmp	cs:off_26938[bx]
 
 loc_268D9:
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -21640,7 +21640,7 @@ loc_269F0:
 		jnz	short loc_26A42
 
 loc_26A0E:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -21649,7 +21649,7 @@ loc_26A0E:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5D9Dh], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -21662,12 +21662,12 @@ loc_26A0E:
 loc_26A42:
 		cmp	word_3A6CA, 64h	; 'd'
 		jge	short loc_26A84
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -21814,7 +21814,7 @@ loc_26B6D:
 		jnz	short loc_26BBF
 
 loc_26B8B:
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
@@ -21823,7 +21823,7 @@ loc_26B8B:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5DB1h], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
@@ -21836,12 +21836,12 @@ loc_26B8B:
 loc_26BBF:
 		cmp	word_3A6CA, 64h	; 'd'
 		jge	short loc_26C01
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -21999,12 +21999,12 @@ loc_26D30:
 		jnz	loc_26DB8
 
 loc_26D39:
-		call	sub_1608
+		call	IRand
 		mov	bx, 200h
 		cwd
 		idiv	bx
 		mov	word_3A765, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 88h	; '·
 		cwd
 		idiv	bx
@@ -22048,7 +22048,7 @@ loc_26D82:
 		mov	word_3A769, ax
 
 loc_26DB8:
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -22136,7 +22136,7 @@ sub_26E49	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26E8A
-		call	sub_1608
+		call	IRand
 		test	al, 1
 		jz	short loc_26E6A
 		push	large 580016h
@@ -22247,7 +22247,7 @@ sub_26F12	proc far
 		push	large 0
 		push	large 10001h
 		push	2
-		call	sub_1608
+		call	IRand
 		push	ax
 		mov	ax, word ptr dword_3988E+2
 		add	ax, 0Ch
@@ -22855,7 +22855,7 @@ loc_2751B:
 loc_2751E:
 		push	ax
 		push	40h ; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 278h
 		cwd
 		idiv	bx
@@ -23416,7 +23416,7 @@ loc_27AD9:
 		jmp	cs:off_27B5F[bx]
 
 loc_27AE9:
-		call	sub_1608
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -23531,7 +23531,7 @@ loc_27B85:
 		mov	word_35D48, ax
 		cmp	word_35D4A, 0
 		jnz	short loc_27BBE
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -24190,13 +24190,13 @@ loc_281F4:
 loc_28211:
 		cmp	word_3A779, 0
 		jnz	short loc_2823F
-		call	sub_1608
+		call	IRand
 		mov	bx, 88h	; '·
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		push	dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 200h
 		cwd
 		idiv	bx
@@ -24323,13 +24323,13 @@ loc_2832B:
 loc_28368:
 		cmp	word_3A779, 0
 		jnz	short loc_28396
-		call	sub_1608
+		call	IRand
 		mov	bx, 88h	; '·
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		push	dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 200h
 		cwd
 		idiv	bx
@@ -24783,7 +24783,7 @@ loc_2871C:
 		call	sub_11A7C
 		add	sp, 0Ch
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		pop	si
 		pop	bp
 		retf
@@ -25369,7 +25369,7 @@ loc_28B00:
 		push	large 0
 		push	large 10001h
 		push	40h ; '@'
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		add	al, 80h	; '?'
 		push	ax
@@ -26608,7 +26608,7 @@ loc_293A3:
 		jge	loc_2945E
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_293CE
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -26687,7 +26687,7 @@ loc_2945E:
 		jge	loc_2954A
 		cmp	word_3A6CA, 0F0h ; '·
 		jnz	short loc_294AA
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -26845,7 +26845,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_295BD:
-		call	sub_1608
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -26853,7 +26853,7 @@ loc_295BD:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+6210h], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 64h	; 'd'
 		cwd
 		idiv	bx
@@ -26946,7 +26946,7 @@ loc_29698:
 		push	4
 		push	word_3A780
 		push	190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -27014,7 +27014,7 @@ loc_2970D:
 		mov	word_35DE3, 0
 		mov	word_3AC50, 1540h
 		mov	word_3AC52, 400h
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -27023,7 +27023,7 @@ loc_2970D:
 		sub	ax, dx
 		shl	ax, 4
 		mov	word_3AC56, ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -27214,7 +27214,7 @@ loc_298FD:
 ; ---------------------------------------------------------------------------
 
 loc_29905:
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		add	al, 80h	; '?'
 		push	ax
@@ -27303,7 +27303,7 @@ loc_2997F:
 		or	si, si
 		jge	short loc_29905
 		call	sub_28FA9
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -27486,7 +27486,7 @@ loc_29AE4:
 		push	0Ch
 		call	sub_EABB
 		pop	cx
-		call	sub_1608
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27820,7 +27820,7 @@ arg_0		= word ptr  4
 loc_29DA5:
 		cmp	byte ptr [si+1445h], 0
 		jnz	short loc_29E2A
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -27870,7 +27870,7 @@ loc_29DD7:
 		db 03dh
 		cmp	[bp+arg_0], 0
 		jnz	short loc_29E00
-		call	sub_1608
+		call	IRand
 		mov	bx, 0Fh
 		cwd
 		idiv	bx
@@ -27879,7 +27879,7 @@ loc_29DD7:
 ; ---------------------------------------------------------------------------
 
 loc_29E00:
-		call	sub_1608
+		call	IRand
 		neg	ax
 		mov	bx, 0Fh
 		cwd
@@ -28272,7 +28272,7 @@ loc_2A0CF:
 		mov	word_3AF42, 18h
 		mov	ax, word_3AF32
 		mov	word_3AF34, ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -28336,7 +28336,7 @@ loc_2A175:
 		sub	word_3AF3E, 6
 		add	word_3AF40, 6
 		add	word_3AF42, 4
-		call	sub_1608
+		call	IRand
 		mov	bx, 40h	; '@'
 		cwd
 		idiv	bx
@@ -28345,7 +28345,7 @@ loc_2A175:
 		add	dx, ax
 		add	dx, 0FFE4h
 		mov	word_3AF34, dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -28536,7 +28536,7 @@ loc_2A3DC:
 		idiv	word_3A780
 		or	dx, dx
 		jnz	short loc_2A459
-		call	sub_1608
+		call	IRand
 		mov	[bp+var_5], al
 		mov	ah, 0
 		and	ax, 0FFh
@@ -28606,7 +28606,7 @@ var_2		= word ptr -2
 loc_2A480:
 		cmp	byte ptr [si+1465h], 0
 		jnz	short loc_2A4BF
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -29078,7 +29078,7 @@ var_2		= word ptr -2
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_2A947
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -30189,7 +30189,7 @@ loc_2B21A:
 		mov	ax, 190h
 		sub	ax, word_3B04F
 		push	ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -30209,7 +30209,7 @@ loc_2B21A:
 		mov	ax, 190h
 		sub	ax, word_3B04F
 		push	ax
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -30369,7 +30369,7 @@ arg_0		= word ptr  4
 loc_2B366:
 		cmp	byte ptr [si+1483h], 0
 		jnz	short loc_2B3DA
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -30390,7 +30390,7 @@ loc_2B366:
 		; Hack (wait)
 		db 0cdh
 		db 03dh
-		call	sub_1608
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -30411,7 +30411,7 @@ loc_2B366:
 		; Hack (wait)
 		db 0cdh
 		db 03dh
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -31183,7 +31183,7 @@ loc_2B9EA:
 		push	large 0
 		push	large 10001h
 		push	10h
-		call	sub_1608
+		call	IRand
 		push	ax
 		push	0B9h ; '?'
 		mov	ax, 280h
@@ -31382,14 +31382,14 @@ loc_2BBB2:
 		add	bx, bx
 		cmp	word ptr [bx+14A1h], 0
 		jnz	short loc_2BC3B
-		call	sub_1608
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+69A1h], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 3E8h
 		cwd
 		idiv	bx
@@ -31409,7 +31409,7 @@ loc_2BBB2:
 		add	ax, 6A19h
 		push	ax
 		push	40h ; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -31568,7 +31568,7 @@ loc_2BD70:
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx+14A1h], 6
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -31641,7 +31641,7 @@ loc_2BE11:
 		add	bx, bx
 		cmp	word ptr [bx+6A55h], 0FFFFh
 		jge	short loc_2BE75
-		call	sub_1608
+		call	IRand
 		mov	bx, 14h
 		cwd
 		idiv	bx
@@ -31984,7 +31984,7 @@ loc_2C117:
 		call	sub_C433
 		add	sp, 4
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 
 loc_2C14E:
 		inc	word_3A6CA
@@ -32140,7 +32140,7 @@ loc_2C2F2:
 		mov	byte_3A6CE, 1
 		mov	word_35E95, 0
 		mov	word_35E97, 0
-		call	sub_1608
+		call	IRand
 		mov	bx, 6
 		cwd
 		idiv	bx
@@ -32381,7 +32381,7 @@ loc_2C4A1:
 		mov	byte_3A6CE, 3
 		mov	word_3A6CA, 0
 		call	sub_28852
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		jmp	loc_2C82A
 ; ---------------------------------------------------------------------------
@@ -32475,7 +32475,7 @@ loc_2C594:
 		mov	word_3A6CA, 0
 		call	sub_28852
 		call	sub_232A4
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -32593,7 +32593,7 @@ loc_2C6B0:
 		mov	word_3A6CA, 0
 		call	sub_28852
 		call	sub_232A4
-		call	sub_1608
+		call	IRand
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -32754,7 +32754,7 @@ loc_2C7F1:
 		mov	word_3A6CA, 0
 		call	sub_28852
 		call	sub_232A4
-		call	sub_1608
+		call	IRand
 		mov	bx, 6
 
 loc_2C82A:
@@ -32843,7 +32843,7 @@ loc_2C8AE:
 		pop	cx
 		mov	word_3B431, 0
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		call	sub_12589
 		push	1
 		call	sub_EA3E
@@ -34386,13 +34386,13 @@ loc_2D62C:
 		or	dx, dx
 		jnz	loc_2D7D3
 		xor	di, di
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C8h ; '?'
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	[bp+var_2], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -34417,13 +34417,13 @@ loc_2D62C:
 		push	offset unk_37635
 		call	sub_304B8
 		mov	di, 278h
-		call	sub_1608
+		call	IRand
 		mov	bx, 0C8h ; '?'
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	[bp+var_2], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -34448,13 +34448,13 @@ loc_2D62C:
 		call	sub_304B8
 		add	sp, 28h
 		mov	[bp+var_2], 40h	; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	di, dx
 		mov	[bp+var_7+1], 190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -34477,13 +34477,13 @@ loc_2D62C:
 		push	offset unk_37635
 		call	sub_304B8
 		mov	[bp+var_2], 40h	; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	di, dx
 		mov	[bp+var_7+1], 190h
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -34507,7 +34507,7 @@ loc_2D62C:
 		call	sub_304B8
 		add	sp, 28h
 		mov	[bp+var_2], 40h	; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -34725,7 +34725,7 @@ loc_2D935:
 		push	ax
 		call	sub_1510
 		mov	byte ptr [bp+var_5], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -34838,7 +34838,7 @@ loc_2DA39:
 		push	ax
 		call	sub_1510
 		mov	byte ptr [bp+var_5], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -34983,7 +34983,7 @@ loc_2DB95:
 		push	ax
 		call	sub_1510
 		mov	byte ptr [bp+var_5], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35024,7 +35024,7 @@ loc_2DBEC:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2DD61
-		call	sub_1608
+		call	IRand
 		mov	bx, 0Ch
 		cwd
 		idiv	bx
@@ -35520,7 +35520,7 @@ loc_2E01D:
 		push	ax
 		call	sub_1510
 		mov	[bp+var_1], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35646,7 +35646,7 @@ loc_2E13D:
 		push	ax
 		call	sub_1510
 		mov	[bp+var_1], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35791,7 +35791,7 @@ loc_2E299:
 		push	ax
 		call	sub_1510
 		mov	[bp+var_1], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35846,7 +35846,7 @@ loc_2E311:
 		push	ax
 		call	sub_1510
 		mov	[bp+var_1], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35901,7 +35901,7 @@ loc_2E38B:
 		push	ax
 		call	sub_1510
 		mov	[bp+var_1], al
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -36210,7 +36210,7 @@ loc_2E6AC:
 		push	large 0
 		push	large 10001h
 		push	20h ; ' '
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		push	ax
 		push	word_3B513
@@ -36221,7 +36221,7 @@ loc_2E6AC:
 		push	large 0
 		push	large 10001h
 		push	20h ; ' '
-		call	sub_1608
+		call	IRand
 		and	al, 7Fh
 		push	ax
 		push	word_3B513
@@ -36368,7 +36368,7 @@ loc_2E803:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36381,7 +36381,7 @@ loc_2E803:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36432,7 +36432,7 @@ loc_2E8CC:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36445,7 +36445,7 @@ loc_2E8CC:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36485,7 +36485,7 @@ loc_2E966:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36498,7 +36498,7 @@ loc_2E966:
 		push	large 0
 		push	large 10001h
 		push	0
-		call	sub_1608
+		call	IRand
 		mov	bx, 7Fh	; ''
 		cwd
 		idiv	bx
@@ -36692,7 +36692,7 @@ loc_2EBA2:
 		jl	loc_2EC98
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2EBD8
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -37023,7 +37023,7 @@ var_2		= word ptr -2
 		mov	byte_3B52F, 0
 		call	sub_232A4
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		jmp	loc_2FC40
 ; ---------------------------------------------------------------------------
 
@@ -37094,7 +37094,7 @@ loc_2EF52:
 		cmp	word_3A6CA, 78h	; 'x'
 		jle	short loc_2EF97
 		mov	word_3A6CA, 1
-		call	sub_1608
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -37102,7 +37102,7 @@ loc_2EF52:
 		mov	ax, word_35FF8
 		cmp	ax, word_3B52D
 		jnz	short loc_2EF8D
-		call	sub_1608
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -37351,7 +37351,7 @@ loc_2F1A2:
 		cmp	word_3A6CA, 78h	; 'x'
 		jle	short loc_2F1E7
 		mov	word_3A6CA, 1
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -37359,7 +37359,7 @@ loc_2F1A2:
 		mov	ax, word_35FF8
 		cmp	ax, word_3B52D
 		jnz	short loc_2F1DD
-		call	sub_1608
+		call	IRand
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -37600,7 +37600,7 @@ loc_2F3E5:
 		cmp	word_3A6CA, 78h	; 'x'
 		jle	short loc_2F42A
 		mov	word_3A6CA, 1
-		call	sub_1608
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -37608,7 +37608,7 @@ loc_2F3E5:
 		mov	ax, word_35FF8
 		cmp	ax, word_3B52D
 		jnz	short loc_2F420
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -37937,7 +37937,7 @@ loc_2F6DB:
 		cmp	word_3A6CA, 5
 		jle	short loc_2F720
 		mov	word_3A6CA, 1
-		call	sub_1608
+		call	IRand
 		mov	bx, 0Ch
 		cwd
 		idiv	bx
@@ -37945,7 +37945,7 @@ loc_2F6DB:
 		mov	ax, word_35FF8
 		cmp	ax, word_3B52D
 		jnz	short loc_2F716
-		call	sub_1608
+		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -39436,7 +39436,7 @@ loc_302C1:
 ; ---------------------------------------------------------------------------
 
 loc_302CB:
-		call	sub_1608
+		call	IRand
 		and	al, 0Fh
 		add	al, 0F9h ; '·
 		mov	[bp+var_1], al
@@ -39445,7 +39445,7 @@ loc_302CB:
 ; ---------------------------------------------------------------------------
 
 loc_302DC:
-		call	sub_1608
+		call	IRand
 		and	al, 3Fh
 		add	al, 20h	; ' '
 		mov	[bp+var_1], al
@@ -39889,7 +39889,7 @@ loc_30660:
 		mov	bx, word_3B530
 		cmp	word ptr [bx+28h], 0
 		jnz	short loc_3067A
-		call	sub_1608
+		call	IRand
 		and	ax, 1
 		inc	ax
 		mov	bx, word_3B530

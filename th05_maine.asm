@@ -674,27 +674,7 @@ loc_1DEA:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1DF8	proc far
-		mov	ax, 4E35h
-		mul	word ptr dword_10376+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_10376
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_10376
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_10376, ax
-		mov	ax, dx
-		mov	word ptr dword_10376+2,	ax
-		and	ah, 7Fh
-		retf
-sub_1DF8	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -4985,7 +4965,7 @@ _envp		= dword	ptr  0Ch
 		call	graph_show
 		les	bx, dword_11E6E
 		mov	eax, es:[bx+28h]
-		mov	dword_10376, eax
+		mov	random_seed, eax
 		push	64h ; 'd'
 		call	sub_F282
 		les	bx, dword_11E6E
@@ -6814,9 +6794,9 @@ loc_B53C:
 loc_B547:
 		cmp	si, 60h	; '`'
 		jl	short loc_B53C
-		call	sub_1DF8
+		call	IRand
 		mov	byte_1501A, al
-		call	sub_1DF8
+		call	IRand
 		mov	byte_1501B, al
 		mov	[bp+var_1], 0
 		mov	si, 5Fh	; '_'
@@ -8034,9 +8014,9 @@ loc_BD8F:
 		shl	ax, 4
 		add	ax, 80h	; '€'
 		mov	[si+4],	ax
-		call	sub_1DF8
+		call	IRand
 		mov	[si+12h], al
-		call	sub_1DF8
+		call	IRand
 		mov	bx, 40h	; '@'
 		cwd
 		idiv	bx
@@ -9422,7 +9402,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		les	bx, dword_11E6E
 		mov	eax, es:[bx+28h]
-		mov	dword_10376, eax
+		mov	random_seed, eax
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -10560,7 +10540,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_D3B3:
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151CE
 		shl	dx, 4
@@ -10569,7 +10549,7 @@ loc_D3B3:
 		sub	dx, ax
 		movsx	eax, dx
 		mov	[si], eax
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151D0
 		shl	dx, 4
@@ -10578,7 +10558,7 @@ loc_D3B3:
 		sub	dx, ax
 		movsx	eax, dx
 		mov	[si+4],	eax
-		call	sub_1DF8
+		call	IRand
 		mov	[si+12h], al
 		mov	word ptr [si+0Eh], 0Ah
 		mov	word ptr [si+0Ch], 0
@@ -10621,7 +10601,7 @@ loc_D451:
 ; ---------------------------------------------------------------------------
 
 loc_D45A:
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151CE
 		shl	dx, 4
@@ -10630,7 +10610,7 @@ loc_D45A:
 		sub	dx, ax
 		mov	bx, [bp+var_4]
 		mov	[bx], dx
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151D0
 		shl	dx, 4
@@ -10767,10 +10747,10 @@ loc_D53E:
 		idiv	bx
 		mov	[si+0Eh], ax
 		mov	word ptr [si+0Ch], 0
-		call	sub_1DF8
+		call	IRand
 		and	al, 7Fh
 		mov	[si+12h], al
-		call	sub_1DF8
+		call	IRand
 		mov	bx, 40h	; '@'
 		cwd
 		idiv	bx
@@ -11008,7 +10988,7 @@ loc_D763:
 		jg	short loc_D7CA
 
 loc_D783:
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151CE
 		shl	dx, 4
@@ -11126,7 +11106,7 @@ sub_D853	proc near
 		add	ax, 50E4h
 		mov	si, ax
 		mov	word ptr [si+0Ch], 0
-		call	sub_1DF8
+		call	IRand
 		and	al, 7Fh
 		mov	[si+12h], al
 		mov	word ptr [si+0Eh], 30h ; '0'
@@ -11393,24 +11373,24 @@ sub_DA36	proc near
 		mov	ax, word_11842
 		cmp	ax, 40h	; '@'
 		jge	loc_DAD4
-		call	sub_1DF8
+		call	IRand
 		mov	bx, 18h
 		cwd
 		idiv	bx
 		add	dx, 8
 		mov	[si+0Eh], dx
-		call	sub_1DF8
+		call	IRand
 		mov	bx, 40h	; '@'
 		cwd
 		idiv	bx
 		add	dl, 20h	; ' '
 		mov	[si+12h], dl
-		call	sub_1DF8
+		call	IRand
 		mov	bx, 6
 		cwd
 		idiv	bx
 		mov	[si+0Ch], dx
-		call	sub_1DF8
+		call	IRand
 		cwd
 		idiv	word_151CE
 		shl	dx, 4
@@ -15286,7 +15266,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_10376	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

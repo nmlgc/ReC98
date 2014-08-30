@@ -3392,7 +3392,7 @@ sub_16CCC	endp
 sub_16D67	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_23C6
+		call	IRand
 		and	al, 0Fh
 		mov	byte_2C98A, al
 		call	sub_178D7

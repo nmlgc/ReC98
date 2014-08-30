@@ -2538,28 +2538,7 @@ loc_1604:
 		retf	4
 sub_1594	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1608	proc far
-		mov	ax, 4E35h
-		mul	word ptr dword_3559A+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_3559A
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_3559A
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_3559A, ax
-		mov	ax, dx
-		mov	word ptr dword_3559A+2,	ax
-		and	ah, 7Fh
-		retf
-sub_1608	endp
-
+include libs/master.lib/random.asm
 ; ---------------------------------------------------------------------------
 		db 34h dup(0)
 byte_1666	db 0
@@ -15705,7 +15684,7 @@ loc_C4E2:
 		add	sp, 8
 
 loc_C50B:
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -15714,7 +15693,7 @@ loc_C50B:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+3E4Ah], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
@@ -15722,7 +15701,7 @@ loc_C50B:
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+3E5Ah], dx
-		call	sub_1608
+		call	IRand
 		mov	bx, 7
 		cwd
 		idiv	bx
@@ -15958,7 +15937,7 @@ arg_8		= word ptr  0Eh
 		jnz	short loc_C68D
 		cmp	word_36C2C, 11h
 		jge	short loc_C670
-		call	sub_1608
+		call	IRand
 		mov	bx, 32h	; '2'
 		cwd
 		idiv	bx
@@ -15969,7 +15948,7 @@ arg_8		= word ptr  0Eh
 loc_C670:
 		cmp	word_36C2C, 11h
 		jge	short loc_C68D
-		call	sub_1608
+		call	IRand
 		mov	bx, 32h	; '2'
 		cwd
 		idiv	bx
@@ -16898,7 +16877,7 @@ var_2		= word ptr -2
 		push	word_36C28
 		call	sub_197E1
 		add	sp, 6
-		call	sub_1608
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -17844,7 +17823,7 @@ loc_D583:
 		inc	ax
 		mov	word_34A8A, ax
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		call	sub_E7E4
 		call	sub_12FA
 		push	large 3F003Fh
@@ -18061,7 +18040,7 @@ loc_D795:
 		call	sub_EA3E
 		pop	cx
 		call	sub_EC0D
-		call	sub_1608
+		call	IRand
 		mov	bx, 3Ch	; '<'
 		cwd
 		idiv	bx
@@ -18534,7 +18513,7 @@ loc_DC3A:
 		mov	byte_34A4E, 0
 		mov	byte_34A47, 1
 		mov	eax, dword_36C16
-		mov	dword_3559A, eax
+		mov	random_seed, eax
 		mov	word_34A6E, 14h
 		mov	byte_34A49, 0
 		mov	[bp+var_C], 0BB8h
@@ -42661,7 +42640,7 @@ loc_1963B:
 loc_1964A:
 		push	large 30001Eh
 		push	40h ; '@'
-		call	sub_1608
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -45417,7 +45396,7 @@ loc_1AD1A:
 		sub	ax, word_36C28
 		jnz	short loc_1AD66
 		mov	word_34A7C, 0
-		call	sub_1608
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -45426,7 +45405,7 @@ loc_1AD1A:
 		mov	word_34A7C, 1
 
 loc_1AD4E:
-		call	sub_1608
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -45568,7 +45547,7 @@ var_2		= word ptr -2
 		push	cs
 		call	near ptr sub_197E1
 		add	sp, 6
-		call	sub_1608
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -46366,7 +46345,7 @@ include libs/master.lib/sin8[data].asm
 		db 1Eh,	1Eh, 1Eh, 1Eh, 1Eh, 1Fh, 1Fh, 1Fh, 1Fh,	1Fh, 1Fh
 		db 1Fh,	1Fh, 1Fh, 1Fh, 1Fh, 1Fh, 20h, 20h, 20h,	20h, 20h
 		db 20h
-dword_3559A	dd 1
+include libs/master.lib/rand[data].asm
 		db    7
 		db 0E0h	; E
 		db  18h

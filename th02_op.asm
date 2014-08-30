@@ -1573,28 +1573,7 @@ loc_1F6A:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F78	proc far
-					; sub_C1B2+27P	...
-		mov	ax, 4E35h
-		mul	word_D8B6
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word_D8B4
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word_D8B4
-		add	ax, 1
-		adc	dx, cx
-		mov	word_D8B4, ax
-		mov	ax, dx
-		mov	word_D8B6, ax
-		and	ah, 7Fh
-		retf
-sub_1F78	endp
-
+include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10237,21 +10216,21 @@ loc_C1C0:
 ; ---------------------------------------------------------------------------
 
 loc_C1C5:
-		call	sub_1F78
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1EACh], dx
-		call	sub_1F78
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1EAEh], dx
-		call	sub_1F78
+		call	IRand
 		and	ax, 7
 		mov	dx, 4
 		sub	dx, ax
@@ -10267,16 +10246,16 @@ loc_C1C5:
 		mov	word ptr [bx+1EECh], 1
 
 loc_C21A:
-		call	sub_1F78
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1EEEh], ax
-		call	sub_1F78
+		call	IRand
 		mov	[si+1F2Ch], al
-		call	sub_1F78
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -10364,7 +10343,7 @@ loc_C2F4:
 ; ---------------------------------------------------------------------------
 
 loc_C304:
-		call	sub_1F78
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -10374,7 +10353,7 @@ loc_C304:
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx+1EAEh], 0F9C0h
-		call	sub_1F78
+		call	IRand
 		and	ax, 0Fh
 		mov	dx, 8
 		sub	dx, ax
@@ -10390,16 +10369,16 @@ loc_C304:
 		mov	word ptr [bx+1EECh], 1
 
 loc_C350:
-		call	sub_1F78
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1EEEh], ax
-		call	sub_1F78
+		call	IRand
 		mov	[si+1F2Ch], al
-		call	sub_1F78
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -11327,8 +11306,7 @@ include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db 0
-word_D8B4	dw 1
-word_D8B6	dw 0
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'

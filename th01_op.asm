@@ -2237,28 +2237,7 @@ sub_12B0	endp
 
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1338	proc far
-					; sub_A66A:loc_A6C8P
-		mov	ax, 4E35h
-		mul	word ptr dword_12AFC+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_12AFC
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_12AFC
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_12AFC, ax
-		mov	ax, dx
-		mov	word ptr dword_12AFC+2,	ax
-		and	ah, 7Fh
-		retf
-sub_1338	endp
+include libs/master.lib/random.asm
 
 ; ---------------------------------------------------------------------------
 		db 34h dup(0)
@@ -10866,7 +10845,7 @@ loc_A68D:
 		add	sp, 8
 
 loc_A6AF:
-		call	sub_1338
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -10876,7 +10855,7 @@ loc_A6AF:
 		mov	[bp+si+var_192], 1
 
 loc_A6C8:
-		call	sub_1338
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
@@ -12133,7 +12112,7 @@ loc_B135:
 		push	cs
 		call	near ptr sub_A772
 		mov	eax, dword_13418
-		mov	dword_12AFC, eax
+		mov	random_seed, eax
 		jmp	loc_B21A
 ; ---------------------------------------------------------------------------
 
@@ -27076,7 +27055,7 @@ word_12AE6	dw 0
 word_12AE8	dw 0
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
-dword_12AFC	dd 1
+include libs/master.lib/rand[data].asm
 aReiidenconfig	db 'ReiidenConfig',0
 byte_12B0E	db 0
 		db 0

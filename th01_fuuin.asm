@@ -2161,28 +2161,7 @@ sub_126C	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1278	proc far
-		mov	ax, 4E35h
-		mul	word_135E6
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word_135E4
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word_135E4
-		add	ax, 1
-		adc	dx, cx
-		mov	word_135E4, ax
-		mov	ax, dx
-		mov	word_135E6, ax
-		and	ah, 7Fh
-		retf
-sub_1278	endp
-
+include libs/master.lib/random.asm
 ; ---------------------------------------------------------------------------
 		db 34h dup(0)
 byte_12D6	db 0
@@ -10490,8 +10469,8 @@ loc_A003:
 		les	bx, [bp+var_4]
 		mov	dx, es:[bx+1Dh]
 		mov	ax, es:[bx+1Bh]
-		mov	word_135E6, dx
-		mov	word_135E4, ax
+		mov	word ptr random_seed+2, dx
+		mov	word ptr random_seed, ax
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+11h]
 		mov	byte_14020, al
@@ -15173,7 +15152,7 @@ loc_C3CE:
 		add	si, 0Ah
 
 loc_C3D8:
-		call	sub_1278
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -29572,8 +29551,7 @@ aPal98Grb_1	db 'pal98 grb',0
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
-word_135E4	dw 1
-word_135E6	dw 0
+include libs/master.lib/rand[data].asm
 word_135E8	dw 1330h
 		dd 0
 dword_135EE	dd 0

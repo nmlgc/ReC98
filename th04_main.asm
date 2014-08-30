@@ -1569,29 +1569,7 @@ loc_2164:
 		retf	6
 sub_2142	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2172	proc far
-					; sub_C314:loc_C31CP ...
-		mov	ax, 4E35h
-		mul	word ptr dword_21722+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_21722
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_21722
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_21722, ax
-		mov	ax, dx
-		mov	word ptr dword_21722+2,	ax
-		and	ah, 7Fh
-		retf
-sub_2172	endp
-
+include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6251,7 +6229,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_13666
 		les	bx, dword_2CDC6
 		mov	eax, es:[bx+14h]
-		mov	dword_21722, eax
+		mov	random_seed, eax
 		call	sub_B488
 		call	text_clear
 		call	sub_1A36
@@ -6663,7 +6641,7 @@ loc_AEF9:
 		add	al, 30h	; '0'
 		mov	es:[bx+13h], al
 		mov	word_23D90, 949h
-		mov	dword_21722, 13Eh
+		mov	random_seed, 13Eh
 
 loc_AF4A:
 		call	sub_12024
@@ -8228,7 +8206,7 @@ sub_BC58	proc near
 		mov	si, 0FFh
 
 loc_BC5C:
-		call	sub_2172
+		call	IRand
 		mov	[si+3DCCh], al
 		dec	si
 		jge	short loc_BC5C
@@ -9358,7 +9336,7 @@ sub_C314	proc near
 		mov	di, 60h	; '`'
 
 loc_C31C:
-		call	sub_2172
+		call	IRand
 		mov	[si+0Eh], al
 		add	si, 10h
 		dec	di
@@ -9524,7 +9502,7 @@ loc_C3FD:
 		inc	bx
 		loop	loc_C3FD
 		mov	[si+2],	ax
-		call	sub_2172
+		call	IRand
 		mov	[si], ax
 		xor	dx, dx
 		add	si, 0C3h ; 'Ã'
@@ -25653,7 +25631,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_21722	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin7[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm

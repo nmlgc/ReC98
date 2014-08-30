@@ -832,28 +832,7 @@ loc_1C4C:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1C5A	proc far
-					; sub_C1A1+21P	...
-		mov	ax, 4E35h
-		mul	word ptr dword_E6A0+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_E6A0
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_E6A0
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_E6A0, ax
-		mov	ax, dx
-		mov	word ptr dword_E6A0+2, ax
-		and	ah, 7Fh
-		retf
-sub_1C5A	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -7509,7 +7488,7 @@ var_4		= dword	ptr -4
 		enter	8, 0
 		les	bx, dword_F3CE
 		mov	eax, es:[bx+14h]
-		mov	dword_E6A0, eax
+		mov	random_seed, eax
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -7616,7 +7595,7 @@ loc_BAF3:
 		mov	[bp+var_8], eax
 		cmp	[bp+var_8], 0
 		jz	short loc_BB2A
-		call	sub_1C5A
+		call	IRand
 		cwde
 		xor	edx, edx
 		div	[bp+var_8]
@@ -8267,9 +8246,9 @@ loc_C1B1:
 loc_C1BC:
 		cmp	si, 0C4h ; 'Ä'
 		jl	short loc_C1B1
-		call	sub_1C5A
+		call	IRand
 		mov	byte_124F2, al
-		call	sub_1C5A
+		call	IRand
 		mov	byte_124F3, al
 		mov	[bp+var_1], 0
 		mov	si, 0C3h ; 'Ã'
@@ -11568,7 +11547,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_E6A0	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

@@ -195,21 +195,21 @@ loc_45B:
 ; ---------------------------------------------------------------------------
 
 loc_4C0:
-		call	sub_16B2
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+2888h], dx
-		call	sub_16B2
+		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+288Ah], dx
-		call	sub_16B2
+		call	IRand
 		mov	bx, 20h
 		cwd
 		idiv	bx
@@ -1027,28 +1027,7 @@ include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_16B2	proc near
-		mov	ax, 4E35h
-		mul	word_266A
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word_2668
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word_2668
-		add	ax, 1
-		adc	dx, cx
-		mov	word_2668, ax
-		mov	ax, dx
-		mov	word_266A, ax
-		and	ah, 7Fh
-		retn
-sub_16B2	endp
-
+include libs/master.lib/random.asm
 include libs/BorlandC/__abort.asm
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/errormsg.asm
@@ -1536,8 +1515,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/sin7[data].asm
-word_2668	dw 1
-word_266A	dw 0
+include libs/master.lib/rand[data].asm
 aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 		db 0
 include libs/BorlandC/atexit[data].asm

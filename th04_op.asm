@@ -1082,27 +1082,7 @@ loc_2040:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_204E	proc far
-		mov	ax, 4E35h
-		mul	word_F906
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word_F904
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word_F904
-		add	ax, 1
-		adc	dx, cx
-		mov	word_F904, ax
-		mov	ax, dx
-		mov	word_F906, ax
-		and	ah, 7Fh
-		retf
-sub_204E	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -7255,13 +7235,13 @@ loc_BA6D:
 		mov	[si+4],	ax
 		mov	word ptr [si+8], 0
 		mov	word ptr [si+6], 0
-		call	sub_204E
+		call	IRand
 		mov	bx, 0E0h ; 'à'
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	[si+0Ah], dx
-		call	sub_204E
+		call	IRand
 		mov	[si+0Ch], al
 		mov	al, [bp+arg_0]
 		mov	[si+0Dh], al
@@ -8052,21 +8032,21 @@ sub_C04E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C060:
-		call	sub_204E
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+39DCh], dx
-		call	sub_204E
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+39DEh], dx
-		call	sub_204E
+		call	IRand
 		and	ax, 7
 		mov	dx, 4
 		sub	dx, ax
@@ -8082,16 +8062,16 @@ loc_C060:
 		mov	word ptr [bx+3A1Ch], 1
 
 loc_C0B5:
-		call	sub_204E
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+3A1Eh], ax
-		call	sub_204E
+		call	IRand
 		mov	[si+3A5Ch], al
-		call	sub_204E
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -8171,7 +8151,7 @@ loc_C18E:
 		shl	bx, 2
 		cmp	word ptr [bx+39DEh], 1F40h
 		jl	loc_C224
-		call	sub_204E
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -8181,7 +8161,7 @@ loc_C18E:
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx+39DEh], 0F9C0h
-		call	sub_204E
+		call	IRand
 		and	ax, 0Fh
 		mov	dx, 8
 		sub	dx, ax
@@ -8197,16 +8177,16 @@ loc_C18E:
 		mov	word ptr [bx+3A1Ch], 1
 
 loc_C1E9:
-		call	sub_204E
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+3A1Eh], ax
-		call	sub_204E
+		call	IRand
 		mov	[si+3A5Ch], al
-		call	sub_204E
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -8759,9 +8739,9 @@ loc_C637:
 loc_C642:
 		cmp	si, 0C4h ; 'Ä'
 		jl	short loc_C637
-		call	sub_204E
+		call	IRand
 		mov	byte_130F2, al
-		call	sub_204E
+		call	IRand
 		mov	byte_130F3, al
 		mov	[bp+var_1], 0
 		mov	si, 0C3h ; 'Ã'
@@ -13129,8 +13109,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-word_F904	dw 1
-word_F906	dw 0
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

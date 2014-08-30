@@ -1775,29 +1775,7 @@ loc_2156:
 		retf	6
 sub_2134	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2164	proc far
-					; sub_102D6+40P ...
-		mov	ax, 4E35h
-		mul	word ptr dword_1DFD8+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_1DFD8
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_1DFD8
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_1DFD8, ax
-		mov	ax, dx
-		mov	word ptr dword_1DFD8+2,	ax
-		and	ah, 7Fh
-		retf
-sub_2164	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -8181,7 +8159,7 @@ loc_B1CA:
 loc_B1CD:
 		les	bx, dword_2026C
 		mov	eax, es:[bx+1Ch]
-		mov	dword_1DFD8, eax
+		mov	random_seed, eax
 		call	sub_B3DA
 		nop
 		push	cs
@@ -9798,7 +9776,7 @@ sub_C224	proc near
 		xor	si, si
 
 loc_C22A:
-		call	sub_2164
+		call	IRand
 		mov	[si+26FAh], al
 		inc	si
 		cmp	si, 100h
@@ -18387,9 +18365,9 @@ loc_10306:
 
 loc_10313:
 		mov	byte ptr [si], 0
-		call	sub_2164
+		call	IRand
 		mov	[si+10h], al
-		call	sub_2164
+		call	IRand
 		and	al, 3Fh
 		mov	[si+11h], al
 		mov	al, byte_2174B
@@ -43274,7 +43252,7 @@ include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db 0
-dword_1DFD8	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'

@@ -543,28 +543,7 @@ loc_1C50:
 		retf	6
 sub_1C2E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1C5E	proc far
-		mov	ax, 4E35h
-		mul	word_F56E
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word_F56C
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word_F56C
-		add	ax, 1
-		adc	dx, cx
-		mov	word_F56C, ax
-		mov	ax, dx
-		mov	word_F56E, ax
-		and	ah, 7Fh
-		retf
-sub_1C5E	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -6965,13 +6944,13 @@ loc_B63E:
 		mov	[si+4],	ax
 		mov	word ptr [si+8], 0
 		mov	word ptr [si+6], 0
-		call	sub_1C5E
+		call	IRand
 		mov	bx, 0E0h ; 'à'
 		cwd
 		idiv	bx
 		add	dx, 40h	; '@'
 		mov	[si+0Ah], dx
-		call	sub_1C5E
+		call	IRand
 		mov	[si+0Ch], al
 		mov	al, [bp+arg_0]
 		mov	[si+0Dh], al
@@ -8275,21 +8254,21 @@ sub_C09D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C0AF:
-		call	sub_1C5E
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+4E14h], dx
-		call	sub_1C5E
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+4E16h], dx
-		call	sub_1C5E
+		call	IRand
 		and	ax, 7
 		mov	dx, 4
 		sub	dx, ax
@@ -8305,16 +8284,16 @@ loc_C0AF:
 		mov	word ptr [bx+4E54h], 1
 
 loc_C104:
-		call	sub_1C5E
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+4E56h], ax
-		call	sub_1C5E
+		call	IRand
 		mov	[si+4E94h], al
-		call	sub_1C5E
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -8394,7 +8373,7 @@ loc_C1DD:
 		shl	bx, 2
 		cmp	word ptr [bx+4E16h], 1F40h
 		jl	loc_C273
-		call	sub_1C5E
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -8404,7 +8383,7 @@ loc_C1DD:
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx+4E16h], 0F9C0h
-		call	sub_1C5E
+		call	IRand
 		and	ax, 0Fh
 		mov	dx, 8
 		sub	dx, ax
@@ -8420,16 +8399,16 @@ loc_C1DD:
 		mov	word ptr [bx+4E54h], 1
 
 loc_C238:
-		call	sub_1C5E
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+4E56h], ax
-		call	sub_1C5E
+		call	IRand
 		mov	[si+4E94h], al
-		call	sub_1C5E
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -9173,9 +9152,9 @@ loc_C88E:
 loc_C899:
 		cmp	si, 60h	; '`'
 		jl	short loc_C88E
-		call	sub_1C5E
+		call	IRand
 		mov	byte_14040, al
-		call	sub_1C5E
+		call	IRand
 		mov	byte_14041, al
 		mov	[bp+var_1], 0
 		mov	si, 5Fh	; '_'
@@ -13147,8 +13126,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db 0
-word_F56C	dw 1
-word_F56E	dw 0
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

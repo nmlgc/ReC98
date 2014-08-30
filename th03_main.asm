@@ -1752,28 +1752,7 @@ loc_1EDE:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1EEC	proc far
-					; sub_A3FA:loc_A3FEP ...
-		mov	ax, 4E35h
-		mul	word ptr dword_1D872+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_1D872
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_1D872
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_1D872, ax
-		mov	ax, dx
-		mov	word ptr dword_1D872+2,	ax
-		and	ah, 7Fh
-		retf
-sub_1EEC	endp
-
+include libs/master.lib/random.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 
@@ -5821,7 +5800,7 @@ var_2		= word ptr -2
 		push	di
 		les	bx, dword_1F2F0
 		mov	eax, es:[bx+10h]
-		mov	dword_1D872, eax
+		mov	random_seed, eax
 		push	large 200005h
 		call	text_fillca
 		push	0
@@ -6531,7 +6510,7 @@ loc_A148:
 ; ---------------------------------------------------------------------------
 
 loc_A1A8:
-		call	sub_1EEC
+		call	IRand
 		and	al, 3
 		shl	al, 6
 		add	al, 3Fh	; '?'
@@ -6918,7 +6897,7 @@ sub_A3FA	proc near
 		mov	si, 0FFh
 
 loc_A3FE:
-		call	sub_1EEC
+		call	IRand
 		mov	[si+1E52h], al
 		dec	si
 		jge	short loc_A3FE
@@ -9144,13 +9123,13 @@ loc_BC1D:
 		call	sub_A40C
 		mov	bx, word_20CE4
 		mov	[bx+6],	al
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
 		mov	bx, word_20CE4
 		mov	[bx+8],	dl
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -9180,13 +9159,13 @@ loc_BC7A:
 		call	sub_A40C
 		mov	bx, word_20CE4
 		mov	[bx+6],	al
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
 		mov	bx, word_20CE4
 		mov	[bx+8],	dl
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -11902,12 +11881,12 @@ sub_D092	proc far
 ; ---------------------------------------------------------------------------
 
 loc_D0A3:
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 2800h
 		cwd
 		idiv	bx
 		mov	[si], dx
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
@@ -11916,13 +11895,13 @@ loc_D0A3:
 		mov	word ptr [si+6], 10h
 		mov	byte ptr [si+8], 20h ; ' '
 		mov	word ptr [si+0Ah], 210Eh
-		call	sub_1EEC
+		call	IRand
 		test	al, 1
 		jz	short loc_D0DF
 		add	word ptr [si+0Ah], 280h
 
 loc_D0DF:
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 0FA0h
 		cwd
 		idiv	bx
@@ -12008,7 +11987,7 @@ sub_D135	proc far
 		xor	si, si
 
 loc_D16B:
-		call	sub_1EEC
+		call	IRand
 		and	ax, 1
 		add	ax, [di+6]
 		mov	[di+6],	ax
@@ -12023,7 +12002,7 @@ loc_D16B:
 		call	egc_on
 
 loc_D195:
-		call	sub_1EEC
+		call	IRand
 		and	ax, 1
 		add	ax, [di+6]
 		mov	[di+6],	ax
@@ -12199,12 +12178,12 @@ sub_D2E8	proc far
 ; ---------------------------------------------------------------------------
 
 loc_D2F9:
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 2800h
 		cwd
 		idiv	bx
 		mov	[si], dx
-		call	sub_1EEC
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
@@ -12258,7 +12237,7 @@ sub_D340	proc far
 		xor	si, si
 
 loc_D376:
-		call	sub_1EEC
+		call	IRand
 		and	ax, 1
 		add	ax, [di+6]
 		mov	[di+6],	ax
@@ -12276,7 +12255,7 @@ loc_D3A0:
 		xor	ax, ax
 		cmp	si, 28h	; '('
 		jnb	short loc_D3AF
-		call	sub_1EEC
+		call	IRand
 		and	ax, 1
 
 loc_D3AF:
@@ -25533,7 +25512,7 @@ var_1		= byte ptr -1
 
 loc_13DA5:
 					; sub_13D9C+44j
-		call	sub_1EEC
+		call	IRand
 		mov	dl, byte_1F55C
 		mov	dh, 0
 		push	dx
@@ -25547,7 +25526,7 @@ loc_13DA5:
 		mov	es, word_1F556
 		mov	es:[si], al
 		mov	[bp+var_2], al
-		call	sub_1EEC
+		call	IRand
 		and	al, 1
 		shl	al, 7
 		mov	es, word_1F558
@@ -43989,7 +43968,7 @@ word_1D82C	dw 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_1D872	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

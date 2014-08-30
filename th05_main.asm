@@ -1928,29 +1928,7 @@ loc_23B8:
 		retf	6
 sub_2396	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_23C6	proc far
-					; sub_C264:loc_C26CP ...
-		mov	ax, 4E35h
-		mul	word ptr dword_20E0A+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_20E0A
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_20E0A
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_20E0A, ax
-		mov	ax, dx
-		mov	word ptr dword_20E0A+2,	ax
-		and	ah, 7Fh
-		retf
-sub_23C6	endp
-
+include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6662,7 +6640,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_14F86
 		les	bx, dword_23EF0
 		mov	eax, es:[bx+28h]
-		mov	dword_20E0A, eax
+		mov	random_seed, eax
 		call	sub_B827
 		call	text_clear
 		les	bx, dword_23EF0
@@ -7119,7 +7097,7 @@ loc_B2A5:
 
 loc_B2CE:
 		mov	word_2300E, 9A5h
-		mov	dword_20E0A, 13Eh
+		mov	random_seed, 13Eh
 
 loc_B2DD:
 		call	sub_CFEE
@@ -8814,7 +8792,7 @@ sub_BFFA	proc near
 		mov	si, 0FFh
 
 loc_BFFE:
-		call	sub_23C6
+		call	IRand
 		mov	[si+3582h], al
 		dec	si
 		jge	short loc_BFFE
@@ -9243,7 +9221,7 @@ sub_C264	proc near
 		mov	di, 60h	; '`'
 
 loc_C26C:
-		call	sub_23C6
+		call	IRand
 		mov	[si+0Eh], al
 		add	si, 10h
 		dec	di
@@ -14484,7 +14462,7 @@ loc_E7B3:
 		inc	bx
 		loop	loc_E7B3
 		mov	[si+2],	ax
-		call	sub_23C6
+		call	IRand
 		mov	[si], ax
 		xor	dx, dx
 		add	si, 5Fh	; '_'
@@ -20223,7 +20201,7 @@ loc_11331:
 loc_1136A:
 					; sub_111B7+7Bj ...
 		mov	[si+2],	dx
-		call	sub_23C6
+		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -26607,7 +26585,7 @@ include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_20E0A	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

@@ -19338,7 +19338,7 @@ sub_1D896	endp
 sub_1DA1B	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_2172
+		call	IRand
 		and	al, 0Fh
 		mov	byte_2D00E, al
 		call	sub_13F16

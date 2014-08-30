@@ -891,27 +891,7 @@ loc_1A30:
 		pop	bp
 		retf	6
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A3E	proc far
-		mov	ax, 4E35h
-		mul	word ptr dword_E9A6+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_E9A6
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_E9A6
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_E9A6, ax
-		mov	ax, dx
-		mov	word ptr dword_E9A6+2, ax
-		and	ah, 7Fh
-		retf
-sub_1A3E	endp
-
+include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7558,11 +7538,11 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	[bp+var_4], 0
-		call	sub_1A3E
+		call	IRand
 		mov	byte_106AA, al
-		call	sub_1A3E
+		call	IRand
 		mov	byte_106AB, al
-		call	sub_1A3E
+		call	IRand
 		mov	byte_10631, al
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+33h], 63h ; 'c'
@@ -8793,7 +8773,7 @@ sub_B7D2	proc near
 		mov	bp, sp
 		les	bx, dword_105DA
 		mov	eax, es:[bx+10h]
-		mov	dword_E9A6, eax
+		mov	random_seed, eax
 		push	600h
 		push	ds
 		push	offset aScore_m	; "score.m"
@@ -9252,7 +9232,7 @@ loc_BB8E:
 		mov	byte ptr [si], 1
 		test	di, 3
 		jz	short loc_BBBE
-		call	sub_1A3E
+		call	IRand
 		mov	bx, 2780h
 		cwd
 		idiv	bx
@@ -9263,26 +9243,26 @@ loc_BB8E:
 
 loc_BBBE:
 		mov	word ptr [si+2], 2780h
-		call	sub_1A3E
+		call	IRand
 		mov	bx, 1880h
 		cwd
 		idiv	bx
 		mov	[si+4],	dx
 
 loc_BBD1:
-		call	sub_1A3E
+		call	IRand
 		mov	bx, 20h	; ' '
 		cwd
 		idiv	bx
 		add	dl, 50h	; 'P'
 		mov	[bp+var_1], dl
-		call	sub_1A3E
+		call	IRand
 		mov	bx, 40h	; '@'
 		cwd
 		idiv	bx
 		add	dl, 30h	; '0'
 		mov	[bp+var_2], dl
-		call	sub_1A3E
+		call	IRand
 		and	ax, 3
 		mov	[si+0Ah], ax
 		push	ds
@@ -10481,7 +10461,7 @@ loc_C4D8:
 		mov	word_10BB2, 0
 		les	bx, dword_105DA
 		mov	eax, es:[bx+10h]
-		mov	dword_E9A6, eax
+		mov	random_seed, eax
 		mov	byte_10BB4, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
@@ -13155,7 +13135,7 @@ word_E960	dw 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_E9A6	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm

@@ -1138,29 +1138,7 @@ loc_1D04:
 		retf	6
 sub_1CE2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D12	proc far
-					; sub_A6A3:loc_A6B5P ...
-		mov	ax, 4E35h
-		mul	word ptr dword_DB02+2
-		mov	cx, ax
-		mov	ax, 15Ah
-		mul	word ptr dword_DB02
-		add	cx, ax
-		mov	ax, 4E35h
-		mul	word ptr dword_DB02
-		add	ax, 1
-		adc	dx, cx
-		mov	word ptr dword_DB02, ax
-		mov	ax, dx
-		mov	word ptr dword_DB02+2, ax
-		and	ah, 7Fh
-		retf
-sub_1D12	endp
-
+include libs/master.lib/random.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5146,13 +5124,13 @@ loc_9A59:
 		mov	[bp+var_4], ax
 		mov	bx, word ptr dword_FC54
 		mov	eax, es:[bx+10h]
-		mov	dword_DB02, eax
+		mov	random_seed, eax
 		xor	si, si
 		jmp	short loc_9ADB
 ; ---------------------------------------------------------------------------
 
 loc_9A85:
-		call	sub_1D12
+		call	IRand
 		mov	bx, 7
 		cwd
 		idiv	bx
@@ -6725,21 +6703,21 @@ sub_A6A3	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A6B5:
-		call	sub_1D12
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1F98h], dx
-		call	sub_1D12
+		call	IRand
 		mov	bx, 1900h
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1F9Ah], dx
-		call	sub_1D12
+		call	IRand
 		and	ax, 7
 		mov	dx, 4
 		sub	dx, ax
@@ -6755,16 +6733,16 @@ loc_A6B5:
 		mov	word ptr [bx+1FD8h], 1
 
 loc_A70A:
-		call	sub_1D12
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1FDAh], ax
-		call	sub_1D12
+		call	IRand
 		mov	[si+2018h], al
-		call	sub_1D12
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -6844,7 +6822,7 @@ loc_A7E3:
 		shl	bx, 2
 		cmp	word ptr [bx+1F9Ah], 1F40h
 		jl	loc_A879
-		call	sub_1D12
+		call	IRand
 		mov	bx, 280h
 		cwd
 		idiv	bx
@@ -6854,7 +6832,7 @@ loc_A7E3:
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx+1F9Ah], 0F9C0h
-		call	sub_1D12
+		call	IRand
 		and	ax, 0Fh
 		mov	dx, 8
 		sub	dx, ax
@@ -6870,16 +6848,16 @@ loc_A7E3:
 		mov	word ptr [bx+1FD8h], 1
 
 loc_A83E:
-		call	sub_1D12
+		call	IRand
 		and	ax, 3
 		shl	ax, 4
 		add	ax, 20h	; ' '
 		mov	bx, si
 		shl	bx, 2
 		mov	[bx+1FDAh], ax
-		call	sub_1D12
+		call	IRand
 		mov	[si+2018h], al
-		call	sub_1D12
+		call	IRand
 		and	al, 7
 		mov	dl, 4
 		sub	dl, al
@@ -7956,11 +7934,11 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	[bp+var_4], 0
-		call	sub_1D12
+		call	IRand
 		mov	byte_FC50, al
-		call	sub_1D12
+		call	IRand
 		mov	byte_FC51, al
-		call	sub_1D12
+		call	IRand
 		mov	byte_FBD7, al
 		mov	si, 2396h
 		xor	di, di
@@ -8413,7 +8391,7 @@ sub_B424	proc near
 		les	bx, dword_FC54
 		assume es:nothing
 		mov	eax, es:[bx+10h]
-		mov	dword_DB02, eax
+		mov	random_seed, eax
 		call	text_clear
 		call	super_free
 		push	ds
@@ -11591,7 +11569,7 @@ word_DABC	dw 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 		db    0
-dword_DB02	dd 1
+include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
 include libs/master.lib/vs[data].asm
