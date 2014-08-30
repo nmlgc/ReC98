@@ -2153,23 +2153,23 @@ arg_2		= dword	ptr  8
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_135CE, 0
+		cmp	file_BufferSize, 0
 		jz	short loc_10B4
 		mov	bx, [bp+arg_0]
 		les	di, [bp+arg_2]
 		assume es:nothing
 
 loc_1042:
-		mov	ax, word_1469C
-		cmp	word_1469A, ax
+		mov	ax, file_InReadBuf
+		cmp	file_BufPtr, ax
 		jb	short loc_1078
-		add	word_14696, ax
-		adc	word_14698, 0
+		add	word ptr file_BufferPos, ax
+		adc	word ptr file_BufferPos+2, 0
 		push	bx
 		push	ds
-		mov	cx, word_135CE
-		mov	bx, word_135D0
-		lds	dx, dword_14692
+		mov	cx, file_BufferSize
+		mov	bx, file_Handle
+		lds	dx, file_Buffer
 		mov	ah, 3Fh
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
@@ -2179,13 +2179,13 @@ loc_1042:
 		cmc
 		sbb	dx, dx
 		and	ax, dx
-		mov	word_1469C, ax
+		mov	file_InReadBuf, ax
 		jz	short loc_10D3
-		mov	word_1469A, 0
+		mov	file_BufPtr, 0
 
 loc_1078:
-		mov	si, word_1469C
-		sub	si, word_1469A
+		mov	si, file_InReadBuf
+		sub	si, file_BufPtr
 		sub	si, bx
 		sbb	ax, ax
 		and	si, ax
@@ -2198,8 +2198,8 @@ loc_1078:
 		push	si
 		push	ds
 		mov	cx, si
-		mov	ax, word_1469A
-		lds	si, dword_14692
+		mov	ax, file_BufPtr
+		lds	si, file_Buffer
 		add	si, ax
 		shr	cx, 1
 		rep movsw
@@ -2209,7 +2209,7 @@ loc_1078:
 		pop	si
 
 loc_10A9:
-		add	word_1469A, si
+		add	file_BufPtr, si
 		sub	bx, si
 		jnz	short loc_1042
 		jmp	short loc_10D9
@@ -2219,21 +2219,21 @@ loc_10A9:
 loc_10B4:
 		push	ds
 		mov	cx, [bp+arg_0]
-		mov	bx, word_135D0
+		mov	bx, file_Handle
 		lds	dx, [bp+arg_2]
 		mov	ah, 3Fh
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
 		pop	ds
-		add	word_14696, ax
-		adc	word_14698, 0
+		add	word ptr file_BufferPos, ax
+		adc	word ptr file_BufferPos+2, 0
 		mov	bx, cx
 		sub	bx, ax
 		jz	short loc_10D9
 
 loc_10D3:
-		mov	word_1469E, 1
+		mov	file_Eof, 1
 
 loc_10D9:
 		mov	ax, [bp+arg_0]
@@ -2249,48 +2249,48 @@ sub_1030	endp
 
 
 sub_10E4	proc far
-		mov	bx, word_135D0
+		mov	bx, file_Handle
 		cmp	bx, 0FFFFh
 		jz	short locret_114E
-		mov	ax, word_1469A
-		cmp	word_1469C, ax
+		mov	ax, file_BufPtr
+		cmp	file_InReadBuf, ax
 		jnb	short loc_1122
 		push	ds
-		mov	cx, word_1469A
-		lds	dx, dword_14692
+		mov	cx, file_BufPtr
+		lds	dx, file_Buffer
 		mov	ah, 40h
 		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
 					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
 		pop	ds
 		jb	short loc_1115
-		add	word_14696, ax
-		adc	word_14698, 0
-		cmp	word_1469A, ax
+		add	word ptr file_BufferPos, ax
+		adc	word ptr file_BufferPos+2, 0
+		cmp	file_BufPtr, ax
 		jz	short loc_111B
 
 loc_1115:
-		mov	word_146A0, 1
+		mov	file_ErrorStat, 1
 
 loc_111B:
-		mov	word_1469A, 0
+		mov	file_BufPtr, 0
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1122:
-		cmp	word_1469C, 0
+		cmp	file_InReadBuf, 0
 		jz	short locret_114E
 		mov	dx, ax
 		mov	cx, 0
-		add	dx, word_14696
-		mov	word_1469C, cx
-		mov	word_1469A, cx
-		adc	cx, word_14698
+		add	dx, word ptr file_BufferPos
+		mov	file_InReadBuf, cx
+		mov	file_BufPtr, cx
+		adc	cx, word ptr file_BufferPos+2
 		mov	ax, 4200h
-		mov	bx, word_135D0
+		mov	bx, file_Handle
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
-		mov	word_14696, ax
-		mov	word_14698, dx
+		mov	word ptr file_BufferPos, ax
+		mov	word ptr file_BufferPos+2, dx
 
 locret_114E:
 		retf
@@ -2308,7 +2308,7 @@ sub_1150	proc far
 		mov	ah, 3Eh
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
-		mov	word_135D0, 0FFFFh
+		mov	file_Handle, 0FFFFh
 		retf
 sub_1150	endp
 
@@ -2327,7 +2327,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		xor	ax, ax
-		mov	bx, word_135D0
+		mov	bx, file_Handle
 		cmp	bx, 0FFFFh
 		jnz	short loc_1197
 		push	[bp+arg_2]
@@ -2336,14 +2336,14 @@ arg_2		= word ptr  8
 		call	dos_ropen
 		sbb	bx, bx
 		or	ax, bx
-		mov	word_135D0, ax
+		mov	file_Handle, ax
 		xor	ax, ax
-		mov	word_1469C, ax
-		mov	word_14696, ax
-		mov	word_14698, ax
-		mov	word_1469A, ax
-		mov	word_1469E, ax
-		mov	word_146A0, ax
+		mov	file_InReadBuf, ax
+		mov	word ptr file_BufferPos, ax
+		mov	word ptr file_BufferPos+2, ax
+		mov	file_BufPtr, ax
+		mov	file_Eof, ax
+		mov	file_ErrorStat, ax
 		lea	ax, [bx+1]
 
 loc_1197:
@@ -2377,19 +2377,19 @@ sub_119C	proc far
 		mov	cx, dx
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from present location
-		mov	word_1469E, 0
-		mov	word_14696, ax
-		mov	word_14698, dx
+		mov	file_Eof, 0
+		mov	word ptr file_BufferPos, ax
+		mov	word ptr file_BufferPos+2, dx
 
 locret_11CD:
 		retf	6
 sub_119C	endp
 
 ; ---------------------------------------------------------------------------
-		mov	ax, word_1469A
+		mov	ax, file_BufPtr
 		xor	dx, dx
-		add	ax, word_14696
-		adc	dx, word_14698
+		add	ax, word ptr file_BufferPos
+		adc	dx, word ptr file_BufferPos+2
 		retf
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29832,8 +29832,7 @@ include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
 aPal98Grb_0	db 'pal98 grb',0
 aPal98Grb_1	db 'pal98 grb',0
-word_135CE	dw 0
-word_135D0	dw 0FFFFh
+include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 word_135E4	dw 1
@@ -30941,14 +30940,7 @@ dword_14652	dd ?
 dword_14656	dd ?
 dword_1465A	dd ?
 include libs/master.lib/pal[bss].asm
-		dd    ?
-dword_14692	dd ?
-word_14696	dw ?
-word_14698	dw ?
-word_1469A	dw ?
-word_1469C	dw ?
-word_1469E	dw ?
-word_146A0	dw ?
+include libs/master.lib/fil[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

@@ -82,7 +82,7 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 	mov	CS:@@color,AX
 	mov	CS:_DS_,DS
 	mov	AX,[BP+@@handle]
-	mov	CS:file_handle,AX
+	mov	CS:bftentry_file_handle,AX
 	_push	DS
 	_lds	BX,[BP+@@header]
 	mov	AX,(bfnt_header PTR [BX]).Xdots
@@ -117,7 +117,7 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 @@NEXT_PATTERN:
 	JMOV	CX,read_byte
 	xor	DX,DX
-	JMOV	BX,file_handle
+	JMOV	BX,bftentry_file_handle
 
 	mov	AH,3fh
 	int	21h			;read handle
