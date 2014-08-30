@@ -48,54 +48,7 @@ include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/egc_shift_down.asm
 include libs/master.lib/egc_shift_left.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9FC		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_A4C
-		mov	ax, 3D02h
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		mov	cx, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		inc	dx
-		jz	short loc_A4C
-		mov	bx, cx
-		xor	cx, cx
-		mov	dx, cx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-		mov	ax, 1
-
-loc_A4C:
-		pop	bp
-		retf	4
-sub_9FC		endp
-
+include libs/master.lib/file_append.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10034,7 +9987,7 @@ loc_BC65:
 		cmp	si, 0B2h ; '²'
 		jl	short loc_BC4F
 		push	large [off_D72E]
-		call	sub_9FC
+		call	file_append
 		mov	al, byte_D722
 		cbw
 		imul	ax, 0B6h

@@ -54,54 +54,7 @@ include libs/master.lib/egc_shift_down.asm
 include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/egc_shift_right.asm
 include libs/master.lib/egc_shift_up.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D34		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, ds:360h
-		cmp	bx, 0FFFFh
-		jnz	short loc_D84
-		mov	ax, 3D02h
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_axdx
-		or	ax, dx
-		mov	ds:360h, ax
-		mov	cx, ax
-		xor	ax, ax
-		mov	ds:2A74h, ax
-		mov	ds:2A72h, ax
-		mov	ds:2A76h, ax
-		mov	ds:2A78h, ax
-		mov	ds:2A6Eh, ax
-		mov	ds:2A70h, ax
-		inc	dx
-		jz	short loc_D84
-		mov	bx, cx
-		xor	cx, cx
-		mov	dx, cx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	ds:2A6Eh, ax
-		mov	ds:2A70h, dx
-		mov	ax, 1
-
-loc_D84:
-		pop	bp
-		retf	4
-sub_D34		endp
-
+include libs/master.lib/file_append.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23513,7 +23466,7 @@ sub_12B1E	proc near
 		call	sub_C3EA
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
-		call	sub_D34
+		call	file_append
 		mov	al, byte_25688
 		mov	ah, 0
 		imul	ax, 0C4h

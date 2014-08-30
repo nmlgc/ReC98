@@ -46,54 +46,7 @@ include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_keyclear.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_786		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_7D6
-		mov	ax, 3D02h
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		mov	cx, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		inc	dx
-		jz	short loc_7D6
-		mov	bx, cx
-		xor	cx, cx
-		mov	dx, cx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-		mov	ax, 1
-
-loc_7D6:
-		pop	bp
-		retf	4
-sub_786		endp
-
+include libs/master.lib/file_append.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8080,7 +8033,7 @@ loc_AF73:
 		jge	short loc_AF55
 		push	ds
 		push	word_ED66
-		call	sub_786
+		call	file_append
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
 		movzx	eax, ax

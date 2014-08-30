@@ -49,54 +49,7 @@ include libs/master.lib/dos_read.asm
 include libs/master.lib/dos_seek.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_89A		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, 0
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_8EA
-		mov	ax, 3D02h
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	dos_axdx
-		or	ax, dx
-		mov	file_Handle, ax
-		mov	cx, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		inc	dx
-		jz	short loc_8EA
-		mov	bx, cx
-		xor	cx, cx
-		mov	dx, cx
-		mov	ax, 4202h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-		mov	ax, 1
-
-loc_8EA:
-		pop	bp
-		retf	4
-sub_89A		endp
-
+include libs/master.lib/file_append.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5509,7 +5462,7 @@ var_2		= byte ptr -2
 		enter	8, 0
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_89A
+		call	file_append
 		push	large 0
 		push	0
 		call	sub_AB6
@@ -5576,7 +5529,7 @@ var_1		= byte ptr -1
 		call	SCOPY@
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_89A
+		call	file_append
 		push	large 0
 		push	0
 		call	sub_AB6
