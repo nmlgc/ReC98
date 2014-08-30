@@ -49,45 +49,7 @@ include libs/master.lib/file_append.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_950		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_987
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_987:
-		pop	bp
-		retf	4
-sub_950		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4599,7 +4561,7 @@ sub_4314	endp ; sp-analysis failed
 
 
 sub_4320	proc far
-		call	near ptr sub_950
+		call	near ptr file_ropen
 		push	ss
 		lea	ax, [bp-0Ah]
 		push	ax
@@ -9913,7 +9875,7 @@ sub_C13E	proc far
 		mov	stage_id, 3
 		push	ds
 		push	offset aDemo1_rec ; "DEMO1.REC"
-		call	sub_950
+		call	file_ropen
 		les	bx, dword_2026C
 		mov	byte ptr es:[bx+26h], 0
 		jmp	short loc_C1D0
@@ -9926,7 +9888,7 @@ loc_C18A:
 		mov	stage_id, 2
 		push	ds
 		push	offset aDemo2_rec ; "DEMO2.REC"
-		call	sub_950
+		call	file_ropen
 		les	bx, dword_2026C
 		mov	byte ptr es:[bx+26h], 2
 		jmp	short loc_C1D0
@@ -9939,7 +9901,7 @@ loc_C1AE:
 		mov	stage_id, 1
 		push	ds
 		push	offset aDemo3_rec ; "DEMO3.REC"
-		call	sub_950
+		call	file_ropen
 		les	bx, dword_2026C
 		mov	byte ptr es:[bx+26h], 1
 
@@ -10064,7 +10026,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	ds
 		push	offset aHuuma_cfg ; "huuma.cfg"
-		call	sub_950
+		call	file_ropen
 		push	large 5
 		push	0
 		call	sub_98C
@@ -14319,7 +14281,7 @@ sub_E178	proc near
 		mov	bp, sp
 		push	ds
 		push	offset aBombs_bft ; "bombs.bft"
-		call	sub_950
+		call	file_ropen
 		push	large 20h ; ' '
 		push	0
 		call	sub_98C
@@ -14370,7 +14332,7 @@ loc_E1F3:
 		add	sp, 6
 		push	ds
 		push	offset aBomb1_bft ; "bomb1.bft"
-		call	sub_950
+		call	file_ropen
 		push	large 50h ; 'P'
 		push	0
 		call	sub_98C
@@ -17273,7 +17235,7 @@ arg_0		= dword	ptr  6
 
 		enter	6, 0
 		push	large [bp+arg_0]
-		call	sub_950
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
@@ -23961,7 +23923,7 @@ var_4		= dword	ptr -4
 		mov	es:[bx+5], al
 		push	word ptr [bp+var_4+2]
 		push	bx
-		call	sub_950
+		call	file_ropen
 		call	sub_9CE
 		mov	[bp+var_6], ax
 		push	ds
@@ -41785,7 +41747,7 @@ var_2		= word ptr -2
 		mov	es:[bx+5], al
 		push	word ptr [bp-0Ch]
 		push	bx
-		call	sub_950
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -42141,7 +42103,7 @@ sub_1C6C7	proc near
 		mov	bp, sp
 		push	si
 		push	large [off_1EDB4]
-		call	sub_950
+		call	file_ropen
 		mov	al, byte_1E364
 		cbw
 		imul	ax, 0B6h

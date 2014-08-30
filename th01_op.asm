@@ -2016,45 +2016,7 @@ sub_F5C		endp
 
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1108	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_113F
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_113F:
-		pop	bp
-		retf	4
-sub_1108	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17744,7 +17706,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_1108
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_D9F8
 		mov	ax, 1
@@ -17782,7 +17744,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_1108
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_DA37
 		mov	ax, 1
@@ -18296,7 +18258,7 @@ sub_DC1B	endp
 		push	di
 		mov	di, [bp+6]
 		push	large dword ptr	[bp+8]
-		call	sub_1108
+		call	file_ropen
 		or	ax, ax
 		jz	loc_DEEF
 		push	64h ; 'd'
@@ -18455,7 +18417,7 @@ loc_DF5C:
 		push	di
 		mov	si, [bp+6]
 		push	large dword ptr	[bp+8]
-		call	sub_1108
+		call	file_ropen
 		or	ax, ax
 		jz	loc_DFFF
 		push	64h ; 'd'
@@ -18613,7 +18575,7 @@ sub_E02B	endp
 		push	si
 		push	di
 		push	large dword ptr	[bp+8]
-		call	sub_1108
+		call	file_ropen
 		or	ax, ax
 		jz	loc_E213
 		push	64h ; 'd'
@@ -19268,7 +19230,7 @@ seg012		segment	byte public 'CODE' use16
 		mov	word ptr dword_13EEA+2,	dx
 		mov	word ptr dword_13EEA, ax
 		push	large dword ptr	[bp+6]
-		call	sub_1108
+		call	file_ropen
 		xor	si, si
 		jmp	short loc_E5AF
 ; ---------------------------------------------------------------------------
@@ -19597,7 +19559,7 @@ loc_E7B9:
 		mov	word ptr dword_13EEE, bx
 		push	ds
 		push	offset unk_13F00
-		call	sub_1108
+		call	file_ropen
 		les	bx, dword_13EEE
 		push	large dword ptr	es:[bx+18h]
 		push	0

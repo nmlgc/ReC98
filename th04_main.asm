@@ -59,45 +59,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F14		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_F4B
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_F4B:
-		pop	bp
-		retf	4
-sub_F14		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2536,8 +2498,7 @@ loc_3296:
 		push	si
 		push	word ptr [bp+arg_0+2]
 		push	word ptr [bp+arg_0]
-		push	cs
-		call	near ptr sub_F14
+		call	file_ropen
 		push	10h
 		call	hmem_allocbyte
 		mov	di, ax
@@ -7350,7 +7311,7 @@ var_4		= dword	ptr -4
 		mov	es:[bx+4], al
 		push	word ptr [bp+var_4+2]
 		push	bx
-		call	sub_F14
+		call	file_ropen
 		push	large [dword_23D92]
 		push	1F40h
 		call	file_read
@@ -7672,7 +7633,7 @@ var_2		= word ptr -2
 		mov	es:[bx+3], al
 		push	word ptr off_21C5A+2
 		push	bx
-		call	sub_F14
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -8005,7 +7966,7 @@ var_8		= word ptr -8
 		mov	es:[bx+3], al
 		push	word ptr off_21CBA+2
 		push	bx
-		call	sub_F14
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -11267,7 +11228,7 @@ arg_0		= dword	ptr  4
 		push	word ptr dword_255CC+2
 		call	hmem_free
 		push	large [bp+arg_0]
-		call	sub_F14
+		call	file_ropen
 		call	sub_F92
 		mov	si, ax
 		push	ax
@@ -17758,7 +17719,7 @@ sub_FF34	proc near
 		les	bx, off_22E38
 		mov	es:[bx+2], al
 		push	large [off_22E34]
-		call	sub_F14
+		call	file_ropen
 		push	800h
 		call	hmem_allocbyte
 		mov	word_256AE, ax
@@ -20432,14 +20393,14 @@ sub_11551	proc near
 		mov	word_22EA6, ax
 		push	ds
 		push	offset aTxt_bb	; "txt.bb"
-		call	sub_F14
+		call	file_ropen
 		push	word_22EA6
 		push	large 800h
 		call	file_read
 		call	file_close
 		push	ds
 		push	offset aTxt2_bb	; "txt2.bb"
-		call	sub_F14
+		call	file_ropen
 		push	word_22EA6
 		push	large 8000400h
 		call	file_read
@@ -21686,7 +21647,7 @@ var_4		= word ptr -4
 		push	si
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_F14
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -23182,7 +23143,7 @@ sub_12AB7	proc near
 		jz	short loc_12B19
 		push	ds
 		push	offset aGensou_scr_1 ; "GENSOU.SCR"
-		call	sub_F14
+		call	file_ropen
 		mov	al, byte_25688
 		mov	ah, 0
 		imul	ax, 0C4h
@@ -24296,7 +24257,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_4]
 		push	large [bp+arg_0]
-		call	sub_F14
+		call	file_ropen
 		mov	ax, di
 		shl	ax, 6
 		add	ax, 345Ah
@@ -25280,7 +25241,7 @@ arg_6		= word ptr  0Ch
 		shl	di, 4
 		add	di, 3978h
 		push	large [bp+arg_2]
-		call	sub_F14
+		call	file_ropen
 		push	ds
 		push	di
 		push	10h
@@ -25382,7 +25343,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_F14
+		call	file_ropen
 		mov	di, [bp+arg_4]
 		shl	di, 4
 		add	di, 3978h

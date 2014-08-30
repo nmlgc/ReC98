@@ -54,45 +54,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A7A		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_AB1
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_AB1:
-		pop	bp
-		retf	4
-sub_A7A		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1799,8 +1761,7 @@ loc_2FF4:
 		push	si
 		push	word ptr [bp+arg_0+2]
 		push	word ptr [bp+arg_0]
-		push	cs
-		call	near ptr sub_A7A
+		call	file_ropen
 		push	10h
 		call	hmem_allocbyte
 		mov	di, ax
@@ -5153,7 +5114,7 @@ var_4		= word ptr -4
 		enter	0Ch, 0
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_A7A
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -8446,7 +8407,7 @@ arg_0		= word ptr  4
 		push	si
 		push	ds
 		push	offset a_music_txt ; "_MUSIC.TXT"
-		call	sub_A7A
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 320h
 		cwde
@@ -9073,7 +9034,7 @@ sub_C733	proc near
 		jz	short loc_C793
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	sub_A7A
+		call	file_ropen
 		mov	al, byte_1327B
 		mov	ah, 0
 		imul	ax, 0C4h
@@ -12949,7 +12910,7 @@ word_E563	dw 1234h
 		shl	di, 4
 		add	di, 2716h
 		push	large dword ptr	[bp+8]
-		call	sub_A7A
+		call	file_ropen
 		push	ds
 		push	di
 		push	10h
@@ -13051,7 +13012,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_A7A
+		call	file_ropen
 		mov	di, [bp+arg_4]
 		shl	di, 4
 		add	di, 2716h

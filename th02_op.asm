@@ -48,45 +48,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_8D4		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_90B
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_90B:
-		pop	bp
-		retf	4
-sub_8D4		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5378,7 +5340,7 @@ var_1		= byte ptr -1
 loc_9C0E:
 		push	[bp+var_A]
 		push	[bp+var_C]
-		call	sub_8D4
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -8473,7 +8435,7 @@ sub_B3B1	proc near
 		push	si
 		push	word ptr off_DC36+2
 		push	word ptr off_DC36
-		call	sub_8D4
+		call	file_ropen
 		mov	al, byte_DC34
 		cbw
 		imul	ax, 0B6h
@@ -10811,7 +10773,7 @@ arg_0		= word ptr  4
 		push	si
 		push	ds
 		push	offset aMusic_txt ; "MUSIC.TXT"
-		call	sub_8D4
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 348h
 		cwd

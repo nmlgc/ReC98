@@ -20057,7 +20057,7 @@ arg_0		= dword	ptr  4
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_F14
+		call	file_ropen
 		push	800h
 		call	hmem_allocbyte
 		mov	word_2D02E, ax

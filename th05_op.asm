@@ -53,45 +53,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A58		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_A8F
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_A8F:
-		pop	bp
-		retf	4
-sub_A58		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1708,8 +1670,7 @@ arg_0		= dword	ptr  6
 		or	ax, word ptr cs:dword_37B2+2
 		jnz	short loc_3831
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_A58
+		call	file_ropen
 		lea	ax, [bp+var_10]
 		push	ss
 		push	ax
@@ -7680,7 +7641,7 @@ var_4		= word ptr -4
 		enter	0Ch, 0
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_A58
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -8677,7 +8638,7 @@ arg_0		= word ptr  4
 		mov	es:[bx+6], al
 		push	word ptr [bp+var_4+2]
 		push	bx
-		call	sub_A58
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 190h
 		cwde
@@ -9513,7 +9474,7 @@ arg_0		= word ptr  4
 		jz	short loc_CA0C
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	sub_A58
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 5
 		mov	dl, byte_14101
@@ -12890,7 +12851,7 @@ arg_6		= word ptr  0Ch
 		shl	di, 4
 		add	di, 3A96h
 		push	large [bp+arg_2]
-		call	sub_A58
+		call	file_ropen
 		push	ds
 		push	di
 		push	10h
@@ -12988,7 +12949,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_A58
+		call	file_ropen
 		mov	di, [bp+arg_4]
 		shl	di, 4
 		add	di, 3A96h

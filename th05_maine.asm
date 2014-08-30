@@ -53,45 +53,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A66		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_A9D
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_A9D:
-		pop	bp
-		retf	4
-sub_A66		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1935,8 +1897,7 @@ arg_0		= dword	ptr  6
 		or	ax, word ptr cs:dword_397A+2
 		jnz	short loc_39F9
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_A66
+		call	file_ropen
 		lea	ax, [bp+var_10]
 		push	ss
 		push	ax
@@ -5047,7 +5008,7 @@ var_4		= word ptr -4
 		push	si
 		push	ds
 		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	sub_A66
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -5219,7 +5180,7 @@ arg_0		= dword	ptr  4
 
 		enter	2, 0
 		push	large [bp+arg_0]
-		call	sub_A66
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_A6AD
 		mov	ax, 1
@@ -7143,7 +7104,7 @@ arg_0		= word ptr  4
 		jz	short loc_B694
 		push	ds
 		push	offset aGensou_scr_1 ; "GENSOU.SCR"
-		call	sub_A66
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 5
 		mov	dl, byte_15177
@@ -10356,7 +10317,7 @@ loc_D01A:
 		call	far ptr	loc_E914
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
-		call	sub_A66
+		call	file_ropen
 		cmp	dword_1517E, 16E360h
 		jge	short loc_D0E1
 		cmp	dword_1517E, 0
@@ -14855,7 +14816,7 @@ sub_F282	endp
 		shl	di, 4
 		add	di, 29FEh
 		push	large dword ptr	[bp+8]
-		call	sub_A66
+		call	file_ropen
 		push	ds
 		push	di
 		push	10h
@@ -14950,7 +14911,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_A66
+		call	file_ropen
 		mov	di, [bp+arg_4]
 		shl	di, 4
 		add	di, 29FEh

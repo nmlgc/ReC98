@@ -46,43 +46,7 @@ include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_896		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_8CD
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_8CD:
-		pop	bp
-		retf	4
-sub_896		endp
-
+include libs/master.lib/file_ropen.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
@@ -2235,8 +2199,7 @@ loc_297E:
 		push	si
 		push	word ptr [bp+arg_0+2]
 		push	word ptr [bp+arg_0]
-		push	cs
-		call	near ptr sub_896
+		call	file_ropen
 		push	10h
 		call	hmem_allocbyte
 		mov	di, ax
@@ -6815,7 +6778,7 @@ var_3		= word ptr -3
 		push	si
 		push	ds
 		push	offset aYume_cfg ; "YUME.CFG"
-		call	sub_896
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -16059,7 +16022,7 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_896
+		call	file_ropen
 		push	8160h
 		call	hmem_allocbyte
 		mov	bx, [bp+arg_4]
@@ -25477,7 +25440,7 @@ var_4		= word ptr -4
 		push	di
 		push	ds
 		push	offset aEnedat_dat ; "ENEDAT.DAT"
-		call	sub_896
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax

@@ -2141,45 +2141,7 @@ loc_1028:
 
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1160	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_1197
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_1197:
-		pop	bp
-		retf	4
-sub_1160	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20979,7 +20941,7 @@ arg_2		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_1160
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_EA34
 		mov	ax, 1
@@ -21021,7 +20983,7 @@ arg_2		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_1160
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_EA75
 		mov	ax, 1

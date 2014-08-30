@@ -53,45 +53,7 @@ include libs/master.lib/egc_shift_right.asm
 include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DF2		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_E29
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_E29:
-		pop	bp
-		retf	4
-sub_DF2		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3530,8 +3492,7 @@ loc_4288:
 		or	ax, word ptr cs:dword_4282+2
 		jnz	short loc_4301
 		push	large dword ptr	[bp+6]
-		push	cs
-		call	near ptr sub_DF2
+		call	file_ropen
 		lea	ax, [bp-10h]
 		push	ss
 		push	ax
@@ -7756,7 +7717,7 @@ loc_B76F:
 		mov	es:[bx+4], al
 		push	word ptr [bp+var_4+2]
 		push	bx
-		call	sub_DF2
+		call	file_ropen
 		push	large [dword_25FF4]
 		push	si
 		call	file_read
@@ -15421,7 +15382,7 @@ arg_0		= dword	ptr  6
 
 loc_ED9D:
 		push	large [bp+arg_0]
-		call	sub_DF2
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -16124,7 +16085,7 @@ sub_F2B4	proc far
 		call	sub_14F68
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
-		call	sub_DF2
+		call	file_ropen
 		push	large [dword_25FF4]
 		push	9C40h
 		call	file_read
@@ -26112,7 +26073,7 @@ arg_6		= word ptr  0Ch
 		shl	di, 4
 		add	di, 307Eh
 		push	large [bp+arg_2]
-		call	sub_DF2
+		call	file_ropen
 		push	ds
 		push	di
 		push	10h
@@ -26221,7 +26182,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_DF2
+		call	file_ropen
 		mov	di, [bp+arg_4]
 		shl	di, 4
 		add	di, 307Eh

@@ -2138,45 +2138,7 @@ sub_FA6		endp
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_116E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_11A5
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_11A5:
-		pop	bp
-		retf	4
-sub_116E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25135,7 +25097,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_10ABA
 		mov	ax, 1
@@ -25173,7 +25135,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	large [bp+arg_0]
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_10AF9
 		mov	ax, 1
@@ -25751,7 +25713,7 @@ arg_2		= dword	ptr  8
 		push	di
 		mov	di, [bp+arg_0]
 		push	large [bp+arg_2]
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jz	loc_10FB1
 		push	64h ; 'd'
@@ -25922,7 +25884,7 @@ arg_2		= dword	ptr  8
 		push	di
 		mov	si, [bp+arg_0]
 		push	large [bp+arg_2]
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jz	loc_110C1
 		push	64h ; 'd'
@@ -26097,7 +26059,7 @@ arg_6		= word ptr  0Ch
 		push	si
 		push	di
 		push	large [bp+arg_2]
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jz	loc_112D5
 		push	64h ; 'd'
@@ -31330,7 +31292,7 @@ loc_13AC9:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax
-		call	sub_116E
+		call	file_ropen
 		or	ax, ax
 		jnz	short loc_13AD9
 		jmp	short loc_13B01
@@ -37781,7 +37743,7 @@ arg_0		= dword	ptr  6
 		mov	word ptr off_39A34+2, dx
 		mov	word ptr off_39A34, ax
 		push	large [bp+arg_0]
-		call	sub_116E
+		call	file_ropen
 		xor	si, si
 		jmp	short loc_17102
 ; ---------------------------------------------------------------------------
@@ -38119,7 +38081,7 @@ loc_1730C:
 		mov	word ptr dword_39A38, bx
 		push	ds
 		push	offset unk_39A4A
-		call	sub_116E
+		call	file_ropen
 		les	bx, dword_39A38
 		push	large dword ptr	es:[bx+18h]
 		push	0
@@ -41531,7 +41493,7 @@ arg_0		= dword	ptr  6
 		enter	40h, 0
 		push	si
 		push	large [bp+arg_0]
-		call	sub_116E
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_40]
 		push	ax

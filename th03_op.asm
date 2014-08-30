@@ -51,45 +51,7 @@ include libs/master.lib/file_close.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_exist.asm
 include libs/master.lib/file_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9A8		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jnz	short loc_9DF
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		sbb	bx, bx
-		or	ax, bx
-		mov	file_Handle, ax
-		xor	ax, ax
-		mov	file_InReadBuf, ax
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, ax
-		mov	file_BufPtr, ax
-		mov	file_Eof, ax
-		mov	file_ErrorStat, ax
-		lea	ax, [bx+1]
-
-loc_9DF:
-		pop	bp
-		retf	4
-sub_9A8		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_ropen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1723,8 +1685,7 @@ loc_2B72:
 		push	si
 		push	word ptr [bp+arg_0+2]
 		push	word ptr [bp+arg_0]
-		push	cs
-		call	near ptr sub_9A8
+		call	file_ropen
 		push	10h
 		call	hmem_allocbyte
 		mov	di, ax
@@ -5152,7 +5113,7 @@ var_3		= word ptr -3
 		enter	0Ah, 0
 		push	ds
 		push	offset aYume_cfg ; "YUME.CFG"
-		call	sub_9A8
+		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -7256,7 +7217,7 @@ arg_0		= word ptr  4
 		push	si
 		push	ds
 		push	offset aMusic_txt ; "MUSIC.TXT"
-		call	sub_9A8
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 348h
 		cwde
@@ -8385,7 +8346,7 @@ arg_0		= word ptr  4
 loc_B314:
 		push	ds
 		push	word_E1F2
-		call	sub_9A8
+		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
 		movzx	eax, ax
@@ -10689,7 +10650,7 @@ arg_6		= word ptr  0Ch
 		add	ax, 1AA8h
 		mov	si, ax
 		push	large [bp+arg_2]
-		call	sub_9A8
+		call	file_ropen
 		push	ds
 		push	si
 		push	10h
@@ -10753,7 +10714,7 @@ arg_6		= word ptr  0Ch
 		add	ax, 1AA8h
 		mov	si, ax
 		push	large [bp+arg_2]
-		call	sub_9A8
+		call	file_ropen
 		push	ds
 		push	si
 		push	10h
@@ -10805,7 +10766,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	large [bp+arg_0]
-		call	sub_9A8
+		call	file_ropen
 		push	[bp+arg_4]
 		nop
 		push	cs
