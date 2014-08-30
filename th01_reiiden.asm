@@ -13121,63 +13121,7 @@ loc_AB4A:
 _setblock	endp
 
 include libs/BorlandC/setenvp.asm
-
-unknown_libname_4:			; BCC v4.x/5.x DOS runtime
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		dd byte_33DBF
-		db 4 dup(0), 2 dup(0ABh)
-		dw seg seg000
-		db 0E2h, 0FFh
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+6]
-		or	ax, [bp+8]
-		jz	short loc_AC00
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		xor	ax, ax
-		push	ax
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	near ptr @xmsg@$bdtr$qv	; xmsg::~xmsg(void)
-		add	sp, 6
-		test	byte ptr [bp+0Ah], 1
-		jz	short loc_ABFE
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		jmp	short loc_AC02
-; ---------------------------------------------------------------------------
-
-loc_ABFE:
-		jmp	short loc_AC02
-; ---------------------------------------------------------------------------
-
-loc_AC00:
-		xor	ax, ax
-
-loc_AC02:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 

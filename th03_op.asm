@@ -4802,64 +4802,7 @@ loc_9158:
 _setblock	endp
 
 include libs/BorlandC/setenvp.asm
-
-unknown_libname_2:			; BCC v4.x/5.x DOS runtime
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		dd byte_CC0B
-		db 4 dup(0), 0B9h, 91h
-		dw seg seg000
-		db 0E2h, 0FFh
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+6]
-		or	ax, [bp+8]
-		jz	short loc_920E
-		nopcall	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		sub	word ptr es:[bx], 1
-		sbb	word ptr es:[bx+2], 0
-		xor	ax, ax
-		push	ax
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	near ptr @xmsg@$bdtr$qv	; xmsg::~xmsg(void)
-		add	sp, 6
-		test	byte ptr [bp+0Ah], 1
-		jz	short loc_920C
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		nopcall	@$bdele$qnv
-		pop	cx
-		pop	cx
-		jmp	short loc_9210
-; ---------------------------------------------------------------------------
-
-loc_920C:
-		jmp	short loc_9210
-; ---------------------------------------------------------------------------
-
-loc_920E:
-		xor	ax, ax
-
-loc_9210:
-					; seg000:loc_920Cj
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
+include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 
@@ -11984,77 +11927,7 @@ seg003		segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; string::string(string	const &)
-@string@$bctr$qmx6string proc far
-					; xmsg::xmsg(xmsg &)+56P ...
-
-var_1E		= word ptr -1Eh
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 1Eh
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 91C1h
-		call	___InitExceptBlocks
-		mov	ax, word ptr [bp+arg_0]
-		or	ax, word ptr [bp+arg_0+2]
-		jnz	short loc_CBCB
-		mov	ax, 4
-		push	ax
-		call	@$bnew$qui	; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
-		or	ax, dx
-		jz	short loc_CBE5
-
-loc_CBCB:
-		les	bx, [bp+arg_4]
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, es:[bx]
-		inc	word ptr es:[bx]
-
-loc_CBE5:
-		call	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		push	[bp+var_1E]
-		call	___ExitExceptBlocks
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@string@$bctr$qmx6string endp
-
-; ---------------------------------------------------------------------------
-byte_CC0B	db 6, 0, 3, 0, 26h, 0, 2 dup(0FFh), 7, 0, 2Eh, 0, 3Ah
-		db 0Dh dup(0), 2, 0, 2,	0, 0C7h, 91h
-		dw seg seg000
-		db 5, 0, 3Eh, 0, 78h, 61h, 2 dup(6Ch), 6Fh, 63h, 2 dup(0)
-		db 0BDh, 0
-		dw seg seg003
-		db 2 dup(0), 3,	0Dh dup(0), 4, 0, 3, 0,	26h, 0,	2 dup(0FFh)
-		db 3, 0, 2Ch, 0, 30h, 0Dh dup(0), 1, 0,	1, 0, 0CEh, 58h
-		dw seg seg000
-		db 5, 0, 34h, 0, 78h, 6Dh, 73h,	67h, 0Eh dup(0)
-
+include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
 include libs/BorlandC/strings[textc].asm
 		dd 0, 0, 0

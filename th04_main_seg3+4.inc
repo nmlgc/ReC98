@@ -24384,77 +24384,7 @@ seg004		segment	byte public 'CODE' use16
 		db 0C9h, 76h, 0CAh, 2Bh, 0CBh, 44h, 0CBh, 79h, 0CBh, 0CFh
 		db 0CBh
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; string::string(string	const &)
-@string@$bctr$qmx6string proc far
-					; xmsg::xmsg(xmsg &)+56P ...
-
-var_1E		= word ptr -1Eh
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 1Eh
-		push	si
-		push	di
-		mov	ax, seg	seg000
-		mov	bx, 0A41Dh
-		call	far ptr	___InitExceptBlocks
-		mov	ax, word ptr [bp+arg_0]
-		or	ax, word ptr [bp+arg_0+2]
-		jnz	short loc_2071B
-		mov	ax, 4
-		push	ax
-		call	@$bnew$qui	; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
-		or	ax, dx
-		jz	short loc_20735
-
-loc_2071B:
-		les	bx, [bp+arg_4]
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, es:[bx]
-		inc	word ptr es:[bx]
-
-loc_20735:
-		call	@__RefDestructorCount$qv ; __RefDestructorCount(void)
-		mov	bx, ax
-		mov	es, dx
-		add	word ptr es:[bx], 1
-		adc	word ptr es:[bx+2], 0
-		push	[bp+var_1E]
-		call	___ExitExceptBlocks
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@string@$bctr$qmx6string endp
-
-; ---------------------------------------------------------------------------
-byte_2075B	db 6, 0, 3, 0, 26h, 0, 2 dup(0FFh), 7, 0, 2Eh, 0, 3Ah
-		db 0Dh dup(0), 2, 0, 2,	0, 23h,	0A4h
-		dw seg seg000
-		db 5, 0, 3Eh, 0, 78h, 61h, 2 dup(6Ch), 6Fh, 63h, 2 dup(0)
-		db 0BDh, 0
-		dw seg seg004
-		db 2 dup(0), 3,	0Dh dup(0), 4, 0, 3, 0,	26h, 0,	2 dup(0FFh)
-		db 3, 0, 2Ch, 0, 30h, 0Dh dup(0), 1, 0,	1, 0, 2Ah, 6Bh
-		dw seg seg000
-		db 5, 0, 34h, 0, 78h, 6Dh, 73h,	67h, 0Eh dup(0)
-
+include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
 include libs/BorlandC/strings[textc].asm
 		dd 0, 0, 0
