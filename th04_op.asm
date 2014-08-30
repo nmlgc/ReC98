@@ -1036,24 +1036,7 @@ loc_1FD7:
 		pop	bp
 		retf	8
 ; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	es, word ptr [bp+6]
-		xor	ax, ax
-		mov	es:1Ah,	ax
-		mov	word ptr es:1Ch, 0FFFFh
-		mov	es:0Ah,	ax
-		mov	es:0Ch,	ax
-		mov	es:12h,	ax
-		mov	es:14h,	ax
-		push	word ptr es:0
-		push	word ptr es:10h
-		push	word ptr es:0Eh
-		push	ax
-		call	bseek_
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm

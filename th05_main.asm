@@ -1859,34 +1859,7 @@ loc_234F:
 		retf	8
 sub_232C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_235A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		xor	ax, ax
-		mov	es:1Ah,	ax
-		mov	word ptr es:1Ch, 0FFFFh
-		mov	es:0Ah,	ax
-		mov	es:0Ch,	ax
-		mov	es:12h,	ax
-		mov	es:14h,	ax
-		push	word ptr es:0
-		push	word ptr es:10h
-		push	word ptr es:0Eh
-		push	ax
-		call	bseek_
-		pop	bp
-		retf	2
-sub_235A	endp
-
+include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 
@@ -3602,8 +3575,7 @@ loc_4453:
 		push	cx
 		push	dx
 		push	word_23EE0
-		push	cs
-		call	near ptr sub_235A
+		call	pfrewind
 		pop	dx
 		pop	cx
 
