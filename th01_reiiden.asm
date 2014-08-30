@@ -6072,30 +6072,7 @@ loc_2B79:
 __TMPNAM	endp
 
 include libs/BorlandC/new.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2EA3	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2EA3	endp
-
+include libs/BorlandC/newarray.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7643,9 +7620,7 @@ loc_3899:
 
 loc_38C3:
 		push	[bp+var_1C]
-		nop
-		push	cs
-		call	near ptr sub_2EA3
+		nopcall	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+arg_0+2], dx
 		mov	word ptr [bp+arg_0], ax
@@ -24974,7 +24949,7 @@ loc_10739:
 		mov	ax, [bp+var_4]
 		imul	ax, 281h
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -25105,7 +25080,7 @@ loc_1084D:
 		mov	ax, [bp+arg_2]
 		imul	ax, 281h
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
@@ -25598,7 +25573,7 @@ arg_0		= dword	ptr  6
 		push	si
 		xor	si, si
 		push	4000h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_38E28+2, dx
 		mov	word ptr off_38E28, ax
@@ -26040,7 +26015,7 @@ arg_2		= dword	ptr  8
 		or	ax, ax
 		jz	loc_10FB1
 		push	64h ; 'd'
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+_font+2], dx
 		mov	word ptr [bp+_font], ax
@@ -26090,7 +26065,7 @@ loc_10F15:
 
 loc_10F44:
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -26124,7 +26099,7 @@ loc_10F6C:
 
 loc_10F8A:
 		push	[bp+var_4]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 6
@@ -26211,7 +26186,7 @@ arg_2		= dword	ptr  8
 		or	ax, ax
 		jz	loc_110C1
 		push	64h ; 'd'
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+_font+2], dx
 		mov	word ptr [bp+_font], ax
@@ -26257,7 +26232,7 @@ loc_1107F:
 
 loc_110A4:
 		push	di
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
@@ -26386,7 +26361,7 @@ arg_6		= word ptr  0Ch
 		or	ax, ax
 		jz	loc_112D5
 		push	64h ; 'd'
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+s1+2], dx
 		mov	word ptr [bp+s1], ax
@@ -26468,7 +26443,7 @@ loc_11232:
 
 loc_11269:
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
@@ -26501,7 +26476,7 @@ loc_1128F:
 
 loc_112AE:
 		push	[bp+var_4]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_0]
 		shl	bx, 6
@@ -30097,12 +30072,12 @@ _font		= dword	ptr -4
 		mov	[bp+var_A], 0
 		mov	[bp+var_10], 1
 		push	320h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+_font+2], dx
 		mov	word ptr [bp+_font], ax
 		push	320h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr [bp+var_8+2], dx
 		mov	word ptr [bp+var_8], ax
@@ -31646,22 +31621,22 @@ loc_13B01:
 
 loc_13B07:
 		push	0A0h ; ' '
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39452+2, dx
 		mov	word ptr off_39452, ax
 		push	14h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_3945A+2, dx
 		mov	word ptr off_3945A, ax
 		push	14h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39456+2, dx
 		mov	word ptr off_39456, ax
 		push	28h ; '('
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39462+2, dx
 		mov	word ptr off_39462, ax
@@ -33800,7 +33775,7 @@ loc_14BF4:
 
 loc_14C45:
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -33809,7 +33784,7 @@ loc_14C45:
 		mov	es:[si+2], dx
 		mov	es:[si], ax
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -33818,7 +33793,7 @@ loc_14C45:
 		mov	es:[si+82h], dx
 		mov	es:[si+80h], ax
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -33827,7 +33802,7 @@ loc_14C45:
 		mov	es:[si+102h], dx
 		mov	es:[si+100h], ax
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -33836,7 +33811,7 @@ loc_14C45:
 		mov	es:[si+182h], dx
 		mov	es:[si+180h], ax
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -34993,7 +34968,7 @@ loc_156F5:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -35008,7 +34983,7 @@ loc_156F5:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -35023,7 +34998,7 @@ loc_156F5:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -35038,7 +35013,7 @@ loc_156F5:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -35053,7 +35028,7 @@ loc_156F5:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -37494,7 +37469,7 @@ loc_16BBA:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -37509,7 +37484,7 @@ loc_16BBA:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -37524,7 +37499,7 @@ loc_16BBA:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -37539,7 +37514,7 @@ loc_16BBA:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -37554,7 +37529,7 @@ loc_16BBA:
 		sar	ax, 1
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
@@ -38061,7 +38036,7 @@ arg_0		= dword	ptr  6
 		push	si
 		push	di
 		push	800h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39A34+2, dx
 		mov	word ptr off_39A34, ax
@@ -38427,14 +38402,14 @@ loc_1735E:
 		mov	word_39A57, 0
 		les	bx, dword_39A38
 		push	word ptr es:[bx+14h]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39A42+2, dx
 		mov	word ptr off_39A42, ax
 		cmp	byte_39A40, 0
 		jz	short loc_173B0
 		push	100h
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39A46+2, dx
 		mov	word ptr off_39A46, ax
@@ -38647,7 +38622,7 @@ loc_174C8:
 
 loc_174F9:
 		push	[bp+var_2]
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		imul	bx, 26h
@@ -41827,7 +41802,7 @@ arg_0		= dword	ptr  6
 		mov	si, [bp+var_38]
 		mov	word_39DA2, si
 		push	si
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr node+2, dx
 		mov	word ptr node, ax

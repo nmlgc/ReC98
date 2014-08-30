@@ -9913,38 +9913,38 @@ loc_2099C:
 		mov	ax, word_39E90
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr font+2, dx
 		mov	word ptr font, ax
 		mov	ax, word_39E90
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E88+2, dx
 		mov	word ptr off_39E88, ax
 		push	word_39E90
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E8C+2, dx
 		mov	word ptr off_39E8C, ax
 		mov	ax, word_39E90
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E92+2, dx
 		mov	word ptr off_39E92, ax
 		push	word_39E90
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E96+2, dx
 		mov	word ptr off_39E96, ax
 		mov	ax, word_39E90
 		shl	ax, 2
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39EAC+2, dx
 		mov	word ptr off_39EAC, ax
@@ -9956,26 +9956,26 @@ loc_20A27:
 		mov	ax, word_39EAA
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E9A+2, dx
 		mov	word ptr off_39E9A, ax
 		mov	ax, word_39EAA
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39E9E+2, dx
 		mov	word ptr off_39E9E, ax
 		push	word_39EAA
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39EA2+2, dx
 		mov	word ptr off_39EA2, ax
 		mov	ax, word_39EAA
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39EA6+2, dx
 		mov	word ptr off_39EA6, ax
@@ -11125,7 +11125,7 @@ loc_2132D:
 		mov	ax, word_39EAA
 		add	ax, ax
 		push	ax
-		call	sub_2EA3
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_39EB3+2, dx
 		mov	word ptr off_39EB3, ax

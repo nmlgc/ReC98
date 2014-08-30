@@ -4185,30 +4185,7 @@ loc_22F7:
 __TMPNAM	endp
 
 include libs/BorlandC/new.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2621	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2621	endp
-
+include libs/BorlandC/newarray.asm
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
 include libs/BorlandC/reada.asm
@@ -10506,7 +10483,7 @@ seg001		segment	byte public 'CODE' use16
 
 loc_A1CE:
 		push	190h
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
@@ -17557,7 +17534,7 @@ loc_D677:
 		mov	ax, [bp+var_4]
 		imul	ax, 281h
 		push	ax
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -17679,7 +17656,7 @@ loc_D78B:
 		mov	ax, [bp+8]
 		imul	ax, 281h
 		push	ax
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
@@ -18099,7 +18076,7 @@ arg_0		= dword	ptr  6
 		push	si
 		xor	si, si
 		push	4000h
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr font+2, dx
 		mov	word ptr font, ax
@@ -18497,7 +18474,7 @@ sub_DC1B	endp
 		or	ax, ax
 		jz	loc_DEEF
 		push	64h ; 'd'
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	[bp-6],	dx
 		mov	[bp-8],	ax
@@ -18547,7 +18524,7 @@ loc_DE53:
 
 loc_DE82:
 		push	word ptr [bp-2]
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
@@ -18581,7 +18558,7 @@ loc_DEAA:
 
 loc_DEC8:
 		push	word ptr [bp-4]
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 6
@@ -18656,7 +18633,7 @@ loc_DF5C:
 		or	ax, ax
 		jz	loc_DFFF
 		push	64h ; 'd'
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	[bp-2],	dx
 		mov	[bp-4],	ax
@@ -18702,7 +18679,7 @@ loc_DFBD:
 
 loc_DFE2:
 		push	di
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
@@ -18814,7 +18791,7 @@ sub_E02B	endp
 		or	ax, ax
 		jz	loc_E213
 		push	64h ; 'd'
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	[bp-6],	dx
 		mov	[bp-8],	ax
@@ -18896,7 +18873,7 @@ loc_E170:
 
 loc_E1A7:
 		push	word ptr [bp-2]
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+6]
 		shl	bx, 2
@@ -18929,7 +18906,7 @@ loc_E1CD:
 
 loc_E1EC:
 		push	word ptr [bp-4]
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	bx, [bp+6]
 		shl	bx, 6
@@ -19460,7 +19437,7 @@ seg012		segment	byte public 'CODE' use16
 		push	si
 		push	di
 		push	800h
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr dword_13EEA+2,	dx
 		mov	word ptr dword_13EEA, ax
@@ -19817,14 +19794,14 @@ loc_E80B:
 		mov	word_13F0D, 0
 		les	bx, dword_13EEE
 		push	word ptr es:[bx+14h]
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_13EF8+2, dx
 		mov	word ptr off_13EF8, ax
 		cmp	byte_13EF6, 0
 		jz	short loc_E85D
 		push	100h
-		call	sub_2621
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_13EFC+2, dx
 		mov	word ptr off_13EFC, ax

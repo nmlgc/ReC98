@@ -4345,30 +4345,7 @@ loc_228F:
 __TMPNAM	endp
 
 include libs/BorlandC/new.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25B9	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr @$bnew$qui ; operator new(uint)
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_25B9	endp
-
+include libs/BorlandC/newarray.asm
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
 include libs/BorlandC/reada.asm
@@ -11731,22 +11708,22 @@ loc_A6DE:
 
 loc_A6E4:
 		push	0A0h ; ' '
-		call	sub_25B9
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr font+2, dx
 		mov	word ptr font, ax
 		push	14h
-		call	sub_25B9
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_1402C+2, dx
 		mov	word ptr off_1402C, ax
 		push	14h
-		call	sub_25B9
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_14028+2, dx
 		mov	word ptr off_14028, ax
 		push	28h ; '('
-		call	sub_25B9
+		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr off_14034+2, dx
 		mov	word ptr off_14034, ax
@@ -21368,7 +21345,7 @@ arg_2		= word ptr  8
 		push	si
 		xor	si, si
 		push	4000h
-		call	sub_25B9
+		call	@$bnwa$qui
 		pop	cx
 		mov	word_1464C, dx
 		mov	off_1464A, ax
