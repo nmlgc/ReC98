@@ -20064,7 +20064,7 @@ arg_0		= dword	ptr  4
 		push	ax
 		push	large 800h
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		pop	bp
 		retn	4
 sub_1DFA8	endp

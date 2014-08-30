@@ -2240,76 +2240,7 @@ loc_10CB:
 		retf	6
 sub_1022	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_10D6	proc far
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jz	short locret_1140
-		mov	ax, file_BufPtr
-		cmp	file_InReadBuf, ax
-		jnb	short loc_1114
-		push	ds
-		mov	cx, file_BufPtr
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_1107
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_110D
-
-loc_1107:
-		mov	file_ErrorStat, 1
-
-loc_110D:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_1114:
-		cmp	file_InReadBuf, 0
-		jz	short locret_1140
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_1140:
-		retf
-sub_10D6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1142	proc far
-		push	cs
-		call	near ptr sub_10D6
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_1142	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2508,8 +2439,7 @@ sub_1250	endp
 
 
 sub_1290	proc far
-		push	cs
-		call	near ptr sub_10D6
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_12C1
 		push	bp
@@ -25388,7 +25318,7 @@ loc_10ABA:
 		push	offset unk_38988
 		call	sub_EB10
 		add	sp, 4
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf
@@ -25422,7 +25352,7 @@ loc_10AF9:
 		push	offset unk_38988
 		push	30h ; '0'
 		call	sub_1022
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf
@@ -26004,7 +25934,7 @@ arg_2		= dword	ptr  8
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_10F03
-		call	sub_1142
+		call	file_close
 		jmp	loc_10FB1
 ; ---------------------------------------------------------------------------
 
@@ -26013,7 +25943,7 @@ loc_10F03:
 		assume es:nothing
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_10F15
-		call	sub_1142
+		call	file_close
 		jmp	loc_10FB1
 ; ---------------------------------------------------------------------------
 
@@ -26046,7 +25976,7 @@ loc_10F44:
 		mov	[bx+4038h], ax
 		or	ax, dx
 		jnz	short loc_10F65
-		call	sub_1142
+		call	file_close
 		jmp	short loc_10FB1
 ; ---------------------------------------------------------------------------
 
@@ -26083,7 +26013,7 @@ loc_10F8A:
 		mov	[bx+4078h], ax
 		or	ax, dx
 		jnz	short loc_10FB6
-		call	sub_1142
+		call	file_close
 
 loc_10FB1:
 		mov	ax, 1
@@ -26129,7 +26059,7 @@ loc_10FFD:
 		push	bx		; font
 		call	@$bdla$qnv
 		add	sp, 4
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 
 loc_1101E:
@@ -26175,7 +26105,7 @@ arg_2		= dword	ptr  8
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_1106E
-		call	sub_1142
+		call	file_close
 		jmp	short loc_110C1
 ; ---------------------------------------------------------------------------
 
@@ -26183,7 +26113,7 @@ loc_1106E:
 		les	bx, [bp+_font]
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_1107F
-		call	sub_1142
+		call	file_close
 		jmp	short loc_110C1
 ; ---------------------------------------------------------------------------
 
@@ -26213,7 +26143,7 @@ loc_110A4:
 		mov	[bx+4038h], ax
 		or	ax, dx
 		jnz	short loc_110C6
-		call	sub_1142
+		call	file_close
 
 loc_110C1:
 		mov	ax, 1
@@ -26229,7 +26159,7 @@ loc_110C6:
 		push	large [bp+_font]	; font
 		call	@$bdla$qnv
 		add	sp, 4
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 
 loc_110E9:
@@ -26350,7 +26280,7 @@ arg_6		= word ptr  0Ch
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_111C6
-		call	sub_1142
+		call	file_close
 		jmp	loc_112D5
 ; ---------------------------------------------------------------------------
 
@@ -26382,7 +26312,7 @@ loc_111C6:
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_11220
-		call	sub_1142
+		call	file_close
 		jmp	loc_112D5
 ; ---------------------------------------------------------------------------
 
@@ -26390,7 +26320,7 @@ loc_11220:
 		les	bx, [bp+s1]
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_11232
-		call	sub_1142
+		call	file_close
 		jmp	loc_112D5
 ; ---------------------------------------------------------------------------
 
@@ -26424,7 +26354,7 @@ loc_11269:
 		mov	[bx+4038h], ax
 		or	ax, dx
 		jnz	short loc_1128B
-		call	sub_1142
+		call	file_close
 		jmp	short loc_112D5
 ; ---------------------------------------------------------------------------
 
@@ -26460,7 +26390,7 @@ loc_112AE:
 		mov	[bx+4078h], ax
 		or	ax, dx
 		jnz	short loc_112DA
-		call	sub_1142
+		call	file_close
 
 loc_112D5:
 		mov	ax, 1
@@ -26511,7 +26441,7 @@ loc_11330:
 		add	sp, 4
 
 loc_11333:
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 
 loc_1133A:
@@ -31487,7 +31417,7 @@ loc_13A5C:
 loc_13A68:
 		cmp	si, 0Ah
 		jl	short loc_13A5C
-		call	sub_1142
+		call	file_close
 
 loc_13A72:
 		pop	si
@@ -31585,7 +31515,7 @@ loc_13AD9:
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_13B07
-		call	sub_1142
+		call	file_close
 
 loc_13B01:
 		mov	ax, 1
@@ -31625,7 +31555,7 @@ loc_13B07:
 		push	large [off_39456]
 		push	14h
 		call	sub_1022
-		call	sub_1142
+		call	file_close
 		xor	si, si
 		jmp	short loc_13B97
 ; ---------------------------------------------------------------------------
@@ -38038,7 +37968,7 @@ loc_17107:
 		push	large [off_39A34]
 		push	800h
 		call	sub_1022
-		call	sub_1142
+		call	file_close
 		xor	si, si
 		jmp	short loc_17160
 ; ---------------------------------------------------------------------------
@@ -38407,7 +38337,7 @@ loc_173B0:
 		call	sub_171CE
 
 loc_173D2:
-		call	sub_1142
+		call	file_close
 		pop	si
 		leave
 		retf	4
@@ -41783,7 +41713,7 @@ arg_0		= dword	ptr  6
 		push	ax
 		push	si
 		call	sub_1022
-		call	sub_1142
+		call	file_close
 		xor	ax, ax
 		pop	si
 		leave

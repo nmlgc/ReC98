@@ -51,77 +51,7 @@ include libs/master.lib/egc_shift_down.asm
 include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/egc_shift_right.asm
 include libs/master.lib/egc_shift_up.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CC2		proc far
-		mov	bx, ds:3B2h
-		cmp	bx, 0FFFFh
-		jz	short locret_D2C
-		mov	ax, ds:264Ch
-		cmp	ds:264Eh, ax
-		jnb	short loc_D00
-		push	ds
-		mov	cx, ds:264Ch
-		lds	dx, ds:2644h
-		assume ds:dseg
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_CF3
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_CF9
-
-loc_CF3:
-		mov	file_ErrorStat, 1
-
-loc_CF9:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D00:
-		cmp	file_InReadBuf, 0
-		jz	short locret_D2C
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_D2C:
-		retf
-sub_CC2		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D2E		proc far
-		push	cs
-		call	near ptr sub_CC2
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_D2E		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -272,8 +202,7 @@ sub_DF2		endp
 
 sub_E2E		proc far
 					; sub_1512A+47P ...
-		push	cs
-		call	near ptr sub_CC2
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_E5F
 		push	bp
@@ -3723,8 +3652,7 @@ loc_4288:
 		push	di
 		push	cs
 		call	near ptr sub_D3E
-		push	cs
-		call	near ptr sub_D2E
+		call	file_close
 		mov	cx, di
 		mov	ax, word_23EE4
 		mov	es, ax
@@ -7938,7 +7866,7 @@ loc_B76F:
 		push	large [dword_25FF4]
 		push	si
 		call	sub_D3E
-		call	sub_D2E
+		call	file_close
 		pop	si
 		leave
 		retn
@@ -15637,7 +15565,7 @@ loc_ED9D:
 		push	large [dword_2C930]
 		push	si
 		call	sub_D3E
-		call	sub_D2E
+		call	file_close
 		pop	si
 		leave
 		retf	4
@@ -16306,7 +16234,7 @@ sub_F2B4	proc far
 		push	large [dword_25FF4]
 		push	9C40h
 		call	sub_D3E
-		call	sub_D2E
+		call	file_close
 		mov	word_25FE0, 0
 		inc	byte_221EC
 		pop	bp
@@ -26312,7 +26240,7 @@ loc_15166:
 		push	1
 		call	sub_E2E
 		call	sub_1518A
-		call	sub_D2E
+		call	file_close
 		mov	byte_2123A, 0
 		pop	di
 		pop	si
@@ -26428,7 +26356,7 @@ loc_15216:
 		add	di, 10h
 		dec	byte_23E5E
 		jnz	short loc_15216
-		call	sub_D2E
+		call	file_close
 		mov	byte_2123A, 0
 		pop	di
 		pop	si

@@ -2119,76 +2119,7 @@ loc_1081:
 		retf	6
 sub_FD8		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_108C	proc far
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jz	short locret_10F6
-		mov	ax, file_BufPtr
-		cmp	file_InReadBuf, ax
-		jnb	short loc_10CA
-		push	ds
-		mov	cx, file_BufPtr
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_10BD
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_10C3
-
-loc_10BD:
-		mov	file_ErrorStat, 1
-
-loc_10C3:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_10CA:
-		cmp	file_InReadBuf, 0
-		jz	short locret_10F6
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_10F6:
-		retf
-sub_108C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_10F8	proc far
-		push	cs
-		call	near ptr sub_108C
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_10F8	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2233,8 +2164,7 @@ sub_1108	endp
 
 
 sub_1144	proc far
-		push	cs
-		call	near ptr sub_108C
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_1175
 		push	bp
@@ -17938,7 +17868,7 @@ loc_D9F8:
 		push	offset unk_136D2
 		call	sub_BA15
 		add	sp, 4
-		call	sub_10F8
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf
@@ -17972,7 +17902,7 @@ loc_DA37:
 		push	offset unk_136D2
 		push	30h ; '0'
 		call	sub_FD8
-		call	sub_10F8
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf
@@ -18490,7 +18420,7 @@ sub_DC1B	endp
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_DE41
-		call	sub_10F8
+		call	file_close
 		jmp	loc_DEEF
 ; ---------------------------------------------------------------------------
 
@@ -18499,7 +18429,7 @@ loc_DE41:
 		assume es:nothing
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_DE53
-		call	sub_10F8
+		call	file_close
 		jmp	loc_DEEF
 ; ---------------------------------------------------------------------------
 
@@ -18532,7 +18462,7 @@ loc_DE82:
 		mov	[bx+1492h], ax
 		or	ax, dx
 		jnz	short loc_DEA3
-		call	sub_10F8
+		call	file_close
 		jmp	short loc_DEEF
 ; ---------------------------------------------------------------------------
 
@@ -18569,7 +18499,7 @@ loc_DEC8:
 		mov	[bx+14D2h], ax
 		or	ax, dx
 		jnz	short loc_DEF4
-		call	sub_10F8
+		call	file_close
 
 loc_DEEF:
 		mov	ax, 1
@@ -18615,7 +18545,7 @@ loc_DF3B:
 		push	bx
 		call	@$bdla$qnv
 		add	sp, 4
-		call	sub_10F8
+		call	file_close
 		xor	ax, ax
 
 loc_DF5C:
@@ -18649,7 +18579,7 @@ loc_DF5C:
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_DFAC
-		call	sub_10F8
+		call	file_close
 		jmp	short loc_DFFF
 ; ---------------------------------------------------------------------------
 
@@ -18657,7 +18587,7 @@ loc_DFAC:
 		les	bx, [bp-4]
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_DFBD
-		call	sub_10F8
+		call	file_close
 		jmp	short loc_DFFF
 ; ---------------------------------------------------------------------------
 
@@ -18687,7 +18617,7 @@ loc_DFE2:
 		mov	[bx+1492h], ax
 		or	ax, dx
 		jnz	short loc_E004
-		call	sub_10F8
+		call	file_close
 
 loc_DFFF:
 		mov	ax, 1
@@ -18703,7 +18633,7 @@ loc_E004:
 		push	large dword ptr	[bp-4]
 		call	@$bdla$qnv
 		add	sp, 4
-		call	sub_10F8
+		call	file_close
 		xor	ax, ax
 
 loc_E027:
@@ -18807,7 +18737,7 @@ sub_E02B	endp
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_E104
-		call	sub_10F8
+		call	file_close
 		jmp	loc_E213
 ; ---------------------------------------------------------------------------
 
@@ -18839,7 +18769,7 @@ loc_E104:
 		add	sp, 0Ah
 		or	ax, ax
 		jz	short loc_E15E
-		call	sub_10F8
+		call	file_close
 		jmp	loc_E213
 ; ---------------------------------------------------------------------------
 
@@ -18847,7 +18777,7 @@ loc_E15E:
 		les	bx, [bp-8]
 		cmp	byte ptr es:[bx+4], 1
 		jnb	short loc_E170
-		call	sub_10F8
+		call	file_close
 		jmp	loc_E213
 ; ---------------------------------------------------------------------------
 
@@ -18881,7 +18811,7 @@ loc_E1A7:
 		mov	[bx+1492h], ax
 		or	ax, dx
 		jnz	short loc_E1C9
-		call	sub_10F8
+		call	file_close
 		jmp	short loc_E213
 ; ---------------------------------------------------------------------------
 
@@ -18917,7 +18847,7 @@ loc_E1EC:
 		mov	[bx+14D2h], ax
 		or	ax, dx
 		jnz	short loc_E218
-		call	sub_10F8
+		call	file_close
 
 loc_E213:
 		mov	ax, 1
@@ -18964,7 +18894,7 @@ loc_E265:
 		push	large dword ptr	[bp-8]
 		call	@$bdla$qnv
 		add	sp, 4
-		call	sub_10F8
+		call	file_close
 		xor	ax, ax
 
 loc_E278:
@@ -19466,7 +19396,7 @@ loc_E5B4:
 		push	large [dword_13EEA]
 		push	800h
 		call	sub_FD8
-		call	sub_10F8
+		call	file_close
 		xor	si, si
 		jmp	short loc_E60D
 ; ---------------------------------------------------------------------------
@@ -19826,7 +19756,7 @@ loc_E85D:
 		call	sub_E67B
 
 loc_E87F:
-		call	sub_10F8
+		call	file_close
 		pop	si
 		leave
 		retf	4

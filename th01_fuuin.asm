@@ -2244,76 +2244,7 @@ loc_10D9:
 		retf	6
 sub_1030	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_10E4	proc far
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jz	short locret_114E
-		mov	ax, file_BufPtr
-		cmp	file_InReadBuf, ax
-		jnb	short loc_1122
-		push	ds
-		mov	cx, file_BufPtr
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_1115
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_111B
-
-loc_1115:
-		mov	file_ErrorStat, 1
-
-loc_111B:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_1122:
-		cmp	file_InReadBuf, 0
-		jz	short locret_114E
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_114E:
-		retf
-sub_10E4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1150	proc far
-		push	cs
-		call	near ptr sub_10E4
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_1150	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2358,8 +2289,7 @@ sub_1160	endp
 
 
 sub_119C	proc far
-		push	cs
-		call	near ptr sub_10E4
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_11CD
 		push	bp
@@ -21172,7 +21102,7 @@ loc_EA34:
 		call	sub_1030
 		push	word_13507
 		call	sub_C842
-		call	sub_1150
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf
@@ -21212,7 +21142,7 @@ loc_EA75:
 		push	offset unk_141AA
 		push	30h ; '0'
 		call	sub_1030
-		call	sub_1150
+		call	file_close
 		xor	ax, ax
 		pop	bp
 		retf

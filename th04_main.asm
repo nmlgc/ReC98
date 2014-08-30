@@ -55,77 +55,7 @@ include libs/master.lib/egc_shift_left.asm
 include libs/master.lib/egc_shift_right.asm
 include libs/master.lib/egc_shift_up.asm
 include libs/master.lib/file_append.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D88		proc far
-		mov	bx, ds:360h
-		cmp	bx, 0FFFFh
-		jz	short locret_DF2
-		mov	ax, ds:2A72h
-		cmp	ds:2A74h, ax
-		jnb	short loc_DC6
-		push	ds
-		mov	cx, ds:2A72h
-		lds	dx, ds:2A6Ah
-		assume ds:dseg
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_DB9
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_DBF
-
-loc_DB9:
-		mov	file_ErrorStat, 1
-
-loc_DBF:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_DC6:
-		cmp	file_InReadBuf, 0
-		jz	short locret_DF2
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_DF2:
-		retf
-sub_D88		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DF4		proc far
-		push	cs
-		call	near ptr sub_D88
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_DF4		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -337,8 +267,7 @@ sub_F14		endp
 
 sub_F50		proc far
 					; sub_12AB7+42P ...
-		push	cs
-		call	near ptr sub_D88
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_F81
 		push	bp
@@ -2794,8 +2723,7 @@ loc_3296:
 		push	di
 		push	cs
 		call	near ptr sub_E60
-		push	cs
-		call	near ptr sub_DF4
+		call	file_close
 		mov	cx, di
 		mov	ax, word_24698
 		mov	es, ax
@@ -7591,7 +7519,7 @@ var_4		= dword	ptr -4
 		push	large [dword_23D92]
 		push	1F40h
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		leave
 		retn
 sub_B3EE	endp
@@ -7930,7 +7858,7 @@ var_2		= word ptr -2
 		push	si
 		push	[bp+var_2]
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		mov	es, word_21C58
 		mov	word_266C0, 4
 		mov	byte_266C2, 0
@@ -8256,7 +8184,7 @@ var_8		= word ptr -8
 		push	0
 		push	[bp+var_8]
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		leave
 		retn
 sub_B971	endp
@@ -11515,7 +11443,7 @@ arg_0		= dword	ptr  4
 		push	word ptr dword_255CC
 		push	si
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		pop	si
 		pop	bp
 		retn	4
@@ -18002,7 +17930,7 @@ sub_FF34	proc near
 		push	ax
 		push	large 800h
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		push	0
 		push	large [off_22E38]
 		push	0
@@ -20673,14 +20601,14 @@ sub_11551	proc near
 		push	word_22EA6
 		push	large 800h
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		push	ds
 		push	offset aTxt2_bb	; "txt2.bb"
 		call	sub_F14
 		push	word_22EA6
 		push	large 8000400h
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		pop	bp
 		retn
 sub_11551	endp
@@ -21929,7 +21857,7 @@ var_4		= word ptr -4
 		push	ax
 		push	0Ah
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		mov	si, [bp+var_4]
 		mov	word ptr dword_2CDC6+2,	si
 		mov	word ptr dword_2CDC6, 0
@@ -23397,7 +23325,7 @@ loc_12A90:
 loc_12AA9:
 		cmp	si, 0Ah
 		jl	short loc_12A90
-		call	sub_DF4
+		call	file_close
 		pop	di
 		pop	si
 		leave
@@ -23440,7 +23368,7 @@ loc_12AFE:
 		push	offset unk_2CF2E
 		push	0C4h ; 'Ä'
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		push	0BBEEh
 		call	sub_C3AA
 		or	al, al
@@ -23486,7 +23414,7 @@ loc_12B5E:
 		push	offset unk_2CF2E
 		push	0C4h ; 'Ä'
 		call	sub_FA0
-		call	sub_DF4
+		call	file_close
 		pop	bp
 		retn
 sub_12B1E	endp
@@ -24573,7 +24501,7 @@ loc_132E3:
 		mov	word ptr [si], 0
 		cmp	dword ptr [si],	0
 		jnz	short loc_13308
-		call	sub_DF4
+		call	file_close
 		mov	ax, 0FFFFh
 		jmp	short loc_1331A
 ; ---------------------------------------------------------------------------
@@ -24582,7 +24510,7 @@ loc_13308:
 		push	large dword ptr	[si]
 		push	[bp+var_8]
 		call	sub_E60
-		call	sub_DF4
+		call	file_close
 		xor	ax, ax
 
 loc_1331A:
@@ -25539,7 +25467,7 @@ loc_1397A:
 		push	1
 		call	sub_F50
 		call	sub_1399E
-		call	sub_DF4
+		call	file_close
 		mov	byte_21C56, 0
 		pop	di
 		pop	si
@@ -25648,7 +25576,7 @@ loc_13A2A:
 		add	di, 10h
 		dec	byte_250B8
 		jnz	short loc_13A2A
-		call	sub_DF4
+		call	file_close
 		mov	byte_21C56, 0
 		pop	di
 		pop	si

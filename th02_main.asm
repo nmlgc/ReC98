@@ -46,76 +46,7 @@ include libs/master.lib/dos_filesize.asm
 include libs/master.lib/dos_setvect.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/file_append.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_804		proc far
-		mov	bx, file_Handle
-		cmp	bx, 0FFFFh
-		jz	short locret_86E
-		mov	ax, file_BufPtr
-		cmp	file_InReadBuf, ax
-		jnb	short loc_842
-		push	ds
-		mov	cx, file_BufPtr
-		lds	dx, file_Buffer
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jb	short loc_835
-		add	word ptr file_BufferPos, ax
-		adc	word ptr file_BufferPos+2, 0
-		cmp	file_BufPtr, ax
-		jz	short loc_83B
-
-loc_835:
-		mov	file_ErrorStat, 1
-
-loc_83B:
-		mov	file_BufPtr, 0
-		retf
-; ---------------------------------------------------------------------------
-
-loc_842:
-		cmp	file_InReadBuf, 0
-		jz	short locret_86E
-		mov	dx, ax
-		mov	cx, 0
-		add	dx, word ptr file_BufferPos
-		mov	file_InReadBuf, cx
-		mov	file_BufPtr, cx
-		adc	cx, word ptr file_BufferPos+2
-		mov	ax, 4200h
-		mov	bx, file_Handle
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	word ptr file_BufferPos, ax
-		mov	word ptr file_BufferPos+2, dx
-
-locret_86E:
-		retf
-sub_804		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_870		proc far
-		push	cs
-		call	near ptr sub_804
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	file_Handle, 0FFFFh
-		retf
-sub_870		endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/file_close.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -286,8 +217,7 @@ sub_950		endp
 
 
 sub_98C		proc far
-		push	cs
-		call	near ptr sub_804
+		call	file_flush
 		cmp	bx, 0FFFFh
 		jz	short locret_9BD
 		push	bp
@@ -4807,9 +4737,7 @@ sub_4320	proc far
 		nop
 		push	cs
 		call	near ptr sub_89C
-		nop
-		push	cs
-		call	near ptr sub_870
+		nopcall	file_close
 		leave
 		retf	4
 sub_4320	endp
@@ -10147,7 +10075,7 @@ loc_C1D0:
 		push	large [dword_1F4A8]
 		push	36B0h
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		pop	bp
 		retf
 sub_C13E	endp
@@ -10273,7 +10201,7 @@ var_2		= word ptr -2
 		push	ax
 		push	2
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		cmp	[bp+var_2], 0
 		jz	short loc_C2F0
 		mov	ax, [bp+var_2]
@@ -14531,7 +14459,7 @@ sub_E178	proc near
 		push	word_218BE
 		push	438h
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 0
 		jnz	short loc_E1D2
@@ -14582,7 +14510,7 @@ loc_E1F3:
 		push	word ptr dword_218BA
 		push	1440h
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		mov	word_219CA, 398Bh
 
 loc_E248:
@@ -17508,7 +17436,7 @@ loc_F8C8:
 		mov	word ptr dword_1FFBC, 0
 		cmp	dword_1FFBC, 0
 		jnz	short loc_F8F4
-		call	sub_870
+		call	file_close
 		mov	ax, 0FFFFh
 		leave
 		retf	4
@@ -17522,7 +17450,7 @@ loc_F8F4:
 		shl	ax, 7
 		push	ax
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		xor	ax, ax
 		leave
 		retf	4
@@ -24168,7 +24096,7 @@ var_4		= dword	ptr -4
 		push	offset unk_23A7A
 		push	ax
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		mov	byte_24E7A, 0
 		leave
 		retf
@@ -42000,7 +41928,7 @@ var_2		= word ptr -2
 		push	word ptr [bp+src]
 		push	[bp+var_A]
 		call	sub_89C
-		call	sub_870
+		call	file_close
 		les	bx, [bp+src]
 		mov	ax, es:[bx]
 		mov	word_22FD8, ax
@@ -42366,7 +42294,7 @@ loc_1C6FA:
 loc_1C705:
 		cmp	si, 0B2h ; '²'
 		jl	short loc_1C6FA
-		call	sub_870
+		call	file_close
 		pop	si
 		pop	bp
 		retn
@@ -42764,7 +42692,7 @@ loc_1C9C5:
 		push	offset word_252FE
 		push	0B6h ; '¶'
 		call	sub_9DC
-		call	sub_870
+		call	file_close
 		pop	si
 		pop	bp
 		retf
