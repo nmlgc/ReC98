@@ -441,104 +441,7 @@ locret_137F:
 		retf
 sub_1364	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1380	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		sub	sp, 20h
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		mov	bp, ax
-		mov	ax, 0
-		jb	short loc_140D
-		mov	ax, 2000h
-		push	ax
-		nop
-		call	smem_wget
-		mov	si, ax
-		mov	ax, 0
-		jb	short loc_1405
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_header_read
-		jb	short loc_13FB
-		mov	di, sp
-		push	ss
-		pop	es
-		cmp	byte ptr es:[di+5], 0
-		jnz	short loc_13FB
-		add	di, 8
-		push	si
-		mov	si, 516h
-		mov	cx, 4
-		repe cmpsw
-		pop	si
-		jnz	short loc_13FB
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_extend_header_skip
-		push	ds
-		mov	ds, si
-		mov	bx, bp
-		xor	dx, dx
-		mov	cx, 2000h
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		cmp	ax, 2000h
-		jnz	short loc_13FB
-		push	si
-		xor	ax, ax
-		push	ax
-		call	gaiji_write_all
-		mov	ax, 1
-		jmp	short loc_13FD
-; ---------------------------------------------------------------------------
-
-loc_13FB:
-		xor	ax, ax
-
-loc_13FD:
-		push	ax
-		push	si
-		nop
-		call	smem_release
-		pop	ax
-
-loc_1405:
-		push	ax
-		mov	bx, bp
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ax
-
-loc_140D:
-		add	sp, 20h
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_1380	endp
-
+include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/gaiji_read.asm
@@ -11773,7 +11676,7 @@ sub_DC38	proc near
 		call	sub_1340
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
-		call	sub_1380
+		call	gaiji_entry_bfnt
 		pop	bp
 		retn
 sub_DC38	endp
@@ -41400,14 +41303,7 @@ include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 word_1DF84	dw 0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
+include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm

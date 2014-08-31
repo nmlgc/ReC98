@@ -115,105 +115,7 @@ locret_F2D:
 		retf
 sub_F12		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F2E		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		sub	sp, 20h
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		mov	bp, ax
-		mov	ax, 0
-		jb	short loc_FBB
-		mov	ax, 2000h
-		push	ax
-		nop
-		call	smem_wget
-		mov	si, ax
-		mov	ax, 0
-		jb	short loc_FB3
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_header_read
-		jb	short loc_FA9
-		mov	di, sp
-		push	ss
-		pop	es
-		assume es:nothing
-		cmp	byte ptr es:[di+5], 0
-		jnz	short loc_FA9
-		add	di, 8
-		push	si
-		mov	si, 114h
-		mov	cx, 4
-		repe cmpsw
-		pop	si
-		jnz	short loc_FA9
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_extend_header_skip
-		push	ds
-		mov	ds, si
-		mov	bx, bp
-		xor	dx, dx
-		mov	cx, 2000h
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		cmp	ax, 2000h
-		jnz	short loc_FA9
-		push	si
-		xor	ax, ax
-		push	ax
-		call	gaiji_write_all
-		mov	ax, 1
-		jmp	short loc_FAB
-; ---------------------------------------------------------------------------
-
-loc_FA9:
-		xor	ax, ax
-
-loc_FAB:
-		push	ax
-		push	si
-		nop
-		call	smem_release
-		pop	ax
-
-loc_FB3:
-		push	ax
-		mov	bx, bp
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ax
-
-loc_FBB:
-		add	sp, 20h
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_F2E		endp
-
+include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/gaiji_read.asm
@@ -4035,7 +3937,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_EEE
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
-		call	sub_F2E
+		call	gaiji_entry_bfnt
 		les	bx, dword_F3CE
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -10964,14 +10866,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 word_E642	dw 0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
+include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 word_E658	dw 0

@@ -532,105 +532,7 @@ locret_1371:
 		retf
 sub_1356	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1372	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		sub	sp, 20h
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nop
-		call	dos_ropen
-		mov	bp, ax
-		mov	ax, 0
-		jb	short loc_13FF
-		mov	ax, 2000h
-		push	ax
-		nop
-		call	smem_wget
-		mov	si, ax
-		mov	ax, 0
-		jb	short loc_13F7
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_header_read
-		jb	short loc_13ED
-		mov	di, sp
-		push	ss
-		pop	es
-		assume es:nothing
-		cmp	byte ptr es:[di+5], 0
-		jnz	short loc_13ED
-		add	di, 8
-		push	si
-		mov	si, 568h
-		mov	cx, 4
-		repe cmpsw
-		pop	si
-		jnz	short loc_13ED
-		mov	ax, sp
-		push	bp
-		push	ss
-		push	ax
-		nopcall	bfnt_extend_header_skip
-		push	ds
-		mov	ds, si
-		mov	bx, bp
-		xor	dx, dx
-		mov	cx, 2000h
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		cmp	ax, 2000h
-		jnz	short loc_13ED
-		push	si
-		xor	ax, ax
-		push	ax
-		call	gaiji_write_all
-		mov	ax, 1
-		jmp	short loc_13EF
-; ---------------------------------------------------------------------------
-
-loc_13ED:
-		xor	ax, ax
-
-loc_13EF:
-		push	ax
-		push	si
-		nop
-		call	smem_release
-		pop	ax
-
-loc_13F7:
-		push	ax
-		mov	bx, bp
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ax
-
-loc_13FF:
-		add	sp, 20h
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_1372	endp
-
+include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_read.asm
 include libs/master.lib/gaiji_write.asm
 include libs/master.lib/graph_400line.asm
@@ -5679,7 +5581,7 @@ loc_B3AB:
 		call	sub_1332
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
-		call	sub_1372
+		call	gaiji_entry_bfnt
 		call	sub_A74C
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+0Fh], 0FFh
@@ -12433,14 +12335,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 word_F8A6	dw 0
-		db  10h
-		db    0
-		db  10h
-		db    0
-		db    0
-		db    0
-		db 0FFh
-		db    0
+include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 word_F8BC	dw 0
