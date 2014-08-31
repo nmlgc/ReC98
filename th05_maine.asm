@@ -157,51 +157,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_121A	proc far
-					; sub_C1DD+1BCP ...
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		mov	cx, di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		assume es:nothing
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		mov	ah, [bp+arg_2]
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	ax, 56h	; 'V'
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		mov	es:[di+2000h], bx
-		stosw
-		or	ah, 80h
-		mov	es:[di+2000h], bx
-		stosw
-		mov	di, cx
-		retf	8
-sub_121A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/gaiji_putca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7500,7 +7456,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]
-		call	sub_121A
+		call	gaiji_putca
 		pop	di
 		pop	si
 		pop	bp
@@ -8328,7 +8284,7 @@ loc_C376:
 		mov	ah, 0
 		push	ax
 		push	0E1h ; 'ÅE
-		call	sub_121A
+		call	gaiji_putca
 		inc	[bp+var_6]
 
 loc_C3A1:
@@ -8344,7 +8300,7 @@ loc_C3AA:
 		mov	ah, 0
 		push	ax
 		push	85h ; 'ÅE
-		call	sub_121A
+		call	gaiji_putca
 		xor	si, si
 		xor	di, di
 		mov	[bp+var_2], 1

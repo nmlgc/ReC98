@@ -981,50 +981,7 @@ loc_140D:
 		retf	4
 sub_1380	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1416	proc far
-					; sub_C31F+153P ...
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		mov	cx, di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		mov	ah, [bp+arg_2]
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	ax, 56h	; 'V'
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		mov	es:[di+2000h], bx
-		stosw
-		or	ah, 80h
-		mov	es:[di+2000h], bx
-		stosw
-		mov	di, cx
-		retf	8
-sub_1416	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/gaiji_putca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9151,7 +9108,7 @@ bgm_show	proc near
 		jnz	short loc_C0E6
 		push	large 180017h
 		push	large 0D800C1h
-		call	sub_1416
+		call	gaiji_putca
 		push	large 1A0017h
 		push	ds
 		mov	al, bgm_title_id
@@ -9587,7 +9544,7 @@ loc_C400:
 		push	large 200014h
 		push	ax
 		push	81h ; 'Å'
-		call	sub_1416
+		call	gaiji_putca
 		mov	di, 1
 
 loc_C47A:
@@ -12951,7 +12908,7 @@ loc_DC65:
 		push	[bp+arg_4]
 		push	ax
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		add	di, 2
 
 loc_DC9A:
@@ -12990,7 +12947,7 @@ loc_DCB7:
 		push	[bp+arg_2]
 		push	ax
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		pop	si
 		leave
 		retn	4
@@ -13339,7 +13296,7 @@ loc_DF7E:
 		push	ax
 		push	large 110002h
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_DF95:
@@ -13360,7 +13317,7 @@ loc_DFA5:
 		push	ax
 		push	large 1100CFh
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_DFBC:
@@ -13392,7 +13349,7 @@ loc_DFCC:
 		push	ax
 		push	large 0F0003h
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_DFE3:
@@ -13413,7 +13370,7 @@ loc_DFF3:
 		push	ax
 		push	large 0F00CFh
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_E00A:
@@ -13575,7 +13532,7 @@ loc_E12A:
 		push	[bp+var_2]
 		push	di
 		push	1
-		call	sub_1416
+		call	gaiji_putca
 		inc	[bp+var_2]
 
 loc_E140:
@@ -17107,7 +17064,7 @@ loc_FBC2:
 		push	[bp+arg_6]
 		push	[bp+var_2]
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 
 loc_FBDE:
 		inc	si
@@ -41539,7 +41496,7 @@ loc_1C763:
 		push	[bp+arg_6]
 		push	[bp+var_2]
 		push	[bp+arg_0]
-		call	sub_1416
+		call	gaiji_putca
 
 loc_1C778:
 		add	si, 2
@@ -41612,7 +41569,7 @@ loc_1C7E7:
 		mov	ah, 0
 		push	ax
 		push	0E1h ; '·'
-		call	sub_1416
+		call	gaiji_putca
 		inc	[bp+var_2]
 
 loc_1C80E:
@@ -41628,7 +41585,7 @@ loc_1C815:
 		mov	ah, 0
 		push	ax
 		push	85h ; 'Ö'
-		call	sub_1416
+		call	gaiji_putca
 
 loc_1C82E:
 		xor	si, si
@@ -41684,7 +41641,7 @@ loc_1C881:
 
 loc_1C88A:
 		push	di
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_1C891:
@@ -41719,13 +41676,13 @@ loc_1C8B9:
 		push	large 5000Fh
 		push	0A1h ; '°'
 		push	di
-		call	sub_1416
+		call	gaiji_putca
 		push	large 7000Fh
 		push	0A0h ; '†'
 
 loc_1C8D1:
 		push	di
-		call	sub_1416
+		call	gaiji_putca
 		inc	si
 
 loc_1C8D8:
@@ -41767,7 +41724,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]
-		call	sub_1416
+		call	gaiji_putca
 		pop	di
 		pop	si
 		pop	bp
@@ -41813,7 +41770,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		push	ax
 		push	85h ; 'Ö'
-		call	sub_1416
+		call	gaiji_putca
 		pop	di
 		pop	si
 		pop	bp

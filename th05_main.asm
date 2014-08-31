@@ -1316,51 +1316,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D7A	proc far
-					; sub_F896+53P	...
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		mov	cx, di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		assume es:nothing
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		mov	ah, [bp+arg_2]
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	ax, 56h	; 'V'
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		mov	es:[di+2000h], bx
-		stosw
-		or	ah, 80h
-		mov	es:[di+2000h], bx
-		stosw
-		mov	di, cx
-		retf	8
-sub_1D7A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/gaiji_putca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15289,7 +15245,7 @@ loc_F14A:
 		mov	ah, 0
 		push	ax
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		add	word_2C934, 2
 
 loc_F170:
@@ -16249,7 +16205,7 @@ loc_F8DA:
 		sub	dx, ax
 		push	dx
 		push	1
-		call	sub_1D7A
+		call	gaiji_putca
 		add	di, 2
 
 loc_F8F1:
@@ -16327,7 +16283,7 @@ loc_F94E:
 		sub	dx, ax
 		push	dx
 		push	1
-		call	sub_1D7A
+		call	gaiji_putca
 		add	di, 2
 
 loc_F965:
@@ -16392,7 +16348,7 @@ loc_F9B1:
 		push	[bp+var_2]
 		push	large 0C00B0h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		push	1
 		call	sub_1510E
 		push	[bp+var_2]
@@ -16414,7 +16370,7 @@ loc_F9EB:
 		push	[bp+var_2]
 		push	large 0C00B0h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		push	1
 		call	sub_1510E
 		push	[bp+var_2]
@@ -16538,7 +16494,7 @@ var_1		= byte ptr -1
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	81h ; ''
-		call	sub_1D7A
+		call	gaiji_putca
 
 loc_FB27:
 		call	sub_150D4
@@ -17698,7 +17654,7 @@ loc_10425:
 		push	si
 		push	large 0D00D4h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -17713,7 +17669,7 @@ loc_10444:
 		push	si
 		push	large 0D0002h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -17740,7 +17696,7 @@ loc_10461:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -17755,7 +17711,7 @@ loc_104A2:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 
 loc_104B8:
 		pop	si
@@ -17791,7 +17747,7 @@ loc_104D8:
 		push	si
 		push	large 0B00D3h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -17806,7 +17762,7 @@ loc_104F7:
 		push	si
 		push	large 0B0002h
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -17835,7 +17791,7 @@ loc_10514:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -17850,7 +17806,7 @@ loc_1055B:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0E1h ; 'ב'
-		call	sub_1D7A
+		call	gaiji_putca
 
 loc_10571:
 		pop	si
@@ -18148,7 +18104,7 @@ loc_10796:
 		call	near ptr sub_10407
 		push	large 3A0010h
 		push	large 0E600C1h
-		call	sub_1D7A
+		call	gaiji_putca
 		push	large 39000Fh
 		push	ds
 		push	offset aAu	; "םמ"
@@ -18158,12 +18114,12 @@ loc_10796:
 		call	near ptr sub_10574
 		push	large 3F0013h
 		push	large 0E700C1h
-		call	sub_1D7A
+		call	gaiji_putca
 		push	cs
 		call	near ptr sub_1059D
 		push	large 3A0012h
 		push	large 0E800C1h
-		call	sub_1D7A
+		call	gaiji_putca
 		push	cs
 		call	near ptr sub_1060E
 		push	cs
@@ -20397,7 +20353,7 @@ loc_11987:
 		sub	dx, ax
 		push	dx
 		push	1
-		call	sub_1D7A
+		call	gaiji_putca
 		add	di, 2
 
 loc_1199E:
@@ -20462,7 +20418,7 @@ loc_119F7:
 		sub	dx, ax
 		push	dx
 		push	1
-		call	sub_1D7A
+		call	gaiji_putca
 		add	di, 2
 
 loc_11A0E:
@@ -20705,7 +20661,7 @@ loc_11BDB:
 		push	ax
 		push	large 170003h
 		push	0C1h ; 'ֱ'
-		call	sub_1D7A
+		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
@@ -20840,7 +20796,7 @@ loc_11D53:
 		push	ax
 		push	large 170003h
 		push	0C1h ; 'ֱ'
-		call	sub_1D7A
+		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax

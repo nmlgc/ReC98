@@ -768,50 +768,7 @@ loc_1089:
 		retf	4
 sub_FFC		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1092	proc far
-					; sub_A510+11AP ...
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		mov	cx, di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		mov	ah, [bp+arg_2]
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	ax, 56h	; 'V'
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		mov	es:[di+2000h], bx
-		stosw
-		or	ah, 80h
-		mov	es:[di+2000h], bx
-		stosw
-		mov	di, cx
-		retf	8
-sub_1092	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/gaiji_putca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6020,7 +5977,7 @@ loc_A5BE:
 		add	ax, 0A1h ; '¡'
 		push	ax
 		push	si
-		call	sub_1092
+		call	gaiji_putca
 		push	188h
 		push	124h
 		push	20h ; ' '
@@ -6053,7 +6010,7 @@ loc_A60A:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	si
-		call	sub_1092
+		call	gaiji_putca
 		push	188h
 		push	134h
 		push	20h ; ' '
@@ -8069,7 +8026,7 @@ loc_B477:
 		push	[bp+arg_6]
 		push	di
 		push	[bp+arg_0]
-		call	sub_1092
+		call	gaiji_putca
 
 loc_B491:
 		inc	si
@@ -8349,7 +8306,7 @@ loc_B645:
 
 loc_B64E:
 		push	di
-		call	sub_1092
+		call	gaiji_putca
 		lea	ax, [si+7]
 		push	ax
 		mov	al, [si+1E64h]
@@ -8397,14 +8354,14 @@ loc_B695:
 		push	10h
 		push	0A1h ; '¡'
 		push	di
-		call	sub_1092
+		call	gaiji_putca
 		push	0Ah
 		push	10h
 		push	0A0h ; ' '
 
 loc_B6A9:
 		push	di
-		call	sub_1092
+		call	gaiji_putca
 		inc	si
 
 loc_B6B0:
