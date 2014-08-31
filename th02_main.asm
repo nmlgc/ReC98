@@ -58,233 +58,7 @@ include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_circlefill.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_CC0
-
-loc_CB6:
-		pop	si
-		pop	bp
-		jmp	grcg_circle_x
-; ---------------------------------------------------------------------------
-
-loc_CBB:
-		pop	si
-		pop	bp
-		retf	6
-; END OF FUNCTION CHUNK	FOR sub_CC0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CC0		proc far
-					; sub_15F95+A8P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-; FUNCTION CHUNK AT 0CB6 SIZE 0000000A BYTES
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		xor	cx, cx
-		mov	ax, [bp+arg_2]
-		sub	ax, ClipYT
-		mov	dx, ax
-		sub	ax, si
-		cmp	ax, ClipYH
-		jg	short loc_CBB
-		shl	ax, 1
-		rcl	cx, 1
-		mov	ax, dx
-		add	ax, si
-		js	short loc_CBB
-		cmp	ClipYH, ax
-		rcl	cx, 1
-		mov	ax, [bp+arg_4]
-		mov	bx, ax
-		sub	ax, si
-		cmp	ax, ClipXR
-		jg	short loc_CBB
-		sub	ax, ClipXL
-		shl	ax, 1
-		rcl	cx, 1
-		mov	ax, bx
-		add	ax, si
-		cmp	ax, ClipXL
-		jl	short loc_CBB
-		cmp	ClipXR, ax
-		rcl	cx, 1
-		jcxz	short loc_CB6
-		or	si, si
-		jz	short loc_CBB
-		push	di
-		mov	al, byte ptr graph_VramZoom
-		mov	byte ptr cs:loc_D5F+2, al
-		mov	byte ptr cs:loc_DCB+2, al
-		mov	es, ClipYT_seg
-		mov	ax, bx
-		mov	word_1F504, ax
-		mov	word_1F506, dx
-		xor	di, di
-		mov	bp, si
-
-loc_D32:
-		call	sub_D5A
-		cmp	si, di
-		jz	short loc_D40
-		xchg	si, di
-		call	sub_D5A
-		xchg	si, di
-
-loc_D40:
-		stc
-		sbb	bp, di
-		sub	bp, di
-		jns	short loc_D4C
-		dec	si
-		add	bp, si
-		add	bp, si
-
-loc_D4C:
-		inc	di
-		cmp	si, di
-		jge	short loc_D32
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_CC0		endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-nullsub_1	proc near
-		retn
-nullsub_1	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D5A		proc near
-					; sub_CC0+7Bp
-		mov	ax, word_1F506
-		mov	bx, di
-
-loc_D5F:
-		shr	bx, 9
-		or	bx, bx
-		jz	short loc_DD0
-		sub	ax, bx
-		js	short loc_DC6
-		cmp	ax, ClipYH
-		jg	short nullsub_1
-		mov	dx, ax
-		shl	dx, 2
-		add	dx, ax
-		shl	dx, 4
-		mov	ax, word_1F504
-		or	si, si
-		jz	short loc_DA7
-		sub	ax, si
-		cmp	ax, ClipXL
-		jl	short loc_DA2
-		cmp	ax, ClipXR
-		jg	short nullsub_1
-		mov	bx, ax
-		mov	cx, ax
-		shr	bx, 3
-		add	bx, dx
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	es:[bx], ch
-
-loc_DA2:
-		mov	ax, word_1F504
-		add	ax, si
-
-loc_DA7:
-		cmp	ax, ClipXL
-		jl	short loc_DC6
-		cmp	ax, ClipXR
-		jg	short loc_DC6
-		mov	bx, ax
-		mov	cx, bx
-		shr	bx, 3
-		add	bx, dx
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	es:[bx], ch
-
-loc_DC6:
-		mov	ax, word_1F506
-		mov	bx, di
-
-loc_DCB:
-		shr	bx, 9
-		add	ax, bx
-
-loc_DD0:
-		cmp	ax, ClipYH
-		jnb	short locret_E2C
-		mov	dx, ax
-		shl	dx, 2
-		add	dx, ax
-		shl	dx, 4
-		mov	ax, word_1F504
-		or	si, si
-		jz	short loc_E0D
-		sub	ax, si
-		cmp	ax, ClipXL
-		jl	short loc_E08
-		cmp	ax, ClipXR
-		jg	short locret_E2C
-		mov	bx, ax
-		mov	cx, ax
-		shr	bx, 3
-		add	bx, dx
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	es:[bx], ch
-
-loc_E08:
-		mov	ax, word_1F504
-		add	ax, si
-
-loc_E0D:
-		cmp	ax, ClipXL
-		jl	short locret_E2C
-		cmp	ax, ClipXR
-		jg	short locret_E2C
-		mov	bx, ax
-		mov	cx, bx
-		shr	bx, 3
-		add	bx, dx
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	es:[bx], ch
-
-locret_E2C:
-		retn
-sub_D5A		endp
-
-; ---------------------------------------------------------------------------
-		db 0
-; ---------------------------------------------------------------------------
+include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28005,7 +27779,7 @@ loc_156BE:
 		mov	al, es:[bx+9]
 		mov	ah, 0
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		call	grcg_off
 
 loc_156F7:
@@ -29057,7 +28831,7 @@ loc_1602E:
 		push	word_2559A
 		push	word_2559C
 		push	70h ; 'p'
-		call	sub_CC0
+		call	grcg_circle
 
 loc_16042:
 		call	grcg_off
@@ -29074,7 +28848,7 @@ loc_1604A:
 		push	word_2559A
 		push	word_2559C
 		push	70h ; 'p'
-		call	sub_CC0
+		call	grcg_circle
 		call	grcg_off
 
 loc_1607A:
@@ -29159,7 +28933,7 @@ loc_16146:
 		push	word_2559A
 		push	word_2559C
 		push	70h ; 'p'
-		call	sub_CC0
+		call	grcg_circle
 		call	grcg_off
 		mov	word_20650, 0
 
@@ -34789,21 +34563,21 @@ loc_1920E:
 		mov	al, byte_26CEF
 		mov	ah, 0
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		push	word_26C5C
 		push	word_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		add	ax, ax
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		push	word_26C5C
 		push	word_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		shl	ax, 2
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		mov	al, byte_26CEF
 		add	al, 0FEh ; 'þ'
 		mov	byte_26CEF, al
@@ -34816,21 +34590,21 @@ loc_1920E:
 		mov	al, byte_26CEF
 		mov	ah, 0
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		push	word_26C5C
 		push	word_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		add	ax, ax
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		push	word_26C5C
 		push	word_26C64
 		mov	al, byte_26CEF
 		mov	ah, 0
 		shl	ax, 2
 		push	ax
-		call	sub_CC0
+		call	grcg_circle
 		call	grcg_off
 		pop	bp
 		retn
@@ -36965,7 +36739,7 @@ loc_1A54E:
 		idiv	bx
 		shl	dx, 2
 		push	dx
-		call	sub_CC0
+		call	grcg_circle
 		push	large 0C0000Fh
 		call	grcg_setcolor
 		push	large 0E00090h
@@ -36975,7 +36749,7 @@ loc_1A54E:
 		idiv	bx
 		imul	dx, 7
 		push	dx
-		call	sub_CC0
+		call	grcg_circle
 		push	1
 		call	sub_F618
 		push	large 0C00000h
@@ -36990,7 +36764,7 @@ loc_1A54E:
 		idiv	bx
 		shl	dx, 2
 		push	dx
-		call	sub_CC0
+		call	grcg_circle
 		push	large 0E00090h
 		mov	ax, si
 		mov	bx, 1Eh
@@ -36998,7 +36772,7 @@ loc_1A54E:
 		idiv	bx
 		imul	dx, 7
 		push	dx
-		call	sub_CC0
+		call	grcg_circle
 		mov	ax, 96h	; '–'
 		sub	ax, si
 		mov	bx, 3
@@ -44806,8 +44580,7 @@ byte_1F4DE	db ?
 		dd    ?	;
 		db    ?	;
 include libs/master.lib/fil[bss].asm
-word_1F504	dw ?
-word_1F506	dw ?
+include libs/master.lib/grcg_circle[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
