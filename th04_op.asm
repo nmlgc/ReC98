@@ -276,7 +276,7 @@ loc_F41:
 		add	si, ax
 		shl	si, 4
 		mov	es, ClipYT_seg
-		call	loc_3264
+		call	draw_trapezoid
 		pop	si
 		les	di, [bp+arg_2]
 		cmp	si, [bp+var_6]
@@ -326,7 +326,7 @@ loc_FBA:
 		shl	si, 2
 		add	si, ax
 		shl	si, 4
-		call	loc_3264
+		call	draw_trapezoid
 		pop	si
 		pop	di
 		leave
@@ -1019,53 +1019,9 @@ sub_323A	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-loc_3264:
-		mov	ax, ClipYB_adr
-		mov	cs:word_32A6, ax
-		mov	ax, trapez_a+6
-		mov	cs:word_3317, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_3325, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_330F, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_3321, ax
-		mov	ax, ClipXL
-		mov	cs:word_32AB, ax
-		mov	cs:word_32D5, ax
-		mov	ax, ClipXW
-		mov	cs:word_32C5, ax
-		jmp	short $+2
-		push	bp
-		mov	cx, trapez_a
-		mov	bp, trapez_b
-; ---------------------------------------------------------------------------
-		db 81h,	0FEh
-word_32A6	dw 1234h
-		db 77h,	61h, 0B8h
-word_32AB	dw 1234h
-		db 2Bh,	0C8h, 8Bh, 0DDh, 2Bh, 0D8h, 85h, 0CBh, 78h, 54h
-		db 3Bh,	0CBh, 7Fh, 2, 87h, 0CBh, 80h, 0FFh, 80h, 1Bh, 0C0h
-		db 23h,	0D8h, 0BFh
-word_32C5	dw 1234h
-		db 2Bh,	0CFh, 1Bh, 0C0h, 23h, 0C8h, 3, 0CFh, 2Bh, 0CBh
-		db 7Ch,	38h, 81h, 0C3h
-word_32D5	dw 1234h
-		db 8Bh,	0FBh, 0C1h, 0EFh, 4, 0D1h, 0E7h, 3, 0FEh, 83h
-		db 0E3h, 0Fh, 3, 0CBh, 83h, 0E9h, 10h, 0D1h, 0E3h, 8Bh
-		db 87h,	1Eh, 5,	0F7h, 0D0h, 23h, 6, 98h, 8, 8Bh, 0D9h
-		db 83h,	0E3h, 0Fh, 0D1h, 0E3h, 0C1h, 0F9h, 4, 78h, 6, 0ABh
-		db 0A1h, 98h, 8, 0F3h, 0ABh, 23h, 87h, 20h, 5, 0ABh, 81h
-		db 6, 72h, 1Ah
-word_330F	dw 1234h
-		db 8Bh,	0Eh, 6Eh, 1Ah, 81h, 0D1h
-word_3317	dw 1234h
-		db 89h,	0Eh, 6Eh, 1Ah, 81h, 6, 7Ah, 1Ah
-word_3321	dw 1234h
-		db 81h,	0D5h
-word_3325	dw 1234h
-		db 83h,	0C6h, 50h, 4Ah,	78h, 3,	0E9h, 74h, 0FFh, 89h, 2Eh
-		db 76h,	1Ah, 5Dh, 0C3h,	0C8h, 3	dup(0),	56h, 57h, 0C7h
+include libs/master.lib/draw_trapezoid.asm
+
+		db 0C8h, 3 dup(0), 56h, 57h, 0C7h
 		db 6, 64h, 8, 7, 0, 6Ah, 1Fh, 0Eh, 0E8h, 0Ah, 0F4h, 0Fh
 		db 82h,	0F6h, 0, 8Bh, 0F0h, 0FFh, 76h, 0Ch, 0FFh, 76h
 		db 0Ah,	0Eh, 0E8h, 4Ch,	0D3h, 0Bh, 0C0h, 0Fh, 84h, 0DDh
@@ -12313,7 +12269,7 @@ include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 aPal98Grb	db 'pal98 grb',0
-		dw 0FFFFh
+include libs/master.lib/draw_trapezoid[data].asm
 a_exe		db '.exe',0
 		db    0
 include libs/master.lib/bgm_timerhook[data].asm

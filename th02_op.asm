@@ -271,7 +271,7 @@ loc_DFB:
 		add	si, ax
 		shl	si, 4
 		mov	es, ClipYT_seg
-		call	loc_1BD2
+		call	draw_trapezoid
 		pop	si
 		les	di, [bp+arg_2]
 		cmp	si, [bp+var_6]
@@ -321,7 +321,7 @@ loc_E74:
 		shl	si, 2
 		add	si, ax
 		shl	si, 4
-		call	loc_1BD2
+		call	draw_trapezoid
 		pop	si
 		pop	di
 		leave
@@ -688,54 +688,7 @@ include libs/master.lib/graph_pack_put_8.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/graph_start.asm
 include libs/master.lib/keybeep.asm
-
-loc_1BD2:
-		mov	ax, ClipYB_adr
-		mov	cs:word_1C14, ax
-		mov	ax, trapez_a+6
-		mov	cs:word_1C81, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_1C8F, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_1C79, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_1C8B, ax
-		mov	ax, ClipXL
-		mov	cs:word_1C19, ax
-		mov	cs:word_1C43, ax
-		mov	ax, ClipXW
-		mov	cs:word_1C33, ax
-		jmp	short $+2
-		push	bp
-		mov	cx, trapez_a
-		mov	bp, trapez_b
-; ---------------------------------------------------------------------------
-		db 81h,	0FEh
-word_1C14	dw 1234h
-		db 77h,	5Dh, 0B8h
-word_1C19	dw 1234h
-		db 2Bh,	0C8h, 8Bh, 0DDh, 2Bh, 0D8h, 85h, 0CBh, 78h, 50h
-		db 3Bh,	0CBh, 7Fh, 2, 87h, 0CBh, 80h, 0FFh, 80h, 1Bh, 0C0h
-		db 23h,	0D8h, 0BFh
-word_1C33	dw 1234h
-		db 2Bh,	0CFh, 1Bh, 0C0h, 23h, 0C8h, 3, 0CFh, 2Bh, 0CBh
-		db 7Ch,	34h, 81h, 0C3h
-word_1C43	dw 1234h
-		db 8Bh,	0FBh, 0C1h, 0EFh, 4, 0D1h, 0E7h, 3, 0FEh, 83h
-		db 0E3h, 0Fh, 3, 0CBh, 83h, 0E9h, 10h, 0D1h, 0E3h, 8Bh
-		db 87h,	8, 2, 0F7h, 0D0h, 8Bh, 0D9h, 83h, 0E3h,	0Fh, 0D1h
-		db 0E3h, 0C1h, 0F9h, 4,	78h, 6,	0ABh, 0B8h, 2 dup(0FFh)
-		db 0F3h, 0ABh, 23h, 87h, 0Ah, 2, 0ABh, 81h, 6, 0D8h, 12h
-word_1C79	dw 1234h
-		db 8Bh,	0Eh, 0D4h, 12h,	81h, 0D1h
-word_1C81	dw 1234h
-		db 89h,	0Eh, 0D4h, 12h,	81h, 6,	0E0h, 12h
-word_1C8B	dw 1234h
-		db 81h,	0D5h
-word_1C8F	dw 1234h
-		db 83h,	0C6h, 50h, 4Ah,	78h, 3,	0E9h, 78h, 0FFh, 89h, 2Eh
-		db 0DCh, 12h, 5Dh, 0C3h
-
+include libs/master.lib/draw_trapezoid.asm
 include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm

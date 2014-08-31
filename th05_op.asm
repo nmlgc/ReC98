@@ -274,7 +274,7 @@ loc_E49:
 		add	si, ax
 		shl	si, 4
 		mov	es, ClipYT_seg
-		call	loc_2BD6
+		call	draw_trapezoid
 		pop	si
 		les	di, [bp+arg_2]
 		cmp	si, [bp+var_6]
@@ -324,7 +324,7 @@ loc_EC2:
 		shl	si, 2
 		add	si, ax
 		shl	si, 4
-		call	loc_2BD6
+		call	draw_trapezoid
 		pop	si
 		pop	di
 		leave
@@ -673,53 +673,7 @@ sub_2BAC	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-loc_2BD6:
-		mov	ax, ClipYB_adr
-		mov	cs:word_2C18, ax
-		mov	ax, trapez_a+6
-		mov	cs:word_2C89, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_2C97, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_2C81, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_2C93, ax
-		mov	ax, ClipXL
-		mov	cs:word_2C1D, ax
-		mov	cs:word_2C47, ax
-		mov	ax, ClipXW
-		mov	cs:word_2C37, ax
-		jmp	short $+2
-		push	bp
-		mov	cx, trapez_a
-		mov	bp, trapez_b
-; ---------------------------------------------------------------------------
-		db 81h,	0FEh
-word_2C18	dw 1234h
-		db 77h,	61h, 0B8h
-word_2C1D	dw 1234h
-		db 2Bh,	0C8h, 8Bh, 0DDh, 2Bh, 0D8h, 85h, 0CBh, 78h, 54h
-		db 3Bh,	0CBh, 7Fh, 2, 87h, 0CBh, 80h, 0FFh, 80h, 1Bh, 0C0h
-		db 23h,	0D8h, 0BFh
-word_2C37	dw 1234h
-		db 2Bh,	0CFh, 1Bh, 0C0h, 23h, 0C8h, 3, 0CFh, 2Bh, 0CBh
-		db 7Ch,	38h, 81h, 0C3h
-word_2C47	dw 1234h
-		db 8Bh,	0FBh, 0C1h, 0EFh, 4, 0D1h, 0E7h, 3, 0FEh, 83h
-		db 0E3h, 0Fh, 3, 0CBh, 83h, 0E9h, 10h, 0D1h, 0E3h, 8Bh
-		db 87h,	0F0h, 4, 0F7h, 0D0h, 23h, 6, 60h, 8, 8Bh, 0D9h
-		db 83h,	0E3h, 0Fh, 0D1h, 0E3h, 0C1h, 0F9h, 4, 78h, 6, 0ABh
-		db 0A1h, 60h, 8, 0F3h, 0ABh, 23h, 87h, 0F2h, 4,	0ABh, 81h
-		db 6, 0FAh, 2Dh
-word_2C81	dw 1234h
-		db 8Bh,	0Eh, 0F6h, 2Dh,	81h, 0D1h
-word_2C89	dw 1234h
-		db 89h,	0Eh, 0F6h, 2Dh,	81h, 6,	2, 2Eh
-word_2C93	dw 1234h
-		db 81h,	0D5h
-word_2C97	dw 1234h
-		db 83h,	0C6h, 50h, 4Ah,	78h, 3,	0E9h, 74h, 0FFh, 89h, 2Eh
-		db 0FEh, 2Dh, 5Dh, 0C3h
+include libs/master.lib/draw_trapezoid.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12721,7 +12675,7 @@ include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 aPal98Grb	db 'pal98 grb',0
-		dw 0FFFFh
+include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 		db    0

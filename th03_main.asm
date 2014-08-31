@@ -164,7 +164,7 @@ loc_FDD:
 		imul	si, 50h
 		mov	dx, word_1E714
 		push	103Ah
-		jmp	loc_2C8C
+		jmp	draw_trapezoid
 ; ---------------------------------------------------------------------------
 		nop
 
@@ -185,7 +185,7 @@ loc_1040:
 		imul	si, 50h
 		mov	dx, word_1E714
 		push	103Ah
-		jmp	loc_2C8C
+		jmp	draw_trapezoid
 ; ---------------------------------------------------------------------------
 		nop
 
@@ -199,7 +199,7 @@ loc_105C:
 		cmp	[bp+arg_2], ax
 		lea	dx, [di-1]
 		imul	si, 50h
-		call	loc_2C8C
+		call	draw_trapezoid
 		mov	cx, [bp+arg_0]
 		mov	ax, [bp+arg_2]
 		sub	cx, [bp+arg_4]
@@ -208,7 +208,7 @@ loc_105C:
 		mov	bx, 118Ch
 		call	make_linework
 		mov	dx, word_1E714
-		call	loc_2C8C
+		call	draw_trapezoid
 		pop	si
 		pop	di
 		leave
@@ -293,7 +293,7 @@ loc_1175:
 		call	make_linework
 		imul	si, 50h
 		mov	dx, di
-		call	loc_2C8C
+		call	draw_trapezoid
 
 loc_11AF:
 		pop	si
@@ -1015,55 +1015,9 @@ locret_2C89:
 		retf	2
 sub_2C42	endp
 
-; ---------------------------------------------------------------------------
+include libs/master.lib/draw_trapezoid.asm
 
-loc_2C8C:
-		mov	ax, ClipYB_adr
-		mov	cs:word_2CCE, ax
-		mov	ax, trapez_a+6
-		mov	cs:word_2D3F, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_2D4D, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_2D37, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_2D49, ax
-		mov	ax, ClipXL
-		mov	cs:word_2CD3, ax
-		mov	cs:word_2CFD, ax
-		mov	ax, ClipXW
-		mov	cs:word_2CED, ax
-		jmp	short $+2
-		push	bp
-		mov	cx, trapez_a
-		mov	bp, trapez_b
-; ---------------------------------------------------------------------------
-		db 81h,	0FEh
-word_2CCE	dw 1234h
-		db 77h,	61h, 0B8h
-word_2CD3	dw 1234h
-		db 2Bh,	0C8h, 8Bh, 0DDh, 2Bh, 0D8h, 85h, 0CBh, 78h, 54h
-		db 3Bh,	0CBh, 7Fh, 2, 87h, 0CBh, 80h, 0FFh, 80h, 1Bh, 0C0h
-		db 23h,	0D8h, 0BFh
-word_2CED	dw 1234h
-		db 2Bh,	0CFh, 1Bh, 0C0h, 23h, 0C8h, 3, 0CFh, 2Bh, 0CBh
-		db 7Ch,	38h, 81h, 0C3h
-word_2CFD	dw 1234h
-		db 8Bh,	0FBh, 0C1h, 0EFh, 4, 0D1h, 0E7h, 3, 0FEh, 83h
-		db 0E3h, 0Fh, 3, 0CBh, 83h, 0E9h, 10h, 0D1h, 0E3h, 8Bh
-		db 87h,	8Eh, 2,	0F7h, 0D0h, 23h, 6, 0E8h, 5, 8Bh, 0D9h
-		db 83h,	0E3h, 0Fh, 0D1h, 0E3h, 0C1h, 0F9h, 4, 78h, 6, 0ABh
-		db 0A1h, 0E8h, 5, 0F3h,	0ABh, 23h, 87h,	90h, 2,	0ABh, 81h
-		db 6, 90h, 11h
-word_2D37	dw 1234h
-		db 8Bh,	0Eh, 8Ch, 11h, 81h, 0D1h
-word_2D3F	dw 1234h
-		db 89h,	0Eh, 8Ch, 11h, 81h, 6, 98h, 11h
-word_2D49	dw 1234h
-		db 81h,	0D5h
-word_2D4D	dw 1234h
-		db 83h,	0C6h, 50h, 4Ah,	78h, 3,	0E9h, 74h, 0FFh, 89h, 2Eh
-		db 94h,	11h, 5Dh, 0C3h,	0C8h, 3	dup(0),	56h, 57h, 0C7h
+		db 0C8h, 3 dup(0), 56h, 57h, 0C7h
 		db 6, 0B2h, 5, 7, 0, 6Ah, 1Fh, 0Eh, 0E8h, 4Ch, 0F5h, 0Fh
 		db 82h,	0F6h, 0, 8Bh, 0F0h, 0FFh, 76h, 0Ch, 0FFh, 76h
 		db 0Ah,	0Eh, 0E8h, 0F4h, 0D7h, 0Bh, 0C0h, 0Fh, 84h, 0DDh
@@ -6686,7 +6640,7 @@ loc_B4E3:
 		add	word_1FBD2, 17h
 		push	large 0C00002h
 		call	grcg_setcolor
-		mov	word_1DB48, 5555h
+		mov	trapezoid_hmask, 5555h
 		xor	si, si
 		jmp	short loc_B565
 ; ---------------------------------------------------------------------------
@@ -6727,7 +6681,7 @@ loc_B51D:
 loc_B565:
 		cmp	si, 140h
 		jle	short loc_B51D
-		mov	word_1DB48, 0AAAAh
+		mov	trapezoid_hmask, 0AAAAh
 		xor	si, si
 		jmp	short loc_B5BD
 ; ---------------------------------------------------------------------------
@@ -6784,7 +6738,7 @@ loc_B5BD:
 		mov	word_1FBC0, 1F2Ah
 
 loc_B5EE:
-		mov	word_1DB48, 0FFFFh
+		mov	trapezoid_hmask, 0FFFFh
 		call	grcg_off
 		push	large 0
 		push	large 27F00C7h
@@ -42235,7 +42189,7 @@ byte_1DB3C	db 0
 					; sub_ECB2+3r
 		db 0
 aPal98Grb	db 'pal98 grb',0
-word_1DB48	dw 0FFFFh
+include libs/master.lib/draw_trapezoid[data].asm
 byte_1DB4A	db 0FFh
 byte_1DB4B	db 0
 a_exe		db '.exe',0

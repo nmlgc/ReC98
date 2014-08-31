@@ -272,7 +272,7 @@ loc_DE9:
 		add	si, ax
 		shl	si, 4
 		mov	es, ClipYT_seg
-		call	loc_2E20
+		call	draw_trapezoid
 		pop	si
 		les	di, [bp+arg_2]
 		cmp	si, [bp+var_6]
@@ -322,7 +322,7 @@ loc_E62:
 		shl	si, 2
 		add	si, ax
 		shl	si, 4
-		call	loc_2E20
+		call	draw_trapezoid
 		pop	si
 		pop	di
 		leave
@@ -1135,53 +1135,7 @@ sub_2DF4	endp
 		db 0
 ; ---------------------------------------------------------------------------
 
-loc_2E20:
-		mov	ax, ClipYB_adr
-		mov	cs:word_2E62, ax
-		mov	ax, trapez_a+6
-		mov	cs:word_2ED3, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_2EE1, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_2ECB, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_2EDD, ax
-		mov	ax, ClipXL
-		mov	cs:word_2E67, ax
-		mov	cs:word_2E91, ax
-		mov	ax, ClipXW
-		mov	cs:word_2E81, ax
-		jmp	short $+2
-		push	bp
-		mov	cx, trapez_a
-		mov	bp, trapez_b
-; ---------------------------------------------------------------------------
-		db 81h,	0FEh
-word_2E62	dw 1234h
-		db 77h,	61h, 0B8h
-word_2E67	dw 1234h
-		db 2Bh,	0C8h, 8Bh, 0DDh, 2Bh, 0D8h, 85h, 0CBh, 78h, 54h
-		db 3Bh,	0CBh, 7Fh, 2, 87h, 0CBh, 80h, 0FFh, 80h, 1Bh, 0C0h
-		db 23h,	0D8h, 0BFh
-word_2E81	dw 1234h
-		db 2Bh,	0CFh, 1Bh, 0C0h, 23h, 0C8h, 3, 0CFh, 2Bh, 0CBh
-		db 7Ch,	38h, 81h, 0C3h
-word_2E91	dw 1234h
-		db 8Bh,	0FBh, 0C1h, 0EFh, 4, 0D1h, 0E7h, 3, 0FEh, 83h
-		db 0E3h, 0Fh, 3, 0CBh, 83h, 0E9h, 10h, 0D1h, 0E3h, 8Bh
-		db 87h,	8Eh, 2,	0F7h, 0D0h, 23h, 6, 0E8h, 5, 8Bh, 0D9h
-		db 83h,	0E3h, 0Fh, 0D1h, 0E3h, 0C1h, 0F9h, 4, 78h, 6, 0ABh
-		db 0A1h, 0E8h, 5, 0F3h,	0ABh, 23h, 87h,	90h, 2,	0ABh, 81h
-		db 6, 94h, 11h
-word_2ECB	dw 1234h
-		db 8Bh,	0Eh, 90h, 11h, 81h, 0D1h
-word_2ED3	dw 1234h
-		db 89h,	0Eh, 90h, 11h, 81h, 6, 9Ch, 11h
-word_2EDD	dw 1234h
-		db 81h,	0D5h
-word_2EE1	dw 1234h
-		db 83h,	0C6h, 50h, 4Ah,	78h, 3,	0E9h, 74h, 0FFh, 89h, 2Eh
-		db 98h,	11h, 5Dh, 0C3h
+include libs/master.lib/draw_trapezoid.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10813,7 +10767,7 @@ include libs/master.lib/superpa[data].asm
 byte_DDCC	db 0
 		db 0
 aPal98Grb	db 'pal98 grb',0
-		dw 0FFFFh
+include libs/master.lib/draw_trapezoid[data].asm
 a_exe		db '.exe',0
 		db 0
 byte_DDE0	db 0
