@@ -1312,28 +1312,7 @@ include libs/master.lib/ems_enablepageframe.asm
 include libs/master.lib/ems_exist.asm
 include libs/master.lib/ems_free.asm
 include libs/master.lib/ems_movememoryregion.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_4052	proc far
-		push	si
-		mov	si, sp
-		push	ds
-		mov	dx, ss:[si+0Ah]
-		lds	si, ss:[si+6]
-		mov	ax, 5301h
-		int	67h		;  - LIM EMS 4.0 - GET/SET HANDLE NAME
-					; AL = 00h get handle name / 01h set handle name,
-					; DS:SI	-> 8-byte handle name, DX = handle
-					; Return: AH = status
-		mov	al, ah
-		xor	ah, ah
-		pop	ds
-		pop	si
-		retf	6
-sub_4052	endp
-
+include libs/master.lib/ems_setname.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5893,7 +5872,7 @@ loc_B84E:
 		push	ax
 		push	ds
 		push	offset aKaikiems ; "KAIKIEMS"
-		call	sub_4052
+		call	ems_setname
 		push	1Fh
 		push	large [off_20A80]
 		push	0
