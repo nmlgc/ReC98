@@ -1823,30 +1823,7 @@ arg_C		= word ptr  12h
 		retf	0Eh
 sub_40F4	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_4156	proc far
-		mov	bx, sp
-		mov	cx, ss:[bx+4]
-		mov	bx, ss:[bx+6]
-		shl	cx, 1
-		rcl	bx, 1
-		shl	cx, 1
-		rcl	bx, 1
-		cmp	cx, 1
-		sbb	bx, 0FFFFh
-		mov	ah, 43h	; 'C'
-		int	67h		;  - LIM EMS - GET HANDLE AND ALLOCATE MEMORY
-					; BX = number of logical pages to allocate
-					; Return: AH = status
-		sub	ah, 1
-		sbb	ax, ax
-		and	ax, dx
-		retf	4
-sub_4156	endp
-
+include libs/master.lib/ems_allocate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5868,7 +5845,7 @@ loc_B4AF:
 		cmp	eax, 2BF20h
 		jb	short loc_B52E
 		push	large 2BF20h
-		call	sub_4156
+		call	ems_allocate
 		mov	word_266DE, ax
 		cmp	word_266DE, 0
 		jz	short loc_B52E
