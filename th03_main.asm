@@ -52,91 +52,7 @@ include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C40		proc far
-					; sub_A21F+17P	...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_6]
-		mov	bx, [bp+arg_2]
-		test	ax, bx
-		js	short loc_CCC
-		cmp	ax, bx
-		jl	short loc_C52
-		xchg	ax, bx
-
-loc_C52:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramWidth
-		shl	cx, 3
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_CCC
-		mov	ClipXL, ax
-		mov	ClipXW, bx
-		add	ax, bx
-		mov	ClipXR, ax
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_0]
-		test	ax, bx
-		js	short loc_CCC
-		cmp	ax, bx
-		jl	short loc_C88
-		xchg	ax, bx
-
-loc_C88:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramLines
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_CCC
-		mov	ClipYT, ax
-		mov	cx, ax
-		mov	ClipYH, bx
-		add	ax, bx
-		mov	ClipYB, ax
-		mov	ax, graph_VramWidth
-		xchg	ax, bx
-		mul	bx
-		mov	ClipYB_adr, ax
-		mov	ax, bx
-		shr	ax, 4
-		mul	cx
-		add	ax, graph_VramSeg
-		mov	ClipYT_seg, ax
-		mov	ax, 1
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_CCC:
-		xor	ax, ax
-		pop	bp
-		retf	8
-sub_C40		endp
-
+include libs/master.lib/grc_setclip.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5411,7 +5327,7 @@ loc_9E24:
 		call	near ptr sub_BAE0
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		push	0
 		call	sub_ECB2
 		pop	di
@@ -5793,7 +5709,7 @@ sub_A21F	proc near
 		call	grcg_setcolor
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -7388,7 +7304,7 @@ sub_B4A8	proc near
 loc_B4E3:
 		push	large 80000h
 		push	large 26F00BFh
-		call	sub_C40
+		call	grc_setclip
 		sub	word_1FBC4, 12h
 		sub	word_1FBCA, 17h
 		add	word_1FBCC, 12h
@@ -7497,7 +7413,7 @@ loc_B5EE:
 		call	grcg_off
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		pop	si
 		pop	bp
 		retn
@@ -7526,7 +7442,7 @@ sub_B60A	proc near
 loc_B645:
 		push	large 100000h
 		push	large 26F00BFh
-		call	sub_C40
+		call	grc_setclip
 		add	word_1FBC6, 17h
 		sub	word_1FBC8, 12h
 		sub	word_1FBCE, 17h
@@ -7613,7 +7529,7 @@ loc_B724:
 		call	grcg_off
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		pop	si
 		pop	bp
 		retn
@@ -10896,7 +10812,7 @@ loc_CF15:
 
 loc_CF1E:
 		push	0BFh ; '¿'
-		call	sub_C40
+		call	grc_setclip
 		cmp	byte ptr [si], 1
 		jnz	short loc_CF42
 		push	word ptr [si+2]
@@ -11008,7 +10924,7 @@ loc_D013:
 		out	7Ch, ax
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		pop	di
 		pop	si
 		leave
@@ -18439,7 +18355,7 @@ loc_10981:
 
 loc_1098A:
 		push	0BFh ; '¿'
-		call	sub_C40
+		call	grc_setclip
 		call	egc_off
 		push	large 0C0000Ah
 		call	grcg_setcolor
@@ -18484,7 +18400,7 @@ loc_109FB:
 		call	egc_on
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 
 loc_10A13:
 		pop	di
@@ -28381,7 +28297,7 @@ loc_15A53:
 		jnz	short loc_15A77
 		push	large 100008h
 		push	large 12F00BFh
-		call	sub_C40
+		call	grc_setclip
 		mov	[bp+var_2], 10h
 		jmp	short loc_15A8D
 ; ---------------------------------------------------------------------------
@@ -28389,7 +28305,7 @@ loc_15A53:
 loc_15A77:
 		push	large 1500008h
 		push	large 26F00BFh
-		call	sub_C40
+		call	grc_setclip
 		mov	[bp+var_2], 150h
 
 loc_15A8D:
@@ -28505,7 +28421,7 @@ loc_15B7E:
 loc_15B9A:
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		call	grcg_off
 		mov	al, [bp+var_F]
 		shl	al, 2
@@ -38627,7 +38543,7 @@ loc_1AA1B:
 
 loc_1AA24:
 		push	0BFh ; '¿'
-		call	sub_C40
+		call	grc_setclip
 		mov	bx, [bp+var_A]
 		cmp	byte ptr [bx+1], 10h
 		ja	loc_1AB7B
@@ -38941,7 +38857,7 @@ loc_1ACCF:
 		call	egc_on
 		push	large 0
 		push	large 27F00C7h
-		call	sub_C40
+		call	grc_setclip
 		sub	di, 10h
 		mov	byte_1F2EA, 2
 		mov	word_1F2E8, 8

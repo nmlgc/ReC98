@@ -60,91 +60,7 @@ include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F1E		proc far
-					; sub_13671+A1P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_6]
-		mov	bx, [bp+arg_2]
-		test	ax, bx
-		js	short loc_FAA
-		cmp	ax, bx
-		jl	short loc_F30
-		xchg	ax, bx
-
-loc_F30:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramWidth
-		shl	cx, 3
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_FAA
-		mov	ClipXL, ax
-		mov	ClipXW, bx
-		add	ax, bx
-		mov	ClipXR, ax
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_0]
-		test	ax, bx
-		js	short loc_FAA
-		cmp	ax, bx
-		jl	short loc_F66
-		xchg	ax, bx
-
-loc_F66:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramLines
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_FAA
-		mov	ClipYT, ax
-		mov	cx, ax
-		mov	ClipYH, bx
-		add	ax, bx
-		mov	ClipYB, ax
-		mov	ax, graph_VramWidth
-		xchg	ax, bx
-		mul	bx
-		mov	ClipYB_adr, ax
-		mov	ax, bx
-		shr	ax, 4
-		mul	cx
-		add	ax, graph_VramSeg
-		mov	ClipYT_seg, ax
-		mov	ax, 1
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_FAA:
-		xor	ax, ax
-		pop	bp
-		retf	8
-sub_F1E		endp
-
+include libs/master.lib/grc_setclip.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7467,7 +7383,7 @@ loc_B8B5:
 loc_B922:
 		push	large 0
 		push	large 27F018Fh
-		call	sub_F1E
+		call	grc_setclip
 		push	large 0C0000Bh
 		call	grcg_setcolor
 		mov	dx, 0A6h ; '¦'
@@ -23893,7 +23809,7 @@ var_2		= byte ptr -2
 		mov	word_1ED94, 3E8h
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		mov	Palettes+42, 0E0h ; 'à'
 		mov	Palettes+43, 0C0h ; 'À'
 		mov	Palettes+44, 0B0h ; '°'
@@ -25022,7 +24938,7 @@ sub_140AE	proc far
 		jz	short loc_140D4
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		mov	byte_1EDA6, 0
 		mov	word_1EB0A, 0FFFFh
 
@@ -29893,7 +29809,7 @@ sub_1696B	proc far
 		call	super_entry_bfnt
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		call	sub_134A0
 		mov	word_20652, 0A0h ; ' '
 		mov	word_20654, 0A0h ; ' '
@@ -35459,7 +35375,7 @@ sub_199B3	proc far
 		call	palette_white_out
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		push	large 0C00000h
 		call	grcg_setcolor
 		call	sub_FB0
@@ -35578,7 +35494,7 @@ sub_199B3	proc far
 		call	grcg_setcolor
 		push	large 1A00000h
 		push	large 27F018Fh
-		call	sub_F1E
+		call	grc_setclip
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -35590,7 +35506,7 @@ sub_199B3	proc far
 		call	grcg_off
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		mov	word_26C6A, 0
 		xor	si, si
 		jmp	short loc_19C0D
@@ -36716,7 +36632,7 @@ sub_1A529	proc near
 		push	si
 		push	large 200010h
 		push	large 1A00140h
-		call	sub_F1E
+		call	grc_setclip
 		push	9
 		call	sub_FA52
 		add	sp, 2
@@ -37000,7 +36916,7 @@ sub_1A7D5	proc far
 		call	grcg_off
 		push	large 200000h
 		push	large 1A0018Fh
-		call	sub_F1E
+		call	grc_setclip
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E

@@ -62,90 +62,7 @@ include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_130C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_6]
-		mov	bx, [bp+arg_2]
-		test	ax, bx
-		js	short loc_1398
-		cmp	ax, bx
-		jl	short loc_131E
-		xchg	ax, bx
-
-loc_131E:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramWidth
-		shl	cx, 3
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_1398
-		mov	ClipXL, ax
-		mov	ClipXW, bx
-		add	ax, bx
-		mov	ClipXR, ax
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_0]
-		test	ax, bx
-		js	short loc_1398
-		cmp	ax, bx
-		jl	short loc_1354
-		xchg	ax, bx
-
-loc_1354:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramLines
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_1398
-		mov	ClipYT, ax
-		mov	cx, ax
-		mov	ClipYH, bx
-		add	ax, bx
-		mov	ClipYB, ax
-		mov	ax, graph_VramWidth
-		xchg	ax, bx
-		mul	bx
-		mov	ClipYB_adr, ax
-		mov	ax, bx
-		shr	ax, 4
-		mul	cx
-		add	ax, graph_VramSeg
-		mov	ClipYT_seg, ax
-		mov	ax, 1
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_1398:
-		xor	ax, ax
-		pop	bp
-		retf	8
-sub_130C	endp
-
+include libs/master.lib/grc_setclip.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13705,7 +13622,7 @@ sub_EACE	proc near
 		mov	byte_2C92C, 0Dh
 		push	large 200010h
 		push	large 19F017Fh
-		call	sub_130C
+		call	grc_setclip
 		push	0BDF2h
 		push	54h ; 'T'
 		call	sub_E708

@@ -62,91 +62,7 @@ include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_circlefill.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DCC		proc far
-					; sub_E41D+3D6P
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_6]
-		mov	bx, [bp+arg_2]
-		test	ax, bx
-		js	short loc_E58
-		cmp	ax, bx
-		jl	short loc_DDE
-		xchg	ax, bx
-
-loc_DDE:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramWidth
-		shl	cx, 3
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_E58
-		mov	ClipXL, ax
-		mov	ClipXW, bx
-		add	ax, bx
-		mov	ClipXR, ax
-		mov	ax, [bp+arg_4]
-		mov	bx, [bp+arg_0]
-		test	ax, bx
-		js	short loc_E58
-		cmp	ax, bx
-		jl	short loc_E14
-		xchg	ax, bx
-
-loc_E14:
-		cmp	ax, 8000h
-		sbb	dx, dx
-		and	ax, dx
-		mov	cx, graph_VramLines
-		dec	cx
-		sub	bx, cx
-		sbb	dx, dx
-		and	bx, dx
-		add	bx, cx
-		sub	bx, ax
-		jl	short loc_E58
-		mov	ClipYT, ax
-		mov	cx, ax
-		mov	ClipYH, bx
-		add	ax, bx
-		mov	ClipYB, ax
-		mov	ax, graph_VramWidth
-		xchg	ax, bx
-		mul	bx
-		mov	ClipYB_adr, ax
-		mov	ax, bx
-		shr	ax, 4
-		mul	cx
-		add	ax, graph_VramSeg
-		mov	ClipYT_seg, ax
-		mov	ax, 1
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_E58:
-		xor	ax, ax
-		pop	bp
-		retf	8
-sub_DCC		endp
-
+include libs/master.lib/grc_setclip.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
@@ -9803,7 +9719,7 @@ arg_6		= word ptr  0Ah
 		add	ax, word_151D8
 		add	ax, 7
 		push	ax
-		call	sub_DCC
+		call	grc_setclip
 		pop	bp
 		retn	8
 sub_D31F	endp
@@ -12316,7 +12232,7 @@ loc_E7CC:
 		call	super_free
 		push	large 0
 		push	large 27F018Fh
-		call	sub_DCC
+		call	grc_setclip
 		pop	di
 		pop	si
 		leave
