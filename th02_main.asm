@@ -1282,55 +1282,7 @@ loc_1D58:
 sub_1D06	endp
 
 include libs/master.lib/graph_scrollup.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E2C	proc far
-					; sub_10E95+69P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_4]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_1E4A:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_1E4A
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, [bp+arg_2]
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		mov	ax, [bp+arg_0]
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	6
-sub_1E2C	endp
-
+include libs/master.lib/graph_scroll.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/key_sense.asm
 include libs/master.lib/palette_show.asm
@@ -17473,7 +17425,7 @@ loc_10258:
 		add	ax, [bp+var_8]
 		push	ax
 		push	[bp+var_8]
-		call	sub_1E2C
+		call	graph_scroll
 		mov	byte_2066D, 3
 
 loc_10286:
@@ -19173,7 +19125,7 @@ loc_10EE4:
 		add	ax, di
 		push	ax
 		push	di
-		call	sub_1E2C
+		call	graph_scroll
 		mov	byte_2066D, 3
 		mov	word_22DA0, 0E0h ; 'à'
 		mov	word_22DA2, 0C8h ; 'È'
@@ -28894,7 +28846,7 @@ loc_15C95:
 		add	ax, si
 		push	ax
 		push	si
-		call	sub_1E2C
+		call	graph_scroll
 		mov	byte_2066D, 2
 		jmp	loc_15D51
 ; ---------------------------------------------------------------------------
