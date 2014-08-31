@@ -1824,39 +1824,7 @@ sub_40F4	endp
 
 include libs/master.lib/ems_allocate.asm
 include libs/master.lib/ems_enablepageframe.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_418A	proc far
-		push	si
-		push	di
-		push	ds
-		xor	ax, ax
-		mov	es, ax
-		assume es:seg000
-		mov	es, word ptr es:[019Eh]
-		assume es:nothing
-		mov	di, 0Ah
-		mov	bx, cs
-		mov	ds, bx
-		assume ds:seg000
-		mov	si, 41ACh
-		mov	cx, 4
-		repe cmpsw
-		jnz	short loc_41A8
-		inc	ax
-
-loc_41A8:
-		pop	ds
-		assume ds:dseg
-		pop	di
-		pop	si
-		retf
-sub_418A	endp
-
-; ---------------------------------------------------------------------------
-		db 45h,	2 dup(4Dh), 4 dup(58h),	30h
+include libs/master.lib/ems_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5822,7 +5790,7 @@ loc_B4AF:
 		add	al, 30h	; '0'
 		mov	es:[bx+3], al
 		mov	word_266DE, 0
-		call	sub_418A
+		call	ems_exist
 		or	ax, ax
 		jz	short loc_B52E
 		call	sub_4258
