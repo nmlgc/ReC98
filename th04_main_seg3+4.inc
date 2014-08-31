@@ -18744,7 +18744,7 @@ loc_1D4EA:
 		lea	ax, [bp+var_A]
 		push	ax
 		push	0E1h ; 'á'
-		call	sub_1B50
+		call	gaiji_putsa
 		pop	di
 		pop	si
 		leave
@@ -18819,7 +18819,7 @@ loc_1D565:
 		lea	ax, [bp+var_6]
 		push	ax
 		push	0E1h ; 'á'
-		call	sub_1B50
+		call	gaiji_putsa
 		pop	di
 		pop	si
 		leave
@@ -19027,7 +19027,7 @@ var_4		= dword	ptr -4
 		push	ds
 		push	offset unk_232A6
 		push	0E1h ; 'á'
-		call	sub_1B50
+		call	gaiji_putsa
 		push	large 60007h
 		push	ds
 		push	offset aVrvsvVfvdb@vav ; "‚r‚s‚`‚f‚d@‚a‚‚Ž‚•‚“"
@@ -19206,7 +19206,7 @@ var_4		= dword	ptr -4
 		push	ds
 		push	offset a_Abcd	; "\\]^_`abcd"
 		push	0E1h ; 'á'
-		call	sub_1B50
+		call	gaiji_putsa
 		push	large 60006h
 		push	ds
 		push	offset aVVkvkb@vbvmvev ; "‚`‚k‚k@‚b‚Œ‚…‚‚’@@"

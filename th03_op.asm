@@ -480,67 +480,7 @@ loc_FC3:
 		retf	4
 sub_F36		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FCC		proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_100E
-
-loc_FFA:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_FFA
-
-loc_100E:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_FCC		endp
-
+include libs/master.lib/gaiji_putsa.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5178,7 +5118,7 @@ loc_9BC9:
 
 loc_9BD3:
 		push	si
-		call	sub_FCC
+		call	gaiji_putsa
 		pop	di
 		pop	si
 		pop	bp
@@ -5601,7 +5541,7 @@ loc_9F3C:
 
 loc_9F4B:
 		push	di
-		call	sub_FCC
+		call	gaiji_putsa
 
 loc_9F51:
 		pop	di
@@ -5632,7 +5572,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	offset aNop	; "nop"
 		push	si
-		call	sub_FCC
+		call	gaiji_putsa
 		push	large 250011h
 		push	ds
 		push	offset asc_D965	; "	   "
@@ -5682,7 +5622,7 @@ loc_9FD6:
 		push	ds
 		push	offset aKlmn	; "KLMN"
 		push	si
-		call	sub_FCC
+		call	gaiji_putsa
 		les	bx, dword_FC54
 		mov	al, es:[bx+15h]
 		mov	ah, 0
@@ -5723,7 +5663,7 @@ loc_A02A:
 		push	ds
 		push	offset a_A	; "\\]^_`a"
 		push	si
-		call	sub_FCC
+		call	gaiji_putsa
 		les	bx, dword_FC54
 		mov	al, es:[bx+16h]
 		mov	ah, 0
@@ -5766,7 +5706,7 @@ loc_A07D:
 
 loc_A08C:
 		push	si
-		call	sub_FCC
+		call	gaiji_putsa
 
 loc_A092:
 		pop	di

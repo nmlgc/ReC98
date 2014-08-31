@@ -1317,67 +1317,7 @@ include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
 include libs/master.lib/gaiji_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DBE	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_1E00
-
-loc_1DEC:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_1DEC
-
-loc_1E00:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_1DBE	endp
-
+include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_extmode.asm
@@ -6921,17 +6861,17 @@ loc_B645:
 		push	ds
 		push	offset unk_20A76
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 1A000Eh
 		push	ds
 		push	offset unk_20A79
 		push	0E9h ; 'È'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset unk_20A7C
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_B682:
 		push	0
@@ -6951,7 +6891,7 @@ loc_B697:
 		push	ds
 		push	offset unk_20A79
 		push	0E9h ; 'È'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset unk_20A7C
@@ -6964,14 +6904,14 @@ loc_B6C3:
 		push	ds
 		push	offset unk_20A79
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset unk_20A7C
 		push	0E9h ; 'È'
 
 loc_B6E2:
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_B6E7:
 		test	byte ptr word_23A56+1, 40h
@@ -16388,7 +16328,7 @@ loc_FA18:
 		push	ds
 		push	offset aKOO	; "∞™∂Æ∏øÆª"
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	0
 		call	sub_150E4
 		call	sub_118D1
@@ -16472,22 +16412,22 @@ var_1		= byte ptr -1
 		push	ds
 		push	offset aMO	; "¨∏∑Ω≤∑æÆ\b"
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 18000Dh
 		push	ds
 		push	offset aO	; "¬Æº"
 		push	85h ; 'Ö'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
 		push	offset asc_226A9 ; "∑∏"
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 130016h
 		push	ds
 		push	offset aMOn	; "¨ªÆ≠≤Ω"
 		push	81h ; 'Å'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 210016h
 		mov	al, [bp+var_2]
 		mov	ah, 0
@@ -16526,7 +16466,7 @@ loc_FB55:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_1DBE
+		call	gaiji_putsa
 		cmp	di, 1
 		jnz	short loc_FB75
 		mov	[bp+var_1], 85h	; 'Ö'
@@ -16543,7 +16483,7 @@ loc_FB79:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_FB8E:
 		test	si, 1000h
@@ -17997,7 +17937,7 @@ arg_0		= word ptr  6
 		push	ds
 		push	offset aI	; "ÍÎÏ"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	9
 		push	si
 		mov	ax, si
@@ -18020,13 +17960,13 @@ loc_106C8:
 		lea	ax, [bp+var_6+1]
 		push	ax
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 380009h
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_106EE:
 		pop	si
@@ -18046,12 +17986,12 @@ sub_106F3	proc far
 		push	ds
 		push	offset asc_226F3 ; "÷◊ÿŸ"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 3D0005h
 		push	ds
 		push	offset unk_226EE
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		call	sub_143CA
 		mov	al, byte_25FEF
 		mov	ah, 0
@@ -18066,12 +18006,12 @@ loc_10730:
 		push	ds
 		push	offset asc_226F8 ; "⁄€"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
 		push	offset asc_226FD ; "‹›"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
 		push	offset asc_22702 ; "ﬁﬂ"
@@ -18083,19 +18023,19 @@ loc_10760:
 		push	ds
 		push	offset aRs	; "‡·"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
 		push	offset aTu	; "‚„"
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
 		push	offset aFx	; "‰Â"
 
 loc_1078E:
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_10796:
 		push	cs
@@ -18109,7 +18049,7 @@ loc_10796:
 		push	ds
 		push	offset aAu	; "ÌÓ"
 		push	0A1h ; '°'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	cs
 		call	near ptr sub_10574
 		push	large 3F0013h
@@ -18157,7 +18097,7 @@ loc_1082A:
 loc_1082D:
 					; sub_106F3+129j ...
 		push	ax
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	0
 		push	cs
 		call	near ptr sub_1065B
@@ -20313,7 +20253,7 @@ loc_1193E:
 		push	ds
 		push	offset unk_228F2
 		push	0C3h ; '√'
-		call	sub_1DBE
+		call	gaiji_putsa
 
 loc_11956:
 		mov	byte_2CE8C, 0
@@ -20644,7 +20584,7 @@ loc_11BD1:
 
 loc_11BDB:
 		push	0C1h ; '¡'
-		call	sub_1DBE
+		call	gaiji_putsa
 		mov	ax, word_2CE6A
 		cwd
 		sub	ax, dx
@@ -20963,7 +20903,7 @@ loc_11EF1:
 		push	ds
 		push	offset unk_2CE74
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		jmp	loc_11FD9
 ; ---------------------------------------------------------------------------
 
@@ -20979,7 +20919,7 @@ loc_11F36:
 		mov	bx, ax
 		push	large dword ptr	[bx+1EF8h]
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		mov	ax, word_2CE70
 		add	ax, ax
 		add	ax, word_2CE82
@@ -21016,7 +20956,7 @@ loc_11FA5:
 		mov	bx, ax
 		push	large dword ptr	[bx+1EF8h]
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		cmp	byte_2CE72, 2
 		jnz	short loc_11FD9
 		push	large 1C0002h
@@ -23780,7 +23720,7 @@ loc_143AE:
 		rep stosb
 
 loc_143C1:
-		call	sub_1DBE
+		call	gaiji_putsa
 		pop	di
 		retn	6
 sub_1437E	endp
@@ -23812,7 +23752,7 @@ loc_143D8:
 		push	ds
 		push	offset unk_229A6
 		push	0E1h ; '·'
-		call	sub_1DBE
+		call	gaiji_putsa
 		add	di, 2
 		cmp	di, 6
 		jz	short loc_143D2

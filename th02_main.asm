@@ -982,67 +982,7 @@ loc_140D:
 sub_1380	endp
 
 include libs/master.lib/gaiji_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_145A	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_149C
-
-loc_1488:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_1488
-
-loc_149C:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_145A	endp
-
+include libs/master.lib/gaiji_putsa.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7684,7 +7624,7 @@ loc_B202:
 
 loc_B213:
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		mov	al, stage_title_halflen
 		mov	ah, 0
 		mov	dx, 1Ch
@@ -7703,7 +7643,7 @@ loc_B237:
 		push	ds
 		push	offset aNoK	; "╜╝╥╦о╧╣╙б"
 		push	0C3h ; 'ц'
-		call	sub_145A
+		call	gaiji_putsa
 
 loc_B249:
 		mov	word_1FFA8, 0
@@ -8405,7 +8345,7 @@ loc_BA33:
 
 loc_BA3D:
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		call	sub_F62E
 		inc	si
 		cmp	[bp+var_1], 0
@@ -8499,22 +8439,22 @@ loc_BB30:
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 11000Eh
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 11000Fh
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 110010h
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		xor	ax, ax
 		jmp	loc_BCAE
 ; ---------------------------------------------------------------------------
@@ -8579,17 +8519,17 @@ loc_BC2C:
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 11000Fh
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 110010h
 		push	ds
 		push	offset asc_1DB5F ; "ооооооооооо"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 17000Fh
 		push	large [off_1DB70]
 		push	0E9h ; 'И'
@@ -9400,12 +9340,12 @@ arg_2		= word ptr  6
 		push	ds
 		push	offset aO	; "б╝╪"
 		push	[bp+arg_2]
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
 		push	offset asc_1E473 ; "╤╦"
 		push	[bp+arg_0]
-		call	sub_145A
+		call	gaiji_putsa
 		pop	bp
 		retn	4
 sub_C2F4	endp
@@ -9449,7 +9389,7 @@ loc_C348:
 		push	ds
 		push	offset aKOO_0	; "╟╙╥╝╦©╝╩"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	12h
 		mov	ax, 17h
 		sub	ax, si
@@ -9465,7 +9405,7 @@ loc_C348:
 		push	ds
 		push	offset aKOO_0	; "╟╙╥╝╦©╝╩"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		mov	ax, 1Dh
 		sub	ax, si
 		push	ax
@@ -9481,7 +9421,7 @@ loc_C348:
 		push	ds
 		push	offset aKOO_0	; "╟╙╥╝╦©╝╩"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		lea	ax, [si+7]
 		push	ax
 		push	0Ch
@@ -9495,7 +9435,7 @@ loc_C348:
 		push	ds
 		push	offset aKOO_0	; "╟╙╥╝╦©╝╩"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	1
 		call	sub_F618
 		dec	si
@@ -9529,14 +9469,14 @@ loc_C400:
 		push	ds
 		push	offset aMO	; "╛╦╤╫╡╤╬╝щ"
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 0E500E1h
 		call	sub_C2F4
 		push	large 120014h
 		push	ds
 		push	offset aMOn	; "╛╩╝╜╡╫"
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		les	bx, dword_2026C
 		mov	ax, 0A3h ; 'ё'
 		sub	ax, es:[bx+12h]
@@ -13269,7 +13209,7 @@ loc_DF37:
 		push	ax
 
 loc_DF6E:
-		call	sub_145A
+		call	gaiji_putsa
 		pop	si
 		leave
 		retn
@@ -13393,7 +13333,7 @@ sub_E012	proc near
 		push	ds
 		push	offset asc_1E615 ; "деф"
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		push	6
 		push	large [dword_1E598]
 		call	sub_DC55
@@ -13406,7 +13346,7 @@ sub_E012	proc near
 		push	ds
 		push	offset asc_1E61A ; "ндеф"
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		push	4
 		push	large [dword_252F8]
 		call	sub_DC55
@@ -13419,19 +13359,19 @@ sub_E012	proc near
 		push	ds
 		push	offset asc_1E61F ; "ий"
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		call	sub_DF76
 		push	large 39000Fh
 		push	ds
 		push	offset asc_1E624 ; "лм"
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		call	sub_DFC4
 		push	large 390014h
 		push	ds
 		push	offset asc_1E629 ; "гх"
 		push	0C1h ; 'а'
-		call	sub_145A
+		call	gaiji_putsa
 		call	sub_DEAD
 		push	large 390016h
 		push	ds
@@ -13469,7 +13409,7 @@ loc_E0DE:
 
 loc_E0E1:
 		push	ax
-		call	sub_145A
+		call	gaiji_putsa
 		pop	bp
 		retn
 sub_E012	endp
@@ -17191,7 +17131,7 @@ var_4		= dword	ptr -4
 		lea	ax, [bp+var_C]
 		push	ax
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	6
 		push	ds
 		push	offset aUqiUx	; " ⌠О┬у⌠x"
@@ -17366,7 +17306,7 @@ var_4		= dword	ptr -4
 		lea	ax, [bp+var_C]
 		push	ax
 		push	0E1h ; 'А'
-		call	sub_145A
+		call	gaiji_putsa
 		push	6
 		push	ds
 		push	offset aGngkga	; "┐N┐┼┐A"
@@ -41528,22 +41468,22 @@ arg_0		= word ptr  4
 		push	ds
 		push	offset aMO_0	; "╠╡о╪╛╦╩╝"
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 0C0004h
 		push	ds
 		push	offset aKO	; "╤╙╥╝"
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 1B0004h
 		push	ds
 		push	offset asc_1EDF9 ; "╧╦╡╤╫"
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		push	large 290004h
 		push	ds
 		push	offset asc_1EDFF ; "╪╫"
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		cmp	[bp+arg_0], 0FFFFh
 		jz	short loc_1C82E
 		xor	si, si
@@ -41612,7 +41552,7 @@ loc_1C83F:
 		push	ds
 		push	ax
 		push	di
-		call	sub_145A
+		call	gaiji_putsa
 		lea	ax, [si+6]
 		push	ax
 		mov	bx, si
@@ -41757,7 +41697,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	ax
 		push	81h ; '│'
-		call	sub_145A
+		call	gaiji_putsa
 		mov	ax, di
 		add	ax, ax
 		add	ax, 0Ah

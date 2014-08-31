@@ -470,67 +470,7 @@ loc_106F:
 sub_FE2		endp
 
 include libs/master.lib/gaiji_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10BC	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_10FE
-
-loc_10EA:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_10EA
-
-loc_10FE:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_10BC	endp
-
+include libs/master.lib/gaiji_putsa.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9145,22 +9085,22 @@ arg_0		= word ptr  4
 		push	ds
 		push	offset aMO	; "±≤œº¨∏ªÆ"
 		push	81h ; 'Å'
-		call	sub_10BC
+		call	gaiji_putsa
 		push	large 0C0004h
 		push	ds
 		push	offset aKO	; "∂™∑Æ"
 		push	81h ; 'Å'
-		call	sub_10BC
+		call	gaiji_putsa
 		push	large 1C0004h
 		push	ds
 		push	offset asc_D773	; "π∏≤∂Ω"
 		push	81h ; 'Å'
-		call	sub_10BC
+		call	gaiji_putsa
 		push	large 2A0004h
 		push	ds
 		push	offset asc_D779	; "ºΩ"
 		push	81h ; 'Å'
-		call	sub_10BC
+		call	gaiji_putsa
 		cmp	[bp+arg_0], 0FFFFh
 		jz	short loc_BACE
 		xor	si, si
@@ -9229,7 +9169,7 @@ loc_BADF:
 		push	ds
 		push	ax
 		push	di
-		call	sub_10BC
+		call	gaiji_putsa
 		lea	ax, [si+6]
 		push	ax
 		mov	bx, si
@@ -9374,7 +9314,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	ax
 		push	81h ; 'Å'
-		call	sub_10BC
+		call	gaiji_putsa
 		mov	ax, di
 		add	ax, ax
 		add	ax, 0Ah

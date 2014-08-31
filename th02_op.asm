@@ -769,68 +769,7 @@ loc_1089:
 sub_FFC		endp
 
 include libs/master.lib/gaiji_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10D6	proc far
-					; sub_A1F5:loc_A26FP ...
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_1118
-
-loc_1104:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_1104
-
-loc_1118:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_10D6	endp
-
+include libs/master.lib/gaiji_putsa.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5516,7 +5455,7 @@ loc_A23B:
 
 loc_A248:
 		push	di
-		call	sub_10D6
+		call	gaiji_putsa
 
 loc_A24E:
 		cmp	si, 1
@@ -5539,7 +5478,7 @@ loc_A265:
 		push	21h ; '!'
 
 loc_A26F:
-		call	sub_10D6
+		call	gaiji_putsa
 
 loc_A274:
 		push	1Ah
@@ -5547,7 +5486,7 @@ loc_A274:
 		push	ds
 		push	offset aK_0	; "ª™∂¥"
 		push	81h ; 'Å'
-		call	sub_10D6
+		call	gaiji_putsa
 		push	26h ; '&'
 		push	17h
 		push	ds
@@ -5557,7 +5496,7 @@ loc_A274:
 		add	ax, 98h	; 'ò'
 		push	ax
 		push	81h ; 'Å'
-		call	sub_10D6
+		call	gaiji_putsa
 		pop	di
 		pop	si
 		pop	bp
@@ -5894,7 +5833,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	offset aK_0	; "ª™∂¥"
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	2Ah ; '*'
 		push	10h
 		push	ds
@@ -5904,7 +5843,7 @@ arg_2		= word ptr  6
 		add	ax, 98h	; 'ò'
 		push	ax
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	150h
 		push	104h
 		push	80h ; 'Ä'
@@ -5929,7 +5868,7 @@ loc_A568:
 		push	ds
 		push	offset aM	; "∑æº≤¨"
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	2Fh ; '/'
 		push	11h
 		push	ds
@@ -5939,7 +5878,7 @@ loc_A568:
 		add	ax, 145h
 		push	ax
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	178h
 		push	114h
 		push	40h ; '@'
@@ -5969,7 +5908,7 @@ loc_A5BE:
 		push	ds
 		push	offset aKO	; "πµ™¬Æª"
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	31h ; '1'
 		push	12h
 		mov	al, byte_F3E1
@@ -6002,7 +5941,7 @@ loc_A60A:
 		push	ds
 		push	offset aLL	; "´∏∑´"
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 		push	31h ; '1'
 		push	13h
 		mov	al, byte_F3E2
@@ -6087,7 +6026,7 @@ loc_A6D6:
 
 loc_A6E3:
 		push	si
-		call	sub_10D6
+		call	gaiji_putsa
 
 loc_A6E9:
 		pop	di
@@ -8236,7 +8175,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	offset aMO_0	; "±≤œº¨∏ªÆ"
 		push	81h ; 'Å'
-		call	sub_10D6
+		call	gaiji_putsa
 		push	28h ; '('
 		push	2
 		push	ds
@@ -8246,7 +8185,7 @@ arg_0		= word ptr  4
 		add	ax, 654h
 		push	ax
 		push	81h ; 'Å'
-		call	sub_10D6
+		call	gaiji_putsa
 		push	8
 		push	4
 		push	ds
@@ -8277,7 +8216,7 @@ loc_B601:
 		add	ax, 1DEAh
 		push	ax
 		push	di
-		call	sub_10D6
+		call	gaiji_putsa
 		lea	ax, [si+7]
 		push	ax
 		mov	bx, si

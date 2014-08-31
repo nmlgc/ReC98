@@ -2350,7 +2350,7 @@ loc_1654F:
 		push	ds
 		push	offset unk_222A0
 		push	0E1h ; 'á'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 60008h
 		push	ds
 		push	BONUS_STAGE
@@ -2577,7 +2577,7 @@ loc_1677D:
 		push	ds
 		push	offset a_Abcd	; "\\]^_`abcd"
 		push	0E1h ; 'á'
-		call	sub_1DBE
+		call	gaiji_putsa
 		push	large 60006h
 		push	ds
 		push	ALL_CLEAR
@@ -18899,7 +18899,7 @@ loc_1FA47:
 		jnz	short loc_1FA34
 		add	dl, 0A0h ; ' '
 		mov	[di], dl
-		call	sub_1DBE
+		call	gaiji_putsa
 		pop	di
 		pop	bp
 		retf	8

@@ -1203,67 +1203,7 @@ loc_1283:
 sub_11F6	endp
 
 include libs/master.lib/gaiji_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12D0	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	cx, di
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		lodsb
-		or	al, al
-		jz	short loc_1312
-
-loc_12FE:
-		mov	ah, al
-		mov	al, 0
-		rol	ax, 1
-		shr	ax, 1
-		adc	al, 56h	; 'V'
-		stosw
-		or	ah, 80h
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_12FE
-
-loc_1312:
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		mov	ax, bx
-		add	di, 2000h
-		rep stosw
-		pop	ds
-		pop	di
-		pop	si
-		retf	0Ah
-sub_12D0	endp
-
+include libs/master.lib/gaiji_putsa.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10917,26 +10857,26 @@ loc_CADF:
 		push	ds
 		push	offset aPqrstuvwxyz_ ; "PQRSTUVWXYZ[\\]^_"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		push	si
 		push	0Ch
 		push	ds
 		push	offset aAbcdefghijklmn ; "`abcdefghijklmno"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		push	si
 		push	0Dh
 		push	ds
 		push	offset aPqrstuvwxyz ; "pqrstuvwxyz{|}~"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		add	si, 4
 		push	si
 		push	0Eh
 		push	ds
 		push	offset aVgdejziiklm ; "ÇÉÑÖÜáàâäãå"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
@@ -10948,7 +10888,7 @@ loc_CADF:
 		push	ds
 		push	offset asc_1DD39 ; "«»… ÀÃÕŒ"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
@@ -10966,7 +10906,7 @@ loc_CB47:
 		push	ds
 		push	offset asc_1DD42 ; "–—“ ÀÃÕŒ"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
@@ -10983,7 +10923,7 @@ loc_CB60:
 		push	ds
 		push	offset aNoptufxccssI ; "çéèíìîïñóòôöõú"
 		push	di
-		call	sub_12D0
+		call	gaiji_putsa
 		pop	di
 		pop	si
 		pop	bp
@@ -29324,14 +29264,14 @@ loc_15D64:
 		push	ds
 		push	offset unk_1DD7C
 		push	0E1h ; '·'
-		call	sub_12D0
+		call	gaiji_putsa
 		lea	ax, [di+4]
 		push	ax
 		push	3
 		push	ds
 		push	offset unk_1DD7F
 		push	0E1h ; '·'
-		call	sub_12D0
+		call	gaiji_putsa
 		mov	al, [si+1]
 		mov	[bp+var_4], al
 		cmp	[bp+var_4], 0Ah
