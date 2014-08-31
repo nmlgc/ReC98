@@ -410,55 +410,7 @@ include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_226E	proc near
-		mov	dx, 188h
-
-loc_2271:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2271
-		mov	al, bh
-		out	dx, al
-
-loc_2279:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2279
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_226E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2284	proc near
-		mov	dx, 188h
-
-loc_2287:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2287
-		mov	al, bh
-		out	dx, al
-
-loc_228F:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_228F
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_2284	endp
-
+include libs/master.lib/soundio.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
@@ -723,11 +675,11 @@ loc_2E57:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_2284
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_226E
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -744,7 +696,7 @@ sub_2E46	endp
 
 sub_2E70	proc near
 		mov	bh, 0Fh
-		call	sub_226E
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al

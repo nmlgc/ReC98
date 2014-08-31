@@ -1537,55 +1537,7 @@ include libs/master.lib/random.asm
 include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_247E	proc near
-		mov	dx, 188h
-
-loc_2481:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2481
-		mov	al, bh
-		out	dx, al
-
-loc_2489:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2489
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_247E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2494	proc near
-		mov	dx, 188h
-
-loc_2497:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_2497
-		mov	al, bh
-		out	dx, al
-
-loc_249F:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_249F
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_2494	endp
-
+include libs/master.lib/soundio.asm
 include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
@@ -2037,11 +1989,11 @@ loc_364F:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_2494
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_247E
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -2058,7 +2010,7 @@ sub_363E	endp
 
 sub_3668	proc near
 		mov	bh, 0Fh
-		call	sub_247E
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al

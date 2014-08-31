@@ -977,55 +977,7 @@ include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21CA	proc near
-		mov	dx, 188h
-
-loc_21CD:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_21CD
-		mov	al, bh
-		out	dx, al
-
-loc_21D5:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_21D5
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_21CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_21E0	proc near
-		mov	dx, 188h
-
-loc_21E3:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_21E3
-		mov	al, bh
-		out	dx, al
-
-loc_21EB:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_21EB
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_21E0	endp
-
+include libs/master.lib/soundio.asm
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
@@ -1532,11 +1484,11 @@ loc_2DC9:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_21E0
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_21CA
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -1553,7 +1505,7 @@ sub_2DB8	endp
 
 sub_2DE2	proc near
 		mov	bh, 0Fh
-		call	sub_21CA
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al

@@ -1015,55 +1015,7 @@ include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24C4	proc near
-		mov	dx, 188h
-
-loc_24C7:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_24C7
-		mov	al, bh
-		out	dx, al
-
-loc_24CF:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_24CF
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_24C4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24DA	proc near
-		mov	dx, 188h
-
-loc_24DD:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_24DD
-		mov	al, bh
-		out	dx, al
-
-loc_24E5:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_24E5
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_24DA	endp
-
+include libs/master.lib/soundio.asm
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
@@ -1473,11 +1425,11 @@ loc_324B:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_24DA
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_24C4
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -1608,7 +1560,7 @@ loc_3480:
 
 sub_3488	proc near
 		mov	bh, 0Fh
-		call	sub_24C4
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al

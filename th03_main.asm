@@ -1502,55 +1502,7 @@ include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F62	proc near
-		mov	dx, 188h
-
-loc_1F65:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F65
-		mov	al, bh
-		out	dx, al
-
-loc_1F6D:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F6D
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_1F62	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F78	proc near
-		mov	dx, 188h
-
-loc_1F7B:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F7B
-		mov	al, bh
-		out	dx, al
-
-loc_1F83:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F83
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_1F78	endp
-
+include libs/master.lib/soundio.asm
 include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
@@ -1984,11 +1936,11 @@ loc_2BD5:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_1F78
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_1F62
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -2005,7 +1957,7 @@ sub_2BC4	endp
 
 sub_2BEE	proc near
 		mov	bh, 0Fh
-		call	sub_1F62
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al

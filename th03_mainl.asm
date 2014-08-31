@@ -733,55 +733,7 @@ include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1EF6	proc near
-		mov	dx, 188h
-
-loc_1EF9:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1EF9
-		mov	al, bh
-		out	dx, al
-
-loc_1F01:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F01
-		inc	dx
-		inc	dx
-		mov	al, bl
-		out	dx, al
-		retn
-sub_1EF6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1F0C	proc near
-		mov	dx, 188h
-
-loc_1F0F:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F0F
-		mov	al, bh
-		out	dx, al
-
-loc_1F17:
-		in	al, dx
-		test	al, 80h
-		jnz	short loc_1F17
-		inc	dx
-		inc	dx
-		in	al, dx
-		retn
-sub_1F0C	endp
-
+include libs/master.lib/soundio.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/vsync.asm
@@ -1170,11 +1122,11 @@ loc_2ABF:
 		pushf
 		cli
 		mov	bh, 7
-		call	sub_1F0C
+		call	sound_i
 		and	al, 3Fh
 		or	al, 80h
 		mov	bl, al
-		call	sub_1EF6
+		call	sound_o
 		popf
 		mov	ax, 1
 
@@ -1191,7 +1143,7 @@ sub_2AAE	endp
 
 sub_2AD8	proc near
 		mov	bh, 0Fh
-		call	sub_1EF6
+		call	sound_o
 		mov	dx, 188h
 		mov	al, 0Eh
 		out	dx, al
