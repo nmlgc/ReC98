@@ -1589,65 +1589,7 @@ sub_2494	endp
 include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2540	proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		mov	cx, di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		assume es:nothing
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		mov	ax, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		mov	bp, dx
-		or	ah, ah
-		jz	short loc_258C
-		cmp	ah, 80h	; '€'
-		jb	short loc_2580
-		shl	ah, 1
-		cmp	al, 9Fh	; 'Ÿ'
-		jnb	short loc_257A
-		cmp	al, 80h	; '€'
-		adc	ax, 0FEDFh
-
-loc_257A:
-		sbb	ax, 0DFFEh
-		and	ax, 7F7Fh
-
-loc_2580:
-		xchg	ah, al
-		sub	al, 20h	; ' '
-		mov	es:[di+2000h], bx
-		stosw
-		or	al, 80h
-
-loc_258C:
-		mov	es:[di+2000h], bx
-		stosw
-		mov	di, cx
-		retf	8
-sub_2540	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/text_putca.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14855,7 +14797,7 @@ loc_EF83:
 		push	di
 		push	si
 		push	large 2000E1h
-		call	sub_2540
+		call	text_putca
 		inc	di
 
 loc_EF91:
@@ -20837,7 +20779,7 @@ loc_11F36:
 		push	ax
 		push	large 22020h
 		push	0E1h ; 'á'
-		call	sub_2540
+		call	text_putca
 
 loc_11F7F:
 		sub	word_2CE82, 2
