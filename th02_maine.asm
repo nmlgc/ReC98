@@ -59,267 +59,7 @@ include libs/master.lib/file_write.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DD4		proc far
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	bp
-		pop	si
-		pop	di
-		pop	cx
-		sub	sp, 12h
-		sti
-		mov	ax, ClipYT
-		sub	di, ax
-		sub	bp, ax
-		mov	ax, ClipXL
-		mov	dx, ClipYH
-		mov	bx, 505h
-		cmp	ax, cx
-		jg	short loc_E04
-		xor	bl, 3
-		cmp	cx, ClipXR
-		jg	short loc_E04
-		xor	bl, 2
-
-loc_E04:
-		cmp	di, dx
-		jg	short loc_E12
-		xor	bl, 0Ch
-		or	di, di
-		js	short loc_E12
-		xor	bl, 8
-
-loc_E12:
-		cmp	ax, si
-		jg	short loc_E22
-		xor	bh, 3
-		cmp	si, ClipXR
-		jg	short loc_E22
-		xor	bh, 2
-
-loc_E22:
-		cmp	bp, dx
-		jg	short loc_E30
-		xor	bh, 0Ch
-		or	bp, bp
-		js	short loc_E30
-		xor	bh, 8
-
-loc_E30:
-		test	bh, bl
-		jnz	short loc_E9B
-		or	bx, bx
-		jz	short loc_E48
-		call	cutline
-		jz	short loc_E48
-		xchg	bh, bl
-		xchg	cx, si
-		xchg	di, bp
-		call	cutline
-		jnz	short loc_E9B
-
-loc_E48:
-		mov	es, ClipYT_seg
-		sub	si, cx
-		jnb	short loc_E56
-		add	cx, si
-		neg	si
-		xchg	di, bp
-
-loc_E56:
-		sub	bp, di
-		sbb	dx, dx
-		mov	bx, 50h	; 'P'
-		add	bx, dx
-		xor	bx, dx
-		add	bp, dx
-		xor	dx, bp
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		shr	ax, 3
-		add	di, ax
-		xor	ax, ax
-		cmp	si, dx
-		jg	short loc_EF0
-		jz	short loc_EAE
-		dec	bx
-		xchg	dx, si
-		div	si
-		mov	dx, 8000h
-		mov	bp, ax
-		and	cl, 7
-		mov	al, dh
-		shr	al, cl
-		lea	cx, [si+1]
-
-loc_E92:
-		stosb
-		add	dx, bp
-		jb	short loc_EA2
-		add	di, bx
-		loop	loc_E92
-
-loc_E9B:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_EA2:
-		ror	al, 1
-		adc	di, bx
-		loop	loc_E92
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_EAE:
-		dec	bx
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		lea	cx, [si+1]
-		shr	cx, 1
-		jnb	short loc_EC2
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_EC2:
-		jcxz	short loc_EEA
-		shr	cx, 1
-		jnb	short loc_ED2
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_ED2:
-		jcxz	short loc_EEA
-
-loc_ED4:
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		loop	loc_ED4
-
-loc_EEA:
-					; sub_DD4:loc_ED2j
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_EF0:
-		and	di, 0FFFEh
-		or	dx, dx
-		jz	short loc_F44
-		div	si
-		mov	dx, 8000h
-		mov	bp, dx
-		and	cl, 0Fh
-		shr	dx, cl
-		mov	cx, si
-		inc	cx
-		mov	si, ax
-		xor	ax, ax
-
-loc_F0A:
-		or	ax, dx
-		ror	dx, 1
-		jb	short loc_F20
-		add	bp, si
-		jb	short loc_F32
-		loop	loc_F0A
-		xchg	ah, al
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F20:
-		xchg	ah, al
-		stosw
-		xor	ax, ax
-		add	bp, si
-		jb	short loc_F39
-		loop	loc_F0A
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F32:
-		xchg	ah, al
-		mov	es:[di], ax
-		xor	ax, ax
-
-loc_F39:
-		add	di, bx
-		loop	loc_F0A
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F44:
-		mov	bx, cx
-		and	bx, 0Fh
-		lea	cx, [bx+si-10h]
-		shl	bx, 1
-		mov	ax, [bx+3F2h]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_F66
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_F66:
-		and	ax, [bx+3F4h]
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_DD4		endp ; sp-analysis failed
-
+include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
@@ -9467,22 +9207,22 @@ loc_C0BC:
 		push	[bp+var_10]
 		push	[bp+var_6]
 		push	[bp+var_E]
-		call	sub_DD4
+		call	grcg_line
 		push	[bp+var_6]
 		push	[bp+var_E]
 		push	[bp+var_4]
 		push	[bp+var_C]
-		call	sub_DD4
+		call	grcg_line
 		push	[bp+var_4]
 		push	[bp+var_C]
 		push	[bp+var_2]
 		push	[bp+var_A]
-		call	sub_DD4
+		call	grcg_line
 		push	[bp+var_2]
 		push	[bp+var_A]
 		push	[bp+var_8]
 		push	[bp+var_10]
-		call	sub_DD4
+		call	grcg_line
 		pop	di
 		pop	si
 		leave
@@ -9705,16 +9445,16 @@ loc_C2AE:
 		call	grcg_setcolor
 		push	large 1640060h
 		push	large 1640130h
-		call	sub_DD4
+		call	grcg_line
 		push	large 1640130h
 		push	large 1C0130h
-		call	sub_DD4
+		call	grcg_line
 		push	large 1C0130h
 		push	large 1C0060h
-		call	sub_DD4
+		call	grcg_line
 		push	large 1C0060h
 		push	large 1640060h
-		call	sub_DD4
+		call	grcg_line
 		call	grcg_off
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show

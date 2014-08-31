@@ -71,268 +71,7 @@ include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
 include libs/master.lib/grc_setclip.asm
 include libs/master.lib/grcg_hline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1562	proc far
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	bp
-		pop	si
-		pop	di
-		pop	cx
-		sub	sp, 12h
-		sti
-		mov	ax, ClipYT
-		sub	di, ax
-		sub	bp, ax
-		mov	ax, ClipXL
-		mov	dx, ClipYH
-		mov	bx, 505h
-		cmp	ax, cx
-		jg	short loc_1592
-		xor	bl, 3
-		cmp	cx, ClipXR
-		jg	short loc_1592
-		xor	bl, 2
-
-loc_1592:
-		cmp	di, dx
-		jg	short loc_15A0
-		xor	bl, 0Ch
-		or	di, di
-		js	short loc_15A0
-		xor	bl, 8
-
-loc_15A0:
-		cmp	ax, si
-		jg	short loc_15B0
-		xor	bh, 3
-		cmp	si, ClipXR
-		jg	short loc_15B0
-		xor	bh, 2
-
-loc_15B0:
-		cmp	bp, dx
-		jg	short loc_15BE
-		xor	bh, 0Ch
-		or	bp, bp
-		js	short loc_15BE
-		xor	bh, 8
-
-loc_15BE:
-		test	bh, bl
-		jnz	short loc_1629
-		or	bx, bx
-		jz	short loc_15D6
-		call	cutline
-		jz	short loc_15D6
-		xchg	bh, bl
-		xchg	cx, si
-		xchg	di, bp
-		call	cutline
-		jnz	short loc_1629
-
-loc_15D6:
-		mov	es, ClipYT_seg
-		sub	si, cx
-		jnb	short loc_15E4
-		add	cx, si
-		neg	si
-		xchg	di, bp
-
-loc_15E4:
-		sub	bp, di
-		sbb	dx, dx
-		mov	bx, 50h	; 'P'
-		add	bx, dx
-		xor	bx, dx
-		add	bp, dx
-		xor	dx, bp
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		shr	ax, 3
-		add	di, ax
-		xor	ax, ax
-		cmp	si, dx
-		jg	short loc_167E
-		jz	short loc_163C
-		dec	bx
-		xchg	dx, si
-		div	si
-		mov	dx, 8000h
-		mov	bp, ax
-		and	cl, 7
-		mov	al, dh
-		shr	al, cl
-		lea	cx, [si+1]
-
-loc_1620:
-		stosb
-		add	dx, bp
-		jb	short loc_1630
-		add	di, bx
-		loop	loc_1620
-
-loc_1629:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1630:
-		ror	al, 1
-		adc	di, bx
-		loop	loc_1620
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_163C:
-		dec	bx
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		lea	cx, [si+1]
-		shr	cx, 1
-		jnb	short loc_1650
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_1650:
-		jcxz	short loc_1678
-		shr	cx, 1
-		jnb	short loc_1660
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_1660:
-		jcxz	short loc_1678
-
-loc_1662:
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		loop	loc_1662
-
-loc_1678:
-					; sub_1562:loc_1660j
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_167E:
-		and	di, 0FFFEh
-		or	dx, dx
-		jz	short loc_16D2
-		div	si
-		mov	dx, 8000h
-		mov	bp, dx
-		and	cl, 0Fh
-		shr	dx, cl
-		mov	cx, si
-		inc	cx
-		mov	si, ax
-		xor	ax, ax
-
-loc_1698:
-					; sub_1562+155j ...
-		or	ax, dx
-		ror	dx, 1
-		jb	short loc_16AE
-		add	bp, si
-		jb	short loc_16C0
-		loop	loc_1698
-		xchg	ah, al
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_16AE:
-		xchg	ah, al
-		stosw
-		xor	ax, ax
-		add	bp, si
-		jb	short loc_16C7
-		loop	loc_1698
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_16C0:
-		xchg	ah, al
-		mov	es:[di], ax
-		xor	ax, ax
-
-loc_16C7:
-		add	di, bx
-		loop	loc_1698
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_16D2:
-		mov	bx, cx
-		and	bx, 0Fh
-		lea	cx, [bx+si-10h]
-		shl	bx, 1
-		mov	ax, [bx+33Ch]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_16F4
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_16F4:
-		and	ax, [bx+33Eh]
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_1562	endp
-
+include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
@@ -13417,7 +13156,7 @@ loc_ECA1:
 		mov	bx, di
 		add	bx, bx
 		push	word ptr [bx+4340h]
-		call	sub_1562
+		call	grcg_line
 		inc	di
 
 loc_ECC7:
@@ -13435,7 +13174,7 @@ loc_ECC7:
 		push	word ptr [bx+433Eh]
 		push	word_25678
 		push	word_25680
-		call	sub_1562
+		call	grcg_line
 
 loc_ECF4:
 		mov	dx, 7Ch	; '|'
@@ -19073,7 +18812,7 @@ loc_118D2:
 		push	di
 		push	word ptr [bp-6]
 		push	ax
-		call	sub_1562
+		call	grcg_line
 
 loc_1192B:
 		inc	word ptr [bp-4]

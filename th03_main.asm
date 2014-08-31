@@ -117,268 +117,7 @@ loc_D2E:
 sub_CD2		endp
 
 include libs/master.lib/grcg_hline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DBE		proc far
-					; sub_CEE0+106P ...
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	bp
-		pop	si
-		pop	di
-		pop	cx
-		sub	sp, 12h
-		sti
-		mov	ax, ClipYT
-		sub	di, ax
-		sub	bp, ax
-		mov	ax, ClipXL
-		mov	dx, ClipYH
-		mov	bx, 505h
-		cmp	ax, cx
-		jg	short loc_DEE
-		xor	bl, 3
-		cmp	cx, ClipXR
-		jg	short loc_DEE
-		xor	bl, 2
-
-loc_DEE:
-		cmp	di, dx
-		jg	short loc_DFC
-		xor	bl, 0Ch
-		or	di, di
-		js	short loc_DFC
-		xor	bl, 8
-
-loc_DFC:
-		cmp	ax, si
-		jg	short loc_E0C
-		xor	bh, 3
-		cmp	si, ClipXR
-		jg	short loc_E0C
-		xor	bh, 2
-
-loc_E0C:
-		cmp	bp, dx
-		jg	short loc_E1A
-		xor	bh, 0Ch
-		or	bp, bp
-		js	short loc_E1A
-		xor	bh, 8
-
-loc_E1A:
-		test	bh, bl
-		jnz	short loc_E85
-		or	bx, bx
-		jz	short loc_E32
-		call	cutline
-		jz	short loc_E32
-		xchg	bh, bl
-		xchg	cx, si
-		xchg	di, bp
-		call	cutline
-		jnz	short loc_E85
-
-loc_E32:
-		mov	es, ClipYT_seg
-		sub	si, cx
-		jnb	short loc_E40
-		add	cx, si
-		neg	si
-		xchg	di, bp
-
-loc_E40:
-		sub	bp, di
-		sbb	dx, dx
-		mov	bx, 50h	; 'P'
-		add	bx, dx
-		xor	bx, dx
-		add	bp, dx
-		xor	dx, bp
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		shr	ax, 3
-		add	di, ax
-		xor	ax, ax
-		cmp	si, dx
-		jg	short loc_EDA
-		jz	short loc_E98
-		dec	bx
-		xchg	dx, si
-		div	si
-		mov	dx, 8000h
-		mov	bp, ax
-		and	cl, 7
-		mov	al, dh
-		shr	al, cl
-		lea	cx, [si+1]
-
-loc_E7C:
-		stosb
-		add	dx, bp
-		jb	short loc_E8C
-		add	di, bx
-		loop	loc_E7C
-
-loc_E85:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_E8C:
-		ror	al, 1
-		adc	di, bx
-		loop	loc_E7C
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_E98:
-		dec	bx
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		lea	cx, [si+1]
-		shr	cx, 1
-		jnb	short loc_EAC
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_EAC:
-		jcxz	short loc_ED4
-		shr	cx, 1
-		jnb	short loc_EBC
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_EBC:
-		jcxz	short loc_ED4
-
-loc_EBE:
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		loop	loc_EBE
-
-loc_ED4:
-					; sub_DBE:loc_EBCj
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_EDA:
-		and	di, 0FFFEh
-		or	dx, dx
-		jz	short loc_F2E
-		div	si
-		mov	dx, 8000h
-		mov	bp, dx
-		and	cl, 0Fh
-		shr	dx, cl
-		mov	cx, si
-		inc	cx
-		mov	si, ax
-		xor	ax, ax
-
-loc_EF4:
-		or	ax, dx
-		ror	dx, 1
-		jb	short loc_F0A
-		add	bp, si
-		jb	short loc_F1C
-		loop	loc_EF4
-		xchg	ah, al
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F0A:
-		xchg	ah, al
-		stosw
-		xor	ax, ax
-		add	bp, si
-		jb	short loc_F23
-		loop	loc_EF4
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F1C:
-		xchg	ah, al
-		mov	es:[di], ax
-		xor	ax, ax
-
-loc_F23:
-		add	di, bx
-		loop	loc_EF4
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_F2E:
-		mov	bx, cx
-		and	bx, 0Fh
-		lea	cx, [bx+si-10h]
-		shl	bx, 1
-		mov	ax, [bx+28Eh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_F50
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_F50:
-		and	ax, [bx+290h]
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_DBE		endp
-
+include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10594,22 +10333,22 @@ loc_CFC1:
 		push	[bp+var_12]
 		push	[bp+var_8]
 		push	[bp+var_10]
-		call	sub_DBE
+		call	grcg_line
 		push	[bp+var_8]
 		push	[bp+var_10]
 		push	[bp+var_6]
 		push	[bp+var_E]
-		call	sub_DBE
+		call	grcg_line
 		push	[bp+var_6]
 		push	[bp+var_E]
 		push	[bp+var_4]
 		push	[bp+var_C]
-		call	sub_DBE
+		call	grcg_line
 		push	[bp+var_4]
 		push	[bp+var_C]
 		push	[bp+var_A]
 		push	[bp+var_12]
-		call	sub_DBE
+		call	grcg_line
 
 loc_D00D:
 		inc	[bp+var_2]
@@ -18091,7 +17830,7 @@ loc_109D2:
 		push	di
 		push	[bp+var_4]
 		push	ax
-		call	sub_DBE
+		call	grcg_line
 
 loc_109FB:
 		call	grcg_off
@@ -34844,7 +34583,7 @@ loc_191E4:
 		push	8
 		push	[bp+var_8]
 		push	0C0h ; 'À'
-		call	sub_DBE
+		call	grcg_line
 
 loc_191FF:
 					; sub_1905A+10Fj

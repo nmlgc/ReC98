@@ -65,270 +65,7 @@ include libs/master.lib/grcg_circle_x.asm
 include libs/master.lib/grc_setclip.asm
 include libs/master.lib/grc_clip_polygon_n.asm
 include libs/master.lib/grcg_hline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1716	proc far
-		push	bp
-		push	si
-		push	di
-		cli
-		add	sp, 0Ah
-		pop	bp
-		pop	si
-		pop	di
-		pop	cx
-		sub	sp, 12h
-		sti
-		mov	ax, ClipYT
-		sub	di, ax
-		sub	bp, ax
-		mov	ax, ClipXL
-		mov	dx, ClipYH
-		mov	bx, 505h
-		cmp	ax, cx
-		jg	short loc_1746
-		xor	bl, 3
-		cmp	cx, ClipXR
-		jg	short loc_1746
-		xor	bl, 2
-
-loc_1746:
-		cmp	di, dx
-		jg	short loc_1754
-		xor	bl, 0Ch
-		or	di, di
-		js	short loc_1754
-		xor	bl, 8
-
-loc_1754:
-		cmp	ax, si
-		jg	short loc_1764
-		xor	bh, 3
-		cmp	si, ClipXR
-		jg	short loc_1764
-		xor	bh, 2
-
-loc_1764:
-		cmp	bp, dx
-		jg	short loc_1772
-		xor	bh, 0Ch
-		or	bp, bp
-		js	short loc_1772
-		xor	bh, 8
-
-loc_1772:
-		test	bh, bl
-		jnz	short loc_17DD
-		or	bx, bx
-		jz	short loc_178A
-		call	cutline
-		jz	short loc_178A
-		xchg	bh, bl
-		xchg	cx, si
-		xchg	di, bp
-		call	cutline
-		jnz	short loc_17DD
-
-loc_178A:
-		mov	es, ClipYT_seg
-		sub	si, cx
-		jnb	short loc_1798
-		add	cx, si
-		neg	si
-		xchg	di, bp
-
-loc_1798:
-		sub	bp, di
-		sbb	dx, dx
-		mov	bx, 50h	; 'P'
-		add	bx, dx
-		xor	bx, dx
-		add	bp, dx
-		xor	dx, bp
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		shr	ax, 3
-		add	di, ax
-		xor	ax, ax
-		cmp	si, dx
-		jg	short loc_1832
-		jz	short loc_17F0
-		dec	bx
-		xchg	dx, si
-		div	si
-		mov	dx, 8000h
-		mov	bp, ax
-		and	cl, 7
-		mov	al, dh
-		shr	al, cl
-		lea	cx, [si+1]
-
-loc_17D4:
-		stosb
-		add	dx, bp
-		jb	short loc_17E4
-		add	di, bx
-		loop	loc_17D4
-
-loc_17DD:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_17E4:
-		ror	al, 1
-		adc	di, bx
-		loop	loc_17D4
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_17F0:
-		dec	bx
-		and	cl, 7
-		mov	al, 80h	; '€'
-		shr	al, cl
-		lea	cx, [si+1]
-		shr	cx, 1
-		jnb	short loc_1804
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_1804:
-		jcxz	short loc_182C
-		shr	cx, 1
-		jnb	short loc_1814
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-
-loc_1814:
-		jcxz	short loc_182C
-
-loc_1816:
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		stosb
-		ror	al, 1
-		adc	di, bx
-		loop	loc_1816
-
-loc_182C:
-					; sub_1716:loc_1814j
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
-loc_1832:
-		and	di, 0FFFEh
-		or	dx, dx
-		jz	short loc_1886
-		div	si
-		mov	dx, 8000h
-		mov	bp, dx
-		and	cl, 0Fh
-		shr	dx, cl
-		mov	cx, si
-		inc	cx
-		mov	si, ax
-		xor	ax, ax
-
-loc_184C:
-					; sub_1716+155j ...
-		or	ax, dx
-		ror	dx, 1
-		jb	short loc_1862
-		add	bp, si
-		jb	short loc_1874
-		loop	loc_184C
-		xchg	ah, al
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1862:
-		xchg	ah, al
-		stosw
-		xor	ax, ax
-		add	bp, si
-		jb	short loc_187B
-		loop	loc_184C
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1874:
-		xchg	ah, al
-		mov	es:[di], ax
-		xor	ax, ax
-
-loc_187B:
-		add	di, bx
-		loop	loc_184C
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1886:
-		mov	bx, cx
-		and	bx, 0Fh
-		lea	cx, [bx+si-10h]
-		shl	bx, 1
-		mov	ax, [bx+38Eh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		sar	cx, 4
-		js	short loc_18A8
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_18A8:
-		and	ax, [bx+390h]
-		stosw
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_1716	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_line.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -366,8 +103,7 @@ arg_2		= dword	ptr  8
 		mov	di, word ptr [bp+arg_2]
 		push	word ptr es:[di]
 		push	word ptr es:[di+2]
-		push	cs
-		call	near ptr sub_1716
+		call	grcg_line
 
 loc_18EA:
 		pop	di
@@ -9689,7 +9425,7 @@ arg_2		= word ptr  6
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	ax
-		call	sub_1716
+		call	grcg_line
 		pop	di
 		pop	si
 		leave
@@ -10524,17 +10260,17 @@ loc_DB58:
 		push	word ptr dword_252DE+2
 		push	word_24490
 		push	word_24492
-		call	sub_1716
+		call	grcg_line
 		push	word_24490
 		push	word_24492
 		push	word_24494
 		push	word_24496
-		call	sub_1716
+		call	grcg_line
 		push	word ptr dword_252DE
 		push	word ptr dword_252DE+2
 		push	word_24494
 		push	word_24496
-		call	sub_1716
+		call	grcg_line
 		inc	[bp+var_2]
 		add	si, 2Ah	; '*'
 
@@ -15493,7 +15229,7 @@ loc_FE11:
 		push	word ptr dword_252DE+2
 		push	word_2C99E
 		push	ax
-		call	sub_1716
+		call	grcg_line
 		jmp	loc_FF61
 ; ---------------------------------------------------------------------------
 
@@ -15563,7 +15299,7 @@ loc_FEC8:
 		push	word ptr dword_252DE+2
 		push	word_2C99E
 		push	ax
-		call	sub_1716
+		call	grcg_line
 		push	48FEh
 		push	word ptr [si+2]
 		push	word ptr [si+4]
