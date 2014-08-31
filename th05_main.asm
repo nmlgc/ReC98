@@ -1314,30 +1314,7 @@ include libs/master.lib/ems_free.asm
 include libs/master.lib/ems_movememoryregion.asm
 include libs/master.lib/ems_setname.asm
 include libs/master.lib/ems_write.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_40CE	proc far
-		mov	ah, 42h	; 'B'
-		int	67h		;  - LIM EMS - GET NUMBER OF PAGES
-					; Return: AH = 00h function successful,	BX = number of unallocated pages
-					; DX = total number of pages
-					; AH = error code
-		xor	dx, dx
-		cmp	ah, 0
-		mov	ax, dx
-		jnz	short locret_40E5
-		mov	dx, bx
-		shr	dx, 1
-		rcr	ax, 1
-		shr	dx, 1
-		rcr	ax, 1
-
-locret_40E5:
-		retf
-sub_40CE	endp
-
+include libs/master.lib/ems_space.asm
 include libs/master.lib/super_put_8.asm
 		db 0
 
@@ -5794,7 +5771,7 @@ loc_B84E:
 		call	ems_exist
 		or	ax, ax
 		jz	short loc_B8C0
-		call	sub_40CE
+		call	ems_space
 		push	dx
 		push	ax
 		pop	eax
