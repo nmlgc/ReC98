@@ -2110,267 +2110,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_clean.asm
 include libs/master.lib/super_roll_put_1plane.asm
 include libs/master.lib/super_roll_put.asm
-; ---------------------------------------------------------------------------
-
-loc_335C:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_3362:
-					; sub_158DC+FP	...
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+6]
-		shl	bx, 1
-		mov	ax, [bx+1ADAh]
-		mov	cs:word_3519, ax
-		mov	bx, [bx+1EDAh]
-		xor	ax, ax
-		xchg	al, bh
-		mov	word_1FD4A, ax
-		mov	cx, ax
-		shl	cx, 3
-		add	cx, [bp+0Ah]
-		dec	cx
-		imul	bx
-		mov	cs:word_3552, ax
-		cmp	cx, ClipXR
-		jg	short loc_33B6
-		mov	dx, ClipXL
-		cmp	[bp+0Ah], dx
-		jl	short loc_33B6
-		mov	di, [bp+8]
-		cmp	ClipYT, di
-		jg	short loc_33B6
-		mov	ax, bx
-		add	ax, di
-		cmp	ax, ClipYB
-		jge	short loc_33B6
-		pop	di
-		pop	si
-		pop	bp
-		jmp	near ptr super_put
-; ---------------------------------------------------------------------------
-
-loc_33B6:
-		cmp	cx, ClipXL
-		jl	short loc_335C
-		mov	dx, ClipXR
-		cmp	[bp+0Ah], dx
-		jg	short loc_335C
-		mov	di, [bp+8]
-		cmp	ClipYB, di
-		jl	short loc_335C
-		mov	ax, bx
-		add	ax, di
-		cmp	ax, ClipYT
-		jle	short loc_335C
-		cmp	cx, dx
-		jle	short loc_33DE
-		mov	cx, dx
-
-loc_33DE:
-		mov	al, [bp+0Ah]
-		and	al, 7
-		mov	cs:byte_345B, al
-		xor	si, si
-		mov	ax, ClipXL
-		cmp	[bp+0Ah], ax
-		jge	short loc_3403
-		mov	dx, ax
-		shr	dx, 3
-		add	si, dx
-		mov	dx, [bp+0Ah]
-		sar	dx, 3
-		sub	si, dx
-		mov	[bp+0Ah], ax
-
-loc_3403:
-		sub	di, ClipYT
-		jns	short loc_3414
-		add	bx, di
-		mov	ax, word_1FD4A
-		imul	di
-		sub	si, ax
-		xor	di, di
-
-loc_3414:
-		lea	ax, [bx+di-1]
-		sub	ax, ClipYH
-		jle	short loc_341F
-		sub	bx, ax
-
-loc_341F:
-		mov	cs:word_351D, bx
-		mov	ax, [bp+0Ah]
-		shr	ax, 3
-		imul	bx, di,	50h
-		add	bx, ax
-		mov	cs:word_3520, bx
-		mov	bx, cx
-		mov	dx, 80FFh
-		and	cl, 7
-		sar	dh, cl
-		mov	cl, [bp+0Ah]
-		and	cl, 7
-		shr	dl, cl
-		mov	cx, ax
-		shr	bx, 3
-		sub	bx, cx
-		jnz	short loc_3451
-		and	dl, dh
-
-loc_3451:
-		mov	cs:word_3523, bx
-		mov	es, ClipYT_seg
-; ---------------------------------------------------------------------------
-		assume es:nothing
-		db 0B1h
-byte_345B	db 12h
-; ---------------------------------------------------------------------------
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	al, 0
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_3516
-		mov	al, 0CEh ; 'Î'
-		out	7Ch, al
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_3516
-		mov	ax, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_3516
-		mov	ax, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_3516
-		mov	ax, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_3516
-		mov	al, 0
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_34A0	proc near
-		test	si, si
-		jz	short loc_34A7
-
-loc_34A4:
-		mov	ah, [si-1]
-
-loc_34A7:
-		mov	al, [si]
-		inc	si
-		mov	bx, ax
-		shr	bx, cl
-		and	bl, dl
-		mov	es:[di], bl
-		inc	di
-		mov	ch, 12h
-		dec	ch
-		js	short loc_34DA
-		jz	short loc_34CD
-
-loc_34BC:
-		mov	ah, al
-		mov	al, [si]
-		inc	si
-		mov	bx, ax
-		shr	bx, cl
-		mov	es:[di], bl
-		inc	di
-		dec	ch
-		jnz	short loc_34BC
-
-loc_34CD:
-		mov	ah, al
-		mov	al, [si]
-		inc	si
-		shr	ax, cl
-		and	al, dh
-		mov	es:[di], al
-		inc	di
-
-loc_34DA:
-		add	si, 1234h
-		add	di, 1234h
-		dec	bp
-		jnz	short loc_34A4
-		retn
-sub_34A0	endp
-
-; ---------------------------------------------------------------------------
-
-loc_34E6:
-		mov	al, [si]
-		inc	si
-		and	al, dl
-		mov	es:[di], al
-		inc	di
-		cmp	bx, 1
-		jl	short loc_3503
-		lea	cx, [bx-1]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		lodsb
-		and	al, dh
-		stosb
-
-loc_3503:
-		mov	al, 0
-		xchg	al, ah
-		add	si, ax
-		sub	si, bx
-		mov	ah, al
-		add	di, 4Fh	; 'O'
-		sub	di, bx
-		dec	bp
-		jnz	short loc_34E6
-		retn
-; ---------------------------------------------------------------------------
-
-loc_3516:
-		push	si
-		push	ds
-; ---------------------------------------------------------------------------
-		db 0B8h
-word_3519	dw 1234h
-		db 50h,	0BDh
-word_351D	dw 1234h
-		db 0BFh
-word_3520	dw 1234h
-		db 0BBh
-word_3523	dw 1234h
-		db 0A1h, 0DAh, 22h, 48h, 80h, 0F9h, 0, 75h, 8, 8Ah, 0E0h
-		db 1Fh,	68h, 4Eh, 35h, 0EBh, 0B0h, 2Eh,	88h, 1Eh, 0B5h
-		db 34h,	2Bh, 0C3h, 2Eh,	0A3h, 0DCh, 34h, 0B8h, 4Fh, 0
-		db 2Bh,	0C3h, 2Eh, 0A3h, 0E0h, 34h, 1Fh, 0E8h, 52h, 0FFh
-		db 1Fh,	5Eh, 81h, 0C6h
-word_3552	dw 1234h
-; ---------------------------------------------------------------------------
-		retn
-; ---------------------------------------------------------------------------
-		db 0
-
+include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28922,7 +28662,7 @@ loc_156F7:
 		mov	al, es:[bx+8]
 		mov	ah, 0
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		jmp	loc_158CD
 ; ---------------------------------------------------------------------------
 
@@ -29106,7 +28846,7 @@ sub_158DC	proc near
 		push	word_254E6
 		push	word_254E8
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	ax, word_254E6
 		add	ax, 40h	; '@'
 		push	ax
@@ -29114,7 +28854,7 @@ sub_158DC	proc near
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		pop	bp
 		retn
 sub_158DC	endp
@@ -33502,7 +33242,7 @@ loc_17E50:
 		and	ax, 3
 		add	ax, 89h	; '‰'
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 
 loc_17E86:
 		inc	si
@@ -33729,7 +33469,7 @@ loc_18033:
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -33745,7 +33485,7 @@ loc_18033:
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -33761,7 +33501,7 @@ loc_18033:
 		mov	ax, word_2064E
 		add	ax, 2
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 
 loc_180A8:
 		pop	di
@@ -36602,7 +36342,7 @@ sub_199B3	proc far
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36618,7 +36358,7 @@ sub_199B3	proc far
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36634,7 +36374,7 @@ sub_199B3	proc far
 		mov	ax, word_2064E
 		add	ax, 2
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		push	word_205F6
 		push	word_205F8
 		push	0
@@ -36807,7 +36547,7 @@ sub_19C8D	proc near
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36823,7 +36563,7 @@ sub_19C8D	proc near
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36839,7 +36579,7 @@ sub_19C8D	proc near
 		mov	ax, word_2064E
 		add	ax, 2
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		call	sub_12DE0
 		call	sub_133B8
 		les	bx, dword_2026C
@@ -36903,7 +36643,7 @@ sub_19D96	proc far
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36919,7 +36659,7 @@ sub_19D96	proc far
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -36935,7 +36675,7 @@ sub_19D96	proc far
 		mov	ax, word_2064E
 		add	ax, 2
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		call	sub_13439
 		add	dword_1E598, 186A0h
 		les	bx, dword_2026C
@@ -38131,7 +37871,7 @@ sub_1A7D5	proc far
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	ax, word_26D76
 		add	ax, 30h	; '0'
 		push	ax
@@ -38139,7 +37879,7 @@ sub_1A7D5	proc far
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		push	word_205F6
 		push	word_205F8
 		push	0
@@ -38187,7 +37927,7 @@ sub_1A7D5	proc far
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	ax, word_26D76
 		add	ax, 30h	; '0'
 		push	ax
@@ -38195,7 +37935,7 @@ sub_1A7D5	proc far
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		push	word_205F6
 		push	word_205F8
 		push	0
@@ -38587,7 +38327,7 @@ loc_1AD16:
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	ax, word_26D76
 		add	ax, 30h	; '0'
 		push	ax
@@ -38595,7 +38335,7 @@ loc_1AD16:
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 		jmp	short loc_1AD64
 ; ---------------------------------------------------------------------------
 
@@ -38735,7 +38475,7 @@ loc_1AE74:
 		les	bx, [bx-6D0Ah]
 		push	word ptr es:[bx]
 		push	di
-		call	far ptr	loc_3362
+		call	super_put_rect
 		xor	ax, ax
 
 loc_1AE94:
@@ -38918,7 +38658,7 @@ loc_1AFFB:
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E
-		call	far ptr	loc_3362
+		call	super_put_rect
 		mov	ax, word_26D76
 		add	ax, 30h	; '0'
 		push	ax
@@ -38926,7 +38666,7 @@ loc_1AFFB:
 		mov	ax, word_2064E
 		inc	ax
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 
 loc_1B021:
 		pop	di
@@ -39096,7 +38836,7 @@ loc_1B16F:
 		push	word ptr es:[bx]
 		lea	ax, [si+8Ah]
 		push	ax
-		call	far ptr	loc_3362
+		call	super_put_rect
 
 loc_1B191:
 					; sub_1B025+148j
@@ -45714,7 +45454,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-word_1FD4A	dw ?
+include libs/master.lib/super_put_rect[bss].asm
 dword_1FD4C	dd ?
 dword_1FD50	dd ?
 dword_1FD54	dd ?

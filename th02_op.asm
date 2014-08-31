@@ -1732,263 +1732,7 @@ include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
-
-loc_2BA4:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_2BAA:
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+6]
-		shl	bx, 1
-		mov	ax, [bx+133Ah]
-		mov	cs:word_2D61, ax
-		mov	bx, [bx+173Ah]
-		xor	ax, ax
-		xchg	al, bh
-		mov	word_F16A, ax
-		mov	cx, ax
-		shl	cx, 3
-		add	cx, [bp+0Ah]
-		dec	cx
-		imul	bx
-		mov	cs:word_2D9A, ax
-		cmp	cx, ClipXR
-		jg	short loc_2BFE
-		mov	dx, ClipXL
-		cmp	[bp+0Ah], dx
-		jl	short loc_2BFE
-		mov	di, [bp+8]
-		cmp	ClipYT, di
-		jg	short loc_2BFE
-		mov	ax, bx
-		add	ax, di
-		cmp	ax, ClipYB
-		jge	short loc_2BFE
-		pop	di
-		pop	si
-		pop	bp
-		jmp	super_put
-; ---------------------------------------------------------------------------
-
-loc_2BFE:
-		cmp	cx, ClipXL
-		jl	short loc_2BA4
-		mov	dx, ClipXR
-		cmp	[bp+0Ah], dx
-		jg	short loc_2BA4
-		mov	di, [bp+8]
-		cmp	ClipYB, di
-		jl	short loc_2BA4
-		mov	ax, bx
-		add	ax, di
-		cmp	ax, ClipYT
-		jle	short loc_2BA4
-		cmp	cx, dx
-		jle	short loc_2C26
-		mov	cx, dx
-
-loc_2C26:
-		mov	al, [bp+0Ah]
-		and	al, 7
-		mov	cs:byte_2CA3, al
-		xor	si, si
-		mov	ax, ClipXL
-		cmp	[bp+0Ah], ax
-		jge	short loc_2C4B
-		mov	dx, ax
-		shr	dx, 3
-		add	si, dx
-		mov	dx, [bp+0Ah]
-		sar	dx, 3
-		sub	si, dx
-		mov	[bp+0Ah], ax
-
-loc_2C4B:
-		sub	di, ClipYT
-		jns	short loc_2C5C
-		add	bx, di
-		mov	ax, word_F16A
-		imul	di
-		sub	si, ax
-		xor	di, di
-
-loc_2C5C:
-		lea	ax, [bx+di-1]
-		sub	ax, ClipYH
-		jle	short loc_2C67
-		sub	bx, ax
-
-loc_2C67:
-		mov	cs:word_2D65, bx
-		mov	ax, [bp+0Ah]
-		shr	ax, 3
-		imul	bx, di,	50h
-		add	bx, ax
-		mov	cs:word_2D68, bx
-		mov	bx, cx
-		mov	dx, 80FFh
-		and	cl, 7
-		sar	dh, cl
-		mov	cl, [bp+0Ah]
-		and	cl, 7
-		shr	dl, cl
-		mov	cx, ax
-		shr	bx, 3
-		sub	bx, cx
-		jnz	short loc_2C99
-		and	dl, dh
-
-loc_2C99:
-		mov	cs:word_2D6B, bx
-		mov	es, ClipYT_seg
-; ---------------------------------------------------------------------------
-		db 0B1h
-byte_2CA3	db 12h
-; ---------------------------------------------------------------------------
-		mov	al, 0C0h ; 'À'
-		out	7Ch, al
-		mov	al, 0
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_2D5E
-		mov	al, 0CEh ; 'Î'
-		out	7Ch, al
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	loc_2D5E
-		mov	ax, 0CDh ; 'Í'
-		out	7Ch, al
-		call	loc_2D5E
-		mov	ax, 0CBh ; 'Ë'
-		out	7Ch, al
-		call	loc_2D5E
-		mov	ax, 0C7h ; 'Ç'
-		out	7Ch, al
-		call	loc_2D5E
-		mov	al, 0
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2CE8	proc near
-		test	si, si
-		jz	short loc_2CEF
-
-loc_2CEC:
-		mov	ah, [si-1]
-
-loc_2CEF:
-		mov	al, [si]
-		inc	si
-		mov	bx, ax
-		shr	bx, cl
-		and	bl, dl
-		mov	es:[di], bl
-		inc	di
-		mov	ch, 12h
-		dec	ch
-		js	short loc_2D22
-		jz	short loc_2D15
-
-loc_2D04:
-		mov	ah, al
-		mov	al, [si]
-		inc	si
-		mov	bx, ax
-		shr	bx, cl
-		mov	es:[di], bl
-		inc	di
-		dec	ch
-		jnz	short loc_2D04
-
-loc_2D15:
-		mov	ah, al
-		mov	al, [si]
-		inc	si
-		shr	ax, cl
-		and	al, dh
-		mov	es:[di], al
-		inc	di
-
-loc_2D22:
-		add	si, 1234h
-		add	di, 1234h
-		dec	bp
-		jnz	short loc_2CEC
-		retn
-sub_2CE8	endp
-
-; ---------------------------------------------------------------------------
-
-loc_2D2E:
-		mov	al, [si]
-		inc	si
-		and	al, dl
-		mov	es:[di], al
-		inc	di
-		cmp	bx, 1
-		jl	short loc_2D4B
-		lea	cx, [bx-1]
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		lodsb
-		and	al, dh
-		stosb
-
-loc_2D4B:
-		mov	al, 0
-		xchg	al, ah
-		add	si, ax
-		sub	si, bx
-		mov	ah, al
-		add	di, 4Fh	; 'O'
-		sub	di, bx
-		dec	bp
-		jnz	short loc_2D2E
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2D5E:
-		push	si
-		push	ds
-; ---------------------------------------------------------------------------
-		db 0B8h
-word_2D61	dw 1234h
-		db 50h,	0BDh
-word_2D65	dw 1234h
-		db 0BFh
-word_2D68	dw 1234h
-		db 0BBh
-word_2D6B	dw 1234h
-		db 0A1h, 3Ah, 1Bh, 48h,	80h, 0F9h, 0, 75h, 8, 8Ah, 0E0h
-		db 1Fh,	68h, 96h, 2Dh, 0EBh, 0B0h, 2Eh,	88h, 1Eh, 0FDh
-		db 2Ch,	2Bh, 0C3h, 2Eh,	0A3h, 24h, 2Dh,	0B8h, 4Fh, 0, 2Bh
-		db 0C3h, 2Eh, 0A3h, 28h, 2Dh, 1Fh, 0E8h, 52h, 0FFh, 1Fh
-		db 5Eh,	81h, 0C6h
-word_2D9A	dw 1234h
-; ---------------------------------------------------------------------------
-		retn
-; ---------------------------------------------------------------------------
-		db 0
+include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 dword_2F50	dd 0
 byte_2F54	db 0, 90h
@@ -8719,13 +8463,13 @@ loc_B708:
 		push	[bp+var_2]
 		push	di
 		push	0
-		call	far ptr	loc_2BAA
+		call	super_put_rect
 		mov	ax, [bp+var_2]
 		add	ax, 40h	; '@'
 		push	ax
 		push	di
 		push	1
-		call	far ptr	loc_2BAA
+		call	super_put_rect
 		inc	si
 
 loc_B723:
@@ -8761,13 +8505,13 @@ loc_B75A:
 		push	[bp+var_2]
 		push	di
 		push	0
-		call	far ptr	loc_2BAA
+		call	super_put_rect
 		mov	ax, [bp+var_2]
 		add	ax, 40h	; '@'
 		push	ax
 		push	di
 		push	1
-		call	far ptr	loc_2BAA
+		call	super_put_rect
 		inc	si
 
 loc_B775:
@@ -12224,7 +11968,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-word_F16A	dw ?
+include libs/master.lib/super_put_rect[bss].asm
 dword_F16C	dd ?
 dword_F170	dd ?
 dword_F174	dd ?
