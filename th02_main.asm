@@ -65,7 +65,7 @@ include libs/master.lib/grcg_circlefill.asm
 loc_CB6:
 		pop	si
 		pop	bp
-		jmp	loc_E2E
+		jmp	grcg_circle_x
 ; ---------------------------------------------------------------------------
 
 loc_CBB:
@@ -285,136 +285,7 @@ sub_D5A		endp
 ; ---------------------------------------------------------------------------
 		db 0
 ; ---------------------------------------------------------------------------
-
-loc_E2E:
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	dx, [bp+6]
-		test	dx, dx
-		jz	short loc_E68
-		mov	al, byte ptr graph_VramZoom
-		mov	byte ptr cs:loc_E87+2, al
-		mov	byte ptr cs:loc_ED1+2, al
-		mov	ax, [bp+8]
-		sub	ax, ClipYT
-		mov	bx, [bp+0Ah]
-		mov	ds, ClipYT_seg
-		mov	word ptr cs:loc_E82+1, bx
-		mov	word ptr cs:loc_E8A+1, ax
-		mov	word ptr cs:loc_ED4+1, ax
-		xor	ax, ax
-		mov	bp, dx
-		jmp	short loc_E81
-; ---------------------------------------------------------------------------
-		nop
-
-loc_E68:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-		nop
-
-loc_E70:
-		stc
-		sbb	bp, ax
-		sub	bp, ax
-		jns	short loc_E7C
-		dec	dx
-		add	bp, dx
-		add	bp, dx
-
-loc_E7C:
-		inc	ax
-		cmp	dx, ax
-		jl	short loc_E68
-
-loc_E81:
-		push	bp
-
-loc_E82:
-		mov	bp, 1234h
-		mov	di, ax
-
-loc_E87:
-		shr	di, 9
-
-loc_E8A:
-		mov	bx, 1234h
-		mov	si, bx
-		sub	si, di
-		add	di, bx
-		mov	bx, si
-		shl	si, 2
-		add	si, bx
-		shl	si, 4
-		mov	bx, di
-		shl	di, 2
-		add	di, bx
-		shl	di, 4
-		mov	bx, bp
-		sub	bx, dx
-		mov	cx, bx
-		shr	bx, 3
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	[bx+di], ch
-		mov	[bx+si], ch
-		mov	bx, bp
-		add	bx, dx
-		mov	cx, bx
-		shr	bx, 3
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	[bx+di], ch
-		mov	[bx+si], ch
-		mov	di, dx
-
-loc_ED1:
-		shr	di, 9
-
-loc_ED4:
-		mov	bx, 1234h
-		mov	si, bx
-		sub	si, di
-		add	di, bx
-		mov	bx, si
-		shl	si, 2
-		add	si, bx
-		shl	si, 4
-		mov	bx, di
-		shl	di, 2
-		add	di, bx
-		shl	di, 4
-		mov	bx, bp
-		sub	bx, ax
-		mov	cx, bx
-		shr	bx, 3
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	[bx+di], ch
-		mov	[bx+si], ch
-		mov	bx, bp
-		add	bx, ax
-		mov	cx, bx
-		shr	bx, 3
-		and	cl, 7
-		mov	ch, 80h	; '€'
-		shr	ch, cl
-		mov	[bx+di], ch
-		mov	[bx+si], ch
-		pop	bp
-		jmp	loc_E70
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/grcg_circle_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
