@@ -676,144 +676,7 @@ loc_37FA:
 sub_3708	endp
 
 include libs/master.lib/super_convert_tiny.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_38BC	proc far
-					; sub_13C0C+6BP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_6]
-		mov	word ptr cs:loc_3982+1,	si
-		mov	di, [bp+arg_4]
-		mov	ax, [bp+arg_0]
-		mov	word ptr cs:loc_3945+2,	ax
-		mov	word ptr cs:loc_3985+2,	ax
-		dec	ax
-		mov	word ptr cs:loc_3953+1,	ax
-		mov	word ptr cs:loc_3959+1,	ax
-		mov	bx, [bp+arg_2]
-		shl	bx, 1
-		mov	cx, [bx+1EDAh]
-		mov	byte ptr cs:loc_3980+1,	ch
-		mov	es, word ptr [bx+1ADAh]
-		mov	ax, cx
-		xor	ah, ah
-		mul	ch
-		mov	bp, ax
-		mov	word ptr cs:loc_3917+2,	ax
-		mov	word ptr cs:loc_391F+2,	ax
-		mov	word ptr cs:loc_3927+2,	ax
-		shl	ax, 1
-		add	ax, bp
-		dec	ax
-		mov	word ptr cs:loc_3978+2,	ax
-		jmp	short $+2
-
-loc_3911:
-		mov	ah, 8
-		mov	bh, es:[bp+0]
-
-loc_3917:
-		add	bp, 1111h
-		mov	bl, es:[bp+0]
-
-loc_391F:
-		add	bp, 1111h
-		mov	dh, es:[bp+0]
-
-loc_3927:
-		add	bp, 1111h
-		mov	dl, es:[bp+0]
-
-loc_392F:
-		xor	al, al
-		shl	dl, 1
-		rcl	al, 1
-		shl	dh, 1
-		rcl	al, 1
-		shl	bl, 1
-		rcl	al, 1
-		shl	bh, 1
-		rcl	al, 1
-		or	al, al
-		jnz	short loc_394C
-
-loc_3945:
-		add	si, 1111h
-		jmp	short loc_3974
-; ---------------------------------------------------------------------------
-		nop
-
-loc_394C:
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	si
-		push	di
-
-loc_3953:
-		mov	bx, 1111h
-		add	si, bx
-		push	si
-
-loc_3959:
-		mov	bx, 1111h
-		add	bx, di
-		push	bx
-		mov	bx, 0C0h ; 'À'
-		push	bx
-		xor	ah, ah
-		push	ax
-		call	grcg_setcolor
-		call	grcg_boxfill
-		inc	si
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-
-loc_3974:
-		dec	ah
-		jnz	short loc_392F
-
-loc_3978:
-		sub	bp, 1111h
-		dec	ch
-		jnz	short loc_3911
-
-loc_3980:
-		mov	ch, 11h
-
-loc_3982:
-		mov	si, 1111h
-
-loc_3985:
-		add	di, 1111h
-		dec	cl
-		jnz	short loc_3911
-		call	grcg_off
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_38BC	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_zoom.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23237,7 +23100,7 @@ loc_1389C:
 		push	si
 		push	di
 		push	3
-		call	sub_38BC
+		call	super_zoom
 
 loc_138AF:
 		pop	di
@@ -23668,7 +23531,7 @@ loc_13C69:
 		push	ax
 		push	si
 		push	2
-		call	sub_38BC
+		call	super_zoom
 
 loc_13C7C:
 		mov	ax, word_24E7C
@@ -24322,7 +24185,7 @@ loc_141F0:
 		push	si
 		push	di
 		push	2
-		call	sub_38BC
+		call	super_zoom
 
 loc_141FF:
 		pop	di
@@ -24764,7 +24627,7 @@ loc_145CC:
 		push	si
 		push	di
 		push	2
-		call	sub_38BC
+		call	super_zoom
 
 loc_145DB:
 		xor	ax, ax
@@ -35237,7 +35100,7 @@ loc_1A033:
 		push	si
 		push	di
 		push	2
-		call	sub_38BC
+		call	super_zoom
 
 loc_1A040:
 		pop	di
@@ -36647,7 +36510,7 @@ loc_1AD54:
 		push	word_26D78
 		push	si
 		push	3
-		call	sub_38BC
+		call	super_zoom
 
 loc_1AD64:
 		cmp	word_1EE9A, 64h	; 'd'

@@ -512,77 +512,7 @@ include libs/master.lib/super_roll_put_1plane.asm
 include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
-
-loc_31A2:
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+0Ch]
-		mov	cs:word_3269, si
-		mov	di, [bp+0Ah]
-		mov	ax, [bp+6]
-		mov	cs:word_322D, ax
-		mov	cs:word_326D, ax
-		dec	ax
-		mov	cs:word_323A, ax
-		mov	cs:word_3240, ax
-		mov	bx, [bp+8]
-		shl	bx, 1
-		mov	cx, [bx+2EC4h]
-		mov	cs:byte_3267, ch
-		mov	es, word ptr [bx+2AC4h]
-		mov	ax, cx
-		xor	ah, ah
-		mul	ch
-		mov	bp, ax
-		mov	cs:word_31FF, ax
-		mov	cs:word_3207, ax
-		mov	cs:word_320F, ax
-		shl	ax, 1
-		add	ax, bp
-		dec	ax
-		mov	cs:word_3260, ax
-		jmp	short $+2
-
-loc_31F7:
-		mov	ah, 8
-		mov	bh, es:[bp+0]
-; ---------------------------------------------------------------------------
-		db 81h,	0C5h
-word_31FF	dw 1111h
-		db 26h,	8Ah, 5Eh, 0, 81h, 0C5h
-word_3207	dw 1111h
-		db 26h,	8Ah, 76h, 0, 81h, 0C5h
-word_320F	dw 1111h
-		db 26h,	8Ah, 56h, 0, 32h, 0C0h,	0D0h, 0E2h, 3 dup(0D0h)
-		db 0E6h, 3 dup(0D0h), 0E3h, 3 dup(0D0h), 0E7h, 2 dup(0D0h)
-		db 0Ah,	0C0h, 75h, 7, 81h, 0C6h
-word_322D	dw 1111h
-		db 0EBh, 29h, 90h, 50h,	53h, 51h, 52h, 6, 56h, 57h, 0BBh
-word_323A	dw 1111h
-		db 3, 0F3h, 56h, 0BBh
-word_3240	dw 1111h
-		db 3, 0DFh, 53h, 0BBh, 0C0h, 0,	53h, 32h, 0E4h,	50h, 0Eh
-		db 0E8h, 0F4h, 0E4h, 0Eh, 0E8h,	28h, 0DEh, 46h,	7, 5Ah
-		db 59h,	5Bh, 58h, 0FEh,	0CCh, 75h, 0B7h, 81h, 0EDh
-word_3260	dw 1111h
-		db 0FEh, 0CDh, 75h, 91h, 0B5h
-byte_3267	db 11h
-		db 0BEh
-word_3269	dw 1111h
-		db 81h,	0C7h
-word_326D	dw 1111h
-; ---------------------------------------------------------------------------
-		dec	cl
-		jnz	short loc_31F7
-		call	grcg_off
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_zoom.asm
 ; ---------------------------------------------------------------------------
 dword_327E	dd 0
 byte_3282	db 0
@@ -12521,7 +12451,7 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		push	3
-		call	far ptr	loc_31A2
+		call	super_zoom
 		jmp	loc_EA5B
 ; ---------------------------------------------------------------------------
 
@@ -19091,7 +19021,7 @@ sub_11B44	endp
 		mov	ah, 0
 		push	ax
 		push	3
-		call	far ptr	loc_31A2
+		call	super_zoom
 		jmp	loc_11D92
 ; ---------------------------------------------------------------------------
 
@@ -21750,7 +21680,7 @@ loc_1306D:
 		mov	ah, 0
 		push	ax
 		push	3
-		call	far ptr	loc_31A2
+		call	super_zoom
 
 loc_13083:
 		call	sub_D88C
