@@ -1399,48 +1399,7 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1FA2	proc far
-					; sub_A2FB+112P ...
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short locret_1FE1
-		mov	bx, ax
-		mov	dx, 12F8h
-		mov	cx, 30h	; '0'
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		sbb	cx, cx
-		push	bx
-		mov	bx, 2Fh	; '/'
-
-loc_1FC5:
-		mov	al, [bx+12F8h]
-		shl	al, 4
-		or	[bx+12F8h], al
-		dec	bx
-		jns	short loc_1FC5
-		pop	bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jcxz	short locret_1FE1
-		mov	ax, 0FFF3h
-		stc
-
-locret_1FE1:
-		retf	4
-sub_1FA2	endp
-
+include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -5105,7 +5064,7 @@ loc_9F16:
 		mov	byte ptr es:[bx+27h], 0
 		push	ds
 		push	offset aOp_rgb	; "op.rgb"
-		call	sub_1FA2
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	6
 		call	palette_white_in
@@ -5689,7 +5648,7 @@ loc_A3BC:
 		call	graph_pi_free
 		push	ds
 		push	offset aOp_rgb	; "op.rgb"
-		call	sub_1FA2
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	0
 		call	graph_copy_page
@@ -8451,7 +8410,7 @@ var_1		= byte ptr -1
 loc_B7B7:
 		push	ds
 		push	offset aOp_h_rgb ; "op_h.rgb"
-		call	sub_1FA2
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	80h ; '€'
 		push	60h ; '`'
@@ -10705,7 +10664,7 @@ loc_C978:
 		call	graph_pi_free
 		push	ds
 		push	offset aOp_rgb_0 ; "op.rgb"
-		call	sub_1FA2
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	0
 		call	graph_copy_page

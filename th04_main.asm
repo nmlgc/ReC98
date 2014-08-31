@@ -1155,47 +1155,7 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_219C	proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short locret_21DB
-		mov	bx, ax
-		mov	dx, 2A82h
-		mov	cx, 30h	; '0'
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		sbb	cx, cx
-		push	bx
-		mov	bx, 2Fh	; '/'
-
-loc_21BF:
-		mov	al, [bx+2A82h]
-		shl	al, 4
-		or	[bx+2A82h], al
-		dec	bx
-		jns	short loc_21BF
-		pop	bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jcxz	short locret_21DB
-		mov	ax, 0FFF3h
-		stc
-
-locret_21DB:
-		retf	4
-sub_219C	endp
-
+include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 
@@ -6234,7 +6194,7 @@ loc_AF4A:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	ds
 		push	offset aEye_rgb	; "eye.rgb"
-		call	sub_219C
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		mov	PaletteTone, 0
 		call	far ptr	palette_show

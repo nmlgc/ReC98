@@ -973,47 +973,7 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1D3C	proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short locret_1D7B
-		mov	bx, ax
-		mov	dx, 11B8h
-		mov	cx, 30h	; '0'
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		sbb	cx, cx
-		push	bx
-		mov	bx, 2Fh	; '/'
-
-loc_1D5F:
-		mov	al, [bx+11B8h]
-		shl	al, 4
-		or	[bx+11B8h], al
-		dec	bx
-		jns	short loc_1D5F
-		pop	bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jcxz	short locret_1D7B
-		mov	ax, 0FFF3h
-		stc
-
-locret_1D7B:
-		retf	4
-sub_1D3C	endp
-
+include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -8242,7 +8202,7 @@ sub_B424	proc near
 		mov	byte_FC5C, 0
 		push	ds
 		push	offset aTlsl_rgb ; "TLSL.RGB"
-		call	sub_1D3C
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		mov	si, 6
 		jmp	short loc_B4BC

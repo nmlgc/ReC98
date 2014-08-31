@@ -729,47 +729,7 @@ include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
 include libs/master.lib/random.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A68	proc far
-		mov	bx, sp
-		push	word ptr ss:[bx+6]
-		push	word ptr ss:[bx+4]
-		nop
-		call	dos_ropen
-		jb	short locret_1AA7
-		mov	bx, ax
-		mov	dx, 141Eh
-		mov	cx, 30h	; '0'
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		sbb	cx, cx
-		push	bx
-		mov	bx, 2Fh	; '/'
-
-loc_1A8B:
-		mov	al, [bx+141Eh]
-		shl	al, 4
-		or	[bx+141Eh], al
-		dec	bx
-		jns	short loc_1A8B
-		pop	bx
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, 0
-		jcxz	short locret_1AA7
-		mov	ax, 0FFF3h
-		stc
-
-locret_1AA7:
-		retf	4
-sub_1A68	endp
-
+include libs/master.lib/palette_entry_rgb.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
@@ -4388,7 +4348,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	ds
 		push	offset aLogo0_rgb ; "logo0.rgb"
-		call	sub_1A68
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	0
 		push	ds
@@ -4620,7 +4580,7 @@ loc_97FC:
 		call	far ptr	loc_D712
 		push	ds
 		push	offset aLogo1_rgb ; "logo1.rgb"
-		call	sub_1A68
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		call	sub_9776
 		push	large 0B0004h
@@ -10200,7 +10160,7 @@ loc_C4D8:
 		call	far ptr	palette_show
 		push	ds
 		push	offset aEdbk1_rgb ; "edbk1.rgb"
-		call	sub_1A68
+		call	palette_entry_rgb
 		call	far ptr	palette_show
 		push	large 0C00008h
 		call	grcg_setcolor
