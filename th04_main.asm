@@ -1825,24 +1825,7 @@ sub_40F4	endp
 include libs/master.lib/ems_allocate.asm
 include libs/master.lib/ems_enablepageframe.asm
 include libs/master.lib/ems_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_41B4	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		mov	ah, 45h	; 'E'
-		int	67h		;  - LIM EMS - RELEASE HANDLE AND MEMORY
-					; DX = EMM handle
-					; Return: AH = status
-		mov	al, ah
-		xor	ah, ah
-		retf	2
-sub_41B4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/ems_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13028,7 +13011,7 @@ _arg0		= dword	ptr  6
 		cmp	word_266DE, 0
 		jz	short loc_E813
 		push	word_266DE
-		call	sub_41B4
+		call	ems_free
 
 loc_E813:
 		les	bx, dword_2CDC6
