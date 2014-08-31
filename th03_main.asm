@@ -665,8 +665,7 @@ sub_11DA	proc far
 		xor	ax, ax
 		mov	word_1D816, ax
 		push	ax
-		push	cs
-		call	near ptr sub_13DC
+		call	gaiji_write_all
 		nop
 		call	hmem_free
 		mov	ax, 1
@@ -742,8 +741,7 @@ arg_2		= word ptr  8
 		push	si
 		xor	ax, ax
 		push	ax
-		push	cs
-		call	near ptr sub_13DC
+		call	gaiji_write_all
 		mov	ax, 1
 		jmp	short loc_1273
 ; ---------------------------------------------------------------------------
@@ -777,86 +775,7 @@ sub_11F6	endp
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/gaiji_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1392	proc near
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	cx, 10h
-		mov	bx, 0
-
-loc_139E:
-		mov	al, bl
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		out	0A9h, al	; Interrupt Controller #2, 8259A
-		mov	al, bl
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A9h, al	; Interrupt Controller #2, 8259A
-		inc	bx
-		loop	loc_139E
-		retn
-sub_1392	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		push	ds
-		push	si
-		mov	dx, sp
-		cli
-		add	sp, 8
-		pop	si
-		pop	ds
-		pop	ax
-		mov	sp, dx
-		sti
-		mov	ah, 0
-		add	ax, 5680h
-		and	al, 7Fh
-		push	ax
-		mov	al, 0Bh
-		out	68h, al
-		pop	ax
-		call	sub_1392
-		mov	al, 0Ah
-		out	68h, al
-		pop	si
-		pop	ds
-		retf	6
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13DC	proc far
-		push	ds
-		push	si
-		mov	si, sp
-		lds	si, ss:[si+8]
-		mov	al, 0Bh
-		out	68h, al
-		mov	dx, 0
-
-loc_13EB:
-		mov	ax, dx
-		adc	ax, 5680h
-		and	al, 7Fh
-		call	sub_1392
-		inc	dl
-		jnz	short loc_13EB
-		mov	al, 0Ah
-		out	68h, al
-		pop	si
-		pop	ds
-		retf	4
-sub_13DC	endp
-
+include libs/master.lib/gaiji_write.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -100,8 +100,7 @@ sub_C96		proc far
 		xor	ax, ax
 		mov	word_E94A, ax
 		push	ax
-		push	cs
-		call	near ptr sub_DFE
+		call	gaiji_write_all
 		nop
 		call	hmem_free
 		mov	ax, 1
@@ -177,8 +176,7 @@ arg_2		= word ptr  8
 		push	si
 		xor	ax, ax
 		push	ax
-		push	cs
-		call	near ptr sub_DFE
+		call	gaiji_write_all
 		mov	ax, 1
 		jmp	short loc_D2F
 ; ---------------------------------------------------------------------------
@@ -210,86 +208,7 @@ loc_D3F:
 sub_CB2		endp
 
 include libs/master.lib/gaiji_read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DB4		proc near
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	cx, 10h
-		mov	bx, 0
-
-loc_DC0:
-		mov	al, bl
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		lodsw
-		out	0A9h, al	; Interrupt Controller #2, 8259A
-		mov	al, bl
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A9h, al	; Interrupt Controller #2, 8259A
-		inc	bx
-		loop	loc_DC0
-		retn
-sub_DB4		endp
-
-; ---------------------------------------------------------------------------
-		nop
-		push	ds
-		push	si
-		mov	dx, sp
-		cli
-		add	sp, 8
-		pop	si
-		pop	ds
-		pop	ax
-		mov	sp, dx
-		sti
-		mov	ah, 0
-		add	ax, 5680h
-		and	al, 7Fh
-		push	ax
-		mov	al, 0Bh
-		out	68h, al
-		pop	ax
-		call	sub_DB4
-		mov	al, 0Ah
-		out	68h, al
-		pop	si
-		pop	ds
-		retf	6
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DFE		proc far
-		push	ds
-		push	si
-		mov	si, sp
-		lds	si, ss:[si+8]
-		mov	al, 0Bh
-		out	68h, al
-		mov	dx, 0
-
-loc_E0D:
-		mov	ax, dx
-		adc	ax, 5680h
-		and	al, 7Fh
-		call	sub_DB4
-		inc	dl
-		jnz	short loc_E0D
-		mov	al, 0Ah
-		out	68h, al
-		pop	si
-		pop	ds
-		retf	4
-sub_DFE		endp
-
+include libs/master.lib/gaiji_write.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
