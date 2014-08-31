@@ -1815,8 +1815,7 @@ arg_C		= word ptr  12h
 		push	ax
 		sub	ax, ax
 		push	ax
-		push	cs
-		call	near ptr sub_417C
+		call	ems_enablepageframe
 		pop	ax
 		mov	sp, bp
 		pop	bp
@@ -1824,18 +1823,7 @@ arg_C		= word ptr  12h
 sub_40F4	endp
 
 include libs/master.lib/ems_allocate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_417C	proc far
-		mov	bx, bp
-		mov	bx, ss:[bx+4]
-		mov	ax, 7001h
-		int	67h		;  - LIM EMS
-		retf	2
-sub_417C	endp
-
+include libs/master.lib/ems_enablepageframe.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1989,8 +1977,7 @@ arg_C		= word ptr  12h
 		push	ax
 		sub	ax, ax
 		push	ax
-		push	cs
-		call	near ptr sub_417C
+		call	ems_enablepageframe
 		pop	ax
 		mov	sp, bp
 		pop	bp
