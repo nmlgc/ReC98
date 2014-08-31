@@ -339,8 +339,7 @@ sub_FA2		proc far
 		push	ax
 		xor	ax, ax
 		push	ax
-		push	cs
-		call	near ptr sub_115A
+		call	gaiji_read_all
 		mov	ax, 1
 
 locret_FC5:
@@ -471,89 +470,7 @@ sub_FE2		endp
 
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1112	proc near
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	cx, 10h
-		mov	bx, 0
-
-loc_111E:
-		mov	al, bl
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, bl
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		stosw
-		inc	bx
-		loop	loc_111E
-		retn
-sub_1112	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1134	proc far
-		push	di
-		mov	dx, sp
-		cli
-		add	sp, 6
-		pop	di
-		pop	es
-		pop	ax
-		mov	sp, dx
-		sti
-		mov	ah, 0
-		add	ax, 5680h
-		and	al, 7Fh
-		push	ax
-		mov	al, 0Bh
-		out	68h, al
-		pop	ax
-		call	sub_1112
-		mov	al, 0Ah
-		out	68h, al
-		pop	di
-		retf	6
-sub_1134	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_115A	proc far
-		push	di
-		mov	di, sp
-		les	di, ss:[di+6]
-		mov	al, 0Bh
-		out	68h, al
-		mov	dx, 0
-
-loc_1168:
-		mov	ax, dx
-		adc	ax, 5680h
-		and	al, 7Fh
-		call	sub_1112
-		inc	dl
-		jnz	short loc_1168
-		mov	al, 0Ah
-		out	68h, al
-		pop	di
-		retf	4
-sub_115A	endp
-
+include libs/master.lib/gaiji_read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
