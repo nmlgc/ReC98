@@ -1242,71 +1242,7 @@ include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
 include libs/master.lib/bgm_init_finish.asm
 include libs/master.lib/bgm_stop_sound.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3F6A	proc far
-
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= byte ptr -0Eh
-var_D		= word ptr -0Dh
-var_B		= word ptr -0Bh
-var_9		= word ptr -9
-var_7		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 12h
-		mov	ax, [bp+arg_0]
-		mov	dx, [bp+arg_2]
-		mov	[bp+var_12], ax
-		mov	[bp+var_10], dx
-		mov	[bp+var_E], 1
-		mov	ax, [bp+arg_C]
-		mov	[bp+var_D], ax
-		mov	ax, [bp+arg_8]
-		mov	dx, ax
-		and	dh, 3Fh
-		mov	[bp+var_B], dx
-		mov	dx, [bp+arg_A]
-		shl	ax, 1
-		rcl	dx, 1
-		shl	ax, 1
-		rcl	dx, 1
-		mov	[bp+var_9], dx
-		mov	[bp+var_7], 0
-		mov	[bp+var_6], 0
-		mov	ax, [bp+arg_4]
-		mov	[bp+var_4], ax
-		mov	ax, [bp+arg_6]
-		mov	[bp+var_2], ax
-		push	ss
-		lea	ax, [bp+var_12]
-		push	ax
-		call	ems_movememoryregion
-		push	ax
-		sub	ax, ax
-		push	ax
-		call	ems_enablepageframe
-		pop	ax
-		mov	sp, bp
-		pop	bp
-		retf	0Eh
-sub_3F6A	endp
-
+include libs/master.lib/ems_read.asm
 include libs/master.lib/ems_allocate.asm
 include libs/master.lib/ems_enablepageframe.asm
 include libs/master.lib/ems_exist.asm
@@ -6024,7 +5960,7 @@ sub_BA66	proc near
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
-		call	sub_3F6A
+		call	ems_read
 		jmp	short loc_BAAA
 ; ---------------------------------------------------------------------------
 
@@ -14149,7 +14085,7 @@ loc_F3A4:
 		push	0
 		movzx	eax, si
 		push	eax
-		call	sub_3F6A
+		call	ems_read
 		movzx	eax, si
 		add	[bp+var_4], eax
 		mov	ax, 4
@@ -14164,7 +14100,7 @@ loc_F3A4:
 		push	0
 		movzx	eax, si
 		push	eax
-		call	sub_3F6A
+		call	ems_read
 		movzx	eax, si
 		add	[bp+var_4], eax
 		jmp	short loc_F432
@@ -14235,7 +14171,7 @@ sub_F463	proc near
 		push	0
 		movzx	eax, si
 		push	eax
-		call	sub_3F6A
+		call	ems_read
 		jmp	short loc_F4D1
 ; ---------------------------------------------------------------------------
 
