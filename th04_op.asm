@@ -485,53 +485,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1332	proc far
-		xor	ax, ax
-		cmp	word_F8A6, ax
-		jnz	short locret_1355
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_1355
-		mov	word_F8A6, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_1355:
-		retf
-sub_1332	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1356	proc far
-		mov	ax, word_F8A6
-		test	ax, ax
-		jz	short locret_1371
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_F8A6, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_1371:
-		retf
-sub_1356	endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_read.asm
 include libs/master.lib/gaiji_write.asm
@@ -4412,7 +4366,7 @@ sub_A8F1	proc near
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
 		call	sub_A7F0
-		call	sub_1356
+		call	gaiji_restore
 		push	20Ah
 		call	sub_DC74
 		call	sub_E0AC
@@ -4464,7 +4418,7 @@ sub_A96C	proc near
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
 		call	sub_A7F0
-		call	sub_1356
+		call	gaiji_restore
 		push	20Ah
 		call	sub_DC74
 		call	sub_E0AC
@@ -4553,7 +4507,7 @@ loc_AA6E:
 		call	graph_pi_free
 		call	sub_CCC8
 		call	sub_A7F0
-		call	sub_1356
+		call	gaiji_restore
 		call	sub_E0AC
 		push	large 0
 		push	ds
@@ -5578,7 +5532,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_A3B2
 
 loc_B3AB:
-		call	sub_1332
+		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
@@ -5670,7 +5624,7 @@ loc_B47B:
 		jz	short loc_B43A
 		call	sub_CCC8
 		call	sub_A873
-		call	sub_1356
+		call	gaiji_restore
 		call	text_clear
 		call	sub_DDB1
 		call	sub_2FBE
@@ -12334,7 +12288,7 @@ include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
-word_F8A6	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

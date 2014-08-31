@@ -321,53 +321,7 @@ loc_F66:
 sub_DD4		endp ; sp-analysis failed
 
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FA2		proc far
-		xor	ax, ax
-		cmp	word_D39A, ax
-		jnz	short locret_FC5
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_FC5
-		mov	word_D39A, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_FC5:
-		retf
-sub_FA2		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FC6		proc far
-		mov	ax, word_D39A
-		test	ax, ax
-		jz	short locret_FE1
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_D39A, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_FE1:
-		retf
-sub_FC6		endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -7321,7 +7275,7 @@ _envp		= dword	ptr  0Ch
 		cmp	byte ptr es:[bx+0Bh], 7Fh ; ''
 		jnz	loc_B1FE
 		call	sub_B756
-		call	sub_FA2
+		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
@@ -7390,7 +7344,7 @@ loc_B1C6:
 		call	sub_BC9E
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_FC6
+		call	gaiji_restore
 		call	sub_B616
 		push	large 0
 		push	ds
@@ -9935,7 +9889,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_D39A	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

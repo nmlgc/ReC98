@@ -537,53 +537,7 @@ loc_F81:
 sub_EAA		endp
 
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FBC		proc far
-		xor	ax, ax
-		cmp	word_D860, ax
-		jnz	short locret_FDF
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_FDF
-		mov	word_D860, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_FDF:
-		retf
-sub_FBC		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FE0		proc far
-		mov	ax, word_D860
-		test	ax, ax
-		jz	short locret_FFB
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_D860, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_FFB:
-		retf
-sub_FE0		endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -4532,7 +4486,7 @@ sub_9FAF	proc far
 		push	20Fh
 		call	sub_B203
 		add	sp, 8
-		call	sub_FE0
+		call	gaiji_restore
 		call	super_free
 		call	sub_B019
 		les	bx, dword_F3DC
@@ -4601,7 +4555,7 @@ sub_A027	proc far
 		push	word_F186
 		push	word_F184
 		call	graph_pi_free
-		call	sub_FE0
+		call	gaiji_restore
 		call	super_free
 		call	sub_B019
 		push	0
@@ -4643,7 +4597,7 @@ sub_A0C6	proc far
 		push	20Fh
 		call	sub_B203
 		add	sp, 8
-		call	sub_FE0
+		call	gaiji_restore
 		call	super_free
 		call	sub_B019
 		les	bx, dword_F3DC
@@ -5787,7 +5741,7 @@ loc_A9EE:
 ; ---------------------------------------------------------------------------
 
 loc_A9F3:
-		call	sub_FBC
+		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
@@ -5893,7 +5847,7 @@ loc_AAF0:
 		call	text_clear
 		call	graph_clear
 		call	sub_AB28
-		call	sub_FE0
+		call	gaiji_restore
 _main		endp ; sp-analysis failed
 
 		mov	al, [bp-1]
@@ -10216,7 +10170,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_D860	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

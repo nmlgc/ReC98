@@ -394,53 +394,7 @@ include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_vline.asm
 include libs/master.lib/gdc_outpw.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1340	proc far
-		xor	ax, ax
-		cmp	word_1DF84, ax
-		jnz	short locret_1363
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_1363
-		mov	word_1DF84, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_1363:
-		retf
-sub_1340	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1364	proc far
-		mov	ax, word_1DF84
-		test	ax, ax
-		jz	short locret_137F
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_1DF84, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_137F:
-		retf
-sub_1364	endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -11673,7 +11627,7 @@ sub_DAF0	endp
 sub_DC38	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1340
+		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
@@ -11689,7 +11643,7 @@ sub_DC38	endp
 sub_DC4B	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1364
+		call	gaiji_restore
 		pop	bp
 		retn
 sub_DC4B	endp
@@ -41302,7 +41256,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_1DF84	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

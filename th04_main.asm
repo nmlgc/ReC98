@@ -342,53 +342,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A36	proc far
-		xor	ax, ax
-		cmp	word_216C4, ax
-		jnz	short locret_1A59
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_1A59
-		mov	word_216C4, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_1A59:
-		retf
-sub_1A36	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1A5A	proc far
-		mov	ax, word_216C4
-		test	ax, ax
-		jz	short locret_1A75
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_216C4, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_1A75:
-		retf
-sub_1A5A	endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -4922,7 +4876,7 @@ _envp		= dword	ptr  0Ch
 		mov	random_seed, eax
 		call	sub_B488
 		call	text_clear
-		call	sub_1A36
+		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
@@ -13174,7 +13128,7 @@ loc_E813:
 		call	super_free
 		call	graph_hide
 		call	text_clear
-		call	sub_1A5A
+		call	gaiji_restore
 		call	sub_1361E
 		push	large 0
 		push	large [bp+_arg0]	; arg0
@@ -24043,7 +23997,7 @@ include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
-word_216C4	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

@@ -625,55 +625,7 @@ loc_11AF:
 		retf	0Ch
 sub_1120	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11B6	proc far
-		xor	ax, ax
-		cmp	word_1D816, ax
-		jnz	short locret_11D9
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_11D9
-		mov	word_1D816, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_11D9:
-		retf
-sub_11B6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11DA	proc far
-		mov	ax, word_1D816
-		test	ax, ax
-		jz	short locret_11F5
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_1D816, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_11F5:
-		retf
-sub_11DA	endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -4283,7 +4235,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_E922
 
 loc_970F:
-		call	sub_11B6
+		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
@@ -7000,7 +6952,7 @@ _arg0		= dword	ptr  6
 		call	super_free
 		call	graph_hide
 		call	text_clear
-		call	sub_11DA
+		call	gaiji_restore
 		push	0
 		call	sub_EF1C
 		push	1
@@ -42579,7 +42531,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_1D816	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

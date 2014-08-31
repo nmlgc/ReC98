@@ -62,53 +62,7 @@ include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/gdc_outpw.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C72		proc far
-		xor	ax, ax
-		cmp	word_E94A, ax
-		jnz	short locret_C95
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_C95
-		mov	word_E94A, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_C95:
-		retf
-sub_C72		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C96		proc far
-		mov	ax, word_E94A
-		test	ax, ax
-		jz	short locret_CB1
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_E94A, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_CB1:
-		retf
-sub_C96		endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_read.asm
 include libs/master.lib/gaiji_write.asm
@@ -4743,7 +4697,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_C80C
 
 loc_9DAD:
-		call	sub_C72
+		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
@@ -4759,7 +4713,7 @@ loc_9DAD:
 		jz	short loc_9E04
 		call	sub_B7D2
 		call	text_clear
-		call	sub_C96
+		call	gaiji_restore
 		call	sub_C990
 		push	large 0
 		push	ds
@@ -4874,7 +4828,7 @@ loc_9EF1:
 		call	sub_A174
 		call	sub_990C
 		call	sub_9A2C
-		call	sub_C96
+		call	gaiji_restore
 
 loc_9F1E:
 		call	sub_D16F
@@ -4914,7 +4868,7 @@ loc_9F58:
 
 loc_9F69:
 		call	text_clear
-		call	sub_C96
+		call	gaiji_restore
 		call	sub_C990
 		push	large 0
 		push	ds
@@ -8345,7 +8299,7 @@ loc_B9DD:
 
 loc_BA66:
 		call	text_clear
-		call	sub_C96
+		call	gaiji_restore
 		call	sub_C990
 		push	large 0
 		push	ds
@@ -12182,7 +12136,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_E94A	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

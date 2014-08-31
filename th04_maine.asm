@@ -68,53 +68,7 @@ include libs/master.lib/get_machine_at.asm
 include libs/master.lib/get_machine_dosbox.asm
 include libs/master.lib/check_machine_fmr.asm
 include libs/master.lib/get_machine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EEE		proc far
-		xor	ax, ax
-		cmp	word_E642, ax
-		jnz	short locret_F11
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_F11
-		mov	word_E642, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_F11:
-		retf
-sub_EEE		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F12		proc far
-		mov	ax, word_E642
-		test	ax, ax
-		jz	short locret_F2D
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_E642, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_F2D:
-		retf
-sub_F12		endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
@@ -3866,7 +3820,7 @@ _arg0		= dword	ptr  4
 		call	sub_D8CE
 		call	graph_hide
 		call	text_clear
-		call	sub_F12
+		call	gaiji_restore
 		call	sub_D3F4
 		push	large 0
 		push	large [bp+_arg0]	; arg0
@@ -3934,7 +3888,7 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aMSzlEd_dat ; "Œ¶‘z‹½ed.dat"
 		call	sub_D43C
-		call	sub_EEE
+		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
@@ -10865,7 +10819,7 @@ include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
-word_E642	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0

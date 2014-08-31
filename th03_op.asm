@@ -331,54 +331,7 @@ sub_C6A		endp
 
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EF6		proc far
-		xor	ax, ax
-		cmp	word_DAA6, ax
-		jnz	short locret_F19
-		mov	ax, 200h
-		push	ax
-		nop
-		call	hmem_alloc
-		or	ax, ax
-		jz	short locret_F19
-		mov	word_DAA6, ax
-		push	ax
-		xor	ax, ax
-		push	ax
-		call	gaiji_read_all
-		mov	ax, 1
-
-locret_F19:
-		retf
-sub_EF6		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F1A		proc far
-					; sub_9BDF+143P ...
-		mov	ax, word_DAA6
-		test	ax, ax
-		jz	short locret_F35
-		push	ax
-		push	ax
-		xor	ax, ax
-		mov	word_DAA6, ax
-		push	ax
-		call	gaiji_write_all
-		nop
-		call	hmem_free
-		mov	ax, 1
-
-locret_F35:
-		retf
-sub_F1A		endp
-
+include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/gaiji_read.asm
@@ -4515,7 +4468,7 @@ loc_9B4E:
 		add	al, 46h	; 'F'
 		mov	es:[bx+38h], al
 		call	sub_9980
-		call	sub_F1A
+		call	gaiji_restore
 		push	100h
 		call	sub_C403
 		call	sub_BFC2
@@ -4729,7 +4682,7 @@ loc_9D19:
 		cmp	[bp+var_2], 10h
 		jl	short loc_9D0A
 		call	sub_9980
-		call	sub_F1A
+		call	gaiji_restore
 		push	100h
 		call	sub_C403
 		call	sub_BFC2
@@ -4811,7 +4764,7 @@ loc_9DDF:
 		push	1
 		call	palette_black_out
 		call	sub_9980
-		call	sub_F1A
+		call	gaiji_restore
 		push	100h
 		call	sub_C403
 		call	sub_BFC2
@@ -4910,7 +4863,7 @@ loc_9EA6:
 		cmp	si, 10h
 		jl	short loc_9E9A
 		call	sub_9980
-		call	sub_F1A
+		call	gaiji_restore
 		push	100h
 		call	sub_C403
 		call	super_free
@@ -5652,7 +5605,7 @@ loc_A452:
 ; ---------------------------------------------------------------------------
 
 loc_A468:
-		call	sub_EF6
+		call	gaiji_backup
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
@@ -5720,7 +5673,7 @@ loc_A4FE:
 		cmp	byte_D952, 0
 		jz	short loc_A4D2
 		call	sub_99C3
-		call	sub_F1A
+		call	gaiji_restore
 		call	text_clear
 		call	sub_BEB8
 		call	sub_2B3C
@@ -10834,7 +10787,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/edges[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
-word_DAA6	dw 0
+include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
