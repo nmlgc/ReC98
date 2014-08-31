@@ -1210,88 +1210,7 @@ sub_2240	endp
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/text_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22F6	proc far
-					; sub_B2CF+103P ...
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_2355
-
-loc_232A:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_234F
-		cmp	al, dh
-		jbe	short loc_2338
-		cmp	al, bl
-		jbe	short loc_234F
-
-loc_2338:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_2345
-		cmp	al, dl
-		adc	ax, bx
-
-loc_2345:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_234F:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_232A
-
-loc_2355:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_22F6	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
@@ -6585,17 +6504,17 @@ loc_B3AC:
 		push	ds
 		push	offset asc_2151E ; "	"
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		push	large 1A000Eh
 		push	ds
 		push	offset asc_21523 ; "	"
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset asc_21528 ; "	"
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		mov	ax, si
 
 loc_B3EB:
@@ -11574,7 +11493,7 @@ loc_D684:
 		push	ax
 		push	large [bp+var_6]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		add	word_255D0, 10h
 		cmp	word_24CB4, 0
 		jnz	short loc_D6D2
@@ -13639,7 +13558,7 @@ loc_E588:
 		push	ds
 		push	offset asc_22C3F ; "  "
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		sub	[bp+var_2], 2
 
 loc_E5B5:
@@ -13661,7 +13580,7 @@ loc_E5C2:
 		push	ds
 		push	offset asc_22C42 ; "  "
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		add	[bp+var_2], 2
 
 loc_E5EF:
@@ -14890,7 +14809,7 @@ loc_EF47:
 		push	ds
 		push	offset aB@b@bB@b@ ; "Å@Å@Å~Å@Å@"
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_EF88
 		push	large 44000Dh
@@ -14987,7 +14906,7 @@ loc_EFFF:
 		push	ds
 		push	offset aB@b@bB@b@_0 ; "Å@Å@Å~Å@Å@"
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_F04B
 		push	large 44000Bh
@@ -19240,7 +19159,7 @@ loc_110A1:
 		mov	bx, ax
 		push	large STAGE_TITLE[bx]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		mov	ax, 30h	; '0'
 		sub	ax, bgm_title_len
 		push	ax
@@ -19257,7 +19176,7 @@ loc_110A1:
 		mov	bx, ax
 		push	large BGM_TITLE[bx]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 
 loc_11107:
 		call	sub_C156
@@ -19400,7 +19319,7 @@ loc_11237:
 		mov	bx, ax
 		push	large BGM_TITLE[bx]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 
 loc_1127E:
 		call	sub_C156
@@ -19445,11 +19364,11 @@ loc_112D2:
 		push	large 40002h
 		push	large [off_22EF8]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		push	large 40017h
 		push	large [off_22EF8]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		mov	byte_22EA4, 0
 
 loc_11317:
@@ -19505,7 +19424,7 @@ loc_1138B:
 		push	large 40002h
 		push	large [off_22EF8]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 		mov	byte_22EA4, 0
 		mov	word_259DE, 11BEh
 		leave
@@ -19602,7 +19521,7 @@ loc_11474:
 		push	large 40002h
 		push	large [off_22EF8]
 		push	0E1h ; '·'
-		call	sub_22F6
+		call	text_putsa
 
 loc_11493:
 		push	word_259D8

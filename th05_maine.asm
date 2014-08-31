@@ -460,87 +460,7 @@ loc_228F:
 sub_2284	endp
 
 include libs/BorlandC/text_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22AA	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_2309
-
-loc_22DE:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_2303
-		cmp	al, dh
-		jbe	short loc_22EC
-		cmp	al, bl
-		jbe	short loc_2303
-
-loc_22EC:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_22F9
-		cmp	al, dl
-		adc	ax, bx
-
-loc_22F9:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_2303:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_22DE
-
-loc_2309:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_22AA	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
@@ -11295,7 +11215,7 @@ loc_DD61:
 		push	ds
 		push	offset unk_1184C
 		push	5
-		call	sub_22AA
+		call	text_putsa
 
 loc_DD9E:
 		add	[bp+var_4], 10h
@@ -11483,7 +11403,7 @@ loc_DED9:
 		push	ds
 		push	offset unk_1184F
 		push	5
-		call	sub_22AA
+		call	text_putsa
 
 loc_DF16:
 		add	[bp+var_4], 10h

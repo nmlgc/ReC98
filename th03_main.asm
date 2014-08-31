@@ -1629,88 +1629,7 @@ loc_2080:
 		retf	8
 sub_2024	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2086	proc far
-					; sub_E3F2+36P	...
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_20E5
-
-loc_20BA:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_20DF
-		cmp	al, dh
-		jbe	short loc_20C8
-		cmp	al, bl
-		jbe	short loc_20DF
-
-loc_20C8:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_20D5
-		cmp	al, dl
-		adc	ax, bx
-
-loc_20D5:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_20DF:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_20BA
-
-loc_20E5:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_2086	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/hmem_lallocate.asm
@@ -11044,7 +10963,7 @@ loc_CCBC:
 		push	ds
 		push	offset asc_1DD5A ; "				    "
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		inc	di
 		inc	si
 
@@ -14260,37 +14179,37 @@ loc_E411:
 		push	ds
 		push	offset aVlvVwb@vbvpvnv ; "ÇlÇ`ÇwÅ@ÇbÇèÇçÇÇÇèÅ@Å@Å@Å~"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	0Ah
 		push	ds
 		push	offset aGqbGwgagGbgni ;	"ÉQÅ[ÉWÉAÉ^ÉbÉNâÒêîÅ@Å@Å@Å~"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	0Ch
 		push	ds
 		push	offset aGGxgagGbgni ; "É{ÉXÉAÉ^ÉbÉNâÒêîÅ@Å@Å@Å@Å~"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	0Eh
 		push	ds
 		push	offset aGGxgkgobGtgli ;	"É{ÉXÉäÉoÅ[ÉTÉãâÒêîÅ@Å@Å@Å~"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	10h
 		push	ds
 		push	offset aGGxgpgjgbgni ; "É{ÉXÉpÉjÉbÉNâÒêîÅ@Å@Å@Å@Å~"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	14h
 		push	ds
 		push	offset aB@b@b@vsvnvsvV ; "Å@Å@Å@ÇsÇnÇsÇ`ÇkÅ@Å@Å@Å@Å@"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+33h], 8
 		jnb	short loc_E48C
@@ -14307,7 +14226,7 @@ loc_E48C:
 		push	ds
 		push	offset aB@b@b@vVkvkb@v ; "Å@Å@Å@Ç`ÇkÇkÅ@ÇbÇkÇdÇ`ÇqÅIÅIÅ@Å@"
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		push	si
 		push	12h
 		push	ds
@@ -14315,7 +14234,7 @@ loc_E48C:
 
 loc_E4A2:
 		push	0E1h ; '·'
-		call	sub_2086
+		call	text_putsa
 		mov	ax, [bp+var_2]
 		shl	ax, 7
 		add	ax, 65A6h

@@ -1481,87 +1481,7 @@ include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/text_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26CA	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_2729
-
-loc_26FE:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_2723
-		cmp	al, dh
-		jbe	short loc_270C
-		cmp	al, bl
-		jbe	short loc_2723
-
-loc_270C:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_2719
-		cmp	al, dl
-		adc	ax, bx
-
-loc_2719:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_2723:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_26FE
-
-loc_2729:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_26CA	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
@@ -7527,7 +7447,7 @@ loc_B213:
 		push	ds
 		push	stage_title_str
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		jmp	short loc_B249
 ; ---------------------------------------------------------------------------
 
@@ -8212,11 +8132,11 @@ var_1		= byte ptr -1
 		push	large 17000Fh
 		push	large [off_1DB70]
 		push	0E9h ; 'È'
-		call	sub_26CA
+		call	text_putsa
 		push	large 170010h
 		push	large [off_1DB6C]
 		push	61h ; 'a'
-		call	sub_26CA
+		call	text_putsa
 		mov	PaletteTone, 46h	; 'F'
 		call	far ptr	palette_show
 
@@ -8276,13 +8196,13 @@ loc_BA98:
 		mov	al, byte_1F4DD
 		mov	ah, 0
 		push	ax
-		call	sub_26CA
+		call	text_putsa
 		push	large 170010h
 		push	large [off_1DB6C]
 		mov	al, byte_1F4DE
 		mov	ah, 0
 		push	ax
-		call	sub_26CA
+		call	text_putsa
 		mov	[bp+var_1], 0
 
 loc_BAC8:
@@ -8302,15 +8222,15 @@ loc_BAE3:
 		push	large 11000Eh
 		push	large [off_1DB76]
 		push	0E3h ; '„'
-		call	sub_26CA
+		call	text_putsa
 		push	large 11000Fh
 		push	large [off_1DB7A]
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 110010h
 		push	large [off_1DB7E]
 		push	61h ; 'a'
-		call	sub_26CA
+		call	text_putsa
 		mov	[bp+var_1], 3
 		mov	byte_1DB74, 0
 
@@ -8390,13 +8310,13 @@ loc_BBEE:
 		mov	al, byte_1F4DD
 		mov	ah, 0
 		push	ax
-		call	sub_26CA
+		call	text_putsa
 		push	large 110010h
 		push	large [off_1DB7E]
 		mov	al, byte_1F4DE
 		mov	ah, 0
 		push	ax
-		call	sub_26CA
+		call	text_putsa
 		mov	[bp+var_1], 3
 
 loc_BC1E:
@@ -8426,11 +8346,11 @@ loc_BC2C:
 		push	large 17000Fh
 		push	large [off_1DB70]
 		push	0E9h ; 'È'
-		call	sub_26CA
+		call	text_putsa
 		push	large 170010h
 		push	large [off_1DB6C]
 		push	61h ; 'a'
-		call	sub_26CA
+		call	text_putsa
 		mov	[bp+var_1], 0
 		jmp	short loc_BC99
 ; ---------------------------------------------------------------------------
@@ -8911,12 +8831,12 @@ sub_C05D	proc far
 		push	ds
 		push	offset aEMPTY ; "					   "...
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 4000Dh
 		push	ds
 		push	offset aEMPTY ; "					   "...
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 
 loc_C09A:
 		mov	word ptr dword_1F498+2,	seg seg001
@@ -8950,7 +8870,7 @@ bgm_show	proc near
 		mov	bx, ax
 		push	word ptr BGM_TITLE[bx]
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 
 loc_C0E6:
 		inc	bgm_show_timer
@@ -8960,7 +8880,7 @@ loc_C0E6:
 		push	ds
 		push	(offset	aEMPTY+16h)
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		mov	bgm_show_timer, 0
 
 loc_C108:
@@ -9276,7 +9196,7 @@ loc_C348:
 		push	ds
 		push	offset asc_1E47E ; "		    "
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	12h
 		push	si
 		push	ds
@@ -9290,7 +9210,7 @@ loc_C348:
 		push	ds
 		push	offset asc_1E47E ; "		    "
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	12h
 		mov	ax, 18h
 		sub	ax, si
@@ -9306,7 +9226,7 @@ loc_C348:
 		push	ds
 		push	offset asc_1E47E ; "		    "
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		mov	ax, 1Eh
 		sub	ax, si
 		push	ax
@@ -9321,7 +9241,7 @@ loc_C348:
 		push	ds
 		push	offset asc_1E47E ; "		    "
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		lea	ax, [si+6]
 		push	ax
 		push	0Ch
@@ -14452,7 +14372,7 @@ loc_EA9D:
 		push	ds
 		push	offset asc_1E6DF ; "  "
 		push	di
-		call	sub_26CA
+		call	text_putsa
 		add	si, 2
 		les	bx, dword_218BA
 		add	bx, [bp+arg_0]
@@ -14471,7 +14391,7 @@ loc_EAC3:
 		push	ds
 		push	offset asc_1E6DF ; "  "
 		push	di
-		call	sub_26CA
+		call	text_putsa
 		add	si, 2
 		inc	[bp+arg_0]
 
@@ -16973,7 +16893,7 @@ arg_A		= word ptr  0Eh
 		push	di
 		push	large [bp+arg_6]
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	16h
 		push	di
 		push	5
@@ -17122,7 +17042,7 @@ loc_FD5A:
 		push	ds
 		push	offset aU_	; "ì_"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 0A0012h
 		push	3
 		movsx	eax, word_2189E
@@ -17132,7 +17052,7 @@ loc_FD5A:
 		push	ds
 		push	offset aB	; "Å~"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
@@ -17145,7 +17065,7 @@ loc_FD5A:
 		push	ds
 		push	offset aBb	; "ÅÅ"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		movsx	eax, word_2189E
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -17274,7 +17194,7 @@ loc_FEB9:
 		push	ds
 		push	offset aU_	; "ì_"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 0A0012h
 		push	3
 		movsx	eax, word_2189E
@@ -17284,7 +17204,7 @@ loc_FEB9:
 		push	ds
 		push	offset aB	; "Å~"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
@@ -17297,7 +17217,7 @@ loc_FEB9:
 		push	ds
 		push	offset aBb	; "ÅÅ"
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		movsx	eax, word_2189E
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -23572,7 +23492,7 @@ loc_13035:
 		lea	ax, [bp+var_28]
 		push	ax
 		push	[bp+arg_2]
-		call	sub_26CA
+		call	text_putsa
 		pop	si
 		leave
 		retn	0Ah
@@ -23597,12 +23517,12 @@ arg_0		= word ptr  4
 		push	ds
 		push	word_1EB96
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 0E0016h
 		push	ds
 		push	word_1EB96
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		mov	si, 6
 		xor	di, di
 		mov	al, byte_24E7A
@@ -23813,12 +23733,12 @@ loc_131AB:
 		push	ds
 		push	word_1EB96
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		push	large 0E0016h
 		push	ds
 		push	word_1EB96
 		push	0E1h ; '·'
-		call	sub_26CA
+		call	text_putsa
 		pop	si
 		leave
 		retn

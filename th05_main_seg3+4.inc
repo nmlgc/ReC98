@@ -2156,7 +2156,7 @@ loc_1641B:
 		add	bx, bx
 		push	word ptr [bx+1896h]
 		push	ax
-		call	sub_2598
+		call	text_putsa
 		pop	si
 		leave
 		retn	0Ah
@@ -2355,29 +2355,29 @@ loc_1654F:
 		push	ds
 		push	BONUS_STAGE
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Ah
 		push	ds
 		push	BONUS_DREAM
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Ch
 		push	ds
 		push	GRAZEX50
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Eh
 		push	ds
 		push	POINT_ITEMS
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		cmp	[bp+var_5], 0
 		jz	short loc_165DF
 		push	large 60010h
 		push	ds
 		push	BONUS_NOMISS
 		push	0A1h ; '¡'
-		call	sub_2598
+		call	text_putsa
 
 loc_165DF:
 		cmp	[bp+var_6], 0
@@ -2386,14 +2386,14 @@ loc_165DF:
 		push	ds
 		push	BONUS_NOBOMB
 		push	0A1h ; '¡'
-		call	sub_2598
+		call	text_putsa
 
 loc_165F8:
 		push	large 60015h
 		push	ds
 		push	BONUS_TOTAL
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		mov	al, byte_25FEA
 		mov	ah, 0
 		imul	ax, 64h
@@ -2582,34 +2582,34 @@ loc_1677D:
 		push	ds
 		push	ALL_CLEAR
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 60008h
 		push	ds
 		push	BONUS_DREAM
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Ah
 		push	ds
 		push	GRAZEX50
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Ch
 		push	ds
 		push	PLAYER_REM
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		push	large 6000Eh
 		push	ds
 		push	POINT_ITEMS
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		cmp	[bp+var_9], 0
 		jz	short loc_16825
 		push	large 60010h
 		push	ds
 		push	BONUS_NOMISS
 		push	0A1h ; '¡'
-		call	sub_2598
+		call	text_putsa
 
 loc_16825:
 		cmp	[bp+var_A], 0
@@ -2618,19 +2618,19 @@ loc_16825:
 		push	ds
 		push	BONUS_NOBOMB
 		push	0A1h ; '¡'
-		call	sub_2598
+		call	text_putsa
 
 loc_1683E:
 		push	large 60012h
 		push	ds
 		push	POINT_TOTAL
 		push	0A1h ; '¡'
-		call	sub_2598
+		call	text_putsa
 		push	large 60015h
 		push	ds
 		push	BONUS_TOTAL
 		push	0E1h ; 'á'
-		call	sub_2598
+		call	text_putsa
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax

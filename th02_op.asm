@@ -1408,88 +1408,7 @@ include libs/BorlandC/txesc.asm
 		db 0
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/text_putca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2520	proc far
-					; sub_A510+179P ...
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_257F
-
-loc_2554:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_2579
-		cmp	al, dh
-		jbe	short loc_2562
-		cmp	al, bl
-		jbe	short loc_2579
-
-loc_2562:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_256F
-		cmp	al, dl
-		adc	ax, bx
-
-loc_256F:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_2579:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_2554
-
-loc_257F:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_2520	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
@@ -5875,7 +5794,7 @@ loc_A656:
 		push	word ptr PERF_TITLE+2
 		push	word ptr PERF_TITLE
 		push	si
-		call	sub_2520
+		call	text_putsa
 		push	2Dh ; '-'
 		push	14h
 		les	bx, dword_F3DC
@@ -5886,7 +5805,7 @@ loc_A656:
 		push	word ptr (PERF_OPTION+2)[bx]
 		push	word ptr PERF_OPTION[bx]
 		push	si
-		call	sub_2520
+		call	text_putsa
 		push	168h
 		push	144h
 		push	80h ; 'Ä'
@@ -7900,7 +7819,7 @@ arg_4		= word ptr  8
 		push	word ptr [bx+676h]
 		push	word ptr [bx+674h]
 		push	[bp+arg_0]
-		call	sub_2520
+		call	text_putsa
 		pop	bp
 		retn	6
 sub_B49D	endp
@@ -8003,7 +7922,7 @@ arg_4		= word ptr  8
 		lea	ax, [bp+var_6]
 		push	ax
 		push	di
-		call	sub_2520
+		call	text_putsa
 		push	2
 		mov	bx, [bp+arg_2]
 		shl	bx, 2
@@ -8026,7 +7945,7 @@ arg_4		= word ptr  8
 		lea	ax, [bp+var_6]
 		push	ax
 		push	di
-		call	sub_2520
+		call	text_putsa
 		push	2
 		mov	bx, [bp+arg_2]
 		shl	bx, 2
@@ -8050,7 +7969,7 @@ arg_4		= word ptr  8
 		lea	ax, [bp+var_6]
 		push	ax
 		push	di
-		call	sub_2520
+		call	text_putsa
 		pop	di
 		pop	si
 		leave
@@ -8092,7 +8011,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	offset aVicSob@b@b@b@b ; "	Ç®ñºëOÅ@Å@Å@Å@Å@Å@ìæì_Å@Å@Å@ STAG"...
 		push	81h ; 'Å'
-		call	sub_2520
+		call	text_putsa
 		xor	si, si
 		jmp	short loc_B66D
 ; ---------------------------------------------------------------------------

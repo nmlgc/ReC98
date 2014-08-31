@@ -18871,7 +18871,7 @@ loc_1D5CB:
 		shl	bx, 2
 		push	large dword ptr	[bx+1F3Ah]
 		push	ax
-		call	sub_22F6
+		call	text_putsa
 		pop	si
 		leave
 		retn	0Ah
@@ -19032,37 +19032,37 @@ var_4		= dword	ptr -4
 		push	ds
 		push	offset aVrvsvVfvdb@vav ; "‚r‚s‚`‚f‚d@‚a‚‚Ž‚•‚“"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60009h
 		push	ds
 		push	offset aVovnvvvdvqb@bB ; "‚o‚n‚v‚d‚q@~@@‚T‚O"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 6000Bh
 		push	ds
 		push	offset aVcvqvdvVlb@vav ; "‚c‚q‚d‚`‚l@‚a‚‚Ž‚•‚“"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 6000Dh
 		push	ds
 		push	offset aGjgxgkterfb@bB ; "ƒJƒXƒŠ’e”@~@@‚T‚O"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60010h
 		push	ds
 		push	offset aVovnvhvmvsb@va ; "‚o‚n‚h‚m‚s@‚a‚‚Ž‚•‚“@@@@@@~"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60015h
 		push	ds
 		push	offset aB@b@b@vsvnvsvV ; "@@@‚s‚n‚s‚`‚k"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60016h
 		push	ds
 		push	offset aB@b@b@b@b@vavp ; "@@@@@‚a‚‚‚‚@‚d‚˜‚”‚…‚Ž‚„II"
 		push	0C3h ; 'Ã'
-		call	sub_22F6
+		call	text_putsa
 		les	bx, dword_2CDC6
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -19211,22 +19211,22 @@ var_4		= dword	ptr -4
 		push	ds
 		push	offset aVVkvkb@vbvmvev ; "‚`‚k‚k@‚b‚Œ‚…‚‚’@@"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60008h
 		push	ds
 		push	offset aVovnvvvdvqb@_0 ; "‚o‚n‚v‚d‚q@~@@‚T‚O"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 6000Ah
 		push	ds
 		push	offset aVcvqvdvVlb@v_0 ; "‚c‚q‚d‚`‚l@‚a‚‚Ž‚•‚“"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 6000Ch
 		push	ds
 		push	offset aGjgxgkterfb@_0 ; "ƒJƒXƒŠ’e”@~@@‚T‚O"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		cmp	byte_25688, 4
 		jz	short loc_1D918
 		push	large 6000Eh
@@ -19242,17 +19242,17 @@ loc_1D918:
 
 loc_1D922:
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60011h
 		push	ds
 		push	offset aVovnvhvmvsb@_0 ; "‚o‚n‚h‚m‚s@‚a‚‚Ž‚•‚“@@@@@@~"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		push	large 60015h
 		push	ds
 		push	offset aB@b@b@vsvnvs_0 ; "@@@‚s‚n‚s‚`‚k"
 		push	0E1h ; 'á'
-		call	sub_22F6
+		call	text_putsa
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax

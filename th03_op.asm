@@ -1029,88 +1029,7 @@ sub_21E0	endp
 include libs/BorlandC/text_clear.asm
 include libs/BorlandC/txesc.asm
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2254	proc far
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		assume es:nothing
-		mov	di, [bp+arg_8]
-		shl	di, 1
-		mov	cx, di
-		push	[bp+arg_0]
-		push	ds
-		lds	si, [bp+arg_2]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_22B3
-
-loc_2288:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_22AD
-		cmp	al, dh
-		jbe	short loc_2296
-		cmp	al, bl
-		jbe	short loc_22AD
-
-loc_2296:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_22A3
-		cmp	al, dl
-		adc	ax, bx
-
-loc_22A3:
-		sbb	al, bh
-		and	ax, 7F7Fh
-		xchg	ah, al
-		stosw
-		or	al, dl
-
-loc_22AD:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_2288
-
-loc_22B3:
-		pop	ds
-		xchg	cx, di
-		sub	cx, di
-		shr	cx, 1
-		add	di, 2000h
-		pop	ax
-		rep stosw
-		pop	di
-		pop	si
-		retf	0Ah
-sub_2254	endp
-
+include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
 include libs/master.lib/palette_white_in.asm
@@ -5537,7 +5456,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	offset asc_D965	; "	   "
 		push	0E1h ; 'á'
-		call	sub_2254
+		call	text_putsa
 		les	bx, dword_FC54
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
