@@ -1159,128 +1159,7 @@ include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1D06
-
-loc_1D00:
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-; END OF FUNCTION CHUNK	FOR sub_1D06
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D06	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-; FUNCTION CHUNK AT 1D00 SIZE 00000006 BYTES
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		sub	ax, ClipYT
-		cmp	ax, ClipYH
-		ja	short loc_1D00
-		mov	cx, [bp+arg_0]
-		sar	cx, 3
-		jle	short loc_1D00
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_8]
-		sar	di, 3
-		jns	short loc_1D36
-		add	cx, di
-		jle	short loc_1D00
-		shl	di, 2
-		add	si, di
-		xor	di, di
-
-loc_1D36:
-		cmp	di, 50h	; 'P'
-		jge	short loc_1D00
-		add	cx, di
-		cmp	cx, 50h	; 'P'
-		jl	short loc_1D45
-		mov	cx, 50h	; 'P'
-
-loc_1D45:
-		sub	cx, di
-		imul	ax, 50h
-		add	di, ax
-		push	ds
-		mov	es, ClipYT_seg
-		assume es:nothing
-		mov	ds, [bp+arg_4]
-		mov	bp, cx
-		cld
-		nop
-
-loc_1D58:
-		mov	cl, 2
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		mov	ax, cs:[bx+218Eh]
-		mov	dx, cs:[bx+2190h]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+218Eh]
-		or	dx, cs:[bx+2190h]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+218Eh]
-		or	dx, cs:[bx+2190h]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+218Eh]
-		or	dx, cs:[bx+2190h]
-		inc	si
-		mov	es:[di], al
-		mov	bx, es
-		mov	es:[di-8000h], ah
-		add	bh, 10h
-		mov	es, bx
-		assume es:nothing
-		mov	es:[di], dl
-		add	bh, 28h	; '('
-		mov	es, bx
-		assume es:nothing
-		mov	es:[di], dh
-		sub	bh, 38h	; '8'
-		mov	es, bx
-		assume es:nothing
-		inc	di
-		dec	bp
-		jnz	short loc_1D58
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_1D06	endp
-
+include libs/master.lib/graph_pack_put_8.asm
 include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/graph_scroll.asm
 include libs/master.lib/iatan2.asm
@@ -16350,7 +16229,7 @@ loc_F996:
 		mov	bx, di
 		imul	bx, 48h
 		push	word ptr [bx+2318h]
-		call	sub_1D06
+		call	graph_pack_put_8
 		inc	si
 		cmp	si, 190h
 		jl	short loc_F9B7
