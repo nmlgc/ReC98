@@ -1808,59 +1808,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/graph_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D08		proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	bp, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_D28:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_D28
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		add	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		shl	ax, 1
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		xor	ax, ax
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	2
-sub_D08		endp
-
+include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 
@@ -14148,7 +14096,7 @@ loc_BC0B:
 		push	0
 
 loc_BC0D:
-		call	sub_D08
+		call	graph_scrollup
 		push	1
 		call	sub_C78B
 		pop	cx
@@ -14186,7 +14134,7 @@ loc_BC48:
 		push	0
 
 loc_BC4A:
-		call	sub_D08
+		call	graph_scrollup
 		push	1
 		call	sub_C78B
 		pop	cx
@@ -14246,7 +14194,7 @@ sub_BC7C	proc near
 		push	20h ; ' '
 		call	sub_BBF9
 		push	0
-		call	sub_D08
+		call	graph_scrollup
 		push	32h ; '2'
 		call	sub_C82D
 		pop	cx

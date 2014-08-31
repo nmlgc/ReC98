@@ -1009,60 +1009,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_hide.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D50	proc far
-					; sub_D1BC:loc_D2E2P ...
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	bp, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_1D70:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_1D70
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		add	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		shl	ax, 1
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		xor	ax, ax
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	2
-sub_1D50	endp
-
+include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
 include libs/master.lib/large_byte.asm
@@ -10225,7 +10172,7 @@ sub_CCD6	proc near
 		cmp	byte_255BC, 0
 		jz	short loc_CCFE
 		push	dx
-		call	sub_1D50
+		call	graph_scrollup
 
 loc_CCFE:
 		mov	word_255BA, 0
@@ -10999,7 +10946,7 @@ loc_D2DF:
 		push	18Ch
 
 loc_D2E2:
-		call	sub_1D50
+		call	graph_scrollup
 		push	1
 		call	sub_131B7
 		inc	si
@@ -11008,7 +10955,7 @@ loc_D2EF:
 		cmp	si, [bp+var_2]
 		jle	short loc_D2D5
 		push	0
-		call	sub_1D50
+		call	graph_scrollup
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -17242,7 +17189,7 @@ loc_10245:
 		jnz	short loc_10281
 		mov	byte_255BC, 0
 		push	0
-		call	sub_1D50
+		call	graph_scrollup
 		mov	word_255AA, 11BEh
 		mov	al, Palettes+42
 		mov	byte_257D6, al
@@ -17299,7 +17246,7 @@ loc_102AF:
 		cmp	byte_256A9, 0B1h ; '±'
 		jnz	short loc_10307
 		push	word_255B8
-		call	sub_1D50
+		call	graph_scrollup
 		jmp	loc_10242
 ; ---------------------------------------------------------------------------
 

@@ -1322,59 +1322,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_hide.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1EE2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	bp, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_1F02:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_1F02
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		add	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		shl	ax, 1
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		xor	ax, ax
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	2
-sub_1EE2	endp
-
+include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
 
@@ -9003,7 +8951,7 @@ loc_C7AE:
 		jnz	short loc_C7C9
 		mov	byte_2CE00, 0
 		push	0
-		call	sub_1EE2
+		call	graph_scrollup
 		mov	word_23F58, 1240h
 		jmp	short loc_C7D0
 ; ---------------------------------------------------------------------------
@@ -9052,7 +9000,7 @@ loc_C800:
 		cmp	byte_25FEA, 5
 		jz	short loc_C849
 		push	word_2CDFC
-		call	sub_1EE2
+		call	graph_scrollup
 		jmp	loc_C7AB
 ; ---------------------------------------------------------------------------
 
@@ -9262,7 +9210,7 @@ sub_C99E	endp
 		jnz	short loc_C9FD
 		mov	byte_2CE00, 0
 		push	0
-		call	sub_1EE2
+		call	graph_scrollup
 		mov	word_23F58, 1240h
 
 loc_C9FD:
@@ -9305,7 +9253,7 @@ loc_CA2D:
 		cmp	byte_25FEA, 5
 		jz	short loc_CA75
 		push	word_2CDFC
-		call	sub_1EE2
+		call	graph_scrollup
 		jmp	short loc_CA75
 ; ---------------------------------------------------------------------------
 
@@ -9490,7 +9438,7 @@ sub_CB30	endp
 		jnz	short loc_CC20
 		mov	byte_2CE00, 0
 		push	0
-		call	sub_1EE2
+		call	graph_scrollup
 		mov	word_23F58, 1240h
 
 loc_CC20:
@@ -9533,7 +9481,7 @@ loc_CC50:
 		cmp	byte_25FEA, 5
 		jz	short loc_CC98
 		push	word_2CDFC
-		call	sub_1EE2
+		call	graph_scrollup
 		jmp	short loc_CC98
 ; ---------------------------------------------------------------------------
 
@@ -9687,7 +9635,7 @@ loc_CDB4:
 		jnz	short loc_CDCF
 		mov	byte_2CE00, 0
 		push	0
-		call	sub_1EE2
+		call	graph_scrollup
 		mov	word_23F58, 1240h
 		jmp	short loc_CDD6
 ; ---------------------------------------------------------------------------
@@ -9736,7 +9684,7 @@ loc_CE06:
 		cmp	byte_25FEA, 5
 		jz	short loc_CE4F
 		push	word_2CDFC
-		call	sub_1EE2
+		call	graph_scrollup
 		jmp	loc_CDB1
 ; ---------------------------------------------------------------------------
 
@@ -17076,7 +17024,7 @@ loc_10223:
 		cmp	byte_25FEA, 5
 		jz	short loc_1024F
 		push	dx
-		call	sub_1EE2
+		call	graph_scrollup
 
 loc_1024F:
 					; sub_10214+2Cj ...
@@ -19367,7 +19315,7 @@ loc_11475:
 		cmp	word_25FE0, 132h
 		jnb	short loc_114CD
 		push	word_2CDFC
-		call	sub_1EE2
+		call	graph_scrollup
 		xor	di, di
 		jmp	short loc_114AD
 ; ---------------------------------------------------------------------------

@@ -584,60 +584,7 @@ loc_1684:
 		retf	0Ah
 sub_1632	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1700	proc far
-					; sub_A64D+2F0P
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	bp, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_1720:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_1720
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		add	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		shl	ax, 1
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		xor	ax, ax
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	2
-sub_1700	endp
-
+include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
@@ -6533,7 +6480,7 @@ loc_A91A:
 		push	18Ch
 
 loc_A91D:
-		call	sub_1700
+		call	graph_scrollup
 		cmp	byte_105CE, 0
 		jnz	short loc_A930
 		push	1
@@ -6547,7 +6494,7 @@ loc_A933:
 		cmp	ax, [bp+var_2]
 		jle	short loc_A910
 		push	0
-		call	sub_1700
+		call	graph_scrollup
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 

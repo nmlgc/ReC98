@@ -1281,60 +1281,7 @@ loc_1D58:
 		retf	0Ah
 sub_1D06	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DD4	proc far
-					; sub_12DE0+17P ...
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	dx, graph_VramLines
-		sub	bx, dx
-		sbb	ax, ax
-		and	bx, ax
-		add	bx, dx
-		sub	dx, bx
-		mov	bp, bx
-		mov	cx, graph_VramZoom
-		shl	bx, cl
-		shl	dx, cl
-		mov	cl, 4
-
-loc_1DF4:
-		jmp	short $+2
-		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
-		test	al, cl
-		jz	short loc_1DF4
-		mov	al, 70h	; 'p'
-		out	0A2h, al	; Interrupt Controller #2, 8259A
-		mov	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		add	ax, bp
-		shl	ax, 1
-		shl	ax, 1
-		shl	ax, 1
-		call	gdc_outpw
-		mov	ax, dx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		xor	ax, ax
-		call	gdc_outpw
-		mov	ax, bx
-		shl	ax, cl
-		or	ah, ch
-		call	gdc_outpw
-		pop	bp
-		retf	2
-sub_1DD4	endp
-
+include libs/master.lib/graph_scrollup.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7673,7 +7620,7 @@ var_C		= byte ptr -0Ch
 		mov	vsync_Count1, 0
 		call	sub_BF7B
 		push	0
-		call	sub_1DD4
+		call	graph_scrollup
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
@@ -23208,7 +23155,7 @@ var_2		= word ptr -2
 		call	near ptr sub_FBE9
 		call	sub_DE4E
 		push	word_20344
-		call	sub_1DD4
+		call	graph_scrollup
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
@@ -37455,7 +37402,7 @@ sub_1A6C5	proc near
 		push	1
 		call	sub_F618
 		push	0
-		call	sub_1DD4
+		call	graph_scrollup
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al		; Interrupt Controller #2, 8259A
