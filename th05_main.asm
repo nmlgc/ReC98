@@ -1586,60 +1586,7 @@ loc_249F:
 		retn
 sub_2494	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_24A8	proc far
-		push	di
-		pushf
-		cli
-		add	sp, 8
-		pop	ax
-		pop	dx
-		pop	bx
-		pop	cx
-		mov	di, cx
-		shl	di, 1
-		shl	di, 1
-		add	di, cx
-		shl	di, 1
-		add	di, TextVramSeg
-		add	di, 200h
-		mov	es, di
-		pop	di
-		sub	sp, 12h
-		popf
-		sub	bx, di
-		inc	bx
-		sub	dx, cx
-		mov	cx, dx
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, cx
-		shl	dx, 1
-		shl	dx, 1
-		shl	dx, 1
-		shl	dx, 1
-		add	di, dx
-		shl	di, 1
-		lea	dx, [bx+50h]
-		shl	dx, 1
-		nop
-
-loc_24EA:
-		mov	cx, bx
-		rep stosw
-
-loc_24EE:
-		sub	di, dx
-		jnb	short loc_24EA
-		pop	di
-
-locret_24F3:
-		retf	0Ah
-sub_24A8	endp
-
+include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 
@@ -15222,11 +15169,11 @@ loc_F1F2:
 		push	large 140014h
 		push	large 320017h
 		push	21h ; '!'
-		call	sub_24A8
+		call	text_boxfilla
 		push	large 6000Ch
 		push	large 24000Fh
 		push	21h ; '!'
-		call	sub_24A8
+		call	text_boxfilla
 		push	word_2C934
 		push	word_2C936
 		call	sub_EF74

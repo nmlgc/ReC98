@@ -1477,56 +1477,7 @@ include libs/master.lib/random.asm
 include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_25DA	proc far
-		push	di
-		pushf
-		cli
-		add	sp, 8
-		pop	ax
-		pop	dx
-		pop	bx
-		pop	cx
-		mov	di, cx
-		shl	di, 1
-		shl	di, 1
-		add	di, cx
-		shl	di, 1
-		add	di, TextVramSeg
-		add	di, 200h
-		mov	es, di
-		pop	di
-		sub	sp, 12h
-		popf
-		sub	bx, di
-		inc	bx
-		sub	dx, cx
-		mov	cx, dx
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, cx
-		shl	dx, 1
-		shl	dx, 1
-		shl	dx, 1
-		shl	dx, 1
-		add	di, dx
-		shl	di, 1
-		lea	dx, [bx+50h]
-		shl	dx, 1
-		nop
-
-loc_261C:
-		mov	cx, bx
-		rep stosw
-		sub	di, dx
-		jnb	short loc_261C
-		pop	di
-		retf	0Ah
-sub_25DA	endp
-
+include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
 
@@ -8198,7 +8149,7 @@ loc_B8B5:
 		push	large 40001h
 		push	large 330017h
 		push	5
-		call	sub_25DA
+		call	text_boxfilla
 		push	30h ; '0'       ; n
 		push	ds
 		push	offset unk_1F4AD ; src
