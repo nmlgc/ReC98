@@ -53,69 +53,7 @@ include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
 include libs/master.lib/grc_setclip.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CD2		proc far
-		push	bp
-		push	si
-		push	di
-		mov	ax, ClipYT_seg
-		mov	es, ax
-		mov	bx, ClipXL
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, ClipYB_adr
-		and	bx, 0Fh
-		lea	si, [bx-10h]
-		shl	bx, 1
-		mov	dx, [bx+28Eh]
-		not	dx
-		add	si, ClipXW
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+290h]
-		sar	si, 4
-		js	short loc_D26
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_D10:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_D10
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_D26:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_D2E:
-		stosw
-		sub	di, bp
-		jnb	short loc_D2E
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_CD2		endp
-
+include libs/master.lib/grcg_fill.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_setcolor.asm
@@ -5150,11 +5088,11 @@ sub_A21F	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_CD2
+		call	grcg_fill
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_CD2
+		call	grcg_fill
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al		; Interrupt Controller #2, 8259A

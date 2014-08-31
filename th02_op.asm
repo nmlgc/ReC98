@@ -55,69 +55,7 @@ include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grc_setclip.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B90		proc far
-		push	bp
-		push	si
-		push	di
-		mov	ax, ClipYT_seg
-		mov	es, ax
-		mov	bx, ClipXL
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, ClipYB_adr
-		and	bx, 0Fh
-		lea	si, [bx-10h]
-		shl	bx, 1
-		mov	dx, [bx+208h]
-		not	dx
-		add	si, ClipXW
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+20Ah]
-		sar	si, 4
-		js	short loc_BE4
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_BCE:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_BCE
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_BE4:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_BEC:
-		stosw
-		sub	di, bp
-		jnb	short loc_BEC
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_B90		endp
-
+include libs/master.lib/grcg_fill.asm
 include libs/master.lib/grcg_hline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7636,7 +7574,7 @@ var_2		= word ptr -2
 		push	0C0h ; 'À'
 		push	0Ah
 		call	grcg_setcolor
-		call	sub_B90
+		call	grcg_fill
 		call	grcg_off
 		inc	word_DCB0
 		xor	si, si
@@ -7770,7 +7708,7 @@ loc_B7B7:
 		push	0C0h ; 'À'
 		push	0Ah
 		call	grcg_setcolor
-		call	sub_B90
+		call	grcg_fill
 		call	grcg_off
 		push	0FFFFh
 		call	sub_B5B0

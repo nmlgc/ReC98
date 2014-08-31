@@ -61,70 +61,7 @@ include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_circle.asm
 include libs/master.lib/grcg_circle_x.asm
 include libs/master.lib/grc_setclip.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_FB0		proc far
-					; sub_199B3+21EP ...
-		push	bp
-		push	si
-		push	di
-		mov	ax, ClipYT_seg
-		mov	es, ax
-		mov	bx, ClipXL
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, ClipYB_adr
-		and	bx, 0Fh
-		lea	si, [bx-10h]
-		shl	bx, 1
-		mov	dx, [bx+4ECh]
-		not	dx
-		add	si, ClipXW
-		mov	bx, si
-		and	bx, 0Fh
-		shl	bx, 1
-		mov	bx, [bx+4EEh]
-		sar	si, 4
-		js	short loc_1004
-		lea	bp, [si+2Ah]
-		shl	bp, 1
-
-loc_FEE:
-		mov	ax, dx
-		stosw
-		mov	ax, 0FFFFh
-		mov	cx, si
-		rep stosw
-		mov	ax, bx
-		stosw
-		sub	di, bp
-		jnb	short loc_FEE
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1004:
-		mov	bp, 52h	; 'R'
-		mov	ax, dx
-		and	ax, bx
-		nop
-
-loc_100C:
-		stosw
-		sub	di, bp
-		jnb	short loc_100C
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_FB0		endp
-
+include libs/master.lib/grcg_fill.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_pset.asm
@@ -34695,7 +34632,7 @@ sub_199B3	proc far
 		call	grc_setclip
 		push	large 0C00000h
 		call	grcg_setcolor
-		call	sub_FB0
+		call	grcg_fill
 		call	grcg_off
 		mov	al, byte_20618
 		mov	ah, 0
@@ -34815,11 +34752,11 @@ sub_199B3	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_FB0
+		call	grcg_fill
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_FB0
+		call	grcg_fill
 		call	grcg_off
 		push	large 200000h
 		push	large 1A0018Fh
@@ -34978,11 +34915,11 @@ loc_19D48:
 		out	dx, al		; Interrupt Controller #2, 8259A
 		push	large 0C00000h
 		call	grcg_setcolor
-		call	sub_FB0
+		call	grcg_fill
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_FB0
+		call	grcg_fill
 		call	grcg_off
 		mov	byte_26CC0, 0
 		xor	ax, ax
@@ -36023,7 +35960,7 @@ loc_1A613:
 		jg	loc_1A54E
 		push	large 0C00000h
 		call	grcg_setcolor
-		call	sub_FB0
+		call	grcg_fill
 		call	grcg_off
 		push	large 600000h
 		call	sub_1A423
@@ -36229,7 +36166,7 @@ sub_1A7D5	proc far
 		call	palette_white_out
 		push	large 0C00000h
 		call	grcg_setcolor
-		call	sub_FB0
+		call	grcg_fill
 		call	grcg_off
 		push	large 200000h
 		push	large 1A0018Fh
