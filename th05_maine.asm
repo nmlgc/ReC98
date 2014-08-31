@@ -318,114 +318,7 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D1A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		xor	di, di
-		mov	ax, 4
-		push	ax
-		mov	bx, [bp+arg_0]
-		cmp	bx, super_patnum
-		jnb	short loc_2DA9
-		shl	bx, 1
-		mov	cx, [bx+1DDCh]
-		jcxz	short loc_2DA9
-		mov	ax, [bx+21DCh]
-		mul	ah
-		mov	bp, ax
-		mov	es, super_buffer
-		assume es:nothing
-		mov	ds, cx
-		mov	bh, 0FFh
-
-loc_2D47:
-		xor	si, si
-		mov	ax, bx
-		not	ax
-		mov	al, 80h	; '€'
-		and	ah, 0Fh
-		stosw
-		mov	cx, bp
-		shr	cx, 1
-		rep movsw
-		sub	di, bp
-		mov	bl, 4
-		mov	cx, bp
-		shr	cx, 1
-		nop
-
-loc_2D62:
-		ror	bh, 1
-		sbb	dx, dx
-
-loc_2D66:
-		lodsw
-		xor	ax, dx
-		and	es:[di], ax
-		inc	di
-		inc	di
-		loop	loc_2D66
-		sub	di, bp
-		mov	cx, bp
-		shr	cx, 1
-		dec	bl
-		jnz	short loc_2D62
-		lea	dx, [di-2]
-		xor	ax, ax
-		repe scasw
-		mov	di, dx
-		jz	short loc_2D8D
-		lea	di, [bp+di+2]
-		pop	ax
-		dec	ax
-		push	ax
-		js	short loc_2DA9
-
-loc_2D8D:
-		sub	bh, 11h
-		jnb	short loc_2D47
-		mov	cx, di
-		shr	cx, 1
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		xor	ax, ax
-		mov	di, ax
-		mov	si, ax
-		rep movsw
-		stosw
-		clc
-		mov	ax, 0
-		jmp	short loc_2DAD
-; ---------------------------------------------------------------------------
-
-loc_2DA9:
-		mov	ax, 0FFF3h
-		stc
-
-loc_2DAD:
-		pop	di
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	2
-sub_2D1A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_convert_tiny.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11936,7 +11829,7 @@ var_2		= word ptr -2
 
 loc_E549:
 		push	si
-		call	sub_2D1A
+		call	super_convert_tiny
 		inc	si
 
 loc_E550:

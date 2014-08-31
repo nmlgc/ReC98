@@ -511,114 +511,7 @@ include libs/master.lib/super_clean.asm
 include libs/master.lib/super_roll_put_1plane.asm
 include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3106	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		xor	di, di
-		mov	ax, 4
-		push	ax
-		mov	bx, [bp+arg_0]
-		cmp	bx, super_patnum
-		jnb	short loc_3195
-		shl	bx, 1
-		mov	cx, [bx+2AC4h]
-		jcxz	short loc_3195
-		mov	ax, [bx+2EC4h]
-		mul	ah
-		mov	bp, ax
-		mov	es, super_buffer
-		assume es:nothing
-		mov	ds, cx
-		mov	bh, 0FFh
-
-loc_3133:
-		xor	si, si
-		mov	ax, bx
-		not	ax
-		mov	al, 80h	; '€'
-		and	ah, 0Fh
-		stosw
-		mov	cx, bp
-		shr	cx, 1
-		rep movsw
-		sub	di, bp
-		mov	bl, 4
-		mov	cx, bp
-		shr	cx, 1
-		nop
-
-loc_314E:
-		ror	bh, 1
-		sbb	dx, dx
-
-loc_3152:
-		lodsw
-		xor	ax, dx
-		and	es:[di], ax
-		inc	di
-		inc	di
-		loop	loc_3152
-		sub	di, bp
-		mov	cx, bp
-		shr	cx, 1
-		dec	bl
-		jnz	short loc_314E
-		lea	dx, [di-2]
-		xor	ax, ax
-		repe scasw
-		mov	di, dx
-		jz	short loc_3179
-		lea	di, [bp+di+2]
-		pop	ax
-		dec	ax
-		push	ax
-		js	short loc_3195
-
-loc_3179:
-		sub	bh, 11h
-		jnb	short loc_3133
-		mov	cx, di
-		shr	cx, 1
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		xor	ax, ax
-		mov	di, ax
-		mov	si, ax
-		rep movsw
-		stosw
-		clc
-		mov	ax, 0
-		jmp	short loc_3199
-; ---------------------------------------------------------------------------
-
-loc_3195:
-		mov	ax, 0FFF3h
-		stc
-
-loc_3199:
-		pop	di
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	2
-sub_3106	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_convert_tiny.asm
 
 loc_31A2:
 		push	bp
@@ -4801,7 +4694,7 @@ loc_AFA4:
 
 loc_AFC9:
 		push	si
-		call	sub_3106
+		call	super_convert_tiny
 		inc	si
 
 loc_AFD0:

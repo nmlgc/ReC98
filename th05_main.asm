@@ -778,115 +778,7 @@ include libs/master.lib/super_roll_put_1plane.asm
 include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_35A2	proc far
-					; sub_F4DD+1EP	...
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		xor	di, di
-		mov	ax, 4
-		push	ax
-		mov	bx, [bp+arg_0]
-		cmp	bx, super_patnum
-		jnb	short loc_3631
-		shl	bx, 1
-		mov	cx, [bx+269Eh]
-		jcxz	short loc_3631
-		mov	ax, [bx+2A9Eh]
-		mul	ah
-		mov	bp, ax
-		mov	es, super_buffer
-		assume es:nothing
-		mov	ds, cx
-		mov	bh, 0FFh
-
-loc_35CF:
-		xor	si, si
-		mov	ax, bx
-		not	ax
-		mov	al, 80h	; '€'
-		and	ah, 0Fh
-		stosw
-		mov	cx, bp
-		shr	cx, 1
-		rep movsw
-		sub	di, bp
-		mov	bl, 4
-		mov	cx, bp
-		shr	cx, 1
-		nop
-
-loc_35EA:
-		ror	bh, 1
-		sbb	dx, dx
-
-loc_35EE:
-		lodsw
-		xor	ax, dx
-		and	es:[di], ax
-		inc	di
-		inc	di
-		loop	loc_35EE
-		sub	di, bp
-		mov	cx, bp
-		shr	cx, 1
-		dec	bl
-		jnz	short loc_35EA
-		lea	dx, [di-2]
-		xor	ax, ax
-		repe scasw
-		mov	di, dx
-		jz	short loc_3615
-		lea	di, [bp+di+2]
-		pop	ax
-		dec	ax
-		push	ax
-		js	short loc_3631
-
-loc_3615:
-		sub	bh, 11h
-		jnb	short loc_35CF
-		mov	cx, di
-		shr	cx, 1
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		xor	ax, ax
-		mov	di, ax
-		mov	si, ax
-		rep movsw
-		stosw
-		clc
-		mov	ax, 0
-		jmp	short loc_3635
-; ---------------------------------------------------------------------------
-
-loc_3631:
-		mov	ax, 0FFF3h
-		stc
-
-loc_3635:
-		pop	di
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	2
-sub_35A2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/super_convert_tiny.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4915,7 +4807,7 @@ loc_B399:
 
 loc_B3A7:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_B3AE:
@@ -13983,7 +13875,7 @@ sub_F4DD	proc near
 
 loc_F4FA:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_F501:

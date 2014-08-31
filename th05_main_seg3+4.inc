@@ -10650,7 +10650,7 @@ loc_1AC1C:				; DATA XREF: seg003:5D48o
 
 loc_1AC51:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_1AC58:
@@ -14571,7 +14571,7 @@ loc_1D29C:				; DATA XREF: seg003:off_1D524o
 
 loc_1D2D0:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_1D2D7:
@@ -16165,7 +16165,7 @@ loc_1E1CD:				; DATA XREF: seg003:off_1E53Co
 
 loc_1E213:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_1E21A:
@@ -18056,7 +18056,7 @@ loc_1F2C9:
 
 loc_1F326:
 		push	si
-		call	sub_35A2
+		call	super_convert_tiny
 		inc	si
 
 loc_1F32D:
