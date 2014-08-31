@@ -1810,8 +1810,7 @@ arg_C		= word ptr  12h
 		push	ss
 		lea	ax, [bp+var_12]
 		push	ax
-		push	cs
-		call	near ptr sub_41C6
+		call	ems_movememoryregion
 		push	ax
 		sub	ax, ax
 		push	ax
@@ -1826,27 +1825,7 @@ include libs/master.lib/ems_allocate.asm
 include libs/master.lib/ems_enablepageframe.asm
 include libs/master.lib/ems_exist.asm
 include libs/master.lib/ems_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_41C6	proc far
-		push	si
-		mov	si, sp
-		push	ds
-		lds	si, ss:[si+6]
-		mov	ax, 5700h
-		int	67h		;  - LIM EMS 4.0 - MOVE/EXCHANGE MEMORY	REGION
-					; AL = 00h move	memory region /	01h exchange memory region
-					; DS:SI	-> structure describing	source and destination
-					; Return: AH = status
-		mov	al, ah
-		xor	ah, ah
-		pop	ds
-		pop	si
-		retf	4
-sub_41C6	endp
-
+include libs/master.lib/ems_movememoryregion.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1923,8 +1902,7 @@ arg_C		= word ptr  12h
 		push	ss
 		lea	ax, [bp+var_12]
 		push	ax
-		push	cs
-		call	near ptr sub_41C6
+		call	ems_movememoryregion
 		push	ax
 		sub	ax, ax
 		push	ax
