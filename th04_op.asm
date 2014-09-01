@@ -63,153 +63,7 @@ include libs/master.lib/grcg_boxfill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_polygon_c.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_FF0
-
-loc_FDA:
-		push	word ptr [bp+0eh]
-		push	word ptr [bp+0ch]
-		push	word ptr [bp+0ah]
-		push	word ptr [bp+08h]
-		call	grcg_boxfill
-		pop	di
-		pop	si
-		leave
-		retf	0Ah
-; END OF FUNCTION CHUNK	FOR sub_FF0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FF0		proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-; FUNCTION CHUNK AT 0FDA SIZE 00000016 BYTES
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	bx, [bp+arg_8]
-		mov	si, [bp+arg_4]
-		cmp	bx, si
-		jle	short loc_100B
-		xchg	bx, si
-		mov	[bp+arg_8], bx
-		mov	[bp+arg_4], si
-
-loc_100B:
-		sub	si, bx
-		shr	si, 1
-		sub	ax, si
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, si
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_2]
-		cmp	cx, di
-		jle	short loc_1023
-		xchg	cx, di
-
-loc_1023:
-		mov	bx, di
-		sub	di, cx
-		shr	di, 1
-		sub	ax, di
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, di
-		jz	short loc_FDA
-		mov	[bp+var_2], ax
-		add	cx, ax
-		sub	bx, ax
-		mov	[bp+arg_6], cx
-		mov	[bp+arg_2], bx
-		mov	si, ax
-		inc	cx
-		dec	bx
-		cmp	bx, cx
-		jl	short loc_1054
-		push	[bp+arg_8]
-		push	cx
-		push	[bp+arg_4]
-		push	bx
-		call	grcg_boxfill
-
-loc_1054:
-		add	[bp+arg_8], si
-		sub	[bp+arg_4], si
-		mov	di, 0
-
-loc_105D:
-		mov	ax, [bp+arg_8]
-		sub	ax, si
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, si
-		push	ax
-		mov	ax, [bp+arg_6]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, [bp+arg_8]
-		sub	ax, si
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, si
-		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_10C7
-		mov	ax, [bp+arg_8]
-		sub	ax, di
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, di
-		push	ax
-		mov	ax, [bp+arg_6]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	ax, [bp+arg_8]
-		sub	ax, di
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, di
-		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_10C7:
-		inc	di
-		cmp	si, di
-		jnb	short loc_105D
-		pop	di
-		pop	si
-		leave
-		retf	0Ah
-sub_FF0		endp
-
+include libs/master.lib/grcg_round_boxfill.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/get_machine_98.asm
 include libs/master.lib/get_machine_at.asm
@@ -8801,7 +8655,7 @@ loc_D353:
 		lea	ax, [di+48h]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		push	large 0C00002h
 		call	grcg_setcolor
 		push	si
@@ -8811,7 +8665,7 @@ loc_D353:
 		lea	ax, [di+40h]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -9060,7 +8914,7 @@ sub_D595	proc near
 		lea	ax, [si+1Fh]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		lea	ax, [di+8]
 		push	ax
 		lea	ax, [si+20h]
@@ -9070,7 +8924,7 @@ sub_D595	proc near
 		lea	ax, [si+37h]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		push	88h ; 'ˆ'
 		lea	ax, [si+8]
 		push	ax
@@ -9078,7 +8932,7 @@ sub_D595	proc near
 		lea	ax, [si+1Fh]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		push	large 0C00002h
 		call	grcg_setcolor
 		push	di
@@ -9088,7 +8942,7 @@ sub_D595	proc near
 		lea	ax, [si+17h]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		push	di
 		lea	ax, [si+18h]
 		push	ax
@@ -9097,14 +8951,14 @@ sub_D595	proc near
 		lea	ax, [si+2Fh]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		push	80h ; '€'
 		push	si
 		push	13Fh
 		lea	ax, [si+17h]
 		push	ax
 		push	8
-		call	sub_FF0
+		call	grcg_round_boxfill
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al

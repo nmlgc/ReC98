@@ -58,153 +58,7 @@ include libs/master.lib/grc_setclip.asm
 include libs/master.lib/grcg_fill.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_polygon_c.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_EAA
-
-loc_E94:
-		push	word ptr [bp+0Eh]
-		push	word ptr [bp+0Ch]
-		push	word ptr [bp+0Ah]
-		push	word ptr [bp+08h]
-		call	grcg_boxfill
-		pop	di
-		pop	si
-		leave
-		retf	0Ah
-; END OF FUNCTION CHUNK	FOR sub_EAA
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EAA		proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-; FUNCTION CHUNK AT 0E94 SIZE 00000016 BYTES
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	bx, [bp+arg_8]
-		mov	si, [bp+arg_4]
-		cmp	bx, si
-		jle	short loc_EC5
-		xchg	bx, si
-		mov	[bp+arg_8], bx
-		mov	[bp+arg_4], si
-
-loc_EC5:
-		sub	si, bx
-		shr	si, 1
-		sub	ax, si
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, si
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_2]
-		cmp	cx, di
-		jle	short loc_EDD
-		xchg	cx, di
-
-loc_EDD:
-		mov	bx, di
-		sub	di, cx
-		shr	di, 1
-		sub	ax, di
-		sbb	dx, dx
-		and	ax, dx
-		add	ax, di
-		jz	short loc_E94
-		mov	[bp+var_2], ax
-		add	cx, ax
-		sub	bx, ax
-		mov	[bp+arg_6], cx
-		mov	[bp+arg_2], bx
-		mov	si, ax
-		inc	cx
-		dec	bx
-		cmp	bx, cx
-		jl	short loc_F0E
-		push	[bp+arg_8]
-		push	cx
-		push	[bp+arg_4]
-		push	bx
-		call	grcg_boxfill
-
-loc_F0E:
-		add	[bp+arg_8], si
-		sub	[bp+arg_4], si
-		mov	di, 0
-
-loc_F17:
-		mov	ax, [bp+arg_8]
-		sub	ax, si
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, si
-		push	ax
-		mov	ax, [bp+arg_6]
-		sub	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, [bp+arg_8]
-		sub	ax, si
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, si
-		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, di
-		push	ax
-		call	grcg_hline
-		mov	ax, di
-		stc
-		rcl	ax, 1
-		sub	[bp+var_2], ax
-		jns	short loc_F81
-		mov	ax, [bp+arg_8]
-		sub	ax, di
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, di
-		push	ax
-		mov	ax, [bp+arg_6]
-		sub	ax, si
-		push	ax
-		call	grcg_hline
-		mov	ax, [bp+arg_8]
-		sub	ax, di
-		push	ax
-		mov	ax, [bp+arg_4]
-		add	ax, di
-		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		call	grcg_hline
-		dec	si
-		mov	ax, si
-		shl	ax, 1
-		add	[bp+var_2], ax
-
-loc_F81:
-		inc	di
-		cmp	si, di
-		jnb	short loc_F17
-		pop	di
-		pop	si
-		leave
-		retf	0Ah
-sub_EAA		endp
-
+include libs/master.lib/grcg_round_boxfill.asm
 include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
@@ -7396,7 +7250,7 @@ loc_BA4B:
 		lea	ax, [di+48h]
 		push	ax
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		push	0C0h ; 'À'
 		push	0
 		call	grcg_setcolor
@@ -7407,7 +7261,7 @@ loc_BA4B:
 		lea	ax, [di+40h]
 		push	ax
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		call	grcg_off
 		mov	bx, [bp+arg_0]
 		imul	bx, 0Ch
@@ -7468,7 +7322,7 @@ sub_BAFC	proc far
 		push	208h
 		push	38h ; '8'
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		push	0C0h ; 'À'
 		push	0
 		call	grcg_setcolor
@@ -7477,7 +7331,7 @@ sub_BAFC	proc far
 		push	200h
 		push	30h ; '0'
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		call	grcg_off
 		push	word ptr off_DD46+2
 		push	word ptr off_DD46
@@ -7497,7 +7351,7 @@ sub_BAFC	proc far
 		push	278h
 		push	68h ; 'h'
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		push	0C0h ; 'À'
 		push	0
 		call	grcg_setcolor
@@ -7506,7 +7360,7 @@ sub_BAFC	proc far
 		push	270h
 		push	60h ; '`'
 		push	8
-		call	sub_EAA
+		call	grcg_round_boxfill
 		call	grcg_off
 		push	word ptr off_DD4A+2
 		push	word ptr off_DD4A
