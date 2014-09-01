@@ -60,92 +60,7 @@ include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_settile_1line.asm
 include libs/master.lib/grcg_triangle.asm
 include libs/master.lib/grcg_vline.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1120	proc far
-					; sub_1905A+DAP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		mov	es, ClipYT_seg
-		mov	ax, ClipYT
-		mov	cx, ClipYH
-		mov	si, [bp+arg_A]
-		sub	si, ax
-		js	short loc_11AF
-		mov	di, [bp+arg_4]
-		sub	di, ax
-		js	short loc_11AF
-		cmp	si, di
-		jg	short loc_1175
-		or	di, di
-		js	short loc_11AF
-		cmp	si, cx
-		jg	short loc_11AF
-		sub	di, cx
-		sbb	ax, ax
-		and	di, ax
-		add	di, cx
-		sub	di, si
-		jl	short loc_11AF
-		mov	ax, [bp+arg_2]
-		mov	cx, di
-		mov	bx, 118Ch
-		mov	dx, [bp+arg_8]
-		call	make_linework
-		mov	ax, [bp+arg_0]
-		mov	cx, di
-		mov	bx, 1194h
-		mov	dx, [bp+arg_6]
-		push	11A7h
-		jmp	make_linework
-; ---------------------------------------------------------------------------
-
-loc_1175:
-		xchg	si, di
-		or	di, di
-		js	short loc_11AF
-		cmp	si, cx
-		jg	short loc_11AF
-		sub	di, cx
-		sbb	ax, ax
-		and	di, ax
-		add	di, cx
-		sub	di, si
-		jl	short loc_11AF
-		mov	ax, [bp+arg_8]
-		mov	cx, di
-		mov	bx, 118Ch
-		mov	dx, [bp+arg_2]
-		call	make_linework
-		mov	ax, [bp+arg_6]
-		mov	cx, di
-		mov	bx, 1194h
-		mov	dx, [bp+arg_0]
-		call	make_linework
-		imul	si, 50h
-		mov	dx, di
-		call	draw_trapezoid
-
-loc_11AF:
-		pop	si
-		pop	di
-		leave
-		retf	0Ch
-sub_1120	endp
-
+include libs/master.lib/grcg_trapezoid.asm
 include libs/master.lib/gaiji_backup.asm
 include libs/master.lib/gaiji_entry_bfnt.asm
 include libs/master.lib/gaiji_putca.asm
@@ -34178,7 +34093,7 @@ loc_190CF:
 		mov	ax, [bp+var_8]
 		add	ax, 6
 		push	ax
-		call	sub_1120
+		call	grcg_trapezoid
 		push	large 0C0000Ah
 		call	grcg_setcolor
 		push	8
@@ -34195,7 +34110,7 @@ loc_190CF:
 		mov	ax, [bp+var_8]
 		add	ax, 3
 		push	ax
-		call	sub_1120
+		call	grcg_trapezoid
 		push	large 0C0000Fh
 		call	grcg_setcolor
 		push	8
@@ -34212,7 +34127,7 @@ loc_190CF:
 		mov	ax, [bp+var_8]
 		inc	ax
 		push	ax
-		call	sub_1120
+		call	grcg_trapezoid
 		jmp	loc_191FF
 ; ---------------------------------------------------------------------------
 
@@ -34247,7 +34162,7 @@ loc_19179:
 		mov	ax, [bp+var_8]
 		add	ax, di
 		push	ax
-		call	sub_1120
+		call	grcg_trapezoid
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -34269,7 +34184,7 @@ loc_19179:
 		mov	ax, [bp+var_8]
 		add	ax, di
 		push	ax
-		call	sub_1120
+		call	grcg_trapezoid
 
 loc_191E4:
 		push	large 0C0000Fh
