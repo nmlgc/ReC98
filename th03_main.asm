@@ -57,35 +57,7 @@ include libs/master.lib/grcg_fill.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_line.asm
 include libs/master.lib/grcg_setcolor.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F8C		proc far
-					; sub_14511+91P ...
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= byte ptr  8
-
-		mov	cx, bp
-		mov	bp, sp
-		mov	al, [bp+arg_4]
-		out	7Ch, al
-		mov	dx, 7Eh	; '~'
-		mov	ax, [bp+arg_0]
-		out	dx, al
-		mov	al, ah
-		out	dx, al
-		mov	ax, [bp+arg_2]
-		out	dx, al
-		mov	al, ah
-		out	dx, al
-		mov	bp, cx
-		retf	6
-sub_F8C		endp
-
+include libs/master.lib/grcg_settile_1line.asm
 include libs/master.lib/grcg_triangle.asm
 include libs/master.lib/grcg_vline.asm
 
@@ -24864,7 +24836,7 @@ var_2		= word ptr -2
 		call	egc_off
 		push	0C0h ; 'À'
 		push	large 0AA0055AAh
-		call	sub_F8C
+		call	grcg_settile_1line
 		mov	[bp+var_4], 0
 		mov	si, 0Bh
 		jmp	short loc_14594
@@ -24906,7 +24878,7 @@ loc_14594:
 		jg	short loc_1454D
 		push	0C0h ; 'À'
 		push	large 0FF00AA55h
-		call	sub_F8C
+		call	grcg_settile_1line
 		mov	[bp+var_4], 0
 		mov	si, 6
 		jmp	short loc_145F8
@@ -24948,7 +24920,7 @@ loc_145F8:
 		jg	short loc_145B1
 		push	0C0h ; 'À'
 		push	large 0FF55FF55h
-		call	sub_F8C
+		call	grcg_settile_1line
 		mov	[bp+var_4], 0
 		mov	si, 3
 		jmp	short loc_1465C
