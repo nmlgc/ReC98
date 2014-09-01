@@ -152,48 +152,7 @@ include libs/master.lib/gaiji_putca.asm
 include libs/master.lib/gaiji_putsa.asm
 include libs/master.lib/gaiji_read.asm
 include libs/master.lib/gaiji_write.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1402	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	cx, bx
-		ror	cx, 1
-		cmc
-		rcr	cx, 1
-		mov	ah, 42h	; 'B'
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	al, 8
-		out	68h, al
-		mov	ax, 0A800h
-		or	bx, bx
-		jz	short loc_1421
-		mov	ax, 0ABE8h
-
-loc_1421:
-		mov	graph_VramSeg, ax
-		mov	ClipYT_seg, ax
-		mov	ax, 0
-		mov	ClipXL, ax
-		mov	ClipYT, ax
-		mov	ax, 27Fh
-		mov	ClipXR, ax
-		mov	ClipXW, ax
-		mov	graph_VramWords, 1F40h
-		mov	ax, 0C8h ; 'È'
-		mov	graph_VramLines, ax
-		dec	ax
-		mov	ClipYB, ax
-		mov	ClipYH, ax
-		mov	ClipYB_adr, 3E30h
-		mov	graph_VramZoom, 1
-		retf	2
-sub_1402	endp
-
+include libs/master.lib/graph_200line.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
@@ -4481,7 +4440,7 @@ loc_9E24:
 		push	cs
 		call	near ptr sub_A38E
 		push	0
-		call	sub_1402
+		call	graph_200line
 		call	sub_F0EE
 		mov	byte_23AEE, 0
 		mov	byte_23AEF, 1
