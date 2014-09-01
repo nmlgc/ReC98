@@ -1038,50 +1038,7 @@ include libs/BorlandC/new.asm
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
 include libs/BorlandC/setupio.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl tolower(int ch)
-_tolower	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		cmp	dx, 0FFFFh
-		jnz	short loc_40F9
-		mov	ax, 0FFFFh
-		jmp	short loc_4113
-; ---------------------------------------------------------------------------
-
-loc_40F9:
-		mov	al, dl
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype+1)[bx], 4
-		jz	short loc_410F
-		mov	al, dl
-		mov	ah, 0
-		add	ax, 20h	; ' '
-		jmp	short loc_4113
-; ---------------------------------------------------------------------------
-
-loc_410F:
-		mov	al, dl
-		mov	ah, 0
-
-loc_4113:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_tolower	endp
-
+include libs/BorlandC/tolower.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
