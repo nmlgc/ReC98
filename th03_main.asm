@@ -86,135 +86,7 @@ arg_4		= byte ptr  8
 		retf	6
 sub_F8C		endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FAC		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		mov	es, ClipYT_seg
-		mov	ax, [bp+arg_A]
-		mov	bx, [bp+arg_8]
-		mov	cx, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		cmp	bx, dx
-		jl	short loc_FCE
-		xchg	ax, cx
-		xchg	bx, dx
-
-loc_FCE:
-		cmp	bx, di
-		jl	short loc_FD5
-		xchg	ax, si
-		xchg	bx, di
-
-loc_FD5:
-		cmp	dx, di
-		jl	short loc_FDD
-		xchg	cx, si
-		xchg	dx, di
-
-loc_FDD:
-		mov	[bp+arg_A], ax
-		mov	ax, ClipYT
-		sub	bx, ax
-		cmp	bx, ClipYH
-		jg	short loc_103A
-		mov	[bp+arg_8], bx
-		mov	[bp+arg_6], cx
-		sub	dx, ax
-		mov	[bp+arg_4], dx
-		mov	[bp+arg_2], si
-		sub	di, ax
-		jl	short loc_103A
-		mov	[bp+arg_0], di
-		mov	ax, si
-		mov	si, bx
-		mov	cx, di
-		mov	bx, 1194h
-		sub	cx, si
-		mov	word_1E714, cx
-		mov	dx, [bp+arg_A]
-		call	make_linework
-		mov	dx, [bp+arg_6]
-		mov	bx, 118Ch
-		mov	cx, [bp+arg_4]
-		cmp	cx, si
-		jnz	short loc_1040
-		mov	ax, [bp+arg_2]
-		sub	di, cx
-		mov	cx, di
-		call	make_linework
-		imul	si, 50h
-		mov	dx, word_1E714
-		push	103Ah
-		jmp	draw_trapezoid
-; ---------------------------------------------------------------------------
-		nop
-
-loc_103A:
-		pop	si
-		pop	di
-		leave
-		retf	0Ch
-; ---------------------------------------------------------------------------
-
-loc_1040:
-		cmp	di, cx
-		jnz	short loc_105C
-		sub	cx, si
-		mov	ax, dx
-		mov	dx, [bp+arg_A]
-		call	make_linework
-		imul	si, 50h
-		mov	dx, word_1E714
-		push	103Ah
-		jmp	draw_trapezoid
-; ---------------------------------------------------------------------------
-		nop
-
-loc_105C:
-		sub	cx, si
-		mov	di, cx
-		mov	ax, dx
-		mov	dx, [bp+arg_A]
-		call	make_linework
-		mov	ax, [bp+arg_6]
-		cmp	[bp+arg_2], ax
-		lea	dx, [di-1]
-		imul	si, 50h
-		call	draw_trapezoid
-		mov	cx, [bp+arg_0]
-		mov	ax, [bp+arg_2]
-		sub	cx, [bp+arg_4]
-		mov	word_1E714, cx
-		mov	dx, [bp+arg_6]
-		mov	bx, 118Ch
-		call	make_linework
-		mov	dx, word_1E714
-		call	draw_trapezoid
-		pop	si
-		pop	di
-		leave
-		retf	0Ch
-sub_FAC		endp
-
+include libs/master.lib/grcg_triangle.asm
 include libs/master.lib/grcg_vline.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6660,7 +6532,7 @@ loc_B51D:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		lea	ax, [si+10h]
 		push	ax
 		push	8
@@ -6675,7 +6547,7 @@ loc_B51D:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		add	si, 140h
 
 loc_B565:
@@ -6701,7 +6573,7 @@ loc_B575:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		lea	ax, [si+10h]
 		push	ax
 		push	8
@@ -6716,7 +6588,7 @@ loc_B575:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		add	si, 140h
 
 loc_B5BD:
@@ -6797,7 +6669,7 @@ loc_B67A:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		lea	ax, [si+10h]
 		push	ax
 		push	8
@@ -6812,7 +6684,7 @@ loc_B67A:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		lea	ax, [si+10h]
 		push	ax
 		push	8
@@ -6827,7 +6699,7 @@ loc_B67A:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		lea	ax, [si+12Fh]
 		push	ax
 		push	8
@@ -6842,7 +6714,7 @@ loc_B67A:
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		call	sub_FAC
+		call	grcg_triangle
 		add	si, 140h
 
 loc_B706:
@@ -27686,7 +27558,7 @@ loc_15AE6:
 		push	[bp+var_C]
 		push	[bp+var_4]
 		push	[bp+var_A]
-		call	sub_FAC
+		call	grcg_triangle
 		cmp	[bp+var_F], 20h	; ' '
 		jbe	loc_15B9A
 		mov	al, [bp+var_F]
@@ -27745,7 +27617,7 @@ loc_15B7E:
 		push	[bp+var_C]
 		push	[bp+var_4]
 		push	[bp+var_A]
-		call	sub_FAC
+		call	grcg_triangle
 
 loc_15B9A:
 		push	large 0
@@ -43723,7 +43595,7 @@ word_1E6EA	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
-word_1E714	dw ?
+include libs/master.lib/grcg_triangle[bss].asm
 word_1E716	dw ?
 		db    ?	;
 		db    ?	;
