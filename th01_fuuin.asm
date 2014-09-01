@@ -4045,50 +4045,7 @@ _localeconv	proc far
 		retf
 _localeconv	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl toupper(int ch)
-_toupper	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		cmp	dx, 0FFFFh
-		jnz	short loc_2733
-		mov	ax, 0FFFFh
-		jmp	short loc_274D
-; ---------------------------------------------------------------------------
-
-loc_2733:
-		mov	al, dl
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype+1)[bx], 8
-		jz	short loc_2749
-		mov	al, dl
-		mov	ah, 0
-		add	ax, 0FFE0h
-		jmp	short loc_274D
-; ---------------------------------------------------------------------------
-
-loc_2749:
-		mov	al, dl
-		mov	ah, 0
-
-loc_274D:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_toupper	endp
-
+include libs/BorlandC/toupper.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

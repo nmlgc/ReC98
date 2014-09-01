@@ -6862,49 +6862,7 @@ _localeconv	proc far
 		retf
 _localeconv	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3749	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		cmp	dx, 0FFFFh
-		jnz	short loc_375B
-		mov	ax, 0FFFFh
-		jmp	short loc_3775
-; ---------------------------------------------------------------------------
-
-loc_375B:
-		mov	al, dl
-		mov	ah, 0
-		mov	bx, ax
-		test	byte ptr [bx+1D17h], 8
-		jz	short loc_3771
-		mov	al, dl
-		mov	ah, 0
-		add	ax, 0FFE0h
-		jmp	short loc_3775
-; ---------------------------------------------------------------------------
-
-loc_3771:
-		mov	al, dl
-		mov	ah, 0
-
-loc_3775:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3749	endp
-
+include libs/BorlandC/toupper.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10428,9 +10386,7 @@ loc_597C:
 		cbw
 		mov	[bp+var_10], ax
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_3749
+		nopcall	_toupper
 		pop	cx
 		add	ax, 0FFC0h
 		mov	[bp+drive], ax
@@ -37608,7 +37564,7 @@ loc_17189:
 		mov	al, es:[bx]
 		cbw
 		push	ax
-		call	sub_3749
+		call	_toupper
 		pop	cx
 		mov	dx, word_39A3C
 		shl	dx, 5

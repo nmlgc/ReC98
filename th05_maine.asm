@@ -1191,49 +1191,7 @@ include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
 include libs/BorlandC/setupio.asm
 include libs/BorlandC/tolower.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4603	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+arg_0]
-		cmp	dx, 0FFFFh
-		jnz	short loc_4615
-		mov	ax, 0FFFFh
-		jmp	short loc_462F
-; ---------------------------------------------------------------------------
-
-loc_4615:
-		mov	al, dl
-		mov	ah, 0
-		mov	bx, ax
-		test	byte ptr [bx+1A39h], 8
-		jz	short loc_462B
-		mov	al, dl
-		mov	ah, 0
-		add	ax, 0FFE0h
-		jmp	short loc_462F
-; ---------------------------------------------------------------------------
-
-loc_462B:
-		mov	al, dl
-		mov	ah, 0
-
-loc_462F:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_4603	endp
-
+include libs/BorlandC/toupper.asm
 include libs/BorlandC/xxas.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2297,9 +2255,7 @@ loc_5710:
 		cbw
 		mov	[bp+var_10], ax
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_4603
+		nopcall	_toupper
 		pop	cx
 		add	ax, 0FFC0h
 		mov	[bp+drive], ax
