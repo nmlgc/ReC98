@@ -172,81 +172,7 @@ include libs/master.lib/soundio.asm
 include libs/master.lib/text_boxfilla.asm
 include libs/BorlandC/text_clear.asm
 include libs/master.lib/text_fillca.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2024	proc far
-					; sub_15D53+126P
-
-arg_0		= dword	ptr  4
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		mov	dx, bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		mov	di, ax
-		shl	ax, 1
-		shl	ax, 1
-		add	di, ax
-		shl	di, 1
-		add	di, TextVramSeg
-		mov	es, di
-		assume es:nothing
-		mov	di, [bp+arg_6]
-		shl	di, 1
-		push	ds
-		lds	si, [bp+arg_0]
-		mov	bp, dx
-		mov	bx, 0FEDFh
-		mov	cx, 7F7Fh
-		mov	dx, 9F80h
-		lodsb
-		or	al, al
-		jz	short loc_2080
-
-loc_2056:
-		xor	ah, ah
-		cmp	al, dl
-		jbe	short loc_207A
-		cmp	al, dh
-		jbe	short loc_2064
-		cmp	al, bl
-		jbe	short loc_207A
-
-loc_2064:
-		mov	ah, al
-		lodsb
-		shl	ah, 1
-		cmp	al, dh
-		jnb	short loc_2071
-		cmp	al, dl
-		adc	ax, bx
-
-loc_2071:
-		sbb	al, bh
-		and	ax, cx
-		xchg	ah, al
-		stosw
-		or	ah, dl
-
-loc_207A:
-		stosw
-		lodsb
-		or	al, al
-		jnz	short loc_2056
-
-loc_2080:
-		pop	ds
-		pop	di
-		pop	si
-		retf	8
-sub_2024	endp
-
+include libs/master.lib/text_puts.asm
 include libs/master.lib/text_putsa.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
@@ -27818,13 +27744,13 @@ loc_15E45:
 		push	2
 		push	ds
 		push	offset asc_1DD84 ; "	    "
-		call	sub_2024
+		call	text_puts
 		lea	ax, [di+4]
 		push	ax
 		push	3
 		push	ds
 		push	offset asc_1DD84 ; "	    "
-		call	sub_2024
+		call	text_puts
 		mov	byte ptr [si+1], 0
 		push	word ptr [si+2]
 		push	[bp+var_3+1]
