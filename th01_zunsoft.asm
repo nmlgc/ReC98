@@ -958,55 +958,7 @@ include libs/BorlandC/setupio.asm
 include libs/BorlandC/brk.asm
 include libs/BorlandC/nearheap.asm
 include libs/BorlandC/fflush.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int flushall(void)
-_flushall	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-stream		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_6], 0
-		mov	ax, __nfile
-		mov	[bp+var_4], ax
-		mov	[bp+stream], 2694h
-		jmp	short loc_1CF4
-; ---------------------------------------------------------------------------
-
-loc_1CDF:
-		mov	bx, [bp+stream]
-		test	byte ptr [bx+2], 3
-		jz	short loc_1CF0
-		push	bx		; stream
-		call	_fflush
-		pop	cx
-		inc	[bp+var_6]
-
-loc_1CF0:
-		add	[bp+stream], 10h
-
-loc_1CF4:
-		mov	ax, [bp+var_4]
-		dec	[bp+var_4]
-		or	ax, ax
-		jnz	short loc_1CDF
-		mov	ax, [bp+var_6]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn
-_flushall	endp
-
+include libs/BorlandC/flushall.asm
 include libs/BorlandC/fseek.asm
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -3299,60 +3299,7 @@ sub_5F2A	endp
 
 include libs/BorlandC/chmoda.asm
 include libs/BorlandC/fflush.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int flushall(void)
-_flushall	proc far
-					; _fflush+12p
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		push	si
-		push	di
-		mov	[bp+var_8], 0
-		mov	ax, __nfile
-		mov	[bp+var_6], ax
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 1490h
-		jmp	short loc_60B7
-; ---------------------------------------------------------------------------
-
-loc_609B:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_60B3
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nop
-		call	_fflush
-		pop	cx
-		pop	cx
-		inc	[bp+var_8]
-
-loc_60B3:
-		add	word ptr [bp+stream], 14h
-
-loc_60B7:
-		mov	ax, [bp+var_6]
-		dec	[bp+var_6]
-		or	ax, ax
-		jnz	short loc_609B
-		mov	ax, [bp+var_8]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_flushall	endp
-
+include libs/BorlandC/flushall.asm
 include libs/BorlandC/fseek.asm
 
 ; =============== S U B	R O U T	I N E =======================================

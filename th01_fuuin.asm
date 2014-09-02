@@ -5789,59 +5789,7 @@ loc_3E22:
 		retf
 _filelength	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int flushall(void)
-_flushall	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		push	si
-		push	di
-		mov	[bp+var_8], 0
-		mov	ax, __nfile
-		mov	[bp+var_6], ax
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 0CAAh
-		jmp	short loc_3E61
-; ---------------------------------------------------------------------------
-
-loc_3E45:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_3E5D
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nop
-		call	_fflush
-		pop	cx
-		pop	cx
-		inc	[bp+var_8]
-
-loc_3E5D:
-		add	word ptr [bp+stream], 14h
-
-loc_3E61:
-		mov	ax, [bp+var_6]
-		dec	[bp+var_6]
-		or	ax, ax
-		jnz	short loc_3E45
-		mov	ax, [bp+var_8]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_flushall	endp
-
+include libs/BorlandC/flushall.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
