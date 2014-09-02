@@ -8320,44 +8320,7 @@ loc_97D3:
 		mov	word ptr __C0argv, ax
 		jmp	word_13228
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl setblock(unsigned	int __psp, unsigned int newsize)
-_setblock	proc far
-
-___psp		= word ptr  6
-newsize		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 4Ah	; 'J'
-		mov	bx, [bp+newsize]
-		mov	es, [bp+___psp]
-		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
-					; ES = segment address of block	to change
-					; BX = new size	in paragraphs
-		jb	short loc_981C
-		mov	ax, 0FFFFh
-		jmp	short loc_9822
-; ---------------------------------------------------------------------------
-
-loc_981C:
-		push	bx
-		push	ax
-		call	__IOERROR
-		pop	ax
-
-loc_9822:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setblock	endp
-
+include libs/BorlandC/setblock.asm
 include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
