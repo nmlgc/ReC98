@@ -5162,55 +5162,7 @@ _intdosx	endp
 
 include libs/BorlandC/ioctl.asm
 include libs/BorlandC/signal.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __far _access(char *pathname, char)
-__access	proc far
-
-pathname	= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax		; func
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; pathname
-		nop
-		call	__chmod
-		add	sp, 6
-		mov	dx, ax
-		cmp	dx, 0FFFFh
-		jnz	short loc_3A4F
-		jmp	short loc_3A67
-; ---------------------------------------------------------------------------
-
-loc_3A4F:
-		test	[bp+arg_4], 2
-		jz	short loc_3A5A
-		test	dl, 1
-		jnz	short loc_3A5E
-
-loc_3A5A:
-		xor	ax, ax
-		jmp	short loc_3A67
-; ---------------------------------------------------------------------------
-
-loc_3A5E:
-		mov	_errno, 5
-		mov	ax, 0FFFFh
-
-loc_3A67:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__access	endp
+include libs/BorlandC/access.asm
 
 ; ---------------------------------------------------------------------------
 		push	ax
@@ -5397,9 +5349,7 @@ amode		= byte ptr  0Ah
 		push	word ptr [bp+amode] ; char
 		push	word ptr [bp+pathname+2]
 		push	word ptr [bp+pathname] ; pathname
-		nop
-		push	cs
-		call	near ptr __access
+		nopcall	__access
 		add	sp, 6
 		pop	di
 		pop	si
@@ -7665,9 +7615,7 @@ loc_5212:
 		push	ax		; char
 		push	word ptr [bp+pathname+2]
 		push	word ptr [bp+pathname] ; pathname
-		nop
-		push	cs
-		call	near ptr __access
+		nopcall	__access
 		add	sp, 6
 		or	ax, ax
 		jz	short loc_5286
@@ -9166,9 +9114,7 @@ loc_9CBA:
 		push	ss
 		lea	ax, [bp+pathname]
 		push	ax		; pathname
-		nop
-		push	cs
-		call	near ptr __access
+		nopcall	__access
 		add	sp, 6
 		or	ax, ax
 		jnz	short loc_9CE7

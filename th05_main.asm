@@ -1477,55 +1477,7 @@ include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 include libs/BorlandC/signal.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl __far _access(char *pathname, char)
-__access	proc far
-
-pathname	= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax		; func
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; pathname
-		nop
-		call	__chmod
-		add	sp, 6
-		mov	dx, ax
-		cmp	dx, 0FFFFh
-		jnz	short loc_5B5A
-		jmp	short loc_5B72
-; ---------------------------------------------------------------------------
-
-loc_5B5A:
-		test	[bp+arg_4], 2
-		jz	short loc_5B65
-		test	dl, 1
-		jnz	short loc_5B69
-
-loc_5B65:
-		xor	ax, ax
-		jmp	short loc_5B72
-; ---------------------------------------------------------------------------
-
-loc_5B69:
-		mov	_errno, 5
-		mov	ax, 0FFFFh
-
-loc_5B72:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__access	endp
+include libs/BorlandC/access.asm
 
 ; ---------------------------------------------------------------------------
 		db 50h,	51h, 52h, 53h, 54h, 55h, 56h, 57h, 1Eh,	6, 8Bh
@@ -2385,9 +2337,7 @@ loc_659A:
 		push	ax		; char
 		push	word ptr [bp+pathname+2]
 		push	word ptr [bp+pathname] ; pathname
-		nop
-		push	cs
-		call	near ptr __access
+		nopcall	__access
 		add	sp, 6
 		or	ax, ax
 		jz	short loc_660E
@@ -3028,9 +2978,7 @@ loc_AB8E:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; pathname
-		nop
-		push	cs
-		call	near ptr __access
+		nopcall	__access
 		add	sp, 6
 		or	ax, ax
 		jnz	short loc_ABBB
