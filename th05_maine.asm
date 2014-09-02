@@ -1148,30 +1148,7 @@ sub_3CA8	endp
 
 include libs/BorlandC/__abort.asm
 include libs/BorlandC/stpcpy.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function noreturn
-
-; void abort(void)
-_abort		proc far
-					; ___call_terminate+6Ep ...
-		push	si
-		push	di
-		mov	ax, 16h
-		push	ax
-		nop
-		call	raise
-		pop	cx
-		nop
-		push	cs
-		call	near ptr __abort
-; ---------------------------------------------------------------------------
-		pop	di
-		pop	si
-		retf
-_abort		endp
-
+include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
 include libs/BorlandC/delarray.asm
