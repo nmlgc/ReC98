@@ -1726,31 +1726,7 @@ include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A3B2	proc far
-		push	si
-		push	di
-		cmp	_cFlag, 0
-		jz	short loc_A3C5
-		mov	_cFlag, 0
-		mov	al, _cChar
-		jmp	short loc_A3CA
-; ---------------------------------------------------------------------------
-
-loc_A3C5:
-		mov	ax, 700h
-		int	21h		; DOS -	DIRECT STDIN INPUT, NO ECHO
-
-loc_A3CA:
-		mov	ah, 0
-		pop	di
-		pop	si
-		retf
-sub_A3B2	endp
-
+include libs/BorlandC/getch.asm
 include libs/BorlandC/kbhit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3664,7 +3640,7 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset asc_F7F7	; "\n‹ó‚«ƒƒ‚ƒŠ•s‘«‚Å‚·Bƒƒ‚ƒŠ‹ó‚«‚ğ‘‚â‚µ"...
 		call	dos_puts2
-		call	sub_A3B2
+		call	getch
 
 loc_B3AB:
 		call	gaiji_backup
