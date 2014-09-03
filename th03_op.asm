@@ -330,129 +330,7 @@ include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2A8A	proc far
-		push	si
-		push	di
-		mov	ah, 52h
-		int	21h		; DOS -	2+ internal - GET LIST OF LISTS
-					; Return: ES:BX	-> DOS list of lists
-		cld
-		mov	bx, es:[bx-2]
-
-loc_2A95:
-		mov	es, bx
-		assume es:nothing
-		inc	bx
-		mov	ax, es:1
-		or	ax, ax
-		jz	short loc_2AAD
-		mov	di, 10h
-		mov	cx, 0Ah
-		mov	si, 5DEh
-		repe cmpsb
-		jz	short loc_2ABE
-
-loc_2AAD:
-		mov	ax, es:3
-		add	bx, ax
-		mov	al, es:0
-		cmp	al, 4Dh	; 'M'
-		jz	short loc_2A95
-		mov	bx, 0
-
-loc_2ABE:
-		mov	ax, bx
-		mov	ResPalSeg, ax
-		pop	di
-		pop	si
-		retf
-sub_2A8A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2AC6	proc far
-		push	si
-		push	di
-		nop
-		push	cs
-		call	near ptr sub_2A8A
-		or	ax, ax
-		mov	ax, 2
-		jnz	short loc_2B38
-		mov	ax, 5800h
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: get allocation strategy
-		mov	dx, ax
-		mov	ax, 5801h
-		mov	bx, 1
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, 4
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	cx, 0
-		jb	short loc_2B2F
-		mov	bx, cs
-		cmp	bx, ax
-		jnb	short loc_2B0A
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ax, 5801h
-		mov	bx, 2
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, 4
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-
-loc_2B0A:
-		mov	cx, ax
-		mov	ResPalSeg, ax
-		dec	cx
-		mov	es, cx
-		assume es:nothing
-		mov	ax, 0FFFFh
-		mov	es:1, ax
-		inc	cx
-		mov	es, cx
-		assume es:nothing
-		cld
-		xor	di, di
-		mov	si, 5DEh
-		mov	cx, 0Ah
-		rep movsb
-		xor	ax, ax
-		stosw
-		stosw
-		stosw
-		mov	cx, 1
-
-loc_2B2F:
-		mov	ax, 5801h
-		mov	bx, dx
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ax, cx
-
-loc_2B38:
-		pop	di
-		pop	si
-		retf
-sub_2AC6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -461,9 +339,7 @@ sub_2B3C	proc far
 		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_2B4C
-		nop
-		push	cs
-		call	near ptr sub_2A8A
+		nopcall	respal_exist
 		or	ax, ax
 		jnz	short locret_2B58
 
@@ -4238,7 +4114,7 @@ _envp		= dword	ptr  0Ch
 		mov	bp, sp
 		call	graph_400line
 		call	text_clear
-		call	sub_2AC6
+		call	respal_create
 		cmp	graph_VramZoom, 0
 		jz	short loc_A452
 		push	ds
@@ -9477,7 +9353,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 byte_DDCC	db 0
 		db 0
-aPal98Grb	db 'pal98 grb',0
+include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 a_exe		db '.exe',0
 		db 0

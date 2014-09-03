@@ -303,60 +303,7 @@ include libs/master.lib/super_entry_at.asm
 include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_276E	proc far
-		push	si
-		push	di
-		mov	ah, 52h
-		int	21h		; DOS -	2+ internal - GET LIST OF LISTS
-					; Return: ES:BX	-> DOS list of lists
-		cld
-		mov	bx, es:[bx-2]
-
-loc_2779:
-		mov	es, bx
-		assume es:nothing
-		inc	bx
-		mov	ax, es:1
-		or	ax, ax
-		jz	short loc_2791
-		mov	di, 10h
-		mov	cx, 0Ah
-		mov	si, 882h
-		repe cmpsb
-		jz	short loc_27A2
-
-loc_2791:
-		mov	ax, es:3
-		add	bx, ax
-		mov	al, es:0
-		cmp	al, 4Dh	; 'M'
-		jz	short loc_2779
-		mov	bx, 0
-
-loc_27A2:
-		mov	ax, bx
-		mov	ResPalSeg, ax
-		pop	di
-		pop	si
-		retf
-sub_276E	endp
-
-; ---------------------------------------------------------------------------
-		db 56h,	57h, 90h, 0Eh, 0E8h, 0BDh, 0FFh, 0Bh, 0C0h, 0B8h
-		db 2, 0, 75h, 64h, 0B8h, 0, 58h, 0CDh, 21h, 8Bh, 0D0h
-		db 0B8h, 1, 58h, 0BBh, 1, 0, 0CDh, 21h,	0B4h, 48h, 0BBh
-		db 4, 0, 0CDh, 21h, 0B9h, 2 dup(0), 72h, 40h, 8Ch, 0CBh
-		db 3Bh,	0D8h, 73h, 15h,	8Eh, 0C0h, 0B4h, 49h, 0CDh, 21h
-		db 0B8h, 1, 58h, 0BBh, 2, 0, 0CDh, 21h,	0B4h, 48h, 0BBh
-		db 4, 0, 0CDh, 21h, 8Bh, 0C8h, 0A3h, 0ACh, 5, 49h, 8Eh
-		db 0C1h, 0B8h, 2 dup(0FFh), 26h, 0A3h, 1, 0, 41h, 8Eh
-		db 0C1h, 0FCh, 33h, 0FFh, 0BEh,	82h, 8,	0B9h, 0Ah, 0, 0F3h
-		db 0A4h, 33h, 0C0h, 3 dup(0ABh), 0B9h, 1, 0, 0B8h, 1, 58h
-		db 8Bh,	0DAh, 0CDh, 21h, 8Bh, 0C1h, 5Fh, 5Eh, 0CBh, 90h
+include libs/master.lib/respal_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3622,7 +3569,7 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aCOul	; "–²Žž‹ó1.dat"
 		call	sub_CEE0
-		call	sub_276E
+		call	respal_exist
 		mov	byte_10061, 0
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+15h], 0
@@ -11095,7 +11042,7 @@ include libs/master.lib/superpa[data].asm
 byte_EC70	db 0
 					; sub_C80C:loc_C822w ...
 		db 0
-aPal98Grb	db 'pal98 grb',0
+include libs/master.lib/respal_exist[data].asm
 byte_EC7C	db 0FFh
 byte_EC7D	db 0
 a_exe		db '.exe',0

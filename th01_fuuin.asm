@@ -1811,126 +1811,7 @@ include libs/master.lib/graph_start.asm
 include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E9E		proc far
-		push	si
-		push	di
-		mov	ah, 52h
-		int	21h		; DOS -	2+ internal - GET LIST OF LISTS
-					; Return: ES:BX	-> DOS list of lists
-		cld
-		mov	bx, es:[bx-2]
-
-loc_EA9:
-		mov	es, bx
-		assume es:nothing
-		inc	bx
-		mov	ax, es:1
-		or	ax, ax
-		jz	short loc_EC1
-		mov	di, 10h
-		mov	cx, 0Ah
-		mov	si, 0B1Ah
-		repe cmpsb
-		jz	short loc_ED2
-
-loc_EC1:
-		mov	ax, es:3
-		add	bx, ax
-		mov	al, es:0
-		cmp	al, 4Dh	; 'M'
-		jz	short loc_EA9
-		mov	bx, 0
-
-loc_ED2:
-		mov	ax, bx
-		mov	ResPalSeg, ax
-		pop	di
-		pop	si
-		retf
-sub_E9E		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EDA		proc far
-		push	si
-		push	di
-		push	cs
-		call	near ptr sub_E9E
-		or	ax, ax
-		mov	ax, 2
-		jnz	short loc_F4B
-		mov	ax, 5800h
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: get allocation strategy
-		mov	dx, ax
-		mov	ax, 5801h
-		mov	bx, 1
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, 4
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	cx, 0
-		jb	short loc_F42
-		mov	bx, cs
-		cmp	bx, ax
-		jnb	short loc_F1D
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ax, 5801h
-		mov	bx, 2
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, 4
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-
-loc_F1D:
-		mov	cx, ax
-		mov	ResPalSeg, ax
-		dec	cx
-		mov	es, cx
-		assume es:nothing
-		mov	ax, 0FFFFh
-		mov	es:1, ax
-		inc	cx
-		mov	es, cx
-		assume es:nothing
-		cld
-		xor	di, di
-		mov	si, 0B1Ah
-		mov	cx, 0Ah
-		rep movsb
-		xor	ax, ax
-		stosw
-		stosw
-		stosw
-		mov	cx, 1
-
-loc_F42:
-		mov	ax, 5801h
-		mov	bx, dx
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ax, cx
-
-loc_F4B:
-		pop	di
-		pop	si
-		retf
-sub_EDA		endp
-
+include libs/master.lib/respal_exist.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1939,8 +1820,7 @@ sub_F4E		proc far
 		mov	ax, ResPalSeg
 		or	ax, ax
 		jnz	short loc_F5D
-		push	cs
-		call	near ptr sub_E9E
+		call	respal_exist
 		or	ax, ax
 		jnz	short locret_F69
 
@@ -15804,7 +15684,7 @@ sub_CEAD	proc far
 		call	sub_CB36
 		call	egc_start
 		call	graph_start
-		call	sub_EDA
+		call	respal_create
 		call	sub_E984
 		call	sub_EC46
 
@@ -28461,7 +28341,7 @@ aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,
 include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
-aPal98Grb_0	db 'pal98 grb',0
+include libs/master.lib/respal_exist[data].asm
 aPal98Grb_1	db 'pal98 grb',0
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
