@@ -4960,148 +4960,7 @@ _intdosx	endp
 include libs/BorlandC/ioctl.asm
 include libs/BorlandC/signal.asm
 include libs/BorlandC/access.asm
-
-; ---------------------------------------------------------------------------
-		db 50h,	51h, 52h, 53h, 54h, 55h, 56h, 57h, 1Eh,	6, 8Bh
-		db 0ECh, 0A1h, 32h, 0Fh, 0Bh, 6, 34h, 0Fh, 75h,	27h, 0BEh
-		db 2 dup(0FFh),	1Eh, 0B8h, 0, 63h, 0F8h, 0CDh, 21h, 8Ch
-		db 0D8h, 1Fh, 72h, 0Bh,	8Ch, 0DAh, 3Bh,	0C2h, 74h, 5, 83h
-		db 0FEh, 0FFh, 75h, 6, 0BEh, 36h, 0Fh, 0B8h
-		dw seg dseg
-; ---------------------------------------------------------------------------
-		mov	word ptr dword_131C2, si
-		mov	word ptr dword_131C2+2,	ax
-		mov	sp, bp
-		pop	es
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		pop	bx
-		pop	bx
-		pop	dx
-		pop	cx
-		pop	ax
-		retn
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3B1C	proc far
-					; sub_45E7+284p ...
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	al, [bp+arg_0]
-		xor	cx, cx
-		les	bx, dword_131C2
-
-loc_3B2A:
-		mov	dx, es:[bx]
-		or	dx, dx
-		jz	short loc_3B3C
-		cmp	al, dl
-		jb	short loc_3B3C
-		inc	bx
-		inc	bx
-		cmp	al, dh
-		ja	short loc_3B2A
-		inc	cx
-
-loc_3B3C:
-		xchg	ax, cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3B1C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3B41	proc far
-					; sub_45E7+1AEp ...
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		xor	cx, cx
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-
-loc_3B57:
-		les	bx, [bp+var_4]
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_3B64
-		xor	cx, cx
-		jmp	short loc_3B92
-; ---------------------------------------------------------------------------
-
-loc_3B64:
-		cmp	cx, 1
-		jnz	short loc_3B6E
-		mov	cx, 2
-		jmp	short loc_3B85
-; ---------------------------------------------------------------------------
-
-loc_3B6E:
-		les	bx, [bp+var_4]
-		mov	al, es:[bx]
-		push	ax
-		push	cs
-		call	near ptr sub_3B1C
-		pop	cx
-		or	ax, ax
-		jz	short loc_3B83
-		mov	cx, 1
-		jmp	short loc_3B85
-; ---------------------------------------------------------------------------
-
-loc_3B83:
-		xor	cx, cx
-
-loc_3B85:
-		mov	ax, word ptr [bp+var_4]
-		cmp	ax, [bp+arg_4]
-		jnb	short loc_3B92
-		inc	word ptr [bp+var_4]
-		jmp	short loc_3B57
-; ---------------------------------------------------------------------------
-
-loc_3B92:
-		or	cx, cx
-		jnz	short loc_3B9B
-		mov	ax, 1
-		jmp	short loc_3B9D
-; ---------------------------------------------------------------------------
-
-loc_3B9B:
-		xor	ax, ax
-
-loc_3B9D:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_3B41	endp
-
+include libs/BorlandC/pathops.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6009,9 +5868,7 @@ arg_6		= word ptr  0Ah
 		push	word ptr [bp+arg_0]
 		push	[bp+arg_6]
 		push	[bp+arg_4]
-		nop
-		push	cs
-		call	near ptr sub_3B41
+		nopcall	___path_issbcs
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_45DF
@@ -6250,9 +6107,7 @@ loc_474F:
 		push	ax
 		push	word ptr [bp+_s+2]
 		push	word ptr [bp+_s]
-		nop
-		push	cs
-		call	near ptr sub_3B41
+		nopcall	___path_issbcs
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_47AF
@@ -6307,9 +6162,7 @@ loc_47E7:
 		push	ax
 		push	word ptr [bp+_s+2]
 		push	word ptr [bp+_s]
-		nop
-		push	cs
-		call	near ptr sub_3B41
+		nopcall	___path_issbcs
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_4815
@@ -6366,9 +6219,7 @@ loc_485A:
 		mov	es:[bx], al
 		inc	word ptr [bp+dest]
 		push	[bp+var_E]
-		nop
-		push	cs
-		call	near ptr sub_3B1C
+		nopcall	___path_isdbcsleadbyte
 		pop	cx
 		or	ax, ax
 		jnz	short loc_4876
@@ -7264,9 +7115,7 @@ loc_5461:
 		push	ax
 		push	word ptr [bp+pathname+2]
 		push	word ptr [bp+pathname]
-		nop
-		push	cs
-		call	near ptr sub_3B41
+		nopcall	___path_issbcs
 		add	sp, 8
 		or	ax, ax
 		jnz	short loc_5490
@@ -7709,9 +7558,7 @@ loc_9754:
 		push	es
 		mov	ds, word ptr cs:byte_96AF
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_3B1C
+		nopcall	___path_isdbcsleadbyte
 		or	ax, ax
 		pop	cx
 		pop	es
@@ -8294,9 +8141,7 @@ loc_9E73:
 		assume es:nothing
 		mov	al, es:[bx]
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_3B1C
+		nopcall	___path_isdbcsleadbyte
 		pop	cx
 		or	ax, ax
 		jz	short loc_9E92
@@ -25862,10 +25707,7 @@ include libs/BorlandC/xxv[data].asm
 include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
-dword_131C2	dd 0
-		dd    0
-		dd    0
-		dd    0
+include libs/BorlandC/pathops[data].asm
 include libs/BorlandC/putc[data].asm
 		db    0
 		db    0
@@ -26151,12 +25993,7 @@ InitStart	label byte
 include libs/BorlandC/new[initdata].asm
 include libs/BorlandC/setupio[initdata].asm
 include libs/BorlandC/cputype[initdata].asm
-		db    0
-		db  0Fh
-		db 0D3h	; Ó
-		db  3Ah	; :
-		db    0
-		db    0
+include libs/BorlandC/pathops[initdata].asm
 		db    0
 		db  10h
 		db 0B1h	; ±
