@@ -1727,30 +1727,7 @@ include libs/master.lib/graph_start.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EF6		proc far
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jnz	short loc_F05
-		call	respal_exist
-		or	ax, ax
-		jnz	short locret_F11
-
-loc_F05:
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ResPalSeg, 0
-
-locret_F11:
-		retf
-sub_EF6		endp
-
+include libs/master.lib/respal_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11932,7 +11909,7 @@ sub_B73C	proc far
 		nop
 		push	cs
 		call	near ptr sub_B784
-		call	sub_EF6
+		call	respal_free
 
 loc_B755:
 		pop	bp

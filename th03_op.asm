@@ -331,32 +331,7 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B3C	proc far
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jnz	short loc_2B4C
-		nopcall	respal_exist
-		or	ax, ax
-		jnz	short locret_2B58
-
-loc_2B4C:
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ResPalSeg, 0
-
-locret_2B58:
-		retf
-sub_2B3C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_free.asm
 ; ---------------------------------------------------------------------------
 dword_2B5A	dd 0
 byte_2B5E	db 0
@@ -4217,7 +4192,7 @@ loc_A4FE:
 		call	gaiji_restore
 		call	text_clear
 		call	sub_BEB8
-		call	sub_2B3C
+		call	respal_free
 		pop	bp
 		retf
 _main		endp

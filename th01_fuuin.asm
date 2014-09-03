@@ -1812,30 +1812,7 @@ include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F4E		proc far
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jnz	short loc_F5D
-		call	respal_exist
-		or	ax, ax
-		jnz	short locret_F69
-
-loc_F5D:
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ResPalSeg, 0
-
-locret_F69:
-		retf
-sub_F4E		endp
-
+include libs/master.lib/respal_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15707,7 +15684,7 @@ sub_CF00	proc far
 		nop
 		push	cs
 		call	near ptr sub_CF48
-		call	sub_F4E
+		call	respal_free
 
 loc_CF19:
 		pop	bp

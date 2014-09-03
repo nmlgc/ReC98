@@ -216,32 +216,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B8E	proc far
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jnz	short loc_2B9E
-		nopcall	respal_exist
-		or	ax, ax
-		jnz	short locret_2BAA
-
-loc_2B9E:
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ResPalSeg, 0
-
-locret_2BAA:
-		retf
-sub_2B8E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4263,7 +4238,7 @@ loc_B058:
 		call	sub_BB91
 		call	text_clear
 		call	sub_D41C
-		call	sub_2B8E
+		call	respal_free
 		pop	si
 		pop	bp
 		retf

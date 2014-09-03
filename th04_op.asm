@@ -224,32 +224,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2FBE	proc far
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jnz	short loc_2FCE
-		nopcall	respal_exist
-		or	ax, ax
-		jnz	short locret_2FDA
-
-loc_2FCE:
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ResPalSeg, 0
-
-locret_2FDA:
-		retf
-sub_2FBE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_free.asm
 ; ---------------------------------------------------------------------------
 dword_2FDC	dd 0
 byte_2FE0	db 0, 90h
@@ -4025,7 +4000,7 @@ loc_B47B:
 		call	gaiji_restore
 		call	text_clear
 		call	sub_DDB1
-		call	sub_2FBE
+		call	respal_free
 		pop	si
 		pop	bp
 		retf
