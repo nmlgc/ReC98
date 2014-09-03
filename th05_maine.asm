@@ -2118,146 +2118,7 @@ loc_5D75:
 		retf
 sub_5C39	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl setvbuf(FILE *stream, char *buf, int type, size_t	size)
-_setvbuf	proc far
-
-_offset		= dword	ptr  6
-buf		= dword	ptr  0Ah
-_type		= word ptr  0Eh
-_size		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	bx, [bp+_offset]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+_offset]
-		jz	short loc_5D8F
-		jmp	loc_5E66
-; ---------------------------------------------------------------------------
-
-loc_5D8F:
-		cmp	[bp+_type], 2
-		jle	short loc_5D98
-		jmp	loc_5E66
-; ---------------------------------------------------------------------------
-
-loc_5D98:
-		cmp	[bp+_size], 7FFFh
-		jbe	short loc_5DA2
-		jmp	loc_5E66
-; ---------------------------------------------------------------------------
-
-loc_5DA2:
-		cmp	word_11DA2, 0
-		jnz	short loc_5DB8
-		cmp	word ptr [bp+_offset], 181Ch
-		jnz	short loc_5DB8
-		mov	word_11DA2, 1
-		jmp	short loc_5DCC
-; ---------------------------------------------------------------------------
-
-loc_5DB8:
-		cmp	word_11DA0, 0
-		jnz	short loc_5DCC
-		cmp	word ptr [bp+_offset], 1808h
-		jnz	short loc_5DCC
-		mov	word_11DA0, 1
-
-loc_5DCC:
-		les	bx, [bp+_offset]
-		cmp	word ptr es:[bx], 0
-		jz	short loc_5DE9
-		mov	ax, 1
-		push	ax
-		xor	ax, ax
-		push	ax		; whence
-		push	ax
-		push	word ptr [bp+_offset+2] ; offset
-		push	bx
-		nopcall	_fseek
-		add	sp, 0Ah
-
-loc_5DE9:
-		les	bx, [bp+_offset]
-		test	byte ptr es:[bx+2], 4
-		jz	short loc_5E02
-		push	word ptr es:[bx+0Ah]
-		push	word ptr es:[bx+8]
-		nop
-		push	cs
-		call	near ptr _farfree
-		pop	cx
-		pop	cx
-
-loc_5E02:
-		les	bx, [bp+_offset]
-		and	word ptr es:[bx+2], 0FFF3h
-		mov	word ptr es:[bx+6], 0
-		mov	dx, word ptr [bp+_offset+2]
-		mov	ax, word ptr [bp+_offset]
-		add	ax, 5
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		cmp	[bp+_type], 2
-		jz	short loc_5E96
-		cmp	[bp+_size], 0
-		jbe	short loc_5E96
-		mov	word ptr _exitbuf+2, seg seg000
-		mov	word ptr _exitbuf, 61A4h
-		mov	ax, word ptr [bp+buf]
-		or	ax, word ptr [bp+buf+2]
-		jnz	short loc_5E6B
-		push	[bp+_size]
-		nop
-		call	_malloc
-		pop	cx
-		mov	word ptr [bp+buf+2], dx
-		mov	word ptr [bp+buf], ax
-		or	ax, dx
-		jz	short loc_5E66
-		les	bx, [bp+_offset]
-		or	word ptr es:[bx+2], 4
-		jmp	short loc_5E6B
-; ---------------------------------------------------------------------------
-
-loc_5E66:
-		mov	ax, 0FFFFh
-		jmp	short loc_5E98
-; ---------------------------------------------------------------------------
-
-loc_5E6B:
-		les	bx, [bp+_offset]
-		mov	dx, word ptr [bp+buf+2]
-		mov	ax, word ptr [bp+buf]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	ax, [bp+_size]
-		mov	es:[bx+6], ax
-		cmp	[bp+_type], 1
-		jnz	short loc_5E96
-		or	word ptr es:[bx+2], 8
-
-loc_5E96:
-		xor	ax, ax
-
-loc_5E98:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setvbuf	endp ; sp-analysis failed
-
+include libs/BorlandC/setvbuf.asm
 include libs/BorlandC/_strcat.asm
 include libs/BorlandC/_strcmp.asm
 include libs/BorlandC/_strcpy.asm
@@ -13870,10 +13731,7 @@ dword_11D8C	dd 0
 		db    0
 		db  5Ch	; \
 		db    0
-word_11DA0	dw 0
-					; _setvbuf+4Bw
-word_11DA2	dw 0
-					; _setvbuf+35w
+include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
 include libs/BorlandC/setenvp[data].asm

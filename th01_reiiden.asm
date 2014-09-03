@@ -9290,9 +9290,7 @@ loc_5631:
 		push	ax		; buf
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
-		nop
-		push	cs
-		call	near ptr _setvbuf
+		nopcall	_setvbuf
 		add	sp, 0Ch
 		or	ax, ax
 		jz	short loc_565B
@@ -11064,148 +11062,7 @@ loc_6941:
 		retf
 sub_6805	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl setvbuf(FILE *stream, char *buf, int type, size_t	size)
-_setvbuf	proc far
-
-stream		= dword	ptr  6
-buf		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-_type		= word ptr  0Eh
-_size		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+stream]
-		jz	short loc_695B
-		jmp	loc_6A32
-; ---------------------------------------------------------------------------
-
-loc_695B:
-		cmp	[bp+_type], 2
-		jle	short loc_6964
-		jmp	loc_6A32
-; ---------------------------------------------------------------------------
-
-loc_6964:
-		cmp	[bp+_size], 7FFFh
-		jbe	short loc_696E
-		jmp	loc_6A32
-; ---------------------------------------------------------------------------
-
-loc_696E:
-		cmp	word_369C6, 0
-		jnz	short loc_6984
-		cmp	word ptr [bp+stream], 1A6Ah
-		jnz	short loc_6984
-		mov	word_369C6, 1
-		jmp	short loc_6998
-; ---------------------------------------------------------------------------
-
-loc_6984:
-		cmp	word_369C4, 0
-		jnz	short loc_6998
-		cmp	word ptr [bp+stream], 1A56h
-		jnz	short loc_6998
-		mov	word_369C4, 1
-
-loc_6998:
-		les	bx, [bp+stream]
-		cmp	word ptr es:[bx], 0
-		jz	short loc_69B5
-		mov	ax, 1
-		push	ax		; whence
-		xor	ax, ax
-		push	ax
-		push	ax		; offset
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nopcall	_fseek
-		add	sp, 0Ah
-
-loc_69B5:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 4
-		jz	short loc_69CE
-		push	word ptr es:[bx+0Ah]
-		push	word ptr es:[bx+8]
-		nop
-		push	cs
-		call	near ptr _farfree
-		pop	cx
-		pop	cx
-
-loc_69CE:
-		les	bx, [bp+stream]
-		and	word ptr es:[bx+2], 0FFF3h
-		mov	word ptr es:[bx+6], 0
-		mov	dx, word ptr [bp+stream+2]
-		mov	ax, word ptr [bp+stream]
-		add	ax, 5
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		cmp	[bp+_type], 2
-		jz	short loc_6A62
-		cmp	[bp+_size], 0
-		jbe	short loc_6A62
-		mov	word ptr _exitbuf+2, seg seg000
-		mov	word ptr _exitbuf, 6EB7h
-		mov	ax, [bp+buf]
-		or	ax, [bp+arg_6]
-		jnz	short loc_6A37
-		push	[bp+_size]
-		nop
-		push	cs
-		call	near ptr _malloc
-		pop	cx
-		mov	[bp+arg_6], dx
-		mov	[bp+buf], ax
-		or	ax, dx
-		jz	short loc_6A32
-		les	bx, [bp+stream]
-		or	word ptr es:[bx+2], 4
-		jmp	short loc_6A37
-; ---------------------------------------------------------------------------
-
-loc_6A32:
-		mov	ax, 0FFFFh
-		jmp	short loc_6A64
-; ---------------------------------------------------------------------------
-
-loc_6A37:
-		les	bx, [bp+stream]
-		mov	dx, [bp+arg_6]
-		mov	ax, [bp+buf]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	ax, [bp+_size]
-		mov	es:[bx+6], ax
-		cmp	[bp+_type], 1
-		jnz	short loc_6A62
-		or	word ptr es:[bx+2], 8
-
-loc_6A62:
-		xor	ax, ax
-
-loc_6A64:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_setvbuf	endp
-
+include libs/BorlandC/setvbuf.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -47005,8 +46862,7 @@ include libs/BorlandC/putc[data].asm
 		db    0
 		db  5Ch	; \
 		db    0
-word_369C4	dw 0
-word_369C6	dw 0
+include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
 aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0

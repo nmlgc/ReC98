@@ -5924,8 +5924,7 @@ loc_40B1:
 		push	ax
 		push	word ptr [bp+buf+2] ; buf
 		push	word ptr [bp+buf]
-		nop
-		call	_setvbuf
+		nopcall	_setvbuf
 		add	sp, 0Ch
 		or	ax, ax
 		jz	short loc_40DB
@@ -7603,154 +7602,7 @@ loc_5543:
 		retf
 sub_5407	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl setvbuf(FILE *stream, char *buf, int type, size_t	size)
-_setvbuf	proc far
-
-stream		= dword	ptr  4
-buf		= dword	ptr  8
-_type		= word ptr  0Ch
-_size		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-_setvbuf	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_554E	proc far
-		les	bx, [bp+6]
-		mov	ax, es:[bx+12h]
-		cmp	ax, [bp+6]
-		jz	short loc_555D
-		jmp	loc_5634
-; ---------------------------------------------------------------------------
-
-loc_555D:
-		cmp	word ptr [bp+0Eh], 2
-		jle	short loc_5566
-		jmp	loc_5634
-; ---------------------------------------------------------------------------
-
-loc_5566:
-		cmp	word ptr [bp+10h], 7FFFh
-		jbe	short loc_5570
-		jmp	loc_5634
-; ---------------------------------------------------------------------------
-
-loc_5570:
-		cmp	word_131DA, 0
-		jnz	short loc_5586
-		cmp	word ptr [bp+6], 0A0Eh
-		jnz	short loc_5586
-		mov	word_131DA, 1
-		jmp	short loc_559A
-; ---------------------------------------------------------------------------
-
-loc_5586:
-		cmp	word_131D8, 0
-		jnz	short loc_559A
-		cmp	word ptr [bp+6], 9FAh
-		jnz	short loc_559A
-		mov	word_131D8, 1
-
-loc_559A:
-		les	bx, [bp+6]
-		cmp	word ptr es:[bx], 0
-		jz	short loc_55B7
-		mov	ax, 1
-		push	ax		; whence
-		xor	ax, ax
-		push	ax
-		push	ax		; offset
-		push	word ptr [bp+8]
-		push	bx		; stream
-		nopcall	_fseek
-		add	sp, 0Ah
-
-loc_55B7:
-		les	bx, [bp+6]
-		test	byte ptr es:[bx+2], 4
-		jz	short loc_55D0
-		push	word ptr es:[bx+0Ah]
-		push	word ptr es:[bx+8]
-		nop
-		push	cs
-		call	near ptr _farfree
-		pop	cx
-		pop	cx
-
-loc_55D0:
-		les	bx, [bp+6]
-		and	word ptr es:[bx+2], 0FFF3h
-		mov	word ptr es:[bx+6], 0
-		mov	dx, [bp+8]
-		mov	ax, [bp+6]
-		add	ax, 5
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		cmp	word ptr [bp+0Eh], 2
-		jz	short loc_5664
-		cmp	word ptr [bp+10h], 0
-		jbe	short loc_5664
-		mov	word ptr _exitbuf+2, seg seg000
-		mov	word ptr _exitbuf, 5A44h
-		mov	ax, [bp+0Ah]
-		or	ax, [bp+0Ch]
-		jnz	short loc_5639
-		push	word ptr [bp+10h]
-		nop
-		push	cs
-		call	near ptr _malloc
-		pop	cx
-		mov	[bp+0Ch], dx
-		mov	[bp+0Ah], ax
-		or	ax, dx
-		jz	short loc_5634
-		les	bx, [bp+6]
-		or	word ptr es:[bx+2], 4
-		jmp	short loc_5639
-; ---------------------------------------------------------------------------
-
-loc_5634:
-		mov	ax, 0FFFFh
-		jmp	short loc_5666
-; ---------------------------------------------------------------------------
-
-loc_5639:
-		les	bx, [bp+6]
-		mov	dx, [bp+0Ch]
-		mov	ax, [bp+0Ah]
-		mov	es:[bx+0Eh], dx
-		mov	es:[bx+0Ch], ax
-		mov	es:[bx+0Ah], dx
-		mov	es:[bx+8], ax
-		mov	ax, [bp+10h]
-		mov	es:[bx+6], ax
-		cmp	word ptr [bp+0Eh], 1
-		jnz	short loc_5664
-		or	word ptr es:[bx+2], 8
-
-loc_5664:
-		xor	ax, ax
-
-loc_5666:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_554E	endp ; sp-analysis failed
+include libs/BorlandC/setvbuf.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -26410,10 +26262,7 @@ include libs/BorlandC/putc[data].asm
 		db    0
 		db  5Ch	; \
 		db    0
-word_131D8	dw 0
-					; sub_554E+46w
-word_131DA	dw 0
-					; sub_554E+30w
+include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
 aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0

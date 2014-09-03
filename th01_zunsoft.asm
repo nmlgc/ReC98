@@ -960,131 +960,7 @@ include libs/BorlandC/nearheap.asm
 include libs/BorlandC/fflush.asm
 include libs/BorlandC/flushall.asm
 include libs/BorlandC/fseek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl setvbuf(FILE *stream, char *buf, int type, size_t	size)
-_setvbuf	proc near
-
-stream		= word ptr  4
-buf		= word ptr  6
-_type		= word ptr  8
-_size		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	bx, [bp+stream]
-		mov	ax, [bx+0Eh]
-		cmp	ax, [bp+stream]
-		jz	short loc_1EC0
-		jmp	loc_1F6B
-; ---------------------------------------------------------------------------
-
-loc_1EC0:
-		cmp	[bp+_type], 2
-		jle	short loc_1EC9
-		jmp	loc_1F6B
-; ---------------------------------------------------------------------------
-
-loc_1EC9:
-		cmp	[bp+_size], 7FFFh
-		jbe	short loc_1ED3
-		jmp	loc_1F6B
-; ---------------------------------------------------------------------------
-
-loc_1ED3:
-		cmp	word_2866, 0
-		jnz	short loc_1EE9
-		cmp	[bp+stream], 26A4h
-		jnz	short loc_1EE9
-		mov	word_2866, 1
-		jmp	short loc_1EFD
-; ---------------------------------------------------------------------------
-
-loc_1EE9:
-		cmp	word_2864, 0
-		jnz	short loc_1EFD
-		cmp	[bp+stream], 2694h
-		jnz	short loc_1EFD
-		mov	word_2864, 1
-
-loc_1EFD:
-		mov	bx, [bp+stream]
-		cmp	word ptr [bx], 0
-		jz	short loc_1F14
-		mov	ax, 1
-		push	ax		; whence
-		xor	ax, ax
-		push	ax
-		push	ax		; offset
-		push	bx		; stream
-		call	_fseek
-		add	sp, 8
-
-loc_1F14:
-		mov	bx, [bp+stream]
-		test	byte ptr [bx+2], 4
-		jz	short loc_1F24
-		push	word ptr [bx+8]	; block
-		call	_free
-		pop	cx
-
-loc_1F24:
-		mov	bx, [bp+stream]
-		and	word ptr [bx+2], 0FFF3h
-		mov	word ptr [bx+6], 0
-		mov	ax, [bp+stream]
-		add	ax, 5
-		mov	[bx+8],	ax
-		mov	[bx+0Ah], ax
-		cmp	[bp+_type], 2
-		jz	short loc_1F8C
-		cmp	[bp+_size], 0
-		jbe	short loc_1F8C
-		mov	_exitbuf, 2128h
-		cmp	[bp+buf], 0
-		jnz	short loc_1F70
-		push	[bp+_size]	; size
-		call	_malloc
-		pop	cx
-		mov	[bp+buf], ax
-		or	ax, ax
-		jz	short loc_1F6B
-		mov	bx, [bp+stream]
-		or	word ptr [bx+2], 4
-		jmp	short loc_1F70
-; ---------------------------------------------------------------------------
-
-loc_1F6B:
-		mov	ax, 0FFFFh
-		jmp	short loc_1F8E
-; ---------------------------------------------------------------------------
-
-loc_1F70:
-		mov	bx, [bp+stream]
-		mov	ax, [bp+buf]
-		mov	[bx+0Ah], ax
-		mov	[bx+8],	ax
-		mov	ax, [bp+_size]
-		mov	[bx+6],	ax
-		cmp	[bp+_type], 1
-		jnz	short loc_1F8C
-		or	word ptr [bx+2], 8
-
-loc_1F8C:
-		xor	ax, ax
-
-loc_1F8E:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-_setvbuf	endp
-
+include libs/BorlandC/setvbuf.asm
 include libs/BorlandC/_strlen.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
@@ -1123,8 +999,7 @@ include libs/BorlandC/__IOERROR[data].asm
 		db    0
 __stklen	dw 1000h
 include libs/BorlandC/nearheap[data].asm
-word_2864	dw 0
-word_2866	dw 0
+include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 
 InitStart	label byte
