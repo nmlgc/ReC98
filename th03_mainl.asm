@@ -304,43 +304,7 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2820	proc far
-		push	si
-		push	di
-		cld
-		mov	ax, ResPalSeg
-		or	ax, ax
-		jz	short loc_284C
-		mov	es, ax
-		mov	ax, PaletteTone
-		mov	es:0Ah,	al
-		mov	si, 141Eh
-		mov	di, 10h
-		mov	cx, 10h
-
-loc_283C:
-		lodsw
-		xchg	ah, al
-		shr	ax, 4
-		and	al, 0Fh
-		stosw
-		lodsb
-		shr	al, 4
-		stosb
-		loop	loc_283C
-
-loc_284C:
-		pop	di
-		pop	si
-		retf
-sub_2820	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_set_palettes.asm
 ; ---------------------------------------------------------------------------
 dword_2850	dd 0
 byte_2854	db 0, 90h
@@ -3423,7 +3387,7 @@ loc_9C5E:
 		push	offset unk_10316
 		push	large [dword_102FE]
 		call	graph_pi_free
-		call	sub_2820
+		call	respal_set_palettes
 		pop	si
 		leave
 		retn
