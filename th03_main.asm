@@ -1290,92 +1290,7 @@ loc_4B74:
 sub_4891	endp
 
 include libs/BorlandC/getdcwd.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	getenv(const char *name)
-_getenv		proc near
-					; sub_948B+126p
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_2		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		les	di, [bp+arg_2]
-		mov	ax, es
-		or	ax, di
-		jz	short loc_4C48
-		mov	al, 0
-		mov	ah, es:[di]
-		mov	cx, 0FFFFh
-		cld
-		repne scasb
-		not	cx
-		dec	cx
-		jz	short loc_4C48
-		les	di, environ@
-		mov	[bp+var_2], es
-		mov	bx, es
-		or	bx, di
-		mov	[bp+var_4], di
-		jnz	short loc_4C55
-
-loc_4C48:
-		xor	dx, dx
-		xor	ax, ax
-_getenv		endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4C4C	proc far
-		jmp	short loc_4C81
-; ---------------------------------------------------------------------------
-
-loc_4C4E:
-		add	word ptr [bp-4], 4
-		les	di, [bp-4]
-
-loc_4C55:
-		les	di, es:[di]
-		mov	bx, es
-		or	bx, di
-		jz	short loc_4C48
-		mov	al, es:[di]
-		or	al, al
-		jz	short loc_4C48
-		cmp	ah, al
-		jnz	short loc_4C4E
-		mov	bx, cx
-		cmp	byte ptr es:[bx+di], 3Dh ; '='
-		jnz	short loc_4C4E
-		push	ds
-		lds	si, [bp+6]
-		repe cmpsb
-		pop	ds
-		xchg	cx, bx
-		jnz	short loc_4C4E
-		inc	di
-		mov	ax, di
-		mov	dx, es
-
-loc_4C81:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_4C4C	endp
-
+include libs/BorlandC/getenv.asm
 include libs/BorlandC/memcmp.asm
 include libs/BorlandC/memcpy.asm
 include libs/BorlandC/memset.asm
@@ -1401,9 +1316,7 @@ pathname	= dword	ptr  0Eh
 		push	di
 		push	[bp+arg_6]
 		push	[bp+varname]
-		nop
-		push	cs		; name
-		call	_getenv
+		nopcall	_getenv
 		pop	cx
 		pop	cx
 		mov	word ptr [bp+var_4+2], dx
@@ -2183,9 +2096,7 @@ loc_959E:
 		push	ds
 		mov	ax, 1153h
 		push	ax
-		nop
-		push	cs		; name
-		call	_getenv
+		nopcall	_getenv
 		pop	cx
 		pop	cx
 		mov	[bp+var_2], dx

@@ -10095,82 +10095,7 @@ _fgetchar	proc far
 _fgetchar	endp
 
 include libs/BorlandC/getdcwd.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; char *__cdecl	getenv(const char *name)
-_getenv		proc far
-
-var_4		= dword	ptr -4
-_name		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		les	di, [bp+_name]
-		mov	ax, es
-		or	ax, di
-		jz	short loc_5EF9
-		mov	al, 0
-		mov	ah, es:[di]
-		mov	cx, 0FFFFh
-		cld
-		repne scasb
-		not	cx
-		dec	cx
-		jz	short loc_5EF9
-		les	di, environ@
-		mov	word ptr [bp+var_4+2], es
-		mov	bx, es
-		or	bx, di
-		mov	word ptr [bp+var_4], di
-		jnz	short loc_5F06
-
-loc_5EF9:
-		xor	dx, dx
-		xor	ax, ax
-		jmp	short loc_5F32
-; ---------------------------------------------------------------------------
-
-loc_5EFF:
-		add	word ptr [bp+var_4], 4
-		les	di, [bp+var_4]
-
-loc_5F06:
-		les	di, es:[di]
-		mov	bx, es
-		or	bx, di
-		jz	short loc_5EF9
-		mov	al, es:[di]
-		or	al, al
-		jz	short loc_5EF9
-		cmp	ah, al
-		jnz	short loc_5EFF
-		mov	bx, cx
-		cmp	byte ptr es:[bx+di], 3Dh ; '='
-		jnz	short loc_5EFF
-		push	ds
-		lds	si, [bp+_name]
-		repe cmpsb
-		pop	ds
-		xchg	cx, bx
-		jnz	short loc_5EFF
-		inc	di
-		mov	ax, di
-		mov	dx, es
-
-loc_5F32:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_getenv		endp
-
+include libs/BorlandC/getenv.asm
 include libs/BorlandC/memcmp.asm
 include libs/BorlandC/memcpy.asm
 include libs/BorlandC/memset.asm
@@ -10705,9 +10630,7 @@ pathname	= dword	ptr  0Eh
 		push	di
 		push	word ptr [bp+varname+2]
 		push	word ptr [bp+varname] ;	name
-		nop
-		push	cs
-		call	near ptr _getenv
+		nopcall	_getenv
 		pop	cx
 		pop	cx
 		mov	word ptr [bp+var_4+2], dx
@@ -12239,9 +12162,7 @@ loc_B3BB:
 		push	ds
 		mov	ax, 21FFh
 		push	ax		; name
-		nop
-		push	cs
-		call	near ptr _getenv
+		nopcall	_getenv
 		pop	cx
 		pop	cx
 		mov	word ptr [bp+_src+2], dx
