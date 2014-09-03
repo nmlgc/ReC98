@@ -214,49 +214,7 @@ include libs/master.lib/super_entry_bfnt.asm
 include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_292E	proc far
-		nopcall	respal_exist
-		or	ax, ax
-		jz	short locret_2964
-		push	si
-		push	di
-		push	ds
-		push	ds
-		pop	es
-		assume es:dseg
-		mov	ds, ax
-		mov	al, ds:[10]
-		xor	ah, ah
-		mov	es:PaletteTone, ax
-		mov	si, 10h
-		mov	di, 11BAh
-		mov	cx, si
-		mov	bx, 11h
-
-loc_2952:
-		lodsw
-		xchg	ah, al
-		and	ax, 0F0Fh
-		mul	bx
-		stosw
-		lodsb
-		mul	bl
-		stosb
-		loop	loc_2952
-		pop	ds
-		pop	di
-		pop	si
-
-locret_2964:
-		retf
-sub_292E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/respal_get_palettes.asm
 ; ---------------------------------------------------------------------------
 dword_2966	dd 0
 byte_296A	db 0
@@ -4054,7 +4012,7 @@ sub_A4A1	proc near
 		call	sub_F0A6
 		push	3
 		call	sub_F0A6
-		call	sub_292E
+		call	respal_get_palettes
 		call	far ptr	palette_show
 		nop
 		push	cs
