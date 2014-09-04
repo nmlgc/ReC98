@@ -1527,9 +1527,7 @@ loc_64F1:
 		push	word ptr [bp+var_4] ; __int32
 		push	word ptr [bp+src+2]
 		push	word ptr [bp+src] ; src
-		nop
-		push	cs
-		call	near ptr sub_6511
+		nopcall	__searchstr
 		add	sp, 0Ch
 		pop	di
 		pop	si
@@ -1538,187 +1536,7 @@ loc_64F1:
 		retf
 __searchenv	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_6511(char *src,	__int32, char *pathname)
-sub_6511	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-src		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-pathname	= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	ax, 50h	; 'P'
-		push	ax		; len
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; buf
-		xor	ax, ax
-		push	ax		; drive
-		nopcall	__getdcwd
-		add	sp, 8
-		or	ax, dx
-		jnz	short loc_6536
-		xor	dx, dx
-		jmp	short loc_6545
-; ---------------------------------------------------------------------------
-
-loc_6536:
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; s
-		nop
-		push	cs
-		call	near ptr _strlen
-		pop	cx
-		pop	cx
-		mov	dx, ax
-
-loc_6545:
-		les	bx, [bp+pathname]
-		add	bx, dx
-		mov	byte ptr es:[bx], 0
-		or	dx, dx
-		jz	short loc_659A
-		mov	bx, dx
-		add	bx, word ptr [bp+pathname]
-		mov	bl, es:[bx-1]
-		mov	al, bl
-		cmp	al, 5Ch	; '\'
-		jz	short loc_656B
-		cmp	bl, 2Fh	; '/'
-		jz	short loc_656B
-		cmp	bl, 3Ah	; ':'
-		jnz	short loc_6587
-
-loc_656B:
-		mov	ax, word ptr [bp+pathname]
-		add	ax, dx
-		dec	ax
-		push	word ptr [bp+pathname+2]
-		push	ax
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname]
-		nopcall	___path_issbcs
-		add	sp, 8
-		or	ax, ax
-		jnz	short loc_659A
-
-loc_6587:
-		push	ds
-		mov	ax, 255Ch
-		push	ax		; src
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; dest
-		nop
-		push	cs
-		call	near ptr _strcat
-		add	sp, 8
-
-loc_659A:
-		push	word ptr [bp+src+2]
-		push	word ptr [bp+src] ; src
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; dest
-		nop
-		push	cs
-		call	near ptr _strcat
-		add	sp, 8
-		xor	ax, ax
-		push	ax		; char
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; pathname
-		nopcall	__access
-		add	sp, 6
-		or	ax, ax
-		jz	short loc_660E
-		les	bx, [bp+arg_4]
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_65D5
-		les	bx, [bp+pathname]
-		mov	byte ptr es:[bx], 0
-		jmp	short loc_664D
-; ---------------------------------------------------------------------------
-
-loc_65D5:
-		xor	dx, dx
-		jmp	short loc_65ED
-; ---------------------------------------------------------------------------
-
-loc_65D9:
-		les	bx, [bp+pathname]
-		add	bx, dx
-		push	es
-		les	si, [bp+arg_4]
-		mov	al, es:[si]
-		pop	es
-		mov	es:[bx], al
-		inc	word ptr [bp+arg_4]
-		inc	dx
-
-loc_65ED:
-		les	bx, [bp+arg_4]
-		cmp	byte ptr es:[bx], 3Bh ;	';'
-		jz	short loc_65FC
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_65D9
-
-loc_65FC:
-		les	bx, [bp+arg_4]
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_6608
-		jmp	loc_6545
-; ---------------------------------------------------------------------------
-
-loc_6608:
-		inc	word ptr [bp+arg_4]
-		jmp	loc_6545
-; ---------------------------------------------------------------------------
-
-loc_660E:
-		mov	ax, 50h	; 'P'
-		push	ax
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname]
-		xor	ax, ax
-		push	ax
-		push	ax
-		nopcall	__fullpath
-		add	sp, 0Ah
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		or	ax, dx
-		jz	short loc_664D
-		push	[bp+var_2]
-		push	[bp+var_4]	; src
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; dest
-		nop
-		push	cs
-		call	near ptr _strcpy
-		push	[bp+var_2]
-		push	[bp+var_4]
-		nop
-		push	cs
-		call	near ptr _farfree
-		add	sp, 0Ch
-
-loc_664D:
-					; sub_6511+11Bj
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_6511	endp
-
+include libs/BorlandC/srchstr.asm
 include libs/BorlandC/setvbuf.asm
 include libs/BorlandC/_strcat.asm
 include libs/BorlandC/_strcmp.asm
@@ -25613,8 +25431,7 @@ include libs/BorlandC/signal[data].asm
 include libs/BorlandC/pathops[data].asm
 		db    0
 		db    0
-		db  5Ch	; \
-		db    0
+include libs/BorlandC/srchstr[data].asm
 include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
