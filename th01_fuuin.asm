@@ -7692,58 +7692,7 @@ loc_9B9F:
 		retn
 sub_9B78	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9BA2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		cmp	ah, 81h	; 'Å'
-		jb	short loc_9BDC
-		cmp	ah, 0A0h ; '†'
-		jb	short loc_9BBE
-		cmp	ah, 0E0h ; '‡'
-		jb	short loc_9BDC
-		cmp	ah, 0F0h ; ''
-		jnb	short loc_9BDC
-
-loc_9BBE:
-		cmp	al, 40h	; '@'
-		jb	short loc_9BDC
-		cmp	al, 0FDh ; '˝'
-		jnb	short loc_9BDC
-		cmp	al, 7Fh	; ''
-		jz	short loc_9BDC
-		cmp	al, 80h	; 'Ä'
-		adc	al, 61h	; 'a'
-		jb	short loc_9BD2
-		sub	al, 0A2h ; '¢'
-
-loc_9BD2:
-		rcl	ah, 1
-		and	ah, 7Fh
-		add	ax, 1F21h
-		jmp	short loc_9BDE
-; ---------------------------------------------------------------------------
-
-loc_9BDC:
-		xor	ax, ax
-
-loc_9BDE:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_9BA2	endp
-
+include libs/BorlandC/mbjmsjis.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14524,7 +14473,7 @@ loc_CD1B:
 		mov	dh, 0
 		add	ax, dx
 		push	ax
-		call	sub_9BA2
+		call	__mbcjmstojis
 		pop	cx
 		mov	[bp+var_2], ax
 		add	word ptr [bp+arg_6], 2
@@ -17692,7 +17641,7 @@ loc_E1EB:
 		mov	dh, 0
 		add	ax, dx
 		push	ax
-		call	sub_9BA2
+		call	__mbcjmstojis
 		pop	cx
 		mov	[bp+var_2], ax
 		add	word ptr [bp+arg_6], 2

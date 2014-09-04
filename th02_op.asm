@@ -1039,58 +1039,7 @@ include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9849	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		cmp	ah, 81h	; 'Å'
-		jb	short loc_9883
-		cmp	ah, 0A0h ; '†'
-		jb	short loc_9865
-		cmp	ah, 0E0h ; '‡'
-		jb	short loc_9883
-		cmp	ah, 0F0h ; ''
-		jnb	short loc_9883
-
-loc_9865:
-		cmp	al, 40h	; '@'
-		jb	short loc_9883
-		cmp	al, 0FDh ; '˝'
-		jnb	short loc_9883
-		cmp	al, 7Fh	; ''
-		jz	short loc_9883
-		cmp	al, 80h	; 'Ä'
-		adc	al, 61h	; 'a'
-		jb	short loc_9879
-		sub	al, 0A2h ; '¢'
-
-loc_9879:
-		rcl	ah, 1
-		and	ah, 7Fh
-		add	ax, 1F21h
-		jmp	short loc_9885
-; ---------------------------------------------------------------------------
-
-loc_9883:
-		xor	ax, ax
-
-loc_9885:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_9849	endp
-
+include libs/BorlandC/mbjmsjis.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3559,7 +3508,7 @@ loc_AB82:
 		mov	dh, 0
 		add	ax, dx
 		push	ax
-		call	sub_9849
+		call	__mbcjmstojis
 		pop	cx
 		mov	[bp+var_2], ax
 		add	word ptr [bp+arg_6], 2
