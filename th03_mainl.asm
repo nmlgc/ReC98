@@ -868,52 +868,7 @@ include libs/BorlandC/memcmp.asm
 include libs/BorlandC/memcpy.asm
 include libs/BorlandC/memset.asm
 include libs/BorlandC/movmem.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl _searchenv(const	char *file, const char *varname, char *pathname)
-__searchenv	proc far
-
-var_4		= dword	ptr -4
-src		= dword	ptr  6
-varname		= dword	ptr  0Ah
-pathname	= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		push	word ptr [bp+varname+2]
-		push	word ptr [bp+varname] ;	name
-		nopcall	_getenv
-		pop	cx
-		pop	cx
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		or	ax, dx
-		jnz	short loc_4C87
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 1168h
-
-loc_4C87:
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; pathname
-		push	word ptr [bp+var_4+2]
-		push	word ptr [bp+var_4] ; __int32
-		push	word ptr [bp+src+2]
-		push	word ptr [bp+src] ; src
-		nopcall	__searchstr
-		add	sp, 0Ch
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__searchenv	endp
-
+include libs/BorlandC/srchenv.asm
 include libs/BorlandC/srchstr.asm
 include libs/BorlandC/setvbuf.asm
 include libs/BorlandC/_strcat.asm
@@ -1108,9 +1063,7 @@ arg_C		= word ptr  12h
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; file
-		nop
-		push	cs
-		call	near ptr __searchenv
+		nopcall	__searchenv
 		add	sp, 0Ch
 		les	bx, [bp+pathname]
 		cmp	byte ptr es:[bx], 0
@@ -10316,8 +10269,7 @@ include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 include libs/BorlandC/pathops[data].asm
-		db    0
-		db    0
+include libs/BorlandC/srchenv[data].asm
 include libs/BorlandC/srchstr[data].asm
 include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
