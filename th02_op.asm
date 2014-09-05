@@ -695,33 +695,7 @@ include libs/BorlandC/dosenv.asm
 include libs/BorlandC/dosgdriv.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-LXMUL@		proc far
-		push	si
-		xchg	ax, si
-		xchg	ax, dx
-		test	ax, ax
-		jz	short loc_366B
-		mul	bx
-
-loc_366B:
-		jcxz	short loc_3672
-		xchg	ax, cx
-		mul	si
-		add	ax, cx
-
-loc_3672:
-		xchg	ax, si
-		mul	bx
-		add	dx, si
-		pop	si
-		retf
-LXMUL@		endp
-
+include libs/BorlandC/f_lxmul.asm
 include libs/BorlandC/f_scopy.asm
 include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
