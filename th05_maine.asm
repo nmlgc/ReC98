@@ -85,102 +85,7 @@ include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/graph_show.asm
 include libs/master.lib/iatan2.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1AF8	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		imul	ax
-		mov	bx, ax
-		mov	cx, dx
-		mov	ax, [bp+arg_2]
-		imul	ax
-		add	bx, ax
-		adc	cx, dx
-		jmp	short loc_1B19
-; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	cx, [bp+arg_2]
-
-loc_1B19:
-		xor	ax, ax
-		mov	dx, bx
-		or	dx, cx
-		jz	short loc_1B80
-		cmp	cx, 3FFFh
-		ja	short loc_1B80
-		jnz	short loc_1B2F
-		cmp	bx, 8000h
-		ja	short loc_1B80
-
-loc_1B2F:
-		push	si
-		shl	bx, 1
-		rcl	cx, 1
-		shl	bx, 1
-		rcl	cx, 1
-		or	cx, cx
-		jz	short loc_1B55
-		mov	si, 1
-		mov	ax, 3
-
-loc_1B42:
-		ror	si, 1
-		ror	ax, 1
-		ror	ax, 1
-		test	cx, ax
-		jz	short loc_1B42
-		or	ax, ax
-		jns	short loc_1B65
-		mov	si, 0FFFFh
-		jmp	short loc_1B65
-; ---------------------------------------------------------------------------
-
-loc_1B55:
-		mov	si, 100h
-		mov	ax, 3
-
-loc_1B5B:
-		ror	si, 1
-		ror	ax, 1
-		ror	ax, 1
-		test	bx, ax
-		jz	short loc_1B5B
-
-loc_1B65:
-		mov	bp, si
-		mov	ax, bx
-		mov	dx, cx
-		div	si
-		add	si, ax
-		rcr	si, 1
-		cmp	si, ax
-		jz	short loc_1B79
-		cmp	si, bp
-		jnz	short loc_1B65
-
-loc_1B79:
-		xor	ax, ax
-		shr	si, 1
-		adc	ax, si
-		pop	si
-
-loc_1B80:
-		pop	bp
-		retf	4
-sub_1AF8	endp
-
+include libs/master.lib/isqrt.asm
 include libs/master.lib/js_end.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
@@ -7600,7 +7505,7 @@ loc_D4A9:
 		mov	[si+12h], al
 		push	word ptr [si]
 		push	word ptr [si+4]
-		call	sub_1AF8
+		call	ihypot
 		mov	bx, 20h	; ' '
 		cwd
 		idiv	bx
@@ -7684,7 +7589,7 @@ loc_D53E:
 		mov	[si+12h], al
 		push	word ptr [si]
 		push	word ptr [si+4]
-		call	sub_1AF8
+		call	ihypot
 		mov	bx, 20h	; ' '
 		cwd
 		idiv	bx

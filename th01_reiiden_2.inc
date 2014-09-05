@@ -554,7 +554,7 @@ arg_4		= dword	ptr  0Ah
 		; Hack (wait)
 		db 0cdh
 		db 03dh
-		call	sub_1594
+		call	isqrt
 		mov	[bp+var_A], ax
 		; Hack (fild [bp+var_A])
 		db 0cdh

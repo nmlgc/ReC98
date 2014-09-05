@@ -2206,114 +2206,7 @@ include libs/master.lib/grcg_setcolor.asm
 include libs/master.lib/grcg_pset.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/iatan2.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_157C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		imul	ax
-		mov	bx, ax
-		mov	cx, dx
-		mov	ax, [bp+arg_2]
-		imul	ax
-		add	bx, ax
-		adc	cx, dx
-		jmp	short loc_159D
-sub_157C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1594	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	cx, [bp+arg_2]
-
-loc_159D:
-		xor	ax, ax
-		mov	dx, bx
-		or	dx, cx
-		jz	short loc_1604
-		cmp	cx, 3FFFh
-		ja	short loc_1604
-		jnz	short loc_15B3
-		cmp	bx, 8000h
-		ja	short loc_1604
-
-loc_15B3:
-		push	si
-		shl	bx, 1
-		rcl	cx, 1
-		shl	bx, 1
-		rcl	cx, 1
-		or	cx, cx
-		jz	short loc_15D9
-		mov	si, 1
-		mov	ax, 3
-
-loc_15C6:
-		ror	si, 1
-		ror	ax, 1
-		ror	ax, 1
-		test	cx, ax
-		jz	short loc_15C6
-		or	ax, ax
-		jns	short loc_15E9
-		mov	si, 0FFFFh
-		jmp	short loc_15E9
-; ---------------------------------------------------------------------------
-
-loc_15D9:
-		mov	si, 100h
-		mov	ax, 3
-
-loc_15DF:
-		ror	si, 1
-		ror	ax, 1
-		ror	ax, 1
-		test	bx, ax
-		jz	short loc_15DF
-
-loc_15E9:
-		mov	bp, si
-		mov	ax, bx
-		mov	dx, cx
-		div	si
-		add	si, ax
-		rcr	si, 1
-		cmp	si, ax
-		jz	short loc_15FD
-		cmp	si, bp
-		jnz	short loc_15E9
-
-loc_15FD:
-		xor	ax, ax
-		shr	si, 1
-		adc	ax, si
-		pop	si
-
-loc_1604:
-		pop	bp
-		retf	4
-sub_1594	endp
-
+include libs/master.lib/isqrt.asm
 include libs/master.lib/random.asm
 ; ---------------------------------------------------------------------------
 		db 34h dup(0)
@@ -14523,7 +14416,7 @@ loc_CF31:
 		jl	short loc_CF04
 		sub	[bp+var_A], 8
 		push	large 2
-		call	sub_1594
+		call	isqrt
 		push	ax
 		mov	ax, 8
 		cwd
@@ -14531,7 +14424,7 @@ loc_CF31:
 		idiv	bx
 		sub	[bp+var_8], ax
 		push	large 2
-		call	sub_1594
+		call	isqrt
 		push	ax
 		mov	ax, 8
 		cwd
@@ -14540,7 +14433,7 @@ loc_CF31:
 		add	[bp+var_4], ax
 		add	[bp+var_2], 8
 		push	large 2
-		call	sub_1594
+		call	isqrt
 		push	ax
 		mov	ax, 8
 		cwd
@@ -14548,7 +14441,7 @@ loc_CF31:
 		idiv	bx
 		sub	[bp+var_12], ax
 		push	large 2
-		call	sub_1594
+		call	isqrt
 		push	ax
 		mov	ax, 8
 		cwd
