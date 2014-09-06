@@ -24,7 +24,7 @@ include ReC98.inc
 seg000		segment	word public 'CODE' use16
 		assume cs:seg000
 		org 100h
-		assume es:nothing, ss:nothing, ds:seg000, fs:nothing, gs:nothing
+		assume es:nothing, ss:seg000, ds:seg000, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 
@@ -498,7 +498,7 @@ loc_6CD:
 		mov	al, ds:2875h
 		cbw
 		push	ax
-		call	sub_1008
+		call	super_wave_put
 		push	140h
 		push	0C0h
 		mov	al, ds:2873h
@@ -512,7 +512,7 @@ loc_6CD:
 		mov	al, ds:2875h
 		cbw
 		push	ax
-		call	sub_1008
+		call	super_wave_put
 		dec	byte ptr ds:2874h
 
 loc_711:
@@ -546,7 +546,7 @@ loc_737:
 		mov	al, ds:2875h
 		cbw
 		push	ax
-		call	sub_1008
+		call	super_wave_put
 		push	140h
 		push	0C0h
 		mov	al, ds:2873h
@@ -560,7 +560,7 @@ loc_737:
 		mov	al, ds:2875h
 		cbw
 		push	ax
-		call	sub_1008
+		call	super_wave_put
 		inc	byte ptr ds:2874h
 		mov	al, ds:2875h
 		add	al, 4
@@ -739,167 +739,7 @@ include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_put_8.asm
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1008	proc near
-
-var_2		= byte ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-
-		enter	2, 0
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bx, [bp+arg_6]
-		add	bx, bx
-		mov	cx, [bx+2DC6h]
-		inc	ch
-		mov	ds:3346h, ch
-		mov	byte ptr cs:sub_10E0+5,	cl
-		push	word ptr [bx+29C6h]
-		imul	di, [bp+arg_8],	50h
-		mov	ax, 0FFFFh
-		and	ax, [bp+arg_4]
-		mov	[bp+var_2], ah
-		jns	short loc_103A
-		neg	[bp+arg_4]
-
-loc_103A:
-		xor	ch, ch
-		xor	si, si
-
-loc_103E:
-		mov	ax, si
-		cwd
-		shl	ax, 7
-		div	[bp+arg_4]
-		add	ax, [bp+arg_0]
-		mov	bx, 2568h
-		xlat
-		imul	[bp+arg_2]
-		sar	ax, 7
-		add	ax, [bp+arg_A]
-		mov	dx, ax
-		and	al, 0Fh
-		xor	dl, al
-		sar	dx, 3
-		add	dx, di
-		mov	ah, ds:3346h
-		test	ah, 1
-		jnz	short loc_106D
-		xor	al, 8
-
-loc_106D:
-		mov	[si+31C6h], dx
-		mov	[si+3246h], ax
-		xor	bh, bh
-		mov	bl, al
-		add	bx, bx
-		mov	dx, [bx+22C6h]
-		mov	[si+32C6h], dx
-		test	[bp+var_2], 0FFh
-		jz	short loc_108C
-		neg	[bp+arg_2]
-
-loc_108C:
-		add	di, 50h
-		add	si, 2
-		loop	loc_103E
-		pop	ds
-		xor	si, si
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		cld
-		mov	al, 0C0h
-		out	7Ch, al
-		xor	al, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_10E0
-		mov	al, 0CEh
-		out	7Ch, al
-		mov	al, 0FFh
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		out	7Eh, al
-		call	sub_10E0
-		mov	al, 0CDh
-		out	7Ch, al
-		call	sub_10E0
-		mov	al, 0CBh
-		out	7Ch, al
-		call	sub_10E0
-		mov	al, 0C7h
-		out	7Ch, al
-		call	sub_10E0
-		xor	al, al
-		out	7Ch, al
-		pop	bp
-		pop	di
-		pop	si
-		pop	ds
-		leave
-		retn	0Ch
-sub_1008	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_10E0	proc near
-		mov	byte ptr ss:3346h, 0
-		xor	bp, bp
-
-loc_10E8:
-		xor	dx, dx
-		mov	di, [bp+31C6h]
-		mov	cx, [bp+3246h]
-		mov	bx, [bp+32C6h]
-		shr	ch, 1
-		jb	short loc_1108
-		lodsb
-		shl	ax, 8
-		test	cl, 8
-		jz	short loc_1109
-		ror	ax, cl
-		jmp	short loc_1112
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1108:
-		lodsw
-
-loc_1109:
-		ror	ax, cl
-		xor	dx, ax
-		and	ax, bx
-		xor	ax, dx
-		stosw
-
-loc_1112:
-		xor	dx, ax
-		dec	ch
-		jnz	short loc_1108
-		mov	es:[di], dx
-		add	bp, 2
-		dec	byte ptr ss:3346h
-		jnz	short loc_10E8
-		retn
-sub_10E0	endp
-
+include libs/master.lib/super_wave_put.asm
 include libs/master.lib/smem_wget.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/memheap.asm
@@ -1014,7 +854,8 @@ bdata@	label byte
 		db 126h dup(?)
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/superpa[bss].asm
-		db 182h dup(?)
+include libs/master.lib/super_wave_put[bss].asm
+		db ?
 include libs/master.lib/mem[bss].asm
 		dd ?
 		dd ?
