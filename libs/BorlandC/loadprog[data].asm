@@ -1,0 +1,9 @@
+loadprog_PATH	db 'PATH',0
+loadprog_slashes db '/\',0
+loadprog_empty	db 0
+loadprog_BAT	db '.BAT',0
+loadprog_COM	db '.COM',0
+loadprog_EXE	db '.EXE',0
+loadprog_BAT_0	db '.BAT',0
+loadprog_COMSPEC db 'COMSPEC',0
+loadprog_SLASH_C db '/c',0

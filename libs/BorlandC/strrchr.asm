@@ -1,6 +1,6 @@
 ; int __cdecl __far strrchr(char *s, char c)
-public strrchr
-strrchr	proc far
+public _strrchr
+_strrchr	proc far
 
 @@ss		= dword	ptr -4
 @@s		= dword	ptr  6
@@ -52,4 +52,4 @@ strrchr	proc far
 		mov	sp, bp
 		pop	bp
 		retf
-strrchr	endp
+_strrchr	endp
