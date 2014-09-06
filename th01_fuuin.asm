@@ -6767,40 +6767,7 @@ unknown_libname_3 db 0BAh, 10h,	12h, 0EBh, 3, 0BAh, 15h, 12h, 0B9h, 5, 0
 		db 1Ah,	12h, 0B4h, 40h,	0CDh, 21h, 0E9h, 56h, 8Ch
 include libs/BorlandC/doscmd.asm
 include libs/BorlandC/exec.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int execl(char *path,	char *arg0, ...)
-_execl		proc far
-
-_s		= dword	ptr  6
-_arg0		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax		; int
-		push	ax		; int
-		push	ax		; int
-		push	ss		; int
-		lea	ax, [bp+_arg0]
-		push	ax		; int
-		push	word ptr [bp+_s+2]
-		push	word ptr [bp+_s]	; s
-		mov	ax, 91CFh
-		push	ax		; int
-		call	__LoadProg
-		add	sp, 10h
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_execl		endp
-
+include libs/BorlandC/execl.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -965,41 +965,7 @@ include libs/BorlandC/xmsg.asm
 include libs/BorlandC/xx.asm
 include libs/BorlandC/doscmd.asm
 include libs/BorlandC/exec.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int execl(char *path,	char *arg0, ...)
-_execl		proc far
-					; sub_9BDF+160P ...
-
-s		= dword	ptr  6
-arg0		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		push	ax		; int
-		push	ax		; int
-		push	ax		; int
-		push	ss		; int
-		lea	ax, [bp+arg0]
-		push	ax		; int
-		push	word ptr [bp+s+2]
-		push	word ptr [bp+s]	; s
-		mov	ax, 8EDBh
-		push	ax		; int
-		call	__LoadProg
-		add	sp, 10h
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_execl		endp
-
+include libs/BorlandC/execl.asm
 include libs/BorlandC/setblock.asm
 include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
