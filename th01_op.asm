@@ -3443,42 +3443,7 @@ _localeconv	proc far
 _localeconv	endp
 
 include libs/BorlandC/toupper.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl unlink(const char	*path)
-_unlink		proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ah, 41h	; 'A'
-		lds	dx, [bp+_path]
-		int	21h		; DOS -	2+ - DELETE A FILE (UNLINK)
-					; DS:DX	-> ASCIZ pathname of file to delete (no	wildcards allowed)
-		pop	ds
-		jb	short loc_27CD
-		xor	ax, ax
-		jmp	short loc_27D1
-; ---------------------------------------------------------------------------
-
-loc_27CD:
-		push	ax
-		call	__IOERROR
-
-loc_27D1:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_unlink		endp
-
+include libs/BorlandC/unlink.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4992,9 +4957,7 @@ loc_3DA2:
 		call	__MKNAME
 		push	dx
 		push	ax		; path
-		nop
-		push	cs
-		call	near ptr _unlink
+		nopcall	_unlink
 		pop	cx
 		pop	cx
 		les	bx, [bp+stream]
