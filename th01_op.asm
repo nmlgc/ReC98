@@ -1728,149 +1728,7 @@ include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F12		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ah, 52h
-		int	21h		; DOS -	2+ internal - GET LIST OF LISTS
-					; Return: ES:BX	-> DOS list of lists
-		cld
-		mov	bx, es:[bx-2]
-
-loc_F21:
-		mov	es, bx
-		inc	bx
-		mov	ax, es:1
-		or	ax, ax
-		jz	short loc_F42
-		mov	ax, es:3
-		cmp	ax, [bp+arg_0]
-		jnz	short loc_F42
-		mov	cx, [bp+arg_2]
-		lds	si, [bp+arg_4]
-		mov	di, 10h
-		repe cmpsb
-		jz	short loc_F53
-
-loc_F42:
-		mov	ax, es:3
-		add	bx, ax
-		mov	al, es:0
-		cmp	al, 4Dh	; 'M'
-		jz	short loc_F21
-		mov	bx, 0
-
-loc_F53:
-		mov	ax, bx
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_F12		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F5C		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		push	word ptr [bp+arg_4+2]
-		push	word ptr [bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_F12
-		or	ax, ax
-		jnz	short loc_FD0
-		mov	ax, 5800h
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: get allocation strategy
-		mov	dx, ax
-		mov	ax, 5801h
-		mov	bx, 1
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, [bp+arg_0]
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	cx, 0
-		jb	short loc_FC7
-		mov	bx, cs
-		cmp	bx, ax
-		jnb	short loc_FAC
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ax, 5801h
-		mov	bx, 2
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, [bp+arg_0]
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-
-loc_FAC:
-		mov	cx, ax
-		push	ax
-		dec	cx
-		mov	es, cx
-		assume es:nothing
-		mov	ax, 0FFFFh
-		mov	es:1, ax
-		inc	cx
-		mov	es, cx
-		assume es:nothing
-		xor	di, di
-		mov	cx, [bp+arg_2]
-		lds	si, [bp+arg_4]
-		rep movsb
-		pop	cx
-
-loc_FC7:
-		mov	ax, 5801h
-		mov	bx, dx
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ax, cx
-
-loc_FD0:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_F5C		endp
-
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/resdata.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_ropen.asm
@@ -15843,7 +15701,7 @@ arg_A		= word ptr  10h
 		push	offset aReiidenconfig ;	"ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F12
+		call	resdata_exist
 		mov	si, ax
 		or	si, si
 		jnz	short loc_E2C6
@@ -15851,7 +15709,7 @@ arg_A		= word ptr  10h
 		push	offset aReiidenconfig ;	"ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F5C
+		call	resdata_create
 		mov	si, ax
 		mov	word ptr dword_13EE6+2,	si
 		mov	word ptr dword_13EE6, 0
@@ -15901,7 +15759,7 @@ sub_E27C	endp
 		push	offset aReiidenconfig ;	"ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F12
+		call	resdata_exist
 		mov	si, ax
 		or	si, si
 		jnz	short loc_E33F
@@ -15967,7 +15825,7 @@ sub_E3C5	proc far
 		push	offset aReiidenconfig ;	"ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F12
+		call	resdata_exist
 		mov	si, ax
 		or	si, si
 		jz	short loc_E3E2
@@ -24056,16 +23914,7 @@ include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/respal_exist[data].asm
-		db  70h	; p
-		db  61h	; a
-		db  6Ch	; l
-		db  39h	; 9
-		db  38h	; 8
-		db  20h
-		db  67h	; g
-		db  72h	; r
-		db  62h	; b
-		db    0
+include libs/master.lib/resdata[data].asm
 include libs/master.lib/fil[data].asm
 		db    3
 		db    0

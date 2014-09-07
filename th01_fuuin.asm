@@ -1813,137 +1813,7 @@ include libs/master.lib/palette_show.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F6A		proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ah, 52h
-		int	21h		; DOS -	2+ internal - GET LIST OF LISTS
-					; Return: ES:BX	-> DOS list of lists
-		cld
-		mov	bx, es:[bx-2]
-
-loc_F79:
-		mov	es, bx
-		inc	bx
-		mov	ax, es:1
-		or	ax, ax
-		jz	short loc_F9A
-		mov	ax, es:3
-		cmp	ax, [bp+arg_0]
-		jnz	short loc_F9A
-		mov	cx, [bp+arg_2]
-		lds	si, [bp+arg_4]
-		mov	di, 10h
-		repe cmpsb
-		jz	short loc_FAB
-
-loc_F9A:
-		mov	ax, es:3
-		add	bx, ax
-		mov	al, es:0
-		cmp	al, 4Dh	; 'M'
-		jz	short loc_F79
-		mov	bx, 0
-
-loc_FAB:
-		mov	ax, bx
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_F6A		endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		push	word ptr [bp+0Ch]
-		push	word ptr [bp+0Ah]
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_F6A
-		or	ax, ax
-		jnz	short loc_1028
-		mov	ax, 5800h
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: get allocation strategy
-		mov	dx, ax
-		mov	ax, 5801h
-		mov	bx, 1
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, [bp+6]
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-		mov	cx, 0
-		jb	short loc_101F
-		mov	bx, cs
-		cmp	bx, ax
-		jnb	short loc_1004
-		mov	es, ax
-		assume es:nothing
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		mov	ax, 5801h
-		mov	bx, 2
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ah, 48h	; 'H'
-		mov	bx, [bp+6]
-		int	21h		; DOS -	2+ - ALLOCATE MEMORY
-					; BX = number of 16-byte paragraphs desired
-
-loc_1004:
-		mov	cx, ax
-		push	ax
-		dec	cx
-		mov	es, cx
-		assume es:nothing
-		mov	ax, 0FFFFh
-		mov	es:1, ax
-		inc	cx
-		mov	es, cx
-		assume es:nothing
-		xor	di, di
-		mov	cx, [bp+8]
-		lds	si, [bp+0Ah]
-		rep movsb
-		pop	cx
-
-loc_101F:
-		mov	ax, 5801h
-		mov	bx, dx
-		int	21h		; DOS -	3+ - GET/SET MEMORY ALLOCATION STRATEGY
-					; AL = function	code: set allocation strategy
-		mov	ax, cx
-
-loc_1028:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/resdata.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_ropen.asm
@@ -7434,7 +7304,7 @@ var_4		= dword	ptr -4
 		push	offset aReiidenconfig ;	"ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F6A
+		call	resdata_exist
 		mov	di, ax
 		or	di, di
 		jnz	short loc_9F65
@@ -7571,7 +7441,7 @@ var_4		= dword	ptr -4
 		push	offset aReiidenconfi_0 ; "ReiidenConfig"
 		push	0Dh
 		push	5
-		call	sub_F6A
+		call	resdata_exist
 		mov	di, ax
 		or	di, di
 		jz	short loc_A0EE
@@ -26580,7 +26450,7 @@ include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/respal_exist[data].asm
-aPal98Grb_1	db 'pal98 grb',0
+include libs/master.lib/resdata[data].asm
 include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm

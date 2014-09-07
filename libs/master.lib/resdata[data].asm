@@ -1,0 +1,3 @@
+public RESDATA_ResPalID
+RESDATA_ResPalID	db	'pal98 grb', 0
+RESDATA_IDLEN EQU 10
