@@ -1875,27 +1875,7 @@ include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1186	proc far
-
-arg_0		= word ptr  8
-
-		push	bp
-		push	es
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		pop	es
-		pop	bp
-		retf	2
-sub_1186	endp
-
+include libs/master.lib/dos_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15992,7 +15972,7 @@ sub_E3C5	proc far
 		or	si, si
 		jz	short loc_E3E2
 		push	si
-		call	sub_1186
+		call	dos_free
 
 loc_E3E2:
 		pop	si

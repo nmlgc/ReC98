@@ -1999,27 +1999,7 @@ include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/file_create.asm
 include libs/master.lib/file_seek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12D2	proc far
-
-arg_0		= word ptr  8
-
-		push	bp
-		push	es
-		mov	bp, sp
-		mov	es, [bp+arg_0]
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-		pop	es
-		pop	bp
-		retf	2
-sub_12D2	endp
-
+include libs/master.lib/dos_free.asm
 include libs/master.lib/dos_axdx.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23586,9 +23566,7 @@ sub_11718	proc far
 		or	si, si
 		jz	short loc_11735
 		push	si
-
-loc_11730:
-		call	sub_12D2
+		call	dos_free
 
 loc_11735:
 		pop	si
