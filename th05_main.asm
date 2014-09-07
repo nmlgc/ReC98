@@ -215,7 +215,7 @@ loc_19A5:
 		sub	si, ClipYT
 		imul	si, 50h
 		mov	es, ClipYT_seg
-		call	loc_1FAC
+		call	draw_trapezoidx
 		mov	es, word ptr [bp+arg_2+2]
 		pop	di
 		pop	si
@@ -271,7 +271,7 @@ loc_1A28:
 		sub	dx, si
 		sub	si, ClipYT
 		imul	si, 50h
-		call	loc_1FAC
+		call	draw_trapezoidx
 		pop	di
 		pop	si
 		leave
@@ -296,72 +296,7 @@ include libs/master.lib/graph_hide.asm
 include libs/master.lib/graph_scrollup.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/js_end.asm
-
-; ---------------------------------------------------------------------------
-
-loc_1FAC:
-					; sub_18B4+187p
-		mov	ax, trapez_a+6
-		mov	cs:word_202A, ax
-		mov	ax, trapez_b+6
-		mov	cs:word_201C, ax
-		mov	ax, trapez_a+2
-		mov	cs:word_2026, ax
-		mov	ax, trapez_b+2
-		mov	cs:word_2014, ax
-		out	64h, al		; AT Keyboard controller 8042.
-		push	bp
-		mov	bp, trapez_a
-		mov	cx, trapez_b
-		nop
-
-loc_1FD4:
-		mov	bx, bp
-		sub	cx, bx
-		sbb	ax, ax
-		xor	cx, ax
-		sub	cx, ax
-		and	ax, cx
-		sub	bx, ax
-		mov	di, bx
-		shr	di, 4
-		shl	di, 1
-		add	di, si
-		and	bx, 0Fh
-		add	cx, bx
-		shl	bx, 1
-		mov	ax, [bx+38Eh]
-		not	ax
-		mov	bx, cx
-		and	bx, 0Fh
-		shl	bx, 1
-		shr	cx, 4
-		jz	short loc_200B
-		dec	cx
-		stosw
-		mov	ax, 0FFFFh
-		rep stosw
-
-loc_200B:
-		and	ax, [bx+390h]
-		stosw
-; ---------------------------------------------------------------------------
-		db 81h,	6, 3Ch,	26h
-word_2014	dw 1234h
-		db 8Bh,	0Eh, 38h, 26h, 81h, 0D1h
-word_201C	dw 1234h
-		db 89h,	0Eh, 38h, 26h, 81h, 6, 34h, 26h
-word_2026	dw 1234h
-		db 81h,	0D5h
-word_202A	dw 1234h
-; ---------------------------------------------------------------------------
-		add	si, 50h	; 'P'
-		dec	dx
-		jns	short loc_1FD4
-		mov	trapez_a, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/draw_trapezoidx.asm
 include libs/master.lib/large_byte.asm
 include libs/master.lib/super_large_put.asm
 include libs/master.lib/make_linework.asm
