@@ -4402,87 +4402,7 @@ include libs/BorlandC/atexit.asm
 include libs/BorlandC/del.asm
 include libs/BorlandC/delarray.asm
 include libs/BorlandC/dosenv.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; unsigned int __cdecl _dos_getfileattr(const char *filename, unsigned int *attrib)
-__dos_getfileattr proc far
-
-filename	= dword	ptr  6
-attrib		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ah, 43h	; 'C'
-		xor	al, al
-		lds	dx, [bp+filename]
-		int	21h		; DOS -	2+ - GET FILE ATTRIBUTES
-					; DS:DX	-> ASCIZ file name or directory
-					; name without trailing	slash
-		pop	ds
-		jb	short loc_2613
-		les	bx, [bp+attrib]
-		mov	es:[bx], cx
-		xor	ax, ax
-		jmp	short loc_2617
-; ---------------------------------------------------------------------------
-
-loc_2613:
-		push	ax
-		call	__DOSERROR
-
-loc_2617:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__dos_getfileattr endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; unsigned int __cdecl _dos_setfileattr(const char *filename, unsigned int attrib)
-__dos_setfileattr proc far
-
-filename	= dword	ptr  6
-attrib		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ah, 43h	; 'C'
-		mov	al, 1
-		lds	dx, [bp+filename]
-		mov	cx, [bp+attrib]
-		int	21h		; DOS -	2+ - SET FILE ATTRIBUTES
-					; DS:DX	-> ASCIZ file name
-					; CX = file attribute bits
-		pop	ds
-		jb	short loc_2634
-		xor	ax, ax
-		jmp	short loc_2638
-; ---------------------------------------------------------------------------
-
-loc_2634:
-		push	ax
-		call	__DOSERROR
-
-loc_2638:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__dos_setfileattr endp
-
+include libs/BorlandC/dosfattr.asm
 include libs/BorlandC/dosgdriv.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
@@ -4899,9 +4819,7 @@ loc_2B79:
 		push	ax		; attrib
 		push	word ptr [bp+dest+2]
 		push	word ptr [bp+dest] ; filename
-		nop
-		push	cs
-		call	near ptr __dos_getfileattr
+		nopcall	__dos_getfileattr
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_2B5E
