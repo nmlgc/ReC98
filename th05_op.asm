@@ -82,88 +82,8 @@ include libs/master.lib/make_linework.asm
 include libs/master.lib/palette_init.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	es, word ptr [bp+6]
-		call	word ptr es:2
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-		nop
-		cmp	word ptr es:1Ah, 0
-		jz	short loc_1B42
-		dec	word ptr es:1Ah
-		add	word ptr es:12h, 1
-		adc	word ptr es:14h, 0
-		mov	ax, es:1Ch
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1B42:
-		call	word ptr es:4
-		test	ah, ah
-		jnz	short locret_1B71
-		cmp	ax, es:1Ch
-		mov	es:1Ch,	ax
-		jnz	short locret_1B71
-		push	ax
-		call	word ptr es:4
-		test	ah, ah
-		jnz	short loc_1B70
-		mov	es:1Ah,	ax
-		sub	word ptr es:12h, 1
-		sbb	word ptr es:14h, 0
-
-loc_1B70:
-		pop	ax
-
-locret_1B71:
-		retn
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1B72	proc near
-		mov	ax, es:0Ah
-		mov	dx, es:0Ch
-		cmp	dx, es:8
-		jb	short loc_1B8F
-		ja	short loc_1B8B
-		cmp	ax, es:6
-		jb	short loc_1B8F
-
-loc_1B8B:
-		mov	ax, 0FFFFh
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1B8F:
-		add	ax, 1
-		adc	dx, 0
-		mov	es:0Ah,	ax
-		mov	es:0Ch,	dx
-		add	word ptr es:12h, 1
-		adc	word ptr es:14h, 0
-		push	es
-		push	word ptr es:0
-		call	bgetc
-		pop	es
-		retn
-sub_1B72	endp
-
-; ---------------------------------------------------------------------------
-		call	sub_1B72
-		or	ah, ah
-		jnz	short locret_1BC2
-		xor	al, es:1Eh
-
-locret_1BC2:
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfgetc.asm
 		db 0
-
 include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
