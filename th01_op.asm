@@ -2079,7 +2079,7 @@ arg_E		= word ptr  12h
 		sub	sp, 32h
 		push	si
 		push	di
-		les	bx, off_12FCC
+		les	bx, __localeconvention
 		assume es:nothing
 		mov	al, es:[bx]
 		mov	[bp+var_5], al
@@ -3344,22 +3344,7 @@ segp		= dword	ptr  6
 _segread	endp
 
 include libs/BorlandC/setupio.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-; struct lconv *localeconv(void)
-_localeconv	proc far
-		push	si
-		push	di
-		mov	dx, ds
-		mov	ax, 0D3Ch
-		pop	di
-		pop	si
-		retf
-_localeconv	endp
-
+include libs/BorlandC/cconv.asm
 include libs/BorlandC/toupper.asm
 include libs/BorlandC/unlink.asm
 
@@ -23693,35 +23678,7 @@ include libs/BorlandC/new[data].asm
 __stklen	dw 1000h
 include libs/master.lib/ctype[data].asm
 		db 0
-off_12FCC	dd unk_12FFC
-		dd unk_12FFE
-		dd unk_12FFF
-		dd unk_13000
-		dd unk_13001
-		dd unk_13002
-		dd unk_13003
-		dd unk_13004
-		dd unk_13005
-		dd unk_13006
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-		db  7Fh	; 
-unk_12FFC	db  2Eh	; .
-		db    0
-unk_12FFE	db    0
-unk_12FFF	db    0
-unk_13000	db    0
-unk_13001	db    0
-unk_13002	db    0
-unk_13003	db    0
-unk_13004	db    0
-unk_13005	db    0
-unk_13006	db    0
+include libs/BorlandC/cconv[data].asm
 		db    0
 		db  28h	; (
 		db  6Eh	; n
