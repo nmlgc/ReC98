@@ -1907,29 +1907,7 @@ loc_129F:
 locret_12A8:
 		retf
 ; ---------------------------------------------------------------------------
-		nop
-		mov	ah, 0
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12B0	proc far
-		mov	ah, 1
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		shr	bh, 1
-		sbb	bx, bx
-		and	ax, bx
-		retf
-sub_12B0	endp
-
+include libs/master.lib/keybios.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/random.asm
@@ -9074,7 +9052,7 @@ loc_B126:
 		inc	di
 
 loc_B135:
-		call	sub_12B0
+		call	key_sense_bios
 		or	ax, ax
 		jz	short loc_B126
 		push	cs
