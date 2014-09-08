@@ -953,60 +953,7 @@ include libs/BorlandC/dosgdriv.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
 include libs/BorlandC/f_scopy.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl getdate(struct date *datep)
-_getdate	proc far
-
-datep		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 2Ah
-		int	21h		; DOS -	GET CURRENT DATE
-					; Return: DL = day, DH = month,	CX = year
-					; AL = day of the week (0=Sunday, 1=Monday, etc.)
-		les	bx, [bp+datep]
-		mov	es:[bx], cx
-		mov	es:[bx+2], dx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_getdate	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; void __cdecl gettime(struct time *timep)
-_gettime	proc far
-
-timep		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 2Ch
-		int	21h		; DOS -	GET CURRENT TIME
-					; Return: CH = hours, CL = minutes, DH = seconds
-					; DL = hundredths of seconds
-		les	bx, [bp+timep]
-		mov	es:[bx], cx
-		mov	es:[bx+2], dx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_gettime	endp
-
+include libs/BorlandC/getdate.asm
 include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
