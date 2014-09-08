@@ -119,33 +119,7 @@ include libs/master.lib/palette_white_out.asm
 include libs/master.lib/mem_assign_dos.asm
 include libs/master.lib/mem_assign.asm
 include libs/master.lib/memheap.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2724	proc far
-		cmp	mem_TopSeg, 0
-		jz	short loc_273F
-		mov	ax, mem_TopSeg
-		mov	es, ax
-		xor	ax, ax
-		cmp	mem_MyOwn, ax
-		mov	mem_TopSeg, ax
-		jz	short loc_273F
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-
-loc_273F:
-		mov	ax, 1
-		retf
-sub_2724	endp
-
-; ---------------------------------------------------------------------------
-		xor	ax, ax
-		stc
-		retf
-
+include libs/master.lib/mem_unassign.asm
 include libs/master.lib/super_free.asm
 include libs/master.lib/super_entry_pat.asm
 include libs/master.lib/super_put_1plane.asm
@@ -19338,7 +19312,7 @@ sub_1361E	proc far
 		out	dx, al		; Interrupt Controller #2, 8259A
 		mov	dx, 0A4h ; '¤'
 		out	dx, al		; Interrupt Controller #2, 8259A
-		call	sub_2724
+		call	mem_unassign
 		call	vsync_end
 		call	text_clear
 		call	js_end

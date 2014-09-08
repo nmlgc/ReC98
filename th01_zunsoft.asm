@@ -94,7 +94,7 @@ sub_3D0		proc near
 		mov	bp, sp
 		call	super_free
 		call	sub_367
-		call	sub_136A
+		call	mem_unassign
 		call	text_clear
 		call	egc_start
 		pop	bp
@@ -744,39 +744,7 @@ include libs/master.lib/smem_wget.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/memheap.asm
 include libs/master.lib/mem_assign.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_136A	proc near
-		cmp	mem_TopSeg, 0
-		jz	short loc_1394
-		mov	ax, ds:3348h
-		cmp	ds:334Ah, ax
-		jnz	short loc_1398
-		mov	ax, mem_TopSeg
-		cmp	ds:334Eh, ax
-		jnz	short loc_1398
-		mov	es, ax
-		xor	ax, ax
-		cmp	mem_MyOwn, ax
-		mov	mem_TopSeg, ax
-		jz	short loc_1394
-		mov	ah, 49h
-		int	21h		; DOS -	2+ - FREE MEMORY
-					; ES = segment address of area to be freed
-
-loc_1394:
-		mov	ax, 1
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1398:
-		xor	ax, ax
-		stc
-		retn
-sub_136A	endp
-
+include libs/master.lib/mem_unassign.asm
 include libs/master.lib/grc_setclip.asm
 include libs/master.lib/grcg_hline.asm
 include libs/master.lib/grcg_setcolor.asm
