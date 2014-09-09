@@ -122,159 +122,7 @@ include libs/master.lib/super_roll_put_1plane.asm
 include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3708	proc far
-					; sub_D488:loc_D60EP ...
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	cx, ss:[bx+8]
-		mov	di, ss:[bx+6]
-		mov	bx, ss:[bx+4]
-		shl	bx, 1
-		mov	ds, word ptr [bx+1ADAh]
-		mov	bx, di
-		shl	bx, 2
-		add	bx, di
-		shl	bx, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	bx, ax
-		xor	si, si
-		mov	ax, 0A800h
-		mov	es, ax
-		lodsw
-		cmp	al, 80h	; '€'
-		jnz	short loc_37B0
-		mov	al, 0C0h ; 'À'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		mov	dl, 0FFh
-		shr	dl, cl
-		test	bx, 1
-		jnz	short loc_37B6
-
-loc_3750:
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	ch, 10h
-		mov	di, bx
-		cmp	di, 7850h
-		jb	short loc_3792
-
-loc_3772:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], ax
-		xor	al, dh
-		mov	es:[di+2], al
-		add	di, 50h	; 'P'
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_3772
-		sub	di, 7D00h
-		nop
-
-loc_3792:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], ax
-		xor	al, dh
-		mov	es:[di+2], al
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_3792
-		lodsw
-		cmp	al, 80h	; '€'
-		jz	short loc_3750
-		out	7Ch, al
-
-loc_37B0:
-		pop	di
-		pop	si
-		pop	ds
-		retf	6
-; ---------------------------------------------------------------------------
-
-loc_37B6:
-					; sub_3708+10Ej
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	ch, 10h
-		mov	di, bx
-		cmp	di, 7850h
-		jb	short loc_37FA
-
-loc_37D8:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], al
-		xor	al, dh
-		xchg	ah, al
-		mov	es:[di+1], ax
-		add	di, 50h	; 'P'
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_37D8
-		sub	di, 7D00h
-		nop
-
-loc_37FA:
-					; sub_3708+109j
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], al
-		xor	al, dh
-		xchg	ah, al
-		mov	es:[di+1], ax
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_37FA
-		lodsw
-		cmp	al, 80h	; '€'
-		jz	short loc_37B6
-		out	7Ch, al
-		pop	di
-		pop	si
-		pop	ds
-		retf	6
-sub_3708	endp
-
+include libs/master.lib/super_roll_put_tiny.asm
 include libs/master.lib/super_convert_tiny.asm
 include libs/master.lib/super_zoom.asm
 
@@ -7044,7 +6892,7 @@ loc_D569:
 		mov	ah, 0
 		add	ax, 4Ah	; 'J'
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 		jmp	short loc_D59F
 ; ---------------------------------------------------------------------------
 
@@ -7114,7 +6962,7 @@ loc_D5F7:
 		push	ax
 
 loc_D60E:
-		call	sub_3708
+		call	super_roll_put_tiny
 
 loc_D613:
 		inc	[bp+var_2]
@@ -7896,7 +7744,7 @@ loc_DBDF:
 		mov	al, [bx+0ABAh]
 		mov	ah, 0
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 
 loc_DBFA:
 		inc	di
@@ -10382,7 +10230,7 @@ loc_EFC7:
 		mov	al, byte_1E51B
 		mov	ah, 0
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	bx, word_205F2
 		mov	ax, [bx]
 		add	ax, 30h	; '0'
@@ -10391,7 +10239,7 @@ loc_EFC7:
 		mov	al, byte_1E51B
 		mov	ah, 0
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 
 loc_EFEF:
 		pop	si
@@ -12828,7 +12676,7 @@ loc_10208:
 		push	di
 		push	[bp+var_6]
 		push	[bp+var_4]
-		call	sub_3708
+		call	super_roll_put_tiny
 
 loc_1022C:
 					; sub_FFF8+219j ...
@@ -14296,7 +14144,7 @@ loc_10D13:
 		mov	al, [si+0Eh]
 		mov	ah, 0
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	[bp+var_4], 1
 
 loc_10D2D:
@@ -18124,7 +17972,7 @@ loc_12B05:
 		mov	ah, 0
 		add	ax, 5Bh	; '['
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 
 loc_12B1E:
 		add	si, 8
@@ -18147,7 +17995,7 @@ loc_12B40:
 		push	word_23A6C
 		push	si
 		push	[bp+var_4]
-		call	sub_3708
+		call	super_roll_put_tiny
 		add	si, 10h
 		cmp	si, 190h
 		jl	short loc_12B5A
@@ -18408,7 +18256,7 @@ loc_12D23:
 		push	word ptr [bx+2B8Ah]
 		push	si
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -18418,7 +18266,7 @@ loc_12D23:
 		push	ax
 		push	si
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		pop	si
 		pop	bp
 		retn
@@ -21736,7 +21584,7 @@ loc_14757:
 		mov	al, [si+9]
 		mov	ah, 0
 		push	ax
-		call	sub_3708
+		call	super_roll_put_tiny
 		dec	byte ptr [si+0Ah]
 		mov	ax, [si+2]
 		add	ax, 0FFF0h
@@ -31435,7 +31283,7 @@ sub_199B3	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -31449,7 +31297,7 @@ sub_199B3	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		push	0Ah
 		call	sub_FA52
 		call	sub_FA8A
@@ -32721,7 +32569,7 @@ loc_1A613:
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -32735,7 +32583,7 @@ loc_1A613:
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		call	sub_1A46B
 		xor	si, si
 		jmp	short loc_1A6B2
@@ -32843,7 +32691,7 @@ sub_1A6C5	proc near
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -32857,7 +32705,7 @@ sub_1A6C5	proc near
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		pop	bp
 		retn
 sub_1A6C5	endp
@@ -32940,7 +32788,7 @@ sub_1A7D5	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -32954,7 +32802,7 @@ sub_1A7D5	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		push	0Ah
 		call	sub_FA52
 		call	sub_FA8A
@@ -32996,7 +32844,7 @@ sub_1A7D5	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20618
 		mov	ah, 0
 		shl	ax, 2
@@ -33010,7 +32858,7 @@ sub_1A7D5	proc far
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
-		call	sub_3708
+		call	super_roll_put_tiny
 		mov	al, byte_20619
 		mov	ah, 0
 		push	ax
