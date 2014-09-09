@@ -272,122 +272,7 @@ include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_pack_put_8.asm
 include libs/master.lib/key_sense.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B86	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	cx, [bp+arg_4]
-		mov	bp, [bp+arg_2]
-		mov	ax, bp
-		shl	ax, 2
-		add	bp, ax
-		shl	bp, 4
-		shr	cx, 3
-		add	bp, cx
-		mov	dx, [bx+2512h]
-		mov	ds, word ptr [bx+2112h]
-		mov	al, dh
-		mul	dl
-		mov	si, ax
-		mov	bx, 50h	; 'P'
-		sub	bl, dh
-		mov	al, dh
-		xor	ah, ah
-		mov	cx, 0A800h
-		call	sub_1BDC
-		mov	cx, 0B000h
-		call	sub_1BDC
-		mov	cx, 0B800h
-		call	sub_1BDC
-		mov	cx, 0E000h
-		call	sub_1BDC
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_1B86	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1BDC	proc near
-		mov	es, cx
-		assume es:nothing
-		mov	dh, dl
-		mov	di, bp
-		test	di, 1
-		jnz	short loc_1C08
-		shr	ax, 1
-		jb	short loc_1BFA
-
-loc_1BEC:
-		mov	cx, ax
-		rep movsw
-		add	di, bx
-		dec	dh
-		jnz	short loc_1BEC
-		shl	ax, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1BFA:
-		mov	cx, ax
-		rep movsw
-		movsb
-		lea	di, [bx+di]
-		dec	dh
-		jnz	short loc_1BFA
-		rcl	ax, 1
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1C08:
-		shr	ax, 1
-		jb	short loc_1C1E
-		dec	ax
-
-loc_1C0D:
-		mov	cx, ax
-		movsb
-		rep movsw
-		movsb
-		add	di, bx
-		dec	dh
-		jnz	short loc_1C0D
-		inc	ax
-		shl	ax, 1
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1C1E:
-		mov	cx, ax
-		movsb
-		rep movsw
-		lea	di, [bx+di]
-		dec	dh
-		jnz	short loc_1C1E
-		rcl	ax, 1
-		retn
-sub_1BDC	endp
-
+include libs/master.lib/over_put_8.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 include libs/master.lib/pfgetc.asm
@@ -3252,7 +3137,7 @@ loc_A887:
 		push	si
 		push	[bp+arg_2]
 		push	di
-		call	sub_1B86
+		call	over_put_8
 		inc	[bp+var_2]
 		inc	di
 		add	si, 10h
