@@ -695,22 +695,22 @@ loc_977E:
 		call	sub_1797F
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_1FE70
-		call	dword_1F32E
-		call	dword_205CE
+		call	p1_1FE70
+		call	p1_1F32E
+		call	p1_205CE
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_1FE7C
-		call	dword_1F332
-		call	dword_205D2
+		call	p2_1FE7C
+		call	p2_1F332
+		call	p2_205D2
 		call	sub_B7E5
 		call	sub_E83F
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_2028C
+		call	p1_2028C
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_20290
+		call	p2_20290
 		call	sub_BB12
 		call	sub_13CC7
 		call	sub_17A1B
@@ -718,12 +718,12 @@ loc_977E:
 		call	sub_18059
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_202A4
-		call	dword_202AC
+		call	p1_202A4
+		call	p1_202AC
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_202A8
-		call	dword_202B0
+		call	p2_202A8
+		call	p2_202B0
 		nop
 		push	cs
 		call	near ptr sub_CEB2
@@ -763,28 +763,28 @@ loc_986C:
 		call	egc_on
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_205D6
+		call	bomb_p1
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_205DA
+		call	bomb_p2
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_1F336
+		call	p1_1F336
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_1F33A
+		call	p2_1F33A
 		call	sub_E86A
 		call	sub_164DA
 		call	sub_1837C
 		call	sub_B80B
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
-		call	dword_1FE74
-		call	dword_20294
+		call	p1_1FE74
+		call	p1_20294
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	dword_1FE80
-		call	dword_20298
+		call	p2_1FE80
+		call	p2_20298
 		mov	byte ptr word_23AF0, 0
 		push	65A6h
 		call	sub_DE95
@@ -1329,55 +1329,55 @@ loc_9D85:
 
 loc_9DEF:
 		push	si
-		call	sub_A524
+		call	set_callbacks_reimu
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9DF5:
 		push	si
-		call	sub_A6BC
+		call	set_callbacks_mima
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9DFB:
 		push	si
-		call	sub_A854
+		call	set_callbacks_marisa
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E01:
 		push	si
-		call	sub_A9EC
+		call	set_callbacks_ellen
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E07:
 		push	si
-		call	sub_AB84
+		call	set_callbacks_kotohime
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E0D:
 		push	si
-		call	sub_AD1C
+		call	set_callbacks_kana
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E13:
 		push	si
-		call	sub_AEB4
+		call	set_callbacks_rikako
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E19:
 		push	si
-		call	sub_B04C
+		call	set_callbacks_chiyuri
 		jmp	short loc_9E23
 ; ---------------------------------------------------------------------------
 
 loc_9E1F:
 		push	si
-		call	sub_B1E4
+		call	set_callbacks_yumemi
 
 loc_9E23:
 					; sub_9B14+2DFj ...
@@ -1942,7 +1942,6 @@ sub_A2F2	endp
 ; Attributes: bp-based frame
 
 sub_A310	proc far
-					; sub_154C4+6FP ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -2092,7 +2091,6 @@ sub_A3A8	endp
 ; Attributes: bp-based frame
 
 sub_A3D2	proc far
-					; sub_126A8+1F5P ...
 
 arg_0		= byte ptr  6
 arg_2		= byte ptr  8
@@ -2241,7 +2239,7 @@ sub_A44C	endp
 ; Attributes: bp-based frame
 
 sub_A4A1	proc near
-					; sub_A6BC+166p ...
+
 		push	bp
 		mov	bp, sp
 		push	1
@@ -2324,7 +2322,7 @@ sub_A4C3	endp
 
 ; Attributes: bp-based frame
 
-sub_A524	proc near
+set_callbacks_reimu	proc near
 
 arg_0		= word ptr  4
 
@@ -2337,64 +2335,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A5E2
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_1A27E
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_1A4E0
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1A5F9
-		mov	word_23B70, seg	seg004
-		mov	word_23B6E, offset sub_14A97
-		mov	word ptr dword_2028C+2,	seg seg004
-		mov	word ptr dword_2028C, offset sub_14B7C
-		mov	word ptr dword_20294+2,	seg seg004
-		mov	word ptr dword_20294, offset sub_14D83
-		mov	word ptr dword_2029C+2,	seg seg004
-		mov	word ptr dword_2029C, offset sub_14CE3
-		mov	word ptr dword_202A4+2,	seg seg004
-		mov	word ptr dword_202A4, offset sub_14FEE
-		mov	word ptr dword_202AC+2,	seg seg004
-		mov	word ptr dword_202AC, offset sub_15006
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_11033
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_113A9
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1508C
-		mov	word ptr dword_205D6+2,	seg seg004
-		mov	word ptr dword_205D6, offset sub_151E1
+		mov	word ptr p1_1FE6C+2, seg reimu_1A27E
+		mov	word ptr p1_1FE6C, offset reimu_1A27E
+		mov	word ptr p1_1FE70+2, seg reimu_1A4E0
+		mov	word ptr p1_1FE70, offset reimu_1A4E0
+		mov	word ptr p1_1FE74+2, seg reimu_1A5F9
+		mov	word ptr p1_1FE74, offset reimu_1A5F9
+		mov	word ptr p1_23B6E+2, seg reimu_14A97
+		mov	word ptr p1_23B6E, offset reimu_14A97
+		mov	word ptr p1_2028C+2, seg reimu_14B7C
+		mov	word ptr p1_2028C, offset reimu_14B7C
+		mov	word ptr p1_20294+2, seg reimu_14D83
+		mov	word ptr p1_20294, offset reimu_14D83
+		mov	word ptr p1_2029C+2, seg reimu_14CE3
+		mov	word ptr p1_2029C, offset reimu_14CE3
+		mov	word ptr p1_202A4+2, seg reimu_14FEE
+		mov	word ptr p1_202A4, offset reimu_14FEE
+		mov	word ptr p1_202AC+2, seg reimu_15006
+		mov	word ptr p1_202AC, offset reimu_15006
+		mov	word ptr p1_1F32E+2, seg reimu_11033
+		mov	word ptr p1_1F32E, offset reimu_11033
+		mov	word ptr p1_1F336+2, seg reimu_113A9
+		mov	word ptr p1_1F336, offset reimu_113A9
+		mov	word ptr p1_205CE+2, seg reimu_1508C
+		mov	word ptr p1_205CE, offset reimu_1508C
+		mov	word ptr bomb_p1+2, seg reimu_bomb
+		mov	word ptr bomb_p1, offset reimu_bomb
 		mov	word_23B6C, 4129h
 		mov	word_23B6A, 4110h
 		jmp	loc_A68D
 ; ---------------------------------------------------------------------------
 
 loc_A5E2:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_1A27E
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_1A4E0
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1A5F9
-		mov	word_23BF0, seg	seg004
-		mov	word_23BEE, offset sub_14A97
-		mov	word ptr dword_20290+2,	seg seg004
-		mov	word ptr dword_20290, offset sub_14B7C
-		mov	word ptr dword_20298+2,	seg seg004
-		mov	word ptr dword_20298, offset sub_14D83
-		mov	word ptr dword_202A0+2,	seg seg004
-		mov	word ptr dword_202A0, offset sub_14CE3
-		mov	word ptr dword_202A8+2,	seg seg004
-		mov	word ptr dword_202A8, offset sub_14FEE
-		mov	word ptr dword_202B0+2,	seg seg004
-		mov	word ptr dword_202B0, offset sub_15006
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_11033
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_113A9
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1508C
-		mov	word ptr dword_205DA+2,	seg seg004
-		mov	word ptr dword_205DA, offset sub_151E1
+		mov	word ptr p2_1FE78+2, seg reimu_1A27E
+		mov	word ptr p2_1FE78, offset reimu_1A27E
+		mov	word ptr p2_1FE7C+2, seg reimu_1A4E0
+		mov	word ptr p2_1FE7C, offset reimu_1A4E0
+		mov	word ptr p2_1FE80+2, seg reimu_1A5F9
+		mov	word ptr p2_1FE80, offset reimu_1A5F9
+		mov	word ptr p2_23BEE+2, seg reimu_14A97
+		mov	word ptr p2_23BEE, offset reimu_14A97
+		mov	word ptr p2_20290+2, seg reimu_14B7C
+		mov	word ptr p2_20290, offset reimu_14B7C
+		mov	word ptr p2_20298+2, seg reimu_14D83
+		mov	word ptr p2_20298, offset reimu_14D83
+		mov	word ptr p2_202A0+2, seg reimu_14CE3
+		mov	word ptr p2_202A0, offset reimu_14CE3
+		mov	word ptr p2_202A8+2, seg reimu_14FEE
+		mov	word ptr p2_202A8, offset reimu_14FEE
+		mov	word ptr p2_202B0+2, seg reimu_15006
+		mov	word ptr p2_202B0, offset reimu_15006
+		mov	word ptr p2_1F332+2, seg reimu_11033
+		mov	word ptr p2_1F332, offset reimu_11033
+		mov	word ptr p2_1F33A+2, seg reimu_113A9
+		mov	word ptr p2_1F33A, offset reimu_113A9
+		mov	word ptr p2_205D2+2, seg reimu_1508C
+		mov	word ptr p2_205D2, offset reimu_1508C
+		mov	word ptr bomb_p2+2, seg reimu_bomb
+		mov	word ptr bomb_p2, offset reimu_bomb
 		mov	word_23BEC, 4129h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2407,18 +2405,18 @@ loc_A68D:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_10BFE
+		call	reimu_10BFE
 		pop	si
 		pop	bp
 		retn	2
-sub_A524	endp
+set_callbacks_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_A6BC	proc near
+set_callbacks_mima	proc near
 
 arg_0		= word ptr  4
 
@@ -2431,64 +2429,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A77A
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_1A62B
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_1A745
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1A8D3
-		mov	word_23B70, seg	seg004
-		mov	word_23B6E, offset sub_153DC
-		mov	word ptr dword_2028C+2,	seg seg004
-		mov	word ptr dword_2028C, offset sub_154C4
-		mov	word ptr dword_20294+2,	seg seg004
-		mov	word ptr dword_20294, offset sub_15652
-		mov	word ptr dword_2029C+2,	seg seg004
-		mov	word ptr dword_2029C, offset sub_15597
-		mov	word ptr dword_202A4+2,	seg seg004
-		mov	word ptr dword_202A4, offset sub_158C5
-		mov	word ptr dword_202AC+2,	seg seg004
-		mov	word ptr dword_202AC, offset sub_158DD
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_FED8
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_10263
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_17043
-		mov	word ptr dword_205D6+2,	seg seg004
-		mov	word ptr dword_205D6, offset sub_171BA
+		mov	word ptr p1_1FE6C+2, seg mima_1A62B
+		mov	word ptr p1_1FE6C, offset mima_1A62B
+		mov	word ptr p1_1FE70+2, seg mima_1A745
+		mov	word ptr p1_1FE70, offset mima_1A745
+		mov	word ptr p1_1FE74+2, seg mima_1A8D3
+		mov	word ptr p1_1FE74, offset mima_1A8D3
+		mov	word ptr p1_23B6E+2, seg mima_153DC
+		mov	word ptr p1_23B6E, offset mima_153DC
+		mov	word ptr p1_2028C+2, seg mima_154C4
+		mov	word ptr p1_2028C, offset mima_154C4
+		mov	word ptr p1_20294+2, seg mima_15652
+		mov	word ptr p1_20294, offset mima_15652
+		mov	word ptr p1_2029C+2, seg mima_15597
+		mov	word ptr p1_2029C, offset mima_15597
+		mov	word ptr p1_202A4+2, seg mima_158C5
+		mov	word ptr p1_202A4, offset mima_158C5
+		mov	word ptr p1_202AC+2, seg mima_158DD
+		mov	word ptr p1_202AC, offset mima_158DD
+		mov	word ptr p1_1F32E+2, seg mima_FED8
+		mov	word ptr p1_1F32E, offset mima_FED8
+		mov	word ptr p1_1F336+2, seg mima_10263
+		mov	word ptr p1_1F336, offset mima_10263
+		mov	word ptr p1_205CE+2, seg mima_17043
+		mov	word ptr p1_205CE, offset mima_17043
+		mov	word ptr bomb_p1+2, seg mima_bomb
+		mov	word ptr bomb_p1, offset mima_bomb
 		mov	word_23B6C, 4167h
 		mov	word_23B6A, 4110h
 		jmp	loc_A825
 ; ---------------------------------------------------------------------------
 
 loc_A77A:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_1A62B
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_1A745
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1A8D3
-		mov	word_23BF0, seg	seg004
-		mov	word_23BEE, offset sub_153DC
-		mov	word ptr dword_20290+2,	seg seg004
-		mov	word ptr dword_20290, offset sub_154C4
-		mov	word ptr dword_20298+2,	seg seg004
-		mov	word ptr dword_20298, offset sub_15652
-		mov	word ptr dword_202A0+2,	seg seg004
-		mov	word ptr dword_202A0, offset sub_15597
-		mov	word ptr dword_202A8+2,	seg seg004
-		mov	word ptr dword_202A8, offset sub_158C5
-		mov	word ptr dword_202B0+2,	seg seg004
-		mov	word ptr dword_202B0, offset sub_158DD
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_FED8
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_10263
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_17043
-		mov	word ptr dword_205DA+2,	seg seg004
-		mov	word ptr dword_205DA, offset sub_171BA
+		mov	word ptr p2_1FE78+2, seg mima_1A62B
+		mov	word ptr p2_1FE78, offset mima_1A62B
+		mov	word ptr p2_1FE7C+2, seg mima_1A745
+		mov	word ptr p2_1FE7C, offset mima_1A745
+		mov	word ptr p2_1FE80+2, seg mima_1A8D3
+		mov	word ptr p2_1FE80, offset mima_1A8D3
+		mov	word ptr p2_23BEE+2, seg mima_153DC
+		mov	word ptr p2_23BEE, offset mima_153DC
+		mov	word ptr p2_20290+2, seg mima_154C4
+		mov	word ptr p2_20290, offset mima_154C4
+		mov	word ptr p2_20298+2, seg mima_15652
+		mov	word ptr p2_20298, offset mima_15652
+		mov	word ptr p2_202A0+2, seg mima_15597
+		mov	word ptr p2_202A0, offset mima_15597
+		mov	word ptr p2_202A8+2, seg mima_158C5
+		mov	word ptr p2_202A8, offset mima_158C5
+		mov	word ptr p2_202B0+2, seg mima_158DD
+		mov	word ptr p2_202B0, offset mima_158DD
+		mov	word ptr p2_1F332+2, seg mima_FED8
+		mov	word ptr p2_1F332, offset mima_FED8
+		mov	word ptr p2_1F33A+2, seg mima_10263
+		mov	word ptr p2_1F33A, offset mima_10263
+		mov	word ptr p2_205D2+2, seg mima_17043
+		mov	word ptr p2_205D2, offset mima_17043
+		mov	word ptr bomb_p2+2, seg mima_bomb
+		mov	word ptr bomb_p2, offset mima_bomb
 		mov	word_23BEC, 4167h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2501,18 +2499,18 @@ loc_A825:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_FB46
+		call	mima_FB46
 		pop	si
 		pop	bp
 		retn	2
-sub_A6BC	endp
+set_callbacks_mima	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_A854	proc near
+set_callbacks_marisa	proc near
 
 arg_0		= word ptr  4
 
@@ -2525,64 +2523,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A912
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_19ABC
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_19C36
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_19D31
-		mov	word_23B70, seg	seg004
-		mov	word_23B6E, offset sub_142DF
-		mov	word ptr dword_2028C+2,	seg seg004
-		mov	word ptr dword_2028C, offset sub_143BE
-		mov	word ptr dword_20294+2,	seg seg004
-		mov	word ptr dword_20294, offset sub_14511
-		mov	word ptr dword_2029C+2,	seg seg004
-		mov	word ptr dword_2029C, offset sub_14487
-		mov	word ptr dword_202A4+2,	seg seg004
-		mov	word ptr dword_202A4, offset sub_14885
-		mov	word ptr dword_202AC+2,	seg seg004
-		mov	word ptr dword_202AC, offset sub_1489D
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_F848
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_FAE8
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg004
-		mov	word ptr dword_205D6, offset sub_148B5
+		mov	word ptr p1_1FE6C+2, seg marisa_19ABC
+		mov	word ptr p1_1FE6C, offset marisa_19ABC
+		mov	word ptr p1_1FE70+2, seg marisa_19C36
+		mov	word ptr p1_1FE70, offset marisa_19C36
+		mov	word ptr p1_1FE74+2, seg marisa_19D31
+		mov	word ptr p1_1FE74, offset marisa_19D31
+		mov	word ptr p1_23B6E+2, seg marisa_142DF
+		mov	word ptr p1_23B6E, offset marisa_142DF
+		mov	word ptr p1_2028C+2, seg marisa_143BE
+		mov	word ptr p1_2028C, offset marisa_143BE
+		mov	word ptr p1_20294+2, seg marisa_14511
+		mov	word ptr p1_20294, offset marisa_14511
+		mov	word ptr p1_2029C+2, seg marisa_14487
+		mov	word ptr p1_2029C, offset marisa_14487
+		mov	word ptr p1_202A4+2, seg marisa_14885
+		mov	word ptr p1_202A4, offset marisa_14885
+		mov	word ptr p1_202AC+2, seg marisa_1489D
+		mov	word ptr p1_202AC, offset marisa_1489D
+		mov	word ptr p1_1F32E+2, seg marisa_F848
+		mov	word ptr p1_1F32E, offset marisa_F848
+		mov	word ptr p1_1F336+2, seg marisa_FAE8
+		mov	word ptr p1_1F336, offset marisa_FAE8
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg marisa_bomb
+		mov	word ptr bomb_p1, offset marisa_bomb
 		mov	word_23B6C, 41A9h
 		mov	word_23B6A, 4110h
 		jmp	loc_A9BD
 ; ---------------------------------------------------------------------------
 
 loc_A912:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_19ABC
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_19C36
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_19D31
-		mov	word_23BF0, seg	seg004
-		mov	word_23BEE, offset sub_142DF
-		mov	word ptr dword_20290+2,	seg seg004
-		mov	word ptr dword_20290, offset sub_143BE
-		mov	word ptr dword_20298+2,	seg seg004
-		mov	word ptr dword_20298, offset sub_14511
-		mov	word ptr dword_202A0+2,	seg seg004
-		mov	word ptr dword_202A0, offset sub_14487
-		mov	word ptr dword_202A8+2,	seg seg004
-		mov	word ptr dword_202A8, offset sub_14885
-		mov	word ptr dword_202B0+2,	seg seg004
-		mov	word ptr dword_202B0, offset sub_1489D
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_F848
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_FAE8
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg004
-		mov	word ptr dword_205DA, offset sub_148B5
+		mov	word ptr p2_1FE78+2, seg marisa_19ABC
+		mov	word ptr p2_1FE78, offset marisa_19ABC
+		mov	word ptr p2_1FE7C+2, seg marisa_19C36
+		mov	word ptr p2_1FE7C, offset marisa_19C36
+		mov	word ptr p2_1FE80+2, seg marisa_19D31
+		mov	word ptr p2_1FE80, offset marisa_19D31
+		mov	word ptr p2_23BEE+2, seg marisa_142DF
+		mov	word ptr p2_23BEE, offset marisa_142DF
+		mov	word ptr p2_20290+2, seg marisa_143BE
+		mov	word ptr p2_20290, offset marisa_143BE
+		mov	word ptr p2_20298+2, seg marisa_14511
+		mov	word ptr p2_20298, offset marisa_14511
+		mov	word ptr p2_202A0+2, seg marisa_14487
+		mov	word ptr p2_202A0, offset marisa_14487
+		mov	word ptr p2_202A8+2, seg marisa_14885
+		mov	word ptr p2_202A8, offset marisa_14885
+		mov	word ptr p2_202B0+2, seg marisa_1489D
+		mov	word ptr p2_202B0, offset marisa_1489D
+		mov	word ptr p2_1F332+2, seg marisa_F848
+		mov	word ptr p2_1F332, offset marisa_F848
+		mov	word ptr p2_1F33A+2, seg marisa_FAE8
+		mov	word ptr p2_1F33A, offset marisa_FAE8
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg marisa_bomb
+		mov	word ptr bomb_p2, offset marisa_bomb
 		mov	word_23BEC, 41A9h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2595,18 +2593,18 @@ loc_A9BD:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_F5AF
+		call	marisa_F5AF
 		pop	si
 		pop	bp
 		retn	2
-sub_A854	endp
+set_callbacks_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_A9EC	proc near
+set_callbacks_ellen	proc near
 
 arg_0		= word ptr  4
 
@@ -2619,64 +2617,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AAAA
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_193EF
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_1961D
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_197F3
-		mov	word_23B70, seg	seg008
-		mov	word_23B6E, offset sub_1B674
-		mov	word ptr dword_2028C+2,	seg seg008
-		mov	word ptr dword_2028C, offset sub_1B723
-		mov	word ptr dword_20294+2,	seg seg008
-		mov	word ptr dword_20294, offset sub_1B979
-		mov	word ptr dword_2029C+2,	seg seg008
-		mov	word ptr dword_2029C, offset sub_1B903
-		mov	word ptr dword_202A4+2,	seg seg008
-		mov	word ptr dword_202A4, offset sub_1BC1D
-		mov	word ptr dword_202AC+2,	seg seg008
-		mov	word ptr dword_202AC, offset sub_1BC35
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_116B6
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset loc_11A01
-		mov	word ptr dword_205CE+2,	seg seg005
-		mov	word ptr dword_205CE, offset sub_185AB
-		mov	word ptr dword_205D6+2,	seg seg005
-		mov	word ptr dword_205D6, offset sub_18766
+		mov	word ptr p1_1FE6C+2, seg ellen_193EF
+		mov	word ptr p1_1FE6C, offset ellen_193EF
+		mov	word ptr p1_1FE70+2, seg ellen_1961D
+		mov	word ptr p1_1FE70, offset ellen_1961D
+		mov	word ptr p1_1FE74+2, seg ellen_197F3
+		mov	word ptr p1_1FE74, offset ellen_197F3
+		mov	word ptr p1_23B6E+2, seg ellen_1B674
+		mov	word ptr p1_23B6E, offset ellen_1B674
+		mov	word ptr p1_2028C+2, seg ellen_1B723
+		mov	word ptr p1_2028C, offset ellen_1B723
+		mov	word ptr p1_20294+2, seg ellen_1B979
+		mov	word ptr p1_20294, offset ellen_1B979
+		mov	word ptr p1_2029C+2, seg ellen_1B903
+		mov	word ptr p1_2029C, offset ellen_1B903
+		mov	word ptr p1_202A4+2, seg ellen_1BC1D
+		mov	word ptr p1_202A4, offset ellen_1BC1D
+		mov	word ptr p1_202AC+2, seg ellen_1BC35
+		mov	word ptr p1_202AC, offset ellen_1BC35
+		mov	word ptr p1_1F32E+2, seg ellen_116B6
+		mov	word ptr p1_1F32E, offset ellen_116B6
+		mov	word ptr p1_1F336+2, seg ellen_11A01
+		mov	word ptr p1_1F336, offset ellen_11A01
+		mov	word ptr p1_205CE+2, seg ellen_185AB
+		mov	word ptr p1_205CE, offset ellen_185AB
+		mov	word ptr bomb_p1+2, seg ellen_bomb
+		mov	word ptr bomb_p1, offset ellen_bomb
 		mov	word_23B6C, 41ECh
 		mov	word_23B6A, 4110h
 		jmp	loc_AB55
 ; ---------------------------------------------------------------------------
 
 loc_AAAA:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_193EF
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_1961D
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_197F3
-		mov	word_23BF0, seg	seg008
-		mov	word_23BEE, offset sub_1B674
-		mov	word ptr dword_20290+2,	seg seg008
-		mov	word ptr dword_20290, offset sub_1B723
-		mov	word ptr dword_20298+2,	seg seg008
-		mov	word ptr dword_20298, offset sub_1B979
-		mov	word ptr dword_202A0+2,	seg seg008
-		mov	word ptr dword_202A0, offset sub_1B903
-		mov	word ptr dword_202A8+2,	seg seg008
-		mov	word ptr dword_202A8, offset sub_1BC1D
-		mov	word ptr dword_202B0+2,	seg seg008
-		mov	word ptr dword_202B0, offset sub_1BC35
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_116B6
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset loc_11A01
-		mov	word ptr dword_205D2+2,	seg seg005
-		mov	word ptr dword_205D2, offset sub_185AB
-		mov	word ptr dword_205DA+2,	seg seg005
-		mov	word ptr dword_205DA, offset sub_18766
+		mov	word ptr p2_1FE78+2, seg ellen_193EF
+		mov	word ptr p2_1FE78, offset ellen_193EF
+		mov	word ptr p2_1FE7C+2, seg ellen_1961D
+		mov	word ptr p2_1FE7C, offset ellen_1961D
+		mov	word ptr p2_1FE80+2, seg ellen_197F3
+		mov	word ptr p2_1FE80, offset ellen_197F3
+		mov	word ptr p2_23BEE+2, seg ellen_1B674
+		mov	word ptr p2_23BEE, offset ellen_1B674
+		mov	word ptr p2_20290+2, seg ellen_1B723
+		mov	word ptr p2_20290, offset ellen_1B723
+		mov	word ptr p2_20298+2, seg ellen_1B979
+		mov	word ptr p2_20298, offset ellen_1B979
+		mov	word ptr p2_202A0+2, seg ellen_1B903
+		mov	word ptr p2_202A0, offset ellen_1B903
+		mov	word ptr p2_202A8+2, seg ellen_1BC1D
+		mov	word ptr p2_202A8, offset ellen_1BC1D
+		mov	word ptr p2_202B0+2, seg ellen_1BC35
+		mov	word ptr p2_202B0, offset ellen_1BC35
+		mov	word ptr p2_1F332+2, seg ellen_116B6
+		mov	word ptr p2_1F332, offset ellen_116B6
+		mov	word ptr p2_1F33A+2, seg ellen_11A01
+		mov	word ptr p2_1F33A, offset ellen_11A01
+		mov	word ptr p2_205D2+2, seg ellen_185AB
+		mov	word ptr p2_205D2, offset ellen_185AB
+		mov	word ptr bomb_p2+2, seg ellen_bomb
+		mov	word ptr bomb_p2, offset ellen_bomb
 		mov	word_23BEC, 41ECh
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2689,18 +2687,18 @@ loc_AB55:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_113E2
+		call	ellen_113E2
 		pop	si
 		pop	bp
 		retn	2
-sub_A9EC	endp
+set_callbacks_ellen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_AB84	proc near
+set_callbacks_kotohime	proc near
 
 arg_0		= word ptr  4
 
@@ -2713,64 +2711,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AC42
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_19D60
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_19FEF
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1A14E
-		mov	word_23B70, seg	seg010
-		mov	word_23B6E, offset sub_1C167
-		mov	word ptr dword_2028C+2,	seg seg010
-		mov	word ptr dword_2028C, offset sub_1C19F
-		mov	word ptr dword_20294+2,	seg seg010
-		mov	word ptr dword_20294, offset sub_1C295
-		mov	word ptr dword_2029C+2,	seg seg010
-		mov	word ptr dword_2029C, offset sub_1C22E
-		mov	word ptr dword_202A4+2,	seg seg010
-		mov	word ptr dword_202A4, offset sub_1C3DA
-		mov	word ptr dword_202AC+2,	seg seg010
-		mov	word ptr dword_202AC, offset sub_1C3F2
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_11E48
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_12140
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg005
-		mov	word ptr dword_205D6, offset sub_18BB8
+		mov	word ptr p1_1FE6C+2, seg kotohime_19D60
+		mov	word ptr p1_1FE6C, offset kotohime_19D60
+		mov	word ptr p1_1FE70+2, seg kotohime_19FEF
+		mov	word ptr p1_1FE70, offset kotohime_19FEF
+		mov	word ptr p1_1FE74+2, seg kotohime_1A14E
+		mov	word ptr p1_1FE74, offset kotohime_1A14E
+		mov	word ptr p1_23B6E+2, seg kotohime_1C167
+		mov	word ptr p1_23B6E, offset kotohime_1C167
+		mov	word ptr p1_2028C+2, seg kotohime_1C19F
+		mov	word ptr p1_2028C, offset kotohime_1C19F
+		mov	word ptr p1_20294+2, seg kotohime_1C295
+		mov	word ptr p1_20294, offset kotohime_1C295
+		mov	word ptr p1_2029C+2, seg kotohime_1C22E
+		mov	word ptr p1_2029C, offset kotohime_1C22E
+		mov	word ptr p1_202A4+2, seg kotohime_1C3DA
+		mov	word ptr p1_202A4, offset kotohime_1C3DA
+		mov	word ptr p1_202AC+2, seg kotohime_1C3F2
+		mov	word ptr p1_202AC, offset kotohime_1C3F2
+		mov	word ptr p1_1F32E+2, seg kotohime_11E48
+		mov	word ptr p1_1F32E, offset kotohime_11E48
+		mov	word ptr p1_1F336+2, seg kotohime_12140
+		mov	word ptr p1_1F336, offset kotohime_12140
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg kotohime_bomb
+		mov	word ptr bomb_p1, offset kotohime_bomb
 		mov	word_23B6C, 421Bh
 		mov	word_23B6A, 4110h
 		jmp	loc_ACED
 ; ---------------------------------------------------------------------------
 
 loc_AC42:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_19D60
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_19FEF
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1A14E
-		mov	word_23BF0, seg	seg010
-		mov	word_23BEE, offset sub_1C167
-		mov	word ptr dword_20290+2,	seg seg010
-		mov	word ptr dword_20290, offset sub_1C19F
-		mov	word ptr dword_20298+2,	seg seg010
-		mov	word ptr dword_20298, offset sub_1C295
-		mov	word ptr dword_202A0+2,	seg seg010
-		mov	word ptr dword_202A0, offset sub_1C22E
-		mov	word ptr dword_202A8+2,	seg seg010
-		mov	word ptr dword_202A8, offset sub_1C3DA
-		mov	word ptr dword_202B0+2,	seg seg010
-		mov	word ptr dword_202B0, offset sub_1C3F2
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_11E48
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_12140
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg005
-		mov	word ptr dword_205DA, offset sub_18BB8
+		mov	word ptr p2_1FE78+2, seg kotohime_19D60
+		mov	word ptr p2_1FE78, offset kotohime_19D60
+		mov	word ptr p2_1FE7C+2, seg kotohime_19FEF
+		mov	word ptr p2_1FE7C, offset kotohime_19FEF
+		mov	word ptr p2_1FE80+2, seg kotohime_1A14E
+		mov	word ptr p2_1FE80, offset kotohime_1A14E
+		mov	word ptr p2_23BEE+2, seg kotohime_1C167
+		mov	word ptr p2_23BEE, offset kotohime_1C167
+		mov	word ptr p2_20290+2, seg kotohime_1C19F
+		mov	word ptr p2_20290, offset kotohime_1C19F
+		mov	word ptr p2_20298+2, seg kotohime_1C295
+		mov	word ptr p2_20298, offset kotohime_1C295
+		mov	word ptr p2_202A0+2, seg kotohime_1C22E
+		mov	word ptr p2_202A0, offset kotohime_1C22E
+		mov	word ptr p2_202A8+2, seg kotohime_1C3DA
+		mov	word ptr p2_202A8, offset kotohime_1C3DA
+		mov	word ptr p2_202B0+2, seg kotohime_1C3F2
+		mov	word ptr p2_202B0, offset kotohime_1C3F2
+		mov	word ptr p2_1F332+2, seg kotohime_11E48
+		mov	word ptr p2_1F332, offset kotohime_11E48
+		mov	word ptr p2_1F33A+2, seg kotohime_12140
+		mov	word ptr p2_1F33A, offset kotohime_12140
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg kotohime_bomb
+		mov	word ptr bomb_p2, offset kotohime_bomb
 		mov	word_23BEC, 421Bh
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2783,18 +2781,18 @@ loc_ACED:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_11A6D
+		call	kotohime_11A6D
 		pop	si
 		pop	bp
 		retn	2
-sub_AB84	endp
+set_callbacks_kotohime	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_AD1C	proc near
+set_callbacks_kana	proc near
 
 arg_0		= word ptr  4
 
@@ -2807,64 +2805,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_ADDA
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_19825
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_19999
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_19A8D
-		mov	word_23B70, seg	seg009
-		mov	word_23B6E, offset sub_1BC5C
-		mov	word ptr dword_2028C+2,	seg seg009
-		mov	word ptr dword_2028C, offset sub_1BCD5
-		mov	word ptr dword_20294+2,	seg seg009
-		mov	word ptr dword_20294, offset sub_1BEF3
-		mov	word ptr dword_2029C+2,	seg seg009
-		mov	word ptr dword_2029C, offset sub_1BE52
-		mov	word ptr dword_202A4+2,	seg seg009
-		mov	word ptr dword_202A4, offset sub_1C128
-		mov	word ptr dword_202AC+2,	seg seg009
-		mov	word ptr dword_202AC, offset sub_1C140
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_12FE8
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset loc_132FE
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg005
-		mov	word ptr dword_205D6, offset sub_189AA
+		mov	word ptr p1_1FE6C+2, seg kana_19825
+		mov	word ptr p1_1FE6C, offset kana_19825
+		mov	word ptr p1_1FE70+2, seg kana_19999
+		mov	word ptr p1_1FE70, offset kana_19999
+		mov	word ptr p1_1FE74+2, seg kana_19A8D
+		mov	word ptr p1_1FE74, offset kana_19A8D
+		mov	word ptr p1_23B6E+2, seg kana_1BC5C
+		mov	word ptr p1_23B6E, offset kana_1BC5C
+		mov	word ptr p1_2028C+2, seg kana_1BCD5
+		mov	word ptr p1_2028C, offset kana_1BCD5
+		mov	word ptr p1_20294+2, seg kana_1BEF3
+		mov	word ptr p1_20294, offset kana_1BEF3
+		mov	word ptr p1_2029C+2, seg kana_1BE52
+		mov	word ptr p1_2029C, offset kana_1BE52
+		mov	word ptr p1_202A4+2, seg kana_1C128
+		mov	word ptr p1_202A4, offset kana_1C128
+		mov	word ptr p1_202AC+2, seg kana_1C140
+		mov	word ptr p1_202AC, offset kana_1C140
+		mov	word ptr p1_1F32E+2, seg kana_12FE8
+		mov	word ptr p1_1F32E, offset kana_12FE8
+		mov	word ptr p1_1F336+2, seg kana_132FE
+		mov	word ptr p1_1F336, offset kana_132FE
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg kana_bomb
+		mov	word ptr bomb_p1, offset kana_bomb
 		mov	word_23B6C, 42D5h
 		mov	word_23B6A, 4110h
 		jmp	loc_AE85
 ; ---------------------------------------------------------------------------
 
 loc_ADDA:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_19825
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_19999
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_19A8D
-		mov	word_23BF0, seg	seg009
-		mov	word_23BEE, offset sub_1BC5C
-		mov	word ptr dword_20290+2,	seg seg009
-		mov	word ptr dword_20290, offset sub_1BCD5
-		mov	word ptr dword_20298+2,	seg seg009
-		mov	word ptr dword_20298, offset sub_1BEF3
-		mov	word ptr dword_202A0+2,	seg seg009
-		mov	word ptr dword_202A0, offset sub_1BE52
-		mov	word ptr dword_202A8+2,	seg seg009
-		mov	word ptr dword_202A8, offset sub_1C128
-		mov	word ptr dword_202B0+2,	seg seg009
-		mov	word ptr dword_202B0, offset sub_1C140
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_12FE8
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset loc_132FE
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg005
-		mov	word ptr dword_205DA, offset sub_189AA
+		mov	word ptr p2_1FE78+2, seg kana_19825
+		mov	word ptr p2_1FE78, offset kana_19825
+		mov	word ptr p2_1FE7C+2, seg kana_19999
+		mov	word ptr p2_1FE7C, offset kana_19999
+		mov	word ptr p2_1FE80+2, seg kana_19A8D
+		mov	word ptr p2_1FE80, offset kana_19A8D
+		mov	word ptr p2_23BEE+2, seg kana_1BC5C
+		mov	word ptr p2_23BEE, offset kana_1BC5C
+		mov	word ptr p2_20290+2, seg kana_1BCD5
+		mov	word ptr p2_20290, offset kana_1BCD5
+		mov	word ptr p2_20298+2, seg kana_1BEF3
+		mov	word ptr p2_20298, offset kana_1BEF3
+		mov	word ptr p2_202A0+2, seg kana_1BE52
+		mov	word ptr p2_202A0, offset kana_1BE52
+		mov	word ptr p2_202A8+2, seg kana_1C128
+		mov	word ptr p2_202A8, offset kana_1C128
+		mov	word ptr p2_202B0+2, seg kana_1C140
+		mov	word ptr p2_202B0, offset kana_1C140
+		mov	word ptr p2_1F332+2, seg kana_12FE8
+		mov	word ptr p2_1F332, offset kana_12FE8
+		mov	word ptr p2_1F33A+2, seg kana_132FE
+		mov	word ptr p2_1F33A, offset kana_132FE
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg kana_bomb
+		mov	word ptr bomb_p2, offset kana_bomb
 		mov	word_23BEC, 42D5h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2877,18 +2875,18 @@ loc_AE85:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_12BFB
+		call	kana_12BFB
 		pop	si
 		pop	bp
 		retn	2
-sub_AD1C	endp
+set_callbacks_kana	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_AEB4	proc near
+set_callbacks_rikako	proc near
 
 arg_0		= word ptr  4
 
@@ -2901,64 +2899,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AF72
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_1AFA2
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_1B105
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1B231
-		mov	word_23B70, seg	seg011
-		mov	word_23B6E, offset sub_1C419
-		mov	word ptr dword_2028C+2,	seg seg011
-		mov	word ptr dword_2028C, offset sub_1C4C5
-		mov	word ptr dword_20294+2,	seg seg011
-		mov	word ptr dword_20294, offset sub_1C6E8
-		mov	word ptr dword_2029C+2,	seg seg011
-		mov	word ptr dword_2029C, offset sub_1C66B
-		mov	word ptr dword_202A4+2,	seg seg011
-		mov	word ptr dword_202A4, offset sub_1C8DA
-		mov	word ptr dword_202AC+2,	seg seg011
-		mov	word ptr dword_202AC, offset sub_1C8F2
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_13661
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_1398B
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg005
-		mov	word ptr dword_205D6, offset sub_18DC8
+		mov	word ptr p1_1FE6C+2, seg rikako_1AFA2
+		mov	word ptr p1_1FE6C, offset rikako_1AFA2
+		mov	word ptr p1_1FE70+2, seg rikako_1B105
+		mov	word ptr p1_1FE70, offset rikako_1B105
+		mov	word ptr p1_1FE74+2, seg rikako_1B231
+		mov	word ptr p1_1FE74, offset rikako_1B231
+		mov	word ptr p1_23B6E+2, seg sub_1C419
+		mov	word ptr p1_23B6E, offset sub_1C419
+		mov	word ptr p1_2028C+2, seg rikako_1C4C5
+		mov	word ptr p1_2028C, offset rikako_1C4C5
+		mov	word ptr p1_20294+2, seg rikako_1C6E8
+		mov	word ptr p1_20294, offset rikako_1C6E8
+		mov	word ptr p1_2029C+2, seg rikako_1C66B
+		mov	word ptr p1_2029C, offset rikako_1C66B
+		mov	word ptr p1_202A4+2, seg rikako_1C8DA
+		mov	word ptr p1_202A4, offset rikako_1C8DA
+		mov	word ptr p1_202AC+2, seg rikako_1C8F2
+		mov	word ptr p1_202AC, offset rikako_1C8F2
+		mov	word ptr p1_1F32E+2, seg rikako_13661
+		mov	word ptr p1_1F32E, offset rikako_13661
+		mov	word ptr p1_1F336+2, seg rikako_1398B
+		mov	word ptr p1_1F336, offset rikako_1398B
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg rikako_bomb
+		mov	word ptr bomb_p1, offset rikako_bomb
 		mov	word_23B6C, 4313h
 		mov	word_23B6A, 4110h
 		jmp	loc_B01D
 ; ---------------------------------------------------------------------------
 
 loc_AF72:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_1AFA2
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_1B105
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1B231
-		mov	word_23BF0, seg	seg011
-		mov	word_23BEE, offset sub_1C419
-		mov	word ptr dword_20290+2,	seg seg011
-		mov	word ptr dword_20290, offset sub_1C4C5
-		mov	word ptr dword_20298+2,	seg seg011
-		mov	word ptr dword_20298, offset sub_1C6E8
-		mov	word ptr dword_202A0+2,	seg seg011
-		mov	word ptr dword_202A0, offset sub_1C66B
-		mov	word ptr dword_202A8+2,	seg seg011
-		mov	word ptr dword_202A8, offset sub_1C8DA
-		mov	word ptr dword_202B0+2,	seg seg011
-		mov	word ptr dword_202B0, offset sub_1C8F2
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_13661
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_1398B
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg005
-		mov	word ptr dword_205DA, offset sub_18DC8
+		mov	word ptr p2_1FE78+2, seg rikako_1AFA2
+		mov	word ptr p2_1FE78, offset rikako_1AFA2
+		mov	word ptr p2_1FE7C+2, seg rikako_1B105
+		mov	word ptr p2_1FE7C, offset rikako_1B105
+		mov	word ptr p2_1FE80+2, seg rikako_1B231
+		mov	word ptr p2_1FE80, offset rikako_1B231
+		mov	word ptr p2_23BEE+2, seg sub_1C419
+		mov	word ptr p2_23BEE, offset sub_1C419
+		mov	word ptr p2_20290+2, seg rikako_1C4C5
+		mov	word ptr p2_20290, offset rikako_1C4C5
+		mov	word ptr p2_20298+2, seg rikako_1C6E8
+		mov	word ptr p2_20298, offset rikako_1C6E8
+		mov	word ptr p2_202A0+2, seg rikako_1C66B
+		mov	word ptr p2_202A0, offset rikako_1C66B
+		mov	word ptr p2_202A8+2, seg rikako_1C8DA
+		mov	word ptr p2_202A8, offset rikako_1C8DA
+		mov	word ptr p2_202B0+2, seg rikako_1C8F2
+		mov	word ptr p2_202B0, offset rikako_1C8F2
+		mov	word ptr p2_1F332+2, seg rikako_13661
+		mov	word ptr p2_1F332, offset rikako_13661
+		mov	word ptr p2_1F33A+2, seg rikako_1398B
+		mov	word ptr p2_1F33A, offset rikako_1398B
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg rikako_bomb
+		mov	word ptr bomb_p2, offset rikako_bomb
 		mov	word_23BEC, 4313h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -2971,18 +2969,18 @@ loc_B01D:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_1334D
+		call	rikako_1334D
 		pop	si
 		pop	bp
 		retn	2
-sub_AEB4	endp
+set_callbacks_rikako	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_B04C	proc near
+set_callbacks_chiyuri	proc near
 
 arg_0		= word ptr  4
 
@@ -2995,64 +2993,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B10A
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset sub_18FEA
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_19260
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1938A
-		mov	word_23B70, seg	seg007
-		mov	word_23B6E, offset sub_1B277
-		mov	word ptr dword_2028C+2,	seg seg007
-		mov	word ptr dword_2028C, offset sub_1B2C2
-		mov	word ptr dword_20294+2,	seg seg007
-		mov	word ptr dword_20294, offset sub_1B427
-		mov	word ptr dword_2029C+2,	seg seg007
-		mov	word ptr dword_2029C, offset sub_1B3B0
-		mov	word ptr dword_202A4+2,	seg seg007
-		mov	word ptr dword_202A4, offset sub_1B623
-		mov	word ptr dword_202AC+2,	seg seg007
-		mov	word ptr dword_202AC, offset sub_1B63B
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_126A8
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_12B99
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg005
-		mov	word ptr dword_205D6, offset sub_183C1
+		mov	word ptr p1_1FE6C+2, seg chiyuri_18FEA
+		mov	word ptr p1_1FE6C, offset chiyuri_18FEA
+		mov	word ptr p1_1FE70+2, seg chiyuri_19260
+		mov	word ptr p1_1FE70, offset chiyuri_19260
+		mov	word ptr p1_1FE74+2, seg chiyuri_1938A
+		mov	word ptr p1_1FE74, offset chiyuri_1938A
+		mov	word ptr p1_23B6E+2, seg chiyuri_1B277
+		mov	word ptr p1_23B6E, offset chiyuri_1B277
+		mov	word ptr p1_2028C+2, seg chiyuri_1B2C2
+		mov	word ptr p1_2028C, offset chiyuri_1B2C2
+		mov	word ptr p1_20294+2, seg chiyuri_1B427
+		mov	word ptr p1_20294, offset chiyuri_1B427
+		mov	word ptr p1_2029C+2, seg chiyuri_1B3B0
+		mov	word ptr p1_2029C, offset chiyuri_1B3B0
+		mov	word ptr p1_202A4+2, seg chiyuri_1B623
+		mov	word ptr p1_202A4, offset chiyuri_1B623
+		mov	word ptr p1_202AC+2, seg chiyuri_1B63B
+		mov	word ptr p1_202AC, offset chiyuri_1B63B
+		mov	word ptr p1_1F32E+2, seg chiyuri_126A8
+		mov	word ptr p1_1F32E, offset chiyuri_126A8
+		mov	word ptr p1_1F336+2, seg chiyuri_12B99
+		mov	word ptr p1_1F336, offset chiyuri_12B99
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg chiyuri_bomb
+		mov	word ptr bomb_p1, offset chiyuri_bomb
 		mov	word_23B6C, 4259h
 		mov	word_23B6A, 4110h
 		jmp	loc_B1B5
 ; ---------------------------------------------------------------------------
 
 loc_B10A:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset sub_18FEA
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_19260
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1938A
-		mov	word_23BF0, seg	seg007
-		mov	word_23BEE, offset sub_1B277
-		mov	word ptr dword_20290+2,	seg seg007
-		mov	word ptr dword_20290, offset sub_1B2C2
-		mov	word ptr dword_20298+2,	seg seg007
-		mov	word ptr dword_20298, offset sub_1B427
-		mov	word ptr dword_202A0+2,	seg seg007
-		mov	word ptr dword_202A0, offset sub_1B3B0
-		mov	word ptr dword_202A8+2,	seg seg007
-		mov	word ptr dword_202A8, offset sub_1B623
-		mov	word ptr dword_202B0+2,	seg seg007
-		mov	word ptr dword_202B0, offset sub_1B63B
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_126A8
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_12B99
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg005
-		mov	word ptr dword_205DA, offset sub_183C1
+		mov	word ptr p2_1FE78+2, seg chiyuri_18FEA
+		mov	word ptr p2_1FE78, offset chiyuri_18FEA
+		mov	word ptr p2_1FE7C+2, seg chiyuri_19260
+		mov	word ptr p2_1FE7C, offset chiyuri_19260
+		mov	word ptr p2_1FE80+2, seg chiyuri_1938A
+		mov	word ptr p2_1FE80, offset chiyuri_1938A
+		mov	word ptr p2_23BEE+2, seg chiyuri_1B277
+		mov	word ptr p2_23BEE, offset chiyuri_1B277
+		mov	word ptr p2_20290+2, seg chiyuri_1B2C2
+		mov	word ptr p2_20290, offset chiyuri_1B2C2
+		mov	word ptr p2_20298+2, seg chiyuri_1B427
+		mov	word ptr p2_20298, offset chiyuri_1B427
+		mov	word ptr p2_202A0+2, seg chiyuri_1B3B0
+		mov	word ptr p2_202A0, offset chiyuri_1B3B0
+		mov	word ptr p2_202A8+2, seg chiyuri_1B623
+		mov	word ptr p2_202A8, offset chiyuri_1B623
+		mov	word ptr p2_202B0+2, seg chiyuri_1B63B
+		mov	word ptr p2_202B0, offset chiyuri_1B63B
+		mov	word ptr p2_1F332+2, seg chiyuri_126A8
+		mov	word ptr p2_1F332, offset chiyuri_126A8
+		mov	word ptr p2_1F33A+2, seg chiyuri_12B99
+		mov	word ptr p2_1F33A, offset chiyuri_12B99
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg chiyuri_bomb
+		mov	word ptr bomb_p2, offset chiyuri_bomb
 		mov	word_23BEC, 4259h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -3065,18 +3063,18 @@ loc_B1B5:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_1219D
+		call	chiyuri_1219D
 		pop	si
 		pop	bp
 		retn	2
-sub_B04C	endp
+set_callbacks_chiyuri	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_B1E4	proc near
+set_callbacks_yumemi	proc near
 
 arg_0		= word ptr  4
 
@@ -3089,64 +3087,64 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B2A2
-		mov	word ptr dword_1FE6C+2,	seg seg006
-		mov	word ptr dword_1FE6C, offset loc_1A902
-		mov	word ptr dword_1FE70+2,	seg seg006
-		mov	word ptr dword_1FE70, offset sub_1AE2E
-		mov	word ptr dword_1FE74+2,	seg seg006
-		mov	word ptr dword_1FE74, offset sub_1AF72
-		mov	word_23B70, seg	seg004
-		mov	word_23B6E, offset sub_16A64
-		mov	word ptr dword_2028C+2,	seg seg004
-		mov	word ptr dword_2028C, offset sub_16A8D
-		mov	word ptr dword_20294+2,	seg seg004
-		mov	word ptr dword_20294, offset sub_16C65
-		mov	word ptr dword_2029C+2,	seg seg004
-		mov	word ptr dword_2029C, offset sub_16B0C
-		mov	word ptr dword_202A4+2,	seg seg004
-		mov	word ptr dword_202A4, offset sub_16FC0
-		mov	word ptr dword_202AC+2,	seg seg004
-		mov	word ptr dword_202AC, offset sub_16FD8
-		mov	word ptr dword_1F32E+2,	seg seg003
-		mov	word ptr dword_1F32E, offset sub_1070A
-		mov	word ptr dword_1F336+2,	seg seg003
-		mov	word ptr dword_1F336, offset sub_10BAB
-		mov	word ptr dword_205CE+2,	seg seg004
-		mov	word ptr dword_205CE, offset sub_1501E
-		mov	word ptr dword_205D6+2,	seg seg004
-		mov	word ptr dword_205D6, offset sub_159FF
+		mov	word ptr p1_1FE6C+2, seg yumemi_1A902
+		mov	word ptr p1_1FE6C, offset yumemi_1A902
+		mov	word ptr p1_1FE70+2, seg yumemi_1AE2E
+		mov	word ptr p1_1FE70, offset yumemi_1AE2E
+		mov	word ptr p1_1FE74+2, seg yumemi_1AF72
+		mov	word ptr p1_1FE74, offset yumemi_1AF72
+		mov	word ptr p1_23B6E+2, seg yumemi_16A64
+		mov	word ptr p1_23B6E, offset yumemi_16A64
+		mov	word ptr p1_2028C+2, seg yumemi_16A8D
+		mov	word ptr p1_2028C, offset yumemi_16A8D
+		mov	word ptr p1_20294+2, seg yumemi_16C65
+		mov	word ptr p1_20294, offset yumemi_16C65
+		mov	word ptr p1_2029C+2, seg yumemi_16B0C
+		mov	word ptr p1_2029C, offset yumemi_16B0C
+		mov	word ptr p1_202A4+2, seg yumemi_16FC0
+		mov	word ptr p1_202A4, offset yumemi_16FC0
+		mov	word ptr p1_202AC+2, seg yumemi_16FD8
+		mov	word ptr p1_202AC, offset yumemi_16FD8
+		mov	word ptr p1_1F32E+2, seg yumemi_1070A
+		mov	word ptr p1_1F32E, offset yumemi_1070A
+		mov	word ptr p1_1F336+2, seg yumemi_10BAB
+		mov	word ptr p1_1F336, offset yumemi_10BAB
+		mov	word ptr p1_205CE+2, seg sub_1501E
+		mov	word ptr p1_205CE, offset sub_1501E
+		mov	word ptr bomb_p1+2, seg yumemi_bomb
+		mov	word ptr bomb_p1, offset yumemi_bomb
 		mov	word_23B6C, 4297h
 		mov	word_23B6A, 4110h
 		jmp	loc_B34D
 ; ---------------------------------------------------------------------------
 
 loc_B2A2:
-		mov	word ptr dword_1FE78+2,	seg seg006
-		mov	word ptr dword_1FE78, offset loc_1A902
-		mov	word ptr dword_1FE7C+2,	seg seg006
-		mov	word ptr dword_1FE7C, offset sub_1AE2E
-		mov	word ptr dword_1FE80+2,	seg seg006
-		mov	word ptr dword_1FE80, offset sub_1AF72
-		mov	word_23BF0, seg	seg004
-		mov	word_23BEE, offset sub_16A64
-		mov	word ptr dword_20290+2,	seg seg004
-		mov	word ptr dword_20290, offset sub_16A8D
-		mov	word ptr dword_20298+2,	seg seg004
-		mov	word ptr dword_20298, offset sub_16C65
-		mov	word ptr dword_202A0+2,	seg seg004
-		mov	word ptr dword_202A0, offset sub_16B0C
-		mov	word ptr dword_202A8+2,	seg seg004
-		mov	word ptr dword_202A8, offset sub_16FC0
-		mov	word ptr dword_202B0+2,	seg seg004
-		mov	word ptr dword_202B0, offset sub_16FD8
-		mov	word ptr dword_1F332+2,	seg seg003
-		mov	word ptr dword_1F332, offset sub_1070A
-		mov	word ptr dword_1F33A+2,	seg seg003
-		mov	word ptr dword_1F33A, offset sub_10BAB
-		mov	word ptr dword_205D2+2,	seg seg004
-		mov	word ptr dword_205D2, offset sub_1501E
-		mov	word ptr dword_205DA+2,	seg seg004
-		mov	word ptr dword_205DA, offset sub_159FF
+		mov	word ptr p2_1FE78+2, seg yumemi_1A902
+		mov	word ptr p2_1FE78, offset yumemi_1A902
+		mov	word ptr p2_1FE7C+2, seg yumemi_1AE2E
+		mov	word ptr p2_1FE7C, offset yumemi_1AE2E
+		mov	word ptr p2_1FE80+2, seg yumemi_1AF72
+		mov	word ptr p2_1FE80, offset yumemi_1AF72
+		mov	word ptr p2_23BEE+2, seg yumemi_16A64
+		mov	word ptr p2_23BEE, offset yumemi_16A64
+		mov	word ptr p2_20290+2, seg yumemi_16A8D
+		mov	word ptr p2_20290, offset yumemi_16A8D
+		mov	word ptr p2_20298+2, seg yumemi_16C65
+		mov	word ptr p2_20298, offset yumemi_16C65
+		mov	word ptr p2_202A0+2, seg yumemi_16B0C
+		mov	word ptr p2_202A0, offset yumemi_16B0C
+		mov	word ptr p2_202A8+2, seg yumemi_16FC0
+		mov	word ptr p2_202A8, offset yumemi_16FC0
+		mov	word ptr p2_202B0+2, seg yumemi_16FD8
+		mov	word ptr p2_202B0, offset yumemi_16FD8
+		mov	word ptr p2_1F332+2, seg yumemi_1070A
+		mov	word ptr p2_1F332, offset yumemi_1070A
+		mov	word ptr p2_1F33A+2, seg yumemi_10BAB
+		mov	word ptr p2_1F33A, offset yumemi_10BAB
+		mov	word ptr p2_205D2+2, seg sub_1501E
+		mov	word ptr p2_205D2, offset sub_1501E
+		mov	word ptr bomb_p2+2, seg yumemi_bomb
+		mov	word ptr bomb_p2, offset yumemi_bomb
 		mov	word_23BEC, 4297h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
@@ -3159,11 +3157,11 @@ loc_B34D:
 		mov	word ptr dword_20F28+2,	seg seg001
 		mov	word ptr dword_20F28, offset sub_D05D
 		push	si
-		call	sub_102C8
+		call	yumemi_102C8
 		pop	si
 		pop	bp
 		retn	2
-sub_B1E4	endp
+set_callbacks_yumemi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3633,7 +3631,6 @@ sub_B60A	endp
 ; Attributes: bp-based frame
 
 sub_B73A	proc far
-					; sub_14CE3+87P ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -7062,7 +7059,6 @@ sub_D031	endp
 ; Attributes: bp-based frame
 
 sub_D05D	proc far
-					; sub_A6BC+187o ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7103,7 +7099,6 @@ sub_D05D	endp
 ; Attributes: bp-based frame
 
 sub_D092	proc far
-					; sub_A6BC+16Fo ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7202,7 +7197,6 @@ sub_D0FA	endp
 ; Attributes: bp-based frame
 
 sub_D135	proc far
-					; sub_A6BC+17Bo ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7400,7 +7394,6 @@ sub_D1E7	endp
 ; Attributes: bp-based frame
 
 sub_D2E8	proc far
-					; sub_A9EC+16Fo ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7453,7 +7446,6 @@ sub_D2E8	endp
 ; Attributes: bp-based frame
 
 sub_D340	proc far
-					; sub_A9EC+17Bo ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -11378,7 +11370,6 @@ sub_EF46	endp
 ; Attributes: bp-based frame
 
 sub_EFF4	proc far
-					; sub_151E1+130P ...
 
 arg_0		= byte ptr  6
 arg_2		= word ptr  8
@@ -11943,7 +11934,6 @@ sub_F356	endp
 ; Attributes: bp-based frame
 
 sub_F3A9	proc near
-					; sub_FED8:loc_FF9Fp ...
 		push	bp
 		mov	bp, sp
 		mov	ax, word_1F346
@@ -12064,7 +12054,6 @@ sub_F402	endp
 ; Attributes: bp-based frame
 
 sub_F4B4	proc far
-					; sub_FED8+125p ...
 
 var_1		= byte ptr -1
 
@@ -12129,7 +12118,6 @@ sub_F512	endp
 ; Attributes: bp-based frame
 
 sub_F52D	proc near
-					; sub_FED8:loc_FF86p ...
 
 var_1		= byte ptr -1
 
@@ -12180,7 +12168,6 @@ sub_F52D	endp
 ; Attributes: bp-based frame
 
 sub_F58C	proc near
-					; sub_10263:loc_102C3p	...
 		push	bp
 		mov	bp, sp
 		push	word_1F33E
@@ -12202,7 +12189,7 @@ sub_F58C	endp
 
 ; Attributes: bp-based frame
 
-sub_F5AF	proc far
+marisa_F5AF	proc far
 
 arg_0		= word ptr  6
 
@@ -12233,7 +12220,7 @@ loc_F5F5:
 		pop	si
 		pop	bp
 		retf	2
-sub_F5AF	endp
+marisa_F5AF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12497,8 +12484,7 @@ sub_F7BD	endp
 
 ; Attributes: bp-based frame
 
-sub_F848	proc far
-					; sub_A854+130o
+marisa_F848	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -12620,10 +12606,9 @@ loc_F8F5:
 		call	near ptr sub_F4B4
 
 locret_F953:
-					; sub_F848:loc_F8BFj ...
 		leave			; jumptable 0000F8BF case 255
 		retf
-sub_F848	endp
+marisa_F848	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -12808,8 +12793,7 @@ sub_FA71	endp
 
 ; Attributes: bp-based frame
 
-sub_FAE8	proc far
-					; sub_A854+13Co
+marisa_FAE8	proc far
 
 var_1		= byte ptr -1
 
@@ -12858,14 +12842,14 @@ loc_FB41:
 locret_FB44:
 		leave
 		retf
-sub_FAE8	endp
+marisa_FAE8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_FB46	proc far
+mima_FB46	proc far
 
 arg_0		= word ptr  6
 
@@ -12896,7 +12880,7 @@ loc_FB8C:
 		pop	si
 		pop	bp
 		retf	2
-sub_FB46	endp
+mima_FB46	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13245,8 +13229,7 @@ sub_FE2B	endp
 
 ; Attributes: bp-based frame
 
-sub_FED8	proc far
-					; sub_A6BC+130o
+mima_FED8	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -13379,10 +13362,9 @@ loc_FFA2:
 		call	near ptr sub_F4B4
 
 locret_10000:
-					; sub_FED8:loc_FF6Cj ...
 		leave			; jumptable 0000FF6C case 255
 		retf
-sub_FED8	endp
+mima_FED8	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -13649,8 +13631,7 @@ sub_10184	endp
 
 ; Attributes: bp-based frame
 
-sub_10263	proc far
-					; sub_A6BC+13Co
+mima_10263	proc far
 
 var_1		= byte ptr -1
 
@@ -13702,14 +13683,14 @@ loc_102C3:
 locret_102C6:
 		leave
 		retf
-sub_10263	endp
+mima_10263	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_102C8	proc far
+yumemi_102C8	proc far
 
 arg_0		= word ptr  6
 
@@ -13743,7 +13724,7 @@ loc_1031B:
 		pop	si
 		pop	bp
 		retf	2
-sub_102C8	endp
+yumemi_102C8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14159,8 +14140,7 @@ sub_10669	endp
 
 ; Attributes: bp-based frame
 
-sub_1070A	proc far
-					; sub_B1E4+130o
+yumemi_1070A	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -14289,7 +14269,6 @@ loc_10800:
 		call	sub_F3A9	; jumptable 000107AE case 128
 
 loc_10803:
-					; sub_1070A+D6j ...
 		cmp	word_1F356, 0	; default
 		jz	short loc_1080F
 		sub	word_1F356, 8
@@ -14328,10 +14307,9 @@ loc_1081A:
 		call	near ptr sub_F4B4
 
 locret_10878:
-					; sub_1070A:loc_107AEj	...
 		leave			; jumptable 000107AE case 255
 		retf
-sub_1070A	endp
+yumemi_1070A	endp
 
 ; ---------------------------------------------------------------------------
 word_1087A	dw	0,     1,     2,     3
@@ -14702,8 +14680,7 @@ sub_10A17	endp
 
 ; Attributes: bp-based frame
 
-sub_10BAB	proc far
-					; sub_B1E4+13Co
+yumemi_10BAB	proc far
 
 var_1		= byte ptr -1
 
@@ -14747,14 +14724,14 @@ loc_10BF9:
 locret_10BFC:
 		leave
 		retf
-sub_10BAB	endp
+yumemi_10BAB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_10BFE	proc far
+reimu_10BFE	proc far
 
 arg_0		= word ptr  6
 
@@ -14785,7 +14762,7 @@ loc_10C48:
 		pop	si
 		pop	bp
 		retf	2
-sub_10BFE	endp
+reimu_10BFE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15215,8 +15192,7 @@ sub_10FD1	endp
 
 ; Attributes: bp-based frame
 
-sub_11033	proc far
-					; sub_A524+130o
+reimu_11033	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -15318,7 +15294,6 @@ loc_110F8:
 		call	sub_F3A9	; jumptable 000110E0 case 128
 
 loc_110FB:
-					; sub_11033+B4j ...
 		mov	ax, word_1F33E	; default
 		mov	word_220EE, ax
 		mov	ax, word_1F340
@@ -15347,10 +15322,9 @@ loc_110FB:
 		call	near ptr sub_F4B4
 
 locret_11159:
-					; sub_11033+77j ...
 		leave			; jumptable 000110E0 case 255
 		retf
-sub_11033	endp
+reimu_11033	endp
 
 ; ---------------------------------------------------------------------------
 word_1115B	dw	2,     3,     4,     5
@@ -15626,8 +15600,7 @@ sub_112A6	endp
 
 ; Attributes: bp-based frame
 
-sub_113A9	proc far
-					; sub_A524+13Co
+reimu_113A9	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -15660,14 +15633,14 @@ loc_113DD:
 loc_113E0:
 		pop	bp
 		retf
-sub_113A9	endp
+reimu_113A9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_113E2	proc far
+ellen_113E2	proc far
 
 arg_0		= word ptr  6
 
@@ -15700,7 +15673,7 @@ loc_11430:
 		pop	si
 		pop	bp
 		retf	2
-sub_113E2	endp
+ellen_113E2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16002,8 +15975,7 @@ sub_11620	endp
 
 ; Attributes: bp-based frame
 
-sub_116B6	proc far
-					; sub_A9EC+130o
+ellen_116B6	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -16095,7 +16067,6 @@ loc_11760:
 		call	sub_F3A9	; jumptable 00011732 case 128
 
 loc_11763:
-					; sub_116B6+94j ...
 		mov	ax, word_1F33E	; default
 		mov	word_220EE, ax
 		mov	ax, word_1F340
@@ -16124,10 +16095,9 @@ loc_11763:
 		call	near ptr sub_F4B4
 
 locret_117C1:
-					; sub_116B6:loc_11732j	...
 		leave			; jumptable 00011732 case 255
 		retf
-sub_116B6	endp
+ellen_116B6	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -16410,18 +16380,23 @@ loc_119FB:
 		retn	6
 sub_1190A	endp
 
-; ---------------------------------------------------------------------------
 
-loc_11A01:
-					; sub_A9EC+13Co
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+ellen_11A01	proc far
+
+var_1		= byte ptr -1
+
 		enter	2, 0
 		mov	al, byte ptr word_1FE88
 		cmp	al, byte_1DB9E
 		jnz	short locret_11A6B
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
-		mov	[bp-1],	al
-		cmp	byte ptr [bp-1], 0
+		mov	[bp+var_1], al
+		cmp	[bp+var_1], 0
 		jnz	short loc_11A2B
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 13Fh
@@ -16464,12 +16439,14 @@ loc_11A68:
 locret_11A6B:
 		leave
 		retf
+ellen_11A01	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_11A6D	proc far
+kotohime_11A6D	proc far
 
 arg_0		= word ptr  6
 
@@ -16501,7 +16478,7 @@ loc_11AB8:
 		pop	si
 		pop	bp
 		retf	2
-sub_11A6D	endp
+kotohime_11A6D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16896,8 +16873,7 @@ sub_11D1A	endp
 
 ; Attributes: bp-based frame
 
-sub_11E48	proc far
-					; sub_AB84+130o
+kotohime_11E48	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -17023,7 +16999,6 @@ loc_11F31:
 		call	sub_F3A9	; jumptable 00011EFE case 128
 
 loc_11F34:
-					; sub_11E48+CEj ...
 		mov	ax, word_1F33E	; default
 		mov	word_220EE, ax
 		mov	ax, word_1F340
@@ -17052,10 +17027,9 @@ loc_11F34:
 		call	near ptr sub_F4B4
 
 locret_11F92:
-					; sub_11E48:loc_11EFEj	...
 		leave			; jumptable 00011EFE case 255
 		retf
-sub_11E48	endp
+kotohime_11E48	endp
 
 ; ---------------------------------------------------------------------------
 word_11F94	dw	0,     1,     2,     3
@@ -17264,8 +17238,7 @@ sub_12103	endp
 
 ; Attributes: bp-based frame
 
-sub_12140	proc far
-					; sub_AB84+13Co
+kotohime_12140	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -17313,14 +17286,14 @@ loc_12198:
 loc_1219B:
 		pop	bp
 		retf
-sub_12140	endp
+kotohime_12140	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1219D	proc far
+chiyuri_1219D	proc far
 
 arg_0		= word ptr  6
 
@@ -17353,7 +17326,7 @@ loc_121EC:
 		pop	si
 		pop	bp
 		retf	2
-sub_1219D	endp
+chiyuri_1219D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17860,8 +17833,7 @@ sub_12498	endp
 
 ; Attributes: bp-based frame
 
-sub_126A8	proc far
-					; sub_B04C+130o
+chiyuri_126A8	proc far
 
 var_4		= word ptr -4
 var_2		= byte ptr -2
@@ -18048,14 +18020,12 @@ loc_1284C:
 ; ---------------------------------------------------------------------------
 
 loc_12859:
-					; sub_126A8+CFj
 		mov	byte_23E50, 1	; jumptable 00012744 case 255
 		leave
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_12860:
-					; sub_126A8+C7j ...
 		mov	byte_23E50, 1	; default
 		test	byte ptr word_23AF6, 3
 		jnz	short loc_12871
@@ -18083,7 +18053,6 @@ loc_12873:
 		call	sub_A3D2
 
 loc_128A2:
-					; sub_126A8+1E7j
 		cmp	byte_1F353, 0
 		jz	short loc_128AD
 		dec	byte_1F353
@@ -18119,7 +18088,7 @@ loc_128AD:
 locret_1290B:
 		leave
 		retf
-sub_126A8	endp
+chiyuri_126A8	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -18450,8 +18419,7 @@ sub_12B38	endp
 
 ; Attributes: bp-based frame
 
-sub_12B99	proc far
-					; sub_B04C+13Co
+chiyuri_12B99	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -18497,17 +18465,16 @@ loc_12BE3:
 		call	sub_A3A8
 
 loc_12BF9:
-					; sub_12B99+52j
 		pop	bp
 		retf
-sub_12B99	endp
+chiyuri_12B99	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12BFB	proc far
+kana_12BFB	proc far
 
 arg_0		= word ptr  6
 
@@ -18539,7 +18506,7 @@ loc_12C46:
 		pop	si
 		pop	bp
 		retf	2
-sub_12BFB	endp
+kana_12BFB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18935,8 +18902,7 @@ sub_12F06	endp
 
 ; Attributes: bp-based frame
 
-sub_12FE8	proc far
-					; sub_AD1C+130o
+kana_12FE8	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -19052,7 +19018,6 @@ loc_130BD:
 		call	sub_F3A9	; jumptable 0001308A case 128
 
 loc_130C0:
-					; sub_12FE8+BAj ...
 		inc	byte_1F354	; default
 		mov	ax, word_1F33E
 		mov	word_220EE, ax
@@ -19082,10 +19047,9 @@ loc_130C0:
 		call	near ptr sub_F4B4
 
 locret_13122:
-					; sub_12FE8:loc_1308Aj	...
 		leave			; jumptable 0001308A case 255
 		retf
-sub_12FE8	endp
+kana_12FE8	endp
 
 ; ---------------------------------------------------------------------------
 word_13124	dw	0,     1,     2,     3
@@ -19305,10 +19269,12 @@ loc_132FA:
 		retn
 sub_13223	endp
 
-; ---------------------------------------------------------------------------
 
-loc_132FE:
-					; sub_AD1C+13Co
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+kana_132FE	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -19350,12 +19316,14 @@ loc_13348:
 loc_1334B:
 		pop	bp
 		retf
+kana_132FE	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1334D	proc far
+rikako_1334D	proc far
 
 arg_0		= word ptr  6
 
@@ -19388,7 +19356,7 @@ loc_1339C:
 		pop	si
 		pop	bp
 		retf	2
-sub_1334D	endp
+rikako_1334D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19728,8 +19696,7 @@ sub_135A4	endp
 
 ; Attributes: bp-based frame
 
-sub_13661	proc far
-					; sub_AEB4+130o
+rikako_13661	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -19826,7 +19793,6 @@ loc_13714:
 		call	sub_F3A9	; jumptable 000136E6 case 128
 
 loc_13717:
-					; sub_13661+9Dj ...
 		mov	al, byte_1F358	; default
 		add	byte_1F354, al
 		mov	ax, word_1F33E
@@ -19857,10 +19823,9 @@ loc_13717:
 		call	near ptr sub_F4B4
 
 locret_1377C:
-					; sub_13661:loc_136E6j	...
 		leave			; jumptable 000136E6 case 255
 		retf
-sub_13661	endp
+rikako_13661	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -20103,8 +20068,7 @@ sub_138B3	endp
 
 ; Attributes: bp-based frame
 
-sub_1398B	proc far
-					; sub_AEB4+13Co
+rikako_1398B	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -20146,7 +20110,7 @@ loc_139D5:
 loc_139D8:
 		pop	bp
 		retf
-sub_1398B	endp
+rikako_1398B	endp
 
 seg003		ends
 
@@ -20179,7 +20143,6 @@ sub_139DA	endp
 ; Attributes: bp-based frame
 
 sub_139EC	proc near
-					; sub_151E1+7Bp ...
 
 arg_0		= word ptr  4
 
@@ -20201,7 +20164,6 @@ sub_139EC	endp
 ; Attributes: bp-based frame
 
 sub_13A06	proc near
-					; sub_148B5+E6p ...
 
 arg_0		= word ptr  4
 
@@ -21446,7 +21408,7 @@ sub_142D0	endp
 
 ; Attributes: bp-based frame
 
-sub_142DF	proc far
+marisa_142DF	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -21493,7 +21455,7 @@ loc_1432F:
 		pop	si
 		pop	bp
 		retf	4
-sub_142DF	endp
+marisa_142DF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21563,7 +21525,7 @@ sub_14340	endp
 
 ; Attributes: bp-based frame
 
-sub_143BE	proc far
+marisa_143BE	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -21645,18 +21607,16 @@ loc_14465:
 		mov	byte ptr [bx], 0
 
 loc_14485:
-					; sub_143BE+AFj
 		pop	bp
 		retf
-sub_143BE	endp
+marisa_143BE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_14487	proc far
-					; sub_A854+10Co
+marisa_14487	proc far
 
 var_1		= byte ptr -1
 
@@ -21714,7 +21674,6 @@ loc_144AF:
 ; ---------------------------------------------------------------------------
 
 loc_14503:
-					; sub_14487+45j ...
 		add	si, 4
 
 loc_14506:
@@ -21728,15 +21687,14 @@ loc_1450E:
 		pop	si
 		leave
 		retf
-sub_14487	endp
+marisa_14487	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_14511	proc far
-					; sub_A854+100o
+marisa_14511	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -21908,7 +21866,7 @@ loc_146AB:
 		pop	si
 		leave
 		retf
-sub_14511	endp
+marisa_14511	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21916,7 +21874,6 @@ sub_14511	endp
 ; Attributes: bp-based frame
 
 sub_146AF	proc near
-					; sub_1489D+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -22142,8 +22099,7 @@ sub_146AF	endp
 
 ; Attributes: bp-based frame
 
-sub_14885	proc far
-					; sub_A854+118o
+marisa_14885	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -22157,15 +22113,14 @@ sub_14885	proc far
 loc_1489B:
 		pop	bp
 		retf
-sub_14885	endp
+marisa_14885	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1489D	proc far
-					; sub_A854+124o
+marisa_1489D	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -22179,15 +22134,14 @@ sub_1489D	proc far
 loc_148B3:
 		pop	bp
 		retf
-sub_1489D	endp
+marisa_1489D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_148B5	proc far
-					; sub_A854+154o
+marisa_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -22337,7 +22291,6 @@ loc_149E8:
 		mov	byte_23B01, 1
 
 loc_14A1C:
-					; sub_148B5+11Aj
 		call	egc_on
 		cmp	[bp+var_1], 40h	; '@'
 		jb	short loc_14A72
@@ -22369,12 +22322,11 @@ loc_14A5E:
 		call	sub_F100
 
 loc_14A72:
-					; sub_148B5+170j ...
 		pop	di
 		pop	si
 		leave
 		retf
-sub_148B5	endp
+marisa_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22407,7 +22359,7 @@ sub_14A76	endp
 
 ; Attributes: bp-based frame
 
-sub_14A97	proc far
+reimu_14A97	proc far
 
 var_1		= byte ptr -1
 arg_0		= word ptr  6
@@ -22463,7 +22415,7 @@ loc_14AFC:
 		mov	byte_205CC, 1
 		leave
 		retf	4
-sub_14A97	endp
+reimu_14A97	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22538,7 +22490,7 @@ sub_14B0A	endp
 
 ; Attributes: bp-based frame
 
-sub_14B7C	proc far
+reimu_14B7C	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -22639,7 +22591,6 @@ loc_14C56:
 		mov	byte ptr [bx+1Fh], 0E0h	; 'à'
 
 loc_14C5E:
-					; sub_14B7C+B8j ...
 		mov	bx, word_205CA
 		inc	byte ptr [bx+1]
 		push	word ptr [bx+0Eh]
@@ -22651,7 +22602,6 @@ loc_14C5E:
 		mov	byte ptr [bx], 0
 
 loc_14C7B:
-					; sub_14B7C+F6j
 		inc	di
 		add	word_205CA, 20h	; ' '
 
@@ -22662,7 +22612,7 @@ loc_14C81:
 		pop	si
 		leave
 		retf
-sub_14B7C	endp
+reimu_14B7C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22670,7 +22620,6 @@ sub_14B7C	endp
 ; Attributes: bp-based frame
 
 sub_14C8C	proc near
-					; sub_14D83+7Cp ...
 
 var_2		= word ptr -2
 arg_0		= word ptr  4
@@ -22719,8 +22668,7 @@ sub_14C8C	endp
 
 ; Attributes: bp-based frame
 
-sub_14CE3	proc far
-					; sub_A524+10Co
+reimu_14CE3	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -22778,7 +22726,6 @@ loc_14D0A:
 ; ---------------------------------------------------------------------------
 
 loc_14D73:
-					; sub_14CE3+39j ...
 		inc	si
 		add	word_205CA, 20h	; ' '
 
@@ -22793,15 +22740,14 @@ loc_14D80:
 		pop	si
 		pop	bp
 		retf
-sub_14CE3	endp
+reimu_14CE3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_14D83	proc far
-					; sub_A524+100o
+reimu_14D83	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -22878,7 +22824,7 @@ loc_14E33:
 		pop	si
 		pop	bp
 		retf
-sub_14D83	endp
+reimu_14D83	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22886,7 +22832,6 @@ sub_14D83	endp
 ; Attributes: bp-based frame
 
 sub_14E3B	proc near
-					; sub_15006+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -23063,8 +23008,7 @@ sub_14E3B	endp
 
 ; Attributes: bp-based frame
 
-sub_14FEE	proc far
-					; sub_A524+118o
+reimu_14FEE	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -23078,15 +23022,14 @@ sub_14FEE	proc far
 loc_15004:
 		pop	bp
 		retf
-sub_14FEE	endp
+reimu_14FEE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_15006	proc far
-					; sub_A524+124o
+reimu_15006	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -23100,7 +23043,7 @@ sub_15006	proc far
 loc_1501C:
 		pop	bp
 		retf
-sub_15006	endp
+reimu_15006	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23108,7 +23051,6 @@ sub_15006	endp
 ; Attributes: bp-based frame
 
 sub_1501E	proc far
-					; sub_A854+148o ...
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -23160,8 +23102,7 @@ sub_1501E	endp
 
 ; Attributes: bp-based frame
 
-sub_1508C	proc far
-					; sub_A524+148o
+reimu_1508C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -23231,7 +23172,6 @@ loc_1510A:
 		add	word ptr [bx+6], 8
 
 loc_1512C:
-					; sub_1508C+95j
 		inc	si
 		add	word_207E0, 8
 
@@ -23251,11 +23191,10 @@ loc_15132:
 		call	sub_A3A8
 
 loc_1515A:
-					; sub_1508C+B7j
 		pop	si
 		pop	bp
 		retf
-sub_1508C	endp
+reimu_1508C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23326,8 +23265,7 @@ sub_1515D	endp
 
 ; Attributes: bp-based frame
 
-sub_151E1	proc far
-					; sub_A524+154o
+reimu_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -23510,17 +23448,15 @@ loc_153A6:
 		mov	byte_23B01, 1
 
 loc_153AB:
-					; sub_151E1+17Dj
 		call	egc_on
 		cmp	[bp+var_1], 60h	; '`'
 		jnb	short locret_153B9
 		call	sub_1515D
 
 locret_153B9:
-					; sub_151E1+1D3j
 		leave
 		retf
-sub_151E1	endp
+reimu_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23553,7 +23489,7 @@ sub_153BB	endp
 
 ; Attributes: bp-based frame
 
-sub_153DC	proc far
+mima_153DC	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -23620,7 +23556,7 @@ loc_15462:
 		pop	si
 		pop	bp
 		retf	4
-sub_153DC	endp
+mima_153DC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23670,7 +23606,7 @@ sub_1546C	endp
 
 ; Attributes: bp-based frame
 
-sub_154C4	proc far
+mima_154C4	proc far
 
 var_1		= byte ptr -1
 
@@ -23726,7 +23662,6 @@ loc_15514:
 		mov	byte ptr [bx+38C4h], 0
 
 loc_15554:
-					; sub_154C4+76j ...
 		inc	si
 		add	word_20E22, 0Ah
 
@@ -23751,7 +23686,6 @@ loc_1555A:
 		call	sub_1546C
 
 loc_15584:
-					; sub_154C4+AEj
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		shl	ax, 7
@@ -23762,15 +23696,14 @@ loc_15594:
 		pop	si
 		leave
 		retf
-sub_154C4	endp
+mima_154C4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_15597	proc far
-					; sub_A6BC+10Co
+mima_15597	proc far
 
 var_1		= byte ptr -1
 
@@ -23823,7 +23756,6 @@ loc_155C5:
 		inc	[bp+var_1]
 
 loc_1560B:
-					; sub_15597+45j ...
 		inc	si
 		add	word_20E22, 0Ah
 
@@ -23836,7 +23768,7 @@ loc_15619:
 		pop	si
 		leave
 		retf
-sub_15597	endp
+mima_15597	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23881,8 +23813,7 @@ sub_1561C	endp
 
 ; Attributes: bp-based frame
 
-sub_15652	proc far
-					; sub_A6BC+100o
+mima_15652	proc far
 
 var_2		= word ptr -2
 
@@ -23948,7 +23879,7 @@ loc_156DF:
 		pop	si
 		leave
 		retf
-sub_15652	endp
+mima_15652	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23956,7 +23887,6 @@ sub_15652	endp
 ; Attributes: bp-based frame
 
 sub_156E2	proc near
-					; sub_158DD+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -24164,8 +24094,8 @@ sub_156E2	endp
 
 ; Attributes: bp-based frame
 
-sub_158C5	proc far
-					; sub_A6BC+118o
+mima_158C5	proc far
+
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -24179,15 +24109,14 @@ sub_158C5	proc far
 loc_158DB:
 		pop	bp
 		retf
-sub_158C5	endp
+mima_158C5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_158DD	proc far
-					; sub_A6BC+124o
+mima_158DD	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -24201,7 +24130,7 @@ sub_158DD	proc far
 loc_158F3:
 		pop	bp
 		retf
-sub_158DD	endp
+mima_158DD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -24209,7 +24138,6 @@ sub_158DD	endp
 ; Attributes: bp-based frame
 
 sub_158F5	proc far
-					; sub_FED8+110P ...
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -24304,12 +24232,12 @@ loc_159B2:
 loc_159CC:
 		cmp	byte ptr word_20E3A, 0
 		jnz	short loc_159D9
-		call	dword_2029C
+		call	p1_2029C
 		jmp	short loc_159DD
 ; ---------------------------------------------------------------------------
 
 loc_159D9:
-		call	dword_202A0
+		call	p2_202A0
 
 loc_159DD:
 		add	[bp+var_5], al
@@ -24338,8 +24266,7 @@ sub_158F5	endp
 
 ; Attributes: bp-based frame
 
-sub_159FF	proc far
-					; sub_B1E4+154o
+yumemi_bomb	proc far
 
 var_14		= byte ptr -14h
 var_10		= byte ptr -10h
@@ -24628,7 +24555,7 @@ loc_15CB5:
 		pop	si
 		leave
 		retf
-sub_159FF	endp
+yumemi_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26371,7 +26298,7 @@ sub_16A55	endp
 
 ; Attributes: bp-based frame
 
-sub_16A64	proc far
+yumemi_16A64	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -26393,14 +26320,14 @@ arg_2		= word ptr  8
 		pop	si
 		pop	bp
 		retf	4
-sub_16A64	endp
+yumemi_16A64	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16A8D	proc far
+yumemi_16A8D	proc far
 
 var_1		= byte ptr -1
 
@@ -26447,13 +26374,11 @@ loc_16AD4:
 		call	sub_EC3A
 
 loc_16AF0:
-					; sub_16A8D+5Aj
 		cmp	[bp+var_1], 40h	; '@'
 		jb	short loc_16AF9
 		mov	byte ptr [si], 0
 
 loc_16AF9:
-					; sub_16A8D+45j ...
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		shl	ax, 7
@@ -26464,15 +26389,14 @@ loc_16B09:
 		pop	si
 		leave
 		retf
-sub_16A8D	endp
+yumemi_16A8D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16B0C	proc far
-					; sub_B1E4+10Co
+yumemi_16B0C	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -26536,14 +26460,13 @@ loc_16B69:
 ; ---------------------------------------------------------------------------
 
 loc_16BB0:
-					; sub_16B0C+27j ...
 		mov	al, 0
 
 loc_16BB2:
 		pop	si
 		pop	bp
 		retf
-sub_16B0C	endp
+yumemi_16B0C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26551,7 +26474,6 @@ sub_16B0C	endp
 ; Attributes: bp-based frame
 
 sub_16BB5	proc near
-					; sub_16C65+147p ...
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -26640,8 +26562,7 @@ sub_16BB5	endp
 
 ; Attributes: bp-based frame
 
-sub_16C65	proc far
-					; sub_B1E4+100o
+yumemi_16C65	proc far
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -26806,23 +26727,20 @@ loc_16DAF:
 		add	ax, 0FFD0h
 
 loc_16DB8:
-					; sub_16C65+DCj
 		shl	ax, 3
 		shl	ax, 4
 		push	ax
 		push	0
 
 loc_16DC1:
-					; sub_16C65+F6j ...
 		call	sub_16BB5
 
 loc_16DC4:
-					; sub_16C65+8Bj ...
 		pop	di
 		pop	si
 		leave
 		retf
-sub_16C65	endp
+yumemi_16C65	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26830,7 +26748,6 @@ sub_16C65	endp
 ; Attributes: bp-based frame
 
 sub_16DC8	proc near
-					; sub_16FD8+13p
 
 var_4		= word ptr -4
 var_2		= byte ptr -2
@@ -27065,8 +26982,7 @@ word_16FA0	dw	0,     8,   10h,   18h
 
 ; Attributes: bp-based frame
 
-sub_16FC0	proc far
-					; sub_B1E4+118o
+yumemi_16FC0	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -27080,15 +26996,14 @@ sub_16FC0	proc far
 loc_16FD6:
 		pop	bp
 		retf
-sub_16FC0	endp
+yumemi_16FC0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16FD8	proc far
-					; sub_B1E4+124o
+yumemi_16FD8	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -27102,7 +27017,7 @@ sub_16FD8	proc far
 loc_16FEE:
 		pop	bp
 		retf
-sub_16FD8	endp
+yumemi_16FD8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27159,8 +27074,7 @@ sub_16FF0	endp
 
 ; Attributes: bp-based frame
 
-sub_17043	proc far
-					; sub_A6BC+148o
+mima_17043	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27259,7 +27173,6 @@ loc_170A5:
 		mov	[bx+689Ch], ax
 
 loc_17129:
-					; sub_17043+9Dj
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	bx, ax
@@ -27273,11 +27186,10 @@ loc_17129:
 		call	sub_A3A8
 
 loc_1714C:
-					; sub_17043+F2j
 		pop	si
 		pop	bp
 		retf
-sub_17043	endp
+mima_17043	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27338,8 +27250,7 @@ sub_1714F	endp
 
 ; Attributes: bp-based frame
 
-sub_171BA	proc far
-					; sub_A6BC+154o
+mima_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -27519,13 +27430,12 @@ loc_17332:
 		mov	byte_23B01, 1
 
 loc_1737D:
-					; sub_171BA+176j
 		call	egc_on
 
 locret_17382:
 		leave
 		retf
-sub_171BA	endp
+mima_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29676,8 +29586,7 @@ seg005		segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_183C1	proc far
-					; sub_B04C+154o
+chiyuri_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -29866,22 +29775,20 @@ loc_1853F:
 		mov	byte_23B01, 1
 
 loc_185A3:
-					; sub_183C1+91j ...
 		call	egc_on
 
 loc_185A8:
 		pop	si
 		leave
 		retf
-sub_183C1	endp
+chiyuri_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_185AB	proc far
-					; sub_A9EC+148o
+ellen_185AB	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29976,7 +29883,6 @@ loc_18667:
 		call	sub_E97A
 
 loc_18692:
-					; sub_185AB+BAj
 		inc	si
 		add	word_1FBBE, 8
 
@@ -29996,11 +29902,10 @@ loc_18698:
 		call	sub_A3A8
 
 loc_186C0:
-					; sub_185AB+FEj
 		pop	si
 		pop	bp
 		retf
-sub_185AB	endp
+ellen_185AB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30085,8 +29990,7 @@ sub_186C3	endp
 
 ; Attributes: bp-based frame
 
-sub_18766	proc far
-					; sub_A9EC+154o
+ellen_bomb	proc far
 
 var_4		= byte ptr -4
 var_3		= byte ptr -3
@@ -30285,7 +30189,6 @@ loc_18911:
 		mov	byte_23B01, 1
 
 loc_18964:
-					; sub_18766+170j ...
 		call	egc_on
 		cmp	[bp+var_3], 40h	; '@'
 		jb	short loc_189A7
@@ -30311,19 +30214,17 @@ loc_18964:
 		mov	[bx+659Ch], dx
 
 loc_189A7:
-					; sub_18766+207j ...
 		pop	si
 		leave
 		retf
-sub_18766	endp
+ellen_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_189AA	proc far
-					; sub_AD1C+154o
+kana_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -30529,20 +30430,18 @@ loc_18B77:
 		mov	byte_23B01, 1
 
 loc_18BB4:
-					; sub_189AA+63j ...
 		pop	di
 		pop	si
 		leave
 		retf
-sub_189AA	endp
+kana_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18BB8	proc far
-					; sub_AB84+154o
+kotohime_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -30751,7 +30650,6 @@ loc_18D5B:
 		mov	byte_23B01, 1
 
 loc_18DBF:
-					; sub_18BB8+DAj ...
 		call	egc_on
 
 loc_18DC4:
@@ -30759,15 +30657,14 @@ loc_18DC4:
 		pop	si
 		leave
 		retf
-sub_18BB8	endp
+kotohime_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18DC8	proc far
-					; sub_AEB4+154o
+rikako_bomb	proc far
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -30980,14 +30877,13 @@ loc_18F89:
 		mov	byte_23B01, 1
 
 loc_18FE2:
-					; sub_18DC8+1B6j ...
 		call	egc_on
 
 loc_18FE7:
 		pop	si
 		leave
 		retf
-sub_18DC8	endp
+rikako_bomb	endp
 
 seg005		ends
 
@@ -31003,7 +30899,7 @@ seg006		segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_18FEA	proc far
+chiyuri_18FEA	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -31063,7 +30959,7 @@ loc_19054:
 		pop	si
 		pop	bp
 		retf	6
-sub_18FEA	endp
+chiyuri_18FEA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31298,7 +31194,7 @@ sub_1905A	endp
 
 ; Attributes: bp-based frame
 
-sub_19260	proc far
+chiyuri_19260	proc far
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -31369,7 +31265,6 @@ loc_192DB:
 ; ---------------------------------------------------------------------------
 
 loc_192FD:
-					; sub_19260+85j
 		cmp	byte ptr [si+1], 88h ; 'ˆ'
 		jbe	short loc_1930C
 		mov	byte ptr [si], 0
@@ -31377,7 +31272,6 @@ loc_192FD:
 		mov	byte ptr [si], 0
 
 loc_1930C:
-					; sub_19260+6Aj ...
 		add	word_2028A, 20h	; ' '
 		jmp	short loc_19377
 ; ---------------------------------------------------------------------------
@@ -31405,7 +31299,6 @@ loc_19334:
 		mov	[bp+var_2], 1
 
 loc_1933D:
-					; sub_19260+C9j ...
 		inc	byte ptr [si+1]
 		add	si, 20h	; ' '
 		add	word_2028A, 20h	; ' '
@@ -31433,7 +31326,6 @@ loc_19364:
 		mov	byte ptr [si], 1
 
 loc_19374:
-					; sub_19260+F9j ...
 		inc	byte ptr [si+1]
 
 loc_19377:
@@ -31447,14 +31339,14 @@ loc_1937F:
 		pop	si
 		leave
 		retf
-sub_19260	endp
+chiyuri_19260	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1938A	proc far
+chiyuri_1938A	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -31483,7 +31375,7 @@ loc_193B4:
 		pop	si
 		pop	bp
 		retf
-sub_1938A	endp
+chiyuri_1938A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31528,7 +31420,7 @@ sub_193BC	endp
 
 ; Attributes: bp-based frame
 
-sub_193EF	proc far
+ellen_193EF	proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -31610,7 +31502,6 @@ loc_1948B:
 ; ---------------------------------------------------------------------------
 
 loc_19499:
-					; sub_193EF+9Aj
 		inc	si
 		add	word_1FB3A, 1Eh
 
@@ -31622,7 +31513,7 @@ loc_194A4:
 		pop	si
 		leave
 		retf	6
-sub_193EF	endp
+ellen_193EF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31819,7 +31710,7 @@ sub_19510	endp
 
 ; Attributes: bp-based frame
 
-sub_1961D	proc far
+ellen_1961D	proc far
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -31932,7 +31823,6 @@ loc_1970C:
 ; ---------------------------------------------------------------------------
 
 loc_19732:
-					; sub_1961D+10Bj
 		mov	bx, [di]
 		mov	ax, [bx+6]
 		add	[di+2],	ax
@@ -32009,12 +31899,10 @@ loc_197CA:
 		call	sub_EC3A
 
 loc_197DC:
-					; sub_1961D+174j ...
 		mov	bx, [di]
 		inc	byte ptr [bx+1]
 
 loc_197E1:
-					; sub_1961D+112j
 		inc	[bp+var_2]
 		add	di, 1Eh
 
@@ -32025,14 +31913,14 @@ loc_197E7:
 		pop	si
 		leave
 		retf
-sub_1961D	endp
+ellen_1961D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_197F3	proc far
+ellen_197F3	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32064,14 +31952,14 @@ loc_1981C:
 		pop	si
 		pop	bp
 		retf
-sub_197F3	endp
+ellen_197F3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19825	proc far
+kana_19825	proc far
 
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -32127,12 +32015,11 @@ loc_1988B:
 		jl	short loc_19847
 
 loc_19890:
-					; sub_19825+60j
 		pop	di
 		pop	si
 		leave
 		retf	6
-sub_19825	endp
+kana_19825	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32286,7 +32173,7 @@ sub_198DD	endp
 
 ; Attributes: bp-based frame
 
-sub_19999	proc far
+kana_19999	proc far
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -32385,11 +32272,9 @@ loc_19A70:
 		mov	byte ptr [si+13h], 8
 
 loc_19A7B:
-					; sub_19999+CCj ...
 		inc	byte ptr [si+1]
 
 loc_19A7E:
-					; sub_19999+C2j
 		inc	di
 		add	si, 20h	; ' '
 
@@ -32400,14 +32285,14 @@ loc_19A82:
 		pop	si
 		leave
 		retf
-sub_19999	endp
+kana_19999	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19A8D	proc far
+kana_19A8D	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32438,14 +32323,14 @@ loc_19AB3:
 		pop	si
 		pop	bp
 		retf
-sub_19A8D	endp
+kana_19A8D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19ABC	proc far
+marisa_19ABC	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -32493,7 +32378,7 @@ loc_19B00:
 		pop	si
 		pop	bp
 		retf	6
-sub_19ABC	endp
+marisa_19ABC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32676,7 +32561,7 @@ sub_19B4F	endp
 
 ; Attributes: bp-based frame
 
-sub_19C36	proc far
+marisa_19C36	proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -32718,7 +32603,6 @@ loc_19C80:
 ; ---------------------------------------------------------------------------
 
 loc_19C8C:
-					; sub_19C36+48j ...
 		mov	ax, [si+2]
 		mov	[bp+var_6], ax
 		mov	di, [si+4]
@@ -32785,11 +32669,9 @@ loc_19D0E:
 		call	sub_EC3A
 
 loc_19D1C:
-					; sub_19C36+A0j ...
 		inc	byte ptr [si+1]
 
 loc_19D1F:
-					; sub_19C36+53j ...
 		inc	[bp+var_2]
 		add	si, 20h	; ' '
 
@@ -32800,14 +32682,14 @@ loc_19D25:
 		pop	si
 		leave
 		retf
-sub_19C36	endp
+marisa_19C36	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19D31	proc far
+marisa_19D31	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32838,14 +32720,14 @@ loc_19D57:
 		pop	si
 		pop	bp
 		retf
-sub_19D31	endp
+marisa_19D31	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19D60	proc far
+kotohime_19D60	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -32905,7 +32787,7 @@ loc_19DCD:
 		pop	si
 		pop	bp
 		retf	6
-sub_19D60	endp
+kotohime_19D60	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33062,7 +32944,6 @@ sub_19E2A	endp
 ; Attributes: bp-based frame
 
 sub_19EF9	proc near
-					; sub_19FEF:loc_1A086p	...
 		push	bp
 		mov	bp, sp
 		push	3
@@ -33203,7 +33084,7 @@ sub_19F87	endp
 
 ; Attributes: bp-based frame
 
-sub_19FEF	proc far
+kotohime_19FEF	proc far
 
 var_1		= byte ptr -1
 
@@ -33294,7 +33175,6 @@ loc_1A0D2:
 		mov	byte ptr [si], 0
 
 loc_1A0D5:
-					; sub_19FEF+89j ...
 		inc	byte ptr [si+12h]
 		jmp	short loc_1A13A
 ; ---------------------------------------------------------------------------
@@ -33340,7 +33220,6 @@ loc_1A133:
 		mov	byte ptr [si], 1
 
 loc_1A13A:
-					; sub_19FEF+12Fj ...
 		inc	byte ptr [si+1]
 
 loc_1A13D:
@@ -33354,14 +33233,14 @@ loc_1A143:
 		pop	si
 		leave
 		retf
-sub_19FEF	endp
+kotohime_19FEF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A14E	proc far
+kotohime_1A14E	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -33390,7 +33269,7 @@ loc_1A176:
 		pop	si
 		pop	bp
 		retf
-sub_1A14E	endp
+kotohime_1A14E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33415,7 +33294,7 @@ arg_4		= word ptr  0Ah
 		push	si
 		push	di
 		push	0
-		call	dword_1FE6C
+		call	p1_1FE6C
 		jmp	short loc_1A1A1
 ; ---------------------------------------------------------------------------
 
@@ -33423,7 +33302,7 @@ loc_1A199:
 		push	si
 		push	di
 		push	1
-		call	dword_1FE78
+		call	p2_1FE78
 
 loc_1A1A1:
 		pop	di
@@ -33438,7 +33317,6 @@ sub_1A17E	endp
 ; Attributes: bp-based frame
 
 sub_1A1A7	proc near
-					; sub_19260+EDp ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -33484,7 +33362,6 @@ sub_1A1A7	endp
 ; Attributes: bp-based frame
 
 sub_1A1ED	proc near
-					; sub_18FEA+5Ap ...
 
 arg_0		= word ptr  4
 arg_2		= byte ptr  6
@@ -33561,7 +33438,7 @@ sub_1A1ED	endp
 
 ; Attributes: bp-based frame
 
-sub_1A27E	proc far
+reimu_1A27E	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -33611,7 +33488,7 @@ loc_1A2C8:
 		pop	si
 		pop	bp
 		retf	6
-sub_1A27E	endp
+reimu_1A27E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33878,7 +33755,6 @@ sub_1A3C4	endp
 ; Attributes: bp-based frame
 
 sub_1A491	proc near
-					; sub_1B105+F2p
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -33910,7 +33786,7 @@ sub_1A491	endp
 
 ; Attributes: bp-based frame
 
-sub_1A4E0	proc far
+reimu_1A4E0	proc far
 
 var_1		= byte ptr -1
 
@@ -34028,7 +33904,6 @@ loc_1A5E2:
 		mov	byte ptr [si], 1
 
 loc_1A5E5:
-					; sub_1A4E0+89j ...
 		inc	di
 		add	si, 20h	; ' '
 
@@ -34040,14 +33915,14 @@ loc_1A5E9:
 		pop	si
 		leave
 		retf
-sub_1A4E0	endp
+reimu_1A4E0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A5F9	proc far
+reimu_1A5F9	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -34079,14 +33954,14 @@ loc_1A622:
 		pop	si
 		pop	bp
 		retf
-sub_1A5F9	endp
+reimu_1A5F9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A62B	proc far
+mima_1A62B	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -34138,7 +34013,7 @@ loc_1A67E:
 		pop	si
 		pop	bp
 		retf	6
-sub_1A62B	endp
+mima_1A62B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34246,7 +34121,7 @@ sub_1A684	endp
 
 ; Attributes: bp-based frame
 
-sub_1A745	proc far
+mima_1A745	proc far
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
@@ -34320,7 +34195,6 @@ loc_1A7D2:
 ; ---------------------------------------------------------------------------
 
 loc_1A7E2:
-					; sub_1A745+80j
 		mov	byte ptr [si], 0
 		jmp	loc_1A8C1
 ; ---------------------------------------------------------------------------
@@ -34351,7 +34225,6 @@ loc_1A813:
 		inc	byte ptr [si+13h]
 
 loc_1A81C:
-					; sub_1A745+CCj ...
 		cmp	[bp+var_6], 50h	; 'P'
 		jge	short loc_1A83A
 		push	ds
@@ -34418,11 +34291,9 @@ loc_1A8AF:
 		call	sub_EC3A
 
 loc_1A8BE:
-					; sub_1A745+147j ...
 		inc	word ptr [si+0Eh]
 
 loc_1A8C1:
-					; sub_1A745+A0j ...
 		inc	[bp+var_2]
 		add	si, 20h	; ' '
 
@@ -34433,14 +34304,14 @@ loc_1A8C7:
 		pop	si
 		leave
 		retf
-sub_1A745	endp
+mima_1A745	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A8D3	proc far
+mima_1A8D3	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -34471,16 +34342,24 @@ loc_1A8F9:
 		pop	si
 		pop	bp
 		retf
-sub_1A8D3	endp
+mima_1A8D3	endp
 
-; ---------------------------------------------------------------------------
 
-loc_1A902:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+yumemi_1A902	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	al, [bp+6]
+		mov	al, byte ptr [bp+arg_0]
 		mov	ah, 0
 		shl	ax, 9
 		add	ax, 292Ah
@@ -34493,8 +34372,8 @@ loc_1A918:
 		cmp	byte ptr [si], 0
 		jnz	short loc_1A950
 		mov	word_2028A, si
-		push	word ptr [bp+0Ah]
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
+		push	[bp+arg_2]
 		push	1200h
 		call	sub_13A50
 		push	ax
@@ -34502,7 +34381,7 @@ loc_1A918:
 		call	sub_13A50
 		add	ax, 600h
 		push	ax
-		push	word ptr [bp+6]
+		push	[bp+arg_0]
 		push	46h ; 'F'
 		call	sub_1A1ED
 		mov	word ptr [si+14h], 0
@@ -34523,6 +34402,8 @@ loc_1A959:
 		pop	si
 		pop	bp
 		retf	6
+yumemi_1A902	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35105,7 +34986,7 @@ sub_1A9B0	endp
 
 ; Attributes: bp-based frame
 
-sub_1AE2E	proc far
+yumemi_1AE2E	proc far
 
 var_1		= byte ptr -1
 
@@ -35152,7 +35033,6 @@ loc_1AE6C:
 ; ---------------------------------------------------------------------------
 
 loc_1AE8B:
-					; sub_1AE2E+55j
 		mov	al, [si+1]
 		mov	ah, 0
 		mov	dx, [si+0Eh]
@@ -35162,7 +35042,6 @@ loc_1AE8B:
 		mov	byte ptr [si], 0
 
 loc_1AE9D:
-					; sub_1AE2E+5Bj ...
 		mov	byte_20E2C, 1
 		mov	al, [bp+var_1]
 		mov	byte ptr word_20E3A, al
@@ -35233,11 +35112,9 @@ loc_1AF4D:
 		call	sub_EC3A
 
 loc_1AF60:
-					; sub_1AE2E+112j ...
 		inc	byte ptr [si+1]
 
 loc_1AF63:
-					; sub_1AE2E+114j
 		inc	di
 		add	si, 20h	; ' '
 
@@ -35248,14 +35125,14 @@ loc_1AF67:
 		pop	si
 		leave
 		retf
-sub_1AE2E	endp
+yumemi_1AE2E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AF72	proc far
+yumemi_1AF72	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -35284,14 +35161,14 @@ loc_1AF9A:
 		pop	si
 		pop	bp
 		retf
-sub_1AF72	endp
+yumemi_1AF72	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AFA2	proc far
+rikako_1AFA2	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -35347,7 +35224,7 @@ loc_1B000:
 		pop	si
 		pop	bp
 		retf	6
-sub_1AFA2	endp
+rikako_1AFA2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -35496,7 +35373,7 @@ sub_1B05A	endp
 
 ; Attributes: bp-based frame
 
-sub_1B105	proc far
+rikako_1B105	proc far
 
 var_7		= byte ptr -7
 var_6		= byte ptr -6
@@ -35578,7 +35455,6 @@ loc_1B146:
 		add	[si+12h], al
 
 loc_1B1CC:
-					; sub_1B105+7Dj ...
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		call	sub_A310
@@ -35620,11 +35496,9 @@ loc_1B213:
 		mov	byte ptr [si], 1
 
 loc_1B21A:
-					; sub_1B105+103j ...
 		inc	byte ptr [si+1]
 
 loc_1B21D:
-					; sub_1B105+D9j
 		inc	di
 		add	si, 20h	; ' '
 
@@ -35636,14 +35510,14 @@ loc_1B221:
 		pop	si
 		leave
 		retf
-sub_1B105	endp
+rikako_1B105	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B231	proc far
+rikako_1B231	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -35674,7 +35548,7 @@ loc_1B257:
 		pop	si
 		pop	bp
 		retf
-sub_1B231	endp
+rikako_1B231	endp
 
 seg006		ends
 
@@ -35715,7 +35589,7 @@ sub_1B260	endp
 
 ; Attributes: bp-based frame
 
-sub_1B277	proc far
+chiyuri_1B277	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -35756,14 +35630,14 @@ loc_1B2B8:
 		pop	si
 		pop	bp
 		retf	4
-sub_1B277	endp
+chiyuri_1B277	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B2C2	proc far
+chiyuri_1B2C2	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -35827,7 +35701,6 @@ loc_1B34A:
 ; ---------------------------------------------------------------------------
 
 loc_1B34F:
-					; sub_1B2C2+67j ...
 		inc	byte ptr [si+1]
 
 loc_1B352:
@@ -35839,12 +35712,11 @@ loc_1B356:
 		jl	short loc_1B2EF
 
 loc_1B35B:
-					; sub_1B2C2+30j
 		pop	di
 		pop	si
 		pop	bp
 		retf
-sub_1B2C2	endp
+chiyuri_1B2C2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -35895,8 +35767,7 @@ sub_1B35F	endp
 
 ; Attributes: bp-based frame
 
-sub_1B3B0	proc far
-					; sub_B04C+10Co
+chiyuri_1B3B0	proc far
 
 var_1		= byte ptr -1
 
@@ -35943,7 +35814,6 @@ loc_1B3CB:
 		inc	[bp+var_1]
 
 loc_1B417:
-					; sub_1B3B0+2Fj ...
 		inc	di
 		sub	si, 6
 
@@ -35957,15 +35827,14 @@ loc_1B420:
 		pop	si
 		leave
 		retf
-sub_1B3B0	endp
+chiyuri_1B3B0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B427	proc far
-					; sub_B04C+100o
+chiyuri_1B427	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -36013,7 +35882,7 @@ loc_1B489:
 		pop	si
 		pop	bp
 		retf
-sub_1B427	endp
+chiyuri_1B427	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36021,7 +35890,6 @@ sub_1B427	endp
 ; Attributes: bp-based frame
 
 sub_1B48C	proc near
-					; sub_1B63B+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -36191,8 +36059,7 @@ sub_1B48C	endp
 
 ; Attributes: bp-based frame
 
-sub_1B623	proc far
-					; sub_B04C+118o
+chiyuri_1B623	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -36206,15 +36073,14 @@ sub_1B623	proc far
 loc_1B639:
 		pop	bp
 		retf
-sub_1B623	endp
+chiyuri_1B623	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B63B	proc far
-					; sub_B04C+124o
+chiyuri_1B63B	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -36228,7 +36094,7 @@ sub_1B63B	proc far
 loc_1B651:
 		pop	bp
 		retf
-sub_1B63B	endp
+chiyuri_1B63B	endp
 
 seg007		ends
 
@@ -36270,7 +36136,7 @@ sub_1B653	endp
 
 ; Attributes: bp-based frame
 
-sub_1B674	proc far
+ellen_1B674	proc far
 
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -36307,7 +36173,7 @@ loc_1B6C0:
 		jl	short loc_1B68E
 		leave
 		retf	4
-sub_1B674	endp
+ellen_1B674	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36368,7 +36234,7 @@ sub_1B6CA	endp
 
 ; Attributes: bp-based frame
 
-sub_1B723	proc far
+ellen_1B723	proc far
 
 var_9		= byte ptr -9
 var_8		= word ptr -8
@@ -36524,7 +36390,6 @@ loc_1B886:
 		mov	[bx+6],	ax
 
 loc_1B896:
-					; sub_1B723+F5j ...
 		inc	si
 		add	word_1F868, 0Ch
 
@@ -36536,7 +36401,7 @@ loc_1B8A3:
 		pop	si
 		leave
 		retf
-sub_1B723	endp
+ellen_1B723	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36594,8 +36459,7 @@ sub_1B8A6	endp
 
 ; Attributes: bp-based frame
 
-sub_1B903	proc far
-					; sub_A9EC+10Co
+ellen_1B903	proc far
 
 var_1		= byte ptr -1
 
@@ -36639,7 +36503,6 @@ loc_1B91F:
 		mov	[bp+var_1], al
 
 loc_1B968:
-					; sub_1B903+30j ...
 		inc	si
 		add	word_1F868, 0Ch
 
@@ -36650,15 +36513,14 @@ loc_1B96E:
 		pop	si
 		leave
 		retf
-sub_1B903	endp
+ellen_1B903	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B979	proc far
-					; sub_A9EC+100o
+ellen_1B979	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -36704,7 +36566,7 @@ loc_1B9D8:
 		pop	si
 		pop	bp
 		retf
-sub_1B979	endp
+ellen_1B979	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36712,7 +36574,6 @@ sub_1B979	endp
 ; Attributes: bp-based frame
 
 sub_1B9E0	proc near
-					; sub_1BC35+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -36935,8 +36796,7 @@ sub_1B9E0	endp
 
 ; Attributes: bp-based frame
 
-sub_1BC1D	proc far
-					; sub_A9EC+118o
+ellen_1BC1D	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -36950,15 +36810,14 @@ sub_1BC1D	proc far
 loc_1BC33:
 		pop	bp
 		retf
-sub_1BC1D	endp
+ellen_1BC1D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BC35	proc far
-					; sub_A9EC+124o
+ellen_1BC35	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -36972,7 +36831,7 @@ sub_1BC35	proc far
 loc_1BC4B:
 		pop	bp
 		retf
-sub_1BC35	endp
+ellen_1BC35	endp
 
 seg008		ends
 
@@ -37002,7 +36861,7 @@ sub_1BC4D	endp
 
 ; Attributes: bp-based frame
 
-sub_1BC5C	proc far
+kana_1BC5C	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -37064,14 +36923,14 @@ loc_1BCAF:
 		pop	si
 		pop	bp
 		retf	4
-sub_1BC5C	endp
+kana_1BC5C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BCD5	proc far
+kana_1BCD5	proc far
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
@@ -37189,7 +37048,6 @@ loc_1BDC3:
 		jl	short loc_1BDBB
 
 loc_1BDC8:
-					; sub_1BCD5+D4j
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		imul	ax, 0D8h
@@ -37213,7 +37071,7 @@ loc_1BDF4:
 		pop	si
 		leave
 		retf
-sub_1BCD5	endp
+kana_1BCD5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37274,8 +37132,7 @@ sub_1BDF8	endp
 
 ; Attributes: bp-based frame
 
-sub_1BE52	proc far
-					; sub_AD1C+10Co
+kana_1BE52	proc far
 
 var_2		= word ptr -2
 
@@ -37341,7 +37198,6 @@ loc_1BE81:
 ; ---------------------------------------------------------------------------
 
 loc_1BED9:
-					; sub_1BE52+4Aj ...
 		add	si, 4
 
 loc_1BEDC:
@@ -37362,15 +37218,14 @@ loc_1BEEF:
 		pop	si
 		leave
 		retf
-sub_1BE52	endp
+kana_1BE52	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BEF3	proc far
-					; sub_AD1C+100o
+kana_1BEF3	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -37421,7 +37276,7 @@ loc_1BF5F:
 		pop	si
 		pop	bp
 		retf
-sub_1BEF3	endp
+kana_1BEF3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37429,7 +37284,6 @@ sub_1BEF3	endp
 ; Attributes: bp-based frame
 
 sub_1BF62	proc near
-					; sub_1C140+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -37621,8 +37475,7 @@ sub_1BF62	endp
 
 ; Attributes: bp-based frame
 
-sub_1C128	proc far
-					; sub_AD1C+118o
+kana_1C128	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -37636,15 +37489,14 @@ sub_1C128	proc far
 loc_1C13E:
 		pop	bp
 		retf
-sub_1C128	endp
+kana_1C128	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C140	proc far
-					; sub_AD1C+124o
+kana_1C140	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -37658,7 +37510,7 @@ sub_1C140	proc far
 loc_1C156:
 		pop	bp
 		retf
-sub_1C140	endp
+kana_1C140	endp
 
 seg009		ends
 
@@ -37688,7 +37540,7 @@ sub_1C158	endp
 
 ; Attributes: bp-based frame
 
-sub_1C167	proc far
+kotohime_1C167	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -37712,14 +37564,14 @@ arg_2		= word ptr  8
 		call	sub_EC3A
 		pop	bp
 		retf	4
-sub_1C167	endp
+kotohime_1C167	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C19F	proc far
+kotohime_1C19F	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -37752,7 +37604,7 @@ loc_1C1DF:
 loc_1C1E7:
 		pop	bp
 		retf
-sub_1C19F	endp
+kotohime_1C19F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37796,8 +37648,7 @@ sub_1C1E9	endp
 
 ; Attributes: bp-based frame
 
-sub_1C22E	proc far
-					; sub_AB84+10Co
+kotohime_1C22E	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_20E3A
@@ -37837,19 +37688,17 @@ sub_1C22E	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1C291:
-					; sub_1C22E+28j ...
 		mov	al, 0
 		pop	bp
 		retf
-sub_1C22E	endp
+kotohime_1C22E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C295	proc far
-					; sub_AB84+100o
+kotohime_1C295	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -37879,7 +37728,7 @@ loc_1C2DB:
 loc_1C2DE:
 		pop	bp
 		retf
-sub_1C295	endp
+kotohime_1C295	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37887,7 +37736,6 @@ sub_1C295	endp
 ; Attributes: bp-based frame
 
 sub_1C2E0	proc near
-					; sub_1C3F2+13p
 
 var_1		= byte ptr -1
 arg_0		= byte ptr  4
@@ -38003,8 +37851,7 @@ sub_1C2E0	endp
 
 ; Attributes: bp-based frame
 
-sub_1C3DA	proc far
-					; sub_AB84+118o
+kotohime_1C3DA	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -38018,15 +37865,14 @@ sub_1C3DA	proc far
 loc_1C3F0:
 		pop	bp
 		retf
-sub_1C3DA	endp
+kotohime_1C3DA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C3F2	proc far
-					; sub_AB84+124o
+kotohime_1C3F2	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -38040,7 +37886,7 @@ sub_1C3F2	proc far
 loc_1C408:
 		pop	bp
 		retf
-sub_1C3F2	endp
+kotohime_1C3F2	endp
 
 seg010		ends
 
@@ -38178,7 +38024,7 @@ sub_1C4B4	endp
 
 ; Attributes: bp-based frame
 
-sub_1C4C5	proc far
+rikako_1C4C5	proc far
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -38326,7 +38172,6 @@ loc_1C602:
 		mov	byte ptr [bx+392Ah], 20h ; ' '
 
 loc_1C60E:
-					; sub_1C4C5+124j ...
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		add	ax, ax
@@ -38342,7 +38187,7 @@ loc_1C626:
 		pop	si
 		leave
 		retf
-sub_1C4C5	endp
+rikako_1C4C5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -38385,8 +38230,7 @@ sub_1C62A	endp
 
 ; Attributes: bp-based frame
 
-sub_1C66B	proc far
-					; sub_AEB4+10Co
+rikako_1C66B	proc far
 
 var_2		= word ptr -2
 
@@ -38439,7 +38283,6 @@ loc_1C699:
 		inc	[bp+var_2]
 
 loc_1C6D8:
-					; sub_1C66B+41j ...
 		inc	di
 		add	si, 6
 
@@ -38453,15 +38296,14 @@ loc_1C6E4:
 		pop	si
 		leave
 		retf
-sub_1C66B	endp
+rikako_1C66B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C6E8	proc far
-					; sub_AEB4+100o
+rikako_1C6E8	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -38506,7 +38348,7 @@ loc_1C746:
 		pop	si
 		pop	bp
 		retf
-sub_1C6E8	endp
+rikako_1C6E8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -38514,7 +38356,6 @@ sub_1C6E8	endp
 ; Attributes: bp-based frame
 
 sub_1C749	proc near
-					; sub_1C8F2+13p
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -38678,8 +38519,7 @@ sub_1C749	endp
 
 ; Attributes: bp-based frame
 
-sub_1C8DA	proc far
-					; sub_AEB4+118o
+rikako_1C8DA	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -38693,15 +38533,14 @@ sub_1C8DA	proc far
 loc_1C8F0:
 		pop	bp
 		retf
-sub_1C8DA	endp
+rikako_1C8DA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C8F2	proc far
-					; sub_AEB4+124o
+rikako_1C8F2	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, byte ptr word_1FE88
@@ -38715,7 +38554,7 @@ sub_1C8F2	proc far
 loc_1C908:
 		pop	bp
 		retf
-sub_1C8F2	endp
+rikako_1C8F2	endp
 
 seg011		ends
 
@@ -40389,7 +40228,6 @@ byte_1F2EA	db ?
 		db ?
 word_1F2EC	dw ?
 word_1F2EE	dw ?
-					; sub_14B7C+1Bw ...
 dword_1F2F0	dd ?
 		dd    ?	;
 		dd    ?	;
@@ -40410,13 +40248,10 @@ word_1F328	dw ?
 					; sub_16983+21r
 word_1F32A	dw ?
 word_1F32C	dw ?
-dword_1F32E	dd ?
-dword_1F332	dd ?
-					; sub_A524+130w ...
-dword_1F336	dd ?
-					; sub_A524+91w	...
-dword_1F33A	dd ?
-					; sub_A524+13Cw ...
+p1_1F32E	dd ?
+p2_1F332	dd ?
+p1_1F336	dd ?
+p2_1F33A	dd ?
 word_1F33E	dw ?
 word_1F340	dw ?
 word_1F342	dw ?
@@ -40466,7 +40301,6 @@ byte_1F39F	db ?
 byte_1F3A0	db ?
 byte_1F3A1	db ?
 byte_1F3A2	db ?
-					; sub_F848+2Cw	...
 byte_1F3A3	db ?
 byte_1F3A4	db ?
 byte_1F3A5	db ?
@@ -40983,9 +40817,7 @@ word_1F868	dw ?
 		dd    ?	;
 		dd    ?	;
 word_1FB3A	dw ?
-					; sub_193EF:loc_19443r	...
 word_1FB3C	dw ?
-					; sub_18766+185r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -41019,7 +40851,6 @@ word_1FB3C	dw ?
 		dd    ?	;
 		dd    ?	;
 word_1FBBE	dw ?
-					; sub_185AB:loc_18636r	...
 word_1FBC0	dw ?
 					; sub_9778+258r ...
 byte_1FBC2	db ?
@@ -41034,7 +40865,6 @@ word_1FBCE	dw ?
 word_1FBD0	dw ?
 word_1FBD2	dw ?
 byte_1FBD4	db ?
-					; sub_189AA+CFr ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -41205,15 +41035,11 @@ byte_1FE1C	db ?
 		dd    ?	;
 		db    ?	;
 word_1FE4E	dw ?
-					; sub_142DF+12r ...
 byte_1FE50	db ?
 		db ?
 word_1FE52	dw ?
-					; sub_148B5+ECr ...
 word_1FE54	dw ?
-					; sub_148B5+10Er ...
 word_1FE56	dw ?
-					; sub_18BB8+15Cr ...
 		db    ?	;
 		db    ?	;
 byte_1FE5A	db ?
@@ -41227,15 +41053,12 @@ byte_1FE62	db ?
 		db    ?	;
 		db    ?	;
 word_1FE6A	dw ?
-					; sub_1C167+11r ...
-dword_1FE6C	dd ?
-dword_1FE70	dd ?
-dword_1FE74	dd ?
-					; sub_A524+31w	...
-dword_1FE78	dd ?
-dword_1FE7C	dd ?
-dword_1FE80	dd ?
-					; sub_A524+DCw	...
+p1_1FE6C	dd ?
+p1_1FE70	dd ?
+p1_1FE74	dd ?
+p2_1FE78	dd ?
+p2_1FE7C	dd ?
+p2_1FE80	dd ?
 		dd ?
 word_1FE88	dw ?
 		dd    ?	;
@@ -41495,22 +41318,16 @@ word_1FE88	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2028A	dw ?
-					; sub_18FEA+3Bw ...
-dword_2028C	dd ?
-dword_20290	dd ?
-dword_20294	dd ?
-					; sub_A524+55w	...
-dword_20298	dd ?
-					; sub_A524+100w ...
-dword_2029C	dd ?
-dword_202A0	dd ?
-					; sub_A6BC+10Cw ...
-dword_202A4	dd ?
-dword_202A8	dd ?
-					; sub_A524+118w ...
-dword_202AC	dd ?
-dword_202B0	dd ?
-					; sub_A524+124w ...
+p1_2028C	dd ?
+p2_20290	dd ?
+p1_20294	dd ?
+p2_20298	dd ?
+p1_2029C	dd ?
+p2_202A0	dd ?
+p1_202A4	dd ?
+p2_202A8	dd ?
+p1_202AC	dd ?
+p2_202B0	dd ?
 		db    ?	;
 		db    ?	;
 byte_202B6	db ?
@@ -41720,13 +41537,10 @@ word_205CA	dw ?
 byte_205CC	db ?
 					; sub_14B0A:loc_14B73w	...
 		db ?
-dword_205CE	dd ?
-dword_205D2	dd ?
-					; sub_A524+148w ...
-dword_205D6	dd ?
-					; sub_A524+A9w	...
-dword_205DA	dd ?
-					; sub_A524+154w ...
+p1_205CE	dd ?
+p2_205D2	dd ?
+bomb_p1	dd ?
+bomb_p2	dd ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -41858,7 +41672,6 @@ dword_205DA	dd ?
 		db    ?	;
 		db    ?	;
 word_207E0	dw ?
-					; sub_1508C:loc_1510Ar	...
 byte_207E2	db ?
 byte_207E3	db ?
 		dd    ?	;
@@ -42279,18 +42092,14 @@ byte_20E2A	db ?
 					; sub_FE2B+92r
 byte_20E2B	db ?
 byte_20E2C	db ?
-					; sub_F848+101w ...
 		db ?
 word_20E2E	dw ?
 word_20E30	dw ?
 word_20E32	dw ?
 word_20E34	dw ?
 word_20E36	dw ?
-					; sub_14CE3+50r ...
 word_20E38	dw ?
-					; sub_15597+5Cr ...
 word_20E3A	dw ?
-					; sub_FED8+101w ...
 byte_20E3C	db ?
 					; sub_9EBF+25Dw ...
 byte_20E3D	db ?
@@ -42375,9 +42184,7 @@ byte_20F1E	db ?
 		db ?
 dword_20F20	dd ?
 dword_20F24	dd ?
-					; sub_A524+17Bw ...
 dword_20F28	dd ?
-					; sub_A524+187w ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -43547,7 +43354,6 @@ byte_220E6	db ?
 		dd    ?	;
 		db    ?	;
 word_220EC	dw ?
-					; sub_18DC8+D9r ...
 word_220EE	dw ?
 word_220F0	dw ?
 word_220F2	dw ?
@@ -45291,8 +45097,7 @@ byte_23B24	db ?
 		db    ?	;
 word_23B6A	dw ?
 word_23B6C	dw ?
-word_23B6E	dw ?
-word_23B70	dw ?
+p1_23B6E	dd ?
 byte_23B72	db ?
 		db ?
 word_23B74	dw ?
@@ -45336,11 +45141,8 @@ byte_23BA4	db ?
 		dd    ?	;
 		db    ?	;
 word_23BEA	dw ?
-					; sub_A524+160w ...
 word_23BEC	dw ?
-					; sub_A6BC+15Aw ...
-word_23BEE	dw ?
-word_23BF0	dw ?
+p2_23BEE	dd ?
 byte_23BF2	db ?
 		db ?
 word_23BF4	dw ?
