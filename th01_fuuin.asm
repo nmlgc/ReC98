@@ -1914,7 +1914,7 @@ loc_1356:
 loc_1387:
 		pop	di
 		pop	ds
-		mov	byte_13D76, cl
+		mov	ds:12D6h, cl
 		cmp	cl, 2
 		jnz	short loc_13A4
 		mov	ax, 3575h
@@ -1941,20 +1941,20 @@ loc_13A4:
 					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
 					; 2: 1=set mask	for channel; 0=clear mask (enable)
 		and	al, 40h
-		mov	byte_13D79, al
+		mov	ds:12D9h, al
 		mov	al, 16h
 
 loc_13BB:
 		mov	bl, al
 		mov	bh, 25h	; '%'
-		mov	word_13D77, bx
+		mov	ds:12D7h, bx
 		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
 					; AL = interrupt number
 					; Return: ES:BX	= value	of interrupt vector
 		mov	[di], bx
 		mov	word ptr [di+2], es
-		mov	word_13DB5, bx
-		mov	word_13DB7, es
+		mov	ds:1315h, bx
+		mov	ds:1317h, es
 
 loc_13D2:
 		pop	ds
@@ -2081,9 +2081,9 @@ loc_14BB:
 		xor	ax, ss:27h
 		mov	ds, ax
 		assume ds:dseg
-		mov	word_13DB5, offset locret_1323
-		mov	word_13DB7, cs
-		mov	word_13D77, 0FFFFh
+		mov	word ptr ds:1315h, offset locret_1323
+		mov	ds:1317h, cs
+		mov	word ptr ds:12D7h, 0FFFFh
 		jmp	short loc_154B
 ; ---------------------------------------------------------------------------
 
@@ -26528,172 +26528,7 @@ include libs/BorlandC/strings[data].asm
 word_13D5C	dw 952h
 word_13D5E	dw 0
 word_13D60	dw 0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-byte_13D76	db 0
-word_13D77	dw 0
-byte_13D79	db 0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-		db    8
-word_13DB5	dw 808h
-word_13DB7	dw 808h
-		db 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,0
-		db    8
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db    8
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db    9
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		db  0Ch
-		dd    0
+include libs/BorlandC/mbctype[data].asm
 include libs/BorlandC/loadprog[data].asm
 off_13E8C	dw offset sub_161E
 		db  12h
