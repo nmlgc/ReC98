@@ -1789,17 +1789,17 @@ loc_B645:
 		jnz	short loc_B640
 		push	large 1A000Ch
 		push	ds
-		push	offset unk_20A76
+		push	offset gsCHUUDAN
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_20A79
+		push	offset gsSAIKAI
 		push	0E9h ; 'È'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_20A7C
+		push	offset gsSHUURYOU
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 
@@ -1819,12 +1819,12 @@ loc_B697:
 		jnz	short loc_B6C3
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_20A79
+		push	offset gsSAIKAI
 		push	0E9h ; 'È'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_20A7C
+		push	offset gsSHUURYOU
 		push	0C1h ; '¡'
 		jmp	short loc_B6E2
 ; ---------------------------------------------------------------------------
@@ -1832,12 +1832,12 @@ loc_B697:
 loc_B6C3:
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_20A79
+		push	offset gsSAIKAI
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_20A7C
+		push	offset gsSHUURYOU
 		push	0E9h ; 'È'
 
 loc_B6E2:
@@ -11256,7 +11256,7 @@ loc_FA18:
 		jl	short loc_F9EB
 		push	large 14000Ch
 		push	ds
-		push	offset aKOO	; "∞™∂Æ∏øÆª"
+		push	offset gGAMEOVER
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	0
@@ -11340,22 +11340,22 @@ var_1		= byte ptr -1
 		jz	loc_FBF5
 		push	large 13000Ah
 		push	ds
-		push	offset aMO	; "¨∏∑Ω≤∑æÆ\b"
+		push	offset gCONTINUE?
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	large 18000Dh
 		push	ds
-		push	offset aO	; "¬Æº"
+		push	offset gYES
 		push	85h ; 'Ö'
 		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
-		push	offset asc_226A9 ; "∑∏"
+		push	offset gNO
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	large 130016h
 		push	ds
-		push	offset aMOn	; "¨ªÆ≠≤Ω"
+		push	offset gCREDIT
 		push	81h ; 'Å'
 		call	gaiji_putsa
 		push	large 210016h
@@ -11392,7 +11392,7 @@ loc_FB51:
 loc_FB55:
 		push	large 18000Dh
 		push	ds
-		push	offset aO	; "¬Æº"
+		push	offset gYES
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -11409,7 +11409,7 @@ loc_FB75:
 loc_FB79:
 		push	large 19000Fh
 		push	ds
-		push	offset asc_226A9 ; "∑∏"
+		push	offset gNO
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -12865,7 +12865,7 @@ arg_0		= word ptr  6
 		jz	short loc_106C8
 		push	large 3D0008h
 		push	ds
-		push	offset aI	; "ÍÎÏ"
+		push	offset gsENEMY
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	9
@@ -12914,12 +12914,12 @@ sub_106F3	proc far
 		mov	bp, sp
 		push	large 3C0003h
 		push	ds
-		push	offset asc_226F3 ; "÷◊ÿŸ"
+		push	offset gsHISCORE
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 3D0005h
 		push	ds
-		push	offset unk_226EE
+		push	offset gsSCORE
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		call	sub_143CA
@@ -12934,34 +12934,34 @@ sub_106F3	proc far
 loc_10730:
 		push	large 39000Bh
 		push	ds
-		push	offset asc_226F8 ; "⁄€"
+		push	offset gsREIGEKI
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
-		push	offset asc_226FD ; "‹›"
+		push	offset gsREIMU
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
-		push	offset asc_22702 ; "ﬁﬂ"
+		push	offset gsREIRYOKU
 		jmp	short loc_1078E
 ; ---------------------------------------------------------------------------
 
 loc_10760:
 		push	large 39000Bh
 		push	ds
-		push	offset aRs	; "‡·"
+		push	offset gsBOMB
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
-		push	offset aTu	; "‚„"
+		push	offset gsPLAYER
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
-		push	offset aFx	; "‰Â"
+		push	offset gsPOWER
 
 loc_1078E:
 		push	0C1h ; '¡'
@@ -12977,7 +12977,7 @@ loc_10796:
 		call	gaiji_putca
 		push	large 39000Fh
 		push	ds
-		push	offset aAu	; "ÌÓ"
+		push	offset gsRUIKEI
 		push	0A1h ; '°'
 		call	gaiji_putsa
 		push	cs
@@ -12999,7 +12999,7 @@ loc_10796:
 		mov	al, byte_25FEB
 		mov	ah, 0
 		shl	ax, 3
-		add	ax, 1CE6h
+		add	ax, offset glEASY
 		push	ax
 		cmp	byte_25FEB, 0
 		jnz	short loc_10812
@@ -15181,7 +15181,7 @@ loc_1193E:
 		mov	word_2CE88, 1240h
 		push	large 12000Ch
 		push	ds
-		push	offset unk_228F2
+		push	offset gDEMO_PLAY
 		push	0C3h ; '√'
 		call	gaiji_putsa
 
@@ -15489,12 +15489,12 @@ loc_11B91:
 		jnz	loc_11C2D
 		mov	al, byte_25FEA
 		add	al, 0A1h ; '°'
-		mov	byte_22896, al
+		mov	gStage_1+6, al
 		cmp	byte_25FEA, 5
 		jnz	short loc_11BBE
 		push	large 11000Bh
 		push	ds
-		push	offset unk_22898
+		push	offset gFINAL_STAGE
 		jmp	short loc_11BDB
 ; ---------------------------------------------------------------------------
 
@@ -15503,14 +15503,14 @@ loc_11BBE:
 		jnz	short loc_11BD1
 		push	large 11000Bh
 		push	ds
-		push	offset unk_228A4
+		push	offset gEXTRA_STAGE
 		jmp	short loc_11BDB
 ; ---------------------------------------------------------------------------
 
 loc_11BD1:
 		push	large 15000Bh
 		push	ds
-		push	offset unk_22890
+		push	offset gStage_1
 
 loc_11BDB:
 		push	0C1h ; '¡'
@@ -15847,7 +15847,7 @@ loc_11F36:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1EF8h]
+		push	large off_228D8[bx]
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		mov	ax, word_2CE70
@@ -15884,7 +15884,7 @@ loc_11FA5:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1EF8h]
+		push	large off_228D8[bx]
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		cmp	byte_2CE72, 2
@@ -20497,15 +20497,7 @@ byte_20A70	db 0
 					; sub_AEA6+108w ...
 byte_20A71	db 0
 		dd aVersion1_01		; "version 1.01"
-unk_20A76	db 0F0h	; 
-		db 0F1h	; Ò
-		db    0
-unk_20A79	db 0F2h	; Ú
-		db 0F3h	; Û
-		db    0
-unk_20A7C	db 0F4h	; Ù
-		db 0F5h	; ı
-		db    0
+include th04/strings/pause[data].asm
 		db    0
 off_20A80	dd aEye_cdg
 					; "eye.cdg"
@@ -23288,16 +23280,8 @@ BONUS_TOTAL	dw offset aBONUS_TOTAL
 ALL_CLEAR	dw offset aALL_CLEAR
 PLAYER_REM	dw offset aPLAYER_REM
 POINT_TOTAL	dw offset aPOINT_TOTAL
-unk_222A0	db  4Dh	; M
-		db  4Eh	; N
-		db  4Fh	; O
-		db    2
-		db  58h	; X
-		db  59h	; Y
-		db  5Ah	; Z
-		db  5Bh	; [
-		db    0
-a_Abcd		db '\]^_`abcd',0
+gpCLEAR_BONUS	db 4Dh,	4Eh, 4Fh, 2, 58h, 59h, 5Ah, 5Bh, 0
+gpCONGRATULATION db 5Ch, 5Dh, 5Eh, 5Fh,	60h, 61h, 62h, 63h, 64h, 0
 aBOSS_FINAL_TIMEOUT	db 'à´óÏÉ{ÉXëﬁé°é∏îsÅIÅIÅ@Å@Å@Å@Å@Å@Å@Å~Å@ÇOÅDÇO',0
 aPENALTY_6	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇUêlÅjÅ~Å@ÇOÅDÇR',0
 aPENALTY_5	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇTêlÅjÅ~Å@ÇOÅDÇT',0
@@ -23591,13 +23575,7 @@ word_2268C	dw 0
 					; sub_17354+3Bw ...
 byte_2268E	db 0
 		db 0
-aKOO		db '∞™∂Æ∏øÆª',0
-		db 0
-aMO		db '¨∏∑Ω≤∑æÆ',8,0
-		db    0
-aO		db '¬Æº',0
-asc_226A9	db '∑∏',0
-aMOn		db '¨ªÆ≠≤Ω',0
+include th04/strings/gameover[data].asm
 asc_226B3	db '  ',0
 asc_226B6	db '  ',0
 ; char aMaine_1[]
@@ -23613,75 +23591,8 @@ byte_226C4	db 0
 					; sub_16F05+3r	...
 byte_226C5	db 0
 					; sub_143FC:loc_14435r	...
-		db 0AEh	; Æ
-		db 0AAh	; ™
-		db 0BCh	; º
-		db 0C2h	; ¬
-		db    2
-		db    2
-		db    2
-		db    0
-		db 0B7h	; ∑
-		db 0B8h	; ∏
-		db 0BBh	; ª
-		db 0B6h	; ∂
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db    2
-		db    0
-		db 0B1h	; ±
-		db 0AAh	; ™
-		db 0BBh	; ª
-		db 0ADh	; ≠
-		db    2
-		db    2
-		db    2
-		db    0
-		db 0B5h	; µ
-		db 0BEh	; æ
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0ACh	; ¨
-		db    0
-		db 0AEh	; Æ
-		db 0C1h	; ¡
-		db 0BDh	; Ω
-		db 0BBh	; ª
-		db 0AAh	; ™
-		db    2
-		db    2
-		db    0
-unk_226EE	db 0D7h	; ◊
-		db 0D8h	; ÿ
-		db 0D9h	; Ÿ
-		db    0
-		db    0
-asc_226F3	db '÷◊ÿŸ',0
-asc_226F8	db '⁄€',0
-		db    0
-		db    0
-asc_226FD	db '‹›',0
-		db    0
-		db    0
-asc_22702	db 'ﬁﬂ',0
-		db    0
-		db    0
-aRs		db '‡·',0
-		db    0
-		db    0
-aTu		db '‚„',0
-		db    0
-		db    0
-aFx		db '‰Â',0
-		db    0
-		db    0
-aI		db 'ÍÎÏ',0
-		db    0
-aAu		db 'ÌÓ',0
-		db    0
-		db    0
+include th04/strings/hud[data].asm
+gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
 					; sub_1059D+4Cw
 word_22721	dw 4141h
@@ -23938,63 +23849,19 @@ byte_2288B	db 0
 byte_2288C	db 0
 		db 0
 word_2288E	dw 0
-unk_22890	db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    2
-byte_22896	db 0A1h
-		db 0
-unk_22898	db 0AFh	; Ø
-		db 0B2h	; ≤
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db    2
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    0
-unk_228A4	db 0AEh	; Æ
-		db 0C1h	; ¡
-		db 0BDh	; Ω
-		db 0BBh	; ª
-		db 0AAh	; ™
-		db    2
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    0
-a@abcdefg	db '@ABCDEFG',0
-aHijkl		db 'HIJKL',0
-aXyz		db 'XYZ[',0
-aPqrstuvw	db 'PQRSTUVW',0
-aEfghijklmn	db 'efghijklmn',0
-		dd a@abcdefg		; "@ABCDEFG"
-		dd aHijkl		; "HIJKL"
-		dd aXyz			; "XYZ["
-		dd aPqrstuvw		; "PQRSTUVW"
-		dd aEfghijklmn		; "efghijklmn"
+include th04/strings/popup[data].asm
+gpDREAMBONUS_MAX db 65h, 66h, 67h, 68h,	69h, 6Ah, 6Bh, 6Ch, 6Dh, 6Eh, 0
+off_228D8	dd gpHISCORE_ENTRY
+		dd gpEXTEND
+		dd gpBONUS
+		dd gpFULL_POWERUP
+		dd gpDREAMBONUS_MAX
 byte_228EC	db 0
 					; seg001:6CB4w	...
 		db 0
 off_228EE	dd asc_228FC
 					; "					  "...
-unk_228F2	db 0ADh	; ≠
-		db 0AEh	; Æ
-		db 0B6h	; ∂
-		db 0B8h	; ∏
-		db    2
-		db 0B9h	; π
-		db 0B5h	; µ
-		db 0AAh	; ™
-		db 0C2h	; ¬
-		db    0
+include th04/strings/demoplay[data].asm
 asc_228FC	db '                                                ',0
 		db 0
 		db  76h	; v

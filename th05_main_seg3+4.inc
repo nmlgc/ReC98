@@ -2348,7 +2348,7 @@ loc_1654F:
 		call	far ptr	palette_show
 		push	large 140004h
 		push	ds
-		push	offset unk_222A0
+		push	offset gpCLEAR_BONUS
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 60008h
@@ -2575,7 +2575,7 @@ loc_1677D:
 		mov	byte_226C4, 0Ah
 		push	large 130004h
 		push	ds
-		push	offset a_Abcd	; "\\]^_`abcd"
+		push	offset gpCONGRATULATION
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 60006h

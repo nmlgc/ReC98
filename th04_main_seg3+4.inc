@@ -19025,7 +19025,7 @@ var_4		= dword	ptr -4
 		call	far ptr	palette_show
 		push	large 140004h
 		push	ds
-		push	offset unk_232A6
+		push	offset gpCLEAR_BONUS
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 60007h
@@ -19204,7 +19204,7 @@ var_4		= dword	ptr -4
 		mov	byte_22DA6, 0Ah
 		push	large 130004h
 		push	ds
-		push	offset a_Abcd	; "\\]^_`abcd"
+		push	offset gpCONGRATULATION
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 60006h

@@ -5229,7 +5229,7 @@ sub_B967	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	large [off_D72E]
+		push	large [HUUHI_DAT]
 		call	file_ropen
 		mov	al, byte_D722
 		cbw
@@ -5340,22 +5340,22 @@ arg_0		= word ptr  4
 		mov	di, 0E1h ; 'á'
 		push	large 140002h
 		push	ds
-		push	offset aMO	; "±²Ï¼¬¸»®"
+		push	offset gHI_SCORE
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 0C0004h
 		push	ds
-		push	offset aKO	; "¶ª·®"
+		push	offset gNAME
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 1C0004h
 		push	ds
-		push	offset asc_D773	; "¹¸²¶½"
+		push	offset gPOINT
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 2A0004h
 		push	ds
-		push	offset asc_D779	; "¼½"
+		push	offset gST
 		push	81h ; ''
 		call	gaiji_putsa
 		cmp	[bp+arg_0], 0FFFFh
@@ -5379,7 +5379,7 @@ loc_BA87:
 		mov	bx, si
 		imul	bx, 11h
 		add	bx, [bp+var_2]
-		mov	al, [bx+7BBh]
+		mov	al, gALPHABET[bx]
 		mov	ah, 0
 		push	ax
 		push	0E1h ; 'á'
@@ -5395,7 +5395,7 @@ loc_BAB5:
 		cmp	si, 3
 		jl	short loc_BA80
 		push	large 0A0012h
-		mov	al, byte_D73B
+		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
 		push	85h ; '…'
@@ -5639,7 +5639,7 @@ loc_BC4F:
 loc_BC65:
 		cmp	si, 0B2h ; '²'
 		jl	short loc_BC4F
-		push	large [off_D72E]
+		push	large [HUUHI_DAT]
 		call	file_append
 		mov	al, byte_D722
 		cbw
@@ -5676,7 +5676,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		xor	si, si
-		push	large [off_D72E]
+		push	large [HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BCBA
@@ -6031,7 +6031,7 @@ sub_BC9E	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		push	large [off_D72E]
+		push	large [HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BFCE
@@ -6480,11 +6480,7 @@ dseg		segment	para public 'DATA' use16
 		assume cs:dseg
 
 include libs/BorlandC/c0[data].asm
-
-aOk		db 'ÏÏ®ª¼ÂÏ',0
-aK		db 'Ï¶¸»·ªµ',0
-aKN		db 'ÏÏ±ª»­Ï',0
-aKM		db 'µ¾¶ª½²¬',0
+include th02/strings/ranks_center[data].asm
 unk_D030	db    0
 		db    0
 		db    0
@@ -6652,63 +6648,7 @@ byte_D722	db 1
 					; sub_B888+54w	...
 		db 0
 aHuuma_cfg	db 'huuma.cfg',0
-off_D72E	dd aHuuhi_dat
-					; "huuhi.dat"
-aMO		db '±²Ï¼¬¸»®',0
-byte_D73B	db 0AAh
-		db 0ABh	; «
-		db 0ACh	; ¬
-		db 0ADh	; ­
-		db 0AEh	; ®
-		db 0AFh	; ¯
-		db 0B0h	; °
-		db 0B1h	; ±
-		db 0B2h	; ²
-		db 0B3h	; ³
-		db 0B4h	; ´
-		db 0B5h	; µ
-		db 0B7h	; ·
-		db 0B6h	; ¶
-		db 0B8h	; ¸
-		db 0B9h	; ¹
-		db 0BAh	; º
-		db 0BBh	; »
-		db 0BCh	; ¼
-		db 0BDh	; ½
-		db 0BEh	; ¾
-		db 0BFh	; ¿
-		db 0C0h	; À
-		db 0C1h	; Á
-		db 0C2h	; Â
-		db 0C3h	; Ã
-		db 0DAh	; Ú
-		db 0DBh	; Û
-		db 0DCh	; Ü
-		db 0DDh	; Ý
-		db 0DEh	; Þ
-		db 0E0h	; à
-		db    2
-		db    3
-		db 0A0h	;  
-		db 0A1h	; ¡
-		db 0A2h	; ¢
-		db 0A3h	; £
-		db 0A4h	; ¤
-		db 0A5h	; ¥
-		db 0A6h	; ¦
-		db 0A7h	; §
-		db 0A8h	; ¨
-		db 0A9h	; ©
-		db 0E1h	; á
-		db 0E2h	; â
-		db 0E3h	; ã
-		db 0E4h	; ä
-		db 0E5h	; å
-		db 0E6h	; æ
-		db 0E7h	; ç
-aKO		db '¶ª·®',0
-asc_D773	db '¹¸²¶½',0
-asc_D779	db '¼½',0
+include th02/strings/hiscore[data].asm
 unk_D77C	db  3Eh	; >
 		db    1
 		db  76h	; v

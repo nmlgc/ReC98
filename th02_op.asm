@@ -864,8 +864,8 @@ var_2		= word ptr -2
 
 		enter	6, 0
 		push	si
-		mov	dx, word_D6C6
-		mov	ax, word_D6C4
+		mov	dx, word ptr gZUN+2
+		mov	ax, word ptr gZUN
 		mov	[bp+var_4], dx
 		mov	[bp+var_6], ax
 		push	cs
@@ -1257,49 +1257,49 @@ sub_A150	proc near
 		push	104h
 		push	10h
 		push	ds
-		push	offset aK	; "ºΩ™ªΩ"
+		push	offset gSTART
 		push	0
 		call	sub_13D0
 		push	0ECh ; 'Ï'
 		push	114h
 		push	10h
 		push	ds
-		push	offset aOKK	; "Æ¡Ωª™œºΩ™ªΩ"
+		push	offset gEXTRA_START
 		push	0
 		call	sub_13D0
 		push	10Ch
 		push	124h
 		push	10h
 		push	ds
-		push	offset aMO	; "±≤º¨∏ªÆ"
+		push	offset gHISCORE
 		push	0
 		call	sub_13D0
 		push	114h
 		push	134h
 		push	10h
 		push	ds
-		push	offset asc_D718	; "∏πΩ≤∏∂"
+		push	offset gOPTION
 		push	0
 		call	sub_13D0
 		push	0F4h ; 'Ù'
 		push	144h
 		push	10h
 		push	ds
-		push	offset aMNo	; "∑æº≤¨œ∑∏≠Æ"
+		push	offset gMUSIC_MODE
 		push	0
 		call	sub_13D0
 		push	124h
 		push	154h
 		push	10h
 		push	ds
-		push	offset asc_D722	; "∫æ≤Ω"
+		push	offset gQUIT
 		push	0
 		call	sub_13D0
 		push	0D4h ; '‘'
 		push	174h
 		push	10h
 		push	ds
-		push	offset aK_0	; "ª™∂¥"
+		push	offset gRANK
 		push	0
 		call	sub_13D0
 		push	134h
@@ -1309,7 +1309,7 @@ sub_A150	proc near
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
-		add	ax, 98h	; 'ò'
+		add	ax, offset gcEASY
 		push	ax
 		push	0
 		call	sub_13D0
@@ -1338,7 +1338,7 @@ arg_2		= word ptr  6
 		push	23h ; '#'
 		push	10h
 		push	ds
-		push	offset aK	; "ºΩ™ªΩ"
+		push	offset gSTART
 		jmp	short loc_A248
 ; ---------------------------------------------------------------------------
 
@@ -1348,7 +1348,7 @@ loc_A20E:
 		push	21h ; '!'
 		push	12h
 		push	ds
-		push	offset aMO	; "±≤º¨∏ªÆ"
+		push	offset gHISCORE
 		jmp	short loc_A248
 ; ---------------------------------------------------------------------------
 
@@ -1358,7 +1358,7 @@ loc_A21D:
 		push	22h ; '"'
 		push	13h
 		push	ds
-		push	offset asc_D718	; "∏πΩ≤∏∂"
+		push	offset gOPTION
 		jmp	short loc_A248
 ; ---------------------------------------------------------------------------
 
@@ -1368,7 +1368,7 @@ loc_A22C:
 		push	1Eh
 		push	14h
 		push	ds
-		push	offset aMNo	; "∑æº≤¨œ∑∏≠Æ"
+		push	offset gMUSIC_MODE
 		jmp	short loc_A248
 ; ---------------------------------------------------------------------------
 
@@ -1378,7 +1378,7 @@ loc_A23B:
 		push	24h ; '$'
 		push	15h
 		push	ds
-		push	offset asc_D722	; "∫æ≤Ω"
+		push	offset gQUIT
 
 loc_A248:
 		push	di
@@ -1392,7 +1392,7 @@ loc_A24E:
 		push	1Dh
 		push	11h
 		push	ds
-		push	offset aOKK	; "Æ¡Ωª™œºΩ™ªΩ"
+		push	offset gEXTRA_START
 		push	di
 		jmp	short loc_A26F
 ; ---------------------------------------------------------------------------
@@ -1401,7 +1401,7 @@ loc_A265:
 		push	1Dh
 		push	11h
 		push	ds
-		push	offset aOKK	; "Æ¡Ωª™œºΩ™ªΩ"
+		push	offset gEXTRA_START
 		push	21h ; '!'
 
 loc_A26F:
@@ -1411,7 +1411,7 @@ loc_A274:
 		push	1Ah
 		push	17h
 		push	ds
-		push	offset aK_0	; "ª™∂¥"
+		push	offset gRANK
 		push	81h ; 'Å'
 		call	gaiji_putsa
 		push	26h ; '&'
@@ -1420,7 +1420,7 @@ loc_A274:
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
-		add	ax, 98h	; 'ò'
+		add	ax, offset gcEASY
 		push	ax
 		push	81h ; 'Å'
 		call	gaiji_putsa
@@ -1688,28 +1688,28 @@ sub_A481	proc near
 		push	104h
 		push	10h
 		push	ds
-		push	offset aK_0	; "ª™∂¥"
+		push	offset gRANK
 		push	0
 		call	sub_13D0
 		push	0C4h ; 'ƒ'
 		push	114h
 		push	10h
 		push	ds
-		push	offset aM	; "∑æº≤¨"
+		push	offset gMUSIC
 		push	0
 		call	sub_13D0
 		push	0C4h ; 'ƒ'
 		push	124h
 		push	10h
 		push	ds
-		push	offset aKO	; "πµ™¬Æª"
+		push	offset gPLAYER
 		push	0
 		call	sub_13D0
 		push	0C4h ; 'ƒ'
 		push	134h
 		push	10h
 		push	ds
-		push	offset aLL	; "´∏∑´"
+		push	offset gBOMB
 		push	0
 		call	sub_13D0
 		push	word ptr PERF_TITLE+2
@@ -1723,14 +1723,14 @@ sub_A481	proc near
 		push	154h
 		push	10h
 		push	ds
-		push	offset aOO	; "ªÆºÆΩ"
+		push	offset gRESET
 		push	0
 		call	sub_13D0
 		push	124h
 		push	174h
 		push	10h
 		push	ds
-		push	offset asc_D722	; "∫æ≤Ω"
+		push	offset gQUIT
 		push	0
 		call	sub_13D0
 		pop	bp
@@ -1758,7 +1758,7 @@ arg_2		= word ptr  6
 		push	18h
 		push	10h
 		push	ds
-		push	offset aK_0	; "ª™∂¥"
+		push	offset gRANK
 		push	si
 		call	gaiji_putsa
 		push	2Ah ; '*'
@@ -1767,7 +1767,7 @@ arg_2		= word ptr  6
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
-		add	ax, 98h	; 'ò'
+		add	ax, offset gcEASY
 		push	ax
 		push	si
 		call	gaiji_putsa
@@ -1783,7 +1783,7 @@ arg_2		= word ptr  6
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
-		add	ax, 98h	; 'ò'
+		add	ax, offset gcEASY
 		jmp	short loc_A5B3
 ; ---------------------------------------------------------------------------
 
@@ -1793,7 +1793,7 @@ loc_A568:
 		push	18h
 		push	11h
 		push	ds
-		push	offset aM	; "∑æº≤¨"
+		push	offset gMUSIC
 		push	si
 		call	gaiji_putsa
 		push	2Fh ; '/'
@@ -1802,7 +1802,7 @@ loc_A568:
 		mov	al, byte_E8F9
 		cbw
 		imul	ax, 5
-		add	ax, 145h
+		add	ax, offset gOFF
 		push	ax
 		push	si
 		call	gaiji_putsa
@@ -1833,7 +1833,7 @@ loc_A5BE:
 		push	18h
 		push	12h
 		push	ds
-		push	offset aKO	; "πµ™¬Æª"
+		push	offset gPLAYER
 		push	si
 		call	gaiji_putsa
 		push	31h ; '1'
@@ -1866,7 +1866,7 @@ loc_A60A:
 		push	18h
 		push	13h
 		push	ds
-		push	offset aLL	; "´∏∑´"
+		push	offset gBOMB
 		push	si
 		call	gaiji_putsa
 		push	31h ; '1'
@@ -1939,7 +1939,7 @@ loc_A6C7:
 		push	23h ; '#'
 		push	15h
 		push	ds
-		push	offset aOO	; "ªÆºÆΩ"
+		push	offset gRESET
 		jmp	short loc_A6E3
 ; ---------------------------------------------------------------------------
 
@@ -1949,7 +1949,7 @@ loc_A6D6:
 		push	24h ; '$'
 		push	17h
 		push	ds
-		push	offset asc_D722	; "∫æ≤Ω"
+		push	offset gQUIT
 
 loc_A6E3:
 		push	si
@@ -3780,8 +3780,8 @@ sub_B3B1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	word ptr off_DC36+2
-		push	word ptr off_DC36
+		push	word ptr HUUHI_DAT+2
+		push	word ptr HUUHI_DAT
 		call	file_ropen
 		mov	al, byte_DC34
 		cbw
@@ -4100,7 +4100,7 @@ arg_0		= word ptr  4
 		push	16h
 		push	2
 		push	ds
-		push	offset aMO_0	; "±≤œº¨∏ªÆ"
+		push	offset gHI_SCORE
 		push	81h ; 'Å'
 		call	gaiji_putsa
 		push	28h ; '('
@@ -4109,7 +4109,7 @@ arg_0		= word ptr  4
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
-		add	ax, 654h
+		add	ax, offset gcEASY_0
 		push	ax
 		push	81h ; 'Å'
 		call	gaiji_putsa
@@ -6673,87 +6673,28 @@ byte_D6C1	db 0
 byte_D6C2	db 0
 					; sub_A2FB+154w ...
 		db 0
-word_D6C4	dw 0BEC3h
-word_D6C6	dw 0B6h
-aOk		db 'œœÆ™º¬œ',0
-aK_1		db 'œ∂∏ª∑™µ',0
-aKN		db 'œœ±™ª≠œ',0
-aKM		db 'µæ∂™Ω≤¨',0
-aO		db '±≤Ωœ¥Æ¬',0
-		db 'œœœœœœœ',0
-aK		db 'ºΩ™ªΩ',0
-		db    0
-		db    0
-		db    0
-		db    0
-aOKK		db 'Æ¡Ωª™œºΩ™ªΩ',0
-aMO		db '±≤º¨∏ªÆ',0
-		dw 0
-asc_D718	db '∏πΩ≤∏∂',0
-		db    0
-		db    0
-		db    0
-asc_D722	db '∫æ≤Ω',0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-aK_0		db 'ª™∂¥',0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-aKO		db 'πµ™¬Æª',0
-		dw 0
-		db    0
-aM		db '∑æº≤¨',0
-		db    0
-		db    0
-		db    0
-		db    0
-aLL		db '´∏∑´',0
-					; sub_A510+104o
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-aMNo		db '∑æº≤¨œ∑∏≠Æ',0
-aOO		db 'ªÆºÆΩ',0
-					; sub_A510+1C1o
-		db    0
-		db    0
-		db    0
-		db    0
-		db 0E8h	; Ë
-		db 0E9h	; È
-		db    0
-		db 0EAh	; Í
-		db 0EBh	; Î
-		db    0
-		db 0ECh	; Ï
-		db 0EDh	; Ì
-		db    0
-		db 0EEh	; Ó
-		db 0EFh	; Ô
-		db    0
-		db 0B8h	; ∏
-		db 0AFh	; Ø
-		db 0AFh	; Ø
-		db 0CFh	; œ
-		db    0
-		db 0CFh	; œ
-		db 0AFh	; Ø
-		db 0B7h	; ∑
-		db 0CFh	; œ
-		db    0
-		db 0B7h	; ∑
-		db 0B2h	; ≤
-		db 0ADh	; ≠
-		db 0B2h	; ≤
-		db    0
+gZUN		db 0C3h, 0BEh, 0B6h, 0
+include th02/strings/ranks_center[data].asm
+gHIT_KEY	db 0B1h, 0B2h, 0BDh, 0CFh, 0B4h, 0AEh, 0C2h, 0
+g7SPACES	db 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0
+gSTART		db 0BCh, 0BDh, 0AAh, 0BBh, 0BDh, 0, 0, 0, 0, 0
+gEXTRA_START	db 0AEh, 0C1h, 0BDh, 0BBh, 0AAh, 0CFh, 0BCh, 0BDh, 0AAh, 0BBh, 0BDh, 0
+gHISCORE	db 0B1h, 0B2h, 0BCh, 0ACh, 0B8h, 0BBh, 0AEh, 0,	0, 0
+gOPTION		db 0B8h, 0B9h, 0BDh, 0B2h, 0B8h, 0B6h, 0, 0, 0,	0
+gQUIT		db 0BAh, 0BEh, 0B2h, 0BDh, 0, 0, 0, 0, 0, 0
+gRANK		db 0BBh, 0AAh, 0B6h, 0B4h, 0, 0, 0, 0, 0, 0
+gPLAYER		db 0B9h, 0B5h, 0AAh, 0C2h, 0AEh, 0BBh, 0, 0, 0,	0
+gMUSIC		db 0B7h, 0BEh, 0BCh, 0B2h, 0ACh, 0, 0, 0, 0, 0
+gBOMB		db 0ABh, 0B8h, 0B7h, 0ABh, 0, 0, 0, 0, 0, 0
+gMUSIC_MODE	db 0B7h, 0BEh, 0BCh, 0B2h, 0ACh, 0CFh, 0B7h, 0B8h, 0ADh, 0AEh, 0
+gRESET		db 0BBh, 0AEh, 0BCh, 0AEh, 0BDh, 0, 0, 0, 0, 0
+gsEASY		db 0E8h, 0E9h, 0
+gsNORMAL	db 0EAh, 0EBh, 0
+gsHARD		db 0ECh, 0EDh, 0
+gsLUNATIC	db 0EEh, 0EFh, 0
+gOFF		db 0B8h, 0AFh, 0AFh, 0CFh, 0
+gFM		db 0CFh, 0AFh, 0B7h, 0CFh, 0
+gMIDI		db 0B7h, 0B2h, 0ADh, 0B2h, 0
 PERF_TITLE	dd aPERF_TITLE
 PERF_OPTION	dd aPERF_NORMAL
 		dd aPERF_TRUNCATE
@@ -6881,106 +6822,11 @@ byte_DBF0	db 0FFh
 byte_DC33	db 0
 byte_DC34	db 1
 		db 0
-off_DC36	dd aHuuhi_dat
-					; "huuhi.dat"
-aMO_0		db '±≤œº¨∏ªÆ',0
-		db 0AAh	; ™
-		db 0ABh	; ´
-		db 0ACh	; ¨
-		db 0ADh	; ≠
-		db 0AEh	; Æ
-		db 0AFh	; Ø
-		db 0B0h	; ∞
-		db 0B1h	; ±
-		db 0B2h	; ≤
-		db 0B3h	; ≥
-		db 0B4h	; ¥
-		db 0B5h	; µ
-		db 0B7h	; ∑
-		db 0B6h	; ∂
-		db 0B8h	; ∏
-		db 0B9h	; π
-		db 0BAh	; ∫
-		db 0BBh	; ª
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0BEh	; æ
-		db 0BFh	; ø
-		db 0C0h	; ¿
-		db 0C1h	; ¡
-		db 0C2h	; ¬
-		db 0C3h	; √
-		db 0DAh	; ⁄
-		db 0DBh	; €
-		db 0DCh	; ‹
-		db 0DDh	; ›
-		db 0DEh	; ﬁ
-		db 0E0h	; ‡
-		db    2
-		db    3
-		db 0A0h	; †
-		db 0A1h	; °
-		db 0A2h	; ¢
-		db 0A3h	; £
-		db 0A4h	; §
-		db 0A5h	; •
-		db 0A6h	; ¶
-		db 0A7h	; ß
-		db 0A8h	; ®
-		db 0A9h	; ©
-		db 0E1h	; ·
-		db 0E2h	; ‚
-		db 0E3h	; „
-		db 0E4h	; ‰
-		db 0E5h	; Â
-		db 0E6h	; Ê
-		db 0E7h	; Á
-		db 0B6h	; ∂
-		db 0AAh	; ™
-		db 0B7h	; ∑
-		db 0AEh	; Æ
-		db    0
-		db 0B9h	; π
-		db 0B8h	; ∏
-		db 0B2h	; ≤
-		db 0B6h	; ∂
-		db 0BDh	; Ω
-		db    0
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db    0
-		db 0CFh	; œ
-		db 0AEh	; Æ
-		db 0AAh	; ™
-		db 0BCh	; º
-		db 0C2h	; ¬
-		db 0CFh	; œ
-		db 0CFh	; œ
-		db    0
-		db 0B6h	; ∂
-		db 0B8h	; ∏
-		db 0BBh	; ª
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db 0CFh	; œ
-		db    0
-		db 0CFh	; œ
-		db 0B1h	; ±
-		db 0AAh	; ™
-		db 0BBh	; ª
-		db 0ADh	; ≠
-		db 0CFh	; œ
-		db 0CFh	; œ
-		db    0
-		db 0B5h	; µ
-		db 0BEh	; æ
-		db 0B6h	; ∂
-		db 0AAh	; ™
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0ACh	; ¨
-		db    0
+include th02/strings/hiscore[data].asm
+gcEASY_0	db 0CFh, 0AEh, 0AAh, 0BCh, 0C2h, 0CFh, 0CFh, 0
+gcNORMAL_0	db 0B6h, 0B8h, 0BBh, 0B7h, 0AAh, 0B5h, 0CFh, 0
+gcHARD_0	db 0CFh, 0B1h, 0AAh, 0BBh, 0ADh, 0CFh, 0CFh, 0
+gcLUNATIC_0	db 0B5h, 0BEh, 0B6h, 0AAh, 0BDh, 0B2h, 0ACh, 0
 		dd aNvl@uo		; "çÇã@ìÆ"
 		dd aChmf		; "ñhå‰"
 		dd aNumv		; "çUåÇ"

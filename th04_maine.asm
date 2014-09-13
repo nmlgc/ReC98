@@ -4207,7 +4207,7 @@ loc_BC79:
 		push	ds
 		mov	ah, 0
 		shl	ax, 3
-		add	ax, 71Bh
+		add	ax, offset grEASY
 		push	ax
 		push	0Eh
 		call	sub_36B6
@@ -5856,7 +5856,7 @@ loc_C9CB:
 		cmp	[bp+var_6], 3
 		jl	short loc_C990
 		push	large 170012h
-		mov	al, byte_ED5C
+		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
 		push	85h ; 'Ö'
@@ -8277,46 +8277,7 @@ aSff7_cdg	db 'sff7.cdg',0
 aSff7b_cdg	db 'sff7b.cdg',0
 		db    0
 byte_EC4A	db 0
-		db    2
-		db    2
-		db    2
-		db 0AEh	; Æ
-		db 0AAh	; ™
-		db 0BCh	; º
-		db 0C2h	; ¬
-		db    0
-		db    2
-		db 0B7h	; ∑
-		db 0B8h	; ∏
-		db 0BBh	; ª
-		db 0B6h	; ∂
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db    0
-		db    2
-		db    2
-		db    2
-		db 0B1h	; ±
-		db 0AAh	; ™
-		db 0BBh	; ª
-		db 0ADh	; ≠
-		db    0
-		db 0B5h	; µ
-		db 0BEh	; æ
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0ACh	; ¨
-		db    0
-		db    2
-		db    2
-		db 0AEh	; Æ
-		db 0C1h	; ¡
-		db 0BDh	; Ω
-		db 0BBh	; ª
-		db 0AAh	; ™
-		db    0
+include th04/strings/verdict[data].asm
 byte_EC73	db 0
 aU_		db 'ì_',0
 aBd		db 'ÅD',0
@@ -8343,57 +8304,12 @@ aBhbhbhbhbhbhu_	db 'ÅHÅHÅHÅHÅHÅHì_',0
 aPicacovVVcvsfT	db 'èàóùóéÇøÇ…ÇÊÇÈîªíËïsâ¬',0
 aUde_pi		db 'ude.pi',0
 		db    0
-byte_ED5C	db 0AAh
-		db 0ABh	; ´
-		db 0ACh	; ¨
-		db 0ADh	; ≠
-		db 0AEh	; Æ
-		db 0AFh	; Ø
-		db 0B0h	; ∞
-		db 0B1h	; ±
-		db 0B2h	; ≤
-		db 0B3h	; ≥
-		db 0B4h	; ¥
-		db 0B5h	; µ
-		db 0B6h	; ∂
-		db 0B7h	; ∑
-		db 0B8h	; ∏
-		db 0B9h	; π
-		db 0BAh	; ∫
-		db 0BBh	; ª
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0BEh	; æ
-		db 0BFh	; ø
-		db 0C0h	; ¿
-		db 0C1h	; ¡
-		db 0C2h	; ¬
-		db 0C3h	; √
-		db 0C4h	; ƒ
-		db 0C5h	; ≈
-		db    3
-		db    6
-		db    7
-		db    8
-		db  0Ch
-		db  0Fh
-		db 0A0h	; †
-		db 0A1h	; °
-		db 0A2h	; ¢
-		db 0A3h	; £
-		db 0A4h	; §
-		db 0A5h	; •
-		db 0A6h	; ¶
-		db 0A7h	; ß
-		db 0A8h	; ®
-		db 0A9h	; ©
-		db 0E6h	; Ê
-		db 0E7h	; Á
-		db 0E8h	; Ë
-		db 0CEh	; Œ
-		db 0CFh	; œ
-		db 0CDh	; Õ
-		db 0D5h	; ’
+gALPHABET	db 0AAh, 0ABh, 0ACh, 0ADh, 0AEh, 0AFh, 0B0h, 0B1h, 0B2h
+		db 0B3h, 0B4h, 0B5h, 0B6h, 0B7h, 0B8h, 0B9h, 0BAh, 0BBh
+		db 0BCh, 0BDh, 0BEh, 0BFh, 0C0h, 0C1h, 0C2h, 0C3h, 0C4h
+		db 0C5h, 3, 6, 7, 8, 0Ch, 0Fh, 0A0h, 0A1h, 0A2h, 0A3h
+		db 0A4h, 0A5h, 0A6h, 0A7h, 0A8h, 0A9h, 0E6h, 0E7h, 0E8h
+		db 0CEh, 0CFh, 0CDh, 0D5h
 aGensou_scr	db 'GENSOU.SCR',0
 aGensou_scr_0	db 'GENSOU.SCR',0
 aGensou_scr_1	db 'GENSOU.SCR',0

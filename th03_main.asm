@@ -6339,26 +6339,26 @@ loc_CADF:
 		push	si
 		push	0Bh
 		push	ds
-		push	offset aPqrstuvwxyz_ ; "PQRSTUVWXYZ[\\]^_"
+		push	offset gbWARNING_1
 		push	di
 		call	gaiji_putsa
 		push	si
 		push	0Ch
 		push	ds
-		push	offset aAbcdefghijklmn ; "`abcdefghijklmno"
+		push	offset gbWARNING_2
 		push	di
 		call	gaiji_putsa
 		push	si
 		push	0Dh
 		push	ds
-		push	offset aPqrstuvwxyz ; "pqrstuvwxyz{|}~"
+		push	offset gbWARNING_3
 		push	di
 		call	gaiji_putsa
 		add	si, 4
 		push	si
 		push	0Eh
 		push	ds
-		push	offset aVgdejziiklm ; "ÇÉÑÖÜáàâäãå"
+		push	offset gpYOU_ARE_FORCED_TO_EVADE_FROM
 		push	di
 		call	gaiji_putsa
 		mov	al, [bp+arg_2]
@@ -6370,7 +6370,7 @@ loc_CADF:
 		push	ax
 		push	0Fh
 		push	ds
-		push	offset asc_1DD39 ; "«»… ÀÃÕŒ"
+		push	offset gpGAUGE_ATTACK_LEVEL
 		push	di
 		call	gaiji_putsa
 		lea	ax, [si+13h]
@@ -6388,7 +6388,7 @@ loc_CB47:
 		push	ax
 		push	0Fh
 		push	ds
-		push	offset asc_1DD42 ; "–—“ ÀÃÕŒ"
+		push	offset gpBOSS_ATTACK_LEVEL
 		push	di
 		call	gaiji_putsa
 		lea	ax, [si+13h]
@@ -6405,7 +6405,7 @@ loc_CB60:
 		push	si
 		push	10h
 		push	ds
-		push	offset aNoptufxccssI ; "çéèíìîïñóòôöõú"
+		push	offset gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL
 		push	di
 		call	gaiji_putsa
 		pop	di
@@ -24676,14 +24676,14 @@ loc_15D64:
 		push	ax
 		push	2
 		push	ds
-		push	offset unk_1DD7C
+		push	offset gsHIT	; strp
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		lea	ax, [di+4]
 		push	ax
 		push	3
 		push	ds
-		push	offset unk_1DD7F
+		push	offset gBONUS_FRAME	; strp
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		mov	al, [si+1]
@@ -39190,25 +39190,22 @@ aEnedat_dat	db 'ENEDAT.DAT',0
 byte_1DCF8	db 0
 byte_1DCF9	db 0
 					; sub_CA3C:loc_CA81r ...
-aPqrstuvwxyz_	db 'PQRSTUVWXYZ[\]^_',0
-aAbcdefghijklmn	db '`abcdefghijklmno',0
-aPqrstuvwxyz	db 'pqrstuvwxyz{|}~'
-		db  7Fh	; 
-		db    0
-aVgdejziiklm	db 'ÇÉÑÖÜáàâäãå',0
-asc_1DD39	db '«»… ÀÃÕŒ',0
-asc_1DD42	db '–—“ ÀÃÕŒ',0
-aNoptufxccssI	db 'çéèíìîïñóòôöõú',0
+gbWARNING_1	db 50h,	51h, 52h, 53h, 54h, 55h, 56h, 57h, 58h, 59h, 5Ah
+		db 5Bh,	5Ch, 5Dh, 5Eh, 5Fh, 0
+gbWARNING_2	db 60h,	61h, 62h, 63h, 64h, 65h, 66h, 67h, 68h, 69h, 6Ah
+		db 6Bh,	6Ch, 6Dh, 6Eh, 6Fh, 0
+gbWARNING_3	db 70h,	71h, 72h, 73h, 74h, 75h, 76h, 77h, 78h, 79h, 7Ah
+		db 7Bh,	7Ch, 7Dh, 7Eh, 7Fh, 0
+gpYOU_ARE_FORCED_TO_EVADE_FROM db 82h, 83h, 84h, 85h, 86h, 87h, 88h
+		db 89h, 8Ah, 8Bh, 8Ch, 0
+gpGAUGE_ATTACK_LEVEL db 0C7h, 0C8h, 0C9h, 0CAh, 0CBh, 0CCh, 0CDh, 0CEh,	0
+gpBOSS_ATTACK_LEVEL db 0D0h, 0D1h, 0D2h, 0CAh, 0CBh, 0CCh, 0CDh, 0CEh, 0
+gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL db 8Dh, 8Eh, 8Fh, 92h, 93h, 94h, 95h
+		db 96h, 97h, 98h, 99h, 9Ah, 9Bh, 9Ch, 0
 asc_1DD5A	db '                                ',0
 		db 0
-unk_1DD7C	db  0Ch
-		db  0Dh
-		db    0
-unk_1DD7F	db  0Ah
-		db  0Bh
-		db  0Eh
-		db  0Fh
-		db    0
+gsHIT		db 0Ch,	0Dh, 0
+gBONUS_FRAME	db 0Ah, 0Bh, 0Eh, 0Fh,0
 asc_1DD84	db '        ',0
 					; sub_15D53+123o
 		db 0

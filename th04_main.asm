@@ -1691,17 +1691,17 @@ loc_B2DC:
 		jnz	short loc_B2D7
 		push	large 1A000Ch
 		push	ds
-		push	offset unk_213D0
+		push	offset gsCHUUDAN ; strp
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_213D3
+		push	offset gsSAIKAI	; strp
 		push	0E9h ; 'È'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_213D6
+		push	offset gsSHUURYOU ; strp
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 
@@ -1721,12 +1721,12 @@ loc_B32E:
 		jnz	short loc_B35A
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_213D3
+		push	offset gsSAIKAI	; strp
 		push	0E9h ; 'È'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_213D6
+		push	offset gsSHUURYOU ; strp
 		push	0C1h ; '¡'
 		jmp	short loc_B379
 ; ---------------------------------------------------------------------------
@@ -1734,12 +1734,12 @@ loc_B32E:
 loc_B35A:
 		push	large 1A000Eh
 		push	ds
-		push	offset unk_213D3
+		push	offset gsSAIKAI	; strp
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
-		push	offset unk_213D6
+		push	offset gsSHUURYOU ; strp
 		push	0E9h ; 'È'
 
 loc_B379:
@@ -8861,7 +8861,7 @@ loc_E5EF:
 		jl	short loc_E5C2
 		push	large 14000Ch
 		push	ds
-		push	offset aKOO	; "∞™∂Æ∏øÆª"
+		push	offset gGAMEOVER
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	0
@@ -8945,22 +8945,22 @@ var_1		= byte ptr -1
 		jz	loc_E7D8
 		push	large 13000Ah
 		push	ds
-		push	offset aMO	; "¨∏∑Ω≤∑æÆ\b"
+		push	offset gCONTINUE?
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	large 18000Dh
 		push	ds
-		push	offset aO	; "¬Æº"
+		push	offset gYES
 		push	85h ; 'Ö'
 		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
-		push	offset asc_22C35 ; "∑∏"
+		push	offset gNO
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		push	large 130016h
 		push	ds
-		push	offset aMOn	; "¨ªÆ≠≤Ω"
+		push	offset gCREDIT
 		push	81h ; 'Å'
 		call	gaiji_putsa
 		push	large 210016h
@@ -8998,7 +8998,7 @@ loc_E72D:
 loc_E731:
 		push	large 18000Dh
 		push	ds
-		push	offset aO	; "¬Æº"
+		push	offset gYES
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -9015,7 +9015,7 @@ loc_E751:
 loc_E755:
 		push	large 19000Fh
 		push	ds
-		push	offset asc_22C35 ; "∑∏"
+		push	offset gNO
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -10351,7 +10351,7 @@ arg_0		= word ptr  6
 		jz	short loc_F14C
 		push	large 3D0008h
 		push	ds
-		push	offset aI	; "ÍÎÏ"
+		push	offset gsENEMY
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	9
@@ -10493,12 +10493,12 @@ sub_F204	proc far
 		mov	bp, sp
 		push	large 3C0003h
 		push	ds
-		push	offset asc_22DD5 ; "÷◊ÿŸ"
+		push	offset gsHISCORE
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		push	large 3D0005h
 		push	ds
-		push	offset unk_22DD0
+		push	offset gsSCORE
 		push	0C1h ; '¡'
 		call	gaiji_putsa
 		call	sub_11692
@@ -10507,14 +10507,14 @@ sub_F204	proc far
 		jnz	short loc_F245
 		push	large 39000Bh
 		push	ds
-		push	offset asc_22DDA ; "⁄€"
+		push	offset gsREIGEKI
 		jmp	short loc_F24F
 ; ---------------------------------------------------------------------------
 
 loc_F245:
 		push	large 39000Bh
 		push	ds
-		push	offset aRs	; "‡·"
+		push	offset gsBOMB
 
 loc_F24F:
 		push	0C1h ; '¡'
@@ -10528,14 +10528,14 @@ loc_F24F:
 		jnz	short loc_F276
 		push	large 39000Dh
 		push	ds
-		push	offset asc_22DDF ; "‹›"
+		push	offset gsREIMU
 		jmp	short loc_F280
 ; ---------------------------------------------------------------------------
 
 loc_F276:
 		push	large 39000Dh
 		push	ds
-		push	offset aTu	; "‚„"
+		push	offset gsPLAYER
 
 loc_F280:
 		push	0C1h ; '¡'
@@ -10560,14 +10560,14 @@ loc_F280:
 		jnz	short loc_F2DE
 		push	large 3E0015h
 		push	ds
-		push	offset unk_22DE4
+		push	offset gsREIRYOKU
 		jmp	short loc_F2E8
 ; ---------------------------------------------------------------------------
 
 loc_F2DE:
 		push	large 3E0015h
 		push	ds
-		push	offset aFx	; "‰Â"
+		push	offset gsPOWER
 
 loc_F2E8:
 		push	0C1h ; '¡'
@@ -10579,7 +10579,7 @@ loc_F2E8:
 		mov	al, byte_25688
 		mov	ah, 0
 		shl	ax, 3
-		add	ax, 1A68h
+		add	ax, offset glEASY
 		push	ax
 		cmp	byte_25688, 0
 		jnz	short loc_F313
@@ -14061,7 +14061,7 @@ loc_10DC6:
 		mov	word_259DC, 11BEh
 		push	large 12000Ch
 		push	ds
-		push	offset byte_22F60
+		push	offset gDEMO_PLAY ; strp
 		push	0C3h ; '√'
 		call	gaiji_putsa
 
@@ -14392,12 +14392,12 @@ loc_11057:
 		jnz	loc_11107
 		mov	al, byte_266D4
 		add	al, 0A1h ; '°'
-		mov	byte_22EAE, al
+		mov	gStage_1+6, al
 		cmp	byte_266D4, 5
 		jnz	short loc_11084
 		push	large 11000Bh
 		push	ds
-		push	offset unk_22EB0
+		push	offset gFINAL_STAGE
 		jmp	short loc_110A1
 ; ---------------------------------------------------------------------------
 
@@ -14406,14 +14406,14 @@ loc_11084:
 		jnz	short loc_11097
 		push	large 11000Bh
 		push	ds
-		push	offset unk_22EBC
+		push	offset gEXTRA_STAGE
 		jmp	short loc_110A1
 ; ---------------------------------------------------------------------------
 
 loc_11097:
 		push	large 15000Bh
 		push	ds
-		push	offset unk_22EA8
+		push	offset gStage_1
 
 loc_110A1:
 		push	0C1h ; '¡'
@@ -14737,7 +14737,7 @@ loc_113DF:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		les	bx, [bx+1BA6h]
+		les	bx, off_22EE6[bx]
 		assume es:nothing
 		mov	al, byte_22EA4
 		mov	ah, 0
@@ -14766,7 +14766,7 @@ loc_11424:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BA6h]
+		push	large off_22EE6[bx] ; strp
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		mov	ax, word_259C8
@@ -14803,7 +14803,7 @@ loc_11493:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+1BA6h]
+		push	large off_22EE6[bx] ; strp
 		push	0E1h ; '·'
 		call	gaiji_putsa
 		cmp	byte_259CA, 2
@@ -17739,7 +17739,7 @@ var_2		= word ptr -2
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_23244
+		push	offset gCONTINUE
 		mov	cx, 8
 		call	SCOPY@
 		mov	[bp+var_2], 9
@@ -19952,16 +19952,7 @@ dseg		segment	para public 'DATA' use16
 		assume cs:dseg
 
 include libs/BorlandC/c0[data].asm
-
-unk_213D0	db 0F0h	; 
-		db 0F1h	; Ò
-		db    0
-unk_213D3	db 0F2h	; Ú
-		db 0F3h	; Û
-		db    0
-unk_213D6	db 0F4h	; Ù
-		db 0F5h	; ı
-		db    0
+include th04/strings/pause[data].asm
 		db    0
 off_213DA	dd aEye0_cdg
 					; sub_B488+75r	...
@@ -22609,13 +22600,7 @@ word_22C18	dw 0
 					; sub_D955+AEr	...
 byte_22C1A	db 0
 		db    0
-aKOO		db '∞™∂Æ∏øÆª',0
-		db    0
-aMO		db '¨∏∑Ω≤∑æÆ',8,0
-		db    0
-aO		db '¬Æº',0
-asc_22C35	db '∑∏',0
-aMOn		db '¨ªÆ≠≤Ω',0
+include th04/strings/gameover[data].asm
 asc_22C3F	db '  ',0
 asc_22C42	db '  ',0
 ; char aMaine_2[]
@@ -22932,74 +22917,7 @@ unk_22D9E	db 0DCh	; ‹
 byte_22DA6	db 0
 byte_22DA7	db 0
 					; sub_116C4:loc_116FDr	...
-		db 0AEh	; Æ
-		db 0AAh	; ™
-		db 0BCh	; º
-		db 0C2h	; ¬
-		db    2
-		db    2
-		db    2
-		db    0
-		db 0B7h	; ∑
-		db 0B8h	; ∏
-		db 0BBh	; ª
-		db 0B6h	; ∂
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db    2
-		db    0
-		db 0B1h	; ±
-		db 0AAh	; ™
-		db 0BBh	; ª
-		db 0ADh	; ≠
-		db    2
-		db    2
-		db    2
-		db    0
-		db 0B5h	; µ
-		db 0BEh	; æ
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0ACh	; ¨
-		db    0
-		db 0AEh	; Æ
-		db 0C1h	; ¡
-		db 0BDh	; Ω
-		db 0BBh	; ª
-		db 0AAh	; ™
-		db    2
-		db    2
-		db    0
-unk_22DD0	db 0D7h	; ◊
-		db 0D8h	; ÿ
-		db 0D9h	; Ÿ
-		db    0
-		db    0
-asc_22DD5	db '÷◊ÿŸ',0
-asc_22DDA	db '⁄€',0
-		db    0
-		db    0
-asc_22DDF	db '‹›',0
-		db 0
-		db    0
-unk_22DE4	db 0DEh	; ﬁ
-		db 0DFh	; ﬂ
-		db    0
-		db    0
-		db    0
-aRs		db '‡·',0
-		db    0
-		db    0
-aTu		db '‚„',0
-		db    0
-		db    0
-aFx		db '‰Â',0
-		db 0
-		db    0
-aI		db 'ÍÎÏ',0
-		db    0
+include th04/strings/hud[data].asm
 		db  41h	; A
 		db  41h	; A
 		db  41h	; A
@@ -23125,47 +23043,12 @@ byte_22EA3	db 0
 byte_22EA4	db 0
 		db    0
 word_22EA6	dw 0
-unk_22EA8	db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    2
-byte_22EAE	db 0A1h
+include th04/strings/popup[data].asm
 		db    0
-unk_22EB0	db 0AFh	; Ø
-		db 0B2h	; ≤
-		db 0B7h	; ∑
-		db 0AAh	; ™
-		db 0B5h	; µ
-		db    2
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    0
-unk_22EBC	db 0AEh	; Æ
-		db 0C1h	; ¡
-		db 0BDh	; Ω
-		db 0BBh	; ª
-		db 0AAh	; ™
-		db    2
-		db 0BCh	; º
-		db 0BDh	; Ω
-		db 0AAh	; ™
-		db 0B0h	; ∞
-		db 0AEh	; Æ
-		db    0
-a@abcdefg	db '@ABCDEFG',0
-aHijkl		db 'HIJKL',0
-aXyz		db 'XYZ[',0
-aPqrstuvw	db 'PQRSTUVW',0
-		db    0
-		dd a@abcdefg		; "@ABCDEFG"
-		dd aHijkl		; "HIJKL"
-		dd aXyz			; "XYZ["
-		dd aPqrstuvw		; "PQRSTUVW"
+off_22EE6	dd gpHISCORE_ENTRY
+		dd gpEXTEND
+		dd gpBONUS
+		dd gpFULL_POWERUP
 byte_22EF6	db 0
 					; seg001:645Cw	...
 		db 0
@@ -23196,16 +23079,7 @@ BGM_TITLE		dd aWitchingDream	; "Witching Dream"
 		dd aGbgcghmSzb@bIc	; "ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic	"
 		dd aVivavvvvilcvb@	; "Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence"
 		dd aPnpcuyszlB@bCa	; "è≠èó„Yëzã»Å@Å` Capriccio "
-byte_22F60	db 0ADh
-		db 0AEh	; Æ
-		db 0B6h	; ∂
-		db 0B8h	; ∏
-		db    2
-		db 0B9h	; π
-		db 0B5h	; µ
-		db 0AAh	; ™
-		db 0C2h	; ¬
-		db    0
+include th04/strings/demoplay[data].asm
 asc_22F6A	db '                                                ',0
 aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0
 aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0
@@ -23310,14 +23184,7 @@ word_23240	dw 204h
 byte_23242	db 0
 					; sub_12461+A2w
 		db    0
-unk_23244	db 0ACh	; ¨
-		db 0B8h	; ∏
-		db 0B7h	; ∑
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0B7h	; ∑
-		db 0BEh	; æ
-		db 0AEh	; Æ
+gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh
 aGensou_scr	db 'GENSOU.SCR',0
 aGensou_scr_0	db 'GENSOU.SCR',0
 aGensou_scr_1	db 'GENSOU.SCR',0
@@ -23335,16 +23202,10 @@ byte_23278	db 0
 		dd aUqiUxgBGigxb_0	; "ìÔà’ìxÉ{Å[ÉiÉXÅiÇmÇèÇíÇçÇÅÇåÅjÅ@Å@Å~Å@Ç"...
 		dd aUqiUxgBGigxb_1	; "ìÔà’ìxÉ{Å[ÉiÉXÅiÇgÇÅÇíÇÑÅjÅ@Å@Å@Å@Å~Å@Ç"...
 		dd aUqiUxgBGigxb_2	; "ìÔà’ìxÉ{Å[ÉiÉXÅiÇkÇïÇéÇÅÇîÇâÇÉÅjÅ@Å~Å@Ç"...
-unk_232A6	db  4Dh	; M
-		db  4Eh	; N
-		db  4Fh	; O
-		db    2
-		db  58h	; X
-		db  59h	; Y
-		db  5Ah	; Z
-		db  5Bh	; [
-		db    0
-a_Abcd		db '\]^_`abcd',0
+; char gpCLEAR_BONUS[3]
+gpCLEAR_BONUS	db 4Dh,	4Eh, 4Fh, 2, 58h, 59h, 5Ah, 5Bh, 0
+; char gpCONGRATULATION[]
+gpCONGRATULATION db 5Ch, 5Dh, 5Eh, 5Fh, 60h, 61h, 62h, 63h, 64h, 0
 aIlcGGxsOboFsbi	db 'à´óÏÉ{ÉXëﬁé°é∏îsÅIÅIÅ@Å@Å@Å@Å@Å@Å@Å~Å@ÇOÅDÇO',0
 aGvgmgcgdbRfgyg	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇUêlÅjÅ~Å@ÇOÅDÇR',0
 aGvgmgcgdbRfg_0	db 'ÉvÉåÉCÉÑÅ[êîÉyÉiÉãÉeÉBÅièâä˙ÇTêlÅjÅ~Å@ÇOÅDÇT',0

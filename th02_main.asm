@@ -2604,7 +2604,7 @@ loc_B1CD:
 		jnz	short loc_B202
 		push	large 10000Ch
 		push	ds
-		push	offset aExtra_Gaiji	; "®Á½»ªÏÏ¼½ª°®"
+		push	offset gEXTRA_STAGE
 		jmp	short loc_B213
 ; ---------------------------------------------------------------------------
 
@@ -2616,7 +2616,7 @@ loc_B202:
 		push	dx
 		push	0Ch
 		push	ds
-		push	offset aStage1_Gaiji	; "¼½ª°®¡"
+		push	offset gStage1
 
 loc_B213:
 		push	0C1h ; 'Á'
@@ -2637,7 +2637,7 @@ loc_B213:
 loc_B237:
 		push	large 12000Ch
 		push	ds
-		push	offset aNoK	; "­®·¸Ï¹µªÂ"
+		push	offset gDEMO_PLAY
 		push	0C3h ; 'Ã'
 		call	gaiji_putsa
 
@@ -2944,7 +2944,7 @@ loc_B4D7:
 		cwd
 		idiv	bx
 		add	dl, 0A1h ; '¡'
-		mov	byte ptr aStage1_Gaiji+5, dl
+		mov	gStage1+5, dl
 		mov	al, stage_id
 		cbw
 		add	ax, ax
@@ -3330,14 +3330,14 @@ loc_BA1D:
 		jnb	short loc_BA33
 		push	large 12000Ch
 		push	ds
-		push	offset aKOO	; "¹ª¾¼®Ï·®¶¾"
+		push	offset gPAUSE_MENU
 		jmp	short loc_BA3D
 ; ---------------------------------------------------------------------------
 
 loc_BA33:
 		push	large 12000Ch
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 
 loc_BA3D:
 		push	0E1h ; 'á'
@@ -3433,22 +3433,22 @@ loc_BB30:
 		mov	word_1FFA8, 0
 		push	large 12000Ch
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 11000Eh
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 11000Fh
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 110010h
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		xor	ax, ax
@@ -3513,17 +3513,17 @@ loc_BC2C:
 		jnz	short loc_BC94
 		push	large 11000Eh
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 11000Fh
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 110010h
 		push	ds
-		push	offset asc_1DB5F ; "ÏÏÏÏÏÏÏÏÏÏÏ"
+		push	offset g11SPACES
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 17000Fh
@@ -4334,12 +4334,12 @@ arg_2		= word ptr  6
 		mov	bp, sp
 		push	large 18000Eh
 		push	ds
-		push	offset aO	; "Â®¼"
+		push	offset gYES
 		push	[bp+arg_2]
 		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
-		push	offset asc_1E473 ; "¶¸"
+		push	offset gNO
 		push	[bp+arg_0]
 		call	gaiji_putsa
 		pop	bp
@@ -4383,7 +4383,7 @@ loc_C348:
 		push	12h
 		push	si
 		push	ds
-		push	offset aKOO_0	; "°ª·®¸¿®»"
+		push	offset gGAMEOVER
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	12h
@@ -4399,7 +4399,7 @@ loc_C348:
 		sub	ax, si
 		push	ax
 		push	ds
-		push	offset aKOO_0	; "°ª·®¸¿®»"
+		push	offset gGAMEOVER
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		mov	ax, 1Dh
@@ -4415,7 +4415,7 @@ loc_C348:
 		push	ax
 		push	0Ch
 		push	ds
-		push	offset aKOO_0	; "°ª·®¸¿®»"
+		push	offset gGAMEOVER
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		lea	ax, [si+7]
@@ -4429,7 +4429,7 @@ loc_C348:
 		push	ax
 		push	0Ch
 		push	ds
-		push	offset aKOO_0	; "°ª·®¸¿®»"
+		push	offset gGAMEOVER
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	1
@@ -4463,14 +4463,14 @@ loc_C400:
 		jge	loc_C4F5
 		push	large 12000Ch
 		push	ds
-		push	offset aMO	; "¬¸¶½²¶¾®Ý"
+		push	offset gCONTINUE?
 		push	0E1h ; 'á'
 		call	gaiji_putsa
 		push	large 0E500E1h
 		call	sub_C2F4
 		push	large 120014h
 		push	ds
-		push	offset aMOn	; "¬»®­²½"
+		push	offset gCREDIT
 		push	81h ; ''
 		call	gaiji_putsa
 		les	bx, dword_2026C
@@ -8327,7 +8327,7 @@ sub_E012	proc near
 		mov	bp, sp
 		push	large 3D0005h
 		push	ds
-		push	offset asc_1E615 ; "ÄÅÆ"
+		push	offset gsSCORE
 		push	0C1h ; 'Á'
 		call	gaiji_putsa
 		push	6
@@ -8340,7 +8340,7 @@ sub_E012	proc near
 		call	sub_DCA5
 		push	large 3C0003h
 		push	ds
-		push	offset asc_1E61A ; "ÎÄÅÆ"
+		push	offset gsHISCORE
 		push	0C1h ; 'Á'
 		call	gaiji_putsa
 		push	4
@@ -8353,19 +8353,19 @@ sub_E012	proc near
 		call	sub_DCA5
 		push	large 390011h
 		push	ds
-		push	offset asc_1E61F ; "ÉÊ"
+		push	offset gsREIMU
 		push	0C1h ; 'Á'
 		call	gaiji_putsa
 		call	sub_DF76
 		push	large 39000Fh
 		push	ds
-		push	offset asc_1E624 ; "ÌÍ"
+		push	offset gsREIGEKI
 		push	0C1h ; 'Á'
 		call	gaiji_putsa
 		call	sub_DFC4
 		push	large 390014h
 		push	ds
-		push	offset asc_1E629 ; "ÇÈ"
+		push	offset gsREIRYOKU
 		push	0C1h ; 'Á'
 		call	gaiji_putsa
 		call	sub_DEAD
@@ -8374,7 +8374,7 @@ sub_E012	proc near
 		mov	al, byte_1E364
 		cbw
 		shl	ax, 3
-		add	ax, 0B7Dh
+		add	ax, offset glEASY
 		push	ax
 		cmp	byte_1E364, 0
 		jnz	short loc_E0C2
@@ -12115,7 +12115,7 @@ var_4		= dword	ptr -4
 		push	ss
 		push	ax
 		push	ds
-		push	offset asc_1E3F0 ; "«¸¶¾¼"
+		push	offset gBONUS
 		mov	cx, 6
 		call	SCOPY@
 		push	cs
@@ -12290,7 +12290,7 @@ var_4		= dword	ptr -4
 		push	ss
 		push	ax
 		push	ds
-		push	offset asc_1E3F6 ; "«¸¶¾¼"
+		push	offset gBONUS_0
 		mov	cx, 6
 		call	SCOPY@
 		push	cs
@@ -36351,7 +36351,7 @@ sub_1C6C7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	large [off_1EDB4]
+		push	large [HUUHI_DAT]
 		call	file_ropen
 		mov	al, byte_1E364
 		cbw
@@ -36462,22 +36462,22 @@ arg_0		= word ptr  4
 		mov	di, 0E1h ; 'á'
 		push	large 140002h
 		push	ds
-		push	offset aMO_0	; "±²Ï¼¬¸»®"
+		push	offset gHI_SCORE
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 0C0004h
 		push	ds
-		push	offset aKO	; "¶ª·®"
+		push	offset gNAME
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 1B0004h
 		push	ds
-		push	offset asc_1EDF9 ; "¹¸²¶½"
+		push	offset gPOINT
 		push	81h ; ''
 		call	gaiji_putsa
 		push	large 290004h
 		push	ds
-		push	offset asc_1EDFF ; "¼½"
+		push	offset gST
 		push	81h ; ''
 		call	gaiji_putsa
 		cmp	[bp+arg_0], 0FFFFh
@@ -36501,7 +36501,7 @@ loc_1C7E7:
 		mov	bx, si
 		imul	bx, 11h
 		add	bx, [bp+var_2]
-		mov	al, [bx+1351h]
+		mov	al, gALPHABET[bx]
 		mov	ah, 0
 		push	ax
 		push	0E1h ; 'á'
@@ -36517,7 +36517,7 @@ loc_1C815:
 		cmp	si, 3
 		jl	short loc_1C7E0
 		push	large 0A0012h
-		mov	al, byte_1EDC1
+		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
 		push	85h ; '…'
@@ -36762,7 +36762,7 @@ loc_1C9AF:
 loc_1C9C5:
 		cmp	si, 0B2h ; '²'
 		jl	short loc_1C9AF
-		push	large [off_1EDB4]
+		push	large [HUUHI_DAT]
 		call	file_append
 		mov	al, byte_1E364
 		cbw
@@ -36799,7 +36799,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		xor	si, si
-		push	large [off_1EDB4]
+		push	large [HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CA1A
@@ -37167,7 +37167,7 @@ sub_1C9FE	endp
 sub_1CD36	proc far
 		push	bp
 		mov	bp, sp
-		push	large [off_1EDB4]
+		push	large [HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_1CD4D
@@ -37313,14 +37313,10 @@ dseg		segment	para public 'DATA' use16
 
 include libs/BorlandC/c0[data].asm
 
-aStage1_Gaiji		db '¼½ª°®¡',0
-		dd 0
-		dd 0
-		db    0
-aExtra_Gaiji		db '®Á½»ªÏÏ¼½ª°®',0
-		db 0
-		db    0
-		db    0
+gStage1		db 0BCh, 0BDh, 0AAh, 0B0h, 0AEh, 0A1h, 0, 0
+		db 0, 0, 0, 0, 0, 0, 0, 0
+gEXTRA_STAGE	db 0AEh, 0C1h, 0BDh, 0BBh, 0AAh, 0CFh, 0CFh, 0BCh, 0BDh
+		db	0AAh, 0B0h, 0AEh, 0, 0, 0, 0
 BGM_TITLE		dw offset aTH02_02
 		dw offset aTH02_03
 		dw offset aTH02_04
@@ -37345,10 +37341,9 @@ STAGE_TITLE_HALFLENGTHS		db  0Ah
 		db  0Ch
 		db  0Dh
 		db  0Dh
-aNoK		db '­®·¸Ï¹µªÂ',0
-aKOO		db '¹ª¾¼®Ï·®¶¾',0
-asc_1DB5F	db 'ÏÏÏÏÏÏÏÏÏÏÏ',0
-					; sub_B9E2+175o ...
+gDEMO_PLAY	db 0ADh, 0AEh, 0B7h, 0B8h, 0CFh, 0B9h, 0B5h, 0AAh, 0C2h, 0
+gPAUSE_MENU	db 0B9h, 0AAh, 0BEh, 0BCh, 0AEh, 0CFh, 0B7h, 0AEh, 0B6h, 0BEh, 0
+g11SPACES	db 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0CFh, 0
 		db 0
 off_1DB6C	dd aGqbGapic
 					; "ƒQ[ƒ€I—¹"
@@ -37649,8 +37644,8 @@ aHuuma_cfg	db 'huuma.cfg',0
 		db 0FCh	; ü
 		db    0
 		db  78h	; x
-asc_1E3F0	db '«¸¶¾¼',0
-asc_1E3F6	db '«¸¶¾¼',0
+gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
+gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 aUqiUx		db ' “ïˆÕ“x',0
 aGxgebGw	db 'ƒXƒe[ƒW',0
 aGGa		db 'ƒ{ƒ€',0
@@ -37667,12 +37662,7 @@ aGngkga		db 'ƒNƒŠƒA',0
 aGGxi		db 'ƒ~ƒX‰ñ”',0
 aGGai		db 'ƒ{ƒ€‰ñ”',0
 aGngkgagGcga	db 'ƒNƒŠƒAƒ^ƒCƒ€',0
-aKOO_0		db '°ª·®¸¿®»',0
-aMO		db '¬¸¶½²¶¾®Ý',0
-aO		db 'Â®¼',0
-asc_1E473	db '¶¸',0
-		db    0
-aMOn		db '¬»®­²½',0
+include th02/strings/gameover[data].asm
 asc_1E47E	db '                ',0
 		db 0
 		db 0E8h	; è
@@ -37926,22 +37916,12 @@ byte_1E5E6	db 0C1h
 word_1E5E7	dw 0CFCFh
 word_1E5E9	dw 0CFCFh
 word_1E5EB	dw 0CFh
-aOk1		db '®ª¼ÂÏÏÏ',0
-aK		db '¶¸»·ªµÏ',0
-aKN		db '±ª»­ÏÏÏ',0
-aKM		db 'µ¾¶ª½²¬',0
-aOK2		db '®Á½»ªÏÏ',0
-asc_1E615	db 'ÄÅÆ',0
-		db 0
-asc_1E61A	db 'ÎÄÅÆ',0
-asc_1E61F	db 'ÉÊ',0
-		dw 0
-asc_1E624	db 'ÌÍ',0
-		db    0
-		db    0
-asc_1E629	db 'ÇÈ',0
-		db    0
-		db    0
+include th02/strings/ranks_left[data].asm
+gsSCORE		db 0C4h, 0C5h, 0C6h, 0,	0
+gsHISCORE	db 0CEh, 0C4h, 0C5h, 0C6h, 0
+gsREIMU		db 0C9h, 0CAh, 0, 0, 0
+gsREIGEKI	db 0CCh, 0CDh, 0, 0, 0
+gsREIRYOKU	db 0C7h, 0C8h, 0, 0, 0
 aMikoft_bft	db 'MIKOFT.bft',0
 		db 0
 		db    1
@@ -39738,64 +39718,7 @@ word_1EDA8	dw 0
 word_1EDAA	dw 0
 					; sub_14519+34r ...
 aBoss4_m	db 'boss4.m',0
-off_1EDB4	dd aHuuhi_dat
-					; sub_1C95D+6Er ...
-					; "huuhi.dat"
-aMO_0		db '±²Ï¼¬¸»®',0
-byte_1EDC1	db 0AAh
-		db 0ABh	; «
-		db 0ACh	; ¬
-		db 0ADh	; ­
-		db 0AEh	; ®
-		db 0AFh	; ¯
-		db 0B0h	; °
-		db 0B1h	; ±
-		db 0B2h	; ²
-		db 0B3h	; ³
-		db 0B4h	; ´
-		db 0B5h	; µ
-		db 0B7h	; ·
-		db 0B6h	; ¶
-		db 0B8h	; ¸
-		db 0B9h	; ¹
-		db 0BAh	; º
-		db 0BBh	; »
-		db 0BCh	; ¼
-		db 0BDh	; ½
-		db 0BEh	; ¾
-		db 0BFh	; ¿
-		db 0C0h	; À
-		db 0C1h	; Á
-		db 0C2h	; Â
-		db 0C3h	; Ã
-		db 0DAh	; Ú
-		db 0DBh	; Û
-		db 0DCh	; Ü
-		db 0DDh	; Ý
-		db 0DEh	; Þ
-		db 0E0h	; à
-		db    2
-		db    3
-		db 0A0h	;  
-		db 0A1h	; ¡
-		db 0A2h	; ¢
-		db 0A3h	; £
-		db 0A4h	; ¤
-		db 0A5h	; ¥
-		db 0A6h	; ¦
-		db 0A7h	; §
-		db 0A8h	; ¨
-		db 0A9h	; ©
-		db 0E1h	; á
-		db 0E2h	; â
-		db 0E3h	; ã
-		db 0E4h	; ä
-		db 0E5h	; å
-		db 0E6h	; æ
-		db 0E7h	; ç
-aKO		db '¶ª·®',0
-asc_1EDF9	db '¹¸²¶½',0
-asc_1EDFF	db '¼½',0
+include th02/strings/hiscore[data].asm
 unk_1EE02	db  3Eh	; >
 		db    1
 		db  76h	; v

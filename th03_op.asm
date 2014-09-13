@@ -1192,7 +1192,7 @@ arg_2		= word ptr  6
 		jnz	short loc_9BB8
 		push	large 1B0012h
 		push	ds
-		push	offset aIiklmnop ; "ˆ‰Š‹ŒŽ"
+		push	offset gp1P_VS_CPU
 		jmp	short loc_9BD3
 ; ---------------------------------------------------------------------------
 
@@ -1201,14 +1201,14 @@ loc_9BB8:
 		jnz	short loc_9BC9
 		push	large 1B0013h
 		push	ds
-		push	offset aIiklccss ; "ˆ‰Š‹–—˜™"
+		push	offset gp1P_VS_2P
 		jmp	short loc_9BD3
 ; ---------------------------------------------------------------------------
 
 loc_9BC9:
 		push	large 1B0014h
 		push	ds
-		push	offset aTufxmnop ; "’“”•ŒŽ"
+		push	offset gpCPU_VS_CPU
 
 loc_9BD3:
 		push	si
@@ -1586,7 +1586,7 @@ arg_2		= word ptr  6
 		jnz	short loc_9EF8
 		push	large 190011h
 		push	ds
-		push	offset unk_D8CC
+		push	offset gpSTART
 		jmp	short loc_9F4B
 ; ---------------------------------------------------------------------------
 
@@ -1595,7 +1595,7 @@ loc_9EF8:
 		jnz	short loc_9F09
 		push	large 170012h
 		push	ds
-		push	offset a345678	; "345678"
+		push	offset gpVS_START
 		jmp	short loc_9F4B
 ; ---------------------------------------------------------------------------
 
@@ -1604,7 +1604,7 @@ loc_9F09:
 		jnz	short loc_9F1A
 		push	large 160013h
 		push	ds
-		push	offset aAbcdefg	; "ABCDEFG"
+		push	offset gpMUSIC_ROOM
 		jmp	short loc_9F4B
 ; ---------------------------------------------------------------------------
 
@@ -1613,7 +1613,7 @@ loc_9F1A:
 		jnz	short loc_9F2B
 		push	large 180014h
 		push	ds
-		push	offset aVgdej	; "‚ƒ„…†"
+		push	offset gpHISCORE
 		jmp	short loc_9F4B
 ; ---------------------------------------------------------------------------
 
@@ -1622,7 +1622,7 @@ loc_9F2B:
 		jnz	short loc_9F3C
 		push	large 190015h
 		push	ds
-		push	offset a?@	; "=>?@"
+		push	offset gpOPTION
 		jmp	short loc_9F4B
 ; ---------------------------------------------------------------------------
 
@@ -1631,7 +1631,7 @@ loc_9F3C:
 		jnz	short loc_9F51
 		push	large 1A0016h
 		push	ds
-		push	offset aHij	; "HIJ"
+		push	offset gpQUIT
 
 loc_9F4B:
 		push	di
@@ -1664,7 +1664,7 @@ arg_2		= word ptr  6
 		jnz	short loc_9FD6
 		push	large 190011h
 		push	ds
-		push	offset aNop	; "nop"
+		push	offset gpRANK
 		push	si
 		call	gaiji_putsa
 		push	large 250011h
@@ -1684,28 +1684,28 @@ arg_2		= word ptr  6
 loc_9FA2:
 		push	large 260011h
 		push	ds
-		push	offset aQrs	; "qrs"
+		push	offset gpEASY
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FAF:
 		push	large 250011h
 		push	ds
-		push	offset aTuvw	; "tuvw"
+		push	offset gpNORMAL
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FBC:
 		push	large 260011h
 		push	ds
-		push	offset aXyz	; "xyz"
+		push	offset gpHARD
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FC9:
 		push	large 250011h
 		push	ds
-		push	offset asc_D910	; "{|}~"
+		push	offset gpLUNATIC
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
@@ -1714,7 +1714,7 @@ loc_9FD6:
 		jnz	short loc_A02A
 		push	large 190013h
 		push	ds
-		push	offset aKlmn	; "KLMN"
+		push	offset gpMUSIC
 		push	si
 		call	gaiji_putsa
 		les	bx, dword_FC54
@@ -1732,21 +1732,21 @@ loc_9FD6:
 loc_A006:
 		push	large 230013h
 		push	ds
-		push	offset aZ	; "ÏÏZ[ÏÏÏ"
+		push	offset gpOFF
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A012:
 		push	large 230013h
 		push	ds
-		push	offset aOpqr	; "ÏOPQRÏÏ"
+		push	offset gpFM_86
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A01E:
 		push	large 230013h
 		push	ds
-		push	offset aStuvwxy	; "STUVWXY"
+		push	offset gpMIDI_SC88
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
@@ -1755,7 +1755,7 @@ loc_A02A:
 		jnz	short loc_A07D
 		push	large 170015h
 		push	ds
-		push	offset a_A	; "\\]^_`a"
+		push	offset gpKEYCONFIG
 		push	si
 		call	gaiji_putsa
 		les	bx, dword_FC54
@@ -1773,21 +1773,21 @@ loc_A02A:
 loc_A059:
 		push	large 250015h
 		push	ds
-		push	offset aHilmhi	; "hilmhi"
+		push	offset gpKEY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A065:
 		push	large 250015h
 		push	ds
-		push	offset aJklmhi	; "jklmhi"
+		push	offset gpJOY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A071:
 		push	large 250015h
 		push	ds
-		push	offset aHilmjk	; "hilmjk"
+		push	offset gpKEY_VS_JOY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
@@ -1796,7 +1796,7 @@ loc_A07D:
 		jnz	short loc_A092
 		push	large 200016h
 		push	ds
-		push	offset aHij	; "HIJ"
+		push	offset gpQUIT
 
 loc_A08C:
 		push	si
@@ -7392,9 +7392,9 @@ unk_D881	db    0
 		db    5
 		db    4
 		db    6
-aIiklmnop	db 'ˆ‰Š‹ŒŽ',0
-aIiklccss	db 'ˆ‰Š‹–—˜™',0
-aTufxmnop	db '’“”•ŒŽ',0
+gp1P_VS_CPU	db 88h,	89h, 8Ah, 8Bh, 8Ch, 8Dh, 8Eh, 8Fh, 0
+gp1P_VS_2P	db 88h,	89h, 8Ah, 8Bh, 96h, 97h, 98h, 99h, 0
+gpCPU_VS_CPU	db 92h,	93h, 94h, 95h, 8Ch, 8Dh, 8Eh, 8Fh, 0
 		db    3
 		db    1
 		db    5
@@ -7419,33 +7419,29 @@ aTufxmnop	db '’“”•ŒŽ',0
 		db    1
 		db    0
 		db    0
-unk_D8CC	db  30h	; 0
-		db  31h	; 1
-		db  32h	; 2
-		db    0
-a345678		db '345678',0
-aAbcdefg	db 'ABCDEFG',0
-aVgdej		db '‚ƒ„…†',0
-a?@		db '=>?@',0
-aHij		db 'HIJ',0
-					; sub_9F57+132o
-aNop		db 'nop',0
-aKlmn		db 'KLMN',0
-a_A		db '\]^_`a',0
-		db 'ÏÏÏÏ',0
-aQrs		db 'qrs',0
-aTuvw		db 'tuvw',0
-aXyz		db 'xyz',0
-asc_D910	db '{|}~',0
-aZ		db 'ÏÏZ[ÏÏÏ',0
-aOpqr		db 'ÏOPQRÏÏ',0
-aStuvwxy	db 'STUVWXY',0
-aBcde		db 'bcde',0
-aBcdf		db 'bcdf',0
-aBcdg		db 'bcdg',0
-aHilmhi		db 'hilmhi',0
-aJklmhi		db 'jklmhi',0
-aHilmjk		db 'hilmjk',0
+gpSTART		db 30h,	31h, 32h, 0
+gpVS_START	db 33h,	34h, 35h, 36h, 37h, 38h, 0
+gpMUSIC_ROOM	db 41h,	42h, 43h, 44h, 45h, 46h, 47h, 0
+gpHISCORE	db 82h,	83h, 84h, 85h, 86h, 0
+gpOPTION	db 3Dh,	3Eh, 3Fh, 40h, 0
+gpQUIT		db 48h,	49h, 4Ah, 0
+gpRANK		db 6Eh,	6Fh, 70h, 0
+gpMUSIC		db 4Bh,	4Ch, 4Dh, 4Eh, 0
+gpKEYCONFIG	db 5Ch,	5Dh, 5Eh, 5Fh, 60h, 61h, 0
+g4SPACES	db 0CFh, 0CFh, 0CFh, 0CFh, 0
+gpEASY		db 71h,	72h, 73h, 0
+gpNORMAL	db 74h,	75h, 76h, 77h, 0
+gpHARD		db 78h,	79h, 7Ah, 0
+gpLUNATIC	db 7Bh,	7Ch, 7Dh, 7Eh, 0
+gpOFF		db 0CFh, 0CFh, 5Ah, 5Bh, 0CFh, 0CFh, 0CFh, 0
+gpFM_86		db 0CFh, 4Fh, 50h, 51h,	52h, 0CFh, 0CFh, 0
+gpMIDI_SC88	db 53h,	54h, 55h, 56h, 57h, 58h, 59h, 0
+gpTYPE1		db 62h,	63h, 64h, 65h, 0
+gpTYPE2		db 62h,	63h, 64h, 66h, 0
+gpTYPE3		db 62h,	63h, 64h, 67h, 0
+gpKEY_VS_KEY	db 68h,	69h, 6Ch, 6Dh, 68h, 69h, 0
+gpJOY_VS_KEY	db 6Ah,	6Bh, 6Ch, 6Dh, 68h, 69h, 0
+gpKEY_VS_JOY	db 68h,	69h, 6Ch, 6Dh, 6Ah, 6Bh, 0
 byte_D951	db 0
 byte_D952	db 0
 					; sub_A0E0+102w ...

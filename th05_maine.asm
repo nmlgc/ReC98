@@ -4951,7 +4951,7 @@ loc_C3AA:
 		cmp	[bp+var_4], 3
 		jl	short loc_C36F
 		push	large 170015h
-		mov	al, byte_115EE
+		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
 		push	85h ; '・
@@ -5953,7 +5953,7 @@ loc_CBE3:
 		mov	al, byte_15186
 		mov	ah, 0
 		shl	ax, 3
-		add	ax, 15EBh
+		add	ax, offset grEASY
 		push	ax
 		push	word_116E4
 		call	sub_383C
@@ -11672,57 +11672,12 @@ aSpecialThanksA	db '    Special Thanks                             Aotaka',0
 aAmusementMaker	db '                                               Amusement Makers',0
 aAndAllTestPlay	db '             and all test player and you ... ',0
 aExed		db 'EXED',0
-byte_115EE	db 0AAh
-		db 0ABh	; ｫ
-		db 0ACh	; ｬ
-		db 0ADh	; ｭ
-		db 0AEh	; ｮ
-		db 0AFh	; ｯ
-		db 0B0h	; ｰ
-		db 0B1h	; ｱ
-		db 0B2h	; ｲ
-		db 0B3h	; ｳ
-		db 0B4h	; ｴ
-		db 0B5h	; ｵ
-		db 0B6h	; ｶ
-		db 0B7h	; ｷ
-		db 0B8h	; ｸ
-		db 0B9h	; ｹ
-		db 0BAh	; ｺ
-		db 0BBh	; ｻ
-		db 0BCh	; ｼ
-		db 0BDh	; ｽ
-		db 0BEh	; ｾ
-		db 0BFh	; ｿ
-		db 0C0h	; ﾀ
-		db 0C1h	; ﾁ
-		db 0C2h	; ﾂ
-		db 0C3h	; ﾃ
-		db 0C4h	; ﾄ
-		db 0C5h	; ﾅ
-		db    3
-		db    6
-		db    7
-		db    8
-		db  0Ch
-		db  0Fh
-		db 0A0h	; 
-		db 0A1h	; ｡
-		db 0A2h	; ｢
-		db 0A3h	; ｣
-		db 0A4h	; ､
-		db 0A5h	; ･
-		db 0A6h	; ｦ
-		db 0A7h	; ｧ
-		db 0A8h	; ｨ
-		db 0A9h	; ｩ
-		db 0E6h	; ・
-		db 0E7h	; ・
-		db 0E8h	; ・
-		db 0CEh	; ﾎ
-		db 0CFh	; ﾏ
-		db 0CDh	; ﾍ
-		db 0D5h	; ﾕ
+gALPHABET	db 0AAh, 0ABh, 0ACh, 0ADh, 0AEh, 0AFh, 0B0h, 0B1h, 0B2h
+		db 0B3h, 0B4h, 0B5h, 0B6h, 0B7h, 0B8h, 0B9h, 0BAh, 0BBh
+		db 0BCh, 0BDh, 0BEh, 0BFh, 0C0h, 0C1h, 0C2h, 0C3h, 0C4h
+		db 0C5h, 3, 6, 7, 8, 0Ch, 0Fh, 0A0h, 0A1h, 0A2h, 0A3h
+		db 0A4h, 0A5h, 0A6h, 0A7h, 0A8h, 0A9h, 0E6h, 0E7h, 0E8h
+		db 0CEh, 0CFh, 0CDh, 0D5h
 byte_11621	db 0
 word_11622	dw 0
 					; sub_C1DD+294r ...
@@ -11747,46 +11702,7 @@ word_116E8	dw 30h
 					; sub_C8AE+132r ...
 byte_116EA	db 0
 					; sub_CA9B+2B7w ...
-		db    2
-		db    2
-		db    2
-		db 0AEh	; ｮ
-		db 0AAh	; ｪ
-		db 0BCh	; ｼ
-		db 0C2h	; ﾂ
-		db    0
-		db    2
-		db 0B7h	; ｷ
-		db 0B8h	; ｸ
-		db 0BBh	; ｻ
-		db 0B6h	; ｶ
-		db 0AAh	; ｪ
-		db 0B5h	; ｵ
-		db    0
-		db    2
-		db    2
-		db    2
-		db 0B1h	; ｱ
-		db 0AAh	; ｪ
-		db 0BBh	; ｻ
-		db 0ADh	; ｭ
-		db    0
-		db 0B5h	; ｵ
-		db 0BEh	; ｾ
-		db 0B7h	; ｷ
-		db 0AAh	; ｪ
-		db 0BDh	; ｽ
-		db 0B2h	; ｲ
-		db 0ACh	; ｬ
-		db    0
-		db    2
-		db    2
-		db 0AEh	; ｮ
-		db 0C1h	; ﾁ
-		db 0BDh	; ｽ
-		db 0BBh	; ｻ
-		db 0AAh	; ｪ
-		db    0
+include th04/strings/verdict[data].asm
 byte_11713	db 0
 aU__0		db '点',0
 aBd		db '．',0
