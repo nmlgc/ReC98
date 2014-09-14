@@ -578,96 +578,7 @@ loc_3E24:
 		retf	0Ch
 sub_3D8A	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3E34	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		mov	dx, [bp+arg_0]
-		mov	bp, [bp+arg_2]
-		add	bp, 5680h
-		and	bp, 0FF7Fh
-		pushf
-		mov	al, 0C0h ; 'À'
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	es, graph_VramSeg
-		mov	ax, bp
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_3E94:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_3E94
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	bp
-		retf	8
-sub_3E34	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/graph_gaiji_putc.asm
 include libs/BorlandC/__abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
@@ -4873,7 +4784,7 @@ arg_4		= word ptr  8
 		push	ax
 		push	[bp+arg_0]
 		push	0Eh
-		call	sub_3E34
+		call	graph_gaiji_putc
 		push	si
 		push	di
 		push	[bp+arg_0]
@@ -4886,14 +4797,14 @@ loc_C8D0:
 		lea	ax, [di+2]
 		push	ax
 		push	large 0EF000Eh
-		call	sub_3E34
+		call	graph_gaiji_putc
 		push	si
 		push	di
 		push	0EFh ; 'ï'
 
 loc_C8E8:
 		push	7
-		call	sub_3E34
+		call	graph_gaiji_putc
 		pop	di
 		pop	si
 		pop	bp

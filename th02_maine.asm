@@ -71,95 +71,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1322	proc far
-					; sub_A8FA+494P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		mov	dx, [bp+arg_0]
-		mov	bp, [bp+arg_2]
-		adc	bp, 5680h
-		and	bp, 0FF7Fh
-		pushf
-		mov	al, 0C0h ; 'À'
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	ax, bp
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_1382:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_1382
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	bp
-		retf	8
-sub_1322	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_gaiji_putc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -981,7 +893,7 @@ loc_961D:
 		push	[bp+arg_4]
 		push	di
 		push	0Fh
-		call	sub_1322
+		call	graph_gaiji_putc
 
 loc_9637:
 		inc	si
@@ -3609,7 +3521,7 @@ loc_A992:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0Fh
-		call	sub_1322
+		call	graph_gaiji_putc
 		push	large 1000A0h
 		push	40h ; '@'
 		push	cs
@@ -3663,7 +3575,7 @@ loc_A992:
 		add	ax, 0A1h ; '¡'
 		push	ax
 		push	0Fh
-		call	sub_1322
+		call	graph_gaiji_putc
 		push	large 1000E0h
 		push	40h ; '@'
 		push	cs
@@ -3689,7 +3601,7 @@ loc_A992:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0Fh
-		call	sub_1322
+		call	graph_gaiji_putc
 		push	large 100100h
 		push	40h ; '@'
 		push	cs

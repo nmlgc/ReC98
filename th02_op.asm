@@ -70,95 +70,7 @@ include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_133C	proc far
-					; sub_9D5C+187P ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		mov	dx, [bp+arg_0]
-		mov	bp, [bp+arg_2]
-		adc	bp, 5680h
-		and	bp, 0FF7Fh
-		pushf
-		mov	al, 0C0h ; 'À'
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	ax, bp
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_139C:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_139C
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	bp
-		retf	8
-sub_133C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_gaiji_putc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -996,7 +908,7 @@ loc_9E97:
 		push	180h
 		push	0DFh ; 'ß'
 		push	0
-		call	sub_133C
+		call	graph_gaiji_putc
 		push	234h
 		push	180h
 		push	10h
@@ -1009,7 +921,7 @@ loc_9E97:
 		push	17Ch
 		push	0DFh ; 'ß'
 		push	6
-		call	sub_133C
+		call	graph_gaiji_putc
 		push	230h
 		push	17Ch
 		push	10h
@@ -1856,7 +1768,7 @@ loc_A5BE:
 		add	ax, 0A1h ; '¡'
 		push	ax
 		push	0
-		call	sub_133C
+		call	graph_gaiji_putc
 		jmp	loc_A6E9
 ; ---------------------------------------------------------------------------
 
@@ -1889,7 +1801,7 @@ loc_A60A:
 		add	ax, 0A0h ; ' '
 		push	ax
 		push	0
-		call	sub_133C
+		call	graph_gaiji_putc
 		jmp	loc_A6E9
 ; ---------------------------------------------------------------------------
 

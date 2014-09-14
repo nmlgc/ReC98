@@ -524,96 +524,8 @@ loc_38D6:
 		retf	0Ch
 sub_383C	endp
 
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/graph_gaiji_putc.asm
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_38E6	proc far
-					; sub_AFD6+13BP ...
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		mov	dx, [bp+arg_0]
-		mov	bp, [bp+arg_2]
-		add	bp, 5680h
-		and	bp, 0FF7Fh
-		pushf
-		mov	al, 0C0h ; '¿'
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	es, graph_VramSeg
-		mov	ax, bp
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_3946:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_3946
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	di
-		pop	bp
-		retf	8
-sub_38E6	endp
-
-; ---------------------------------------------------------------------------
-		nop
 dword_397A	dd 0
 byte_397E	db 0
 		db  90h	; ÅE
@@ -1629,7 +1541,7 @@ loc_A962:
 		add	ax, 1Ch
 		push	ax
 		push	0Fh
-		call	sub_38E6
+		call	graph_gaiji_putc
 		inc	di
 		cmp	[bp+var_2], 0
 		jnz	short loc_A9B4
@@ -2484,7 +2396,7 @@ loc_B0F4:
 		mov	al, byte_1500A
 		mov	ah, 0
 		push	ax
-		call	sub_38E6
+		call	graph_gaiji_putc
 		jmp	short loc_B18D
 ; ---------------------------------------------------------------------------
 
@@ -3705,14 +3617,14 @@ loc_BA4E:
 		push	ax
 		push	[bp+arg_0]
 		push	0Eh
-		call	sub_38E6
+		call	graph_gaiji_putc
 		push	di
 		push	[bp+var_2]
 		push	[bp+arg_0]
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	sub_38E6
+		call	graph_gaiji_putc
 		pop	di
 		pop	si
 		leave
@@ -3852,7 +3764,7 @@ loc_BB00:
 		mov	ah, 0
 		push	ax
 		push	7
-		call	sub_38E6
+		call	graph_gaiji_putc
 		push	large 0C00007h
 		call	grcg_setcolor
 		mov	al, [bp+arg_0]
