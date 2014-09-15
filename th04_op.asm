@@ -473,111 +473,7 @@ include libs/master.lib/bgm_stop_play.asm
 include libs/master.lib/bgm_set_tempo.asm
 include libs/master.lib/bgm_init_finish.asm
 include libs/master.lib/bgm_stop_sound.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3D8A	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	cx, [bp+arg_A]
-		mov	di, [bp+arg_8]
-		mov	bx, [bp+arg_6]
-		lds	si, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	al, 0C0h ; 'À'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-
-loc_3DD2:
-		lodsb
-		or	al, al
-		jz	short loc_3E24
-		mov	ah, 0
-		add	ax, 5680h
-		and	ax, 0FF7Fh
-		mov	bx, cx
-		and	cx, 7
-		shr	bx, 3
-		add	di, bx
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_3DF4:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_3DF4
-		sub	di, 500h
-		xor	ch, ch
-		add	cx, bp
-		jmp	short loc_3DD2
-; ---------------------------------------------------------------------------
-
-loc_3E24:
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_3D8A	endp
-
+include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
 include libs/BorlandC/__abort.asm
 include libs/BorlandC/stpcpy.asm
@@ -4835,7 +4731,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	large 80060h
 		push	10h
 		mov	ax, si
@@ -4844,7 +4740,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	ax
 		push	7
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	large 1420062h
 		push	10h
 		mov	ax, si
@@ -4853,7 +4749,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	large 1400060h
 		push	10h
 		mov	ax, si
@@ -4862,7 +4758,7 @@ arg_0		= word ptr  4
 		push	ds
 		push	ax
 		push	7
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	large 600000h
 		call	sub_C79E
 		push	large 1240060h
@@ -4889,7 +4785,7 @@ loc_C989:
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	8
 		push	di
 		push	10h
@@ -4899,7 +4795,7 @@ loc_C989:
 		push	ds
 		push	ax
 		push	2
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	142h
 		lea	ax, [di+2]
 		push	ax
@@ -4910,7 +4806,7 @@ loc_C989:
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	140h
 		push	di
 		push	10h
@@ -4920,7 +4816,7 @@ loc_C989:
 		push	ds
 		push	ax
 		push	2
-		call	sub_3D8A
+		call	graph_gaiji_puts
 		push	di
 		push	si
 		call	sub_C79E

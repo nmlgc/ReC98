@@ -419,111 +419,7 @@ loc_37C0:
 		retf	0Ah
 sub_3778	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_383C	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	es, graph_VramSeg
-		assume es:nothing
-		mov	cx, [bp+arg_A]
-		mov	di, [bp+arg_8]
-		mov	bx, [bp+arg_6]
-		lds	si, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	al, 0C0h ; 'À'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-
-loc_3884:
-		lodsb
-		or	al, al
-		jz	short loc_38D6
-		mov	ah, 0
-		add	ax, 5680h
-		and	ax, 0FF7Fh
-		mov	bx, cx
-		and	cx, 7
-		shr	bx, 3
-		add	di, bx
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_38A6:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_38A6
-		sub	di, 500h
-		xor	ch, ch
-		add	cx, bp
-		jmp	short loc_3884
-; ---------------------------------------------------------------------------
-
-loc_38D6:
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_383C	endp
-
+include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
 
 dword_397A	dd 0
@@ -3738,7 +3634,7 @@ loc_BB00:
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_383C
+		call	graph_gaiji_puts
 		push	si
 		push	di
 		push	10h
@@ -3748,7 +3644,7 @@ loc_BB00:
 		push	ds
 		push	ax
 		push	6
-		call	sub_383C
+		call	graph_gaiji_puts
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		shl	ax, 4
@@ -3938,7 +3834,7 @@ loc_BC8F:
 		push	ds
 		push	ax
 		push	0Eh
-		call	sub_383C
+		call	graph_gaiji_puts
 		push	[bp+var_2]
 		push	di
 		push	10h
@@ -3948,7 +3844,7 @@ loc_BC8F:
 		push	ds
 		push	ax
 		push	2
-		call	sub_383C
+		call	graph_gaiji_puts
 
 loc_BCC4:
 		pop	di
@@ -5210,7 +5106,7 @@ loc_C658:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	word_116E4
-		call	sub_383C
+		call	graph_gaiji_puts
 		pop	si
 		leave
 		retn	6
@@ -5302,7 +5198,7 @@ loc_C6F1:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	word_116E4
-		call	sub_383C
+		call	graph_gaiji_puts
 		lea	ax, [di+90h]
 		push	ax
 		push	[bp+arg_4]
@@ -5868,7 +5764,7 @@ loc_CBE3:
 		add	ax, offset grEASY
 		push	ax
 		push	word_116E4
-		call	sub_383C
+		call	graph_gaiji_puts
 		mov	ax, word_116E2
 		add	ax, 80h	; '€'
 		push	ax

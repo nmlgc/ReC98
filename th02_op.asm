@@ -71,114 +71,7 @@ include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_gaiji_putc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13D0	proc far
-					; sub_9D5C+19BP ...
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	es, graph_VramSeg
-		mov	cx, [bp+arg_A]
-		mov	di, [bp+arg_8]
-		mov	bx, [bp+arg_6]
-		lds	si, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	al, 0C0h ; 'À'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-
-loc_1418:
-		lodsb
-		or	al, al
-		jz	short loc_146A
-		mov	ah, 0
-		adc	ax, 5680h
-		and	ax, 0FF7Fh
-		mov	bx, cx
-		and	cx, 7
-		shr	bx, 3
-		add	di, bx
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_143A:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_143A
-		sub	di, 500h
-		xor	ch, ch
-		add	cx, bp
-		jmp	short loc_1418
-; ---------------------------------------------------------------------------
-
-loc_146A:
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_13D0	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_pack_put_8.asm
@@ -916,7 +809,7 @@ loc_9E97:
 		lea	ax, [bp+var_6]
 		push	ax
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	220h
 		push	17Ch
 		push	0DFh ; 'ß'
@@ -929,7 +822,7 @@ loc_9E97:
 		lea	ax, [bp+var_6]
 		push	ax
 		push	6
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0
 		call	graph_copy_page
 		les	bx, dword_F3DC
@@ -1171,49 +1064,49 @@ sub_A150	proc near
 		push	ds
 		push	offset gSTART
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0ECh ; 'ì'
 		push	114h
 		push	10h
 		push	ds
 		push	offset gEXTRA_START
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	10Ch
 		push	124h
 		push	10h
 		push	ds
 		push	offset gHISCORE
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	114h
 		push	134h
 		push	10h
 		push	ds
 		push	offset gOPTION
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0F4h ; 'ô'
 		push	144h
 		push	10h
 		push	ds
 		push	offset gMUSIC_MODE
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	124h
 		push	154h
 		push	10h
 		push	ds
 		push	offset gQUIT
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0D4h ; 'Ô'
 		push	174h
 		push	10h
 		push	ds
 		push	offset gRANK
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	134h
 		push	174h
 		push	10h
@@ -1224,7 +1117,7 @@ sub_A150	proc near
 		add	ax, offset gcEASY
 		push	ax
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		pop	bp
 		retn
 sub_A150	endp
@@ -1602,28 +1495,28 @@ sub_A481	proc near
 		push	ds
 		push	offset gRANK
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0C4h ; 'Ä'
 		push	114h
 		push	10h
 		push	ds
 		push	offset gMUSIC
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0C4h ; 'Ä'
 		push	124h
 		push	10h
 		push	ds
 		push	offset gPLAYER
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	0C4h ; 'Ä'
 		push	134h
 		push	10h
 		push	ds
 		push	offset gBOMB
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	word ptr PERF_TITLE+2
 		push	word ptr PERF_TITLE
 		push	0
@@ -1637,14 +1530,14 @@ sub_A481	proc near
 		push	ds
 		push	offset gRESET
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		push	124h
 		push	174h
 		push	10h
 		push	ds
 		push	offset gQUIT
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		pop	bp
 		retn
 sub_A481	endp
@@ -1735,7 +1628,7 @@ loc_A568:
 loc_A5B3:
 		push	ax
 		push	0
-		call	sub_13D0
+		call	graph_gaiji_puts
 		jmp	loc_A6E9
 ; ---------------------------------------------------------------------------
 

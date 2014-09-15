@@ -72,114 +72,7 @@ include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_copy_page.asm
 include libs/master.lib/graph_extmode.asm
 include libs/master.lib/graph_gaiji_putc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13B6	proc far
-					; sub_A8FA+5E7P
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	es, graph_VramSeg
-		mov	cx, [bp+arg_A]
-		mov	di, [bp+arg_8]
-		mov	bx, [bp+arg_6]
-		lds	si, [bp+arg_2]
-		mov	dx, [bp+arg_0]
-		mov	bp, bx
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	al, 0C0h ; '¿'
-		pushf
-		cli
-		out	7Ch, al
-		popf
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		mov	al, 0Bh
-		out	68h, al
-
-loc_13FE:
-		lodsb
-		or	al, al
-		jz	short loc_1450
-		mov	ah, 0
-		adc	ax, 5680h
-		and	ax, 0FF7Fh
-		mov	bx, cx
-		and	cx, 7
-		shr	bx, 3
-		add	di, bx
-		out	0A1h, al	; Interrupt Controller #2, 8259A
-		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
-		mov	dx, 10h
-		xor	ch, ch
-
-loc_1420:
-		mov	al, ch
-		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	ah, al
-		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
-		mov	bh, al
-		mov	bl, 0
-		shr	ax, cl
-		shr	bx, cl
-		xchg	al, ah
-		stosw
-		mov	es:[di], bl
-		add	di, 4Eh	; 'N'
-		inc	ch
-		dec	dx
-		jnz	short loc_1420
-		sub	di, 500h
-		xor	ch, ch
-		add	cx, bp
-		jmp	short loc_13FE
-; ---------------------------------------------------------------------------
-
-loc_1450:
-		mov	al, 0Ah
-		out	68h, al
-		xor	al, al
-		out	7Ch, al
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_13B6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_pi_free.asm
 include libs/master.lib/graph_pi_load_pack.asm
 include libs/master.lib/graph_pack_put_8.asm
@@ -3549,7 +3442,7 @@ loc_A992:
 		add	ax, 90h	; 'ê'
 		push	ax
 		push	0Fh
-		call	sub_13B6
+		call	graph_gaiji_puts
 		push	large 1000C0h
 		push	40h ; '@'
 		push	cs
@@ -3646,7 +3539,7 @@ loc_AEB2:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	0Fh
-		call	sub_13B6
+		call	graph_gaiji_puts
 		cmp	di, 64h	; 'd'
 		jnz	short loc_AEEF
 		xor	si, si
