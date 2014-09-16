@@ -26309,9 +26309,7 @@ byte_13509	db 0
 byte_1350A	db 0
 		db 0
 aMdrv2system	db 'Mdrv2System',0
-aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
-		db 'man,iR,All rights reserved.',0
-		db 0
+include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm

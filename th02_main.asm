@@ -37419,9 +37419,7 @@ include libs/master.lib/pf[data].asm
 include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
-aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
-		db 'man,iR,All rights reserved.',0
-		db 0
+include libs/master.lib/version[data].asm
 include libs/master.lib/vs[data].asm
 include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm

@@ -781,9 +781,7 @@ include libs/BorlandC/xfflush.asm
 include libs/BorlandC/c0[data].asm
 aTouhou_dat	db 'touhou.dat',0
 		db 4, 3, 2, 1, 0
-aMasters_libVer	db 'MASTERS.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
-		db 'man,iR,All rights reserved.',0
-		db 0
+include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 		db 0
 include libs/master.lib/pal[data].asm

@@ -23579,9 +23579,7 @@ byte_129C8	db 0
 byte_129C9	db 0
 aHgrx		db 'HGRX',0
 aHgrz		db 'HGRZ',0
-aMasterl_libVer	db 'MASTERL.LIB Version 0.23 Copyright (c)1995 A.Koizuka,Kazumi,steel'
-		db 'man,iR,All rights reserved.',0
-		db 0
+include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 include libs/master.lib/pal[data].asm
