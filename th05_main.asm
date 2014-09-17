@@ -909,7 +909,7 @@ _envp		= dword	ptr  0Ch
 		jz	short loc_AEA4
 		mov	word_21216, 4718h
 		push	ds
-		push	offset unk_20AA3
+		push	offset aKAIKIDAN2_DAT
 		call	sub_14F86
 		les	bx, dword_23EF0
 		mov	eax, es:[bx+28h]
@@ -2379,9 +2379,9 @@ sub_BB3E	proc near
 		call	sub_BB82
 		mov	al, byte_25FEA
 		add	al, 30h	; '0'
-		mov	byte_21249, al
+		mov	aSt00_map+3, al
 		mov	ax, 3D00h
-		mov	dx, 866h
+		mov	dx, offset aSt00_map
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -2755,8 +2755,8 @@ sub_BDEC	proc near
 		call	sub_BEA4
 		mov	al, byte_25FEA
 		add	al, 30h	; '0'
-		mov	byte_21295, al
-		mov	dx, 8B2h
+		mov	byte ptr aSt00_std+3, al
+		mov	dx, offset aSt00_std
 		mov	ax, 3D00h
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
@@ -4970,9 +4970,9 @@ loc_CE4F:
 
 sub_CE56	proc near
 		mov	al, byte_25FEF
-		add	byte_21D66, al
+		add	byte ptr aBb0_bb+2, al
 		push	ds
-		push	offset unk_21D64
+		push	offset aBb0_bb
 		call	sub_DEFE
 		mov	word_2429E, ax
 		retn
@@ -7117,7 +7117,7 @@ loc_DDD2:
 
 sub_DDD6	proc near
 		mov	ax, 3D00h
-		mov	dx, 139Dh
+		mov	dx, offset aLs00_bb
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -8290,7 +8290,7 @@ sub_E528	proc near
 		call	hmem_allocbyte
 		mov	word_2288E, ax
 		mov	ax, 3D00h
-		mov	dx, 13C4h
+		mov	dx, offset aTxt1_bb
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -8308,9 +8308,9 @@ sub_E528	proc near
 		mov	ah, 3Eh
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
-		mov	byte_21DA7, 32h	; '2'
+		mov	byte ptr aTxt1_bb+3, '2'
 		mov	ax, 3D00h
-		mov	dx, 13C4h
+		mov	dx, offset aTxt1_bb
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -8759,7 +8759,7 @@ sub_E7A3	endp
 
 sub_E7DC	proc near
 		mov	ax, 3D00h
-		mov	dx, 17CCh
+		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -8800,7 +8800,7 @@ sub_E7DC	endp
 sub_E813	proc near
 		call	sub_E7A3
 		mov	ax, 3D02h
-		mov	dx, 17CCh
+		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
 					; AL = access mode
@@ -20510,18 +20510,7 @@ off_20A8A	dd aBb0_cdg_0
 					; "BB0.CDG"
 aVersion1_01	db 'version 1.01',0
 aEye_cdg	db 'eye.cdg',0
-unk_20AA3	db  89h	; â
-		db 0F6h	; ˆ
-		db 0E3h	; „
-		db  59h	; Y
-		db  92h	; í
-		db  6Bh	; k
-		db  32h	; 2
-		db  2Eh	; .
-		db  64h	; d
-		db  61h	; a
-		db  74h	; t
-		db    0
+aKAIKIDAN2_DAT	db 'âˆ„Yík2.dat',0
 aMiko		db 'miko',0
 ; char arg0[]
 arg0		db 'op',0
@@ -20642,18 +20631,10 @@ byte_21214	db 0FFh
 byte_21215	db 0
 					; sub_14CEE+31w ...
 word_21216	dw 4E20h
-		db  65h	; e
-		db  66h	; f
-		db  63h	; c
-		db    0
+aEfc		db 'efc',0
 dword_2121C	dd 6Dh
-		db  6Dh	; m
-		db  32h	; 2
-		db    0
-		db  6Dh	; m
-		db  6Dh	; m
-		db  64h	; d
-		db    0
+aM2		db 'm2',0
+aMmd		db 'mmd',0
 byte_21227	db 0
 					; sub_14BE0:loc_14C2Cw	...
 byte_21228	db 0
@@ -20675,16 +20656,12 @@ byte_21229	db 0
 		db    0
 		db    0
 		db    0
-		db 0E0h	; ‡
+		db 0E0h	; ÅE
 byte_2123A	db 0
 		db 0
 aMiko_cfg	db 'MIKO.CFG',0
 		db 0
-		db  73h	; s
-		db  74h	; t
-		db  30h	; 0
-byte_21249	db 30h
-a_map		db '.map',0
+aSt00_map	db  'st00.map',0
 		db    0
 		db    0
 		db    0
@@ -20751,11 +20728,7 @@ a_map		db '.map',0
 		db 0C0h	; ¿
 		db  26h	; &
 word_21290	dw 0
-		db  53h	; S
-		db  54h	; T
-		db  30h	; 0
-byte_21295	db 30h
-a_std		db '.STD',0
+aSt00_std	db  'ST00.STD',0
 		db 0
 		db 0DCh	; ‹
 		db    7
@@ -22090,13 +22063,7 @@ NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0
 		db    1,0E0h,	2, 30h,	  2, 30h,   0, 30h,   1,0E0h,	3,   0,	  6,   8,   7,0F8h
 		db    0,0F0h,	1, 18h,	  1, 18h,   0, 18h,   0,0F0h,	1, 80h,	  3,   4,   3,0FCh
 		db    0, 78h,	0, 8Ch,	  0, 8Ch,   0, 0Ch,   0, 78h,	0,0C0h,	  1, 82h,   1,0FEh
-unk_21D64	db  42h	; B
-		db  42h	; B
-byte_21D66	db 30h
-		db  2Eh	; .
-		db  42h	; B
-		db  42h	; B
-		db    0
+aBb0_bb	db 'BB0.BB',0
 		db    0
 byte_21D6C	db 0
 		db 0
@@ -22114,14 +22081,7 @@ byte_21D76	db 0
 		db  7Eh	; ~
 		db 0BDh	; Ω
 		db 0FFh
-		db  4Ch	; L
-		db  53h	; S
-		db  30h	; 0
-		db  30h	; 0
-		db  2Eh	; .
-		db  42h	; B
-		db  42h	; B
-		db    0
+aLs00_bb	db 'LS00.BB',0
 		db    0
 ; char aMaine[]
 aMaine		db 'maine',0
@@ -22145,14 +22105,7 @@ aMaine_0	db 'maine',0
 		db    0
 		db  80h	; Ä
 		db    0
-		db  74h	; t
-		db  78h	; x
-		db  74h	; t
-byte_21DA7	db 31h
-		db  2Eh	; .
-		db  62h	; b
-		db  62h	; b
-		db    0
+aTxt1_bb	db 'txt1.bb',0
 		db 0C0h	; ¿
 		db    0
 		db    0
@@ -23177,26 +23130,8 @@ byte_21DA7	db 31h
 		db    0
 		db 0FBh	; ˚
 		db 0FFh
-		db  47h	; G
-		db  45h	; E
-		db  4Eh	; N
-		db  53h	; S
-		db  4Fh	; O
-		db  55h	; U
-		db  2Eh	; .
-		db  53h	; S
-		db  43h	; C
-		db  52h	; R
-		db    0
-		db 0ACh	; ¨
-		db 0B8h	; ∏
-		db 0B7h	; ∑
-		db 0BDh	; Ω
-		db 0B2h	; ≤
-		db 0B7h	; ∑
-		db 0BEh	; æ
-		db 0AEh	; Æ
-		db    0
+aGENSOU_SCR	db 'GENSOU.SCR',0
+gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 byte_221C0	db 0
 					; sub_15A70+17w ...
 		db 0

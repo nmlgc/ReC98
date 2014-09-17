@@ -6693,10 +6693,8 @@ aB@iaczlVCVRavd	db ' @‰A—z‹Ê‚Ì—Í‚Åí‚¤   ',0
 aB@numvcVkcdvVV	db '@UŒ‚—Í‚ª—D‚ê‚Ä‚¢‚é@',0
 aB@b@numvpdolgG	db '@@UŒ‚dŽ‹ƒ^ƒCƒv@@',0
 aSCVRaumgxgGcgl	db 'èË–²‚Ìí“¬ƒXƒ^ƒCƒ‹‚ðA‰º‚Ì‚R‚Â‚©‚ç‚¦‚ç‚ñ‚Å‚Ë',0
-aTnbjb@ggglgxgg	db '’j@ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚Å‚ÍA“ïˆÕ“xAƒvƒŒƒCƒ„[Aƒ{ƒ€”‚Í•ÏXo—'
-		db 'ˆ‚Ü‚¹‚ñ',0
-aB@b@b@vVVVBauq	db '@@@‚»‚ê‚¼‚êA“ïˆÕ“x‚d‚w‚s‚q‚`AƒvƒŒƒCƒ„[‚RlAƒ{ƒ€‚PŒÂ‚Æ‚È‚è‚'
-		db 'Ü‚·    ',0
+aTnbjb@ggglgxgg	db '’j@ƒGƒLƒXƒgƒ‰ƒXƒe[ƒW‚Å‚ÍA“ïˆÕ“xAƒvƒŒƒCƒ„[Aƒ{ƒ€”‚Í•ÏXo—ˆ‚Ü‚¹‚ñ',0
+aB@b@b@vVVVBauq	db '@@@‚»‚ê‚¼‚êA“ïˆÕ“x‚d‚w‚s‚q‚`AƒvƒŒƒCƒ„[‚RlAƒ{ƒ€‚PŒÂ‚Æ‚È‚è‚Ü‚·    ',0
 aBsbsvbvkvdvVqv	db '  ™™‚b‚k‚d‚`‚q‚d‚c™™  ',0
 aTselect_pi	db 'TSELECT.pi',0
 		dd aNo_1Umx		; "NO.1	   “Œ•û••–‚˜^@`ò“y™Öä¶—…"

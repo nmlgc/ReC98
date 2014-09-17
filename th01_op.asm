@@ -23295,7 +23295,7 @@ off_12526	dd aASacretLot
 		dd aXcvR_o		; "	 •—‚Ì_Ğ     "
 		dd aIiiuvIPc		; "	‰i‰“‚Ì›Ş—    "
 		dd aHighlyResponsi	; "  Highly Responsive"
-		dd unk_12763
+		dd aUmx
 		dd aOrientalMagici	; "  Oriental Magician"
 		dd aB@FjoVPmsUbb@	; "@  ”j×‚Ì¬‘¾“@ "
 		dd aTheLegendOfKag	; " The	Legend of KAGE"
@@ -23378,26 +23378,7 @@ aASacretLot	db '    A Sacret Lot',0
 aXcvR_o		db '      •—‚Ì_Ğ     ',0
 aIiiuvIPc	db '     ‰i‰“‚Ì›Ş—    ',0
 aHighlyResponsi	db '  Highly Responsive',0
-unk_12763	db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db  93h	; “
-		db  8Ch	; Œ
-		db  95h	; •
-		db 0FBh	; û
-		db  89h	; ‰
-		db 0F6h	; ö
-		db  8Ah	; Š
-		db 0EFh	; ï
-		db  92h	; ’
-		db  6Bh	; k
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
+aUmx		db '     “Œ•û‰öŠï’k    ',0
 aOrientalMagici	db '  Oriental Magician',0
 aB@FjoVPmsUbb@	db '@  ”j×‚Ì¬‘¾“@ ',0
 aTheLegendOfKag	db ' The Legend of KAGE',0

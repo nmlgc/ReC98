@@ -11470,8 +11470,7 @@ aAliceWitchOfDe	db '        Alice                              ( Witch of death 
 aYukiBlackWitch	db '         Yuki                                ( Black witch )',0
 aMaiWhiteWitch	db '         Mai                                 ( White witch )',0
 aYumekoMaid	db '        Yumeko                                 ( Maid )',0
-aShinkiGoddessO	db '        Shinki                         ( Goddess of devil',27h,'s wo'
-		db 'rld )',0
+aShinkiGoddessO	db '        Shinki                         ( Goddess of devil',27h,'s world )',0
 aProgramerZunJu	db '      Programer                                ZUN (Junya Ota)',0
 aGraphicsZunJun	db '      Graphics                                 ZUN (Junya Ota)',0
 aMusicComposeZu	db '    Music Compose                              ZUN (Junya Ota)',0

@@ -42412,8 +42412,7 @@ aOldPtn7lu	db 'old - ptn   = %7lu',0Ah,0
 aEtcMem7ld	db 'etc   mem   = %7ld',0Ah
 		db 0Ah,0
 ; char aZPtnFreeXBossF[]
-aZPtnFreeXBossF	db 'Z = PTN FREE, X = BOSS FREE, UP = TAMA DEL, DOWN = REWIRTE, ret ='
-		db ' NODE CHEAK',0
+aZPtnFreeXBossF	db 'Z = PTN FREE, X = BOSS FREE, UP = TAMA DEL, DOWN = REWIRTE, ret = NODE CHEAK',0
 aPtn		db 'PTN ',0
 aMask		db 'MASK',0
 aKabe		db 'KABE',0
