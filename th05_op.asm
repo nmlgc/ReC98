@@ -175,7 +175,7 @@ sub_2CA8	endp
 sub_2CBA	proc far
 		pushf
 		cli
-		mov	bl, 80h	; 'Ä'
+		mov	bl, 80h
 		call	sub_2CA8
 		and	ax, 3Fh
 		popf
@@ -335,7 +335,6 @@ byte_37B6	db 0
 ; Attributes: bp-based frame
 
 sub_37B8	proc far
-					; sub_C490+309P ...
 
 var_10		= word ptr -10h
 var_A		= word ptr -0Ah
@@ -425,7 +424,6 @@ sub_37B8	endp
 
 
 sub_3858	proc far
-					; sub_C490:loc_C790P ...
 		mov	ax, word ptr cs:dword_37B2
 		or	ax, word ptr cs:dword_37B2+2
 		jz	short locret_388F
@@ -1127,13 +1125,13 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_2]
 		mov	ax, si
 		imul	ax, 14h
-		add	ax, 0FAh ; '˙'
+		add	ax, 0FAh
 		mov	di, ax
 		push	100h
 		push	ax
 		push	large 800010h
 		call	sub_E2D8
-		push	0C0h ; '¿'
+		push	0C0h
 		push	[bp+arg_0]
 		call	grcg_setcolor
 		mov	[bp+var_2], si
@@ -1247,7 +1245,6 @@ off_A70B	dw offset loc_A634
 ; Attributes: bp-based frame
 
 sub_A717	proc near
-					; sub_ABCF+22Dp ...
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -1257,21 +1254,21 @@ arg_2		= word ptr  6
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, 0E0h ; '‡'
+		mov	di, 0E0h
 		mov	ax, [bp+arg_2]
 		shl	ax, 4
-		add	ax, 0FAh ; '˙'
+		add	ax, 0FAh
 		mov	[bp+var_4], ax
 		cmp	[bp+arg_2], 7
 		jnz	short loc_A737
 		mov	[bp+var_4], 16Eh
 
 loc_A737:
-		push	0E0h ; '‡'
+		push	0E0h
 		push	[bp+var_4]
 		push	large 0C00010h
 		call	sub_E2D8
-		push	0C0h ; '¿'
+		push	0C0h
 		push	[bp+arg_0]
 		call	grcg_setcolor
 		mov	bx, [bp+arg_2]
@@ -1297,7 +1294,6 @@ loc_A764:
 		add	ax, 6
 
 loc_A797:
-					; sub_A717+16Aj ...
 		mov	si, ax
 		jmp	loc_A8DA
 ; ---------------------------------------------------------------------------
@@ -1633,7 +1629,7 @@ loc_AA91:
 		call	sub_A39C
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
@@ -1659,7 +1655,7 @@ loc_AAE1:
 		call	sub_A447
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
@@ -1692,7 +1688,7 @@ loc_AB3B:
 		call	sub_BC0F
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
@@ -1736,7 +1732,6 @@ loc_ABB4:
 		mov	byte_11DD4, 0
 
 loc_ABC0:
-					; sub_A9D6+108j ...
 		pop	si
 		pop	bp
 		retn
@@ -1872,7 +1867,6 @@ loc_ACD8:
 		mov	byte_11DD0, 0
 
 loc_ACF8:
-					; sub_ABCF+107j
 		test	byte ptr word_12A72, 8
 		jz	loc_ADFF
 
@@ -1895,7 +1889,6 @@ loc_AD15:
 ; ---------------------------------------------------------------------------
 
 loc_AD2E:
-					; sub_ABCF+248j
 		les	bx, dword_11DCC
 		inc	byte ptr es:[bx+0Fh]
 		cmp	byte ptr es:[bx+0Fh], 6
@@ -1905,7 +1898,6 @@ loc_AD2E:
 ; ---------------------------------------------------------------------------
 
 loc_AD47:
-					; sub_ABCF+248j
 		les	bx, dword_11DCC
 		inc	byte ptr es:[bx+10h]
 		cmp	byte ptr es:[bx+10h], 3
@@ -1915,7 +1907,6 @@ loc_AD47:
 ; ---------------------------------------------------------------------------
 
 loc_AD60:
-					; sub_ABCF+248j
 		les	bx, dword_11DCC
 		inc	byte ptr es:[bx+12h]
 		cmp	byte ptr es:[bx+12h], 3
@@ -1943,7 +1934,6 @@ loc_AD74:
 ; ---------------------------------------------------------------------------
 
 loc_ADA8:
-					; sub_ABCF+248j
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+15h], 0
 		jnz	short loc_ADBA
@@ -1972,14 +1962,12 @@ loc_ADC2:
 ; ---------------------------------------------------------------------------
 
 loc_ADE7:
-					; sub_ABCF+248j
 		les	bx, dword_11DCC
 		mov	al, 1
 		sub	al, es:[bx+16h]
 		mov	es:[bx+16h], al
 
 loc_ADF5:
-					; sub_ABCF+153j ...
 		mov	al, byte_F071
 		cbw
 		push	ax
@@ -2095,7 +2083,6 @@ loc_AEF4:
 		mov	es:[bx+16h], al
 
 loc_AF02:
-					; sub_ABCF+265j ...
 		mov	al, byte_F071
 		cbw
 		push	ax
@@ -2115,7 +2102,6 @@ loc_AF22:
 		mov	byte_11DD5, 0
 
 loc_AF2E:
-					; sub_ABCF+358j
 		pop	si
 		pop	bp
 		retn
@@ -2543,7 +2529,6 @@ sub_B1BA	endp
 ; Attributes: bp-based frame
 
 sub_B234	proc near
-					; sub_B36C+10Dp ...
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -2595,7 +2580,7 @@ arg_2		= word ptr  6
 
 		enter	4, 0
 		push	si
-		mov	si, 88h	; 'à'
+		mov	si, 88h
 		mov	ax, [bp+arg_2]
 		or	ax, ax
 		jz	short loc_B2A0
@@ -2644,7 +2629,7 @@ arg_2		= word ptr  6
 
 		enter	4, 0
 		push	si
-		mov	si, 88h	; 'à'
+		mov	si, 88h
 		mov	ax, [bp+arg_2]
 		or	ax, ax
 		jz	short loc_B2F1
@@ -2694,13 +2679,13 @@ sub_B310	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, 88h	; 'à'
+		mov	di, 88h
 		xor	si, si
 		jmp	short loc_B335
 ; ---------------------------------------------------------------------------
 
 loc_B31C:
-		push	0D0h ; '–'
+		push	0D0h
 		push	di
 		push	0Fh
 		mov	bx, si
@@ -2729,13 +2714,13 @@ sub_B33E	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, 88h	; 'à'
+		mov	di, 88h
 		xor	si, si
 		jmp	short loc_B363
 ; ---------------------------------------------------------------------------
 
 loc_B34A:
-		push	0D0h ; '–'
+		push	0D0h
 		push	di
 		push	0Fh
 		mov	bx, si
@@ -2770,7 +2755,7 @@ var_2		= word ptr -2
 		push	large 700058h
 		push	0Fh
 		push	ds
-		push	offset aSETUP_BGM_HEAD ; "Å@Å@Å@Å@Å@égópÇ∑ÇÈâπåπÇëIëÇµÇƒâ∫Ç≥Ç¢Ç"...
+		push	offset aSETUP_BGM_HEAD ; "Å@Å@Å@Å@Å@égópÇ∑ÇÈâπåπÇëIëÇµÇƒâ∫Ç≥Ç¢ÅE...
 		call	far ptr	loc_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
@@ -2888,7 +2873,7 @@ var_2		= word ptr -2
 		push	large 700058h
 		push	0Fh
 		push	ds
-		push	offset aSETUP_SFX_HEAD ; "Å@Å@Å@Å@å¯â âπÇ…égópÇ∑ÇÈâπåπÇëIëÇµÇƒÇ"...
+		push	offset aSETUP_SFX_HEAD ; "Å@Å@Å@Å@å¯â âπÇ…égópÇ∑ÇÈâπåπÇëIëÇµÇƒÅE...
 		call	far ptr	loc_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
@@ -3005,7 +2990,7 @@ sub_B5A6	proc near
 		call	super_entry_bfnt
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aMs_pi	; "ms.pi"
@@ -3075,10 +3060,10 @@ loc_B63E:
 		mov	word ptr [si+8], 0
 		mov	word ptr [si+6], 0
 		call	IRand
-		mov	bx, 0E0h ; '‡'
+		mov	bx, 0E0h
 		cwd
 		idiv	bx
-		add	dx, 40h	; '@'
+		add	dx, 40h
 		mov	[si+0Ah], dx
 		call	IRand
 		mov	[si+0Ch], al
@@ -3325,7 +3310,7 @@ var_1		= byte ptr -1
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aZun00_pi ; "zun00.pi"
@@ -3342,11 +3327,11 @@ var_1		= byte ptr -1
 		call	sub_D688
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		xor	si, si
 		jmp	short loc_B8C7
@@ -3424,10 +3409,10 @@ loc_B8F4:
 		mov	[bp+var_1], 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	di, di
 		jmp	loc_BA47
 ; ---------------------------------------------------------------------------
@@ -3494,7 +3479,6 @@ loc_B9AD:
 		push	large 0C800BEh	; jumptable 0000B971 cases 40,56
 
 loc_B9B3:
-					; sub_B806+185j ...
 		push	14h
 		jmp	short loc_B9C9
 ; ---------------------------------------------------------------------------
@@ -3503,14 +3487,13 @@ loc_B9B7:
 		push	large 1B800D2h	; jumptable 0000B971 case 60
 
 loc_B9BD:
-					; sub_B806+18Dj ...
 		push	14h
 		jmp	short loc_B9D5
 ; ---------------------------------------------------------------------------
 
 loc_B9C1:
 		push	large 14000C8h	; jumptable 0000B971 case 64
-		push	40h ; '@'
+		push	40h
 
 loc_B9C9:
 		push	0
@@ -3519,7 +3502,7 @@ loc_B9C9:
 
 loc_B9CD:
 		push	large 14000C8h	; jumptable 0000B971 case 68
-		push	40h ; '@'
+		push	40h
 
 loc_B9D5:
 		push	0Ah
@@ -3537,12 +3520,12 @@ loc_B9E2:
 		mov	vsync_Count1, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, [bp+var_1]
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	al, 1
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		mov	dx, 0A4h
+		out	dx, al
 		cmp	[bp+var_2], 0
 		jnz	short loc_BA26
 		cmp	di, 10h
@@ -3554,7 +3537,6 @@ loc_B9E2:
 		mov	[bp+var_3], al
 
 loc_BA1B:
-					; sub_B806+20Bj
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
@@ -3566,7 +3548,7 @@ loc_BA26:
 		cmp	[bp+var_4], 0
 		jbe	short loc_BA56
 		mov	al, [bp+var_4]
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	[bp+var_4], al
 		mov	al, [bp+var_4]
 		mov	ah, 0
@@ -3900,20 +3882,20 @@ var_1		= byte ptr -1
 		call	sub_DDD8
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		push	large 0C00001h
 		call	grcg_setcolor
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	large 0
 		push	large 4F018Fh
 		call	grcg_byteboxfill_x
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	large 0
 		push	large 4F018Fh
 		call	grcg_byteboxfill_x
@@ -3926,9 +3908,9 @@ var_1		= byte ptr -1
 		mov	[bp+var_2], 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		xor	si, si
 		jmp	short loc_BDAD
 ; ---------------------------------------------------------------------------
@@ -3958,10 +3940,10 @@ loc_BD81:
 		call	sub_E15E
 		mov	dx, 0A6h ; '¶'
 		mov	al, [bp+var_1]
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, [bp+var_2]
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	[bp+var_1], al
 		mov	al, 1
 		sub	al, [bp+var_2]
@@ -3972,7 +3954,7 @@ loc_BD81:
 		inc	si
 
 loc_BDAD:
-		cmp	si, 40h	; '@'
+		cmp	si, 40h
 		jl	short loc_BD55
 		mov	si, 1
 		jmp	short loc_BDBE
@@ -4005,9 +3987,9 @@ loc_BDE8:
 		call	sub_DDD8
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		push	10h
 		call	sub_E15E
 		xor	si, si
@@ -4034,10 +4016,10 @@ loc_BE25:
 		call	sub_E15E
 		mov	dx, 0A6h ; '¶'
 		mov	al, [bp+var_1]
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, [bp+var_2]
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	[bp+var_1], al
 		mov	al, 1
 		sub	al, [bp+var_2]
@@ -4049,10 +4031,10 @@ loc_BE46:
 		jl	short loc_BE08
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		call	sub_DEBA
 		push	large 0
@@ -4073,7 +4055,6 @@ sub_BC8D	endp
 ; Attributes: bp-based frame
 
 sub_BE79	proc near
-					; sub_C490+123p ...
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -4091,7 +4072,7 @@ arg_2		= byte ptr  6
 		mov	si, ax
 		or	si, si
 		jl	loc_BF48
-		cmp	si, 0C0h ; '¿'
+		cmp	si, 0C0h
 		jge	loc_BF48
 		cmp	[bp+arg_0], 0
 		jz	short loc_BEF4
@@ -4148,7 +4129,7 @@ loc_BF14:
 		mov	dx, [bx+0FEEh]
 		mov	[bp+var_2], ax
 		mov	[bp+var_4], dx
-		add	si, 60h	; '`'
+		add	si, 60h
 		push	0Ch
 		push	si
 		mov	al, [bp+var_5]
@@ -4456,7 +4437,7 @@ loc_C151:
 		mov	ax, si
 		and	ax, 3
 		shl	ax, 4
-		add	ax, 40h	; '@'
+		add	ax, 40h
 		push	ax
 		mov	ax, si
 		mov	bx, 4
@@ -4548,7 +4529,6 @@ loc_C238:
 		mov	byte ptr [si+4EA4h], 4
 
 loc_C273:
-					; sub_C09D+1CFj
 		push	ds
 		push	offset unk_13DCC
 		mov	ax, si
@@ -4586,14 +4566,14 @@ sub_C293	proc near
 		out	dx, al
 		push	1
 		call	sub_E15E
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, byte ptr word_13E94+1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	al, 1
 		sub	al, byte ptr word_13E94+1
 		mov	byte ptr word_13E94+1, al
 		mov	dx, 0A6h ; '¶'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		pop	bp
 		retn
 sub_C293	endp
@@ -4761,7 +4741,6 @@ sub_C3A7	endp
 ; Attributes: bp-based frame
 
 sub_C3F9	proc near
-					; sub_C490+235p ...
 
 arg_0		= word ptr  4
 
@@ -4802,7 +4781,6 @@ sub_C3F9	endp
 ; Attributes: bp-based frame
 
 sub_C441	proc near
-					; sub_C490+195p ...
 
 arg_0		= word ptr  4
 
@@ -4813,7 +4791,7 @@ arg_0		= word ptr  4
 		push	large 20h ; ' '
 		push	large 1400010h
 		call	far ptr	loc_DB3C
-		push	large 60h ; '`'
+		push	large 60h
 		push	large 14000C0h
 		call	far ptr	loc_DB3C
 		push	si
@@ -4822,7 +4800,7 @@ arg_0		= word ptr  4
 		push	large 20h ; ' '
 		push	large 1400010h
 		call	far ptr	loc_DB3C
-		push	large 60h ; '`'
+		push	large 60h
 		push	large 14000C0h
 		call	far ptr	loc_DB3C
 		push	si
@@ -4857,15 +4835,15 @@ var_1		= byte ptr -1
 		mov	byte ptr word_13E94+1, 1
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	dx, 0A6h ; '¶'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aMusic_pi ; "music.pi"
@@ -4886,10 +4864,10 @@ var_1		= byte ptr -1
 		call	graph_copy_page
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	sub_3858
 		push	ds
 		push	offset aMusic_dat ; "music.dat"
@@ -4902,7 +4880,6 @@ var_1		= byte ptr -1
 		call	far ptr	palette_show
 
 loc_C555:
-					; sub_C490+2E3j
 		call	sub_E094
 		cmp	word_12A72, 0
 		jz	short loc_C57F
@@ -4969,7 +4946,6 @@ loc_C5D5:
 		call	sub_C441
 
 loc_C5EB:
-					; sub_C490+143j
 		test	byte ptr word_12A72, 2
 		jz	short loc_C666
 		mov	al, byte ptr word_13E94
@@ -5023,7 +4999,6 @@ loc_C652:
 		call	sub_C441
 
 loc_C666:
-					; sub_C490+1C0j
 		test	byte ptr word_12A72, 4
 		jz	short loc_C680
 		dec	musicroom_game_id
@@ -5042,7 +5017,6 @@ loc_C680:
 		mov	musicroom_game_id, 0
 
 loc_C698:
-					; sub_C490+1EEj ...
 		mov	byte ptr word_13E94, 0
 		mov	word_1403C, 0
 		mov	word_1403A, 0
@@ -5065,7 +5039,6 @@ loc_C698:
 		call	sub_DC76
 
 loc_C6E3:
-					; sub_C490+1F5j
 		test	byte ptr word_12A72, 20h
 		jnz	short loc_C6F1
 		test	byte ptr word_12A72+1, 20h
@@ -5123,7 +5096,6 @@ loc_C767:
 ; ---------------------------------------------------------------------------
 
 loc_C77F:
-					; sub_C490+2DCj ...
 		call	sub_E094
 		cmp	word_12A72, 0
 		jz	short loc_C790
@@ -5139,11 +5111,11 @@ loc_C790:
 		push	210h
 		call	sub_DC76
 		call	sub_BFE8
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	dx, 0A6h ; '¶'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	1
 		call	palette_black_out
 		call	sub_D726
@@ -5203,7 +5175,7 @@ loc_C815:
 		inc	si
 
 loc_C81E:
-		cmp	si, 60h	; '`'
+		cmp	si, 60h
 		jl	short loc_C815
 		cmp	word_14042, cx
 		jz	short loc_C82D
@@ -5246,7 +5218,7 @@ loc_C868:
 		inc	si
 
 loc_C871:
-		cmp	si, 60h	; '`'
+		cmp	si, 60h
 		jl	short loc_C868
 		mov	al, byte_140A2
 		sub	al, cl
@@ -5280,7 +5252,7 @@ loc_C88E:
 		inc	si
 
 loc_C899:
-		cmp	si, 60h	; '`'
+		cmp	si, 60h
 		jl	short loc_C88E
 		call	IRand
 		mov	byte_14040, al
@@ -5339,7 +5311,7 @@ loc_C8FB:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	byte ptr [bx+5091h], 0A0h ; '†'
+		mov	byte ptr [bx+5091h], 0A0h
 		inc	[bp+var_2]
 
 loc_C90B:
@@ -5358,7 +5330,7 @@ loc_C921:
 		shl	bx, 3
 		mov	al, [bp+var_3]
 		mov	[bx+5096h], al
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	[bp+var_3], al
 
 loc_C932:
@@ -5423,7 +5395,7 @@ loc_C999:
 		call	sub_C87E
 		push	ds
 		push	offset byte_14040
-		push	60h ; '`'
+		push	60h
 		call	file_write
 		call	sub_C7D5
 		inc	si
@@ -5468,7 +5440,7 @@ arg_0		= word ptr  4
 		call	file_seek
 		push	ds
 		push	offset byte_14040
-		push	60h ; '`'
+		push	60h
 		call	file_read
 		call	file_close
 		call	sub_C7D5
@@ -5608,7 +5580,7 @@ loc_CADB:
 		call	graph_gaiji_putc
 		push	si
 		push	di
-		push	0EFh ; 'Ô'
+		push	0EFh ; 'ÅE
 
 loc_CAF3:
 		push	7
@@ -5663,7 +5635,7 @@ loc_CB2D:
 		mov	si, 148h
 
 loc_CB30:
-		mov	di, 0E0h ; '‡'
+		mov	di, 0E0h
 
 loc_CB33:
 		mov	[bp+var_2], 7
@@ -5688,7 +5660,7 @@ loc_CB4E:
 loc_CB51:
 		mov	ax, [bp+arg_0]
 		shl	ax, 4
-		add	ax, 60h	; '`'
+		add	ax, 60h
 		jmp	short loc_CB6D
 ; ---------------------------------------------------------------------------
 
@@ -5703,7 +5675,7 @@ loc_CB61:
 loc_CB64:
 		mov	ax, [bp+arg_0]
 		shl	ax, 4
-		add	ax, 0E8h ; 'Ë'
+		add	ax, 0E8h ; 'ÅE
 
 loc_CB6D:
 		mov	di, ax
@@ -5768,14 +5740,13 @@ off_CBD4	dw offset loc_CB1B
 ; Attributes: bp-based frame
 
 sub_CBDC	proc near
-					; sub_CC5C+92p
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		call	sub_DEBA
 		push	large 0
@@ -5783,7 +5754,7 @@ sub_CBDC	proc near
 		call	sub_DE0A
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		call	sub_DEBA
 		push	large 0
@@ -5910,7 +5881,7 @@ loc_CD17:
 		call	sub_DEE0
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi_1 ; "op1.pi"
@@ -5981,7 +5952,7 @@ loc_CDA8:
 		mov	al, byte_14101
 		mov	ah, 0
 		add	bx, ax
-		cmp	byte ptr [bx+5122h], 80h ; 'Ä'
+		cmp	byte ptr [bx+5122h], 80h
 		jz	short loc_CDE7
 		mov	bx, si
 		imul	bx, 5
@@ -6130,7 +6101,7 @@ loc_CEDB:
 		add	si, 34h	; '4'
 
 loc_CEE5:
-		cmp	di, 0A0h ; '†'
+		cmp	di, 0A0h
 		jl	short loc_CEA7
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -6172,7 +6143,7 @@ loc_CF18:
 		mov	si, 10h
 		mov	di, 30h	; '0'
 		mov	[bp+var_2], 0B0h ; '∞'
-		mov	[bp+var_4], 0C0h ; '¿'
+		mov	[bp+var_4], 0C0h
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
@@ -6180,20 +6151,20 @@ loc_CF2A:
 		mov	si, 110h
 		mov	di, 30h	; '0'
 		mov	[bp+var_2], 1B0h
-		mov	[bp+var_4], 0C0h ; '¿'
+		mov	[bp+var_4], 0C0h
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
 loc_CF3C:
-		mov	si, 0A0h ; '†'
-		mov	di, 0E0h ; '‡'
+		mov	si, 0A0h
+		mov	di, 0E0h
 		mov	[bp+var_2], 140h
 		jmp	short loc_CF54
 ; ---------------------------------------------------------------------------
 
 loc_CF49:
 		mov	si, 190h
-		mov	di, 0E0h ; '‡'
+		mov	di, 0E0h
 		mov	[bp+var_2], 230h
 
 loc_CF54:
@@ -6331,7 +6302,6 @@ loc_D07F:
 		call	sub_CE65
 
 loc_D086:
-					; sub_CEFF+111j
 		pop	di
 		pop	si
 		leave
@@ -6362,7 +6332,7 @@ var_2		= word ptr -2
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		push	ds
 		push	offset aSlb1_pi	; "slb1.pi"
@@ -6379,10 +6349,10 @@ var_2		= word ptr -2
 		call	sub_D688
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	si, si
 		mov	byte ptr word_14118, 0
 		jmp	short loc_D111
@@ -6508,7 +6478,7 @@ loc_D1D0:
 		call	sub_D63C
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	1
 		call	sub_CEFF
 		xor	byte ptr word_14118, 1
@@ -6517,17 +6487,17 @@ loc_D1D0:
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 
 loc_D223:
 		test	byte ptr word_12A72, 1
@@ -6542,7 +6512,7 @@ loc_D231:
 		call	sub_D63C
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	1
 		call	sub_CEFF
 		xor	byte ptr word_14118, 2
@@ -6551,17 +6521,17 @@ loc_D231:
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	0
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
 		call	sub_E15E
-		mov	dx, 0A4h ; '§'
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 
 loc_D284:
 		test	byte ptr word_12A72+1, 20h
@@ -6591,7 +6561,6 @@ loc_D292:
 ; ---------------------------------------------------------------------------
 
 loc_D2CC:
-					; sub_D12D+171j
 		test	byte ptr word_12A72+1, 10h
 		jz	short loc_D2E4
 		push	1
@@ -6614,7 +6583,6 @@ loc_D2EC:
 		mov	[bp+var_1], 0
 
 loc_D2F7:
-					; sub_D12D+1C4j
 		push	1
 		call	sub_E15E
 		jmp	loc_D1B5
@@ -6663,7 +6631,7 @@ loc_D319:
 
 sub_D322	proc far
 		xor	ax, ax
-		mov	byte_12742, 60h	; '`'
+		mov	byte_12742, 60h
 		mov	byte_FA43, al
 		mov	byte_FA42, al
 		mov	byte_FA41, al
@@ -6716,7 +6684,6 @@ sub_D350	endp
 ; Attributes: bp-based frame
 
 sub_D380	proc far
-					; sub_ABCF+1BFP ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -6836,14 +6803,13 @@ sub_D41C	endp
 		db 0
 
 loc_D436:
-					; sub_A717+235P ...
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
 		mov	dx, [bp+0Ah]
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		pushf
 		cli
 		out	7Ch, al
@@ -6887,7 +6853,6 @@ loc_D482:
 		mov	bx, 8
 
 loc_D492:
-					; sub_DA6B-5E6j
 		mov	ax, [bx+9A2h]
 		mov	cs:word_D4F5, ax
 		mov	ax, [bx+9ACh]
@@ -6915,26 +6880,26 @@ loc_D4B8:
 		mov	ah, al
 		lodsb
 		shl	ah, 1
-		cmp	al, 9Fh	; 'ü'
+		cmp	al, 9Fh
 		jnb	short loc_D4D8
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		adc	ax, 0FEDFh
 
 loc_D4D8:
-		sbb	al, 0FEh ; '˛'
+		sbb	al, 0FEh
 		and	ax, 7F7Fh
-		out	0A1h, al	; Interrupt Controller #2, 8259A
+		out	0A1h, al
 		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
+		out	0A3h, al
 		nop
 		mov	al, ch
 		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
+		out	0A5h, al
+		in	al, 0A9h
 		mov	ah, al
 		mov	al, ch
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
+		out	0A5h, al
+		in	al, 0A9h
 ; END OF FUNCTION CHUNK	FOR sub_DA6B
 ; ---------------------------------------------------------------------------
 		db 0E8h
@@ -6966,19 +6931,19 @@ loc_D51F:
 ; ---------------------------------------------------------------------------
 
 loc_D52E:
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 
 loc_D531:
 		cmp	al, 20h	; ' '
 		jz	short near ptr byte_D55A
-		out	0A1h, al	; Interrupt Controller #2, 8259A
+		out	0A1h, al
 		mov	al, ah
-		out	0A3h, al	; Interrupt Controller #2, 8259A
+		out	0A3h, al
 		nop
 		mov	al, ch
 		or	al, 20h
-		out	0A5h, al	; Interrupt Controller #2, 8259A
-		in	al, 0A9h	; Interrupt Controller #2, 8259A
+		out	0A5h, al
+		in	al, 0A9h
 		xor	ah, ah
 ; END OF FUNCTION CHUNK	FOR sub_DA6B
 ; ---------------------------------------------------------------------------
@@ -7029,7 +6994,6 @@ word_D58D	dw 1234h
 ; Attributes: bp-based frame
 
 sub_D590	proc far
-					; sub_CEFF:loc_D054P
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -7100,7 +7064,6 @@ sub_D590	endp ; sp-analysis failed
 
 
 sub_D5F6	proc far
-					; sub_A9D6:loc_AA6CP ...
 		mov	byte_F9C3, 0
 		mov	byte_F9C2, 0FFh
 		retf
@@ -7268,7 +7231,6 @@ sub_D6F0	endp ; sp-analysis failed
 
 
 sub_D726	proc far
-					; sub_C490+32AP ...
 		cmp	word_F9C4, 0
 		jz	short locret_D757
 		push	word_F9C4
@@ -7302,7 +7264,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	ds
 		cli
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -7390,17 +7352,17 @@ sub_D7EC	proc far
 		call	sub_3858
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear
@@ -7463,7 +7425,7 @@ sub_D834	endp
 sub_D894	proc far
 		push	si
 		push	di
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		out	7Ch, al
 		mov	ax, 0A800h
 		mov	es, ax
@@ -7560,7 +7522,7 @@ sub_D96E	proc far
 		push	ds
 		push	ds
 		pop	fs
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		out	7Ch, al
 		mov	ax, 0A800h
 		mov	es, ax
@@ -7732,7 +7694,6 @@ loc_DA70:
 		jmp	cs:off_DAD1[bx]
 
 loc_DA9D:
-					; seg002:07D5o	...
 		shr	dl, cl
 		mov	al, cl
 		mov	cx, 9
@@ -7742,7 +7703,7 @@ loc_DAA4:
 		add	di, 50h	; 'P'
 		loop	loc_DAA4
 		mov	cl, al
-		mov	al, 0E0h ; '‡'
+		mov	al, 0E0h
 		shr	al, cl
 		mov	cx, 6
 
@@ -8073,7 +8034,7 @@ sub_DC94	endp
 		mov	cl, [bp+8]
 		test	cl, 1
 		jz	short loc_DCDD
-		mov	ax, 0A0h ; '†'
+		mov	ax, 0A0h
 
 loc_DCDD:
 		test	cl, 2
@@ -8213,7 +8174,6 @@ sub_DD97	endp
 ; Attributes: bp-based frame
 
 sub_DDD8	proc far
-					; sub_A9D6+11AP ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -8251,7 +8211,6 @@ sub_DDD8	endp
 ; Attributes: bp-based frame
 
 sub_DE0A	proc far
-					; sub_A9D6+12BP ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -8292,7 +8251,7 @@ sub_DE0A	endp
 		mov	cl, [bp+6]
 		test	cl, 1
 		jz	short loc_DE51
-		mov	ax, 0A0h ; '†'
+		mov	ax, 0A0h
 
 loc_DE51:
 		test	cl, 2
@@ -8364,7 +8323,6 @@ sub_DE80	endp
 
 
 sub_DEBA	proc far
-					; sub_A9D6+121P ...
 		mov	bx, sp
 		push	si
 		push	di
@@ -8388,7 +8346,6 @@ sub_DEBA	endp
 
 
 sub_DEE0	proc far
-					; sub_A9D6+132P ...
 		mov	bx, sp
 		mov	bx, ss:[bx+4]
 		mov	ax, bx
@@ -8435,17 +8392,17 @@ loc_DF27:
 		call	graph_start
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		mov	bbufsiz, 2000h
 		call	vsync_start
 		call	key_beep_off
@@ -8607,7 +8564,6 @@ sub_DF96	endp
 
 
 sub_E094	proc far
-					; sub_B806:loc_B949P ...
 		push	cs
 		call	sub_DF8E
 		mov	cx, 400h
@@ -8686,7 +8642,7 @@ loc_E0DD:
 ; ---------------------------------------------------------------------------
 
 loc_E0EA:
-		mov	dx, 0C0h ; '¿'
+		mov	dx, 0C0h
 		int	61h		; reserved for user interrupt
 
 loc_E0EF:
@@ -8739,7 +8695,6 @@ sub_E0F1	endp
 ; Attributes: bp-based frame
 
 sub_E114	proc far
-					; sub_A5F6:loc_A695P ...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -9073,10 +9028,10 @@ loc_E327:
 		cmp	di, 7D00h
 		jnb	short loc_E33F
 		mov	al, 1
-		out	0A6h, al	; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		mov	dx, es:[di]
 		xor	ax, ax
-		out	0A6h, al	; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		mov	es:[di], dx
 
 loc_E33F:
@@ -9103,7 +9058,7 @@ sub_E354	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	es:[495h], al
 		popf
@@ -9164,7 +9119,6 @@ include libs/BorlandC/c0[data].asm
 		db    0
 byte_F071	db 0
 byte_F072	db 0
-					; sub_A9D6+1D9w ...
 byte_F073	db 1
 MENU_DESC		dd aMENU_START		; "ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑"
 		dd aMENU_START_EXTRA	; "ÉGÉLÉXÉgÉâÉXÉeÅ[ÉWÇäJénÇµÇ‹Ç∑"
@@ -9173,19 +9127,19 @@ MENU_DESC		dd aMENU_START		; "ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑"
 		dd aMENU_OPTION		; "äeéÌê›íËÇïœçXèoóàÇ‹Ç∑"
 		dd aMENU_QUIT	; "ÇcÇnÇrÇ…ñﬂÇËÇ‹Ç∑"
 		dd aMENU_EASY		; "ìÔà’ìxÇÇ‚Ç≥ÇµÇ≠ÇµÇ‹Ç∑Å@	ÅièâêSé“å¸"...
-		dd aMENU_NORMAL		; "ìÔà’ìxÇïWèÄÇ…ÇµÇ‹Ç∑Å@Å@Å@	 ÅiàÍî å¸Ç"...
-		dd aMENU_HARD		; "ìÔà’ìxÇìÔÇµÇ≠ÇµÇ‹Ç∑Å@Å@Å@ÅiÉAÅ[ÉPÅ[É_Å"...
-		dd aMENU_LUNATIC		; "ìÔà’ìxÇîÒèÌÇ…ìÔÇµÇ≠ÇµÇ‹Ç∑Å@ÅiÉVÉÖÅ[É^Å"...
-		dd aMENU_LIVES	; "ÉQÅ[ÉÄÉXÉ^Å[ÉgéûÇÃêlêîÇïœçXèoóàÇ‹Ç∑Åiè"...
-		dd aMENU_BOMBS		; "É{ÉÄÇÃégópâÒêîÇïœçXèoóàÇ‹Ç∑ÅièúÇ≠ÉGÉLÉ"...
+		dd aMENU_NORMAL		; "ìÔà’ìxÇïWèÄÇ…ÇµÇ‹Ç∑Å@Å@Å@	 ÅiàÍî å¸ÅE...
+		dd aMENU_HARD		; "ìÔà’ìxÇìÔÇµÇ≠ÇµÇ‹Ç∑Å@Å@Å@ÅiÉAÅ[ÉPÅ[É_ÅE...
+		dd aMENU_LUNATIC		; "ìÔà’ìxÇîÒèÌÇ…ìÔÇµÇ≠ÇµÇ‹Ç∑Å@ÅiÉVÉÖÅ[É^ÅE...
+		dd aMENU_LIVES	; "ÉQÅ[ÉÄÉXÉ^Å[ÉgéûÇÃêlêîÇïœçXèoóàÇ‹Ç∑ÅiÅE...
+		dd aMENU_BOMBS		; "É{ÉÄÇÃégópâÒêîÇïœçXèoóàÇ‹Ç∑ÅièúÇ≠ÉGÉLÅE...
 		dd aMENU_BGM_OFF	; "ÇaÇfÇlÇÕó¨ÇÍÇ‹ÇπÇÒ"
 		dd aMENU_BGM_26K	; "ÇaÇfÇlÇ…ÇQÇUÇjâπåπå›ä∑ÇégópÇµÇ‹Ç∑"
 		dd aMENU_BGM_86K	; "ÇaÇfÇlÇ…ÇWÇUâπåπå›ä∑ÇégópÇµÇ‹Ç∑"
 		dd aMENU_SFX_OFF			; "å¯â âπÇÕó¨ÇÍÇ‹ÇπÇÒ"
 		dd aMENU_SFX_FM			; "å¯â âπÇ…ÇeÇlâπåπÇégópÇµÇ‹Ç∑"
 		dd aMENU_SFX_BEEP			; "å¯â âπÇ…ÇaÇÖÇÖÇêâπåπÇégópÇµÇ‹Ç∑"
-		dd aMENU_SLOW	; "ìGíeÇÃëΩÇ¢èÍèäÇ≈ÅAÇÌÇ¥Ç∆èàóùóéÇøÅiÉXÉçÅ"...
-		dd aMENU_TURBO		; "èàóùóéÇøÇÉ}ÉVÉìÇÃÉXÉsÅ[ÉhÇ…îCÇπÇ‹Ç∑Åiï"...
+		dd aMENU_SLOW	; "ìGíeÇÃëΩÇ¢èÍèäÇ≈ÅAÇÌÇ¥Ç∆èàóùóéÇøÅiÉXÉçÅE...
+		dd aMENU_TURBO		; "èàóùóéÇøÇÉ}ÉVÉìÇÃÉXÉsÅ[ÉhÇ…îCÇπÇ‹Ç∑ÅiÅE...
 		dd aMENU_RESET	; "Ç±ÇÃÉIÉvÉVÉáÉìÇëSÇƒïWèÄÇ…ñﬂÇµÇ‹Ç∑"
 		dd aMENU_OPTION_QUIT		; "ÉIÉvÉVÉáÉìÇèIóπÇµÇ‹Ç∑"
 		dd aMENU_START_EASY		; "ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑ÅiÉCÅ[ÉWÅ[Åj"
@@ -9225,11 +9179,8 @@ aMENU_START_NORMAL	db 'ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑ÅiÉmÅ[É}ÉãÅj',0
 aMENU_START_HARD	db 'ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑ÅiÉnÅ[ÉhÅj',0
 aMENU_START_LUNATIC		db 'ÉQÅ[ÉÄÇäJénÇµÇ‹Ç∑ÅiÉãÉiÉeÉBÉbÉNÅj',0
 aOp1_pi		db 'op1.pi',0
-					; sub_A9D6+117o ...
 aMiko		db 'miko',0
-					; sub_ABCF+20Bo ...
 aOp		db 'op',0
-					; sub_ABCF+1C5o ...
 aKaikidan1_dat0	db 'âˆ„Yík1.dat',0
 aNotEnoughMem	db 0Ah
 		db 'ãÛÇ´ÉÅÉÇÉäïsë´Ç≈Ç∑ÅBÉÅÉÇÉäãÛÇ´ÇëùÇ‚ÇµÇƒÇ©ÇÁé¿çsÇµÇƒÇÀ',0Ah,0
@@ -9245,7 +9196,6 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 word_F524	dw 0
-					; sub_DF96+E9r
 		db    0
 		db    0
 		db    0
@@ -9275,7 +9225,7 @@ include libs/master.lib/bgm[data].asm
 		db    2
 		db  12h
 		db  12h
-		db  40h	; @
+		db  40h
 		db  10h
 		db  11h
 		db    2
@@ -9310,7 +9260,7 @@ include libs/master.lib/bgm[data].asm
 		db    0
 		db  72h	; r
 		db    0
-		db  89h	; â
+		db  89h
 		db    0
 		db  1Fh
 		db    0
@@ -9326,20 +9276,20 @@ include libs/master.lib/bgm[data].asm
 		db    9
 		db 0C6h	; ∆
 		db    9
-		db 0CEh	; Œ
+		db 0CEh
 		db    9
-		db 0D6h	; ÷
+		db 0D6h
 		db    9
-		db  88h	; à
-		db  88h	; à
+		db  88h
+		db  88h
 		db    0
 		db    0
 		db  22h	; "
 		db  22h	; "
 		db    0
 		db    0
-		db  88h	; à
-		db  88h	; à
+		db  88h
+		db  88h
 		db  44h	; D
 		db  44h	; D
 		db  22h	; "
@@ -9363,7 +9313,6 @@ include libs/master.lib/bgm[data].asm
 		db  55h	; U
 		db  55h	; U
 word_F9BE	dw 2
-					; sub_A717+204w ...
 word_F9C0	dw 10h
 byte_F9C2	db 0FFh
 byte_F9C3	db 0
@@ -9373,50 +9322,50 @@ word_F9C8	dw 0
 word_F9CA	dw 0
 word_F9CC	dw 4E20h
 		db  3Bh	; ;
-		db  83h	; É
+		db  83h
 		db 0BBh	; ª
-		db  83h	; É
+		db  83h
 		db 0B8h	; ∏
 		db  3Bh	; ;
 		db 0B8h	; ∏
 		db  3Bh	; ;
-		db  83h	; É
+		db  83h
 		db 0BBh	; ª
-		db  83h	; É
+		db  83h
 		db 0B8h	; ∏
 		db  3Bh	; ;
 		db 0B8h	; ∏
 		db  3Bh	; ;
-		db  83h	; É
+		db  83h
 		db 0BBh	; ª
-		db  83h	; É
+		db  83h
 		db 0B8h	; ∏
 		db  3Bh	; ;
 		db 0B8h	; ∏
 		db  3Bh	; ;
-		db  83h	; É
+		db  83h
 		db 0BBh	; ª
-		db  83h	; É
+		db  83h
 		db 0B8h	; ∏
 		db  3Bh	; ;
 		db 0B8h	; ∏
 		db  3Fh	; ?
-		db  60h	; `
+		db  60h
 		db 0C0h	; ¿
-		db 0FEh	; ˛
-		db  80h	; Ä
-		db  80h	; Ä
+		db 0FEh
+		db  80h
+		db  80h
 unk_F9F0	db 0C0h	; ¿
-		db  40h	; @
-		db  66h	; f
-		db 0A9h	; ©
-		db  99h	; ô
-		db  81h	; Å
-		db  81h	; Å
-		db  81h	; Å
-		db 0C3h	; √
-		db  42h	; B
-		db  3Ch	; <
+		db  40h
+		db  66h
+		db 0A9h
+		db  99h
+		db  81h
+		db  81h
+		db  81h
+		db 0C3h
+		db  42h
+		db  3Ch
 		db    4
 		db    4
 		db    4
@@ -9426,7 +9375,7 @@ unk_F9F0	db 0C0h	; ¿
 		db    8
 		db  3Ch	; <
 		db  42h	; B
-		db  81h	; Å
+		db  81h
 		db    1
 		db    6
 		db  18h
@@ -9437,7 +9386,7 @@ unk_F9F0	db 0C0h	; ¿
 		db    1
 		db  0Eh
 		db    1
-		db 0C1h	; ¡
+		db 0C1h
 		db  42h	; B
 		db  7Ch	; |
 		db  0Ch
@@ -9445,31 +9394,31 @@ unk_F9F0	db 0C0h	; ¿
 		db  22h	; "
 		db  42h	; B
 		db  42h	; B
-		db  7Fh	; 
+		db  7Fh
 		db    2
 		db    2
 		db  3Eh	; >
-		db  40h	; @
-		db  80h	; Ä
+		db  40h
+		db  80h
 		db 0BCh	; º
 		db  42h	; B
 		db    1
-		db  82h	; Ç
+		db  82h
 		db  7Ch	; |
 		db  7Eh	; ~
-		db 0C1h	; ¡
-		db  80h	; Ä
+		db 0C1h
+		db  80h
 		db  70h	; p
 		db  0Eh
 		db    1
-		db  83h	; É
+		db  83h
 		db  7Eh	; ~
 		db  3Eh	; >
 		db  63h	; c
 		db 0C0h	; ¿
-		db  80h	; Ä
-		db  86h	; Ü
-		db 0C1h	; ¡
+		db  80h
+		db  86h
+		db 0C1h
 		db  63h	; c
 		db  3Ch	; <
 		db  65h	; e
@@ -9485,7 +9434,6 @@ dword_FA36	dd 6Dh
 		db  64h	; d
 		db    0
 byte_FA41	db 0
-					; sub_D380:loc_D3CCw ...
 byte_FA42	db 0
 byte_FA43	db 0
 		db    0
@@ -9496,8 +9444,8 @@ byte_FA43	db 0
 		db    0
 		db  44h	; D
 		db  44h	; D
-		db  88h	; à
-		db  88h	; à
+		db  88h
+		db  88h
 		db  11h
 		db  11h
 		db  22h	; "
@@ -9512,14 +9460,14 @@ byte_FA43	db 0
 		db 0AAh	; ™
 		db  55h	; U
 		db  55h	; U
-		db 0EEh	; Ó
-		db 0EEh	; Ó
+		db 0EEh
+		db 0EEh
 		db  77h	; w
 		db  77h	; w
 		db 0BBh	; ª
 		db 0BBh	; ª
-		db 0DDh	; ›
-		db 0DDh	; ›
+		db 0DDh
+		db 0DDh
 		db    0
 		db    0
 		db    0
@@ -9553,7 +9501,6 @@ byte_FA43	db 0
 		db    0
 		db    0
 dword_FA84	dd 0A8000000h
-					; sub_CE65:loc_CEC6r
 		db    0
 		db    0
 		db    0
@@ -9565,29 +9512,27 @@ dword_FA84	dd 0A8000000h
 		db    0
 		db    0
 		db    0
-		db 0E0h	; ‡
+		db 0E0h
 byte_FA94	db 0
 		db 0
 SETUP_BGM_BODY	dd aSETUP_BGM_BODY1
-					; "ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[É"...
-		dd aSETUP_BGM_BODY2	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA  "...
-		dd aSETUP_BGM_BODY3	; "Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉ"...
-		dd aSETUP_BGM_BODY4	; "Å@ïWèÄÇeÇlâπåπÅF  PC-9801-26K(å›ä∑)É{Å["...
-		dd aSETUP_BGM_BODY5	; "		     PC-9801DAìôÇ…ì‡ë†ÇÃâπ"...
-		dd aSETUP_BGM_BODY6	; "Å@Å@Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇRâπÅ{ÇrÇrÇfÇRâπ "...
-		dd aSETUP_BGM_BODY7	; "Å@Å@âπäyñ≥ÇµÅFÅ@Å@ÇeÇlâπåπÇ™ñ≥Ç¢èÍçá	  "...
-		dd aSETUP_BGM_BODY8	; "					  "...
-		dd aSETUP_TAIL		; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
+		dd aSETUP_BGM_BODY2
+		dd aSETUP_BGM_BODY3
+		dd aSETUP_BGM_BODY4
+		dd aSETUP_BGM_BODY5
+		dd aSETUP_BGM_BODY6
+		dd aSETUP_BGM_BODY7
+		dd aSETUP_BGM_BODY8
+		dd aSETUP_TAIL
 SETUP_SFX_BODY	dd aSETUP_SFX_BODY1
-					; "Å@ÇeÇlâπåπÅ@ÅFå¯â âπÇ…ÇeÇlâπåπÇégópÇµÇ"...
-		dd aSETUP_SFX_BODY2	; "Å@Å@Å@Å@Å@Å@Å@ÇaÇfÇlÇ™ÉXÉeÉåÉIÇeÇlâπåπé"...
-		dd aSETUP_SFX_BODY3	; "Å@ Å@ Å@Å@ÅiïWèÄÇeÇlâπåπÇ≈ÇÕÅA3chÇégóp"...
-		dd aSETUP_SFX_BODY4	; "Å@ Å@Å@Å@Å@ ÇÃÇ≈ÅAÇaÇfÇlÇ™ê≥èÌÇ…Ç´ÇØÇ»Ç"...
-		dd aSETUP_SFX_BODY5	; "ÇaÇÖÇÖÇêâπåπÅFå¯â âπÇ…ÇaÇÖÇÖÇêâπåπÇégó"...
-		dd aSETUP_SFX_BODY6	; "		 ÇeÇlâπåπÇ™ñ≥Ç¢èÍçáégópÇµÇ"...
-		dd aSETUP_SFX_BODY7	; " å¯â âπñ≥Çµ ÅFâΩÇÁÇ©ÇÃéñèÓÇ≈å¯â âπÇñ¬Ç"...
-		dd aSETUP_SFX_BODY8	; "Å@Å@Å@Å@Å@Å@Å@ñ≥Ç¢èÍçá		  "...
-		dd aSETUP_TAIL		; "Ç»Ç®ÅAÇ±ÇÍÇÁÇÃê›íËÇÕÇnÇêÇîÇâÇèÇéÇ≈ïœçXâ"...
+		dd aSETUP_SFX_BODY2
+		dd aSETUP_SFX_BODY3
+		dd aSETUP_SFX_BODY4
+		dd aSETUP_SFX_BODY5
+		dd aSETUP_SFX_BODY6
+		dd aSETUP_SFX_BODY7
+		dd aSETUP_SFX_BODY8
+		dd aSETUP_TAIL
 aSETUP_BGM_BODY1 db 'ÉXÉeÉåÉIÇeÇlâπåπÅFPC-9801-86(å›ä∑)É{Å[ÉhÅ@Å@Å@',0
 aSETUP_BGM_BODY2 db 'Å@Å@Å@Å@Å@Å@Å@Å@Å@CanBeì‡ë†âπåπÇ»Ç«ÅA         ',0
 aSETUP_BGM_BODY3 db 'Å@Å@Å@Å@Å@Å@Å@ÇeÇlÇUâπÅ{ÇrÇrÇfÇRâπÅ{ÉäÉYÉÄâπåπ',0
@@ -9964,7 +9909,6 @@ MUSICROOM_GAME		dd aMUSICROOM_TH01
 		dd    0
 		dd    0
 musicroom_game_id	dw 4
-					; sub_BF4D+54r	...
 MUSICROOM_TRACKCOUNTS dw 14,18,24,28,23
 byte_1048A	db 0
 aMUSICROOM_UP		db '             ------ Å£ ------       ',0
@@ -9990,7 +9934,6 @@ aTH01_12	db 'No.12      Civilization of Magic    ',0
 aTH01_13	db 'No.13            êØóHìVég           ',0
 aTH01_14	db 'No.14            ÉAÉCÉäÉX           ',0
 aMUSICROOM_QUIT1	db '            É^ÉCÉgÉãÇ…ñﬂÇÈ          ',0
-					; dseg:10AEo ...
 aTH02_01	db 'No.1      ìåï˚ïïñÇò^Å@Å`èÚìyô÷‰∂óÖ  ',0
 aTH02_02	db 'No.2      Å@ îéóÌÅ@Å`Eastern Wind   ',0
 aTH02_03	db 'No.3      Å@  She',27h,'s in a temper!!   ',0
@@ -10228,7 +10171,6 @@ ExitEnd	label byte
 
 bdata@	label byte
 dword_11DCC	dd 0
-					; sub_A39C:loc_A3CFr ...
 byte_11DD0	db 0
 		db 0
 word_11DD2	dw 0
@@ -10662,7 +10604,6 @@ word_12830	dw ?
 		dd    ?	;
 		dd    ?	;
 word_12A72	dw ?
-					; sub_A9D6:loc_AA2Br ...
 byte_12A74	db ?
 		dd    ?	;
 		dd    ?	;
@@ -10962,7 +10903,6 @@ word_12EF8	dw ?
 word_12EFA	dw ?
 word_12EFC	dw ?
 word_12EFE	dw ?
-					; sub_E2D8:loc_E323r
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -10976,9 +10916,7 @@ word_12EFE	dw ?
 		dd    ?	;
 		dd    ?	;
 word_12F30	dw ?
-					; sub_B077:loc_B0CDr ...
 word_12F32	dw ?
-					; sub_B234+8r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -11092,16 +11030,11 @@ word_12FEA	dw ?
 		dd    ?	;
 		dd    ?	;
 byte_130EC	db ?
-					; sub_1354+16Dw
 		db ?
 word_130EE	dw ?
-					; sub_1354+4A0r ...
 word_130F0	dw ?
-					; sub_1354+1B1r ...
 byte_130F2	db ?
-					; sub_1354+1A3r ...
 byte_130F3	db ?
-					; sub_1354+1A7r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -12091,7 +12024,6 @@ unk_13EAA	db    ?	;
 word_1403A	dw ?
 word_1403C	dw ?
 musicroom_trackcount	dw ?
-					; sub_C490+22w	...
 byte_14040	db ?
 byte_14041	db ?
 word_14042	dw ?
@@ -12120,7 +12052,6 @@ word_14042	dw ?
 		db    ?	;
 		db    ?	;
 byte_1409E	db ?
-					; sub_CD94+28r
 		db ?
 byte_140A0	db ?
 byte_140A1	db ?
@@ -12157,11 +12088,9 @@ byte_14101	db ?
 		dd    ?	;
 		dd    ?	;
 byte_14116	db ?
-					; sub_A968:loc_A998r ...
 		db ?
 word_14118	dw ?
 byte_1411A	db ?
-					; sub_CEFF+162r ...
 		dd    ?	;
 byte_1411F	db ?
 byte_14120	db ?

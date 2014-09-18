@@ -37,15 +37,15 @@ sub_367		proc near
 		mov	bp, sp
 		mov	dx, 0A6h
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		pop	bp
 		retn
 sub_367		endp
@@ -683,10 +683,10 @@ loc_822:
 		call	sub_683
 		mov	al, ds:2870h
 		mov	ds:2871h, al
-		out	0A4h, al	; Interrupt Controller #2, 8259A
+		out	0A4h, al
 		xor	byte ptr ds:2870h, 1
 		mov	al, ds:2870h
-		out	0A6h, al	; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		xor	di, di
 		xor	si, si
 		jmp	short loc_864

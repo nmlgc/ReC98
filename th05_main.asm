@@ -188,7 +188,7 @@ sub_3668	endp
 sub_367A	proc far
 		pushf
 		cli
-		mov	bl, 80h	; 'Ä'
+		mov	bl, 80h
 		call	sub_3668
 		and	ax, 3Fh
 		popf
@@ -365,7 +365,7 @@ sub_4272	endp
 ; ---------------------------------------------------------------------------
 dword_4282	dd 0
 byte_4286	db 0
-		db  90h	; ê
+		db  90h
 ; ---------------------------------------------------------------------------
 
 loc_4288:
@@ -492,7 +492,6 @@ loc_4355:
 		call	pfclose
 
 locret_435F:
-					; sub_4328+2Dj
 		retf
 sub_4328	endp
 
@@ -1050,7 +1049,7 @@ loc_AF88:
 		jz	short loc_AFC3
 		cmp	byte_20A70, 0
 		jnz	short loc_AFB5
-		mov	byte_20A70, 0FEh ; '˛'
+		mov	byte_20A70, 0FEh
 		jmp	short loc_AFDF
 ; ---------------------------------------------------------------------------
 
@@ -1069,13 +1068,12 @@ loc_AFC3:
 ; ---------------------------------------------------------------------------
 
 loc_AFD1:
-		cmp	byte_20A70, 0FEh ; '˛'
+		cmp	byte_20A70, 0FEh
 		jnz	short loc_AFDF
 		mov	byte_20A70, 0FFh
 		jmp	short $+2
 
 loc_AFDF:
-					; sub_AEA6+10Dj ...
 		cmp	byte_20A70, 0
 		jnz	short loc_AFEB
 		call	sub_AE1E
@@ -1096,10 +1094,10 @@ loc_B003:
 		call	sub_10214
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_25353
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, byte_25352
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		mov	byte_25353, al
 		xor	byte_25352, 1
 		call	sub_14D28
@@ -1182,15 +1180,13 @@ loc_B0C4:
 ; ---------------------------------------------------------------------------
 
 loc_B0D8:
-					; sub_B063+122j ...
-		mov	word_2CEAC, 40h	; '@'
+		mov	word_2CEAC, 40h
 		mov	word_2CEB0, 30h	; '0'
 		mov	word_2429C, 1BCAh
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
 loc_B0EC:
-					; sub_B063+122j
 		mov	word_2CEAC, 48h	; 'H'
 		mov	word_2CEB0, 34h	; '4'
 		mov	word_2429C, 1DEDh
@@ -1198,7 +1194,6 @@ loc_B0EC:
 ; ---------------------------------------------------------------------------
 
 loc_B100:
-					; sub_B063+122j
 		mov	word_2CEAC, 38h	; '8'
 		mov	word_2CEB0, 28h	; '('
 		mov	word_2429C, 1F84h
@@ -1284,7 +1279,7 @@ loc_B1C0:
 
 loc_B1E3:
 		mov	word_2C988, 4E20h
-		mov	word_2C97C, 0C8h ; '»'
+		mov	word_2C97C, 0C8h
 		mov	byte_25FEC, 30h	; '0'
 		mov	byte_25FEE, 30h	; '0'
 		mov	byte_25FED, 3Ah	; ':'
@@ -1302,7 +1297,6 @@ loc_B21C:
 		mov	word_25344, 0C7Ch
 
 loc_B222:
-					; sub_B063+143j ...
 		pop	si
 		pop	bp
 		retn
@@ -1366,7 +1360,7 @@ loc_B2A5:
 		mov	byte_25FEA, al
 		cmp	byte ptr es:[bx+1Fh], 5
 		jz	short loc_B2CE
-		mov	byte_2CEBE, 80h	; 'Ä'
+		mov	byte_2CEBE, 80h
 
 loc_B2CE:
 		mov	word_2300E, 9A5h
@@ -1376,9 +1370,9 @@ loc_B2DD:
 		call	sub_CFEE
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		push	ds
 		push	offset aEye_rgb	; "eye.rgb"
 		call	palette_entry_rgb
@@ -1413,26 +1407,22 @@ loc_B33E:
 ; ---------------------------------------------------------------------------
 
 loc_B344:
-					; sub_B237+142j
 		push	ds
 		push	offset aMari_bft ; "mari.bft"
 		jmp	short loc_B354
 ; ---------------------------------------------------------------------------
 
 loc_B34A:
-					; sub_B237+142j
 		push	ds
 		push	offset aMima_bft ; "mima.bft"
 		jmp	short loc_B354
 ; ---------------------------------------------------------------------------
 
 loc_B350:
-					; sub_B237+142j
 		push	ds
 		push	offset aYuka_bft ; "yuka.bft"
 
 loc_B354:
-					; sub_B237+111j ...
 		call	super_entry_bfnt
 
 loc_B359:
@@ -1473,7 +1463,6 @@ loc_B390:
 		push	offset aYuka16_bft ; "yuka16.bft"
 
 loc_B394:
-					; sub_B237+151j ...
 		call	super_entry_bfnt
 
 loc_B399:
@@ -1611,21 +1600,19 @@ loc_B469:
 		push	offset aSt06_mpn ; "st06.mpn"
 
 loc_B4A6:
-					; sub_B237+1E4j ...
 		call	sub_BAF8
 
 loc_B4A9:
-					; sub_B237+251j
 		call	sub_BB3E
 		call	sub_BDEC
 		call	sub_EE17
 		call	sub_BB9A
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 
 loc_B4BB:
-		cmp	vsync_Count2, 80h	; 'Ä'
+		cmp	vsync_Count2, 80h
 		jb	short loc_B4BB
 		push	1
 		call	palette_black_out
@@ -1637,10 +1624,10 @@ loc_B4BB:
 		mov	byte_25353, 0
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
+		out	dx, al
+		mov	dx, 0A4h
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	sub_BBE8
 		les	bx, dword_23EF0
 		cmp	byte ptr es:[bx+1Fh], 0
@@ -1713,7 +1700,7 @@ sub_B55A	proc near
 		mov	byte_2CEBD, 0
 		mov	byte_2CEC2, 0
 		mov	byte_2CEC1, 0
-		mov	byte_2CEBC, 40h	; '@'
+		mov	byte_2CEBC, 40h
 		mov	word_2CEC6, 0
 		mov	byte_2CEC0, 0
 		mov	word_2C92E, 4048h
@@ -1790,17 +1777,17 @@ loc_B645:
 		push	large 1A000Ch
 		push	ds
 		push	offset gsCHUUDAN
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 1A000Eh
 		push	ds
 		push	offset gsSAIKAI
-		push	0E9h ; 'È'
+		push	0E9h
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset gsSHUURYOU
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 
 loc_B682:
@@ -1820,12 +1807,12 @@ loc_B697:
 		push	large 1A000Eh
 		push	ds
 		push	offset gsSAIKAI
-		push	0E9h ; 'È'
+		push	0E9h
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset gsSHUURYOU
-		push	0C1h ; '¡'
+		push	0C1h
 		jmp	short loc_B6E2
 ; ---------------------------------------------------------------------------
 
@@ -1833,12 +1820,12 @@ loc_B6C3:
 		push	large 1A000Eh
 		push	ds
 		push	offset gsSAIKAI
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset gsSHUURYOU
-		push	0E9h ; 'È'
+		push	0E9h
 
 loc_B6E2:
 		call	gaiji_putsa
@@ -1874,17 +1861,17 @@ loc_B715:
 		push	large 1A000Ch
 		push	ds
 		push	offset asc_20BFE ; "	"
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		push	large 1A000Eh
 		push	ds
 		push	offset asc_20C03 ; "	"
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		push	large 1A000Fh
 		push	ds
 		push	offset asc_20C08 ; "	"
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		mov	ax, si
 
@@ -2181,7 +2168,6 @@ off_B9C4	dw offset loc_B923
 ; Attributes: bp-based frame
 
 sub_B9CC	proc near
-					; sub_B237+1D1p ...
 
 var_4		= dword	ptr -4
 arg_0		= dword	ptr  4
@@ -2338,7 +2324,7 @@ arg_0		= dword	ptr  4
 		mov	al, 1
 
 loc_BB08:
-		out	0A6h, al	; Interrupt Controller #2, 8259A
+		out	0A6h, al
 		push	ax
 		xor	bp, bp
 		mov	si, 240h
@@ -2482,7 +2468,6 @@ sub_BB9A	endp
 
 
 sub_BBE8	proc near
-					; sub_B237+2BAp ...
 		push	si
 		push	di
 		call	sub_BC2A
@@ -2532,7 +2517,7 @@ sub_BC2A	proc near
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -2627,7 +2612,7 @@ loc_BCDC:
 		jz	short loc_BD0B
 		mov	cl, bl
 		mov	bx, ax
-		add	bx, 40h	; '@'
+		add	bx, 40h
 		cmp	di, 7D00h
 		jb	short loc_BD03
 		sub	di, 7D00h
@@ -2875,7 +2860,6 @@ sub_BEBC	endp
 
 
 sub_BED0	proc near
-					; seg001:loc_1146Fp ...
 		push	di
 		mov	ax, ds
 		mov	es, ax
@@ -2893,7 +2877,6 @@ sub_BED0	endp
 ; Attributes: bp-based frame
 
 sub_BEE6	proc near
-					; seg001:loc_D17Ap ...
 		push	bp
 		mov	bp, sp
 		call	sub_11A65
@@ -2995,7 +2978,7 @@ loc_BF89:
 		jnz	short loc_BF5D
 		test	dh, 1
 		jnz	short loc_BF9C
-		add	si, 40h	; '@'
+		add	si, 40h
 
 loc_BF9C:
 		sub	si, 70h	; 'p'
@@ -3199,7 +3182,7 @@ loc_C0C2:
 		loop	loc_C0C2
 
 loc_C0C9:
-		sub	di, 0F0h ; ''
+		sub	di, 0F0h
 		jns	short loc_C0D3
 		add	di, 7D00h
 
@@ -3374,7 +3357,7 @@ sub_C150	endp
 sub_C1B6	proc near
 		push	si
 		push	di
-		mov	di, 40h	; '@'
+		mov	di, 40h
 		mov	si, 5986h
 
 loc_C1BE:
@@ -3390,10 +3373,10 @@ loc_C1CD:
 		lea	ax, [si+2]
 		push	ax
 		call	sub_BFDA
-		add	ax, 40h	; '@'
+		add	ax, 40h
 		cmp	ax, 1880h
 		jnb	short loc_C1E5
-		add	dx, 40h	; '@'
+		add	dx, 40h
 		cmp	dx, 1780h
 		jb	short loc_C1EA
 
@@ -3429,14 +3412,14 @@ sub_C202	proc near
 		call	sub_E6EE
 		mov	ax, 0A800h
 		mov	es, ax
-		mov	di, 40h	; '@'
+		mov	di, 40h
 		mov	si, 5986h
 
 loc_C214:
 		cmp	byte ptr [si], 1
 		jnz	short loc_C234
 		mov	ax, [si+4]
-		add	ax, 0C0h ; '¿'
+		add	ax, 0C0h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -3465,7 +3448,7 @@ sub_C23E	proc near
 		push	si
 		push	di
 		mov	dword_23F52, 80008h
-		mov	di, 60h	; '`'
+		mov	di, 60h
 		mov	si, 5986h
 
 loc_C24F:
@@ -3491,7 +3474,7 @@ sub_C264	proc near
 		push	si
 		push	di
 		mov	si, 5986h
-		mov	di, 60h	; '`'
+		mov	di, 60h
 
 loc_C26C:
 		call	IRand
@@ -3517,7 +3500,7 @@ sub_C282	proc near
 		shr	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		and	cl, 7
 		shr	al, cl
 		mov	es:[bx], al
@@ -3682,7 +3665,7 @@ loc_C377:
 		shr	bp, 2
 		sub	bp, 2
 		mov	ax, [si+4]
-		add	ax, 0C0h ; '¿'
+		add	ax, 0C0h
 		push	ax
 		call	sub_BFB2
 		add	si, 0Ah
@@ -3992,14 +3975,14 @@ loc_C583:
 		sub	di, 0Ah
 		mov	[di], eax
 		add	di, 64h	; 'd'
-		push	7Fh ; ''
+		push	7Fh
 		call	sub_C020
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		mov	[bp+var_2], ax
 		push	30h ; '0'
 		call	sub_C036
 		sub	al, 18h
-		add	al, 40h	; '@'
+		add	al, 40h
 		mov	byte ptr [bp+var_5], al
 		push	ds
 		lea	ax, [si+4]
@@ -4082,7 +4065,7 @@ loc_C683:
 		idiv	bx
 		push	ax
 		push	large 0B30000h
-		push	0C9h ; '…'
+		push	0C9h
 		call	super_roll_put_1plane
 		sub	di, 14h
 		mov	ax, [di]
@@ -4095,7 +4078,7 @@ loc_C683:
 		idiv	bx
 		push	ax
 		push	large 0B30000h
-		push	0C9h ; '…'
+		push	0C9h
 		call	super_roll_put_1plane
 		sub	di, 14h
 		mov	ax, [di]
@@ -4108,7 +4091,7 @@ loc_C683:
 		idiv	bx
 		push	ax
 		push	large 0B30000h
-		push	0C9h ; '…'
+		push	0C9h
 		call	super_roll_put_1plane
 		mov	ax, [si]
 		mov	bx, 10h
@@ -4120,10 +4103,10 @@ loc_C683:
 		idiv	bx
 		push	ax
 		push	large 0B30000h
-		push	0C8h ; '»'
+		push	0C8h
 		call	super_roll_put_1plane
-		add	di, 82h	; 'Ç'
-		add	si, 8Ch	; 'å'
+		add	di, 82h
+		add	si, 8Ch
 		cmp	byte_2429B, 70h	; 'p'
 		ja	short loc_C72B
 		mov	al, byte_25FE4
@@ -4139,7 +4122,6 @@ loc_C683:
 		call	near ptr sub_EC86
 
 loc_C72B:
-					; sub_C567+1B4j
 		inc	[bp+var_5+1]
 
 loc_C72E:
@@ -4165,13 +4147,13 @@ sub_C73A	proc near
 		call	sub_CEC2
 		call	sub_C567
 		mov	byte_2C92C, 9
-		cmp	byte_2429B, 40h	; '@'
+		cmp	byte_2429B, 40h
 		ja	short loc_C777
 		mov	al, byte_2429B
 		mov	ah, 0
 		add	ax, 0FFE0h
 		imul	ax, 3
-		mov	dx, 0C4h ; 'ƒ'
+		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
@@ -4221,7 +4203,7 @@ loc_C7AE:
 ; ---------------------------------------------------------------------------
 
 loc_C7C9:
-		cmp	byte_2429B, 80h	; 'Ä'
+		cmp	byte_2429B, 80h
 		jnb	short loc_C7D8
 
 loc_C7D0:
@@ -4231,7 +4213,7 @@ loc_C7D0:
 ; ---------------------------------------------------------------------------
 
 loc_C7D8:
-		cmp	byte_2429B, 80h	; 'Ä'
+		cmp	byte_2429B, 80h
 		jnz	short loc_C7F9
 		push	0Fh
 		call	sub_14CEE
@@ -4245,7 +4227,7 @@ loc_C7F2:
 ; ---------------------------------------------------------------------------
 
 loc_C7F9:
-		cmp	byte_2429B, 0A0h ; '†'
+		cmp	byte_2429B, 0A0h
 		jnb	short loc_C839
 
 loc_C800:
@@ -4255,11 +4237,11 @@ loc_C800:
 		mov	ah, 0
 		add	ax, 0FF80h
 		imul	ax, 3
-		mov	dx, 0C0h ; '¿'
+		mov	dx, 0C0h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
-		cmp	byte_2429B, 82h	; 'Ç'
+		cmp	byte_2429B, 82h
 		jnz	short loc_C849
 		cmp	byte_25FEA, 5
 		jz	short loc_C849
@@ -4274,7 +4256,6 @@ loc_C839:
 		mov	byte_25FE9, 1
 
 loc_C849:
-					; seg001:19C6j	...
 		inc	byte_2429B
 		pop	bp
 		retn
@@ -4417,7 +4398,6 @@ loc_C8E4:
 		mov	word ptr [si], 0FC19h
 
 loc_C989:
-					; sub_C84F+134j
 		inc	di
 		add	si, 0Ah
 
@@ -4450,7 +4430,7 @@ sub_C99E	proc near
 		mov	al, byte_2429B
 		mov	ah, 0
 		imul	ax, 6
-		mov	dx, 0C4h ; 'ƒ'
+		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
@@ -4498,7 +4478,7 @@ loc_CA1F:
 ; ---------------------------------------------------------------------------
 
 loc_CA26:
-		cmp	byte_2429B, 60h	; '`'
+		cmp	byte_2429B, 60h
 		jnb	short loc_CA65
 
 loc_CA2D:
@@ -4508,7 +4488,7 @@ loc_CA2D:
 		mov	ah, 0
 		add	ax, 0FFB0h
 		imul	ax, 6
-		mov	dx, 0C0h ; '¿'
+		mov	dx, 0C0h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
@@ -4670,7 +4650,7 @@ sub_CB30	proc near
 		call	sub_CA7B
 		mov	al, byte_2429B
 		mov	ah, 0
-		mov	dx, 0E0h ; '‡'
+		mov	dx, 0E0h
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
@@ -4696,7 +4676,7 @@ sub_CB30	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	byte_2429B, 40h	; '@'
+		cmp	byte_2429B, 40h
 		jnb	short loc_CC28
 		cmp	byte_2429B, 2
 		jnz	short loc_CC20
@@ -4712,7 +4692,7 @@ loc_CC20:
 ; ---------------------------------------------------------------------------
 
 loc_CC28:
-		cmp	byte_2429B, 40h	; '@'
+		cmp	byte_2429B, 40h
 		jnz	short loc_CC49
 		push	0Fh
 		call	sub_14CEE
@@ -4736,7 +4716,7 @@ loc_CC50:
 		mov	ah, 0
 		add	ax, 0FFC0h
 		imul	ax, 6
-		mov	dx, 0C0h ; '¿'
+		mov	dx, 0C0h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
@@ -4830,13 +4810,13 @@ sub_CD1C	proc near
 		call	sub_CFBA
 		call	sub_CC9E
 		mov	byte_2C92C, 9
-		cmp	byte_2429B, 40h	; '@'
+		cmp	byte_2429B, 40h
 		ja	short loc_CD59
 		mov	al, byte_2429B
 		mov	ah, 0
 		add	ax, 0FFE0h
 		imul	ax, 3
-		mov	dx, 0C4h ; 'ƒ'
+		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
@@ -4854,7 +4834,7 @@ loc_CD59:
 		jnz	short loc_CD77
 		push	9
 		call	sub_14CEE
-		mov	PaletteTone, 96h	; 'ñ'
+		mov	PaletteTone, 96h
 		jmp	short loc_CD8D
 ; ---------------------------------------------------------------------------
 
@@ -4905,7 +4885,7 @@ loc_CDB4:
 ; ---------------------------------------------------------------------------
 
 loc_CDCF:
-		cmp	byte_2429B, 0A0h ; '†'
+		cmp	byte_2429B, 0A0h
 		jnb	short loc_CDDE
 
 loc_CDD6:
@@ -4915,7 +4895,7 @@ loc_CDD6:
 ; ---------------------------------------------------------------------------
 
 loc_CDDE:
-		cmp	byte_2429B, 0A0h ; '†'
+		cmp	byte_2429B, 0A0h
 		jnz	short loc_CDFF
 		push	0Fh
 		call	sub_14CEE
@@ -4929,7 +4909,7 @@ loc_CDF8:
 ; ---------------------------------------------------------------------------
 
 loc_CDFF:
-		cmp	byte_2429B, 0C0h ; '¿'
+		cmp	byte_2429B, 0C0h
 		jnb	short loc_CE3F
 
 loc_CE06:
@@ -4939,11 +4919,11 @@ loc_CE06:
 		mov	ah, 0
 		add	ax, 0FF60h
 		imul	ax, 3
-		mov	dx, 0C0h ; '¿'
+		mov	dx, 0C0h
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	byte_25FE9, 1
-		cmp	byte_2429B, 0A1h ; '°'
+		cmp	byte_2429B, 0A1h
 		jnz	short loc_CE4F
 		cmp	byte_25FEA, 5
 		jz	short loc_CE4F
@@ -4958,7 +4938,6 @@ loc_CE3F:
 		mov	byte_25FE9, 1
 
 loc_CE4F:
-					; seg001:1FCCj	...
 		inc	byte_2429B
 		pop	bp
 		retn
@@ -5048,7 +5027,7 @@ sub_CEC2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -5083,7 +5062,7 @@ sub_CEF2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -5148,7 +5127,7 @@ sub_CF50	proc near
 		push	di
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -5219,7 +5198,7 @@ sub_CFBA	proc near
 		push	di
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -5251,9 +5230,8 @@ sub_CFBA	endp
 
 
 sub_CFEE	proc near
-					; sub_B237+CCp
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -5268,12 +5246,12 @@ sub_CFEE	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	ax, 1
-		out	0A6h, ax	; Interrupt Controller #2, 8259A
+		out	0A6h, ax
 		xor	di, di
 		mov	cx, 1F40h
 		rep stosd
 		xor	ax, ax
-		out	0A6h, ax	; Interrupt Controller #2, 8259A
+		out	0A6h, ax
 		mov	cx, 1F40h
 		xor	di, di
 		rep stosd
@@ -5290,7 +5268,7 @@ sub_CFEE	endp
 sub_D024	proc near
 		mov	cx, 0Ch
 		rep stosd
-		sub	di, 80h	; 'Ä'
+		sub	di, 80h
 		jge	short sub_D024
 		retn
 sub_D024	endp
@@ -5299,17 +5277,17 @@ sub_D024	endp
 		nop
 		push	bp
 		mov	bp, sp
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_D04F
-		mov	word ptr dword_23F52, 40h ; '@'
-		mov	word ptr dword_23F52+2,	40h ; '@'
+		mov	word ptr dword_23F52, 40h
+		mov	word ptr dword_23F52+2,	40h
 		push	large [dword_26324]
 		jmp	short loc_D060
 ; ---------------------------------------------------------------------------
 
 loc_D04F:
-		mov	word ptr dword_23F52, 80h ; 'Ä'
-		mov	word ptr dword_23F52+2,	80h ; 'Ä'
+		mov	word ptr dword_23F52, 80h
+		mov	word ptr dword_23F52+2,	80h
 		push	large [dword_26320]
 
 loc_D060:
@@ -5374,7 +5352,7 @@ loc_D09F:
 ; ---------------------------------------------------------------------------
 
 loc_D0C8:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_D0DC
 		push	large 400010h
 		push	0
@@ -5384,7 +5362,7 @@ loc_D0C8:
 ; ---------------------------------------------------------------------------
 
 loc_D0DC:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_D0EA
 		cmp	word_26346, 2
 		jg	short loc_D0EF
@@ -5446,7 +5424,7 @@ loc_D142:
 ; ---------------------------------------------------------------------------
 
 loc_D153:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_D167
 		push	large 200010h
 		push	1
@@ -5455,7 +5433,7 @@ loc_D153:
 ; ---------------------------------------------------------------------------
 
 loc_D167:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_D175
 		cmp	word_26346, 2
 		jg	short loc_D17A
@@ -5519,7 +5497,7 @@ loc_D1CE:
 ; ---------------------------------------------------------------------------
 
 loc_D1DF:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_D1F3
 		push	large 2000DDh
 		push	1
@@ -5528,7 +5506,7 @@ loc_D1DF:
 ; ---------------------------------------------------------------------------
 
 loc_D1F3:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_D201
 		cmp	word_26346, 2
 		jg	short loc_D206
@@ -5593,7 +5571,7 @@ loc_D25C:
 ; ---------------------------------------------------------------------------
 
 loc_D272:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_D286
 		push	large 600048h
 		push	1
@@ -5603,7 +5581,7 @@ loc_D272:
 ; ---------------------------------------------------------------------------
 
 loc_D286:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_D294
 		cmp	word_26346, 2
 		jg	short loc_D299
@@ -5660,7 +5638,7 @@ loc_D2E5:
 ; ---------------------------------------------------------------------------
 
 loc_D2FB:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_D30F
 		push	large 200010h
 		push	1
@@ -5670,7 +5648,7 @@ loc_D2FB:
 ; ---------------------------------------------------------------------------
 
 loc_D30F:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_D31D
 		cmp	word_26346, 2
 		jg	short loc_D322
@@ -5768,7 +5746,7 @@ loc_D3B4:
 		add	si, 10h
 
 loc_D3BA:
-		cmp	[bp+var_4], 40h	; '@'
+		cmp	[bp+var_4], 40h
 		jl	loc_D33C
 		pop	di
 		pop	si
@@ -5794,7 +5772,7 @@ var_2		= word ptr -2
 		jnz	loc_D456
 		mov	[bp+var_6], 3AC0h
 		xor	di, di
-		mov	[bp+var_2], 40h	; '@'
+		mov	[bp+var_2], 40h
 		jmp	short loc_D433
 ; ---------------------------------------------------------------------------
 
@@ -5826,8 +5804,8 @@ loc_D422:
 		cmp	[bp+var_4], 14h
 		jl	short loc_D3EB
 		inc	di
-		add	[bp+var_6], 8Eh	; 'é'
-		sub	[bp+var_2], 80h	; 'Ä'
+		add	[bp+var_6], 8Eh
+		sub	[bp+var_2], 80h
 
 loc_D433:
 		cmp	di, 2
@@ -5844,12 +5822,12 @@ loc_D43F:
 		add	si, 10h
 
 loc_D44B:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_D43F
 		mov	word_21D6E, 0
 
 loc_D456:
-		cmp	word_21D6E, 40h	; '@'
+		cmp	word_21D6E, 40h
 		jge	short loc_D4BE
 		mov	ax, word_26346
 		mov	bx, 4
@@ -5911,10 +5889,10 @@ loc_D4BE:
 
 loc_D4E4:
 		mov	al, byte_2451A
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	byte_2451A, al
 		mov	al, byte_245A8
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 
 loc_D4F1:
 		mov	byte_245A8, al
@@ -5981,7 +5959,7 @@ arg_2		= word ptr  6
 		mov	bx, di
 		mov	al, [bx+si+7Ah]
 		mov	ah, 0
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_14E6C
 		mov	ax, word ptr dword_252DE
@@ -6072,7 +6050,7 @@ sub_D5E2	proc near
 loc_D5F1:
 		push	si
 		call	sub_D598
-		add	word ptr [si+52h], 40h ; '@'
+		add	word ptr [si+52h], 40h
 		push	si
 		push	large 0C000B80h
 		mov	ax, [si+52h]
@@ -6093,7 +6071,7 @@ loc_D5F1:
 
 loc_D62B:
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 
 loc_D630:
 		cmp	di, 2
@@ -6182,7 +6160,7 @@ loc_D6B8:
 		mov	word ptr [bx+52h], 1000h
 		mov	bx, [bp+var_6]
 		add	bx, [bp+var_4]
-		mov	byte ptr [bx+7Ah], 40h ; '@'
+		mov	byte ptr [bx+7Ah], 40h
 		dec	[bp+var_4]
 
 loc_D6EE:
@@ -6191,7 +6169,7 @@ loc_D6EE:
 		mov	bx, [bp+var_6]
 		mov	word ptr [bx+50h], 0
 		inc	di
-		add	[bp+var_6], 8Eh	; 'é'
+		add	[bp+var_6], 8Eh
 		add	[bp+var_2], 1000h
 
 loc_D707:
@@ -6222,7 +6200,7 @@ loc_D713:
 		add	si, 10h
 
 loc_D746:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_D713
 		inc	byte_21D70
 		jmp	short loc_D770
@@ -6235,7 +6213,7 @@ loc_D751:
 ; ---------------------------------------------------------------------------
 
 loc_D758:
-		cmp	word ptr [si+0Ah], 0A0h	; '†'
+		cmp	word ptr [si+0Ah], 0A0h
 		jge	short loc_D767
 		mov	al, byte_25FE2
 		mov	ah, 0
@@ -6246,7 +6224,7 @@ loc_D767:
 		add	si, 10h
 
 loc_D76B:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_D758
 
 loc_D770:
@@ -6322,7 +6300,7 @@ loc_D7CD:
 		add	al, [si+7Ah]
 		mov	[si+7Ah], al
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 		mov	ax, [bp+var_2]
 		neg	ax
 		mov	[bp+var_2], ax
@@ -6357,7 +6335,7 @@ loc_D81E:
 		cmp	[bp+var_4], 0
 		jge	short loc_D80F
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 
 loc_D829:
 		cmp	di, 2
@@ -6429,7 +6407,7 @@ loc_D8A5:
 		add	si, 10h
 
 loc_D8AE:
-		cmp	dx, 40h	; '@'
+		cmp	dx, 40h
 		jl	short loc_D8A5
 		inc	byte_21D74
 
@@ -6451,7 +6429,7 @@ loc_D8CD:
 		add	si, 10h
 
 loc_D8D1:
-		cmp	dx, 40h	; '@'
+		cmp	dx, 40h
 		jl	short loc_D8BE
 		pop	si
 		pop	bp
@@ -6483,7 +6461,7 @@ loc_D8EE:
 		call	sub_D598
 		mov	ax, [si+50h]
 		add	[si+2],	ax
-		cmp	word ptr [si+50h], 0E0h	; '‡'
+		cmp	word ptr [si+50h], 0E0h
 		jge	short loc_D907
 		mov	al, byte_25FE2
 		mov	ah, 0
@@ -6516,7 +6494,7 @@ loc_D929:
 		add	al, [si+7Ah]
 		mov	[si+7Ah], al
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 		mov	ax, [bp+var_2]
 		neg	ax
 		mov	[bp+var_2], ax
@@ -6551,7 +6529,7 @@ loc_D97A:
 		cmp	[bp+var_4], 0
 		jge	short loc_D96B
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 
 loc_D985:
 		cmp	di, 2
@@ -6585,7 +6563,7 @@ loc_D9B6:
 		cmp	[bp+var_4], 0
 		jge	short loc_D9A7
 		inc	di
-		add	si, 8Eh	; 'é'
+		add	si, 8Eh
 
 loc_D9C1:
 		cmp	di, 2
@@ -6658,7 +6636,7 @@ loc_DA38:
 		add	si, 10h
 
 loc_DA46:
-		cmp	cx, 40h	; '@'
+		cmp	cx, 40h
 		jl	short loc_DA38
 		inc	byte_21D75
 
@@ -6688,7 +6666,7 @@ loc_DA72:
 		add	si, 10h
 
 loc_DA7E:
-		cmp	cx, 40h	; '@'
+		cmp	cx, 40h
 		jl	short loc_DA56
 		pop	si
 		leave
@@ -6994,7 +6972,7 @@ loc_DCEF:
 ; ---------------------------------------------------------------------------
 
 loc_DD1B:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnb	short loc_DD2A
 		call	sub_E92E
 		call	sub_DBFF
@@ -7003,7 +6981,7 @@ loc_DD1B:
 ; ---------------------------------------------------------------------------
 
 loc_DD2A:
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jz	short loc_DD38
 		cmp	word_26346, 2
 		jg	short loc_DD3D
@@ -7205,7 +7183,6 @@ sub_DDF0	endp
 
 
 sub_DE56	proc near
-					; sub_DDF0:loc_DE30p
 		xor	bl, bl
 		mov	bh, 2
 		lodsd
@@ -7232,7 +7209,6 @@ sub_DE56	endp
 
 
 sub_DE7A	proc near
-					; sub_DDF0:loc_DE4Ep
 		mov	bh, 2
 		lodsd
 		ror	al, cl
@@ -7306,7 +7282,7 @@ loc_DECF:
 		mov	es:[di+6180h], eax
 		stosd
 		loop	loc_DECF
-		sub	di, 80h	; 'Ä'
+		sub	di, 80h
 		jge	short loc_DECC
 		mov	ax, 0A968h
 		mov	es, ax
@@ -7379,7 +7355,7 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	di
-		push	80h ; 'Ä'
+		push	80h
 		mov	al, byte_24498
 		mov	ah, 0
 		push	ax
@@ -7458,10 +7434,10 @@ arg_0		= word ptr  4
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
-		mov	word ptr [bp+var_6+2], 80h ; 'Ä'
+		mov	word ptr [bp+var_6+2], 80h
 
 loc_DFD8:
-		mov	word ptr [bp+var_6], 80h ; 'Ä'
+		mov	word ptr [bp+var_6], 80h
 		mov	[bp+var_2], 18h
 
 loc_DFE1:
@@ -7517,7 +7493,6 @@ word_E02C	dw 0
 
 
 sub_E02E	proc near
-					; seg001:60EFp	...
 		mov	bx, sp
 		push	ds
 		push	si
@@ -7536,7 +7511,7 @@ sub_E02E	proc near
 		mov	cs:word_E02C, bx
 		xor	si, si
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jnz	short loc_E08E
 		mov	dl, 0FFh
 		shr	dl, cl
@@ -7561,7 +7536,7 @@ loc_E084:
 		call	sub_E0DC
 		jnz	short loc_E084
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jz	short loc_E066
 
 loc_E08E:
@@ -7589,7 +7564,7 @@ loc_E0B2:
 		call	sub_E10E
 		jnz	short loc_E0B2
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jz	short loc_E094
 		pop	di
 		pop	si
@@ -7602,7 +7577,6 @@ sub_E02E	endp
 
 
 sub_E0C2	proc near
-					; sub_E02E:loc_E094p
 		shr	ah, 1
 		sbb	al, al
 		out	7Eh, al
@@ -7625,7 +7599,6 @@ sub_E0C2	endp
 
 
 sub_E0DC	proc near
-					; sub_E02E:loc_E084p
 		xor	bl, bl
 		mov	bh, 2
 		lodsd
@@ -7663,7 +7636,6 @@ sub_E0DC	endp
 
 
 sub_E10E	proc near
-					; sub_E02E:loc_E0B2p
 		mov	bh, 2
 		lodsd
 		ror	al, cl
@@ -7720,7 +7692,7 @@ sub_E148	proc near
 		add	bx, ax
 		xor	si, si
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jnz	short loc_E1DE
 		mov	dl, 0FFh
 		shr	dl, cl
@@ -7779,7 +7751,7 @@ loc_E1D2:
 		dec	ch
 		jnz	short loc_E1C0
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jz	short loc_E17C
 
 loc_E1DE:
@@ -7836,7 +7808,7 @@ loc_E228:
 		dec	ch
 		jnz	short loc_E228
 		lodsw
-		cmp	al, 80h	; 'Ä'
+		cmp	al, 80h
 		jz	short loc_E1E4
 		pop	di
 		pop	si
@@ -8137,7 +8109,7 @@ loc_E42D:
 		call	sub_E24C
 
 loc_E43E:
-		add	si, 40h	; '@'
+		add	si, 40h
 		dec	di
 		jnz	short loc_E42D
 		pop	di
@@ -8159,7 +8131,7 @@ sub_E448	proc far
 		jz	short loc_E45D
 		les	bx, dword_23EF0
 		assume es:nothing
-		mov	byte ptr es:[bx+1Ah], 0FEh ; '˛'
+		mov	byte ptr es:[bx+1Ah], 0FEh
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
@@ -8190,7 +8162,7 @@ sub_E480	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, dword_23EF0
-		mov	byte ptr es:[bx+1Ah], 0FDh ; '˝'
+		mov	byte ptr es:[bx+1Ah], 0FDh
 		push	204h
 		call	sub_14F68
 		push	10h
@@ -8238,7 +8210,6 @@ sub_E4A6	endp
 
 
 sub_E4DE	proc near
-					; seg001:7BB1p	...
 		mov	bx, sp
 		push	si
 		mov	si, ss:[bx+4]
@@ -8256,7 +8227,6 @@ sub_E4DE	endp
 
 
 sub_E4FC	proc far
-					; sub_B55A+88p	...
 		xor	bx, bx
 		xor	ax, ax
 		mov	al, byte_2CEBE
@@ -8423,7 +8393,7 @@ sub_E5EE	proc near
 		push	si
 		push	di
 		mov	si, 5DC6h
-		mov	di, 0B4h ; '¥'
+		mov	di, 0B4h
 		mov	dword_23F52, 80008h
 		cmp	byte_2C978, 0
 		jnz	short loc_E638
@@ -8452,7 +8422,7 @@ loc_E632:
 		jnz	short loc_E60D
 
 loc_E638:
-		add	di, 0DCh ; '‹'
+		add	di, 0DCh
 		shl	dword_23F52, 1
 
 loc_E641:
@@ -8549,7 +8519,7 @@ sub_E696	endp
 
 
 sub_E6E2	proc near
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		out	7Ch, al
 		retn
 sub_E6E2	endp
@@ -8561,8 +8531,7 @@ sub_E6E2	endp
 
 
 sub_E6E8	proc near
-					; seg001:loc_D124p ...
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		retn
 sub_E6E8	endp
@@ -8617,7 +8586,6 @@ sub_E708	endp
 
 
 sub_E720	proc far
-					; sub_16510:loc_166F5P	...
 		mov	bx, sp
 		mov	al, ss:[bx+4]
 		add	al, byte_25FEC
@@ -8637,7 +8605,6 @@ sub_E720	endp
 
 
 sub_E73A	proc far
-					; sub_12017+70p ...
 		mov	bx, sp
 		mov	al, byte_25FEC
 		sub	al, ss:[bx+4]
@@ -8666,7 +8633,6 @@ sub_E752	endp
 
 
 sub_E758	proc far
-					; sub_14879+E9p ...
 		mov	al, byte_25FEB
 
 loc_E75B:
@@ -8700,7 +8666,7 @@ loc_E77A:
 		inc	bx
 		loop	loc_E77A
 		add	[bx], dl
-		mov	cx, 5Ch	; '\'
+		mov	cx, 5Ch
 		xor	bx, bx
 		xor	dx, dx
 		mov	ax, [si+2]
@@ -8727,7 +8693,7 @@ sub_E7A3	proc near
 		xor	dx, dx
 		xor	ax, ax
 		add	bx, 4
-		mov	cx, 5Ch	; '\'
+		mov	cx, 5Ch
 
 loc_E7B3:
 		mov	dl, [bx]
@@ -8739,7 +8705,7 @@ loc_E7B3:
 		mov	[si], ax
 		xor	dx, dx
 		add	si, 5Fh	; '_'
-		mov	cx, 5Ch	; '\'
+		mov	cx, 5Ch
 
 loc_E7CC:
 		add	dl, al
@@ -8782,7 +8748,7 @@ loc_E7E7:
 					; AL = method: offset from beginning of	file
 		mov	ah, 3Fh	; '?'
 		mov	dx, 4902h
-		mov	cx, 60h	; '`'
+		mov	cx, 60h
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
@@ -8816,9 +8782,9 @@ sub_E813	proc near
 		mov	ax, 4200h
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
-		mov	ah, 40h	; '@'
+		mov	ah, 40h
 		mov	dx, 4902h
-		mov	cx, 60h	; '`'
+		mov	cx, 60h
 		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
 					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
 		mov	ah, 3Eh
@@ -8846,7 +8812,7 @@ loc_E84F:
 
 loc_E85E:
 		mov	al, [si]
-		sub	al, 0A0h ; '†'
+		sub	al, 0A0h
 		cmp	al, [bx]
 		jb	short loc_E86C
 		ja	short loc_E86F
@@ -8905,7 +8871,7 @@ loc_E8AD:
 		mov	cx, 8
 
 loc_E8D5:
-		add	byte ptr [di], 0A0h ; '†'
+		add	byte ptr [di], 0A0h
 		inc	di
 		loop	loc_E8D5
 		mov	al, byte_25FEA
@@ -8915,7 +8881,7 @@ loc_E8D5:
 
 loc_E8E4:
 		mov	di, dx
-		add	al, 0A1h ; '°'
+		add	al, 0A1h
 		mov	[di+495Bh], al
 		call	sub_E813
 
@@ -8951,7 +8917,7 @@ sub_E8FE	proc near
 
 loc_E906:
 		mov	al, [bx+4933h]
-		sub	al, 0A0h ; '†'
+		sub	al, 0A0h
 		mov	[bx-3BCEh], al
 		inc	bx
 		loop	loc_E906
@@ -8979,10 +8945,9 @@ sub_E8FE	endp
 
 
 sub_E92E	proc near
-					; seg001:2CD4p	...
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -9010,7 +8975,7 @@ sub_E92E	endp
 sub_E950	proc near
 		pushf
 		cli
-		mov	al, 80h	; 'Ä'
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -9082,7 +9047,6 @@ sub_E9AA	endp
 ; Attributes: bp-based frame
 
 sub_E9D6	proc near
-					; sub_FD33+15Bp
 
 var_20		= byte ptr -20h
 var_14		= byte ptr -14h
@@ -9106,12 +9070,12 @@ arg_0		= word ptr  4
 		add	ax, 100h
 		mov	[bp+var_2], ax
 		mov	cl, [si+8]
-		add	cl, 40h	; '@'
+		add	cl, 40h
 		mov	ch, 0
 		lea	di, [bp+var_8]
 		sub	bp, 4
 		call	sub_E972
-		add	cl, 80h	; 'Ä'
+		add	cl, 80h
 		sub	di, 4
 		call	sub_E972
 		sub	[bp+var_2], ax
@@ -9189,14 +9153,14 @@ arg_0		= word ptr  4
 
 loc_EA98:
 		call	sub_E972
-		add	ax, 60h	; '`'
+		add	ax, 60h
 		sub	ax, word ptr dword_2CEA0+2
-		cmp	ax, 0C0h ; '¿'
+		cmp	ax, 0C0h
 		jnb	short loc_EABD
 		mov	ax, ss:[di]
-		add	ax, 60h	; '`'
+		add	ax, 60h
 		sub	ax, word ptr dword_2CEA0
-		cmp	ax, 0C0h ; '¿'
+		cmp	ax, 0C0h
 		jnb	short loc_EABD
 		mov	byte_2CEC1, 1
 		jmp	short loc_EAC5
@@ -9246,7 +9210,7 @@ sub_EACE	proc near
 		push	54h ; 'T'
 		call	sub_E708
 		push	5628h
-		push	0C0h ; '¿'
+		push	0C0h
 		call	sub_E708
 		push	0B92Ah
 		push	120h
@@ -9267,13 +9231,13 @@ sub_EACE	proc near
 		push	14h
 		call	sub_E708
 		push	0AF20h
-		push	0C8h ; '»'
+		push	0C8h
 		call	sub_E708
 		push	9DA0h
 		push	460h
 		call	sub_E708
 		push	9A96h
-		push	98h ; 'ò'
+		push	98h
 		call	sub_E708
 		mov	word_2A72C, 8
 		mov	byte_2A72E, 9
@@ -9307,7 +9271,7 @@ var_2		= word ptr -2
 loc_EBC8:
 		cmp	byte ptr [si], 1
 		jz	short loc_EBD4
-		cmp	byte ptr [si], 80h ; 'Ä'
+		cmp	byte ptr [si], 80h
 		jb	loc_EC74
 
 loc_EBD4:
@@ -9378,7 +9342,7 @@ loc_EC5B:
 
 loc_EC74:
 		inc	[bp+var_2]
-		add	si, 40h	; '@'
+		add	si, 40h
 
 loc_EC7A:
 		cmp	[bp+var_2], 20h	; ' '
@@ -9395,7 +9359,6 @@ sub_EBB7	endp
 ; Attributes: bp-based frame
 
 sub_EC86	proc far
-					; seg003:686FP	...
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -9477,7 +9440,7 @@ loc_ECDD:
 		idiv	bx
 		add	ax, 10h
 		mov	[si+4],	ax
-		mov	word ptr [si+6], 84h ; 'Ñ'
+		mov	word ptr [si+6], 84h
 		mov	word ptr [si+8], 0FFF8h
 		jmp	short loc_ED19
 ; ---------------------------------------------------------------------------
@@ -9786,17 +9749,17 @@ loc_EF07:
 		mov	cx, 18h
 
 loc_EF0A:
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	al, 1
 		mov	bx, es:[di]
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	al, 1
 		mov	es:[di], bx
 		add	di, 2
 		loop	loc_EF0A
-		sub	di, 80h	; 'Ä'
+		sub	di, 80h
 		jge	short loc_EF07
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	egc_off
 		pop	di
 		pop	bp
@@ -9835,15 +9798,15 @@ loc_EF51:
 		mov	cx, 8
 
 loc_EF54:
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	al, 1
 		mov	bx, es:[di]
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		xor	al, 1
 		mov	es:[di], bx
 		add	di, 2
 		loop	loc_EF54
-		sub	di, 60h	; '`'
+		sub	di, 60h
 		jge	short loc_EF51
 		call	egc_off
 		pop	di
@@ -9857,7 +9820,6 @@ sub_EF2A	endp
 ; Attributes: bp-based frame
 
 sub_EF74	proc near
-					; sub_EFDE+121p ...
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -9939,7 +9901,6 @@ sub_EFAC	endp
 ; Attributes: bp-based frame
 
 sub_EFDE	proc near
-					; sub_F1A6+102p
 
 s		= dword	ptr -8
 var_4		= word ptr -4
@@ -10114,12 +10075,11 @@ loc_F14A:
 		push	word_2C936
 		mov	ah, 0
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		add	word_2C934, 2
 
 loc_F170:
-					; sub_EFDE+16Aj
 		mov	al, 1
 		leave
 		retn	2
@@ -10234,7 +10194,7 @@ loc_F249:
 		push	word_2C936
 		push	word ptr [bp+var_6+2]
 		push	bx
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		add	word_2C934, 2
 		call	sub_14FD6
@@ -10275,7 +10235,6 @@ sub_F1A6	endp
 ; Attributes: bp-based frame
 
 sub_F2B4	proc far
-					; seg003:loc_1AF85P ...
 		push	bp
 		mov	bp, sp
 		les	bx, dword_23EF0
@@ -10331,14 +10290,14 @@ loc_F333:
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_25353
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	sub_EFAC
 		call	sub_EEF2
 		call	sub_F1A6
 		call	sub_F463
 		mov	dx, 0A6h ; '¶'
 		mov	al, byte_25352
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		push	1
 		call	sub_1510E
 		pop	bp
@@ -10539,7 +10498,6 @@ off_F4D5	dw offset loc_F4AC
 ; Attributes: bp-based frame
 
 sub_F4DD	proc near
-					; sub_F2B4+15p
 		push	bp
 		mov	bp, sp
 		push	si
@@ -10584,7 +10542,6 @@ sub_F4DD	endp
 ; Attributes: bp-based frame
 
 sub_F520	proc near
-					; seg001:loc_10A94p ...
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
@@ -10645,7 +10602,7 @@ loc_F548:
 		jbe	short loc_F5AC
 		cmp	dx, 180h
 		jnb	short loc_F5AC
-		push	0A4h ; '§'
+		push	0A4h
 		call	sub_E148
 
 loc_F5AC:
@@ -10655,7 +10612,7 @@ loc_F5AC:
 		mov	[bp+var_7], al
 
 loc_F5B5:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_F548
 		mov	ax, [si+0Ah]
 		add	[si+6],	ax
@@ -10766,7 +10723,7 @@ loc_F694:
 		jge	short loc_F6AE
 		test	byte ptr word_22272, 1
 		jz	short loc_F6AE
-		mov	PaletteTone, 96h	; 'ñ'
+		mov	PaletteTone, 96h
 		jmp	short loc_F6CB
 ; ---------------------------------------------------------------------------
 
@@ -10777,7 +10734,7 @@ loc_F6AE:
 		jge	short loc_F6D2
 		mov	ax, word_22272
 		imul	ax, 6
-		mov	dx, 0C4h ; 'ƒ'
+		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
 
@@ -10914,7 +10871,7 @@ loc_F7B9:
 		cmp	word ptr [si+4], 0FF80h
 		jle	short loc_F7DF
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -11027,7 +10984,6 @@ sub_F7EC	endp
 ; Attributes: bp-based frame
 
 sub_F896	proc near
-					; sub_F976:loc_FA68p
 
 var_1		= byte ptr -1
 
@@ -11071,7 +11027,7 @@ loc_F8DA:
 		push	si
 		mov	al, [bp+var_1]
 		mov	ah, 0
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		push	dx
 		push	1
@@ -11104,7 +11060,6 @@ sub_F896	endp
 ; Attributes: bp-based frame
 
 sub_F906	proc near
-					; sub_F976:loc_FA47p
 
 var_1		= byte ptr -1
 
@@ -11149,7 +11104,7 @@ loc_F94E:
 		push	si
 		mov	al, [bp+var_1]
 		mov	ah, 0
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		push	dx
 		push	1
@@ -11217,7 +11172,7 @@ loc_F9AA:
 loc_F9B1:
 		push	[bp+var_2]
 		push	large 0C00B0h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		push	1
 		call	sub_1510E
@@ -11225,7 +11180,7 @@ loc_F9B1:
 		push	0Ch
 		push	ds
 		push	offset asc_226B3 ; "  "
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		sub	[bp+var_2], 2
 
@@ -11239,7 +11194,7 @@ loc_F9DE:
 loc_F9EB:
 		push	[bp+var_2]
 		push	large 0C00B0h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		push	1
 		call	sub_1510E
@@ -11247,7 +11202,7 @@ loc_F9EB:
 		push	0Ch
 		push	ds
 		push	offset asc_226B6 ; "  "
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		add	[bp+var_2], 2
 
@@ -11257,7 +11212,7 @@ loc_FA18:
 		push	large 14000Ch
 		push	ds
 		push	offset gGAMEOVER
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		push	0
 		call	sub_150E4
@@ -11341,29 +11296,29 @@ var_1		= byte ptr -1
 		push	large 13000Ah
 		push	ds
 		push	offset gCONTINUE?
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		push	large 18000Dh
 		push	ds
 		push	offset gYES
-		push	85h ; 'Ö'
+		push	85h
 		call	gaiji_putsa
 		push	large 19000Fh
 		push	ds
 		push	offset gNO
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		push	large 130016h
 		push	ds
 		push	offset gCREDIT
-		push	81h ; 'Å'
+		push	81h
 		call	gaiji_putsa
 		push	large 210016h
 		mov	al, [bp+var_2]
 		mov	ah, 0
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		push	ax
-		push	81h ; 'Å'
+		push	81h
 		call	gaiji_putca
 
 loc_FB27:
@@ -11382,12 +11337,12 @@ loc_FB40:
 		mov	di, ax
 		or	di, di
 		jnz	short loc_FB51
-		mov	[bp+var_1], 85h	; 'Ö'
+		mov	[bp+var_1], 85h
 		jmp	short loc_FB55
 ; ---------------------------------------------------------------------------
 
 loc_FB51:
-		mov	[bp+var_1], 0E1h ; '·'
+		mov	[bp+var_1], 0E1h
 
 loc_FB55:
 		push	large 18000Dh
@@ -11399,12 +11354,12 @@ loc_FB55:
 		call	gaiji_putsa
 		cmp	di, 1
 		jnz	short loc_FB75
-		mov	[bp+var_1], 85h	; 'Ö'
+		mov	[bp+var_1], 85h
 		jmp	short loc_FB79
 ; ---------------------------------------------------------------------------
 
 loc_FB75:
-		mov	[bp+var_1], 0E1h ; '·'
+		mov	[bp+var_1], 0E1h
 
 loc_FB79:
 		push	large 19000Fh
@@ -11582,7 +11537,7 @@ loc_FCB3:
 		test	byte ptr [si+0Eh], 1
 		jz	short loc_FCC1
 		mov	al, [si+0Bh]
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	[si+0Bh], al
 
 loc_FCC1:
@@ -11595,7 +11550,7 @@ loc_FCC9:
 		test	byte ptr [si+0Eh], 1
 		jz	short loc_FCD7
 		mov	al, [si+0Bh]
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	[si+0Bh], al
 
 loc_FCD7:
@@ -11719,7 +11674,7 @@ loc_FD96:
 		push	ax
 		call	grcg_circlefill
 		mov	al, [bp+var_A]
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	[bp+var_A], al
 
 loc_FDC2:
@@ -11738,13 +11693,13 @@ loc_FDDF:
 		cmp	byte ptr [si+0Bh], 5
 		jb	short loc_FDEC
 		mov	al, [si+0Bh]
-		add	al, 0FCh ; '¸'
+		add	al, 0FCh
 		jmp	short loc_FDF1
 ; ---------------------------------------------------------------------------
 
 loc_FDEC:
 		mov	al, [si+0Bh]
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 
 loc_FDF1:
 		mov	[si+0Bh], al
@@ -11826,7 +11781,7 @@ loc_FE9D:
 		push	ax
 		mov	al, [si+0Ah]
 		mov	ah, 0
-		add	ax, 40h	; '@'
+		add	ax, 40h
 		push	ax
 		call	sub_14E6C
 		xor	di, di
@@ -11889,7 +11844,6 @@ loc_FF5A:
 		jl	loc_FEC8
 
 loc_FF61:
-					; sub_FD33+160j ...
 		mov	al, [bp+var_9]
 		mov	[si+0Bh], al
 
@@ -12069,7 +12023,6 @@ loc_10061:
 		call	sub_C282
 
 loc_100AD:
-					; sub_10043+41j ...
 		add	di, 8
 
 loc_100B0:
@@ -12116,7 +12069,7 @@ loc_100DE:
 		cmp	byte ptr [si+12h], 3
 		ja	short loc_10108
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -12147,17 +12100,15 @@ loc_10108:
 loc_10134:
 		cmp	word ptr [si+18h], 74h ; 't'
 		jl	short loc_10146
-		cmp	word ptr [si+18h], 98h ; 'ò'
+		cmp	word ptr [si+18h], 98h
 		jge	short loc_10146
 
 loc_10141:
-					; sub_100C6+6Cj
 		mov	di, 0Bh
 		jmp	short loc_10149
 ; ---------------------------------------------------------------------------
 
 loc_10146:
-					; sub_100C6+79j
 		mov	di, 0Fh
 
 loc_10149:
@@ -12177,12 +12128,11 @@ loc_10149:
 		call	sub_E02E
 
 loc_1016B:
-					; sub_100C6+40j ...
 		inc	[bp+var_2]
 		sub	si, 20h	; ' '
 
 loc_10171:
-		cmp	[bp+var_2], 0DCh ; '‹'
+		cmp	[bp+var_2], 0DCh
 		jl	loc_100DE
 		cmp	byte_2C978, 0
 		jnz	short loc_101DC
@@ -12200,10 +12150,10 @@ loc_1018A:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 93h	; 'ì'
+		add	ax, 93h
 		mov	di, ax
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -12228,7 +12178,6 @@ loc_101BD:
 ; ---------------------------------------------------------------------------
 
 loc_101DC:
-					; sub_100C6+C0j
 		mov	[bp+var_2], 0
 		jmp	short loc_10209
 ; ---------------------------------------------------------------------------
@@ -12237,7 +12186,7 @@ loc_101E3:
 		cmp	byte ptr [si], 1
 		jnz	short loc_10203
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -12252,7 +12201,7 @@ loc_10203:
 		sub	si, 20h	; ' '
 
 loc_10209:
-		cmp	[bp+var_2], 0B4h ; '¥'
+		cmp	[bp+var_2], 0B4h
 		jl	short loc_101E3
 
 loc_10210:
@@ -12291,7 +12240,6 @@ loc_10223:
 		call	graph_scrollup
 
 loc_1024F:
-					; sub_10214+2Cj ...
 		mov	word_2CDFE, 0
 		mov	al, byte_2CDFA
 		add	al, byte_2CDFB
@@ -12441,7 +12389,6 @@ sub_10287	endp
 ; Attributes: bp-based frame
 
 sub_10398	proc near
-					; sub_F6E4+1Cp	...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12472,7 +12419,6 @@ loc_103BE:
 		xor	dx, dx
 
 loc_103D0:
-					; sub_10398+24j ...
 		cmp	dx, 2
 		jnz	short loc_103E3
 		mov	al, [si-3BD6h]
@@ -12501,7 +12447,6 @@ sub_10398	endp
 ; Attributes: bp-based frame
 
 sub_10407	proc far
-					; sub_106F3+A8p ...
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -12523,7 +12468,7 @@ var_1		= byte ptr -1
 loc_10425:
 		push	si
 		push	large 0D00D4h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
@@ -12538,7 +12483,7 @@ loc_1043A:
 loc_10444:
 		push	si
 		push	large 0D0002h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
@@ -12553,7 +12498,7 @@ loc_10461:
 		push	large 3E000Dh
 		push	ds
 		push	offset aB@b@bB@b@ ; "Å@Å@Å~Å@Å@"
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_104A2
@@ -12563,9 +12508,9 @@ loc_10461:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -12578,9 +12523,9 @@ loc_104A2:
 		push	large 46000Dh
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 
 loc_104B8:
@@ -12595,7 +12540,6 @@ sub_10407	endp
 ; Attributes: bp-based frame
 
 sub_104BB	proc far
-					; sub_FAA3+141p ...
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
@@ -12616,7 +12560,7 @@ var_1		= byte ptr -1
 loc_104D8:
 		push	si
 		push	large 0B00D3h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
@@ -12631,7 +12575,7 @@ loc_104ED:
 loc_104F7:
 		push	si
 		push	large 0B0002h
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
@@ -12648,7 +12592,7 @@ loc_10514:
 		push	large 3E000Bh
 		push	ds
 		push	offset aB@b@bB@b@_0 ; "Å@Å@Å~Å@Å@"
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_1055B
@@ -12658,9 +12602,9 @@ loc_10514:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -12673,9 +12617,9 @@ loc_1055B:
 		push	large 46000Bh
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h ; '†'
+		add	ax, 0A0h
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putca
 
 loc_10571:
@@ -12690,16 +12634,15 @@ sub_104BB	endp
 ; Attributes: bp-based frame
 
 sub_10574	proc far
-					; sub_16F54+123P
 		push	bp
 		mov	bp, sp
 		push	large 3E0010h
 		push	word_2CEC6
-		push	0E1h ; '·'
+		push	0E1h
 		call	sub_1F9F4
 		push	large 3E000Fh
 		push	word_22648
-		push	0A1h ; '°'
+		push	0A1h
 		call	sub_1F9F4
 		pop	bp
 		retf
@@ -12711,7 +12654,6 @@ sub_10574	endp
 ; Attributes: bp-based frame
 
 sub_1059D	proc far
-					; sub_106F3+E4p ...
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -12732,9 +12674,9 @@ var_2		= byte ptr -2
 		mov	[bp+var_4], ax
 		mov	al, byte_22729
 		mov	[bp+var_2], al
-		cmp	byte_22720, 7Fh	; ''
+		cmp	byte_22720, 7Fh
 		ja	short loc_105E6
-		cmp	byte_2CEC3, 80h	; 'Ä'
+		cmp	byte_2CEC3, 80h
 		jb	short loc_105E6
 		mov	byte_2CE87, 4
 		mov	word_2CE8A, 6FDAh
@@ -12743,7 +12685,6 @@ var_2		= byte ptr -2
 		mov	byte_2C979, 14h
 
 loc_105E6:
-					; sub_1059D+30j ...
 		mov	al, byte_2CEC3
 		mov	byte_22720, al
 		push	14h
@@ -12771,12 +12712,11 @@ sub_1059D	endp
 ; Attributes: bp-based frame
 
 sub_1060E	proc far
-					; sub_17C04+22DP
 		push	bp
 		mov	bp, sp
 		push	large 3E0012h
 		push	word_2C97A
-		push	0E1h ; '·'
+		push	0E1h
 		call	sub_1F9F4
 		pop	bp
 		retf
@@ -12788,7 +12728,6 @@ sub_1060E	endp
 ; Attributes: bp-based frame
 
 sub_10625	proc far
-					; sub_106F3+FDp
 
 var_A		= byte ptr -0Ah
 
@@ -12828,7 +12767,6 @@ sub_10625	endp
 ; Attributes: bp-based frame
 
 sub_1065B	proc far
-					; sub_17354+4DP
 
 var_10		= word ptr -10h
 var_E		= word ptr -0Eh
@@ -12866,7 +12804,7 @@ arg_0		= word ptr  6
 		push	large 3D0008h
 		push	ds
 		push	offset gsENEMY
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	9
 		push	si
@@ -12889,13 +12827,13 @@ loc_106C8:
 		push	ss
 		lea	ax, [bp+var_6+1]
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		push	large 380009h
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 
 loc_106EE:
@@ -12915,12 +12853,12 @@ sub_106F3	proc far
 		push	large 3C0003h
 		push	ds
 		push	offset gsHISCORE
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 3D0005h
 		push	ds
 		push	offset gsSCORE
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		call	sub_143CA
 		mov	al, byte_25FEF
@@ -12935,12 +12873,12 @@ loc_10730:
 		push	large 39000Bh
 		push	ds
 		push	offset gsREIGEKI
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
 		push	offset gsREIMU
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
@@ -12952,19 +12890,19 @@ loc_10760:
 		push	large 39000Bh
 		push	ds
 		push	offset gsBOMB
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 39000Dh
 		push	ds
 		push	offset gsPLAYER
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		push	large 3E0015h
 		push	ds
 		push	offset gsPOWER
 
 loc_1078E:
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 
 loc_10796:
@@ -12978,7 +12916,7 @@ loc_10796:
 		push	large 39000Fh
 		push	ds
 		push	offset gsRUIKEI
-		push	0A1h ; '°'
+		push	0A1h
 		call	gaiji_putsa
 		push	cs
 		call	near ptr sub_10574
@@ -13003,14 +12941,14 @@ loc_10796:
 		push	ax
 		cmp	byte_25FEB, 0
 		jnz	short loc_10812
-		mov	ax, 81h	; 'Å'
+		mov	ax, 81h
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_10812:
 		cmp	byte_25FEB, 1
 		jnz	short loc_1081E
-		mov	ax, 0A1h ; '°'
+		mov	ax, 0A1h
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
@@ -13025,7 +12963,6 @@ loc_1082A:
 		mov	ax, 41h	; 'A'
 
 loc_1082D:
-					; sub_106F3+129j ...
 		push	ax
 		call	gaiji_putsa
 		push	0
@@ -13051,7 +12988,7 @@ table_1083C	dw loc_10730
 sub_10848	proc near
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	loc_108F6
 		mov	ax, word ptr dword_26320
 		sar	ax, 4
@@ -13091,7 +13028,7 @@ sub_10848	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0D0h ; '–'
+		add	ax, 0D0h
 		mov	si, ax
 
 loc_108B6:
@@ -13110,7 +13047,7 @@ loc_108C2:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0D4h ; '‘'
+		add	ax, 0D4h
 		mov	si, ax
 		cmp	byte_26334, 0
 		jz	short loc_108B6
@@ -13124,7 +13061,7 @@ loc_108C2:
 ; ---------------------------------------------------------------------------
 
 loc_108F6:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_10900
 		call	sub_F7EC
 
@@ -13146,7 +13083,7 @@ sub_10848	endp
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-2],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_10934
 		push	di
 		push	ax
@@ -13160,9 +13097,9 @@ loc_10932:
 ; ---------------------------------------------------------------------------
 
 loc_10934:
-		cmp	byte_26344, 0B8h ; '∏'
+		cmp	byte_26344, 0B8h
 		jz	short loc_10942
-		cmp	byte_26344, 0BAh ; '∫'
+		cmp	byte_26344, 0BAh
 		jnz	short loc_1094D
 
 loc_10942:
@@ -13173,7 +13110,7 @@ loc_10942:
 ; ---------------------------------------------------------------------------
 
 loc_1094D:
-		cmp	byte_26344, 0B4h ; '¥'
+		cmp	byte_26344, 0B4h
 		jnz	short loc_1096F
 		mov	al, byte_26344
 		mov	ah, 0
@@ -13225,7 +13162,7 @@ loc_10999:
 		enter	2, 0
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_10A1C
 		cmp	word ptr dword_26320+2,	0
 		jl	short loc_10A26
@@ -13237,14 +13174,14 @@ loc_10999:
 		push	ax
 		call	sub_BFB2
 		mov	[bp-2],	ax
-		cmp	byte_26330, 0CAh ; ' '
+		cmp	byte_26330, 0CAh
 		jnz	short loc_109E3
 		mov	al, byte_25FE5
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 0CAh ; ' '
+		add	ax, 0CAh
 		jmp	short loc_109F0
 ; ---------------------------------------------------------------------------
 
@@ -13254,7 +13191,7 @@ loc_109E3:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0CEh ; 'Œ'
+		add	ax, 0CEh
 
 loc_109F0:
 		mov	si, ax
@@ -13278,7 +13215,7 @@ loc_10A05:
 ; ---------------------------------------------------------------------------
 
 loc_10A1C:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_10A26
 		call	sub_F7EC
 
@@ -13298,7 +13235,7 @@ loc_10A26:
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	di, ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_10A59
 		push	si
 		push	ax
@@ -13351,7 +13288,7 @@ loc_10A94:
 		enter	2, 0
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_10B0F
 		cmp	word ptr dword_26320+2,	0
 		jl	short loc_10B19
@@ -13363,14 +13300,14 @@ loc_10A94:
 		push	ax
 		call	sub_BFB2
 		mov	[bp-2],	ax
-		cmp	byte_26330, 0D0h ; '–'
+		cmp	byte_26330, 0D0h
 		jnz	short loc_10ADE
 		mov	al, byte_25FE5
 		mov	ah, 0
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 0D0h ; '–'
+		add	ax, 0D0h
 		jmp	short loc_10AE3
 ; ---------------------------------------------------------------------------
 
@@ -13400,7 +13337,7 @@ loc_10AF8:
 ; ---------------------------------------------------------------------------
 
 loc_10B0F:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_10B19
 		call	sub_F7EC
 
@@ -13533,7 +13470,6 @@ loc_10C1F:
 		out	dx, al
 
 loc_10C25:
-					; sub_10B1D+E5j
 		mov	bx, [bp+var_2]
 		add	bx, bx
 		lea	ax, [bp+var_A]
@@ -13543,7 +13479,6 @@ loc_10C25:
 		mov	ss:[bx], ax
 
 loc_10C38:
-					; sub_10B1D+28j ...
 		inc	[bp+var_2]
 		add	si, 1Ah
 
@@ -13574,7 +13509,7 @@ loc_10C6C:
 		push	ax
 		call	super_put
 		mov	ax, [bp+var_A]
-		add	ax, 40h	; '@'
+		add	ax, 40h
 		push	ax
 		push	di
 		mov	al, byte_2D07E
@@ -13584,7 +13519,6 @@ loc_10C6C:
 		call	super_put
 
 loc_10C96:
-					; sub_10B1D+154j
 		pop	di
 		pop	si
 		leave
@@ -13602,7 +13536,7 @@ sub_10B1D	endp
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-2],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_10CCA
 		push	di
 		push	ax
@@ -13617,14 +13551,14 @@ loc_10CCA:
 		mov	al, byte_26344
 		mov	ah, 0
 		mov	si, ax
-		cmp	si, 0B4h ; '¥'
+		cmp	si, 0B4h
 		jnz	short loc_10CDC
 		mov	al, byte_25FE5
 		jmp	short loc_10CEC
 ; ---------------------------------------------------------------------------
 
 loc_10CDC:
-		cmp	si, 0B8h ; '∏'
+		cmp	si, 0B8h
 		jnz	short loc_10CE9
 		mov	al, byte_25FE2
 		mov	ah, 0
@@ -13686,9 +13620,9 @@ arg_6		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_6]
 		mov	si, [bp+arg_2]
-		cmp	si, 0B8h ; '∏'
+		cmp	si, 0B8h
 		jz	short loc_10D3D
-		cmp	si, 0C8h ; '»'
+		cmp	si, 0C8h
 		jnz	short loc_10D49
 
 loc_10D3D:
@@ -13741,7 +13675,7 @@ sub_10D26	endp
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-4],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_10DDA
 		cmp	byte_26363, 0
 		jnz	short loc_10DBC
@@ -13771,7 +13705,7 @@ loc_10DBC:
 ; ---------------------------------------------------------------------------
 
 loc_10DDA:
-		cmp	byte_26345, 0FDh ; '˝'
+		cmp	byte_26345, 0FDh
 		jbe	short loc_10DE8
 		cmp	byte_26363, 0
 		jz	short loc_10DF9
@@ -13788,7 +13722,7 @@ loc_10DE8:
 		call	sub_10D26
 
 loc_10DF9:
-		cmp	byte_26345, 0FDh ; '˝'
+		cmp	byte_26345, 0FDh
 		jbe	short loc_10E07
 		cmp	byte_26363, 0
 		jnz	short loc_10E1F
@@ -13820,7 +13754,7 @@ loc_10E1F:
 		enter	2, 0
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_10EA4
 		cmp	word ptr dword_26320+2,	0
 		jl	short loc_10EAE
@@ -13866,7 +13800,7 @@ loc_10E8D:
 ; ---------------------------------------------------------------------------
 
 loc_10EA4:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_10EAE
 		call	sub_F7EC
 
@@ -13891,7 +13825,7 @@ loc_10EC7:
 		cmp	byte ptr [si], 0
 		jz	short loc_10F02
 		mov	di, [si+12h]
-		cmp	di, 0DCh ; '‹'
+		cmp	di, 0DCh
 		jge	short loc_10EED
 		mov	ax, [si+0Eh]
 		and	ax, 3
@@ -13919,7 +13853,7 @@ loc_10F02:
 		add	si, 1Ah
 
 loc_10F08:
-		cmp	word ptr [bp-2], 40h ; '@'
+		cmp	word ptr [bp-2], 40h
 		jl	short loc_10EC7
 		pop	di
 		pop	si
@@ -13936,7 +13870,7 @@ loc_10F08:
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-2],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_10F42
 		push	di
 		push	ax
@@ -13953,9 +13887,9 @@ loc_10F42:
 		mov	al, byte_26344
 		mov	ah, 0
 		mov	si, ax
-		cmp	byte_26344, 0D0h ; '–'
+		cmp	byte_26344, 0D0h
 		jz	short loc_10F57
-		cmp	byte_26344, 0C0h ; '¿'
+		cmp	byte_26344, 0C0h
 		jnz	short loc_10F63
 
 loc_10F57:
@@ -14020,7 +13954,7 @@ loc_10FC5:
 		add	si, 1Ah
 
 loc_10FC9:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_10FA3
 		pop	di
 		pop	si
@@ -14037,7 +13971,7 @@ loc_10FC9:
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	di, ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_11001
 		push	si
 		push	ax
@@ -14060,7 +13994,7 @@ loc_11001:
 		mov	[bp-6],	ax
 		push	word ptr [bp-4]
 		push	ax
-		push	0C0h ; '¿'
+		push	0C0h
 		call	super_put_rect
 
 loc_11029:
@@ -14155,7 +14089,7 @@ loc_110D4:
 		add	si, 1Ah
 
 loc_110D8:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_11080
 		call	sub_FF79
 		pop	di
@@ -14173,7 +14107,7 @@ loc_110D8:
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-2],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_11114
 		push	si
 		push	ax
@@ -14188,7 +14122,7 @@ loc_11114:
 		mov	al, byte_26344
 		mov	ah, 0
 		mov	di, ax
-		cmp	di, 0B8h ; '∏'
+		cmp	di, 0B8h
 		jge	short loc_11146
 		cmp	byte_26348, 0
 		jnz	short loc_11134
@@ -14209,7 +14143,7 @@ loc_11134:
 ; ---------------------------------------------------------------------------
 
 loc_11146:
-		sub	si, 60h	; '`'
+		sub	si, 60h
 		sub	word ptr [bp-2], 10h
 		cmp	byte_26348, 0
 		jz	short loc_11157
@@ -14226,7 +14160,7 @@ loc_1115E:
 		push	di
 		call	super_put_8
 		inc	word ptr [bp-4]
-		add	si, 40h	; '@'
+		add	si, 40h
 		inc	di
 
 loc_1116F:
@@ -14267,7 +14201,7 @@ loc_111AA:
 		add	si, 1Ah
 
 loc_111AE:
-		cmp	di, 40h	; '@'
+		cmp	di, 40h
 		jl	short loc_1119C
 		pop	di
 		pop	si
@@ -14340,11 +14274,11 @@ loc_11235:
 		jge	short loc_1125C
 		push	20h ; ' '
 		call	sub_C036
-		add	al, 40h	; '@'
+		add	al, 40h
 		mov	[si+1],	al
 		mov	al, [si+1]
 		mov	ah, 0
-		mov	dx, 60h	; '`'
+		mov	dx, 60h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
@@ -14360,7 +14294,7 @@ loc_1125C:
 		mov	bx, 8
 		cwd
 		idiv	bx
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		push	20h ; ' '
@@ -14440,7 +14374,7 @@ loc_1130F:
 		mov	[si+1],	al
 		mov	al, [si+1]
 		mov	ah, 0
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
@@ -14472,7 +14406,6 @@ loc_11331:
 		add	dx, di
 
 loc_1136A:
-					; sub_111B7+7Bj ...
 		mov	[si+2],	dx
 		call	IRand
 		mov	bx, 8
@@ -14489,7 +14422,7 @@ loc_1136A:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	word ptr [si+1]
-		push	80h ; 'Ä'
+		push	80h
 		call	sub_14AC4
 		pop	di
 		pop	si
@@ -14503,7 +14436,7 @@ sub_111B7	endp
 		push	di
 		cmp	byte_26345, 1
 		jbe	short loc_113B9
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jb	loc_1162C
 
 loc_113B9:
@@ -14620,7 +14553,7 @@ loc_114CD:
 		cmp	byte_22859, 4
 		jbe	short loc_114E5
 		mov	al, byte_22859
-		add	al, 0FCh ; '¸'
+		add	al, 0FCh
 		mov	byte_22859, al
 		jmp	short loc_114EA
 ; ---------------------------------------------------------------------------
@@ -14637,7 +14570,7 @@ loc_114EA:
 ; ---------------------------------------------------------------------------
 
 loc_114F8:
-		cmp	word_22856, 40h	; '@'
+		cmp	word_22856, 40h
 		jge	short loc_11553
 		cmp	byte_25FE2, 0
 		jnz	short loc_11553
@@ -14666,7 +14599,7 @@ loc_114F8:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	word ptr [si+1]
-		push	80h ; 'Ä'
+		push	80h
 		call	sub_14AC4
 		inc	word_22856
 
@@ -14721,7 +14654,7 @@ loc_115AD:
 		add	ax, 18h
 		mov	[bp-4],	ax
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	cx, [bp-4]
@@ -14733,7 +14666,7 @@ loc_115CE:
 		add	si, 1Ah
 
 loc_115D4:
-		cmp	word ptr [bp-2], 40h ; '@'
+		cmp	word ptr [bp-2], 40h
 		jl	short loc_11568
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -14779,7 +14712,7 @@ loc_1162C:
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_11687
 		cmp	word ptr dword_26320+2,	0
 		jl	short loc_11691
@@ -14815,7 +14748,7 @@ loc_1166D:
 ; ---------------------------------------------------------------------------
 
 loc_11687:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_11691
 		call	sub_F7EC
 
@@ -14957,7 +14890,7 @@ loc_1179F:
 loc_117A6:
 		cmp	si, 10h
 		jl	short loc_117B4
-		cmp	word ptr [bp-4], 80h ; 'Ä'
+		cmp	word ptr [bp-4], 80h
 		jl	loc_116CE
 
 loc_117B4:
@@ -14983,7 +14916,7 @@ loc_117BA:
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	[bp-2],	ax
-		cmp	byte_26345, 0FEh ; '˛'
+		cmp	byte_26345, 0FEh
 		jnz	short loc_117F9
 		push	di
 		push	ax
@@ -15026,7 +14959,7 @@ loc_11825:
 		mov	byte_26348, 0
 
 loc_1183A:
-		cmp	si, 0B5h ; 'µ'
+		cmp	si, 0B5h
 		jg	short loc_11862
 		cmp	byte_26345, 2
 		jb	short loc_11862
@@ -15054,7 +14987,7 @@ loc_11862:
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnb	short loc_118C3
 		cmp	word ptr dword_26320+2,	0
 		jl	short loc_118CD
@@ -15090,7 +15023,7 @@ loc_118A9:
 ; ---------------------------------------------------------------------------
 
 loc_118C3:
-		cmp	byte_26331, 0FEh ; '˛'
+		cmp	byte_26331, 0FEh
 		jnz	short loc_118CD
 		call	sub_F7EC
 
@@ -15105,7 +15038,6 @@ loc_118CD:
 ; Attributes: bp-based frame
 
 sub_118D1	proc near
-					; sub_F1A6:loc_F2AEp ...
 		push	bp
 		mov	bp, sp
 		push	si
@@ -15117,7 +15049,7 @@ loc_118DA:
 		push	4
 		push	si
 		push	large [off_228EE]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		inc	si
 
@@ -15182,7 +15114,7 @@ loc_1193E:
 		push	large 12000Ch
 		push	ds
 		push	offset gDEMO_PLAY
-		push	0C3h ; '√'
+		push	0C3h
 		call	gaiji_putsa
 
 loc_11956:
@@ -15219,7 +15151,7 @@ loc_11987:
 		push	si
 		mov	al, [bp-1]
 		mov	ah, 0
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		push	dx
 		push	1
@@ -15284,7 +15216,7 @@ loc_119F7:
 		push	si
 		mov	al, [bp-1]
 		mov	ah, 0
-		mov	dx, 40h	; '@'
+		mov	dx, 40h
 		sub	dx, ax
 		push	dx
 		push	1
@@ -15311,7 +15243,6 @@ loc_11A19:
 ; Attributes: bp-based frame
 
 sub_11A1D	proc near
-					; seg001:6D1Ap	...
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -15373,7 +15304,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jz	short locret_11AAC
-		cmp	[bp+var_1], 0C0h ; '¿'
+		cmp	[bp+var_1], 0C0h
 		jnb	short loc_11A85
 		cmp	[bp+var_1], 22h	; '"'
 		ja	short locret_11AAC
@@ -15389,7 +15320,6 @@ loc_11A85:
 		call	sub_E24C
 
 locret_11AAC:
-					; sub_11A65+1Ej
 		leave
 		retn
 sub_11A65	endp
@@ -15397,9 +15327,9 @@ sub_11A65	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	byte_2CE8C, 0C0h ; '¿'
+		cmp	byte_2CE8C, 0C0h
 		jb	loc_11B65
-		cmp	byte_2CE8C, 0C0h ; '¿'
+		cmp	byte_2CE8C, 0C0h
 		jnz	short loc_11ACB
 		call	sub_118D1
 		mov	byte_228EC, 0
@@ -15488,7 +15418,7 @@ loc_11B91:
 		cmp	byte_228EC, 16h
 		jnz	loc_11C2D
 		mov	al, byte_25FEA
-		add	al, 0A1h ; '°'
+		add	al, 0A1h
 		mov	gStage_1+6, al
 		cmp	byte_25FEA, 5
 		jnz	short loc_11BBE
@@ -15513,7 +15443,7 @@ loc_11BD1:
 		push	offset gStage_1
 
 loc_11BDB:
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putsa
 		mov	ax, word_2CE6A
 		cwd
@@ -15524,20 +15454,20 @@ loc_11BDB:
 		push	dx
 		push	0Dh
 		push	large [dword_2CE92]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6C
 		push	ax
 		push	large 170003h
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
 		push	17h
 		push	large [dword_2CE96]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 
 loc_11C2D:
@@ -15599,9 +15529,9 @@ loc_11CB5:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	byte_2288B, 0C0h ; '¿'
+		cmp	byte_2288B, 0C0h
 		jb	short loc_11D37
-		cmp	byte_2288B, 0C0h ; '¿'
+		cmp	byte_2288B, 0C0h
 		jnz	short loc_11CD6
 		call	sub_118D1
 		mov	byte_228EC, 0
@@ -15665,14 +15595,14 @@ loc_11D53:
 		sub	ax, word_2CE6E
 		push	ax
 		push	large 170003h
-		push	0C1h ; '¡'
+		push	0C1h
 		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax
 		push	17h
 		push	large [dword_2CE9A]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 
 loc_11D90:
@@ -15713,15 +15643,15 @@ loc_11DE4:
 		mov	al, byte_2CE87
 		cmp	al, byte_2CE72
 		jz	short loc_11E29
-		cmp	byte_2288C, 40h	; '@'
+		cmp	byte_2288C, 40h
 		jb	short loc_11E29
 		push	large 40002h
 		push	large [off_228EE]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		push	large 40017h
 		push	large [off_228EE]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		mov	byte_2288C, 0
 
@@ -15773,11 +15703,11 @@ loc_11E98:
 		mov	byte_2CE73, 0
 
 loc_11E9D:
-		cmp	byte_2288C, 80h	; 'Ä'
+		cmp	byte_2288C, 80h
 		jb	short loc_11EC4
 		push	large 40002h
 		push	large [off_228EE]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 		mov	byte_2288C, 0
 		mov	word_2CE8A, 1240h
@@ -15832,7 +15762,7 @@ loc_11EF1:
 		push	2
 		push	ds
 		push	offset unk_2CE74
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		jmp	loc_11FD9
 ; ---------------------------------------------------------------------------
@@ -15848,7 +15778,7 @@ loc_11F36:
 		shl	ax, 2
 		mov	bx, ax
 		push	large off_228D8[bx]
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		mov	ax, word_2CE70
 		add	ax, ax
@@ -15860,7 +15790,7 @@ loc_11F36:
 		add	ax, word_2CE82
 		push	ax
 		push	large 22020h
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putca
 
 loc_11F7F:
@@ -15874,7 +15804,7 @@ loc_11F86:
 		mov	byte_2CE73, 1
 		push	large 40002h
 		push	large [off_228EE]
-		push	0E1h ; '·'
+		push	0E1h
 		call	text_putsa
 
 loc_11FA5:
@@ -15885,7 +15815,7 @@ loc_11FA5:
 		shl	ax, 2
 		mov	bx, ax
 		push	large off_228D8[bx]
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		cmp	byte_2CE72, 2
 		jnz	short loc_11FD9
@@ -15907,9 +15837,9 @@ sub_11FDF	proc near
 		mov	bp, sp
 		push	0C4C0h
 		call	sub_BFDA
-		cmp	ax, 80h	; 'Ä'
+		cmp	ax, 80h
 		jge	short loc_11FF2
-		mov	ax, 80h	; 'Ä'
+		mov	ax, 80h
 		jmp	short loc_11FFA
 ; ---------------------------------------------------------------------------
 
@@ -15919,10 +15849,9 @@ loc_11FF2:
 		mov	ax, 1780h
 
 loc_11FFA:
-					; sub_11FDF+16j
-		cmp	dx, 80h	; 'Ä'
+		cmp	dx, 80h
 		jge	short loc_12005
-		mov	dx, 80h	; 'Ä'
+		mov	dx, 80h
 		jmp	short loc_1200E
 ; ---------------------------------------------------------------------------
 
@@ -15932,7 +15861,6 @@ loc_12005:
 		mov	dx, 1600h
 
 loc_1200E:
-					; sub_11FDF+2Aj
 		mov	word ptr dword_2CEA0, ax
 		mov	word ptr dword_2CEA0+2,	dx
 		pop	bp
@@ -15999,7 +15927,7 @@ loc_12092:
 
 loc_120A7:
 		mov	al, byte_2CEC3
-		add	al, 0FEh ; '˛'
+		add	al, 0FEh
 		mov	byte_2CEC3, al
 		jmp	short loc_120B6
 ; ---------------------------------------------------------------------------
@@ -16008,7 +15936,6 @@ loc_120B1:
 		mov	byte_2CEC3, 1
 
 loc_120B6:
-					; sub_12017+98j
 		nop
 		push	cs
 		call	near ptr sub_1059D
@@ -16022,7 +15949,7 @@ loc_120B6:
 		jbe	short loc_120F0
 		test	byte_2CEC2, 1
 		jz	short loc_120E5
-		mov	PaletteTone, 96h	; 'ñ'
+		mov	PaletteTone, 96h
 		jmp	short loc_120EB
 ; ---------------------------------------------------------------------------
 
@@ -16063,7 +15990,6 @@ loc_12142:
 		mov	byte_25FE8, al
 
 locret_12148:
-					; sub_12017+B6j ...
 		leave
 		retn
 sub_12017	endp
@@ -16091,13 +16017,12 @@ loc_12161:
 		jz	short loc_12188
 		mov	byte_2CEC2, 28h	; '('
 		mov	byte_2CEC1, 0
-		mov	byte_2CEBC, 0C0h ; '¿'
+		mov	byte_2CEBC, 0C0h
 		mov	byte_2CEBD, 48h	; 'H'
 		mov	word_2CEA8, 0
 		mov	word_2CEAA, 0
 
 loc_12188:
-					; sub_1214A+1Cj
 		cmp	byte_2CEBD, 0
 		jnz	loc_12224
 		mov	word_2CEA8, 0
@@ -16124,7 +16049,6 @@ loc_121A9:
 ; ---------------------------------------------------------------------------
 
 loc_121CA:
-					; sub_1214A+6Bj ...
 		cmp	byte_23A58, 0
 		jz	short loc_121E7
 		mov	ax, word_2CEA8
@@ -16152,7 +16076,6 @@ loc_121F4:
 		mov	byte_2CEC0, 12h
 
 loc_12207:
-					; sub_1214A+B6j
 		cmp	byte_2CEC0, 12h
 		jbe	short loc_12213
 		mov	byte_2CEC0, 0
@@ -16171,7 +16094,6 @@ loc_12224:
 		dec	byte_2CEBD
 
 loc_1222E:
-					; sub_1214A+D8j
 		mov	eax, dword_2CEB4
 		mov	dword_2CEB8, eax
 		mov	eax, dword_2CEA0
@@ -16241,7 +16163,6 @@ loc_122A9:
 		xor	si, si
 
 loc_122AB:
-					; sub_12263+44j
 		cmp	byte_2CEBC, 0
 		jz	short loc_122CB
 		cmp	byte_25FE3, 0
@@ -16255,7 +16176,6 @@ loc_122AB:
 ; ---------------------------------------------------------------------------
 
 loc_122CB:
-					; sub_12263+54j
 		push	di
 		push	[bp+var_2]
 		push	si
@@ -16269,7 +16189,7 @@ loc_122D5:
 		sar	ax, 4
 		mov	di, ax
 		mov	ax, word ptr dword_2CEB4+2
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	[bp+var_2], ax
@@ -16340,10 +16260,9 @@ loc_12342:
 		call	super_roll_put
 
 loc_12398:
-					; sub_12263+103j ...
 		inc	[bp+var_4]
 		mov	al, [bp+var_5]
-		add	al, 40h	; '@'
+		add	al, 40h
 
 loc_123A0:
 		mov	[bp+var_5], al
@@ -16351,7 +16270,6 @@ loc_123A0:
 		jl	short loc_1232B
 
 loc_123A9:
-					; sub_12263+AEj ...
 		pop	di
 		pop	si
 		leave
@@ -16390,7 +16308,7 @@ loc_123DA:
 		add	si, 12h
 
 loc_123E0:
-		cmp	[bp+var_2], 40h	; '@'
+		cmp	[bp+var_2], 40h
 		jl	short loc_123CC
 		mov	[bp+var_2], 0
 		jmp	short loc_12401
@@ -16476,7 +16394,7 @@ loc_12460:
 		mov	dl, [si+11h]
 		sub	dl, al
 		mov	[bp+var_5], dl
-		cmp	[bp+var_5], 80h	; 'Ä'
+		cmp	[bp+var_5], 80h
 		jb	short loc_124B0
 		mov	al, [bp+var_5]
 		mov	ah, 0
@@ -16526,7 +16444,6 @@ loc_124DC:
 		sub	[si+11h], al
 
 loc_124E2:
-					; sub_1240B+CFj
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [si+11h]
@@ -16543,11 +16460,9 @@ loc_124F3:
 		dec	word ptr [si+0Ah]
 
 loc_124F6:
-					; sub_1240B+E6j
 		sub	word ptr [si+0Ch], 4
 
 loc_124FA:
-					; sub_1240B+40j ...
 		lea	ax, [si+2]
 		push	ax
 		call	sub_BFDA
@@ -16561,7 +16476,6 @@ loc_124FA:
 		jl	short loc_1251B
 
 loc_12516:
-					; sub_1240B+FEj ...
 		mov	byte ptr [si], 2
 		jmp	short loc_12531
 ; ---------------------------------------------------------------------------
@@ -16576,12 +16490,11 @@ loc_1251B:
 		inc	byte ptr [si+1]
 
 loc_12531:
-					; sub_1240B+2Aj ...
 		inc	[bp+var_2]
 		add	si, 12h
 
 loc_12537:
-		cmp	[bp+var_2], 40h	; '@'
+		cmp	[bp+var_2], 40h
 		jl	loc_12427
 		mov	di, 0BDF2h
 		mov	[bp+var_2], 0
@@ -16609,7 +16522,6 @@ loc_12551:
 		jl	short loc_12577
 
 loc_12572:
-					; sub_1240B+15Aj ...
 		mov	byte ptr [di], 12h
 		jmp	short loc_1258B
 ; ---------------------------------------------------------------------------
@@ -16626,7 +16538,6 @@ loc_12577:
 		inc	byte ptr [di+1]
 
 loc_1258B:
-					; sub_1240B+16Aj ...
 		inc	[bp+var_2]
 		add	di, 0Eh
 
@@ -16679,7 +16590,7 @@ loc_125BB:
 		add	al, cl
 		mov	cl, al
 		mov	ax, [di+2]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -16710,7 +16621,7 @@ loc_12609:
 		mov	ch, 0
 		mov	cl, [si+1]
 		mov	ax, [si+4]
-		add	ax, 80h	; 'Ä'
+		add	ax, 80h
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
@@ -16721,7 +16632,6 @@ loc_12609:
 		call	sub_E148
 
 loc_12631:
-					; sub_125A3+6Ej
 		inc	[bp+var_2]
 		add	si, 0Eh
 
@@ -16743,7 +16653,6 @@ sub_125A3	endp
 ; Attributes: bp-based frame
 
 sub_12647	proc near
-					; sub_12842+ABp
 
 arg_0		= word ptr  4
 
@@ -16807,7 +16716,6 @@ sub_12647	endp
 ; Attributes: bp-based frame
 
 sub_126B3	proc far
-					; sub_196D3+13BP ...
 
 var_B		= byte ptr -0Bh
 var_A		= word ptr -0Ah
@@ -16877,7 +16785,6 @@ loc_1273B:
 		mov	word ptr [di], 0C190h
 
 loc_12745:
-					; sub_126B3+4Dj
 		inc	[bp+var_2]
 		add	di, 6
 
@@ -16927,7 +16834,6 @@ loc_12783:
 		add	si, 16h
 
 loc_127BD:
-					; sub_126B3+D5j ...
 		cmp	byte_2297E, 0
 		jz	short loc_127FA
 		cmp	byte_25FEF, 0
@@ -16971,7 +16877,6 @@ loc_127FA:
 		mov	si, ax
 
 loc_1281A:
-					; sub_126B3+153j
 		cmp	byte_25FEF, 3
 		jnz	short loc_12833
 
@@ -16990,7 +16895,6 @@ loc_12831:
 		mov	si, ax
 
 loc_12833:
-					; sub_126B3+16Cj
 		movzx	eax, si
 		add	dword_2CE1A, eax
 		mov	ax, si
@@ -17088,7 +16992,6 @@ loc_128EA:
 		mov	word ptr [si], 0C190h
 
 loc_128F4:
-					; sub_12842+4Dj
 		inc	[bp+var_2]
 		add	si, 6
 
@@ -17150,14 +17053,12 @@ loc_1294B:
 ; ---------------------------------------------------------------------------
 
 loc_12951:
-					; sub_12914+19j
 		mov	al, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_12955:
-					; sub_12914+35j ...
 		mov	word_2D062, 0B92Ah
 		mov	byte_2D064, 0
 		mov	al, [bp+var_1]
@@ -17215,7 +17116,7 @@ loc_1299E:
 		push	ax
 		push	7
 		call	sub_C020
-		add	al, 0BCh ; 'º'
+		add	al, 0BCh
 		push	ax
 		call	sub_E4DE
 		mov	byte ptr [si+10h], 0Ah
@@ -17246,7 +17147,7 @@ loc_129E9:
 		push	ax
 		push	0Fh
 		call	sub_C020
-		add	al, 0B8h ; '∏'
+		add	al, 0B8h
 		push	ax
 		call	sub_E4DE
 		mov	byte ptr [si+10h], 0Ah
@@ -17257,13 +17158,13 @@ loc_12A04:
 		cmp	byte ptr [bp-1], 3
 		jnz	short loc_12A15
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h ;	'∏'
+		mov	byte ptr [bp-2], 0B8h
 		jmp	short loc_12A1E
 ; ---------------------------------------------------------------------------
 
 loc_12A15:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h ;	'»'
+		mov	byte ptr [bp-2], 0C8h
 
 loc_12A1E:
 		lea	ax, [si+0Ah]
@@ -17311,12 +17212,12 @@ loc_12A6A:
 		ja	short loc_12A88
 		cmp	byte ptr [bp-1], 2
 		jnz	short loc_12A7D
-		sub	word ptr [si+2], 80h ; 'Ä'
+		sub	word ptr [si+2], 80h
 		jmp	short loc_12A82
 ; ---------------------------------------------------------------------------
 
 loc_12A7D:
-		add	word ptr [si+2], 80h ; 'Ä'
+		add	word ptr [si+2], 80h
 
 loc_12A82:
 		mov	byte ptr [si+10h], 9
@@ -17327,13 +17228,13 @@ loc_12A88:
 		cmp	byte ptr [bp-1], 4
 		jnz	short loc_12A99
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h ;	'∏'
+		mov	byte ptr [bp-2], 0B8h
 		jmp	short loc_12AA2
 ; ---------------------------------------------------------------------------
 
 loc_12A99:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h ;	'»'
+		mov	byte ptr [bp-2], 0C8h
 
 loc_12AA2:
 		lea	ax, [si+0Ah]
@@ -17381,7 +17282,7 @@ loc_12AEE:
 		ja	short loc_12B0C
 		cmp	byte ptr [bp-1], 3
 		jnz	short loc_12AFE
-		mov	byte ptr [bp-2], 0B4h ;	'¥'
+		mov	byte ptr [bp-2], 0B4h
 
 loc_12AFE:
 		mov	byte ptr [si+10h], 9
@@ -17395,13 +17296,13 @@ loc_12B0C:
 		cmp	byte ptr [bp-1], 5
 		jnz	short loc_12B1D
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h ;	'∏'
+		mov	byte ptr [bp-2], 0B8h
 		jmp	short loc_12B26
 ; ---------------------------------------------------------------------------
 
 loc_12B1D:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h ;	'»'
+		mov	byte ptr [bp-2], 0C8h
 
 loc_12B26:
 		mov	byte ptr [si+0Eh], 16h
@@ -17452,7 +17353,7 @@ loc_12B75:
 		mov	byte ptr [si+10h], 9
 		cmp	byte ptr [bp-1], 3
 		jnz	short loc_12B89
-		mov	byte ptr [bp-2], 0B2h ;	'≤'
+		mov	byte ptr [bp-2], 0B2h
 
 loc_12B89:
 		mov	al, [bp-2]
@@ -17467,7 +17368,7 @@ loc_12B93:
 		sub	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0B6h ; '∂'
+		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12BC3
 ; ---------------------------------------------------------------------------
@@ -17476,7 +17377,7 @@ loc_12BAA:
 		add	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0C6h ; '∆'
+		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
 		jnz	short loc_12BC3
@@ -17531,7 +17432,7 @@ loc_12C12:
 		mov	byte ptr [si+10h], 9
 		cmp	byte ptr [bp-1], 3
 		jnz	short loc_12C26
-		mov	byte ptr [bp-2], 0B2h ;	'≤'
+		mov	byte ptr [bp-2], 0B2h
 
 loc_12C26:
 		mov	al, [bp-2]
@@ -17546,7 +17447,7 @@ loc_12C30:
 		sub	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0B6h ; '∂'
+		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12C60
 ; ---------------------------------------------------------------------------
@@ -17555,7 +17456,7 @@ loc_12C47:
 		add	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0C6h ; '∆'
+		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
 		jnz	short loc_12C60
@@ -17609,7 +17510,7 @@ loc_12CAF:
 		ja	short loc_12CCD
 		cmp	byte ptr [bp-1], 5
 		jnz	short loc_12CBF
-		mov	byte ptr [bp-2], 0B1h ;	'±'
+		mov	byte ptr [bp-2], 0B1h
 
 loc_12CBF:
 		mov	byte ptr [si+10h], 9
@@ -17625,7 +17526,7 @@ loc_12CCD:
 		sub	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0B6h ; '∂'
+		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12CFD
 ; ---------------------------------------------------------------------------
@@ -17634,7 +17535,7 @@ loc_12CE4:
 		add	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0C6h ; '∆'
+		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
 		jnz	short loc_12CFD
@@ -17681,7 +17582,7 @@ loc_12D3D:
 		ja	short loc_12D5B
 		cmp	byte ptr [bp-1], 5
 		jnz	short loc_12D4D
-		mov	byte ptr [bp-2], 0B1h ;	'±'
+		mov	byte ptr [bp-2], 0B1h
 
 loc_12D4D:
 		mov	byte ptr [si+10h], 9
@@ -17697,7 +17598,7 @@ loc_12D5B:
 		sub	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0B6h ; '∂'
+		add	al, 0B6h
 		jmp	short loc_12D7B
 ; ---------------------------------------------------------------------------
 
@@ -17705,7 +17606,7 @@ loc_12D6F:
 		add	word ptr [si+2], 180h
 		push	3
 		call	sub_C020
-		add	al, 0C6h ; '∆'
+		add	al, 0C6h
 
 loc_12D7B:
 		mov	[bp-2],	al
@@ -17756,7 +17657,7 @@ loc_12DCE:
 		ja	short loc_12DEC
 		cmp	byte ptr [bp-1], 5
 		jnz	short loc_12DDE
-		mov	byte ptr [bp-2], 0B1h ;	'±'
+		mov	byte ptr [bp-2], 0B1h
 
 loc_12DDE:
 		mov	byte ptr [si+10h], 9
@@ -17772,13 +17673,13 @@ loc_12DEC:
 		cmp	byte ptr [bp-1], 7
 		jnz	short loc_12E03
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h ;	'∏'
+		mov	byte ptr [bp-2], 0B8h
 		jmp	short loc_12E32
 ; ---------------------------------------------------------------------------
 
 loc_12E03:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h ;	'»'
+		mov	byte ptr [bp-2], 0C8h
 		jmp	short loc_12E32
 ; ---------------------------------------------------------------------------
 
@@ -17792,7 +17693,7 @@ loc_12E0E:
 
 loc_12E1F:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0D6h ;	'÷'
+		mov	byte ptr [bp-2], 0D6h
 		cmp	byte ptr [bp-3], 0
 		jnz	short loc_12E32
 		mov	byte ptr [bp-1], 1
@@ -17845,7 +17746,7 @@ loc_12E80:
 		push	ax
 		push	0Fh
 		call	sub_C020
-		add	al, 0B8h ; '∏'
+		add	al, 0B8h
 		push	ax
 		call	sub_E4DE
 		mov	byte ptr [si+10h], 8
@@ -17908,12 +17809,12 @@ loc_12F07:
 		ja	short loc_12F25
 		cmp	byte ptr [bp-1], 2
 		jnz	short loc_12F1A
-		sub	word ptr [si+2], 80h ; 'Ä'
+		sub	word ptr [si+2], 80h
 		jmp	short loc_12F1F
 ; ---------------------------------------------------------------------------
 
 loc_12F1A:
-		add	word ptr [si+2], 80h ; 'Ä'
+		add	word ptr [si+2], 80h
 
 loc_12F1F:
 		mov	byte ptr [si+10h], 7
@@ -18445,7 +18346,7 @@ sub_14266	proc near
 		mov	di, word_2CEC4
 		add	di, 0FF90h
 		mov	al, byte_2CEC8
-		add	al, 0F8h ; '¯'
+		add	al, 0F8h
 		mov	ah, 8
 
 loc_14288:
@@ -18474,9 +18375,8 @@ loc_14291:
 		call	sub_E24C
 
 loc_142CA:
-					; sub_14266+4Bj ...
 		pop	ax
-		add	al, 40h	; '@'
+		add	al, 40h
 		dec	ah
 		jnz	short loc_14288
 		pop	di
@@ -18487,7 +18387,7 @@ loc_142D4:
 		mov	word ptr dword_23F52, 20h ; ' '
 		push	large [dword_2CEA4]
 		call	sub_E24C
-		mov	word ptr dword_23F52, 40h ; '@'
+		mov	word ptr dword_23F52, 40h
 		mov	word ptr dword_23F52+2,	10h
 		push	large [dword_2CEB8]
 		call	sub_E24C
@@ -18551,7 +18451,6 @@ loc_1433E:
 		neg	ax
 
 loc_14340:
-					; sub_142F8+42j
 		mov	word_2CEA8, ax
 		mov	word_2CEAA, cx
 		jmp	short loc_14351
@@ -18563,17 +18462,14 @@ loc_14349:
 ; ---------------------------------------------------------------------------
 
 loc_1434D:
-					; sub_142F8+1Cj ...
 		xor	al, al
 		jmp	short locret_14353
 ; ---------------------------------------------------------------------------
 
 loc_14351:
-					; sub_142F8+3Ej ...
 		mov	al, 1
 
 locret_14353:
-					; sub_142F8+57j
 		retn	2
 sub_142F8	endp
 
@@ -18603,7 +18499,6 @@ table_14356	dw loc_14349
 
 
 sub_1437E	proc near
-					; sub_10625+2Fp ...
 		mov	bx, sp
 		push	di
 		push	ds
@@ -18618,7 +18513,7 @@ sub_1437E	proc near
 		mov	al, 30h	; '0'
 		mov	cx, 8
 		mov	bl, ss:[bx+4]
-		cmp	bl, 80h	; 'Ä'
+		cmp	bl, 80h
 		jb	short loc_143A7
 
 loc_143A0:
@@ -18660,7 +18555,6 @@ sub_1437E	endp
 
 
 sub_143CA	proc near
-					; sub_FAA3+14Bp ...
 		push	si
 		push	di
 		mov	si, 0C439h
@@ -18672,7 +18566,7 @@ loc_143D2:
 
 loc_143D8:
 		mov	al, [si]
-		add	al, 0A0h ; '†'
+		add	al, 0A0h
 		mov	[bx], al
 		inc	bx
 		dec	si
@@ -18681,7 +18575,7 @@ loc_143D8:
 		push	di
 		push	ds
 		push	offset unk_229A6
-		push	0E1h ; '·'
+		push	0E1h
 		call	gaiji_putsa
 		add	di, 2
 		cmp	di, 6
@@ -18696,7 +18590,6 @@ sub_143CA	endp
 
 
 sub_143FC	proc near
-					; sub_14AB1:loc_14AB6p
 		mov	eax, dword_2CE1A
 		or	eax, eax
 		jz	short locret_1445C
@@ -18718,7 +18611,6 @@ loc_1441B:
 		mov	ax, 17DFh
 
 loc_14426:
-					; sub_143FC+25j
 		cmp	word ptr dword_2CE1E, ax
 		jnb	short loc_1442F
 		mov	word ptr dword_2CE1E, ax
@@ -18738,7 +18630,6 @@ loc_14435:
 		mov	word_2CE8A, 6FDAh
 
 loc_14450:
-					; sub_143FC+42j
 		mov	eax, dword_2CE1E
 		sub	dword_2CE1A, eax
 		call	sub_143CA
@@ -18799,7 +18690,6 @@ loc_144B0:
 		loop	loc_144B0
 
 loc_144BC:
-					; sub_143FC+BAj
 		cli
 		std
 		rep movsb
@@ -18820,7 +18710,6 @@ sub_143FC	endp
 ; Attributes: bp-based frame
 
 sub_144CB	proc near
-					; sub_14613+4Ap ...
 		push	bp
 		mov	bp, sp
 		mov	word ptr dword_2D066+2,	seg seg001
@@ -18846,7 +18735,6 @@ sub_144CB	endp
 ; Attributes: bp-based frame
 
 sub_14518	proc near
-					; sub_14613+ACp ...
 
 arg_0		= dword	ptr  4
 
@@ -18897,7 +18785,7 @@ sub_14544	proc near
 		mov	word_26328, 0
 		mov	word_2632A, 0
 		mov	word_2632E, 3E8h
-		mov	byte_26330, 0C8h ; '»'
+		mov	byte_26330, 0C8h
 		call	sub_144CB
 		mov	word_26335+1, 0C00h
 		mov	word_2633A, 0C00h
@@ -18907,12 +18795,12 @@ sub_14544	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 3436h
 		mov	word_2D074, 5AF4h
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
-		mov	word_2C96E, 0BAh ; '∫'
-		mov	word_2C970, 0B8h ; '∏'
-		mov	word_2C972, 0B4h ; '¥'
+		mov	word_2C96E, 0BAh
+		mov	word_2C970, 0B8h
+		mov	word_2C972, 0B4h
 		mov	word_2449A, 2F32h
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
@@ -18949,7 +18837,7 @@ sub_14613	proc near
 		mov	word_26328, 0
 		mov	word_2632A, 8
 		mov	word_2632E, 578h
-		mov	byte_26330, 0CAh ; ' '
+		mov	byte_26330, 0CAh
 		call	sub_144CB
 		mov	word_26335+1, 0C00h
 		mov	word_2633A, 0C00h
@@ -18959,7 +18847,7 @@ sub_14613	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 3DBAh
 		mov	word_2D074, 5C1Ah
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 3096h
@@ -18998,7 +18886,7 @@ sub_146D0	proc near
 		mov	word_26328, 0
 		mov	word_2632A, 8
 		mov	word_2632E, 578h
-		mov	byte_26330, 0D0h ; '–'
+		mov	byte_26330, 0D0h
 		call	sub_144CB
 		mov	word_26335+1, 0C00h
 		mov	word_2633A, 0C00h
@@ -19008,13 +18896,13 @@ sub_146D0	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 4DC4h
 		mov	word_2D074, 5E8Ah
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 30A4h
-		mov	word_2C96E, 0BCh ; 'º'
-		mov	word_2C970, 0BAh ; '∫'
-		mov	word_2C972, 0B4h ; '¥'
+		mov	word_2C96E, 0BCh
+		mov	word_2C970, 0BAh
+		mov	word_2C972, 0B4h
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
@@ -19050,7 +18938,7 @@ sub_1479F	proc near
 		mov	word_26328, 0
 		mov	word_2632A, 8
 		mov	word_2632E, 44Ch
-		mov	byte_26330, 0D0h ; '–'
+		mov	byte_26330, 0D0h
 		call	sub_144CB
 		mov	word_26335+1, 600h
 		mov	word_2633A, 600h
@@ -19064,8 +18952,8 @@ sub_1479F	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 595Ah
 		mov	word_2D074, 5F61h
-		mov	byte_26344, 0B4h ; '¥'
-		mov	byte_2635C, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
+		mov	byte_2635C, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 30B2h
@@ -19104,7 +18992,7 @@ sub_14879	proc near
 		mov	word_26328, 0
 		mov	word_2632A, 8
 		mov	word_2632E, 60Eh
-		mov	byte_26330, 0D4h ; '‘'
+		mov	byte_26330, 0D4h
 		call	sub_144CB
 		mov	word_26335+1, 600h
 		mov	word_2633A, 600h
@@ -19118,7 +19006,7 @@ sub_14879	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 7FEBh
 		mov	word_2D074, 61C2h
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 320Eh
@@ -19171,7 +19059,7 @@ sub_14976	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 8F17h
 		mov	word_2D074, 62D4h
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 3B04h
@@ -19208,9 +19096,9 @@ sub_14A06	proc near
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FF00h
 		mov	word ptr dword_26324+2,	0FF00h
-		mov	byte ptr word_26335, 40h ; '@'
+		mov	byte ptr word_26335, 40h
 		mov	word_2632E, 0BB8h
-		mov	byte_26330, 0DCh ; '‹'
+		mov	byte_26330, 0DCh
 		call	sub_144CB
 		mov	word_26335+1, 0C00h
 		mov	word_2633A, 0C00h
@@ -19220,7 +19108,7 @@ sub_14A06	proc near
 		mov	word ptr dword_2D070+2,	seg seg003
 		mov	word ptr dword_2D070, 0A009h
 		mov	word_2D074, 69B9h
-		mov	byte_26344, 0B4h ; '¥'
+		mov	byte_26344, 0B4h
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
 		mov	word_2449A, 3B04h
@@ -19273,7 +19161,6 @@ seg002		segment	byte public 'CODE' use16
 ; Attributes: bp-based frame
 
 sub_14AC4	proc far
-					; sub_111B7+1E1P ...
 
 arg_0		= word ptr  6
 arg_2		= byte ptr  8
@@ -19386,7 +19273,7 @@ loc_14B79:
 
 sub_14B82	proc far
 		xor	ax, ax
-		mov	byte_23980, 60h	; '`'
+		mov	byte_23980, 60h
 		mov	byte_21229, al
 		mov	byte_21228, al
 		mov	byte_21227, al
@@ -19402,7 +19289,6 @@ sub_14B82	proc far
 		inc	ax
 
 locret_14BAF:
-					; sub_14B82+23j ...
 		retf
 sub_14B82	endp
 
@@ -19428,7 +19314,6 @@ sub_14BB0	proc far
 ; ---------------------------------------------------------------------------
 
 loc_14BDC:
-					; sub_14BB0+15j ...
 		xor	ax, ax
 		retf
 sub_14BB0	endp
@@ -19480,7 +19365,6 @@ loc_14C14:
 		mov	byte_21228, 2
 
 loc_14C19:
-					; sub_14BE0+32j
 		cmp	di, 1
 		jnz	short loc_14C31
 		cmp	byte_21228, 0
@@ -19508,7 +19392,6 @@ loc_14C3D:
 		mov	byte_21227, 0
 
 loc_14C42:
-					; sub_14BE0+5Bj
 		or	si, si
 		jnz	short loc_14C4D
 		mov	byte_21228, 0
@@ -19525,7 +19408,6 @@ loc_14C4D:
 ; ---------------------------------------------------------------------------
 
 loc_14C60:
-					; sub_14BE0+77j
 		cmp	si, 1
 		jnz	short loc_14C71
 		cmp	byte_21228, 0
@@ -19533,7 +19415,6 @@ loc_14C60:
 		mov	byte_21228, 1
 
 loc_14C71:
-					; sub_14BE0+7Ej ...
 		mov	al, byte_21228
 		mov	ah, 0
 		pop	di
@@ -19643,7 +19524,6 @@ loc_14D09:
 		mov	byte_21215, 0
 
 locret_14D24:
-					; sub_14CEE+2Bj
 		retf	2
 sub_14CEE	endp
 
@@ -19676,7 +19556,6 @@ loc_14D4D:
 		call	bgm_sound
 
 loc_14D55:
-					; sub_14D28+23j
 		inc	byte_21215
 		mov	bl, byte_21214
 		xor	bh, bh
@@ -19707,7 +19586,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	ds
 		cli
-		mov	al, 0C0h ; '¿'
+		mov	al, 0C0h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -19795,17 +19674,17 @@ sub_14E08	proc far
 		call	sub_4328
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
 		call	graph_clear
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
-		out	dx, al		; Interrupt Controller #2, 8259A
-		mov	dx, 0A4h ; '§'
-		out	dx, al		; Interrupt Controller #2, 8259A
+		out	dx, al
+		mov	dx, 0A4h
+		out	dx, al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear
@@ -19961,7 +19840,6 @@ loc_14F3E:
 ; ---------------------------------------------------------------------------
 
 loc_14F52:
-					; sub_14EB0+9Cj
 		int	60h
 
 loc_14F54:
@@ -19977,7 +19855,6 @@ loc_14F54:
 		pop	ds
 
 loc_14F62:
-					; sub_14EB0+59j ...
 		pop	di
 		pop	si
 		pop	bp
@@ -19989,7 +19866,6 @@ sub_14EB0	endp
 
 
 sub_14F68	proc far
-					; sub_E448+21P	...
 		cmp	byte_21228, 0
 		jz	short locret_14F82
 		mov	bx, sp
@@ -20004,7 +19880,6 @@ loc_14F80:
 		int	61h		; reserved for user interrupt
 
 locret_14F82:
-					; sub_14F68+16j
 		retf	2
 sub_14F68	endp
 
@@ -20060,7 +19935,6 @@ sub_14FCE	endp ; sp-analysis failed
 
 
 sub_14FD6	proc far
-					; sub_F1A6+E0P	...
 		xor	ax, ax
 		mov	es, ax
 		mov	ah, byte ptr es:[531h]
@@ -20184,7 +20058,6 @@ sub_14FD6	endp
 
 
 sub_150D4	proc far
-					; sub_B638:loc_B710P ...
 		push	cs
 		call	sub_14FCE
 		mov	cx, 400h
@@ -20217,7 +20090,6 @@ loc_150E7:
 		mov	bp, [bp+arg_0]
 
 loc_150F2:
-					; sub_150E4+24j
 		push	cs
 		call	near ptr sub_150D4
 		or	ax, ax
@@ -20301,7 +20173,6 @@ arg_6		= word ptr  0Ch
 		add	ax, dx
 
 loc_15166:
-					; sub_1512A+38j
 		mul	[bp+arg_0]
 		movzx	eax, ax
 		push	eax
@@ -20323,7 +20194,6 @@ sub_1512A	endp
 
 
 sub_1518A	proc near
-					; sub_151E8+3Fp
 		mov	al, [di+0Bh]
 		or	al, al
 		jz	short loc_151BF
@@ -20350,7 +20220,6 @@ loc_151B2:
 		call	file_seek
 
 loc_151BF:
-					; sub_1518A+26j
 		cmp	byte ptr [di+0Bh], 2
 		jz	short locret_151E1
 		mov	ax, [di]
@@ -20374,7 +20243,6 @@ sub_1518A	endp
 
 
 sub_151E2	proc near
-					; sub_14544+B5P ...
 		mov	byte_2123A, 1
 		nop
 sub_151E2	endp ; sp-analysis failed
@@ -20385,7 +20253,6 @@ sub_151E2	endp ; sp-analysis failed
 ; Attributes: bp-based frame
 
 sub_151E8	proc far
-					; sub_B9CC+15P
 
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
@@ -20494,7 +20361,6 @@ dseg		segment	para public 'DATA' use16
 include libs/BorlandC/c0[data].asm
 
 byte_20A70	db 0
-					; sub_AEA6+108w ...
 byte_20A71	db 0
 		dd aVersion1_01		; "version 1.01"
 include th04/strings/pause[data].asm
@@ -20502,9 +20368,7 @@ include th04/strings/pause[data].asm
 off_20A80	dd aEye_cdg
 					; "eye.cdg"
 word_20A84	dw 0
-					; sub_B237:loc_B260w ...
 off_20A86	dd aSt00
-					; sub_B237+2E1r
 					; "ST00"
 off_20A8A	dd aBb0_cdg_0
 					; "BB0.CDG"
@@ -20573,7 +20437,6 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
 		db    0
 word_20DC2	dw 0
-					; sub_14FD6+E9r
 		db    0
 		db    0
 		db    0
@@ -20600,7 +20463,7 @@ include libs/master.lib/bgm[data].asm
 		db    2
 		db  12h
 		db  12h
-		db  40h	; @
+		db  40h
 		db  10h
 		db  11h
 		db    2
@@ -20629,18 +20492,14 @@ include libs/master.lib/bgm[data].asm
 		db    0
 byte_21214	db 0FFh
 byte_21215	db 0
-					; sub_14CEE+31w ...
 word_21216	dw 4E20h
 aEfc		db 'efc',0
 dword_2121C	dd 6Dh
 aM2		db 'm2',0
 aMmd		db 'mmd',0
 byte_21227	db 0
-					; sub_14BE0:loc_14C2Cw	...
 byte_21228	db 0
-					; sub_14BE0+22w ...
 byte_21229	db 0
-					; sub_14BB0+23w ...
 		db    0
 		db    0
 		db    0
@@ -20656,7 +20515,7 @@ byte_21229	db 0
 		db    0
 		db    0
 		db    0
-		db 0E0h	; ÅE
+		db 0E0h
 byte_2123A	db 0
 		db 0
 aMiko_cfg	db 'MIKO.CFG',0
@@ -20665,76 +20524,76 @@ aSt00_map	db  'st00.map',0
 		db    0
 		db    0
 		db    0
-		db  40h	; @
+		db  40h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    2
-		db 0C0h	; ¿
+		db 0C0h
 		db    3
 		db    0
 		db    5
-		db  40h	; @
+		db  40h
 		db    6
-		db  80h	; Ä
+		db  80h
 		db    7
-		db 0C0h	; ¿
+		db 0C0h
 		db    8
 		db    0
 		db  0Ah
-		db  40h	; @
+		db  40h
 		db  0Bh
-		db  80h	; Ä
+		db  80h
 		db  0Ch
-		db 0C0h	; ¿
+		db 0C0h
 		db  0Dh
 		db    0
 		db  0Fh
-		db  40h	; @
+		db  40h
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db  11h
-		db 0C0h	; ¿
+		db 0C0h
 		db  12h
 		db    0
 		db  14h
-		db  40h	; @
+		db  40h
 		db  15h
-		db  80h	; Ä
+		db  80h
 		db  16h
-		db 0C0h	; ¿
+		db 0C0h
 		db  17h
 		db    0
 		db  19h
-		db  40h	; @
+		db  40h
 		db  1Ah
-		db  80h	; Ä
+		db  80h
 		db  1Bh
-		db 0C0h	; ¿
+		db 0C0h
 		db  1Ch
 		db    0
 		db  1Eh
-		db  40h	; @
+		db  40h
 		db  1Fh
-		db  80h	; Ä
+		db  80h
 		db  20h
-		db 0C0h	; ¿
+		db 0C0h
 		db  21h	; !
 		db    0
 		db  23h	; #
-		db  40h	; @
+		db  40h
 		db  24h	; $
-		db  80h	; Ä
+		db  80h
 		db  25h	; %
-		db 0C0h	; ¿
+		db 0C0h
 		db  26h	; &
 word_21290	dw 0
 aSt00_std	db  'ST00.STD',0
 		db 0
-		db 0DCh	; ‹
+		db 0DCh
 		db    7
 		db  0Eh
 		db    8
-		db 0F0h	; 
+		db 0F0h
 		db    7
 		db  3Ch	; <
 		db    0
@@ -20756,14 +20615,14 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  3Fh	; ?
 		db    0
-		db  7Fh	; 
-		db  80h	; Ä
-		db  7Fh	; 
-		db  80h	; Ä
-		db  7Fh	; 
-		db  80h	; Ä
-		db  7Fh	; 
-		db  80h	; Ä
+		db  7Fh
+		db  80h
+		db  7Fh
+		db  80h
+		db  7Fh
+		db  80h
+		db  7Fh
+		db  80h
 		db  3Fh	; ?
 		db    0
 		db  1Eh
@@ -20771,161 +20630,161 @@ aSt00_std	db  'ST00.STD',0
 		db  0Fh
 		db    0
 		db  1Fh
-		db  80h	; Ä
+		db  80h
 		db  3Fh	; ?
-		db 0C0h	; ¿
+		db 0C0h
 		db  3Fh	; ?
-		db 0C0h	; ¿
+		db 0C0h
 		db  3Fh	; ?
-		db 0C0h	; ¿
+		db 0C0h
 		db  3Fh	; ?
-		db 0C0h	; ¿
+		db 0C0h
 		db  1Fh
-		db  80h	; Ä
+		db  80h
 		db  0Fh
 		db    0
 		db    7
-		db  80h	; Ä
+		db  80h
 		db  0Fh
-		db 0C0h	; ¿
+		db 0C0h
 		db  1Fh
-		db 0E0h	; ‡
+		db 0E0h
 		db  1Fh
-		db 0E0h	; ‡
+		db 0E0h
 		db  1Fh
-		db 0E0h	; ‡
+		db 0E0h
 		db  1Fh
-		db 0E0h	; ‡
+		db 0E0h
 		db  0Fh
-		db 0C0h	; ¿
+		db 0C0h
 		db    7
-		db  80h	; Ä
+		db  80h
 		db    3
-		db 0C0h	; ¿
+		db 0C0h
 		db    7
-		db 0E0h	; ‡
+		db 0E0h
 		db  0Fh
-		db 0F0h	; 
+		db 0F0h
 		db  0Fh
-		db 0F0h	; 
+		db 0F0h
 		db  0Fh
-		db 0F0h	; 
+		db 0F0h
 		db  0Fh
-		db 0F0h	; 
+		db 0F0h
 		db    7
-		db 0E0h	; ‡
+		db 0E0h
 		db    3
-		db 0C0h	; ¿
+		db 0C0h
 		db    1
-		db 0E0h	; ‡
+		db 0E0h
 		db    3
-		db 0F0h	; 
+		db 0F0h
 		db    7
-		db 0F8h	; ¯
+		db 0F8h
 		db    7
-		db 0F8h	; ¯
+		db 0F8h
 		db    7
-		db 0F8h	; ¯
+		db 0F8h
 		db    7
-		db 0F8h	; ¯
+		db 0F8h
 		db    3
-		db 0F0h	; 
+		db 0F0h
 		db    1
-		db 0E0h	; ‡
+		db 0E0h
 		db    0
-		db 0F0h	; 
+		db 0F0h
 		db    1
-		db 0F8h	; ¯
+		db 0F8h
 		db    3
-		db 0FCh	; ¸
+		db 0FCh
 		db    3
-		db 0FCh	; ¸
+		db 0FCh
 		db    3
-		db 0FCh	; ¸
+		db 0FCh
 		db    3
-		db 0FCh	; ¸
+		db 0FCh
 		db    1
-		db 0F8h	; ¯
+		db 0F8h
 		db    0
-		db 0F0h	; 
+		db 0F0h
 		db    0
 		db  78h	; x
 		db    0
-		db 0FCh	; ¸
+		db 0FCh
 		db    1
-		db 0FEh	; ˛
+		db 0FEh
 		db    1
-		db 0FEh	; ˛
+		db 0FEh
 		db    1
-		db 0FEh	; ˛
+		db 0FEh
 		db    1
-		db 0FEh	; ˛
+		db 0FEh
 		db    0
-		db 0FCh	; ¸
+		db 0FCh
 		db    0
 		db  78h	; x
 		db    1
 		db    0
-		db  83h	; É
+		db  83h
 		db    0
 		db  7Eh	; ~
 		db    0
 		db  3Ch	; <
 		db    0
 		db    0
-		db  80h	; Ä
+		db  80h
 		db  41h	; A
-		db  80h	; Ä
+		db  80h
 		db  3Fh	; ?
 		db    0
 		db  1Eh
 		db    0
 		db    0
-		db  40h	; @
+		db  40h
 		db  20h
-		db 0C0h	; ¿
+		db 0C0h
 		db  1Fh
-		db  80h	; Ä
+		db  80h
 		db  0Fh
 		db    0
 		db    0
 		db  20h
 		db  10h
-		db  60h	; `
+		db  60h
 		db  0Fh
-		db 0C0h	; ¿
+		db 0C0h
 		db    7
-		db  80h	; Ä
+		db  80h
 		db    0
 		db  10h
 		db    8
 		db  30h	; 0
 		db    7
-		db 0E0h	; ‡
+		db 0E0h
 		db    3
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    8
 		db    4
 		db  18h
 		db    3
-		db 0F0h	; 
+		db 0F0h
 		db    1
-		db 0E0h	; ‡
+		db 0E0h
 		db    0
 		db    4
 		db    2
 		db  0Ch
 		db    1
-		db 0F8h	; ¯
+		db 0F8h
 		db    0
-		db 0F0h	; 
+		db 0F0h
 		db    0
 		db    2
 		db    1
 		db    6
 		db    0
-		db 0FCh	; ¸
+		db 0FCh
 		db    0
 		db  78h	; x
 		db  10h
@@ -20936,7 +20795,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  1Fh
 		db    0
-		db 0F8h	; ¯
+		db 0F8h
 		db    0
 		db    8
 		db    0
@@ -20944,7 +20803,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    8
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
 		db  21h	; !
 		db    0
@@ -20956,7 +20815,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  48h	; H
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db    2
 		db    0
@@ -20992,7 +20851,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
 		db  21h	; !
 		db    0
@@ -21004,7 +20863,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  48h	; H
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db    2
 		db    0
@@ -21044,13 +20903,13 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  42h	; B
 		db    0
-		db  81h	; Å
+		db  81h
 		db    0
-		db  99h	; ô
+		db  99h
 		db    0
-		db  99h	; ô
+		db  99h
 		db    0
-		db  81h	; Å
+		db  81h
 		db    0
 		db  42h	; B
 		db    0
@@ -21063,7 +20922,7 @@ aSt00_std	db  'ST00.STD',0
 		db    8
 		db    0
 		db  0Fh
-		db  80h	; Ä
+		db  80h
 		db  7Ch	; |
 		db    0
 		db    4
@@ -21075,7 +20934,7 @@ aSt00_std	db  'ST00.STD',0
 		db  20h
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    9
 		db    0
 		db  0Eh
@@ -21123,7 +20982,7 @@ aSt00_std	db  'ST00.STD',0
 		db  20h
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    9
 		db    0
 		db  0Eh
@@ -21172,14 +21031,14 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  21h	; !
 		db    0
-		db  40h	; @
-		db  80h	; Ä
+		db  40h
+		db  80h
 		db  4Ch	; L
-		db  80h	; Ä
+		db  80h
 		db  4Ch	; L
-		db  80h	; Ä
-		db  40h	; @
-		db  80h	; Ä
+		db  80h
+		db  40h
+		db  80h
 		db  21h	; !
 		db    0
 		db  1Eh
@@ -21191,7 +21050,7 @@ aSt00_std	db  'ST00.STD',0
 		db    4
 		db    0
 		db    7
-		db 0C0h	; ¿
+		db 0C0h
 		db  3Eh	; >
 		db    0
 		db    2
@@ -21203,9 +21062,9 @@ aSt00_std	db  'ST00.STD',0
 		db  10h
 		db    0
 		db    8
-		db  40h	; @
+		db  40h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    7
 		db    0
 		db  0Eh
@@ -21215,11 +21074,11 @@ aSt00_std	db  'ST00.STD',0
 		db  21h	; !
 		db    0
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    9
 		db    0
 		db    6
@@ -21229,7 +21088,7 @@ aSt00_std	db  'ST00.STD',0
 		db    9
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db    0
@@ -21251,9 +21110,9 @@ aSt00_std	db  'ST00.STD',0
 		db  10h
 		db    0
 		db    8
-		db  40h	; @
+		db  40h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    7
 		db    0
 		db  0Eh
@@ -21263,11 +21122,11 @@ aSt00_std	db  'ST00.STD',0
 		db  21h	; !
 		db    0
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    9
 		db    0
 		db    6
@@ -21277,7 +21136,7 @@ aSt00_std	db  'ST00.STD',0
 		db    9
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db    0
@@ -21299,17 +21158,17 @@ aSt00_std	db  'ST00.STD',0
 		db  0Fh
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db  20h
-		db  40h	; @
+		db  40h
 		db  26h	; &
-		db  40h	; @
+		db  40h
 		db  26h	; &
-		db  40h	; @
+		db  40h
 		db  20h
-		db  40h	; @
+		db  40h
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db  0Fh
 		db    0
 		db    2
@@ -21319,7 +21178,7 @@ aSt00_std	db  'ST00.STD',0
 		db    2
 		db    0
 		db    3
-		db 0E0h	; ‡
+		db 0E0h
 		db  1Fh
 		db    0
 		db    1
@@ -21333,31 +21192,31 @@ aSt00_std	db  'ST00.STD',0
 		db    4
 		db  20h
 		db    2
-		db  40h	; @
+		db  40h
 		db    3
-		db  80h	; Ä
+		db  80h
 		db    7
 		db    0
 		db    9
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    8
-		db  40h	; @
+		db  40h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    3
 		db    0
 		db    3
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    8
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    0
@@ -21365,13 +21224,13 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    3
 		db    0
 		db    3
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db    0
@@ -21381,31 +21240,31 @@ aSt00_std	db  'ST00.STD',0
 		db    4
 		db  20h
 		db    2
-		db  40h	; @
+		db  40h
 		db    3
-		db  80h	; Ä
+		db  80h
 		db    7
 		db    0
 		db    9
 		db    0
 		db  10h
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    8
-		db  40h	; @
+		db  40h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    3
 		db    0
 		db    3
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    8
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    0
@@ -21413,21 +21272,21 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    3
 		db    0
 		db    3
 		db    0
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    0
 		db    0
 		db    0
 		db    0
 		db    7
-		db  80h	; Ä
+		db  80h
 		db    8
-		db  40h	; @
+		db  40h
 		db  10h
 		db  20h
 		db  13h
@@ -21437,9 +21296,9 @@ aSt00_std	db  'ST00.STD',0
 		db  10h
 		db  20h
 		db    8
-		db  40h	; @
+		db  40h
 		db    7
-		db  80h	; Ä
+		db  80h
 		db    1
 		db    0
 		db    1
@@ -21447,15 +21306,15 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    0
 		db    1
-		db 0F0h	; 
+		db 0F0h
 		db  0Fh
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    4
 		db    0
 		db    2
@@ -21463,13 +21322,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    1
-		db 0C0h	; ¿
+		db 0C0h
 		db    3
-		db  80h	; Ä
+		db  80h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    8
-		db  40h	; @
+		db  40h
 		db    0
 		db  20h
 		db    0
@@ -21477,13 +21336,13 @@ aSt00_std	db  'ST00.STD',0
 		db    4
 		db  20h
 		db    2
-		db  40h	; @
+		db  40h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    2
-		db  40h	; @
+		db  40h
 		db    4
 		db  20h
 		db    0
@@ -21493,13 +21352,13 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    2
-		db  40h	; @
+		db  40h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    2
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    0
@@ -21511,13 +21370,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    1
-		db 0C0h	; ¿
+		db 0C0h
 		db    3
-		db  80h	; Ä
+		db  80h
 		db    4
-		db  80h	; Ä
+		db  80h
 		db    8
-		db  40h	; @
+		db  40h
 		db    0
 		db  20h
 		db    0
@@ -21525,13 +21384,13 @@ aSt00_std	db  'ST00.STD',0
 		db    4
 		db  20h
 		db    2
-		db  40h	; @
+		db  40h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    2
-		db  40h	; @
+		db  40h
 		db    4
 		db  20h
 		db    0
@@ -21541,61 +21400,61 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    2
-		db  40h	; @
+		db  40h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    1
-		db  80h	; Ä
+		db  80h
 		db    2
-		db  40h	; @
+		db  40h
 		db    0
 		db    0
 		db    0
 		db    0
 		db    3
-		db 0C0h	; ¿
+		db 0C0h
 		db    4
 		db  20h
 		db    8
 		db  10h
 		db    9
-		db  90h	; ê
+		db  90h
 		db    9
-		db  90h	; ê
+		db  90h
 		db    8
 		db  10h
 		db    4
 		db  20h
 		db    3
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
-		db 0F8h	; ¯
+		db 0F8h
 		db    7
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db  40h	; @
+		db  40h
 		db    2
 		db    0
 		db    1
 		db    8
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db 0E0h	; ‡
+		db 0E0h
 		db    1
-		db 0C0h	; ¿
+		db 0C0h
 		db    2
-		db  40h	; @
+		db  40h
 		db    4
 		db  20h
 		db    0
@@ -21607,9 +21466,9 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    1
 		db  20h
 		db    2
@@ -21623,9 +21482,9 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    1
 		db  20h
 		db    0
@@ -21637,13 +21496,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    8
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db 0E0h	; ‡
+		db 0E0h
 		db    1
-		db 0C0h	; ¿
+		db 0C0h
 		db    2
-		db  40h	; @
+		db  40h
 		db    4
 		db  20h
 		db    0
@@ -21655,9 +21514,9 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    1
 		db  20h
 		db    2
@@ -21671,9 +21530,9 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db  20h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    1
 		db  20h
 		db    0
@@ -21681,31 +21540,31 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    1
-		db 0E0h	; ‡
+		db 0E0h
 		db    2
 		db  10h
-		db    4
-		db    8
-		db    4
-		db 0C8h	; »
-		db    4
-		db 0C8h	; »
 		db    4
 		db    8
+		db    4
+		db 0C8h
+		db    4
+		db 0C8h
+		db    4
+		db    8
 		db    2
 		db  10h
 		db    1
-		db 0E0h	; ‡
+		db 0E0h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
 		db  7Ch	; |
 		db    3
-		db 0E0h	; ‡
+		db 0E0h
 		db    0
 		db  20h
 		db    0
@@ -21715,13 +21574,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    0
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  48h	; H
 		db    0
 		db  70h	; p
 		db    0
-		db 0E0h	; ‡
+		db 0E0h
 		db    1
 		db  20h
 		db    2
@@ -21733,13 +21592,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    8
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  90h	; ê
+		db  90h
 		db    1
 		db    8
 		db    0
@@ -21749,13 +21608,13 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
 		db    0
 		db    0
@@ -21763,13 +21622,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    0
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  48h	; H
 		db    0
 		db  70h	; p
 		db    0
-		db 0E0h	; ‡
+		db 0E0h
 		db    1
 		db  20h
 		db    2
@@ -21781,13 +21640,13 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    8
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  90h	; ê
+		db  90h
 		db    1
 		db    8
 		db    0
@@ -21797,19 +21656,19 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  90h	; ê
+		db  90h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  90h	; ê
-		db    0
-		db    0
+		db  90h
 		db    0
 		db    0
 		db    0
-		db 0F0h	; 
+		db    0
+		db    0
+		db 0F0h
 		db    1
 		db    8
 		db    2
@@ -21823,7 +21682,7 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    8
 		db    0
-		db 0F0h	; 
+		db 0F0h
 		db    0
 		db  20h
 		db    0
@@ -21833,7 +21692,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  3Eh	; >
 		db    1
-		db 0F0h	; 
+		db 0F0h
 		db    0
 		db  10h
 		db    0
@@ -21841,7 +21700,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  10h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
 		db  42h	; B
 		db    0
@@ -21851,7 +21710,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  70h	; p
 		db    0
-		db  90h	; ê
+		db  90h
 		db    1
 		db    8
 		db    0
@@ -21859,7 +21718,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  48h	; H
 		db    0
@@ -21869,7 +21728,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  48h	; H
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db    0
 		db    0
@@ -21889,7 +21748,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
 		db  42h	; B
 		db    0
@@ -21899,7 +21758,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  70h	; p
 		db    0
-		db  90h	; ê
+		db  90h
 		db    1
 		db    8
 		db    0
@@ -21907,7 +21766,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db    0
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  48h	; H
 		db    0
@@ -21917,7 +21776,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  48h	; H
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db    0
 		db    0
@@ -21939,7 +21798,7 @@ aSt00_std	db  'ST00.STD',0
 		db    0
 		db  78h	; x
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    1
 		db    2
 		db    1
@@ -21949,11 +21808,10 @@ aSt00_std	db  'ST00.STD',0
 		db    1
 		db    2
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  78h	; x
 byte_21762	db 0
-					; sub_1720E+E8w ...
 		db    0
 ; 0
 NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0, 38h,	 0
@@ -22071,7 +21929,6 @@ word_21D6E	dw 0FFh
 byte_21D70	db 0
 		db 0
 word_21D72	dw 0
-					; sub_D774+79w	...
 byte_21D74	db 0
 byte_21D75	db 0
 byte_21D76	db 0
@@ -22079,7 +21936,7 @@ byte_21D76	db 0
 		db  18h
 		db  3Ch	; <
 		db  7Eh	; ~
-		db 0BDh	; Ω
+		db 0BDh
 		db 0FFh
 aLs00_bb	db 'LS00.BB',0
 		db    0
@@ -22101,406 +21958,406 @@ aMaine_0	db 'maine',0
 		db    0
 		db  48h	; H
 		db    0
-		db  60h	; `
+		db  60h
 		db    0
-		db  80h	; Ä
+		db  80h
 		db    0
 aTxt1_bb	db 'txt1.bb',0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    0
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    4
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    9
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db    0
 		db  0Eh
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db    0
 		db  12h
 		db    0
-		db 0BEh	; æ
+		db 0BEh
 		db    0
 		db  17h
 		db    0
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
 		db  1Ch
 		db    0
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
 		db  21h	; !
 		db    0
-		db 0BCh	; º
+		db 0BCh
 		db    0
 		db  25h	; %
 		db    0
-		db 0BBh	; ª
+		db 0BBh
 		db    0
 		db  2Ah	; *
 		db    0
-		db 0BAh	; ∫
+		db 0BAh
 		db    0
 		db  2Eh	; .
 		db    0
-		db 0B9h	; π
+		db 0B9h
 		db    0
 		db  33h	; 3
 		db    0
-		db 0B7h	; ∑
+		db 0B7h
 		db    0
 		db  37h	; 7
 		db    0
-		db 0B6h	; ∂
+		db 0B6h
 		db    0
 		db  3Ch	; <
 		db    0
-		db 0B4h	; ¥
+		db 0B4h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db 0B3h	; ≥
+		db 0B3h
 		db    0
 		db  45h	; E
 		db    0
-		db 0B1h	; ±
+		db 0B1h
 		db    0
 		db  49h	; I
 		db    0
-		db 0AFh	; Ø
+		db 0AFh
 		db    0
 		db  4Eh	; N
 		db    0
-		db 0ADh	; ≠
+		db 0ADh
 		db    0
 		db  51h	; Q
 		db    0
-		db 0ABh	; ´
+		db 0ABh
 		db    0
 		db  56h	; V
 		db    0
-		db 0A9h	; ©
+		db 0A9h
 		db    0
 		db  5Ah	; Z
 		db    0
-		db 0A7h	; ß
+		db 0A7h
 		db    0
 		db  5Eh	; ^
 		db    0
-		db 0A5h	; •
+		db 0A5h
 		db    0
 		db  63h	; c
 		db    0
-		db 0A2h	; ¢
+		db 0A2h
 		db    0
 		db  66h	; f
 		db    0
-		db  9Fh	; ü
+		db  9Fh
 		db    0
 		db  6Ah	; j
 		db    0
-		db  9Ch	; ú
+		db  9Ch
 		db    0
 		db  6Eh	; n
 		db    0
-		db  9Ah	; ö
+		db  9Ah
 		db    0
 		db  72h	; r
 		db    0
-		db  97h	; ó
+		db  97h
 		db    0
 		db  75h	; u
 		db    0
-		db  94h	; î
+		db  94h
 		db    0
 		db  79h	; y
 		db    0
-		db  91h	; ë
+		db  91h
 		db    0
 		db  7Dh	; }
 		db    0
-		db  8Eh	; é
+		db  8Eh
 		db    0
-		db  81h	; Å
+		db  81h
 		db    0
-		db  8Ah	; ä
+		db  8Ah
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
-		db  87h	; á
+		db  87h
 		db    0
-		db  87h	; á
+		db  87h
 		db    0
-		db  84h	; Ñ
+		db  84h
 		db    0
-		db  8Ah	; ä
+		db  8Ah
 		db    0
-		db  81h	; Å
+		db  81h
 		db    0
-		db  8Eh	; é
+		db  8Eh
 		db    0
 		db  7Dh	; }
 		db    0
-		db  91h	; ë
+		db  91h
 		db    0
 		db  79h	; y
 		db    0
-		db  94h	; î
+		db  94h
 		db    0
 		db  75h	; u
 		db    0
-		db  97h	; ó
+		db  97h
 		db    0
 		db  72h	; r
 		db    0
-		db  9Ah	; ö
+		db  9Ah
 		db    0
 		db  6Eh	; n
 		db    0
-		db  9Ch	; ú
+		db  9Ch
 		db    0
 		db  6Ah	; j
 		db    0
-		db  9Fh	; ü
+		db  9Fh
 		db    0
 		db  66h	; f
 		db    0
-		db 0A2h	; ¢
+		db 0A2h
 		db    0
 		db  63h	; c
 		db    0
-		db 0A5h	; •
+		db 0A5h
 		db    0
 		db  5Eh	; ^
 		db    0
-		db 0A7h	; ß
+		db 0A7h
 		db    0
 		db  5Ah	; Z
 		db    0
-		db 0A9h	; ©
+		db 0A9h
 		db    0
 		db  56h	; V
 		db    0
-		db 0ABh	; ´
+		db 0ABh
 		db    0
 		db  51h	; Q
 		db    0
-		db 0ADh	; ≠
+		db 0ADh
 		db    0
 		db  4Eh	; N
 		db    0
-		db 0AFh	; Ø
+		db 0AFh
 		db    0
 		db  49h	; I
 		db    0
-		db 0B1h	; ±
+		db 0B1h
 		db    0
 		db  45h	; E
 		db    0
-		db 0B3h	; ≥
+		db 0B3h
 		db    0
-		db  40h	; @
+		db  40h
 		db    0
-		db 0B4h	; ¥
+		db 0B4h
 		db    0
 		db  3Ch	; <
 		db    0
-		db 0B6h	; ∂
+		db 0B6h
 		db    0
 		db  37h	; 7
 		db    0
-		db 0B7h	; ∑
+		db 0B7h
 		db    0
 		db  33h	; 3
 		db    0
-		db 0B9h	; π
+		db 0B9h
 		db    0
 		db  2Eh	; .
 		db    0
-		db 0BAh	; ∫
+		db 0BAh
 		db    0
 		db  2Ah	; *
 		db    0
-		db 0BBh	; ª
+		db 0BBh
 		db    0
 		db  25h	; %
 		db    0
-		db 0BCh	; º
+		db 0BCh
 		db    0
 		db  21h	; !
 		db    0
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
 		db  1Ch
 		db    0
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
 		db  17h
 		db    0
-		db 0BEh	; æ
+		db 0BEh
 		db    0
 		db  12h
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db    0
 		db  0Eh
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db    0
 		db    9
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    4
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
 		db    0
 		db    0
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0FBh	; ˚
+		db 0FBh
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0F6h	; ˆ
+		db 0F6h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0F1h	; Ò
+		db 0F1h
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db    0
-		db 0EDh	; Ì
+		db 0EDh
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db    0
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
-		db 0BEh	; æ
+		db 0BEh
 		db    0
-		db 0E3h	; „
+		db 0E3h
 		db 0FFh
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
-		db 0DFh	; ﬂ
+		db 0DFh
 		db 0FFh
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
-		db 0DAh	; ⁄
+		db 0DAh
 		db 0FFh
-		db 0BCh	; º
+		db 0BCh
 		db    0
-		db 0D6h	; ÷
+		db 0D6h
 		db 0FFh
-		db 0BBh	; ª
+		db 0BBh
 		db    0
-		db 0D1h	; —
+		db 0D1h
 		db 0FFh
-		db 0BAh	; ∫
+		db 0BAh
 		db    0
-		db 0CDh	; Õ
+		db 0CDh
 		db 0FFh
-		db 0B9h	; π
+		db 0B9h
 		db    0
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0B7h	; ∑
+		db 0B7h
 		db    0
-		db 0C4h	; ƒ
+		db 0C4h
 		db 0FFh
-		db 0B6h	; ∂
+		db 0B6h
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db 0FFh
-		db 0B4h	; ¥
+		db 0B4h
 		db    0
-		db 0BBh	; ª
+		db 0BBh
 		db 0FFh
-		db 0B3h	; ≥
+		db 0B3h
 		db    0
-		db 0B6h	; ∂
+		db 0B6h
 		db 0FFh
-		db 0B1h	; ±
+		db 0B1h
 		db    0
-		db 0B2h	; ≤
+		db 0B2h
 		db 0FFh
-		db 0AFh	; Ø
+		db 0AFh
 		db    0
-		db 0AEh	; Æ
+		db 0AEh
 		db 0FFh
-		db 0ADh	; ≠
+		db 0ADh
 		db    0
-		db 0A9h	; ©
+		db 0A9h
 		db 0FFh
-		db 0ABh	; ´
+		db 0ABh
 		db    0
-		db 0A5h	; •
+		db 0A5h
 		db 0FFh
-		db 0A9h	; ©
+		db 0A9h
 		db    0
-		db 0A1h	; °
+		db 0A1h
 		db 0FFh
-		db 0A7h	; ß
+		db 0A7h
 		db    0
-		db  9Dh	; ù
+		db  9Dh
 		db 0FFh
-		db 0A5h	; •
+		db 0A5h
 		db    0
-		db  99h	; ô
+		db  99h
 		db 0FFh
-		db 0A2h	; ¢
+		db 0A2h
 		db    0
-		db  95h	; ï
+		db  95h
 		db 0FFh
-		db  9Fh	; ü
+		db  9Fh
 		db    0
-		db  91h	; ë
+		db  91h
 		db 0FFh
-		db  9Ch	; ú
+		db  9Ch
 		db    0
-		db  8Eh	; é
+		db  8Eh
 		db 0FFh
-		db  9Ah	; ö
+		db  9Ah
 		db    0
-		db  8Ah	; ä
+		db  8Ah
 		db 0FFh
-		db  97h	; ó
+		db  97h
 		db    0
-		db  86h	; Ü
+		db  86h
 		db 0FFh
-		db  94h	; î
+		db  94h
 		db    0
-		db  82h	; Ç
+		db  82h
 		db 0FFh
-		db  91h	; ë
+		db  91h
 		db    0
-		db  7Fh	; 
+		db  7Fh
 		db 0FFh
-		db  8Eh	; é
+		db  8Eh
 		db    0
 		db  7Bh	; {
 		db 0FFh
-		db  8Ah	; ä
+		db  8Ah
 		db    0
 		db  78h	; x
 		db 0FFh
-		db  87h	; á
+		db  87h
 		db    0
 		db  75h	; u
 		db 0FFh
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  71h	; q
 		db 0FFh
-		db  81h	; Å
+		db  81h
 		db    0
 		db  6Eh	; n
 		db 0FFh
@@ -22522,7 +22379,7 @@ aTxt1_bb	db 'txt1.bb',0
 		db 0FFh
 		db  6Eh	; n
 		db    0
-		db  60h	; `
+		db  60h
 		db 0FFh
 		db  6Ah	; j
 		db    0
@@ -22564,7 +22421,7 @@ aTxt1_bb	db 'txt1.bb',0
 		db    0
 		db  4Bh	; K
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db    0
 		db  49h	; I
 		db 0FFh
@@ -22602,145 +22459,145 @@ aTxt1_bb	db 'txt1.bb',0
 		db 0FFh
 		db  17h
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db  12h
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db  0Eh
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    9
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    4
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    0
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0FBh	; ˚
+		db 0FBh
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0F6h	; ˆ
+		db 0F6h
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0F1h	; Ò
+		db 0F1h
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0EDh	; Ì
+		db 0EDh
 		db 0FFh
 		db  41h	; A
 		db 0FFh
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
 		db  42h	; B
 		db 0FFh
-		db 0E3h	; „
+		db 0E3h
 		db 0FFh
 		db  43h	; C
 		db 0FFh
-		db 0DFh	; ﬂ
+		db 0DFh
 		db 0FFh
 		db  43h	; C
 		db 0FFh
-		db 0DAh	; ⁄
+		db 0DAh
 		db 0FFh
 		db  44h	; D
 		db 0FFh
-		db 0D6h	; ÷
+		db 0D6h
 		db 0FFh
 		db  46h	; F
 		db 0FFh
-		db 0D1h	; —
+		db 0D1h
 		db 0FFh
 		db  46h	; F
 		db 0FFh
-		db 0CDh	; Õ
+		db 0CDh
 		db 0FFh
 		db  48h	; H
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
 		db  49h	; I
 		db 0FFh
-		db 0C4h	; ƒ
+		db 0C4h
 		db 0FFh
 		db  4Bh	; K
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db 0FFh
 		db  4Ch	; L
 		db 0FFh
-		db 0BBh	; ª
+		db 0BBh
 		db 0FFh
 		db  4Eh	; N
 		db 0FFh
-		db 0B6h	; ∂
+		db 0B6h
 		db 0FFh
 		db  50h	; P
 		db 0FFh
-		db 0B2h	; ≤
+		db 0B2h
 		db 0FFh
 		db  52h	; R
 		db 0FFh
-		db 0AEh	; Æ
+		db 0AEh
 		db 0FFh
 		db  54h	; T
 		db 0FFh
-		db 0A9h	; ©
+		db 0A9h
 		db 0FFh
 		db  56h	; V
 		db 0FFh
-		db 0A5h	; •
+		db 0A5h
 		db 0FFh
 		db  58h	; X
 		db 0FFh
-		db 0A1h	; °
+		db 0A1h
 		db 0FFh
 		db  5Bh	; [
 		db 0FFh
-		db  9Dh	; ù
+		db  9Dh
 		db 0FFh
 		db  5Eh	; ^
 		db 0FFh
-		db  99h	; ô
+		db  99h
 		db 0FFh
-		db  60h	; `
+		db  60h
 		db 0FFh
-		db  95h	; ï
+		db  95h
 		db 0FFh
 		db  63h	; c
 		db 0FFh
-		db  91h	; ë
+		db  91h
 		db 0FFh
 		db  65h	; e
 		db 0FFh
-		db  8Eh	; é
+		db  8Eh
 		db 0FFh
 		db  68h	; h
 		db 0FFh
-		db  8Ah	; ä
+		db  8Ah
 		db 0FFh
 		db  6Bh	; k
 		db 0FFh
-		db  86h	; Ü
+		db  86h
 		db 0FFh
 		db  6Eh	; n
 		db 0FFh
-		db  82h	; Ç
+		db  82h
 		db 0FFh
 		db  71h	; q
 		db 0FFh
-		db  7Fh	; 
+		db  7Fh
 		db 0FFh
 		db  75h	; u
 		db 0FFh
@@ -22754,145 +22611,145 @@ aTxt1_bb	db 'txt1.bb',0
 		db 0FFh
 		db  75h	; u
 		db 0FFh
-		db  7Fh	; 
+		db  7Fh
 		db 0FFh
 		db  71h	; q
 		db 0FFh
-		db  82h	; Ç
+		db  82h
 		db 0FFh
 		db  6Eh	; n
 		db 0FFh
-		db  86h	; Ü
+		db  86h
 		db 0FFh
 		db  6Bh	; k
 		db 0FFh
-		db  8Ah	; ä
+		db  8Ah
 		db 0FFh
 		db  68h	; h
 		db 0FFh
-		db  8Eh	; é
+		db  8Eh
 		db 0FFh
 		db  65h	; e
 		db 0FFh
-		db  91h	; ë
+		db  91h
 		db 0FFh
 		db  63h	; c
 		db 0FFh
-		db  95h	; ï
+		db  95h
 		db 0FFh
-		db  60h	; `
+		db  60h
 		db 0FFh
-		db  99h	; ô
+		db  99h
 		db 0FFh
 		db  5Eh	; ^
 		db 0FFh
-		db  9Dh	; ù
+		db  9Dh
 		db 0FFh
 		db  5Bh	; [
 		db 0FFh
-		db 0A1h	; °
+		db 0A1h
 		db 0FFh
 		db  58h	; X
 		db 0FFh
-		db 0A5h	; •
+		db 0A5h
 		db 0FFh
 		db  56h	; V
 		db 0FFh
-		db 0A9h	; ©
+		db 0A9h
 		db 0FFh
 		db  54h	; T
 		db 0FFh
-		db 0AEh	; Æ
+		db 0AEh
 		db 0FFh
 		db  52h	; R
 		db 0FFh
-		db 0B2h	; ≤
+		db 0B2h
 		db 0FFh
 		db  50h	; P
 		db 0FFh
-		db 0B6h	; ∂
+		db 0B6h
 		db 0FFh
 		db  4Eh	; N
 		db 0FFh
-		db 0BBh	; ª
+		db 0BBh
 		db 0FFh
 		db  4Ch	; L
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db 0FFh
 		db  4Bh	; K
 		db 0FFh
-		db 0C4h	; ƒ
+		db 0C4h
 		db 0FFh
 		db  49h	; I
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
 		db  48h	; H
 		db 0FFh
-		db 0CDh	; Õ
+		db 0CDh
 		db 0FFh
 		db  46h	; F
 		db 0FFh
-		db 0D1h	; —
+		db 0D1h
 		db 0FFh
 		db  46h	; F
 		db 0FFh
-		db 0D6h	; ÷
+		db 0D6h
 		db 0FFh
 		db  44h	; D
 		db 0FFh
-		db 0DAh	; ⁄
+		db 0DAh
 		db 0FFh
 		db  43h	; C
 		db 0FFh
-		db 0DFh	; ﬂ
+		db 0DFh
 		db 0FFh
 		db  43h	; C
 		db 0FFh
-		db 0E3h	; „
+		db 0E3h
 		db 0FFh
 		db  42h	; B
 		db 0FFh
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
 		db  41h	; A
 		db 0FFh
-		db 0EDh	; Ì
+		db 0EDh
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0F1h	; Ò
+		db 0F1h
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0F6h	; ˆ
+		db 0F6h
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
-		db 0FBh	; ˚
+		db 0FBh
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    0
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    4
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db    9
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db  0Eh
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db  12h
 		db    0
-		db  40h	; @
+		db  40h
 		db 0FFh
 		db  17h
 		db    0
@@ -22930,7 +22787,7 @@ aTxt1_bb	db 'txt1.bb',0
 		db    0
 		db  49h	; I
 		db 0FFh
-		db  40h	; @
+		db  40h
 		db    0
 		db  4Bh	; K
 		db 0FFh
@@ -22972,7 +22829,7 @@ aTxt1_bb	db 'txt1.bb',0
 		db 0FFh
 		db  6Ah	; j
 		db    0
-		db  60h	; `
+		db  60h
 		db 0FFh
 		db  6Eh	; n
 		db    0
@@ -22994,181 +22851,177 @@ aTxt1_bb	db 'txt1.bb',0
 		db    0
 		db  6Eh	; n
 		db 0FFh
-		db  81h	; Å
+		db  81h
 		db    0
 		db  71h	; q
 		db 0FFh
-		db  84h	; Ñ
+		db  84h
 		db    0
 		db  75h	; u
 		db 0FFh
-		db  87h	; á
+		db  87h
 		db    0
 		db  78h	; x
 		db 0FFh
-		db  8Ah	; ä
+		db  8Ah
 		db    0
 		db  7Bh	; {
 		db 0FFh
-		db  8Eh	; é
+		db  8Eh
 		db    0
-		db  7Fh	; 
+		db  7Fh
 		db 0FFh
-		db  91h	; ë
+		db  91h
 		db    0
-		db  82h	; Ç
+		db  82h
 		db 0FFh
-		db  94h	; î
+		db  94h
 		db    0
-		db  86h	; Ü
+		db  86h
 		db 0FFh
-		db  97h	; ó
+		db  97h
 		db    0
-		db  8Ah	; ä
+		db  8Ah
 		db 0FFh
-		db  9Ah	; ö
+		db  9Ah
 		db    0
-		db  8Eh	; é
+		db  8Eh
 		db 0FFh
-		db  9Ch	; ú
+		db  9Ch
 		db    0
-		db  91h	; ë
+		db  91h
 		db 0FFh
-		db  9Fh	; ü
+		db  9Fh
 		db    0
-		db  95h	; ï
+		db  95h
 		db 0FFh
-		db 0A2h	; ¢
+		db 0A2h
 		db    0
-		db  99h	; ô
+		db  99h
 		db 0FFh
-		db 0A5h	; •
+		db 0A5h
 		db    0
-		db  9Dh	; ù
+		db  9Dh
 		db 0FFh
-		db 0A7h	; ß
+		db 0A7h
 		db    0
-		db 0A1h	; °
+		db 0A1h
 		db 0FFh
-		db 0A9h	; ©
+		db 0A9h
 		db    0
-		db 0A5h	; •
+		db 0A5h
 		db 0FFh
-		db 0ABh	; ´
+		db 0ABh
 		db    0
-		db 0A9h	; ©
+		db 0A9h
 		db 0FFh
-		db 0ADh	; ≠
+		db 0ADh
 		db    0
-		db 0AEh	; Æ
+		db 0AEh
 		db 0FFh
-		db 0AFh	; Ø
+		db 0AFh
 		db    0
-		db 0B2h	; ≤
+		db 0B2h
 		db 0FFh
-		db 0B1h	; ±
+		db 0B1h
 		db    0
-		db 0B6h	; ∂
+		db 0B6h
 		db 0FFh
-		db 0B3h	; ≥
+		db 0B3h
 		db    0
-		db 0BBh	; ª
+		db 0BBh
 		db 0FFh
-		db 0B4h	; ¥
+		db 0B4h
 		db    0
-		db 0BFh	; ø
+		db 0BFh
 		db 0FFh
-		db 0B6h	; ∂
+		db 0B6h
 		db    0
-		db 0C4h	; ƒ
+		db 0C4h
 		db 0FFh
-		db 0B7h	; ∑
+		db 0B7h
 		db    0
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0B9h	; π
+		db 0B9h
 		db    0
-		db 0CDh	; Õ
+		db 0CDh
 		db 0FFh
-		db 0BAh	; ∫
+		db 0BAh
 		db    0
-		db 0D1h	; —
+		db 0D1h
 		db 0FFh
-		db 0BBh	; ª
+		db 0BBh
 		db    0
-		db 0D6h	; ÷
+		db 0D6h
 		db 0FFh
-		db 0BCh	; º
+		db 0BCh
 		db    0
-		db 0DAh	; ⁄
+		db 0DAh
 		db 0FFh
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
-		db 0DFh	; ﬂ
+		db 0DFh
 		db 0FFh
-		db 0BDh	; Ω
+		db 0BDh
 		db    0
-		db 0E3h	; „
+		db 0E3h
 		db 0FFh
-		db 0BEh	; æ
+		db 0BEh
 		db    0
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db    0
-		db 0EDh	; Ì
+		db 0EDh
 		db 0FFh
-		db 0BFh	; ø
+		db 0BFh
 		db    0
-		db 0F1h	; Ò
+		db 0F1h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0F6h	; ˆ
+		db 0F6h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db    0
-		db 0FBh	; ˚
+		db 0FBh
 		db 0FFh
 aGENSOU_SCR	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 byte_221C0	db 0
-					; sub_15A70+17w ...
 		db 0
 word_221C2	dw 0
-					; sub_152F2:loc_15319w	...
 word_221C4	dw 0
-					; sub_1607D+135w
 dword_221C6	dd 0
 dword_221CA	dd 0
 word_221CE	dw 0
-					; sub_F706+1Ar
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
-		db  88h	; à
-		db  88h	; à
+		db  88h
+		db  88h
 		db  44h	; D
 		db  44h	; D
 		db  22h	; "
 		db  22h	; "
 		db  11h
 		db  11h
-		db 0CCh	; Ã
-		db 0CCh	; Ã
+		db 0CCh
+		db 0CCh
 		db  66h	; f
 		db  66h	; f
 		db  33h	; 3
 		db  33h	; 3
-		db  99h	; ô
-		db  99h	; ô
-		db 0EEh	; Ó
-		db 0EEh	; Ó
+		db  99h
+		db  99h
+		db 0EEh
+		db 0EEh
 		db  77h	; w
 		db  77h	; w
-		db 0BBh	; ª
-		db 0BBh	; ª
-		db 0DDh	; ›
-		db 0DDh	; ›
+		db 0BBh
+		db 0BBh
+		db 0DDh
+		db 0DDh
 byte_221EC	db 0
 a_dm00_tx2	db '_DM00.TX2',0
 		db '  ',0
@@ -23189,11 +23042,8 @@ aBomb3_bft_0	db 'bomb3.bft',0
 aBomb0_bft_0	db 'bomb0.bft',0
 		db 0
 word_22272	dw 0
-					; sub_F5EA+AEr	...
 byte_22274	db 0
-					; sub_16510+25w ...
 byte_22275	db 0
-					; sub_16510+4Aw ...
 off_22276	dw offset aBOSS_FINAL_TIMEOUT
 		dw offset aPENALTY_6
 		dw offset aPENALTY_5
@@ -23239,13 +23089,9 @@ aALL_CLEAR	db 'Ç`ÇkÇkÅ@ÇbÇåÇÖÇÅÇíÅ@Å@',0
 aPLAYER_REM	db 'écÇËêlêîÅ@Å~ÇPÇOÇOÇOÇO',0
 aPOINT_TOTAL	db 'ëçìæì_ÉAÉCÉeÉÄÉ{Å[ÉiÉX',0
 word_22582	dw 200h
-					; sub_16BD9+C9r ...
 word_22584	dw 1600h
-					; sub_16BD9+D7r ...
 word_22586	dw 180h
-					; sub_16BD9+9Fr ...
 word_22588	dw 800h
-					; sub_16BD9+B5r ...
 		db    0
 		db    0
 		db    0
@@ -23313,7 +23159,6 @@ word_22588	dw 800h
 		db    0
 		db    3
 byte_225CC	db 0
-					; sub_16F54:loc_1705Cw	...
 		db 0
 		db  24h	; $
 		db    0
@@ -23369,41 +23214,41 @@ byte_225CC	db 0
 		db    0
 		db  64h	; d
 		db    0
-		db  96h	; ñ
+		db  96h
 		db    0
-		db 0C8h	; »
+		db 0C8h
 		db    0
-		db 0FAh	; ˙
+		db 0FAh
 		db    0
 		db  2Ch	; ,
 		db    1
 		db  5Eh	; ^
 		db    1
-		db  90h	; ê
+		db  90h
 		db    1
-		db 0C2h	; ¬
+		db 0C2h
 		db    1
-		db 0F4h	; Ù
+		db 0F4h
 		db    1
 		db  26h	; &
 		db    2
 		db  58h	; X
 		db    2
-		db  8Ah	; ä
+		db  8Ah
 		db    2
-		db 0BCh	; º
+		db 0BCh
 		db    2
-		db 0EEh	; Ó
+		db 0EEh
 		db    2
 		db  20h
 		db    3
 		db  52h	; R
 		db    3
-		db  84h	; Ñ
+		db  84h
 		db    3
-		db 0B6h	; ∂
+		db 0B6h
 		db    3
-		db 0E8h	; Ë
+		db 0E8h
 		db    3
 		db  1Ah
 		db    4
@@ -23411,7 +23256,7 @@ byte_225CC	db 0
 		db    4
 		db 0B0h	; ∞
 		db    4
-		db 0E2h	; ‚
+		db 0E2h
 		db    4
 		db    0
 		db    5
@@ -23419,38 +23264,31 @@ byte_225CC	db 0
 		db    0
 		db  64h	; d
 		db    0
-		db 0C8h	; »
+		db 0C8h
 		db    0
-		db  90h	; ê
+		db  90h
 		db    1
 		db  58h	; X
 		db    2
 		db  20h
 		db    3
-		db 0E8h	; Ë
+		db 0E8h
 		db    3
 		db    0
 		db    5
 word_22642	dw 0
-					; sub_16F54:loc_16FAAw	...
 word_22644	dw 0
-					; sub_16D84+90w ...
 word_22646	dw 0
-					; sub_16F54:loc_171AFw
 word_22648	dw 0
-					; sub_1673E:loc_16939r	...
 word_2264A	dw 0
-					; sub_16F54+110w
 word_2264C	dw 0
-					; sub_16F54:loc_17043w
 byte_2264E	db 0
-					; seg001:loc_C7F2w ...
 		db 0
-		db 0D0h	; –
+		db 0D0h
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db 0FFh
 		db 0B8h	; ∏
 		db 0FFh
@@ -23466,19 +23304,19 @@ byte_2264E	db 0
 		db    0
 		db  30h	; 0
 		db    0
-		db 0D0h	; –
+		db 0D0h
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0D0h	; –
+		db 0D0h
 		db 0FFh
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
-		db 0F4h	; Ù
+		db 0F4h
 		db 0FFh
 		db    0
 		db    0
@@ -23486,11 +23324,11 @@ byte_2264E	db 0
 		db    0
 		db  18h
 		db    0
-		db 0D0h	; –
+		db 0D0h
 		db 0FFh
-		db 0C8h	; »
+		db 0C8h
 		db 0FFh
-		db 0C0h	; ¿
+		db 0C0h
 		db 0FFh
 		db 0B8h	; ∏
 		db 0FFh
@@ -23498,16 +23336,15 @@ byte_2264E	db 0
 		db 0FFh
 		db    0
 		db    0
-		db 0F4h	; Ù
+		db 0F4h
 		db 0FFh
-		db 0E8h	; Ë
+		db 0E8h
 		db 0FFh
-		db 0DCh	; ‹
+		db 0DCh
 		db 0FFh
-		db 0D0h	; –
+		db 0D0h
 		db 0FFh
 word_2268C	dw 0
-					; sub_17354+3Bw ...
 byte_2268E	db 0
 		db 0
 include th04/strings/gameover[data].asm
@@ -23517,19 +23354,14 @@ asc_226B6	db '  ',0
 aMaine_1	db 'maine',0
 		db 0
 byte_226C0	db 0
-					; sub_1F23B+17w ...
 		db 0
 byte_226C2	db 0
-					; sub_10287:loc_10377w	...
 		db 0
 byte_226C4	db 0
-					; sub_16F05+3r	...
 byte_226C5	db 0
-					; sub_143FC:loc_14435r	...
 include th04/strings/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
-					; sub_1059D+4Cw
 word_22721	dw 4141h
 word_22723	dw 6161h
 word_22725	dw 8121h
@@ -23541,10 +23373,10 @@ byte_22729	db 0E1h
 		db  61h	; a
 		db  61h	; a
 		db  21h	; !
-		db  81h	; Å
-		db 0A1h	; °
-		db 0C1h	; ¡
-		db 0E1h	; ·
+		db  81h
+		db 0A1h
+		db 0C1h
+		db 0E1h
 word_22734	dw 202h
 word_22736	dw 202h
 word_22738	dw 202h
@@ -23555,9 +23387,9 @@ word_2273F	dw 0C1A1h
 byte_22741	db 0E1h
 aB@b@bB@b@	db 'Å@Å@Å~Å@Å@',0
 aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0
-		db 0BBh	; ª
+		db 0BBh
 		db  2Fh	; /
-		db 0F6h	; ˆ
+		db 0F6h
 		db  2Fh	; /
 		db  31h	; 1
 		db  30h	; 0
@@ -23565,7 +23397,7 @@ aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0
 		db  30h	; 0
 		db  75h	; u
 		db  31h	; 1
-		db 0FDh	; ˝
+		db 0FDh
 		db  31h	; 1
 		db  3Ch	; <
 		db  32h	; 2
@@ -23577,47 +23409,47 @@ aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0
 		db  46h	; F
 		db  1Ah
 		db  47h	; G
-		db  8Fh	; è
+		db  8Fh
 		db  47h	; G
 		db  1Eh
 		db  49h	; I
 		db  38h	; 8
 		db  49h	; I
-		db 0B4h	; ¥
+		db 0B4h
 		db  49h	; I
 		db  38h	; 8
 		db  49h	; I
-		db 0B4h	; ¥
+		db 0B4h
 		db  49h	; I
 		db  5Ah	; Z
 		db  4Ch	; L
-		db 0B4h	; ¥
+		db 0B4h
 		db  49h	; I
-		db  92h	; í
+		db  92h
 		db  4Bh	; K
 		db  5Ah	; Z
 		db  4Ch	; L
-		db  92h	; í
+		db  92h
 		db  4Bh	; K
 		db  5Ah	; Z
 		db  4Ch	; L
-		db 0F5h	; ı
+		db 0F5h
 		db  4Ch	; L
 		db  6Bh	; k
 		db  53h	; S
 		db  2Bh	; +
 		db  54h	; T
-		db 0D1h	; —
+		db 0D1h
 		db  53h	; S
-		db  99h	; ô
+		db  99h
 		db  54h	; T
-		db 0F6h	; ˆ
+		db 0F6h
 		db  58h	; X
 		db  2Bh	; +
 		db  54h	; T
-		db 0AFh	; Ø
+		db 0AFh
 		db  55h	; U
-		db 0AFh	; Ø
+		db 0AFh
 		db  55h	; U
 		db    0
 		db    0
@@ -23629,27 +23461,27 @@ aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0
 		db    0
 		db  49h	; I
 		db  56h	; V
-		db 0EAh	; Í
+		db 0EAh
 		db  56h	; V
-		db 0A1h	; °
+		db 0A1h
 		db  56h	; V
 		db  33h	; 3
 		db  57h	; W
-		db 0A1h	; °
+		db 0A1h
 		db  56h	; V
-		db 0CCh	; Ã
+		db 0CCh
 		db  57h	; W
-		db  83h	; É
+		db  83h
 		db  57h	; W
 		db  49h	; I
 		db  56h	; V
-		db  9Fh	; ü
+		db  9Fh
 		db  58h	; X
 		db  1Bh
 		db  58h	; X
 		db  1Bh
 		db  58h	; X
-		db 0EAh	; Í
+		db 0EAh
 		db  56h	; V
 a_dm09_tx2	db '_DM09.TX2',0
 aTH05_10	db 'ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0
@@ -23661,9 +23493,9 @@ aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db  63h	; c
 		db  44h	; D
 		db  64h	; d
-		db 0D4h	; ‘
+		db 0D4h
 		db  64h	; d
-		db 0B2h	; ≤
+		db 0B2h
 		db  65h	; e
 		db  48h	; H
 		db  66h	; f
@@ -23677,7 +23509,7 @@ aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db  6Ch	; l
 		db  74h	; t
 		db  6Ch	; l
-		db 0CDh	; Õ
+		db 0CDh
 		db  6Ch	; l
 		db  5Ah	; Z
 		db  6Dh	; m
@@ -23685,13 +23517,13 @@ aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db  6Eh	; n
 		db  14h
 		db  6Fh	; o
-		db 0BDh	; Ω
+		db 0BDh
 		db  6Fh	; o
 		db 0ACh	; ¨
 		db  6Ah	; j
 		db  50h	; P
 		db  6Bh	; k
-		db 0C2h	; ¬
+		db 0C2h
 		db  77h	; w
 		db  57h	; W
 		db  78h	; x
@@ -23701,7 +23533,7 @@ aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db    0
 		db  53h	; S
 		db  7Ah	; z
-		db  8Dh	; ç
+		db  8Dh
 		db  7Bh	; {
 		db    0
 		db    0
@@ -23723,63 +23555,60 @@ aTH05_11	db 'ó†êÿÇËÇÃè≠èóÅ@Å` Judas Kiss',0
 		db    0
 		db    0
 		db    0
-		db 0E7h	; Á
-		db  83h	; É
+		db 0E7h
+		db  83h
 		db  61h	; a
-		db  84h	; Ñ
-		db  5Ch	; \
-		db  85h	; Ö
-		db 0BAh	; ∫
-		db  85h	; Ö
+		db  84h
+		db  5Ch
+		db  85h
+		db 0BAh
+		db  85h
 word_22852	dw 0
-					; seg003:8AE9w	...
 byte_22854	db 0
-					; sub_1E15D+1Cw ...
 		db 0
 word_22856	dw 0
-					; seg001:loc_114F8r ...
 byte_22858	db 0
 byte_22859	db 0
 off_2285A	dw offset sub_1E5FC
-					; sub_1E556+99r ...
-aOuquFF		db 'éìÔì&î&î',0
-		db    0
-		db    0
-		db    0
-		db  10h
+word_2285C	dw 938Eh
+		dw 93EFh
+		dw 9426h
+		dw 9426h
+		dw 0
+		dw 0
+byte_22868	db  10h
 		db  70h	; p
-		db  80h	; Ä
-		db  80h	; Ä
-		db  90h	; ê
-		db 0F0h	; 
+		db  80h
+		db  80h
+		db  90h
+		db 0F0h
 		db    0
 		db    0
 word_22870	dw 0
 word_22872	dw 0C00h
-		db 0A2h	; ¢
-		db  96h	; ñ
-		db 0F8h	; ¯
-		db  96h	; ñ
-		db 0D2h	; “
-		db  98h	; ò
-		db  81h	; Å
-		db  99h	; ô
+		db 0A2h
+		db  96h
+		db 0F8h
+		db  96h
+		db 0D2h
+		db  98h
+		db  81h
+		db  99h
 		db  54h	; T
-		db  9Ah	; ö
+		db  9Ah
 		db  41h	; A
-		db  9Bh	; õ
+		db  9Bh
 		db  71h	; q
-		db  9Ch	; ú
+		db  9Ch
 		db    0
-		db  9Dh	; ù
-		db 0F6h	; ˆ
-		db 0A4h	; §
+		db  9Dh
+		db 0F6h
+		db 0A4h
 		db  3Ah	; :
-		db 0A5h	; •
+		db 0A5h
 		db 0A3h	; £
-		db 0A5h	; •
+		db 0A5h
 byte_2288A	db 0
-					; seg001:loc_1195Dr ...
 byte_2288B	db 0
 byte_2288C	db 0
 		db 0
@@ -23792,7 +23621,6 @@ off_228D8	dd gpHISCORE_ENTRY
 		dd gpFULL_POWERUP
 		dd gpDREAMBONUS_MAX
 byte_228EC	db 0
-					; seg001:6CB4w	...
 		db 0
 off_228EE	dd asc_228FC
 					; "					  "...
@@ -23801,100 +23629,99 @@ asc_228FC	db '                                                ',0
 		db 0
 		db  76h	; v
 		db  7Bh	; {
-		db  91h	; ë
+		db  91h
 		db  7Bh	; {
-		db 0BBh	; ª
+		db 0BBh
 		db  7Bh	; {
 		db  3Ch	; <
 		db  7Ch	; |
-		db 0C0h	; ¿
+		db 0C0h
 		db  7Ch	; |
 		db  44h	; D
 		db  7Dh	; }
-		db 0E1h	; ·
+		db 0E1h
 		db  7Dh	; }
 		db  7Eh	; ~
 		db  7Eh	; ~
 		db  1Bh
-		db  7Fh	; 
-		db  9Ch	; ú
-		db  7Fh	; 
+		db  7Fh
+		db  9Ch
+		db  7Fh
 		db  76h	; v
 		db  7Bh	; {
-		db  91h	; ë
+		db  91h
 		db  7Bh	; {
 		db  52h	; R
-		db  80h	; Ä
-		db 0D4h	; ‘
-		db  80h	; Ä
-		db  8Fh	; è
-		db  81h	; Å
-		db  8Dh	; ç
-		db  82h	; Ç
-		db  95h	; ï
-		db  83h	; É
+		db  80h
+		db 0D4h
+		db  80h
+		db  8Fh
+		db  81h
+		db  8Dh
+		db  82h
+		db  95h
+		db  83h
 		db 0A3h	; £
-		db  84h	; Ñ
-		db 0E1h	; ·
-		db  85h	; Ö
+		db  84h
+		db 0E1h
+		db  85h
 		db  1Fh
-		db  87h	; á
+		db  87h
 		db  76h	; v
 		db  7Bh	; {
-		db  91h	; ë
+		db  91h
 		db  7Bh	; {
 		db 0A8h	; ®
-		db  88h	; à
+		db  88h
 		db  13h
-		db  89h	; â
-		db  8Bh	; ã
-		db  89h	; â
+		db  89h
+		db  8Bh	; ÅE
+		db  89h
 		db  24h	; $
-		db  8Ah	; ä
-		db 0BBh	; ª
-		db  8Ah	; ä
+		db  8Ah
+		db 0BBh
+		db  8Ah
 		db  67h	; g
-		db  8Bh	; ã
+		db  8Bh	; ÅE
 		db  1Fh
-		db  8Ch	; å
-		db 0E6h	; Ê
-		db  8Ch	; å
+		db  8Ch
+		db 0E6h
+		db  8Ch
 		db  76h	; v
 		db  7Bh	; {
-		db  91h	; ë
+		db  91h
 		db  7Bh	; {
-		db 0EFh	; Ô
-		db  8Dh	; ç
+		db 0EFh
+		db  8Dh
 		db  67h	; g
-		db  8Eh	; é
-		db 0F2h	; Ú
-		db  8Eh	; é
-		db  90h	; ê
-		db  8Fh	; è
+		db  8Eh
+		db 0F2h
+		db  8Eh
+		db  90h
+		db  8Fh
 		db  4Fh	; O
-		db  90h	; ê
+		db  90h
 		db  38h	; 8
-		db  91h	; ë
+		db  91h
 		db  3Ah	; :
-		db  92h	; í
+		db  92h
 		db  3Bh	; ;
-		db  93h	; ì
+		db  93h
 byte_2297E	db 0
-					; sub_126B3:loc_127BDr	...
 		db 0
-		db  40h	; @
+		db  40h
 		db  42h	; B
 		db  0Fh
 		db    0
-		db 0A0h	; †
-		db  86h	; Ü
+		db 0A0h
+		db  86h
 		db    1
 		db    0
 unk_22988	db  10h
 		db  27h	; '
 		db    0
 		db    0
-		db 0E8h	; Ë
+		db 0E8h
 		db    3
 		db    0
 		db    0
@@ -23912,7 +23739,7 @@ unk_22988	db  10h
 		db    0
 		db  10h
 		db  27h	; '
-		db 0E8h	; Ë
+		db 0E8h
 		db    3
 		db  64h	; d
 		db    0
@@ -23925,7 +23752,6 @@ unk_229A6	db    0
 		db    0
 unk_229A9	db    0
 dword_229AA	dd 0
-					; sub_1FA0E+Ew
 		db    0
 		db    0
 		db    0
@@ -23939,7 +23765,6 @@ dword_229AA	dd 0
 		db    1
 		db    1
 byte_229BA	db 0
-					; sub_17416+65w ...
 aSt00_bmt	db 'st00.bmt',0
 aSt00bk_cdg	db 'st00bk.cdg',0
 aSt00_bb	db 'st00.bb',0
@@ -24270,7 +24095,6 @@ include libs/master.lib/super_put_rect[bss].asm
 		db    0
 		db    0
 byte_23980	db 0
-					; sub_14BB0+1Ew
 		db 0
 include libs/master.lib/bgm[bss].asm
 unk_23A48	db    ?	;
@@ -24279,9 +24103,7 @@ unk_23A48	db    ?	;
 		dd    ?	;
 		db    ?	;
 word_23A56	dw ?
-					; sub_B638+51r	...
 byte_23A58	db ?
-					; sub_1214A:loc_121CAr	...
 		db ?
 word_23A5A	dw ?
 word_23A5C	dw ?
@@ -24295,7 +24117,6 @@ word_23A6C	dw ?
 		dd    ?	;
 		dd    ?	;
 word_23A7E	dw ?
-					; sub_F36B:loc_F3A4r
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
@@ -24550,7 +24371,6 @@ word_23C5C	dw ?
 		dd    ?	;
 		dd    ?	;
 byte_23E5E	db ?
-					; sub_151E8+46w
 		db ?
 unk_23E60	db    ?	;
 		dd    ?	;
@@ -24603,9 +24423,7 @@ word_23EF4	dw ?
 byte_23EFC	db ?
 word_23EFD	dw ?
 word_23EFF	dw ?
-					; sub_BC6A:loc_BCCDr ...
 word_23F01	dw ?
-					; sub_BC6A:loc_BD0Br
 		db ?
 byte_23F04	db ?
 		db ?
@@ -24633,11 +24451,8 @@ word_23F4E	dw ?
 word_23F50	dw ?
 dword_23F52	dd ?
 word_23F56	dw ?
-					; sub_B237+245w ...
 word_23F58	dw ?
-					; sub_C473+8w ...
 word_23F5A	dw ?
-					; sub_B55A+A4w	...
 		db    ?	;
 		db    ?	;
 byte_23F5E	db ?
@@ -24997,7 +24812,6 @@ word_24496	dw ?
 byte_24498	db ?
 		db ?
 word_2449A	dw ?
-					; sub_14544+A0w ...
 word_2449C	dw ?
 		dd    ?	;
 		dd    ?	;
@@ -25031,7 +24845,6 @@ word_2449C	dw ?
 		dd    ?	;
 		dd    ?	;
 byte_2451A	db ?
-					; sub_D3C6+114w ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -25069,7 +24882,6 @@ byte_2451A	db ?
 		dd    ?	;
 		db    ?	;
 byte_245A8	db ?
-					; sub_D3C6+126r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -25918,9 +25730,7 @@ byte_24F6B	db ?
 		dd    ?	;
 word_252D8	dw ?
 word_252DA	dw ?
-					; sub_E24C+91r
 word_252DC	dw ?
-					; sub_1591A:loc_15930r	...
 dword_252DE	dd ?
 		dd    ?	;
 		dd    ?	;
@@ -25949,22 +25759,16 @@ dword_252DE	dd ?
 byte_25342	db ?
 		db ?
 word_25344	dw ?
-					; sub_B063+178w ...
 byte_25346	db ?
 byte_25347	db ?
-					; sub_15AAA+91w ...
 byte_25348	db ?
 word_25349	dw ?
-					; seg003:0B2Er	...
 dword_2534B	dd ?
 		db ?
 byte_25350	db ?
-					; sub_FAA3+132w ...
 byte_25351	db ?
 byte_25352	db ?
-					; sub_AEA6+171w ...
 byte_25353	db ?
-					; sub_AEA6+16Ew ...
 word_25354	dw ?
 		dd    ?	;
 		dd    ?	;
@@ -26772,55 +26576,36 @@ byte_25FD8	db ?
 word_25FDA	dw ?
 dword_25FDC	dd ?
 word_25FE0	dw ?
-					; sub_AEA6+186w ...
 byte_25FE2	db ?
-					; sub_D694+CBr	...
 byte_25FE3	db ?
-					; sub_C73A+44r	...
 byte_25FE4	db ?
-					; sub_C567+1ACr ...
 byte_25FE5	db ?
-					; sub_EACE+29w	...
 word_25FE6	dw ?
 byte_25FE8	db ?
 byte_25FE9	db ?
-					; sub_AEA6+156w ...
 byte_25FEA	db ?
 byte_25FEB	db ?
-					; sub_B063:loc_B151w ...
 byte_25FEC	db ?
-					; sub_B063:loc_B13Ew ...
 byte_25FED	db ?
-					; sub_B063+156w ...
 byte_25FEE	db ?
-					; sub_B063+151w ...
 byte_25FEF	db ?
 word_25FF0	dw ?
-					; sub_B827+52w	...
 byte_25FF2	db ?
-					; sub_B063+109w ...
 		db ?
 dword_25FF4	dd ?
 byte_25FF8	db ?
 		db ?
 word_25FFA	dw ?
-					; seg003:0A1Br	...
 dword_25FFC	dd ?
-					; sub_15AAA+13Cr ...
 byte_26000	db ?
-					; sub_15AAA+5Er ...
 byte_26001	db ?
-					; sub_18017+32w ...
 dword_26002	dd ?
-					; seg003:0B81w	...
 word_26006	dw ?
-					; sub_15A5C+7r	...
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
 		db    ?	;
 byte_26012	db ?
-					; sub_18590+84w ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -26830,7 +26615,6 @@ byte_26012	db ?
 		db    ?	;
 		db    ?	;
 byte_2602A	db ?
-					; sub_18590+87r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -26840,7 +26624,6 @@ byte_2602A	db ?
 		db    ?	;
 		db    ?	;
 byte_26042	db ?
-					; sub_1D89A+86r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -26850,7 +26633,6 @@ byte_26042	db ?
 		db    ?	;
 		db    ?	;
 byte_2605A	db ?
-					; sub_1D89A+93w ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -26860,7 +26642,6 @@ byte_2605A	db ?
 		db    ?	;
 		db    ?	;
 byte_26072	db ?
-					; sub_1D89A+9Bw
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -26870,7 +26651,6 @@ byte_26072	db ?
 		db    ?	;
 		db    ?	;
 byte_2608A	db ?
-					; sub_1D89A+A3w
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -27033,68 +26813,43 @@ byte_2608A	db ?
 		db    ?	;
 		db    ?	;
 byte_26309	db ?
-					; sub_17548+3Ar ...
 dword_2630A	dd ?
-					; sub_17548+17r ...
 		dd    ?	;
 byte_26312	db ?
-					; sub_174C7+60r ...
 byte_26313	db ?
-					; sub_175A4+42r ...
 word_26314	dw ?
-					; sub_18EBD+39w ...
 word_26316	dw ?
 word_26318	dw ?
-					; sub_17548+2Er ...
 word_2631A	dw ?
-					; seg003:6FDEw	...
 		dd ?
 dword_26320	dd ?
-					; sub_F7EC:loc_F816r ...
 dword_26324	dd ?
-					; sub_14544+27w ...
 word_26328	dw ?
-					; sub_14613+33w ...
 word_2632A	dw ?
-					; sub_14613+39w ...
 word_2632C	dw ?
-					; sub_14613+15w ...
 word_2632E	dw ?
-					; sub_14613+3Fw ...
 byte_26330	db ?
 byte_26331	db ?
 word_26332	dw ?
 byte_26334	db ?
 word_26335	dw ?
-					; sub_17FC6+16r ...
 		db ?
 word_26338	dw ?
 word_2633A	dw ?
-					; sub_14613+53w ...
 word_2633C	dw ?
-					; sub_14613+5Fw ...
 word_2633E	dw ?
-					; sub_16BD9+76r ...
 word_26340	dw ?
-					; sub_16BD9+7Dr ...
 word_26342	dw ?
-					; seg003:loc_188EEr ...
 byte_26344	db ?
-					; seg001:loc_10934r ...
 byte_26345	db ?
 word_26346	dw ?
 byte_26348	db ?
-					; seg001:5C63r	...
 byte_26349	db ?
-					; sub_181E5+4Bw ...
 word_2634A	dw ?
-					; sub_16BD9+3Ar ...
 word_2634C	dw ?
 dword_2634E	dd ?
 word_26352	dw ?
-					; sub_14879+6Bw
 word_26354	dw ?
-					; sub_14879+77w
 		dd    ?	;
 word_2635A	dw ?
 byte_2635C	db ?
@@ -31445,7 +31200,6 @@ byte_2980E	db ?
 		db    ?	;
 		db    ?	;
 dword_2A722	dd ?
-					; sub_16999+18r ...
 dword_2A726	dd ?
 word_2A72A	dw ?
 word_2A72C	dw ?
@@ -32813,35 +32567,24 @@ byte_2A72F	db ?
 		dd    ?	;
 byte_2BC70	db ?
 word_2BC71	dw ?
-					; sub_19634+Ar	...
 		db ?
 word_2BC74	dw ?
-					; sub_19CB0+F9r ...
 dword_2BC76	dd ?
-					; sub_19CB0+8r	...
 		dd    ?	;
 word_2BC7E	dw ?
-					; sub_1C82A+64r ...
 word_2BC80	dw ?
-					; sub_19634+22r ...
 word_2BC82	dw ?
-					; seg003:58B9w	...
 word_2BC84	dw ?
 		dw ?
 byte_2BC88	db ?
-					; seg003:58BFw	...
 		db ?
 byte_2BC8A	db ?
 byte_2BC8B	db ?
-					; sub_19634+6Br ...
 dword_2BC8C	dd ?
-					; sub_19634+95r ...
 dword_2BC90	dd ?
-					; sub_19CB0+15r ...
 		dd ?
 word_2BC98	dw ?
 word_2BC9A	dw ?
-					; sub_19634+67r ...
 		db    ?	;
 		db    ?	;
 word_2BC9E	dw ?
@@ -33647,17 +33390,13 @@ word_2C0C8	dw ?
 		dd    ?	;
 		dd    ?	;
 dword_2C922	dd ?
-					; sub_1240B+66r ...
 dword_2C926	dd ?
 word_2C92A	dw ?
-					; sub_1607D:loc_160B9w
 byte_2C92C	db ?
 		db ?
 word_2C92E	dw ?
-					; sub_B55A+7Bw	...
 dword_2C930	dd ?
 word_2C934	dw ?
-					; sub_EFDE:loc_F00Cw ...
 word_2C936	dw ?
 word_2C938	dw ?
 		dw ?
@@ -33682,49 +33421,35 @@ byte_2C94C	db ?
 byte_2C96C	db ?
 		db ?
 word_2C96E	dw ?
-					; sub_146D0+94w ...
 word_2C970	dw ?
-					; sub_146D0+9Aw ...
 word_2C972	dw ?
-					; sub_146D0+A0w ...
 byte_2C974	db ?
-					; sub_16BD9:loc_16C1Ar	...
 		db ?
 byte_2C976	db ?
-					; sub_179F9+15r ...
 byte_2C977	db ?
-					; sub_18F5C+58w ...
 byte_2C978	db ?
 byte_2C979	db ?
 word_2C97A	dw ?
 word_2C97C	dw ?
-					; sub_B063+14Bw ...
 word_2C97E	dw ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
 word_2C986	dw ?
 word_2C988	dw ?
-					; sub_B063:loc_B1A8w ...
 byte_2C98A	db ?
-					; sub_16D84+22w ...
 		db ?
 byte_2C98C	db ?
-					; sub_17486+17w
 		db ?
 word_2C98E	dw ?
 dword_2C990	dd ?
-					; sub_172FF+15w ...
 word_2C994	dw ?
 dword_2C996	dd ?
 word_2C99A	dw ?
 byte_2C99C	db ?
-					; sub_F896:loc_F8B0r ...
 		db ?
 word_2C99E	dw ?
-					; sub_FD33+133w ...
 word_2C9A0	dw ?
-					; sub_FD33+13Fw ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -33914,10 +33639,8 @@ word_2C9A0	dw ?
 		db    ?	;
 		db    ?	;
 byte_2CC8C	db ?
-					; sub_178F1+4r	...
 		db ?
 word_2CC8E	dw ?
-					; sub_100C6+10Ar ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -34009,22 +33732,15 @@ word_2CC8E	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2CDF8	dw ?
-					; sub_100C6:loc_101BDr	...
 byte_2CDFA	db ?
-					; sub_10214+41r ...
 byte_2CDFB	db ?
-					; sub_BD20+4Ew	...
 word_2CDFC	dw ?
 word_2CDFE	dw ?
-					; sub_10214+6Bw ...
 byte_2CE00	db ?
 		db ?
 word_2CE02	dw ?
-					; sub_10287:loc_102A0w	...
 word_2CE04	dw ?
-					; sub_10287:loc_102B2w	...
 word_2CE06	dw ?
-					; sub_10287+2Ew ...
 		db    ?	;
 		db    ?	;
 byte_2CE0A	db ?
@@ -34035,54 +33751,33 @@ byte_2CE0A	db ?
 		db    ?	;
 		db    ?	;
 dword_2CE1A	dd ?
-					; sub_126B3+184w ...
 dword_2CE1E	dd ?
-					; sub_143FC+9r	...
 		dw ?
 word_2CE24	dw ?
-					; sub_1833B:loc_183D4r	...
 word_2CE26	dw ?
-					; sub_18905+29w ...
 word_2CE28	dw ?
-					; seg003:3819w
 word_2CE2A	dw ?
-					; sub_196D3+EAw ...
 word_2CE2C	dw ?
-					; sub_196D3+FCw ...
 word_2CE2E	dw ?
-					; sub_19CB0+22r ...
 word_2CE30	dw ?
-					; sub_19CB0+123r ...
 word_2CE32	dw ?
-					; seg003:loc_1A1E3r
 		db    ?	;
 		db    ?	;
 word_2CE36	dw ?
-					; seg003:5A3Bw
 word_2CE38	dw ?
-					; seg003:5A41w
 word_2CE3A	dw ?
-					; sub_1AFD4:loc_1B004r	...
 word_2CE3C	dw ?
-					; sub_1C34B+31r ...
 word_2CE3E	dw ?
-					; sub_1C34B+E6w ...
 word_2CE40	dw ?
-					; sub_1C34B+17Fw ...
 word_2CE42	dw ?
 word_2CE44	dw ?
-					; sub_1C34B+151w ...
 word_2CE46	dw ?
-					; seg003:loc_1D3EAw ...
 word_2CE48	dw ?
-					; seg003:8FFDw	...
 word_2CE4A	dw ?
 byte_2CE4C	db ?
 		db ?
 word_2CE4E	dw ?
-					; sub_14544+C7w ...
 word_2CE50	dw ?
-					; sub_14544+C1w ...
 word_2CE52	dw ?
 word_2CE54	dw ?
 byte_2CE56	db ?
@@ -34092,16 +33787,13 @@ byte_2CE56	db ?
 		db    ?	;
 word_2CE64	dw ?
 word_2CE66	dw ?
-					; seg003:A11Fw	...
 word_2CE68	dw ?
-					; seg003:A65Ew	...
 word_2CE6A	dw ?
 word_2CE6C	dw ?
 word_2CE6E	dw ?
 word_2CE70	dw ?
 byte_2CE72	db ?
 byte_2CE73	db ?
-					; seg001:loc_11F86r ...
 unk_2CE74	db    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -34109,66 +33801,45 @@ unk_2CE74	db    ?	;
 		db    ?	;
 word_2CE82	dw ?
 word_2CE84	dw ?
-					; seg001:loc_11E92w ...
 		db    ?	;
 byte_2CE87	db ?
-					; seg001:6FDEr	...
 word_2CE88	dw ?
-					; sub_B237:loc_B52Cw ...
 word_2CE8A	dw ?
-					; sub_B237+2FBw ...
 byte_2CE8C	db ?
-					; sub_11A65+4r	...
 		db ?
 dword_2CE8E	dd ?
-					; sub_17C04+2F9w ...
 dword_2CE92	dd ?
 dword_2CE96	dd ?
 dword_2CE9A	dd ?
 word_2CE9E	dw ?
-					; sub_1214A+73r ...
 dword_2CEA0	dd ?
 dword_2CEA4	dd ?
-					; sub_12017+E6w ...
 word_2CEA8	dw ?
-					; sub_12017+F8w ...
 word_2CEAA	dw ?
-					; sub_12017+FEw ...
 word_2CEAC	dw ?
-					; sub_B063:loc_B0D8w ...
 		dw ?
 word_2CEB0	dw ?
 		dw ?
 dword_2CEB4	dd ?
-					; sub_1214A+F0w ...
 dword_2CEB8	dd ?
-					; sub_14266+88r
 byte_2CEBC	db ?
 byte_2CEBD	db ?
 byte_2CEBE	db ?
 byte_2CEBF	db ?
-					; sub_10625+1Dr ...
 byte_2CEC0	db ?
 byte_2CEC1	db ?
-					; sub_B55A+66w	...
 byte_2CEC2	db ?
 byte_2CEC3	db ?
-					; sub_C52D:loc_C555r ...
 word_2CEC4	dw ?
-					; sub_12017+A4w ...
 word_2CEC6	dw ?
 byte_2CEC8	db ?
-					; sub_12017+AEw ...
 		dd    ?	;
 		db    ?	;
 word_2CECE	dw ?
-					; sub_1214A+D0r
 word_2CED0	dw ?
 dword_2CED2	dd ?
 word_2CED6	dw ?
-					; sub_126B3+1Ar ...
 word_2CED8	dw ?
-					; sub_126B3+22r ...
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -34266,52 +33937,35 @@ word_2CED8	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2D05A	dw ?
-					; sub_1240B+11Fw ...
 word_2D05C	dw ?
 word_2D05E	dw ?
 byte_2D060	db ?
-					; sub_126B3+71r ...
 		db ?
 word_2D062	dw ?
 byte_2D064	db ?
 		db ?
 dword_2D066	dd ?
 word_2D06A	dw ?
-					; seg001:4075w	...
 word_2D06C	dw ?
-					; sub_144CB+15w ...
 word_2D06E	dw ?
-					; sub_14544+65w ...
 dword_2D070	dd ?
-					; sub_14544+71w ...
 word_2D074	dw ?
-					; sub_14544+77w ...
 byte_2D076	db ?
-					; seg003:loc_1CC3Er ...
 byte_2D077	db ?
-					; seg003:loc_1CFC3r ...
 		dd    ?	;
 		db    ?	;
 byte_2D07D	db ?
 byte_2D07E	db ?
-					; sub_10B1D+16Dr ...
 byte_2D07F	db ?
-					; sub_10B1D:loc_10BFDr	...
 byte_2D080	db ?
 byte_2D081	db ?
-					; seg003:loc_1C20Fr ...
 byte_2D082	db ?
 byte_2D083	db ?
-					; seg003:308Fr	...
 byte_2D084	db ?
-					; seg003:3015r	...
 byte_2D085	db ?
-					; sub_181E5+26w ...
 word_2D086	dw ?
 word_2D088	dw ?
-					; sub_14613+82w ...
 word_2D08A	dw ?
-					; sub_14613+88w ...
 		dd    ?	;
 		db    ?	;
 		db    ?	;
