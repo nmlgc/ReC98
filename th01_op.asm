@@ -4708,64 +4708,7 @@ loc_3DE1:
 _fclose		endp
 
 include libs/BorlandC/fflush.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; __int32 __cdecl filelength(int handle)
-_filelength	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-handle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	ax, 4201h
-		mov	bx, [bp+handle]
-		xor	cx, cx
-		xor	dx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		jb	short loc_3EF5
-		push	dx
-		push	ax
-		mov	ax, 4202h
-		xor	cx, cx
-		xor	dx, dx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	[bp+var_4], ax
-		mov	[bp+var_2], dx
-		pop	dx
-		pop	cx
-		jb	short loc_3EF5
-		mov	ax, 4200h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		jb	short loc_3EF5
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		jmp	short loc_3EFA
-; ---------------------------------------------------------------------------
-
-loc_3EF5:
-		push	ax
-		call	__IOERROR
-		cwd
-
-loc_3EFA:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_filelength	endp
-
+include libs/BorlandC/flength.asm
 include libs/BorlandC/flushall.asm
 
 ; =============== S U B	R O U T	I N E =======================================
