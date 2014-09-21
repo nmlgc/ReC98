@@ -7852,111 +7852,7 @@ loc_52A4:
 		retf
 _eof		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl fclose(FILE *stream)
-_fclose		proc far
-
-var_2		= word ptr -2
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	[bp+var_2], 0FFFFh
-		mov	ax, word ptr [bp+stream]
-		or	ax, word ptr [bp+stream+2]
-		jnz	short loc_52C2
-		jmp	loc_5361
-; ---------------------------------------------------------------------------
-
-loc_52C2:
-		les	bx, [bp+stream]
-		mov	ax, es:[bx+12h]
-		cmp	ax, word ptr [bp+stream]
-		jz	short loc_52D1
-		jmp	loc_5361
-; ---------------------------------------------------------------------------
-
-loc_52D1:
-		les	bx, [bp+stream]
-		cmp	word ptr es:[bx+6], 0
-		jz	short loc_5309
-		cmp	word ptr es:[bx], 0
-		jge	short loc_52F0
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nop
-		call	_fflush
-		pop	cx
-		pop	cx
-		or	ax, ax
-		jnz	short loc_5361
-
-loc_52F0:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 4
-		jz	short loc_5309
-		push	word ptr es:[bx+0Ah]
-		push	word ptr es:[bx+8]
-		nop
-		push	cs
-		call	near ptr _farfree
-		pop	cx
-		pop	cx
-
-loc_5309:
-		les	bx, [bp+stream]
-		cmp	byte ptr es:[bx+4], 0
-		jl	short loc_5322
-		mov	al, es:[bx+4]
-		cbw
-		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr _close
-		pop	cx
-		mov	[bp+var_2], ax
-
-loc_5322:
-		les	bx, [bp+stream]
-		mov	word ptr es:[bx+2], 0
-		mov	word ptr es:[bx+6], 0
-		mov	word ptr es:[bx], 0
-		mov	byte ptr es:[bx+4], 0FFh
-		cmp	word ptr es:[bx+10h], 0
-		jz	short loc_5361
-		xor	ax, ax
-		push	ax
-		push	ax		; dest
-		push	ax		; int
-		push	ax		; int
-		push	word ptr es:[bx+10h] ; int
-		call	__MKNAME
-		push	dx
-		push	ax		; path
-		nopcall	_unlink
-		pop	cx
-
-loc_5357:
-		pop	cx
-		les	bx, [bp+stream]
-		mov	word ptr es:[bx+10h], 0
-
-loc_5361:
-		mov	ax, [bp+var_2]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fclose		endp
-
+include libs/BorlandC/fclose.asm
 include libs/BorlandC/fflush.asm
 include libs/BorlandC/flength.asm
 include libs/BorlandC/flushall.asm
@@ -8186,9 +8082,7 @@ loc_5631:
 		jz	short loc_565B
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
-		nop
-		push	cs
-		call	near ptr _fclose
+		nopcall	_fclose
 		pop	cx
 		pop	cx
 
@@ -9407,9 +9301,7 @@ loc_6E8C:
 		jz	short loc_6EA1
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
-		nop
-		push	cs
-		call	near ptr _fclose
+		nopcall	_fclose
 		pop	cx
 		pop	cx
 
