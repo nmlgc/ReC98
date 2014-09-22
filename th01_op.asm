@@ -56,6 +56,22 @@ SREGS		ends
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
+		CGROUP00 group seg000
+		CGROUP01 group seg001
+		CGROUP02 group seg002
+		CGROUP03 group seg003
+		CGROUP04 group seg004
+		CGROUP05 group seg005
+		CGROUP06 group seg006
+		CGROUP07 group seg007
+		CGROUP08 group seg008
+		CGROUP09 group seg009
+		CGROUP10 group seg010
+		CGROUP11 group seg011
+		CGROUP12 group seg012
+		CGROUP13 group seg013
+		CGROUP14 group seg014
+		CGROUP15 group seg015
 		.386
 		.model large
 

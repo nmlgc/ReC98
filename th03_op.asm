@@ -13,6 +13,10 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
+		CGROUP00 group seg000
+		CGROUP01 group seg001
+		CGROUP02 group seg002
+		CGROUP03 group seg003
 		.386
 		.model large
 
