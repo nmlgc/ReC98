@@ -3055,131 +3055,7 @@ include libs/BorlandC/__IOERROR.ASM
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/longtoa.asm
 include libs/BorlandC/lseek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __stdcall	_MKNAME(int, int, int, char *dest)
-__MKNAME	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-dest		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, word ptr [bp+dest]
-		or	ax, word ptr [bp+dest+2]
-		jnz	short loc_2288
-		mov	word ptr [bp+dest+2], ds
-		mov	word ptr [bp+dest], 1D02h
-
-loc_2288:
-		push	[bp+arg_0]
-		mov	ax, [bp+arg_2]
-		or	ax, [bp+arg_4]
-		jnz	short loc_229A
-		mov	dx, ds
-		mov	ax, 0C16h
-		jmp	short loc_22A0
-; ---------------------------------------------------------------------------
-
-loc_229A:
-		mov	dx, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-
-loc_22A0:
-		push	dx
-		push	ax		; src
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		nop
-		call	_stpcpy
-		add	sp, 8
-		push	dx
-		push	ax
-		call	__UTOA
-		push	ds
-		mov	ax, 0C1Ah
-		push	ax		; src
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		nop
-		push	cs
-		call	near ptr _strcat
-		add	sp, 8
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		pop	di
-		pop	si
-		pop	bp
-		retn	0Ah
-__MKNAME	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __stdcall	_TMPNAM(__int32, char *dest)
-__TMPNAM	proc near
-
-attrib		= word ptr -2
-arg_0		= dword	ptr  4
-dest		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-
-loc_22DC:
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; dest
-		xor	ax, ax
-		push	ax		; int
-		push	ax		; int
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 0FFFFh
-		jnz	short loc_22F4
-		mov	ax, 2
-		jmp	short loc_22F7
-; ---------------------------------------------------------------------------
-
-loc_22F4:
-		mov	ax, 1
-
-loc_22F7:
-		les	bx, [bp+arg_0]
-		add	es:[bx], ax
-		mov	ax, es:[bx]
-		push	ax		; int
-		call	__MKNAME
-		mov	word ptr [bp+dest+2], dx
-		mov	word ptr [bp+dest], ax
-		push	ss
-		lea	ax, [bp+attrib]
-		push	ax		; attrib
-		push	word ptr [bp+dest+2]
-		push	word ptr [bp+dest] ; filename
-		nopcall	__dos_getfileattr
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_22DC
-		mov	dx, word ptr [bp+dest+2]
-		mov	ax, word ptr [bp+dest]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn	8
-__TMPNAM	endp
-
+include libs/BorlandC/mkname.asm
 include libs/BorlandC/new.asm
 include libs/BorlandC/newarray.asm
 include libs/BorlandC/N_LXMUL.ASM
@@ -23212,16 +23088,7 @@ word_12E46	dw 0FFFFh
 		db    0
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
-		db  54h	; T
-		db  4Dh	; M
-		db  50h	; P
-		db    0
-		db  2Eh	; .
-		db  24h	; $
-		db  24h	; $
-		db  24h	; $
-		db    0
-		db    0
+include libs/BorlandC/mkname[data].asm
 include libs/BorlandC/new[data].asm
 __stklen	dw 1000h
 include libs/master.lib/ctype[data].asm
@@ -23913,11 +23780,7 @@ word_13F0D	dw ?
 word_13F0F	dw ?
 		db    ?	;
 include libs/BorlandC/atexit[bss].asm
-		dd    ?
-		dd    ?
-		dd    ?
-		db    ?	;
-		db    ?	;
+include libs/BorlandC/mkname[bss].asm
 include libs/BorlandC/sigdata[bss].asm
 		dd ?
 include libs/BorlandC/signal[bss].asm
