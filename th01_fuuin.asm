@@ -4753,8 +4753,8 @@ loc_3F1E:
 		or	[bp+var_4], 40h
 
 loc_3F22:
-		mov	word ptr _exitfopen+2, seg seg000
-		mov	word ptr _exitfopen, 5787h
+		mov	word ptr _exitfopen+2, seg __xfclose
+		mov	word ptr _exitfopen, offset __xfclose
 		les	bx, [bp+arg_4]
 		mov	es:[bx], dx
 		les	bx, [bp+arg_0]
@@ -5975,52 +5975,7 @@ j____write	proc far
 		jmp	near ptr ___write
 j____write	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xfclose	proc far
-
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_6], 0
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 0CAAh
-		jmp	short loc_57BA
-; ---------------------------------------------------------------------------
-
-loc_579E:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_57B3
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nopcall	_fclose
-		pop	cx
-		pop	cx
-
-loc_57B3:
-		add	word ptr [bp+stream], 14h
-		inc	[bp+var_6]
-
-loc_57BA:
-		mov	ax, [bp+var_6]
-		cmp	ax, __nfile
-		jb	short loc_579E
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xfclose	endp
-
+include libs/BorlandC/xfclose.asm
 include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
 include libs/BorlandC/xmsg.asm

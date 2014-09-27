@@ -4532,8 +4532,8 @@ loc_3FF6:
 		or	[bp+var_4], 40h
 
 loc_3FFA:
-		mov	word ptr _exitfopen+2, seg seg000
-		mov	word ptr _exitfopen, 5A02h
+		mov	word ptr _exitfopen+2, seg __xfclose
+		mov	word ptr _exitfopen, offset __xfclose
 		les	bx, [bp+arg_4]
 		mov	es:[bx], dx
 		les	bx, [bp+arg_0]
@@ -5635,52 +5635,7 @@ include libs/BorlandC/_strlen.asm
 include libs/BorlandC/strrchr.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xfclose	proc far
-
-var_6		= word ptr -6
-stream		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	[bp+var_6], 0
-		mov	word ptr [bp+stream+2],	ds
-		mov	word ptr [bp+stream], 9FAh
-		jmp	short loc_5A35
-; ---------------------------------------------------------------------------
-
-loc_5A19:
-		les	bx, [bp+stream]
-		test	byte ptr es:[bx+2], 3
-		jz	short loc_5A2E
-		push	word ptr [bp+stream+2]
-		push	bx		; stream
-		nopcall	_fclose
-		pop	cx
-		pop	cx
-
-loc_5A2E:
-		add	word ptr [bp+stream], 14h
-		inc	[bp+var_6]
-
-loc_5A35:
-		mov	ax, [bp+var_6]
-		cmp	ax, __nfile
-		jb	short loc_5A19
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xfclose	endp
-
+include libs/BorlandC/xfclose.asm
 include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
 include libs/BorlandC/xmsg.asm
