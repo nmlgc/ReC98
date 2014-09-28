@@ -4125,109 +4125,7 @@ include libs/BorlandC/ioctl.asm
 include libs/BorlandC/signal.asm
 include libs/BorlandC/access.asm
 include libs/BorlandC/pathops.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3BA3	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	es
-		push	bp
-		les	si, [bp+arg_0]
-		cld
-		sub	ax, ax
-		cwd
-		mov	cx, 0Ah
-		mov	bh, 0
-		mov	di, 0C3Bh
-
-loc_3BB9:
-		mov	bl, es:[si]
-		inc	si
-		test	byte ptr [bx+di], 1
-		jnz	short loc_3BB9
-		mov	bp, 0
-		cmp	bl, 2Bh	; '+'
-		jz	short loc_3BD0
-		cmp	bl, 2Dh	; '-'
-		jnz	short loc_3BD4
-		inc	bp
-
-loc_3BD0:
-		mov	bl, es:[si]
-		inc	si
-
-loc_3BD4:
-		cmp	bl, 39h	; '9'
-		ja	short loc_3C08
-		sub	bl, 30h	; '0'
-		jb	short loc_3C08
-		mul	cx
-		add	ax, bx
-		adc	dl, dh
-		jz	short loc_3BD0
-		jmp	short loc_3BFA
-; ---------------------------------------------------------------------------
-
-loc_3BE8:
-		mov	di, dx
-		mov	cx, 0Ah
-		mul	cx
-		xchg	ax, di
-		xchg	dx, cx
-		mul	dx
-		xchg	ax, dx
-		xchg	ax, di
-		add	ax, bx
-		adc	dx, cx
-
-loc_3BFA:
-		mov	bl, es:[si]
-		inc	si
-		cmp	bl, 39h	; '9'
-		ja	short loc_3C08
-		sub	bl, 30h	; '0'
-		jnb	short loc_3BE8
-
-loc_3C08:
-		dec	bp
-		jl	short loc_3C12
-		neg	dx
-		neg	ax
-		sbb	dx, 0
-
-loc_3C12:
-		pop	bp
-		pop	es
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_3BA3	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_3BA3
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-
+include libs/BorlandC/atol.asm
 include libs/BorlandC/chmoda.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8119,12 +8017,12 @@ loc_B06F:
 		mov	eax, es:[bx+8]
 		mov	[bp+var_4], eax
 		push	large [bp+var_4]
-		call	sub_3BA3
+		call	_atol
 		add	sp, 4
 		mov	byte_1232D, al
 		les	bx, [bp+_argv+2]
 		push	large dword ptr	es:[bx+0Ch]
-		call	sub_3BA3
+		call	_atol
 		add	sp, 4
 		mov	word ptr dword_12330+2,	dx
 		mov	word ptr dword_12330, ax
@@ -8132,7 +8030,7 @@ loc_B06F:
 		mov	eax, es:[bx+10h]
 		mov	[bp+var_8], eax
 		push	large [bp+var_8]
-		call	sub_3BA3
+		call	_atol
 		add	sp, 4
 		mov	byte_1232E, al
 
