@@ -7603,100 +7603,7 @@ handle		= word ptr  6
 		retf
 __close		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl eof(int handle)
-_eof		proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-handle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	ax, [bp+handle]
-		cmp	ax, __nfile
-		jb	short loc_5244
-		mov	ax, 6
-		push	ax
-		jmp	short loc_52A1
-; ---------------------------------------------------------------------------
-
-loc_5244:
-		mov	bx, [bp+handle]
-		add	bx, bx
-		test	byte ptr [bx+1BE9h], 2
-		jz	short loc_5255
-		mov	ax, 1
-		jmp	short loc_52A4
-; ---------------------------------------------------------------------------
-
-loc_5255:
-		mov	ax, 4400h
-		mov	bx, [bp+handle]
-		int	21h		; DOS -	2+ - IOCTL - GET DEVICE	INFORMATION
-					; BX = file or device handle
-		jb	short loc_52A0
-		test	dl, 80h
-		jnz	short loc_529C
-		mov	ax, 4201h
-		xor	cx, cx
-		mov	dx, cx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from present location
-		jb	short loc_52A0
-		push	dx
-		push	ax
-		mov	ax, 4202h
-		xor	cx, cx
-		mov	dx, cx
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from end of file
-		mov	[bp+var_4], ax
-		mov	[bp+var_2], dx
-		pop	dx
-		pop	cx
-		jb	short loc_52A0
-		mov	ax, 4200h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		jb	short loc_52A0
-		cmp	dx, [bp+var_2]
-		jb	short loc_529C
-		ja	short loc_5297
-		cmp	ax, [bp+var_4]
-		jb	short loc_529C
-
-loc_5297:
-		mov	ax, 1
-		jmp	short loc_52A4
-; ---------------------------------------------------------------------------
-
-loc_529C:
-		xor	ax, ax
-		jmp	short loc_52A4
-; ---------------------------------------------------------------------------
-
-loc_52A0:
-		push	ax
-
-loc_52A1:
-		call	__IOERROR
-
-loc_52A4:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_eof		endp
-
+include libs/BorlandC/eof.asm
 include libs/BorlandC/fclose.asm
 include libs/BorlandC/fflush.asm
 include libs/BorlandC/flength.asm
@@ -8329,9 +8236,7 @@ loc_5DA7:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr _eof
+		nopcall	_eof
 		pop	cx
 		cmp	ax, 1
 		jz	short loc_5DE3
