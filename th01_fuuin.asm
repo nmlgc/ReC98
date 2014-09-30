@@ -4141,42 +4141,7 @@ off_2C18	dw offset loc_2874
 		dw offset loc_2884
 		dw offset loc_288A
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xclose	proc far
-
-handle		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	[bp+handle], 2
-		jmp	short loc_2C63
-; ---------------------------------------------------------------------------
-
-loc_2C57:
-		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr _close
-		pop	cx
-		inc	[bp+handle]
-
-loc_2C63:
-		mov	ax, [bp+handle]
-		cmp	ax, __nfile
-		jb	short loc_2C57
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xclose	endp
-
+include libs/BorlandC/xclose.asm
 include libs/BorlandC/xxas.asm
 include libs/BorlandC/xxv.asm
 include libs/BorlandC/cputype.asm
@@ -5504,8 +5469,8 @@ loc_4B46:
 loc_4B6B:
 		cmp	word ptr [bp-8], 0
 		jl	short loc_4BAD
-		mov	word ptr _exitopen+2, seg seg000
-		mov	word ptr _exitopen, 2C48h
+		mov	word ptr _exitopen+2, seg __xclose
+		mov	word ptr _exitopen, offset __xclose
 		test	byte ptr [bp+0Bh], 3
 		jz	short loc_4B88
 		mov	ax, 1000h

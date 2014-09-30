@@ -7062,42 +7062,7 @@ off_3F03	dw offset loc_3B5F
 		dw offset loc_3B6F
 		dw offset loc_3B75
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__xclose	proc far
-
-handle		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	[bp+handle], 2
-		jmp	short loc_3F4E
-; ---------------------------------------------------------------------------
-
-loc_3F42:
-		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr _close
-		pop	cx
-		inc	[bp+handle]
-
-loc_3F4E:
-		mov	ax, [bp+handle]
-		cmp	ax, __nfile
-		jb	short loc_3F42
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-__xclose	endp
-
+include libs/BorlandC/xclose.asm
 include libs/BorlandC/xxas.asm
 include libs/BorlandC/xxv.asm
 
@@ -8555,8 +8520,8 @@ loc_619E:
 loc_61C3:
 		cmp	[bp+handle], 0
 		jl	short loc_6205
-		mov	word ptr _exitopen+2, seg seg000
-		mov	word ptr _exitopen, 3F33h
+		mov	word ptr _exitopen+2, seg __xclose
+		mov	word ptr _exitopen, offset __xclose
 		test	byte ptr [bp+access+1],	3
 		jz	short loc_61E0
 		mov	ax, 1000h
