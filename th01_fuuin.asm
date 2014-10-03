@@ -5630,207 +5630,7 @@ sub_9430	proc near
 		jmp	off_13E8C
 sub_9430	endp
 
-; ---------------------------------------------------------------------------
-byte_9434	db 2 dup(0)
-; ---------------------------------------------------------------------------
-
-unknown_libname_4:			; BCC v4.x/5.x DOS runtime
-		pop	word_13CE8
-		pop	word_13CEA
-		pop	word_13CEC
-		mov	word ptr cs:byte_9434, ds
-		mov	word_13CEE, si
-		mov	word_13CF0, di
-		cld
-		mov	es, __psp
-		mov	si, 80h
-		xor	ah, ah
-		lods	byte ptr es:[si]
-		inc	ax
-		mov	bp, es
-		xchg	dx, si
-		xchg	ax, bx
-		mov	si, _envLng@
-		inc	si
-		inc	si
-		mov	cx, 1
-		cmp	_osmajor@, 3
-		jb	short loc_9482
-		mov	es, _envseg@
-		mov	di, si
-		mov	cl, 7Fh
-		xor	al, al
-		repne scasb
-		jcxz	short loc_94C9
-		xor	cl, 7Fh
-
-loc_9482:
-		push	ax
-		mov	ax, cx
-		add	ax, bx
-		inc	ax
-		and	ax, 0FFFEh
-		mov	di, sp
-		sub	di, ax
-		jb	short loc_94C9
-		mov	sp, di
-		push	es
-		pop	ds
-		push	ss
-		pop	es
-		push	cx
-		dec	cx
-		rep movsb
-		xor	al, al
-		stosb
-		mov	ds, bp
-		xchg	si, dx
-		xchg	bx, cx
-		mov	ax, bx
-		mov	dx, ax
-		inc	bx
-
-loc_94A9:
-		call	sub_94CE
-		ja	short loc_94B9
-
-loc_94AE:
-		jb	short loc_9520
-		cmp	al, 0Dh
-		jz	short loc_94C5
-		call	sub_94CE
-		ja	short loc_94AE
-
-loc_94B9:
-		cmp	al, 20h	; ' '
-		jz	short loc_94C5
-		cmp	al, 0Dh
-		jz	short loc_94C5
-		cmp	al, 9
-		jnz	short loc_94A9
-
-loc_94C5:
-		xor	al, al
-		jmp	short loc_94A9
-; ---------------------------------------------------------------------------
-
-loc_94C9:
-		nop
-		nop
-		jmp	near ptr __abort
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_94CE	proc near
-		or	ax, ax
-		jz	short loc_94D9
-		inc	dx
-		stosb
-		or	al, al
-		jnz	short loc_94D9
-		inc	bx
-
-loc_94D9:
-		xchg	ah, al
-		xor	al, al
-		stc
-		jcxz	short locret_951F
-		lodsb
-		dec	cx
-		cmp	dh, 1
-		jz	short loc_9505
-		xor	dh, dh
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	ds
-		push	es
-		mov	ds, word ptr cs:byte_9434
-		push	ax
-		nopcall	___path_isdbcsleadbyte
-		or	ax, ax
-		pop	cx
-		pop	es
-		pop	ds
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		jz	short loc_9507
-
-loc_9505:
-		inc	dh
-
-loc_9507:
-		cmp	dh, 0
-		jnz	short loc_951D
-		sub	al, 22h	; '"'
-		jz	short locret_951F
-		add	al, 22h	; '"'
-		cmp	al, 5Ch
-		jnz	short loc_951D
-		cmp	byte ptr [si], 22h ; '"'
-		jnz	short loc_951D
-		lodsb
-		dec	cx
-
-loc_951D:
-		or	si, si
-
-locret_951F:
-		retn
-sub_94CE	endp
-
-; ---------------------------------------------------------------------------
-
-loc_9520:
-		pop	cx
-		xor	dh, dh
-		add	cx, dx
-		mov	ds, word ptr cs:byte_9434
-		mov	word_13CE2, bx
-		inc	bx
-		add	bx, bx
-		add	bx, bx
-		mov	si, sp
-		mov	bp, sp
-		sub	bp, bx
-		jb	short loc_94C9
-		mov	sp, bp
-		mov	word_13CE4, bp
-		mov	word_13CE6, ss
-
-loc_9545:
-		jcxz	short loc_9558
-		mov	[bp+0],	si
-		mov	word ptr [bp+2], ss
-		add	bp, 4
-
-loc_9550:
-		lods	byte ptr ss:[si]
-		or	al, al
-		loopne	loc_9550
-		jz	short loc_9545
-
-loc_9558:
-		xor	ax, ax
-		mov	[bp+0],	ax
-		mov	[bp+2],	ax
-		mov	ds, word ptr cs:byte_9434
-		mov	si, word_13CEE
-		mov	di, word_13CF0
-		push	word_13CEC
-		push	word_13CEA
-		mov	ax, word_13CE2
-		mov	__C0argc, ax
-		mov	ax, word_13CE6
-		mov	word ptr __C0argv+2, ax
-		mov	ax, word_13CE4
-		mov	word ptr __C0argv, ax
-		jmp	word_13CE8
-
+include libs/BorlandC/setargv.asm
 include libs/BorlandC/setblock.asm
 include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
@@ -25621,14 +25421,7 @@ include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
 aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0
-word_13CE2	dw 0
-word_13CE4	dw 0
-word_13CE6	dw 0
-word_13CE8	dw 0
-word_13CEA	dw 0
-word_13CEC	dw 0
-word_13CEE	dw 0
-word_13CF0	dw 0
+include libs/BorlandC/setargv[data].asm
 include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
 word_13D5C	dw 952h
@@ -25657,12 +25450,7 @@ include libs/BorlandC/new[initdata].asm
 include libs/BorlandC/setupio[initdata].asm
 include libs/BorlandC/cputype[initdata].asm
 include libs/BorlandC/pathops[initdata].asm
-		db    0
-		db  10h
-		db  36h	; 6
-		db  94h
-		db    0
-		db    0
+include libs/BorlandC/setargv[initdata].asm
 include libs/BorlandC/setenvp[initdata].asm
 		db    1
 		db  10h
