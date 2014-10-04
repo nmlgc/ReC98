@@ -4208,9 +4208,7 @@ loc_3B8D:
 		add	bx, bx
 		mov	word ptr [bx+0E3Ch], 0
 		push	dx		; handle
-		nop
-		push	cs
-		call	near ptr __rtl_close
+		nopcall	__rtl_close
 		pop	cx
 
 loc_3B9E:
@@ -4220,66 +4218,7 @@ loc_3B9E:
 		retf
 _close		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _rtl_close(int handle)
-__rtl_close	proc far
-
-handle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, 3Eh	; '>'
-		mov	bx, [bp+handle]
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		jb	short loc_3BBC
-		add	bx, bx
-		mov	word ptr [bx+0E3Ch], 0
-		xor	ax, ax
-		jmp	short loc_3BC0
-; ---------------------------------------------------------------------------
-
-loc_3BBC:
-		push	ax
-		call	__IOERROR
-
-loc_3BC0:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__rtl_close	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl _close(int handle)
-__close		proc far
-
-handle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+handle]	; handle
-		push	cs
-		call	near ptr __rtl_close
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__close		endp
-
+include libs/BorlandC/closea.asm
 include libs/BorlandC/eof.asm
 include libs/BorlandC/fclose.asm
 include libs/BorlandC/fflush.asm
@@ -5141,9 +5080,7 @@ loc_4ABE:
 
 loc_4AC4:
 		push	[bp+handle]	; handle
-		nop
-		push	cs
-		call	near ptr __rtl_close
+		nopcall	__rtl_close
 		pop	cx
 		jmp	short loc_4AE8
 ; ---------------------------------------------------------------------------
