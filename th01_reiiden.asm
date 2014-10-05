@@ -8756,7 +8756,7 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	ax, [bp+arg_0]
-		cmp	word_36A7C, 2
+		cmp	___conio_type, 2
 		jnz	short loc_AF37
 		push	ax
 		nop
@@ -8766,7 +8766,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_AF37:
-		cmp	word_36A7C, 1
+		cmp	___conio_type, 1
 		jnz	short loc_AF45
 		push	ax
 		nop
@@ -8826,7 +8826,7 @@ sub_AF4E	endp
 		sub	sp, 2
 		push	si
 		push	di
-		cmp	word_36A7C, 1
+		cmp	___conio_type, 1
 		jnz	short loc_AF9E
 		mov	word ptr [bp-2], 0
 
@@ -9130,7 +9130,7 @@ sub_B0EE	endp
 sub_B11B	proc near
 		push	si
 		push	di
-		cmp	word_36A7C, 0
+		cmp	___conio_type, 0
 		jnz	short loc_B142
 		mov	ah, 4
 		xor	cx, cx
@@ -9143,12 +9143,12 @@ sub_B11B	proc near
 		jz	short loc_B13C
 		cmp	ch, 20h	; ' '
 		jz	short loc_B13C
-		mov	word_36A7C, 2
+		mov	___conio_type, 2
 		jmp	short loc_B142
 ; ---------------------------------------------------------------------------
 
 loc_B13C:
-		mov	word_36A7C, 1
+		mov	___conio_type, 1
 
 loc_B142:
 		pop	di
@@ -43349,7 +43349,7 @@ include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
 word_36A78	dw 952h
 word_36A7A	dw 0
-word_36A7C	dw 0
+include libs/BorlandC/coniotyp[data].asm
 include libs/BorlandC/kbhit[data].asm
 include libs/BorlandC/mbctype[data].asm
 include libs/BorlandC/loadprog[data].asm

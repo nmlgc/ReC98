@@ -5587,7 +5587,7 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	ax, [bp+arg_0]
-		cmp	word_13D60, 2
+		cmp	___conio_type, 2
 		jnz	short loc_9994
 		push	ax
 		nop
@@ -5597,7 +5597,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_9994:
-		cmp	word_13D60, 1
+		cmp	___conio_type, 1
 		jnz	short loc_99A2
 		push	ax
 		nop
@@ -5665,7 +5665,7 @@ var_2		= word ptr -2
 		sub	sp, 2
 		push	si
 		push	di
-		cmp	word_13D60, 1
+		cmp	___conio_type, 1
 		jnz	short loc_99FB
 		mov	[bp+var_2], 0
 
@@ -5971,7 +5971,7 @@ sub_9B4B	endp
 sub_9B78	proc near
 		push	si
 		push	di
-		cmp	word_13D60, 0
+		cmp	___conio_type, 0
 		jnz	short loc_9B9F
 		mov	ah, 4
 		xor	cx, cx
@@ -5984,12 +5984,12 @@ sub_9B78	proc near
 		jz	short loc_9B99
 		cmp	ch, 20h	; ' '
 		jz	short loc_9B99
-		mov	word_13D60, 2
+		mov	___conio_type, 2
 		jmp	short loc_9B9F
 ; ---------------------------------------------------------------------------
 
 loc_9B99:
-		mov	word_13D60, 1
+		mov	___conio_type, 1
 
 loc_9B9F:
 		pop	di
@@ -25363,7 +25363,7 @@ include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
 word_13D5C	dw 952h
 word_13D5E	dw 0
-word_13D60	dw 0
+include libs/BorlandC/coniotyp[data].asm
 include libs/BorlandC/mbctype[data].asm
 include libs/BorlandC/loadprog[data].asm
 off_13E8C	dw offset sub_161E
