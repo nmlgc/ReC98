@@ -5158,9 +5158,7 @@ loc_9C0F:
 		cmp	___conio_type, 1
 		jnz	short loc_9C1D
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_9C7C
+		nopcall	___ibm_delay
 
 loc_9C1C:
 		pop	cx
@@ -5172,144 +5170,7 @@ loc_9C1D:
 		retf
 sub_9BF8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_9C21	proc near
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retn
-sub_9C21	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_9C26	proc near
-		push	si
-		push	di
-		pushf
-		cli
-		mov	al, 0
-		out	43h, al		; Timer	8253-5 (AT: 8254.2).
-		call	sub_9C21
-		in	al, 40h		; Timer	8253-5 (AT: 8254.2).
-		mov	bl, al
-		call	sub_9C21
-		in	al, 40h		; Timer	8253-5 (AT: 8254.2).
-		mov	bh, al
-		not	bx
-		popf
-		mov	ax, bx
-		pop	di
-		pop	si
-		retn
-sub_9C26	endp
-
-; ---------------------------------------------------------------------------
-
-loc_9C44:
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		cmp	___conio_type, 1
-		jnz	short loc_9C76
-		mov	word ptr [bp-2], 0
-
-loc_9C58:
-		call	sub_9C26
-		test	al, 1
-		jnz	short loc_9C6D
-		mov	word_1329E, 0
-		mov	word_1329C, 4A9h
-		jmp	short loc_9C76
-; ---------------------------------------------------------------------------
-
-loc_9C6D:
-		inc	word ptr [bp-2]
-		cmp	word ptr [bp-2], 64h ; 'd'
-		jl	short loc_9C58
-
-loc_9C76:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9C7C	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		call	sub_9C26
-		mov	[bp+var_6], ax
-		xor	dx, dx
-		mov	bx, [bp+arg_0]
-		xor	cx, cx
-		push	ax
-		push	dx
-		mov	dx, word_1329E
-		mov	ax, word_1329C
-		call	N_LXMUL@
-		pop	bx
-		pop	cx
-		add	cx, ax
-		adc	bx, dx
-		mov	[bp+var_2], bx
-		mov	[bp+var_4], cx
-		jmp	short loc_9CC4
-; ---------------------------------------------------------------------------
-
-loc_9CAB:
-		cmp	bx, [bp+var_6]
-		jnb	short loc_9CC1
-		cmp	[bp+var_2], 1
-		ja	short loc_9CBE
-		jb	short loc_9CD7
-		cmp	[bp+var_4], 0
-		jb	short loc_9CD7
-
-loc_9CBE:
-		dec	[bp+var_2]
-
-loc_9CC1:
-		mov	[bp+var_6], bx
-
-loc_9CC4:
-		call	sub_9C26
-		mov	bx, ax
-		xor	dx, dx
-		cmp	dx, [bp+var_2]
-		jb	short loc_9CAB
-		jnz	short loc_9CD7
-		cmp	ax, [bp+var_4]
-		jb	short loc_9CAB
-
-loc_9CD7:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_9C7C	endp
-
+include libs/BorlandC/cibmdely.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22367,8 +22228,7 @@ aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0
 include libs/BorlandC/setargv[data].asm
 include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
-word_1329C	dw 952h
-word_1329E	dw 0
+include libs/BorlandC/cibmdely[data].asm
 include libs/BorlandC/coniotyp[data].asm
 include libs/BorlandC/mbctype[data].asm
 include libs/BorlandC/loadprog[data].asm
@@ -22388,9 +22248,7 @@ include libs/BorlandC/cputype[initdata].asm
 include libs/BorlandC/pathops[initdata].asm
 include libs/BorlandC/setargv[initdata].asm
 include libs/BorlandC/setenvp[initdata].asm
-		db    1
-		db  10h
-		dd loc_9C44
+include libs/BorlandC/cibmdely[initdata].asm
 		db    0
 		db  0Fh
 		dd loc_9DF3

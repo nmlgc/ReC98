@@ -8769,9 +8769,7 @@ loc_AF37:
 		cmp	___conio_type, 1
 		jnz	short loc_AF45
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_AFA4
+		nopcall	___ibm_delay
 
 loc_AF44:
 		pop	cx
@@ -8783,142 +8781,7 @@ loc_AF45:
 		retf
 sub_AF20	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AF49	proc near
-		push	si
-		push	di
-		pop	di
-		pop	si
-		retn
-sub_AF49	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AF4E	proc near
-		push	si
-		push	di
-		pushf
-		cli
-		mov	al, 0
-		out	43h, al		; Timer	8253-5 (AT: 8254.2).
-		call	sub_AF49
-		in	al, 40h		; Timer	8253-5 (AT: 8254.2).
-		mov	bl, al
-		call	sub_AF49
-		in	al, 40h		; Timer	8253-5 (AT: 8254.2).
-		mov	bh, al
-		not	bx
-		popf
-		mov	ax, bx
-		pop	di
-		pop	si
-		retn
-sub_AF4E	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		cmp	___conio_type, 1
-		jnz	short loc_AF9E
-		mov	word ptr [bp-2], 0
-
-loc_AF80:
-		call	sub_AF4E
-		test	al, 1
-		jnz	short loc_AF95
-		mov	word_36A7A, 0
-		mov	word_36A78, 4A9h
-		jmp	short loc_AF9E
-; ---------------------------------------------------------------------------
-
-loc_AF95:
-		inc	word ptr [bp-2]
-		cmp	word ptr [bp-2], 64h ; 'd'
-		jl	short loc_AF80
-
-loc_AF9E:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AFA4	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		call	sub_AF4E
-		mov	[bp+var_6], ax
-		xor	dx, dx
-		mov	bx, [bp+arg_0]
-		xor	cx, cx
-		push	ax
-		push	dx
-		mov	dx, word_36A7A
-		mov	ax, word_36A78
-		call	N_LXMUL@
-		pop	bx
-		pop	cx
-		add	cx, ax
-		adc	bx, dx
-		mov	[bp+var_2], bx
-		mov	[bp+var_4], cx
-		jmp	short loc_AFEC
-; ---------------------------------------------------------------------------
-
-loc_AFD3:
-		cmp	bx, [bp+var_6]
-		jnb	short loc_AFE9
-		cmp	[bp+var_2], 1
-		ja	short loc_AFE6
-		jb	short loc_AFFF
-		cmp	[bp+var_4], 0
-		jb	short loc_AFFF
-
-loc_AFE6:
-		dec	[bp+var_2]
-
-loc_AFE9:
-		mov	[bp+var_6], bx
-
-loc_AFEC:
-		call	sub_AF4E
-		mov	bx, ax
-		xor	dx, dx
-		cmp	dx, [bp+var_2]
-		jb	short loc_AFD3
-		jnz	short loc_AFFF
-		cmp	ax, [bp+var_4]
-		jb	short loc_AFD3
-
-loc_AFFF:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_AFA4	endp
-
+include libs/BorlandC/cibmdely.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -43347,8 +43210,7 @@ include libs/BorlandC/xx[data].asm
 aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0
 include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
-word_36A78	dw 952h
-word_36A7A	dw 0
+include libs/BorlandC/cibmdely[data].asm
 include libs/BorlandC/coniotyp[data].asm
 include libs/BorlandC/kbhit[data].asm
 include libs/BorlandC/mbctype[data].asm
@@ -43393,11 +43255,7 @@ include libs/BorlandC/setupio[initdata].asm
 include libs/BorlandC/cputype[initdata].asm
 include libs/BorlandC/pathops[initdata].asm
 include libs/BorlandC/setenvp[initdata].asm
-		db    1
-		db  10h
-		db  6Ch	; l
-		db 0AFh	; ¯
-		dw seg seg000
+include libs/BorlandC/cibmdely[initdata].asm
 		db    0
 		db  0Fh
 		dd sub_B11B
