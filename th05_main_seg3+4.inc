@@ -1771,9 +1771,7 @@ loc_1618C:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 400007h
-		nop
-		push	cs
-		call	near ptr sub_1591A
+		nopcall	sub_1591A
 		inc	word_221C2
 		inc	word_221C4
 		jmp	loc_1624D
@@ -2329,9 +2327,7 @@ loc_165F8:
 		mov	[bp+var_4], eax
 		push	large 220008h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	al, byte_2CEC3
 		mov	ah, 0
 		imul	ax, 0Ah
@@ -2340,9 +2336,7 @@ loc_165F8:
 		add	[bp+var_4], eax
 		push	large 22000Ah
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	ax, word_2C97A
 		imul	ax, 5
 		mov	si, ax
@@ -2350,9 +2344,7 @@ loc_165F8:
 		add	[bp+var_4], eax
 		push	large 22000Ch
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	si, word_2CEC6
 		movzx	eax, si
 		imul	eax, [bp+var_4]
@@ -2360,9 +2352,7 @@ loc_165F8:
 		push	large 28000Eh
 		push	si
 		push	0E1h
-		nop
-		push	cs
-		call	near ptr sub_1F9F4
+		nopcall	sub_1F9F4
 		mov	al, byte_25FEA
 		mov	ah, 0
 		imul	ax, 1388h
@@ -2374,9 +2364,7 @@ loc_165F8:
 		add	[bp+var_4], eax
 		push	large 220010h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 
 loc_166B2:
 		cmp	[bp+var_6], 0
@@ -2385,9 +2373,7 @@ loc_166B2:
 		add	[bp+var_4], eax
 		push	large 220011h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 
 loc_166CD:
 		cmp	[bp+var_4], 124F80h
@@ -2435,9 +2421,7 @@ loc_1671B:
 		call	sub_16438
 		push	large 220015h
 		push	large [bp+var_4]
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	eax, [bp+var_4]
 		add	dword_2CE1A, eax
 		pop	si
@@ -2558,9 +2542,7 @@ loc_1683E:
 		mov	[bp+var_4], eax
 		push	large 220006h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	al, byte_2CEC3
 		mov	ah, 0
 		imul	ax, 0Ah
@@ -2569,9 +2551,7 @@ loc_1683E:
 		add	[bp+var_4], eax
 		push	large 220008h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	ax, word_2C97A
 		imul	ax, 5
 		mov	si, ax
@@ -2579,9 +2559,7 @@ loc_1683E:
 		add	[bp+var_4], eax
 		push	large 22000Ah
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	al, byte_25350
 		mov	ah, 0
 		imul	ax, 3E8h
@@ -2591,9 +2569,7 @@ loc_1683E:
 		add	[bp+var_4], eax
 		push	large 22000Ch
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	si, word_2CEC6
 		movzx	eax, si
 		imul	eax, [bp+var_4]
@@ -2601,9 +2577,7 @@ loc_1683E:
 		push	large 28000Eh
 		push	si
 		push	0E1h
-		nop
-		push	cs
-		call	near ptr sub_1F9F4
+		nopcall	sub_1F9F4
 		mov	[bp+var_8], 0C350h
 		cmp	[bp+var_9], 0
 		jz	short loc_1691E
@@ -2611,9 +2585,7 @@ loc_1683E:
 		add	[bp+var_4], eax
 		push	large 220010h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 
 loc_1691E:
 		cmp	[bp+var_A], 0
@@ -2622,9 +2594,7 @@ loc_1691E:
 		add	[bp+var_4], eax
 		push	large 220011h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 
 loc_16939:
 		movzx	eax, word_22648
@@ -2633,18 +2603,14 @@ loc_16939:
 		add	[bp+var_4], eax
 		push	large 220012h
 		push	eax
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
 		call	sub_16438
 		push	large 220015h
 		push	large [bp+var_4]
-		nop
-		push	cs
-		call	near ptr sub_1FA0E
+		nopcall	sub_1FA0E
 		mov	eax, [bp+var_4]
 		add	dword_2CE1A, eax
 		pop	si
@@ -4250,8 +4216,7 @@ loc_174A2:
 ; ---------------------------------------------------------------------------
 
 loc_174C1:
-		push	cs
-		call	near ptr sub_172FF
+		call	sub_172FF
 
 loc_174C5:
 		pop	bp
@@ -5530,9 +5495,7 @@ loc_17DFE:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 200002h
-		nop
-		push	cs
-		call	near ptr sub_1591A
+		nopcall	sub_1591A
 		mov	byte ptr [si+12h], 1
 		cmp	word_2C97A, 3E7h
 		jnb	short loc_17E41
@@ -17850,8 +17813,7 @@ loc_1F400:
 		call	sub_1E8DA
 
 loc_1F403:
-		push	cs
-		call	near ptr sub_1F21A
+		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
 		push	14h
@@ -17912,8 +17874,7 @@ loc_1F483:
 		mov	byte_26349, 1
 
 loc_1F49F:
-		push	cs
-		call	near ptr sub_1F21A
+		call	sub_1F21A
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
@@ -17931,8 +17892,7 @@ loc_1F4BA:
 		jg	short loc_1F4D4
 
 loc_1F4C5:
-		push	cs
-		call	near ptr sub_1F21A
+		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
 		push	14h
@@ -18085,8 +18045,7 @@ loc_1F626:
 		call	sub_1F13B
 		cmp	word_26346, 1388h
 		jg	short loc_1F643
-		push	cs
-		call	near ptr sub_1F21A
+		call	sub_1F21A
 		or	ax, ax
 		jz	short loc_1F666
 		mov	byte ptr word_2634A+1, 1

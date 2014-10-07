@@ -493,8 +493,7 @@ byte_38F4	db 0
 		push	offset unk_12E78
 		push	word ptr [bp+2]
 		push	dx
-		push	cs
-		call	near ptr sub_39F0
+		call	sub_39F0
 		or	ax, ax
 		jz	loc_39C4
 		mov	word_12EF8, ax
@@ -6698,14 +6697,10 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_D322
+		nopcall	sub_D322
 		cmp	si, 3
 		jnz	short loc_D39A
-		nop
-		push	cs
-		call	near ptr sub_D350
+		nopcall	sub_D350
 
 loc_D39A:
 		mov	ah, 9
@@ -6793,9 +6788,7 @@ sub_D380	endp
 sub_D41C	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_D7EC
+		nopcall	sub_D7EC
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -7910,8 +7903,7 @@ loc_DC19:
 		cmp	byte_FA42, 0
 		jz	short loc_DC70
 		push	100h
-		push	cs
-		call	near ptr sub_DC76
+		call	sub_DC76
 		movzx	bx, byte_FA42
 		shl	bx, 2
 
@@ -8189,8 +8181,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_4]
 		push	di
-		push	cs
-		call	near ptr sub_DEE0
+		call	sub_DEE0
 		mov	si, di
 		shl	si, 2
 		add	si, 0A84h
@@ -8575,8 +8566,7 @@ sub_E094	proc far
 loc_E09B:
 		out	5Fh, al
 		loop	loc_E09B
-		push	cs
-		call	near ptr sub_DF96
+		call	sub_DF96
 		retf
 sub_E094	endp
 
@@ -8593,15 +8583,13 @@ arg_0		= word ptr  6
 		mov	bp, sp
 
 loc_E0A7:
-		push	cs
-		call	near ptr sub_E094
+		call	sub_E094
 		or	ax, ax
 		jnz	short loc_E0A7
 		mov	bp, [bp+arg_0]
 
 loc_E0B2:
-		push	cs
-		call	near ptr sub_E094
+		call	sub_E094
 		or	ax, ax
 		jnz	short loc_E0CA
 		mov	ax, vsync_Count1
@@ -8669,15 +8657,12 @@ arg_2		= word ptr  8
 		push	si
 
 loc_E0F5:
-		push	cs
-		call	near ptr sub_E0CE
+		call	sub_E0CE
 		mov	si, ax
 		or	si, si
 		jge	short loc_E109
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_E15E
+		nopcall	sub_E15E
 		jmp	short loc_E10E
 ; ---------------------------------------------------------------------------
 
@@ -8785,9 +8770,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_6]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_E294
+		nopcall	sub_E294
 		shl	di, 4
 		add	di, 3A96h
 		push	large [bp+arg_2]
@@ -8907,8 +8890,7 @@ arg_4		= word ptr  0Ah
 
 loc_E266:
 		push	bp
-		push	cs
-		call	near ptr sub_E294
+		call	sub_E294
 		mov	cx, 3
 		rep movsd
 		sub	si, 0Ch
@@ -8967,8 +8949,7 @@ sub_E2CA	proc far
 
 loc_E2CE:
 		push	si
-		push	cs
-		call	near ptr sub_E294
+		call	sub_E294
 		dec	si
 		jge	short loc_E2CE
 		pop	si

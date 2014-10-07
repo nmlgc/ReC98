@@ -1815,9 +1815,7 @@ loc_14A6B:
 		jl	short loc_14A87
 
 loc_14A82:
-		nop
-		push	cs
-		call	near ptr sub_19EBC
+		nopcall	sub_19EBC
 ; START	OF FUNCTION CHUNK FOR sub_1CCB8
 
 loc_14A87:
@@ -2367,9 +2365,7 @@ loc_14F38:
 ; ---------------------------------------------------------------------------
 
 loc_14F52:
-		nop
-		push	cs
-		call	near ptr sub_19EBC
+		nopcall	sub_19EBC
 
 loc_14F57:
 		push	word_26702
@@ -2986,9 +2982,7 @@ loc_15490:
 ; ---------------------------------------------------------------------------
 
 loc_154D1:
-		nop
-		push	cs
-		call	near ptr sub_19EBC
+		nopcall	sub_19EBC
 		cmp	word_26700, 0AF0h
 		jnz	short loc_1552D
 		mov	word_26700, 15E0h
@@ -5925,9 +5919,7 @@ loc_16CFC:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 400008h
-		nop
-		push	cs
-		call	near ptr sub_13E2A
+		nopcall	sub_13E2A
 		jmp	short loc_16DC5
 ; ---------------------------------------------------------------------------
 
@@ -8014,9 +8006,7 @@ loc_17F3C:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 400008h
-		nop
-		push	cs
-		call	near ptr sub_13E2A
+		nopcall	sub_13E2A
 		inc	word_22E9E
 		inc	word_22EA0
 		jmp	loc_18020
@@ -11957,8 +11947,7 @@ loc_1A05E:
 ; ---------------------------------------------------------------------------
 
 loc_1A081:
-		push	cs
-		call	near ptr sub_19EBC
+		call	sub_19EBC
 
 loc_1A085:
 		pop	bp
@@ -12159,9 +12148,7 @@ loc_1A1EE:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 400008h
-		nop
-		push	cs
-		call	near ptr sub_13E2A
+		nopcall	sub_13E2A
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	3
@@ -17045,9 +17032,7 @@ loc_1CA82:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large 200002h
-		nop
-		push	cs
-		call	near ptr sub_13E2A
+		nopcall	sub_13E2A
 		mov	byte ptr [si+12h], 1
 		cmp	word_2CFFC, 3E7h
 		jnb	short loc_1CAC5
@@ -18794,8 +18779,7 @@ var_4		= dword	ptr -4
 		mov	[bp+var_4], eax
 		push	large 280010h
 		push	si
-		push	cs
-		call	near ptr sub_1D519
+		call	sub_1D519
 		mov	eax, [bp+var_4]
 		mov	[bp+var_8], eax
 		push	ss
@@ -19000,8 +18984,7 @@ loc_1D9CE:
 		mov	[bp+var_4], eax
 		push	large 280011h
 		push	si
-		push	cs
-		call	near ptr sub_1D519
+		call	sub_1D519
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -19707,9 +19690,7 @@ sub_1DF61	proc near
 		mov	word_26712, 0
 		mov	word_26714, 0
 		mov	byte_2671C, 0
-		nop
-		push	cs
-		call	near ptr sub_15C6D
+		nopcall	sub_15C6D
 		mov	byte_2372D, 1
 		pop	bp
 		retn
@@ -20485,8 +20466,7 @@ loc_1E801:
 		mov	word_259DC, 66A5h
 		push	10h
 		call	sub_13A58
-		push	cs
-		call	near ptr sub_1DFD4
+		call	sub_1DFD4
 		push	10h
 		push	ds
 		push	offset aSt06bk2_cdg ; "st06bk2.cdg"

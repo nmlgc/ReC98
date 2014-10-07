@@ -2512,9 +2512,7 @@ loc_198C:
 
 loc_1994:
 		push	ax		; p
-		nop
-		push	cs
-		call	near ptr _pow10
+		nopcall	_pow10
 		pop	ax
 		or	si, si
 		jg	short loc_19A6
@@ -2538,9 +2536,7 @@ loc_19A6:
 
 loc_19AE:
 		push	bx		; p
-		nop
-		push	cs
-		call	near ptr _pow10
+		nopcall	_pow10
 		pop	ax
 		; Hack (fcomp st(1))
 		db 0cdh
@@ -2577,9 +2573,7 @@ loc_19D8:
 		mov	ax, bx
 		dec	ax
 		push	ax		; p
-		nop
-		push	cs
-		call	near ptr _pow10
+		nopcall	_pow10
 		pop	ax
 		; Hack (fcomp st(1))
 		db 0cdh
@@ -4065,9 +4059,7 @@ buf		= dword	ptr  0Eh
 		push	ax		; access
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path] ; path
-		nop
-		push	cs
-		call	near ptr _open
+		nopcall	_open
 		add	sp, 8
 		les	bx, [bp+buf]
 		mov	es:[bx+4], al
@@ -4086,9 +4078,7 @@ loc_4080:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr _isatty
+		nopcall	_isatty
 		pop	cx
 		or	ax, ax
 		jz	short loc_409C
@@ -4310,8 +4300,7 @@ loc_48E7:
 		jnz	short loc_4901
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
-		nop
-		call	_fflush
+		nopcall	_fflush
 		pop	cx
 		pop	cx
 
@@ -4360,9 +4349,7 @@ loc_4927:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___read
+		nopcall	___read
 		add	sp, 8
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
@@ -4417,8 +4404,7 @@ stream		= dword	ptr  6
 		inc	word ptr es:[bx]
 		push	word ptr [bp+stream+2]
 		push	bx		; stream
-		push	cs
-		call	near ptr _fgetc
+		call	_fgetc
 		pop	cx
 		pop	cx
 		pop	di
@@ -4515,9 +4501,7 @@ loc_4A31:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax		; handle
-		nop
-		push	cs
-		call	near ptr ___read
+		nopcall	___read
 		add	sp, 8
 		or	ax, ax
 		jnz	short loc_4A83
@@ -4580,8 +4564,7 @@ _fgetchar	proc far
 		push	ds
 		mov	ax, 9FAh
 		push	ax		; stream
-		push	cs
-		call	near ptr _fgetc
+		call	_fgetc
 		pop	cx
 		pop	cx
 		pop	di
@@ -4691,8 +4674,7 @@ loc_4D19:
 		push	ax		; func
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path] ; pathname
-		nop
-		call	__chmod
+		nopcall	__chmod
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	ax, [bp+var_6]
@@ -4783,9 +4765,7 @@ loc_4DCA:
 		push	[bp+access]
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path]
-		nop
-		push	cs
-		call	near ptr sub_4E98
+		nopcall	sub_4E98
 		add	sp, 6
 		mov	[bp+handle], ax
 		or	ax, ax
@@ -4793,8 +4773,7 @@ loc_4DCA:
 		xor	ax, ax
 		push	ax		; func
 		push	[bp+handle]	; handle
-		nop
-		call	_ioctl
+		nopcall	_ioctl
 		pop	cx
 		pop	cx
 		mov	[bp+var_4], ax
@@ -4811,8 +4790,7 @@ loc_4DCA:
 		mov	ax, 1
 		push	ax		; func
 		push	[bp+handle]	; handle
-		nop
-		call	_ioctl
+		nopcall	_ioctl
 		add	sp, 8
 		jmp	short loc_4E28
 ; ---------------------------------------------------------------------------
@@ -4835,8 +4813,7 @@ loc_4E28:
 		push	ax		; func
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path] ; pathname
-		nop
-		call	__chmod
+		nopcall	__chmod
 		add	sp, 8
 
 loc_4E4D:
@@ -4954,8 +4931,7 @@ sub_4E98	endp
 		push	word ptr [bp+0Ah]
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_4E98
+		call	sub_4E98
 		add	sp, 6
 		pop	di
 		pop	si
@@ -5148,9 +5124,7 @@ arg_0		= word ptr  6
 		cmp	___conio_type, 2
 		jnz	short loc_9C0F
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_9DC6
+		nopcall	sub_9DC6
 		jmp	short loc_9C1C
 ; ---------------------------------------------------------------------------
 
@@ -6075,12 +6049,10 @@ loc_A6C8:
 		jnz	short loc_A6C8
 		mov	[bp+di+var_192], 1
 		push	si
-		push	cs
-		call	near ptr sub_A629
+		call	sub_A629
 		pop	cx
 		push	di
-		push	cs
-		call	near ptr sub_A629
+		call	sub_A629
 		pop	cx
 		push	1
 		call	sub_B269
@@ -6137,8 +6109,7 @@ sub_A719	proc far
 		push	64h ; 'd'
 		call	sub_B269
 		pop	cx
-		push	cs
-		call	near ptr sub_A66A
+		call	sub_A66A
 		pop	bp
 		retf
 sub_A719	endp
@@ -6196,8 +6167,7 @@ sub_A7B5	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		push	cs
-		call	near ptr sub_A2E4
+		call	sub_A2E4
 		push	large [dword_13418]
 		push	word_12322+1
 		push	word_12322
@@ -6205,8 +6175,7 @@ sub_A7B5	proc far
 		push	word_12320
 		call	sub_E27C
 		add	sp, 0Ch
-		push	cs
-		call	near ptr sub_A79D
+		call	sub_A79D
 		call	sub_E519
 		call	sub_B757
 		mov	al, byte_12324
@@ -6289,8 +6258,7 @@ sub_A7B5	endp
 sub_A8AD	proc far
 		push	bp
 		mov	bp, sp
-		push	cs
-		call	near ptr sub_A2E4
+		call	sub_A2E4
 		push	large [dword_13418]
 		push	word_12322+1
 		push	word_12322
@@ -6306,8 +6274,7 @@ sub_A8AD	proc far
 		assume es:seg001
 
 loc_A8E1:
-		push	cs
-		call	near ptr sub_A79D
+		call	sub_A79D
 		call	sub_E519
 		call	sub_B757
 		les	bx, dword_13EE6
@@ -6673,27 +6640,22 @@ sub_AB97	proc far
 		call	sub_D338
 		add	sp, 8
 		push	large 50000h
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		push	large 50001h
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		push	large 50002h
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		push	large 50003h
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		push	0Fh
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		mov	word_12564, 1
 		mov	al, byte_12325
@@ -6707,15 +6669,13 @@ loc_AC04:
 		jz	short loc_AC30
 		push	5
 		push	word_12562
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		push	0Fh
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_A96A
+		call	sub_A96A
 		add	sp, 4
 		mov	al, byte_12325
 		cbw
@@ -6737,14 +6697,12 @@ loc_AC3E:
 		jmp	cs:off_AC7C[bx]
 
 loc_AC50:
-		push	cs
-		call	near ptr sub_A7B5
+		call	sub_A7B5
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
 loc_AC56:
-		push	cs
-		call	near ptr sub_A8AD
+		call	sub_A8AD
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
@@ -6791,24 +6749,19 @@ sub_AC84	proc far
 		call	sub_D338
 		add	sp, 8
 		push	large 0F0000h
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		push	large 50001h
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		push	large 50002h
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		push	large 50003h
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		push	large 50004h
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 
 loc_ACF9:
@@ -6818,15 +6771,13 @@ loc_ACF9:
 		jz	short loc_AD25
 		push	5
 		push	word_12568
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		push	0Fh
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		mov	al, byte_12325
 		cbw
@@ -6883,8 +6834,7 @@ loc_AD80:
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		mov	word_1256A, 1
 		jmp	short loc_AD9C
@@ -6944,8 +6894,7 @@ loc_ADFA:
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_A9B9
+		call	sub_A9B9
 		add	sp, 4
 		mov	word_1256C, 1
 		jmp	short loc_AE16
@@ -7048,12 +6997,10 @@ sub_AEA8	proc far
 		call	sub_D338
 		add	sp, 8
 		push	large 0F0000h
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 		push	large 50001h
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 
 loc_AF00:
@@ -7063,15 +7010,13 @@ loc_AF00:
 		jz	short loc_AF2C
 		push	5
 		push	word_125AC
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 		push	0Fh
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 		mov	al, byte_12325
 		cbw
@@ -7096,8 +7041,7 @@ loc_AF53:
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 		mov	word_125AE, 1
 		jmp	short loc_AF6F
@@ -7125,8 +7069,7 @@ loc_AF96:
 		mov	al, byte_12325
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_AAB6
+		call	sub_AAB6
 		add	sp, 4
 		mov	word_125B0, 1
 		jmp	short loc_AFB2
@@ -7165,8 +7108,7 @@ loc_AFE0:
 loc_AFEE:
 		cmp	byte_12325, 0
 		jnz	short loc_AFF9
-		push	cs
-		call	near ptr sub_AE6D
+		call	sub_AE6D
 
 loc_AFF9:
 		pop	bp
@@ -7270,8 +7212,7 @@ loc_B06F:
 loc_B0D6:
 		call	sub_E549
 		call	sub_B6E9
-		push	cs
-		call	near ptr sub_A240
+		call	sub_A240
 		mov	al, byte ptr word_12320+1
 		cbw
 		mov	si, ax
@@ -7286,8 +7227,7 @@ loc_B0D6:
 		call	_int86
 		add	sp, 0Ah
 		call	key_start
-		push	cs
-		call	near ptr sub_A719
+		call	sub_A719
 		xor	ax, ax
 		mov	es, ax
 		mov	al, es:0500h
@@ -7305,8 +7245,7 @@ loc_B126:
 		call	sub_B269
 		pop	cx
 		push	di
-		push	cs
-		call	near ptr sub_A92C
+		call	sub_A92C
 		pop	cx
 		inc	di
 
@@ -7314,8 +7253,7 @@ loc_B135:
 		call	key_sense_bios
 		or	ax, ax
 		jz	short loc_B126
-		push	cs
-		call	near ptr sub_A772
+		call	sub_A772
 		mov	eax, dword_13418
 		mov	random_seed, eax
 		jmp	loc_B21A
@@ -7324,10 +7262,8 @@ loc_B135:
 loc_B14D:
 		cmp	byte_1232A, 0
 		jnz	short loc_B15F
-		push	cs
-		call	near ptr sub_A363
-		push	cs
-		call	near ptr sub_AB97
+		call	sub_A363
+		call	sub_AB97
 		jmp	loc_B1EE
 ; ---------------------------------------------------------------------------
 
@@ -7336,10 +7272,8 @@ loc_B15F:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B172
-		push	cs
-		call	near ptr sub_A4AB
-		push	cs
-		call	near ptr sub_AC84
+		call	sub_A4AB
+		call	sub_AC84
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
 
@@ -7348,10 +7282,8 @@ loc_B172:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_B185
-		push	cs
-		call	near ptr sub_A4AB
-		push	cs
-		call	near ptr sub_AEA8
+		call	sub_A4AB
+		call	sub_AEA8
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
 
@@ -7424,12 +7356,10 @@ loc_B1EE:
 loc_B21A:
 		cmp	byte_1232C, 0
 		jz	loc_B14D
-		push	cs
-		call	near ptr sub_A2E4
+		call	sub_A2E4
 		mov	byte_1232F, 1
 		call	sub_E509
-		push	cs
-		call	near ptr sub_A79D
+		call	sub_A79D
 		push	1
 		call	sub_B943
 		pop	cx
@@ -7686,23 +7616,13 @@ inregs		= REGS ptr -10h
 		push	ax		; inregs
 		push	18h		; intno
 		call	_int86
-		nop
-		push	cs
-		call	near ptr sub_B3D1
-		nop
-		push	cs
-		call	near ptr sub_B404
+		nopcall	sub_B3D1
+		nopcall	sub_B404
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B462
+		nopcall	sub_B462
 		add	sp, 0Ch
-		nop
-		push	cs
-		call	near ptr sub_B415
-		nop
-		push	cs
-		call	near ptr sub_B426
+		nopcall	sub_B415
+		nopcall	sub_B426
 		leave
 		retf
 sub_B372	endp
@@ -7710,23 +7630,13 @@ sub_B372	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_B3D1
-		nop
-		push	cs
-		call	near ptr sub_B3F3
+		nopcall	sub_B3D1
+		nopcall	sub_B3F3
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_B462
+		nopcall	sub_B462
 		pop	cx
-		nop
-		push	cs
-		call	near ptr sub_B415
-		nop
-		push	cs
-		call	near ptr sub_B426
+		nopcall	sub_B415
+		nopcall	sub_B426
 		pop	bp
 		retf
 
@@ -7739,9 +7649,7 @@ sub_B3D1	proc far
 		mov	bp, sp
 		push	ds
 		push	offset a3l	; "\x1B[>3l"
-		nop
-		push	cs
-		call	near ptr sub_B683
+		nopcall	sub_B683
 		add	sp, 4
 		pop	bp
 		retf
@@ -7752,9 +7660,7 @@ sub_B3D1	endp
 		mov	bp, sp
 		push	ds
 		push	offset a3h	; "\x1B[>3h"
-		nop
-		push	cs
-		call	near ptr sub_B683
+		nopcall	sub_B683
 		add	sp, 4
 		pop	bp
 		retf
@@ -7768,9 +7674,7 @@ sub_B3F3	proc far
 		mov	bp, sp
 		push	ds
 		push	offset a1l	; "\x1B[>1l"
-		nop
-		push	cs
-		call	near ptr sub_B683
+		nopcall	sub_B683
 		add	sp, 4
 		pop	bp
 		retf
@@ -7786,9 +7690,7 @@ sub_B404	proc far
 		mov	bp, sp
 		push	ds
 		push	offset a1h	; "\x1B[>1h"
-		nop
-		push	cs
-		call	near ptr sub_B683
+		nopcall	sub_B683
 		add	sp, 4
 		pop	bp
 		retf
@@ -7804,9 +7706,7 @@ sub_B415	proc far
 		mov	bp, sp
 		push	ds
 		push	offset a2j	; "\x1B[2J"
-		nop
-		push	cs
-		call	near ptr sub_B683
+		nopcall	sub_B683
 		add	sp, 4
 		pop	bp
 		retf
@@ -8146,8 +8046,7 @@ sub_B4E3	endp
 		push	word ptr [bp+0Ah]
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_B4E3
+		call	sub_B4E3
 		add	sp, 16h
 		leave
 		retf
@@ -8278,9 +8177,7 @@ sub_B73C	proc far
 		cmp	byte_12978, 1
 		jnz	short loc_B755
 		mov	byte_12978, 0
-		nop
-		push	cs
-		call	near ptr sub_B784
+		nopcall	sub_B784
 		call	respal_free
 
 loc_B755:
@@ -8298,9 +8195,7 @@ sub_B757	proc far
 		mov	bp, sp
 		cmp	byte_12978, 1
 		jnz	short loc_B782
-		nop
-		push	cs
-		call	near ptr sub_B784
+		nopcall	sub_B784
 		call	sub_B3D1
 		push	0
 		call	sub_B462
@@ -8359,8 +8254,7 @@ sub_B7C3	proc near
 		mov	bp, seg	dseg
 		mov	ds, bp
 		mov	bp, sp
-		push	cs
-		call	near ptr sub_B73C
+		call	sub_B73C
 		push	0		; status
 		call	_exit
 sub_B7C3	endp
@@ -8389,8 +8283,7 @@ sub_B7C3	endp
 		lea	ax, [bp-104h]
 		push	ax
 		call	_vsprintf
-		push	cs
-		call	near ptr sub_B73C
+		call	sub_B73C
 		push	ss
 		lea	ax, [bp-104h]
 		push	ax
@@ -8411,9 +8304,7 @@ seg006		segment	byte public 'CODE' use16
 		assume cs:seg006
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 		enter	10h, 0
-		nop
-		push	cs
-		call	near ptr sub_B91C
+		nopcall	sub_B91C
 		mov	byte ptr [bp-0Fh], 42h ; 'B'
 		mov	byte ptr [bp-0Bh], 0C0h
 		push	ss
@@ -8429,37 +8320,25 @@ seg006		segment	byte public 'CODE' use16
 					;
 		push	ds
 		push	offset unk_1297A
-		nop
-		push	cs
-		call	near ptr sub_BA15
+		nopcall	sub_BA15
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B943
+		nopcall	sub_B943
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B937
+		nopcall	sub_B937
 		add	sp, 12h
-		nop
-		push	cs
-		call	near ptr sub_BB3C
+		nopcall	sub_BB3C
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
-		nop
-		push	cs
-		call	near ptr sub_B901
+		nopcall	sub_B901
 		leave
 		retf
 ; ---------------------------------------------------------------------------
 		enter	10h, 0
-		nop
-		push	cs
-		call	near ptr sub_B91C
+		nopcall	sub_B91C
 		mov	byte ptr [bp-0Fh], 42h ; 'B'
 		mov	byte ptr [bp-0Bh], 0C0h
 		push	ss
@@ -8474,13 +8353,9 @@ seg006		segment	byte public 'CODE' use16
 		out	dx, al		; PC-98	GDC (6a):
 					;
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B943
+		nopcall	sub_B943
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B937
+		nopcall	sub_B937
 		add	sp, 0Eh
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
@@ -8488,9 +8363,7 @@ seg006		segment	byte public 'CODE' use16
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
-		nop
-		push	cs
-		call	near ptr sub_B901
+		nopcall	sub_B901
 		leave
 		retf
 
@@ -8501,24 +8374,14 @@ seg006		segment	byte public 'CODE' use16
 sub_B8D0	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_BC6D
-		nop
-		push	cs
-		call	near ptr sub_BB3C
+		nopcall	sub_BC6D
+		nopcall	sub_BB3C
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B943
+		nopcall	sub_B943
 		push	0
-		nop
-		push	cs
-		call	near ptr sub_B937
+		nopcall	sub_B937
 		add	sp, 4
-		nop
-		push	cs
-		call	near ptr sub_B901
+		nopcall	sub_B901
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
@@ -8831,9 +8694,7 @@ loc_BA1D:
 		cbw
 		push	ax
 		push	si
-		nop
-		push	cs
-		call	near ptr sub_BA5E
+		nopcall	sub_BA5E
 		add	sp, 8
 		inc	si
 
@@ -8967,8 +8828,7 @@ loc_BAD7:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		pop	si
 		pop	bp
@@ -8987,14 +8847,12 @@ _s		= dword	ptr -4
 		enter	4, 0
 		mov	[bp+_s],	0A8000000h
 		push	0
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		push	large 7D0000FFh	; c
 		push	large [bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 		leave
 		retf
 sub_BB12	endp
@@ -9008,16 +8866,12 @@ sub_BB3C	proc far
 		push	bp
 		mov	bp, sp
 		push	2
-		push	cs
-		call	near ptr sub_B943
-		push	cs
-		call	near ptr sub_BB12
+		call	sub_B943
+		call	sub_BB12
 		push	2
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		add	sp, 4
-		push	cs
-		call	near ptr sub_BB12
+		call	sub_BB12
 		pop	bp
 		retf
 sub_BB3C	endp
@@ -9028,14 +8882,12 @@ sub_BB3C	endp
 		mov	al, [bp+6]
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		push	large 7D0000FFh
 		push	large dword ptr	[bp-4]
 		call	_memset
 		add	sp, 0Ah
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 		leave
 		retf
 
@@ -9156,8 +9008,7 @@ loc_BC75:
 		push	large 0
 		push	0
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9251,8 +9102,7 @@ loc_BCE3:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9353,8 +9203,7 @@ loc_BD86:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9387,8 +9236,7 @@ loc_BDE3:
 		push	large 0F000Fh
 		push	0Fh
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9469,8 +9317,7 @@ loc_BE54:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9558,8 +9405,7 @@ loc_BEF7:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9603,8 +9449,7 @@ loc_BF54:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	si
 
@@ -9618,8 +9463,7 @@ loc_BF7E:
 		push	bp
 		mov	bp, sp
 		push	word ptr [bp+0Ah]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 		mov	bx, [bp+8]
 		imul	bx, 50h
@@ -9634,8 +9478,7 @@ loc_BF7E:
 		mov	es, ax
 		assume es:nothing
 		mov	es:[bx], dl
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -9782,8 +9625,7 @@ loc_C070:
 		cmp	byte_129AA, 0
 		jnz	short loc_C0D4
 		push	[bp+arg_6]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 
 loc_C0D4:
@@ -9837,8 +9679,7 @@ loc_C129:
 loc_C12C:
 		cmp	byte_129AA, 0
 		jnz	short loc_C137
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 
 loc_C137:
 		pop	di
@@ -9928,8 +9769,7 @@ loc_C196:
 		shl	ax, cl
 		or	[bp+var_6], ax
 		push	[bp+arg_6]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 		mov	[bp+var_2], si
 		jmp	short loc_C1ED
@@ -9946,8 +9786,7 @@ loc_C1D9:
 loc_C1ED:
 		cmp	[bp+var_2], di
 		jle	short loc_C1D9
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 
 loc_C1F6:
 		pop	di
@@ -9965,9 +9804,7 @@ sub_C13B	endp
 		push	word ptr [bp+0Ah]
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	near ptr sub_C247
+		nopcall	sub_C247
 		add	sp, 0Ah
 		mov	byte_129AA, 0
 		pop	bp
@@ -9982,9 +9819,7 @@ sub_C13B	endp
 		push	word ptr [bp+0Ah]
 		push	word ptr [bp+8]
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	near ptr sub_C247
+		nopcall	sub_C247
 		add	sp, 0Ah
 		mov	word_129AB, 80h
 		pop	bp
@@ -10031,8 +9866,7 @@ arg_8		= word ptr  0Eh
 		push	[bp+arg_6]
 		push	di
 		push	ax
-		push	cs
-		call	near ptr sub_C13B
+		call	sub_C13B
 		jmp	short loc_C287
 ; ---------------------------------------------------------------------------
 
@@ -10045,8 +9879,7 @@ loc_C26D:
 		push	di
 		push	[bp+arg_4]
 		push	[bp+arg_0]
-		push	cs
-		call	near ptr sub_C028
+		call	sub_C028
 
 loc_C287:
 		add	sp, 8
@@ -10295,8 +10128,7 @@ loc_C437:
 		cmp	byte_129AA, 0
 		jnz	short loc_C471
 		push	[bp+arg_8]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 
 loc_C471:
@@ -10336,8 +10168,7 @@ loc_C49D:
 loc_C4C3:
 		dec	si
 		push	1
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		les	bx, dword_13672
 		add	bx, si
 		mov	eax, es:[bx]
@@ -10355,8 +10186,7 @@ loc_C4C3:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		add	sp, 4
 		les	bx, dword_13672
 		add	bx, si
@@ -10452,8 +10282,7 @@ loc_C5CA:
 loc_C5F0:
 		dec	si
 		push	1
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		les	bx, dword_13672
 		add	bx, si
 		mov	eax, es:[bx]
@@ -10471,8 +10300,7 @@ loc_C5F0:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		add	sp, 4
 		les	bx, dword_13672
 		add	bx, si
@@ -10543,8 +10371,7 @@ loc_C6CF:
 		dec	ax
 		mov	si, ax
 		push	1
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		les	bx, dword_13672
 		add	bx, si
 		mov	eax, es:[bx]
@@ -10562,8 +10389,7 @@ loc_C6CF:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		push	cs
-		call	near ptr sub_B943
+		call	sub_B943
 		add	sp, 4
 		les	bx, dword_13672
 		add	bx, si
@@ -10585,8 +10411,7 @@ loc_C6CF:
 loc_C767:
 		cmp	byte_129AA, 0
 		jnz	short loc_C772
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 
 loc_C772:
 		pop	di
@@ -10666,8 +10491,7 @@ loc_C7D9:
 
 loc_C7EA:
 		push	[bp+arg_8]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 		mov	ax, si
 		imul	ax, 50h
@@ -10737,8 +10561,7 @@ loc_C87A:
 loc_C884:
 		cmp	[bp+var_4], di
 		jle	short loc_C80C
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 
 loc_C88D:
 		pop	di
@@ -10758,26 +10581,22 @@ sub_C776	endp
 		push	word ptr [bp+8]
 		push	word ptr [bp+0Ah]
 		push	di
-		push	cs
-		call	near ptr sub_C028
+		call	sub_C028
 		push	si
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+8]
 		push	di
-		push	cs
-		call	near ptr sub_C13B
+		call	sub_C13B
 		push	si
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+8]
 		push	word ptr [bp+0Ah]
-		push	cs
-		call	near ptr sub_C13B
+		call	sub_C13B
 		push	si
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+0Ah]
 		push	di
-		push	cs
-		call	near ptr sub_C028
+		call	sub_C028
 		add	sp, 20h
 		pop	di
 		pop	si
@@ -10918,8 +10737,7 @@ arg_6		= dword	ptr  0Ch
 		jz	short loc_C9E7
 		push	large [bp+arg_6]
 		push	[bp+arg_4]
-		push	cs
-		call	near ptr sub_C8D5
+		call	sub_C8D5
 		add	sp, 6
 		mov	[bp+var_18], ax
 		cmp	[bp+var_14], 0
@@ -10934,8 +10752,7 @@ arg_6		= dword	ptr  0Ch
 		push	ax
 		push	[bp+arg_2]
 		push	si
-		push	cs
-		call	near ptr sub_C776
+		call	sub_C776
 		add	sp, 0Ah
 		jmp	short loc_C9FE
 ; ---------------------------------------------------------------------------
@@ -10951,8 +10768,7 @@ loc_C9CA:
 		push	ax
 		push	[bp+arg_2]
 		push	si
-		push	cs
-		call	near ptr sub_C776
+		call	sub_C776
 		add	sp, 0Ah
 		jmp	short loc_CA16
 ; ---------------------------------------------------------------------------
@@ -10962,8 +10778,7 @@ loc_C9E7:
 		jz	short loc_CA16
 		push	large [bp+arg_6]
 		push	[bp+arg_4]
-		push	cs
-		call	near ptr sub_C8D5
+		call	sub_C8D5
 		add	sp, 6
 		mov	[bp+var_18], ax
 
@@ -10977,14 +10792,12 @@ loc_C9FE:
 		dec	ax
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_C028
+		call	sub_C028
 		add	sp, 8
 
 loc_CA16:
 		push	[bp+arg_4]
-		push	cs
-		call	near ptr sub_B976
+		call	sub_B976
 		pop	cx
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
@@ -11261,8 +11074,7 @@ loc_CC59:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		push	cs
-		call	near ptr sub_BA0A
+		call	sub_BA0A
 		pop	di
 		pop	si
 		leave
@@ -11712,8 +11524,7 @@ palette_show5:
 		cbw
 		push	ax
 		push	word ptr [bp-2]
-		push	cs
-		call	near ptr sub_B955
+		call	sub_B955
 		add	sp, 8
 		inc	word ptr [bp-2]
 
@@ -11827,8 +11638,7 @@ sub_D0E5	endp
 		enter	4, 0
 		push	si
 		push	di
-		push	cs
-		call	near ptr sub_D0E5
+		call	sub_D0E5
 		mov	di, ax
 		or	di, di
 		jz	short loc_D1B9
@@ -11850,8 +11660,7 @@ loc_D18F:
 		cbw
 		push	ax
 		push	si
-		push	cs
-		call	near ptr sub_BA5E
+		call	sub_BA5E
 		add	sp, 8
 		add	word ptr [bp-4], 3
 		inc	si
@@ -11883,8 +11692,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		push	di
-		push	cs
-		call	near ptr sub_D0E5
+		call	sub_D0E5
 		mov	di, ax
 		or	di, di
 		jz	short loc_D219
@@ -12086,8 +11894,7 @@ arg_6		= word ptr  0Ch
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_6], ax
-		push	cs
-		call	near ptr sub_D304
+		call	sub_D304
 		mov	[bp+var_2], 0
 		jmp	short loc_D3B6
 ; ---------------------------------------------------------------------------
@@ -12612,8 +12419,7 @@ loc_D7C3:
 		mov	word_129B8, 0
 		push	large dword ptr	[bp+8]
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_D631
+		call	sub_D631
 		add	sp, 6
 		mov	[bp-2],	ax
 		mov	word_129B8, 1
@@ -13034,15 +12840,13 @@ loc_DB3F:
 		cmp	word_129B8, 1
 		jnz	short loc_DB50
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_D9E3
+		call	sub_D9E3
 		jmp	short loc_DB58
 ; ---------------------------------------------------------------------------
 
 loc_DB50:
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_DA22
+		call	sub_DA22
 
 loc_DB58:
 		add	sp, 4
@@ -13069,8 +12873,7 @@ arg_0		= dword	ptr  6
 		enter	2, 0
 		mov	word_129B8, 0
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_DAEC
+		call	sub_DAEC
 		add	sp, 4
 		mov	[bp+var_2], ax
 		mov	word_129B8, 1
@@ -13082,8 +12885,7 @@ sub_DB6F	endp
 		enter	2, 0
 		mov	word_129BA, 0
 		push	large dword ptr	[bp+6]
-		push	cs
-		call	near ptr sub_DAEC
+		call	sub_DAEC
 		add	sp, 4
 		mov	[bp-2],	ax
 		mov	word_129BA, 1
@@ -13103,8 +12905,7 @@ arg_0		= dword	ptr  6
 		mov	byte_129C7, 1
 		mov	word_129B8, 0
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_DAEC
+		call	sub_DAEC
 		add	sp, 4
 		mov	[bp+var_2], ax
 		mov	word_129B8, 1
@@ -13125,9 +12926,7 @@ sub_DBAF	endp
 		mov	al, [bp+8]
 		mov	byte_129C8, al
 		push	si
-		nop
-		push	cs
-		call	near ptr sub_DC1B
+		nopcall	sub_DC1B
 		pop	cx
 		mov	byte_129C8, 0
 
@@ -13142,9 +12941,7 @@ loc_DBFD:
 		inc	al
 		mov	byte_129C9, al
 		push	word ptr [bp+6]
-		nop
-		push	cs
-		call	near ptr sub_DC1B
+		nopcall	sub_DC1B
 		pop	cx
 		mov	byte_129C9, 0
 		pop	bp
@@ -13444,9 +13241,7 @@ loc_DE53:
 		or	ax, [bx+1494h]
 		jz	short loc_DE82
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_E02B
+		nopcall	sub_E02B
 		pop	cx
 
 loc_DE82:
@@ -13478,9 +13273,7 @@ loc_DEAA:
 		or	ax, [bx+14D4h]
 		jz	short loc_DEC8
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_E02B
+		nopcall	sub_E02B
 		pop	cx
 
 loc_DEC8:
@@ -13599,9 +13392,7 @@ loc_DFBD:
 		or	ax, [bx+1494h]
 		jz	short loc_DFE2
 		push	si
-		nop
-		push	cs
-		call	near ptr sub_E02B
+		nopcall	sub_E02B
 		pop	cx
 
 loc_DFE2:
@@ -13794,8 +13585,7 @@ loc_E170:
 		or	ax, [bx+1494h]
 		jz	short loc_E1A7
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_E02B
+		call	sub_E02B
 		pop	cx
 
 loc_E1A7:
@@ -13827,8 +13617,7 @@ loc_E1CD:
 		or	ax, [bx+14D4h]
 		jz	short loc_E1EC
 		push	word ptr [bp+6]
-		push	cs
-		call	near ptr sub_E02B
+		call	sub_E02B
 		pop	cx
 
 loc_E1EC:
@@ -15046,8 +14835,7 @@ loc_EA19:
 		fldcw	word ptr ds:051h
 
 loc_EA2B:
-		push	cs
-		call	near ptr sub_EAB5
+		call	sub_EAB5
 		add	sp, 0Ah
 		fstsw	word ptr ds:051h
 		fclex
@@ -15897,8 +15685,7 @@ loc_EF59:
 
 loc_EF64:
 		mov	di, [bp+4]
-		nop
-		call	sub_FD13
+		nopcall	sub_FD13
 
 loc_EF6B:
 		jmp	loc_F101
@@ -15915,8 +15702,7 @@ sub_EF6E	proc near
 		push	di
 		mov	bx, di
 		mov	di, [bp+4]
-		nop
-		call	sub_EED2
+		nopcall	sub_EED2
 		pop	di
 		pop	bx
 		jb	short loc_EF6B
@@ -15937,8 +15723,7 @@ loc_EF8C:
 		xor	al, cl
 		mov	si, di
 		mov	di, [bp+4]
-		nop
-		call	sub_EED2
+		nopcall	sub_EED2
 		jb	short loc_EF6B
 		jmp	short loc_EF59
 ; ---------------------------------------------------------------------------
@@ -16456,8 +16241,7 @@ sub_F213	endp
 loc_F2F4:
 		mov	si, di
 		mov	di, [bp+arg_0]
-		nop
-		call	sub_EED2
+		nopcall	sub_EED2
 		jb	short loc_F32E
 		cmp	word ptr [bx+8], 4001h
 		jl	short loc_F336
@@ -16469,8 +16253,7 @@ loc_F30B:
 		mov	si, bx
 		mov	bx, 0FFFFh
 		mov	di, [bp+arg_0]
-		nop
-		call	sub_EED2
+		nopcall	sub_EED2
 		jb	short loc_F32E
 		jmp	short loc_F320
 ; ---------------------------------------------------------------------------
@@ -16488,8 +16271,7 @@ loc_F323:
 		mov	cl, [bp+var_7]
 		nop
 		mov	di, [bp+arg_0]
-		nop
-		call	sub_FCFD
+		nopcall	sub_FCFD
 
 loc_F32E:
 		jmp	loc_F692

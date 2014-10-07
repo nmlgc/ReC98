@@ -7686,9 +7686,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_CEF6:
-		nop
-		push	cs
-		call	near ptr sub_C7E2
+		nopcall	sub_C7E2
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -7717,9 +7715,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_6]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_D130
+		nopcall	sub_D130
 		mov	ax, di
 		shl	ax, 4
 		add	ax, 1D0Eh
@@ -7781,9 +7777,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_6]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_D130
+		nopcall	sub_D130
 		mov	ax, di
 		shl	ax, 4
 		add	ax, 1D0Eh
@@ -7843,9 +7837,7 @@ arg_4		= word ptr  0Ah
 		push	large [bp+arg_0]
 		call	file_ropen
 		push	[bp+arg_4]
-		nop
-		push	cs
-		call	near ptr sub_D130
+		nopcall	sub_D130
 		mov	ax, [bp+arg_4]
 		shl	ax, 4
 		add	ax, 1D0Eh
@@ -7863,9 +7855,7 @@ loc_D062:
 		mov	ax, [bp+arg_4]
 		add	ax, [bp+var_2]
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_D130
+		nopcall	sub_D130
 		inc	[bp+var_2]
 
 loc_D071:
@@ -7952,8 +7942,7 @@ arg_4		= word ptr  0Ah
 		mov	byte_EC84, 1
 		push	[bp+arg_4]
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_D02E
+		call	sub_D02E
 		mov	byte_EC84, 0
 		pop	bp
 		retf	6
@@ -8351,9 +8340,7 @@ arg_2		= word ptr  8
 		cmp	byte_EC70, 0
 		jnz	short loc_D412
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_CB52
+		nopcall	sub_CB52
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -8395,9 +8382,7 @@ arg_2		= word ptr  8
 		cmp	byte_EC70, 0
 		jnz	short loc_D443
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_D47A
+		nopcall	sub_D47A
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -8418,9 +8403,7 @@ loc_D450:
 		int	61h		; reserved for user interrupt
 
 loc_D455:
-		nop
-		push	cs
-		call	near ptr sub_D5A2
+		nopcall	sub_D5A2
 		test	byte ptr word_100FC, 20h
 		jnz	short loc_D468
 		test	byte ptr word_100FC+1, 20h
@@ -8454,9 +8437,7 @@ arg_0		= word ptr  6
 		mov	vsync_Count1, 0
 
 loc_D483:
-		nop
-		push	cs
-		call	near ptr sub_D5A2
+		nopcall	sub_D5A2
 		test	byte ptr word_100FC, 20h
 		jnz	short loc_D496
 		test	byte ptr word_100FC+1, 20h
@@ -8616,9 +8597,7 @@ sub_D4F1	endp
 sub_D5A2	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		cmp	word_E960, 0
 		jz	short loc_D5BD
 		call	sub_2AEA
@@ -8635,17 +8614,13 @@ sub_D5A2	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		cmp	word_E960, 0
 		jz	short loc_D5F0
 		call	sub_2AEA
@@ -8660,9 +8635,7 @@ loc_D5F0:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		cmp	word_E960, 0
 		jz	short loc_D612
 		call	sub_2AEA
@@ -8677,9 +8650,7 @@ loc_D612:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		mov	ax, word_100FC
 		or	word_100F8, ax
 		cmp	word_E960, 0
@@ -8695,9 +8666,7 @@ loc_D636:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		mov	ax, word_100FC
 		or	ax, word_100F8
 		mov	word_100FA, ax
@@ -8714,9 +8683,7 @@ loc_D663:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		test	byte ptr word_100FC+1, 10h
 		jnz	short loc_D681
 		test	byte ptr word_100FC+1, 20h
@@ -8733,9 +8700,7 @@ loc_D687:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_CB68
+		nopcall	sub_CB68
 		cmp	word_E960, 0
 		jz	short loc_D6B0
 		call	sub_2AEA
@@ -8766,14 +8731,11 @@ arg_0		= word ptr  6
 		xor	di, di
 
 loc_D6CF:
-		push	cs
-		call	near ptr sub_D5A2
+		call	sub_D5A2
 		cmp	word_100FC, 0
 		jz	short loc_D6E3
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_CB52
+		nopcall	sub_CB52
 		jmp	short loc_D6CF
 ; ---------------------------------------------------------------------------
 
@@ -8785,15 +8747,12 @@ loc_D6E3:
 ; ---------------------------------------------------------------------------
 
 loc_D6EC:
-		push	cs
-		call	near ptr sub_D5A2
+		call	sub_D5A2
 		cmp	word_100FC, 0
 		jnz	short loc_D70B
 		inc	di
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_CB52
+		nopcall	sub_CB52
 		cmp	si, 270Fh
 		jnz	short loc_D707
 		xor	di, di

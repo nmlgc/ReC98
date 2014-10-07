@@ -6900,12 +6900,8 @@ loc_DB6C:
 		push	cs
 		call	sub_E1DC
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_DA3B
-		nop
-		push	cs
-		call	near ptr sub_E1E4
+		nopcall	sub_DA3B
+		nopcall	sub_E1E4
 		cmp	word_11A50, 0
 		jnz	short loc_DB6C
 		or	si, si
@@ -6919,12 +6915,8 @@ loc_DB8D:
 		push	cs
 		call	sub_E1DC
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_DA3B
-		nop
-		push	cs
-		call	near ptr sub_E1E4
+		nopcall	sub_DA3B
+		nopcall	sub_E1E4
 		cmp	word_11A50, 0
 		jnz	short loc_DBB2
 		inc	di
@@ -7119,14 +7111,10 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_DC16
+		nopcall	sub_DC16
 		cmp	si, 3
 		jnz	short loc_DCFE
-		nop
-		push	cs
-		call	near ptr sub_DC44
+		nopcall	sub_DC44
 
 loc_DCFE:
 		mov	ah, 9
@@ -7221,9 +7209,7 @@ arg_2		= word ptr  8
 		cmp	byte_FD21, 0
 		jnz	short loc_DD96
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_DA3B
+		nopcall	sub_DA3B
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -7258,9 +7244,7 @@ sub_DD80	endp
 sub_DDB1	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_E0AC
+		nopcall	sub_E0AC
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -7328,9 +7312,7 @@ loc_DE32:
 		cmp	byte_FD21, 0
 		jz	short loc_DEAF
 		push	100h
-		nop
-		push	cs
-		call	near ptr sub_DC74
+		nopcall	sub_DC74
 		mov	al, byte_FD21
 		mov	ah, 0
 		shl	ax, 2
@@ -7716,9 +7698,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_E109:
-		nop
-		push	cs
-		call	near ptr sub_DA12
+		nopcall	sub_DA12
 		call	graph_start
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -8324,9 +8304,7 @@ word_E563	dw 1234h
 		push	di
 		mov	di, [bp+0Ch]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_E69A
+		nopcall	sub_E69A
 		shl	di, 4
 		add	di, 2716h
 		push	large dword ptr	[bp+8]
@@ -8450,8 +8428,7 @@ arg_4		= word ptr  0Ah
 
 loc_E66C:
 		push	bp
-		push	cs
-		call	near ptr sub_E69A
+		call	sub_E69A
 		mov	cx, 3
 		rep movsd
 		sub	si, 0Ch
@@ -8510,8 +8487,7 @@ sub_E6D0	proc far
 
 loc_E6D4:
 		push	si
-		push	cs
-		call	near ptr sub_E69A
+		call	sub_E69A
 		dec	si
 		jge	short loc_E6D4
 		pop	si

@@ -9075,14 +9075,10 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_E81A
+		nopcall	sub_E81A
 		cmp	si, 3
 		jnz	short loc_E892
-		nop
-		push	cs
-		call	near ptr sub_E848
+		nopcall	sub_E848
 
 loc_E892:
 		mov	ah, 9
@@ -9777,8 +9773,7 @@ loc_EDBB:
 		cmp	byte_107DC, 0
 		jz	short loc_EE12
 		push	100h
-		push	cs
-		call	near ptr sub_EE18
+		call	sub_EE18
 		movzx	bx, byte_107DC
 		shl	bx, 2
 
@@ -10056,8 +10051,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_4]
 		push	di
-		push	cs
-		call	near ptr sub_F082
+		call	sub_F082
 		mov	si, di
 		shl	si, 2
 		add	si, 6FEh
@@ -10437,8 +10431,7 @@ sub_F202	proc far
 loc_F209:
 		out	5Fh, al
 		loop	loc_F209
-		push	cs
-		call	near ptr sub_F104
+		call	sub_F104
 		retf
 sub_F202	endp
 
@@ -10455,15 +10448,13 @@ arg_0		= word ptr  6
 		mov	bp, sp
 
 loc_F215:
-		push	cs
-		call	near ptr sub_F202
+		call	sub_F202
 		or	ax, ax
 		jnz	short loc_F215
 		mov	bp, [bp+arg_0]
 
 loc_F220:
-		push	cs
-		call	near ptr sub_F202
+		call	sub_F202
 		or	ax, ax
 		jnz	short loc_F238
 		mov	ax, vsync_Count1
@@ -10531,15 +10522,12 @@ arg_2		= word ptr  8
 		push	si
 
 loc_F263:
-		push	cs
-		call	near ptr sub_F23C
+		call	sub_F23C
 		mov	si, ax
 		or	si, si
 		jge	short loc_F277
 		push	[bp+arg_0]
-		nop
-		push	cs
-		call	near ptr sub_F282
+		nopcall	sub_F282
 		jmp	short loc_F27C
 ; ---------------------------------------------------------------------------
 
@@ -10580,9 +10568,7 @@ sub_F282	endp
 		push	di
 		mov	di, [bp+0Ch]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_F3B8
+		nopcall	sub_F3B8
 		shl	di, 4
 		add	di, 29FEh
 		push	large dword ptr	[bp+8]
@@ -10699,8 +10685,7 @@ arg_4		= word ptr  0Ah
 
 loc_F38A:
 		push	bp
-		push	cs
-		call	near ptr sub_F3B8
+		call	sub_F3B8
 		mov	cx, 3
 		rep movsd
 		sub	si, 0Ch
@@ -10759,8 +10744,7 @@ sub_F3EE	proc far
 
 loc_F3F2:
 		push	si
-		push	cs
-		call	near ptr sub_F3B8
+		call	sub_F3B8
 		dec	si
 		jge	short loc_F3F2
 		pop	si

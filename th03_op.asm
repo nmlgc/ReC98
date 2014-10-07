@@ -305,8 +305,7 @@ loc_2CCA:
 		push	offset unk_F20C
 		push	word ptr [bp+2]
 		push	dx
-		push	cs
-		call	near ptr sub_2EF2
+		call	sub_2EF2
 		or	ax, ax
 		jnz	short loc_2CDD
 		jmp	loc_2D8C
@@ -1852,9 +1851,7 @@ loc_A19A:
 		mov	byte_D953, 1
 		jmp	short loc_A1F3
 ; ---------------------------------------------------------------------------
-		nop
-		push	cs
-		call	near ptr sub_AC06
+		nopcall	sub_AC06
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 		call	sub_9E7F
@@ -5468,9 +5465,7 @@ seg002		segment	byte public 'CODE' use16
 sub_BEB8	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_BFC2
+		nopcall	sub_BFC2
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -6244,9 +6239,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_C435:
-		nop
-		push	cs
-		call	near ptr sub_BED1
+		nopcall	sub_BED1
 		call	graph_start
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -6291,9 +6284,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_6]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_C69C
+		nopcall	sub_C69C
 		mov	ax, di
 		shl	ax, 4
 		add	ax, 1AA8h
@@ -6355,9 +6346,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_6]
 		push	di
-		nop
-		push	cs
-		call	near ptr sub_C69C
+		nopcall	sub_C69C
 		mov	ax, di
 		shl	ax, 4
 		add	ax, 1AA8h
@@ -6417,9 +6406,7 @@ arg_4		= word ptr  0Ah
 		push	large [bp+arg_0]
 		call	file_ropen
 		push	[bp+arg_4]
-		nop
-		push	cs
-		call	near ptr sub_C69C
+		nopcall	sub_C69C
 		mov	ax, [bp+arg_4]
 		shl	ax, 4
 		add	ax, 1AA8h
@@ -6437,9 +6424,7 @@ loc_C5CE:
 		mov	ax, [bp+arg_4]
 		add	ax, [bp+var_2]
 		push	ax
-		nop
-		push	cs
-		call	near ptr sub_C69C
+		nopcall	sub_C69C
 		inc	[bp+var_2]
 
 loc_C5DD:
@@ -6526,8 +6511,7 @@ arg_4		= word ptr  0Ah
 		mov	byte_DDE0, 1
 		push	[bp+arg_4]
 		push	large [bp+arg_0]
-		push	cs
-		call	near ptr sub_C59A
+		call	sub_C59A
 		mov	byte_DDE0, 0
 		pop	bp
 		retf	6
@@ -6937,9 +6921,7 @@ sub_C940	endp
 sub_C986	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		cmp	word_DABC, 0
 		jz	short loc_C9A1
 		call	sub_2DF4
@@ -6956,17 +6938,13 @@ sub_C986	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		cmp	word_DABC, 0
 		jz	short loc_C9D4
 		call	sub_2DF4
@@ -6981,9 +6959,7 @@ loc_C9D4:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		cmp	word_DABC, 0
 		jz	short loc_C9F6
 		call	sub_2DF4
@@ -6998,9 +6974,7 @@ loc_C9F6:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		mov	ax, word_F296
 		or	word_F292, ax
 		cmp	word_DABC, 0
@@ -7016,9 +6990,7 @@ loc_CA1A:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		mov	ax, word_F296
 		or	ax, word_F292
 		mov	word_F294, ax
@@ -7035,9 +7007,7 @@ loc_CA47:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		test	byte ptr word_F296+1, 10h
 		jnz	short loc_CA65
 		test	byte ptr word_F296+1, 20h
@@ -7054,9 +7024,7 @@ loc_CA6B:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_C1B4
+		nopcall	sub_C1B4
 		cmp	word_DABC, 0
 		jz	short loc_CA94
 		call	sub_2DF4
@@ -7079,14 +7047,11 @@ loc_CA94:
 		xor	di, di
 
 loc_CAB3:
-		push	cs
-		call	near ptr sub_C986
+		call	sub_C986
 		cmp	word_F296, 0
 		jz	short loc_CAC7
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_C19E
+		nopcall	sub_C19E
 		jmp	short loc_CAB3
 ; ---------------------------------------------------------------------------
 
@@ -7098,15 +7063,12 @@ loc_CAC7:
 ; ---------------------------------------------------------------------------
 
 loc_CAD0:
-		push	cs
-		call	near ptr sub_C986
+		call	sub_C986
 		cmp	word_F296, 0
 		jnz	short loc_CAEF
 		inc	di
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_C19E
+		nopcall	sub_C19E
 		cmp	si, 270Fh
 		jnz	short loc_CAEB
 		xor	di, di

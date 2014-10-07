@@ -253,8 +253,7 @@ loc_2A18:
 		push	offset unk_FA6A
 		push	word ptr [bp+2]
 		push	dx
-		push	cs
-		call	near ptr sub_2B06
+		call	sub_2B06
 		or	ax, ax
 		jnz	short loc_2A2B
 		jmp	loc_2ADA
@@ -1075,8 +1074,7 @@ loc_9810:
 		shl	ax, 4
 		add	ax, [bp+arg_0]
 		push	ax
-		push	cs
-		call	near ptr sub_9701
+		call	sub_9701
 		add	sp, 8
 		inc	si
 
@@ -3370,8 +3368,7 @@ loc_A992:
 		add	sp, 0Ah
 		push	large 150060h
 		push	18h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	0C8h ; 'È'
 		call	sub_B520
@@ -3391,8 +3388,7 @@ loc_A992:
 		call	sub_95CB
 		push	large 100080h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
 		call	sub_B520
@@ -3416,8 +3412,7 @@ loc_A992:
 		call	graph_gaiji_putc
 		push	large 1000A0h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
 		call	sub_B520
@@ -3444,8 +3439,7 @@ loc_A992:
 		call	graph_gaiji_puts
 		push	large 1000C0h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
 		call	sub_B520
@@ -3470,8 +3464,7 @@ loc_A992:
 		call	graph_gaiji_putc
 		push	large 1000E0h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
 		call	sub_B520
@@ -3496,8 +3489,7 @@ loc_A992:
 		call	graph_gaiji_putc
 		push	large 100100h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	96h
 		call	sub_B520
@@ -3631,15 +3623,13 @@ loc_AF56:
 		add	sp, 0Ah
 		push	large 60120h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	78h ; 'x'
 		call	sub_B520
 		push	large 180120h
 		push	0C0h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		push	0C8h ; 'È'
 		call	sub_B520
@@ -3656,15 +3646,12 @@ loc_AF56:
 		add	sp, 0Ah
 		push	large 120160h
 		push	40h
-		push	cs
-		call	near ptr sub_97F1
+		call	sub_97F1
 		add	sp, 6
 		call	sub_B4B7
 		push	5
 		call	palette_black_out
-		nop
-		push	cs
-		call	near ptr sub_AFE7
+		nopcall	sub_AFE7
 		call	graph_clear
 		pop	di
 		pop	si
@@ -3870,8 +3857,7 @@ loc_B1BD:
 ; ---------------------------------------------------------------------------
 
 loc_B1C2:
-		push	cs
-		call	near ptr sub_B07F
+		call	sub_B07F
 
 loc_B1C6:
 		mov	PaletteTone, 32h ; '2'
@@ -4233,9 +4219,7 @@ sub_B45F	proc far
 		call	key_sense
 		or	si, ax
 		push	2
-		nop
-		push	cs
-		call	near ptr sub_B520
+		nopcall	sub_B520
 		mov	al, byte_D70A
 		cbw
 		push	ax
@@ -4267,14 +4251,12 @@ sub_B4B7	proc far
 		mov	bp, sp
 
 loc_B4BA:
-		push	cs
-		call	near ptr sub_B45F
+		call	sub_B45F
 		or	ax, ax
 		jnz	short loc_B4BA
 
 loc_B4C2:
-		push	cs
-		call	near ptr sub_B45F
+		call	sub_B45F
 		or	ax, ax
 		jz	short loc_B4C2
 		pop	bp
@@ -4698,9 +4680,7 @@ sub_B756	proc far
 ; ---------------------------------------------------------------------------
 
 loc_B76A:
-		nop
-		push	cs
-		call	near ptr sub_B4CC
+		nopcall	sub_B4CC
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -4851,18 +4831,14 @@ arg_0		= word ptr  6
 		cmp	byte_D714, 0
 		jnz	short loc_B868
 		push	64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_B520
+		nopcall	sub_B520
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_B868:
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_B520
+		nopcall	sub_B520
 		mov	ah, 5
 		cmp	byte_FAF1, 1
 		jz	short loc_B87C
@@ -5225,8 +5201,7 @@ loc_BADF:
 		shl	bx, 2
 		push	large dword ptr	[bx+2B98h]
 		push	di
-		push	cs
-		call	near ptr sub_B9B3
+		call	sub_B9B3
 		cmp	byte ptr [si+2C0Bh], 7Fh
 		jz	short loc_BB21
 		push	2Ch ; ','
@@ -5470,8 +5445,7 @@ var_2		= word ptr -2
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BCBA
-		push	cs
-		call	near ptr sub_B8ED
+		call	sub_B8ED
 		jmp	short loc_BCBD
 ; ---------------------------------------------------------------------------
 
@@ -5804,8 +5778,7 @@ loc_BF7F:
 ; ---------------------------------------------------------------------------
 
 loc_BFAF:
-		push	cs
-		call	near ptr sub_BBFD
+		call	sub_BBFD
 
 loc_BFB3:
 		pop	di
@@ -5821,8 +5794,7 @@ sub_BC9E	endp
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BFCE
-		push	cs
-		call	near ptr sub_B8ED
+		call	sub_B8ED
 		jmp	short loc_BFD1
 ; ---------------------------------------------------------------------------
 
@@ -6056,8 +6028,7 @@ sub_C10B	endp
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp-6],	ax
-		push	cs
-		call	near ptr sub_C10B
+		call	sub_C10B
 		mov	word ptr [bp-2], 0
 		jmp	short loc_C1B5
 ; ---------------------------------------------------------------------------

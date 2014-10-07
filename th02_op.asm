@@ -681,8 +681,7 @@ var_2		= word ptr -2
 		mov	ax, word ptr gZUN
 		mov	[bp+var_4], dx
 		mov	[bp+var_6], ax
-		push	cs
-		call	near ptr sub_9D0A
+		call	sub_9D0A
 		push	0B00h
 		push	ds
 		push	offset aHuuma_efc ; "huuma.efc"
@@ -906,8 +905,7 @@ sub_9FAF	proc far
 		mov	al, byte_DC34
 		mov	es:[bx+16h], al
 		mov	byte ptr es:[bx+0Bh], 0
-		push	cs
-		call	near ptr sub_9CA2
+		call	sub_9CA2
 		push	ds
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
@@ -968,8 +966,7 @@ sub_A027	proc far
 		mov	al, byte_E8FE
 		mov	es:[bx+27h], al
 		mov	byte ptr es:[bx+26h], 0
-		push	cs
-		call	near ptr sub_9CA2
+		call	sub_9CA2
 		call	text_clear
 		push	ds
 		push	offset unk_F194
@@ -1017,8 +1014,7 @@ sub_A0C6	proc far
 		mov	byte ptr es:[bx+14h], 1
 		mov	byte ptr es:[bx+1Ah], 2
 		mov	byte ptr es:[bx+19h], 1
-		push	cs
-		call	near ptr sub_9CA2
+		call	sub_9CA2
 		push	ds
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
@@ -1390,14 +1386,12 @@ loc_A3A7:
 		jmp	cs:off_A475[bx]
 
 loc_A3AE:
-		push	cs
-		call	near ptr sub_9FAF
+		call	sub_9FAF
 		jmp	loc_A448
 ; ---------------------------------------------------------------------------
 
 loc_A3B5:
-		push	cs
-		call	near ptr sub_A0C6
+		call	sub_A0C6
 		jmp	loc_A448
 ; ---------------------------------------------------------------------------
 
@@ -1471,8 +1465,7 @@ loc_A454:
 loc_A466:
 		cmp	word_E8FC, 280h
 		jbe	short loc_A472
-		push	cs
-		call	near ptr sub_A027
+		call	sub_A027
 
 loc_A472:
 		pop	si
@@ -2149,8 +2142,7 @@ _envp		= dword	ptr  0Ch
 loc_A9DD:
 		call	sub_B86E
 		mov	byte_F4A2, al
-		push	cs
-		call	near ptr sub_9BF0
+		call	sub_9BF0
 		cmp	ax, 1
 		jnz	short loc_A9F3
 
@@ -2216,8 +2208,7 @@ loc_AA4A:
 		mov	byte_F3CB, al
 
 loc_AA8F:
-		push	cs
-		call	near ptr sub_9D5C
+		call	sub_9D5C
 		push	ds
 		push	offset aTs3_pi	; "ts3.pi"
 		push	2
@@ -2236,16 +2227,14 @@ loc_AABA:
 		call	sub_AED0
 		cmp	byte_D6C1, 0
 		jnz	short loc_AACC
-		push	cs
-		call	near ptr sub_A2FB
+		call	sub_A2FB
 		jmp	short loc_AAD7
 ; ---------------------------------------------------------------------------
 
 loc_AACC:
 		cmp	byte_D6C1, 1
 		jnz	short loc_AAD7
-		push	cs
-		call	near ptr sub_A74A
+		call	sub_A74A
 
 loc_AAD7:
 		les	bx, dword_F3DC
@@ -2262,8 +2251,7 @@ loc_AAF0:
 		mov	al, es:[bx+23h]
 		mov	[bp+var_1], al
 		mov	word_E900, 0
-		push	cs
-		call	near ptr sub_9CA2
+		call	sub_9CA2
 		call	text_clear
 		call	graph_clear
 		call	sub_AB28
@@ -2292,9 +2280,7 @@ seg002		segment	byte public 'CODE' use16
 sub_AB28	proc far
 		push	bp
 		mov	bp, sp
-		nop
-		push	cs
-		call	near ptr sub_B019
+		nopcall	sub_B019
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -2954,9 +2940,7 @@ sub_AFB0	proc far
 ; ---------------------------------------------------------------------------
 
 loc_AFC4:
-		nop
-		push	cs
-		call	near ptr sub_ADAC
+		nopcall	sub_ADAC
 		call	graph_start
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -3307,18 +3291,14 @@ sub_B203	endp
 		cmp	byte_DBEE, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
-		nop
-		push	cs
-		call	near ptr sub_AEBB
+		nopcall	sub_AEBB
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_B232:
 		push	1
-		nop
-		push	cs
-		call	near ptr sub_AEBB
+		nopcall	sub_AEBB
 		mov	ah, 5
 		cmp	byte_F3CB, 1
 		jz	short loc_B246
@@ -3815,8 +3795,7 @@ arg_4		= word ptr  8
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	cs
-		call	near ptr sub_B4BF
+		call	sub_B4BF
 		push	38h ; '8'
 		push	si
 		push	ss
@@ -3833,8 +3812,7 @@ arg_4		= word ptr  8
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	cs
-		call	near ptr sub_B4BF
+		call	sub_B4BF
 		push	3Ch ; '<'
 		push	si
 		push	2Fh ; '/'
@@ -3856,8 +3834,7 @@ arg_4		= word ptr  8
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	cs
-		call	near ptr sub_B4BF
+		call	sub_B4BF
 		add	sp, 18h
 		push	3Fh ; '?'
 		push	si
@@ -4845,27 +4822,21 @@ loc_BCBA:
 		mov	byte ptr es:[bx+26h], 1
 		push	88h
 		push	18h
-		push	cs
-		call	near ptr sub_B9BB
+		call	sub_B9BB
 		push	88h
 		push	1B8h
-		push	cs
-		call	near ptr sub_B9BB
+		call	sub_B9BB
 		push	7
 		push	0
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		push	0Ch
 		push	1
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		push	7
 		push	2
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		add	sp, 26h
-		push	cs
-		call	near ptr sub_BAFC
+		call	sub_BAFC
 		push	2
 		call	palette_black_in
 		pop	bp
@@ -4901,8 +4872,7 @@ var_6		= byte ptr -6
 		mov	cx, 6
 		call	SCOPY@
 		xor	di, di
-		push	cs
-		call	near ptr sub_BBC0
+		call	sub_BBC0
 
 loc_BD54:
 		call	sub_AED0
@@ -4922,8 +4892,7 @@ loc_BD6A:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -4931,8 +4900,7 @@ loc_BD6A:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_B90D
+		call	sub_B90D
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -4979,8 +4947,7 @@ loc_BD6A:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		push	cs
-		call	near ptr sub_B9BB
+		call	sub_B9BB
 		add	sp, 4
 		dec	byte_DD20
 		cmp	byte_DD20, 0
@@ -4994,8 +4961,7 @@ loc_BE0F:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_B90D
+		call	sub_B90D
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -5003,8 +4969,7 @@ loc_BE0F:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -5039,8 +5004,7 @@ loc_BE77:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_B90D
+		call	sub_B90D
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -5073,8 +5037,7 @@ loc_BE77:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -5096,8 +5059,7 @@ loc_BE77:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		push	cs
-		call	near ptr sub_B9BB
+		call	sub_B9BB
 		add	sp, 4
 		inc	byte_DD20
 		cmp	byte_DD20, 2
@@ -5111,8 +5073,7 @@ loc_BF1C:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_B90D
+		call	sub_B90D
 		add	sp, 4
 		push	1
 		call	sub_B2D2
@@ -5120,8 +5081,7 @@ loc_BF1C:
 		mov	al, byte_DD20
 		cbw
 		push	ax
-		push	cs
-		call	near ptr sub_BA20
+		call	sub_BA20
 		add	sp, 4
 		push	1
 		call	sub_B2D2
