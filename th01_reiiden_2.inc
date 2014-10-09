@@ -22638,7 +22638,7 @@ loc_274C6:
 
 loc_274E5:
 		push	64h ; 'd'
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		mov	byte_34A4F, 1
 
@@ -25775,7 +25775,7 @@ loc_28DBF:
 		jnb	short loc_28E98
 		mov	byte_34A4F, 1
 		push	64h ; 'd'
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		jmp	short loc_28EA0
 ; ---------------------------------------------------------------------------

@@ -5107,43 +5107,7 @@ include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9BF8	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		cmp	___conio_type, 2
-		jnz	short loc_9C0F
-		push	ax
-		nopcall	___nec_delay
-		jmp	short loc_9C1C
-; ---------------------------------------------------------------------------
-
-loc_9C0F:
-		cmp	___conio_type, 1
-		jnz	short loc_9C1D
-		push	ax
-		nopcall	___ibm_delay
-
-loc_9C1C:
-		pop	cx
-
-loc_9C1D:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_9BF8	endp
-
+include libs/BorlandC/ccomdely.asm
 include libs/BorlandC/cibmdely.asm
 include libs/BorlandC/cnecdely.asm
 
@@ -8909,7 +8873,7 @@ loc_BD1E:
 		cmp	si, 10h
 		jl	short loc_BCB5
 		push	0Ah
-		call	sub_9BF8
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -9010,7 +8974,7 @@ loc_BDC1:
 		cmp	si, 10h
 		jl	short loc_BD63
 		push	0Ah
-		call	sub_9BF8
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -9124,7 +9088,7 @@ loc_BE8F:
 		cmp	si, 10h
 		jl	short loc_BE26
 		push	0Ah
-		call	sub_9BF8
+		call	_delay
 		pop	cx
 		inc	word ptr [bp-2]
 
@@ -9212,7 +9176,7 @@ loc_BF32:
 		cmp	si, 10h
 		jl	short loc_BED4
 		push	0Ah
-		call	sub_9BF8
+		call	_delay
 		pop	cx
 		inc	word ptr [bp-2]
 
@@ -11331,7 +11295,7 @@ loc_D0C8:
 		cmp	word ptr [bp-2], 10h
 		jl	loc_D016
 		push	word ptr [bp+10h]
-		call	sub_9BF8
+		call	_delay
 		pop	cx
 		inc	di
 

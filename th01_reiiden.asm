@@ -8701,43 +8701,7 @@ include libs/BorlandC/setenvp.asm
 include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AF20	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		cmp	___conio_type, 2
-		jnz	short loc_AF37
-		push	ax
-		nopcall	___nec_delay
-		jmp	short loc_AF44
-; ---------------------------------------------------------------------------
-
-loc_AF37:
-		cmp	___conio_type, 1
-		jnz	short loc_AF45
-		push	ax
-		nopcall	___ibm_delay
-
-loc_AF44:
-		pop	cx
-
-loc_AF45:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_AF20	endp
-
+include libs/BorlandC/ccomdely.asm
 include libs/BorlandC/cibmdely.asm
 include libs/BorlandC/cnecdely.asm
 
@@ -16052,7 +16016,7 @@ loc_EE19:
 		cmp	si, 10h
 		jl	short loc_EDB0
 		push	0Ah
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -16153,7 +16117,7 @@ loc_EEBC:
 		cmp	si, 10h
 		jl	short loc_EE5E
 		push	0Ah
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -16285,7 +16249,7 @@ loc_EF8A:
 		cmp	si, 10h
 		jl	short loc_EF21
 		push	0Ah
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -16386,7 +16350,7 @@ loc_F02D:
 		cmp	si, 10h
 		jl	short loc_EFCF
 		push	0Ah
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	[bp+var_2]
 
@@ -18652,7 +18616,7 @@ loc_101C3:
 		cmp	[bp+var_2], 10h
 		jl	loc_10111
 		push	[bp+arg_A]
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	di
 
@@ -22232,7 +22196,7 @@ loc_11BEC:
 loc_11BEF:
 		mov	[bp+var_8], ax
 		push	[bp+arg_0]
-		call	sub_AF20
+		call	_delay
 		pop	cx
 		inc	[bp+var_E]
 
@@ -24326,7 +24290,7 @@ loc_12C0F:
 		cmp	[bp+var_2], 2
 		jge	short loc_12C2C
 		push	4
-		call	sub_AF20
+		call	_delay
 		push	2
 		call	sub_125C9
 		add	sp, 4
