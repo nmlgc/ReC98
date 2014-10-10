@@ -5110,37 +5110,7 @@ include libs/BorlandC/strings.asm
 include libs/BorlandC/ccomdely.asm
 include libs/BorlandC/cibmdely.asm
 include libs/BorlandC/cnecdely.asm
-
-; ---------------------------------------------------------------------------
-
-loc_9DF3:
-		push	si
-		push	di
-		cmp	___conio_type, 0
-		jnz	short loc_9E1A
-		mov	ah, 4
-		xor	cx, cx
-		int	1Ah		; CLOCK	- READ DATE FROM REAL TIME CLOCK (AT,XT286,CONV,PS)
-					; Return: DL = day in BCD
-					; DH = month in	BCD
-					; CL = year in BCD
-					; CH = century (19h or 20h)
-		cmp	ch, 19h
-		jz	short loc_9E14
-		cmp	ch, 20h	; ' '
-		jz	short loc_9E14
-		mov	___conio_type, 2
-		jmp	short loc_9E1A
-; ---------------------------------------------------------------------------
-
-loc_9E14:
-		mov	___conio_type, 1
-
-loc_9E1A:
-		pop	di
-		pop	si
-		retn
-
+include libs/BorlandC/conioini.asm
 include libs/BorlandC/mbjmsjis.asm
 include libs/BorlandC/loadprog.asm
 seg000		ends
@@ -21794,9 +21764,7 @@ include libs/BorlandC/pathops[initdata].asm
 include libs/BorlandC/setargv[initdata].asm
 include libs/BorlandC/setenvp[initdata].asm
 include libs/BorlandC/cibmdely[initdata].asm
-		db    0
-		db  0Fh
-		dd loc_9DF3
+include libs/BorlandC/conioini[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte

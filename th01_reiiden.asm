@@ -8704,39 +8704,7 @@ include libs/BorlandC/strings.asm
 include libs/BorlandC/ccomdely.asm
 include libs/BorlandC/cibmdely.asm
 include libs/BorlandC/cnecdely.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B11B	proc near
-		push	si
-		push	di
-		cmp	___conio_type, 0
-		jnz	short loc_B142
-		mov	ah, 4
-		xor	cx, cx
-		int	1Ah		; CLOCK	- READ DATE FROM REAL TIME CLOCK (AT,XT286,CONV,PS)
-					; Return: DL = day in BCD
-					; DH = month in	BCD
-					; CL = year in BCD
-					; CH = century (19h or 20h)
-		cmp	ch, 19h
-		jz	short loc_B13C
-		cmp	ch, 20h	; ' '
-		jz	short loc_B13C
-		mov	___conio_type, 2
-		jmp	short loc_B142
-; ---------------------------------------------------------------------------
-
-loc_B13C:
-		mov	___conio_type, 1
-
-loc_B142:
-		pop	di
-		pop	si
-		retn
-sub_B11B	endp
-
+include libs/BorlandC/conioini.asm
 include libs/BorlandC/kbhit.asm
 include libs/BorlandC/mbjmsjis.asm
 include libs/BorlandC/loadprog.asm
@@ -42612,9 +42580,7 @@ include libs/BorlandC/cputype[initdata].asm
 include libs/BorlandC/pathops[initdata].asm
 include libs/BorlandC/setenvp[initdata].asm
 include libs/BorlandC/cibmdely[initdata].asm
-		db    0
-		db  0Fh
-		dd sub_B11B
+include libs/BorlandC/conioini[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte
