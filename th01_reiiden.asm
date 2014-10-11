@@ -7357,7 +7357,7 @@ loc_555C:
 ; ---------------------------------------------------------------------------
 
 loc_5567:
-		mov	ax, word_365B0
+		mov	ax, __fmode
 		and	ax, 0C000h
 		or	dx, ax
 		mov	ax, dx
@@ -8028,7 +8028,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		test	byte ptr [bp+access+1],	0C0h
 		jnz	short loc_608F
-		mov	ax, word_365B0
+		mov	ax, __fmode
 		and	ax, 0C000h
 		or	[bp+0Ah], ax
 
@@ -8050,7 +8050,7 @@ loc_608F:
 ; ---------------------------------------------------------------------------
 
 loc_60B8:
-		mov	ax, word_365B2
+		mov	ax, __notUmask
 		and	[bp+arg_6], ax
 		mov	ax, [bp+arg_6]
 		test	ax, 180h
@@ -42280,8 +42280,7 @@ aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
-word_365B0	dw 4000h
-word_365B2	dw 0FFFFh
+include libs/BorlandC/fmode[data].asm
 		db 0CCh	; Ì
 		db    0
 include libs/BorlandC/__IOERROR[data].asm
