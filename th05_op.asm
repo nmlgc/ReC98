@@ -750,7 +750,7 @@ loc_3B10:
 		retn	8
 sub_3AE0	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -10116,8 +10116,7 @@ aScnum_bft	db 'scnum.bft',0
 aHi_m_bft	db 'hi_m.bft',0
 		db 0
 aSlb1_pi	db 'slb1.pi',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

@@ -392,7 +392,7 @@ loc_3320:
 		pop	bp
 		retn	8
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -6703,8 +6703,7 @@ aMusic_txt	db 'MUSIC.TXT',0
 aOp3_pi		db 'op3.pi',0
 aOp2_pi_0	db 'op2.pi',0
 aOp_rgb_0	db 'op.rgb',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

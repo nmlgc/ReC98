@@ -537,7 +537,7 @@ loc_2EA8:
 		pop	bp
 		retn	8
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -39520,8 +39520,7 @@ aOcvsrlrfb@b@b@	db '残り人数　　　　　　　　×',0
 		db    0
 byte_1E14C	db 0
 		db 0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

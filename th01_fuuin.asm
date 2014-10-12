@@ -3213,7 +3213,7 @@ var_2		= word ptr -2
 		retf
 sub_1B5B	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -24591,8 +24591,7 @@ tbyte_12C3A	db 017h, 00ch, 075h, 081h, 086h, 075h, 076h, 0c9h, 048h, 04dh
 tbyte_12C44	db 0e5h, 05dh, 03dh, 0c5h, 05dh, 03bh, 08bh, 09eh, 092h, 05ah
 tbyte_12C4E	db 09bh, 097h, 020h, 08ah, 002h, 052h, 060h, 0c4h, 025h, 075h
 flt_13718	dd 3.4028237e38
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

@@ -479,7 +479,7 @@ include libs/master.lib/bgm_init_finish.asm
 include libs/master.lib/bgm_stop_sound.asm
 include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -8959,8 +8959,7 @@ aGigsgbghgvgzgb	db '   ラピッドショット   ',0
 aStar		db '☆',0
 aGtgugegfgGuvSi	db 'サブウェポンの選択',0
 aSlb1_pi	db 'slb1.pi',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db    0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

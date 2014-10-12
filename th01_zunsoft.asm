@@ -753,7 +753,7 @@ include libs/master.lib/egc.asm
 include libs/master.lib/grcg_circlefill.asm
 include libs/master.lib/grcg_byteboxfill_x.asm
 include libs/master.lib/random.asm
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/atexit.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
@@ -795,8 +795,7 @@ include libs/master.lib/edges[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/sin7[data].asm
 include libs/master.lib/rand[data].asm
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

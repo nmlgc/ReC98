@@ -756,7 +756,7 @@ loc_3CD8:
 		retn	8
 sub_3CA8	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -11485,8 +11485,7 @@ aStf09_cdg	db 'stf09.cdg',0
 aStf10_cdg	db 'stf10.cdg',0
 aStf01_bft	db 'stf01.bft',0
 aStf00_bft	db 'stf00.bft',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

@@ -789,7 +789,7 @@ include libs/master.lib/ems_movememoryregion.asm
 include libs/master.lib/ems_setname.asm
 include libs/master.lib/ems_write.asm
 include libs/master.lib/ems_space.asm
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -23293,8 +23293,7 @@ aSt06b_bb	db 'st06b.bb',0
 byte_237F6	db 0
 byte_237F7	db 0
 word_237F8	dw 0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

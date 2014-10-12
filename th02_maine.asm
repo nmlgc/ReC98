@@ -638,7 +638,7 @@ loc_2CDC:
 		retn	8
 sub_2CAC	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -6418,8 +6418,7 @@ unk_D78C	db    0
 		db    0
 		db    1
 asc_D796	db ')))))',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

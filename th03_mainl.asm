@@ -634,7 +634,7 @@ loc_2CB6:
 		retf	0Ah
 sub_2C6E	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -9429,8 +9429,7 @@ aStf9_cdg	db 'stf9.cdg',0
 aStf10_cdg	db 'stf10.cdg',0
 aStf2_cdg	db 'stf2.cdg',0
 aStf12_cdg	db 'stf12.cdg',0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm

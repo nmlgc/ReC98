@@ -796,7 +796,7 @@ loc_45E0:
 		retn	8
 sub_45B0	endp
 
-include libs/BorlandC/__abort.asm
+include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
 include libs/BorlandC/atexit.asm
@@ -23706,8 +23706,7 @@ aSt05_bb	db 'st05.bb',0
 aSt06_bmt	db 'st06.bmt',0
 aSt03_bb_0	db 'st03.bb',0
 		db 0
-aAbnormalProgra	db 'Abnormal program termination',0Dh,0Ah,0
-		db 0
+include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
