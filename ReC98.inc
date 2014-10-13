@@ -5,6 +5,8 @@ locals
 
 include libs/BorlandC/RULES.ASI
 include libs/BorlandC/fcntl.inc
+include libs/BorlandC/stdio.inc
+include libs/BorlandC/sys/stat.inc
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc

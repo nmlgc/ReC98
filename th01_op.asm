@@ -3895,345 +3895,7 @@ include libs/BorlandC/fclose.asm
 include libs/BorlandC/fflush.asm
 include libs/BorlandC/flength.asm
 include libs/BorlandC/flushall.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_3F4C	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= dword	ptr  8
-arg_8		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+var_2], 0
-		les	bx, [bp+arg_8]
-		inc	word ptr [bp+arg_8]
-		mov	cl, es:[bx]
-		mov	al, cl
-		cmp	al, 72h	; 'r'
-		jnz	short loc_3F72
-		mov	dx, 1
-		mov	[bp+var_4], 1
-		jmp	short loc_3F95
-; ---------------------------------------------------------------------------
-
-loc_3F72:
-		cmp	cl, 77h	; 'w'
-		jnz	short loc_3F7C
-		mov	dx, 302h
-		jmp	short loc_3F84
-; ---------------------------------------------------------------------------
-
-loc_3F7C:
-		cmp	cl, 61h	; 'a'
-		jnz	short loc_3F90
-		mov	dx, 902h
-
-loc_3F84:
-		mov	[bp+var_2], 80h
-		mov	[bp+var_4], 2
-		jmp	short loc_3F95
-; ---------------------------------------------------------------------------
-
-loc_3F90:
-		xor	ax, ax
-		jmp	loc_4018
-; ---------------------------------------------------------------------------
-
-loc_3F95:
-		les	bx, [bp+arg_8]
-		mov	cl, es:[bx]
-		inc	word ptr [bp+arg_8]
-		cmp	cl, 2Bh	; '+'
-		jz	short loc_3FB6
-		les	bx, [bp+arg_8]
-		cmp	byte ptr es:[bx], 2Bh ;	'+'
-		jnz	short loc_3FD1
-		cmp	cl, 74h	; 't'
-		jz	short loc_3FB6
-		cmp	cl, 62h	; 'b'
-		jnz	short loc_3FD1
-
-loc_3FB6:
-		cmp	cl, 2Bh	; '+'
-		jnz	short loc_3FC1
-		les	bx, [bp+arg_8]
-		mov	cl, es:[bx]
-
-loc_3FC1:
-		and	dx, 0FFFCh
-		or	dx, 4
-		mov	[bp+var_2], 180h
-		mov	[bp+var_4], 3
-
-loc_3FD1:
-		cmp	cl, 74h	; 't'
-		jnz	short loc_3FDC
-		or	dx, 4000h
-		jmp	short loc_3FFA
-; ---------------------------------------------------------------------------
-
-loc_3FDC:
-		cmp	cl, 62h	; 'b'
-		jnz	short loc_3FE7
-		or	dx, 8000h
-		jmp	short loc_3FF6
-; ---------------------------------------------------------------------------
-
-loc_3FE7:
-		mov	ax, __fmode
-		and	ax, 0C000h
-		or	dx, ax
-		mov	ax, dx
-		test	ah, 80h
-		jz	short loc_3FFA
-
-loc_3FF6:
-		or	[bp+var_4], 40h
-
-loc_3FFA:
-		mov	word ptr _exitfopen+2, seg __xfclose
-		mov	word ptr _exitfopen, offset __xfclose
-		les	bx, [bp+arg_4]
-		mov	es:[bx], dx
-		les	bx, [bp+arg_0]
-		mov	ax, [bp+var_2]
-		mov	es:[bx], ax
-		mov	ax, [bp+var_4]
-
-loc_4018:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn	0Ch
-sub_3F4C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __stdcall	_OPENFP(int, int, int, char *path, FILE	*buf)
-__OPENFP	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-_path		= dword	ptr  0Ah
-buf		= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		call	sub_3F4C
-		les	bx, [bp+buf]
-		mov	es:[bx+2], ax
-		or	ax, ax
-		jz	short loc_4070
-		cmp	byte ptr es:[bx+4], 0
-		jge	short loc_4080
-		push	[bp+var_4]
-		mov	ax, [bp+var_2]
-		or	ax, [bp+arg_0]
-		push	ax		; access
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		nopcall	_open
-		add	sp, 8
-		les	bx, [bp+buf]
-		mov	es:[bx+4], al
-		or	al, al
-		jge	short loc_4080
-
-loc_4070:
-		les	bx, [bp+buf]
-		mov	byte ptr es:[bx+4], 0FFh
-		mov	word ptr es:[bx+2], 0
-		jmp	short loc_40D5
-; ---------------------------------------------------------------------------
-
-loc_4080:
-		les	bx, [bp+buf]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax		; handle
-		nopcall	_isatty
-		pop	cx
-		or	ax, ax
-		jz	short loc_409C
-		les	bx, [bp+buf]
-		or	word ptr es:[bx+2], 200h
-
-loc_409C:
-		mov	ax, 200h
-		push	ax
-		les	bx, [bp+buf]
-		test	byte ptr es:[bx+3], 2
-		jz	short loc_40AF
-		mov	ax, 1
-		jmp	short loc_40B1
-; ---------------------------------------------------------------------------
-
-loc_40AF:
-		xor	ax, ax
-
-loc_40B1:
-		push	ax		; size
-		xor	ax, ax
-		push	ax		; type
-		push	ax
-		push	word ptr [bp+buf+2] ; buf
-		push	word ptr [bp+buf]
-		nopcall	_setvbuf
-		add	sp, 0Ch
-		or	ax, ax
-		jz	short loc_40DB
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; stream
-		nopcall	_fclose
-		pop	cx
-		pop	cx
-
-loc_40D5:
-		xor	dx, dx
-		xor	ax, ax
-		jmp	short loc_40EA
-; ---------------------------------------------------------------------------
-
-loc_40DB:
-		les	bx, [bp+buf]
-		mov	word ptr es:[bx+10h], 0
-		mov	dx, word ptr [bp+buf+2]
-		mov	ax, word ptr [bp+buf]
-
-loc_40EA:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn	0Eh
-__OPENFP	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-__GETFP		proc near
-
-var_4		= dword	ptr -4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 9FAh
-
-loc_4102:
-		les	bx, [bp+var_4]
-		cmp	byte ptr es:[bx+4], 0
-		jl	short loc_4123
-		mov	ax, word ptr [bp+var_4]
-		add	word ptr [bp+var_4], 14h
-		push	ax
-		mov	ax, 14h
-		imul	__nfile
-		add	ax, 9FAh
-		pop	dx
-		cmp	dx, ax
-		jb	short loc_4102
-
-loc_4123:
-		les	bx, [bp+var_4]
-		cmp	byte ptr es:[bx+4], 0
-		jl	short loc_4133
-		xor	dx, dx
-		xor	ax, ax
-		jmp	short loc_4139
-; ---------------------------------------------------------------------------
-
-loc_4133:
-		mov	dx, word ptr [bp+var_4+2]
-		mov	ax, word ptr [bp+var_4]
-
-loc_4139:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retn
-__GETFP		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; FILE *__cdecl	fopen(const char *path,	const char *mode)
-_fopen		proc far
-
-buf		= dword	ptr -4
-_path		= dword	ptr  6
-_mode		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		call	__GETFP
-		mov	word ptr [bp+buf+2], dx
-		mov	word ptr [bp+buf], ax
-		or	ax, dx
-		jnz	short loc_415A
-		xor	dx, dx
-		xor	ax, ax
-		jmp	short loc_4172
-; ---------------------------------------------------------------------------
-
-loc_415A:
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	[bp+arg_6]	; int
-		push	[bp+_mode]	; int
-		xor	ax, ax
-		push	ax		; int
-		call	__OPENFP
-
-loc_4172:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_fopen		endp
-
+include libs/BorlandC/fopen.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5013,7 +4675,7 @@ include libs/BorlandC/setvbuf.asm
 ; int sprintf(char *buffer, const char *format,	...)
 _sprintf	proc far
 
-buffer		= dword	ptr  6
+@@buffer		= dword	ptr  6
 _format		= dword	ptr  0Ah
 arg_8		= byte ptr  0Eh
 
@@ -5021,12 +4683,12 @@ arg_8		= byte ptr  0Eh
 		mov	bp, sp
 		push	si
 		push	di
-		les	bx, [bp+buffer]
+		les	bx, [bp+@@buffer]
 		mov	byte ptr es:[bx], 0
 		mov	ax, 566Ah
 		push	ax
 		push	ss
-		lea	ax, [bp+buffer]
+		lea	ax, [bp+@@buffer]
 		push	ax
 		push	word ptr [bp+_format+2]
 		push	word ptr [bp+_format]
@@ -5047,7 +4709,7 @@ _sprintf	endp
 ; int __cdecl vsprintf(char *buffer, const char	*format, void *arglist)
 _vsprintf	proc far
 
-buffer		= dword	ptr  6
+@@buffer		= dword	ptr  6
 _format		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arglist		= word ptr  0Eh
@@ -5056,12 +4718,12 @@ arglist		= word ptr  0Eh
 		mov	bp, sp
 		push	si
 		push	di
-		les	bx, [bp+buffer]
+		les	bx, [bp+@@buffer]
 		mov	byte ptr es:[bx], 0
 		mov	ax, 566Ah
 		push	ax
 		push	ss
-		lea	ax, [bp+buffer]
+		lea	ax, [bp+@@buffer]
 		push	ax
 		push	[bp+arg_6]
 		push	[bp+_format]
@@ -11918,7 +11580,7 @@ seg008		segment	byte public 'CODE' use16
 ; int __cdecl __far sub_D5F8(int, int, int, char *format, char arglist)
 sub_D5F8	proc far
 
-buffer		= byte ptr -104h
+@@buffer		= byte ptr -104h
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -11935,11 +11597,11 @@ arglist		= byte ptr  10h
 		push	ax		; arglist
 		push	large [bp+_format] ; format
 		push	ss
-		lea	ax, [bp+buffer]
+		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
 		call	_vsprintf
 		push	ss
-		lea	ax, [bp+buffer]
+		lea	ax, [bp+@@buffer]
 		push	ax
 		push	[bp+arg_4]
 		push	[bp+arg_2]

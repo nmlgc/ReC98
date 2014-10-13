@@ -1,17 +1,3 @@
-_NFILE	equ 20
-
-FILE	struc ; (standard type)
-level		dw ?
-flags		dw ?
-fd		db ?
-hold		db ?
-_bsize		dw ?	; Yes, calling it just "bsize" crashes TASM.
-dPtr@		buffer, ?
-dPtr@		curp, ?
-istemp		dw ?
-token		dw ?	; offset (dseg)
-ends
-
 ; FILE _streams [_NFILE_]
 _streams	label byte
 stdin		FILE <0, 209h, 0, 0, 0, 0, 0, 0, offset stdin>
