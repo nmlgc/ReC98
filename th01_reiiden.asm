@@ -7212,44 +7212,7 @@ include libs/BorlandC/signal.asm
 include libs/BorlandC/access.asm
 include libs/BorlandC/pathops.asm
 include libs/BorlandC/chmoda.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl close(int	handle)
-_close		proc far
-
-handle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, [bp+handle]
-		cmp	dx, __nfile
-		jb	short loc_51E5
-		mov	ax, 6
-		push	ax
-		call	__IOERROR
-		jmp	short loc_51F6
-; ---------------------------------------------------------------------------
-
-loc_51E5:
-		mov	bx, dx
-		add	bx, bx
-		mov	word ptr [bx+1BE8h], 0
-		push	dx		; handle
-		nopcall	__rtl_close
-		pop	cx
-
-loc_51F6:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_close		endp
-
+include libs/BorlandC/close.asm
 include libs/BorlandC/closea.asm
 include libs/BorlandC/eof.asm
 include libs/BorlandC/fclose.asm

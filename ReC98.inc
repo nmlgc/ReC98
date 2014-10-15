@@ -4,6 +4,7 @@
 locals
 
 include libs/BorlandC/RULES.ASI
+include libs/BorlandC/doserror.inc
 include libs/BorlandC/fcntl.inc
 include libs/BorlandC/stdio.inc
 include libs/BorlandC/sys/stat.inc
