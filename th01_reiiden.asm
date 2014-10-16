@@ -8164,9 +8164,7 @@ include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
 include libs/BorlandC/xmsg.asm
 include libs/BorlandC/xx.asm
-unknown_libname_3 db 0BAh, 3Ch,	20h, 0EBh, 3, 0BAh, 41h, 20h, 0B9h, 5, 0
-		db 0B4h, 40h, 0BBh, 2, 0, 0CDh,	21h, 0B9h, 27h,	0, 0BAh
-		db 46h,	20h, 0B4h, 40h,	0CDh, 21h, 0E9h, 0A2h, 7Dh
+include libs/BorlandC/cvtfak.asm
 include libs/BorlandC/doscmd.asm
 include libs/BorlandC/exec.asm
 include libs/BorlandC/execl.asm
@@ -42040,7 +42038,7 @@ include libs/BorlandC/srchstr[data].asm
 include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
 include libs/BorlandC/xx[data].asm
-aPrintScanfFloa	db 'print scanf : floating point formats not linked',0Dh,0Ah,0
+include libs/BorlandC/cvtfak[data].asm
 include libs/BorlandC/setenvp[data].asm
 include libs/BorlandC/strings[data].asm
 include libs/BorlandC/cibmdely[data].asm
@@ -42049,17 +42047,11 @@ include libs/BorlandC/kbhit[data].asm
 include libs/BorlandC/mbctype[data].asm
 include libs/BorlandC/loadprog[data].asm
 off_36BAA	dw offset sub_1AB8
-		db    0
-		db 0A6h	; ¦
+include libs/BorlandC/cvtfak[cvtseg].asm
 off_36BAE	dw offset sub_1C66
 off_36BB0	dw offset sub_1F84
 off_36BB2	dw offset sub_1F7C
-		db    5
-		db 0A6h	; ¦
-		db    5
-		db 0A6h	; ¦
-		db    5
-		db 0A6h	; ¦
+include libs/BorlandC/cvtfak[scnseg].asm
 
 InitStart	label byte
 		db    1
