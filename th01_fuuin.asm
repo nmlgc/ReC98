@@ -4182,39 +4182,7 @@ include libs/BorlandC/fflush.asm
 include libs/BorlandC/flength.asm
 include libs/BorlandC/flushall.asm
 include libs/BorlandC/fopen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int fprintf(FILE *stream, const char *format,	...)
-_fprintf	proc far
-
-stream		= word ptr  6
-arg_2		= word ptr  8
-_format		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= byte ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 4E04h
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+stream]
-		push	[bp+arg_6]
-		push	[bp+_format]
-		lea	ax, [bp+arg_8]
-		push	ax
-		call	__VPRINTER
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_fprintf	endp
-
+include libs/BorlandC/fprintf.asm
 include libs/BorlandC/fseek.asm
 include libs/BorlandC/fullpath.asm
 
