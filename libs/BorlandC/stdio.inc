@@ -53,4 +53,6 @@ istemp		dw ?	; Temporary file indicator
 token		dw ?	 ; Used for validity checking
 ends
 
+FOPEN_MAX equ _NFILE
+SYS_OPEN equ _NFILE
 FILENAME_MAX equ 80
