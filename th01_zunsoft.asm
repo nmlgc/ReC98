@@ -802,7 +802,7 @@ include libs/BorlandC/files[data].asm
 __heaplen	dw 0
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
-__stklen	dw 1000h
+include libs/BorlandC/stklen[data].asm
 include libs/BorlandC/nearheap[data].asm
 include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm

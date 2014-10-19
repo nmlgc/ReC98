@@ -1842,7 +1842,7 @@ locret_1323:
 		mov	ss:2Fh,	ax
 		add	ax, 0C0h ; 'À'
 		mov	ss:31h,	ax
-		mov	ax, word ptr dword_135EE+2
+		mov	ax, __protected
 		mov	ss:27h,	ax
 		push	ds
 		push	cs
@@ -1870,7 +1870,7 @@ loc_1356:
 		mov	cl, 0
 		mov	ax, seg	dseg
 		mov	ds, ax
-		cmp	word_13600, 0
+		cmp	__8087, 0
 		jz	short loc_1387
 		mov	ah, 4
 		xor	cx, cx
@@ -1964,26 +1964,26 @@ loc_140A:
 		or	bx, bx
 		jz	short loc_146F
 		jg	short loc_1450
-		mov	cx, word_13600
+		mov	cx, __8087
 		jcxz	short loc_1472
 		fninit
-		mov	word_13600, 0
-		fnstcw	word_13600
+		mov	__8087, 0
+		fnstcw	__8087
 		mov	cx, 14h
 
 loc_1429:
 		loop	loc_1429
-		mov	cx, word_13600
+		mov	cx, __8087
 		and	cx, 0F3Fh
 		cmp	cx, 33Fh
 		jnz	short loc_146E
-		mov	word_13600, 0FFFFh
-		fnstsw	word_13600
+		mov	__8087, 0FFFFh
+		fnstsw	__8087
 		mov	cx, 14h
 
 loc_1446:
 		loop	loc_1446
-		test	word_13600, 0B8BFh
+		test	__8087, 0B8BFh
 		jnz	short loc_146E
 
 loc_1450:
@@ -2006,7 +2006,7 @@ loc_146E:
 		cbw
 
 loc_146F:
-		mov	word_13600, ax
+		mov	__8087, ax
 
 loc_1472:
 		mov	ss:26h,	al
@@ -2017,7 +2017,7 @@ loc_1472:
 		sub	sp, 8
 		mov	bx, seg	dseg
 		mov	ds, bx
-		cmp	word_13600, 0
+		cmp	__8087, 0
 		mov	word ptr [bp-8], offset	e087_Entry
 		mov	word ptr [bp-6], seg seg014
 		mov	word ptr [bp-4], offset	e087_Shortcut
@@ -2045,7 +2045,7 @@ loc_14BB:
 					; AL = interrupt number
 					; DS:DX	= new vector to	be used	for specified interrupt
 		mov	ds, bx
-		cmp	word_13600, 0
+		cmp	__8087, 0
 		jnz	short loc_14FA
 		mov	word ptr ss:61h, offset	off_1308
 		mov	word ptr ss:63h, cs
@@ -2073,7 +2073,7 @@ loc_14FA:
 		int	21h		; DOS -	DOS v??? - OEM FUNCTION
 		mov	ds, bx
 		assume ds:dseg
-		cmp	word_13600, 0
+		cmp	__8087, 0
 		jz	short loc_154B
 		mov	ax, _version@
 		xchg	ah, al
@@ -2124,9 +2124,9 @@ loc_154B:
 		db 0e3h
 		mov	word ptr ss:41h, 0
 		mov	word ptr ss:43h, 0
-		mov	ax, word_135E8
+		mov	ax, __default87
 		mov	[bp-8],	ax
-		cmp	word_13600, 3
+		cmp	__8087, 3
 		jl	short loc_1575
 		or	word ptr [bp-8], 2
 
@@ -2170,7 +2170,7 @@ loc_15A6:
 		inc	ax
 		loop	loc_15A6
 		pop	ds
-		cmp	word_13600, 0
+		cmp	__8087, 0
 		jz	short loc_15EF
 		cmp	cs:byte_12D6, 2
 		jnz	short loc_15CC
@@ -23723,14 +23723,9 @@ include libs/master.lib/fil[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
-word_135E8	dw 1330h
-		dd 0
-dword_135EE	dd 0
-		dd 0
-		dd 0
-		dd 0
-		dw 0
-word_13600	dw 0FFFFh
+include libs/BorlandC/deflt87[data].asm
+include libs/BorlandC/protflag[data].asm
+include libs/BorlandC/flag8087[data].asm
 include libs/BorlandC/fperr[data].asm
 flt_1369C	dd 1.0
 		db    0
@@ -23778,13 +23773,12 @@ include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 include libs/BorlandC/fmode[data].asm
-		db 0CCh	; Ì
-		db    0
+include libs/BorlandC/fpstklen[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
 include libs/BorlandC/mkname[data].asm
 include libs/BorlandC/new[data].asm
-__stklen	dw 1000h
+include libs/BorlandC/stklen[data].asm
 include libs/master.lib/ctype[data].asm
 		db 0
 include libs/BorlandC/cconv[data].asm
@@ -24495,7 +24489,9 @@ dseg		ends
 seg018		segment	byte stack 'STACK' use16
 		assume cs:seg018
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 80h dup(?)
+		db 20h dup(?)
+include libs/BorlandC/math/emuvars[stack].asm
+		db 33h dup(?)
 seg018		ends
 
 

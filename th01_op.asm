@@ -1758,7 +1758,7 @@ locret_13E3:
 		db 40h,	0E2h, 0F3h, 1Eh, 57h, 0B1h, 0, 0B8h
 		dw seg dseg
 		mov ds, ax
-		cmp	word_12B40, 0
+		cmp	__8087, 0
 		db 74h,	14h, 0B4h, 4, 33h, 0C9h, 0CDh, 1Ah, 0B1h, 2, 80h
 		db 0FDh, 19h, 74h, 7, 80h, 0FDh, 20h, 74h, 2, 0B1h, 1
 		db 5Fh,	1Fh, 88h, 0Eh, 96h, 13h, 80h, 0F9h, 2, 75h, 12h
@@ -1790,7 +1790,7 @@ locret_13E3:
 		sub	sp, 8
 		mov	bx, seg	dseg
 		mov	ds, bx
-		cmp	word_12B40, 0
+		cmp	__8087, 0
 		mov	word ptr [bp-8], offset	e087_Entry
 		mov	word ptr [bp-6], seg seg013
 		mov	word ptr [bp-4], offset	e087_Shortcut
@@ -1818,7 +1818,7 @@ loc_157B:
 					; AL = interrupt number
 					; DS:DX	= new vector to	be used	for specified interrupt
 		mov	ds, bx
-		cmp	word_12B40, 0
+		cmp	__8087, 0
 		jnz	short loc_15BA
 		mov	word ptr ss:61h, offset	off_13C8
 		mov	word ptr ss:63h, cs
@@ -1846,7 +1846,7 @@ loc_15BA:
 		int	21h		; DOS -	DOS v??? - OEM FUNCTION
 		mov	ds, bx
 		assume ds:dseg
-		cmp	word_12B40, 0
+		cmp	__8087, 0
 		jz	short loc_160B
 		mov	ax, _version@
 		xchg	ah, al
@@ -1897,9 +1897,9 @@ loc_160B:
 		db 0e3h
 		mov	word ptr ss:41h, 0
 		mov	word ptr ss:43h, 0
-		mov	ax, word_12B20
+		mov	ax, __default87
 		mov	[bp-8],	ax
-		cmp	word_12B40, 3
+		cmp	__8087, 3
 		jl	short loc_1635
 		or	word ptr [bp-8], 2
 
@@ -1943,7 +1943,7 @@ loc_1666:
 		inc	ax
 		loop	loc_1666
 		pop	ds
-		cmp	word_12B40, 0
+		cmp	__8087, 0
 		jz	short loc_16AF
 		cmp	cs:byte_1396, 2
 		jnz	short loc_168C
@@ -20746,16 +20746,9 @@ byte_12B0E	db 0
 aMdrv2system	db 'Mdrv2System',0
 aXx		db '••',0
 		db 0
-word_12B20	dw 1330h
-		dd 0
-		dd 0
-		dd 0
-		dd 0
-		dd 0
-		dd 0
-		dd 0
-		dw 0
-word_12B40	dw 0FFFFh
+include libs/BorlandC/deflt87[data].asm
+include libs/BorlandC/protflag[data].asm
+include libs/BorlandC/flag8087[data].asm
 include libs/BorlandC/fperr[data].asm
 flt_12BDC	dd 1.0
 		db    0
@@ -20803,13 +20796,12 @@ include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 include libs/BorlandC/fmode[data].asm
-		db 0CCh
-		db    0
+include libs/BorlandC/fpstklen[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
 include libs/BorlandC/mkname[data].asm
 include libs/BorlandC/new[data].asm
-__stklen	dw 1000h
+include libs/BorlandC/stklen[data].asm
 include libs/master.lib/ctype[data].asm
 		db 0
 include libs/BorlandC/cconv[data].asm
@@ -21503,7 +21495,9 @@ dseg		ends
 seg017		segment	byte stack 'STACK' use16
 		assume cs:seg017
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 80h dup(?)
+		db 20h dup(?)
+include libs/BorlandC/math/emuvars[stack].asm
+		db 33h dup(?)
 seg017		ends
 
 

@@ -6425,7 +6425,7 @@ include libs/BorlandC/files[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
 include libs/BorlandC/new[data].asm
-__stklen	dw 1000h
+include libs/BorlandC/stklen[data].asm
 include libs/master.lib/ctype[data].asm
 		db    0
 include libs/BorlandC/xxv[data].asm

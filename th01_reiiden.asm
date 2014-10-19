@@ -2236,7 +2236,7 @@ a6g		db '6£/',0
 		sub	sp, 8
 		mov	bx, seg	dseg
 		mov	ds, bx
-		cmp	word_36270, 0
+		cmp	__8087, 0
 		mov	word ptr [bp-8], offset	e087_Entry
 		mov	word ptr [bp-6], seg seg039
 		mov	word ptr [bp-4], offset	e087_Shortcut
@@ -2264,7 +2264,7 @@ loc_184B:
 					; AL = interrupt number
 					; DS:DX	= new vector to	be used	for specified interrupt
 		mov	ds, bx
-		cmp	word_36270, 0
+		cmp	__8087, 0
 		jnz	short loc_188A
 		mov	word ptr ss:61h, offset	off_1698
 		mov	word ptr ss:63h, cs
@@ -2292,7 +2292,7 @@ loc_188A:
 		int	21h		; DOS -	DOS v??? - OEM FUNCTION
 		mov	ds, bx
 		assume ds:dseg
-		cmp	word_36270, 0
+		cmp	__8087, 0
 		jz	short loc_18DB
 		mov	ax, _version@
 		xchg	ah, al
@@ -2343,9 +2343,9 @@ loc_18DB:
 		db 0e3h
 		mov	word ptr ss:41h, 0
 		mov	word ptr ss:43h, 0
-		mov	ax, word_36254
+		mov	ax, __default87
 		mov	[bp-8],	ax
-		cmp	word_36270, 3
+		cmp	__8087, 3
 		jl	short loc_1905
 		or	word ptr [bp-8], 2
 
@@ -41368,16 +41368,9 @@ word_360CD	dw 0
 		db    0
 flt_3624F	dd 1.5
 		db 0
-word_36254	dw 1330h
-		dd 0
-		dd 0
-		dw 0
-		dw 0
-		dd 0
-		dd 0
-		dd 0
-		dw 0
-word_36270	dw 0FFFFh
+include libs/BorlandC/deflt87[data].asm
+include libs/BorlandC/protflag[data].asm
+include libs/BorlandC/flag8087[data].asm
 		db 0FFh
 		db 0FFh
 		db  7Fh
@@ -41457,8 +41450,7 @@ include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 include libs/BorlandC/fmode[data].asm
-		db 0CCh	; Ì
-		db    0
+include libs/BorlandC/fpstklen[data].asm
 include libs/BorlandC/__IOERROR[data].asm
 		db    0
 include libs/BorlandC/mkname[data].asm
@@ -41591,7 +41583,7 @@ include libs/BorlandC/new[data].asm
 		db    2
 		db    2
 		db    2
-__stklen	dw 1000h
+include libs/BorlandC/stklen[data].asm
 include libs/master.lib/ctype[data].asm
 		db 0
 include libs/BorlandC/cconv[data].asm
@@ -46647,7 +46639,9 @@ dseg		ends
 seg043		segment	byte stack 'STACK' use16
 		assume cs:seg043
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-byte_3B5E0	db 80h dup(?)
+		db 20h dup(?)
+include libs/BorlandC/math/emuvars[stack].asm
+		db 33h dup(?)
 seg043		ends
 
 
