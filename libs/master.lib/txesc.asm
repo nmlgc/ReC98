@@ -115,3 +115,4 @@ putcmd	proc CALLMODEL
 	int	29h
 	ret
 putcmd	endp
+	db	0	; word alignment

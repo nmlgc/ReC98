@@ -33,3 +33,4 @@ __ctype		db    0, 20h, 20h, 20h,	20h, 20h, 20h, 20h
 		db    0,   0,	0,   0,	  0,   0,   0,	 0
 		db    0,   0,	0,   0,	  0,   0,   0,	 0
 		db    0
+		db    0 ; word alignment

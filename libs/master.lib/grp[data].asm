@@ -45,3 +45,4 @@ _graph_VramZoom	dw 0
 	public _graph_MeshByte,graph_MeshByte
 graph_MeshByte label word
 _graph_MeshByte	db 55h
+		db 0	; word alignment

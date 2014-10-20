@@ -91,3 +91,4 @@ __dosErrorToSV	db    0
 		db  25h	; %
 		db  13h
 		db  28h	; (
+		db    0	; word alignment

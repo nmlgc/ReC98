@@ -146,3 +146,4 @@ PFGETX1 proc near	; pfgetx1() {
 @@PFGETX1_return:
 	ret
 PFGETX1	endp	; }
+	db	0	; word alignment

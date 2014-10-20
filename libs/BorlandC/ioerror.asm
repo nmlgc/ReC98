@@ -4,7 +4,6 @@ public __IOERROR
 public __DOSERROR
 
 __IOERROR	proc near
-
 @@dosErr		= word ptr  4
 
 		push	bp
@@ -14,11 +13,11 @@ __IOERROR	proc near
 		mov	dx, [bp+@@dosErr]
 		or	dx, dx
 		jl	short @@ser_maybeSVerr
-		cmp	dx, 58h	; 'X'
+		cmp	dx, e_dosFinalError
 		jle	short @@ser_dosError
 
 @@ser_errorFault:
-		mov	dx, 57h	; 'W'
+		mov	dx, e_parameter
 
 @@ser_dosError:
 		mov	__doserrno, dx
@@ -27,25 +26,23 @@ __IOERROR	proc near
 		cbw
 		mov	dx, ax
 		jmp	short @@ser_end
-; ---------------------------------------------------------------------------
 
 @@ser_maybeSVerr:
 		neg	dx
 		cmp	dx, __sys_nerr
 		jg	short @@ser_errorFault
-		mov	__doserrno, 0FFFFh
+		mov	__doserrno, -1
 
 @@ser_end:
 		mov	_errno, dx
-		mov	ax, 0FFFFh
+		mov	ax, -1
 		pop	di
 		pop	si
 		pop	bp
-		retn	2
+		ret	2
 __IOERROR	endp
 
 __DOSERROR	proc near
-
 @@dosErr		= word ptr  4
 
 		push	bp
@@ -58,5 +55,5 @@ __DOSERROR	proc near
 		pop	di
 		pop	si
 		pop	bp
-		retn	2
+		ret	2
 __DOSERROR	endp

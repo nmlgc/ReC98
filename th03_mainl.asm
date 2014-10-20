@@ -85,7 +85,6 @@ include libs/master.lib/js_end.asm
 include libs/master.lib/palette_show.asm
 include libs/master.lib/pfclose.asm
 include libs/master.lib/pfgetc.asm
-		db 0
 include libs/master.lib/pfread.asm
 include libs/master.lib/pfrewind.asm
 include libs/master.lib/pfseek.asm
@@ -95,7 +94,7 @@ include libs/master.lib/rottbl.asm
 include libs/master.lib/smem_release.asm
 include libs/master.lib/smem_wget.asm
 include libs/master.lib/soundio.asm
-include libs/BorlandC/text_clear.asm
+include libs/master.lib/text_clear.asm
 include libs/master.lib/text_fillca.asm
 include libs/master.lib/vsync.asm
 include libs/master.lib/vsync_wait.asm
@@ -649,7 +648,7 @@ include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
 include libs/BorlandC/H_PADD.ASM
-include libs/BorlandC/__IOERROR.ASM
+include libs/BorlandC/ioerror.asm
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/lseek.asm
 include libs/BorlandC/new.asm
@@ -8988,7 +8987,6 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-		db    0
 word_E960	dw 0
 		db 0
 		db    0
@@ -8998,7 +8996,6 @@ word_E960	dw 0
 		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
-		db    0
 include libs/master.lib/rand[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/tx[data].asm
@@ -9433,12 +9430,10 @@ include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
-include libs/BorlandC/__IOERROR[data].asm
-		db    0
+include libs/BorlandC/ioerror[data].asm
 include libs/BorlandC/new[data].asm
 include libs/BorlandC/stklen[data].asm
-include libs/master.lib/ctype[data].asm
-		db 0
+include libs/BorlandC/ctype[data].asm
 include libs/BorlandC/xxv[data].asm
 include libs/BorlandC/cputype[data].asm
 include libs/BorlandC/fbrk[data].asm

@@ -715,9 +715,8 @@ loc_873:
 		retn
 _main		endp
 
-include libs/BorlandC/text_clear.asm
-include libs/BorlandC/txesc.asm
-		db    0
+include libs/master.lib/text_clear.asm
+include libs/master.lib/txesc.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_hide.asm
@@ -758,7 +757,7 @@ include libs/BorlandC/atexit.asm
 include libs/BorlandC/errormsg.asm
 include libs/BorlandC/exit.asm
 include libs/BorlandC/H_LRSH.ASM
-include libs/BorlandC/__IOERROR.ASM
+include libs/BorlandC/ioerror.asm
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/lseek.asm
 include libs/BorlandC/N_LXMUL.ASM
@@ -783,7 +782,6 @@ aTouhou_dat	db 'touhou.dat',0
 		db 4, 3, 2, 1, 0
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
-		db 0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/bfnt_id[data].asm
 include libs/master.lib/dos_ropen[data].asm
@@ -800,8 +798,7 @@ include libs/BorlandC/atexit[data].asm
 include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 __heaplen	dw 0
-include libs/BorlandC/__IOERROR[data].asm
-		db    0
+include libs/BorlandC/ioerror[data].asm
 include libs/BorlandC/stklen[data].asm
 include libs/BorlandC/nearheap[data].asm
 include libs/BorlandC/setvbuf[data].asm
@@ -820,7 +817,6 @@ bdata@	label byte
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
-		db ?
 include libs/master.lib/mem[bss].asm
 		dd ?
 		dd ?

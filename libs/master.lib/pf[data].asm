@@ -27,3 +27,4 @@ pferrno		dw	PFEZERO
 	public pfkey,_pfkey
 _pfkey label byte
 pfkey		db	0
+		db	0	; word alignment

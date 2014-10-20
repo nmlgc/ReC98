@@ -30,3 +30,4 @@ cconv_10057	db    0
 cconv_10058	db    0
 cconv_10059	db    0
 cconv_1005A	db    0
+		db    0	; word alignment

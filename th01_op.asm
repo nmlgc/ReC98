@@ -3003,7 +3003,7 @@ include libs/BorlandC/getvect.asm
 include libs/BorlandC/H_LDIV.ASM
 include libs/BorlandC/H_LLSH.ASM
 include libs/BorlandC/H_PADD.ASM
-include libs/BorlandC/__IOERROR.ASM
+include libs/BorlandC/ioerror.asm
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/longtoa.asm
 include libs/BorlandC/lseek.asm
@@ -20729,7 +20729,6 @@ aHgrx		db 'HGRX',0
 aHgrz		db 'HGRZ',0
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
-		db    0
 include libs/master.lib/pal[data].asm
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/resdata[data].asm
@@ -20797,15 +20796,12 @@ include libs/BorlandC/exit[data].asm
 include libs/BorlandC/files[data].asm
 include libs/BorlandC/fmode[data].asm
 include libs/BorlandC/fpstklen[data].asm
-include libs/BorlandC/__IOERROR[data].asm
-		db    0
+include libs/BorlandC/ioerror[data].asm
 include libs/BorlandC/mkname[data].asm
 include libs/BorlandC/new[data].asm
 include libs/BorlandC/stklen[data].asm
-include libs/master.lib/ctype[data].asm
-		db 0
+include libs/BorlandC/ctype[data].asm
 include libs/BorlandC/cconv[data].asm
-		db    0
 		db  28h	; (
 		db  6Eh	; n
 		db  75h	; u
@@ -20916,7 +20912,6 @@ include libs/BorlandC/fbrk[data].asm
 include libs/BorlandC/signal[data].asm
 include libs/BorlandC/pathops[data].asm
 include libs/BorlandC/putc[data].asm
-		db    0
 include libs/BorlandC/srchenv[data].asm
 include libs/BorlandC/srchstr[data].asm
 include libs/BorlandC/setvbuf[data].asm
@@ -21481,7 +21476,6 @@ include libs/BorlandC/sigdata[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/getc[bss].asm
 include libs/BorlandC/putc[bss].asm
-		db ?
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
 

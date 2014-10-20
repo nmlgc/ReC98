@@ -1,39 +1,80 @@
-; int bfill(bf_t bf);
-public bfill
+; master library - (pf.lib)
+;
+; Description:
+;	読み込みバッファへの充填と先頭バイトの読み込み
+;
+; Functions/Procedures:
+;	int bfill(bf_t bf);
+;
+; Parameters:
+;	bf	bファイルハンドル
+;
+; Returns:
+;	-1	ファイル終端に達したので1バイトも読めなかった
+;	0〜255	バッファの先頭バイト(充填成功)
+;
+; Binding Target:
+;	Microsoft-C / Turbo-C / Turbo Pascal
+;
+; Running Target:
+;	MS-DOS
+;
+; Requiring Resources:
+;	CPU: 186
+;
+; Notes:
+;	
+;
+; Assembly Language Note:
+;	
+;
+; Compiler/Assembler:
+;	TASM 3.0
+;	OPTASM 1.6
+;
+; Author:
+;	iR
+;	恋塚昭彦
+;
+; Revision History:
+; BFILL.ASM         571 94-05-26   22:44
+;	95/ 1/10 Initial: bfill.asm/master.lib 0.23
 
 func BFILL	; bfill() {
+	push	BP
+	mov	BP,SP
+	push	DS
 
-@@bf		= word ptr  6
+	;arg	bf:word
+	@@bf	= (RETSIZE+1)*2
 
-		push	bp
-		mov	bp, sp
-		push	ds
-		mov	ds, [bp+@@bf]
-		mov	bx, ds:[0]
-		mov	cx, ds:[6]
-		mov	dx, 8
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		jb	short @@_error
-		or	ax, ax
-		jz	short @@_error
-		dec	ax
-		mov	ds:[2], ax
-		mov	word ptr ds:[4], 1
-		mov	al, byte ptr ds:[8]
-		xor	ah, ah
-		pop	ds
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
+	mov	DS,[BP+@@bf]		; BFILE構造体のセグメント
+
+	mov	BX,DS:[b_hdl]
+	mov	CX,DS:[b_siz]
+	lea	DX,DS:[b_buff]
+	msdos	ReadHandle
+	jc	short @@_error
+	chk	AX
+	jz	short @@_error
+
+@@_getc:
+	dec	AX
+	mov	DS:[b_left],AX
+	mov	DS:[b_pos],1
+	mov	AL,DS:[b_buff]
+	clr	AH
+
+	pop	DS
+	pop	BP
+	ret	(1)*2
 
 @@_error:
-		xor	ax, ax
-		mov	ds:[2], ax
-		dec	ax
-		pop	ds
-		pop	bp
-		retf	2
+	clr	AX
+	mov	DS:[b_left],AX
+	dec	AX		; mov	AX,EOF
+
+	pop	DS
+	pop	BP
+	ret	(1)*2
 endfunc		; }
