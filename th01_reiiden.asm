@@ -4498,42 +4498,7 @@ include libs/BorlandC/ioerror.asm
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/longtoa.asm
 include libs/BorlandC/lrotl.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; unsigned __int32 __cdecl _lrotr(unsigned __int32 val,	int count)
-__lrotr		proc far
-
-val		= word ptr  6
-arg_2		= word ptr  8
-count		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+val]
-		mov	dx, [bp+arg_2]
-		mov	cx, [bp+count]
-		and	cx, 1Fh
-		jz	short loc_2AC4
-
-loc_2ABA:
-		mov	bx, dx
-		shr	bx, 1
-		rcr	ax, 1
-		rcr	dx, 1
-		loop	loc_2ABA
-
-loc_2AC4:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-__lrotr		endp
-
+include libs/BorlandC/lrotr.asm
 include libs/BorlandC/lseek.asm
 include libs/BorlandC/mkname.asm
 include libs/BorlandC/new.asm
