@@ -4503,69 +4503,7 @@ include libs/BorlandC/lseek.asm
 include libs/BorlandC/mkname.asm
 include libs/BorlandC/new.asm
 include libs/BorlandC/newarray.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; operator new(unsigned	long)
-@$bnew$qul	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		or	ax, [bp+arg_2]
-		jz	short loc_2ECD
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		jmp	short loc_2ED2
-; ---------------------------------------------------------------------------
-
-loc_2ECD:
-		xor	dx, dx
-		mov	ax, 1
-
-loc_2ED2:
-		mov	[bp+arg_2], dx
-		mov	[bp+arg_0], ax
-		jmp	short loc_2EDE
-; ---------------------------------------------------------------------------
-
-loc_2EDA:
-		call	__new_handler
-
-loc_2EDE:
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	_farmalloc
-		pop	cx
-		pop	cx
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		or	ax, dx
-		jnz	short loc_2EFE
-		mov	ax, word ptr __new_handler
-		or	ax, word ptr __new_handler+2
-		jnz	short loc_2EDA
-
-loc_2EFE:
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-@$bnew$qul	endp
-
+include libs/BorlandC/newf.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
