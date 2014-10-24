@@ -4504,31 +4504,7 @@ include libs/BorlandC/mkname.asm
 include libs/BorlandC/new.asm
 include libs/BorlandC/newarray.asm
 include libs/BorlandC/newf.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2F0A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	@$bnew$qul ; operator new(ulong)
-		pop	cx
-		pop	cx
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2F0A	endp
-
+include libs/BorlandC/newfarry.asm
 include libs/BorlandC/N_LXMUL.ASM
 include libs/BorlandC/N_PCMP.ASM
 include libs/BorlandC/reada.asm
@@ -5798,7 +5774,7 @@ loc_3817:
 		adc	dx, 0
 		push	dx
 		push	ax
-		nopcall	sub_2F0A
+		nopcall	@$bnwa$qul
 		pop	cx
 		pop	cx
 		mov	word ptr [bp+arg_0+2], dx
