@@ -4310,7 +4310,7 @@ loc_4AE8:
 		push	[bp+access]
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path]
-		nopcall	sub_4BB6
+		nopcall	__rtl_open
 		add	sp, 6
 		mov	[bp+handle], ax
 		or	ax, ax
@@ -4344,14 +4344,6 @@ loc_4B3A:
 		test	byte ptr [bp+access+1],	2
 		jz	short loc_4B46
 		push	[bp+handle]
-_open		endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function
-
-sub_4B43	proc far
 		call	sub_4A0A
 
 loc_4B46:
@@ -4413,95 +4405,9 @@ loc_4BB0:
 		mov	sp, bp
 		pop	bp
 		retf
-sub_4B43	endp ; sp-analysis failed
+_open		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_4BB6	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	al, 1
-		mov	cx, [bp+arg_4]
-		test	cx, 2
-		jnz	short loc_4BD3
-		mov	al, 2
-		test	cx, 4
-		jnz	short loc_4BD3
-		mov	al, 0
-
-loc_4BD3:
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	cl, 0F0h
-		and	cl, byte ptr [bp+arg_4]
-		or	al, cl
-		mov	ah, 3Dh
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read, 1 -	write, 2 - read	& write
-		pop	ds
-		jb	short loc_4BFF
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_4]
-		and	ax, 0B8FFh
-		or	ax, 8000h
-		mov	bx, [bp+var_2]
-		add	bx, bx
-		mov	[bx+0E3Ch], ax
-		mov	ax, [bp+var_2]
-		jmp	short loc_4C03
-; ---------------------------------------------------------------------------
-
-loc_4BFF:
-		push	ax
-		call	__IOERROR
-
-loc_4C03:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_4BB6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4C09	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_4BB6
-		add	sp, 6
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_4C09	endp
-
+include libs/BorlandC/opena.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

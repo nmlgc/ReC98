@@ -4058,7 +4058,7 @@ loc_4DCA:
 		push	[bp+access]
 		push	word ptr [bp+_path+2]
 		push	word ptr [bp+_path]
-		nopcall	sub_4E98
+		nopcall	__rtl_open
 		add	sp, 6
 		mov	[bp+handle], ax
 		or	ax, ax
@@ -4155,81 +4155,7 @@ loc_4E92:
 		retf
 _open		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-sub_4E98	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	al, 1
-		mov	cx, [bp+arg_4]
-		test	cx, 2
-		jnz	short loc_4EB5
-		mov	al, 2
-		test	cx, 4
-		jnz	short loc_4EB5
-		mov	al, 0
-
-loc_4EB5:
-		push	ds
-		lds	dx, [bp+arg_0]
-		mov	cl, 0F0h
-		and	cl, byte ptr [bp+arg_4]
-		or	al, cl
-		mov	ah, 3Dh
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read, 1 -	write, 2 - read	& write
-		pop	ds
-		jb	short loc_4EE1
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_4]
-		and	ax, 0B8FFh
-		or	ax, 8000h
-		mov	bx, [bp+var_2]
-		add	bx, bx
-		mov	[bx+0B8Ch], ax
-		mov	ax, [bp+var_2]
-		jmp	short loc_4EE5
-; ---------------------------------------------------------------------------
-
-loc_4EE1:
-		push	ax
-		call	__IOERROR
-
-loc_4EE5:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-sub_4E98	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+0Ah]
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		call	sub_4E98
-		add	sp, 6
-		pop	di
-		pop	si
-		pop	bp
-		retf
+include libs/BorlandC/opena.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
