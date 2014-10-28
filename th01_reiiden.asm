@@ -6685,38 +6685,7 @@ include libs/BorlandC/memset.asm
 include libs/BorlandC/movmem.asm
 include libs/BorlandC/open.asm
 include libs/BorlandC/opena.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int printf(const char	*format, ...)
-_printf		proc far
-
-_format		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 645Ch
-		push	ax
-		push	ds
-		mov	ax, 1A6Ah
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+_format]
-		lea	ax, [bp+arg_4]
-		push	ax
-		call	__VPRINTER
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_printf		endp
-
+include libs/BorlandC/printf.asm
 include libs/BorlandC/putc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
