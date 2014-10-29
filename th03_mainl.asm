@@ -10317,7 +10317,7 @@ byte_10BD8	db ?
 		db    ?	;
 include libs/BorlandC/atexit[bss].asm
 include libs/BorlandC/sigdata[bss].asm
-		dd    ?	;
+include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte

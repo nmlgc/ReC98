@@ -21084,7 +21084,7 @@ word_13F0F	dw ?
 include libs/BorlandC/atexit[bss].asm
 include libs/BorlandC/mkname[bss].asm
 include libs/BorlandC/sigdata[bss].asm
-		dd ?
+include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/getc[bss].asm
 include libs/BorlandC/putc[bss].asm

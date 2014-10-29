@@ -11401,8 +11401,7 @@ byte_125B7	db ?
 word_125B8	dw ?
 include libs/BorlandC/atexit[bss].asm
 include libs/BorlandC/sigdata[bss].asm
-word_1263E	dw ?
-word_12640	dw ?
+include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
