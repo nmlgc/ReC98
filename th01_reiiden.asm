@@ -6687,74 +6687,7 @@ include libs/BorlandC/open.asm
 include libs/BorlandC/opena.asm
 include libs/BorlandC/printf.asm
 include libs/BorlandC/putc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl puts(const char *s)
-_puts		proc far
-
-var_2		= word ptr -2
-buf		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, word ptr [bp+buf]
-		or	ax, word ptr [bp+buf+2]
-		jnz	short loc_667B
-		xor	ax, ax
-		jmp	short loc_66C2
-; ---------------------------------------------------------------------------
-
-loc_667B:
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; s
-		nopcall	_strlen
-		pop	cx
-		pop	cx
-		mov	[bp+var_2], ax
-		push	word ptr [bp+buf+2]
-		push	word ptr [bp+buf] ; buf
-		push	ax		; len
-		push	ds
-		mov	ax, 1A6Ah
-		push	ax		; stream
-		call	__FPUTN
-		cmp	ax, [bp+var_2]
-		jz	short loc_66A4
-		mov	ax, 0FFFFh
-		jmp	short loc_66C2
-; ---------------------------------------------------------------------------
-
-loc_66A4:
-		push	ds
-		mov	ax, 1A6Ah
-		push	ax		; stream
-		mov	ax, 0Ah
-		push	ax		; c
-		nopcall	_fputc
-		add	sp, 6
-		cmp	ax, 0Ah
-		jz	short loc_66BF
-		mov	ax, 0FFFFh
-		jmp	short loc_66C2
-; ---------------------------------------------------------------------------
-
-loc_66BF:
-		mov	ax, 0Ah
-
-loc_66C2:
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_puts		endp
-
+include libs/BorlandC/puts.asm
 include libs/BorlandC/read.asm
 
 ; =============== S U B	R O U T	I N E =======================================
