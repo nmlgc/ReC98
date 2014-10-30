@@ -4,6 +4,7 @@
 locals
 
 include libs/BorlandC/RULES.ASI
+include libs/BorlandC/ctype.inc
 include libs/BorlandC/dos.inc
 include libs/BorlandC/doserror.inc
 include libs/BorlandC/fcntl.inc
@@ -32,5 +33,11 @@ endm
 pushSS_ macro
 if LDATA
 	push ss
+endif
+endm
+
+popCX_ macro
+if LDATA
+	pop cx
 endif
 endm
