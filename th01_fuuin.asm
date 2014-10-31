@@ -30,8 +30,12 @@
 		CGROUP14 group seg014
 		CGROUP15 group seg015
 		CGROUP16 group seg016
-		.386
+
+		.286 ; Force the .model directive to create 16-bit default segments...
 		.model large
+		__LARGE__ equ 1
+		.386 ; ... then switch to what we actually need.
+		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
 include libs/BorlandC/regs.inc

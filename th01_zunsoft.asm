@@ -12,19 +12,21 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.386
+		.286 ; Force the .model directive to create 16-bit default segments...
 		.model tiny
-		DGROUP group seg000
+		__TINY__ equ 1
+		.386 ; ... then switch to what we actually need.
+		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
 		org 100h
-		assume es:nothing, ss:seg000, ds:seg000, fs:nothing, gs:nothing
+		assume es:nothing, ss:_TEXT, ds:_TEXT, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 
@@ -171,8 +173,6 @@ sub_439		proc near
 		mov	word ptr ds:287Ah, 140h
 		mov	word ptr ds:295Ah, 8
 		mov	word ptr ds:287Ch, 100h
-
-loc_45B:
 		mov	word ptr ds:2954h, 0FFF8h
 		mov	word ptr ds:287Eh, 0F0h
 		mov	word ptr ds:295Ch, 8
@@ -627,8 +627,7 @@ _envp		= word ptr  8
 		push	di
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
-		test	byte ptr es:loc_45B+1, 40h
+		test	byte ptr es:[045Ch], 40h
 		jz	short loc_7F0
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -825,7 +824,7 @@ include libs/master.lib/mem[bss].asm
 include libs/BorlandC/atexit[bss].asm
 edata@	label byte
 
-seg000		ends
+_TEXT		ends
 
 
 		end startx

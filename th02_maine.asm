@@ -20,8 +20,12 @@
 		CGROUP04 group seg004
 		CGROUP05 group seg005
 		CGROUP06 group seg006
-		.386
+
+		.286 ; Force the .model directive to create 16-bit default segments...
 		.model large
+		__LARGE__ equ 1
+		.386 ; ... then switch to what we actually need.
+		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
 
