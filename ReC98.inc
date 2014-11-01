@@ -9,6 +9,7 @@ include libs/BorlandC/dos.inc
 include libs/BorlandC/doserror.inc
 include libs/BorlandC/fcntl.inc
 include libs/BorlandC/stdio.inc
+include libs/BorlandC/_printf.inc
 include libs/BorlandC/sys/stat.inc
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc

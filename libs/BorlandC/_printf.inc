@@ -1,0 +1,11 @@
+FLOATS_32_BIT	 = 1
+F_4byteFloat	 = 2
+F_8byteFloat	 = 6
+F_10byteFloat	 = 8
+MaxSigDigits	 = 18
+__LTOAMAX__	 = 32
+__XCVTDIG__	 = 40
+__XCVTMAX__	 = 47
+__CVTMAX__	 = 48
+NAN_number	 = 32766
+INF_number	 = 32767

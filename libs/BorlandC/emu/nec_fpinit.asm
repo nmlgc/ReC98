@@ -469,4 +469,3 @@ __fpuint	proc far
 		mov	ax, cs:fpinit_100B5
 		ret
 __fpuint	endp
-		noemul
