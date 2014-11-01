@@ -1803,426 +1803,7 @@ include libs/master.lib/egc.asm
 include libs/master.lib/gdc_outpw.asm
 		db    0
 include libs/master.lib/random.asm
-; ---------------------------------------------------------------------------
-		db 34h dup(0)
-byte_12D6	db 0
-word_12D7	dw 0FFFFh
-byte_12D9	db 0
-byte_12DA	db 0
-byte_12DB	db 2 dup(0), 80h, 7Fh, 50h, 32h, 0C0h, 0E6h, 0F0h, 0B0h
-		db 20h,	0E6h, 0A0h, 0E6h, 20h, 58h, 0CDh, 2, 0CFh, 50h
-		db 0B0h, 20h, 0E6h, 8, 0EBh, 0,	0B0h, 0Bh, 0E6h, 8, 0EBh
-		db 0, 0E4h, 8, 0Ah, 0C0h, 75h, 4, 0B0h,	20h, 0E6h, 0, 58h
-		db 0EBh, 0
-off_1308	dd 1476B850h
-; ---------------------------------------------------------------------------
-		call	sub_F150
-		jb	short loc_1319
-		pop	ax
-		; Hack (jmp start)
-		db 0eah
-		db 000h
-		db 000h
-		db 000h
-		db 000h
-; ---------------------------------------------------------------------------
-
-loc_1319:
-		xchg	ax, bx
-		mov	ax, seg	dseg
-		mov	ds, ax
-		call	fperror
-		pop	ax
-
-locret_1323:
-		iret
-; ---------------------------------------------------------------------------
-		push	ds
-		push	si
-		push	di
-		mov	ax, seg	dseg
-		mov	ds, ax
-		mov	ax, 65h	; 'e'
-		mov	ss:2Fh,	ax
-		add	ax, 0C0h ; 'À'
-		mov	ss:31h,	ax
-		mov	ax, __protected
-		mov	ss:27h,	ax
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	ax, ds
-		xor	ax, ss:27h
-		mov	ds, ax
-		assume ds:dseg
-		mov	ax, 3534h
-		mov	cx, 0Bh
-		mov	di, 12A2h
-
-loc_1356:
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	[di], bx
-		mov	word ptr [di+2], es
-		add	di, 4
-		inc	ax
-		loop	loc_1356
-		push	ds
-		push	di
-		mov	cl, 0
-		mov	ax, seg	dseg
-		mov	ds, ax
-		cmp	__8087, 0
-		jz	short loc_1387
-		mov	ah, 4
-		xor	cx, cx
-		int	1Ah		; CLOCK	- READ DATE FROM REAL TIME CLOCK (AT,XT286,CONV,PS)
-					; Return: DL = day in BCD
-					; DH = month in	BCD
-					; CL = year in BCD
-					; CH = century (19h or 20h)
-		mov	cl, 2
-		cmp	ch, 19h
-		jz	short loc_1387
-		cmp	ch, 20h	; ' '
-		jz	short loc_1387
-		mov	cl, 1
-
-loc_1387:
-		pop	di
-		pop	ds
-		mov	ds:12D6h, cl
-		cmp	cl, 2
-		jnz	short loc_13A4
-		mov	ax, 3575h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	[di], bx
-		mov	word ptr [di+2], es
-		add	di, 4
-		mov	ax, 3502h
-		jmp	short loc_13BB
-; ---------------------------------------------------------------------------
-
-loc_13A4:
-		cmp	cl, 1
-		jnz	short loc_13D2
-		push	sp
-		pop	ax
-		cmp	ax, sp
-		mov	ax, 3510h
-		jz	short loc_13BB
-		in	al, 0Ah		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		and	al, 40h
-		mov	ds:12D9h, al
-		mov	al, 16h
-
-loc_13BB:
-		mov	bl, al
-		mov	bh, 25h	; '%'
-		mov	ds:12D7h, bx
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	[di], bx
-		mov	word ptr [di+2], es
-		mov	ds:1315h, bx
-		mov	ds:1317h, es
-
-loc_13D2:
-		pop	ds
-		mov	bx, 0FFFFh
-		mov	es, __psp
-		mov	es, word ptr es:2Ch
-		sub	di, di
-		mov	cx, 7FFFh
-		mov	al, 0
-		cld
-
-loc_13E7:
-		repne scasb
-		jcxz	short loc_140A
-		cmp	al, es:[di]
-		jz	short loc_140A
-		cmp	word ptr es:[di], 3738h
-		jnz	short loc_13E7
-		mov	dx, es:[di+2]
-		cmp	dl, 3Dh	; '='
-		jnz	short loc_13E7
-		inc	bx
-		and	dh, 0DFh
-		cmp	dh, 59h	; 'Y'
-		jnz	short loc_140A
-		inc	bx
-
-loc_140A:
-		pop	di
-		pop	si
-		xor	ax, ax
-		or	bx, bx
-		jz	short loc_146F
-		jg	short loc_1450
-		mov	cx, __8087
-		jcxz	short loc_1472
-		fninit
-		mov	__8087, 0
-		fnstcw	__8087
-		mov	cx, 14h
-
-loc_1429:
-		loop	loc_1429
-		mov	cx, __8087
-		and	cx, 0F3Fh
-		cmp	cx, 33Fh
-		jnz	short loc_146E
-		mov	__8087, 0FFFFh
-		fnstsw	__8087
-		mov	cx, 14h
-
-loc_1446:
-		loop	loc_1446
-		test	__8087, 0B8BFh
-		jnz	short loc_146E
-
-loc_1450:
-		inc	ax
-		push	sp
-		pop	cx
-		cmp	cx, sp
-		jnz	short loc_146E
-		fninit
-		fld	dword ptr cs:byte_12DB
-		fchs
-		fcomp	dword ptr cs:byte_12DB
-		fstsw	ax
-		sahf
-		mov	al, 2
-		jz	short loc_146E
-		inc	ax
-
-loc_146E:
-		cbw
-
-loc_146F:
-		mov	__8087, ax
-
-loc_1472:
-		mov	ss:26h,	al
-		pop	ds
-		push	ds
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		mov	bx, seg	dseg
-		mov	ds, bx
-		cmp	__8087, 0
-		mov	word ptr [bp-8], offset	e087_Entry
-		mov	word ptr [bp-6], seg seg014
-		mov	word ptr [bp-4], offset	e087_Shortcut
-		mov	word ptr [bp-2], seg seg014
-		jnz	short loc_14B2
-		mov	word ptr [bp-8], offset	loc_11817
-		mov	word ptr [bp-6], seg seg015
-		mov	word ptr [bp-4], offset	loc_11DA5
-		mov	word ptr [bp-2], seg seg015
-
-loc_14B2:
-		mov	ax, 2534h
-		mov	cx, 0Ah
-		lds	dx, [bp-8]
-
-loc_14BB:
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		inc	ax
-		loop	loc_14BB
-		mov	ax, 253Eh
-		lds	dx, [bp-4]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		mov	ds, bx
-		cmp	__8087, 0
-		jnz	short loc_14FA
-		mov	word ptr ss:61h, offset	off_1308
-		mov	word ptr ss:63h, cs
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	ax, ds
-		xor	ax, ss:27h
-		mov	ds, ax
-		assume ds:dseg
-		mov	word ptr ds:1315h, offset locret_1323
-		mov	ds:1317h, cs
-		mov	word ptr ds:12D7h, 0FFFFh
-		jmp	short loc_154B
-; ---------------------------------------------------------------------------
-
-loc_14FA:
-		push	cs
-		pop	ds
-		assume ds:seg000
-		cmp	byte_12D6, 2
-		jnz	short loc_1528
-		mov	ax, word_12D7
-		mov	dx, 1308h
-		int	21h		; DOS -	DOS v??? - OEM FUNCTION
-		mov	ds, bx
-		assume ds:dseg
-		cmp	__8087, 0
-		jz	short loc_154B
-		mov	ax, _version@
-		xchg	ah, al
-		cmp	ax, 1403h
-		jnz	short loc_154B
-		mov	ax, 2575h
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 12DFh
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-
-loc_1528:
-		cmp	byte_12D6, 1
-		jnz	short loc_154B
-		mov	ax, word_12D7
-		mov	dx, 1308h
-		cmp	al, 16h
-		jnz	short loc_153C
-		mov	dx, 12EEh
-
-loc_153C:
-		int	21h		; DOS -	DOS v??? - OEM FUNCTION
-		cmp	al, 16h
-		jnz	short loc_154B
-		pushf
-		cli
-		in	al, 0Ah		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		and	al, 0BFh
-		out	0Ah, al		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		popf
-
-loc_154B:
-		mov	ds, bx
-		assume ds:dseg
-		mov	cs:byte_12DA, 1
-		; Hack (fninit)
-		db 0cdh
-		db 037h
-		db 0e3h
-		mov	word ptr ss:41h, 0
-		mov	word ptr ss:43h, 0
-		mov	ax, __default87
-		mov	[bp-8],	ax
-		cmp	__8087, 3
-		jl	short loc_1575
-		or	word ptr [bp-8], 2
-
-loc_1575:
-		push	si
-		; Hack (fldcw word ptr [bp-8])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0f8h
-		pop	si
-		mov	ax, [bp-8]
-		and	ss:22h,	ax
-		xor	ax, ax
-		cwd
-		mov	sp, bp
-		pop	bp
-		pop	ds
-		retn
-; ---------------------------------------------------------------------------
-		push	ds
-		mov	ax, seg	dseg
-		mov	ds, ax
-		cmp	cs:byte_12DA, 0
-		jz	short loc_15EF
-		push	ds
-		; Hack (fninit)
-		db 0cdh
-		db 037h
-		db 0e3h
-		mov	ax, 2534h
-		mov	bx, 12A2h
-		mov	cx, 0Bh
-
-loc_15A6:
-		lds	dx, cs:[bx]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		add	bx, 4
-		inc	ax
-		loop	loc_15A6
-		pop	ds
-		cmp	__8087, 0
-		jz	short loc_15EF
-		cmp	cs:byte_12D6, 2
-		jnz	short loc_15CC
-		mov	ax, 2575h
-		lds	dx, cs:[bx]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		add	bx, 4
-
-loc_15CC:
-		mov	ax, cs:word_12D7
-		cmp	cs:byte_12D6, 1
-		jnz	short loc_15EA
-		cmp	al, 16h
-		jnz	short loc_15EA
-		xchg	ax, dx
-		pushf
-		cli
-		in	al, 0Ah		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		or	al, cs:byte_12D9
-		out	0Ah, al		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		popf
-		xchg	ax, dx
-
-loc_15EA:
-		lds	dx, cs:[bx]
-		int	21h		; DOS -
-
-loc_15EF:
-		mov	cs:byte_12DA, 0
-		pop	ds
-		retn
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15F7	proc far
-		mov	ax, cs:word_12D7
-		retf
-sub_15F7	endp
-
+include libs/BorlandC/emu/nec_fpinit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15690,7 +15271,7 @@ loc_F146:
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_F150	proc far
+e087_Trap	proc far
 
 ; FUNCTION CHUNK AT 0000 SIZE 0000003D BYTES
 
@@ -15883,7 +15464,7 @@ loc_F269:
 		mov	ax, 29h	; ')'
 		stc
 		jmp	short loc_F257
-sub_F150	endp ; sp-analysis failed
+e087_Trap	endp ; sp-analysis failed
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21690,7 +21271,7 @@ loc_11812:
 		db 55h,	0
 ; ---------------------------------------------------------------------------
 
-loc_11817:
+e086_Entry:
 		sti
 		cld
 		push	ax
@@ -22647,7 +22228,7 @@ sub_11D8B	proc far
 		lodsw
 		sbb	ax, 1DB8h
 
-loc_11DA5:
+e086_Shortcut:
 		sti
 		cld
 		push	ax
@@ -22727,7 +22308,7 @@ loc_11E0D:
 ; ---------------------------------------------------------------------------
 
 loc_11E16:
-		call	sub_15F7
+		call	__fpuint
 		cmp	ax, 0FFFFh
 		jz	short loc_11E2E
 		mov	ah, 35h
@@ -23434,12 +23015,7 @@ include libs/BorlandC/cvtfak[cvtseg].asm
 include libs/BorlandC/cvtfak[scnseg].asm
 
 InitStart	label byte
-		db    0
-		db  10h
-		db  24h	; $
-		db  13h
-		db    0
-		db    0
+include libs/BorlandC/emu/fpinit[initdata].asm
 include libs/BorlandC/new[initdata].asm
 include libs/BorlandC/setupio[initdata].asm
 include libs/BorlandC/cputype[initdata].asm
@@ -23451,12 +23027,7 @@ include libs/BorlandC/conioini[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte
-		db    0
-		db  10h
-		db  8Bh
-		db  15h
-		db    0
-		db    0
+include libs/BorlandC/emu/fpinit[exitdata].asm
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 

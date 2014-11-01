@@ -40807,7 +40807,7 @@ loc_31046:
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_31050	proc far
+e087_Trap	proc far
 
 ; FUNCTION CHUNK AT 0000 SIZE 0000003D BYTES
 
@@ -41000,7 +41000,7 @@ loc_31169:
 		mov	ax, 29h	; ')'
 		stc
 		jmp	short loc_31157
-sub_31050	endp ; sp-analysis failed
+e087_Trap	endp ; sp-analysis failed
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -46525,7 +46525,7 @@ loc_33712:
 		db    0
 ; ---------------------------------------------------------------------------
 
-loc_33717:
+e086_Entry:
 		sti
 		cld
 		push	ax
@@ -47431,7 +47431,7 @@ sub_33B37	endp ; sp-analysis failed
 		lodsw
 		sbb	ax, 1DB8h
 
-loc_33CA5:
+e086_Shortcut:
 		sti
 		cld
 		push	ax
@@ -47509,7 +47509,7 @@ loc_33D0D:
 ; ---------------------------------------------------------------------------
 
 loc_33D16:
-		call	sub_1987
+		call	__fpuint
 		cmp	ax, 0FFFFh
 		jz	short loc_33D2E
 		mov	ah, 35h

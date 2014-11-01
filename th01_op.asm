@@ -1715,287 +1715,7 @@ include libs/master.lib/keybios.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/random.asm
-
-; ---------------------------------------------------------------------------
-		db 34h dup(0)
-byte_1396	db 0
-word_1397	dw 0FFFFh
-byte_1399	db 0
-byte_139A	db 0
-		db 2 dup(0), 80h, 7Fh, 50h, 32h, 0C0h, 0E6h, 0F0h, 0B0h
-		db 20h,	0E6h, 0A0h, 0E6h, 20h, 58h, 0CDh, 2, 0CFh, 50h
-		db 0B0h, 20h, 0E6h, 8, 0EBh, 0,	0B0h, 0Bh, 0E6h, 8, 0EBh
-		db 0, 0E4h, 8, 0Ah, 0C0h, 75h, 4, 0B0h,	20h, 0E6h, 0, 58h
-		db 0EBh, 0
-off_13C8	dd 13FCB850h
-; ---------------------------------------------------------------------------
-		call	sub_E940
-		jb	short loc_13D9
-		pop	ax
-		; Hack (jmp start)
-		db 0eah
-		db 000h
-		db 000h
-		db 000h
-		db 000h
-; ---------------------------------------------------------------------------
-
-loc_13D9:
-		xchg	ax, bx
-		mov	ax, seg	dseg
-		mov	ds, ax
-		call	fperror
-		pop	ax
-
-locret_13E3:
-		iret
-; ---------------------------------------------------------------------------
-		db 1Eh,	56h, 57h, 0B8h
-		dw seg dseg
-		mov	ds, ax
-		mov	ax, 65h
-		mov	ss:2Fh, ax
-		db 5, 0C0h, 0, 36h, 0A3h, 31h, 0, 0A1h,	0A0h, 8, 36h, 0A3h
-		db 27h,	0, 1Eh,	0Eh, 1Fh, 8Ch, 0D8h, 36h, 33h, 6, 27h
-		db 0, 8Eh, 0D8h, 0B8h, 34h, 35h, 0B9h, 0Bh, 0, 0BFh, 62h
-		db 13h,	0CDh, 21h, 89h,	1Dh, 8Ch, 45h, 2, 83h, 0C7h, 4
-		db 40h,	0E2h, 0F3h, 1Eh, 57h, 0B1h, 0, 0B8h
-		dw seg dseg
-		mov ds, ax
-		cmp	__8087, 0
-		db 74h,	14h, 0B4h, 4, 33h, 0C9h, 0CDh, 1Ah, 0B1h, 2, 80h
-		db 0FDh, 19h, 74h, 7, 80h, 0FDh, 20h, 74h, 2, 0B1h, 1
-		db 5Fh,	1Fh, 88h, 0Eh, 96h, 13h, 80h, 0F9h, 2, 75h, 12h
-		db 0B8h, 75h, 35h, 0CDh, 21h, 89h, 1Dh,	8Ch, 45h, 2, 83h
-		db 0C7h, 4, 0B8h, 2, 35h, 0EBh,	17h, 80h, 0F9h,	1, 75h
-		db 29h,	54h, 58h, 3Bh, 0C4h, 0B8h, 10h,	35h, 74h, 9, 0E4h
-		db 0Ah,	24h, 40h, 0A2h,	99h, 13h, 0B0h,	16h, 8Ah, 0D8h
-		db 0B7h, 25h, 89h, 1Eh,	97h, 13h, 0CDh,	21h, 89h, 1Dh
-		db 8Ch,	45h, 2,	89h, 1Eh, 0D5h,	13h, 8Ch, 6, 0D7h, 13h
-		db 1Fh,	0BBh, 2	dup(0FFh), 8Eh,	6, 7Ah,	0, 26h,	8Eh, 6
-		db 2Ch,	0, 2Bh,	0FFh, 0B9h, 0FFh, 7Fh, 0B0h, 0,	0FCh, 0F2h
-		db 0AEh, 0E3h, 1Fh, 26h, 3Ah, 5, 74h, 1Ah, 26h,	81h, 3Dh
-		db 38h,	37h, 75h, 0F0h,	26h, 8Bh, 55h, 2, 80h, 0FAh, 3Dh
-		db 75h,	0E7h, 43h, 80h,	0E6h, 0DFh, 80h, 0FEh, 59h, 75h
-		db 1, 43h, 5Fh,	5Eh, 33h, 0C0h,	0Bh, 0DBh, 74h,	5Dh, 7Fh
-		db 3Ch,	8Bh, 0Eh, 0B0h,	8, 0E3h, 58h, 0DBh, 0E3h, 0C7h
-		db 6, 0B0h, 8, 2 dup(0), 0D9h, 3Eh, 0B0h, 8, 0B9h, 14h
-		db 0, 0E2h, 0FEh, 8Bh, 0Eh, 0B0h, 8, 81h, 0E1h,	3Fh, 0Fh
-		db 81h,	0F9h, 3Fh, 3, 75h, 35h,	0C7h, 6, 0B0h, 8, 2 dup(0FFh)
-		db 0DDh, 3Eh, 0B0h, 8, 0B9h, 14h, 0, 0E2h, 0FEh, 0F7h
-		db 6, 0B0h, 8, 0BFh, 0B8h, 75h,	1Eh, 40h, 54h, 59h, 3Bh
-		db 0CCh, 75h, 17h, 0DBh, 0E3h, 2Eh, 0D9h, 6, 9Bh, 13h
-		db 0D9h, 0E0h, 2Eh, 0D8h, 1Eh, 9Bh, 13h, 9Bh, 0DFh, 0E0h
-		db 9Eh,	0B0h, 2, 74h, 1, 40h, 98h, 0A3h, 0B0h, 8, 36h
-		db 0A2h, 26h, 0, 1Fh, 1Eh
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		sub	sp, 8
-		mov	bx, seg	dseg
-		mov	ds, bx
-		cmp	__8087, 0
-		mov	word ptr [bp-8], offset	e087_Entry
-		mov	word ptr [bp-6], seg seg013
-		mov	word ptr [bp-4], offset	e087_Shortcut
-		mov	word ptr [bp-2], seg seg013
-		jnz	short loc_1572
-		mov	word ptr [bp-8], offset	loc_11007
-		mov	word ptr [bp-6], seg seg014
-		mov	word ptr [bp-4], offset	loc_11595
-		mov	word ptr [bp-2], seg seg014
-
-loc_1572:
-		mov	ax, 2534h
-		mov	cx, 0Ah
-		lds	dx, [bp-8]
-
-loc_157B:
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		inc	ax
-		loop	loc_157B
-		mov	ax, 253Eh
-		lds	dx, [bp-4]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		mov	ds, bx
-		cmp	__8087, 0
-		jnz	short loc_15BA
-		mov	word ptr ss:61h, offset	off_13C8
-		mov	word ptr ss:63h, cs
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	ax, ds
-		xor	ax, ss:27h
-		mov	ds, ax
-		assume ds:dseg
-		mov	word_13665, offset locret_13E3
-		mov	word_13667, cs
-		mov	word_13627, 0FFFFh
-		jmp	short loc_160B
-; ---------------------------------------------------------------------------
-
-loc_15BA:
-		push	cs
-		pop	ds
-		assume ds:seg000
-		cmp	byte_1396, 2
-		jnz	short loc_15E8
-		mov	ax, word_1397
-		mov	dx, 13C8h
-		int	21h		; DOS -	DOS v??? - OEM FUNCTION
-		mov	ds, bx
-		assume ds:dseg
-		cmp	__8087, 0
-		jz	short loc_160B
-		mov	ax, _version@
-		xchg	ah, al
-		cmp	ax, 1403h
-		jnz	short loc_160B
-		mov	ax, 2575h
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 139Fh
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-
-loc_15E8:
-		cmp	byte_1396, 1
-		jnz	short loc_160B
-		mov	ax, word_1397
-		mov	dx, 13C8h
-		cmp	al, 16h
-		jnz	short loc_15FC
-		mov	dx, 13AEh
-
-loc_15FC:
-		int	21h		; DOS -	DOS v??? - OEM FUNCTION
-		cmp	al, 16h
-		jnz	short loc_160B
-		pushf
-		cli
-		in	al, 0Ah		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		and	al, 0BFh
-		out	0Ah, al		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		popf
-
-loc_160B:
-		mov	ds, bx
-		assume ds:dseg
-		mov	cs:byte_139A, 1
-		; Hack (fninit)
-		db 0cdh
-		db 037h
-		db 0e3h
-		mov	word ptr ss:41h, 0
-		mov	word ptr ss:43h, 0
-		mov	ax, __default87
-		mov	[bp-8],	ax
-		cmp	__8087, 3
-		jl	short loc_1635
-		or	word ptr [bp-8], 2
-
-loc_1635:
-		push	si
-		; Hack (fldcw word ptr [bp-8])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0f8h
-		pop	si
-		mov	ax, [bp-8]
-		and	ss:22h,	ax
-		xor	ax, ax
-		cwd
-		mov	sp, bp
-		pop	bp
-		pop	ds
-		retn
-; ---------------------------------------------------------------------------
-		push	ds
-		mov	ax, seg	dseg
-		mov	ds, ax
-		cmp	cs:byte_139A, 0
-		jz	short loc_16AF
-		push	ds
-		; Hack (fninit)
-		db 0cdh
-		db 037h
-		db 0e3h
-		mov	ax, 2534h
-		mov	bx, 1362h
-		mov	cx, 0Bh
-
-loc_1666:
-		lds	dx, cs:[bx]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		add	bx, 4
-		inc	ax
-		loop	loc_1666
-		pop	ds
-		cmp	__8087, 0
-		jz	short loc_16AF
-		cmp	cs:byte_1396, 2
-		jnz	short loc_168C
-		mov	ax, 2575h
-		lds	dx, cs:[bx]
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		add	bx, 4
-
-loc_168C:
-		mov	ax, cs:word_1397
-		cmp	cs:byte_1396, 1
-		jnz	short loc_16AA
-		cmp	al, 16h
-		jnz	short loc_16AA
-		xchg	ax, dx
-		pushf
-		cli
-		in	al, 0Ah		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		or	al, cs:byte_1399
-		out	0Ah, al		; DMA controller, 8237A-5.
-					; single mask bit register
-					; 0-1: select channel (00=0; 01=1; 10=2; 11=3)
-					; 2: 1=set mask	for channel; 0=clear mask (enable)
-		popf
-		xchg	ax, dx
-
-loc_16AA:
-		lds	dx, cs:[bx]
-		int	21h		; DOS -
-
-loc_16AF:
-		mov	cs:byte_139A, 0
-		pop	ds
-		retn
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_16B7	proc far
-		mov	ax, cs:word_1397
-		retf
-sub_16B7	endp
-
+include libs/BorlandC/emu/nec_fpinit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13228,7 +12948,7 @@ loc_E936:
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_E940	proc far
+e087_Trap	proc far
 
 ; FUNCTION CHUNK AT 0000 SIZE 0000003D BYTES
 
@@ -13421,7 +13141,7 @@ loc_EA59:
 		mov	ax, 29h	; ')'
 		stc
 		jmp	short loc_EA47
-sub_E940	endp ; sp-analysis failed
+e087_Trap	endp ; sp-analysis failed
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18878,7 +18598,7 @@ loc_11002:
 		db 55h,	0
 ; ---------------------------------------------------------------------------
 
-loc_11007:
+e086_Entry:
 		sti
 		cld
 		push	ax
@@ -19784,7 +19504,7 @@ sub_11427	endp ; sp-analysis failed
 		lodsw
 		sbb	ax, 1DB8h
 
-loc_11595:
+e086_Shortcut:
 		sti
 		cld
 		push	ax
@@ -19862,7 +19582,7 @@ loc_115FD:
 ; ---------------------------------------------------------------------------
 
 loc_11606:
-		call	sub_16B7
+		call	__fpuint
 		cmp	ax, 0FFFFh
 		jz	short loc_1161E
 		mov	ah, 35h
@@ -20546,12 +20266,7 @@ include libs/BorlandC/cvtfak[cvtseg].asm
 include libs/BorlandC/cvtfak[scnseg].asm
 
 InitStart	label byte
-		db    0
-		db  10h
-		db 0E4h
-		db  13h
-		db    0
-		db    0
+include libs/BorlandC/emu/fpinit[initdata].asm
 include libs/BorlandC/new[initdata].asm
 include libs/BorlandC/setupio[initdata].asm
 include libs/BorlandC/cputype[initdata].asm
@@ -20563,12 +20278,7 @@ include libs/BorlandC/conioini[initdata].asm
 InitEnd	label byte
 
 ExitStart	label byte
-		db    0
-		db  10h
-		db  4Bh	; K
-		db  16h
-		db    0
-		db    0
+include libs/BorlandC/emu/fpinit[exitdata].asm
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 

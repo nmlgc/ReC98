@@ -1,5 +1,5 @@
 ; void near cdecl _fperror(void)
-fperror	proc near
+__fperror	proc near
 @@func		= dword	ptr -8
 @@a		= dword	ptr -4
 
@@ -78,4 +78,4 @@ fperror	proc near
 		mov	sp, bp
 		pop	bp
 		retn
-fperror	endp
+__fperror	endp
