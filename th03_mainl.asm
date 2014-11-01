@@ -8857,6 +8857,7 @@ include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
 include libs/BorlandC/strings[textc].asm
 		dd 0
+		dw 0
 seg003		ends
 
 ; ===========================================================================
