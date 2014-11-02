@@ -44,7 +44,7 @@ include libs/BorlandC/regs.inc
 ; Segment type:	Pure code
 seg000		segment	word public 'CODE' use16
 		assume cs:seg000
-		assume es:nothing, ss:seg017, ds:dseg, fs:nothing, gs:nothing
+		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 
@@ -13127,20 +13127,8 @@ include libs/BorlandC/putc[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
 
-		dw ?
-		dd ?
 dseg		ends
 
-; ===========================================================================
-
-; Segment type:	Uninitialized
-seg017		segment	byte stack 'STACK' use16
-		assume cs:seg017
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 20h dup(?)
-include libs/BorlandC/math/emuvars[stack].asm
-		db 33h dup(?)
-seg017		ends
-
+include libs/BorlandC/stack.asm
 
 		end startx

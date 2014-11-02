@@ -32,7 +32,7 @@ include ReC98.inc
 ; Segment type:	Pure code
 seg000		segment	word public 'CODE' use16
 		assume cs:seg000
-		assume es:nothing, ss:seg006, ds:dseg, fs:nothing, gs:nothing
+		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -33894,18 +33894,8 @@ include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
 
-		dd ?
-		dd ?
 dseg		ends
 
-; ===========================================================================
-
-; Segment type:	Uninitialized
-seg006		segment	byte stack 'STACK' use16
-		assume cs:seg006
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 80h dup(?)
-seg006		ends
-
+include libs/BorlandC/stack.asm
 
 		end startx
