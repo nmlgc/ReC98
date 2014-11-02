@@ -52,7 +52,7 @@
 		CGROUP36 group seg036
 		CGROUP37 group seg037
 		CGROUP38 group seg038
-		CGROUP39 group seg039
+		CGROUP39 group E87_PROG
 		CGROUP40 group EMU_PROG
 		CGROUP41 group seg041
 

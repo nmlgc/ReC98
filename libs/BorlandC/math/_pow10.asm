@@ -115,4 +115,3 @@ endif
 		pop	bp
 		ret	2
 __pow10		endp
-		noemul
