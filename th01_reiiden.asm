@@ -53,7 +53,7 @@
 		CGROUP37 group seg037
 		CGROUP38 group seg038
 		CGROUP39 group seg039
-		CGROUP40 group seg040
+		CGROUP40 group EMU_PROG
 		CGROUP41 group seg041
 
 		.286 ; Force the .model directive to create 16-bit default segments...
