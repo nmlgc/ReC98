@@ -297,4 +297,3 @@ ___XCVT		proc near
 		pop	bp
 		ret	10h
 ___XCVT		endp
-		noemul
