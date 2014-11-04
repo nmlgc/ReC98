@@ -30,8 +30,9 @@ It certainly *seems* to be. During the development of the static English patches
 
 * [master.lib](http://www.koizuka.jp/~koizuka/master.lib/), a 16-bit x86 assembly library providing an abstraction layer for all components of a PC-98 DOS system
 * as well as the Borland C/C++ runtime library, version 4.0.
+* Additionally, TH01 includes the [Pi loader library by 電脳科学研究所/BERO](http://www.vector.co.jp/soft/dos/prog/se037608.html).
 
-These two make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
+The two main libraries make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
 
 With [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we also have an open-source PC-9821 emulator, capable of running the games. This will greatly help in understanding and porting all hardware-specific code.
 
