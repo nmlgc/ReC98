@@ -1,6 +1,6 @@
 ; int execl(char *pathP, char *arg0, ...)
 		public _execl
-_execl		proc DIST
+_execl		proc
 @@pathP		= DPTR_ 2 + dPtrSize
 @@arg0		= DPTR_ 2 + (dPtrSize * 2)
 

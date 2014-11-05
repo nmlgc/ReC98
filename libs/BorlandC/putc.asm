@@ -1,6 +1,6 @@
 ; int __cdecl _fputc(char ch, FILE *fp)
 public __fputc
-__fputc		proc DIST
+__fputc		proc
 @@ch		= byte ptr dPtrSize + 2
 @@fp		= dword	ptr dPtrSize + 4
 
@@ -25,7 +25,7 @@ __fputc		endp
 
 ; int __cdecl fputc(int	ch, FILE *fp)
 public _fputc
-_fputc		proc DIST
+_fputc		proc
 @@ch		= byte ptr dPtrSize + 2
 @@fp		= dword	ptr dPtrSize + 4
 
@@ -210,7 +210,7 @@ _fputc		endp
 
 ; int __cdecl fputchar(int c)
 public _fputchar
-_fputchar	proc DIST
+_fputchar	proc
 @@ch		= word ptr dPtrSize + 2
 
 		push	bp

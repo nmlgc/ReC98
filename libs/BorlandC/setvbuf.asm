@@ -1,5 +1,5 @@
 ; int __cdecl setvbuf(FILE *fp, char *buf, int type, size_t size)
-_setvbuf	proc DIST
+_setvbuf	proc
 @@fp		= DPTR_ dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 2 + dPtrSize
 @@type		= word ptr dPtrSize + 2 + (dPtrSize * 2)

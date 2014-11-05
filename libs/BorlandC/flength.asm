@@ -1,5 +1,5 @@
 ; long __cdecl __far filelength(int handle)
-_filelength	proc DIST
+_filelength	proc
 @@Position	= dword	ptr -4
 @@handle	= word ptr dPtrSize + 2
 

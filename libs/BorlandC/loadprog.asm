@@ -1,4 +1,4 @@
-loadprog_strchr	proc DIST
+loadprog_strchr	proc
 @@var_8		= dword	ptr -8
 @@var_4		= dword	ptr -4
 @@arg_0		= word ptr  6
@@ -81,7 +81,7 @@ loadprog_strchr	endp
 
 
 ; int __cdecl __far loadprog_search(const char *pathP, char *fullname, const char *ext, int UsePath)
-loadprog_search	proc DIST
+loadprog_search	proc
 @@name		= byte ptr -50h
 @@pathP		= dword	ptr  6
 @@fullname	= dword	ptr  0Ah

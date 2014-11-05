@@ -264,7 +264,7 @@ __getfp		proc near
 __getfp		endp
 
 ; FILE *__cdecl fopen(const char *filename, const char *type)
-_fopen		proc DIST
+_fopen		proc
 @@fp		= DPTR_ -4
 @@filename	= DPTR_ (2 + cPtrSize)
 @@type		= DPTR_ (2 + cPtrSize + dPtrSize)

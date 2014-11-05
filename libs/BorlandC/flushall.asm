@@ -1,5 +1,5 @@
 ; int flushall(void)
-_flushall	proc DIST
+_flushall	proc
 @@Cpt		= word ptr -(dPtrSize + 4)
 @@Nb		= word ptr -(dPtrSize + 2)
 @@fp		= DPTR_ -(dPtrSize)

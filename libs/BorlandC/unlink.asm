@@ -1,5 +1,5 @@
 ; int __cdecl unlink(const char	*path)
-_unlink		proc DIST
+_unlink		proc
 @@path		= DPTR_ 2 + dPtrSize
 
 		push	bp

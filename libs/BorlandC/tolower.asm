@@ -1,5 +1,5 @@
 ; int __cdecl tolower(int ch)
-_tolower	proc DIST
+_tolower	proc
 @@ch		= word ptr dPtrSize + 2
 
 		push	bp

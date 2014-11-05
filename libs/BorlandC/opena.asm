@@ -1,5 +1,5 @@
 ; int __cdecl __far _rtl_open(const char *filename, int oflag)
-__rtl_open	proc DIST
+__rtl_open	proc
 @@fd		= word ptr -2
 @@filename	= DPTR_ (cPtrSize + 2)
 @@oflag		= word ptr (cPtrSize + 2 + dPtrSize)
@@ -51,7 +51,7 @@ __rtl_open	proc DIST
 __rtl_open	endp
 
 ; int __cdecl _open(const char *path, int oflags)
-__open		proc DIST
+__open		proc
 @@filename	= DPTR_ (cPtrSize + 2)
 @@oflag		= word ptr (cPtrSize + 2 + dPtrSize)
 

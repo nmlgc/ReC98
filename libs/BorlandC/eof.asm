@@ -1,5 +1,5 @@
 ; int __cdecl __far eof(int handle)
-_eof		proc DIST
+_eof		proc
 @@endPosn	= DPTR_ -(dPtrSize)
 @@handle	= word ptr 2 + dPtrSize
 

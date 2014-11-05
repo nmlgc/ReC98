@@ -174,7 +174,7 @@ VSYNC_COUNT endp
 ;	void vsync_leave( void );
 	public VSYNC_LEAVE
 func VSYNC_END
-VSYNC_LEAVE label callmodel
+VSYNC_LEAVE label proc
 	cmp	vsync_OldMask,0 ; house keeping
 	je	short @@E_IGNORE
 

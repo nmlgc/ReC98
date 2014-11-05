@@ -1,6 +1,6 @@
 ; int _CType _FARFUNC _write(int fd, const void *buf, unsigned len)
 public __rtl_write
-__rtl_write	proc DIST
+__rtl_write	proc
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize
@@ -48,7 +48,7 @@ __rtl_write	endp
 
 ; int __cdecl _write(int fd, const void *buf, unsigned len)
 public __write
-__write	proc DIST
+__write	proc
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize

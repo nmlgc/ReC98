@@ -1,5 +1,5 @@
 ; void _xclose(void)
-__xclose	proc DIST
+__xclose	proc
 @@i		= word ptr -2
 
 		push	bp

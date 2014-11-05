@@ -1,5 +1,5 @@
 ; void __cdecl movmem(const void *src, void *dst, unsigned int len)
-_movmem		proc DIST
+_movmem		proc
 @@src		= DPTR_ 2 + dPtrSize
 @@dst		= DPTR_ 2 + (dPtrSize * 2)
 @@len		= word ptr 2 + (dPtrSize * 3)
@@ -67,7 +67,7 @@ _movmem		endp
 
 ; void *__cdecl	memmove(void *dest, const void *src, size_t n)
 public _memmove
-_memmove	proc DIST
+_memmove	proc
 @@dst		= DPTR_ 2 + dPtrSize
 @@src		= DPTR_ 2 + (dPtrSize * 2)
 @@len		= word ptr 2 + (dPtrSize * 3)

@@ -1,6 +1,6 @@
 ; size_t __cdecl strlen(const char *s)
 public _strlen
-_strlen		proc DIST
+_strlen		proc
 @@s		= DPTR_ (2 + cPtrSize)
 
 		push	bp

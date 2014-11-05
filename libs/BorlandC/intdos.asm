@@ -1,5 +1,5 @@
 ; int __cdecl intdos(union REGS *inregs, union REGS *outregs)
-_intdos		proc DIST
+_intdos		proc
 @@segp		= SREGS	ptr -(size SREGS)
 @@inregs	= DPTR_ (dPtrSize + 2)
 @@outregs	= DPTR_ (dPtrSize + 2 + dPtrSize)
@@ -32,7 +32,7 @@ _intdos		proc DIST
 _intdos		endp
 
 ; int __cdecl intdosx(union REGS *inregs, union REGS *outregs, struct SREGS *segregs)
-_intdosx	proc DIST
+_intdosx	proc
 @@inregs	= DPTR_ (2 + dPtrSize)
 @@outregs	= DPTR_ (2 + dPtrSize + dPtrSize)
 @@segregs	= DPTR_ (2 + dPtrSize + dPtrSize + dPtrSize)

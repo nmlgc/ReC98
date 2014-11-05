@@ -1,5 +1,5 @@
 ; int __cdecl puts(const char *s)
-_puts		proc DIST
+_puts		proc
 @@len		= word ptr -2
 @@s		= DPTR_ (2 + cPtrSize)
 

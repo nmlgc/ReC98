@@ -4,6 +4,8 @@
 ; * any extern data declarations
 ; * the 'CODE' segment declaration (for obvious reasons)
 ; * the ARG directives (they don't compile correctly for some reason)
+; * PROC DIST and LABEL DIST (replaced with just PROC and LABEL PROC,
+;   respectively)
 
 ;[]-----------------------------------------------------------------[]
 ;|      FEAPCHK.ASM                                                  |
@@ -20,10 +22,8 @@
 
 IF LPROG
   EXTRADISP     equ     2         ; Allow for FAR returns when getting parms
-  DIST          equ     FAR
 ELSE
   EXTRADISP     equ     0
-  DIST          equ     NEAR
 ENDIF
 
 ;-----------------------------------------------------------------------
@@ -87,10 +87,10 @@ FreeHeaderSize  EQU     10
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _heapcheck
-_heapcheck      LABEL   DIST
+_heapcheck      LABEL   PROC
 ENDIF
                 PUBLIC  _farheapcheck
-_farheapcheck   PROC    DIST
+_farheapcheck   PROC
                 push    si
                 push    di
                 push    bp
@@ -217,10 +217,10 @@ _farheapcheck   PROC    DIST
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _heapchecknode
-_heapchecknode  LABEL   DIST
+_heapchecknode  LABEL   PROC
 ENDIF
                 PUBLIC  _farheapchecknode
-_farheapchecknode       PROC DIST
+_farheapchecknode       PROC
 
                 push    bp
                 mov     bp,sp
@@ -292,10 +292,10 @@ _farheapchecknode       PROC DIST
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _heapfillfree
-_heapfillfree   LABEL   DIST
+_heapfillfree   LABEL   PROC
 ENDIF
                 PUBLIC  _farheapfillfree
-_farheapfillfree        PROC DIST
+_farheapfillfree        PROC
 
                 push    bp
                 mov     bp,sp
@@ -358,10 +358,10 @@ _farheapfillfree        PROC DIST
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _heapcheckfree
-_heapcheckfree  LABEL   DIST
+_heapcheckfree  LABEL   PROC
 ENDIF
                 PUBLIC  _farheapcheckfree
-_farheapcheckfree       PROC DIST
+_farheapcheckfree       PROC
 
                 push    bp
                 mov     bp,sp
@@ -428,10 +428,10 @@ _farheapcheckfree       PROC DIST
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _heapwalk
-_heapwalk       LABEL   DIST
+_heapwalk       LABEL   PROC
 ENDIF
                 PUBLIC  _farheapwalk
-_farheapwalk    PROC DIST
+_farheapwalk    PROC
 
                 push    bp
                 mov     bp,sp

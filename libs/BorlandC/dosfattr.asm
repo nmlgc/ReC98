@@ -1,5 +1,5 @@
 ; unsigned int __cdecl _dos_getfileattr(const char *filename, unsigned int *attrib)
-__dos_getfileattr proc DIST
+__dos_getfileattr proc
 @@filename	= DPTR_ 2 + dPtrSize
 @@attrib	= DPTR_ 2 + (dPtrSize * 2)
 
@@ -31,7 +31,7 @@ __dos_getfileattr proc DIST
 __dos_getfileattr endp
 
 ; unsigned int __cdecl _dos_setfileattr(const char *filename, unsigned int attrib)
-__dos_setfileattr proc DIST
+__dos_setfileattr proc
 @@filename	= DPTR_ 2 + dPtrSize
 @@attrib	= DPTR_ 2 + (dPtrSize * 2)
 

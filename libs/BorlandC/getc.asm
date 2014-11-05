@@ -101,7 +101,7 @@ __ffill		proc near
 __ffill		endp
 
 ; int __cdecl _fgetc(FILE *stream)
-__fgetc		proc DIST
+__fgetc		proc
 @@fp		= DPTR_ (2 + cPtrSize)
 
 		push	bp
@@ -127,7 +127,7 @@ __Nfgetc:
 		push	ax
 
 ; int __cdecl fgetc(FILE *@@fp)
-_fgetc		proc DIST
+_fgetc		proc
 @@fp		= DPTR_ (2 + cPtrSize)
 
 		push	bp
@@ -248,7 +248,7 @@ _fgetc		proc DIST
 _fgetc		endp
 
 ; int fgetchar(void)
-_fgetchar	proc DIST
+_fgetchar	proc
 		push	si
 		push	di
 		push	ds

@@ -1,6 +1,6 @@
 ; long _CType lseek(int fd, long ofs, int kind)
 public _lseek
-_lseek		proc DIST
+_lseek		proc
 @@fd		= word ptr dPtrSize + 2
 @@ofs		= dword ptr dPtrSize + 4
 @@kind	= byte ptr dPtrSize + 8

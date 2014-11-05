@@ -1,6 +1,6 @@
 ; int __cdecl fputs(const char *s, FILE	*fp)
 public _fputs
-_fputs		proc DIST
+_fputs		proc
 @@len		= word ptr -2
 @@s		= DPTR_ dPtrSize + 2
 @@fp		= DPTR_ dPtrSize + 2 + dPtrSize

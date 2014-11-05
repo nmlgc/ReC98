@@ -2,7 +2,7 @@ MAX_ATEXIT	equ 32
 
 ; int atexit(atexit_t func)
 public _atexit
-_atexit		proc DIST
+_atexit		proc
 
 _func		= DPTR_  2 + dPtrSize
 

@@ -1,6 +1,6 @@
 ; operator new[](unsigned int)
 		public @$bnwa$qui
-@$bnwa$qui	proc DIST
+@$bnwa$qui	proc
 @@size		= word ptr 2 + dPtrSize
 
 		push	bp

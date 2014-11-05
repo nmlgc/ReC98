@@ -79,7 +79,7 @@ ENDIF
 ; Returns:              void
 ;-----------------------------------------------------------------------------
                 PUBLIC  _free
-_free           PROC DIST
+_free           PROC
                 push    si
                 push    di
                 mov     si,sp
@@ -252,7 +252,7 @@ InsertFreeBlock ENDP
 ;                       NULL if failure (ax)
 ;-----------------------------------------------------------------------------
                 PUBLIC  _malloc
-_malloc         PROC DIST
+_malloc         PROC
                 push    si                      ;should be on an odd address
                 push    di
 
@@ -526,7 +526,7 @@ ShrinkBlock     ENDP
 ;                       NULL if failure (ax)
 ;-----------------------------------------------------------------------------
                 PUBLIC  _realloc
-_realloc        PROC DIST
+_realloc        PROC
                 push    si
                 push    di
                 push    bp

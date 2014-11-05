@@ -208,7 +208,7 @@ Int23Catcher	proc far
 Int23Catcher	endp
 
 ; static int GetIndex(int SigType)
-GetIndex	proc DIST
+GetIndex	proc
 SigType		= word ptr 2 + dPtrSize
 
 		push	bp
@@ -240,7 +240,7 @@ SigType		= word ptr 2 + dPtrSize
 GetIndex	endp
 
 ; CatcherPTR __cdecl signal(int sig, CatcherPTR *New)
-signal		proc DIST
+signal		proc
 @@OldVar		= dword	ptr -6
 @@Index		= word ptr -2
 @@sig		= word ptr  6
@@ -348,7 +348,7 @@ signal		proc DIST
 signal		endp
 
 ; int raise(int SigType)
-raise	proc DIST
+raise	proc
 @@action		= dword	ptr -6
 @@Index		= word ptr -2
 @@SigType		= word ptr  6

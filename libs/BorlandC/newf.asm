@@ -1,6 +1,6 @@
 ; void far *__cdecl operator new(unsigned long size)
 		public @$bnew$qul
-@$bnew$qul	proc DIST
+@$bnew$qul	proc
 @@p		= dword	ptr -4
 @@size		= dword	ptr (cPtrSize + 2)
 

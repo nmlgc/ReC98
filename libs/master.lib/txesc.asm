@@ -102,7 +102,7 @@ func TEXT_SYSTEMLINE_SHOW
 endfunc
 
 ; In: DH = first byte, DL = second byte
-putcmd	proc CALLMODEL
+putcmd	proc
 	mov	AL,27	; ESC
 	int	29h
 	mov	AL,'['	; '['

@@ -1,6 +1,6 @@
 ; void (__cdecl	__interrupt far	*__cdecl getvect(int intr))()
 public _getvect
-_getvect	proc DIST
+_getvect	proc
 @@intr	= byte ptr  6
 
 		push	bp
@@ -20,7 +20,7 @@ _getvect	endp
 
 ; void __cdecl setvect(int intr, void (__interrupt far *func)())
 public _setvect
-_setvect	proc DIST
+_setvect	proc
 @@intr	= byte ptr  6
 @@func	= dword	ptr  8
 

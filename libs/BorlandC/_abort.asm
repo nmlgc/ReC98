@@ -1,5 +1,5 @@
 public __abort
-__abort	proc DIST
+__abort	proc
 		push	si
 		push	di
 if LDATA

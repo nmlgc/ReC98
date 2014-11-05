@@ -117,7 +117,7 @@ endif
 Displacement	endp
 
 ; int __cdecl fseek(FILE *fp, __int32 ofs, int whence)
-_fseek		proc DIST
+_fseek		proc
 @@fp		= DPTR_ 2 + dPtrSize
 @@ofs		= dword	ptr 2 + dPtrSize + dPtrSize
 @@whence	= word ptr 2 + dPtrSize + dPtrSize + 4
@@ -193,7 +193,7 @@ endif
 _fseek		endp
 
 ; __int32 __cdecl ftell(FILE *fp)
-_ftell		proc DIST
+_ftell		proc
 @@l		= dword	ptr -8
 @@a		= dword	ptr -4
 @@fp		= DPTR_	2 + dPtrSize

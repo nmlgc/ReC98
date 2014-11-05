@@ -1,4 +1,4 @@
-__xfclose	proc DIST
+__xfclose	proc
 @@i		= word ptr -(dPtrSize + 2)
 @@fp		= DPTR_ -(dPtrSize)
 

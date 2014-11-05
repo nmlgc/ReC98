@@ -1,5 +1,5 @@
 ; int __cdecl int86(int intno, union REGS *inregs, union REGS *outregs)
-_int86		proc DIST
+_int86		proc
 @@segp		= SREGS	ptr -(size SREGS)
 @@intno		= word ptr (dPtrSize + 2)
 @@inregs	= DPTR_ (dPtrSize + 4)
@@ -34,7 +34,7 @@ _int86		proc DIST
 _int86		endp
 
 ; int __cdecl int86x(int intno, union REGS *inregs, union REGS *outregs, struct SREGS *segregs)
-_int86x		proc DIST
+_int86x		proc
 @@Code		= byte ptr -(4 + 10)
 @@Vector	= dword	ptr -4
 @@intno		= word ptr (dPtrSize + 2)

@@ -1,7 +1,7 @@
 _ctlZ equ 26
 
 ; int __cdecl __far __read(int fd, void *buf, unsigned int len)
-___read		proc DIST
+___read		proc
 public ___read
 @@c		= byte ptr -3
 @@dlen		= word ptr -2

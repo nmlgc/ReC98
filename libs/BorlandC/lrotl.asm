@@ -1,5 +1,5 @@
 ; unsigned long __cdecl _lrotl(unsigned long val, int rotate_count)
-__lrotl		proc DIST
+__lrotl		proc
 @@val		= dword	ptr (cPtrSize + 2)
 @@rotate_count	= word ptr (cPtrSize + 2 + 4)
 

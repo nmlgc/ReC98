@@ -1,6 +1,6 @@
 ; operator new[](unsigned long size)
 		public @$bnwa$qul
-@$bnwa$qul	proc DIST
+@$bnwa$qul	proc
 @@size		= dword	ptr (cPtrSize + 2)
 
 		push	bp

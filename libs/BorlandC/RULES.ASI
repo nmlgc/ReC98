@@ -107,12 +107,6 @@ IFDEF   __HUGE__                ; Large Code - Large Data
         MMODEL          equ     FCODE+FDATA+5
 ENDIF
 
-IF      LPROG
-        DIST            equ     FAR
-ELSE
-        DIST            equ     NEAR
-ENDIF
-
         PAGE
 ;[]------------------------------------------------------------[]
 ;|                                                              |

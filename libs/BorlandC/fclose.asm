@@ -1,5 +1,5 @@
 ; int __cdecl fclose(FILE *fp)
-_fclose		proc DIST
+_fclose		proc
 @@res		= word ptr -2
 @@fp		= dword	ptr  6
 

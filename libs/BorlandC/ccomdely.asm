@@ -1,5 +1,5 @@
 		public _delay
-_delay		proc DIST
+_delay		proc
 @@arg_0		= word ptr cPtrSize + 2
 
 		push	bp

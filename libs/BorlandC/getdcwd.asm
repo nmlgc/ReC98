@@ -3,7 +3,7 @@ GETDCWD_STACK_SIZE equ 2 + MAXDIR + 4
 
 ; char *__cdecl	_getdcwd(int drive, char *bufP, int bufL)
 public __getdcwd
-__getdcwd	proc DIST
+__getdcwd	proc
 @@bufI		= byte ptr -GETDCWD_STACK_SIZE
 @@drv		= word ptr -2
 @@drive		= word ptr dPtrSize + 2

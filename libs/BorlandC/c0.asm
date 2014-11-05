@@ -295,7 +295,7 @@ ENDIF
 
 ;       Call cleanup routines
 
-__cleanup       PROC    DIST
+__cleanup       PROC
                 PUBLIC  __cleanup
 
                 mov     es, cs:DGROUP@@
@@ -311,7 +311,7 @@ __cleanup       ENDP
 
 ;       Check for null pointers before exit
 
-__checknull     PROC    DIST
+__checknull     PROC
                 PUBLIC  __checknull
 IF      LDATA EQ false
   IFNDEF  __TINY__
@@ -343,7 +343,7 @@ __checknull     ENDP
 
 ;       Exit to DOS
 
-__terminate     PROC    DIST
+__terminate     PROC
                 PUBLIC  __terminate
                 mov     bp,sp
                 mov     ah,4Ch
@@ -425,7 +425,7 @@ SaveVectors     ENDP
 ;       will have to save/restore these vectors itself when activated and
 ;       deactivated.
 ;--------------------------------------------------------------------------
-__restorezero   PROC    DIST
+__restorezero   PROC
                 PUBLIC  __restorezero
 IFDEF   __HUGE__
                 push    ds

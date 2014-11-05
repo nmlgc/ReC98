@@ -1,6 +1,6 @@
 ; void __cdecl _searchstr(const	char *file, const char *ipath, char *pathname)
 		public __searchstr
-__searchstr	proc DIST
+__searchstr	proc
 @@temp		= dword	ptr -4
 @@file		= dword	ptr  6
 @@ipath		= dword	ptr  0Ah

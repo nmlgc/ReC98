@@ -1,5 +1,5 @@
 ; int __cdecl setblock(unsigned	int segx, unsigned int newsize)
-_setblock	proc DIST
+_setblock	proc
 @@segx		= word ptr 2 + dPtrSize
 @@newsize		= word ptr 4 + dPtrSize
 

@@ -11,7 +11,7 @@ VCALLTYPE	 = 1A7h
 
 ; void __far _vector_new_(void far *ptr, size_t size, unsigned __int32 count, unsigned int mode, ...)
 		public @_vector_new_$qnvuiuluie
-@_vector_new_$qnvuiuluie proc DIST
+@_vector_new_$qnvuiuluie proc
 @@Length	= dword	ptr -1Ch
 @@PadFromZero	= word ptr -18h
 @@Header	= word ptr -16h

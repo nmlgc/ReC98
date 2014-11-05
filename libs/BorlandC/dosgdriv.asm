@@ -1,6 +1,6 @@
 ; void _dos_getdrive(unsigned *drive)
 public __dos_getdrive
-__dos_getdrive	proc DIST
+__dos_getdrive	proc
 @@drive		= DPTR_	2 + dPtrSize
 
 		push	bp
@@ -21,7 +21,7 @@ __dos_getdrive	endp
 
 ; void _dos_setdrive(unsigned drive, unsigned *ndrives)
 public __dos_setdrive
-__dos_setdrive	proc DIST
+__dos_setdrive	proc
 @@drive		= word ptr 2 + dPtrSize
 @@ndrives		= DPTR_ 4 + dPtrSize
 

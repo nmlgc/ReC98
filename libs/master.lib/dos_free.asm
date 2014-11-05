@@ -39,7 +39,7 @@
 
 	public DOS_FREE
 func MEM_FREE
-DOS_FREE label CALLMODEL
+DOS_FREE label proc
 	push	BP
 	push	ES
 	mov	BP,SP

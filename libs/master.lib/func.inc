@@ -22,19 +22,15 @@
 
 .list
 IF @MODEL LE 2
-  CALLMODEL equ NEAR
   RETSIZE EQU 1
   DATASIZE EQU 1
 ELSEIF @MODEL EQ 3
-  CALLMODEL equ NEAR
   RETSIZE EQU 1
   DATASIZE EQU 2
 ELSEIF @MODEL EQ 4
-  CALLMODEL equ FAR
   RETSIZE EQU 2
   DATASIZE EQU 1
 ELSEIF @MODEL EQ 5
-  CALLMODEL equ FAR
   RETSIZE EQU 2
   DATASIZE EQU 2
 ENDIF
@@ -47,7 +43,7 @@ ENDIF
 func	macro	name
 	public name
 	EVEN
-	name proc CALLMODEL
+	name proc
 	endfunc macro
 		EVEN
 		name endp
@@ -58,7 +54,7 @@ endm
 ; funcの外に、復帰処理をするPROCを置くときに、その先頭を指示するマクロ
 ; <実行するとマクロENDFUNCが生成される。これを用いて関数の終りを指示する>
 retfunc	macro name
-	name proc CALLMODEL
+	name proc
 	EVEN
 	endfunc macro
 		EVEN

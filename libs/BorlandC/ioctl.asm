@@ -1,6 +1,6 @@
 ; int ioctl(int fd, int func, void *argdx, int argcx)
 public _ioctl
-_ioctl		proc DIST
+_ioctl		proc
 
 handle		= word ptr  6
 _func		= word ptr  8

@@ -1,5 +1,5 @@
 ; int _CType _FARFUNC _close( register int fd )
-__rtl_close	proc DIST
+__rtl_close	proc
 @@fd		= word ptr cPtrSize + 2
 
 		push	bp
@@ -27,7 +27,7 @@ __rtl_close	proc DIST
 __rtl_close	endp
 
 ; int __cdecl _close(int fd)
-__close		proc DIST
+__close		proc
 @@fd		= word ptr cPtrSize + 2
 
 		push	bp

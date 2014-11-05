@@ -27,7 +27,7 @@ cibmdely_10035	proc near
 		retn
 cibmdely_10035	endp
 
-cibmdely_10053	proc DIST
+cibmdely_10053	proc
 @@var_2		= word ptr -2
 
 		push	bp
@@ -61,7 +61,7 @@ cibmdely_10053	proc DIST
 cibmdely_10053	endp
 
 		public ___ibm_delay
-___ibm_delay	proc DIST
+___ibm_delay	proc
 @@var_6		= word ptr -6
 @@var_4		= word ptr -4
 @@var_2		= word ptr -2

@@ -1,6 +1,6 @@
 ; char *_stpcpy(char *to, const char *from)
 public _stpcpy
-_stpcpy		proc DIST
+_stpcpy		proc
 
 @@len		= word ptr -2
 @@to		= dword	ptr  6

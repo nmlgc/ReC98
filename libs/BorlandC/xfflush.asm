@@ -1,6 +1,6 @@
 ; void _xfflush(void)
 public __xfflush
-__xfflush	proc DIST
+__xfflush	proc
 @@i		= word ptr -(dPtrSize + 2)
 @@fp		= DPTR_ -(dPtrSize)
 

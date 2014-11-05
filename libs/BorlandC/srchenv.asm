@@ -1,6 +1,6 @@
 ; void __cdecl __far _searchenv(const char *file, const char *varname, const char *pathname)
 		public __searchenv
-__searchenv	proc DIST
+__searchenv	proc
 @@env		= dword	ptr -4
 @@file		= dword	ptr  6
 @@varname	= dword	ptr  0Ah

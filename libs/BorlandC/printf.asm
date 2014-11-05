@@ -1,5 +1,5 @@
 ; int printf(const char	*format, ...)
-_printf		proc DIST
+_printf		proc
 @@format		= DPTR_ (2 + cPtrSize)
 @@va		= byte ptr (2 + cPtrSize + dPtrSize)
 

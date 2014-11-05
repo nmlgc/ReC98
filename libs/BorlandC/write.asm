@@ -1,7 +1,7 @@
 ___WRITE_CHUNK_SIZE equ 128
 
 ; int __cdecl __write(int fd, const void *buf, unsigned int len)
-___write	proc DIST
+___write	proc
 if LDATA
 ___WRITE_CRBUF_OFFSET equ 10h + ___WRITE_CHUNK_SIZE
 

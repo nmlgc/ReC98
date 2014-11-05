@@ -1,6 +1,6 @@
 ; int kbhit(void)
 public _kbhit
-_kbhit		proc DIST
+_kbhit		proc
 		push	si
 		push	di
 		cmp	_cFlag, 0

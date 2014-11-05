@@ -1,5 +1,5 @@
 ; __int32 __cdecl __far atol(const char *strP)
-_atol		proc DIST
+_atol		proc
 @@strP		= DPTR_ 2 + dPtrSize
 
 		push	bp
@@ -88,7 +88,7 @@ endif
 _atol		endp
 
 ; int __cdecl __far atoi(const char *strP)
-_atoi		proc DIST
+_atoi		proc
 @@strP		= DPTR_ 2 + dPtrSize
 
 		push	bp

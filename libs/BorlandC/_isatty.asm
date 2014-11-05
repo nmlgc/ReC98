@@ -1,6 +1,6 @@
 ; int __cdecl isatty(int handle)
 public _isatty
-_isatty		proc DIST
+_isatty		proc
 @@handle		= word ptr  dPtrSize + 2
 
 		push	bp

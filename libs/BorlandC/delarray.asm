@@ -1,6 +1,6 @@
 ; void operator delete[]( void _FAR *ptr )
 public @$bdla$qnv
-@$bdla$qnv	proc DIST
+@$bdla$qnv	proc
 @@ptr		= DPTR_ 2 + dPtrSize
 
 		push	bp

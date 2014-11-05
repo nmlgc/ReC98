@@ -47,7 +47,7 @@ dosWriteNone	proc near
 dosWriteNone	endp
 
 ; int __cdecl open(const char *pathP, int oflag, unsigned int mode)
-_open		proc DIST
+_open		proc
 @@fildes	= word ptr -8
 @@errno_copy	= word ptr -6
 @@devstat	= word ptr -4

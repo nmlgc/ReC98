@@ -1,6 +1,6 @@
 ; int _CType _read( int fd, void *buf, unsigned len )
 public __rtl_write
-__rtl_read	proc DIST
+__rtl_read	proc
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize
@@ -43,7 +43,7 @@ __rtl_read	endp
 
 ; int __cdecl _read(int fd, const void *buf, unsigned len)
 public __read
-__read		proc DIST
+__read		proc
 @@fd		= word ptr dPtrSize + 2
 @@buf		= DPTR_ dPtrSize + 4
 @@len		= word ptr dPtrSize + 4 + dPtrSize

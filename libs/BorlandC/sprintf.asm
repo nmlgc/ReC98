@@ -36,7 +36,7 @@ strputn		proc near
 strputn		endp
 
 ; int __far sprintf(char *bufP, const char *fmt, ...)
-_sprintf	proc DIST
+_sprintf	proc
 @@bufP		= DPTR_ (cPtrSize + 2)
 @@fmt		= DPTR_ (cPtrSize + 2 + dPtrSize)
 @@va		= byte ptr (cPtrSize + 2 + dPtrSize + dPtrSize)
@@ -64,7 +64,7 @@ _sprintf	proc DIST
 _sprintf	endp
 
 ; int __cdecl __far vsprintf(char *@@bufP, const char *@@fmt, va_list @@ap)
-_vsprintf	proc DIST
+_vsprintf	proc
 @@bufP		= DPTR_ (cPtrSize + 2)
 @@fmt		= DPTR_ (cPtrSize + 2 + dPtrSize)
 @@ap		= DPTR_ (cPtrSize + 2 + dPtrSize + dPtrSize)

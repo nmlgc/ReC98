@@ -1,5 +1,5 @@
 ; int __cdecl __far _access(const char *filename, int amode)
-__access	proc DIST
+__access	proc
 @@filename	= dword	ptr  6
 @@amode		= byte ptr  0Ah
 

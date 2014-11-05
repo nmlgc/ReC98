@@ -4,7 +4,8 @@
 ; * removal of the 'CODE' segment declaration (for obvious reasons)
 ; * removal of the ARG directives (they don't compile correctly for some
 ;   reason)
-; * the "PROC Generic* DIST" directives (apparently invalid TASM syntax?!?)
+; * PROC DIST and LABEL DIST being changed to just PROC and LABEL PROC,
+;   respectively
 ; * and a small section of code in ExtendHeap, which is present in the 
 ;   original Touhou builds, but was not included in the original version of
 ;   this file.
@@ -262,10 +263,10 @@ InsertFreeBlock PROC    NEAR
 ;-----------------------------------------------------------------------------
 IF LDATA
                 PUBLIC  _free
-_free           LABEL   DIST
+_free           LABEL   PROC
 ENDIF
                 PUBLIC  _farfree
-_farfree        PROC DIST
+_farfree        PROC
 
                 push    bp
                 mov     bp,sp
@@ -478,10 +479,10 @@ AllocatePartialBlock    PROC    NEAR
 ;                       from the heap if successful (dx:ax)
 ;                       NULL if failure (ds:ax)
 ;-----------------------------------------------------------------------------
-GenericMalloc	PROC DIST
+GenericMalloc	PROC
 IF LDATA
                 PUBLIC  _malloc
-_malloc         LABEL   DIST
+_malloc         LABEL   PROC
 
                 push    bp
                 mov     bp,sp
@@ -490,7 +491,7 @@ _malloc         LABEL   DIST
                 jmp     SHORT @@GotTheSize
 ENDIF
                 PUBLIC  _farmalloc
-_farmalloc      LABEL   DIST
+_farmalloc      LABEL   PROC
 
                 push    bp
                 mov     bp,sp
@@ -708,10 +709,10 @@ ShrinkBlock     PROC    NEAR
 ;                       from the heap if successful (dx:ax)
 ;                       NULL if failure (dx:ax)
 ;-----------------------------------------------------------------------------
-GenericRealloc	PROC DIST
+GenericRealloc	PROC
 IF LDATA
                 PUBLIC  _realloc
-_realloc        LABEL   DIST
+_realloc        LABEL   PROC
 
                 push    bp
                 mov     bp,sp
@@ -719,7 +720,7 @@ _realloc        LABEL   DIST
                 jmp     SHORT @@GetTheSize
 ENDIF
                 PUBLIC  _farrealloc
-_farrealloc     LABEL   DIST
+_farrealloc     LABEL   PROC
 
                 push    bp
                 mov     bp,sp

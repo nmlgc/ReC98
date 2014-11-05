@@ -1,6 +1,6 @@
 ; static void dummy(void)
 public dummy
-dummy	proc DIST
+dummy	proc
 		push	si
 		push	di
 		pop	di
@@ -66,7 +66,7 @@ ___exit	endp
 
 ; void __cdecl exit(int	status)
 public _exit
-_exit		proc DIST
+_exit		proc
 @@status		= word ptr 2 + dPtrSize
 
 		push	bp
@@ -86,7 +86,7 @@ _exit		endp
 
 ; void __cdecl _exit(int status)
 public _exit
-__exit		proc DIST
+__exit		proc
 @@status		= word ptr 2 + dPtrSize
 
 		push	bp
@@ -107,7 +107,7 @@ __exit		endp
 
 ; void _cexit(void)
 public __cexit
-__cexit		proc DIST
+__cexit		proc
 		push	si
 		push	di
 		xor	ax, ax
@@ -124,7 +124,7 @@ __cexit		endp
 
 ; void _c_exit(void)
 public __c_exit
-__c_exit	proc DIST
+__c_exit	proc
 		push	si
 		push	di
 		mov	ax, 1

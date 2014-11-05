@@ -1,5 +1,5 @@
 ; int __cdecl close(int	handle)
-_close		proc DIST
+_close		proc
 @@handle		= word ptr (cPtrSize + 2)
 
 		push	bp

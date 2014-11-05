@@ -65,7 +65,7 @@ fullpath_1003F	endp
 
 ; int __cdecl __far _fullpath(char *buffer, int pathname, int maxlen)
 		public __fullpath
-__fullpath	proc DIST
+__fullpath	proc
 @@drive		= word ptr -12h
 @@driveletter	= word ptr -10h
 @@c		= word ptr -0Eh

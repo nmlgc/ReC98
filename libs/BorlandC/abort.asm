@@ -1,5 +1,5 @@
 ; void abort(void)
-_abort		proc DIST
+_abort		proc
 		push	si
 		push	di
 		mov	ax, 16h

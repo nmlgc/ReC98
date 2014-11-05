@@ -1,6 +1,6 @@
 ; int __cdecl memcmp(const void	*s1, const void	*s2, size_t n)
 public _memcmp
-_memcmp		proc DIST
+_memcmp		proc
 @@s1		= DPTR_ 2 + dPtrSize
 @@s2		= DPTR_ 2 + (dPtrSize * 2)
 @@n		= word ptr 2 + (dPtrSize * 3)

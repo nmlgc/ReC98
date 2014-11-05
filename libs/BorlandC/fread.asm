@@ -144,7 +144,7 @@ _fgetn		endp
 
 ; size_t __cdecl fread(void *ptr, size_t psize, size_t nitems, FILE *fp)
 public _fread
-_fread		proc DIST
+_fread		proc
 @@temp		= dword	ptr -6
 @@n		= word ptr -2
 @@ptr		= dword	ptr  6

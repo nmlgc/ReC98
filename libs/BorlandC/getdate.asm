@@ -1,5 +1,5 @@
 ; void __cdecl getdate(struct date *datep)
-_getdate	proc DIST
+_getdate	proc
 @@datep		= DPTR_ 2 + dPtrSize
 
 		push	bp
@@ -18,7 +18,7 @@ _getdate	proc DIST
 _getdate	endp
 
 ; void __cdecl gettime(struct time *timep)
-_gettime	proc DIST
+_gettime	proc
 @@timep		= DPTR_ 2 + dPtrSize
 
 		push	bp

@@ -1,5 +1,5 @@
 ; int fprintf(FILE *F, const char *fmt, ...)
-_fprintf	proc DIST
+_fprintf	proc
 @@F		= DPTR_ (cPtrSize + 2)
 @@fmt		= DPTR_ (cPtrSize + 2 + dPtrSize)
 @@va		= byte ptr (cPtrSize + 2 + dPtrSize + dPtrSize)

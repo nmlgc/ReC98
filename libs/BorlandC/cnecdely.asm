@@ -149,7 +149,7 @@ cnecdely_10089	proc near
 cnecdely_10089	endp
 
 		public ___nec_delay
-___nec_delay	proc DIST
+___nec_delay	proc
 @@arg_0		= word ptr cPtrSize + 2
 
 		push	bp

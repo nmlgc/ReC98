@@ -1,5 +1,5 @@
 ; void *__cdecl	memcpy(void *dst, const void *src, size_t n)
-_memcpy		proc DIST
+_memcpy		proc
 @@dst		= DPTR_ 2 + dPtrSize
 @@src		= DPTR_ 2 + (dPtrSize * 2)
 @@n		= word ptr 2 + (dPtrSize * 3)

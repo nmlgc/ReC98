@@ -1,6 +1,6 @@
 ; int __cdecl fflush(FILE *fp)
 public _fflush
-_fflush		proc DIST
+_fflush		proc
 @@count		= word ptr -2
 @@fp		= DPTR_	2 + dPtrSize
 

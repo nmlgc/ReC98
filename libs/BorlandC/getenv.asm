@@ -1,5 +1,5 @@
 ; char *__cdecl	getenv(const char *nameP)
-_getenv		proc DIST
+_getenv		proc
 @@envP		= DPTR_ -(dPtrSize)
 @@nameP		= DPTR_ 2 + dPtrSize
 

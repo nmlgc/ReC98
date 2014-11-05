@@ -120,7 +120,7 @@ func KEY_SCAN		; {
 	cmp	AL,07fh
 	jne	short @@SCAN_RET
 
-key_convert label CALLMODEL
+key_convert label proc
 	mov	AH,7
 	int	21h
 

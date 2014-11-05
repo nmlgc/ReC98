@@ -1,6 +1,6 @@
 ; int _chmod(const char	*pathname, int func, ...)
 public __chmod
-__chmod		proc DIST
+__chmod		proc
 
 pathname	= dword	ptr  6
 _func		= byte ptr  0Ah

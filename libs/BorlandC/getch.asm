@@ -1,4 +1,4 @@
-getch	proc DIST
+getch	proc
 		push	si
 		push	di
 		cmp	_cFlag, 0

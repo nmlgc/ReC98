@@ -1,5 +1,5 @@
 ; int __cdecl toupper(int ch)
-_toupper	proc DIST
+_toupper	proc
 @@ch		= word ptr dPtrSize + 2
 
 		push	bp

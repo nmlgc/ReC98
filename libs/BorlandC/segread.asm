@@ -1,5 +1,5 @@
 ; void __cdecl segread(struct SREGS *segp)
-_segread	proc DIST
+_segread	proc
 @@segp		= DPTR_ 2 + dPtrSize
 
 		push	bp

@@ -1,6 +1,6 @@
 ; void __ErrorMessage(const char *msg)
 public ___ErrorMessage
-___ErrorMessage	proc DIST
+___ErrorMessage	proc
 @@msg		= DPTR_	2 + dPtrSize
 
 		push	bp

@@ -1,5 +1,5 @@
 		public __mbcjmstojis
-__mbcjmstojis	proc DIST
+__mbcjmstojis	proc
 @@c		= word ptr 2 + dPtrSize
 
 		push	bp

@@ -1,6 +1,6 @@
 		public _pow10
 ; double __cdecl pow10(int p)
-_pow10		proc DIST
+_pow10		proc
 @@p		= word ptr (2 + cPtrSize)
 
 		push	bp

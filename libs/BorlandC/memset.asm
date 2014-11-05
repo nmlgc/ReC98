@@ -1,6 +1,6 @@
 ; void __cdecl setmem(void *addr, unsigned int len, char val)
 public _setmem
-_setmem		proc DIST
+_setmem		proc
 @@addr		= dword	ptr  6
 @@len		= word ptr  0Ah
 @@val		= byte ptr  0Ch
@@ -36,7 +36,7 @@ _setmem		endp
 
 ; void *__cdecl	memset(void *src, int c, size_t n)
 public _memset
-_memset		proc DIST
+_memset		proc
 @@src		= dword	ptr  6
 @@c		= byte ptr  0Ah
 @@n		= word ptr  0Ch
