@@ -458,7 +458,7 @@ ENDIF
                 pop     ds
 
                 ret
-                ENDP
+__restorezero   ENDP
 
 ;------------------------------------------------------------------
 ;  Loop through a startup/exit (SE) table,
@@ -513,7 +513,7 @@ Initialize      proc near
                 jmp     short @@Start
 
 @@Done:         ret
-                endp
+Initialize      endp
 
 Cleanup         proc near
 @@Start:        mov     ah,0                    ;start with highest priority
@@ -548,7 +548,7 @@ Cleanup         proc near
                 jmp     short @@Start
 
 @@Done:         ret
-                endp
+Cleanup         endp
 
 ;------------------------------------------------------------------
 

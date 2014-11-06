@@ -116,4 +116,4 @@ ENDIF
 
                 ret
 
-                endp
+__setenvp       endp

@@ -43,4 +43,4 @@ F_SCOPY@:
                 pop     si
                 pop     bp
                 retf    8
-endp
+SCOPY@	endp

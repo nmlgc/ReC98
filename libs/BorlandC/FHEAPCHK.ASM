@@ -70,7 +70,7 @@ HeapInfo        STRUC
 hi_ptr          dd      ?
 hi_size         dd      ?
 hi_inuse        dw      ?
-                ENDS
+HeapInfo        ENDS
 
 UsedHeaderSize  EQU     4
 FreeHeaderSize  EQU     10
@@ -207,7 +207,7 @@ _farheapcheck   PROC
                 pop     di
                 pop     si
                 ret
-                ENDP
+_farheapcheck           ENDP
 
 ;-----------------------------------------------------------------------------
 ; C callable function which checks and verifies a node on the heap.
@@ -282,7 +282,7 @@ _farheapchecknode       PROC
                 pop     si
                 pop     bp
                 ret
-                ENDP
+_farheapchecknode       ENDP
 
 ;-----------------------------------------------------------------------------
 ; C callable function which fills the free areas with a given value
@@ -348,7 +348,7 @@ _farheapfillfree        PROC
                 pop     si
                 pop     bp
                 ret
-                ENDP
+_farheapfillfree        ENDP
 
 ;-----------------------------------------------------------------------------
 ; C callable function which checks the free areas of the heap for a given value
@@ -418,7 +418,7 @@ _farheapcheckfree       PROC
                 pop     si
                 pop     bp
                 ret
-                ENDP
+_farheapcheckfree       ENDP
 
 ;-----------------------------------------------------------------------------
 ; C callable function to walk through the heap node by node
@@ -495,4 +495,4 @@ ENDIF
                 pop     si
                 pop     bp
                 ret
-                ENDP
+_farheapwalk    ENDP

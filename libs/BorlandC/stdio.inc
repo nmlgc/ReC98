@@ -51,7 +51,7 @@ dPtr@		buffer, ?	; Data transfer buffer
 dPtr@		curp, ?	; Current active pointer
 istemp		dw ?	; Temporary file indicator
 token		dw ?	 ; Used for validity checking
-ends
+FILE	ends
 
 FOPEN_MAX equ _NFILE
 SYS_OPEN equ _NFILE

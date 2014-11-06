@@ -490,4 +490,4 @@ ExecExit        label   near
                 mov     sp, bp
                 pop     bp
                 ret
-                endp
+__exec          endp

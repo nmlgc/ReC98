@@ -27,7 +27,7 @@ __cvtfak        equ     0
 _FakRealCvt     proc near
                 mov     dx, offset DGROUP: RealMSG      ; Message address
                 jmp     short DisplayMessage            ; Display the message
-                endp
+_FakRealCvt     endp
 
 ;-------------------------------------------------------------------------
 ;               Get scanf() specific part of message
@@ -59,4 +59,4 @@ ENDIF
                 int     021h                            ;      'stdout'
                 jmp     __abort                         ; abort();
 
-                endp
+_FakScanTod     endp

@@ -45,7 +45,7 @@ bsize           dw      ?
 prev_real       dw      ?
 prev_free       dw      ?
 next_free       dw      ?
-                ENDS
+NEARHEAP_Header ENDS
 
 ;-----------------------------------------------------------------------
 ; heapinfo structure (near heap)
@@ -61,7 +61,7 @@ HeapInfo        STRUC
 hi_ptr          dw      ?
 hi_size         dw      ?
 hi_inuse        dw      ?
-                ENDS
+HeapInfo        ENDS
 
 UsedHeaderSize  EQU     4
 FreeHeaderSize  EQU     8

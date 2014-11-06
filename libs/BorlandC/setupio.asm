@@ -130,4 +130,4 @@ endif
 		pop	di
 		pop	si
 		retn
-endp
+__setupio	endp

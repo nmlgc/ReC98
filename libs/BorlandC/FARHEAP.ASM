@@ -65,7 +65,7 @@ HeapInfo        STRUC
 hi_ptr          dd      ?
 hi_size         dd      ?
 hi_inuse        dw      ?
-                ENDS
+HeapInfo        ENDS
 
 UsedHeaderSize  EQU     4
 FreeHeaderSize  EQU     10
@@ -129,7 +129,7 @@ FreeLastBlock   PROC    NEAR
                 call    __brk                   ;reset the break level
                 add     sp,4                    ;cleanup stack
                 ret
-                ENDP
+FreeLastBlock   ENDP
 
 ;-----------------------------------------------------------------------------
 ; Frees an interior block from within the heap
@@ -177,7 +177,7 @@ FreeInnerBlock  PROC    NEAR
                 je      JoinFreeBlocks
 @@AllDone:
                 ret
-                ENDP
+FreeInnerBlock  ENDP
 
 ;-----------------------------------------------------------------------------
 ; Joins two physically adjacent free blocks together
@@ -197,7 +197,7 @@ JoinFreeBlocks  PROC    NEAR
                 mov     es,bx                   ;es = next block
                 mov     es:[prev_real],ax       ;fixup link
 ;;;;            jmp     SHORT PullFreeBlock
-                ENDP
+JoinFreeBlocks  ENDP
 
 ;-----------------------------------------------------------------------------
 ; Removes a block from the free block queue
@@ -221,7 +221,7 @@ PullFreeBlock   PROC    NEAR
 @@NoFreeBlocks:
                 mov     cs:___rover,0
                 ret
-                ENDP
+PullFreeBlock   ENDP
 
 ;-----------------------------------------------------------------------------
 ; Inserts a block into the free block queue
@@ -252,7 +252,7 @@ InsertFreeBlock PROC    NEAR
                 mov     ds:[prev_free],ds
                 mov     ds:[next_free],ds
                 ret
-                ENDP
+InsertFreeBlock ENDP
 
 
 ;-----------------------------------------------------------------------------
@@ -291,7 +291,7 @@ _farfree        PROC
                 pop     si
                 pop     bp
                 ret
-                ENDP
+_farfree        ENDP
 
 ;-----------------------------------------------------------------------------
 ; Creates a heap from scratch
@@ -353,7 +353,7 @@ CreateHeap      PROC    NEAR
                 xor     ax,ax
                 cwd
                 ret
-                ENDP
+CreateHeap      ENDP
 
 ;-----------------------------------------------------------------------------
 ; Attempts to extend the heap.
@@ -445,7 +445,7 @@ ExtendHeap      PROC    NEAR
                 xor     ax,ax
                 cwd
                 ret
-                ENDP
+ExtendHeap      ENDP
 
 ;-----------------------------------------------------------------------------
 ; Divides a free block into two pieces.
@@ -469,7 +469,7 @@ AllocatePartialBlock    PROC    NEAR
                 mov     ds:[prev_real],dx
                 mov     ax,UsedHeaderSize
                 ret
-                ENDP
+AllocatePartialBlock    ENDP
 
 ;-----------------------------------------------------------------------------
 ; C callable function to allocates a given number of bytes from the far heap
@@ -557,7 +557,7 @@ _farmalloc      LABEL   PROC
 @@Exit:
                 pop     bp
                 ret
-                ENDP
+GenericMalloc   ENDP
 
 ;-----------------------------------------------------------------------------
 ; Attempts to expand a block, relocating it if necessary
@@ -637,7 +637,7 @@ ExpandBlock     PROC    NEAR
                 mov     ax,UsedHeaderSize
 @@AllDone:
                 ret
-                ENDP
+ExpandBlock     ENDP
 
 ;-----------------------------------------------------------------------------
 ; Shrinks a block
@@ -698,7 +698,7 @@ ShrinkBlock     PROC    NEAR
                 pop     dx                      ;restore block
                 mov     ax,UsedHeaderSize
                 ret
-                ENDP
+ShrinkBlock     ENDP
 
 ;-----------------------------------------------------------------------------
 ; Attempts to reallocate a block
@@ -787,4 +787,4 @@ _farrealloc     LABEL   PROC
                 pop     si
                 pop     bp
                 ret
-                ENDP
+GenericRealloc  ENDP

@@ -756,5 +756,8 @@ ENDIF
                 mov     word ptr __C0argv,ax
 
                 jmp     word ptr SavedReturn
-
-                endp
+ifdef   WILD
+__wildargv      endp
+else
+__setargv       endp
+endif
