@@ -74,7 +74,7 @@ _normalize	endp
 public __brk
 __brk		proc near
 
-addr		= dword ptr  4
+@@addr		= dword ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -82,18 +82,18 @@ addr		= dword ptr  4
 		push	di
 		mov	cx, word ptr __heapbase+2
 		mov	bx, word ptr __heapbase
-		mov	dx, word ptr [bp+addr+2]
-		mov	ax, word ptr [bp+addr]
+		mov	dx, word ptr [bp+@@addr+2]
+		mov	ax, word ptr [bp+@@addr]
 		call	N_PCMP@
 		jb	short @@loc_4CEC
 		mov	cx, word ptr __heaptop+2
 		mov	bx, word ptr __heaptop
-		mov	dx, word ptr [bp+addr+2]
-		mov	ax, word ptr [bp+addr]
+		mov	dx, word ptr [bp+@@addr+2]
+		mov	ax, word ptr [bp+@@addr]
 		call	N_PCMP@
 		ja	short @@loc_4CEC
-		push	word ptr [bp+addr+2]
-		push	word ptr [bp+addr]
+		push	word ptr [bp+@@addr+2]
+		push	word ptr [bp+@@addr]
 		call	_normalize
 		or	ax, ax
 		jnz	short @@loc_4CF1

@@ -3,13 +3,13 @@ MARGIN	equ 512
 ; int near __brk(void *addr)
 ___brk		proc near
 
-addr		= word ptr  4
+@@addr		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, [bp+addr]
+		mov	ax, [bp+@@addr]
 		mov	dx, sp
 		sub	dx, MARGIN
 		cmp	ax, dx
@@ -68,13 +68,13 @@ ___sbrk		endp
 ; int brk(void *addr)
 _brk		proc near
 
-addr		= word ptr  4
+@@addr		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		push	[bp+addr]
+		push	[bp+@@addr]
 		call	___brk
 		pop	cx
 		pop	di
