@@ -24510,7 +24510,7 @@ sub_2869E	proc far
 		push	si
 		mov	byte_360CC, 1
 		push	large 200005h
-		call	sub_C7C
+		call	text_fillca
 		push	ds
 		push	offset aBoss6_l_grp ; "boss6_l.grp"
 		call	sub_10BAE
@@ -24532,7 +24532,7 @@ sub_2869E	proc far
 		add	sp, 16h
 		call	sub_12569
 		push	large 2000E1h
-		call	sub_C7C
+		call	text_fillca
 		mov	si, 18Fh
 		jmp	short loc_2871C
 ; ---------------------------------------------------------------------------
@@ -33292,7 +33292,7 @@ var_2		= word ptr -2
 		push	di
 		mov	byte_360CC, 1
 		push	large 200005h
-		call	sub_C7C
+		call	text_fillca
 		push	ds
 		push	offset aBoss7_d1_grp ; "boss7_d1.grp"
 		call	sub_10BAE
@@ -33343,7 +33343,7 @@ loc_2CF26:
 		push	offset unk_35090
 		call	sub_EB10
 		push	large 2000E1h
-		call	sub_C7C
+		call	text_fillca
 		mov	word_39854, 1
 		push	0
 		push	ds

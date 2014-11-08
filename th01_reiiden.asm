@@ -76,44 +76,7 @@ include libs/BorlandC/c0.asm
 		db 0
 include libs/piloadc/piloadc.asm
 include libs/master.lib/text_clear.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C7C		proc far
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		mov	bx, bp
-		mov	bp, sp
-		push	di
-		xor	ax, ax
-		mov	es, ax
-		mov	al, byte ptr es:[712h]
-		inc	ax
-		mov	dx, ax
-		shl	dx, 1
-		shl	dx, 1
-		add	dx, ax
-		mov	cl, 4
-		shl	dx, cl
-		mov	cx, dx
-		mov	es, word_3514A
-		assume es:nothing
-		xor	di, di
-		mov	ax, [bp+arg_2]
-		rep stosw
-		mov	cx, dx
-		mov	di, 2000h
-		mov	ax, [bp+arg_0]
-		rep stosw
-		pop	di
-		mov	bp, bx
-		retf	4
-sub_C7C		endp
-
+include libs/master.lib/text_fillca.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
@@ -34574,13 +34537,7 @@ byte_350DF	db 0
 aHgrx		db 'HGRX',0
 aHgrz		db 'HGRZ',0
 include libs/master.lib/version[data].asm
-		db    0
-		db    0
-word_3514A	dw 0A000h
-		db  50h	; P
-		db    0
-		db    1
-		db    0
+include libs/master.lib/tx[data].asm
 include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/respal_exist[data].asm
