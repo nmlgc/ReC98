@@ -7,6 +7,7 @@ include libs/BorlandC/RULES.ASI
 include libs/BorlandC/ctype.inc
 include libs/BorlandC/dos.inc
 include libs/BorlandC/doserror.inc
+include libs/BorlandC/errno.inc
 include libs/BorlandC/fcntl.inc
 include libs/BorlandC/stdio.inc
 include libs/BorlandC/_printf.inc

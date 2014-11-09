@@ -106,183 +106,7 @@ include libs/master.lib/isqrt.asm
 include libs/master.lib/random.asm
 include libs/BorlandC/emu/nec_fpinit.asm
 include libs/BorlandC/math/ctrl87.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_19D8(double, long double, int)
-sub_19D8	proc near
-
-var_C		= qword	ptr -0Ch
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= qword	ptr  4
-arg_8		= tbyte	ptr  0Ch
-arg_12		= word ptr  16h
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ch
-		xor	cx, cx
-		mov	ax, 43FEh
-		mov	bx, 3BCDh
-		cmp	[bp+arg_12], 0
-		jnz	short loc_19F2
-		mov	ax, 407Eh
-		mov	bx, 3F6Ah
-
-loc_19F2:
-		mov	dx, word ptr [bp+arg_8+8]
-		shl	dx, 1
-		rcl	cx, 1
-		shr	dx, 1
-		cmp	dx, 7FFFh
-		jz	short loc_1A70
-		cmp	dx, ax
-		jz	short loc_1A0D
-		jle	short loc_1A46
-		; Hack (fld [bp+arg_0])
-		db 0cdh
-		db 039h
-		db 046h
-		db 004h
-		jmp	short loc_1A5D
-; ---------------------------------------------------------------------------
-
-loc_1A0D:
-		; Hack (fnstcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 07eh
-		db 0feh
-		mov	ax, 0C00h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
-		or	ax, [bp+var_2]
-		mov	[bp+var_4], ax
-		; Hack (fldcw [bp+var_4])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0fch
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 037h
-		db 06eh
-		db 00ch
-		cmp	[bp+arg_12], 0
-		jnz	short loc_1A34
-		; Hack (fstp dword ptr [bp+arg_0])
-		db 0cdh
-		db 035h
-		db 05eh
-		db 004h
-		; Hack (fld	dword ptr [bp+arg_0])
-		db 0cdh
-		db 035h
-		db 046h
-		db 004h
-		jmp	short loc_1A3C
-; ---------------------------------------------------------------------------
-
-loc_1A34:
-		; Hack (fstp [bp+arg_0])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 004h
-		; Hack (fld [bp+arg_0])
-		db 0cdh
-		db 039h
-		db 046h
-		db 004h
-
-loc_1A3C:
-		; Hack (fldcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0feh
-		mov	sp, bp
-		pop	bp
-		retn	14h
-; ---------------------------------------------------------------------------
-
-loc_1A46:
-		mov	ax, dx
-		or	ax, word ptr [bp+arg_8+6]
-		or	ax, word ptr [bp+arg_8+4]
-		or	ax, word ptr [bp+arg_8+2]
-		or	ax, word ptr [bp+arg_8]
-		jz	short loc_1A70
-		cmp	dx, bx
-		jge	short loc_1A70
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-
-loc_1A5D:
-		or	cx, cx
-		jz	short loc_1A64
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
-
-loc_1A64:
-		mov	_errno, 22h	; '"'
-		mov	sp, bp
-		pop	bp
-		retn	14h
-; ---------------------------------------------------------------------------
-
-loc_1A70:
-		cmp	[bp+arg_12], 0
-		jz	short loc_1A84
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 037h
-		db 06eh
-		db 00ch
-		; Hack (fstp [bp+var_C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f4h
-		; Hack (fld	[bp+var_C])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f4h
-		jmp	short loc_1A90
-; ---------------------------------------------------------------------------
-
-loc_1A84:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 037h
-		db 06eh
-		db 00ch
-		; Hack (fstp dword ptr [bp+var_C])
-		db 0cdh
-		db 035h
-		db 05eh
-		db 0f4h
-		; Hack (fld	dword ptr [bp+var_C])
-		db 0cdh
-		db 035h
-		db 046h
-		db 0f4h
-
-loc_1A90:
-		mov	sp, bp
-		pop	bp
-		retn	14h
-sub_19D8	endp
-
+include libs/BorlandC/math/ldtrunc.asm
 include libs/BorlandC/math/realcvt.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -884,7 +708,7 @@ arg_4		= word ptr  8
 		; Hack (wait)
 		db 0cdh
 		db 03dh
-		call	sub_19D8
+		call	__ldtrunc
 		les	bx, [bp+arg_0]
 		; Hack (fstp qword ptr es:[bx])
 		db 0cdh
@@ -940,7 +764,7 @@ loc_1FD4:
 		; Hack (wait)
 		db 0cdh
 		db 03dh
-		call	sub_19D8
+		call	__ldtrunc
 		les	bx, [bp+arg_0]
 		; Hack (fstp dword ptr es:[bx])
 		db 0cdh
