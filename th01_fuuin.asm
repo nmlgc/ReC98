@@ -76,52 +76,7 @@ include libs/BorlandC/math/xcvt.asm
 include libs/BorlandC/fperr.asm
 include libs/BorlandC/math/_pow10.asm
 include libs/BorlandC/math/pow10d.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B5B	proc far
-
-var_A		= qword	ptr -0Ah
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 0Ah
-		; Hack (fnstcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
-		mov	al, byte ptr [bp+var_2+1]
-		or	byte ptr [bp+var_2+1], 0Ch
-		; Hack (fldcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0feh
-		; Hack (fistp [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 07eh
-		db 0f6h
-		mov	byte ptr [bp+var_2+1], al
-		; Hack (fldcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0feh
-		mov	ax, word ptr [bp+var_A]
-		mov	dx, word ptr [bp+var_A+2]
-		mov	sp, bp
-		pop	bp
-		retf
-sub_1B5B	endp
-
+include libs/BorlandC/math/ftol.asm
 include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
@@ -8619,7 +8574,7 @@ loc_DA74:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		add	di, ax
 		mov	[bp+arg_0], 0
 
@@ -8652,7 +8607,7 @@ loc_DAB2:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		sub	[bp+arg_6], ax
 		mov	[bp+arg_4], 27Fh
 
@@ -8685,7 +8640,7 @@ loc_DAF4:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		add	[bp+arg_0], ax
 		xor	di, di
 
@@ -8718,7 +8673,7 @@ loc_DB2D:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		sub	[bp+arg_4], ax
 		mov	[bp+arg_6], 18Fh
 
@@ -8749,7 +8704,7 @@ loc_DB6E:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		add	[bp+arg_4], ax
 		mov	[bp+arg_6], 0
 
@@ -8779,7 +8734,7 @@ loc_DBA5:
 		db 0cdh
 		db 03ah
 		db 0c9h
-		call	sub_1B5B
+		call	ftol@
 		sub	[bp+arg_0], ax
 		mov	di, 18Fh
 

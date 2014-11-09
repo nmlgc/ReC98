@@ -570,7 +570,7 @@ arg_4		= dword	ptr  0Ah
 		db 036h
 		db 0d6h
 		db 011h
-		call	sub_2395
+		call	ftol@
 		les	bx, [bp+arg_4]
 		mov	es:[bx], ax
 		leave
@@ -12169,7 +12169,7 @@ loc_21C16:
 		db 00eh
 		db 0feh
 		db 012h
-		call	sub_2395
+		call	ftol@
 		mov	dx, si
 		add	dx, dx
 		les	bx, [bp+arg_0]
@@ -12186,7 +12186,7 @@ loc_21C16:
 		db 00eh
 		db 0feh
 		db 012h
-		call	sub_2395
+		call	ftol@
 		mov	dx, si
 		add	dx, dx
 		les	bx, [bp+arg_0]
@@ -19249,14 +19249,14 @@ loc_255FB:
 		db 039h
 		db 046h
 		db 0f0h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		; Hack (fld [bp+arg_8])
 		db 0cdh
 		db 039h
 		db 046h
 		db 0f8h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	ax, word ptr dword_3982A+2
 		add	ax, 1Ch
@@ -19668,7 +19668,7 @@ loc_25977:
 		db 006h
 		db 0f5h
 		db 013h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		push	word_3A6FB
 		push	1
@@ -24986,7 +24986,7 @@ loc_28A16:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25002,7 +25002,7 @@ loc_28A16:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		push	ds
 		push	offset unk_37635
@@ -25075,7 +25075,7 @@ loc_28A94:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25091,7 +25091,7 @@ loc_28A94:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		push	ds
 		push	offset unk_37635
@@ -25165,7 +25165,7 @@ loc_28B00:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25181,7 +25181,7 @@ loc_28B00:
 		db 006h
 		db 0ceh
 		db 015h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		push	ds
 		push	offset unk_37635
@@ -25386,7 +25386,7 @@ loc_28C2A:
 		db 087h
 		db 0d2h
 		db 05eh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25396,7 +25396,7 @@ loc_28C2A:
 		db 087h
 		db 0e2h
 		db 05dh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		call	sub_1754D
 		add	sp, 0Ah
@@ -25414,7 +25414,7 @@ loc_28C92:
 		db 087h
 		db 0d2h
 		db 05eh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25424,7 +25424,7 @@ loc_28C92:
 		db 087h
 		db 0e2h
 		db 05dh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		call	sub_10433
 		add	sp, 8
@@ -25607,7 +25607,7 @@ loc_28D89:
 		db 087h
 		db 0d2h
 		db 05eh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25617,7 +25617,7 @@ loc_28D89:
 		db 087h
 		db 0e2h
 		db 05dh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		call	sub_10433
 		add	sp, 8
@@ -25645,7 +25645,7 @@ loc_28DBF:
 		db 087h
 		db 0d2h
 		db 05eh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -25655,7 +25655,7 @@ loc_28DBF:
 		db 087h
 		db 0e2h
 		db 05dh
-		call	sub_2395
+		call	ftol@
 		push	ax
 		call	sub_1754D
 		add	sp, 0Ah
@@ -27739,7 +27739,7 @@ loc_29E46:
 		db 0cdh
 		db 03ah
 		db 0c1h
-		call	sub_2395
+		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
@@ -27749,7 +27749,7 @@ loc_29E46:
 		db 087h
 		db 0c2h
 		db 062h
-		call	sub_2395
+		call	ftol@
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27853,7 +27853,7 @@ loc_29F0B:
 		db 0cdh
 		db 03ah
 		db 0c1h
-		call	sub_2395
+		call	ftol@
 		mov	di, ax
 		cmp	di, 7CB0h
 		jge	short loc_29F5B
@@ -29283,7 +29283,7 @@ loc_2AD01:
 		db 039h
 		db 046h
 		db 0f8h
-		call	sub_2395
+		call	ftol@
 		push	ax
 		mov	ax, word_3B045
 		add	ax, 0FFE0h
@@ -30268,7 +30268,7 @@ loc_2B3F4:
 		db 0cdh
 		db 03ah
 		db 0c1h
-		call	sub_2395
+		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
@@ -30278,7 +30278,7 @@ loc_2B3F4:
 		db 087h
 		db 0b7h
 		db 066h
-		call	sub_2395
+		call	ftol@
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -30471,7 +30471,7 @@ loc_2B54A:
 		db 0cdh
 		db 03ah
 		db 0c1h
-		call	sub_2395
+		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
@@ -30481,7 +30481,7 @@ loc_2B54A:
 		db 087h
 		db 0b7h
 		db 066h
-		call	sub_2395
+		call	ftol@
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -30546,7 +30546,7 @@ loc_2B54A:
 		db 087h
 		db 097h
 		db 068h
-		call	sub_2395
+		call	ftol@
 		mov	[bp+var_A], ax
 		cwd
 		xor	ax, dx
@@ -40533,7 +40533,7 @@ loc_30E63:
 		db 036h
 		db 0afh
 		db 018h
-		call	sub_2395
+		call	ftol@
 		mov	bx, word_3B530
 		mov	[bx+12h], ax
 		mov	ax, [bx+10h]
@@ -40549,7 +40549,7 @@ loc_30E63:
 		db 036h
 		db 0afh
 		db 018h
-		call	sub_2395
+		call	ftol@
 		mov	bx, word_3B530
 		mov	[bx+10h], ax
 		mov	word ptr [bx+1Eh], 1
