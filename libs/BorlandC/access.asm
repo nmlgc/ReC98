@@ -1,40 +1,21 @@
-; int __cdecl __far _access(const char *filename, int amode)
-__access	proc
-@@filename	= dword	ptr  6
-@@amode		= byte ptr  0Ah
+; int __cdecl access(const char *filename, int amode)
+_access		proc
+@@filename	= DPTR_ (2 + cPtrSize)
+@@amode		= byte ptr (2 + cPtrSize + dPtrSize)
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		xor	ax, ax
-		push	ax
+		push	word ptr [bp+@@amode]
+if LDATA
 		push	word ptr [bp+@@filename+2]
+endif
 		push	word ptr [bp+@@filename]
-		nopcall	__chmod
-		add	sp, 6
-		mov	dx, ax
-		cmp	dx, 0FFFFh
-		jnz	short @@check
-		jmp	short @@ret
-
-@@check:
-		test	[bp+@@amode], 2
-		jz	short @@ret0
-		test	dl, 1
-		jnz	short @@EACCES
-
-@@ret0:
-		xor	ax, ax
-		jmp	short @@ret
-
-@@EACCES:
-		mov	_errno, 5
-		mov	ax, -1
-
-@@ret:
+		nopcall	__access
+		add	sp, 2 + dPtrSize
 		pop	di
 		pop	si
 		pop	bp
 		ret
-__access	endp
+_access		endp

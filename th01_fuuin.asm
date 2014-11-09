@@ -122,34 +122,9 @@ include libs/BorlandC/int86.asm
 include libs/BorlandC/intdos.asm
 include libs/BorlandC/ioctl.asm
 include libs/BorlandC/signal.asm
-include libs/BorlandC/access.asm
+include libs/BorlandC/_access.asm
 include libs/BorlandC/pathops.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int __cdecl access(const char	*path, int amode)
-_access		proc far
-
-pathname	= dword	ptr  6
-amode		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	word ptr [bp+amode] ; char
-		push	word ptr [bp+pathname+2]
-		push	word ptr [bp+pathname] ; pathname
-		nopcall	__access
-		add	sp, 6
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_access		endp
-
+include libs/BorlandC/access.asm
 include libs/BorlandC/chmoda.asm
 include libs/BorlandC/close.asm
 include libs/BorlandC/closea.asm

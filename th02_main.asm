@@ -2466,7 +2466,7 @@ include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 include libs/BorlandC/signal.asm
-include libs/BorlandC/access.asm
+include libs/BorlandC/_access.asm
 include libs/BorlandC/pathops.asm
 include libs/BorlandC/chmoda.asm
 include libs/BorlandC/fflush.asm

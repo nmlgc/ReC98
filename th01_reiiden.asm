@@ -2161,7 +2161,7 @@ include libs/BorlandC/int86.asm
 include libs/BorlandC/intdos.asm
 include libs/BorlandC/ioctl.asm
 include libs/BorlandC/signal.asm
-include libs/BorlandC/access.asm
+include libs/BorlandC/_access.asm
 include libs/BorlandC/pathops.asm
 include libs/BorlandC/chmoda.asm
 include libs/BorlandC/close.asm
