@@ -105,60 +105,7 @@ include libs/master.lib/iatan2.asm
 include libs/master.lib/isqrt.asm
 include libs/master.lib/random.asm
 include libs/BorlandC/emu/nec_fpinit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_198C	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		; Hack (fnstcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 07eh
-		db 0feh
-		mov	ax, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		and	ax, bx
-		not	bx
-		; Hack (wait)
-		db 0cdh
-		db 03dh
-		mov	dx, [bp+var_2]
-		and	dx, bx
-		or	dx, ax
-		mov	cl, dl
-		and	cl, 3Fh
-		mov	ss:22h,	cl
-		mov	ax, dx
-		cmp	byte ptr ss:26h, 0
-		jz	short loc_19CC
-		mov	ax, dx
-		and	ax, 0FFFDh
-		cmp	byte ptr ss:26h, 3
-		jl	short loc_19CC
-		or	al, 2
-
-loc_19CC:
-		mov	[bp+var_2], ax
-		; Hack (fldcw [bp+var_2])
-		db 0cdh
-		db 035h
-		db 06eh
-		db 0feh
-		xchg	ax, dx
-		mov	sp, bp
-		pop	bp
-		retf
-sub_198C	endp
-
+include libs/BorlandC/math/ctrl87.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6412,7 +6359,7 @@ loc_D583:
 		call	sub_E7E4
 		call	key_start
 		push	large 3F003Fh
-		call	sub_198C
+		call	__control87
 		add	sp, 4
 		les	bx, dword_3919C
 		mov	al, es:[bx+14h]

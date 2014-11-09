@@ -393,4 +393,54 @@ unLink@ MACRO   _si,_di,_ES,locals
         pop     bp
 ENDM
 
+; Remainder of file only used for language denpendent
+; initialization and trapping.
+
+        PAGE
+;[]------------------------------------------------------------[]
+;|                                                              |
+;|      iNDP Status and Control words definitions               |
+;|                                                              |
+;[]------------------------------------------------------------[]
+
+;/* 8087/80287 Status Word format   */
+
+SW_INVALID              equ     00001h  ;/* Invalid operation            */
+SW_DENORMAL             equ     00002h  ;/* Denormalized operand         */
+SW_ZERODIVIDE           equ     00004h  ;/* Zero divide                  */
+SW_OVERFLOW             equ     00008h  ;/* Overflow                     */
+SW_UNDERFLOW            equ     00010h  ;/* Underflow                    */
+SW_INEXACT              equ     00020h  ;/* Precision (Inexact result)   */
+
+;/* 8087/80287 Control Word format */
+
+MCW_EM                  equ     0003Fh  ;/* interrupt Exception Masks    */
+    EM_INVALID          equ     00001h  ;/*   invalid                    */
+    EM_DENORMAL         equ     00002h  ;/*   denormal                   */
+    EM_ZERODIVIDE       equ     00004h  ;/*   zero divide                */
+    EM_OVERFLOW         equ     00008h  ;/*   overflow                   */
+    EM_UNDERFLOW        equ     00010h  ;/*   underflow                  */
+    EM_INEXACT          equ     00020h  ;/*   inexact (precision)        */
+
+MCW_IC                  equ     01000h  ;/* Infinity Control             */
+    IC_AFFINE           equ     01000h  ;/*   affine                     */
+    IC_PROJECTIVE       equ     00000h  ;/*   projective                 */
+
+MCW_RC                  equ     00C00h  ;/* Rounding Control             */
+    RC_CHOP             equ     00C00h  ;/*   chop                       */
+    RC_UP               equ     00800h  ;/*   up                         */
+    RC_DOWN             equ     00400h  ;/*   down                       */
+    RC_NEAR             equ     00000h  ;/*   near                       */
+
+MCW_PC                  equ     00300h  ;/* Precision Control            */
+    PC_24               equ     00000h  ;/*    24 bits                   */
+    PC_53               equ     00200h  ;/*    53 bits                   */
+    PC_64               equ     00300h  ;/*    64 bits                   */
+
+;/* 8087/80287 Initial Control Word */
+;/* use affine infinity, mask underflow and precision exceptions */
+;/* should be same as in float.h  */
+; No longer used!
+;CW_DEFAULT     equ     (RC_NEAR+PC_64+IC_AFFINE+EM_UNDERFLOW+EM_INEXACT)
+
 .LIST
