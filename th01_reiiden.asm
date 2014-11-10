@@ -197,42 +197,7 @@ include libs/BorlandC/printf.asm
 include libs/BorlandC/putc.asm
 include libs/BorlandC/puts.asm
 include libs/BorlandC/read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; int scanf(const char *format,	...)
-_scanf		proc far
-
-_format		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= byte ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ss
-		lea	ax, [bp+arg_4]
-		push	ax
-		push	[bp+arg_2]
-		push	[bp+_format]
-		push	ds
-		mov	ax, 1A56h
-		push	ax
-		mov	ax, 6C3Fh
-		push	ax
-		mov	ax, 5D1Fh
-		push	ax
-		call	_scanner
-		add	sp, 10h
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_scanf		endp
-
+include libs/BorlandC/scanf.asm
 include libs/BorlandC/srchenv.asm
 include libs/BorlandC/srchstr.asm
 include libs/BorlandC/setvbuf.asm
