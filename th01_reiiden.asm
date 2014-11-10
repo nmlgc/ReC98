@@ -1023,52 +1023,7 @@ include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
 include libs/BorlandC/fcalloc.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-; unsigned __int32 farcoreleft(void)
-_farcoreleft	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], 0
-		mov	dx, word ptr _heaptop@ + 2
-		mov	ax, word ptr _heaptop@
-		mov	cx, word ptr _brklvl@ + 2
-		mov	bx, word ptr _brklvl@
-		call	near ptr N_PSBP@
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		cmp	[bp+var_2], 0
-		jb	short loc_496A
-		ja	short loc_4962
-		cmp	[bp+var_4], 10h
-		jbe	short loc_496A
-
-loc_4962:
-		sub	[bp+var_4], 10h
-		sbb	[bp+var_2], 0
-
-loc_496A:
-		and	[bp+var_4], 0FFF0h
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+var_4]
-		pop	di
-		pop	si
-		mov	sp, bp
-		pop	bp
-		retf
-_farcoreleft	endp ; sp-analysis failed
-
+include libs/BorlandC/fcorleft.asm
 include libs/BorlandC/FHEAPCHK.ASM
 include libs/BorlandC/int86.asm
 include libs/BorlandC/intdos.asm
