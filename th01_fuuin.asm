@@ -150,15 +150,7 @@ include libs/BorlandC/printf.asm
 include libs/BorlandC/putc.asm
 include libs/BorlandC/puts.asm
 include libs/BorlandC/read.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame thunk
-
-j____read	proc far
-		jmp	near ptr ___read
-j____read	endp
-
+include libs/BorlandC/readu.asm
 include libs/BorlandC/srchenv.asm
 include libs/BorlandC/srchstr.asm
 include libs/BorlandC/setvbuf.asm
@@ -171,15 +163,7 @@ include libs/BorlandC/_strlen.asm
 include libs/BorlandC/strrchr.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame thunk
-
-j____write	proc far
-		jmp	near ptr ___write
-j____write	endp
-
+include libs/BorlandC/writeu.asm
 include libs/BorlandC/xfclose.asm
 include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
@@ -994,7 +978,7 @@ loc_A517:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		mov	[bp+var_2], 0Ah
 		mov	[bp+var_8], 0
@@ -1030,7 +1014,7 @@ loc_A563:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		inc	si
 
@@ -1050,7 +1034,7 @@ loc_A586:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		mov	dx, [bp+var_8]
 		mov	ax, [bp+var_A]
@@ -1076,7 +1060,7 @@ loc_A5BA:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		mov	ax, [bp+var_2]
 		dec	ax
@@ -1098,7 +1082,7 @@ loc_A5E3:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		inc	si
 
@@ -1215,7 +1199,7 @@ loc_A694:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____read
+		call	_read
 		add	sp, 8
 		push	4		; n
 		push	ds
@@ -1272,7 +1256,7 @@ loc_A6E4:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____read
+		call	_read
 		add	sp, 8
 		push	28h ; '('
 		push	word ptr off_14034+2
@@ -1281,7 +1265,7 @@ loc_A6E4:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____read
+		call	_read
 		add	sp, 8
 		push	14h
 		push	word ptr off_1402C+2
@@ -1290,7 +1274,7 @@ loc_A6E4:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____read
+		call	_read
 		add	sp, 8
 		push	14h
 		push	word ptr off_14028+2
@@ -1299,7 +1283,7 @@ loc_A6E4:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____read
+		call	_read
 		add	sp, 8
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream
@@ -3044,7 +3028,7 @@ loc_B47A:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		xor	si, si
 		jmp	short loc_B4AF
@@ -3072,7 +3056,7 @@ loc_B4AF:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	28h ; '('
 		push	word ptr off_14034+2
@@ -3081,7 +3065,7 @@ loc_B4AF:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	14h
 		push	word ptr off_1402C+2
@@ -3090,7 +3074,7 @@ loc_B4AF:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	14h
 		push	word ptr off_14028+2
@@ -3099,7 +3083,7 @@ loc_B4AF:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	word ptr [bp+stream+2]
 		push	word ptr [bp+stream] ; stream

@@ -211,15 +211,7 @@ include libs/BorlandC/strrchr.asm
 include libs/BorlandC/ungetc.asm
 include libs/BorlandC/write.asm
 include libs/BorlandC/writea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame thunk
-
-j____write	proc far
-		jmp	near ptr ___write
-j____write	endp
-
+include libs/BorlandC/writeu.asm
 include libs/BorlandC/xfclose.asm
 include libs/BorlandC/xfflush.asm
 include libs/BorlandC/xalloc.asm
@@ -19056,7 +19048,7 @@ loc_1473E:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		xor	si, si
 		jmp	short loc_14790
@@ -19083,7 +19075,7 @@ loc_14790:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	28h ; '('
 		push	large [off_39462]
@@ -19091,7 +19083,7 @@ loc_14790:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	14h
 		push	large [off_3945A]
@@ -19099,7 +19091,7 @@ loc_14790:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	14h
 		push	large [off_39456]
@@ -19107,7 +19099,7 @@ loc_14790:
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
-		call	j____write
+		call	_write
 		add	sp, 8
 		push	large [bp+stream] ; stream
 		call	_fclose
