@@ -1006,19 +1006,7 @@ include libs/BorlandC/vprinter.asm
 include libs/BorlandC/xclose.asm
 include libs/BorlandC/xxas.asm
 include libs/BorlandC/xxv.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_4275	proc far
-		push	si
-		push	di
-		nopcall	_farcoreleft
-		pop	di
-		pop	si
-		retf
-sub_4275	endp
-
+include libs/BorlandC/coreleft.asm
 include libs/BorlandC/cputype.asm
 include libs/BorlandC/FARHEAP.ASM
 include libs/BorlandC/fbrk.asm
@@ -4679,7 +4667,7 @@ loc_D118:
 		push	offset aOldCoreleft7lu ; "old coreleft %7lu bytes free\n"
 		call	_printf
 		add	sp, 8
-		call	sub_4275
+		call	_coreleft
 		push	dx
 		push	ax
 		push	ds
@@ -4760,7 +4748,7 @@ loc_D1E3:
 		push	offset aOldPtn7lu ; "old - ptn	 = %7lu\n"
 		call	_printf
 		add	sp, 8
-		call	sub_4275
+		call	_coreleft
 		push	dx
 		push	ax
 		pop	eax
@@ -4909,7 +4897,7 @@ sub_D340	proc far
 		push	offset a30h	; "\x1B[3;0H"
 		call	_printf
 		add	sp, 4
-		call	sub_4275
+		call	_coreleft
 		push	dx
 		push	ax
 		push	ds
@@ -5453,7 +5441,7 @@ loc_D776:
 		pop	cx
 
 loc_D795:
-		call	sub_4275
+		call	_coreleft
 		mov	word ptr dword_36C1A+2,	dx
 		mov	word ptr dword_36C1A, ax
 		call	sub_BC87
