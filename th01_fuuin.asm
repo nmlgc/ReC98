@@ -73,7 +73,7 @@ include libs/master.lib/random.asm
 include libs/BorlandC/emu/nec_fpinit.asm
 include libs/BorlandC/math/realcvt.asm
 include libs/BorlandC/math/xcvt.asm
-include libs/BorlandC/fperr.asm
+include libs/BorlandC/math/fperr.asm
 include libs/BorlandC/math/_pow10.asm
 include libs/BorlandC/math/pow10d.asm
 include libs/BorlandC/math/ftol.asm
@@ -12708,7 +12708,7 @@ include libs/master.lib/rand[data].asm
 include libs/BorlandC/deflt87[data].asm
 include libs/BorlandC/protflag[data].asm
 include libs/BorlandC/flag8087[data].asm
-include libs/BorlandC/fperr[data].asm
+include libs/BorlandC/math/fperr[data].asm
 include libs/BorlandC/math/_pow10[data].asm
 include libs/BorlandC/_abort[data].asm
 include libs/BorlandC/atexit[data].asm
