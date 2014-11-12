@@ -1581,9 +1581,9 @@ loc_B469:
 		mov	word_23F5A, 2C76h
 		jmp	short loc_B4A9
 ; ---------------------------------------------------------------------------
-		db 90h
-; ---------------------------------------------------------------------------
-		call	sub_E4FC
+
+loc_B48A:
+		nopcall	sub_E4FC
 		push	ds
 		push	offset aBss6_cd2 ; "BSS6.CD2"
 		call	sub_B9CC
@@ -1659,7 +1659,7 @@ off_B53C	dw offset loc_B3EA
 		dw offset loc_B437
 		dw offset loc_B450
 		dw offset loc_B469
-		db 7Ah,	6
+		dw offset loc_B48A
 off_B54A	dw offset loc_B37E
 		dw offset loc_B384
 		dw offset loc_B38A
@@ -2799,10 +2799,10 @@ loc_BE7C:
 		dec	dl
 		jnz	short loc_BE7C
 		inc	di
-		mov	word_23F4C, es
-		mov	word_23F4A, di
+		mov	word ptr dword_23F4A+2, es
+		mov	word ptr dword_23F4A, di
 		mov	word ptr dword_2C926+2,	seg seg003
-		mov	word ptr dword_2C926, 0D8Ch
+		mov	word ptr dword_2C926, offset sub_1600C
 		pop	di
 		pop	si
 		retn
@@ -3091,10 +3091,24 @@ sub_C036	endp
 
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+nullsub_2	proc near
 		retn
+nullsub_2	endp
+
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+nullsub_1	proc far
 		retf
+nullsub_1	endp
+
 ; ---------------------------------------------------------------------------
 		nop
 
@@ -12929,14 +12943,16 @@ table_1083C	dw loc_10730
 		dw loc_10760
 		dw loc_10760
 		dw loc_10760
-		dw offset loc_B0D8
-		db 0
-		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
 
+; Attributes: bp-based frame
 
-sub_10848	proc near
+sub_10844	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
 		push	si
 		push	di
 		cmp	byte_26331, 0FEh
@@ -12947,7 +12963,7 @@ sub_10848	proc near
 		mov	di, ax
 		push	word ptr dword_26320+2
 		call	sub_BFB2
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		mov	al, byte_26330
 		mov	ah, 0
 		mov	dl, byte_25FE5
@@ -12961,7 +12977,7 @@ sub_10848	proc near
 		add	dx, ax
 		mov	si, dx
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	dx
 		call	super_roll_put
 		mov	ax, word ptr dword_26320
@@ -12971,7 +12987,7 @@ sub_10848	proc near
 		add	ax, 0FF00h
 		push	ax
 		call	sub_BFB2
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		cmp	byte_26331, 2
 		jnz	short loc_108C2
 		mov	al, byte_25FE4
@@ -12984,7 +13000,7 @@ sub_10848	proc near
 
 loc_108B6:
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		call	super_roll_put
 		jmp	short loc_10900
@@ -13003,7 +13019,7 @@ loc_108C2:
 		cmp	byte_26334, 0
 		jz	short loc_108B6
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		push	large 0FFC0h
 		call	super_roll_put_1plane
@@ -13021,9 +13037,17 @@ loc_10900:
 		pop	si
 		leave
 		retn
-sub_10848	endp
+sub_10844	endp
 
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_10904	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -13033,7 +13057,7 @@ sub_10848	endp
 		mov	ax, word_26338
 		sar	ax, 4
 		add	ax, 0FFF0h
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		cmp	byte_26345, 0FEh
 		jnz	short loc_10934
 		push	di
@@ -13089,7 +13113,7 @@ loc_10976:
 		cmp	byte_26348, 0
 		jnz	short loc_10989
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		call	super_put
 		jmp	short loc_10932
@@ -13097,7 +13121,7 @@ loc_10976:
 
 loc_10989:
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		push	large 0FFC0h
 		call	super_put_1plane
@@ -13109,7 +13133,17 @@ loc_10999:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+sub_10904	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_109A3	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -13124,7 +13158,7 @@ loc_10999:
 		add	ax, 0FF00h
 		push	ax
 		call	sub_BFB2
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		cmp	byte_26330, 0CAh
 		jnz	short loc_109E3
 		mov	al, byte_25FE5
@@ -13149,7 +13183,7 @@ loc_109F0:
 		cmp	byte_26334, 0
 		jnz	short loc_10A05
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		call	super_roll_put
 		jmp	short loc_10A26
@@ -13157,7 +13191,7 @@ loc_109F0:
 
 loc_10A05:
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		push	large 0FFC0h
 		call	super_roll_put_1plane
@@ -13175,7 +13209,17 @@ loc_10A26:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+sub_109A3	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_10A2A	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -13235,7 +13279,17 @@ loc_10A94:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+sub_10A2A	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_10A9E	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -13250,7 +13304,7 @@ loc_10A94:
 		add	ax, 0FF00h
 		push	ax
 		call	sub_BFB2
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		cmp	byte_26330, 0D0h
 		jnz	short loc_10ADE
 		mov	al, byte_25FE5
@@ -13271,7 +13325,7 @@ loc_10AE3:
 		cmp	byte_26334, 0
 		jnz	short loc_10AF8
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		call	super_roll_put
 		jmp	short loc_10B19
@@ -13279,7 +13333,7 @@ loc_10AE3:
 
 loc_10AF8:
 		push	di
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		push	si
 		push	large 0FFC0h
 		call	super_roll_put_1plane
@@ -13297,6 +13351,8 @@ loc_10B19:
 		pop	si
 		leave
 		retn
+sub_10A9E	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17825,453 +17881,2669 @@ table_12F97	dw loc_12F3B
 		dw loc_12F4B
 		dw loc_12F60
 		dw loc_12F67
-		dw offset loc_B0D8
-		db 2 dup(0), 56h, 0C6h,	46h, 0FFh, 3, 0E8h, 69h, 0F9h
-		db 0A8h, 9, 0Fh, 84h, 0DDh, 0, 0A8h, 8,	0Fh, 84h, 0CCh
-		db 0, 8Ah, 46h,	0FFh, 4, 6, 88h, 46h, 0FFh, 0E9h, 0C1h
-		db 0, 80h, 7Eh,	0FFh, 3, 77h, 23h, 80h,	7Eh, 0FFh, 3, 75h
-		db 4, 0C6h, 46h, 0FEh, 0B4h, 0C6h, 44h,	10h, 6,	8Ah, 46h
-		db 0FEh, 4, 6, 88h, 46h, 0FEh, 8Dh, 44h, 0Ah, 50h, 0FFh
-		db 76h,	0FEh, 0E8h, 0F6h, 0B4h,	0E9h, 8Ch, 0, 8Ah, 46h
-		db 0FFh, 0B4h, 0, 2Dh, 4, 0, 8Bh, 0D8h,	83h, 0FBh, 5, 77h
-		db 75h,	3, 0DBh, 2Eh, 0FFh, 0A7h, 81h, 82h, 81h, 6Ch, 2
-		db 80h,	1, 0C6h, 44h, 0Fh, 2, 0C7h, 44h, 0Ah, 0EAh, 0FFh
-		db 0C7h, 44h, 0Ch, 24h,	0, 0EBh, 59h, 81h, 44h,	2, 80h
-		db 1, 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 16h, 0, 0C7h
-		db 44h,	0Ch, 24h, 0, 0EBh, 44h,	81h, 6Ch, 2, 80h, 1, 0C6h
-		db 44h,	0Fh, 4,	0C7h, 44h, 0Ah,	0F0h, 0FFh, 0C7h, 44h
-		db 0Ch,	0D0h, 0FFh, 0EBh, 2Fh, 81h, 44h, 2, 80h, 1, 0C6h
-		db 44h,	0Fh, 4,	0C7h, 44h, 0Ah,	10h, 0,	0C7h, 44h, 0Ch
-		db 0D0h, 0FFh, 0EBh, 1Ah, 81h, 6Ch, 2, 80h, 1, 0EBh, 5
-		db 81h,	44h, 2,	80h, 1,	0C6h, 44h, 0Fh,	4, 0C7h, 44h, 0Ah
-		db 2 dup(0), 0C7h, 44h,	0Ch, 0C0h, 0FFh, 0C6h, 44h, 0Eh
-		db 16h,	0C6h, 44h, 10h,	0Ch, 8Ah, 46h, 0FFh, 4,	0FFh, 88h
-		db 46h,	0FFh, 0Ah, 0C0h, 76h, 0Bh, 0E8h, 20h, 0B4h, 8Bh
-		db 0F0h, 0Bh, 0C0h, 0Fh, 85h, 34h, 0FFh, 5Eh, 0C9h, 0C3h
-		db 0F1h, 81h, 6, 82h, 1Bh, 82h,	30h, 82h, 45h, 82h, 4Ch
-		db 82h,	0C8h, 2, 2 dup(0), 56h,	0C6h, 46h, 0FFh, 3, 0E8h
-		db 6Bh,	0F8h, 0A8h, 9, 0Fh, 84h, 0E6h, 0, 0A8h,	8, 0Fh
-		db 84h,	0D5h, 0, 8Ah, 46h, 0FFh, 4, 6, 88h, 46h, 0FFh
-		db 0E9h, 0CAh, 0, 80h, 7Eh, 0FFh, 3, 77h, 23h, 0C6h, 44h
-		db 10h,	6, 80h,	7Eh, 0FFh, 3, 75h, 4, 0C6h, 46h, 0FEh
-		db 0B2h, 8Ah, 46h, 0FEh, 4, 7, 88h, 46h, 0FEh, 8Dh, 44h
-		db 0Ah,	50h, 0FFh, 76h,	0FEh, 0E8h, 0F8h, 0B3h,	0E9h, 95h
-		db 0, 8Ah, 46h,	0FFh, 0B4h, 0, 2Dh, 4, 0, 8Bh, 0D8h, 83h
-		db 0FBh, 5, 77h, 7Eh, 3, 0DBh, 2Eh, 0FFh, 0A7h,	89h, 83h
-		db 81h,	6Ch, 2,	80h, 1,	0C6h, 44h, 0Fh,	2, 0C7h, 44h, 0Ah
-		db 0EAh, 0FFh, 0C7h, 44h, 0Ch, 24h, 0, 0EBh, 62h, 81h
-		db 44h,	2, 80h,	1, 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 16h
-		db 0, 0C7h, 44h, 0Ch, 24h, 0, 0EBh, 4Dh, 81h, 6Ch, 2, 80h
-		db 1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ah, 0F0h, 0FFh, 0C7h
-		db 44h,	0Ch, 0D0h, 0FFh, 0EBh, 38h, 81h, 44h, 2, 80h, 1
-		db 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ah, 10h, 0, 0C7h, 44h
-		db 0Ch,	0D0h, 0FFh, 0EBh, 23h, 81h, 6Ch, 2, 80h, 1, 0C6h
-		db 44h,	0Fh, 4,	0C7h, 44h, 0Ah,	8, 0, 0EBh, 0Eh, 81h, 44h
-		db 2, 80h, 1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ah, 0F8h
-		db 0FFh, 0C7h, 44h, 0Ch, 0C0h, 0FFh, 0C6h, 44h,	0Eh, 16h
-		db 0C6h, 44h, 10h, 0Bh,	8Ah, 46h, 0FFh,	4, 0FFh, 88h, 46h
-		db 0FFh, 0Ah, 0C0h, 76h, 0Bh, 0E8h, 19h, 0B3h, 8Bh, 0F0h
-		db 0Bh,	0C0h, 0Fh, 85h,	2Bh, 0FFh, 5Eh,	0C9h, 0C3h, 0
-		db 0EFh, 82h, 4, 83h, 19h, 83h,	2Eh, 83h, 43h, 83h, 53h
-		db 83h,	0C8h, 2, 2 dup(0), 56h,	57h, 0C6h, 46h,	0FFh, 4
-		db 0E8h, 62h, 0F7h, 0A8h, 9, 0Fh, 84h, 0E6h, 0,	0A8h, 8
-		db 74h,	8, 8Ah,	46h, 0FFh, 4, 8, 88h, 46h, 0FFh, 0BFh
-		db 80h,	0FEh, 0E9h, 0C9h, 0, 80h, 7Eh, 0FFh, 4,	77h, 13h
-		db 1, 7Ch, 2, 0C6h, 44h, 10h, 5, 0C7h, 44h, 0Ch, 40h, 0FFh
-		db 81h,	0C7h, 0, 1, 0E9h, 0A4h,	0, 8Ah,	46h, 0FFh, 0B4h
-		db 0, 2Dh, 5, 0, 8Bh, 0D8h, 83h, 0FBh, 7, 0Fh, 87h, 8Bh
-		db 0, 3, 0DBh, 2Eh, 0FFh, 0A7h,	93h, 84h, 81h, 6Ch, 2
-		db 80h,	1, 0C6h, 44h, 0Fh, 2, 0C7h, 44h, 0Ah, 0EAh, 0FFh
-		db 0C7h, 44h, 0Ch, 24h,	0, 0EBh, 6Fh, 81h, 44h,	2, 80h
-		db 1, 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 16h, 0, 0C7h
-		db 44h,	0Ch, 24h, 0, 0EBh, 5Ah,	81h, 6Ch, 2, 80h, 1, 0C6h
-		db 44h,	0Fh, 4,	0C7h, 44h, 0Ah,	0F0h, 0FFh, 0EBh, 0Eh
-		db 81h,	44h, 2,	80h, 1,	0C6h, 44h, 0Fh,	4, 0C7h, 44h, 0Ah
-		db 10h,	0, 0C7h, 44h, 0Ch, 0D0h, 0FFh, 0EBh, 35h, 81h
-		db 6Ch,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 0B0h
-		db 0FFh, 0EBh, 25h, 81h, 44h, 2, 80h, 1, 0C6h, 44h, 0Fh
-		db 4, 0C7h, 44h, 0Ch, 0B0h, 0FFh, 0EBh,	15h, 81h, 6Ch
-		db 2, 80h, 1, 0EBh, 5, 81h, 44h, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	4, 0C7h, 44h, 0Ch, 0E0h, 0FFh, 0C6h, 44h, 0Eh
-		db 16h,	0C6h, 44h, 10h,	0Bh, 8Ah, 46h, 0FFh, 4,	0FFh, 88h
-		db 46h,	0FFh, 0Ah, 0C0h, 76h, 0Bh, 0E8h, 10h, 0B2h, 8Bh
-		db 0F0h, 0Bh, 0C0h, 0Fh, 85h, 2Ch, 0FFh, 5Fh, 5Eh, 0C9h
-		db 0C3h, 0, 0EBh, 83h, 0, 84h, 15h, 84h, 25h, 84h, 3Ah
-		db 84h,	4Ah, 84h, 5Ah, 84h, 61h, 84h, 0C8h, 2, 2 dup(0)
-		db 56h,	57h, 0C6h, 46h,	0FFh, 4, 0E8h, 54h, 0F6h, 0A8h
-		db 9, 0Fh, 84h,	12h, 1,	0A8h, 8, 74h, 8, 8Ah, 46h, 0FFh
-		db 4, 0Ah, 88h,	46h, 0FFh, 0BFh, 80h, 0FEh, 0E9h, 0F5h
-		db 0, 80h, 7Eh,	0FFh, 4, 77h, 13h, 1, 7Ch, 2, 0C6h, 44h
-		db 10h,	5, 0C7h, 44h, 0Ch, 40h,	0FFh, 81h, 0C7h, 0, 1
-		db 0E9h, 0D0h, 0, 8Ah, 46h, 0FFh, 0B4h,	0, 2Dh,	5, 0, 8Bh
-		db 0D8h, 83h, 0FBh, 9, 0Fh, 87h, 0B7h, 0, 3, 0DBh, 2Eh
-		db 0FFh, 0A7h, 0CDh, 85h, 81h, 6Ch, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	2, 0C7h, 44h, 0Ah, 0E4h, 0FFh, 0C7h, 44h, 0Ch
-		db 24h,	0, 0E9h, 9Ah, 0, 81h, 44h, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	3, 0C7h, 44h, 0Ah, 1Ch,	0, 0C7h, 44h, 0Ch, 24h
-		db 0, 0E9h, 84h, 0, 81h, 6Ch, 2, 80h, 1, 0C6h, 44h, 0Fh
-		db 3, 0C7h, 44h, 0Ah, 20h, 0, 0EBh, 0Eh, 81h, 44h, 2, 80h
-		db 1, 0C6h, 44h, 0Fh, 2, 0C7h, 44h, 0Ah, 0E0h, 0FFh, 0C7h
-		db 44h,	0Ch, 20h, 0, 0EBh, 5Fh,	81h, 6Ch, 2, 80h, 1, 0C6h
-		db 44h,	0Fh, 4,	0C7h, 44h, 0Ch,	30h, 0,	0C7h, 44h, 0Ah
-		db 0F0h, 0FFh, 0EBh, 4Ah, 81h, 44h, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	4, 0C7h, 44h, 0Ch, 30h,	0, 0C7h, 44h, 0Ah, 10h
-		db 0, 0EBh, 35h, 81h, 6Ch, 2, 80h, 1, 0C6h, 44h, 0Fh, 4
-		db 0C7h, 44h, 0Ch, 0B0h, 0FFh, 0EBh, 25h, 81h, 44h, 2
-		db 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 0B0h, 0FFh
-		db 0EBh, 15h, 81h, 6Ch
-		db 2, 80h, 1, 0EBh, 5, 81h, 44h, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	4, 0C7h, 44h, 0Ch, 0E0h, 0FFh, 0C6h, 44h, 0Eh
-		db 16h,	0C6h, 44h, 10h,	0Bh, 8Ah, 46h, 0FFh, 4,	0FFh, 88h
-		db 46h,	0FFh, 0Ah, 0C0h, 76h, 0Bh, 0E8h, 0D6h, 0B0h, 8Bh
-		db 0F0h, 0Bh, 0C0h, 0Fh, 85h, 0, 0FFh, 5Fh, 5Eh, 0C9h
-		db 0C3h, 0, 0F9h, 84h, 0Fh, 85h, 25h, 85h, 35h,	85h, 4Ah
-		db 85h,	5Fh, 85h, 74h, 85h, 84h, 85h, 94h, 85h,	9Bh, 85h
-		db 0C8h, 2, 2 dup(0), 56h, 57h,	0C6h, 46h, 0FFh, 4, 0E8h
-		db 16h,	0F5h, 0A8h, 9, 0Fh, 84h, 12h, 1, 0A8h, 8, 74h
-		db 8, 8Ah, 46h,	0FFh, 4, 0Ah, 88h, 46h,	0FFh, 0BFh, 80h
-		db 0FEh, 0E9h, 0F5h, 0,	80h, 7Eh, 0FFh,	4, 77h,	13h, 1
-		db 7Ch,	2, 0C6h, 44h, 10h, 4, 0C7h, 44h, 0Ch, 40h, 0FFh
-		db 81h,	0C7h, 0, 1, 0E9h, 0D0h,	0, 8Ah,	46h, 0FFh, 0B4h
-		db 0, 2Dh, 5, 0, 8Bh, 0D8h, 83h, 0FBh, 9, 0Fh, 87h, 0B7h
-		db 0, 3, 0DBh, 2Eh, 0FFh, 0A7h,	0Bh, 87h, 81h, 6Ch, 2
-		db 80h,	1, 0C6h, 44h, 0Fh, 2, 0C7h, 44h, 0Ah, 0E4h, 0FFh
-		db 0C7h, 44h, 0Ch, 24h,	0, 0E9h, 9Ah, 0, 81h, 44h, 2, 80h
-		db 1, 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 1Ch, 0, 0C7h
-		db 44h,	0Ch, 24h, 0, 0E9h, 84h,	0, 81h,	6Ch, 2,	80h, 1
-		db 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 20h, 0, 0EBh, 0Eh
-		db 81h,	44h, 2,	80h, 1,	0C6h, 44h, 0Fh,	2, 0C7h, 44h, 0Ah
-		db 0E0h, 0FFh, 0C7h, 44h, 0Ch, 20h, 0, 0EBh, 5Fh, 81h
-		db 6Ch,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 30h
-		db 0, 0C7h, 44h, 0Ah, 0F0h, 0FFh, 0EBh,	4Ah, 81h, 44h
-		db 2, 80h, 1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 30h, 0
-		db 0C7h, 44h, 0Ah, 10h,	0, 0EBh, 35h, 81h, 6Ch,	2, 80h
-		db 1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 0B0h, 0FFh, 0EBh
-		db 25h,	81h, 44h, 2, 80h, 1, 0C6h, 44h,	0Fh, 4,	0C7h, 44h
-		db 0Ch,	0B0h, 0FFh, 0EBh, 15h, 81h, 6Ch, 2, 80h, 1, 0EBh
-		db 5, 81h, 44h,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h
-		db 0Ch,	0E0h, 0FFh, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h
-		db 0Ah,	8Ah, 46h, 0FFh,	4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	0Bh, 0E8h, 98h,	0AFh, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh
-		db 85h,	0, 0FFh, 5Fh, 5Eh, 0C9h, 0C3h, 0, 37h, 86h, 4Dh
-		db 86h,	63h, 86h, 73h, 86h, 88h, 86h, 9Dh, 86h,	0B2h, 86h
-		db 0C2h, 86h, 0D2h, 86h, 0D9h, 86h, 0C8h, 2, 2 dup(0)
-		db 56h,	57h, 0C6h, 46h,	0FFh, 6, 0E8h, 0D8h, 0F3h, 0A8h
-		db 9, 0Fh, 84h,	55h, 1,	0A8h, 8, 74h, 8, 8Ah, 46h, 0FFh
-		db 4, 0Ch, 88h,	46h, 0FFh, 0BFh, 80h, 0FDh, 0E9h, 38h
-		db 1, 80h, 7Eh,	0FFh, 6, 77h, 13h, 1, 7Ch, 2, 0C6h, 44h
-		db 10h,	4, 0C7h, 44h, 0Ch, 40h,	0FFh, 81h, 0C7h, 0, 1
-		db 0E9h, 13h, 1, 8Ah, 46h, 0FFh, 0B4h, 0, 2Dh, 7, 0, 8Bh
-		db 0D8h, 83h, 0FBh, 0Dh, 0Fh, 87h, 0FAh, 0, 3, 0DBh, 2Eh
-		db 0FFh, 0A7h, 8Ch, 88h, 81h, 6Ch, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	2, 0C7h, 44h, 0Ah, 0E0h, 0FFh, 0C7h, 44h, 0Ch
-		db 24h,	0, 0E9h, 0DDh, 0, 81h, 44h, 2, 80h, 1, 0C6h, 44h
-		db 0Fh,	3, 0C7h, 44h, 0Ah, 20h
-		db 0, 0C7h, 44h, 0Ch, 24h, 0, 0E9h, 0C7h, 0, 81h, 6Ch
-		db 2, 80h, 1, 0C6h, 44h, 0Fh, 3, 0C7h, 44h, 0Ah, 20h, 0
-		db 0EBh, 0Eh, 81h, 44h,	2, 80h,	1, 0C6h, 44h, 0Fh, 2, 0C7h
-		db 44h,	0Ah, 0E0h, 0FFh, 0C7h, 44h, 0Ch, 20h, 0, 0E9h
-		db 0A1h, 0, 81h, 6Ch, 2, 80h, 1, 0C6h, 44h, 0Fh, 4, 0C7h
-		db 44h,	0Ch, 30h, 0, 0E9h, 90h,	0, 81h,	44h, 2,	80h, 1
-		db 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 30h, 0, 0E9h, 7Fh
-		db 0, 81h, 6Ch,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h
-		db 0Ch,	2 dup(0), 0C7h,	44h, 0Ah, 0F0h,	0FFh, 0EBh, 6Ah
-		db 81h,	44h, 2,	80h, 1,	0C6h, 44h, 0Fh,	4, 0C7h, 44h, 0Ch
-		db 2 dup(0), 0C7h, 44h,	0Ah, 10h, 0, 0EBh, 55h,	81h, 6Ch
-		db 2, 80h, 1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 80h, 0FFh
-		db 0EBh, 45h, 81h, 44h,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h
-		db 44h,	0Ch, 80h, 0FFh,	0EBh, 35h, 81h,	6Ch, 2,	80h, 1
-		db 0C6h, 44h, 0Fh, 4, 0C7h, 44h, 0Ch, 0C0h, 0FFh, 0EBh
-		db 25h,	81h, 44h, 2, 80h, 1, 0C6h, 44h,	0Fh, 4,	0C7h, 44h
-		db 0Ch,	0C0h, 0FFh, 0EBh, 15h, 81h, 6Ch, 2, 80h, 1, 0EBh
-		db 5, 81h, 44h,	2, 80h,	1, 0C6h, 44h, 0Fh, 4, 0C7h, 44h
-		db 0Ch,	0F0h, 0FFh, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h
-		db 9, 8Ah, 46h,	0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	0Bh, 0E8h, 17h,	0AEh, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh
-		db 85h,	0BDh, 0FEh, 5Fh, 5Eh, 0C9h, 0C3h, 0, 75h, 87h
-		db 8Bh,	87h, 0A1h, 87h,	0B1h, 87h, 0C7h, 87h, 0D8h, 87h
-		db 0E9h, 87h, 0FEh, 87h, 13h, 88h, 23h,	88h, 33h, 88h
-		db 43h,	88h, 53h, 88h, 5Ah, 88h, 0C8h, 2, 2 dup(0), 56h
-		db 0C6h, 46h, 0FFh, 2, 0E8h, 50h, 0F2h,	0A8h, 5, 74h, 58h
-		db 0A8h, 1, 74h, 4Bh, 0FEh, 46h, 0FFh, 0EBh, 46h, 80h
-		db 7Eh,	0FFh, 2, 77h, 21h, 80h,	7Eh, 0FFh, 2, 75h, 7, 81h
-		db 6Ch,	2, 80h,	1, 0EBh, 5, 81h, 44h, 2, 80h, 1, 0C7h
-		db 44h,	0Ch, 0C0h, 0FEh, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h
-		db 10h,	5, 0EBh, 13h, 8Dh, 44h,	0Ah, 50h, 6Ah, 0Fh, 0E8h
-		db 1Fh,	89h, 4,	0B8h, 50h, 0E8h, 0D7h, 0ADh, 0C6h, 44h
-		db 10h,	8, 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah
-		db 0C0h, 76h, 9, 0E8h, 8Ch, 0ADh, 8Bh, 0F0h, 0Bh, 0C0h
-		db 75h,	0B1h, 5Eh, 0C9h, 0C3h, 0C8h, 2,	2 dup(0), 56h
-		db 0C6h, 46h, 0FFh, 2, 0E8h, 0E5h, 0F1h, 0A8h, 5, 74h
-		db 65h,	0A8h, 1, 74h, 58h, 8Ah,	46h, 0FFh, 4, 2, 88h, 46h
-		db 0FFh, 0EBh, 4Eh, 80h, 7Eh, 0FFh, 2, 77h, 21h, 80h, 7Eh
-		db 0FFh, 2, 75h, 7, 81h, 6Ch, 2, 80h, 1, 0EBh, 5, 81h
-		db 44h,	2, 80h,	1, 0C7h, 44h, 0Ch, 0C0h, 0FEh, 0C6h, 44h
-		db 0Eh,	16h, 0C6h, 44h,	10h, 5,	0EBh, 1Bh, 80h,	7Eh, 0FFh
-		db 4, 75h, 7, 81h, 6Ch,	2, 80h,	0, 0EBh, 5, 81h, 44h, 2
-		db 80h,	0, 0C7h, 44h, 0Ch, 40h,	0FFh, 0C6h, 44h, 10h, 7
-		db 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	9, 0E8h, 14h, 0ADh, 8Bh, 0F0h, 0Bh, 0C0h, 75h
-		db 0A9h, 5Eh, 0C9h, 0C3h, 0C8h,	2, 2 dup(0), 56h, 0C6h
-		db 46h,	0FFh, 4, 0E8h, 6Dh, 0F1h, 0A8h,	5, 74h,	7Dh, 0A8h
-		db 1
-		db 74h,	70h, 8Ah, 46h, 0FFh, 4,	2, 88h,	46h, 0FFh, 0EBh
-		db 66h,	80h, 7Eh, 0FFh,	4, 77h,	39h, 8Ah, 46h, 0FFh, 0B4h
-		db 0, 48h, 8Bh,	0D8h, 83h, 0FBh, 3, 77h, 1Dh, 3, 0DBh
-		db 2Eh,	0FFh, 0A7h, 1Ch, 8Ah, 0C7h, 44h, 0Ah, 0F0h, 0FFh
-		db 81h,	6Ch, 2,	80h, 1,	0EBh, 0Ah, 0C7h, 44h, 0Ah, 10h
-		db 0, 81h, 44h,	2, 80h,	1, 0C7h, 44h, 0Ch, 0C0h, 0FEh
-		db 0C6h, 44h, 0Eh, 16h,	0C6h, 44h, 10h,	4, 0EBh, 1Bh, 80h
-		db 7Eh,	0FFh, 6, 75h, 7, 81h, 6Ch, 2, 80h, 0, 0EBh, 5
-		db 81h,	44h, 2,	80h, 0,	0C7h, 44h, 0Ch,	40h, 0FFh, 0C6h
-		db 44h,	10h, 7,	8Ah, 46h, 0FFh,	4, 0FFh, 88h, 46h, 0FFh
-		db 0Ah,	0C0h, 76h, 9, 0E8h, 84h, 0ACh, 8Bh, 0F0h, 0Bh
-		db 0C0h, 75h, 91h, 5Eh,	0C9h, 0C3h, 0, 0CFh, 89h, 0C3h
-		db 89h,	0D4h, 89h, 0C8h, 89h, 0C8h, 2, 2 dup(0), 56h, 0C6h
-		db 46h,	0FFh, 4, 0E8h, 0D4h, 0F0h, 0A8h, 5, 74h, 7Ch, 0A8h
-		db 1, 74h, 8, 8Ah, 46h,	0FFh, 4, 3, 88h, 46h, 0FFh, 0C6h
-		db 46h,	0FEh, 0BAh, 0EBh, 61h, 80h, 7Eh, 0FFh, 4, 77h
-		db 39h,	8Ah, 46h, 0FFh,	0B4h, 0, 48h, 8Bh, 0D8h, 83h, 0FBh
-		db 3, 77h, 1Dh,	3, 0DBh, 2Eh, 0FFh, 0A7h, 0B3h,	8Ah, 0C7h
-		db 44h,	0Ah, 10h, 0, 81h, 6Ch, 2, 80h, 1, 0EBh,	0Ah, 0C7h
-		db 44h,	0Ah, 0F0h, 0FFh, 81h, 44h, 2, 80h, 1, 0C7h, 44h
-		db 0Ch,	0C0h, 0FEh, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h
-		db 4, 0EBh, 16h, 8Dh, 44h, 0Ah,	50h, 0FFh, 76h,	0FEh, 0E8h
-		db 3Fh,	0ACh, 8Ah, 46h,	0FEh, 4, 6, 88h, 46h, 0FEh, 0C6h
-		db 44h,	10h, 7,	8Ah, 46h, 0FFh,	4, 0FFh, 88h, 46h, 0FFh
-		db 0Ah,	0C0h, 76h, 9, 0E8h, 0ECh, 0ABh,	8Bh, 0F0h, 0Bh
-		db 0C0h, 75h, 96h, 5Eh,	0C9h, 0C3h, 60h, 8Ah, 6Ch, 8Ah
-		db 71h,	8Ah, 65h, 8Ah, 0C8h, 2,	2 dup(0), 56h, 0C6h, 46h
-		db 0FFh, 4, 0E8h, 3Dh, 0F0h, 0A8h, 5, 0Fh, 84h,	8Fh, 0
-		db 0A8h, 1, 74h, 8, 8Ah, 46h, 0FFh, 4, 3, 88h, 46h, 0FFh
-		db 0C6h, 46h, 0FEh, 0BAh, 0EBh,	74h, 80h, 7Eh, 0FFh, 4
-		db 77h,	4Ch, 8Ah, 46h, 0FFh, 0B4h, 0, 48h, 8Bh,	0D8h, 83h
-		db 0FBh, 3, 77h, 30h, 3, 0DBh, 2Eh, 0FFh, 0A7h,	5Fh, 8Bh
-		db 0C7h, 44h, 0Ah, 10h,	0, 81h,	44h, 2,	80h, 1,	0EBh, 1Dh
-		db 0C7h, 44h, 0Ah, 0F0h, 0FFh, 0EBh, 11h, 0C7h,	44h, 0Ah
-		db 0F8h, 0FFh, 81h, 44h, 2, 80h, 1, 0EBh, 0Ah, 0C7h, 44h
-		db 0Ah,	8, 0, 81h, 6Ch,	2, 80h,	1, 0C7h, 44h, 0Ch, 0C0h
-		db 0FEh, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h, 4, 0EBh
-		db 16h,	8Dh, 44h, 0Ah, 50h, 0FFh, 76h, 0FEh, 0E8h, 93h
-		db 0ABh, 8Ah, 46h, 0FEh, 4, 6, 88h, 46h, 0FEh, 0C6h, 44h
-		db 10h,	7, 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah
-		db 0C0h, 76h, 9, 0E8h, 40h, 0ABh, 8Bh, 0F0h, 0Bh, 0C0h
-		db 75h,	83h, 5Eh, 0C9h,	0C3h, 0F9h, 8Ah, 5, 8Bh, 0Ch, 8Bh
-		db 18h,	8Bh, 0C8h, 2, 2	dup(0),	56h, 0C6h, 46h,	0FFh, 6
-		db 0E8h, 91h, 0EFh, 0A8h, 5, 0Fh, 84h, 96h, 0, 0A8h, 1
-		db 74h,	8, 8Ah,	46h, 0FFh, 4, 3, 88h, 46h, 0FFh, 0C6h
-		db 46h,	0FEh, 0BAh, 0EBh, 79h, 80h, 7Eh, 0FFh, 6, 77h
-		db 51h,	8Ah, 46h, 0FFh,	0B4h, 0, 48h, 8Bh, 0D8h, 83h, 0FBh
-		db 5, 77h, 35h,	3, 0DBh
-		db 2Eh,	0FFh, 0A7h, 13h, 8Ch, 0C7h, 44h, 0Ah, 10h, 0, 81h
-		db 44h,	2, 0C0h, 1, 0EBh, 22h, 0C7h, 44h, 0Ah, 0F0h, 0FFh
-		db 81h,	6Ch, 2,	0C0h, 1, 0EBh, 16h, 0C7h, 44h, 0Ah, 0F8h
-		db 0FFh, 81h, 44h, 2, 80h, 1, 0EBh, 0Ah, 0C7h, 44h, 0Ah
-		db 8, 0, 81h, 6Ch, 2, 80h, 1, 0C7h, 44h, 0Ch, 0C0h, 0FEh
-		db 0C6h, 44h, 0Eh, 16h,	0C6h, 44h, 10h,	4, 0EBh, 16h, 8Dh
-		db 44h,	0Ah, 50h, 0FFh,	76h, 0FEh, 0E8h, 0E2h, 0AAh, 8Ah
-		db 46h,	0FEh, 4, 6, 88h, 46h, 0FEh, 0C6h, 44h, 10h, 7
-		db 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	0Bh, 0E8h, 8Fh,	0AAh, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh
-		db 85h,	7Ch, 0FFh, 5Eh,	0C9h, 0C3h, 0, 0A5h, 8Bh, 0B1h
-		db 8Bh,	0BDh, 8Bh, 0C9h, 8Bh, 0C2h, 8Bh, 0CEh, 8Bh, 0C8h
-		db 2, 2	dup(0),	56h, 0C6h, 46h,	0FFh, 6, 0E8h, 0D9h, 0EEh
-		db 0A8h, 5, 0Fh, 84h, 0A6h, 0, 0A8h, 1,	74h, 8,	8Ah, 46h
-		db 0FFh, 4, 3, 88h, 46h, 0FFh, 0C6h, 46h, 0FEh,	0BAh, 0E9h
-		db 88h,	0, 80h,	7Eh, 0FFh, 6, 77h, 60h,	0C7h, 44h, 0Ch
-		db 0C0h, 0FEh, 8Ah, 46h, 0FFh, 0B4h, 0,	48h, 8Bh, 0D8h
-		db 83h,	0FBh, 5, 77h, 3Fh, 3, 0DBh, 2Eh, 0FFh, 0A7h, 0DAh
-		db 8Ch,	0C7h, 44h, 0Ah,	1Ch, 0,	0C7h, 44h, 0Ch,	0E0h, 0FEh
-		db 81h,	44h, 2,	0, 2, 0EBh, 27h, 0C7h, 44h, 0Ah, 0E4h
-		db 0FFh, 0C7h, 44h, 0Ch, 0E0h, 0FEh, 81h, 6Ch, 2, 0, 2
-		db 0EBh, 16h, 0C7h, 44h, 0Ah, 0F8h, 0FFh, 81h, 44h, 2
-		db 80h,	1, 0EBh, 0Ah, 0C7h, 44h, 0Ah, 8, 0, 81h, 6Ch, 2
-		db 80h,	1, 0C7h, 44h, 0Ch, 0C0h, 0FEh, 0C6h, 44h, 0Eh
-		db 16h,	0C6h, 44h, 10h,	4, 0EBh, 16h, 8Dh, 44h,	0Ah, 50h
-		db 0FFh, 76h, 0FEh, 0E8h, 1Ah, 0AAh, 8Ah, 46h, 0FEh, 4
-		db 6, 88h, 46h,	0FEh, 0C6h, 44h, 10h, 7, 8Ah, 46h, 0FFh
-		db 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h, 76h, 0Bh, 0E8h
-		db 0C7h, 0A9h, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh, 85h, 6Dh, 0FFh
-		db 5Eh,	0C9h, 0C3h, 63h, 8Ch, 74h, 8Ch,	85h, 8Ch, 91h
-		db 8Ch,	8Ah, 8Ch, 96h, 8Ch, 0C8h, 2, 2 dup(0), 56h, 0C6h
-		db 46h,	0FFh, 6, 0E8h, 12h, 0EEh, 0A8h,	5, 0Fh,	84h, 0E0h
-		db 0, 0A8h, 1, 0Fh, 84h, 0CFh, 0, 8Ah, 46h, 0FFh, 2 dup(4)
-		db 88h,	46h, 0FFh, 0E9h, 0C4h, 0, 80h, 7Eh, 0FFh, 6, 77h
-		db 6Eh,	0C7h, 44h, 0Ch,	0C0h, 0FEh, 8Ah, 46h, 0FFh, 0B4h
-		db 0, 48h, 8Bh,	0D8h, 83h, 0FBh, 5, 77h, 52h, 3, 0DBh
-		db 2Eh,	0FFh, 0A7h, 0E3h, 8Dh, 0C7h, 44h, 0Ah, 2Ah, 0
-		db 0C7h, 44h, 0Ch, 0E0h, 0FEh, 81h, 44h, 2, 0, 2, 0EBh
-		db 3Ah,	0C7h, 44h, 0Ah,	0D6h, 0FFh, 0C7h, 44h, 0Ch, 0E0h
-		db 0FEh, 81h, 6Ch, 2, 0, 2, 0EBh, 29h, 0C7h, 44h, 0Ah
-		db 0F8h, 0FFh, 81h, 44h, 2, 80h, 1, 0EBh, 1Dh, 0C7h, 44h
-		db 0Ah,	8, 0, 0EBh, 11h, 0C7h, 44h, 0Ah, 8, 0, 81h, 44h
-		db 2, 80h, 1, 0EBh, 0Ah, 0C7h, 44h, 0Ah, 0F8h, 0FFh, 81h
-		db 6Ch,	2, 80h,	1, 0C6h, 44h, 0Eh, 16h,	0C6h, 44h, 10h
-		db 4, 0EBh, 44h, 8Ah, 46h, 0FFh, 0B4h, 0, 2Dh, 7, 0, 8Bh
-		db 0D8h, 83h, 0FBh, 3, 77h, 27h, 3, 0DBh, 2Eh, 0FFh, 0A7h
-		db 0DBh, 8Dh, 0C6h, 46h, 0FEh, 0B8h, 0EBh, 1Ah,	0C6h, 46h
-		db 0FEh, 0C0h, 81h, 6Ch, 2, 80h, 0, 0EBh
-		db 0Fh,	0C6h, 46h, 0FEh, 0C0h, 81h, 44h, 2, 80h, 0, 0EBh
-		db 4, 0C6h, 46h, 0FEh, 0C8h, 8Dh, 44h, 0Ah, 50h, 0FFh
-		db 76h,	0FEh, 0E8h, 11h, 0A9h, 0C6h, 44h, 10h, 7, 8Ah
-		db 46h,	0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h, 76h
-		db 0Bh,	0E8h, 0C6h, 0A8h, 8Bh, 0F0h, 0Bh, 0C0h,	0Fh, 85h
-		db 31h,	0FFh, 5Eh, 0C9h, 0C3h, 93h, 8Dh, 99h, 8Dh, 0A4h
-		db 8Dh,	0AFh, 8Dh, 28h,	8Dh, 39h, 8Dh, 4Ah, 8Dh, 56h, 8Dh
-		db 5Dh,	8Dh, 69h, 8Dh, 0C8h, 2,	2 dup(0), 56h, 0C6h, 46h
-		db 0FFh, 1, 0E8h, 9, 0EDh, 0A8h, 9, 74h, 65h, 0A8h, 8
-		db 74h,	58h, 8Ah, 46h, 0FFh, 4,	2, 88h,	46h, 0FFh, 0EBh
-		db 4Eh,	80h, 7Eh, 0FFh,	1, 75h,	10h, 6Ah, 0Fh, 0E8h, 0F8h
-		db 83h,	4, 0B8h, 88h, 46h, 0FEh, 0C6h, 44h, 10h, 9, 0EBh
-		db 22h,	80h, 7Eh, 0FFh,	3, 75h,	0Bh, 81h, 6Ch, 2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0B8h, 0EBh, 9, 81h, 44h,	2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0C8h, 0C6h, 44h,	0Eh, 16h, 0C6h
-		db 44h,	10h, 6,	8Dh, 44h, 0Ah, 50h, 0FFh, 76h, 0FEh, 0E8h
-		db 7Fh,	0A8h, 8Ah, 46h,	0FFh, 4, 0FFh, 88h, 46h, 0FFh
-		db 0Ah,	0C0h, 76h, 9, 0E8h, 38h, 0A8h, 8Bh, 0F0h, 0Bh
-		db 0C0h, 75h, 0A9h, 5Eh, 0C9h, 0C3h, 0C8h, 4, 2	dup(0)
-		db 56h,	0C6h, 46h, 0FFh, 2, 0E8h, 91h, 0ECh, 0A8h, 3, 74h
-		db 78h,	0A8h, 2, 74h, 4, 80h, 46h, 0FFh, 2, 24h, 1, 88h
-		db 46h,	0FDh, 0EBh, 60h, 80h, 7Eh, 0FFh, 2, 77h, 18h, 80h
-		db 7Eh,	0FFh, 2, 75h, 7, 81h, 6Ch, 2, 80h, 0, 0EBh, 5
-		db 81h,	44h, 2,	80h, 0,	0C6h, 44h, 10h,	8, 0EBh, 36h, 80h
-		db 7Eh,	0FFh, 4, 75h, 0Bh, 81h,	6Ch, 2,	80h, 1,	0C6h, 46h
-		db 0FEh, 0B8h, 0EBh, 13h, 81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0C8h, 80h, 7Eh, 0FDh, 0, 75h, 4, 0C6h,	46h, 0FFh
-		db 1, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h, 6, 8Dh, 44h
-		db 0Ah,	50h, 0FFh, 76h,	0FEh, 0E8h, 0F4h, 0A7h,	8Ah, 46h
-		db 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h, 76h, 9, 0E8h
-		db 0ADh, 0A7h, 8Bh, 0F0h, 0Bh, 0C0h, 75h, 97h, 5Eh, 0C9h
-		db 0C3h, 0C8h, 4, 2 dup(0), 56h, 0C6h, 46h, 0FFh, 3, 0E8h
-		db 6, 0ECh, 0A8h, 3, 0Fh, 84h, 89h, 0, 0A8h, 2,	74h, 4
-		db 80h,	46h, 0FFh, 2, 24h, 1, 88h, 46h,	0FDh, 0EBh, 71h
-		db 80h,	7Eh, 0FFh, 3, 77h, 18h,	80h, 7Eh, 0FFh,	3, 75h
-		db 4, 0C6h, 46h, 0FEh, 0B4h, 0C6h, 44h,	10h, 7,	8Ah, 46h
-		db 0FEh, 4, 6, 88h, 46h, 0FEh, 0EBh, 3Dh, 80h, 7Eh, 0FFh
-		db 5, 75h, 11h,	81h, 6Ch, 2, 80h, 1, 6Ah, 7, 0E8h, 0CFh
-		db 82h,	4, 0B4h, 88h, 46h, 0FEh, 0EBh, 19h, 81h, 44h, 2
-		db 80h,	1, 6Ah,	7, 0E8h, 0BEh, 82h, 4, 0C4h, 88h, 46h
-		db 0FEh, 80h, 7Eh, 0FDh, 0, 75h, 4, 0C6h, 46h, 0FFh, 1
-		db 0C7h, 44h, 0Ch, 20h,	0, 0C6h, 44h, 0Eh, 16h,	0C6h, 44h
-		db 10h,	6, 8Dh,	44h, 0Ah, 50h, 0FFh, 76h, 0FEh,	0E8h, 56h
-		db 0A7h, 8Ah, 46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah
-		db 0C0h, 76h, 9, 0E8h, 0Fh, 0A7h, 8Bh, 0F0h, 0Bh, 0C0h
-		db 75h,	86h, 5Eh, 0C9h,	0C3h, 0C8h, 4, 2 dup(0), 56h, 0C6h
-		db 46h,	0FFh, 3, 0E8h, 68h, 0EBh, 0A8h,	3, 0Fh,	84h, 0A1h
-		db 0, 0A8h, 2, 74h, 4, 80h
-		db 46h,	0FFh, 4, 24h, 1, 88h, 46h, 0FDh, 0E9h, 86h, 0
-		db 80h,	7Eh, 0FFh, 3, 77h, 18h,	0C6h, 44h, 10h,	7, 80h
-		db 7Eh,	0FFh, 3, 75h, 4, 0C6h, 46h, 0FEh, 0B4h,	8Ah, 46h
-		db 0FEh, 4, 6, 88h, 46h, 0FEh, 0EBh, 52h, 8Ah, 46h, 0FFh
-		db 0B4h, 0, 2Dh, 4, 0, 8Bh, 0D8h, 83h, 0FBh, 3,	77h, 3Bh
-		db 3, 0DBh, 2Eh, 0FFh, 0A7h, 47h, 90h, 80h, 7Eh, 0FDh
-		db 0, 75h, 4, 0C6h, 46h, 0FFh, 1, 81h, 6Ch, 2, 80h, 1
-		db 0C6h, 46h, 0FEh, 0B2h, 0EBh,	1Fh, 81h, 44h, 2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0CEh, 0EBh, 14h,	81h, 6Ch, 2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0BAh, 0EBh, 9, 81h, 44h,	2, 80h
-		db 1, 0C6h, 46h, 0FEh, 2 dup(0C6h), 44h, 0Eh, 16h, 0C6h
-		db 44h,	10h, 6,	8Dh, 44h, 0Ah, 50h, 0FFh, 76h, 0FEh, 0E8h
-		db 0A2h, 0A6h, 8Ah, 46h, 0FFh, 4, 0FFh,	88h, 46h, 0FFh
-		db 0Ah,	0C0h, 76h, 0Bh,	0E8h, 5Bh, 0A6h, 8Bh, 0F0h, 0Bh
-		db 0C0h, 0Fh, 85h, 6Fh,	0FFh, 5Eh, 0C9h, 0C3h, 0, 0E6h
-		db 8Fh,	0FBh, 8Fh, 6, 90h, 11h,	90h, 0C8h, 4, 2	dup(0)
-		db 56h,	0C6h, 46h, 0FFh, 4, 0E8h, 0A9h,	0EAh, 0A8h, 3
-		db 0Fh,	84h, 0C3h, 0, 0A8h, 2, 74h, 4, 80h, 46h, 0FFh
-		db 4, 24h, 1, 88h, 46h,	0FDh, 0E9h, 0A8h, 0, 80h, 7Eh
-		db 0FFh, 4, 77h, 3Ah, 8Ah, 46h,	0FFh, 0B4h, 0, 48h, 8Bh
-		db 0D8h, 83h, 0FBh, 3, 77h, 27h, 3, 0DBh, 2Eh, 0FFh, 0A7h
-		db 30h,	91h, 0C6h, 46h,	0FEh, 0BAh, 0EBh, 1Ah, 0C6h, 46h
-		db 0FEh, 0C0h, 81h, 6Ch, 2, 80h, 0, 0EBh, 0Fh, 0C6h, 46h
-		db 0FEh, 0C0h, 81h, 44h, 2, 80h, 0, 0EBh, 4, 0C6h, 46h
-		db 0FEh, 2 dup(0C6h), 44h, 10h,	7, 0EBh, 52h, 8Ah, 46h
-		db 0FFh, 0B4h, 0, 2Dh, 5, 0, 8Bh, 0D8h,	83h, 0FBh, 3, 77h
-		db 3Bh,	3, 0DBh, 2Eh, 0FFh, 0A7h, 28h, 91h, 81h, 6Ch, 2
-		db 80h,	1, 0C6h, 46h, 0FEh, 0B0h, 80h, 7Eh, 0FDh, 0, 75h
-		db 25h,	0C6h, 46h, 0FFh, 1, 0EBh, 1Fh, 81h, 44h, 2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0D0h, 0EBh, 14h,	81h, 6Ch, 2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0B8h, 0EBh, 9, 81h, 44h,	2, 80h
-		db 1, 0C6h, 46h, 0FEh, 0C8h, 0C6h, 44h,	0Eh, 16h, 0C6h
-		db 44h,	10h, 6,	8Dh, 44h, 0Ah, 50h, 0FFh, 76h, 0FEh, 0E8h
-		db 0C1h, 0A5h, 8Ah, 46h, 0FFh, 4, 0FFh,	88h, 46h, 0FFh
-		db 0Ah,	0C0h, 76h, 0Bh,	0E8h, 7Ah, 0A5h, 8Bh, 0F0h, 0Bh
-		db 0C0h, 0Fh, 85h, 4Dh,	0FFh, 5Eh, 0C9h, 0C3h, 0, 0C7h
-		db 90h,	0DCh, 90h, 0E7h, 90h, 0F2h, 90h, 8Bh, 90h, 91h
-		db 90h,	9Ch, 90h, 0A7h,	90h, 0C8h, 4, 2	dup(0),	56h, 0C6h
-		db 46h,	0FFh, 4, 0E8h, 0C0h, 0E9h, 0A8h, 3, 0Fh, 84h, 0D9h
-		db 0, 0A8h, 2, 74h, 4, 80h, 46h, 0FFh, 6, 24h, 1, 88h
-		db 46h,	0FDh, 0E9h, 0BEh, 0, 80h, 7Eh, 0FFh, 4,	77h, 3Ah
-		db 8Ah,	46h, 0FFh, 0B4h, 0, 48h, 8Bh, 0D8h, 83h, 0FBh
-		db 3, 77h, 27h,	3, 0DBh, 2Eh, 0FFh, 0A7h, 32h, 92h, 0C6h
-		db 46h,	0FEh, 0BAh, 0EBh, 1Ah, 0C6h, 46h, 0FEh,	0C0h, 81h
-		db 6Ch,	2, 80h,	0, 0EBh, 0Fh, 0C6h, 46h, 0FEh, 0C0h, 81h
-		db 44h,	2, 80h,	0, 0EBh, 4, 0C6h, 46h, 0FEh, 2 dup(0C6h)
-		db 44h,	10h, 7,	0EBh, 68h, 8Ah,	46h, 0FFh, 0B4h, 0, 2Dh
-		db 5, 0, 8Bh, 0D8h, 83h, 0FBh, 5, 77h, 51h, 3, 0DBh, 2Eh
-		db 0FFh, 0A7h, 26h, 92h, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0B0h, 80h, 7Eh, 0FDh, 0, 75h, 3Bh, 0C6h, 46h
-		db 0FFh, 1, 0EBh, 35h, 81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0D0h, 0EBh, 2Ah, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0B7h, 0EBh, 1Fh, 81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0C9h, 0EBh, 14h, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0BEh, 0EBh, 9,	81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0C2h, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h, 6
-		db 8Dh,	44h, 0Ah, 50h, 0FFh, 76h, 0FEh,	0E8h, 0C2h, 0A4h
-		db 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	0Bh, 0E8h, 7Bh,	0A4h, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh
-		db 85h,	37h, 0FFh, 5Eh,	0C9h, 0C3h, 0B0h, 91h, 0C5h, 91h
-		db 0D0h, 91h, 0DBh, 91h, 0E6h, 91h, 0F1h, 91h, 74h, 91h
-		db 7Ah,	91h, 85h, 91h, 90h, 91h, 0C8h, 4, 2 dup(0), 56h
-		db 0C6h, 46h, 0FFh, 5, 0E8h, 0BEh, 0E8h, 0A8h, 3, 0Fh
-		db 84h,	0D5h, 0, 0A8h, 2, 74h, 4, 80h, 46h, 0FFh, 6, 24h
-		db 1, 88h, 46h,	0FDh, 0E9h, 0BAh, 0, 80h, 7Eh, 0FFh, 5
-		db 77h,	36h, 8Ah, 46h, 0FFh, 0B4h, 0, 48h, 8Bh,	0D8h, 83h
-		db 0FBh, 4, 77h, 23h, 3, 0DBh, 2Eh, 0FFh, 0A7h,	31h, 93h
-		db 0C6h, 46h, 0FEh, 0B4h, 0EBh,	16h, 0C6h, 46h,	0FEh, 0BAh
-		db 0EBh, 10h, 0C6h, 46h, 0FEh, 0C0h, 0EBh, 0Ah,	0C6h, 46h
-		db 0FEh, 0C6h, 0EBh, 4,	0C6h, 46h, 0FEh, 0CCh, 0C6h, 44h
-		db 10h,	7, 0EBh, 68h, 8Ah, 46h,	0FFh, 0B4h, 0, 2Dh, 6
-		db 0, 8Bh, 0D8h, 83h, 0FBh, 5, 77h, 51h, 3, 0DBh, 2Eh
-		db 0FFh, 0A7h, 25h, 93h, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0B0h, 80h, 7Eh, 0FDh, 0, 75h, 3Bh, 0C6h, 46h
-		db 0FFh, 1, 0EBh, 35h, 81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0D0h, 0EBh, 2Ah, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0B7h, 0EBh, 1Fh, 81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0C9h, 0EBh, 14h, 81h, 6Ch, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0BEh, 0EBh, 9,	81h, 44h, 2, 80h, 1, 0C6h, 46h
-		db 0FEh, 0C2h, 0C6h, 44h, 0Eh, 16h, 0C6h, 44h, 10h, 6
-		db 8Dh,	44h, 0Ah, 50h, 0FFh, 76h, 0FEh,	0E8h, 0C4h, 0A3h
-		db 8Ah,	46h, 0FFh, 4, 0FFh, 88h, 46h, 0FFh, 0Ah, 0C0h
-		db 76h,	0Bh, 0E8h, 7Dh,	0A3h, 8Bh, 0F0h, 0Bh, 0C0h, 0Fh
-		db 85h,	3Bh, 0FFh, 5Eh,	0C9h, 0C3h, 0, 0AEh, 92h, 0C3h
-		db 92h,	0CEh, 92h, 0D9h, 92h, 0E4h, 92h, 0EFh, 92h, 76h
-		db 92h,	7Ch, 92h, 82h, 92h, 88h, 92h, 8Eh, 92h,	0C8h, 4
-		db 2 dup(0), 56h, 0C6h,	46h, 0FFh, 5, 0E8h, 0BDh, 0E7h
-		db 0A8h, 3, 0Fh, 84h, 0EBh, 0, 0A8h, 2,	74h, 4,	80h, 46h
-		db 0FFh, 8, 24h, 1, 88h, 46h, 0FDh, 0E9h, 0D0h,	0, 80h
-		db 7Eh,	0FFh, 5, 77h, 36h, 8Ah,	46h, 0FFh, 0B4h, 0, 48h
-		db 8Bh,	0D8h, 83h, 0FBh, 4, 77h, 23h, 3, 0DBh, 2Eh, 0FFh
-		db 0A7h, 4Bh, 94h, 0C6h, 46h, 0FEh, 0B4h, 0EBh,	16h, 0C6h
-		db 46h,	0FEh, 0BAh, 0EBh, 10h, 0C6h, 46h, 0FEh,	0C0h, 0EBh
-		db 0Ah,	0C6h, 46h, 0FEh, 0C6h, 0EBh, 4,	0C6h, 46h, 0FEh
-		db 0CCh, 0C6h, 44h, 10h, 7, 0EBh, 7Eh, 8Ah, 46h, 0FFh
-		db 0B4h, 0, 2Dh, 6, 0, 8Bh, 0D8h, 83h, 0FBh, 7,	77h, 67h
-		db 3, 0DBh, 2Eh, 0FFh, 0A7h, 3Bh
-		db 94h,	81h, 6Ch, 2, 80h, 1, 0C6h, 46h,	0FEh, 0A8h, 80h
-		db 7Eh,	0FDh, 0, 75h, 51h, 0C6h, 46h, 0FFh, 1, 0EBh, 4Bh
-		db 81h,	44h, 2,	80h, 1,	0C6h, 46h, 0FEh, 0D8h, 0EBh, 40h
-		db 81h,	6Ch, 2,	80h, 1,	0C6h, 46h, 0FEh, 0B0h, 0EBh, 35h
-		db 81h,	44h, 2,	80h, 1,	0C6h, 46h, 0FEh, 0D0h, 0EBh, 2Ah
-		db 81h,	6Ch, 2,	80h, 1,	0C6h, 46h, 0FEh, 0B8h, 0EBh, 1Fh
-		db 81h,	44h, 2,	80h, 1,	0C6h, 46h, 0FEh, 0C8h, 0EBh, 14h
-		db 81h,	6Ch, 2,	80h, 1,	0C6h, 46h, 0FEh, 0C1h, 0EBh, 9
-		db 81h,	44h, 2,	80h, 1,	0C6h, 46h, 0FEh, 0BFh, 0C6h, 44h
-		db 0Eh,	16h, 0C6h, 44h,	10h, 6,	8Dh, 44h, 0Ah, 50h, 0FFh
-		db 76h,	0FEh, 0E8h, 0ADh, 0A2h,	8Ah, 46h, 0FFh,	4, 0FFh
-		db 88h,	46h, 0FFh, 0Ah,	0C0h, 76h, 0Bh,	0E8h, 66h, 0A2h
-		db 8Bh,	0F0h, 0Bh, 0C0h, 0Fh, 85h, 25h,	0FFh, 5Eh, 0C9h
-		db 0C3h, 0AFh, 93h, 0C4h, 93h, 0CFh, 93h, 0DAh,	93h, 0E5h
-		db 93h,	0F0h, 93h, 0FBh, 93h, 6, 94h, 77h, 93h,	7Dh, 93h
-		db 83h,	93h, 89h, 93h, 8Fh, 93h, 0
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_12F9F	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 3
+		call	sub_12914
+		test	al, 9
+		jz	loc_1308E
+		test	al, 8
+		jz	loc_13083
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 6
+		mov	byte ptr [bp+var_2+1], al
+		jmp	loc_13083
+; ---------------------------------------------------------------------------
+
+loc_12FC2:
+		cmp	byte ptr [bp+var_2+1], 3
+		ja	short loc_12FEB
+		cmp	byte ptr [bp+var_2+1], 3
+		jnz	short loc_12FD2
+		mov	byte ptr [bp+var_2], 0B4h
+
+loc_12FD2:
+		mov	byte ptr [si+10h], 6
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		jmp	loc_13077
+; ---------------------------------------------------------------------------
+
+loc_12FEB:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 4
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_1306F
+		add	bx, bx
+		jmp	cs:table_13091[bx]
+
+loc_13001:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFEAh
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_1306F
+; ---------------------------------------------------------------------------
+
+loc_13016:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 16h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_1306F
+; ---------------------------------------------------------------------------
+
+loc_1302B:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 0FFF0h
+		mov	word ptr [si+0Ch], 0FFD0h
+		jmp	short loc_1306F
+; ---------------------------------------------------------------------------
+
+loc_13040:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 10h
+		mov	word ptr [si+0Ch], 0FFD0h
+		jmp	short loc_1306F
+; ---------------------------------------------------------------------------
+
+loc_13055:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_13061
+; ---------------------------------------------------------------------------
+
+loc_1305C:
+		add	word ptr [si+2], 180h
+
+loc_13061:
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 0
+		mov	word ptr [si+0Ch], 0FFC0h
+
+loc_1306F:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 0Ch
+
+loc_13077:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_1308E
+
+loc_13083:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_12FC2
+
+loc_1308E:
+		pop	si
+		leave
+		retn
+sub_12F9F	endp
+
+; ---------------------------------------------------------------------------
+table_13091	dw loc_13001
+		dw loc_13016
+		dw loc_1302B
+		dw loc_13040
+		dw loc_13055
+		dw loc_1305C
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1309D	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 3
+		call	sub_12914
+		test	al, 9
+		jz	loc_13195
+		test	al, 8
+		jz	loc_1318A
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 6
+		mov	byte ptr [bp+var_2+1], al
+		jmp	loc_1318A
+; ---------------------------------------------------------------------------
+
+loc_130C0:
+		cmp	byte ptr [bp+var_2+1], 3
+		ja	short loc_130E9
+		mov	byte ptr [si+10h], 6
+		cmp	byte ptr [bp+var_2+1], 3
+		jnz	short loc_130D4
+		mov	byte ptr [bp+var_2], 0B2h
+
+loc_130D4:
+		mov	al, byte ptr [bp+var_2]
+		add	al, 7
+		mov	byte ptr [bp+var_2], al
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		jmp	loc_1317E
+; ---------------------------------------------------------------------------
+
+loc_130E9:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 4
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_13176
+		add	bx, bx
+		jmp	cs:table_13199[bx]
+
+loc_130FF:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFEAh
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_13176
+; ---------------------------------------------------------------------------
+
+loc_13114:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 16h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_13176
+; ---------------------------------------------------------------------------
+
+loc_13129:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 0FFF0h
+		mov	word ptr [si+0Ch], 0FFD0h
+		jmp	short loc_13176
+; ---------------------------------------------------------------------------
+
+loc_1313E:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 10h
+		mov	word ptr [si+0Ch], 0FFD0h
+		jmp	short loc_13176
+; ---------------------------------------------------------------------------
+
+loc_13153:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 8
+		jmp	short loc_13171
+; ---------------------------------------------------------------------------
+
+loc_13163:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 0FFF8h
+
+loc_13171:
+		mov	word ptr [si+0Ch], 0FFC0h
+
+loc_13176:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 0Bh
+
+loc_1317E:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13195
+
+loc_1318A:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_130C0
+
+loc_13195:
+		pop	si
+		leave
+		retn
+sub_1309D	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_13199	dw loc_130FF
+		dw loc_13114
+		dw loc_13129
+		dw loc_1313E
+		dw loc_13153
+		dw loc_13163
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_131A5	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		push	di
+		mov	[bp+var_1], 4
+		call	sub_12914
+		test	al, 9
+		jz	loc_1329E
+		test	al, 8
+		jz	short loc_131C4
+		mov	al, [bp+var_1]
+		add	al, 8
+		mov	[bp+var_1], al
+
+loc_131C4:
+		mov	di, 0FE80h
+		jmp	loc_13293
+; ---------------------------------------------------------------------------
+
+loc_131CA:
+		cmp	[bp+var_1], 4
+		ja	short loc_131E3
+		add	[si+2],	di
+		mov	byte ptr [si+10h], 5
+		mov	word ptr [si+0Ch], 0FF40h
+		add	di, 100h
+		jmp	loc_13287
+; ---------------------------------------------------------------------------
+
+loc_131E3:
+		mov	al, [bp+var_1]
+		mov	ah, 0
+		sub	ax, 5
+		mov	bx, ax
+		cmp	bx, 7
+		ja	loc_1327F
+		add	bx, bx
+		jmp	cs:table_132A3[bx]
+
+loc_131FB:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFEAh
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_1327F
+; ---------------------------------------------------------------------------
+
+loc_13210:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 16h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	short loc_1327F
+; ---------------------------------------------------------------------------
+
+loc_13225:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 0FFF0h
+		jmp	short loc_13243
+; ---------------------------------------------------------------------------
+
+loc_13235:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ah], 10h
+
+loc_13243:
+		mov	word ptr [si+0Ch], 0FFD0h
+		jmp	short loc_1327F
+; ---------------------------------------------------------------------------
+
+loc_1324A:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_1327F
+; ---------------------------------------------------------------------------
+
+loc_1325A:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_1327F
+; ---------------------------------------------------------------------------
+
+loc_1326A:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_13276
+; ---------------------------------------------------------------------------
+
+loc_13271:
+		add	word ptr [si+2], 180h
+
+loc_13276:
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFE0h
+
+loc_1327F:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 0Bh
+
+loc_13287:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_1329E
+
+loc_13293:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_131CA
+
+loc_1329E:
+		pop	di
+		pop	si
+		leave
+		retn
+sub_131A5	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_132A3	dw loc_131FB
+		dw loc_13210
+		dw loc_13225
+		dw loc_13235
+		dw loc_1324A
+		dw loc_1325A
+		dw loc_1326A
+		dw loc_13271
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_132B3	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		push	di
+		mov	[bp+var_1], 4
+		call	sub_12914
+		test	al, 9
+		jz	loc_133D8
+		test	al, 8
+		jz	short loc_132D2
+		mov	al, [bp+var_1]
+		add	al, 0Ah
+		mov	[bp+var_1], al
+
+loc_132D2:
+		mov	di, 0FE80h
+		jmp	loc_133CD
+; ---------------------------------------------------------------------------
+
+loc_132D8:
+		cmp	[bp+var_1], 4
+		ja	short loc_132F1
+		add	[si+2],	di
+		mov	byte ptr [si+10h], 5
+		mov	word ptr [si+0Ch], 0FF40h
+		add	di, 100h
+		jmp	loc_133C1
+; ---------------------------------------------------------------------------
+
+loc_132F1:
+		mov	al, [bp+var_1]
+		mov	ah, 0
+		sub	ax, 5
+		mov	bx, ax
+		cmp	bx, 9
+		ja	loc_133B9
+		add	bx, bx
+		jmp	cs:table_133DD[bx]
+
+loc_13309:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE4h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_1331F:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 1Ch
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_13335:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 20h ; ' '
+		jmp	short loc_13353
+; ---------------------------------------------------------------------------
+
+loc_13345:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE0h
+
+loc_13353:
+		mov	word ptr [si+0Ch], 20h ; ' '
+		jmp	short loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_1335A:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		mov	word ptr [si+0Ah], 0FFF0h
+		jmp	short loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_1336F:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		mov	word ptr [si+0Ah], 10h
+		jmp	short loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_13384:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_13394:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_133B9
+; ---------------------------------------------------------------------------
+
+loc_133A4:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_133B0
+; ---------------------------------------------------------------------------
+
+loc_133AB:
+		add	word ptr [si+2], 180h
+
+loc_133B0:
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFE0h
+
+loc_133B9:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 0Bh
+
+loc_133C1:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_133D8
+
+loc_133CD:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_132D8
+
+loc_133D8:
+		pop	di
+		pop	si
+		leave
+		retn
+sub_132B3	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_133DD	dw loc_13309
+		dw loc_1331F
+		dw loc_13335
+		dw loc_13345
+		dw loc_1335A
+		dw loc_1336F
+		dw loc_13384
+		dw loc_13394
+		dw loc_133A4
+		dw loc_133AB
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_133F1	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		push	di
+		mov	[bp+var_1], 4
+		call	sub_12914
+		test	al, 9
+		jz	loc_13516
+		test	al, 8
+		jz	short loc_13410
+		mov	al, [bp+var_1]
+		add	al, 0Ah
+		mov	[bp+var_1], al
+
+loc_13410:
+		mov	di, 0FE80h
+		jmp	loc_1350B
+; ---------------------------------------------------------------------------
+
+loc_13416:
+		cmp	[bp+var_1], 4
+		ja	short loc_1342F
+		add	[si+2],	di
+		mov	byte ptr [si+10h], 4
+		mov	word ptr [si+0Ch], 0FF40h
+		add	di, 100h
+		jmp	loc_134FF
+; ---------------------------------------------------------------------------
+
+loc_1342F:
+		mov	al, [bp+var_1]
+		mov	ah, 0
+		sub	ax, 5
+		mov	bx, ax
+		cmp	bx, 9
+		ja	loc_134F7
+		add	bx, bx
+		jmp	cs:table_1351B[bx]
+
+loc_13447:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE4h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_1345D:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 1Ch
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_13473:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 20h ; ' '
+		jmp	short loc_13491
+; ---------------------------------------------------------------------------
+
+loc_13483:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE0h
+
+loc_13491:
+		mov	word ptr [si+0Ch], 20h ; ' '
+		jmp	short loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_13498:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		mov	word ptr [si+0Ah], 0FFF0h
+		jmp	short loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_134AD:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		mov	word ptr [si+0Ah], 10h
+		jmp	short loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_134C2:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_134D2:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFB0h
+		jmp	short loc_134F7
+; ---------------------------------------------------------------------------
+
+loc_134E2:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_134EE
+; ---------------------------------------------------------------------------
+
+loc_134E9:
+		add	word ptr [si+2], 180h
+
+loc_134EE:
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFE0h
+
+loc_134F7:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 0Ah
+
+loc_134FF:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_13516
+
+loc_1350B:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13416
+
+loc_13516:
+		pop	di
+		pop	si
+		leave
+		retn
+sub_133F1	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_1351B	dw loc_13447
+		dw loc_1345D
+		dw loc_13473
+		dw loc_13483
+		dw loc_13498
+		dw loc_134AD
+		dw loc_134C2
+		dw loc_134D2
+		dw loc_134E2
+		dw loc_134E9
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1352F	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		push	di
+		mov	[bp+var_1], 6
+		call	sub_12914
+		test	al, 9
+		jz	loc_13697
+		test	al, 8
+		jz	short loc_1354E
+		mov	al, [bp+var_1]
+		add	al, 0Ch
+		mov	[bp+var_1], al
+
+loc_1354E:
+		mov	di, 0FD80h
+		jmp	loc_1368C
+; ---------------------------------------------------------------------------
+
+loc_13554:
+		cmp	[bp+var_1], 6
+		ja	short loc_1356D
+		add	[si+2],	di
+		mov	byte ptr [si+10h], 4
+		mov	word ptr [si+0Ch], 0FF40h
+		add	di, 100h
+		jmp	loc_13680
+; ---------------------------------------------------------------------------
+
+loc_1356D:
+		mov	al, [bp+var_1]
+		mov	ah, 0
+		sub	ax, 7
+		mov	bx, ax
+		cmp	bx, 0Dh
+		ja	loc_13678
+		add	bx, bx
+		jmp	cs:table_1369C[bx]
+
+loc_13585:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE0h
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_13678
+; ---------------------------------------------------------------------------
+
+loc_1359B:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 20h ; ' '
+		mov	word ptr [si+0Ch], 24h ; '$'
+		jmp	loc_13678
+; ---------------------------------------------------------------------------
+
+loc_135B1:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 3
+		mov	word ptr [si+0Ah], 20h ; ' '
+		jmp	short loc_135CF
+; ---------------------------------------------------------------------------
+
+loc_135C1:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 2
+		mov	word ptr [si+0Ah], 0FFE0h
+
+loc_135CF:
+		mov	word ptr [si+0Ch], 20h ; ' '
+		jmp	loc_13678
+; ---------------------------------------------------------------------------
+
+loc_135D7:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		jmp	loc_13678
+; ---------------------------------------------------------------------------
+
+loc_135E8:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 30h ; '0'
+		jmp	loc_13678
+; ---------------------------------------------------------------------------
+
+loc_135F9:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0
+		mov	word ptr [si+0Ah], 0FFF0h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_1360E:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0
+		mov	word ptr [si+0Ah], 10h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_13623:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FF80h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_13633:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FF80h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_13643:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFC0h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_13653:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFC0h
+		jmp	short loc_13678
+; ---------------------------------------------------------------------------
+
+loc_13663:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_1366F
+; ---------------------------------------------------------------------------
+
+loc_1366A:
+		add	word ptr [si+2], 180h
+
+loc_1366F:
+		mov	byte ptr [si+0Fh], 4
+		mov	word ptr [si+0Ch], 0FFF0h
+
+loc_13678:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 9
+
+loc_13680:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_13697
+
+loc_1368C:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13554
+
+loc_13697:
+		pop	di
+		pop	si
+		leave
+		retn
+sub_1352F	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_1369C	dw loc_13585
+		dw loc_1359B
+		dw loc_135B1
+		dw loc_135C1
+		dw loc_135D7
+		dw loc_135E8
+		dw loc_135F9
+		dw loc_1360E
+		dw loc_13623
+		dw loc_13633
+		dw loc_13643
+		dw loc_13653
+		dw loc_13663
+		dw loc_1366A
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_136B8	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		mov	[bp+var_1], 2
+		call	sub_12914
+		test	al, 5
+		jz	short loc_13720
+		test	al, 1
+		jz	short loc_13717
+		inc	[bp+var_1]
+		jmp	short loc_13717
+; ---------------------------------------------------------------------------
+
+loc_136D1:
+		cmp	[bp+var_1], 2
+		ja	short loc_136F8
+		cmp	[bp+var_1], 2
+		jnz	short loc_136E4
+		sub	word ptr [si+2], 180h
+		jmp	short loc_136E9
+; ---------------------------------------------------------------------------
+
+loc_136E4:
+		add	word ptr [si+2], 180h
+
+loc_136E9:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 5
+		jmp	short loc_1370B
+; ---------------------------------------------------------------------------
+
+loc_136F8:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	0Fh
+		call	sub_C020
+		add	al, 0B8h
+		push	ax
+		call	sub_E4DE
+		mov	byte ptr [si+10h], 8
+
+loc_1370B:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_13720
+
+loc_13717:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_136D1
+
+loc_13720:
+		pop	si
+		leave
+		retn
+sub_136B8	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13723	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		mov	[bp+var_1], 2
+		call	sub_12914
+		test	al, 5
+		jz	short loc_13798
+		test	al, 1
+		jz	short loc_1378F
+		mov	al, [bp+var_1]
+		add	al, 2
+		mov	[bp+var_1], al
+		jmp	short loc_1378F
+; ---------------------------------------------------------------------------
+
+loc_13741:
+		cmp	[bp+var_1], 2
+		ja	short loc_13768
+		cmp	[bp+var_1], 2
+		jnz	short loc_13754
+		sub	word ptr [si+2], 180h
+		jmp	short loc_13759
+; ---------------------------------------------------------------------------
+
+loc_13754:
+		add	word ptr [si+2], 180h
+
+loc_13759:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 5
+		jmp	short loc_13783
+; ---------------------------------------------------------------------------
+
+loc_13768:
+		cmp	[bp+var_1], 4
+		jnz	short loc_13775
+		sub	word ptr [si+2], 80h
+		jmp	short loc_1377A
+; ---------------------------------------------------------------------------
+
+loc_13775:
+		add	word ptr [si+2], 80h
+
+loc_1377A:
+		mov	word ptr [si+0Ch], 0FF40h
+		mov	byte ptr [si+10h], 7
+
+loc_13783:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_13798
+
+loc_1378F:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_13741
+
+loc_13798:
+		pop	si
+		leave
+		retn
+sub_13723	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1379B	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		mov	[bp+var_1], 4
+		call	sub_12914
+		test	al, 5
+		jz	short loc_13828
+		test	al, 1
+		jz	short loc_1381F
+		mov	al, [bp+var_1]
+		add	al, 2
+		mov	[bp+var_1], al
+		jmp	short loc_1381F
+; ---------------------------------------------------------------------------
+
+loc_137B9:
+		cmp	[bp+var_1], 4
+		ja	short loc_137F8
+		mov	al, [bp+var_1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_137E9
+		add	bx, bx
+		jmp	cs:table_1382C[bx]
+
+loc_137D3:
+		mov	word ptr [si+0Ah], 0FFF0h
+
+loc_137D8:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_137E9
+; ---------------------------------------------------------------------------
+
+loc_137DF:
+		mov	word ptr [si+0Ah], 10h
+
+loc_137E4:
+		add	word ptr [si+2], 180h
+
+loc_137E9:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_13813
+; ---------------------------------------------------------------------------
+
+loc_137F8:
+		cmp	[bp+var_1], 6
+		jnz	short loc_13805
+		sub	word ptr [si+2], 80h
+		jmp	short loc_1380A
+; ---------------------------------------------------------------------------
+
+loc_13805:
+		add	word ptr [si+2], 80h
+
+loc_1380A:
+		mov	word ptr [si+0Ch], 0FF40h
+		mov	byte ptr [si+10h], 7
+
+loc_13813:
+		mov	al, [bp+var_1]
+		add	al, 0FFh
+		mov	[bp+var_1], al
+		or	al, al
+		jbe	short loc_13828
+
+loc_1381F:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_137B9
+
+loc_13828:
+		pop	si
+		leave
+		retn
+sub_1379B	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_1382C	dw loc_137DF
+		dw loc_137D3
+		dw loc_137E4
+		dw loc_137D8
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13834	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 4
+		call	sub_12914
+		test	al, 5
+		jz	short loc_138C0
+		test	al, 1
+		jz	short loc_13850
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 3
+		mov	byte ptr [bp+var_2+1], al
+
+loc_13850:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_138B7
+; ---------------------------------------------------------------------------
+
+loc_13856:
+		cmp	byte ptr [bp+var_2+1], 4
+		ja	short loc_13895
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13886
+		add	bx, bx
+		jmp	cs:table_138C3[bx]
+
+loc_13870:
+		mov	word ptr [si+0Ah], 10h
+
+loc_13875:
+		sub	word ptr [si+2], 180h
+		jmp	short loc_13886
+; ---------------------------------------------------------------------------
+
+loc_1387C:
+		mov	word ptr [si+0Ah], 0FFF0h
+
+loc_13881:
+		add	word ptr [si+2], 180h
+
+loc_13886:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_138AB
+; ---------------------------------------------------------------------------
+
+loc_13895:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		mov	byte ptr [si+10h], 7
+
+loc_138AB:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_138C0
+
+loc_138B7:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_13856
+
+loc_138C0:
+		pop	si
+		leave
+		retn
+sub_13834	endp
+
+; ---------------------------------------------------------------------------
+table_138C3	dw loc_13870
+		dw loc_1387C
+		dw loc_13881
+		dw loc_13875
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_138CB	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 4
+		call	sub_12914
+		test	al, 5
+		jz	loc_1396C
+		test	al, 1
+		jz	short loc_138E9
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 3
+		mov	byte ptr [bp+var_2+1], al
+
+loc_138E9:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_13963
+; ---------------------------------------------------------------------------
+
+loc_138EF:
+		cmp	byte ptr [bp+var_2+1], 4
+		ja	short loc_13941
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13932
+		add	bx, bx
+		jmp	cs:table_1396F[bx]
+
+loc_13909:
+		mov	word ptr [si+0Ah], 10h
+		add	word ptr [si+2], 180h
+		jmp	short loc_13932
+; ---------------------------------------------------------------------------
+
+loc_13915:
+		mov	word ptr [si+0Ah], 0FFF0h
+		jmp	short loc_1392D
+; ---------------------------------------------------------------------------
+
+loc_1391C:
+		mov	word ptr [si+0Ah], 0FFF8h
+		add	word ptr [si+2], 180h
+		jmp	short loc_13932
+; ---------------------------------------------------------------------------
+
+loc_13928:
+		mov	word ptr [si+0Ah], 8
+
+loc_1392D:
+		sub	word ptr [si+2], 180h
+
+loc_13932:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_13957
+; ---------------------------------------------------------------------------
+
+loc_13941:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		mov	byte ptr [si+10h], 7
+
+loc_13957:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_1396C
+
+loc_13963:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_138EF
+
+loc_1396C:
+		pop	si
+		leave
+		retn
+sub_138CB	endp
+
+; ---------------------------------------------------------------------------
+table_1396F	dw loc_13909
+		dw loc_13915
+		dw loc_1391C
+		dw loc_13928
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13977	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 6
+		call	sub_12914
+		test	al, 5
+		jz	loc_13A1F
+		test	al, 1
+		jz	short loc_13995
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 3
+		mov	byte ptr [bp+var_2+1], al
+
+loc_13995:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_13A14
+; ---------------------------------------------------------------------------
+
+loc_1399B:
+		cmp	byte ptr [bp+var_2+1], 6
+		ja	short loc_139F2
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_139E3
+		add	bx, bx
+		jmp	cs:table_13A23[bx]
+
+loc_139B5:
+		mov	word ptr [si+0Ah], 10h
+		add	word ptr [si+2], 1C0h
+		jmp	short loc_139E3
+; ---------------------------------------------------------------------------
+
+loc_139C1:
+		mov	word ptr [si+0Ah], 0FFF0h
+		sub	word ptr [si+2], 1C0h
+		jmp	short loc_139E3
+; ---------------------------------------------------------------------------
+
+loc_139CD:
+		mov	word ptr [si+0Ah], 0FFF8h
+
+loc_139D2:
+		add	word ptr [si+2], 180h
+		jmp	short loc_139E3
+; ---------------------------------------------------------------------------
+
+loc_139D9:
+		mov	word ptr [si+0Ah], 8
+
+loc_139DE:
+		sub	word ptr [si+2], 180h
+
+loc_139E3:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_13A08
+; ---------------------------------------------------------------------------
+
+loc_139F2:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		mov	byte ptr [si+10h], 7
+
+loc_13A08:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13A1F
+
+loc_13A14:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_1399B
+
+loc_13A1F:
+		pop	si
+		leave
+		retn
+sub_13977	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_13A23	dw loc_139B5
+		dw loc_139C1
+		dw loc_139CD
+		dw loc_139D9
+		dw loc_139D2
+		dw loc_139DE
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13A2F	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 6
+		call	sub_12914
+		test	al, 5
+		jz	loc_13AE7
+		test	al, 1
+		jz	short loc_13A4D
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 3
+		mov	byte ptr [bp+var_2+1], al
+
+loc_13A4D:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	loc_13ADC
+; ---------------------------------------------------------------------------
+
+loc_13A54:
+		cmp	byte ptr [bp+var_2+1], 6
+		ja	short loc_13ABA
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_13AAB
+		add	bx, bx
+		jmp	cs:table_13AEA[bx]
+
+loc_13A73:
+		mov	word ptr [si+0Ah], 1Ch
+		mov	word ptr [si+0Ch], 0FEE0h
+		add	word ptr [si+2], 200h
+		jmp	short loc_13AAB
+; ---------------------------------------------------------------------------
+
+loc_13A84:
+		mov	word ptr [si+0Ah], 0FFE4h
+		mov	word ptr [si+0Ch], 0FEE0h
+		sub	word ptr [si+2], 200h
+		jmp	short loc_13AAB
+; ---------------------------------------------------------------------------
+
+loc_13A95:
+		mov	word ptr [si+0Ah], 0FFF8h
+
+loc_13A9A:
+		add	word ptr [si+2], 180h
+		jmp	short loc_13AAB
+; ---------------------------------------------------------------------------
+
+loc_13AA1:
+		mov	word ptr [si+0Ah], 8
+
+loc_13AA6:
+		sub	word ptr [si+2], 180h
+
+loc_13AAB:
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_13AD0
+; ---------------------------------------------------------------------------
+
+loc_13ABA:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		mov	byte ptr [si+10h], 7
+
+loc_13AD0:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13AE7
+
+loc_13ADC:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13A54
+
+loc_13AE7:
+		pop	si
+		leave
+		retn
+sub_13A2F	endp
+
+; ---------------------------------------------------------------------------
+table_13AEA	dw loc_13A73
+		dw loc_13A84
+		dw loc_13A95
+		dw loc_13AA1
+		dw loc_13A9A
+		dw loc_13AA6
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13AF6	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 6
+		call	sub_12914
+		test	al, 5
+		jz	loc_13BE8
+		test	al, 1
+		jz	loc_13BDD
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 4
+		mov	byte ptr [bp+var_2+1], al
+		jmp	loc_13BDD
+; ---------------------------------------------------------------------------
+
+loc_13B19:
+		cmp	byte ptr [bp+var_2+1], 6
+		ja	short loc_13B8D
+		mov	word ptr [si+0Ch], 0FEC0h
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_13B83
+		add	bx, bx
+		jmp	word ptr cs:table_13BF3[bx]
+
+loc_13B38:
+		mov	word ptr [si+0Ah], 2Ah ; '*'
+		mov	word ptr [si+0Ch], 0FEE0h
+		add	word ptr [si+2], 200h
+		jmp	short loc_13B83
+; ---------------------------------------------------------------------------
+
+loc_13B49:
+		mov	word ptr [si+0Ah], 0FFD6h
+		mov	word ptr [si+0Ch], 0FEE0h
+		sub	word ptr [si+2], 200h
+		jmp	short loc_13B83
+; ---------------------------------------------------------------------------
+
+loc_13B5A:
+		mov	word ptr [si+0Ah], 0FFF8h
+		add	word ptr [si+2], 180h
+		jmp	short loc_13B83
+; ---------------------------------------------------------------------------
+
+loc_13B66:
+		mov	word ptr [si+0Ah], 8
+		jmp	short loc_13B7E
+; ---------------------------------------------------------------------------
+
+loc_13B6D:
+		mov	word ptr [si+0Ah], 8
+		add	word ptr [si+2], 180h
+		jmp	short loc_13B83
+; ---------------------------------------------------------------------------
+
+loc_13B79:
+		mov	word ptr [si+0Ah], 0FFF8h
+
+loc_13B7E:
+		sub	word ptr [si+2], 180h
+
+loc_13B83:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 4
+		jmp	short loc_13BD1
+; ---------------------------------------------------------------------------
+
+loc_13B8D:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 7
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13BC3
+		add	bx, bx
+		jmp	word ptr cs:table_13BEB[bx]
+
+loc_13BA3:
+		mov	byte ptr [bp+var_2], 0B8h
+		jmp	short loc_13BC3
+; ---------------------------------------------------------------------------
+
+loc_13BA9:
+		mov	byte ptr [bp+var_2], 0C0h
+		sub	word ptr [si+2], 80h
+		jmp	short loc_13BC3
+; ---------------------------------------------------------------------------
+
+loc_13BB4:
+		mov	byte ptr [bp+var_2], 0C0h
+		add	word ptr [si+2], 80h
+		jmp	short loc_13BC3
+; ---------------------------------------------------------------------------
+
+loc_13BBF:
+		mov	byte ptr [bp+var_2], 0C8h
+
+loc_13BC3:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	byte ptr [si+10h], 7
+
+loc_13BD1:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13BE8
+
+loc_13BDD:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13B19
+
+loc_13BE8:
+		pop	si
+		leave
+		retn
+sub_13AF6	endp
+
+; ---------------------------------------------------------------------------
+table_13BEB	dw loc_13BA3
+		dw loc_13BA9
+		dw loc_13BB4
+		dw loc_13BBF
+table_13BF3	dw loc_13B38
+		dw loc_13B49
+		dw loc_13B5A
+		dw loc_13B66
+		dw loc_13B6D
+		dw loc_13B79
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13BFF	proc near
+
+var_2		= word ptr -2
+
+		enter	2, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 1
+		call	sub_12914
+		test	al, 9
+		jz	short loc_13C74
+		test	al, 8
+		jz	short loc_13C6B
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 2
+		mov	byte ptr [bp+var_2+1], al
+		jmp	short loc_13C6B
+; ---------------------------------------------------------------------------
+
+loc_13C1D:
+		cmp	byte ptr [bp+var_2+1], 1
+		jnz	short loc_13C33
+		push	0Fh
+		call	sub_C020
+		add	al, 0B8h
+		mov	byte ptr [bp+var_2], al
+		mov	byte ptr [si+10h], 9
+		jmp	short loc_13C55
+; ---------------------------------------------------------------------------
+
+loc_13C33:
+		cmp	byte ptr [bp+var_2+1], 3
+		jnz	short loc_13C44
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B8h
+		jmp	short loc_13C4D
+; ---------------------------------------------------------------------------
+
+loc_13C44:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C8h
+
+loc_13C4D:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_13C55:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13C74
+
+loc_13C6B:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_13C1D
+
+loc_13C74:
+		pop	si
+		leave
+		retn
+sub_13BFF	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13C77	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 2
+		call	sub_12914
+		test	al, 3
+		jz	short loc_13CFF
+		test	al, 2
+		jz	short loc_13C8F
+		add	byte ptr [bp+var_2+1], 2
+
+loc_13C8F:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	short loc_13CF6
+; ---------------------------------------------------------------------------
+
+loc_13C96:
+		cmp	byte ptr [bp+var_2+1], 2
+		ja	short loc_13CB4
+		cmp	byte ptr [bp+var_2+1], 2
+		jnz	short loc_13CA9
+		sub	word ptr [si+2], 80h
+		jmp	short loc_13CAE
+; ---------------------------------------------------------------------------
+
+loc_13CA9:
+		add	word ptr [si+2], 80h
+
+loc_13CAE:
+		mov	byte ptr [si+10h], 8
+		jmp	short loc_13CEA
+; ---------------------------------------------------------------------------
+
+loc_13CB4:
+		cmp	byte ptr [bp+var_2+1], 4
+		jnz	short loc_13CC5
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B8h
+		jmp	short loc_13CD8
+; ---------------------------------------------------------------------------
+
+loc_13CC5:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C8h
+		cmp	[bp+var_3], 0
+		jnz	short loc_13CD8
+		mov	byte ptr [bp+var_2+1], 1
+
+loc_13CD8:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+
+loc_13CEA:
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13CFF
+
+loc_13CF6:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_13C96
+
+loc_13CFF:
+		pop	si
+		leave
+		retn
+sub_13C77	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13D02	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 3
+		call	sub_12914
+		test	al, 3
+		jz	loc_13D9D
+		test	al, 2
+		jz	short loc_13D1C
+		add	byte ptr [bp+var_2+1], 2
+
+loc_13D1C:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	short loc_13D94
+; ---------------------------------------------------------------------------
+
+loc_13D23:
+		cmp	byte ptr [bp+var_2+1], 3
+		ja	short loc_13D41
+		cmp	byte ptr [bp+var_2+1], 3
+		jnz	short loc_13D33
+		mov	byte ptr [bp+var_2], 0B4h
+
+loc_13D33:
+		mov	byte ptr [si+10h], 7
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		jmp	short loc_13D7E
+; ---------------------------------------------------------------------------
+
+loc_13D41:
+		cmp	byte ptr [bp+var_2+1], 5
+		jnz	short loc_13D58
+		sub	word ptr [si+2], 180h
+		push	7
+		call	sub_C020
+		add	al, 0B4h
+		mov	byte ptr [bp+var_2], al
+		jmp	short loc_13D71
+; ---------------------------------------------------------------------------
+
+loc_13D58:
+		add	word ptr [si+2], 180h
+		push	7
+		call	sub_C020
+		add	al, 0C4h ; 'A'
+		mov	byte ptr [bp+var_2], al
+		cmp	[bp+var_3], 0
+		jnz	short loc_13D71
+		mov	byte ptr [bp+var_2+1], 1
+
+loc_13D71:
+		mov	word ptr [si+0Ch], 20h ; ' '
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_13D7E:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13D9D
+
+loc_13D94:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	short loc_13D23
+
+loc_13D9D:
+		pop	si
+		leave
+		retn
+sub_13D02	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13DA0	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 3
+		call	sub_12914
+		test	al, 3
+		jz	loc_13E53
+		test	al, 2
+		jz	short loc_13DBA
+		add	byte ptr [bp+var_2+1], 4
+
+loc_13DBA:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	loc_13E48
+; ---------------------------------------------------------------------------
+
+loc_13DC2:
+		cmp	byte ptr [bp+var_2+1], 3
+		ja	short loc_13DE0
+		mov	byte ptr [si+10h], 7
+		cmp	byte ptr [bp+var_2+1], 3
+		jnz	short loc_13DD6
+		mov	byte ptr [bp+var_2], 0B4h
+
+loc_13DD6:
+		mov	al, byte ptr [bp+var_2]
+		add	al, 6
+		mov	byte ptr [bp+var_2], al
+		jmp	short loc_13E32
+; ---------------------------------------------------------------------------
+
+loc_13DE0:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 4
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13E2A
+		add	bx, bx
+		jmp	cs:table_13E57[bx]
+
+loc_13DF6:
+		cmp	[bp+var_3], 0
+		jnz	short loc_13E00
+		mov	byte ptr [bp+var_2+1], 1
+
+loc_13E00:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B2h
+		jmp	short loc_13E2A
+; ---------------------------------------------------------------------------
+
+loc_13E0B:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0CEh
+		jmp	short loc_13E2A
+; ---------------------------------------------------------------------------
+
+loc_13E16:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_13E2A
+; ---------------------------------------------------------------------------
+
+loc_13E21:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C6h
+
+loc_13E2A:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_13E32:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13E53
+
+loc_13E48:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13DC2
+
+loc_13E53:
+		pop	si
+		leave
+		retn
+sub_13DA0	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_13E57	dw loc_13DF6
+		dw loc_13E0B
+		dw loc_13E16
+		dw loc_13E21
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13E5F	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 4
+		call	sub_12914
+		test	al, 3
+		jz	loc_13F34
+		test	al, 2
+		jz	short loc_13E79
+		add	byte ptr [bp+var_2+1], 4
+
+loc_13E79:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	loc_13F29
+; ---------------------------------------------------------------------------
+
+loc_13E81:
+		cmp	byte ptr [bp+var_2+1], 4
+		ja	short loc_13EC1
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13EBB
+		add	bx, bx
+		jmp	cs:table_13F40[bx]
+
+loc_13E9B:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_13EBB
+; ---------------------------------------------------------------------------
+
+loc_13EA1:
+		mov	byte ptr [bp+var_2], 0C0h
+		sub	word ptr [si+2], 80h
+		jmp	short loc_13EBB
+; ---------------------------------------------------------------------------
+
+loc_13EAC:
+		mov	byte ptr [bp+var_2], 0C0h
+		add	word ptr [si+2], 80h
+		jmp	short loc_13EBB
+; ---------------------------------------------------------------------------
+
+loc_13EB7:
+		mov	byte ptr [bp+var_2], 0C6h
+
+loc_13EBB:
+		mov	byte ptr [si+10h], 7
+		jmp	short loc_13F13
+; ---------------------------------------------------------------------------
+
+loc_13EC1:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 5
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13F0B
+		add	bx, bx
+		jmp	cs:table_13F38[bx]
+
+loc_13ED7:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B0h
+		cmp	[bp+var_3], 0
+		jnz	short loc_13F0B
+		mov	byte ptr [bp+var_2+1], 1
+		jmp	short loc_13F0B
+; ---------------------------------------------------------------------------
+
+loc_13EEC:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0D0h
+		jmp	short loc_13F0B
+; ---------------------------------------------------------------------------
+
+loc_13EF7:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B8h
+		jmp	short loc_13F0B
+; ---------------------------------------------------------------------------
+
+loc_13F02:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C8h
+
+loc_13F0B:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_13F13:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_13F34
+
+loc_13F29:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13E81
+
+loc_13F34:
+		pop	si
+		leave
+		retn
+sub_13E5F	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_13F38	dw loc_13ED7
+		dw loc_13EEC
+		dw loc_13EF7
+		dw loc_13F02
+table_13F40	dw loc_13E9B
+		dw loc_13EA1
+		dw loc_13EAC
+		dw loc_13EB7
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13F48	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 4
+		call	sub_12914
+		test	al, 3
+		jz	loc_14033
+		test	al, 2
+		jz	short loc_13F62
+		add	byte ptr [bp+var_2+1], 6
+
+loc_13F62:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	loc_14028
+; ---------------------------------------------------------------------------
+
+loc_13F6A:
+		cmp	byte ptr [bp+var_2+1], 4
+		ja	short loc_13FAA
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 3
+		ja	short loc_13FA4
+		add	bx, bx
+		jmp	cs:table_14042[bx]
+
+loc_13F84:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_13FA4
+; ---------------------------------------------------------------------------
+
+loc_13F8A:
+		mov	byte ptr [bp+var_2], 0C0h
+		sub	word ptr [si+2], 80h
+		jmp	short loc_13FA4
+; ---------------------------------------------------------------------------
+
+loc_13F95:
+		mov	byte ptr [bp+var_2], 0C0h
+		add	word ptr [si+2], 80h
+		jmp	short loc_13FA4
+; ---------------------------------------------------------------------------
+
+loc_13FA0:
+		mov	byte ptr [bp+var_2], 0C6h
+
+loc_13FA4:
+		mov	byte ptr [si+10h], 7
+		jmp	short loc_14012
+; ---------------------------------------------------------------------------
+
+loc_13FAA:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 5
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_1400A
+		add	bx, bx
+		jmp	cs:table_14036[bx]
+
+loc_13FC0:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B0h
+		cmp	[bp+var_3], 0
+		jnz	short loc_1400A
+		mov	byte ptr [bp+var_2+1], 1
+		jmp	short loc_1400A
+; ---------------------------------------------------------------------------
+
+loc_13FD5:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0D0h
+		jmp	short loc_1400A
+; ---------------------------------------------------------------------------
+
+loc_13FE0:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B7h
+		jmp	short loc_1400A
+; ---------------------------------------------------------------------------
+
+loc_13FEB:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C9h
+		jmp	short loc_1400A
+; ---------------------------------------------------------------------------
+
+loc_13FF6:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0BEh
+		jmp	short loc_1400A
+; ---------------------------------------------------------------------------
+
+loc_14001:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C2h
+
+loc_1400A:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_14012:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_14033
+
+loc_14028:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_13F6A
+
+loc_14033:
+		pop	si
+		leave
+		retn
+sub_13F48	endp
+
+; ---------------------------------------------------------------------------
+table_14036	dw loc_13FC0
+		dw loc_13FD5
+		dw loc_13FE0
+		dw loc_13FEB
+		dw loc_13FF6
+		dw loc_14001
+table_14042	dw loc_13F84
+		dw loc_13F8A
+		dw loc_13F95
+		dw loc_13FA0
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1404A	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 5
+		call	sub_12914
+		test	al, 3
+		jz	loc_14131
+		test	al, 2
+		jz	short loc_14064
+		add	byte ptr [bp+var_2+1], 6
+
+loc_14064:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	loc_14126
+; ---------------------------------------------------------------------------
+
+loc_1406C:
+		cmp	byte ptr [bp+var_2+1], 5
+		ja	short loc_140A8
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 4
+		ja	short loc_140A2
+		add	bx, bx
+		jmp	cs:table_14141[bx]
+
+loc_14086:
+		mov	byte ptr [bp+var_2], 0B4h
+		jmp	short loc_140A2
+; ---------------------------------------------------------------------------
+
+loc_1408C:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_140A2
+; ---------------------------------------------------------------------------
+
+loc_14092:
+		mov	byte ptr [bp+var_2], 0C0h
+		jmp	short loc_140A2
+; ---------------------------------------------------------------------------
+
+loc_14098:
+		mov	byte ptr [bp+var_2], 0C6h
+		jmp	short loc_140A2
+; ---------------------------------------------------------------------------
+
+loc_1409E:
+		mov	byte ptr [bp+var_2], 0CCh
+
+loc_140A2:
+		mov	byte ptr [si+10h], 7
+		jmp	short loc_14110
+; ---------------------------------------------------------------------------
+
+loc_140A8:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 6
+		mov	bx, ax
+		cmp	bx, 5
+		ja	short loc_14108
+		add	bx, bx
+		jmp	cs:table_14135[bx]
+
+loc_140BE:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B0h
+		cmp	[bp+var_3], 0
+		jnz	short loc_14108
+		mov	byte ptr [bp+var_2+1], 1
+		jmp	short loc_14108
+; ---------------------------------------------------------------------------
+
+loc_140D3:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0D0h
+		jmp	short loc_14108
+; ---------------------------------------------------------------------------
+
+loc_140DE:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B7h
+		jmp	short loc_14108
+; ---------------------------------------------------------------------------
+
+loc_140E9:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C9h
+		jmp	short loc_14108
+; ---------------------------------------------------------------------------
+
+loc_140F4:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0BEh
+		jmp	short loc_14108
+; ---------------------------------------------------------------------------
+
+loc_140FF:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C2h
+
+loc_14108:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_14110:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_14131
+
+loc_14126:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_1406C
+
+loc_14131:
+		pop	si
+		leave
+		retn
+sub_1404A	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+table_14135	dw loc_140BE
+		dw loc_140D3
+		dw loc_140DE
+		dw loc_140E9
+		dw loc_140F4
+		dw loc_140FF
+table_14141	dw loc_14086
+		dw loc_1408C
+		dw loc_14092
+		dw loc_14098
+		dw loc_1409E
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1414B	proc near
+
+var_3		= byte ptr -3
+var_2		= word ptr -2
+
+		enter	4, 0
+		push	si
+		mov	byte ptr [bp+var_2+1], 5
+		call	sub_12914
+		test	al, 3
+		jz	loc_14248
+		test	al, 2
+		jz	short loc_14165
+		add	byte ptr [bp+var_2+1], 8
+
+loc_14165:
+		and	al, 1
+		mov	[bp+var_3], al
+		jmp	loc_1423D
+; ---------------------------------------------------------------------------
+
+loc_1416D:
+		cmp	byte ptr [bp+var_2+1], 5
+		ja	short loc_141A9
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		dec	ax
+		mov	bx, ax
+		cmp	bx, 4
+		ja	short loc_141A3
+		add	bx, bx
+		jmp	cs:table_1425B[bx]
+
+loc_14187:
+		mov	byte ptr [bp+var_2], 0B4h
+		jmp	short loc_141A3
+; ---------------------------------------------------------------------------
+
+loc_1418D:
+		mov	byte ptr [bp+var_2], 0BAh
+		jmp	short loc_141A3
+; ---------------------------------------------------------------------------
+
+loc_14193:
+		mov	byte ptr [bp+var_2], 0C0h
+		jmp	short loc_141A3
+; ---------------------------------------------------------------------------
+
+loc_14199:
+		mov	byte ptr [bp+var_2], 0C6h
+		jmp	short loc_141A3
+; ---------------------------------------------------------------------------
+
+loc_1419F:
+		mov	byte ptr [bp+var_2], 0CCh
+
+loc_141A3:
+		mov	byte ptr [si+10h], 7
+		jmp	short loc_14227
+; ---------------------------------------------------------------------------
+
+loc_141A9:
+		mov	al, byte ptr [bp+var_2+1]
+		mov	ah, 0
+		sub	ax, 6
+		mov	bx, ax
+		cmp	bx, 7
+		ja	short loc_1421F
+		add	bx, bx
+		jmp	cs:table_1424B[bx]
+
+loc_141BF:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0A8h
+		cmp	[bp+var_3], 0
+		jnz	short loc_1421F
+		mov	byte ptr [bp+var_2+1], 1
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_141D4:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0D8h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_141DF:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B0h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_141EA:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0D0h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_141F5:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0B8h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_14200:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C8h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_1420B:
+		sub	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0C1h
+		jmp	short loc_1421F
+; ---------------------------------------------------------------------------
+
+loc_14216:
+		add	word ptr [si+2], 180h
+		mov	byte ptr [bp+var_2], 0BFh
+
+loc_1421F:
+		mov	byte ptr [si+0Eh], 16h
+		mov	byte ptr [si+10h], 6
+
+loc_14227:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_E4DE
+		mov	al, byte ptr [bp+var_2+1]
+		add	al, 0FFh
+		mov	byte ptr [bp+var_2+1], al
+		or	al, al
+		jbe	short loc_14248
+
+loc_1423D:
+		call	sub_E4A6
+		mov	si, ax
+		or	ax, ax
+		jnz	loc_1416D
+
+loc_14248:
+		pop	si
+		leave
+		retn
+sub_1414B	endp
+
+; ---------------------------------------------------------------------------
+table_1424B	dw loc_141BF
+		dw loc_141D4
+		dw loc_141DF
+		dw loc_141EA
+		dw loc_141F5
+		dw loc_14200
+		dw loc_1420B
+		dw loc_14216
+table_1425B	dw loc_14187
+		dw loc_1418D
+		dw loc_14193
+		dw loc_14199
+		dw loc_1419F
+		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20510,12 +22782,9 @@ aSt00_map	db  'st00.map',0
 word_21290	dw 0
 aSt00_std	db  'ST00.STD',0
 		db 0
-		db 0DCh
-		db    7
-		db  0Eh
-		db    8
-		db 0F0h
-		db    7
+off_2129C	dw offset sub_15A5C
+		dw offset sub_15A8E
+		dw offset sub_15A70
 		db  3Ch	; <
 		db    0
 		db  7Eh	; ~
@@ -23364,46 +25633,26 @@ aB@b@bB@b@_0	db '@@~@@',0
 		db  53h	; S
 		db  99h
 		db  54h	; T
-		db 0F6h
-		db  58h	; X
-		db  2Bh	; +
-		db  54h	; T
-		db 0AFh
-		db  55h	; U
-		db 0AFh
-		db  55h	; U
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  49h	; I
-		db  56h	; V
-		db 0EAh
-		db  56h	; V
-		db 0A1h
-		db  56h	; V
-		db  33h	; 3
-		db  57h	; W
-		db 0A1h
-		db  56h	; V
-		db 0CCh
-		db  57h	; W
-		db  83h
-		db  57h	; W
-		db  49h	; I
-		db  56h	; V
-		db  9Fh
-		db  58h	; X
-		db  1Bh
-		db  58h	; X
-		db  1Bh
-		db  58h	; X
-		db 0EAh
-		db  56h	; V
+off_22790	dw offset sub_1AB76
+		dw offset sub_1A6AB
+		dw offset sub_1A82F
+		dw offset sub_1A82F
+		dw 0
+		dw 0
+		dw 0
+		dw 0
+		dw offset sub_1A8C9
+		dw offset sub_1A96A
+		dw offset sub_1A921
+		dw offset sub_1A9B3
+off_227A8	dw offset sub_1A921
+		dw offset sub_1AA4C
+		dw offset sub_1AA03
+		dw offset sub_1A8C9
+off_227B0	dw offset sub_1AB1F
+		dw offset sub_1AA9B
+		dw offset sub_1AA9B
+		dw offset sub_1A96A
 a_dm09_tx2	db '_DM09.TX2',0
 aTH05_10	db '^g‚Ì­—@` Crimson Dead!!',0
 a_dm08_tx2	db '_DM08.TX2',0
@@ -23491,10 +25740,10 @@ word_22856	dw 0
 byte_22858	db 0
 byte_22859	db 0
 off_2285A	dw offset sub_1E5FC
-word_2285C	dw 938Eh
-		dw 93EFh
-		dw 9426h
-		dw 9426h
+off_2285C	dw offset sub_1E60E
+		dw offset sub_1E66F
+		dw offset sub_1E6A6
+		dw offset sub_1E6A6
 		dw 0
 		dw 0
 byte_22868	db  10h
@@ -24363,8 +26612,7 @@ word_23F08	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_23F4A	dw ?
-word_23F4C	dw ?
+dword_23F4A	dd ?
 word_23F4E	dw ?
 word_23F50	dw ?
 dword_23F52	dd ?
@@ -24374,73 +26622,72 @@ word_23F5A	dw ?
 		db    ?	;
 		db    ?	;
 byte_23F5E	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
-		db    ?	;
-		db    ?	;
+word_23F60	dw ?
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
 word_24062	dw ?
 byte_24064	db ?
 byte_24065	db ?
@@ -26519,9 +28766,9 @@ byte_26000	db ?
 byte_26001	db ?
 dword_26002	dd ?
 word_26006	dw ?
+byte_26008	db    ?	;
 		dd    ?	;
 		dd    ?	;
-		db    ?	;
 		db    ?	;
 byte_26012	db ?
 		dd    ?	;

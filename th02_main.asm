@@ -10408,6 +10408,8 @@ loc_F24E:
 		mov	word_1E512, 2
 		jmp	short loc_F2C2
 ; ---------------------------------------------------------------------------
+
+loc_F260:
 		mov	al, byte_2060A
 		cbw
 		mov	si, ax
@@ -10651,7 +10653,11 @@ off_F443	dw offset loc_F238
 		dw offset loc_F24E
 		dw offset loc_F270
 		dw offset loc_F29E
-byte_F44F	db 58h,	41h, 0,	41h, 28h, 41h, 44h, 41h, 0
+		dw offset loc_F2B8
+		dw offset loc_F260
+		dw offset loc_F288
+		dw offset loc_F2A4
+		db    0
 seg001		ends
 
 ; ===========================================================================

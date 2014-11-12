@@ -1228,7 +1228,7 @@ loc_A69A:
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		push	large dword ptr	MENU_DESC[bx]
-		call	far ptr	loc_D436
+		call	sub_D436
 
 loc_A705:
 		pop	di
@@ -1468,7 +1468,7 @@ loc_A900:
 		mov	bx, si
 		shl	bx, 2
 		push	large dword ptr	MENU_DESC[bx]
-		call	far ptr	loc_D436
+		call	sub_D436
 
 loc_A951:
 		pop	di
@@ -2615,7 +2615,7 @@ loc_B2AB:
 		push	si
 		push	[bp+arg_0]
 		push	large [bp+var_4]
-		call	far ptr	loc_D436
+		call	sub_D436
 		pop	si
 		leave
 		retn	4
@@ -2668,7 +2668,7 @@ loc_B2FC:
 		push	si
 		push	[bp+arg_0]
 		push	large [bp+var_4]
-		call	far ptr	loc_D436
+		call	sub_D436
 		pop	si
 		leave
 		retn	4
@@ -2696,7 +2696,7 @@ loc_B31C:
 		mov	bx, si
 		shl	bx, 2
 		push	large [SETUP_BGM_BODY+bx]
-		call	far ptr	loc_D436
+		call	sub_D436
 		inc	si
 		add	di, 10h
 
@@ -2731,7 +2731,7 @@ loc_B34A:
 		mov	bx, si
 		shl	bx, 2
 		push	large [SETUP_SFX_BODY+bx]
-		call	far ptr	loc_D436
+		call	sub_D436
 		inc	si
 		add	di, 10h
 
@@ -2761,7 +2761,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aSETUP_BGM_HEAD ; "　　　　　使用する音源を選択して下さい・...
-		call	far ptr	loc_D436
+		call	sub_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	large 200080h
@@ -2879,7 +2879,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aSETUP_SFX_HEAD ; "　　　　効果音に使用する音源を選択して・...
-		call	far ptr	loc_D436
+		call	sub_D436
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	large 200080h
@@ -4114,7 +4114,7 @@ loc_BEF4:
 		lea	ax, [si+60h]
 		push	ax
 		push	large 1400010h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 
 loc_BF05:
 		mov	al, [bp+arg_2]
@@ -4142,7 +4142,7 @@ loc_BF14:
 		push	ax
 		push	[bp+var_2]
 		push	dx
-		call	far ptr	loc_D436
+		call	sub_D436
 
 loc_BF48:
 		pop	si
@@ -4192,17 +4192,17 @@ loc_BF6B:
 		push	large 0C0050h
 		push	5
 		push	large [MUSICROOM_UP]
-		call	far ptr	loc_D436
+		call	sub_D436
 		push	large 0C0120h
 		push	5
 		push	large [MUSICROOM_DOWN]
-		call	far ptr	loc_D436
+		call	sub_D436
 		push	large 0C0020h
 		push	3
 		mov	bx, musicroom_game_id
 		shl	bx, 2
 		push	large dword ptr	MUSICROOM_GAME[bx]
-		call	far ptr	loc_D436
+		call	sub_D436
 		pop	si
 		pop	bp
 		retn	2
@@ -4650,7 +4650,7 @@ var_2		= word ptr -2
 		push	7
 		push	ds
 		push	offset unk_13EAA
-		call	far ptr	loc_D436
+		call	sub_D436
 		mov	si, 4EF2h
 		mov	di, 1
 		mov	[bp+var_2], 0B4h ; 'ｴ'
@@ -4665,7 +4665,7 @@ loc_C351:
 		push	7
 		push	ds
 		push	si
-		call	far ptr	loc_D436
+		call	sub_D436
 
 loc_C365:
 		inc	di
@@ -4725,17 +4725,17 @@ sub_C3A7	proc near
 		mov	word_F9BE, 2
 		push	large 1400020h
 		push	large 1400010h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	large 14000B4h
 		push	large 1400090h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		call	sub_C293
 		push	large 1400020h
 		push	large 1400010h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	large 14000B4h
 		push	large 1400090h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		pop	bp
 		retn
 sub_C3A7	endp
@@ -4761,7 +4761,7 @@ loc_C406:
 		call	sub_BFF6
 		push	large 1400040h
 		push	large 1400100h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		cmp	byte_13E96, 0
 		jz	short loc_C42C
 		call	sub_C376
@@ -4795,19 +4795,19 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		push	large 20h ; ' '
 		push	large 1400010h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	large 60h
 		push	large 14000C0h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	si
 		call	sub_BF4D
 		call	sub_C293
 		push	large 20h ; ' '
 		push	large 1400010h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	large 60h
 		push	large 14000C0h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		push	si
 		call	sub_BF4D
 		pop	si
@@ -6261,12 +6261,12 @@ loc_D012:
 		lea	ax, [di-8]
 		push	ax
 		push	large 0E00008h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		lea	ax, [si-8]
 		push	ax
 		push	di
 		push	large 800A0h
-		call	far ptr	loc_DB3C
+		call	sub_DB3C
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		mov	bx, ax
@@ -6591,22 +6591,24 @@ loc_D2F7:
 		push	1
 		call	sub_E15E
 		jmp	loc_D1B5
+; ---------------------------------------------------------------------------
+		leave
+		retn
 sub_D12D	endp
 
+; ---------------------------------------------------------------------------
+		db 0
 seg001		ends
 
-; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
 seg002		segment	byte public 'CODE' use16
 		assume cs:seg002
-		; org 1
+		; org 4
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		leave
-		retn
-; ---------------------------------------------------------------------------
-		db 0
+
+sub_D304	proc near
 		push	di
 		xor	ax, ax
 		mov	di, 3662h
@@ -6630,6 +6632,8 @@ loc_D319:
 		jnz	short loc_D30E
 		pop	di
 		retf
+sub_D304	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6801,13 +6805,23 @@ sub_D41C	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-loc_D436:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_D436	proc far
+
+arg_0		= dword	ptr  6
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+arg_8		= word ptr  0Eh
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+0Ah]
+		mov	dx, [bp+arg_4]
 		mov	al, 0C0h
 		pushf
 		cli
@@ -6828,41 +6842,36 @@ loc_D436:
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+0Ch]
+		mov	dx, [bp+arg_6]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+0Eh]
+		mov	cx, [bp+arg_8]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_F9BE
 		add	bx, bx
 		cmp	bx, 8
-; START	OF FUNCTION CHUNK FOR sub_DA6B
-
-loc_D480:
 		jb	short loc_D492
-
-loc_D482:
 		cmp	bx, 10h
 		jnb	short loc_D492
 		mov	ax, [bx+9AEh]
-		mov	cs:word_D58D, ax
+		mov	word ptr cs:loc_D58A+3,	ax
 		mov	bx, 8
 
 loc_D492:
 		mov	ax, [bx+9A2h]
-		mov	cs:word_D4F5, ax
+		mov	word ptr cs:loc_D4F4+1,	ax
 		mov	ax, [bx+9ACh]
-		mov	cs:word_D547, ax
+		mov	word ptr cs:loc_D546+1,	ax
 		mov	ax, word_F9C0
-		mov	cs:word_D514, ax
-		mov	cs:word_D55B, ax
+		mov	word ptr cs:loc_D513+1,	ax
+		mov	word ptr cs:loc_D55A+1,	ax
 		push	ds
 		pop	fs
 		assume fs:dseg
-		lds	si, [bp+6]
+		lds	si, [bp+arg_0]
 		lodsb
 		or	al, al
 		jz	short loc_D51F
@@ -6891,6 +6900,8 @@ loc_D4D8:
 		mov	al, ah
 		out	0A3h, al
 		nop
+
+loc_D4E4:
 		mov	al, ch
 		or	al, 20h
 		out	0A5h, al
@@ -6899,15 +6910,24 @@ loc_D4D8:
 		mov	al, ch
 		out	0A5h, al
 		in	al, 0A9h
-; END OF FUNCTION CHUNK	FOR sub_DA6B
-; ---------------------------------------------------------------------------
-		db 0E8h
-word_D4F5	dw 78h
-		db 8Ah,	0F8h, 0B3h, 0, 0D3h, 0E8h, 0D3h, 0EBh, 86h, 0E0h
-		db 0ABh, 26h, 88h, 1Dh,	83h, 0C7h, 4Eh,	0FEh, 0C5h, 80h
-		db 0FDh, 10h, 72h, 0D5h, 81h, 0EFh, 0, 5, 0BAh
-word_D514	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_D4F4:
+		call	sub_D56F
+		mov	bh, al
+		mov	bl, 0
+		shr	ax, cl
+		shr	bx, cl
+		xchg	ah, al
+		stosw
+		mov	es:[di], bl
+		add	di, 4Eh	; 'N'
+		inc	ch
+		cmp	ch, 10h
+		jb	short loc_D4E4
+		sub	di, 500h
+
+loc_D513:
+		mov	dx, 1234h
 
 loc_D516:
 		xor	ch, ch
@@ -6915,7 +6935,6 @@ loc_D516:
 		lodsb
 		or	al, al
 		jnz	short loc_D4B8
-; START	OF FUNCTION CHUNK FOR sub_DA6B
 
 loc_D51F:
 		mov	al, 0Ah
@@ -6934,33 +6953,48 @@ loc_D52E:
 
 loc_D531:
 		cmp	al, 20h	; ' '
-		jz	short near ptr byte_D55A
+		jz	short loc_D55A
 		out	0A1h, al
 		mov	al, ah
 		out	0A3h, al
 		nop
+
+loc_D53C:
 		mov	al, ch
 		or	al, 20h
 		out	0A5h, al
 		in	al, 0A9h
 		xor	ah, ah
-; END OF FUNCTION CHUNK	FOR sub_DA6B
-; ---------------------------------------------------------------------------
-		db 0E8h
-word_D547	dw 26h
-		db 0D3h, 0C8h, 0ABh, 83h, 0C7h,	4Eh, 0FEh, 0C5h, 80h, 0FDh
-		db 10h,	72h, 0E6h, 81h,	0EFh, 0, 5
-byte_D55A	db 0BAh
-word_D55B	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_D546:
+		call	sub_D56F
+		ror	ax, cl
+		stosw
+		add	di, 4Eh	; 'N'
+		inc	ch
+		cmp	ch, 10h
+		jb	short loc_D53C
+		sub	di, 500h
+
+loc_D55A:
+		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_D516
+sub_D436	endp
+
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_D562	proc near
 		mov	dx, ax
 		add	dx, dx
 		or	ax, dx
 		retn
+sub_D562	endp
+
 ; ---------------------------------------------------------------------------
 		mov	dx, ax
 		shl	dx, 1
@@ -6981,12 +7015,21 @@ sub_D56F	proc near
 		retn
 sub_D56F	endp
 
-; ---------------------------------------------------------------------------
-		db 0E8h, 0ECh, 0FFh, 8Ah, 0DDh,	83h, 0E3h, 2 dup(3), 0DBh
-		db 64h,	23h, 87h
-word_D58D	dw 1234h
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_D580	proc near
+		call	sub_D56F
+		mov	bl, ch
+		and	bx, 3
+		add	bx, bx
+
+loc_D58A:
+		and	ax, fs:[bx+1234h]
 		retn
+sub_D580	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7742,8 +7785,8 @@ off_DAD1	dw offset loc_DA9D
 		dw offset loc_DA9D
 		dw offset loc_DABF
 		dw offset loc_DA9D
-		dw offset loc_D480
-		dw offset loc_D482
+		dw 180h
+		dw 182h
 		dw 184h
 		dw 186h
 		dw 188h
@@ -7804,15 +7847,25 @@ sub_DB21	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-loc_DB3C:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_DB3C	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+
 		push	bp
 		mov	bp, sp
 		push	di
 		push	si
 		push	ds
 		cld
-		mov	ax, [bp+0Ch]
-		mov	dx, [bp+0Ah]
+		mov	ax, [bp+arg_6]
+		mov	dx, [bp+arg_4]
 		mov	bx, ax
 		sar	bx, 4
 		shl	bx, 1
@@ -7820,22 +7873,22 @@ loc_DB3C:
 		add	bx, dx
 		shr	dx, 2
 		add	bx, dx
-		mov	cs:word_DBA2, bx
+		mov	word ptr cs:loc_DBA1+1,	bx
 		and	ax, 0Fh
 		mov	cx, ax
-		add	ax, [bp+8]
+		add	ax, [bp+arg_2]
 		shr	ax, 4
 		or	cx, cx
 		jz	short loc_DB6F
 		inc	ax
 
 loc_DB6F:
-		mov	cs:word_DBA7, ax
+		mov	word ptr cs:loc_DBA6+1,	ax
 		jmp	short $+2
 		mov	cx, 28h	; '('
 		sub	cx, ax
 		shl	cx, 1
-		mov	ax, [bp+6]
+		mov	ax, [bp+arg_0]
 		mov	bp, cx
 		push	0E000h
 		push	word_F9CA
@@ -7846,14 +7899,34 @@ loc_DB6F:
 		push	0A800h
 		push	word_F9C4
 		mov	dl, 4
+
+loc_DB9F:
 		mov	bx, ax
+
+loc_DBA1:
+		mov	di, 1234h
+		pop	ds
+		assume es:nothing
+		pop	es
+
+loc_DBA6:
+		mov	cx, 1234h
+		mov	si, di
+		rep movsw
+		add	di, bp
+		dec	bx
+		jnz	short loc_DBA6
+		dec	dl
+		jnz	short loc_DB9F
+		pop	ds
+		pop	si
+		pop	di
+		pop	bp
+		retf	8
+sub_DB3C	endp ; sp-analysis failed
+
 ; ---------------------------------------------------------------------------
-		db 0BFh
-word_DBA2	dw 1234h
-		db 1Fh,	7, 0B9h
-word_DBA7	dw 1234h
-		db 8Bh,	0F7h, 0F3h, 0A5h, 3, 0FDh, 4Bh,	75h, 0F4h, 0FEh
-		db 0CAh, 75h, 0E9h, 1Fh, 5Eh, 5Fh, 5Dh,	0CAh, 8, 0, 90h
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 

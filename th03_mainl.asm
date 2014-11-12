@@ -954,7 +954,7 @@ sub_978D	proc near
 		call	graph_show
 		push	large 160012Ch
 		push	0
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	0
 		call	sub_CEC2
 		push	2
@@ -968,7 +968,7 @@ sub_978D	proc near
 loc_97E8:
 		push	large 160012Ch
 		push	si
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	6
 		call	sub_CB52
 		inc	si
@@ -982,10 +982,10 @@ loc_97FC:
 		call	far ptr	palette_show
 		push	large 0E00040h
 		push	6
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	large 160012Ch
 		push	5
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	ds
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
@@ -1253,15 +1253,15 @@ var_2		= word ptr -2
 		call	graph_pi_free
 		push	large 600060h
 		push	0
-		call	far ptr	loc_C9D4
+		call	sub_C9D4
 		push	large 1600060h
 		push	1
-		call	far ptr	loc_CA88
+		call	sub_CA88
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
 		push	large 180002Eh
 		push	2
-		call	far ptr	loc_C9D4
+		call	sub_C9D4
 
 loc_9A8E:
 		push	0
@@ -1854,10 +1854,10 @@ loc_9FB3:
 loc_9FC8:
 		push	large 0C00110h
 		push	0
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	large 1600110h
 		push	3
-		call	far ptr	loc_D712
+		call	sub_D712
 		les	bx, dword_105DA
 		mov	al, es:[bx+36h]
 		les	bx, [bp+var_6]
@@ -1889,13 +1889,13 @@ loc_A01E:
 		mov	dx, 2
 		sub	dx, ax
 		push	dx
-		call	far ptr	loc_D712
+		call	sub_D712
 		push	large 1600110h
 		mov	ax, si
 		add	ax, ax
 		inc	ax
 		push	ax
-		call	far ptr	loc_D712
+		call	sub_D712
 		mov	[bp+var_2], 1
 		jmp	short loc_A05B
 ; ---------------------------------------------------------------------------
@@ -3844,7 +3844,7 @@ sub_AFAC	proc near
 		call	sub_CF1E
 		push	large 1400138h
 		push	0
-		call	far ptr	loc_C9D4
+		call	sub_C9D4
 		push	0
 		call	sub_D130
 		push	ds
@@ -5688,7 +5688,7 @@ loc_BD65:
 		push	[bp+arg_6]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		call	far ptr	loc_D712
+		call	sub_D712
 		jmp	short loc_BD83
 ; ---------------------------------------------------------------------------
 
@@ -5696,7 +5696,7 @@ loc_BD75:
 		push	[bp+arg_6]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		call	far ptr	loc_C9D4
+		call	sub_C9D4
 
 loc_BD83:
 		and	[bp+arg_0], 7
@@ -7072,33 +7072,41 @@ sub_C990	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-; ---------------------------------------------------------------------------
 
-loc_C9D4:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_C9D4	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	large 0C00000h
 		call	grcg_setcolor
-		mov	si, [bp+6]
+		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1D0Eh
 		mov	ax, [si+0Eh]
-		mov	cs:word_CA4C, ax
-		mov	ax, [bp+0Ah]
+		mov	word ptr cs:loc_CA4B+1,	ax
+		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		add	ax, [si+6]
 		mov	di, ax
-		mov	cs:word_CA45, ax
+		mov	word ptr cs:loc_CA44+1,	ax
 		mov	ax, [si+8]
-		mov	cs:word_CA37, ax
-		mov	cs:word_CA51, ax
+		mov	word ptr cs:loc_CA36+1,	ax
+		mov	word ptr cs:loc_CA50+1,	ax
 		shl	ax, 2
 		add	ax, 50h	; 'P'
-		mov	cs:word_CA33, ax
+		mov	word ptr cs:loc_CA32+1,	ax
 		jmp	short $+2
-		mov	ax, [bp+8]
+		mov	ax, [bp+arg_2]
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
@@ -7108,36 +7116,86 @@ loc_C9D4:
 		mov	ax, [si+0Ch]
 		mov	ds, ax
 		xor	si, si
-; ---------------------------------------------------------------------------
-		db 0BAh
-word_CA33	dw 1234h
-		db 0FCh, 0B9h
-word_CA37	dw 1234h
-		db 0F3h, 66h, 0A5h, 2Bh, 0FAh, 79h, 0F6h, 32h, 0C0h, 0E6h
-		db 7Ch,	0BBh
-word_CA45	dw 1234h
-		db 8Bh,	0FBh, 33h, 0F6h, 0B8h
-word_CA4C	dw 1234h
-		db 8Eh,	0D8h, 0B9h
-word_CA51	dw 1234h
-		db 66h,	8Bh, 4,	66h, 26h, 9, 5,	83h, 0C6h, 4, 83h, 0C7h
-		db 4, 0E2h, 0F1h, 2Bh, 0FAh, 79h, 0EAh,	8Bh, 0FBh, 8Ch
-		db 0C0h, 5, 0, 8, 8Eh, 0C0h, 3Dh, 0, 0C0h, 72h,	0DCh, 3Dh
-		db 0, 0C8h, 73h, 7, 5, 0, 20h, 8Eh, 0C0h, 0EBh,	0D0h, 1Fh
-		db 5Fh,	5Eh, 5Dh, 0CAh,	6, 0, 90h
-; ---------------------------------------------------------------------------
 
-loc_CA88:
+loc_CA32:
+		mov	dx, 1234h
+		cld
+
+loc_CA36:
+		mov	cx, 1234h
+		rep movsd
+		sub	di, dx
+		jns	short loc_CA36
+		xor	al, al
+		out	7Ch, al
+
+loc_CA44:
+		mov	bx, 1234h
+		mov	di, bx
+		xor	si, si
+
+loc_CA4B:
+		mov	ax, 1234h
+		mov	ds, ax
+		assume ds:nothing
+
+loc_CA50:
+		mov	cx, 1234h
+
+loc_CA53:
+		mov	eax, [si]
+		or	es:[di], eax
+		add	si, 4
+		add	di, 4
+		loop	loc_CA53
+		sub	di, dx
+		jns	short loc_CA50
+		mov	di, bx
+		mov	ax, es
+		add	ax, 800h
+		mov	es, ax
+		assume es:nothing
+		cmp	ax, 0C000h
+		jb	short loc_CA50
+		cmp	ax, 0C800h
+		jnb	short loc_CA80
+		add	ax, 2000h
+		mov	es, ax
+		assume es:nothing
+		jmp	short loc_CA50
+
+loc_CA80:
+		pop	ds
+		assume ds:dseg
+		pop	di
+		pop	si
+		pop	bp
+		retf	6
+sub_C9D4	endp
+
+; ---------------------------------------------------------------------------
+		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_CA88	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	large 0C00000h
 		call	grcg_setcolor
-		mov	si, [bp+6]
+		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1D0Eh
-		mov	ax, [bp+0Ah]
+		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		add	ax, [si+6]
 		mov	bx, [si+8]
@@ -7145,49 +7203,94 @@ loc_CA88:
 		add	ax, bx
 		dec	ax
 		mov	di, ax
-		mov	cs:word_CB09, ax
-		mov	cs:word_CB31, ax
-		mov	cs:word_CAF3, bx
-		mov	cs:word_CB1F, bx
+		mov	word ptr cs:loc_CB08+1,	ax
+		mov	word ptr cs:loc_CB30+1,	ax
+		mov	word ptr cs:loc_CAF2+1,	bx
+		mov	word ptr cs:loc_CB1E+1,	bx
 		mov	ax, 50h	; 'P'
 		sub	ax, bx
-		mov	cs:word_CAEF, ax
-		mov	cs:word_CB1B, ax
+		mov	word ptr cs:loc_CAEE+1,	ax
+		mov	word ptr cs:loc_CB1A+1,	ax
 		jmp	short $+2
-		mov	ax, [bp+8]
+		mov	ax, [bp+arg_2]
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
 		add	ax, 0A800h
 		mov	es, ax
+		assume es:nothing
 		mov	bx, 20D6h
 		mov	fs, word ptr [si+0Ch]
 		xor	si, si
-; ---------------------------------------------------------------------------
-		db 0BAh
-word_CAEF	dw 1234h
+
+loc_CAEE:
+		mov	dx, 1234h
+		nop
+
+loc_CAF2:
+		mov	cx, 1234h
+
+loc_CAF5:
+		mov	al, fs:[si]
+		xlat
+		mov	es:[di], al
+		inc	si
+		dec	di
+		loop	loc_CAF5
+		sub	di, dx
+		jns	short loc_CAF2
+		xor	al, al
+		out	7Ch, al
+
+loc_CB08:
+		mov	di, 1234h
+		mov	si, [bp+arg_0]
+		shl	si, 4
+		add	si, 1D0Eh
+		mov	fs, word ptr [si+0Eh]
+		xor	si, si
+
+loc_CB1A:
+		mov	dx, 1234h
+		nop
+
+loc_CB1E:
+		mov	cx, 4D2h
+
+loc_CB21:
+		mov	al, fs:[si]
+		xlat
+		or	es:[di], al
+		inc	si
+		dec	di
+		loop	loc_CB21
+		sub	di, dx
+		jns	short loc_CB1E
+
+loc_CB30:
+		mov	di, 1234h
+		mov	ax, es
+		add	ax, 800h
+		mov	es, ax
+		assume es:nothing
+		cmp	ax, 0C000h
+		jb	short loc_CB1E
+		cmp	ax, 0C800h
+		jnb	short loc_CB4B
+		add	ax, 2000h
+		mov	es, ax
+		assume es:nothing
+		jmp	short loc_CB1E
+
+loc_CB4B:
+		pop	di
+		pop	si
+		pop	bp
+		retf	6
+sub_CA88	endp
+
 ; ---------------------------------------------------------------------------
 		nop
-; ---------------------------------------------------------------------------
-		db 0B9h
-word_CAF3	dw 1234h
-		db 64h,	8Ah, 4,	0D7h, 26h, 88h,	5, 46h,	4Fh, 0E2h, 0F5h
-		db 2Bh,	0FAh, 79h, 0EEh, 32h, 0C0h, 0E6h, 7Ch, 0BFh
-word_CB09	dw 1234h
-		db 8Bh,	76h, 6,	0C1h, 0E6h, 4, 81h, 0C6h, 0Eh, 1Dh, 8Eh
-		db 64h,	0Eh, 33h, 0F6h,	0BAh
-word_CB1B	dw 1234h
-; ---------------------------------------------------------------------------
-		nop
-; ---------------------------------------------------------------------------
-		db 0B9h
-word_CB1F	dw 4D2h
-		db 64h,	8Ah, 4,	0D7h, 26h, 8, 5, 46h, 4Fh, 0E2h, 0F5h
-		db 2Bh,	0FAh, 79h, 0EEh, 0BFh
-word_CB31	dw 1234h
-		db 8Ch,	0C0h, 5, 0, 8, 8Eh, 0C0h, 3Dh, 0, 0C0h,	72h, 0DFh
-		db 3Dh,	0, 0C8h, 73h, 7, 5, 0, 20h, 8Eh, 0C0h, 0EBh, 0D3h
-		db 5Fh,	5Eh, 5Dh, 0CAh,	6, 0, 90h
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8773,9 +8876,17 @@ sub_D6C5	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-; ---------------------------------------------------------------------------
 
-loc_D712:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_D712	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
@@ -8788,7 +8899,7 @@ loc_D712:
 		add	ax, [si+6]
 		mov	di, ax
 		mov	ax, [si+8]
-		mov	cs:word_D759, ax
+		mov	word ptr cs:loc_D758+1,	ax
 		jmp	short $+2
 		shl	ax, 2
 		add	ax, 50h	; 'P'
@@ -8806,13 +8917,36 @@ loc_D712:
 		mov	bx, di
 		cld
 		nop
+
+loc_D758:
+		mov	cx, 1234h
+		rep movsd
+		sub	di, dx
+		jns	short loc_D758
+		mov	di, bx
+		mov	ax, es
+		add	ax, 800h
+		mov	es, ax
+		assume es:nothing
+		cmp	ax, 0C000h
+		jb	short loc_D758
+		cmp	ax, 0C800h
+		jnb	short loc_D77C
+		add	ax, 2000h
+		mov	es, ax
+		assume es:nothing
+		jmp	short loc_D758
+
+loc_D77C:
+		pop	ds
+		pop	di
+		pop	si
+		pop	bp
+		retf	6
+sub_D712	endp
+
 ; ---------------------------------------------------------------------------
-		db 0B9h
-word_D759	dw 1234h
-		db 0F3h, 66h, 0A5h, 2Bh, 0FAh, 79h, 0F6h, 8Bh, 0FBh, 8Ch
-		db 0C0h, 5, 0, 8, 8Eh, 0C0h, 3Dh, 0, 0C0h, 72h,	0E8h, 3Dh
-		db 0, 0C8h, 73h, 7, 5, 0, 20h, 8Eh, 0C0h, 0EBh,	0DCh, 1Fh
-		db 5Fh,	5Eh, 5Dh, 0CAh,	6, 0, 90h
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8868,24 +9002,15 @@ dseg		segment	para public 'DATA' use16
 
 include libs/BorlandC/c0[data].asm
 
-		db  22h	; "
-		db    1
-		db  2Bh	; +
-		db    1
-		db  34h	; 4
-		db    1
-		db  3Dh	; =
-		db    1
-		db  46h	; F
-		db    1
-		db  4Fh	; O
-		db    1
-		db  58h	; X
-		db    1
-		db  61h	; a
-		db    1
-		db  6Ah	; j
-		db    1
+		dw offset a00sl_cd2
+		dw offset a02sl_cd2
+		dw offset a04sl_cd2
+		dw offset a06sl_cd2
+		dw offset a08sl_cd2
+		dw offset a10sl_cd2
+		dw offset a12sl_cd2
+		dw offset a14sl_cd2
+		dw offset a16sl_cd2
 		dd a@00tx_txt		; "@00TX.TXT"
 		dd a@01tx_txt		; "@01TX.TXT"
 		dd a@02tx_txt		; "@02TX.TXT"
@@ -8915,8 +9040,8 @@ CHAR_NAME		dd NAME_REIMU		; "   博麗　靈夢"
 		dd NAME_CHIYURI	; " 北白河　ちゆり"
 		dd TITLE_YUMEMI	; "　  　　　夢幻伝説　　　    "
 		dd NAME_YUMEMI		; " 　岡崎　夢美"
-word_E502	dw 38Ah
-word_E504	dw 391h
+word_E502	dw offset aSt_cd2
+word_E504	dw offset aStnx1_pi
 a0016_pi	db '0016.pi',0
 		db    0
 		db    0

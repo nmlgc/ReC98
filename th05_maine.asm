@@ -1425,7 +1425,7 @@ loc_A962:
 		push	240h
 		push	word_15006
 		push	large 100010h
-		call	far ptr	loc_ECDE
+		call	sub_ECDE
 		or	si, si
 		jle	short loc_A9BD
 		test	byte ptr word_12AFA+1, 20h
@@ -1535,7 +1535,7 @@ loc_AA3E:
 		out	dx, al
 		push	large 500140h
 		push	large 1E00040h
-		call	far ptr	loc_ECDE
+		call	sub_ECDE
 		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 0
 
@@ -2348,7 +2348,7 @@ loc_B164:
 		mov	ah, 0
 		push	ax
 		push	large [bp+var_8]
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 0
 		out	dx, al
@@ -2414,13 +2414,13 @@ loc_B1F7:
 		push	si
 		push	0Fh
 		push	large [bp+var_4]
-		call	far ptr	loc_E914
+		call	sub_E914
 		call	sub_B37C
 		push	40h
 		push	si
 		push	0Fh
 		push	large [bp+var_4]
-		call	far ptr	loc_E914
+		call	sub_E914
 		call	sub_B37C
 		dec	word_107BC
 		inc	di
@@ -2433,13 +2433,13 @@ loc_B21E:
 		push	si
 		push	0Fh
 		push	large [bp+var_4]
-		call	far ptr	loc_E914
+		call	sub_E914
 		call	sub_B37C
 		push	40h
 		push	si
 		push	0Fh
 		push	large [bp+var_4]
-		call	far ptr	loc_E914
+		call	sub_E914
 		call	sub_B37C
 		inc	allcast_step
 		inc	allcast_line_on_screen
@@ -3620,7 +3620,7 @@ loc_BB00:
 		push	si
 		push	di
 		push	large 820012h
-		call	far ptr	loc_ECDE
+		call	sub_ECDE
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
@@ -4161,7 +4161,7 @@ loc_BEA6:
 		add	ax, 0FFF0h
 		push	ax
 		push	large 200020h
-		call	far ptr	loc_ECDE
+		call	sub_ECDE
 
 loc_BEC8:
 		inc	di
@@ -4661,12 +4661,12 @@ loc_C2BB:
 		push	9
 		push	ds
 		push	offset aGxgnbGvbGhvVGv
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	large 7800C0h
 		push	2
 		push	ds
 		push	offset aGxgnbGvbGhvV_0
-		call	far ptr	loc_E914
+		call	sub_E914
 
 loc_C2EB:
 		call	sub_EB66
@@ -5188,7 +5188,7 @@ loc_C6F1:
 		push	word_116E4
 		push	ds
 		push	offset aU__0
-		call	far ptr	loc_E914
+		call	sub_E914
 		pop	di
 		pop	si
 		leave
@@ -5298,14 +5298,14 @@ loc_C7B6:
 		push	word_116E4
 		push	ds
 		push	offset aBd
-		call	far ptr	loc_E914
+		call	sub_E914
 		lea	ax, [si+60h]
 		push	ax
 		push	di
 		push	word_116E4
 		push	ds
 		push	offset aBu
-		call	far ptr	loc_E914
+		call	sub_E914
 		pop	di
 		pop	si
 		leave
@@ -5361,7 +5361,7 @@ arg_6		= word ptr  0Ah
 		push	word_116E4
 		push	ds
 		push	offset aBd_0
-		call	far ptr	loc_E914
+		call	sub_E914
 		pop	di
 		pop	si
 		leave
@@ -5502,7 +5502,7 @@ loc_C9B3:
 		push	word_116E4
 		push	ds
 		push	offset aBu_0
-		call	far ptr	loc_E914
+		call	sub_E914
 		leave
 		retn
 sub_C8AE	endp
@@ -5628,7 +5628,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 18h
@@ -5636,7 +5636,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aUqiUx	; "難易度"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 30h	; '0'
@@ -5644,7 +5644,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aNPiuU_	; "最終得点"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 48h	; 'H'
@@ -5652,7 +5652,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGGxi
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 60h
@@ -5660,7 +5660,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGGaogcpi
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 78h	; 'x'
@@ -5668,7 +5668,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGqbGatbrmcj ; "ゲーム達成率"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 90h	; '・
@@ -5676,7 +5676,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aIlcSObcj ; "悪霊退治率"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0A8h ; 'ｨ'
@@ -5684,7 +5684,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGagcgegai
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0C0h
@@ -5692,7 +5692,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0D8h
@@ -5700,7 +5700,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aLcnzvv	; "気合い"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0F0h ; '・
@@ -5708,7 +5708,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aPicacovCj ; "処理落ち率"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 110h
@@ -5716,7 +5716,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
-		call	far ptr	loc_E914
+		call	sub_E914
 		les	bx, dword_11E6E
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_CBDB
@@ -5787,7 +5787,7 @@ loc_CBE3:
 		push	word_116E4
 		push	ds
 		push	offset aI
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	ax, word_116E2
 		add	ax, 110h
 		push	ax
@@ -5797,7 +5797,7 @@ loc_CBE3:
 		push	word_116E4
 		push	ds
 		push	offset aI_0
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	byte_1517C, 1
 		les	bx, dword_11E6E
 		cmp	byte ptr es:[bx+13h], 6
@@ -6120,7 +6120,7 @@ loc_D01A:
 		push	word_116E4
 		push	ds
 		push	offset aU_
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
@@ -6204,7 +6204,7 @@ loc_D120:
 		push	word_116E4
 		push	ds
 		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	ax, word_116E2
 		add	ax, 30h	; '0'
 		push	ax
@@ -6214,7 +6214,7 @@ loc_D120:
 		push	word_116E6
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
-		call	far ptr	loc_E914
+		call	sub_E914
 
 loc_D156:
 		pop	si
@@ -6253,7 +6253,7 @@ sub_D16F	proc near
 		push	word_116E6
 		push	ds
 		push	offset byte_15187
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	ax, word_116E2
 		add	ax, 30h	; '0'
 		push	ax
@@ -6263,7 +6263,7 @@ sub_D16F	proc near
 		push	word_116E6
 		push	ds
 		push	offset byte_151A5
-		call	far ptr	loc_E914
+		call	sub_E914
 
 loc_D1AF:
 		pop	bp
@@ -6334,7 +6334,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vpcB@	; "　１面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 60h
@@ -6342,7 +6342,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vqcB@	; "　２面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 80h
@@ -6350,7 +6350,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vrcB@	; "　３面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0A0h
@@ -6358,7 +6358,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vscB@	; "　４面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0C0h
@@ -6366,7 +6366,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vtcB@	; "　５面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0E0h ; '・
@@ -6374,7 +6374,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vucB@	; "　６面　"
-		call	far ptr	loc_E914
+		call	sub_E914
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 120h
@@ -6382,7 +6382,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aNPiuU__0 ; "最終得点"
-		call	far ptr	loc_E914
+		call	sub_E914
 		mov	ax, word_116E2
 		add	ax, 80h
 		mov	[bp+var_2], ax
@@ -9161,15 +9161,24 @@ loc_E909:
 		retf	4
 sub_E878	endp
 
-; ---------------------------------------------------------------------------
 
-loc_E914:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_E914	proc far
+
+arg_0		= dword	ptr  6
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+arg_8		= word ptr  0Eh
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+0Ah]
+		mov	dx, [bp+arg_4]
 		mov	al, 0C0h
 		pushf
 		cli
@@ -9190,12 +9199,12 @@ loc_E914:
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+0Ch]
+		mov	dx, [bp+arg_6]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+0Eh]
+		mov	cx, [bp+arg_8]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_107BC
@@ -9204,22 +9213,22 @@ loc_E914:
 		jb	short loc_E970
 		cmp	bx, 10h
 		jnb	short loc_E970
-		mov	ax, [bx+68Ch]
-		mov	cs:word_EA6B, ax
+		mov	ax, word_1078C[bx]
+		mov	word ptr cs:loc_EA68+3,	ax
 		mov	bx, 8
 
 loc_E970:
-		mov	ax, [bx+680h]
-		mov	cs:word_E9D3, ax
-		mov	ax, [bx+68Ah]
-		mov	cs:word_EA25, ax
+		mov	ax, word_10780[bx]
+		mov	word ptr cs:loc_E9D2+1,	ax
+		mov	ax, word_1078A[bx]
+		mov	word ptr cs:loc_EA24+1,	ax
 		mov	ax, word_107BE
-		mov	cs:word_E9F2, ax
-		mov	cs:word_EA39, ax
+		mov	word ptr cs:loc_E9F1+1,	ax
+		mov	word ptr cs:loc_EA38+1,	ax
 		push	ds
 		pop	fs
 		assume fs:dseg
-		lds	si, [bp+6]
+		lds	si, [bp+arg_0]
 		lodsb
 		or	al, al
 		jz	short loc_E9FD
@@ -9236,7 +9245,7 @@ loc_E996:
 		mov	ah, al
 		lodsb
 		shl	ah, 1
-		cmp	al, 9Fh	; '・
+		cmp	al, 9Fh
 		jnb	short loc_E9B6
 		cmp	al, 80h
 		adc	ax, 0FEDFh
@@ -9248,6 +9257,8 @@ loc_E9B6:
 		mov	al, ah
 		out	0A3h, al
 		nop
+
+loc_E9C2:
 		mov	al, ch
 		or	al, 20h
 		out	0A5h, al
@@ -9256,14 +9267,24 @@ loc_E9B6:
 		mov	al, ch
 		out	0A5h, al
 		in	al, 0A9h
-; ---------------------------------------------------------------------------
-		db 0E8h
-word_E9D3	dw 78h
-		db 8Ah,	0F8h, 0B3h, 0, 0D3h, 0E8h, 0D3h, 0EBh, 86h, 0E0h
-		db 0ABh, 26h, 88h, 1Dh,	83h, 0C7h, 4Eh,	0FEh, 0C5h, 80h
-		db 0FDh, 10h, 72h, 0D5h, 81h, 0EFh, 0, 5, 0BAh
-word_E9F2	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_E9D2:
+		call	sub_EA4D
+		mov	bh, al
+		mov	bl, 0
+		shr	ax, cl
+		shr	bx, cl
+		xchg	ah, al
+		stosw
+		mov	es:[di], bl
+		add	di, 4Eh	; 'N'
+		inc	ch
+		cmp	ch, 10h
+		jb	short loc_E9C2
+		sub	di, 500h
+
+loc_E9F1:
+		mov	dx, 1234h
 
 loc_E9F4:
 		xor	ch, ch
@@ -9289,32 +9310,48 @@ loc_EA0C:
 
 loc_EA0F:
 		cmp	al, 20h	; ' '
-		jz	short near ptr byte_EA38
+		jz	short loc_EA38
 		out	0A1h, al
 		mov	al, ah
 		out	0A3h, al
 		nop
+
+loc_EA1A:
 		mov	al, ch
 		or	al, 20h
 		out	0A5h, al
 		in	al, 0A9h
 		xor	ah, ah
-; ---------------------------------------------------------------------------
-		db 0E8h
-word_EA25	dw 26h
-		db 0D3h, 0C8h, 0ABh, 83h, 0C7h,	4Eh, 0FEh, 0C5h, 80h, 0FDh
-		db 10h,	72h, 0E6h, 81h,	0EFh, 0, 5
-byte_EA38	db 0BAh
-word_EA39	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_EA24:
+		call	sub_EA4D
+		ror	ax, cl
+		stosw
+		add	di, 4Eh	; 'N'
+		inc	ch
+		cmp	ch, 10h
+		jb	short loc_EA1A
+		sub	di, 500h
+
+loc_EA38:
+		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_E9F4
+sub_E914	endp
+
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_EA40	proc near
 		mov	dx, ax
 		add	dx, dx
 		or	ax, dx
 		retn
+sub_EA40	endp
+
 ; ---------------------------------------------------------------------------
 		mov	dx, ax
 		shl	dx, 1
@@ -9335,12 +9372,21 @@ sub_EA4D	proc near
 		retn
 sub_EA4D	endp
 
-; ---------------------------------------------------------------------------
-		db 0E8h, 0ECh, 0FFh, 8Ah, 0DDh,	83h, 0E3h, 2 dup(3), 0DBh
-		db 64h,	23h, 87h
-word_EA6B	dw 1234h
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_EA5E	proc near
+		call	sub_EA4D
+		mov	bl, ch
+		and	bx, 3
+		add	bx, bx
+
+loc_EA68:
+		and	ax, fs:[bx+1234h]
 		retn
+sub_EA5E	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9673,17 +9719,26 @@ arg_8		= word ptr  0Eh
 		retf	0Ah
 sub_EC9A	endp
 
-; ---------------------------------------------------------------------------
 
-loc_ECDE:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_ECDE	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+
 		push	bp
 		mov	bp, sp
 		push	di
 		push	si
 		push	ds
 		cld
-		mov	ax, [bp+0Ch]
-		mov	dx, [bp+0Ah]
+		mov	ax, [bp+arg_6]
+		mov	dx, [bp+arg_4]
 		mov	bx, ax
 		sar	bx, 4
 		shl	bx, 1
@@ -9691,22 +9746,22 @@ loc_ECDE:
 		add	bx, dx
 		shr	dx, 2
 		add	bx, dx
-		mov	cs:word_ED44, bx
+		mov	word ptr cs:loc_ED43+1,	bx
 		and	ax, 0Fh
 		mov	cx, ax
-		add	ax, [bp+8]
+		add	ax, [bp+arg_2]
 		shr	ax, 4
 		or	cx, cx
 		jz	short loc_ED11
 		inc	ax
 
 loc_ED11:
-		mov	cs:word_ED49, ax
+		mov	word ptr cs:loc_ED48+1,	ax
 		jmp	short $+2
 		mov	cx, 28h	; '('
 		sub	cx, ax
 		shl	cx, 1
-		mov	ax, [bp+6]
+		mov	ax, [bp+arg_0]
 		mov	bp, cx
 		push	0E000h
 		push	word_107C8
@@ -9717,14 +9772,33 @@ loc_ED11:
 		push	0A800h
 		push	word_107C2
 		mov	dl, 4
+
+loc_ED41:
 		mov	bx, ax
+
+loc_ED43:
+		mov	di, 1234h
+		pop	ds
+		pop	es
+
+loc_ED48:
+		mov	cx, 1234h
+		mov	si, di
+		rep movsw
+		add	di, bp
+		dec	bx
+		jnz	short loc_ED48
+		dec	dl
+		jnz	short loc_ED41
+		pop	ds
+		pop	si
+		pop	di
+		pop	bp
+		retf	8
+sub_ECDE	endp ; sp-analysis failed
+
 ; ---------------------------------------------------------------------------
-		db 0BFh
-word_ED44	dw 1234h
-		db 1Fh,	7, 0B9h
-word_ED49	dw 1234h
-		db 8Bh,	0F7h, 0F3h, 0A5h, 3, 0FDh, 4Bh,	75h, 0F4h, 0FEh
-		db 0CAh, 75h, 0E9h, 1Fh, 5Eh, 5Fh, 5Dh,	0CAh, 8, 0, 90h
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10970,26 +11044,16 @@ include libs/master.lib/bgm[data].asm
 		db  50h	; P
 		db  20h
 		db    0
-		db  71h	; q
-		db    0
-		db  6Bh	; k
-		db    0
-		db  78h	; x
-		db    0
-		db  72h	; r
-		db    0
-		db  89h
-		db    0
-		db  1Fh
-		db    0
-		db  19h
-		db    0
-		db  26h	; &
-		db    0
-		db  20h
-		db    0
-		db  37h	; 7
-		db    0
+word_10780	dw  71h
+		dw  6Bh
+		dw  78h
+		dw  72h
+		dw  89h
+word_1078A	dw  1Fh
+word_1078C	dw  19h
+		dw  26h
+		dw  20h
+		dw  37h
 		db  9Ch
 		db    6
 		db 0A4h

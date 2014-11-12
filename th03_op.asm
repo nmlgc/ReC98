@@ -1853,17 +1853,25 @@ loc_A19A:
 		mov	byte_D953, 1
 		jmp	short loc_A1F3
 ; ---------------------------------------------------------------------------
+
+loc_A1B4:
 		nopcall	sub_AC06
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
+
+loc_A1BB:
 		call	sub_9E7F
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
+
+loc_A1C0:
 		mov	byte_D954, 0
 		mov	byte_E97C, 1
 		mov	byte_D951, 0
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
+
+loc_A1D1:
 		mov	byte_D954, 0
 		mov	byte_D952, 1
 
@@ -1887,7 +1895,10 @@ sub_A0E0	endp
 		db 0
 off_A1F7	dw offset loc_A184
 		dw offset loc_A189
-		db 0B4h, 8, 0BBh, 8, 0C0h, 8, 0D1h, 8
+		dw offset loc_A1B4
+		dw offset loc_A1BB
+		dw offset loc_A1C0
+		dw offset loc_A1D1
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4364,13 +4375,13 @@ var_2		= word ptr -2
 		push	di
 		push	large 200130h
 		push	0Bh
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 		les	bx, dword_FC54
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B590
 		push	large 1A00130h
 		push	0Bh
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 
 loc_B590:
 		push	large 0C0000Eh
@@ -4506,25 +4517,25 @@ sub_B670	proc near
 		mov	bp, sp
 		push	large 0A00130h
 		push	0Ch
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 		push	large 0B0013Ch
 		mov	al, byte_FC58
 		cbw
 		add	ax, 0Dh
 		push	ax
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 		les	bx, dword_FC54
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B6BE
 		push	large 2200130h
 		push	0Ch
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 		push	large 230013Ch
 		mov	al, byte_FC59
 		cbw
 		add	ax, 0Dh
 		push	ax
-		call	far ptr	loc_CAF6
+		call	sub_CAF6
 
 loc_B6BE:
 		pop	bp
@@ -7086,27 +7097,35 @@ loc_CAEF:
 		retf	2
 ; ---------------------------------------------------------------------------
 		db 0
-; ---------------------------------------------------------------------------
 
-loc_CAF6:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_CAF6	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+6]
+		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1AA8h
-		mov	ax, [bp+0Ah]
+		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		add	ax, [si+6]
 		mov	di, ax
 		mov	ax, [si+8]
-		mov	cs:word_CB3D, ax
+		mov	word ptr cs:loc_CB3C+1,	ax
 		jmp	short $+2
 		shl	ax, 2
 		add	ax, 50h	; 'P'
 		mov	dx, ax
-		mov	ax, [bp+8]
+		mov	ax, [bp+arg_2]
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
@@ -7119,13 +7138,36 @@ loc_CAF6:
 		mov	bx, di
 		cld
 		nop
+
+loc_CB3C:
+		mov	cx, 1234h
+		rep movsd
+		sub	di, dx
+		jns	short loc_CB3C
+		mov	di, bx
+		mov	ax, es
+		add	ax, 800h
+		mov	es, ax
+		assume es:nothing
+		cmp	ax, 0C000h
+		jb	short loc_CB3C
+		cmp	ax, 0C800h
+		jnb	short loc_CB60
+		add	ax, 2000h
+		mov	es, ax
+		assume es:nothing
+		jmp	short loc_CB3C
+
+loc_CB60:
+		pop	ds
+		pop	di
+		pop	si
+		pop	bp
+		retf	6
+sub_CAF6	endp
+
 ; ---------------------------------------------------------------------------
-		db 0B9h
-word_CB3D	dw 1234h
-		db 0F3h, 66h, 0A5h, 2Bh, 0FAh, 79h, 0F6h, 8Bh, 0FBh, 8Ch
-		db 0C0h, 5, 0, 8, 8Eh, 0C0h, 3Dh, 0, 0C0h, 72h,	0E8h, 3Dh
-		db 0, 0C8h, 73h, 7, 5, 0, 20h, 8Eh, 0C0h, 0EBh,	0DCh, 1Fh
-		db 5Fh,	5Eh, 5Dh, 0CAh,	6, 0, 90h
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 

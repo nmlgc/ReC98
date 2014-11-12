@@ -2911,10 +2911,24 @@ sub_BC94	endp
 
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+nullsub_1	proc near
 		retn
+nullsub_1	endp
+
 ; ---------------------------------------------------------------------------
 		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+nullsub_2	proc far
 		retf
+nullsub_2	endp
+
 ; ---------------------------------------------------------------------------
 		nop
 
@@ -3091,7 +3105,7 @@ loc_BDBB:
 		mov	cx, bp
 		inc	cx
 		shl	cx, 3
-		mov	cs:word_BDD9, cx
+		mov	word ptr cs:loc_BDD6+3, cx
 
 loc_BDC6:
 		xor	cx, cx
@@ -3102,10 +3116,9 @@ loc_BDC6:
 		jnz	short loc_BDC6
 		xor	cx, cx
 		call	numerals_draw
-; ---------------------------------------------------------------------------
-		db 0C7h, 44h, 5
-word_BDD9	dw 28h
-; ---------------------------------------------------------------------------
+
+loc_BDD6:
+		mov	word ptr [si+5], 28h
 		cmp	byte ptr [si+7], 0
 		jz	short loc_BDF1
 		add	word ptr [si+5], 10h
@@ -4567,32 +4580,41 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	si
+		mov	si, 9594h
+		xor	cx, cx
+		jmp	short loc_C6D8
 ; ---------------------------------------------------------------------------
-		db 0BEh, 94h
-word_C69C	dw  3395h,0EBC9h, 8037h,   3Ch
-		dw  2E75h,  4C6h,0C601h,  144h ; value table for switch	statement
-		dw  8B00h,  846h
-		dw offset loc_14B47+4	; jump table for switch	statement
-		dw offset loc_1D38E+2
-		dw offset loc_13685+2 -	(offset	loc_13A8F+1)
-		dw offset loc_15A95
-		dw offset loc_1C38D+3
-		dw offset loc_13CD2+2
-		dw offset loc_18116+5
-		dw offset loc_1D395+1
-		dw offset loc_13685+2 -	(offset	loc_13A8F+1)
-		dw offset off_14A94+1
-		db    0
-; ---------------------------------------------------------------------------
+
+loc_C6A1:
+		cmp	byte ptr [si], 0
+		jnz	short loc_C6D4
+		mov	byte ptr [si], 1
+		mov	byte ptr [si+1], 0
+		mov	ax, [bp+arg_2]
+		mov	bx, 10h
+		cwd
+		idiv	bx
+		add	ax, 20h
+		mov	[si+2],	ax
+		mov	ax, [bp+arg_0]
+		cwd
+		idiv	bx
+		add	ax, 10h
 		mov	[si+4],	ax
+
+loc_C6C8:
 		mov	word ptr [si+6], 84h
 		mov	word ptr [si+8], 0FFF8h
 		jmp	short loc_C6DD
 ; ---------------------------------------------------------------------------
+
+loc_C6D4:
 		inc	cx
 		add	si, 0Ah
+
+loc_C6D8:
 		cmp	cx, 10h
-		jl	short near ptr word_C69C+5
+		jl	short loc_C6A1
 
 loc_C6DD:
 		pop	si
@@ -11013,7 +11035,15 @@ loc_F6B9:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_F6BD	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -11034,7 +11064,7 @@ loc_F6D2:
 
 loc_F6E4:
 		inc	byte_256A2
-		mov	byte ptr [bp-1], 0BAh
+		mov	byte ptr [bp+var_2+1], 0BAh
 		mov	word_256A4, 0B55Eh
 		mov	byte_256A6, 0
 		jmp	loc_F780
@@ -11045,14 +11075,14 @@ loc_F6FA:
 		jg	short loc_F720
 		lea	ax, [si+0Ah]
 		push	ax
-		push	word ptr [bp-1]
+		push	[bp+var_2+1]
 		call	sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 4
 		mov	byte ptr [si+10h], 7
-		mov	al, [bp-1]
+		mov	al, byte ptr [bp+var_2+1]
 		add	al, 6
-		mov	[bp-1],	al
+		mov	byte ptr [bp+var_2+1], al
 		jmp	short loc_F77D
 ; ---------------------------------------------------------------------------
 
@@ -11062,18 +11092,18 @@ loc_F720:
 		cmp	di, 5
 		jnz	short loc_F735
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h
+		mov	byte ptr [bp+var_2], 0B8h
 		jmp	short loc_F73E
 ; ---------------------------------------------------------------------------
 
 loc_F735:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h
+		mov	byte ptr [bp+var_2], 0C8h
 
 loc_F73E:
 		lea	ax, [si+0Ah]
 		push	ax
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		call	sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F779
@@ -11120,14 +11150,24 @@ loc_F78B:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+sub_F6BD	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_F78F	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
 		mov	di, 5
 		add	di, 2
 		inc	byte_256A2
-		mov	byte ptr [bp-1], 0BAh
+		mov	byte ptr [bp+var_2+1], 0BAh
 		mov	word_256A4, 0B55Eh
 		mov	byte_256A6, 0
 		jmp	loc_F833
@@ -11138,13 +11178,13 @@ loc_F7B1:
 		jg	short loc_F7D3
 		lea	ax, [si+0Ah]
 		push	ax
-		push	word ptr [bp-1]
+		push	[bp+var_2+1]
 		call	sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
-		mov	al, [bp-1]
+		mov	al, byte ptr [bp+var_2+1]
 		add	al, 6
-		mov	[bp-1],	al
+		mov	byte ptr [bp+var_2+1], al
 		jmp	short loc_F830
 ; ---------------------------------------------------------------------------
 
@@ -11154,18 +11194,18 @@ loc_F7D3:
 		cmp	di, 5
 		jnz	short loc_F7E8
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0B8h
+		mov	byte ptr [bp+var_2], 0B8h
 		jmp	short loc_F7F1
 ; ---------------------------------------------------------------------------
 
 loc_F7E8:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-2], 0C8h
+		mov	byte ptr [bp+var_2], 0C8h
 
 loc_F7F1:
 		lea	ax, [si+0Ah]
 		push	ax
-		push	word ptr [bp-2]
+		push	[bp+var_2]
 		call	sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F82C
@@ -11212,7 +11252,17 @@ loc_F83E:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
+sub_F78F	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_F842	proc near
+
+var_2		= word ptr -2
+
 		enter	2, 0
 		push	si
 		push	di
@@ -11262,20 +11312,20 @@ loc_F8A5:
 		jnz	short loc_F8BA
 		sub	word ptr [si+2], 180h
 		mov	byte ptr [bp-2], 0B8h
-		jmp	short near ptr word_F8C0+3
+		jmp	short loc_F8C3
 ; ---------------------------------------------------------------------------
 
 loc_F8BA:
 		add	word ptr [si+2], 180h
-; ---------------------------------------------------------------------------
-		db 0C6h
-word_F8C0	dw 0FE46h, 8DC8h, 0A44h,0FF50h
-		dw 0FE76h		; value	table for switch statement
-		dw offset loc_13876+2 -	(offset	loc_13A8F+1) ; jump table for switch statement
-		dw offset loc_201B4
-		dw offset loc_148D0+4
-		dw offset loc_13AAC
-		dw offset loc_1A87B
+		mov	byte ptr [bp+var_2], 0C8h
+
+loc_F8C3:
+		lea	ax, [si+0Ah]
+		push	ax
+		push	[bp+var_2]
+		call	sub_11DCA
+		mov	word ptr [si+0Eh], 1Ch
+		jmp	short loc_F941
 ; ---------------------------------------------------------------------------
 
 loc_F8D4:
@@ -11335,6 +11385,8 @@ loc_F92E:
 
 loc_F93C:
 		mov	word ptr [si+0Eh], 1Eh
+
+loc_F941:
 		mov	byte ptr [si+10h], 7
 
 loc_F945:
@@ -11352,16 +11404,36 @@ loc_F953:
 		pop	si
 		leave
 		retn
-; ---------------------------------------------------------------------------
-		db 0C8h, 2, 2 dup(0), 56h, 57h,	0BFh, 1, 0, 80h, 3Eh, 66h
-		db 46h,	12h, 75h, 5, 0C6h, 6, 62h
-		dw    43h, 62A0h,0B443h,0BB00h ; value table for switch	statement
-		dw offset loc_13A93 - (offset loc_13A8F+1) ; jump table	for switch statement
-		dw offset loc_13229 - (offset loc_13A8F+1)
-		dw offset loc_1468B
-		dw offset loc_1B05F+3
-; ---------------------------------------------------------------------------
-		add	ax, [bp+di+2C7h]
+sub_F842	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_F957	proc near
+
+var_1		= byte ptr -1
+
+		enter	2, 0
+		push	si
+		push	di
+		mov	di, 1
+		cmp	byte_259A6, 12h
+		jnz	short loc_F96C
+		mov	byte_256A2, 0
+
+loc_F96C:
+		mov	al, byte_256A2
+		mov	ah, 0
+		mov	bx, 3
+		cwd
+		idiv	bx
+		or	dx, dx
+		jnz	short loc_F97E
+		add	di, 2
+
+loc_F97E:
 		inc	byte_256A2
 		mov	word_256A4, 0B55Eh
 		mov	byte_256A6, 0
@@ -11386,18 +11458,18 @@ loc_F9AA:
 		cmp	di, 3
 		jnz	short loc_F9BA
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [bp-1], 0B8h
+		mov	[bp+var_1], 0B8h
 		jmp	short loc_F9C3
 ; ---------------------------------------------------------------------------
 
 loc_F9BA:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [bp-1], 0C8h
+		mov	[bp+var_1], 0C8h
 
 loc_F9C3:
 		lea	ax, [si+0Ah]
 		push	ax
-		push	word ptr [bp-1]
+		push	word ptr [bp+var_1]
 		call	sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 
@@ -11417,6 +11489,7 @@ loc_F9E2:
 		pop	si
 		leave
 		retn
+sub_F957	endp
 ; ---------------------------------------------------------------------------
 		enter	4, 0
 		push	si
@@ -19032,7 +19105,7 @@ loc_13580:
 		shl	si, 4
 		add	si, 3978h
 		mov	ax, [si+0Eh]
-		mov	cs:word_135F8, ax
+		mov	word ptr cs:loc_135F7+1, ax
 		jmp	short $+2
 		mov	ax, [bp+8]
 		mov	bx, ax
@@ -19071,10 +19144,9 @@ loc_135E8:
 		xor	al, al
 		out	7Ch, al
 		xor	si, si
-; ---------------------------------------------------------------------------
-		db 0B8h
-word_135F8	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_135F7:
+		mov	ax, 1234h
 		mov	ds, ax
 
 loc_135FC:
@@ -19155,11 +19227,7 @@ arg_0		= dword	ptr  6
 
 loc_1367D:
 		mov	bbufsiz, 1000h
-		nop
-		push	cs
-
-loc_13685:
-		call	near ptr sub_130EE
+		nopcall	sub_130EE
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -19724,16 +19792,11 @@ sub_13A58	endp
 
 sub_13A8E	proc far
 		push	si
-
-loc_13A8F:
 		mov	si, 3Fh	; '?'
 
 loc_13A92:
 		push	si
-
-loc_13A93:
-		push	cs		; jumptable 0001F922 case 67
-		call	near ptr sub_13A58
+		call	sub_13A58	; jumptable 0001F922 case 67
 		dec	si
 		jge	short loc_13A92
 		pop	si
@@ -24869,8 +24932,8 @@ byte_25594	db ?
 		db ?
 word_25596	dw ?
 byte_25598	db ?
-		db ?
-		db ?
+byte_25599	db ?
+byte_2559A	db ?
 		db ?
 		dd    ?	;
 word_255A0	dw ?

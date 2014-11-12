@@ -2590,7 +2590,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	0
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2618,7 +2618,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	1
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2646,7 +2646,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	2
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2674,7 +2674,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	3
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2735,7 +2735,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	0
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		push	si
 		push	_CosTable8+128
@@ -2753,7 +2753,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	1
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		mov	ax, si
 		cwd
@@ -2779,7 +2779,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	2
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		push	si
 		push	_CosTable8+384
@@ -2797,7 +2797,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	3
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -2855,7 +2855,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	0
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		push	si
 		push	_CosTable8
@@ -2873,7 +2873,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	1
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		mov	ax, si
 		cwd
@@ -2899,7 +2899,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	2
-		call	far ptr	loc_D078
+		call	sub_D078
 		push	word ptr [bp+8]
 		push	si
 		push	_CosTable8+256
@@ -2917,7 +2917,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	3
-		call	far ptr	loc_D078
+		call	sub_D078
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
@@ -2963,7 +2963,7 @@ arg_8		= word ptr  0Ch
 		add	ax, ax
 		add	ax, [bp+arg_2]
 		push	ax
-		call	far ptr	loc_D6F6
+		call	sub_D6F6
 		pop	si
 		pop	bp
 		retn	0Ah
@@ -6622,35 +6622,45 @@ sub_D046	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-; ---------------------------------------------------------------------------
 
-loc_D078:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+; int __stdcall	__far sub_D078(int, int	slot, int, int)
+sub_D078	proc far
+
+arg_0		= word ptr  6
+@@slot		= word ptr  8
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+8]
+		mov	si, [bp+@@slot]
 		shl	si, 4
 		add	si, 1B46h
-		mov	cx, [bp+0Ch]
+		mov	cx, [bp+arg_6]
 		mov	di, cx
 		sar	di, 4
 		shl	di, 1
 		add	di, [si+6]
 		mov	ax, [si+8]
 		shl	ax, 1
-		mov	cs:byte_D0DD, al
+		mov	byte ptr cs:loc_D0DC+1,	al
 		and	cx, 0Fh
 		mov	bx, cx
 		shl	bx, 1
 		mov	bx, [bx+580h]
-		mov	cs:word_D0E4, bx
-		mov	cs:word_D0F1, bx
+		mov	word ptr cs:loc_D0E3+1,	bx
+		mov	word ptr cs:loc_D0F0+1,	bx
 		jmp	short $+2
 		shl	ax, 1
 		add	ax, 50h	; 'P'
 		mov	dx, ax
-		mov	ax, [bp+0Ah]
+		mov	ax, [bp+arg_4]
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
@@ -6660,22 +6670,52 @@ loc_D078:
 		mov	ax, [si+0Eh]
 		mov	si, [si]
 		mov	ds, ax
-		mov	ax, [bp+6]
+		mov	ax, [bp+arg_0]
 		mov	bp, dx
 		mul	si
 		mov	si, ax
 		cld
-; ---------------------------------------------------------------------------
-		db 0B5h
-byte_D0DD	db 80h
-		db 0ADh, 0D3h, 0C8h, 8Bh, 0D0h,	25h
-word_D0E4	dw 1234h
-		db 33h,	0D0h, 0ABh, 0FEh, 0CDh,	0ADh, 0D3h, 0C8h, 8Bh
-		db 0D8h, 25h
-word_D0F1	dw 1234h
-		db 33h,	0D8h, 0Bh, 0C2h, 8Bh, 0D3h, 0ABh, 0FEh,	0CDh, 75h
-		db 0EDh, 0Bh, 0D2h, 74h, 5, 26h, 89h, 15h, 33h,	0D2h, 2Bh
-		db 0FDh, 79h, 0D1h, 1Fh, 5Fh, 5Eh, 5Dh,	0CAh, 8, 0
+
+loc_D0DC:
+		mov	ch, 80h
+		lodsw
+		ror	ax, cl
+		mov	dx, ax
+
+loc_D0E3:
+		and	ax, 1234h
+		xor	dx, ax
+		stosw
+		dec	ch
+
+loc_D0EB:
+		lodsw
+		ror	ax, cl
+		mov	bx, ax
+
+loc_D0F0:
+		and	ax, 1234h
+		xor	bx, ax
+		or	ax, dx
+		mov	dx, bx
+		stosw
+		dec	ch
+		jnz	short loc_D0EB
+		or	dx, dx
+		jz	short loc_D107
+		mov	es:[di], dx
+		xor	dx, dx
+
+loc_D107:
+		sub	di, bp
+		jns	short loc_D0DC
+		pop	ds
+		pop	di
+		pop	si
+		pop	bp
+		retf	8
+sub_D078	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6846,11 +6886,11 @@ loc_D1FC:
 
 loc_D258:
 		mov	ax, [bx+5C0h]
-		mov	cs:word_D2BB, ax
+		mov	word ptr cs:loc_D2BA+1, ax
 		mov	ax, [bx+5CAh]
 		mov	word ptr cs:loc_D30C+1,	ax
 		mov	ax, word_EB2E
-		mov	cs:word_D2DA, ax
+		mov	word ptr cs:loc_D2D9+1, ax
 		mov	word ptr cs:loc_D320+1,	ax
 		push	ds
 		pop	fs
@@ -6884,6 +6924,8 @@ loc_D29E:
 		mov	al, ah
 		out	0A3h, al
 		nop
+
+loc_D2AA:
 		mov	al, ch
 		or	al, 20h
 		out	0A5h, al
@@ -6892,14 +6934,24 @@ loc_D29E:
 		mov	al, ch
 		out	0A5h, al
 		in	al, 0A9h
-; ---------------------------------------------------------------------------
-		db 0E8h
-word_D2BB	dw 78h
-		db 8Ah,	0F8h, 0B3h, 0, 0D3h, 0E8h, 0D3h, 0EBh, 86h, 0E0h
-		db 0ABh, 26h, 88h, 1Dh,	83h, 0C7h, 4Eh,	0FEh, 0C5h, 80h
-		db 0FDh, 10h, 72h, 0D5h, 81h, 0EFh, 0, 5, 0BAh
-word_D2DA	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_D2BA:
+		call	sub_D335
+		mov	bh, al
+		mov	bl, 0
+		shr	ax, cl
+		shr	bx, cl
+		xchg	ah, al
+		stosw
+		mov	es:[di], bl
+		add	di, 4Eh
+		inc	ch
+		cmp	ch, 10h
+		jb	short loc_D2AA
+		sub	di, 500h
+
+loc_D2D9:
+		mov	dx, 1234h
 
 loc_D2DC:
 		xor	ch, ch
@@ -7009,7 +7061,7 @@ loc_D356:
 		shl	si, 4
 		add	si, 1B46h
 		mov	ax, [si+0Eh]
-		mov	cs:word_D3CE, ax
+		mov	word ptr cs:loc_D3CD+1, ax
 		jmp	short $+2
 		mov	ax, [bp+8]
 		mov	bx, ax
@@ -7049,10 +7101,9 @@ loc_D3BE:
 		xor	al, al
 		out	7Ch, al
 		xor	si, si
-; ---------------------------------------------------------------------------
-		db 0B8h
-word_D3CE	dw 1234h
-; ---------------------------------------------------------------------------
+
+loc_D3CD:
+		mov	ax, 1234h
 		mov	ds, ax
 
 loc_D3D2:
@@ -7464,17 +7515,26 @@ locret_D6F5:
 		retf
 sub_D6C4	endp
 
-; ---------------------------------------------------------------------------
 
-loc_D6F6:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_D6F6	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+arg_6		= word ptr  0Ch
+
 		push	bp
 		mov	bp, sp
 		push	di
 		push	si
 		push	ds
 		cld
-		mov	ax, [bp+0Ch]
-		mov	dx, [bp+0Ah]
+		mov	ax, [bp+arg_6]
+		mov	dx, [bp+arg_4]
 		mov	bx, ax
 		sar	bx, 4
 		shl	bx, 1
@@ -7482,22 +7542,22 @@ loc_D6F6:
 		add	bx, dx
 		shr	dx, 2
 		add	bx, dx
-		mov	cs:word_D75C, bx
+		mov	word ptr cs:loc_D75B+1,	bx
 		and	ax, 0Fh
 		mov	cx, ax
-		add	ax, [bp+8]
+		add	ax, [bp+arg_2]
 		shr	ax, 4
 		or	cx, cx
 		jz	short loc_D729
 		inc	ax
 
 loc_D729:
-		mov	cs:word_D761, ax
+		mov	word ptr cs:loc_D760+1,	ax
 		jmp	short $+2
 		mov	cx, 28h	; '('
 		sub	cx, ax
 		shl	cx, 1
-		mov	ax, [bp+6]
+		mov	ax, [bp+arg_0]
 		mov	bp, cx
 		push	0E000h
 		push	word_EB38
@@ -7508,14 +7568,33 @@ loc_D729:
 		push	0A800h
 		push	word_EB32
 		mov	dl, 4
+
+loc_D759:
 		mov	bx, ax
+
+loc_D75B:
+		mov	di, 1234h
+		pop	ds
+		pop	es
+
+loc_D760:
+		mov	cx, 1234h
+		mov	si, di
+		rep movsw
+		add	di, bp
+		dec	bx
+		jns	short loc_D760
+		dec	dl
+		jnz	short loc_D759
+		pop	ds
+		pop	si
+		pop	di
+		pop	bp
+		retf	8
+sub_D6F6	endp
+
 ; ---------------------------------------------------------------------------
-		db 0BFh
-word_D75C	dw 1234h
-		db 1Fh,	7, 0B9h
-word_D761	dw 1234h
-		db 8Bh,	0F7h, 0F3h, 0A5h, 3, 0FDh, 4Bh,	79h, 0F4h, 0FEh
-		db 0CAh, 75h, 0E9h, 1Fh, 5Eh, 5Fh, 5Dh,	0CAh, 8, 0, 90h
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 

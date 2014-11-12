@@ -1164,7 +1164,12 @@ loc_142E4:
 		retf
 sub_14017	endp
 
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_142F1	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_26706, 2
@@ -1213,7 +1218,14 @@ loc_1436F:
 loc_14381:
 		pop	bp
 		retn
-; ---------------------------------------------------------------------------
+sub_142F1	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_14383	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_26706, 20h	; ' '
@@ -1235,7 +1247,14 @@ loc_14381:
 loc_143C5:
 		pop	bp
 		retn
-; ---------------------------------------------------------------------------
+sub_14383	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_143C7	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_26706, 1
@@ -1271,7 +1290,14 @@ loc_14411:
 loc_14423:
 		pop	bp
 		retn
-; ---------------------------------------------------------------------------
+sub_143C7	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_14425	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_26706, 1
@@ -1310,69 +1336,235 @@ loc_14477:
 loc_14489:
 		pop	bp
 		retn
-; ---------------------------------------------------------------------------
-		db 0C8h, 4, 2 dup(0), 56h, 0A1h, 0B4h, 53h, 0A3h, 42h
-		db 46h,	0A1h, 0B6h, 53h, 0A3h, 44h, 46h, 80h, 3Eh, 0C5h
-		db 53h,	0, 75h,	4Eh, 68h, 0B4h,	53h, 0E8h, 89h,	0F8h, 0FFh
-		db 6, 0C6h, 53h, 66h, 68h, 80h,	1, 80h,	1, 6Ah,	0Ah, 0E8h
-		db 60h,	0A1h, 8Bh, 0F0h, 83h, 3Eh, 0C6h, 53h, 14h, 0Fh
-		db 8Ch,	0CAh, 1, 0FEh, 6, 0C5h,	53h, 0C7h, 6, 0C6h, 53h
-		db 2 dup(0), 0C7h, 6, 0BCh, 53h, 2 dup(0), 0C7h, 6, 0BEh
-		db 53h,	2 dup(0), 6Ah, 3, 0E8h,	82h, 0F8h, 0A2h, 58h, 42h
-		db 6Ah,	1, 0E8h, 7Ah, 0F8h, 0A2h, 59h, 42h, 0C6h, 6, 5Ah
-		db 42h,	0, 0E9h, 9Ch, 1, 80h, 3Eh, 0C5h, 53h, 1, 0Fh, 85h
-		db 90h,	1, 68h,	0B4h, 53h, 0E8h, 32h, 0F8h, 0FFh, 6, 0C6h
-		db 53h,	0C6h, 6, 0A2h, 53h, 1, 0A1h, 0B4h, 53h,	0A3h, 0A4h
-		db 53h,	0A1h, 0B6h, 53h, 5, 0, 0FFh, 0A3h, 0A6h, 53h, 0A0h
-		db 58h,	42h, 0B4h, 0, 89h, 46h,	0FCh, 0B9h, 5, 0, 0BBh
-		db 0Bh,	0Ch, 2Eh, 8Bh, 7, 3Bh, 46h, 0FCh, 74h, 8, 83h
-		db 0C3h, 2, 0E2h, 0F3h,	0E9h, 0B4h, 0, 2Eh, 0FFh, 67h
-		db 0Ah,	0E8h, 0B4h, 0FDh, 0E9h,	0AAh, 0, 0E8h, 40h, 0FEh
-		db 0E9h, 0A4h, 0, 0E8h,	7Eh, 0FEh, 0E9h, 9Eh, 0, 0E8h
-		db 0D6h, 0FEh, 0E9h, 98h, 0, 80h, 3Eh, 5Ah, 42h, 0Bh, 77h
-		db 4Ch,	0A1h, 0B4h, 53h, 0A3h, 86h, 95h, 0A1h, 0B6h, 53h
-		db 0A3h, 88h, 95h, 0A1h, 0C6h, 53h, 5, 0C0h, 0FFh, 50h
-		db 66h,	68h, 9,	0, 0Fh,	0, 0E8h, 14h, 0F6h, 0A1h, 0C6h
-		db 53h,	3Dh, 40h, 0, 74h, 7, 3Dh, 44h, 0, 74h, 10h, 0EBh
-		db 21h,	0C7h, 6, 0BCh, 53h, 2 dup(0), 0C7h, 6, 0BEh, 53h
-		db 2 dup(0), 0EBh, 13h,	0C7h, 6, 0C6h, 53h, 2 dup(0), 0A0h
-		db 5Ah,	42h, 24h, 3, 0A2h, 58h,	42h, 0C6h, 6, 0C4h, 53h
-		db 0, 83h, 3Eh,	0C6h, 53h, 1, 75h, 3Eh,	0A0h, 5Ah, 42h
-		db 0B4h, 0, 8Bh, 0D8h, 8Ah, 87h, 90h, 17h, 88h,	46h, 0FFh
-		db 80h,	3Eh, 59h, 42h, 0, 74h, 8, 0B0h,	80h, 2Ah, 46h
-		db 0FFh, 88h, 46h, 0FFh, 1Eh, 68h, 0BCh, 53h, 1Eh, 68h
-		db 0BEh, 53h, 0FFh, 76h, 0FFh, 6Ah, 20h, 9Ah, 37h, 0
-		dw seg seg002
-		db 0FEh, 6, 5Ah, 42h, 0C6h, 6, 0C4h, 53h, 1, 0C7h, 6, 90h
-		db 95h,	8, 0, 81h, 3Eh,	0B6h, 53h, 0, 17h, 7Dh,	0Fh, 83h
-		db 3Eh,	0B4h, 53h, 0, 7Eh, 8, 81h, 3Eh,	0B4h, 53h, 0, 18h
-		db 7Ch,	5, 0C6h, 6, 0C5h, 53h, 3, 66h, 68h, 80h, 1, 80h
-		db 1, 6Ah, 4, 0E8h, 7, 0A0h, 8Bh, 0F0h,	0Bh, 0F6h, 74h
-		db 76h,	29h, 36h, 0C2h,	53h, 83h, 3Eh, 0C2h, 53h, 0, 7Eh
-		db 7, 0C6h, 6, 0C8h, 53h, 1, 0EBh, 64h,	0C6h, 6, 0C8h
-		db 53h,	1, 0A1h, 0B6h, 53h, 5, 0, 0FFh,	50h, 0E8h, 0D8h
-		db 0F6h, 8Bh, 0F0h, 0C6h, 6, 0B9h, 0BCh, 1, 0A0h, 5Ah
-		db 42h,	0B4h, 0, 0BAh, 14h, 0, 2Bh, 0D0h, 52h, 0E8h, 21h
-		db 59h,	0C6h, 6, 0C5h, 53h, 0FEh, 0C6h,	6, 0C4h, 53h, 4
-		db 0C7h, 6, 0C6h, 53h, 2 dup(0), 0C7h, 6, 0BCh,	53h, 2 dup(0)
-		db 0FFh, 36h, 0B4h, 53h, 0FFh, 36h, 0B6h, 53h, 66h, 68h
-		db 30h,	0, 60h,	0, 0E8h, 18h, 0F8h, 6Ah, 0Ch, 9Ah, 0D2h
-		db 7
-		dw seg seg002
-		db 0FFh, 36h, 0B4h, 53h, 0FFh, 36h, 0B6h, 53h, 6Ah, 5
-		db 0E8h, 0B0h, 93h, 0EBh, 3, 0E8h
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1F903
+sub_14425	endp
 
-loc_1468B:
-		mov	dx, 0FF59h	; jumptable 0001F922 case 46147
-		db	36h
-		retn	6853h
-; END OF FUNCTION CHUNK	FOR sub_1F903
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1448B	proc far
+
+var_4		= word ptr -4
+var_1		= byte ptr -1
+
+		enter	4, 0
+		push	si
+		mov	ax, word ptr dword_266F4
+		mov	word_25982, ax
+		mov	ax, word ptr dword_266F4+2
+		mov	word_25984, ax
+		cmp	byte_26705, 0
+		jnz	short loc_144F1
+		push	53B4h
+		call	sub_13D32
+		inc	word_26706
+		push	large 1800180h
+		push	0Ah
+		call	sub_1E618
+		mov	si, ax
+		cmp	word_26706, 14h
+		jl	loc_1468D
+		inc	byte_26705
+		mov	word_26706, 0
+		mov	word_266FC, 0
+		mov	word_266FE, 0
+		push	3
+		call	sub_13D60
+		mov	byte_25598, al
+		push	1
+		call	sub_13D60
+		mov	byte_25599, al
+		mov	byte_2559A, 0
+		jmp	loc_1468D
 ; ---------------------------------------------------------------------------
-		db 52h,	3, 0E8h, 7Fh, 58h, 5Eh,	0C9h, 0CBh, 3 dup(0), 1
-		db 0, 2, 0, 3, 0, 0FFh,	0, 0AAh, 0Ah, 0B0h, 0Ah, 0B6h
-		db 0Ah,	0BCh, 0Ah, 0C2h, 0Ah
+
+loc_144F1:
+		cmp	byte_26705, 1
+		jnz	loc_1468A
+		push	53B4h
+		call	sub_13D32
+		inc	word_26706
+		mov	byte_266E2, 1
+		mov	ax, word ptr dword_266F4
+		mov	word ptr dword_266E4, ax
+		mov	ax, word ptr dword_266F4+2
+		add	ax, 0FF00h
+		mov	word ptr dword_266E4+2,	ax
+		mov	al, byte_25598
+		mov	ah, 0
+		mov	[bp+var_4], ax
+		mov	cx, 5		; switch 5 cases
+		mov	bx, offset word_1469B
+
+loc_14526:
+		mov	ax, cs:[bx]
+		cmp	ax, [bp+var_4]
+		jz	short loc_14536
+		add	bx, 2
+		loop	loc_14526
+		jmp	loc_145EA
+; ---------------------------------------------------------------------------
+
+loc_14536:
+		jmp	word ptr cs:[bx+0Ah] ; switch jump
+
+loc_1453A:
+		call	sub_142F1	; jumptable 00014536 case 0
+		jmp	loc_145EA
+; ---------------------------------------------------------------------------
+
+loc_14540:
+		call	sub_14383	; jumptable 00014536 case 1
+		jmp	loc_145EA
+; ---------------------------------------------------------------------------
+
+loc_14546:
+		call	sub_143C7	; jumptable 00014536 case 2
+		jmp	loc_145EA
+; ---------------------------------------------------------------------------
+
+loc_1454C:
+		call	sub_14425	; jumptable 00014536 case 3
+		jmp	loc_145EA
+; ---------------------------------------------------------------------------
+
+loc_14552:
+		cmp	byte_2559A, 0Bh	; jumptable 00014536 case 255
+		ja	short loc_145A5
+		mov	ax, word ptr dword_266F4
+		mov	word ptr dword_2A8C6, ax
+		mov	ax, word ptr dword_266F4+2
+		mov	word ptr dword_2A8C6+2,	ax
+		mov	ax, word_26706
+		add	ax, 0FFC0h
+		push	ax
+		push	large 0F0009h
+		call	sub_13B89
+		mov	ax, word_26706
+		cmp	ax, 40h	; '@'
+		jz	short loc_14584
+		cmp	ax, 44h	; 'D'
+		jz	short loc_14592
+		jmp	short loc_145A5
+; ---------------------------------------------------------------------------
+
+loc_14584:
+		mov	word_266FC, 0
+		mov	word_266FE, 0
+		jmp	short loc_145A5
+; ---------------------------------------------------------------------------
+
+loc_14592:
+		mov	word_26706, 0
+		mov	al, byte_2559A
+		and	al, 3
+		mov	byte_25598, al
+		mov	byte_26704, 0
+
+loc_145A5:
+		cmp	word_26706, 1
+		jnz	short loc_145EA
+		mov	al, byte_2559A
+		mov	ah, 0
+		mov	bx, ax
+		mov	al, [bx+1790h]
+		mov	[bp+var_1], al
+		cmp	byte_25599, 0
+		jz	short loc_145C9
+		mov	al, 80h
+		sub	al, [bp+var_1]
+		mov	[bp+var_1], al
+
+loc_145C9:
+		push	ds
+		push	offset word_266FC
+		push	ds
+		push	offset word_266FE
+		push	word ptr [bp+var_1]
+		push	20h ; ' '
+		call	sub_13117
+		inc	byte_2559A
+		mov	byte_26704, 1
+		mov	word_2A8D0, 8
+
+loc_145EA:
+		cmp	word ptr dword_266F4+2,	1700h
+		jge	short loc_14601
+		cmp	word ptr dword_266F4, 0
+		jle	short loc_14601
+		cmp	word ptr dword_266F4, 1800h
+		jl	short loc_14606
+
+loc_14601:
+		mov	byte_26705, 3
+
+loc_14606:
+		push	large 1800180h
+		push	4
+		call	sub_1E618
+		mov	si, ax
+		or	si, si
+		jz	short loc_1468D
+		sub	word_26702, si
+		cmp	word_26702, 0
+		jle	short loc_14629
+		mov	byte_26708, 1
+		jmp	short loc_1468D
+; ---------------------------------------------------------------------------
+
+loc_14629:
+		mov	byte_26708, 1
+		mov	ax, word ptr dword_266F4+2
+		add	ax, 0FF00h
+		push	ax
+		call	sub_13D10
+		mov	si, ax
+		mov	byte_2CFF9, 1
+		mov	al, byte_2559A
+		mov	ah, 0
+		mov	dx, 14h
+		sub	dx, ax
+		push	dx
+		call	sub_19F6E
+		mov	byte_26705, 0FEh
+		mov	byte_26704, 4
+		mov	word_26706, 0
+		mov	word_266FC, 0
+		push	word ptr dword_266F4
+		push	word ptr dword_266F4+2
+		push	large 600030h
+		call	sub_13E8C
+		push	0Ch
+		call	sub_138B2
+		push	word ptr dword_266F4
+		push	word ptr dword_266F4+2
+		push	5
+		call	sub_1DA38
+		jmp	short loc_1468D
+; ---------------------------------------------------------------------------
+
+loc_1468A:
+		call	sub_1A047
+
+loc_1468D:
+		push	word_26702
+		push	352h
+		call	sub_19F16
+		pop	si
+		leave
+		retf
+sub_1448B	endp
+
+; ---------------------------------------------------------------------------
+		db    0
+word_1469B	dw	0,     1,     2,     3
+		dw   0FFh		; value	table for switch statement
+		dw offset loc_1453A	; jump table for switch	statement
+		dw offset loc_14540
+		dw offset loc_14546
+		dw offset loc_1454C
+		dw offset loc_14552
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3689,8 +3881,6 @@ loc_15A8A:
 		mov	al, es:[di+1]
 		mov	[si+1Eh], al
 		mov	al, es:[di+2]
-
-loc_15A95:
 		mov	ah, 0		; jumptable 0001C46F case 60
 		mov	[si+1Ch], ax
 
@@ -10239,7 +10429,7 @@ sub_1905A	endp
 
 sub_1915D	proc far
 
-; FUNCTION CHUNK AT 5B14 SIZE 00000005 BYTES
+var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -10250,14 +10440,9 @@ sub_1915D	proc far
 		cmp	bx, 6
 		ja	loc_195A4
 		add	bx, bx
-		jmp	word ptr cs:[bx+5B46h]
-sub_1915D	endp
+		jmp	cs:off_195D6[bx]
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_19178	proc far
+loc_19178:
 		cmp	word_2671A, 0
 		jnz	short loc_191DC
 		mov	word_26716, 12C0h
@@ -10321,15 +10506,13 @@ loc_19226:
 		jnz	short loc_19235
 		push	8
 		call	sub_138B2
-sub_19178	endp ; sp-analysis failed
-
-; START	OF FUNCTION CHUNK FOR sub_1CD6E
 
 loc_19235:
 		call	sub_1E67C
 		jmp	loc_195A9
-; END OF FUNCTION CHUNK	FOR sub_1CD6E
 ; ---------------------------------------------------------------------------
+
+loc_1923B:
 		call	sub_1E67C
 		cmp	word_2671A, 20h	; ' '
 		jl	loc_195A9
@@ -10341,6 +10524,8 @@ loc_19235:
 		call	sub_138B2
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
+
+loc_19264:
 		mov	al, byte_2671D
 		mov	ah, 0
 		mov	bx, ax
@@ -10427,6 +10612,8 @@ loc_19317:
 		mov	byte_2CFF8, 40h
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
+
+loc_19328:
 		call	sub_18A79
 		mov	al, byte_2671D
 		mov	ah, 0
@@ -10461,6 +10648,8 @@ loc_19369:
 		push	large 20226h
 		jmp	loc_1942B
 ; ---------------------------------------------------------------------------
+
+loc_19372:
 		mov	al, byte_2671D
 		mov	ah, 0
 		mov	bx, ax
@@ -10548,6 +10737,8 @@ loc_1942B:
 		call	sub_1E6F3
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
+
+loc_19431:
 		call	sub_18A79
 		mov	al, byte_2671D
 		mov	ah, 0
@@ -10635,6 +10826,8 @@ loc_19500:
 		mov	word_2671A, 0
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
+
+loc_19509:
 		call	sub_18A79
 		cmp	word ptr dword_2670A, 0BF0h
 		jge	short loc_1951C
@@ -10691,14 +10884,11 @@ loc_19581:
 		mov	byte_259A2, 0FFh
 		jmp	short loc_195A9
 ; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1915D
 
 loc_195A4:
 		call	sub_1E743
 		jmp	short loc_195BF
-; END OF FUNCTION CHUNK	FOR sub_1915D
 ; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1CD6E
 
 loc_195A9:
 		mov	ax, word ptr dword_2670A
@@ -10714,7 +10904,8 @@ loc_195BF:
 		pop	si
 		leave
 		retf
-; END OF FUNCTION CHUNK	FOR sub_1CD6E
+sub_1915D	endp
+
 ; ---------------------------------------------------------------------------
 		db 0
 off_195C4	dw offset loc_19387
@@ -10726,8 +10917,13 @@ off_195CC	dw offset loc_19279
 		dw offset loc_19301
 		dw offset loc_19306
 		dw offset loc_19306
-		db 0E8h, 56h, 0ABh, 57h, 0D4h, 57h, 98h, 58h, 0E2h, 58h
-		db 0A1h, 59h, 79h, 5Ah
+off_195D6	dw offset loc_19178
+		dw offset loc_1923B
+		dw offset loc_19264
+		dw offset loc_19328
+		dw offset loc_19372
+		dw offset loc_19431
+		dw offset loc_19509
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14523,17 +14719,36 @@ loc_1B43E:
 		retn	4
 sub_1B42F	endp
 
-; ---------------------------------------------------------------------------
-		db 0C8h, 6, 2 dup(0), 0A0h, 0D9h, 53h, 0B4h, 0,	8Bh, 0D8h
-		db 83h,	0FBh, 11h, 0Fh,	87h, 55h, 4, 3,	0DBh, 2Eh, 0FFh
-		db 0A7h, 0A8h, 7Eh, 83h, 3Eh, 0DAh, 53h, 0, 75h, 1Ch, 0C7h
-		db 6, 48h, 46h
-		dw seg seg001
-; ---------------------------------------------------------------------------
-		mov	word ptr dword_25986, 11C0h
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_1B47E	proc far
+
+var_6		= word ptr -6
+var_4		= word ptr -4
+var_2		= word ptr -2
+
+		enter	6, 0
+		mov	al, byte_26719
+		mov	ah, 0
+		mov	bx, ax
+		cmp	bx, 11h
+		ja	loc_1B8E5
+		add	bx, bx
+		jmp	cs:off_1B938[bx]
+
+loc_1B497:
+		cmp	word_2671A, 0
+		jnz	short loc_1B4BA
+		mov	word ptr dword_25986+2,	seg seg001
+		mov	word ptr dword_25986, offset nullsub_2
 		mov	word_26700, 0
 		mov	byte_25A08, 0
 		mov	byte_25A1B, 0
+
+loc_1B4BA:
 		call	sub_1E67C
 		cmp	word_2671A, 80h
 		jle	loc_1B8EA
@@ -14546,6 +14761,8 @@ sub_1B42F	endp
 		mov	byte_2CDCA, 0Fh
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B4EB:
 		call	sub_1E67C
 		cmp	word_2671A, 40h
 		jl	loc_1B8EA
@@ -14563,15 +14780,17 @@ sub_1B42F	endp
 		mov	byte_25A07, al
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B533:
 		mov	al, byte_2671D
 		mov	ah, 0
-		mov	[bp-2],	ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_1B928
+		mov	[bp+var_2], ax
+		mov	cx, 4
+		mov	bx, 7E98h
 
 loc_1B541:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp-2]
+		cmp	ax, [bp+var_2]
 		jz	short loc_1B550
 		add	bx, 2
 		loop	loc_1B541
@@ -14624,6 +14843,8 @@ loc_1B59A:
 		call	sub_1B42F
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B5A6:
 		inc	word_2671A
 		push	large 0C000500h
 		call	sub_1A439
@@ -14634,6 +14855,8 @@ loc_1B59A:
 		mov	byte_2671F, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B5CB:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -14679,6 +14902,8 @@ loc_1B623:
 		mov	byte_25A08, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B634:
 		inc	word_2671A
 		cmp	byte_25A06, 0
 		jz	short loc_1B645
@@ -14691,6 +14916,8 @@ loc_1B645:
 		mov	word_2671A, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B652:
 		call	sub_1ADDB
 		inc	word_2671A
 		call	sub_1A4A8
@@ -14710,6 +14937,8 @@ loc_1B681:
 		mov	word_25A0A, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B694:
 		call	sub_1E64E
 		call	sub_1A503
 		or	al, al
@@ -14724,15 +14953,17 @@ loc_1B681:
 		mov	byte_25A02, 0FFh
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B6CC:
 		mov	al, byte_2671D
 		mov	ah, 0
-		mov	[bp-4],	ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_1B918
+		mov	[bp+var_4], ax
+		mov	cx, 4
+		mov	bx, 7E88h
 
 loc_1B6DA:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp-4]
+		cmp	ax, [bp+var_4]
 		jz	short loc_1B6E9
 		add	bx, 2
 		loop	loc_1B6DA
@@ -14825,12 +15056,9 @@ loc_1B787:
 		inc	word_2671A
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
-		db 0E8h, 0EBh
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1CCB8
 
-loc_1B790:
-		db	2Eh		; jumptable 0001CCD9 case 47109
+loc_1B78E:
+		call	sub_1E67C
 		call	sub_1A503
 		or	al, al
 		jz	loc_1B8EA
@@ -14842,17 +15070,18 @@ loc_1B790:
 		mov	byte_25A06, 2
 		mov	byte_25A1B, 1
 		jmp	loc_1B8EA
-; END OF FUNCTION CHUNK	FOR sub_1CCB8
 ; ---------------------------------------------------------------------------
+
+loc_1B7C1:
 		mov	al, byte_2671D
 		mov	ah, 0
-		mov	[bp-6],	ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_1B908
+		mov	[bp+var_6], ax
+		mov	cx, 4
+		mov	bx, 7E78h
 
 loc_1B7CF:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp-6]
+		cmp	ax, [bp+var_6]
 		jz	short loc_1B7DE
 		add	bx, 2
 		loop	loc_1B7CF
@@ -14902,6 +15131,8 @@ loc_1B81C:
 		mov	byte_26718, 92h
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B82D:
 		call	sub_1E64E
 		cmp	word_2671A, 80h
 		jl	loc_1B8EA
@@ -14910,6 +15141,8 @@ loc_1B81C:
 		mov	byte_266ED, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B84B:
 		call	sub_1B282
 		call	sub_1E64E
 		or	al, al
@@ -14937,6 +15170,8 @@ loc_1B87C:
 		mov	byte_266D3, 1
 		jmp	short loc_1B8EA
 ; ---------------------------------------------------------------------------
+
+loc_1B894:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1B8A4
@@ -14964,13 +15199,13 @@ loc_1B8C7:
 		mov	byte_266D3, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_1B8EA
-; END OF FUNCTION CHUNK	FOR sub_1CD6E
 ; ---------------------------------------------------------------------------
+
+loc_1B8E5:
 		call	sub_1E743
 		leave
 		retf
 ; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1CCB8
 
 loc_1B8EA:
 		mov	ax, word ptr dword_2670A
@@ -14984,30 +15219,42 @@ loc_1B8EA:
 		call	sub_19F16
 		leave
 		retf
-; END OF FUNCTION CHUNK	FOR sub_1CCB8
+sub_1B47E	endp
+
 ; ---------------------------------------------------------------------------
-word_1B908	dw	0,     1,     2,  0FFh
-					; value	table for switch statement
+		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B7E2	; jump table for switch	statement
 		dw offset loc_1B7E7
 		dw offset loc_1B7EC
 		dw offset loc_1B7F1
-word_1B918	dw	0,     1,     2,  0FFh
-					; value	table for switch statement
+		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B6ED	; jump table for switch	statement
 		dw offset loc_1B6F2
 		dw offset loc_1B6F7
 		dw offset loc_1B6FC
-word_1B928	dw	0,     1,     2,  0FFh
-					; value	table for switch statement
+		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B554	; jump table for switch	statement
 		dw offset loc_1B559
 		dw offset loc_1B55E
 		dw offset loc_1B563
-		db 7, 7Ah, 5Bh,	7Ah, 0A3h, 7Ah,	16h, 7Bh, 3Bh, 7Bh, 0A4h
-		db 7Bh,	0C2h, 7Bh, 4, 7Ch, 3Ch,	7Ch, 0A4h, 7Bh,	0C2h, 7Bh
-		db 4, 7Ch, 3Ch,	7Ch, 0FEh, 7Ch,	31h, 7Dh, 9Dh, 7Dh, 0BBh
-		db 7Dh,	4, 7Eh
+off_1B938	dw offset loc_1B497
+		dw offset loc_1B4EB
+		dw offset loc_1B533
+		dw offset loc_1B5A6
+		dw offset loc_1B5CB
+		dw offset loc_1B634
+		dw offset loc_1B652
+		dw offset loc_1B694
+		dw offset loc_1B6CC
+		dw offset loc_1B634
+		dw offset loc_1B652
+		dw offset loc_1B694
+		dw offset loc_1B6CC
+		dw offset loc_1B78E
+		dw offset loc_1B7C1
+		dw offset loc_1B82D
+		dw offset loc_1B84B
+		dw offset loc_1B894
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15030,8 +15277,10 @@ loc_1B96C:
 		cmp	bx, 7
 		ja	loc_1BBA8
 		add	bx, bx
-		jmp	word ptr cs:[bx-7E64h]
+		jmp	cs:off_1BC2C[bx]
 ; ---------------------------------------------------------------------------
+
+loc_1B982:
 		cmp	word_25A34, 40h
 		jnb	short loc_1B99B
 		test	byte ptr word_25A34, 7
@@ -15067,6 +15316,8 @@ loc_1B9CE:
 		jb	loc_1BBA4
 		mov	byte_26718, 8Dh
 		mov	byte_25A26, 2
+
+loc_1B9E1:
 		cmp	word_25A34, 50h	; 'P'
 		jnb	short loc_1BA49
 		mov	ax, word ptr dword_2598E+2
@@ -15143,6 +15394,8 @@ loc_1BA80:
 		mov	byte_25A26, 6
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
+
+loc_1BA92:
 		mov	al, byte ptr word_25A36+1
 		add	al, 0FCh
 		mov	byte ptr word_25A36+1, al
@@ -15152,6 +15405,8 @@ loc_1BA80:
 		ja	loc_1BBA8
 		jmp	short loc_1BB0C
 ; ---------------------------------------------------------------------------
+
+loc_1BAAC:
 		mov	al, byte ptr word_25A36+1
 		add	al, 0FCh
 		mov	byte ptr word_25A36+1, al
@@ -15172,6 +15427,8 @@ loc_1BACF:
 		ja	loc_1BBA8
 		jmp	short loc_1BB0C
 ; ---------------------------------------------------------------------------
+
+loc_1BADA:
 		mov	al, byte ptr word_25A36+1
 		add	al, 0FCh
 		mov	byte ptr word_25A36+1, al
@@ -15181,6 +15438,8 @@ loc_1BACF:
 		ja	loc_1BBA8
 		jmp	short loc_1BB0C
 ; ---------------------------------------------------------------------------
+
+loc_1BAF4:
 		mov	al, byte ptr word_25A36+1
 		add	al, 0FCh
 		mov	byte ptr word_25A36+1, al
@@ -15193,6 +15452,8 @@ loc_1BB0C:
 		mov	byte_25A26, 7
 		jmp	loc_1BBA8
 ; ---------------------------------------------------------------------------
+
+loc_1BB14:
 		mov	ax, word ptr dword_2670A+2
 		sub	ax, word_25A2A
 		push	ax
@@ -15225,6 +15486,8 @@ loc_1BB0C:
 		mov	word_25A34, 0
 		jmp	short loc_1BBA8
 ; ---------------------------------------------------------------------------
+
+loc_1BB76:
 		cmp	word_25A34, 20h	; ' '
 		jnb	short loc_1BB93
 		test	byte ptr word_25A34, 7
@@ -15293,8 +15556,14 @@ locret_1BC2A:
 sub_1B95C	endp
 
 ; ---------------------------------------------------------------------------
-		db 0F2h, 7Eh, 51h, 7Fh,	2, 80h,	1Ch, 80h, 4Ah, 80h, 64h
-		db 80h,	84h, 80h, 0E6h,	80h
+off_1BC2C	dw offset loc_1B982
+		dw offset loc_1B9E1
+		dw offset loc_1BA92
+		dw offset loc_1BAAC
+		dw offset loc_1BADA
+		dw offset loc_1BAF4
+		dw offset loc_1BB14
+		dw offset loc_1BB76
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15487,7 +15756,7 @@ loc_1BDC3:
 		mov	ax, word_2671A
 		mov	[bp+var_2], ax
 		mov	cx, 4		; switch 4 cases
-		mov	bx, offset byte_1BE33
+		mov	bx, offset word_1BE33
 
 loc_1BDCF:
 		mov	ax, cs:[bx]
@@ -15501,6 +15770,8 @@ loc_1BDCF:
 loc_1BDDE:
 		jmp	word ptr cs:[bx+8] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1BDE2:
 		mov	ax, word ptr dword_2670A
 		mov	word ptr dword_2A8C6, ax
 		mov	ax, word ptr dword_2670A+2
@@ -15516,13 +15787,19 @@ loc_1BDFF:
 		call	sub_13B21
 		jmp	short loc_1BE2E	; default
 ; ---------------------------------------------------------------------------
+
+loc_1BE11:
 		push	word ptr dword_2670A
 		push	word ptr dword_2670A+2
 		call	sub_C696
 		mov	byte_25592, 0Fh
+
+loc_1BE23:
 		mov	byte_2A8D2, 7
 		jmp	short loc_1BDFF
 ; ---------------------------------------------------------------------------
+
+loc_1BE2A:
 		mov	al, 2
 		leave
 		retn
@@ -15536,8 +15813,14 @@ sub_1BDB4	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-byte_1BE33	db 1, 0, 8, 0, 10h, 0, 20h, 0, 52h, 83h, 93h, 83h, 81h
-		db 83h,	9Ah, 83h
+word_1BE33	dw 1
+		dw 8
+		dw 10h
+		dw 20h
+		dw offset loc_1BDE2
+		dw offset loc_1BE23
+		dw offset loc_1BE11
+		dw offset loc_1BE2A
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16081,8 +16364,6 @@ sub_1C2E5	proc far
 
 var_2		= word ptr -2
 
-; FUNCTION CHUNK AT 8BEA SIZE 00000018 BYTES
-
 		enter	2, 0
 		call	sub_1B95C
 		mov	al, byte_26719
@@ -16091,8 +16372,9 @@ var_2		= word ptr -2
 		cmp	bx, 4
 		ja	loc_1C675
 		add	bx, bx
-		jmp	word ptr cs:[bx-73CCh]
-; ---------------------------------------------------------------------------
+		jmp	cs:off_1C6C4[bx]
+
+loc_1C301:
 		mov	byte_25A27, 0
 		mov	byte_25A26, 0
 		inc	byte_26719
@@ -16103,6 +16385,8 @@ var_2		= word ptr -2
 		mov	word_26720, 1770h
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
+
+loc_1C32D:
 		push	53CAh
 		call	sub_13D32
 		mov	al, byte_2671D
@@ -16172,6 +16456,8 @@ loc_1C39E:
 		mov	byte_2CDCA, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
+
+loc_1C3D4:
 		push	53CAh
 		call	sub_13D32
 		cmp	word ptr dword_2670A, 0C00h
@@ -16206,6 +16492,8 @@ loc_1C400:
 		mov	byte_25A24, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
+
+loc_1C445:
 		mov	ax, word ptr dword_2670A
 		mov	word ptr dword_266E4, ax
 		mov	ax, word ptr dword_2670A+2
@@ -16214,7 +16502,7 @@ loc_1C400:
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	cx, 0Ah		; switch 10 cases
-		mov	bx, offset unk_1C69C
+		mov	bx, offset word_1C69C
 
 loc_1C45F:
 		mov	ax, cs:[bx]
@@ -16228,33 +16516,53 @@ loc_1C45F:
 loc_1C46F:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1C473:
 		call	sub_1BD4B
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C479:
 		call	sub_1BE78
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C47F:
 		call	sub_1BF52
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C485:
 		call	sub_1BFAB
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C48B:
 		call	sub_1C044
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C491:
 		call	sub_1C0BF
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C497:
 		call	sub_1C164
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C49D:
 		call	sub_1C1CF
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C4A3:
 		call	sub_1C251
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
+
+loc_1C4A9:
 		cmp	word_2671A, 20h	; ' '
 		jge	short loc_1C4BA
 		call	sub_1BC73
@@ -16270,8 +16578,9 @@ loc_1C4BA:
 		cmp	bx, 4
 		ja	loc_1C57F
 		add	bx, bx
-		jmp	word ptr cs:[bx-73FEh]
-; ---------------------------------------------------------------------------
+		jmp	cs:off_1C692[bx]
+
+loc_1C4D3:
 		mov	al, byte_2671F
 		mov	ah, 0
 		mov	bx, 2
@@ -16296,6 +16605,8 @@ loc_1C4EB:
 		mov	word_26716, dx
 		jmp	short loc_1C57F
 ; ---------------------------------------------------------------------------
+
+loc_1C511:
 		mov	al, byte_2671F
 		mov	ah, 0
 		mov	bx, 4
@@ -16306,6 +16617,8 @@ loc_1C4EB:
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
+
+loc_1C529:
 		mov	al, byte_2671F
 		mov	ah, 0
 		mov	bx, 4
@@ -16317,6 +16630,8 @@ loc_1C4EB:
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
+
+loc_1C544:
 		mov	al, byte_2671F
 		mov	ah, 0
 		mov	bx, 4
@@ -16328,6 +16643,8 @@ loc_1C4EB:
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
+
+loc_1C55F:
 		mov	al, byte_2671F
 		mov	ah, 0
 		mov	bx, 4
@@ -16402,6 +16719,8 @@ loc_1C600:
 		inc	byte_25A24
 		jmp	short loc_1C67A
 ; ---------------------------------------------------------------------------
+
+loc_1C61F:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1C62F
@@ -16436,10 +16755,7 @@ loc_1C675:
 		call	sub_1E743
 		leave
 		retf
-sub_1C2E5	endp
-
 ; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1C2E5
 
 loc_1C67A:
 		mov	ax, word ptr dword_2670A
@@ -16451,68 +16767,39 @@ loc_1C67A:
 		call	sub_19F16
 		leave
 		retf
-; END OF FUNCTION CHUNK	FOR sub_1C2E5
+sub_1C2E5	endp
 ; ---------------------------------------------------------------------------
-		db  43h	; C
-		db  8Ah
-		db  81h
-		db  8Ah
-		db  99h
-		db  8Ah
-		db 0B4h
-		db  8Ah
-		db 0CFh
-		db  8Ah
-unk_1C69C	db    0
-		db    0
-		db    1
-		db    0
-		db    2
-		db    0
-		db    3
-		db    0
-		db    4
-		db    0
-		db    5
-		db    0
-		db    6
-		db    0
-		db    7
-		db    0
-		db    8
-		db    0
-		db 0FFh
-		db    0
-		db 0E3h
-		db  89h
-		db 0E9h
-		db  89h
-		db 0EFh
-		db  89h
-		db 0F5h
-		db  89h
-		db 0FBh
-		db  89h
-		db    1
-		db  8Ah
-		db    7
-		db  8Ah
-		db  0Dh
-		db  8Ah
-		db  13h
-		db  8Ah
-		db  19h
-		db  8Ah
-		db  71h	; q
-		db  88h
-		db  9Dh
-		db  88h
-		db  44h	; D
-		db  89h
-		db 0B5h
-		db  89h
-		db  8Fh
-		db  8Bh	; ‹
+
+off_1C692	dw offset loc_1C4D3
+		dw offset loc_1C511
+		dw offset loc_1C529
+		dw offset loc_1C544
+		dw offset loc_1C55F
+word_1C69C	dw 0
+		dw 1
+		dw 2
+		dw 3
+		dw 4
+		dw 5
+		dw 6
+		dw 7
+		dw 8
+		dw 0FFh
+		dw offset loc_1C473
+		dw offset loc_1C479
+		dw offset loc_1C47F
+		dw offset loc_1C485
+		dw offset loc_1C48B
+		dw offset loc_1C491
+		dw offset loc_1C497
+		dw offset loc_1C49D
+		dw offset loc_1C4A3
+		dw offset loc_1C4A9
+off_1C6C4	dw offset loc_1C301
+		dw offset loc_1C32D
+		dw offset loc_1C3D4
+		dw offset loc_1C445
+		dw offset loc_1C61F
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17288,28 +17575,16 @@ off_1CC8C	dw offset loc_1CC7C
 
 ; Attributes: bp-based frame
 
-sub_1CCB8	proc far
+sub_1CCB8	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_4		= word ptr  0Ah
-
-; FUNCTION CHUNK AT 0EFF SIZE 00000014 BYTES
-; FUNCTION CHUNK AT 0F99 SIZE 00000008 BYTES
-; FUNCTION CHUNK AT 0FD5 SIZE 00000006 BYTES
-; FUNCTION CHUNK AT 0FF7 SIZE 00000002 BYTES
-; FUNCTION CHUNK AT 3F18 SIZE 00000014 BYTES
-; FUNCTION CHUNK AT 427E SIZE 000000AF BYTES
-; FUNCTION CHUNK AT 433B SIZE 00000006 BYTES
-; FUNCTION CHUNK AT 7D00 SIZE 00000031 BYTES
-; FUNCTION CHUNK AT 7E5A SIZE 0000001E BYTES
 
 		enter	2, 0
 		mov	al, byte_266EC
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	cx, 0Ah		; switch 10 cases
-		mov	bx, offset byte_1CD46
+		mov	cx, 0Ah
+		mov	bx, offset word_1CD46
 
 loc_1CCCA:
 		mov	ax, cs:[bx]
@@ -17323,9 +17598,13 @@ loc_1CCCA:
 loc_1CCD9:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1CCDD:
 		mov	byte_266EC, 30h	; '0'
 		jmp	short loc_1CCE9
 ; ---------------------------------------------------------------------------
+
+loc_1CCE4:
 		mov	byte_266EC, 2Fh	; '/'
 
 loc_1CCE9:
@@ -17334,6 +17613,8 @@ loc_1CCE9:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CCF5:
 		mov	al, byte_266F0
 		mov	ah, 0
 		cwd
@@ -17344,10 +17625,14 @@ loc_1CCE9:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CD08:
 		mov	al, byte_266EF
 		add	al, 2
 		jmp	short loc_1CD40
 ; ---------------------------------------------------------------------------
+
+loc_1CD0F:
 		mov	al, byte_266EF
 		mov	ah, 0
 		imul	ax, 3
@@ -17363,6 +17648,8 @@ loc_1CCE9:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CD32:
 		mov	al, byte_266EF
 		mov	ah, 0
 		cwd
@@ -17376,35 +17663,45 @@ loc_1CD40:
 locret_1CD43:
 		leave			; default
 		retn
-sub_1CCB8	endp ; sp-analysis failed
+sub_1CCB8	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-byte_1CD46	db 2 dup(0), 1,	0, 1Bh,	0, 1Ch,	0, 26h,	0, 2Ch,	0, 2Dh
-		db 0, 2Eh, 0, 2Fh, 0, 30h, 0, 54h, 92h,	4Dh, 92h, 0A2h
-		db 92h,	0A2h, 92h, 7Fh,	92h, 7Fh, 92h, 78h, 92h, 78h, 92h
-		db 65h,	92h, 65h, 92h
+word_1CD46	dw 0
+		dw 1
+		dw 1Bh
+		dw 1Ch
+		dw 26h
+		dw 2Ch
+		dw 2Dh
+		dw 2Eh
+		dw 2Fh
+		dw 30h
+		dw offset loc_1CCE4
+		dw offset loc_1CCDD
+		dw offset loc_1CD32
+		dw offset loc_1CD32
+		dw offset loc_1CD0F
+		dw offset loc_1CD0F
+		dw offset loc_1CD08
+		dw offset loc_1CD08
+		dw offset loc_1CCF5
+		dw offset loc_1CCF5
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1CD6E	proc far
+sub_1CD6E	proc near
 
 var_2		= word ptr -2
-arg_24		= dword	ptr  28h
-
-; FUNCTION CHUNK AT 53B6 SIZE 000000A1 BYTES
-; FUNCTION CHUNK AT 57A5 SIZE 00000006 BYTES
-; FUNCTION CHUNK AT 5B19 SIZE 0000001A BYTES
-; FUNCTION CHUNK AT 7E00 SIZE 00000055 BYTES
 
 		enter	2, 0
 		mov	al, byte_266EC
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	cx, 0Ah		; switch 10 cases
-		mov	bx, offset byte_1CDEA
+		mov	cx, 0Ah
+		mov	bx, offset word_1CDEA
 
 loc_1CD80:
 		mov	ax, cs:[bx]
@@ -17418,9 +17715,13 @@ loc_1CD80:
 loc_1CD8F:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1CD93:
 		mov	byte_266EC, 2Eh	; '.'
 		jmp	short loc_1CD9F
 ; ---------------------------------------------------------------------------
+
+loc_1CD9A:
 		mov	byte_266EC, 2Dh	; '-'
 
 loc_1CD9F:
@@ -17429,6 +17730,8 @@ loc_1CD9F:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CDAB:
 		mov	al, byte_266F0
 		mov	ah, 0
 		cwd
@@ -17440,10 +17743,14 @@ loc_1CD9F:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CDC2:
 		mov	al, byte_266EF
 		add	al, 4
 		jmp	short loc_1CDE4
 ; ---------------------------------------------------------------------------
+
+loc_1CDC9:
 		mov	al, byte_266EF
 		add	al, al
 		mov	byte_266EF, al
@@ -17453,6 +17760,8 @@ loc_1CD9F:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1CDDF:
 		mov	al, byte_266EF
 		add	al, al
 
@@ -17462,14 +17771,30 @@ loc_1CDE4:
 locret_1CDE7:
 		leave			; default
 		retn
-sub_1CD6E	endp ; sp-analysis failed
+sub_1CD6E	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-byte_1CDEA	db 2 dup(0), 1,	0, 1Bh,	0, 1Ch,	0, 26h,	0, 2Ch,	0, 2Dh
-		db 0, 2Eh, 0, 2Fh, 0, 30h, 0, 0Ah, 93h,	3, 93h,	4Fh, 93h
-		db 4Fh,	93h, 39h, 93h, 39h, 93h, 32h, 93h, 32h,	93h, 1Bh
-		db 93h,	1Bh, 93h
+word_1CDEA	dw 0
+		dw 1
+		dw 1Bh
+		dw 1Ch
+		dw 26h
+		dw 2Ch
+		dw 2Dh
+		dw 2Eh
+		dw 2Fh
+		dw 30h
+		dw offset loc_1CD9A
+		dw offset loc_1CD93
+		dw offset loc_1CDDF
+		dw offset loc_1CDDF
+		dw offset loc_1CDC9
+		dw offset loc_1CDC9
+		dw offset loc_1CDC2
+		dw offset loc_1CDC2
+		dw offset loc_1CDAB
+		dw offset loc_1CDAB
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18211,14 +18536,10 @@ loc_1D33C:
 		push	word_2D008
 		call	sub_1D218
 		mov	ah, 0
-
-loc_1D38E:
 		add	[si+18h], ax
 
 loc_1D391:
 		mov	eax, dword_266E8
-
-loc_1D395:
 		mov	[si+0Ah], eax
 		mov	al, byte ptr word_2D008
 		mov	[si+11h], al
@@ -20694,14 +21015,11 @@ sub_1EA4B	proc near
 
 var_2		= word ptr -2
 
-; FUNCTION CHUNK AT 878B SIZE 00000009 BYTES
-; FUNCTION CHUNK AT B443 SIZE 000000B4 BYTES
-
 		enter	2, 0
 		mov	ax, word_2671A
 		mov	[bp+var_2], ax
-		mov	cx, 0Ah		; switch 10 cases
-		mov	bx, (offset byte_1EB08+1)
+		mov	cx, 0Ah
+		mov	bx, offset word_1EB09
 
 loc_1EA5B:
 		mov	ax, cs:[bx]
@@ -20715,6 +21033,8 @@ loc_1EA5B:
 loc_1EA6B:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1EA6F:
 		mov	ax, word ptr dword_2670A
 		add	ax, 40h
 		mov	word ptr dword_2A8C6, ax
@@ -20731,31 +21051,49 @@ loc_1EA6B:
 		mov	byte_25592, 0Fh
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAA8:
 		mov	byte_2A8D2, 8
+
+loc_1EAAD:
 		call	sub_13B21
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAB2:
 		mov	byte_26718, 82h
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAB9:
 		mov	byte_26718, 83h
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAC0:
 		mov	byte_26718, 84h
 		push	word ptr dword_2A8C6
 		push	word ptr dword_2A8C6+2
 		call	sub_C696
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAD4:
 		mov	byte_26718, 85h
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EADB:
 		mov	byte_26718, 86h
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAE2:
 		mov	byte_26718, 87h
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
+
+loc_1EAE9:
 		mov	byte_26718, 81h
 		push	3
 		call	sub_138B2
@@ -20776,13 +21114,30 @@ loc_1EB04:
 		mov	al, 1
 		leave
 		retn
-sub_1EA4B	endp ; sp-analysis failed
+sub_1EA4B	endp
 
 ; ---------------------------------------------------------------------------
-byte_1EB08	db 0, 0Eh, 0, 10h, 0, 12h, 0, 16h, 0, 1Ah, 0, 1Eh, 0, 22h
-		db 0, 26h, 0, 2Ah, 0, 2Eh, 0, 0DFh, 0AFh, 18h, 0B0h, 1Dh
-		db 0B0h, 22h, 0B0h, 29h, 0B0h, 30h, 0B0h, 44h, 0B0h, 4Bh
-		db 0B0h, 52h, 0B0h, 59h, 0B0h
+		db 0
+word_1EB09	dw 0Eh
+		dw 10h
+		dw 12h
+		dw 16h
+		dw 1Ah
+		dw 1Eh
+		dw 22h
+		dw 26h
+		dw 2Ah
+		dw 2Eh
+		dw offset loc_1EA6F
+		dw offset loc_1EAA8
+		dw offset loc_1EAAD
+		dw offset loc_1EAB2
+		dw offset loc_1EAB9
+		dw offset loc_1EAC0
+		dw offset loc_1EAD4
+		dw offset loc_1EADB
+		dw offset loc_1EAE2
+		dw offset loc_1EAE9
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21765,8 +22120,6 @@ sub_1F3AB	proc far
 
 var_2		= word ptr -2
 
-; FUNCTION CHUNK AT BE15 SIZE 0000001B BYTES
-
 		enter	2, 0
 		mov	ax, word ptr dword_2670A
 		add	ax, 40h
@@ -21780,8 +22133,9 @@ var_2		= word ptr -2
 		cmp	bx, 0Ch
 		ja	loc_1F8A0
 		add	bx, bx
-		jmp	word ptr cs:[bx-41BCh]
-; ---------------------------------------------------------------------------
+		jmp	cs:off_1F8D4[bx]
+
+loc_1F3D6:
 		cmp	word_2671A, 0
 		jnz	short loc_1F3E2
 		mov	byte_2D03C, 0
@@ -21802,6 +22156,8 @@ loc_1F3E2:
 		mov	byte_2CDCA, 0Fh
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F421:
 		call	sub_1F378
 		inc	word_2671A
 		call	sub_1E67C
@@ -21813,6 +22169,8 @@ loc_1F3E2:
 		call	sub_1E6F3
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F44D:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -21851,6 +22209,8 @@ loc_1F487:
 		push	large 189Ch
 		jmp	loc_1F621
 ; ---------------------------------------------------------------------------
+
+loc_1F490:
 		cmp	word ptr dword_2670A, 0C00h
 		jge	short loc_1F4A0
 		mov	word_26712, 20h	; ' '
@@ -21901,11 +22261,13 @@ loc_1F4DC:
 		mov	byte_2D028, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F51C:
 		mov	al, byte_2671D
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	cx, 5		; switch 5 cases
-		mov	bx, offset byte_1F8C0
+		mov	bx, offset word_1F8C0
 
 loc_1F52A:
 		mov	ax, cs:[bx]
@@ -21919,12 +22281,18 @@ loc_1F52A:
 loc_1F539:
 		jmp	word ptr cs:[bx+0Ah] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1F53D:
 		call	sub_1EE21
 		jmp	short loc_1F579	; default
 ; ---------------------------------------------------------------------------
+
+loc_1F542:
 		call	sub_1EE73
 		jmp	short loc_1F579	; default
 ; ---------------------------------------------------------------------------
+
+loc_1F547:
 		inc	byte_2671F
 		cmp	byte_2D028, 2
 		ja	short loc_1F568
@@ -21965,6 +22333,8 @@ loc_1F591:
 		mov	word_26712, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F5A3:
 		cmp	word ptr dword_2670A+2,	800h
 		jge	short loc_1F5B3
 		mov	word_26714, 10h
@@ -21990,6 +22360,8 @@ loc_1F5C9:
 		jl	loc_1F8A5
 		jmp	loc_1F7E1
 ; ---------------------------------------------------------------------------
+
+loc_1F5E1:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -22033,6 +22405,8 @@ loc_1F621:
 		mov	byte_2D03C, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F631:
 		cmp	word ptr dword_2670A, 0C00h
 		jge	short loc_1F641
 		mov	word_26712, 20h	; ' '
@@ -22068,6 +22442,8 @@ loc_1F677:
 
 loc_1F67D:
 		push	53CAh
+
+loc_1F680:
 		call	sub_13D32
 		call	sub_1F378
 		call	sub_1E64E
@@ -22082,6 +22458,8 @@ loc_1F67D:
 		mov	byte_2D03B, 90h
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F6B8:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -22127,6 +22505,8 @@ loc_1F701:
 		mov	byte_2D057, 3
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F718:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -22169,6 +22549,8 @@ loc_1F752:
 		mov	Palettes, 3Ch	; '<'
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F76E:
 		cmp	word ptr dword_2670A, 0C00h
 		jge	short loc_1F77E
 		mov	word_26712, 20h	; ' '
@@ -22195,6 +22577,8 @@ loc_1F794:
 loc_1F7A4:
 		cmp	word ptr dword_2670A+2,	600h
 		jle	short loc_1F7B4
+
+loc_1F7AC:
 		mov	word_26714, 0FFF0h
 		jmp	short loc_1F7BA
 ; ---------------------------------------------------------------------------
@@ -22225,6 +22609,8 @@ loc_1F7E1:
 		mov	byte_2D057, 4
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F802:
 		mov	ax, word ptr dword_2670A
 		mov	word ptr dword_266E4, ax
 		mov	ax, word ptr dword_2670A+2
@@ -22249,6 +22635,8 @@ loc_1F83D:
 		mov	word_2671A, 0
 		jmp	short loc_1F8A5
 ; ---------------------------------------------------------------------------
+
+loc_1F845:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1F855
@@ -22284,10 +22672,7 @@ loc_1F8A0:
 		call	sub_1E743
 		leave
 		retf
-sub_1F3AB	endp
-
 ; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1F3AB
 
 loc_1F8A5:
 		mov	ax, word ptr dword_2670A
@@ -22300,13 +22685,32 @@ loc_1F8A5:
 		call	sub_19F16
 		leave
 		retf
-; END OF FUNCTION CHUNK	FOR sub_1F3AB
+sub_1F3AB	endp
+
 ; ---------------------------------------------------------------------------
-byte_1F8C0	db 2 dup(0), 1,	0, 2, 0, 3, 0, 0FFh, 0,	0ADh, 0BAh, 0ADh
-		db 0BAh, 0ADh, 0BAh, 0B2h, 0BAh, 0B7h, 0BAh, 46h, 0B9h
-		db 91h,	0B9h, 0BDh, 0B9h, 0, 0BAh, 8Ch,	0BAh, 13h, 0BBh
-		db 51h,	0BBh, 0A1h, 0BBh, 28h, 0BCh, 88h, 0BCh,	0DEh, 0BCh
-		db 72h,	0BDh, 0B5h, 0BDh
+word_1F8C0	dw 0
+		dw 1
+		dw 2
+		dw 3
+		dw 0FFh
+		dw offset loc_1F53D
+		dw offset loc_1F53D
+		dw offset loc_1F53D
+		dw offset loc_1F542
+		dw offset loc_1F547
+off_1F8D4	dw offset loc_1F3D6
+		dw offset loc_1F421
+		dw offset loc_1F44D
+		dw offset loc_1F490
+		dw offset loc_1F51C
+		dw offset loc_1F5A3
+		dw offset loc_1F5E1
+		dw offset loc_1F631
+		dw offset loc_1F6B8
+		dw offset loc_1F718
+		dw offset loc_1F76E
+		dw offset loc_1F802
+		dw offset loc_1F845
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22332,13 +22736,11 @@ sub_1F903	proc near
 
 var_2		= word ptr -2
 
-; FUNCTION CHUNK AT 0BFB SIZE 00000007 BYTES
-
 		enter	2, 0
 		mov	ax, word_2671A
 		mov	[bp+var_2], ax
 		mov	cx, 4		; switch 4 cases
-		mov	bx, offset byte_1F96A
+		mov	bx, offset word_1F96A
 
 loc_1F913:
 		mov	ax, cs:[bx]
@@ -22352,6 +22754,8 @@ loc_1F913:
 loc_1F922:
 		jmp	word ptr cs:[bx+8] ; switch jump
 ; ---------------------------------------------------------------------------
+
+loc_1F926:
 		mov	word_2A8CE, 1400h
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FD00h
@@ -22367,9 +22771,13 @@ loc_1F949:
 		leave
 		retn
 ; ---------------------------------------------------------------------------
+
+loc_1F94E:
 		mov	byte_2A8D2, 9
 		jmp	short loc_1F949
 ; ---------------------------------------------------------------------------
+
+loc_1F955:
 		push	word ptr dword_2A8C6
 		push	word ptr dword_2A8C6+2
 		call	sub_C696
@@ -22378,12 +22786,18 @@ loc_1F949:
 locret_1F967:
 		leave			; default
 		retn
-sub_1F903	endp ; sp-analysis failed
+sub_1F903	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-byte_1F96A	db 30h,	0, 32h,	0, 34h,	0, 40h,	0, 96h,	3 dup(0BEh), 0B9h
-		db 0BEh, 0C5h, 0BEh
+word_1F96A	dw 30h
+		dw 32h
+		dw 34h
+		dw 40h
+		dw offset loc_1F926
+		dw offset loc_1F94E
+		dw offset loc_1F949
+		dw offset loc_1F955
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23674,6 +24088,8 @@ loc_20456:
 		push	large 322C4h
 		jmp	loc_205AA
 ; ---------------------------------------------------------------------------
+
+loc_2045F:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -23751,6 +24167,8 @@ loc_204FD:
 		push	large 3157Ch
 		jmp	loc_205AA
 ; ---------------------------------------------------------------------------
+
+loc_20506:
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -23833,6 +24251,8 @@ loc_205AA:
 		mov	word_2D05A, 0C00h
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
+
+loc_205BB:
 		call	sub_20202
 		call	sub_1F9C5
 		or	al, al
@@ -23841,6 +24261,8 @@ loc_205AA:
 		mov	word_2671A, 20h	; ' '
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
+
+loc_205D4:
 		call	sub_20050
 		cmp	word_2671A, 5DCh
 		jge	short loc_205ED
@@ -23858,6 +24280,8 @@ loc_205ED:
 		mov	byte_2D02D, 10h
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
+
+loc_20609:
 		cmp	word_2671A, 0BB8h
 		jg	short loc_20616
 		call	sub_200B6
@@ -23894,6 +24318,8 @@ loc_20647:
 		mov	byte_266D3, 1
 		jmp	short loc_206B6
 ; ---------------------------------------------------------------------------
+
+loc_2065F:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_2066F
@@ -23951,6 +24377,12 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_202E8
 		dw offset loc_20311
 		dw offset loc_203B8
+		dw offset loc_2045F
+		dw offset loc_20506
+		dw offset loc_205BB
+		dw offset loc_205D4
+		dw offset loc_20609
+		dw offset loc_2065F
 seg003		ends
 
 ; ---------------------------------------------------------------------------
@@ -23959,11 +24391,8 @@ seg003		ends
 ; Segment type:	Pure code
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
+		;org 0Ch
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		iret
-; ---------------------------------------------------------------------------
-		db 0C9h, 76h, 0CAh, 2Bh, 0CBh, 44h, 0CBh, 79h, 0CBh, 0CFh
-		db 0CBh
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm

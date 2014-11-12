@@ -503,7 +503,7 @@ arg_10		= word ptr  16h
 		push	ss
 		push	ax
 		push	ds
-		push	offset off_12BCC
+		push	offset FULLWIDTH_NUMBERS
 		mov	cx, 28h	; '('
 		call	SCOPY@
 		xor	di, di
@@ -12300,27 +12300,8 @@ byte_12BA3	db 0
 		db  81h
 		db  45h	; E
 		db  81h
-off_12BCC	dd aVo
-					; "ÇO"
-word_12BD0	dw 191h
-seg_12BD2	dw seg dseg
-word_12BD4	dw 194h
-seg_12BD6	dw seg dseg
-byte_12BD8	db 97h
-byte_12BD9	db 1
-seg_12BDA	db 0aah
-unk_12BDB	db  12h
-word_12BDC	dw 19Ah
-seg_12BDE	dw seg dseg
-word_12BE0	dw 19Dh
-seg_12BE2	dw seg dseg
-word_12BE4	dw 1A0h
-seg_12BE6	dw seg dseg
-off_12BE8	dd aVv
-					; "ÇV"
-word_12BEC	dw 1A6h
-		dw seg dseg
-		dd aVx			; "ÇX"
+FULLWIDTH_NUMBERS	dd aFW_0, aFW_1, aFW_2, aFW_3, aFW_4
+	dd aFW_5, aFW_6, aFW_7, aFW_8, aFW_9
 aBqbqbqbqbqbqbq	db 'ÅQÅQÅQÅQÅQÅQÅQÅQ',0
 aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@Å@',0
 aHiscore_0	db 'HISCORE',0
@@ -12329,16 +12310,16 @@ off_12C1E	dd aB@gcbGwbB@
 		dd aB@gmbGGlb@		; "Å@ÉmÅ[É}ÉãÅ@"
 		dd aB@gnbGhb@b@		; "Å@ÉnÅ[ÉhÅ@Å@"
 		dd aGlgigegbgbgn	; "ÉãÉiÉeÉBÉbÉN"
-aVo		db 'ÇO',0
-aVp		db 'ÇP',0
-aVq		db 'ÇQ',0
-aVr		db 'ÇR',0
-aVs		db 'ÇS',0
-aVt		db 'ÇT',0
-aVu		db 'ÇU',0
-aVv		db 'ÇV',0
-aVw		db 'ÇW',0
-aVx		db 'ÇX',0
+aFW_0		db 'ÇO',0
+aFW_1		db 'ÇP',0
+aFW_2		db 'ÇQ',0
+aFW_3		db 'ÇR',0
+aFW_4		db 'ÇS',0
+aFW_5		db 'ÇT',0
+aFW_6		db 'ÇU',0
+aFW_7		db 'ÇV',0
+aFW_8		db 'ÇW',0
+aFW_9		db 'ÇX',0
 aC_0		db 'ñ≥',0
 aUmx_0		db 'ìåï˚ÅöËÀàŸì`Å@Å@',0
 aHiscore_1	db 'HISCORE',0

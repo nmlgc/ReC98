@@ -13699,6 +13699,8 @@ off_22684	dw offset loc_22323
 		dw offset loc_22350
 		dw offset loc_22350
 		dw offset loc_22350
+		dw offset loc_2237D
+		dw offset loc_22323
 seg032		ends
 
 ; ===========================================================================
@@ -13706,8 +13708,8 @@ seg032		ends
 ; Segment type:	Pure code
 seg033		segment	byte public 'CODE' use16
 		assume cs:seg033
+		;org 4
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 0FDh, 0Ah, 0A3h, 0Ah
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25932,9 +25934,12 @@ sub_28FA9	proc near
 		retn
 sub_28FA9	endp
 
-; ---------------------------------------------------------------------------
 
-loc_28FC5:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_28FC5	proc near
 		enter	2, 0
 		mov	ax, word_3A6CA
 		mov	bx, 0Fh
@@ -25954,15 +25959,7 @@ loc_28FC5:
 		mov	al, [bp-2]
 		mov	byte_39A27, al
 		push	1
-; ---------------------------------------------------------------------------
-		db 9Ah,	1Eh, 1
-		db  92h	; SEG16 SEGDEF [seg006,0]
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_28FF6	proc near
-		push	cs
+		call	sub_EA3E
 		push	ds
 		push	offset word_39A1E
 		call	sub_16D6A
@@ -25976,7 +25973,7 @@ sub_28FF6	proc near
 locret_29013:
 		leave
 		retn
-sub_28FF6	endp
+sub_28FC5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32007,7 +32004,7 @@ loc_2C3BE:
 		inc	word_3A6CA
 		inc	word_3B433
 		call	sub_28EA6
-		call	loc_28FC5
+		call	sub_28FC5
 		; Hack (fldz)
 		db 0cdh
 		db 035h
@@ -32139,7 +32136,7 @@ loc_2C4A1:
 		inc	word_3A6CA
 		push	1
 		call	sub_29A99
-		call	loc_28FC5
+		call	sub_28FC5
 		cmp	word_3A6CA, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 3
@@ -32158,7 +32155,7 @@ loc_2C4D8:
 		inc	word_3A6CA
 		inc	word_3B433
 		call	sub_28EA6
-		call	loc_28FC5
+		call	sub_28FC5
 		push	0
 		call	sub_29D8B
 		cmp	word_35E95, 0
@@ -32232,7 +32229,7 @@ loc_2C594:
 		inc	word_3A6CA
 		push	2
 		call	sub_29A99
-		call	loc_28FC5
+		call	sub_28FC5
 		cmp	word_3A6CA, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 5
@@ -32255,7 +32252,7 @@ loc_2C5D6:
 		inc	word_3A6CA
 		inc	word_3B433
 		call	sub_28EA6
-		call	loc_28FC5
+		call	sub_28FC5
 		call	sub_2A469
 		cmp	word_35E95, 0
 		jnz	short loc_2C5FE
@@ -32350,7 +32347,7 @@ loc_2C6B0:
 		inc	word_3A6CA
 		push	3
 		call	sub_29A99
-		call	loc_28FC5
+		call	sub_28FC5
 		cmp	word_3A6CA, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 7
@@ -32373,7 +32370,7 @@ loc_2C6F2:
 		inc	word_3A6CA
 		inc	word_3B433
 		call	sub_28EA6
-		call	loc_28FC5
+		call	sub_28FC5
 		push	1
 		call	sub_29D8B
 		; Hack (fldz)
@@ -32511,7 +32508,7 @@ loc_2C7F1:
 		inc	word_3A6CA
 		push	0
 		call	sub_29A99
-		call	loc_28FC5
+		call	sub_28FC5
 		cmp	word_3A6CA, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 1
