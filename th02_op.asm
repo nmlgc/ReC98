@@ -1257,7 +1257,7 @@ arg_2		= byte ptr  6
 		cbw
 		push	ax
 		push	0C1h
-		call	word_E902
+		call	fp_E902
 		mov	al, [bp+arg_0]
 		add	byte_D6C0, al
 		cmp	byte_D6C1, 0
@@ -1285,7 +1285,7 @@ loc_A2EB:
 		cbw
 		push	ax
 		push	0E1h
-		call	word_E902
+		call	fp_E902
 		pop	bp
 		retn	4
 sub_A2A2	endp
@@ -1339,7 +1339,7 @@ loc_A346:
 loc_A34B:
 		cmp	si, 6
 		jl	short loc_A335
-		mov	word_E902, 605h
+		mov	fp_E902, offset sub_A1F5
 
 loc_A356:
 		cmp	word_F3C8, 0
@@ -1865,7 +1865,7 @@ loc_A78F:
 loc_A794:
 		cmp	si, 7
 		jl	short loc_A77E
-		mov	word_E902, 920h
+		mov	fp_E902, offset sub_A510
 
 loc_A79F:
 		cmp	word_F3C8, 0
@@ -6748,7 +6748,7 @@ word_E8FC	dw ?
 byte_E8FE	db ?
 		db ?
 word_E900	dw ?
-word_E902	dw ?
+fp_E902	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/pal[bss].asm

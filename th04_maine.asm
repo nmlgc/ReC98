@@ -2541,19 +2541,30 @@ loc_AEC8:
 		retn
 sub_ADFC	endp
 
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_AED0	proc near
+
+var_2		= word ptr -2
+arg_0		= word ptr  4
+arg_2		= word ptr  6
+arg_4		= word ptr  8
+
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+4]
+		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	short loc_AEF1
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
+		push	[bp+arg_4]
+		push	[bp+arg_2]
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	far ptr	loc_D356
+		call	sub_D356
 		jmp	loc_B027
 ; ---------------------------------------------------------------------------
 
@@ -2565,24 +2576,24 @@ loc_AEF1:
 		cwd
 		idiv	bx
 		mov	si, ax
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	ax
 		mov	al, byte_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+1F4h]
+		push	_CosTable8[bx]
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		mov	al, byte_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+174h]
+		push	_SinTable8[bx]
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2594,23 +2605,23 @@ loc_AEF1:
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+1F4h]
+		push	_CosTable8[bx]
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		mov	al, byte_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+174h]
+		push	_SinTable8[bx]
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2622,23 +2633,23 @@ loc_AEF1:
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+1F4h]
+		push	_CosTable8[bx]
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		mov	al, byte_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+174h]
+		push	_SinTable8[bx]
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2650,23 +2661,23 @@ loc_AEF1:
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+1F4h]
+		push	_CosTable8[bx]
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		mov	al, byte_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+174h]
+		push	_SinTable8[bx]
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2687,19 +2698,32 @@ loc_B027:
 		pop	si
 		leave
 		retn	6
-; ---------------------------------------------------------------------------
+sub_AED0	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_B02D	proc near
+
+var_2		= word ptr -2
+arg_0		= word ptr  4
+arg_2		= word ptr  6
+arg_4		= word ptr  8
+
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+4]
+		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	short loc_B04E
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
+		push	[bp+arg_4]
+		push	[bp+arg_2]
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	far ptr	loc_D356
+		call	sub_D356
 		jmp	loc_B13E
 ; ---------------------------------------------------------------------------
 
@@ -2711,7 +2735,7 @@ loc_B04E:
 		sub	ax, dx
 		sar	ax, 1
 		mov	si, ax
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -2719,7 +2743,7 @@ loc_B04E:
 		push	_CosTable8+192
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2727,7 +2751,7 @@ loc_B04E:
 		push	ax
 		push	_CosTable8+64
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2736,16 +2760,16 @@ loc_B04E:
 		push	ax
 		push	0
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+128
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		push	_CosTable8
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2754,7 +2778,7 @@ loc_B04E:
 		push	ax
 		push	1
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2763,7 +2787,7 @@ loc_B04E:
 		push	_CosTable8+448
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2771,7 +2795,7 @@ loc_B04E:
 		push	ax
 		push	_CosTable8+320
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2780,16 +2804,16 @@ loc_B04E:
 		push	ax
 		push	2
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+384
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		push	_CosTable8+256
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2807,19 +2831,32 @@ loc_B13E:
 		pop	si
 		leave
 		retn	6
-; ---------------------------------------------------------------------------
+sub_B02D	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_B144	proc near
+
+var_2		= word ptr -2
+arg_0		= word ptr  4
+arg_2		= word ptr  6
+arg_4		= word ptr  8
+
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+4]
+		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	short loc_B165
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
+		push	[bp+arg_4]
+		push	[bp+arg_2]
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	far ptr	loc_D356
+		call	sub_D356
 		jmp	loc_B255
 ; ---------------------------------------------------------------------------
 
@@ -2831,7 +2868,7 @@ loc_B165:
 		sub	ax, dx
 		sar	ax, 1
 		mov	si, ax
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -2839,7 +2876,7 @@ loc_B165:
 		push	_CosTable8
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2847,7 +2884,7 @@ loc_B165:
 		push	ax
 		push	_SinTable8
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2856,16 +2893,16 @@ loc_B165:
 		push	ax
 		push	0
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		push	_CosTable8
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		push	_SinTable8
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2874,7 +2911,7 @@ loc_B165:
 		push	ax
 		push	1
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2883,7 +2920,7 @@ loc_B165:
 		push	_CosTable8+256
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2891,7 +2928,7 @@ loc_B165:
 		push	ax
 		push	_CosTable8+128
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2900,16 +2937,16 @@ loc_B165:
 		push	ax
 		push	2
 		call	sub_D078
-		push	word ptr [bp+8]
+		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+256
 		call	sub_CED0
 		mov	di, ax
-		push	word ptr [bp+6]
+		push	[bp+arg_2]
 		push	si
 		push	_CosTable8+128
 		call	sub_CED0
-		mov	[bp-2],	ax
+		mov	[bp+var_2], ax
 		push	di
 		push	ax
 		mov	al, byte_124C6
@@ -2927,6 +2964,8 @@ loc_B255:
 		pop	si
 		leave
 		retn	6
+sub_B144	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3017,7 +3056,7 @@ loc_B2AF:
 		push	di
 		push	[bp+arg_0]
 		push	si
-		call	word_124C8
+		call	fp_124C8
 
 loc_B2E8:
 		cmp	vsync_Count1, 2
@@ -3092,7 +3131,7 @@ loc_B339:
 		push	di
 		push	[bp+arg_0]
 		push	si
-		call	word_124C8
+		call	fp_124C8
 
 loc_B375:
 		cmp	vsync_Count1, 2
@@ -3169,12 +3208,12 @@ loc_B3C7:
 		push	di
 		push	[bp+arg_4]
 		push	si
-		call	word_124C8
+		call	fp_124C8
 		mov	byte_124C6, 0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		push	si
-		call	word_124C8
+		call	fp_124C8
 
 loc_B416:
 		cmp	vsync_Count1, 2
@@ -3254,7 +3293,7 @@ sub_B44D	proc near
 		push	large 30040h
 		call	sub_D046
 		mov	byte_124C6, 0
-		mov	word_124C8, 0E80h
+		mov	fp_124C8, offset sub_AED0
 		push	large 16000A0h
 		call	sub_B291
 		push	2
@@ -3269,11 +3308,11 @@ sub_B44D	proc near
 		call	far ptr	sub_D778
 		push	large 700A0h
 		call	sub_D046
-		mov	word_124C8, 0FDDh
+		mov	fp_124C8, offset sub_B02D
 		push	large 16000A0h
 		call	sub_B31E
 		mov	byte_124C6, 2
-		mov	word_124C8, 10F4h
+		mov	fp_124C8, offset sub_B144
 		push	large 0C00080h
 		call	sub_B291
 		mov	dx, 0A6h ; '¦'
@@ -3296,7 +3335,7 @@ sub_B44D	proc near
 		call	sub_B291
 		push	large 1300A0h
 		call	sub_D046
-		mov	word_124C8, 0FDDh
+		mov	fp_124C8, offset sub_B02D
 		push	large 0C00080h
 		push	large 12000C8h
 		call	sub_B3AC
@@ -3337,7 +3376,7 @@ sub_B44D	proc near
 		push	large 1700A0h
 		call	sub_D046
 		mov	byte_124C6, 2
-		mov	word_124C8, 10F4h
+		mov	fp_124C8, offset sub_B144
 		push	large 200070h
 		call	sub_B291
 		push	2
@@ -3355,7 +3394,7 @@ sub_B44D	proc near
 		push	large 1B00A0h
 		call	sub_D046
 		mov	byte_124C6, 4
-		mov	word_124C8, 0FDDh
+		mov	fp_124C8, offset sub_B02D
 		push	large 2000B8h
 		call	sub_B291
 		push	0
@@ -3370,7 +3409,7 @@ sub_B44D	proc near
 		call	far ptr	sub_D778
 		push	large 1F00A0h
 		call	sub_D046
-		mov	word_124C8, 10F4h
+		mov	fp_124C8, offset sub_B144
 		push	large 2000B8h
 		call	sub_B31E
 		mov	byte_124C6, 0
@@ -3388,7 +3427,7 @@ sub_B44D	proc near
 		call	far ptr	sub_D778
 		push	large 2300A0h
 		call	sub_D046
-		mov	word_124C8, 0E80h
+		mov	fp_124C8, offset sub_AED0
 		push	large 4000B8h
 		call	sub_B31E
 		mov	byte_124C6, 4
@@ -3406,7 +3445,7 @@ sub_B44D	proc near
 		call	far ptr	sub_D778
 		push	large 2700A0h
 		call	sub_D046
-		mov	word_124C8, 0FDDh
+		mov	fp_124C8, offset sub_B02D
 		push	large 4000B8h
 		call	sub_B31E
 		mov	byte_124C6, 0
@@ -3414,7 +3453,7 @@ sub_B44D	proc near
 		call	sub_B291
 		push	large 2B00A0h
 		call	sub_D046
-		mov	word_124C8, 10F4h
+		mov	fp_124C8, offset sub_B144
 		push	large 200070h
 		push	large 2000B8h
 		call	sub_B3AC
@@ -7039,9 +7078,17 @@ sub_D335	endp
 loc_D350:
 		and	ax, fs:[bx+1234h]
 		retn
-; ---------------------------------------------------------------------------
 
-loc_D356:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_D356	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+arg_4		= word ptr  0Ah
+
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7057,13 +7104,13 @@ loc_D356:
 		out	dx, al
 		out	dx, al
 		sti
-		mov	si, [bp+6]
+		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1B46h
 		mov	ax, [si+0Eh]
 		mov	word ptr cs:loc_D3CD+1, ax
 		jmp	short $+2
-		mov	ax, [bp+8]
+		mov	ax, [bp+arg_2]
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
@@ -7077,7 +7124,7 @@ loc_D356:
 		push	ax
 		sub	ax, 800h
 		push	ax
-		mov	ax, [bp+0Ah]
+		mov	ax, [bp+arg_4]
 		shr	ax, 3
 		add	ax, [si+6]
 		mov	di, ax
@@ -7105,6 +7152,7 @@ loc_D3BE:
 loc_D3CD:
 		mov	ax, 1234h
 		mov	ds, ax
+		assume ds:nothing
 
 loc_D3D2:
 		mov	di, bx
@@ -7124,10 +7172,13 @@ loc_D3D6:
 		or	ax, ax
 		jnz	short loc_D3D2
 		pop	ds
+		assume ds:dseg
 		pop	di
 		pop	si
 		pop	bp
 		retf	6
+sub_D356	endp
+
 ; ---------------------------------------------------------------------------
 		nop
 
@@ -11404,7 +11455,7 @@ byte_124C2	db ?
 word_124C4	dw ?
 byte_124C6	db ?
 byte_124C7	db ?
-word_124C8	dw ?
+fp_124C8	dw ?
 		dw ?
 byte_124CC	db ?
 		db    ?	;

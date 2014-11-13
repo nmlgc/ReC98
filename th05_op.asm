@@ -1503,7 +1503,7 @@ arg_2		= byte ptr  6
 		cbw
 		push	ax
 		push	8
-		call	word_11DD2
+		call	fp_11DD2
 		mov	al, [bp+arg_0]
 		add	byte_F071, al
 		mov	al, byte_F071
@@ -1536,7 +1536,7 @@ loc_A9B6:
 		cbw
 		push	ax
 		push	0Eh
-		call	word_11DD2
+		call	fp_11DD2
 		call	sub_D5F6
 		push	1
 		call	sub_D602
@@ -1586,7 +1586,7 @@ loc_AA11:
 loc_AA16:
 		cmp	si, 6
 		jl	short loc_AA00
-		mov	word_11DD2, 266h
+		mov	fp_11DD2, offset sub_A5F6
 		mov	byte_F0DC, 1
 		mov	byte_11DD4, 0
 
@@ -1789,7 +1789,7 @@ loc_AC05:
 loc_AC0A:
 		cmp	si, 8
 		jl	short loc_ABF4
-		mov	word_11DD2, 387h
+		mov	fp_11DD2, offset sub_A717
 		mov	byte_F0DD, 1
 		mov	byte_11DD5, 0
 
@@ -10228,7 +10228,7 @@ bdata@	label byte
 dword_11DCC	dd 0
 byte_11DD0	db 0
 		db 0
-word_11DD2	dw 0
+fp_11DD2	dw 0
 byte_11DD4	db 0
 byte_11DD5	db 0
 include libs/master.lib/clip[bss].asm

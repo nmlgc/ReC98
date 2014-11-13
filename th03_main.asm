@@ -648,7 +648,7 @@ loc_970F:
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
 		call	sub_9B14
-		call	dword_20F20
+		call	farfp_20F20
 
 loc_9724:
 		mov	PaletteTone, 64h	; 'd'
@@ -737,7 +737,7 @@ loc_977E:
 		call	p2_202A8
 		call	p2_202B0
 		nopcall	sub_CEB2
-		call	dword_1E6E2
+		call	farfp_1E6E2
 		mov	byte ptr word_23AF0, 0
 		push	word_1EFF6
 		push	65A6h
@@ -757,7 +757,7 @@ loc_9845:
 		nopcall	sub_CB81
 		push	1
 		nopcall	sub_CB81
-		call	dword_20F24
+		call	farfp_20F24
 		cmp	byte_23AFA, 0
 		jz	short loc_986C
 		test	byte ptr word_23AF6, 1
@@ -846,7 +846,7 @@ loc_9973:
 		jnz	short loc_998E
 
 loc_9986:
-		mov	word_1FBC0, 1DC8h
+		mov	fp_1FBC0, offset sub_B4A8
 		jmp	short loc_99B1
 ; ---------------------------------------------------------------------------
 
@@ -882,8 +882,8 @@ loc_99B1:
 		nopcall	sub_C9FE
 		call	sub_BE5D
 		call	sub_15D53
-		call	word_1FBC0
-		call	word_1E6EA
+		call	fp_1FBC0
+		call	fp_1E6EA
 		cmp	byte_23AFA, 0
 		jnz	short loc_99F7
 
@@ -979,7 +979,12 @@ loc_9AC9:
 		retn
 sub_9778	endp
 
-; ---------------------------------------------------------------------------
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_9AD6	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_1E6E6, 1B58h
@@ -991,7 +996,7 @@ sub_9778	endp
 loc_9AE7:
 		cmp	word_1E6E6, 1B58h
 		jnz	short loc_9AF5
-		mov	word_1FBC0, 1DC8h
+		mov	fp_1FBC0, offset sub_B4A8
 
 loc_9AF5:
 		cmp	byte_1FBC3, 0
@@ -1006,11 +1011,20 @@ loc_9B01:
 loc_9B0D:
 		pop	bp
 		retn
-; ---------------------------------------------------------------------------
+sub_9AD6	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_9B0F	proc near
 		push	bp
 		mov	bp, sp
 		pop	bp
 		retn
+sub_9B0F	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1186,13 +1200,13 @@ loc_9C93:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+39h], 0
 		jnz	short loc_9CAB
-		mov	word_1E6EA, 42Fh
+		mov	fp_1E6EA, offset sub_9B0F
 		jmp	short loc_9CD0
 ; ---------------------------------------------------------------------------
 
 loc_9CAB:
 		mov	word_1E6E6, 0
-		mov	word_1E6EA, 3F6h
+		mov	fp_1E6EA, offset sub_9AD6
 		mov	byte_23AF8, 40h
 		mov	byte_23E3C, 0
 		mov	byte_1F39E, 8
@@ -1200,12 +1214,11 @@ loc_9CAB:
 		mov	byte_202B7, 9
 
 loc_9CD0:
-		mov	word_1FBC0, 1DC3h
+		mov	fp_1FBC0, offset sub_B4A3
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+39h], 0
 		jz	short loc_9CF0
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 557h
+		setfarfp	farfp_1E6E2, sub_EE47
 		jmp	loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -1215,8 +1228,7 @@ loc_9CF0:
 		jz	short loc_9D10
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D10
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 52Dh
+		setfarfp	farfp_1E6E2, sub_EE1D
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -1224,8 +1236,7 @@ loc_9D10:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+0Fh], 0
 		jz	short loc_9D29
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 4D6h
+		setfarfp	farfp_1E6E2, sub_EDC6
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -1233,8 +1244,7 @@ loc_9D29:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D42
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 500h
+		setfarfp	farfp_1E6E2, sub_EDF0
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -1242,8 +1252,7 @@ loc_9D42:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_9D5B
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 488h
+		setfarfp	farfp_1E6E2, sub_ED78
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -1251,14 +1260,12 @@ loc_9D5B:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+16h], 1
 		jnz	short loc_9D74
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 492h
+		setfarfp	farfp_1E6E2, sub_ED82
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
 loc_9D74:
-		mov	word ptr dword_1E6E2+2,	seg seg002
-		mov	word ptr dword_1E6E2, 4B4h
+		setfarfp	farfp_1E6E2, sub_EDA4
 
 loc_9D80:
 		xor	si, si
@@ -1787,7 +1794,7 @@ sub_A21F	proc near
 		call	grcg_off
 		inc	byte_207E3
 		call	sub_9EBF
-		call	dword_20F28
+		call	farfp_20F28
 		mov	word_23B6A, 4110h
 		mov	word_23BEA, 4110h
 		call	sub_EC2E
@@ -2291,75 +2298,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A5E2
-		mov	word ptr p1_1FE6C+2, seg reimu_1A27E
-		mov	word ptr p1_1FE6C, offset reimu_1A27E
-		mov	word ptr p1_1FE70+2, seg reimu_1A4E0
-		mov	word ptr p1_1FE70, offset reimu_1A4E0
-		mov	word ptr p1_1FE74+2, seg reimu_1A5F9
-		mov	word ptr p1_1FE74, offset reimu_1A5F9
-		mov	word ptr p1_23B6E+2, seg reimu_14A97
-		mov	word ptr p1_23B6E, offset reimu_14A97
-		mov	word ptr p1_2028C+2, seg reimu_14B7C
-		mov	word ptr p1_2028C, offset reimu_14B7C
-		mov	word ptr p1_20294+2, seg reimu_14D83
-		mov	word ptr p1_20294, offset reimu_14D83
-		mov	word ptr p1_2029C+2, seg reimu_14CE3
-		mov	word ptr p1_2029C, offset reimu_14CE3
-		mov	word ptr p1_202A4+2, seg reimu_14FEE
-		mov	word ptr p1_202A4, offset reimu_14FEE
-		mov	word ptr p1_202AC+2, seg reimu_15006
-		mov	word ptr p1_202AC, offset reimu_15006
-		mov	word ptr p1_1F32E+2, seg reimu_11033
-		mov	word ptr p1_1F32E, offset reimu_11033
-		mov	word ptr p1_1F336+2, seg reimu_113A9
-		mov	word ptr p1_1F336, offset reimu_113A9
-		mov	word ptr p1_205CE+2, seg reimu_1508C
-		mov	word ptr p1_205CE, offset reimu_1508C
-		mov	word ptr bomb_p1+2, seg reimu_bomb
-		mov	word ptr bomb_p1, offset reimu_bomb
+		setfarfp	p1_1FE6C, reimu_1A27E
+		setfarfp	p1_1FE70, reimu_1A4E0
+		setfarfp	p1_1FE74, reimu_1A5F9
+		setfarfp	p1_23B6E, reimu_14A97
+		setfarfp	p1_2028C, reimu_14B7C
+		setfarfp	p1_20294, reimu_14D83
+		setfarfp	p1_2029C, reimu_14CE3
+		setfarfp	p1_202A4, reimu_14FEE
+		setfarfp	p1_202AC, reimu_15006
+		setfarfp	p1_1F32E, reimu_11033
+		setfarfp	p1_1F336, reimu_113A9
+		setfarfp	p1_205CE, reimu_1508C
+		setfarfp	bomb_p1, reimu_bomb
 		mov	word_23B6C, 4129h
 		mov	word_23B6A, 4110h
 		jmp	loc_A68D
 ; ---------------------------------------------------------------------------
 
 loc_A5E2:
-		mov	word ptr p2_1FE78+2, seg reimu_1A27E
-		mov	word ptr p2_1FE78, offset reimu_1A27E
-		mov	word ptr p2_1FE7C+2, seg reimu_1A4E0
-		mov	word ptr p2_1FE7C, offset reimu_1A4E0
-		mov	word ptr p2_1FE80+2, seg reimu_1A5F9
-		mov	word ptr p2_1FE80, offset reimu_1A5F9
-		mov	word ptr p2_23BEE+2, seg reimu_14A97
-		mov	word ptr p2_23BEE, offset reimu_14A97
-		mov	word ptr p2_20290+2, seg reimu_14B7C
-		mov	word ptr p2_20290, offset reimu_14B7C
-		mov	word ptr p2_20298+2, seg reimu_14D83
-		mov	word ptr p2_20298, offset reimu_14D83
-		mov	word ptr p2_202A0+2, seg reimu_14CE3
-		mov	word ptr p2_202A0, offset reimu_14CE3
-		mov	word ptr p2_202A8+2, seg reimu_14FEE
-		mov	word ptr p2_202A8, offset reimu_14FEE
-		mov	word ptr p2_202B0+2, seg reimu_15006
-		mov	word ptr p2_202B0, offset reimu_15006
-		mov	word ptr p2_1F332+2, seg reimu_11033
-		mov	word ptr p2_1F332, offset reimu_11033
-		mov	word ptr p2_1F33A+2, seg reimu_113A9
-		mov	word ptr p2_1F33A, offset reimu_113A9
-		mov	word ptr p2_205D2+2, seg reimu_1508C
-		mov	word ptr p2_205D2, offset reimu_1508C
-		mov	word ptr bomb_p2+2, seg reimu_bomb
-		mov	word ptr bomb_p2, offset reimu_bomb
+		setfarfp	p2_1FE78, reimu_1A27E
+		setfarfp	p2_1FE7C, reimu_1A4E0
+		setfarfp	p2_1FE80, reimu_1A5F9
+		setfarfp	p2_23BEE, reimu_14A97
+		setfarfp	p2_20290, reimu_14B7C
+		setfarfp	p2_20298, reimu_14D83
+		setfarfp	p2_202A0, reimu_14CE3
+		setfarfp	p2_202A8, reimu_14FEE
+		setfarfp	p2_202B0, reimu_15006
+		setfarfp	p2_1F332, reimu_11033
+		setfarfp	p2_1F33A, reimu_113A9
+		setfarfp	p2_205D2, reimu_1508C
+		setfarfp	bomb_p2, reimu_bomb
 		mov	word_23BEC, 4129h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_A68D:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D092
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D135
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D092
+		setfarfp	farfp_20F24, sub_D135
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	reimu_10BFE
 		pop	si
@@ -2385,75 +2363,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A77A
-		mov	word ptr p1_1FE6C+2, seg mima_1A62B
-		mov	word ptr p1_1FE6C, offset mima_1A62B
-		mov	word ptr p1_1FE70+2, seg mima_1A745
-		mov	word ptr p1_1FE70, offset mima_1A745
-		mov	word ptr p1_1FE74+2, seg mima_1A8D3
-		mov	word ptr p1_1FE74, offset mima_1A8D3
-		mov	word ptr p1_23B6E+2, seg mima_153DC
-		mov	word ptr p1_23B6E, offset mima_153DC
-		mov	word ptr p1_2028C+2, seg mima_154C4
-		mov	word ptr p1_2028C, offset mima_154C4
-		mov	word ptr p1_20294+2, seg mima_15652
-		mov	word ptr p1_20294, offset mima_15652
-		mov	word ptr p1_2029C+2, seg mima_15597
-		mov	word ptr p1_2029C, offset mima_15597
-		mov	word ptr p1_202A4+2, seg mima_158C5
-		mov	word ptr p1_202A4, offset mima_158C5
-		mov	word ptr p1_202AC+2, seg mima_158DD
-		mov	word ptr p1_202AC, offset mima_158DD
-		mov	word ptr p1_1F32E+2, seg mima_FED8
-		mov	word ptr p1_1F32E, offset mima_FED8
-		mov	word ptr p1_1F336+2, seg mima_10263
-		mov	word ptr p1_1F336, offset mima_10263
-		mov	word ptr p1_205CE+2, seg mima_17043
-		mov	word ptr p1_205CE, offset mima_17043
-		mov	word ptr bomb_p1+2, seg mima_bomb
-		mov	word ptr bomb_p1, offset mima_bomb
+		setfarfp	p1_1FE6C, mima_1A62B
+		setfarfp	p1_1FE70, mima_1A745
+		setfarfp	p1_1FE74, mima_1A8D3
+		setfarfp	p1_23B6E, mima_153DC
+		setfarfp	p1_2028C, mima_154C4
+		setfarfp	p1_20294, mima_15652
+		setfarfp	p1_2029C, mima_15597
+		setfarfp	p1_202A4, mima_158C5
+		setfarfp	p1_202AC, mima_158DD
+		setfarfp	p1_1F32E, mima_FED8
+		setfarfp	p1_1F336, mima_10263
+		setfarfp	p1_205CE, mima_17043
+		setfarfp	bomb_p1, mima_bomb
 		mov	word_23B6C, 4167h
 		mov	word_23B6A, 4110h
 		jmp	loc_A825
 ; ---------------------------------------------------------------------------
 
 loc_A77A:
-		mov	word ptr p2_1FE78+2, seg mima_1A62B
-		mov	word ptr p2_1FE78, offset mima_1A62B
-		mov	word ptr p2_1FE7C+2, seg mima_1A745
-		mov	word ptr p2_1FE7C, offset mima_1A745
-		mov	word ptr p2_1FE80+2, seg mima_1A8D3
-		mov	word ptr p2_1FE80, offset mima_1A8D3
-		mov	word ptr p2_23BEE+2, seg mima_153DC
-		mov	word ptr p2_23BEE, offset mima_153DC
-		mov	word ptr p2_20290+2, seg mima_154C4
-		mov	word ptr p2_20290, offset mima_154C4
-		mov	word ptr p2_20298+2, seg mima_15652
-		mov	word ptr p2_20298, offset mima_15652
-		mov	word ptr p2_202A0+2, seg mima_15597
-		mov	word ptr p2_202A0, offset mima_15597
-		mov	word ptr p2_202A8+2, seg mima_158C5
-		mov	word ptr p2_202A8, offset mima_158C5
-		mov	word ptr p2_202B0+2, seg mima_158DD
-		mov	word ptr p2_202B0, offset mima_158DD
-		mov	word ptr p2_1F332+2, seg mima_FED8
-		mov	word ptr p2_1F332, offset mima_FED8
-		mov	word ptr p2_1F33A+2, seg mima_10263
-		mov	word ptr p2_1F33A, offset mima_10263
-		mov	word ptr p2_205D2+2, seg mima_17043
-		mov	word ptr p2_205D2, offset mima_17043
-		mov	word ptr bomb_p2+2, seg mima_bomb
-		mov	word ptr bomb_p2, offset mima_bomb
+		setfarfp	p2_1FE78, mima_1A62B
+		setfarfp	p2_1FE7C, mima_1A745
+		setfarfp	p2_1FE80, mima_1A8D3
+		setfarfp	p2_23BEE, mima_153DC
+		setfarfp	p2_20290, mima_154C4
+		setfarfp	p2_20298, mima_15652
+		setfarfp	p2_202A0, mima_15597
+		setfarfp	p2_202A8, mima_158C5
+		setfarfp	p2_202B0, mima_158DD
+		setfarfp	p2_1F332, mima_FED8
+		setfarfp	p2_1F33A, mima_10263
+		setfarfp	p2_205D2, mima_17043
+		setfarfp	bomb_p2, mima_bomb
 		mov	word_23BEC, 4167h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_A825:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D092
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D135
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D092
+		setfarfp	farfp_20F24, sub_D135
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	mima_FB46
 		pop	si
@@ -2479,75 +2428,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_A912
-		mov	word ptr p1_1FE6C+2, seg marisa_19ABC
-		mov	word ptr p1_1FE6C, offset marisa_19ABC
-		mov	word ptr p1_1FE70+2, seg marisa_19C36
-		mov	word ptr p1_1FE70, offset marisa_19C36
-		mov	word ptr p1_1FE74+2, seg marisa_19D31
-		mov	word ptr p1_1FE74, offset marisa_19D31
-		mov	word ptr p1_23B6E+2, seg marisa_142DF
-		mov	word ptr p1_23B6E, offset marisa_142DF
-		mov	word ptr p1_2028C+2, seg marisa_143BE
-		mov	word ptr p1_2028C, offset marisa_143BE
-		mov	word ptr p1_20294+2, seg marisa_14511
-		mov	word ptr p1_20294, offset marisa_14511
-		mov	word ptr p1_2029C+2, seg marisa_14487
-		mov	word ptr p1_2029C, offset marisa_14487
-		mov	word ptr p1_202A4+2, seg marisa_14885
-		mov	word ptr p1_202A4, offset marisa_14885
-		mov	word ptr p1_202AC+2, seg marisa_1489D
-		mov	word ptr p1_202AC, offset marisa_1489D
-		mov	word ptr p1_1F32E+2, seg marisa_F848
-		mov	word ptr p1_1F32E, offset marisa_F848
-		mov	word ptr p1_1F336+2, seg marisa_FAE8
-		mov	word ptr p1_1F336, offset marisa_FAE8
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg marisa_bomb
-		mov	word ptr bomb_p1, offset marisa_bomb
+		setfarfp	p1_1FE6C, marisa_19ABC
+		setfarfp	p1_1FE70, marisa_19C36
+		setfarfp	p1_1FE74, marisa_19D31
+		setfarfp	p1_23B6E, marisa_142DF
+		setfarfp	p1_2028C, marisa_143BE
+		setfarfp	p1_20294, marisa_14511
+		setfarfp	p1_2029C, marisa_14487
+		setfarfp	p1_202A4, marisa_14885
+		setfarfp	p1_202AC, marisa_1489D
+		setfarfp	p1_1F32E, marisa_F848
+		setfarfp	p1_1F336, marisa_FAE8
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, marisa_bomb
 		mov	word_23B6C, 41A9h
 		mov	word_23B6A, 4110h
 		jmp	loc_A9BD
 ; ---------------------------------------------------------------------------
 
 loc_A912:
-		mov	word ptr p2_1FE78+2, seg marisa_19ABC
-		mov	word ptr p2_1FE78, offset marisa_19ABC
-		mov	word ptr p2_1FE7C+2, seg marisa_19C36
-		mov	word ptr p2_1FE7C, offset marisa_19C36
-		mov	word ptr p2_1FE80+2, seg marisa_19D31
-		mov	word ptr p2_1FE80, offset marisa_19D31
-		mov	word ptr p2_23BEE+2, seg marisa_142DF
-		mov	word ptr p2_23BEE, offset marisa_142DF
-		mov	word ptr p2_20290+2, seg marisa_143BE
-		mov	word ptr p2_20290, offset marisa_143BE
-		mov	word ptr p2_20298+2, seg marisa_14511
-		mov	word ptr p2_20298, offset marisa_14511
-		mov	word ptr p2_202A0+2, seg marisa_14487
-		mov	word ptr p2_202A0, offset marisa_14487
-		mov	word ptr p2_202A8+2, seg marisa_14885
-		mov	word ptr p2_202A8, offset marisa_14885
-		mov	word ptr p2_202B0+2, seg marisa_1489D
-		mov	word ptr p2_202B0, offset marisa_1489D
-		mov	word ptr p2_1F332+2, seg marisa_F848
-		mov	word ptr p2_1F332, offset marisa_F848
-		mov	word ptr p2_1F33A+2, seg marisa_FAE8
-		mov	word ptr p2_1F33A, offset marisa_FAE8
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg marisa_bomb
-		mov	word ptr bomb_p2, offset marisa_bomb
+		setfarfp	p2_1FE78, marisa_19ABC
+		setfarfp	p2_1FE7C, marisa_19C36
+		setfarfp	p2_1FE80, marisa_19D31
+		setfarfp	p2_23BEE, marisa_142DF
+		setfarfp	p2_20290, marisa_143BE
+		setfarfp	p2_20298, marisa_14511
+		setfarfp	p2_202A0, marisa_14487
+		setfarfp	p2_202A8, marisa_14885
+		setfarfp	p2_202B0, marisa_1489D
+		setfarfp	p2_1F332, marisa_F848
+		setfarfp	p2_1F33A, marisa_FAE8
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, marisa_bomb
 		mov	word_23BEC, 41A9h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_A9BD:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	marisa_F5AF
 		pop	si
@@ -2573,75 +2493,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AAAA
-		mov	word ptr p1_1FE6C+2, seg ellen_193EF
-		mov	word ptr p1_1FE6C, offset ellen_193EF
-		mov	word ptr p1_1FE70+2, seg ellen_1961D
-		mov	word ptr p1_1FE70, offset ellen_1961D
-		mov	word ptr p1_1FE74+2, seg ellen_197F3
-		mov	word ptr p1_1FE74, offset ellen_197F3
-		mov	word ptr p1_23B6E+2, seg ellen_1B674
-		mov	word ptr p1_23B6E, offset ellen_1B674
-		mov	word ptr p1_2028C+2, seg ellen_1B723
-		mov	word ptr p1_2028C, offset ellen_1B723
-		mov	word ptr p1_20294+2, seg ellen_1B979
-		mov	word ptr p1_20294, offset ellen_1B979
-		mov	word ptr p1_2029C+2, seg ellen_1B903
-		mov	word ptr p1_2029C, offset ellen_1B903
-		mov	word ptr p1_202A4+2, seg ellen_1BC1D
-		mov	word ptr p1_202A4, offset ellen_1BC1D
-		mov	word ptr p1_202AC+2, seg ellen_1BC35
-		mov	word ptr p1_202AC, offset ellen_1BC35
-		mov	word ptr p1_1F32E+2, seg ellen_116B6
-		mov	word ptr p1_1F32E, offset ellen_116B6
-		mov	word ptr p1_1F336+2, seg ellen_11A01
-		mov	word ptr p1_1F336, offset ellen_11A01
-		mov	word ptr p1_205CE+2, seg ellen_185AB
-		mov	word ptr p1_205CE, offset ellen_185AB
-		mov	word ptr bomb_p1+2, seg ellen_bomb
-		mov	word ptr bomb_p1, offset ellen_bomb
+		setfarfp	p1_1FE6C, ellen_193EF
+		setfarfp	p1_1FE70, ellen_1961D
+		setfarfp	p1_1FE74, ellen_197F3
+		setfarfp	p1_23B6E, ellen_1B674
+		setfarfp	p1_2028C, ellen_1B723
+		setfarfp	p1_20294, ellen_1B979
+		setfarfp	p1_2029C, ellen_1B903
+		setfarfp	p1_202A4, ellen_1BC1D
+		setfarfp	p1_202AC, ellen_1BC35
+		setfarfp	p1_1F32E, ellen_116B6
+		setfarfp	p1_1F336, ellen_11A01
+		setfarfp	p1_205CE, ellen_185AB
+		setfarfp	bomb_p1, ellen_bomb
 		mov	word_23B6C, 41ECh
 		mov	word_23B6A, 4110h
 		jmp	loc_AB55
 ; ---------------------------------------------------------------------------
 
 loc_AAAA:
-		mov	word ptr p2_1FE78+2, seg ellen_193EF
-		mov	word ptr p2_1FE78, offset ellen_193EF
-		mov	word ptr p2_1FE7C+2, seg ellen_1961D
-		mov	word ptr p2_1FE7C, offset ellen_1961D
-		mov	word ptr p2_1FE80+2, seg ellen_197F3
-		mov	word ptr p2_1FE80, offset ellen_197F3
-		mov	word ptr p2_23BEE+2, seg ellen_1B674
-		mov	word ptr p2_23BEE, offset ellen_1B674
-		mov	word ptr p2_20290+2, seg ellen_1B723
-		mov	word ptr p2_20290, offset ellen_1B723
-		mov	word ptr p2_20298+2, seg ellen_1B979
-		mov	word ptr p2_20298, offset ellen_1B979
-		mov	word ptr p2_202A0+2, seg ellen_1B903
-		mov	word ptr p2_202A0, offset ellen_1B903
-		mov	word ptr p2_202A8+2, seg ellen_1BC1D
-		mov	word ptr p2_202A8, offset ellen_1BC1D
-		mov	word ptr p2_202B0+2, seg ellen_1BC35
-		mov	word ptr p2_202B0, offset ellen_1BC35
-		mov	word ptr p2_1F332+2, seg ellen_116B6
-		mov	word ptr p2_1F332, offset ellen_116B6
-		mov	word ptr p2_1F33A+2, seg ellen_11A01
-		mov	word ptr p2_1F33A, offset ellen_11A01
-		mov	word ptr p2_205D2+2, seg ellen_185AB
-		mov	word ptr p2_205D2, offset ellen_185AB
-		mov	word ptr bomb_p2+2, seg ellen_bomb
-		mov	word ptr bomb_p2, offset ellen_bomb
+		setfarfp	p2_1FE78, ellen_193EF
+		setfarfp	p2_1FE7C, ellen_1961D
+		setfarfp	p2_1FE80, ellen_197F3
+		setfarfp	p2_23BEE, ellen_1B674
+		setfarfp	p2_20290, ellen_1B723
+		setfarfp	p2_20298, ellen_1B979
+		setfarfp	p2_202A0, ellen_1B903
+		setfarfp	p2_202A8, ellen_1BC1D
+		setfarfp	p2_202B0, ellen_1BC35
+		setfarfp	p2_1F332, ellen_116B6
+		setfarfp	p2_1F33A, ellen_11A01
+		setfarfp	p2_205D2, ellen_185AB
+		setfarfp	bomb_p2, ellen_bomb
 		mov	word_23BEC, 41ECh
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_AB55:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	ellen_113E2
 		pop	si
@@ -2667,75 +2558,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AC42
-		mov	word ptr p1_1FE6C+2, seg kotohime_19D60
-		mov	word ptr p1_1FE6C, offset kotohime_19D60
-		mov	word ptr p1_1FE70+2, seg kotohime_19FEF
-		mov	word ptr p1_1FE70, offset kotohime_19FEF
-		mov	word ptr p1_1FE74+2, seg kotohime_1A14E
-		mov	word ptr p1_1FE74, offset kotohime_1A14E
-		mov	word ptr p1_23B6E+2, seg kotohime_1C167
-		mov	word ptr p1_23B6E, offset kotohime_1C167
-		mov	word ptr p1_2028C+2, seg kotohime_1C19F
-		mov	word ptr p1_2028C, offset kotohime_1C19F
-		mov	word ptr p1_20294+2, seg kotohime_1C295
-		mov	word ptr p1_20294, offset kotohime_1C295
-		mov	word ptr p1_2029C+2, seg kotohime_1C22E
-		mov	word ptr p1_2029C, offset kotohime_1C22E
-		mov	word ptr p1_202A4+2, seg kotohime_1C3DA
-		mov	word ptr p1_202A4, offset kotohime_1C3DA
-		mov	word ptr p1_202AC+2, seg kotohime_1C3F2
-		mov	word ptr p1_202AC, offset kotohime_1C3F2
-		mov	word ptr p1_1F32E+2, seg kotohime_11E48
-		mov	word ptr p1_1F32E, offset kotohime_11E48
-		mov	word ptr p1_1F336+2, seg kotohime_12140
-		mov	word ptr p1_1F336, offset kotohime_12140
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg kotohime_bomb
-		mov	word ptr bomb_p1, offset kotohime_bomb
+		setfarfp	p1_1FE6C, kotohime_19D60
+		setfarfp	p1_1FE70, kotohime_19FEF
+		setfarfp	p1_1FE74, kotohime_1A14E
+		setfarfp	p1_23B6E, kotohime_1C167
+		setfarfp	p1_2028C, kotohime_1C19F
+		setfarfp	p1_20294, kotohime_1C295
+		setfarfp	p1_2029C, kotohime_1C22E
+		setfarfp	p1_202A4, kotohime_1C3DA
+		setfarfp	p1_202AC, kotohime_1C3F2
+		setfarfp	p1_1F32E, kotohime_11E48
+		setfarfp	p1_1F336, kotohime_12140
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, kotohime_bomb
 		mov	word_23B6C, 421Bh
 		mov	word_23B6A, 4110h
 		jmp	loc_ACED
 ; ---------------------------------------------------------------------------
 
 loc_AC42:
-		mov	word ptr p2_1FE78+2, seg kotohime_19D60
-		mov	word ptr p2_1FE78, offset kotohime_19D60
-		mov	word ptr p2_1FE7C+2, seg kotohime_19FEF
-		mov	word ptr p2_1FE7C, offset kotohime_19FEF
-		mov	word ptr p2_1FE80+2, seg kotohime_1A14E
-		mov	word ptr p2_1FE80, offset kotohime_1A14E
-		mov	word ptr p2_23BEE+2, seg kotohime_1C167
-		mov	word ptr p2_23BEE, offset kotohime_1C167
-		mov	word ptr p2_20290+2, seg kotohime_1C19F
-		mov	word ptr p2_20290, offset kotohime_1C19F
-		mov	word ptr p2_20298+2, seg kotohime_1C295
-		mov	word ptr p2_20298, offset kotohime_1C295
-		mov	word ptr p2_202A0+2, seg kotohime_1C22E
-		mov	word ptr p2_202A0, offset kotohime_1C22E
-		mov	word ptr p2_202A8+2, seg kotohime_1C3DA
-		mov	word ptr p2_202A8, offset kotohime_1C3DA
-		mov	word ptr p2_202B0+2, seg kotohime_1C3F2
-		mov	word ptr p2_202B0, offset kotohime_1C3F2
-		mov	word ptr p2_1F332+2, seg kotohime_11E48
-		mov	word ptr p2_1F332, offset kotohime_11E48
-		mov	word ptr p2_1F33A+2, seg kotohime_12140
-		mov	word ptr p2_1F33A, offset kotohime_12140
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg kotohime_bomb
-		mov	word ptr bomb_p2, offset kotohime_bomb
+		setfarfp	p2_1FE78, kotohime_19D60
+		setfarfp	p2_1FE7C, kotohime_19FEF
+		setfarfp	p2_1FE80, kotohime_1A14E
+		setfarfp	p2_23BEE, kotohime_1C167
+		setfarfp	p2_20290, kotohime_1C19F
+		setfarfp	p2_20298, kotohime_1C295
+		setfarfp	p2_202A0, kotohime_1C22E
+		setfarfp	p2_202A8, kotohime_1C3DA
+		setfarfp	p2_202B0, kotohime_1C3F2
+		setfarfp	p2_1F332, kotohime_11E48
+		setfarfp	p2_1F33A, kotohime_12140
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, kotohime_bomb
 		mov	word_23BEC, 421Bh
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_ACED:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	kotohime_11A6D
 		pop	si
@@ -2761,75 +2623,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_ADDA
-		mov	word ptr p1_1FE6C+2, seg kana_19825
-		mov	word ptr p1_1FE6C, offset kana_19825
-		mov	word ptr p1_1FE70+2, seg kana_19999
-		mov	word ptr p1_1FE70, offset kana_19999
-		mov	word ptr p1_1FE74+2, seg kana_19A8D
-		mov	word ptr p1_1FE74, offset kana_19A8D
-		mov	word ptr p1_23B6E+2, seg kana_1BC5C
-		mov	word ptr p1_23B6E, offset kana_1BC5C
-		mov	word ptr p1_2028C+2, seg kana_1BCD5
-		mov	word ptr p1_2028C, offset kana_1BCD5
-		mov	word ptr p1_20294+2, seg kana_1BEF3
-		mov	word ptr p1_20294, offset kana_1BEF3
-		mov	word ptr p1_2029C+2, seg kana_1BE52
-		mov	word ptr p1_2029C, offset kana_1BE52
-		mov	word ptr p1_202A4+2, seg kana_1C128
-		mov	word ptr p1_202A4, offset kana_1C128
-		mov	word ptr p1_202AC+2, seg kana_1C140
-		mov	word ptr p1_202AC, offset kana_1C140
-		mov	word ptr p1_1F32E+2, seg kana_12FE8
-		mov	word ptr p1_1F32E, offset kana_12FE8
-		mov	word ptr p1_1F336+2, seg kana_132FE
-		mov	word ptr p1_1F336, offset kana_132FE
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg kana_bomb
-		mov	word ptr bomb_p1, offset kana_bomb
+		setfarfp	p1_1FE6C, kana_19825
+		setfarfp	p1_1FE70, kana_19999
+		setfarfp	p1_1FE74, kana_19A8D
+		setfarfp	p1_23B6E, kana_1BC5C
+		setfarfp	p1_2028C, kana_1BCD5
+		setfarfp	p1_20294, kana_1BEF3
+		setfarfp	p1_2029C, kana_1BE52
+		setfarfp	p1_202A4, kana_1C128
+		setfarfp	p1_202AC, kana_1C140
+		setfarfp	p1_1F32E, kana_12FE8
+		setfarfp	p1_1F336, kana_132FE
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, kana_bomb
 		mov	word_23B6C, 42D5h
 		mov	word_23B6A, 4110h
 		jmp	loc_AE85
 ; ---------------------------------------------------------------------------
 
 loc_ADDA:
-		mov	word ptr p2_1FE78+2, seg kana_19825
-		mov	word ptr p2_1FE78, offset kana_19825
-		mov	word ptr p2_1FE7C+2, seg kana_19999
-		mov	word ptr p2_1FE7C, offset kana_19999
-		mov	word ptr p2_1FE80+2, seg kana_19A8D
-		mov	word ptr p2_1FE80, offset kana_19A8D
-		mov	word ptr p2_23BEE+2, seg kana_1BC5C
-		mov	word ptr p2_23BEE, offset kana_1BC5C
-		mov	word ptr p2_20290+2, seg kana_1BCD5
-		mov	word ptr p2_20290, offset kana_1BCD5
-		mov	word ptr p2_20298+2, seg kana_1BEF3
-		mov	word ptr p2_20298, offset kana_1BEF3
-		mov	word ptr p2_202A0+2, seg kana_1BE52
-		mov	word ptr p2_202A0, offset kana_1BE52
-		mov	word ptr p2_202A8+2, seg kana_1C128
-		mov	word ptr p2_202A8, offset kana_1C128
-		mov	word ptr p2_202B0+2, seg kana_1C140
-		mov	word ptr p2_202B0, offset kana_1C140
-		mov	word ptr p2_1F332+2, seg kana_12FE8
-		mov	word ptr p2_1F332, offset kana_12FE8
-		mov	word ptr p2_1F33A+2, seg kana_132FE
-		mov	word ptr p2_1F33A, offset kana_132FE
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg kana_bomb
-		mov	word ptr bomb_p2, offset kana_bomb
+		setfarfp	p2_1FE78, kana_19825
+		setfarfp	p2_1FE7C, kana_19999
+		setfarfp	p2_1FE80, kana_19A8D
+		setfarfp	p2_23BEE, kana_1BC5C
+		setfarfp	p2_20290, kana_1BCD5
+		setfarfp	p2_20298, kana_1BEF3
+		setfarfp	p2_202A0, kana_1BE52
+		setfarfp	p2_202A8, kana_1C128
+		setfarfp	p2_202B0, kana_1C140
+		setfarfp	p2_1F332, kana_12FE8
+		setfarfp	p2_1F33A, kana_132FE
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, kana_bomb
 		mov	word_23BEC, 42D5h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_AE85:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	kana_12BFB
 		pop	si
@@ -2855,75 +2688,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_AF72
-		mov	word ptr p1_1FE6C+2, seg rikako_1AFA2
-		mov	word ptr p1_1FE6C, offset rikako_1AFA2
-		mov	word ptr p1_1FE70+2, seg rikako_1B105
-		mov	word ptr p1_1FE70, offset rikako_1B105
-		mov	word ptr p1_1FE74+2, seg rikako_1B231
-		mov	word ptr p1_1FE74, offset rikako_1B231
-		mov	word ptr p1_23B6E+2, seg sub_1C419
-		mov	word ptr p1_23B6E, offset sub_1C419
-		mov	word ptr p1_2028C+2, seg rikako_1C4C5
-		mov	word ptr p1_2028C, offset rikako_1C4C5
-		mov	word ptr p1_20294+2, seg rikako_1C6E8
-		mov	word ptr p1_20294, offset rikako_1C6E8
-		mov	word ptr p1_2029C+2, seg rikako_1C66B
-		mov	word ptr p1_2029C, offset rikako_1C66B
-		mov	word ptr p1_202A4+2, seg rikako_1C8DA
-		mov	word ptr p1_202A4, offset rikako_1C8DA
-		mov	word ptr p1_202AC+2, seg rikako_1C8F2
-		mov	word ptr p1_202AC, offset rikako_1C8F2
-		mov	word ptr p1_1F32E+2, seg rikako_13661
-		mov	word ptr p1_1F32E, offset rikako_13661
-		mov	word ptr p1_1F336+2, seg rikako_1398B
-		mov	word ptr p1_1F336, offset rikako_1398B
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg rikako_bomb
-		mov	word ptr bomb_p1, offset rikako_bomb
+		setfarfp	p1_1FE6C, rikako_1AFA2
+		setfarfp	p1_1FE70, rikako_1B105
+		setfarfp	p1_1FE74, rikako_1B231
+		setfarfp	p1_23B6E, sub_1C419
+		setfarfp	p1_2028C, rikako_1C4C5
+		setfarfp	p1_20294, rikako_1C6E8
+		setfarfp	p1_2029C, rikako_1C66B
+		setfarfp	p1_202A4, rikako_1C8DA
+		setfarfp	p1_202AC, rikako_1C8F2
+		setfarfp	p1_1F32E, rikako_13661
+		setfarfp	p1_1F336, rikako_1398B
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, rikako_bomb
 		mov	word_23B6C, 4313h
 		mov	word_23B6A, 4110h
 		jmp	loc_B01D
 ; ---------------------------------------------------------------------------
 
 loc_AF72:
-		mov	word ptr p2_1FE78+2, seg rikako_1AFA2
-		mov	word ptr p2_1FE78, offset rikako_1AFA2
-		mov	word ptr p2_1FE7C+2, seg rikako_1B105
-		mov	word ptr p2_1FE7C, offset rikako_1B105
-		mov	word ptr p2_1FE80+2, seg rikako_1B231
-		mov	word ptr p2_1FE80, offset rikako_1B231
-		mov	word ptr p2_23BEE+2, seg sub_1C419
-		mov	word ptr p2_23BEE, offset sub_1C419
-		mov	word ptr p2_20290+2, seg rikako_1C4C5
-		mov	word ptr p2_20290, offset rikako_1C4C5
-		mov	word ptr p2_20298+2, seg rikako_1C6E8
-		mov	word ptr p2_20298, offset rikako_1C6E8
-		mov	word ptr p2_202A0+2, seg rikako_1C66B
-		mov	word ptr p2_202A0, offset rikako_1C66B
-		mov	word ptr p2_202A8+2, seg rikako_1C8DA
-		mov	word ptr p2_202A8, offset rikako_1C8DA
-		mov	word ptr p2_202B0+2, seg rikako_1C8F2
-		mov	word ptr p2_202B0, offset rikako_1C8F2
-		mov	word ptr p2_1F332+2, seg rikako_13661
-		mov	word ptr p2_1F332, offset rikako_13661
-		mov	word ptr p2_1F33A+2, seg rikako_1398B
-		mov	word ptr p2_1F33A, offset rikako_1398B
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg rikako_bomb
-		mov	word ptr bomb_p2, offset rikako_bomb
+		setfarfp	p2_1FE78, rikako_1AFA2
+		setfarfp	p2_1FE7C, rikako_1B105
+		setfarfp	p2_1FE80, rikako_1B231
+		setfarfp	p2_23BEE, sub_1C419
+		setfarfp	p2_20290, rikako_1C4C5
+		setfarfp	p2_20298, rikako_1C6E8
+		setfarfp	p2_202A0, rikako_1C66B
+		setfarfp	p2_202A8, rikako_1C8DA
+		setfarfp	p2_202B0, rikako_1C8F2
+		setfarfp	p2_1F332, rikako_13661
+		setfarfp	p2_1F33A, rikako_1398B
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, rikako_bomb
 		mov	word_23BEC, 4313h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_B01D:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D092
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D135
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D092
+		setfarfp	farfp_20F24, sub_D135
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	rikako_1334D
 		pop	si
@@ -2949,75 +2753,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B10A
-		mov	word ptr p1_1FE6C+2, seg chiyuri_18FEA
-		mov	word ptr p1_1FE6C, offset chiyuri_18FEA
-		mov	word ptr p1_1FE70+2, seg chiyuri_19260
-		mov	word ptr p1_1FE70, offset chiyuri_19260
-		mov	word ptr p1_1FE74+2, seg chiyuri_1938A
-		mov	word ptr p1_1FE74, offset chiyuri_1938A
-		mov	word ptr p1_23B6E+2, seg chiyuri_1B277
-		mov	word ptr p1_23B6E, offset chiyuri_1B277
-		mov	word ptr p1_2028C+2, seg chiyuri_1B2C2
-		mov	word ptr p1_2028C, offset chiyuri_1B2C2
-		mov	word ptr p1_20294+2, seg chiyuri_1B427
-		mov	word ptr p1_20294, offset chiyuri_1B427
-		mov	word ptr p1_2029C+2, seg chiyuri_1B3B0
-		mov	word ptr p1_2029C, offset chiyuri_1B3B0
-		mov	word ptr p1_202A4+2, seg chiyuri_1B623
-		mov	word ptr p1_202A4, offset chiyuri_1B623
-		mov	word ptr p1_202AC+2, seg chiyuri_1B63B
-		mov	word ptr p1_202AC, offset chiyuri_1B63B
-		mov	word ptr p1_1F32E+2, seg chiyuri_126A8
-		mov	word ptr p1_1F32E, offset chiyuri_126A8
-		mov	word ptr p1_1F336+2, seg chiyuri_12B99
-		mov	word ptr p1_1F336, offset chiyuri_12B99
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg chiyuri_bomb
-		mov	word ptr bomb_p1, offset chiyuri_bomb
+		setfarfp	p1_1FE6C, chiyuri_18FEA
+		setfarfp	p1_1FE70, chiyuri_19260
+		setfarfp	p1_1FE74, chiyuri_1938A
+		setfarfp	p1_23B6E, chiyuri_1B277
+		setfarfp	p1_2028C, chiyuri_1B2C2
+		setfarfp	p1_20294, chiyuri_1B427
+		setfarfp	p1_2029C, chiyuri_1B3B0
+		setfarfp	p1_202A4, chiyuri_1B623
+		setfarfp	p1_202AC, chiyuri_1B63B
+		setfarfp	p1_1F32E, chiyuri_126A8
+		setfarfp	p1_1F336, chiyuri_12B99
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, chiyuri_bomb
 		mov	word_23B6C, 4259h
 		mov	word_23B6A, 4110h
 		jmp	loc_B1B5
 ; ---------------------------------------------------------------------------
 
 loc_B10A:
-		mov	word ptr p2_1FE78+2, seg chiyuri_18FEA
-		mov	word ptr p2_1FE78, offset chiyuri_18FEA
-		mov	word ptr p2_1FE7C+2, seg chiyuri_19260
-		mov	word ptr p2_1FE7C, offset chiyuri_19260
-		mov	word ptr p2_1FE80+2, seg chiyuri_1938A
-		mov	word ptr p2_1FE80, offset chiyuri_1938A
-		mov	word ptr p2_23BEE+2, seg chiyuri_1B277
-		mov	word ptr p2_23BEE, offset chiyuri_1B277
-		mov	word ptr p2_20290+2, seg chiyuri_1B2C2
-		mov	word ptr p2_20290, offset chiyuri_1B2C2
-		mov	word ptr p2_20298+2, seg chiyuri_1B427
-		mov	word ptr p2_20298, offset chiyuri_1B427
-		mov	word ptr p2_202A0+2, seg chiyuri_1B3B0
-		mov	word ptr p2_202A0, offset chiyuri_1B3B0
-		mov	word ptr p2_202A8+2, seg chiyuri_1B623
-		mov	word ptr p2_202A8, offset chiyuri_1B623
-		mov	word ptr p2_202B0+2, seg chiyuri_1B63B
-		mov	word ptr p2_202B0, offset chiyuri_1B63B
-		mov	word ptr p2_1F332+2, seg chiyuri_126A8
-		mov	word ptr p2_1F332, offset chiyuri_126A8
-		mov	word ptr p2_1F33A+2, seg chiyuri_12B99
-		mov	word ptr p2_1F33A, offset chiyuri_12B99
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg chiyuri_bomb
-		mov	word ptr bomb_p2, offset chiyuri_bomb
+		setfarfp	p2_1FE78, chiyuri_18FEA
+		setfarfp	p2_1FE7C, chiyuri_19260
+		setfarfp	p2_1FE80, chiyuri_1938A
+		setfarfp	p2_23BEE, chiyuri_1B277
+		setfarfp	p2_20290, chiyuri_1B2C2
+		setfarfp	p2_20298, chiyuri_1B427
+		setfarfp	p2_202A0, chiyuri_1B3B0
+		setfarfp	p2_202A8, chiyuri_1B623
+		setfarfp	p2_202B0, chiyuri_1B63B
+		setfarfp	p2_1F332, chiyuri_126A8
+		setfarfp	p2_1F33A, chiyuri_12B99
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, chiyuri_bomb
 		mov	word_23BEC, 4259h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_B1B5:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	chiyuri_1219D
 		pop	si
@@ -3043,75 +2818,46 @@ arg_0		= word ptr  4
 		call	sub_A4C3
 		or	si, si
 		jnz	loc_B2A2
-		mov	word ptr p1_1FE6C+2, seg yumemi_1A902
-		mov	word ptr p1_1FE6C, offset yumemi_1A902
-		mov	word ptr p1_1FE70+2, seg yumemi_1AE2E
-		mov	word ptr p1_1FE70, offset yumemi_1AE2E
-		mov	word ptr p1_1FE74+2, seg yumemi_1AF72
-		mov	word ptr p1_1FE74, offset yumemi_1AF72
-		mov	word ptr p1_23B6E+2, seg yumemi_16A64
-		mov	word ptr p1_23B6E, offset yumemi_16A64
-		mov	word ptr p1_2028C+2, seg yumemi_16A8D
-		mov	word ptr p1_2028C, offset yumemi_16A8D
-		mov	word ptr p1_20294+2, seg yumemi_16C65
-		mov	word ptr p1_20294, offset yumemi_16C65
-		mov	word ptr p1_2029C+2, seg yumemi_16B0C
-		mov	word ptr p1_2029C, offset yumemi_16B0C
-		mov	word ptr p1_202A4+2, seg yumemi_16FC0
-		mov	word ptr p1_202A4, offset yumemi_16FC0
-		mov	word ptr p1_202AC+2, seg yumemi_16FD8
-		mov	word ptr p1_202AC, offset yumemi_16FD8
-		mov	word ptr p1_1F32E+2, seg yumemi_1070A
-		mov	word ptr p1_1F32E, offset yumemi_1070A
-		mov	word ptr p1_1F336+2, seg yumemi_10BAB
-		mov	word ptr p1_1F336, offset yumemi_10BAB
-		mov	word ptr p1_205CE+2, seg sub_1501E
-		mov	word ptr p1_205CE, offset sub_1501E
-		mov	word ptr bomb_p1+2, seg yumemi_bomb
-		mov	word ptr bomb_p1, offset yumemi_bomb
+		setfarfp	p1_1FE6C, yumemi_1A902
+		setfarfp	p1_1FE70, yumemi_1AE2E
+		setfarfp	p1_1FE74, yumemi_1AF72
+		setfarfp	p1_23B6E, yumemi_16A64
+		setfarfp	p1_2028C, yumemi_16A8D
+		setfarfp	p1_20294, yumemi_16C65
+		setfarfp	p1_2029C, yumemi_16B0C
+		setfarfp	p1_202A4, yumemi_16FC0
+		setfarfp	p1_202AC, yumemi_16FD8
+		setfarfp	p1_1F32E, yumemi_1070A
+		setfarfp	p1_1F336, yumemi_10BAB
+		setfarfp	p1_205CE, sub_1501E
+		setfarfp	bomb_p1, yumemi_bomb
 		mov	word_23B6C, 4297h
 		mov	word_23B6A, 4110h
 		jmp	loc_B34D
 ; ---------------------------------------------------------------------------
 
 loc_B2A2:
-		mov	word ptr p2_1FE78+2, seg yumemi_1A902
-		mov	word ptr p2_1FE78, offset yumemi_1A902
-		mov	word ptr p2_1FE7C+2, seg yumemi_1AE2E
-		mov	word ptr p2_1FE7C, offset yumemi_1AE2E
-		mov	word ptr p2_1FE80+2, seg yumemi_1AF72
-		mov	word ptr p2_1FE80, offset yumemi_1AF72
-		mov	word ptr p2_23BEE+2, seg yumemi_16A64
-		mov	word ptr p2_23BEE, offset yumemi_16A64
-		mov	word ptr p2_20290+2, seg yumemi_16A8D
-		mov	word ptr p2_20290, offset yumemi_16A8D
-		mov	word ptr p2_20298+2, seg yumemi_16C65
-		mov	word ptr p2_20298, offset yumemi_16C65
-		mov	word ptr p2_202A0+2, seg yumemi_16B0C
-		mov	word ptr p2_202A0, offset yumemi_16B0C
-		mov	word ptr p2_202A8+2, seg yumemi_16FC0
-		mov	word ptr p2_202A8, offset yumemi_16FC0
-		mov	word ptr p2_202B0+2, seg yumemi_16FD8
-		mov	word ptr p2_202B0, offset yumemi_16FD8
-		mov	word ptr p2_1F332+2, seg yumemi_1070A
-		mov	word ptr p2_1F332, offset yumemi_1070A
-		mov	word ptr p2_1F33A+2, seg yumemi_10BAB
-		mov	word ptr p2_1F33A, offset yumemi_10BAB
-		mov	word ptr p2_205D2+2, seg sub_1501E
-		mov	word ptr p2_205D2, offset sub_1501E
-		mov	word ptr bomb_p2+2, seg yumemi_bomb
-		mov	word ptr bomb_p2, offset yumemi_bomb
+		setfarfp	p2_1FE78, yumemi_1A902
+		setfarfp	p2_1FE7C, yumemi_1AE2E
+		setfarfp	p2_1FE80, yumemi_1AF72
+		setfarfp	p2_23BEE, yumemi_16A64
+		setfarfp	p2_20290, yumemi_16A8D
+		setfarfp	p2_20298, yumemi_16C65
+		setfarfp	p2_202A0, yumemi_16B0C
+		setfarfp	p2_202A8, yumemi_16FC0
+		setfarfp	p2_202B0, yumemi_16FD8
+		setfarfp	p2_1F332, yumemi_1070A
+		setfarfp	p2_1F33A, yumemi_10BAB
+		setfarfp	p2_205D2, sub_1501E
+		setfarfp	bomb_p2, yumemi_bomb
 		mov	word_23BEC, 4297h
 		mov	word_23BEA, 4110h
 		call	sub_A4A1
 
 loc_B34D:
-		mov	word ptr dword_20F20+2,	seg seg001
-		mov	word ptr dword_20F20, offset sub_D2E8
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, offset sub_D340
-		mov	word ptr dword_20F28+2,	seg seg001
-		mov	word ptr dword_20F28, offset sub_D05D
+		setfarfp	farfp_20F20, sub_D2E8
+		setfarfp	farfp_20F24, sub_D340
+		setfarfp	farfp_20F28, sub_D05D
 		push	si
 		call	yumemi_102C8
 		pop	si
@@ -3446,7 +3192,7 @@ loc_B5BD:
 		nopcall	sub_B39E
 		mov	byte_1FBC3, 1
 		mov	byte_1FBC2, 0
-		mov	word_1FBC0, 1F2Ah
+		mov	fp_1FBC0, offset sub_B60A
 
 loc_B5EE:
 		mov	trapezoid_hmask, 0FFFFh
@@ -3563,7 +3309,7 @@ loc_B706:
 		cmp	byte_1FBC2, 10h
 		jb	short loc_B724
 		mov	byte_1FBC2, 0
-		mov	word_1FBC0, 1DC3h
+		mov	fp_1FBC0, offset sub_B4A3
 
 loc_B724:
 		call	grcg_off
@@ -7159,8 +6905,7 @@ loc_D195:
 		jb	short loc_D195
 		cmp	dword_23AF2, 80h
 		jbe	short loc_D1DE
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, 3B07h
+		setfarfp	farfp_20F24, sub_D1E7
 
 loc_D1DE:
 		call	egc_off
@@ -7412,8 +7157,7 @@ loc_D3AF:
 		jb	short loc_D3A0
 		cmp	dword_23AF2, 90h
 		jbe	short loc_D3F0
-		mov	word ptr dword_20F24+2,	seg seg001
-		mov	word ptr dword_20F24, 3D19h
+		setfarfp	farfp_20F24, sub_D3F9
 
 loc_D3F0:
 		call	egc_off
@@ -39557,10 +39301,10 @@ include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 
 bdata@	label byte
-dword_1E6E2	dd ?
+farfp_1E6E2	dd ?
 word_1E6E6	dw ?
 word_1E6E8	dw ?
-word_1E6EA	dw ?
+fp_1E6EA	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
@@ -40419,7 +40163,7 @@ word_1FB3C	dw ?
 		dd    ?	;
 		dd    ?	;
 word_1FBBE	dw ?
-word_1FBC0	dw ?
+fp_1FBC0	dw ?
 byte_1FBC2	db ?
 byte_1FBC3	db ?
 word_1FBC4	dw ?
@@ -41727,9 +41471,9 @@ byte_20E89	db ?
 		dd    ?	;
 byte_20F1E	db ?
 		db ?
-dword_20F20	dd ?
-dword_20F24	dd ?
-dword_20F28	dd ?
+farfp_20F20	dd ?
+farfp_20F24	dd ?
+farfp_20F28	dd ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

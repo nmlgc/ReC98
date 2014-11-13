@@ -2253,7 +2253,7 @@ var_2		= word ptr -2
 		inc	word_1355E
 		cmp	word_12903, 0
 		jz	short loc_B2AE
-		call	dword_13564
+		call	farfp_13564
 
 loc_B2AE:
 		xor	dx, dx
@@ -2376,8 +2376,8 @@ sub_B334	endp
 		mov	word_12903, 0
 		mov	dx, [bp+8]
 		mov	ax, [bp+6]
-		mov	word ptr dword_13564+2,	dx
-		mov	word ptr dword_13564, ax
+		mov	word ptr farfp_13564+2,	dx
+		mov	word ptr farfp_13564, ax
 		mov	word_12903, 1
 		pop	bp
 		retf
@@ -10654,7 +10654,7 @@ word_1355E	dw ?
 ; void (__interrupt far	*off_13560)()
 off_13560	dw ?
 word_13562	dw ?
-dword_13564	dd ?
+farfp_13564	dd ?
 		dd    ?
 		dd    ?
 		dd    ?

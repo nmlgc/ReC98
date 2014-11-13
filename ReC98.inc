@@ -33,6 +33,13 @@ endif
 	call func
 endm
 
+; Avoids specifying both segment and offset of a function. Too bad that it
+; still doesn't cause TASM to require [func] to be a valid identifier.
+setfarfp macro farfp, func
+	mov word ptr farfp+2, seg func
+	mov word ptr farfp, offset func
+endm
+
 pushSS_ macro
 if LDATA
 	push ss

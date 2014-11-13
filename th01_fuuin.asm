@@ -5872,7 +5872,7 @@ var_2		= word ptr -2
 		inc	word_14046
 		cmp	word_13443, 0
 		jz	short loc_CA72
-		call	dword_1404C
+		call	farfp_1404C
 
 loc_CA72:
 		xor	dx, dx
@@ -6004,8 +6004,8 @@ arg_2		= word ptr  8
 		mov	word_13443, 0
 		mov	dx, [bp+arg_2]
 		mov	ax, [bp+arg_0]
-		mov	word ptr dword_1404C+2,	dx
-		mov	word ptr dword_1404C, ax
+		mov	word ptr farfp_1404C+2,	dx
+		mov	word ptr farfp_1404C, ax
 		mov	word_13443, 1
 		pop	bp
 		retf
@@ -12871,7 +12871,7 @@ word_14046	dw ?
 ; void (__interrupt far	*off_14048)()
 off_14048	dw ?
 word_1404A	dw ?
-dword_1404C	dd ?
+farfp_1404C	dd ?
 		dd    ?
 		dd    ?
 		dd    ?

@@ -2630,7 +2630,7 @@ loc_B249:
 		mov	word_1FFA8, 0
 
 loc_B24F:
-		call	dword_1F4A4
+		call	farfp_1F4A4
 		or	ax, ax
 		jz	short loc_B263
 		push	228h
@@ -2718,8 +2718,7 @@ loc_B2F5:
 		les	bx, dword_2026C
 		mov	al, es:[bx+24h]
 		mov	byte_2066C, al
-		mov	word ptr dword_1F4A4+2,	seg seg001
-		mov	word ptr dword_1F4A4, offset sub_BCB1
+		setfarfp	farfp_1F4A4, sub_BCB1
 		cmp	word ptr es:[bx+12h], 0
 		jz	short loc_B34C
 		cmp	word ptr es:[bx+12h], 9
@@ -2991,28 +2990,17 @@ loc_B4D7:
 		call	sub_1C608
 		call	sub_1C3DF
 		call	sub_12C72
-		mov	word ptr dword_1F478+2,	seg seg001
-		mov	word ptr dword_1F478, offset sub_BF90
-		mov	word ptr dword_1F47C+2,	seg seg001
-		mov	word ptr dword_1F47C, offset sub_BF95
-		mov	word ptr dword_1F490+2,	seg seg001
-		mov	word ptr dword_1F490, offset sub_BF90
-		mov	word ptr dword_1F4A0+2,	seg seg001
-		mov	word ptr dword_1F4A0, offset sub_BF90
-		mov	word ptr dword_23A72+2,	seg seg001
-		mov	word ptr dword_23A72, offset sub_BF90
-		mov	word ptr dword_23A76+2,	seg seg001
-		mov	word ptr dword_23A76, offset sub_BF90
-		mov	word ptr dword_26C3C+2,	seg seg003
-		mov	word ptr dword_26C3C, offset sub_17979
-		mov	word ptr dword_26C40+2,	seg seg003
-		mov	word ptr dword_26C40, offset sub_1766E
-		mov	word ptr dword_1F494+2,	seg seg001
-		mov	word ptr dword_1F494, offset sub_BFD0
-		mov	word ptr dword_1F498+2,	seg seg001
-		mov	word ptr dword_1F498, offset sub_C05D
-		mov	word ptr dword_1F48C+2,	seg seg001
-		mov	word ptr dword_1F48C, offset sub_BF95
+		setfarfp	farfp_1F478, sub_BF90
+		setfarfp	farfp_1F47C, sub_BF95
+		setfarfp	farfp_1F490, sub_BF90
+		setfarfp	farfp_1F4A0, sub_BF90
+		setfarfp	farfp_23A72, sub_BF90
+		setfarfp	farfp_23A76, sub_BF90
+		setfarfp	farfp_26C3C, sub_17979
+		setfarfp	farfp_26C40, sub_1766E
+		setfarfp	farfp_1F494, sub_BFD0
+		setfarfp	farfp_1F498, sub_C05D
+		setfarfp	farfp_1F48C, sub_BF95
 		call	sub_C5B0
 		mov	byte_20342, 1
 		mov	byte_1E500, 4
@@ -3026,85 +3014,55 @@ loc_B4D7:
 
 loc_B63C:
 		mov	word_20616, 74h	; 't'
-		mov	word ptr dword_1F474+2,	seg seg003
-		mov	word ptr dword_1F474, offset sub_13786
-		mov	word ptr dword_1F470+2,	seg seg003
-		mov	word ptr dword_1F470, offset sub_13909
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_13ADE
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_13B8B
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_13BB5
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset loc_13FE5
-		mov	word ptr dword_1F490+2,	seg seg003
-		mov	word ptr dword_1F490, offset sub_13671
+		setfarfp	farfp_1F474, sub_13786
+		setfarfp	farfp_1F470, sub_13909
+		setfarfp	farfp_1F484, sub_13ADE
+		setfarfp	farfp_1F488, sub_13B8B
+		setfarfp	farfp_1F49C, sub_13BB5
+		setfarfp	farfp_1F480, sub_13FE5
+		setfarfp	farfp_1F490, sub_13671
 		jmp	short loc_B6F2
 ; ---------------------------------------------------------------------------
 
 loc_B698:
 		mov	word_20616, 50h	; 'P'
-		mov	word ptr dword_1F474+2,	seg seg003
-		mov	word ptr dword_1F474, offset sub_1410A
-		mov	word ptr dword_1F470+2,	seg seg003
-		mov	word ptr dword_1F470, offset sub_1424A
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_1523C
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_15218
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_143E5
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset sub_150F4
-		mov	word ptr dword_1F490+2,	seg seg003
-		mov	word ptr dword_1F490, offset sub_140AE
+		setfarfp	farfp_1F474, sub_1410A
+		setfarfp	farfp_1F470, sub_1424A
+		setfarfp	farfp_1F484, sub_1523C
+		setfarfp	farfp_1F488, sub_15218
+		setfarfp	farfp_1F49C, sub_143E5
+		setfarfp	farfp_1F480, sub_150F4
+		setfarfp	farfp_1F490, sub_140AE
 
 loc_B6F2:
-		mov	word ptr dword_1F4A0+2,	seg seg003
-		mov	word ptr dword_1F4A0, offset sub_13513
+		setfarfp	farfp_1F4A0, sub_13513
 		jmp	loc_B88A
 ; ---------------------------------------------------------------------------
 
 loc_B701:
 		mov	word_20616, 67h	; 'g'
-		mov	word ptr dword_1F474+2,	seg seg003
-		mov	word ptr dword_1F474, offset sub_110B7
-		mov	word ptr dword_1F470+2,	seg seg003
-		mov	word ptr dword_1F470, offset sub_114D6
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_12754
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_1273B
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_116AD
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset sub_123A9
-		mov	word ptr dword_1F490+2,	seg seg003
-		mov	word ptr dword_1F490, offset sub_10E95
-		mov	word ptr dword_1F4A0+2,	seg seg003
-		mov	word ptr dword_1F4A0, offset sub_10E4F
+		setfarfp	farfp_1F474, sub_110B7
+		setfarfp	farfp_1F470, sub_114D6
+		setfarfp	farfp_1F484, sub_12754
+		setfarfp	farfp_1F488, sub_1273B
+		setfarfp	farfp_1F49C, sub_116AD
+		setfarfp	farfp_1F480, sub_123A9
+		setfarfp	farfp_1F490, sub_10E95
+		setfarfp	farfp_1F4A0, sub_10E4F
 		jmp	loc_B88A
 ; ---------------------------------------------------------------------------
 
 loc_B76A:
 		mov	word_20616, 3B0h
-		mov	word ptr dword_1F474+2,	seg seg003
-		mov	word ptr dword_1F474, offset sub_19EF3
-		mov	word ptr dword_1F470+2,	seg seg003
-		mov	word ptr dword_1F470, offset sub_1A1FF
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_1A7D5
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_1C270
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_1C16A
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset sub_1BEF2
+		setfarfp	farfp_1F474, sub_19EF3
+		setfarfp	farfp_1F470, sub_1A1FF
+		setfarfp	farfp_1F484, sub_1A7D5
+		setfarfp	farfp_1F488, sub_1C270
+		setfarfp	farfp_1F49C, sub_1C16A
+		setfarfp	farfp_1F480, sub_1BEF2
 		cmp	byte_2066C, 0
 		jnz	short loc_B7CB
-		mov	word ptr dword_1F490+2,	seg seg003
-		mov	word ptr dword_1F490, 0A36Fh
+		setfarfp	farfp_1F490, sub_19E2F
 
 loc_B7CB:
 		call	sub_129FC
@@ -3115,36 +3073,24 @@ loc_B7CB:
 
 loc_B7DD:
 		mov	word_20616, 0FFFFh
-		mov	word ptr dword_1F474+2,	seg seg001
-		mov	word ptr dword_1F474, offset sub_BF95
-		mov	word ptr dword_1F470+2,	seg seg001
-		mov	word ptr dword_1F470, offset sub_BF90
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_199B3
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_19D96
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_17B75
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset sub_19456
+		setfarfp	farfp_1F474, sub_BF95
+		setfarfp	farfp_1F470, sub_BF90
+		setfarfp	farfp_1F484, sub_199B3
+		setfarfp	farfp_1F488, sub_19D96
+		setfarfp	farfp_1F49C, sub_17B75
+		setfarfp	farfp_1F480, sub_19456
 		mov	byte_1E500, 1
 		jmp	short loc_B88A
 ; ---------------------------------------------------------------------------
 
 loc_B832:
 		mov	word_20616, 0C8h
-		mov	word ptr dword_1F474+2,	seg seg003
-		mov	word ptr dword_1F474, offset sub_15402
-		mov	word ptr dword_1F470+2,	seg seg003
-		mov	word ptr dword_1F470, offset sub_1540C
-		mov	word ptr dword_1F484+2,	seg seg003
-		mov	word ptr dword_1F484, offset sub_1696B
-		mov	word ptr dword_1F488+2,	seg seg003
-		mov	word ptr dword_1F488, offset sub_16A21
-		mov	word ptr dword_1F49C+2,	seg seg003
-		mov	word ptr dword_1F49C, offset sub_159AF
-		mov	word ptr dword_1F480+2,	seg seg003
-		mov	word ptr dword_1F480, offset sub_16744
+		setfarfp	farfp_1F474, sub_15402
+		setfarfp	farfp_1F470, sub_1540C
+		setfarfp	farfp_1F484, sub_1696B
+		setfarfp	farfp_1F488, sub_16A21
+		setfarfp	farfp_1F49C, sub_159AF
+		setfarfp	farfp_1F480, sub_16744
 		call	sub_129FC
 		mov	byte_1E500, 2
 
@@ -3559,7 +3505,7 @@ var_2		= word ptr -2
 
 loc_BCC3:
 		call	sub_FA8A
-		call	dword_1F498
+		call	farfp_1F498
 		call	bgm_show
 		mov	si, word_20344
 		mov	al, byte_20618
@@ -3570,17 +3516,17 @@ loc_BCC3:
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		mov	word_20344, ax
-		call	dword_1F478
+		call	farfp_1F478
 		cmp	byte_2061A, 0
 		jz	short loc_BCF9
-		call	dword_1F474
+		call	farfp_1F474
 		mov	byte_2061A, al
 
 loc_BCF9:
-		call	dword_26C3C
+		call	farfp_26C3C
 		call	sub_C6B2
 		call	sub_10D42
-		call	dword_23A72
+		call	farfp_23A72
 		call	sub_D874
 		call	sub_4288
 		call	sub_E2D9
@@ -3591,9 +3537,9 @@ loc_BCF9:
 
 loc_BD26:
 		call	sub_C10A
-		call	dword_1F4A0
+		call	farfp_1F4A0
 		call	sub_4692
-		call	dword_1F490
+		call	farfp_1F490
 		mov	ax, 0FFF0h
 		mov	dx, 4A0h
 		out	dx, ax
@@ -3660,17 +3606,17 @@ loc_BDA2:
 loc_BDCC:
 		call	sub_F1D8
 		call	sub_ECAC
-		call	dword_26C40
-		call	dword_1F47C
+		call	farfp_26C40
+		call	farfp_1F47C
 		mov	byte_1F466, al
 		cmp	byte_2061A, 0
 		jz	short loc_BDE8
-		call	dword_1F470
+		call	farfp_1F470
 
 loc_BDE8:
 		call	sub_EF36
 		call	sub_DAF0
-		call	dword_23A76
+		call	farfp_23A76
 		call	sub_10BC6
 		call	sub_41AA
 		test	byte ptr word_1FFA8, 40h
@@ -3791,11 +3737,11 @@ loc_BEED:
 		xor	byte_20618, 1
 		mov	al, byte_20618
 		out	0A6h, al
-		call	dword_1F494
+		call	farfp_1F494
 		les	bx, dword_2026C
 		inc	dword ptr es:[bx+1Ch]
 		inc	dword_20612
-		call	dword_1F48C
+		call	farfp_1F48C
 		or	ax, ax
 		jz	short loc_BF36
 		cmp	byte_20607, 0
@@ -3894,7 +3840,7 @@ sub_BF9C	proc far
 		call	far ptr	palette_show
 
 loc_BFC3:
-		call	dword_1F488
+		call	farfp_1F488
 		mov	ax, 1
 		pop	bp
 		retf
@@ -3921,8 +3867,7 @@ sub_BFD0	proc far
 		cbw
 		cmp	ax, 3
 		jnz	short loc_BFF8
-		mov	word ptr dword_1F490+2,	seg seg001
-		mov	word ptr dword_1F490, 0E30h
+		setfarfp	farfp_1F490, sub_BF90
 		jmp	short loc_C015
 ; ---------------------------------------------------------------------------
 
@@ -3937,17 +3882,15 @@ loc_BFF8:
 		call	far ptr	palette_show
 
 loc_C015:
-		call	dword_1F484
+		call	farfp_1F484
 		call	sub_17A55
 		call	sub_16A8A
-		mov	word ptr dword_1F494+2,	seg seg001
-		mov	word ptr dword_1F494, offset sub_BF90
-		mov	eax, dword_1F49C
-		mov	dword_1F478, eax
-		mov	eax, dword_1F480
-		mov	dword_1F47C, eax
-		mov	word ptr dword_1F48C+2,	seg seg001
-		mov	word ptr dword_1F48C, offset sub_BF9C
+		setfarfp	farfp_1F494, sub_BF90
+		mov	eax, farfp_1F49C
+		mov	farfp_1F478, eax
+		mov	eax, farfp_1F480
+		mov	farfp_1F47C, eax
+		setfarfp	farfp_1F48C, sub_BF9C
 		mov	byte_20343, 0FFh
 		mov	bgm_show_timer, 1
 		mov	al, byte_1F46E
@@ -3983,8 +3926,7 @@ sub_C05D	proc far
 		call	text_putsa
 
 loc_C09A:
-		mov	word ptr dword_1F498+2,	seg seg001
-		mov	word ptr dword_1F498, offset sub_BF90
+		setfarfp	farfp_1F498, sub_BF90
 
 loc_C0A6:
 		pop	bp
@@ -4615,7 +4557,7 @@ loc_C5C2:
 ; ---------------------------------------------------------------------------
 
 loc_C634:
-		mov	word_20602, 19CDh
+		mov	fp_20602, offset sub_CB2D
 		mov	byte_2060A, 5
 		mov	byte_2060B, 5
 		mov	byte_2060C, 4
@@ -4626,7 +4568,7 @@ loc_C634:
 ; ---------------------------------------------------------------------------
 
 loc_C655:
-		mov	word_20602, 1BCAh
+		mov	fp_20602, offset sub_CD2A
 		mov	byte_2060A, 4
 		mov	byte_2060B, 4
 		mov	byte_2060C, 3
@@ -4639,7 +4581,7 @@ loc_C655:
 ; ---------------------------------------------------------------------------
 
 loc_C67F:
-		mov	word_20602, 1F0Bh
+		mov	fp_20602, offset sub_D06B
 		mov	byte_2060A, 3
 		mov	byte_2060B, 3
 		mov	byte_2060C, 3
@@ -8446,7 +8388,7 @@ sub_E178	proc near
 		push	1
 		call	sub_F537
 		add	sp, 6
-		mov	word_219CA, 34B8h
+		mov	fp_219CA, offset sub_E618
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -8460,7 +8402,7 @@ loc_E1D2:
 		push	1
 		call	sub_F537
 		add	sp, 6
-		mov	word_219CA, 373Ch
+		mov	fp_219CA, offset sub_E89C
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -8489,7 +8431,7 @@ loc_E1F3:
 		push	1440h
 		call	file_read
 		call	file_close
-		mov	word_219CA, 398Bh
+		mov	fp_219CA, offset sub_EAEB
 
 loc_E248:
 		pop	bp
@@ -9700,7 +9642,7 @@ loc_ECD0:
 loc_ECE3:
 		cmp	word_218CA, 1
 		jnz	short loc_ECF0
-		call	word_219CA
+		call	fp_219CA
 		mov	si, ax
 
 loc_ECF0:
@@ -10568,7 +10510,7 @@ loc_F38B:
 		mov	byte_1E51A, 3Fh	; '?'
 
 loc_F395:
-		call	word_20602
+		call	fp_20602
 		push	1
 		call	sub_FA52
 		add	sp, 2
@@ -10621,7 +10563,7 @@ loc_F40D:
 		mov	byte_1E51A, 3Fh	; '?'
 
 loc_F417:
-		call	word_20602
+		call	fp_20602
 		mov	byte_22D4B, 8
 		inc	byte_1EB0E
 		jmp	short loc_F434
@@ -17559,10 +17501,8 @@ sub_129DD	endp
 sub_129FC	proc far
 		push	bp
 		mov	bp, sp
-		mov	word ptr dword_23A72+2,	seg seg003
-		mov	word ptr dword_23A72, offset sub_12A7D
-		mov	word ptr dword_23A76+2,	seg seg003
-		mov	word ptr dword_23A76, offset sub_12B9E
+		setfarfp	farfp_23A72, sub_12A7D
+		setfarfp	farfp_23A76, sub_12B9E
 		pop	bp
 		retf
 sub_129FC	endp
@@ -20389,9 +20329,12 @@ locret_13FE3:
 		retf
 sub_13F34	endp
 
-; ---------------------------------------------------------------------------
 
-loc_13FE5:
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_13FE5	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, word_24E7C
@@ -20431,6 +20374,8 @@ loc_14039:
 		mov	ax, 1
 		pop	bp
 		retf
+sub_13FE5	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25031,17 +24976,17 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_166F6:
-		call	word_255B6
+		call	fp_255B6
 		jmp	short loc_16706
 ; ---------------------------------------------------------------------------
 
 loc_166FC:
-		call	word_255B8
+		call	fp_255B8
 		jmp	short loc_16706
 ; ---------------------------------------------------------------------------
 
 loc_16702:
-		call	word_255BA
+		call	fp_255BA
 
 loc_16706:
 		cmp	word_20650, 0
@@ -25150,9 +25095,9 @@ loc_167E6:
 		mov	word_20650, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B3, 0
-		mov	word_255B6, 6296h
-		mov	word_255B8, 63C4h
-		mov	word_255BA, 64AFh
+		mov	fp_255B6, offset sub_15D56
+		mov	fp_255B8, offset sub_15E84
+		mov	fp_255BA, offset sub_15F6F
 		mov	word_255BC, 708h
 		jmp	loc_16948
 ; ---------------------------------------------------------------------------
@@ -25173,8 +25118,8 @@ loc_16838:
 		mov	word_20650, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B3, 0
-		mov	word_255B6, 64D5h
-		mov	word_255B8, 66B6h
+		mov	fp_255B6, offset sub_15F95
+		mov	fp_255B8, offset sub_16176
 		mov	word_255BC, 708h
 		jmp	loc_16948
 ; ---------------------------------------------------------------------------
@@ -25188,8 +25133,8 @@ loc_16868:
 		mov	word_20650, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B3, 0
-		mov	word_255B6, 66DCh
-		mov	word_255B8, 6813h
+		mov	fp_255B6, offset sub_1619C
+		mov	fp_255B8, offset sub_162D3
 		mov	word_255BC, 708h
 		jmp	loc_16948
 ; ---------------------------------------------------------------------------
@@ -25203,8 +25148,8 @@ loc_1689F:
 		mov	word_20650, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B3, 0
-		mov	word_255B6, 6961h
-		mov	word_255B8, 6A95h
+		mov	fp_255B6, offset sub_16421
+		mov	fp_255B8, offset sub_16555
 		mov	word_255BC, 708h
 		jmp	short loc_16948
 ; ---------------------------------------------------------------------------
@@ -25227,9 +25172,9 @@ loc_168E7:
 		mov	word_20650, 0
 		inc	byte ptr word_255B1+1
 		mov	byte_255B3, 0
-		mov	word_255B6, 6B46h
-		mov	word_255B8, 6B90h
-		mov	word_255BA, 6BCEh
+		mov	fp_255B6, offset sub_16606
+		mov	fp_255B8, offset sub_16650
+		mov	fp_255BA, offset sub_1668E
 		mov	word_255BC, 1388h
 		jmp	short loc_16948
 ; ---------------------------------------------------------------------------
@@ -25389,10 +25334,8 @@ sub_16A6B	endp
 sub_16A8A	proc far
 		push	bp
 		mov	bp, sp
-		mov	word ptr dword_26C3C+2,	seg seg003
-		mov	word ptr dword_26C3C, offset loc_16A66
-		mov	word ptr dword_26C40+2,	seg seg003
-		mov	word ptr dword_26C40, offset loc_16A66
+		setfarfp	farfp_26C3C, loc_16A66
+		setfarfp	farfp_26C40, loc_16A66
 		pop	bp
 		retf
 sub_16A8A	endp
@@ -39251,20 +39194,20 @@ bgm_show_timer	db ?
 bgm_title_id	db ?
 byte_1F46E	db ?
 		db ?
-dword_1F470	dd ?
-dword_1F474	dd ?
-dword_1F478	dd ?
-dword_1F47C	dd ?
-dword_1F480	dd ?
-dword_1F484	dd ?
-dword_1F488	dd ?
-dword_1F48C	dd ?
-dword_1F490	dd ?
-dword_1F494	dd ?
-dword_1F498	dd ?
-dword_1F49C	dd ?
-dword_1F4A0	dd ?
-dword_1F4A4	dd ?
+farfp_1F470	dd ?
+farfp_1F474	dd ?
+farfp_1F478	dd ?
+farfp_1F47C	dd ?
+farfp_1F480	dd ?
+farfp_1F484	dd ?
+farfp_1F488	dd ?
+farfp_1F48C	dd ?
+farfp_1F490	dd ?
+farfp_1F494	dd ?
+farfp_1F498	dd ?
+farfp_1F49C	dd ?
+farfp_1F4A0	dd ?
+farfp_1F4A4	dd ?
 dword_1F4A8	dd ?
 byte_1F4AC	db ?
 unk_1F4AD	db    ?	;
@@ -39906,7 +39849,7 @@ word_205F6	dw ?
 word_205F8	dw ?
 		dd    ?	;
 		dd    ?	;
-word_20602	dw ?
+fp_20602	dw ?
 byte_20604	db ?
 byte_20605	db ?
 byte_20606	db ?
@@ -41242,7 +41185,7 @@ word_218CA	dw ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-word_219CA	dw ?
+fp_219CA	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -43386,8 +43329,8 @@ word_23A6C	dw ?
 word_23A6E	dw ?
 byte_23A70	db ?
 		db ?
-dword_23A72	dd ?
-dword_23A76	dd ?
+farfp_23A72	dd ?
+farfp_23A76	dd ?
 unk_23A7A	db    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -45181,9 +45124,9 @@ word_255B1	dw ?
 byte_255B3	db ?
 byte_255B4	db ?
 		db ?
-word_255B6	dw ?
-word_255B8	dw ?
-word_255BA	dw ?
+fp_255B6	dw ?
+fp_255B8	dw ?
+fp_255BA	dw ?
 word_255BC	dw ?
 byte_255BE	db ?
 		dd    ?	;
@@ -46631,8 +46574,8 @@ dword_26B76	dd ?
 		dd    ?	;
 		dd    ?	;
 word_26C3A	dw ?
-dword_26C3C	dd ?
-dword_26C40	dd ?
+farfp_26C3C	dd ?
+farfp_26C40	dd ?
 word_26C44	dw ?
 word_26C46	dw ?
 word_26C48	dw ?
