@@ -121,7 +121,7 @@ func SUPER_WAVE_PUT	; super_wave_put() {
 	add	si,2
 	loop	@@for
 
-ifdef MASTERMOD
+if GAME ge 2
 	pop	fs		; pattern address segment
 else
 	pop	ds		; pattern address segment
@@ -175,13 +175,13 @@ endif
 endfunc			; }
 
 superwav_disp		proc	near
-ifdef MASTERMOD
+if GAME ge 2
 	mov	[superwav_count],12h	; dummy
 else
 	mov	ss:[superwav_count],0	; dummy
 endif
 superwav_ydots	equ	$-1
-ifdef MASTERMOD
+if GAME ge 2
 	xor	bx,bx		; できればbxは使いたくなかった
 else
 	xor	bp,bp		; できればbpは使いたくなかった
@@ -189,7 +189,7 @@ endif
 	even
 @@put_loop:
 	xor	dx,dx
-ifdef MASTERMOD
+if GAME ge 2
 	mov	di,wave_address[bx]
 	mov	cx,wave_shift[bx]
 	mov	bp,wave_mask[bx]
@@ -208,7 +208,7 @@ endif
 	jmp	short @@odd2
 	even
 @@put_loop1:
-ifdef MASTERMOD
+if GAME ge 2
 	mov	ax,fs:[si]
 	add	si, 2
 else
@@ -216,7 +216,7 @@ else
 endif
 @@odd1:	ror	ax,cl
 	xor	dx,ax
-ifdef MASTERMOD
+if GAME ge 2
 	and	ax,bp
 else
 	and	ax,bx
@@ -227,7 +227,7 @@ endif
 	dec	ch
 	jnz	@@put_loop1
 	mov	es:[di],dx
-ifdef MASTERMOD
+if GAME ge 2
 	add	bx,2
 	dec	[superwav_count]
 else

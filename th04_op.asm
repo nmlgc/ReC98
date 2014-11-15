@@ -25,6 +25,7 @@
 		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
+include th04/th04.asm
 
 ; ===========================================================================
 

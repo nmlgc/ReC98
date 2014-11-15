@@ -55,7 +55,7 @@ func GRAPH_GAIJI_PUTC	; graph_gaiji_putc() {
 	mov	DI,[BP+@@y]
 	mov	DX,[BP+@@color]
 	mov	BP,[BP+@@ank]	;BP
-if MASTERMOD ge 3
+if GAME ge 4
 	add	BP,5680h	;from gjwrite.asm
 else
 	adc	BP,5680h	;from gjwrite.asm

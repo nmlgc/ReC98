@@ -45,13 +45,13 @@ func MEM_UNASSIGN	; mem_unassign() {
 	cmp	mem_TopSeg,0
 	je	short @@SUCCESS
 
-ifndef MASTERMOD
+if GAME eq 1
 	mov	AX,mem_OutSeg	; some heap type memory allocated
 	cmp	mem_TopHeap,AX
 	jne	short @@FAILURE
 endif
 	mov	AX,mem_TopSeg
-ifndef MASTERMOD
+if GAME eq 1
 	cmp	mem_EndMark,AX	; some stack type memory allocated
 	jne	short @@FAILURE
 endif

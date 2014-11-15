@@ -157,7 +157,7 @@ koizoid_clipxl_2 dw ?
 	shl	BX,1
 	mov	AX,[EDGES+BX]	; 左エッジ
 	not	AX
-if MASTERMOD ge 2
+if GAME ge 3
 	and	AX,trapezoid_hmask
 endif
 
@@ -168,7 +168,7 @@ endif
 	sar	CX,4
 	js	short @@LASTW
 	stosw
-if MASTERMOD ge 2
+if GAME ge 3
 	mov	AX,trapezoid_hmask
 else
 	mov	AX,0FFFFh

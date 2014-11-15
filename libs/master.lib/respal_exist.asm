@@ -91,7 +91,7 @@ func RESPAL_CREATE
 	push	SI
 	push	DI
 
-ifdef MASTERMOD
+if GAME ge 2
 	nop
 endif
 	call	RESPAL_EXIST

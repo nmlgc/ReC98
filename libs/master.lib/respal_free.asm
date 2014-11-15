@@ -38,7 +38,7 @@ func RESPAL_FREE
 	mov	AX,ResPalSeg
 	or	AX,AX
 	jnz	short @@FREE
-ifdef MASTERMOD
+if GAME ge 2
 	nop
 endif
 	call	RESPAL_EXIST

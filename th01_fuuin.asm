@@ -38,6 +38,7 @@
 		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
+include th01/th01.asm
 include libs/BorlandC/regs.inc
 
 ; ===========================================================================

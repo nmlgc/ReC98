@@ -98,7 +98,7 @@ func GRAPH_GAIJI_PUTS	; graph_gaiji_puts() {
 	or	AL,AL
 	jz	short @@RETURN
 	mov	AH,0
-if MASTERMOD ge 3
+if GAME ge 4
 	add	AX,5680h	;from gjwrite.asm
 else
 	adc	AX,5680h	;from gjwrite.asm
