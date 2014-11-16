@@ -332,269 +332,14 @@ sub_35B0	endp
 
 include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
-
-dword_37B2	dd 0
-byte_37B6	db 0
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_37B8	proc far
-
-var_10		= word ptr -10h
-var_A		= word ptr -0Ah
-arg_0		= dword	ptr  6
-
-		enter	10h, 0
-		push	si
-		push	di
-		mov	ax, word ptr cs:dword_37B2
-		or	ax, word ptr cs:dword_37B2+2
-		jnz	short loc_3831
-		push	large [bp+arg_0]
-		call	file_ropen
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	10h
-		call	file_read
-		mov	di, [bp+var_10]
-		mov	si, [bp+var_A]
-		push	di
-		call	hmem_allocbyte
-		mov	word_12EFC, ax
-		push	ax
-		push	0
-		push	di
-		call	file_read
-		call	file_close
-		mov	cx, di
-		mov	ax, word_12EFC
-		mov	es, ax
-		mov	ax, si
-		xor	bx, bx
-
-loc_3801:
-		xor	es:[bx], al
-		sub	al, es:[bx]
-		inc	bx
-		loop	loc_3801
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_37B2,	bx
-		mov	word ptr cs:dword_37B2+2, es
-		mov	word_12EF8, 0
-		mov	word_12EFA, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 3890h
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_3831:
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 3E98h
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		leave
-		retf	4
-sub_37B8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3858	proc far
-		mov	ax, word ptr cs:dword_37B2
-		or	ax, word ptr cs:dword_37B2+2
-		jz	short locret_388F
-		push	word_12EFC
-		call	hmem_free
-		push	ds
-		lds	dx, cs:dword_37B2
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_37B2,	ax
-		mov	word ptr cs:dword_37B2+2, ax
-		cmp	word_12EF8, ax
-		jz	short locret_388F
-		push	word_12EF8
-		call	pfclose
-
-locret_388F:
-		retf
-sub_3858	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_37B6, 0
-		jz	short loc_389D
-		jmp	cs:dword_37B2
-; ---------------------------------------------------------------------------
-
-loc_389D:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_37B6
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_38F4, ah
-		mov	si, 38C4h
-
-loc_38B8:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_38B8
-		mov	di, word_12EFA
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db 3Dh,	0, 0F8h, 38h, 3Eh, 0, 2Ah, 39h,	3Fh, 0,	47h, 39h
-		db 42h,	0, 5Bh,	39h, 46h, 0, 0BCh, 39h,	40h, 0,	0C0h, 39h
-		db 45h,	0, 0C0h, 39h, 4Ch, 0, 9Eh, 39h,	57h, 0,	0C0h, 39h
-		db 5Ch,	0, 0C0h, 39h, 44h, 0, 0AAh, 39h
-byte_38F4	db 0
-		db 0
-		les	di, [bx+di]
-		test	al, 0Fh
-		jnz	loc_39C4
-		or	di, di
-		jns	loc_39C4
-		push	ds
-		push	offset unk_12E78
-		push	word ptr [bp+2]
-		push	dx
-		call	sub_39F0
-		or	ax, ax
-		jz	loc_39C4
-		mov	word_12EF8, ax
-		mov	es, ax
-		mov	es, word ptr es:0
-		mov	ax, es:0
-		mov	word_12EFA, ax
-		jmp	loc_39DF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	loc_39C4
-		push	word_12EF8
-		call	pfclose
-		mov	word_12EF8, 0
-		mov	word_12EFA, 0FFFFh
-		jmp	loc_39DF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_39C4
-		push	word ptr [bp+2]
-		push	dx
-		push	cx
-		push	word_12EF8
-		call	pfread
-		jmp	loc_39DF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_39C4
-		or	cx, cx
-		jl	short loc_39D6
-		cmp	al, 1
-		jz	short loc_398F
-		jl	short loc_3983
-		mov	es, word_12EF8
-		mov	dx, es:16h
-		mov	cx, es:18h
-		sub	dx, es:12h
-		sbb	cx, es:14h
-		jmp	short loc_398F
-; ---------------------------------------------------------------------------
-
-loc_3983:
-		push	cx
-		push	dx
-		push	word_12EF8
-		call	pfrewind
-		pop	dx
-		pop	cx
-
-loc_398F:
-		push	word_12EF8
-		push	cx
-		push	dx
-		call	pfseek
-		mov	[bp+0Eh], dx
-		jmp	short loc_39DF
-; ---------------------------------------------------------------------------
-		db 2Eh,	0C5h, 16h, 0B2h, 37h, 0B8h, 21h, 25h, 0CDh, 21h
-		db 0EBh, 1Ah, 8Ah, 0C8h, 0B8h, 1, 0, 0D3h, 0E0h, 2Eh, 85h
-		db 6, 0BAh, 39h, 75h, 8, 0EBh, 0Ah, 0CFh, 14h, 8Bh, 0CFh
-		db 74h,	16h, 3Bh, 0DFh,	74h, 12h
-; ---------------------------------------------------------------------------
-
-loc_39C4:
-		dec	cs:byte_37B6
-		push	word ptr [bp+18h]
-		popf
-		pop	es
-		pop	ds
-		popa
-		cli
-		jmp	cs:dword_37B2
-; ---------------------------------------------------------------------------
-
-loc_39D6:
-		or	byte ptr [bp+18h], 1
-		mov	ax, 1
-		jmp	short loc_39E3
-; ---------------------------------------------------------------------------
-
-loc_39DF:
-		and	byte ptr [bp+18h], 0FEh
-
-loc_39E3:
-		mov	[bp+12h], ax
-		dec	cs:byte_37B6
-		pop	es
-		pop	ds
-		popa
-		iret
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfint21.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_39F0	proc far
+pfopen	proc far
 
 arg_0		= dword	ptr  6
 arg_4		= dword	ptr  0Ah
@@ -613,7 +358,7 @@ arg_4		= dword	ptr  0Ah
 		jz	loc_3AD1
 		mov	es, si
 		mov	es:0, ax
-		mov	ax, word_12EFC
+		mov	ax, pfint21_entries
 		mov	fs, ax
 		xor	ax, ax
 		mov	di, ax
@@ -699,7 +444,7 @@ loc_3ADA:
 		pop	si
 		pop	bp
 		retf	8
-sub_39F0	endp
+pfopen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4874,10 +4619,10 @@ var_1		= byte ptr -1
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
-		call	sub_3858
+		call	pfend
 		push	ds
 		push	offset aMusic_dat ; "music.dat"
-		call	sub_37B8
+		call	pfstart
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
 		push	ax
@@ -5110,10 +4855,10 @@ loc_C77F:
 ; ---------------------------------------------------------------------------
 
 loc_C790:
-		call	sub_3858
+		call	pfend
 		push	ds
 		push	offset aKaikidan1_dat1
-		call	sub_37B8
+		call	pfstart
 		push	210h
 		call	sub_DC76
 		call	sub_BFE8
@@ -7392,7 +7137,7 @@ sub_D758	endp ; sp-analysis failed
 sub_D7EC	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_3858
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -8487,7 +8232,7 @@ loc_DF27:
 		jz	short loc_DF82
 		push	word ptr [bp+arg_0+2]
 		push	bx
-		call	sub_37B8
+		call	pfstart
 
 loc_DF82:
 		push	400h
@@ -10920,44 +10665,7 @@ byte_12A74	db ?
 		db    ?	;
 byte_12E76	db ?
 		db ?
-unk_12E78	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-word_12EF8	dw ?
-word_12EFA	dw ?
-word_12EFC	dw ?
+include libs/master.lib/pfint21[bss].asm
 word_12EFE	dw ?
 		dd    ?	;
 		dd    ?	;

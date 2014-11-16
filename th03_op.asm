@@ -120,294 +120,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
-; ---------------------------------------------------------------------------
-dword_2B5A	dd 0
-byte_2B5E	db 0
-		db  90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2B60	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cld
-		mov	ax, word ptr cs:dword_2B5A
-		or	ax, word ptr cs:dword_2B5A+2
-		jz	short loc_2B72
-		jmp	loc_2BF3
-; ---------------------------------------------------------------------------
-
-loc_2B72:
-		push	di
-		push	si
-		push	word ptr [bp+arg_0+2]
-		push	word ptr [bp+arg_0]
-		call	file_ropen
-		push	10h
-		call	hmem_allocbyte
-		mov	di, ax
-		push	ax
-		push	0
-		push	10h
-		call	file_read
-		mov	ax, di
-		mov	es, ax
-		mov	di, es:0
-		mov	si, es:6
-		push	ax
-		call	hmem_free
-		push	di
-		call	hmem_allocbyte
-		mov	word_F290, ax
-		push	ax
-		push	0
-		push	di
-		call	file_read
-		call	file_close
-		mov	cx, di
-		mov	ax, word_F290
-		mov	es, ax
-		mov	ax, si
-		xor	bx, bx
-
-loc_2BC1:
-		xor	es:[bx], al
-		sub	al, es:[bx]
-		inc	bx
-		loop	loc_2BC1
-		pop	si
-		pop	di
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_2B5A,	bx
-		mov	word ptr cs:dword_2B5A+2, es
-		mov	word_F28C, 0
-		mov	word_F28E, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 2C54h
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_2BF3:
-		push	si
-		push	di
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 1A1Ch
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_2B60	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2C1C	proc far
-		mov	ax, word ptr cs:dword_2B5A
-		or	ax, word ptr cs:dword_2B5A+2
-		jz	short locret_2C53
-		push	ds
-		lds	dx, cs:dword_2B5A
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_2B5A,	ax
-		mov	word ptr cs:dword_2B5A+2, ax
-		cmp	word_F28C, ax
-		jz	short locret_2C53
-		push	word_F28C
-		call	pfclose
-		push	word_F290
-		call	hmem_free
-
-locret_2C53:
-		retf
-sub_2C1C	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_2B5E, 0
-		jz	short loc_2C61
-		jmp	cs:dword_2B5A
-; ---------------------------------------------------------------------------
-
-loc_2C61:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_2B5E
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_2CB8, ah
-		mov	si, 2C88h
-
-loc_2C7C:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_2C7C
-		mov	di, word_F28E
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db 3Dh,	0, 0BCh, 2Ch, 3Eh, 0, 0F1h, 2Ch, 3Fh, 0, 0Fh, 2Dh
-		db 42h,	0, 23h,	2Dh, 46h, 0, 84h, 2Dh, 40h, 0, 88h, 2Dh
-		db 45h,	0, 88h,	2Dh, 4Ch, 0, 66h, 2Dh, 57h, 0, 88h, 2Dh
-		db 5Ch,	0, 88h,	2Dh, 44h, 0, 72h, 2Dh
-byte_2CB8	db 0
-		db 0
-; ---------------------------------------------------------------------------
-		mov	word ptr [di], gs
-		test	al, 0Fh
-		jz	short loc_2CC3
-		jmp	loc_2D8C
-; ---------------------------------------------------------------------------
-
-loc_2CC3:
-		or	di, di
-		js	short loc_2CCA
-		jmp	loc_2D8C
-; ---------------------------------------------------------------------------
-
-loc_2CCA:
-		push	ds
-		push	offset unk_F20C
-		push	word ptr [bp+2]
-		push	dx
-		call	sub_2EF2
-		or	ax, ax
-		jnz	short loc_2CDD
-		jmp	loc_2D8C
-; ---------------------------------------------------------------------------
-
-loc_2CDD:
-		mov	word_F28C, ax
-		mov	es, ax
-		mov	es, word ptr es:0
-		mov	ax, es:0
-		mov	word_F28E, ax
-		jmp	loc_2DA7
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jz	short loc_2CF8
-		jmp	loc_2D8C
-; ---------------------------------------------------------------------------
-
-loc_2CF8:
-		push	word_F28C
-		call	pfclose
-		mov	word_F28C, 0
-		mov	word_F28E, 0FFFFh
-		jmp	loc_2DA7
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_2D8C
-		push	word ptr [bp+2]
-		push	dx
-		push	cx
-		push	word_F28C
-		call	pfread
-		jmp	loc_2DA7
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_2D8C
-		or	cx, cx
-		jl	short loc_2D9E
-		cmp	al, 1
-		jz	short loc_2D57
-		jl	short loc_2D4B
-		mov	es, word_F28C
-		mov	dx, es:16h
-		mov	cx, es:18h
-		sub	dx, es:12h
-		sbb	cx, es:14h
-		jmp	short loc_2D57
-; ---------------------------------------------------------------------------
-
-loc_2D4B:
-		push	cx
-		push	dx
-		push	word_F28C
-		call	pfrewind
-		pop	dx
-		pop	cx
-
-loc_2D57:
-		push	word_F28C
-		push	cx
-		push	dx
-		call	pfseek
-		mov	[bp+0Eh], dx
-		jmp	short loc_2DA7
-; ---------------------------------------------------------------------------
-		db 2Eh,	0C5h, 16h, 5Ah,	2Bh, 0B8h, 21h,	25h, 0CDh, 21h
-		db 0EBh, 1Ah, 8Ah, 0C8h, 0B8h, 1, 0, 0D3h, 0E0h, 2Eh, 85h
-		db 6, 82h, 2Dh,	75h, 8,	0EBh, 0Ah, 0CFh, 14h, 8Bh, 0CFh
-		db 74h,	16h, 3Bh, 0DFh,	74h, 12h
-; ---------------------------------------------------------------------------
-
-loc_2D8C:
-		dec	cs:byte_2B5E
-		push	word ptr [bp+18h]
-		popf
-		pop	es
-		pop	ds
-		popa
-		cli
-		jmp	cs:dword_2B5A
-; ---------------------------------------------------------------------------
-
-loc_2D9E:
-		or	byte ptr [bp+18h], 1
-		mov	ax, 1
-		jmp	short loc_2DAB
-; ---------------------------------------------------------------------------
-
-loc_2DA7:
-		and	byte ptr [bp+18h], 0FEh
-
-loc_2DAB:
-		mov	[bp+12h], ax
-		dec	cs:byte_2B5E
-		pop	es
-		pop	ds
-		popa
-		iret
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfint21.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -509,7 +222,7 @@ include libs/master.lib/draw_trapezoid.asm
 
 ; Attributes: bp-based frame
 
-sub_2EF2	proc far
+pfopen	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -531,7 +244,7 @@ arg_6		= word ptr  0Ch
 		jz	loc_2FF7
 		mov	es, si
 		mov	es:0, ax
-		mov	ax, word_F290
+		mov	ax, pfint21_entries
 		mov	fs, ax
 		xor	ax, ax
 		mov	di, ax
@@ -637,7 +350,7 @@ loc_3005:
 		pop	si
 		leave
 		retf	8
-sub_2EF2	endp
+pfopen	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -5629,7 +5342,7 @@ sub_BF52	endp
 sub_BFC2	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_2C1C
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -6270,7 +5983,7 @@ loc_C435:
 		call	egc_start
 		call	sub_2DB8
 		push	large [bp+arg_0]
-		call	sub_2B60
+		call	pfstart
 		xor	ax, ax
 		pop	bp
 		retf
@@ -7650,44 +7363,7 @@ byte_F1FD	db ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-unk_F20C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-word_F28C	dw ?
-word_F28E	dw ?
-word_F290	dw ?
+include libs/master.lib/pfint21[bss].asm
 word_F292	dw ?
 word_F294	dw ?
 word_F296	dw ?

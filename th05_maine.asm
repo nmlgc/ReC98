@@ -428,186 +428,10 @@ sub_3778	endp
 
 include libs/master.lib/graph_gaiji_puts.asm
 include libs/master.lib/graph_gaiji_putc.asm
-
-dword_397A	dd 0
-byte_397E	db 0
-		db  90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3980	proc far
-
-var_10		= word ptr -10h
-var_A		= word ptr -0Ah
-arg_0		= dword	ptr  6
-
-		enter	10h, 0
-		push	si
-		push	di
-		mov	ax, word ptr cs:dword_397A
-		or	ax, word ptr cs:dword_397A+2
-		jnz	short loc_39F9
-		push	large [bp+arg_0]
-		call	file_ropen
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	10h
-		call	file_read
-		mov	di, [bp+var_10]
-		mov	si, [bp+var_A]
-		push	di
-		call	hmem_allocbyte
-		mov	word_12F84, ax
-		push	ax
-		push	0
-		push	di
-		call	file_read
-		call	file_close
-		mov	cx, di
-		mov	ax, word_12F84
-		mov	es, ax
-		mov	ax, si
-		xor	bx, bx
-
-loc_39C9:
-		xor	es:[bx], al
-		sub	al, es:[bx]
-		inc	bx
-		loop	loc_39C9
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_397A,	bx
-		mov	word ptr cs:dword_397A+2, es
-		mov	word_12F80, 0
-		mov	word_12F82, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 3A58h
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_39F9:
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 2E00h
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		leave
-		retf	4
-sub_3980	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3A20	proc far
-		mov	ax, word ptr cs:dword_397A
-		or	ax, word ptr cs:dword_397A+2
-		jz	short locret_3A57
-		push	word_12F84
-		call	hmem_free
-		push	ds
-		lds	dx, cs:dword_397A
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_397A,	ax
-		mov	word ptr cs:dword_397A+2, ax
-		cmp	word_12F80, ax
-		jz	short locret_3A57
-		push	word_12F80
-		call	pfclose
-
-locret_3A57:
-		retf
-sub_3A20	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_397E, 0
-		jz	short loc_3A65
-		jmp	cs:dword_397A
-; ---------------------------------------------------------------------------
-
-loc_3A65:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_397E
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_3ABC, ah
-		mov	si, 3A8Ch
-
-loc_3A80:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_3A80
-		mov	di, word_12F82
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db 3Dh,	0, 0C0h, 3Ah, 3Eh, 0, 0F2h, 3Ah, 3Fh, 0, 0Fh, 3Bh
-		db 42h,	0, 23h,	3Bh, 46h, 0, 84h, 3Bh, 40h, 0, 88h, 3Bh
-		db 45h,	0, 88h,	3Bh, 4Ch, 0, 66h, 3Bh, 57h, 0, 88h, 3Bh
-		db 5Ch,	0, 88h,	3Bh, 44h, 0, 72h, 3Bh
-byte_3ABC	db 0
+include libs/master.lib/pfint21.asm
 		db 0
-		db 8Ch,	3Bh, 0A8h, 2 dup(0Fh), 85h, 0C6h, 0, 0Bh, 0FFh
-		db 0Fh,	89h, 0C0h, 0, 1Eh, 68h,	0, 2Eh,	0FFh, 76h, 2, 52h
-		db 0Eh,	0E8h, 0E0h, 0, 0Bh, 0C0h, 0Fh, 84h, 0AEh, 0, 0A3h
-		db 80h,	2Eh, 8Eh, 0C0h,	26h, 8Eh, 6, 2 dup(0), 26h, 0A1h
-		db 2 dup(0), 0A3h, 82h,	2Eh, 0E9h, 0B5h, 0, 3Bh, 0DFh
-		db 0Fh,	85h, 94h, 0, 0FFh, 36h,	80h, 2Eh, 0Eh, 0E8h, 94h
-		db 0E1h, 0C7h, 6, 80h, 2Eh, 2 dup(0), 0C7h, 6, 82h, 2Eh
-		db 2 dup(0FFh),	0E9h, 98h, 0, 3Bh, 0DFh, 75h, 79h, 0FFh
-		db 76h,	2, 52h,	51h, 0FFh, 36h,	80h, 2Eh, 0Eh, 0E8h, 3Eh
-		db 0E2h, 0E9h, 84h, 0, 3Bh, 0DFh, 75h, 65h, 0Bh, 0C9h
-		db 7Ch,	73h, 3Ch, 1, 74h, 28h, 7Ch, 1Ah, 8Eh, 6, 80h, 2Eh
-		db 26h,	8Bh, 2 dup(16h), 0, 26h, 8Bh, 0Eh, 18h,	0, 26h
-		db 2Bh,	16h, 12h, 0, 26h, 1Bh, 0Eh, 14h, 0, 0EBh, 0Ch
-		db 51h,	52h, 0FFh, 36h,	80h, 2Eh, 0Eh, 0E8h, 37h, 0E2h
-		db 5Ah,	59h, 0FFh, 36h,	80h, 2Eh, 51h, 52h, 0Eh, 0E8h
-		db 67h,	0E2h, 89h, 56h,	0Eh, 0EBh, 41h,	2Eh, 0C5h, 16h
-		db 7Ah,	39h, 0B8h, 21h,	25h, 0CDh, 21h,	0EBh, 1Ah, 8Ah
-		db 0C8h, 0B8h, 1, 0, 0D3h, 0E0h, 2Eh, 85h, 6, 82h, 3Bh
-		db 75h,	8, 0EBh, 0Ah, 0CFh, 14h, 8Bh, 0CFh, 74h, 16h, 3Bh
-		db 0DFh, 74h, 12h, 2Eh,	0FEh, 0Eh, 7Eh,	39h, 0FFh, 76h
-		db 18h,	9Dh, 7,	1Fh, 61h, 0FAh,	2Eh, 0FFh, 2Eh,	7Ah, 39h
-		db 80h,	4Eh, 18h, 1, 0B8h, 1, 0, 0EBh, 4, 80h, 66h, 18h
-		db 0FEh, 89h, 46h, 12h,	2Eh, 0FEh, 0Eh,	7Eh, 39h, 7, 1Fh
-		db 61h,	0CFh, 0
 ; ---------------------------------------------------------------------------
+pfopen	label proc
 		push	bp
 		mov	bp, sp
 		push	si
@@ -622,7 +446,7 @@ byte_3ABC	db 0
 		jz	loc_3C99
 		mov	es, si
 		mov	es:0, ax
-		mov	ax, word_12F84
+		mov	ax, pfint21_entries
 		mov	fs, ax
 		xor	ax, ax
 		mov	di, ax
@@ -9649,7 +9473,7 @@ sub_EC04	endp
 sub_EC36	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_3A20
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -10356,7 +10180,7 @@ loc_F0CB:
 		call	graph_400line
 		call	sub_2E46
 		push	large [bp+arg_0]
-		call	sub_3980
+		call	pfstart
 		push	800h
 		call	bgm_init
 		xor	ax, ax
@@ -12285,42 +12109,8 @@ byte_12AFC	db ?
 		dd    ?	;
 		db    ?	;
 byte_12EFE	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
-word_12F80	dw ?
-word_12F82	dw ?
-word_12F84	dw ?
+include libs/master.lib/pfint21[bss].asm
 word_12F86	dw ?
 		dd    ?	;
 		dd    ?	;

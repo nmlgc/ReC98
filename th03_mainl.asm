@@ -118,238 +118,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_set_palettes.asm
-; ---------------------------------------------------------------------------
-dword_2850	dd 0
-byte_2854	db 0, 90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2856	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cld
-		mov	ax, word ptr cs:dword_2850
-		or	ax, word ptr cs:dword_2850+2
-		jz	short loc_2868
-		jmp	loc_28E9
-; ---------------------------------------------------------------------------
-
-loc_2868:
-		push	di
-		push	si
-		push	word ptr [bp+arg_0+2]
-		push	word ptr [bp+arg_0]
-		call	file_ropen
-		push	10h
-		call	hmem_allocbyte
-		mov	di, ax
-		push	ax
-		push	0
-		push	10h
-		call	file_read
-		mov	ax, di
-		mov	es, ax
-		mov	di, es:0
-		mov	si, es:6
-		push	ax
-		call	hmem_free
-		push	di
-		call	hmem_allocbyte
-		mov	word_100F6, ax
-		push	ax
-		push	0
-		push	di
-		call	file_read
-		call	file_close
-		mov	cx, di
-		mov	ax, word_100F6
-		mov	es, ax
-		mov	ax, si
-		xor	bx, bx
-
-loc_28B7:
-		xor	es:[bx], al
-		sub	al, es:[bx]
-		inc	bx
-		loop	loc_28B7
-		pop	si
-		pop	di
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_2850,	bx
-		mov	word ptr cs:dword_2850+2, es
-		mov	word_100F2, 0
-		mov	word_100F4, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 294Ah
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_28E9:
-		push	si
-		push	di
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 1C82h
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_2856	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2912	proc far
-		mov	ax, word ptr cs:dword_2850
-		or	ax, word ptr cs:dword_2850+2
-		jz	short locret_2949
-		push	ds
-		lds	dx, cs:dword_2850
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_2850,	ax
-		mov	word ptr cs:dword_2850+2, ax
-		cmp	word_100F2, ax
-		jz	short locret_2949
-		push	word_100F2
-		call	pfclose
-		push	word_100F6
-		call	hmem_free
-
-locret_2949:
-		retf
-sub_2912	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_2854, 0
-		jz	short loc_2957
-		jmp	cs:dword_2850
-; ---------------------------------------------------------------------------
-
-loc_2957:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_2854
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_29AE, ah
-		mov	si, 297Eh
-
-loc_2972:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_2972
-		mov	di, word_100F4
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db  3Dh	; =
-		db    0
-		db 0B2h
-		db  29h	; )
-		db  3Eh	; >
-		db    0
-		db 0E7h
-		db  29h	; )
-		db  3Fh	; ?
-		db    0
-		db    5
-		db  2Ah	; *
-		db  42h	; B
-		db    0
-		db  19h
-		db  2Ah	; *
-		db  46h	; F
-		db    0
-		db  7Ah	; z
-		db  2Ah	; *
-		db  40h
-		db    0
-		db  7Eh	; ~
-		db  2Ah	; *
-		db  45h	; E
-		db    0
-		db  7Eh	; ~
-		db  2Ah	; *
-		db  4Ch	; L
-		db    0
-		db  5Ch
-		db  2Ah	; *
-		db  57h	; W
-		db    0
-		db  7Eh	; ~
-		db  2Ah	; *
-		db  5Ch
-		db    0
-		db  7Eh	; ~
-		db  2Ah	; *
-		db  44h	; D
-		db    0
-		db  68h	; h
-		db  2Ah	; *
-byte_29AE	db 0
-		db 0
-		db 82h,	2Ah, 0A8h, 0Fh,	74h, 3,	0E9h, 0C9h, 0, 0Bh, 0FFh
-		db 78h,	3, 0E9h, 0C2h, 0, 1Eh, 68h, 82h, 1Ch, 0FFh, 76h
-		db 2, 52h, 0Eh,	0E8h, 4Ah, 1, 0Bh, 0C0h, 75h, 3, 0E9h
-		db 0AFh, 0, 0A3h, 2, 1Dh, 8Eh, 0C0h, 26h, 8Eh, 6, 2 dup(0)
-		db 26h,	0A1h, 2	dup(0),	0A3h, 4, 1Dh, 0E9h, 0B6h, 0, 3Bh
-		db 0DFh, 74h, 3, 0E9h, 94h, 0, 0FFh, 36h, 2, 1Dh, 0Eh
-		db 0E8h, 0E4h, 0EEh, 0C7h, 6, 2, 1Dh, 2	dup(0),	0C7h, 6
-		db 4, 1Dh, 2 dup(0FFh),	0E9h, 98h, 0, 3Bh, 0DFh, 75h, 79h
-		db 0FFh, 76h, 2, 52h, 51h, 0FFh, 36h, 2, 1Dh, 0Eh, 0E8h
-		db 8Eh,	0EFh, 0E9h, 84h, 0, 3Bh, 0DFh, 75h, 65h, 0Bh, 0C9h
-		db 7Ch,	73h, 3Ch, 1, 74h, 28h, 7Ch, 1Ah, 8Eh, 6, 2, 1Dh
-		db 26h,	8Bh, 2 dup(16h), 0, 26h, 8Bh, 0Eh, 18h,	0, 26h
-		db 2Bh,	16h, 12h, 0, 26h, 1Bh, 0Eh, 14h, 0, 0EBh, 0Ch
-		db 51h,	52h, 0FFh, 36h,	2, 1Dh,	0Eh, 0E8h, 87h,	0EFh, 5Ah
-		db 59h,	0FFh, 36h, 2, 1Dh, 51h,	52h, 0Eh, 0E8h,	0B7h, 0EFh
-		db 89h,	56h, 0Eh, 0EBh,	41h, 2Eh, 0C5h,	16h, 50h, 28h
-		db 0B8h, 21h, 25h, 0CDh, 21h, 0EBh, 1Ah, 8Ah, 0C8h, 0B8h
-		db 1, 0, 0D3h, 0E0h, 2Eh, 85h, 6, 78h, 2Ah, 75h, 8, 0EBh
-		db 0Ah,	0CFh, 14h, 8Bh,	0CFh, 74h, 16h,	3Bh, 0DFh, 74h
-		db 12h,	2Eh, 0FEh, 0Eh,	54h, 28h, 0FFh,	76h, 18h, 9Dh
-		db 7, 1Fh, 61h,	0FAh, 2Eh, 0FFh, 2Eh, 50h, 28h,	80h, 4Eh
-		db 18h,	1, 0B8h, 1, 0, 0EBh, 4,	80h, 66h, 18h, 0FEh, 89h
-		db 46h,	12h, 2Eh, 0FEh,	0Eh, 54h, 28h, 7, 1Fh, 61h, 0CFh
+include libs/master.lib/pfint21.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -443,6 +212,7 @@ sub_2AEA	endp
 		retn
 ; ---------------------------------------------------------------------------
 		db 0
+pfopen	label proc
 		db 0C8h, 3 dup(0), 56h,	57h, 0C7h, 6, 56h, 8, 7, 0, 6Ah
 		db 1Fh,	0Eh, 0E8h, 86h,	0F6h, 0Fh, 82h,	0F6h, 0, 8Bh, 0F0h
 		db 0FFh, 76h, 0Ch, 0FFh, 76h, 0Ah, 0Eh,	0E8h, 80h, 0DAh
@@ -7048,7 +6818,7 @@ sub_C8F0	endp
 sub_C990	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_2912
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -7799,7 +7569,7 @@ loc_CEF6:
 		call	graph_400line
 		call	sub_2AAE
 		push	large [bp+arg_0]
-		call	sub_2856
+		call	pfstart
 		xor	ax, ax
 		pop	bp
 		retf	4
@@ -8109,7 +7879,7 @@ sub_D130	endp
 sub_D16F	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_2912
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -9678,43 +9448,9 @@ byte_10063	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
 		db    ?	;
-word_100F2	dw ?
-word_100F4	dw ?
-word_100F6	dw ?
+include libs/master.lib/pfint21[bss].asm
 word_100F8	dw ?
 word_100FA	dw ?
 word_100FC	dw ?

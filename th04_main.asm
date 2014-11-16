@@ -141,294 +141,7 @@ include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
 include libs/master.lib/super_zoom.asm
-; ---------------------------------------------------------------------------
-dword_327E	dd 0
-byte_3282	db 0
-		db  90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3284	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cld
-		mov	ax, word ptr cs:dword_327E
-		or	ax, word ptr cs:dword_327E+2
-		jz	short loc_3296
-		jmp	loc_3317
-; ---------------------------------------------------------------------------
-
-loc_3296:
-		push	di
-		push	si
-		push	word ptr [bp+arg_0+2]
-		push	word ptr [bp+arg_0]
-		call	file_ropen
-		push	10h
-		call	hmem_allocbyte
-		mov	di, ax
-		push	ax
-		push	0
-		push	10h
-		call	file_read
-		mov	ax, di
-		mov	es, ax
-		mov	di, es:0
-		mov	si, es:6
-		push	ax
-		call	hmem_free
-		push	di
-		call	hmem_allocbyte
-		mov	word_24698, ax
-		push	ax
-		push	0
-		push	di
-		call	file_read
-		call	file_close
-		mov	cx, di
-		mov	ax, word_24698
-		mov	es, ax
-		mov	ax, si
-		xor	bx, bx
-
-loc_32E5:
-		xor	es:[bx], al
-		sub	al, es:[bx]
-		inc	bx
-		loop	loc_32E5
-		pop	si
-		pop	di
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_327E,	bx
-		mov	word ptr cs:dword_327E+2, es
-		mov	word_24694, 0
-		mov	word_24696, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 3378h
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_3317:
-		push	si
-		push	di
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 32D4h
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_3284	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3340	proc far
-		mov	ax, word ptr cs:dword_327E
-		or	ax, word ptr cs:dword_327E+2
-		jz	short locret_3377
-		push	ds
-		lds	dx, cs:dword_327E
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_327E,	ax
-		mov	word ptr cs:dword_327E+2, ax
-		cmp	word_24694, ax
-		jz	short locret_3377
-		push	word_24694
-		call	pfclose
-		push	word_24698
-		call	hmem_free
-
-locret_3377:
-		retf
-sub_3340	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_3282, 0
-		jz	short loc_3385
-		jmp	cs:dword_327E
-; ---------------------------------------------------------------------------
-
-loc_3385:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_3282
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_33DC, ah
-		mov	si, 33ACh
-
-loc_33A0:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_33A0
-		mov	di, word_24696
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db 3Dh,	0, 0E0h, 33h, 3Eh, 0, 15h, 34h,	3Fh, 0,	33h, 34h
-		db 42h,	0, 47h,	34h, 46h, 0, 0A8h, 34h,	40h, 0,	0ACh, 34h
-		db 45h,	0, 0ACh, 34h, 4Ch, 0, 8Ah, 34h,	57h, 0,	0ACh, 34h
-		db 5Ch,	0, 0ACh, 34h, 44h, 0, 96h, 34h
-byte_33DC	db 0
-		db    0
-; ---------------------------------------------------------------------------
-		mov	al, 34h	; '4'
-		test	al, 0Fh
-		jz	short loc_33E7
-		jmp	loc_34B0
-; ---------------------------------------------------------------------------
-
-loc_33E7:
-		or	di, di
-		js	short loc_33EE
-		jmp	loc_34B0
-; ---------------------------------------------------------------------------
-
-loc_33EE:
-		push	ds
-		push	offset unk_24614
-		push	word ptr [bp+2]
-		push	dx
-		call	sub_3506
-		or	ax, ax
-		jnz	short loc_3401
-		jmp	loc_34B0
-; ---------------------------------------------------------------------------
-
-loc_3401:
-		mov	word_24694, ax
-		mov	es, ax
-		mov	es, word ptr es:0
-		mov	ax, es:0
-		mov	word_24696, ax
-		jmp	loc_34CB
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jz	short loc_341C
-		jmp	loc_34B0
-; ---------------------------------------------------------------------------
-
-loc_341C:
-		push	word_24694
-		call	pfclose
-		mov	word_24694, 0
-		mov	word_24696, 0FFFFh
-		jmp	loc_34CB
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_34B0
-		push	word ptr [bp+2]
-		push	dx
-		push	cx
-		push	word_24694
-		call	pfread
-		jmp	loc_34CB
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_34B0
-		or	cx, cx
-		jl	short loc_34C2
-		cmp	al, 1
-		jz	short loc_347B
-		jl	short loc_346F
-		mov	es, word_24694
-		mov	dx, es:16h
-		mov	cx, es:18h
-		sub	dx, es:12h
-		sbb	cx, es:14h
-		jmp	short loc_347B
-; ---------------------------------------------------------------------------
-
-loc_346F:
-		push	cx
-		push	dx
-		push	word_24694
-		call	pfrewind
-		pop	dx
-		pop	cx
-
-loc_347B:
-		push	word_24694
-		push	cx
-		push	dx
-		call	pfseek
-		mov	[bp+0Eh], dx
-		jmp	short loc_34CB
-; ---------------------------------------------------------------------------
-		db 2Eh,	0C5h, 16h, 7Eh,	32h, 0B8h, 21h,	25h, 0CDh, 21h
-		db 0EBh, 1Ah, 8Ah, 0C8h, 0B8h, 1, 0, 0D3h, 0E0h, 2Eh, 85h
-		db 6, 0A6h, 34h, 75h, 8, 0EBh, 0Ah, 0CFh, 14h, 8Bh, 0CFh
-		db 74h,	16h, 3Bh, 0DFh,	74h, 12h
-; ---------------------------------------------------------------------------
-
-loc_34B0:
-		dec	cs:byte_3282
-		push	word ptr [bp+18h]
-		popf
-		pop	es
-		pop	ds
-		popa
-		cli
-		jmp	cs:dword_327E
-; ---------------------------------------------------------------------------
-
-loc_34C2:
-		or	byte ptr [bp+18h], 1
-		mov	ax, 1
-		jmp	short loc_34CF
-; ---------------------------------------------------------------------------
-
-loc_34CB:
-		and	byte ptr [bp+18h], 0FEh
-
-loc_34CF:
-		mov	[bp+12h], ax
-		dec	cs:byte_3282
-		pop	es
-		pop	ds
-		popa
-		iret
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfint21.asm
 		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -471,7 +184,7 @@ sub_34DC	endp
 
 ; Attributes: bp-based frame
 
-sub_3506	proc far
+pfopen	proc far
 
 arg_0		= word ptr  6
 arg_2		= word ptr  8
@@ -493,7 +206,7 @@ arg_6		= word ptr  0Ch
 		jz	loc_360B
 		mov	es, si
 		mov	es:0, ax
-		mov	ax, word_24698
+		mov	ax, pfint21_entries
 		mov	fs, ax
 		xor	ax, ax
 		mov	di, ax
@@ -599,7 +312,7 @@ loc_3619:
 		pop	si
 		leave
 		retf	8
-sub_3506	endp
+pfopen	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -19470,7 +19183,7 @@ loc_13600:
 sub_1361E	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_3340
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -19522,7 +19235,7 @@ loc_1367D:
 		call	graph_400line
 		call	sub_34DC
 		push	large [bp+arg_0]
-		call	sub_3284
+		call	pfstart
 		push	800h
 		call	bgm_init
 		xor	ax, ax
@@ -23715,137 +23428,7 @@ dword_24604	dd 0
 dword_24608	dd 0
 dword_2460C	dd 0
 dword_24610	dd 0
-unk_24614	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-word_24694	dw 0
-word_24696	dw 0
-word_24698	dw 0
+include libs/master.lib/pfint21[bss].asm
 		db    0
 		db    0
 		db    0

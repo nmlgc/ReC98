@@ -202,259 +202,14 @@ loc_39CC:
 		retf	6
 sub_3998	endp
 
-; ---------------------------------------------------------------------------
-dword_3A06	dd 0
-byte_3A0A	db 0
-		db  90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3A0C	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cld
-		mov	ax, word ptr cs:dword_3A06
-		or	ax, word ptr cs:dword_3A06+2
-		jnz	short loc_3A42
-		mov	ax, 3521h
-		int	21h		; DOS -	2+ - GET INTERRUPT VECTOR
-					; AL = interrupt number
-					; Return: ES:BX	= value	of interrupt vector
-		mov	word ptr cs:dword_3A06,	bx
-		mov	word ptr cs:dword_3A06+2, es
-		mov	word_1FFA4, 0
-		mov	word_1FFA6, 0FFFFh
-		push	ds
-		push	cs
-		pop	ds
-		assume ds:seg000
-		mov	dx, 3A9Ch
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		assume ds:dseg
-
-loc_3A42:
-		push	si
-		push	di
-		push	ds
-		mov	cx, 0FFFFh
-		mov	al, 0
-		les	di, [bp+arg_0]
-		assume es:nothing
-		repne scasb
-		not	cx
-		sub	di, cx
-		mov	si, di
-		mov	di, 24B4h
-		push	ds
-		push	es
-		pop	ds
-		pop	es
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_3A0C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3A6C	proc far
-		mov	ax, word ptr cs:dword_3A06
-		or	ax, word ptr cs:dword_3A06+2
-		jz	short locret_3A9B
-		push	ds
-		lds	dx, cs:dword_3A06
-		mov	ax, 2521h
-		int	21h		; DOS -	SET INTERRUPT VECTOR
-					; AL = interrupt number
-					; DS:DX	= new vector to	be used	for specified interrupt
-		pop	ds
-		xor	ax, ax
-		mov	word ptr cs:dword_3A06,	ax
-		mov	word ptr cs:dword_3A06+2, ax
-		cmp	word_1FFA4, ax
-		jz	short locret_3A9B
-		push	word_1FFA4
-		call	pfclose
-
-locret_3A9B:
-		retf
-sub_3A6C	endp
-
-; ---------------------------------------------------------------------------
-		cmp	cs:byte_3A0A, 0
-		jz	short loc_3AA9
-		jmp	cs:dword_3A06
-; ---------------------------------------------------------------------------
-
-loc_3AA9:
-		pusha
-		push	ds
-		push	es
-		mov	bp, sp
-		mov	di, seg	dseg
-		mov	ds, di
-		inc	cs:byte_3A0A
-		push	word ptr [bp+18h]
-		popf
-		mov	cs:byte_3B00, ah
-		mov	si, 3AD0h
-
-loc_3AC4:
-		add	si, 4
-		cmp	ah, cs:[si]
-		jnz	short loc_3AC4
-		mov	di, word_1FFA6
-		jmp	word ptr cs:[si+2]
-; ---------------------------------------------------------------------------
-		db 3Dh,	0, 4, 3Bh, 3Eh,	0, 39h,	3Bh, 3Fh, 0, 57h, 3Bh
-		db 42h,	0, 6Bh,	3Bh, 46h, 0, 0CCh, 3Bh,	40h, 0,	0D0h, 3Bh
-		db 45h,	0, 0D0h, 3Bh, 4Ch, 0, 0AEh, 3Bh, 57h, 0, 0D0h
-		db 3Bh,	5Ch, 0,	0D0h, 3Bh, 44h,	0, 0BAh, 3Bh
-byte_3B00	db 0
-		db 0
-; ---------------------------------------------------------------------------
-		aam	3Bh
-		test	al, 0Fh
-		jz	short loc_3B0B
-		jmp	loc_3BD4
-; ---------------------------------------------------------------------------
-
-loc_3B0B:
-		or	di, di
-		js	short loc_3B12
-		jmp	loc_3BD4
-; ---------------------------------------------------------------------------
-
-loc_3B12:
-		push	ds
-		push	offset unk_1FF24
-		push	word ptr [bp+2]
-		push	dx
-		call	sub_3C00
-		or	ax, ax
-		jnz	short loc_3B25
-		jmp	loc_3BD4
-; ---------------------------------------------------------------------------
-
-loc_3B25:
-		mov	word_1FFA4, ax
-		mov	es, ax
-		mov	es, word ptr es:0
-		mov	ax, es:0
-		mov	word_1FFA6, ax
-		jmp	loc_3BEF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jz	short loc_3B40
-		jmp	loc_3BD4
-; ---------------------------------------------------------------------------
-
-loc_3B40:
-		push	word_1FFA4
-		call	pfclose
-		mov	word_1FFA4, 0
-		mov	word_1FFA6, 0FFFFh
-		jmp	loc_3BEF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_3BD4
-		push	word ptr [bp+2]
-		push	dx
-		push	cx
-		push	word_1FFA4
-		call	pfread
-		jmp	loc_3BEF
-; ---------------------------------------------------------------------------
-		cmp	bx, di
-		jnz	short loc_3BD4
-		or	cx, cx
-		jl	short loc_3BE6
-		cmp	al, 1
-		jz	short loc_3B9F
-		jl	short loc_3B93
-		mov	es, word_1FFA4
-		mov	dx, es:16h
-		mov	cx, es:18h
-		sub	dx, es:12h
-		sbb	cx, es:14h
-		jmp	short loc_3B9F
-; ---------------------------------------------------------------------------
-
-loc_3B93:
-		push	cx
-		push	dx
-		push	word_1FFA4
-		call	pfrewind
-		pop	dx
-		pop	cx
-
-loc_3B9F:
-		push	word_1FFA4
-		push	cx
-		push	dx
-		call	pfseek
-		mov	[bp+0Eh], dx
-		jmp	short loc_3BEF
-; ---------------------------------------------------------------------------
-		db 2Eh,	0C5h, 16h, 6, 3Ah, 0B8h, 21h, 25h, 0CDh, 21h, 0EBh
-		db 1Ah,	8Ah, 0C8h, 0B8h, 1, 0, 0D3h, 0E0h, 2Eh,	85h, 6
-		db 0CAh, 3Bh, 75h, 8, 0EBh, 0Ah, 0CFh, 14h, 8Bh, 0CFh
-		db 74h,	16h, 3Bh, 0DFh,	74h, 12h
-; ---------------------------------------------------------------------------
-
-loc_3BD4:
-		dec	cs:byte_3A0A
-		push	word ptr [bp+18h]
-		popf
-		pop	es
-		pop	ds
-		popa
-		cli
-		jmp	cs:dword_3A06
-; ---------------------------------------------------------------------------
-
-loc_3BE6:
-		or	byte ptr [bp+18h], 1
-		mov	ax, 1
-		jmp	short loc_3BF3
-; ---------------------------------------------------------------------------
-
-loc_3BEF:
-		and	byte ptr [bp+18h], 0FEh
-
-loc_3BF3:
-		mov	[bp+12h], ax
-		dec	cs:byte_3A0A
-		pop	es
-		pop	ds
-		popa
-		iret
-; ---------------------------------------------------------------------------
+include libs/master.lib/pfint21.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_3C00	proc far
+pfopen	proc far
 
 var_20		= byte ptr -20h
 arg_0		= word ptr  6
@@ -563,7 +318,7 @@ loc_3CD9:
 		pop	si
 		leave
 		retf	8
-sub_3C00	endp
+pfopen	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -11051,7 +10806,7 @@ sub_F62E	endp
 sub_F70E	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_3A6C
+		call	pfend
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -11379,7 +11134,7 @@ loc_F927:
 		mov	pfkey, 12h
 		push	ds
 		push	offset aUmx	; "“Œ•û••–‚.˜^"
-		call	sub_3A0C
+		call	pfstart
 		xor	ax, ax
 		pop	bp
 		retf
@@ -39365,43 +39120,7 @@ unk_1FDBC	db    ?	;
 		db    ?	;
 		db    ?	;
 		db    ?	;
-unk_1FF24	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-word_1FFA4	dw ?
-word_1FFA6	dw ?
+include libs/master.lib/pfint21[bss].asm
 word_1FFA8	dw ?
 byte_1FFAA	db ?
 byte_1FFAB	db ?
