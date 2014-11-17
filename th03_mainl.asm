@@ -212,84 +212,8 @@ sub_2AEA	endp
 		retn
 ; ---------------------------------------------------------------------------
 		db 0
-pfopen	label proc
-		db 0C8h, 3 dup(0), 56h,	57h, 0C7h, 6, 56h, 8, 7, 0, 6Ah
-		db 1Fh,	0Eh, 0E8h, 86h,	0F6h, 0Fh, 82h,	0F6h, 0, 8Bh, 0F0h
-		db 0FFh, 76h, 0Ch, 0FFh, 76h, 0Ah, 0Eh,	0E8h, 80h, 0DAh
-		db 0Bh,	0C0h, 0Fh, 84h,	0DDh, 0, 8Eh, 0C6h, 26h, 0A3h
-		db 2 dup(0), 0A1h, 6, 1Dh, 8Eh,	0E0h, 33h, 0C0h, 8Bh, 0F8h
-		db 64h,	8Ah, 5,	0BBh, 2, 0, 0Ah, 0C0h, 74h, 18h, 0BBh
-		db 3, 0, 3, 0DFh, 0FFh,	76h, 8,	0FFh, 76h, 6, 0Fh, 0A0h
-		db 53h,	0E8h, 0C8h, 0, 75h, 7, 83h, 0C7h, 20h, 0EBh, 0DEh
-		db 8Bh,	0C3h, 8Eh, 0C6h, 64h, 8Bh, 45h,	14h, 64h, 8Bh
-		db 55h,	16h, 26h, 0A3h,	0Eh, 0,	26h, 89h, 16h, 10h, 0
-		db 26h,	0FFh, 36h, 2 dup(0), 52h, 50h, 6Ah, 0, 0Eh, 0E8h
-		db 0EDh, 0DAh, 0B8h, 52h, 19h, 64h, 8Ah, 55h, 2, 8Eh, 0C6h
-		db 0Ah,	0D2h, 74h, 8, 26h, 88h,	16h, 1Eh, 0, 0B8h, 96h
-		db 19h,	26h, 0A3h, 4, 0, 8Eh, 0C1h, 64h, 8Bh, 5, 8Eh, 0C6h
-		db 3Dh,	88h, 0F3h, 74h,	0Ah, 3Dh, 2 dup(95h), 74h, 0Fh
-		db 0B8h, 5, 0, 0EBh, 4Fh, 26h, 0A1h, 4,	0, 26h,	0A3h, 2
-		db 0, 0EBh, 15h, 26h, 0C7h, 6, 2, 0, 4,	19h, 26h, 0C7h
-		db 6, 1Ah, 3 dup(0), 26h, 0C7h,	6, 1Ch,	0, 2 dup(0FFh)
-		db 64h,	8Bh, 5Dh, 10h, 64h, 8Bh, 55h, 12h, 33h,	0C0h, 26h
-		db 89h,	1Eh, 6,	0, 26h,	0A3h, 8, 0, 26h, 89h, 2	dup(16h)
-		db 0, 26h, 0A3h, 18h, 0, 26h, 0A3h, 0Ah, 0, 26h, 0A3h
-		db 0Ch,	0, 26h,	0A3h, 12h, 0, 26h, 0A3h, 14h, 0, 8Bh, 0C6h
-		db 0EBh, 1Ah, 0A3h, 0B2h, 5, 26h, 0FFh,	36h, 2 dup(0)
-		db 0Eh,	0E8h, 57h, 0D8h, 56h, 0Eh, 0E8h, 92h, 0F6h, 0EBh
-		db 5, 0C6h, 6, 0B2h, 5,	3, 33h,	0C0h, 5Fh, 5Eh,	0C9h, 0CAh
-		db 8, 0, 90h
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2C30	proc near
-
-arg_0		= dword	ptr  4
-arg_4		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		cld
-		les	bx, [bp+arg_4]
-		lds	si, [bp+arg_0]
-
-loc_2C3C:
-		mov	ah, es:[bx]
-		inc	bx
-		lodsb
-		sub	al, 61h	; 'a'
-		cmp	al, 19h
-		ja	short loc_2C49
-		sub	al, 20h	; ' '
-
-loc_2C49:
-		sub	ah, 61h	; 'a'
-		cmp	ah, 19h
-		ja	short loc_2C54
-		sub	ah, 20h	; ' '
-
-loc_2C54:
-		cmp	ah, al
-		jnz	short loc_2C5E
-		add	al, 61h	; 'a'
-		jnz	short loc_2C3C
-		jmp	short loc_2C60
-; ---------------------------------------------------------------------------
-
-loc_2C5E:
-		xor	ax, ax
-
-loc_2C60:
-		test	ax, ax
-		pop	ds
-		pop	si
-		pop	bp
-		retn	8
-sub_2C30	endp
+include th03/formats/pfopen.asm
+include libs/master.lib/pf_str_ieq.asm
 
 ; ---------------------------------------------------------------------------
 ; START	OF FUNCTION CHUNK FOR sub_2C6E
@@ -8910,8 +8834,7 @@ byte_EC70	db 0
 include libs/master.lib/respal_exist[data].asm
 byte_EC7C	db 0FFh
 byte_EC7D	db 0
-a_exe		db '.exe',0
-		db 0
+include th02/formats/pfopen[data].asm
 byte_EC84	db 0
 		db 0
 		db    0

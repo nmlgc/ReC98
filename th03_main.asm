@@ -279,75 +279,8 @@ locret_2C89:
 sub_2C42	endp
 
 include libs/master.lib/draw_trapezoid.asm
-pfopen	label proc
-		db 0C8h, 3 dup(0), 56h, 57h, 0C7h
-		db 6, 0B2h, 5, 7, 0, 6Ah, 1Fh, 0Eh, 0E8h, 4Ch, 0F5h, 0Fh
-		db 82h,	0F6h, 0, 8Bh, 0F0h, 0FFh, 76h, 0Ch, 0FFh, 76h
-		db 0Ah,	0Eh, 0E8h, 0F4h, 0D7h, 0Bh, 0C0h, 0Fh, 84h, 0DDh
-		db 0, 8Eh, 0C6h, 26h, 0A3h, 2 dup(0), 0A1h, 94h, 1Ah, 8Eh
-		db 0E0h, 33h, 0C0h, 8Bh, 0F8h, 64h, 8Ah, 5, 0BBh, 2, 0
-		db 0Ah,	0C0h, 74h, 18h,	0BBh, 3, 0, 3, 0DFh, 0FFh, 76h
-		db 8, 0FFh, 76h, 6, 0Fh, 0A0h, 53h, 0E8h, 0C8h,	0, 75h
-		db 7, 83h, 0C7h, 20h, 0EBh, 0DEh, 8Bh, 0C3h, 8Eh, 0C6h
-		db 64h,	8Bh, 45h, 14h, 64h, 8Bh, 55h, 16h, 26h,	0A3h, 0Eh
-		db 0, 26h, 89h,	16h, 10h, 0, 26h, 0FFh,	36h, 2 dup(0)
-		db 52h,	50h, 6Ah, 0, 0Eh, 0E8h,	61h, 0D8h, 0B8h, 0, 1Eh
-		db 64h,	8Ah, 55h, 2, 8Eh, 0C6h,	0Ah, 0D2h, 74h,	8, 26h
-		db 88h,	16h, 1Eh, 0, 0B8h, 44h,	1Eh, 26h, 0A3h,	4, 0, 8Eh
-		db 0C1h, 64h, 8Bh, 5, 8Eh, 0C6h, 3Dh, 88h, 0F3h, 74h, 0Ah
-		db 3Dh,	2 dup(95h), 74h, 0Fh, 0B8h, 5, 0, 0EBh,	4Fh, 26h
-		db 0A1h, 4, 0, 26h, 0A3h, 2, 0,	0EBh, 15h, 26h,	0C7h, 6
-		db 2, 0, 0B2h, 1Dh, 26h, 0C7h, 6, 1Ah, 3 dup(0), 26h, 0C7h
-		db 6, 1Ch, 0, 2	dup(0FFh), 64h,	8Bh, 5Dh, 10h, 64h, 8Bh
-		db 55h,	12h, 33h, 0C0h,	26h, 89h, 1Eh, 6, 0, 26h, 0A3h
-		db 8, 0, 26h, 89h, 2 dup(16h), 0, 26h, 0A3h, 18h, 0, 26h
-		db 0A3h, 0Ah, 0, 26h, 0A3h, 0Ch, 0, 26h, 0A3h, 12h, 0
-		db 26h,	0A3h, 14h, 0, 8Bh, 0C6h, 0EBh, 1Ah, 0A3h, 0Eh
-		db 3, 26h, 0FFh, 36h, 2	dup(0),	0Eh, 0E8h, 0Fh,	0D6h, 56h
-		db 0Eh,	0E8h, 58h, 0F5h, 0EBh, 5, 0C6h,	6, 0Eh,	2 dup(3)
-		db 33h,	0C0h, 5Fh, 5Eh,	0C9h, 0CAh, 8, 0, 90h
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		cld
-		les	bx, [bp+8]
-		lds	si, [bp+4]
-
-loc_2E84:
-		mov	ah, es:[bx]
-		inc	bx
-		lodsb
-		sub	al, 61h	; 'a'
-		cmp	al, 19h
-		ja	short loc_2E91
-		sub	al, 20h	; ' '
-
-loc_2E91:
-		sub	ah, 61h	; 'a'
-		cmp	ah, 19h
-		ja	short loc_2E9C
-		sub	ah, 20h	; ' '
-
-loc_2E9C:
-		cmp	ah, al
-		jnz	short loc_2EA6
-		add	al, 61h	; 'a'
-		jnz	short loc_2E84
-		jmp	short loc_2EA8
-; ---------------------------------------------------------------------------
-
-loc_2EA6:
-		xor	ax, ax
-
-loc_2EA8:
-		test	ax, ax
-		pop	ds
-		pop	si
-		pop	bp
-		retn	8
-
+include th03/formats/pfopen.asm
+include libs/master.lib/pf_str_ieq.asm
 include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
@@ -37951,8 +37884,7 @@ include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 byte_1DB4A	db 0FFh
 byte_1DB4B	db 0
-a_exe		db '.exe',0
-		db 0
+include th02/formats/pfopen[data].asm
 		db    0
 		db    0
 		db  20h

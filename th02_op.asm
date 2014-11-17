@@ -127,88 +127,8 @@ include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/pfint21.asm
 		db 0
-pfopen	label proc
-		db 0C8h, 20h, 2 dup(0), 56h
-		db 57h,	0C7h, 6, 82h, 5, 7, 0, 6Ah, 1Fh, 0Eh, 0E8h, 3Ah
-		db 0F6h, 73h, 3, 0E9h, 0BBh, 0,	8Bh, 0F0h, 0FFh, 76h, 0Ch
-		db 0FFh, 76h, 0Ah, 0Eh,	0E8h, 4Bh, 0D4h, 0Bh, 0C0h, 75h
-		db 3, 0E9h, 0A1h, 0, 8Eh, 0C6h,	26h, 0A3h, 2 dup(0), 8Dh
-		db 7Eh,	0E0h, 57h, 56h,	0FFh, 76h, 0Ch,	0FFh, 76h, 0Ah
-		db 0FFh, 76h, 8, 0FFh, 76h, 6, 0E8h, 9Ch, 0, 0Bh, 0C0h
-		db 75h,	77h, 0B8h, 0D0h, 1Eh, 26h, 0A3h, 4, 0, 0A0h, 82h
-		db 2, 26h, 0A2h, 1Eh, 0, 36h, 8Bh, 5, 3Dh, 88h,	0F3h, 74h
-		db 0Ah,	3Dh, 2 dup(95h), 74h, 0Fh, 0B8h, 5, 0, 0EBh, 57h
-		db 26h,	0A1h, 4, 0, 26h, 0A3h, 2, 0, 0EBh, 15h,	26h, 0C7h
-		db 6, 2, 0, 3Eh, 1Eh, 26h, 0C7h, 6, 1Ah, 3 dup(0), 26h
-		db 0C7h, 6, 1Ch, 0, 2 dup(0FFh), 36h, 8Bh, 45h,	10h, 36h
-		db 8Bh,	55h, 12h, 26h, 0A3h, 6,	0, 26h,	89h, 16h, 8, 0
-		db 36h,	8Bh, 45h, 14h, 36h, 8Bh, 55h, 16h, 26h,	0A3h, 16h
-		db 0, 26h, 89h,	16h, 18h, 0, 33h, 0C0h,	26h, 0A3h, 0Ah
-		db 0, 26h, 0A3h, 0Ch, 0, 26h, 0A3h, 12h, 0, 26h, 0A3h
-		db 14h,	0, 8Bh,	0C6h, 0EBh, 1Ah, 0A3h, 80h, 2, 26h, 0FFh
-		db 36h,	2 dup(0), 0Eh, 0E8h, 5Dh, 0D2h,	56h, 0Eh, 0E8h
-		db 80h,	0F6h, 0EBh, 5, 0C6h, 6,	80h, 2,	3, 33h,	0C0h, 5Fh
-		db 5Eh,	0C9h, 0CAh, 8, 0, 90h, 0C8h, 6,	2 dup(0), 56h
-		db 57h,	6, 8Bh,	76h, 0Ch, 8Eh, 0C6h, 33h, 0C0h,	26h, 0A3h
-		db 0Eh,	0, 26h,	0A3h, 10h, 0, 1Eh, 56h,	0FCh, 33h, 0DBh
-		db 8Bh,	0D3h, 0C5h, 76h, 8, 0ACh, 3Ch, 0, 74h, 0Bh, 3Ch
-		db 2Eh,	75h, 0F7h, 8Dh,	5Ch, 0FFh, 8Ch,	0DAh, 0EBh
-		db 0F0h, 5Eh, 1Fh, 8Bh,	0C2h, 0Bh, 0C3h, 74h, 0, 8Bh, 7Eh
-		db 0Eh,	0C6h, 6, 0B1h, 5, 0, 8Eh, 0C6h,	16h, 57h, 6Ah
-		db 20h,	26h, 0FFh, 36h,	2 dup(0), 0Eh, 0E8h, 93h, 0D3h
-		db 0FEh, 6, 0B1h, 5, 80h, 3Eh, 0B1h, 5,	0FFh, 0BBh, 2
-		db 0, 74h, 40h,	3Dh, 20h, 0, 75h, 3Bh, 8Eh, 0C6h, 26h
-		db 1, 6, 0Eh, 0, 26h, 83h, 16h,	10h, 2 dup(0), 36h, 8Bh
-		db 5, 23h, 0C0h, 0BBh, 6, 0, 74h, 24h, 8Dh, 5Dh, 3, 36h
-		db 80h,	3Fh, 0,	74h, 6,	36h, 0F6h, 17h,	43h, 0EBh, 0F4h
-		db 8Dh,	5Dh, 3,	0FFh, 76h, 6, 0FFh, 76h, 4, 16h, 53h, 0E8h
-		db 30h,	0, 0B8h, 2 dup(0), 75h,	4, 0EBh, 0A3h, 8Bh, 0C3h
-		db 8Eh,	0C6h, 36h, 8Bh,	45h, 18h, 36h, 8Bh, 55h, 1Ah, 26h
-		db 0A3h, 0Eh, 0, 26h, 89h, 16h,	10h, 0,	26h, 0FFh, 36h
-		db 2 dup(0), 52h, 50h, 6Ah, 0, 0Eh, 0E8h, 95h, 0D3h, 7
-		db 5Fh,	5Eh, 0C9h, 0C2h, 0Ch, 0
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		cld
-		les	bx, [bp+8]
-		lds	si, [bp+4]
-
-loc_32FC:
-		mov	ah, es:[bx]
-		inc	bx
-		lodsb
-		sub	al, 61h	; 'a'
-		cmp	al, 19h
-		ja	short loc_3309
-		sub	al, 20h	; ' '
-
-loc_3309:
-		sub	ah, 61h	; 'a'
-		cmp	ah, 19h
-		ja	short loc_3314
-		sub	ah, 20h	; ' '
-
-loc_3314:
-		cmp	ah, al
-		jnz	short loc_331E
-		add	al, 61h	; 'a'
-		jnz	short loc_32FC
-		jmp	short loc_3320
-; ---------------------------------------------------------------------------
-
-loc_331E:
-		xor	ax, ax
-
-loc_3320:
-		test	ax, ax
-		pop	ds
-		pop	si
-		pop	bp
-		retn	8
-
+include th02/formats/pfopen.asm
+include libs/master.lib/pf_str_ieq.asm
 include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
@@ -6303,8 +6223,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-a_exe		db '.exe',0
-		db 0
+include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
 byte_DBEE	db 0
 		db 0
