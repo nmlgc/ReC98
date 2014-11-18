@@ -903,18 +903,15 @@ loc_99F1:
 		push	0
 		push	ds
 		push	offset aStnx0_pi ; "stnx0.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	large 0
 		push	0
 		call	sub_CD2F
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		push	ds
 		push	word_E504
-		call	sub_D4AB
+		call	pi_slot_load
 		push	large 0
 		push	0
 		call	sub_CD2F
@@ -942,10 +939,7 @@ var_2		= word ptr -2
 		call	sub_CD0A
 		push	0
 		call	graph_copy_page
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	large 600060h
 		push	0
 		call	sub_C9D4
@@ -1021,14 +1015,11 @@ loc_9A8E:
 		push	0
 		push	ds
 		push	offset aEn2_pi	; "EN2.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	large 118h
 		push	0
 		call	sub_CDB7
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
@@ -1077,7 +1068,7 @@ loc_9BB7:
 		push	offset aEnemy04_pi ; "ENEMY04.pi"
 
 loc_9BBD:
-		call	sub_D4AB
+		call	pi_slot_load
 
 loc_9BC2:
 		push	large 130h
@@ -1161,10 +1152,7 @@ loc_9C5E:
 		call	text_fillca
 		push	0
 		call	sub_CD0A
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	respal_set_palettes
 		pop	si
 		leave
@@ -1197,32 +1185,26 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		push	0
 		push	large [bp+arg_0]
-		call	sub_D4AB
+		call	pi_slot_load
 		mov	ax, si
 		imul	ax, 140h
 		push	ax
 		push	large 0C80000h
 		call	sub_CDB7
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 65h	; 'e'
 		mov	byte ptr es:[bx+3], 78h	; 'x'
 		push	0
 		push	word ptr [bp+arg_0+2]
 		push	bx
-		call	sub_D4AB
+		call	pi_slot_load
 		mov	ax, si
 		imul	ax, 140h
 		push	ax
 		push	large 0D00000h
 		call	sub_CDB7
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		pop	si
 		pop	bp
 		retn	6
@@ -1395,10 +1377,7 @@ loc_9E7B:
 
 loc_9E89:
 		call	sub_9776
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		mov	al, byte_F7E3
 		mov	ah, 0
 		cwd
@@ -1468,10 +1447,7 @@ loc_9F2E:
 
 loc_9F38:
 		call	sub_9776
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	sub_B7D2
 		call	sub_9F8D
 		or	ax, ax
@@ -1482,10 +1458,7 @@ loc_9F38:
 
 loc_9F58:
 		call	sub_9776
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 
 loc_9F69:
 		call	text_clear
@@ -1653,16 +1626,13 @@ loc_A0C5:
 		push	0
 		push	ds
 		push	offset aOver_pi	; "over.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	0
 		call	sub_CD0A
 		push	large 0
 		push	0
 		call	sub_CD2F
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	100h
 		call	sub_CEC2
 		les	bx, dword_105DA
@@ -1856,7 +1826,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, dword_102FE
+		mov	eax, pi_slot_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A257
@@ -2786,10 +2756,7 @@ loc_A9FE:
 loc_AA1B:
 		cmp	[bp+arg_0], 2Dh	; '-'
 		jnz	short loc_AA32
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -2842,7 +2809,7 @@ loc_AA8A:
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	sub_D4AB
+		call	pi_slot_load
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -3518,16 +3485,13 @@ sub_AFAC	proc near
 		push	0
 		push	ds
 		push	offset aRegib_pi ; "regib.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	0
 		call	sub_CD0A
 		push	large 0
 		push	0
 		call	sub_CD2F
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
 		mov	bx, word_ED68
@@ -4738,16 +4702,13 @@ loc_B879:
 		push	0
 		push	ds
 		push	offset aConti_pi ; "conti.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	0
 		call	sub_CD0A
 		push	large 0
 		push	0
 		call	sub_CD2F
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		push	ds
 		push	offset aConti_cd2 ; "conti.cd2"
@@ -4760,16 +4721,13 @@ loc_B8F1:
 		push	0
 		push	ds
 		push	offset aOver_pi_0 ; "over.pi"
-		call	sub_D4AB
+		call	pi_slot_load
 		push	0
 		call	sub_CD0A
 		push	large 0
 		push	0
 		call	sub_CD2F
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0FFh
 		call	sub_C864
 		pop	cx
@@ -4824,10 +4782,7 @@ var_1		= byte ptr -1
 		call	sub_D130
 		push	2
 		call	sub_D130
-		push	ds
-		push	offset unk_10316
-		push	large [dword_102FE]
-		call	graph_pi_free
+		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -8259,47 +8214,7 @@ loc_D49D:
 		retf	2
 sub_D47A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4AB	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1F26h
-		push	ds
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	large dword ptr	[bx+1F0Eh]
-		call	graph_pi_free
-		push	large [bp+arg_0]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1F26h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 1F0Eh
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf	6
-sub_D4AB	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9505,13 +9420,12 @@ word_100FC	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-dword_102FE	dd ?
+include th02/formats/pi_slots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_10316	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -9571,121 +9485,6 @@ unk_10316	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
 dword_105C6	dd ?
 dword_105CA	dd ?
 byte_105CE	db ?

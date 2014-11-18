@@ -561,16 +561,13 @@ loc_A187:
 		push	0
 		push	word ptr [bp+var_4+2]
 		push	bx
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	1
@@ -605,16 +602,13 @@ loc_A1FE:
 		out	dx, al
 		push	0
 		push	large [bp+var_4]
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	1
@@ -812,7 +806,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, dword_FCD2
+		mov	eax, pi_slot_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A39A
@@ -1809,10 +1803,7 @@ loc_AB8D:
 loc_ABAA:
 		cmp	[bp+arg_0], 2Dh	; '-'
 		jnz	short loc_ABC1
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1861,15 +1852,12 @@ loc_AC18:
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	sub_CD65
+		call	pi_slot_load
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -2892,16 +2880,13 @@ sub_B44D	proc near
 		push	0
 		push	ds
 		push	offset aSff1_pi	; "sff1.pi"
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		call	sub_D626
@@ -2983,16 +2968,13 @@ sub_B44D	proc near
 		push	0
 		push	ds
 		push	offset aSff2_pi	; "sff2.pi"
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		call	sub_D626
@@ -4090,16 +4072,13 @@ sub_C0F8	proc near
 		push	0
 		push	ds
 		push	offset aUde_pi	; "ude.pi"
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	4
@@ -5135,16 +5114,13 @@ var_2		= word ptr -2
 		push	0
 		push	ds
 		push	offset aHi01_pi	; "hi01.pi"
-		call	sub_CD65
+		call	pi_slot_load
 		push	0
 		call	sub_CCB8
 		push	large 0
 		push	0
 		call	sub_CCDD
-		push	ds
-		push	offset unk_FCEA
-		push	large [dword_FCD2]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	ds
@@ -5817,47 +5793,7 @@ loc_CD51:
 		retf	6
 sub_CCDD	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CD65	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 17BAh
-		push	ds
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	large dword ptr	[bx+17A2h]
-		call	graph_pi_free
-		push	large [bp+arg_0]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 17BAh
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 17A2h
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf	6
-sub_CD65	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7898,459 +7834,7 @@ dword_FC40	dd 0
 dword_FC44	dd 0
 dword_FC48	dd 0
 include libs/master.lib/pfint21[bss].asm
-dword_FCD2	dd 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_FCEA	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th02/formats/pi_slots[bss].asm
 		db    0
 		db    0
 		db    0

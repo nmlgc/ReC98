@@ -1222,14 +1222,14 @@ loc_AA91:
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
@@ -1248,14 +1248,14 @@ loc_AAE1:
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
@@ -1281,14 +1281,14 @@ loc_AB3B:
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
@@ -2583,14 +2583,14 @@ sub_B5A6	proc near
 		push	0
 		push	ds
 		push	offset aMs_pi	; "ms.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		push	1
@@ -2903,14 +2903,14 @@ var_1		= byte ptr -1
 		push	0
 		push	ds
 		push	offset aZun00_pi ; "zun00.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		call	sub_D688
@@ -3440,35 +3440,35 @@ var_1		= byte ptr -1
 		push	0
 		push	ds
 		push	offset aOp2a_pi	; "op2a.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	1
 		push	ds
 		push	offset aOp2b_pi	; "op2b.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	2
 		push	ds
 		push	offset aOp2c_pi	; "op2c.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	3
 		push	ds
 		push	offset aOp2d_pi	; "op2d.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	4
 		push	ds
 		push	offset aOp2e_pi	; "op2e.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	5
 		push	ds
 		push	offset aOp2f_pi	; "op2f.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	6
 		push	ds
 		push	offset aOp2g_pi	; "op2g.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	7
 		push	ds
 		push	offset aOp2h_pi	; "op2h.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -3551,7 +3551,7 @@ loc_BDAD:
 
 loc_BDB7:
 		push	si
-		call	sub_DEE0
+		call	pi_slot_free
 		inc	si
 
 loc_BDBE:
@@ -3573,7 +3573,7 @@ loc_BDE8:
 		push	0
 		push	ds
 		push	offset aOp1_pi_0 ; "op1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -3630,7 +3630,7 @@ loc_BE46:
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		pop	si
@@ -4436,14 +4436,14 @@ var_1		= byte ptr -1
 		push	0
 		push	ds
 		push	offset aMusic_pi ; "music.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		call	sub_D894
 		call	sub_BFB7
 		call	sub_D688
@@ -5420,7 +5420,7 @@ sub_CC5C	proc near
 		push	0
 		push	ds
 		push	offset aHi01_pi	; "hi01.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 
 loc_CC9F:
 		call	sub_CBDC
@@ -5467,21 +5467,21 @@ loc_CD17:
 		push	1
 		call	palette_black_out
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi_1 ; "op1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		push	1
@@ -5925,14 +5925,14 @@ var_2		= word ptr -2
 		push	0
 		push	ds
 		push	offset aSlb1_pi	; "slb1.pi"
-		call	sub_DDD8
+		call	pi_slot_load
 		push	0
 		call	sub_DEBA
 		push	large 0
 		push	0
 		call	sub_DE0A
 		push	0
-		call	sub_DEE0
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		call	sub_D688
@@ -6187,7 +6187,7 @@ seg001		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		; org 4
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
@@ -7823,42 +7823,7 @@ sub_DD97	proc near
 		retn
 sub_DD97	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DDD8	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		push	di
-		call	sub_DEE0
-		mov	si, di
-		shl	si, 2
-		add	si, 0A84h
-		imul	di, 48h
-		add	di, 3852h
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	ds
-		push	di
-		push	ds
-		push	si
-		call	graph_pi_load_pack
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_DDD8	endp
-
+include th05/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7995,33 +7960,7 @@ sub_DEBA	proc far
 		retf	2
 sub_DEBA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DEE0	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	ax, bx
-		shl	bx, 2
-		add	bx, 0A84h
-		cmp	dword ptr [bx],	0
-		jz	short locret_DF0E
-		imul	ax, 48h
-		add	ax, 3852h
-		push	ds
-		push	ax
-		push	word ptr [bx+2]
-		push	word ptr [bx]
-		mov	dword ptr [bx],	0
-		call	graph_pi_free
-
-locret_DF0E:
-		retf	2
-sub_DEE0	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/pi_slot_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9110,38 +9049,7 @@ byte_FA43	db 0
 		db 0BBh	; »
 		db 0DDh
 		db 0DDh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th05/formats/pi_slot_buffers[bss].asm
 dword_FA84	dd 0A8000000h
 		db    0
 		db    0
@@ -10098,150 +10006,7 @@ unk_1281E	db    ?	;
 word_1282C	dw ?
 word_1282E	dw ?
 word_12830	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th05/formats/pi_slot_headers[bss].asm
 word_12A72	dw ?
 byte_12A74	db ?
 		dd    ?	;

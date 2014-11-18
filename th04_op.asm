@@ -654,10 +654,7 @@ loc_AA6E:
 		push	1
 		call	palette_black_out
 		call	super_free
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	sub_CCC8
 		call	sub_A7F0
 		call	gaiji_restore
@@ -1207,16 +1204,13 @@ loc_AF56:
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
@@ -1244,16 +1238,13 @@ loc_AFBD:
 		push	0
 		push	ds
 		push	offset aOp1_pi	; "op1.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
@@ -2511,16 +2502,13 @@ sub_B9CE	proc near
 		push	0
 		push	ds
 		push	offset aMs_pi	; "ms.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	1
@@ -2833,16 +2821,13 @@ var_1		= byte ptr -1
 		push	0
 		push	ds
 		push	offset aZun00_pi ; "zun00.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		call	sub_E428
@@ -3793,16 +3778,13 @@ sub_C3B7	proc near
 		push	0
 		push	ds
 		push	offset aMusic_pi ; "music.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		mov	al, byte_102AF
 		mov	byte ptr word_12DBC, al
 		push	word_12DBC
@@ -4656,7 +4638,7 @@ sub_CA94	proc near
 		push	0
 		push	ds
 		push	offset aHi01_pi	; "hi01.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 
 loc_CADA:
 		call	sub_CA1A
@@ -4704,26 +4686,20 @@ loc_CB58:
 		call	sub_DC74
 		push	1
 		call	palette_black_out
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
 		push	0
 		push	ds
 		push	offset aOp1_pi_0 ; "op1.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		push	1
@@ -4901,27 +4877,27 @@ var_2		= word ptr -2
 		push	0
 		push	ds
 		push	offset aOp5b_pi	; "op5b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	1
 		push	ds
 		push	offset aOp4b_pi	; "op4b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	2
 		push	ds
 		push	offset aOp3b_pi	; "op3b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	3
 		push	ds
 		push	offset aOp2b_pi	; "op2b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	4
 		push	ds
 		push	offset aOp1b_pi	; "op1b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	5
 		push	ds
 		push	offset aOp0b_pi	; "op0b.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	4
@@ -4981,30 +4957,12 @@ loc_CDC4:
 		out	dx, al
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
-		push	ds
-		push	offset unk_11710
-		push	large [dword_116B4]
-		call	graph_pi_free
-		push	ds
-		push	offset unk_11758
-		push	large [dword_116B8]
-		call	graph_pi_free
-		push	ds
-		push	offset unk_117A0
-		push	large [dword_116BC]
-		call	graph_pi_free
-		push	ds
-		push	offset unk_117E8
-		push	large [dword_116C0]
-		call	graph_pi_free
-		push	ds
-		push	offset unk_11830
-		push	large [dword_116C4]
-		call	graph_pi_free
+		freePISlotLarge	0
+		freePISlotLarge	1
+		freePISlotLarge	2
+		freePISlotLarge	3
+		freePISlotLarge	4
+		freePISlotLarge	5
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_CE50
@@ -5022,16 +4980,13 @@ loc_CE50:
 		push	0
 		push	ds
 		push	offset aOp1_pi_1 ; "op1.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		push	0
 		call	sub_DA50
 		push	large 0
 		push	0
 		call	sub_DA75
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
 		xor	si, si
@@ -6029,7 +5984,7 @@ sub_D6B2	proc near
 		push	0
 		push	ds
 		push	offset aSlb1_pi	; "slb1.pi"
-		call	sub_DAFD
+		call	pi_slot_load
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -6274,10 +6229,7 @@ loc_D8B2:
 		push	1
 		call	palette_black_out
 		call	sub_D1F3
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		mov	ax, 1
 		jmp	loc_DA0D
 ; ---------------------------------------------------------------------------
@@ -6372,10 +6324,7 @@ loc_D994:
 		push	1
 		call	palette_black_out
 		call	sub_D1F3
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		xor	ax, ax
 		jmp	short loc_DA0D
 ; ---------------------------------------------------------------------------
@@ -6384,10 +6333,7 @@ loc_D9D5:
 		test	byte ptr word_11A50+1, 10h
 		jz	short loc_D9F0
 		call	sub_D1F3
-		push	ds
-		push	offset unk_116C8
-		push	large [dword_116B0]
-		call	graph_pi_free
+		freePISlotLarge	0
 		jmp	loc_D7B8
 ; ---------------------------------------------------------------------------
 
@@ -6558,46 +6504,7 @@ loc_DAE9:
 		retf	6
 sub_DA75	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DAFD	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 2388h
-		push	ds
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	large dword ptr	[bx+2370h]
-		call	graph_pi_free
-		push	large [bp+arg_0]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 2388h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 2370h
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf	6
-sub_DAFD	endp
+include th02/formats/pi_slot_load.asm
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -8877,444 +8784,7 @@ dword_1161E	dd 0
 dword_11622	dd 0
 dword_11626	dd 0
 include libs/master.lib/pfint21[bss].asm
-dword_116B0	dd 0
-dword_116B4	dd 0
-dword_116B8	dd 0
-dword_116BC	dd 0
-dword_116C0	dd 0
-dword_116C4	dd 0
-unk_116C8	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_11710	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_11758	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_117A0	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_117E8	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_11830	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th02/formats/pi_slots[bss].asm
 		db    0
 		db    0
 		db    0

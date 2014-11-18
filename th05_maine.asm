@@ -1518,7 +1518,7 @@ loc_AD13:
 		cmp	[bp+arg_0], 2Dh	; '-'
 		jnz	short loc_AD23
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1570,12 +1570,12 @@ loc_AD7A:
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		push	0
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	sub_EF7A
+		call	pi_slot_load
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -2035,7 +2035,7 @@ loc_B18D:
 loc_B196:
 		call	sub_EC04
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		pop	si
 		leave
 		retn
@@ -2228,7 +2228,7 @@ loc_B309:
 		add	ax, dx
 		mov	bx, ax
 		push	large dword ptr	[bx+760h]
-		call	sub_EF7A
+		call	pi_slot_load
 
 loc_B357:
 		add	word_15012, 2
@@ -2335,7 +2335,7 @@ sub_B3CB	proc near
 		shl	ax, 5
 		mov	bx, ax
 		push	large dword ptr	[bx+760h]
-		call	sub_EF7A
+		call	pi_slot_load
 		push	0
 		call	sub_F05C
 		push	ds
@@ -2375,7 +2375,7 @@ loc_B4B5:
 		push	4
 		call	palette_black_out
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -4250,14 +4250,14 @@ var_2		= word ptr -2
 		push	0
 		push	ds
 		push	offset aHi01_pi	; "hi01.pi"
-		call	sub_EF7A
+		call	pi_slot_load
 		push	0
 		call	sub_F05C
 		push	large 0
 		push	0
 		call	sub_EFAC
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		push	ds
@@ -5959,14 +5959,14 @@ sub_D1B1	proc near
 		push	0
 		push	ds
 		push	offset aUde_pi	; "ude.pi"
-		call	sub_EF7A
+		call	pi_slot_load
 		push	0
 		call	sub_F05C
 		push	large 0
 		push	0
 		call	sub_EFAC
 		push	0
-		call	sub_F082
+		call	pi_slot_free
 		push	0
 		call	graph_copy_page
 		push	4
@@ -8655,7 +8655,7 @@ seg001		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
@@ -9784,42 +9784,7 @@ sub_EF39	proc near
 		retn
 sub_EF39	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF7A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		push	di
-		call	sub_F082
-		mov	si, di
-		shl	si, 2
-		add	si, 6FEh
-		imul	di, 48h
-		add	di, 27BAh
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	ds
-		push	di
-		push	ds
-		push	si
-		call	graph_pi_load_pack
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_EF7A	endp
-
+include th05/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9972,33 +9937,7 @@ sub_F05C	proc far
 		retf	2
 sub_F05C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F082	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	ax, bx
-		shl	bx, 2
-		add	bx, 6FEh
-		cmp	dword ptr [bx],	0
-		jz	short locret_F0B0
-		imul	ax, 48h
-		add	ax, 27BAh
-		push	ds
-		push	ax
-		push	word ptr [bx+2]
-		push	word ptr [bx]
-		mov	dword ptr [bx],	0
-		call	graph_pi_free
-
-locret_F0B0:
-		retf	2
-sub_F082	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/pi_slot_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10814,38 +10753,7 @@ byte_107DD	db 0
 		db 0BBh	; »
 		db 0DDh
 		db 0DDh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th05/formats/pi_slot_buffers[bss].asm
 dword_1081E	dd 0A8000000h
 		db    0
 		db    0
@@ -11553,150 +11461,7 @@ unk_128A6	db    ?	;
 word_128B4	dw ?
 word_128B6	dw ?
 word_128B8	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th05/formats/pi_slot_headers[bss].asm
 word_12AFA	dw ?
 byte_12AFC	db ?
 		dd    ?	;

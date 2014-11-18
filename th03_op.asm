@@ -2696,16 +2696,13 @@ loc_AC15:
 		push	0
 		push	ds
 		push	offset aOp3_pi	; "op3.pi"
-		call	sub_C940
+		call	pi_slot_load
 		push	0
 		call	sub_C356
 		push	large 0
 		push	0
 		call	sub_C37B
-		push	ds
-		push	offset unk_F4B0
-		push	large [dword_F498]
-		call	graph_pi_free
+		freePISlotLarge	0
 		mov	al, byte_DE83
 		mov	byte ptr word_F828, al
 		push	word_F828
@@ -2891,7 +2888,7 @@ var_2		= word ptr -2
 		push	0
 		push	ds
 		push	offset aTl01_pi	; "TL01.PI"
-		call	sub_C940
+		call	pi_slot_load
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
@@ -2918,14 +2915,11 @@ var_2		= word ptr -2
 		mov	Palettes+34, 0
 		mov	Palettes+35, 0
 		call	far ptr	palette_show
-		push	ds
-		push	offset unk_F4B0
-		push	large [dword_F498]
-		call	graph_pi_free
+		freePISlotLarge	0
 		push	0
 		push	ds
 		push	offset aTl02_pi	; "TL02.PI"
-		call	sub_C940
+		call	pi_slot_load
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al
@@ -3060,10 +3054,7 @@ loc_AFD9:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset unk_F4B0
-		push	large [dword_F498]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	sub_B38D
 		pop	si
 		leave
@@ -3094,7 +3085,7 @@ sub_B008	proc near
 		push	0
 		push	ds
 		push	offset aTl02_pi	; "TL02.PI"
-		call	sub_C940
+		call	pi_slot_load
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
@@ -3116,10 +3107,7 @@ sub_B008	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset unk_F4B0
-		push	large [dword_F498]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	sub_B38D
 		push	0
 		call	sub_C403
@@ -6407,47 +6395,7 @@ loc_C92F:
 		retf	0Ah
 sub_C6DB	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C940	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1CC0h
-		push	ds
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	large dword ptr	[bx+1CA8h]
-		call	graph_pi_free
-		push	large [bp+arg_0]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1CC0h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 1CA8h
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf	6
-sub_C940	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7307,13 +7255,12 @@ word_F296	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-dword_F498	dd ?
+include th02/formats/pi_slots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_F4B0	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -7373,121 +7320,6 @@ unk_F4B0	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
 unk_F760	db    ?	;
 		dd    ?	;
 		dd    ?	;

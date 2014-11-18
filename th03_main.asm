@@ -2778,10 +2778,7 @@ _arg0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset unk_1F014
-		push	large [dword_1EFFC]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -10216,47 +10213,7 @@ loc_ECE6:
 		retf	4
 sub_ECD0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED0E	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_4]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1AB4h
-		push	ds
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	large dword ptr	[bx+1A9Ch]
-		call	graph_pi_free
-		push	large [bp+arg_0]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1AB4h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 1A9Ch
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf	6
-sub_ED0E	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39070,13 +39027,12 @@ word_1EFF6	dw ?
 word_1EFF8	dw ?
 unk_1EFFA	db    ?	;
 byte_1EFFB	db ?
-dword_1EFFC	dd ?
+include th02/formats/pi_slots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_1F014	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -39144,121 +39100,6 @@ unk_1F014	db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
 word_1F2E4	dw ?
 word_1F2E6	dw ?
 word_1F2E8	dw ?

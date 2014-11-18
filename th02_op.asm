@@ -381,7 +381,7 @@ arg_2		= word ptr  6
 		push	ds
 		push	[bp+arg_2]
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+arg_0]
 		out	dx, al
@@ -392,11 +392,7 @@ arg_2		= word ptr  6
 		push	0
 		call	sub_B17D
 		add	sp, 0Eh
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
+		freePISlot	0
 		pop	bp
 		retn	4
 sub_9D1D	endp
@@ -432,15 +428,15 @@ var_2		= word ptr -2
 		push	ds
 		push	offset aOpa_pi	; "opa.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		push	ds
 		push	offset aOpb_pi	; "opb.pi"
 		push	1
-		call	sub_ADD5
+		call	pi_slot_load
 		push	ds
 		push	offset aOpc_pi	; "opc.pi"
 		push	2
-		call	sub_ADD5
+		call	pi_slot_load
 		add	sp, 18h
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
@@ -646,7 +642,7 @@ sub_9FAF	proc far
 		push	ds
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		call	text_clear
 		call	sub_BD24
 		push	20Fh
@@ -705,21 +701,9 @@ sub_A027	proc far
 		mov	byte ptr es:[bx+26h], 0
 		call	sub_9CA2
 		call	text_clear
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F1DC
-		push	word_F182
-		push	word_F180
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F224
-		push	word_F186
-		push	word_F184
-		call	graph_pi_free
+		freePISlot	0
+		freePISlot	1
+		freePISlot	2
 		call	gaiji_restore
 		call	super_free
 		call	sub_B019
@@ -755,7 +739,7 @@ sub_A0C6	proc far
 		push	ds
 		push	offset aTs1_pi	; "ts1.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		call	text_clear
 		call	sub_BD24
 		push	20Fh
@@ -1145,7 +1129,7 @@ loc_A3BC:
 		push	ds
 		push	offset aOp2_pi	; "op2.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		push	0
 		call	sub_B15A
 		push	0
@@ -1153,11 +1137,7 @@ loc_A3BC:
 		push	0
 		call	sub_B17D
 		add	sp, 0Eh
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
+		freePISlot	0
 		push	ds
 		push	offset aOp_rgb	; "op.rgb"
 		call	palette_entry_rgb
@@ -1949,11 +1929,11 @@ loc_AA8F:
 		push	ds
 		push	offset aTs3_pi	; "ts3.pi"
 		push	2
-		call	sub_ADD5
+		call	pi_slot_load
 		push	ds
 		push	offset aTs2_pi	; "ts2.pi"
 		push	1
-		call	sub_ADD5
+		call	pi_slot_load
 		add	sp, 0Ch
 		mov	word_F3C8, 0
 		mov	word_E8FC, 0
@@ -2367,38 +2347,7 @@ sub_ADAC	proc far
 		retf
 sub_ADAC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ADD5	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_0]
-		push	large [bp+arg_2]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 1B64h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 1B4Ch
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf
-sub_ADD5	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3253,21 +3202,9 @@ loc_B370:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F1DC
-		push	word_F182
-		push	word_F180
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F224
-		push	word_F186
-		push	word_F184
-		call	graph_pi_free
+		freePISlot	0
+		freePISlot	1
+		freePISlot	2
 		pop	si
 		leave
 		retf
@@ -4459,7 +4396,7 @@ sub_BBC0	proc far
 		push	ds
 		push	offset aTselect_pi ; "TSELECT.pi"
 		push	3
-		call	sub_ADD5
+		call	pi_slot_load
 		push	3
 		call	sub_B15A
 		push	3
@@ -4467,11 +4404,7 @@ sub_BBC0	proc far
 		push	0
 		call	sub_B17D
 		add	sp, 0Eh
-		push	ds
-		push	offset unk_F26C
-		push	word_F18A
-		push	word_F188
-		call	graph_pi_free
+		freePISlot	3
 		push	1
 		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
@@ -4878,21 +4811,9 @@ loc_BFB2:
 ; ---------------------------------------------------------------------------
 
 loc_BFB7:
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F1DC
-		push	word_F182
-		push	word_F180
-		call	graph_pi_free
-		push	ds
-		push	offset unk_F224
-		push	word_F186
-		push	word_F184
-		call	graph_pi_free
+		freePISlot	0
+		freePISlot	1
+		freePISlot	2
 		push	1
 		call	palette_black_out
 		pop	di
@@ -5910,7 +5831,7 @@ var_1		= byte ptr -1
 		push	ds
 		push	offset aOp3_pi	; "op3.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		push	0
 		call	sub_B15A
 		push	0
@@ -5918,11 +5839,7 @@ var_1		= byte ptr -1
 		push	0
 		call	sub_B17D
 		add	sp, 0Eh
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
+		freePISlot	0
 		mov	al, byte_DF97
 		mov	byte ptr word_F57C, al
 		push	word_F57C
@@ -6099,7 +6016,7 @@ loc_C978:
 		push	ds
 		push	offset aOp2_pi_0 ; "op2.pi"
 		push	0
-		call	sub_ADD5
+		call	pi_slot_load
 		push	0
 		call	sub_B15A
 		push	0
@@ -6107,11 +6024,7 @@ loc_C978:
 		push	0
 		call	sub_B17D
 		add	sp, 0Eh
-		push	ds
-		push	offset unk_F194
-		push	word_F17E
-		push	word_F17C
-		call	graph_pi_free
+		freePISlot	0
 		push	ds
 		push	offset aOp_rgb_0 ; "op.rgb"
 		call	palette_entry_rgb
@@ -6495,136 +6408,7 @@ dword_F16C	dd ?
 dword_F170	dd ?
 dword_F174	dd ?
 dword_F178	dd ?
-word_F17C	dw ?
-word_F17E	dw ?
-word_F180	dw ?
-word_F182	dw ?
-word_F184	dw ?
-word_F186	dw ?
-word_F188	dw ?
-word_F18A	dw ?
-		dd    ?	;
-		dd    ?	;
-unk_F194	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_F1DC	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_F224	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_F26C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_F3C8	dw ?
 byte_F3CA	db ?

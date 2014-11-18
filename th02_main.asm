@@ -2164,7 +2164,7 @@ sub_B2AB	proc near
 		push	ds
 		push	offset aEye_pi	; "EYE.PI"
 		push	0
-		call	sub_F537
+		call	pi_slot_load
 		add	sp, 0Ch
 		push	ds
 		push	offset aMiko_bft ; "miko.bft"
@@ -3959,10 +3959,7 @@ _arg0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset unk_1FD74
-		push	large [dword_1FD5C]
-		call	graph_pi_free
+		freePISlotLarge	0
 		call	sub_E24A
 		call	sub_F4EF
 		call	sub_1C608
@@ -7860,7 +7857,7 @@ sub_E178	proc near
 		push	ds
 		push	offset aBomb1_pi ; "bomb1.pi"
 		push	1
-		call	sub_F537
+		call	pi_slot_load
 		add	sp, 6
 		mov	fp_219CA, offset sub_E618
 		pop	bp
@@ -7874,7 +7871,7 @@ loc_E1D2:
 		push	ds
 		push	offset aBomb3_pi ; "bomb3.pi"
 		push	1
-		call	sub_F537
+		call	pi_slot_load
 		add	sp, 6
 		mov	fp_219CA, offset sub_E89C
 		pop	bp
@@ -7888,7 +7885,7 @@ loc_E1F3:
 		push	ds
 		push	offset aBomb2_pi ; "bomb2.pi"
 		push	1
-		call	sub_F537
+		call	pi_slot_load
 		add	sp, 6
 		push	ds
 		push	offset aBomb1_bft ; "bomb1.bft"
@@ -7920,10 +7917,7 @@ sub_E178	endp
 sub_E24A	proc near
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset unk_1FDBC
-		push	large [dword_1FD60]
-		call	graph_pi_free
+		freePISlotLarge	1
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	short loc_E26F
@@ -10227,38 +10221,7 @@ sub_F50E	proc far
 		retf
 sub_F50E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F537	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_0]
-		push	large [bp+arg_2]
-		mov	ax, si
-		imul	ax, 48h
-		add	ax, 2304h
-		push	ds
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		add	ax, 22ECh
-		push	ds
-		push	ax
-		call	graph_pi_load_pack
-		mov	[bp+var_2], ax
-		pop	si
-		leave
-		retf
-sub_F537	endp
-
+include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38717,126 +38680,7 @@ dword_1FD4C	dd ?
 dword_1FD50	dd ?
 dword_1FD54	dd ?
 dword_1FD58	dd ?
-dword_1FD5C	dd ?
-dword_1FD60	dd ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-unk_1FD74	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_1FDBC	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1FFA8	dw ?
 byte_1FFAA	db ?
