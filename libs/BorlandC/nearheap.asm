@@ -455,8 +455,7 @@ ExpandBlock     PROC NEAR
                 sub     cx,UsedHeaderSize+1     ;cx = number of bytes in old data area
 @@MoveIt:
                 shr     cx,1                    ;cx = number of words in data area
-                rep
-                movsw
+                rep     movsw
                 mov     [bp-2],ax               ;save data area of new block in scratch area
                 call    _free
                 pop     bx                      ;cleanup stack

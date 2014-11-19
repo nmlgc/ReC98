@@ -319,8 +319,7 @@ _farheapfillfree        PROC
                 mov     di,free_space
                 mov     cx,8 - (free_space/2)
 @@FillHerUp:
-                rep
-                stosw
+                rep     stosw
                 xor     di,di
                 mov     cx,8
                 inc     bx
@@ -385,8 +384,7 @@ _farheapcheckfree       PROC
                 mov     di,free_space
                 mov     cx,8 - (free_space/2)
 @@CheckHerOut:
-                repe
-                scasw
+                repe    scasw
                 jnz     @@BadValue
                 xor     di,di
                 mov     cx,8

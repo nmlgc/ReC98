@@ -597,8 +597,7 @@ ExpandBlock     PROC    NEAR
                 mov     di,UsedHeaderSize
                 mov     si,di
                 mov     cx,(16d-UsedHeaderSize)/2
-                rep
-                movsw
+                rep     movsw
                 or      dx,dx
                 jz      @@FreeOldBlock
                 mov     ax,es                   ;increment segments
@@ -617,8 +616,7 @@ ExpandBlock     PROC    NEAR
 @@MoveIt:       shl     cx,1                    ;cx = number of words
                 shl     cx,1
                 shl     cx,1
-                rep
-                movsw
+                rep     movsw
                 sub     dx,1000h
                 jbe     @@FreeOldBlock
                 mov     ax,es                   ;increment segments
