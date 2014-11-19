@@ -111,8 +111,8 @@ SEARCH_HOLE_S:
 	mov	CX,mem_OutSeg
 SEARCH_HOLE:
 	mov	ES,AX
-	mov	AX,ES:[0].nextseg
-	cmp	ES:[0].using,0
+	mov	AX,ES:[MEMHEAD.nextseg]
+	cmp	ES:[MEMHEAD.using],0
 	jne	short SEARCH_HOLE_E
 	mov	CX,ES
 	add	CX,BX
@@ -136,8 +136,8 @@ ALLOC_CENTER:
 	jb	short NO_MEMORY
 	mov	mem_TopHeap,AX
 	mov	ES,AX
-	mov	ES:[0].nextseg,CX
-	mov	ES:[0].using,1
+	mov	ES:[MEMHEAD.nextseg],CX
+	mov	ES:[MEMHEAD.using],1
 	mov	BX,AX
 	jmp	short RETURN
 
@@ -160,12 +160,12 @@ FOUND_HOLE:
 	cmp	AX,1	; 新しい穴が 0〜1パラの大きさしかないなら穴を占有する
 	jbe	short JUST_FIT
 	add	AX,CX
-	mov	ES:[0].using,1
-	mov	ES:[0].nextseg,CX
+	mov	ES:[MEMHEAD.using],1
+	mov	ES:[MEMHEAD.nextseg],CX
 	mov	BX,ES
 	mov	ES,CX
-	mov	ES:[0].nextseg,AX
-	mov	ES:[0].using,0
+	mov	ES:[MEMHEAD.nextseg],AX
+	mov	ES:[MEMHEAD.using],0
 	cmp	BX,mem_FirstHole
 	jne	short RETURN
 	mov	mem_FirstHole,CX ; 今のが先頭フリーブロックだったら更新だ
@@ -173,7 +173,7 @@ FOUND_HOLE:
 
 	; ちょうどいい按配でフリーブロックが見つかったのね
 JUST_FIT:
-	mov	ES:[0].using,1
+	mov	ES:[MEMHEAD.using],1
 	mov	BX,ES
 	cmp	BX,mem_FirstHole
 	jne	short RETURN
@@ -197,7 +197,7 @@ FOUND_NEXT_HOLE:
 RETURN:	mov	ES,BX
 	mov	AX,0
 	xchg	AX,mem_AllocID
-	mov	ES:[0].mem_id,AX
+	mov	ES:[MEMHEAD.mem_id],AX
 	lea	AX,[BX+1]
 	clc
 NO_THANKYOU:				; hmem_freeのエラーはここにくる(笑)
@@ -224,9 +224,9 @@ func HMEM_FREE		; hmem_free() {
 
 	; 先頭ではないブロックの開放処理
 	xor	BX,BX
-	cmp	ES:[BX].using,1
+	cmp	ES:[BX].MEMHEAD.using,1
 	jne	short NO_THANKYOU	; usingが1でなければ無効
-	mov	ES:[BX].using,BX	; using <- 0
+	mov	ES:[BX].MEMHEAD.using,BX	; using <- 0
 	mov	CX,mem_FirstHole
 	mov	AX,ES
 	mov	mem_FirstHole,AX
@@ -238,7 +238,7 @@ func HMEM_FREE		; hmem_free() {
 CONNECT_START:
 
 	mov	CX,AX
-	mov	AX,ES:[BX].nextseg	; 終了地点は、目的ブロックの次だけど
+	mov	AX,ES:[BX].MEMHEAD.nextseg	; 終了地点は、目的ブロックの次だけど
 
 	cmp	AX,mem_OutSeg
 	jne	short NO_TAIL
@@ -249,19 +249,19 @@ NO_TAIL:
 CONNECT_FREE:
 	; 空きを探すループ
 	mov	DS,CX			; DS<-CX
-	mov	CX,[BX].nextseg		; CX=next seg
+	mov	CX,[BX].MEMHEAD.nextseg		; CX=next seg
 	cmp	CX,AX
 	ja	short CONNECT_SKIP_OVER	; nextsegが最終segより大きければ終わり
-	cmp	[BX].using,BX
+	cmp	[BX].MEMHEAD.using,BX
 	jne	short CONNECT_FREE	; フリーブロックになるまで進める
 	; 連続した空きを繋ぐループ
 CONNECT_FREE2:
 	mov	ES,CX			; ES<-CX(=next seg)
-	cmp	ES:[BX].using,BX	; 連接したフリーまで進める
+	cmp	ES:[BX].MEMHEAD.using,BX	; 連接したフリーまで進める
 	jne	short CONNECT_FREE
 	; DSとESのフリーブロックが連接している
-	mov	CX,ES:[BX].nextseg	; CX=新しいnext seg
-	mov	[BX].nextseg,CX		; 接続
+	mov	CX,ES:[BX].MEMHEAD.nextseg	; CX=新しいnext seg
+	mov	[BX].MEMHEAD.nextseg,CX		; 接続
 	cmp	CX,AX
 	jbe	short CONNECT_FREE2	; CXが最終seg以内ならまた次を見る
 CONNECT_SKIP_OVER:
@@ -271,16 +271,16 @@ CONNECT_SKIP_OVER:
 	EVEN
 EXPAND_CENTER:	; 先頭ブロックの開放
 	xor	BX,BX
-	mov	AX,ES:[BX].nextseg
+	mov	AX,ES:[BX].MEMHEAD.nextseg
 	mov	mem_TopHeap,AX
 	cmp	AX,mem_OutSeg
 	je	short FREE_RETURN	; 末尾だったら終り
 	mov	ES,AX
-	cmp	ES:[BX].using,BX
+	cmp	ES:[BX].MEMHEAD.using,BX
 	jne	short FREE_RETURN	; 次のブロックが使用中なら終り
 
 	; すぐ次(ES:)がフリーブロックなのでそこも詰める。
-	mov	AX,ES:[BX].nextseg
+	mov	AX,ES:[BX].MEMHEAD.nextseg
 	mov	mem_TopHeap,AX
 	; 以後の最初のフリーブロックを検索し、その場所をmem_FirstHoleに入れる
 	mov	CX,mem_OutSeg
@@ -289,12 +289,12 @@ EXPAND_CENTER:	; 先頭ブロックの開放
 	jmp	short X_SEARCH_HOLE
 	EVEN
 X_SEARCH_NEXT_HOLE:
-	mov	AX,ES:[BX].nextseg
+	mov	AX,ES:[BX].MEMHEAD.nextseg
 	cmp	AX,CX
 	je	short FREE_LOST_HOLE
 X_SEARCH_HOLE:
 	mov	ES,AX
-	cmp	ES:[BX].using,BX
+	cmp	ES:[BX].MEMHEAD.using,BX
 	jne	short X_SEARCH_NEXT_HOLE
 	mov	BX,ES
 FREE_LOST_HOLE:

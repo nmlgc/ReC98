@@ -205,42 +205,42 @@ even
 	;オクターブ
 even
 @@OCTAVE:
-	les	BX,[SI].pptr
+	les	BX,[SI].SPART.pptr
 	mov	AL,ES:[BX]
 	sub	AL,'1'
 	cmp	AL,7
 	ja	short @@WHILEEND
 	sub	AH,AH
 	inc	AX
-	mov	[SI].oct,AX
-	inc	word ptr [SI].pptr
+	mov	[SI].SPART.oct,AX
+	inc	word ptr [SI].SPART.pptr
 	jmp	short @@WHILEEND
 
 	;オクターブ--
 even
 @@DECOCTAVE:
-	dec	[SI].oct
-	cmp	[SI].oct,0
+	dec	[SI].SPART.oct
+	cmp	[SI].SPART.oct,0
 	jne	short @@WHILEEND
-	inc	[SI].oct
+	inc	[SI].SPART.oct
 	jmp	short @@WHILEEND
 
 	;オクターブ++
 even
 @@INCOCTAVE:
-	inc	[SI].oct
-	cmp	[SI].oct,9
+	inc	[SI].SPART.oct
+	cmp	[SI].SPART.oct,9
 	jne	short @@WHILEEND
-	dec	[SI].oct
+	dec	[SI].SPART.oct
 	jmp	short @@WHILEEND
 
 	;テヌート
 even
 @@TENOOT:				;ってスペルは適当(笑)
-	les	BX,[SI].pptr
-	mov	[SI].tnt,OFF
+	les	BX,[SI].SPART.pptr
+	mov	[SI].SPART.tnt,OFF
 	cmp	byte ptr ES:[BX],'1'
 	jne	short @@WHILEEND
-	mov	[SI].tnt,ON
+	mov	[SI].SPART.tnt,ON
 	jmp	short @@WHILEEND
 endfunc

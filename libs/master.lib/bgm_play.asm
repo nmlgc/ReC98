@@ -45,20 +45,20 @@ BGM_BELL:
 	mov	SI,BX
 
 	;マスクON ならリターン
-	cmp	[SI].pmask,ON
+	cmp	[SI].SGLB.pmask,ON
 	je	short @@EXIT
 	;spval = (ulong)(note_dat[part2->note - 'A'] * 2);
-	mov	BX,[SI].note
+	mov	BX,[SI].SPART.note
 	shl	BX,1
 	mov	BX,note_dat[BX-('A'*2)]
 
-	cmp	[SI].oct,1
+	cmp	[SI].SPART.oct,1
 	jne	short @@NOTOCT1
 	shl	BX,1
 	jmp	short @@OCT1
 @@NOTOCT1:
 	;spval = (ulong)(note_dat[part2->note - 'A'] / octdat[part2->oct - 1]);
-	mov	CX,[SI].oct
+	mov	CX,[SI].SPART.oct
 	dec	CX
 	dec	CX
 	shr	BX,CL

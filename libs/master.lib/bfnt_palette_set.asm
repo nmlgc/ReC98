@@ -51,7 +51,7 @@ func BFNT_PALETTE_SET
 
 	_push	DS
 	_lds	BX,[BP+@@header]
-	test	[BX].col,80h
+	test	[BX].bfnt_header.col,80h
 	_pop	DS
 	jz	short @@INVALID
 

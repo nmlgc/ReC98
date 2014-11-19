@@ -48,14 +48,14 @@ endif
         sub     sp, 10
         fstcw   temp1                   ; save the control word
         fwait
-        mov     al, temp1.BY1
-        or      temp1.BY1, 0Ch
+        mov     al, byte ptr temp1 + 1
+        or      byte ptr temp1 + 1, 0Ch
         fldcw   temp1
         fistp   qword ptr temp2         ; convert to 64-bit integer
-        mov     temp1.BY1, al
+        mov     byte ptr temp1 + 1, al
         fldcw   temp1                   ; restore the control word
-        mov     ax, temp2.W0            ; return LS 32 bits
-        mov     dx, temp2.W1
+        mov     ax, word ptr temp2      ; return LS 32 bits
+        mov     dx, word ptr temp2 + 2
         mov     sp, bp
         pop     bp
         ret

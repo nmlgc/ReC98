@@ -49,21 +49,21 @@ func _BGM_PINIT
 	shl	BX,1
 	mov	AX,glb.track[BX]
 	mov	BX,DX
-	add	AX,word ptr [BX].mbuf
-	mov	word ptr [BX].pptr,AX
-	mov	AX,word ptr [BX].mbuf+2
-	mov	word ptr [BX].pptr+2,AX
+	add	AX,word ptr [BX].SPART.mbuf
+	mov	word ptr [BX].SPART.pptr,AX
+	mov	AX,word ptr [BX].SPART.mbuf+2
+	mov	word ptr [BX].SPART.pptr+2,AX
 	;オクターブ = 4
-	mov	[BX].oct,DEFOCT
+	mov	[BX].SPART.oct,DEFOCT
 	;音符 = R
-	mov	[BX].note,REST
+	mov	[BX].SPART.note,REST
 	;音長 = 四分音符
 	mov	AX,DEFLEN
-	mov	[BX].dflen,AX
-	mov	[BX].len,AX
+	mov	[BX].SPART.dflen,AX
+	mov	[BX].SPART.len,AX
 	;音長カウンタ
-	mov	[BX].lcnt,DEFLCNT
+	mov	[BX].SPART.lcnt,DEFLCNT
 	;テヌートOFF
-	mov	[BX].tnt,OFF
+	mov	[BX].SPART.tnt,OFF
 	ret	2
 endfunc

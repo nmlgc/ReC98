@@ -485,9 +485,9 @@ Initialize      proc near
 
 @@TopOfTable:   cmp     bx,di                   ;and the end of the table?
                 je      @@EndOfTable            ;yes, exit the loop
-                cmp     es:[bx.calltype],NOTUSED;check the call type
+                cmp     es:[bx.SE.calltype],NOTUSED
                 je      @@Next
-                mov     cl, es:[bx.priority]    ;move priority to CX
+                mov     cl, es:[bx.SE.priority] ;move priority to CX
                 xor     ch, ch
                 cmp     cx,ax                   ;check the priority
                 jae     @@Next                  ;too high?  skip
@@ -499,16 +499,16 @@ Initialize      proc near
 @@EndOfTable:   cmp     dx,di                   ;did we exhaust the table?
                 je      @@Done                  ;yes, quit
                 mov     bx,dx                   ;bx = highest priority item
-                cmp     es:[bx.calltype],PNEAR  ;is it near or far?
-                mov     es:[bx.calltype],NOTUSED;wipe the call type
+                cmp     es:[bx.SE.calltype],PNEAR
+                mov     es:[bx.SE.calltype],NOTUSED
                 push    es                      ;save es
                 je      @@NearCall
 
-@@FarCall:      call    DWORD PTR es:[bx.addrlow]
+@@FarCall:      call    DWORD PTR es:[bx.SE.addrlow]
                 pop     es                      ;restore es
                 jmp     short @@Start
 
-@@NearCall:     call    WORD PTR es:[bx.addrlow]
+@@NearCall:     call    WORD PTR es:[bx.SE.addrlow]
                 pop     es                      ;restore es
                 jmp     short @@Start
 
@@ -522,11 +522,11 @@ Cleanup         proc near
 
 @@TopOfTable:   cmp     bx,di                   ;and the end of the table?
                 je      @@EndOfTable            ;yes, exit the loop
-                cmp     es:[bx.calltype],NOTUSED;check the call type
+                cmp     es:[bx.SE.calltype],NOTUSED
                 je      @@Next
-                cmp     es:[bx.priority],ah     ;check the priority
+                cmp     es:[bx.SE.priority],ah  ;check the priority
                 jb      @@Next                  ;too low?  skip
-                mov     ah,es:[bx.priority]     ;keep priority
+                mov     ah,es:[bx.SE.priority]  ;keep priority
                 mov     dx,bx                   ;keep index in dx
 @@Next:         add     bx,SIZE SE              ;bx = next item in table
                 jmp     @@TopOfTable
@@ -534,16 +534,16 @@ Cleanup         proc near
 @@EndOfTable:   cmp     dx,di                   ;did we exhaust the table?
                 je      @@Done                  ;yes, quit
                 mov     bx,dx                   ;bx = highest priority item
-                cmp     es:[bx.calltype],PNEAR  ;is it near or far?
-                mov     es:[bx.calltype],NOTUSED;wipe the call type
+                cmp     es:[bx.SE.calltype],PNEAR
+                mov     es:[bx.SE.calltype],NOTUSED
                 push    es                      ;save es
                 je      @@NearCall
 
-@@FarCall:      call    DWORD PTR es:[bx.addrlow]
+@@FarCall:      call    DWORD PTR es:[bx.SE.addrlow]
                 pop     es                      ;restore es
                 jmp     short @@Start
 
-@@NearCall:     call    WORD PTR es:[bx.addrlow]
+@@NearCall:     call    WORD PTR es:[bx.SE.addrlow]
                 pop     es                      ;restore es
                 jmp     short @@Start
 
