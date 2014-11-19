@@ -31,10 +31,10 @@ ZeroDivMSG      db      'Divide error', 13, 10, 0
 ;       steal these vectors during execution.
 ;       Note: These vectors save area must not be altered
 ;             without changing the save/restore logic.
-PubSym@         _Int0Vector     <dd     0>,             __CDECL__
-PubSym@         _Int4Vector     <dd     0>,             __CDECL__
-PubSym@         _Int5Vector     <dd     0>,             __CDECL__
-PubSym@         _Int6Vector     <dd     0>,             __CDECL__
+PubSym@         _Int0Vector,    <dd     0>,             __CDECL__
+PubSym@         _Int4Vector,    <dd     0>,             __CDECL__
+PubSym@         _Int5Vector,    <dd     0>,             __CDECL__
+PubSym@         _Int6Vector,    <dd     0>,             __CDECL__
 ;                       Miscellaneous variables
 PubSym@         _C0argc,        <dw     0>,             __CDECL__
 dPtrPub@        _C0argv,        0,                      __CDECL__
