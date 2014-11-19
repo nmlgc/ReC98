@@ -6694,7 +6694,7 @@ sub_CF48	proc far
 		call	sub_D4FE
 		call	sub_D094
 		call	egc_start
-		push	large [off_14150] ; isr
+		pushd	[off_14150] ; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 0Ch
@@ -6757,7 +6757,7 @@ _arglist		= byte ptr  0Ah
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax		; arglist
-		push	large [bp+_format] ; format
+		pushd	[bp+_format] ; format
 		push	ss
 		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
@@ -7350,8 +7350,8 @@ _s		= dword	ptr -4
 		mov	[bp+_s],	0A8000000h
 		push	0
 		call	sub_D13A
-		push	large 7D0000FFh	; c
-		push	large [bp+_s]	; s
+		push	7D0000FFh	; c
+		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
 		call	sub_D1CE
@@ -7394,8 +7394,8 @@ arg_0		= byte ptr  6
 		cbw
 		push	ax
 		call	sub_D13A
-		push	large 7D0000FFh	; c
-		push	large [bp+_s]	; s
+		push	7D0000FFh	; c
+		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
 		call	sub_D1CE
@@ -7435,25 +7435,25 @@ _src		= dword	ptr -4
 
 loc_D37B:
 		push	50h ; 'P'       ; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_8] ; src
+		pushd	[bp+var_8] ; src
 		push	ss
 		lea	ax, [bp+var_B2]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_C] ; src
+		pushd	[bp+var_C] ; src
 		push	ss
 		lea	ax, [bp+var_102]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_10] ; src
+		pushd	[bp+var_10] ; src
 		push	ss
 		lea	ax, [bp+var_152]
 		push	ax		; dest
@@ -7465,26 +7465,26 @@ loc_D37B:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+_src]	; dest
+		pushd	[bp+_src]	; dest
 		call	_memcpy
 		add	sp, 32h
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_B2]
 		push	ax		; src
-		push	large [bp+var_8] ; dest
+		pushd	[bp+var_8] ; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_102]
 		push	ax		; src
-		push	large [bp+var_C] ; dest
+		pushd	[bp+var_C] ; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_152]
 		push	ax		; src
-		push	large [bp+var_10] ; dest
+		pushd	[bp+var_10] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¦'
@@ -7518,7 +7518,7 @@ sub_D431	proc far
 ; ---------------------------------------------------------------------------
 
 loc_D439:
-		push	large 0
+		pushd	0
 		push	0
 		push	si
 		call	sub_D119
@@ -7548,7 +7548,7 @@ var_2		= word ptr -2
 		enter	32h, 0
 		push	si
 		push	di
-		push	large 300000h	; c
+		push	300000h	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -7751,7 +7751,7 @@ sub_D59F	proc far
 ; ---------------------------------------------------------------------------
 
 loc_D5A7:
-		push	large 0F000Fh
+		push	0F000Fh
 		push	0Fh
 		push	si
 		call	sub_D119
@@ -7781,7 +7781,7 @@ var_2		= word ptr -2
 		enter	32h, 0
 		push	si
 		push	di
-		push	large 30000Fh	; c
+		push	30000Fh	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -9354,7 +9354,7 @@ arg_6		= dword	ptr  0Ch
 		mov	[bp+var_16], ax
 		cmp	[bp+var_12], 0
 		jz	short loc_E1AB
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	[bp+arg_4]
 		call	sub_E099
 		add	sp, 6
@@ -9395,7 +9395,7 @@ loc_E18E:
 loc_E1AB:
 		cmp	[bp+var_14], 0
 		jz	short loc_E1DA
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	[bp+arg_4]
 		call	sub_E099
 		add	sp, 6
@@ -9777,25 +9777,25 @@ arg_6		= word ptr  0Ch
 
 loc_E4BA:
 		push	si		; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_A] ; src
+		pushd	[bp+var_A] ; src
 		push	ss
 		lea	ax, [bp+var_B6]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_E] ; src
+		pushd	[bp+var_E] ; src
 		push	ss
 		lea	ax, [bp+var_106]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_12] ; src
+		pushd	[bp+var_12] ; src
 		push	ss
 		lea	ax, [bp+var_156]
 		push	ax		; dest
@@ -9807,26 +9807,26 @@ loc_E4BA:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+_src]	; dest
+		pushd	[bp+_src]	; dest
 		call	_memcpy
 		add	sp, 32h
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_B6]
 		push	ax		; src
-		push	large [bp+var_A] ; dest
+		pushd	[bp+var_A] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_106]
 		push	ax		; src
-		push	large [bp+var_E] ; dest
+		pushd	[bp+var_E] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_156]
 		push	ax		; src
-		push	large [bp+var_12] ; dest
+		pushd	[bp+var_12] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¦'
@@ -9961,25 +9961,25 @@ arg_E		= byte ptr  14h
 
 loc_E658:
 		push	si		; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_A] ; src
+		pushd	[bp+var_A] ; src
 		push	ss
 		lea	ax, [bp+var_C4]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_E] ; src
+		pushd	[bp+var_E] ; src
 		push	ss
 		lea	ax, [bp+var_114]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_12] ; src
+		pushd	[bp+var_12] ; src
 		push	ss
 		lea	ax, [bp+var_164]
 		push	ax		; dest
@@ -9991,26 +9991,26 @@ loc_E658:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+var_16] ; dest
+		pushd	[bp+var_16] ; dest
 		call	_memcpy
 		add	sp, 32h
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_C4]
 		push	ax		; src
-		push	large [bp+var_1A] ; dest
+		pushd	[bp+var_1A] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_114]
 		push	ax		; src
-		push	large [bp+var_1E] ; dest
+		pushd	[bp+var_1E] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_164]
 		push	ax		; src
-		push	large [bp+var_22] ; dest
+		pushd	[bp+var_22] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¦'
@@ -10060,7 +10060,7 @@ arg_A		= word ptr  10h
 		enter	34h, 0
 		push	si
 		push	di
-		push	large 300000h	; c
+		push	300000h	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -10473,7 +10473,7 @@ _arglist		= byte ptr  10h
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax		; arglist
-		push	large [bp+_format] ; format
+		pushd	[bp+_format] ; format
 		push	ss
 		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
@@ -11044,7 +11044,7 @@ loc_ED67:
 		add	sp, 6
 		or	[bp+var_C], eax
 		push	1		; count
-		push	large [bp+val]	; val
+		pushd	[bp+val]	; val
 		call	__lrotl
 		add	sp, 6
 		mov	word ptr [bp+val+2], dx

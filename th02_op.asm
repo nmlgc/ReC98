@@ -2904,7 +2904,7 @@ arg_4		= word ptr  0Ah
 loc_B1A3:
 		push	[bp+arg_0]
 		push	si
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		mov	bx, di
 		imul	bx, 48h
 		push	word ptr [bx+1B78h]

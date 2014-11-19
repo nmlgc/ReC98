@@ -21,10 +21,10 @@ if GAME ge 3
 	push	ax
 	mov	bx, si
 	shl	bx, 2
-	push	large pi_slot_buffers[bx]
+	pushd	pi_slot_buffers[bx]
 	call	graph_pi_free
 endif
-	push	large [bp+@@fn]
+	pushd	[bp+@@fn]
 	mov	ax, si
 	imul	ax, size PiHeader
 	add	ax, offset pi_slot_headers

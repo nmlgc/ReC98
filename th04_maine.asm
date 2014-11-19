@@ -457,9 +457,9 @@ _arg0		= dword	ptr  4
 		call	text_clear
 		call	gaiji_restore
 		call	sub_D3F4
-		push	large 0
-		push	large [bp+_arg0]	; arg0
-		push	large [bp+_arg0]	; path
+		pushd	0
+		pushd	[bp+_arg0]	; arg0
+		pushd	[bp+_arg0]	; path
 		call	_execl
 		add	sp, 0Ch
 		pop	bp
@@ -564,7 +564,7 @@ loc_A187:
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -601,11 +601,11 @@ loc_A1FE:
 		mov	al, 1
 		out	dx, al
 		push	0
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -652,7 +652,7 @@ arg_0		= dword	ptr  4
 
 		enter	2, 0
 		call	sub_A2D1
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		or	ax, ax
 		jnz	short loc_A2AD
@@ -856,8 +856,8 @@ loc_A3B2:
 ; ---------------------------------------------------------------------------
 
 loc_A3F7:
-		push	large 190h
-		push	large [bp+var_8]
+		pushd	190h
+		pushd	[bp+var_8]
 		push	140h
 		call	sub_35F2
 		call	sub_A2D6
@@ -1243,7 +1243,7 @@ arg_0		= dword	ptr  4
 		cmp	byte ptr [bx], 2Ch ; ','
 		jnz	short loc_A72E
 		inc	word_12478
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_A64D
 		pop	bp
 		retn	4
@@ -1788,7 +1788,7 @@ loc_AB7A:
 		call	sub_CCB8
 
 loc_AB8D:
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		push	0
@@ -1884,10 +1884,10 @@ loc_AC3F:
 ; ---------------------------------------------------------------------------
 
 loc_AC70:
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
-		push	large 140040h
-		push	large 3B0107h
+		push	140040h
+		push	3B0107h
 		call	grcg_byteboxfill_x
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
@@ -1911,7 +1911,7 @@ loc_AC94:
 ; ---------------------------------------------------------------------------
 
 loc_ACB2:
-		push	large 0A00040h
+		push	0A00040h
 		push	[bp+var_2]
 		push	si
 		call	sub_A37F
@@ -1934,7 +1934,7 @@ loc_ACCF:
 		out	dx, al
 
 loc_ACE0:
-		push	large 0A00040h
+		push	0A00040h
 		push	0
 		push	[bp+var_2]
 		call	sub_CDAB
@@ -1943,7 +1943,7 @@ loc_ACF0:
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
-		push	large 0A00040h
+		push	0A00040h
 		call	sub_A30A
 
 loc_ACFF:
@@ -2192,7 +2192,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_AEF1:
-		push	large 0C0000Fh
+		push	0C0000Fh
 		call	grcg_setcolor
 		mov	bx, 4
 		mov	ax, si
@@ -2351,7 +2351,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B04E:
-		push	large 0C0000Fh
+		push	0C0000Fh
 		call	grcg_setcolor
 		mov	ax, si
 		cwd
@@ -2484,7 +2484,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B165:
-		push	large 0C0000Fh
+		push	0C0000Fh
 		call	grcg_setcolor
 		mov	ax, si
 		cwd
@@ -2883,7 +2883,7 @@ sub_B44D	proc near
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -2910,11 +2910,11 @@ sub_B44D	proc near
 		push	offset aSff1b_cdg ; "sff1b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 30040h
+		push	30040h
 		call	sub_D046
 		mov	byte_124C6, 0
 		mov	fp_124C8, offset sub_AED0
-		push	large 16000A0h
+		push	16000A0h
 		call	sub_B291
 		push	2
 		push	ds
@@ -2926,14 +2926,14 @@ sub_B44D	proc near
 		push	offset aSff2b_cdg ; "sff2b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 700A0h
+		push	700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
-		push	large 16000A0h
+		push	16000A0h
 		call	sub_B31E
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
-		push	large 0C00080h
+		push	0C00080h
 		call	sub_B291
 		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 0
@@ -2949,15 +2949,15 @@ sub_B44D	proc near
 		push	offset aSff3b_cdg ; "sff3b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 0B00A0h
+		push	0B00A0h
 		call	sub_D046
-		push	large 12000C8h
+		push	12000C8h
 		call	sub_B291
-		push	large 1300A0h
+		push	1300A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
-		push	large 0C00080h
-		push	large 12000C8h
+		push	0C00080h
+		push	12000C8h
 		call	sub_B3AC
 		push	4
 		call	palette_black_out
@@ -2971,7 +2971,7 @@ sub_B44D	proc near
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -2990,11 +2990,11 @@ sub_B44D	proc near
 		push	offset aSff4b_cdg ; "sff4b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 1700A0h
+		push	1700A0h
 		call	sub_D046
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
-		push	large 200070h
+		push	200070h
 		call	sub_B291
 		push	2
 		call	sub_D898
@@ -3008,11 +3008,11 @@ sub_B44D	proc near
 		push	offset aSff5b_cdg ; "sff5b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 1B00A0h
+		push	1B00A0h
 		call	sub_D046
 		mov	byte_124C6, 4
 		mov	fp_124C8, offset sub_B02D
-		push	large 2000B8h
+		push	2000B8h
 		call	sub_B291
 		push	0
 		push	ds
@@ -3024,13 +3024,13 @@ sub_B44D	proc near
 		push	offset aSff8b_cdg ; "sff8b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 1F00A0h
+		push	1F00A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B144
-		push	large 2000B8h
+		push	2000B8h
 		call	sub_B31E
 		mov	byte_124C6, 0
-		push	large 4000B8h
+		push	4000B8h
 		call	sub_B291
 		push	4
 		push	ds
@@ -3042,13 +3042,13 @@ sub_B44D	proc near
 		push	offset aSff9b_cdg ; "sff9b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 2300A0h
+		push	2300A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_AED0
-		push	large 4000B8h
+		push	4000B8h
 		call	sub_B31E
 		mov	byte_124C6, 4
-		push	large 4000B8h
+		push	4000B8h
 		call	sub_B291
 		push	0
 		push	ds
@@ -3060,19 +3060,19 @@ sub_B44D	proc near
 		push	offset aSff6b_cdg ; "sff6b.cdg"
 		push	0
 		call	far ptr	sub_D778
-		push	large 2700A0h
+		push	2700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
-		push	large 4000B8h
+		push	4000B8h
 		call	sub_B31E
 		mov	byte_124C6, 0
-		push	large 2000B8h
+		push	2000B8h
 		call	sub_B291
-		push	large 2B00A0h
+		push	2B00A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B144
-		push	large 200070h
-		push	large 2000B8h
+		push	200070h
+		push	2000B8h
 		call	sub_B3AC
 		push	0
 		push	ds
@@ -3085,9 +3085,9 @@ sub_B44D	proc near
 		push	0
 		call	far ptr	sub_D778
 		mov	byte_124C6, 0
-		push	large 200150h
+		push	200150h
 		call	sub_B291
-		push	large 3000A0h
+		push	3000A0h
 		call	sub_D046
 		call	sub_D6C4
 		call	sub_D8CE
@@ -3227,7 +3227,7 @@ loc_B851:
 		cmp	si, 8
 		jl	short loc_B82A
 		mov	[bp+var_4], 0
-		push	large 0A00060h
+		push	0A00060h
 		push	10h
 		push	ss
 		lea	ax, [bp+var_C]
@@ -3235,7 +3235,7 @@ loc_B851:
 		push	0Eh
 		call	graph_gaiji_puts
 		mov	[bp+var_2], 1
-		push	large 1200060h
+		push	1200060h
 		push	0Eh
 		push	ds
 		push	offset aU_	; "点"
@@ -3549,10 +3549,10 @@ loc_BB48:
 		mov	eax, dword_124CE
 		add	eax, [bp+var_4]
 		mov	dword_124CE, eax
-		push	large 0C00108h
-		push	large [bp+var_4]
+		push	0C00108h
+		pushd	[bp+var_4]
 		call	sub_B97B
-		push	large 1200108h
+		push	1200108h
 		push	0Eh
 		push	ds
 		push	offset aBu_0	; "％"
@@ -3586,62 +3586,62 @@ var_4		= dword	ptr -4
 		out	dx, al
 		mov	dx, 0A4h
 		out	dx, al
-		push	large 100030h
+		push	100030h
 		push	0Fh
 		push	ds
 		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
 		call	far ptr	loc_D1FC
-		push	large 100048h
+		push	100048h
 		push	0Fh
 		push	ds
 		push	offset aUqiUx	; "難易度"
 		call	far ptr	loc_D1FC
-		push	large 100060h
+		push	100060h
 		push	0Fh
 		push	ds
 		push	offset aNPiuU_	; "最終得点"
 		call	far ptr	loc_D1FC
-		push	large 100078h
+		push	100078h
 		push	0Fh
 		push	ds
 		push	offset aGGxi	; "ミス回数"
 		call	far ptr	loc_D1FC
-		push	large 100090h
+		push	100090h
 		push	0Fh
 		push	ds
 		push	offset aGGaogcpi ; "ボム使用回数"
 		call	far ptr	loc_D1FC
-		push	large 1000A8h
+		push	1000A8h
 		push	0Fh
 		push	ds
 		push	offset aGqbGatbrmcj ; "ゲーム達成率"
 		call	far ptr	loc_D1FC
-		push	large 1000C0h
+		push	1000C0h
 		push	0Fh
 		push	ds
 		push	offset aIlcSObcj ; "悪霊退治率"
 		call	far ptr	loc_D1FC
-		push	large 1000D8h
+		push	1000D8h
 		push	0Fh
 		push	ds
 		push	offset aGagcgegai ; "アイテム回収率"
 		call	far ptr	loc_D1FC
-		push	large 1000F0h
+		push	1000F0h
 		push	0Fh
 		push	ds
 		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
 		call	far ptr	loc_D1FC
-		push	large 100108h
+		push	100108h
 		push	0Fh
 		push	ds
 		push	offset aLcnzvv	; "気合い"
 		call	far ptr	loc_D1FC
-		push	large 100120h
+		push	100120h
 		push	0Fh
 		push	ds
 		push	offset aPicacovCj ; "処理落ち率"
 		call	far ptr	loc_D1FC
-		push	large 100150h
+		push	100150h
 		push	0Fh
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
@@ -3659,7 +3659,7 @@ loc_BC71:
 
 loc_BC79:
 		mov	byte_124D2, al
-		push	large 0B00048h
+		push	0B00048h
 		push	10h
 		push	ds
 		mov	ah, 0
@@ -3669,24 +3669,24 @@ loc_BC79:
 		push	0Eh
 		call	graph_gaiji_puts
 		call	sub_B81D
-		push	large 0F00078h
+		push	0F00078h
 		les	bx, dword_F3CE
 		mov	al, es:[bx+31h]
 		mov	ah, 0
 		push	ax
 		call	sub_B787
-		push	large 0F00090h
+		push	0F00090h
 		les	bx, dword_F3CE
 		mov	al, es:[bx+32h]
 		mov	ah, 0
 		push	ax
 		call	sub_B787
-		push	large 1200078h
+		push	1200078h
 		push	0Eh
 		push	ds
 		push	offset aTimes	; "回"
 		call	far ptr	loc_D1FC
-		push	large 1200090h
+		push	1200090h
 		push	0Eh
 		push	ds
 		push	offset aTimes_0	; "回"
@@ -3700,7 +3700,7 @@ loc_BC79:
 		mov	word ptr es:[bx+26h], 0ABE0h
 
 loc_BCFF:
-		push	large 0C000A8h
+		push	0C000A8h
 		push	0ABE0h
 		jmp	short loc_BD24
 ; ---------------------------------------------------------------------------
@@ -3712,7 +3712,7 @@ loc_BD0A:
 		mov	word ptr es:[bx+26h], 2EE0h
 
 loc_BD1B:
-		push	large 0C000A8h
+		push	0C000A8h
 		push	2EE0h
 
 loc_BD24:
@@ -3720,23 +3720,23 @@ loc_BD24:
 		push	word ptr es:[bx+26h]
 		call	sub_B886
 		mov	byte_124CC, 0
-		push	large 0C000C0h
+		push	0C000C0h
 		les	bx, dword_F3CE
 		push	word ptr es:[bx+34h]
 		push	word ptr es:[bx+36h]
 		call	sub_B886
-		push	large 0C000D8h
+		push	0C000D8h
 		les	bx, dword_F3CE
 		push	word ptr es:[bx+28h]
 		push	word ptr es:[bx+2Ah]
 		call	sub_B886
-		push	large 0C000F0h
+		push	0C000F0h
 		les	bx, dword_F3CE
 		push	word ptr es:[bx+2Ch]
 		push	word ptr es:[bx+2Eh]
 		call	sub_B886
 		call	sub_B9F2
-		push	large 0C00120h
+		push	0C00120h
 		les	bx, dword_F3CE
 		mov	eax, es:[bx+44h]
 		mov	ebx, 0Ah
@@ -3948,10 +3948,10 @@ loc_BFD9:
 		shr	eax, 1
 		cmp	eax, es:[bx+40h]
 		jbe	loc_C0AE
-		push	large 0C00150h
-		push	large [dword_124CE]
+		push	0C00150h
+		pushd	[dword_124CE]
 		call	sub_B97B
-		push	large 1200150h
+		push	1200150h
 		push	0Eh
 		push	ds
 		push	offset aPoint	; "点"
@@ -4014,7 +4014,7 @@ loc_C084:
 		call	file_close
 		push	40h
 		call	sub_CCA3
-		push	large 400168h
+		push	400168h
 		push	0Fh
 		push	ds
 		push	offset unk_124D3
@@ -4022,12 +4022,12 @@ loc_C084:
 ; ---------------------------------------------------------------------------
 
 loc_C0AE:
-		push	large 0C00150h
+		push	0C00150h
 		push	0Eh
 		push	ds
 		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
 		call	far ptr	loc_D1FC
-		push	large 400168h
+		push	400168h
 		push	0Fh
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
@@ -4075,7 +4075,7 @@ sub_C0F8	proc near
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -4327,7 +4327,7 @@ arg_0		= byte ptr  4
 		call	file_seek
 		cmp	[bp+arg_0], 0
 		jz	short loc_C2EF
-		push	large 3D4h
+		pushd	3D4h
 		push	1
 		call	file_seek
 
@@ -4376,7 +4376,7 @@ sub_C316	proc near
 		call	file_seek
 		cmp	byte ptr word_125B8, 0
 		jz	short loc_C350
-		push	large 3D4h
+		pushd	3D4h
 		push	1
 		call	file_seek
 
@@ -4861,7 +4861,7 @@ loc_C68A:
 		shl	ax, 4
 		add	ax, 2
 		push	ax
-		push	large 800010h
+		push	800010h
 		call	sub_CBF3
 		mov	ax, di
 		shl	ax, 3
@@ -5117,7 +5117,7 @@ var_2		= word ptr -2
 		call	pi_slot_load
 		push	0
 		call	sub_CCB8
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_CCDD
 		freePISlotLarge	0
@@ -5184,12 +5184,12 @@ loc_C8D9:
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
-		push	large 7C00C4h
+		push	7C00C4h
 		push	9
 		push	ds
 		push	offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
 		call	far ptr	loc_D1FC
-		push	large 7800C0h
+		push	7800C0h
 		push	2
 		push	ds
 		push	offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
@@ -5290,7 +5290,7 @@ loc_C9C2:
 loc_C9CB:
 		cmp	[bp+var_6], 3
 		jl	short loc_C990
-		push	large 170012h
+		push	170012h
 		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
@@ -5754,7 +5754,7 @@ arg_4		= word ptr  0Ah
 loc_CD03:
 		push	[bp+arg_4]
 		push	si
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		mov	bx, di
 		imul	bx, 48h
 		push	word ptr [bx+17CEh]
@@ -5854,7 +5854,7 @@ loc_CDED:
 loc_CE10:
 		push	[bp+arg_6]
 		push	si
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		push	140h
 		call	graph_pack_put_8
 		inc	si
@@ -6811,7 +6811,7 @@ loc_D453:
 		call	egc_start
 		call	graph_400line
 		call	sub_2B6E
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	pfstart
 		push	800h
 		call	bgm_init
@@ -7246,7 +7246,7 @@ arg_6		= word ptr  0Ch
 		nopcall	sub_D898
 		shl	di, 4
 		add	di, 1B46h
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	file_ropen
 		push	ds
 		push	di
@@ -7334,7 +7334,7 @@ sub_D7DE	endp
 		mov	bp, sp
 		push	si
 		push	di
-		push	large dword ptr	[bp+6]
+		pushd	dword ptr [bp+6]
 		call	file_ropen
 		mov	di, [bp+0Ah]
 		shl	di, 4

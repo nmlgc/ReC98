@@ -101,7 +101,7 @@ if (GAME eq 3) or (GAME eq 4)
 	push	ax
 	call	hmem_free
 elseif (GAME eq 5)
-	push	large dword ptr [bp+@@parfile]
+	pushd	dword ptr [bp+@@parfile]
 	call	file_ropen
 	lea	ax, @@parheader
 	push	ss

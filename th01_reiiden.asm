@@ -749,7 +749,7 @@ loc_B93C:
 loc_B940:
 		push	[bp+arg_6]
 		push	[bp+arg_4]
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_B8B5
 		add	sp, 8
 		inc	di
@@ -801,7 +801,7 @@ arg_0		= word ptr  6
 		push	18h		; intno
 		call	_int86
 		mov	[bp+var_2], 0
-		push	large 50020h
+		push	50020h
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -834,7 +834,7 @@ loc_B9A8:
 ; ---------------------------------------------------------------------------
 
 loc_B9D6:
-		push	large 50020h
+		push	50020h
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -878,7 +878,7 @@ loc_BA12:
 ; ---------------------------------------------------------------------------
 
 loc_BA1B:
-		push	large 50020h
+		push	50020h
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -894,7 +894,7 @@ loc_BA2E:
 loc_BA34:
 		cmp	di, 10h
 		jbe	loc_B9A8
-		push	large 50020h
+		push	50020h
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -1037,7 +1037,7 @@ arg_0		= word ptr  6
 		push	ax		; inregs
 		call	sub_BA53
 		mov	[bp+var_4], 0
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1099,7 +1099,7 @@ loc_BB8F:
 loc_BB96:
 		cmp	di, 11h
 		jbe	short loc_BB44
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1107,7 +1107,7 @@ loc_BB96:
 		push	23h ; '#'
 		call	sub_E364
 		mov	[bp+var_4], 0
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1123,7 +1123,7 @@ loc_BBCE:
 ; ---------------------------------------------------------------------------
 
 loc_BBD2:
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1185,7 +1185,7 @@ loc_BC35:
 ; ---------------------------------------------------------------------------
 
 loc_BC3F:
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1201,7 +1201,7 @@ loc_BC52:
 loc_BC58:
 		cmp	di, 11h
 		jbe	loc_BBCE
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -1251,7 +1251,7 @@ var_2		= word ptr -2
 		push	offset aMiko_ptn ; "miko.ptn"
 		push	1
 		call	sub_10888
-		push	large 1A0005h
+		push	1A0005h
 		call	sub_10814
 		add	sp, 24h
 		nopcall	sub_BEB1
@@ -1332,12 +1332,12 @@ loc_BD43:
 		add	sp, 4
 		push	ds
 		push	offset s2	; "empty.grf"
-		push	large [bp+s1]	; s1
+		pushd	[bp+s1]	; s1
 		call	_strcmp
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_BD75
-		push	large [bp+s1]
+		pushd	[bp+s1]
 		call	sub_10BAE
 		add	sp, 4
 
@@ -1356,7 +1356,7 @@ loc_BD88:
 		call	sub_EC80
 		push	0
 		call	sub_EA3E
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 0Ah
@@ -1382,7 +1382,7 @@ loc_BDC2:
 		call	sub_EA3E
 		push	0
 		call	sub_EA3E
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 0Eh
@@ -1505,7 +1505,7 @@ arg_0		= word ptr  6
 		push	offset unk_37635
 		call	sub_30E54
 		add	sp, 4
-		push	large 430170h
+		push	430170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -1652,7 +1652,7 @@ loc_C00E:
 ; ---------------------------------------------------------------------------
 
 loc_C014:
-		push	large 200030h
+		push	200030h
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E03h]
@@ -1716,7 +1716,7 @@ loc_C014:
 ; ---------------------------------------------------------------------------
 
 loc_C0CA:
-		push	large 70000h
+		push	70000h
 		push	7
 
 loc_C0D2:
@@ -1780,7 +1780,7 @@ loc_C146:
 ; ---------------------------------------------------------------------------
 
 loc_C150:
-		push	large 200030h
+		push	200030h
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E03h]
@@ -1932,7 +1932,7 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 0B8h ; '∏'
 		mov	word_387A3, ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	ax
 		push	word_3876D
 		call	sub_1156E
@@ -1965,7 +1965,7 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 0B8h ; '∏'
 		mov	word_387A3, ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	ax
 		push	word_3876D
 		call	sub_1156E
@@ -1998,7 +1998,7 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 0B8h ; '∏'
 		mov	word_387A3, ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	ax
 		push	word_3876D
 		call	sub_1156E
@@ -2163,7 +2163,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_C47E:
-		push	large 80010h
+		push	80010h
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E5Ah]
@@ -2218,7 +2218,7 @@ loc_C4E2:
 		add	bx, bx
 		cmp	word ptr [bx+3E3Ah], 9
 		jnz	short loc_C50B
-		push	large 80010h
+		push	80010h
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E5Ah]
@@ -2933,19 +2933,19 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], 0
 		push	ds
 		push	offset aVovVtvrvd ; "ÇoÇ`ÇtÇrÇd"
-		push	large 370080h
+		push	370080h
 		push	110h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@nKjb@b@pic ; "Å@çƒäJÅ@Å@èIóπ"
-		push	large 370090h
+		push	370090h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aBB@b@b@b@b@b@ ;	"ÅúÅ@Å@Å@Å@Å@Å@"
-		push	large 70090h
+		push	70090h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -2966,13 +2966,13 @@ loc_C9A2:
 		jz	loc_CB91
 		cmp	byte_34A4B, 2
 		jnz	short loc_C9E6
-		push	large 100010h
-		push	large 900140h
+		push	100010h
+		push	900140h
 		call	sub_10433
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
-		push	large 70090h
+		push	70090h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -2981,13 +2981,13 @@ loc_C9A2:
 loc_C9E6:
 		cmp	byte_34A4B, 1
 		jnz	short loc_CA1A
-		push	large 100010h
-		push	large 900100h
+		push	100010h
+		push	900100h
 		call	sub_10433
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
-		push	large 70090h
+		push	70090h
 		push	140h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -3007,12 +3007,12 @@ loc_CA30:
 		jnz	loc_C9A2
 
 loc_CA39:
-		push	large 100050h
-		push	large 800114h
+		push	100050h
+		push	800114h
 		call	sub_10433
 		add	sp, 8
-		push	large 100070h
-		push	large 900100h
+		push	100070h
+		push	900100h
 		call	sub_10433
 		add	sp, 8
 		push	14h
@@ -3027,19 +3027,19 @@ loc_CA39:
 		jz	loc_CB96
 		push	ds
 		push	offset aCUcvPicVVVsvdv ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
-		push	large 370080h
+		push	370080h
 		push	0E0h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@vdvVVVgb@b@v ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
-		push	large 370090h
+		push	370090h
 		push	0E0h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB	; "Åú"
-		push	large 70090h
+		push	70090h
 		push	0E0h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -3055,13 +3055,13 @@ loc_CACF:
 		jz	loc_CB91
 		cmp	byte_34A4B, 2
 		jnz	short loc_CB13
-		push	large 100010h
-		push	large 900150h
+		push	100010h
+		push	900150h
 		call	sub_10433
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
-		push	large 70090h
+		push	70090h
 		push	0E0h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -3070,13 +3070,13 @@ loc_CACF:
 loc_CB13:
 		cmp	byte_34A4B, 1
 		jnz	short loc_CB47
-		push	large 100010h
-		push	large 9000E0h
+		push	100010h
+		push	9000E0h
 		call	sub_10433
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
-		push	large 70090h
+		push	70090h
 		push	150h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -3122,8 +3122,8 @@ loc_CB96:
 		call	sub_EB10
 		add	sp, 4
 		call	sub_B87C
-		push	large 2000B0h
-		push	large 8000E8h
+		push	2000B0h
+		push	8000E8h
 		call	sub_10433
 		add	sp, 8
 		xor	ax, ax
@@ -3207,50 +3207,50 @@ sub_CC0F	proc far
 		call	sub_EC80
 		push	ds
 		push	offset aVgvpvovfvivovx ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
-		push	large 2270000h
+		push	2270000h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVxvevub@b@B@ ; "ÇxÇÖÇìÅ@Å@  Å@"
-		push	large 2270010h
+		push	2270010h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVmvpb@b@B@ ; "ÇmÇèÅ@Å@	Å@ "
-		push	large 2270020h
+		push	2270020h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVxvevub@b@c@ ; "ÇxÇÖÇìÅ@Å@Å@  "
-		push	large 2210030h
+		push	2210030h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVmvpb@b@c@ ; "ÇmÇèÅ@Å@Å@   "
-		push	large 2210040h
+		push	2210040h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
 		push	0
 		call	sub_EA3E
 		pop	cx
-		push	large 100090h
-		push	large 0
-		push	large 4000A0h
+		push	100090h
+		pushd	0
+		push	4000A0h
 		call	sub_11D09
 		add	sp, 0Ch
-		push	large 100030h
-		push	large 100000h
-		push	large 0C80120h
+		push	100030h
+		push	100000h
+		push	0C80120h
 		call	sub_11D09
 		add	sp, 0Ch
-		push	large 100030h
-		push	large 400000h
-		push	large 0E80120h
+		push	100030h
+		push	400000h
+		push	0E80120h
 		call	sub_11D09
 		add	sp, 0Ch
 		mov	si, 1
@@ -3282,7 +3282,7 @@ loc_CD2E:
 		mov	al, es:[bx+11h]
 		add	al, 2
 		mov	es:[bx+15h], al
-		push	large 0FFFBFFFEh
+		push	0FFFBFFFEh
 		call	sub_CBBE
 		add	sp, 4
 
@@ -3307,7 +3307,7 @@ loc_CD70:
 		call	sub_E852
 		les	bx, dword_3919C
 		mov	word ptr es:[bx+49h], 0
-		push	large 0
+		pushd	0
 		push	ds
 		push	offset path	; "REIIDEN"
 		push	ds
@@ -3342,14 +3342,14 @@ loc_CDD8:
 		cmp	byte_34A54, 1
 		jnz	short loc_CE16
 		mov	si, 1
-		push	large 100030h
-		push	large 100000h
-		push	large 0C80120h
+		push	100030h
+		push	100000h
+		push	0C80120h
 		call	sub_11D09
 		add	sp, 0Ch
-		push	large 100030h
-		push	large 400000h
-		push	large 0E80120h
+		push	100030h
+		push	400000h
+		push	0E80120h
 		call	sub_11D09
 		add	sp, 0Ch
 
@@ -3357,14 +3357,14 @@ loc_CE16:
 		cmp	byte_34A55, 1
 		jnz	loc_CD52
 		xor	si, si
-		push	large 100030h
-		push	large 300000h
-		push	large 0C80120h
+		push	100030h
+		push	300000h
+		push	0C80120h
 		call	sub_11D09
 		add	sp, 0Ch
-		push	large 100030h
-		push	large 200000h
-		push	large 0E80120h
+		push	100030h
+		push	200000h
+		push	0E80120h
 		call	sub_11D09
 		add	sp, 0Ch
 		jmp	loc_CD52
@@ -3479,7 +3479,7 @@ loc_CF04:
 		add	bx, ax
 		cmp	word ptr ss:[bx], 0
 		jnz	short loc_CF30
-		push	large 200020h
+		push	200020h
 		push	170h
 		mov	bx, si
 		add	bx, bx
@@ -3496,7 +3496,7 @@ loc_CF31:
 		cmp	si, 5
 		jl	short loc_CF04
 		sub	[bp+var_A], 8
-		push	large 2
+		pushd	2
 		call	isqrt
 		push	ax
 		mov	ax, 8
@@ -3504,7 +3504,7 @@ loc_CF31:
 		pop	bx
 		idiv	bx
 		sub	[bp+var_8], ax
-		push	large 2
+		pushd	2
 		call	isqrt
 		push	ax
 		mov	ax, 8
@@ -3513,7 +3513,7 @@ loc_CF31:
 		idiv	bx
 		add	[bp+var_4], ax
 		add	[bp+var_2], 8
-		push	large 2
+		pushd	2
 		call	isqrt
 		push	ax
 		mov	ax, 8
@@ -3521,7 +3521,7 @@ loc_CF31:
 		pop	bx
 		idiv	bx
 		sub	[bp+var_12], ax
-		push	large 2
+		pushd	2
 		call	isqrt
 		push	ax
 		mov	ax, 8
@@ -3682,17 +3682,17 @@ arg_4		= dword	ptr  0Ah
 
 		push	bp
 		mov	bp, sp
-		push	large [bp+arg_4]
+		pushd	[bp+arg_4]
 		push	ds
 		push	offset aS	; "%s"
 		call	_printf
 		add	sp, 8
-		push	large [bp+_node]
+		pushd	[bp+_node]
 		push	ds
 		push	offset aFp	; " : [%Fp] -> "
 		call	_printf
 		add	sp, 8
-		push	large [bp+_node]	; node
+		pushd	[bp+_node]	; node
 		call	_farheapchecknode
 		add	sp, 4
 		sub	ax, 0FFFEh
@@ -3773,7 +3773,7 @@ loc_D118:
 		push	offset aB@b@b@vVVriCVi ; "Å@Å@Å@Ç±ÇÍÇ‡â^ñΩÇ©...\n"
 		call	_puts
 		add	sp, 4
-		push	large [dword_36C1A]
+		pushd	[dword_36C1A]
 		push	ds
 		push	offset aOldCoreleft7lu ; "old coreleft %7lu bytes free\n"
 		call	_printf
@@ -3837,12 +3837,12 @@ loc_D1E3:
 		push	(offset	aB@b@b@vVVriCVi+15h) ; s
 		call	_puts
 		add	sp, 4
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		push	ds
 		push	offset aAllPtn7lu ; "all   ptn	 = %7lu\n"
 		call	_printf
 		add	sp, 8
-		push	large [dword_39E80]
+		pushd	[dword_39E80]
 		push	ds
 		push	offset aKabeMem7lu ; "kabe  mem	  = %7lu\n"
 		call	_printf
@@ -3944,7 +3944,7 @@ loc_D2E5:
 		push	offset aPtn	; "PTN "
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+4018h] ; node
+		pushd	dword ptr [bx+4018h] ; node
 		call	sub_D095
 		inc	si
 
@@ -3953,11 +3953,11 @@ loc_D2F8:
 		jl	short loc_D2E5
 		push	ds
 		push	offset aMask	; "MASK"
-		push	large [node]	; node
+		pushd	[node]	; node
 		call	sub_D095
 		push	ds
 		push	offset aKabe	; "KABE"
-		push	large [off_39E7C] ; node
+		pushd	[off_39E7C] ; node
 		call	sub_D095
 
 loc_D317:
@@ -4118,10 +4118,10 @@ loc_D414:
 		push	offset a50h	; "\x1B[5;0H"
 		call	_printf
 		add	sp, 4
-		push	large [dword_36C20]
+		pushd	[dword_36C20]
 		push	word_34A6E
-		push	large [dword_36C16]
-		push	large [dword_34A62]
+		pushd	[dword_36C16]
+		pushd	[dword_34A62]
 		push	ds
 		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
 		call	_printf
@@ -4351,7 +4351,7 @@ loc_D583:
 		mov	random_seed, eax
 		call	sub_E7E4
 		call	key_start
-		push	large 3F003Fh
+		push	3F003Fh
 		call	__control87
 		add	sp, 4
 		les	bx, dword_3919C
@@ -4627,7 +4627,7 @@ loc_D85F:
 		mov	word_360CA, 1
 		push	ds
 		push	offset src	; "boss1.grp"
-		push	large [bp+s1]	; dest
+		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
 		push	ds
@@ -4661,7 +4661,7 @@ loc_D89B:
 		add	sp, 8
 		push	ds
 		push	offset aBoss2_grp ; "boss2.grp"
-		push	large [bp+s1]	; dest
+		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
 		call	sub_1B03F
@@ -4678,7 +4678,7 @@ loc_D8D9:
 		add	sp, 8
 		push	ds
 		push	offset aBoss3_grp ; "boss3.grp"
-		push	large [bp+s1]	; dest
+		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
 		call	sub_1E33A
@@ -4704,7 +4704,7 @@ loc_D901:
 		add	sp, 8
 		push	ds
 		push	offset aBoss4_grp ; "boss4.grp"
-		push	large [bp+s1]	; dest
+		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
 		call	sub_23329
@@ -4724,7 +4724,7 @@ loc_D947:
 		add	sp, 8
 		push	ds
 		push	offset aBoss5_grp ; "boss5.grp"
-		push	large [bp+s1]	; dest
+		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
 		call	sub_24F41
@@ -4834,7 +4834,7 @@ loc_DA49:
 		cmp	ax, 7
 		jz	short loc_DA7B
 		push	di		; int
-		push	large [bp+s1]	; s1
+		pushd	[bp+s1]	; s1
 		mov	ax, [bp+var_2]
 		mov	bx, 5
 		cwd
@@ -4928,7 +4928,7 @@ loc_DB3E:
 		push	0
 		call	sub_19E48
 		pop	cx
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -5226,7 +5226,7 @@ loc_DE47:
 		call	sub_E364
 		pop	cx
 		call	sub_E852
-		push	large 0
+		pushd	0
 		push	ds
 		push	offset aFuuin	; "fuuin"
 		push	ds
@@ -5328,7 +5328,7 @@ loc_DF52:
 		mov	al, byte_34A32
 		mov	es:[bx+10h], al
 		call	sub_E852
-		push	large 0
+		pushd	0
 		push	ds
 		push	offset aReiiden	; "reiiden"
 		push	ds
@@ -5352,7 +5352,7 @@ loc_DFBC:
 		call	sub_D47D
 		cmp	font, 0
 		jz	short loc_DFE0
-		push	large [font]	; font
+		pushd	[font]	; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	font, 0
@@ -5361,7 +5361,7 @@ loc_DFBC:
 loc_DFE0:
 		cmp	off_39E88, 0
 		jz	short loc_E000
-		push	large [off_39E88] ; font
+		pushd	[off_39E88] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E88, 0
@@ -5370,7 +5370,7 @@ loc_DFE0:
 loc_E000:
 		cmp	off_39E8C, 0
 		jz	short loc_E020
-		push	large [off_39E8C] ; font
+		pushd	[off_39E8C] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E8C, 0
@@ -5379,7 +5379,7 @@ loc_E000:
 loc_E020:
 		cmp	off_39E92, 0
 		jz	short loc_E040
-		push	large [off_39E92] ; font
+		pushd	[off_39E92] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E92, 0
@@ -5388,7 +5388,7 @@ loc_E020:
 loc_E040:
 		cmp	off_39E96, 0
 		jz	short loc_E060
-		push	large [off_39E96] ; font
+		pushd	[off_39E96] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E96, 0
@@ -5397,7 +5397,7 @@ loc_E040:
 loc_E060:
 		cmp	off_39EAC, 0
 		jz	short loc_E080
-		push	large [off_39EAC] ; font
+		pushd	[off_39EAC] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EAC, 0
@@ -5406,7 +5406,7 @@ loc_E060:
 loc_E080:
 		cmp	off_39E9A, 0
 		jz	short loc_E0A0
-		push	large [off_39E9A] ; font
+		pushd	[off_39E9A] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9A, 0
@@ -5415,7 +5415,7 @@ loc_E080:
 loc_E0A0:
 		cmp	off_39E9E, 0
 		jz	short loc_E0C0
-		push	large [off_39E9E] ; font
+		pushd	[off_39E9E] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9E, 0
@@ -5424,7 +5424,7 @@ loc_E0A0:
 loc_E0C0:
 		cmp	off_39EA2, 0
 		jz	short loc_E0E0
-		push	large [off_39EA2] ; font
+		pushd	[off_39EA2] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA2, 0
@@ -5433,7 +5433,7 @@ loc_E0C0:
 loc_E0E0:
 		cmp	off_39EA6, 0
 		jz	short loc_E101
-		push	large [off_39EA6] ; font
+		pushd	[off_39EA6] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA6, 0
@@ -5447,7 +5447,7 @@ loc_E101:
 loc_E104:
 		cmp	font, 0
 		jz	short loc_E124
-		push	large [font]	; font
+		pushd	[font]	; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	font, 0
@@ -5456,7 +5456,7 @@ loc_E104:
 loc_E124:
 		cmp	off_39E88, 0
 		jz	short loc_E144
-		push	large [off_39E88] ; font
+		pushd	[off_39E88] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E88, 0
@@ -5465,7 +5465,7 @@ loc_E124:
 loc_E144:
 		cmp	off_39E8C, 0
 		jz	short loc_E164
-		push	large [off_39E8C] ; font
+		pushd	[off_39E8C] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E8C, 0
@@ -5474,7 +5474,7 @@ loc_E144:
 loc_E164:
 		cmp	off_39E92, 0
 		jz	short loc_E184
-		push	large [off_39E92] ; font
+		pushd	[off_39E92] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E92, 0
@@ -5483,7 +5483,7 @@ loc_E164:
 loc_E184:
 		cmp	off_39E96, 0
 		jz	short loc_E1A4
-		push	large [off_39E96] ; font
+		pushd	[off_39E96] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E96, 0
@@ -5492,7 +5492,7 @@ loc_E184:
 loc_E1A4:
 		cmp	off_39EAC, 0
 		jz	short loc_E1C4
-		push	large [off_39EAC] ; font
+		pushd	[off_39EAC] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EAC, 0
@@ -5501,7 +5501,7 @@ loc_E1A4:
 loc_E1C4:
 		cmp	off_39E9A, 0
 		jz	short loc_E1E4
-		push	large [off_39E9A] ; font
+		pushd	[off_39E9A] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9A, 0
@@ -5510,7 +5510,7 @@ loc_E1C4:
 loc_E1E4:
 		cmp	off_39E9E, 0
 		jz	short loc_E204
-		push	large [off_39E9E] ; font
+		pushd	[off_39E9E] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39E9E, 0
@@ -5519,7 +5519,7 @@ loc_E1E4:
 loc_E204:
 		cmp	off_39EA2, 0
 		jz	short loc_E224
-		push	large [off_39EA2] ; font
+		pushd	[off_39EA2] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA2, 0
@@ -5528,7 +5528,7 @@ loc_E204:
 loc_E224:
 		cmp	off_39EA6, 0
 		jz	short loc_E244
-		push	large [off_39EA6] ; font
+		pushd	[off_39EA6] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	off_39EA6, 0
@@ -5581,7 +5581,7 @@ loc_E2A8:
 		mov	ax, [bp+var_2]
 		inc	ax
 		push	ax
-		push	large [dword_34A5A]
+		pushd	[dword_34A5A]
 		call	sub_148B3
 		add	sp, 0Ah
 		les	bx, dword_3919C
@@ -5595,7 +5595,7 @@ loc_E2CB:
 		call	sub_E852
 		call	key_end
 		call	sub_1716F
-		push	large 0
+		pushd	0
 		push	ds
 		push	offset aOp	; "op"
 		push	ds
@@ -6572,7 +6572,7 @@ sub_E87F	proc far
 		call	sub_EE35
 		call	sub_E9CB
 		call	egc_start
-		push	large [off_3891E] ; isr
+		pushd	[off_3891E] ; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 0Ch
@@ -6635,7 +6635,7 @@ arglist		= byte ptr  0Ah
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax		; arglist
-		push	large [bp+_format] ; format
+		pushd	[bp+_format] ; format
 		push	ss
 		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
@@ -7238,8 +7238,8 @@ _s		= dword	ptr -4
 		mov	[bp+_s],	0A8000000h
 		push	0
 		call	sub_EA71
-		push	large 7D0000FFh	; c
-		push	large [bp+_s]	; s
+		push	7D0000FFh	; c
+		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
 		call	sub_EB05
@@ -7282,8 +7282,8 @@ arg_0		= byte ptr  6
 		cbw
 		push	ax
 		call	sub_EA71
-		push	large 7D0000FFh	; c
-		push	large [bp+_s]	; s
+		push	7D0000FFh	; c
+		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
 		call	sub_EB05
@@ -7323,25 +7323,25 @@ _src		= dword	ptr -4
 
 loc_ECB2:
 		push	50h ; 'P'       ; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_8] ; src
+		pushd	[bp+var_8] ; src
 		push	ss
 		lea	ax, [bp+var_B2]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_C] ; src
+		pushd	[bp+var_C] ; src
 		push	ss
 		lea	ax, [bp+var_102]
 		push	ax		; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
-		push	large [bp+var_10] ; src
+		pushd	[bp+var_10] ; src
 		push	ss
 		lea	ax, [bp+var_152]
 		push	ax		; dest
@@ -7353,26 +7353,26 @@ loc_ECB2:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+_src]	; dest
+		pushd	[bp+_src]	; dest
 		call	_memcpy
 		add	sp, 32h
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_B2]
 		push	ax		; src
-		push	large [bp+var_8] ; dest
+		pushd	[bp+var_8] ; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_102]
 		push	ax		; src
-		push	large [bp+var_C] ; dest
+		pushd	[bp+var_C] ; dest
 		call	_memcpy
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+var_152]
 		push	ax		; src
-		push	large [bp+var_10] ; dest
+		pushd	[bp+var_10] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¶'
@@ -7406,7 +7406,7 @@ sub_ED68	proc far
 ; ---------------------------------------------------------------------------
 
 loc_ED70:
-		push	large 0
+		pushd	0
 		push	0
 		push	si
 		call	sub_EA50
@@ -7436,7 +7436,7 @@ var_2		= word ptr -2
 		enter	32h, 0
 		push	si
 		push	di
-		push	large 300000h	; c
+		push	300000h	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -7639,7 +7639,7 @@ sub_EED6	proc far
 ; ---------------------------------------------------------------------------
 
 loc_EEDE:
-		push	large 0F000Fh
+		push	0F000Fh
 		push	0Fh
 		push	si
 		call	sub_EA50
@@ -7669,7 +7669,7 @@ var_2		= word ptr -2
 		enter	32h, 0
 		push	si
 		push	di
-		push	large 30000Fh	; c
+		push	30000Fh	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -9242,7 +9242,7 @@ arg_6		= dword	ptr  0Ch
 		mov	[bp+var_16], ax
 		cmp	[bp+var_12], 0
 		jz	short loc_FAE2
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	[bp+arg_4]
 		call	sub_F9D0
 		add	sp, 6
@@ -9283,7 +9283,7 @@ loc_FAC5:
 loc_FAE2:
 		cmp	[bp+var_14], 0
 		jz	short loc_FB11
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	[bp+arg_4]
 		call	sub_F9D0
 		add	sp, 6
@@ -9665,25 +9665,25 @@ arg_6		= word ptr  0Ch
 
 loc_FDF1:
 		push	si		; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_A] ; src
+		pushd	[bp+var_A] ; src
 		push	ss
 		lea	ax, [bp+var_B6]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_E] ; src
+		pushd	[bp+var_E] ; src
 		push	ss
 		lea	ax, [bp+var_106]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_12] ; src
+		pushd	[bp+var_12] ; src
 		push	ss
 		lea	ax, [bp+var_156]
 		push	ax		; dest
@@ -9695,26 +9695,26 @@ loc_FDF1:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+_src]	; dest
+		pushd	[bp+_src]	; dest
 		call	_memcpy
 		add	sp, 32h
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_B6]
 		push	ax		; src
-		push	large [bp+var_A] ; dest
+		pushd	[bp+var_A] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_106]
 		push	ax		; src
-		push	large [bp+var_E] ; dest
+		pushd	[bp+var_E] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_156]
 		push	ax		; src
-		push	large [bp+var_12] ; dest
+		pushd	[bp+var_12] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¶'
@@ -9849,25 +9849,25 @@ arg_E		= byte ptr  14h
 
 loc_FF8F:
 		push	si		; n
-		push	large [bp+_src]	; src
+		pushd	[bp+_src]	; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_A] ; src
+		pushd	[bp+var_A] ; src
 		push	ss
 		lea	ax, [bp+var_C4]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_E] ; src
+		pushd	[bp+var_E] ; src
 		push	ss
 		lea	ax, [bp+var_114]
 		push	ax		; dest
 		call	_memcpy
 		push	si		; n
-		push	large [bp+var_12] ; src
+		pushd	[bp+var_12] ; src
 		push	ss
 		lea	ax, [bp+var_164]
 		push	ax		; dest
@@ -9879,26 +9879,26 @@ loc_FF8F:
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; src
-		push	large [bp+var_16] ; dest
+		pushd	[bp+var_16] ; dest
 		call	_memcpy
 		add	sp, 32h
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_C4]
 		push	ax		; src
-		push	large [bp+var_1A] ; dest
+		pushd	[bp+var_1A] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_114]
 		push	ax		; src
-		push	large [bp+var_1E] ; dest
+		pushd	[bp+var_1E] ; dest
 		call	_memcpy
 		push	si		; n
 		push	ss
 		lea	ax, [bp+var_164]
 		push	ax		; src
-		push	large [bp+var_22] ; dest
+		pushd	[bp+var_22] ; dest
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¶'
@@ -9948,7 +9948,7 @@ arg_A		= word ptr  10h
 		enter	34h, 0
 		push	si
 		push	di
-		push	large 300000h	; c
+		push	300000h	; c
 		push	ss
 		lea	ax, [bp+_s]
 		push	ax		; s
@@ -10835,7 +10835,7 @@ arg_2		= dword	ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	sub_172D6
 		push	ss
 		lea	ax, [bp+var_38]
@@ -10852,7 +10852,7 @@ arg_2		= dword	ptr  8
 		jz	short loc_10739
 		mov	bx, di
 		shl	bx, 2
-		push	large dword ptr	[bx+4018h] ; font
+		pushd	dword ptr [bx+4018h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -10903,7 +10903,7 @@ loc_10789:
 ; ---------------------------------------------------------------------------
 
 loc_107AA:
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		push	1
 		call	sub_173DC
 		mov	ax, word ptr [bp+var_8]
@@ -10981,7 +10981,7 @@ loc_1082C:
 		jz	short loc_1084D
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+4018h] ; font
+		pushd	dword ptr [bx+4018h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -11028,7 +11028,7 @@ arg_2		= dword	ptr  8
 
 		enter	2, 0
 		mov	word_350CE, 0
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_106F3
 		add	sp, 6
@@ -11058,7 +11058,7 @@ arg_0		= word ptr  6
 		jz	short loc_108E9
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+4018h] ; font
+		pushd	dword ptr [bx+4018h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
@@ -11304,7 +11304,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		or	ax, ax
 		jnz	short loc_10ABA
@@ -11314,7 +11314,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_10ABA:
-		push	large 12h
+		pushd	12h
 		push	0
 		call	file_seek
 		push	ds
@@ -11342,7 +11342,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		or	ax, ax
 		jnz	short loc_10AF9
@@ -11352,7 +11352,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_10AF9:
-		push	large 12h
+		pushd	12h
 		push	0
 		call	file_seek
 		push	ds
@@ -11391,7 +11391,7 @@ stream		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_10B39:
-		push	large [bp+stream] ; stream
+		pushd	[bp+stream] ; stream
 		call	__fgetc
 		add	sp, 4
 
@@ -11410,7 +11410,7 @@ loc_10B45:
 ; ---------------------------------------------------------------------------
 
 loc_10B64:
-		push	large [bp+stream] ; stream
+		pushd	[bp+stream] ; stream
 		call	__fgetc
 		add	sp, 4
 
@@ -11500,10 +11500,10 @@ loc_10BD9:
 		cmp	word_350D0, 1
 		jnz	short loc_10C01
 		push	si
-		push	large 640000h
-		push	large 4000h
-		push	large [off_38E28]
-		push	large [bp+arg_0]
+		push	640000h
+		pushd	4000h
+		pushd	[off_38E28]
+		pushd	[bp+arg_0]
 		call	_PiLoadL
 		add	sp, 12h
 		mov	[bp+var_1], al
@@ -11511,18 +11511,18 @@ loc_10BD9:
 loc_10C01:
 		cmp	word_350CE, 1
 		jnz	short loc_10C12
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_10AA5
 		jmp	short loc_10C1A
 ; ---------------------------------------------------------------------------
 
 loc_10C12:
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_10AE4
 
 loc_10C1A:
 		add	sp, 4
-		push	large [off_38E28] ; font
+		pushd	[off_38E28] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	al, [bp+var_1]
@@ -11544,7 +11544,7 @@ arg_0		= dword	ptr  6
 
 		enter	2, 0
 		mov	word_350CE, 0
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
@@ -11565,7 +11565,7 @@ arg_0		= dword	ptr  6
 
 		enter	2, 0
 		mov	word_350D0, 0
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
@@ -11587,7 +11587,7 @@ arg_0		= dword	ptr  6
 		enter	2, 0
 		mov	byte_350DD, 1
 		mov	word_350CE, 0
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
@@ -11911,7 +11911,7 @@ arg_2		= dword	ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	file_ropen
 		or	ax, ax
 		jz	loc_10FB1
@@ -11927,7 +11927,7 @@ arg_2		= dword	ptr  8
 		push	4		; n
 		push	ds
 		push	offset aHgrx	; "HGRX"
-		push	large [bp+_font]	; s1
+		pushd	[bp+_font]	; s1
 		call	_memcmp
 		add	sp, 0Ah
 		or	ax, ax
@@ -12025,7 +12025,7 @@ loc_10FB9:
 		jg	short loc_10F6C
 		mov	bx, di
 		shl	bx, 2
-		push	large dword ptr	[bx+4038h]
+		pushd	dword ptr [bx+4038h]
 		push	[bp+var_2]
 		call	file_read
 		mov	[bp+var_A], 0
@@ -12038,7 +12038,7 @@ loc_10FE0:
 		mov	ax, [bp+var_A]
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+4078h]
+		pushd	dword ptr [bx+4078h]
 		push	[bp+var_4]
 		call	file_read
 		inc	[bp+var_A]
@@ -12078,7 +12078,7 @@ arg_2		= dword	ptr  8
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	file_ropen
 		or	ax, ax
 		jz	loc_110C1
@@ -12094,7 +12094,7 @@ arg_2		= dword	ptr  8
 		push	4		; n
 		push	ds
 		push	offset aHgrx	; "HGRX"
-		push	large [bp+_font]	; s1
+		pushd	[bp+_font]	; s1
 		call	_memcmp
 		add	sp, 0Ah
 		or	ax, ax
@@ -12145,10 +12145,10 @@ loc_110C1:
 loc_110C6:
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+4038h]
+		pushd	dword ptr [bx+4038h]
 		push	di
 		call	file_read
-		push	large [bp+_font]	; font
+		pushd	[bp+_font]	; font
 		call	@$bdla$qnv
 		add	sp, 4
 		call	file_close
@@ -12182,7 +12182,7 @@ arg_0		= word ptr  6
 		jz	short loc_11127
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+4038h] ; font
+		pushd	dword ptr [bx+4038h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
@@ -12209,7 +12209,7 @@ loc_1112B:
 		mov	ax, di
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+4078h] ; font
+		pushd	dword ptr [bx+4078h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, si
@@ -12251,7 +12251,7 @@ arg_6		= word ptr  0Ch
 		enter	0Eh, 0
 		push	si
 		push	di
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	file_ropen
 		or	ax, ax
 		jz	loc_112D5
@@ -12267,7 +12267,7 @@ arg_6		= word ptr  0Ch
 		push	4		; n
 		push	ds
 		push	offset aHgrz	; "HGRZ"
-		push	large [bp+s1]	; s1
+		pushd	[bp+s1]	; s1
 		call	_memcmp
 		add	sp, 0Ah
 		or	ax, ax
@@ -12293,13 +12293,13 @@ loc_111C6:
 		push	eax
 		push	0
 		call	file_seek
-		push	large [bp+s1]
+		pushd	[bp+s1]
 		push	40h
 		call	file_read
 		push	4		; n
 		push	ds
 		push	offset aHgrx	; "HGRX"
-		push	large [bp+s1]	; s1
+		pushd	[bp+s1]	; s1
 		call	_memcmp
 		add	sp, 0Ah
 		or	ax, ax
@@ -12398,7 +12398,7 @@ loc_112DB:
 		jg	short loc_1128F
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		push	large dword ptr	[bx+4038h]
+		pushd	dword ptr [bx+4038h]
 		push	[bp+var_2]
 		call	file_read
 		xor	di, di
@@ -12411,7 +12411,7 @@ loc_112FF:
 		mov	ax, di
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+4078h]
+		pushd	dword ptr [bx+4078h]
 		push	[bp+var_4]
 		call	file_read
 		inc	di
@@ -12424,7 +12424,7 @@ loc_1131A:
 		jg	short loc_112FF
 
 loc_11327:
-		push	large [bp+s1]	; font
+		pushd	[bp+s1]	; font
 		call	@$bdla$qnv
 
 loc_11330:
@@ -14544,7 +14544,7 @@ loc_122C7:
 		mov	bx, word ptr [bp+arg_0]
 		cmp	byte ptr es:[bx+44h], 0
 		jnz	short loc_12310
-		push	large 10010h
+		push	10010h
 		mov	eax, es:[bx+14h]
 		sar	eax, 8
 		push	ax
@@ -14662,7 +14662,7 @@ sub_1240A	proc far
 		push	seg seg015
 		push	offset sub_12428
 		push	5
-		push	large 0Ah
+		pushd	0Ah
 		push	45h ; 'E'
 		push	ds
 		push	offset unk_391A0
@@ -15213,7 +15213,7 @@ loc_126E1:
 		call	sub_EC80
 		push	0
 		call	sub_EA3E
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 0Eh
@@ -15325,62 +15325,62 @@ loc_127AC:
 		call	sub_EC0D
 		push	ds
 		push	offset aVqvnvtvmvcb@vp ; "ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq"
-		push	large 2070000h
+		push	2070000h
 		push	0
 		call	sub_FA43
 		push	ds
 		push	offset aVbvpvovzvtvbvf ; "ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI"
-		push	large 2070020h
+		push	2070020h
 		push	0
 		call	sub_FA43
 		push	ds
 		push	offset aVrvevmvevgvfb@ ; "ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ"
-		push	large 2070040h
+		push	2070040h
 		push	0
 		call	sub_FA43
 		push	ds
 		push	offset aCvkev	; "ñÇäEÇ÷"
-		push	large 2010060h
+		push	2010060h
 		push	0
 		call	sub_FA43
 		add	sp, 2Eh
 		push	ds
 		push	offset aTnncv	; "ínçñÇ÷"
-		push	large 2030080h
+		push	2030080h
 		push	0
 		call	sub_FA43
 		push	0
 		call	sub_EA3E
-		push	large 0F000Fh
-		push	large 0F0001h
+		push	0F000Fh
+		push	0F0001h
 		call	sub_EB59
-		push	large 90009h
-		push	large 90003h
+		push	90009h
+		push	90003h
 		call	sub_EB59
-		push	large 1000D0h
-		push	large 0
-		push	large 400040h
+		push	1000D0h
+		pushd	0
+		push	400040h
 		call	sub_11D09
 		add	sp, 28h
-		push	large 100100h
-		push	large 200000h
-		push	large 600020h
+		push	100100h
+		push	200000h
+		push	600020h
 		call	sub_11D09
-		push	large 100110h
-		push	large 400000h
-		push	large 0B40020h
+		push	100110h
+		push	400000h
+		push	0B40020h
 		call	sub_11D09
-		push	large 100030h
-		push	large 600000h
-		push	large 0FA0100h
+		push	100030h
+		push	600000h
+		push	0FA0100h
 		call	sub_11D09
-		push	large 100030h
-		push	large 800000h
-		push	large 12C0100h
+		push	100030h
+		push	800000h
+		push	12C0100h
 		call	sub_11D09
 		add	sp, 30h
 		call	sub_EC80
-		push	large 300FAh
+		push	300FAh
 		push	80h
 		call	sub_197E1
 		add	sp, 6
@@ -15412,17 +15412,17 @@ loc_1291D:
 loc_1292E:
 		cmp	[bp+var_A], 0
 		jnz	short loc_1297F
-		push	large 200020h
-		push	large 0FA0080h
+		push	200020h
+		push	0FA0080h
 		call	sub_10433
-		push	large 3012Ch
+		push	3012Ch
 		push	80h
 		call	sub_197E1
-		push	large 0F000Fh
-		push	large 0F0003h
+		push	0F000Fh
+		push	0F0003h
 		call	sub_EB59
-		push	large 90009h
-		push	large 90001h
+		push	90009h
+		push	90001h
 		call	sub_EB59
 		add	sp, 1Eh
 		mov	[bp+var_A], 1
@@ -15430,17 +15430,17 @@ loc_1292E:
 ; ---------------------------------------------------------------------------
 
 loc_1297F:
-		push	large 200020h
-		push	large 12C0080h
+		push	200020h
+		push	12C0080h
 		call	sub_10433
-		push	large 300FAh
+		push	300FAh
 		push	80h
 		call	sub_197E1
-		push	large 0F000Fh
-		push	large 0F0001h
+		push	0F000Fh
+		push	0F0001h
 		call	sub_EB59
-		push	large 90009h
-		push	large 90003h
+		push	90009h
+		push	90003h
 		call	sub_EB59
 		add	sp, 1Eh
 		mov	[bp+var_A], 0
@@ -15634,7 +15634,7 @@ loc_12B02:
 		call	sub_EC80
 		push	0
 		call	sub_EA3E
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 0Eh
@@ -16156,9 +16156,9 @@ loc_12F39:
 ; ---------------------------------------------------------------------------
 
 loc_12F42:
-		push	large [bp+_font]	; font
+		pushd	[bp+_font]	; font
 		call	@$bdla$qnv
-		push	large [bp+var_8] ; font
+		pushd	[bp+var_8] ; font
 		call	@$bdla$qnv
 		add	sp, 8
 		call	egc_off
@@ -16345,7 +16345,7 @@ arg_2		= dword	ptr  6
 		cwd
 		idiv	bx
 		push	ax
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	sub_13033
 		add	sp, 6
 		mov	bx, 3E8h
@@ -16445,50 +16445,50 @@ arg_0		= word ptr  6
 		call	sub_EB10
 		add	sp, 4
 		call	sub_12F91
-		push	large [bp+var_4]
-		push	large 2A0050h
+		pushd	[bp+var_4]
+		push	2A0050h
 		push	40h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@vavnvmvtvr ; "Å@Å@ÇaÇnÇmÇtÇr"
-		push	large 270070h
+		push	270070h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@vsvivnveb@ ; "   Å@ÇsÇâÇçÇÖÅ@"
-		push	large 270080h
+		push	270080h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVbvpvovfvivovx ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
-		push	large 2700A0h
+		push	2700A0h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVavpvnvvbxvovm ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
-		push	large 2700C0h
+		push	2700C0h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@vrvsvVfvd ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
-		push	large 2700E0h
+		push	2700E0h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVavnvmvtvrb@vo ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
-		push	large 270100h
+		push	270100h
 		push	30h ; '0'
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aVgvivfb@vyb@vj ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
-		push	large 2A0120h
+		push	2A0120h
 		push	0A0h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16526,11 +16526,11 @@ loc_1321E:
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		push	si
 		call	sub_1307D
-		push	large [bp+var_8]
-		push	large 270080h
+		pushd	[bp+var_8]
+		push	270080h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16554,11 +16554,11 @@ loc_1327B:
 loc_13285:
 		cmp	di, 0Ah
 		jb	short loc_1327B
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		push	si
 		call	sub_1307D
-		push	large [bp+var_8]
-		push	large 2700A0h
+		pushd	[bp+var_8]
+		push	2700A0h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16586,11 +16586,11 @@ loc_132C6:
 loc_132D0:
 		cmp	di, 0Ah
 		jb	short loc_132C6
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		push	si
 		call	sub_1307D
-		push	large [bp+var_8]
-		push	large 2700C0h
+		pushd	[bp+var_8]
+		push	2700C0h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16615,11 +16615,11 @@ loc_13309:
 loc_13313:
 		cmp	di, 0Ah
 		jb	short loc_13309
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		push	si
 		call	sub_1307D
-		push	large [bp+var_8]
-		push	large 2700E0h
+		pushd	[bp+var_8]
+		push	2700E0h
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16648,7 +16648,7 @@ loc_13313:
 		cwd
 		idiv	bx
 		push	ax
-		push	large [bp+var_8]
+		pushd	[bp+var_8]
 		call	sub_13033
 		add	sp, 6
 		mov	ax, [bp+var_A]
@@ -16712,8 +16712,8 @@ loc_13313:
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		push	large [bp+var_8]
-		push	large 270100h
+		pushd	[bp+var_8]
+		push	270100h
 		push	0F0h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -16777,7 +16777,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		add	ax, 1C0h
 		push	ax
-		push	large 0E00E0h
+		push	0E00E0h
 		call	sub_197E1
 		add	sp, 6
 		mov	ax, [bp+arg_0]
@@ -16786,7 +16786,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		add	dx, 1C0h
 		push	dx
-		push	large 0E0100h
+		push	0E0100h
 		call	sub_197E1
 		add	sp, 6
 		push	1Eh
@@ -16818,7 +16818,7 @@ loc_13513:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 56h ; 'V'
+		pushd	56h ; 'V'
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 3E8h
@@ -16830,7 +16830,7 @@ loc_13513:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 10056h
+		push	10056h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 64h ; 'd'
@@ -16842,7 +16842,7 @@ loc_13513:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 20056h
+		push	20056h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 0Ah
@@ -16850,9 +16850,9 @@ loc_13513:
 		idiv	ebx
 		mov	[bp+var_6], edx
 		push	word ptr [bp+var_6]
-		push	large 30056h
+		push	30056h
 		call	sub_12BAB
-		push	large 4
+		pushd	4
 		push	56h ; 'V'
 		call	sub_12BAB
 		push	5
@@ -16884,7 +16884,7 @@ loc_135E2:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 6Bh ; 'k'
+		pushd	6Bh ; 'k'
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 3E8h
@@ -16896,7 +16896,7 @@ loc_135E2:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 1006Bh
+		push	1006Bh
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 64h ; 'd'
@@ -16908,7 +16908,7 @@ loc_135E2:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 2006Bh
+		push	2006Bh
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 0Ah
@@ -16916,9 +16916,9 @@ loc_135E2:
 		idiv	ebx
 		mov	[bp+var_6], edx
 		push	word ptr [bp+var_6]
-		push	large 3006Bh
+		push	3006Bh
 		call	sub_12BAB
-		push	large 4
+		pushd	4
 		push	6Bh ; 'k'
 		call	sub_12BAB
 		push	5
@@ -16955,7 +16955,7 @@ loc_136BF:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 80h
+		pushd	80h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 3E8h
@@ -16967,7 +16967,7 @@ loc_136BF:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 10080h
+		push	10080h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 64h ; 'd'
@@ -16979,7 +16979,7 @@ loc_136BF:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 20080h
+		push	20080h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 0Ah
@@ -16987,9 +16987,9 @@ loc_136BF:
 		idiv	ebx
 		mov	[bp+var_6], edx
 		push	word ptr [bp+var_6]
-		push	large 30080h
+		push	30080h
 		call	sub_12BAB
-		push	large 4
+		pushd	4
 		push	80h
 		call	sub_12BAB
 		push	5
@@ -17021,7 +17021,7 @@ loc_13792:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 0FFFF0095h
+		push	0FFFF0095h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 2710h
@@ -17033,7 +17033,7 @@ loc_13792:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 95h
+		pushd	95h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 3E8h
@@ -17045,7 +17045,7 @@ loc_13792:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 10095h
+		push	10095h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
 		mov	ebx, 64h ; 'd'
@@ -17057,12 +17057,12 @@ loc_13792:
 		cdq
 		idiv	ebx
 		push	ax
-		push	large 20095h
+		push	20095h
 		call	sub_12BAB
-		push	large 3
+		pushd	3
 		push	95h
 		call	sub_12BAB
-		push	large 4
+		pushd	4
 		push	95h
 		call	sub_12BAB
 		push	5
@@ -17083,7 +17083,7 @@ loc_13792:
 		cwd
 		idiv	bx
 		push	ax
-		push	large 0FFFF00C4h
+		push	0FFFF00C4h
 		call	sub_12BAB
 		mov	ax, [bp+var_2]
 		mov	bx, 0Ah
@@ -17091,14 +17091,14 @@ loc_13792:
 		idiv	bx
 		mov	[bp+var_2], dx
 		push	dx
-		push	large 0C4h ; 'ƒ'
+		pushd	0C4h ; 'ƒ'
 		call	sub_12BAB
 		mov	ax, di
 		mov	bx, 3E8h
 		cwd
 		idiv	bx
 		push	ax
-		push	large 100C4h
+		push	100C4h
 		call	sub_12BAB
 		mov	ax, di
 		mov	bx, 3E8h
@@ -17110,7 +17110,7 @@ loc_13792:
 		cwd
 		idiv	bx
 		push	ax
-		push	large 200C4h
+		push	200C4h
 		call	sub_12BAB
 		mov	ax, di
 		mov	bx, 64h	; 'd'
@@ -17122,7 +17122,7 @@ loc_13792:
 		cwd
 		idiv	bx
 		push	ax
-		push	large 300C4h
+		push	300C4h
 		call	sub_12BAB
 		mov	ax, di
 		mov	bx, 0Ah
@@ -17130,7 +17130,7 @@ loc_13792:
 		idiv	bx
 		mov	di, dx
 		push	dx
-		push	large 400C4h
+		push	400C4h
 		call	sub_12BAB
 		push	5
 		call	sub_E364
@@ -17286,7 +17286,7 @@ loc_139BC:
 		call	file_create
 		or	ax, ax
 		jz	loc_13A72
-		push	large [bp+var_12]
+		pushd	[bp+var_12]
 		push	7
 		call	file_write
 		mov	[bp+var_2], 0Ah
@@ -17315,7 +17315,7 @@ loc_139FF:
 ; ---------------------------------------------------------------------------
 
 loc_13A08:
-		push	large [bp+var_E]
+		pushd	[bp+var_E]
 		push	10h
 		call	file_write
 		inc	si
@@ -17364,7 +17364,7 @@ loc_13A53:
 ; ---------------------------------------------------------------------------
 
 loc_13A5C:
-		push	large [bp+var_6]
+		pushd	[bp+var_6]
 		push	2
 		call	file_write
 		inc	si
@@ -17497,16 +17497,16 @@ loc_13B07:
 		pop	cx
 		mov	word ptr off_39462+2, dx
 		mov	word ptr off_39462, ax
-		push	large [off_39452]
+		pushd	[off_39452]
 		push	0A0h
 		call	file_read
-		push	large [off_39462]
+		pushd	[off_39462]
 		push	28h ; '('
 		call	file_read
-		push	large [off_3945A]
+		pushd	[off_3945A]
 		push	14h
 		call	file_read
-		push	large [off_39456]
+		pushd	[off_39456]
 		push	14h
 		call	file_read
 		call	file_close
@@ -17678,7 +17678,7 @@ loc_13C69:
 		jl	short loc_13C33
 		push	ds
 		push	offset aVb	; "ÇÅ"
-		push	large 82300F0h
+		push	82300F0h
 		push	20h ; ' '
 		call	sub_FA43
 		add	sp, 0Ah
@@ -17904,25 +17904,25 @@ arg_E		= word ptr  14h
 		pop	cx
 		push	ds
 		push	offset aB@cB@iB@ ; "Å@óÏÅ@à Å@"
-		push	large 330030h
+		push	330030h
 		push	20h ; ' '
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@cB@b@sob@b ; "Å@Å@ñºÅ@Å@ëOÅ@Å@"
-		push	large 330030h
+		push	330030h
 		push	90h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@uB@b@u_b@b ; "Å@Å@ìæÅ@Å@ì_Å@Å@"
-		push	large 330030h
+		push	330030h
 		push	160h
 		call	sub_FA43
 		add	sp, 0Ah
 		push	ds
 		push	offset aGxgebGwbeglbGg ; "ÉXÉeÅ[ÉWÅEÉãÅ[Ég"
-		push	large 330030h
+		push	330030h
 		push	200h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -18047,7 +18047,7 @@ loc_13EFC:
 		call	sub_FA43
 		add	sp, 0Ah
 		push	0
-		push	large 0
+		pushd	0
 		cmp	[bp+arg_0], si
 		jnz	short loc_13F22
 		mov	eax, [bp+arg_2]
@@ -18088,7 +18088,7 @@ loc_13F5E:
 
 loc_13F69:
 		push	0
-		push	large 0
+		pushd	0
 		cmp	si, [bp+arg_0]
 		jnz	short loc_13F78
 		mov	ax, [bp+arg_6]
@@ -18269,7 +18269,7 @@ arg_4		= word ptr  0Ah
 		mov	si, [bp+arg_0]
 		mov	di, [bp+arg_2]
 		mov	[bp+var_2], 0
-		push	large 100020h
+		push	100020h
 		push	di
 		push	si
 		call	sub_10433
@@ -18602,12 +18602,12 @@ loc_14322:
 		inc	word ptr es:[bx]
 
 loc_1432E:
-		push	large 100080h
+		push	100080h
 		push	word_39460
 		push	word_3945E
 		call	sub_10433
 		add	sp, 8
-		push	large [bp+arg_4]
+		pushd	[bp+arg_4]
 		push	23h ; '#'
 		push	word_39460
 		push	word_3945E
@@ -18882,8 +18882,8 @@ loc_145FC:
 loc_14619:
 		cmp	byte_34A4E, 1
 		jnz	short loc_1468E
-		push	large [bp+arg_C]
-		push	large [bp+arg_8]
+		pushd	[bp+arg_C]
+		pushd	[bp+arg_8]
 		les	bx, [bp+arg_4]
 		push	word ptr es:[bx]
 		les	bx, [bp+arg_0]
@@ -18927,9 +18927,9 @@ loc_14687:
 loc_1468E:
 		cmp	byte_34A53, 1
 		jnz	short loc_146B1
-		push	large [bp+arg_C]
-		push	large [bp+arg_8]
-		push	large 1680200h
+		pushd	[bp+arg_C]
+		pushd	[bp+arg_8]
+		push	1680200h
 		call	sub_141D6
 		add	sp, 0Ch
 		mov	byte_34A53, 0
@@ -18956,16 +18956,16 @@ sub_14399	endp
 sub_146BA	proc far
 		push	bp
 		mov	bp, sp
-		push	large [off_39452] ; font
+		pushd	[off_39452] ; font
 		call	@$bdla$qnv
 		add	sp, 4
-		push	large [off_3945A] ; font
+		pushd	[off_3945A] ; font
 		call	@$bdla$qnv
 		add	sp, 4
-		push	large [off_39456] ; font
+		pushd	[off_39456] ; font
 		call	@$bdla$qnv
 		add	sp, 4
-		push	large [off_39462] ; font
+		pushd	[off_39462] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
@@ -19071,7 +19071,7 @@ loc_14790:
 		cmp	si, 0A0h
 		jl	short loc_14777
 		push	0A0h
-		push	large [off_39452]
+		pushd	[off_39452]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
@@ -19079,7 +19079,7 @@ loc_14790:
 		call	_write
 		add	sp, 8
 		push	28h ; '('
-		push	large [off_39462]
+		pushd	[off_39462]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
@@ -19087,7 +19087,7 @@ loc_14790:
 		call	_write
 		add	sp, 8
 		push	14h
-		push	large [off_3945A]
+		pushd	[off_3945A]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
@@ -19095,14 +19095,14 @@ loc_14790:
 		call	_write
 		add	sp, 8
 		push	14h
-		push	large [off_39456]
+		pushd	[off_39456]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
 		call	_write
 		add	sp, 8
-		push	large [bp+stream] ; stream
+		pushd	[bp+stream] ; stream
 		call	_fclose
 		add	sp, 4
 
@@ -19270,7 +19270,7 @@ loc_148F9:
 		jge	short loc_14942
 		push	ds
 		push	offset aUmx_2	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
-		push	large 2270180h
+		push	2270180h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
@@ -19280,15 +19280,15 @@ loc_148F9:
 		lea	dx, [bp+var_D0]
 		add	ax, dx
 		mov	bx, ax
-		push	large dword ptr	ss:[bx]
-		push	large 2270180h
+		pushd	dword ptr ss:[bx]
+		push	2270180h
 		jmp	short loc_1496F
 ; ---------------------------------------------------------------------------
 
 loc_14942:
 		push	ds
 		push	offset aUmx_1	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
-		push	large 2270000h
+		push	2270000h
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
@@ -19298,8 +19298,8 @@ loc_14942:
 		lea	dx, [bp+var_D0]
 		add	ax, dx
 		mov	bx, ax
-		push	large dword ptr	ss:[bx]
-		push	large 2270000h
+		pushd	dword ptr ss:[bx]
+		push	2270000h
 
 loc_1496F:
 		push	0C0h ; '¿'
@@ -19310,24 +19310,24 @@ loc_1496F:
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_149C0
-		push	large 100120h
-		push	large 1800000h
-		push	large 30h ; '0'
+		push	100120h
+		push	1800000h
+		pushd	30h ; '0'
 		call	sub_11D09
 		add	sp, 0Ch
-		push	large 10000h
-		push	large 1800000h
-		push	large 1900120h
-		push	large 1800000h
+		push	10000h
+		push	1800000h
+		push	1900120h
+		push	1800000h
 		call	sub_FEA4
 		add	sp, 10h
 		jmp	short loc_149D4
 ; ---------------------------------------------------------------------------
 
 loc_149C0:
-		push	large 100120h
-		push	large 0
-		push	large 30h ; '0'
+		push	100120h
+		pushd	0
+		pushd	30h ; '0'
 		call	sub_11D09
 		add	sp, 0Ch
 
@@ -19454,9 +19454,9 @@ loc_14B04:
 		push	ss
 		lea	ax, [bp+var_C0]
 		push	ax
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	di
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		push	word ptr [bp+var_4]
 		call	sub_13DF5
 		add	sp, 10h
@@ -19498,9 +19498,9 @@ loc_14B8D:
 		push	ss
 		lea	ax, [bp+var_C0]
 		push	ax
-		push	large [bp+arg_6]
+		pushd	[bp+arg_6]
 		push	di
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		push	1Eh
 		call	sub_13DF5
 		add	sp, 10h
@@ -19579,7 +19579,7 @@ arg_4		= dword	ptr  0Ah
 loc_14BF4:
 		push	si
 		push	di
-		push	large [bp+arg_4]
+		pushd	[bp+arg_4]
 		call	sub_172D6
 		push	ss
 		lea	ax, [bp+var_36]
@@ -19659,28 +19659,28 @@ loc_14C45:
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+80h]
+		pushd	dword ptr es:[bx+80h]
 		push	[bp+var_2]
 		call	sub_173DC
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+100h]
+		pushd	dword ptr es:[bx+100h]
 		push	[bp+var_2]
 		call	sub_173DC
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+180h]
+		pushd	dword ptr es:[bx+180h]
 		push	[bp+var_2]
 		call	sub_173DC
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+200h]
+		pushd	dword ptr es:[bx+200h]
 		push	[bp+var_2]
 		call	sub_173DC
 		mov	[bp+var_4], 0
@@ -20625,31 +20625,31 @@ loc_1557C:
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx]	; font
+		pushd	dword ptr es:[bx]	; font
 		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+80h] ; font
+		pushd	dword ptr es:[bx+80h] ; font
 		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+100h] ; font
+		pushd	dword ptr es:[bx+100h] ; font
 		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+180h] ; font
+		pushd	dword ptr es:[bx+180h] ; font
 		call	@$bdla$qnv
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		push	large dword ptr	es:[bx+200h] ; font
+		pushd	dword ptr es:[bx+200h] ; font
 		call	@$bdla$qnv
 		add	sp, 14h
 		inc	si
@@ -20757,7 +20757,7 @@ arg_8		= word ptr  0Eh
 		enter	32h, 0
 		push	si
 		push	di
-		push	large [bp+arg_4]
+		pushd	[bp+arg_4]
 		call	sub_172D6
 		push	ss
 		lea	ax, [bp+var_32]
@@ -20872,7 +20872,7 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ADAh]
+		pushd	dword ptr [bx+4ADAh]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -20880,7 +20880,7 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ACAh]
+		pushd	dword ptr [bx+4ACAh]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -20888,7 +20888,7 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ACEh]
+		pushd	dword ptr [bx+4ACEh]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -20896,7 +20896,7 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4AD2h]
+		pushd	dword ptr [bx+4AD2h]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -20904,7 +20904,7 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4AD6h]
+		pushd	dword ptr [bx+4AD6h]
 		push	di
 		call	sub_173DC
 		inc	si
@@ -21649,28 +21649,28 @@ loc_15D71:
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		push	[bp+var_20]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		push	[bp+var_20]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		push	[bp+var_20]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		push	[bp+var_20]
 		call	sub_15C80
@@ -21678,22 +21678,22 @@ loc_15D71:
 		call	sub_EA3E
 		add	sp, 4
 		push	[bp+var_1E]
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		push	[bp+var_10]
 		call	sub_15C99
 		push	[bp+var_1C]
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		push	[bp+var_E]
 		call	sub_15C99
 		push	[bp+var_1A]
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		push	[bp+var_C]
 		call	sub_15C99
 		push	[bp+var_18]
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		push	[bp+var_A]
 		call	sub_15C99
@@ -21714,28 +21714,28 @@ loc_15E7A:
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		push	[bp+var_12]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		push	[bp+var_12]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		push	[bp+var_12]
 		call	sub_15C80
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		push	[bp+var_12]
 		call	sub_15C80
@@ -21743,25 +21743,25 @@ loc_15E7A:
 		call	sub_EA3E
 		add	sp, 4
 		push	[bp+var_1E]
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		push	[bp+var_10]
 		push	[bp+var_7]
 		call	sub_15CAF
 		push	[bp+var_1C]
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		push	[bp+var_E]
 		push	[bp+var_7]
 		call	sub_15CAF
 		push	[bp+var_1A]
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		push	[bp+var_C]
 		push	[bp+var_7]
 		call	sub_15CAF
 		push	[bp+var_18]
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		push	[bp+var_A]
 		push	[bp+var_7]
@@ -22299,7 +22299,7 @@ loc_16351:
 		add	ax, si
 		push	ax
 		push	[bp+var_2]
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_15A37
 		add	sp, 0Ch
 		inc	si
@@ -22360,7 +22360,7 @@ loc_163B5:
 		add	ax, si
 		push	ax
 		push	[bp+var_2]
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_15CDD
 		add	sp, 0Ch
 		inc	si
@@ -22597,7 +22597,7 @@ loc_16596:
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		les	bx, [bp+var_14]
 		les	bx, es:[bx+10h]
@@ -22609,7 +22609,7 @@ loc_16596:
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		les	bx, [bp+var_14]
 		les	bx, es:[bx+10h]
@@ -22621,7 +22621,7 @@ loc_16596:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		les	bx, [bp+var_14]
 		les	bx, es:[bx+10h]
@@ -22633,7 +22633,7 @@ loc_16596:
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		les	bx, [bp+var_14]
 		les	bx, es:[bx+10h]
@@ -22651,7 +22651,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		push	large [dword_38928]
+		pushd	[dword_38928]
 		push	si
 		push	[bp+var_10]
 		call	sub_15C99
@@ -22661,7 +22661,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		push	large [dword_3892C]
+		pushd	[dword_3892C]
 		push	si
 		push	[bp+var_E]
 		call	sub_15C99
@@ -22671,7 +22671,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		push	large [dword_38930]
+		pushd	[dword_38930]
 		push	si
 		push	[bp+var_C]
 		call	sub_15C99
@@ -22681,7 +22681,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		push	large [dword_38934]
+		pushd	[dword_38934]
 		push	si
 		push	[bp+var_A]
 		call	sub_15C99
@@ -23111,7 +23111,7 @@ loc_169D8:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ADAh] ; font
+		pushd	dword ptr [bx+4ADAh] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23136,7 +23136,7 @@ loc_16A09:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ACAh] ; font
+		pushd	dword ptr [bx+4ACAh] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23161,7 +23161,7 @@ loc_16A53:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4ACEh] ; font
+		pushd	dword ptr [bx+4ACEh] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23186,7 +23186,7 @@ loc_16A9D:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4AD2h] ; font
+		pushd	dword ptr [bx+4AD2h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23211,7 +23211,7 @@ loc_16AE7:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4AD6h] ; font
+		pushd	dword ptr [bx+4AD6h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23253,7 +23253,7 @@ arg_8		= word ptr  0Eh
 		enter	34h, 0
 		push	si
 		push	di
-		push	large [bp+arg_4]
+		pushd	[bp+arg_4]
 		call	sub_172D6
 		push	ss
 		lea	ax, [bp+var_34]
@@ -23367,7 +23367,7 @@ loc_16BBA:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D5Ah]
+		pushd	dword ptr [bx+4D5Ah]
 		push	di
 		call	sub_173DC
 		mov	[bp+var_2], 0
@@ -23410,7 +23410,7 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D4Ah]
+		pushd	dword ptr [bx+4D4Ah]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -23418,7 +23418,7 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D4Eh]
+		pushd	dword ptr [bx+4D4Eh]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -23426,7 +23426,7 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D52h]
+		pushd	dword ptr [bx+4D52h]
 		push	di
 		call	sub_173DC
 		mov	bx, [bp+arg_8]
@@ -23434,7 +23434,7 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D56h]
+		pushd	dword ptr [bx+4D56h]
 		push	di
 		call	sub_173DC
 		inc	si
@@ -23691,7 +23691,7 @@ loc_16F28:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D5Ah] ; font
+		pushd	dword ptr [bx+4D5Ah] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -23708,7 +23708,7 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D4Ah] ; font
+		pushd	dword ptr [bx+4D4Ah] ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
@@ -23722,7 +23722,7 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D4Eh] ; font
+		pushd	dword ptr [bx+4D4Eh] ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
@@ -23736,7 +23736,7 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D52h] ; font
+		pushd	dword ptr [bx+4D52h] ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, 0A0h
@@ -23750,7 +23750,7 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		push	large dword ptr	[bx+4D56h] ; font
+		pushd	dword ptr [bx+4D56h] ; font
 		call	@$bdla$qnv
 		add	sp, 10h
 		mov	bx, di
@@ -23792,7 +23792,7 @@ sub_17041	proc far
 		push	seg seg021
 		push	offset sub_17096
 		push	5
-		push	large 5
+		pushd	5
 		push	32h ; '2'
 		push	ds
 		push	offset unk_39924
@@ -23864,7 +23864,7 @@ arg_0		= dword	ptr  6
 		pop	cx
 		mov	word ptr off_39A34+2, dx
 		mov	word ptr off_39A34, ax
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		xor	si, si
 		jmp	short loc_17102
@@ -23886,7 +23886,7 @@ loc_17102:
 		jl	short loc_170EA
 
 loc_17107:
-		push	large [off_39A34]
+		pushd	[off_39A34]
 		push	800h
 		call	file_read
 		call	file_close
@@ -23948,7 +23948,7 @@ sub_170C8	endp
 sub_1716F	proc far
 		push	bp
 		mov	bp, sp
-		push	large [off_39A34] ; font
+		pushd	[off_39A34] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
@@ -24055,7 +24055,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		cmp	word_39A59, 0
 		jnz	short loc_17202
-		push	large [off_39A46]
+		pushd	[off_39A46]
 		push	100h
 		call	file_read
 
@@ -24182,7 +24182,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_172F6:
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	sub_17181
 		or	ax, ax
 		jnz	short loc_1730C
@@ -24205,7 +24205,7 @@ loc_1730C:
 		push	offset unk_39A4A
 		call	file_ropen
 		les	bx, dword_39A38
-		push	large dword ptr	es:[bx+18h]
+		pushd	dword ptr es:[bx+18h]
 		push	0
 		call	file_seek
 		les	bx, dword_39A38
@@ -24241,18 +24241,18 @@ loc_1735E:
 		les	bx, dword_39A38
 		push	word ptr es:[bx+10h]
 		call	sub_1722D
-		push	large [off_39A46] ; font
+		pushd	[off_39A46] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		jmp	short loc_173D2
 ; ---------------------------------------------------------------------------
 
 loc_173B0:
-		push	large [off_39A42]
+		pushd	[off_39A42]
 		les	bx, dword_39A38
 		push	word ptr es:[bx+10h]
 		call	file_read
-		push	large [off_39A42]
+		pushd	[off_39A42]
 		les	bx, dword_39A38
 		push	word ptr es:[bx+10h]
 		call	sub_171CE
@@ -24331,7 +24331,7 @@ sub_1741E	endp
 sub_1742C	proc far
 		push	bp
 		mov	bp, sp
-		push	large [off_39A42] ; font
+		pushd	[off_39A42] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		pop	bp
@@ -24382,7 +24382,7 @@ arg_2		= dword	ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		push	large [bp+arg_2]
+		pushd	[bp+arg_2]
 		call	sub_172D6
 		push	4
 		call	sub_1741E
@@ -24440,7 +24440,7 @@ loc_174C8:
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+50C2h] ; font
+		pushd	dword ptr [bx+50C2h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -24460,7 +24460,7 @@ loc_174F9:
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+50C2h]
+		pushd	dword ptr [bx+50C2h]
 		push	[bp+var_2]
 		call	sub_173DC
 		inc	[bp+var_4]
@@ -24664,7 +24664,7 @@ loc_1768E:
 		mov	ax, si
 		shl	ax, 2
 		add	bx, ax
-		push	large dword ptr	[bx+50C2h] ; font
+		pushd	dword ptr [bx+50C2h] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, di
@@ -25111,7 +25111,7 @@ loc_1796F:
 		jz	short loc_179E2
 
 loc_179C7:
-		push	large 10008h
+		push	10008h
 		push	[bp+var_2]
 		push	di
 		call	sub_10433
@@ -25624,7 +25624,7 @@ arg_0		= word ptr  6
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	loc_17E1B
-		push	large 200020h
+		push	200020h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5372h]
@@ -25764,7 +25764,7 @@ loc_17E71:
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	short loc_17EAF
-		push	large 200020h
+		push	200020h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5372h]
@@ -25986,7 +25986,7 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		push	large 100020h
+		push	100020h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5372h]
@@ -26001,7 +26001,7 @@ arg_0		= word ptr  6
 		cbw
 		cmp	ax, 63h	; 'c'
 		jnz	short loc_180C5
-		push	large 100040h
+		push	100040h
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, [bx+5372h]
@@ -26341,7 +26341,7 @@ arg_0		= word ptr  6
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	loc_183A0
-		push	large 200020h
+		push	200020h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+539Ah]
@@ -26486,7 +26486,7 @@ loc_183F6:
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	short loc_18434
-		push	large 200020h
+		push	200020h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+539Ah]
@@ -26559,7 +26559,7 @@ arg_0		= word ptr  6
 		enter	6, 0
 		push	si
 		mov	si, [bp+arg_0]
-		push	large 100030h
+		push	100030h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+539Ah]
@@ -26798,7 +26798,7 @@ loc_18629:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		push	large dword ptr	ss:[bx]
+		pushd	dword ptr ss:[bx]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	si
@@ -26926,9 +26926,9 @@ loc_18740:
 
 loc_18744:
 		push	eax
-		push	large [dword_34A5A]
-		push	large 70027h
-		push	large 100h
+		pushd	[dword_34A5A]
+		push	70027h
+		pushd	100h
 		call	sub_18589
 		add	sp, 12h
 		push	0
@@ -26946,9 +26946,9 @@ loc_18774:
 
 loc_18778:
 		push	eax
-		push	large [dword_34A5A]
-		push	large 70027h
-		push	large 100h
+		pushd	[dword_34A5A]
+		push	70027h
+		pushd	100h
 		call	sub_18589
 		add	sp, 12h
 		mov	eax, dword_34A5A
@@ -27001,7 +27001,7 @@ loc_187D4:
 		call	sub_EA3E
 		pop	cx
 		push	si
-		push	large 14C0000h
+		push	14C0000h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27012,7 +27012,7 @@ loc_187D4:
 		call	sub_EA3E
 		pop	cx
 		push	si
-		push	large 14C0000h
+		push	14C0000h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27049,8 +27049,8 @@ loc_1883C:
 		push	eax
 		movsx	eax, word_34A84
 		push	eax
-		push	large 20027h
-		push	large 190h
+		push	20027h
+		pushd	190h
 		call	sub_18589
 		add	sp, 12h
 		push	0
@@ -27071,8 +27071,8 @@ loc_18873:
 		push	eax
 		movsx	eax, word_34A84
 		push	eax
-		push	large 20027h
-		push	large 190h
+		push	20027h
+		pushd	190h
 		call	sub_18589
 		add	sp, 12h
 		mov	ax, word_34A84
@@ -27173,9 +27173,9 @@ loc_1894F:
 
 loc_18953:
 		push	eax
-		push	large [dword_34A5A]
-		push	large 70037h
-		push	large 100100h
+		pushd	[dword_34A5A]
+		push	70037h
+		push	100100h
 		call	sub_18589
 		add	sp, 12h
 		xor	si, si
@@ -27203,7 +27203,7 @@ loc_18971:
 
 loc_18993:
 		push	si
-		push	large 1480010h
+		push	1480010h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27237,8 +27237,8 @@ loc_189CB:
 		push	eax
 		movsx	eax, word_34A84
 		push	eax
-		push	large 20037h
-		push	large 100190h
+		push	20037h
+		push	100190h
 		call	sub_18589
 		add	sp, 12h
 		dec	[bp+var_2]
@@ -27316,10 +27316,10 @@ loc_18A60:
 		call	sub_EA3E
 		pop	cx
 		push	1
-		push	large 0
-		push	large [dword_34A5A]
-		push	large 70037h
-		push	large 100100h
+		pushd	0
+		pushd	[dword_34A5A]
+		push	70037h
+		push	100100h
 		call	sub_18589
 		add	sp, 12h
 		push	1
@@ -27331,7 +27331,7 @@ loc_18A60:
 
 loc_18A96:
 		push	si
-		push	large 1480010h
+		push	1480010h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27353,7 +27353,7 @@ loc_18AB6:
 
 loc_18ABA:
 		push	si
-		push	large 1480010h
+		push	1480010h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27371,10 +27371,10 @@ loc_18AD8:
 		call	sub_EA3E
 		pop	cx
 		push	1
-		push	large 63h ; 'c'
-		push	large 0
-		push	large 20037h
-		push	large 100190h
+		pushd	63h ; 'c'
+		pushd	0
+		push	20037h
+		push	100190h
 		call	sub_18589
 		add	sp, 12h
 		or	di, di
@@ -27413,11 +27413,11 @@ loc_18B33:
 		call	sub_EA3E
 		pop	cx
 		push	1
-		push	large 0
+		pushd	0
 		les	bx, dword_3919C
-		push	large dword ptr	es:[bx+41h]
-		push	large 70027h
-		push	large 100h
+		pushd	dword ptr es:[bx+41h]
+		push	70027h
+		pushd	100h
 		call	sub_18589
 		add	sp, 12h
 		push	1
@@ -27429,7 +27429,7 @@ loc_18B33:
 
 loc_18B6D:
 		push	si
-		push	large 14C0000h
+		push	14C0000h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27454,7 +27454,7 @@ loc_18B95:
 
 loc_18B99:
 		push	si
-		push	large 14C0000h
+		push	14C0000h
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 190h
@@ -27469,17 +27469,17 @@ loc_18BB2:
 
 loc_18BB7:
 		push	1
-		push	large 63h ; 'c'
-		push	large 0
-		push	large 20027h
-		push	large 190h
+		pushd	63h ; 'c'
+		pushd	0
+		push	20027h
+		pushd	190h
 		call	sub_18589
 		add	sp, 12h
-		push	large 0B00000h
+		push	0B00000h
 		push	100h
 		nopcall	sub_18CD3
 		add	sp, 6
-		push	large 0B00010h
+		push	0B00010h
 		push	100h
 		nopcall	sub_18CD3
 		add	sp, 6
@@ -27591,7 +27591,7 @@ arg_0		= dword	ptr  6
 
 		enter	40h, 0
 		push	si
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		push	ss
 		lea	ax, [bp+var_40]
@@ -27759,7 +27759,7 @@ loc_18DA0:
 		push	dx
 		call	sub_10585
 		add	sp, 8
-		push	large 0
+		pushd	0
 		mov	ax, si
 		mov	bx, 6
 		cwd
@@ -27782,7 +27782,7 @@ loc_18DF8:
 		mov	ax, word_34A80
 		shl	ax, 4
 		push	ax
-		push	large 80h
+		pushd	80h
 		call	sub_18CD3
 		add	sp, 6
 		pop	si
@@ -27908,7 +27908,7 @@ loc_18EB3:
 		push	0
 		call	sub_EA3E
 		pop	cx
-		push	large 0
+		pushd	0
 		mov	ax, si
 		mov	bx, 6
 		cwd
@@ -27931,7 +27931,7 @@ loc_18F13:
 		mov	ax, word_34A80
 		shl	ax, 4
 		push	ax
-		push	large 80h
+		pushd	80h
 		call	sub_18CD3
 		add	sp, 6
 
@@ -27973,7 +27973,7 @@ loc_18F39:
 		push	ax
 		call	sub_10585
 		add	sp, 8
-		push	large 10000h
+		push	10000h
 		push	10h
 		mov	ax, si
 		shl	ax, 4
@@ -27992,7 +27992,7 @@ loc_18F78:
 		cbw
 		shl	ax, 4
 		push	ax
-		push	large 100080h
+		push	100080h
 		call	sub_18CD3
 		add	sp, 6
 		pop	si
@@ -28103,7 +28103,7 @@ loc_1901D:
 		push	0
 		call	sub_EA3E
 		pop	cx
-		push	large 10000h
+		push	10000h
 		push	10h
 		mov	ax, si
 		shl	ax, 4
@@ -28122,7 +28122,7 @@ loc_19064:
 		cbw
 		shl	ax, 4
 		push	ax
-		push	large 100080h
+		push	100080h
 		call	sub_18CD3
 		add	sp, 6
 
@@ -28143,8 +28143,8 @@ sub_19085	proc far
 var_4		= byte ptr -4
 
 		enter	4, 0
-		push	large 142h
-		push	large 200260h
+		pushd	142h
+		push	200260h
 		call	sub_10585
 		add	sp, 8
 		push	ss
@@ -28158,11 +28158,11 @@ var_4		= byte ptr -4
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	large 270020h
+		push	270020h
 		push	260h
 		call	sub_FA43
 		add	sp, 0Ah
-		push	large 100020h
+		push	100020h
 		push	260h
 		call	sub_18CD3
 		add	sp, 6
@@ -28216,13 +28216,13 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+97h]
-		push	large 270030h
+		pushd	dword ptr [bx+97h]
+		push	270030h
 		mov	al, byte_34A30
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+97h]
+		pushd	dword ptr [bx+97h]
 		push	7
 		call	sub_F9D0
 		add	sp, 6
@@ -28234,8 +28234,8 @@ loc_19124:
 		push	dx
 		call	sub_FA43
 		add	sp, 0Ah
-		push	large 142h
-		push	large 200260h
+		pushd	142h
+		push	200260h
 		call	sub_109B2
 		add	sp, 8
 		push	ss
@@ -28249,7 +28249,7 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	large 270020h
+		push	270020h
 		push	260h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -28260,13 +28260,13 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+97h]
-		push	large 270030h
+		pushd	dword ptr [bx+97h]
+		push	270030h
 		mov	al, byte_34A30
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		push	large dword ptr	[bx+97h]
+		pushd	dword ptr [bx+97h]
 		push	7
 		call	sub_F9D0
 		add	sp, 6
@@ -28278,14 +28278,14 @@ loc_19124:
 		push	dx
 		call	sub_FA43
 		add	sp, 0Ah
-		push	large 142h
-		push	large 200260h
+		pushd	142h
+		push	200260h
 		call	sub_109B2
 		add	sp, 8
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	large 270020h
+		push	270020h
 		push	260h
 		call	sub_FA43
 		add	sp, 0Ah
@@ -28371,7 +28371,7 @@ var_6		= byte ptr -6
 
 loc_19274:
 		push	si
-		push	large 14D0000h
+		push	14D0000h
 		push	200h
 		call	sub_10585
 		add	sp, 8
@@ -28391,7 +28391,7 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	large 270000h
+		push	270000h
 		push	200h
 		call	sub_FA43
 		push	0
@@ -28399,7 +28399,7 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	large 270000h
+		push	270000h
 		push	200h
 		call	sub_FA43
 		add	sp, 18h
@@ -28432,11 +28432,11 @@ loc_192EB:
 		mov	si, ax
 		push	1
 		call	sub_EA3E
-		push	large 14Dh
-		push	large 200h
+		pushd	14Dh
+		pushd	200h
 		call	sub_109B2
-		push	large 1014Dh
-		push	large 210h
+		push	1014Dh
+		pushd	210h
 		call	sub_109B2
 		push	ss
 		lea	ax, [bp+var_6]
@@ -28448,15 +28448,15 @@ loc_192EB:
 		lea	ax, [bp+var_6]
 		push	ax
 		push	si
-		push	large 200h
+		pushd	200h
 		call	sub_FA43
 		push	0
 		call	sub_EA3E
-		push	large 14Dh
-		push	large 200h
+		pushd	14Dh
+		pushd	200h
 		call	sub_109B2
-		push	large 1014Dh
-		push	large 210h
+		push	1014Dh
+		pushd	210h
 		call	sub_109B2
 		add	sp, 2Eh
 		push	ss
@@ -28469,7 +28469,7 @@ loc_192EB:
 		lea	ax, [bp+var_6]
 		push	ax
 		push	si
-		push	large 200h
+		pushd	200h
 		call	sub_FA43
 		add	sp, 0Ah
 		pop	si
@@ -28614,7 +28614,7 @@ var_1		= byte ptr -1
 		push	ax		; inregs
 		call	sub_BA53
 		mov	[bp+var_4], 0
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -28679,7 +28679,7 @@ loc_194DE:
 		push	1Bh
 		call	sub_E364
 		mov	[bp+var_4], 0
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -28695,7 +28695,7 @@ loc_19508:
 ; ---------------------------------------------------------------------------
 
 loc_1950C:
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -28757,7 +28757,7 @@ loc_19571:
 ; ---------------------------------------------------------------------------
 
 loc_1957B:
-		push	large 10020h
+		push	10020h
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -28885,7 +28885,7 @@ loc_1963B:
 ; ---------------------------------------------------------------------------
 
 loc_1964A:
-		push	large 30001Eh
+		push	30001Eh
 		push	40h
 		call	IRand
 		mov	bx, 280h
@@ -29130,7 +29130,7 @@ arg_4		= word ptr  0Ah
 		mov	word ptr [bp+var_8], ax
 		cmp	byte_35B29, 0
 		jz	short loc_1984C
-		push	large 200020h
+		push	200020h
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_10433
@@ -29440,7 +29440,7 @@ loc_19ACF:
 		mov	[bp+var_6], ax
 		cmp	byte_35B29, 0
 		jz	short loc_19AED
-		push	large 100010h
+		push	100010h
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_10433
@@ -29950,7 +29950,7 @@ loc_19F4C:
 		jz	short loc_19F77
 		mov	byte_35B47, 0
 		mov	byte_34A50, 0
-		push	large 400170h
+		push	400170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -29961,7 +29961,7 @@ loc_19F4C:
 loc_19F77:
 		cmp	dword_34A62, 3Ch ; '<'
 		jbe	short loc_19F90
-		push	large 430170h
+		push	430170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -30194,7 +30194,7 @@ loc_1A191:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1A1B2
-		push	large 4E0170h
+		push	4E0170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -30207,7 +30207,7 @@ loc_1A1B2:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1A1D1
-		push	large 440170h
+		push	440170h
 		push	word_36C26
 		call	sub_197E1
 		add	sp, 6
@@ -31039,7 +31039,7 @@ loc_1A8D0:
 		push	6
 		call	sub_1967E
 		pop	cx
-		push	large 50005h
+		push	50005h
 		jmp	short loc_1A8FE
 ; ---------------------------------------------------------------------------
 
@@ -31049,7 +31049,7 @@ loc_1A8E8:
 		push	0FFFAh
 		call	sub_1967E
 		pop	cx
-		push	large 40004h
+		push	40004h
 
 loc_1A8FE:
 		push	170h
@@ -31757,7 +31757,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		push	large 200020h
+		push	200020h
 		push	170h
 		push	word_36C26
 		call	sub_10433
@@ -31813,7 +31813,7 @@ loc_1AE85:
 		push	0
 		call	sub_11738
 		pop	cx
-		push	large 300030h
+		push	300030h
 		push	160h
 		mov	ax, word_36C26
 		add	ax, 0FFF8h
@@ -31853,12 +31853,12 @@ loc_1AEF2:
 ; ---------------------------------------------------------------------------
 
 loc_1AEFB:
-		push	large 200020h
+		push	200020h
 		push	170h
 		push	word_36C26
 		call	sub_10433
 		add	sp, 8
-		push	large 200020h
+		push	200020h
 		push	170h
 		push	di
 		call	sub_10433
@@ -31951,12 +31951,12 @@ loc_1AFC0:
 loc_1AFC8:
 		cmp	si, 1Eh
 		jl	loc_1AEFB
-		push	large 200020h
+		push	200020h
 		push	170h
 		push	word_36C26
 		call	sub_10433
 		add	sp, 8
-		push	large 200020h
+		push	200020h
 		push	170h
 		push	di
 		call	sub_10433
@@ -31988,7 +31988,7 @@ loc_1B028:
 		call	sub_193BA
 
 loc_1B02D:
-		push	large 0FFFE0000h
+		push	0FFFE0000h
 
 loc_1B033:
 		call	sub_CBBE

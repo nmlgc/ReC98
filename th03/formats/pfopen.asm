@@ -91,7 +91,7 @@ endif
 
 	; parファイルをオープン
 if GAME eq 5
-	push	large dword ptr [BP+@@parfile]
+	pushd	dword ptr [BP+@@parfile]
 else
 	push	word ptr [BP+@@parfile+2]
 	push	word ptr [BP+@@parfile]
@@ -115,7 +115,7 @@ if GAME eq 5
 	cmp	byte ptr fs:[di+pfHeader.hd_type], 0	; End of list?
 	jz	PFOPEN_close
 	lea	bx, [di+pfHeader.hd_fnm]
-	push	large dword ptr [bp+@@file]
+	pushd	dword ptr [bp+@@file]
 else
 	mov	al, byte ptr fs:[di+pfHeader.hd_type]
 	mov	bx, PFENOTFOUND	; End of list?

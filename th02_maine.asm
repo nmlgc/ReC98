@@ -205,7 +205,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  4
 
 		enter	2, 0
-		push	large [bp+arg_0]
+		pushd	[bp+arg_0]
 		call	file_ropen
 		call	file_size
 		mov	[bp+var_2], ax
@@ -451,7 +451,7 @@ loc_9724:
 		mov	[bp+var_2], ax
 		mov	al, 0
 		out	dx, al
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
 		mov	ax, di
 		add	ax, ax
@@ -936,7 +936,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
 		mov	si, 14Ch
 		jmp	short loc_9AC5
@@ -1016,9 +1016,9 @@ loc_9B1B:
 		push	64h ; 'd'
 		lea	ax, [si+13Fh]
 		push	ax
-		push	large 12B0004h
+		push	12B0004h
 		call	egc_shift_left
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
 		lea	ax, [si+138h]
 		push	ax
@@ -1073,7 +1073,7 @@ sub_9B64	proc near
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -1086,7 +1086,7 @@ sub_9B64	proc near
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
 		mov	byte_F02B, 1
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_DE32
@@ -1105,7 +1105,7 @@ sub_9B64	proc near
 ; ---------------------------------------------------------------------------
 
 loc_9C15:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1126,7 +1126,7 @@ loc_9C2D:
 ; ---------------------------------------------------------------------------
 
 loc_9C3C:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1141,7 +1141,7 @@ loc_9C54:
 		cmp	si, 5
 		jle	short loc_9C3C
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_DF46
@@ -1153,7 +1153,7 @@ loc_9C54:
 ; ---------------------------------------------------------------------------
 
 loc_9C79:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1168,14 +1168,14 @@ loc_9C91:
 		cmp	si, 9
 		jle	short loc_9C79
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_DFFE
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E02C
@@ -1183,7 +1183,7 @@ loc_9C91:
 		call	sub_9643
 		push	14h
 		call	sub_B520
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E05A
@@ -1197,8 +1197,8 @@ loc_9CDE:
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
 		out	dx, al
-		push	large 0A00064h
-		push	large 1DF0129h
+		push	0A00064h
+		push	1DF0129h
 		push	2
 		call	egc_shift_down
 		push	3
@@ -1216,7 +1216,7 @@ loc_9CDE:
 loc_9D10:
 		cmp	si, 64h	; 'd'
 		jl	short loc_9CDE
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E088
@@ -1228,7 +1228,7 @@ loc_9D10:
 ; ---------------------------------------------------------------------------
 
 loc_9D30:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1248,7 +1248,7 @@ loc_9D48:
 ; ---------------------------------------------------------------------------
 
 loc_9D57:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1268,7 +1268,7 @@ loc_9D6F:
 ; ---------------------------------------------------------------------------
 
 loc_9D7E:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1283,21 +1283,21 @@ loc_9D96:
 		cmp	si, 14h
 		jle	short loc_9D7E
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E1F8
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E226
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E254
@@ -1314,7 +1314,7 @@ loc_9D96:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -1344,7 +1344,7 @@ loc_9E3B:
 		push	2
 		call	palette_black_in
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E282
@@ -1356,7 +1356,7 @@ loc_9E3B:
 ; ---------------------------------------------------------------------------
 
 loc_9E65:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1379,7 +1379,7 @@ loc_9E7D:
 ; ---------------------------------------------------------------------------
 
 loc_9E99:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1399,7 +1399,7 @@ loc_9EB1:
 ; ---------------------------------------------------------------------------
 
 loc_9EC0:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1416,21 +1416,21 @@ loc_9ED8:
 		push	1
 		call	sub_98B5
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E3C4
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E3F2
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E420
@@ -1441,21 +1441,21 @@ loc_9F22:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	loc_9FD3
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E44E
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E47C
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E4AA
@@ -1467,7 +1467,7 @@ loc_9F22:
 ; ---------------------------------------------------------------------------
 
 loc_9F76:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1482,21 +1482,21 @@ loc_9F8E:
 		cmp	si, 26h	; '&'
 		jle	short loc_9F76
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E534
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E562
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E590
@@ -1507,14 +1507,14 @@ loc_9FD3:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 2
 		jnz	loc_A097
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E5BE
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E5EC
@@ -1526,7 +1526,7 @@ loc_9FD3:
 ; ---------------------------------------------------------------------------
 
 loc_A011:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1546,7 +1546,7 @@ loc_A029:
 ; ---------------------------------------------------------------------------
 
 loc_A038:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1561,21 +1561,21 @@ loc_A050:
 		cmp	si, 2Fh	; '/'
 		jle	short loc_A038
 		mov	byte_F02A, 26h ; '&'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E6D2
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E700
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E72E
@@ -1624,7 +1624,7 @@ sub_A09D	proc near
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -1637,7 +1637,7 @@ sub_A09D	proc near
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
 		mov	byte_F02B, 1
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_DE32
@@ -1658,7 +1658,7 @@ sub_A09D	proc near
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -1672,7 +1672,7 @@ sub_A09D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A185:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1693,7 +1693,7 @@ loc_A19D:
 ; ---------------------------------------------------------------------------
 
 loc_A1AC:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1714,7 +1714,7 @@ loc_A1C4:
 ; ---------------------------------------------------------------------------
 
 loc_A1D3:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1735,7 +1735,7 @@ loc_A1EB:
 ; ---------------------------------------------------------------------------
 
 loc_A1FA:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1759,7 +1759,7 @@ loc_A212:
 ; ---------------------------------------------------------------------------
 
 loc_A22F:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1786,7 +1786,7 @@ loc_A247:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -1799,14 +1799,14 @@ loc_A247:
 		push	2
 		call	palette_black_in
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E112
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E140
@@ -1818,7 +1818,7 @@ loc_A247:
 ; ---------------------------------------------------------------------------
 
 loc_A2D2:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1840,7 +1840,7 @@ loc_A2EA:
 ; ---------------------------------------------------------------------------
 
 loc_A2FE:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1855,7 +1855,7 @@ loc_A316:
 		cmp	si, 15h
 		jle	short loc_A2FE
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E226
@@ -1867,7 +1867,7 @@ loc_A316:
 ; ---------------------------------------------------------------------------
 
 loc_A33B:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1882,14 +1882,14 @@ loc_A353:
 		cmp	si, 18h
 		jle	short loc_A33B
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E2B0
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E2DE
@@ -1900,7 +1900,7 @@ loc_A353:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 0
 		jnz	loc_A4EC
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E30C
@@ -1911,7 +1911,7 @@ loc_A353:
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E33A
@@ -1919,7 +1919,7 @@ loc_A353:
 		call	sub_9643
 		push	3
 		call	sub_98B5
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E368
@@ -1931,7 +1931,7 @@ loc_A353:
 ; ---------------------------------------------------------------------------
 
 loc_A3EB:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1951,7 +1951,7 @@ loc_A403:
 ; ---------------------------------------------------------------------------
 
 loc_A412:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1971,7 +1971,7 @@ loc_A42A:
 ; ---------------------------------------------------------------------------
 
 loc_A439:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -1986,7 +1986,7 @@ loc_A451:
 		cmp	si, 26h	; '&'
 		jle	short loc_A439
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E534
@@ -2005,7 +2005,7 @@ loc_A451:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2019,7 +2019,7 @@ loc_A451:
 ; ---------------------------------------------------------------------------
 
 loc_A4BB:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -2034,7 +2034,7 @@ loc_A4D3:
 		cmp	si, 2Eh	; '.'
 		jle	short loc_A4BB
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E6A4
@@ -2045,27 +2045,27 @@ loc_A4EC:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	loc_A6B6
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E6D2
 		push	6
 		call	sub_9643
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E700
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E72E
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E75C
@@ -2076,7 +2076,7 @@ loc_A4EC:
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E78A
@@ -2084,35 +2084,35 @@ loc_A4EC:
 		call	sub_9643
 		push	3
 		call	sub_98B5
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E7B8
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E7E6
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E814
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E842
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_E870
@@ -2124,7 +2124,7 @@ loc_A4EC:
 ; ---------------------------------------------------------------------------
 
 loc_A5E1:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -2144,7 +2144,7 @@ loc_A5F9:
 ; ---------------------------------------------------------------------------
 
 loc_A608:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -2171,7 +2171,7 @@ loc_A620:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2185,7 +2185,7 @@ loc_A620:
 ; ---------------------------------------------------------------------------
 
 loc_A674:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -2199,14 +2199,14 @@ loc_A674:
 loc_A68C:
 		cmp	si, 44h	; 'D'
 		jle	short loc_A674
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EA98
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EAC6
@@ -2214,21 +2214,21 @@ loc_A68C:
 ; ---------------------------------------------------------------------------
 
 loc_A6B6:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EAF4
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EB22
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EB50
@@ -2239,7 +2239,7 @@ loc_A6B6:
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EB7E
@@ -2247,63 +2247,63 @@ loc_A6B6:
 		call	sub_9643
 		push	3
 		call	sub_98B5
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EBAC
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EBDA
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EC08
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EC36
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EC64
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EC92
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_ECC0
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_ECEE
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_ED1C
@@ -2322,7 +2322,7 @@ loc_A6B6:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2336,7 +2336,7 @@ loc_A6B6:
 ; ---------------------------------------------------------------------------
 
 loc_A82A:
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
 		imul	ax, 2Eh
@@ -2350,14 +2350,14 @@ loc_A82A:
 loc_A842:
 		cmp	si, 5Bh	; '['
 		jle	short loc_A82A
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EEBA
 		push	6
 		call	sub_9643
 		mov	byte_F02B, 0
-		push	large 90014Ch
+		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset unk_EEE8
@@ -2418,10 +2418,10 @@ sub_A874	endp
 sub_A8A4	proc near
 		push	bp
 		mov	bp, sp
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
-		push	large 1A000C0h
-		push	large 27F010Fh
+		push	1A000C0h
+		push	27F010Fh
 		call	grcg_boxfill
 		call	grcg_off
 		pop	bp
@@ -2444,7 +2444,7 @@ arg_4		= word ptr  8
 		push	[bp+arg_4]
 		push	[bp+arg_0]
 		call	sub_C1C6
-		push	large 200064h
+		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
 		push	4
@@ -2475,7 +2475,7 @@ var_4		= byte ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_A90C:
-		push	large 1B000B8h
+		push	1B000B8h
 		push	si
 		call	sub_A874
 		push	4
@@ -2487,7 +2487,7 @@ loc_A920:
 		jl	short loc_A90C
 		push	ds
 		push	offset aVer1_00	; "ver 1.00"
-		push	large 2F00C0h
+		push	2F00C0h
 		push	210h
 		call	sub_B200
 		add	sp, 0Ah
@@ -2499,7 +2499,7 @@ loc_A920:
 ; ---------------------------------------------------------------------------
 
 loc_A947:
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
 		push	210h
 		lea	ax, [si+4]
@@ -2532,7 +2532,7 @@ loc_A992:
 		call	sub_B855
 		pop	cx
 		mov	byte_F02A, 2Fh ; '/'
-		push	large 1B000C0h
+		push	1B000C0h
 		push	14h
 		push	ds
 		push	offset aXxcvsB@b@vrvsv ; "ïïñÇò^Å@Å@ÇrÇsÇ`ÇeÇe"
@@ -2552,7 +2552,7 @@ loc_A992:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2567,7 +2567,7 @@ loc_A992:
 		call	sub_A8A4
 		push	ds
 		push	offset aGvgngogigab@b@ ; "ÉvÉçÉOÉâÉÄÅ@Å@Å@ÇyÇtÇm"
-		push	large 2F00C0h
+		push	2F00C0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
@@ -2585,7 +2585,7 @@ loc_A992:
 		push	15h
 		call	sub_B855
 		pop	cx
-		push	large 200064h
+		push	200064h
 		push	3
 		call	sub_9942
 		push	ds
@@ -2604,7 +2604,7 @@ loc_A992:
 		push	0
 		call	pi_slot_load
 		add	sp, 6
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2618,19 +2618,19 @@ loc_A992:
 		call	sub_A8A4
 		push	ds
 		push	offset aGogigtgbgbgnb@ ; "ÉOÉâÉtÉBÉbÉNÅ@ÇyÇtÇm"
-		push	large 2F00C0h
+		push	2F00C0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@b@b@b@b@b@ ; "Å@Å@Å@Å@Å@Å@Å@çÇïçì˙å¸"
-		push	large 2F00E0h
+		push	2F00E0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@b@b@bigibG ; "Å@Å@Å@Å@ÅiÉIÅ[ÉãÉNÉäÉAâÊÅj"
-		push	large 2F00F0h
+		push	2F00F0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
@@ -2656,7 +2656,7 @@ loc_A992:
 		push	21h ; '!'
 		call	sub_B855
 		pop	cx
-		push	large 200064h
+		push	200064h
 		push	2
 		call	sub_9942
 		push	0F8h
@@ -2669,7 +2669,7 @@ loc_A992:
 		call	sub_A8A4
 		push	ds
 		push	offset aVlvtvrvhvbb@b@ ; "ÇlÇtÇrÇhÇbÅ@Å@ÇyÇtÇm"
-		push	large 2F00C0h
+		push	2F00C0h
 		push	1B0h
 		call	sub_B200
 		add	sp, 0Ah
@@ -2689,7 +2689,7 @@ loc_A992:
 		push	0
 		call	pi_slot_load
 		add	sp, 6
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2724,31 +2724,31 @@ loc_A992:
 		call	sub_A8A4
 		push	ds
 		push	offset aVsvdvrvsb@vovk ; "ÇsÇdÇrÇsÅ@ÇoÇkÇ`ÇxÇdÇq"
-		push	large 2F00C0h
+		push	2F00C0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@b@b@vivivs ; "Å@Å@Å@Å@Ç©Ç®ÇÈ"
-		push	large 2F00E0h
+		push	2F00E0h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@b@b@vbbVv ;	"Å@Å@Å@Å@ÇbÅ|Çv"
-		push	large 2F00F8h
+		push	2F00F8h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@Orucb@mbiS ; "Å@Å@ éRìcÅ@åbàÍòY"
-		push	large 2F0110h
+		push	2F0110h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
 		push	ds
 		push	offset aVVSSxrivVVVV ; " ÇªÇÃëºëÂê®ÇÃÇ›Ç»Ç≥ÇÒ"
-		push	large 2F0128h
+		push	2F0128h
 		push	1A0h
 		call	sub_B200
 		add	sp, 0Ah
@@ -2787,7 +2787,7 @@ loc_A992:
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -2806,10 +2806,10 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 600018h
+		push	600018h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 150060h
+		push	150060h
 		push	18h
 		call	sub_97F1
 		add	sp, 6
@@ -2823,13 +2823,13 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 800040h
+		push	800040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 0C00080h
-		push	large [dword_FB0C]
+		push	0C00080h
+		pushd	[dword_FB0C]
 		call	sub_95CB
-		push	large 100080h
+		push	100080h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -2843,17 +2843,17 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 0A00040h
+		push	0A00040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 10000A0h
+		push	10000A0h
 		les	bx, dword_FB02
 		mov	ax, es:[bx+12h]
 		add	ax, 0A0h
 		push	ax
 		push	0Fh
 		call	graph_gaiji_putc
-		push	large 1000A0h
+		push	1000A0h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -2867,10 +2867,10 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 0C00040h
+		push	0C00040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 0D000C0h
+		push	0D000C0h
 		push	10h
 		push	ds
 		mov	al, byte_D722
@@ -2880,7 +2880,7 @@ loc_A992:
 		push	ax
 		push	0Fh
 		call	graph_gaiji_puts
-		push	large 1000C0h
+		push	1000C0h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -2894,10 +2894,10 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 0E00040h
+		push	0E00040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 10000E0h
+		push	10000E0h
 		les	bx, dword_FB02
 		mov	al, es:[bx+1Ah]
 		mov	ah, 0
@@ -2905,7 +2905,7 @@ loc_A992:
 		push	ax
 		push	0Fh
 		call	graph_gaiji_putc
-		push	large 1000E0h
+		push	1000E0h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -2919,10 +2919,10 @@ loc_A992:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 1000040h
+		push	1000040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 1000100h
+		push	1000100h
 		les	bx, dword_FB02
 		mov	al, es:[bx+19h]
 		mov	ah, 0
@@ -2930,7 +2930,7 @@ loc_A992:
 		push	ax
 		push	0Fh
 		call	graph_gaiji_putc
-		push	large 100100h
+		push	100100h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -2958,7 +2958,7 @@ loc_AEB2:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 1200040h
+		push	1200040h
 		call	sub_B200
 		add	sp, 0Ah
 		push	di
@@ -2966,7 +2966,7 @@ loc_AEB2:
 		lea	ax, [bp+var_4]
 		push	ax
 		call	sub_9846
-		push	large 0C00120h
+		push	0C00120h
 		push	10h
 		push	ss
 		lea	ax, [bp+var_4]
@@ -3061,16 +3061,16 @@ loc_AF56:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 12000F0h
+		push	12000F0h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 60120h
+		push	60120h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
 		push	78h ; 'x'
 		call	sub_B520
-		push	large 180120h
+		push	180120h
 		push	0C0h
 		call	sub_97F1
 		add	sp, 6
@@ -3084,10 +3084,10 @@ loc_AF56:
 		mov	al, byte_F02A
 		cbw
 		push	ax
-		push	large 1600040h
+		push	1600040h
 		call	sub_B200
 		add	sp, 0Ah
-		push	large 120160h
+		push	120160h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
@@ -3124,7 +3124,7 @@ sub_AFE7	proc far
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -3141,7 +3141,7 @@ sub_AFE7	proc far
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -3176,7 +3176,7 @@ sub_B07F	proc far
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -3193,7 +3193,7 @@ sub_B07F	proc far
 		push	0
 		call	sub_B790
 		pop	cx
-		push	large 0
+		pushd	0
 		push	0
 		call	sub_B7B3
 		add	sp, 6
@@ -3298,7 +3298,7 @@ loc_B1C6:
 		call	far ptr	palette_show
 		call	gaiji_restore
 		call	sub_B616
-		push	large 0
+		pushd	0
 		push	ds
 		push	offset path	; "op"
 		push	ds
@@ -4150,7 +4150,7 @@ arg_4		= word ptr  0Ah
 loc_B7D9:
 		push	[bp+arg_0]
 		push	si
-		push	large [bp+var_4]
+		pushd	[bp+var_4]
 		mov	bx, di
 		imul	bx, 48h
 		push	word ptr [bx+294Eh]
@@ -4282,7 +4282,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset aHuuma_cfg ; "huuma.cfg"
 		call	file_ropen
-		push	large 5
+		pushd	5
 		push	0
 		call	file_seek
 		push	ss
@@ -4398,7 +4398,7 @@ sub_B967	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	large [HUUHI_DAT]
+		pushd	[HUUHI_DAT]
 		call	file_ropen
 		mov	al, byte_D722
 		cbw
@@ -4506,22 +4506,22 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, 0E1h
-		push	large 140002h
+		push	140002h
 		push	ds
 		push	offset gHI_SCORE
 		push	81h
 		call	gaiji_putsa
-		push	large 0C0004h
+		push	0C0004h
 		push	ds
 		push	offset gNAME
 		push	81h
 		call	gaiji_putsa
-		push	large 1C0004h
+		push	1C0004h
 		push	ds
 		push	offset gPOINT
 		push	81h
 		call	gaiji_putsa
-		push	large 2A0004h
+		push	2A0004h
 		push	ds
 		push	offset gST
 		push	81h
@@ -4562,7 +4562,7 @@ loc_BAAE:
 loc_BAB5:
 		cmp	si, 3
 		jl	short loc_BA80
-		push	large 0A0012h
+		push	0A0012h
 		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
@@ -4599,7 +4599,7 @@ loc_BADF:
 		push	ax
 		mov	bx, si
 		shl	bx, 2
-		push	large dword ptr	[bx+2B98h]
+		pushd	dword ptr [bx+2B98h]
 		push	di
 		call	sub_B9B3
 		cmp	byte ptr [si+2C0Bh], 7Fh
@@ -4654,11 +4654,11 @@ loc_BB47:
 ; ---------------------------------------------------------------------------
 
 loc_BB59:
-		push	large 4000Fh
+		push	4000Fh
 		push	0A1h ; '°'
 		push	di
 		call	gaiji_putca
-		push	large 6000Fh
+		push	6000Fh
 		push	0A0h
 
 loc_BB71:
@@ -4804,7 +4804,7 @@ loc_BC4F:
 loc_BC65:
 		cmp	si, 0B2h ; '≤'
 		jl	short loc_BC4F
-		push	large [HUUHI_DAT]
+		pushd	[HUUHI_DAT]
 		call	file_append
 		mov	al, byte_D722
 		cbw
@@ -4841,7 +4841,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		xor	si, si
-		push	large [HUUHI_DAT]
+		pushd	[HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BCBA
@@ -5190,7 +5190,7 @@ sub_BC9E	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		push	large [HUUHI_DAT]
+		pushd	[HUUHI_DAT]
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_BFCE
@@ -5516,17 +5516,17 @@ loc_C1F2:
 loc_C1F9:
 		cmp	si, 5
 		jl	short loc_C1F2
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
-		push	large 0
-		push	large 180018Fh
+		pushd	0
+		push	180018Fh
 		call	grcg_boxfill
 		xor	si, si
 		jmp	loc_C2AE
 ; ---------------------------------------------------------------------------
 
 loc_C21C:
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
 		push	[bp+var_A]
 		push	[bp+var_10]
@@ -5535,7 +5535,7 @@ loc_C21C:
 		mov	byte ptr [bp+var_10], al
 		mov	ax, [bp+var_8]
 		mov	[bp+var_A], ax
-		push	large 0C00004h
+		push	0C00004h
 		call	grcg_setcolor
 		mov	di, 1
 		jmp	short loc_C27E
@@ -5567,7 +5567,7 @@ loc_C24C:
 loc_C27E:
 		cmp	di, 4
 		jl	short loc_C24C
-		push	large 0C0000Fh
+		push	0C0000Fh
 		call	grcg_setcolor
 		cmp	si, 10h
 		jge	short loc_C29D
@@ -5586,24 +5586,24 @@ loc_C29D:
 loc_C2AE:
 		cmp	si, 14h
 		jl	loc_C21C
-		push	large 0C00000h
+		push	0C00000h
 		call	grcg_setcolor
-		push	large 0
-		push	large 180018Fh
+		pushd	0
+		push	180018Fh
 		call	grcg_boxfill
-		push	large 0C0000Fh
+		push	0C0000Fh
 		call	grcg_setcolor
-		push	large 1640060h
-		push	large 1640130h
+		push	1640060h
+		push	1640130h
 		call	grcg_line
-		push	large 1640130h
-		push	large 1C0130h
+		push	1640130h
+		push	1C0130h
 		call	grcg_line
-		push	large 1C0130h
-		push	large 1C0060h
+		push	1C0130h
+		push	1C0060h
 		call	grcg_line
-		push	large 1C0060h
-		push	large 1640060h
+		push	1C0060h
+		push	1640060h
 		call	grcg_line
 		call	grcg_off
 		mov	PaletteTone, 0C8h	; '»'
