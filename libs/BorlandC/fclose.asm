@@ -39,8 +39,8 @@ _fclose		proc
 		les	bx, [bp+@@fp]
 		test	byte ptr es:[bx+FILE.flags], 4
 		jz	short @@close?
-		push	word ptr es:[bx+FILE._buffer+2]
-		push	word ptr es:[bx+FILE._buffer]
+		push	word ptr es:[bx+FILE.buffer+2]
+		push	word ptr es:[bx+FILE.buffer]
 		nopcall	_farfree
 		pop	cx
 		pop	cx

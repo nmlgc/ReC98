@@ -49,12 +49,12 @@ endif
 		jnz	short @@ret
 		LES_	bx, [bp+@@fp]
 if LDATA
-		mov	dx, word ptr ES_[bx+FILE._curp+2]
-		mov	ax, word ptr ES_[bx+FILE._curp]
+		mov	dx, word ptr ES_[bx+FILE.curp+2]
+		mov	ax, word ptr ES_[bx+FILE.curp]
 		mov	word ptr [bp+@@P+2], dx
 		mov	word ptr [bp+@@P], ax
 else
-		mov	cx, [bx+FILE._curp]
+		mov	cx, [bx+FILE.curp]
 endif
 		cmp	ES_[bx+FILE.level], 0
 		jge	short @@readLoop
@@ -131,9 +131,7 @@ if LDATA
 endif
 		push	word ptr [bp+@@fp]
 		nopcall	_fflush
-if LDATA
-		pop	cx
-endif
+		popCX_
 		pop	cx
 		or	ax, ax
 		jz	short @@fromCur?
@@ -160,13 +158,13 @@ endif
 		and	ES_[bx+FILE.flags], 0FE5Fh
 		mov	ES_[bx+FILE.level], 0
 if LDATA
-		mov	dx, word ptr ES_[bx+FILE._buffer+2]
+		mov	dx, word ptr ES_[bx+FILE.buffer+2]
 endif
-		mov	ax, word ptr ES_[bx+FILE._buffer]
+		mov	ax, word ptr ES_[bx+FILE.buffer]
 if LDATA
-		mov	word ptr ES_[bx+FILE._curp+2], dx
+		mov	word ptr ES_[bx+FILE.curp+2], dx
 endif
-		mov	word ptr ES_[bx+FILE._curp], ax
+		mov	word ptr ES_[bx+FILE.curp], ax
 		push	[bp+@@whence]
 		push	word ptr [bp+@@ofs+2]
 		push	word ptr [bp+@@ofs]

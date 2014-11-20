@@ -61,13 +61,11 @@ endif
 		test	byte ptr ES_[bx+FILE.flags], 4
 		jz	short @@resetBuffer
 if LDATA
-		push	word ptr ES_[bx+FILE._buffer+2]
+		push	word ptr ES_[bx+FILE.buffer+2]
 endif
-		push	word ptr ES_[bx+FILE._buffer]
+		push	word ptr ES_[bx+FILE.buffer]
 		nopcall	_free
-if LDATA
-		pop	cx
-endif
+		popCX_
 		pop	cx
 
 @@resetBuffer:
@@ -80,20 +78,19 @@ endif
 		mov	ax, word ptr [bp+@@fp]
 		add	ax, FILE.hold
 if LDATA
-		mov	word ptr ES_[bx+FILE._buffer+2], dx
-		mov	word ptr ES_[bx+FILE._buffer], ax
-		mov	word ptr ES_[bx+FILE._curp+2], dx
+		mov	word ptr ES_[bx+FILE.buffer+2], dx
+		mov	word ptr ES_[bx+FILE.buffer], ax
+		mov	word ptr ES_[bx+FILE.curp+2], dx
 else
-		mov	word ptr ES_[bx+FILE._buffer], ax
+		mov	word ptr ES_[bx+FILE.buffer], ax
 endif
-		mov	word ptr ES_[bx+FILE._curp], ax
+		mov	word ptr ES_[bx+FILE.curp], ax
 		cmp	[bp+@@type], 2
 		jz	short @@ret0
 		cmp	[bp+@@size], 0
 		jbe	short @@ret0
-if LDATA		
-		mov	word ptr _exitbuf+2, seg __xfflush
-		mov	word ptr _exitbuf, offset __xfflush
+if LDATA
+		setfarfp	_exitbuf, __xfflush
 		mov	ax, word ptr [bp+@@buf]
 		or	ax, word ptr [bp+@@buf+2]
 else
@@ -126,14 +123,14 @@ endif
 if LDATA
 		mov	dx, word ptr [bp+@@buf+2]
 		mov	ax, word ptr [bp+@@buf]
-		mov	word ptr ES_[bx+FILE._curp+2], dx
-		mov	word ptr ES_[bx+FILE._curp], ax
-		mov	word ptr ES_[bx+FILE._buffer+2], dx
-		mov	word ptr ES_[bx+FILE._buffer], ax
+		mov	word ptr ES_[bx+FILE.curp+2], dx
+		mov	word ptr ES_[bx+FILE.curp], ax
+		mov	word ptr ES_[bx+FILE.buffer+2], dx
+		mov	word ptr ES_[bx+FILE.buffer], ax
 else
 		mov	ax, word ptr [bp+@@buf]
-		mov	word ptr ES_[bx+FILE._curp], ax
-		mov	word ptr ES_[bx+FILE._buffer], ax
+		mov	word ptr ES_[bx+FILE.curp], ax
+		mov	word ptr ES_[bx+FILE.buffer], ax
 endif
 		mov	ax, [bp+@@size]
 		mov	ES_[bx+FILE._bsize], ax

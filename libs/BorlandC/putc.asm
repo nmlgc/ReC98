@@ -39,9 +39,9 @@ _fputc		proc
 		cmp	es:[bx+FILE.level], -1
 		jge	short @@checkFlags
 		inc	es:[bx+FILE.level]
-		mov	dx, word ptr es:[bx+FILE._curp+2]
-		mov	si, word ptr es:[bx+FILE._curp]
-		inc	word ptr es:[bx+FILE._curp]
+		mov	dx, word ptr es:[bx+FILE.curp+2]
+		mov	si, word ptr es:[bx+FILE.curp]
+		inc	word ptr es:[bx+FILE.curp]
 		mov	es, dx
 		mov	es:[si], al
 		mov	es, word ptr [bp+@@fp+2]
@@ -102,9 +102,9 @@ _fputc		proc
 		mov	ax, es:[bx+FILE._bsize]
 		neg	ax
 		mov	es:[bx+FILE.level], ax
-		mov	dx, word ptr es:[bx+FILE._curp+2]
-		mov	si, word ptr es:[bx+FILE._curp]
-		inc	word ptr es:[bx+FILE._curp]
+		mov	dx, word ptr es:[bx+FILE.curp+2]
+		mov	si, word ptr es:[bx+FILE.curp]
+		inc	word ptr es:[bx+FILE.curp]
 		mov	al, fputc_c
 		mov	es, dx
 		mov	es:[si], al
@@ -359,8 +359,8 @@ __FPUTN		proc near
 		push	word ptr [bp+@@ptr+2]
 		push	word ptr [bp+@@ptr]
 		les	bx, [bp+@@fp]
-		push	word ptr es:[bx+FILE._curp+2]
-		push	word ptr es:[bx+FILE._curp]
+		push	word ptr es:[bx+FILE.curp+2]
+		push	word ptr es:[bx+FILE.curp]
 		nopcall	_memcpy
 		add	sp, 0Ah
 		les	bx, [bp+@@fp]
@@ -368,7 +368,7 @@ __FPUTN		proc near
 		add	ax, [bp+@@n]
 		mov	es:[bx+FILE.level], ax
 		mov	ax, [bp+@@n]
-		add	word ptr es:[bx+FILE._curp], ax
+		add	word ptr es:[bx+FILE.curp], ax
 		jmp	@@retLen
 
 @@binUnbuffered:
@@ -403,7 +403,8 @@ __FPUTN		proc near
 		add	sp, 8
 		cmp	ax, [bp+@@n]
 		jnz	short @@j2_ret0
-		jmp	@@retLen
+		; Hack (jmp	long @@retLen)
+		db	0e9h, 07fh, 000h
 
 @@j2_ret0:
 		jmp	short @@ret0
@@ -418,9 +419,9 @@ __FPUTN		proc near
 		les	bx, [bp+@@fp]
 		inc	word ptr es:[bx]
 		jge	short @@textBufferedPut
-		mov	dx, word ptr es:[bx+FILE._curp+2]
-		mov	si, word ptr es:[bx+FILE._curp]
-		inc	word ptr es:[bx+FILE._curp]
+		mov	dx, word ptr es:[bx+FILE.curp+2]
+		mov	si, word ptr es:[bx+FILE.curp]
+		inc	word ptr es:[bx+FILE.curp]
 		les	bx, [bp+@@ptr]
 		inc	word ptr [bp+@@ptr]
 		mov	al, es:[bx]

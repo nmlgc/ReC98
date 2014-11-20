@@ -47,8 +47,13 @@ flags		dw ?	; File status flags
 fd		db ?	; File descriptor
 hold		db ?	; Ungetc char if no buffer
 _bsize		dw ?	; Buffer size. Yes, calling it just "bsize" crashes TASM.
-dPtr@		buffer, ?	; Data transfer buffer
-dPtr@		curp, ?	; Current active pointer
+if LDATA
+	buffer	dd ?	; Data transfer buffer
+	curp	dd ?	; Current active pointer
+else
+	buffer	dw ?	; Data transfer buffer
+	curp	dw ?	; Current active pointer
+endif
 istemp		dw ?	; Temporary file indicator
 token		dw ?	 ; Used for validity checking
 FILE	ends
