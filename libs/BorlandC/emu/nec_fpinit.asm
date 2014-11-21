@@ -287,7 +287,7 @@ emu1st		proc near
 		pop	ds
 emu1st		endp
 
-		emul
+		option emulator
 		public ___fpreset
 ___fpreset	proc near
 @@temp1		= dword	ptr -8

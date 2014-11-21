@@ -8,7 +8,7 @@ __control87	proc
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
-		emul
+		option	emulator
 		fstcw	[bp+@@Control]
 		mov	ax, [bp+@@new]
 		mov	bx, [bp+@@mask]

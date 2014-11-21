@@ -26,7 +26,10 @@ Hex4		proc near
 		mov	al, dl
 
 Byte2Ascii:
-		aam	10h
+		; Hack (aam	10h)
+		; AAM trick to separate nibbles in AL. TASM can actually
+		; assemble "aam 10h" correctly, but MASM/JWasm can't.
+		db	0d4h,10h
 		xchg	ah, al
 		call	Nibble2Ascii
 		xchg	ah, al

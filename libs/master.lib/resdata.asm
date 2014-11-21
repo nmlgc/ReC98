@@ -77,7 +77,7 @@ RSDEXIST_FIND:
 		mov	CX,[BP+@@id_len]
 		_lds	SI,[BP+@@id_str]
 		mov	DI,10h ; MCBの次
-		rep cmpsb
+		repe cmpsb
 		je	short RSDEXIST_FOUND
 	RSDEXIST_SKIP:
 	mov	AX,ES:[_mcb_size]

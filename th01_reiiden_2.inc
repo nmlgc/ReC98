@@ -17813,7 +17813,8 @@ loc_248BE:
 
 loc_24938:
 		cmp	si, 0A0h ; '?'
-		jl	short loc_248BE
+		; Hack (jl	short loc_248BE) (1 byte too much for JWasm)
+		db	07ch, 080h
 		jmp	loc_24A9D
 ; ---------------------------------------------------------------------------
 
@@ -17874,7 +17875,8 @@ loc_2495E:
 
 loc_249D8:
 		cmp	si, 0A0h ; '?'
-		jl	short loc_2495E
+		; Hack (jl	short loc_2495E) (1 byte too much for JWasm)
+		db	07ch, 080h
 		add	word_3A6C4, 10h
 		xor	di, di
 		mov	si, 20h	; ' '
@@ -40749,12 +40751,12 @@ E87_PROG		segment	para public 'CODE' use16
 		; Hack. Let's better use bytes for accuracy here.
 tbyte_31200	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0feh, 03fh
 tbyte_3120A	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0ffh, 03fh
-flt_31214	dd -5.1110893e38
-flt_31218	dd -5.1117124e38
+flt_31214	dd 0FFC04200r
+flt_31218	dd 0FFC04800r
 		db 0, 4Ah, 0C0h, 0FFh
 flt_31220	dd 0.5
 tbyte_31224	db 085h, 064h, 0deh, 0f9h, 033h, 0f3h, 004h, 0b5h, 0ffh, 03fh
-flt_3122E	dd 3.4028237e38
+flt_3122E	dd 7F800000R
 ; ---------------------------------------------------------------------------
 		mov	cl, 0
 		jmp	short loc_3123C

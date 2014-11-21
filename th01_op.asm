@@ -6383,7 +6383,7 @@ segp		= SREGS	ptr -8
 		add	sp, 0Ch
 		mov	bx, word ptr [bp+inregs+2]
 		sub	bx, 2
-		mov	es, [bp+segp._es]
+		mov	es, [bp+segp+SREGS._es]
 		mov	si, es:[bx]
 
 loc_D12D:
@@ -9430,12 +9430,12 @@ E87_PROG		segment	para public 'CODE' use16
 		; Hack. Let's better use bytes for accuracy here.
 tbyte_EAF0	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0feh, 03fh
 tbyte_EAFA	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0ffh, 03fh
-flt_EB04	dd -5.1110893e38
-flt_EB08	dd -5.1117124e38
+flt_EB04	dd 0FFC04200r
+flt_EB08	dd 0FFC04800r
 		db 0, 4Ah, 0C0h, 0FFh
 flt_EB10	dd 0.5
 tbyte_EB14	db 085h, 064h, 0deh, 0f9h, 033h, 0f3h, 004h, 0b5h, 0ffh, 03fh
-flt_EB1E	dd 3.4028237e38
+flt_EB1E	dd 7F800000R
 ; ---------------------------------------------------------------------------
 		mov	cl, 0
 		jmp	short loc_EB2C

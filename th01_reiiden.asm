@@ -10163,7 +10163,7 @@ segp		= SREGS	ptr -8
 		add	sp, 0Ch
 		mov	bx, word ptr [bp+inregs+2]
 		sub	bx, 2
-		mov	es, [bp+segp._es]
+		mov	es, [bp+segp+SREGS._es]
 		mov	si, es:[bx]
 
 loc_10228:

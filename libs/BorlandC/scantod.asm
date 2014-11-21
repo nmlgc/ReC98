@@ -27,7 +27,7 @@ ExtSym@         DGROUP@, WORD, __PASCAL__
 ELSE
                 jmp     [__ScanTodVector]
 ENDIF
-                endp
+_scantod        endp
 
 
                 public _scanrslt
@@ -39,7 +39,7 @@ ExtSym@         DGROUP@, WORD, __PASCAL__
 ELSE
                 jmp     [__ScanTodVector + 2]
 ENDIF
-                endp
+_scanrslt       endp
 
                 public _scanpop
 _scanpop       proc near
@@ -50,4 +50,4 @@ ExtSym@         DGROUP@, WORD, __PASCAL__
 ELSE
                 jmp     [__ScanTodVector + 4]
 ENDIF
-                endp
+_scanpop        endp

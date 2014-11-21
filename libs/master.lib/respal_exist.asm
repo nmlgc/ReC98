@@ -66,7 +66,7 @@ RSPEXIST_FIND:
 			mov	DI,10h ; MCBの次
 			mov	CX,IDLEN
 			mov	SI,offset ResPalID
-			rep cmpsb
+			repe cmpsb
 			je	short RSPEXIST_FOUND
 		RSPEXIST_SKIP:
 		mov	AX,ES:[_mcb_size]

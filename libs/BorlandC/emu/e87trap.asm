@@ -1,7 +1,7 @@
 E87_PROG		segment	para public 'CODE' use16
 		assume cs:E87_PROG
 		assume es:nothing, ss:nothing, ds:_STACK, fs:nothing, gs:nothing
-		noemul
+		option noemulator
 
 e87trap_10070:
 		pop	di

@@ -126,21 +126,21 @@ dsseg	dw	?
 
 	public	PiLoad,ToneSet
 PiLoad	proc	near
-@@opt	=	word ptr [bp+4]
-@@ton	=	word ptr [bp+6]
-@@y	=	word ptr [bp+8]
-@@x	=	word ptr [bp+10]
-@@bufsiz	=	word ptr [bp+12]
-@@buf	=	dword ptr [bp+14]
-@@nam	=	dword ptr [bp+18]
+@@opt	=	word ptr 4
+@@ton	=	word ptr 6
+@@y	=	word ptr 8
+@@x	=	word ptr 10
+@@bufsiz	=	word ptr 12
+@@buf	=	dword ptr 14
+@@nam	=	dword ptr 18
 	push	bp
 	mov	bp,sp
 	push	ds
-	lds	dx,@@nam
-	mov	ax,word ptr @@buf
+	lds	dx,[bp+@@nam]
+	mov	ax,word ptr [bp+@@buf]
 	add	ax,15
 	shr	ax,4
-	add	ax,word ptr @@buf+2
+	add	ax,word ptr [bp+@@buf+2]
 	mov	es,ax
 	cld
 	mov	si,dx
@@ -154,14 +154,14 @@ PiLoad	proc	near
 	stosb
 	push	es
 	pop	ds
-	mov	si,@@bufsiz
-	mov	ax,word ptr @@buf
+	mov	si,[bp+@@bufsiz]
+	mov	ax,word ptr [bp+@@buf]
 	and	ax,15
 	sub	si,ax
-	mov	bx,@@x
-	mov	cx,@@y
-	mov	di,@@ton
-	mov	ax,@@opt
+	mov	bx,[bp+@@x]
+	mov	cx,[bp+@@y]
+	mov	di,[bp+@@ton]
+	mov	ax,[bp+@@opt]
 	call	piload0
 	pop	ds
 	pop	bp

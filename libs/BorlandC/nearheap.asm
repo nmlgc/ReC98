@@ -110,7 +110,7 @@ FreeLastBlock   PROC NEAR
                 cmp     [__first],bx            ;freeing the ONLY block?
                 je      @@KillHeap
                 mov     si,[bx.prev_real]       ;si = next-to-last block
-                test    BYTE PTR [si.bsize],01h
+                test    BYTE PTR [si.NEARHEAP_Header.bsize],01h
                 jz      @@PreviousBlockIsFree
 @@PreviousBlockIsUsed:
                 mov     __last,si
@@ -147,18 +147,18 @@ FreeLastBlock   ENDP
 ; Returns:              void
 ;-----------------------------------------------------------------------------
 FreeInnerBlock  PROC NEAR
-                dec     WORD PTR [bx.bsize]     ;mark the block as free
+                dec     WORD PTR [bx.NEARHEAP_Header.bsize]
                 cmp     bx,[__first]            ;first block?
                 je      @@PreviousBlockIsUsed
                 mov     si,[bx.prev_real]       ;get the previous block (si)
-                mov     ax,[si.bsize]           ;is the previous block free?
+                mov     ax,[si.NEARHEAP_Header.bsize]
                 test    al,01h
                 jnz     @@PreviousBlockIsUsed
 ; join this block to the previous block
 @@PreviousBlockIsFree:
-                add     ax,[bx.bsize]           ;add the size of this block to
-                mov     [si.bsize],ax           ;the size of the previous block
-                mov     di,[bx.bsize]           ;get the next block (di)
+                add     ax,[bx.NEARHEAP_Header.bsize]
+                mov     [si.NEARHEAP_Header.bsize],ax
+                mov     di,[bx.NEARHEAP_Header.bsize]
                 add     di,bx
                 mov     [di.prev_real],si       ;adjust the prev_real pointer
                 mov     bx,si                   ;set up the current block
@@ -166,10 +166,10 @@ FreeInnerBlock  PROC NEAR
 @@PreviousBlockIsUsed:
                 call    InsertFreeBlock         ;add it to the free queue
 @@CheckNextBlock:
-                mov     di,[bx.bsize]           ;get the next block (di)
+                mov     di,[bx.NEARHEAP_Header.bsize]
                 add     di,bx
-                mov     ax,[di.bsize]           ;is the next block free?
-                test    al,01h
+                mov     ax,[di.NEARHEAP_Header.bsize]
+                test    al,01h                  ;is the next block free?
                 jz      JoinFreeBlocks          ;join this block to the next
 @@AllDone:
                 ret                             ;all done
@@ -187,7 +187,7 @@ FreeInnerBlock  ENDP
 ; This routine falls through to PullFreeBlock
 ;-----------------------------------------------------------------------------
 JoinFreeBlocks  PROC NEAR
-                add     [bx.bsize],ax           ;adjust the size of the lower block
+                add     [bx.NEARHEAP_Header.bsize],ax
                 mov     si,di                   ;si = the next block after di
                 add     si,ax
                 mov     [si.prev_real],bx       ;adjust the link
@@ -276,8 +276,8 @@ _malloc         PROC
                 jz      @@AddToHeap
                 mov     dx,bx                   ;dx = rover pointer
 @@SearchHeap:
-                cmp     [bx.bsize],ax           ;big enough to use at all?
-                jae     @@AllocateBlock
+                cmp     [bx.NEARHEAP_Header.bsize],ax
+                jae     @@AllocateBlock         ;big enough to use at all?
 @@TooSmall:
                 mov     bx,[bx.next_free]       ;move to the next free block
                 cmp     bx,dx                   ;at the end of the list?
@@ -297,10 +297,10 @@ _malloc         PROC
 @@AllocateBlock:
                 mov     si,ax                   ;si = smallest divisible block size
                 add     si,FreeHeaderSize
-                cmp     [bx.bsize],si           ;big enough to break up?
-                jae     @@DivideFreeBlock
+                cmp     [bx.NEARHEAP_Header.bsize],si
+                jae     @@DivideFreeBlock       ;big enough to break up?
                 call    PullFreeBlock           ;remove it from the free-block queue
-                inc     [bx.bsize]              ;mark it as allocated
+                inc     [bx.NEARHEAP_Header.bsize]
                 mov     ax,bx
                 add     ax,UsedHeaderSize
 @@AllDone:
@@ -352,7 +352,7 @@ CreateHeap      PROC NEAR
                 mov     __last,bx
                 pop     ax                      ;retrieve the size
                 inc     ax                      ;mark it as allocated
-                mov     [bx.bsize],ax
+                mov     [bx.NEARHEAP_Header.bsize],ax
                 add     bx,UsedHeaderSize
                 mov     ax,bx
                 ret
@@ -387,7 +387,7 @@ ExtendHeap      PROC NEAR
                 mov     __last,bx               ;update last-block pointer
                 pop     ax                      ;retrieve the size
                 inc     ax                      ;mark it as allocated
-                mov     [bx.bsize],ax
+                mov     [bx.NEARHEAP_Header.bsize],ax
                 add     bx,UsedHeaderSize
                 mov     ax,bx
                 ret
@@ -406,13 +406,13 @@ ExtendHeap      ENDP
 ;                       from the heap (ax)
 ;-----------------------------------------------------------------------------
 AllocatePartialBlock    PROC NEAR
-                sub     [bx.bsize],ax           ;make room!
+                sub     [bx.NEARHEAP_Header.bsize],ax           ;make room!
                 mov     si,bx                   ;si = new block address
-                add     si,[bx.bsize]
+                add     si,[bx.NEARHEAP_Header.bsize]
                 mov     di,si                   ;di = the block after the new block
                 add     di,ax
                 inc     ax
-                mov     [si.bsize],ax
+                mov     [si.NEARHEAP_Header.bsize],ax
                 mov     [si.prev_real],bx
                 mov     [di.prev_real],si
                 add     si,UsedHeaderSize
@@ -449,7 +449,7 @@ ExpandBlock     PROC NEAR
                 cld
                 mov     di,ax                   ;di = data area of new block
                 mov     si,[bp-2]               ;si = old block
-                mov     cx,[si.bsize]           ;cx = old block size
+                mov     cx,[si.NEARHEAP_Header.bsize]
                 add     si,UsedHeaderSize       ;si = data area of old block
                 push    si                      ;save for call to _free
                 sub     cx,UsedHeaderSize+1     ;cx = number of bytes in old data area
@@ -486,8 +486,8 @@ ShrinkBlock     PROC NEAR
                 cmp     bx,[__last]             ;last block in the heap?
                 jne     @@InnerBlock
 @@LastBlock:
-                mov     [bx.bsize],ax
-                inc     [bx.bsize]
+                mov     [bx.NEARHEAP_Header.bsize],ax
+                inc     [bx.NEARHEAP_Header.bsize]
                 add     ax,bx
                 push    bx                      ;save the old block
                 push    ax
@@ -500,12 +500,12 @@ ShrinkBlock     PROC NEAR
                 add     di,ax                   ;di = new (free) block
                 mov     [di.prev_real],bx
                 sub     dx,ax                   ;dx = size of new (free) block
-                sub     [bx.bsize],dx
+                sub     [bx.NEARHEAP_Header.bsize],dx
                 mov     si,di                   ;si = next block after the new one
                 add     si,dx
                 mov     [si.prev_real],di       ;adjust the link
                 inc     dx                      ;mark it as used
-                mov     [di.bsize],dx
+                mov     [di.NEARHEAP_Header.bsize],dx
                 mov     cx,bx                   ;save the old block
                 mov     bx,di
                 call    FreeInnerBlock
@@ -542,7 +542,7 @@ _realloc        PROC
 
                 sub     bx,UsedHeaderSize       ;make bx = start of block
 
-                mov     cx,[bx.bsize]           ;cx = size of block
+                mov     cx,[bx.NEARHEAP_Header.bsize]
                 dec     cx
                 mov     dx,ax
 
