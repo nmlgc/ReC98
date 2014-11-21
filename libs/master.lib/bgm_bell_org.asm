@@ -42,16 +42,16 @@
 
 func _BGM_BELL_ORG
 	test	Machine_State,10h
-	jnz	short @@PCAT
+	jnz	short B_B_ORG_PCAT
 
-@@PC98:
+; B_B_ORG_PC98:
 	xor	AX,AX
 	mov	ES,AX
 	test	byte ptr ES:[0501H],80h
 	mov	BX,TVAL8ORG/2
-	jnz	short @@CLOCK8MHZ
+	jnz	short B_B_ORG_CLOCK8MHZ
 	mov	BX,TVAL10ORG/2
-@@CLOCK8MHZ:
+B_B_ORG_CLOCK8MHZ:
 	;タイマカウント値設定
 	mov	DX,BEEP_CNT
 	mov	AL,BL
@@ -62,7 +62,7 @@ func _BGM_BELL_ORG
 	mov	AL,BEEP_OFF
 	out	BEEP_SW,AL		; 98
 	ret
-@@PCAT:
+B_B_ORG_PCAT:
 	;ビープOFF
 	in	AL,61h
 	and	AL,not 3

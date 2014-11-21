@@ -11,28 +11,28 @@ _FlushOutStreams proc near
 		mov	[bp+@@Ndx], FOPEN_MAX
 		mov	word ptr [bp+@@fp+2], ds
 		mov	word ptr [bp+@@fp], offset _streams
-		jmp	short @@loop
+		jmp	short flush_loop
 
-@@outstream?:
+flush_outstream?:
 		LES_	bx, [bp+@@fp]
 		mov	ax, ES_[bx+FILE.flags]
 		and	ax, _F_TERM or _F_OUT
 		cmp	ax, _F_TERM or _F_OUT
-		jnz	short @@next
+		jnz	short flush_next
 		push	word ptr [bp+@@fp+2]
 		push	bx
 		nopcall	_fflush
 		pop	cx
 		pop	cx
 
-@@next:
+flush_next:
 		add	word ptr [bp+@@fp], size FILE
 
-@@loop:
+flush_loop:
 		mov	ax, [bp+@@Ndx]
 		dec	[bp+@@Ndx]
 		or	ax, ax
-		jnz	short @@outstream?
+		jnz	short flush_outstream?
 		pop	di
 		pop	si
 		mov	sp, bp

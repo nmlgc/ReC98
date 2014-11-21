@@ -46,34 +46,35 @@ BGM_BELL:
 
 	;マスクON ならリターン
 	cmp	[SI].SGLB.pmask,ON
-	je	short @@EXIT
+	je	short B_PLAY_EXIT
 	;spval = (ulong)(note_dat[part2->note - 'A'] * 2);
 	mov	BX,[SI].SPART.note
 	shl	BX,1
 	mov	BX,note_dat[BX-('A'*2)]
 
 	cmp	[SI].SPART.oct,1
-	jne	short @@NOTOCT1
+	jne	short B_PLAY_NOTOCT1
 	shl	BX,1
-	jmp	short @@OCT1
-@@NOTOCT1:
+	jmp	short B_PLAY_OCT1
+B_PLAY_NOTOCT1:
 	;spval = (ulong)(note_dat[part2->note - 'A'] / octdat[part2->oct - 1]);
 	mov	CX,[SI].SPART.oct
 	dec	CX
 	dec	CX
 	shr	BX,CL
-@@OCT1:
+B_PLAY_OCT1:
 	test	Machine_State,10h	; PC/AT
-	jz	short @@PC98
-@@PCAT:	in	AL,61h	;ビープON
+	jz	short B_PLAY_PC98
+;@@PCAT:
+	in	AL,61h	;ビープON
 	or	AL,3
 	out	61h,AL			; AT
 	mov	AX,BX
 	mov	BX,TVALATORG/2
 	mov	CX,BEEP_CNT_AT
-	jmp	short @@DO_SCALE
+	jmp	short B_PLAY_DO_SCALE
 	EVEN
-@@PC98:
+B_PLAY_PC98:
 	;ビープON	(上にもってきたけど大丈夫かなあ)
 	mov	AL,BEEP_ON
 	out	BEEP_SW,AL		; 98
@@ -84,16 +85,16 @@ BGM_BELL:
 	xor	AX,AX
 	mov	ES,AX
 	test	byte ptr ES:[0501H],80h
-	jz	short @@CLOCK10MHZ
+	jz	short B_PLAY_CLOCK10MHZ
 	;spval = spval * 998UL / 1229UL;
 	mov	AX,BX
 	mov	BX,TVAL8ORG/2
-@@DO_SCALE:
+B_PLAY_DO_SCALE:
 	mul	BX
 	mov	BX,TVAL10ORG/2
 	div	BX
 	mov	BX,AX
-@@CLOCK10MHZ:
+B_PLAY_CLOCK10MHZ:
 	;タイマカウント値設定
 	mov	AL,BL
 	mov	DX,CX
@@ -103,7 +104,7 @@ BGM_BELL:
 	;ビープON
 ;	mov	AL,BEEP_ON
 ;	out	BEEP_SW,AL
-@@EXIT:
+B_PLAY_EXIT:
 	pop	SI
 	ret
 

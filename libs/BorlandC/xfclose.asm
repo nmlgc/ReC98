@@ -17,16 +17,14 @@ endif
 @@loop:
 		LES_	bx, [bp+@@fp]
 		test	byte ptr ES_[bx+FILE.flags], 3
-		jz	short @@next
+		jz	short xfclose_next
 		push	word ptr [bp+@@fp+2]
 		push	bx
 		nopcall	_fclose
-if LDATA
-		pop	cx
-endif
+		popCX_
 		pop	cx
 
-@@next:
+xfclose_next:
 		add	word ptr [bp+@@fp], size FILE
 		inc	[bp+@@i]
 

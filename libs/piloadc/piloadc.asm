@@ -6,6 +6,8 @@
 ;   (???), resulting in a "symbol already defined elsewhere" error
 ; * the "piloadc_" prefix on constants
 ; * the @@ prefix on function parameters
+; * unique label names to make up for JWasm's lack of support for truly block-
+;   scoped symbols
 ; * "rep segcs movsw" being spelled out to what it's actually supposed to mean
 ;   (movs word ptr es:[di], word ptr cs:[si])
 ; * the ID check being changed from 'iP' to 'NZ' (lol ZUN)
@@ -362,19 +364,19 @@ piload0:
 error:	ret
 pilop:
 	test	ds:piloadc_option,4
-	jz	@@lop2
-@@lop:
+	jz	pilop_lop2
+pilop_lop:
 	lodsb
 	cmp	al,1ah
-	jz	@@lop2
+	jz	pilop_lop2
 	mov	dl,al
 	mov	ah,2
 	int	21h
-	jmp	short	@@lop
-@@lop2:
+	jmp	short	pilop_lop
+pilop_lop2:
 	lodsb
 	or	al,al
-	jnz	@@lop2
+	jnz	pilop_lop2
 	lodsb
 	mov	bl,al	;palet flag
 	lodsw		;ドット比率
@@ -384,10 +386,10 @@ pilop:
 	mov	ax,-32
 	jnz	error
 	test	ds:piloadc_option,8
-	jz	@@skip
+	jz	pilop_skip
 	mov	ax,cx
 	call	gmode
-@@skip:
+pilop_skip:
 	add	si,4	;machine code skip
 	lodsw
 	xchg	ah,al	;dmy
@@ -431,13 +433,13 @@ code2:
 codee:
 	mov	si,di
 	cmp	ds:piloadc_x_pos,0
-	jge	@@jmp@
+	jge	codee_jmp@
 	mov	ds:piloadc_x_pos,cx
-@@jmp@:
+codee_jmp@:
 	cmp	ds:piloadc_y_pos,0
-	jge	@@jmp
+	jge	codee_jmp
 	mov	ds:piloadc_y_pos,dx
-@@jmp:
+codee_jmp:
 
 	mov	cx,ds:piloadc_x_pos
 	mov	ax,ds:piloadc_y_pos
@@ -486,11 +488,11 @@ codee:
 	jnz	nopalet
 	mov	cx,48
 	mov	di,piloadc_PaletteBuff
-@@lop1:
+codee_lop1:
 	lodsb
 	shr	al,4
 	stosb
-	loop	@@lop1
+	loop	codee_lop1
 	mov	bx,si
 	jmp	short	palend
 nopalet:
@@ -501,9 +503,9 @@ nopalet:
 	rep	movs word ptr es:[di], word ptr cs:[si]
 palend:
 	test	ds:piloadc_option,1
-	jz	@@skip
+	jz	palend_skip
 	call	palset
-@@skip:
+palend_skip:
 	call	maketbl
 	mov	dh,1
 	mov	di,piloadc_gbuff
@@ -637,10 +639,10 @@ lop0:
 
 bit01:
 	get1bit	e
-	jc	@@jmp
+	jc	bit01_jmp
 	lodsb
 	jmp	short color2
-@@jmp:
+bit01_jmp:
 	mov	ax,[si]
 	xchg	ah,al
 	mov	[si],ax
@@ -711,12 +713,12 @@ color2:
 
 @bit01:
 	get1bit	f
-	jc	@@jmp
+	jc	@bit01_jmp
 	mov	ah,[si]
 	mov	di,bp
 	cld
 	ret
-@@jmp:
+@bit01_jmp:
 	mov	cx,[si]
 	xchg	ch,cl
 	mov	[si],cx
@@ -803,7 +805,7 @@ fclose:
 ;	in	ax=ドット比率データ
 gmode:
 	cmp	ax,102h
-	jz	@@next
+	jz	gmode_next
 ;	or	ax,ax
 ;	mov	ax,-32
 ;	jnz	error
@@ -815,7 +817,7 @@ gmode:
 	mov	al,1
 	out	6ah,al
 	ret
-@@next:
+gmode_next:
 	mov	ch,080h
 	mov	ah,42h
 	int	18h
@@ -834,13 +836,13 @@ gtrans:
 	pusha
 	push	es
 	cmp	ds:piloadc_vadr,32000
-	jl	@@skip
+	jl	gtrans_skip
 	sub	ds:piloadc_vadr,32000
 	or	ds:piloadc_flg800,1
 	mov	al,1
 	out	0a6h,al
 ;	out	0a4h,al
-@@skip:
+gtrans_skip:
 
 disp:
 	mov	si,ds:piloadc_bufend
@@ -856,7 +858,7 @@ ylop:
 	mov	di,ds:piloadc_vadr
 	mov	ax,ds:piloadc_x_pos
 	and	ax,7
-	jz	@@skip
+	jz	ylop_skip
 	mov	cx,8
 	sub	cx,ax
 	push	cx
@@ -865,7 +867,7 @@ ylop:
 	not	al
 	xor	bx,bx
 	mov	dx,bx
-@@lop:
+ylop_lop:
 	lodsb
 	shl1	al
 	rcl1	bl
@@ -875,7 +877,7 @@ ylop:
 	rcl1	dl
 	shl1	al
 	rcl1	dh
-	loop	@@lop
+	loop	ylop_lop
 	mov	cx,0a800h
 	mov	es,cx
 
@@ -891,28 +893,28 @@ ylop:
 	out	7eh,al
 	mov	al,ah
 	test	ds:piloadc_option,40h
-	jz	@@skip0
+	jz	ylop_skip0
 	mov	ah,ds:piloadc_tcol
 	shr	ah,1
-	jnc	@@jmp1
+	jnc	ylop_jmp1
 	not	dh
-@@jmp1:
+ylop_jmp1:
 	shr	ah,1
-	jnc	@@jmp2
+	jnc	ylop_jmp2
 	not	dl
-@@jmp2:
+ylop_jmp2:
 	shr	ah,1
-	jnc	@@jmp3
+	jnc	ylop_jmp3
 	not	bh
-@@jmp3:
+ylop_jmp3:
 	shr	ah,1
-	jnc	@@jmp4
+	jnc	ylop_jmp4
 	not	bl
-@@jmp4:
+ylop_jmp4:
 	or	bx,dx
 	or	bl,bh
 	or	al,bl
-@@skip0:
+ylop_skip0:
 	stosb
 	xor	al,al
 	out	7ch,al
@@ -922,7 +924,7 @@ ylop:
 	sub	cx,ax
 	shr	cx,3
 	jmp	short	xlop
-@@skip:
+ylop_skip:
 	mov	cx,ds:piloadc_x_wid
 	shr	cx,3
 xlop:
@@ -949,7 +951,7 @@ xlop:
 	mov	es,ax
 
 	test	ds:piloadc_option,40h
-	jnz	@@jmp0
+	jnz	xlop_jmp0
 	mov	es:[di],dh
 	mov	es:[di+8000h],dl
 	mov	ah,0b8h
@@ -962,7 +964,7 @@ xlop:
 	dec	cx
 	jz	xend
 	jmp	xlop
-@@jmp0:
+xlop_jmp0:
 	mov	ah,ds:piloadc_tcol
 	mov	al,0c0h
 	out	7ch,al
@@ -976,21 +978,21 @@ xlop:
 	out	7eh,al
 
 	shr	ah,1
-	jnc	@@jmp1
+	jnc	xlop_jmp1
 	not	dh
-@@jmp1:
+xlop_jmp1:
 	shr	ah,1
-	jnc	@@jmp2
+	jnc	xlop_jmp2
 	not	dl
-@@jmp2:
+xlop_jmp2:
 	shr	ah,1
-	jnc	@@jmp3
+	jnc	xlop_jmp3
 	not	bh
-@@jmp3:
+xlop_jmp3:
 	shr	ah,1
-	jnc	@@jmp4
+	jnc	xlop_jmp4
 	not	bl
-@@jmp4:
+xlop_jmp4:
 	mov	ax,dx
 	or	ax,bx
 	or	al,ah
@@ -1009,7 +1011,7 @@ xend:
 	sub	ah,cl
 	xor	bx,bx
 	mov	dx,bx
-@@lop:
+xend_lop:
 	lodsb
 	shl1	al
 	rcl1	bl
@@ -1019,7 +1021,7 @@ xend:
 	rcl1	dl
 	shl1	al
 	rcl1	dh
-	loop	@@lop
+	loop	xend_lop
 	mov	cl,ah
 	mov	ch,0ffh
 	shl	ch,cl
@@ -1040,28 +1042,28 @@ xend:
 	out	7eh,al
 	mov	al,ch
 	test	ds:piloadc_option,40h
-	jz	@@skip0
+	jz	xend_skip0
 	mov	ah,ds:piloadc_tcol
 	shr	ah,1
-	jnc	@@jmp1
+	jnc	xend_jmp1
 	not	dh
-@@jmp1:
+xend_jmp1:
 	shr	ah,1
-	jnc	@@jmp2
+	jnc	xend_jmp2
 	not	dl
-@@jmp2:
+xend_jmp2:
 	shr	ah,1
-	jnc	@@jmp3
+	jnc	xend_jmp3
 	not	bh
-@@jmp3:
+xend_jmp3:
 	shr	ah,1
-	jnc	@@jmp4
+	jnc	xend_jmp4
 	not	bl
-@@jmp4:
+xend_jmp4:
 	or	bx,dx
 	or	bl,bh
 	or	al,bl
-@@skip0:
+xend_skip0:
 	stosb
 	xor	al,al
 	out	7ch,al
@@ -1081,12 +1083,12 @@ ext2:
 	ret
 piloadc_fin:
 	test	ds:piloadc_flg800,1
-	jle	@@jmp
+	jle	fin_jmp
 	mov	al,0
 ;	out	0a4h,al
 	out	0a6h,al
 	and	ds:piloadc_flg800,not 2
-@@jmp:
+fin_jmp:
 	call	fclose
 	mov	sp,spreg
 	xor	ax,ax
@@ -1105,22 +1107,22 @@ palset:
 	mov	bh,100
 	mov	di,piloadc_tonetbl
 	xor	cx,cx
-@@plop:
+palset_plop:
 	mov	al,cl
 	mul	bl
 	div	bh
 	stosb
 	inc	cl
 	cmp	cl,16
-	jnz	@@plop
+	jnz	palset_plop
 
 	mov	si,piloadc_PaletteBuff
 	mov	bx,piloadc_tonetbl
 	mov	cx,16
 	xor	ah,ah
 	test	ds:piloadc_option,16
-	jnz	@@lop2
-@@lop:				;通常
+	jnz	palset_lop2
+palset_lop:				;通常
 	mov	al,ah
 	out	0a8h,al	;palet	no
 	lodsb
@@ -1133,10 +1135,10 @@ palset:
 	xlat	[bx]
 	out	0aeh,al	;blue
 	inc	ah
-	loop	@@lop
+	loop	palset_lop
 	pop	bx
 	ret
-@@lop2:				;NOTE用
+palset_lop2:				;NOTE用
 	mov	al,16
 	sub	al,cl
 	out	0a8h,al	;palet	no
@@ -1162,7 +1164,7 @@ palset:
 	sbb	al,al
 	out	port,al
 	endm
-	loop	@@lop2
+	loop	palset_lop2
 	pop	bx
 	ret
 

@@ -25,7 +25,7 @@ N_LXLSH@:
 LXLSH@:
 F_LXLSH@:
         cmp     cl,16
-        jae     @@lsh@small
+        jae     llsh_@small
         mov     bx,ax                   ; save the low bits
         shl     ax,cl                   ; now shift each half
         shl     dx,cl
@@ -40,7 +40,7 @@ F_LXLSH@:
         shr     bx,cl
         or      dx,bx
         retf
-@@lsh@small:
+llsh_@small:
         sub     cl,16                   ; for shifts more than 15, do this
                                         ; short sequence.
         xchg    ax,dx

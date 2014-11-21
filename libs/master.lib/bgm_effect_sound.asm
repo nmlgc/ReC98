@@ -51,14 +51,14 @@ func _BGM_EFFECT_SOUND	; _bgm_effect_sound() {
 	les	BX,esound[BX].sptr
 	mov	CX,ES:[BX]
 	mov	BX,AX
-	jcxz	short @@END_OF_SOUND	; cmp	CX,SEND / jne
+	jcxz	short B_E_SND_END_OF_SOUND	; cmp	CX,SEND / jne
 
 	;bgm_bell2(*(esound[glb.scnt - 1].sptr)++);
 	add	word ptr esound[BX].sptr,2
 
 	test	Machine_State,10h	; PC/AT
-	jz	short @@PC98
-@@PCAT:
+	jz	short B_E_SND_PC98
+; PCAT:
 	in	AL,61h		;ビープON
 	or	AL,3
 	out	61h,AL		; AT
@@ -66,9 +66,9 @@ func _BGM_EFFECT_SOUND	; _bgm_effect_sound() {
 	mov	DX,0012h 	; 1193.18K(AT互換機)
 	mov	AX,34dch
 	mov	BX,BEEP_CNT_AT
-	jmp	short @@CLOCK8MHZ
+	jmp	short B_E_SND_CLOCK8MHZ
 	EVEN
-@@PC98:
+B_E_SND_PC98:
 	;ビープON	(上にもってきたけど大丈夫かなあ)
 	mov	AL,BEEP_ON
 	out	BEEP_SW,AL	; 98
@@ -81,18 +81,18 @@ func _BGM_EFFECT_SOUND	; _bgm_effect_sound() {
 	test	byte ptr ES:[0501H],80h
 	mov	DX,001eh 	; 1996.8K(8MHz系)
 	mov	AX,7800h
-	jnz	short @@CLOCK8MHZ
+	jnz	short B_E_SND_CLOCK8MHZ
 	mov	DX,0025h	; 2457.6K(10MHz系)
 	mov	AX,8000h
-@@CLOCK8MHZ:
+B_E_SND_CLOCK8MHZ:
 	cmp	CX,DX
-	ja	short @@NORMAL
+	ja	short B_E_SND_NORMAL
 	mov	AX,0ffffh
-	jmp	short @@PLAY
+	jmp	short B_E_SND_PLAY
 	EVEN
-@@NORMAL:
+B_E_SND_NORMAL:
 	div	CX
-@@PLAY:
+B_E_SND_PLAY:
 	;タイマカウント値設定
 	mov	DX,BX	; BEEP_CNT
 	out	DX,AL		; 98,AT
@@ -107,7 +107,7 @@ func _BGM_EFFECT_SOUND	; _bgm_effect_sound() {
 	ret
 	EVEN
 
-@@END_OF_SOUND:
+B_E_SND_END_OF_SOUND:
 	;esound[glb.scnt - 1].sptr = (uint far *)esound[glb.scnt - 1].sbuf;
 	mov	AX,word ptr esound[BX].sbuf+2
 	mov	word ptr esound[BX].sptr+2,AX

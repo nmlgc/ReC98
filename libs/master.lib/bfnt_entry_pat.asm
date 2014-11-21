@@ -79,7 +79,7 @@ func BFNT_ENTRY_PAT	; bfnt_entry_pat() {
 	@@clear_color = (RETSIZE+1)*2
 
 	mov	AX,[BP+@@clear_color]
-	mov	CS:@@color,AX
+	mov	CS:bftentry_color,AX
 	mov	CS:_DS_,DS
 	mov	AX,[BP+@@handle]
 	mov	CS:bftentry_file_handle,AX
@@ -211,7 +211,7 @@ B2V_LOOP:
 	push	ES			; seg addr
 	xor	AX,AX
 	push	AX			;offset address
-	JMOV	AX,@@color		;clear_color
+	JMOV	AX,bftentry_color		;clear_color
 	push	AX
 	_call	SUPER_ENTRY_PAT		; (patsize, far addr, clear_color)
 

@@ -340,14 +340,14 @@ _dummy_skip:
 	stosw
 	test	AX,AX
 	mov	AX,InvalidData
-	jz	short @@COLOR
+	jz	short GRPPILOD_COLOR
 	jmp	_errorA
-@@COLOR:
+GRPPILOD_COLOR:
 	call	byte_load
 	cmp	DL,4		; 色数=16色?
-	jz	short @@MACHINE_INFORMATION
+	jz	short GRPPILOD_MACHINE_INFORMATION
 	jmp	_errorA
-@@MACHINE_INFORMATION:
+GRPPILOD_MACHINE_INFORMATION:
 	mov	AL,DL
 	stosb
 	call	byte_load
@@ -430,9 +430,9 @@ _minfo_skipB:
 	pop	DS
 	mov	BX,AX
 	mov	AX,InsufficientMemory
-	jnb	short @@SET_PTRS
+	jnb	short GRPPILOD_SET_PTRS
 	jmp	_errorA
-@@SET_PTRS:
+GRPPILOD_SET_PTRS:
 	mov	AX,BX
 	mov	DS:gbuffer_off,0
 	mov	DS:gbuffer_seg,AX
@@ -543,9 +543,9 @@ loop_rlA:
 	mov	DS:bit_len,CL
 	mov	DH,0
 	dec	BH
-	jnz	short @@LENGTH_CONTEXT
+	jnz	short GRPPILOD_LENGTH_CONTEXT
 	jmp	end_rlA
-@@LENGTH_CONTEXT:
+GRPPILOD_LENGTH_CONTEXT:
 IF 1
 	cmp	BH,8		; read length context
 	jl	short skip_rlB
@@ -600,10 +600,10 @@ end_rlA:
 	mov	CX,AX
 
 	test	BL,BL
-	jnz	short @@POSITION
+	jnz	short GRPPILOD_POSITION
 	jmp	_position_zero	; position: 0      前の2dotが同じ色なら2dot左
 				;                  違う色なら4dot左
-@@POSITION:
+GRPPILOD_POSITION:
 	mov	BH,0		; BH = pixel position
 	mov	AX,DS:xwidth
 	cmp	BL,1

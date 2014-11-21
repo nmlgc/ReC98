@@ -65,57 +65,57 @@ func BGM_INIT	; bgm_init() {
 	nopcall	GET_MACHINE
 
 	cmp	glb.init,0
-	je	short @@NOTINITIALIZED1
+	je	short B_INIT_NOTINITIALIZED1
 	xor	AX,AX			; BGM_COMPLETE
 	MRETURN
 
-@@NOTINITIALIZED1:
+B_INIT_NOTINITIALIZED1:
 	;bsize2 = bufsiz;
 	mov	DX,[BP+@@bsize]
 	mov	[BP+@@bsize2],DX
 	or	DX,DX
-	jg	short @@SETBUFSIZE
+	jg	short B_INIT_SETBUFSIZE
 	mov	word ptr [BP+@@bsize2],BUFMAX
-@@SETBUFSIZE:
+B_INIT_SETBUFSIZE:
 	mov	AX,[BP+@@bsize2]
 	mov	glb.bufsiz,AX
 
 	;曲バッファ確保
 	mov	DI,offset part
-@@ALLOCATEMBUF:
+B_INIT_ALLOCATEMBUF:
 	;if ((part[cnt].mbuf = MK_FP(hmem_allocbyte(bsize2),0)) == NULL)
 	mov	mem_AllocID,MEMID_bgm
 	push	word ptr [BP+@@bsize2]
 	nopcall	HMEM_ALLOCBYTE
 	mov	word ptr [DI].mbuf+2,AX
 	mov	word ptr [DI].mbuf,0
-	jnc	short @@MBUFALLOCATED
+	jnc	short B_INIT_MBUFALLOCATED
 	mov	AX,BGM_OVERFLOW
 	MRETURN
-@@MBUFALLOCATED:
+B_INIT_MBUFALLOCATED:
 	add	DI,type SPART
 	cmp	DI,offset part + (type SPART * PMAX)
-	jne	short @@ALLOCATEMBUF
+	jne	short B_INIT_ALLOCATEMBUF
 
 	;効果音バッファ確保
 	mov	DI,offset esound
-@@ALLOCATESBUF:
+B_INIT_ALLOCATESBUF:
 	;if ((esound[cnt].sbuf = MK_FP(hmem_allocbyte(SBUFMAX * sizeof(uint) + 1),0)) == NULL)
 	mov	mem_AllocID,MEMID_efs
 	push	(SBUFMAX * 2)+1
 	nopcall	HMEM_ALLOCBYTE
 	mov	word ptr [DI].sbuf+2,AX
 	mov	word ptr [DI].sbuf,0
-	jnc	short @@SBUFALLOCATED
+	jnc	short B_INIT_SBUFALLOCATED
 	push	word ptr [DI].mbuf+2
 	mov	word ptr [DI].mbuf+2,0
 	nopcall	HMEM_FREE
 	mov	AX,BGM_OVERFLOW
 	MRETURN
-@@SBUFALLOCATED:
+B_INIT_SBUFALLOCATED:
 	add	DI,type SESOUND
 	cmp	DI,offset esound + (type SESOUND * SMAX)
-	jne	short @@ALLOCATESBUF
+	jne	short B_INIT_ALLOCATESBUF
 
 	;BGMOFF
 	mov	glb.rflg,OFF
@@ -158,18 +158,18 @@ func BGM_INIT	; bgm_init() {
 	;glb.clockbase = ((ulong)TVAL1ms * 120UL);
 	;tempo120のタイマカウント
 	test	Machine_State,10h	; PC/AT
-	jz	short @@PC98
+	jz	short B_INIT_PC98
 	mov	AX,TVALATORG_RTC
-	jmp	short @@SET_CLOCKBASE
-@@PC98:
+	jmp	short B_INIT_SET_CLOCKBASE
+B_INIT_PC98:
 	xor	AX,AX
 	mov	ES,AX
 	test	byte ptr ES:[0501H],80h
 	mov	AX,TVAL8ORG
-	jnz	short @@CLOCK8MHZ
+	jnz	short B_INIT_CLOCK8MHZ
 	mov	AX,TVAL10ORG
-@@CLOCK8MHZ:
-@@SET_CLOCKBASE:
+B_INIT_CLOCK8MHZ:
+B_INIT_SET_CLOCKBASE:
 	and	AX,0fffeh
 	mov	DX,DEFTEMPO
 	mul	DX
@@ -183,7 +183,7 @@ func BGM_INIT	; bgm_init() {
 	mov	BX,offset part.mbuf
 	xor	DX,DX
 	xor	AX,AX
-@@BUFFERCLEARLOOP:
+B_INIT_BUFFERCLEARLOOP:
 	les	DI,[BX]
 	mov	CX,glb.bufsiz
 	shr	CX,1
@@ -193,14 +193,14 @@ func BGM_INIT	; bgm_init() {
 	add	BX,type SPART
 	inc	DX
 	cmp	DX,PMAX
-	jl	short @@BUFFERCLEARLOOP
+	jl	short B_INIT_BUFFERCLEARLOOP
 
 	nopcall	_BGM_TIMER_INIT
 
 	;BEEPモード設定
 	test	Machine_State,10h	; PC/AT
-	jz	short @@PC98_2
-@@PCAT_2:
+	jz	short B_INIT_PC98_2
+B_INIT_PCAT_2:
 	mov	AX,TVALATORG/2
 	mov	CX,AX
 	mov	AL,0b6h	; CNT#2, L-H WORD, 方形波, binary
@@ -209,18 +209,18 @@ func BGM_INIT	; bgm_init() {
 	out	BEEP_CNT_AT,AL		; AT
 	mov	AL,CH	; 上位, count start
 	out	BEEP_CNT_AT,AL		; AT
-	jmp	short @@B_INIT_DONE
+	jmp	short B_INIT_DONE
 	EVEN
 
-@@PC98_2:
+B_INIT_PC98_2:
 	;bgm_bell_mode(3, (INPB( CLOCK_CHK ) & 0x20) ? 998 : 1229);
 	xor	AX,AX
 	mov	ES,AX
 	test	byte ptr ES:[0501H],80h
 	mov	AX,TVAL8ORG/2
-	jnz	short @@CLOCK8MHZ_2
+	jnz	short B_INIT_CLOCK8MHZ_2
 	mov	AX,TVAL10ORG/2
-@@CLOCK8MHZ_2:
+B_INIT_CLOCK8MHZ_2:
 	mov	CX,AX
 	;OUTB(BEEP_MODE, ((mode & 0x03) << 1) | 0x70);
 	mov	AL,3
@@ -236,7 +236,7 @@ func BGM_INIT	; bgm_init() {
 	mov	AL,CH
 	out	DX,AL			; 98
 
-@@B_INIT_DONE:
+B_INIT_DONE:
 	mov	glb.init,TRUE
 	xor	AX,AX			; BGM_COMPLETE
 	MRETURN

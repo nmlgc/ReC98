@@ -4,9 +4,9 @@ Displacement	proc near
 @@disp		= word ptr -2
 @@fp		= DPTR_ 4
 if LDATA
-@@local_stack equ 6
+	@@local_stack = 6
 else
-@@local_stack equ 2
+	@@local_stack = 2
 endif
 
 		push	bp

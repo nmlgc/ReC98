@@ -4,9 +4,9 @@ _flushall	proc
 @@Nb		= word ptr -(dPtrSize + 2)
 @@fp		= DPTR_ -(dPtrSize)
 if LDATA
-@@local_stack equ 8
+	@@local_stack = 8
 else
-@@local_stack equ 6
+	@@local_stack = 6
 endif
 
 		push	bp
@@ -21,31 +21,29 @@ if LDATA
 		mov	word ptr [bp+@@fp+2], ds
 endif
 		mov	word ptr [bp+@@fp], offset _streams
-		jmp	short @@loop
+		jmp	short flushall_loop
 
-@@RDWR?:
+flushall_RDWR?:
 		LES_	bx, [bp+@@fp]
 		test	byte ptr ES_[bx+FILE.flags], 3
-		jz	short @@next
+		jz	short flushall_next
 if LDATA
 		push	word ptr [bp+@@fp+2]
 endif
 		push	bx
 		nopcall	_fflush
-if LDATA
-		pop	cx
-endif
+		popCX_
 		pop	cx
 		inc	[bp+@@Cpt]
 
-@@next:
+flushall_next:
 		add	word ptr [bp+@@fp], size FILE
 
-@@loop:
+flushall_loop:
 		mov	ax, [bp+@@Nb]
 		dec	[bp+@@Nb]
 		or	ax, ax
-		jnz	short @@RDWR?
+		jnz	short flushall_RDWR?
 		mov	ax, [bp+@@Cpt]
 		pop	di
 		pop	si

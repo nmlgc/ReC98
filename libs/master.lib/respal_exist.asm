@@ -57,26 +57,26 @@ func RESPAL_EXIST
 	int	21h
 	CLD
 	mov	BX, ES:[BX-2]
-@@FIND:
+RSPEXIST_FIND:
 		mov	ES,BX
 		inc	BX
 		mov	AX,ES:[_mcb_owner]
 		or	AX,AX
-		je	short @@SKIP
+		je	short RSPEXIST_SKIP
 			mov	DI,10h ; MCBの次
 			mov	CX,IDLEN
 			mov	SI,offset ResPalID
 			rep cmpsb
-			je	short @@FOUND
-		@@SKIP:
+			je	short RSPEXIST_FOUND
+		RSPEXIST_SKIP:
 		mov	AX,ES:[_mcb_size]
 		add	BX,AX
 	mov	AL,ES:[_mcb_flg]
 	cmp	AL,'M'
-	je	short @@FIND
-@@NOTFOUND:
+	je	short RSPEXIST_FIND
+RSPEXIST_NOTFOUND:
 	mov	BX,0
-@@FOUND:
+RSPEXIST_FOUND:
 	mov	AX,BX
 	mov	ResPalSeg,AX
 
@@ -97,8 +97,8 @@ endif
 	call	RESPAL_EXIST
 	or	AX,AX
 	mov	AX,2
-	jnz	short @@IGNORE
-@@CREATE:
+	jnz	short RSPEXIST_IGNORE
+RSPEXIST_CREATE:
 	mov	AX,5800h	; アロケーションストラテジを得る
 	int	21h
 	mov	DX,AX		; 得たストラテジを保存する
@@ -110,10 +110,10 @@ endif
 	mov	BX,4 ; 64/16
 	int	21h
 	mov	CX,0
-	jc	short @@DAME
+	jc	short RSPEXIST_DAME
 	mov	BX,CS		; 自分より前ならＯＫ
 	cmp	BX,AX
-	jnb	short @@ALLOC_OK
+	jnb	short RSPEXIST_ALLOC_OK
 		mov	ES,AX		; 自分より後ろだったら
 		mov	AH,49h		; 解放する。
 		int	21h		;
@@ -125,7 +125,7 @@ endif
 		mov	AH,48h		; メモリ割り当て
 		mov	BX,4 ; 64/16
 		int	21h
-	@@ALLOC_OK:
+	RSPEXIST_ALLOC_OK:
 	mov	CX,AX
 	mov	ResPalSeg,AX
 
@@ -146,13 +146,13 @@ endif
 	stosw
 	mov	CX,1
 
-@@DAME:
+RSPEXIST_DAME:
 	mov	AX,5801h	; アロケーションストラテジの復帰
 	mov	BX,DX		;
 	int	21h		;
 	mov	AX,CX
 
-@@IGNORE:
+RSPEXIST_IGNORE:
 	pop	DI
 	pop	SI
 	ret

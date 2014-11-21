@@ -69,19 +69,19 @@ func PALETTE_SHOW	; palette_show() {
 
 	mov	CH,BL		; 0
 	cmp	DH,100
-	jna	short @@SKIP
+	jna	short PALSHOW_SKIP
 	mov	CH,0fh
 	sub	DH,200		; AL = 200 - AL
 	neg	DH
-@@SKIP:
+PALSHOW_SKIP:
 	mov	SI,offset Palettes
 	mov	DL,100
 
 	cmp	PaletteNote,BX	; 0
-	jne	short	@@LCD
+	jne	short	PALSHOW_LCD
 
 
-@@PLOOP:	mov	AL,BL
+PALSHOW_PLOOP:	mov	AL,BL
 	out	0a8h,AL	; palette number
 
 	lodsw
@@ -109,14 +109,14 @@ func PALETTE_SHOW	; palette_show() {
 
 	inc	BX
 	cmp	BX,16
-	jl	short @@PLOOP
+	jl	short PALSHOW_PLOOP
 
 	pop	SI
 	ret
 
 	; 液晶〜〜〜
 	EVEN
-@@LCD:
+PALSHOW_LCD:
 	mov	BX,DX
 IF 0
 	mov	DX,0ae8eh
@@ -129,22 +129,22 @@ ELSE
 	out	0f6h,AL
 	in	AL,DX
 	cmp	AL,0ffh
-	jnz	short @@NEWNOTE
+	jnz	short PALSHOW_NEWNOTE
 	mov	DX,0ae8eh
 	in	AL,DX
 	shr	AL,2
-@@NEWNOTE:
+PALSHOW_NEWNOTE:
 	shr	AL,1
 	cmc
 ENDIF
 	sbb	AL,AL
-	mov	CS:@@XORVAL,AL	; 反転
+	mov	CS:PALSHOW_XORVAL,AL	; 反転
 	mov	DX,BX
 
 	push	DI	;  1byte
 	mov	DI,0	; +3byte
 			; =4(even)
-@@LLOOP:
+PALSHOW_LLOOP:
 	mov	AX,DI
 	out	0a8h,AL	; palette number
 
@@ -172,12 +172,12 @@ ENDIF
 	mov	AH,BH	; AL = g'  AH = BH = b'
 
 	cmp	BH,AL	; BL = r   AL = g   AH = BH = b
-	ja	short @@S1
+	ja	short PALSHOW_S1
 	mov	BH,AL
-@@S1:	cmp	BH,BL
-	ja	short @@S2
+PALSHOW_S1:	cmp	BH,BL
+	ja	short PALSHOW_S2
 	mov	BH,BL	; BH = max(r,g,b)
-@@S2:
+PALSHOW_S2:
 	shl	AL,1
 	add	AL,BL
 	shl	AL,1
@@ -195,7 +195,7 @@ ENDIF
 	and	AH,AL
 	xor	AH,0
 	org $-1
-@@XORVAL	db ?
+PALSHOW_XORVAL	db ?
 
 	shr	AH,1
 	sbb	AL,AL
@@ -211,7 +211,7 @@ ENDIF
 	out	0aah,AL	; g
 	inc	DI
 	cmp	DI,16
-	jl	short @@LLOOP
+	jl	short PALSHOW_LLOOP
 
 	pop	DI
 	pop	SI
