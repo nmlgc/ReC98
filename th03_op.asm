@@ -2698,7 +2698,7 @@ loc_AC15:
 		push	offset aOp3_pi	; "op3.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_C356
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -2901,7 +2901,7 @@ var_2		= word ptr -2
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_C356
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -3017,7 +3017,7 @@ loc_AF65:
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	0
-		call	sub_C356
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -3100,7 +3100,7 @@ sub_B008	proc near
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_C356
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -4969,17 +4969,17 @@ loc_BEB0:
 		pop	bp
 		retn
 sub_BD9A	endp
+		db 0
 
 seg001		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
-		;org 7
+		;org 8
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5615,34 +5615,7 @@ locret_C354:
 		retf
 sub_C1B4	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C356	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 1CD8h
-		push	ax		; src
-		push	ds
-		push	offset Palettes	; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf	2
-sub_C356	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

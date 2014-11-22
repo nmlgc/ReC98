@@ -1224,7 +1224,7 @@ loc_AA91:
 		push	offset aOp1_pi	; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -1250,7 +1250,7 @@ loc_AAE1:
 		push	offset aOp1_pi	; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -1283,7 +1283,7 @@ loc_AB3B:
 		push	offset aOp1_pi	; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -2585,7 +2585,7 @@ sub_B5A6	proc near
 		push	offset aMs_pi	; "ms.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -2905,7 +2905,7 @@ var_1		= byte ptr -1
 		push	offset aZun00_pi ; "zun00.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -3515,7 +3515,7 @@ loc_BD55:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	116h
 		mov	ax, si
 		mov	bx, 8
@@ -3625,7 +3625,7 @@ loc_BE46:
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -4438,7 +4438,7 @@ var_1		= byte ptr -1
 		push	offset aMusic_pi ; "music.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -5337,7 +5337,7 @@ sub_CBDC	proc near
 		mov	al, 1
 		out	dx, al
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -5345,7 +5345,7 @@ sub_CBDC	proc near
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -5476,7 +5476,7 @@ loc_CD17:
 		push	offset aOp1_pi_1 ; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -5927,7 +5927,7 @@ var_2		= word ptr -2
 		push	offset aSlb1_pi	; "slb1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DEBA
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DE0A
@@ -7937,29 +7937,7 @@ loc_DEA3:
 		retn	8
 sub_DE80	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DEBA	proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		imul	si, 48h
-		add	si, 386Ah
-		mov	di, 2E1Eh
-		mov	ax, ds
-		mov	es, ax
-		assume es:dseg
-		mov	cx, 0Ch
-		rep movsd
-		call	far ptr	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_DEBA	endp
-
+include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================

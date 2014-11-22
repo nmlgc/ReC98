@@ -1206,7 +1206,7 @@ loc_AF56:
 		push	offset aOp1_pi	; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -1240,7 +1240,7 @@ loc_AFBD:
 		push	offset aOp1_pi	; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -2504,7 +2504,7 @@ sub_B9CE	proc near
 		push	offset aMs_pi	; "ms.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -2823,7 +2823,7 @@ var_1		= byte ptr -1
 		push	offset aZun00_pi ; "zun00.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -3780,7 +3780,7 @@ sub_C3B7	proc near
 		push	offset aMusic_pi ; "music.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -4563,7 +4563,7 @@ sub_CA1A	proc near
 		mov	al, 1
 		out	dx, al
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -4571,7 +4571,7 @@ sub_CA1A	proc near
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -4695,7 +4695,7 @@ loc_CB58:
 		push	offset aOp1_pi_0 ; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -4899,7 +4899,7 @@ var_2		= word ptr -2
 		push	offset aOp0b_pi	; "op0b.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		push	4
 		call	palette_black_in
 		mov	dx, 0A4h ; '¤'
@@ -4982,7 +4982,7 @@ loc_CE50:
 		push	offset aOp1_pi_1 ; "op1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -5086,7 +5086,7 @@ loc_CF4E:
 		cmp	si, 3Fh	; '?'
 		jl	short loc_CEF5
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pop	di
 		pop	si
 		leave
@@ -5992,7 +5992,7 @@ sub_D6B2	proc near
 		mov	al, 0
 		out	dx, al
 		push	0
-		call	sub_DA50
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_DA75
@@ -6360,17 +6360,17 @@ loc_DA0D:
 		leave
 		retn
 sub_D708	endp
+		db    0
 
 seg001		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
-		;org 1
+		;org 2
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6408,32 +6408,7 @@ loc_DA44:
 		retf	2
 sub_DA3B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DA50	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 23A0h
-		push	ax		; src
-		push	ds
-		push	offset Palettes ; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf	2
-sub_DA50	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

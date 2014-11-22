@@ -1071,7 +1071,7 @@ sub_9B64	proc near
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -1312,7 +1312,7 @@ loc_9D96:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -1622,7 +1622,7 @@ sub_A09D	proc near
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -1656,7 +1656,7 @@ sub_A09D	proc near
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -1784,7 +1784,7 @@ loc_A247:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -2003,7 +2003,7 @@ loc_A451:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -2169,7 +2169,7 @@ loc_A620:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -2320,7 +2320,7 @@ loc_A6B6:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -2550,7 +2550,7 @@ loc_A992:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -2700,7 +2700,7 @@ loc_A992:
 		call	sub_B855
 		pop	cx
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		freePISlotLarge	0
 		push	0F8h
@@ -2785,7 +2785,7 @@ loc_A992:
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -3122,7 +3122,7 @@ sub_AFE7	proc far
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -3139,7 +3139,7 @@ sub_AFE7	proc far
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -3174,7 +3174,7 @@ sub_B07F	proc far
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -3191,7 +3191,7 @@ sub_B07F	proc far
 		call	pi_slot_load
 		add	sp, 6
 		push	0
-		call	sub_B790
+		call	pi_slot_palette_apply
 		pop	cx
 		pushd	0
 		push	0
@@ -3316,7 +3316,7 @@ seg001		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 
@@ -4093,32 +4093,7 @@ loc_B76A:
 		retf
 sub_B756	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B790	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 2952h
-		push	ax		; src
-		push	ds
-		push	offset Palettes	; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf
-sub_B790	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

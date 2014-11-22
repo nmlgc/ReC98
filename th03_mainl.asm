@@ -936,7 +936,7 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		push	0
 		call	graph_copy_page
 		freePISlotLarge	0
@@ -1151,7 +1151,7 @@ loc_9C5E:
 		push	200005h
 		call	text_fillca
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		freePISlotLarge	0
 		call	respal_set_palettes
 		pop	si
@@ -1628,7 +1628,7 @@ loc_A0C5:
 		push	offset aOver_pi	; "over.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CD2F
@@ -2738,7 +2738,7 @@ loc_A9EB:
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_A9FE
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 
 loc_A9FE:
 		pushd	0
@@ -2764,7 +2764,7 @@ loc_AA32:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_AA42
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -3487,7 +3487,7 @@ sub_AFAC	proc near
 		push	offset aRegib_pi ; "regib.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CD2F
@@ -4704,7 +4704,7 @@ loc_B879:
 		push	offset aConti_pi ; "conti.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CD2F
@@ -4723,7 +4723,7 @@ loc_B8F1:
 		push	offset aOver_pi_0 ; "over.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CD0A
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CD2F
@@ -6431,17 +6431,17 @@ loc_C7D8:
 		pop	bp
 		retn
 sub_C40D	endp
+		db 0
 
 seg001		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
-		;org 1
+		;org 2
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7145,34 +7145,7 @@ locret_CD08:
 		retf
 sub_CB68	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CD0A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 1F3Eh
-		push	ax		; src
-		push	ds
-		push	offset Palettes	; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf	2
-sub_CD0A	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

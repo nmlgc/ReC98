@@ -563,7 +563,7 @@ loc_A187:
 		push	bx
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -604,7 +604,7 @@ loc_A1FE:
 		pushd	[bp+var_4]
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -1785,7 +1785,7 @@ loc_AB7A:
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_AB8D
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 
 loc_AB8D:
 		pushd	0
@@ -1811,7 +1811,7 @@ loc_ABC1:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_ABD1
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -2882,7 +2882,7 @@ sub_B44D	proc near
 		push	offset aSff1_pi	; "sff1.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -2970,7 +2970,7 @@ sub_B44D	proc near
 		push	offset aSff2_pi	; "sff2.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -4074,7 +4074,7 @@ sub_C0F8	proc near
 		push	offset aUde_pi	; "ude.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -5116,7 +5116,7 @@ var_2		= word ptr -2
 		push	offset aHi01_pi	; "hi01.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_CCB8
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -5649,17 +5649,17 @@ loc_CC66:
 		leave
 		retn	8
 sub_CBF3	endp
+		db    0
 
 seg001		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
-		;org 9
+		;org 0Ah
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5697,32 +5697,7 @@ loc_CCAC:
 		retf	2
 sub_CCA3	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CCB8	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 17D2h
-		push	ax		; src
-		push	ds
-		push	offset Palettes	; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf	2
-sub_CCB8	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

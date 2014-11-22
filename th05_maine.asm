@@ -1499,7 +1499,7 @@ loc_ACE1:
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_ACF4
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 
 loc_ACF4:
 		pushd	0
@@ -1526,7 +1526,7 @@ loc_AD23:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_AD33
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -2183,7 +2183,7 @@ arg_2		= word ptr  6
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 		xor	si, si
 		jmp	short loc_B309
 ; ---------------------------------------------------------------------------
@@ -2337,7 +2337,7 @@ sub_B3CB	proc near
 		pushd	dword ptr [bx+760h]
 		call	pi_slot_load
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 		push	ds
 		push	offset aExed	; "EXED"
 		push	600h
@@ -4252,7 +4252,7 @@ var_2		= word ptr -2
 		push	offset aHi01_pi	; "hi01.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_EFAC
@@ -5961,7 +5961,7 @@ sub_D1B1	proc near
 		push	offset aUde_pi	; "ude.pi"
 		call	pi_slot_load
 		push	0
-		call	sub_F05C
+		call	pi_slot_palette_apply
 		pushd	0
 		push	0
 		call	sub_EFAC
@@ -9914,29 +9914,7 @@ loc_F045:
 		retn	8
 sub_F022	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F05C	proc far
-		mov	bx, sp
-		push	si
-		push	di
-		mov	si, ss:[bx+4]
-		imul	si, 48h
-		add	si, 27D2h
-		mov	di, 1D9Ah
-		mov	ax, ds
-		mov	es, ax
-		assume es:dseg
-		mov	cx, 0Ch
-		rep movsd
-		call	far ptr	palette_show
-		pop	di
-		pop	si
-		retf	2
-sub_F05C	endp
-
+include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
 
 ; =============== S U B	R O U T	I N E =======================================

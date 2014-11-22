@@ -386,7 +386,7 @@ arg_2		= word ptr  6
 		mov	al, [bp+arg_0]
 		out	dx, al
 		push	0
-		call	sub_B15A
+		call	pi_slot_palette_apply
 		push	0
 		push	0
 		push	0
@@ -1131,7 +1131,7 @@ loc_A3BC:
 		push	0
 		call	pi_slot_load
 		push	0
-		call	sub_B15A
+		call	pi_slot_palette_apply
 		push	0
 		push	0
 		push	0
@@ -1973,22 +1973,22 @@ loc_AAF0:
 		call	graph_clear
 		call	sub_AB28
 		call	gaiji_restore
-_main		endp ; sp-analysis failed
-
 		mov	al, [bp-1]
 		mov	ah, 0
 		leave
 		retf
+_main		endp
+		db 0
+
 seg001		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
-		;org 7
+		;org 8
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2847,32 +2847,7 @@ loc_B14A:
 		retf
 sub_B0EA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B15A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		mov	ax, [bp+arg_0]
-		imul	ax, 48h
-		add	ax, 1B7Ch
-		push	ax		; src
-		push	ds
-		push	offset Palettes	; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf
-sub_B15A	endp
-
+include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4398,7 +4373,7 @@ sub_BBC0	proc far
 		push	3
 		call	pi_slot_load
 		push	3
-		call	sub_B15A
+		call	pi_slot_palette_apply
 		push	3
 		push	0
 		push	0
@@ -5833,7 +5808,7 @@ var_1		= byte ptr -1
 		push	0
 		call	pi_slot_load
 		push	0
-		call	sub_B15A
+		call	pi_slot_palette_apply
 		push	0
 		push	0
 		push	0
@@ -6018,7 +5993,7 @@ loc_C978:
 		push	0
 		call	pi_slot_load
 		push	0
-		call	sub_B15A
+		call	pi_slot_palette_apply
 		push	0
 		push	0
 		push	0
