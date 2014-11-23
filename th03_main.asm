@@ -5326,7 +5326,7 @@ loc_C7C8:
 loc_C7DB:
 		call	sub_EA8C
 		push	1
-		call	sub_EA77
+		call	frame_delay
 
 loc_C7E7:
 		cmp	word ptr unk_1EFFA, 0
@@ -5339,14 +5339,14 @@ loc_C7EE:
 		test	byte_1EFFB, 10h
 		jnz	short loc_C816
 		push	1
-		call	sub_EA77
+		call	frame_delay
 		jmp	short loc_C7EE
 ; ---------------------------------------------------------------------------
 
 loc_C80A:
 		call	sub_EA8C
 		push	1
-		call	sub_EA77
+		call	frame_delay
 
 loc_C816:
 		cmp	word ptr unk_1EFFA, 0
@@ -5705,7 +5705,7 @@ loc_CA99:
 
 loc_CAA8:
 		push	1
-		call	sub_EA77
+		call	frame_delay
 		mov	ax, si
 		and	ax, 1
 		imul	ax, 32h
@@ -9867,27 +9867,7 @@ arg_4		= word ptr  0Ah
 		retf
 sub_EA5D	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA77	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_EA80:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_EA80
-		pop	bp
-		retf	2
-sub_EA77	endp
-
+include th02/frame_delay.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10409,7 +10389,7 @@ loc_EE81:
 		cmp	word ptr unk_1EFFA, 0
 		jz	short loc_EE95
 		push	1
-		nopcall	sub_EA77
+		nopcall	frame_delay
 		jmp	short loc_EE81
 ; ---------------------------------------------------------------------------
 
@@ -10426,7 +10406,7 @@ loc_EE9E:
 		jnz	short loc_EEBD
 		inc	di
 		push	1
-		nopcall	sub_EA77
+		nopcall	frame_delay
 		cmp	si, 270Fh
 		jnz	short loc_EEB9
 		xor	di, di

@@ -1750,7 +1750,7 @@ loc_B46B:
 		les	bx, dword_10DA4
 		inc	dword ptr es:[bx+14h]
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 
 loc_B47B:
 		cmp	byte_F3DC, 0
@@ -1945,7 +1945,7 @@ loc_B5BE:
 		push	si
 		call	sub_B49F
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		inc	di
 		add	si, 8
 
@@ -2059,7 +2059,7 @@ loc_B674:
 		push	si
 		call	sub_B519
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		inc	di
 		sub	si, 8
 
@@ -2303,7 +2303,7 @@ loc_B80E:
 		push	0
 		call	sub_DB62
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		test	byte ptr word_11A50+1, 20h
 		jnz	short loc_B87A
 		test	byte ptr word_11A50, 20h
@@ -2421,7 +2421,7 @@ loc_B92B:
 		push	0
 		call	sub_DB62
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		test	byte ptr word_11A50+1, 20h
 		jnz	short loc_B997
 		test	byte ptr word_11A50, 20h
@@ -2515,7 +2515,7 @@ sub_B9CE	proc near
 		call	palette_black_in
 		call	sub_B794
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		push	0
 		call	graph_copy_page
 		call	sub_B8B1
@@ -3564,7 +3564,7 @@ sub_C244	proc near
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	1
-		call	sub_E6DE
+		call	frame_delay_
 		pop	bp
 		retn
 sub_C244	endp
@@ -4648,7 +4648,7 @@ loc_CADA:
 loc_CAE4:
 		call	far ptr	sub_E1DC
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		test	byte ptr word_11A50+1, 20h
 		jnz	short loc_CB58
 		test	byte ptr word_11A50, 20h
@@ -4708,7 +4708,7 @@ loc_CB58:
 loc_CBB3:
 		call	far ptr	sub_E1DC
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		cmp	word_11A50, 0
 		jnz	short loc_CBB3
 		push	100h
@@ -4944,7 +4944,7 @@ loc_CDB0:
 		call	far ptr	palette_show
 		add	di, 2
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		inc	si
 
 loc_CDC4:
@@ -5023,7 +5023,7 @@ loc_CEC7:
 		mov	Palettes+2, al
 		call	far ptr	palette_show
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, 0F0h
@@ -5076,7 +5076,7 @@ loc_CF34:
 		jl	short loc_CEFA
 		call	far ptr	palette_show
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		inc	si
 		mov	al, [bp+var_3]
 		add	al, 0FCh
@@ -6166,7 +6166,7 @@ loc_D816:
 		call	sub_D3A2
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al
@@ -6174,7 +6174,7 @@ loc_D816:
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
@@ -6247,7 +6247,7 @@ loc_D8DF:
 
 loc_D8EA:
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		jmp	loc_D7BB
 ; ---------------------------------------------------------------------------
 
@@ -6287,7 +6287,7 @@ loc_D939:
 		call	sub_D465
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al
@@ -6295,7 +6295,7 @@ loc_D939:
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
@@ -6350,7 +6350,7 @@ loc_D9F8:
 
 loc_DA03:
 		push	1
-		call	sub_DA3B
+		call	frame_delay
 		jmp	loc_D8B0
 ; ---------------------------------------------------------------------------
 
@@ -6387,27 +6387,7 @@ sub_DA12	proc far
 		retf
 sub_DA12	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DA3B	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_DA44:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_DA44
-		pop	bp
-		retf	2
-sub_DA3B	endp
-
+include th02/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6528,7 +6508,7 @@ loc_DB6C:
 		push	cs
 		call	sub_E1DC
 		push	1
-		nopcall	sub_DA3B
+		nopcall	frame_delay
 		nopcall	sub_E1E4
 		cmp	word_11A50, 0
 		jnz	short loc_DB6C
@@ -6543,7 +6523,7 @@ loc_DB8D:
 		push	cs
 		call	sub_E1DC
 		push	1
-		nopcall	sub_DA3B
+		nopcall	frame_delay
 		nopcall	sub_E1E4
 		cmp	word_11A50, 0
 		jnz	short loc_DBB2
@@ -6855,7 +6835,7 @@ arg_2		= word ptr  8
 		cmp	byte_FD21, 0
 		jnz	short loc_DD96
 		push	[bp+arg_0]
-		nopcall	sub_DA3B
+		nopcall	frame_delay
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -8239,26 +8219,7 @@ loc_E6D4:
 		retf
 sub_E6D0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E6DE	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_E6E7:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_E6E7
-		pop	bp
-		retf	2
-sub_E6DE	endp
+include th02/frame_delay_.asm
 
 seg002		ends
 

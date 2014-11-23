@@ -534,7 +534,7 @@ sub_AEA6	proc near
 		mov	bp, sp
 		mov	word_25FE6, 1
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		call	far ptr	sub_14FCE
 
 loc_AEBB:
@@ -9595,7 +9595,7 @@ loc_EFBA:
 		push	si
 		call	sub_EE9A
 		push	0Ch
-		call	sub_1510E
+		call	frame_delay
 		inc	si
 
 loc_EFD6:
@@ -9647,7 +9647,7 @@ loc_F021:
 		mov	[bp+arg_0], al
 		inc	word ptr dword_2C930
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		cmp	word_2C938, 0
 		jnz	short loc_F045
 		push	2000F0h
@@ -9921,7 +9921,7 @@ loc_F296:
 		push	1
 
 loc_F29E:
-		call	sub_1510E
+		call	frame_delay
 		jmp	short loc_F227
 ; ---------------------------------------------------------------------------
 
@@ -10008,7 +10008,7 @@ loc_F333:
 		mov	al, byte_25352
 		out	dx, al
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		pop	bp
 		retf
 sub_F2B4	endp
@@ -10103,7 +10103,7 @@ loc_F421:
 
 loc_F432:
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		call	sub_EF2A
@@ -10856,7 +10856,7 @@ loc_F97F:
 		or	al, al
 		jnz	short loc_F98F
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		jmp	short loc_F97F
 ; ---------------------------------------------------------------------------
 
@@ -10869,7 +10869,7 @@ loc_F99A:
 		or	al, al
 		jnz	short loc_F9AA
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		jmp	short loc_F99A
 ; ---------------------------------------------------------------------------
 
@@ -10884,7 +10884,7 @@ loc_F9B1:
 		push	0E1h
 		call	gaiji_putca
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		push	[bp+var_2]
 		push	0Ch
 		push	ds
@@ -10906,7 +10906,7 @@ loc_F9EB:
 		push	0E1h
 		call	gaiji_putca
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		push	[bp+var_2]
 		push	0Ch
 		push	ds
@@ -10936,7 +10936,7 @@ loc_FA47:
 		or	al, al
 		jnz	short loc_FA57
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		jmp	short loc_FA47
 ; ---------------------------------------------------------------------------
 
@@ -10951,7 +10951,7 @@ loc_FA68:
 		or	al, al
 		jnz	short loc_FA78
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		jmp	short loc_FA68
 ; ---------------------------------------------------------------------------
 
@@ -11097,7 +11097,7 @@ loc_FBA7:
 
 loc_FBAB:
 		push	1
-		call	sub_1510E
+		call	frame_delay
 		jmp	loc_FB27
 ; ---------------------------------------------------------------------------
 
@@ -22316,22 +22316,7 @@ loc_1510A:
 		retf	2
 sub_150E4	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1510E	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	vsync_Count1, 0
-
-loc_1511A:
-		cmp	vsync_Count1, bx
-		jb	short loc_1511A
-		retf	2
-sub_1510E	endp
-
-; ---------------------------------------------------------------------------
+include th05/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

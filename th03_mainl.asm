@@ -665,7 +665,7 @@ loc_97E8:
 		push	si
 		call	sub_D712
 		push	6
-		call	sub_CB52
+		call	frame_delay
 		inc	si
 
 loc_97FC:
@@ -691,7 +691,7 @@ loc_97FC:
 		push	1
 		call	palette_white_in
 		push	8
-		call	sub_CB52
+		call	frame_delay
 		call	sub_973E
 		call	sub_9887
 		or	ax, ax
@@ -703,7 +703,7 @@ loc_9868:
 		cmp	word_100FC, 0
 		jnz	short loc_987D
 		push	1
-		call	sub_CB52
+		call	frame_delay
 		jmp	short loc_9868
 ; ---------------------------------------------------------------------------
 
@@ -1607,7 +1607,7 @@ loc_A0B0:
 
 loc_A0BB:
 		push	1
-		call	sub_CB52
+		call	frame_delay
 		jmp	loc_A00B
 ; ---------------------------------------------------------------------------
 
@@ -2487,7 +2487,7 @@ loc_A7A2:
 		cmp	[bp+arg_0], 6Bh	; 'k'
 		jz	short loc_A7C4
 		push	[bp+var_2]
-		call	sub_CB52
+		call	frame_delay
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2568,7 +2568,7 @@ loc_A85F:
 		cmp	byte_105CE, 0
 		jnz	short loc_A87B
 		push	1
-		call	sub_CB52
+		call	frame_delay
 
 loc_A87B:
 		mov	ax, [bp+var_2]
@@ -2649,7 +2649,7 @@ loc_A91D:
 		cmp	byte_105CE, 0
 		jnz	short loc_A930
 		push	1
-		call	sub_CB52
+		call	frame_delay
 
 loc_A930:
 		inc	[bp+var_4]
@@ -2868,7 +2868,7 @@ loc_AB16:
 		cmp	byte_105CE, 0
 		jnz	short loc_AB32
 		push	[bp+var_4]
-		call	sub_CB52
+		call	frame_delay
 
 loc_AB32:
 		inc	si
@@ -3120,7 +3120,7 @@ loc_ACFB:
 		cmp	word_100FC, 0
 		jnz	short loc_AD7A
 		push	word_105D4
-		call	sub_CB52
+		call	frame_delay
 		jmp	loc_ACA3
 ; ---------------------------------------------------------------------------
 
@@ -3142,7 +3142,7 @@ loc_AD8F:
 
 loc_AD94:
 		push	si
-		call	sub_CB52
+		call	frame_delay
 
 loc_AD9A:
 		inc	[bp+var_2]
@@ -4508,7 +4508,7 @@ loc_B738:
 
 loc_B73C:
 		push	1
-		call	sub_CB52
+		call	frame_delay
 
 loc_B743:
 		cmp	[bp+var_B], 0
@@ -4819,7 +4819,7 @@ loc_B9DD:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	60h
-		call	sub_CB52
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -6301,7 +6301,7 @@ loc_C4D8:
 		mov	byte_10BB6, 1
 		mov	byte_10BB5, 1
 		push	1
-		call	sub_CB52
+		call	frame_delay
 		mov	vsync_Count1, 0
 
 loc_C657:
@@ -6942,27 +6942,7 @@ sub_CA88	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB52	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_CB5B:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_CB5B
-		pop	bp
-		retf	2
-sub_CB52	endp
-
-; ---------------------------------------------------------------------------
+include th02/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8069,7 +8049,7 @@ arg_2		= word ptr  8
 		cmp	byte_EC70, 0
 		jnz	short loc_D412
 		push	[bp+arg_0]
-		nopcall	sub_CB52
+		nopcall	frame_delay
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------
@@ -8424,7 +8404,7 @@ loc_D6CF:
 		cmp	word_100FC, 0
 		jz	short loc_D6E3
 		push	1
-		nopcall	sub_CB52
+		nopcall	frame_delay
 		jmp	short loc_D6CF
 ; ---------------------------------------------------------------------------
 
@@ -8441,7 +8421,7 @@ loc_D6EC:
 		jnz	short loc_D70B
 		inc	di
 		push	1
-		nopcall	sub_CB52
+		nopcall	frame_delay
 		cmp	si, 270Fh
 		jnz	short loc_D707
 		xor	di, di

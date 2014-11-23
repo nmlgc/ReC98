@@ -1832,7 +1832,7 @@ loc_B048:
 		les	bx, dword_11DCC
 		inc	dword ptr es:[bx+28h]
 		push	1
-		call	sub_E15E
+		call	frame_delay
 
 loc_B058:
 		cmp	byte_F072, 0
@@ -2026,7 +2026,7 @@ loc_B196:
 		push	si
 		call	sub_B077
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		inc	di
 		add	si, 8
 
@@ -2140,7 +2140,7 @@ loc_B24C:
 		push	si
 		call	sub_B0F1
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		inc	di
 		sub	si, 8
 
@@ -2384,7 +2384,7 @@ loc_B3E6:
 		push	0
 		call	sub_E0A4
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		test	byte ptr word_12A72+1, 20h
 		jnz	short loc_B452
 		test	byte ptr word_12A72, 20h
@@ -2502,7 +2502,7 @@ loc_B503:
 		push	0
 		call	sub_E0A4
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		test	byte ptr word_12A72+1, 20h
 		jnz	short loc_B56F
 		test	byte ptr word_12A72, 20h
@@ -2597,7 +2597,7 @@ sub_B5A6	proc near
 		call	palette_black_in
 		call	sub_B36C
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		push	0
 		call	graph_copy_page
 		call	sub_B489
@@ -3526,7 +3526,7 @@ loc_BD55:
 
 loc_BD81:
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+var_1]
 		out	dx, al
@@ -3580,7 +3580,7 @@ loc_BDE8:
 		mov	dx, 0A4h
 		out	dx, al
 		push	10h
-		call	sub_E15E
+		call	frame_delay
 		xor	si, si
 		jmp	short loc_BE46
 ; ---------------------------------------------------------------------------
@@ -3602,7 +3602,7 @@ loc_BE08:
 
 loc_BE25:
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+var_1]
 		out	dx, al
@@ -4154,7 +4154,7 @@ sub_C293	proc near
 		mov	al, 0
 		out	dx, al
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, byte ptr word_13E94+1
 		out	dx, al
@@ -5430,7 +5430,7 @@ loc_CC9F:
 loc_CCA9:
 		call	sub_E094
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		test	byte ptr word_12A72+1, 20h
 		jnz	short loc_CD17
 		test	byte ptr word_12A72, 20h
@@ -5490,7 +5490,7 @@ loc_CD17:
 loc_CD64:
 		call	sub_E094
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		cmp	word_12A72, 0
 		jnz	short loc_CD64
 		push	100h
@@ -6075,7 +6075,7 @@ loc_D1D0:
 		call	sub_CEFF
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, 1
 		out	dx, al
@@ -6083,7 +6083,7 @@ loc_D1D0:
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
@@ -6109,7 +6109,7 @@ loc_D231:
 		call	sub_CEFF
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, 1
 		out	dx, al
@@ -6117,7 +6117,7 @@ loc_D231:
 		call	graph_copy_page
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
@@ -6173,7 +6173,7 @@ loc_D2EC:
 
 loc_D2F7:
 		push	1
-		call	sub_E15E
+		call	frame_delay
 		jmp	loc_D1B5
 ; ---------------------------------------------------------------------------
 		leave
@@ -8238,7 +8238,7 @@ loc_E0F5:
 		or	si, si
 		jge	short loc_E109
 		push	[bp+arg_0]
-		nopcall	sub_E15E
+		nopcall	frame_delay
 		jmp	short loc_E10E
 ; ---------------------------------------------------------------------------
 
@@ -8303,22 +8303,7 @@ loc_E14E:
 		retf	6
 sub_E114	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E15E	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	vsync_Count1, 0
-
-loc_E16A:
-		cmp	vsync_Count1, bx
-		jb	short loc_E16A
-		retf	2
-sub_E15E	endp
-
-; ---------------------------------------------------------------------------
+include th05/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

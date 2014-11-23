@@ -476,7 +476,7 @@ loc_9DED:
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		inc	[bp+var_2]
 
 loc_9E0F:
@@ -494,7 +494,7 @@ loc_9E1C:
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		inc	[bp+var_2]
 
 loc_9E39:
@@ -530,7 +530,7 @@ loc_9E7D:
 
 loc_9E97:
 		push	12h
-		call	sub_B2D2
+		call	frame_delay
 		call	sub_B2E8
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
@@ -600,7 +600,7 @@ sub_9F37	proc near
 		pop	cx
 		call	sub_B296
 		push	14h
-		call	sub_B2D2
+		call	frame_delay
 		les	bx, dword_F3DC
 		mov	al, byte_F3E1
 		mov	es:[bx+15h], al
@@ -1959,7 +1959,7 @@ loc_AAD7:
 		adc	word ptr es:[bx+1Eh], 0
 		inc	word_E8FC
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 
 loc_AAF0:
 		cmp	byte_D6C2, 0
@@ -2449,27 +2449,7 @@ loc_AEAE:
 		retf	8
 sub_AE00	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AEBB	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_AEC4:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_AEC4
-		pop	bp
-		retf	2
-sub_AEBB	endp
-
+include th02/frame_delay_.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2952,14 +2932,14 @@ sub_B203	endp
 		cmp	byte_DBEE, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
-		nopcall	sub_AEBB
+		nopcall	frame_delay_
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_B232:
 		push	1
-		nopcall	sub_AEBB
+		nopcall	frame_delay_
 		mov	ah, 5
 		cmp	byte_F3CB, 1
 		jz	short loc_B246
@@ -3060,26 +3040,7 @@ locret_B2D1:
 		retf
 sub_B296	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2D2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_B2DB:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_B2DB
-		pop	bp
-		retf	2
-sub_B2D2	endp
+include th02/frame_delay.asm
 
 seg002		ends
 
@@ -3168,7 +3129,7 @@ loc_B363:
 
 loc_B368:
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		inc	si
 
 loc_B370:
@@ -3842,7 +3803,7 @@ loc_B81D:
 loc_B829:
 		call	sub_B6BB
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+var_1]
 		out	dx, al
@@ -3858,7 +3819,7 @@ loc_B829:
 loc_B84F:
 		mov	word_F3C8, 0
 		push	14h
-		call	sub_B2D2
+		call	frame_delay
 		push	0
 		push	0
 		push	27Fh
@@ -4540,7 +4501,7 @@ loc_BD6A:
 		call	sub_BA20
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	0
 		mov	al, byte_DD20
 		cbw
@@ -4548,7 +4509,7 @@ loc_BD6A:
 		call	sub_B90D
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		push	ax
@@ -4573,7 +4534,7 @@ loc_BD6A:
 		call	sub_B17D
 		add	sp, 6
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		add	ax, ax
@@ -4601,7 +4562,7 @@ loc_BD6A:
 
 loc_BE0F:
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	1
 		mov	al, byte_DD20
 		cbw
@@ -4609,7 +4570,7 @@ loc_BE0F:
 		call	sub_B90D
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	0Ch
 		mov	al, byte_DD20
 		cbw
@@ -4617,7 +4578,7 @@ loc_BE0F:
 		call	sub_BA20
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		push	ax
@@ -4652,7 +4613,7 @@ loc_BE77:
 		call	sub_B90D
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		push	ax
@@ -4677,7 +4638,7 @@ loc_BE77:
 		call	sub_B17D
 		add	sp, 6
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	7
 		mov	al, byte_DD20
 		cbw
@@ -4685,7 +4646,7 @@ loc_BE77:
 		call	sub_BA20
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		add	ax, ax
@@ -4713,7 +4674,7 @@ loc_BE77:
 
 loc_BF1C:
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	1
 		mov	al, byte_DD20
 		cbw
@@ -4721,7 +4682,7 @@ loc_BF1C:
 		call	sub_B90D
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		push	0Ch
 		mov	al, byte_DD20
 		cbw
@@ -4729,7 +4690,7 @@ loc_BF1C:
 		call	sub_BA20
 		add	sp, 4
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	al, byte_DD20
 		cbw
 		push	ax
@@ -4765,7 +4726,7 @@ loc_BF88:
 
 loc_BF95:
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		mov	si, word_F3C8
 		or	si, si
 		jz	short loc_BFB2
@@ -5313,7 +5274,7 @@ sub_C3AC	proc near
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	1
-		call	sub_B2D2
+		call	frame_delay
 		pop	bp
 		retn
 sub_C3AC	endp

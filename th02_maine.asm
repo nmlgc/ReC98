@@ -355,7 +355,7 @@ loc_96B9:
 		push	[bp+arg_0]
 
 loc_96BC:
-		call	sub_B520
+		call	frame_delay
 
 loc_96C1:
 		add	di, 2
@@ -381,7 +381,7 @@ loc_96E4:
 		push	2
 
 loc_96E6:
-		call	sub_B520
+		call	frame_delay
 		inc	si
 
 loc_96EC:
@@ -561,7 +561,7 @@ loc_9830:
 		cmp	si, [bp+arg_4]
 		jl	short loc_9810
 		push	0Ah
-		call	sub_B520
+		call	frame_delay
 		inc	di
 
 loc_983D:
@@ -990,7 +990,7 @@ sub_9AD4	proc near
 		push	(offset	aKkuukkuukkuukk+60h)
 		call	sub_95A3
 		push	1Eh
-		call	sub_B520
+		call	frame_delay
 		push	1
 		call	palette_white_out
 		push	600h
@@ -1029,7 +1029,7 @@ loc_9B1B:
 		call	grcg_boxfill
 		call	grcg_off
 		push	1
-		call	sub_B520
+		call	frame_delay
 		sub	si, 4
 
 loc_9B5C:
@@ -1081,7 +1081,7 @@ sub_9B64	proc near
 		push	2
 		call	palette_black_in
 		push	28h ; '('
-		call	sub_B520
+		call	frame_delay
 		push	0
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
@@ -1093,7 +1093,7 @@ sub_9B64	proc near
 		push	6
 		call	sub_9643
 		push	14h
-		call	sub_B520
+		call	frame_delay
 		push	1
 		call	palette_black_out
 		push	1
@@ -1182,7 +1182,7 @@ loc_9C91:
 		push	6
 		call	sub_9643
 		push	14h
-		call	sub_B520
+		call	frame_delay
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1210,7 +1210,7 @@ loc_9CDE:
 		push	2
 		call	sub_99E4
 		push	1
-		call	sub_B520
+		call	frame_delay
 		inc	si
 
 loc_9D10:
@@ -1632,7 +1632,7 @@ sub_A09D	proc near
 		push	2
 		call	palette_black_in
 		push	28h ; '('
-		call	sub_B520
+		call	frame_delay
 		push	0
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
@@ -1644,7 +1644,7 @@ sub_A09D	proc near
 		push	6
 		call	sub_9643
 		push	14h
-		call	sub_B520
+		call	frame_delay
 		push	1
 		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
@@ -1896,7 +1896,7 @@ loc_A353:
 		push	6
 		call	sub_9643
 		push	0Ah
-		call	sub_B520
+		call	frame_delay
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+26h], 0
 		jnz	loc_A4EC
@@ -1907,7 +1907,7 @@ loc_A353:
 		push	6
 		call	sub_9643
 		push	1Eh
-		call	sub_B520
+		call	frame_delay
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
@@ -2072,7 +2072,7 @@ loc_A4EC:
 		push	6
 		call	sub_9643
 		push	1Eh
-		call	sub_B520
+		call	frame_delay
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
@@ -2235,7 +2235,7 @@ loc_A6B6:
 		push	6
 		call	sub_9643
 		push	1Eh
-		call	sub_B520
+		call	frame_delay
 		push	2
 		call	sub_98B5
 		mov	byte_F02A, 2Fh ; '/'
@@ -2448,7 +2448,7 @@ arg_4		= word ptr  8
 		push	[bp+arg_2]
 		call	sub_9942
 		push	4
-		call	sub_B520
+		call	frame_delay
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		pop	bp
@@ -2479,7 +2479,7 @@ loc_A90C:
 		push	si
 		call	sub_A874
 		push	4
-		call	sub_B520
+		call	frame_delay
 		add	si, 5
 
 loc_A920:
@@ -2522,7 +2522,7 @@ loc_A947:
 		call	sub_B200
 		add	sp, 0Ah
 		push	1
-		call	sub_B520
+		call	frame_delay
 		add	si, 4
 
 loc_A992:
@@ -2797,7 +2797,7 @@ loc_A992:
 		push	4
 		call	palette_black_in
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2814,7 +2814,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	0C8h ; 'È'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2834,7 +2834,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2858,7 +2858,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2885,7 +2885,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2910,7 +2910,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2935,7 +2935,7 @@ loc_A992:
 		call	sub_97F1
 		add	sp, 6
 		push	96h
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -3069,13 +3069,13 @@ loc_AF56:
 		call	sub_97F1
 		add	sp, 6
 		push	78h ; 'x'
-		call	sub_B520
+		call	frame_delay
 		push	180120h
 		push	0C0h
 		call	sub_97F1
 		add	sp, 6
 		push	0C8h ; 'È'
-		call	sub_B520
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -3132,7 +3132,7 @@ sub_AFE7	proc far
 		push	2
 		call	palette_black_in
 		push	96h
-		call	sub_B520
+		call	frame_delay
 		push	ds
 		push	offset aBut_pi	; "but.pi"
 		push	0
@@ -3184,7 +3184,7 @@ sub_B07F	proc far
 		push	2
 		call	palette_black_in
 		push	96h
-		call	sub_B520
+		call	frame_delay
 		push	ds
 		push	offset aExtra_pi ; "extra.pi"
 		push	0
@@ -3269,7 +3269,7 @@ loc_B189:
 		push	offset aEndft_bft ; "endft.bft"
 		call	super_entry_bfnt
 		push	64h ; 'd'
-		call	sub_B520
+		call	frame_delay
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+16h], 4
 		jz	short loc_B1C2
@@ -3650,7 +3650,7 @@ sub_B45F	proc far
 		call	key_sense
 		or	si, ax
 		push	2
-		nopcall	sub_B520
+		nopcall	frame_delay
 		mov	al, byte_D70A
 		cbw
 		push	ax
@@ -3711,28 +3711,7 @@ sub_B4CC	proc far
 sub_B4CC	endp
 
 include th02/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B520	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_B529:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_B529
-		pop	bp
-		retf	2
-sub_B520	endp
-
-; ---------------------------------------------------------------------------
+include th02/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4206,14 +4185,14 @@ arg_0		= word ptr  6
 		cmp	byte_D714, 0
 		jnz	short loc_B868
 		push	64h ; 'd'
-		nopcall	sub_B520
+		nopcall	frame_delay
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_B868:
 		push	1
-		nopcall	sub_B520
+		nopcall	frame_delay
 		mov	ah, 5
 		cmp	byte_FAF1, 1
 		jz	short loc_B87C
@@ -5138,7 +5117,7 @@ loc_BF78:
 
 loc_BF7F:
 		push	1
-		call	sub_B520
+		call	frame_delay
 		mov	ax, word_FAEE
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0
@@ -5555,7 +5534,7 @@ loc_C29D:
 		push	[bp+var_C]
 		call	sub_C045
 		push	1
-		call	sub_B520
+		call	frame_delay
 		inc	si
 
 loc_C2AE:

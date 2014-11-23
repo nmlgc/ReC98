@@ -643,7 +643,7 @@ _envp		= dword	ptr  0Ch
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
 		push	64h ; 'd'
-		call	sub_F282
+		call	frame_delay
 		les	bx, dword_11E6E
 		cmp	byte ptr es:[bx+1Ah], 0FEh
 		jb	short loc_A665
@@ -1038,7 +1038,7 @@ loc_A904:
 		push	si
 		call	sub_A866
 		push	word_15008
-		call	sub_F282
+		call	frame_delay
 		inc	si
 
 loc_A912:
@@ -1050,7 +1050,7 @@ loc_A917:
 		call	sub_A866
 		call	egc_off
 		push	1
-		call	sub_F282
+		call	frame_delay
 		pop	si
 		pop	bp
 		retn
@@ -1078,7 +1078,7 @@ loc_A93B:
 		cmp	word_12AFA, 0
 		jz	short loc_A950
 		push	1
-		call	sub_F282
+		call	frame_delay
 		jmp	short loc_A93B
 ; ---------------------------------------------------------------------------
 
@@ -1123,7 +1123,7 @@ loc_A962:
 
 loc_A9B4:
 		push	1
-		call	sub_F282
+		call	frame_delay
 		jmp	short loc_A962
 ; ---------------------------------------------------------------------------
 
@@ -1298,7 +1298,7 @@ loc_AB17:
 		cmp	byte_14F8E, 0
 		jnz	loc_AF8F	; default
 		push	[bp+var_2]
-		call	sub_F282
+		call	frame_delay
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1363,7 +1363,7 @@ loc_ABAC:
 		cmp	byte_14F8E, 0
 		jnz	short loc_ABC8
 		push	1
-		call	sub_F282
+		call	frame_delay
 
 loc_ABC8:
 		mov	ax, [bp+var_2]
@@ -1441,7 +1441,7 @@ loc_AC5F:
 		cmp	byte_14F8E, 0
 		jnz	short loc_AC72
 		push	1
-		call	sub_F282
+		call	frame_delay
 
 loc_AC72:
 		inc	[bp+var_4]
@@ -1591,7 +1591,7 @@ loc_AD9A:
 		push	ax
 		call	sub_A738
 		push	1
-		call	sub_F282
+		call	frame_delay
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
@@ -1644,7 +1644,7 @@ loc_AE25:
 		cmp	byte_14F8E, 0
 		jnz	short loc_AE41
 		push	[bp+var_4]
-		call	sub_F282
+		call	frame_delay
 
 loc_AE41:
 		inc	si
@@ -1660,7 +1660,7 @@ loc_AE42:
 		push	[bp+var_2]
 		call	sub_EFDC
 		push	1
-		call	sub_F282
+		call	frame_delay
 
 loc_AE64:
 		push	0A00040h
@@ -2261,7 +2261,7 @@ sub_B37C	proc near
 		push	bp
 		mov	bp, sp
 		push	2
-		call	sub_F282
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_1085E
 		out	dx, al
@@ -3607,7 +3607,7 @@ sub_BD1E	proc near
 		call	sub_EB1A
 		call	sub_BE76
 		push	1
-		call	sub_F282
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_11621
 		out	dx, al
@@ -5978,7 +5978,7 @@ sub_D1B1	proc near
 		out	dx, al
 		call	sub_CA9B
 		push	40h
-		call	sub_F282
+		call	frame_delay
 		call	sub_D16F
 		push	0
 		call	sub_F212
@@ -8128,7 +8128,7 @@ sub_E349	proc near
 		call	sub_D5E1
 		call	sub_DFEC
 		push	1
-		call	sub_F282
+		call	frame_delay
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_1183A
 		out	dx, al
@@ -10194,7 +10194,7 @@ loc_F263:
 		or	si, si
 		jge	short loc_F277
 		push	[bp+arg_0]
-		nopcall	sub_F282
+		nopcall	frame_delay
 		jmp	short loc_F27C
 ; ---------------------------------------------------------------------------
 
@@ -10211,21 +10211,7 @@ sub_F25F	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F282	proc far
-		mov	bx, sp
-		mov	bx, ss:[bx+4]
-		mov	vsync_Count1, 0
-
-loc_F28E:
-		cmp	vsync_Count1, bx
-		jb	short loc_F28E
-		retf	2
-sub_F282	endp
-
-; ---------------------------------------------------------------------------
+include th05/frame_delay.asm
 		db 0
 		mov	byte_1082E, 1
 		nop

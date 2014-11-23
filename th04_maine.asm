@@ -581,7 +581,7 @@ loc_A1E9:
 		push	204h
 		call	sub_CF8C
 		push	64h ; 'd'
-		call	sub_CCA3
+		call	frame_delay
 		call	sub_C814
 		jmp	loc_A281
 ; ---------------------------------------------------------------------------
@@ -591,7 +591,7 @@ loc_A1FE:
 		cmp	byte ptr es:[bx+30h], 0FDh
 		jnz	short loc_A274
 		push	64h ; 'd'
-		call	sub_CCA3
+		call	frame_delay
 		call	sub_C814
 		les	bx, [bp+var_4]
 		mov	byte ptr es:[bx+5], 34h	; '4'
@@ -622,7 +622,7 @@ loc_A1FE:
 
 loc_A274:
 		push	64h ; 'd'
-		call	sub_CCA3
+		call	frame_delay
 		call	sub_C814
 
 loc_A27E:
@@ -1393,7 +1393,7 @@ loc_A827:
 		push	si
 		call	sub_A78F
 		push	word_124C0
-		call	sub_CCA3
+		call	frame_delay
 		inc	si
 
 loc_A835:
@@ -1561,7 +1561,7 @@ loc_A978:
 		cmp	byte_1247E, 0
 		jnz	loc_ADB5	; default
 		push	[bp+var_2]
-		call	sub_CCA3
+		call	frame_delay
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -1627,7 +1627,7 @@ loc_AA0E:
 		cmp	byte_1247E, 0
 		jnz	short loc_AA2A
 		push	1
-		call	sub_CCA3
+		call	frame_delay
 
 loc_AA2A:
 		mov	ax, [bp+var_2]
@@ -1708,7 +1708,7 @@ loc_AACA:
 		cmp	byte_1247E, 0
 		jnz	short loc_AADD
 		push	1
-		call	sub_CCA3
+		call	frame_delay
 
 loc_AADD:
 		inc	[bp+var_4]
@@ -1918,7 +1918,7 @@ loc_ACB2:
 		cmp	byte_1247E, 0
 		jnz	short loc_ACCE
 		push	[bp+var_4]
-		call	sub_CCA3
+		call	frame_delay
 
 loc_ACCE:
 		inc	si
@@ -4013,7 +4013,7 @@ loc_C084:
 		mov	byte_124EF, 0
 		call	file_close
 		push	40h
-		call	sub_CCA3
+		call	frame_delay
 		push	400168h
 		push	0Fh
 		push	ds
@@ -5493,7 +5493,7 @@ loc_CB67:
 loc_CB6B:
 		call	far ptr	sub_D48A
 		push	1
-		call	sub_CCA3
+		call	frame_delay
 		jmp	loc_C9F6
 ; ---------------------------------------------------------------------------
 
@@ -5676,27 +5676,7 @@ sub_CC7A	proc far
 		retf
 sub_CC7A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CCA3	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_CCAC:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_CCAC
-		pop	bp
-		retf	2
-sub_CCA3	endp
-
+include th02/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5904,7 +5884,7 @@ loc_CE84:
 		push	cs
 		call	sub_D48A
 		push	1
-		nopcall	sub_CCA3
+		nopcall	frame_delay
 		nopcall	sub_D492
 		cmp	word_10072, 0
 		jnz	short loc_CE84
@@ -5919,7 +5899,7 @@ loc_CEA5:
 		push	cs
 		call	sub_D48A
 		push	1
-		nopcall	sub_CCA3
+		nopcall	frame_delay
 		nopcall	sub_D492
 		cmp	word_10072, 0
 		jnz	short loc_CECA
@@ -6178,7 +6158,7 @@ arg_2		= word ptr  8
 		cmp	byte_EAD1, 0
 		jnz	short loc_D05C
 		push	[bp+arg_0]
-		nopcall	sub_CCA3
+		nopcall	frame_delay
 		pop	bp
 		retf	4
 ; ---------------------------------------------------------------------------

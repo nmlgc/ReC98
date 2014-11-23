@@ -20441,7 +20441,7 @@ loc_1FD35:
 		inc	byte ptr es:[bx+13h]
 		mov	byte_25FE8, 2
 		push	1
-		call	sub_1510E
+		call	frame_delay
 
 loc_1FD51:
 		mov	word ptr dword_2C922, 0C190h

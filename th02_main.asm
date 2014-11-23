@@ -2947,7 +2947,7 @@ loc_BCA0:
 
 loc_BCA4:
 		push	1
-		call	sub_F618
+		call	frame_delay
 		jmp	loc_BA1D
 ; ---------------------------------------------------------------------------
 
@@ -3802,14 +3802,14 @@ loc_C348:
 		push	0E1h
 		call	gaiji_putsa
 		push	1
-		call	sub_F618
+		call	frame_delay
 		dec	si
 
 loc_C3E5:
 		cmp	si, 0Ch
 		jge	loc_C348
 		push	1Eh
-		call	sub_F618
+		call	frame_delay
 		mov	word_1FFA8, 0
 		jmp	short loc_C400
 ; ---------------------------------------------------------------------------
@@ -3895,7 +3895,7 @@ loc_C4CA:
 
 loc_C4E5:
 		push	1
-		call	sub_F618
+		call	frame_delay
 		jmp	short loc_C47A
 ; ---------------------------------------------------------------------------
 
@@ -7788,7 +7788,7 @@ loc_E147:
 		cmp	si, 18h
 		jl	short loc_E103
 		push	2
-		call	sub_F618
+		call	frame_delay
 		inc	[bp+var_4]
 
 loc_E156:
@@ -10122,7 +10122,7 @@ sub_F464	proc far
 		call	key_sense
 		or	si, ax
 		push	2
-		nopcall	sub_F618
+		nopcall	frame_delay
 		mov	al, byte_1E300
 		cbw
 		push	ax
@@ -10318,28 +10318,7 @@ arg_12		= word ptr  18h
 		retf	14h
 sub_F5B1	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F618	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_F621:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_F621
-		pop	bp
-		retf	2
-sub_F618	endp
-
-; ---------------------------------------------------------------------------
+include th02/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10926,14 +10905,14 @@ sub_F9F6	endp
 		cmp	byte_1E30A, 0
 		jnz	short loc_FA25
 		push	64h ; 'd'
-		nopcall	sub_F618
+		nopcall	frame_delay
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_FA25:
 		push	1
-		nopcall	sub_F618
+		nopcall	frame_delay
 		mov	ah, 5
 		cmp	byte_1FFAB, 1
 		jz	short loc_FA39
@@ -17524,7 +17503,7 @@ loc_12E4F:
 		mov	ax, [bp+var_4]
 		mov	[bp+var_2], ax
 		push	1
-		call	sub_F618
+		call	frame_delay
 		call	sub_12CB1
 		push	200140h
 		push	1800050h
@@ -17583,7 +17562,7 @@ loc_12EC5:
 		mov	ax, [bp+var_4]
 		mov	[bp+var_2], ax
 		push	1
-		call	sub_F618
+		call	frame_delay
 		call	sub_12CB1
 		push	200140h
 		push	1800050h
@@ -17846,7 +17825,7 @@ loc_130CF:
 loc_130DE:
 		mov	[bp+var_2], 3
 		push	1
-		call	sub_F618
+		call	frame_delay
 
 loc_130EA:
 		mov	ax, di
@@ -18394,26 +18373,26 @@ sub_13439	proc near
 		call	sub_13055
 		call	sub_13414
 		push	0Ah
-		call	sub_F618
+		call	frame_delay
 		push	69h ; 'i'
 		call	sub_13055
 		push	1Eh
-		call	sub_F618
+		call	frame_delay
 		call	sub_13414
 		push	14h
-		call	sub_F618
+		call	frame_delay
 		push	69h ; 'i'
 		call	sub_13055
 		push	14h
-		call	sub_F618
+		call	frame_delay
 		push	69h ; 'i'
 		call	sub_13055
 		call	sub_13414
 		push	14h
-		call	sub_F618
+		call	frame_delay
 		call	sub_13414
 		push	14h
-		call	sub_F618
+		call	frame_delay
 		call	sub_13414
 		push	3
 		call	palette_white_out
@@ -30083,7 +30062,7 @@ sub_199B3	proc far
 		call	sub_13328
 		mov	vsync_Count1, 0
 		push	0Ah
-		call	sub_F618
+		call	frame_delay
 		call	sub_1A529
 		push	8000C0h
 		call	super_clean
@@ -30366,7 +30345,7 @@ sub_19C8D	proc near
 		push	0Ah
 		call	palette_white_out
 		push	32h ; '2'
-		call	sub_F618
+		call	frame_delay
 		add	dword_1E598, 0C350h
 		call	sub_19C1D
 		mov	ax, 1
@@ -31387,7 +31366,7 @@ loc_1A54E:
 		push	dx
 		call	grcg_circle
 		push	1
-		call	sub_F618
+		call	frame_delay
 		push	0C00000h
 		call	grcg_setcolor
 		push	0E00090h
@@ -31473,7 +31452,7 @@ loc_1A697:
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
 		push	3
-		call	sub_F618
+		call	frame_delay
 		inc	si
 
 loc_1A6B2:
@@ -31512,7 +31491,7 @@ sub_1A6C5	proc near
 		call	graph_clear
 		mov	vsync_Count1, 0
 		push	1
-		call	sub_F618
+		call	frame_delay
 		push	0
 		call	graph_scrollup
 		mov	dx, 0A6h ; '¦'
@@ -31606,7 +31585,7 @@ sub_1A7D5	proc far
 		call	sub_1315B
 		mov	vsync_Count1, 0
 		push	0Ah
-		call	sub_F618
+		call	frame_delay
 		call	sub_1A529
 		push	0
 		call	sub_1310B
@@ -35951,7 +35930,7 @@ loc_1CCF7:
 
 loc_1CCFE:
 		push	1
-		call	sub_F618
+		call	frame_delay
 		mov	ax, word_1FFA8
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0

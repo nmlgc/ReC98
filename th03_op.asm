@@ -711,7 +711,7 @@ loc_9C70:
 loc_9C7E:
 		mov	si, word_F296
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		jmp	short loc_9C1B
 ; ---------------------------------------------------------------------------
 
@@ -912,7 +912,7 @@ loc_9E24:
 
 loc_9E3C:
 		push	1
-		call	sub_C19E
+		call	frame_delay
 
 loc_9E43:
 		cmp	word_F296, 0
@@ -931,7 +931,7 @@ loc_9E5C:
 		push	1000002h
 		call	super_put
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		add	si, 8
 
 loc_9E76:
@@ -1779,7 +1779,7 @@ loc_A4EE:
 		les	bx, dword_FC54
 		inc	dword ptr es:[bx+10h]
 		push	1
-		call	sub_C19E
+		call	frame_delay
 
 loc_A4FE:
 		cmp	byte_D952, 0
@@ -2260,7 +2260,7 @@ sub_A899	proc near
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	1
-		call	sub_CB86
+		call	frame_delay_
 		pop	bp
 		retn
 sub_A899	endp
@@ -2929,7 +2929,7 @@ var_2		= word ptr -2
 
 loc_AEA0:
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes+45, al
 		mov	Palettes+46, al
@@ -2978,7 +2978,7 @@ loc_AF09:
 		call	far ptr	palette_show
 		add	[bp+var_2], 2
 		push	1
-		call	sub_C19E
+		call	frame_delay
 
 loc_AF25:
 		cmp	[bp+var_2], 0FFh
@@ -2997,11 +2997,11 @@ loc_AF40:
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		inc	si
 
 loc_AF65:
@@ -3022,11 +3022,11 @@ loc_AF65:
 		push	0
 		call	sub_C37B
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		xor	si, si
 		jmp	short loc_AFD9
 ; ---------------------------------------------------------------------------
@@ -3035,11 +3035,11 @@ loc_AFB4:
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		inc	si
 
 loc_AFD9:
@@ -3119,7 +3119,7 @@ loc_B094:
 		mov	PaletteTone, si
 		call	far ptr	palette_show
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		add	si, 4
 
 loc_B0A7:
@@ -3150,7 +3150,7 @@ loc_B0B8:
 		push	1000002h
 		call	super_put
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		add	si, 8
 
 loc_B0D2:
@@ -3182,7 +3182,7 @@ loc_B0E4:
 		push	1000002h
 		call	super_put
 		push	1
-		call	sub_C19E
+		call	frame_delay
 		sub	si, 8
 
 loc_B101:
@@ -4574,7 +4574,7 @@ loc_BAED:
 
 loc_BAF9:
 		push	10h
-		call	sub_C19E
+		call	frame_delay
 		mov	word_FC62, 0
 
 loc_BB06:
@@ -5412,27 +5412,7 @@ sub_C0D4	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C19E	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_C1A7:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_C1A7
-		pop	bp
-		retf	2
-sub_C19E	endp
-
-; ---------------------------------------------------------------------------
+include th02/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6564,7 +6544,7 @@ loc_CAB3:
 		cmp	word_F296, 0
 		jz	short loc_CAC7
 		push	1
-		nopcall	sub_C19E
+		nopcall	frame_delay
 		jmp	short loc_CAB3
 ; ---------------------------------------------------------------------------
 
@@ -6581,7 +6561,7 @@ loc_CAD0:
 		jnz	short loc_CAEF
 		inc	di
 		push	1
-		nopcall	sub_C19E
+		nopcall	frame_delay
 		cmp	si, 270Fh
 		jnz	short loc_CAEB
 		xor	di, di
@@ -6700,26 +6680,7 @@ loc_CB7D:
 		retf
 sub_CB68	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CB86	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_CB8F:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_CB8F
-		pop	bp
-		retf	2
-sub_CB86	endp
+include th02/frame_delay_.asm
 
 seg002		ends
 

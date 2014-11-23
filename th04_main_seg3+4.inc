@@ -20938,7 +20938,7 @@ loc_1E8E5:
 		inc	byte ptr es:[bx+13h]
 		mov	byte_266D2, 2
 		push	1
-		call	sub_131B7
+		call	frame_delay
 
 loc_1E905:
 		inc	word_2671A

@@ -486,7 +486,7 @@ sub_AB88	proc near
 		push	si
 		mov	word_266D0, 1
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		call	far ptr	sub_1379C
 
 loc_AB9E:
@@ -5605,7 +5605,7 @@ loc_D0A6:
 		push	si
 		call	sub_CFBE
 		push	0Ch
-		call	sub_131B7
+		call	frame_delay
 		inc	si
 
 loc_D0C2:
@@ -5801,7 +5801,7 @@ loc_D20A:
 		push	ax
 		call	sub_D0CA
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		mov	ax, [bp+var_2]
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
@@ -5892,7 +5892,7 @@ loc_D2DF:
 loc_D2E2:
 		call	graph_scrollup
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		inc	si
 
 loc_D2EF:
@@ -5945,7 +5945,7 @@ loc_D350:
 		push	ax
 		call	sub_D0CA
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		cmp	word_255D4, 0
 		jnz	short loc_D38A
 		push	2000F0h
@@ -5986,7 +5986,7 @@ loc_D3B0:
 		push	ax
 		call	sub_D193
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	[bp+var_2]
@@ -6348,7 +6348,7 @@ loc_D6D2:
 		push	1
 
 loc_D6DC:
-		call	sub_131B7
+		call	frame_delay
 		jmp	loc_D63F
 ; ---------------------------------------------------------------------------
 
@@ -6385,7 +6385,7 @@ sub_D6EB	proc far
 		mov	al, byte_25A3C
 		out	dx, al
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		pop	bp
 		retf
 sub_D6EB	endp
@@ -8355,7 +8355,7 @@ loc_E556:
 		or	al, al
 		jnz	short loc_E566
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		jmp	short loc_E556
 ; ---------------------------------------------------------------------------
 
@@ -8368,7 +8368,7 @@ loc_E571:
 		or	al, al
 		jnz	short loc_E581
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		jmp	short loc_E571
 ; ---------------------------------------------------------------------------
 
@@ -8383,7 +8383,7 @@ loc_E588:
 		push	0E1h
 		call	gaiji_putca
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		push	[bp+var_2]
 		push	0Ch
 		push	ds
@@ -8405,7 +8405,7 @@ loc_E5C2:
 		push	0E1h
 		call	gaiji_putca
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		push	[bp+var_2]
 		push	0Ch
 		push	ds
@@ -8435,7 +8435,7 @@ loc_E61E:
 		or	al, al
 		jnz	short loc_E62E
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		jmp	short loc_E61E
 ; ---------------------------------------------------------------------------
 
@@ -8450,7 +8450,7 @@ loc_E63F:
 		or	al, al
 		jnz	short loc_E64F
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		jmp	short loc_E63F
 ; ---------------------------------------------------------------------------
 
@@ -8598,7 +8598,7 @@ loc_E783:
 loc_E787:
 		call	far ptr	sub_1379C
 		push	1
-		call	sub_131B7
+		call	frame_delay
 		jmp	loc_E703
 ; ---------------------------------------------------------------------------
 
@@ -18307,25 +18307,7 @@ sub_13117	endp
 		pop	bp
 		retf	14h
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_131B7	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_131C0:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_131C0
-		pop	bp
-		retf	2
-sub_131B7	endp
+include th02/frame_delay.asm
 
 ; ---------------------------------------------------------------------------
 		push	di
@@ -18400,7 +18382,7 @@ loc_1321D:
 		push	cs
 		call	sub_1379C
 		push	1
-		nopcall	sub_131B7
+		nopcall	frame_delay
 
 loc_13229:
 		nopcall	sub_137A4
@@ -18417,7 +18399,7 @@ loc_1323E:
 		push	cs
 		call	sub_1379C
 		push	1
-		nopcall	sub_131B7
+		nopcall	frame_delay
 		nopcall	sub_137A4
 		cmp	word_24CB4, 0
 		jnz	short loc_13263
