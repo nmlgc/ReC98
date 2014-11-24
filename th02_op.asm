@@ -246,7 +246,7 @@ loc_9C0E:
 		mov	al, [bp+var_8]
 		mov	byte_DC34, al
 		mov	al, [bp+var_7]
-		mov	byte_E8F9, al
+		mov	snd_bgm_mode, al
 		mov	al, [bp+var_6]
 		mov	byte_F3E2, al
 		mov	al, [bp+var_5]
@@ -264,23 +264,23 @@ loc_9C0E:
 		mov	al, [bp+var_1]
 		mov	es:[bx+0Ch], al
 		call	file_close
-		cmp	byte_E8F9, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_9C80
-		mov	byte_F3CA, 0
-		mov	byte_DBEE, 0
+		mov	snd_fm_possible, 0
+		mov	snd_playing, 0
 		jmp	short loc_9C99
 ; ---------------------------------------------------------------------------
 
 loc_9C80:
-		cmp	byte_E8F9, 1
+		cmp	snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_9C8E
-		mov	byte_F3CB, 0
+		mov	snd_midi_active, 0
 		jmp	short loc_9C94
 ; ---------------------------------------------------------------------------
 
 loc_9C8E:
-		mov	al, byte_F3CD
-		mov	byte_F3CB, al
+		mov	al, snd_midi_possible
+		mov	snd_midi_active, al
 
 loc_9C94:
 		call	sub_B092
@@ -319,7 +319,7 @@ var_2		= word ptr -2
 		mov	[bp+var_5], 0
 		mov	al, byte_DC34
 		mov	[bp+var_C], al
-		mov	al, byte_E8F9
+		mov	al, snd_bgm_mode
 		mov	[bp+var_B], al
 		mov	al, byte_F3E2
 		mov	[bp+var_A], al
@@ -506,12 +506,12 @@ loc_9E39:
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_9E97
 		mov	[bp+var_2], 0
-		cmp	byte_F3CD, 0
+		cmp	snd_midi_possible, 0
 		jz	short loc_9E7D
-		mov	al, byte_F3CB
+		mov	al, snd_midi_active
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	byte_F3CB, 1
+		mov	snd_midi_active, 1
 		push	600h
 		push	ds
 		push	offset aOp_m	; "op.m"
@@ -519,14 +519,14 @@ loc_9E39:
 		add	sp, 6
 
 loc_9E7D:
-		mov	byte_F3CB, 0
+		mov	snd_midi_active, 0
 		push	600h
 		push	ds
 		push	offset aOp_m	; "op.m"
 		call	sub_B0EA
 		add	sp, 6
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_F3CB, al
+		mov	snd_midi_active, al
 
 loc_9E97:
 		push	12h
@@ -610,7 +610,7 @@ sub_9F37	proc near
 		mov	es:[bx+1Ah], al
 		mov	al, byte_F3E2
 		mov	es:[bx+19h], al
-		mov	al, byte_E8F9
+		mov	al, snd_bgm_mode
 		mov	es:[bx+18h], al
 		mov	byte ptr es:[bx+17h], 0
 		mov	word ptr es:[bx+10h], 0
@@ -691,7 +691,7 @@ sub_A027	proc far
 		mov	byte ptr es:[bx+14h], 3
 		mov	byte ptr es:[bx+1Ah], 2
 		mov	byte ptr es:[bx+19h], 3
-		mov	al, byte_E8F9
+		mov	al, snd_bgm_mode
 		mov	es:[bx+18h], al
 		mov	byte ptr es:[bx+16h], 1
 		mov	word ptr es:[bx+12h], 0
@@ -1320,7 +1320,7 @@ loc_A568:
 		push	2Fh ; '/'
 		push	11h
 		push	ds
-		mov	al, byte_E8F9
+		mov	al, snd_bgm_mode
 		cbw
 		imul	ax, 5
 		add	ax, offset gOFF
@@ -1336,7 +1336,7 @@ loc_A568:
 		push	114h
 		push	10h
 		push	ds
-		mov	al, byte_E8F9
+		mov	al, snd_bgm_mode
 		cbw
 		imul	ax, 5
 		add	ax, 145h
@@ -1491,35 +1491,35 @@ sub_A510	endp
 sub_A6EF	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_E8F9, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_A70E
-		mov	byte_F3CA, 0
+		mov	snd_fm_possible, 0
 		push	100h
 		call	sub_B203
 		pop	cx
-		mov	byte_DBEE, 0
+		mov	snd_playing, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_A70E:
-		cmp	byte_E8F9, 1
+		cmp	snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_A725
 		push	100h
 		call	sub_B203
 		pop	cx
-		mov	byte_F3CB, 0
+		mov	snd_midi_active, 0
 		jmp	short loc_A73B
 ; ---------------------------------------------------------------------------
 
 loc_A725:
-		cmp	byte_E8F9, 2
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_A748
 		push	100h
 		call	sub_B203
 		pop	cx
-		mov	al, byte_F3CD
-		mov	byte_F3CB, al
+		mov	al, snd_midi_possible
+		mov	snd_midi_active, al
 
 loc_A73B:
 		call	sub_B092
@@ -1636,10 +1636,10 @@ loc_A7F8:
 ; ---------------------------------------------------------------------------
 
 loc_A80A:
-		inc	byte_E8F9
-		cmp	byte_E8F9, 2
+		inc	snd_bgm_mode
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jle	short loc_A81A
-		mov	byte_E8F9, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 
 loc_A81A:
 		call	sub_A6EF
@@ -1704,10 +1704,10 @@ loc_A883:
 ; ---------------------------------------------------------------------------
 
 loc_A895:
-		dec	byte_E8F9
-		cmp	byte_E8F9, 0
+		dec	snd_bgm_mode
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jge	short loc_A8A5
-		mov	byte_E8F9, 2
+		mov	snd_bgm_mode, SND_BGM_MIDI
 
 loc_A8A5:
 		call	sub_A6EF
@@ -1763,10 +1763,10 @@ loc_A8F8:
 
 loc_A908:
 		mov	byte_DC34, 1
-		mov	byte_E8F9, 1
+		mov	snd_bgm_mode, SND_BGM_FM
 		push	100h
 		call	sub_B203
-		mov	byte_F3CB, 0
+		mov	snd_midi_active, 0
 		call	sub_B092
 		push	0
 		call	sub_B203
@@ -1844,10 +1844,10 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	sub_B0B0
+		call	snd_pmd_resident
 		or	ax, ax
 		jz	short loc_A9EE
-		call	sub_B058
+		call	snd_mmd_resident
 		call	sub_AFB0
 		or	ax, ax
 		jz	short loc_A9DD
@@ -1904,16 +1904,16 @@ loc_AA35:
 
 loc_AA4A:
 		mov	word_F3C8, 0
-		mov	al, byte_E8F9
-		mov	byte_DBEE, al
+		mov	al, snd_bgm_mode
+		mov	snd_playing, al
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_AA8F
-		cmp	byte_F3CD, 0
+		cmp	snd_midi_possible, 0
 		jz	short loc_AA8F
-		mov	al, byte_F3CB
+		mov	al, snd_midi_active
 		mov	[bp+var_2], al
-		mov	byte_F3CB, 1
+		mov	snd_midi_active, 1
 		push	600h
 		push	ds
 		push	offset aGminit_m ; "gminit.m"
@@ -1922,7 +1922,7 @@ loc_AA4A:
 		call	sub_B203
 		add	sp, 8
 		mov	al, [bp+var_2]
-		mov	byte_F3CB, al
+		mov	snd_midi_active, al
 
 loc_AA8F:
 		call	sub_9D5C
@@ -2668,35 +2668,7 @@ sub_B019	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B058	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_B089
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_B089
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_B089
-		mov	byte_F3CC, 61h ; 'a'
-		mov	byte_F3CB, 1
-		mov	byte_F3CD, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B089:
-		mov	byte_F3CD, 0
-		xor	ax, ax
-		retf
-sub_B058	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2705,54 +2677,24 @@ sub_B092	proc far
 		mov	ah, 9
 		int	60h
 		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_B0A4
+		cmp	al, -1
+		jz	short @@midi?
 		inc	bx
-		mov	byte_F3CA, 1
-		jmp	short loc_B0A8
-; ---------------------------------------------------------------------------
+		mov	snd_fm_possible, 1
+		jmp	short @@ret
 
-loc_B0A4:
-		mov	bl, byte_F3CB
+@@midi?:
+		mov	bl, snd_midi_active
 
-loc_B0A8:
-		mov	byte_DBEE, bl
+@@ret:
+		mov	snd_playing, bl
 		mov	ax, bx
-		retf
+		ret
 sub_B092	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B0B0	proc far
-		mov	byte_F3CC, 60h
-		mov	byte_F3CB, 0
-		mov	byte_F3CA, 0
-		mov	byte_F3CD, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_B0E6
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_B0E6
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_B0E6
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B0E6:
-		xor	ax, ax
-		retf
-sub_B0B0	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2780,7 +2722,7 @@ loc_B0F4:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_B12B
-		cmp	byte_F3CB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_B12B
 		xor	bx, bx
 
@@ -2803,7 +2745,7 @@ loc_B12B:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_B148
-		cmp	byte_F3CB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_B148
 		int	61h		; reserved for user interrupt
 		jmp	short loc_B14A
@@ -2909,10 +2851,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_DBEE, 0
+		cmp	snd_playing, 0
 		jz	short loc_B21D
 		mov	ax, [bp+arg_0]
-		cmp	byte_F3CB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_B21B
 		int	60h
 		jmp	short loc_B21D
@@ -2929,7 +2871,7 @@ sub_B203	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	byte_DBEE, 0
+		cmp	snd_playing, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
 		nopcall	frame_delay_
@@ -2941,7 +2883,7 @@ loc_B232:
 		push	1
 		nopcall	frame_delay_
 		mov	ah, 5
-		cmp	byte_F3CB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_B246
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -2983,7 +2925,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		cmp	byte_F3CA, 0
+		cmp	snd_fm_possible, 0
 		jz	short loc_B294
 		cmp	byte_DBF0, 0FFh
 		jnz	short loc_B278
@@ -3013,7 +2955,7 @@ sub_B25E	endp
 
 
 sub_B296	proc far
-		cmp	byte_F3CA, 0
+		cmp	snd_fm_possible, 0
 		jz	short locret_B2D1
 		cmp	byte_DBF0, 0FFh
 		jz	short locret_B2D1
@@ -5879,10 +5821,10 @@ loc_C8D9:
 ; ---------------------------------------------------------------------------
 
 loc_C8E3:
-		mov	al, byte_F3CB
+		mov	al, snd_midi_active
 		mov	[bp+var_1], al
-		mov	al, byte_F3CD
-		mov	byte_F3CB, al
+		mov	al, snd_midi_possible
+		mov	snd_midi_active, al
 		push	600h
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
@@ -5891,7 +5833,7 @@ loc_C8E3:
 		push	word ptr [bx+92Ch]
 		push	word ptr [bx+92Ah]
 		call	sub_B0EA
-		mov	byte_F3CB, 0
+		mov	snd_midi_active, 0
 		push	600h
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
@@ -5901,7 +5843,7 @@ loc_C8E3:
 		push	word ptr [bx+92Ah]
 		call	sub_B0EA
 		mov	al, [bp+var_1]
-		mov	byte_F3CB, al
+		mov	snd_midi_active, al
 		push	0
 		call	sub_B203
 		add	sp, 0Eh
@@ -6074,7 +6016,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
-byte_DBEE	db 0
+snd_playing	db 0
 		db 0
 byte_DBF0	db 0FFh
 		db    0
@@ -6325,7 +6267,7 @@ ExitEnd	label byte
 
 bdata@	label byte
 byte_E8F8	db ?
-byte_E8F9	db ?
+snd_bgm_mode	db ?
 		dw ?
 word_E8FC	dw ?
 byte_E8FE	db ?
@@ -6347,10 +6289,7 @@ dword_F178	dd ?
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_F3C8	dw ?
-byte_F3CA	db ?
-byte_F3CB	db ?
-byte_F3CC	db ?
-byte_F3CD	db ?
+include th02/hardware/snd[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

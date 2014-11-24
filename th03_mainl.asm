@@ -1293,7 +1293,7 @@ _envp		= dword	ptr  0Ch
 		push	offset aCOul	; "–²Žž‹ó1.dat"
 		call	sub_CEE0
 		call	respal_exist
-		mov	byte_10061, 0
+		mov	snd_midi_active, 0
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_9DAD
@@ -5226,7 +5226,7 @@ arg_2		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EC70, 0
+		cmp	snd_playing, 0
 		jnz	short loc_BCB9
 		mov	ax, word_10BB2
 		cmp	ax, [bp+arg_0]
@@ -6471,44 +6471,22 @@ sub_C80C	proc far
 		cmp	al, 0FFh
 		jz	short loc_C81E
 		inc	bx
-		mov	byte_10060, 1
+		mov	snd_fm_possible, 1
 		jmp	short loc_C822
 ; ---------------------------------------------------------------------------
 
 loc_C81E:
-		mov	bl, byte_10061
+		mov	bl, snd_midi_active
 
 loc_C822:
-		mov	byte_EC70, bl
+		mov	snd_playing, bl
 		mov	ax, bx
 		retf
 sub_C80C	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-		mov	byte_10062, 60h
-		mov	byte_10061, 0
-		mov	byte_10060, 0
-		mov	byte_10063, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_C860
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_C860
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_C860
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_C860:
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6523,7 +6501,7 @@ arg_0		= byte ptr  6
 
 loc_C867:
 		mov	ah, 8
-		cmp	byte_10061, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_C874
 		int	60h
 		jmp	short loc_C876
@@ -6572,7 +6550,7 @@ loc_C88A:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_C8C1
-		cmp	byte_10061, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_C8C1
 		xor	bx, bx
 
@@ -6595,7 +6573,7 @@ loc_C8C1:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_C8DE
-		cmp	byte_10061, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_C8DE
 		int	61h		; reserved for user interrupt
 		jmp	short loc_C8E0
@@ -7289,7 +7267,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		cmp	byte_10060, 0
+		cmp	snd_fm_possible, 0
 		jz	short loc_CE82
 		cmp	byte_EC7C, 0FFh
 		jnz	short loc_CE66
@@ -7319,7 +7297,7 @@ sub_CE4A	endp
 
 
 sub_CE86	proc far
-		cmp	byte_10060, 0
+		cmp	snd_fm_possible, 0
 		jz	short locret_CEC1
 		cmp	byte_EC7C, 0FFh
 		jz	short locret_CEC1
@@ -7357,10 +7335,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EC70, 0
+		cmp	snd_playing, 0
 		jz	short loc_CEDC
 		mov	ax, [bp+arg_0]
-		cmp	byte_10061, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_CEDA
 		int	60h
 		jmp	short loc_CEDC
@@ -8046,7 +8024,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EC70, 0
+		cmp	snd_playing, 0
 		jnz	short loc_D412
 		push	[bp+arg_0]
 		nopcall	frame_delay
@@ -8056,7 +8034,7 @@ arg_2		= word ptr  8
 
 loc_D412:
 		mov	ah, 5
-		cmp	byte_10061, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_D41F
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -8088,7 +8066,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EC70, 0
+		cmp	snd_playing, 0
 		jnz	short loc_D443
 		push	[bp+arg_0]
 		nopcall	sub_D47A
@@ -8098,7 +8076,7 @@ arg_2		= word ptr  8
 
 loc_D443:
 		mov	ah, 5
-		cmp	byte_10061, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_D450
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -8697,7 +8675,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-byte_EC70	db 0
+snd_playing	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 byte_EC7C	db 0FFh
@@ -9232,10 +9210,7 @@ dword_10050	dd ?
 dword_10054	dd ?
 dword_10058	dd ?
 dword_1005C	dd ?
-byte_10060	db ?
-byte_10061	db ?
-byte_10062	db ?
-byte_10063	db ?
+include th02/hardware/snd[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

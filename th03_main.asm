@@ -377,7 +377,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_A346
 		or	ax, ax
 		jz	short loc_9775
-		mov	byte_1EF6D, 0
+		mov	snd_midi_active, 0
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_970F
@@ -9688,44 +9688,22 @@ sub_E922	proc far
 		cmp	al, 0FFh
 		jz	short loc_E934
 		inc	bx
-		mov	byte_1EF6C, 1
+		mov	snd_fm_possible, 1
 		jmp	short loc_E938
 ; ---------------------------------------------------------------------------
 
 loc_E934:
-		mov	bl, byte_1EF6D
+		mov	bl, snd_midi_active
 
 loc_E938:
-		mov	byte_1DB3C, bl
+		mov	snd_playing, bl
 		mov	ax, bx
 		retf
 sub_E922	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-		mov	byte_1EF6E, 60h
-		mov	byte_1EF6D, 0
-		mov	byte_1EF6C, 0
-		mov	byte_1EF6F, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_E976
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_E976
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_E976
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_E976:
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10075,7 +10053,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		cmp	byte_1EF6C, 0
+		cmp	snd_fm_possible, 0
 		jz	short loc_EC72
 		cmp	byte_1DB4A, 0FFh
 		jnz	short loc_EC56
@@ -10105,7 +10083,7 @@ sub_EC3A	endp
 
 
 sub_EC76	proc far
-		cmp	byte_1EF6C, 0
+		cmp	snd_fm_possible, 0
 		jz	short locret_ECB1
 		cmp	byte_1DB4A, 0FFh
 		jz	short locret_ECB1
@@ -10143,10 +10121,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_1DB3C, 0
+		cmp	snd_playing, 0
 		jz	short loc_ECCC
 		mov	ax, [bp+arg_0]
-		cmp	byte_1EF6D, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_ECCA
 		int	60h
 		jmp	short loc_ECCC
@@ -37815,7 +37793,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-byte_1DB3C	db 0
+snd_playing	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
@@ -38998,10 +38976,7 @@ dword_1EF5C	dd ?
 dword_1EF60	dd ?
 dword_1EF64	dd ?
 dword_1EF68	dd ?
-byte_1EF6C	db ?
-byte_1EF6D	db ?
-byte_1EF6E	db ?
-byte_1EF6F	db ?
+include th02/hardware/snd[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1EFF6	dw ?
 word_1EFF8	dw ?

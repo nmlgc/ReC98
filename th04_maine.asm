@@ -5964,58 +5964,8 @@ sub_CED0	endp
 		pop	bp
 		retf	0Ah
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CF2E	proc far
-		xor	ax, ax
-		mov	byte_FF9A, 60h
-		mov	byte_EAD2, al
-		mov	byte_EAD1, al
-		mov	byte_EAD0, al
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short locret_CF5B
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short locret_CF5B
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short locret_CF5B
-		inc	ax
-
-locret_CF5B:
-		retf
-sub_CF2E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CF5C	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_CF88
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_CF88
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_CF88
-		mov	byte_FF9A, 61h ; 'a'
-		mov	byte_EAD2, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_CF88:
-		xor	ax, ax
-		retf
-sub_CF5C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/snd_pmd_resident.asm
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6027,10 +5977,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EAD1, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_CFA6
 		mov	ax, [bp+arg_0]
-		cmp	byte_EAD1, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_CFA4
 		int	60h
 		jmp	short loc_CFA6
@@ -6060,34 +6010,34 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nopcall	sub_CF2E
-		cmp	si, 3
+		nopcall	snd_pmd_resident
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_CFC4
-		nopcall	sub_CF5C
+		nopcall	snd_mmd_resident
 
 loc_CFC4:
 		mov	ah, 9
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_CFD3
-		mov	byte_EAD1, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_CFE3
 ; ---------------------------------------------------------------------------
 
 loc_CFD3:
 		or	al, al
 		jnz	short loc_CFDE
-		mov	byte_EAD1, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 		jmp	short loc_CFE3
 ; ---------------------------------------------------------------------------
 
 loc_CFDE:
-		mov	byte_EAD1, 2
+		mov	snd_bgm_mode, SND_BGM_FM86
 
 loc_CFE3:
-		cmp	di, 1
+		cmp	di, SND_SE_FM
 		jnz	short loc_CFFB
-		cmp	byte_EAD1, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_CFF4
 		mov	ax, 1
 		jmp	short loc_CFF6
@@ -6097,45 +6047,45 @@ loc_CFF4:
 		xor	ax, ax
 
 loc_CFF6:
-		mov	byte_EAD0, al
+		mov	snd_se_mode, al
 		jmp	short loc_D00C
 ; ---------------------------------------------------------------------------
 
 loc_CFFB:
-		cmp	di, 2
+		cmp	di, SND_SE_BEEP
 		jnz	short loc_D007
-		mov	byte_EAD0, 2
+		mov	snd_se_mode, SND_SE_BEEP
 		jmp	short loc_D00C
 ; ---------------------------------------------------------------------------
 
 loc_D007:
-		mov	byte_EAD0, 0
+		mov	snd_se_mode, SND_SE_OFF
 
 loc_D00C:
 		or	si, si
 		jnz	short loc_D017
-		mov	byte_EAD1, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_D03B
 ; ---------------------------------------------------------------------------
 
 loc_D017:
-		cmp	si, 3
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_D02A
-		cmp	byte_EAD2, 0
+		cmp	snd_midi_possible, 0
 		jz	short loc_D02A
-		mov	byte_EAD1, 3
+		mov	snd_bgm_mode, SND_BGM_MIDI
 		jmp	short loc_D03B
 ; ---------------------------------------------------------------------------
 
 loc_D02A:
-		cmp	si, 1
+		cmp	si, SND_BGM_FM26
 		jnz	short loc_D03B
-		cmp	byte_EAD1, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D03B
-		mov	byte_EAD1, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 
 loc_D03B:
-		mov	al, byte_EAD1
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		pop	di
 		pop	si
@@ -6155,7 +6105,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_EAD1, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_D05C
 		push	[bp+arg_0]
 		nopcall	frame_delay
@@ -6165,7 +6115,7 @@ arg_2		= word ptr  8
 
 loc_D05C:
 		mov	ah, 5
-		cmp	byte_EAD1, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_D069
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -6321,9 +6271,9 @@ loc_D12E:
 		jnz	short loc_D17A
 		mov	byte ptr [si+1B32h], 65h ; 'e'
 		mov	byte ptr [si+1B33h], 66h ; 'f'
-		cmp	byte_EAD0, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	loc_D1F7
-		cmp	byte_EAD0, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jnz	short loc_D173
 		mov	byte ptr [si+1B34h], 73h ; 's'
 		push	ds
@@ -6338,25 +6288,25 @@ loc_D173:
 ; ---------------------------------------------------------------------------
 
 loc_D17A:
-		cmp	byte_EAD1, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D1F7
 		push	100h
 		nopcall	sub_CF8C
-		mov	al, byte_EAD1
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		les	bx, [bx+5A4h]
 		mov	al, es:[bx]
 		mov	[si+1B32h], al
-		mov	al, byte_EAD1
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		les	bx, [bx+5A4h]
 		mov	al, es:[bx+1]
 		mov	[si+1B33h], al
-		mov	al, byte_EAD1
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -6376,7 +6326,7 @@ loc_D1CA:
 		mov	ax, [bp+arg_0]
 		cmp	ah, 6
 		jnz	short loc_D1E8
-		cmp	byte_EAD1, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_D1E8
 		int	61h		; reserved for user interrupt
 		jmp	short loc_D1EA
@@ -6928,7 +6878,7 @@ sub_D594	endp
 sub_D5A0	proc far
 		mov	bx, sp
 		mov	dx, ss:[bx+4]
-		cmp	byte_EAD0, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_D5D6
 		cmp	byte_EB30, 0FFh
 		jnz	short loc_D5BB
@@ -6957,14 +6907,14 @@ sub_D5A0	endp
 
 
 sub_D5DA	proc far
-		cmp	byte_EAD0, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_D625
 		cmp	byte_EB30, 0FFh
 		jz	short locret_D625
 		cmp	byte_EB31, 0
 		jnz	short loc_D607
 		mov	al, byte_EB30
-		cmp	byte_EAD0, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_D5FF
 		mov	ah, 0Ch
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
@@ -7499,9 +7449,7 @@ include libs/master.lib/bgm[data].asm
 		db    3
 		db    0
 		db    1
-byte_EAD0	db 0
-byte_EAD1	db 0
-byte_EAD2	db 0
+include th04/hardware/snd[data].asm
 		db    0
 		dd aM26			; "m26"
 		dd aM26			; "m26"
@@ -8046,8 +7994,7 @@ include th02/formats/pi_slots[bss].asm
 		db    0
 		db    0
 		db    0
-byte_FF9A	db 0
-		db    0
+include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 unk_10062	db    ?	;
 		dd    ?	;

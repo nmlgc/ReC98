@@ -6218,59 +6218,8 @@ loc_D319:
 		retf
 sub_D304	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D322	proc far
-		xor	ax, ax
-		mov	byte_12742, 60h
-		mov	byte_FA43, al
-		mov	byte_FA42, al
-		mov	byte_FA41, al
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short locret_D34F
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short locret_D34F
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short locret_D34F
-		inc	ax
-
-locret_D34F:
-		retf
-sub_D322	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D350	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_D37C
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_D37C
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_D37C
-		mov	byte_12742, 61h	; 'a'
-		mov	byte_FA43, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D37C:
-		xor	ax, ax
-		retf
-sub_D350	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/snd_pmd_resident.asm
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6287,34 +6236,34 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nopcall	sub_D322
-		cmp	si, 3
+		nopcall	snd_pmd_resident
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_D39A
-		nopcall	sub_D350
+		nopcall	snd_mmd_resident
 
 loc_D39A:
 		mov	ah, 9
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_D3A9
-		mov	byte_FA42, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_D3B9
 ; ---------------------------------------------------------------------------
 
 loc_D3A9:
 		or	al, al
 		jnz	short loc_D3B4
-		mov	byte_FA42, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 		jmp	short loc_D3B9
 ; ---------------------------------------------------------------------------
 
 loc_D3B4:
-		mov	byte_FA42, 2
+		mov	snd_bgm_mode, SND_BGM_FM86
 
 loc_D3B9:
-		cmp	di, 1
+		cmp	di, SND_SE_FM
 		jnz	short loc_D3D1
-		cmp	byte_FA42, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D3CA
 		mov	ax, 1
 		jmp	short loc_D3CC
@@ -6324,45 +6273,45 @@ loc_D3CA:
 		xor	ax, ax
 
 loc_D3CC:
-		mov	byte_FA41, al
+		mov	snd_se_mode, al
 		jmp	short loc_D3E2
 ; ---------------------------------------------------------------------------
 
 loc_D3D1:
-		cmp	di, 2
+		cmp	di, SND_SE_BEEP
 		jnz	short loc_D3DD
-		mov	byte_FA41, 2
+		mov	snd_se_mode, SND_SE_BEEP
 		jmp	short loc_D3E2
 ; ---------------------------------------------------------------------------
 
 loc_D3DD:
-		mov	byte_FA41, 0
+		mov	snd_se_mode, SND_SE_OFF
 
 loc_D3E2:
 		or	si, si
 		jnz	short loc_D3ED
-		mov	byte_FA42, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_D411
 ; ---------------------------------------------------------------------------
 
 loc_D3ED:
-		cmp	si, 3
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_D400
-		cmp	byte_FA43, 0
+		cmp	snd_midi_possible, 0
 		jz	short loc_D400
-		mov	byte_FA42, 3
+		mov	snd_bgm_mode, SND_BGM_MIDI
 		jmp	short loc_D411
 ; ---------------------------------------------------------------------------
 
 loc_D400:
-		cmp	si, 1
+		cmp	si, SND_BGM_FM26
 		jnz	short loc_D411
-		cmp	byte_FA42, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D411
-		mov	byte_FA42, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 
 loc_D411:
-		mov	al, byte_FA42
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		pop	di
 		pop	si
@@ -6704,7 +6653,7 @@ sub_D5F6	endp
 sub_D602	proc far
 		mov	bx, sp
 		mov	dx, ss:[bx+4]
-		cmp	byte_FA41, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_D638
 		cmp	byte_F9C2, 0FFh
 		jnz	short loc_D61D
@@ -6733,14 +6682,14 @@ sub_D602	endp
 
 
 sub_D63C	proc far
-		cmp	byte_FA41, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_D687
 		cmp	byte_F9C2, 0FFh
 		jz	short locret_D687
 		cmp	byte_F9C3, 0
 		jnz	short loc_D669
 		mov	al, byte_F9C2
-		cmp	byte_FA41, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_D661
 		mov	ah, 0Ch
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
@@ -7543,10 +7492,10 @@ arg_2		= dword	ptr  8
 		inc	di
 		cmp	bp, 0B00h
 		jnz	short loc_DC19
-		cmp	byte_FA41, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short loc_DC70
 		xor	bx, bx
-		cmp	byte_FA41, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jnz	short loc_DC2F
 		mov	dword ptr [di],	736665h
 		call	bgm_finish
@@ -7559,11 +7508,11 @@ arg_2		= dword	ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_DC19:
-		cmp	byte_FA42, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_DC70
 		push	100h
 		call	sub_DC76
-		movzx	bx, byte_FA42
+		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
 loc_DC2F:
@@ -7589,7 +7538,7 @@ loc_DC4C:
 		mov	ax, bp
 		cmp	ah, 6
 		jnz	short loc_DC60
-		cmp	byte_FA42, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_DC60
 		int	61h		; reserved for user interrupt
 		jmp	short loc_DC62
@@ -7622,11 +7571,11 @@ sub_DBBE	endp
 
 
 sub_DC76	proc far
-		cmp	byte_FA42, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short locret_DC90
 		mov	bx, sp
 		mov	ax, ss:[bx+4]
-		cmp	byte_FA42, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_DC8E
 		int	60h
 		jmp	short locret_DC90
@@ -8191,7 +8140,7 @@ sub_E0A4	endp
 sub_E0CE	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_FA42, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_E0DD
 		mov	ax, 0FFFFh
 		pop	bp
@@ -8200,7 +8149,7 @@ sub_E0CE	proc far
 
 loc_E0DD:
 		mov	ah, 5
-		cmp	byte_FA42, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_E0EA
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -8977,9 +8926,7 @@ dword_FA36	dd 6Dh
 		db  6Dh	; m
 		db  64h	; d
 		db    0
-byte_FA41	db 0
-byte_FA42	db 0
-byte_FA43	db 0
+include th04/hardware/snd[data].asm
 		db    0
 		db    0
 		db  11h
@@ -9953,8 +9900,7 @@ include libs/master.lib/super_put_rect[bss].asm
 		db    0
 		db    0
 		db    0
-byte_12742	db 0
-		db 0
+include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 		dd    ?	;
 		dd    ?	;

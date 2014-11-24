@@ -2022,8 +2022,8 @@ loc_B183:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+18h], 1
 		jnz	short loc_B19A
-		call	sub_F7A4
-		mov	byte_1FFAB, 0
+		call	snd_pmd_resident
+		mov	snd_midi_active, 0
 		jmp	short loc_B1B5
 ; ---------------------------------------------------------------------------
 
@@ -2031,10 +2031,10 @@ loc_B19A:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+18h], 2
 		jnz	short loc_B1BA
-		call	sub_F7A4
-		call	sub_F74C
-		mov	al, byte_1FFAD
-		mov	byte_1FFAB, al
+		call	snd_pmd_resident
+		call	snd_mmd_resident
+		mov	al, snd_midi_possible
+		mov	snd_midi_active, al
 
 loc_B1B5:
 		call	sub_F786
@@ -10488,36 +10488,7 @@ sub_F70E	proc far
 		retf
 sub_F70E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F74C	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_F77D
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_F77D
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_F77D
-		mov	byte_1FFAC, 61h	; 'a'
-		mov	byte_1FFAB, 1
-		mov	byte_1FFAD, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F77D:
-		mov	byte_1FFAD, 0
-		xor	ax, ax
-		retf
-sub_F74C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10529,51 +10500,22 @@ sub_F786	proc far
 		cmp	al, 0FFh
 		jz	short loc_F798
 		inc	bx
-		mov	byte_1FFAA, 1
+		mov	snd_fm_possible, 1
 		jmp	short loc_F79C
 ; ---------------------------------------------------------------------------
 
 loc_F798:
-		mov	bl, byte_1FFAB
+		mov	bl, snd_midi_active
 
 loc_F79C:
-		mov	byte_1E30A, bl
+		mov	snd_playing, bl
 		mov	ax, bx
 		retf
 sub_F786	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F7A4	proc far
-		mov	byte_1FFAC, 60h
-		mov	byte_1FFAB, 0
-		mov	byte_1FFAA, 0
-		mov	byte_1FFAD, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_F7DA
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_F7DA
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_F7DA
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F7DA:
-		xor	ax, ax
-		retf
-sub_F7A4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10588,7 +10530,7 @@ arg_0		= byte ptr  6
 
 loc_F7E1:
 		mov	ah, 8
-		cmp	byte_1FFAB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_F7EE
 		int	60h
 		jmp	short loc_F7F0
@@ -10637,7 +10579,7 @@ loc_F804:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_F83B
-		cmp	byte_1FFAB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_F83B
 		xor	bx, bx
 
@@ -10660,7 +10602,7 @@ loc_F83B:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_F858
-		cmp	byte_1FFAB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_F858
 		int	61h		; reserved for user interrupt
 		jmp	short loc_F85A
@@ -10882,10 +10824,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E30A, 0
+		cmp	snd_playing, 0
 		jz	short loc_FA10
 		mov	ax, [bp+arg_0]
-		cmp	byte_1FFAB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_FA0E
 		int	60h
 		jmp	short loc_FA10
@@ -10902,7 +10844,7 @@ sub_F9F6	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E30A, 0
+		cmp	snd_playing, 0
 		jnz	short loc_FA25
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -10914,7 +10856,7 @@ loc_FA25:
 		push	1
 		nopcall	frame_delay
 		mov	ah, 5
-		cmp	byte_1FFAB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_FA39
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -10958,7 +10900,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		cmp	byte_1FFAA, 0
+		cmp	snd_fm_possible, 0
 		jz	short loc_FA88
 		cmp	byte_1E31A, 0FFh
 		jnz	short loc_FA6C
@@ -10988,7 +10930,7 @@ sub_FA52	endp
 
 
 sub_FA8A	proc far
-		cmp	byte_1FFAA, 0
+		cmp	snd_fm_possible, 0
 		jz	short locret_FAC5
 		cmp	byte_1E31A, 0FFh
 		jz	short locret_FAC5
@@ -36219,7 +36161,7 @@ byte_1E301	db 3
 byte_1E302	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-byte_1E30A	db 0
+snd_playing	db 0
 		db 0
 byte_1E30C	db 1
 byte_1E30D	db 0
@@ -38637,10 +38579,7 @@ dword_1FD58	dd ?
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1FFA8	dw ?
-byte_1FFAA	db ?
-byte_1FFAB	db ?
-byte_1FFAC	db ?
-byte_1FFAD	db ?
+include th02/hardware/snd[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

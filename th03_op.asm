@@ -329,7 +329,7 @@ var_3		= word ptr -3
 		mov	es:[bx+15h], al
 		call	sub_BEFA
 		mov	byte_D880, 0
-		cmp	byte_DDCC, 0
+		cmp	snd_playing, 0
 		jnz	short loc_9961
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
@@ -340,7 +340,7 @@ var_3		= word ptr -3
 loc_9961:
 		cmp	[bp+var_8], 0
 		jnz	short loc_996C
-		mov	byte_DDCC, 0
+		mov	snd_playing, 0
 
 loc_996C:
 		les	bx, dword_FC54
@@ -1533,7 +1533,7 @@ loc_A2DB:
 		mov	byte ptr es:[bx+15h], 0
 		push	100h
 		call	sub_C403
-		mov	byte_DDCC, 0
+		mov	snd_playing, 0
 
 loc_A2F1:
 		mov	al, byte_D951
@@ -1606,7 +1606,7 @@ loc_A384:
 		mov	byte ptr es:[bx+15h], 0
 		push	100h
 		call	sub_C403
-		mov	byte_DDCC, 0
+		mov	snd_playing, 0
 
 loc_A39A:
 		mov	al, byte_D951
@@ -5023,44 +5023,22 @@ sub_BEFA	proc far
 		cmp	al, 0FFh
 		jz	short loc_BF0C
 		inc	bx
-		mov	byte_F1FA, 1
+		mov	snd_fm_possible, 1
 		jmp	short loc_BF10
 ; ---------------------------------------------------------------------------
 
 loc_BF0C:
-		mov	bl, byte_F1FB
+		mov	bl, snd_midi_active
 
 loc_BF10:
-		mov	byte_DDCC, bl
+		mov	snd_playing, bl
 		mov	ax, bx
 		retf
 sub_BEFA	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-		mov	byte_F1FC, 60h
-		mov	byte_F1FB, 0
-		mov	byte_F1FA, 0
-		mov	byte_F1FD, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_BF4E
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_BF4E
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_BF4E
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_BF4E:
-		xor	ax, ax
-		retf
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5088,7 +5066,7 @@ loc_BF5C:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_BF93
-		cmp	byte_F1FB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_BF93
 		xor	bx, bx
 
@@ -5111,7 +5089,7 @@ loc_BF93:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_BFB0
-		cmp	byte_F1FB, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_BFB0
 		int	61h		; reserved for user interrupt
 		jmp	short loc_BFB2
@@ -5677,10 +5655,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_DDCC, 0
+		cmp	snd_playing, 0
 		jz	short loc_C41D
 		mov	ax, [bp+arg_0]
-		cmp	byte_F1FB, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_C41B
 		int	60h
 		jmp	short loc_C41D
@@ -6825,7 +6803,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-byte_DDCC	db 0
+snd_playing	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
@@ -7048,10 +7026,7 @@ dword_F1EA	dd ?
 dword_F1EE	dd ?
 dword_F1F2	dd ?
 dword_F1F6	dd ?
-byte_F1FA	db ?
-byte_F1FB	db ?
-byte_F1FC	db ?
-byte_F1FD	db ?
+include th02/hardware/snd[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

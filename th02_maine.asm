@@ -3232,12 +3232,12 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	sub_B6AC
-		call	sub_B654
+		call	snd_pmd_resident
+		call	snd_mmd_resident
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 0
 		jnz	short loc_B161
-		mov	byte_FAF1, 0
+		mov	snd_midi_active, 0
 		jmp	short loc_B189
 ; ---------------------------------------------------------------------------
 
@@ -3245,7 +3245,7 @@ loc_B161:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 1
 		jnz	short loc_B173
-		mov	byte_FAF1, 0
+		mov	snd_midi_active, 0
 		jmp	short loc_B184
 ; ---------------------------------------------------------------------------
 
@@ -3253,8 +3253,8 @@ loc_B173:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 2
 		jnz	short loc_B189
-		mov	al, byte_FAF3
-		mov	byte_FAF1, al
+		mov	al, snd_midi_possible
+		mov	snd_midi_active, al
 
 loc_B184:
 		call	sub_B68E
@@ -3881,36 +3881,7 @@ sub_B616	proc far
 		retf
 sub_B616	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B654	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_B685
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_B685
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_B685
-		mov	byte_FAF2, 61h ; 'a'
-		mov	byte_FAF1, 1
-		mov	byte_FAF3, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B685:
-		mov	byte_FAF3, 0
-		xor	ax, ax
-		retf
-sub_B654	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3922,51 +3893,22 @@ sub_B68E	proc far
 		cmp	al, 0FFh
 		jz	short loc_B6A0
 		inc	bx
-		mov	byte_FAF0, 1
+		mov	snd_fm_possible, 1
 		jmp	short loc_B6A4
 ; ---------------------------------------------------------------------------
 
 loc_B6A0:
-		mov	bl, byte_FAF1
+		mov	bl, snd_midi_active
 
 loc_B6A4:
-		mov	byte_D714, bl
+		mov	snd_playing, bl
 		mov	ax, bx
 		retf
 sub_B68E	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B6AC	proc far
-		mov	byte_FAF2, 60h
-		mov	byte_FAF1, 0
-		mov	byte_FAF0, 0
-		mov	byte_FAF3, 0
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short loc_B6E2
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_B6E2
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_B6E2
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B6E2:
-		xor	ax, ax
-		retf
-sub_B6AC	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3994,7 +3936,7 @@ loc_B6F0:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_B727
-		cmp	byte_FAF1, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_B727
 		xor	bx, bx
 
@@ -4017,7 +3959,7 @@ loc_B727:
 		mov	ax, [bp+arg_4]
 		cmp	ax, 600h
 		jnz	short loc_B744
-		cmp	byte_FAF1, 0
+		cmp	snd_midi_active, 0
 		jz	short loc_B744
 		int	61h		; reserved for user interrupt
 		jmp	short loc_B746
@@ -4154,10 +4096,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_D714, 0
+		cmp	snd_playing, 0
 		jz	short loc_B853
 		mov	ax, [bp+arg_0]
-		cmp	byte_FAF1, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_B851
 		int	60h
 		jmp	short loc_B853
@@ -4182,7 +4124,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_D714, 0
+		cmp	snd_playing, 0
 		jnz	short loc_B868
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -4194,7 +4136,7 @@ loc_B868:
 		push	1
 		nopcall	frame_delay
 		mov	ah, 5
-		cmp	byte_FAF1, 1
+		cmp	snd_midi_active, 1
 		jz	short loc_B87C
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -5744,7 +5686,7 @@ byte_D70B	db 3
 byte_D70C	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-byte_D714	db 0
+snd_playing	db 0
 		db 0
 aUmx		db '“Œ•û••–‚.˜^',0
 byte_D722	db 1
@@ -7068,10 +7010,7 @@ dword_F89E	dd ?
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_FAEE	dw ?
-byte_FAF0	db ?
-byte_FAF1	db ?
-byte_FAF2	db ?
-byte_FAF3	db ?
+include th02/hardware/snd[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

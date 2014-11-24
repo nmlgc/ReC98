@@ -21475,59 +21475,8 @@ loc_14B79:
 		retf
 sub_14B64	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14B82	proc far
-		xor	ax, ax
-		mov	byte_23980, 60h
-		mov	byte_21229, al
-		mov	byte_21228, al
-		mov	byte_21227, al
-		mov	es, ax
-		les	bx, dword ptr es:[0180h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 50h	; 'P'
-		jnz	short locret_14BAF
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short locret_14BAF
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short locret_14BAF
-		inc	ax
-
-locret_14BAF:
-		retf
-sub_14B82	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14BB0	proc far
-		xor	ax, ax
-		mov	es, ax
-		les	bx, dword ptr es:[0184h]
-		assume es:nothing
-		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
-		jnz	short loc_14BDC
-		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
-		jnz	short loc_14BDC
-		cmp	byte ptr es:[bx+4], 44h	; 'D'
-		jnz	short loc_14BDC
-		mov	byte_23980, 61h	; 'a'
-		mov	byte_21229, 1
-		mov	ax, 1
-		retf
-; ---------------------------------------------------------------------------
-
-loc_14BDC:
-		xor	ax, ax
-		retf
-sub_14BB0	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/snd_pmd_resident.asm
+include th02/hardware/snd_mmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21544,34 +21493,34 @@ arg_2		= word ptr  8
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		nopcall	sub_14B82
-		cmp	si, 3
+		nopcall	snd_pmd_resident
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_14BFA
-		nopcall	sub_14BB0
+		nopcall	snd_mmd_resident
 
 loc_14BFA:
 		mov	ah, 9
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_14C09
-		mov	byte_21228, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_14C19
 ; ---------------------------------------------------------------------------
 
 loc_14C09:
 		or	al, al
 		jnz	short loc_14C14
-		mov	byte_21228, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 		jmp	short loc_14C19
 ; ---------------------------------------------------------------------------
 
 loc_14C14:
-		mov	byte_21228, 2
+		mov	snd_bgm_mode, SND_BGM_FM86
 
 loc_14C19:
-		cmp	di, 1
+		cmp	di, SND_SE_FM
 		jnz	short loc_14C31
-		cmp	byte_21228, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_14C2A
 		mov	ax, 1
 		jmp	short loc_14C2C
@@ -21581,45 +21530,45 @@ loc_14C2A:
 		xor	ax, ax
 
 loc_14C2C:
-		mov	byte_21227, al
+		mov	snd_se_mode, al
 		jmp	short loc_14C42
 ; ---------------------------------------------------------------------------
 
 loc_14C31:
-		cmp	di, 2
+		cmp	di, SND_SE_BEEP
 		jnz	short loc_14C3D
-		mov	byte_21227, 2
+		mov	snd_se_mode, SND_SE_BEEP
 		jmp	short loc_14C42
 ; ---------------------------------------------------------------------------
 
 loc_14C3D:
-		mov	byte_21227, 0
+		mov	snd_se_mode, SND_SE_OFF
 
 loc_14C42:
 		or	si, si
 		jnz	short loc_14C4D
-		mov	byte_21228, 0
+		mov	snd_bgm_mode, SND_BGM_OFF
 		jmp	short loc_14C71
 ; ---------------------------------------------------------------------------
 
 loc_14C4D:
-		cmp	si, 3
+		cmp	si, SND_BGM_MIDI
 		jnz	short loc_14C60
-		cmp	byte_21229, 0
+		cmp	snd_midi_possible, 0
 		jz	short loc_14C60
-		mov	byte_21228, 3
+		mov	snd_bgm_mode, SND_BGM_MIDI
 		jmp	short loc_14C71
 ; ---------------------------------------------------------------------------
 
 loc_14C60:
-		cmp	si, 1
+		cmp	si, SND_BGM_FM26
 		jnz	short loc_14C71
-		cmp	byte_21228, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_14C71
-		mov	byte_21228, 1
+		mov	snd_bgm_mode, SND_BGM_FM26
 
 loc_14C71:
-		mov	al, byte_21228
+		mov	al, snd_bgm_mode
 		mov	ah, 0
 		pop	di
 		pop	si
@@ -21716,7 +21665,7 @@ sub_14CE2	endp
 sub_14CEE	proc far
 		mov	bx, sp
 		mov	dx, ss:[bx+4]
-		cmp	byte_21227, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_14D24
 		cmp	byte_21214, 0FFh
 		jnz	short loc_14D09
@@ -21745,14 +21694,14 @@ sub_14CEE	endp
 
 
 sub_14D28	proc far
-		cmp	byte_21227, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short locret_14D73
 		cmp	byte_21214, 0FFh
 		jz	short locret_14D73
 		cmp	byte_21215, 0
 		jnz	short loc_14D55
 		mov	al, byte_21214
-		cmp	byte_21227, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_14D4D
 		mov	ah, 0Ch
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
@@ -21997,10 +21946,10 @@ arg_2		= dword	ptr  8
 		inc	di
 		cmp	bp, 0B00h
 		jnz	short loc_14F0B
-		cmp	byte_21227, 0
+		cmp	snd_se_mode, SND_SE_OFF
 		jz	short loc_14F62
 		xor	bx, bx
-		cmp	byte_21227, 2
+		cmp	snd_se_mode, SND_SE_BEEP
 		jnz	short loc_14F21
 		mov	dword ptr [di],	736665h
 		call	bgm_finish
@@ -22013,11 +21962,11 @@ arg_2		= dword	ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_14F0B:
-		cmp	byte_21228, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_14F62
 		push	100h
 		call	sub_14F68
-		movzx	bx, byte_21228
+		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
 loc_14F21:
@@ -22043,7 +21992,7 @@ loc_14F3E:
 		mov	ax, bp
 		cmp	ah, 6
 		jnz	short loc_14F52
-		cmp	byte_21228, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_14F52
 		int	61h		; reserved for user interrupt
 		jmp	short loc_14F54
@@ -22076,11 +22025,11 @@ sub_14EB0	endp
 
 
 sub_14F68	proc far
-		cmp	byte_21228, 0
+		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short locret_14F82
 		mov	bx, sp
 		mov	ax, ss:[bx+4]
-		cmp	byte_21228, 3
+		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_14F80
 		int	60h
 		jmp	short locret_14F82
@@ -22683,9 +22632,7 @@ aEfc		db 'efc',0
 dword_2121C	dd 6Dh
 aM2		db 'm2',0
 aMmd		db 'mmd',0
-byte_21227	db 0
-byte_21228	db 0
-byte_21229	db 0
+include th04/hardware/snd[data].asm
 		db    0
 		db    0
 		db    0
@@ -26177,8 +26124,7 @@ include libs/master.lib/super_put_rect[bss].asm
 		db    0
 		db    0
 		db    0
-byte_23980	db 0
-		db 0
+include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 unk_23A48	db    ?	;
 		dd    ?	;
