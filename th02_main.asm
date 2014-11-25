@@ -2574,7 +2574,7 @@ loc_B88A:
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B8AF
 		push	0FFh
-		call	sub_F7DE
+		call	snd_delay_until_volume
 		pop	cx
 		push	ss
 		lea	ax, [bp+var_C]
@@ -10516,42 +10516,7 @@ sub_F786	endp
 ; ---------------------------------------------------------------------------
 		nop
 include th02/hardware/snd_pmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F7DE	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_F7E1:
-		mov	ah, 8
-		cmp	snd_midi_active, 1
-		jz	short loc_F7EE
-		int	60h
-		jmp	short loc_F7F0
-; ---------------------------------------------------------------------------
-
-loc_F7EE:
-		int	61h		; reserved for user interrupt
-
-loc_F7F0:
-		cmp	al, [bp+arg_0]
-		jz	short loc_F7F7
-		jmp	short loc_F7E1
-; ---------------------------------------------------------------------------
-
-loc_F7F7:
-		pop	bp
-		retf
-sub_F7DE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_delay_until_volume.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

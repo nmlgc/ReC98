@@ -4729,7 +4729,7 @@ loc_B8F1:
 		call	sub_CD2F
 		freePISlotLarge	0
 		push	0FFh
-		call	sub_C864
+		call	snd_delay_until_volume
 		pop	cx
 		push	100h
 		call	sub_CEC2
@@ -6103,7 +6103,7 @@ sub_C40D	proc near
 		push	4
 		call	palette_black_out
 		push	0FFh
-		call	sub_C864
+		call	snd_delay_until_volume
 		pop	cx
 		push	100h
 		call	sub_CEC2
@@ -6487,42 +6487,7 @@ sub_C80C	endp
 ; ---------------------------------------------------------------------------
 		nop
 include th02/hardware/snd_pmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C864	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_C867:
-		mov	ah, 8
-		cmp	snd_midi_active, 1
-		jz	short loc_C874
-		int	60h
-		jmp	short loc_C876
-; ---------------------------------------------------------------------------
-
-loc_C874:
-		int	61h		; reserved for user interrupt
-
-loc_C876:
-		cmp	al, [bp+arg_0]
-		jz	short loc_C87D
-		jmp	short loc_C867
-; ---------------------------------------------------------------------------
-
-loc_C87D:
-		pop	bp
-		retf
-sub_C864	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_delay_until_volume.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
