@@ -468,7 +468,7 @@ loc_A400:
 		call	sub_BC83
 		call	sub_BB0E
 		push	20Ah
-		call	sub_DC76
+		call	snd_kaja_func
 		call	sub_D7EC
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+17h], 0
@@ -551,7 +551,7 @@ loc_A4A0:
 		call	sub_BC83
 		call	sub_BB0E
 		push	20Ah
-		call	sub_DC76
+		call	snd_kaja_func
 		call	sub_D7EC
 		pushd	0
 		push	ds
@@ -653,7 +653,7 @@ loc_A58E:
 		mov	byte ptr es:[bx+14h], 2
 		mov	byte ptr es:[bx+1Dh], 6
 		push	208h
-		call	sub_DC76
+		call	snd_kaja_func
 
 loc_A5A4:
 		xor	si, si
@@ -1423,7 +1423,7 @@ loc_AC71:
 		mov	byte ptr es:[bx+15h], 1
 		mov	byte ptr es:[bx+16h], 1
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		les	bx, dword_11DCC
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -1441,7 +1441,7 @@ loc_AC71:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		mov	byte_F0DD, 0
 		jmp	short loc_ACF8
 ; ---------------------------------------------------------------------------
@@ -1504,7 +1504,7 @@ loc_AD60:
 
 loc_AD74:
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		les	bx, dword_11DCC
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -1518,7 +1518,7 @@ loc_AD74:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		jmp	short loc_ADF5
 ; ---------------------------------------------------------------------------
 
@@ -1624,7 +1624,7 @@ loc_AE7F:
 
 loc_AE87:
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		les	bx, dword_11DCC
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -1638,7 +1638,7 @@ loc_AE87:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		jmp	short loc_AF02
 ; ---------------------------------------------------------------------------
 
@@ -1779,7 +1779,7 @@ loc_AFE1:
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_AFF4
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 
 loc_AFF4:
 		call	sub_BC8D
@@ -2964,7 +2964,7 @@ loc_B8C7:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		mov	[bp+var_6], 3F84h
 		xor	si, si
 		jmp	short loc_B8F4
@@ -3567,7 +3567,7 @@ loc_BDBE:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 
 loc_BDE8:
 		push	0
@@ -4616,7 +4616,7 @@ loc_C698:
 		push	0
 		call	sub_C441
 		push	220h
-		call	sub_DC76
+		call	snd_kaja_func
 		push	0
 		call	sub_C3F9
 		mov	bx, musicroom_game_id
@@ -4625,7 +4625,7 @@ loc_C698:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 
 loc_C6E3:
 		test	byte ptr word_12A72, 20h
@@ -4639,7 +4639,7 @@ loc_C6F1:
 		cmp	ax, musicroom_trackcount
 		jz	loc_C77F
 		push	220h
-		call	sub_DC76
+		call	snd_kaja_func
 		mov	al, byte ptr word_1403C
 		mov	[bp+var_1], al
 		mov	al, byte ptr word_13E94
@@ -4672,7 +4672,7 @@ loc_C6F1:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 
 loc_C767:
 		test	byte ptr word_12A72+1, 10h
@@ -4698,7 +4698,7 @@ loc_C790:
 		push	offset aKaikidan1_dat1
 		call	pfstart
 		push	210h
-		call	sub_DC76
+		call	snd_kaja_func
 		call	sub_BFE8
 		mov	dx, 0A4h
 		mov	al, 0
@@ -4713,7 +4713,7 @@ loc_C790:
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		pop	si
 		leave
 		retn
@@ -5403,15 +5403,15 @@ sub_CC5C	proc near
 		push	bp
 		mov	bp, sp
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		push	280h
-		call	sub_DC76
+		call	snd_kaja_func
 		push	1
 		call	palette_black_out
 		les	bx, dword_11DCC
@@ -5463,7 +5463,7 @@ loc_CCF8:
 
 loc_CD17:
 		push	201h
-		call	sub_DC76
+		call	snd_kaja_func
 		push	1
 		call	palette_black_out
 		push	0
@@ -5494,13 +5494,13 @@ loc_CD64:
 		cmp	word_12A72, 0
 		jnz	short loc_CD64
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		push	ds
 		push	offset aOp_1	; "op"
 		push	600h
 		call	sub_DBBE
 		push	0
-		call	sub_DC76
+		call	snd_kaja_func
 		pop	bp
 		retn
 sub_CC5C	endp
@@ -7511,7 +7511,7 @@ loc_DC19:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_DC70
 		push	100h
-		call	sub_DC76
+		call	snd_kaja_func
 		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
@@ -7566,30 +7566,7 @@ loc_DC70:
 		retf	6
 sub_DBBE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DC76	proc far
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short locret_DC90
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_DC8E
-		int	60h
-		jmp	short locret_DC90
-; ---------------------------------------------------------------------------
-
-loc_DC8E:
-		int	61h		; reserved for user interrupt
-
-locret_DC90:
-		retf	2
-sub_DC76	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

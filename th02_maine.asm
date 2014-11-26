@@ -999,7 +999,7 @@ sub_9AD4	proc near
 		call	sub_B6E6
 		add	sp, 6
 		push	0
-		call	sub_B839
+		call	snd_kaja_func
 		pop	cx
 		call	sub_9A7E
 		push	4
@@ -1058,7 +1058,7 @@ sub_9B64	proc near
 		call	sub_B6E6
 		add	sp, 6
 		push	0
-		call	sub_B839
+		call	snd_kaja_func
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -1609,7 +1609,7 @@ sub_A09D	proc near
 		call	sub_B6E6
 		add	sp, 6
 		push	0
-		call	sub_B839
+		call	snd_kaja_func
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -4085,34 +4085,7 @@ loc_B827:
 		retf
 sub_B7B3	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B839	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_B853
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_B851
-		int	60h
-		jmp	short loc_B853
-; ---------------------------------------------------------------------------
-
-loc_B851:
-		int	61h		; reserved for user interrupt
-
-loc_B853:
-		pop	bp
-		retf
-sub_B839	endp
-
+include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

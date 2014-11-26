@@ -521,7 +521,7 @@ sub_A8F1	proc near
 		call	sub_A7F0
 		call	gaiji_restore
 		push	20Ah
-		call	sub_DC74
+		call	snd_kaja_func
 		call	sub_E0AC
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+1Ah], 0
@@ -573,7 +573,7 @@ sub_A96C	proc near
 		call	sub_A7F0
 		call	gaiji_restore
 		push	20Ah
-		call	sub_DC74
+		call	snd_kaja_func
 		call	sub_E0AC
 		pushd	0
 		push	ds
@@ -1379,7 +1379,7 @@ loc_B0F4:
 		mov	byte ptr es:[bx+18h], 1
 		mov	byte ptr es:[bx+49h], 1
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1393,7 +1393,7 @@ loc_B0F4:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		mov	byte_F447, 0
 		jmp	short loc_B16F
 ; ---------------------------------------------------------------------------
@@ -1456,7 +1456,7 @@ loc_B1D4:
 
 loc_B1E8:
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1470,7 +1470,7 @@ loc_B1E8:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
@@ -1562,7 +1562,7 @@ loc_B2CF:
 
 loc_B2D7:
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1576,7 +1576,7 @@ loc_B2D7:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
 
@@ -1702,7 +1702,7 @@ loc_B40D:
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_B420
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 
 loc_B420:
 		call	sub_CCD2
@@ -2881,7 +2881,7 @@ loc_BCFD:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		mov	[bp+var_6], 2B7Ch
 		xor	si, si
 		jmp	short loc_BD2A
@@ -3875,7 +3875,7 @@ loc_C4E4:
 		cmp	byte ptr word_12DBC, 17h
 		jz	short loc_C533
 		push	220h
-		call	sub_DC74
+		call	snd_kaja_func
 		mov	al, byte ptr word_12DBC
 		mov	byte_102AF, al
 		mov	ah, 0
@@ -3889,7 +3889,7 @@ loc_C4E4:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 
 loc_C51D:
 		test	byte ptr word_11A50+1, 10h
@@ -3910,7 +3910,7 @@ loc_C533:
 
 loc_C544:
 		push	210h
-		call	sub_DC74
+		call	snd_kaja_func
 		call	sub_BF99
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
@@ -3925,7 +3925,7 @@ loc_C544:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		pop	bp
 		retn
 sub_C3B7	endp
@@ -4619,15 +4619,15 @@ sub_CA94	proc near
 		push	bp
 		mov	bp, sp
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		push	280h
-		call	sub_DC74
+		call	snd_kaja_func
 		push	1
 		call	palette_black_out
 		les	bx, dword_10DA4
@@ -4683,7 +4683,7 @@ loc_CB36:
 
 loc_CB58:
 		push	201h
-		call	sub_DC74
+		call	snd_kaja_func
 		push	1
 		call	palette_black_out
 		freePISlotLarge	0
@@ -4712,13 +4712,13 @@ loc_CBB3:
 		cmp	word_11A50, 0
 		jnz	short loc_CBB3
 		push	100h
-		call	sub_DC74
+		call	snd_kaja_func
 		push	ds
 		push	offset aOp_0	; "op"
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 		pop	bp
 		retn
 sub_CA94	endp
@@ -4971,7 +4971,7 @@ loc_CDC4:
 		push	600h
 		call	sub_DDCA
 		push	0
-		call	sub_DC74
+		call	snd_kaja_func
 
 loc_CE50:
 		mov	dx, 0A6h ; '¦'
@@ -6590,34 +6590,7 @@ sub_DBB8	endp
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DC74	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_DC8E
-		mov	ax, [bp+arg_0]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_DC8C
-		int	60h
-		jmp	short loc_DC8E
-; ---------------------------------------------------------------------------
-
-loc_DC8C:
-		int	61h		; reserved for user interrupt
-
-loc_DC8E:
-		pop	bp
-		retf	2
-sub_DC74	endp
-
+include th04/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6888,7 +6861,7 @@ loc_DE32:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_DEAF
 		push	100h
-		nopcall	sub_DC74
+		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2

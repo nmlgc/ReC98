@@ -409,7 +409,7 @@ loc_9724:
 loc_974D:
 		call	sub_13DF9
 		push	100h
-		call	sub_ECB2
+		call	snd_kaja_func
 		or	si, si
 		jnz	short loc_9764
 		push	ds
@@ -1142,7 +1142,7 @@ loc_9E24:
 		push	27F00C7h
 		call	grc_setclip
 		push	0
-		call	sub_ECB2
+		call	snd_kaja_func
 		pop	di
 		pop	si
 		leave
@@ -10110,34 +10110,7 @@ locret_ECB1:
 		retf
 sub_EC76	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECB2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_ECCC
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_ECCA
-		int	60h
-		jmp	short loc_ECCC
-; ---------------------------------------------------------------------------
-
-loc_ECCA:
-		int	61h		; reserved for user interrupt
-
-loc_ECCC:
-		pop	bp
-		retf	2
-sub_ECB2	endp
-
+include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

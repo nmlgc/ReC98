@@ -2108,7 +2108,7 @@ loc_B24F:
 		or	ax, ax
 		jz	short loc_B263
 		push	228h
-		call	sub_F9F6
+		call	snd_kaja_func
 		pop	cx
 		jmp	loc_B1CD
 ; ---------------------------------------------------------------------------
@@ -10778,33 +10778,7 @@ loc_F9E4:
 		retf
 sub_F970	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F9F6	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_FA10
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_FA0E
-		int	60h
-		jmp	short loc_FA10
-; ---------------------------------------------------------------------------
-
-loc_FA0E:
-		int	61h		; reserved for user interrupt
-
-loc_FA10:
-		pop	bp
-		retf
-sub_F9F6	endp
+include th02/hardware/snd_kaja_func.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -18274,7 +18248,7 @@ sub_13439	proc near
 		mov	bp, sp
 		nopcall	sub_FBE9
 		push	100h
-		call	sub_F9F6
+		call	snd_kaja_func
 		pop	cx
 		push	69h ; 'i'
 		call	sub_13055
@@ -19044,12 +19018,12 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		push	100h
-		call	sub_F9F6
+		call	snd_kaja_func
 		push	600h
 		pushd	[bp+arg_0]
 		call	sub_F7FA
 		push	0
-		call	sub_F9F6
+		call	snd_kaja_func
 		add	sp, 0Ah
 		pop	bp
 		retf
@@ -30247,7 +30221,7 @@ sub_19C8D	proc near
 		cmp	word ptr es:[bx+12h], 0
 		jz	short loc_19D48
 		push	20Ah
-		call	sub_F9F6
+		call	snd_kaja_func
 		pop	cx
 		push	0Ah
 		call	palette_white_out

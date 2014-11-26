@@ -1084,7 +1084,7 @@ loc_B156:
 		push	600h
 		call	sub_13496
 		push	0
-		call	sub_133DC
+		call	snd_kaja_func
 
 loc_B1AE:
 		nopcall	sub_CB99
@@ -1760,7 +1760,7 @@ sub_B7B9	proc far
 		mov	byte ptr es:[bx+30h], 0FFh
 		mov	byte ptr es:[bx+25h], 30h ; '0'
 		push	204h
-		call	sub_133DC
+		call	snd_kaja_func
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -1782,7 +1782,7 @@ sub_B7E4	proc far
 		mov	byte ptr es:[bx+30h], 0FEh
 		mov	byte ptr es:[bx+25h], 31h ; '1'
 		push	204h
-		call	sub_133DC
+		call	snd_kaja_func
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -1803,7 +1803,7 @@ sub_B80F	proc far
 		les	bx, dword_2CDC6
 		mov	byte ptr es:[bx+30h], 0FDh
 		push	204h
-		call	sub_133DC
+		call	snd_kaja_func
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -6014,7 +6014,7 @@ loc_D3FF:
 		push	0
 
 loc_D40B:
-		call	sub_133DC
+		call	snd_kaja_func
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -6057,7 +6057,7 @@ loc_D45A:
 		push	600h
 		call	sub_13496
 		push	0
-		call	sub_133DC
+		call	snd_kaja_func
 
 loc_D478:
 		jmp	loc_D528	; default
@@ -8464,7 +8464,7 @@ loc_E654:
 		assume es:nothing
 		mov	byte ptr es:[bx+30h], 0
 		push	204h
-		call	sub_133DC
+		call	snd_kaja_func
 		push	4
 		call	palette_black_out
 		push	ds
@@ -18579,34 +18579,7 @@ sub_1333C	endp
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_133DC	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_133F6
-		mov	ax, [bp+arg_0]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_133F4
-		int	60h
-		jmp	short loc_133F6
-; ---------------------------------------------------------------------------
-
-loc_133F4:
-		int	61h		; reserved for user interrupt
-
-loc_133F6:
-		pop	bp
-		retf	2
-sub_133DC	endp
-
+include th04/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18766,7 +18739,7 @@ loc_134FE:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_1357B
 		push	100h
-		nopcall	sub_133DC
+		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2

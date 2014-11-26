@@ -579,7 +579,7 @@ loc_A187:
 
 loc_A1E9:
 		push	204h
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	64h ; 'd'
 		call	frame_delay
 		call	sub_C814
@@ -630,7 +630,7 @@ loc_A27E:
 
 loc_A281:
 		push	204h
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	ds
 		push	offset arg0	; "op"
 		call	sub_A08A
@@ -1970,7 +1970,7 @@ loc_AD24:
 		push	0
 
 loc_AD26:
-		call	sub_CF8C
+		call	snd_kaja_func
 
 loc_AD2B:
 		; Hack
@@ -2017,7 +2017,7 @@ loc_AD74:
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
 		push	100h
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
@@ -2891,13 +2891,13 @@ sub_B44D	proc near
 		call	graph_copy_page
 		call	sub_D626
 		push	100h
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	ds
 		push	offset aStaff	; "staff"
 		push	600h
 		call	sub_D112
 		push	0
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	0Ch
 		call	palette_black_in
 		push	0
@@ -5244,13 +5244,13 @@ loc_C958:
 
 loc_C95E:
 		push	100h
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_D112
 		push	0
-		call	sub_CF8C
+		call	snd_kaja_func
 		push	2
 		call	palette_black_in
 		cmp	byte_125B6, 0FFh
@@ -5966,34 +5966,7 @@ sub_CED0	endp
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF8C	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_CFA6
-		mov	ax, [bp+arg_0]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_CFA4
-		int	60h
-		jmp	short loc_CFA6
-; ---------------------------------------------------------------------------
-
-loc_CFA4:
-		int	61h		; reserved for user interrupt
-
-loc_CFA6:
-		pop	bp
-		retf	2
-sub_CF8C	endp
-
+include th04/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6291,7 +6264,7 @@ loc_D17A:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D1F7
 		push	100h
-		nopcall	sub_CF8C
+		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
 		shl	ax, 2

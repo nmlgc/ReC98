@@ -1214,7 +1214,7 @@ loc_B506:
 		push	600h
 		call	sub_14EB0
 		push	0
-		call	sub_14F68
+		call	snd_kaja_func
 
 loc_B52C:
 		mov	fp_2CE88, offset sub_11914
@@ -7841,7 +7841,7 @@ loc_E45D:
 
 loc_E466:
 		push	204h
-		call	sub_14F68
+		call	snd_kaja_func
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -7862,7 +7862,7 @@ sub_E480	proc far
 		les	bx, dword_23EF0
 		mov	byte ptr es:[bx+1Ah], 0FDh
 		push	204h
-		call	sub_14F68
+		call	snd_kaja_func
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -9710,7 +9710,7 @@ loc_F0AD:
 		push	0
 
 loc_F0BB:
-		call	sub_14F68
+		call	snd_kaja_func
 		jmp	short loc_F068
 ; ---------------------------------------------------------------------------
 
@@ -9965,7 +9965,7 @@ sub_F2B4	proc far
 		push	600h
 		call	sub_14EB0
 		push	0
-		call	sub_14F68
+		call	snd_kaja_func
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
 		call	file_ropen
@@ -10965,7 +10965,7 @@ loc_FA7D:
 		assume es:nothing
 		mov	byte ptr es:[bx+1Ah], 0
 		push	204h
-		call	sub_14F68
+		call	snd_kaja_func
 		push	4
 		call	palette_black_out
 		push	ds
@@ -21965,7 +21965,7 @@ loc_14F0B:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_14F62
 		push	100h
-		call	sub_14F68
+		call	snd_kaja_func
 		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
@@ -22020,30 +22020,7 @@ loc_14F62:
 		retf	6
 sub_14EB0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14F68	proc far
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short locret_14F82
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_14F80
-		int	60h
-		jmp	short locret_14F82
-; ---------------------------------------------------------------------------
-
-loc_14F80:
-		int	61h		; reserved for user interrupt
-
-locret_14F82:
-		retf	2
-sub_14F68	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

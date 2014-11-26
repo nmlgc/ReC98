@@ -651,7 +651,7 @@ sub_978D	proc near
 		push	0
 		call	sub_D712
 		push	0
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	2
 		call	palette_black_in
 		push	60010h
@@ -1099,7 +1099,7 @@ loc_9BFB:
 		add	al, byte ptr [bp+var_4]
 		mov	[si+1],	al
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+33h], 6
 		jz	short loc_9C1E
@@ -1355,7 +1355,7 @@ loc_9E3F:
 		call	sub_9624
 		call	sub_978D
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+28h], 1
 		jnz	loc_9F58
@@ -1613,7 +1613,7 @@ loc_A0BB:
 
 loc_A0C5:
 		push	203h
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	1
 		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
@@ -1634,7 +1634,7 @@ loc_A0C5:
 		call	sub_CD2F
 		freePISlotLarge	0
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		les	bx, dword_105DA
 		dec	byte ptr es:[bx+33h]
 		mov	byte ptr es:[bx+34h], 2
@@ -2920,7 +2920,7 @@ loc_AB89:
 		push	0
 
 loc_AB8B:
-		call	sub_CEC2
+		call	snd_kaja_func
 
 loc_AB90:
 		jmp	loc_AC1E	; default
@@ -2960,7 +2960,7 @@ loc_ABDA:
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	600h
 		push	ss
 		lea	ax, [bp+var_16]
@@ -4624,7 +4624,7 @@ sub_B7D2	proc near
 		call	sub_C880
 		add	sp, 6
 		push	0
-		call	sub_CEC2
+		call	snd_kaja_func
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
@@ -4676,7 +4676,7 @@ loc_B858:
 
 loc_B871:
 		push	210h
-		call	sub_CEC2
+		call	snd_kaja_func
 
 loc_B879:
 		push	2
@@ -4732,7 +4732,7 @@ loc_B8F1:
 		call	snd_delay_until_volume
 		pop	cx
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		pop	bp
 		retn
 sub_B7D2	endp
@@ -4746,14 +4746,14 @@ sub_B92E	proc near
 		push	bp
 		mov	bp, sp
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	600h
 		push	ds
 		push	offset aOver_m	; "over.m"
 		call	sub_C880
 		add	sp, 6
 		push	0
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	1
 		call	palette_black_in
 		push	30040h
@@ -4761,7 +4761,7 @@ sub_B92E	proc near
 		push	1
 		call	palette_black_out
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		pop	bp
 		retn
 sub_B92E	endp
@@ -6099,14 +6099,14 @@ sub_C40D	proc near
 		push	si
 		push	di
 		push	210h
-		call	sub_CEC2
+		call	snd_kaja_func
 		push	4
 		call	palette_black_out
 		push	0FFh
 		call	snd_delay_until_volume
 		pop	cx
 		push	100h
-		call	sub_CEC2
+		call	snd_kaja_func
 		mov	byte_106B0, 50h	; 'P'
 		mov	si, 1
 		jmp	short loc_C44B
@@ -6297,7 +6297,7 @@ loc_C4D8:
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	0
-		call	sub_CEC2
+		call	snd_kaja_func
 		mov	byte_10BB6, 1
 		mov	byte_10BB5, 1
 		push	1
@@ -6407,7 +6407,7 @@ loc_C7AB:
 		cmp	word_10BB2, 100h
 		jle	short loc_C781
 		push	208h
-		call	sub_CEC2
+		call	snd_kaja_func
 		mov	di, 64h	; 'd'
 		mov	word_10BB2, 0
 		jmp	short loc_C781
@@ -7289,34 +7289,7 @@ locret_CEC1:
 		retf
 sub_CE86	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CEC2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_CEDC
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_CEDA
-		int	60h
-		jmp	short loc_CEDC
-; ---------------------------------------------------------------------------
-
-loc_CEDA:
-		int	61h		; reserved for user interrupt
-
-loc_CEDC:
-		pop	bp
-		retf	2
-sub_CEC2	endp
-
+include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

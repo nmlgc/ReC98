@@ -20430,7 +20430,7 @@ loc_1FD19:
 loc_1FD25:
 		mov	fp_2CE88, offset sub_119B1
 		push	20Ah
-		call	sub_14F68
+		call	snd_kaja_func
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
 

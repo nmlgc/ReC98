@@ -578,7 +578,7 @@ loc_9B4E:
 		call	sub_9980
 		call	gaiji_restore
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	sub_BFC2
 		pushd	0
 		push	ds
@@ -791,7 +791,7 @@ loc_9D19:
 		call	sub_9980
 		call	gaiji_restore
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	sub_BFC2
 		pushd	0
 		push	ds
@@ -873,7 +873,7 @@ loc_9DDF:
 		call	sub_9980
 		call	gaiji_restore
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	sub_BFC2
 		pushd	0
 		push	ds
@@ -971,7 +971,7 @@ loc_9EA6:
 		call	sub_9980
 		call	gaiji_restore
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	super_free
 		call	sub_BFC2
 		pushd	0
@@ -1521,10 +1521,10 @@ loc_A2AE:
 		jnz	short loc_A2DB
 		mov	byte ptr es:[bx+15h], 1
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	sub_BEFA
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		jmp	short loc_A2F1
 ; ---------------------------------------------------------------------------
 
@@ -1532,7 +1532,7 @@ loc_A2DB:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		mov	snd_playing, 0
 
 loc_A2F1:
@@ -1594,10 +1594,10 @@ loc_A357:
 		jnz	short loc_A384
 		mov	byte ptr es:[bx+15h], 1
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		call	sub_BEFA
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		jmp	short loc_A39A
 ; ---------------------------------------------------------------------------
 
@@ -1605,7 +1605,7 @@ loc_A384:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		mov	snd_playing, 0
 
 loc_A39A:
@@ -2803,7 +2803,7 @@ loc_AD52:
 		cmp	byte ptr word_F828, 14h
 		jz	short loc_ADB0
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		push	600h
 		mov	al, byte ptr word_F828
 		mov	ah, 0
@@ -2813,7 +2813,7 @@ loc_AD52:
 		call	sub_BF52
 		add	sp, 6
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		mov	al, byte ptr word_F828
 		mov	byte_DE83, al
 		mov	ah, 0
@@ -2879,7 +2879,7 @@ var_2		= word ptr -2
 		push	offset aOpwin_bft ; "opwin.bft"
 		call	super_entry_bfnt
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		push	600h
 		push	ds
 		push	offset aOp_m	; "op.m"
@@ -3010,7 +3010,7 @@ loc_AF65:
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
@@ -3074,7 +3074,7 @@ sub_B008	proc near
 		push	offset aOpwin_bft ; "opwin.bft"
 		call	super_entry_bfnt
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		push	600h
 		push	ds
 		push	offset aOp_m	; "op.m"
@@ -3110,7 +3110,7 @@ sub_B008	proc near
 		freePISlotLarge	0
 		call	sub_B38D
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		xor	si, si
 		jmp	short loc_B0A7
 ; ---------------------------------------------------------------------------
@@ -3713,14 +3713,14 @@ sub_B424	proc near
 		push	si
 		mov	vsync_Count1, 0
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		push	600h
 		push	ds
 		push	offset aSelect_m ; "select.m"
 		call	sub_BF52
 		add	sp, 6
 		push	0
-		call	sub_C403
+		call	snd_kaja_func
 		mov	word_FC64, 0C8h	; 'È'
 		les	bx, dword_FC54
 		assume es:nothing
@@ -4629,7 +4629,7 @@ loc_BB37:
 		call	text_clear
 		call	sub_B4D7
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		mov	al, 1
 		pop	bp
 		retn
@@ -4780,7 +4780,7 @@ loc_BCAE:
 		call	text_clear
 		call	sub_B4D7
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		mov	al, 1
 		jmp	loc_BD97
 ; ---------------------------------------------------------------------------
@@ -4909,7 +4909,7 @@ loc_BDDF:
 		call	text_clear
 		call	sub_B4D7
 		push	100h
-		call	sub_C403
+		call	snd_kaja_func
 		mov	al, 1
 		pop	bp
 		retn
@@ -5644,34 +5644,7 @@ loc_C3EF:
 		retf	6
 sub_C37B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C403	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_C41D
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_C41B
-		int	60h
-		jmp	short loc_C41D
-; ---------------------------------------------------------------------------
-
-loc_C41B:
-		int	61h		; reserved for user interrupt
-
-loc_C41D:
-		pop	bp
-		retf	2
-sub_C403	endp
-
+include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

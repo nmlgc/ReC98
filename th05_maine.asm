@@ -671,7 +671,7 @@ loc_A67E:
 
 loc_A684:
 		push	204h
-		call	sub_EE18
+		call	snd_kaja_func
 		push	ds
 		push	offset arg0	; "op"
 		call	sub_A576
@@ -1677,7 +1677,7 @@ loc_AE78:
 		jnz	short loc_AE96
 		inc	word_14F88
 		push	100h
-		call	sub_EE18
+		call	snd_kaja_func
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1686,7 +1686,7 @@ loc_AE96:
 		jnz	short loc_AEAA
 		inc	word_14F88
 		push	0
-		call	sub_EE18
+		call	snd_kaja_func
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1724,7 +1724,7 @@ loc_AEF0:
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
 		push	100h
-		call	sub_EE18
+		call	snd_kaja_func
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
@@ -1733,7 +1733,7 @@ loc_AEF0:
 		push	0
 
 loc_AF11:
-		call	sub_EE18
+		call	snd_kaja_func
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -2343,7 +2343,7 @@ sub_B3CB	proc near
 		push	600h
 		call	sub_ED60
 		push	0
-		call	sub_EE18
+		call	snd_kaja_func
 		mov	word_15012, 2
 
 loc_B45F:
@@ -4355,13 +4355,13 @@ loc_C307:
 		call	graph_copy_page
 		call	sub_EB66
 		push	100h
-		call	sub_EE18
+		call	snd_kaja_func
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_ED60
 		push	0
-		call	sub_EE18
+		call	snd_kaja_func
 		push	2
 		call	palette_black_in
 		cmp	byte_15176, 0FFh
@@ -8299,7 +8299,7 @@ var_2		= word ptr -2
 		push	600h
 		call	sub_ED60
 		push	0
-		call	sub_EE18
+		call	snd_kaja_func
 		push	0
 		push	ds
 		push	offset aStf00_cdg ; "stf00.cdg"
@@ -8627,7 +8627,7 @@ loc_E7BB:
 
 loc_E7C1:
 		push	204h
-		call	sub_EE18
+		call	snd_kaja_func
 		mov	si, 64h	; 'd'
 
 loc_E7CC:
@@ -9473,7 +9473,7 @@ loc_EDBB:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_EE12
 		push	100h
-		call	sub_EE18
+		call	snd_kaja_func
 		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
@@ -9528,30 +9528,8 @@ loc_EE12:
 		retf	6
 sub_ED60	endp
 
+include th05/hardware/snd_kaja_func.asm
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EE18	proc far
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short locret_EE32
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_EE30
-		int	60h
-		jmp	short locret_EE32
-; ---------------------------------------------------------------------------
-
-loc_EE30:
-		int	61h		; reserved for user interrupt
-
-locret_EE32:
-		retf	2
-sub_EE18	endp
-
-; ---------------------------------------------------------------------------
-		nop
 		push	bp
 		mov	bp, sp
 		push	si

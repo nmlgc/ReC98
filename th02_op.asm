@@ -569,7 +569,7 @@ loc_9E97:
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_9F16
 		push	0
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 
 loc_9F16:
@@ -646,7 +646,7 @@ sub_9FAF	proc far
 		call	text_clear
 		call	sub_BD24
 		push	20Fh
-		call	sub_B203
+		call	snd_kaja_func
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
@@ -743,7 +743,7 @@ sub_A0C6	proc far
 		call	text_clear
 		call	sub_BD24
 		push	20Fh
-		call	sub_B203
+		call	snd_kaja_func
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
@@ -1495,7 +1495,7 @@ sub_A6EF	proc near
 		jnz	short loc_A70E
 		mov	snd_fm_possible, 0
 		push	100h
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 		mov	snd_playing, 0
 		pop	bp
@@ -1506,7 +1506,7 @@ loc_A70E:
 		cmp	snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_A725
 		push	100h
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 		mov	snd_midi_active, 0
 		jmp	short loc_A73B
@@ -1516,7 +1516,7 @@ loc_A725:
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_A748
 		push	100h
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 		mov	al, snd_midi_possible
 		mov	snd_midi_active, al
@@ -1524,7 +1524,7 @@ loc_A725:
 loc_A73B:
 		call	sub_B092
 		push	0
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 
 loc_A748:
@@ -1765,11 +1765,11 @@ loc_A908:
 		mov	byte_DC34, 1
 		mov	snd_bgm_mode, SND_BGM_FM
 		push	100h
-		call	sub_B203
+		call	snd_kaja_func
 		mov	snd_midi_active, 0
 		call	sub_B092
 		push	0
-		call	sub_B203
+		call	snd_kaja_func
 		add	sp, 4
 		mov	byte_F3E1, 2
 		mov	byte_F3E2, 3
@@ -1879,7 +1879,7 @@ loc_A9F3:
 		jnz	short loc_AA1C
 		mov	byte_E8FE, 1
 		push	100h
-		call	sub_B203
+		call	snd_kaja_func
 		pop	cx
 		jmp	short loc_AA4A
 ; ---------------------------------------------------------------------------
@@ -1919,7 +1919,7 @@ loc_AA4A:
 		push	offset aGminit_m ; "gminit.m"
 		call	sub_B0EA
 		push	0
-		call	sub_B203
+		call	snd_kaja_func
 		add	sp, 8
 		mov	al, [bp+var_2]
 		mov	snd_midi_active, al
@@ -2840,33 +2840,7 @@ loc_B1F1:
 		retf
 sub_B17D	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B203	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	snd_playing, 0
-		jz	short loc_B21D
-		mov	ax, [bp+arg_0]
-		cmp	snd_midi_active, 1
-		jz	short loc_B21B
-		int	60h
-		jmp	short loc_B21D
-; ---------------------------------------------------------------------------
-
-loc_B21B:
-		int	61h		; reserved for user interrupt
-
-loc_B21D:
-		pop	bp
-		retf
-sub_B203	endp
+include th02/hardware/snd_kaja_func.asm
 
 ; ---------------------------------------------------------------------------
 		push	bp
@@ -5845,7 +5819,7 @@ loc_C8E3:
 		mov	al, [bp+var_1]
 		mov	snd_midi_active, al
 		push	0
-		call	sub_B203
+		call	snd_kaja_func
 		add	sp, 0Eh
 		mov	al, byte ptr word_F57C
 		mov	byte_DF97, al
