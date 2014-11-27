@@ -20925,8 +20925,7 @@ loc_1E8C9:
 
 loc_1E8D5:
 		mov	fp_259DC, offset sub_10E39
-		push	20Ah
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------
 

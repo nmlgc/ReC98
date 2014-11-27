@@ -568,8 +568,7 @@ loc_9E97:
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_9F16
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	cx
 
 loc_9F16:
@@ -645,8 +644,7 @@ sub_9FAF	proc far
 		call	pi_slot_load
 		call	text_clear
 		call	sub_BD24
-		push	20Fh
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 15
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
@@ -742,8 +740,7 @@ sub_A0C6	proc far
 		call	pi_slot_load
 		call	text_clear
 		call	sub_BD24
-		push	20Fh
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 15
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
@@ -1494,8 +1491,7 @@ sub_A6EF	proc near
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_A70E
 		mov	snd_fm_possible, 0
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	cx
 		mov	snd_playing, 0
 		pop	bp
@@ -1505,8 +1501,7 @@ sub_A6EF	proc near
 loc_A70E:
 		cmp	snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_A725
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	cx
 		mov	snd_midi_active, 0
 		jmp	short loc_A73B
@@ -1515,16 +1510,14 @@ loc_A70E:
 loc_A725:
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_A748
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	cx
 		mov	al, snd_midi_possible
 		mov	snd_midi_active, al
 
 loc_A73B:
 		call	sub_B092
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	cx
 
 loc_A748:
@@ -1764,12 +1757,10 @@ loc_A8F8:
 loc_A908:
 		mov	byte_DC34, 1
 		mov	snd_bgm_mode, SND_BGM_FM
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		mov	snd_midi_active, 0
 		call	sub_B092
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		add	sp, 4
 		mov	byte_F3E1, 2
 		mov	byte_F3E2, 3
@@ -1878,8 +1869,7 @@ loc_A9F3:
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_AA1C
 		mov	byte_E8FE, 1
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	cx
 		jmp	short loc_AA4A
 ; ---------------------------------------------------------------------------
@@ -1918,8 +1908,7 @@ loc_AA4A:
 		push	ds
 		push	offset aGminit_m ; "gminit.m"
 		call	sub_B0EA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		add	sp, 8
 		mov	al, [bp+var_2]
 		mov	snd_midi_active, al
@@ -2674,7 +2663,7 @@ include th02/hardware/snd_mmd_resident.asm
 
 
 sub_B092	proc far
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		xor	bx, bx
 		cmp	al, -1
@@ -2743,7 +2732,7 @@ loc_B12B:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_B148
 		cmp	snd_midi_active, 0
 		jz	short loc_B148
@@ -2856,7 +2845,7 @@ include th02/hardware/snd_kaja_func.asm
 loc_B232:
 		push	1
 		nopcall	frame_delay_
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_midi_active, 1
 		jz	short loc_B246
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
@@ -2935,7 +2924,7 @@ sub_B296	proc far
 		jz	short locret_B2D1
 		cmp	byte_DC33, 0
 		jnz	short loc_B2B2
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		mov	al, byte_DBF0
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
@@ -5818,8 +5807,7 @@ loc_C8E3:
 		call	sub_B0EA
 		mov	al, [bp+var_1]
 		mov	snd_midi_active, al
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Eh
 		mov	al, byte ptr word_F57C
 		mov	byte_DF97, al

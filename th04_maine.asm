@@ -578,8 +578,7 @@ loc_A187:
 		call	palette_black_out
 
 loc_A1E9:
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	64h ; 'd'
 		call	frame_delay
 		call	sub_C814
@@ -629,8 +628,7 @@ loc_A27E:
 		call	sub_C0F8
 
 loc_A281:
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	ds
 		push	offset arg0	; "op"
 		call	sub_A08A
@@ -1957,7 +1955,7 @@ loc_AD02:
 		cmp	[bp+arg_0], 24h	; '$'
 		jnz	short loc_AD1A
 		inc	word_12478
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_AD26
 ; ---------------------------------------------------------------------------
 
@@ -1967,7 +1965,7 @@ loc_AD1A:
 		inc	word_12478
 
 loc_AD24:
-		push	0
+		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AD26:
 		call	snd_kaja_func
@@ -2016,8 +2014,7 @@ loc_AD74:
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
@@ -2890,14 +2887,12 @@ sub_B44D	proc near
 		push	0
 		call	graph_copy_page
 		call	sub_D626
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	ds
 		push	offset aStaff	; "staff"
 		push	600h
 		call	sub_D112
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		push	0Ch
 		call	palette_black_in
 		push	0
@@ -5243,14 +5238,12 @@ loc_C958:
 		mov	byte_125A0, al
 
 loc_C95E:
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_D112
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
 		cmp	byte_125B6, 0FFh
@@ -5989,7 +5982,7 @@ arg_2		= word ptr  8
 		nopcall	snd_mmd_resident
 
 loc_CFC4:
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_CFD3
@@ -6087,7 +6080,7 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_D05C:
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_D069
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
@@ -6263,7 +6256,7 @@ loc_D173:
 loc_D17A:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_D1F7
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
@@ -6297,7 +6290,7 @@ loc_D1CA:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_0]
-		cmp	ah, 6
+		cmp	ah, KAJA_GET_SONG_ADDRESS
 		jnz	short loc_D1E8
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_D1E8
@@ -6889,7 +6882,7 @@ sub_D5DA	proc far
 		mov	al, byte_EB30
 		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_D5FF
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
 					; 02h semaphore	service	is unavailable

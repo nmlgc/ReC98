@@ -1213,8 +1213,7 @@ loc_B506:
 		push	bx
 		push	600h
 		call	sub_14EB0
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 
 loc_B52C:
 		mov	fp_2CE88, offset sub_11914
@@ -7840,8 +7839,7 @@ loc_E45D:
 		mov	byte ptr es:[bx+1Ah], 0FFh
 
 loc_E466:
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -7861,8 +7859,7 @@ sub_E480	proc far
 		mov	bp, sp
 		les	bx, dword_23EF0
 		mov	byte ptr es:[bx+1Ah], 0FDh
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -9699,7 +9696,7 @@ loc_F097:
 		les	bx, [bp+s]
 		cmp	byte ptr es:[bx], 24h ;	'$'
 		jnz	short loc_F0AD
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_F0BB
 ; ---------------------------------------------------------------------------
 
@@ -9707,7 +9704,7 @@ loc_F0AD:
 		pushd	[bp+s]
 		push	600h
 		call	sub_14EB0
-		push	0
+		push	(KAJA_SONG_PLAY shl 8)
 
 loc_F0BB:
 		call	snd_kaja_func
@@ -9964,8 +9961,7 @@ sub_F2B4	proc far
 		push	offset aSt06b	; "st06b"
 		push	600h
 		call	sub_14EB0
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
 		call	file_ropen
@@ -10964,8 +10960,7 @@ loc_FA7D:
 		les	bx, dword_23EF0
 		assume es:nothing
 		mov	byte ptr es:[bx+1Ah], 0
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	4
 		call	palette_black_out
 		push	ds
@@ -21499,7 +21494,7 @@ arg_2		= word ptr  8
 		nopcall	snd_mmd_resident
 
 loc_14BFA:
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_14C09
@@ -21703,7 +21698,7 @@ sub_14D28	proc far
 		mov	al, byte_21214
 		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_14D4D
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
 					; 02h semaphore	service	is unavailable
@@ -21964,8 +21959,7 @@ arg_2		= dword	ptr  8
 loc_14F0B:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_14F62
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		movzx	bx, snd_bgm_mode
 		shl	bx, 2
 
@@ -21990,7 +21984,7 @@ loc_14F26:
 loc_14F3E:
 		mov	bx, ax
 		mov	ax, bp
-		cmp	ah, 6
+		cmp	ah, KAJA_GET_SONG_ADDRESS
 		jnz	short loc_14F52
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_14F52

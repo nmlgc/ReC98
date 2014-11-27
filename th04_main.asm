@@ -1083,8 +1083,7 @@ loc_B156:
 		pushd	[off_213E0]
 		push	600h
 		call	sub_13496
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 
 loc_B1AE:
 		nopcall	sub_CB99
@@ -1759,8 +1758,7 @@ sub_B7B9	proc far
 		les	bx, dword_2CDC6
 		mov	byte ptr es:[bx+30h], 0FFh
 		mov	byte ptr es:[bx+25h], 30h ; '0'
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -1781,8 +1779,7 @@ sub_B7E4	proc far
 		les	bx, dword_2CDC6
 		mov	byte ptr es:[bx+30h], 0FEh
 		mov	byte ptr es:[bx+25h], 31h ; '1'
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -1802,8 +1799,7 @@ sub_B80F	proc far
 		mov	bp, sp
 		les	bx, dword_2CDC6
 		mov	byte ptr es:[bx+30h], 0FDh
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -6003,7 +5999,7 @@ loc_D3E6:
 		cmp	[bp+arg_0], 24h	; '$'
 		jnz	short loc_D3FF
 		inc	word ptr dword_255CC
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_D40B
 ; ---------------------------------------------------------------------------
 
@@ -6011,7 +6007,7 @@ loc_D3FF:
 		cmp	[bp+arg_0], 2Ah	; '*'
 		jnz	short loc_D413
 		inc	word ptr dword_255CC
-		push	0
+		push	(KAJA_SONG_PLAY shl 8)
 
 loc_D40B:
 		call	snd_kaja_func
@@ -6056,8 +6052,7 @@ loc_D45A:
 		push	ax
 		push	600h
 		call	sub_13496
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 
 loc_D478:
 		jmp	loc_D528	; default
@@ -8463,8 +8458,7 @@ loc_E654:
 		les	bx, dword_2CDC6
 		assume es:nothing
 		mov	byte ptr es:[bx+30h], 0
-		push	204h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 4
 		push	4
 		call	palette_black_out
 		push	ds
@@ -18602,7 +18596,7 @@ arg_2		= word ptr  8
 		nopcall	snd_mmd_resident
 
 loc_13414:
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_13423
@@ -18738,7 +18732,7 @@ loc_134F7:
 loc_134FE:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_1357B
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
@@ -18772,7 +18766,7 @@ loc_1354E:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_0]
-		cmp	ah, 6
+		cmp	ah, KAJA_GET_SONG_ADDRESS
 		jnz	short loc_1356C
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_1356C
@@ -19289,7 +19283,7 @@ sub_138EC	proc far
 		mov	al, byte_21C54
 		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_13911
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
 					; 02h semaphore	service	is unavailable

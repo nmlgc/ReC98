@@ -520,8 +520,7 @@ sub_A8F1	proc near
 		call	sub_CCC8
 		call	sub_A7F0
 		call	gaiji_restore
-		push	20Ah
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 10
 		call	sub_E0AC
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+1Ah], 0
@@ -572,8 +571,7 @@ sub_A96C	proc near
 		call	sub_CCC8
 		call	sub_A7F0
 		call	gaiji_restore
-		push	20Ah
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 10
 		call	sub_E0AC
 		pushd	0
 		push	ds
@@ -1378,8 +1376,7 @@ loc_B0F4:
 		mov	byte ptr es:[bx+10h], 2
 		mov	byte ptr es:[bx+18h], 1
 		mov	byte ptr es:[bx+49h], 1
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1392,8 +1389,7 @@ loc_B0F4:
 		push	offset aOp	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		mov	byte_F447, 0
 		jmp	short loc_B16F
 ; ---------------------------------------------------------------------------
@@ -1455,8 +1451,7 @@ loc_B1D4:
 		mov	byte ptr es:[bx+10h], 0
 
 loc_B1E8:
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1469,8 +1464,7 @@ loc_B1E8:
 		push	offset aOp	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
@@ -1561,8 +1555,7 @@ loc_B2CF:
 		dec	byte ptr es:[bx+10h]
 
 loc_B2D7:
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -1575,8 +1568,7 @@ loc_B2D7:
 		push	offset aOp	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
 
@@ -1701,8 +1693,7 @@ loc_B40D:
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_B420
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 
 loc_B420:
 		call	sub_CCD2
@@ -2880,8 +2871,7 @@ loc_BCFD:
 		push	offset aLogo	; "logo"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		mov	[bp+var_6], 2B7Ch
 		xor	si, si
 		jmp	short loc_BD2A
@@ -3874,8 +3864,7 @@ loc_C4D6:
 loc_C4E4:
 		cmp	byte ptr word_12DBC, 17h
 		jz	short loc_C533
-		push	220h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 32
 		mov	al, byte ptr word_12DBC
 		mov	byte_102AF, al
 		mov	ah, 0
@@ -3888,8 +3877,7 @@ loc_C4E4:
 		pushd	dword ptr [bx+0F16h]
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 
 loc_C51D:
 		test	byte ptr word_11A50+1, 10h
@@ -3909,8 +3897,7 @@ loc_C533:
 ; ---------------------------------------------------------------------------
 
 loc_C544:
-		push	210h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 16
 		call	sub_BF99
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
@@ -3924,8 +3911,7 @@ loc_C544:
 		push	offset aOp_2	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
 sub_C3B7	endp
@@ -4618,16 +4604,13 @@ sub_CA1A	endp
 sub_CA94	proc near
 		push	bp
 		mov	bp, sp
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	ds
 		push	offset aName	; "name"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
-		push	280h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
+		kajacall	KAJA_SONG_FADE, -128
 		push	1
 		call	palette_black_out
 		les	bx, dword_10DA4
@@ -4682,8 +4665,7 @@ loc_CB36:
 ; ---------------------------------------------------------------------------
 
 loc_CB58:
-		push	201h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 1
 		push	1
 		call	palette_black_out
 		freePISlotLarge	0
@@ -4711,14 +4693,12 @@ loc_CBB3:
 		call	frame_delay
 		cmp	word_11A50, 0
 		jnz	short loc_CBB3
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	ds
 		push	offset aOp_0	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
 sub_CA94	endp
@@ -4970,8 +4950,7 @@ loc_CDC4:
 		push	offset aOp_1	; "op"
 		push	600h
 		call	sub_DDCA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 
 loc_CE50:
 		mov	dx, 0A6h ; '¦'
@@ -6666,7 +6645,7 @@ arg_2		= word ptr  8
 		nopcall	snd_mmd_resident
 
 loc_DCFE:
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		cmp	al, 0FFh
 		jnz	short loc_DD0D
@@ -6764,7 +6743,7 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_DD96:
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_DDA3
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
@@ -6860,7 +6839,7 @@ loc_DE2B:
 loc_DE32:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jz	short loc_DEAF
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		nopcall	snd_kaja_func
 		mov	al, snd_bgm_mode
 		mov	ah, 0
@@ -6894,7 +6873,7 @@ loc_DE82:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_0]
-		cmp	ah, 6
+		cmp	ah, KAJA_GET_SONG_ADDRESS
 		jnz	short loc_DEA0
 		cmp	snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_DEA0
@@ -7596,7 +7575,7 @@ sub_E32C	proc far
 		mov	al, byte_FD80
 		cmp	snd_se_mode, SND_SE_BEEP
 		jz	short loc_E351
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
 					; 02h semaphore	service	is unavailable

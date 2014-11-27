@@ -408,8 +408,7 @@ loc_9724:
 
 loc_974D:
 		call	sub_13DF9
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		or	si, si
 		jnz	short loc_9764
 		push	ds
@@ -1141,8 +1140,7 @@ loc_9E24:
 		pushd	0
 		push	27F00C7h
 		call	grc_setclip
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	di
 		pop	si
 		leave
@@ -9682,7 +9680,7 @@ sub_E8F8	endp
 
 
 sub_E922	proc far
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		xor	bx, bx
 		cmp	al, 0FFh
@@ -10089,7 +10087,7 @@ sub_EC76	proc far
 		jz	short locret_ECB1
 		cmp	byte_1DB4B, 0
 		jnz	short loc_EC92
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		mov	al, byte_1DB4A
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address

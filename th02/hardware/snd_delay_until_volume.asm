@@ -6,7 +6,7 @@ snd_delay_until_volume	proc
 	mov	bp, sp
 
 @@loop:
-	mov	ah, 8
+	mov	ah, KAJA_GET_VOLUME
 	cmp	snd_midi_active, 1
 	jz	short @@midi
 	int	60h

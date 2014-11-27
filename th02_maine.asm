@@ -998,8 +998,7 @@ sub_9AD4	proc near
 		push	offset aEnding_m ; "ending.m"
 		call	sub_B6E6
 		add	sp, 6
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		call	sub_9A7E
 		push	4
@@ -1057,8 +1056,7 @@ sub_9B64	proc near
 		push	offset aEnd1_m	; "end1.m"
 		call	sub_B6E6
 		add	sp, 6
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -1608,8 +1606,7 @@ sub_A09D	proc near
 		push	offset aEnd1_m	; "end1.m"
 		call	sub_B6E6
 		add	sp, 6
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -3887,7 +3884,7 @@ include th02/hardware/snd_mmd_resident.asm
 
 
 sub_B68E	proc far
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		xor	bx, bx
 		cmp	al, 0FFh
@@ -3957,7 +3954,7 @@ loc_B727:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_B744
 		cmp	snd_midi_active, 0
 		jz	short loc_B744
@@ -4108,7 +4105,7 @@ arg_0		= word ptr  6
 loc_B868:
 		push	1
 		nopcall	frame_delay
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_midi_active, 1
 		jz	short loc_B87C
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE

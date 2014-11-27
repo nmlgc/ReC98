@@ -2107,8 +2107,7 @@ loc_B24F:
 		call	farfp_1F4A4
 		or	ax, ax
 		jz	short loc_B263
-		push	228h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 40
 		pop	cx
 		jmp	loc_B1CD
 ; ---------------------------------------------------------------------------
@@ -10494,7 +10493,7 @@ include th02/hardware/snd_mmd_resident.asm
 
 
 sub_F786	proc far
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		xor	bx, bx
 		cmp	al, 0FFh
@@ -10542,7 +10541,7 @@ loc_F804:
 		inc	si
 		loop	loc_F804
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_F83B
 		cmp	snd_midi_active, 0
 		jz	short loc_F83B
@@ -10565,7 +10564,7 @@ loc_F83B:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_F858
 		cmp	snd_midi_active, 0
 		jz	short loc_F858
@@ -10794,7 +10793,7 @@ include th02/hardware/snd_kaja_func.asm
 loc_FA25:
 		push	1
 		nopcall	frame_delay
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_midi_active, 1
 		jz	short loc_FA39
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
@@ -10875,7 +10874,7 @@ sub_FA8A	proc far
 		jz	short locret_FAC5
 		cmp	byte_1E35D, 0
 		jnz	short loc_FAA6
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		mov	al, byte_1E31A
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
@@ -18247,8 +18246,7 @@ sub_13439	proc near
 		push	bp
 		mov	bp, sp
 		nopcall	sub_FBE9
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	cx
 		push	69h ; 'i'
 		call	sub_13055
@@ -19017,13 +19015,11 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	600h
 		pushd	[bp+arg_0]
 		call	sub_F7FA
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Ah
 		pop	bp
 		retf
@@ -30220,8 +30216,7 @@ sub_19C8D	proc near
 		les	bx, dword_2026C
 		cmp	word ptr es:[bx+12h], 0
 		jz	short loc_19D48
-		push	20Ah
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 10
 		pop	cx
 		push	0Ah
 		call	palette_white_out

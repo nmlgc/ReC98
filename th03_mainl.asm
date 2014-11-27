@@ -650,8 +650,7 @@ sub_978D	proc near
 		push	160012Ch
 		push	0
 		call	sub_D712
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
 		push	60010h
@@ -1098,8 +1097,7 @@ loc_9BFB:
 		mov	al, [si+1]
 		add	al, byte ptr [bp+var_4]
 		mov	[si+1],	al
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+33h], 6
 		jz	short loc_9C1E
@@ -1354,8 +1352,7 @@ loc_9E3F:
 		add	sp, 6
 		call	sub_9624
 		call	sub_978D
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+28h], 1
 		jnz	loc_9F58
@@ -1612,8 +1609,7 @@ loc_A0BB:
 ; ---------------------------------------------------------------------------
 
 loc_A0C5:
-		push	203h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 3
 		push	1
 		call	palette_black_out
 		mov	dx, 0A6h ; '¦'
@@ -1633,8 +1629,7 @@ loc_A0C5:
 		push	0
 		call	sub_CD2F
 		freePISlotLarge	0
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		les	bx, dword_105DA
 		dec	byte ptr es:[bx+33h]
 		mov	byte ptr es:[bx+34h], 2
@@ -2907,7 +2902,7 @@ loc_AB66:
 		cmp	[bp+arg_0], 24h	; '$'
 		jnz	short loc_AB7F
 		inc	word ptr dword_105C6
-		push	100h
+		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_AB8B
 ; ---------------------------------------------------------------------------
 
@@ -2917,7 +2912,7 @@ loc_AB7F:
 		inc	word ptr dword_105C6
 
 loc_AB89:
-		push	0
+		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AB8B:
 		call	snd_kaja_func
@@ -2959,8 +2954,7 @@ loc_ABDA:
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	600h
 		push	ss
 		lea	ax, [bp+var_16]
@@ -4623,8 +4617,7 @@ sub_B7D2	proc near
 		push	offset aScore_m	; "score.m"
 		call	sub_C880
 		add	sp, 6
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
@@ -4675,8 +4668,7 @@ loc_B858:
 		jnz	short loc_B879
 
 loc_B871:
-		push	210h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 16
 
 loc_B879:
 		push	2
@@ -4731,8 +4723,7 @@ loc_B8F1:
 		push	0FFh
 		call	snd_delay_until_volume
 		pop	cx
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	bp
 		retn
 sub_B7D2	endp
@@ -4745,23 +4736,20 @@ sub_B7D2	endp
 sub_B92E	proc near
 		push	bp
 		mov	bp, sp
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		push	600h
 		push	ds
 		push	offset aOver_m	; "over.m"
 		call	sub_C880
 		add	sp, 6
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		push	1
 		call	palette_black_in
 		push	30040h
 		call	sub_D3FC
 		push	1
 		call	palette_black_out
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		pop	bp
 		retn
 sub_B92E	endp
@@ -5235,7 +5223,7 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_BCB9:
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
 					; Return: CF set on error, DH =	error code
@@ -6098,15 +6086,13 @@ sub_C40D	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		push	210h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 16
 		push	4
 		call	palette_black_out
 		push	0FFh
 		call	snd_delay_until_volume
 		pop	cx
-		push	100h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_STOP
 		mov	byte_106B0, 50h	; 'P'
 		mov	si, 1
 		jmp	short loc_C44B
@@ -6296,8 +6282,7 @@ loc_C4D8:
 		mov	byte_10BB4, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
-		push	0
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_PLAY
 		mov	byte_10BB6, 1
 		mov	byte_10BB5, 1
 		push	1
@@ -6406,8 +6391,7 @@ loc_C7AB:
 		jz	short loc_C781
 		cmp	word_10BB2, 100h
 		jle	short loc_C781
-		push	208h
-		call	snd_kaja_func
+		kajacall	KAJA_SONG_FADE, 8
 		mov	di, 64h	; 'd'
 		mov	word_10BB2, 0
 		jmp	short loc_C781
@@ -6465,7 +6449,7 @@ sub_C7E2	endp
 
 
 sub_C80C	proc far
-		mov	ah, 9
+		mov	ah, PMD_GET_DRIVER_VERSION
 		int	60h
 		xor	bx, bx
 		cmp	al, 0FFh
@@ -6513,7 +6497,7 @@ loc_C88A:
 		inc	si
 		loop	loc_C88A
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_C8C1
 		cmp	snd_midi_active, 0
 		jz	short loc_C8C1
@@ -6536,7 +6520,7 @@ loc_C8C1:
 					; 0 - read
 		mov	bx, ax
 		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
+		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
 		jnz	short loc_C8DE
 		cmp	snd_midi_active, 0
 		jz	short loc_C8DE
@@ -7268,7 +7252,7 @@ sub_CE86	proc far
 		jz	short locret_CEC1
 		cmp	byte_EC7D, 0
 		jnz	short loc_CEA2
-		mov	ah, 0Ch
+		mov	ah, PMD_SE_PLAY
 		mov	al, byte_EC7C
 		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
 					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
@@ -7971,7 +7955,7 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_D412:
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_midi_active, 1
 		jz	short loc_D41F
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
@@ -8013,7 +7997,7 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_D443:
-		mov	ah, 5
+		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	snd_midi_active, 1
 		jz	short loc_D450
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
