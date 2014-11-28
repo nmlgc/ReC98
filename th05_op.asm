@@ -1427,7 +1427,7 @@ loc_AC71:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -1506,7 +1506,7 @@ loc_AD74:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aOp	; "op"
 		push	600h
@@ -1535,7 +1535,7 @@ loc_ADC2:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -1624,7 +1624,7 @@ loc_AE87:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aOp	; "op"
 		push	600h
@@ -1648,7 +1648,7 @@ loc_AECF:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -1747,7 +1747,7 @@ loc_AF97:
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_D380
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -6196,105 +6196,7 @@ sub_D304	endp
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D380	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		nopcall	snd_pmd_resident
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_D39A
-		nopcall	snd_mmd_resident
-
-loc_D39A:
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		cmp	al, 0FFh
-		jnz	short loc_D3A9
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_D3B9
-; ---------------------------------------------------------------------------
-
-loc_D3A9:
-		or	al, al
-		jnz	short loc_D3B4
-		mov	snd_bgm_mode, SND_BGM_FM26
-		jmp	short loc_D3B9
-; ---------------------------------------------------------------------------
-
-loc_D3B4:
-		mov	snd_bgm_mode, SND_BGM_FM86
-
-loc_D3B9:
-		cmp	di, SND_SE_FM
-		jnz	short loc_D3D1
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_D3CA
-		mov	ax, 1
-		jmp	short loc_D3CC
-; ---------------------------------------------------------------------------
-
-loc_D3CA:
-		xor	ax, ax
-
-loc_D3CC:
-		mov	snd_se_mode, al
-		jmp	short loc_D3E2
-; ---------------------------------------------------------------------------
-
-loc_D3D1:
-		cmp	di, SND_SE_BEEP
-		jnz	short loc_D3DD
-		mov	snd_se_mode, SND_SE_BEEP
-		jmp	short loc_D3E2
-; ---------------------------------------------------------------------------
-
-loc_D3DD:
-		mov	snd_se_mode, SND_SE_OFF
-
-loc_D3E2:
-		or	si, si
-		jnz	short loc_D3ED
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_D411
-; ---------------------------------------------------------------------------
-
-loc_D3ED:
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_D400
-		cmp	snd_midi_possible, 0
-		jz	short loc_D400
-		mov	snd_bgm_mode, SND_BGM_MIDI
-		jmp	short loc_D411
-; ---------------------------------------------------------------------------
-
-loc_D400:
-		cmp	si, SND_BGM_FM26
-		jnz	short loc_D411
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_D411
-		mov	snd_bgm_mode, SND_BGM_FM26
-
-loc_D411:
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_D380	endp
-
+include th04/hardware/snd_determine_modes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

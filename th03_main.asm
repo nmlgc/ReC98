@@ -381,7 +381,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_970F
-		call	sub_E922
+		call	snd_determine_mode
 
 loc_970F:
 		call	gaiji_backup
@@ -9676,31 +9676,7 @@ sub_E8F8	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E922	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_E934
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short loc_E938
-; ---------------------------------------------------------------------------
-
-loc_E934:
-		mov	bl, snd_midi_active
-
-loc_E938:
-		mov	snd_playing, bl
-		mov	ax, bx
-		retf
-sub_E922	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37764,7 +37740,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-snd_playing	db 0
+snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm

@@ -1295,7 +1295,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_9DAD
-		call	sub_C80C
+		call	snd_determine_mode
 
 loc_9DAD:
 		call	gaiji_backup
@@ -5214,7 +5214,7 @@ arg_2		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_BCB9
 		mov	ax, word_10BB2
 		cmp	ax, [bp+arg_0]
@@ -6445,31 +6445,7 @@ sub_C7E2	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C80C	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_C81E
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short loc_C822
-; ---------------------------------------------------------------------------
-
-loc_C81E:
-		mov	bl, snd_midi_active
-
-loc_C822:
-		mov	snd_playing, bl
-		mov	ax, bx
-		retf
-sub_C80C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_delay_until_volume.asm
 
@@ -7946,7 +7922,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_D412
 		push	[bp+arg_0]
 		nopcall	frame_delay
@@ -7988,7 +7964,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_D443
 		push	[bp+arg_0]
 		nopcall	sub_D47A
@@ -8597,7 +8573,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-snd_playing	db 0
+snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 byte_EC7C	db 0FFh

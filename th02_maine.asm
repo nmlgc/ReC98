@@ -3254,7 +3254,7 @@ loc_B173:
 		mov	snd_midi_active, al
 
 loc_B184:
-		call	sub_B68E
+		call	snd_determine_mode
 
 loc_B189:
 		mov	dx, 0A6h ; '¦'
@@ -3879,32 +3879,7 @@ sub_B616	proc far
 sub_B616	endp
 
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B68E	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_B6A0
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short loc_B6A4
-; ---------------------------------------------------------------------------
-
-loc_B6A0:
-		mov	bl, snd_midi_active
-
-loc_B6A4:
-		mov	snd_playing, bl
-		mov	ax, bx
-		retf
-sub_B68E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4094,7 +4069,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_B868
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -5656,7 +5631,7 @@ byte_D70B	db 3
 byte_D70C	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-snd_playing	db 0
+snd_active	db 0
 		db 0
 aUmx		db '“Œ•û••–‚.˜^',0
 byte_D722	db 1

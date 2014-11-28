@@ -4,7 +4,7 @@ snd_kaja_func	proc
 
 	push	bp
 	mov	bp, sp
-	cmp	snd_playing, 0
+	cmp	snd_active, 0
 	jz	short @@ret
 	mov	ax, [bp+@@ax]
 	cmp	snd_midi_active, 1

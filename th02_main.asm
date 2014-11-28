@@ -2037,7 +2037,7 @@ loc_B19A:
 		mov	snd_midi_active, al
 
 loc_B1B5:
-		call	sub_F786
+		call	snd_determine_mode
 
 loc_B1BA:
 		les	bx, dword_2026C
@@ -10488,32 +10488,7 @@ sub_F70E	proc far
 sub_F70E	endp
 
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F786	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_F798
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short loc_F79C
-; ---------------------------------------------------------------------------
-
-loc_F798:
-		mov	bl, snd_midi_active
-
-loc_F79C:
-		mov	snd_playing, bl
-		mov	ax, bx
-		retf
-sub_F786	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_delay_until_volume.asm
 
@@ -10782,7 +10757,7 @@ include th02/hardware/snd_kaja_func.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_FA25
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -36095,7 +36070,7 @@ byte_1E301	db 3
 byte_1E302	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-snd_playing	db 0
+snd_active	db 0
 		db 0
 byte_1E30C	db 1
 byte_1E30D	db 0

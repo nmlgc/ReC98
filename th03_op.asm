@@ -327,9 +327,9 @@ var_3		= word ptr -3
 		les	bx, dword_FC54
 		mov	al, [bp+var_8]
 		mov	es:[bx+15h], al
-		call	sub_BEFA
+		call	snd_determine_mode
 		mov	byte_D880, 0
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_9961
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
@@ -340,7 +340,7 @@ var_3		= word ptr -3
 loc_9961:
 		cmp	[bp+var_8], 0
 		jnz	short loc_996C
-		mov	snd_playing, 0
+		mov	snd_active, 0
 
 loc_996C:
 		les	bx, dword_FC54
@@ -1517,7 +1517,7 @@ loc_A2AE:
 		jnz	short loc_A2DB
 		mov	byte ptr es:[bx+15h], 1
 		kajacall	KAJA_SONG_STOP
-		call	sub_BEFA
+		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A2F1
 ; ---------------------------------------------------------------------------
@@ -1526,7 +1526,7 @@ loc_A2DB:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		kajacall	KAJA_SONG_STOP
-		mov	snd_playing, 0
+		mov	snd_active, 0
 
 loc_A2F1:
 		mov	al, byte_D951
@@ -1587,7 +1587,7 @@ loc_A357:
 		jnz	short loc_A384
 		mov	byte ptr es:[bx+15h], 1
 		kajacall	KAJA_SONG_STOP
-		call	sub_BEFA
+		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A39A
 ; ---------------------------------------------------------------------------
@@ -1596,7 +1596,7 @@ loc_A384:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		kajacall	KAJA_SONG_STOP
-		mov	snd_playing, 0
+		mov	snd_active, 0
 
 loc_A39A:
 		mov	al, byte_D951
@@ -4991,32 +4991,7 @@ sub_BED1	proc far
 		retf
 sub_BED1	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BEFA	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, 0FFh
-		jz	short loc_BF0C
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short loc_BF10
-; ---------------------------------------------------------------------------
-
-loc_BF0C:
-		mov	bl, snd_midi_active
-
-loc_BF10:
-		mov	snd_playing, bl
-		mov	ax, bx
-		retf
-sub_BEFA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6755,7 +6730,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-snd_playing	db 0
+snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm

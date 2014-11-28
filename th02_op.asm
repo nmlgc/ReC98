@@ -267,7 +267,7 @@ loc_9C0E:
 		cmp	snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_9C80
 		mov	snd_fm_possible, 0
-		mov	snd_playing, 0
+		mov	snd_active, 0
 		jmp	short loc_9C99
 ; ---------------------------------------------------------------------------
 
@@ -283,7 +283,7 @@ loc_9C8E:
 		mov	snd_midi_active, al
 
 loc_9C94:
-		call	sub_B092
+		call	snd_determine_mode
 
 loc_9C99:
 		xor	ax, ax
@@ -1493,7 +1493,7 @@ sub_A6EF	proc near
 		mov	snd_fm_possible, 0
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		mov	snd_playing, 0
+		mov	snd_active, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -1516,7 +1516,7 @@ loc_A725:
 		mov	snd_midi_active, al
 
 loc_A73B:
-		call	sub_B092
+		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 
@@ -1759,7 +1759,7 @@ loc_A908:
 		mov	snd_bgm_mode, SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
 		mov	snd_midi_active, 0
-		call	sub_B092
+		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 4
 		mov	byte_F3E1, 2
@@ -1895,7 +1895,7 @@ loc_AA35:
 loc_AA4A:
 		mov	word_F3C8, 0
 		mov	al, snd_bgm_mode
-		mov	snd_playing, al
+		mov	snd_active, al
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_AA8F
@@ -2658,31 +2658,7 @@ sub_B019	endp
 		db 0
 
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B092	proc far
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		xor	bx, bx
-		cmp	al, -1
-		jz	short @@midi?
-		inc	bx
-		mov	snd_fm_possible, 1
-		jmp	short @@ret
-
-@@midi?:
-		mov	bl, snd_midi_active
-
-@@ret:
-		mov	snd_playing, bl
-		mov	ax, bx
-		ret
-sub_B092	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2834,7 +2810,7 @@ include th02/hardware/snd_kaja_func.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	snd_playing, 0
+		cmp	snd_active, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
 		nopcall	frame_delay_
@@ -5978,7 +5954,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
-snd_playing	db 0
+snd_active	db 0
 		db 0
 byte_DBF0	db 0FFh
 		db    0

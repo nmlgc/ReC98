@@ -633,7 +633,7 @@ _envp		= dword	ptr  0Ch
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_E878
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -8676,105 +8676,7 @@ loc_E811:
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E878	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		nopcall	snd_pmd_resident
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_E892
-		nopcall	snd_mmd_resident
-
-loc_E892:
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		cmp	al, 0FFh
-		jnz	short loc_E8A1
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_E8B1
-; ---------------------------------------------------------------------------
-
-loc_E8A1:
-		or	al, al
-		jnz	short loc_E8AC
-		mov	snd_bgm_mode, SND_BGM_FM26
-		jmp	short loc_E8B1
-; ---------------------------------------------------------------------------
-
-loc_E8AC:
-		mov	snd_bgm_mode, SND_BGM_FM86
-
-loc_E8B1:
-		cmp	di, SND_SE_FM
-		jnz	short loc_E8C9
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_E8C2
-		mov	ax, 1
-		jmp	short loc_E8C4
-; ---------------------------------------------------------------------------
-
-loc_E8C2:
-		xor	ax, ax
-
-loc_E8C4:
-		mov	snd_se_mode, al
-		jmp	short loc_E8DA
-; ---------------------------------------------------------------------------
-
-loc_E8C9:
-		cmp	di, SND_SE_BEEP
-		jnz	short loc_E8D5
-		mov	snd_se_mode, SND_SE_BEEP
-		jmp	short loc_E8DA
-; ---------------------------------------------------------------------------
-
-loc_E8D5:
-		mov	snd_se_mode, SND_SE_OFF
-
-loc_E8DA:
-		or	si, si
-		jnz	short loc_E8E5
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_E909
-; ---------------------------------------------------------------------------
-
-loc_E8E5:
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_E8F8
-		cmp	snd_midi_possible, 0
-		jz	short loc_E8F8
-		mov	snd_bgm_mode, SND_BGM_MIDI
-		jmp	short loc_E909
-; ---------------------------------------------------------------------------
-
-loc_E8F8:
-		cmp	si, SND_BGM_FM26
-		jnz	short loc_E909
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_E909
-		mov	snd_bgm_mode, SND_BGM_FM26
-
-loc_E909:
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_E878	endp
-
+include th04/hardware/snd_determine_modes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

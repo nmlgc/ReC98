@@ -499,7 +499,7 @@ _envp		= dword	ptr  0Ch
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	sub_14BE0
+		call	snd_determine_modes
 		push	ds
 		push	offset aMiko	; "miko"
 		push	0B00h
@@ -21472,105 +21472,7 @@ sub_14B64	endp
 
 include th04/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_mmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14BE0	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		nopcall	snd_pmd_resident
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_14BFA
-		nopcall	snd_mmd_resident
-
-loc_14BFA:
-		mov	ah, PMD_GET_DRIVER_VERSION
-		int	60h
-		cmp	al, 0FFh
-		jnz	short loc_14C09
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_14C19
-; ---------------------------------------------------------------------------
-
-loc_14C09:
-		or	al, al
-		jnz	short loc_14C14
-		mov	snd_bgm_mode, SND_BGM_FM26
-		jmp	short loc_14C19
-; ---------------------------------------------------------------------------
-
-loc_14C14:
-		mov	snd_bgm_mode, SND_BGM_FM86
-
-loc_14C19:
-		cmp	di, SND_SE_FM
-		jnz	short loc_14C31
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_14C2A
-		mov	ax, 1
-		jmp	short loc_14C2C
-; ---------------------------------------------------------------------------
-
-loc_14C2A:
-		xor	ax, ax
-
-loc_14C2C:
-		mov	snd_se_mode, al
-		jmp	short loc_14C42
-; ---------------------------------------------------------------------------
-
-loc_14C31:
-		cmp	di, SND_SE_BEEP
-		jnz	short loc_14C3D
-		mov	snd_se_mode, SND_SE_BEEP
-		jmp	short loc_14C42
-; ---------------------------------------------------------------------------
-
-loc_14C3D:
-		mov	snd_se_mode, SND_SE_OFF
-
-loc_14C42:
-		or	si, si
-		jnz	short loc_14C4D
-		mov	snd_bgm_mode, SND_BGM_OFF
-		jmp	short loc_14C71
-; ---------------------------------------------------------------------------
-
-loc_14C4D:
-		cmp	si, SND_BGM_MIDI
-		jnz	short loc_14C60
-		cmp	snd_midi_possible, 0
-		jz	short loc_14C60
-		mov	snd_bgm_mode, SND_BGM_MIDI
-		jmp	short loc_14C71
-; ---------------------------------------------------------------------------
-
-loc_14C60:
-		cmp	si, SND_BGM_FM26
-		jnz	short loc_14C71
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_14C71
-		mov	snd_bgm_mode, SND_BGM_FM26
-
-loc_14C71:
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_14BE0	endp
-
+include th04/hardware/snd_determine_modes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
