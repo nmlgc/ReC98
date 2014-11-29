@@ -415,10 +415,7 @@ var_2		= word ptr -2
 		mov	[bp+var_4], dx
 		mov	[bp+var_6], ax
 		call	sub_9D0A
-		push	0B00h
-		push	ds
-		push	offset aHuuma_efc ; "huuma.efc"
-		call	sub_B0EA
+		call	snd_load pascal, SND_LOAD_SE, ds, offset aHuuma_efc
 		push	177h
 		push	1
 		call	sub_9D1D
@@ -512,19 +509,11 @@ loc_9E39:
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	snd_midi_active, 1
-		push	600h
-		push	ds
-		push	offset aOp_m	; "op.m"
-		call	sub_B0EA
-		add	sp, 6
+		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 
 loc_9E7D:
 		mov	snd_midi_active, 0
-		push	600h
-		push	ds
-		push	offset aOp_m	; "op.m"
-		call	sub_B0EA
-		add	sp, 6
+		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	al, byte ptr [bp+var_2]
 		mov	snd_midi_active, al
 
@@ -1904,10 +1893,7 @@ loc_AA4A:
 		mov	al, snd_midi_active
 		mov	[bp+var_2], al
 		mov	snd_midi_active, 1
-		push	600h
-		push	ds
-		push	offset aGminit_m ; "gminit.m"
-		call	sub_B0EA
+		call	snd_load pascal, SND_LOAD_SONG, ds, offset aGminit_m
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 8
 		mov	al, [bp+var_2]
@@ -2660,80 +2646,7 @@ sub_B019	endp
 include th02/hardware/snd_mmd_resident.asm
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B0EA	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		mov	cx, 0Dh
-		xor	si, si
-
-loc_B0F4:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+1D9Eh], al
-		inc	si
-		loop	loc_B0F4
-		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
-		jnz	short loc_B12B
-		cmp	snd_midi_active, 0
-		jz	short loc_B12B
-		xor	bx, bx
-
-loc_B114:
-		inc	bx
-		cmp	byte ptr [bx+1D9Eh], 0
-		jnz	short loc_B114
-		mov	byte ptr [bx+1D9Eh], 6Dh ; 'm'
-		mov	byte ptr [bx+1D9Fh], 64h ; 'd'
-		mov	byte ptr [bx+1DA0h], 0
-
-loc_B12B:
-		mov	dx, 1D9Eh
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_B148
-		cmp	snd_midi_active, 0
-		jz	short loc_B148
-		int	61h		; reserved for user interrupt
-		jmp	short loc_B14A
-; ---------------------------------------------------------------------------
-
-loc_B148:
-		int	60h
-
-loc_B14A:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	si
-		pop	bp
-		retf
-sub_B0EA	endp
-
+include th02/hardware/snd_load.asm
 include th02/formats/pi_slot_palette_apply.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5764,23 +5677,23 @@ loc_C8E3:
 		mov	[bp+var_1], al
 		mov	al, snd_midi_possible
 		mov	snd_midi_active, al
-		push	600h
+		push	SND_LOAD_SONG
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+92Ch]
 		push	word ptr [bx+92Ah]
-		call	sub_B0EA
+		call	snd_load
 		mov	snd_midi_active, 0
-		push	600h
+		push	SND_LOAD_SONG
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+92Ch]
 		push	word ptr [bx+92Ah]
-		call	sub_B0EA
+		call	snd_load
 		mov	al, [bp+var_1]
 		mov	snd_midi_active, al
 		kajacall	KAJA_SONG_PLAY
@@ -6228,11 +6141,7 @@ include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_F3C8	dw ?
 include th02/hardware/snd[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 dword_F3DC	dd ?
 		db    ?	;
 byte_F3E1	db ?

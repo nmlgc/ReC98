@@ -500,10 +500,7 @@ _envp		= dword	ptr  0Ch
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_14EB0
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 
 loc_AE89:
 		call	sub_B237
@@ -1211,8 +1208,8 @@ loc_B506:
 		mov	es:[bx+3], al
 		push	word ptr off_20A86+2
 		push	bx
-		push	600h
-		call	sub_14EB0
+		push	SND_LOAD_SONG
+		call	snd_load
 		kajacall	KAJA_SONG_PLAY
 
 loc_B52C:
@@ -9701,9 +9698,7 @@ loc_F097:
 ; ---------------------------------------------------------------------------
 
 loc_F0AD:
-		pushd	[bp+s]
-		push	600h
-		call	sub_14EB0
+		call	snd_load pascal, [bp+s], SND_LOAD_SONG
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_F0BB:
@@ -9957,10 +9952,7 @@ sub_F2B4	proc far
 		push	ds
 		push	offset aSt06_bb2 ; "st06.bb2"
 		call	super_entry_bfnt
-		push	ds
-		push	offset aSt06b	; "st06b"
-		push	600h
-		call	sub_14EB0
+		call	snd_load pascal, ds, offset aSt06b, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
@@ -21811,111 +21803,7 @@ arg_8		= word ptr  0Eh
 		retf	0Ah
 sub_14E6C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14EB0	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		mov	es, dx
-		assume es:dseg
-		mov	di, 3068h
-		lds	si, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	cx, 0Dh
-		rep movsb
-		mov	ds, dx
-		mov	di, 3068h
-		dec	cx
-		xor	ax, ax
-		repne scasb
-		dec	di
-		mov	byte ptr [di], 2Eh ; '.'
-		inc	di
-		cmp	bp, 0B00h
-		jnz	short loc_14F0B
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short loc_14F62
-		xor	bx, bx
-		cmp	snd_se_mode, SND_SE_BEEP
-		jnz	short loc_14F21
-		mov	dword ptr [di],	736665h
-		call	bgm_finish
-		push	800h
-		call	bgm_init
-		push	ds
-		push	offset unk_23A48
-		call	bgm_read_sdata
-		jmp	short loc_14F62
-; ---------------------------------------------------------------------------
-
-loc_14F0B:
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_14F62
-		kajacall	KAJA_SONG_STOP
-		movzx	bx, snd_bgm_mode
-		shl	bx, 2
-
-loc_14F21:
-		mov	eax, [bx+838h]
-
-loc_14F26:
-		mov	[di], eax
-		mov	dx, 3068h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jnb	short loc_14F3E
-		cmp	ax, 2
-		jnz	short loc_14F62
-		mov	eax, dword_2121C
-		jmp	short loc_14F26
-; ---------------------------------------------------------------------------
-
-loc_14F3E:
-		mov	bx, ax
-		mov	ax, bp
-		cmp	ah, KAJA_GET_SONG_ADDRESS
-		jnz	short loc_14F52
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jnz	short loc_14F52
-		int	61h		; reserved for user interrupt
-		jmp	short loc_14F54
-; ---------------------------------------------------------------------------
-
-loc_14F52:
-		int	60h
-
-loc_14F54:
-		mov	ax, 3F00h
-		mov	cx, 0FFFFh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		push	es
-		pop	ds
-
-loc_14F62:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_14EB0	endp
-
+include th05/hardware/snd_load.asm
 include th05/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22501,10 +22389,7 @@ include libs/master.lib/bgm[data].asm
 byte_21214	db 0FFh
 byte_21215	db 0
 word_21216	dw 4E20h
-aEfc		db 'efc',0
-dword_2121C	dd 6Dh
-aM2		db 'm2',0
-aMmd		db 'mmd',0
+include th05/hardware/snd_load[data].asm
 include th04/hardware/snd[data].asm
 		db    0
 		db    0
@@ -25999,11 +25884,7 @@ include libs/master.lib/super_put_rect[bss].asm
 		db    0
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-unk_23A48	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 word_23A56	dw ?
 byte_23A58	db ?
 		db ?

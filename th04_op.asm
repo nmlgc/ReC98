@@ -1385,10 +1385,7 @@ loc_B0F4:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	byte_F447, 0
 		jmp	short loc_B16F
@@ -1460,10 +1457,7 @@ loc_B1E8:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
@@ -1564,10 +1558,7 @@ loc_B2D7:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
@@ -1678,10 +1669,7 @@ loc_B3D3:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+48h], 0
 		jnz	short loc_B40D
@@ -2867,10 +2855,7 @@ loc_BCA8:
 loc_BCFD:
 		cmp	si, 0Fh
 		jl	short loc_BCA8
-		push	ds
-		push	offset aLogo	; "logo"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	[bp+var_6], 2B7Ch
 		xor	si, si
@@ -3874,9 +3859,7 @@ loc_C4E4:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+0F16h]
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, dword ptr [bx+0F16h], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C51D:
@@ -3907,10 +3890,7 @@ loc_C544:
 		push	1
 		call	palette_black_out
 		call	sub_E4C6
-		push	ds
-		push	offset aOp_2	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
@@ -4605,10 +4585,7 @@ sub_CA94	proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		push	ds
-		push	offset aName	; "name"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		kajacall	KAJA_SONG_FADE, -128
 		push	1
@@ -4694,10 +4671,7 @@ loc_CBB3:
 		cmp	word_11A50, 0
 		jnz	short loc_CBB3
 		kajacall	KAJA_SONG_STOP
-		push	ds
-		push	offset aOp_0	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
@@ -4946,10 +4920,7 @@ loc_CDC4:
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_CE50
-		push	ds
-		push	offset aOp_1	; "op"
-		push	600h
-		call	sub_DDCA
+		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_CE50:
@@ -6682,127 +6653,7 @@ sub_DDB1	proc far
 		retf
 sub_DDB1	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DDCA	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_DDDF
-; ---------------------------------------------------------------------------
-
-loc_DDD2:
-		les	bx, [bp+arg_2]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+2700h], al
-		inc	si
-
-loc_DDDF:
-		cmp	si, 0Dh
-		jl	short loc_DDD2
-		xor	si, si
-
-loc_DDE6:
-		inc	si
-		cmp	byte ptr [si+2700h], 0
-		jnz	short loc_DDE6
-		mov	byte ptr [si+2704h], 0
-		mov	byte ptr [si+2700h], 2Eh ; '.'
-		inc	si
-		cmp	[bp+arg_0], 0B00h
-		jnz	short loc_DE32
-		mov	byte ptr [si+2700h], 65h ; 'e'
-		mov	byte ptr [si+2701h], 66h ; 'f'
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	loc_DEAF
-		cmp	snd_se_mode, SND_SE_BEEP
-		jnz	short loc_DE2B
-		mov	byte ptr [si+2702h], 73h ; 's'
-		push	ds
-		push	offset unk_11A40
-		call	bgm_read_sdata
-		jmp	loc_DEAF
-; ---------------------------------------------------------------------------
-
-loc_DE2B:
-		mov	byte ptr [si+2702h], 63h ; 'c'
-		jmp	short loc_DE82
-; ---------------------------------------------------------------------------
-
-loc_DE32:
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_DEAF
-		push	(KAJA_SONG_STOP shl 8)
-		nopcall	snd_kaja_func
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		les	bx, [bx+9E4h]
-		mov	al, es:[bx]
-		mov	[si+2700h], al
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		les	bx, [bx+9E4h]
-		mov	al, es:[bx+1]
-		mov	[si+2701h], al
-		mov	al, snd_bgm_mode
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		les	bx, [bx+9E4h]
-		mov	al, es:[bx+2]
-		mov	[si+2702h], al
-
-loc_DE82:
-		push	ds
-		mov	dx, 2700h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_0]
-		cmp	ah, KAJA_GET_SONG_ADDRESS
-		jnz	short loc_DEA0
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jnz	short loc_DEA0
-		int	61h		; reserved for user interrupt
-		jmp	short loc_DEA2
-; ---------------------------------------------------------------------------
-
-loc_DEA0:
-		int	60h
-
-loc_DEA2:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-
-loc_DEAF:
-		pop	si
-		pop	bp
-		retf	6
-sub_DDCA	endp
-
+include th04/hardware/snd_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8199,13 +8050,7 @@ include libs/master.lib/bgm[data].asm
 		db    0
 include th04/hardware/snd[data].asm
 		db    0
-		dd aM26			; "m26"
-		dd aM26			; "m26"
-		dd aM86			; "m86"
-		dd aMmd			; "mmd"
-aM26		db 'm26',0
-aM86		db 'm86',0
-aMmd		db 'mmd',0
+include th04/hardware/snd_load[data].asm
 		db  71h	; q
 		db    0
 		db  6Bh	; k
@@ -8781,11 +8626,7 @@ include th02/formats/pi_slots[bss].asm
 		db    0
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-unk_11A40	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 word_11A4E	dw ?
 word_11A50	dw ?
 byte_11A52	db ?

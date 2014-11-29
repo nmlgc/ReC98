@@ -2793,13 +2793,13 @@ loc_AD52:
 		cmp	byte ptr word_F828, 14h
 		jz	short loc_ADB0
 		kajacall	KAJA_SONG_STOP
-		push	600h
+		push	SND_LOAD_SONG
 		mov	al, byte ptr word_F828
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+646h]
-		call	sub_BF52
+		call	snd_load
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
 		mov	al, byte ptr word_F828
@@ -2867,11 +2867,7 @@ var_2		= word ptr -2
 		push	offset aOpwin_bft ; "opwin.bft"
 		call	super_entry_bfnt
 		kajacall	KAJA_SONG_STOP
-		push	600h
-		push	ds
-		push	offset aOp_m	; "op.m"
-		call	sub_BF52
-		add	sp, 6
+		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		push	0
 		push	ds
 		push	offset aTl01_pi	; "TL01.PI"
@@ -3060,11 +3056,7 @@ sub_B008	proc near
 		push	offset aOpwin_bft ; "opwin.bft"
 		call	super_entry_bfnt
 		kajacall	KAJA_SONG_STOP
-		push	600h
-		push	ds
-		push	offset aOp_m	; "op.m"
-		call	sub_BF52
-		add	sp, 6
+		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	0
@@ -3697,11 +3689,7 @@ sub_B424	proc near
 		push	si
 		mov	vsync_Count1, 0
 		kajacall	KAJA_SONG_STOP
-		push	600h
-		push	ds
-		push	offset aSelect_m ; "select.m"
-		call	sub_BF52
-		add	sp, 6
+		call	snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_FC64, 0C8h	; 'È'
 		les	bx, dword_FC54
@@ -4993,80 +4981,7 @@ sub_BED1	endp
 
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF52	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		mov	cx, 0Dh
-		xor	si, si
-
-loc_BF5C:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+1A0Eh], al
-		inc	si
-		loop	loc_BF5C
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_BF93
-		cmp	snd_midi_active, 0
-		jz	short loc_BF93
-		xor	bx, bx
-
-loc_BF7C:
-		inc	bx
-		cmp	byte ptr [bx+1A0Eh], 0
-		jnz	short loc_BF7C
-		mov	byte ptr [bx+1A0Eh], 6Dh ; 'm'
-		mov	byte ptr [bx+1A0Fh], 64h ; 'd'
-		mov	byte ptr [bx+1A10h], 0
-
-loc_BF93:
-		mov	dx, 1A0Eh
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_BFB0
-		cmp	snd_midi_active, 0
-		jz	short loc_BFB0
-		int	61h		; reserved for user interrupt
-		jmp	short loc_BFB2
-; ---------------------------------------------------------------------------
-
-loc_BFB0:
-		int	60h
-
-loc_BFB2:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	si
-		pop	bp
-		retf
-sub_BF52	endp
-
+include th02/hardware/snd_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6954,11 +6869,7 @@ dword_F1EE	dd ?
 dword_F1F2	dd ?
 dword_F1F6	dd ?
 include th02/hardware/snd[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_F292	dw ?
 word_F294	dw ?

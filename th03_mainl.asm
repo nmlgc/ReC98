@@ -1101,25 +1101,21 @@ loc_9BFB:
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+33h], 6
 		jz	short loc_9C1E
-		push	600h
+		push	SND_LOAD_SONG
 		push	ds
 		push	si
 		jmp	short loc_9C25
 ; ---------------------------------------------------------------------------
 
 loc_9C1E:
-		push	600h
+		push	SND_LOAD_SONG
 		push	ds
 		push	[bp+var_2]
 
 loc_9C25:
-		call	sub_C880
+		call	snd_load
 		add	sp, 6
-		push	0B00h
-		push	ds
-		push	offset aYume_efc ; "YUME.EFC"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		mov	word_100FC, 0
 
 loc_9C42:
@@ -1302,11 +1298,7 @@ loc_9DAD:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		push	0B00h
-		push	ds
-		push	offset aYume_efc ; "YUME.EFC"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		call	sub_CE3E
 		call	sub_D784
 		les	bx, dword_105DA
@@ -1345,11 +1337,7 @@ loc_9E04:
 		call	sub_B972
 
 loc_9E3F:
-		push	600h
-		push	ds
-		push	offset aWin_m	; "win.m"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c,  offset aWin_m, ds, SND_LOAD_SONG
 		call	sub_9624
 		call	sub_978D
 		kajacall	KAJA_SONG_STOP
@@ -2955,11 +2943,11 @@ loc_ABDA:
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
 		kajacall	KAJA_SONG_STOP
-		push	600h
+		push	SND_LOAD_SONG
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	sub_C880
+		call	snd_load
 		add	sp, 6
 		jmp	short loc_AB89
 ; ---------------------------------------------------------------------------
@@ -4612,11 +4600,7 @@ sub_B7D2	proc near
 		les	bx, dword_105DA
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
-		push	600h
-		push	ds
-		push	offset aScore_m	; "score.m"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c, offset aScore_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
@@ -4737,11 +4721,7 @@ sub_B92E	proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		push	600h
-		push	ds
-		push	offset aOver_m	; "over.m"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c, offset aOver_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		push	1
 		call	palette_black_in
@@ -6171,11 +6151,7 @@ loc_C4CC:
 		mov	byte_10BD8, 64h	; 'd'
 
 loc_C4D8:
-		push	600h
-		push	ds
-		push	offset aEd_m	; "ed.m"
-		call	sub_C880
-		add	sp, 6
+		call	snd_load c, offset aEd_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	ds
@@ -6448,80 +6424,7 @@ sub_C7E2	endp
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_delay_until_volume.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C880	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		mov	cx, 0Dh
-		xor	si, si
-
-loc_C88A:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+1C74h], al
-		inc	si
-		loop	loc_C88A
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_C8C1
-		cmp	snd_midi_active, 0
-		jz	short loc_C8C1
-		xor	bx, bx
-
-loc_C8AA:
-		inc	bx
-		cmp	byte ptr [bx+1C74h], 0
-		jnz	short loc_C8AA
-		mov	byte ptr [bx+1C74h], 6Dh ; 'm'
-		mov	byte ptr [bx+1C75h], 64h ; 'd'
-		mov	byte ptr [bx+1C76h], 0
-
-loc_C8C1:
-		mov	dx, 1C74h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_C8DE
-		cmp	snd_midi_active, 0
-		jz	short loc_C8DE
-		int	61h		; reserved for user interrupt
-		jmp	short loc_C8E0
-; ---------------------------------------------------------------------------
-
-loc_C8DE:
-		int	60h
-
-loc_C8E0:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	si
-		pop	bp
-		retf
-sub_C880	endp
-
+include th02/hardware/snd_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9109,11 +9012,7 @@ dword_10054	dd ?
 dword_10058	dd ?
 dword_1005C	dd ?
 include th02/hardware/snd[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_100F8	dw ?
 word_100FA	dw ?

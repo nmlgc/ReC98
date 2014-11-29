@@ -2155,10 +2155,7 @@ sub_B2AB	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	0B00h
-		push	ds
-		push	offset aHuuma_efc ; "huuma.efc"
-		call	sub_F7FA
+		call	snd_load pascal, SND_LOAD_SE, ds, offset aHuuma_efc
 		call	sub_1CD36
 		push	ds
 		push	offset aEye_pi	; "EYE.PI"
@@ -10491,80 +10488,7 @@ include th02/hardware/snd_mmd_resident.asm
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_delay_until_volume.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F7FA	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		mov	cx, 0Dh
-		xor	si, si
-
-loc_F804:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+253Eh], al
-		inc	si
-		loop	loc_F804
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_F83B
-		cmp	snd_midi_active, 0
-		jz	short loc_F83B
-		xor	bx, bx
-
-loc_F824:
-		inc	bx
-		cmp	byte ptr [bx+253Eh], 0
-		jnz	short loc_F824
-		mov	byte ptr [bx+253Eh], 6Dh ; 'm'
-		mov	byte ptr [bx+253Fh], 64h ; 'd'
-		mov	byte ptr [bx+2540h], 0
-
-loc_F83B:
-		mov	dx, 253Eh
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_F858
-		cmp	snd_midi_active, 0
-		jz	short loc_F858
-		int	61h		; reserved for user interrupt
-		jmp	short loc_F85A
-; ---------------------------------------------------------------------------
-
-loc_F858:
-		int	60h
-
-loc_F85A:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	si
-		pop	bp
-		retf
-sub_F7FA	endp
-
+include th02/hardware/snd_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18991,9 +18915,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		push	600h
-		pushd	[bp+arg_0]
-		call	sub_F7FA
+		call	snd_load pascal, SND_LOAD_SONG, [bp+arg_0]
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Ah
 		pop	bp
@@ -38489,11 +38411,7 @@ include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1FFA8	dw ?
 include th02/hardware/snd[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 dword_1FFBC	dd ?
 unk_1FFC0	db    ?	;
 		dd    ?	;

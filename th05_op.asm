@@ -1428,14 +1428,8 @@ loc_AC71:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_DBBE
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	byte_F0DD, 0
 		jmp	short loc_ACF8
@@ -1507,10 +1501,7 @@ loc_AD74:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_ADF5
 ; ---------------------------------------------------------------------------
@@ -1536,10 +1527,7 @@ loc_ADC2:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		jmp	short loc_ADF5
 ; ---------------------------------------------------------------------------
 
@@ -1625,10 +1613,7 @@ loc_AE87:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aOp	; "op"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_AF02
 ; ---------------------------------------------------------------------------
@@ -1649,10 +1634,7 @@ loc_AECF:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		jmp	short loc_AF02
 ; ---------------------------------------------------------------------------
 
@@ -1748,10 +1730,7 @@ loc_AF97:
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+0Ah], 0
 		jnz	short loc_AFD1
@@ -2949,10 +2928,7 @@ loc_B872:
 loc_B8C7:
 		cmp	si, 0Fh
 		jl	short loc_B872
-		push	ds
-		push	offset aLogo	; "logo"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	[bp+var_6], 3F84h
 		xor	si, si
@@ -3551,10 +3527,7 @@ loc_BDBE:
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_BDE8
-		push	ds
-		push	offset aOp_0	; "op"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_BDE8:
@@ -4608,9 +4581,7 @@ loc_C698:
 		call	sub_C3F9
 		mov	bx, musicroom_game_id
 		imul	bx, 78h
-		pushd	dword ptr [bx+1246h]
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, dword ptr [bx+1246h], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C6E3:
@@ -4653,9 +4624,7 @@ loc_C6F1:
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		pushd	dword ptr [bx+1246h]
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, dword ptr [bx+1246h], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C767:
@@ -4691,10 +4660,7 @@ loc_C790:
 		push	1
 		call	palette_black_out
 		call	sub_D726
-		push	ds
-		push	(offset	aH_op+2)
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aH_op+2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	si
 		leave
@@ -5385,10 +5351,7 @@ sub_CC5C	proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		push	ds
-		push	offset aName	; "name"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		kajacall	KAJA_SONG_FADE, -128
 		push	1
@@ -5472,10 +5435,7 @@ loc_CD64:
 		cmp	word_12A72, 0
 		jnz	short loc_CD64
 		kajacall	KAJA_SONG_STOP
-		push	ds
-		push	offset aOp_1	; "op"
-		push	600h
-		call	sub_DBBE
+		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
@@ -7339,110 +7299,7 @@ sub_DB3C	endp ; sp-analysis failed
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DBBE	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		mov	es, dx
-		assume es:dseg
-		mov	di, 383Eh
-		lds	si, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	cx, 0Dh
-		rep movsb
-		mov	ds, dx
-		mov	di, 383Eh
-		dec	cx
-		xor	ax, ax
-		repne scasb
-		dec	di
-		mov	byte ptr [di], 2Eh ; '.'
-		inc	di
-		cmp	bp, 0B00h
-		jnz	short loc_DC19
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short loc_DC70
-		xor	bx, bx
-		cmp	snd_se_mode, SND_SE_BEEP
-		jnz	short loc_DC2F
-		mov	dword ptr [di],	736665h
-		call	bgm_finish
-		push	800h
-		call	bgm_init
-		push	ds
-		push	offset unk_1281E
-		call	bgm_read_sdata
-		jmp	short loc_DC70
-; ---------------------------------------------------------------------------
-
-loc_DC19:
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_DC70
-		kajacall	KAJA_SONG_STOP
-		movzx	bx, snd_bgm_mode
-		shl	bx, 2
-
-loc_DC2F:
-		mov	eax, [bx+0A52h]
-
-loc_DC34:
-		mov	[di], eax
-		mov	dx, 383Eh
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jnb	short loc_DC4C
-		cmp	ax, 2
-		jnz	short loc_DC70
-		mov	eax, dword_FA36
-		jmp	short loc_DC34
-; ---------------------------------------------------------------------------
-
-loc_DC4C:
-		mov	bx, ax
-		mov	ax, bp
-		cmp	ah, KAJA_GET_SONG_ADDRESS
-		jnz	short loc_DC60
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jnz	short loc_DC60
-		int	61h		; reserved for user interrupt
-		jmp	short loc_DC62
-; ---------------------------------------------------------------------------
-
-loc_DC60:
-		int	60h
-
-loc_DC62:
-		mov	ax, 3F00h
-		mov	cx, 0FFFFh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		push	es
-		pop	ds
-
-loc_DC70:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_DBBE	endp
-
+include th05/hardware/snd_load.asm
 include th05/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8768,18 +8625,7 @@ unk_F9F0	db 0C0h	; À
 		db 0C1h
 		db  63h	; c
 		db  3Ch	; <
-		db  65h	; e
-		db  66h	; f
-		db  63h	; c
-		db    0
-dword_FA36	dd 6Dh
-		db  6Dh	; m
-		db  32h	; 2
-		db    0
-		db  6Dh	; m
-		db  6Dh	; m
-		db  64h	; d
-		db    0
+include th05/hardware/snd_load[data].asm
 include th04/hardware/snd[data].asm
 		db    0
 		db    0
@@ -9761,11 +9607,7 @@ include libs/master.lib/bgm[bss].asm
 		dd    ?	;
 		dd    ?	;
 dword_1281A	dd ?
-unk_1281E	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 word_1282C	dw ?
 word_1282E	dw ?
 word_12830	dw ?

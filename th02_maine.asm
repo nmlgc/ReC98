@@ -993,11 +993,7 @@ sub_9AD4	proc near
 		call	frame_delay
 		push	1
 		call	palette_white_out
-		push	600h
-		push	ds
-		push	offset aEnding_m ; "ending.m"
-		call	sub_B6E6
-		add	sp, 6
+		call	snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		call	sub_9A7E
@@ -1051,11 +1047,7 @@ sub_9B64	proc near
 		push	ds
 		push	offset aEnd1_txt ; "end1.txt"
 		call	sub_95A3
-		push	600h
-		push	ds
-		push	offset aEnd1_m	; "end1.m"
-		call	sub_B6E6
-		add	sp, 6
+		call	snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
@@ -1601,11 +1593,7 @@ sub_A09D	proc near
 		push	ds
 		push	offset aEnd2_txt ; "end2.txt"
 		call	sub_95A3
-		push	600h
-		push	ds
-		push	offset aEnd1_m	; "end1.m"
-		call	sub_B6E6
-		add	sp, 6
+		call	snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
@@ -3881,80 +3869,7 @@ sub_B616	endp
 include th02/hardware/snd_mmd_resident.asm
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6E6	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		mov	cx, 0Dh
-		xor	si, si
-
-loc_B6F0:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+2B74h], al
-		inc	si
-		loop	loc_B6F0
-		mov	ax, [bp+arg_4]
-		cmp	ax, 600h
-		jnz	short loc_B727
-		cmp	snd_midi_active, 0
-		jz	short loc_B727
-		xor	bx, bx
-
-loc_B710:
-		inc	bx
-		cmp	byte ptr [bx+2B74h], 0
-		jnz	short loc_B710
-		mov	byte ptr [bx+2B74h], 6Dh ; 'm'
-		mov	byte ptr [bx+2B75h], 64h ; 'd'
-		mov	byte ptr [bx+2B76h], 0
-
-loc_B727:
-		mov	dx, 2B74h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ax, [bp+arg_4]
-		cmp	ax, (KAJA_GET_SONG_ADDRESS shl 8)
-		jnz	short loc_B744
-		cmp	snd_midi_active, 0
-		jz	short loc_B744
-		int	61h		; reserved for user interrupt
-		jmp	short loc_B746
-; ---------------------------------------------------------------------------
-
-loc_B744:
-		int	60h
-
-loc_B746:
-		mov	ax, 3F00h
-		mov	cx, 5000h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	si
-		pop	bp
-		retf
-sub_B6E6	endp
-
+include th02/hardware/snd_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6956,11 +6871,7 @@ include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_FAEE	dw ?
 include th02/hardware/snd[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 dword_FB02	dd ?
 		db    ?	;
 byte_FB07	db ?

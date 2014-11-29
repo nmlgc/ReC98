@@ -634,10 +634,7 @@ _envp		= dword	ptr  0Ch
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
-		push	ds
-		push	offset aMiko	; "miko"
-		push	0B00h
-		call	sub_ED60
+		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		call	graph_show
 		les	bx, dword_11E6E
 		mov	eax, es:[bx+28h]
@@ -1724,8 +1721,8 @@ loc_AEF0:
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		push	600h
-		call	sub_ED60
+		push	SND_LOAD_SONG
+		call	snd_load
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AF11:
@@ -2334,10 +2331,7 @@ sub_B3CB	proc near
 		call	pi_slot_load
 		push	0
 		call	pi_slot_palette_apply
-		push	ds
-		push	offset aExed	; "EXED"
-		push	600h
-		call	sub_ED60
+		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_15012, 2
 
@@ -4350,10 +4344,7 @@ loc_C307:
 		call	graph_copy_page
 		call	sub_EB66
 		kajacall	KAJA_SONG_STOP
-		push	ds
-		push	offset aName	; "name"
-		push	600h
-		call	sub_ED60
+		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
@@ -8287,10 +8278,7 @@ var_2		= word ptr -2
 		mov	dx, 7Ch	; '|'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset aStaff	; "staff"
-		push	600h
-		call	sub_ED60
+		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		push	0
 		push	ds
@@ -9316,110 +9304,7 @@ sub_ECDE	endp ; sp-analysis failed
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED60	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	dx, ds
-		mov	es, dx
-		assume es:dseg
-		mov	di, 27A6h
-		lds	si, [bp+arg_2]
-		mov	bp, [bp+arg_0]
-		mov	cx, 0Dh
-		rep movsb
-		mov	ds, dx
-		mov	di, 27A6h
-		dec	cx
-		xor	ax, ax
-		repne scasb
-		dec	di
-		mov	byte ptr [di], 2Eh ; '.'
-		inc	di
-		cmp	bp, 0B00h
-		jnz	short loc_EDBB
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short loc_EE12
-		xor	bx, bx
-		cmp	snd_se_mode, SND_SE_BEEP
-		jnz	short loc_EDD1
-		mov	dword ptr [di],	736665h
-		call	bgm_finish
-		push	800h
-		call	bgm_init
-		push	ds
-		push	offset unk_128A6
-		call	bgm_read_sdata
-		jmp	short loc_EE12
-; ---------------------------------------------------------------------------
-
-loc_EDBB:
-		cmp	snd_bgm_mode, SND_BGM_OFF
-		jz	short loc_EE12
-		kajacall	KAJA_SONG_STOP
-		movzx	bx, snd_bgm_mode
-		shl	bx, 2
-
-loc_EDD1:
-		mov	eax, [bx+6CCh]
-
-loc_EDD6:
-		mov	[di], eax
-		mov	dx, 27A6h
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jnb	short loc_EDEE
-		cmp	ax, 2
-		jnz	short loc_EE12
-		mov	eax, dword_107D0
-		jmp	short loc_EDD6
-; ---------------------------------------------------------------------------
-
-loc_EDEE:
-		mov	bx, ax
-		mov	ax, bp
-		cmp	ah, KAJA_GET_SONG_ADDRESS
-		jnz	short loc_EE02
-		cmp	snd_bgm_mode, SND_BGM_MIDI
-		jnz	short loc_EE02
-		int	61h		; reserved for user interrupt
-		jmp	short loc_EE04
-; ---------------------------------------------------------------------------
-
-loc_EE02:
-		int	60h
-
-loc_EE04:
-		mov	ax, 3F00h
-		mov	cx, 0FFFFh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		push	es
-		pop	ds
-
-loc_EE12:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_ED60	endp
-
+include th05/hardware/snd_load.asm
 include th05/hardware/snd_kaja_func.asm
 
 		push	bp
@@ -10499,10 +10384,7 @@ word_107C4	dw 0
 word_107C6	dw 0
 word_107C8	dw 0
 word_107CA	dw 4E20h
-aEfc		db 'efc',0
-dword_107D0	dd 6Dh
-aM2		db 'm2',0
-aMmd		db 'mmd',0
+include th05/hardware/snd_load[data].asm
 include th04/hardware/snd[data].asm
 		dw    0
 		db  11h
@@ -11234,11 +11116,7 @@ include libs/master.lib/super_put_rect[bss].asm
 		db    0
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-unk_128A6	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+include th02/hardware/snd_load[bss].asm
 word_128B4	dw ?
 word_128B6	dw ?
 word_128B8	dw ?
