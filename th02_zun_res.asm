@@ -68,14 +68,14 @@ arg_0		= byte ptr  4
 loc_398:
 		push	di
 		push	20h
-		call	sub_AC4
+		call	dos_create
 		mov	si, ax
 		push	ax
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
 		push	5
-		call	sub_B2E
+		call	dos_write
 
 loc_3AB:
 		push	si
@@ -83,12 +83,12 @@ loc_3AB:
 		lea	ax, [bp+arg_0]
 		push	ax
 		push	2
-		call	sub_B2E
+		call	dos_write
 		push	si
 		push	ds
 		push	offset byte_183E
 		push	1
-		call	sub_B2E
+		call	dos_write
 		push	si
 		call	dos_close
 		pop	di
@@ -354,7 +354,7 @@ loc_584:
 
 loc_588:
 		push	off_19A8
-		call	sub_A4A
+		call	file_delete
 		mov	ax, 1
 		jmp	short $+2
 
@@ -568,70 +568,15 @@ include libs/master.lib/file_exist.asm
 include libs/master.lib/file_ropen.asm
 include libs/master.lib/file_write.asm
 include libs/master.lib/file_create.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A4A		proc near
-		mov	bx, sp
-		mov	ah, 41h
-		push	ax
-		push	word ptr ss:[bx+2]
-		call	dos_axdx
-		sbb	ax, ax
-		inc	ax
-		retn	2
-sub_A4A		endp
-
+include libs/master.lib/file_delete.asm
 include libs/master.lib/file_seek.asm
 include libs/master.lib/dos_free.asm
 include libs/master.lib/dos_axdx.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_AC4		proc near
-		mov	bx, sp
-		mov	ax, 3C00h
-		push	ax
-		push	word ptr ss:[bx+4]
-		mov	cx, ss:[bx+2]
-		call	dos_axdx
-		retn	4
-sub_AC4		endp
-
+include libs/master.lib/dos_create.asm
 include libs/master.lib/dos_puts2.asm
 include libs/master.lib/dos_close.asm
 include libs/master.lib/dos_ropen.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2E		proc near
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-arg_6		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		mov	bx, [bp+arg_6]
-		lds	dx, [bp+arg_2]
-		mov	cx, [bp+arg_0]
-		mov	ah, 40h
-		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
-					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
-		pop	ds
-		jnb	short loc_B44
-		neg	ax
-
-loc_B44:
-		pop	bp
-		retn	8
-sub_B2E		endp
-
+include libs/master.lib/dos_write.asm
 include libs/master.lib/dos_seek.asm
 include libs/BorlandC/_abort.asm
 include libs/BorlandC/atexit.asm
@@ -640,35 +585,7 @@ include libs/BorlandC/exit.asm
 include libs/BorlandC/ioerror.asm
 include libs/BorlandC/_isatty.asm
 include libs/BorlandC/lseek.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-N_SCOPY@	proc near
-
-arg_0		= dword	ptr  4
-arg_4		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		lds	si, [bp+arg_0]
-		les	di, [bp+arg_4]
-		cld
-		shr	cx, 1
-		rep movsw
-		adc	cx, cx
-		rep movsb
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-N_SCOPY@	endp
-
+include libs/BorlandC/n_scopy.asm
 include libs/BorlandC/setupio.asm
 include libs/BorlandC/brk.asm
 include libs/BorlandC/nearheap.asm
