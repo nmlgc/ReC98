@@ -65,7 +65,7 @@ endif
                 pop     word ptr SavedReturn
                 pop     word ptr SavedDS2
                 pop     word ptr SavedReturn2
-                mov     SavedDS, ds
+                mov     cs:SavedDS, ds
                 mov     SavedSI, si
                 mov     SavedDI, di
                 cld
@@ -623,8 +623,10 @@ EndArgument     label   near
 ;       Invalid program name
 
 BadProgName     label   near
+if LDATA
                 nop                     ; PC-98 / Japanese-specific
                 nop                     ; PC-98 / Japanese-specific
+endif
                 jmp     __abort
 
 ;       Character test function used in SetArgs
@@ -659,7 +661,7 @@ NextChar0       label   near
                 push    dx
                 push    ds
                 push    es
-                mov     ds, SavedDS
+                mov     ds, cs:SavedDS
                 push    ax
                 nopcall ___path_isdbcsleadbyte
                 or      ax, ax
@@ -700,7 +702,7 @@ BuildArgv       label   near
                 pop     cx
                 xor     dh, dh          ; PC-98 / Japanese-specific
                 add     cx, dx          ; CX = Argument area size
-                mov     ds, SavedDS
+                mov     ds, cs:SavedDS
                 mov     _argc@, bx
                 inc     bx              ; argv ends with a NULL pointer
                 add     bx, bx          ;        argc * 2       (LDATA = 0)
@@ -741,7 +743,7 @@ endif           ;       ifdef WILD
 
 ;       Restore caller context and exit
 
-                mov     ds,SavedDS
+                mov     ds,cs:SavedDS
                 mov     si,SavedSI
                 mov     di,SavedDI
                 push    word ptr SavedReturn2

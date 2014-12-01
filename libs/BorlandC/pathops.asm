@@ -1,3 +1,13 @@
+if LDATA
+	issbcsValXOR macro
+		xor	cx, cx
+	endm
+else
+	issbcsValXOR macro
+		xor	dx, dx
+	endm
+endif
+
 pathops_10010	proc near
 		push	ax
 		push	cx
@@ -29,7 +39,11 @@ pathops_10010	proc near
 
 @@pathops_1003F:
 		mov	si, offset ___path_dbcs_default
+if LDATA
 		mov	ax, seg	___path_dbcs_default
+else
+		mov	ax, ds
+endif
 
 @@pathops_10045:
 		mov	word ptr ___path_dbcs_vector, si
@@ -52,8 +66,8 @@ pathops_10010	endp
 
 
 		public ___path_isdbcsleadbyte
-___path_isdbcsleadbyte proc far
-@@arg_0		= byte ptr  6
+___path_isdbcsleadbyte proc
+@@arg_0		= byte ptr (cPtrSize + 2)
 
 		push	bp
 		mov	bp, sp
@@ -85,49 +99,67 @@ ___path_isdbcsleadbyte endp
 
 
 		public ___path_issbcs
-___path_issbcs	proc far
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+___path_issbcs	proc
+var_4		= DPTR_ -(dPtrSize)
+arg_0		= DPTR_ +(cPtrSize + 2)
+arg_4		= word ptr +(cPtrSize + 2 + dPtrSize)
 
 		push	bp
 		mov	bp, sp
-		sub	sp, 4
+		sub	sp, dPtrSize
 		push	si
 		push	di
-		xor	cx, cx
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
+		issbcsValXOR
+if LDATA
+		mov	dx, word ptr [bp+arg_0+2]
+		mov	ax, word ptr [bp+arg_0]
 		mov	word ptr [bp+var_4+2], dx
 		mov	word ptr [bp+var_4], ax
+else
+		mov	ax, [bp+arg_0]
+		mov	word ptr [bp+var_4], ax
+endif
 
 @@pathops_10094:
-		les	bx, [bp+var_4]
-		cmp	byte ptr es:[bx], 0
+		LES_	bx, [bp+var_4]
+		cmp	byte ptr ES_[bx], 0
 		jnz	short @@pathops_100A1
-		xor	cx, cx
+		issbcsValXOR
 		jmp	short @@pathops_100CF
 
 @@pathops_100A1:
+if LDATA
 		cmp	cx, 1
 		jnz	short @@pathops_100AB
 		mov	cx, 2
+else
+		cmp	dx, 1
+		jnz	short @@pathops_100AB
+		mov	dx, 2
+endif
 		jmp	short @@pathops_100C2
 
 @@pathops_100AB:
-		les	bx, [bp+var_4]
-		mov	al, es:[bx]
+		LES_	bx, [bp+var_4]
+if LDATA
+		mov	al, ES_[bx]
 		push	ax
+else
+		push	word ptr [bx]
+endif
 		call	___path_isdbcsleadbyte
 		pop	cx
 		or	ax, ax
 		jz	short @@pathops_100C0
+if LDATA
 		mov	cx, 1
+else
+		mov	dx, 1
+endif
 		jmp	short @@pathops_100C2
 
 @@pathops_100C0:
-		xor	cx, cx
+		issbcsValXOR
 
 @@pathops_100C2:
 		mov	ax, word ptr [bp+var_4]
@@ -137,7 +169,11 @@ arg_4		= word ptr  0Ah
 		jmp	short @@pathops_10094
 
 @@pathops_100CF:
+if LDATA
 		or	cx, cx
+else
+		or	dx, dx
+endif
 		jnz	short @@pathops_100D8
 		mov	ax, 1
 		jmp	short @@pathops_100DA
