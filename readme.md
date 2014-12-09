@@ -43,16 +43,16 @@ Still, it will no doubt take a long time until this project will have made any v
 ### Reconstruction phase
 First, we have to accurately reconstruct understandable C/C++ source code for all the games from the original binaries, while still staying on the PC-98 platform. To ensure the correctness of the process, each commit during this phase should result in a build that ideally is byte-identical to the previous commit.
 
-##### Step 1: Dumping (done)
-Based on the auto-analysis done by IDA, create assembly dumps for all 16 necessary executables, and edit them until they successfully recompile back into working binaries equivalent to ZUN's builds.
+##### Step 1: Dumping
+Based on the auto-analysis done by IDA, create assembly dumps for all necessary executables, and edit them until they successfully recompile back into working binaries equivalent to ZUN's builds. In total, there are 27 unique executables we need to dump:
 
-Note that we don't dump the `ZUN.COM` executables of TH02 and later. This file is essentially a package of multiple smaller executables, doing the following:
-* Check for enough free conventional memory
-* Check the sound hardware installed and run the appropriate PMD driver
-* Set up some interrupt vectors and code shared across the three executables that make up each game
-* Set up *gaiji* characters - a set of 254 <small>[sic]</small> custom 16x16 1-bit bitmaps that can be displayed on the superimposed text RAM by using specific character codes
+* TH01: `zunsoft.com`, `op.exe`, `reiiden.exe`, `fuuin.exe`
+* TH02: zun.com (<s>`ongchk.com`</s>, `zuninit.com`, `zun_res.com`, <s>`zunsoft.com`</s>), `op.exe`, `main.exe`, `maine.exe`
+* TH03: zun.com (<s>`ongchk.com`</s> [-1], <s>`zuninit.com`</s> [-2], <s>`zunsoft.com`</s> [-3], `zunsp.com` [-4], `res_yume.com` [-5]), `op.exe`, `main.exe`, `mainl.exe`
+* TH04: zun.com (<s>`ongchk.com`</s> [-O], `zuninit.com` [-I], `res_huma.com` [-S], `memchk.com` [-M]), `op.exe`, `main.exe`, `maine.exe`
+* TH05: zun.com (<s>`ongchk.com`</s> [-O], `zuninit.com` [-I], `res_kso.com` [-S], `gjinit.com` [-G], `memchk.com` [-M]), `op.exe`, `main.exe`, `maine.exe`
 
-The first two functions are not necessary in a cross-platform scenario, while the last two need to be completely rewritten for the ports anyway. Therefore, the `ZUN.COM` files will be this project's "required proprietary element" as long as we stay on the PC-98 platform.
+Crossed-out files are identical to their version in the previous game. ONGCHK.COM is part of the PMD sound driver by KAJA, and therefore doesn't need to be disassembled either; we only need to keep the binary to allow bit-perfect rebuilds of ZUN.COM.
 
 ##### Step 2: Reduction (current)
 Identify duplicated functions and either replace them with references to the original libraries or move them to separate include files. In the end, only ZUN's own code and data will remain in the dumps created in Step 1.
