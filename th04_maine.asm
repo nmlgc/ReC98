@@ -558,12 +558,8 @@ loc_A187:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, word ptr [bp+var_4+2], bx
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -599,11 +595,8 @@ loc_A1FE:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		pushd	[bp+var_4]
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, large [bp+var_4]
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -1782,8 +1775,7 @@ loc_AB7A:
 		out	dx, al
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_AB8D
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 
 loc_AB8D:
 		pushd	0
@@ -1808,8 +1800,7 @@ loc_ABAA:
 loc_ABC1:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_ABD1
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -2874,12 +2865,8 @@ sub_B44D	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aSff1_pi	; "sff1.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aSff1_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -2957,12 +2944,8 @@ sub_B44D	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aSff2_pi	; "sff2.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aSff2_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -4061,12 +4044,8 @@ sub_C0F8	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aUde_pi	; "ude.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aUde_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD
@@ -5103,12 +5082,8 @@ var_2		= word ptr -2
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aHi01_pi	; "hi01.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_CCDD

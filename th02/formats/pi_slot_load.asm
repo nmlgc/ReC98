@@ -1,18 +1,10 @@
-; TH02: int __cdecl pi_slot_load(int slot, char *fn)
-; TH03: int __cdecl pi_slot_load(char *fn, int slot)
-pi_slot_load	proc
-@@ret	= word ptr -2
-if GAME ge 3
-@@fn	= DPTR_ (cPtrSize + 2)
-@@slot	= word ptr (cPtrSize + 2 + dPtrSize)
-else
-@@slot	= word ptr (cPtrSize + 2)
-@@fn	= DPTR_ (cPtrSize + 4)
-endif
+; int DEFCONV pi_slot_load(int slot, char *fn)
+proc_defconv pi_slot_load
+	arg @@slot:word, @@fn:dword
+	local @@ret
 
-	enter	2, 0
 	push	si
-	mov	si, [bp+@@slot]
+	mov	si, @@slot
 if GAME ge 3
 	mov	ax, si
 	imul	ax, size PiHeader
@@ -24,7 +16,7 @@ if GAME ge 3
 	pushd	pi_slot_buffers[bx]
 	call	graph_pi_free
 endif
-	pushd	[bp+@@fn]
+	pushd	@@fn
 	mov	ax, si
 	imul	ax, size PiHeader
 	add	ax, offset pi_slot_headers
@@ -36,12 +28,7 @@ endif
 	push	ds
 	push	ax
 	call	graph_pi_load_pack
-	mov	[bp+@@ret], ax
+	mov	@@ret, ax
 	pop	si
-	leave
-if GAME ge 3
-	ret	6
-else
 	ret
-endif
 pi_slot_load	endp

@@ -1,4 +1,4 @@
-; int __pascal snd_kaja_func(int ax)
+; int DEFCONV snd_kaja_func(int ax)
 snd_kaja_func	proc
 @@ax	= word ptr (cPtrSize + 2)
 

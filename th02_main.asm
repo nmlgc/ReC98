@@ -2155,12 +2155,9 @@ sub_B2AB	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	snd_load pascal, SND_LOAD_SE, ds, offset aHuuma_efc
+		call	snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
 		call	sub_1CD36
-		push	ds
-		push	offset aEye_pi	; "EYE.PI"
-		push	0
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 0, offset aEye_pi, ds
 		add	sp, 0Ch
 		push	ds
 		push	offset aMiko_bft ; "miko.bft"
@@ -2321,10 +2318,8 @@ var_C		= byte ptr -0Ch
 		out	dx, al
 		call	sub_E012
 		call	sub_FBE9
-		push	0
-		call	pi_slot_palette_apply
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply stdcall, 0
+		call	pi_slot_palette_apply stdcall, 0
 		pushd	90h
 		push	60h
 		call	sub_F970
@@ -2569,8 +2564,7 @@ loc_B88A:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B8AF
-		push	0FFh
-		call	snd_delay_until_volume
+		call	snd_delay_until_volume stdcall, 255
 		pop	cx
 		push	ss
 		lea	ax, [bp+var_C]
@@ -7850,11 +7844,7 @@ sub_E178	proc near
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 0
 		jnz	short loc_E1D2
-		push	ds
-		push	offset aBomb1_pi ; "bomb1.pi"
-		push	1
-		call	pi_slot_load
-		add	sp, 6
+		call	pi_slot_load c, 1, offset aBomb1_pi, ds
 		mov	fp_219CA, offset sub_E618
 		pop	bp
 		retn
@@ -7864,11 +7854,7 @@ loc_E1D2:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 2
 		jnz	short loc_E1F3
-		push	ds
-		push	offset aBomb3_pi ; "bomb3.pi"
-		push	1
-		call	pi_slot_load
-		add	sp, 6
+		call	pi_slot_load c, 1, offset aBomb3_pi, ds
 		mov	fp_219CA, offset sub_E89C
 		pop	bp
 		retn
@@ -7878,11 +7864,7 @@ loc_E1F3:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+26h], 1
 		jnz	short loc_E248
-		push	ds
-		push	offset aBomb2_pi ; "bomb2.pi"
-		push	1
-		call	pi_slot_load
-		add	sp, 6
+		call	pi_slot_load c, 1, offset aBomb2_pi, ds
 		push	ds
 		push	offset aBomb1_bft ; "bomb1.bft"
 		call	file_ropen
@@ -18915,7 +18897,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		call	snd_load pascal, SND_LOAD_SONG, [bp+arg_0]
+		call	snd_load stdcall, [bp+arg_0], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Ah
 		pop	bp

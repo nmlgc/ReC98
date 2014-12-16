@@ -2683,12 +2683,8 @@ loc_AC15:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aOp3_pi	; "op3.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aOp3_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -2868,10 +2864,7 @@ var_2		= word ptr -2
 		call	super_entry_bfnt
 		kajacall	KAJA_SONG_STOP
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		push	0
-		push	ds
-		push	offset aTl01_pi	; "TL01.PI"
-		call	pi_slot_load
+		call	pi_slot_load pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
@@ -2883,8 +2876,7 @@ var_2		= word ptr -2
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -2899,10 +2891,7 @@ var_2		= word ptr -2
 		mov	Palettes+35, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		push	0
-		push	ds
-		push	offset aTl02_pi	; "TL02.PI"
-		call	pi_slot_load
+		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
 		mov	dx, 0A4h ; '¤'
 		mov	al, 1
 		out	dx, al
@@ -2998,8 +2987,7 @@ loc_AF65:
 		out	dx, al
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_C37B
@@ -3059,10 +3047,7 @@ sub_B008	proc near
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	0
-		push	ds
-		push	offset aTl02_pi	; "TL02.PI"
-		call	pi_slot_load
+		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
@@ -3076,8 +3061,7 @@ sub_B008	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_C37B

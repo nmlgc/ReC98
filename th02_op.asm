@@ -378,15 +378,11 @@ arg_2		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	[bp+arg_2]
-		push	0
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 0, [bp+arg_2], ds
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+arg_0]
 		out	dx, al
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply stdcall, 0
 		push	0
 		push	0
 		push	0
@@ -415,25 +411,16 @@ var_2		= word ptr -2
 		mov	[bp+var_4], dx
 		mov	[bp+var_6], ax
 		call	sub_9D0A
-		call	snd_load pascal, SND_LOAD_SE, ds, offset aHuuma_efc
+		call	snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
 		push	177h
 		push	1
 		call	sub_9D1D
 		push	17Eh
 		push	0
 		call	sub_9D1D
-		push	ds
-		push	offset aOpa_pi	; "opa.pi"
-		push	0
-		call	pi_slot_load
-		push	ds
-		push	offset aOpb_pi	; "opb.pi"
-		push	1
-		call	pi_slot_load
-		push	ds
-		push	offset aOpc_pi	; "opc.pi"
-		push	2
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 0, offset aOpa_pi, ds
+		call	pi_slot_load stdcall, 1, offset aOpb_pi, ds
+		call	pi_slot_load stdcall, 2, offset aOpc_pi, ds
 		add	sp, 18h
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
@@ -627,10 +614,7 @@ sub_9FAF	proc far
 		mov	es:[bx+16h], al
 		mov	byte ptr es:[bx+0Bh], 0
 		call	sub_9CA2
-		push	ds
-		push	offset aTs1_pi	; "ts1.pi"
-		push	0
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
 		call	sub_BD24
 		kajacall	KAJA_SONG_FADE, 15
@@ -723,10 +707,7 @@ sub_A0C6	proc far
 		mov	byte ptr es:[bx+1Ah], 2
 		mov	byte ptr es:[bx+19h], 1
 		call	sub_9CA2
-		push	ds
-		push	offset aTs1_pi	; "ts1.pi"
-		push	0
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
 		call	sub_BD24
 		kajacall	KAJA_SONG_FADE, 15
@@ -1112,12 +1093,8 @@ loc_A3BC:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset aOp2_pi	; "op2.pi"
-		push	0
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load stdcall, 0, offset aOp2_pi, ds
+		call	pi_slot_palette_apply stdcall, 0
 		push	0
 		push	0
 		push	0
@@ -1893,7 +1870,7 @@ loc_AA4A:
 		mov	al, snd_midi_active
 		mov	[bp+var_2], al
 		mov	snd_midi_active, 1
-		call	snd_load pascal, SND_LOAD_SONG, ds, offset aGminit_m
+		call	snd_load stdcall, offset aGminit_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 8
 		mov	al, [bp+var_2]
@@ -1901,14 +1878,8 @@ loc_AA4A:
 
 loc_AA8F:
 		call	sub_9D5C
-		push	ds
-		push	offset aTs3_pi	; "ts3.pi"
-		push	2
-		call	pi_slot_load
-		push	ds
-		push	offset aTs2_pi	; "ts2.pi"
-		push	1
-		call	pi_slot_load
+		call	pi_slot_load stdcall, 2, offset aTs3_pi, ds
+		call	pi_slot_load stdcall, 1, offset aTs2_pi, ds
 		add	sp, 0Ch
 		mov	word_F3C8, 0
 		mov	word_E8FC, 0
@@ -4123,12 +4094,8 @@ sub_BBC0	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		push	ds
-		push	offset aTselect_pi ; "TSELECT.pi"
-		push	3
-		call	pi_slot_load
-		push	3
-		call	pi_slot_palette_apply
+		call	pi_slot_load stdcall, 3, offset aTselect_pi, ds
+		call	pi_slot_palette_apply stdcall, 3
 		push	3
 		push	0
 		push	0
@@ -5558,12 +5525,8 @@ var_1		= byte ptr -1
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	ds
-		push	offset aOp3_pi	; "op3.pi"
-		push	0
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load stdcall, 0, offset aOp3_pi, ds
+		call	pi_slot_palette_apply stdcall, 0
 		push	0
 		push	0
 		push	0
@@ -5742,12 +5705,8 @@ loc_C978:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	ds
-		push	offset aOp2_pi_0 ; "op2.pi"
-		push	0
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load stdcall, 0, offset aOp2_pi_0, ds
+		call	pi_slot_palette_apply stdcall, 0
 		push	0
 		push	0
 		push	0

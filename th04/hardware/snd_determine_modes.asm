@@ -2,7 +2,7 @@
 ; sets snd_se_mode and snd_bgm_mode accordingly.
 ; Returns snd_bgm_mode, but the game doesn't care.
 
-; int __stdcall snd_determine_modes(int req_se_mode, int req_bgm_mode)
+; int __pascal snd_determine_modes(int req_bgm_mode, int req_se_mode)
 snd_determine_modes	proc
 @@req_se_mode	= word ptr (cPtrSize + 2)
 @@req_bgm_mode	= word ptr (cPtrSize + 4)

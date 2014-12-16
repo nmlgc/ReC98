@@ -1494,8 +1494,7 @@ loc_ACE1:
 		out	dx, al
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_ACF4
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 
 loc_ACF4:
 		pushd	0
@@ -1513,16 +1512,14 @@ loc_ACF4:
 loc_AD13:
 		cmp	[bp+arg_0], 2Dh	; '-'
 		jnz	short loc_AD23
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
 loc_AD23:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_AD33
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1565,8 +1562,7 @@ loc_AD7A:
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		push	0
 		push	ss
 		lea	ax, [bp+var_16]
@@ -2027,8 +2023,7 @@ loc_B18D:
 
 loc_B196:
 		call	sub_EC04
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		pop	si
 		leave
 		retn
@@ -2175,8 +2170,7 @@ arg_2		= word ptr  6
 		out	dx, al
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		xor	si, si
 		jmp	short loc_B309
 ; ---------------------------------------------------------------------------
@@ -2329,8 +2323,7 @@ sub_B3CB	proc near
 		mov	bx, ax
 		pushd	dword ptr [bx+760h]
 		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_palette_apply pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_15012, 2
@@ -2363,8 +2356,7 @@ loc_B4B5:
 		jz	short loc_B4B5
 		push	4
 		call	palette_black_out
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -4236,17 +4228,12 @@ var_2		= word ptr -2
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aHi01_pi	; "hi01.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_EFAC
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
 		push	ds
@@ -5940,17 +5927,12 @@ sub_D1B1	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aUde_pi	; "ude.pi"
-		call	pi_slot_load
-		push	0
-		call	pi_slot_palette_apply
+		call	pi_slot_load pascal, 0, ds, offset aUde_pi
+		call	pi_slot_palette_apply pascal, 0
 		pushd	0
 		push	0
 		call	sub_EFAC
-		push	0
-		call	pi_slot_free
+		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
 		push	4
