@@ -214,124 +214,7 @@ sub_2AEA	endp
 		db 0
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_2C6E
-
-loc_2C68:
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-; END OF FUNCTION CHUNK	FOR sub_2C6E
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2C6E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-; FUNCTION CHUNK AT 2C68 SIZE 00000006 BYTES
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		mov	cx, [bp+arg_0]
-		sar	cx, 3
-		jle	short loc_2C68
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_8]
-		sar	di, 3
-		jns	short loc_2C94
-		add	cx, di
-		jle	short loc_2C68
-		shl	di, 2
-		add	si, di
-		xor	di, di
-
-loc_2C94:
-		cmp	di, 50h	; 'P'
-		jge	short loc_2C68
-		add	cx, di
-		cmp	cx, 50h	; 'P'
-		jl	short loc_2CA3
-		mov	cx, 50h	; 'P'
-
-loc_2CA3:
-		sub	cx, di
-		imul	ax, 50h
-		add	di, ax
-		push	ds
-		mov	es, ClipYT_seg
-		mov	ds, [bp+arg_4]
-		mov	bp, cx
-		cld
-		nop
-
-loc_2CB6:
-		mov	cl, 2
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		mov	ax, cs:[bx+1AAAh]
-		mov	dx, cs:[bx+1AACh]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+1AAAh]
-		or	dx, cs:[bx+1AACh]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+1AAAh]
-		or	dx, cs:[bx+1AACh]
-		inc	si
-		shl	ax, cl
-		shl	dx, cl
-		mov	bl, [si]
-		mov	bh, 0
-		shl	bx, cl
-		or	ax, cs:[bx+1AAAh]
-		or	dx, cs:[bx+1AACh]
-		inc	si
-		mov	es:[di], al
-		mov	bx, es
-		mov	es:[di-8000h], ah
-		add	bh, 10h
-		mov	es, bx
-		assume es:nothing
-		mov	es:[di], dl
-		add	bh, 28h	; '('
-		mov	es, bx
-		assume es:nothing
-		mov	es:[di], dh
-		sub	bh, 38h	; '8'
-		mov	es, bx
-		assume es:nothing
-		inc	di
-		dec	bp
-		jnz	short loc_2CB6
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_2C6E	endp
-
+include libs/master.lib/graph_pack_put_8_noclip.asm
 include libs/BorlandC/_abort.asm
 include libs/BorlandC/stpcpy.asm
 include libs/BorlandC/abort.asm
@@ -1839,10 +1722,7 @@ loc_A26F:
 ; ---------------------------------------------------------------------------
 
 loc_A2B4:
-		pushd	190h
-		pushd	[bp+var_8]
-		push	140h
-		call	sub_2C6E
+		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
 		call	sub_A193
 		mov	ax, 0FFh
 		mov	dx, 4A2h
