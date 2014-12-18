@@ -2320,9 +2320,7 @@ var_C		= byte ptr -0Ch
 		call	sub_FBE9
 		call	pi_slot_palette_apply stdcall, 0
 		call	pi_slot_palette_apply stdcall, 0
-		pushd	90h
-		push	60h
-		call	sub_F970
+		call	pi_slot_put stdcall, 96, large 144
 		add	sp, 0Ah
 		call	sub_102D6
 		call	sub_16A6B
@@ -8495,11 +8493,7 @@ loc_E782:
 		sub	si, 190h
 
 loc_E793:
-		push	1
-		push	si
-		push	70h ; 'p'
-		call	sub_F970
-		add	sp, 6
+		call	pi_slot_put c, 112, si, 1
 
 loc_E7A0:
 		cmp	word_218B6, 56h	; 'V'
@@ -8729,10 +8723,7 @@ loc_E9A6:
 		sub	[bp+var_2], 190h
 
 loc_E9DB:
-		push	1
-		push	[bp+var_2]
-		push	20h ; ' '
-		call	sub_F970
+		call	pi_slot_put stdcall, 32, [bp+var_2], 1
 		push	10h
 		call	sub_FA52
 		add	sp, 8
@@ -8959,11 +8950,7 @@ loc_EBCC:
 		sub	si, 190h
 
 loc_EBE2:
-		push	1
-		push	si
-		push	20h ; ' '
-		call	sub_F970
-		add	sp, 6
+		call	pi_slot_put c, 32, si, 1
 
 loc_EBEF:
 		test	byte ptr word_218B6, 3
@@ -10588,76 +10575,7 @@ loc_F927:
 sub_F913	endp
 
 include th02/formats/pi_slot_palette_apply.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F970	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_4]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+22EEh]
-		mov	dx, [bx+22ECh]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_F9E4
-; ---------------------------------------------------------------------------
-
-loc_F996:
-		push	[bp+arg_0]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+2318h]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_F9B7
-		sub	si, 190h
-
-loc_F9B7:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+2318h]
-		shr	ax, 1
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_F9E4:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+231Ah]
-		cmp	ax, [bp+var_6]
-		ja	short loc_F996
-		pop	di
-		pop	si
-		leave
-		retf
-sub_F970	endp
-
+include th02/formats/pi_slot_put.asm
 include th02/hardware/snd_kaja_func.asm
 
 ; ---------------------------------------------------------------------------

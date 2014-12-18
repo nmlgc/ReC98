@@ -783,14 +783,10 @@ loc_99D4:
 
 loc_99F1:
 		call	pi_slot_load pascal, 0, ds, offset aStnx0_pi
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	pi_slot_load pascal, 0, ds, word_E504
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		leave
 		retn
 sub_990C	endp
@@ -888,9 +884,7 @@ loc_9A8E:
 		push	1
 		call	sub_9D20
 		call	pi_slot_load pascal, 0, ds, offset aEn2_pi
-		pushd	118h
-		push	0
-		call	sub_CDB7
+		call	pi_slot_put_interlace pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
@@ -943,9 +937,7 @@ loc_9BBD:
 		call	pi_slot_load
 
 loc_9BC2:
-		pushd	130h
-		push	0
-		call	sub_CDB7
+		call	pi_slot_put_interlace pascal, large 304, 0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
@@ -1051,20 +1043,16 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_4]
 		call	pi_slot_load pascal, 0, large [bp+arg_0]
 		mov	ax, si
-		imul	ax, 140h
-		push	ax
-		push	0C80000h
-		call	sub_CDB7
+		imul	ax, 320
+		call	pi_slot_put_interlace pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
-		mov	byte ptr es:[bx+2], 65h	; 'e'
-		mov	byte ptr es:[bx+3], 78h	; 'x'
+		mov	byte ptr es:[bx+2], 'e'
+		mov	byte ptr es:[bx+3], 'x'
 		call	pi_slot_load pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
-		imul	ax, 140h
-		push	ax
-		push	0D00000h
-		call	sub_CDB7
+		imul	ax, 320
+		call	pi_slot_put_interlace pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -1476,9 +1464,7 @@ loc_A0C5:
 		call	far ptr	palette_show
 		call	pi_slot_load pascal, 0, ds, offset aOver_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
 		les	bx, dword_105DA
@@ -2583,9 +2569,7 @@ loc_A9EB:
 		call	pi_slot_palette_apply pascal, 0
 
 loc_A9FE:
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		push	0
 		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
@@ -2725,10 +2709,7 @@ loc_AB33:
 		out	dx, al
 
 loc_AB44:
-		push	0A00040h
-		push	0
-		push	[bp+var_2]
-		call	sub_D4F1
+		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_AB54:
 		mov	dx, 0A4h
@@ -3324,9 +3305,7 @@ sub_AFAC	proc near
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aRegib_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Bh]
@@ -4531,9 +4510,7 @@ loc_B879:
 		jz	short loc_B8F1
 		call	pi_slot_load pascal, 0, ds, offset aConti_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		push	ds
@@ -4546,9 +4523,7 @@ loc_B879:
 loc_B8F1:
 		call	pi_slot_load pascal, 0, ds, offset aOver_pi_0
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_CD2F
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	snd_delay_until_volume stdcall, 255
 		pop	cx
@@ -6776,145 +6751,8 @@ locret_CD08:
 sub_CB68	endp
 
 include th02/formats/pi_slot_palette_apply.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CD2F	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+1F10h]
-		mov	dx, [bx+1F0Eh]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_CDA3
-; ---------------------------------------------------------------------------
-
-loc_CD55:
-		push	[bp+arg_4]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+1F3Ah]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_CD76
-		sub	si, 190h
-
-loc_CD76:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1F3Ah]
-		shr	ax, 1
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_CDA3:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1F3Ch]
-		cmp	ax, [bp+var_6]
-		ja	short loc_CD55
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_CD2F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CDB7	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+1F10h]
-		mov	dx, [bx+1F0Eh]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_CE2A
-; ---------------------------------------------------------------------------
-
-loc_CDDD:
-		push	[bp+arg_4]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+1F3Ah]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_CDFE
-		sub	si, 190h
-
-loc_CDFE:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1F3Ah]
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		add	[bp+var_6], 2
-
-loc_CE2A:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1F3Ch]
-		cmp	ax, [bp+var_6]
-		ja	short loc_CDDD
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_CDB7	endp
-
+include th02/formats/pi_slot_put.asm
+include th03/formats/pi_slot_put_interlace.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7791,96 +7629,7 @@ loc_D49D:
 sub_D47A	endp
 
 include th02/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4F1	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		mov	ax, [bx+1F10h]
-		mov	dx, [bx+1F0Eh]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		cmp	di, 1
-		jnz	short loc_D51D
-		add	word ptr [bp+var_4], 0A0h
-		jmp	short loc_D533
-; ---------------------------------------------------------------------------
-
-loc_D51D:
-		cmp	di, 2
-		jnz	short loc_D529
-		add	word ptr [bp+var_4], 0FA00h
-		jmp	short loc_D533
-; ---------------------------------------------------------------------------
-
-loc_D529:
-		cmp	di, 3
-		jnz	short loc_D533
-		add	word ptr [bp+var_4], 0FAA0h
-
-loc_D533:
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_D595
-; ---------------------------------------------------------------------------
-
-loc_D556:
-		push	[bp+arg_6]
-		push	si
-		pushd	[bp+var_4]
-		push	140h
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_D571
-		sub	si, 190h
-
-loc_D571:
-		add	word ptr [bp+var_4], 140h
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_D595:
-		cmp	[bp+var_6], 0C8h
-		jl	short loc_D556
-		pop	di
-		pop	si
-		leave
-		retf	8
-sub_D4F1	endp
-
+include th03/formats/pi_slot_put_quarter.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

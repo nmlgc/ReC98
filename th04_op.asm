@@ -1201,9 +1201,7 @@ loc_AF56:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -1231,9 +1229,7 @@ loc_AFBD:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -2472,9 +2468,7 @@ sub_B9CE	proc near
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aMs_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -2787,9 +2781,7 @@ var_1		= byte ptr -1
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aZun00_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -3736,9 +3728,7 @@ sub_C3B7	proc near
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aMusic_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, byte_102AF
 		mov	byte ptr word_12DBC, al
@@ -4509,16 +4499,12 @@ sub_CA1A	proc near
 		mov	al, 1
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -4626,9 +4612,7 @@ loc_CB58:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_0
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -4830,11 +4814,11 @@ loc_CD7A:
 		jnz	short loc_CDB0
 		cmp	[bp+var_3], 6
 		jnb	short loc_CDB0
-		pushd	26h ; '&'
+		pushd	38
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	sub_DA75
+		call	pi_slot_put
 		inc	[bp+var_3]
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+var_4]
@@ -4881,9 +4865,7 @@ loc_CE50:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_1
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -5886,9 +5868,7 @@ sub_D6B2	proc near
 		mov	al, 0
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		call	sub_CF5E
 		push	0
 		call	sub_D338
@@ -6103,9 +6083,7 @@ loc_D881:
 		out	dx, al
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
-		pushd	0
-		push	0
-		call	sub_DA75
+		call	pi_slot_put pascal, large 0, 0
 		call	sub_D650
 		push	0
 		call	graph_copy_page
@@ -6282,76 +6260,7 @@ sub_DA12	endp
 
 include th02/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DA75	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+2372h]
-		mov	dx, [bx+2370h]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_DAE9
-; ---------------------------------------------------------------------------
-
-loc_DA9B:
-		push	[bp+arg_4]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+239Ch]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_DABC
-		sub	si, 190h
-
-loc_DABC:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+239Ch]
-		shr	ax, 1
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_DAE9:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+239Eh]
-		cmp	ax, [bp+var_6]
-		ja	short loc_DA9B
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_DA75	endp
-
+include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
 
 ; ---------------------------------------------------------------------------

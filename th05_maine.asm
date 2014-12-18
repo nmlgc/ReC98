@@ -1379,9 +1379,7 @@ loc_ACE1:
 		call	pi_slot_palette_apply pascal, 0
 
 loc_ACF4:
-		pushd	0
-		push	0
-		call	sub_EFAC
+		call	pi_slot_put pascal, large 0, 0
 		push	0
 		call	graph_copy_page
 		mov	dx, 0A6h ; '¦'
@@ -1474,10 +1472,7 @@ loc_AD9A:
 		out	dx, al
 		cmp	[bp+var_2], 4
 		jge	short loc_ADE3
-		push	0A00040h
-		push	0
-		push	[bp+var_2]
-		call	sub_EFDC
+		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		jmp	loc_AE64
 ; ---------------------------------------------------------------------------
 
@@ -1529,10 +1524,7 @@ loc_AE42:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		push	0A00040h
-		push	0
-		push	[bp+var_2]
-		call	sub_EFDC
+		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		push	1
 		call	frame_delay
 
@@ -2074,17 +2066,9 @@ loc_B2EE:
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		push	di
-		push	[bp+arg_0]
-		push	0
-		push	[bp+var_2]
-		call	sub_EFDC
+		call	pi_slot_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
 		call	sub_B37C
-		push	di
-		push	[bp+arg_0]
-		push	0
-		push	[bp+var_2]
-		call	sub_EFDC
+		call	pi_slot_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -4112,9 +4096,7 @@ var_2		= word ptr -2
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_EFAC
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -5811,9 +5793,7 @@ sub_D1B1	proc near
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aUde_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_EFAC
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -9349,131 +9329,7 @@ sub_EF39	proc near
 sub_EF39	endp
 
 include th05/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFAC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, si
-		shl	si, 2
-		les	si, [si+6FEh]
-		imul	di, 48h
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		mov	ax, [di+27CEh]
-		push	ax
-		shr	ax, 1
-		push	ax
-		mov	di, [di+27D0h]
-		call	sub_F022
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_EFAC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFDC	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		xor	dx, dx
-		mov	si, [bp+arg_2]
-		mov	cl, [bp+arg_0]
-		test	cl, 1
-		jz	short loc_EFF3
-		mov	ax, 0A0h
-
-loc_EFF3:
-		test	cl, 2
-		jz	short loc_EFFB
-		mov	dx, 0FA0h
-
-loc_EFFB:
-		shl	si, 2
-		les	si, [si+6FEh]
-		add	si, ax
-		mov	ax, es
-		add	ax, dx
-		mov	es, ax
-		assume es:nothing
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-
-loc_F010:
-		push	140h
-		push	140h
-		mov	di, 0C8h
-		call	sub_F022
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_EFDC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F022	proc near
-
-arg_0		= word ptr  2
-arg_2		= word ptr  4
-arg_4		= word ptr  6
-arg_6		= word ptr  8
-
-		mov	bp, sp
-
-loc_F024:
-		push	es
-		call	graph_pack_put_8_noclip pascal, \
-				[bp+arg_6], [bp+arg_4], es, si, [bp+arg_2]
-		pop	es
-		assume es:nothing
-		inc	[bp+arg_4]
-		cmp	[bp+arg_4], 190h
-		jb	short loc_F045
-		sub	[bp+arg_4], 190h
-
-loc_F045:
-		add	si, [bp+arg_0]
-		mov	ax, si
-		shr	ax, 4
-		mov	dx, es
-		add	dx, ax
-		mov	es, dx
-		and	si, 0Fh
-		dec	di
-		jnz	short loc_F024
-		retn	8
-sub_F022	endp
-
+include th05/formats/pi_slot_put.asm
 include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
 

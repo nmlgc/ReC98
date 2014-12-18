@@ -383,10 +383,7 @@ arg_2		= word ptr  6
 		mov	al, [bp+arg_0]
 		out	dx, al
 		call	pi_slot_palette_apply stdcall, 0
-		push	0
-		push	0
-		push	0
-		call	sub_B17D
+		call	pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		pop	bp
@@ -1095,10 +1092,7 @@ loc_A3BC:
 		out	dx, al
 		call	pi_slot_load stdcall, 0, offset aOp2_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
-		push	0
-		push	0
-		push	0
-		call	sub_B17D
+		call	pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		push	ds
@@ -2619,76 +2613,7 @@ include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_load.asm
 include th02/formats/pi_slot_palette_apply.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B17D	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_4]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+1B4Eh]
-		mov	dx, [bx+1B4Ch]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_B1F1
-; ---------------------------------------------------------------------------
-
-loc_B1A3:
-		push	[bp+arg_0]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+1B78h]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_B1C4
-		sub	si, 190h
-
-loc_B1C4:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1B78h]
-		shr	ax, 1
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_B1F1:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+1B7Ah]
-		cmp	ax, [bp+var_6]
-		ja	short loc_B1A3
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B17D	endp
-
+include th02/formats/pi_slot_put.asm
 include th02/hardware/snd_kaja_func.asm
 
 ; ---------------------------------------------------------------------------
@@ -2866,7 +2791,7 @@ loc_B329:
 loc_B330:
 		push	0
 		push	0
-		call	sub_B17D
+		call	pi_slot_put
 		add	sp, 6
 
 loc_B33C:
@@ -4096,10 +4021,7 @@ sub_BBC0	proc far
 		out	dx, al
 		call	pi_slot_load stdcall, 3, offset aTselect_pi, ds
 		call	pi_slot_palette_apply stdcall, 3
-		push	3
-		push	0
-		push	0
-		call	sub_B17D
+		call	pi_slot_put stdcall, 0, 0, 3
 		add	sp, 0Eh
 		freePISlot	3
 		push	1
@@ -4173,18 +4095,9 @@ loc_BCA3:
 		add	sp, 0Ah
 
 loc_BCBA:
-		push	0
-		push	88h
-		push	18h
-		call	sub_B17D
-		push	1
-		push	0E0h
-		push	0E0h
-		call	sub_B17D
-		push	2
-		push	88h
-		push	1B8h
-		call	sub_B17D
+		call	pi_slot_put stdcall, 24, 136, 0
+		call	pi_slot_put stdcall, 224, 224, 1
+		call	pi_slot_put stdcall, 440, 136, 2
 		les	bx, dword_F3DC
 		mov	byte ptr es:[bx+26h], 1
 		push	88h
@@ -4292,7 +4205,7 @@ loc_BD6A:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		call	sub_B17D
+		call	pi_slot_put
 		add	sp, 6
 		push	1
 		call	frame_delay
@@ -4357,7 +4270,7 @@ loc_BE0F:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_B17D
+		call	pi_slot_put
 		add	sp, 6
 
 loc_BE6D:
@@ -4396,7 +4309,7 @@ loc_BE77:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		call	sub_B17D
+		call	pi_slot_put
 		add	sp, 6
 		push	1
 		call	frame_delay
@@ -4469,7 +4382,7 @@ loc_BF1C:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_B17D
+		call	pi_slot_put
 		add	sp, 6
 
 loc_BF7A:
@@ -5527,10 +5440,7 @@ var_1		= byte ptr -1
 		out	dx, al
 		call	pi_slot_load stdcall, 0, offset aOp3_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
-		push	0
-		push	0
-		push	0
-		call	sub_B17D
+		call	pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		mov	al, byte_DF97
@@ -5707,10 +5617,7 @@ loc_C978:
 		out	dx, al
 		call	pi_slot_load stdcall, 0, offset aOp2_pi_0, ds
 		call	pi_slot_palette_apply stdcall, 0
-		push	0
-		push	0
-		push	0
-		call	sub_B17D
+		call	pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		push	ds

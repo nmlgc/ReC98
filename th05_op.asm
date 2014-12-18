@@ -1100,9 +1100,7 @@ loc_AA91:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -1121,9 +1119,7 @@ loc_AAE1:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -1149,9 +1145,7 @@ loc_AB3B:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -2418,9 +2412,7 @@ sub_B5A6	proc near
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aMs_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -2733,9 +2725,7 @@ var_1		= byte ptr -1
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aZun00_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -3313,13 +3303,13 @@ loc_BD55:
 		cwd
 		idiv	bx
 		call	pi_slot_palette_apply pascal, ax
-		pushd	116h
+		pushd	278
 		mov	ax, si
 		mov	bx, 8
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_DE0A
+		call	pi_slot_put
 
 loc_BD81:
 		push	1
@@ -3414,9 +3404,7 @@ loc_BE46:
 		mov	al, 0
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -4222,9 +4210,7 @@ var_1		= byte ptr -1
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aMusic_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		call	sub_D894
 		call	sub_BFB7
@@ -5106,16 +5092,12 @@ sub_CBDC	proc near
 		mov	al, 1
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		xor	si, si
 		jmp	short loc_CC27
 ; ---------------------------------------------------------------------------
@@ -5229,9 +5211,7 @@ loc_CD17:
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_1
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -5670,9 +5650,7 @@ var_2		= word ptr -2
 		out	dx, al
 		call	pi_slot_load pascal, 0, ds, offset aSlb1_pi
 		call	pi_slot_palette_apply pascal, 0
-		pushd	0
-		push	0
-		call	sub_DE0A
+		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
@@ -7284,115 +7262,7 @@ sub_DD97	proc near
 sub_DD97	endp
 
 include th05/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DE0A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, si
-		shl	si, 2
-		les	si, [si+0A84h]
-		imul	di, 48h
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		mov	ax, [di+3866h]
-		push	ax
-		shr	ax, 1
-		push	ax
-		mov	di, [di+3868h]
-		call	sub_DE80
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_DE0A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		xor	dx, dx
-		mov	si, [bp+8]
-		mov	cl, [bp+6]
-		test	cl, 1
-		jz	short loc_DE51
-		mov	ax, 0A0h
-
-loc_DE51:
-		test	cl, 2
-		jz	short loc_DE59
-		mov	dx, 0FA0h
-
-loc_DE59:
-		shl	si, 2
-		les	si, [si+0A84h]
-		add	si, ax
-		mov	ax, es
-		add	ax, dx
-		mov	es, ax
-		assume es:nothing
-		push	word ptr [bp+0Ch]
-		push	word ptr [bp+0Ah]
-		push	140h
-		push	140h
-		mov	di, 0C8h ; 'È'
-		call	sub_DE80
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DE80	proc near
-
-arg_0		= word ptr  2
-arg_2		= word ptr  4
-arg_4		= word ptr  6
-arg_6		= word ptr  8
-
-		mov	bp, sp
-
-loc_DE82:
-		push	es
-		call	graph_pack_put_8_noclip pascal, \
-				[bp+arg_6], [bp+arg_4], es, si, [bp+arg_2]
-		pop	es
-		assume es:nothing
-		inc	[bp+arg_4]
-		cmp	[bp+arg_4], 190h
-		jb	short loc_DEA3
-		sub	[bp+arg_4], 190h
-
-loc_DEA3:
-		add	si, [bp+arg_0]
-		mov	ax, si
-		shr	ax, 4
-		mov	dx, es
-		add	dx, ax
-		mov	es, dx
-		and	si, 0Fh
-		dec	di
-		jnz	short loc_DE82
-		retn	8
-sub_DE80	endp
-
+include th05/formats/pi_slot_put.asm
 include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
 

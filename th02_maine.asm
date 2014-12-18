@@ -1058,10 +1058,7 @@ sub_9B64	proc near
 		call	pi_slot_load c, 0, offset aEd01_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -1294,10 +1291,7 @@ loc_9D96:
 		call	pi_slot_load c, 0, offset aEd02_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_out
@@ -1594,10 +1588,7 @@ sub_A09D	proc near
 		call	pi_slot_load c, 0, offset aEd01_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -1623,10 +1614,7 @@ sub_A09D	proc near
 		call	pi_slot_load c, 0, offset aEd03_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -1746,10 +1734,7 @@ loc_A247:
 		call	pi_slot_load c, 0, offset aEd04_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
@@ -1960,10 +1945,7 @@ loc_A451:
 		call	pi_slot_load c, 0, offset aEd05_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -2121,10 +2103,7 @@ loc_A620:
 		call	pi_slot_load c, 0, offset aEd05_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	1
 		call	sub_98B5
@@ -2267,10 +2246,7 @@ loc_A6B6:
 		call	pi_slot_load c, 0, offset aEd05_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	sub_98B5
@@ -2492,10 +2468,7 @@ loc_A992:
 		call	pi_slot_load c, 0, offset aEd06_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
@@ -2540,10 +2513,7 @@ loc_A992:
 		mov	al, 1
 		out	dx, al
 		call	pi_slot_load c, 0, offset aEd07_pi, ds
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
@@ -2621,10 +2591,7 @@ loc_A992:
 		mov	al, 1
 		out	dx, al
 		call	pi_slot_load c, 0, offset aEd08_pi, ds
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
@@ -2713,10 +2680,7 @@ loc_A992:
 		call	pi_slot_load c, 0, offset aEd09_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
@@ -3045,10 +3009,7 @@ sub_AFE7	proc far
 		call	pi_slot_load c, 0, offset aAll_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -3057,10 +3018,7 @@ sub_AFE7	proc far
 		call	pi_slot_load c, 0, offset aBut_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		call	sub_B4B7
 		push	5
@@ -3087,10 +3045,7 @@ sub_B07F	proc far
 		call	pi_slot_load c, 0, offset aAll_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -3099,10 +3054,7 @@ sub_B07F	proc far
 		call	pi_slot_load c, 0, offset aExtra_pi, ds
 		call	pi_slot_palette_apply stdcall, 0
 		pop	cx
-		pushd	0
-		push	0
-		call	sub_B7B3
-		add	sp, 6
+		call	pi_slot_put c, 0, large 0
 		freePISlotLarge	0
 		call	sub_B4B7
 		push	5
@@ -3823,76 +3775,7 @@ loc_B76A:
 sub_B756	endp
 
 include th02/formats/pi_slot_palette_apply.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B7B3	proc far
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_4]
-		mov	bx, di
-		shl	bx, 2
-		mov	ax, [bx+2924h]
-		mov	dx, [bx+2922h]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		mov	[bp+var_6], 0
-		jmp	short loc_B827
-; ---------------------------------------------------------------------------
-
-loc_B7D9:
-		push	[bp+arg_0]
-		push	si
-		pushd	[bp+var_4]
-		mov	bx, di
-		imul	bx, 48h
-		push	word ptr [bx+294Eh]
-		call	graph_pack_put_8
-		inc	si
-		cmp	si, 190h
-		jl	short loc_B7FA
-		sub	si, 190h
-
-loc_B7FA:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+294Eh]
-		shr	ax, 1
-		add	word ptr [bp+var_4], ax
-		mov	eax, [bp+var_4]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_4]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_4]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
-		inc	[bp+var_6]
-
-loc_B827:
-		mov	bx, di
-		imul	bx, 48h
-		mov	ax, [bx+2950h]
-		cmp	ax, [bp+var_6]
-		ja	short loc_B7D9
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B7B3	endp
-
+include th02/formats/pi_slot_put.asm
 include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
