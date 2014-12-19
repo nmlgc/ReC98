@@ -4713,23 +4713,12 @@ loc_C2B0:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, [bp+arg_0]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	di, ax
 		mov	[bp+arg_0], 0
@@ -4746,23 +4735,12 @@ loc_C2EE:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		mov	ax, [bp+arg_4]
 		add	ax, 0FD81h
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_6], ax
 		mov	[bp+arg_4], 27Fh
@@ -4779,23 +4757,12 @@ loc_C330:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, di
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	[bp+arg_0], ax
 		xor	di, di
@@ -4812,23 +4779,12 @@ loc_C369:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		mov	ax, [bp+arg_6]
 		add	ax, 0FE71h
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_4], ax
 		mov	[bp+arg_6], 18Fh
@@ -4843,23 +4799,12 @@ loc_C3AA:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, [bp+arg_6]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	[bp+arg_4], ax
 		mov	[bp+arg_6], 0
@@ -4874,22 +4819,11 @@ loc_C3E1:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		lea	ax, [di-18Fh]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_0], ax
 		mov	di, 18Fh

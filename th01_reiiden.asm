@@ -2323,96 +2323,33 @@ var_2		= word ptr -2
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fadd dbl_34A9C)
-		db 0cdh
-		db 038h
-		db 006h
-		db 0fch
-		db 000h
-		; Hack (fstp dbl_34A94)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0f4h
-		db 000h
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fcomp flt_34B64)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0c4h
-		db 001h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_2]
+		fadd	dbl_34A9C
+		fstp	dbl_34A94
+		fld	dbl_34A94
+		fcomp	flt_34B64
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jbe	short loc_C5EF
-		; Hack (fld flt_34B64)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0c4h
-		db 001h
+		fld	flt_34B64
 		jmp	short loc_C60A
 ; ---------------------------------------------------------------------------
 
 loc_C5EF:
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fcomp dbl_34B68)
-		db 0cdh
-		db 038h
-		db 01eh
-		db 0c8h
-		db 001h
-		; Hack (fnstcw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	dbl_34A94
+		fcomp	dbl_34B68
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnb	short loc_C611
-		; Hack (fld dbl_34B68)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0c8h
-		db 001h
+		fld	dbl_34B68
 
 loc_C60A:
-		; Hack (fstp dbl_34A94)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0f4h
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	dbl_34A94
+		fwait
 
 loc_C611:
 		mov	ax, word_36C2C
@@ -2420,17 +2357,8 @@ loc_C611:
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fadd dbl_34A9C)
-		db 0cdh
-		db 038h
-		db 006h
-		db 0fch
-		db 000h
+		fild	[bp+var_2]
+		fadd	dbl_34A9C
 		call	ftol@
 		leave
 		retf
@@ -2453,31 +2381,11 @@ arg_8		= word ptr  0Eh
 		mov	si, [bp+arg_8]
 		or	si, si
 		jnz	short loc_C68D
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
-		; Hack (fmul dbl_34B70)
-		db 0cdh
-		db 038h
-		db 00eh
-		db 0d0h
-		db 001h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	dbl_34A94
+		fchs
+		fmul	dbl_34B70
+		fstp	dbl_34A9C
+		fwait
 		cmp	word_34A7C, 0
 		jnz	short loc_C68D
 		cmp	word_36C2C, 11h
@@ -2509,83 +2417,28 @@ loc_C68D:
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
-		; Hack (fsubrp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0e1h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_2]
+		fld	dbl_34A94
+		fchs
+		fsubrp	st(1), st
+		fstp	dbl_34A9C
+		fwait
 
 loc_C6B4:
 		cmp	si, 2
 		jnz	short loc_C6CF
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fdiv flt_34B78)
-		db 0cdh
-		db 034h
-		db 036h
-		db 0d8h
-		db 001h
-		; Hack (fadd dbl_34B7C)
-		db 0cdh
-		db 038h
-		db 006h
-		db 0dch
-		db 001h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	dbl_34A94
+		fdiv	flt_34B78
+		fadd	dbl_34B7C
+		fstp	dbl_34A9C
+		fwait
 
 loc_C6CF:
 		cmp	si, 3
 		jnz	short loc_C6DF
-		; Hack (fld [bp+arg_0])
-		db 0cdh
-		db 039h
-		db 046h
-		db 006h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_0]
+		fstp	dbl_34A9C
+		fwait
 
 loc_C6DF:
 		mov	word_36C2C, 0
@@ -2722,21 +2575,10 @@ loc_C7C9:
 		cmp	word_36C2A, 170h
 		jle	short loc_C7F4
 		push	0		; int
-		; Hack (fld dbl_34B70)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0d0h
-		db 001h
+		fld	dbl_34B70
 		sub	sp, 8
-		; Hack (fstp [bp+var_C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f4h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_C]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		mov	word_36C2A, 170h
@@ -2746,19 +2588,10 @@ loc_C7F4:
 		cmp	word_36C2A, 40h
 		jge	short loc_C816
 		push	1		; int
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
+		fldz
 		sub	sp, 8
-		; Hack (fstp [bp+var_C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f4h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_C]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		mov	word_36C2A, 40h
@@ -4901,21 +4734,9 @@ loc_DB04:
 		mov	word_36C26, 130h
 
 loc_DB0A:
-		; Hack (fld dbl_34FF5)
-		db 0cdh
-		db 039h
-		db 006h
-		db 055h
-		db 006h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	dbl_34FF5
+		fstp	dbl_34A9C
+		fwait
 		mov	word_36C2C, 0
 		mov	word_34A7C, 1
 		mov	word_34A8E, 258h
@@ -8405,23 +8226,12 @@ loc_F3AB:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, [bp+arg_0]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	di, ax
 		mov	[bp+arg_0], 0
@@ -8438,23 +8248,12 @@ loc_F3E9:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		mov	ax, [bp+arg_4]
 		add	ax, 0FD81h
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_6], ax
 		mov	[bp+arg_4], 27Fh
@@ -8471,23 +8270,12 @@ loc_F42B:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, di
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	[bp+arg_0], ax
 		xor	di, di
@@ -8504,23 +8292,12 @@ loc_F464:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		mov	ax, [bp+arg_6]
 		add	ax, 0FE71h
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_4], ax
 		mov	[bp+arg_6], 18Fh
@@ -8535,23 +8312,12 @@ loc_F4A5:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		xor	ax, ax
 		sub	ax, [bp+arg_6]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		add	[bp+arg_4], ax
 		mov	[bp+arg_6], 0
@@ -8566,22 +8332,11 @@ loc_F4DC:
 		cwd
 		idiv	bx
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		lea	ax, [di-18Fh]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
-		; Hack (fmulp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c9h
+		fild	[bp+var_18]
+		fmulp	st(1), st
 		call	ftol@
 		sub	[bp+arg_0], ax
 		mov	di, 18Fh
@@ -31649,11 +31404,7 @@ loc_1AD6C:
 		sar	ax, 1
 		add	ax, 0FFF3h
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
+		fild	[bp+var_2]
 		jmp	short loc_1ADF9
 ; ---------------------------------------------------------------------------
 
@@ -31717,23 +31468,12 @@ loc_1ADE7:
 
 loc_1ADF2:
 		push	3		; int
-		; Hack (fld dbl_35B49)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0a9h
-		db 011h
+		fld	dbl_35B49
 
 loc_1ADF9:
 		sub	sp, 8
-		; Hack (fstp [bp+var_E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f2h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_E]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 

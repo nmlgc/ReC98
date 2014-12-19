@@ -538,38 +538,15 @@ arg_4		= dword	ptr  0Ah
 		mov	ax, [bp+arg_2]
 		sub	ax, [bp+arg_0]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
-		; Hack (fstp [bp+var_8])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f8h
+		fild	[bp+var_A]
+		fstp	[bp+var_8]
 		pushd	3
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	isqrt
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
-		; Hack (fmul [bp+var_8])
-		db 0cdh
-		db 038h
-		db 04eh
-		db 0f8h
-		; Hack (fdiv flt_35B76)
-		db 0cdh
-		db 034h
-		db 036h
-		db 0d6h
-		db 011h
+		fild	[bp+var_A]
+		fmul	[bp+var_8]
+		fdiv	flt_35B76
 		call	ftol@
 		les	bx, [bp+arg_4]
 		mov	es:[bx], ax
@@ -901,36 +878,16 @@ arg_2		= word ptr  6
 		push	0		; char
 		mov	ax, [bp+var_2]
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		sub	sp, 8
-		; Hack (fstp [bp+var_10])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f0h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_10]
+		fwait
 		mov	ax, [bp+var_4]
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		sub	sp, 8
-		; Hack (fstp [bp+var_18])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_18]
+		fwait
 		mov	ax, word ptr dword_3988E+2
 		add	ax, 1Ch
 		push	ax		; int
@@ -954,36 +911,16 @@ arg_2		= word ptr  6
 		push	0		; char
 		mov	ax, [bp+var_2]
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		sub	sp, 8
-		; Hack (fstp [bp+var_10])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f0h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_10]
+		fwait
 		mov	ax, [bp+var_4]
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		sub	sp, 8
-		; Hack (fstp [bp+var_18])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_18]
+		fwait
 		mov	ax, word_398C2
 		add	ax, 1Ch
 		push	ax		; int
@@ -6347,37 +6284,17 @@ loc_1EC0B:
 		mov	ax, [bp+var_16]
 		sar	ax, 4
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		sub	sp, 8
-		; Hack (fstp [bp+var_26])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0dah
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_26]
+		fwait
 		mov	ax, [bp+var_14]
 		sar	ax, 4
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		sub	sp, 8
-		; Hack (fstp [bp+var_2E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d2h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_2E]
+		fwait
 		mov	bx, [bp+var_12]
 		add	bx, bx
 		lea	ax, [bp+var_10]
@@ -7507,38 +7424,18 @@ loc_1F682:
 		push	0		; char
 		mov	ax, [bp+var_16]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		sub	sp, 8
-		; Hack (fstp [bp+var_26])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0dah
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_26]
+		fwait
 		mov	ax, [bp+var_14]
 		mov	[bp+var_18], ax
-		; Hack (fild [bp+var_18])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0e8h
+		fild	[bp+var_18]
 		sub	sp, 8
-		; Hack (fstp [bp+var_2E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d2h
+		fstp	[bp+var_2E]
 		mov	bx, si
 		add	bx, bx
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		lea	ax, [bp+var_10]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
@@ -10524,21 +10421,10 @@ loc_20F3C:
 
 loc_20F4F:
 		push	0		; int
-		; Hack (fld flt_35C9A)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0fah
-		db 012h
+		fld	flt_35C9A
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 
@@ -10683,25 +10569,11 @@ loc_21060:
 		jnz	short loc_210B1
 		inc	word ptr es:[bx]
 		push	3		; int
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
+		fld	dbl_34A94
+		fchs
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 
@@ -10737,25 +10609,11 @@ loc_210C6:
 		jnz	short loc_21117
 		inc	word ptr es:[bx]
 		push	3		; int
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
+		fld	dbl_34A94
+		fchs
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 
@@ -10796,25 +10654,11 @@ loc_2112C:
 		cmp	word_34A7C, 0
 		jnz	short loc_21198
 		push	3		; int
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
+		fld	dbl_34A94
+		fchs
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		jmp	short loc_211CD
@@ -10891,25 +10735,11 @@ loc_211E2:
 		cmp	word_34A7C, 0
 		jnz	short loc_2124E
 		push	3		; int
-		; Hack (fld dbl_34A94)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f4h
-		db 000h
-		; Hack (fchs)
-		db 0cdh
-		db 035h
-		db 0e0h
+		fld	dbl_34A94
+		fchs
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		jmp	short loc_21283
@@ -11543,20 +11373,10 @@ loc_21777:
 		idiv	bx
 		add	dx, 0FFF7h
 		mov	[bp+var_4], dx
-		; Hack (fild [bp+var_4])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fch
+		fild	[bp+var_4]
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		mov	ax, word_39EB9
@@ -12158,34 +11978,16 @@ loc_21C16:
 		shl	ax, 4
 		mov	es:[bx+64h], ax
 		mov	word ptr es:[bx+0C8h], 0FFFFh
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 00eh
-		; Hack (fmul flt_35C9E)
-		db 0cdh
-		db 034h
-		db 00eh
-		db 0feh
-		db 012h
+		fld	[bp+arg_8]
+		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
 		add	dx, dx
 		les	bx, [bp+arg_0]
 		add	bx, dx
 		mov	es:[bx+190h], ax
-		; Hack (fld [bp+arg_10])
-		db 0cdh
-		db 039h
-		db 046h
-		db 016h
-		; Hack (fmul flt_35C9E)
-		db 0cdh
-		db 034h
-		db 00eh
-		db 0feh
-		db 012h
+		fld	[bp+arg_10]
+		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
 		add	dx, dx
@@ -12240,35 +12042,12 @@ arg_A		= dword	ptr  10h
 		push	word ptr es:[bx+190h]
 		call	iatan2
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
-		; Hack (fstp [bp+var_8])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f8h
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CA2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 002h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_A]
+		fstp	[bp+var_8]
+		fld	[bp+var_8]
+		fcomp	flt_35CA2
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21CE7
@@ -12277,25 +12056,10 @@ arg_A		= dword	ptr  10h
 ; ---------------------------------------------------------------------------
 
 loc_21CE7:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CA6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 006h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CA6
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D01
@@ -12304,25 +12068,10 @@ loc_21CE7:
 ; ---------------------------------------------------------------------------
 
 loc_21D01:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CAA)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 00ah
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CAA
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D1B
@@ -12331,25 +12080,10 @@ loc_21D01:
 ; ---------------------------------------------------------------------------
 
 loc_21D1B:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CAE)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 00eh
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CAE
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D35
@@ -12368,25 +12102,10 @@ loc_21D37:
 		mov	ah, 0
 		les	bx, [bp+arg_6]
 		add	es:[bx], ax
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35C9E)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0feh
-		db 012h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35C9E
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D67
@@ -12395,25 +12114,10 @@ loc_21D37:
 ; ---------------------------------------------------------------------------
 
 loc_21D67:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CB2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 012h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CB2
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D82
@@ -12422,25 +12126,10 @@ loc_21D67:
 ; ---------------------------------------------------------------------------
 
 loc_21D82:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CB6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 016h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CB6
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21D9D
@@ -12449,25 +12138,10 @@ loc_21D82:
 ; ---------------------------------------------------------------------------
 
 loc_21D9D:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CA2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 002h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CA2
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21DB8
@@ -12476,25 +12150,10 @@ loc_21D9D:
 ; ---------------------------------------------------------------------------
 
 loc_21DB8:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CBA)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 01ah
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CBA
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21DD2
@@ -12503,25 +12162,10 @@ loc_21DB8:
 ; ---------------------------------------------------------------------------
 
 loc_21DD2:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CBE)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 01eh
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CBE
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21DED
@@ -12530,25 +12174,10 @@ loc_21DD2:
 ; ---------------------------------------------------------------------------
 
 loc_21DED:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CC2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 022h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CC2
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E08
@@ -12557,25 +12186,10 @@ loc_21DED:
 ; ---------------------------------------------------------------------------
 
 loc_21E08:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CA6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 006h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CA6
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E23
@@ -12584,25 +12198,10 @@ loc_21E08:
 ; ---------------------------------------------------------------------------
 
 loc_21E23:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CC6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 026h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CC6
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E3D
@@ -12611,25 +12210,10 @@ loc_21E23:
 ; ---------------------------------------------------------------------------
 
 loc_21E3D:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CCA)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 02ah
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CCA
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E58
@@ -12638,25 +12222,10 @@ loc_21E3D:
 ; ---------------------------------------------------------------------------
 
 loc_21E58:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CCE)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 02eh
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CCE
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E73
@@ -12665,25 +12234,10 @@ loc_21E58:
 ; ---------------------------------------------------------------------------
 
 loc_21E73:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CAA)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 00ah
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CAA
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21E8D
@@ -12692,25 +12246,10 @@ loc_21E73:
 ; ---------------------------------------------------------------------------
 
 loc_21E8D:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CD2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 032h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CD2
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21EA6
@@ -12719,25 +12258,10 @@ loc_21E8D:
 ; ---------------------------------------------------------------------------
 
 loc_21EA6:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CD6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 036h
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CD6
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21EC0
@@ -12746,25 +12270,10 @@ loc_21EA6:
 ; ---------------------------------------------------------------------------
 
 loc_21EC0:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CDA)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 03ah
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CDA
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21EDA
@@ -12773,25 +12282,10 @@ loc_21EC0:
 ; ---------------------------------------------------------------------------
 
 loc_21EDA:
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35CAE)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 00eh
-		db 013h
-		; Hack (fnstsw [bp+var_A])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35CAE
+		fstsw	[bp+var_A]
+		fwait
 		mov	ax, [bp+var_A]
 		sahf
 		jnb	short loc_21EF4
@@ -19218,48 +18712,19 @@ loc_255E4:
 		mov	[bp+var_12], dx
 
 loc_255FB:
-		; Hack (fild [bp+var_12])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0eeh
-		; Hack (fstp [bp+var_8])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
-		; Hack (fld flt_35D8D)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0edh
-		db 013h
-		; Hack (fstp [bp+var_10])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f0h
+		fild	[bp+var_12]
+		fstp	[bp+var_8]
+		fwait
+		fld	flt_35D8D
+		fstp	[bp+var_10]
 		push	40019h
 		push	7
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		push	word_3A6CC
-		; Hack (fld [bp+var_10])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f0h
+		fld	[bp+var_10]
 		call	ftol@
 		push	ax
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
+		fld	[bp+var_8]
 		call	ftol@
 		push	ax
 		mov	ax, word ptr dword_3982A+2
@@ -19284,25 +18749,10 @@ loc_255FB:
 		add	sp, 16h
 		cmp	word_3A6E5, 0
 		jnz	short loc_2567E
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35D91)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0f1h
-		db 013h
-		; Hack (fnstsw [bp+var_12])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fcomp	flt_35D91
+		fstsw	[bp+var_12]
+		fwait
 		mov	ax, [bp+var_12]
 		sahf
 		jnb	short loc_2569B
@@ -19310,27 +18760,11 @@ loc_255FB:
 loc_2567E:
 		cmp	word_3A6E5, 1
 		jnz	short loc_256A5
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_12])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_8]
+		fldz
+		fcompp
+		fstsw	[bp+var_12]
+		fwait
 		mov	ax, [bp+var_12]
 		sahf
 		jb	short loc_256A5
@@ -19438,38 +18872,18 @@ loc_25726:
 		push	0		; char
 		mov	ax, [bp+var_7+1]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_16])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eah
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_16]
+		fwait
 		mov	ax, [bp+var_4]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_1E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e2h
+		fstp	[bp+var_1E]
 		mov	bx, si
 		add	bx, bx
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		push	word ptr [bx+5D51h] ; int
 		mov	bx, si
 		add	bx, bx
@@ -19661,17 +19075,8 @@ loc_25977:
 		mov	al, byte ptr word_3A6FB
 		mov	ah, 0
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
-		; Hack (fadd dbl_35D95)
-		db 0cdh
-		db 038h
-		db 006h
-		db 0f5h
-		db 013h
+		fild	[bp+var_6]
+		fadd	qword ptr dbl_35D95
 		call	ftol@
 		push	ax
 		push	word_3A6FB
@@ -24907,25 +24312,10 @@ arg_1A		= qword	ptr  1Eh
 		enter	1Eh, 0
 		push	si
 		push	di
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fcomp flt_35F66)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0c6h
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_1A]
+		fcomp	flt_35F66
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnz	short loc_289FD
@@ -24944,25 +24334,10 @@ loc_289F5:
 ; ---------------------------------------------------------------------------
 
 loc_289FD:
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fcomp flt_35F6A)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0cah
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_1A]
+		fcomp	flt_35F6A
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnz	short loc_28A69
@@ -24978,34 +24353,14 @@ loc_28A16:
 		push	30000Ch
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5ED2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5DE2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		push	ds
@@ -25023,25 +24378,10 @@ loc_28A61:
 ; ---------------------------------------------------------------------------
 
 loc_28A69:
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fcomp flt_35F72)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0d2h
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_1A]
+		fcomp	flt_35F72
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnz	short loc_28AE7
@@ -25067,34 +24407,14 @@ loc_28A94:
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5ED2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5DE2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		push	ds
@@ -25117,25 +24437,10 @@ loc_28ADF:
 ; ---------------------------------------------------------------------------
 
 loc_28AE7:
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fcomp flt_35F76)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0d6h
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_1A]
+		fcomp	flt_35F76
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnz	short loc_28B62
@@ -25157,34 +24462,14 @@ loc_28B00:
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5ED2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
-		; Hack (fadd flt_35F6E)
-		db 0cdh
-		db 034h
-		db 006h
-		db 0ceh
-		db 015h
+		fld	qword ptr [bx+5DE2h]
+		fadd	flt_35F6E
 		call	ftol@
 		push	ax
 		push	ds
@@ -25202,27 +24487,11 @@ loc_28B5A:
 ; ---------------------------------------------------------------------------
 
 loc_28B62:
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_1A]
+		fldz
+		fcompp
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jz	loc_28C25
@@ -25250,88 +24519,30 @@ loc_28B7F:
 		add	ax, 5FC2h
 		mov	word ptr [bp+var_E+2], ds
 		mov	word ptr [bp+var_E], ax
-		; Hack (fld [bp+arg_2])
-		db 0cdh
-		db 039h
-		db 046h
-		db 006h
-		; Hack (fstp [bp+var_16])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eah
-		; Hack (fld [bp+arg_A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 00eh
-		; Hack (fstp [bp+var_1E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e2h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_2]
+		fstp	[bp+var_16]
+		fld	[bp+arg_A]
+		fstp	[bp+var_1E]
+		fwait
 		les	bx, [bp+var_E]
-		; Hack (fld [bp+var_1E])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0e2h
-		; Hack (fstp qword ptr es:[bx])
-		db 0cdh
-		db 03ch
-		db 0ddh
-		db 01fh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_1E]
+		fstp	qword ptr es:[bx]
+		fwait
 		les	bx, [bp+var_A]
-		; Hack (fld [bp+var_16])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0eah
-		; Hack (fstp qword ptr es:[bx])
-		db 0cdh
-		db 03ch
-		db 0ddh
-		db 01fh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+var_16]
+		fstp	qword ptr es:[bx]
+		fwait
 		les	bx, [bp+var_6]
 		mov	byte ptr es:[bx], 19h
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld [bp+arg_1A])
-		db 0cdh
-		db 039h
-		db 046h
-		db 01eh
-		; Hack (fstp qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0e2h
-		db 05dh
+		fld	[bp+arg_1A]
+		fstp	qword ptr [bx+5DE2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld [bp+arg_12])
-		db 0cdh
-		db 039h
-		db 046h
-		db 016h
-		; Hack (fstp qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0d2h
-		db 05eh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	[bp+arg_12]
+		fstp	qword ptr [bx+5ED2h]
+		fwait
 		mov	al, [bp+arg_0]
 		mov	[si+61A2h], al
 		mov	al, [si+61C0h]
@@ -25384,22 +24595,12 @@ loc_28C2A:
 		push	1
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
+		fld	qword ptr [bx+5ED2h]
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
 		call	sub_1754D
@@ -25412,22 +24613,12 @@ loc_28C92:
 		push	200030h
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
+		fld	qword ptr [bx+5ED2h]
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
 		call	sub_10433
@@ -25450,153 +24641,57 @@ loc_28CCD:
 		jnz	loc_28E98
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5FC2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0c2h
-		db 05fh
+		fld	qword ptr [bx+5FC2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fadd qword ptr [bx+5DE2h])
-		db 0cdh
-		db 038h
-		db 087h
-		db 0e2h
-		db 05dh
+		fadd	qword ptr [bx+5DE2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0e2h
-		db 05dh
+		fstp	qword ptr [bx+5DE2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+60B2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b2h
-		db 060h
+		fld	qword ptr [bx+60B2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fadd qword ptr [bx+5ED2h])
-		db 0cdh
-		db 038h
-		db 087h
-		db 0d2h
-		db 05eh
+		fadd	qword ptr [bx+5ED2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0d2h
-		db 05eh
+		fstp	qword ptr [bx+5ED2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5DE2h]
+		fldz
+		fcompp
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		ja	short loc_28D89
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
-		; Hack (fcomp flt_35F7A)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0dah
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5DE2h]
+		fcomp	flt_35F7A
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		ja	short loc_28D89
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5ED2h]
+		fldz
+		fcompp
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		ja	short loc_28D89
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fcomp flt_35F7E)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0deh
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5ED2h]
+		fcomp	flt_35F7E
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jbe	short loc_28DBF
@@ -25605,22 +24700,12 @@ loc_28D89:
 		push	200030h
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
+		fld	qword ptr [bx+5ED2h]
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
 		call	sub_10433
@@ -25643,22 +24728,12 @@ loc_28DBF:
 		push	1
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
+		fld	qword ptr [bx+5ED2h]
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
 		call	sub_1754D
@@ -25667,113 +24742,45 @@ loc_28DBF:
 		jnz	loc_28E98
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		mov	ax, word_36C26
 		add	ax, 0FFF8h
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_2]
+		fcompp
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnb	short loc_28E98
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5DE2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0e2h
-		db 05dh
+		fld	qword ptr [bx+5DE2h]
 		mov	ax, word_36C26
 		add	ax, 8
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_2]
+		fcompp
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jbe	short loc_28E98
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fcomp flt_35F82)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0e2h
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5ED2h]
+		fcomp	flt_35F82
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jbe	short loc_28E98
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+5ED2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0d2h
-		db 05eh
-		; Hack (fcomp flt_35F86)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 0e6h
-		db 015h
-		; Hack (fnstsw [bp+var_2])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0feh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+5ED2h]
+		fcomp	flt_35F86
+		fstsw	[bp+var_2]
+		fwait
 		mov	ax, [bp+var_2]
 		sahf
 		jnb	short loc_28E98
@@ -27005,71 +26012,31 @@ loc_29905:
 		add	bx, bx
 		mov	ax, [bx+6238h]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_14])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0ech
+		fstp	[bp+var_14]
 		mov	bx, si
 		add	bx, bx
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		mov	ax, [bx+6274h]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_1C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e4h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1C]
+		fwait
 		mov	ax, [bp+var_4]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_24])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0dch
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_24]
+		fwait
 		mov	ax, [bp+var_2]
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_2C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d4h
+		fstp	[bp+var_2C]
 		push	1		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		dec	si
 
@@ -27148,60 +26115,23 @@ loc_29A41:
 		cbw
 		add	ax, 3E9h
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_14])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0ech
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_14]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e4h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1C]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_24])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0dch
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_24]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2C])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d4h
+		fstp	[bp+var_2C]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		jmp	short loc_29A96
 ; ---------------------------------------------------------------------------
@@ -27599,22 +26529,11 @@ loc_29DA5:
 		cwd
 		idiv	bx
 		mov	[bp+var_6], dx
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+62C2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0c2h
-		db 062h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+62C2h]
+		fwait
 		cmp	[bp+arg_0], 0
 		jnz	short loc_29DD4
 		xor	ax, ax
@@ -27626,22 +26545,11 @@ loc_29DD4:
 
 loc_29DD7:
 		mov	[bp+var_6], ax
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+63B2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0b2h
-		db 063h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+63B2h]
+		fwait
 		cmp	[bp+arg_0], 0
 		jnz	short loc_29E00
 		call	IRand
@@ -27662,22 +26570,11 @@ loc_29E00:
 
 loc_29E10:
 		mov	[bp+var_6], dx
-		; Hack (fild [bp+var_6])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0fah
+		fild	[bp+var_6]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+64A2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0a2h
-		db 064h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+64A2h]
+		fwait
 		mov	byte ptr [si+1445h], 4
 		jmp	short loc_29E32
 ; ---------------------------------------------------------------------------
@@ -27708,46 +26605,18 @@ loc_29E46:
 		pop	cx
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+62C2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0c2h
-		db 062h
-		; Hack (fdiv flt_35F8A)
- 		db 0cdh
-		db 034h
-		db 036h
-		db 0eah
-		db 015h
+		fld	qword ptr [bx+62C2h]
+		fdiv	flt_35F8A
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+63B2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b2h
-		db 063h
-		; Hack (fmul flt_35F8E)
- 		db 0cdh
-		db 034h
-		db 00eh
-		db 0eeh
-		db 015h
-		; Hack (faddp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c1h
+		fld	qword ptr [bx+63B2h]
+		fmul	flt_35F8E
+		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+62C2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0c2h
-		db 062h
+		fld	qword ptr [bx+62C2h]
 		call	ftol@
 		mov	bx, 8
 		cwd
@@ -27798,60 +26667,22 @@ loc_29EF8:
 loc_29F0B:
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+64A2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0a2h
-		db 064h
+		fld	qword ptr [bx+64A2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fadd qword ptr [bx+63B2h])
-		db 0cdh
-		db 038h
-		db 087h
-		db 0b2h
-		db 063h
+		fadd	qword ptr [bx+63B2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+63B2h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0b2h
-		db 063h
+		fstp	qword ptr [bx+63B2h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+62C2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0c2h
-		db 062h
-		; Hack (fdiv flt_35F8A)
- 		db 0cdh
-		db 034h
-		db 036h
-		db 0eah
-		db 015h
+		fld	qword ptr [bx+62C2h]
+		fdiv	flt_35F8A
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+63B2h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b2h
-		db 063h
-		; Hack (fmul flt_35F8E)
- 		db 0cdh
-		db 034h
-		db 00eh
-		db 0eeh
-		db 015h
-		; Hack (faddp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c1h
+		fld	qword ptr [bx+63B2h]
+		fmul	flt_35F8E
+		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
 		cmp	di, 7CB0h
@@ -29261,27 +28092,15 @@ loc_2AD01:
 		imul	ax, 0Ah
 		add	ax, word_3B043
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
-		; Hack (fstp [bp+var_8])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f8h
+		fild	[bp+var_A]
+		fstp	[bp+var_8]
 		push	4
 		push	ds
 		push	offset word_3B049
 		push	ds
 		push	offset word_3B047
 		push	0
-		; Hack (fld [bp+arg_8])
-		db 0cdh
-		db 039h
-		db 046h
-		db 0f8h
+		fld	[bp+var_8]
 		call	ftol@
 		push	ax
 		mov	ax, word_3B045
@@ -29292,139 +28111,59 @@ loc_2AD01:
 		add	sp, 12h
 		mov	ax, word_3B043
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fwait
 		mov	ax, word_3B045
 		add	ax, 0FFE0h
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		mov	ax, word_3B047
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fwait
 		mov	ax, word_3B049
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	1		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		mov	ax, 27Fh
 		sub	ax, word_3B043
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fwait
 		mov	ax, word_3B045
 		add	ax, 0FFE0h
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fwait
 		mov	ax, word_3B047
 		neg	ax
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fwait
 		mov	ax, word_3B049
 		mov	[bp+var_A], ax
-		; Hack (fild [bp+var_A])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f6h
+		fild	[bp+var_A]
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	1		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 
 loc_2AE0C:
@@ -29434,61 +28173,23 @@ loc_2AE0C:
 		idiv	bx
 		or	dx, dx
 		jnz	locret_2AECC
-		; Hack (fld flt_35F76)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0d6h
-		db 015h
+		fld	flt_35F76
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		leave
 		retn
@@ -29516,61 +28217,23 @@ loc_2AE7A:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2AEBE
-		; Hack (fld flt_35F76)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0d6h
-		db 015h
+		fld	flt_35F76
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 
 loc_2AEBE:
@@ -30140,43 +28803,21 @@ loc_2B366:
 		cwd
 		idiv	bx
 		mov	[bp+var_8], dx
-		; Hack (fild [bp+var_8])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f8h
+		fild	[bp+var_8]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0b7h
-		db 066h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+66B7h]
+		fwait
 		call	IRand
 		mov	bx, 190h
 		cwd
 		idiv	bx
 		mov	[bp+var_8], dx
-		; Hack (fild [bp+var_8])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f8h
+		fild	[bp+var_8]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+67A7h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0a7h
-		db 067h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+67A7h]
+		fwait
 		call	IRand
 		mov	bx, 2
 		cwd
@@ -30192,22 +28833,11 @@ loc_2B3BD:
 
 loc_2B3C0:
 		mov	[bp+var_8], ax
-		; Hack (fild [bp+var_8])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f8h
+		fild	[bp+var_8]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+6897h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 097h
-		db 068h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	qword ptr [bx+6897h]
+		fwait
 		mov	byte ptr [si+1483h], 4
 		jmp	short loc_2B3E0
 ; ---------------------------------------------------------------------------
@@ -30237,46 +28867,18 @@ loc_2B3F4:
 		call	sub_EABB
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
-		; Hack (fdiv flt_35F8A)
- 		db 0cdh
-		db 034h
-		db 036h
-		db 0eah
-		db 015h
+		fld	qword ptr [bx+66B7h]
+		fdiv	flt_35F8A
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+67A7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0a7h
-		db 067h
-		; Hack (fmul flt_35F8E)
- 		db 0cdh
-		db 034h
-		db 00eh
-		db 0eeh
-		db 015h
-		; Hack (faddp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c1h
+		fld	qword ptr [bx+67A7h]
+		fmul	flt_35F8E
+		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
+		fld	qword ptr [bx+66B7h]
 		call	ftol@
 		mov	bx, 8
 		cwd
@@ -30355,131 +28957,51 @@ loc_2B4F1:
 loc_2B504:
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+6897h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 097h
-		db 068h
+		fld	qword ptr [bx+6897h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fadd qword ptr [bx+66B7h])
-		db 0cdh
-		db 038h
-		db 087h
-		db 0b7h
-		db 066h
+		fadd	qword ptr [bx+66B7h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 0b7h
-		db 066h
+		fstp	qword ptr [bx+66B7h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+6897h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 097h
-		db 068h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_8])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+6897h]
+		fldz
+		fcompp
+		fstsw	[bp+var_8]
+		fwait
 		mov	ax, [bp+var_8]
 		sahf
 		jbe	short loc_2B545
-		; Hack (fld dbl_35F92)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0f2h
-		db 015h
+		fld	qword ptr dbl_35F92
 		jmp	short loc_2B54A
 ; ---------------------------------------------------------------------------
 
 loc_2B545:
-		; Hack (fld dbl_35F9A)
-		db 0cdh
-		db 039h
-		db 006h
-		db 0fah
-		db 015h
+		fld	qword ptr dbl_35F9A
 
 loc_2B54A:
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fadd qword ptr [bx+6897h])
-		db 0cdh
-		db 038h
-		db 087h
-		db 097h
-		db 068h
+		fadd	qword ptr [bx+6897h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fstp qword ptr [bx+6897h])
-		db 0cdh
-		db 039h
-		db 09fh
-		db 097h
-		db 068h
+		fstp	qword ptr [bx+6897h]
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
-		; Hack (fdiv flt_35F8A)
- 		db 0cdh
-		db 034h
-		db 036h
-		db 0eah
-		db 015h
+		fld	qword ptr [bx+66B7h]
+		fdiv	flt_35F8A
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+67A7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0a7h
-		db 067h
-		; Hack (fmul flt_35F8E)
- 		db 0cdh
-		db 034h
-		db 00eh
-		db 0eeh
-		db 015h
-		; Hack (faddp st(1), st)
-		db 0cdh
-		db 03ah
-		db 0c1h
+		fld	qword ptr [bx+67A7h]
+		fmul	flt_35F8E
+		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
+		fld	qword ptr [bx+66B7h]
 		call	ftol@
 		mov	bx, 8
 		cwd
@@ -30487,89 +29009,36 @@ loc_2B54A:
 		mov	[bp+var_2], dx
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
-		; Hack (fcomp flt_35FA2)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 002h
-		db 016h
-		; Hack (fnstsw [bp+var_8])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+66B7h]
+		fcomp	flt_35FA2
+		fstsw	[bp+var_8]
+		fwait
 		mov	ax, [bp+var_8]
 		sahf
 		jnb	short loc_2B604
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+66B7h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 0b7h
-		db 066h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (fcompp)
-		db 0cdh
-		db 03ah
-		db 0d9h
-		; Hack (fnstsw [bp+var_8])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	qword ptr [bx+66B7h]
+		fldz
+		fcompp
+		fstsw	[bp+var_8]
+		fwait
 		mov	ax, [bp+var_8]
 		sahf
 		ja	short loc_2B604
 		mov	bx, si
 		shl	bx, 3
-		; Hack (fld qword ptr [bx+6897h])
-		db 0cdh
-		db 039h
-		db 087h
-		db 097h
-		db 068h
+		fld	qword ptr [bx+6897h]
 		call	ftol@
 		mov	[bp+var_A], ax
 		cwd
 		xor	ax, dx
 		sub	ax, dx
 		mov	[bp+var_8], ax
-		; Hack (fild [bp+var_8])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0f8h
-		; Hack (fcomp flt_35FA6)
-		db 0cdh
-		db 034h
-		db 01eh
-		db 006h
-		db 016h
-		; Hack (fnstsw [bp+var_8])
-		db 0cdh
-		db 039h
-		db 07eh
-		db 0f8h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fild	[bp+var_8]
+		fcomp	flt_35FA6
+		fstsw	[bp+var_8]
+		fwait
 		mov	ax, [bp+var_8]
 		sahf
 		jnb	short loc_2B60C
@@ -31917,61 +30386,23 @@ loc_2C2F2:
 		call	sub_28852
 		push	1
 		call	sub_28F11
-		; Hack (fld flt_35F66)
-		db 0cdh
-		db 035h
-		db 006h
-		db 0c6h
-		db 015h
+		fld	flt_35F66
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
@@ -32007,59 +30438,23 @@ loc_2C3BE:
 		inc	word_3B433
 		call	sub_28EA6
 		call	sub_28FC5
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
+		fldz
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		cmp	word_35E95, 0
 		jnz	short loc_2C40D
@@ -32375,59 +30770,23 @@ loc_2C6F2:
 		call	sub_28FC5
 		push	1
 		call	sub_29D8B
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
+		fldz
 		sub	sp, 8
-		; Hack (fstp [bp+var_12])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0eeh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_12]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_1A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0e6h
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_1A]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_22])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0deh
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_22]
+		fldz
+		fwait
 		sub	sp, 8
-		; Hack (fstp [bp+var_2A])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0d6h
+		fstp	[bp+var_2A]
 		push	0		; char
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fwait
 		call	sub_289D0
 		cmp	word_35E95, 0
 		jnz	short loc_2C751
@@ -32582,21 +30941,9 @@ loc_2C8AE:
 		mov	word_36C28, 258h
 		mov	word_36C2A, 118h
 		mov	word_36C26, 130h
-		; Hack (fld dbl_35FAA)
-		db 0cdh
-		db 039h
-		db 006h
-		db 00ah
-		db 016h
-		; Hack (fstp dbl_34A9C)
-		db 0cdh
-		db 039h
-		db 01eh
-		db 0fch
-		db 000h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fld	dbl_35FAA
+		fstp	dbl_34A9C
+		fwait
 		mov	word_36C2C, 0
 		mov	word_34A7C, 1
 		mov	byte_34A57, 0
@@ -38550,19 +36897,10 @@ loc_2FECD:
 
 loc_2FEE6:
 		push	2		; int
-		; Hack (fldz)
-		db 0cdh
-		db 035h
-		db 0eeh
+		fldz
 		sub	sp, 8
-		; Hack (fstp [bp+var_E])
-		db 0cdh
-		db 039h
-		db 05eh
-		db 0f2h
-		; Hack (wait)
-		db 0cdh
-		db 03dh
+		fstp	[bp+var_E]
+		fwait
 		call	sub_C62D
 		add	sp, 0Ah
 		les	bx, [bp+arg_0]
@@ -40521,33 +38859,15 @@ loc_30E63:
 		mov	bx, word_3B530
 		mov	ax, [bx+12h]
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fdiv flt_3624F)
-		db 0cdh
-		db 034h
-		db 036h
-		db 0afh
-		db 018h
+		fild	[bp+var_2]
+		fdiv	flt_3624F
 		call	ftol@
 		mov	bx, word_3B530
 		mov	[bx+12h], ax
 		mov	ax, [bx+10h]
 		mov	[bp+var_2], ax
-		; Hack (fild [bp+var_2])
-		db 0cdh
-		db 03bh
-		db 046h
-		db 0feh
-		; Hack (fdiv flt_3624F)
-		db 0cdh
-		db 034h
-		db 036h
-		db 0afh
-		db 018h
+		fild	[bp+var_2]
+		fdiv	flt_3624F
 		call	ftol@
 		mov	bx, word_3B530
 		mov	[bx+10h], ax
