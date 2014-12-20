@@ -17,6 +17,7 @@ include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc
 include libs/master.lib/pf.inc
 include libs/master.lib/clip.inc
+include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
 include th02/formats/pi_slots.inc
 

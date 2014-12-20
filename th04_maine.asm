@@ -4721,7 +4721,7 @@ loc_C68A:
 		add	ax, 3FC6h
 		push	ds
 		push	ax
-		push	41h ; 'A'
+		push	TX_RED
 		call	gaiji_putsa
 		mov	al, [bp+arg_0]
 		mov	ah, 0
@@ -4737,7 +4737,7 @@ loc_C68A:
 		mov	al, [bx+3FC6h]
 		mov	ah, 0
 		push	ax
-		push	45h ; 'E'
+		push	TX_RED + TX_REVERSE
 		call	gaiji_putca
 		pop	di
 		pop	si
@@ -4835,7 +4835,7 @@ loc_C787:
 		add	ax, 3FC6h
 		push	ds
 		push	ax
-		push	41h ; 'A'
+		push	TX_RED
 		call	gaiji_putsa
 
 loc_C7AB:
@@ -5091,10 +5091,10 @@ loc_C990:
 loc_C997:
 		mov	ax, [bp+var_8]
 		add	ax, ax
-		add	ax, 17h
+		add	ax, 23
 		push	ax
 		mov	ax, [bp+var_6]
-		add	ax, 12h
+		add	ax, 18
 		push	ax
 		mov	bx, [bp+var_6]
 		imul	bx, 11h
@@ -5102,7 +5102,7 @@ loc_C997:
 		mov	al, [bx+82Ch]
 		mov	ah, 0
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		inc	[bp+var_8]
 
@@ -5114,11 +5114,11 @@ loc_C9C2:
 loc_C9CB:
 		cmp	[bp+var_6], 3
 		jl	short loc_C990
-		push	170012h
+		push	(23 shl 16) + 18
 		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
-		push	85h ; 'ÅE
+		push	TX_GREEN + TX_REVERSE
 		call	gaiji_putca
 		xor	di, di
 		mov	[bp+var_2], 0
@@ -5133,7 +5133,7 @@ loc_C9F6:
 		jz	short loc_CA6A
 		push	di
 		push	[bp+var_2]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_C7E3
 		test	byte ptr word_10072, 1
 		jz	short loc_CA1E
@@ -5181,7 +5181,7 @@ loc_CA59:
 loc_CA60:
 		push	di
 		push	[bp+var_2]
-		push	85h ; 'ÅE
+		push	TX_GREEN + TX_REVERSE
 		call	sub_C7E3
 
 loc_CA6A:
@@ -5237,13 +5237,13 @@ loc_CABD:
 		jnz	short loc_CAEF
 		push	di
 		push	[bp+var_2]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_C7E3
 		mov	di, 10h
 		mov	[bp+var_2], 2
 		push	di
 		push	[bp+var_2]
-		push	85h ; 'ÅE
+		push	TX_GREEN + TX_REVERSE
 		call	sub_C7E3
 
 loc_CAEF:

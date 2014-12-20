@@ -4035,17 +4035,13 @@ loc_B9C9:
 loc_BA03:
 		cmp	[bp+var_B], 0
 		jz	short loc_BA18
-		push	si
-		push	[bp+arg_6]
-		push	[bp+var_2]
-		push	[bp+arg_0]
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, [bp+arg_6], [bp+var_2], [bp+arg_0]
 
 loc_BA18:
 		add	si, 2
 
 loc_BA1B:
-		cmp	si, 2Ah	; '*'
+		cmp	si, 42
 		jl	short loc_B9C9
 		pop	si
 		leave
@@ -4065,27 +4061,11 @@ arg_0		= word ptr  4
 		enter	2, 0
 		push	si
 		push	di
-		mov	di, 0E1h
-		push	140002h
-		push	ds
-		push	offset gHI_SCORE
-		push	81h
-		call	gaiji_putsa
-		push	0C0004h
-		push	ds
-		push	offset gNAME
-		push	81h
-		call	gaiji_putsa
-		push	1C0004h
-		push	ds
-		push	offset gPOINT
-		push	81h
-		call	gaiji_putsa
-		push	2A0004h
-		push	ds
-		push	offset gST
-		push	81h
-		call	gaiji_putsa
+		mov	di, TX_WHITE
+		call	gaiji_putsa pascal, (20 shl 16) + 2, ds, offset gHI_SCORE, TX_GREEN
+		call	gaiji_putsa pascal, (12 shl 16) + 4, ds, offset gNAME, TX_GREEN
+		call	gaiji_putsa pascal, (28 shl 16) + 4, ds, offset gPOINT, TX_GREEN
+		call	gaiji_putsa pascal, (42 shl 16) + 4, ds, offset gST, TX_GREEN
 		cmp	[bp+arg_0], 0FFFFh
 		jz	short loc_BACE
 		xor	si, si
@@ -4110,7 +4090,7 @@ loc_BA87:
 		mov	al, gALPHABET[bx]
 		mov	ah, 0
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		inc	[bp+var_2]
 
@@ -4122,11 +4102,11 @@ loc_BAAE:
 loc_BAB5:
 		cmp	si, 3
 		jl	short loc_BA80
-		push	0A0012h
+		push	(10 shl 16) + 18
 		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	gaiji_putca
 
 loc_BACE:
@@ -4137,15 +4117,15 @@ loc_BACE:
 loc_BAD2:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_BADC
-		mov	di, 81h
+		mov	di, TX_GREEN
 		jmp	short loc_BADF
 ; ---------------------------------------------------------------------------
 
 loc_BADC:
-		mov	di, 0E1h
+		mov	di, TX_WHITE
 
 loc_BADF:
-		push	0Ah
+		push	10
 		lea	ax, [si+6]
 		push	ax
 		mov	ax, si
@@ -4164,7 +4144,7 @@ loc_BADF:
 		call	sub_B9B3
 		cmp	byte ptr [si+2C0Bh], 7Fh
 		jz	short loc_BB21
-		push	2Ch ; ','
+		push	44
 		lea	ax, [si+6]
 		push	ax
 		mov	al, [si+2C0Bh]
@@ -4175,7 +4155,7 @@ loc_BADF:
 ; ---------------------------------------------------------------------------
 
 loc_BB21:
-		push	2Ch ; ','
+		push	44
 		lea	ax, [si+6]
 		push	ax
 		push	0F0h
@@ -4195,12 +4175,12 @@ loc_BB31:
 loc_BB3A:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_BB44
-		mov	di, 81h
+		mov	di, TX_GREEN
 		jmp	short loc_BB47
 ; ---------------------------------------------------------------------------
 
 loc_BB44:
-		mov	di, 0E1h
+		mov	di, TX_WHITE
 
 loc_BB47:
 		cmp	si, 9
@@ -4214,11 +4194,11 @@ loc_BB47:
 ; ---------------------------------------------------------------------------
 
 loc_BB59:
-		push	4000Fh
+		push	(4 shl 16) + 15
 		push	0A1h ; '｡'
 		push	di
 		call	gaiji_putca
-		push	6000Fh
+		push	(6 shl 16) + 15
 		push	0A0h
 
 loc_BB71:
@@ -4295,7 +4275,7 @@ arg_2		= word ptr  6
 		add	ax, 2BC4h
 		push	ds
 		push	ax
-		push	81h
+		push	TX_GREEN
 		call	gaiji_putsa
 		mov	ax, di
 		add	ax, ax
@@ -4308,7 +4288,7 @@ arg_2		= word ptr  6
 		mov	al, [bx+di+2BC4h]
 		mov	ah, 0
 		push	ax
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	gaiji_putca
 		pop	di
 		pop	si
@@ -4547,7 +4527,7 @@ loc_BE0E:
 		jz	short loc_BE44
 		push	di
 		push	[bp+var_8]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_BB83
 		dec	[bp+var_8]
 		cmp	[bp+var_8], 0
@@ -4557,7 +4537,7 @@ loc_BE0E:
 loc_BE3A:
 		push	di
 		push	[bp+var_8]
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BB83
 
 loc_BE44:
@@ -4565,7 +4545,7 @@ loc_BE44:
 		jz	short loc_BE6D
 		push	di
 		push	[bp+var_8]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_BB83
 		inc	[bp+var_8]
 		cmp	[bp+var_8], 2
@@ -4575,7 +4555,7 @@ loc_BE44:
 loc_BE63:
 		push	di
 		push	[bp+var_8]
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BB83
 
 loc_BE6D:
@@ -4583,7 +4563,7 @@ loc_BE6D:
 		jz	short loc_BE90
 		push	di
 		push	[bp+var_8]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_BB83
 		dec	di
 		or	di, di
@@ -4593,7 +4573,7 @@ loc_BE6D:
 loc_BE86:
 		push	di
 		push	[bp+var_8]
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BB83
 
 loc_BE90:
@@ -4601,7 +4581,7 @@ loc_BE90:
 		jz	short loc_BEB3
 		push	di
 		push	[bp+var_8]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_BB83
 		inc	di
 		cmp	di, 10h
@@ -4611,7 +4591,7 @@ loc_BE90:
 loc_BEA9:
 		push	di
 		push	[bp+var_8]
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BB83
 
 loc_BEB3:
@@ -4637,13 +4617,13 @@ loc_BECE:
 		jnz	short loc_BF03
 		push	di
 		push	[bp+var_8]
-		push	0E1h
+		push	TX_WHITE
 		call	sub_BB83
 		mov	di, 10h
 		mov	[bp+var_8], 2
 		push	di
 		push	[bp+var_8]
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BB83
 
 loc_BF03:

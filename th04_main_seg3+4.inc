@@ -18845,12 +18845,12 @@ loc_1D4EA:
 		mov	[bp+var_4], al
 		mov	[bp+var_3], 0A0h
 		mov	[bp+var_2], 0
-		push	22h ; '"'
+		push	34
 		push	[bp+arg_4]
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
 		pop	di
 		pop	si
@@ -18925,7 +18925,7 @@ loc_1D565:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
 		pop	di
 		pop	si
@@ -18962,12 +18962,12 @@ arg_8		= word ptr  0Ch
 		mov	es:[bx], eax
 		cmp	si, 0Ah
 		jge	short loc_1D5C8
-		mov	ax, 41h	; 'A'
+		mov	ax, TX_RED
 		jmp	short loc_1D5CB
 ; ---------------------------------------------------------------------------
 
 loc_1D5C8:
-		mov	ax, 81h
+		mov	ax, TX_GREEN
 
 loc_1D5CB:
 		mov	[bp+var_2], ax
@@ -19125,46 +19125,14 @@ var_4		= dword	ptr -4
 		push	si
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
-		push	140004h
-		push	ds
-		push	offset gpCLEAR_BONUS
-		push	0E1h
-		call	gaiji_putsa
-		push	60007h
-		push	ds
-		push	offset aVrvsvVfvdb@vav
-		push	0E1h
-		call	text_putsa
-		push	60009h
-		push	ds
-		push	offset aVovnvvvdvqb@bB
-		push	0E1h
-		call	text_putsa
-		push	6000Bh
-		push	ds
-		push	offset aVcvqvdvVlb@vav
-		push	0E1h
-		call	text_putsa
-		push	6000Dh
-		push	ds
-		push	offset aGjgxgkterfb@bB
-		push	0E1h
-		call	text_putsa
-		push	60010h
-		push	ds
-		push	offset aVovnvhvmvsb@va
-		push	0E1h
-		call	text_putsa
-		push	60015h
-		push	ds
-		push	offset aB@b@b@vsvnvsvV
-		push	0E1h
-		call	text_putsa
-		push	60016h
-		push	ds
-		push	offset aB@b@b@b@b@vavp
-		push	0C3h
-		call	text_putsa
+		call	gaiji_putsa pascal, (20 shl 16) + 4, ds, offset gpCLEAR_BONUS, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 7, ds, offset aBONUS_STAGE, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 9, ds, offset aPOWERX50, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 11, ds, offset aBONUS_DREAM, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 13, ds, offset aGRAZEX50, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 16, ds, offset aBONUS_POINT, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 21, ds, offset aBONUS_TOTAL, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 22, ds, offset aBOMB_EXTEND, TX_YELLOW + TX_BLINK
 		les	bx, dword_2CDC6
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -19300,57 +19268,29 @@ var_4		= dword	ptr -4
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
 		mov	byte_22DA6, 0Ah
-		push	130004h
-		push	ds
-		push	offset gpCONGRATULATION
-		push	0E1h
-		call	gaiji_putsa
-		push	60006h
-		push	ds
-		push	offset aVVkvkb@vbvmvev
-		push	0E1h
-		call	text_putsa
-		push	60008h
-		push	ds
-		push	offset aVovnvvvdvqb@_0
-		push	0E1h
-		call	text_putsa
-		push	6000Ah
-		push	ds
-		push	offset aVcvqvdvVlb@v_0
-		push	0E1h
-		call	text_putsa
-		push	6000Ch
-		push	ds
-		push	offset aGjgxgkterfb@_0
-		push	0E1h
-		call	text_putsa
+		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 6, ds, offset aALL_CLEAR, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 8, ds, offset aPOWERX50_2, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 10, ds, offset aBONUS_DREAM_2, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 12, ds, offset aGRAZEX50_2, TX_WHITE
 		cmp	byte_25688, 4
 		jz	short loc_1D918
-		push	6000Eh
+		push	(6 shl 16) + 14
 		push	ds
-		push	offset aOcvsrlrfb@bVpv
+		push	offset aPLAYER_REM_10000
 		jmp	short loc_1D922
 ; ---------------------------------------------------------------------------
 
 loc_1D918:
-		push	6000Eh
+		push	(6 shl 16) + 14
 		push	ds
-		push	offset aOcvsrlrfb@bVrv
+		push	offset aPLAYER_REM_30000
 
 loc_1D922:
-		push	0E1h
+		push	TX_WHITE
 		call	text_putsa
-		push	60011h
-		push	ds
-		push	offset aVovnvhvmvsb@_0
-		push	0E1h
-		call	text_putsa
-		push	60015h
-		push	ds
-		push	offset aB@b@b@vsvnvs_0
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 17, ds, offset aBONUS_POINT_2, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 21, ds, offset aBONUS_TOTAL_2, TX_WHITE
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax

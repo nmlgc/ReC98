@@ -23918,8 +23918,7 @@ sub_2869E	proc far
 		mov	bp, sp
 		push	si
 		mov	byte_360CC, 1
-		push	200005h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		push	ds
 		push	offset aBoss6_l_grp ; "boss6_l.grp"
 		call	sub_10BAE
@@ -23940,8 +23939,7 @@ sub_2869E	proc far
 		call	sub_12559
 		add	sp, 16h
 		call	sub_12569
-		push	2000E1h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
 		mov	si, 18Fh
 		jmp	short loc_2871C
 ; ---------------------------------------------------------------------------
@@ -31637,8 +31635,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	byte_360CC, 1
-		push	200005h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		push	ds
 		push	offset aBoss7_d1_grp ; "boss7_d1.grp"
 		call	sub_10BAE
@@ -31688,8 +31685,7 @@ loc_2CF26:
 		push	ds
 		push	offset unk_35090
 		call	sub_EB10
-		push	2000E1h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
 		mov	word_39854, 1
 		push	0
 		push	ds

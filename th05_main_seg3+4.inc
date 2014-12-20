@@ -2613,12 +2613,12 @@ arg_8		= word ptr  0Ch
 		mov	es:[bx], eax
 		cmp	si, 0Ah
 		jge	short loc_16418
-		mov	ax, 41h	; 'A'
+		mov	ax, TX_RED
 		jmp	short loc_1641B
 ; ---------------------------------------------------------------------------
 
 loc_16418:
-		mov	ax, 81h
+		mov	ax, TX_GREEN
 
 loc_1641B:
 		mov	[bp+var_2], ax
@@ -2811,54 +2811,22 @@ loc_1654F:
 		mov	byte_22275, al
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
-		push	140004h
-		push	ds
-		push	offset gpCLEAR_BONUS
-		push	0E1h
-		call	gaiji_putsa
-		push	60008h
-		push	ds
-		push	BONUS_STAGE
-		push	0E1h
-		call	text_putsa
-		push	6000Ah
-		push	ds
-		push	BONUS_DREAM
-		push	0E1h
-		call	text_putsa
-		push	6000Ch
-		push	ds
-		push	GRAZEX50
-		push	0E1h
-		call	text_putsa
-		push	6000Eh
-		push	ds
-		push	POINT_ITEMS
-		push	0E1h
-		call	text_putsa
+		call	gaiji_putsa pascal, (20 shl 16) + 4, ds, offset gpCLEAR_BONUS, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 8, ds, BONUS_STAGE, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 10, ds, BONUS_DREAM, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 12, ds, GRAZEX50, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 14, ds, POINT_ITEMS, TX_WHITE
 		cmp	[bp+var_5], 0
 		jz	short loc_165DF
-		push	60010h
-		push	ds
-		push	BONUS_NOMISS
-		push	0A1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 16, ds, BONUS_NOMISS, TX_CYAN
 
 loc_165DF:
 		cmp	[bp+var_6], 0
 		jz	short loc_165F8
-		push	60011h
-		push	ds
-		push	BONUS_NOBOMB
-		push	0A1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 17, ds, BONUS_NOBOMB, TX_CYAN
 
 loc_165F8:
-		push	60015h
-		push	ds
-		push	BONUS_TOTAL
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
 		mov	al, byte_25FEA
 		mov	ah, 0
 		imul	ax, 64h
@@ -3020,64 +2988,24 @@ loc_1677D:
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
 		mov	byte_226C4, 0Ah
-		push	130004h
-		push	ds
-		push	offset gpCONGRATULATION
-		push	0E1h
-		call	gaiji_putsa
-		push	60006h
-		push	ds
-		push	ALL_CLEAR
-		push	0E1h
-		call	text_putsa
-		push	60008h
-		push	ds
-		push	BONUS_DREAM
-		push	0E1h
-		call	text_putsa
-		push	6000Ah
-		push	ds
-		push	GRAZEX50
-		push	0E1h
-		call	text_putsa
-		push	6000Ch
-		push	ds
-		push	PLAYER_REM
-		push	0E1h
-		call	text_putsa
-		push	6000Eh
-		push	ds
-		push	POINT_ITEMS
-		push	0E1h
-		call	text_putsa
+		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 6, ds, ALL_CLEAR, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 8, ds, BONUS_DREAM, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 10, ds, GRAZEX50, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 12, ds, PLAYER_REM, TX_WHITE
+		call	text_putsa pascal, (6 shl 16) + 14, ds, POINT_ITEMS, TX_WHITE
 		cmp	[bp+var_9], 0
 		jz	short loc_16825
-		push	60010h
-		push	ds
-		push	BONUS_NOMISS
-		push	0A1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 16, ds, BONUS_NOMISS, TX_CYAN
 
 loc_16825:
 		cmp	[bp+var_A], 0
 		jz	short loc_1683E
-		push	60011h
-		push	ds
-		push	BONUS_NOBOMB
-		push	0A1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 17, ds, BONUS_NOBOMB, TX_CYAN
 
 loc_1683E:
-		push	60012h
-		push	ds
-		push	POINT_TOTAL
-		push	0A1h
-		call	text_putsa
-		push	60015h
-		push	ds
-		push	BONUS_TOTAL
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (6 shl 16) + 18, ds, POINT_TOTAL, TX_CYAN
+		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax
@@ -20009,7 +19937,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	edx, [bp+arg_0]
 		mov	di, 1FC6h
-		mov	ax, 0E1h
+		mov	ax, TX_WHITE
 		mov	byte ptr dword_229AA+3,	0A0h
 		mov	bx, 1FA0h
 		mov	cx, 6

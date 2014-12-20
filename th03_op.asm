@@ -1001,7 +1001,7 @@ arg_2		= word ptr  6
 		mov	di, [bp+arg_0]
 		or	si, si
 		jnz	short loc_9EF8
-		push	190011h
+		push	(25 shl 16) + 17
 		push	ds
 		push	offset gpSTART
 		jmp	short loc_9F4B
@@ -1010,7 +1010,7 @@ arg_2		= word ptr  6
 loc_9EF8:
 		cmp	si, 1
 		jnz	short loc_9F09
-		push	170012h
+		push	(23 shl 16) + 18
 		push	ds
 		push	offset gpVS_START
 		jmp	short loc_9F4B
@@ -1019,7 +1019,7 @@ loc_9EF8:
 loc_9F09:
 		cmp	si, 2
 		jnz	short loc_9F1A
-		push	160013h
+		push	(22 shl 16) + 19
 		push	ds
 		push	offset gpMUSIC_ROOM
 		jmp	short loc_9F4B
@@ -1028,7 +1028,7 @@ loc_9F09:
 loc_9F1A:
 		cmp	si, 3
 		jnz	short loc_9F2B
-		push	180014h
+		push	(24 shl 16) + 20
 		push	ds
 		push	offset gpHISCORE
 		jmp	short loc_9F4B
@@ -1037,7 +1037,7 @@ loc_9F1A:
 loc_9F2B:
 		cmp	si, 4
 		jnz	short loc_9F3C
-		push	190015h
+		push	(25 shl 16) + 21
 		push	ds
 		push	offset gpOPTION
 		jmp	short loc_9F4B
@@ -1046,7 +1046,7 @@ loc_9F2B:
 loc_9F3C:
 		cmp	si, 5
 		jnz	short loc_9F51
-		push	1A0016h
+		push	(26 shl 16) + 22
 		push	ds
 		push	offset gpQUIT
 
@@ -1079,16 +1079,8 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_0]
 		or	di, di
 		jnz	short loc_9FD6
-		push	190011h
-		push	ds
-		push	offset gpRANK
-		push	si
-		call	gaiji_putsa
-		push	250011h
-		push	ds
-		push	offset asc_D965	; "	   "
-		push	0E1h
-		call	text_putsa
+		call	gaiji_putsa pascal, (25 shl 16) + 17, ds offset gpRANK, si
+		call	text_putsa pascal, (37 shl 16) + 17, ds, offset asc_D965, TX_WHITE
 		les	bx, dword_FC54
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
@@ -1099,28 +1091,28 @@ arg_2		= word ptr  6
 		jmp	cs:off_A099[bx]
 
 loc_9FA2:
-		push	260011h
+		push	(38 shl 16) + 17
 		push	ds
 		push	offset gpEASY
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FAF:
-		push	250011h
+		push	(37 shl 16) + 17
 		push	ds
 		push	offset gpNORMAL
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FBC:
-		push	260011h
+		push	(38 shl 16) + 17
 		push	ds
 		push	offset gpHARD
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_9FC9:
-		push	250011h
+		push	(37 shl 16) + 17
 		push	ds
 		push	offset gpLUNATIC
 		jmp	loc_A08C
@@ -1129,11 +1121,7 @@ loc_9FC9:
 loc_9FD6:
 		cmp	di, 1
 		jnz	short loc_A02A
-		push	190013h
-		push	ds
-		push	offset gpMUSIC
-		push	si
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (25 shl 16) + 19, ds, offset gpMUSIC, si
 		les	bx, dword_FC54
 		mov	al, es:[bx+15h]
 		mov	ah, 0
@@ -1147,21 +1135,21 @@ loc_9FD6:
 ; ---------------------------------------------------------------------------
 
 loc_A006:
-		push	230013h
+		push	(35 shl 16) + 19
 		push	ds
 		push	offset gpOFF
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A012:
-		push	230013h
+		push	(35 shl 16) + 19
 		push	ds
 		push	offset gpFM_86
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A01E:
-		push	230013h
+		push	(35 shl 16) + 19
 		push	ds
 		push	offset gpMIDI_SC88
 		jmp	short loc_A08C
@@ -1170,11 +1158,7 @@ loc_A01E:
 loc_A02A:
 		cmp	di, 2
 		jnz	short loc_A07D
-		push	170015h
-		push	ds
-		push	offset gpKEYCONFIG
-		push	si
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (23 shl 16) + 21, ds, offset gpKEYCONFIG, si
 		les	bx, dword_FC54
 		mov	al, es:[bx+16h]
 		mov	ah, 0
@@ -1188,21 +1172,21 @@ loc_A02A:
 ; ---------------------------------------------------------------------------
 
 loc_A059:
-		push	250015h
+		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpKEY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A065:
-		push	250015h
+		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpJOY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
 loc_A071:
-		push	250015h
+		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpKEY_VS_JOY
 		jmp	short loc_A08C
@@ -1211,7 +1195,7 @@ loc_A071:
 loc_A07D:
 		cmp	di, 3
 		jnz	short loc_A092
-		push	200016h
+		push	(32 shl 16) + 22
 		push	ds
 		push	offset gpQUIT
 
@@ -1446,12 +1430,12 @@ loc_A21F:
 		cbw
 		cmp	ax, si
 		jnz	short loc_A22D
-		mov	ax, 0E1h
+		mov	ax, TX_WHITE
 		jmp	short loc_A230
 ; ---------------------------------------------------------------------------
 
 loc_A22D:
-		mov	ax, 1
+		mov	ax, TX_BLACK
 
 loc_A230:
 		push	ax

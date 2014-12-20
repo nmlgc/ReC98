@@ -782,8 +782,7 @@ var_2		= word ptr -2
 		les	bx, dword_1F2F0
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
-		push	200005h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		push	0
 		call	graph_copy_page
 		call	sub_13CDD
@@ -3312,16 +3311,9 @@ sub_B80B	endp
 sub_B8F7	proc far
 		push	bp
 		mov	bp, sp
-		push	200005h
-		call	text_fillca
-		push	20001h
-		push	250018h
-		push	0E1h
-		call	text_boxfilla
-		push	2A0001h
-		push	4D0018h
-		push	0E1h
-		call	text_boxfilla
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
+		call	text_boxfilla pascal, (2 shl 16) + 1, (37 shl 16) + 24, TX_WHITE
+		call	text_boxfilla pascal, (42 shl 16) + 1, (77 shl 16) + 24, TX_WHITE
 		pop	bp
 		retf
 sub_B8F7	endp
@@ -3379,7 +3371,7 @@ loc_B970:
 		push	6
 
 loc_B976:
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		add	si, 2
 		add	di, 2
@@ -3391,10 +3383,7 @@ loc_B984:
 ; ---------------------------------------------------------------------------
 
 loc_B98B:
-		push	si
-		push	[bp+var_4]
-		push	400E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, [bp+var_4], (4 shl 16) + TX_WHITE
 		add	si, 2
 		add	di, 2
 
@@ -3447,20 +3436,14 @@ loc_B9CB:
 ; ---------------------------------------------------------------------------
 
 loc_B9E5:
-		push	si
-		push	[bp+var_4]
-		push	700E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, [bp+var_4], (7 shl 16) + TX_WHITE
 		add	si, [bp+var_6]
 		inc	di
 
 loc_B9F8:
 		cmp	di, [bp+var_2]
 		jl	short loc_B9E5
-		push	si
-		push	[bp+var_4]
-		push	0CF00E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, [bp+var_4], (0CFh shl 16) + TX_WHITE
 		pop	di
 		pop	si
 		leave
@@ -3502,10 +3485,7 @@ loc_BA28:
 ; ---------------------------------------------------------------------------
 
 loc_BA3D:
-		push	si
-		push	10009h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, (1 shl 16) + 9, TX_WHITE
 		add	si, 2
 		inc	di
 
@@ -3541,10 +3521,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_BA75:
-		push	di
-		push	20002h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, di, (2 shl 16) + 2, TX_WHITE
 		sub	di, 2
 		inc	si
 
@@ -3581,10 +3558,10 @@ loc_BAA2:
 		mov	ah, 0
 		mov	si, ax
 		push	di
-		push	18h
+		push	24
 		add	ax, 1Fh
 		push	ax
-		push	81h
+		push	TX_GREEN
 		call	gaiji_putca
 		add	di, 22h	; '"'
 		mov	al, byte_1F39E
@@ -3596,10 +3573,10 @@ loc_BAA2:
 
 loc_BACC:
 		push	di
-		push	18h
+		push	24
 		lea	ax, [si+20h]
 		push	ax
-		push	41h ; 'A'
+		push	TX_RED
 		call	gaiji_putca
 		pop	di
 		pop	si
@@ -5743,43 +5720,18 @@ arg_2		= byte ptr  6
 		add	si, 28h	; '('
 
 loc_CADF:
-		push	si
-		push	0Bh
-		push	ds
-		push	offset gbWARNING_1
-		push	di
-		call	gaiji_putsa
-		push	si
-		push	0Ch
-		push	ds
-		push	offset gbWARNING_2
-		push	di
-		call	gaiji_putsa
-		push	si
-		push	0Dh
-		push	ds
-		push	offset gbWARNING_3
-		push	di
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, si, 11, ds, offset gbWARNING_1, di
+		call	gaiji_putsa pascal, si, 12, ds, offset gbWARNING_2, di
+		call	gaiji_putsa pascal, si, 13, ds, offset gbWARNING_3, di
 		add	si, 4
-		push	si
-		push	0Eh
-		push	ds
-		push	offset gpYOU_ARE_FORCED_TO_EVADE_FROM
-		push	di
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, si, 14, ds, offset gpYOU_ARE_FORCED_TO_EVADE_FROM, di
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+393Ch], 5
 		jz	short loc_CB47
 		lea	ax, [si+2]
-		push	ax
-		push	0Fh
-		push	ds
-		push	offset gpGAUGE_ATTACK_LEVEL
-		push	di
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, ax, 15, ds, offset gpGAUGE_ATTACK_LEVEL, di
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
@@ -5792,12 +5744,7 @@ loc_CADF:
 
 loc_CB47:
 		lea	ax, [si+2]
-		push	ax
-		push	0Fh
-		push	ds
-		push	offset gpBOSS_ATTACK_LEVEL
-		push	di
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, ax, 15, ds, offset gpBOSS_ATTACK_LEVEL, di
 		lea	ax, [si+13h]
 		push	ax
 		push	0Fh
@@ -5807,14 +5754,9 @@ loc_CB60:
 		mov	ah, 0
 		add	ax, 1Fh
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
-		push	si
-		push	10h
-		push	ds
-		push	offset gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL
-		push	di
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, si, 16, ds, offset gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL, di
 		pop	di
 		pop	si
 		pop	bp
@@ -5977,12 +5919,7 @@ loc_CCB5:
 ; ---------------------------------------------------------------------------
 
 loc_CCBC:
-		push	[bp+var_3+1]
-		push	si
-		push	ds
-		push	offset asc_1DD5A ; "				    "
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, [bp+var_3+1], si, ds, offset asc_1DD5A, TX_WHITE
 		inc	di
 		inc	si
 
@@ -9061,7 +8998,7 @@ arg_4		= word ptr  8
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		mov	bx, 64h	; 'd'
 		mov	ax, si
@@ -9084,7 +9021,7 @@ loc_E39F:
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		mov	bx, 0Ah
 		mov	ax, si
@@ -9103,7 +9040,7 @@ loc_E3CE:
 		push	ax
 		lea	ax, [si+0A0h]
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		pop	di
 		pop	si
@@ -9139,66 +9076,31 @@ loc_E411:
 		and	ax, 7
 		cmp	ax, 1
 		jnz	loc_E602
-		push	si
-		push	8
-		push	ds
-		push	offset aVlvVwb@vbvpvnv ; "ＭＡＸ　Ｃｏｍｂｏ　　　×"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	0Ah
-		push	ds
-		push	offset aGqbGwgagGbgni ;	"ゲージアタック回数　　　×"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	0Ch
-		push	ds
-		push	offset aGGxgagGbgni ; "ボスアタック回数　　　　×"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	0Eh
-		push	ds
-		push	offset aGGxgkgobGtgli ;	"ボスリバーサル回数　　　×"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	10h
-		push	ds
-		push	offset aGGxgpgjgbgni ; "ボスパニック回数　　　　×"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	14h
-		push	ds
-		push	offset aB@b@b@vsvnvsvV ; "　　　ＴＯＴＡＬ　　　　　"
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, si, 8, ds, offset aMAX_COMBO, TX_WHITE
+		call	text_putsa pascal, si, 10, ds, offset aGAUGE_ATTACK_TIMES, TX_WHITE
+		call	text_putsa pascal, si, 12, ds, offset aBOSS_ATTACK_TIMES, TX_WHITE
+		call	text_putsa pascal, si, 14, ds, offset aBOSS_REVERSAL_TIMES, TX_WHITE
+		call	text_putsa pascal, si, 16, ds, offset aBOSS_PANIC_TIMES, TX_WHITE
+		call	text_putsa pascal, si, 20, ds, offset aTOTAL, TX_WHITE
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+33h], 8
 		jnb	short loc_E48C
 		push	si
 		push	6
 		push	ds
-		push	offset aB@b@vvvhvmvmvd ; "　　ＷＩＮＮＥＲ　ＢＯＮＵＳ　　"
+		push	offset aWINNER_BONUS
 		jmp	short loc_E4A2
 ; ---------------------------------------------------------------------------
 
 loc_E48C:
+		call	text_putsa pascal, si, 6, ds, offset aALL_CLEAR, TX_WHITE
 		push	si
-		push	6
+		push	18
 		push	ds
-		push	offset aB@b@b@vVkvkb@v ; "　　　ＡＬＬ　ＣＬＥＡＲ！！　　"
-		push	0E1h
-		call	text_putsa
-		push	si
-		push	12h
-		push	ds
-		push	offset aOcvsrlrfb@b@b@ ; "残り人数　　　　　　　　×"
+		push	offset aPLAYER_REM
 
 loc_E4A2:
-		push	0E1h
+		push	TX_WHITE
 		call	text_putsa
 		mov	ax, [bp+var_2]
 		shl	ax, 7
@@ -23733,22 +23635,12 @@ loc_15D64:
 		cmp	byte ptr [si], 50h ; 'P'
 		jnz	loc_15E09
 		mov	ax, [bp+var_3+1]
-		imul	ax, 28h
+		imul	ax, 40
 		mov	di, ax
 		add	ax, 8
-		push	ax
-		push	2
-		push	ds
-		push	offset gsHIT	; strp
-		push	0E1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, ax, 2, ds, offset gsHIT, TX_WHITE
 		lea	ax, [di+4]
-		push	ax
-		push	3
-		push	ds
-		push	offset gBONUS_FRAME	; strp
-		push	0E1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, ax, 3, ds, offset gBONUS_FRAME, TX_WHITE
 		mov	al, [si+1]
 		mov	[bp+var_4], al
 		cmp	[bp+var_4], 0Ah
@@ -23765,7 +23657,7 @@ loc_15D64:
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_4]
 		mov	ah, 0
@@ -23779,8 +23671,8 @@ loc_15D64:
 loc_15DDB:
 		lea	ax, [di+4]
 		push	ax
-		push	200CFh
-		push	0E1h
+		push	(2 shl 16) + 0CFh
+		push	TX_WHITE
 		call	gaiji_putca
 
 loc_15DED:
@@ -23793,7 +23685,7 @@ loc_15DED:
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 
 loc_15E09:
@@ -38343,15 +38235,15 @@ word_1DDAC	dw 2AB6h
 		db  0Fh
 		db    0
 		db    7
-aVlvVwb@vbvpvnv	db 'ＭＡＸ　Ｃｏｍｂｏ　　　×',0
-aGqbGwgagGbgni	db 'ゲージアタック回数　　　×',0
-aGGxgagGbgni	db 'ボスアタック回数　　　　×',0
-aGGxgkgobGtgli	db 'ボスリバーサル回数　　　×',0
-aGGxgpgjgbgni	db 'ボスパニック回数　　　　×',0
-aB@b@b@vsvnvsvV	db '　　　ＴＯＴＡＬ　　　　　',0
-aB@b@vvvhvmvmvd	db '　　ＷＩＮＮＥＲ　ＢＯＮＵＳ　　',0
-aB@b@b@vVkvkb@v	db '　　　ＡＬＬ　ＣＬＥＡＲ！！　　',0
-aOcvsrlrfb@b@b@	db '残り人数　　　　　　　　×',0
+aMAX_COMBO	db 'ＭＡＸ　Ｃｏｍｂｏ　　　×',0
+aGAUGE_ATTACK_TIMES	db 'ゲージアタック回数　　　×',0
+aBOSS_ATTACK_TIMES	db 'ボスアタック回数　　　　×',0
+aBOSS_REVERSAL_TIMES	db 'ボスリバーサル回数　　　×',0
+aBOSS_PANIC_TIMES	db 'ボスパニック回数　　　　×',0
+aTOTAL	db '　　　ＴＯＴＡＬ　　　　　',0
+aWINNER_BONUS	db '　　ＷＩＮＮＥＲ　ＢＯＮＵＳ　　',0
+aALL_CLEAR	db '　　　ＡＬＬ　ＣＬＥＡＲ！！　　',0
+aPLAYER_REM	db '残り人数　　　　　　　　×',0
 		db 0
 		db '<',0
 		db    0

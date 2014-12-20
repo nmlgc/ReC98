@@ -4231,10 +4231,10 @@ loc_C36F:
 loc_C376:
 		mov	ax, [bp+var_6]
 		add	ax, ax
-		add	ax, 17h
+		add	ax, 23
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 15h
+		add	ax, 21
 		push	ax
 		mov	bx, [bp+var_4]
 		imul	bx, 11h
@@ -4242,7 +4242,7 @@ loc_C376:
 		mov	al, [bx+14EEh]
 		mov	ah, 0
 		push	ax
-		push	0E1h ; '・
+		push	TX_WHITE
 		call	gaiji_putca
 		inc	[bp+var_6]
 
@@ -4254,11 +4254,11 @@ loc_C3A1:
 loc_C3AA:
 		cmp	[bp+var_4], 3
 		jl	short loc_C36F
-		push	170015h
+		push	(23 shl 16) + 21
 		mov	al, gALPHABET
 		mov	ah, 0
 		push	ax
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	gaiji_putca
 		xor	si, si
 		xor	di, di
@@ -4272,7 +4272,7 @@ loc_C3CD:
 		jz	short loc_C438
 		push	si
 		push	di
-		push	0E1h ; '・
+		push	TX_WHITE
 		call	sub_BCED
 		test	byte ptr word_12AFA, 1
 		jz	short loc_C3F1
@@ -4320,7 +4320,7 @@ loc_C422:
 loc_C429:
 		push	si
 		push	di
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BCED
 		push	1
 		call	sub_EAE0
@@ -4404,13 +4404,13 @@ loc_C4D4:
 		jnz	short loc_C50B
 		push	si
 		push	di
-		push	0E1h ; '・
+		push	TX_WHITE
 		call	sub_BCED
 		mov	si, 10h
 		mov	di, 2
 		push	si
 		push	di
-		push	85h ; '・
+		push	TX_GREEN + TX_REVERSE
 		call	sub_BCED
 
 loc_C50B:
@@ -7180,7 +7180,7 @@ loc_DCDD:
 		push	ss
 		lea	ax, [bp+var_2C]
 		push	ax
-		push	1
+		push	TX_BLACK
 		call	gaiji_putsa
 		inc	si
 		inc	di
@@ -7282,7 +7282,7 @@ loc_DD61:
 		push	ax
 		push	ds
 		push	offset unk_1184C
-		push	5
+		push	TX_BLACK + TX_REVERSE
 		call	text_putsa
 
 loc_DD9E:
@@ -7469,7 +7469,7 @@ loc_DED9:
 		push	ax
 		push	ds
 		push	offset unk_1184F
-		push	5
+		push	TX_BLACK + TX_REVERSE
 		call	text_putsa
 
 loc_DF16:

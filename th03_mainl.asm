@@ -1007,8 +1007,7 @@ loc_9C5E:
 		call	graph_clear
 		push	1
 		call	palette_white_in
-		push	200005h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	pi_slot_palette_apply pascal, 0
 		freePISlotLarge	0
 		call	respal_set_palettes

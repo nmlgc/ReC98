@@ -359,9 +359,7 @@ sub_9D0A	proc far
 		push	bp
 		mov	bp, sp
 		call	text_clear
-		push	20h ; ' '
-		push	5
-		call	text_fillca
+		call	text_fillca pascal, ' ', TX_BLACK + TX_REVERSE
 		pop	bp
 		retf
 sub_9D0A	endp
@@ -431,24 +429,16 @@ loc_9DC4:
 ; ---------------------------------------------------------------------------
 
 loc_9DC8:
-		mov	ax, 27h	; '''
+		mov	ax, 39
 		sub	ax, [bp+var_2]
-		push	ax
-		push	si
-		push	20h ; ' '
-		push	0E1h
-		call	text_putca
+		call	text_putca pascal, ax, si, ' ', TX_WHITE
 		mov	ax, [bp+var_2]
-		add	ax, 28h	; '('
-		push	ax
-		push	si
-		push	20h ; ' '
-		push	0E1h
-		call	text_putca
+		add	ax, 40
+		call	text_putca pascal, ax, si, ' ', TX_WHITE
 		inc	si
 
 loc_9DED:
-		cmp	si, 19h
+		cmp	si, 25
 		jl	short loc_9DC8
 		mov	ax, [bp+var_2]
 		add	ax, ax
@@ -829,8 +819,8 @@ arg_2		= word ptr  6
 		mov	di, [bp+arg_0]
 		or	si, si
 		jnz	short loc_A20E
-		push	23h ; '#'
-		push	10h
+		push	35
+		push	16
 		push	ds
 		push	offset gSTART
 		jmp	short loc_A248
@@ -839,8 +829,8 @@ arg_2		= word ptr  6
 loc_A20E:
 		cmp	si, 2
 		jnz	short loc_A21D
-		push	21h ; '!'
-		push	12h
+		push	33
+		push	18
 		push	ds
 		push	offset gHISCORE
 		jmp	short loc_A248
@@ -849,8 +839,8 @@ loc_A20E:
 loc_A21D:
 		cmp	si, 3
 		jnz	short loc_A22C
-		push	22h ; '"'
-		push	13h
+		push	34
+		push	19
 		push	ds
 		push	offset gOPTION
 		jmp	short loc_A248
@@ -859,8 +849,8 @@ loc_A21D:
 loc_A22C:
 		cmp	si, 4
 		jnz	short loc_A23B
-		push	1Eh
-		push	14h
+		push	30
+		push	20
 		push	ds
 		push	offset gMUSIC_MODE
 		jmp	short loc_A248
@@ -869,8 +859,8 @@ loc_A22C:
 loc_A23B:
 		cmp	si, 5
 		jnz	short loc_A24E
-		push	24h ; '$'
-		push	15h
+		push	36
+		push	21
 		push	ds
 		push	offset gQUIT
 
@@ -883,8 +873,8 @@ loc_A24E:
 		jnz	short loc_A274
 		cmp	byte_F4A2, 0
 		jz	short loc_A265
-		push	1Dh
-		push	11h
+		push	29
+		push	17
 		push	ds
 		push	offset gEXTRA_START
 		push	di
@@ -892,31 +882,26 @@ loc_A24E:
 ; ---------------------------------------------------------------------------
 
 loc_A265:
-		push	1Dh
-		push	11h
+		push	29
+		push	17
 		push	ds
 		push	offset gEXTRA_START
-		push	21h ; '!'
+		push	TX_BLUE
 
 loc_A26F:
 		call	gaiji_putsa
 
 loc_A274:
-		push	1Ah
-		push	17h
-		push	ds
-		push	offset gRANK
-		push	81h
-		call	gaiji_putsa
-		push	26h ; '&'
-		push	17h
+		call	gaiji_putsa pascal, 26, 23, ds, offset gRANK, TX_GREEN
+		push	38
+		push	23
 		push	ds
 		mov	al, byte_DC34
 		cbw
 		shl	ax, 3
 		add	ax, offset gcEASY
 		push	ax
-		push	81h
+		push	TX_GREEN
 		call	gaiji_putsa
 		pop	di
 		pop	si
@@ -938,9 +923,7 @@ arg_2		= byte ptr  6
 		mov	bp, sp
 		mov	al, byte_D6C0
 		cbw
-		push	ax
-		push	0C1h
-		call	fp_E902
+		call	fp_E902 pascal, ax, TX_YELLOW
 		mov	al, [bp+arg_0]
 		add	byte_D6C0, al
 		cmp	byte_D6C1, 0
@@ -1007,12 +990,12 @@ loc_A335:
 		cbw
 		cmp	ax, si
 		jnz	short loc_A343
-		mov	ax, 0E1h
+		mov	ax, TX_WHITE
 		jmp	short loc_A346
 ; ---------------------------------------------------------------------------
 
 loc_A343:
-		mov	ax, 0C1h
+		mov	ax, TX_YELLOW
 
 loc_A346:
 		push	ax
@@ -1233,14 +1216,14 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_0]
 		or	di, di
 		jnz	short loc_A568
-		push	18h
-		push	10h
+		push	24
+		push	16
 		push	ds
 		push	offset gRANK
 		push	si
 		call	gaiji_putsa
-		push	2Ah ; '*'
-		push	10h
+		push	42
+		push	16
 		push	ds
 		mov	al, byte_DC34
 		cbw
@@ -1268,14 +1251,9 @@ arg_2		= word ptr  6
 loc_A568:
 		cmp	di, 1
 		jnz	short loc_A5BE
-		push	18h
-		push	11h
-		push	ds
-		push	offset gMUSIC
-		push	si
-		call	gaiji_putsa
-		push	2Fh ; '/'
-		push	11h
+		call	gaiji_putsa pascal, 24, 17, ds, offset gMUSIC, si
+		push	47
+		push	17
 		push	ds
 		mov	al, snd_bgm_mode
 		cbw
@@ -1308,14 +1286,9 @@ loc_A5B3:
 loc_A5BE:
 		cmp	di, 2
 		jnz	short loc_A60A
-		push	18h
-		push	12h
-		push	ds
-		push	offset gPLAYER
-		push	si
-		call	gaiji_putsa
-		push	31h ; '1'
-		push	12h
+		call	gaiji_putsa pascal, 24, 18, ds, offset gPLAYER, si
+		push	49
+		push	18
 		mov	al, byte_F3E1
 		cbw
 		add	ax, 0A1h ; '｡'
@@ -1341,14 +1314,9 @@ loc_A5BE:
 loc_A60A:
 		cmp	di, 3
 		jnz	short loc_A656
-		push	18h
-		push	13h
-		push	ds
-		push	offset gBOMB
-		push	si
-		call	gaiji_putsa
-		push	31h ; '1'
-		push	13h
+		call	gaiji_putsa pascal, 24, 19, ds, offset gBOMB, si
+		push	49
+		push	19
 		mov	al, byte_F3E2
 		cbw
 		add	ax, 0A0h
@@ -1374,14 +1342,9 @@ loc_A60A:
 loc_A656:
 		cmp	di, 4
 		jnz	short loc_A6C7
-		push	18h
-		push	14h
-		push	word ptr PERF_TITLE+2
-		push	word ptr PERF_TITLE
-		push	si
-		call	text_putsa
-		push	2Dh ; '-'
-		push	14h
+		call	text_putsa pascal, 24, 20, word ptr PERF_TITLE+2, word ptr PERF_TITLE, si
+		push	45
+		push	20
 		les	bx, dword_F3DC
 		mov	al, es:[bx+24h]
 		mov	ah, 0
@@ -1414,8 +1377,8 @@ loc_A656:
 loc_A6C7:
 		cmp	di, 5
 		jnz	short loc_A6D6
-		push	23h ; '#'
-		push	15h
+		push	35
+		push	21
 		push	ds
 		push	offset gRESET
 		jmp	short loc_A6E3
@@ -1424,8 +1387,8 @@ loc_A6C7:
 loc_A6D6:
 		cmp	di, 6
 		jnz	short loc_A6E9
-		push	24h ; '$'
-		push	17h
+		push	36
+		push	23
 		push	ds
 		push	offset gQUIT
 
@@ -1518,12 +1481,12 @@ loc_A77E:
 		cbw
 		cmp	ax, si
 		jnz	short loc_A78C
-		mov	ax, 0E1h
+		mov	ax, TX_WHITE
 		jmp	short loc_A78F
 ; ---------------------------------------------------------------------------
 
 loc_A78C:
-		mov	ax, 0C1h
+		mov	ax, TX_YELLOW
 
 loc_A78F:
 		push	ax
@@ -1569,9 +1532,7 @@ loc_A7D1:
 loc_A7DB:
 		mov	al, byte_D6C0
 		cbw
-		push	ax
-		push	0C1h
-		call	sub_A510
+		call	sub_A510 pascal, ax, TX_YELLOW
 		mov	al, byte_D6C0
 		cbw
 		mov	bx, ax
@@ -1624,9 +1585,7 @@ loc_A843:
 loc_A851:
 		mov	al, byte_D6C0
 		cbw
-		push	ax
-		push	0E1h
-		call	sub_A510
+		call	sub_A510 pascal, ax, TX_WHITE
 
 loc_A85C:
 		test	byte ptr word_F3C8, 4
@@ -1637,9 +1596,7 @@ loc_A85C:
 loc_A866:
 		mov	al, byte_D6C0
 		cbw
-		push	ax
-		push	0C1h
-		call	sub_A510
+		call	sub_A510 pascal, ax, TX_YELLOW
 		mov	al, byte_D6C0
 		cbw
 		mov	bx, ax
@@ -1727,21 +1684,11 @@ loc_A908:
 		les	bx, dword_F3DC
 		mov	byte ptr es:[bx+22h], 1
 		mov	byte ptr es:[bx+24h], 0
-		push	0
-		push	0C1h
-		call	sub_A510
-		push	1
-		push	0C1h
-		call	sub_A510
-		push	2
-		push	0C1h
-		call	sub_A510
-		push	3
-		push	0C1h
-		call	sub_A510
-		push	4
-		push	0C1h
-		call	sub_A510
+		call	sub_A510 pascal, 0, TX_YELLOW
+		call	sub_A510 pascal, 1, TX_YELLOW
+		call	sub_A510 pascal, 2, TX_YELLOW
+		call	sub_A510 pascal, 3, TX_YELLOW
+		call	sub_A510 pascal, 4, TX_YELLOW
 		jmp	short loc_A97F
 ; ---------------------------------------------------------------------------
 
@@ -2962,11 +2909,7 @@ loc_B477:
 		mov	ax, si
 		add	ax, ax
 		add	ax, 1Ah
-		push	ax
-		push	[bp+arg_6]
-		push	di
-		push	[bp+arg_0]
-		call	gaiji_putca
+		call	gaiji_putca pascal, ax, [bp+arg_6], di, [bp+arg_0]
 
 loc_B491:
 		inc	si
@@ -2993,12 +2936,12 @@ arg_4		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		push	30h ; '0'
+		push	48
 		push	[bp+arg_4]
 		mov	bx, [bp+arg_2]
 		shl	bx, 2
-		push	word ptr [bx+676h]
-		push	word ptr [bx+674h]
+		push	word ptr (HISCORE_TYPE+2)[bx]
+		push	word ptr HISCORE_TYPE[bx]
 		push	[bp+arg_0]
 		call	text_putsa
 		pop	bp
@@ -3096,7 +3039,7 @@ arg_4		= word ptr  8
 		lea	ax, [bp+var_6]
 		push	ax
 		call	sub_B4BF
-		push	38h ; '8'
+		push	56
 		push	si
 		push	ss
 		lea	ax, [bp+var_6]
@@ -3113,12 +3056,8 @@ arg_4		= word ptr  8
 		lea	ax, [bp+var_6]
 		push	ax
 		call	sub_B4BF
-		push	3Ch ; '<'
-		push	si
-		push	2Fh ; '/'
-		push	di
-		call	text_putca
-		push	3Dh ; '='
+		call	text_putca pascal, 60, si, '/', di
+		push	61
 		push	si
 		push	ss
 		lea	ax, [bp+var_6]
@@ -3136,12 +3075,8 @@ arg_4		= word ptr  8
 		push	ax
 		call	sub_B4BF
 		add	sp, 18h
-		push	3Fh ; '?'
-		push	si
-		push	2Fh ; '/'
-		push	di
-		call	text_putca
-		push	40h
+		call	text_putca pascal, 63, si, '/', di
+		push	64
 		push	si
 		push	ss
 		lea	ax, [bp+var_6]
@@ -3167,14 +3102,9 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, 0E1h
-		push	16h
-		push	2
-		push	ds
-		push	offset gHI_SCORE
-		push	81h
-		call	gaiji_putsa
-		push	28h ; '('
+		mov	di, TX_WHITE
+		call	gaiji_putsa pascal, 22, 2, ds, offset gHI_SCORE, TX_GREEN
+		push	40
 		push	2
 		push	ds
 		mov	al, byte_DC34
@@ -3182,14 +3112,9 @@ arg_0		= word ptr  4
 		shl	ax, 3
 		add	ax, offset gcEASY_0
 		push	ax
-		push	81h
+		push	TX_GREEN
 		call	gaiji_putsa
-		push	8
-		push	4
-		push	ds
-		push	offset aVicSob@b@b@b@b ; "	お名前　　　　　　得点　　　 STAG"...
-		push	81h
-		call	text_putsa
+		call	text_putsa pascal, 8, 4, ds, offset aHISCORE_HEAD, TX_GREEN
 		xor	si, si
 		jmp	short loc_B66D
 ; ---------------------------------------------------------------------------
@@ -3197,12 +3122,12 @@ arg_0		= word ptr  4
 loc_B5F4:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_B5FE
-		mov	di, 81h
+		mov	di, TX_GREEN
 		jmp	short loc_B601
 ; ---------------------------------------------------------------------------
 
 loc_B5FE:
-		mov	di, 0E1h
+		mov	di, TX_WHITE
 
 loc_B601:
 		push	0Ch
@@ -3236,7 +3161,7 @@ loc_B601:
 ; ---------------------------------------------------------------------------
 
 loc_B645:
-		push	2Ch ; ','
+		push	44
 		lea	ax, [si+7]
 		push	ax
 		push	0F0h
@@ -3268,12 +3193,12 @@ loc_B66D:
 loc_B676:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_B680
-		mov	di, 81h
+		mov	di, TX_GREEN
 		jmp	short loc_B683
 ; ---------------------------------------------------------------------------
 
 loc_B680:
-		mov	di, 0E1h
+		mov	di, TX_WHITE
 
 loc_B683:
 		cmp	si, 9
@@ -3287,13 +3212,9 @@ loc_B683:
 ; ---------------------------------------------------------------------------
 
 loc_B695:
-		push	8
-		push	10h
-		push	0A1h ; '｡'
-		push	di
-		call	gaiji_putca
-		push	0Ah
-		push	10h
+		call	gaiji_putca pascal, 8, 16, 0A1h, di
+		push	10
+		push	16
 		push	0A0h
 
 loc_B6A9:
@@ -5810,9 +5731,9 @@ gcEASY_0	db 0CFh, 0AEh, 0AAh, 0BCh, 0C2h, 0CFh, 0CFh, 0
 gcNORMAL_0	db 0B6h, 0B8h, 0BBh, 0B7h, 0AAh, 0B5h, 0CFh, 0
 gcHARD_0	db 0CFh, 0B1h, 0AAh, 0BBh, 0ADh, 0CFh, 0CFh, 0
 gcLUNATIC_0	db 0B5h, 0BEh, 0B6h, 0AAh, 0BDh, 0B2h, 0ACh, 0
-		dd aNvl@uo		; "高機動"
-		dd aChmf		; "防御"
-		dd aNumv		; "攻撃"
+HISCORE_TYPE		dd aKOUKIDOU		; "高機動"
+		dd aBOUGYO		; "防御"
+		dd aKOUGEKI		; "攻撃"
 word_DCB0	dw 0
 byte_DCB2	db 1
 		db 0
@@ -5826,10 +5747,10 @@ unk_DCBA	db    1
 		db    2
 		db    4
 aHuuhi_dat	db 'huuhi.dat',0
-aNvl@uo		db '高機動',0
-aChmf		db '防御',0
-aNumv		db '攻撃',0
-aVicSob@b@b@b@b	db '      お名前　　　　　　得点　　　 STAGE  TYPE   日付',0
+aKOUKIDOU	db '高機動',0
+aBOUGYO		db '防御',0
+aKOUGEKI		db '攻撃',0
+aHISCORE_HEAD	db '      お名前　　　　　　得点　　　 STAGE  TYPE   日付',0
 aOp_h_bft	db 'op_h.bft',0
 aOp_h_rgb	db 'op_h.rgb',0
 byte_DD20	db 1

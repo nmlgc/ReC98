@@ -903,8 +903,7 @@ sub_B237	proc near
 
 loc_B260:
 		mov	word_20A84, 1
-		push	200005h
-		call	text_fillca
+		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		mov	fp_2300E, offset nullsub_2
 		call	sub_B063
 		les	bx, dword_23EF0
@@ -1334,21 +1333,9 @@ loc_B640:
 loc_B645:
 		cmp	word_23A56, 0
 		jnz	short loc_B640
-		push	1A000Ch
-		push	ds
-		push	offset gsCHUUDAN
-		push	0C1h
-		call	gaiji_putsa
-		push	1A000Eh
-		push	ds
-		push	offset gsSAIKAI
-		push	0E9h
-		call	gaiji_putsa
-		push	1A000Fh
-		push	ds
-		push	offset gsSHUURYOU
-		push	0C1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (26 shl 16) + 12, ds, offset gsCHUUDAN, TX_YELLOW
+		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
+		call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
 
 loc_B682:
 		push	0
@@ -1364,28 +1351,20 @@ loc_B697:
 		mov	si, ax
 		or	si, si
 		jnz	short loc_B6C3
-		push	1A000Eh
-		push	ds
-		push	offset gsSAIKAI
-		push	0E9h
-		call	gaiji_putsa
-		push	1A000Fh
+		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
+		push	(26 shl 16) + 15
 		push	ds
 		push	offset gsSHUURYOU
-		push	0C1h
+		push	TX_YELLOW
 		jmp	short loc_B6E2
 ; ---------------------------------------------------------------------------
 
 loc_B6C3:
-		push	1A000Eh
-		push	ds
-		push	offset gsSAIKAI
-		push	0C1h
-		call	gaiji_putsa
-		push	1A000Fh
+		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_YELLOW
+		push	(26 shl 16) + 15
 		push	ds
 		push	offset gsSHUURYOU
-		push	0E9h
+		push	TX_WHITE + TX_UNDERLINE
 
 loc_B6E2:
 		call	gaiji_putsa
@@ -1418,21 +1397,9 @@ loc_B710:
 loc_B715:
 		test	byte ptr word_23A56+1, 10h
 		jnz	short loc_B710
-		push	1A000Ch
-		push	ds
-		push	offset asc_20BFE ; "	"
-		push	0E1h
-		call	text_putsa
-		push	1A000Eh
-		push	ds
-		push	offset asc_20C03 ; "	"
-		push	0E1h
-		call	text_putsa
-		push	1A000Fh
-		push	ds
-		push	offset asc_20C08 ; "	"
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (26 shl 16) + 12, ds, offset asc_20BFE, TX_WHITE
+		call	text_putsa pascal, (26 shl 16) + 14, ds, offset asc_20C03, TX_WHITE
+		call	text_putsa pascal, (26 shl 16) + 15, ds, offset asc_20C08, TX_WHITE
 		mov	ax, si
 
 loc_B754:
@@ -9543,10 +9510,7 @@ loc_EF7E:
 ; ---------------------------------------------------------------------------
 
 loc_EF83:
-		push	di
-		push	si
-		push	2000E1h
-		call	text_putca
+		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
 		inc	di
 
 loc_EF91:
@@ -9778,7 +9742,7 @@ loc_F14A:
 		push	word_2C936
 		mov	ah, 0
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		add	word_2C934, 2
 
@@ -9853,14 +9817,8 @@ loc_F1E6:
 		mov	word_2C936, 0Ch
 
 loc_F1F2:
-		push	140014h
-		push	320017h
-		push	21h ; '!'
-		call	text_boxfilla
-		push	6000Ch
-		push	24000Fh
-		push	21h ; '!'
-		call	text_boxfilla
+		call	text_boxfilla pascal, (20 shl 16) + 20, (50 shl 16) + 23, TX_BLUE
+		call	text_boxfilla pascal, (6 shl 16) + 12, (36 shl 16) + 15, TX_BLUE
 		push	word_2C934
 		push	word_2C936
 		call	sub_EF74
@@ -9893,12 +9851,7 @@ loc_F249:
 		pop	es
 		mov	es:[bx+1], al
 		inc	word ptr dword_2C930
-		push	word_2C934
-		push	word_2C936
-		push	word ptr [bp+var_6+2]
-		push	bx
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, word_2C934, word_2C936, word ptr [bp+var_6+2], bx, TX_WHITE
 		add	word_2C934, 2
 		call	sub_14FD6
 		cmp	word_23A56, 0
@@ -10727,17 +10680,17 @@ loc_F8DA:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	1
+		push	TX_BLACK
 		call	gaiji_putca
 		add	di, 2
 
 loc_F8F1:
-		cmp	di, 34h	; '4'
+		cmp	di, 52
 		jl	short loc_F8DA
 		inc	si
 
 loc_F8F7:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_F8D5
 
 loc_F8FC:
@@ -10804,17 +10757,17 @@ loc_F94E:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	1
+		push	TX_BLACK
 		call	gaiji_putca
 		add	di, 2
 
 loc_F965:
-		cmp	di, 34h	; '4'
+		cmp	di, 52
 		jl	short loc_F94E
 		inc	si
 
 loc_F96B:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_F949
 
 loc_F970:
@@ -10867,18 +10820,10 @@ loc_F9AA:
 ; ---------------------------------------------------------------------------
 
 loc_F9B1:
-		push	[bp+var_2]
-		push	0C00B0h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
 		push	1
 		call	frame_delay
-		push	[bp+var_2]
-		push	0Ch
-		push	ds
-		push	offset asc_226B3 ; "  "
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B3, TX_WHITE
 		sub	[bp+var_2], 2
 
 loc_F9DE:
@@ -10889,28 +10834,16 @@ loc_F9DE:
 ; ---------------------------------------------------------------------------
 
 loc_F9EB:
-		push	[bp+var_2]
-		push	0C00B0h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
 		push	1
 		call	frame_delay
-		push	[bp+var_2]
-		push	0Ch
-		push	ds
-		push	offset asc_226B6 ; "  "
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B6, TX_WHITE
 		add	[bp+var_2], 2
 
 loc_FA18:
 		cmp	[bp+var_2], 14h
 		jl	short loc_F9EB
-		push	14000Ch
-		push	ds
-		push	offset gGAMEOVER
-		push	0E1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
 		push	0
 		call	sub_150E4
 		call	sub_118D1
@@ -10987,32 +10920,16 @@ var_1		= byte ptr -1
 		mov	[bp+var_2], al
 		cmp	[bp+var_2], 0
 		jz	loc_FBF5
-		push	13000Ah
-		push	ds
-		push	offset gCONTINUE?
-		push	0E1h
-		call	gaiji_putsa
-		push	18000Dh
-		push	ds
-		push	offset gYES
-		push	85h
-		call	gaiji_putsa
-		push	19000Fh
-		push	ds
-		push	offset gNO
-		push	0E1h
-		call	gaiji_putsa
-		push	130016h
-		push	ds
-		push	offset gCREDIT
-		push	81h
-		call	gaiji_putsa
-		push	210016h
+		call	gaiji_putsa pascal, (19 shl 16) + 10, ds, offset gCONTINUE?, TX_WHITE
+		call	gaiji_putsa pascal, (24 shl 16) + 13, ds, offset gYES, TX_GREEN + TX_REVERSE
+		call	gaiji_putsa pascal, (25 shl 16) + 15, ds, offset gNO, TX_WHITE
+		call	gaiji_putsa pascal, (19 shl 16) + 22, ds, offset gCREDIT, TX_GREEN
+		push	(33 shl 16) + 22
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		add	ax, 0A0h
 		push	ax
-		push	81h
+		push	TX_GREEN
 		call	gaiji_putca
 
 loc_FB27:
@@ -11031,7 +10948,7 @@ loc_FB40:
 		mov	di, ax
 		or	di, di
 		jnz	short loc_FB51
-		mov	[bp+var_1], 85h
+		mov	[bp+var_1], TX_GREEN + TX_REVERSE
 		jmp	short loc_FB55
 ; ---------------------------------------------------------------------------
 
@@ -11039,7 +10956,7 @@ loc_FB51:
 		mov	[bp+var_1], 0E1h
 
 loc_FB55:
-		push	18000Dh
+		push	(24 shl 16) + 13
 		push	ds
 		push	offset gYES
 		mov	al, [bp+var_1]
@@ -11048,15 +10965,15 @@ loc_FB55:
 		call	gaiji_putsa
 		cmp	di, 1
 		jnz	short loc_FB75
-		mov	[bp+var_1], 85h
+		mov	[bp+var_1], TX_GREEN + TX_REVERSE
 		jmp	short loc_FB79
 ; ---------------------------------------------------------------------------
 
 loc_FB75:
-		mov	[bp+var_1], 0E1h
+		mov	[bp+var_1], TX_WHITE
 
 loc_FB79:
-		push	19000Fh
+		push	(25 shl 16) + 15
 		push	ds
 		push	offset gNO
 		mov	al, [bp+var_1]
@@ -12154,10 +12071,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_10425:
-		push	si
-		push	0D00D4h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, (13 shl 16) + 0D4h, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12169,10 +12083,7 @@ loc_1043A:
 ; ---------------------------------------------------------------------------
 
 loc_10444:
-		push	si
-		push	0D0002h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, (13 shl 16) + 2, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12183,14 +12094,10 @@ loc_10459:
 ; ---------------------------------------------------------------------------
 
 loc_10461:
-		push	3E000Dh
-		push	ds
-		push	offset aB@b@bB@b@ ; "　　×　　"
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (62 shl 16) + 13, ds, offset aB@b@bB@b@, TX_WHITE
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_104A2
-		push	44000Dh
+		push	(68 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -12198,7 +12105,7 @@ loc_10461:
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -12208,12 +12115,12 @@ loc_10461:
 		mov	[bp+var_1], dl
 
 loc_104A2:
-		push	46000Dh
+		push	(70 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 
 loc_104B8:
@@ -12246,10 +12153,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_104D8:
-		push	si
-		push	0B00D3h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, (11 shl 16) + 0D3h, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12261,10 +12165,7 @@ loc_104ED:
 ; ---------------------------------------------------------------------------
 
 loc_104F7:
-		push	si
-		push	0B0002h
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, si, (11 shl 16) + 2, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12277,14 +12178,10 @@ loc_1050C:
 loc_10514:
 		mov	al, byte_25351
 		mov	[bp+var_1], al
-		push	3E000Bh
-		push	ds
-		push	offset aB@b@bB@b@_0 ; "　　×　　"
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (62 shl 16) + 11, ds, offset aB@b@bB@b@_0, TX_WHITE
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_1055B
-		push	44000Bh
+		push	(68 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -12292,7 +12189,7 @@ loc_10514:
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -12302,12 +12199,12 @@ loc_10514:
 		mov	[bp+var_1], dl
 
 loc_1055B:
-		push	46000Bh
+		push	(70 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
 		add	ax, 0A0h
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putca
 
 loc_10571:
@@ -12489,11 +12386,7 @@ arg_0		= word ptr  6
 		mov	[bp+var_C], al
 		or	si, si
 		jz	short loc_106C8
-		push	3D0008h
-		push	ds
-		push	offset gsENEMY
-		push	0C1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
 		push	9
 		push	si
 		mov	ax, si
@@ -12511,17 +12404,17 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_106C8:
-		push	3D0008h
+		push	(61 shl 16) + 8
 		push	ss
 		lea	ax, [bp+var_6+1]
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
-		push	380009h
+		push	(56 shl 16) + 9
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
 
 loc_106EE:
@@ -12538,16 +12431,8 @@ sub_1065B	endp
 sub_106F3	proc far
 		push	bp
 		mov	bp, sp
-		push	3C0003h
-		push	ds
-		push	offset gsHISCORE
-		push	0C1h
-		call	gaiji_putsa
-		push	3D0005h
-		push	ds
-		push	offset gsSCORE
-		push	0C1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
+		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
 		call	sub_143CA
 		mov	al, byte_25FEF
 		mov	ah, 0
@@ -12558,63 +12443,37 @@ sub_106F3	proc far
 		jmp	word ptr cs:table_1083C[bx]
 
 loc_10730:
-		push	39000Bh
-		push	ds
-		push	offset gsREIGEKI
-		push	0C1h
-		call	gaiji_putsa
-		push	39000Dh
-		push	ds
-		push	offset gsREIMU
-		push	0C1h
-		call	gaiji_putsa
-		push	3E0015h
+		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsREIGEKI, TX_YELLOW
+		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsREIMU, TX_YELLOW
+		push	(62 shl 16) + 21
 		push	ds
 		push	offset gsREIRYOKU
 		jmp	short loc_1078E
 ; ---------------------------------------------------------------------------
 
 loc_10760:
-		push	39000Bh
-		push	ds
-		push	offset gsBOMB
-		push	0C1h
-		call	gaiji_putsa
-		push	39000Dh
-		push	ds
-		push	offset gsPLAYER
-		push	0C1h
-		call	gaiji_putsa
-		push	3E0015h
+		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsBOMB, TX_YELLOW
+		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsPLAYER, TX_YELLOW
+		push	(62 shl 16) + 21
 		push	ds
 		push	offset gsPOWER
 
 loc_1078E:
-		push	0C1h
+		push	TX_YELLOW
 		call	gaiji_putsa
 
 loc_10796:
 		call	sub_104BB
 		call	sub_10407
-		push	3A0010h
-		push	0E600C1h
-		call	gaiji_putca
-		push	39000Fh
-		push	ds
-		push	offset gsRUIKEI
-		push	0A1h
-		call	gaiji_putsa
+		call	gaiji_putca pascal, (58 shl 16) + 16, (0E6h shl 16) + TX_YELLOW
+		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsRUIKEI, TX_CYAN
 		call	sub_10574
-		push	3F0013h
-		push	0E700C1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, (63 shl 16) + 19, (0E7h shl 16) + TX_YELLOW
 		call	sub_1059D
-		push	3A0012h
-		push	0E800C1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, (58 shl 16) + 18, (0E8h shl 16) + TX_YELLOW
 		call	sub_1060E
 		call	sub_10625
-		push	390017h
+		push	(57 shl 16) + 23
 		push	ds
 		mov	al, byte_25FEB
 		mov	ah, 0
@@ -12623,26 +12482,26 @@ loc_10796:
 		push	ax
 		cmp	byte_25FEB, 0
 		jnz	short loc_10812
-		mov	ax, 81h
+		mov	ax, TX_GREEN
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_10812:
 		cmp	byte_25FEB, 1
 		jnz	short loc_1081E
-		mov	ax, 0A1h
+		mov	ax, TX_CYAN
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_1081E:
 		cmp	byte_25FEB, 2
 		jnz	short loc_1082A
-		mov	ax, 61h	; 'a'
+		mov	ax, TX_MAGENTA
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_1082A:
-		mov	ax, 41h	; 'A'
+		mov	ax, TX_RED
 
 loc_1082D:
 		push	ax
@@ -14916,15 +14775,11 @@ sub_118D1	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118DA:
-		push	4
-		push	si
-		pushd	[off_228EE]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, 4, si, off_228EE, TX_WHITE
 		inc	si
 
 loc_118EB:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_118DA
 		pop	si
 		pop	bp
@@ -14945,15 +14800,11 @@ sub_118F3	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118FC:
-		push	4
-		push	si
-		pushd	[off_228EE]
-		push	5
-		call	text_putsa
+		call	text_putsa pascal, 4, si, off_228EE, TX_BLACK + TX_REVERSE
 		inc	si
 
 loc_1190C:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_118FC
 		pop	si
 		pop	bp
@@ -14989,11 +14840,7 @@ loc_11936:
 
 loc_1193E:
 		mov	fp_2CE88, offset nullsub_2
-		push	12000Ch
-		push	ds
-		push	offset gDEMO_PLAY
-		push	0C3h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
 		mov	byte_2CE8C, 0
@@ -15032,17 +14879,17 @@ loc_11987:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	1
+		push	TX_BLACK
 		call	gaiji_putca
 		add	di, 2
 
 loc_1199E:
-		cmp	di, 34h	; '4'
+		cmp	di, 52
 		jl	short loc_11987
 		inc	si
 
 loc_119A4:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_11982
 
 loc_119A9:
@@ -15107,17 +14954,17 @@ loc_119F7:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	1
+		push	TX_BLACK
 		call	gaiji_putca
 		add	di, 2
 
 loc_11A0E:
-		cmp	di, 34h	; '4'
+		cmp	di, 52
 		jl	short loc_119F7
 		inc	si
 
 loc_11A14:
-		cmp	si, 18h
+		cmp	si, 24
 		jl	short loc_119F2
 
 loc_11A19:
@@ -15317,7 +15164,7 @@ loc_11B91:
 		mov	gStage_1+6, al
 		cmp	byte_25FEA, 5
 		jnz	short loc_11BBE
-		push	11000Bh
+		push	(17 shl 16) + 11
 		push	ds
 		push	offset gFINAL_STAGE
 		jmp	short loc_11BDB
@@ -15326,19 +15173,19 @@ loc_11B91:
 loc_11BBE:
 		cmp	byte_25FEA, 6
 		jnz	short loc_11BD1
-		push	11000Bh
+		push	(17 shl 16) + 11
 		push	ds
 		push	offset gEXTRA_STAGE
 		jmp	short loc_11BDB
 ; ---------------------------------------------------------------------------
 
 loc_11BD1:
-		push	15000Bh
+		push	(21 shl 16) + 11
 		push	ds
 		push	offset gStage_1
 
 loc_11BDB:
-		push	0C1h
+		push	TX_YELLOW
 		call	gaiji_putsa
 		mov	ax, word_2CE6A
 		cwd
@@ -15346,24 +15193,13 @@ loc_11BDB:
 		sar	ax, 1
 		mov	dx, 1Ch
 		sub	dx, ax
-		push	dx
-		push	0Dh
-		pushd	[dword_2CE92]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, dx, 13, dword_2CE92, TX_WHITE
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6C
-		push	ax
-		push	170003h
-		push	0C1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
-		push	ax
-		push	17h
-		pushd	[dword_2CE96]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, ax, 23, dword_2CE96, TX_WHITE
 
 loc_11C2D:
 		call	sub_E6E2
@@ -15495,17 +15331,10 @@ loc_11D53:
 		jnz	short loc_11D90
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
-		push	ax
-		push	170003h
-		push	0C1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
-		push	ax
-		push	17h
-		pushd	[dword_2CE9A]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, ax, 23, dword_2CE9A, TX_WHITE
 
 loc_11D90:
 		call	sub_E6E2
@@ -15557,14 +15386,8 @@ var_1		= byte ptr -1
 		jz	short loc_11E29
 		cmp	byte_2288C, 40h
 		jb	short loc_11E29
-		push	40002h
-		pushd	[off_228EE]
-		push	0E1h
-		call	text_putsa
-		push	40017h
-		pushd	[off_228EE]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
+		call	text_putsa pascal, (4 shl 16) + 23, off_228EE, TX_WHITE
 		mov	byte_2288C, 0
 
 loc_11E29:
@@ -15617,10 +15440,7 @@ loc_11E98:
 loc_11E9D:
 		cmp	byte_2288C, 80h
 		jb	short loc_11EC4
-		push	40002h
-		pushd	[off_228EE]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
 		mov	byte_2288C, 0
 		mov	fp_2CE8A, offset nullsub_2
 		leave
@@ -15670,12 +15490,7 @@ loc_11EF1:
 		dec	bx
 		add	bx, word_2CE70
 		mov	[bx], al
-		push	word_2CE82
-		push	2
-		push	ds
-		push	offset unk_2CE74
-		push	0E1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, word_2CE82, 2, ds, offset unk_2CE74, TX_WHITE
 		jmp	loc_11FD9
 ; ---------------------------------------------------------------------------
 
@@ -15690,7 +15505,7 @@ loc_11F36:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	off_228D8[bx]
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
 		mov	ax, word_2CE70
 		add	ax, ax
@@ -15700,10 +15515,7 @@ loc_11F36:
 		mov	ax, word_2CE70
 		add	ax, ax
 		add	ax, word_2CE82
-		push	ax
-		push	22020h
-		push	0E1h
-		call	text_putca
+		call	text_putca pascal, ax, 22020h, TX_WHITE
 
 loc_11F7F:
 		sub	word_2CE82, 2
@@ -15714,10 +15526,7 @@ loc_11F86:
 		cmp	byte_2CE73, 0
 		jnz	short loc_11FA5
 		mov	byte_2CE73, 1
-		push	40002h
-		pushd	[off_228EE]
-		push	0E1h
-		call	text_putsa
+		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
 
 loc_11FA5:
 		push	word_2CE84
@@ -15727,7 +15536,7 @@ loc_11FA5:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	off_228D8[bx]
-		push	0E1h
+		push	TX_WHITE
 		call	gaiji_putsa
 		cmp	byte_2CE72, 2
 		jnz	short loc_11FD9
@@ -20779,12 +20588,7 @@ loc_143D8:
 		inc	bx
 		dec	si
 		loop	loc_143D8
-		push	38h ; '8'
-		push	di
-		push	ds
-		push	offset unk_229A6
-		push	0E1h
-		call	gaiji_putsa
+		call	gaiji_putsa pascal, 56, di, ds, offset unk_229A6, TX_WHITE
 		add	di, 2
 		cmp	di, 6
 		jz	short loc_143D2
@@ -25255,16 +25059,7 @@ word_22723	dw 6161h
 word_22725	dw 8121h
 word_22727	dw 0C1A1h
 byte_22729	db 0E1h
-		db  41h	; A
-		db  41h	; A
-		db  41h	; A
-		db  61h	; a
-		db  61h	; a
-		db  21h	; !
-		db  81h
-		db 0A1h
-		db 0C1h
-		db 0E1h
+include th04/hud/bar_colors[data].asm
 word_22734	dw 202h
 word_22736	dw 202h
 word_22738	dw 202h
