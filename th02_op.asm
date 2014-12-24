@@ -30,6 +30,7 @@
 
 include ReC98.inc
 include th02/th02.asm
+include th02/music/music.inc
 
 ; ===========================================================================
 
@@ -5043,51 +5044,7 @@ loc_C558:
 		retn
 sub_C3E1	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C55C	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aMusic_txt ; "MUSIC.TXT"
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 348h
-		cwd
-		push	dx
-		push	ax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_F592
-		push	348h
-		call	file_read
-		call	file_close
-		xor	si, si
-		jmp	short loc_C59A
-; ---------------------------------------------------------------------------
-
-loc_C58F:
-		mov	bx, si
-		imul	bx, 2Ah
-		mov	byte ptr [bx+1F8Ah], 0
-		inc	si
-
-loc_C59A:
-		cmp	si, 14h
-		jl	short loc_C58F
-		pop	si
-		pop	bp
-		retn	2
-sub_C55C	endp
-
+include th02/music/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5274,18 +5231,17 @@ sub_C5CD	endp
 
 sub_C726	proc near
 
-arg_0		= word ptr  4
+@@track		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		push	[bp+arg_0]
-		call	sub_C55C
+		call	music_cmt_load pascal, [bp+@@track]
 		call	sub_C0E4
 		call	sub_C5CD
 		push	ds
-		push	offset unk_F592
+		push	offset music_cmt
 		push	1Fh
 		push	40h
 		push	0A0h
@@ -5298,8 +5254,8 @@ arg_0		= word ptr  4
 loc_C74F:
 		push	ds
 		mov	ax, si
-		imul	ax, 2Ah
-		add	ax, 1F62h
+		imul	ax, MUSIC_CMT_LINE_LEN
+		add	ax, offset music_cmt
 		push	ax
 		push	1Dh
 		lea	ax, [si+4]
@@ -5311,7 +5267,7 @@ loc_C74F:
 		inc	si
 
 loc_C76E:
-		cmp	si, 14h
+		cmp	si, MUSIC_CMT_LINE_COUNT
 		jl	short loc_C74F
 		xor	di, di
 		jmp	short loc_C794
@@ -5864,7 +5820,7 @@ aEnd1_m		db 'end1.m',0
 aEnding_m	db 'ending.m',0
 aStage5_m	db 'stage5.m',0
 aBoss5_m	db 'boss5.m',0
-aMusic_txt	db 'MUSIC.TXT',0
+include th02/music/music_cmt_load[data].asm
 aOp3_pi		db 'op3.pi',0
 aOp2_pi_0	db 'op2.pi',0
 aOp_rgb_0	db 'op.rgb',0
@@ -6060,219 +6016,7 @@ word_F58C	dw ?
 unk_F58E	db    ?	;
 		db    ?	;
 word_F590	dw ?
-unk_F592	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/music/music_cmt[bss].asm
 include libs/BorlandC/atexit[bss].asm
 include libs/BorlandC/sigdata[bss].asm
 include libs/BorlandC/xxv[bss].asm

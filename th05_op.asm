@@ -26,6 +26,7 @@
 
 include ReC98.inc
 include th05/th05.asm
+include th05/music/music.inc
 
 ; ===========================================================================
 
@@ -3483,7 +3484,7 @@ loc_BF05:
 		mov	[bp+var_5], 3
 
 loc_BF14:
-		mov	bx, musicroom_game_id
+		mov	bx, music_game
 		imul	bx, 78h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -3558,7 +3559,7 @@ loc_BF6B:
 		call	sub_D436
 		push	0C0020h
 		push	3
-		mov	bx, musicroom_game_id
+		mov	bx, music_game
 		shl	bx, 2
 		pushd	dword ptr MUSICROOM_GAME[bx]
 		call	sub_D436
@@ -3942,85 +3943,33 @@ sub_C293	proc near
 		retn
 sub_C293	endp
 
+include th05/music/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_C2CF	proc near
+sub_C32D	proc pascal near
+		local @@y:word
 
-var_4		= dword	ptr -4
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 27ECh
-		les	bx, [bp+var_4]
-		assume es:nothing
-		mov	al, byte ptr musicroom_game_id
-		add	al, 30h	; '0'
-		mov	es:[bx+6], al
-		push	word ptr [bp+var_4+2]
-		push	bx
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 190h
-		cwde
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_13EAA
-		push	190h
-		call	file_read
-		call	file_close
-		xor	si, si
-		jmp	short loc_C323
-; ---------------------------------------------------------------------------
-
-loc_C318:
-		mov	bx, si
-		imul	bx, 28h
-		mov	byte ptr [bx+4EF0h], 0
-		inc	si
-
-loc_C323:
-		cmp	si, 0Ah
-		jl	short loc_C318
-		pop	si
-		leave
-		retn	2
-sub_C2CF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C32D	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
 		push	si
 		push	di
 		push	1400020h
 		push	7
 		push	ds
-		push	offset unk_13EAA
+		push	offset music_cmt
 		call	sub_D436
-		mov	si, 4EF2h
+		mov	si, offset music_cmt + MUSIC_CMT_LINE_LEN
 		mov	di, 1
-		mov	[bp+var_2], 0B4h ; '¥'
+		mov	@@y, 180
 		jmp	short loc_C36D
 ; ---------------------------------------------------------------------------
 
 loc_C351:
-		cmp	byte ptr [si], 3Bh ; ';'
+		cmp	byte ptr [si], ';'
 		jz	short loc_C365
-		push	140h
-		push	[bp+var_2]
+		push	320
+		push	@@y
 		push	7
 		push	ds
 		push	si
@@ -4028,16 +3977,15 @@ loc_C351:
 
 loc_C365:
 		inc	di
-		add	[bp+var_2], 10h
-		add	si, 28h	; '('
+		add	@@y, 16
+		add	si, MUSIC_CMT_LINE_LEN
 
 loc_C36D:
-		cmp	di, 0Ah
+		cmp	di, MUSIC_CMT_LINE_COUNT
 		jl	short loc_C351
 		pop	di
 		pop	si
-		leave
-		retn
+		ret
 sub_C32D	endp
 
 
@@ -4106,7 +4054,7 @@ sub_C3A7	endp
 
 sub_C3F9	proc near
 
-arg_0		= word ptr  4
+@@track		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -4115,8 +4063,7 @@ arg_0		= word ptr  4
 		call	sub_C3A7
 
 loc_C406:
-		push	[bp+arg_0]
-		call	sub_C2CF
+		call	music_cmt_load pascal, [bp+@@track]
 		call	sub_BFF6
 		push	1400040h
 		push	1400100h
@@ -4189,7 +4136,7 @@ var_1		= byte ptr -1
 		mov	word_1403A, 0
 		mov	word_1403C, 0
 		mov	byte ptr word_13E94, 0
-		mov	bx, musicroom_game_id
+		mov	bx, music_game
 		add	bx, bx
 		mov	ax, [bx+14A0h]
 		mov	musicroom_trackcount, ax
@@ -4231,8 +4178,7 @@ var_1		= byte ptr -1
 		call	pfstart
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
-		push	ax
-		call	sub_C3F9
+		call	sub_C3F9 pascal, ax
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 
@@ -4358,35 +4304,34 @@ loc_C652:
 loc_C666:
 		test	byte ptr word_12A72, 4
 		jz	short loc_C680
-		dec	musicroom_game_id
-		cmp	musicroom_game_id, 0
+		dec	music_game
+		cmp	music_game, 0
 		jge	short loc_C698
-		mov	musicroom_game_id, 4
+		mov	music_game, 4
 		jmp	short loc_C698
 ; ---------------------------------------------------------------------------
 
 loc_C680:
 		test	byte ptr word_12A72, 8
 		jz	short loc_C6E3
-		inc	musicroom_game_id
-		cmp	musicroom_game_id, 5
+		inc	music_game
+		cmp	music_game, 5
 		jl	short loc_C698
-		mov	musicroom_game_id, 0
+		mov	music_game, 0
 
 loc_C698:
 		mov	byte ptr word_13E94, 0
 		mov	word_1403C, 0
 		mov	word_1403A, 0
-		mov	bx, musicroom_game_id
+		mov	bx, music_game
 		add	bx, bx
 		mov	ax, [bx+14A0h]
 		mov	musicroom_trackcount, ax
 		push	0
 		call	sub_C441
 		kajacall	KAJA_SONG_FADE, 32
-		push	0
-		call	sub_C3F9
-		mov	bx, musicroom_game_id
+		call	sub_C3F9 pascal, 0
+		mov	bx, music_game
 		imul	bx, 78h
 		call	snd_load pascal, dword ptr [bx+1246h], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -4423,9 +4368,8 @@ loc_C6F1:
 		call	sub_BE79
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
-		push	ax
-		call	sub_C3F9
-		mov	bx, musicroom_game_id
+		call	sub_C3F9 pascal, ax
+		mov	bx, music_game
 		imul	bx, 78h
 		mov	al, byte ptr word_13E94
 		mov	ah, 0
@@ -8734,7 +8678,7 @@ MUSICROOM_GAME		dd aMUSICROOM_TH01
 		dd    0
 		dd    0
 		dd    0
-musicroom_game_id	dw 4
+music_game	dw 4
 MUSICROOM_TRACKCOUNTS dw 14,18,24,28,23
 byte_1048A	db 0
 aMUSICROOM_UP		db '             ------ Å£ ------       ',0
@@ -8943,7 +8887,7 @@ aEd00		db 'ed00',0
 aEd01		db 'ed01',0
 aEd02		db 'ed02',0
 aExed		db 'exed',0
-a_music0_txt	db '_MUSIC0.TXT',0
+include th05/music/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aMusic_dat	db 'music.dat',0
 aKaikidan1_dat1	db 'âˆ„Yík1.dat',0
@@ -10556,109 +10500,7 @@ word_13E98	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_13EAA	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/music/music_cmt[bss].asm
 word_1403A	dw ?
 word_1403C	dw ?
 musicroom_trackcount	dw ?

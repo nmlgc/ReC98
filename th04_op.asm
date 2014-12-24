@@ -26,6 +26,7 @@
 
 include ReC98.inc
 include th04/th04.asm
+include th04/music/music.inc
 
 ; ===========================================================================
 
@@ -3520,50 +3521,7 @@ sub_C244	proc near
 		retn
 sub_C244	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C27B	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset a_music_txt ; "_MUSIC.TXT"
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 320h
-		cwde
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_12DD2
-		push	320h
-		call	file_read
-		call	file_close
-		xor	si, si
-		jmp	short loc_C2BA
-; ---------------------------------------------------------------------------
-
-loc_C2AF:
-		mov	bx, si
-		imul	bx, 28h
-		mov	byte ptr [bx+3AB8h], 0
-		inc	si
-
-loc_C2BA:
-		cmp	si, 14h
-		jl	short loc_C2AF
-		pop	si
-		pop	bp
-		retn	2
-sub_C27B	endp
-
+include th02/music/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3576,7 +3534,7 @@ sub_C2C4	proc near
 		push	1400040h
 		push	7
 		push	ds
-		push	offset unk_12DD2
+		push	offset music_cmt
 		call	sub_DEB4
 		mov	si, 1
 		jmp	short loc_C306
@@ -3584,8 +3542,8 @@ sub_C2C4	proc near
 
 loc_C2DE:
 		mov	bx, si
-		imul	bx, 28h
-		cmp	byte ptr [bx+3A92h], 3Bh ; ';'
+		imul	bx, MUSIC_CMT_LINE_LEN
+		cmp	byte ptr music_cmt[bx], ';'
 		jz	short loc_C305
 		push	140h
 		lea	ax, [si+4]
@@ -3594,8 +3552,8 @@ loc_C2DE:
 		push	7
 		push	ds
 		mov	ax, si
-		imul	ax, 28h
-		add	ax, 3A92h
+		imul	ax, MUSIC_CMT_LINE_LEN
+		add	ax, offset music_cmt
 		push	ax
 		call	sub_DEB4
 
@@ -3603,7 +3561,7 @@ loc_C305:
 		inc	si
 
 loc_C306:
-		cmp	si, 14h
+		cmp	si, MUSIC_CMT_LINE_COUNT
 		jl	short loc_C2DE
 		pop	si
 		pop	bp
@@ -3670,7 +3628,7 @@ sub_C33F	endp
 
 sub_C36F	proc near
 
-arg_0		= word ptr  4
+@@track		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -3679,8 +3637,7 @@ arg_0		= word ptr  4
 		call	sub_C33F
 
 loc_C37C:
-		push	[bp+arg_0]
-		call	sub_C27B
+		call	music_cmt_load pascal, [bp+@@track]
 		call	sub_BFA7
 		push	1400040h
 		push	1400140h
@@ -3746,8 +3703,7 @@ sub_C3B7	proc near
 		call	sub_BF68
 		mov	al, byte_102AF
 		mov	ah, 0
-		push	ax
-		call	sub_C36F
+		call	sub_C36F pascal, ax
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 
@@ -3823,8 +3779,7 @@ loc_C4E4:
 		mov	al, byte ptr word_12DBC
 		mov	byte_102AF, al
 		mov	ah, 0
-		push	ax
-		call	sub_C36F
+		call	sub_C36F pascal, ax
 		mov	al, byte ptr word_12DBC
 		mov	ah, 0
 		shl	ax, 2
@@ -8119,7 +8074,7 @@ aEnd1		db 'end1',0
 aEnd2		db 'end2',0
 aStaff		db 'staff',0
 aName_0		db 'name',0
-a_music_txt	db '_MUSIC.TXT',0
+include th04/music/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
@@ -9742,209 +9697,7 @@ word_12DC0	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_12DD2	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/music/music_cmt[bss].asm
 byte_130F2	db ?
 byte_130F3	db ?
 word_130F4	dw ?
