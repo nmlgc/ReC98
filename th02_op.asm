@@ -1946,9 +1946,7 @@ arg_6		= dword	ptr  0Ch
 		sar	ax, 6
 		and	ax, 7
 		mov	[bp+var_10], ax
-		push	0C0h
-		push	[bp+arg_4]
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, [bp+arg_4]
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
 		out	dx, al
@@ -3244,9 +3242,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		push	0C0h
-		push	0Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 10
 		call	grcg_fill
 		call	grcg_off
 		inc	word_DCB0
@@ -3378,9 +3374,7 @@ loc_B7B7:
 		push	200h
 		push	130h
 		call	grc_setclip
-		push	0C0h
-		push	0Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 10
 		call	grcg_fill
 		call	grcg_off
 		push	0FFFFh
@@ -3699,9 +3693,7 @@ arg_2		= word ptr  8
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_2], ax
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		xor	si, si
 		jmp	short loc_BA11
 ; ---------------------------------------------------------------------------
@@ -3785,9 +3777,7 @@ loc_BA48:
 		mov	di, 128h
 
 loc_BA4B:
-		push	0C0h
-		push	[bp+arg_2]
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, [bp+arg_2]
 		lea	ax, [si+8]
 		push	ax
 		lea	ax, [di+8]
@@ -3798,9 +3788,7 @@ loc_BA4B:
 		push	ax
 		push	8
 		call	grcg_round_boxfill
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		push	si
 		push	di
 		lea	ax, [si+0C0h]
@@ -3861,18 +3849,14 @@ sub_BA20	endp
 sub_BAFC	proc far
 		push	bp
 		mov	bp, sp
-		push	0C0h
-		push	0Ch
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 12
 		push	88h
 		push	18h
 		push	208h
 		push	38h ; '8'
 		push	8
 		call	grcg_round_boxfill
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		push	80h
 		push	10h
 		push	200h
@@ -3890,18 +3874,14 @@ sub_BAFC	proc far
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+0Bh], 5
 		jnz	short loc_BBBE
-		push	0C0h
-		push	0Ch
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 12
 		push	18h
 		push	38h ; '8'
 		push	278h
 		push	68h ; 'h'
 		push	8
 		call	grcg_round_boxfill
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		push	10h
 		push	30h ; '0'
 		push	270h
@@ -4856,9 +4836,7 @@ sub_C3AC	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_C0E4
-		push	0CEh
-		push	0Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW or GC_B, 15
 		call	sub_C1B2
 		call	grcg_off
 		mov	dx, 0A4h ; '¤'

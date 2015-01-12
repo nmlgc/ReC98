@@ -535,8 +535,8 @@ loc_ABD8:
 		call	loc_BD64
 		call	sub_12CE5
 		call	sub_C718
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		call	fp_259DC
 		call	fp_259DE
@@ -2837,7 +2837,7 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	di
-		push	80h
+		push	GC_TDW
 		mov	al, byte_2CDCA
 		mov	ah, 0
 		push	ax
@@ -2885,8 +2885,8 @@ loc_BF7A:
 		add	[bp+var_6], 10h
 		cmp	[bp+var_6], 180h
 		jb	short loc_BF39
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		leave
@@ -3188,7 +3188,7 @@ sub_C148	endp
 
 
 sub_C156	proc near
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		retn
 sub_C156	endp
@@ -3200,7 +3200,7 @@ sub_C156	endp
 
 
 sub_C15C	proc near
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		retn
 sub_C15C	endp
@@ -4910,7 +4910,7 @@ sub_CBB8	endp
 
 
 sub_CBFA	proc near
-		mov	al, 0
+		mov	al, GC_OFF
 		out	7Ch, al
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -4918,7 +4918,7 @@ sub_CBFA	proc near
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -5417,8 +5417,7 @@ arg_4		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	di
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -5447,8 +5446,8 @@ loc_D005:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_CFF0
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	bp
@@ -6629,8 +6628,8 @@ loc_D93D:
 loc_D943:
 		cmp	[bp+var_6], 2
 		jl	loc_D8A5
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -7985,8 +7984,7 @@ loc_E2D6:
 		sar	ax, 4
 		add	ax, 10h
 		mov	[bp+var_6], ax
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		push	[bp+var_4]
 		push	[bp+var_6]
 		push	17Fh
@@ -8026,7 +8024,7 @@ loc_E356:
 		sar	ax, 1
 		or	ax, ax
 		jz	short loc_E3B1
-		push	0C0h
+		push	GC_RMW
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
@@ -8060,7 +8058,7 @@ loc_E356:
 loc_E3B1:
 		or	di, di
 		jz	short loc_E416
-		push	0C0h
+		push	GC_RMW
 		mov	al, [si+10h]
 		mov	ah, 0
 		inc	ax
@@ -8105,8 +8103,7 @@ loc_E3B1:
 loc_E416:
 		add	[bp+var_8], di
 		sub	[bp+var_A], di
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		push	[bp+var_4]
 		push	[bp+var_6]
 		mov	ax, [si+14h]
@@ -8126,8 +8123,8 @@ loc_E449:
 loc_E44F:
 		cmp	[bp+var_2], 2
 		jl	loc_E2D6
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -8769,8 +8766,8 @@ loc_E98E:
 		push	ax
 		push	dx
 		call	grcg_circlefill
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	si
 		push	di
@@ -8829,8 +8826,8 @@ loc_EA0D:
 		call	super_put
 
 loc_EA55:
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_EA5B:
@@ -9214,8 +9211,8 @@ loc_ECC7:
 		call	grcg_line
 
 loc_ECF4:
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		mov	si, 0B204h
 		xor	di, di
@@ -11820,8 +11817,8 @@ var_1		= byte ptr -1
 		mov	ah, 0Fh
 		call	sub_C162
 		call	sub_1200A
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	200038h
 		push	0
@@ -11878,8 +11875,8 @@ loc_100FE:
 		call	sub_C162
 		push	0
 		call	sub_1030D
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		leave
 		retn
@@ -11900,8 +11897,8 @@ var_2		= word ptr -2
 		mov	ah, 1
 		call	sub_C162
 		call	sub_1200A
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	200038h
 		push	0
@@ -11987,8 +11984,8 @@ loc_101F4:
 		call	sub_C162
 		push	1
 		call	sub_1030D
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	si
 		leave
@@ -12497,8 +12494,8 @@ loc_105A6:
 loc_105AA:
 		cmp	di, 44h	; 'D'
 		jl	short loc_10570
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -13326,8 +13323,8 @@ loc_10C6F:
 		mov	dx, [bp+var_2]
 		push	word_259B4
 		call	sub_C546
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	loc_10D47
 ; ---------------------------------------------------------------------------
@@ -13794,8 +13791,8 @@ loc_10FA1:
 		push	0C80h
 		push	stage_title_len
 		call	sub_10EA5
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	loc_1118F
 ; ---------------------------------------------------------------------------
@@ -13939,8 +13936,8 @@ loc_11128:
 		push	0C80h
 		push	stage_title_len
 		call	sub_10EA5
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		test	byte_259E0, 3
 		jnz	short loc_1118F
@@ -14007,8 +14004,8 @@ loc_111D8:
 		push	1680h
 		push	word_259C6
 		call	sub_10EA5
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	loc_112D2
 ; ---------------------------------------------------------------------------
@@ -14063,8 +14060,8 @@ loc_1127E:
 		push	1680h
 		push	word_259C6
 		call	sub_10EA5
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		test	byte_22EA3, 3
 		jnz	short loc_112D2
@@ -14726,8 +14723,8 @@ var_2		= word ptr -2
 		add	ax, 0Ch
 		push	ax
 		call	grcg_circle
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	loc_11961
 ; ---------------------------------------------------------------------------
@@ -14942,8 +14939,8 @@ var_2		= word ptr -2
 		add	ax, 0Ch
 		push	ax
 		call	grcg_circle
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	short loc_11A90
 ; ---------------------------------------------------------------------------
@@ -15195,8 +15192,8 @@ loc_11BD1:
 		add	ax, [si+10h]
 		push	ax
 		call	grcg_circle
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_11C16:
@@ -15721,7 +15718,7 @@ sub_1200A	endp
 
 sub_12024	proc near
 		cli
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -15918,8 +15915,8 @@ arg_4		= word ptr  8
 		mov	ah, [bp+arg_0]
 		call	sub_C162
 		call	fp_2CDCC
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	bp
 		retn	6
@@ -16160,8 +16157,8 @@ loc_12309:
 		mov	ah, 1
 		call	sub_C162
 		call	sub_BEDA
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	600048h
 		push	10h
@@ -16242,8 +16239,8 @@ loc_12396:
 		mov	ah, 0
 		call	sub_C162
 		call	sub_BFF8
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	800080h
 		push	10h
@@ -16857,8 +16854,8 @@ loc_1284C:
 loc_1286D:
 		cmp	di, 38h	; '8'
 		jl	short loc_12834
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -16916,8 +16913,8 @@ var_1		= byte ptr -1
 		mov	ah, 1
 		call	sub_C162
 		call	sub_1205A
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		cmp	word_2671A, 2
 		jnz	loc_12975
@@ -16988,8 +16985,8 @@ loc_12964:
 		mov	ah, 1
 		call	sub_C162
 		call	sub_1205A
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_12972:
@@ -17043,8 +17040,8 @@ loc_129B4:
 		mov	ah, 1
 		call	sub_C162
 		call	sub_C148
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	200010h
 		push	10h
@@ -18430,7 +18427,7 @@ loc_13580:
 		push	di
 		push	ds
 		cli
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al

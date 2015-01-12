@@ -243,7 +243,7 @@ sub_502		proc near
 ; ---------------------------------------------------------------------------
 
 loc_50C:
-		push	0C0h
+		push	GC_RMW
 		mov	al, [si+21D9h]
 		cbw
 		push	ax
@@ -314,7 +314,7 @@ loc_5A6:
 
 loc_5AD:
 		mov	dx, 7Ch
-		mov	al, 0
+		mov	al, GC_OFF
 		out	dx, al
 		pop	si
 		pop	bp
@@ -333,9 +333,7 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
-		push	0C0h
-		push	5
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 5
 		xor	si, si
 		jmp	loc_66E
 ; ---------------------------------------------------------------------------
@@ -416,7 +414,7 @@ loc_66E:
 loc_676:
 		inc	byte ptr ds:2962h
 		mov	dx, 7Ch
-		mov	al, 0
+		mov	al, GC_OFF
 		out	dx, al
 		pop	si
 		leave
@@ -668,9 +666,7 @@ loc_818:
 		call	palette_show
 
 loc_822:
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		push	0Ch
 		push	64h
 		push	43h

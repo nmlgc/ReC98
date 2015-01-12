@@ -6529,8 +6529,8 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		nopcall	sub_E9FC
 		leave
@@ -6569,8 +6569,8 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		nopcall	sub_E9FC
 		leave
@@ -6596,8 +6596,8 @@ sub_E9CB	proc far
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	bp
 		retf
@@ -6729,8 +6729,8 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch	; '|'
-		mov	al, 0C0h ; 'À'
+		mov	dx, 7Ch
+		mov	al, GC_RMW
 		out	dx, al
 		test	bl, 1
 		jz	short loc_EA86
@@ -6796,8 +6796,8 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch	; '|'
-		mov	al, 80h
+		mov	dx, 7Ch
+		mov	al, GC_TDW
 		out	dx, al
 		test	bl, 1
 		jz	short loc_EAD0
@@ -6859,8 +6859,8 @@ sub_EABB	endp
 sub_EB05	proc far
 		push	bp
 		mov	bp, sp
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	bp
 		retf

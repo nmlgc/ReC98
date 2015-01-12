@@ -1419,8 +1419,7 @@ loc_A05B:
 loc_A069:
 		cmp	si, 1
 		jnz	short loc_A0C5
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	2400173h
 		push	2500183h
 		call	grcg_boxfill
@@ -2660,8 +2659,7 @@ loc_AAA3:
 ; ---------------------------------------------------------------------------
 
 loc_AAD5:
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	140040h
 		push	3B0107h
 		call	grcg_byteboxfill_x
@@ -5363,8 +5361,7 @@ loc_BF3B:
 ; ---------------------------------------------------------------------------
 
 loc_BF57:
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
@@ -5490,15 +5487,13 @@ loc_C032:
 		call	sub_BCA5
 		or	ax, ax
 		jz	short loc_C032
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0 
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
@@ -5613,8 +5608,7 @@ loc_C155:
 ; ---------------------------------------------------------------------------
 
 loc_C173:
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
@@ -5631,15 +5625,13 @@ loc_C199:
 		call	sub_BCA5
 		or	ax, ax
 		jz	loc_C114
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x
@@ -5976,8 +5968,7 @@ loc_C4D8:
 		push	offset aEdbk1_rgb ; "edbk1.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0C00008h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -5990,8 +5981,7 @@ loc_C4D8:
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -6361,8 +6351,7 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1D0Eh
@@ -6464,8 +6453,7 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1D0Eh
@@ -7218,7 +7206,7 @@ arg_8		= word ptr  0Eh
 		sar	ax, 6
 		and	ax, 7
 		mov	[bp+var_10], ax
-		push	0C0h
+		push	GC_RMW
 		mov	ax, [bp+arg_4]
 		and	ax, 0Fh
 		push	ax

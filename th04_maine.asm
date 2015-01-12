@@ -1746,13 +1746,12 @@ loc_AC3F:
 ; ---------------------------------------------------------------------------
 
 loc_AC70:
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	140040h
 		push	3B0107h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	short loc_ACF0
 ; ---------------------------------------------------------------------------
@@ -2050,8 +2049,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_AEF1:
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	bx, 4
 		mov	ax, si
 		cwd
@@ -2170,8 +2168,8 @@ loc_AEF1:
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_B027:
@@ -2209,8 +2207,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B04E:
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2303,8 +2300,8 @@ loc_B04E:
 		push	ax
 		push	3
 		call	sub_D078
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_B13E:
@@ -2342,8 +2339,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B165:
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2436,8 +2432,8 @@ loc_B165:
 		push	ax
 		push	3
 		call	sub_D078
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_B255:
@@ -5360,7 +5356,7 @@ off_CB9E	dw offset loc_CA9A
 sub_CBB0	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, 0
+		mov	al, GC_OFF
 		out	7Ch, al
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -5368,7 +5364,7 @@ sub_CBB0	proc near
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -5784,7 +5780,7 @@ loc_D1FC:
 		push	di
 		push	ds
 		mov	dx, [bp+0Ah]
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		pushf
 		cli
 		out	7Ch, al
@@ -5994,7 +5990,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	ds
 		cli
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al

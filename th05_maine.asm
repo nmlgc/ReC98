@@ -161,7 +161,7 @@ arg_4		= word ptr  0Ah
 		lodsw
 		cmp	al, 80h
 		jnz	short loc_2E3F
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		pushf
 		cli
 		out	7Ch, al
@@ -204,7 +204,7 @@ loc_2E1C:
 		jnz	short loc_2E1C
 		sub	di, bp
 		lodsw
-		cmp	al, 80h
+		cmp	al, GC_TDW
 		jz	short loc_2E02
 		out	7Ch, al
 
@@ -1477,13 +1477,12 @@ loc_AD9A:
 ; ---------------------------------------------------------------------------
 
 loc_ADE3:
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	140040h
 		push	3B0107h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	short loc_AE64
 ; ---------------------------------------------------------------------------
@@ -2024,8 +2023,7 @@ arg_2		= word ptr  6
 		mov	[bp+var_2], ax
 		push	2
 		call	palette_black_out
-		push	0C0000Eh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2039,8 +2037,8 @@ arg_2		= word ptr  6
 		push	4F018Fh
 		call	grcg_byteboxfill_x
 		call	sub_B37C
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
@@ -2164,8 +2162,7 @@ sub_B3CB	proc near
 		mov	byte_15018, al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	0C0000Eh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2178,8 +2175,8 @@ sub_B3CB	proc near
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		mov	allcast_screen_plus_one, 0
 		push	0
@@ -3179,8 +3176,7 @@ loc_BB00:
 		push	ax
 		push	7
 		call	graph_gaiji_putc
-		push	0C00007h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		shl	ax, 4
@@ -3223,8 +3219,8 @@ loc_BB00:
 		lea	ax, [di+10h]
 		push	ax
 		call	grcg_hline
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -7067,8 +7063,7 @@ loc_DBFF:
 		add	ax, 7
 		cmp	ax, [bp+arg_2]
 		jge	short loc_DC48
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	ax, [bp+arg_A]
 		mov	bx, 8
 		cwd
@@ -7086,8 +7081,8 @@ loc_DBFF:
 		dec	ax
 		push	ax
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		mov	al, 2
 		jmp	loc_DCF6
@@ -7590,8 +7585,7 @@ var_2		= word ptr -2
 		mov	si, 55E4h
 		mov	[bp+var_8], 5614h
 		mov	[bp+var_A], 5618h
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	ax, word_151CE
 		cwd
 		sub	ax, dx
@@ -7621,8 +7615,8 @@ var_2		= word ptr -2
 		dec	ax
 		push	ax
 		call	grcg_boxfill
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		xor	di, di
 		jmp	short loc_E098
@@ -7683,7 +7677,7 @@ loc_E0A6:
 		idiv	bx
 		add	ax, word_151D8
 		mov	[bp+var_4], ax
-		push	0C0h
+		push	GC_RMW
 		mov	ax, [bp+var_6]
 		inc	[bp+var_6]
 		push	ax
@@ -7692,8 +7686,8 @@ loc_E0A6:
 		push	[bp+var_4]
 		push	10h
 		call	grcg_circlefill
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_E0F6:
@@ -7738,8 +7732,7 @@ loc_E0FB:
 ; ---------------------------------------------------------------------------
 
 loc_E161:
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+var_2]
 		add	ax, 10h
 		push	ax
@@ -7750,8 +7743,8 @@ loc_E161:
 		mov	ah, 0
 		push	ax
 		call	grcg_circlefill
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 
 loc_E18B:
@@ -7814,8 +7807,7 @@ loc_E219:
 loc_E21D:
 		cmp	di, 40h
 		jl	loc_E193
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	ax, word_151CE
 		cwd
 		sub	ax, dx
@@ -7936,8 +7928,8 @@ loc_E21D:
 		add	ax, 7
 		push	ax
 		call	grcg_boxfill
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -8039,8 +8031,7 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		push	di
-		push	800001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_TDW shl 16) + 1
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -8053,8 +8044,7 @@ loc_E3E4:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_E3E4
-		push	0C0000Dh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		xor	di, di
 		mov	si, [bp+arg_0]
 		add	si, 56D8h
@@ -8066,8 +8056,8 @@ loc_E406:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_E406
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -8094,22 +8084,20 @@ var_2		= word ptr -2
 		mov	word_116E8, 10h
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		call	sub_D21D
 		push	3700h
 		call	sub_E39F
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -8119,8 +8107,8 @@ var_2		= word ptr -2
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -8527,7 +8515,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		push	ds
 		mov	dx, [bp+arg_4]
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		pushf
 		cli
 		out	7Ch, al
@@ -9907,7 +9895,7 @@ sub_F478	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		mov	es:[495h], al
 		popf

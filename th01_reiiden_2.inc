@@ -13125,9 +13125,7 @@ loc_22601:
 loc_22604:
 		cmp	[bp+var_1], 28h	; '('
 		jb	loc_2253F
-		push	0C0h ; '?'
-		push	[bp+arg_2]
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, [bp+arg_2]
 		mov	[bp+var_1], 0
 		jmp	short loc_22655
 ; ---------------------------------------------------------------------------

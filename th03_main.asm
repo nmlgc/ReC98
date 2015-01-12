@@ -664,12 +664,10 @@ loc_9A25:
 		out	dx, al
 		mov	byte_23AEF, al
 		xor	byte_23AEE, 1
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	bx, 3932h
 		call	sub_B37C
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	bx, 395Ah
 		call	sub_B37C
 		call	grcg_off
@@ -1513,8 +1511,7 @@ off_A217	dw offset loc_A014
 sub_A21F	proc near
 		push	bp
 		mov	bp, sp
-		push	0C00002h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 		pushd	0
 		push	27F00C7h
 		call	grc_setclip
@@ -2834,8 +2831,7 @@ loc_B4E3:
 		sub	word_1FBCA, 17h
 		add	word_1FBCC, 12h
 		add	word_1FBD2, 17h
-		push	0C00002h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 		mov	trapezoid_hmask, 5555h
 		xor	si, si
 		jmp	short loc_B565
@@ -2968,8 +2964,7 @@ loc_B645:
 		sub	word_1FBC8, 12h
 		sub	word_1FBCE, 17h
 		add	word_1FBD0, 12h
-		push	0C00002h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 		xor	si, si
 		jmp	loc_B706
 ; ---------------------------------------------------------------------------
@@ -4033,8 +4028,7 @@ sub_BE5D	proc near
 		jz	loc_C0D5
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	word_20CE4, 3284h
 		xor	si, si
 		jmp	loc_BF41
@@ -4251,8 +4245,7 @@ loc_BFF0:
 loc_C08D:
 		cmp	byte_20CE6, 3
 		jnz	short loc_C0D5
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -5370,9 +5363,7 @@ loc_C86B:
 		mov	si, 6
 
 loc_C86E:
-		push	0C0h
-		push	si
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, si
 		mov	bx, 232h
 		call	sub_B398
 		xor	ax, ax
@@ -5403,9 +5394,7 @@ loc_C8AB:
 		mov	si, 6
 
 loc_C8AE:
-		push	0C0h
-		push	si
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, si
 		mov	bx, 25Ah
 		call	sub_B398
 		xor	ax, ax
@@ -5452,12 +5441,12 @@ var_1		= byte ptr -1
 		jz	short loc_C909
 
 loc_C901:
-		push	0C00009h
+		push	(GC_RMW shl 16) + 9
 		jmp	short loc_C90F
 ; ---------------------------------------------------------------------------
 
 loc_C909:
-		push	0C0000Fh
+		push	(GC_RMW shl 16) + 15
 
 loc_C90F:
 		call	grcg_setcolor
@@ -5477,12 +5466,12 @@ loc_C921:
 		jz	short loc_C93E
 
 loc_C936:
-		push	0C00009h
+		push	(GC_RMW shl 16) + 9
 		jmp	short loc_C944
 ; ---------------------------------------------------------------------------
 
 loc_C93E:
-		push	0C0000Fh
+		push	(GC_RMW shl 16) + 15
 
 loc_C944:
 		call	grcg_setcolor
@@ -5527,7 +5516,7 @@ loc_C98C:
 		mov	[bp+var_1], 0Ch
 
 loc_C990:
-		push	0C0h
+		push	GC_RMW
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -5571,7 +5560,7 @@ loc_C9DC:
 		mov	[bp+var_1], 0Ch
 
 loc_C9E0:
-		push	0C0h
+		push	GC_RMW
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
@@ -6208,8 +6197,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, 3946h
-		push	0C0000Dh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	[bp+var_2], 0
 		jmp	loc_D013
 ; ---------------------------------------------------------------------------
@@ -6533,8 +6521,7 @@ sub_D135	proc far
 		mov	word_1F2E8, 3
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		push	0C0000Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -6679,8 +6666,7 @@ loc_D276:
 		mov	word_1F2E8, 3
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		push	0C0000Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 39CCh
@@ -6781,8 +6767,7 @@ sub_D340	proc far
 		mov	word_1F2E8, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		push	0C0000Dh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	byte_2142C, 40h
@@ -6931,8 +6916,7 @@ loc_D488:
 		mov	word_1F2E8, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		push	0C0000Dh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 39CCh
@@ -7013,8 +6997,7 @@ sub_D50E	endp
 
 
 sub_D52E	proc near
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 0A82Dh
 		mov	es, ax
 		assume es:nothing
@@ -7159,7 +7142,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C0h
+		push	GC_RMW
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		push	ax
@@ -7218,7 +7201,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C0h
+		push	GC_RMW
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		push	ax
@@ -10354,9 +10337,7 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C0h
-		push	0
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, 0
 		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		add	ax, 3930h
@@ -13480,8 +13461,7 @@ loc_1098A:
 		push	0BFh
 		call	grc_setclip
 		call	egc_off
-		push	0C0000Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		push	word_20E50
 		mov	al, [bp+var_7]
 		mov	ah, 0
@@ -20703,9 +20683,7 @@ var_2		= word ptr -2
 		cmp	byte ptr [bx], 0
 		jz	loc_146AB
 		call	egc_off
-		push	0C0h
-		push	0AA0055AAh
-		call	grcg_settile_1line
+		call	grcg_settile_1line pascal, GC_RMW, 0AA0055AAh
 		mov	[bp+var_4], 0
 		mov	si, 0Bh
 		jmp	short loc_14594
@@ -20745,9 +20723,7 @@ loc_14590:
 loc_14594:
 		cmp	si, 6
 		jg	short loc_1454D
-		push	0C0h
-		push	0FF00AA55h
-		call	grcg_settile_1line
+		call	grcg_settile_1line pascal, GC_RMW, 0FF00AA55h
 		mov	[bp+var_4], 0
 		mov	si, 6
 		jmp	short loc_145F8
@@ -20787,9 +20763,7 @@ loc_145F4:
 loc_145F8:
 		cmp	si, 3
 		jg	short loc_145B1
-		push	0C0h
-		push	0FF55FF55h
-		call	grcg_settile_1line
+		call	grcg_settile_1line pascal, GC_RMW, 0FF55FF55h
 		mov	[bp+var_4], 0
 		mov	si, 3
 		jmp	short loc_1465C
@@ -20829,8 +20803,7 @@ loc_14658:
 loc_1465C:
 		or	si, si
 		jg	short loc_14615
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	bx, word_1FE4E
 		push	word ptr [bx+2]
 		mov	al, byte ptr word_1FE88
@@ -21148,7 +21121,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 40h
 		jnb	short loc_14914
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -22261,7 +22234,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 40h
 		jnb	loc_152C2
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -23269,13 +23242,13 @@ var_2		= word ptr -2
 		mov	dx, 0E0h
 		sub	dx, ax
 		mov	di, dx
-		push	0C00008h
+		push	(GC_RMW shl 16) + 8
 		jmp	short loc_15A53
 ; ---------------------------------------------------------------------------
 
 loc_15A4A:
 		mov	di, 80h
-		push	0C00007h
+		push	(GC_RMW shl 16) + 7
 
 loc_15A53:
 		call	grcg_setcolor
@@ -23352,8 +23325,7 @@ loc_15AE6:
 		mov	dx, 140h
 		sub	dx, ax
 		mov	di, dx
-		push	0C00008h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
 		mov	si, 3
 		jmp	short loc_15B7E
 ; ---------------------------------------------------------------------------
@@ -26185,7 +26157,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 50h	; 'P'
 		ja	short loc_17255
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -27649,8 +27621,7 @@ loc_17D48:
 
 loc_17D56:
 		call	egc_off
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -28476,7 +28447,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 40h
 		jnb	short loc_18455
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -28880,7 +28851,7 @@ var_2		= word ptr -2
 		mov	[bp+var_3], al
 		cmp	[bp+var_3], 40h
 		jnb	short loc_18801
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -29331,7 +29302,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 40h
 		jnb	loc_18C95
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -29553,7 +29524,7 @@ var_1		= byte ptr -1
 		call	egc_off
 		cmp	[bp+var_1], 40h
 		jnb	short loc_18E39
-		push	0C0h
+		push	GC_RMW
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
@@ -29617,8 +29588,7 @@ loc_18E7C:
 		mov	ah, 0
 		push	ax
 		call	sub_EFF4
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 900h
 		sub	ax, word_220EC
 		push	ax
@@ -29887,8 +29857,7 @@ var_1		= byte ptr -1
 loc_190CF:
 		cmp	[bp+var_1], 70h	; 'p'
 		jnb	loc_19165
-		push	0C00009h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
 		push	8
 		mov	ax, [bp+var_4]
 		add	ax, 0FFFAh
@@ -29904,8 +29873,7 @@ loc_190CF:
 		add	ax, 6
 		push	ax
 		call	grcg_trapezoid
-		push	0C0000Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		push	8
 		mov	ax, [bp+var_4]
 		add	ax, 0FFFDh
@@ -29921,8 +29889,7 @@ loc_190CF:
 		add	ax, 3
 		push	ax
 		call	grcg_trapezoid
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		push	8
 		mov	ax, [bp+var_4]
 		dec	ax
@@ -29956,8 +29923,7 @@ loc_19179:
 		cwd
 		idiv	bx
 		mov	di, ax
-		push	0C00009h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
 		push	8
 		mov	ax, [bp+var_4]
 		sub	ax, di
@@ -29978,8 +29944,7 @@ loc_19179:
 		sub	ax, dx
 		sar	ax, 1
 		mov	di, ax
-		push	0C0000Ah
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		push	8
 		mov	ax, [bp+var_4]
 		sub	ax, di
@@ -29997,8 +29962,7 @@ loc_19179:
 		call	grcg_trapezoid
 
 loc_191E4:
-		push	0C0000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		push	[bp+var_4]
 		push	8
 		push	[bp+var_8]
@@ -33374,8 +33338,7 @@ loc_1AA24:
 		cmp	byte ptr [bx+1], 10h
 		ja	loc_1AB7B
 		call	egc_off
-		push	0C00006h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
 		mov	bx, [bp+var_A]
 		mov	al, [bx+1]
 		mov	[bp+var_7], al
@@ -33528,12 +33491,12 @@ loc_1AB7B:
 		mov	[bp+var_7], al
 		cmp	[bp+var_7], 10h
 		jle	short loc_1AB9C
-		push	0C00005h
+		push	(GC_RMW shl 16) + 5
 		jmp	short loc_1ABA2
 ; ---------------------------------------------------------------------------
 
 loc_1AB9C:
-		push	0C00006h
+		push	(GC_RMW shl 16) + 6
 
 loc_1ABA2:
 		call	grcg_setcolor

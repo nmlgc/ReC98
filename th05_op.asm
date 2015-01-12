@@ -600,9 +600,7 @@ arg_2		= word ptr  6
 		push	ax
 		push	800010h
 		call	sub_E2D8
-		push	0C0h
-		push	[bp+arg_0]
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	[bp+var_2], si
 		mov	bx, si
 		cmp	bx, 5
@@ -627,8 +625,7 @@ loc_A653:
 
 loc_A658:
 		jnz	short loc_A665
-		push	0C00002h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 
 loc_A665:
 		push	110010Eh
@@ -662,8 +659,8 @@ loc_A695:
 		call	sub_E114
 
 loc_A69A:
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A705
@@ -737,9 +734,7 @@ loc_A737:
 		push	[bp+var_4]
 		push	0C00010h
 		call	sub_E2D8
-		push	0C0h
-		push	[bp+arg_0]
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	bx, [bp+arg_2]
 		cmp	bx, 7
 		ja	loc_A8DA
@@ -892,8 +887,8 @@ loc_A8C7:
 		mov	si, 15h
 
 loc_A8DA:
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A951
@@ -3263,8 +3258,7 @@ var_1		= byte ptr -1
 		out	dx, al
 		mov	dx, 0A4h
 		out	dx, al
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -3277,8 +3271,8 @@ var_1		= byte ptr -1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	1
 		call	graph_copy_page
@@ -3441,8 +3435,7 @@ arg_2		= byte ptr  6
 		jge	loc_BF48
 		cmp	[bp+arg_0], 0
 		jz	short loc_BEF4
-		push	0C00005h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
 		push	0C012Ch
 		lea	ax, [si+60h]
 		push	ax
@@ -3463,8 +3456,8 @@ arg_2		= byte ptr  6
 		lea	ax, [si+6Fh]
 		push	ax
 		call	grcg_vline
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		jmp	short loc_BF05
 ; ---------------------------------------------------------------------------
@@ -3923,11 +3916,10 @@ sub_C293	proc near
 		mov	bp, sp
 		call	sub_BFF6
 		call	sub_D96E
-		push	0CE000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
 		call	sub_C09D
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		push	1
 		call	frame_delay
@@ -5322,8 +5314,7 @@ loc_CE8D:
 		mov	si, 4632h
 
 loc_CE90:
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	[bp+var_6], 0AAAAAAAAh
 		xor	di, di
 		jmp	short loc_CEE5
@@ -5362,8 +5353,8 @@ loc_CEDB:
 loc_CEE5:
 		cmp	di, 0A0h
 		jl	short loc_CEA7
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		pop	di
 		pop	si
@@ -5457,8 +5448,7 @@ loc_CF82:
 
 loc_CF8C:
 		call	sub_D590
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [si+0D8h]
 		mov	bx, 8
 		cwd
@@ -5486,8 +5476,8 @@ loc_CF8C:
 		lea	ax, [di+9Fh]
 		push	ax
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
+		mov	dx, 7Ch
+		mov	al, GC_OFF
 		out	dx, al
 		mov	al, byte ptr word_14118
 		mov	ah, 0
@@ -5920,7 +5910,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		push	ds
 		mov	dx, [bp+arg_4]
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		pushf
 		cli
 		out	7Ch, al
@@ -6404,7 +6394,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	ds
 		cli
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -6565,7 +6555,7 @@ sub_D834	endp
 sub_D894	proc far
 		push	si
 		push	di
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		mov	ax, 0A800h
 		mov	es, ax
@@ -6662,7 +6652,7 @@ sub_D96E	proc far
 		push	ds
 		push	ds
 		pop	fs
-		mov	al, 0C0h
+		mov	al, GC_RMW
 		out	7Ch, al
 		mov	ax, 0A800h
 		mov	es, ax
@@ -7874,7 +7864,7 @@ sub_E354	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, 80h
+		mov	al, GC_TDW
 		out	7Ch, al
 		mov	es:[495h], al
 		popf

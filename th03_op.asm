@@ -2222,8 +2222,7 @@ sub_A899	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_A5F6
-		push	0CE000Fh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
 		call	sub_A6A3
 		call	grcg_off
 		mov	dx, 0A4h ; '¤'
@@ -3776,8 +3775,7 @@ var_2		= word ptr -2
 		call	sub_CAF6
 
 loc_B590:
-		push	0C0000Eh
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
 		mov	[bp+var_2], 0
 		mov	[bp+var_4], 13Bh
 		jmp	short loc_B625
@@ -4040,8 +4038,7 @@ loc_B761:
 		mov	ax, si
 		add	ax, si
 		mov	[bp+var_2], ax
-		push	0C00006h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
 		push	word_FC52
 		mov	al, byte ptr word_FC52
 		add	al, al
@@ -4063,8 +4060,7 @@ loc_B761:
 		push	[bp+var_4]
 		push	si
 		call	sub_B6C0
-		push	0C00005h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
 		mov	ax, word_FC66
 		cwd
 		sub	ax, dx
@@ -4119,8 +4115,7 @@ loc_B7D4:
 loc_B824:
 		cmp	[bp+var_6], di
 		jle	short loc_B7D4
-		push	0C00001h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [di+1]
 		mov	[bp+var_6], ax
 		jmp	short loc_B88C
@@ -4549,8 +4544,7 @@ loc_BBD0:
 		mov	byte_FC5C, al
 		mov	dx, 0A4h ; '¤'
 		out	dx, al
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -4706,8 +4700,7 @@ loc_BD42:
 		mov	byte_FC5C, al
 		mov	dx, 0A4h ; '¤'
 		out	dx, al
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -4825,8 +4818,7 @@ loc_BE68:
 		mov	byte_FC5C, al
 		mov	dx, 0A4h ; '¤'
 		out	dx, al
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -4959,8 +4951,7 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1AA8h
@@ -5063,8 +5054,7 @@ arg_4		= word ptr  0Ah
 		mov	bp, sp
 		push	si
 		push	di
-		push	0C00000h
-		call	grcg_setcolor
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	si, [bp+arg_0]
 		shl	si, 4
 		add	si, 1AA8h
@@ -5730,7 +5720,7 @@ arg_8		= word ptr  0Eh
 		sar	ax, 6
 		and	ax, 7
 		mov	[bp+var_10], ax
-		push	0C0h
+		push	GC_RMW
 		mov	ax, [bp+arg_4]
 		and	ax, 0Fh
 		push	ax
