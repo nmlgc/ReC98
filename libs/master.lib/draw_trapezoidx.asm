@@ -59,10 +59,10 @@ PAGE 98,120
 
 ; LINEWORK構造体の各メンバの定義
 ; 名称  - ｵﾌｾｯﾄ - 説明
-x	= 0	; 現在のx座標
-dlx	= 2	; 誤差変数への加算値
-s	= 4	; 誤差変数
-d	= 6	; 最小横移動量(符号付き)
+koizoidx_x	= 0	; 現在のx座標
+koizoidx_dlx	= 2	; 誤差変数への加算値
+koizoidx_s	= 4	; 誤差変数
+koizoidx_d	= 6	; 最小横移動量(符号付き)
 
 ;-------------------------------------------------------------------------
 ; draw_trapezoidx - 台形の描画 高速（機能削減）版
@@ -77,14 +77,14 @@ d	= 6	; 最小横移動量(符号付き)
 ;
 	public draw_trapezoidx
 draw_trapezoidx	PROC NEAR
-	mov	AX,[trapez_a+d]
+	mov	AX,[trapez_a+koizoidx_d]
 	mov	CS:[koizoidx_trapez_a_d],AX
-	mov	AX,[trapez_b+d]
+	mov	AX,[trapez_b+koizoidx_d]
 	mov	CS:[koizoidx_trapez_b_d],AX
 
-	mov	AX,[trapez_a+dlx]
+	mov	AX,[trapez_a+koizoidx_dlx]
 	mov	CS:[koizoidx_trapez_a_dlx],AX
-	mov	AX,[trapez_b+dlx]
+	mov	AX,[trapez_b+koizoidx_dlx]
 	mov	CS:[koizoidx_trapez_b_dlx],AX
 
 	out	64h,AL		; 'out anywhere' for CPU cache clear
@@ -92,8 +92,8 @@ draw_trapezoidx	PROC NEAR
 
 	push	BP
 
-	mov	BP,[trapez_a+x]
-	mov	CX,[trapez_b+x]
+	mov	BP,[trapez_a+koizoidx_x]
+	mov	CX,[trapez_b+koizoidx_x]
 
 	EVEN
 @@YLOOP:
@@ -134,16 +134,16 @@ draw_trapezoidx	PROC NEAR
 	stosw
 	; 水平線 (without clipping) end ===================================
 
-	add	[trapez_b+s],1234h
+	add	[trapez_b+koizoidx_s],1234h
 	org $-2
 koizoidx_trapez_b_dlx	dw ?
-	mov	CX,[trapez_b+x]
+	mov	CX,[trapez_b+koizoidx_x]
 	adc	CX,1234h
 	org $-2
 koizoidx_trapez_b_d	dw ?
-	mov	[trapez_b+x],CX
+	mov	[trapez_b+koizoidx_x],CX
 
-	add	[trapez_a+s],1234h
+	add	[trapez_a+koizoidx_s],1234h
 	org $-2
 koizoidx_trapez_a_dlx	dw ?
 	adc	BP,1234h
@@ -154,7 +154,7 @@ koizoidx_trapez_a_d	dw ?
 	dec	DX			; ylen
 	jns	short @@YLOOP
 
-	mov	[trapez_a+x],BP
+	mov	[trapez_a+koizoidx_x],BP
 	pop	BP
 	ret
 	EVEN

@@ -57,17 +57,17 @@ func GRCG_HLINE
 	push	DI
 
 	; PARAMETERS
-	xl = (RETSIZE+3)*2
-	xr = (RETSIZE+2)*2
-	 y = (RETSIZE+1)*2
+	@@xl = (RETSIZE+3)*2
+	@@xr = (RETSIZE+2)*2
+	 @@y = (RETSIZE+1)*2
 
-	mov	DX,[BP+y]
+	mov	DX,[BP+@@y]
 	sub	DX,ClipYT	;
 	cmp	DX,ClipYH	;
 	ja	short @@RETURN	; y がクリップ範囲外 -> skip
 
-	mov	CX,[BP+xl]
-	mov	BX,[BP+xr]
+	mov	CX,[BP+@@xl]
+	mov	BX,[BP+@@xr]
 
 	mov	BP,DX		; BP=VRAM ADDR
 	shl	BP,2		;

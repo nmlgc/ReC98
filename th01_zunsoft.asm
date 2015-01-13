@@ -21,6 +21,9 @@
 include ReC98.inc
 include th01/th01.asm
 
+CIRCLE_COUNT = 4
+STAR_COUNT = 50
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -69,16 +72,11 @@ sub_384		proc near
 		call	egc_start
 		call	sub_367
 		call	text_clear
-		mov	byte ptr ds:2870h, 0
-		mov	byte ptr ds:2871h, 1
-		push	60h
-		push	64h
-		push	21Fh
-		push	12Bh
-		call	grc_setclip
+		mov	page_write, 0
+		mov	page_show, 1
+		call	grc_setclip pascal, 96, 100, 543, 299
 		call	graph_hide
-		push	21CEh
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, offset aTouhou_dat
 		call	palette_show
 		mov	PaletteTone, 0
 		call	palette_show
@@ -129,14 +127,14 @@ arg_6		= word ptr  0Ah
 		and	bx, 0FFh
 		add	bx, bx
 		push	ax
-		mov	ax, [bx+2368h]
+		mov	ax, _CosTable8[bx]
 		push	dx
 		cwd
 		pop	cx
 		pop	bx
 		call	N_LXMUL@
 		mov	cl, 8
-		call	near ptr N_LXRSH@
+		call	N_LXRSH@
 		mov	[si], ax
 		mov	ax, [bp+arg_0]
 		cwd
@@ -145,20 +143,20 @@ arg_6		= word ptr  0Ah
 		and	bx, 0FFh
 		add	bx, bx
 		push	ax
-		mov	ax, [bx+22E8h]
+		mov	ax, _SinTable8[bx]
 		push	dx
 		cwd
 		pop	cx
 		pop	bx
 		call	N_LXMUL@
 		mov	cl, 8
-		call	near ptr N_LXRSH@
+		call	N_LXRSH@
 		mov	[di], ax
 		pop	di
 		pop	si
 		pop	bp
 		retn	8
-sub_3E4		endp ; sp-analysis failed
+sub_3E4		endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -169,59 +167,59 @@ sub_439		proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word ptr ds:2878h, 80h
-		mov	word ptr ds:2952h, 0FFF8h
-		mov	word ptr ds:287Ah, 140h
-		mov	word ptr ds:295Ah, 8
-		mov	word ptr ds:287Ch, 100h
-		mov	word ptr ds:2954h, 0FFF8h
-		mov	word ptr ds:287Eh, 0F0h
-		mov	word ptr ds:295Ch, 8
-		mov	word ptr ds:2880h, 180h
-		mov	word ptr ds:2956h, 0FFF8h
-		mov	word ptr ds:2882h, 0A0h
-		mov	word ptr ds:295Eh, 8
-		mov	word ptr ds:2884h, 200h
-		mov	word ptr ds:2958h, 0FFF8h
-		mov	word ptr ds:2886h, 50h
-		mov	word ptr ds:2960h, 8
-		mov	word ptr ds:2950h, 0
-		mov	byte ptr ds:2872h, 0
-		mov	byte ptr ds:2873h, 0
-		mov	byte ptr ds:2874h, 17h
-		mov	byte ptr ds:2875h, 0
-		mov	byte ptr ds:2876h, 0
+		mov	(circle_pos[0 * size Point]).x, 128
+		mov	circle_speed_x[0*2], -8
+		mov	(circle_pos[0 * size Point]).y, 320
+		mov	circle_speed_y[0*2], 8
+		mov	(circle_pos[1 * size Point]).x, 256
+		mov	circle_speed_x[1*2], -8
+		mov	(circle_pos[1 * size Point]).y, 240
+		mov	circle_speed_y[1*2], 8
+		mov	(circle_pos[2 * size Point]).x, 384
+		mov	circle_speed_x[2*2], -8
+		mov	(circle_pos[2 * size Point]).y, 160
+		mov	circle_speed_y[2*2], 8
+		mov	(circle_pos[3 * size Point]).x, 512
+		mov	circle_speed_x[3*2], -8
+		mov	(circle_pos[3 * size Point]).y, 80
+		mov	circle_speed_y[3*2], 8
+		mov	frame, 0
+		mov	tone, 0
+		mov	logo_num, 0
+		mov	wave_len, 23
+		mov	wave_phase, 0
+		mov	byte ptr wave_amp, 0
 		xor	si, si
 		jmp	short loc_4F5
 ; ---------------------------------------------------------------------------
 
 loc_4C0:
 		call	IRand
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+2888h], dx
+		mov	star_pos[bx].x, dx
 		call	IRand
-		mov	bx, 190h
+		mov	bx, 400
 		cwd
 		idiv	bx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+288Ah], dx
+		mov	star_pos[bx].y, dx
 		call	IRand
-		mov	bx, 20h
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	dl, 6
-		mov	[si+2963h], dl
+		mov	star_speed[si], dl
 		inc	si
 
 loc_4F5:
-		cmp	si, 32h
+		cmp	si, STAR_COUNT
 		jl	short loc_4C0
-		mov	byte ptr ds:2962h, 40h
+		mov	star_angle, 64
 		pop	si
 
 loc_500:
@@ -238,70 +236,70 @@ sub_502		proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 3
+		mov	si, CIRCLE_COUNT - 1
 		jmp	loc_5A6
 ; ---------------------------------------------------------------------------
 
 loc_50C:
 		push	GC_RMW
-		mov	al, [si+21D9h]
+		mov	al, CIRCLE_COLORS[si]
 		cbw
 		push	ax
 		call	grcg_setcolor
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+2878h]
+		push	circle_pos[bx].x
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+287Ah]
-		push	60h
+		push	circle_pos[bx].y
+		push	96
 		call	grcg_circlefill
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+2952h]
+		mov	ax, circle_speed_x[bx]
 		mov	bx, si
 		shl	bx, 2
-		add	[bx+2878h], ax
+		add	circle_pos[bx].x, ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+295Ah]
+		mov	ax, circle_speed_y[bx]
 		mov	bx, si
 		shl	bx, 2
-		add	[bx+287Ah], ax
+		add	circle_pos[bx].y, ax
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+2878h], 20h
+		cmp	circle_pos[bx].x, 32
 		jle	short loc_56A
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+2878h], 25Fh
+		cmp	circle_pos[bx].x, 607
 		jle	short loc_57B
 
 loc_56A:
 		mov	bx, si
 		add	bx, bx
-		mov	dx, 0FFFFh
-		mov	ax, [bx+2952h]
+		mov	dx, -1
+		mov	ax, circle_speed_x[bx]
 		imul	dx
-		mov	[bx+2952h], ax
+		mov	circle_speed_x[bx], ax
 
 loc_57B:
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+287Ah], 20h
+		cmp	circle_pos[bx].y, 32
 		jle	short loc_594
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+287Ah], 16Fh
+		cmp	circle_pos[bx].y, 367
 		jle	short loc_5A5
 
 loc_594:
 		mov	bx, si
 		add	bx, bx
-		mov	dx, 0FFFFh
-		mov	ax, [bx+295Ah]
+		mov	dx, -1
+		mov	ax, circle_speed_y[bx]
 		imul	dx
-		mov	[bx+295Ah], ax
+		mov	circle_speed_y[bx], ax
 
 loc_5A5:
 		dec	si
@@ -341,78 +339,78 @@ var_2		= word ptr -2
 loc_5C8:
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+2888h]
+		push	star_pos[bx].x
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+288Ah]
+		push	star_pos[bx].y
 		call	grcg_pset
 		lea	ax, [bp+var_2]
 		push	ax
 		lea	ax, [bp+var_4]
 		push	ax
-		push	word ptr ds:2962h
-		mov	al, [si+2963h]
+		push	word ptr star_angle
+		mov	al, star_speed[si]
 		mov	ah, 0
 		push	ax
 		call	sub_3E4
 		mov	bx, si
 		shl	bx, 2
 		mov	ax, [bp+var_2]
-		add	[bx+2888h], ax
+		add	star_pos[bx].x, ax
 		mov	bx, si
 		shl	bx, 2
 		mov	ax, [bp+var_4]
-		add	[bx+288Ah], ax
+		add	star_pos[bx].y, ax
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+2888h], 0
+		cmp	star_pos[bx].x, 0
 		jge	short loc_624
 		mov	bx, si
 		shl	bx, 2
-		add	word ptr [bx+2888h], 280h
+		add	star_pos[bx].x, 640
 		jmp	short loc_63C
 ; ---------------------------------------------------------------------------
 
 loc_624:
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+2888h], 280h
+		cmp	star_pos[bx].x, 640
 		jl	short loc_63C
 		mov	bx, si
 		shl	bx, 2
-		sub	word ptr [bx+2888h], 280h
+		sub	star_pos[bx].x, 640
 
 loc_63C:
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+288Ah], 0
+		cmp	star_pos[bx].y, 0
 		jge	short loc_655
 		mov	bx, si
 		shl	bx, 2
-		add	word ptr [bx+288Ah], 190h
+		add	star_pos[bx].y, 400
 		jmp	short loc_66D
 ; ---------------------------------------------------------------------------
 
 loc_655:
 		mov	bx, si
 		shl	bx, 2
-		cmp	word ptr [bx+288Ah], 190h
+		cmp	star_pos[bx].y, 400
 		jl	short loc_66D
 		mov	bx, si
 		shl	bx, 2
-		sub	word ptr [bx+288Ah], 190h
+		sub	star_pos[bx].y, 400
 
 loc_66D:
 		inc	si
 
 loc_66E:
-		cmp	si, 32h
+		cmp	si, STAR_COUNT
 		jge	short loc_676
 		jmp	loc_5C8
 ; ---------------------------------------------------------------------------
 
 loc_676:
-		inc	byte ptr ds:2962h
+		inc	star_angle
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
@@ -453,27 +451,27 @@ sub_683		endp
 sub_698		proc near
 		push	bp
 		mov	bp, sp
-		cmp	word ptr ds:2950h, 32h
+		cmp	frame, 50
 		jge	short loc_6A5
 		jmp	loc_7CB
 ; ---------------------------------------------------------------------------
 
 loc_6A5:
-		cmp	word ptr ds:2950h, 5Ah
+		cmp	frame, 90
 		jge	short loc_6CD
-		cmp	word ptr ds:2950h, 37h
+		cmp	frame, 55
 		jnz	short loc_6B6
 		jmp	loc_7A6
 ; ---------------------------------------------------------------------------
 
 loc_6B6:
-		cmp	word ptr ds:2950h, 3Ch
+		cmp	frame, 60
 		jnz	short loc_6C0
 		jmp	loc_7A6
 ; ---------------------------------------------------------------------------
 
 loc_6C0:
-		cmp	word ptr ds:2950h, 41h
+		cmp	frame, 65
 		jz	short loc_6CA
 		jmp	loc_7AE
 ; ---------------------------------------------------------------------------
@@ -483,121 +481,121 @@ loc_6CA:
 ; ---------------------------------------------------------------------------
 
 loc_6CD:
-		cmp	word ptr ds:2950h, 6Eh
+		cmp	frame, 110
 		jge	short loc_720
-		push	100h
-		push	0C0h
-		mov	al, ds:2873h
+		push	256
+		push	192
+		mov	al, logo_num
 		cbw
 		push	ax
-		mov	al, ds:2874h
+		mov	al, wave_len
 		cbw
 		push	ax
-		push	word ptr ds:2876h
-		mov	al, ds:2875h
+		push	wave_amp
+		mov	al, wave_phase
 		cbw
 		push	ax
 		call	super_wave_put
-		push	140h
-		push	0C0h
-		mov	al, ds:2873h
+		push	320
+		push	192
+		mov	al, logo_num
 		cbw
 		inc	ax
 		push	ax
-		mov	al, ds:2874h
+		mov	al, wave_len
 		cbw
 		push	ax
-		push	word ptr ds:2876h
-		mov	al, ds:2875h
+		push	wave_amp
+		mov	al, wave_phase
 		cbw
 		push	ax
 		call	super_wave_put
-		dec	byte ptr ds:2874h
+		dec	wave_len
 
 loc_711:
-		mov	al, ds:2875h
+		mov	al, wave_phase
 		add	al, 4
-		mov	ds:2875h, al
-		mov	al, ds:2876h
+		mov	wave_phase, al
+		mov	al, byte ptr wave_amp
 		add	al, 4
 		jmp	short loc_781
 ; ---------------------------------------------------------------------------
 
 loc_720:
-		cmp	word ptr ds:2950h, 82h
+		cmp	frame, 130
 		jge	short loc_786
-		cmp	word ptr ds:2950h, 6Eh
+		cmp	frame, 110
 		jnz	short loc_737
-		mov	al, ds:2873h
+		mov	al, logo_num
 		add	al, 2
-		mov	ds:2873h, al
+		mov	logo_num, al
 
 loc_737:
-		push	100h
-		push	0C0h
-		mov	al, ds:2873h
+		push	256
+		push	192
+		mov	al, logo_num
 		cbw
 		push	ax
-		mov	al, ds:2874h
+		mov	al, wave_len
 		cbw
 		push	ax
-		push	word ptr ds:2876h
-		mov	al, ds:2875h
+		push	wave_amp
+		mov	al, wave_phase
 		cbw
 		push	ax
 		call	super_wave_put
-		push	140h
-		push	0C0h
-		mov	al, ds:2873h
+		push	320
+		push	192
+		mov	al, logo_num
 		cbw
 		inc	ax
 		push	ax
-		mov	al, ds:2874h
+		mov	al, wave_len
 		cbw
 		push	ax
-		push	word ptr ds:2876h
-		mov	al, ds:2875h
+		push	wave_amp
+		mov	al, wave_phase
 		cbw
 		push	ax
 		call	super_wave_put
-		inc	byte ptr ds:2874h
-		mov	al, ds:2875h
+		inc	wave_len
+		mov	al, wave_phase
 		add	al, 4
-		mov	ds:2875h, al
-		mov	al, ds:2876h
-		add	al, 0FCh
+		mov	wave_phase, al
+		mov	al, byte ptr wave_amp
+		add	al, -4
 
 loc_781:
-		mov	ds:2876h, al
+		mov	byte ptr wave_amp, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_786:
-		cmp	word ptr ds:2950h, 0AAh
+		cmp	frame, 170
 		jge	short loc_7CB
-		cmp	word ptr ds:2950h, 9Bh
+		cmp	frame, 155
 		jz	short loc_7A6
-		cmp	word ptr ds:2950h, 0A0h
+		cmp	frame, 160
 		jz	short loc_7A6
-		cmp	word ptr ds:2950h, 0A5h
+		cmp	frame, 165
 		jnz	short loc_7AE
 
 loc_7A6:
-		mov	al, ds:2873h
+		mov	al, logo_num
 		add	al, 2
-		mov	ds:2873h, al
+		mov	logo_num, al
 
 loc_7AE:
-		push	100h
-		push	0C0h
-		mov	al, ds:2873h
+		push	256
+		push	192
+		mov	al, logo_num
 		cbw
 		push	ax
 		call	super_put_8
-		push	140h
-		push	0C0h
-		mov	al, ds:2873h
+		push	320
+		push	192
+		mov	al, logo_num
 		cbw
 		inc	ax
 		push	ax
@@ -644,44 +642,40 @@ loc_7F0:
 		call	sub_439
 
 loc_7F6:
-		cmp	word ptr ds:2950h, 0B4h
+		cmp	frame, 180
 		jle	short loc_80C
-		cmp	byte ptr ds:2872h, 0
+		cmp	tone, 0
 		jle	short loc_873
-		mov	al, ds:2872h
-		add	al, 0FEh
+		mov	al, tone
+		add	al, -2
 		jmp	short loc_818
 ; ---------------------------------------------------------------------------
 
 loc_80C:
-		cmp	byte ptr ds:2872h, 64h
+		cmp	tone, 100
 		jge	short loc_822
-		mov	al, ds:2872h
+		mov	al, tone
 		add	al, 2
 
 loc_818:
-		mov	ds:2872h, al
+		mov	tone, al
 		cbw
 		mov	PaletteTone, ax
 		call	palette_show
 
 loc_822:
 		call	grcg_setcolor pascal, GC_RMW, 0
-		push	0Ch
-		push	64h
-		push	43h
-		push	12Bh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, 12, 100, 67, 299
 		call	sub_5B6
 		call	sub_502
 		call	sub_698
 		call	sub_683
 		call	sub_683
-		mov	al, ds:2870h
-		mov	ds:2871h, al
+		mov	al, page_write
+		mov	page_show, al
 		out	0A4h, al
-		xor	byte ptr ds:2870h, 1
-		mov	al, ds:2870h
+		xor	page_write, 1
+		mov	al, page_write
 		out	0A6h, al
 		xor	di, di
 		xor	si, si
@@ -699,7 +693,7 @@ loc_864:
 		jl	short loc_85D
 		or	di, di
 		jnz	short loc_873
-		inc	word ptr ds:2950h
+		inc	frame
 		jmp	short loc_7F6
 ; ---------------------------------------------------------------------------
 
@@ -774,8 +768,8 @@ include libs/BorlandC/xfflush.asm
 		db    0
 		db    0
 include libs/BorlandC/c0[data].asm
-aTouhou_dat	db 'touhou.dat',0
-		db 4, 3, 2, 1, 0
+aTOUHOU_DAT	db 'touhou.dat',0
+CIRCLE_COLORS	db 4, 3, 2, 1, 0
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm
@@ -809,7 +803,21 @@ ExitEnd	label byte
 
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
-		db 126h dup(?)
+page_write	db ?
+page_show	db ?
+tone	db ?
+logo_num	db ?
+wave_len	db ?
+wave_phase	db ?
+wave_amp	dw ?
+circle_pos	Point CIRCLE_COUNT dup(<?>)
+star_pos	Point STAR_COUNT dup(<?>)
+frame		dw ?
+circle_speed_x	dw CIRCLE_COUNT dup(?)
+circle_speed_y	dw CIRCLE_COUNT dup(?)
+star_angle	db ?
+star_speed	db STAR_COUNT dup(?)
+		db    ?	;
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_wave_put[bss].asm

@@ -57,15 +57,15 @@ func GRCG_VLINE
 	push	DI
 
 	; PARAMETERS
-	x  = (RETSIZE+3)*2
-	y1 = (RETSIZE+2)*2
-	y2 = (RETSIZE+1)*2
+	@@x  = (RETSIZE+3)*2
+	@@y1 = (RETSIZE+2)*2
+	@@y2 = (RETSIZE+1)*2
 
 	mov	AX,ClipYT
 	mov	CX,ClipYH
 
-	mov	BX,[BP+y1]
-	mov	DX,[BP+y2]
+	mov	BX,[BP+@@y1]
+	mov	DX,[BP+@@y2]
 	cmp	BX,DX
 	jl	short @@GO
 	xchg	BX,DX
@@ -86,7 +86,7 @@ func GRCG_VLINE
 	and	DX,DI
 	add	DX,CX
 
-	mov	AX,[BP+x]	; xのクリップ
+	mov	AX,[BP+@@x]	; xのクリップ
 	cmp	AX,ClipXL
 	jl	short @@RETURN
 	cmp	AX,ClipXR
