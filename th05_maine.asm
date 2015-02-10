@@ -866,13 +866,13 @@ loc_A8B2:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_1081E
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_1081E
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, si
 		mov	ax, [bp+var_2]
 		mov	es:[bx], ax
@@ -10117,19 +10117,7 @@ include th04/hardware/snd[data].asm
 		db 0DDh
 		db 0DDh
 include th05/formats/pi_slot_buffers[bss].asm
-dword_1081E	dd 0A8000000h
-		db    0
-		db    0
-		db    0
-		db 0B0h	; °
-		db    0
-		db    0
-		db    0
-		db 0B8h	; ¸
-		db    0
-		db    0
-		db    0
-		db 0E0h
+include th05/hardware/vram_planes[data].asm
 byte_1082E	db 0
 		db 0
 byte_10830	db 0

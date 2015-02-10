@@ -9995,22 +9995,7 @@ loc_F503:
 		retf
 sub_F4EF	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F50E	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_1FD4C, 0A8000000h
-		mov	dword_1FD50, 0B0000000h
-		mov	dword_1FD54, 0B8000000h
-		mov	dword_1FD58, 0E0000000h
-		pop	bp
-		retf
-sub_F50E	endp
-
+include th01/hardware/vram_planes_set.asm
 include th02/formats/pi_slot_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10386,7 +10371,7 @@ sub_F913	proc far
 ; ---------------------------------------------------------------------------
 
 loc_F927:
-		nopcall	sub_F50E
+		nopcall	vram_planes_set
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -26656,7 +26641,7 @@ loc_17FCC:
 		sar	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, dword_1FD4C
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_6]
 		mov	es:[bx+si], ax
 
@@ -31709,7 +31694,7 @@ loc_1AF15:
 		shl	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, dword_1FD4C
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	es:[bx+si], ax
 
@@ -31772,7 +31757,7 @@ loc_1AFA2:
 		shl	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, dword_1FD4C
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	es:[bx+si], ax
 
@@ -38012,10 +37997,7 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_put_rect[bss].asm
-dword_1FD4C	dd ?
-dword_1FD50	dd ?
-dword_1FD54	dd ?
-dword_1FD58	dd ?
+include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1FFA8	dw ?

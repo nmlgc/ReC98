@@ -1883,7 +1883,7 @@ sub_A5B7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A5CA:
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_F82A
@@ -2289,23 +2289,23 @@ loc_A90B:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_4], ax
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		assume es:nothing
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F82C
 		mov	es:[bx+si], eax
-		les	bx, dword_F1EE
+		les	bx, VRAM_PLANE_R
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F830
 		mov	es:[bx+si], eax
-		les	bx, dword_F1F2
+		les	bx, VRAM_PLANE_G
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F834
 		mov	es:[bx+si], eax
-		les	bx, dword_F1F6
+		les	bx, VRAM_PLANE_E
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F838
@@ -2340,22 +2340,22 @@ loc_A98E:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_4], ax
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F82C
 		mov	es:[bx+si], eax
-		les	bx, dword_F1EE
+		les	bx, VRAM_PLANE_R
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F830
 		mov	es:[bx+si], eax
-		les	bx, dword_F1F2
+		les	bx, VRAM_PLANE_G
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F834
 		mov	es:[bx+si], eax
-		les	bx, dword_F1F6
+		les	bx, VRAM_PLANE_E
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F838
@@ -2433,25 +2433,25 @@ loc_AA8E:
 		les	bx, dword ptr unk_F82C
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F830
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1EE
+		les	bx, VRAM_PLANE_R
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F834
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1F2
+		les	bx, VRAM_PLANE_G
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F838
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1F6
+		les	bx, VRAM_PLANE_E
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		add	cx, 4
@@ -2487,25 +2487,25 @@ loc_AB16:
 		les	bx, dword ptr unk_F82C
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F830
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1EE
+		les	bx, VRAM_PLANE_R
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F834
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1F2
+		les	bx, VRAM_PLANE_G
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F838
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, dword_F1F6
+		les	bx, VRAM_PLANE_E
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		add	cx, 4
@@ -2572,7 +2572,7 @@ loc_ABDC:
 ; ---------------------------------------------------------------------------
 
 loc_ABE5:
-		les	bx, dword_F1EA
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_F82A
@@ -4862,22 +4862,7 @@ sub_BEB8	proc far
 		retf
 sub_BEB8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BED1	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_F1EA, 0A8000000h
-		mov	dword_F1EE, 0B0000000h
-		mov	dword_F1F2, 0B8000000h
-		mov	dword_F1F6, 0E0000000h
-		pop	bp
-		retf
-sub_BED1	endp
-
+include th01/hardware/vram_planes_set.asm
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_load.asm
@@ -5363,7 +5348,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_C435:
-		nopcall	sub_BED1
+		nopcall	vram_planes_set
 		call	graph_start
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
@@ -6692,10 +6677,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-dword_F1EA	dd ?
-dword_F1EE	dd ?
-dword_F1F2	dd ?
-dword_F1F6	dd ?
+include th01/hardware/vram_planes[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
 include libs/master.lib/pfint21[bss].asm

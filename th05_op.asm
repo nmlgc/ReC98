@@ -3578,7 +3578,7 @@ sub_BFB7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BFCA:
-		les	bx, dword_FA84
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_13E98
@@ -5337,7 +5337,7 @@ loc_CEBB:
 ; ---------------------------------------------------------------------------
 
 loc_CEC6:
-		les	bx, dword_FA84
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	eax, [bp+var_6]
 		mov	es:[bx], eax
@@ -8260,19 +8260,7 @@ include th04/hardware/snd[data].asm
 		db 0DDh
 		db 0DDh
 include th05/formats/pi_slot_buffers[bss].asm
-dword_FA84	dd 0A8000000h
-		db    0
-		db    0
-		db    0
-		db 0B0h	; °
-		db    0
-		db    0
-		db    0
-		db 0B8h	; ¸
-		db    0
-		db    0
-		db    0
-		db 0E0h
+include th05/hardware/vram_planes[data].asm
 byte_FA94	db 0
 		db 0
 SETUP_BGM_BODY	dd aSETUP_BGM_BODY1

@@ -22185,22 +22185,7 @@ byte_21215	db 0
 word_21216	dw 4E20h
 include th05/hardware/snd_load[data].asm
 include th04/hardware/snd[data].asm
-		db    0
-		db    0
-		db    0
-		db 0A8h	; ¨
-		db    0
-		db    0
-		db    0
-		db 0B0h	; °
-		db    0
-		db    0
-		db    0
-		db 0B8h	; ¸
-		db    0
-		db    0
-		db    0
-		db 0E0h
+include th05/hardware/vram_planes[data].asm
 byte_2123A	db 0
 		db 0
 aMiko_cfg	db 'MIKO.CFG',0

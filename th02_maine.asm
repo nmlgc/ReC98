@@ -433,19 +433,19 @@ loc_9724:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_8], ax
-		les	bx, dword_F896
+		les	bx, VRAM_PLANE_R
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
-		les	bx, dword_F89A
+		les	bx, VRAM_PLANE_G
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_4], ax
-		les	bx, dword_F89E
+		les	bx, VRAM_PLANE_E
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
@@ -457,7 +457,7 @@ loc_9724:
 		les	bx, [bp+arg_4]
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], ax
 		call	grcg_off
@@ -467,7 +467,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_8]
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -476,7 +476,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_6]
-		les	bx, dword_F896
+		les	bx, VRAM_PLANE_R
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -485,7 +485,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_4]
-		les	bx, dword_F89A
+		les	bx, VRAM_PLANE_G
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -494,7 +494,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_2]
-		les	bx, dword_F89E
+		les	bx, VRAM_PLANE_E
 		add	bx, si
 		or	es:[bx], ax
 		add	si, 50h	; 'P'
@@ -702,13 +702,13 @@ loc_98F6:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_F892
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -798,13 +798,13 @@ loc_9998:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_F892
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -890,13 +890,13 @@ loc_9A2E:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_F892
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -955,7 +955,7 @@ loc_9A99:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_2], ax
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	word ptr es:[bx], 0FFFFh
 		add	di, 10h
@@ -3545,22 +3545,7 @@ loc_B4C2:
 		retf
 sub_B4B7	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B4CC	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_F892, 0A8000000h
-		mov	dword_F896, 0B0000000h
-		mov	dword_F89A, 0B8000000h
-		mov	dword_F89E, 0E0000000h
-		pop	bp
-		retf
-sub_B4CC	endp
-
+include th01/hardware/vram_planes_set.asm
 include th02/formats/pi_slot_load.asm
 include th02/frame_delay.asm
 		db 0
@@ -3754,7 +3739,7 @@ sub_B756	proc far
 ; ---------------------------------------------------------------------------
 
 loc_B76A:
-		nopcall	sub_B4CC
+		nopcall	vram_planes_set
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -4977,13 +4962,13 @@ loc_C17E:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_F892
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp-0Ah]
 		mov	ax, es:[bx]
 		mov	[bp-8],	ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_F892
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, [bp-0Ah]
 		mov	ax, [bp-8]
 		mov	es:[bx], ax
@@ -6634,10 +6619,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-dword_F892	dd ?
-dword_F896	dd ?
-dword_F89A	dd ?
-dword_F89E	dd ?
+include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_FAEE	dw ?

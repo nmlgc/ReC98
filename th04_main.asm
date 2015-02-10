@@ -18055,21 +18055,7 @@ seg002		segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_130EE	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_24604, 0A8000000h
-		mov	dword_24608, 0B0000000h
-		mov	dword_2460C, 0B8000000h
-		mov	dword_24610, 0E0000000h
-		pop	bp
-		retf
-sub_130EE	endp
-
+include th01/hardware/vram_planes_set.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18562,7 +18548,7 @@ arg_0		= dword	ptr  6
 
 loc_1367D:
 		mov	bbufsiz, 1000h
-		nopcall	sub_130EE
+		nopcall	vram_planes_set
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -22739,10 +22725,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-dword_24604	dd 0
-dword_24608	dd 0
-dword_2460C	dd 0
-dword_24610	dd 0
+include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 		db    0
 		db    0

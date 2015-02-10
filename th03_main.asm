@@ -9543,24 +9543,8 @@ seg002		segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E8F8	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_1EF5C, 0A8000000h
-		mov	dword_1EF60, 0B0000000h
-		mov	dword_1EF64, 0B8000000h
-		mov	dword_1EF68, 0E0000000h
-		pop	bp
-		retf
-sub_E8F8	endp
-
-; ---------------------------------------------------------------------------
+include th01/hardware/vram_planes_set.asm
 		db 0
-
 include th02/hardware/snd_determine_mode.asm
 include th02/hardware/snd_pmd_resident.asm
 
@@ -9991,7 +9975,7 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_ECE6:
-		nopcall	sub_E8F8
+		nopcall	vram_planes_set
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -38774,10 +38758,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-dword_1EF5C	dd ?
-dword_1EF60	dd ?
-dword_1EF64	dd ?
-dword_1EF68	dd ?
+include th01/hardware/vram_planes[bss].asm
 include th02/hardware/snd[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1EFF6	dw ?

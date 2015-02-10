@@ -625,13 +625,13 @@ loc_A336:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_4], ax
 		mov	al, 1
 		out	dx, al
-		mov	bx, word ptr dword_FC3C
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, si
 		mov	ax, [bp+var_4]
 		mov	es:[bx], ax
@@ -751,10 +751,10 @@ loc_A3F7:
 ; ---------------------------------------------------------------------------
 
 loc_A444:
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	ax, es:[bx]
-		mov	bx, word ptr dword_FC3C
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], ax
 		inc	[bp+var_2]
@@ -838,7 +838,7 @@ loc_A4E8:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_8], ax
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, [bp+var_8]
 		mov	ax, es:[bx]
 		mov	dx, si
@@ -847,7 +847,7 @@ loc_A4E8:
 		add	bx, dx
 		mov	es:[bx], ax
 		inc	si
-		les	bx, dword_FC40
+		les	bx, VRAM_PLANE_R
 		add	bx, [bp+var_8]
 		mov	ax, es:[bx]
 		mov	dx, si
@@ -856,7 +856,7 @@ loc_A4E8:
 		add	bx, dx
 		mov	es:[bx], ax
 		inc	si
-		les	bx, dword_FC44
+		les	bx, VRAM_PLANE_G
 		add	bx, [bp+var_8]
 		mov	ax, es:[bx]
 		mov	dx, si
@@ -865,7 +865,7 @@ loc_A4E8:
 		add	bx, dx
 		mov	es:[bx], ax
 		inc	si
-		les	bx, dword_FC48
+		les	bx, VRAM_PLANE_E
 		add	bx, [bp+var_8]
 		mov	ax, es:[bx]
 		mov	dx, si
@@ -952,7 +952,7 @@ loc_A5BD:
 		les	bx, dword_1247A
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, di
 		mov	es:[bx], ax
 		inc	cx
@@ -961,7 +961,7 @@ loc_A5BD:
 		les	bx, dword_1247A
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, dword_FC40
+		les	bx, VRAM_PLANE_R
 		add	bx, di
 		mov	es:[bx], ax
 		inc	cx
@@ -970,7 +970,7 @@ loc_A5BD:
 		les	bx, dword_1247A
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, dword_FC44
+		les	bx, VRAM_PLANE_G
 		add	bx, di
 		mov	es:[bx], ax
 		inc	cx
@@ -979,7 +979,7 @@ loc_A5BD:
 		les	bx, dword_1247A
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, dword_FC48
+		les	bx, VRAM_PLANE_E
 		add	bx, di
 		mov	es:[bx], ax
 		inc	cx
@@ -1212,13 +1212,13 @@ loc_A7DB:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_FC3C
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, si
 		mov	ax, [bp+var_2]
 		mov	es:[bx], ax
@@ -5440,13 +5440,13 @@ loc_CC33:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, dword_FC3C
+		les	bx, VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_8], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr dword_FC3C
+		mov	bx, word ptr VRAM_PLANE_B
 		add	bx, si
 		mov	ax, [bp+var_8]
 		mov	es:[bx], ax
@@ -5481,21 +5481,7 @@ seg002		segment	word public 'CODE' use16
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CC7A	proc far
-		push	bp
-		mov	bp, sp
-		mov	dword_FC3C, 0A8000000h
-		mov	dword_FC40, 0B0000000h
-		mov	dword_FC44, 0B8000000h
-		mov	dword_FC48, 0E0000000h
-		pop	bp
-		retf
-sub_CC7A	endp
-
+include th01/hardware/vram_planes_set.asm
 include th02/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
@@ -6130,7 +6116,7 @@ arg_0		= dword	ptr  6
 
 loc_D453:
 		mov	bbufsiz, 1000h
-		nopcall	sub_CC7A
+		nopcall	vram_planes_set
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
@@ -7145,10 +7131,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-dword_FC3C	dd 0
-dword_FC40	dd 0
-dword_FC44	dd 0
-dword_FC48	dd 0
+include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/formats/pi_slots[bss].asm
 		db    0
