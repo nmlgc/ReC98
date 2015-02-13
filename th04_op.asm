@@ -1092,10 +1092,9 @@ loc_AE76:
 		push	ax
 		push	8
 		call	fp_10DAA
-		call	sub_E2E6
-		push	1
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 		pop	bp
 		retn	4
 sub_AE28	endp
@@ -1173,10 +1172,9 @@ loc_AF1C:
 		jz	loc_B02B
 
 loc_AF2C:
-		call	sub_E2E6
-		push	0Bh
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		mov	al, byte_F3DB
 		cbw
 		mov	bx, ax
@@ -1376,10 +1374,9 @@ loc_B0F4:
 ; ---------------------------------------------------------------------------
 
 loc_B14F:
-		call	sub_E2E6
-		push	0Bh
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		mov	byte_F447, 0
 		mov	byte_F3DB, 4
 		mov	byte_10DA8, 0
@@ -2615,8 +2612,7 @@ loc_BB29:
 		jnb	short loc_BB83
 		cmp	byte ptr [si+1], 10h
 		jnz	short loc_BB3C
-		push	0Fh
-		call	sub_E2F2
+		call	snd_se_play pascal, 15
 
 loc_BB3C:
 		mov	ax, [si+8]
@@ -3011,7 +3007,7 @@ loc_BE66:
 		call	far ptr	palette_show
 
 loc_BE81:
-		call	sub_E32C
+		call	snd_se_update
 		inc	di
 
 loc_BE87:
@@ -5950,10 +5946,9 @@ loc_D7BB:
 		jz	short loc_D84C
 
 loc_D7D6:
-		call	sub_E2E6
-		push	1
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 		mov	al, 1
 		sub	al, byte_132B8
 		mov	byte_132B8, al
@@ -5999,10 +5994,9 @@ loc_D84C:
 		jz	short loc_D8B2
 
 loc_D85A:
-		call	sub_E2E6
-		push	0Bh
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		mov	al, byte_132B8
 		mov	ah, 0
 		add	ax, ax
@@ -6110,10 +6104,9 @@ loc_D939:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
-		call	sub_E2E6
-		push	1
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 
 loc_D986:
 		test	byte ptr word_11A50+1, 20h
@@ -6122,10 +6115,9 @@ loc_D986:
 		jz	short loc_D9D5
 
 loc_D994:
-		call	sub_E2E6
-		push	0Bh
-		call	sub_E2F2
-		call	sub_E32C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		les	bx, dword_10DA4
 		mov	al, byte_132B9
 		mov	es:[bx+19h], al
@@ -7047,91 +7039,7 @@ locret_E2E4:
 		retf
 sub_E1E4	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E2E6	proc far
-		mov	byte_FD81, 0
-		mov	byte_FD80, 0FFh
-		retf
-sub_E2E6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E2F2	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_E328
-		cmp	byte_FD80, 0FFh
-		jnz	short loc_E30D
-		mov	byte_FD80, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_E30D:
-		mov	bl, byte_FD80
-		xor	bh, bh
-		mov	al, [bx+9BEh]
-		mov	bx, dx
-		cmp	al, [bx+9BEh]
-		ja	short locret_E328
-		mov	byte_FD80, dl
-		mov	byte_FD81, 0
-
-locret_E328:
-		retf	2
-sub_E2F2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E32C	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_E377
-		cmp	byte_FD80, 0FFh
-		jz	short locret_E377
-		cmp	byte_FD81, 0
-		jnz	short loc_E359
-		mov	al, byte_FD80
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_E351
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_E359
-; ---------------------------------------------------------------------------
-
-loc_E351:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_E359:
-		inc	byte_FD81
-		mov	bl, byte_FD80
-		xor	bh, bh
-		mov	al, [bx+9CFh]
-		cmp	al, byte_FD81
-		jnb	short locret_E377
-		mov	byte_FD81, 0
-		mov	byte_FD80, 0FFh
-
-locret_E377:
-		retf
-sub_E32C	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7792,40 +7700,7 @@ include libs/master.lib/draw_trapezoid[data].asm
 include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		db 0
-		db    0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
+include th04/hardware/snd_se_priority[data].asm
 include th04/hardware/snd[data].asm
 		db    0
 include th04/hardware/snd_load[data].asm
@@ -7891,8 +7766,7 @@ include th04/hardware/snd_load[data].asm
 		db  55h	; U
 word_FD7C	dw 2
 word_FD7E	dw 10h
-byte_FD80	db 0FFh
-byte_FD81	db 0
+include th03/hardware/snd_se_state[data].asm
 word_FD82	dw 0
 word_FD84	dw 0
 word_FD86	dw 0

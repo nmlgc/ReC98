@@ -1888,10 +1888,9 @@ loc_AD95:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A64D
-		call	sub_D594
-		push	[bp+var_2]
-		call	sub_D5A0
-		call	sub_D5DA
+		call	snd_se_reset
+		call	snd_se_play pascal, [bp+var_2]
+		call	snd_se_update
 		jmp	short loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -6262,91 +6261,7 @@ locret_D592:
 		retf
 sub_D492	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D594	proc far
-		mov	byte_EB31, 0
-		mov	byte_EB30, 0FFh
-		retf
-sub_D594	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D5A0	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_D5D6
-		cmp	byte_EB30, 0FFh
-		jnz	short loc_D5BB
-		mov	byte_EB30, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_D5BB:
-		mov	bl, byte_EB30
-		xor	bh, bh
-		mov	al, [bx+55Eh]
-		mov	bx, dx
-		cmp	al, [bx+55Eh]
-		ja	short locret_D5D6
-		mov	byte_EB30, dl
-		mov	byte_EB31, 0
-
-locret_D5D6:
-		retf	2
-sub_D5A0	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D5DA	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_D625
-		cmp	byte_EB30, 0FFh
-		jz	short locret_D625
-		cmp	byte_EB31, 0
-		jnz	short loc_D607
-		mov	al, byte_EB30
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_D5FF
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_D607
-; ---------------------------------------------------------------------------
-
-loc_D5FF:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_D607:
-		inc	byte_EB31
-		mov	bl, byte_EB30
-		xor	bh, bh
-		mov	al, [bx+56Fh]
-		cmp	al, byte_EB31
-		jnb	short locret_D625
-		mov	byte_EB31, 0
-		mov	byte_EB30, 0FFh
-
-locret_D625:
-		retf
-sub_D5DA	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6789,39 +6704,7 @@ include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		dw 0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
+include th04/hardware/snd_se_priority[data].asm
 		db 0FFh
 		db 0FFh
 		db  7Fh
@@ -6919,8 +6802,7 @@ include th04/hardware/snd_load[data].asm
 		db  55h	; U
 word_EB2C	dw 2
 word_EB2E	dw 10h
-byte_EB30	db 0FFh
-byte_EB31	db 0
+include th03/hardware/snd_se_state[data].asm
 word_EB32	dw 0
 word_EB34	dw 0
 word_EB36	dw 0

@@ -672,7 +672,7 @@ loc_B003:
 		out	dx, al
 		mov	byte_25353, al
 		xor	byte_25352, 1
-		call	sub_14D28
+		call	snd_se_update
 		inc	dword_25FDC
 		mov	ax, word_25FE0
 		mov	dx, ax
@@ -3415,8 +3415,7 @@ loc_C4BC:
 		mov	byte_2C979, al
 		mov	ax, fp_23F5A
 		mov	fp_23F58, ax
-		push	0Dh
-		call	sub_14CEE
+		call	snd_se_play pascal, 13
 		mov	byte_2264E, 1
 		les	bx, dword_23EF0
 		assume es:nothing
@@ -3719,8 +3718,7 @@ loc_C777:
 		ja	short loc_C78C
 		cmp	byte_25FE3, 0
 		jnz	short loc_C78C
-		push	9
-		call	sub_14CEE
+		call	snd_se_play pascal, 9
 
 loc_C78C:
 		pop	bp
@@ -3773,8 +3771,7 @@ loc_C7D0:
 loc_C7D8:
 		cmp	byte_2429B, 80h
 		jnz	short loc_C7F9
-		push	0Fh
-		call	sub_14CEE
+		call	snd_se_play pascal, 15
 		cmp	byte_25FEA, 5
 		jz	short loc_C7F2
 		mov	byte_2CE00, 1
@@ -3877,8 +3874,7 @@ loc_C87C:
 		mov	ax, word ptr dword_2CEA0+2
 		mov	[si+2],	ax
 		mov	word ptr [si+6], 18h
-		push	0Fh
-		call	sub_14CEE
+		call	snd_se_play pascal, 15
 		mov	PaletteTone, 0AAh ; 'ª'
 		jmp	short loc_C8D4
 ; ---------------------------------------------------------------------------
@@ -4031,8 +4027,7 @@ loc_C9FD:
 loc_CA05:
 		cmp	byte_2429B, 50h	; 'P'
 		jnz	short loc_CA26
-		push	0Fh
-		call	sub_14CEE
+		call	snd_se_play pascal, 15
 		cmp	byte_25FEA, 5
 		jz	short loc_CA1F
 		mov	byte_2CE00, 1
@@ -4265,8 +4260,7 @@ loc_CC20:
 loc_CC28:
 		cmp	byte_2429B, 40h
 		jnz	short loc_CC49
-		push	0Fh
-		call	sub_14CEE
+		call	snd_se_play pascal, 15
 		cmp	byte_25FEA, 5
 		jz	short loc_CC42
 		mov	byte_2CE00, 1
@@ -4405,8 +4399,7 @@ loc_CD59:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_CD77
-		push	9
-		call	sub_14CEE
+		call	snd_se_play pascal, 9
 		mov	PaletteTone, 96h
 		jmp	short loc_CD8D
 ; ---------------------------------------------------------------------------
@@ -4475,8 +4468,7 @@ loc_CDD6:
 loc_CDDE:
 		cmp	byte_2429B, 0A0h
 		jnz	short loc_CDFF
-		push	0Fh
-		call	sub_14CEE
+		call	snd_se_play pascal, 15
 		cmp	byte_25FEA, 5
 		jz	short loc_CDF8
 		mov	byte_2CE00, 1
@@ -11099,8 +11091,7 @@ loc_FC67:
 		cmp	ax, [si+10h]
 		jl	loc_FD13
 		inc	byte ptr [si]
-		push	6
-		call	sub_14CEE
+		call	snd_se_play pascal, 6
 		jmp	loc_FD13
 ; ---------------------------------------------------------------------------
 
@@ -15614,8 +15605,7 @@ loc_12064:
 		mov	al, [bp+var_1]
 		sub	byte_2CEBE, al
 		nopcall	sub_E4FC
-		push	2
-		call	sub_14CEE
+		call	snd_se_play pascal, 2
 		cmp	byte_25FEC, 26h	; '&'
 		jbe	short loc_12083
 		mov	byte_25FEC, 26h	; '&'
@@ -16743,8 +16733,7 @@ loc_1293E:
 		mov	[bp+var_1], 5
 
 loc_12942:
-		push	1
-		call	sub_14CEE
+		call	snd_se_play pascal, 1
 		jmp	short loc_12955
 ; ---------------------------------------------------------------------------
 
@@ -21133,11 +21122,10 @@ seg001		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 3
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21327,91 +21315,7 @@ loc_14CDA:
 		retf	6
 sub_14C7C	endp ; sp-analysis failed
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14CE2	proc far
-		mov	byte_21215, 0
-		mov	byte_21214, 0FFh
-		retf
-sub_14CE2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14CEE	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_14D24
-		cmp	byte_21214, 0FFh
-		jnz	short loc_14D09
-		mov	byte_21214, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_14D09:
-		mov	bl, byte_21214
-		xor	bh, bh
-		mov	al, [bx+812h]
-		mov	bx, dx
-		cmp	al, [bx+812h]
-		ja	short locret_14D24
-		mov	byte_21214, dl
-		mov	byte_21215, 0
-
-locret_14D24:
-		retf	2
-sub_14CEE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14D28	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_14D73
-		cmp	byte_21214, 0FFh
-		jz	short locret_14D73
-		cmp	byte_21215, 0
-		jnz	short loc_14D55
-		mov	al, byte_21214
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_14D4D
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_14D55
-; ---------------------------------------------------------------------------
-
-loc_14D4D:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_14D55:
-		inc	byte_21215
-		mov	bl, byte_21214
-		xor	bh, bh
-		mov	al, [bx+823h]
-		cmp	al, byte_21215
-		jnb	short locret_14D73
-		mov	byte_21215, 0
-		mov	byte_21214, 0FFh
-
-locret_14D73:
-		retf
-sub_14D28	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22147,41 +22051,8 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		dw    0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
-byte_21214	db 0FFh
-byte_21215	db 0
+include th04/hardware/snd_se_priority[data].asm
+include th03/hardware/snd_se_state[data].asm
 word_21216	dw 4E20h
 include th05/hardware/snd_load[data].asm
 include th04/hardware/snd[data].asm

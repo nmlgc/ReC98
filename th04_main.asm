@@ -573,7 +573,7 @@ loc_AC7A:
 		out	dx, al
 		mov	byte_25A3D, al
 		xor	byte_25A3C, 1
-		call	sub_138EC
+		call	snd_se_update
 		inc	dword_266C6
 		mov	ax, word_266CA
 		mov	dx, ax
@@ -6024,10 +6024,9 @@ loc_D47B:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_D0CA
-		call	sub_138A6
-		push	[bp+var_2]
-		call	sub_138B2
-		call	sub_138EC
+		call	snd_se_reset
+		call	snd_se_play pascal, [bp+var_2]
+		call	snd_se_update
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -9436,8 +9435,7 @@ loc_EE8C:
 		nopcall	sub_EEE8
 		mov	byte_259DB, 1
 		mov	fp_259DE, offset sub_112D8
-		push	7
-		call	sub_138B2
+		call	snd_se_play pascal, 7
 
 locret_EEA3:
 		leave
@@ -11762,8 +11760,7 @@ loc_FFED:
 		mov	ax, fp_255AC
 		mov	fp_255AA, ax
 		mov	byte_2CFFA, 0C0h
-		push	0Dh
-		call	sub_138B2
+		call	snd_se_play pascal, 13
 		mov	byte_236E0, 1
 		les	bx, dword_2CDC6
 		inc	byte ptr es:[bx+32h]
@@ -11866,8 +11863,7 @@ loc_10096:
 		push	word_266DA
 		push	word_266DC
 		nopcall	sub_C64A
-		push	9
-		call	sub_138B2
+		call	snd_se_play pascal, 9
 
 loc_100FE:
 		call	sub_C156
@@ -11975,8 +11971,7 @@ loc_101D7:
 		shl	ax, 4
 		push	ax
 		nopcall	sub_C64A
-		push	9
-		call	sub_138B2
+		call	snd_se_play pascal, 9
 
 loc_101F4:
 		call	sub_C156
@@ -12061,8 +12056,7 @@ loc_10288:
 loc_1028E:
 		cmp	byte_256A9, 0B0h ; '°'
 		jnz	short loc_102A8
-		push	0Fh
-		call	sub_138B2
+		call	snd_se_play pascal, 15
 		mov	byte_255BC, 1
 		mov	byte_236E0, 0
 		jmp	short loc_102AF
@@ -13033,8 +13027,7 @@ loc_109E9:
 		mov	word_2D00C, ax
 		nopcall	sub_F07A
 		nopcall	sub_11DE6
-		push	2
-		call	sub_138B2
+		call	snd_se_play pascal, 2
 		cmp	byte_266D5, 16h
 		jb	short loc_10A16
 		mov	byte_266D5, 15h
@@ -13205,8 +13198,7 @@ loc_10B97:
 
 loc_10BB0:
 		call	fp_257DA
-		push	1
-		call	sub_138B2
+		call	snd_se_play pascal, 1
 		jmp	short loc_10BC7
 ; ---------------------------------------------------------------------------
 
@@ -18049,11 +18041,10 @@ seg001		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
+seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
-		db    0
 
 include th01/hardware/vram_planes_set.asm
 
@@ -18837,88 +18828,7 @@ sub_137A4	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_138A6	proc far
-		mov	byte_21C55, 0
-		mov	byte_21C54, 0FFh
-		retf
-sub_138A6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_138B2	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_138E8
-		cmp	byte_21C54, 0FFh
-		jnz	short loc_138CD
-		mov	byte_21C54, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_138CD:
-		mov	bl, byte_21C54
-		xor	bh, bh
-		mov	al, [bx+8D2h]
-		mov	bx, dx
-		cmp	al, [bx+8D2h]
-		ja	short locret_138E8
-		mov	byte_21C54, dl
-		mov	byte_21C55, 0
-
-locret_138E8:
-		retf	2
-sub_138B2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_138EC	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_13937
-		cmp	byte_21C54, 0FFh
-		jz	short locret_13937
-		cmp	byte_21C55, 0
-		jnz	short loc_13919
-		mov	al, byte_21C54
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_13911
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_13919
-; ---------------------------------------------------------------------------
-
-loc_13911:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_13919:
-		inc	byte_21C55
-		mov	bl, byte_21C54
-		xor	bh, bh
-		mov	al, [bx+8E3h]
-		cmp	al, byte_21C55
-		jnb	short locret_13937
-		mov	byte_21C55, 0
-		mov	byte_21C54, 0FFh
-
-locret_13937:
-		retf
-sub_138EC	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19226,44 +19136,11 @@ byte_21AF2	db 1
 		db 0
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		dw 0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
+include th04/hardware/snd_se_priority[data].asm
 include th04/hardware/snd[data].asm
 		db    0
 include th04/hardware/snd_load[data].asm
-byte_21C54	db 0FFh
-byte_21C55	db 0
+include th03/hardware/snd_se_state[data].asm
 byte_21C56	db 0
 		db 0
 word_21C58	dw 0

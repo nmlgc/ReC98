@@ -557,11 +557,10 @@ sub_9D5C	endp
 sub_9F37	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_B252
-		push	0Dh
-		call	sub_B25E
+		call	snd_se_reset
+		call	snd_se_play stdcall, 13
 		pop	cx
-		call	sub_B296
+		call	snd_se_update
 		push	14h
 		call	frame_delay
 		les	bx, dword_F3DC
@@ -2580,89 +2579,10 @@ loc_B24B:
 		jb	short loc_B232
 		pop	bp
 		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B252	proc far
-		mov	byte_DC33, 0
-		mov	byte_DBF0, 0FFh
-		retf
-sub_B252	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B25E	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		cmp	snd_fm_possible, 0
-		jz	short loc_B294
-		cmp	byte_DBF0, 0FFh
-		jnz	short loc_B278
-		mov	byte_DBF0, dl
-		pop	bp
-		retf
 ; ---------------------------------------------------------------------------
 
-loc_B278:
-		mov	al, byte_DBF0
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+5C1h]
-		mov	bx, dx
-		cmp	al, [bx+5C1h]
-		ja	short loc_B294
-		mov	byte_DBF0, dl
-		mov	byte_DC33, 0
-
-loc_B294:
-		pop	bp
-		retf
-sub_B25E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B296	proc far
-		cmp	snd_fm_possible, 0
-		jz	short locret_B2D1
-		cmp	byte_DBF0, 0FFh
-		jz	short locret_B2D1
-		cmp	byte_DC33, 0
-		jnz	short loc_B2B2
-		mov	ah, PMD_SE_PLAY
-		mov	al, byte_DBF0
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-
-loc_B2B2:
-		inc	byte_DC33
-		mov	al, byte_DBF0
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+5E2h]
-		cmp	al, byte_DC33
-		jnb	short locret_B2D1
-		mov	byte_DC33, 0
-		mov	byte_DBF0, 0FFh
-
-locret_B2D1:
-		retf
-sub_B296	endp
-
+include th02/hardware/snd_se.asm
 include th02/frame_delay.asm
-
 seg002		ends
 
 ; ===========================================================================
@@ -2685,11 +2605,10 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	[bp+var_2], 1
-		call	sub_B252
-		push	6
-		call	sub_B25E
+		call	snd_se_reset
+		call	snd_se_play stdcall, 6
 		pop	cx
-		call	sub_B296
+		call	snd_se_update
 		xor	si, si
 		jmp	short loc_B370
 ; ---------------------------------------------------------------------------
@@ -5575,74 +5494,7 @@ include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
 snd_active	db 0
 		db 0
-byte_DBF0	db 0FFh
-		db    0
-		db    0
-		db  20h
-		db    9
-		db    2
-		db  10h
-		db    5
-		db    6
-		db  30h	; 0
-		db    8
-		db    9
-		db    5
-		db  10h
-		db  0Ah
-		db  11h
-		db  0Ch
-		db  20h
-		db  20h
-		db  10h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  0Ah
-		db  30h	; 0
-		db  50h	; P
-		db  18h
-		db  11h
-		db  0Bh
-		db    4
-		db  50h	; P
-		db  10h
-		db  30h	; 0
-		db  4Ah	; J
-		db  20h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-byte_DC33	db 0
+include th02/hardware/snd_se[data].asm
 byte_DC34	db 1
 		db 0
 include th02/strings/hiscore[data].asm

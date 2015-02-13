@@ -996,10 +996,9 @@ loc_A9B6:
 		push	ax
 		push	0Eh
 		call	fp_11DD2
-		call	sub_D5F6
-		push	1
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 		pop	bp
 		retn	4
 sub_A968	endp
@@ -1077,10 +1076,9 @@ loc_AA5C:
 		jz	loc_ABA8
 
 loc_AA6C:
-		call	sub_D5F6
-		push	0Bh
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		mov	al, byte_F071
 		cbw
 		mov	bx, ax
@@ -1293,10 +1291,9 @@ loc_AC71:
 ; ---------------------------------------------------------------------------
 
 loc_ACD8:
-		call	sub_D5F6
-		push	0Bh
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		mov	byte_F0DD, 0
 		mov	byte_F071, 4
 		mov	byte_11DD0, 0
@@ -2559,8 +2556,7 @@ loc_B6FA:
 		jnb	short loc_B754
 		cmp	byte ptr [si+1], 10h
 		jnz	short loc_B70D
-		push	0Fh
-		call	sub_D602
+		call	snd_se_play pascal, 15
 
 loc_B70D:
 		mov	ax, [si+8]
@@ -2953,7 +2949,7 @@ loc_BA26:
 		call	far ptr	palette_show
 
 loc_BA41:
-		call	sub_D63C
+		call	snd_se_update
 		inc	di
 
 loc_BA47:
@@ -5714,10 +5710,9 @@ loc_D1B5:
 		jz	short loc_D223
 
 loc_D1D0:
-		call	sub_D5F6
-		push	1
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -5748,10 +5743,9 @@ loc_D223:
 		jz	short loc_D284
 
 loc_D231:
-		call	sub_D5F6
-		push	1
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 1
+		call	snd_se_update
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -5787,10 +5781,9 @@ loc_D292:
 		mov	bx, ax
 		cmp	byte ptr [bx+5143h], 0
 		jz	short loc_D2CC
-		call	sub_D5F6
-		push	0Bh
-		call	sub_D602
-		call	sub_D63C
+		call	snd_se_reset
+		call	snd_se_play pascal, 11
+		call	snd_se_update
 		les	bx, dword_11DCC
 		mov	al, byte ptr word_14118
 		mov	es:[bx+14h], al
@@ -6187,91 +6180,7 @@ loc_D5EE:
 		retf	6
 sub_D590	endp ; sp-analysis failed
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D5F6	proc far
-		mov	byte_F9C3, 0
-		mov	byte_F9C2, 0FFh
-		retf
-sub_D5F6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D602	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_D638
-		cmp	byte_F9C2, 0FFh
-		jnz	short loc_D61D
-		mov	byte_F9C2, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_D61D:
-		mov	bl, byte_F9C2
-		xor	bh, bh
-		mov	al, [bx+980h]
-		mov	bx, dx
-		cmp	al, [bx+980h]
-		ja	short locret_D638
-		mov	byte_F9C2, dl
-		mov	byte_F9C3, 0
-
-locret_D638:
-		retf	2
-sub_D602	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D63C	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_D687
-		cmp	byte_F9C2, 0FFh
-		jz	short locret_D687
-		cmp	byte_F9C3, 0
-		jnz	short loc_D669
-		mov	al, byte_F9C2
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_D661
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_D669
-; ---------------------------------------------------------------------------
-
-loc_D661:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_D669:
-		inc	byte_F9C3
-		mov	bl, byte_F9C2
-		xor	bh, bh
-		mov	al, [bx+991h]
-		cmp	al, byte_F9C3
-		jnb	short locret_D687
-		mov	byte_F9C3, 0
-		mov	byte_F9C2, 0FFh
-
-locret_D687:
-		retf
-sub_D63C	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8022,40 +7931,7 @@ include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		db    0
-		db    0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
+include th04/hardware/snd_se_priority[data].asm
 		db  71h	; q
 		db    0
 		db  6Bh	; k
@@ -8118,8 +7994,7 @@ include libs/master.lib/bgm[data].asm
 		db  55h	; U
 word_F9BE	dw 2
 word_F9C0	dw 10h
-byte_F9C2	db 0FFh
-byte_F9C3	db 0
+include th03/hardware/snd_se_state[data].asm
 word_F9C4	dw 0
 word_F9C6	dw 0
 word_F9C8	dw 0

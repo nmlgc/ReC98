@@ -1604,10 +1604,9 @@ loc_AF18:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A738
-		call	sub_EAD4
-		push	[bp+var_2]
-		call	sub_EAE0
-		call	sub_EB1A
+		call	snd_se_reset
+		call	snd_se_play pascal, [bp+var_2]
+		call	snd_se_update
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -3447,7 +3446,7 @@ sub_BCED	endp
 sub_BD1E	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_EB1A
+		call	snd_se_update
 		call	sub_BE76
 		push	1
 		call	frame_delay
@@ -4002,8 +4001,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 0
-		push	0Bh
-		call	sub_EAE0
+		call	snd_se_play pascal, 11
 		mov	si, 4F7Ah
 		xor	di, di
 		jmp	short loc_C1AF
@@ -4318,8 +4316,7 @@ loc_C429:
 		push	di
 		push	TX_GREEN + TX_REVERSE
 		call	sub_BCED
-		push	1
-		call	sub_EAE0
+		call	snd_se_play pascal, 1
 
 loc_C438:
 		test	byte ptr word_12AFA, 20h
@@ -4372,22 +4369,19 @@ loc_C4A1:
 		mov	byte ptr [bx+4F7Ah], 5
 
 loc_C4BB:
-		push	4
-		call	sub_EAE0
+		call	snd_se_play pascal, 4
 		jmp	short loc_C516
 ; ---------------------------------------------------------------------------
 
 loc_C4C4:
-		push	0Bh
-		call	sub_EAE0
+		call	snd_se_play pascal, 11
 		cmp	word_11622, 7
 		jge	short loc_C516
 		jmp	short loc_C512
 ; ---------------------------------------------------------------------------
 
 loc_C4D4:
-		push	0Bh
-		call	sub_EAE0
+		call	snd_se_play pascal, 11
 		push	si
 		push	di
 		mov	al, byte_15176
@@ -4448,8 +4442,7 @@ loc_C555:
 		mov	byte ptr [bx+4F7Ah], 5
 
 loc_C56F:
-		push	4
-		call	sub_EAE0
+		call	snd_se_play pascal, 4
 
 loc_C576:
 		test	byte ptr word_12AFA+1, 10h
@@ -8795,88 +8788,7 @@ sub_EA6E	endp ; sp-analysis failed
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EAD4	proc far
-		mov	byte_107C1, 0
-		mov	byte_107C0, 0FFh
-		retf
-sub_EAD4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EAE0	proc far
-		mov	bx, sp
-		mov	dx, ss:[bx+4]
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_EB16
-		cmp	byte_107C0, 0FFh
-		jnz	short loc_EAFB
-		mov	byte_107C0, dl
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_EAFB:
-		mov	bl, byte_107C0
-		xor	bh, bh
-		mov	al, [bx+65Eh]
-		mov	bx, dx
-		cmp	al, [bx+65Eh]
-		ja	short locret_EB16
-		mov	byte_107C0, dl
-		mov	byte_107C1, 0
-
-locret_EB16:
-		retf	2
-sub_EAE0	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EB1A	proc far
-		cmp	snd_se_mode, SND_SE_OFF
-		jz	short locret_EB65
-		cmp	byte_107C0, 0FFh
-		jz	short locret_EB65
-		cmp	byte_107C1, 0
-		jnz	short loc_EB47
-		mov	al, byte_107C0
-		cmp	snd_se_mode, SND_SE_BEEP
-		jz	short loc_EB3F
-		mov	ah, PMD_SE_PLAY
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-		jmp	short loc_EB47
-; ---------------------------------------------------------------------------
-
-loc_EB3F:
-		xor	ah, ah
-		push	ax
-		call	bgm_sound
-
-loc_EB47:
-		inc	byte_107C1
-		mov	bl, byte_107C0
-		xor	bh, bh
-		mov	al, [bx+66Fh]
-		cmp	al, byte_107C1
-		jnb	short locret_EB65
-		mov	byte_107C1, 0
-		mov	byte_107C0, 0FFh
-
-locret_EB65:
-		retf
-sub_EB1A	endp
-
+include th04/hardware/snd_se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9991,39 +9903,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-		dw    0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  12h
-		db  20h
-		db  20h
-		db  20h
-		db  20h
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  30h	; 0
-		db  50h	; P
-		db  11h
-		db    4
-		db  0Bh
-		db  50h	; P
-		db  50h	; P
-		db  50h	; P
-		db  20h
-		db    0
+include th04/hardware/snd_se_priority[data].asm
 word_10780	dw  71h
 		dw  6Bh
 		dw  78h
@@ -10076,8 +9956,7 @@ word_1078C	dw  19h
 		db  55h	; U
 word_107BC	dw 2
 word_107BE	dw 10h
-byte_107C0	db 0FFh
-byte_107C1	db 0
+include th03/hardware/snd_se_state[data].asm
 word_107C2	dw 0
 word_107C4	dw 0
 word_107C6	dw 0

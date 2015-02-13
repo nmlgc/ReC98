@@ -1153,7 +1153,7 @@ loc_9DAD:
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
-		call	sub_CE3E
+		call	snd_se_reset
 		call	sub_D784
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+35h], 0
@@ -2793,10 +2793,9 @@ loc_ABFE:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		call	sub_CE3E
-		push	[bp+var_2]
-		call	sub_CE4A
-		call	sub_CE86
+		call	snd_se_reset
+		call	snd_se_play pascal, [bp+var_2]
+		call	snd_se_update
 		jmp	short loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -6724,87 +6723,7 @@ sub_CB68	endp
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th03/formats/pi_slot_put_interlace.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE3E	proc far
-		mov	byte_EC7D, 0
-		mov	byte_EC7C, 0FFh
-		retf
-sub_CE3E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CE4A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		cmp	snd_fm_possible, 0
-		jz	short loc_CE82
-		cmp	byte_EC7C, 0FFh
-		jnz	short loc_CE66
-		mov	byte_EC7C, dl
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_CE66:
-		mov	al, byte_EC7C
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+896h]
-		mov	bx, dx
-		cmp	al, [bx+896h]
-		ja	short loc_CE82
-		mov	byte_EC7C, dl
-		mov	byte_EC7D, 0
-
-loc_CE82:
-		pop	bp
-		retf	2
-sub_CE4A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE86	proc far
-		cmp	snd_fm_possible, 0
-		jz	short locret_CEC1
-		cmp	byte_EC7C, 0FFh
-		jz	short locret_CEC1
-		cmp	byte_EC7D, 0
-		jnz	short loc_CEA2
-		mov	ah, PMD_SE_PLAY
-		mov	al, byte_EC7C
-		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
-					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
-					; 02h semaphore	service	is unavailable
-
-loc_CEA2:
-		inc	byte_EC7D
-		mov	al, byte_EC7C
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+8B7h]
-		cmp	al, byte_EC7D
-		jnb	short locret_CEC1
-		mov	byte_EC7D, 0
-		mov	byte_EC7C, 0FFh
-
-locret_CEC1:
-		retf
-sub_CE86	endp
-
+include th02/hardware/snd_se.asm
 include th02/hardware/snd_kaja_func.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8043,77 +7962,11 @@ include libs/master.lib/superpa[data].asm
 snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
-byte_EC7C	db 0FFh
-byte_EC7D	db 0
+include th03/hardware/snd_se_state[data].asm
 include th02/formats/pfopen[data].asm
 byte_EC84	db 0
 		db 0
-		db    0
-		db    0
-		db  20h
-		db  10h
-		db    2
-		db  12h
-		db  12h
-		db  12h
-		db  40h
-		db  10h
-		db  11h
-		db    2
-		db  11h
-		db  20h
-		db  12h
-		db  12h
-		db  12h
-		db  12h
-		db  20h
-		db  20h
-		db  12h
-		db  12h
-		db  0Eh
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  24h	; $
-		db  10h
-		db    4
-		db  10h
-		db    8
-		db  0Ah
-		db  30h	; 0
-		db  50h	; P
-		db  18h
-		db  11h
-		db  0Bh
-		db    4
-		db  50h	; P
-		db  10h
-		db  30h	; 0
-		db  4Ah	; J
-		db  32h	; 2
-		db  20h
-		db  18h
-		db  44h	; D
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/hardware/snd_se_priority[data].asm
 		db  30h	; 0
 		db    0
 aOver_pi	db 'over.pi',0
