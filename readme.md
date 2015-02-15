@@ -82,8 +82,16 @@ Do whatever else is necessary to easily modify the game elements people like to 
 Since this will most likely result in graphics mods that exceed the specifications of PC-98 hardware, there will also be an optional filter to reduce the rendered output to the original resolution of 640x400 and a 16-color palette, for the sake of keeping the original spirit.
 
 ## Building
-Currently, this code is only known to build with Borland's *Turbo Assembler* (TASM) and *Turbo Linker* (TLINK), Version 5.0 or later. Due to the large size of the initial assembly dumps, the 32-bit version of TASM (`tasm32`) is necessary to assemble them. However, TLINK32 does *not* support 16-bit DOS targets, so the 16-bit version of TLINK is needed for linking.
+You will need:
 
-To sum up: Compile the .asm files with ```tasm32 /kh32768 /m /zn``` (on 32-bit/Windows), and link the resulting .obj files with ```tlink``` (on 16-bit/DOS).
+* Borland Turbo C++ 4.0J
+* Borland Turbo Assembler (TASM), version 5.0 or later, in a 32-bit version (`TASM32.EXE`)
+* [DOSBox](http://dosbox.com) if you're running a 64-bit version of Windows, or a non-Windows operating system
 
-Please let us know if there are any other build systems we can use instead!
+The Borland tools are the only ones that will, with the correct command-line switches for each game, deterministically compile this source code to executables that are bit-perfect to ZUN's original ones. Hence, they are the only supported build tools during all of the reconstruction phase.
+
+To build, simply run `build.bat` and follow the instructions.
+
+Since I, unfortunately, decided earlier in development to freely use long file names that don't need to conform to the 8.3 convention, the first part of the building process (`build32b.bat`) must be run in Windows (or Wine). This will be fixed as development goes along.
+
+The final executables will be put into `bin\th0?`, using the same names as the originals.
