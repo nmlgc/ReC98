@@ -8,7 +8,6 @@ for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
 %ReC98_ASM% 1>NUL 2>NUL
 if errorlevel 9009 goto no_tasm32
 
-%ReC98_ASM% th01_zunsoft.asm bin\th01\zunsoft.obj
 %ReC98_ASM% th01_op.asm bin\th01\op.obj
 %ReC98_ASM% th01_reiiden.asm bin\th01\reiiden.obj
 %ReC98_ASM% th01_fuuin.asm bin\th01\fuuin.obj

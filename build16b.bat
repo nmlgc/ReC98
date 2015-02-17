@@ -4,13 +4,20 @@ echo If this fails or shows other weird behavior, run BUILD16B separately in DOS
 REM (Yes, we don't use %0%, as it actually has to be %0 on DOS. Just spelling
 REM out the name saves us that trouble.)
 
+set ReC98_CFLAGS=-Ilibs\master.lib\
+set ReC98_LFLAGS=-Lbin\
 set ReC98_LINK=tlink
 
 %ReC98_LINK% 1>NUL 2>NUL
 if errorlevel 9009 goto no_tlink
 if errorlevel 216 goto 64_bit
 
-%ReC98_LINK% /t bin\th01\zunsoft.obj
+tcc 1>NUL 2>NUL
+if errorlevel 9009 goto no_tcc
+if errorlevel 216 goto 64_bit
+
+tcc -lt -mt %ReC98_CFLAGS% %ReC98_LFLAGS% -O -a2 -nbin\th01\ th01\zunsoft.c masters.lib
+
 %ReC98_LINK% bin\th01\op.obj
 %ReC98_LINK% bin\th01\reiiden.obj
 %ReC98_LINK% bin\th01\fuuin.obj
@@ -39,8 +46,13 @@ goto eof
 echo You're running a 64-bit OS. Run BUILD16B.BAT separately in DOSBox instead.
 goto eof
 
+:no_tcc
+echo Could not find TCC.
+goto tc4j_bin
 :no_tlink
 echo Could not find TLINK.
+goto tc4j_bin
+:tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
 goto eof
 
