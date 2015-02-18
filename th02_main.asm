@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -34,9 +33,9 @@ include th02/th02.asm
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db    0
@@ -1977,7 +1976,7 @@ include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ===========================================================================
 
@@ -1985,7 +1984,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 3
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9835,7 +9834,7 @@ seg001		ends
 seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 8
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10402,7 +10401,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 6
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33665,7 +33664,7 @@ seg003		ends
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
 		;org 7
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33844,7 +33843,7 @@ seg004		ends
 seg005		segment	byte public 'CODE' use16
 		assume cs:seg005
 		;org 0Fh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34146,7 +34145,7 @@ seg005		ends
 seg006		segment	byte public 'CODE' use16
 		assume cs:seg006
 		;org 7
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35134,7 +35133,7 @@ seg006		ends
 seg007		segment	byte public 'CODE' use16
 		assume cs:seg007
 		;org 0Fh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
@@ -35144,9 +35143,7 @@ seg007		ends
 
 ; ===========================================================================
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 
@@ -37549,6 +37546,8 @@ InitEnd	label byte
 ExitStart	label byte
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
+
+	.data?
 
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
@@ -44932,8 +44931,6 @@ include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte	
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

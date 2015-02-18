@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -30,9 +29,9 @@ include th04/th04.asm
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -283,7 +282,7 @@ include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ===========================================================================
 
@@ -291,7 +290,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 9
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5478,7 +5477,7 @@ seg001		ends
 seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 0Ah
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th01/hardware/vram_planes_set.asm
 include th02/frame_delay.asm
@@ -5813,7 +5812,7 @@ loc_D258:
 		mov	word ptr cs:loc_D320+1,	ax
 		push	ds
 		pop	fs
-		assume fs:dseg
+		assume fs:_DATA
 		lds	si, [bp+6]
 		lodsb
 		or	al, al
@@ -6052,7 +6051,7 @@ loc_D3D6:
 		or	ax, ax
 		jnz	short loc_D3D2
 		pop	ds
-		assume ds:dseg
+		assume ds:_DATA
 		pop	di
 		pop	si
 		pop	bp
@@ -6574,7 +6573,7 @@ sub_D7DE	endp
 		mov	byte_10476, al
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 
 loc_D86A:
 		push	bp
@@ -6650,7 +6649,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 0Ch
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
@@ -6660,9 +6659,7 @@ seg003		ends
 
 ; ===========================================================================
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 
@@ -6985,29 +6982,19 @@ ExitStart	label byte
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 
+	.data?
+
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
-dword_F3CE	dd 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+dword_F3CE	dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include libs/master.lib/fil[bss].asm
-word_F3F6	dw 0
-		db    0
-		db    0
+word_F3F6	dw ?
+		db ?
+		db ?
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
@@ -7016,262 +7003,70 @@ include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/formats/pi_slots[bss].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/hardware/snd_load[bss].asm
@@ -9703,8 +9498,6 @@ include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -43,9 +42,9 @@ include libs/BorlandC/regs.inc
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -181,7 +180,7 @@ include libs/BorlandC/cnecdely.asm
 include libs/BorlandC/conioini.asm
 include libs/BorlandC/mbjmsjis.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
@@ -190,7 +189,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 4
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	2, 0
 		push	si
 		push	di
@@ -2191,7 +2190,7 @@ seg001		ends
 seg002		segment	byte public 'CODE' use16
 		assume cs:seg002
 		;org 9
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2221,7 +2220,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 0Ch
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2242,7 +2241,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		sub	sp, 4
@@ -2396,7 +2395,7 @@ seg003		ends
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
 		;org 2
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2564,7 +2563,7 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	al, byte ptr es:[053Bh]
 		cbw
 		mov	bx, ax
@@ -2901,7 +2900,7 @@ seg004		ends
 seg005		segment	byte public 'CODE' use16
 		assume cs:seg005
 		;org 3
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2918,7 +2917,7 @@ sub_B6C3	proc far
 		push	esi
 		push	edi
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		pop	bp
@@ -3052,7 +3051,7 @@ sub_B7C3	proc near
 		push	esi
 		push	edi
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		call	sub_B73C
@@ -3103,7 +3102,7 @@ seg005		ends
 ; Segment type:	Pure code
 seg006		segment	byte public 'CODE' use16
 		assume cs:seg006
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	10h, 0
 		nopcall	sub_B91C
 		mov	byte ptr [bp-0Fh], 42h ; 'B'
@@ -6481,7 +6480,7 @@ seg006		ends
 ; Segment type:	Pure code
 seg007		segment	byte public 'CODE' use16
 		assume cs:seg007
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	10h, 0
 		push	si
 		push	di
@@ -6897,7 +6896,7 @@ seg007		ends
 seg008		segment	byte public 'CODE' use16
 		assume cs:seg008
 		;org 8
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6946,7 +6945,7 @@ seg008		ends
 seg009		segment	byte public 'CODE' use16
 		assume cs:seg009
 		;org 1
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8417,7 +8416,7 @@ seg009		ends
 seg010		segment	byte public 'CODE' use16
 		assume cs:seg010
 		;org 0Ch
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8584,7 +8583,7 @@ seg010		ends
 seg011		segment	byte public 'CODE' use16
 		assume cs:seg011
 		;org 5
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8867,7 +8866,7 @@ seg011		ends
 seg012		segment	byte public 'CODE' use16
 		assume cs:seg012
 		;org 5
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9967,7 +9966,7 @@ include libs/BorlandC/emu/emu086.asm
 ; Segment type:	Pure code
 seg015		segment	para public 'CODE' use16
 		assume cs:seg015
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
@@ -9977,9 +9976,7 @@ seg015		ends
 
 ; ===========================================================================
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 
@@ -10486,6 +10483,8 @@ ExitStart	label byte
 include libs/BorlandC/emu/fpinit[exitdata].asm
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
+
+	.data?
 
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
@@ -11006,8 +11005,6 @@ include libs/BorlandC/getc[bss].asm
 include libs/BorlandC/putc[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

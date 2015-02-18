@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -31,9 +30,9 @@ include th05/th05.asm
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -437,7 +436,7 @@ include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ===========================================================================
 
@@ -445,7 +444,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 0Dh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1967,7 +1966,7 @@ sub_BB9A	proc near
 		xor	dx, dx
 		mov	ax, ds
 		mov	es, ax
-		assume es:dseg
+		assume es:_DATA
 		mov	ax, word_21290
 		mov	fs, ax
 		mov	ax, word_25354
@@ -2233,7 +2232,7 @@ loc_BD88:
 		add	si, bx
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		push	ds
 		mov	ax, word_25354
 		mov	ds, ax
@@ -2378,7 +2377,7 @@ sub_BEBC	proc near
 		push	di
 		mov	ax, ds
 		mov	es, ax
-		assume es:dseg
+		assume es:_DATA
 		mov	di, 4976h
 		xor	eax, eax
 		mov	cx, 190h
@@ -7544,7 +7543,7 @@ loc_E2C4:
 		push	di
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	di, ax
 		add	di, word_252DA
 		add	di, 4976h
@@ -8214,7 +8213,7 @@ sub_E708	proc near
 		mov	cx, ss:[bx+2]
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		xor	eax, eax
 		rep stosd
 		pop	di
@@ -20499,7 +20498,7 @@ sub_1437E	proc near
 		push	di
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	di, 1FC6h
 		push	38h ; '8'
 		push	word ptr ss:[bx+6]
@@ -21125,7 +21124,7 @@ seg001		ends
 seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 3
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21874,7 +21873,7 @@ arg_4		= word ptr  0Ah
 		mov	byte_23E5E, al
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 
 loc_15216:
 		push	bp
@@ -21952,7 +21951,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 8
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22095,7 +22094,7 @@ sub_15345	proc near
 		push	es
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	di, 561Ah
 		rep movsw
 		pop	es
@@ -24111,7 +24110,7 @@ arg_0		= word ptr  4
 		mov	di, 561Ah
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		rep movsw
 		pop	di
 		pop	si
@@ -25044,7 +25043,7 @@ arg_0		= word ptr  4
 		mov	cx, 7
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	si, 561Ah
 		mov	di, [bp+arg_0]
 		add	di, 18h
@@ -27180,7 +27179,7 @@ sub_178D7	proc near
 		mov	cx, 28h	; '('
 		mov	ax, ds
 		mov	es, ax
-		assume es:dseg
+		assume es:_DATA
 		xor	ax, ax
 		mov	di, 0C252h
 		rep stosw
@@ -42215,7 +42214,7 @@ seg003		ends
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
 		;org 0Dh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
@@ -42227,9 +42226,7 @@ seg004		ends
 
 ; ===========================================================================
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 
@@ -45529,277 +45526,87 @@ ExitStart	label byte
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 
+	.data?
+
 bdata@	label byte
-		db    0
-		db    0
-fp_2300E	dw 0
+		db ?
+		db ?
+fp_2300E	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
-word_23038	dw 0
-		dw 0
+word_23038	dw ?
+		dw ?
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_put_rect[bss].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/hardware/snd_load[bss].asm
@@ -55637,8 +55444,6 @@ include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

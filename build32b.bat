@@ -8,9 +8,9 @@ for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
 %ReC98_ASM% 1>NUL 2>NUL
 if errorlevel 9009 goto no_tasm32
 
-%ReC98_ASM% th01_op.asm bin\th01\op.obj
-%ReC98_ASM% th01_reiiden.asm bin\th01\reiiden.obj
-%ReC98_ASM% th01_fuuin.asm bin\th01\fuuin.obj
+%ReC98_ASM% /w-aln th01_op.asm bin\th01\op.obj
+%ReC98_ASM% /w-aln th01_reiiden.asm bin\th01\reiiden.obj
+%ReC98_ASM% /w-aln th01_fuuin.asm bin\th01\fuuin.obj
 
 %ReC98_ASM% th02_zuninit.asm bin\th02\zuninit.obj
 %ReC98_ASM% th02_zun_res.asm bin\th02\zun_res.obj
@@ -41,4 +41,4 @@ echo Please make sure that the BIN directory of Turbo Assembler 5.0 is in your P
 goto eof
 
 :eof
-echo --------------------------------------------------------------------------------
+echo -------------------------------------------------------------------------------

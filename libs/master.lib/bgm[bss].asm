@@ -4,6 +4,6 @@
 
 timerorg	dd	?
 _bgm_part	label	word
-part		SPART	PMAX dup(<0>)
+part		SPART	PMAX dup(<>)
 _bgm_esound	label	word
-esound		SESOUND	SMAX dup(<0>)
+esound		SESOUND	SMAX dup(<>)

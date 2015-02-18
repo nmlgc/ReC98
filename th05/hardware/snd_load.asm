@@ -21,7 +21,6 @@ snd_load	proc
 	push	di
 	mov	dx, ds
 	mov	es, dx
-	assume es:dseg
 	mov	di, offset snd_load_fn
 	lds	si, [bp+@@fn]
 	mov	bp, [bp+@@func]

@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -69,9 +68,9 @@ include libs/BorlandC/regs.inc
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -236,7 +235,7 @@ include libs/BorlandC/conioini.asm
 include libs/BorlandC/kbhit.asm
 include libs/BorlandC/mbjmsjis.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ===========================================================================
 
@@ -244,7 +243,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 2
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5481,7 +5480,7 @@ seg001		ends
 seg002		segment	byte public 'CODE' use16
 		assume cs:seg002
 		;org 4
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5513,7 +5512,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 7
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5534,7 +5533,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		sub	sp, 4
@@ -5693,7 +5692,7 @@ seg003		ends
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
 		;org 2
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6266,7 +6265,7 @@ seg004		ends
 seg005		segment	byte public 'CODE' use16
 		assume cs:seg005
 		;org 0Eh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6283,7 +6282,7 @@ sub_E7BE	proc far
 		push	esi
 		push	edi
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		pop	bp
@@ -6417,7 +6416,7 @@ sub_E8BE	proc far
 		push	esi
 		push	edi
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		call	sub_E837
@@ -6482,7 +6481,7 @@ seg005		ends
 seg006		segment	byte public 'CODE' use16
 		assume cs:seg006
 		;org 6
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10094,7 +10093,7 @@ seg006		ends
 seg007		segment	byte public 'CODE' use16
 		assume cs:seg007
 		;org 0Bh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10555,7 +10554,7 @@ seg007		ends
 seg008		segment	byte public 'CODE' use16
 		assume cs:seg008
 		;org 3
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12189,7 +12188,7 @@ seg008		ends
 seg009		segment	byte public 'CODE' use16
 		assume cs:seg009
 		;org 0Eh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12406,7 +12405,7 @@ seg009		ends
 seg010		segment	byte public 'CODE' use16
 		assume cs:seg010
 		;org 0Ah
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12535,7 +12534,7 @@ seg010		ends
 seg011		segment	byte public 'CODE' use16
 		assume cs:seg011
 		;org 0Eh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12611,7 +12610,7 @@ seg011		ends
 seg012		segment	byte public 'CODE' use16
 		assume cs:seg012
 		;org 0Fh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12794,7 +12793,7 @@ seg012		ends
 seg013		segment	byte public 'CODE' use16
 		assume cs:seg013
 		;org 8
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13947,7 +13946,7 @@ seg013		ends
 ; Segment type:	Pure code
 seg014		segment	byte public 'CODE' use16
 		assume cs:seg014
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14053,7 +14052,7 @@ seg014		ends
 seg015		segment	byte public 'CODE' use16
 		assume cs:seg015
 		;org 0Dh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14456,7 +14455,7 @@ seg015		ends
 seg016		segment	byte public 'CODE' use16
 		assume cs:seg016
 		;org 5
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14777,7 +14776,7 @@ seg016		ends
 seg017		segment	byte public 'CODE' use16
 		assume cs:seg017
 		;org 5
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15458,7 +15457,7 @@ seg017		ends
 seg018		segment	byte public 'CODE' use16
 		assume cs:seg018
 		;org 0Bh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16925,7 +16924,7 @@ seg018		ends
 seg019		segment	byte public 'CODE' use16
 		assume cs:seg019
 		;org 6
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19297,7 +19296,7 @@ seg019		ends
 ; Segment type:	Pure code
 seg020		segment	byte public 'CODE' use16
 		assume cs:seg020
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20411,7 +20410,7 @@ seg020		ends
 seg021		segment	byte public 'CODE' use16
 		assume cs:seg021
 		;org 4
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23585,7 +23584,7 @@ seg021		ends
 seg022		segment	byte public 'CODE' use16
 		assume cs:seg022
 		;org 8
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24104,7 +24103,7 @@ seg022		ends
 seg023		segment	byte public 'CODE' use16
 		assume cs:seg023
 		;org 0Bh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25259,7 +25258,7 @@ seg023		ends
 seg024		segment	byte public 'CODE' use16
 		assume cs:seg024
 		;org 9
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26453,7 +26452,7 @@ seg024		ends
 seg025		segment	byte public 'CODE' use16
 		assume cs:seg025
 		;org 9
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28058,7 +28057,7 @@ seg025		ends
 seg026		segment	byte public 'CODE' use16
 		assume cs:seg026
 		;org 3
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28665,7 +28664,7 @@ seg026		ends
 seg027		segment	byte public 'CODE' use16
 		assume cs:seg027
 		;org 0Eh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31728,9 +31727,7 @@ seg027		ends
 
 include th01_reiiden_2.inc
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 
@@ -33479,6 +33476,7 @@ include libs/BorlandC/cvtfak[cvtseg].asm
 include libs/BorlandC/math/scantod[scnseg].asm
 include libs/BorlandC/cvtfak[scnseg].asm
 
+_INIT_	segment word public 'INITDATA' use16
 InitStart	label byte
 		db    1
 		db  20h
@@ -33504,11 +33502,16 @@ include libs/BorlandC/setenvp[initdata].asm
 include libs/BorlandC/cibmdely[initdata].asm
 include libs/BorlandC/conioini[initdata].asm
 InitEnd	label byte
+_INIT_	ends
 
+_EXIT_	segment word public 'EXITDATA' use16
 ExitStart	label byte
 include libs/BorlandC/emu/fpinit[exitdata].asm
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
+_EXIT_	ends
+
+	.data?
 
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
@@ -38380,8 +38383,6 @@ include libs/BorlandC/getc[bss].asm
 include libs/BorlandC/putc[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

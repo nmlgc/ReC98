@@ -13,7 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP00 group seg000
 		CGROUP01 group seg001
 		CGROUP02 group seg002
 		CGROUP03 group seg003
@@ -31,9 +30,9 @@ include th04/th04.asm
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	word public 'CODE' use16
-		assume cs:seg000
-		assume es:nothing, ss:_STACK, ds:dseg, fs:nothing, gs:nothing
+_TEXT		segment	word public 'CODE' use16
+		assume cs:_TEXT
+		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/c0.asm
 		db 0
@@ -384,7 +383,7 @@ include libs/BorlandC/ctor2.asm
 include libs/BorlandC/ctor3.asm
 include libs/BorlandC/strings.asm
 include libs/BorlandC/loadprog.asm
-seg000		ends
+_TEXT		ends
 
 ; ===========================================================================
 
@@ -392,7 +391,7 @@ seg000		ends
 seg001		segment	byte public 'CODE' use16
 		assume cs:seg001
 		;org 1
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1832,7 +1831,7 @@ loc_B89D:
 		add	si, bx
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		push	ds
 		mov	ax, word_25A3E
 		mov	ds, ax
@@ -2062,7 +2061,7 @@ loc_BA4E:
 		push	di
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	di, ax
 		add	di, word_25102
 		add	di, 4700h
@@ -3541,7 +3540,7 @@ sub_C34E	proc near
 		mov	cx, ss:[bx+2]
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		xor	ax, ax
 		rep stosd
 		pop	di
@@ -8883,7 +8882,7 @@ arg_2		= word ptr  6
 		push	di
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	bx, 18h
 		mov	ax, [bp+arg_2]
 		mul	bx
@@ -14612,7 +14611,7 @@ loc_11753:
 		add	[si], al
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	si, 4350h
 		mov	di, 4358h
 		xor	dl, dl
@@ -18044,7 +18043,7 @@ seg001		ends
 seg002		segment	word public 'CODE' use16
 		assume cs:seg002
 		;org 0Dh
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th01/hardware/vram_planes_set.asm
 
@@ -18964,7 +18963,7 @@ arg_4		= word ptr  0Ah
 		mov	byte_250B8, al
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 
 loc_13A2A:
 		push	bp
@@ -19042,7 +19041,7 @@ seg002		ends
 seg003		segment	byte public 'CODE' use16
 		assume cs:seg003
 		;org 0Ch
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19058,7 +19057,7 @@ arg_0		= word ptr  4
 		push	di
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	si, 53A2h
 		mov	di, [bp+arg_0]
 		add	di, 14h
@@ -19806,7 +19805,7 @@ sub_13F16	proc near
 		mov	cx, 28h	; '('
 		mov	ax, ds
 		mov	es, ax
-		assume es:dseg
+		assume es:_DATA
 		xor	ax, ax
 		mov	di, 41F6h
 		rep stosw
@@ -23339,7 +23338,7 @@ arg_0		= word ptr  4
 		mov	cx, 0Ch
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		mov	si, 42D8h
 		mov	di, [bp+arg_0]
 		rep movsw
@@ -27078,7 +27077,7 @@ arg_0		= word ptr  4
 		mov	di, 53A2h
 		push	ds
 		pop	es
-		assume es:dseg
+		assume es:_DATA
 		rep movsw
 		pop	di
 		pop	si
@@ -43298,7 +43297,7 @@ seg003		ends
 seg004		segment	byte public 'CODE' use16
 		assume cs:seg004
 		;org 0Ch
-		assume es:nothing, ss:nothing, ds:dseg,	fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include libs/BorlandC/ctor2[textc].asm
 include libs/BorlandC/ctor3[textc].asm
@@ -43308,9 +43307,7 @@ seg004		ends
 
 ; ===========================================================================
 
-; Segment type:	Pure data
-dseg		segment	para public 'DATA' use16
-		assume cs:dseg
+	.data
 
 include libs/BorlandC/c0[data].asm
 include th04/strings/pause[data].asm
@@ -46839,32 +46836,22 @@ ExitStart	label byte
 include libs/BorlandC/new[exitdata].asm
 ExitEnd	label byte
 
+	.data?
+
 bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
-		dw 0
-fp_23D90	dw 0
-dword_23D92	dd 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dw ?
+fp_23D90	dw ?
+dword_23D92	dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
-word_23DBE	dw 0
-		db    0
-		db    0
+word_23DBE	dw ?
+		db ?
+		db ?
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
@@ -46872,774 +46859,198 @@ include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
+		dd ?
 include th04/hardware/snd_interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
@@ -56337,8 +55748,6 @@ include libs/BorlandC/xxv[bss].asm
 include libs/BorlandC/signal[bss].asm
 include libs/BorlandC/xx[bss].asm
 edata@	label byte
-
-dseg		ends
 
 include libs/BorlandC/stack.asm
 

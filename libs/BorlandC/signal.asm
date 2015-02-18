@@ -11,7 +11,7 @@ Int0Catcher	proc far
 		push	si
 		push	di
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		sub	sp, 4
@@ -79,7 +79,7 @@ Int4Catcher	proc far
 		push	si
 		push	di
 		push	bp
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		sub	sp, 4
@@ -148,7 +148,7 @@ Int23Catcher	proc far
 		push	di
 		push	ds
 		push	es
-		mov	bp, seg	dseg
+		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
 		sub	sp, 4

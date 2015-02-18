@@ -54,7 +54,6 @@ else
 		mov	di, ES_[di]
 		push	ds
 		pop	es
-		assume es:dseg
 		add	word ptr [bp+@@varPP], 2
 endif
 		ret

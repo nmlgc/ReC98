@@ -12,16 +12,18 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.386
+		.286 ; Force the .model directive to create 16-bit default segments...
 		.model tiny
+		.386 ; ... then switch to what we actually need.
+		; And yes, we can't move this to an include file for some reason.
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16
-		assume cs:seg000
+_TEXT		segment use16
+		assume cs:_TEXT
 		org 100h
-		assume es:nothing, ss:nothing, ds:seg000, fs:nothing, gs:nothing
+		assume es:nothing, ss:nothing, ds:_TEXT, fs:nothing, gs:nothing
 
 		public start
 start:
@@ -44,7 +46,7 @@ sub_10C		proc near
 		push	es
 		mov	ax, 0
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	bx, word ptr es:start
 		mov	es, word ptr es:aSprite16 ; "SPRITE16"
 		assume es:nothing
@@ -69,7 +71,7 @@ loc_13D:
 		mov	sp, offset word_F38
 		push	ds
 		pop	es
-		assume es:seg000
+		assume es:_TEXT
 		mov	bx, word_F43
 		mov	ah, 4Ah
 		int	21h		; DOS -	2+ - ADJUST MEMORY BLOCK SIZE (SETBLOCK)
@@ -241,7 +243,7 @@ sub_243		proc near
 		push	es
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	bl, byte_F42
 		xor	bh, bh
 		shl	bx, 2
@@ -257,7 +259,7 @@ sub_243		proc near
 		push	es
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	dx, cs
 		mov	ax, offset sub_22A
 		mov	bl, byte_F42
@@ -298,7 +300,7 @@ sub_243		endp
 sub_2AD		proc near
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	bl, byte_F42
 		xor	bh, bh
 		shl	bx, 2
@@ -314,7 +316,7 @@ sub_2AD		proc near
 		push	es
 		xor	ax, ax
 		mov	es, ax
-		assume es:seg000
+		assume es:_TEXT
 		mov	bl, byte_F42
 		xor	bh, bh
 		shl	bx, 2
@@ -675,7 +677,7 @@ sub_520		proc near
 		pop	es
 		assume es:nothing
 		pop	ds
-		assume ds:seg000
+		assume ds:_TEXT
 		retn
 sub_520		endp
 
@@ -769,7 +771,7 @@ loc_5B9:
 		popa
 		pop	es
 		pop	ds
-		assume ds:seg000
+		assume ds:_TEXT
 		retn
 sub_5A4		endp
 
@@ -803,7 +805,7 @@ loc_5E4:
 		pop	es
 		assume es:nothing
 		pop	ds
-		assume ds:seg000
+		assume ds:_TEXT
 		retn
 sub_5D0		endp
 
@@ -872,7 +874,7 @@ var_D0		= byte ptr -0D0h
 		push	dx
 		push	ss
 		pop	ds
-		assume ds:seg000
+		assume ds:_TEXT
 		lea	dx, [bp+var_D0]
 		call	sub_660
 		pop	dx
@@ -1342,7 +1344,7 @@ sub_8EC		proc near
 		push	di
 		push	ds
 		pop	es
-		assume es:seg000
+		assume es:_TEXT
 		mov	di, dx
 		xor	al, al
 		mov	cx, 0FFFFh
@@ -1920,7 +1922,7 @@ sub_BA2		proc near
 		push	es
 		push	cs
 		pop	es
-		assume es:seg000
+		assume es:_TEXT
 		mov	ax, 1
 		mov	di, offset aOn	; "ON"
 		call	sub_C52
@@ -2160,7 +2162,7 @@ aGigvgvgzguvkcM	db 'オプションが無効です。',0Dh,0Ah
 aOn		db 'ON',0
 aOff		db 'OFF',0
 		db 9 dup(0)
-seg000		ends
+_TEXT		ends
 
 
 		end start

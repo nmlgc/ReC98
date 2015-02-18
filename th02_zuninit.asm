@@ -12,15 +12,16 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
+		.286
 		.model tiny
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg000		segment	byte public 'CODE' use16
-		assume cs:seg000
+_TEXT		segment use16
+		assume cs:_TEXT
 		org 100h
-		assume es:nothing, ss:nothing, ds:seg000
+		assume es:nothing, ss:nothing, ds:_TEXT
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -487,7 +488,7 @@ aVVBapatuvVVVvv	db 'まだ、常駐してないわぁ',0Dh,0Ah
 		db 0Dh,0Ah,'$'
 aICbxscVGigvgvg	db '意味不明なオプションよぉ（オプションは -Rのみ）',0Dh,0Ah,'$'
 aGbgvgki	db 'メモリ解放エラーです。 : zuninit.com',0Dh,0Ah,'$'
-seg000		ends
+_TEXT		ends
 
 
 		end start
