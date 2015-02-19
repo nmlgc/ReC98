@@ -13,22 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP01 group seg001
-		CGROUP02 group seg002
-		CGROUP03 group seg003
-		CGROUP04 group seg004
-		CGROUP05 group seg005
-		CGROUP06 group seg006
-		CGROUP07 group seg007
-		CGROUP08 group seg008
-		CGROUP09 group seg009
-		CGROUP10 group seg010
-		CGROUP11 group seg011
-		CGROUP12 group seg012
-		CGROUP13 group E87_PROG
-		CGROUP14 group EMU_PROG
-		CGROUP15 group seg015
-
 		.286 ; Force the .model directive to create 16-bit default segments...
 		.model large
 		__LARGE__ equ 1
@@ -39,15 +23,52 @@ include ReC98.inc
 include th01/th01.asm
 include libs/BorlandC/regs.inc
 
+	option emulator
+
+	extern @$bdla$qnv:proc
+	extern @$bnwa$qui:proc
+	extern FTOL@:proc
+	extern SCOPY@:proc
+	extern __fgetc:proc
+	extern __mbcjmstojis:proc
+	extern __mbctype:byte
+	extern __mscjmstojis:proc
+	extern __setargv__:proc ; main() needs both to be set
+	extern __setenvp__:proc
+	extern _atol:proc
+	extern _close:proc
+	extern _delay:proc
+	extern _execl:proc
+	extern _exit:proc
+	extern _farfree:proc
+	extern _farmalloc:proc
+	extern _fclose:proc
+	extern _filelength:proc
+	extern _fopen:proc
+	extern _fputc:proc
+	extern _fputs:proc
+	extern _fread:proc
+	extern _getvect:proc
+	extern _int86:proc
+	extern _intdosx:proc
+	extern _memcmp:proc
+	extern _memcpy:proc
+	extern _memset:proc
+	extern _open:proc
+	extern _printf:proc
+	extern _segread:proc
+	extern _setvect:proc
+	extern _strcmp:proc
+	extern _toupper:proc
+	extern _vsprintf:proc
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
 _TEXT		segment	word public 'CODE' use16
 		assume cs:_TEXT
-		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
+		assume es:nothing, ds:DGROUP, fs:nothing, gs:nothing
 
-include libs/BorlandC/c0.asm
-		db 0
 include libs/piloadc/piloadc.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
@@ -68,118 +89,6 @@ include libs/master.lib/keybios.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm
 include libs/master.lib/random.asm
-include libs/BorlandC/emu/nec_fpinit.asm
-include libs/BorlandC/math/realcvt.asm
-include libs/BorlandC/math/xcvt.asm
-include libs/BorlandC/math/fperr.asm
-include libs/BorlandC/math/_pow10.asm
-include libs/BorlandC/math/pow10d.asm
-include libs/BorlandC/math/ftol.asm
-include libs/BorlandC/_abort.asm
-include libs/BorlandC/stpcpy.asm
-include libs/BorlandC/abort.asm
-include libs/BorlandC/atexit.asm
-include libs/BorlandC/del.asm
-include libs/BorlandC/delarray.asm
-include libs/BorlandC/dosenv.asm
-include libs/BorlandC/dosfattr.asm
-include libs/BorlandC/dosgdriv.asm
-include libs/BorlandC/errormsg.asm
-include libs/BorlandC/exit.asm
-include libs/BorlandC/f_scopy.asm
-include libs/BorlandC/getvect.asm
-include libs/BorlandC/H_LDIV.ASM
-include libs/BorlandC/H_LLSH.ASM
-include libs/BorlandC/H_PADD.ASM
-include libs/BorlandC/ioerror.asm
-include libs/BorlandC/_isatty.asm
-include libs/BorlandC/longtoa.asm
-include libs/BorlandC/lseek.asm
-include libs/BorlandC/mkname.asm
-include libs/BorlandC/new.asm
-include libs/BorlandC/newarray.asm
-include libs/BorlandC/N_LXMUL.ASM
-include libs/BorlandC/N_PCMP.ASM
-include libs/BorlandC/reada.asm
-include libs/BorlandC/segread.asm
-include libs/BorlandC/setupio.asm
-include libs/BorlandC/cconv.asm
-include libs/BorlandC/toupper.asm
-include libs/BorlandC/unlink.asm
-include libs/BorlandC/vprinter.asm
-include libs/BorlandC/xclose.asm
-include libs/BorlandC/xxas.asm
-include libs/BorlandC/xxv.asm
-include libs/BorlandC/cputype.asm
-include libs/BorlandC/FARHEAP.ASM
-include libs/BorlandC/fbrk.asm
-include libs/BorlandC/int86.asm
-include libs/BorlandC/intdos.asm
-include libs/BorlandC/ioctl.asm
-include libs/BorlandC/signal.asm
-include libs/BorlandC/_access.asm
-include libs/BorlandC/pathops.asm
-include libs/BorlandC/atol.asm
-include libs/BorlandC/chmoda.asm
-include libs/BorlandC/close.asm
-include libs/BorlandC/closea.asm
-include libs/BorlandC/eof.asm
-include libs/BorlandC/fclose.asm
-include libs/BorlandC/fflush.asm
-include libs/BorlandC/flength.asm
-include libs/BorlandC/flushall.asm
-include libs/BorlandC/fopen.asm
-include libs/BorlandC/fprintf.asm
-include libs/BorlandC/fputs.asm
-include libs/BorlandC/fread.asm
-include libs/BorlandC/fseek.asm
-include libs/BorlandC/fullpath.asm
-include libs/BorlandC/getc.asm
-include libs/BorlandC/getdcwd.asm
-include libs/BorlandC/getenv.asm
-include libs/BorlandC/memcmp.asm
-include libs/BorlandC/memcpy.asm
-include libs/BorlandC/memset.asm
-include libs/BorlandC/movmem.asm
-include libs/BorlandC/open.asm
-include libs/BorlandC/opena.asm
-include libs/BorlandC/printf.asm
-include libs/BorlandC/putc.asm
-include libs/BorlandC/read.asm
-include libs/BorlandC/srchenv.asm
-include libs/BorlandC/srchstr.asm
-include libs/BorlandC/setvbuf.asm
-include libs/BorlandC/sprintf.asm
-include libs/BorlandC/_strcat.asm
-include libs/BorlandC/_strcmp.asm
-include libs/BorlandC/_strcpy.asm
-include libs/BorlandC/_stricmp.asm
-include libs/BorlandC/_strlen.asm
-include libs/BorlandC/strrchr.asm
-include libs/BorlandC/write.asm
-include libs/BorlandC/writea.asm
-include libs/BorlandC/xfclose.asm
-include libs/BorlandC/xfflush.asm
-include libs/BorlandC/xalloc.asm
-include libs/BorlandC/xmsg.asm
-include libs/BorlandC/xx.asm
-include libs/BorlandC/cvtfak.asm
-include libs/BorlandC/doscmd.asm
-include libs/BorlandC/exec.asm
-include libs/BorlandC/execl.asm
-include libs/BorlandC/realcvt.asm
-include libs/BorlandC/setargv.asm
-include libs/BorlandC/setblock.asm
-include libs/BorlandC/setenvp.asm
-include libs/BorlandC/ctor2.asm
-include libs/BorlandC/ctor3.asm
-include libs/BorlandC/strings.asm
-include libs/BorlandC/ccomdely.asm
-include libs/BorlandC/cibmdely.asm
-include libs/BorlandC/cnecdely.asm
-include libs/BorlandC/conioini.asm
-include libs/BorlandC/mbjmsjis.asm
-include libs/BorlandC/loadprog.asm
 _TEXT		ends
 
 ; ---------------------------------------------------------------------------
@@ -1921,6 +1830,7 @@ sub_AEA8	endp
 ; Attributes: bp-based frame
 
 ; int __cdecl main(int argc, const char	**argv,	const char **envp)
+public _main
 _main		proc far
 
 outregs		= REGS ptr -2Ch
@@ -2175,13 +2085,12 @@ loc_B21A:
 
 loc_B25D:
 		call	_printf
-_main		endp ; sp-analysis failed
-
 		add	sp, 4
 		pop	di
 		pop	si
 		leave
 		retf
+_main		endp
 seg001		ends
 
 ; ===========================================================================
@@ -2707,7 +2616,7 @@ loc_B543:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1013h], 4
+		test	__mbctype+1[bx], 4
 		jnz	short loc_B557
 		jmp	loc_B60E
 ; ---------------------------------------------------------------------------
@@ -5367,7 +5276,7 @@ loc_C8EF:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1013h], 4
+		test	__mbctype+1[bx], 4
 		jz	short loc_C92F
 		mov	bx, word ptr [bp+arg_2]
 		mov	al, es:[bx]
@@ -5559,7 +5468,7 @@ loc_CA27:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1013h], 4
+		test	__mbctype+1[bx], 4
 		jz	short loc_CA7C
 		mov	bx, word ptr [bp+arg_6]
 		mov	al, es:[bx]
@@ -5581,7 +5490,7 @@ loc_CA7C:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1013h], 3
+		test	__mbctype+1[bx], 3
 		jz	short loc_CA9A
 		mov	bx, word ptr [bp+arg_6]
 		mov	al, es:[bx]
@@ -9340,645 +9249,9 @@ sub_E8D9	endp
 		retf
 seg012		ends
 
-include libs/BorlandC/emu/e87trap.asm
-
-E87_PROG		segment	para public 'CODE' use16
-		assume cs:E87_PROG
-		assume es:nothing, ss:nothing, ds:_STACK, fs:nothing, gs:nothing
-
-		; Hack. Let's better use bytes for accuracy here.
-tbyte_EAF0	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0feh, 03fh
-tbyte_EAFA	db 035h, 0c2h, 068h, 021h, 0a2h, 0dah, 00fh, 0c9h, 0ffh, 03fh
-flt_EB04	dd 0FFC04200r
-flt_EB08	dd 0FFC04800r
-		db 0, 4Ah, 0C0h, 0FFh
-flt_EB10	dd 0.5
-tbyte_EB14	db 085h, 064h, 0deh, 0f9h, 033h, 0f3h, 004h, 0b5h, 0ffh, 03fh
-flt_EB1E	dd 7F800000R
-; ---------------------------------------------------------------------------
-		mov	cl, 0
-		jmp	short loc_EB2C
-; ---------------------------------------------------------------------------
-		mov	cl, 2
-		jmp	short loc_EB2C
-; ---------------------------------------------------------------------------
-		mov	cl, 4
-
-loc_EB2C:
-		wait
-		fxam
-		push	bp
-		mov	bp, sp
-		lea	sp, [bp-2]
-		fstsw	word ptr [bp-2]
-		wait
-		mov	ah, [bp-1]
-		sahf
-		jb	short loc_EB4F
-		jnz	short loc_EB70
-		cmp	cl, 2
-		jnz	short loc_EB4D
-		wait
-		fstp	st
-		wait
-		fld1
-
-loc_EB4D:
-		jmp	short loc_EB6D
-; ---------------------------------------------------------------------------
-
-loc_EB4F:
-		jz	short loc_EB5F
-		jnp	short loc_EB5F
-		wait
-		fstp	st
-		wait
-		fld	cs:flt_EB04
-		wait
-		ftst
-
-loc_EB5F:
-		jmp	short loc_EB6D
-; ---------------------------------------------------------------------------
-
-loc_EB61:
-		wait
-		fcompp
-		wait
-		fld	cs:flt_EB04
-		wait
-		ftst
-
-loc_EB6D:
-		jmp	loc_EC17
-; ---------------------------------------------------------------------------
-
-loc_EB70:
-		wait
-		fabs
-		wait
-		fld	tbyte ptr cs:tbyte_EAF0
-		wait
-		fxch	st(1)
-		wait
-		fprem
-		mov	ch, 2
-		and	ch, ah
-		shr	ch, 1
-		fstsw	word ptr [bp-2]
-		wait
-		mov	ah, [bp-1]
-		sahf
-		jp	short loc_EB61
-		mov	al, 3
-		and	al, ah
-		shl	ah, 1
-		shl	ah, 1
-		rcl	al, 1
-		add	al, 0FCh
-		rcl	al, 1
-		cmp	cl, 2
-		jnz	short loc_EBA7
-		add	al, cl
-		mov	ch, 0
-
-loc_EBA7:
-		and	al, 7
-		test	al, 1
-		jz	short loc_EBB2
-		wait
-		fsubp	st(1), st
-		jmp	short loc_EBB5
-; ---------------------------------------------------------------------------
-
-loc_EBB2:
-		wait
-		fstp	st(1)
-
-loc_EBB5:
-		wait
-		fptan
-		cmp	cl, 4
-		jz	short loc_EBE6
-		test	al, 3
-		jp	short loc_EBC4
-		wait
-		fxch	st(1)
-
-loc_EBC4:
-		wait
-		fld	st(1)
-		wait
-		fmul	st, st
-		wait
-		fxch	st(1)
-		wait
-		fmul	st, st
-		wait
-		faddp	st(1), st
-		wait
-		fsqrt
-		shr	al, 1
-		shr	al, 1
-		xor	al, ch
-		jz	short loc_EBE1
-		wait
-		fchs
-
-loc_EBE1:
-		wait
-		fdivp	st(1), st
-		jmp	short loc_EC17
-; ---------------------------------------------------------------------------
-
-loc_EBE6:
-		mov	ah, al
-		shr	ah, 1
-		and	ah, 1
-		xor	ah, ch
-		jz	short loc_EBF4
-		wait
-		fchs
-
-loc_EBF4:
-		test	al, 3
-		jp	short loc_EC14
-		wait
-		fxch	st(1)
-		wait
-		ftst
-		fstsw	word ptr [bp-2]
-		wait
-		test	byte ptr [bp-1], 40h
-		jz	short loc_EC14
-		wait
-		fcompp
-		wait
-		fld	cs:flt_EB1E
-		jmp	short loc_EC17
-; ---------------------------------------------------------------------------
-
-loc_EC14:
-		wait
-		fdivp	st(1), st
-
-loc_EC17:
-		mov	sp, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-		wait
-		fxam
-		push	bp
-		mov	bp, sp
-		lea	sp, [bp-2]
-		fstsw	word ptr [bp-2]
-		wait
-		mov	ah, [bp-1]
-		sahf
-		xchg	ax, cx
-		jb	short loc_EC34
-		jnz	short loc_EC4E
-		jmp	short loc_EC80
-; ---------------------------------------------------------------------------
-
-loc_EC34:
-		jz	short loc_EC80
-		jnp	short loc_EC80
-		wait
-		fstp	st
-		wait
-		fld	tbyte ptr cs:tbyte_EAFA
-		jmp	short loc_EC78
-; ---------------------------------------------------------------------------
-
-loc_EC43:
-		wait
-		fcompp
-		wait
-		fld	tbyte ptr cs:tbyte_EAF0
-		jmp	short loc_EC78
-; ---------------------------------------------------------------------------
-
-loc_EC4E:
-		wait
-		fabs
-		wait
-		fld1
-		wait
-		fcom	st(1)
-		fstsw	word ptr [bp-2]
-		wait
-		mov	ah, [bp-1]
-		sahf
-		jz	short loc_EC43
-		jnb	short loc_EC67
-		wait
-		fxch	st(1)
-
-loc_EC67:
-		wait
-		fpatan
-		jnb	short loc_EC78
-		wait
-		fld	tbyte ptr cs:tbyte_EAFA
-		wait
-		fsubp	st(1), st
-		xor	ch, 2
-
-loc_EC78:
-		test	ch, 2
-		jz	short loc_EC80
-		wait
-		fchs
-
-loc_EC80:
-		mov	sp, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-		wait
-		fld1
-		jmp	short loc_EC91
-; ---------------------------------------------------------------------------
-		wait
-		fldlg2
-		jmp	short loc_EC91
-; ---------------------------------------------------------------------------
-		wait
-		fldln2
-
-loc_EC91:
-		wait
-		fxch	st(1)
-		push	bp
-		mov	bp, sp
-		wait
-		fxam
-		lea	sp, [bp-0Ah]
-		fstsw	word ptr [bp-0Ah]
-		wait
-		mov	ah, [bp-9]
-		sahf
-		jb	short loc_ECB4
-		jz	short loc_ECAF
-		test	ah, 2
-		jz	short loc_ECD1
-
-loc_ECAF:
-		wait
-		fstp	st
-		jmp	short loc_ECC3
-; ---------------------------------------------------------------------------
-
-loc_ECB4:
-		jz	short loc_ECCC
-		wait
-		fstp	st(1)
-		jnp	short loc_ECCC
-		wait
-		fstp	st(1)
-		test	ah, 2
-		jz	short loc_ECF5
-
-loc_ECC3:
-		wait
-		fstp	st
-		wait
-		fld	cs:flt_EB08
-
-loc_ECCC:
-		wait
-		ftst
-		jmp	short loc_ECF5
-; ---------------------------------------------------------------------------
-
-loc_ECD1:
-		wait
-		fld	st
-		wait
-		fstp	tbyte ptr [bp-0Ah]
-		wait
-		cmp	word ptr [bp-2], 3FFFh
-		jnz	short loc_ECF2
-		cmp	word ptr [bp-4], 8000h
-		jnz	short loc_ECF2
-		wait
-		fld1
-		wait
-		fsubp	st(1), st
-		wait
-		fyl2xp1
-		jmp	short loc_ECF5
-; ---------------------------------------------------------------------------
-
-loc_ECF2:
-		wait
-		fyl2x
-
-loc_ECF5:
-		mov	sp, bp
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-		sub	cx, cx
-		jmp	short loc_ED0F
-; ---------------------------------------------------------------------------
-		wait
-		fldl2t
-		mov	cl, 1
-		wait
-		fxch	st(1)
-		jmp	short loc_ED0F
-; ---------------------------------------------------------------------------
-		wait
-		fldl2e
-		mov	cl, 1
-		wait
-		fxch	st(1)
-
-loc_ED0F:
-		wait
-		fxam
-		push	bp
-		mov	bp, sp
-		lea	sp, [bp-4]
-		fstsw	word ptr [bp-4]
-		jcxz	short loc_ED21
-		wait
-		fxch	st(1)
-
-loc_ED21:
-		wait
-		mov	ah, [bp-3]
-		sahf
-		jb	short loc_ED38
-		jnz	short loc_ED53
-		wait
-		fstp	st
-		jcxz	short loc_ED32
-		wait
-		fstp	st
-
-loc_ED32:
-		wait
-		fld1
-		jmp	loc_EDDC
-; ---------------------------------------------------------------------------
-
-loc_ED38:
-		jcxz	short loc_ED3D
-		wait
-		fstp	st
-
-loc_ED3D:
-		jz	short loc_ED4D
-		jnp	short loc_ED4D
-		wait
-		fstp	st
-		wait
-		fld	cs:flt_EB1E
-		jmp	loc_EDD1
-; ---------------------------------------------------------------------------
-
-loc_ED4D:
-		wait
-		ftst
-		jmp	loc_EDDC
-; ---------------------------------------------------------------------------
-
-loc_ED53:
-		jcxz	short loc_ED58
-		wait
-		fmulp	st(1), st
-
-loc_ED58:
-		wait
-		fabs
-		wait
-		fcom	cs:flt_EB10
-		fstsw	word ptr [bp-4]
-		wait
-		test	byte ptr [bp-3], 41h
-		jz	short loc_ED77
-		wait
-		f2xm1
-		wait
-		fld1
-		wait
-		faddp	st(1), st
-		jmp	short loc_EDD1
-; ---------------------------------------------------------------------------
-
-loc_ED77:
-		wait
-		fld1
-		wait
-		fld	st(1)
-		fstcw	word ptr [bp-4]
-		wait
-		fscale
-		or	byte ptr [bp-3], 0Fh
-		wait
-		fldcw	word ptr [bp-4]
-		wait
-		frndint
-		and	byte ptr [bp-3], 0F3h
-		wait
-		fldcw	word ptr [bp-4]
-		wait
-		fist	word ptr [bp-2]
-		wait
-		fxch	st(1)
-		wait
-		fchs
-		wait
-		fxch	st(1)
-		wait
-		fscale
-		wait
-		fstp	st(1)
-		wait
-		fsubp	st(1), st
-		wait
-		f2xm1
-		wait
-		fld1
-		wait
-		faddp	st(1), st
-		shr	word ptr [bp-2], 1
-		jnb	short loc_EDC4
-		wait
-		fld	tbyte ptr cs:tbyte_EB14
-		wait
-		fmulp	st(1), st
-
-loc_EDC4:
-		wait
-		fild	word ptr [bp-2]
-		wait
-		fxch	st(1)
-		wait
-		fscale
-		wait
-		fstp	st(1)
-
-loc_EDD1:
-		test	ah, 2
-		jz	short loc_EDDC
-		wait
-		fld1
-		wait
-		fdivrp	st(1), st
-
-loc_EDDC:
-		mov	sp, bp
-		pop	bp
-		retn
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: library function bp-based	frame
-
-e087_Entry	proc far
-
-var_2		= word ptr -2
-arg_1		= byte ptr  7
-
-		push	bp
-		mov	bp, sp
-		push	ax
-		push	si
-		push	ds
-		test	[bp+arg_1], 2
-		jz	short loc_EDED
-		sti
-
-loc_EDED:
-		lds	si, [bp+2]
-		mov	ax, ds
-		xor	ax, ss:27h
-		mov	ds, ax
-		mov	ax, [si-1]
-		sub	al, 34h	; '4'
-		cmp	al, 8
-		jnb	short loc_EE57
-		cmp	ax, 0E303h
-		jz	short loc_EE2C
-		cmp	ax, 0E007h
-		jnz	short loc_EE1D
-		cmp	byte ptr ss:26h, 2
-		jge	short loc_EE1D
-		fstsw	[bp+var_2]
-		inc	word ptr [bp+2]
-		jmp	short loc_EE7A
-; ---------------------------------------------------------------------------
-
-loc_EE1D:
-		sub	si, 2
-		mov	byte ptr [si], 9Bh
-		add	byte ptr [si+1], 0A4h
-
-loc_EE27:
-		mov	[bp+2],	si
-		jmp	short loc_EE7A
-; ---------------------------------------------------------------------------
-
-loc_EE2C:
-		fninit
-		inc	word ptr [bp+2]
-		mov	word ptr ss:20h, 4100h
-		mov	word ptr ss:22h, 3Fh ; '?'
-		mov	word ptr ss:45h, 0
-		mov	ax, ss:31h
-		mov	ss:2Dh,	ax
-		mov	word ptr ss:24h, 0
-		jmp	short loc_EE7A
-; ---------------------------------------------------------------------------
-
-loc_EE57:
-		ja	short loc_EE7F
-		test	ah, 20h
-		jnz	short loc_EE8C
-		sub	si, 2
-		mov	[bp+2],	si
-		mov	byte ptr [si], 9Bh
-		inc	si
-		mov	al, ah
-		and	ax, 7C0h
-		shr	al, 1
-		shr	al, 1
-		shr	al, 1
-		xor	al, 18h
-		add	ax, 0D826h
-		mov	[si], ax
-
-loc_EE7A:
-		pop	ds
-		pop	si
-		pop	ax
-		pop	bp
-		iret
-; ---------------------------------------------------------------------------
-
-loc_EE7F:
-		cmp	al, 9
-		ja	short loc_EE8C
-		sub	si, 2
-		mov	word ptr [si], 9B90h
-		jmp	short loc_EE27
-; ---------------------------------------------------------------------------
-
-loc_EE8C:
-		int	3		; Trap to Debugger
-		jmp	short loc_EE7A
-e087_Entry	endp
-
-; ---------------------------------------------------------------------------
-		db 22h,	2, 26h,	2, 2Ah,	2, 1Bh,	3, 8Eh,	3, 84h,	3, 89h
-		db 3, 7, 4, 0F9h, 3, 0FDh, 3
-; ---------------------------------------------------------------------------
-
-e087_Shortcut:
-		sti
-		push	ax
-		push	si
-		push	es
-		push	bp
-		mov	bp, sp
-		les	si, [bp+8]
-		lods	byte ptr es:[si]
-		mov	[bp+8],	si
-		cbw
-		xchg	ax, si
-		push	cx
-		call	word ptr cs:[si+5A3h]
-		pop	cx
-		pop	bp
-		pop	es
-		pop	si
-		pop	ax
-		iret
-E87_PROG		ends
-
-include libs/BorlandC/emu/emu086.asm
-
-; Segment type:	Pure code
-seg015		segment	para public 'CODE' use16
-		assume cs:seg015
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include libs/BorlandC/ctor2[textc].asm
-include libs/BorlandC/ctor3[textc].asm
-include libs/BorlandC/strings[textc].asm
-		dd 0, 0
-seg015		ends
-
 ; ===========================================================================
 
 	.data
-
-include libs/BorlandC/c0[data].asm
 
 word_12320	dw 101h
 word_12322	dw 201h
@@ -10426,67 +9699,8 @@ byte_12B0E	db 0
 aMdrv2system	db 'Mdrv2System',0
 aXx		db '••',0
 		db 0
-include libs/BorlandC/deflt87[data].asm
-include libs/BorlandC/protflag[data].asm
-include libs/BorlandC/flag8087[data].asm
-include libs/BorlandC/math/fperr[data].asm
-include libs/BorlandC/math/_pow10[data].asm
-include libs/BorlandC/_abort[data].asm
-include libs/BorlandC/atexit[data].asm
-include libs/BorlandC/exit[data].asm
-include libs/BorlandC/files[data].asm
-include libs/BorlandC/fmode[data].asm
-include libs/BorlandC/fpstklen[data].asm
-include libs/BorlandC/ioerror[data].asm
-include libs/BorlandC/mkname[data].asm
-include libs/BorlandC/new[data].asm
-include libs/BorlandC/stklen[data].asm
-include libs/BorlandC/ctype[data].asm
-include libs/BorlandC/cconv[data].asm
-include libs/BorlandC/vprinter[data].asm
-include libs/BorlandC/xxv[data].asm
-include libs/BorlandC/cputype[data].asm
-include libs/BorlandC/fbrk[data].asm
-include libs/BorlandC/signal[data].asm
-include libs/BorlandC/pathops[data].asm
-include libs/BorlandC/putc[data].asm
-include libs/BorlandC/srchenv[data].asm
-include libs/BorlandC/srchstr[data].asm
-include libs/BorlandC/setvbuf[data].asm
-include libs/BorlandC/sysnerr[data].asm
-include libs/BorlandC/xx[data].asm
-include libs/BorlandC/cvtfak[data].asm
-include libs/BorlandC/setargv[data].asm
-include libs/BorlandC/setenvp[data].asm
-include libs/BorlandC/strings[data].asm
-include libs/BorlandC/cibmdely[data].asm
-include libs/BorlandC/coniotyp[data].asm
-include libs/BorlandC/mbctype[data].asm
-include libs/BorlandC/loadprog[data].asm
-include libs/BorlandC/math/realcvt[cvtseg].asm
-include libs/BorlandC/cvtfak[cvtseg].asm
-include libs/BorlandC/cvtfak[scnseg].asm
-
-InitStart	label byte
-include libs/BorlandC/emu/fpinit[initdata].asm
-include libs/BorlandC/new[initdata].asm
-include libs/BorlandC/setupio[initdata].asm
-include libs/BorlandC/cputype[initdata].asm
-include libs/BorlandC/pathops[initdata].asm
-include libs/BorlandC/setargv[initdata].asm
-include libs/BorlandC/setenvp[initdata].asm
-include libs/BorlandC/cibmdely[initdata].asm
-include libs/BorlandC/conioini[initdata].asm
-InitEnd	label byte
-
-ExitStart	label byte
-include libs/BorlandC/emu/fpinit[exitdata].asm
-include libs/BorlandC/new[exitdata].asm
-ExitEnd	label byte
-
 	.data?
 
-bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 dword_13418	dd ?
 		dd    ?
@@ -10996,16 +10210,5 @@ unk_13F00	db    ?	;
 word_13F0D	dw ?
 word_13F0F	dw ?
 		db    ?	;
-include libs/BorlandC/atexit[bss].asm
-include libs/BorlandC/mkname[bss].asm
-include libs/BorlandC/sigdata[bss].asm
-include libs/BorlandC/xxv[bss].asm
-include libs/BorlandC/signal[bss].asm
-include libs/BorlandC/getc[bss].asm
-include libs/BorlandC/putc[bss].asm
-include libs/BorlandC/xx[bss].asm
-edata@	label byte
 
-include libs/BorlandC/stack.asm
-
-		end startx
+		end

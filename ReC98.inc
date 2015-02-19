@@ -1,17 +1,22 @@
 ; ReC98
 ; Main include file
 
+; Order segments alphabetically.
+; Rather ugly workaround to prevent the automatically generated code segment
+; for the large model (filename_TEXT) from enforcing its word alignment
+; between _TEXT and seg001, even though we never emit anything into it.
+; However, this merely pushes filename_TEXT before _TEXTC, and therefore
+; breaks another group of files. In these, we actually have to rename that
+; automatically generated code segment to one that is expected to have word
+; alignment.
+.alpha
+
 locals
 
 include libs/BorlandC/RULES.ASI
-include libs/BorlandC/ctype.inc
-include libs/BorlandC/dos.inc
 include libs/BorlandC/doserror.inc
 include libs/BorlandC/errno.inc
-include libs/BorlandC/fcntl.inc
 include libs/BorlandC/stdio.inc
-include libs/BorlandC/_printf.inc
-include libs/BorlandC/sys/stat.inc
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc

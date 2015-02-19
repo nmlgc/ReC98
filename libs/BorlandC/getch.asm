@@ -1,4 +1,4 @@
-getch	proc
+_getch	proc
 		push	si
 		push	di
 		cmp	_cFlag, 0
@@ -16,4 +16,4 @@ getch	proc
 		pop	di
 		pop	si
 		ret
-getch	endp
+_getch	endp

@@ -13,13 +13,8 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP01 group seg001
-		CGROUP02 group seg002
-		CGROUP03 group seg003
-		CGROUP04 group seg004
-
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large
+		.model large seg002
 		__LARGE__ equ 1
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
@@ -27,15 +22,16 @@
 include ReC98.inc
 include th05/th05.asm
 
+	extern _execl:proc
+	extern _strlen:proc
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
 _TEXT		segment	word public 'CODE' use16
 		assume cs:_TEXT
-		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
+		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include libs/BorlandC/c0.asm
-		db 0
 include libs/master.lib/bfnt_entry_pat.asm
 include libs/master.lib/bfnt_header_read.asm
 include libs/master.lib/bfnt_header_analysis.asm
@@ -371,81 +367,15 @@ include libs/master.lib/pfint21.asm
 		db 0
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-include libs/BorlandC/_abort.asm
-include libs/BorlandC/stpcpy.asm
-include libs/BorlandC/abort.asm
-include libs/BorlandC/atexit.asm
-include libs/BorlandC/del.asm
-include libs/BorlandC/delarray.asm
-include libs/BorlandC/dosenv.asm
-include libs/BorlandC/dosgdriv.asm
-include libs/BorlandC/errormsg.asm
-include libs/BorlandC/exit.asm
-include libs/BorlandC/getvect.asm
-include libs/BorlandC/H_LDIV.ASM
-include libs/BorlandC/H_LLSH.ASM
-include libs/BorlandC/H_PADD.ASM
-include libs/BorlandC/ioerror.asm
-include libs/BorlandC/_isatty.asm
-include libs/BorlandC/lseek.asm
-include libs/BorlandC/new.asm
-include libs/BorlandC/N_LXMUL.ASM
-include libs/BorlandC/N_PCMP.ASM
-include libs/BorlandC/setupio.asm
-include libs/BorlandC/toupper.asm
-include libs/BorlandC/xxas.asm
-include libs/BorlandC/xxv.asm
-include libs/BorlandC/cputype.asm
-include libs/BorlandC/FARHEAP.ASM
-include libs/BorlandC/fbrk.asm
-include libs/BorlandC/signal.asm
-include libs/BorlandC/_access.asm
-include libs/BorlandC/pathops.asm
-include libs/BorlandC/chmoda.asm
-include libs/BorlandC/fflush.asm
-include libs/BorlandC/flushall.asm
-include libs/BorlandC/fseek.asm
-include libs/BorlandC/fullpath.asm
-include libs/BorlandC/getdcwd.asm
-include libs/BorlandC/getenv.asm
-include libs/BorlandC/memcmp.asm
-include libs/BorlandC/memcpy.asm
-include libs/BorlandC/memset.asm
-include libs/BorlandC/movmem.asm
-include libs/BorlandC/srchenv.asm
-include libs/BorlandC/srchstr.asm
-include libs/BorlandC/setvbuf.asm
-include libs/BorlandC/_strcat.asm
-include libs/BorlandC/_strcmp.asm
-include libs/BorlandC/_strcpy.asm
-include libs/BorlandC/_stricmp.asm
-include libs/BorlandC/_strlen.asm
-include libs/BorlandC/strrchr.asm
-include libs/BorlandC/write.asm
-include libs/BorlandC/writea.asm
-include libs/BorlandC/xfflush.asm
-include libs/BorlandC/xalloc.asm
-include libs/BorlandC/xmsg.asm
-include libs/BorlandC/xx.asm
-include libs/BorlandC/doscmd.asm
-include libs/BorlandC/exec.asm
-include libs/BorlandC/execl.asm
-include libs/BorlandC/setblock.asm
-include libs/BorlandC/setenvp.asm
-include libs/BorlandC/ctor2.asm
-include libs/BorlandC/ctor3.asm
-include libs/BorlandC/strings.asm
-include libs/BorlandC/loadprog.asm
 _TEXT		ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
+seg001		segment	word public 'CODE' use16
 		assume cs:seg001
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -471,6 +401,7 @@ sub_AE1E	endp
 ; Attributes: bp-based frame
 
 ; int __cdecl main(int argc, const char	**argv,	const char **envp)
+public _main
 _main		proc far
 
 _argc		= word ptr  6
@@ -42208,27 +42139,7 @@ sub_1FD62	endp
 
 seg003		ends
 
-; ===========================================================================
-
-; Segment type:	Pure code
-seg004		segment	byte public 'CODE' use16
-		assume cs:seg004
-		;org 0Dh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include libs/BorlandC/ctor2[textc].asm
-include libs/BorlandC/ctor3[textc].asm
-include libs/BorlandC/strings[textc].asm
-		dd 0, 0
-		dw 0
-		db 0
-seg004		ends
-
-; ===========================================================================
-
 	.data
-
-include libs/BorlandC/c0[data].asm
 
 byte_20A70	db 0
 byte_20A71	db 0
@@ -45492,43 +45403,9 @@ aSt05_bb	db 'st05.bb',0
 aSt06_bmt	db 'st06.bmt',0
 aSt03_bb_0	db 'st03.bb',0
 		db 0
-include libs/BorlandC/_abort[data].asm
-include libs/BorlandC/atexit[data].asm
-include libs/BorlandC/exit[data].asm
-include libs/BorlandC/files[data].asm
-include libs/BorlandC/ioerror[data].asm
-include libs/BorlandC/new[data].asm
-include libs/BorlandC/stklen[data].asm
-include libs/BorlandC/ctype[data].asm
-include libs/BorlandC/xxv[data].asm
-include libs/BorlandC/cputype[data].asm
-include libs/BorlandC/fbrk[data].asm
-include libs/BorlandC/signal[data].asm
-include libs/BorlandC/pathops[data].asm
-include libs/BorlandC/srchenv[data].asm
-include libs/BorlandC/srchstr[data].asm
-include libs/BorlandC/setvbuf[data].asm
-include libs/BorlandC/sysnerr[data].asm
-include libs/BorlandC/xx[data].asm
-include libs/BorlandC/setenvp[data].asm
-include libs/BorlandC/strings[data].asm
-include libs/BorlandC/loadprog[data].asm
-
-InitStart	label byte
-include libs/BorlandC/new[initdata].asm
-include libs/BorlandC/setupio[initdata].asm
-include libs/BorlandC/cputype[initdata].asm
-include libs/BorlandC/pathops[initdata].asm
-include libs/BorlandC/setenvp[initdata].asm
-InitEnd	label byte
-
-ExitStart	label byte
-include libs/BorlandC/new[exitdata].asm
-ExitEnd	label byte
 
 	.data?
 
-bdata@	label byte
 		db ?
 		db ?
 fp_2300E	dw ?
@@ -55438,13 +55315,5 @@ word_2D08A	dw ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-include libs/BorlandC/atexit[bss].asm
-include libs/BorlandC/sigdata[bss].asm
-include libs/BorlandC/xxv[bss].asm
-include libs/BorlandC/signal[bss].asm
-include libs/BorlandC/xx[bss].asm
-edata@	label byte
 
-include libs/BorlandC/stack.asm
-
-		end startx
+		end

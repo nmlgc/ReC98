@@ -13,48 +13,6 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		CGROUP01 group seg001
-		CGROUP02 group seg002
-		CGROUP03 group seg003
-		CGROUP04 group seg004
-		CGROUP05 group seg005
-		CGROUP06 group seg006
-		CGROUP07 group seg007
-		CGROUP08 group seg008
-		CGROUP09 group seg009
-		CGROUP10 group seg010
-		CGROUP11 group seg011
-		CGROUP12 group seg012
-		CGROUP13 group seg013
-		CGROUP14 group seg014
-		CGROUP15 group seg015
-		CGROUP16 group seg016
-		CGROUP17 group seg017
-		CGROUP18 group seg018
-		CGROUP19 group seg019
-		CGROUP20 group seg020
-		CGROUP21 group seg021
-		CGROUP22 group seg022
-		CGROUP23 group seg023
-		CGROUP24 group seg024
-		CGROUP25 group seg025
-		CGROUP26 group seg026
-		CGROUP27 group seg027
-		CGROUP28 group seg028
-		CGROUP29 group seg029
-		CGROUP30 group seg030
-		CGROUP31 group seg031
-		CGROUP32 group seg032
-		CGROUP33 group seg033
-		CGROUP34 group seg034
-		CGROUP35 group seg035
-		CGROUP36 group seg036
-		CGROUP37 group seg037
-		CGROUP38 group seg038
-		CGROUP39 group E87_PROG
-		CGROUP40 group EMU_PROG
-		CGROUP41 group seg041
-
 		.286 ; Force the .model directive to create 16-bit default segments...
 		.model large
 		__LARGE__ equ 1
@@ -65,15 +23,63 @@ include ReC98.inc
 include th01/th01.asm
 include libs/BorlandC/regs.inc
 
+	option emulator
+
+	extern @$bdla$qnv:proc
+	extern @$bnew$qui:proc
+	extern @$bnwa$qui:proc
+	extern @_vector_new_$qnvuiuluie:proc
+	extern @set_new_handler$qnqv$v:proc
+	extern FTOL@:proc
+	extern LDIV@:proc
+	extern LXMUL@:proc
+	extern SCOPY@:proc
+	extern __control87:proc
+	extern __fgetc:proc
+	extern __lrotl:proc
+	extern __lrotr:proc
+	extern __mbcjmstojis:proc
+	extern __mbctype:byte
+	extern __turboFloat
+	extern _close:proc
+	extern _coreleft:proc
+	extern _delay:proc
+	extern _execl:proc
+	extern _exit:proc
+	extern _farcalloc:proc
+	extern _farfree:proc
+	extern _farheapcheck:proc
+	extern _farheapchecknode:proc
+	extern _farmalloc:proc
+	extern _fclose:proc
+	extern _filelength:proc
+	extern _fopen:proc
+	extern _getvect:proc
+	extern _int86:proc
+	extern _intdosx:proc
+	extern _kbhit:proc
+	extern _memcmp:proc
+	extern _memcpy:proc
+	extern _memset:proc
+	extern _open:proc
+	extern _printf:proc
+	extern _puts:proc
+	extern _scanf:proc
+	extern _segread:proc
+	extern _setvect:proc
+	extern _strcmp:proc
+	extern _strcpy:proc
+	extern _toupper:proc
+	extern _vsprintf:proc
+	extern _write:proc
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
 _TEXT		segment	word public 'CODE' use16
 		assume cs:_TEXT
-		assume es:nothing, ss:_STACK, ds:_DATA, fs:nothing, gs:nothing
+		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include libs/BorlandC/c0.asm
-		db 0
 include libs/piloadc/piloadc.asm
 include libs/master.lib/text_clear.asm
 include libs/master.lib/text_fillca.asm
@@ -104,137 +110,6 @@ include libs/master.lib/egc.asm
 include libs/master.lib/iatan2.asm
 include libs/master.lib/isqrt.asm
 include libs/master.lib/random.asm
-include libs/BorlandC/emu/nec_fpinit.asm
-include libs/BorlandC/math/ctrl87.asm
-include libs/BorlandC/math/ldtrunc.asm
-include libs/BorlandC/math/realcvt.asm
-include libs/BorlandC/math/scantod.asm
-include libs/BorlandC/math/xcvt.asm
-include libs/BorlandC/math/fperr.asm
-include libs/BorlandC/math/_pow10.asm
-include libs/BorlandC/math/pow10d.asm
-include libs/BorlandC/math/ftol.asm
-include libs/BorlandC/_abort.asm
-include libs/BorlandC/stpcpy.asm
-include libs/BorlandC/abort.asm
-include libs/BorlandC/atexit.asm
-include libs/BorlandC/del.asm
-include libs/BorlandC/delarray.asm
-include libs/BorlandC/dosenv.asm
-include libs/BorlandC/dosfattr.asm
-include libs/BorlandC/dosgdriv.asm
-include libs/BorlandC/errormsg.asm
-include libs/BorlandC/exit.asm
-include libs/BorlandC/f_lxmul.asm
-include libs/BorlandC/f_scopy.asm
-include libs/BorlandC/getvect.asm
-include libs/BorlandC/H_LDIV.ASM
-include libs/BorlandC/H_LLSH.ASM
-include libs/BorlandC/h_pada.asm
-include libs/BorlandC/H_PADD.ASM
-include libs/BorlandC/H_PSBP.ASM
-include libs/BorlandC/ioerror.asm
-include libs/BorlandC/_isatty.asm
-include libs/BorlandC/longtoa.asm
-include libs/BorlandC/lrotl.asm
-include libs/BorlandC/lrotr.asm
-include libs/BorlandC/lseek.asm
-include libs/BorlandC/mkname.asm
-include libs/BorlandC/new.asm
-include libs/BorlandC/newarray.asm
-include libs/BorlandC/newf.asm
-include libs/BorlandC/newfarry.asm
-include libs/BorlandC/N_LXMUL.ASM
-include libs/BorlandC/N_PCMP.ASM
-include libs/BorlandC/reada.asm
-include libs/BorlandC/scanner.asm
-include libs/BorlandC/scantol.asm
-include libs/BorlandC/segread.asm
-include libs/BorlandC/setupio.asm
-include libs/BorlandC/cconv.asm
-include libs/BorlandC/toupper.asm
-include libs/BorlandC/unlink.asm
-include libs/BorlandC/vnewf.asm
-include libs/BorlandC/vprinter.asm
-include libs/BorlandC/xclose.asm
-include libs/BorlandC/xxas.asm
-include libs/BorlandC/xxv.asm
-include libs/BorlandC/coreleft.asm
-include libs/BorlandC/cputype.asm
-include libs/BorlandC/FARHEAP.ASM
-include libs/BorlandC/fbrk.asm
-include libs/BorlandC/fcalloc.asm
-include libs/BorlandC/fcorleft.asm
-include libs/BorlandC/FHEAPCHK.ASM
-include libs/BorlandC/int86.asm
-include libs/BorlandC/intdos.asm
-include libs/BorlandC/ioctl.asm
-include libs/BorlandC/signal.asm
-include libs/BorlandC/_access.asm
-include libs/BorlandC/pathops.asm
-include libs/BorlandC/chmoda.asm
-include libs/BorlandC/close.asm
-include libs/BorlandC/closea.asm
-include libs/BorlandC/eof.asm
-include libs/BorlandC/fclose.asm
-include libs/BorlandC/fflush.asm
-include libs/BorlandC/flength.asm
-include libs/BorlandC/flushall.asm
-include libs/BorlandC/fopen.asm
-include libs/BorlandC/fprintf.asm
-include libs/BorlandC/fseek.asm
-include libs/BorlandC/fullpath.asm
-include libs/BorlandC/getc.asm
-include libs/BorlandC/getdcwd.asm
-include libs/BorlandC/getenv.asm
-include libs/BorlandC/memcmp.asm
-include libs/BorlandC/memcpy.asm
-include libs/BorlandC/memset.asm
-include libs/BorlandC/movmem.asm
-include libs/BorlandC/open.asm
-include libs/BorlandC/opena.asm
-include libs/BorlandC/printf.asm
-include libs/BorlandC/putc.asm
-include libs/BorlandC/puts.asm
-include libs/BorlandC/read.asm
-include libs/BorlandC/scanf.asm
-include libs/BorlandC/srchenv.asm
-include libs/BorlandC/srchstr.asm
-include libs/BorlandC/setvbuf.asm
-include libs/BorlandC/sprintf.asm
-include libs/BorlandC/_strcat.asm
-include libs/BorlandC/_strcmp.asm
-include libs/BorlandC/_strcpy.asm
-include libs/BorlandC/_stricmp.asm
-include libs/BorlandC/_strlen.asm
-include libs/BorlandC/strrchr.asm
-include libs/BorlandC/ungetc.asm
-include libs/BorlandC/write.asm
-include libs/BorlandC/writea.asm
-include libs/BorlandC/writeu.asm
-include libs/BorlandC/xfclose.asm
-include libs/BorlandC/xfflush.asm
-include libs/BorlandC/xalloc.asm
-include libs/BorlandC/xmsg.asm
-include libs/BorlandC/xx.asm
-include libs/BorlandC/cvtfak.asm
-include libs/BorlandC/doscmd.asm
-include libs/BorlandC/exec.asm
-include libs/BorlandC/execl.asm
-include libs/BorlandC/realcvt.asm
-include libs/BorlandC/scantod.asm
-include libs/BorlandC/setblock.asm
-include libs/BorlandC/setenvp.asm
-include libs/BorlandC/ctor2.asm
-include libs/BorlandC/ctor3.asm
-include libs/BorlandC/strings.asm
-include libs/BorlandC/ccomdely.asm
-include libs/BorlandC/cibmdely.asm
-include libs/BorlandC/cnecdely.asm
-include libs/BorlandC/conioini.asm
-include libs/BorlandC/kbhit.asm
-include libs/BorlandC/mbjmsjis.asm
-include libs/BorlandC/loadprog.asm
 _TEXT		ends
 
 ; ===========================================================================
@@ -4117,6 +3992,7 @@ off_D524	dw offset loc_D4F3
 ; Attributes: bp-based frame
 
 ; int __cdecl main(int argc, const char	**argv,	const char **envp)
+public _main
 _main		proc far
 
 _path		= byte ptr -1Eh
@@ -6052,7 +5928,7 @@ loc_E63E:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+20E1h], 4
+		test	__mbctype+1[bx], 4
 		jnz	short loc_E652
 		jmp	loc_E709
 ; ---------------------------------------------------------------------------
@@ -8894,7 +8770,7 @@ loc_F9EA:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+20E1h], 4
+		test	__mbctype+1[bx], 4
 		jz	short loc_FA2A
 		mov	bx, word ptr [bp+arg_2]
 		mov	al, es:[bx]
@@ -9086,7 +8962,7 @@ loc_FB22:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+20E1h], 4
+		test	__mbctype+1[bx], 4
 		jz	short loc_FB77
 		mov	bx, word ptr [bp+arg_6]
 		mov	al, es:[bx]
@@ -9108,7 +8984,7 @@ loc_FB77:
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+20E1h], 3
+		test	__mbctype+1[bx], 3
 		jz	short loc_FB95
 		mov	bx, word ptr [bp+arg_6]
 		mov	al, es:[bx]
@@ -31729,8 +31605,6 @@ include th01_reiiden_2.inc
 
 	.data
 
-include libs/BorlandC/c0[data].asm
-
 byte_34A30	db 1
 byte_34A31	db 1
 byte_34A32	db 1
@@ -33431,53 +33305,7 @@ word_360CD	dw 0
 		db    0
 flt_3624F	dd 1.5
 		db 0
-include libs/BorlandC/deflt87[data].asm
-include libs/BorlandC/protflag[data].asm
-include libs/BorlandC/flag8087[data].asm
-include libs/BorlandC/math/hugeval[data].asm
-include libs/BorlandC/math/scantod[data].asm
-include libs/BorlandC/math/fperr[data].asm
-include libs/BorlandC/math/_pow10[data].asm
-include libs/BorlandC/_abort[data].asm
-include libs/BorlandC/atexit[data].asm
-include libs/BorlandC/exit[data].asm
-include libs/BorlandC/files[data].asm
-include libs/BorlandC/fmode[data].asm
-include libs/BorlandC/fpstklen[data].asm
-include libs/BorlandC/ioerror[data].asm
-include libs/BorlandC/mkname[data].asm
-include libs/BorlandC/new[data].asm
-include libs/BorlandC/scanner[data].asm
-include libs/BorlandC/stklen[data].asm
-include libs/BorlandC/ctype[data].asm
-include libs/BorlandC/cconv[data].asm
-include libs/BorlandC/vprinter[data].asm
-include libs/BorlandC/xxv[data].asm
-include libs/BorlandC/cputype[data].asm
-include libs/BorlandC/fbrk[data].asm
-include libs/BorlandC/signal[data].asm
-include libs/BorlandC/pathops[data].asm
-include libs/BorlandC/putc[data].asm
-include libs/BorlandC/srchenv[data].asm
-include libs/BorlandC/srchstr[data].asm
-include libs/BorlandC/setvbuf[data].asm
-include libs/BorlandC/sysnerr[data].asm
-include libs/BorlandC/xx[data].asm
-include libs/BorlandC/cvtfak[data].asm
-include libs/BorlandC/setenvp[data].asm
-include libs/BorlandC/strings[data].asm
-include libs/BorlandC/cibmdely[data].asm
-include libs/BorlandC/coniotyp[data].asm
-include libs/BorlandC/kbhit[data].asm
-include libs/BorlandC/mbctype[data].asm
-include libs/BorlandC/loadprog[data].asm
-include libs/BorlandC/math/realcvt[cvtseg].asm
-include libs/BorlandC/cvtfak[cvtseg].asm
-include libs/BorlandC/math/scantod[scnseg].asm
-include libs/BorlandC/cvtfak[scnseg].asm
-
 _INIT_	segment word public 'INITDATA' use16
-InitStart	label byte
 		db    1
 		db  20h
 		dd sub_E319
@@ -33493,27 +33321,10 @@ InitStart	label byte
 		db    1
 		db  20h
 		dd sub_24DFF
-include libs/BorlandC/emu/fpinit[initdata].asm
-include libs/BorlandC/new[initdata].asm
-include libs/BorlandC/setupio[initdata].asm
-include libs/BorlandC/cputype[initdata].asm
-include libs/BorlandC/pathops[initdata].asm
-include libs/BorlandC/setenvp[initdata].asm
-include libs/BorlandC/cibmdely[initdata].asm
-include libs/BorlandC/conioini[initdata].asm
-InitEnd	label byte
 _INIT_	ends
-
-_EXIT_	segment word public 'EXITDATA' use16
-ExitStart	label byte
-include libs/BorlandC/emu/fpinit[exitdata].asm
-include libs/BorlandC/new[exitdata].asm
-ExitEnd	label byte
-_EXIT_	ends
 
 	.data?
 
-bdata@	label byte
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 byte_36C14	db ?
 byte_36C15	db ?
@@ -38374,16 +38185,5 @@ word_3B52B	dw ?
 word_3B52D	dw ?
 byte_3B52F	db ?
 word_3B530	dw ?
-include libs/BorlandC/atexit[bss].asm
-include libs/BorlandC/mkname[bss].asm
-include libs/BorlandC/sigdata[bss].asm
-include libs/BorlandC/xxv[bss].asm
-include libs/BorlandC/signal[bss].asm
-include libs/BorlandC/getc[bss].asm
-include libs/BorlandC/putc[bss].asm
-include libs/BorlandC/xx[bss].asm
-edata@	label byte
 
-include libs/BorlandC/stack.asm
-
-		end startx
+		end
