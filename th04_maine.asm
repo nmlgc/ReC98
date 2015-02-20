@@ -6242,7 +6242,7 @@ loc_D67A:
 		pop	di
 		pop	si
 		retf
-sub_D626	endp ; sp-analysis failed
+sub_D626	endp
 
 ; ---------------------------------------------------------------------------
 		push	si

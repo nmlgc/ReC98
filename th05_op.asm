@@ -6109,7 +6109,7 @@ loc_D5EE:
 		pop	si
 		pop	bp
 		retf	6
-sub_D590	endp ; sp-analysis failed
+sub_D590	endp
 
 include th04/hardware/snd_se.asm
 
@@ -6159,7 +6159,7 @@ loc_D6DC:
 		pop	di
 		pop	si
 		retf
-sub_D688	endp ; sp-analysis failed
+sub_D688	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6192,7 +6192,7 @@ loc_D711:
 		pop	di
 		pop	si
 		retf
-sub_D6F0	endp ; sp-analysis failed
+sub_D6F0	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -6307,7 +6307,7 @@ loc_D7CE:
 		pop	si
 		pop	bp
 		retf	6
-sub_D758	endp ; sp-analysis failed
+sub_D758	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -6636,9 +6636,6 @@ sub_DA30	endp
 
 sub_DA6B	proc far
 
-; FUNCTION CHUNK AT 0180 SIZE 00000074 BYTES
-; FUNCTION CHUNK AT 021F SIZE 00000027 BYTES
-
 		cmp	al, 0FFh
 		jnz	short loc_DA70
 		retn
@@ -6698,7 +6695,7 @@ loc_DACE:
 		pop	di
 		pop	bx
 		retn
-sub_DA6B	endp ; sp-analysis failed
+sub_DA6B	endp
 
 ; ---------------------------------------------------------------------------
 off_DAD1	dw offset loc_DA9D
@@ -6851,7 +6848,7 @@ loc_DBA6:
 		pop	di
 		pop	bp
 		retf	8
-sub_DB3C	endp ; sp-analysis failed
+sub_DB3C	endp
 
 ; ---------------------------------------------------------------------------
 		nop

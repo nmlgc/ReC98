@@ -38,8 +38,6 @@ aSprite16	db 'SPRITE16',0
 
 sub_10C		proc near
 
-; FUNCTION CHUNK AT 0191 SIZE 0000000B BYTES
-
 		cld
 		push	offset aZunsp_comVersi ; "ZUNSP.COM    Version 1.00 Copyright(C) "...
 		call	sub_676
@@ -108,10 +106,7 @@ loc_186:
 		call	sub_676
 		mov	ax, 4C01h
 		int	21h		; DOS -	2+ - QUIT WITH EXIT CODE (EXIT)
-sub_10C		endp			; AL = exit code
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_10C
+					; AL = exit code
 
 loc_191:
 		cmp	cs:word_F40, 0
@@ -120,7 +115,7 @@ loc_191:
 
 locret_19B:
 		retn
-; END OF FUNCTION CHUNK	FOR sub_10C
+sub_10C		endp
 
 ; =============== S U B	R O U T	I N E =======================================
 

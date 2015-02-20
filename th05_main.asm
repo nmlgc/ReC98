@@ -21243,7 +21243,7 @@ loc_14CDA:
 		pop	si
 		pop	bp
 		retf	6
-sub_14C7C	endp ; sp-analysis failed
+sub_14C7C	endp
 
 include th04/hardware/snd_se.asm
 
@@ -21336,7 +21336,7 @@ loc_14DEA:
 		pop	si
 		pop	bp
 		retf	6
-sub_14D74	endp ; sp-analysis failed
+sub_14D74	endp
 
 ; ---------------------------------------------------------------------------
 		nop

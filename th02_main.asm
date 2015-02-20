@@ -994,16 +994,7 @@ arg_4		= word ptr  8
 		enter	0Ah, 0
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		nop
-		push	cs
-sub_4314	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_4320	proc far
-		call	near ptr file_ropen
+		nopcall	file_ropen
 		push	ss
 		lea	ax, [bp-0Ah]
 		push	ax
@@ -1016,7 +1007,7 @@ sub_4320	proc far
 		nopcall	file_close
 		leave
 		retf	4
-sub_4320	endp
+sub_4314	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2544,7 +2535,7 @@ loc_B922:
 		pop	si
 		leave
 		retn
-sub_B3DA	endp ; sp-analysis failed
+sub_B3DA	endp
 
 ; ---------------------------------------------------------------------------
 off_B982	dw offset loc_B63C

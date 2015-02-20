@@ -6837,7 +6837,7 @@ loc_E1D4:
 		pop	si
 		pop	bp
 		retf	6
-sub_E176	endp ; sp-analysis failed
+sub_E176	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -7136,7 +7136,7 @@ loc_E47C:
 		pop	di
 		pop	si
 		retf
-sub_E428	endp ; sp-analysis failed
+sub_E428	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7169,7 +7169,7 @@ loc_E4B1:
 		pop	di
 		pop	si
 		retf
-sub_E490	endp ; sp-analysis failed
+sub_E490	endp
 
 ; ---------------------------------------------------------------------------
 		nop

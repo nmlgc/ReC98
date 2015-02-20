@@ -4028,8 +4028,6 @@ loc_C6A1:
 		idiv	bx
 		add	ax, 10h
 		mov	[si+4],	ax
-
-loc_C6C8:
 		mov	word ptr [si+6], 84h
 		mov	word ptr [si+8], 0FFF8h
 		jmp	short loc_C6DD
@@ -4047,7 +4045,7 @@ loc_C6DD:
 		pop	si
 		pop	bp
 		retf	4
-sub_C696	endp ; sp-analysis failed
+sub_C696	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16784,7 +16782,7 @@ loc_1286D:
 		pop	si
 		leave
 		retn
-sub_12461	endp ; sp-analysis failed
+sub_12461	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -18552,7 +18550,7 @@ loc_13712:
 		pop	si
 		pop	bp
 		retf	6
-sub_136B4	endp ; sp-analysis failed
+sub_136B4	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -19076,8 +19074,6 @@ sub_13B21	proc near
 		push	si
 		mov	si, 9292h
 		xor	cx, cx
-sub_13B21	endp ; sp-analysis failed
-
 		jmp	short loc_13B81
 ; ---------------------------------------------------------------------------
 
@@ -19124,6 +19120,7 @@ loc_13B86:
 		pop	si
 		pop	bp
 		retn
+sub_13B21	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26449,10 +26446,6 @@ loc_1795F:
 		call	sub_1CFA2
 		call	snd_se_play pascal, 15
 		jmp	short loc_179B8
-sub_1788E	endp
-
-; ---------------------------------------------------------------------------
-; START	OF FUNCTION CHUNK FOR sub_1CCB8
 
 loc_179A8:
 		mov	word_2671A, 0
@@ -26464,7 +26457,7 @@ loc_179B8:
 		pop	si
 		leave
 		retn
-; END OF FUNCTION CHUNK	FOR sub_1CCB8
+sub_1788E	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26806,7 +26799,7 @@ loc_17CA4:
 		call	sub_19F16
 		leave
 		retf
-sub_179F4	endp ; sp-analysis failed
+sub_179F4	endp
 
 ; ---------------------------------------------------------------------------
 word_17CBF	dw	0,     1,     2,     3
@@ -28980,12 +28973,7 @@ sub_18DB6	endp
 sub_18E43	proc near
 		push	bp
 		mov	bp, sp
-sub_18E43	endp ; sp-analysis failed
-
-; START	OF FUNCTION CHUNK FOR sub_1CD6E
-
-loc_18E46:
-		cmp	word_2671A, 10h	; jumptable 0001CD8F case 17022
+		cmp	word_2671A, 10h
 		jnz	short loc_18E54
 		mov	byte_26718, 8
 		pop	bp
@@ -29054,7 +29042,7 @@ loc_18EB6:
 loc_18EE5:
 		pop	bp
 		retn
-; END OF FUNCTION CHUNK	FOR sub_1CD6E
+sub_18E43	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35110,8 +35098,6 @@ sub_1C164	endp
 
 sub_1C1CF	proc near
 
-; FUNCTION CHUNK AT 87B5 SIZE 0000000C BYTES
-
 		push	bp
 		mov	bp, sp
 		call	sub_1BDB4
@@ -35134,14 +35120,10 @@ sub_1C1CF	proc near
 		add	word ptr dword_266E4, 400h
 		call	fp_2D000
 		call	sub_13D52
-sub_1C1CF	endp ; sp-analysis failed
-
-; START	OF FUNCTION CHUNK FOR sub_1EA4B
 
 loc_1C21B:
 		mov	byte_266ED, al
 		sub	word ptr dword_266E4, 200h
-; END OF FUNCTION CHUNK	FOR sub_1EA4B
 		sub	word ptr dword_266E4+2,	200h
 		call	fp_2D000
 		call	sub_13D52
@@ -35149,7 +35131,6 @@ loc_1C21B:
 		add	word ptr dword_266E4+2,	400h
 		call	fp_2D000
 		call	snd_se_play pascal, 9
-; START	OF FUNCTION CHUNK FOR sub_1C1CF
 
 loc_1C245:
 		cmp	word_2671A, 50h	; 'P'
@@ -35159,7 +35140,7 @@ loc_1C245:
 loc_1C24F:
 		pop	bp
 		retn
-; END OF FUNCTION CHUNK	FOR sub_1C1CF
+sub_1C1CF	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40446,12 +40427,7 @@ var_1		= byte ptr -1
 		mov	byte_266E3, 39h	; '9'
 		mov	byte_266EE, 10h
 		mov	byte_266ED, 0
-sub_1EE73	endp ; sp-analysis failed
-
-; START	OF FUNCTION CHUNK FOR sub_1EA4B
-
-loc_1EED3:
-		mov	byte_266F2, 82h ; jumptable 0001EA6B case 65331
+		mov	byte_266F2, 82h
 		mov	byte_2CFF7, 1
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 10h
@@ -40514,7 +40490,7 @@ loc_1EF84:
 		pop	si
 		leave
 		retn
-; END OF FUNCTION CHUNK	FOR sub_1EA4B
+sub_1EE73	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 

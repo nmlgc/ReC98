@@ -8714,7 +8714,7 @@ loc_EACC:
 		pop	si
 		pop	bp
 		retf	6
-sub_EA6E	endp ; sp-analysis failed
+sub_EA6E	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -8767,7 +8767,7 @@ loc_EBBA:
 		pop	di
 		pop	si
 		retf
-sub_EB66	endp ; sp-analysis failed
+sub_EB66	endp
 
 ; ---------------------------------------------------------------------------
 		push	si
@@ -8974,7 +8974,7 @@ loc_ED48:
 		pop	di
 		pop	bp
 		retf	8
-sub_ECDE	endp ; sp-analysis failed
+sub_ECDE	endp
 
 ; ---------------------------------------------------------------------------
 		nop
