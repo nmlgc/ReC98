@@ -16,8 +16,8 @@ endif
 	mov	di, @@slot
 	mov	bx, di
 	shl	bx, 2
-	mov	ax, word ptr (pi_slot_buffers+2)[bx]
-	mov	dx, word ptr pi_slot_buffers[bx]
+	mov	ax, word ptr (_pi_slot_buffers+2)[bx]
+	mov	dx, word ptr _pi_slot_buffers[bx]
 	mov	word ptr @@row_buf+2, ax
 	mov	word ptr @@row_buf, dx
 	mov	@@row_num, 0
@@ -29,7 +29,7 @@ endif
 	pushd	@@row_buf
 	mov	bx, di
 	imul	bx, size PiHeader
-	push	pi_slot_headers.PiHeader._xsize[bx]
+	push	_pi_slot_headers.PiHeader._xsize[bx]
 	call	graph_pack_put_8
 	inc	si
 	cmp	si, 400
@@ -39,7 +39,7 @@ endif
 @@next_row:
 	mov	bx, di
 	imul	bx, size PiHeader
-	mov	ax, pi_slot_headers.PiHeader._xsize[bx]
+	mov	ax, _pi_slot_headers.PiHeader._xsize[bx]
 	shr	ax, 1
 	add	word ptr @@row_buf, ax
 	mov	eax, @@row_buf
@@ -56,10 +56,10 @@ endif
 @@check:
 	mov	bx, di
 	imul	bx, size PiHeader
-	mov	ax, pi_slot_headers.PiHeader._ysize[bx]
+	mov	ax, _pi_slot_headers.PiHeader._ysize[bx]
 	cmp	ax, @@row_num
 	ja	short @@put
 	pop	di
 	pop	si
 	ret
-pi_slot_put	endp
+endp_defconv

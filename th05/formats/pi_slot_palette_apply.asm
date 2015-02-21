@@ -7,7 +7,7 @@ pi_slot_palette_apply	proc
 	push	di
 	mov	si, ss:[bx+@@slot]
 	imul	si, size PiHeader
-	add	si, offset pi_slot_headers + PiHeader._palette
+	add	si, offset _pi_slot_headers + PiHeader._palette
 	mov	di, offset Palettes
 	mov	ax, ds
 	mov	es, ax

@@ -307,12 +307,12 @@ arg_2		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		call	pi_slot_load stdcall, 0, [bp+arg_2], ds
+		call	_pi_slot_load stdcall, 0, [bp+arg_2], ds
 		mov	dx, 0A6h ; '¦'
 		mov	al, [bp+arg_0]
 		out	dx, al
-		call	pi_slot_palette_apply stdcall, 0
-		call	pi_slot_put stdcall, 0, 0, 0
+		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		pop	bp
@@ -344,9 +344,9 @@ var_2		= word ptr -2
 		push	17Eh
 		push	0
 		call	sub_9D1D
-		call	pi_slot_load stdcall, 0, offset aOpa_pi, ds
-		call	pi_slot_load stdcall, 1, offset aOpb_pi, ds
-		call	pi_slot_load stdcall, 2, offset aOpc_pi, ds
+		call	_pi_slot_load stdcall, 0, offset aOpa_pi, ds
+		call	_pi_slot_load stdcall, 1, offset aOpb_pi, ds
+		call	_pi_slot_load stdcall, 2, offset aOpc_pi, ds
 		add	sp, 18h
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
@@ -487,10 +487,10 @@ sub_9D5C	endp
 sub_9F37	proc near
 		push	bp
 		mov	bp, sp
-		call	snd_se_reset
-		call	snd_se_play stdcall, 13
+		call	_snd_se_reset
+		call	_snd_se_play stdcall, 13
 		pop	cx
-		call	snd_se_update
+		call	_snd_se_update
 		push	14h
 		call	frame_delay
 		les	bx, dword_F3DC
@@ -531,7 +531,7 @@ sub_9FAF	proc far
 		mov	es:[bx+16h], al
 		mov	byte ptr es:[bx+0Bh], 0
 		call	sub_9CA2
-		call	pi_slot_load stdcall, 0, offset aTs1_pi, ds
+		call	_pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
 		call	sub_BD24
 		kajacall	KAJA_SONG_FADE, 15
@@ -624,7 +624,7 @@ sub_A0C6	proc far
 		mov	byte ptr es:[bx+1Ah], 2
 		mov	byte ptr es:[bx+19h], 1
 		call	sub_9CA2
-		call	pi_slot_load stdcall, 0, offset aTs1_pi, ds
+		call	_pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
 		call	sub_BD24
 		kajacall	KAJA_SONG_FADE, 15
@@ -1003,9 +1003,9 @@ loc_A3BC:
 		mov	dx, 0A4h ; '¤'
 		mov	al, 0
 		out	dx, al
-		call	pi_slot_load stdcall, 0, offset aOp2_pi, ds
-		call	pi_slot_palette_apply stdcall, 0
-		call	pi_slot_put stdcall, 0, 0, 0
+		call	_pi_slot_load stdcall, 0, offset aOp2_pi, ds
+		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		push	ds
@@ -1750,8 +1750,8 @@ loc_AA4A:
 
 loc_AA8F:
 		call	sub_9D5C
-		call	pi_slot_load stdcall, 2, offset aTs3_pi, ds
-		call	pi_slot_load stdcall, 1, offset aTs2_pi, ds
+		call	_pi_slot_load stdcall, 2, offset aTs3_pi, ds
+		call	_pi_slot_load stdcall, 1, offset aTs2_pi, ds
 		add	sp, 0Ch
 		mov	word_F3C8, 0
 		mov	word_E8FC, 0
@@ -2536,16 +2536,16 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	[bp+var_2], 1
-		call	snd_se_reset
-		call	snd_se_play stdcall, 6
+		call	_snd_se_reset
+		call	_snd_se_play stdcall, 6
 		pop	cx
-		call	snd_se_update
+		call	_snd_se_update
 		xor	si, si
 		jmp	short loc_B370
 ; ---------------------------------------------------------------------------
 
 loc_B308:
-		mov	dx, 0A4h ; '¤'
+		mov	dx, 0A4h ; '?'
 		mov	al, byte ptr [bp+var_2]
 		out	dx, al
 		mov	ax, 1
@@ -2572,7 +2572,7 @@ loc_B329:
 loc_B330:
 		push	0
 		push	0
-		call	pi_slot_put
+		call	_pi_slot_put
 		add	sp, 6
 
 loc_B33C:
@@ -2606,7 +2606,7 @@ loc_B368:
 loc_B370:
 		cmp	si, 12h
 		jl	short loc_B308
-		mov	dx, 0A4h ; '¤'
+		mov	dx, 0A4h ; '?'
 		mov	al, 0
 		out	dx, al
 		freePISlot	0
@@ -3756,9 +3756,9 @@ sub_BBC0	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		call	pi_slot_load stdcall, 3, offset aTselect_pi, ds
-		call	pi_slot_palette_apply stdcall, 3
-		call	pi_slot_put stdcall, 0, 0, 3
+		call	_pi_slot_load stdcall, 3, offset aTselect_pi, ds
+		call	_pi_slot_palette_apply stdcall, 3
+		call	_pi_slot_put stdcall, 0, 0, 3
 		add	sp, 0Eh
 		freePISlot	3
 		push	1
@@ -3832,9 +3832,9 @@ loc_BCA3:
 		add	sp, 0Ah
 
 loc_BCBA:
-		call	pi_slot_put stdcall, 24, 136, 0
-		call	pi_slot_put stdcall, 224, 224, 1
-		call	pi_slot_put stdcall, 440, 136, 2
+		call	_pi_slot_put stdcall, 24, 136, 0
+		call	_pi_slot_put stdcall, 224, 224, 1
+		call	_pi_slot_put stdcall, 440, 136, 2
 		les	bx, dword_F3DC
 		mov	byte ptr es:[bx+26h], 1
 		push	88h
@@ -3942,7 +3942,7 @@ loc_BD6A:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		call	pi_slot_put
+		call	_pi_slot_put
 		add	sp, 6
 		push	1
 		call	frame_delay
@@ -4007,7 +4007,7 @@ loc_BE0F:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr ss:[bx]
-		call	pi_slot_put
+		call	_pi_slot_put
 		add	sp, 6
 
 loc_BE6D:
@@ -4046,7 +4046,7 @@ loc_BE77:
 		mov	ax, ss:[bx]
 		add	ax, 8
 		push	ax
-		call	pi_slot_put
+		call	_pi_slot_put
 		add	sp, 6
 		push	1
 		call	frame_delay
@@ -4119,7 +4119,7 @@ loc_BF1C:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr ss:[bx]
-		call	pi_slot_put
+		call	_pi_slot_put
 		add	sp, 6
 
 loc_BF7A:
@@ -5128,9 +5128,9 @@ var_1		= byte ptr -1
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		call	pi_slot_load stdcall, 0, offset aOp3_pi, ds
-		call	pi_slot_palette_apply stdcall, 0
-		call	pi_slot_put stdcall, 0, 0, 0
+		call	_pi_slot_load stdcall, 0, offset aOp3_pi, ds
+		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		mov	al, byte_DF97
@@ -5305,9 +5305,9 @@ loc_C978:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		call	pi_slot_load stdcall, 0, offset aOp2_pi_0, ds
-		call	pi_slot_palette_apply stdcall, 0
-		call	pi_slot_put stdcall, 0, 0, 0
+		call	_pi_slot_load stdcall, 0, offset aOp2_pi_0, ds
+		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_slot_put stdcall, 0, 0, 0
 		add	sp, 0Eh
 		freePISlot	0
 		push	ds

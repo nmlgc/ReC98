@@ -1086,7 +1086,7 @@ loc_9DAD:
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	sub_D784
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+35h], 0
@@ -1589,7 +1589,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, pi_slot_buffers
+		mov	eax, _pi_slot_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A257
@@ -2726,9 +2726,9 @@ loc_ABFE:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		call	snd_se_reset
-		call	snd_se_play pascal, [bp+var_2]
-		call	snd_se_update
+		call	_snd_se_reset
+		call	_snd_se_play pascal, [bp+var_2]
+		call	_snd_se_update
 		jmp	short loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 

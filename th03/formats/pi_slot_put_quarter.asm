@@ -12,8 +12,8 @@ proc_defconv pi_slot_put_quarter
 	mov	di, @@quarter
 	mov	bx, @@slot
 	shl	bx, 2
-	mov	ax, word ptr (pi_slot_buffers+2)[bx]
-	mov	dx, word ptr pi_slot_buffers[bx]
+	mov	ax, word ptr (_pi_slot_buffers+2)[bx]
+	mov	dx, word ptr _pi_slot_buffers[bx]
 	mov	word ptr @@row_buf+2, ax
 	mov	word ptr @@row_buf, dx
 	cmp	di, 1
@@ -71,4 +71,4 @@ proc_defconv pi_slot_put_quarter
 	pop	di
 	pop	si
 	ret
-pi_slot_put_quarter	endp
+endp_defconv

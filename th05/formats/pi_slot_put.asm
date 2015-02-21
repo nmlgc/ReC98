@@ -11,21 +11,21 @@ proc_defconv pi_slot_put
 	mov	si, @@slot
 	mov	di, si
 	shl	si, 2
-	les	si, pi_slot_buffers[si]
+	les	si, _pi_slot_buffers[si]
 	imul	di, size PiHeader
 	push	@@x
 	push	@@y
-	mov	ax, pi_slot_headers.PiHeader._xsize[di]
+	mov	ax, _pi_slot_headers.PiHeader._xsize[di]
 	push	ax
 	shr	ax, 1
 	push	ax
-	mov	di, pi_slot_headers.PiHeader._ysize[di]
+	mov	di, _pi_slot_headers.PiHeader._ysize[di]
 	call	pi_slot_put_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	ret	6
-pi_slot_put	endp
+endp_defconv
 	align	2
 
 ; ---------------------------------------------------------------------------
@@ -56,7 +56,7 @@ proc_defconv pi_slot_put_quarter
 
 @@put:
 	shl	si, 2
-	les	si, pi_slot_buffers[si]
+	les	si, _pi_slot_buffers[si]
 	add	si, ax
 	mov	ax, es
 	add	ax, dx
@@ -71,7 +71,7 @@ proc_defconv pi_slot_put_quarter
 	pop	si
 	pop	bp
 	ret	8
-pi_slot_put_quarter	endp
+endp_defconv
 
 ; ---------------------------------------------------------------------------
 

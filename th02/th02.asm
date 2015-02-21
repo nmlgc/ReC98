@@ -1,5 +1,3 @@
 GAME = 2
-proc_defconv macro nam
-	nam proc c
-endm
+include defconv_c.inc
 include th02/frame_delay_macro.asm

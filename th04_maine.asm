@@ -607,7 +607,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, pi_slot_buffers
+		mov	eax, _pi_slot_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A39A

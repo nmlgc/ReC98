@@ -1,5 +1,5 @@
 ; void snd_se_reset(void)
-func snd_se_reset
+func _snd_se_reset
 	mov	snd_se_frame, 0
 	mov	snd_se_playing, -1
 	ret
@@ -14,7 +14,7 @@ retfunc macro
 		ret
 	endif
 endm
-func snd_se_play
+func _snd_se_play
 @@se	= [bp+6]
 
 	push	bp
@@ -46,7 +46,7 @@ endfunc
 
 
 ; void snd_se_update(void)
-func snd_se_update
+func _snd_se_update
 	cmp	snd_fm_possible, 0
 	jz	short @@ret
 	cmp	snd_se_playing, -1
