@@ -1283,37 +1283,37 @@ loc_BE0B:
 
 loc_BE23:
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	456Ch
 		call	sub_B961
 		push	8
 		call	sub_E364
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	4A7Dh
 		call	sub_B961
 		push	8
 		call	sub_E364
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	217Ah
 		call	sub_B961
 		push	8
 		call	sub_E364
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	704Dh
 		call	sub_B961
 		push	8
 		call	sub_E364
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	305Bh
 		call	sub_B961
 		push	8
 		call	sub_E364
 		push	0Eh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	4541h
 		call	sub_B961
 		push	8
@@ -1629,7 +1629,7 @@ loc_C113:
 		or	dx, dx
 		jnz	short loc_C128
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_C128:
@@ -1684,7 +1684,7 @@ loc_C17C:
 		or	dx, dx
 		jnz	short loc_C1A2
 		push	9
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_C1A2:
@@ -3028,7 +3028,7 @@ loc_CDA2:
 		mov	byte_34A4F, 0
 		mov	byte_34A51, 0
 		mov	dword_34A66, 0
-		call	sub_12579
+		call	_mdrv2_bgm_stop
 		jmp	short loc_CDD3
 ; ---------------------------------------------------------------------------
 
@@ -3342,7 +3342,7 @@ sub_D02F	proc far
 		call	sub_18E15
 		pop	cx
 		push	0Fh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	1
 		call	sub_CBF2
@@ -3764,7 +3764,7 @@ loc_D3BE:
 		call	_printf
 		add	sp, 4
 		push	5
-		call	sub_125C9
+		call	_mdrv2_se_play
 		jmp	short loc_D3D9
 ; ---------------------------------------------------------------------------
 
@@ -4147,7 +4147,7 @@ loc_D68E:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_D69C
-		call	sub_125B9
+		call	_mdrv2_check_board
 
 loc_D69C:
 		cmp	[bp+var_2], 5
@@ -4239,12 +4239,12 @@ loc_D72E:
 		jz	short loc_D776
 		push	ds
 		push	offset aInit_mdt ; "init.mdt"
-		call	sub_12549
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_12569
+		call	_mdrv2_bgm_play
 		push	ds
 		push	offset aZigoku_mde ; "zigoku.mde"
-		call	sub_12559
+		call	_mdrv2_se_load
 		add	sp, 4
 
 loc_D776:
@@ -4659,9 +4659,9 @@ loc_DB3E:
 		push	ss
 		lea	ax, [bp+_path]
 		push	ax		; path
-		call	sub_12549
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_12569
+		call	_mdrv2_bgm_play
 
 loc_DBCC:
 		call	sub_B87C
@@ -4952,7 +4952,7 @@ loc_DE72:
 		cmp	word_34A82, 0
 		jnz	short loc_DEDA
 		push	5
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		les	bx, dword_3919C
 		dec	byte ptr es:[bx+15h]
@@ -5019,7 +5019,7 @@ loc_DF52:
 		mov	byte ptr es:[bx+16h], 1
 		mov	al, byte_3A37E
 		mov	es:[bx+14h], al
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		les	bx, dword_3919C
 		mov	al, byte_34A32
 		mov	es:[bx+10h], al
@@ -14398,252 +14398,15 @@ loc_124BD:
 		retf
 sub_12455	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_124C0(char,	char *path)
-sub_124C0	proc near
-
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-handle		= word ptr -2
-arg_0		= byte ptr  4
-_path		= dword	ptr  6
-
-		enter	0Ch, 0
-		push	si
-		cmp	byte_356BE, 0
-		jz	short loc_12544
-		push	8001h		; access
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		call	_open
-		add	sp, 6
-		mov	[bp+handle], ax
-		push	[bp+handle]	; handle
-		call	_filelength
-		pop	cx
-		mov	[bp+var_4], ax
-		movsx	eax, [bp+var_4]
-		push	eax
-		call	_farmalloc
-		add	sp, 4
-		mov	[bp+var_A], dx
-		mov	[bp+var_C], ax
-		mov	ax, [bp+var_A]
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_C]
-		mov	[bp+var_8], ax
-		push	ds
-		mov	ax, 3F00h
-		mov	bx, [bp+handle]
-		mov	cx, [bp+var_4]
-		mov	ds, [bp+var_6]
-		mov	dx, [bp+var_8]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		push	[bp+handle]	; handle
-		call	_close
-		pop	cx
-		push	ds
-		mov	ah, [bp+arg_0]
-		mov	ds, [bp+var_6]
-		mov	si, [bp+var_8]
-		int	0F2h
-		pop	ds
-		push	[bp+var_A]
-		push	[bp+var_C]
-		call	_farfree
-		add	sp, 4
-
-loc_12544:
-		pop	si
-		leave
-		retn	6
-sub_124C0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_12549(char *path)
-sub_12549	proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	6		; char
-		call	sub_124C0
-		pop	bp
-		retf
-sub_12549	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_12559(char *path)
-sub_12559	proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	7		; char
-		call	sub_124C0
-		pop	bp
-		retf
-sub_12559	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12569	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_356BE, 0
-		jz	short loc_12577
-		mov	ah, 0
-		int	0F2h
-
-loc_12577:
-		pop	bp
-		retf
-sub_12569	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12579	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_356BE, 0
-		jz	short loc_12587
-		mov	ah, 3
-		int	0F2h
-
-loc_12587:
-		pop	bp
-		retf
-sub_12579	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12589	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_356BE, 0
-		jz	short loc_12597
-		mov	ah, 2
-		int	0F2h
-
-loc_12597:
-		pop	bp
-		retf
-sub_12589	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12599	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_356BE, 0
-		jz	short loc_125A7
-		mov	ah, 1
-		int	0F2h
-
-loc_125A7:
-		pop	bp
-		retf
-sub_12599	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_125A9	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_356BE, 0
-		jz	short loc_125B7
-		mov	ah, 0Fh
-		int	0F2h
-
-loc_125B7:
-		pop	bp
-		retf
-sub_125A9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_125B9	proc far
-		push	bp
-		mov	bp, sp
-		mov	ah, 9
-		int	0F2h
-		mov	byte_356BE, al
-		mov	al, byte_356BE
-		cbw
-		pop	bp
-		retf
-sub_125B9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_125C9	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_0], 0
-		jz	short loc_125E3
-		cmp	byte_356BE, 0
-		jz	short loc_125E3
-		add	[bp+arg_0], 400h
-
-loc_125DE:
-		mov	ax, [bp+arg_0]
-		int	0F2h
-
-loc_125E3:
-		pop	bp
-
-locret_125E4:
-		retf
-sub_125C9	endp
-
+	extern _mdrv2_bgm_load:proc
+	extern _mdrv2_se_load:proc
+	extern _mdrv2_bgm_play:proc
+	extern _mdrv2_bgm_stop:proc
+	extern _mdrv2_bgm_fade_out_nonblock:proc
+	extern _mdrv2_bgm_fade_out_block:proc
+	extern _mdrv2_bgm_fade_in:proc
+	extern _mdrv2_check_board:proc
+	extern _mdrv2_se_play:proc
 main_16_TEXT	ends
 
 ; ===========================================================================
@@ -15088,7 +14851,7 @@ loc_129F8:
 
 loc_12A06:
 		push	4
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		cmp	[bp+var_A], 0
 		jnz	short loc_12A1D
@@ -15400,7 +15163,7 @@ loc_12C0F:
 		push	4
 		call	_delay
 		push	2
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 4
 		inc	si
 
@@ -25297,7 +25060,7 @@ loc_17DFB:
 
 loc_17E13:
 		push	0Fh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_17E1B:
@@ -26019,7 +25782,7 @@ loc_1837A:
 		imul	bx, 0Ah
 		mov	byte ptr [bx+53A0h], 64h ; 'd'
 		push	0Fh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_183A0:
@@ -28170,7 +27933,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		push	11h
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	8048h		; int
 		push	ss		; int
 		lea	ax, [bp+var_94]
@@ -29853,7 +29616,7 @@ loc_1A1FB:
 
 loc_1A211:
 		push	0Bh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	byte_35B43, 0
 		mov	byte_35B44, 2
@@ -30054,7 +29817,7 @@ loc_1A403:
 		mov	byte_35B43, 0
 		mov	byte_34A57, 0
 		push	0Bh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	byte_34A59, 1
 		jmp	loc_1A70B
@@ -31035,7 +30798,7 @@ loc_1ABD1:
 
 loc_1ABD6:
 		push	0Bh
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	byte_35B48, 0
 		jmp	short loc_1AC2A
@@ -32290,7 +32053,8 @@ unk_355EC	db    0
 		db 0FCh
 		db    1
 		db 0FEh
-byte_356BE	db 0
+public _mdrv2_have_board
+_mdrv2_have_board	db 0
 		db 0
 aMdrv2system	db 'Mdrv2System',0
 aVqvnvtvmvcb@vp	db 'ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq',0

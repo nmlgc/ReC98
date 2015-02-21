@@ -358,7 +358,7 @@ loc_A139:
 		mov	byte_14021, 2
 
 loc_A13E:
-		call	sub_F0E4
+		call	_mdrv2_check_board
 		call	sub_CEAD
 		call	sub_B945
 		call	sub_CF1B
@@ -3524,9 +3524,9 @@ sub_B945	proc far
 		push	si
 		push	ds
 		push	offset aIris_mdt ; "iris.mdt"
-		call	sub_F074
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_F094
+		call	_mdrv2_bgm_play
 		push	0
 		call	sub_C842
 		push	ds
@@ -3805,16 +3805,16 @@ loc_BBB1:
 
 loc_BBC7:
 		call	sub_BC7C
-		call	sub_F0B4
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	0Ah
 		call	sub_C911
 		call	sub_D2D6
-		call	sub_F0A4
+		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset aSt1_mdt	; "st1.mdt"
-		call	sub_F074
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_F094
+		call	_mdrv2_bgm_play
 
 loc_BBF1:
 		nopcall	sub_C446
@@ -4371,16 +4371,16 @@ sub_C009	endp
 sub_C03D	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_F0B4
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	0Ah
 		call	sub_C911
 		call	sub_D2D6
-		call	sub_F0A4
+		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset aSt1_mdt_0 ; "st1.mdt"
-		call	sub_F074
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_F094
+		call	_mdrv2_bgm_play
 		cmp	byte_14021, 1
 		jnz	short loc_C074
 		push	ds
@@ -11155,233 +11155,13 @@ loc_EFE8:
 		retf
 sub_EF80	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_EFEB(char, char *path)
-sub_EFEB	proc near
-
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-handle		= word ptr -2
-arg_0		= byte ptr  4
-_path		= dword	ptr  6
-
-		enter	0Ch, 0
-		push	si
-		cmp	byte_1350A, 0
-		jz	short loc_F06F
-		push	8001h		; access
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		call	_open
-		add	sp, 6
-		mov	[bp+handle], ax
-		push	[bp+handle]	; handle
-		call	_filelength
-		pop	cx
-		mov	[bp+var_4], ax
-		movsx	eax, [bp+var_4]
-		push	eax
-		call	_farmalloc
-		add	sp, 4
-		mov	[bp+var_A], dx
-		mov	[bp+var_C], ax
-		mov	ax, [bp+var_A]
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_C]
-		mov	[bp+var_8], ax
-		push	ds
-		mov	ax, 3F00h
-		mov	bx, [bp+handle]
-		mov	cx, [bp+var_4]
-		mov	ds, [bp+var_6]
-		mov	dx, [bp+var_8]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		push	[bp+handle]	; handle
-		call	_close
-		pop	cx
-		push	ds
-		mov	ah, [bp+arg_0]
-		mov	ds, [bp+var_6]
-		mov	si, [bp+var_8]
-		int	0F2h
-		pop	ds
-		push	[bp+var_A]
-		push	[bp+var_C]
-		call	_farfree
-		add	sp, 4
-
-loc_F06F:
-		pop	si
-		leave
-		retn	6
-sub_EFEB	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_F074(char *path)
-sub_F074	proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	6		; char
-		call	sub_EFEB
-		pop	bp
-		retf
-sub_F074	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F084	proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	7		; char
-		call	sub_EFEB
-		pop	bp
-		retf
-sub_F084	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F094	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_1350A, 0
-		jz	short loc_F0A2
-		mov	ah, 0
-		int	0F2h
-
-loc_F0A2:
-		pop	bp
-		retf
-sub_F094	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0A4	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_1350A, 0
-		jz	short loc_F0B2
-		mov	ah, 3
-		int	0F2h
-
-loc_F0B2:
-		pop	bp
-		retf
-sub_F0A4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0B4	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_1350A, 0
-		jz	short loc_F0C2
-		mov	ah, 2
-		int	0F2h
-
-loc_F0C2:
-		pop	bp
-		retf
-sub_F0B4	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	byte_1350A, 0
-		jz	short loc_F0D2
-		mov	ah, 1
-		int	0F2h
-
-loc_F0D2:
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	byte_1350A, 0
-		jz	short loc_F0E2
-		mov	ah, 0Fh
-		int	0F2h
-
-loc_F0E2:
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0E4	proc far
-		push	bp
-		mov	bp, sp
-		mov	ah, 9
-		int	0F2h
-		mov	byte_1350A, al
-		mov	al, byte_1350A
-		cbw
-		pop	bp
-		retf
-sub_F0E4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0F4	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_0], 0
-		jz	short loc_F10E
-		cmp	byte_1350A, 0
-		jz	short loc_F10E
-		add	[bp+arg_0], 400h
-		mov	ax, [bp+arg_0]
-		int	0F2h
-
-loc_F10E:
-		pop	bp
-		retf
-sub_F0F4	endp
-
+	extern _mdrv2_bgm_load:proc
+	extern _mdrv2_se_load:proc
+	extern _mdrv2_bgm_play:proc
+	extern _mdrv2_bgm_stop:proc
+	extern _mdrv2_bgm_fade_out_nonblock:proc
+	extern _mdrv2_check_board:proc
+	extern _mdrv2_se_play:proc
 fuuin_13_TEXT	ends
 
 	.data
@@ -11824,7 +11604,8 @@ word_134FA	dw 1
 		db    0
 word_13507	dw 64h
 byte_13509	db 0
-byte_1350A	db 0
+public _mdrv2_have_board
+_mdrv2_have_board	db 0
 		db 0
 aMdrv2system	db 'Mdrv2System',0
 include libs/master.lib/version[data].asm

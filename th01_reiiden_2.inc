@@ -3885,7 +3885,7 @@ loc_1D6C4:
 		add	sp, 22h
 		cmp	word_3A6C8, 0
 		jg	short loc_1D75D
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -4710,7 +4710,7 @@ loc_1DF5A:
 		add	sp, 22h
 		cmp	word_3A6C8, 0
 		jg	short loc_1DFFC
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -5949,7 +5949,7 @@ var_8		= byte ptr -8
 		push	offset word_39E18
 		call	sub_1E841
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_1E947:
@@ -6046,7 +6046,7 @@ loc_1E9C6:
 		push	offset unk_37635
 		call	sub_304B8
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 		inc	si
 
@@ -6101,7 +6101,7 @@ loc_1EA31:
 		push	offset unk_37635
 		call	sub_304B8
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 		inc	si
 
@@ -6203,7 +6203,7 @@ var_8		= byte ptr -8
 		call	sub_1E841
 		add	sp, 0Ch
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1EB64:
@@ -6315,7 +6315,7 @@ loc_1EC62:
 		cmp	[bp+var_12], 4
 		jl	short loc_1EC0B
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1EC70:
@@ -6413,7 +6413,7 @@ loc_1ED01:
 		push	offset word_39E18
 		call	sub_1E841
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_1ED3A:
@@ -6555,7 +6555,7 @@ loc_1EDD9:
 		push	offset unk_37635
 		call	sub_304B8
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 2Ah
 		inc	si
 
@@ -7066,7 +7066,7 @@ loc_1F263:
 		push	offset word_39E18
 		call	sub_1E841
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_1F31E:
@@ -7136,7 +7136,7 @@ loc_1F381:
 
 loc_1F3C4:
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1F3CC:
@@ -7205,7 +7205,7 @@ loc_1F458:
 		cmp	word ptr [bx+5487h], 20h ; ' '
 		jnz	short loc_1F495
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+54A7h]
@@ -7347,7 +7347,7 @@ var_8		= byte ptr -8
 		call	sub_1E841
 		add	sp, 0Ch
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1F5DE:
@@ -7454,7 +7454,7 @@ loc_1F6CF:
 		cmp	si, 4
 		jl	short loc_1F682
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	al, byte ptr word_39E5A
 		add	al, 0Dh
@@ -7549,7 +7549,7 @@ var_8		= byte ptr -8
 		push	offset word_39E18
 		call	sub_1E841
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_1F7AD:
@@ -7650,7 +7650,7 @@ loc_1F877:
 		cmp	si, 4
 		jl	short loc_1F844
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1F884:
@@ -7744,7 +7744,7 @@ loc_1F91A:
 		push	offset word_39E18
 		call	sub_1E841
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_1F953:
@@ -8157,7 +8157,7 @@ loc_1FCF7:
 		call	sub_1E589
 		push	0
 		call	sub_EA3E
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -8409,7 +8409,7 @@ loc_1FF75:
 
 loc_1FF76:
 		push	2
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_1FF7E:
@@ -11867,7 +11867,7 @@ loc_21B61:
 		add	dword_34A5A, eax
 		call	sub_1889C
 		push	3
-		call	sub_125C9
+		call	_mdrv2_se_play
 		call	[bp+arg_14]
 		push	3E7h
 		les	bx, [bp+arg_8]
@@ -12510,7 +12510,7 @@ loc_220A1:
 		push	ax
 		call	sub_10433
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Ah
 
 loc_220E9:
@@ -13479,7 +13479,7 @@ loc_22895:
 		cmp	word_3A37F, 32h	; '2'
 		jnz	short loc_228A4
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_228A4:
@@ -14670,7 +14670,7 @@ loc_2320E:
 		jg	short loc_232A0
 		mov	byte_35CDE, 8
 		push	5
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	word_3A37F, 0
 		jmp	short loc_232A0
@@ -14686,7 +14686,7 @@ loc_2326F:
 		push	ds
 		push	offset dword_3982A
 		call	sub_1588A
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -15478,7 +15478,7 @@ arg_6		= word ptr  0Ah
 		push	0
 		call	sub_236E0
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Ah
 		jmp	loc_23C44
 ; ---------------------------------------------------------------------------
@@ -16484,7 +16484,7 @@ sub_240DE	proc near
 		push	offset unk_391E5
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 2Ah
 
 loc_2414A:
@@ -16712,7 +16712,7 @@ sub_24316	proc near
 		push	offset word_3A6B7
 		call	sub_232E4
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 		push	40014h
 		push	0Ah
@@ -16735,7 +16735,7 @@ loc_24378:
 		cmp	word_3A6CA, 118h
 		jnz	short loc_243B7
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	40014h
 		push	0Ah
@@ -16758,7 +16758,7 @@ loc_243B7:
 		cmp	word_3A6CA, 136h
 		jnz	short loc_243F6
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	40014h
 		push	0Ah
@@ -16781,7 +16781,7 @@ loc_243F6:
 		cmp	word_3A6CA, 154h
 		jnz	short loc_24434
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	40014h
 		push	0Ah
@@ -16804,7 +16804,7 @@ loc_24434:
 		cmp	word_3A6CA, 172h
 		jnz	short loc_24472
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	40014h
 		push	0Ah
@@ -16827,7 +16827,7 @@ loc_24472:
 		cmp	word_3A6CA, 190h
 		jnz	short loc_244B6
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		push	40014h
 		push	0Ah
@@ -16999,7 +16999,7 @@ loc_2450C:
 		push	offset unk_37635
 		call	sub_304B8
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 2Ah
 		inc	si
 
@@ -17092,7 +17092,7 @@ loc_246A0:
 		push	ax
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 
 loc_24709:
@@ -17745,7 +17745,7 @@ loc_24D59:
 		add	sp, 22h
 		cmp	word_3A6C8, 0
 		jg	short loc_24DFB
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -18743,7 +18743,7 @@ loc_255FB:
 		push	dx
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 		cmp	word_3A6E5, 0
 		jnz	short loc_2567E
@@ -18984,7 +18984,7 @@ loc_2589B:
 		cmp	si, 5
 		jl	loc_257EA
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_258AA:
@@ -19066,7 +19066,7 @@ loc_25947:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_25977
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_25977:
@@ -19632,7 +19632,7 @@ loc_25EB1:
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_25EE1
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_25EE1:
@@ -20283,7 +20283,7 @@ loc_264AC:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jg	loc_265C5
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	40004h
 		push	0
 		mov	ax, word_3A6CA
@@ -20676,7 +20676,7 @@ loc_26890:
 		cmp	si, 5
 		jl	loc_267DF
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2689F:
@@ -20926,7 +20926,7 @@ loc_26A85:
 		cmp	si, 5
 		jl	loc_269CB
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_26A94:
@@ -21098,7 +21098,7 @@ loc_26C02:
 		cmp	si, 5
 		jl	loc_26B48
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_26C11:
@@ -21769,7 +21769,7 @@ loc_271CB:
 
 loc_271D0:
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	short loc_271EB
 ; ---------------------------------------------------------------------------
@@ -21888,7 +21888,7 @@ loc_272E1:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_27317
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	ax, word_36C26
 		mov	word_3A76D, ax
@@ -22276,7 +22276,7 @@ loc_27729:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_27759
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_27759:
@@ -22592,7 +22592,7 @@ loc_27A65:
 		push	dx
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 
 loc_27ABB:
@@ -23778,7 +23778,7 @@ loc_285A5:
 		add	sp, 22h
 		cmp	word_3A6C8, 0
 		jg	short loc_28655
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -23931,12 +23931,12 @@ sub_2869E	proc far
 		call	sub_2091E
 		push	ds
 		push	offset aTensi_mdt_0 ; "TENSI.MDT"
-		call	sub_12549
+		call	_mdrv2_bgm_load
 		push	ds
 		push	offset aZigoku_mde_0 ; "zigoku.mde"
-		call	sub_12559
+		call	_mdrv2_se_load
 		add	sp, 16h
-		call	sub_12569
+		call	_mdrv2_bgm_play
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
 		mov	si, 18Fh
 		jmp	short loc_2871C
@@ -25719,7 +25719,7 @@ loc_29665:
 
 loc_29698:
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	50019h
 		push	4
 		push	word_3A780
@@ -25817,7 +25817,7 @@ loc_2970D:
 		call	sub_28659
 		add	sp, 0Ch
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	loc_29A96
 ; ---------------------------------------------------------------------------
@@ -26174,7 +26174,7 @@ loc_29AAC:
 		mov	word_3AC5E, 2
 		mov	word_3AC5C, 0
 		push	0Ah
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_29ADC:
@@ -26785,7 +26785,7 @@ loc_2A031:
 		cmp	word_35E03, 1
 		jnz	short loc_2A073
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		mov	word_3AF32, 1540h
 		mov	word_3AF36, 400h
 		push	70h ; 'p'
@@ -26880,7 +26880,7 @@ loc_2A0CF:
 		sub	ax, dx
 		mov	word_3AF38, ax
 		push	0Ah
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 32h
 
 loc_2A16A:
@@ -27469,7 +27469,7 @@ loc_2A6B0:
 loc_2A724:
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 		pop	bp
 		retn
@@ -27638,7 +27638,7 @@ loc_2A8C9:
 		or	dx, dx
 		jnz	short loc_2A8F5
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		pop	bp
 		retn
@@ -27734,7 +27734,7 @@ loc_2A960:
 
 loc_2A993:
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	loc_2ABD8
 ; ---------------------------------------------------------------------------
@@ -27823,7 +27823,7 @@ loc_2AA36:
 		add	ax, 0A0h
 		mov	di, ax
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	ax, word_3A6CA
 		mov	bx, 0Fh
@@ -28081,7 +28081,7 @@ loc_2AD01:
 		or	dx, dx
 		jnz	loc_2AE0C
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		mov	ax, word_3A6CA
 		add	ax, 0FFC4h
@@ -28585,7 +28585,7 @@ loc_2B1CF:
 		jl	loc_2B14D
 		add	word_3B04D, 20h	; ' '
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	loc_2B2B6
 ; ---------------------------------------------------------------------------
@@ -29367,14 +29367,14 @@ loc_2B95F:
 		or	dx, dx
 		jnz	loc_2BA24
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	loc_2BA24
 ; ---------------------------------------------------------------------------
 
 loc_2B97C:
 		push	3
-		call	sub_125C9
+		call	_mdrv2_se_play
 		push	280020h
 		mov	ax, word_3B332
 		add	ax, 0FFF0h
@@ -30950,7 +30950,7 @@ loc_2C8AE:
 		mov	word_3B431, 0
 		mov	eax, dword_36C16
 		mov	random_seed, eax
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 		push	1
 		call	sub_EA3E
 		pop	cx
@@ -31013,7 +31013,7 @@ loc_2C99C:
 		or	dx, dx
 		jnz	short loc_2C9B1
 		push	9
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2C9B1:
@@ -31050,9 +31050,9 @@ loc_2C9DA:
 		pop	cx
 		push	ds
 		push	offset aSyugen_mdt ; "syugen.MDT"
-		call	sub_12549
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_12569
+		call	_mdrv2_bgm_play
 		push	ds
 		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
 		call	sub_10BAE
@@ -31312,7 +31312,7 @@ loc_2CC6B:
 loc_2CC7C:
 		cmp	word_3A6C8, 0
 		jg	loc_2CDCE
-		call	sub_12579
+		call	_mdrv2_bgm_stop
 		mov	byte_3A6CE, 65h	; 'e'
 		mov	word_3A6CA, 0
 		mov	word_3B433, 0
@@ -31376,13 +31376,13 @@ loc_2CD16:
 		or	dx, dx
 		jnz	short loc_2CD33
 		push	9
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2CD33:
 		cmp	word_3A6CA, 0AAh ; '?'
 		jnz	short loc_2CD40
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 
 loc_2CD40:
 		cmp	word_3A6CA, 0BEh ; '?'
@@ -31651,12 +31651,12 @@ var_2		= word ptr -2
 		call	sub_EA3E
 		push	ds
 		push	offset aAlice_mdt_0 ; "ALICE.MDT"
-		call	sub_12549
+		call	_mdrv2_bgm_load
 		push	ds
 		push	offset aZigoku_mde_1 ; "zigoku.mde"
-		call	sub_12559
+		call	_mdrv2_se_load
 		add	sp, 1Ah
-		call	sub_12569
+		call	_mdrv2_bgm_play
 		xor	di, di
 		jmp	short loc_2CF26
 ; ---------------------------------------------------------------------------
@@ -31882,7 +31882,7 @@ loc_2D0EC:
 		or	dx, dx
 		jnz	short loc_2D117
 		push	9
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2D117:
@@ -32343,7 +32343,7 @@ loc_2D4C5:
 		push	offset word_3B438
 		call	sub_2CDD2
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 1Ah
 		jmp	loc_2D7CD
 ; ---------------------------------------------------------------------------
@@ -32843,7 +32843,7 @@ loc_2D96A:
 		push	0Ch
 
 loc_2D98D:
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		jmp	loc_2DD61
 ; ---------------------------------------------------------------------------
@@ -33097,7 +33097,7 @@ loc_2DBCA:
 		push	offset unk_3B481
 		call	sub_12053
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_2DBEC:
@@ -33333,7 +33333,7 @@ loc_2DD76:
 		mov	word_3B495, 0C8h ; '?'
 		mov	word_3B499, 30h	; '0'
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		mov	word_3B497, 63h	; 'c'
 		push	60008h
 		push	0A000Ch
@@ -33899,7 +33899,7 @@ loc_2E2CE:
 		push	offset unk_3B4F3
 		call	sub_12053
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_2E2F0:
@@ -33954,7 +33954,7 @@ loc_2E346:
 		push	offset unk_3B4F5
 		call	sub_12053
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 
 loc_2E368:
@@ -34011,7 +34011,7 @@ loc_2E3C0:
 
 loc_2E3D8:
 		push	0Ch
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Eh
 		jmp	short loc_2E42A
 ; ---------------------------------------------------------------------------
@@ -34269,7 +34269,7 @@ loc_2E697:
 		or	dx, dx
 		jnz	short loc_2E6AC
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2E6AC:
@@ -34322,7 +34322,7 @@ sub_2E705	proc far
 		push	0
 		call	sub_2D412
 		push	8
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 4
 
 loc_2E728:
@@ -34805,7 +34805,7 @@ loc_2EC19:
 		push	dx
 		call	sub_1209D
 		push	6
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 16h
 		cmp	word_3B523, 0
 		jnz	short loc_2EC6C
@@ -35021,7 +35021,7 @@ loc_2EE5F:
 
 loc_2EE64:
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2EE6C:
@@ -36021,7 +36021,7 @@ loc_2F766:
 		add	sp, 4
 		call	sub_2D241
 		call	sub_EC0D
-		call	sub_12579
+		call	_mdrv2_bgm_stop
 		pushd	0
 		pushd	0
 		call	sub_EB59
@@ -36234,7 +36234,7 @@ loc_2F9E0:
 		call	sub_EB10
 		add	sp, 4
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2F9F9:
@@ -36443,7 +36443,7 @@ loc_2FB7F:
 		jnz	loc_2FC0E
 		cmp	[bp+var_6], 0C0h ; '?'
 		jnz	short loc_2FB9A
-		call	sub_12589
+		call	_mdrv2_bgm_fade_out_nonblock
 
 loc_2FB9A:
 		mov	[bp+var_2], 0
@@ -36502,7 +36502,7 @@ loc_2FBE6:
 
 loc_2FC06:
 		push	7
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 
 loc_2FC0E:
@@ -36591,7 +36591,7 @@ loc_2FC5A:
 		add	bx, si
 		mov	byte ptr es:[bx+30h], 1
 		push	1
-		call	sub_125C9
+		call	_mdrv2_se_play
 		pop	cx
 		les	bx, [bp+arg_0]
 		add	bx, si
@@ -36979,7 +36979,7 @@ loc_2FF31:
 		add	bx, si
 		mov	byte ptr es:[bx+38h], 1
 		push	10h
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Ah
 		mov	ax, 1
 		jmp	short loc_2FFBD
@@ -37055,7 +37055,7 @@ loc_2FFCD:
 		add	bx, si
 		mov	byte ptr es:[bx+38h], 1
 		push	10h
-		call	sub_125C9
+		call	_mdrv2_se_play
 		add	sp, 0Ah
 		mov	ax, 1
 		jmp	short loc_30043

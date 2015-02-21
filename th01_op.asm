@@ -795,9 +795,9 @@ sub_A719	proc far
 		mov	bp, sp
 		push	ds
 		push	offset aReimu_mdt ; "reimu.mdt"
-		call	sub_E4D9
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_E4F9
+		call	_mdrv2_bgm_play
 		push	1
 		call	sub_B943
 		pop	cx
@@ -885,7 +885,7 @@ sub_A7B5	proc far
 		call	sub_E27C
 		add	sp, 0Ch
 		call	sub_A79D
-		call	sub_E519
+		call	_mdrv2_bgm_fade_out_nonblock
 		call	sub_B757
 		mov	al, byte_12324
 		cbw
@@ -984,7 +984,7 @@ sub_A8AD	proc far
 
 loc_A8E1:
 		call	sub_A79D
-		call	sub_E519
+		call	_mdrv2_bgm_fade_out_nonblock
 		call	sub_B757
 		les	bx, dword_13EE6
 		assume es:nothing
@@ -1670,7 +1670,7 @@ var_3C		= byte ptr -3Ch
 		push	offset off_1256E
 		mov	cx, 3Ch	; '<'
 		call	SCOPY@
-		call	sub_E509
+		call	_mdrv2_bgm_stop
 		mov	al, byte_1251D
 		cbw
 		shl	ax, 2
@@ -1678,9 +1678,9 @@ var_3C		= byte ptr -3Ch
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]	; path
-		call	sub_E4D9
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_E4F9
+		call	_mdrv2_bgm_play
 		leave
 		retf
 sub_AE6D	endp
@@ -1848,7 +1848,7 @@ _envp		= dword	ptr  0Ah
 		push	di
 		xor	si, si
 		xor	di, di
-		call	sub_E3E5
+		call	_mdrv2_resident
 		or	ax, ax
 		jnz	short loc_B015
 		push	ds
@@ -1920,7 +1920,7 @@ loc_B06F:
 		mov	byte_1232E, al
 
 loc_B0D6:
-		call	sub_E549
+		call	_mdrv2_check_board
 		call	sub_B6E9
 		call	sub_A240
 		mov	al, byte ptr word_12320+1
@@ -2008,7 +2008,7 @@ loc_B185:
 		jz	short loc_B1C9
 		cmp	byte ptr word_12320+1, 0
 		jnz	short loc_B1A4
-		call	sub_E509
+		call	_mdrv2_bgm_stop
 		jmp	short loc_B1C3
 ; ---------------------------------------------------------------------------
 
@@ -2017,12 +2017,12 @@ loc_B1A4:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B1C3
-		call	sub_E509
+		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset aReimu_mdt ; "reimu.mdt"
-		call	sub_E4D9
+		call	_mdrv2_bgm_load
 		add	sp, 4
-		call	sub_E4F9
+		call	_mdrv2_bgm_play
 
 loc_B1C3:
 		mov	al, byte ptr word_12320+1
@@ -2068,7 +2068,7 @@ loc_B21A:
 		jz	loc_B14D
 		call	sub_A2E4
 		mov	byte_1232F, 1
-		call	sub_E509
+		call	_mdrv2_bgm_stop
 		call	sub_A79D
 		push	1
 		call	sub_B943
@@ -2079,7 +2079,7 @@ loc_B21A:
 		pop	cx
 		call	sub_BB12
 		call	sub_B73C
-		call	sub_E509
+		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset format	; "‚¨‚Â‚©‚ê‚³‚Ü‚Å‚µ‚½II\n"
 
@@ -8498,7 +8498,7 @@ op_11_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_E3E5	proc far
+_mdrv2_resident	proc far
 
 s2		= byte ptr -1Ch
 s1		= byte ptr -10h
@@ -8557,215 +8557,13 @@ loc_E44D:
 		pop	si
 		leave
 		retf
-sub_E3E5	endp
+_mdrv2_resident	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_E450(char, char *path)
-sub_E450	proc near
-
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-handle		= word ptr -2
-arg_0		= byte ptr  4
-_path		= dword	ptr  6
-
-		enter	0Ch, 0
-		push	si
-		cmp	byte_12B0E, 0
-		jz	short loc_E4D4
-		push	8001h		; access
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		call	_open
-		add	sp, 6
-		mov	[bp+handle], ax
-		push	[bp+handle]	; handle
-		call	_filelength
-		pop	cx
-		mov	[bp+var_4], ax
-		movsx	eax, [bp+var_4]
-		push	eax
-		call	_farmalloc
-		add	sp, 4
-		mov	[bp+var_A], dx
-		mov	[bp+var_C], ax
-		mov	ax, [bp+var_A]
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_C]
-		mov	[bp+var_8], ax
-		push	ds
-		mov	ax, 3F00h
-		mov	bx, [bp+handle]
-		mov	cx, [bp+var_4]
-		mov	ds, [bp+var_6]
-		mov	dx, [bp+var_8]
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		push	[bp+handle]	; handle
-		call	_close
-		pop	cx
-		push	ds
-		mov	ah, [bp+arg_0]
-		mov	ds, [bp+var_6]
-		mov	si, [bp+var_8]
-		int	0F2h
-		pop	ds
-		push	[bp+var_A]
-		push	[bp+var_C]
-		call	_farfree
-		add	sp, 4
-
-loc_E4D4:
-		pop	si
-		leave
-		retn	6
-sub_E450	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_E4D9(char *path)
-sub_E4D9	proc far
-
-_path		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+_path+2]
-		push	word ptr [bp+_path] ; path
-		push	6		; char
-		call	sub_E450
-		pop	bp
-		retf
-sub_E4D9	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		push	7
-		call	sub_E450
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E4F9	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_12B0E, 0
-		jz	short loc_E507
-		mov	ah, 0
-		int	0F2h
-
-loc_E507:
-		pop	bp
-		retf
-sub_E4F9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E509	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_12B0E, 0
-		jz	short loc_E517
-		mov	ah, 3
-		int	0F2h
-
-loc_E517:
-		pop	bp
-		retf
-sub_E509	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E519	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_12B0E, 0
-		jz	short loc_E527
-		mov	ah, 2
-		int	0F2h
-
-loc_E527:
-		pop	bp
-		retf
-sub_E519	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	byte_12B0E, 0
-		jz	short loc_E537
-		mov	ah, 1
-		int	0F2h
-
-loc_E537:
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	byte_12B0E, 0
-		jz	short loc_E547
-		mov	ah, 0Fh
-		int	0F2h
-
-loc_E547:
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E549	proc far
-		push	bp
-		mov	bp, sp
-		mov	ah, 9
-		int	0F2h
-		mov	byte_12B0E, al
-		mov	al, byte_12B0E
-		cbw
-		pop	bp
-		retf
-sub_E549	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	word ptr [bp+6], 0
-		jz	short loc_E573
-		cmp	byte_12B0E, 0
-		jz	short loc_E573
-		add	word ptr [bp+6], 400h
-		mov	ax, [bp+6]
-		int	0F2h
-
-loc_E573:
-		pop	bp
-		retf
+	extern _mdrv2_bgm_load:proc
+	extern _mdrv2_bgm_play:proc
+	extern _mdrv2_bgm_stop:proc
+	extern _mdrv2_bgm_fade_out_nonblock:proc
+	extern _mdrv2_check_board:proc
 op_11_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -9694,7 +9492,8 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
 aReiidenconfig	db 'ReiidenConfig',0
-byte_12B0E	db 0
+public _mdrv2_have_board
+_mdrv2_have_board	db 0
 		db 0
 aMdrv2system	db 'Mdrv2System',0
 aXx		db '••',0
