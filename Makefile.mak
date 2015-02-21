@@ -2,7 +2,7 @@
 # -----
 # Makefile for the 16-bit part of the build process
 
-CFLAGS = -ls -Ilibs\master.lib\ -Lbin\
+CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -a2
 
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
 TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe
@@ -26,4 +26,7 @@ th05:: $(TH05:\=bin\th05\)
 	tlink /t /3 $**
 
 bin\th01\zunsoft.com: th01\zunsoft.c
-	$(CC) $(CFLAGS) -mt -lt -O -a2 -nbin\th01\ $** masters.lib
+	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
+
+bin\th02\op.exe: bin\th02\op.obj th02\op_03.c
+	$(CC) $(CFLAGS) -ml -nbin\th02\ -eOP.EXE $**

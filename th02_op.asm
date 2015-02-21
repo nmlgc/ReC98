@@ -425,7 +425,7 @@ loc_9E7D:
 loc_9E97:
 		push	12h
 		call	frame_delay
-		call	sub_B2E8
+		call	_title_flash
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
@@ -2518,105 +2518,8 @@ op_02_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-op_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_03_TEXT
-		;org 7
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2E8	proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		mov	[bp+var_2], 1
-		call	_snd_se_reset
-		call	_snd_se_play stdcall, 6
-		pop	cx
-		call	_snd_se_update
-		xor	si, si
-		jmp	short loc_B370
-; ---------------------------------------------------------------------------
-
-loc_B308:
-		mov	dx, 0A4h ; '?'
-		mov	al, byte ptr [bp+var_2]
-		out	dx, al
-		mov	ax, 1
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		or	si, si
-		jnz	short loc_B320
-		push	0
-		jmp	short loc_B330
-; ---------------------------------------------------------------------------
-
-loc_B320:
-		cmp	si, 5
-		jnz	short loc_B329
-		push	1
-		jmp	short loc_B330
-; ---------------------------------------------------------------------------
-
-loc_B329:
-		cmp	si, 0Ah
-		jnz	short loc_B33C
-		push	2
-
-loc_B330:
-		push	0
-		push	0
-		call	_pi_slot_put
-		add	sp, 6
-
-loc_B33C:
-		mov	ax, si
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_B350
-		mov	PaletteTone, 96h
-		jmp	short loc_B363
-; ---------------------------------------------------------------------------
-
-loc_B350:
-		mov	ax, si
-		mov	bx, 3
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_B368
-		mov	PaletteTone, 64h ; 'd'
-
-loc_B363:
-		call	far ptr	palette_show
-
-loc_B368:
-		push	1
-		call	frame_delay
-		inc	si
-
-loc_B370:
-		cmp	si, 12h
-		jl	short loc_B308
-		mov	dx, 0A4h ; '?'
-		mov	al, 0
-		out	dx, al
-		freePISlot	0
-		freePISlot	1
-		freePISlot	2
-		pop	si
-		leave
-		retf
-sub_B2E8	endp
-
+op_03_TEXT	segment	word public 'CODE' use16
+	extern _title_flash:proc
 op_03_TEXT	ends
 
 ; ===========================================================================
