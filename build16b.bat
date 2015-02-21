@@ -4,10 +4,7 @@ echo If this fails or shows other weird behavior, run BUILD16B separately in DOS
 REM (Yes, we don't use %0%, as it actually has to be %0 on DOS. Just spelling
 REM out the name saves us that trouble.)
 
-set ReC98_CC=tcc -ls -Ilibs\master.lib\ -Lbin\
-set ReC98_LINK=tlink
-
-%ReC98_LINK% 1>NUL 2>NUL
+tlink 1>NUL 2>NUL
 if errorlevel 9009 goto no_tlink
 if errorlevel 216 goto 64_bit
 
@@ -15,29 +12,9 @@ tcc 1>NUL 2>NUL
 if errorlevel 9009 goto no_tcc
 if errorlevel 216 goto 64_bit
 
-%ReC98_CC% -mt -lt -O -a2 -nbin\th01\ th01\zunsoft.c masters.lib
-%ReC98_CC% -ml bin\th01\op.obj
-%ReC98_CC% -ml bin\th01\reiiden.obj
-%ReC98_CC% -ml bin\th01\fuuin.obj
-%ReC98_LINK% /t bin\th02\zuninit.obj
-%ReC98_LINK% /t bin\th02\zun_res.obj
-%ReC98_CC% -ml bin\th02\op.obj
-%ReC98_CC% -ml bin\th02\main.obj
-%ReC98_CC% -ml bin\th02\maine.obj
-%ReC98_LINK% /t /3 bin\th03\zunsp.obj
-%ReC98_LINK% /t bin\th03\res_yume.obj
-%ReC98_CC% -ml bin\th03\op.obj
-%ReC98_CC% -ml bin\th03\main.obj
-%ReC98_CC% -ml bin\th03\mainl.obj
-%ReC98_LINK% /t bin\th04\res_huma.obj
-%ReC98_CC% -ml bin\th04\op.obj
-%ReC98_CC% -ml bin\th04\main.obj
-%ReC98_CC% -ml bin\th04\maine.obj
-%ReC98_LINK% /t bin\th05\res_kso.obj
-%ReC98_CC% -ml bin\th05\op.obj
-%ReC98_CC% -ml bin\th05\main.obj
-%ReC98_CC% -ml bin\th05\maine.obj
-echo Done. Find the executables in the bin\ subdirectory.
+make
+if errorlevel 9009 goto no_make
+if errorlevel 216 goto 64_bit
 goto eof
 
 :64_bit
@@ -49,6 +26,9 @@ echo Could not find TCC.
 goto tc4j_bin
 :no_tlink
 echo Could not find TLINK.
+goto tc4j_bin
+:no_make
+echo Could not find MAKE.
 goto tc4j_bin
 :tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
