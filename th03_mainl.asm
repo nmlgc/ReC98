@@ -220,8 +220,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+mainl_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:mainl_01_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6133,13 +6133,13 @@ loc_C7D8:
 sub_C40D	endp
 		db 0
 
-seg001		ends
+mainl_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+mainl_02_TEXT	segment	word public 'CODE' use16
+		assume cs:mainl_02_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -7735,7 +7735,7 @@ loc_D799:
 		retf
 sub_D784	endp
 
-seg002		ends
+mainl_02_TEXT	ends
 
 	.data
 

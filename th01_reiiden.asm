@@ -115,8 +115,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+main_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_01_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -4205,7 +4205,7 @@ loc_D6EB:
 
 loc_D6EE:
 		mov	[bp+var_6], ax
-		push	seg seg001
+		push	seg main_01_TEXT
 		push	offset sub_D07C
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
 		add	sp, 4
@@ -5348,13 +5348,13 @@ sub_E319	proc far
 		retf
 sub_E319	endp
 
-seg001		ends
+main_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
-		assume cs:seg002
+main_02_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_02_TEXT
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5380,13 +5380,13 @@ loc_E36F:
 		retf
 sub_E364	endp
 
-seg002		ends
+main_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+main_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03_TEXT
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5459,7 +5459,7 @@ sub_E3BE	proc far
 		pop	cx
 		mov	word_38818, dx
 		mov	off_38816, ax
-		push	seg seg003
+		push	seg main_03_TEXT
 		push	offset isr	; isr
 		push	0Ah		; interruptno
 		call	_setvect
@@ -5560,13 +5560,13 @@ arg_2		= word ptr  8
 		retf
 sub_E444	endp
 
-seg003		ends
+main_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg004		segment	byte public 'CODE' use16
-		assume cs:seg004
+main_04_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_04_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6133,13 +6133,13 @@ loc_E7B4:
 		retf
 sub_E77E	endp
 
-seg004		ends
+main_04_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg005		segment	byte public 'CODE' use16
-		assume cs:seg005
+main_05_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_05_TEXT
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6189,7 +6189,7 @@ sub_E7E4	proc far
 		pop	cx
 		mov	word ptr off_3891E+2, dx
 		mov	word ptr off_3891E, ax
-		push	seg seg005
+		push	seg main_05_TEXT
 		push	offset sub_E8BE	; isr
 		push	6		; interruptno
 		call	_setvect
@@ -6259,7 +6259,7 @@ sub_E87F	proc far
 		push	bp
 		mov	bp, sp
 		mov	byte_3508E, 0
-		push	seg seg005
+		push	seg main_05_TEXT
 		push	offset sub_E7BE	; isr
 		push	6		; interruptno
 		call	_setvect
@@ -6349,13 +6349,13 @@ loc_E921:
 		call	_exit
 sub_E8F0	endp
 
-seg005		ends
+main_05_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg006		segment	byte public 'CODE' use16
-		assume cs:seg006
+main_06_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_06_TEXT
 		;org 6
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -9961,13 +9961,13 @@ loc_10317:
 		retf
 sub_102BB	endp
 
-seg006		ends
+main_06_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg007		segment	byte public 'CODE' use16
-		assume cs:seg007
+main_07_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_07_TEXT
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -10422,13 +10422,13 @@ loc_106E3:
 		retf
 sub_10585	endp
 
-seg007		ends
+main_07_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg008		segment	byte public 'CODE' use16
-		assume cs:seg008
+main_08_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_08_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -12056,13 +12056,13 @@ loc_1133A:
 		retf
 sub_1117C	endp
 
-seg008		ends
+main_08_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg009		segment	byte public 'CODE' use16
-		assume cs:seg009
+main_09_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_09_TEXT
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -12273,13 +12273,13 @@ loc_114C6:
 		retf
 sub_113A6	endp
 
-seg009		ends
+main_09_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg010		segment	byte public 'CODE' use16
-		assume cs:seg010
+main_10_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_10_TEXT
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -12402,13 +12402,13 @@ loc_1156A:
 		retf
 sub_11527	endp
 
-seg010		ends
+main_10_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg011		segment	byte public 'CODE' use16
-		assume cs:seg011
+main_11_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_11_TEXT
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -12478,13 +12478,13 @@ loc_115CB:
 		retf
 sub_1156E	endp
 
-seg011		ends
+main_11_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg012		segment	byte public 'CODE' use16
-		assume cs:seg012
+main_12_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_12_TEXT
 		;org 0Fh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -12661,13 +12661,13 @@ loc_11735:
 		retf
 sub_11718	endp
 
-seg012		ends
+main_12_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg013		segment	byte public 'CODE' use16
-		assume cs:seg013
+main_13_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_13_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -13815,13 +13815,13 @@ loc_11FEC:
 		retf
 sub_11F03	endp
 
-seg013		ends
+main_13_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg014		segment	byte public 'CODE' use16
-		assume cs:seg014
+main_14_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_14_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13920,13 +13920,13 @@ loc_12091:
 		retf
 sub_12053	endp
 
-seg014		ends
+main_14_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg015		segment	byte public 'CODE' use16
-		assume cs:seg015
+main_15_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_15_TEXT
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -14274,7 +14274,7 @@ sub_12347	endp
 sub_1240A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg seg015
+		push	seg main_15_TEXT
 		push	offset sub_12428
 		push	5
 		pushd	0Ah
@@ -14323,13 +14323,13 @@ locret_12454:
 		retf
 sub_12428	endp
 
-seg015		ends
+main_15_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg016		segment	byte public 'CODE' use16
-		assume cs:seg016
+main_16_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_16_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -14644,13 +14644,13 @@ locret_125E4:
 		retf
 sub_125C9	endp
 
-seg016		ends
+main_16_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg017		segment	byte public 'CODE' use16
-		assume cs:seg017
+main_17_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_17_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -15325,13 +15325,13 @@ loc_12BA2:
 		retf
 sub_12A3A	endp
 
-seg017		ends
+main_17_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg018		segment	byte public 'CODE' use16
-		assume cs:seg018
+main_18_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_18_TEXT
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -16792,13 +16792,13 @@ locret_13954:
 		retf
 sub_13475	endp
 
-seg018		ends
+main_18_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg019		segment	byte public 'CODE' use16
-		assume cs:seg019
+main_19_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_19_TEXT
 		;org 6
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -19132,9 +19132,9 @@ loc_14BAF:
 		jnz	short loc_14BAF
 
 loc_14BC5:
-		mov	ax, seg	seg006
+		mov	ax, seg	main_06_TEXT
 		mov	es, ax
-		assume es:seg006
+		assume es:main_06_TEXT
 		call	sub_146BA
 
 loc_14BCE:
@@ -19165,13 +19165,13 @@ sub_14BD2	proc far
 		retf
 sub_14BD2	endp
 
-seg019		ends
+main_19_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg020		segment	byte public 'CODE' use16
-		assume cs:seg020
+main_20_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_20_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20278,13 +20278,13 @@ loc_155E7:
 		retf
 sub_15574	endp
 
-seg020		ends
+main_20_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg021		segment	byte public 'CODE' use16
-		assume cs:seg021
+main_21_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_21_TEXT
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -23404,7 +23404,7 @@ sub_17041	proc far
 		mov	byte_398F0, 0
 		mov	word_3991C, 0
 		mov	byte_39922, 0
-		push	seg seg021
+		push	seg main_21_TEXT
 		push	offset sub_17096
 		push	5
 		pushd	5
@@ -23452,13 +23452,13 @@ loc_170C3:
 		retf
 sub_17096	endp
 
-seg021		ends
+main_21_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg022		segment	byte public 'CODE' use16
-		assume cs:seg022
+main_22_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_22_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -23971,13 +23971,13 @@ loc_17441:
 		retf
 sub_1743E	endp
 
-seg022		ends
+main_22_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg023		segment	byte public 'CODE' use16
-		assume cs:seg023
+main_23_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_23_TEXT
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -25126,13 +25126,13 @@ loc_17CA3:
 		retf
 sub_17C2F	endp
 
-seg023		ends
+main_23_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg024		segment	byte public 'CODE' use16
-		assume cs:seg024
+main_24_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_24_TEXT
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -25805,9 +25805,9 @@ loc_181B4:
 		imul	bx, 0Ah
 		cmp	byte ptr [bx+5378h], 0
 		jz	short loc_1820E
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_181A7
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_1802D
 		push	20h ; ' '
 		push	ds
@@ -25830,7 +25830,7 @@ loc_181B4:
 		imul	ax, 0Ah
 		add	ax, 5370h
 		push	ax
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_17D1F
 		push	ds
 		mov	ax, si
@@ -26271,9 +26271,9 @@ loc_18526:
 		imul	bx, 0Ah
 		cmp	byte ptr [bx+53A0h], 0
 		jz	short loc_18580
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_18456
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_18465
 		push	21h ; '!'
 		push	ds
@@ -26296,7 +26296,7 @@ loc_18526:
 		imul	ax, 0Ah
 		add	ax, 5398h
 		push	ax
-		push	seg seg024
+		push	seg main_24_TEXT
 		push	offset sub_1828D
 		push	ds
 		mov	ax, si
@@ -26320,13 +26320,13 @@ loc_18584:
 		retf
 sub_1851E	endp
 
-seg024		ends
+main_24_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg025		segment	byte public 'CODE' use16
-		assume cs:seg025
+main_25_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_25_TEXT
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -27925,13 +27925,13 @@ loc_19229:
 		retf
 sub_190D6	endp
 
-seg025		ends
+main_25_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg026		segment	byte public 'CODE' use16
-		assume cs:seg026
+main_26_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_26_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -28532,13 +28532,13 @@ locret_1967C:
 		retf
 sub_195AD	endp
 
-seg026		ends
+main_26_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg027		segment	byte public 'CODE' use16
-		assume cs:seg027
+main_27_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_27_TEXT
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -31599,7 +31599,7 @@ loc_1B033:
 		retf
 sub_1AE0D	endp
 
-seg027		ends
+main_27_TEXT	ends
 
 include th01_reiiden_2.inc
 

@@ -225,8 +225,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+op_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_01_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -4769,13 +4769,13 @@ loc_BEB0:
 sub_BD9A	endp
 		db 0
 
-seg001		ends
+op_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+op_02_TEXT	segment	word public 'CODE' use16
+		assume cs:op_02_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6247,7 +6247,7 @@ sub_CB68	endp
 
 include th02/frame_delay_.asm
 	db 0
-seg002		ends
+op_02_TEXT	ends
 
 	.data
 

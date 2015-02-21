@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large seg002
+		.model large op_02_TEXT
 		__LARGE__ equ 1
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
@@ -230,8 +230,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+op_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_01_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6097,13 +6097,13 @@ loc_DA0D:
 sub_D708	endp
 		db    0
 
-seg001		ends
+op_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+op_02_TEXT	segment	word public 'CODE' use16
+		assume cs:op_02_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -7494,7 +7494,7 @@ sub_E6D0	endp
 
 include th02/frame_delay_.asm
 
-seg002		ends
+op_02_TEXT	ends
 
 	.data
 

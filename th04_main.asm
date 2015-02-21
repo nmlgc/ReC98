@@ -320,8 +320,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	word public 'CODE' use16
-		assume cs:seg001
+main_01_TEXT	segment	word public 'CODE' use16
+		assume cs:main_01_TEXT
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -17965,13 +17965,13 @@ loc_130E9:
 		retn
 sub_12F5F	endp
 
-seg001		ends
+main_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+main_02_TEXT	segment	word public 'CODE' use16
+		assume cs:main_02_TEXT
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -18963,13 +18963,13 @@ loc_13A92:
 		retf
 sub_13A8E	endp
 
-seg002		ends
+main_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+main_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -43196,7 +43196,7 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_205D4
 		dw offset loc_20609
 		dw offset loc_2065F
-seg003		ends
+main_03_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================

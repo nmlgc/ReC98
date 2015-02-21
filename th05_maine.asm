@@ -315,8 +315,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+maine_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:maine_01_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -8384,14 +8384,14 @@ loc_E7CC:
 		retn
 sub_E41D	endp
 
-seg001		ends
+maine_01_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+maine_02_TEXT	segment	word public 'CODE' use16
+		assume cs:maine_02_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		push	di
@@ -9771,7 +9771,7 @@ sub_F478	proc near
 		retn
 sub_F478	endp
 
-seg002		ends
+maine_02_TEXT	ends
 
 	.data
 

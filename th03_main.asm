@@ -272,8 +272,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	word public 'CODE' use16
-		assume cs:seg001
+main_01_TEXT	segment	word public 'CODE' use16
+		assume cs:main_01_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -9445,13 +9445,13 @@ loc_E8EF:
 		retn
 sub_E86A	endp
 
-seg001		ends
+main_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+main_02_TEXT	segment	word public 'CODE' use16
+		assume cs:main_02_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -10582,13 +10582,13 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_F1D2	endp
 
-seg002		ends
+main_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+main_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03_TEXT
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -18894,13 +18894,13 @@ loc_139D8:
 		retf
 rikako_1398B	endp
 
-seg003		ends
+main_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg004		segment	byte public 'CODE' use16
-		assume cs:seg004
+main_04_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_04_TEXT
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -28192,13 +28192,13 @@ loc_183B9:
 		retf
 sub_1837C	endp
 
-seg004		ends
+main_04_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg005		segment	byte public 'CODE' use16
-		assume cs:seg005
+main_05_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_05_TEXT
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -29497,13 +29497,13 @@ loc_18FE7:
 		retf
 rikako_bomb	endp
 
-seg005		ends
+main_05_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg006		segment	byte public 'CODE' use16
-		assume cs:seg006
+main_06_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_06_TEXT
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -34131,13 +34131,13 @@ loc_1B257:
 		retf
 rikako_1B231	endp
 
-seg006		ends
+main_06_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg007		segment	byte public 'CODE' use16
-		assume cs:seg007
+main_07_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_07_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34675,13 +34675,13 @@ loc_1B651:
 		retf
 chiyuri_1B63B	endp
 
-seg007		ends
+main_07_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg008		segment	byte public 'CODE' use16
-		assume cs:seg008
+main_08_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_08_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -35410,13 +35410,13 @@ loc_1BC4B:
 		retf
 ellen_1BC35	endp
 
-seg008		ends
+main_08_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg009		segment	byte public 'CODE' use16
-		assume cs:seg009
+main_09_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_09_TEXT
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -36089,13 +36089,13 @@ loc_1C156:
 		retf
 kana_1C140	endp
 
-seg009		ends
+main_09_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg010		segment	byte public 'CODE' use16
-		assume cs:seg010
+main_10_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_10_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -36463,13 +36463,13 @@ loc_1C408:
 		retf
 kotohime_1C3F2	endp
 
-seg010		ends
+main_10_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg011		segment	byte public 'CODE' use16
-		assume cs:seg011
+main_11_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_11_TEXT
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -37130,7 +37130,7 @@ loc_1C908:
 		retf
 rikako_1C8F2	endp
 
-seg011		ends
+main_11_TEXT	ends
 
 	.data
 

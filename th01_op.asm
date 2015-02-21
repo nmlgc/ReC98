@@ -95,8 +95,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+op_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_01_TEXT
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	2, 0
@@ -978,9 +978,9 @@ sub_A8AD	proc far
 		les	bx, dword_13EE6
 		cmp	word ptr es:[bx+3Fh], 0
 		jnz	short loc_A8E1
-		mov	ax, seg	seg001
+		mov	ax, seg	op_01_TEXT
 		mov	es, ax
-		assume es:seg001
+		assume es:op_01_TEXT
 
 loc_A8E1:
 		call	sub_A79D
@@ -2091,13 +2091,13 @@ loc_B25D:
 		leave
 		retf
 _main		endp
-seg001		ends
+op_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	byte public 'CODE' use16
-		assume cs:seg002
+op_02_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_02_TEXT
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2121,13 +2121,13 @@ loc_B26C:
 		retf
 sub_B269	endp
 
-seg002		ends
+op_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+op_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_03_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2200,7 +2200,7 @@ sub_B2C3	proc far
 		pop	cx
 		mov	word_13562, dx
 		mov	off_13560, ax
-		push	seg seg003
+		push	seg op_03_TEXT
 		push	offset isr	; isr
 		push	0Ah		; interruptno
 		call	_setvect
@@ -2296,13 +2296,13 @@ sub_B334	endp
 		mov	word_12903, 0
 		pop	bp
 		retf
-seg003		ends
+op_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg004		segment	byte public 'CODE' use16
-		assume cs:seg004
+op_04_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_04_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2801,13 +2801,13 @@ loc_B6B2:
 		retf
 sub_B683	endp
 
-seg004		ends
+op_04_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg005		segment	byte public 'CODE' use16
-		assume cs:seg005
+op_05_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_05_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2857,7 +2857,7 @@ sub_B6E9	proc far
 		pop	cx
 		mov	word_1366A, dx
 		mov	word_13667+1, ax
-		push	seg seg005
+		push	seg op_05_TEXT
 		push	offset sub_B7C3	; isr
 		push	6		; interruptno
 		call	_setvect
@@ -2927,7 +2927,7 @@ sub_B784	proc far
 		push	bp
 		mov	bp, sp
 		mov	byte_12978, 0
-		push	seg seg005
+		push	seg op_05_TEXT
 		push	offset sub_B6C3	; isr
 		push	6		; interruptno
 		call	_setvect
@@ -3003,14 +3003,14 @@ sub_B7C3	endp
 		add	sp, 12h
 		leave
 		retf
-seg005		ends
+op_05_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg006		segment	byte public 'CODE' use16
-		assume cs:seg006
+op_06_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_06_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	10h, 0
 		nopcall	sub_B91C
@@ -6381,14 +6381,14 @@ loc_D21C:
 		retf
 sub_D1C0	endp
 
-seg006		ends
+op_06_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg007		segment	byte public 'CODE' use16
-		assume cs:seg007
+op_07_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_07_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		enter	10h, 0
 		push	si
@@ -6797,13 +6797,13 @@ loc_D5E8:
 		pop	si
 		leave
 		retf
-seg007		ends
+op_07_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg008		segment	byte public 'CODE' use16
-		assume cs:seg008
+op_08_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_08_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6846,13 +6846,13 @@ arglist		= byte ptr  10h
 		retf
 sub_D5F8	endp
 
-seg008		ends
+op_08_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg009		segment	byte public 'CODE' use16
-		assume cs:seg009
+op_09_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_09_TEXT
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -8317,13 +8317,13 @@ loc_E278:
 		pop	si
 		leave
 		retf
-seg009		ends
+op_09_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg010		segment	byte public 'CODE' use16
-		assume cs:seg010
+op_10_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_10_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -8484,13 +8484,13 @@ loc_E3E2:
 		retf
 sub_E3C5	endp
 
-seg010		ends
+op_10_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg011		segment	byte public 'CODE' use16
-		assume cs:seg011
+op_11_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_11_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -8766,14 +8766,14 @@ sub_E549	endp
 loc_E573:
 		pop	bp
 		retf
-seg011		ends
+op_11_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg012		segment	byte public 'CODE' use16
-		assume cs:seg012
+op_12_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_12_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		push	bp
@@ -9247,7 +9247,7 @@ sub_E8D9	endp
 		mov	ax, es:[bx+14h]
 		pop	bp
 		retf
-seg012		ends
+op_12_TEXT	ends
 
 ; ===========================================================================
 

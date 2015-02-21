@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large seg002
+		.model large main_02_TEXT
 		__LARGE__ equ 1
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
@@ -372,8 +372,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	word public 'CODE' use16
-		assume cs:seg001
+main_01_TEXT	segment	word public 'CODE' use16
+		assume cs:main_01_TEXT
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -21047,13 +21047,13 @@ loc_14AB9:
 		retf
 sub_14AB1	endp
 
-seg001		ends
+main_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+main_02_TEXT	segment	word public 'CODE' use16
+		assume cs:main_02_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -21874,13 +21874,13 @@ loc_1527E:
 		retf
 sub_1527A	endp
 
-seg002		ends
+main_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+main_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -42137,7 +42137,7 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-seg003		ends
+main_03_TEXT	ends
 
 	.data
 

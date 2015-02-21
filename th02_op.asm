@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large seg002
+		.model large op_02_TEXT
 		__LARGE__ equ 1
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
@@ -134,8 +134,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg001		segment	byte public 'CODE' use16
-		assume cs:seg001
+op_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_01_TEXT
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1798,13 +1798,13 @@ loc_AAF0:
 _main		endp
 		db 0
 
-seg001		ends
+op_01_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg002		segment	word public 'CODE' use16
-		assume cs:seg002
+op_02_TEXT	segment	word public 'CODE' use16
+		assume cs:op_02_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2514,13 +2514,13 @@ loc_B24B:
 
 include th02/hardware/snd_se.asm
 include th02/frame_delay.asm
-seg002		ends
+op_02_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg003		segment	byte public 'CODE' use16
-		assume cs:seg003
+op_03_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_03_TEXT
 		;org 7
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		db 0
@@ -2617,13 +2617,13 @@ loc_B370:
 		retf
 sub_B2E8	endp
 
-seg003		ends
+op_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg004		segment	byte public 'CODE' use16
-		assume cs:seg004
+op_04_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_04_TEXT
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -3365,13 +3365,13 @@ loc_B902:
 		retf
 sub_B86E	endp
 
-seg004		ends
+op_04_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg005		segment	byte public 'CODE' use16
-		assume cs:seg005
+op_05_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_05_TEXT
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -4169,13 +4169,13 @@ loc_BFB7:
 		retf
 sub_BD24	endp
 
-seg005		ends
+op_05_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg006		segment	byte public 'CODE' use16
-		assume cs:seg006
+op_06_TEXT	segment	byte public 'CODE' use16
+		assume cs:op_06_TEXT
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5323,7 +5323,7 @@ loc_C978:
 		retf
 sub_C7A0	endp
 
-seg006		ends
+op_06_TEXT	ends
 
 	.data
 
