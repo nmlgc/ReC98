@@ -244,7 +244,7 @@ arg_A		= word ptr  0Eh
 ; ---------------------------------------------------------------------------
 
 loc_9660:
-		call	sub_B536
+		call	_input_sense
 		les	bx, [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
@@ -268,7 +268,7 @@ loc_9660:
 		add	sp, 0Ah
 		cmp	byte_F02B, 0
 		jz	short loc_96B9
-		cmp	word_FAEE, 0
+		cmp	_input, 0
 		jz	short loc_96B9
 		test	di, 3
 		jz	short loc_96C1
@@ -297,10 +297,10 @@ loc_96C4:
 ; ---------------------------------------------------------------------------
 
 loc_96CD:
-		call	sub_B536
+		call	_input_sense
 		cmp	byte_F02B, 0
 		jz	short loc_96E4
-		cmp	word_FAEE, 0
+		cmp	_input, 0
 		jz	short loc_96E4
 		push	0
 		jmp	short loc_96E6
@@ -3479,144 +3479,7 @@ include th01/hardware/vram_planes_set.asm
 include th02/formats/pi_slot_load.asm
 include th02/frame_delay.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_B536	proc far
-		mov	word_FAEE, 0
-		mov	al, 7
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	bh, ah
-		mov	al, 8
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	bh, 4
-		jnz	short loc_B554
-		test	ah, 8
-		jz	short loc_B559
-
-loc_B554:
-		or	word_FAEE, 1
-
-loc_B559:
-		test	bh, 8
-		jnz	short loc_B563
-		test	ah, 40h
-		jz	short loc_B568
-
-loc_B563:
-		or	word_FAEE, 4
-
-loc_B568:
-		test	ah, 4
-		jz	short loc_B573
-		or	word_FAEE, 1000h
-
-loc_B573:
-		test	ah, 10h
-		jz	short loc_B57E
-		or	word_FAEE, 2000h
-
-loc_B57E:
-		mov	al, 9
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	bh, 20h
-		jnz	short loc_B58E
-		test	ah, 8
-		jz	short loc_B593
-
-loc_B58E:
-		or	word_FAEE, 2
-
-loc_B593:
-		test	bh, 10h
-		jnz	short loc_B59D
-		test	ah, 1
-		jz	short loc_B5A2
-
-loc_B59D:
-		or	word_FAEE, 8
-
-loc_B5A2:
-		test	ah, 4
-		jz	short loc_B5AD
-		or	word_FAEE, 4000h
-
-loc_B5AD:
-		test	ah, 10h
-		jz	short loc_B5B8
-		or	word_FAEE, 8000h
-
-loc_B5B8:
-		mov	al, 5
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 2
-		jz	short loc_B5C8
-		or	word_FAEE, 10h
-
-loc_B5C8:
-		test	ah, 4
-		jz	short loc_B5D2
-		or	word_FAEE, 20h
-
-loc_B5D2:
-		mov	al, 0
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 1
-		jz	short loc_B5E2
-		or	word_FAEE, 40h
-
-loc_B5E2:
-		mov	al, 3
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 10h
-		jz	short loc_B5F3
-		or	word_FAEE, 80h
-
-loc_B5F3:
-		mov	al, 2
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 1
-		jz	short loc_B604
-		or	word_FAEE, 100h
-
-loc_B604:
-		mov	al, 6
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 10h
-		jz	short locret_B614
-		or	word_FAEE, 10h
-
-locret_B614:
-		retf
-sub_B536	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/input_sense.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4421,17 +4284,17 @@ loc_BDEC:
 		call	sub_BA25
 		xor	di, di
 		mov	[bp+var_8], 0
-		mov	word_FAEE, 0
+		mov	_input, 0
 		mov	[bp+var_A], 1
 
 loc_BE0A:
 		mov	[bp+var_B], 0
 
 loc_BE0E:
-		call	sub_B536
+		call	_input_sense
 		cmp	[bp+var_A], 0
 		jnz	loc_BF7F
-		test	byte ptr word_FAEE, 1
+		test	byte ptr _input, 1
 		jz	short loc_BE44
 		push	di
 		push	[bp+var_8]
@@ -4449,7 +4312,7 @@ loc_BE3A:
 		call	sub_BB83
 
 loc_BE44:
-		test	byte ptr word_FAEE, 2
+		test	byte ptr _input, 2
 		jz	short loc_BE6D
 		push	di
 		push	[bp+var_8]
@@ -4467,7 +4330,7 @@ loc_BE63:
 		call	sub_BB83
 
 loc_BE6D:
-		test	byte ptr word_FAEE, 4
+		test	byte ptr _input, 4
 		jz	short loc_BE90
 		push	di
 		push	[bp+var_8]
@@ -4485,7 +4348,7 @@ loc_BE86:
 		call	sub_BB83
 
 loc_BE90:
-		test	byte ptr word_FAEE, 8
+		test	byte ptr _input, 8
 		jz	short loc_BEB3
 		push	di
 		push	[bp+var_8]
@@ -4503,9 +4366,9 @@ loc_BEA9:
 		call	sub_BB83
 
 loc_BEB3:
-		test	byte ptr word_FAEE, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jnz	short loc_BEC3
-		test	byte ptr word_FAEE, 80h
+		test	byte ptr _input, INPUT_OK
 		jz	loc_BF58
 
 loc_BEC3:
@@ -4590,7 +4453,7 @@ loc_BF51:
 		call	sub_BBB4
 
 loc_BF58:
-		test	byte ptr word_FAEE, 20h
+		test	byte ptr _input, INPUT_BOMB
 		jz	short loc_BF78
 		mov	bx, [bp+var_2]
 		imul	bx, 7
@@ -4606,13 +4469,13 @@ loc_BF71:
 		call	sub_BBB4
 
 loc_BF78:
-		test	byte ptr word_FAEE, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jnz	short loc_BFAF
 
 loc_BF7F:
 		push	1
 		call	frame_delay
-		mov	ax, word_FAEE
+		mov	ax, _input
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0
 		jz	loc_BE0A
@@ -6500,7 +6363,7 @@ include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
-word_FAEE	dw ?
+include th02/hardware/input_sense[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
 dword_FB02	dd ?

@@ -2001,7 +2001,7 @@ loc_B237:
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_B249:
-		mov	word_1FFA8, 0
+		mov	_input, 0
 
 loc_B24F:
 		call	farfp_1F4A4
@@ -2615,20 +2615,20 @@ loc_BA33:
 loc_BA3D:
 		push	TX_WHITE
 		call	gaiji_putsa
-		call	sub_F62E
+		call	_input_sense
 		inc	si
 		cmp	[bp+var_1], 0
 		jnz	short loc_BA5C
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jnz	short loc_BA5C
 		mov	[bp+var_1], 1
 
 loc_BA5C:
 		cmp	[bp+var_1], 1
 		jnz	loc_BB30
-		test	byte ptr word_1FFA8, 1
+		test	byte ptr _input, 1
 		jnz	short loc_BA72
-		test	byte ptr word_1FFA8, 2
+		test	byte ptr _input, 2
 		jz	short loc_BAC8
 
 loc_BA72:
@@ -2662,9 +2662,9 @@ loc_BA98:
 		mov	[bp+var_1], 0
 
 loc_BAC8:
-		test	byte ptr word_1FFA8, 80h
+		test	byte ptr _input, INPUT_OK
 		jnz	short loc_BAD6
-		test	byte ptr word_1FFA8, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jz	short loc_BB24
 
 loc_BAD6:
@@ -2682,7 +2682,7 @@ loc_BAE3:
 		mov	byte_1DB74, 0
 
 loc_BB24:
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jz	loc_BCA4
 		jmp	loc_BCA0
 ; ---------------------------------------------------------------------------
@@ -2690,11 +2690,11 @@ loc_BB24:
 loc_BB30:
 		cmp	[bp+var_1], 2
 		jnz	short loc_BB9D
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jnz	loc_BCA4
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		mov	word_1FFA8, 0
+		mov	_input, 0
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset g11SPACES, TX_WHITE
 		call	gaiji_putsa pascal, (17 shl 16) + 14, ds, offset g11SPACES, TX_WHITE
 		call	gaiji_putsa pascal, (17 shl 16) + 15, ds, offset g11SPACES, TX_WHITE
@@ -2706,7 +2706,7 @@ loc_BB30:
 loc_BB9D:
 		cmp	[bp+var_1], 3
 		jnz	short loc_BBB2
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jnz	loc_BCA4
 		inc	[bp+var_1]
 		jmp	loc_BCA4
@@ -2715,9 +2715,9 @@ loc_BB9D:
 loc_BBB2:
 		cmp	[bp+var_1], 4
 		jnz	loc_BCA4
-		test	byte ptr word_1FFA8, 1
+		test	byte ptr _input, 1
 		jnz	short loc_BBC8
-		test	byte ptr word_1FFA8, 2
+		test	byte ptr _input, 2
 		jz	short loc_BC1E
 
 loc_BBC8:
@@ -2751,9 +2751,9 @@ loc_BBEE:
 		mov	[bp+var_1], 3
 
 loc_BC1E:
-		test	byte ptr word_1FFA8, 80h
+		test	byte ptr _input, INPUT_OK
 		jnz	short loc_BC2C
-		test	byte ptr word_1FFA8, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jz	short loc_BC99
 
 loc_BC2C:
@@ -2774,7 +2774,7 @@ loc_BC94:
 ; ---------------------------------------------------------------------------
 
 loc_BC99:
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jz	short loc_BCA4
 
 loc_BCA0:
@@ -2906,7 +2906,7 @@ loc_BDA2:
 		mov	dx, word_20344
 		mov	bx, ax
 		mov	ss:[bx], dx
-		call	sub_F62E
+		call	_input_sense
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 0
 		jz	short loc_BDCC
@@ -2928,7 +2928,7 @@ loc_BDE8:
 		call	farfp_23A76
 		call	sub_10BC6
 		call	sub_41AA
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jz	short loc_BE0F
 		call	sub_B9E2
 		or	ax, ax
@@ -3367,20 +3367,20 @@ sub_C13E	endp
 sub_C1E4	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jnz	short loc_C20B
 		mov	ax, word_1DB86
 		add	ax, ax
 		les	bx, dword_1F4A8
 		add	bx, ax
 		mov	ax, es:[bx]
-		mov	word_1FFA8, ax
+		mov	_input, ax
 		inc	word_1DB86
 		cmp	word_1DB86, 1B26h
 		jl	short loc_C222
 
 loc_C20B:
-		mov	word_1FFA8, 0
+		mov	_input, 0
 		push	0Ah
 		call	palette_black_out
 		mov	byte_20607, 1
@@ -3605,15 +3605,15 @@ loc_C3E5:
 		jge	loc_C348
 		push	1Eh
 		call	frame_delay
-		mov	word_1FFA8, 0
+		mov	_input, 0
 		jmp	short loc_C400
 ; ---------------------------------------------------------------------------
 
 loc_C3FB:
-		call	sub_F62E
+		call	_input_sense
 
 loc_C400:
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jz	short loc_C3FB
 		call	sub_FBE9
 		call	sub_1C9FE
@@ -3637,10 +3637,10 @@ loc_C400:
 		mov	di, 1
 
 loc_C47A:
-		call	sub_F62E
+		call	_input_sense
 		cmp	[bp+var_2], 0
 		jnz	short loc_C493
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jnz	short loc_C493
 		mov	[bp+var_2], 1
 		jmp	short loc_C4A5
@@ -3649,19 +3649,19 @@ loc_C47A:
 loc_C493:
 		cmp	[bp+var_2], 1
 		jnz	short loc_C4A5
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jz	short loc_C4A5
 		mov	[bp+var_2], 2
 
 loc_C4A5:
-		test	byte ptr word_1FFA8, 1
+		test	byte ptr _input, 1
 		jz	short loc_C4B8
 		mov	di, 1
 		push	0E500E1h
 		call	sub_C2F4
 
 loc_C4B8:
-		test	byte ptr word_1FFA8, 2
+		test	byte ptr _input, 2
 		jz	short loc_C4CA
 		xor	di, di
 		push	0E100E5h
@@ -3670,11 +3670,11 @@ loc_C4B8:
 loc_C4CA:
 		cmp	[bp+var_2], 2
 		jnz	short loc_C4E5
-		test	byte ptr word_1FFA8, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jnz	short loc_C4EE
-		test	byte ptr word_1FFA8, 80h
+		test	byte ptr _input, INPUT_OK
 		jnz	short loc_C4EE
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jnz	short loc_C4EE
 
 loc_C4E5:
@@ -3684,7 +3684,7 @@ loc_C4E5:
 ; ---------------------------------------------------------------------------
 
 loc_C4EE:
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jz	short loc_C4F7
 
 loc_C4F5:
@@ -9439,7 +9439,7 @@ loc_F1F2:
 loc_F1F7:
 		cmp	byte_20604, 0
 		jnz	loc_F43E
-		mov	ax, word_1FFA8
+		mov	ax, _input
 		and	ax, 0F000h
 		cmp	ax, 4000h
 		jz	loc_F29E
@@ -9456,7 +9456,7 @@ loc_F21B:
 		jz	loc_F2A4
 
 loc_F222:
-		mov	bx, word_1FFA8
+		mov	bx, _input
 		and	bx, 0Fh
 		dec	bx
 		cmp	bx, 9
@@ -9601,7 +9601,7 @@ loc_F2FB:
 		sub	ax, di
 		mov	bx, word_205F4
 		mov	[bx], ax
-		test	byte ptr word_1FFA8, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jz	short loc_F349
 		cmp	byte_1EB0D, 0FFh
 		jnz	short loc_F336
@@ -9671,7 +9671,7 @@ loc_F3B3:
 		mov	byte_1E519, al
 		mov	al, byte_2060F
 		mov	byte_1E51A, al
-		test	word_1FFA8, 0C002h
+		test	_input, INPUT_DOWN or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 		jz	short loc_F3F1
 		mov	al, byte_20610
 		add	al, 5
@@ -9684,7 +9684,7 @@ loc_F3B3:
 ; ---------------------------------------------------------------------------
 
 loc_F3F1:
-		test	word_1FFA8, 0F00Fh
+		test	_input, INPUT_UP or INPUT_DOWN or INPUT_LEFT or INPUT_RIGHT or INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 		jnz	short loc_F417
 		mov	al, byte_20610
 		add	al, 0FBh
@@ -9712,7 +9712,7 @@ loc_F426:
 		dec	byte_22D4B
 
 loc_F434:
-		test	byte ptr word_1FFA8, 20h
+		test	byte ptr _input, INPUT_BOMB
 		jz	short loc_F43E
 		call	sub_E280
 
@@ -9973,144 +9973,7 @@ sub_F5B1	endp
 
 include th02/frame_delay.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F62E	proc far
-		mov	word_1FFA8, 0
-		mov	al, 7
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		mov	bh, ah
-		mov	al, 8
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	bh, 4
-		jnz	short loc_F64C
-		test	ah, 8
-		jz	short loc_F651
-
-loc_F64C:
-		or	word_1FFA8, 1
-
-loc_F651:
-		test	bh, 8
-		jnz	short loc_F65B
-		test	ah, 40h
-		jz	short loc_F660
-
-loc_F65B:
-		or	word_1FFA8, 4
-
-loc_F660:
-		test	ah, 4
-		jz	short loc_F66B
-		or	word_1FFA8, 1000h
-
-loc_F66B:
-		test	ah, 10h
-		jz	short loc_F676
-		or	word_1FFA8, 2000h
-
-loc_F676:
-		mov	al, 9
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	bh, 20h
-		jnz	short loc_F686
-		test	ah, 8
-		jz	short loc_F68B
-
-loc_F686:
-		or	word_1FFA8, 2
-
-loc_F68B:
-		test	bh, 10h
-		jnz	short loc_F695
-		test	ah, 1
-		jz	short loc_F69A
-
-loc_F695:
-		or	word_1FFA8, 8
-
-loc_F69A:
-		test	ah, 4
-		jz	short loc_F6A5
-		or	word_1FFA8, 4000h
-
-loc_F6A5:
-		test	ah, 10h
-		jz	short loc_F6B0
-		or	word_1FFA8, 8000h
-
-loc_F6B0:
-		mov	al, 5
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 2
-		jz	short loc_F6C0
-		or	word_1FFA8, 10h
-
-loc_F6C0:
-		test	ah, 4
-		jz	short loc_F6CA
-		or	word_1FFA8, 20h
-
-loc_F6CA:
-		mov	al, 0
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 1
-		jz	short loc_F6DA
-		or	word_1FFA8, 40h
-
-loc_F6DA:
-		mov	al, 3
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 10h
-		jz	short loc_F6EB
-		or	word_1FFA8, 80h
-
-loc_F6EB:
-		mov	al, 2
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 1
-		jz	short loc_F6FC
-		or	word_1FFA8, 100h
-
-loc_F6FC:
-		mov	al, 6
-		mov	ah, 4
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		test	ah, 10h
-		jz	short locret_F70C
-		or	word_1FFA8, 10h
-
-locret_F70C:
-		retf
-sub_F62E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th02/hardware/input_sense.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10721,7 +10584,7 @@ loc_FD5A:
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
-		mov	word_1FFA8, 1
+		mov	_input, 1
 		call	sub_F4BC
 		pop	si
 		leave
@@ -10860,7 +10723,7 @@ loc_FEB9:
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
-		mov	word_1FFA8, 1
+		mov	_input, 1
 		call	sub_F4BC
 		pop	si
 		leave
@@ -17005,7 +16868,7 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_13090:
-		call	sub_F62E
+		call	_input_sense
 		push	[bp+arg_0]
 		call	sub_12F23
 		cmp	si, 24h	; '$'
@@ -17039,7 +16902,7 @@ loc_130CC:
 
 loc_130CF:
 		inc	di
-		cmp	word_1FFA8, 0
+		cmp	_input, 0
 		jz	short loc_130DE
 		mov	[bp+var_2], 1
 		jmp	short loc_130EA
@@ -34693,17 +34556,17 @@ loc_1CB6B:
 		call	sub_1C785
 		xor	di, di
 		mov	[bp+var_8], 0
-		mov	word_1FFA8, 0
+		mov	_input, 0
 		mov	[bp+var_A], 1
 
 loc_1CB89:
 		mov	[bp+var_B], 0
 
 loc_1CB8D:
-		call	sub_F62E
+		call	_input_sense
 		cmp	[bp+var_A], 0
 		jnz	loc_1CCFE
-		test	byte ptr word_1FFA8, 1
+		test	byte ptr _input, 1
 		jz	short loc_1CBC3
 		push	di
 		push	[bp+var_8]
@@ -34721,7 +34584,7 @@ loc_1CBB9:
 		call	sub_1C8E3
 
 loc_1CBC3:
-		test	byte ptr word_1FFA8, 2
+		test	byte ptr _input, 2
 		jz	short loc_1CBEC
 		push	di
 		push	[bp+var_8]
@@ -34739,7 +34602,7 @@ loc_1CBE2:
 		call	sub_1C8E3
 
 loc_1CBEC:
-		test	byte ptr word_1FFA8, 4
+		test	byte ptr _input, 4
 		jz	short loc_1CC0F
 		push	di
 		push	[bp+var_8]
@@ -34757,7 +34620,7 @@ loc_1CC05:
 		call	sub_1C8E3
 
 loc_1CC0F:
-		test	byte ptr word_1FFA8, 8
+		test	byte ptr _input, 8
 		jz	short loc_1CC32
 		push	di
 		push	[bp+var_8]
@@ -34775,9 +34638,9 @@ loc_1CC28:
 		call	sub_1C8E3
 
 loc_1CC32:
-		test	byte ptr word_1FFA8, 10h
+		test	byte ptr _input, INPUT_SHOT
 		jnz	short loc_1CC42
-		test	byte ptr word_1FFA8, 80h
+		test	byte ptr _input, INPUT_OK
 		jz	loc_1CCD7
 
 loc_1CC42:
@@ -34862,7 +34725,7 @@ loc_1CCD0:
 		call	sub_1C914
 
 loc_1CCD7:
-		test	byte ptr word_1FFA8, 20h
+		test	byte ptr _input, INPUT_BOMB
 		jz	short loc_1CCF7
 		mov	bx, [bp+var_2]
 		imul	bx, 7
@@ -34878,13 +34741,13 @@ loc_1CCF0:
 		call	sub_1C914
 
 loc_1CCF7:
-		test	byte ptr word_1FFA8, 40h
+		test	byte ptr _input, INPUT_CANCEL
 		jnz	short loc_1CD2E
 
 loc_1CCFE:
 		push	1
 		call	frame_delay
-		mov	ax, word_1FFA8
+		mov	ax, _input
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0
 		jz	loc_1CB89
@@ -37466,7 +37329,7 @@ include libs/master.lib/super_put_rect[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
-word_1FFA8	dw ?
+include th02/hardware/input_sense[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
 dword_1FFBC	dd ?
