@@ -187,13 +187,13 @@ loc_9C0E:
 		cmp	word_E900, 0
 		jz	short loc_9C9D
 		mov	ax, word_E900
-		mov	word ptr dword_F3DC+2, ax
-		mov	word ptr dword_F3DC, 0
-		les	bx, dword_F3DC
+		mov	word ptr mikoconfig+2, ax
+		mov	word ptr mikoconfig, 0
+		les	bx, mikoconfig
 		mov	al, [bp+var_4]
-		mov	es:[bx+24h], al
+		mov	es:[bx+mikoconfig_t.perf], al
 		mov	al, [bp+var_1]
-		mov	es:[bx+0Ch], al
+		mov	es:[bx+mikoconfig_t.debug_flag], al
 		call	file_close
 		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_9C80
@@ -256,8 +256,8 @@ var_2		= word ptr -2
 		mov	[bp+var_A], al
 		mov	al, byte_F3E1
 		mov	[bp+var_9], al
-		les	bx, dword_F3DC
-		mov	al, es:[bx+24h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	[bp+var_8], al
 		push	[bp+var_2]
 		push	[bp+var_4]
@@ -404,8 +404,8 @@ loc_9E39:
 		jl	short loc_9E1C
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_9E97
 		mov	[bp+var_2], 0
 		cmp	_snd_midi_possible, 0
@@ -459,15 +459,15 @@ loc_9E97:
 		call	graph_gaiji_puts
 		push	0
 		call	graph_copy_page
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_9F16
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 
 loc_9F16:
-		les	bx, dword_F3DC
-		mov	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.demo_num], 0
 		push	ds
 		push	offset aOp_rgb	; "op.rgb"
 		call	palette_entry_rgb
@@ -493,26 +493,26 @@ sub_9F37	proc near
 		call	_snd_se_update
 		push	14h
 		call	frame_delay
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, byte_F3E1
-		mov	es:[bx+15h], al
+		mov	es:[bx+mikoconfig_t.rem_lives], al
 		mov	al, byte_F3E2
-		mov	es:[bx+14h], al
+		mov	es:[bx+mikoconfig_t.rem_bombs], al
 		mov	al, byte_F3E1
-		mov	es:[bx+1Ah], al
+		mov	es:[bx+mikoconfig_t.start_lives], al
 		mov	al, byte_F3E2
-		mov	es:[bx+19h], al
+		mov	es:[bx+mikoconfig_t.start_bombs], al
 		mov	al, _snd_bgm_mode
-		mov	es:[bx+18h], al
-		mov	byte ptr es:[bx+17h], 0
-		mov	word ptr es:[bx+10h], 0
-		mov	word ptr es:[bx+0Eh], 0
-		mov	word ptr es:[bx+12h], 0
-		mov	byte ptr es:[bx+25h], 0
-		mov	word ptr es:[bx+20h], 0
-		mov	byte ptr es:[bx+27h], 0
-		mov	word ptr es:[bx+2Eh], 0
-		mov	word ptr es:[bx+2Ch], 0
+		mov	es:[bx+mikoconfig_t.bgm_mode], al
+		mov	es:[bx+mikoconfig_t.start_power], 0
+		mov	word ptr es:[bx+mikoconfig_t.score+2], 0
+		mov	word ptr es:[bx+mikoconfig_t.score], 0
+		mov	es:[bx+mikoconfig_t.continues_used], 0
+		mov	es:[bx+mikoconfig_t.unused_3], 0
+		mov	es:[bx+mikoconfig_t.unused_1], 0
+		mov	es:[bx+mikoconfig_t.demo_num], 0
+		mov	word ptr es:[bx+mikoconfig_t.score_highest+2], 0
+		mov	word ptr es:[bx+mikoconfig_t.score_highest], 0
 		pop	bp
 		retn
 sub_9F37	endp
@@ -526,10 +526,10 @@ sub_9FAF	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_9F37
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, byte_DC34
-		mov	es:[bx+16h], al
-		mov	byte ptr es:[bx+0Bh], 0
+		mov	es:[bx+mikoconfig_t.rank], al
+		mov	es:[bx+mikoconfig_t.stage], 0
 		call	sub_9CA2
 		call	_pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
@@ -539,8 +539,8 @@ sub_9FAF	proc far
 		call	gaiji_restore
 		call	super_free
 		call	sub_B019
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+0Ch], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.debug_flag], 0
 		jz	short loc_A011
 		push	0
 		push	0
@@ -574,19 +574,19 @@ sub_9FAF	endp
 sub_A027	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, dword_F3DC
-		mov	byte ptr es:[bx+15h], 2
-		mov	byte ptr es:[bx+14h], 3
-		mov	byte ptr es:[bx+1Ah], 2
-		mov	byte ptr es:[bx+19h], 3
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.rem_lives], 2
+		mov	es:[bx+mikoconfig_t.rem_bombs], 3
+		mov	es:[bx+mikoconfig_t.start_lives], 2
+		mov	es:[bx+mikoconfig_t.start_bombs], 3
 		mov	al, _snd_bgm_mode
-		mov	es:[bx+18h], al
-		mov	byte ptr es:[bx+16h], 1
-		mov	word ptr es:[bx+12h], 0
-		mov	byte ptr es:[bx+25h], 0
+		mov	es:[bx+mikoconfig_t.bgm_mode], al
+		mov	es:[bx+mikoconfig_t.rank], 1
+		mov	es:[bx+mikoconfig_t.continues_used], 0
+		mov	es:[bx+mikoconfig_t.unused_3], 0
 		mov	al, byte_E8FE
 		mov	es:[bx+27h], al
-		mov	byte ptr es:[bx+26h], 0
+		mov	es:[bx+mikoconfig_t.shottype], 0
 		call	sub_9CA2
 		call	text_clear
 		freePISlot	0
@@ -616,13 +616,13 @@ sub_A0C6	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_9F37
-		les	bx, dword_F3DC
-		mov	byte ptr es:[bx+16h], 4
-		mov	byte ptr es:[bx+0Bh], 5
-		mov	byte ptr es:[bx+15h], 2
-		mov	byte ptr es:[bx+14h], 1
-		mov	byte ptr es:[bx+1Ah], 2
-		mov	byte ptr es:[bx+19h], 1
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.rank], 4
+		mov	es:[bx+mikoconfig_t.stage], 5
+		mov	es:[bx+mikoconfig_t.rem_lives], 2
+		mov	es:[bx+mikoconfig_t.rem_bombs], 1
+		mov	es:[bx+mikoconfig_t.start_lives], 2
+		mov	es:[bx+mikoconfig_t.start_bombs], 1
 		call	sub_9CA2
 		call	_pi_slot_load stdcall, 0, offset aTs1_pi, ds
 		call	text_clear
@@ -632,8 +632,8 @@ sub_A0C6	proc far
 		call	gaiji_restore
 		call	super_free
 		call	sub_B019
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+0Ch], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.debug_flag], 0
 		jz	short loc_A13A
 		push	0
 		push	0
@@ -1275,8 +1275,8 @@ loc_A656:
 		call	text_putsa pascal, 24, 20, word ptr PERF_TITLE+2, word ptr PERF_TITLE, si
 		push	45
 		push	20
-		les	bx, dword_F3DC
-		mov	al, es:[bx+24h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -1289,8 +1289,8 @@ loc_A656:
 		push	80h
 		push	10h
 		call	sub_AE00
-		les	bx, dword_F3DC
-		mov	al, es:[bx+24h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -1507,10 +1507,10 @@ loc_A831:
 ; ---------------------------------------------------------------------------
 
 loc_A843:
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, 1
-		sub	al, es:[bx+24h]
-		mov	es:[bx+24h], al
+		sub	al, es:[bx+mikoconfig_t.perf]
+		mov	es:[bx+mikoconfig_t.perf], al
 
 loc_A851:
 		mov	al, byte_D6C0
@@ -1571,10 +1571,10 @@ loc_A8BC:
 ; ---------------------------------------------------------------------------
 
 loc_A8CE:
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, 1
-		sub	al, es:[bx+24h]
-		mov	es:[bx+24h], al
+		sub	al, es:[bx+mikoconfig_t.perf]
+		mov	es:[bx+mikoconfig_t.perf], al
 
 loc_A8DC:
 		mov	al, byte_D6C0
@@ -1611,9 +1611,9 @@ loc_A908:
 		add	sp, 4
 		mov	byte_F3E1, 2
 		mov	byte_F3E2, 3
-		les	bx, dword_F3DC
-		mov	byte ptr es:[bx+22h], 1
-		mov	byte ptr es:[bx+24h], 0
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.unused_2], 1
+		mov	es:[bx+mikoconfig_t.perf], 0
 		call	sub_A510 pascal, 0, TX_YELLOW
 		call	sub_A510 pascal, 1, TX_YELLOW
 		call	sub_A510 pascal, 2, TX_YELLOW
@@ -1703,8 +1703,8 @@ loc_A9F3:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_AA1C
 		mov	byte_E8FE, 1
 		kajacall	KAJA_SONG_STOP
@@ -1713,7 +1713,7 @@ loc_A9F3:
 ; ---------------------------------------------------------------------------
 
 loc_AA1C:
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, es:[bx+27h]
 		inc	al
 		mov	byte_E8FE, al
@@ -1734,8 +1734,8 @@ loc_AA4A:
 		mov	_input, 0
 		mov	al, _snd_bgm_mode
 		mov	_snd_active, al
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_AA8F
 		cmp	_snd_midi_possible, 0
 		jz	short loc_AA8F
@@ -1772,9 +1772,9 @@ loc_AACC:
 		call	sub_A74A
 
 loc_AAD7:
-		les	bx, dword_F3DC
-		add	word ptr es:[bx+1Ch], 1
-		adc	word ptr es:[bx+1Eh], 0
+		les	bx, mikoconfig
+		add	word ptr es:[bx+mikoconfig_t.frame], 1
+		adc	word ptr es:[bx+mikoconfig_t.frame+2], 0
 		inc	word_E8FC
 		push	1
 		call	frame_delay
@@ -1782,8 +1782,8 @@ loc_AAD7:
 loc_AAF0:
 		cmp	byte_D6C2, 0
 		jz	short loc_AABA
-		les	bx, dword_F3DC
-		mov	al, es:[bx+23h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.main_retval]
 		mov	[bp+var_1], al
 		mov	word_E900, 0
 		call	sub_9CA2
@@ -3472,8 +3472,8 @@ sub_BAFC	proc far
 		push	90h
 		call	sub_AB4D
 		add	sp, 0Ah
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+0Bh], 5
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.stage], 5
 		jnz	short loc_BBBE
 		call	grcg_setcolor pascal, GC_RMW, 12
 		push	18h
@@ -3532,8 +3532,8 @@ sub_BBC0	proc far
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		les	bx, dword_F3DC
-		cmp	byte ptr es:[bx+0Bh], 5
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.stage], 5
 		jz	short loc_BC61
 		cmp	byte_F4A6, 0
 		jz	short loc_BC3A
@@ -3601,8 +3601,8 @@ loc_BCBA:
 		call	_pi_slot_put stdcall, 24, 136, 0
 		call	_pi_slot_put stdcall, 224, 224, 1
 		call	_pi_slot_put stdcall, 440, 136, 2
-		les	bx, dword_F3DC
-		mov	byte ptr es:[bx+26h], 1
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.shottype], 1
 		push	88h
 		push	18h
 		call	sub_B9BB
@@ -3895,7 +3895,7 @@ loc_BF7A:
 		jz	short loc_BF95
 
 loc_BF88:
-		les	bx, dword_F3DC
+		les	bx, mikoconfig
 		mov	al, byte_DD20
 		mov	es:[bx+26h], al
 		jmp	short loc_BFB7
@@ -5339,7 +5339,7 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
-dword_F3DC	dd ?
+mikoconfig	dd ?
 		db    ?	;
 byte_F3E1	db ?
 byte_F3E2	db ?

@@ -220,7 +220,7 @@ loc_486:
 		mov	word ptr [bp+var_8], 0
 		push	offset aVVVVBavcvivVnv ; "ÇªÇÍÇ≈ÇÕÅAÇÊÇÎÇµÇ≠Ç®äËÇ¢ÇµÇ‹Ç∑\n\n"
 		call	dos_puts2
-		mov	[bp+var_4], 0Bh
+		mov	[bp+var_4], mikoconfig_t.stage
 		jmp	short loc_4A8
 ; ---------------------------------------------------------------------------
 
@@ -231,7 +231,7 @@ loc_49B:
 		inc	[bp+var_4]
 
 loc_4A8:
-		cmp	[bp+var_4], 30h
+		cmp	[bp+var_4], size mikoconfig_t
 		jl	short loc_49B
 		push	di
 		call	sub_367

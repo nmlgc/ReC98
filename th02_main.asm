@@ -1928,8 +1928,8 @@ loc_B17E:
 ; ---------------------------------------------------------------------------
 
 loc_B183:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+18h], 1
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.bgm_mode], 1
 		jnz	short loc_B19A
 		call	_snd_pmd_resident
 		mov	_snd_midi_active, 0
@@ -1937,8 +1937,8 @@ loc_B183:
 ; ---------------------------------------------------------------------------
 
 loc_B19A:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+18h], 2
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.bgm_mode], 2
 		jnz	short loc_B1BA
 		call	_snd_pmd_resident
 		call	_snd_mmd_resident
@@ -1949,8 +1949,8 @@ loc_B1B5:
 		call	_snd_determine_mode
 
 loc_B1BA:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_B1CA
 		nopcall	sub_C13E
 
@@ -1958,13 +1958,13 @@ loc_B1CA:
 		call	sub_B2AB
 
 loc_B1CD:
-		les	bx, dword_2026C
-		mov	eax, es:[bx+1Ch]
+		les	bx, mikoconfig
+		mov	eax, es:[bx+mikoconfig_t.frame]
 		mov	random_seed, eax
 		call	sub_B3DA
 		nopcall	sub_E16D
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B237
 		mov	al, stage_id
 		cbw
@@ -2013,8 +2013,8 @@ loc_B24F:
 ; ---------------------------------------------------------------------------
 
 loc_B263:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B287
 		call	sub_C31F
 		or	ax, ax
@@ -2024,9 +2024,9 @@ loc_B263:
 ; ---------------------------------------------------------------------------
 
 loc_B27A:
-		les	bx, dword_2026C
+		les	bx, mikoconfig
 		mov	al, stage_id
-		mov	es:[bx+0Bh], al
+		mov	es:[bx+mikoconfig_t.stage], al
 		jmp	short loc_B290
 ; ---------------------------------------------------------------------------
 
@@ -2082,21 +2082,21 @@ loc_B2F5:
 		jl	short loc_B2EE
 		call	sub_DC38
 		call	sub_E178
-		les	bx, dword_2026C
-		mov	al, es:[bx+24h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	byte_2066C, al
 		setfarfp	farfp_1F4A4, sub_BCB1
-		cmp	word ptr es:[bx+12h], 0
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_B34C
-		cmp	word ptr es:[bx+12h], 9
+		cmp	es:[bx+mikoconfig_t.continues_used], 9
 		jb	short loc_B32B
 		mov	ax, 9
 		jmp	short loc_B333
 ; ---------------------------------------------------------------------------
 
 loc_B32B:
-		les	bx, dword_2026C
-		mov	ax, es:[bx+12h]
+		les	bx, mikoconfig
+		mov	ax, es:[bx+mikoconfig_t.continues_used]
 
 loc_B333:
 		movzx	eax, ax
@@ -2243,8 +2243,8 @@ var_C		= byte ptr -0Ch
 		mov	byte_2061A, 0
 		mov	byte_1F466, 0
 		mov	byte_2066D, 1
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B4BB
 		mov	bgm_show_timer, 1
 		mov	al, stage_id
@@ -2459,8 +2459,8 @@ loc_B832:
 
 loc_B88A:
 		call	sub_4344
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B8AF
 		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
@@ -2499,8 +2499,8 @@ loc_B8B5:
 		push	ds
 		push	offset aMiko_k_mpn ; "miko_k.mpn"
 		call	sub_F4D1
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B922
 		push	ss
 		lea	ax, [bp+var_C]
@@ -2907,8 +2907,8 @@ loc_BDA2:
 		mov	bx, ax
 		mov	ss:[bx], dx
 		call	_input_sense
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_BDCC
 		nopcall	sub_C1E4
 
@@ -3047,8 +3047,8 @@ loc_BEED:
 		mov	al, byte_20618
 		out	0A6h, al
 		call	farfp_1F494
-		les	bx, dword_2026C
-		inc	dword ptr es:[bx+1Ch]
+		les	bx, mikoconfig
+		inc	es:[bx+mikoconfig_t.frame]
 		inc	dword_20612
 		call	farfp_1F48C
 		or	ax, ax
@@ -3219,8 +3219,8 @@ sub_C05D	proc far
 		mov	bp, sp
 		cmp	dword_20612, 0A0h
 		jnz	short loc_C0A6
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_C09A
 		call	text_putsa pascal, (4 shl 16) + 12, ds, offset aEMPTY, TX_WHITE
 		call	text_putsa pascal, (4 shl 16) + 13, ds, offset aEMPTY, TX_WHITE
@@ -3313,42 +3313,42 @@ sub_C13E	proc far
 		mov	word ptr dword_1F4A8, 0
 		mov	byte_1E516, 50h	; 'P'
 		mov	word_20272, 0Ch
-		les	bx, dword_2026C
-		mov	dword ptr es:[bx+1Ch], 12h
-		cmp	byte ptr es:[bx+27h], 1
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.frame], 12h
+		cmp	es:[bx+mikoconfig_t.demo_num], 1
 		jnz	short loc_C18A
 		mov	stage_id, 3
 		push	ds
 		push	offset aDemo1_rec ; "DEMO1.REC"
 		call	file_ropen
-		les	bx, dword_2026C
-		mov	byte ptr es:[bx+26h], 0
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.shottype], 0
 		jmp	short loc_C1D0
 ; ---------------------------------------------------------------------------
 
 loc_C18A:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 2
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 2
 		jnz	short loc_C1AE
 		mov	stage_id, 2
 		push	ds
 		push	offset aDemo2_rec ; "DEMO2.REC"
 		call	file_ropen
-		les	bx, dword_2026C
-		mov	byte ptr es:[bx+26h], 2
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.shottype], 2
 		jmp	short loc_C1D0
 ; ---------------------------------------------------------------------------
 
 loc_C1AE:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+27h], 3
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.demo_num], 3
 		jnz	short loc_C1D0
 		mov	stage_id, 1
 		push	ds
 		push	offset aDemo3_rec ; "DEMO3.REC"
 		call	file_ropen
-		les	bx, dword_2026C
-		mov	byte ptr es:[bx+26h], 1
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.shottype], 1
 
 loc_C1D0:
 		pushd	[dword_1F4A8]
@@ -3482,18 +3482,18 @@ var_2		= word ptr -2
 		cmp	[bp+var_2], 0
 		jz	short loc_C2F0
 		mov	ax, [bp+var_2]
-		mov	word ptr dword_2026C+2,	ax
-		mov	word ptr dword_2026C, 0
-		les	bx, dword_2026C
-		mov	al, es:[bx+0Bh]
+		mov	word ptr mikoconfig+2,	ax
+		mov	word ptr mikoconfig, 0
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.stage]
 		mov	stage_id, al
-		mov	al, es:[bx+1Ah]
+		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	byte_1E59C, al
-		mov	al, es:[bx+19h]
+		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	byte_1E59D, al
-		mov	al, es:[bx+16h]
+		mov	al, es:[bx+mikoconfig_t.rank]
 		mov	byte_1E364, al
-		mov	al, es:[bx+17h]
+		mov	al, es:[bx+mikoconfig_t.start_power]
 		mov	byte_1E516, al
 		cmp	byte_1E516, 0
 		jnz	short loc_C2DF
@@ -3618,8 +3618,8 @@ loc_C400:
 		call	sub_FBE9
 		call	sub_1C9FE
 		call	sub_FBE9
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 3
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 3
 		jnb	loc_C4F5
 		mov	al, byte_1E364
 		cbw
@@ -3629,9 +3629,9 @@ loc_C400:
 		push	0E500E1h
 		call	sub_C2F4
 		call	gaiji_putsa pascal, (18 shl 16) + 20, ds, offset gCREDIT, TX_GREEN
-		les	bx, dword_2026C
+		les	bx, mikoconfig
 		mov	ax, 0A3h ; '£'
-		sub	ax, es:[bx+12h]
+		sub	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	si, ax
 		call	gaiji_putca pascal, (32 shl 16) + 20, ax, TX_GREEN
 		mov	di, 1
@@ -3691,8 +3691,8 @@ loc_C4F5:
 		xor	di, di
 
 loc_C4F7:
-		les	bx, dword_2026C
-		mov	eax, es:[bx+2Ch]
+		les	bx, mikoconfig
+		mov	eax, es:[bx+mikoconfig_t.score_highest]
 		cmp	eax, dword_1E598
 		jnb	short loc_C50D
 		mov	eax, dword_1E598
@@ -3700,18 +3700,18 @@ loc_C4F7:
 ; ---------------------------------------------------------------------------
 
 loc_C50D:
-		les	bx, dword_2026C
-		mov	eax, es:[bx+2Ch]
+		les	bx, mikoconfig
+		mov	eax, es:[bx+mikoconfig_t.score_highest]
 
 loc_C516:
-		les	bx, dword_2026C
-		mov	es:[bx+2Ch], eax
-		mov	al, es:[bx+1Ah]
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.score_highest], eax
+		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	byte_1E59C, al
-		mov	al, es:[bx+19h]
+		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	byte_1E59D, al
 		mov	byte_1E516, 1
-		inc	word ptr es:[bx+12h]
+		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
 		mov	al, stage_id
 		cbw
@@ -3798,8 +3798,8 @@ loc_C5C2:
 		mov	word_205DA, 0FFFFh
 		mov	byte_20610, 0
 		mov	byte_20611, 0
-		les	bx, dword_2026C
-		mov	al, es:[bx+26h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_C634
@@ -7398,9 +7398,9 @@ sub_E012	proc near
 		pushd	[dword_1E598]
 		call	sub_DC55
 		push	6
-		les	bx, dword_2026C
+		les	bx, mikoconfig
 		assume es:nothing
-		push	word ptr es:[bx+12h]
+		push	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DCA5
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
 		push	4
@@ -7587,8 +7587,8 @@ sub_E178	proc near
 		push	438h
 		call	file_read
 		call	file_close
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E1D2
 		call	_pi_slot_load c, 1, offset aBomb1_pi, ds
 		mov	fp_219CA, offset sub_E618
@@ -7597,8 +7597,8 @@ sub_E178	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E1D2:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 2
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	short loc_E1F3
 		call	_pi_slot_load c, 1, offset aBomb3_pi, ds
 		mov	fp_219CA, offset sub_E89C
@@ -7607,8 +7607,8 @@ loc_E1D2:
 ; ---------------------------------------------------------------------------
 
 loc_E1F3:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 1
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E248
 		call	_pi_slot_load c, 1, offset aBomb2_pi, ds
 		push	ds
@@ -7642,8 +7642,8 @@ sub_E24A	proc near
 		push	bp
 		mov	bp, sp
 		freePISlotLarge	1
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 1
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E26F
 		push	word ptr dword_218BA+2
 		call	hmem_free
@@ -7783,8 +7783,8 @@ loc_E38A:
 		mov	byte_22D48, 1
 
 loc_E39D:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E3BA
 		cmp	word_218B6, 88h
 		jz	short loc_E3E5
@@ -7794,8 +7794,8 @@ loc_E39D:
 ; ---------------------------------------------------------------------------
 
 loc_E3BA:
-		les	bx, dword_2026C
-		cmp	byte ptr es:[bx+26h], 1
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E3D7
 		cmp	word_218B6, 0A4h
 		jz	short loc_E3E5
@@ -9354,9 +9354,9 @@ loc_F13B:
 		jnz	short loc_F198
 		dec	byte_1E59C
 		call	sub_DF76
-		les	bx, dword_2026C
+		les	bx, mikoconfig
 		assume es:nothing
-		mov	al, es:[bx+19h]
+		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	byte_1E59D, al
 		cmp	byte_1E59C, 0
 		jnz	short loc_F160
@@ -10525,8 +10525,8 @@ loc_FCFB:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, dword_2026C
-		mov	al, es:[bx+19h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	ah, 0
 		mov	dx, 4
 		sub	dx, ax
@@ -10539,8 +10539,8 @@ loc_FCFB:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, dword_2026C
-		mov	al, es:[bx+1Ah]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	ah, 0
 		mov	dx, 4
 		sub	dx, ax
@@ -17115,8 +17115,8 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		push	1
 		call	sub_1310B
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	loc_13304
 		xor	si, si
 		jmp	short loc_13248
@@ -17134,8 +17134,8 @@ loc_13238:
 loc_13248:
 		cmp	si, 3
 		jl	short loc_13238
-		les	bx, dword_2026C
-		mov	ax, es:[bx+12h]
+		les	bx, mikoconfig
+		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	bx, 0Ah
 		xor	dx, dx
 		div	bx
@@ -17166,8 +17166,8 @@ loc_13248:
 		mov	[bx+6013h], al
 
 loc_1329D:
-		les	bx, dword_2026C
-		mov	ax, es:[bx+12h]
+		les	bx, mikoconfig
+		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	bx, 0Ah
 		xor	dx, dx
 		div	bx
@@ -17286,8 +17286,8 @@ var_16		= byte ptr -16h
 		call	sub_13055
 		push	69h ; 'i'
 		call	sub_13055
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_13390
 		xor	si, si
 		jmp	short loc_13381
@@ -17369,8 +17369,8 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		mov	eax, dword_1ED42
 		mov	[bp+var_A], eax
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_133F6
 		xor	si, si
 		jmp	short loc_133EF
@@ -23647,13 +23647,13 @@ sub_16A21	proc far
 		call	sub_1310B
 		call	sub_FE12
 		call	sub_F4BC
-		les	bx, dword_2026C
-		mov	byte ptr es:[bx+0Bh], 7Fh
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.stage], 7Fh
 		mov	eax, dword_1E598
 		imul	eax, 0Ah
-		movzx	edx, word ptr es:[bx+12h]
+		movzx	edx, es:[bx+mikoconfig_t.continues_used]
 		add	eax, edx
-		mov	es:[bx+0Eh], eax
+		mov	es:[bx+mikoconfig_t.score], eax
 		call	sub_1CDD6
 		push	ds
 		push	offset aMaine	; "maine"
@@ -28903,8 +28903,8 @@ sub_19949	proc near
 		cbw
 		imul	ax, 14h
 		mov	cx, ax
-		les	bx, dword_2026C
-		mov	ax, es:[bx+12h]
+		les	bx, mikoconfig
+		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		imul	ax, 3
 		mov	dx, 0Ah
 		sub	dx, ax
@@ -28938,8 +28938,8 @@ loc_19997:
 
 loc_199A4:
 		add	cx, word_1E586
-		les	bx, dword_2026C
-		mov	es:[bx+28h], cx
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.skill], cx
 		pop	si
 		pop	bp
 		retn
@@ -29145,8 +29145,8 @@ sub_19C1D	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		les	bx, dword_2026C
-		mov	eax, es:[bx+2Ch]
+		les	bx, mikoconfig
+		mov	eax, es:[bx+mikoconfig_t.score_highest]
 		cmp	eax, dword_1E598
 		jnb	short loc_19C41
 		mov	eax, dword_1E598
@@ -29154,22 +29154,22 @@ sub_19C1D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_19C41:
-		les	bx, dword_2026C
-		mov	eax, es:[bx+2Ch]
+		les	bx, mikoconfig
+		mov	eax, es:[bx+mikoconfig_t.score_highest]
 
 loc_19C4A:
-		les	bx, dword_2026C
-		mov	es:[bx+2Ch], eax
+		les	bx, mikoconfig
+		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	eax, dword_1E598
 		imul	eax, 0Ah
-		movzx	edx, word ptr es:[bx+12h]
+		movzx	edx, es:[bx+mikoconfig_t.continues_used]
 		add	eax, edx
-		mov	es:[bx+0Eh], eax
-		mov	byte ptr es:[bx+0Bh], 7Fh
+		mov	es:[bx+mikoconfig_t.score], eax
+		mov	es:[bx+mikoconfig_t.stage], 7Fh
 		mov	al, byte_1E59C
-		mov	es:[bx+15h], al
+		mov	es:[bx+mikoconfig_t.rem_lives], al
 		mov	al, byte_1E59D
-		mov	es:[bx+14h], al
+		mov	es:[bx+mikoconfig_t.rem_bombs], al
 		call	sub_19949
 		push	ds
 		push	offset aMaine_0	; "maine"
@@ -29235,8 +29235,8 @@ sub_19C8D	proc near
 		call	super_put_rect
 		call	sub_12DE0
 		call	sub_133B8
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_19D48
 		kajacall	KAJA_SONG_FADE, 10
 		pop	cx
@@ -29329,8 +29329,8 @@ sub_19D96	proc far
 		call	super_put_rect
 		call	sub_13439
 		add	dword_1E598, 186A0h
-		les	bx, dword_2026C
-		cmp	word ptr es:[bx+12h], 0
+		les	bx, mikoconfig
+		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_19E2A
 		call	sub_1CD8E
 
@@ -34431,8 +34431,8 @@ loc_1CA1D:
 		mov	eax, dword_1E598
 		imul	eax, 0Ah
 		mov	dword_1E598, eax
-		les	bx, dword_2026C
-		movzx	eax, word ptr es:[bx+12h]
+		les	bx, mikoconfig
+		movzx	eax, es:[bx+mikoconfig_t.continues_used]
 		add	dword_1E598, eax
 		mov	eax, dword_25324
 		cmp	eax, dword_1E598
@@ -34534,8 +34534,8 @@ loc_1CB0C:
 		push	ax		; datep
 		call	_getdate
 		add	sp, 4
-		les	bx, dword_2026C
-		mov	al, es:[bx+26h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	bx, [bp+var_2]
 		mov	[bx+7936h], al
 		mov	[bp+var_6], 0
@@ -34836,8 +34836,8 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		mov	al, byte_1E364
 		mov	[bp+var_7], al
-		les	bx, dword_2026C
-		mov	al, es:[bx+26h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	byte_1E364, al
 		call	sub_1C6C7
 		mov	al, byte_1E364
@@ -34877,8 +34877,8 @@ var_4		= byte ptr -4
 		mov	[bp+var_5], al
 		mov	byte_1E364, 3
 		call	sub_1C6C7
-		les	bx, dword_2026C
-		mov	al, es:[bx+26h]
+		les	bx, mikoconfig
+		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	ah, 0
 		lea	dx, [bp+var_4]
 		add	ax, dx
@@ -37516,7 +37516,7 @@ byte_20169	db ?
 		dd    ?	;
 byte_2026A	db ?
 		db ?
-dword_2026C	dd ?
+mikoconfig	dd ?
 		db    ?	;
 		db    ?	;
 word_20272	dw ?
