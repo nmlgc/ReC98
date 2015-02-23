@@ -7288,7 +7288,7 @@ sub_E0A4	endp
 sub_E0CE	proc far
 		push	bp
 		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_E0DD
 		mov	ax, 0FFFFh
 		pop	bp
@@ -7297,7 +7297,7 @@ sub_E0CE	proc far
 
 loc_E0DD:
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_bgm_mode, SND_BGM_MIDI
+		cmp	_snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_E0EA
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle

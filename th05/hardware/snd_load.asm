@@ -21,13 +21,13 @@ snd_load	proc
 	push	di
 	mov	dx, ds
 	mov	es, dx
-	mov	di, offset snd_load_fn
+	mov	di, offset _snd_load_fn
 	lds	si, [bp+@@fn]
 	mov	bp, [bp+@@func]
 	mov	cx, SND_LOAD_FN_LEN
 	rep movsb
 	mov	ds, dx
-	mov	di, offset snd_load_fn
+	mov	di, offset _snd_load_fn
 	dec	cx
 	xor	ax, ax
 	repne scasb
@@ -36,22 +36,22 @@ snd_load	proc
 	inc	di
 	cmp	bp, SND_LOAD_SE
 	jnz	short @@song
-	cmp	snd_se_mode, SND_SE_OFF
+	cmp	_snd_se_mode, SND_SE_OFF
 	jz	short @@ret
 	xor	bx, bx
-	cmp	snd_se_mode, SND_SE_BEEP
+	cmp	_snd_se_mode, SND_SE_BEEP
 	jnz	short @@set_ext
 	mov	dword ptr [di], 'sfe'
 	call	bgm_finish
 	call	bgm_init pascal, 2048
-	call	bgm_read_sdata pascal, ds, offset snd_load_fn
+	call	bgm_read_sdata pascal, ds, offset _snd_load_fn
 	jmp	short @@ret
 
 @@song:
-	cmp	snd_bgm_mode, SND_BGM_OFF
+	cmp	_snd_bgm_mode, SND_BGM_OFF
 	jz	short @@ret
 	kajacall	KAJA_SONG_STOP
-	movzx	bx, snd_bgm_mode
+	movzx	bx, _snd_bgm_mode
 	shl	bx, 2
 
 @@set_ext:
@@ -59,7 +59,7 @@ snd_load	proc
 
 @@open:
 	mov	[di], eax
-	mov	dx, offset snd_load_fn
+	mov	dx, offset _snd_load_fn
 	mov	ax, 3D00h
 	int	21h
 	jnb	short @@which_driver?
@@ -73,7 +73,7 @@ snd_load	proc
 	mov	ax, bp
 	cmp	ah, KAJA_GET_SONG_ADDRESS
 	jnz	short @@PMD
-	cmp	snd_bgm_mode, SND_BGM_MIDI
+	cmp	_snd_bgm_mode, SND_BGM_MIDI
 	jnz	short @@PMD
 	int	61h
 	jmp	short @@read

@@ -4,10 +4,10 @@ snd_kaja_func	proc
 
 	push	bp
 	mov	bp, sp
-	cmp	snd_bgm_mode, SND_BGM_OFF
+	cmp	_snd_bgm_mode, SND_BGM_OFF
 	jz	short @@ret
 	mov	ax, [bp+@@ax]
-	cmp	snd_bgm_mode, SND_BGM_MIDI
+	cmp	_snd_bgm_mode, SND_BGM_MIDI
 	jz	short @@midi
 	int	60h
 	jmp	short @@ret

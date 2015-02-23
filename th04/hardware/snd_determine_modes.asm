@@ -23,22 +23,22 @@ snd_determine_modes	proc
 	int	60h
 	cmp	al, -1
 	jne	short @@got_PMD
-	mov	snd_bgm_mode, SND_BGM_OFF
+	mov	_snd_bgm_mode, SND_BGM_OFF
 	jmp	short @@FM_SE_requested?
 
 @@got_PMD:
 	or	al, al	; 1 == running a 26 board, 2 == running a 86 board
 	jne	short @@got_PMD86
-	mov	snd_bgm_mode, SND_BGM_FM26
+	mov	_snd_bgm_mode, SND_BGM_FM26
 	jmp	short @@FM_SE_requested?
 
 @@got_PMD86:
-	mov	snd_bgm_mode, SND_BGM_FM86
+	mov	_snd_bgm_mode, SND_BGM_FM86
 
 @@FM_SE_requested?:
 	cmp	di, SND_SE_FM
 	jne	short @@Beep_SE_requested?
-	cmp	snd_bgm_mode, SND_BGM_OFF
+	cmp	_snd_bgm_mode, SND_BGM_OFF
 	je	short @@FM_SE_requested_but_got_no_board
 	mov	ax, SND_SE_FM
 	jmp	short @@decide_SE_if_FM_requested
@@ -47,42 +47,42 @@ snd_determine_modes	proc
 	xor	ax, ax
 
 @@decide_SE_if_FM_requested:
-	mov	snd_se_mode, al
+	mov	_snd_se_mode, al
 	jmp	short @@do_we_even_want_BGM?
 
 @@Beep_SE_requested?:
 	cmp	di, SND_SE_BEEP
 	jne	short @@no_SE_requested
-	mov	snd_se_mode, SND_SE_BEEP
+	mov	_snd_se_mode, SND_SE_BEEP
 	jmp	short @@do_we_even_want_BGM?
 
 @@no_SE_requested:
-	mov	snd_se_mode, SND_SE_OFF
+	mov	_snd_se_mode, SND_SE_OFF
 
 ; Since we tentatively set snd_bgm_mode when checking the driver above...
 @@do_we_even_want_BGM?:
 	or	si, si
 	jne	short @@MIDI_requested?
-	mov	snd_bgm_mode, SND_BGM_OFF
+	mov	_snd_bgm_mode, SND_BGM_OFF
 	jmp	short @@ret
 
 @@MIDI_requested?:
 	cmp	si, SND_BGM_MIDI
 	jnz	short @@FM26_requested?
-	cmp	snd_midi_possible, 0
+	cmp	_snd_midi_possible, 0
 	jz	short @@FM26_requested?
-	mov	snd_bgm_mode, SND_BGM_MIDI
+	mov	_snd_bgm_mode, SND_BGM_MIDI
 	jmp	short @@ret
 
 @@FM26_requested?:
 	cmp	si, SND_BGM_FM26
 	jnz	short @@ret
-	cmp	snd_bgm_mode, SND_BGM_OFF
+	cmp	_snd_bgm_mode, SND_BGM_OFF
 	jz	short @@ret
-	mov	snd_bgm_mode, SND_BGM_FM26
+	mov	_snd_bgm_mode, SND_BGM_FM26
 
 @@ret:
-	mov	al, snd_bgm_mode
+	mov	al, _snd_bgm_mode
 	mov	ah, 0
 	pop	di
 	pop	si

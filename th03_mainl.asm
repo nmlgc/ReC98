@@ -1074,7 +1074,7 @@ _envp		= dword	ptr  0Ch
 		push	offset aCOul	; "–²Žž‹ó1.dat"
 		call	sub_CEE0
 		call	respal_exist
-		mov	snd_midi_active, 0
+		mov	_snd_midi_active, 0
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_9DAD
@@ -1086,7 +1086,7 @@ loc_9DAD:
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
-		call	_snd_se_reset
+		call	snd_se_reset
 		call	sub_D784
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+35h], 0
@@ -2726,9 +2726,9 @@ loc_ABFE:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		call	_snd_se_reset
-		call	_snd_se_play pascal, [bp+var_2]
-		call	_snd_se_update
+		call	snd_se_reset
+		call	snd_se_play pascal, [bp+var_2]
+		call	snd_se_update
 		jmp	short loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -4943,7 +4943,7 @@ arg_2		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_BCB9
 		mov	ax, word_10BB2
 		cmp	ax, [bp+arg_0]
@@ -7330,7 +7330,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_D412
 		push	[bp+arg_0]
 		nopcall	frame_delay
@@ -7340,7 +7340,7 @@ arg_2		= word ptr  8
 
 loc_D412:
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_midi_active, 1
+		cmp	_snd_midi_active, 1
 		jz	short loc_D41F
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -7372,7 +7372,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_D443
 		push	[bp+arg_0]
 		nopcall	sub_D47A
@@ -7382,7 +7382,7 @@ arg_2		= word ptr  8
 
 loc_D443:
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_midi_active, 1
+		cmp	_snd_midi_active, 1
 		jz	short loc_D450
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -7871,7 +7871,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-snd_active	db 0
+_snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include th03/hardware/snd_se_state[data].asm

@@ -9394,7 +9394,7 @@ sub_F212	endp
 sub_F23C	proc far
 		push	bp
 		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_F24B
 		mov	ax, 0FFFFh
 		pop	bp
@@ -9403,7 +9403,7 @@ sub_F23C	proc far
 
 loc_F24B:
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_bgm_mode, SND_BGM_MIDI
+		cmp	_snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_F258
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle

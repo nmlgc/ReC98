@@ -1,4 +1,5 @@
-snd_se_priorities	db   0
+public _snd_se_priorities
+_snd_se_priorities	db   0
 	db   0
 	db  32
 	db  16
@@ -31,7 +32,8 @@ snd_se_priorities	db   0
 	db   0
 	db   0
 	db   0
-snd_se_priority_frames	db   0
+public _snd_se_priority_frames
+_snd_se_priority_frames	db   0
 	db   0
 	db  36
 	db  16

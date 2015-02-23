@@ -1,5 +1,5 @@
-; int __cdecl snd_mmd_resident(void)
-snd_mmd_resident	proc
+; int DEFCONV snd_mmd_resident(void)
+proc_defconv snd_mmd_resident
 	xor	ax, ax
 	mov	es, ax
 	les	bx, dword ptr es:[61h * 4]
@@ -10,19 +10,19 @@ snd_mmd_resident	proc
 	jnz	short @@nope
 	cmp	byte ptr es:[bx+4], 'D'
 	jnz	short @@nope
-	mov	snd_interrupt_if_midi, 61h
+	mov	_snd_interrupt_if_midi, 61h
 if GAME le 3
-	mov	snd_midi_active, 1
+	mov	_snd_midi_active, 1
 endif
-	mov	snd_midi_possible, 1
+	mov	_snd_midi_possible, 1
 	mov	ax, 1
 	ret
 
 @@nope:
 if GAME le 3
-	mov	snd_midi_possible, 0
+	mov	_snd_midi_possible, 0
 endif
 	xor	ax, ax
 	ret
-snd_mmd_resident	endp
+endp_defconv
 	nop	; word alignment

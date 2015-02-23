@@ -920,7 +920,7 @@ sub_9AD4	proc near
 		call	frame_delay
 		push	1
 		call	palette_white_out
-		call	snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		call	sub_9A7E
@@ -973,7 +973,7 @@ sub_9B64	proc near
 		push	ds
 		push	offset aEnd1_txt ; "end1.txt"
 		call	sub_95A3
-		call	snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
@@ -1503,7 +1503,7 @@ sub_A09D	proc near
 		push	ds
 		push	offset aEnd2_txt ; "end2.txt"
 		call	sub_95A3
-		call	snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aEnd1_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 		mov	PaletteTone, 0
@@ -3015,12 +3015,12 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	snd_pmd_resident
-		call	snd_mmd_resident
+		call	_snd_pmd_resident
+		call	_snd_mmd_resident
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 0
 		jnz	short loc_B161
-		mov	snd_midi_active, 0
+		mov	_snd_midi_active, 0
 		jmp	short loc_B189
 ; ---------------------------------------------------------------------------
 
@@ -3028,7 +3028,7 @@ loc_B161:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 1
 		jnz	short loc_B173
-		mov	snd_midi_active, 0
+		mov	_snd_midi_active, 0
 		jmp	short loc_B184
 ; ---------------------------------------------------------------------------
 
@@ -3036,11 +3036,11 @@ loc_B173:
 		les	bx, dword_FB02
 		cmp	byte ptr es:[bx+18h], 2
 		jnz	short loc_B189
-		mov	al, snd_midi_possible
-		mov	snd_midi_active, al
+		mov	al, _snd_midi_possible
+		mov	_snd_midi_active, al
 
 loc_B184:
-		call	snd_determine_mode
+		call	_snd_determine_mode
 
 loc_B189:
 		mov	dx, 0A6h ; '¦'
@@ -3559,7 +3559,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_B868
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -3571,7 +3571,7 @@ loc_B868:
 		push	1
 		nopcall	frame_delay
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_midi_active, 1
+		cmp	_snd_midi_active, 1
 		jz	short loc_B87C
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -5076,7 +5076,7 @@ byte_D70B	db 3
 byte_D70C	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-snd_active	db 0
+_snd_active	db 0
 		db 0
 aUmx		db '“Œ•û••–‚.˜^',0
 byte_D722	db 1

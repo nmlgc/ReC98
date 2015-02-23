@@ -1,9 +1,9 @@
-; int __cdecl snd_pmd_resident(void)
-snd_pmd_resident	proc
-	mov	snd_interrupt_if_midi, 60h
-	mov	snd_midi_active, 0
-	mov	snd_fm_possible, 0
-	mov	snd_midi_possible, 0
+; int DEFCONV snd_pmd_resident(void)
+proc_defconv snd_pmd_resident
+	mov	_snd_interrupt_if_midi, 60h
+	mov	_snd_midi_active, 0
+	mov	_snd_fm_possible, 0
+	mov	_snd_midi_possible, 0
 	xor	ax, ax
 	mov	es, ax
 	assume es:nothing
@@ -20,5 +20,5 @@ snd_pmd_resident	proc
 @@nope:
 	xor	ax, ax
 	ret
-snd_pmd_resident	endp
+endp_defconv
 	nop	; word alignment

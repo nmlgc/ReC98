@@ -1,10 +1,10 @@
 ; int __cdecl snd_pmd_resident(void)
 snd_pmd_resident	proc
 	xor	ax, ax
-	mov	snd_interrupt_if_midi, 60h
-	mov	snd_midi_possible, al
-	mov	snd_bgm_mode, al
-	mov	snd_se_mode, al
+	mov	_snd_interrupt_if_midi, 60h
+	mov	_snd_midi_possible, al
+	mov	_snd_bgm_mode, al
+	mov	_snd_se_mode, al
 	mov	es, ax
 	assume es:nothing
 	les	bx, dword ptr es:[60h * 4]

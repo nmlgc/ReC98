@@ -6309,7 +6309,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_DD96
 		push	[bp+arg_0]
 		nopcall	frame_delay
@@ -6319,7 +6319,7 @@ arg_2		= word ptr  8
 
 loc_DD96:
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_bgm_mode, SND_BGM_MIDI
+		cmp	_snd_bgm_mode, SND_BGM_MIDI
 		jz	short loc_DDA3
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle

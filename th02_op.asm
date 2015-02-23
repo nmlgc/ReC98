@@ -177,7 +177,7 @@ loc_9C0E:
 		mov	al, [bp+var_8]
 		mov	byte_DC34, al
 		mov	al, [bp+var_7]
-		mov	snd_bgm_mode, al
+		mov	_snd_bgm_mode, al
 		mov	al, [bp+var_6]
 		mov	byte_F3E2, al
 		mov	al, [bp+var_5]
@@ -195,26 +195,26 @@ loc_9C0E:
 		mov	al, [bp+var_1]
 		mov	es:[bx+0Ch], al
 		call	file_close
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_9C80
-		mov	snd_fm_possible, 0
-		mov	snd_active, 0
+		mov	_snd_fm_possible, 0
+		mov	_snd_active, 0
 		jmp	short loc_9C99
 ; ---------------------------------------------------------------------------
 
 loc_9C80:
-		cmp	snd_bgm_mode, SND_BGM_FM
+		cmp	_snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_9C8E
-		mov	snd_midi_active, 0
+		mov	_snd_midi_active, 0
 		jmp	short loc_9C94
 ; ---------------------------------------------------------------------------
 
 loc_9C8E:
-		mov	al, snd_midi_possible
-		mov	snd_midi_active, al
+		mov	al, _snd_midi_possible
+		mov	_snd_midi_active, al
 
 loc_9C94:
-		call	snd_determine_mode
+		call	_snd_determine_mode
 
 loc_9C99:
 		xor	ax, ax
@@ -250,7 +250,7 @@ var_2		= word ptr -2
 		mov	[bp+var_5], 0
 		mov	al, byte_DC34
 		mov	[bp+var_C], al
-		mov	al, snd_bgm_mode
+		mov	al, _snd_bgm_mode
 		mov	[bp+var_B], al
 		mov	al, byte_F3E2
 		mov	[bp+var_A], al
@@ -337,7 +337,7 @@ var_2		= word ptr -2
 		mov	[bp+var_4], dx
 		mov	[bp+var_6], ax
 		call	sub_9D0A
-		call	snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
+		call	_snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
 		push	177h
 		push	1
 		call	sub_9D1D
@@ -408,19 +408,19 @@ loc_9E39:
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_9E97
 		mov	[bp+var_2], 0
-		cmp	snd_midi_possible, 0
+		cmp	_snd_midi_possible, 0
 		jz	short loc_9E7D
-		mov	al, snd_midi_active
+		mov	al, _snd_midi_active
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	snd_midi_active, 1
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		mov	_snd_midi_active, 1
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 
 loc_9E7D:
-		mov	snd_midi_active, 0
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		mov	_snd_midi_active, 0
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	al, byte ptr [bp+var_2]
-		mov	snd_midi_active, al
+		mov	_snd_midi_active, al
 
 loc_9E97:
 		push	12h
@@ -502,7 +502,7 @@ sub_9F37	proc near
 		mov	es:[bx+1Ah], al
 		mov	al, byte_F3E2
 		mov	es:[bx+19h], al
-		mov	al, snd_bgm_mode
+		mov	al, _snd_bgm_mode
 		mov	es:[bx+18h], al
 		mov	byte ptr es:[bx+17h], 0
 		mov	word ptr es:[bx+10h], 0
@@ -579,7 +579,7 @@ sub_A027	proc far
 		mov	byte ptr es:[bx+14h], 3
 		mov	byte ptr es:[bx+1Ah], 2
 		mov	byte ptr es:[bx+19h], 3
-		mov	al, snd_bgm_mode
+		mov	al, _snd_bgm_mode
 		mov	es:[bx+18h], al
 		mov	byte ptr es:[bx+16h], 1
 		mov	word ptr es:[bx+12h], 0
@@ -1185,7 +1185,7 @@ loc_A568:
 		push	47
 		push	17
 		push	ds
-		mov	al, snd_bgm_mode
+		mov	al, _snd_bgm_mode
 		cbw
 		imul	ax, 5
 		add	ax, offset gOFF
@@ -1201,7 +1201,7 @@ loc_A568:
 		push	114h
 		push	10h
 		push	ds
-		mov	al, snd_bgm_mode
+		mov	al, _snd_bgm_mode
 		cbw
 		imul	ax, 5
 		add	ax, 145h
@@ -1341,35 +1341,35 @@ sub_A510	endp
 sub_A6EF	proc near
 		push	bp
 		mov	bp, sp
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jnz	short loc_A70E
-		mov	snd_fm_possible, 0
+		mov	_snd_fm_possible, 0
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		mov	snd_active, 0
+		mov	_snd_active, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_A70E:
-		cmp	snd_bgm_mode, SND_BGM_FM
+		cmp	_snd_bgm_mode, SND_BGM_FM
 		jnz	short loc_A725
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		mov	snd_midi_active, 0
+		mov	_snd_midi_active, 0
 		jmp	short loc_A73B
 ; ---------------------------------------------------------------------------
 
 loc_A725:
-		cmp	snd_bgm_mode, SND_BGM_MIDI
+		cmp	_snd_bgm_mode, SND_BGM_MIDI
 		jnz	short loc_A748
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		mov	al, snd_midi_possible
-		mov	snd_midi_active, al
+		mov	al, _snd_midi_possible
+		mov	_snd_midi_active, al
 
 loc_A73B:
-		call	snd_determine_mode
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		pop	cx
 
@@ -1480,10 +1480,10 @@ loc_A7F8:
 ; ---------------------------------------------------------------------------
 
 loc_A80A:
-		inc	snd_bgm_mode
-		cmp	snd_bgm_mode, SND_BGM_MIDI
+		inc	_snd_bgm_mode
+		cmp	_snd_bgm_mode, SND_BGM_MIDI
 		jle	short loc_A81A
-		mov	snd_bgm_mode, SND_BGM_OFF
+		mov	_snd_bgm_mode, SND_BGM_OFF
 
 loc_A81A:
 		call	sub_A6EF
@@ -1544,10 +1544,10 @@ loc_A883:
 ; ---------------------------------------------------------------------------
 
 loc_A895:
-		dec	snd_bgm_mode
-		cmp	snd_bgm_mode, SND_BGM_OFF
+		dec	_snd_bgm_mode
+		cmp	_snd_bgm_mode, SND_BGM_OFF
 		jge	short loc_A8A5
-		mov	snd_bgm_mode, SND_BGM_MIDI
+		mov	_snd_bgm_mode, SND_BGM_MIDI
 
 loc_A8A5:
 		call	sub_A6EF
@@ -1603,10 +1603,10 @@ loc_A8F8:
 
 loc_A908:
 		mov	byte_DC34, 1
-		mov	snd_bgm_mode, SND_BGM_FM
+		mov	_snd_bgm_mode, SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
-		mov	snd_midi_active, 0
-		call	snd_determine_mode
+		mov	_snd_midi_active, 0
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 4
 		mov	byte_F3E1, 2
@@ -1673,10 +1673,10 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	snd_pmd_resident
+		call	_snd_pmd_resident
 		or	ax, ax
 		jz	short loc_A9EE
-		call	snd_mmd_resident
+		call	_snd_mmd_resident
 		call	sub_AFB0
 		or	ax, ax
 		jz	short loc_A9DD
@@ -1732,21 +1732,21 @@ loc_AA35:
 
 loc_AA4A:
 		mov	_input, 0
-		mov	al, snd_bgm_mode
-		mov	snd_active, al
+		mov	al, _snd_bgm_mode
+		mov	_snd_active, al
 		les	bx, dword_F3DC
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_AA8F
-		cmp	snd_midi_possible, 0
+		cmp	_snd_midi_possible, 0
 		jz	short loc_AA8F
-		mov	al, snd_midi_active
+		mov	al, _snd_midi_active
 		mov	[bp+var_2], al
-		mov	snd_midi_active, 1
-		call	snd_load stdcall, offset aGminit_m, ds, SND_LOAD_SONG
+		mov	_snd_midi_active, 1
+		call	_snd_load stdcall, offset aGminit_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 8
 		mov	al, [bp+var_2]
-		mov	snd_midi_active, al
+		mov	_snd_midi_active, al
 
 loc_AA8F:
 		call	sub_9D5C
@@ -2343,7 +2343,7 @@ include th02/hardware/snd_kaja_func.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
 		nopcall	frame_delay_
@@ -2355,7 +2355,7 @@ loc_B232:
 		push	1
 		nopcall	frame_delay_
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_midi_active, 1
+		cmp	_snd_midi_active, 1
 		jz	short loc_B246
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -5002,10 +5002,10 @@ loc_C8D9:
 ; ---------------------------------------------------------------------------
 
 loc_C8E3:
-		mov	al, snd_midi_active
+		mov	al, _snd_midi_active
 		mov	[bp+var_1], al
-		mov	al, snd_midi_possible
-		mov	snd_midi_active, al
+		mov	al, _snd_midi_possible
+		mov	_snd_midi_active, al
 		push	SND_LOAD_SONG
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
@@ -5013,8 +5013,8 @@ loc_C8E3:
 		mov	bx, ax
 		push	word ptr [bx+92Ch]
 		push	word ptr [bx+92Ah]
-		call	snd_load
-		mov	snd_midi_active, 0
+		call	_snd_load
+		mov	_snd_midi_active, 0
 		push	SND_LOAD_SONG
 		mov	al, byte ptr word_F57C
 		mov	ah, 0
@@ -5022,9 +5022,9 @@ loc_C8E3:
 		mov	bx, ax
 		push	word ptr [bx+92Ch]
 		push	word ptr [bx+92Ah]
-		call	snd_load
+		call	_snd_load
 		mov	al, [bp+var_1]
-		mov	snd_midi_active, al
+		mov	_snd_midi_active, al
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Eh
 		mov	al, byte ptr word_F57C
@@ -5167,7 +5167,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
-snd_active	db 0
+_snd_active	db 0
 		db 0
 include th02/hardware/snd_se[data].asm
 byte_DC34	db 1
@@ -5318,7 +5318,7 @@ aOp_rgb_0	db 'op.rgb',0
 	.data?
 
 byte_E8F8	db ?
-snd_bgm_mode	db ?
+_snd_bgm_mode	db ?
 		dw ?
 word_E8FC	dw ?
 byte_E8FE	db ?

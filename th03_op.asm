@@ -261,7 +261,7 @@ var_3		= word ptr -3
 		mov	es:[bx+15h], al
 		call	snd_determine_mode
 		mov	byte_D880, 0
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_9961
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
@@ -272,7 +272,7 @@ var_3		= word ptr -3
 loc_9961:
 		cmp	[bp+var_8], 0
 		jnz	short loc_996C
-		mov	snd_active, 0
+		mov	_snd_active, 0
 
 loc_996C:
 		les	bx, dword_FC54
@@ -1442,7 +1442,7 @@ loc_A2DB:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		kajacall	KAJA_SONG_STOP
-		mov	snd_active, 0
+		mov	_snd_active, 0
 
 loc_A2F1:
 		mov	al, byte_D951
@@ -1512,7 +1512,7 @@ loc_A384:
 		les	bx, dword_FC54
 		mov	byte ptr es:[bx+15h], 0
 		kajacall	KAJA_SONG_STOP
-		mov	snd_active, 0
+		mov	_snd_active, 0
 
 loc_A39A:
 		mov	al, byte_D951
@@ -6369,7 +6369,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-snd_active	db 0
+_snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm

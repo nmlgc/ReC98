@@ -1931,8 +1931,8 @@ loc_B183:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+18h], 1
 		jnz	short loc_B19A
-		call	snd_pmd_resident
-		mov	snd_midi_active, 0
+		call	_snd_pmd_resident
+		mov	_snd_midi_active, 0
 		jmp	short loc_B1B5
 ; ---------------------------------------------------------------------------
 
@@ -1940,13 +1940,13 @@ loc_B19A:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+18h], 2
 		jnz	short loc_B1BA
-		call	snd_pmd_resident
-		call	snd_mmd_resident
-		mov	al, snd_midi_possible
-		mov	snd_midi_active, al
+		call	_snd_pmd_resident
+		call	_snd_mmd_resident
+		mov	al, _snd_midi_possible
+		mov	_snd_midi_active, al
 
 loc_B1B5:
-		call	snd_determine_mode
+		call	_snd_determine_mode
 
 loc_B1BA:
 		les	bx, dword_2026C
@@ -2055,7 +2055,7 @@ sub_B2AB	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
+		call	_snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
 		call	sub_1CD36
 		call	_pi_slot_load stdcall, 0, offset aEye_pi, ds
 		add	sp, 0Ch
@@ -2462,7 +2462,7 @@ loc_B88A:
 		les	bx, dword_2026C
 		cmp	byte ptr es:[bx+27h], 0
 		jnz	short loc_B8AF
-		call	snd_delay_until_volume stdcall, 255
+		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
 		push	ss
 		lea	ax, [bp+var_C]
@@ -10132,7 +10132,7 @@ include th02/hardware/snd_kaja_func.asm
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		cmp	snd_active, 0
+		cmp	_snd_active, 0
 		jnz	short loc_FA25
 		push	64h ; 'd'
 		nopcall	frame_delay
@@ -10144,7 +10144,7 @@ loc_FA25:
 		push	1
 		nopcall	frame_delay
 		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	snd_midi_active, 1
+		cmp	_snd_midi_active, 1
 		jz	short loc_FA39
 		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
 					; BX = handle
@@ -18206,7 +18206,7 @@ arg_0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		call	snd_load stdcall, [bp+arg_0], SND_LOAD_SONG
+		call	_snd_load stdcall, [bp+arg_0], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		add	sp, 0Ah
 		pop	bp
@@ -35015,7 +35015,7 @@ byte_1E301	db 3
 byte_1E302	db 0
 		db 0
 include th02/formats/pfopen[data].asm
-snd_active	db 0
+_snd_active	db 0
 		db 0
 byte_1E30C	db 1
 byte_1E30D	db 0

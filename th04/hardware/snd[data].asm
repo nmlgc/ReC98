@@ -9,6 +9,9 @@ SND_SE_OFF = 0
 SND_SE_FM = 1
 SND_SE_BEEP = 2
 
-snd_se_mode db SND_SE_OFF
-snd_bgm_mode db SND_BGM_OFF
-snd_midi_possible db 0
+public _snd_se_mode
+_snd_se_mode db SND_SE_OFF
+public _snd_bgm_mode
+_snd_bgm_mode db SND_BGM_OFF
+public _snd_midi_possible
+_snd_midi_possible db 0

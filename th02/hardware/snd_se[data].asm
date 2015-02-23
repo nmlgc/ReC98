@@ -1,5 +1,7 @@
-snd_se_playing	db -1
-snd_se_priorities	db   0
+public _snd_se_playing
+_snd_se_playing	db -1
+public _snd_se_priorities
+_snd_se_priorities	db   0
 	db   0
 	db  32
 	db   9
@@ -32,7 +34,8 @@ snd_se_priorities	db   0
 	db   0
 	db   0
 	db   0
-snd_se_priority_frames	db   0
+public _snd_se_priority_frames
+_snd_se_priority_frames	db   0
 	db   0
 	db  36
 	db  16
@@ -65,4 +68,5 @@ snd_se_priority_frames	db   0
 	db   0
 	db   0
 	db   0
-snd_se_frame	db 0
+public _snd_se_frame
+_snd_se_frame	db 0
