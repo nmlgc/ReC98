@@ -9971,7 +9971,7 @@ arg_12		= word ptr  18h
 		retf	14h
 sub_F5B1	endp
 
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 		db 0
 include th02/hardware/input_sense.asm
 

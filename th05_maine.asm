@@ -9458,7 +9458,7 @@ sub_F25F	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-include th05/frame_delay.asm
+include th05/hardware/frame_delay.asm
 		db 0
 		mov	byte_1082E, 1
 		nop

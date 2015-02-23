@@ -5073,7 +5073,7 @@ sub_C0D4	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6245,7 +6245,7 @@ loc_CB7D:
 		retf
 sub_CB68	endp
 
-include th02/frame_delay_.asm
+include th02/hardware/frame_delay_.asm
 	db 0
 op_02_TEXT	ends
 

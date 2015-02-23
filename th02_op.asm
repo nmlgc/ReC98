@@ -2250,7 +2250,7 @@ loc_AEAE:
 		retf	8
 sub_AE00	endp
 
-include th02/frame_delay_.asm
+include th02/hardware/frame_delay_.asm
 include th02/hardware/input_sense.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2376,7 +2376,7 @@ loc_B24B:
 ; ---------------------------------------------------------------------------
 
 include th02/hardware/snd_se.asm
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 op_02_TEXT	ends
 
 ; ===========================================================================

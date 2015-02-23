@@ -3477,7 +3477,7 @@ sub_B4B7	endp
 
 include th01/hardware/vram_planes_set.asm
 include th02/formats/pi_slot_load.asm
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 		db 0
 include th02/hardware/input_sense.asm
 

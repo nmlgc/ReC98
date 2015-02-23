@@ -18048,7 +18048,7 @@ sub_13117	endp
 		pop	bp
 		retf	14h
 
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 
 ; ---------------------------------------------------------------------------
 		push	di

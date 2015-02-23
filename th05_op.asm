@@ -7400,7 +7400,7 @@ loc_E14E:
 		retf	6
 sub_E114	endp
 
-include th05/frame_delay.asm
+include th05/hardware/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

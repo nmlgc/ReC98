@@ -9600,7 +9600,7 @@ arg_4		= word ptr  0Ah
 		retf
 sub_EA5D	endp
 
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

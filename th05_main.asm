@@ -21654,7 +21654,7 @@ loc_1510A:
 		retf	2
 sub_150E4	endp
 
-include th05/frame_delay.asm
+include th05/hardware/frame_delay.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

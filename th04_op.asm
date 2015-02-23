@@ -6108,7 +6108,7 @@ op_02_TEXT	segment	word public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th01/hardware/vram_planes_set.asm
-include th02/frame_delay.asm
+include th02/hardware/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
@@ -7492,7 +7492,7 @@ loc_E6D4:
 		retf
 sub_E6D0	endp
 
-include th02/frame_delay_.asm
+include th02/hardware/frame_delay_.asm
 
 op_02_TEXT	ends
 
