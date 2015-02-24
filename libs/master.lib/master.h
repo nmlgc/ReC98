@@ -2391,7 +2391,9 @@ void MASTER_RET grcg_and( int mode, int color );
 void MASTER_RET grcg_or( int mode, int color );
 void MASTER_RET grcg_off(void);
 # define	grcg_setmode(mode)		OUTB(0x7c,mode)
-# define	grcg_off()				OUTB(0x7c,0)
+# if GAME < 2
+#  define	grcg_off()				OUTB(0x7c,0)
+# endif
 
 /* EGC */
 void MASTER_RET egc_on(void);

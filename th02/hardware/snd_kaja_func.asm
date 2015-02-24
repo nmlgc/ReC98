@@ -1,5 +1,5 @@
 ; int DEFCONV snd_kaja_func(int ax)
-snd_kaja_func	proc
+proc_defconv snd_kaja_func
 @@ax	= word ptr (cPtrSize + 2)
 
 	push	bp
@@ -22,4 +22,4 @@ if GAME ge 3
 else
 	ret
 endif
-snd_kaja_func	endp
+endp_defconv

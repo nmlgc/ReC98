@@ -5,7 +5,7 @@ music_cmt_load	proc pascal near
 
 	push	si
 	mov	word ptr @@fn+2, ds
-	mov	word ptr @@fn, offset a_Music0_txt
+	mov	word ptr @@fn, offset _a_Music0_txt
 	les	bx, @@fn
 	mov	al, byte ptr music_game
 	add	al, '0'
@@ -15,7 +15,7 @@ music_cmt_load	proc pascal near
 	imul	ax, MUSIC_CMT_LEN
 	cwde
 	call	file_seek pascal, eax, 0
-	call	file_read pascal, ds, offset music_cmt, MUSIC_CMT_LEN
+	call	file_read pascal, ds, offset _music_cmt, MUSIC_CMT_LEN
 	call	file_close
 	xor	si, si
 	jmp	short @@check
@@ -23,7 +23,7 @@ music_cmt_load	proc pascal near
 @@terminate_line:
 	mov	bx, si
 	imul	bx, MUSIC_CMT_LINE_LEN
-	mov	byte ptr (music_cmt + MUSIC_CMT_LINE_LEN - 2)[bx], 0
+	mov	(_music_cmt + MUSIC_CMT_LINE_LEN - 2)[bx], 0
 	inc	si
 
 @@check:

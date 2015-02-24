@@ -3876,9 +3876,9 @@ sub_C32D	proc pascal near
 		push	1400020h
 		push	7
 		push	ds
-		push	offset music_cmt
+		push	offset _music_cmt
 		call	sub_D436
-		mov	si, offset music_cmt + MUSIC_CMT_LINE_LEN
+		mov	si, offset _music_cmt + MUSIC_CMT_LINE_LEN
 		mov	di, 1
 		mov	@@y, 180
 		jmp	short loc_C36D

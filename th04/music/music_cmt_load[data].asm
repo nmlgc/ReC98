@@ -1,1 +1,1 @@
-aMUSIC_TXT db '_MUSIC.TXT',0
+_aMUSIC_TXT db '_MUSIC.TXT',0

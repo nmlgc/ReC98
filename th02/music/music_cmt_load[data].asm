@@ -1,1 +1,2 @@
-aMUSIC_TXT db 'MUSIC.TXT',0
+public _aMUSIC_TXT
+_aMUSIC_TXT db 'MUSIC.TXT',0

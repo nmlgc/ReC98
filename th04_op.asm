@@ -3456,7 +3456,7 @@ sub_C2C4	proc near
 		push	1400040h
 		push	7
 		push	ds
-		push	offset music_cmt
+		push	offset _music_cmt
 		call	sub_DEB4
 		mov	si, 1
 		jmp	short loc_C306
@@ -3465,7 +3465,7 @@ sub_C2C4	proc near
 loc_C2DE:
 		mov	bx, si
 		imul	bx, MUSIC_CMT_LINE_LEN
-		cmp	byte ptr music_cmt[bx], ';'
+		cmp	_music_cmt[bx], ';'
 		jz	short loc_C305
 		push	140h
 		lea	ax, [si+4]
@@ -3475,7 +3475,7 @@ loc_C2DE:
 		push	ds
 		mov	ax, si
 		imul	ax, MUSIC_CMT_LINE_LEN
-		add	ax, offset music_cmt
+		add	ax, offset _music_cmt
 		push	ax
 		call	sub_DEB4
 

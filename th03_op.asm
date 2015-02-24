@@ -2476,7 +2476,7 @@ sub_AB99	proc near
 		push	1300040h
 		push	1Fh
 		push	ds
-		push	offset music_cmt
+		push	offset _music_cmt
 		call	sub_C6DB
 		mov	di, 1
 		jmp	short loc_ABDC
@@ -2491,7 +2491,7 @@ loc_ABC0:
 		push	ds
 		mov	ax, di
 		imul	ax, MUSIC_CMT_LINE_LEN
-		add	ax, offset music_cmt
+		add	ax, offset _music_cmt
 		push	ax
 		call	sub_C6DB
 		inc	di

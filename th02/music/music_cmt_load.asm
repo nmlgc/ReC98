@@ -5,7 +5,7 @@ music_cmt_load	proc pascal near
 	push	bp
 	mov	bp, sp
 	push	si
-	call	file_ropen pascal, ds, offset aMUSIC_TXT
+	call	file_ropen pascal, ds, offset _aMUSIC_TXT
 	mov	ax, @@track
 	imul	ax, MUSIC_CMT_LEN
 if GAME ge 3
@@ -15,7 +15,7 @@ else
 	cwd
 	call	file_seek pascal, dx, ax, 0
 endif
-	call	file_read pascal, ds, offset music_cmt, MUSIC_CMT_LEN
+	call	file_read pascal, ds, offset _music_cmt, MUSIC_CMT_LEN
 	call	file_close
 	xor	si, si
 	jmp	short @@check
@@ -23,7 +23,7 @@ endif
 @@terminate_line:
 	mov	bx, si
 	imul	bx, MUSIC_CMT_LINE_LEN
-	mov	byte ptr (music_cmt + MUSIC_CMT_LINE_LEN - 2)[bx], 0
+	mov	(_music_cmt + MUSIC_CMT_LINE_LEN - 2)[bx], 0
 	inc	si
 
 @@check:
