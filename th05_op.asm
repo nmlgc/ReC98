@@ -3505,7 +3505,7 @@ sub_BFB7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BFCA:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_13E98
@@ -5264,7 +5264,7 @@ loc_CEBB:
 ; ---------------------------------------------------------------------------
 
 loc_CEC6:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, [bp+var_6]
 		mov	es:[bx], eax

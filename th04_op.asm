@@ -3087,7 +3087,7 @@ sub_BF68	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BF7B:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_12DC0
@@ -4888,45 +4888,45 @@ loc_CF98:
 ; ---------------------------------------------------------------------------
 
 loc_CFA9:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_6]
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_A]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_6]
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_A]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_6]
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_A]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_6]
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_A]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
@@ -4951,45 +4951,45 @@ loc_D050:
 ; ---------------------------------------------------------------------------
 
 loc_D060:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_8]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, di
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_8]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, di
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_8]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
 		mov	es:[bx+si], al
 		inc	si
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, di
 		mov	al, es:[bx]
 		les	bx, dword_132BA
 		mov	es:[bx+si], al
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_8]
 		mov	al, es:[bx]
 		les	bx, dword_132BE
@@ -5046,7 +5046,7 @@ loc_D123:
 ; ---------------------------------------------------------------------------
 
 loc_D12C:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		push	es
 		les	si, [bp+var_6]
@@ -5054,7 +5054,7 @@ loc_D12C:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, di
 		push	es
 		les	si, [bp+var_6]
@@ -5062,7 +5062,7 @@ loc_D12C:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, di
 		push	es
 		les	si, [bp+var_6]
@@ -5070,7 +5070,7 @@ loc_D12C:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, di
 		push	es
 		les	si, [bp+var_6]
@@ -5095,7 +5095,7 @@ loc_D18A:
 ; ---------------------------------------------------------------------------
 
 loc_D193:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, dx
 		push	es
 		les	si, [bp+var_6]
@@ -5103,7 +5103,7 @@ loc_D193:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, dx
 		push	es
 		les	si, [bp+var_6]
@@ -5111,7 +5111,7 @@ loc_D193:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, dx
 		push	es
 		les	si, [bp+var_6]
@@ -5119,7 +5119,7 @@ loc_D193:
 		pop	es
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, dx
 		push	es
 		les	si, [bp+var_6]
@@ -5202,7 +5202,7 @@ loc_D249:
 ; ---------------------------------------------------------------------------
 
 loc_D254:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, [bp+var_6]
 		mov	es:[bx], eax

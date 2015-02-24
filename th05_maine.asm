@@ -797,13 +797,13 @@ loc_A8B2:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, [bp+var_2]
 		mov	es:[bx], ax

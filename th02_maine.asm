@@ -362,19 +362,19 @@ loc_9724:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_8], ax
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_4], ax
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
@@ -386,7 +386,7 @@ loc_9724:
 		les	bx, [bp+arg_4]
 		add	bx, ax
 		mov	ax, es:[bx]
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], ax
 		call	grcg_off
@@ -396,7 +396,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_8]
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -405,7 +405,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_6]
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -414,7 +414,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_4]
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		or	es:[bx], ax
 		mov	ax, di
@@ -423,7 +423,7 @@ loc_9724:
 		add	bx, ax
 		mov	ax, es:[bx]
 		and	ax, [bp+var_2]
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		or	es:[bx], ax
 		add	si, 50h	; 'P'
@@ -631,13 +631,13 @@ loc_98F6:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -727,13 +727,13 @@ loc_9998:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -819,13 +819,13 @@ loc_9A2E:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -884,7 +884,7 @@ loc_9A99:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_2], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	word ptr es:[bx], 0FFFFh
 		add	di, 10h
@@ -4755,13 +4755,13 @@ loc_C17E:
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp-0Ah]
 		mov	ax, es:[bx]
 		mov	[bp-8],	ax
 		mov	al, 0
 		out	dx, al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, [bp-0Ah]
 		mov	ax, [bp-8]
 		mov	es:[bx], ax

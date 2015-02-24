@@ -1815,7 +1815,7 @@ sub_A5B7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A5CA:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_F82A
@@ -2221,23 +2221,23 @@ loc_A90B:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_4], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		assume es:nothing
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F82C
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F830
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F834
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F838
@@ -2272,22 +2272,22 @@ loc_A98E:
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_4], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F82C
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F830
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F834
 		mov	es:[bx+si], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_4]
 		mov	eax, es:[bx]
 		les	bx, dword ptr unk_F838
@@ -2365,25 +2365,25 @@ loc_AA8E:
 		les	bx, dword ptr unk_F82C
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F830
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F834
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F838
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		add	cx, 4
@@ -2419,25 +2419,25 @@ loc_AB16:
 		les	bx, dword ptr unk_F82C
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F830
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_R
+		les	bx, _VRAM_PLANE_R
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F834
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_G
+		les	bx, _VRAM_PLANE_G
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		les	bx, dword ptr unk_F838
 		add	bx, cx
 		mov	eax, es:[bx]
-		les	bx, VRAM_PLANE_E
+		les	bx, _VRAM_PLANE_E
 		add	bx, [bp+var_2]
 		mov	es:[bx], eax
 		add	cx, 4
@@ -2504,7 +2504,7 @@ loc_ABDC:
 ; ---------------------------------------------------------------------------
 
 loc_ABE5:
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	es, word_F82A

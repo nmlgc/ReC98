@@ -26196,7 +26196,7 @@ loc_17FCC:
 		sar	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_6]
 		mov	es:[bx+si], ax
 
@@ -31173,7 +31173,7 @@ loc_1AF15:
 		shl	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	es:[bx+si], ax
 
@@ -31236,7 +31236,7 @@ loc_1AFA2:
 		shl	dx, cl
 		add	ax, dx
 		mov	[bp+var_12], ax
-		les	bx, VRAM_PLANE_B
+		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	es:[bx+si], ax
 
