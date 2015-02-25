@@ -37,5 +37,7 @@ bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_16.c
 bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_13.c
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eFUUIN.EXE $**
 
-bin\th02\op.exe: bin\th02\op.obj th02\op_03.c th02\op_06.c
-	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE $**
+bin\th02\op.exe: bin\th02\op.obj th02\op_03.c th02\op_05.c th02\op_06.c
+	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
+$**
+|

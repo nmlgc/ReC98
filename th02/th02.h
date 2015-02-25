@@ -15,11 +15,11 @@ void pi_slot_load(int slot, const char *fn);
 void pi_slot_palette_apply(int slot);
 void pi_slot_put(int x, int y, int slot);
 
-#define pi_load_put_free(fn) \
-	pi_slot_load(0, (fn)); \
-	pi_slot_palette_apply(0); \
-	pi_slot_put(0, 0, 0); \
-	graph_pi_free(&pi_slot_headers[0], pi_slot_buffers[0]);
+#define pi_load_put_free(slot, fn) \
+	pi_slot_load(slot, (fn)); \
+	pi_slot_palette_apply(slot); \
+	pi_slot_put(0, 0, slot); \
+	graph_pi_free(&pi_slot_headers[slot], pi_slot_buffers[slot]);
 
 // Hardware
 void graph_putsa_fx(int x, int y, int color, const char *str);
@@ -65,3 +65,34 @@ void snd_se_update(void);
 #define MUSIC_CMT_FILE "MUSIC.TXT"
 #define MUSIC_CMT_LINE_LEN 42
 #define MUSIC_CMT_LINE_COUNT 20
+
+// Resident structure
+typedef struct {
+	char id[11];	// = "MIKOConfig"
+	char stage;
+	char debug;
+	long score;
+	int continues_used;
+	char rem_bombs;
+	char rem_lives;
+	char rank;
+	char start_power;
+	char bgm_mode;
+	char start_bombs;
+	char start_lives;
+	long frame;
+	int unused_1;
+	char unused_2;
+	char op_main_retval;
+	char perf;
+	char unused_3;
+	char shottype;
+	char demo_num;
+	int skill;
+	int unused_4;
+	long score_highest;
+} mikoconfig_t;
+
+extern mikoconfig_t *mikoconfig;
+
+#define SHOTTYPE_COUNT 3

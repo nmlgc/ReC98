@@ -24,4 +24,6 @@ extern char *VRAM_PLANE_E;
 	for(p = 0; p < PLANE_SIZE; p += 4) { \
 		*(long*)((dst) + p) = *(long*)((src) + p); \
 	}
+
+#define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
 // -----------

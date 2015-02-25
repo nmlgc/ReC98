@@ -172,7 +172,7 @@ void pascal near music_flip(void)
 	ps = 0; \
 	for(y = 64; y < 80; y++) { \
 		for(x = 160; x < 480; x += (4 * 8)) { \
-			pd = (x >> 3) + (y * 64) + (y * 16); \
+			pd = VRAM_OFFSET(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
 			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \
@@ -182,7 +182,7 @@ void pascal near music_flip(void)
 	} \
 	for(y = 80; y < 384; y++) { \
 		for(x = 304; x < 624; x += (4 * 8)) { \
-			pd = (x >> 3) + (y * 64) + (y * 16); \
+			pd = VRAM_OFFSET(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
 			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \
@@ -246,7 +246,7 @@ void pascal musicroom(void)
 	graph_clear();
 	graph_accesspage(1);
 
-	pi_load_put_free("op3.pi");
+	pi_load_put_free(0, "op3.pi");
 	music_sel = track_playing;
 	draw_tracks(music_sel);
 	graph_copy_page(0);
@@ -334,7 +334,7 @@ controls:
 	graph_accesspage(0);
 	graph_clear();
 	graph_accesspage(1);
-	pi_load_put_free("op2.pi");
+	pi_load_put_free(0, "op2.pi");
 	palette_entry_rgb("op.rgb");
 	palette_show();
 	graph_copy_page(0);
