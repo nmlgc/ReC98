@@ -5288,14 +5288,14 @@ var_2		= word ptr -2
 		mov	word ptr dword_3985C+2,	ax
 		mov	word_39880, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		pushd	[dword_3985C]
 		push	ds
 		push	offset dword_3985C
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		pushd	[dword_3985C]
 		push	ds
@@ -5330,14 +5330,14 @@ var_2		= word ptr -2
 		mov	word ptr dword_3985C+2,	ax
 		mov	word_39880, 1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		pushd	[dword_3985C]
 		push	ds
 		push	offset dword_3985C
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		pushd	[dword_3985C]
 		push	ds
@@ -5359,14 +5359,14 @@ sub_1E4EC	proc far
 		push	bp
 		mov	bp, sp
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	word_3984E
 		pushd	[dword_3982A]
 		push	ds
 		push	offset dword_3982A
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	word_3984E
 		pushd	[dword_3982A]
 		push	ds
@@ -5397,7 +5397,7 @@ var_2		= word ptr -2
 		mov	[bp+var_4], ax
 		mov	[bp+var_6], 3
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		xor	di, di
 		jmp	short loc_1E578
@@ -5434,7 +5434,7 @@ loc_1E578:
 		cmp	di, 5
 		jl	short loc_1E549
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		pop	di
 		pop	si
@@ -5718,7 +5718,7 @@ loc_1E768:
 		add	ax, si
 		push	ax
 		push	word ptr dword_3982A
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	8
 		push	word_39832
 		mov	ax, word ptr dword_3982A+2
@@ -5726,7 +5726,7 @@ loc_1E768:
 		sub	ax, si
 		push	ax
 		push	word ptr dword_3982A
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 10h
 
 loc_1E798:
@@ -6701,11 +6701,11 @@ loc_1EFB1:
 		cmp	byte_39E25, 0FFh
 		jnz	short loc_1EFE5
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		add	sp, 8
@@ -6771,11 +6771,11 @@ loc_1F051:
 		cmp	byte_39E25, 4
 		jz	short loc_1F087
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		add	sp, 8
@@ -6829,14 +6829,14 @@ loc_1F0F8:
 		cmp	byte_39E25, 4
 		jb	short loc_1F154
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		pushd	[dword_3982A]
 		push	ds
 		push	offset dword_3982A
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		pushd	[dword_3982A]
 		push	ds
@@ -7278,7 +7278,7 @@ loc_1F4F8:
 		mov	ax, [bx+5497h]
 		add	ax, 0FFF0h
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 14h
 		mov	bx, si
 		add	bx, bx
@@ -7892,7 +7892,7 @@ var_2		= word ptr -2
 		cmp	byte_3A6CE, 0
 		jnz	short loc_1FB20
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		mov	word_3A6CA, 0
 		mov	word_39852, 0
@@ -8033,11 +8033,11 @@ loc_1FBAC:
 		cmp	word_39E76, 0
 		jnz	loc_1FDCF
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		add	sp, 8
@@ -8152,11 +8152,11 @@ loc_1FCF7:
 		cmp	word_3A6C8, 0
 		jg	loc_1FDCF
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	0
 		call	sub_1E589
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	ds
 		push	offset unk_37635
@@ -8677,7 +8677,7 @@ loc_20116:
 		mov	ax, es:[bx]
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_20142:
@@ -8776,7 +8776,7 @@ loc_201CF:
 		or	dx, dx
 		jnz	loc_202A6
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	si
 		les	bx, off_39E96
@@ -8809,7 +8809,7 @@ loc_201CF:
 		push	word ptr es:[bx]
 		call	sub_20496
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Ah
 		push	si
 		les	bx, off_39E96
@@ -9341,7 +9341,7 @@ arg_4		= word ptr  0Ah
 		mov	word ptr [bp+var_4+2], dx
 		mov	word ptr [bp+var_4], bx
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		xor	si, si
 		jmp	short loc_20743
@@ -9387,7 +9387,7 @@ loc_20743:
 		cmp	si, 20h	; ' '
 		jl	short loc_206D8
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		pop	di
 		pop	si
@@ -10906,7 +10906,7 @@ loc_21364:
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_213DE
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	18h
 		mov	ax, si
@@ -10922,7 +10922,7 @@ loc_21364:
 		call	sub_197E1
 		add	sp, 6
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	18h
 		mov	ax, si
@@ -11068,7 +11068,7 @@ loc_214D3:
 		cmp	word ptr es:[bx], 0Ah
 		jl	short loc_2155C
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	17h
 		mov	ax, si
@@ -11084,7 +11084,7 @@ loc_214D3:
 		call	sub_197E1
 		add	sp, 6
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	17h
 		mov	ax, si
@@ -11189,7 +11189,7 @@ loc_215D2:
 		push	200020h
 		push	word_34A90
 		push	word_34A8E
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Eh
 
@@ -11229,7 +11229,7 @@ loc_21634:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Fh
 		jmp	short loc_2160F
@@ -11253,7 +11253,7 @@ loc_21670:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Dh
 		mov	ax, si
@@ -11318,7 +11318,7 @@ loc_2170D:
 		push	200020h
 		push	ax
 		push	word_39EB9
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Fh
 
@@ -11338,7 +11338,7 @@ loc_2174D:
 		push	200020h
 		push	word_39EBB
 		push	word_39EB9
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Eh
 		jmp	short loc_21742
@@ -11354,7 +11354,7 @@ loc_21777:
 		push	200020h
 		push	word_39EBB
 		push	word_39EB9
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	1Dh
 		push	word_39EBB
@@ -11524,13 +11524,13 @@ loc_218D8:
 
 loc_218DE:
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	al, [bp+var_1]
 		mov	es:[bx], al
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
@@ -11568,7 +11568,7 @@ arg_2		= word ptr  8
 		cmp	di, 3E7h
 		jnz	loc_219D1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -11593,7 +11593,7 @@ arg_2		= word ptr  8
 		push	ax
 		call	sub_109B2
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -12376,7 +12376,7 @@ loc_21F23:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_21F7D:
@@ -12424,7 +12424,7 @@ loc_21FD5:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, si
 		add	ax, ax
@@ -12508,7 +12508,7 @@ loc_220A1:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 0Ah
@@ -13066,7 +13066,7 @@ loc_2253F:
 		mov	ax, [bx+584Dh]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -13564,7 +13564,7 @@ loc_2292E:
 
 loc_22939:
 		push	word ptr dword_3982A
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_22945:
@@ -13586,7 +13586,7 @@ loc_22956:
 		push	ax
 
 loc_2296D:
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_22975:
@@ -15433,7 +15433,7 @@ arg_6		= word ptr  0Ah
 		push	100010h
 		push	di
 		push	si
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	[bp+arg_0]
 		push	[bp+arg_2]
 		push	di
@@ -15972,7 +15972,7 @@ arg_2		= word ptr  6
 
 loc_23C76:
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -15980,12 +15980,12 @@ loc_23C76:
 		and	ax, [bp+arg_0]
 		mov	di, ax
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	es:[si], di
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0B000h
 		mov	es, ax
 		assume es:nothing
@@ -15993,12 +15993,12 @@ loc_23C76:
 		and	ax, [bp+arg_0]
 		mov	di, ax
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0B000h
 		mov	es, ax
 		mov	es:[si], di
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0B800h
 		mov	es, ax
 		assume es:nothing
@@ -16006,12 +16006,12 @@ loc_23C76:
 		and	ax, [bp+arg_0]
 		mov	di, ax
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0B800h
 		mov	es, ax
 		mov	es:[si], di
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0E000h
 		mov	es, ax
 		assume es:nothing
@@ -16019,7 +16019,7 @@ loc_23C76:
 		and	ax, [bp+arg_0]
 		mov	di, ax
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	ax, 0E000h
 		mov	es, ax
@@ -17879,7 +17879,7 @@ loc_24E6E:
 loc_24E71:
 		mov	[bp+var_6], 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		xor	di, di
 		jmp	short loc_24EB1
@@ -17916,7 +17916,7 @@ loc_24EB1:
 		cmp	di, 3
 		jl	short loc_24E82
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		pop	di
 		pop	si
@@ -18190,11 +18190,11 @@ arg_2		= word ptr  8
 		cmp	word_3A6CA, 14h
 		jnz	short loc_25150
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 6
 		mov	word_39856, 0
 		mov	word_3984E, 2
@@ -18234,7 +18234,7 @@ loc_2517B:
 		mov	word_39852, 1
 		push	600080h
 		pushd	[dword_3982A]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		jmp	loc_25293
 ; ---------------------------------------------------------------------------
@@ -18292,7 +18292,7 @@ loc_25221:
 		jnz	short loc_25280
 		mov	word_39852, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		mov	word_3984E, 0
 		push	30000h
@@ -18301,7 +18301,7 @@ loc_25221:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39856, 0
 		mov	word_3984E, 0
@@ -18345,7 +18345,7 @@ loc_252A7:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D2Fh]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_252CC:
@@ -18524,7 +18524,7 @@ var_8		= qword	ptr -8
 		idiv	bx
 		mov	word_3A6E5, dx
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -18535,7 +18535,7 @@ var_8		= qword	ptr -8
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		mov	word_3984E, 1
 		push	30000h
@@ -18654,7 +18654,7 @@ loc_25556:
 		cmp	word_3A6CA, 96h
 		jnz	short loc_255B4
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -18665,7 +18665,7 @@ loc_25556:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 12h
 		mov	word_39856, 0
 		mov	word_3984E, 0
@@ -18799,7 +18799,7 @@ var_2		= word ptr -2
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_25726
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	1
 		call	sub_24EC2
@@ -18813,7 +18813,7 @@ var_2		= word ptr -2
 		call	sub_1689D
 		add	sp, 0Ch
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		mov	word_39856, 0
 		mov	word_3984E, 1
@@ -18916,7 +18916,7 @@ loc_257EA:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D47h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_2580F:
@@ -19025,7 +19025,7 @@ loc_258D4:
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_25947
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -19036,7 +19036,7 @@ loc_258D4:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		mov	word_3984E, 1
 		push	30000h
@@ -19168,7 +19168,7 @@ loc_25977:
 		call	sub_1786D
 		mov	word_3A6FB+1, 1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -19179,7 +19179,7 @@ loc_25977:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
@@ -19593,7 +19593,7 @@ loc_25E3D:
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_25EB1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -19604,7 +19604,7 @@ loc_25E3D:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -19850,7 +19850,7 @@ sub_260DC	proc far
 		or	dx, dx
 		jnz	short loc_26136
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -19861,7 +19861,7 @@ sub_260DC	proc far
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -19878,7 +19878,7 @@ loc_26136:
 		cmp	dx, 4
 		jnz	short loc_26194
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -19887,7 +19887,7 @@ loc_26136:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -20085,7 +20085,7 @@ loc_262FB:
 		jle	short loc_2631C
 		mov	word_3A6CA, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 4
@@ -20120,7 +20120,7 @@ var_3		= word ptr -3
 		or	dx, dx
 		jnz	short loc_2637D
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -20131,7 +20131,7 @@ var_3		= word ptr -3
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -20148,7 +20148,7 @@ loc_2637D:
 		cmp	dx, 4
 		jnz	short loc_263DB
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -20157,7 +20157,7 @@ loc_2637D:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -20397,7 +20397,7 @@ loc_265C5:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D5Fh]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		jmp	short loc_26617
 ; ---------------------------------------------------------------------------
@@ -20438,7 +20438,7 @@ var_3		= word ptr -3
 		or	dx, dx
 		jnz	short loc_26678
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -20449,7 +20449,7 @@ var_3		= word ptr -3
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -20466,7 +20466,7 @@ loc_26678:
 		cmp	dx, 4
 		jnz	short loc_266D6
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -20475,7 +20475,7 @@ loc_26678:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -20608,7 +20608,7 @@ loc_267DF:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D89h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_26804:
@@ -20806,7 +20806,7 @@ var_2		= word ptr -2
 		cmp	word_3A6CA, 14h
 		jnz	short loc_269A5
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -20817,7 +20817,7 @@ var_2		= word ptr -2
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -20854,7 +20854,7 @@ loc_269CB:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D9Dh]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_269F0:
@@ -20963,11 +20963,11 @@ loc_26ABF:
 		mov	word ptr dword_3988E+2,	ax
 		mov	word_398B2, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		push	190h
@@ -21026,7 +21026,7 @@ loc_26B48:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5DB1h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_26B6D:
@@ -21126,7 +21126,7 @@ loc_26C3C:
 		jle	loc_26D0B
 		push	200030h
 		pushd	[dword_3988E]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, word ptr dword_3988E
 		add	ax, 0FFD8h
@@ -21161,7 +21161,7 @@ loc_26C85:
 		push	1
 		call	sub_24E33
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -21172,7 +21172,7 @@ loc_26C85:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -21511,7 +21511,7 @@ var_1		= byte ptr -1
 		or	dx, dx
 		jnz	short loc_26FAA
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -21522,7 +21522,7 @@ var_1		= byte ptr -1
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -21539,7 +21539,7 @@ loc_26FAA:
 		cmp	dx, 4
 		jnz	short loc_27008
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -21548,7 +21548,7 @@ loc_26FAA:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -21811,7 +21811,7 @@ loc_27201:
 		or	dx, dx
 		jnz	short loc_27257
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -21822,7 +21822,7 @@ loc_27201:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -21839,7 +21839,7 @@ loc_27257:
 		cmp	dx, 4
 		jnz	short loc_272B5
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -21848,7 +21848,7 @@ loc_27257:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -21971,7 +21971,7 @@ loc_27317:
 		call	sub_1786D
 		mov	word_3A76B, 1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -21982,7 +21982,7 @@ loc_27317:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
@@ -22179,7 +22179,7 @@ var_2		= word ptr -2
 		or	dx, dx
 		jnz	short loc_2764F
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	word_39888, 0
@@ -22190,7 +22190,7 @@ var_2		= word ptr -2
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
@@ -22207,7 +22207,7 @@ loc_2764F:
 		cmp	dx, 4
 		jnz	short loc_276AD
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39888, 0
 		mov	word_39880, 2
 		push	30000h
@@ -22216,7 +22216,7 @@ loc_2764F:
 		push	offset dword_3985C
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 10h
 		mov	word_39888, 0
 		mov	word_39880, 2
@@ -22235,7 +22235,7 @@ loc_276AD:
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_27729
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -22246,7 +22246,7 @@ loc_276AD:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		mov	word_3984E, 1
 		push	30000h
@@ -22374,7 +22374,7 @@ loc_27759:
 		call	sub_1786D
 		mov	word_3A771, 1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		mov	word_39856, 0
@@ -22385,7 +22385,7 @@ loc_27759:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
@@ -22907,7 +22907,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1E]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	80003h
 		push	0
 		push	[bp+var_2]
@@ -22927,7 +22927,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1C]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	80002h
 		push	0
 		mov	bx, si
@@ -22955,7 +22955,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	80001h
 		push	0
 		mov	bx, si
@@ -23091,7 +23091,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1E]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	80003h
 		push	0
 		push	[bp+var_2]
@@ -23108,7 +23108,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1C]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	80002h
 		push	0
 		mov	bx, si
@@ -23133,7 +23133,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 2Ch
 		push	80001h
 		push	0
@@ -23339,7 +23339,7 @@ loc_28163:
 		mov	byte_3A6CE, 1
 		mov	word_39852, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		push	30000h
 		pushd	0
@@ -23347,7 +23347,7 @@ loc_28163:
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		push	30000h
 		pushd	0
@@ -23921,12 +23921,12 @@ sub_2869E	proc far
 		push	offset aBoss6_l_grp ; "boss6_l.grp"
 		call	sub_10BAE
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset aBoss6_h_grp ; "boss6_h.grp"
 		call	sub_10BAE
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	4
 		call	sub_2091E
 		push	ds
@@ -23959,11 +23959,11 @@ loc_2871C:
 		push	0
 		call	sub_11738
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pushd	[off_35DAB]
 		call	sub_10BAE
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	28h ; '('
 		call	sub_11A7C
 		add	sp, 0Ch
@@ -24082,7 +24082,7 @@ var_2		= word ptr -2
 		mov	[bp+var_4], ax
 		mov	[bp+var_6], 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		xor	di, di
 		jmp	short loc_288A4
@@ -24119,7 +24119,7 @@ loc_288A4:
 		cmp	di, 3
 		jl	short loc_28875
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		pop	di
 		pop	si
@@ -24617,7 +24617,7 @@ loc_28C92:
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_28CC0:
@@ -24704,7 +24704,7 @@ loc_28D89:
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	byte ptr [si+141Fh], 0
 		jmp	loc_28E98
@@ -24828,7 +24828,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		mov	word_3984E, ax
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		push	30000h
 		pushd	0
@@ -24836,7 +24836,7 @@ var_2		= word ptr -2
 		push	offset dword_3982A
 		call	sub_1689D
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	word_39856, 0
 		push	30000h
 		pushd	0
@@ -24880,12 +24880,12 @@ loc_28F32:
 		jnz	short loc_28F67
 		mov	byte_39A32, 0
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A29
 		call	sub_16D6A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A29
 		call	sub_16D6A
@@ -24898,12 +24898,12 @@ loc_28F67:
 		jnz	short loc_28FA3
 		mov	byte_39A32, 1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A29
 		call	sub_16D6A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A29
 		call	sub_16D6A
@@ -24929,10 +24929,10 @@ sub_28FA9	proc near
 		push	bp
 		mov	bp, sp
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		call	sub_288B5
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		call	sub_288B5
 		pop	bp
@@ -24964,12 +24964,12 @@ sub_28FC5	proc near
 		mov	al, [bp-2]
 		mov	byte_39A27, al
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A1E
 		call	sub_16D6A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset word_39A1E
 		call	sub_16D6A
@@ -25141,7 +25141,7 @@ loc_29142:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -25232,7 +25232,7 @@ loc_29219:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -25343,7 +25343,7 @@ loc_2933D:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -25416,7 +25416,7 @@ loc_293D3:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -25519,7 +25519,7 @@ loc_294C9:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -25579,7 +25579,7 @@ loc_29556:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+61FCh]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -25852,7 +25852,7 @@ loc_297B1:
 		mov	ax, word_3AC50
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, word_35DE3
 		dec	ax
@@ -26062,7 +26062,7 @@ loc_29995:
 		mov	ax, word_3AC50
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, word_3AC56
 		add	word_3AC50, ax
@@ -26464,7 +26464,7 @@ loc_29D0E:
 		push	0
 		call	sub_11738
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
 		pushd	dword ptr [bx+140Bh]
@@ -26474,7 +26474,7 @@ loc_29D0E:
 		push	offset unk_35090
 		call	sub_C433
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	byte_34A49, 1
 		call	sub_190D6
 		call	sub_1889C
@@ -26624,7 +26624,7 @@ loc_29E46:
 
 loc_29EA2:
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	al, es:[bx]
@@ -26643,7 +26643,7 @@ loc_29EA2:
 		push	0Ch
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 6
 		cmp	[bp+var_4], 0
 		jz	short loc_29EF8
@@ -26695,7 +26695,7 @@ loc_29F62:
 		push	0Ch
 		call	sub_EABB
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	al, es:[bx]
@@ -26716,7 +26716,7 @@ loc_29F62:
 		push	ax
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 8
 		cmp	[bp+var_4], 0
 		jz	short loc_29FC3
@@ -26812,7 +26812,7 @@ loc_2A073:
 		mov	ax, word_3AF32
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, word_3AF3A
 		add	word_3AF36, ax
@@ -26901,7 +26901,7 @@ loc_2A175:
 		push	10h
 		push	word_3AF38
 		push	word_3AF34
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	0FFh
 		push	0
 		push	8
@@ -27275,7 +27275,7 @@ loc_2A4D9:
 		and	ax, 7
 		mov	[bp+var_2], ax
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -27295,7 +27295,7 @@ loc_2A4D9:
 		push	0Ch
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 8
 		cmp	[bp+var_6], 0
 		jz	short loc_2A58C
@@ -27362,7 +27362,7 @@ loc_2A618:
 		push	0Ch
 		call	sub_EABB
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -27384,7 +27384,7 @@ loc_2A618:
 		push	ax
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 8
 		cmp	[bp+var_6], 0
 		jz	short loc_2A677
@@ -28005,7 +28005,7 @@ loc_2AC27:
 		mov	ax, word_3B043
 		add	ax, 0FFE4h
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	7
 		push	word_3B04B
@@ -28039,7 +28039,7 @@ loc_2AC8A:
 		sub	ax, word_3B043
 		add	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	7
 		push	word_3B04B
@@ -28425,7 +28425,7 @@ loc_2B01A:
 		mov	ax, word_3B04D
 		add	ax, 0FFD8h
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		push	word_3B051
 		push	0
@@ -28458,7 +28458,7 @@ loc_2B07B:
 		sub	ax, word_3B04D
 		add	ax, 10h
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	7
 		push	word_3B051
 		push	0
@@ -28881,7 +28881,7 @@ loc_2B3F4:
 		idiv	bx
 		mov	[bp+var_2], dx
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
@@ -28915,7 +28915,7 @@ loc_2B4A2:
 		push	0Ch
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		cmp	[bp+var_6], 0
 		jz	short loc_2B4C5
@@ -29048,7 +29048,7 @@ loc_2B60C:
 		push	0Ch
 		call	sub_EABB
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
@@ -29084,7 +29084,7 @@ loc_2B671:
 		push	ax
 		call	sub_EA71
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 4
 		cmp	[bp+var_6], 0
 		jz	short loc_2B698
@@ -29291,7 +29291,7 @@ loc_2B883:
 		add	ax, 0FFF8h
 		push	ax
 		push	word_3B330
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	14000B9h
 		push	word_3B330
 		push	word_3B332
@@ -29324,7 +29324,7 @@ loc_2B8E3:
 		mov	ax, 260h
 		sub	ax, word_3B330
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	14000B9h
 		mov	ax, 27Fh
 		sub	ax, word_3B330
@@ -29382,13 +29382,13 @@ loc_2B97C:
 		mov	ax, 260h
 		sub	ax, word_3B330
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		push	320020h
 		mov	ax, word_3B332
 		add	ax, 0FFF0h
 		push	ax
 		push	word_3B330
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		mov	ax, word_3B332
 		add	ax, 4
 		push	ax
@@ -29723,7 +29723,7 @@ loc_2BC5A:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_2BCCE:
@@ -29785,7 +29785,7 @@ loc_2BD09:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_2BD70:
@@ -29846,7 +29846,7 @@ loc_2BDAA:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_2BE11:
@@ -30952,7 +30952,7 @@ loc_2C8AE:
 		mov	random_seed, eax
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aBoss6_grp ; "boss6.grp"
@@ -30965,14 +30965,14 @@ loc_2C8AE:
 		call	sub_232A4
 		call	sub_EC80
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aBoss6_a5_grp ; "boss6_a5.grp"
 		call	sub_10C31
 		add	sp, 4
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 
 loc_2C949:
 		pop	cx
@@ -31046,7 +31046,7 @@ loc_2C9DA:
 		call	sub_11A94
 		add	sp, 0Ah
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aSyugen_mdt ; "syugen.MDT"
@@ -31325,7 +31325,7 @@ loc_2CC9E:
 		cmp	ax, 65h	; 'e'
 		jnz	loc_2CDCE
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
@@ -31338,7 +31338,7 @@ loc_2CC9E:
 		call	sub_232A4
 		call	sub_EC80
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 
 loc_2CCDC:
 		pop	cx
@@ -31643,12 +31643,12 @@ var_2		= word ptr -2
 		push	4
 		call	sub_2091E
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset aBoss8_a1_grp ; "boss8_a1.grp"
 		call	sub_10BAE
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	ds
 		push	offset aAlice_mdt_0 ; "ALICE.MDT"
 		call	_mdrv2_bgm_load
@@ -32082,14 +32082,14 @@ arg_0		= word ptr  6
 		cmp	word_35FEE, si
 		jz	loc_2D340
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	si
 		push	500118h
 		push	ds
 		push	offset dword_3982A
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	si
 		push	500118h
 		push	ds
@@ -32099,14 +32099,14 @@ arg_0		= word ptr  6
 		cmp	word_35FF0, 3
 		jnz	short loc_2D2EF
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	si
 		push	800118h
 		push	ds
 		push	offset dword_3988E
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Eh
 		push	si
 		push	800118h
@@ -32119,7 +32119,7 @@ loc_2D2EF:
 		cmp	word_35FF0, 0
 		jz	short loc_2D33C
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		mov	ax, word_35FF0
 		dec	ax
 		imul	ax, 3
@@ -32130,7 +32130,7 @@ loc_2D2EF:
 		push	offset dword_3985C
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Eh
 		mov	ax, word_35FF0
 		dec	ax
@@ -32172,14 +32172,14 @@ arg_0		= word ptr  6
 		cmp	si, 3
 		jnz	short loc_2D38B
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	word_35FEE
 		push	800118h
 		push	ds
 		push	offset dword_3988E
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Eh
 		push	word_35FEE
 		push	800118h
@@ -32192,7 +32192,7 @@ loc_2D38B:
 		or	si, si
 		jz	short loc_2D3D1
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		lea	ax, [si-1]
 		imul	ax, 3
 		add	ax, word_35FEE
@@ -32202,7 +32202,7 @@ loc_2D38B:
 		push	offset dword_3985C
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Eh
 		lea	ax, [si-1]
 		imul	ax, 3
@@ -32216,14 +32216,14 @@ loc_2D38B:
 
 loc_2D3D1:
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	word_35FEE
 		push	500118h
 		push	ds
 		push	offset dword_3982A
 		call	sub_1588A
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		add	sp, 0Eh
 		push	word_35FEE
 		push	500118h
@@ -32255,11 +32255,11 @@ arg_0		= word ptr  6
 		push	si
 		mov	si, [bp+arg_0]
 		push	1
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	si
 		call	sub_10CDD
 		push	0
-		call	sub_EA3E
+		call	_graph_accesspage_func
 		push	si
 		call	sub_10CDD
 		add	sp, 8
@@ -32363,7 +32363,7 @@ loc_2D50D:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -32433,7 +32433,7 @@ loc_2D5BD:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -32867,7 +32867,7 @@ loc_2D9A5:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6ABFh]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	di, 3
 		jmp	short loc_2DA02
@@ -33281,7 +33281,7 @@ loc_2DD23:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6AB7h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		inc	di
 
@@ -33351,7 +33351,7 @@ loc_2DDD9:
 		push	80010h
 		push	word_3B495
 		push	word_3B493
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, word_3B48F
 		add	word_3B493, ax
@@ -33377,7 +33377,7 @@ loc_2DE24:
 		push	80010h
 		push	word_3B495
 		push	word_3B493
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		cmp	word_3B497, 0
 		jnz	short loc_2DE4E
@@ -33669,7 +33669,7 @@ loc_2E0A9:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6B09h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	di, 3
 		jmp	short loc_2E106
@@ -34040,7 +34040,7 @@ loc_2E3EC:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6B01h]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		inc	di
 
@@ -36641,7 +36641,7 @@ loc_2FCB5:
 		add	bx, ax
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		les	bx, [bp+arg_0]
 		add	bx, si
@@ -36661,7 +36661,7 @@ loc_2FCEB:
 		add	bx, ax
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		les	bx, [bp+arg_0]
 		add	bx, si
@@ -36706,7 +36706,7 @@ loc_2FD31:
 		add	bx, ax
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		mov	ax, si
 		add	ax, ax
@@ -36971,7 +36971,7 @@ loc_2FF31:
 		push	100010h
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		les	bx, [bp+arg_0]
 		add	bx, si
 		mov	byte ptr es:[bx+30h], 0
@@ -37047,7 +37047,7 @@ loc_2FFCD:
 		push	100010h
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		les	bx, [bp+arg_0]
 		add	bx, si
 		mov	byte ptr es:[bx+30h], 0
@@ -38532,7 +38532,7 @@ loc_30B78:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_30BA4:
@@ -38590,7 +38590,7 @@ loc_30BDF:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_30C46:
@@ -38618,7 +38618,7 @@ loc_30C65:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_30C99:
@@ -38747,7 +38747,7 @@ loc_30D90:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_30DC6:
@@ -38802,7 +38802,7 @@ loc_30DFC:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		call	sub_10433
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 
 loc_30E2B:

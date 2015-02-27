@@ -1555,7 +1555,7 @@ arg_E		= word ptr  14h
 		mov	cx, 11h
 		call	SCOPY@
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aB@cB@iB@ ; "Å@óÏÅ@à Å@"
@@ -2120,7 +2120,7 @@ arg_4		= word ptr  0Ah
 		push	20h ; ' '
 		push	di
 		push	si
-		call	sub_ECA3
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		cmp	[bp+arg_4], 0
 		jnz	short loc_ADB0
@@ -2477,7 +2477,7 @@ loc_B063:
 		push	80h
 		push	word_14032
 		push	word_14030
-		call	sub_ECA3
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+_arglist] ;	arglist
@@ -3149,7 +3149,7 @@ arg_6		= dword	ptr  0Ch
 		mov	cx, 10h
 		call	SCOPY@
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		mov	al, byte_14022
 		mov	ah, 0
@@ -3167,7 +3167,7 @@ arg_6		= dword	ptr  0Ch
 		call	sub_E9E4
 		add	sp, 0Eh
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_B666
@@ -3589,7 +3589,7 @@ sub_B945	proc far
 		push	6
 		call	sub_C911
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		call	sub_D2D6
 		push	64h ; 'd'
@@ -4926,7 +4926,7 @@ var_10		= byte ptr -10h
 		push	0Ah
 		call	sub_C911
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		push	ds
 		push	offset aEndm_a_grp ; "endm_a.grp"
@@ -4934,7 +4934,7 @@ var_10		= byte ptr -10h
 		add	sp, 4
 		call	sub_D349
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		push	8
 		call	sub_C939
@@ -5164,11 +5164,11 @@ loc_C6B1:
 
 loc_C6C7:
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		call	sub_D349
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		push	32h ; '2'
 		call	sub_C842
@@ -5228,7 +5228,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		push	[bp+arg_2]
 		push	[bp+arg_0]
@@ -5320,14 +5320,14 @@ loc_C7D6:
 
 loc_C7DD:
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_A], ax
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
@@ -6723,9 +6723,9 @@ inregs		= REGS ptr -10h
 		push	offset unk_134BA
 		nopcall	sub_D1D9
 		push	0
-		nopcall	sub_D107
+		nopcall	_graph_accesspage_func
 		push	0
-		nopcall	sub_D0FB
+		nopcall	_graph_showpage_func
 		add	sp, 12h
 		nopcall	sub_D300
 		mov	dx, 68h	; 'h'
@@ -6764,9 +6764,9 @@ inregs		= REGS ptr -10h
 		out	dx, al		; PC-98	GDC (6a):
 					;
 		push	0
-		nopcall	sub_D107
+		nopcall	_graph_accesspage_func
 		push	0
-		nopcall	sub_D0FB
+		nopcall	_graph_showpage_func
 		add	sp, 0Eh
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
@@ -6790,9 +6790,9 @@ sub_D094	proc far
 		nopcall	sub_D431
 		nopcall	sub_D300
 		push	0
-		nopcall	sub_D107
+		nopcall	_graph_accesspage_func
 		push	0
-		nopcall	sub_D0FB
+		nopcall	_graph_showpage_func
 		add	sp, 4
 		nopcall	sub_D0C5
 		mov	dx, 68h	; 'h'
@@ -6856,7 +6856,7 @@ sub_D0E0	endp
 
 ; Attributes: bp-based frame
 
-sub_D0FB	proc far
+_graph_showpage_func	proc far
 
 arg_0		= byte ptr  6
 
@@ -6867,27 +6867,27 @@ arg_0		= byte ptr  6
 		out	dx, al
 		pop	bp
 		retf
-sub_D0FB	endp
+_graph_showpage_func	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D107	proc far
+public _graph_accesspage_func
+_graph_accesspage_func	proc far
 
 arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	byte_14159, bl
+		mov	_graph_page, bl
 		mov	dx, 0A6h ; '¶'
 		mov	al, bl
 		out	dx, al
 		pop	bp
 		retf
-sub_D107	endp
+_graph_accesspage_func	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7279,10 +7279,10 @@ sub_D300	proc far
 		push	bp
 		mov	bp, sp
 		push	2
-		call	sub_D107
+		call	_graph_accesspage_func
 		call	sub_D2D6
 		push	2
-		call	sub_D107
+		call	_graph_accesspage_func
 		add	sp, 4
 		call	sub_D2D6
 		pop	bp
@@ -7337,7 +7337,7 @@ _src		= dword	ptr -4
 		mov	[bp+var_8], 0B0000000h
 		mov	[bp+var_C], 0B8000000h
 		mov	[bp+var_10], 0E0000000h
-		mov	al, byte_14159
+		mov	al, _graph_page
 		xor	al, 1
 		mov	[bp+var_11], al
 		xor	si, si
@@ -7399,7 +7399,7 @@ loc_D37B:
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¶'
-		mov	al, byte_14159
+		mov	al, _graph_page
 		out	dx, al
 		add	word ptr [bp+_src], 50h ; 'P'
 		add	word ptr [bp+var_8], 50h ; 'P'
@@ -8125,7 +8125,7 @@ loc_D898:
 		push	ax
 		push	di
 		push	[bp+arg_0]
-		call	sub_ECA3
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		jmp	short loc_D8F0
 ; ---------------------------------------------------------------------------
@@ -8229,7 +8229,7 @@ loc_D934:
 		push	10h
 		push	si
 		push	[bp+arg_0]
-		call	sub_ECA3
+		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
 		jmp	short loc_D9BA
 ; ---------------------------------------------------------------------------
@@ -8618,7 +8618,7 @@ loc_DC61:
 loc_DC87:
 		dec	si
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
@@ -8636,7 +8636,7 @@ loc_DC87:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
@@ -8732,7 +8732,7 @@ loc_DD8E:
 loc_DDB4:
 		dec	si
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
@@ -8750,7 +8750,7 @@ loc_DDB4:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
@@ -8821,7 +8821,7 @@ loc_DE93:
 		dec	ax
 		mov	si, ax
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
@@ -8839,7 +8839,7 @@ loc_DE93:
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		add	sp, 4
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
@@ -9585,7 +9585,7 @@ arg_6		= word ptr  0Ch
 		mov	[bp+var_A], 0B0000000h
 		mov	[bp+var_E], 0B8000000h
 		mov	[bp+var_12], 0E0000000h
-		mov	al, byte_14159
+		mov	al, _graph_page
 		xor	al, 1
 		mov	[bp+var_13], al
 		mov	ax, di
@@ -9675,7 +9675,7 @@ loc_E4BA:
 		call	_memcpy
 		add	sp, 1Eh
 		mov	dx, 0A6h ; '¶'
-		mov	al, byte_14159
+		mov	al, _graph_page
 		out	dx, al
 		add	word ptr [bp+_src], 50h ; 'P'
 		add	word ptr [bp+var_A], 50h ; 'P'
@@ -9876,7 +9876,7 @@ loc_E70D:
 		cmp	ax, [bp+var_2]
 		jl	loc_E658
 		mov	dx, 0A6h ; '¶'
-		mov	al, byte_14159
+		mov	al, _graph_page
 		out	dx, al
 		pop	di
 		pop	si
@@ -10692,125 +10692,11 @@ fuuin_10_TEXT	ends
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
-; Segment type:	Pure code
 fuuin_11_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_11_TEXT
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 		leave
 		retf
-
-include th01/hardware/vram_planes_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EC6F	proc far
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
-		pop	bp
-		retf
-sub_EC6F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECA3	proc far
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, si
-		add	si, [bp+arg_4]
-		and	di, 0FFF0h
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_6], ax
-		call	sub_EC6F
-		mov	[bp+var_2], 0
-		jmp	short loc_ED21
-; ---------------------------------------------------------------------------
-
-loc_ECD7:
-		mov	[bp+var_4], di
-		mov	ax, [bp+var_6]
-		mov	[bp+var_A], ax
-		jmp	short loc_ED15
-; ---------------------------------------------------------------------------
-
-loc_ECE2:
-		push	1
-		call	sub_D107
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_A]
-		mov	ax, es:[bx]
-		mov	[bp+var_8], ax
-		push	0
-		call	sub_D107
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_A]
-		mov	ax, [bp+var_8]
-		mov	es:[bx], ax
-		add	[bp+var_A], 2
-		add	[bp+var_4], 10h
-
-loc_ED15:
-		cmp	[bp+var_4], si
-		jl	short loc_ECE2
-		add	[bp+var_6], 50h	; 'P'
-		inc	[bp+var_2]
-
-loc_ED21:
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+arg_6]
-		jl	short loc_ECD7
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retf
-sub_ECA3	endp
-
+	extern VRAM_PLANES_SET:proc
+	extern _egc_copy_region_from_1_to_0:proc
 fuuin_11_TEXT	ends
 
 ; ===========================================================================
@@ -10972,7 +10858,7 @@ loc_EE48:
 
 loc_EE59:
 		push	1
-		call	sub_D107
+		call	_graph_accesspage_func
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_14]
@@ -11001,7 +10887,7 @@ loc_EE59:
 
 loc_EEA9:
 		push	0
-		call	sub_D107
+		call	_graph_accesspage_func
 		push	[bp+var_12]
 		push	ss
 		lea	ax, [bp+var_1C]
@@ -11816,7 +11702,7 @@ off_14150	dd ?
 word_14154	dw ?
 word_14156	dw ?
 		db    ?	;
-byte_14159	db ?
+_graph_page	db ?
 		dd    ?
 		dd    ?
 		dd    ?
