@@ -617,7 +617,7 @@ loc_98DB:
 loc_98DE:
 		mov	si, ax
 		mov	di, 1F54h
-		call	sub_C10B
+		call	egc_start_copy
 		mov	[bp+var_2], 0
 		jmp	short loc_9930
 ; ---------------------------------------------------------------------------
@@ -713,7 +713,7 @@ loc_996B:
 		shl	dx, 4
 		add	ax, dx
 		mov	di, ax
-		call	sub_C10B
+		call	egc_start_copy
 		mov	[bp+var_2], 0
 		jmp	short loc_99D2
 ; ---------------------------------------------------------------------------
@@ -804,7 +804,7 @@ loc_9A0D:
 		mov	ax, [bp+arg_2]
 		imul	ax, 50h
 		add	si, ax
-		call	sub_C10B
+		call	egc_start_copy
 		mov	ax, [bp+arg_2]
 		mov	[bp+var_2], ax
 		jmp	short loc_9A68
@@ -2279,7 +2279,7 @@ sub_A8A4	endp
 
 ; Attributes: bp-based frame
 
-sub_A8CA	proc near
+rotrect	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -2289,7 +2289,7 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_4]
 		push	[bp+arg_0]
-		call	sub_C1C6
+		call	rotrect_animate
 		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
@@ -2299,7 +2299,7 @@ arg_4		= word ptr  8
 		call	far ptr	palette_show
 		pop	bp
 		retn	6
-sub_A8CA	endp
+rotrect	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2400,7 +2400,7 @@ loc_A992:
 		push	4
 		push	0
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		call	sub_A8A4
 		push	ds
 		push	offset aGvgngogigab@b@ ; "ƒvƒƒOƒ‰ƒ€@@@‚y‚t‚m"
@@ -2418,7 +2418,7 @@ loc_A992:
 		push	0FCh
 		push	2
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		push	15h
 		call	sub_B855
 		pop	cx
@@ -2432,7 +2432,7 @@ loc_A992:
 		push	4
 		push	3
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2471,7 +2471,7 @@ loc_A992:
 		push	0FCh
 		push	0
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		push	1Dh
 		call	sub_B855
 		pop	cx
@@ -2482,7 +2482,7 @@ loc_A992:
 		push	8
 		push	1
 		push	0E9h
-		call	sub_A8CA
+		call	rotrect
 		push	21h ; '!'
 		call	sub_B855
 		pop	cx
@@ -2492,7 +2492,7 @@ loc_A992:
 		push	0F8h
 		push	2
 		push	0E9h
-		call	sub_A8CA
+		call	rotrect
 		push	25h ; '%'
 		call	sub_B855
 		pop	cx
@@ -2510,7 +2510,7 @@ loc_A992:
 		push	8
 		push	3
 		push	0E9h
-		call	sub_A8CA
+		call	rotrect
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2528,7 +2528,7 @@ loc_A992:
 		push	0F8h
 		push	0
 		push	0E9h
-		call	sub_A8CA
+		call	rotrect
 		push	2Dh ; '-'
 		call	sub_B855
 		pop	cx
@@ -2539,7 +2539,7 @@ loc_A992:
 		push	0Ch
 		push	1
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		push	31h ; '1'
 		call	sub_B855
 		pop	cx
@@ -2581,7 +2581,7 @@ loc_A992:
 		push	0F4h
 		push	2
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		push	35h ; '5'
 		call	sub_B855
 		pop	cx
@@ -2592,7 +2592,7 @@ loc_A992:
 		push	0Ch
 		push	3
 		push	29h ; ')'
-		call	sub_A8CA
+		call	rotrect
 		push	39h ; '9'
 		call	sub_B855
 		pop	cx
@@ -4589,336 +4589,8 @@ maine_04_TEXT	ends
 
 ; Segment type:	Pure code
 maine_05_TEXT	segment	byte public 'CODE' use16
-		assume cs:maine_05_TEXT
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C045	proc near
-
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-
-		enter	10h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		xor	si, si
-		jmp	short loc_C0BC
-; ---------------------------------------------------------------------------
-
-loc_C052:
-		movsx	eax, di
-		mov	dl, [bp+arg_0]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+4EEh]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 0C0h
-		mov	bx, si
-		add	bx, bx
-		lea	dx, [bp+var_8]
-		add	bx, dx
-		mov	ss:[bx], ax
-		movsx	eax, di
-		mov	dl, [bp+arg_0]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+46Eh]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 0C8h ; 'È'
-		mov	bx, si
-		add	bx, bx
-		lea	dx, [bp+var_10]
-		add	bx, dx
-		mov	ss:[bx], ax
-		test	si, 1
-		jz	short loc_C0B3
-		mov	al, [bp+arg_0]
-		add	al, 51h	; 'Q'
-		jmp	short loc_C0B8
-; ---------------------------------------------------------------------------
-
-loc_C0B3:
-		mov	al, [bp+arg_0]
-		add	al, 2Fh	; '/'
-
-loc_C0B8:
-		mov	[bp+arg_0], al
-		inc	si
-
-loc_C0BC:
-		cmp	si, 4
-		jl	short loc_C052
-		push	[bp+var_8]
-		push	[bp+var_10]
-		push	[bp+var_6]
-		push	[bp+var_E]
-		call	grcg_line
-		push	[bp+var_6]
-		push	[bp+var_E]
-		push	[bp+var_4]
-		push	[bp+var_C]
-		call	grcg_line
-		push	[bp+var_4]
-		push	[bp+var_C]
-		push	[bp+var_2]
-		push	[bp+var_A]
-		call	grcg_line
-		push	[bp+var_2]
-		push	[bp+var_A]
-		push	[bp+var_8]
-		push	[bp+var_10]
-		call	grcg_line
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_C045	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C10B	proc far
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
-		pop	bp
-		retf
-sub_C10B	endp
-
-; ---------------------------------------------------------------------------
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	si, [bp+6]
-		mov	di, si
-		add	si, [bp+0Ah]
-		and	di, 0FFF0h
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, [bp+8]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+8]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp-6],	ax
-		call	sub_C10B
-		mov	word ptr [bp-2], 0
-		jmp	short loc_C1B5
-; ---------------------------------------------------------------------------
-
-loc_C173:
-		mov	[bp-4],	di
-		mov	ax, [bp-6]
-		mov	[bp-0Ah], ax
-		jmp	short loc_C1A9
-; ---------------------------------------------------------------------------
-
-loc_C17E:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp-0Ah]
-		mov	ax, es:[bx]
-		mov	[bp-8],	ax
-		mov	al, 0
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, [bp-0Ah]
-		mov	ax, [bp-8]
-		mov	es:[bx], ax
-		add	word ptr [bp-0Ah], 2
-		add	word ptr [bp-4], 10h
-
-loc_C1A9:
-		cmp	[bp-4],	si
-		jl	short loc_C17E
-		add	word ptr [bp-6], 50h ; 'P'
-		inc	word ptr [bp-2]
-
-loc_C1B5:
-		mov	ax, [bp-2]
-		cmp	ax, [bp+0Ch]
-		jl	short loc_C173
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C1C6	proc far
-
-var_10		= word ptr -10h
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_2		= word ptr -2
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-
-		enter	10h, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_D78C
-		mov	cx, 0Ah
-		call	SCOPY@
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	ds
-		push	offset asc_D796	; ")))))"
-		mov	cx, 5
-		call	SCOPY@
-		xor	si, si
-		jmp	short loc_C1F9
-; ---------------------------------------------------------------------------
-
-loc_C1F2:
-		mov	al, [bp+arg_0]
-		mov	byte ptr [bp+si+var_10], al
-		inc	si
-
-loc_C1F9:
-		cmp	si, 5
-		jl	short loc_C1F2
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		pushd	0
-		push	180018Fh
-		call	grcg_boxfill
-		xor	si, si
-		jmp	loc_C2AE
-; ---------------------------------------------------------------------------
-
-loc_C21C:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	[bp+var_A]
-		push	[bp+var_10]
-		call	sub_C045
-		mov	al, byte ptr [bp+var_10+1]
-		mov	byte ptr [bp+var_10], al
-		mov	ax, [bp+var_8]
-		mov	[bp+var_A], ax
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 4
-		mov	di, 1
-		jmp	short loc_C27E
-; ---------------------------------------------------------------------------
-
-loc_C24C:
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_A]
-		add	bx, ax
-		push	word ptr ss:[bx]
-		mov	al, byte ptr [bp+di+var_10]
-		push	ax
-		call	sub_C045
-		mov	al, byte ptr [bp+di+var_10+1]
-		mov	byte ptr [bp+di+var_10], al
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_8]
-		add	bx, ax
-		mov	ax, ss:[bx]
-		mov	bx, di
-		add	bx, bx
-		lea	dx, [bp+var_A]
-		add	bx, dx
-		mov	ss:[bx], ax
-		inc	di
-
-loc_C27E:
-		cmp	di, 4
-		jl	short loc_C24C
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		cmp	si, 10h
-		jge	short loc_C29D
-		sub	[bp+var_2], 4
-		mov	al, [bp+arg_2]
-		add	byte ptr [bp+var_C], al
-
-loc_C29D:
-		push	[bp+var_2]
-		push	[bp+var_C]
-		call	sub_C045
-		push	1
-		call	frame_delay
-		inc	si
-
-loc_C2AE:
-		cmp	si, 14h
-		jl	loc_C21C
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		pushd	0
-		push	180018Fh
-		call	grcg_boxfill
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		push	1640060h
-		push	1640130h
-		call	grcg_line
-		push	1640130h
-		push	1C0130h
-		call	grcg_line
-		push	1C0130h
-		push	1C0060h
-		call	grcg_line
-		push	1C0060h
-		push	1640060h
-		call	grcg_line
-		call	grcg_off
-		mov	PaletteTone, 0C8h	; 'È'
-		call	far ptr	palette_show
-		pop	di
-		pop	si
-		leave
-		retf	4
-sub_C1C6	endp
-
+	extern EGC_START_COPY:proc
+	extern ROTRECT_ANIMATE:proc
 maine_05_TEXT	ends
 
 	.data
@@ -5090,17 +4762,6 @@ unk_D77C	db  3Eh	; >
 		db 0DAh
 		db    0
 aHuuhi_dat	db 'huuhi.dat',0
-unk_D78C	db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-asc_D796	db ')))))',0
 
 	.data?
 

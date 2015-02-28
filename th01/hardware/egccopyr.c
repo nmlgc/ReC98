@@ -5,7 +5,7 @@
 	out dx, ax; \
 }
 
-void egc_start_copy(void)
+void pascal egc_start_copy(void)
 {
 	egc_on();
 	OUTW2(EGC_ACTIVEPLANEREG, 0xFFF0);

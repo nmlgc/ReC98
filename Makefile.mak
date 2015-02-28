@@ -43,3 +43,8 @@ bin\th02\op.exe: bin\th02\op.obj th02\op_03.c th02\op_05.c th02\op_06.c
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
+
+bin\th02\maine.exe: bin\th02\maine.obj th02\maine_05.c
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
+$**
+|
