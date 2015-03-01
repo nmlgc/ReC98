@@ -39,22 +39,22 @@ void copy_pic_back(int sel, int highlight)
 	int x, y;
 	if(!highlight) {
 		switch(sel) {
-			case 0:	x =  16; y = 128; break;
-			case 1:	x = 224; y = 224; break;
+			case 0: x =  16; y = 128; break;
+			case 1: x = 224; y = 224; break;
 			case 2: x = 432; y = 128; break;
 		}
 		graph_copy_region_from_1_to_0(x, y, 16, 144);
 		graph_copy_region_from_1_to_0(x, y, 192, 10);
 	} else {
 		switch(sel) {
-			case 0:	x = 208; y = 136; break;
-			case 1:	x = 416; y = 232; break;
+			case 0: x = 208; y = 136; break;
+			case 1: x = 416; y = 232; break;
 			case 2: x = 624; y = 136; break;
 		}
 		graph_copy_region_from_1_to_0(x, y, 16, 144);
 		switch(sel) {
-			case 0:	x =  24; y = 272; break;
-			case 1:	x = 232; y = 368; break;
+			case 0: x =  24; y = 272; break;
+			case 1: x = 232; y = 368; break;
 			case 2: x = 440; y = 272; break;
 		}
 		graph_copy_region_from_1_to_0(x, y, 192, 8);
@@ -81,8 +81,8 @@ void draw_shottype_desc(int sel, int color)
 {
 	int x, y;
 	switch(sel) {
-		case 0:	x =  16; y = 296; break;
-		case 1:	x = 224; y = 136; break;
+		case 0: x =  16; y = 296; break;
+		case 1: x = 224; y = 136; break;
 		case 2: x = 432; y = 296; break;
 	}
 	grcg_setcolor(GC_RMW, color);
@@ -176,10 +176,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				sel--;
-				if(sel < 0) {
-					sel = SHOTTYPE_COUNT - 1;
-				}
+				RING_DEC(sel, SHOTTYPE_COUNT - 1);
 				DRAW_NEW_SEL();
 			}
 			if(input & INPUT_RIGHT) {
@@ -191,10 +188,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				sel++;
-				if(sel > SHOTTYPE_COUNT - 1) {
-					sel = 0;
-				}
+				RING_INC(sel, SHOTTYPE_COUNT - 1);
 				DRAW_NEW_SEL();
 			}
 			if(input & INPUT_SHOT || input & INPUT_OK) {

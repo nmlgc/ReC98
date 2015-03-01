@@ -3,7 +3,7 @@
  * Include file for TH02
  */
 
-#include "pc98.h"
+#include "ReC98.h"
 
 // Formats
 #define PI_SLOTS 6

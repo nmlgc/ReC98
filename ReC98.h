@@ -1,10 +1,37 @@
 /* ReC98
  * -----
- * Some useful PC-98 hardware constants
+ * Some useful random constants and macros
  */
 
-// VRAM planes
-// -----------
+// Macros
+// ------
+#define CLAMP_INC(val, max) \
+	(val)++; \
+	if((val) > (max)) { \
+		(val) = (max); \
+	}
+
+#define CLAMP_DEC(val, min) \
+	(val)--; \
+	if((val) < (min)) { \
+		(val) = (min); \
+	}
+
+#define RING_INC(val, ring_end) \
+	(val)++; \
+	if((val) > (ring_end)) { \
+		(val) = 0; \
+	}
+
+#define RING_DEC(val, ring_end) \
+	(val)--; \
+	if((val) < 0) { \
+		(val) = ring_end; \
+	}
+// ------
+
+// PC-98 VRAM planes
+// -----------------
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
@@ -26,4 +53,4 @@ extern char *VRAM_PLANE_E;
 	}
 
 #define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
-// -----------
+// -----------------
