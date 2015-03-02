@@ -24,6 +24,76 @@ void pi_slot_put(int x, int y, int slot);
 // Hardware
 void graph_putsa_fx(int x, int y, int color, const char *str);
 
+// Gaiji characters
+/* ZUN messed up and swapped M and N in MIKOFT.BFT for both regular and bold
+ * fonts. Therefore, other code shouldn't really use the straightforward
+ * solution of just adding char literals to a defined start offset, as it may
+ * suggest that this also works for M and N (which it doesn't). So...
+ */
+typedef enum {
+	GB_DIGITS = 160,
+	gb_0_ = GB_DIGITS,
+	gb_1_,
+	gb_2_,
+	gb_3_,
+	gb_4_,
+	gb_5_,
+	gb_6_,
+	gb_7_,
+	gb_8_,
+	gb_9_,
+
+	GB_LETTERS = 105,
+	gb_A_ = GB_LETTERS + 'A',
+	gb_B_,
+	gb_C_,
+	gb_D_,
+	gb_E_,
+	gb_F_,
+	gb_G_,
+	gb_H_,
+	gb_I_,
+	gb_J_,
+	gb_K_,
+	gb_L_,
+	gb_M_ = GB_LETTERS + 'N',
+	gb_N_ = GB_LETTERS + 'M',
+	gb_O_ = GB_LETTERS + 'O',
+	gb_P_,
+	gb_Q_,
+	gb_R_,
+	gb_S_,
+	gb_T_,
+	gb_U_,
+	gb_V_,
+	gb_W_,
+	gb_X_,
+	gb_Y_,
+	gb_Z_,
+
+	gb_SP = 207,
+} gaiji_bold_t;
+
+typedef enum {
+	gs_YINYANG = 2, // ☯
+	gs_BOMB, // ◉? ⦿? 🎯? 🖸? Or simply 💣?
+	gs_BULLET = 218, // •
+	gs_PERIOD, // .
+	gs_EXCLAMATION, // !
+	gs_QUESTION, // ?
+	gs_ELLIPSIS, // …
+	gs_COPYRIGHT, // ©
+	gs_HEART, // 🎔
+	gs_SKULL, // 💀
+	gs_GHOST, // 👻
+	gs_SIDDHAM_HAM, // Siddhaṃ seed syllable HĀṂ (I don't even)
+	gs_SPACE, // ␠
+	gs_ARROW_LEFT, // ←
+	gs_ARROW_RIGHT, // →
+	gs_END, // "End"
+	gs_ALL = 240 // "All"
+} gaiji_symbols_t;
+
 typedef enum {
 	INPUT_UP = 0x1,
 	INPUT_DOWN = 0x2,
@@ -96,3 +166,43 @@ typedef struct {
 extern mikoconfig_t *mikoconfig;
 
 #define SHOTTYPE_COUNT 3
+
+// Highscores
+#define SCORE_PLACES 10
+#define SCORE_NAME_LEN 6 /* excluding the terminating 0 */
+#define EXTRA_CLEAR_FLAGS {1, 2, 4}
+#define GAME_CLEAR_CONSTANTS {318, 118, 218}
+#define STAGE_ALL 127
+
+typedef struct {
+	/* For ranks (and therefore, structure instances) #0, #1 and #2 (Easy,
+	 * Normal and Hard), this is either GAME_CLEAR_CONSTANTS[rank] or 0,
+	 * and indicates whether the main 5 stages have been cleared with the
+	 * *shot type* associated with the rank's index, in any difficulty.
+	 * Yes, ZUN uses a field in a rank-specific structure to store a
+	 * shot type-specific value.
+	 *
+	 * For rank #3, this is instead interpreted as a bit field using the
+	 * EXTRA_CLEAR_FLAGS to indicate whether the Extra Stage has been
+	 * cleared with the respective shot type.
+	 * Yes, ZUN stores what is technically information about the Extra
+	 * rank in the structure of the Lunatic rank.
+	 *
+	 * For rank #4, this field is unused.
+	 */
+	int cleared;
+
+	long points[SCORE_PLACES];
+	long points_sum;
+	unsigned char g_name[SCORE_PLACES][SCORE_NAME_LEN + 1];
+	unsigned char g_name_first_sum;
+	unsigned char stage[SCORE_PLACES];
+	unsigned char stage_sum;
+	struct date date[SCORE_PLACES];
+	unsigned char shottype[SCORE_PLACES];
+} score_t;
+
+typedef struct {
+	score_t score;
+	long score_sum; // Sum of all bytes in score, pre-encraption
+} score_file_t;
