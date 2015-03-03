@@ -2166,7 +2166,7 @@ sub_A899	proc near
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	1
-		call	frame_delay_
+		call	frame_delay_2
 		pop	bp
 		retn
 sub_A899	endp
@@ -6245,8 +6245,7 @@ loc_CB7D:
 		retf
 sub_CB68	endp
 
-include th02/hardware/frame_delay_.asm
-	db 0
+	extern FRAME_DELAY_2:proc
 op_02_TEXT	ends
 
 	.data

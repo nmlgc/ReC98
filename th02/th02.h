@@ -115,6 +115,7 @@ extern input_t input;
 
 void input_sense(void);
 void pascal frame_delay(int frames);
+void pascal frame_delay_2(int frames);
 
 // Sound
 #include "libs\kaja\kaja.h"

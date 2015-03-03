@@ -3438,7 +3438,7 @@ sub_C244	proc near
 		mov	dx, 0A6h ; '¦'
 		out	dx, al
 		push	1
-		call	frame_delay_
+		call	frame_delay_2
 		pop	bp
 		retn
 sub_C244	endp
@@ -7492,7 +7492,7 @@ loc_E6D4:
 		retf
 sub_E6D0	endp
 
-include th02/hardware/frame_delay_.asm
+	extern FRAME_DELAY_2:proc
 
 op_02_TEXT	ends
 

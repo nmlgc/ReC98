@@ -2347,14 +2347,14 @@ include th02/hardware/snd_kaja_func.asm
 		cmp	_snd_active, 0
 		jnz	short loc_B232
 		push	64h ; 'd'
-		nopcall	frame_delay_
+		nopcall	frame_delay_2
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_B232:
 		push	1
-		nopcall	frame_delay_
+		nopcall	frame_delay_2
 		mov	ah, KAJA_GET_SONG_MEASURE
 		cmp	_snd_midi_active, 1
 		jz	short loc_B246
@@ -2377,7 +2377,7 @@ loc_B24B:
 ; ---------------------------------------------------------------------------
 
 include th02/hardware/snd_se.asm
-include th02/hardware/frame_delay.asm
+	extern FRAME_DELAY:proc
 op_02_TEXT	ends
 
 ; ===========================================================================

@@ -39,12 +39,22 @@ bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_11.c th01\fuuin_13.c
 $**
 |
 
-bin\th02\op.exe: bin\th02\op.obj th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
+bin\th02\op.exe: bin\th02\op.obj th02\op_02.c th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
 bin\th02\maine.exe: bin\th02\maine.obj th02\maine_03.c th02\maine_04.c th02\maine_05.c
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
+$**
+|
+
+bin\th03\op.exe: bin\th03\op.obj th03\op_02.c
+	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
+$**
+|
+
+bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
+	$(CC) $(CFLAGS) -ml -DGAME=4 -nbin\th04\ -eOP.EXE @&&|
 $**
 |
