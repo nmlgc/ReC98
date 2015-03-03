@@ -175,7 +175,7 @@ loc_9C0E:
 		push	8
 		call	file_read
 		mov	al, [bp+var_8]
-		mov	byte_DC34, al
+		mov	_rank, al
 		mov	al, [bp+var_7]
 		mov	_snd_bgm_mode, al
 		mov	al, [bp+var_6]
@@ -248,7 +248,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ds
 		mov	[bp+var_4], 163h
 		mov	[bp+var_5], 0
-		mov	al, byte_DC34
+		mov	al, _rank
 		mov	[bp+var_C], al
 		mov	al, _snd_bgm_mode
 		mov	[bp+var_B], al
@@ -527,7 +527,7 @@ sub_9FAF	proc far
 		mov	bp, sp
 		call	sub_9F37
 		les	bx, _mikoconfig
-		mov	al, byte_DC34
+		mov	al, _rank
 		mov	es:[bx+mikoconfig_t.rank], al
 		mov	es:[bx+mikoconfig_t.stage], 0
 		call	sub_9CA2
@@ -720,7 +720,7 @@ sub_A150	proc near
 		push	174h
 		push	10h
 		push	ds
-		mov	al, byte_DC34
+		mov	al, _rank
 		cbw
 		shl	ax, 3
 		add	ax, offset gcEASY
@@ -801,7 +801,7 @@ loc_A248:
 loc_A24E:
 		cmp	si, 1
 		jnz	short loc_A274
-		cmp	byte_F4A2, 0
+		cmp	_extra_unlocked, 0
 		jz	short loc_A265
 		push	29
 		push	17
@@ -826,7 +826,7 @@ loc_A274:
 		push	38
 		push	23
 		push	ds
-		mov	al, byte_DC34
+		mov	al, _rank
 		cbw
 		shl	ax, 3
 		add	ax, offset gcEASY
@@ -858,7 +858,7 @@ arg_2		= byte ptr  6
 		add	byte_D6C0, al
 		cmp	byte_D6C1, 0
 		jnz	short loc_A2D1
-		cmp	byte_F4A2, 0
+		cmp	_extra_unlocked, 0
 		jnz	short loc_A2D1
 		cmp	byte_D6C0, 1
 		jnz	short loc_A2D1
@@ -994,9 +994,9 @@ loc_A3B5:
 ; ---------------------------------------------------------------------------
 
 loc_A3BC:
-		mov	word_F4A4, 7D0h
+		mov	_score_duration, 7D0h
 		call	text_clear
-		call	sub_B77E
+		call	score_menu
 		mov	dx, 0A6h ; 'ｦ'
 		mov	al, 1
 		out	dx, al
@@ -1155,7 +1155,7 @@ arg_2		= word ptr  6
 		push	42
 		push	16
 		push	ds
-		mov	al, byte_DC34
+		mov	al, _rank
 		cbw
 		shl	ax, 3
 		add	ax, offset gcEASY
@@ -1171,7 +1171,7 @@ arg_2		= word ptr  6
 		push	104h
 		push	10h
 		push	ds
-		mov	al, byte_DC34
+		mov	al, _rank
 		cbw
 		shl	ax, 3
 		add	ax, offset gcEASY
@@ -1472,10 +1472,10 @@ loc_A7DB:
 		jmp	cs:off_A9AF[bx]
 
 loc_A7F8:
-		inc	byte_DC34
-		cmp	byte_DC34, 3
+		inc	_rank
+		cmp	_rank, 3
 		jle	short loc_A851
-		mov	byte_DC34, 0
+		mov	_rank, 0
 		jmp	short loc_A851
 ; ---------------------------------------------------------------------------
 
@@ -1536,10 +1536,10 @@ loc_A866:
 		jmp	cs:off_A9A5[bx]
 
 loc_A883:
-		dec	byte_DC34
-		cmp	byte_DC34, 0
+		dec	_rank
+		cmp	_rank, 0
 		jge	short loc_A8DC
-		mov	byte_DC34, 3
+		mov	_rank, 3
 		jmp	short loc_A8DC
 ; ---------------------------------------------------------------------------
 
@@ -1602,7 +1602,7 @@ loc_A8F8:
 ; ---------------------------------------------------------------------------
 
 loc_A908:
-		mov	byte_DC34, 1
+		mov	_rank, 1
 		mov	_snd_bgm_mode, SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
 		mov	_snd_midi_active, 0
@@ -1686,8 +1686,8 @@ _envp		= dword	ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_A9DD:
-		call	sub_B86E
-		mov	byte_F4A2, al
+		call	score_cleared_load
+		mov	_extra_unlocked, al
 		call	sub_9BF0
 		cmp	ax, 1
 		jnz	short loc_A9F3
@@ -1722,8 +1722,8 @@ loc_AA1C:
 		mov	byte_E8FE, 1
 
 loc_AA35:
-		mov	word_F4A4, 15Eh
-		call	sub_B77E
+		mov	_score_duration, 15Eh
+		call	score_menu
 		mov	dx, 0A4h ; '､'
 		mov	al, 0
 		out	dx, al
@@ -2390,748 +2390,8 @@ op_03_TEXT	ends
 
 ; Segment type:	Pure code
 op_04_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_04_TEXT
-		;org 1
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3B1	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	word ptr HUUHI_DAT+2
-		push	word ptr HUUHI_DAT
-		call	file_ropen
-		mov	al, byte_DC34
-		cbw
-		imul	ax, 0B6h
-		push	0
-		push	ax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset word_F3EC
-		push	0B6h ; 'ｶ'
-		call	file_read
-		xor	si, si
-		jmp	short loc_B3EF
-; ---------------------------------------------------------------------------
-
-loc_B3E4:
-		mov	al, [si+1DBCh]
-		add	al, 0EEh
-		mov	[si+1DBCh], al
-		inc	si
-
-loc_B3EF:
-		cmp	si, 0B2h ; 'ｲ'
-		jl	short loc_B3E4
-		call	file_close
-		pop	si
-		pop	bp
-		retn
-sub_B3B1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3FD	proc near
-
-var_9		= byte ptr -9
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	di, 0A0h
-		mov	[bp+var_2], 98h
-		mov	[bp+var_4], 9680h
-		mov	[bp+var_9], 0
-		xor	si, si
-		jmp	short loc_B492
-; ---------------------------------------------------------------------------
-
-loc_B418:
-		mov	ax, [bp+var_4]
-		or	ax, [bp+var_2]
-		jz	short loc_B439
-		push	0
-		push	0Ah
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	far ptr LDIV@
-		push	dx
-		push	ax
-		jmp	short loc_B443
-; ---------------------------------------------------------------------------
-
-loc_B439:
-		push	0
-		push	0Ah
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-
-loc_B443:
-		call	far ptr F_LMOD@
-		mov	[bp+var_6], dx
-		mov	[bp+var_8], ax
-		push	0
-		push	0Ah
-		push	[bp+var_2]
-		push	[bp+var_4]
-		call	far ptr LDIV@
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], ax
-		mov	ax, [bp+var_8]
-		add	ax, 0A0h
-		mov	di, ax
-		mov	ax, [bp+var_8]
-		or	ax, [bp+var_6]
-		jz	short loc_B477
-		mov	[bp+var_9], 1
-
-loc_B477:
-		cmp	[bp+var_9], 0
-		jz	short loc_B491
-		mov	ax, si
-		add	ax, ax
-		add	ax, 1Ah
-		call	gaiji_putca pascal, ax, [bp+arg_6], di, [bp+arg_0]
-
-loc_B491:
-		inc	si
-
-loc_B492:
-		cmp	si, 8
-		jl	short loc_B418
-		pop	di
-		pop	si
-		leave
-		retn	8
-sub_B3FD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B49D	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	48
-		push	[bp+arg_4]
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		push	word ptr (HISCORE_TYPE+2)[bx]
-		push	word ptr HISCORE_TYPE[bx]
-		push	[bp+arg_0]
-		call	text_putsa
-		pop	bp
-		retn	6
-sub_B49D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B4BF	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_6]
-		mov	si, 1
-		mov	cx, 1
-		jmp	short loc_B4D8
-; ---------------------------------------------------------------------------
-
-loc_B4D0:
-		mov	ax, 0Ah
-		imul	si
-		mov	si, ax
-		inc	cx
-
-loc_B4D8:
-		cmp	cx, di
-		jl	short loc_B4D0
-		xor	cx, cx
-		jmp	short loc_B507
-; ---------------------------------------------------------------------------
-
-loc_B4E0:
-		mov	ax, [bp+arg_4]
-		cwd
-		idiv	si
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		les	bx, [bp+arg_0]
-		add	bx, cx
-		mov	al, byte ptr [bp+var_2]
-		add	al, 30h	; '0'
-		mov	es:[bx], al
-		mov	bx, 0Ah
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, ax
-		inc	cx
-
-loc_B507:
-		cmp	cx, di
-		jl	short loc_B4E0
-		les	bx, [bp+arg_0]
-		add	bx, cx
-		mov	byte ptr es:[bx], 0
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B4BF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B518	proc near
-
-var_6		= byte ptr -6
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		push	4
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		push	word ptr [bx+1E3Ch]
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		call	sub_B4BF
-		push	56
-		push	si
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	text_putsa
-		push	2
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		mov	al, [bx+1E3Fh]
-		cbw
-		push	ax
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		call	sub_B4BF
-		call	text_putca pascal, 60, si, '/', di
-		push	61
-		push	si
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	text_putsa
-		push	2
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		mov	al, [bx+1E3Eh]
-		cbw
-		push	ax
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		call	sub_B4BF
-		add	sp, 18h
-		call	text_putca pascal, 63, si, '/', di
-		push	64
-		push	si
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	text_putsa
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_B518	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B5B0	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, TX_WHITE
-		call	gaiji_putsa pascal, 22, 2, ds, offset gHI_SCORE, TX_GREEN
-		push	40
-		push	2
-		push	ds
-		mov	al, byte_DC34
-		cbw
-		shl	ax, 3
-		add	ax, offset gcEASY_0
-		push	ax
-		push	TX_GREEN
-		call	gaiji_putsa
-		call	text_putsa pascal, 8, 4, ds, offset aHISCORE_HEAD, TX_GREEN
-		xor	si, si
-		jmp	short loc_B66D
-; ---------------------------------------------------------------------------
-
-loc_B5F4:
-		cmp	si, [bp+arg_0]
-		jnz	short loc_B5FE
-		mov	di, TX_GREEN
-		jmp	short loc_B601
-; ---------------------------------------------------------------------------
-
-loc_B5FE:
-		mov	di, TX_WHITE
-
-loc_B601:
-		push	0Ch
-		lea	ax, [si+7]
-		push	ax
-		push	ds
-		mov	ax, si
-		imul	ax, 7
-		add	ax, 1DEAh
-		push	ax
-		push	di
-		call	gaiji_putsa
-		lea	ax, [si+7]
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		push	word ptr [bx+1DC0h]
-		push	word ptr [bx+1DBEh]
-		push	di
-		call	sub_B3FD
-		cmp	byte ptr [si+1E31h], 7Fh
-		jz	short loc_B645
-		push	2Ch ; ','
-		lea	ax, [si+7]
-		push	ax
-		mov	al, [si+1E31h]
-		mov	ah, 0
-		add	ax, 0A0h
-		push	ax
-		jmp	short loc_B64E
-; ---------------------------------------------------------------------------
-
-loc_B645:
-		push	44
-		lea	ax, [si+7]
-		push	ax
-		push	0F0h
-
-loc_B64E:
-		push	di
-		call	gaiji_putca
-		lea	ax, [si+7]
-		push	ax
-		mov	al, [si+1E64h]
-		mov	ah, 0
-		push	ax
-		push	di
-		call	sub_B49D
-		lea	ax, [si+7]
-		push	ax
-		push	si
-		push	di
-		call	sub_B518
-		inc	si
-
-loc_B66D:
-		cmp	si, 0Ah
-		jl	short loc_B5F4
-		xor	si, si
-		jmp	short loc_B6B0
-; ---------------------------------------------------------------------------
-
-loc_B676:
-		cmp	si, [bp+arg_0]
-		jnz	short loc_B680
-		mov	di, TX_GREEN
-		jmp	short loc_B683
-; ---------------------------------------------------------------------------
-
-loc_B680:
-		mov	di, TX_WHITE
-
-loc_B683:
-		cmp	si, 9
-		jz	short loc_B695
-		push	9
-		lea	ax, [si+7]
-		push	ax
-		lea	ax, [si+0A1h]
-		push	ax
-		jmp	short loc_B6A9
-; ---------------------------------------------------------------------------
-
-loc_B695:
-		call	gaiji_putca pascal, 8, 16, 0A1h, di
-		push	10
-		push	16
-		push	0A0h
-
-loc_B6A9:
-		push	di
-		call	gaiji_putca
-		inc	si
-
-loc_B6B0:
-		cmp	si, 0Ah
-		jl	short loc_B676
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_B5B0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6BB	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		call	grcg_setcolor pascal, GC_RMW, 10
-		call	grcg_fill
-		call	grcg_off
-		inc	word_DCB0
-		xor	si, si
-		jmp	short loc_B723
-; ---------------------------------------------------------------------------
-
-loc_B6DD:
-		mov	ax, si
-		imul	ax, 0A0h
-		add	ax, word_DCB0
-		mov	[bp+var_2], ax
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		mov	ax, si
-		imul	ax, 64h
-		sub	ax, word_DCB0
-		mov	di, ax
-
-loc_B6FE:
-		or	di, di
-		jge	short loc_B708
-		add	di, 190h
-		jmp	short loc_B6FE
-; ---------------------------------------------------------------------------
-
-loc_B708:
-		push	[bp+var_2]
-		push	di
-		push	0
-		call	super_put_rect
-		mov	ax, [bp+var_2]
-		add	ax, 40h
-		push	ax
-		push	di
-		push	1
-		call	super_put_rect
-		inc	si
-
-loc_B723:
-		cmp	si, 4
-		jl	short loc_B6DD
-		xor	si, si
-		jmp	short loc_B775
-; ---------------------------------------------------------------------------
-
-loc_B72C:
-		mov	ax, si
-		imul	ax, 0A0h
-		add	ax, word_DCB0
-		add	ax, 140h
-		mov	[bp+var_2], ax
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		mov	ax, si
-		imul	ax, 64h
-		sub	ax, word_DCB0
-		mov	di, ax
-
-loc_B750:
-		or	di, di
-		jge	short loc_B75A
-		add	di, 190h
-		jmp	short loc_B750
-; ---------------------------------------------------------------------------
-
-loc_B75A:
-		push	[bp+var_2]
-		push	di
-		push	0
-		call	super_put_rect
-		mov	ax, [bp+var_2]
-		add	ax, 40h
-		push	ax
-		push	di
-		push	1
-		call	super_put_rect
-		inc	si
-
-loc_B775:
-		cmp	si, 4
-		jl	short loc_B72C
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B6BB	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B77E	proc far
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		mov	[bp+var_1], 0
-		call	sub_B3B1
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
-		call	graph_clear
-		cmp	byte_DCB2, 0
-		jz	short loc_B7B7
-		mov	byte_DCB2, 0
-		push	ds
-		push	offset aOp_h_bft ; "op_h.bft"
-		call	super_entry_bfnt
-
-loc_B7B7:
-		push	ds
-		push	offset aOp_h_rgb ; "op_h.rgb"
-		call	palette_entry_rgb
-		call	far ptr	palette_show
-		push	80h
-		push	60h
-		push	200h
-		push	130h
-		call	grc_setclip
-		call	grcg_setcolor pascal, GC_RMW, 10
-		call	grcg_fill
-		call	grcg_off
-		push	0FFFFh
-		call	sub_B5B0
-		mov	word_DCB0, 0
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
-		mov	al, 1
-		sub	al, [bp+var_1]
-		mov	[bp+var_1], al
-		mov	dx, 0A4h ; '､'
-		mov	al, 1
-		out	dx, al
-
-loc_B808:
-		call	_input_sense
-		or	si, si
-		jnz	short loc_B81D
-		cmp	_input, 0
-		jnz	short loc_B81D
-		mov	si, 1
-		jmp	short loc_B829
-; ---------------------------------------------------------------------------
-
-loc_B81D:
-		cmp	si, 1
-		jnz	short loc_B829
-		cmp	_input, 0
-		jnz	short loc_B84F
-
-loc_B829:
-		call	sub_B6BB
-		push	1
-		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, [bp+var_1]
-		out	dx, al
-		mov	al, 1
-		sub	al, [bp+var_1]
-		mov	[bp+var_1], al
-		mov	dx, 0A4h ; '､'
-		out	dx, al
-		mov	ax, word_DCB0
-		cmp	ax, word_F4A4
-		jbe	short loc_B808
-
-loc_B84F:
-		mov	_input, 0
-		push	14h
-		call	frame_delay
-		push	0
-		push	0
-		push	27Fh
-		push	18Fh
-		call	grc_setclip
-		pop	si
-		leave
-		retf
-sub_B77E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B86E	proc far
-
-var_A		= byte ptr -0Ah
-var_6		= byte ptr -6
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_6]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_DCB4
-		mov	cx, 6
-		call	SCOPY@
-		lea	ax, [bp+var_A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_DCBA
-		mov	cx, 3
-		call	SCOPY@
-		mov	di, 1
-		mov	byte_DC34, 0
-		jmp	short loc_B8D7
-; ---------------------------------------------------------------------------
-
-loc_B8A0:
-		call	sub_B3B1
-		mov	al, byte_DC34
-		cbw
-		add	ax, ax
-		lea	dx, [bp+var_6]
-		add	ax, dx
-		mov	bx, ax
-		mov	ax, ss:[bx]
-		cmp	ax, word_F3EC
-		jz	short loc_B8C8
-		mov	al, byte_DC34
-		cbw
-		mov	bx, ax
-		mov	byte ptr [bx+1E76h], 0
-		xor	di, di
-		jmp	short loc_B8D3
-; ---------------------------------------------------------------------------
-
-loc_B8C8:
-		mov	al, byte_DC34
-		cbw
-		mov	bx, ax
-		mov	byte ptr [bx+1E76h], 1
-
-loc_B8D3:
-		inc	byte_DC34
-
-loc_B8D7:
-		cmp	byte_DC34, 3
-		jl	short loc_B8A0
-		mov	byte_DC34, 3
-		call	sub_B3B1
-		xor	si, si
-		jmp	short loc_B902
-; ---------------------------------------------------------------------------
-
-loc_B8EA:
-		mov	al, [bp+si+var_A]
-		mov	ah, 0
-		test	word_F3EC, ax
-		jz	short loc_B8FC
-		mov	byte ptr [si+1E79h], 1
-		jmp	short loc_B901
-; ---------------------------------------------------------------------------
-
-loc_B8FC:
-		mov	byte ptr [si+1E79h], 0
-
-loc_B901:
-		inc	si
-
-loc_B902:
-		cmp	si, 3
-		jl	short loc_B8EA
-		mov	ax, di
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B86E	endp
-
+	extern SCORE_MENU:proc
+	extern SCORE_CLEARED_LOAD:proc
 op_04_TEXT	ends
 
 ; ===========================================================================
@@ -3225,35 +2485,7 @@ aUmx		db '東方封魔.録',0
 _snd_active	db 0
 		db 0
 include th02/hardware/snd_se[data].asm
-byte_DC34	db 1
-		db 0
-include th02/strings/hiscore[data].asm
-gcEASY_0	db 0CFh, 0AEh, 0AAh, 0BCh, 0C2h, 0CFh, 0CFh, 0
-gcNORMAL_0	db 0B6h, 0B8h, 0BBh, 0B7h, 0AAh, 0B5h, 0CFh, 0
-gcHARD_0	db 0CFh, 0B1h, 0AAh, 0BBh, 0ADh, 0CFh, 0CFh, 0
-gcLUNATIC_0	db 0B5h, 0BEh, 0B6h, 0AAh, 0BDh, 0B2h, 0ACh, 0
-HISCORE_TYPE		dd aKOUKIDOU		; "高機動"
-		dd aBOUGYO		; "防御"
-		dd aKOUGEKI		; "攻撃"
-word_DCB0	dw 0
-byte_DCB2	db 1
-		db 0
-unk_DCB4	db  3Eh	; >
-		db    1
-		db  76h	; v
-		db    0
-		db 0DAh	; ﾚ
-		db    0
-unk_DCBA	db    1
-		db    2
-		db    4
-aHuuhi_dat	db 'huuhi.dat',0
-aKOUKIDOU	db '高機動',0
-aBOUGYO		db '防御',0
-aKOUGEKI		db '攻撃',0
-aHISCORE_HEAD	db '      お名前　　　　　　得点　　　 STAGE  TYPE   日付',0
-aOp_h_bft	db 'op_h.bft',0
-aOp_h_rgb	db 'op_h.rgb',0
+extern _rank:byte
 
 	.data?
 
@@ -3287,54 +2519,7 @@ byte_F3E2	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-word_F3EC	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-byte_F4A2	db ?
-		db ?
-word_F4A4	dw ?
+extern _extra_unlocked:byte
+extern _score_duration:word
 
 		end

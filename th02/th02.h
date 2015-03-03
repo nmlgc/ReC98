@@ -4,6 +4,7 @@
  */
 
 #include "ReC98.h"
+#include "th01\ranks.h"
 
 // Formats
 #define PI_SLOTS 6
@@ -206,3 +207,6 @@ typedef struct {
 	score_t score;
 	long score_sum; // Sum of all bytes in score, pre-encraption
 } score_file_t;
+
+extern char cleared_game_with[SHOTTYPE_COUNT];
+extern char cleared_extra_with[SHOTTYPE_COUNT];

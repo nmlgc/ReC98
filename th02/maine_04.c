@@ -6,7 +6,7 @@
 #include <master.h>
 #include "th02\th02.h"
 
-#include "th02\strings\score.c"
+#include "th02\score.c"
 
 extern char rank;
 extern long score;
@@ -34,7 +34,7 @@ void pascal score_defaults_set(void)
 	}
 }
 
-#include "th02\formats\scorelod.c"
+#include "th02\scorelod.c"
 
 #define score_init() \
 	if(!file_exist(SCORE_FN)) { \
@@ -67,13 +67,6 @@ void pascal score_points_put(unsigned y, long points, unsigned atrb)
 #define ALPHABET_PUTCA(col, row, atrb) \
 	gaiji_putca(10 + (col * 2), 18 + row, gALPHABET[row][col], atrb);
 
-#define ATRB_SET \
-	if(i == place_to_highlight) { \
-		atrb = TX_GREEN; \
-	} else { \
-		atrb = TX_WHITE; \
-	}
-
 void pascal near scores_put(int place_to_highlight)
 {
 	unsigned atrb = TX_WHITE;
@@ -92,7 +85,7 @@ void pascal near scores_put(int place_to_highlight)
 		ALPHABET_PUTCA(0, 0, TX_GREEN | TX_REVERSE);
 	}
 	for(i = 0; i < SCORE_PLACES; i++) {
-		ATRB_SET;
+		ATRB_SET(i);
 		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
 		score_points_put(6+i, hi.score.points[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
@@ -102,7 +95,7 @@ void pascal near scores_put(int place_to_highlight)
 		}
 	}
 	for(i = 0; i < SCORE_PLACES; i++) {
-		ATRB_SET;
+		ATRB_SET(i);
 		if(i != 9) {
 			gaiji_putca(6, 6+i, GB_DIGITS+i+1, atrb);
 		} else {
