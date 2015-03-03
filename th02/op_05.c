@@ -3,7 +3,6 @@
  * Code segment #5 of TH02's OP.EXE
  */
 
-#include <master.h>
 #include "th02\th02.h"
 
 char sel = 1;

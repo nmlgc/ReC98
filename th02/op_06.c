@@ -3,7 +3,6 @@
  * Code segment #6 of TH02's OP.EXE
  */
 
-#include <master.h>
 #include "th02\th02.h"
 
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])

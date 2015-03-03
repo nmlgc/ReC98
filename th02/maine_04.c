@@ -3,7 +3,6 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
-#include <master.h>
 #include "th02\th02.h"
 
 #include "th02\score.c"

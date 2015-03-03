@@ -1,7 +1,9 @@
 /* ReC98
  * -----
- * Some useful random constants and macros
+ * Main include file
  */
+
+#include <master.h>
 
 // Macros
 // ------

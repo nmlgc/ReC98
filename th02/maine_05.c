@@ -3,7 +3,6 @@
  * Code segment #5 of TH02's MAINE.EXE
  */
 
-#include <master.h>
 #include "th02\th02.h"
 
 void pascal near rotrect_draw(int rad, unsigned char angle)

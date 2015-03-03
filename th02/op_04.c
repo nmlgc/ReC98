@@ -3,7 +3,6 @@
  * Code segment #4 of TH02's OP.EXE
  */
 
-#include <master.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include "th02\th02.h"
