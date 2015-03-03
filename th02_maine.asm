@@ -3004,7 +3004,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_B888
+		call	cfg_load
 		or	ax, ax
 		jz	loc_B1FE
 		les	bx, _mikoconfig
@@ -3598,56 +3598,7 @@ maine_02_TEXT	ends
 
 ; Segment type:	Pure code
 maine_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:maine_03_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B888	proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	ds
-		push	offset aHuuma_cfg ; "huuma.cfg"
-		call	file_ropen
-		pushd	5
-		push	0
-		call	file_seek
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	2
-		call	file_read
-		call	file_close
-		cmp	[bp+var_2], 0
-		jnz	short loc_B8BA
-		xor	ax, ax
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B8BA:
-		mov	ax, [bp+var_2]
-		mov	word ptr _mikoconfig+2, ax
-		mov	word ptr _mikoconfig, 0
-		les	bx, _mikoconfig
-		mov	al, es:[bx+mikoconfig_t.rem_lives]
-		mov	byte_FB07, al
-		mov	al, es:[bx+mikoconfig_t.rem_bombs]
-		mov	byte_FB08, al
-		mov	al, es:[bx+mikoconfig_t.rank]
-		mov	_rank, al
-		mov	eax, es:[bx+mikoconfig_t.score]
-		mov	_score, eax
-		mov	ax, 1
-		leave
-		retf
-sub_B888	endp
-
+	extern CFG_LOAD:proc
 maine_03_TEXT	ends
 
 ; ===========================================================================
@@ -3824,10 +3775,7 @@ include th02/formats/pfopen[data].asm
 _snd_active	db 0
 		db 0
 aUmx		db '“Œ•û••–‚.˜^',0
-public _rank
-_rank	db 1
-		db 0
-aHuuma_cfg	db 'huuma.cfg',0
+extern _rank:byte
 
 	.data?
 
@@ -5093,17 +5041,7 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
-public _mikoconfig
-_mikoconfig	dd ?
-		db    ?	;
-byte_FB07	db ?
-byte_FB08	db ?
-		db ?
-		db    ?	;
-		db    ?	;
-public _score
-_score	dd ?
-		db    ?	;
-		db    ?	;
+extern _mikoconfig:dword
+extern _score:dword
 
 		end

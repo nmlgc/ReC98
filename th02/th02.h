@@ -137,6 +137,19 @@ void snd_se_update(void);
 #define MUSIC_CMT_LINE_LEN 42
 #define MUSIC_CMT_LINE_COUNT 20
 
+// Configuration file
+#pragma option -a1
+typedef struct {
+	char rank;
+	char music;
+	char bombs;
+	char lives;
+	char perf;
+	int mikoconfig_sgm;
+	char debug;
+} huuma_cfg_t;
+#pragma option -a2
+
 // Resident structure
 typedef struct {
 	char id[11];	// = "MIKOConfig"
