@@ -10127,45 +10127,10 @@ sub_F913	endp
 
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
-include th02/hardware/snd_kaja_func.asm
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	_snd_active, 0
-		jnz	short loc_FA25
-		push	64h ; 'd'
-		nopcall	frame_delay
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_FA25:
-		push	1
-		nopcall	frame_delay
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_midi_active, 1
-		jz	short loc_FA39
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_FA3E
-; ---------------------------------------------------------------------------
-
-loc_FA39:
-		mov	dx, 0C0h
-		int	61h		; reserved for user interrupt
-
-loc_FA3E:
-		cmp	ax, [bp+6]
-		jb	short loc_FA25
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		db 0
-
-include th02/hardware/snd_se.asm
+	extern _snd_kaja_func:proc
+	extern _snd_se_reset:proc
+	extern _snd_se_play:proc
+	extern _snd_se_update:proc
 main_02_TEXT	ends
 
 ; ===========================================================================
@@ -35015,6 +34980,7 @@ byte_1E301	db 3
 byte_1E302	db 0
 		db 0
 include th02/formats/pfopen[data].asm
+public _snd_active
 _snd_active	db 0
 		db 0
 byte_1E30C	db 1

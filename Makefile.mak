@@ -44,7 +44,12 @@ bin\th02\op.exe: bin\th02\op.obj th02\op_02.c th02\op_03.c th02\op_04.c th02\op_
 $**
 |
 
-bin\th02\maine.exe: bin\th02\maine.obj th02\maine_03.c th02\maine_04.c th02\maine_05.c
+bin\th02\main.exe: bin\th02\main.obj th02\main_02.c
+	$(CC) $(CFLAGS) -ml -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
+$**
+|
+
+bin\th02\maine.exe: bin\th02\maine.obj th02\maine_02.c th02\maine_03.c th02\maine_04.c th02\maine_05.c
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

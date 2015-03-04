@@ -2339,44 +2339,10 @@ include th02/hardware/snd_pmd_resident.asm
 include th02/hardware/snd_load.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
-include th02/hardware/snd_kaja_func.asm
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		cmp	_snd_active, 0
-		jnz	short loc_B232
-		push	64h ; 'd'
-		nopcall	frame_delay_2
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B232:
-		push	1
-		nopcall	frame_delay_2
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_midi_active, 1
-		jz	short loc_B246
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_B24B
-; ---------------------------------------------------------------------------
-
-loc_B246:
-		mov	dx, 0C0h
-		int	61h		; reserved for user interrupt
-
-loc_B24B:
-		cmp	ax, [bp+6]
-		jb	short loc_B232
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-include th02/hardware/snd_se.asm
+	extern _snd_kaja_func:proc
+	extern _snd_se_reset:proc
+	extern _snd_se_play:proc
+	extern _snd_se_update:proc
 	extern FRAME_DELAY:proc
 op_02_TEXT	ends
 
@@ -2482,9 +2448,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 aUmx		db '“Œ•û••–‚.˜^',0
-_snd_active	db 0
-		db 0
-include th02/hardware/snd_se[data].asm
+extern _snd_active:byte
 extern _rank:byte
 
 	.data?

@@ -19,3 +19,4 @@ typedef enum {
 } kaja_func_t;
 
 #define PMD 0x60
+#define MMD 0x61

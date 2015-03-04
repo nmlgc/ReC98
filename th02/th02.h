@@ -123,14 +123,14 @@ void pascal frame_delay_2(int frames);
 extern char snd_midi_active;
 extern char snd_midi_possible;
 
-void snd_kaja_func(kaja_func_t func);
+int snd_kaja_func(kaja_func_t func);
 
 #define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
 
 void snd_load(const char *fn, int func);
 
 void snd_se_reset(void);
-void snd_se_play(unsigned char se);
+void snd_se_play(int new_se);
 void snd_se_update(void);
 
 // Music Room
