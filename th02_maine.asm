@@ -3546,8 +3546,8 @@ loc_B76A:
 		retf
 sub_B756	endp
 
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
+	extern _pi_slot_palette_apply:proc
+	extern _pi_slot_put:proc
 	extern _snd_kaja_func:proc
 	extern _snd_delay_until_measure:proc
 maine_02_TEXT	ends

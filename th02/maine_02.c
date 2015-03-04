@@ -9,5 +9,6 @@ extern char snd_active;
 
 #define frame_delay_2 frame_delay
 
+#include "th02/formats/pi_put.c"
 #include "th02/snd/kajafunc.c"
 #include "th02/snd/delaymea.c"

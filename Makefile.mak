@@ -45,7 +45,7 @@ $**
 |
 
 bin\th02\main.exe: bin\th02\main.obj th02\main_02.c
-	$(CC) $(CFLAGS) -ml -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 

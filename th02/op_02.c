@@ -5,6 +5,8 @@
 
 #include "th02/th02.h"
 
+#pragma option -3
+
 char snd_active = 0;
 char snd_unused = 0;
 
@@ -12,6 +14,7 @@ extern char snd_midi_active;
 
 #include "th02/snd/se_data.c"
 
+#include "th02/formats/pi_put.c"
 #include "th02/snd/kajafunc.c"
 #include "th02/snd/delaymea.c"
 #include "th02/snd/se.c"

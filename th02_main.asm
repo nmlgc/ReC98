@@ -10125,8 +10125,8 @@ loc_F927:
 		retf
 sub_F913	endp
 
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
+	extern _pi_slot_palette_apply:proc
+	extern _pi_slot_put:proc
 	extern _snd_kaja_func:proc
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc

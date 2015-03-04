@@ -32,6 +32,9 @@
 	}
 // ------
 
+#define RES_X 640
+#define RES_Y 400
+
 // PC-98 VRAM planes
 // -----------------
 typedef enum {
@@ -47,7 +50,7 @@ extern char *VRAM_PLANE_R;
 extern char *VRAM_PLANE_E;
 
 // Parenthesizing it like this avoids a signed 16-bit overflow.
-#define PLANE_SIZE (640 * (400 / 8))
+#define PLANE_SIZE (RES_X * (RES_Y / 8))
 
 #define PLANE_DWORD_BLIT(dst, src) \
 	for(p = 0; p < PLANE_SIZE; p += 4) { \
