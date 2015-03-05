@@ -28,7 +28,7 @@ th05:: $(TH05:\=bin\th05\)
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
 
-bin\th01\op.exe: bin\th01\op.obj th01\op_11.c
+bin\th01\op.exe: bin\th01\op.obj th01\op_11.c th01\op_12.cpp
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eOP.EXE $**
 
 bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_16.c

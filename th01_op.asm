@@ -6875,12 +6875,12 @@ arg_2		= dword	ptr  8
 		push	di
 		mov	di, [bp+arg_0]
 		pushd	[bp+arg_2]
-		call	sub_E783
+		call	@arc_file_load$qnxc
 		push	ss
 		lea	ax, [bp+var_38]
 		push	ax
 		push	6
-		call	sub_E889
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_33]
 		cbw
 		mov	[bp+var_4], ax
@@ -6919,7 +6919,7 @@ loc_D6A7:
 		lea	ax, [bp+var_38]
 		push	ax
 		push	30h ; '0'
-		call	sub_E889
+		call	@arc_file_get$qncui
 		cmp	word_129B8, 0
 		jz	short loc_D6C7
 		push	ss
@@ -6944,13 +6944,13 @@ loc_D6C7:
 loc_D6E8:
 		pushd	[bp+var_8]
 		push	1
-		call	sub_E889
+		call	@arc_file_get$qncui
 		mov	ax, word ptr [bp+var_8]
 		inc	ax
 		push	word ptr [bp+var_8+2]
 		push	ax
 		push	200h
-		call	sub_E889
+		call	@arc_file_get$qncui
 		xor	si, si
 		jmp	short loc_D732
 ; ---------------------------------------------------------------------------
@@ -6978,7 +6978,7 @@ loc_D73F:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+var_4]
 		jl	short loc_D6E8
-		call	sub_E8D9
+		call	@arc_file_free$qv
 		xor	ax, ax
 
 loc_D74E:
@@ -8569,482 +8569,10 @@ op_11_TEXT	ends
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
-; Segment type:	Pure code
 op_12_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_12_TEXT
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	800h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr dword_13EEA+2,	dx
-		mov	word ptr dword_13EEA, ax
-		pushd	dword ptr [bp+6]
-		call	file_ropen
-		xor	si, si
-		jmp	short loc_E5AF
-; ---------------------------------------------------------------------------
-
-loc_E597:
-		les	bx, [bp+6]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+1C70h], al
-		mov	bx, [bp+6]
-		add	bx, si
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_E5B4
-		inc	si
-
-loc_E5AF:
-		cmp	si, 0Dh
-		jl	short loc_E597
-
-loc_E5B4:
-		pushd	[dword_13EEA]
-		push	800h
-		call	file_read
-		call	file_close
-		xor	si, si
-		jmp	short loc_E60D
-; ---------------------------------------------------------------------------
-
-loc_E5CA:
-		mov	ax, si
-		shl	ax, 5
-		les	bx, dword_13EEA
-		add	bx, ax
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_E612
-		xor	di, di
-		jmp	short loc_E607
-; ---------------------------------------------------------------------------
-
-loc_E5DF:
-		mov	ax, si
-		shl	ax, 5
-		les	bx, dword_13EEA
-		add	bx, ax
-		cmp	byte ptr es:[bx+di+3], 0
-		jz	short loc_E60C
-		mov	ax, si
-		shl	ax, 5
-		les	bx, dword_13EEA
-		add	bx, ax
-		mov	al, es:[bx+di+3]
-		not	al
-		mov	es:[bx+di+3], al
-		inc	di
-
-loc_E607:
-		cmp	di, 0Dh
-		jl	short loc_E5DF
-
-loc_E60C:
-		inc	si
-
-loc_E60D:
-		cmp	si, 40h
-		jl	short loc_E5CA
-
-loc_E612:
-		mov	word_13EF4, si
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		pushd	[dword_13EEA]
-		call	@$bdla$qnv
-		add	sp, 4
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E62E	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_E66F
-; ---------------------------------------------------------------------------
-
-loc_E636:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		cbw
-		push	ax		; ch
-		call	_toupper
-		pop	cx
-		mov	dx, word_13EF2
-		shl	dx, 5
-		les	bx, dword_13EEA
-		add	bx, dx
-		push	ax
-		mov	al, es:[bx+si+3]
-		cbw
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_E674
-		les	bx, [bp+arg_0]
-		add	bx, si
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_E66E
-		mov	ax, 1
-		jmp	short loc_E676
-; ---------------------------------------------------------------------------
-
-loc_E66E:
-		inc	si
-
-loc_E66F:
-		cmp	si, 0Dh
-		jl	short loc_E636
-
-loc_E674:
-		xor	ax, ax
-
-loc_E676:
-		pop	si
-		pop	bp
-		retn	4
-sub_E62E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E67B	proc near
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_E68E
-; ---------------------------------------------------------------------------
-
-loc_E682:
-		les	bx, [bp+arg_2]
-		add	bx, dx
-		mov	al, byte_13EF7
-		xor	es:[bx], al
-		inc	dx
-
-loc_E68E:
-		cmp	dx, [bp+arg_0]
-		jb	short loc_E682
-		pop	bp
-		retn	6
-sub_E67B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E697	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	word_13F0F, 0
-		jnz	short loc_E6AF
-		pushd	[off_13EFC]
-		push	100h
-		call	file_read
-
-loc_E6AF:
-		les	bx, off_13EFC
-		add	bx, word_13F0F
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		mov	al, byte_13EF7
-		xor	[bp+var_1], al
-		inc	word_13F0F
-		cmp	word_13F0F, 100h
-		jb	short loc_E6D5
-		mov	word_13F0F, 0
-
-loc_E6D5:
-		mov	al, [bp+var_1]
-		leave
-		retn
-sub_E697	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E6DA	proc near
-
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	0Ch, 0
-		mov	[bp+var_8], 0
-		mov	[bp+var_C], 0
-		call	sub_E697
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		jmp	short loc_E772
-; ---------------------------------------------------------------------------
-
-loc_E6FA:
-		les	bx, off_13EF8
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_3]
-		mov	es:[bx], al
-		mov	[bp+var_1], al
-		inc	[bp+var_C]
-		call	sub_E697
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		mov	al, [bp+var_1]
-		cmp	al, [bp+var_3]
-		jnz	short loc_E6FA
-		les	bx, off_13EF8
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_3]
-
-loc_E72A:
-		mov	es:[bx], al
-		inc	[bp+var_C]
-		call	sub_E697
-		mov	[bp+var_2], al
-		inc	[bp+var_8]
-		jmp	short loc_E751
-; ---------------------------------------------------------------------------
-
-loc_E73D:
-		les	bx, off_13EF8
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		inc	[bp+var_C]
-		dec	[bp+var_2]
-
-loc_E751:
-		cmp	[bp+var_2], 0
-		ja	short loc_E73D
-		call	sub_E697
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		cmp	al, [bp+var_1]
-		jnz	short loc_E772
-		les	bx, off_13EF8
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_1]
-		jmp	short loc_E72A
-; ---------------------------------------------------------------------------
-
-loc_E772:
-		movzx	eax, [bp+arg_0]
-		cmp	eax, [bp+var_8]
-		jg	loc_E6FA
-		leave
-		retn	2
-sub_E6DA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E783	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-arg_0		= dword	ptr  6
-
-		enter	4, 0
-		push	si
-		lea	ax, [bp+var_4]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aXx	; "••"
-		mov	cx, 3
-		call	SCOPY@
-		mov	word_13EF2, 0
-		xor	si, si
-		jmp	short loc_E7B3
-; ---------------------------------------------------------------------------
-
-loc_E7A3:
-		pushd	[bp+arg_0]
-		call	sub_E62E
-		or	ax, ax
-		jnz	short loc_E7B9
-		inc	word_13EF2
-		inc	si
-
-loc_E7B3:
-		cmp	si, word_13EF4
-		jl	short loc_E7A3
-
-loc_E7B9:
-		mov	ax, word_13EF2
-		shl	ax, 5
-		mov	dx, word ptr dword_13EEA+2
-		mov	bx, word ptr dword_13EEA
-		add	bx, ax
-		mov	word ptr dword_13EEE+2,	dx
-		mov	word ptr dword_13EEE, bx
-		push	ds
-		push	offset unk_13F00
-		call	file_ropen
-		les	bx, dword_13EEE
-		pushd	dword ptr es:[bx+18h]
-		push	0
-		call	file_seek
-		les	bx, dword_13EEE
-		mov	al, es:[bx]
-		cmp	al, [bp+var_4]
-		jnz	short loc_E806
-		mov	al, es:[bx+1]
-		cmp	al, [bp+var_3]
-		jnz	short loc_E806
-		mov	byte_13EF6, 1
-		jmp	short loc_E80B
-; ---------------------------------------------------------------------------
-
-loc_E806:
-		mov	byte_13EF6, 0
-
-loc_E80B:
-		mov	word_13F0D, 0
-		les	bx, dword_13EEE
-		push	word ptr es:[bx+14h]
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_13EF8+2, dx
-		mov	word ptr off_13EF8, ax
-		cmp	byte_13EF6, 0
-		jz	short loc_E85D
-		push	100h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_13EFC+2, dx
-		mov	word ptr off_13EFC, ax
-		mov	word_13F0F, 0
-		les	bx, dword_13EEE
-		push	word ptr es:[bx+10h]
-		call	sub_E6DA
-		pushd	[off_13EFC] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		jmp	short loc_E87F
-; ---------------------------------------------------------------------------
-
-loc_E85D:
-		pushd	[off_13EF8]
-		les	bx, dword_13EEE
-		push	word ptr es:[bx+10h]
-		call	file_read
-		pushd	[off_13EF8]
-		les	bx, dword_13EEE
-		push	word ptr es:[bx+10h]
-		call	sub_E67B
-
-loc_E87F:
-		call	file_close
-		pop	si
-		leave
-		retf	4
-sub_E783	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E889	proc far
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		enter	4, 0
-		mov	eax, [bp+arg_2]
-		mov	[bp+var_4], eax
-		xor	dx, dx
-		jmp	short loc_E8C2
-; ---------------------------------------------------------------------------
-
-loc_E899:
-		movzx	eax, word_13F0D
-		les	bx, dword_13EEE
-		cmp	eax, es:[bx+14h]
-		jge	short locret_E8C7
-		les	bx, off_13EF8
-		add	bx, word_13F0D
-		mov	al, es:[bx]
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx], al
-		inc	word_13F0D
-		inc	dx
-
-loc_E8C2:
-		cmp	dx, [bp+arg_0]
-		jb	short loc_E899
-
-locret_E8C7:
-		leave
-		retf	6
-sub_E889	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+6]
-		cbw
-		mov	word_13F0D, ax
-		pop	bp
-		retf	2
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E8D9	proc far
-		push	bp
-		mov	bp, sp
-		pushd	[off_13EF8] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pop	bp
-		retf
-sub_E8D9	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		les	bx, dword_13EEE
-		mov	ax, es:[bx+14h]
-		pop	bp
-		retf
+	extern @ARC_FILE_LOAD$QNXC:proc
+	extern @ARC_FILE_GET$QNCUI:proc
+	extern @ARC_FILE_FREE$QV:proc
 op_12_TEXT	ends
 
 ; ===========================================================================
@@ -9496,8 +9024,6 @@ public _mdrv2_have_board
 _mdrv2_have_board	db 0
 		db 0
 aMdrv2system	db 'Mdrv2System',0
-aXx		db '••',0
-		db 0
 	.data?
 
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
@@ -9992,22 +9518,5 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 dword_13EE6	dd ?
-dword_13EEA	dd ?
-dword_13EEE	dd ?
-word_13EF2	dw ?
-word_13EF4	dw ?
-byte_13EF6	db ?
-byte_13EF7	db ?
-; void (*off_13EF8)(void)
-off_13EF8	dd ?
-; void (*off_13EFC)(void)
-off_13EFC	dd ?
-unk_13F00	db    ?	;
-		dd    ?
-		dd    ?
-		dd    ?
-word_13F0D	dw ?
-word_13F0F	dw ?
-		db    ?	;
 
 		end

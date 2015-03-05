@@ -4209,10 +4209,10 @@ loc_D6EE:
 		push	offset sub_D07C
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
 		add	sp, 4
-		mov	byte_39A41, 76h	; 'v'
+		mov	_arc_key, 76h
 		push	ds
 		push	offset aUmx	; "ìåï˚ËÀàŸ.ì`"
-		call	sub_170C8
+		call	@arc_open$qnxc
 		call	vram_planes_set
 		push	[bp+var_6]
 		call	sub_20754
@@ -5290,7 +5290,7 @@ loc_E2CB:
 		call	sub_D4DD
 		call	sub_E852
 		call	key_end
-		call	sub_1716F
+		call	@arc_close$qv
 		pushd	0
 		push	ds
 		push	offset aOp	; "op"
@@ -10451,12 +10451,12 @@ arg_2		= dword	ptr  8
 		push	di
 		mov	di, [bp+arg_0]
 		pushd	[bp+arg_2]
-		call	sub_172D6
+		call	@arc_file_load$qnxc
 		push	ss
 		lea	ax, [bp+var_38]
 		push	ax
 		push	6
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_33]
 		cbw
 		mov	[bp+var_4], ax
@@ -10495,7 +10495,7 @@ loc_10769:
 		lea	ax, [bp+var_38]
 		push	ax
 		push	30h ; '0'
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		cmp	word_350CE, 0
 		jz	short loc_10789
 		push	ss
@@ -10520,13 +10520,13 @@ loc_10789:
 loc_107AA:
 		pushd	[bp+var_8]
 		push	1
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	ax, word ptr [bp+var_8]
 		inc	ax
 		push	word ptr [bp+var_8+2]
 		push	ax
 		push	200h
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		xor	si, si
 		jmp	short loc_107F4
 ; ---------------------------------------------------------------------------
@@ -10554,7 +10554,7 @@ loc_10801:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+var_4]
 		jl	short loc_107AA
-		call	sub_1742C
+		call	@arc_file_free$qv
 		xor	ax, ax
 
 loc_10810:
@@ -18958,12 +18958,12 @@ loc_14BF4:
 		push	si
 		push	di
 		pushd	[bp+arg_4]
-		call	sub_172D6
+		call	@arc_file_load$qnxc
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
 		push	10h
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_32]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -18978,7 +18978,7 @@ loc_14BF4:
 		imul	word ptr es:[bx+282h]
 		mov	[bp+var_2], ax
 		push	40h
-		call	sub_1741E
+		call	@arc_file_seek$qc
 		xor	di, di
 		jmp	loc_14E20
 ; ---------------------------------------------------------------------------
@@ -19032,35 +19032,35 @@ loc_14C45:
 		push	word ptr es:[si+2]
 		push	word ptr es:[si]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		pushd	dword ptr es:[bx+80h]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		pushd	dword ptr es:[bx+100h]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		pushd	dword ptr es:[bx+180h]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		pushd	dword ptr es:[bx+200h]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	[bp+var_4], 0
 		jmp	loc_14E15
 ; ---------------------------------------------------------------------------
@@ -19149,7 +19149,7 @@ loc_14E20:
 		les	bx, [bp+arg_0]
 		cmp	es:[bx+284h], di
 		jg	loc_14C45
-		call	sub_1742C
+		call	@arc_file_free$qv
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -20136,12 +20136,12 @@ arg_8		= word ptr  0Eh
 		push	si
 		push	di
 		pushd	[bp+arg_4]
-		call	sub_172D6
+		call	@arc_file_load$qnxc
 		push	ss
 		lea	ax, [bp+var_32]
 		push	ax
 		push	10h
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_2E]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -20159,7 +20159,7 @@ arg_8		= word ptr  0Eh
 		lea	ax, [bp+var_32]
 		push	ax
 		push	30h ; '0'
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		cmp	byte_35A44, 0
 		jnz	loc_1583C
 		push	[bp+arg_8]
@@ -20252,7 +20252,7 @@ loc_156F5:
 		add	bx, ax
 		pushd	dword ptr [bx+4ADAh]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -20260,7 +20260,7 @@ loc_156F5:
 		add	bx, ax
 		pushd	dword ptr [bx+4ACAh]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -20268,7 +20268,7 @@ loc_156F5:
 		add	bx, ax
 		pushd	dword ptr [bx+4ACEh]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -20276,7 +20276,7 @@ loc_156F5:
 		add	bx, ax
 		pushd	dword ptr [bx+4AD2h]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -20284,7 +20284,7 @@ loc_156F5:
 		add	bx, ax
 		pushd	dword ptr [bx+4AD6h]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		inc	si
 
 loc_15831:
@@ -20296,7 +20296,7 @@ loc_1583C:
 		les	bx, [bp+arg_0]
 		mov	al, byte ptr [bp+arg_8]
 		mov	es:[bx+31h], al
-		call	sub_1742C
+		call	@arc_file_free$qv
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -22632,12 +22632,12 @@ arg_8		= word ptr  0Eh
 		push	si
 		push	di
 		pushd	[bp+arg_4]
-		call	sub_172D6
+		call	@arc_file_load$qnxc
 		push	ss
 		lea	ax, [bp+var_34]
 		push	ax
 		push	10h
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_30]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -22654,7 +22654,7 @@ arg_8		= word ptr  0Eh
 		lea	ax, [bp+var_34]
 		push	ax
 		push	30h ; '0'
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		cmp	byte_35A44, 0
 		jnz	loc_16D55
 		push	[bp+arg_8]
@@ -22747,7 +22747,7 @@ loc_16BBA:
 		add	bx, ax
 		pushd	dword ptr [bx+4D5Ah]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	[bp+var_2], 0
 		jmp	short loc_16CD5
 ; ---------------------------------------------------------------------------
@@ -22790,7 +22790,7 @@ loc_16CD5:
 		add	bx, ax
 		pushd	dword ptr [bx+4D4Ah]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -22798,7 +22798,7 @@ loc_16CD5:
 		add	bx, ax
 		pushd	dword ptr [bx+4D4Eh]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -22806,7 +22806,7 @@ loc_16CD5:
 		add	bx, ax
 		pushd	dword ptr [bx+4D52h]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
@@ -22814,7 +22814,7 @@ loc_16CD5:
 		add	bx, ax
 		pushd	dword ptr [bx+4D56h]
 		push	di
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		inc	si
 
 loc_16D46:
@@ -22828,7 +22828,7 @@ loc_16D55:
 		les	bx, [bp+arg_0]
 		mov	al, byte ptr [bp+arg_8]
 		mov	es:[bx+0Ah], al
-		call	sub_1742C
+		call	@arc_file_free$qv
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -23224,516 +23224,7 @@ main_22_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_22_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_170C8	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	800h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_39A34+2, dx
-		mov	word ptr off_39A34, ax
-		pushd	[bp+arg_0]
-		call	file_ropen
-		xor	si, si
-		jmp	short loc_17102
-; ---------------------------------------------------------------------------
-
-loc_170EA:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[si+50AAh], al
-		mov	bx, word ptr [bp+arg_0]
-		add	bx, si
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_17107
-		inc	si
-
-loc_17102:
-		cmp	si, 0Dh
-		jl	short loc_170EA
-
-loc_17107:
-		pushd	[off_39A34]
-		push	800h
-		call	file_read
-		call	file_close
-		xor	si, si
-		jmp	short loc_17160
-; ---------------------------------------------------------------------------
-
-loc_1711D:
-		mov	ax, si
-		shl	ax, 5
-		les	bx, off_39A34
-		add	bx, ax
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_17165
-		xor	di, di
-		jmp	short loc_1715A
-; ---------------------------------------------------------------------------
-
-loc_17132:
-		mov	ax, si
-		shl	ax, 5
-		les	bx, off_39A34
-		add	bx, ax
-		cmp	byte ptr es:[bx+di+3], 0
-		jz	short loc_1715F
-		mov	ax, si
-		shl	ax, 5
-		les	bx, off_39A34
-		add	bx, ax
-		mov	al, es:[bx+di+3]
-		not	al
-		mov	es:[bx+di+3], al
-		inc	di
-
-loc_1715A:
-		cmp	di, 0Dh
-		jl	short loc_17132
-
-loc_1715F:
-		inc	si
-
-loc_17160:
-		cmp	si, 40h
-		jl	short loc_1711D
-
-loc_17165:
-		mov	word_39A3E, si
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_170C8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1716F	proc far
-		push	bp
-		mov	bp, sp
-		pushd	[off_39A34] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pop	bp
-		retf
-sub_1716F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17181	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_171C2
-; ---------------------------------------------------------------------------
-
-loc_17189:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		cbw
-		push	ax
-		call	_toupper
-		pop	cx
-		mov	dx, word_39A3C
-		shl	dx, 5
-		les	bx, off_39A34
-		add	bx, dx
-		push	ax
-		mov	al, es:[bx+si+3]
-		cbw
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_171C7
-		les	bx, [bp+arg_0]
-		add	bx, si
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_171C1
-		mov	ax, 1
-		jmp	short loc_171C9
-; ---------------------------------------------------------------------------
-
-loc_171C1:
-		inc	si
-
-loc_171C2:
-		cmp	si, 0Dh
-		jl	short loc_17189
-
-loc_171C7:
-		xor	ax, ax
-
-loc_171C9:
-		pop	si
-		pop	bp
-		retn	4
-sub_17181	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_171CE	proc near
-
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_171E1
-; ---------------------------------------------------------------------------
-
-loc_171D5:
-		les	bx, [bp+arg_2]
-		add	bx, dx
-		mov	al, byte_39A41
-		xor	es:[bx], al
-		inc	dx
-
-loc_171E1:
-		cmp	dx, [bp+arg_0]
-		jb	short loc_171D5
-		pop	bp
-		retn	6
-sub_171CE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_171EA	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	word_39A59, 0
-		jnz	short loc_17202
-		pushd	[off_39A46]
-		push	100h
-		call	file_read
-
-loc_17202:
-		les	bx, off_39A46
-		add	bx, word_39A59
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		mov	al, byte_39A41
-		xor	[bp+var_1], al
-		inc	word_39A59
-		cmp	word_39A59, 100h
-		jb	short loc_17228
-		mov	word_39A59, 0
-
-loc_17228:
-		mov	al, [bp+var_1]
-		leave
-		retn
-sub_171EA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1722D	proc near
-
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	0Ch, 0
-		mov	[bp+var_8], 0
-		mov	[bp+var_C], 0
-		call	sub_171EA
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		jmp	short loc_172C5
-; ---------------------------------------------------------------------------
-
-loc_1724D:
-		les	bx, off_39A42
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_3]
-		mov	es:[bx], al
-		mov	[bp+var_1], al
-		inc	[bp+var_C]
-		call	sub_171EA
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		mov	al, [bp+var_1]
-		cmp	al, [bp+var_3]
-		jnz	short loc_1724D
-		les	bx, off_39A42
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_3]
-
-loc_1727D:
-		mov	es:[bx], al
-		inc	[bp+var_C]
-		call	sub_171EA
-		mov	[bp+var_2], al
-		inc	[bp+var_8]
-		jmp	short loc_172A4
-; ---------------------------------------------------------------------------
-
-loc_17290:
-		les	bx, off_39A42
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		inc	[bp+var_C]
-		dec	[bp+var_2]
-
-loc_172A4:
-		cmp	[bp+var_2], 0
-		ja	short loc_17290
-		call	sub_171EA
-		mov	[bp+var_3], al
-		inc	[bp+var_8]
-		cmp	al, [bp+var_1]
-		jnz	short loc_172C5
-		les	bx, off_39A42
-		add	bx, word ptr [bp+var_C]
-		mov	al, [bp+var_1]
-		jmp	short loc_1727D
-; ---------------------------------------------------------------------------
-
-loc_172C5:
-		movzx	eax, [bp+arg_0]
-		cmp	eax, [bp+var_8]
-		jg	loc_1724D
-		leave
-		retn	2
-sub_1722D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_172D6	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-arg_0		= dword	ptr  6
-
-		enter	4, 0
-		push	si
-		lea	ax, [bp+var_4]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aXx	; "ïï"
-		mov	cx, 3
-		call	SCOPY@
-		mov	word_39A3C, 0
-		xor	si, si
-		jmp	short loc_17306
-; ---------------------------------------------------------------------------
-
-loc_172F6:
-		pushd	[bp+arg_0]
-		call	sub_17181
-		or	ax, ax
-		jnz	short loc_1730C
-		inc	word_39A3C
-		inc	si
-
-loc_17306:
-		cmp	si, word_39A3E
-		jl	short loc_172F6
-
-loc_1730C:
-		mov	ax, word_39A3C
-		shl	ax, 5
-		mov	dx, word ptr off_39A34+2
-		mov	bx, word ptr off_39A34
-		add	bx, ax
-		mov	word ptr dword_39A38+2,	dx
-		mov	word ptr dword_39A38, bx
-		push	ds
-		push	offset unk_39A4A
-		call	file_ropen
-		les	bx, dword_39A38
-		pushd	dword ptr es:[bx+18h]
-		push	0
-		call	file_seek
-		les	bx, dword_39A38
-		mov	al, es:[bx]
-		cmp	al, [bp+var_4]
-		jnz	short loc_17359
-		mov	al, es:[bx+1]
-		cmp	al, [bp+var_3]
-		jnz	short loc_17359
-		mov	byte_39A40, 1
-		jmp	short loc_1735E
-; ---------------------------------------------------------------------------
-
-loc_17359:
-		mov	byte_39A40, 0
-
-loc_1735E:
-		mov	word_39A57, 0
-		les	bx, dword_39A38
-		push	word ptr es:[bx+14h]
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_39A42+2, dx
-		mov	word ptr off_39A42, ax
-		cmp	byte_39A40, 0
-		jz	short loc_173B0
-		push	100h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_39A46+2, dx
-		mov	word ptr off_39A46, ax
-		mov	word_39A59, 0
-		les	bx, dword_39A38
-		push	word ptr es:[bx+10h]
-		call	sub_1722D
-		pushd	[off_39A46] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		jmp	short loc_173D2
-; ---------------------------------------------------------------------------
-
-loc_173B0:
-		pushd	[off_39A42]
-		les	bx, dword_39A38
-		push	word ptr es:[bx+10h]
-		call	file_read
-		pushd	[off_39A42]
-		les	bx, dword_39A38
-		push	word ptr es:[bx+10h]
-		call	sub_171CE
-
-loc_173D2:
-		call	file_close
-		pop	si
-		leave
-		retf	4
-sub_172D6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_173DC	proc far
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		enter	4, 0
-		mov	eax, [bp+arg_2]
-		mov	[bp+var_4], eax
-		xor	dx, dx
-		jmp	short loc_17415
-; ---------------------------------------------------------------------------
-
-loc_173EC:
-		movzx	eax, word_39A57
-		les	bx, dword_39A38
-		cmp	eax, es:[bx+14h]
-		jge	short locret_1741A
-		les	bx, off_39A42
-		add	bx, word_39A57
-		mov	al, es:[bx]
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx], al
-		inc	word_39A57
-		inc	dx
-
-loc_17415:
-		cmp	dx, [bp+arg_0]
-		jb	short loc_173EC
-
-locret_1741A:
-		leave
-		retf	6
-sub_173DC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1741E	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		cbw
-		mov	word_39A57, ax
-		pop	bp
-		retf	2
-sub_1741E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1742C	proc far
-		push	bp
-		mov	bp, sp
-		pushd	[off_39A42] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pop	bp
-		retf
-sub_1742C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1743E	proc far
-		push	bp
-
-loc_1743F:
-		mov	bp, sp
-
-loc_17441:
-		les	bx, dword_39A38
-		mov	ax, es:[bx+14h]
-		pop	bp
-		retf
-sub_1743E	endp
-
+include th01/pf.asm
 main_22_TEXT	ends
 
 ; ===========================================================================
@@ -23761,28 +23252,28 @@ arg_2		= dword	ptr  8
 		push	di
 		mov	di, [bp+arg_0]
 		pushd	[bp+arg_2]
-		call	sub_172D6
+		call	@arc_file_load$qnxc
 		push	4
-		call	sub_1741E
+		call	@arc_file_seek$qc
 		push	ds
 		mov	ax, di
 		imul	ax, 26h
 		add	ax, 50BCh
 		push	ax
 		push	2
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		push	ds
 		mov	ax, di
 		imul	ax, 26h
 		add	ax, 50BEh
 		push	ax
 		push	2
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
 		push	8
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	al, [bp+var_36]
 		mov	ah, 0
 		mov	bx, di
@@ -23799,7 +23290,7 @@ arg_2		= dword	ptr  8
 		lea	ax, [bp+var_36]
 		push	ax
 		push	30h ; '0'
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		mov	[bp+var_4], 0
 		jmp	short loc_17534
 ; ---------------------------------------------------------------------------
@@ -23840,7 +23331,7 @@ loc_174F9:
 		add	bx, ax
 		pushd	dword ptr [bx+50C2h]
 		push	[bp+var_2]
-		call	sub_173DC
+		call	@arc_file_get$qncui
 		inc	[bp+var_4]
 
 loc_17534:
@@ -23849,7 +23340,7 @@ loc_17534:
 		mov	ax, [bx+50C0h]
 		cmp	ax, [bp+var_4]
 		jg	short loc_174C8
-		call	sub_1742C
+		call	@arc_file_free$qv
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -32170,8 +31661,7 @@ aUmx_2		db 'ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@',0
 aUmx_1		db 'ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^',0
 byte_35A44	db 0
 		db 0
-aXx		db 'ïï',0
-		db    0
+include th01/pf[data].asm
 unk_35A4A	db  18h
 		db  3Ch	; <
 		db  7Eh	; ~
@@ -35974,23 +35464,7 @@ word_39A2B	dw ?
 		db    ?	;
 byte_39A32	db ?
 		db ?
-; void (*off_39A34)(void)
-off_39A34	dd ?
-dword_39A38	dd ?
-word_39A3C	dw ?
-word_39A3E	dw ?
-byte_39A40	db ?
-byte_39A41	db ?
-; void (*off_39A42)(void)
-off_39A42	dd ?
-; void (*off_39A46)(void)
-off_39A46	dd ?
-unk_39A4A	db    ?	;
-		dd    ?
-		dd    ?
-		dd    ?
-word_39A57	dw ?
-word_39A59	dw ?
+include th01/pf[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
