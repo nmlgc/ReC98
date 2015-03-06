@@ -444,7 +444,7 @@ loc_B7F3:
 		mov	byte_38708, 0
 
 loc_B802:
-		cmp	word_34A6C, 1
+		cmp	_mode_test, 1
 		jnz	short locret_B87A
 		push	6
 		call	key_sense
@@ -2805,17 +2805,17 @@ loc_CB5D:
 loc_CB66:
 		cmp	[bp+var_1], 0
 		jz	short loc_CB96
-		les	bx, dword_3919C
-		inc	dword ptr es:[bx+23h]
-		inc	dword_34A66
-		mov	ax, es:[bx+3Fh]
+		les	bx, reiidenconfig
+		inc	es:[bx+reiidenconfig_t.continues_total]
+		inc	_continues_total
+		mov	ax, es:[bx+reiidenconfig_t.stage]
 		mov	bx, 5
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr dword_3919C
+		mov	bx, word ptr reiidenconfig
 		add	bx, ax
-		inc	word ptr es:[bx+27h]
+		inc	es:[bx+reiidenconfig_t.continues_per_scene]
 
 loc_CB91:
 		mov	ax, 1
@@ -2851,23 +2851,23 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		les	bx, dword_3919C
-		cmp	es:[bx+19h], dx
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.bullet_speed], dx
 		jle	short loc_CBD4
-		mov	es:[bx+19h], dx
+		mov	es:[bx+reiidenconfig_t.bullet_speed], dx
 		jmp	short loc_CBDF
 ; ---------------------------------------------------------------------------
 
 loc_CBD4:
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		mov	ax, [bp+arg_2]
-		add	es:[bx+19h], ax
+		add	es:[bx+reiidenconfig_t.bullet_speed], ax
 
 loc_CBDF:
-		les	bx, dword_3919C
-		cmp	word ptr es:[bx+19h], 0FFF1h
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.bullet_speed], -15
 		jge	short loc_CBF0
-		mov	word ptr es:[bx+19h], 0FFF1h
+		mov	es:[bx+reiidenconfig_t.bullet_speed], -15
 
 loc_CBF0:
 		pop	bp
@@ -2885,12 +2885,12 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		mov	ax, [bp+arg_0]
-		add	es:[bx+19h], ax
-		cmp	word ptr es:[bx+19h], 14h
+		add	es:[bx+reiidenconfig_t.bullet_speed], ax
+		cmp	es:[bx+reiidenconfig_t.bullet_speed], 20
 		jle	short loc_CC0D
-		mov	word ptr es:[bx+19h], 14h
+		mov	es:[bx+reiidenconfig_t.bullet_speed], 20
 
 loc_CC0D:
 		pop	bp
@@ -2965,30 +2965,30 @@ sub_CC0F	proc far
 		mov	byte_34A51, 0
 		mov	byte_34A4E, 0
 		call	sub_B87C
-		les	bx, dword_3919C
-		inc	dword ptr es:[bx+23h]
-		inc	dword_34A66
-		mov	ax, es:[bx+3Fh]
+		les	bx, reiidenconfig
+		inc	es:[bx+reiidenconfig_t.continues_total]
+		inc	_continues_total
+		mov	ax, es:[bx+reiidenconfig_t.stage]
 		mov	bx, 5
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr dword_3919C
+		mov	bx, word ptr reiidenconfig
 		add	bx, ax
-		inc	word ptr es:[bx+27h]
-		mov	bx, word ptr dword_3919C
-		mov	eax, es:[bx+45h]
-		cmp	eax, dword_34A5A
+		inc	es:[bx+reiidenconfig_t.continues_per_scene]
+		mov	bx, word ptr reiidenconfig
+		mov	eax, es:[bx+reiidenconfig_t.score_highest]
+		cmp	eax, _score
 		jnb	short loc_CD2E
-		mov	eax, dword_34A5A
-		mov	es:[bx+45h], eax
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score_highest], eax
 
 loc_CD2E:
-		les	bx, dword_3919C
-		mov	dword ptr es:[bx+1Fh], 0
-		mov	al, es:[bx+11h]
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.score], 0
+		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		add	al, 2
-		mov	es:[bx+15h], al
+		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		push	0FFFBFFFEh
 		call	sub_CBBE
 		add	sp, 4
@@ -3009,11 +3009,11 @@ loc_CD52:
 loc_CD70:
 		cmp	si, 1
 		jnz	short loc_CDA2
-		les	bx, dword_3919C
-		mov	byte ptr es:[bx+16h], 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
 		call	sub_E852
-		les	bx, dword_3919C
-		mov	word ptr es:[bx+49h], 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
 		push	ds
 		push	offset path	; "REIIDEN"
@@ -3027,7 +3027,7 @@ loc_CD70:
 loc_CDA2:
 		mov	byte_34A4F, 0
 		mov	byte_34A51, 0
-		mov	dword_34A66, 0
+		mov	_continues_total, 0
 		call	_mdrv2_bgm_stop
 		jmp	short loc_CDD3
 ; ---------------------------------------------------------------------------
@@ -3309,9 +3309,9 @@ loc_D00D:
 		call	sub_11738
 		pop	cx
 		mov	al, byte_36C14
-		mov	byte_34A32, al
-		les	bx, dword_3919C
-		mov	byte ptr es:[bx+10h], 1
+		mov	_bombs, al
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.bombs], 1
 		pop	di
 		pop	si
 		leave
@@ -3328,15 +3328,15 @@ sub_D02F	proc far
 		mov	bp, sp
 		movsx	eax, word_34A8A
 		imul	eax, 61A80h
-		cmp	eax, dword_34A5A
+		cmp	eax, _score
 		ja	short loc_D07A
-		cmp	word_34A80, 6
+		cmp	_rem_lives, 6
 		jge	short loc_D076
-		inc	word_34A80
-		les	bx, dword_3919C
-		mov	al, byte ptr word_34A80
-		mov	es:[bx+15h], al
-		mov	ax, word_34A80
+		inc	_rem_lives
+		les	bx, reiidenconfig
+		mov	al, byte ptr _rem_lives
+		mov	es:[bx+reiidenconfig_t.rem_lives], al
+		mov	ax, _rem_lives
 		dec	ax
 		push	ax
 		call	sub_18E15
@@ -3469,7 +3469,7 @@ var_4		= dword	ptr -4
 
 loc_D118:
 		mov	[bp+var_4], 0
-		cmp	word_34A6C, 1
+		cmp	_mode_test, 1
 		jnz	loc_D317
 		call	sub_EA17
 		push	ds
@@ -3683,7 +3683,7 @@ sub_D10B	endp
 sub_D323	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_34A6C, 1
+		cmp	_mode_test, 1
 		jnz	short loc_D33E
 		call	sub_E9FC
 		push	ds
@@ -3827,7 +3827,7 @@ loc_D414:
 		add	sp, 4
 		pushd	[dword_36C20]
 		push	word_34A6E
-		pushd	[dword_36C16]
+		pushd	[_rand]
 		pushd	[dword_34A62]
 		push	ds
 		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
@@ -3910,7 +3910,7 @@ sub_D4C2	proc far
 		push	bp
 		mov	bp, sp
 		movzx	eax, word_360CD
-		add	dword_34A5A, eax
+		add	_score, eax
 		call	sub_1889C
 		mov	word_360CD, 0
 		pop	bp
@@ -4023,9 +4023,9 @@ loc_D54F:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset dword_34A66
+		push	offset _continues_total
 		push	ds
-		push	offset dword_36C16
+		push	offset _rand
 		push	ds
 		push	offset unk_34A33
 		push	ds
@@ -4047,27 +4047,27 @@ loc_D579:
 
 loc_D583:
 		mov	byte_36C14, 1
-		les	bx, dword_3919C
-		mov	eax, es:[bx+1Fh]
-		mov	dword_34A5A, eax
+		les	bx, reiidenconfig
+		mov	eax, es:[bx+reiidenconfig_t.score]
+		mov	_score, eax
 		mov	ebx, 61A80h
 		cdq
 		idiv	ebx
 		inc	ax
 		mov	word_34A8A, ax
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		call	sub_E7E4
 		call	key_start
 		push	3F003Fh
 		call	__control87
 		add	sp, 4
-		les	bx, dword_3919C
-		mov	al, es:[bx+14h]
-		mov	byte_3A37E, al
-		cmp	byte ptr es:[bx+18h], 0
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.route]
+		mov	_route, al
+		cmp	es:[bx+reiidenconfig_t.mode], 0
 		jz	loc_D68E
-		cmp	word ptr es:[bx+3Fh], 0
+		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_D649
 		push	ds
 		push	offset aCGzgmgngg ; "面セレクト\n"
@@ -4089,7 +4089,7 @@ loc_D583:
 		call	_puts
 		add	sp, 4
 		push	ds
-		push	offset byte_3A37E
+		push	offset _route
 		push	ds
 		push	offset aD	; "%d"
 		call	_scanf
@@ -4100,26 +4100,26 @@ loc_D583:
 ; ---------------------------------------------------------------------------
 
 loc_D62C:
-		mov	al, byte_3A37E
+		mov	al, _route
 		cbw
 		cmp	ax, 1
 		jle	short loc_D63C
-		mov	byte_3A37E, 1
+		mov	_route, 1
 		jmp	short loc_D649
 ; ---------------------------------------------------------------------------
 
 loc_D63C:
-		mov	al, byte_3A37E
+		mov	al, _route
 		cbw
 		or	ax, ax
 		jge	short loc_D649
 
 loc_D644:
-		mov	byte_3A37E, 0
+		mov	_route, 0
 
 loc_D649:
-		les	bx, dword_3919C
-		mov	al, es:[bx+18h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 1
 		jnz	short loc_D669
@@ -4127,11 +4127,11 @@ loc_D649:
 		push	offset aGegxgggvbGhbib ; "テストモード！！\n"
 		call	_puts
 		add	sp, 4
-		mov	word_34A6C, 1
+		mov	_mode_test, 1
 
 loc_D669:
-		les	bx, dword_3919C
-		mov	al, es:[bx+18h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 3
 		jnz	short loc_D68E
@@ -4139,8 +4139,8 @@ loc_D669:
 		push	offset aGfgogbgogvbGhb ; "デバッグモード！！\n"
 		call	_puts
 		add	sp, 4
-		mov	byte_36C1F, 1
-		mov	word_34A6C, 1
+		mov	_mode_debug, 1
+		mov	_mode_test, 1
 
 loc_D68E:
 		mov	al, byte_34A31
@@ -4159,7 +4159,7 @@ loc_D69C:
 loc_D6A6:
 		cmp	[bp+var_2], 0Ah
 		jge	short loc_D6BD
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_D6B8
 		mov	ax, 1
 		jmp	short loc_D6EE
@@ -4173,7 +4173,7 @@ loc_D6B8:
 loc_D6BD:
 		cmp	[bp+var_2], 0Fh
 		jge	short loc_D6D4
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_D6CF
 		mov	ax, 3
 		jmp	short loc_D6EE
@@ -4187,7 +4187,7 @@ loc_D6CF:
 loc_D6D4:
 		cmp	[bp+var_2], 14h
 		jge	short loc_D6EB
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_D6E6
 		mov	ax, 5
 		jmp	short loc_D6E9
@@ -4217,7 +4217,7 @@ loc_D6EE:
 		push	[bp+var_6]
 		call	sub_20754
 		pop	cx
-		cmp	byte_36C1F, 1
+		cmp	_mode_debug, 1
 		jnz	short loc_D72E
 		call	sub_D340
 		push	28h ; '('
@@ -4226,16 +4226,16 @@ loc_D6EE:
 
 loc_D72E:
 		call	sub_D487
-		les	bx, dword_3919C
-		mov	al, es:[bx+15h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.rem_lives]
 		cbw
-		mov	word_34A80, ax
-		mov	al, es:[bx+10h]
-		mov	byte_34A32, al
+		mov	_rem_lives, ax
+		mov	al, es:[bx+reiidenconfig_t.bombs]
+		mov	_bombs, al
 		mov	word_36C26, 130h
 		cmp	byte_34A31, 0
 		jz	short loc_D776
-		cmp	byte ptr es:[bx+16h], 0
+		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
 		jz	short loc_D776
 		push	ds
 		push	offset aInit_mdt ; "init.mdt"
@@ -4248,7 +4248,7 @@ loc_D72E:
 		add	sp, 4
 
 loc_D776:
-		cmp	byte_36C1F, 1
+		cmp	_mode_debug, 1
 		jnz	short loc_D795
 		push	ds
 		push	offset a2	; "2 :"
@@ -4276,8 +4276,8 @@ loc_D795:
 		mov	byte_35BEE, dl
 		mov	byte_34A49, 1
 		mov	byte_36C1E, 1
-		les	bx, dword_3919C
-		cmp	byte ptr es:[bx+16h], 0
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
 		jnz	short loc_D7E0
 		mov	ax, 1
 		jmp	short loc_D7E2
@@ -4290,15 +4290,15 @@ loc_D7E2:
 		mov	si, ax
 
 loc_D7E4:
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		mov	ax, [bp+var_2]
-		mov	es:[bx+3Fh], ax
-		mov	al, byte_3A37E
-		mov	es:[bx+14h], al
-		mov	eax, dword_34A5A
-		mov	es:[bx+1Fh], eax
-		mov	eax, dword_34A66
-		mov	es:[bx+23h], eax
+		mov	es:[bx+reiidenconfig_t.stage], ax
+		mov	al, _route
+		mov	es:[bx+reiidenconfig_t.route], al
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score], eax
+		mov	eax, _continues_total
+		mov	es:[bx+reiidenconfig_t.continues_total], eax
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -4354,11 +4354,11 @@ loc_D892:
 ; ---------------------------------------------------------------------------
 
 loc_D89B:
-		mov	al, byte_3A37E	; jumptable 0000D85B case 9
+		mov	al, _route	; jumptable 0000D85B case 9
 		add	al, 2
 		mov	byte_34ADF, al
 		mov	word_360CA, 1
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_D8D9
 		push	ds
 		push	offset aLegend_mdt ; "LEGEND.mdt"
@@ -4395,11 +4395,11 @@ loc_D8D9:
 
 loc_D901:
 		mov	al, 1		; jumptable 0000D85B case 14
-		sub	al, byte_3A37E
+		sub	al, _route
 		add	al, 4
 		mov	byte_34ADF, al
 		mov	word_360CA, 1
-		mov	al, byte_3A37E
+		mov	al, _route
 		cbw
 		cmp	ax, 1
 		jnz	short loc_D947
@@ -4443,11 +4443,11 @@ loc_D96D:
 ; ---------------------------------------------------------------------------
 
 loc_D972:
-		mov	al, byte_3A37E	; jumptable 0000D85B case 19
+		mov	al, _route	; jumptable 0000D85B case 19
 		add	al, 6
 		mov	byte_34ADF, al
 		mov	word_360CA, 1
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_D99F
 		push	ds
 		push	offset aTensi_mdt ; "tensi.mdt"
@@ -4518,7 +4518,7 @@ loc_DA06:
 		jmp	short $+2
 
 loc_DA2A:
-		cmp	byte_36C1F, 1
+		cmp	_mode_debug, 1
 		jnz	short loc_DA49
 		push	ds
 		push	offset a3	; "3 :"
@@ -4582,7 +4582,7 @@ loc_DA9E:
 		mov	word_34A86, 0
 		mov	dword_34A62, 0
 		mov	word_386B3, 7
-		cmp	byte_36C1F, 1
+		cmp	_mode_debug, 1
 		jnz	short loc_DAD7
 		call	sub_D340
 		push	28h ; '('
@@ -4724,7 +4724,7 @@ loc_DC3A:
 		mov	byte_36C1E, 0
 		mov	byte_34A4E, 0
 		mov	byte_34A47, 1
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		mov	word_34A6E, 14h
 		mov	byte_34A49, 0
@@ -4733,18 +4733,18 @@ loc_DC3A:
 ; ---------------------------------------------------------------------------
 
 loc_DC64:
-		inc	dword_36C16
-		mov	ax, word_34A80
+		inc	_rand
+		mov	ax, _rem_lives
 		imul	ax, 0C8h
 		mov	dx, 708h
 		sub	dx, ax
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		imul	ax, 32h
 		sub	dx, ax
 		mov	[bp+var_C], dx
 		movsx	ebx, [bp+var_C]
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		xor	edx, edx
 		div	ebx
 		cmp	edx, 0
@@ -4780,12 +4780,12 @@ loc_DCCA:
 		inc	word_36C2C
 		inc	dword_34A62
 		inc	word_34A6E
-		test	byte ptr dword_36C16, 3
+		test	byte ptr _rand, 3
 		jnz	short loc_DCFA
 		call	sub_1938A
 
 loc_DCFA:
-		cmp	word_34A6C, 1
+		cmp	_mode_test, 1
 		jnz	short loc_DD20
 		cmp	byte_34A52, 0
 		jz	short loc_DD0E
@@ -4795,7 +4795,7 @@ loc_DD0E:
 		cmp	byte_34A55, 0
 		jz	short loc_DD20
 		mov	byte_34A4F, 1
-		mov	word_34A80, 0
+		mov	_rem_lives, 0
 
 loc_DD20:
 		push	word_34A78
@@ -4895,7 +4895,7 @@ loc_DDF8:
 		cmp	[bp+var_4], 1
 		jz	loc_E2CB
 		call	sub_D02F
-		cmp	byte_36C1F, 1
+		cmp	_mode_debug, 1
 		jnz	short loc_DE0F
 		call	sub_D340
 
@@ -4905,17 +4905,17 @@ loc_DE0F:
 		cmp	ax, 1
 		jnz	short loc_DE67
 		call	sub_D487
-		les	bx, dword_3919C
-		mov	al, byte_3A37E
+		les	bx, reiidenconfig
+		mov	al, _route
 		inc	al
-		mov	es:[bx+12h], al
-		mov	eax, dword_34A5A
-		mov	es:[bx+1Fh], eax
-		mov	eax, es:[bx+45h]
-		cmp	eax, dword_34A5A
+		mov	es:[bx+reiidenconfig_t.end_flag], al
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score], eax
+		mov	eax, es:[bx+reiidenconfig_t.score_highest]
+		cmp	eax, _score
 		jnb	short loc_DE47
-		mov	eax, dword_34A5A
-		mov	es:[bx+45h], eax
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score_highest], eax
 
 loc_DE47:
 		push	78h ; 'x'
@@ -4942,21 +4942,21 @@ loc_DE72:
 		push	0
 		call	sub_11738
 		pop	cx
-		les	bx, dword_3919C
-		mov	eax, dword_36C16
-		mov	es:[bx+1Bh], eax
+		les	bx, reiidenconfig
+		mov	eax, _rand
+		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	word_34A72, 0
 		mov	dword_34A62, 0C8h ; 'ﾈ'
-		cmp	word_34A80, 0
+		cmp	_rem_lives, 0
 		jle	short loc_DEDA
 		cmp	word_34A82, 0
 		jnz	short loc_DEDA
 		push	5
 		call	_mdrv2_se_play
 		pop	cx
-		les	bx, dword_3919C
-		dec	byte ptr es:[bx+15h]
-		dec	word_34A80
+		les	bx, reiidenconfig
+		dec	es:[bx+reiidenconfig_t.rem_lives]
+		dec	_rem_lives
 		call	sub_1AE0D
 		mov	byte_34A4F, 0
 		inc	si
@@ -4978,9 +4978,9 @@ loc_DEDA:
 loc_DF03:
 		inc	si
 		inc	[bp+var_2]
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		mov	ax, [bp+var_2]
-		mov	es:[bx+3Fh], ax
+		mov	es:[bx+reiidenconfig_t.stage], ax
 		cmp	byte_34ADF, 0
 		jz	short loc_DF23
 		xor	si, si
@@ -4995,10 +4995,10 @@ loc_DF23:
 
 loc_DF2B:
 		pop	cx
-		les	bx, dword_3919C
-		cmp	word ptr es:[bx+19h], 0
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.bullet_speed], 0
 		jge	short loc_DF3D
-		mov	word ptr es:[bx+19h], 0
+		mov	es:[bx+reiidenconfig_t.bullet_speed], 0
 
 loc_DF3D:
 		mov	ax, [bp+var_2]
@@ -5011,18 +5011,18 @@ loc_DF3D:
 		jz	short loc_DF9A
 
 loc_DF52:
-		les	bx, dword_3919C
-		mov	eax, dword_34A5A
-		mov	es:[bx+1Fh], eax
-		mov	al, byte ptr word_34A80
-		mov	es:[bx+15h], al
-		mov	byte ptr es:[bx+16h], 1
-		mov	al, byte_3A37E
-		mov	es:[bx+14h], al
+		les	bx, reiidenconfig
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score], eax
+		mov	al, byte ptr _rem_lives
+		mov	es:[bx+reiidenconfig_t.rem_lives], al
+		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
+		mov	al, _route
+		mov	es:[bx+reiidenconfig_t.route], al
 		call	_mdrv2_bgm_fade_out_nonblock
-		les	bx, dword_3919C
-		mov	al, byte_34A32
-		mov	es:[bx+10h], al
+		les	bx, reiidenconfig
+		mov	al, _bombs
+		mov	es:[bx+reiidenconfig_t.bombs], al
 		call	sub_E852
 		pushd	0
 		push	ds
@@ -5249,9 +5249,9 @@ loc_E244:
 		mov	byte_34A49, 1
 
 loc_E27B:
-		les	bx, dword_3919C
-		mov	eax, dword_34A5A
-		mov	es:[bx+1Fh], eax
+		les	bx, reiidenconfig
+		mov	eax, _score
+		mov	es:[bx+reiidenconfig_t.score], eax
 		cmp	[bp+var_2], 5
 		jge	short loc_E295
 		mov	dx, ds
@@ -5260,7 +5260,7 @@ loc_E27B:
 ; ---------------------------------------------------------------------------
 
 loc_E295:
-		cmp	byte_3A37E, 0
+		cmp	_route, 0
 		jnz	short loc_E2A3
 		mov	dx, ds
 		mov	ax, 66Eh
@@ -5277,12 +5277,12 @@ loc_E2A8:
 		mov	ax, [bp+var_2]
 		inc	ax
 		push	ax
-		pushd	[dword_34A5A]
+		pushd	[_score]
 		call	sub_148B3
 		add	sp, 0Ah
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		mov	ax, [bp+var_2]
-		mov	es:[bx+3Fh], ax
+		mov	es:[bx+reiidenconfig_t.stage], ax
 		call	sub_CC0F
 
 loc_E2CB:
@@ -12498,8 +12498,7 @@ arg_0		= byte ptr  6
 arg_2		= byte ptr  8
 arg_4		= byte ptr  0Ah
 arg_6		= byte ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
+arg_8		= dword ptr  0Eh
 
 		push	bp
 		mov	bp, sp
@@ -12518,39 +12517,39 @@ arg_A		= word ptr  10h
 		push	5
 		call	resdata_create
 		mov	si, ax
-		mov	word ptr dword_3919C+2,	si
-		mov	word ptr dword_3919C, 0
-		les	bx, dword_3919C
-		mov	word ptr es:[bx+3Fh], 0
-		les	bx, dword_3919C
-		mov	word ptr es:[bx+25h], 0
-		mov	word ptr es:[bx+23h], 0
+		mov	word ptr reiidenconfig+2, si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.stage], 0
+		les	bx, reiidenconfig
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
 
 loc_11619:
 		or	si, si
 		jz	short loc_11675
-		mov	word ptr dword_3919C+2,	si
-		mov	word ptr dword_3919C, 0
-		les	bx, dword_3919C
+		mov	word ptr reiidenconfig+2, si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_0]
-		mov	es:[bx+0Eh], al
-		les	bx, dword_3919C
+		mov	es:[bx+reiidenconfig_t.rank], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_2]
-		mov	es:[bx+0Fh], al
-		les	bx, dword_3919C
+		mov	es:[bx+reiidenconfig_t.bgm_mode], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_4]
-		mov	es:[bx+10h], al
-		les	bx, dword_3919C
+		mov	es:[bx+reiidenconfig_t.bombs], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_6]
-		mov	es:[bx+11h], al
-		les	bx, dword_3919C
-		mov	dx, [bp+arg_A]
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+1Dh], dx
-		mov	es:[bx+1Bh], ax
-		les	bx, dword_3919C
-		mov	word ptr es:[bx+21h], 0
-		mov	word ptr es:[bx+1Fh], 0
+		mov	es:[bx+reiidenconfig_t.start_lives_extra], al
+		les	bx, reiidenconfig
+		mov	dx, word ptr [bp+arg_8+2]
+		mov	ax, word ptr [bp+arg_8]
+		mov	word ptr es:[bx+reiidenconfig_t.rand+2], dx
+		mov	word ptr es:[bx+reiidenconfig_t.rand], ax
+		les	bx, reiidenconfig
+		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score], 0
 
 loc_11675:
 		pop	si
@@ -12588,38 +12587,38 @@ arg_18		= dword	ptr  1Eh
 ; ---------------------------------------------------------------------------
 
 loc_11692:
-		mov	word ptr dword_3919C+2,	si
-		mov	word ptr dword_3919C, 0
-		les	bx, dword_3919C
-		mov	al, es:[bx+0Eh]
+		mov	word ptr reiidenconfig+2, si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.rank]
 		les	bx, [bp+arg_0]
 		mov	es:[bx], al
-		les	bx, dword_3919C
-		mov	al, es:[bx+0Fh]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.bgm_mode]
 		les	bx, [bp+arg_4]
 		mov	es:[bx], al
-		les	bx, dword_3919C
-		mov	al, es:[bx+10h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.bombs]
 		les	bx, [bp+arg_8]
 		mov	es:[bx], al
-		les	bx, dword_3919C
-		mov	al, es:[bx+11h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		les	bx, [bp+arg_C]
 		mov	es:[bx], al
-		les	bx, dword_3919C
-		mov	dx, es:[bx+1Dh]
-		mov	ax, es:[bx+1Bh]
+		les	bx, reiidenconfig
+		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
 		les	bx, [bp+arg_10]
 		mov	es:[bx+2], dx
 		mov	es:[bx], ax
-		les	bx, dword_3919C
-		mov	dx, es:[bx+25h]
-		mov	ax, es:[bx+23h]
+		les	bx, reiidenconfig
+		mov	dx, word ptr es:[bx+reiidenconfig_t.continues_total+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.continues_total]
 		les	bx, [bp+arg_14]
 		mov	es:[bx+2], dx
 		mov	es:[bx], ax
-		les	bx, dword_3919C
-		mov	ax, es:[bx+3Fh]
+		les	bx, reiidenconfig
+		mov	ax, es:[bx+reiidenconfig_t.stage]
 		les	bx, [bp+arg_18]
 		mov	es:[bx], ax
 		xor	ax, ax
@@ -14871,7 +14870,7 @@ loc_12A1F:
 		call	sub_20754
 		pop	cx
 		mov	al, byte ptr [bp+var_A]
-		mov	byte_3A37E, al
+		mov	_route, al
 		mov	word_34A82, 1
 		mov	byte_34A4F, 1
 		pop	di
@@ -15940,10 +15939,10 @@ loc_13285:
 		push	100h
 		call	sub_FA43
 		add	sp, 0Ah
-		mov	ax, word_34A80
+		mov	ax, _rem_lives
 		imul	ax, 0C8h
 		mov	si, ax
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		imul	ax, 64h
 		add	si, ax
@@ -16002,7 +16001,7 @@ loc_13313:
 		call	sub_FA43
 		add	sp, 0Ah
 		mov	eax, dword_34A5E
-		add	dword_34A5A, eax
+		add	_score, eax
 		mov	ebx, 2710h
 		xor	edx, edx
 		div	ebx
@@ -16017,10 +16016,10 @@ loc_13313:
 		cwd
 		idiv	bx
 		shl	dx, 2
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		add	bx, dx
 		mov	eax, dword_34A5E
-		mov	es:[bx+2Fh], eax
+		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
 		mov	ax, [bp+var_A]
 		mov	bx, 0Ah
 		cwd
@@ -16302,11 +16301,11 @@ loc_135E2:
 		push	5
 		call	sub_E364
 		pop	cx
-		mov	ax, word_34A80
+		mov	ax, _rem_lives
 		imul	ax, 1F4h
 		cwde
 		mov	[bp+var_6], eax
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		imul	ax, 0C8h
 		cwde
@@ -16447,7 +16446,7 @@ loc_13792:
 		call	sub_E364
 		pop	cx
 		mov	eax, dword_34A5E
-		add	dword_34A5A, eax
+		add	_score, eax
 		mov	ebx, 2710h
 		xor	edx, edx
 		div	ebx
@@ -16522,10 +16521,10 @@ loc_13792:
 		idiv	bx
 		dec	ax
 		add	ax, ax
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		add	bx, ax
-		mov	ax, word ptr dword_34A66
-		mov	es:[bx+27h], ax
+		mov	ax, word ptr _continues_total
+		mov	es:[bx+reiidenconfig_t.continues_per_scene], ax
 		jmp	short loc_13933
 ; ---------------------------------------------------------------------------
 
@@ -18409,7 +18408,7 @@ loc_14731:
 
 loc_1473E:
 		push	ds
-		push	offset mode	; "wb"
+		push	offset aWB	; "wb"
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; path
@@ -18920,9 +18919,9 @@ sub_14BD2	proc far
 		push	dx
 		push	ax
 		pop	eax
-		les	bx, dword_3919C
+		les	bx, reiidenconfig
 		assume es:nothing
-		mov	es:[bx+41h], eax
+		mov	es:[bx+reiidenconfig_t.hiscore], eax
 		call	sub_146BA
 		pop	bp
 		retf
@@ -24525,12 +24524,12 @@ loc_17DCD:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	[bx+5372h], ax
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		cmp	ax, 5
 		jge	short loc_17DFB
-		inc	byte_34A32
-		mov	al, byte_34A32
+		inc	_bombs
+		mov	al, _bombs
 		cbw
 		dec	ax
 		push	ax
@@ -24543,7 +24542,7 @@ loc_17DCD:
 ; ---------------------------------------------------------------------------
 
 loc_17DFB:
-		add	dword_34A5A, 2710h
+		add	_score, 10000
 		call	sub_1889C
 		mov	bx, si
 		imul	bx, 0Ah
@@ -25242,10 +25241,10 @@ loc_1833B:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	[bx+539Ah], ax
-		les	bx, dword_3919C
-		cmp	word ptr es:[bx+49h], 0EA5Fh
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.p_value], 59999
 		jnb	short loc_18368
-		cmp	word ptr es:[bx+49h], 2710h
+		cmp	es:[bx+reiidenconfig_t.p_value], 10000
 		jnb	short loc_1835D
 		mov	ax, 3E8h
 		jmp	short loc_18360
@@ -25255,19 +25254,19 @@ loc_1835D:
 		mov	ax, 2710h
 
 loc_18360:
-		les	bx, dword_3919C
-		add	es:[bx+49h], ax
+		les	bx, reiidenconfig
+		add	es:[bx+reiidenconfig_t.p_value], ax
 
 loc_18368:
-		les	bx, dword_3919C
-		cmp	word ptr es:[bx+49h], 0EA60h
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.p_value], 60000
 		jb	short loc_1837A
-		mov	word ptr es:[bx+49h], 0FFFAh
+		mov	es:[bx+reiidenconfig_t.p_value], 65530
 
 loc_1837A:
-		les	bx, dword_3919C
-		movzx	eax, word ptr es:[bx+49h]
-		add	dword_34A5A, eax
+		les	bx, reiidenconfig
+		movzx	eax, es:[bx+reiidenconfig_t.p_value]
+		add	_score, eax
 		call	sub_1889C
 		mov	bx, si
 		imul	bx, 0Ah
@@ -25409,8 +25408,8 @@ sub_1843D	endp
 sub_18456	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, dword_3919C
-		mov	word ptr es:[bx+49h], 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pop	bp
 		retf
 sub_18456	endp
@@ -25472,8 +25471,8 @@ loc_184D3:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, dword_3919C
-		push	word ptr es:[bx+49h]
+		les	bx, reiidenconfig
+		push	es:[bx+reiidenconfig_t.p_value]
 		push	5
 		call	sub_1FF8A
 		push	ss
@@ -25699,10 +25698,10 @@ var_4		= dword	ptr -4
 		enter	8, 0
 		push	si
 		mov	[bp+var_4], 0F4240h
-		les	bx, dword_3919C
-		mov	eax, es:[bx+41h]
+		les	bx, reiidenconfig
+		mov	eax, es:[bx+reiidenconfig_t.hiscore]
 		mov	[bp+var_8], eax
-		cmp	eax, dword_34A5A
+		cmp	eax, _score
 		jnb	loc_187A3
 		xor	si, si
 		jmp	loc_18723
@@ -25716,7 +25715,7 @@ loc_1867F:
 		cdq
 		idiv	ebx
 		push	edx
-		mov	eax, dword_34A5A
+		mov	eax, _score
 		xor	edx, edx
 		div	[bp+var_4]
 		xor	edx, edx
@@ -25795,7 +25794,7 @@ loc_18740:
 
 loc_18744:
 		push	eax
-		pushd	[dword_34A5A]
+		pushd	[_score]
 		push	70027h
 		pushd	100h
 		call	sub_18589
@@ -25815,15 +25814,15 @@ loc_18774:
 
 loc_18778:
 		push	eax
-		pushd	[dword_34A5A]
+		pushd	[_score]
 		push	70027h
 		pushd	100h
 		call	sub_18589
 		add	sp, 12h
-		mov	eax, dword_34A5A
+		mov	eax, _score
 		mov	dword_35ABF, eax
-		les	bx, dword_3919C
-		mov	es:[bx+41h], eax
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.hiscore], eax
 
 loc_187A3:
 		pop	si
@@ -25989,7 +25988,7 @@ loc_188CD:
 		cdq
 		idiv	ebx
 		push	edx
-		mov	eax, dword_34A5A
+		mov	eax, _score
 		xor	edx, edx
 		div	[bp+var_6]
 		xor	edx, edx
@@ -26042,7 +26041,7 @@ loc_1894F:
 
 loc_18953:
 		push	eax
-		pushd	[dword_34A5A]
+		pushd	[_score]
 		push	70037h
 		push	100100h
 		call	sub_18589
@@ -26115,7 +26114,7 @@ loc_189CB:
 loc_189ED:
 		cmp	[bp+var_2], 0
 		jge	loc_188B5
-		mov	eax, dword_34A5A
+		mov	eax, _score
 		mov	dword_39DA6, eax
 		mov	ax, word_34A84
 		mov	word_39DAA, ax
@@ -26186,7 +26185,7 @@ loc_18A60:
 		pop	cx
 		push	1
 		pushd	0
-		pushd	[dword_34A5A]
+		pushd	[_score]
 		push	70037h
 		push	100100h
 		call	sub_18589
@@ -26283,8 +26282,8 @@ loc_18B33:
 		pop	cx
 		push	1
 		pushd	0
-		les	bx, dword_3919C
-		pushd	dword ptr es:[bx+41h]
+		les	bx, reiidenconfig
+		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]
 		push	70027h
 		pushd	100h
 		call	sub_18589
@@ -26646,9 +26645,9 @@ loc_18DA0:
 		inc	si
 
 loc_18DF8:
-		cmp	si, word_34A80
+		cmp	si, _rem_lives
 		jl	short loc_18DA0
-		mov	ax, word_34A80
+		mov	ax, _rem_lives
 		shl	ax, 4
 		push	ax
 		pushd	80h
@@ -26673,9 +26672,9 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		cmp	di, word_34A80
+		cmp	di, _rem_lives
 		jle	loc_18EA9
-		mov	si, word_34A80
+		mov	si, _rem_lives
 		jmp	short loc_18EA2
 ; ---------------------------------------------------------------------------
 
@@ -26743,7 +26742,7 @@ loc_18EA2:
 ; ---------------------------------------------------------------------------
 
 loc_18EA9:
-		cmp	di, word_34A80
+		cmp	di, _rem_lives
 		jge	short loc_18F2D
 		mov	si, di
 		jmp	short loc_18F13
@@ -26795,9 +26794,9 @@ loc_18EB3:
 		inc	si
 
 loc_18F13:
-		cmp	si, word_34A80
+		cmp	si, _rem_lives
 		jl	short loc_18EB3
-		mov	ax, word_34A80
+		mov	ax, _rem_lives
 		shl	ax, 4
 		push	ax
 		pushd	80h
@@ -26853,11 +26852,11 @@ loc_18F39:
 		inc	si
 
 loc_18F78:
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		cmp	ax, si
 		jg	short loc_18F39
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		shl	ax, 4
 		push	ax
@@ -26883,11 +26882,11 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		cmp	ax, di
 		jge	short loc_19011
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		mov	si, ax
 		jmp	short loc_1900B
@@ -26943,7 +26942,7 @@ loc_1900B:
 ; ---------------------------------------------------------------------------
 
 loc_19011:
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		cmp	ax, di
 		jle	short loc_19081
@@ -26983,11 +26982,11 @@ loc_1901D:
 		inc	si
 
 loc_19064:
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		cmp	ax, si
 		jg	short loc_1901D
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		shl	ax, 4
 		push	ax
@@ -27059,7 +27058,7 @@ var_4		= byte ptr -4
 		call	sub_18BFD
 		cmp	byte_34A47, 0
 		jnz	short loc_1910C
-		mov	al, byte_3A37E
+		mov	al, _route
 		cbw
 		push	ax
 		mov	al, byte_34A34
@@ -28770,7 +28769,7 @@ loc_19EBC:
 loc_19ED6:
 		inc	byte_35B42
 		and	byte_35B42, 7
-		cmp	byte_34A32, 0
+		cmp	_bombs, 0
 		jnz	short loc_19EEF
 		cmp	byte_35B47, 0
 		jz	loc_19FB0
@@ -28788,8 +28787,8 @@ loc_19EEF:
 		mov	byte_35B46, 3
 		mov	byte_34A57, 1
 		mov	byte_35B47, 1
-		dec	byte_34A32
-		mov	al, byte_34A32
+		dec	_bombs
+		mov	al, _bombs
 		cbw
 		inc	ax
 		push	ax
@@ -28852,7 +28851,7 @@ loc_19FB0:
 		cbw
 		cmp	ax, 3
 		jz	short loc_19FDB
-		cmp	byte_34A32, 0
+		cmp	_bombs, 0
 		jz	short loc_19FDB
 		mov	byte_35B46, 2
 		mov	byte_34A50, 0
@@ -30815,21 +30814,21 @@ loc_1AFC8:
 		push	di
 		call	_egc_copy_region_from_1_to_0
 		add	sp, 8
-		mov	ax, word_34A80
+		mov	ax, _rem_lives
 		inc	ax
 		push	ax
 		call	sub_18E15
 		pop	cx
-		mov	al, byte_34A32
+		mov	al, _bombs
 		cbw
 		mov	[bp+var_6], ax
 		mov	al, byte_36C14
-		add	al, byte_34A32
-		mov	byte_34A32, al
+		add	al, _bombs
+		mov	_bombs, al
 		cbw
 		cmp	ax, 5
 		jle	short loc_1B01F
-		mov	byte_34A32, 5
+		mov	_bombs, 5
 		jmp	short loc_1B028
 ; ---------------------------------------------------------------------------
 
@@ -30861,7 +30860,7 @@ include th01_reiiden_2.inc
 
 byte_34A30	db 1
 byte_34A31	db 1
-byte_34A32	db 1
+_bombs	db 1
 unk_34A33	db    2
 byte_34A34	db 0
 byte_34A35	db 0
@@ -30889,12 +30888,12 @@ byte_34A55	db 0
 byte_34A57	db 0
 byte_34A58	db 0
 byte_34A59	db 0
-dword_34A5A	dd 0
+_score	dd 0
 dword_34A5E	dd 0
 dword_34A62	dd 0
-dword_34A66	dd 0
+_continues_total	dd 0
 		dw 0
-word_34A6C	dw 0
+_mode_test	dw 0
 word_34A6E	dw 0
 word_34A70	dw 0
 word_34A72	dw 0
@@ -30904,7 +30903,7 @@ word_34A78	dw 0
 		dw 0
 word_34A7C	dw 0
 word_34A7E	dw 0
-word_34A80	dw 4
+_rem_lives	dw 4
 word_34A82	dw 0
 word_34A84	dw 0
 word_34A86	dw 0
@@ -31649,8 +31648,7 @@ aPcb@lB@o	db '修　業　者',0
 aCvke		db '魔界',0
 aTnnc		db '地獄',0
 aB_0		db '－',0
-; char mode[]
-mode		db 'wb',0
+aWB		db 'wb',0
 aB@gcbGwbB@	db '　イージー　',0
 aB@gmbGGlb@	db '　ノーマル　',0
 aB@gnbGhb@b@	db '　ハード　　',0
@@ -32582,10 +32580,10 @@ _INIT_	ends
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
 byte_36C14	db ?
 byte_36C15	db ?
-dword_36C16	dd ?
+_rand	dd ?
 dword_36C1A	dd ?
 byte_36C1E	db ?
-byte_36C1F	db ?
+_mode_debug	db ?
 dword_36C20	dd ?
 word_36C24	dw ?
 word_36C26	dw ?
@@ -34830,7 +34828,7 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-dword_3919C	dd ?
+reiidenconfig	dd ?
 unk_391A0	db    ?	;
 		dd    ?
 		dd    ?
@@ -36140,7 +36138,7 @@ word_3A1EB	dw ?
 		dd    ?
 		dd    ?
 byte_3A37D	db ?
-byte_3A37E	db ?
+_route	db ?
 word_3A37F	dw ?
 word_3A381	dw ?
 word_3A383	dw ?

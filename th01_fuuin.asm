@@ -130,33 +130,33 @@ var_4		= dword	ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_9F65:
-		mov	word ptr [bp+var_4+2], di
-		mov	word ptr [bp+var_4], 0
-		les	bx, [bp+var_4]
-		cmp	byte ptr es:[bx+12h], 0
+		mov	word ptr [bp+reiidenconfig+2], di
+		mov	word ptr [bp+reiidenconfig], 0
+		les	bx, [bp+reiidenconfig]
+		cmp	es:[bx+reiidenconfig_t.end_flag], 0
 		jnz	short loc_9F7A
 		jmp	loc_A053
 ; ---------------------------------------------------------------------------
 
 loc_9F7A:
-		les	bx, [bp+var_4]
-		mov	dx, es:[bx+21h]
-		mov	ax, es:[bx+1Fh]
-		mov	word_12B32, dx
-		mov	word_12B30, ax
-		mov	word_13EDA, 0
-		mov	word_13ED8, 0
-		les	bx, [bp+var_4]
-		mov	al, es:[bx+12h]
+		les	bx, [bp+reiidenconfig]
+		mov	dx, word ptr es:[bx+reiidenconfig_t.score+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.score]
+		mov	word ptr _score+2, dx
+		mov	word ptr _score, ax
+		mov	word ptr _continues_total+2, 0
+		mov	word ptr _continues_total, 0
+		les	bx, [bp+reiidenconfig]
+		mov	al, es:[bx+reiidenconfig_t.end_flag]
 		mov	byte_14021, al
-		les	bx, [bp+var_4]
-		mov	al, es:[bx+0Eh]
+		les	bx, [bp+reiidenconfig]
+		mov	al, es:[bx+reiidenconfig_t.rank]
 		mov	byte_14022, al
-		les	bx, [bp+var_4]
-		mov	dx, es:[bx+47h]
-		mov	ax, es:[bx+45h]
-		mov	word_12B36, dx
-		mov	arglist, ax
+		les	bx, [bp+reiidenconfig]
+		mov	dx, word ptr es:[bx+reiidenconfig_t.score_highest+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.score_highest]
+		mov	word ptr _score_highest+2, dx
+		mov	word ptr _score_highest, ax
 		xor	si, si
 		jmp	short loc_A003
 ; ---------------------------------------------------------------------------
@@ -164,46 +164,46 @@ loc_9F7A:
 loc_9FC2:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+var_4]
+		les	bx, [bp+reiidenconfig]
 		add	bx, ax
-		mov	ax, es:[bx+27h]
+		mov	ax, es:[bx+reiidenconfig_t.continues_per_scene]
 		mov	bx, si
 		shl	bx, 2
 		mov	word ptr [bx+143Eh], 0
 		mov	[bx+143Ch], ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+var_4]
+		les	bx, [bp+reiidenconfig]
 		add	bx, ax
-		mov	word ptr es:[bx+27h], 0
+		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
 		mov	bx, si
 		shl	bx, 2
 		mov	dx, [bx+143Eh]
 		mov	ax, [bx+143Ch]
-		add	word_13ED8, ax
-		adc	word_13EDA, dx
+		add	word ptr _continues_total, ax
+		adc	word ptr _continues_total+2, dx
 		inc	si
 
 loc_A003:
 		cmp	si, 4
 		jl	short loc_9FC2
-		les	bx, [bp+var_4]
-		mov	dx, es:[bx+1Dh]
-		mov	ax, es:[bx+1Bh]
+		les	bx, [bp+reiidenconfig]
+		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
 		mov	word ptr random_seed+2, dx
 		mov	word ptr random_seed, ax
-		les	bx, [bp+var_4]
-		mov	al, es:[bx+11h]
+		les	bx, [bp+reiidenconfig]
+		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		mov	byte_14020, al
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+21h], 0
-		mov	word ptr es:[bx+1Fh], 0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+25h], 0
-		mov	word ptr es:[bx+23h], 0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+47h], 0
-		mov	word ptr es:[bx+45h], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.score_highest+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score_highest], 0
 		jmp	short loc_A05B
 ; ---------------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ sub_9F49	endp
 
 sub_A076	proc far
 
-var_4		= dword	ptr -4
+reiidenconfig		= dword	ptr -4
 
 		enter	4, 0
 		push	si
@@ -263,19 +263,19 @@ var_4		= dword	ptr -4
 		mov	di, ax
 		or	di, di
 		jz	short loc_A0EE
-		mov	word ptr [bp+var_4+2], di
-		mov	word ptr [bp+var_4], 0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+21h], 0
-		mov	word ptr es:[bx+1Fh], 0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+25h], 0
-		mov	word ptr es:[bx+23h], 0
-		les	bx, [bp+var_4]
-		mov	byte ptr es:[bx+12h], 0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+47h], 0
-		mov	word ptr es:[bx+45h], 0
+		mov	word ptr [bp+reiidenconfig+2], di
+		mov	word ptr [bp+reiidenconfig], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
+		les	bx, [bp+reiidenconfig]
+		mov	es:[bx+reiidenconfig_t.end_flag], 0
+		les	bx, [bp+reiidenconfig]
+		mov	word ptr es:[bx+reiidenconfig_t.score_highest+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score_highest], 0
 		xor	si, si
 		jmp	short loc_A0E0
 ; ---------------------------------------------------------------------------
@@ -283,16 +283,16 @@ var_4		= dword	ptr -4
 loc_A0D0:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+var_4]
+		les	bx, [bp+reiidenconfig]
 		add	bx, ax
-		mov	word ptr es:[bx+27h], 0
+		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
 		inc	si
 
 loc_A0E0:
 		cmp	si, 4
 		jl	short loc_A0D0
-		les	bx, [bp+var_4]
-		mov	word ptr es:[bx+3Fh], 0
+		les	bx, [bp+reiidenconfig]
+		mov	es:[bx+reiidenconfig_t.stage], 0
 
 loc_A0EE:
 		mov	ax, 1
@@ -867,7 +867,7 @@ loc_A4E6:
 loc_A4F5:
 		cli
 		push	ds
-		push	offset mode	; "wb"
+		push	offset aWB	; "wb"
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; path
@@ -3795,8 +3795,8 @@ loc_BB82:
 loc_BBB1:
 		cmp	si, 0Fh
 		jl	short loc_BB82
-		mov	ax, word_13ED8
-		or	ax, word_13EDA
+		mov	ax, word ptr _continues_total
+		or	ax, word ptr _continues_total+2
 		jnz	short loc_BBC7
 		call	sub_BDBD
 		call	sub_C03D
@@ -4533,10 +4533,10 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		xor	si, si
-		cmp	word_12B32, 26h	; '&'
+		cmp	word ptr _score+2, 26h	; '&'
 		jl	short loc_C1C6
 		jnz	short loc_C1C1
-		cmp	word_12B30, 25A0h
+		cmp	word ptr _score, 25A0h
 		jb	short loc_C1C6
 
 loc_C1C1:
@@ -4545,10 +4545,10 @@ loc_C1C1:
 ; ---------------------------------------------------------------------------
 
 loc_C1C6:
-		cmp	word_12B32, 1Eh
+		cmp	word ptr _score+2, 1Eh
 		jl	short loc_C1DC
 		jnz	short loc_C1D7
-		cmp	word_12B30, 8480h
+		cmp	word ptr _score, 8480h
 		jb	short loc_C1DC
 
 loc_C1D7:
@@ -4557,10 +4557,10 @@ loc_C1D7:
 ; ---------------------------------------------------------------------------
 
 loc_C1DC:
-		cmp	word_12B32, 16h
+		cmp	word ptr _score+2, 16h
 		jl	short loc_C1F2
 		jnz	short loc_C1ED
-		cmp	word_12B30, 0E360h
+		cmp	word ptr _score, 0E360h
 		jb	short loc_C1F2
 
 loc_C1ED:
@@ -4569,10 +4569,10 @@ loc_C1ED:
 ; ---------------------------------------------------------------------------
 
 loc_C1F2:
-		cmp	word_12B32, 0Fh
+		cmp	word ptr _score+2, 0Fh
 		jl	short loc_C208
 		jnz	short loc_C203
-		cmp	word_12B30, 4240h
+		cmp	word ptr _score, 4240h
 		jb	short loc_C208
 
 loc_C203:
@@ -4581,20 +4581,20 @@ loc_C203:
 ; ---------------------------------------------------------------------------
 
 loc_C208:
-		cmp	word_12B32, 7
+		cmp	word ptr _score+2, 7
 		jl	short loc_C21C
 		jnz	short loc_C219
-		cmp	word_12B30, 0A120h
+		cmp	word ptr _score, 0A120h
 		jb	short loc_C21C
 
 loc_C219:
 		add	si, 2
 
 loc_C21C:
-		cmp	word_12B36, 2Dh	; '-'
+		cmp	word ptr _score_highest+2, 2Dh	; '-'
 		jl	short loc_C232
 		jnz	short loc_C22D
-		cmp	arglist, 0C6C0h
+		cmp	word ptr _score_highest, 0C6C0h
 		jb	short loc_C232
 
 loc_C22D:
@@ -4603,10 +4603,10 @@ loc_C22D:
 ; ---------------------------------------------------------------------------
 
 loc_C232:
-		cmp	word_12B36, 27h	; '''
+		cmp	word ptr _score_highest+2, 27h	; '''
 		jl	short loc_C248
 		jnz	short loc_C243
-		cmp	arglist, 0AC40h
+		cmp	word ptr _score_highest, 0AC40h
 		jb	short loc_C248
 
 loc_C243:
@@ -4615,10 +4615,10 @@ loc_C243:
 ; ---------------------------------------------------------------------------
 
 loc_C248:
-		cmp	word_12B36, 21h	; '!'
+		cmp	word ptr _score_highest+2, 21h	; '!'
 		jl	short loc_C25E
 		jnz	short loc_C259
-		cmp	arglist, 91C0h
+		cmp	word ptr _score_highest, 91C0h
 		jb	short loc_C25E
 
 loc_C259:
@@ -4627,10 +4627,10 @@ loc_C259:
 ; ---------------------------------------------------------------------------
 
 loc_C25E:
-		cmp	word_12B36, 1Bh
+		cmp	word ptr _score_highest+2, 1Bh
 		jl	short loc_C274
 		jnz	short loc_C26F
-		cmp	arglist, 7740h
+		cmp	word ptr _score_highest, 7740h
 		jb	short loc_C274
 
 loc_C26F:
@@ -4639,28 +4639,28 @@ loc_C26F:
 ; ---------------------------------------------------------------------------
 
 loc_C274:
-		cmp	word_12B36, 15h
+		cmp	word ptr _score_highest+2, 15h
 		jl	short loc_C288
 		jnz	short loc_C285
-		cmp	arglist, 5CC0h
+		cmp	word ptr _score_highest, 5CC0h
 		jb	short loc_C288
 
 loc_C285:
 		add	si, 2
 
 loc_C288:
-		mov	ax, word_13ED8
-		or	ax, word_13EDA
+		mov	ax, word ptr _continues_total
+		or	ax, word ptr _continues_total+2
 		jnz	short loc_C297
 		add	si, 1Eh
 		jmp	loc_C36C
 ; ---------------------------------------------------------------------------
 
 loc_C297:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C2AD
 		jnz	short loc_C2A7
-		cmp	word_13ED8, 2
+		cmp	word ptr _continues_total, 2
 		ja	short loc_C2AD
 
 loc_C2A7:
@@ -4669,10 +4669,10 @@ loc_C2A7:
 ; ---------------------------------------------------------------------------
 
 loc_C2AD:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C2C3
 		jnz	short loc_C2BD
-		cmp	word_13ED8, 4
+		cmp	word ptr _continues_total, 4
 		ja	short loc_C2C3
 
 loc_C2BD:
@@ -4681,10 +4681,10 @@ loc_C2BD:
 ; ---------------------------------------------------------------------------
 
 loc_C2C3:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C2D9
 		jnz	short loc_C2D3
-		cmp	word_13ED8, 6
+		cmp	word ptr _continues_total, 6
 		ja	short loc_C2D9
 
 loc_C2D3:
@@ -4693,10 +4693,10 @@ loc_C2D3:
 ; ---------------------------------------------------------------------------
 
 loc_C2D9:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C2EE
 		jnz	short loc_C2E9
-		cmp	word_13ED8, 8
+		cmp	word ptr _continues_total, 8
 		ja	short loc_C2EE
 
 loc_C2E9:
@@ -4705,10 +4705,10 @@ loc_C2E9:
 ; ---------------------------------------------------------------------------
 
 loc_C2EE:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C303
 		jnz	short loc_C2FE
-		cmp	word_13ED8, 0Ah
+		cmp	word ptr _continues_total, 0Ah
 		ja	short loc_C303
 
 loc_C2FE:
@@ -4717,10 +4717,10 @@ loc_C2FE:
 ; ---------------------------------------------------------------------------
 
 loc_C303:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C315
 		jnz	short loc_C313
-		cmp	word_13ED8, 0Ch
+		cmp	word ptr _continues_total, 0Ch
 		ja	short loc_C315
 
 loc_C313:
@@ -4728,10 +4728,10 @@ loc_C313:
 ; ---------------------------------------------------------------------------
 
 loc_C315:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C32A
 		jnz	short loc_C325
-		cmp	word_13ED8, 0Eh
+		cmp	word ptr _continues_total, 0Eh
 		ja	short loc_C32A
 
 loc_C325:
@@ -4740,10 +4740,10 @@ loc_C325:
 ; ---------------------------------------------------------------------------
 
 loc_C32A:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C33F
 		jnz	short loc_C33A
-		cmp	word_13ED8, 10h
+		cmp	word ptr _continues_total, 10h
 		ja	short loc_C33F
 
 loc_C33A:
@@ -4752,10 +4752,10 @@ loc_C33A:
 ; ---------------------------------------------------------------------------
 
 loc_C33F:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C354
 		jnz	short loc_C34F
-		cmp	word_13ED8, 12h
+		cmp	word ptr _continues_total, 12h
 		ja	short loc_C354
 
 loc_C34F:
@@ -4764,10 +4764,10 @@ loc_C34F:
 ; ---------------------------------------------------------------------------
 
 loc_C354:
-		cmp	word_13EDA, 0
+		cmp	word ptr _continues_total+2, 0
 		jg	short loc_C369
 		jnz	short loc_C364
-		cmp	word_13ED8, 14h
+		cmp	word ptr _continues_total, 14h
 		ja	short loc_C369
 
 loc_C364:
@@ -4977,8 +4977,8 @@ var_10		= byte ptr -10h
 		push	1Eh
 		call	sub_C82D
 		pop	cx
-		push	word_12B36
-		push	arglist		; arglist
+		push	word ptr _score_highest+2
+		push	word ptr _score_highest		; arglist
 		push	ds
 		push	offset aNbi	; "今回の最高得点　　　　　　  %7lu"
 		push	0Fh		; int
@@ -4989,8 +4989,8 @@ var_10		= byte ptr -10h
 		push	1Eh
 		call	sub_C82D
 		pop	cx
-		push	word_12B32
-		push	word_12B30	; arglist
+		push	word ptr _score+2
+		push	word ptr _score	; arglist
 		push	ds
 		push	offset aNPiuU_b@b@b@b@ ; "最終得点　　　　　　　　　  %7lu"
 		push	0Fh		; int
@@ -5097,16 +5097,16 @@ loc_C60E:
 		pop	cx
 		cmp	byte_14021, 1
 		jnz	short loc_C63B
-		push	word_13EDA
-		push	word_13ED8
+		push	word ptr _continues_total+2
+		push	word ptr _continues_total
 		push	ds
 		push	offset aCvkeglbGgsnnzb ; "  魔界ルート総合　　　　　　	%5lu"
 		jmp	short loc_C647
 ; ---------------------------------------------------------------------------
 
 loc_C63B:
-		push	word_13EDA
-		push	word_13ED8	; arglist
+		push	word ptr _continues_total+2
+		push	word ptr _continues_total	; arglist
 		push	ds
 		push	offset aB@tnncglbGgsnn ; "　地獄ルート総合　　　　　　　%5lu"
 
@@ -5196,8 +5196,8 @@ loc_C71C:
 		push	3Ch ; '<'
 
 loc_C722:
-		push	word_12B32
-		push	word_12B30
+		push	word ptr _score+2
+		push	word ptr _score
 		call	sub_B5D8
 		add	sp, 0Ah
 		call	sub_A076
@@ -11052,12 +11052,8 @@ fuuin_13_TEXT	ends
 
 	.data
 
-; char word_12B30[]
-word_12B30	dw 86A0h
-word_12B32	dw 1
-; char arglist[]
-arglist		dw 86A0h
-word_12B36	dw 1
+_score	dd 100000
+_score_highest	dd 100000
 aReiidenconfig	db 'ReiidenConfig',0
 aErrorEnd_flagI	db 'ERROR : end_flag is not ture !!',0
 ; char s[]
@@ -11144,8 +11140,7 @@ aReyhino_dat	db 'REYHINO.DAT',0
 aReyhiha_dat	db 'REYHIHA.DAT',0
 ; char src[]
 src		db 'REYHILU.DAT',0
-; char mode[]
-mode		db 'wb',0
+aWB		db 'wb',0
 aReyhies_dat_0	db 'REYHIES.DAT',0
 aReyhino_dat_0	db 'REYHINO.DAT',0
 aReyhiha_dat_0	db 'REYHIHA.DAT',0
@@ -11507,9 +11502,7 @@ include libs/master.lib/rand[data].asm
 	.data?
 
 ; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
-; char word_13ED8[]
-word_13ED8	dw ?
-word_13EDA	dw ?
+_continues_total	dd ?
 ; char word_13EDC[]
 word_13EDC	dw ?
 word_13EDE	dw ?

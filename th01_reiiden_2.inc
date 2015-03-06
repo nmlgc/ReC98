@@ -8370,7 +8370,7 @@ loc_1FF15:
 		les	bx, off_39EAC
 		add	bx, ax
 		mov	eax, es:[bx]
-		add	dword_34A5A, eax
+		add	_score, eax
 		inc	word_34A84
 		mov	ax, word_34A88
 		cmp	ax, word_34A84
@@ -11807,7 +11807,7 @@ loc_21AAE:
 		jz	short loc_21AE9
 
 loc_21AD5:
-		pushd	[dword_36C16]
+		pushd	[_rand]
 		nopcall	sub_22234
 		add	sp, 4
 		cmp	ax, 1
@@ -11864,7 +11864,7 @@ loc_21B5B:
 
 loc_21B61:
 		movsx	eax, [bp+arg_12]
-		add	dword_34A5A, eax
+		add	_score, eax
 		call	sub_1889C
 		push	3
 		call	_mdrv2_se_play
@@ -12359,7 +12359,7 @@ loc_21F23:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, dword_36C16
+		mov	edx, _rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	short loc_21F7D
@@ -12481,7 +12481,7 @@ loc_2207D:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, dword_36C16
+		mov	edx, _rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	short loc_220A1
@@ -12533,7 +12533,7 @@ loc_220F6:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, dword_36C16
+		mov	edx, _rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	loc_221C1
@@ -12668,7 +12668,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	word_34A80, 0
+		cmp	_rem_lives, 0
 		jnz	short loc_22260
 		cmp	byte_34A58, 1
 		jnz	short loc_22260
@@ -18108,7 +18108,7 @@ sub_24FE0	proc far
 		mov	word_3A6C8, 0Eh
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 6
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		xor	si, si
 		jmp	short loc_250B3
@@ -23967,7 +23967,7 @@ loc_2871C:
 		push	28h ; '('
 		call	sub_11A7C
 		add	sp, 0Ch
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		pop	si
 		pop	bp
@@ -30211,7 +30211,7 @@ loc_2C117:
 		push	offset unk_35090
 		call	sub_C433
 		add	sp, 4
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 
 loc_2C14E:
@@ -30948,7 +30948,7 @@ loc_2C8AE:
 		call	sub_19E48
 		pop	cx
 		mov	word_3B431, 0
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	1
@@ -31458,7 +31458,7 @@ loc_2CDAA:
 ; ---------------------------------------------------------------------------
 
 loc_2CDBA:
-		add	dword_34A5A, 2710h
+		add	_score, 10000
 		inc	si
 
 loc_2CDC4:
@@ -35069,7 +35069,7 @@ var_2		= word ptr -2
 		mov	word_3B529, 0
 		mov	byte_3B52F, 0
 		call	sub_232A4
-		mov	eax, dword_36C16
+		mov	eax, _rand
 		mov	random_seed, eax
 		jmp	loc_2FC40
 ; ---------------------------------------------------------------------------
@@ -36522,7 +36522,7 @@ loc_2FC1C:
 ; ---------------------------------------------------------------------------
 
 loc_2FC28:
-		add	dword_34A5A, 2710h
+		add	_score, 10000
 		inc	si
 
 loc_2FC32:
@@ -37578,8 +37578,8 @@ loc_303CD:
 
 loc_303D0:
 		add	si, ax
-		les	bx, dword_3919C
-		mov	ax, es:[bx+19h]
+		les	bx, reiidenconfig
+		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('
 		cwd
@@ -37728,8 +37728,8 @@ loc_304F5:
 
 loc_304F8:
 		add	si, ax
-		les	bx, dword_3919C
-		mov	ax, es:[bx+19h]
+		les	bx, reiidenconfig
+		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('
 		cwd

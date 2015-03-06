@@ -180,7 +180,7 @@ var_1		= byte ptr -1
 		enter	12h, 0
 		mov	[bp+var_1], 0
 		push	ds
-		push	offset mode	; "rb"
+		push	offset aRB	; "rb"
 		push	ds
 		push	offset path	; "reiiden.cfg"
 		call	_fopen
@@ -887,39 +887,39 @@ sub_A7B5	proc far
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	sub_B757
-		mov	al, byte_12324
+		mov	al, _mode
 		cbw
 		cmp	ax, 2
 		jnz	short loc_A7FC
-		les	bx, dword_13EE6
-		mov	byte ptr es:[bx+18h], 1
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.mode], 1
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
 loc_A7FC:
-		mov	al, byte_12324
+		mov	al, _mode
 		cbw
 		cmp	ax, 3
 		jnz	short loc_A810
-		les	bx, dword_13EE6
-		mov	byte ptr es:[bx+18h], 3
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.mode], 3
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
 loc_A810:
-		cmp	byte_12324, 0
+		cmp	_mode, 0
 		jnz	short loc_A820
-		les	bx, dword_13EE6
-		mov	byte ptr es:[bx+18h], 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.mode], 0
 
 loc_A820:
-		les	bx, dword_13EE6
-		mov	byte ptr es:[bx+14h], 0
-		mov	word ptr es:[bx+3Fh], 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.route], 0
+		mov	es:[bx+reiidenconfig_t.stage], 0
 		mov	al, byte ptr word_12322+1
 		add	al, 2
-		mov	es:[bx+15h], al
-		mov	word ptr es:[bx+49h], 0
+		mov	es:[bx+reiidenconfig_t.rem_lives], al
+		mov	es:[bx+reiidenconfig_t.p_value], 0
 		xor	si, si
 		jmp	short loc_A867
 ; ---------------------------------------------------------------------------
@@ -927,26 +927,26 @@ loc_A820:
 loc_A842:
 		mov	ax, si
 		add	ax, ax
-		les	bx, dword_13EE6
+		les	bx, reiidenconfig
 		add	bx, ax
-		mov	word ptr es:[bx+27h], 0
+		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
 		mov	ax, si
 		shl	ax, 2
-		mov	bx, word ptr dword_13EE6
+		mov	bx, word ptr reiidenconfig
 		add	bx, ax
-		mov	dword ptr es:[bx+2Fh], 0
+		mov	es:[bx+reiidenconfig_t.bonus_per_stage], 0
 		inc	si
 
 loc_A867:
 		cmp	si, 4
 		jl	short loc_A842
-		les	bx, dword_13EE6
-		mov	dword ptr es:[bx+45h], 0
-		mov	dword ptr es:[bx+23h], 0
-		mov	byte ptr es:[bx+12h], 0
-		mov	byte ptr es:[bx+13h], 0
-		mov	byte ptr es:[bx+16h], 1
-		mov	word ptr es:[bx+19h], 0FFFCh
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.score_highest], 0
+		mov	es:[bx+reiidenconfig_t.continues_total], 0
+		mov	es:[bx+reiidenconfig_t.end_flag], 0
+		mov	es:[bx+reiidenconfig_t.unused_1], 0
+		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
+		mov	es:[bx+reiidenconfig_t.bullet_speed], -4
 		pushd	0
 		push	ds
 		push	offset aReiiden_0 ; "reiiden"
@@ -975,8 +975,8 @@ sub_A8AD	proc far
 		push	word_12320
 		call	sub_E27C
 		add	sp, 0Ch
-		les	bx, dword_13EE6
-		cmp	word ptr es:[bx+3Fh], 0
+		les	bx, reiidenconfig
+		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
 		mov	ax, seg	op_01_TEXT
 		mov	es, ax
@@ -986,16 +986,16 @@ loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	sub_B757
-		les	bx, dword_13EE6
+		les	bx, reiidenconfig
 		assume es:nothing
-		mov	byte ptr es:[bx+18h], 0
-		mov	byte ptr es:[bx+16h], 1
+		mov	es:[bx+reiidenconfig_t.mode], 0
+		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
 		mov	al, byte ptr word_12322+1
 		add	al, 2
-		mov	es:[bx+15h], al
-		mov	byte ptr es:[bx+13h], 0
-		mov	word ptr es:[bx+19h], 0FFFCh
-		mov	word ptr es:[bx+49h], 0
+		mov	es:[bx+reiidenconfig_t.rem_lives], al
+		mov	es:[bx+reiidenconfig_t.unused_1], 0
+		mov	es:[bx+reiidenconfig_t.bullet_speed], -4
+		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
 		push	ds
 		push	offset s	; "REIIDEN"
@@ -1868,7 +1868,7 @@ loc_B015:
 		cbw
 		cmp	ax, 73h	; 's'
 		jnz	short loc_B045
-		mov	byte_12324, 1
+		mov	_mode, 1
 
 loc_B045:
 		les	bx, [bp+_argv+2]
@@ -1877,7 +1877,7 @@ loc_B045:
 		cbw
 		cmp	ax, 74h	; 't'
 		jnz	short loc_B05A
-		mov	byte_12324, 2
+		mov	_mode, 2
 
 loc_B05A:
 		les	bx, [bp+_argv+2]
@@ -1886,7 +1886,7 @@ loc_B05A:
 		cbw
 		cmp	ax, 64h	; 'd'
 		jnz	short loc_B06F
-		mov	byte_12324, 3
+		mov	_mode, 3
 
 loc_B06F:
 		push	3		; n
@@ -8337,8 +8337,7 @@ arg_0		= byte ptr  6
 arg_2		= byte ptr  8
 arg_4		= byte ptr  0Ah
 arg_6		= byte ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
+arg_8		= dword ptr  0Eh
 
 		push	bp
 		mov	bp, sp
@@ -8357,39 +8356,39 @@ arg_A		= word ptr  10h
 		push	5
 		call	resdata_create
 		mov	si, ax
-		mov	word ptr dword_13EE6+2,	si
-		mov	word ptr dword_13EE6, 0
-		les	bx, dword_13EE6
-		mov	word ptr es:[bx+3Fh], 0
-		les	bx, dword_13EE6
-		mov	word ptr es:[bx+25h], 0
-		mov	word ptr es:[bx+23h], 0
+		mov	word ptr reiidenconfig+2,	si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
+		mov	es:[bx+reiidenconfig_t.stage], 0
+		les	bx, reiidenconfig
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
 
 loc_E2C6:
 		or	si, si
 		jz	short loc_E322
-		mov	word ptr dword_13EE6+2,	si
-		mov	word ptr dword_13EE6, 0
-		les	bx, dword_13EE6
+		mov	word ptr reiidenconfig+2, si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_0]
-		mov	es:[bx+0Eh], al
-		les	bx, dword_13EE6
+		mov	es:[bx+reiidenconfig_t.rank], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_2]
-		mov	es:[bx+0Fh], al
-		les	bx, dword_13EE6
+		mov	es:[bx+reiidenconfig_t.bgm_mode], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_4]
-		mov	es:[bx+10h], al
-		les	bx, dword_13EE6
+		mov	es:[bx+reiidenconfig_t.bombs], al
+		les	bx, reiidenconfig
 		mov	al, [bp+arg_6]
-		mov	es:[bx+11h], al
-		les	bx, dword_13EE6
-		mov	dx, [bp+arg_A]
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+1Dh], dx
-		mov	es:[bx+1Bh], ax
-		les	bx, dword_13EE6
-		mov	word ptr es:[bx+21h], 0
-		mov	word ptr es:[bx+1Fh], 0
+		mov	es:[bx+reiidenconfig_t.start_lives_extra], al
+		les	bx, reiidenconfig
+		mov	dx, word ptr [bp+arg_8+2]
+		mov	ax, word ptr [bp+arg_8]
+		mov	word ptr es:[bx+reiidenconfig_t.rand+2], dx
+		mov	word ptr es:[bx+reiidenconfig_t.rand], ax
+		les	bx, reiidenconfig
+		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
+		mov	word ptr es:[bx+reiidenconfig_t.score], 0
 
 loc_E322:
 		pop	si
@@ -8413,38 +8412,38 @@ sub_E27C	endp
 ; ---------------------------------------------------------------------------
 
 loc_E33F:
-		mov	word ptr dword_13EE6+2,	si
-		mov	word ptr dword_13EE6, 0
-		les	bx, dword_13EE6
-		mov	al, es:[bx+0Eh]
+		mov	word ptr reiidenconfig+2, si
+		mov	word ptr reiidenconfig, 0
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.rank]
 		les	bx, [bp+6]
 		mov	es:[bx], al
-		les	bx, dword_13EE6
-		mov	al, es:[bx+0Fh]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.bgm_mode]
 		les	bx, [bp+0Ah]
 		mov	es:[bx], al
-		les	bx, dword_13EE6
-		mov	al, es:[bx+10h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.bombs]
 		les	bx, [bp+0Eh]
 		mov	es:[bx], al
-		les	bx, dword_13EE6
-		mov	al, es:[bx+11h]
+		les	bx, reiidenconfig
+		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		les	bx, [bp+12h]
 		mov	es:[bx], al
-		les	bx, dword_13EE6
-		mov	dx, es:[bx+1Dh]
-		mov	ax, es:[bx+1Bh]
+		les	bx, reiidenconfig
+		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
 		les	bx, [bp+16h]
 		mov	es:[bx+2], dx
 		mov	es:[bx], ax
-		les	bx, dword_13EE6
-		mov	dx, es:[bx+25h]
-		mov	ax, es:[bx+23h]
+		les	bx, reiidenconfig
+		mov	dx, word ptr es:[bx+reiidenconfig_t.continues_total+2]
+		mov	ax, word ptr es:[bx+reiidenconfig_t.continues_total]
 		les	bx, [bp+1Ah]
 		mov	es:[bx+2], dx
 		mov	es:[bx], ax
-		les	bx, dword_13EE6
-		mov	ax, es:[bx+3Fh]
+		les	bx, reiidenconfig
+		mov	ax, es:[bx+reiidenconfig_t.stage]
 		les	bx, [bp+1Eh]
 		mov	es:[bx], ax
 		xor	ax, ax
@@ -8581,7 +8580,7 @@ op_12_TEXT	ends
 
 word_12320	dw 101h
 word_12322	dw 201h
-byte_12324	db 0
+_mode	db 0
 byte_12325	db 0
 byte_12326	db 0
 byte_12327	db 0
@@ -8786,8 +8785,7 @@ word_125AE	dw 0
 word_125B0	dw 0
 ; char path[]
 path		db 'reiiden.cfg',0
-; char mode[3]
-mode		db 'rb',0
+aRB		db 'rb',0
 ; char s[]
 s		db 'REIIDEN',0
 ; char aWb[]
@@ -9517,6 +9515,6 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-dword_13EE6	dd ?
+reiidenconfig	dd ?
 
 		end
