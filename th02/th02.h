@@ -146,7 +146,7 @@ typedef struct {
 	char bombs;
 	char lives;
 	char perf;
-	int mikoconfig_sgm;
+	int resident_sgm;
 	char debug;
 } huuma_cfg_t;
 #pragma option -a2
@@ -176,9 +176,9 @@ typedef struct {
 	int skill;
 	int unused_4;
 	long score_highest;
-} mikoconfig_t;
+} resident_t;
 
-extern mikoconfig_t *mikoconfig;
+extern resident_t *mikoconfig;
 
 #define SHOTTYPE_COUNT 3
 

@@ -859,7 +859,7 @@ sub_A79D	proc far
 		cbw
 		cmp	ax, 1
 		jnz	short loc_A7AE
-		call	sub_E3C5
+		call	_resident_free
 
 loc_A7AE:
 		call	key_end
@@ -882,7 +882,7 @@ sub_A7B5	proc far
 		push	word_12322
 		push	word_12320+1
 		push	word_12320
-		call	sub_E27C
+		call	_resident_stuff_set
 		add	sp, 0Ch
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
@@ -891,7 +891,7 @@ sub_A7B5	proc far
 		cbw
 		cmp	ax, 2
 		jnz	short loc_A7FC
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.mode], 1
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
@@ -901,7 +901,7 @@ loc_A7FC:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_A810
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.mode], 3
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
@@ -909,11 +909,11 @@ loc_A7FC:
 loc_A810:
 		cmp	_mode, 0
 		jnz	short loc_A820
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.mode], 0
 
 loc_A820:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.route], 0
 		mov	es:[bx+reiidenconfig_t.stage], 0
 		mov	al, byte ptr word_12322+1
@@ -927,12 +927,12 @@ loc_A820:
 loc_A842:
 		mov	ax, si
 		add	ax, ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		add	bx, ax
 		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
 		mov	ax, si
 		shl	ax, 2
-		mov	bx, word ptr reiidenconfig
+		mov	bx, word ptr _reiidenconfig
 		add	bx, ax
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], 0
 		inc	si
@@ -940,7 +940,7 @@ loc_A842:
 loc_A867:
 		cmp	si, 4
 		jl	short loc_A842
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.score_highest], 0
 		mov	es:[bx+reiidenconfig_t.continues_total], 0
 		mov	es:[bx+reiidenconfig_t.end_flag], 0
@@ -973,9 +973,9 @@ sub_A8AD	proc far
 		push	word_12322
 		push	word_12320+1
 		push	word_12320
-		call	sub_E27C
+		call	_resident_stuff_set
 		add	sp, 0Ch
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
 		mov	ax, seg	op_01_TEXT
@@ -986,7 +986,7 @@ loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	sub_B757
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.mode], 0
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
@@ -8323,166 +8323,8 @@ op_09_TEXT	ends
 
 ; Segment type:	Pure code
 op_10_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_10_TEXT
-		;org 0Ch
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E27C	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
-arg_6		= byte ptr  0Ch
-arg_8		= dword ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jnz	short loc_E2C6
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_create
-		mov	si, ax
-		mov	word ptr reiidenconfig+2,	si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	es:[bx+reiidenconfig_t.stage], 0
-		les	bx, reiidenconfig
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
-
-loc_E2C6:
-		or	si, si
-		jz	short loc_E322
-		mov	word ptr reiidenconfig+2, si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_0]
-		mov	es:[bx+reiidenconfig_t.rank], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_2]
-		mov	es:[bx+reiidenconfig_t.bgm_mode], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_4]
-		mov	es:[bx+reiidenconfig_t.bombs], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_6]
-		mov	es:[bx+reiidenconfig_t.start_lives_extra], al
-		les	bx, reiidenconfig
-		mov	dx, word ptr [bp+arg_8+2]
-		mov	ax, word ptr [bp+arg_8]
-		mov	word ptr es:[bx+reiidenconfig_t.rand+2], dx
-		mov	word ptr es:[bx+reiidenconfig_t.rand], ax
-		les	bx, reiidenconfig
-		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score], 0
-
-loc_E322:
-		pop	si
-		pop	bp
-		retf
-sub_E27C	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jnz	short loc_E33F
-		jmp	loc_E3BF
-; ---------------------------------------------------------------------------
-
-loc_E33F:
-		mov	word ptr reiidenconfig+2, si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.rank]
-		les	bx, [bp+6]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.bgm_mode]
-		les	bx, [bp+0Ah]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.bombs]
-		les	bx, [bp+0Eh]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
-		les	bx, [bp+12h]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
-		les	bx, [bp+16h]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, reiidenconfig
-		mov	dx, word ptr es:[bx+reiidenconfig_t.continues_total+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.continues_total]
-		les	bx, [bp+1Ah]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, reiidenconfig
-		mov	ax, es:[bx+reiidenconfig_t.stage]
-		les	bx, [bp+1Eh]
-		mov	es:[bx], ax
-		xor	ax, ax
-		jmp	short loc_E3C2
-; ---------------------------------------------------------------------------
-
-loc_E3BF:
-		mov	ax, 1
-
-loc_E3C2:
-		pop	si
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E3C5	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jz	short loc_E3E2
-		push	si
-		call	dos_free
-
-loc_E3E2:
-		pop	si
-		pop	bp
-		retf
-sub_E3C5	endp
-
+	extern _resident_stuff_set:proc
+	extern _resident_free:proc
 op_10_TEXT	ends
 
 ; ===========================================================================
@@ -9017,7 +8859,8 @@ include libs/master.lib/keyback[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
-aReiidenconfig	db 'ReiidenConfig',0
+public _res_id
+_res_id	db 'ReiidenConfig',0
 public _mdrv2_have_board
 _mdrv2_have_board	db 0
 		db 0
@@ -9515,6 +9358,7 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-reiidenconfig	dd ?
+public _reiidenconfig
+_reiidenconfig	dd ?
 
 		end

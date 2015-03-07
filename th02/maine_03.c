@@ -9,7 +9,7 @@
 char rank = RANK_NORMAL;
 char unused_1 = 0;
 
-mikoconfig_t *mikoconfig;
+resident_t *mikoconfig;
 char unused_2;
 char rem_lives;
 char rem_bombs;
@@ -21,16 +21,16 @@ int unused_6;
 
 int pascal cfg_load(void)
 {
-	int mikoconfig_sgm;
+	int resident_sgm;
 
 	file_ropen("huuma.cfg");
-	file_seek(offsetof(huuma_cfg_t, mikoconfig_sgm), 0);
-	file_read(&mikoconfig_sgm, sizeof(mikoconfig_sgm));
+	file_seek(offsetof(huuma_cfg_t, resident_sgm), 0);
+	file_read(&resident_sgm, sizeof(resident_sgm));
 	file_close();
-	if(!mikoconfig_sgm) {
+	if(!resident_sgm) {
 		return 0;
 	}
-	mikoconfig = MK_FP(mikoconfig_sgm, 0);
+	mikoconfig = MK_FP(resident_sgm, 0);
 	rem_lives = mikoconfig->rem_lives;
 	rem_bombs = mikoconfig->rem_bombs;
 	rank = mikoconfig->rank;

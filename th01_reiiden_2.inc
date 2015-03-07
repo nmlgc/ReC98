@@ -1218,7 +1218,7 @@ loc_1BBD3:
 		mov	word_398B6, 1
 		mov	word_398E8, 1
 		mov	word_3991A, 1
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	loc_1DFFC
@@ -1253,7 +1253,7 @@ loc_1BBD3:
 		push	offset unk_37635
 		call	sub_30368
 		add	sp, 24h
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	loc_1DFFC
@@ -1268,7 +1268,7 @@ loc_1BC8C:
 		mov	word_398B2, 1
 		mov	word_398E4, 1
 		mov	word_39916, 1
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	loc_1DFFC
@@ -1412,14 +1412,14 @@ loc_1BE24:
 		mov	byte ptr word_39E14+1, 0
 		mov	word_3984E, 4
 		mov	word_39880, 3
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1BE6D
 		mov	ax, 15Eh
 		jmp	short loc_1BE9A
 ; ---------------------------------------------------------------------------
 
 loc_1BE6D:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1BE7B
@@ -1428,7 +1428,7 @@ loc_1BE6D:
 ; ---------------------------------------------------------------------------
 
 loc_1BE7B:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1BE89
@@ -1437,7 +1437,7 @@ loc_1BE7B:
 ; ---------------------------------------------------------------------------
 
 loc_1BE89:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1BE97
@@ -1645,14 +1645,14 @@ loc_1C02D:
 		call	sub_EB10
 		add	sp, 4
 		call	sub_232A4
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1C097
 		mov	ax, 8
 		jmp	loc_1D84C
 ; ---------------------------------------------------------------------------
 
 loc_1C097:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1C0A6
@@ -1661,7 +1661,7 @@ loc_1C097:
 ; ---------------------------------------------------------------------------
 
 loc_1C0A6:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1C0B5
@@ -1670,7 +1670,7 @@ loc_1C0A6:
 ; ---------------------------------------------------------------------------
 
 loc_1C0B5:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1C0C4
@@ -2031,14 +2031,14 @@ loc_1C3EB:
 		mov	ax, 190h
 		sub	ax, word ptr dword_3982A+2
 		mov	word_39E0C, ax
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1C45B
 		mov	ax, 0Ch
 		jmp	short loc_1C488
 ; ---------------------------------------------------------------------------
 
 loc_1C45B:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1C469
@@ -2047,7 +2047,7 @@ loc_1C45B:
 ; ---------------------------------------------------------------------------
 
 loc_1C469:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1C477
@@ -2056,7 +2056,7 @@ loc_1C469:
 ; ---------------------------------------------------------------------------
 
 loc_1C477:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1C485
@@ -2370,14 +2370,14 @@ loc_1C741:
 		call	sub_EB10
 		add	sp, 4
 		call	sub_232A4
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1C7B1
 		mov	ax, 0Ah
 		jmp	loc_1D84C
 ; ---------------------------------------------------------------------------
 
 loc_1C7B1:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1C7C0
@@ -2386,7 +2386,7 @@ loc_1C7B1:
 ; ---------------------------------------------------------------------------
 
 loc_1C7C0:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1C7CF
@@ -2395,7 +2395,7 @@ loc_1C7C0:
 ; ---------------------------------------------------------------------------
 
 loc_1C7CF:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1C7DE
@@ -2861,7 +2861,7 @@ loc_1CBE8:
 		mov	word_39E08, 2
 		mov	word_3A6CA, 0
 		mov	word_39E06, 0
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jle	loc_1CF52
@@ -2957,7 +2957,7 @@ loc_1CCF1:
 		mov	word_39E08, 4
 		mov	word_3A6CA, 0
 		mov	word_39E06, 0
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jle	loc_1CF52
@@ -3077,7 +3077,7 @@ loc_1CDD6:
 		mov	word_39E08, 6
 		mov	word_3A6CA, 0
 		mov	word_39E06, 0
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1CF29
@@ -3094,7 +3094,7 @@ loc_1CDD6:
 		add	sp, 0Ch
 
 loc_1CF29:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1CF52
@@ -3986,14 +3986,14 @@ loc_1D808:
 		jl	short loc_1D7B1
 		mov	ax, word_39DF8
 		mov	word_39DF2, ax
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1D81F
 		mov	ax, 18h
 		jmp	short loc_1D84C
 ; ---------------------------------------------------------------------------
 
 loc_1D81F:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1D82D
@@ -4002,7 +4002,7 @@ loc_1D81F:
 ; ---------------------------------------------------------------------------
 
 loc_1D82D:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1D83B
@@ -4011,7 +4011,7 @@ loc_1D82D:
 ; ---------------------------------------------------------------------------
 
 loc_1D83B:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1D849
@@ -5808,14 +5808,14 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_1E853
 		mov	ax, [bp+arg_4]
 		jmp	short loc_1E87E
 ; ---------------------------------------------------------------------------
 
 loc_1E853:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1E860
@@ -5824,7 +5824,7 @@ loc_1E853:
 ; ---------------------------------------------------------------------------
 
 loc_1E860:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1E86E
@@ -5833,7 +5833,7 @@ loc_1E860:
 ; ---------------------------------------------------------------------------
 
 loc_1E86E:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1E87C
@@ -8328,7 +8328,7 @@ loc_1FEAB:
 		imul	word_34A84
 		cwde
 		push	eax
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1FECC
@@ -8851,7 +8851,7 @@ loc_202A6:
 		inc	word ptr es:[bx]
 		cmp	word ptr es:[bx], 18h
 		jl	loc_2036D
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_2031C
@@ -10447,7 +10447,7 @@ loc_20F85:
 ; ---------------------------------------------------------------------------
 
 loc_20F8F:
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jz	short loc_20FA3
 		mov	ax, si
 		add	ax, ax
@@ -10474,7 +10474,7 @@ loc_20FBF:
 ; ---------------------------------------------------------------------------
 
 loc_20FC8:
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jz	short loc_20FDC
 		mov	ax, si
 		add	ax, ax
@@ -13402,14 +13402,14 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_2282C
 		mov	ax, [bp+arg_4]
 		jmp	short loc_22857
 ; ---------------------------------------------------------------------------
 
 loc_2282C:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_22839
@@ -13418,7 +13418,7 @@ loc_2282C:
 ; ---------------------------------------------------------------------------
 
 loc_22839:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_22847
@@ -13427,7 +13427,7 @@ loc_22839:
 ; ---------------------------------------------------------------------------
 
 loc_22847:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_22855
@@ -14454,14 +14454,14 @@ loc_2302C:
 		call	sub_232A4
 		mov	word_39852, 0
 		mov	word_3A381, 0
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_23087
 		mov	ax, 46h	; 'F'
 		jmp	short loc_230B4
 ; ---------------------------------------------------------------------------
 
 loc_23087:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_23095
@@ -14470,7 +14470,7 @@ loc_23087:
 ; ---------------------------------------------------------------------------
 
 loc_23095:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_230A3
@@ -14479,7 +14479,7 @@ loc_23095:
 ; ---------------------------------------------------------------------------
 
 loc_230A3:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_230B1
@@ -14781,14 +14781,14 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_232F6
 		mov	ax, [bp+arg_4]
 		jmp	short loc_23321
 ; ---------------------------------------------------------------------------
 
 loc_232F6:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_23303
@@ -14797,7 +14797,7 @@ loc_232F6:
 ; ---------------------------------------------------------------------------
 
 loc_23303:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_23311
@@ -14806,7 +14806,7 @@ loc_23303:
 ; ---------------------------------------------------------------------------
 
 loc_23311:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_2331F
@@ -18461,14 +18461,14 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_253B4
 		mov	ax, [bp+arg_4]
 		jmp	short loc_253DF
 ; ---------------------------------------------------------------------------
 
 loc_253B4:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_253C1
@@ -18477,7 +18477,7 @@ loc_253B4:
 ; ---------------------------------------------------------------------------
 
 loc_253C1:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_253CF
@@ -18486,7 +18486,7 @@ loc_253C1:
 ; ---------------------------------------------------------------------------
 
 loc_253CF:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_253DD
@@ -22061,7 +22061,7 @@ loc_274FF:
 		or	dx, dx
 		jnz	short loc_27539
 		push	48h ; 'H'
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_2751B
@@ -23863,14 +23863,14 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_2866B
 		mov	ax, [bp+arg_4]
 		jmp	short loc_28696
 ; ---------------------------------------------------------------------------
 
 loc_2866B:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_28678
@@ -23879,7 +23879,7 @@ loc_2866B:
 ; ---------------------------------------------------------------------------
 
 loc_28678:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_28686
@@ -23888,7 +23888,7 @@ loc_28678:
 ; ---------------------------------------------------------------------------
 
 loc_28686:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_28694
@@ -27885,7 +27885,7 @@ loc_2AAF6:
 		push	offset unk_37635
 		call	sub_304B8
 		add	sp, 28h
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		; Hack (jl loc_2ABC0)
@@ -27914,7 +27914,7 @@ loc_2AAF6:
 		push	offset unk_37635
 		call	sub_304B8
 		add	sp, 28h
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_2ABC0
@@ -31500,14 +31500,14 @@ arg_A		= word ptr  10h
 loc_2CDD3:
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_2CDE4
 		mov	ax, [bp+arg_4]
 		jmp	short loc_2CE0F
 ; ---------------------------------------------------------------------------
 
 loc_2CDE4:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_2CDF1
@@ -31516,7 +31516,7 @@ loc_2CDE4:
 ; ---------------------------------------------------------------------------
 
 loc_2CDF1:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_2CDFF
@@ -31525,7 +31525,7 @@ loc_2CDF1:
 ; ---------------------------------------------------------------------------
 
 loc_2CDFF:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_2CE0D
@@ -33101,7 +33101,7 @@ loc_2DBCA:
 		add	sp, 0Eh
 
 loc_2DBEC:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		imul	ax, 28h
 		mov	dx, 0F0h
@@ -37549,14 +37549,14 @@ arg_A		= word ptr  10h
 		jl	loc_304B4
 		cmp	[bp+arg_6], 190h
 		jg	loc_304B4
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_303B1
 		xor	ax, ax
 		jmp	short loc_303D0
 ; ---------------------------------------------------------------------------
 
 loc_303B1:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_303BF
@@ -37565,7 +37565,7 @@ loc_303B1:
 ; ---------------------------------------------------------------------------
 
 loc_303BF:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_303CD
@@ -37578,7 +37578,7 @@ loc_303CD:
 
 loc_303D0:
 		add	si, ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('
@@ -37699,14 +37699,14 @@ arg_12		= word ptr  18h
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx+1068h],	64h ; 'd'
 		jg	loc_30634
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_304D9
 		xor	ax, ax
 		jmp	short loc_304F8
 ; ---------------------------------------------------------------------------
 
 loc_304D9:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_304E7
@@ -37715,7 +37715,7 @@ loc_304D9:
 ; ---------------------------------------------------------------------------
 
 loc_304E7:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_304F5
@@ -37728,7 +37728,7 @@ loc_304F5:
 
 loc_304F8:
 		add	si, ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('

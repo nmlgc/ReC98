@@ -2805,7 +2805,7 @@ loc_CB5D:
 loc_CB66:
 		cmp	[bp+var_1], 0
 		jz	short loc_CB96
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		inc	es:[bx+reiidenconfig_t.continues_total]
 		inc	_continues_total
 		mov	ax, es:[bx+reiidenconfig_t.stage]
@@ -2813,7 +2813,7 @@ loc_CB66:
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr reiidenconfig
+		mov	bx, word ptr _reiidenconfig
 		add	bx, ax
 		inc	es:[bx+reiidenconfig_t.continues_per_scene]
 
@@ -2851,7 +2851,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], dx
 		jle	short loc_CBD4
 		mov	es:[bx+reiidenconfig_t.bullet_speed], dx
@@ -2859,12 +2859,12 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_CBD4:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, [bp+arg_2]
 		add	es:[bx+reiidenconfig_t.bullet_speed], ax
 
 loc_CBDF:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], -15
 		jge	short loc_CBF0
 		mov	es:[bx+reiidenconfig_t.bullet_speed], -15
@@ -2885,7 +2885,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, [bp+arg_0]
 		add	es:[bx+reiidenconfig_t.bullet_speed], ax
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], 20
@@ -2965,7 +2965,7 @@ sub_CC0F	proc far
 		mov	byte_34A51, 0
 		mov	byte_34A4E, 0
 		call	sub_B87C
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		inc	es:[bx+reiidenconfig_t.continues_total]
 		inc	_continues_total
 		mov	ax, es:[bx+reiidenconfig_t.stage]
@@ -2973,10 +2973,10 @@ sub_CC0F	proc far
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr reiidenconfig
+		mov	bx, word ptr _reiidenconfig
 		add	bx, ax
 		inc	es:[bx+reiidenconfig_t.continues_per_scene]
-		mov	bx, word ptr reiidenconfig
+		mov	bx, word ptr _reiidenconfig
 		mov	eax, es:[bx+reiidenconfig_t.score_highest]
 		cmp	eax, _score
 		jnb	short loc_CD2E
@@ -2984,7 +2984,7 @@ sub_CC0F	proc far
 		mov	es:[bx+reiidenconfig_t.score_highest], eax
 
 loc_CD2E:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.score], 0
 		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		add	al, 2
@@ -3009,10 +3009,10 @@ loc_CD52:
 loc_CD70:
 		cmp	si, 1
 		jnz	short loc_CDA2
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
 		call	sub_E852
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
 		push	ds
@@ -3310,7 +3310,7 @@ loc_D00D:
 		pop	cx
 		mov	al, byte_36C14
 		mov	_bombs, al
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.bombs], 1
 		pop	di
 		pop	si
@@ -3333,7 +3333,7 @@ sub_D02F	proc far
 		cmp	_rem_lives, 6
 		jge	short loc_D076
 		inc	_rem_lives
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, byte ptr _rem_lives
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	ax, _rem_lives
@@ -4033,8 +4033,8 @@ loc_D54F:
 		push	ds
 		push	offset byte_34A31
 		push	ds
-		push	offset byte_34A30
-		call	sub_11678
+		push	offset _rank
+		call	_resident_stuff_get
 		add	sp, 1Ch
 		cmp	ax, 1
 		jnz	short loc_D583
@@ -4047,7 +4047,7 @@ loc_D579:
 
 loc_D583:
 		mov	byte_36C14, 1
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	eax, es:[bx+reiidenconfig_t.score]
 		mov	_score, eax
 		mov	ebx, 61A80h
@@ -4062,7 +4062,7 @@ loc_D583:
 		push	3F003Fh
 		call	__control87
 		add	sp, 4
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, es:[bx+reiidenconfig_t.route]
 		mov	_route, al
 		cmp	es:[bx+reiidenconfig_t.mode], 0
@@ -4118,7 +4118,7 @@ loc_D644:
 		mov	_route, 0
 
 loc_D649:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 1
@@ -4130,7 +4130,7 @@ loc_D649:
 		mov	_mode_test, 1
 
 loc_D669:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 3
@@ -4226,7 +4226,7 @@ loc_D6EE:
 
 loc_D72E:
 		call	sub_D487
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, es:[bx+reiidenconfig_t.rem_lives]
 		cbw
 		mov	_rem_lives, ax
@@ -4276,7 +4276,7 @@ loc_D795:
 		mov	byte_35BEE, dl
 		mov	byte_34A49, 1
 		mov	byte_36C1E, 1
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
 		jnz	short loc_D7E0
 		mov	ax, 1
@@ -4290,7 +4290,7 @@ loc_D7E2:
 		mov	si, ax
 
 loc_D7E4:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		mov	al, _route
@@ -4905,7 +4905,7 @@ loc_DE0F:
 		cmp	ax, 1
 		jnz	short loc_DE67
 		call	sub_D487
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, _route
 		inc	al
 		mov	es:[bx+reiidenconfig_t.end_flag], al
@@ -4942,7 +4942,7 @@ loc_DE72:
 		push	0
 		call	sub_11738
 		pop	cx
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	eax, _rand
 		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	word_34A72, 0
@@ -4954,7 +4954,7 @@ loc_DE72:
 		push	5
 		call	_mdrv2_se_play
 		pop	cx
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_rem_lives
 		call	sub_1AE0D
@@ -4978,7 +4978,7 @@ loc_DEDA:
 loc_DF03:
 		inc	si
 		inc	[bp+var_2]
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		cmp	byte_34ADF, 0
@@ -4995,7 +4995,7 @@ loc_DF23:
 
 loc_DF2B:
 		pop	cx
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], 0
 		jge	short loc_DF3D
 		mov	es:[bx+reiidenconfig_t.bullet_speed], 0
@@ -5011,7 +5011,7 @@ loc_DF3D:
 		jz	short loc_DF9A
 
 loc_DF52:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
 		mov	al, byte ptr _rem_lives
@@ -5020,7 +5020,7 @@ loc_DF52:
 		mov	al, _route
 		mov	es:[bx+reiidenconfig_t.route], al
 		call	_mdrv2_bgm_fade_out_nonblock
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
 		call	sub_E852
@@ -5249,7 +5249,7 @@ loc_E244:
 		mov	byte_34A49, 1
 
 loc_E27B:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
 		cmp	[bp+var_2], 5
@@ -5280,7 +5280,7 @@ loc_E2A8:
 		pushd	[_score]
 		call	sub_148B3
 		add	sp, 0Ah
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		call	sub_CC0F
@@ -12484,182 +12484,7 @@ main_11_TEXT	ends
 
 ; Segment type:	Pure code
 main_12_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_12_TEXT
-		;org 0Fh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_115CF	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
-arg_6		= byte ptr  0Ch
-arg_8		= dword ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jnz	short loc_11619
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_create
-		mov	si, ax
-		mov	word ptr reiidenconfig+2, si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	es:[bx+reiidenconfig_t.stage], 0
-		les	bx, reiidenconfig
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
-
-loc_11619:
-		or	si, si
-		jz	short loc_11675
-		mov	word ptr reiidenconfig+2, si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_0]
-		mov	es:[bx+reiidenconfig_t.rank], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_2]
-		mov	es:[bx+reiidenconfig_t.bgm_mode], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_4]
-		mov	es:[bx+reiidenconfig_t.bombs], al
-		les	bx, reiidenconfig
-		mov	al, [bp+arg_6]
-		mov	es:[bx+reiidenconfig_t.start_lives_extra], al
-		les	bx, reiidenconfig
-		mov	dx, word ptr [bp+arg_8+2]
-		mov	ax, word ptr [bp+arg_8]
-		mov	word ptr es:[bx+reiidenconfig_t.rand+2], dx
-		mov	word ptr es:[bx+reiidenconfig_t.rand], ax
-		les	bx, reiidenconfig
-		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score], 0
-
-loc_11675:
-		pop	si
-		pop	bp
-		retf
-sub_115CF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11678	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-arg_C		= dword	ptr  12h
-arg_10		= dword	ptr  16h
-arg_14		= dword	ptr  1Ah
-arg_18		= dword	ptr  1Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jnz	short loc_11692
-		jmp	loc_11712
-; ---------------------------------------------------------------------------
-
-loc_11692:
-		mov	word ptr reiidenconfig+2, si
-		mov	word ptr reiidenconfig, 0
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.rank]
-		les	bx, [bp+arg_0]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.bgm_mode]
-		les	bx, [bp+arg_4]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.bombs]
-		les	bx, [bp+arg_8]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
-		les	bx, [bp+arg_C]
-		mov	es:[bx], al
-		les	bx, reiidenconfig
-		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
-		les	bx, [bp+arg_10]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, reiidenconfig
-		mov	dx, word ptr es:[bx+reiidenconfig_t.continues_total+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.continues_total]
-		les	bx, [bp+arg_14]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		les	bx, reiidenconfig
-		mov	ax, es:[bx+reiidenconfig_t.stage]
-		les	bx, [bp+arg_18]
-		mov	es:[bx], ax
-		xor	ax, ax
-		jmp	short loc_11715
-; ---------------------------------------------------------------------------
-
-loc_11712:
-		mov	ax, 1
-
-loc_11715:
-		pop	si
-		pop	bp
-		retf
-sub_11678	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11718	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	si, ax
-		or	si, si
-		jz	short loc_11735
-		push	si
-		call	dos_free
-
-loc_11735:
-		pop	si
-		pop	bp
-		retf
-sub_11718	endp
-
+	extern _resident_stuff_get:proc
 main_12_TEXT	ends
 
 ; ===========================================================================
@@ -16016,7 +15841,7 @@ loc_13313:
 		cwd
 		idiv	bx
 		shl	dx, 2
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		add	bx, dx
 		mov	eax, dword_34A5E
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
@@ -16521,7 +16346,7 @@ loc_13792:
 		idiv	bx
 		dec	ax
 		add	ax, ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		add	bx, ax
 		mov	ax, word ptr _continues_total
 		mov	es:[bx+reiidenconfig_t.continues_per_scene], ax
@@ -16619,7 +16444,7 @@ var_2		= word ptr -2
 		mov	word ptr [bp+var_E], offset aUmx_0 ; "ìåï˚ÅöËÀàŸì`Å@Å@"
 		mov	word ptr [bp+var_12+2],	ds
 		mov	word ptr [bp+var_12], offset aHiscore ;	"HISCORE"
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		mov	bx, ax
 		cmp	bx, 3
@@ -16774,7 +16599,7 @@ s1		= byte ptr -32h
 
 		enter	42h, 0
 		push	si
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		mov	bx, ax
 		cmp	bx, 3
@@ -18369,7 +18194,7 @@ stream		= dword	ptr -4
 		push	offset aHiscore_0 ; "HISCORE"
 		mov	cx, 8
 		call	SCOPY@
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		mov	bx, ax
 		cmp	bx, 3
@@ -18651,7 +18476,7 @@ loc_148F9:
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_D0]
@@ -18669,7 +18494,7 @@ loc_14942:
 		push	0
 		call	sub_FA43
 		add	sp, 0Ah
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_D0]
@@ -18919,7 +18744,7 @@ sub_14BD2	proc far
 		push	dx
 		push	ax
 		pop	eax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
 		call	sub_146BA
@@ -25241,7 +25066,7 @@ loc_1833B:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	[bx+539Ah], ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.p_value], 59999
 		jnb	short loc_18368
 		cmp	es:[bx+reiidenconfig_t.p_value], 10000
@@ -25254,17 +25079,17 @@ loc_1835D:
 		mov	ax, 2710h
 
 loc_18360:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		add	es:[bx+reiidenconfig_t.p_value], ax
 
 loc_18368:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		cmp	es:[bx+reiidenconfig_t.p_value], 60000
 		jb	short loc_1837A
 		mov	es:[bx+reiidenconfig_t.p_value], 65530
 
 loc_1837A:
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		movzx	eax, es:[bx+reiidenconfig_t.p_value]
 		add	_score, eax
 		call	sub_1889C
@@ -25408,7 +25233,7 @@ sub_1843D	endp
 sub_18456	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pop	bp
 		retf
@@ -25471,7 +25296,7 @@ loc_184D3:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		push	es:[bx+reiidenconfig_t.p_value]
 		push	5
 		call	sub_1FF8A
@@ -25698,7 +25523,7 @@ var_4		= dword	ptr -4
 		enter	8, 0
 		push	si
 		mov	[bp+var_4], 0F4240h
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	eax, es:[bx+reiidenconfig_t.hiscore]
 		mov	[bp+var_8], eax
 		cmp	eax, _score
@@ -25821,7 +25646,7 @@ loc_18778:
 		add	sp, 12h
 		mov	eax, _score
 		mov	dword_35ABF, eax
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
 
 loc_187A3:
@@ -26282,7 +26107,7 @@ loc_18B33:
 		pop	cx
 		push	1
 		pushd	0
-		les	bx, reiidenconfig
+		les	bx, _reiidenconfig
 		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]
 		push	70027h
 		pushd	100h
@@ -27080,13 +26905,13 @@ loc_19124:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+97h]
 		push	270030h
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
@@ -27124,13 +26949,13 @@ loc_19124:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+97h]
 		push	270030h
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
@@ -27774,7 +27599,7 @@ loc_19670:
 		push	ax
 
 loc_19673:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		pop	dx
 		cmp	dx, ax
@@ -28721,14 +28546,14 @@ arg_0		= word ptr  6
 		mov	byte_34A59, 0
 		mov	byte_34A57, 0
 		mov	byte_39DB3, 40h
-		cmp	byte_34A30, 0
+		cmp	_rank, 0
 		jnz	short loc_19E93
 		mov	al, 0Fh
 		jmp	short loc_19EBC
 ; ---------------------------------------------------------------------------
 
 loc_19E93:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 1
 		jnz	short loc_19EA0
@@ -28737,7 +28562,7 @@ loc_19E93:
 ; ---------------------------------------------------------------------------
 
 loc_19EA0:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	short loc_19EAD
@@ -28746,7 +28571,7 @@ loc_19EA0:
 ; ---------------------------------------------------------------------------
 
 loc_19EAD:
-		mov	al, byte_34A30
+		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	short loc_19EBA
@@ -30858,7 +30683,7 @@ include th01_reiiden_2.inc
 
 	.data
 
-byte_34A30	db 1
+_rank	db 1
 byte_34A31	db 1
 _bombs	db 1
 unk_34A33	db    2
@@ -31359,7 +31184,8 @@ include libs/master.lib/rand[data].asm
 		db    8
 		db    3
 		db  20h
-aReiidenconfig	db 'ReiidenConfig',0
+public _res_id
+_res_id	db 'ReiidenConfig',0
 unk_355EC	db    0
 		dd    0
 		db    0
@@ -34828,7 +34654,8 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-reiidenconfig	dd ?
+public _reiidenconfig
+_reiidenconfig	dd ?
 unk_391A0	db    ?	;
 		dd    ?
 		dd    ?
