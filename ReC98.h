@@ -54,8 +54,8 @@ extern char *VRAM_PLANE_G;
 extern char *VRAM_PLANE_R;
 extern char *VRAM_PLANE_E;
 
-// Parenthesizing it like this avoids a signed 16-bit overflow.
-#define PLANE_SIZE (RES_X * (RES_Y / 8))
+#define ROW_SIZE (RES_X / 8)
+#define PLANE_SIZE (ROW_SIZE * RES_Y)
 
 #define PLANE_DWORD_BLIT(dst, src) \
 	for(p = 0; p < PLANE_SIZE; p += 4) { \

@@ -7,6 +7,14 @@
 
 // Hardware
 void graph_accesspage_func(int page);
+void grcg_setcolor_rmw(int color);
+void grcg_off_func(void);
+
+#undef graph_accesspage
+#define graph_accesspage graph_accesspage_func
+
+#undef grcg_off
+#define grcg_off grcg_off_func
 
 // Game
 #define STAGES_PER_SCENE 4

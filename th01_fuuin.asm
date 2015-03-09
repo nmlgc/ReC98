@@ -34,8 +34,6 @@ include libs/BorlandC/regs.inc
 	extern LXMUL@:proc
 	extern SCOPY@:proc
 	extern __fgetc:proc
-	extern __lrotl:proc
-	extern __lrotr:proc
 	extern __mbcjmstojis:proc
 	extern __mbctype:byte
 	extern __setargv__:proc ; main() needs both to be set
@@ -3177,7 +3175,7 @@ arg_6		= dword	ptr  0Ch
 		push	0
 		push	0
 		push	30h ; '0'
-		call	sub_EE15
+		call	_graph_slow_2xscale_region_1_to_0
 		add	sp, 0Ch
 		push	1
 		push	0
@@ -3199,7 +3197,7 @@ loc_B666:
 		push	0
 		push	0
 		push	30h ; '0'
-		call	sub_EE15
+		call	_graph_slow_2xscale_region_1_to_0
 		add	sp, 0Ch
 
 loc_B67B:
@@ -6923,8 +6921,8 @@ sub_D119	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D13A	proc far
+public _grcg_setcolor_rmw
+_grcg_setcolor_rmw	proc far
 
 arg_0		= word ptr  6
 
@@ -6984,7 +6982,7 @@ loc_D17E:
 		out	dx, al
 		pop	bp
 		retf
-sub_D13A	endp
+_grcg_setcolor_rmw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7057,8 +7055,8 @@ sub_D184	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D1CE	proc far
+public _grcg_off_func
+_grcg_off_func	proc far
 		push	bp
 		mov	bp, sp
 		mov	dx, 7Ch
@@ -7066,7 +7064,7 @@ sub_D1CE	proc far
 		out	dx, al
 		pop	bp
 		retf
-sub_D1CE	endp
+_grcg_off_func	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7260,12 +7258,12 @@ _s		= dword	ptr -4
 		enter	4, 0
 		mov	[bp+_s],	0A8000000h
 		push	0
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh	; c
 		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		call	sub_D1CE
+		call	_grcg_off_func
 		leave
 		retf
 sub_D2D6	endp
@@ -7304,12 +7302,12 @@ arg_0		= byte ptr  6
 		mov	al, [bp+arg_0]
 		cbw
 		push	ax
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh	; c
 		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		call	sub_D1CE
+		call	_grcg_off_func
 		leave
 		retf
 sub_D31C	endp
@@ -7937,7 +7935,7 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		push	[bp+arg_4]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	bx, [bp+arg_2]
 		imul	bx, 50h
@@ -7952,7 +7950,7 @@ arg_4		= word ptr  0Ah
 		mov	es, ax
 		assume es:nothing
 		mov	es:[bx], dl
-		call	sub_D1CE
+		call	_grcg_off_func
 		pop	bp
 		retf
 sub_D74A	endp
@@ -8113,7 +8111,7 @@ loc_D834:
 		cmp	byte_134EA, 0
 		jnz	short loc_D898
 		push	[bp+arg_6]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_D898:
@@ -8167,7 +8165,7 @@ loc_D8ED:
 loc_D8F0:
 		cmp	byte_134EA, 0
 		jnz	short loc_D8FB
-		call	sub_D1CE
+		call	_grcg_off_func
 
 loc_D8FB:
 		pop	di
@@ -8257,7 +8255,7 @@ loc_D95A:
 		shl	ax, cl
 		or	[bp+var_6], ax
 		push	[bp+arg_6]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	[bp+var_2], si
 		jmp	short loc_D9B1
@@ -8274,7 +8272,7 @@ loc_D99D:
 loc_D9B1:
 		cmp	[bp+var_2], di
 		jle	short loc_D99D
-		call	sub_D1CE
+		call	_grcg_off_func
 
 loc_D9BA:
 		pop	di
@@ -8578,7 +8576,7 @@ loc_DBFB:
 		cmp	byte_134EA, 0
 		jnz	short loc_DC35
 		push	[bp+arg_8]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_DC35:
@@ -8861,7 +8859,7 @@ loc_DE93:
 loc_DF2B:
 		cmp	byte_134EA, 0
 		jnz	short loc_DF36
-		call	sub_D1CE
+		call	_grcg_off_func
 
 loc_DF36:
 		pop	di
@@ -8941,7 +8939,7 @@ loc_DF9D:
 
 loc_DFAE:
 		push	[bp+arg_8]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	ax, si
 		imul	ax, 50h
@@ -9011,7 +9009,7 @@ loc_E03E:
 loc_E048:
 		cmp	[bp+var_4], di
 		jle	short loc_DFD0
-		call	sub_D1CE
+		call	_grcg_off_func
 
 loc_E051:
 		pop	di
@@ -9261,7 +9259,7 @@ loc_E1C2:
 
 loc_E1DA:
 		push	[bp+arg_4]
-		call	sub_D13A
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
@@ -9538,7 +9536,7 @@ loc_E41D:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_D1CE
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -10703,270 +10701,7 @@ fuuin_11_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_12_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_12_TEXT
-		;org 2
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED32	proc far
-
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-val		= dword	ptr -4
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	0Ch, 0
-		push	si
-		mov	[bp+val], 1
-		mov	[bp+var_8], 0
-		movsx	eax, [bp+arg_4]
-		mov	[bp+var_8], eax
-		mov	[bp+var_C], 0
-		les	bx, [bp+arg_0]
-		mov	dword ptr es:[bx], 0
-		xor	si, si
-		jmp	short loc_EDBF
-; ---------------------------------------------------------------------------
-
-loc_ED67:
-		mov	ax, si
-		add	ax, ax
-		sub	ax, si
-		push	ax		; count
-		mov	eax, [bp+var_8]
-		and	eax, [bp+val]
-		push	eax		; val
-		call	__lrotl
-		push	dx
-		push	ax
-		pop	eax
-		add	sp, 6
-		or	[bp+var_C], eax
-		mov	ax, si
-		add	ax, ax
-		inc	ax
-		sub	ax, si
-		push	ax		; count
-		mov	eax, [bp+var_8]
-		and	eax, [bp+val]
-		push	eax		; val
-		call	__lrotl
-		push	dx
-		push	ax
-		pop	eax
-		add	sp, 6
-		or	[bp+var_C], eax
-		push	1		; count
-		pushd	[bp+val]	; val
-		call	__lrotl
-		add	sp, 6
-		mov	word ptr [bp+val+2], dx
-		mov	word ptr [bp+val], ax
-		inc	si
-
-loc_EDBF:
-		cmp	si, 10h
-		jl	short loc_ED67
-		mov	[bp+val], 0FF00FFh
-		push	8		; count
-		mov	eax, [bp+var_C]
-		and	eax, [bp+val]
-		push	eax		; val
-		call	__lrotl
-		push	dx
-		push	ax
-		pop	eax
-		add	sp, 6
-		les	bx, [bp+arg_0]
-		or	es:[bx], eax
-		mov	[bp+val], 0FF00FF00h
-		push	8		; count
-		mov	eax, [bp+var_C]
-		and	eax, [bp+val]
-		push	eax		; val
-		call	__lrotr
-		push	dx
-		push	ax
-		pop	eax
-		add	sp, 6
-		les	bx, [bp+arg_0]
-		or	es:[bx], eax
-		pop	si
-		leave
-		retf
-sub_ED32	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE15	proc far
-
-var_1C		= dword	ptr -1Ch
-var_18		= dword	ptr -18h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		enter	1Ch, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_6]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_4], ax
-		mov	[bp+var_8], 0
-		jmp	loc_EF72
-; ---------------------------------------------------------------------------
-
-loc_EE48:
-		mov	di, [bp+var_4]
-		mov	ax, [bp+var_2]
-		mov	[bp+var_14], ax
-		mov	[bp+var_6], 0
-		jmp	loc_EF56
-; ---------------------------------------------------------------------------
-
-loc_EE59:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_10], ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_E], ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_C], ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_A], ax
-		mov	ax, [bp+var_10]
-		or	ax, [bp+var_E]
-		or	ax, [bp+var_C]
-		or	ax, [bp+var_A]
-		mov	[bp+var_12], ax
-		xor	si, si
-		jmp	loc_EF44
-; ---------------------------------------------------------------------------
-
-loc_EEA9:
-		push	0
-		call	_graph_accesspage_func
-		push	[bp+var_12]
-		push	ss
-		lea	ax, [bp+var_1C]
-		push	ax
-		call	sub_ED32
-		push	0
-		call	sub_D13A
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	eax, [bp+var_1C]
-		mov	es:[bx+si], eax
-		call	sub_D1CE
-		push	[bp+var_10]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_ED32
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	eax, [bp+var_18]
-		or	es:[bx+si], eax
-		push	[bp+var_E]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_ED32
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		mov	eax, [bp+var_18]
-		or	es:[bx+si], eax
-		push	[bp+var_C]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_ED32
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		mov	eax, [bp+var_18]
-		or	es:[bx+si], eax
-		push	[bp+var_A]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_ED32
-		add	sp, 22h
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		mov	eax, [bp+var_18]
-		or	es:[bx+si], eax
-		add	si, 50h	; 'P'
-
-loc_EF44:
-		cmp	si, 0A0h
-		jl	loc_EEA9
-		add	[bp+var_14], 2
-		add	di, 4
-		inc	[bp+var_6]
-
-loc_EF56:
-		mov	ax, [bp+arg_8]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_6]
-		jg	loc_EE59
-		add	[bp+var_4], 0A0h
-		add	[bp+var_2], 50h	; 'P'
-		inc	[bp+var_8]
-
-loc_EF72:
-		mov	ax, [bp+var_8]
-		cmp	ax, [bp+arg_A]
-		jl	loc_EE48
-		pop	di
-		pop	si
-		leave
-		retf
-sub_EE15	endp
-
+	extern _graph_slow_2xscale_region_1_to_0:proc
 fuuin_12_TEXT	ends
 
 ; ===========================================================================

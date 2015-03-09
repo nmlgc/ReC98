@@ -38,7 +38,7 @@ bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_12.c th01\main_16.c
 $**
 |
 
-bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_11.c th01\fuuin_13.c
+bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |
