@@ -31,7 +31,7 @@ char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
 long unused[2];
 
-void pascal graph_copy_region_from_1_to_0(int x, int y, int w, int h);
+void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h);
 
 void copy_pic_back(int sel, int highlight)
 {
@@ -42,21 +42,21 @@ void copy_pic_back(int sel, int highlight)
 			case 1: x = 224; y = 224; break;
 			case 2: x = 432; y = 128; break;
 		}
-		graph_copy_region_from_1_to_0(x, y, 16, 144);
-		graph_copy_region_from_1_to_0(x, y, 192, 10);
+		graph_copy_rect_1_to_0(x, y, 16, 144);
+		graph_copy_rect_1_to_0(x, y, 192, 10);
 	} else {
 		switch(sel) {
 			case 0: x = 208; y = 136; break;
 			case 1: x = 416; y = 232; break;
 			case 2: x = 624; y = 136; break;
 		}
-		graph_copy_region_from_1_to_0(x, y, 16, 144);
+		graph_copy_rect_1_to_0(x, y, 16, 144);
 		switch(sel) {
 			case 0: x =  24; y = 272; break;
 			case 1: x = 232; y = 368; break;
 			case 2: x = 440; y = 272; break;
 		}
-		graph_copy_region_from_1_to_0(x, y, 192, 8);
+		graph_copy_rect_1_to_0(x, y, 192, 8);
 	}
 }
 

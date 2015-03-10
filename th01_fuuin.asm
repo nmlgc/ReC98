@@ -2118,7 +2118,7 @@ arg_4		= word ptr  0Ah
 		push	20h ; ' '
 		push	di
 		push	si
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		cmp	[bp+arg_4], 0
 		jnz	short loc_ADB0
@@ -2475,7 +2475,7 @@ loc_B063:
 		push	80h
 		push	word_14032
 		push	word_14030
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+_arglist] ;	arglist
@@ -3175,7 +3175,7 @@ arg_6		= dword	ptr  0Ch
 		push	0
 		push	0
 		push	30h ; '0'
-		call	_graph_slow_2xscale_region_1_to_0
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	1
 		push	0
@@ -3197,7 +3197,7 @@ loc_B666:
 		push	0
 		push	0
 		push	30h ; '0'
-		call	_graph_slow_2xscale_region_1_to_0
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 
 loc_B67B:
@@ -8123,7 +8123,7 @@ loc_D898:
 		push	ax
 		push	di
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_D8F0
 ; ---------------------------------------------------------------------------
@@ -8227,7 +8227,7 @@ loc_D934:
 		push	10h
 		push	si
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_D9BA
 ; ---------------------------------------------------------------------------
@@ -10694,14 +10694,14 @@ fuuin_11_TEXT	segment	byte public 'CODE' use16
 		leave
 		retf
 	extern VRAM_PLANES_SET:proc
-	extern _egc_copy_region_from_1_to_0:proc
+	extern _egc_copy_rect_1_to_0:proc
 fuuin_11_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 fuuin_12_TEXT	segment	byte public 'CODE' use16
-	extern _graph_slow_2xscale_region_1_to_0:proc
+	extern _graph_slow_2xscale_rect_1_to_0:proc
 fuuin_12_TEXT	ends
 
 ; ===========================================================================

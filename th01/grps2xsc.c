@@ -21,9 +21,7 @@ typedef struct {
 	int B, R, G, E;
 } vram_planar_16_pixels_t;
 
-void graph_slow_2xscale_region_1_to_0(
-	int x0, int y0, int x1, int y1, int w1, int h1
-)
+void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int h1)
 {
 	int row_p1 = (x1 / 8) + (y1 * ROW_SIZE);
 	int row_p0 = (x0 / 8) + (y0 * ROW_SIZE);

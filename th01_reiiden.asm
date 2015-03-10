@@ -1533,7 +1533,7 @@ loc_C014:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	ax, [bp+var_2]
 		imul	ax, 0Ah
@@ -1661,7 +1661,7 @@ loc_C150:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -2044,7 +2044,7 @@ loc_C47E:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -2099,7 +2099,7 @@ loc_C4E2:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_C50B:
@@ -2675,7 +2675,7 @@ loc_C9A2:
 		jnz	short loc_C9E6
 		push	100010h
 		push	900140h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
@@ -2690,7 +2690,7 @@ loc_C9E6:
 		jnz	short loc_CA1A
 		push	100010h
 		push	900100h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
@@ -2716,11 +2716,11 @@ loc_CA30:
 loc_CA39:
 		push	100050h
 		push	800114h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	100070h
 		push	900100h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	14h
 		call	sub_E364
@@ -2764,7 +2764,7 @@ loc_CACF:
 		jnz	short loc_CB13
 		push	100010h
 		push	900150h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
@@ -2779,7 +2779,7 @@ loc_CB13:
 		jnz	short loc_CB47
 		push	100010h
 		push	9000E0h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	ds
 		push	offset aB	; "Åú"
@@ -2831,7 +2831,7 @@ loc_CB96:
 		call	sub_B87C
 		push	2000B0h
 		push	8000E8h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		xor	ax, ax
 		leave
@@ -3193,7 +3193,7 @@ loc_CF04:
 		lea	ax, [bp+var_A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_CF30:
@@ -7798,7 +7798,7 @@ loc_F1CF:
 		push	ax
 		push	di
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_F227
 ; ---------------------------------------------------------------------------
@@ -7902,7 +7902,7 @@ loc_F26B:
 		push	10h
 		push	si
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_F2F1
 ; ---------------------------------------------------------------------------
@@ -10090,7 +10090,7 @@ egc_start_copy	endp
 
 ; Attributes: bp-based frame
 
-_egc_copy_region_from_1_to_0	proc far
+_egc_copy_rect_1_to_0	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -10162,7 +10162,7 @@ loc_104B1:
 		pop	si
 		leave
 		retf
-_egc_copy_region_from_1_to_0	endp
+_egc_copy_rect_1_to_0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13507,7 +13507,7 @@ loc_11EAE:
 		add	ax, si
 		push	ax
 		push	[bp+var_2]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -13990,7 +13990,7 @@ loc_122C7:
 		mov	eax, es:[bx+10h]
 		sar	eax, 8
 		push	ax
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_12310:
@@ -14616,7 +14616,7 @@ loc_1292E:
 		jnz	short loc_1297F
 		push	200020h
 		push	0FA0080h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		push	3012Ch
 		push	80h
 		call	sub_197E1
@@ -14634,7 +14634,7 @@ loc_1292E:
 loc_1297F:
 		push	200020h
 		push	12C0080h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		push	300FAh
 		push	80h
 		call	sub_197E1
@@ -17474,7 +17474,7 @@ arg_4		= word ptr  0Ah
 		push	100020h
 		push	di
 		push	si
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		cmp	[bp+arg_4], 0
 		jnz	short loc_140CD
@@ -17807,7 +17807,7 @@ loc_1432E:
 		push	100080h
 		push	word_39460
 		push	word_3945E
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		pushd	[bp+arg_4]
 		push	23h ; '#'
@@ -21677,7 +21677,7 @@ loc_164AB:
 		push	ax
 
 loc_164CE:
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		inc	si
 
@@ -21968,7 +21968,7 @@ arg_0		= dword	ptr  6
 		push	ax
 		push	word ptr es:[bx+2]
 		push	word ptr es:[bx]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		pop	bp
 		retf
@@ -22073,7 +22073,7 @@ loc_167F9:
 		push	8
 		push	word ptr es:[bx+6]
 		push	ax
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		les	bx, [bp+arg_0]
 		mov	ax, es:[bx+2]
@@ -22103,7 +22103,7 @@ loc_16830:
 		push	ax
 		push	[bp+var_4]
 		push	word ptr es:[bx+4]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		les	bx, [bp+arg_0]
 		push	word ptr es:[bx+24h]
 		push	word ptr es:[bx+2]
@@ -23807,7 +23807,7 @@ loc_179C7:
 		push	10008h
 		push	[bp+var_2]
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	[bp+var_4], di
 		mov	ax, [bp+var_2]
@@ -24324,7 +24324,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -24464,7 +24464,7 @@ loc_17E71:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_17EAF:
@@ -24686,7 +24686,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -24740,7 +24740,7 @@ loc_180B0:
 
 loc_180BC:
 		push	ax
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_180C5:
@@ -25041,7 +25041,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5398h]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -25186,7 +25186,7 @@ loc_183F6:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5398h]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_18434:
@@ -25271,7 +25271,7 @@ loc_1848E:
 
 loc_18497:
 		push	ax
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -27826,7 +27826,7 @@ arg_4		= word ptr  0Ah
 		push	200020h
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_1984C:
@@ -28136,7 +28136,7 @@ loc_19ACF:
 		push	100010h
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_19AED:
@@ -30438,7 +30438,7 @@ var_2		= word ptr -2
 		push	200020h
 		push	170h
 		push	word_36C26
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	3
 		push	word_36C2A
@@ -30496,7 +30496,7 @@ loc_1AE85:
 		mov	ax, word_36C26
 		add	ax, 0FFF8h
 		push	ax
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	ds
 		push	offset unk_386B8
@@ -30534,12 +30534,12 @@ loc_1AEFB:
 		push	200020h
 		push	170h
 		push	word_36C26
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	200020h
 		push	170h
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		cmp	si, 0Ah
 		jge	short loc_1AF2C
@@ -30632,12 +30632,12 @@ loc_1AFC8:
 		push	200020h
 		push	170h
 		push	word_36C26
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	200020h
 		push	170h
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	ax, _rem_lives
 		inc	ax

@@ -730,12 +730,12 @@ loc_A68D:
 		push	10280h
 		push	si
 		push	0
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	10280h
 		push	di
 		push	0
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 
 loc_A6AF:
@@ -1037,7 +1037,7 @@ arg_0		= word ptr  6
 loc_A954:
 		push	100080h
 		push	13200F4h
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		pop	bp
 		retf
@@ -1143,7 +1143,7 @@ arg_2		= word ptr  8
 		push	1000B0h
 		push	ax
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		or	si, si
 		jnz	short loc_AA34
@@ -1261,7 +1261,7 @@ arg_2		= word ptr  8
 		push	1000B0h
 		push	ax
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		or	si, si
 		jnz	short loc_AB69
@@ -1270,7 +1270,7 @@ arg_2		= word ptr  8
 		add	ax, 14h
 		push	ax
 		push	di
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	al, byte_1251D
 		cbw
@@ -1346,7 +1346,7 @@ sub_AB97	proc far
 		jnz	short loc_AC04
 		push	6400B0h
 		push	10A00DCh
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	50000h
 		call	sub_A96A
@@ -1455,7 +1455,7 @@ sub_AC84	proc far
 		mov	byte_12338, 4
 		push	5000B0h
 		push	11400DCh
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	0F0000h
 		call	sub_A9B9
@@ -1703,7 +1703,7 @@ sub_AEA8	proc far
 		mov	byte_12338, 1
 		push	6400B0h
 		push	10A00DCh
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		push	0F0000h
 		call	sub_AAB6
@@ -4346,7 +4346,7 @@ loc_C0D4:
 		push	ax
 		push	di
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_C12C
 ; ---------------------------------------------------------------------------
@@ -4450,7 +4450,7 @@ loc_C170:
 		push	10h
 		push	si
 		push	[bp+arg_0]
-		call	_egc_copy_region_from_1_to_0
+		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		jmp	short loc_C1F6
 ; ---------------------------------------------------------------------------
@@ -6495,7 +6495,7 @@ egc_start_copy	endp
 
 ; Attributes: bp-based frame
 
-_egc_copy_region_from_1_to_0	proc far
+_egc_copy_rect_1_to_0	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -6567,7 +6567,7 @@ loc_D3B6:
 		pop	si
 		leave
 		retf
-_egc_copy_region_from_1_to_0	endp
+_egc_copy_rect_1_to_0	endp
 
 ; ---------------------------------------------------------------------------
 		enter	4, 0

@@ -1166,7 +1166,7 @@ arg_2		= word ptr  6
 		push	104h
 		push	80h
 		push	10h
-		call	graph_copy_region_from_1_to_0
+		call	graph_copy_rect_1_to_0
 		push	154h
 		push	104h
 		push	10h
@@ -1196,7 +1196,7 @@ loc_A568:
 		push	114h
 		push	40h
 		push	10h
-		call	graph_copy_region_from_1_to_0
+		call	graph_copy_rect_1_to_0
 		push	17Ch
 		push	114h
 		push	10h
@@ -1229,7 +1229,7 @@ loc_A5BE:
 		push	124h
 		push	20h ; ' '
 		push	10h
-		call	graph_copy_region_from_1_to_0
+		call	graph_copy_rect_1_to_0
 		push	18Ch
 		push	124h
 		mov	al, byte_F3E1
@@ -1257,7 +1257,7 @@ loc_A60A:
 		push	134h
 		push	20h ; ' '
 		push	10h
-		call	graph_copy_region_from_1_to_0
+		call	graph_copy_rect_1_to_0
 		push	18Ch
 		push	134h
 		mov	al, byte_F3E2
@@ -1288,7 +1288,7 @@ loc_A656:
 		push	144h
 		push	80h
 		push	10h
-		call	graph_copy_region_from_1_to_0
+		call	graph_copy_rect_1_to_0
 		les	bx, _mikoconfig
 		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	ah, 0
@@ -2154,8 +2154,8 @@ include th02/formats/pi_slot_load.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public GRAPH_COPY_REGION_FROM_1_TO_0
-graph_copy_region_from_1_to_0	proc far
+public GRAPH_COPY_RECT_1_TO_0
+graph_copy_rect_1_to_0	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -2249,7 +2249,7 @@ loc_AEAE:
 		pop	si
 		leave
 		retf	8
-graph_copy_region_from_1_to_0	endp
+graph_copy_rect_1_to_0	endp
 
 include th02/hardware/frame_delay_.asm
 include th02/hardware/input_sense.asm

@@ -17,7 +17,7 @@ void pascal egc_start_copy(void)
 	OUTW2(EGC_BITLENGTHREG, 0xF);
 }
 
-void egc_copy_region_from_1_to_0(int x, int y, int w, int h)
+void egc_copy_rect_1_to_0(int x, int y, int w, int h)
 {
 	register int x_end = x;
 	register int x_floor = x_end;
