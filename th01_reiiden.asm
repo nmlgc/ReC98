@@ -2948,17 +2948,17 @@ sub_CC0F	proc far
 		push	100090h
 		pushd	0
 		push	4000A0h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	100030h
 		push	100000h
 		push	0C80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	100030h
 		push	400000h
 		push	0E80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		mov	si, 1
 		mov	byte_34A52, 0
@@ -3052,12 +3052,12 @@ loc_CDD8:
 		push	100030h
 		push	100000h
 		push	0C80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	100030h
 		push	400000h
 		push	0E80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 
 loc_CE16:
@@ -3067,12 +3067,12 @@ loc_CE16:
 		push	100030h
 		push	300000h
 		push	0C80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	100030h
 		push	200000h
 		push	0E80120h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		jmp	loc_CD52
 ; ---------------------------------------------------------------------------
@@ -6596,8 +6596,8 @@ sub_EA50	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_EA71	proc far
+public _grcg_setcolor_rmw
+_grcg_setcolor_rmw	proc far
 
 arg_0		= word ptr  6
 
@@ -6657,7 +6657,7 @@ loc_EAB5:
 		out	dx, al
 		pop	bp
 		retf
-sub_EA71	endp
+_grcg_setcolor_rmw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6730,8 +6730,8 @@ sub_EABB	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_EB05	proc far
+public _grcg_off_func
+_grcg_off_func	proc far
 		push	bp
 		mov	bp, sp
 		mov	dx, 7Ch
@@ -6739,7 +6739,7 @@ sub_EB05	proc far
 		out	dx, al
 		pop	bp
 		retf
-sub_EB05	endp
+_grcg_off_func	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6933,12 +6933,12 @@ _s		= dword	ptr -4
 		enter	4, 0
 		mov	[bp+_s],	0A8000000h
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh	; c
 		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		call	sub_EB05
+		call	_grcg_off_func
 		leave
 		retf
 sub_EC0D	endp
@@ -6977,12 +6977,12 @@ arg_0		= byte ptr  6
 		mov	al, [bp+arg_0]
 		cbw
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh	; c
 		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		call	sub_EB05
+		call	_grcg_off_func
 		leave
 		retf
 sub_EC53	endp
@@ -7610,7 +7610,7 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		push	[bp+arg_4]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	bx, [bp+arg_2]
 		imul	bx, 50h
@@ -7625,7 +7625,7 @@ arg_4		= word ptr  0Ah
 		mov	es, ax
 		assume es:nothing
 		mov	es:[bx], dl
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	bp
 		retf
 sub_F081	endp
@@ -7786,7 +7786,7 @@ loc_F16B:
 		cmp	byte_350C0, 0
 		jnz	short loc_F1CF
 		push	[bp+arg_6]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_F1CF:
@@ -7840,7 +7840,7 @@ loc_F224:
 loc_F227:
 		cmp	byte_350C0, 0
 		jnz	short loc_F232
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_F232:
 		pop	di
@@ -7930,7 +7930,7 @@ loc_F291:
 		shl	ax, cl
 		or	[bp+var_6], ax
 		push	[bp+arg_6]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	[bp+var_2], si
 		jmp	short loc_F2E8
@@ -7947,7 +7947,7 @@ loc_F2D4:
 loc_F2E8:
 		cmp	[bp+var_2], di
 		jle	short loc_F2D4
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_F2F1:
 		pop	di
@@ -8251,7 +8251,7 @@ loc_F532:
 		cmp	byte_350C0, 0
 		jnz	short loc_F56C
 		push	[bp+arg_8]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_F56C:
@@ -8534,7 +8534,7 @@ loc_F7CA:
 loc_F862:
 		cmp	byte_350C0, 0
 		jnz	short loc_F86D
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_F86D:
 		pop	di
@@ -8614,7 +8614,7 @@ loc_F8D4:
 
 loc_F8E5:
 		push	[bp+arg_8]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	ax, si
 		imul	ax, 50h
@@ -8684,7 +8684,7 @@ loc_F975:
 loc_F97F:
 		cmp	[bp+var_4], di
 		jle	short loc_F907
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_F988:
 		pop	di
@@ -8934,7 +8934,7 @@ loc_FAF9:
 
 loc_FB11:
 		push	[bp+arg_4]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
@@ -9211,7 +9211,7 @@ loc_FD54:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -10089,7 +10089,7 @@ egc_start_copy	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public _egc_copy_rect_1_to_0
 _egc_copy_rect_1_to_0	proc far
 
 var_A		= word ptr -0Ah
@@ -11323,7 +11323,7 @@ arg_0		= word ptr  6
 		cbw
 		dec	ax
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_10D28:
@@ -11499,7 +11499,7 @@ loc_10E9E:
 		jb	loc_10D2D
 		cmp	byte_350DF, 0
 		jz	short loc_10EB2
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_10EB2:
 		pop	di
@@ -12091,7 +12091,7 @@ arg_6		= word ptr  0Ch
 		add	ax, dx
 		mov	di, ax
 		push	[bp+arg_4]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	si, si
 		jmp	short loc_11398
@@ -12122,7 +12122,7 @@ loc_11394:
 loc_11398:
 		cmp	si, 10h
 		jl	short loc_11368
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		pop	bp
@@ -13146,499 +13146,9 @@ loc_11C08:
 		retf
 sub_11A94	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11C0C	proc far
-
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-val		= dword	ptr -4
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	0Ch, 0
-		push	si
-		mov	word ptr [bp+val+2], 0
-		mov	word ptr [bp+val], 1
-		mov	[bp+var_6], 0
-		mov	[bp+var_8], 0
-		mov	ax, [bp+arg_4]
-		cwd
-		mov	[bp+var_6], dx
-		mov	[bp+var_8], ax
-		mov	[bp+var_A], 0
-		mov	[bp+var_C], 0
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+2], 0
-		mov	word ptr es:[bx], 0
-		xor	si, si
-		jmp	short loc_11CA9
-; ---------------------------------------------------------------------------
-
-loc_11C4B:
-		mov	ax, si
-		add	ax, ax
-		sub	ax, si
-		push	ax		; count
-		mov	dx, [bp+var_6]
-		mov	ax, [bp+var_8]
-		and	ax, word ptr [bp+val]
-		and	dx, word ptr [bp+val+2]
-		push	dx
-		push	ax		; val
-		call	__lrotl
-		add	sp, 6
-		or	[bp+var_C], ax
-		or	[bp+var_A], dx
-		mov	ax, si
-		add	ax, ax
-		inc	ax
-		sub	ax, si
-		push	ax		; count
-		mov	dx, [bp+var_6]
-		mov	ax, [bp+var_8]
-		and	ax, word ptr [bp+val]
-		and	dx, word ptr [bp+val+2]
-		push	dx
-		push	ax		; val
-		call	__lrotl
-		add	sp, 6
-		or	[bp+var_C], ax
-		or	[bp+var_A], dx
-		push	1		; count
-		push	word ptr [bp+val+2]
-		push	word ptr [bp+val] ; val
-		call	__lrotl
-		add	sp, 6
-		mov	word ptr [bp+val+2], dx
-		mov	word ptr [bp+val], ax
-		inc	si
-
-loc_11CA9:
-		cmp	si, 10h
-		jl	short loc_11C4B
-		mov	word ptr [bp+val+2], 0FFh
-		mov	word ptr [bp+val], 0FFh
-		push	8		; count
-		mov	dx, [bp+var_A]
-		mov	ax, [bp+var_C]
-		and	ax, word ptr [bp+val]
-		and	dx, word ptr [bp+val+2]
-		push	dx
-		push	ax		; val
-		call	__lrotl
-		add	sp, 6
-		les	bx, [bp+arg_0]
-		or	es:[bx], ax
-		or	es:[bx+2], dx
-		mov	word ptr [bp+val+2], 0FF00h
-		mov	word ptr [bp+val], 0FF00h
-		push	8		; count
-		mov	dx, [bp+var_A]
-		mov	ax, [bp+var_C]
-		and	ax, word ptr [bp+val]
-		and	dx, word ptr [bp+val+2]
-		push	dx
-		push	ax		; val
-		call	__lrotr
-		add	sp, 6
-		les	bx, [bp+arg_0]
-		or	es:[bx], ax
-		or	es:[bx+2], dx
-		pop	si
-		leave
-		retf
-sub_11C0C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11D09	proc far
-
-var_1C		= word ptr -1Ch
-var_1A		= word ptr -1Ah
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		enter	1Ch, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_6]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_4], ax
-		mov	[bp+var_8], 0
-		jmp	loc_11E92
-; ---------------------------------------------------------------------------
-
-loc_11D3F:
-		mov	di, [bp+var_4]
-		mov	ax, [bp+var_2]
-		mov	[bp+var_14], ax
-		mov	[bp+var_6], 0
-		jmp	loc_11E75
-; ---------------------------------------------------------------------------
-
-loc_11D50:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_10], ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_E], ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_C], ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_14]
-		mov	ax, es:[bx]
-		mov	[bp+var_A], ax
-		mov	ax, [bp+var_10]
-		or	ax, [bp+var_E]
-		or	ax, [bp+var_C]
-		or	ax, [bp+var_A]
-		mov	[bp+var_12], ax
-		xor	si, si
-		jmp	loc_11E62
-; ---------------------------------------------------------------------------
-
-loc_11DA0:
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	[bp+var_12]
-		push	ss
-		lea	ax, [bp+var_1C]
-		push	ax
-		call	sub_11C0C
-		add	sp, 6
-		push	0
-		call	sub_EA71
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	dx, [bp+var_1A]
-		mov	ax, [bp+var_1C]
-		mov	es:[bx+si+2], dx
-		mov	es:[bx+si], ax
-		call	sub_EB05
-		push	[bp+var_10]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_11C0C
-		add	sp, 6
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	dx, [bp+var_16]
-		mov	ax, [bp+var_18]
-		or	es:[bx+si], ax
-		or	es:[bx+si+2], dx
-		push	[bp+var_E]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_11C0C
-		add	sp, 6
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		mov	dx, [bp+var_16]
-		mov	ax, [bp+var_18]
-		or	es:[bx+si], ax
-		or	es:[bx+si+2], dx
-		push	[bp+var_C]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_11C0C
-		add	sp, 6
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		mov	dx, [bp+var_16]
-		mov	ax, [bp+var_18]
-		or	es:[bx+si], ax
-		or	es:[bx+si+2], dx
-		push	[bp+var_A]
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		call	sub_11C0C
-		add	sp, 6
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		mov	dx, [bp+var_16]
-		mov	ax, [bp+var_18]
-		or	es:[bx+si], ax
-		or	es:[bx+si+2], dx
-		add	si, 50h	; 'P'
-
-loc_11E62:
-		cmp	si, 0A0h
-		jge	short loc_11E6B
-		jmp	loc_11DA0
-; ---------------------------------------------------------------------------
-
-loc_11E6B:
-		add	[bp+var_14], 2
-		add	di, 4
-		inc	[bp+var_6]
-
-loc_11E75:
-		mov	ax, [bp+arg_8]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_6]
-		jle	short loc_11E86
-		jmp	loc_11D50
-; ---------------------------------------------------------------------------
-
-loc_11E86:
-		add	[bp+var_4], 0A0h
-		add	[bp+var_2], 50h	; 'P'
-		inc	[bp+var_8]
-
-loc_11E92:
-		mov	ax, [bp+var_8]
-		cmp	ax, [bp+arg_A]
-		jge	short loc_11E9D
-		jmp	loc_11D3F
-; ---------------------------------------------------------------------------
-
-loc_11E9D:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11D09	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11EA1	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_8]
-		xor	si, si
-		jmp	short loc_11EFA
-; ---------------------------------------------------------------------------
-
-loc_11EAE:
-		push	0
-		push	100h
-		mov	ax, [bp+arg_6]
-		cwd
-		mov	bx, di
-		and	bx, 0FFh
-		add	bx, bx
-		push	ax
-		mov	ax, [bx+87Ah]
-		push	dx
-		cwd
-		pop	cx
-		pop	bx
-		call	LXMUL@
-		push	dx
-		push	ax
-		call	far ptr LDIV@
-		add	ax, [bp+arg_0]
-		mov	[bp+var_2], ax
-		mov	ax, 100h
-		cwd
-		idiv	[bp+arg_4]
-		add	di, ax
-		push	1
-		push	[bp+arg_A]
-		mov	ax, [bp+arg_2]
-		add	ax, si
-		push	ax
-		push	[bp+var_2]
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
-		inc	si
-
-loc_11EFA:
-		cmp	si, [bp+arg_C]
-		jl	short loc_11EAE
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11EA1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11F03	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		xor	di, di
-		jmp	loc_11FE4
-; ---------------------------------------------------------------------------
-
-loc_11F26:
-		les	bx, [bp+arg_4]
-		add	bx, di
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_11F34
-		jmp	loc_11FE2
-; ---------------------------------------------------------------------------
-
-loc_11F34:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, [bp+arg_4]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_4], al
-		les	bx, [bp+arg_4]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_3], al
-		les	bx, [bp+arg_4]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_2], al
-		les	bx, [bp+arg_4]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	0
-		call	sub_EA71
-		pop	cx
-		les	bx, [bp+arg_4]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], al
-		call	sub_EB05
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_4]
-		or	es:[bx], al
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	al, [bp+var_3]
-		or	es:[bx], al
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	al, [bp+var_2]
-		or	es:[bx], al
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	al, [bp+var_1]
-		or	es:[bx], al
-
-loc_11FE2:
-		inc	di
-		inc	si
-
-loc_11FE4:
-		cmp	di, [bp+arg_8]
-		jge	short loc_11FEC
-		jmp	loc_11F26
-; ---------------------------------------------------------------------------
-
-loc_11FEC:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11F03	endp
-
+	extern _graph_slow_2xscale_rect_1_to_0:proc
+	extern _graph_copy_hline_mask_1_to_0:proc
+	extern _egc_copy_wave_1_to_0:proc
 main_13_TEXT	ends
 
 ; ===========================================================================
@@ -13888,7 +13398,7 @@ arg_0		= dword	ptr  6
 		mov	al, es:[bx+40h]
 		mov	ah, 0
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		jmp	short loc_12203
 ; ---------------------------------------------------------------------------
@@ -14010,7 +13520,7 @@ loc_12334:
 		les	bx, [bp+arg_0]
 		cmp	byte ptr es:[bx+44h], 0
 		jz	short loc_12343
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_12343:
 		pop	di
@@ -14257,7 +13767,7 @@ arg_0		= word ptr  6
 		imul	ax, 50h
 		mov	si, ax
 		push	7
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	di, di
 		jmp	short loc_1260D
@@ -14273,7 +13783,7 @@ loc_125FE:
 loc_1260D:
 		cmp	di, 28h	; '('
 		jl	short loc_125FE
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		pop	bp
@@ -14562,24 +14072,24 @@ loc_127AC:
 		push	1000D0h
 		pushd	0
 		push	400040h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 28h
 		push	100100h
 		push	200000h
 		push	600020h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		push	100110h
 		push	400000h
 		push	0B40020h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		push	100030h
 		push	600000h
 		push	0FA0100h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		push	100030h
 		push	800000h
 		push	12C0100h
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 30h
 		call	sub_EC80
 		push	300FAh
@@ -15416,7 +14926,7 @@ var_2		= word ptr -2
 		mov	eax, dword_3573A
 		mov	[bp+var_C], eax
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	[bp+var_6], di
 		xor	si, si
@@ -15479,7 +14989,7 @@ loc_13023:
 loc_13024:
 		cmp	si, 8Ch
 		jl	short loc_12FB1
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -18515,7 +18025,7 @@ loc_1496F:
 		push	100120h
 		push	1800000h
 		pushd	30h ; '0'
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 		push	10000h
 		push	1800000h
@@ -18530,7 +18040,7 @@ loc_149C0:
 		push	100120h
 		pushd	0
 		pushd	30h ; '0'
-		call	sub_11D09
+		call	_graph_slow_2xscale_rect_1_to_0
 		add	sp, 0Ch
 
 loc_149D4:
@@ -19062,7 +18572,7 @@ loc_14E99:
 		cmp	byte ptr es:[bx], 0
 		jz	loc_14FFB
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		mov	ax, [bp+arg_8]
@@ -19075,7 +18585,7 @@ loc_14E99:
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], al
-		call	sub_EB05
+		call	_grcg_off_func
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 6
@@ -19289,7 +18799,7 @@ loc_1509A:
 		cmp	byte ptr es:[bx], 0
 		jz	loc_151CF
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -19303,7 +18813,7 @@ loc_1509A:
 		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_4]
 		mov	es:[bx], al
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
@@ -19655,7 +19165,7 @@ loc_153CE:
 		push	0
 
 loc_153E6:
-		call	sub_11F03
+		call	_graph_copy_hline_mask_1_to_0
 		add	sp, 0Ah
 		mov	[bp+var_12], 0
 		jmp	loc_1553C
@@ -19679,7 +19189,7 @@ loc_153F6:
 		cmp	byte ptr es:[bx], 0
 		jz	loc_15535
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -19693,7 +19203,7 @@ loc_153F6:
 		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_10]
 		mov	es:[bx], al
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	ax, [bp+arg_C]
 		shl	ax, 2
 		les	bx, [bp+arg_0]
@@ -20250,7 +19760,7 @@ loc_15900:
 		or	ax, ax
 		jz	loc_159FD
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, [bp+var_C]
 		les	bx, es:[bx+10h]
@@ -20262,7 +19772,7 @@ loc_15900:
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	es:[bx], ax
-		call	sub_EB05
+		call	_grcg_off_func
 		les	bx, [bp+var_C]
 		les	bx, es:[bx]
 		mov	ax, si
@@ -20503,13 +20013,13 @@ loc_15ACF:
 
 loc_15B4D:
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	al, byte ptr [bp+si+var_18]
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	es:[bx+si], al
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	al, byte ptr [bp+si+var_16]
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
@@ -20541,7 +20051,7 @@ loc_15B9F:
 
 loc_15BA4:
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	al, byte ptr [bp+si+var_18]
 		mov	ah, 0
@@ -20556,7 +20066,7 @@ loc_15BA4:
 		mov	bx, word ptr _VRAM_PLANE_B
 		add	bx, di
 		mov	es:[bx+si+1], al
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	al, byte ptr [bp+si+var_16]
 		mov	ah, 0
 		mov	cl, [bp+var_9]
@@ -21300,7 +20810,7 @@ loc_161A7:
 		or	si, si
 		jl	loc_16300
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -21314,7 +20824,7 @@ loc_161A7:
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], ax
-		call	sub_EB05
+		call	_grcg_off_func
 		les	bx, [bp+var_E]
 		les	bx, es:[bx+10h]
 		mov	ax, [bp+var_8]
@@ -22745,7 +22255,7 @@ loc_16DEB:
 		cmp	word ptr es:[bx], 0
 		jz	short loc_16E33
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, [bp+var_C]
 		les	bx, es:[bx+10h]
@@ -22756,7 +22266,7 @@ loc_16DEB:
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	es:[bx], ax
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_16E33:
 		les	bx, [bp+var_C]
@@ -23221,7 +22731,7 @@ arg_8		= word ptr  0Eh
 		cmp	[bp+arg_2], 190h
 		jge	loc_1767E
 		push	[bp+arg_8]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	[bp+var_4], 0
 		jmp	loc_17669
@@ -23316,7 +22826,7 @@ loc_17669:
 		jg	loc_175BD
 
 loc_17679:
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_1767E:
 		pop	di
@@ -23400,7 +22910,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		mov	di, [bp+arg_0]
 		push	[bp+arg_8]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	si, si
 		jmp	short loc_17733
@@ -23435,7 +22945,7 @@ loc_17733:
 		jl	short loc_176FB
 
 loc_17738:
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -23654,7 +23164,7 @@ arg_E		= byte ptr  14h
 		mov	[bp+var_1], 0
 		mov	di, 0FFFFh
 		push	[bp+arg_8]
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	al, [bp+arg_C]
 		cmp	al, [bp+arg_E]
@@ -23735,7 +23245,7 @@ loc_17942:
 		mov	ah, 0
 		cmp	ax, si
 		jge	loc_17897
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_17952:
 		pop	di
@@ -23870,7 +23380,7 @@ arg_4		= word ptr  0Ah
 		cmp	di, 3
 		jg	short loc_17AA5
 		push	0Ah
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	si, si
 		jmp	short loc_17A9B
@@ -23918,7 +23428,7 @@ loc_17A9B:
 		jl	short loc_17A46
 
 loc_17AA0:
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_17AA5:
 		pop	di
@@ -23961,7 +23471,7 @@ arg_4		= word ptr  0Ah
 		cmp	[bp+arg_4], 3
 		jg	loc_17BAA
 		push	0Ah
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	di, di
 		jmp	loc_17B9E
@@ -24046,7 +23556,7 @@ loc_17B9E:
 		jl	loc_17AE8
 
 loc_17BA5:
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_17BAA:
 		pop	di
@@ -26202,7 +25712,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_3], al
 		cli
 		push	0Ah
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	si, si
 		jmp	short loc_18C7C
@@ -26262,7 +25772,7 @@ loc_18C7B:
 loc_18C7C:
 		cmp	si, 14A0h
 		jb	short loc_18C18
-		call	sub_EB05
+		call	_grcg_off_func
 		sti
 		pop	di
 		pop	si
@@ -27713,12 +27223,12 @@ loc_196FC:
 		cmp	[bp+var_4], 0
 		jz	loc_197CC
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, [bp+var_4]
 		mov	es:[bx], eax
-		call	sub_EB05
+		call	_grcg_off_func
 		push	1
 		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
@@ -27844,13 +27354,13 @@ loc_19851:
 		cmp	[bp+var_4], 0
 		jz	loc_19900
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	eax, [bp+var_4]
 		mov	es:[bx], eax
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+var_8]
@@ -28000,11 +27510,11 @@ loc_1998E:
 		or	di, di
 		jz	loc_19A4B
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], di
-		call	sub_EB05
+		call	_grcg_off_func
 		push	1
 		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
@@ -28157,13 +27667,13 @@ loc_19AF3:
 		cmp	[bp+var_2], 0
 		jz	loc_19BAF
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_2]
 		mov	es:[bx], ax
-		call	sub_EB05
+		call	_grcg_off_func
 		mov	ax, si
 		shl	ax, 2
 		les	bx, [bp+var_E]
@@ -28370,13 +27880,13 @@ loc_19CBE:
 		cmp	[bp+var_4], 0
 		jz	loc_19E2B
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	ax, [bp+var_4]
 		mov	es:[bx], ax
-		call	sub_EB05
+		call	_grcg_off_func
 		cmp	[bp+var_1A], 0
 		jz	short loc_19D10
 		les	bx, _VRAM_PLANE_B
@@ -28440,13 +27950,13 @@ loc_19D54:
 		shr	ax, cl
 		mov	byte ptr [bp+var_E+2], al
 		push	0
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	eax, [bp+var_E]
 		mov	es:[bx], eax
-		call	sub_EB05
+		call	_grcg_off_func
 		xor	si, si
 		jmp	short loc_19E26
 ; ---------------------------------------------------------------------------

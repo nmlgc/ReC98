@@ -46,6 +46,14 @@ typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
 
+typedef struct {
+	char B, R, G, E;
+} vram_planar_8_pixels_t;
+
+typedef struct {
+	int B, R, G, E;
+} vram_planar_16_pixels_t;
+
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
 extern char *VRAM_PLANE[PL_COUNT];

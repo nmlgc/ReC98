@@ -17,10 +17,6 @@ void scale_2x(unsigned long *dst32, int src16)
 	mask = 0xFF00FF00;	*dst32 |= _lrotr(dst_local & mask, 8);
 }
 
-typedef struct {
-	int B, R, G, E;
-} vram_planar_16_pixels_t;
-
 void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int h1)
 {
 	int row_p1 = (x1 / 8) + (y1 * ROW_SIZE);

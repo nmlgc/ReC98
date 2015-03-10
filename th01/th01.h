@@ -6,6 +6,8 @@
 #include "ReC98.h"
 
 // Hardware
+void egc_copy_rect_1_to_0(int x, int y, int w, int h);
+
 void graph_accesspage_func(int page);
 void grcg_setcolor_rmw(int color);
 void grcg_off_func(void);

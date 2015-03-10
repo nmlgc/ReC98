@@ -33,7 +33,7 @@ bin\th01\op.exe: bin\th01\op.obj th01\op_10.c th01\op_11.c th01\op_12.cpp
 $**
 |
 
-bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_12.c th01\main_16.c
+bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_12.c th01\main_13.c th01\main_16.c
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |

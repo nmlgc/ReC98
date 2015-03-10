@@ -6921,7 +6921,7 @@ arg_4		= word ptr  0Ah
 		add	ax, dx
 		mov	di, ax
 		push	0Ah
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	si, si
 		jmp	short loc_1F1EA
@@ -6969,7 +6969,7 @@ loc_1F1F8:
 loc_1F21B:
 		cmp	si, 8
 		jl	short loc_1F1F8
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		pop	bp
@@ -11507,7 +11507,7 @@ loc_218C1:
 		push	7
 
 loc_218C7:
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		jmp	short loc_218D8
 ; ---------------------------------------------------------------------------
@@ -11542,7 +11542,7 @@ loc_218DE:
 loc_2190D:
 		cmp	[bp+var_2], 0Fh
 		jb	short loc_218DE
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -23242,7 +23242,7 @@ loc_2802A:
 		add	ax, 0FFFEh
 		push	ax
 		pushd	[dword_3982A]
-		call	sub_11EA1
+		call	_egc_copy_wave_1_to_0
 		add	sp, 0Eh
 
 loc_28082:
@@ -23282,7 +23282,7 @@ loc_280AE:
 
 loc_280D6:
 		pushd	[dword_3982A]
-		call	sub_11EA1
+		call	_egc_copy_wave_1_to_0
 		mov	word_39856, 0
 		mov	word_3984E, 0
 		push	30000h
@@ -26323,7 +26323,7 @@ loc_29BE5:
 loc_29BE7:
 		add	ax, word_3AC5E
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, word_3AC5C
@@ -26348,7 +26348,7 @@ loc_29C16:
 
 loc_29C1D:
 		push	0Ch
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	di, di
 		jmp	loc_29CAC
@@ -26449,7 +26449,7 @@ loc_29CB8:
 		mov	word_3AC5C, ax
 
 loc_29D06:
-		call	sub_EB05
+		call	_grcg_off_func
 		inc	[bp+var_2]
 
 loc_29D0E:
@@ -26641,7 +26641,7 @@ loc_29EA2:
 		sar	ax, cl
 		and	[bp+var_3], al
 		push	0Ch
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 6
@@ -26714,7 +26714,7 @@ loc_29F62:
 		mov	al, [si+1445h]
 		cbw
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -26739,7 +26739,7 @@ loc_29FD6:
 loc_29FD7:
 		cmp	si, 1Eh
 		jl	loc_29E46
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_29FE3:
 		pop	di
@@ -27293,7 +27293,7 @@ loc_2A4D9:
 		sar	ax, cl
 		and	[bp+var_5], al
 		push	0Ch
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -27382,7 +27382,7 @@ loc_2A618:
 		mov	al, [si+1465h]
 		cbw
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -27408,7 +27408,7 @@ loc_2A68A:
 loc_2A68B:
 		cmp	si, 1Eh
 		jl	loc_2A4D9
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_2A697:
 		pop	di
@@ -28913,7 +28913,7 @@ loc_2B3F4:
 
 loc_2B4A2:
 		push	0Ch
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -29082,7 +29082,7 @@ loc_2B671:
 		mov	al, [si+1483h]
 		cbw
 		push	ax
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -29125,7 +29125,7 @@ loc_2B6D7:
 loc_2B6D8:
 		cmp	si, 1Eh
 		jl	loc_2B3F4
-		call	sub_EB05
+		call	_grcg_off_func
 
 loc_2B6E4:
 		pop	di
@@ -38189,13 +38189,13 @@ arg_4		= word ptr  0Ah
 		push	bp
 		mov	bp, sp
 		push	7
-		call	sub_EA71
+		call	_grcg_setcolor_rmw
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_308A1
 		add	sp, 8
-		call	sub_EB05
+		call	_grcg_off_func
 		pop	bp
 		retf
 sub_308E9	endp
