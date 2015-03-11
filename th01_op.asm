@@ -2300,507 +2300,13 @@ op_03_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 op_04_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_04_TEXT
-		;org 2
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B372	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	0Eh
-		mov	word ptr [bp+inregs+6],	0
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		nopcall	sub_B3D1
-		nopcall	sub_B404
-		push	0
-		nopcall	sub_B462
-		add	sp, 0Ch
-		nopcall	sub_B415
-		nopcall	sub_B426
-		leave
-		retf
-sub_B372	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	sub_B3D1
-		nopcall	sub_B3F3
-		push	1
-		nopcall	sub_B462
-		pop	cx
-		nopcall	sub_B415
-		nopcall	sub_B426
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3D1	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset a3l	; "\x1B[>3l"
-		nopcall	sub_B683
-		add	sp, 4
-		pop	bp
-		retf
-sub_B3D1	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset a3h	; "\x1B[>3h"
-		nopcall	sub_B683
-		add	sp, 4
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B3F3	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset a1l	; "\x1B[>1l"
-		nopcall	sub_B683
-		add	sp, 4
-		pop	bp
-		retf
-sub_B3F3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B404	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset a1h	; "\x1B[>1h"
-		nopcall	sub_B683
-		add	sp, 4
-		pop	bp
-		retf
-sub_B404	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B415	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset a2j	; "\x1B[2J"
-		nopcall	sub_B683
-		add	sp, 4
-		pop	bp
-		retf
-sub_B415	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B426	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	0Ch
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_B426	endp
-
-; ---------------------------------------------------------------------------
-		enter	10h, 0
-		mov	byte ptr [bp-0Fh], 0Dh
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	18h
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B462	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		mov	es, ax
-		assume es:_TEXT
-		mov	al, byte ptr es:[053Bh]
-		cbw
-		mov	bx, ax
-		mov	dx, 62h	; 'b'
-		mov	al, 4Bh	; 'K'
-		out	dx, al		; PC/XT	PPI port C. Bits:
-					; 0-3: values of DIP switches
-					; 5: 1=Timer 2 channel out
-					; 6: 1=I/O channel check
-					; 7: 1=RAM parity check	error occurred.
-		mov	al, bl
-		or	al, 80h
-		mov	dx, 60h
-		out	dx, al		; AT Keyboard controller 8042.
-		mov	ax, [bp+arg_0]
-		or	ax, ax
-		jz	short loc_B491
-		cmp	ax, 1
-		jz	short loc_B498
-		cmp	ax, 2
-		jz	short loc_B49F
-		jmp	short loc_B4A7
-; ---------------------------------------------------------------------------
-
-loc_B491:
-		mov	dx, 60h
-		mov	al, 9Fh
-		jmp	short loc_B4A6
-; ---------------------------------------------------------------------------
-
-loc_B498:
-		mov	dx, 60h
-		mov	al, 80h
-		jmp	short loc_B4A6
-; ---------------------------------------------------------------------------
-
-loc_B49F:
-		mov	al, bl
-		add	al, 7Dh	; '}'
-		mov	dx, 60h
-
-loc_B4A6:
-		out	dx, al		; AT Keyboard controller 8042.
-
-loc_B4A7:
-		mov	al, bl
-		shl	al, 3
-		add	al, 2
-		mov	dx, 60h
-		out	dx, al		; AT Keyboard controller 8042.
-		pop	bp
-		retf
-sub_B462	endp
-
-; ---------------------------------------------------------------------------
-		enter	10h, 0
-		mov	byte ptr [bp-0Ch], 10h
-		mov	byte ptr [bp-0Fh], 3
-		mov	al, [bp+8]
-		mov	[bp-9],	al
-		mov	al, [bp+6]
-		mov	[bp-0Ah], al
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	0DCh
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B4E3	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= byte ptr  0Ah
-arg_5		= byte ptr  0Bh
-arg_6		= dword	ptr  0Ch
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		add	ax, [bp+arg_0]
-		add	ax, ax
-		mov	si, ax
-		mov	di, 1
-		test	[bp+arg_4], 1
-		jz	short loc_B502
-		add	di, 20h	; ' '
-
-loc_B502:
-		test	[bp+arg_4], 4
-		jz	short loc_B50B
-		add	di, 40h
-
-loc_B50B:
-		test	[bp+arg_4], 2
-		jz	short loc_B515
-		add	di, 80h
-
-loc_B515:
-		test	[bp+arg_5], 8
-		jz	short loc_B51E
-		add	di, 10h
-
-loc_B51E:
-		test	[bp+arg_5], 4
-		jz	short loc_B527
-		add	di, 8
-
-loc_B527:
-		test	[bp+arg_5], 2
-		jz	short loc_B530
-		add	di, 4
-
-loc_B530:
-		test	[bp+arg_5], 1
-		jz	short loc_B539
-		add	di, 2
-
-loc_B539:
-		mov	ax, di
-		shl	ax, 8
-		add	di, ax
-		jmp	loc_B637
-; ---------------------------------------------------------------------------
-
-loc_B543:
-		les	bx, [bp+arg_6]
-		assume es:nothing
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 4
-		jnz	short loc_B557
-		jmp	loc_B60E
-; ---------------------------------------------------------------------------
-
-loc_B557:
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		cbw
-		shl	ax, 8
-		les	bx, [bp+arg_6]
-		mov	dl, es:[bx+1]
-		mov	dh, 0
-		add	ax, dx
-		push	ax
-		call	__mbcjmstojis
-		pop	cx
-		mov	[bp+var_2], ax
-		add	word ptr [bp+arg_6], 2
-		cmp	[bp+var_2], 2921h
-		jb	short loc_B5A8
-		cmp	[bp+var_2], 2B7Eh
-		ja	short loc_B5A8
-		mov	ax, [bp+var_2]
-		shr	ax, 8
-		add	al, 0E0h
-		or	al, 80h
-		mov	dx, 0A000h
-		mov	es, dx
-		assume es:nothing
-		mov	es:[si], al
-		mov	ax, 0A000h
-		mov	dl, byte ptr [bp+var_2]
-		mov	es, ax
-		mov	es:[si+1], dl
-		jmp	short loc_B621
-; ---------------------------------------------------------------------------
-
-loc_B5A8:
-		cmp	[bp+arg_0], 4Fh	; 'O'
-		jnz	short loc_B5BA
-		mov	ax, 0A000h
-		mov	es, ax
-		mov	word ptr es:[si], 20h ;	' '
-		jmp	short loc_B621
-; ---------------------------------------------------------------------------
-
-loc_B5BA:
-		mov	ax, [bp+var_2]
-		shr	ax, 8
-		add	al, 0E0h
-		mov	dx, 0A000h
-		mov	es, dx
-		mov	es:[si], al
-		mov	ax, 0A000h
-		mov	dl, byte ptr [bp+var_2]
-		mov	es, ax
-		mov	es:[si+1], dl
-		mov	ax, [bp+var_2]
-		shr	ax, 8
-		add	al, 0E0h
-		or	al, 80h
-		mov	dx, 0A000h
-		mov	es, dx
-		mov	es:[si+2], al
-		mov	ax, 0A000h
-		mov	dl, byte ptr [bp+var_2]
-		mov	es, ax
-		mov	es:[si+3], dl
-		mov	ax, 0A200h
-		mov	es, ax
-		assume es:nothing
-		mov	es:[si], di
-		mov	ax, 0A200h
-		mov	es, ax
-		mov	es:[si+2], di
-		add	si, 2
-		inc	[bp+arg_0]
-		jmp	short loc_B629
-; ---------------------------------------------------------------------------
-
-loc_B60E:
-		les	bx, [bp+arg_6]
-		assume es:nothing
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	dx, 0A000h
-		mov	es, dx
-		assume es:nothing
-		mov	es:[si], ax
-		inc	word ptr [bp+arg_6]
-
-loc_B621:
-		mov	ax, 0A200h
-		mov	es, ax
-		assume es:nothing
-		mov	es:[si], di
-
-loc_B629:
-		add	si, 2
-		inc	[bp+arg_0]
-		mov	ax, [bp+arg_0]
-		cmp	ax, 50h	; 'P'
-		jge	short loc_B643
-
-loc_B637:
-		les	bx, [bp+arg_6]
-		assume es:nothing
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_B643
-		jmp	loc_B543
-; ---------------------------------------------------------------------------
-
-loc_B643:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B4E3	endp
-
-; ---------------------------------------------------------------------------
-		enter	104h, 0
-		lea	ax, [bp+10h]
-		mov	word ptr [bp-2], ss
-		mov	[bp-4],	ax
-		push	word ptr [bp-2]
-		push	word ptr [bp-4]
-		push	word ptr [bp+0Eh]
-		push	word ptr [bp+0Ch]
-		push	ss
-		lea	ax, [bp-104h]
-		push	ax
-		call	_vsprintf
-		push	ss
-		lea	ax, [bp-104h]
-		push	ax
-		push	word ptr [bp+0Ah]
-		push	word ptr [bp+8]
-		push	word ptr [bp+6]
-		call	sub_B4E3
-		add	sp, 16h
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B683	proc far
-
-inregs		= REGS ptr -10h
-arg_0		= dword	ptr  6
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+4],	10h
-		mov	byte ptr [bp+inregs+1],	0
-		jmp	short loc_B6B2
-; ---------------------------------------------------------------------------
-
-loc_B691:
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx]
-		mov	byte ptr [bp+inregs+6],	al
-		inc	word ptr [bp+arg_0]
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	0DCh      ; intno
-		call	_int86
-		add	sp, 0Ah
-
-loc_B6B2:
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_B691
-		mov	dx, 64h	; 'd'
-		mov	al, 0
-		out	dx, al		; AT Keyboard controller 8042.
-		leave
-		retf
-sub_B683	endp
-
+	extern _z_text_init:proc
+	extern _z_text_25line:proc
+	extern _z_text_setcursor:proc
+	extern _z_text_clear:proc
+	extern _z_text_show:proc
+	extern _z_text_print:proc
 op_04_TEXT	ends
 
 ; ===========================================================================
@@ -2863,7 +2369,7 @@ sub_B6E9	proc far
 		call	_setvect
 		add	sp, 6
 		call	sub_B2C3
-		call	sub_B372
+		call	_z_text_init
 		call	egc_start
 		call	graph_start
 		call	respal_create
@@ -2905,12 +2411,12 @@ sub_B757	proc far
 		cmp	byte_12978, 1
 		jnz	short loc_B782
 		nopcall	sub_B784
-		call	sub_B3D1
+		call	_z_text_25line
 		push	0
-		call	sub_B462
+		call	_z_text_setcursor
 		pop	cx
-		call	sub_B415
-		call	sub_B426
+		call	_z_text_clear
+		call	_z_text_show
 		mov	byte_12978, 0
 
 loc_B782:
@@ -2932,7 +2438,7 @@ sub_B784	proc far
 		push	6		; interruptno
 		call	_setvect
 		call	sub_B305
-		call	sub_B415
+		call	_z_text_clear
 		call	sub_BD3A
 		call	sub_B8D0
 		call	egc_start
@@ -2996,7 +2502,7 @@ sub_B7C3	endp
 		push	ss
 		lea	ax, [bp-104h]
 		push	ax
-		call	sub_B683
+		call	_z_text_print
 		push	1
 		call	_exit
 ; ---------------------------------------------------------------------------
@@ -8778,12 +8284,7 @@ word_1290F	dw 0C8h
 		db    0
 		db    0
 		db    0
-a3l		db 1Bh,'[>3l',0
-a3h		db 1Bh,'[>3h',0
-a1l		db 1Bh,'[>1l',0
-a1h		db 1Bh,'[>1h',0
-a2j		db 1Bh,'[2J',0
-		db 0
+include th01/ztext[data].asm
 byte_12978	db 0
 		db 0
 unk_1297A	db    0
