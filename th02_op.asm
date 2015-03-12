@@ -2333,10 +2333,10 @@ sub_B019	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-include th02/hardware/snd_mmd_resident.asm
-include th02/hardware/snd_determine_mode.asm
-include th02/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_load.asm
+	extern _snd_mmd_resident:proc
+	extern _snd_determine_mode:proc
+	extern _snd_pmd_resident:proc
+	extern _snd_load:proc
 	extern _pi_slot_palette_apply:proc
 	extern _pi_slot_put:proc
 	extern _snd_kaja_func:proc

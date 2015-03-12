@@ -127,7 +127,7 @@ int snd_kaja_func(kaja_func_t func);
 
 #define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
 
-void snd_load(const char *fn, int func);
+void snd_load(const char *fn, kaja_func_t func);
 
 void snd_se_reset(void);
 void snd_se_play(int new_se);
