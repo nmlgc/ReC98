@@ -873,7 +873,7 @@ arg_2		= word ptr  6
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		push	0		; char
 		mov	ax, [bp+var_2]
@@ -906,7 +906,7 @@ arg_2		= word ptr  6
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		push	0		; char
 		mov	ax, [bp+var_2]
@@ -4463,7 +4463,7 @@ loc_1DC6D:
 		push	word_36C26
 		push	word_39DFE
 		push	word_39DFC
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 
 loc_1DCAB:
@@ -4554,7 +4554,7 @@ loc_1DDAD:
 		push	word_36C26
 		push	word_39DFE
 		push	word_39DFC
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 
 loc_1DDD4:
@@ -4577,7 +4577,7 @@ loc_1DDD4:
 		push	word_36C26
 		push	word_39DFE
 		push	word_39DFC
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 
 loc_1DE12:
@@ -6273,7 +6273,7 @@ loc_1EBD8:
 		push	ax
 		push	di
 		push	si
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	[bp+var_12], 0
 		jmp	short loc_1EC62
@@ -7414,7 +7414,7 @@ loc_1F644:
 		push	ss
 		lea	ax, [bp+var_14]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		xor	si, si
 		jmp	short loc_1F6CF
@@ -13798,7 +13798,7 @@ loc_22ABA:
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
 		push	ax
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 1Eh
 
 loc_22AFE:
@@ -18865,7 +18865,7 @@ loc_25726:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		push	0		; char
 		mov	ax, [bp+var_7+1]
@@ -21263,7 +21263,7 @@ loc_26D82:
 		push	word_3A767
 		push	word_3A765
 		pushd	[dword_3988E]
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	ax, word_3A765
 		sub	ax, word ptr dword_3988E
@@ -26002,7 +26002,7 @@ loc_29905:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, si
 		add	bx, bx
@@ -26798,7 +26798,7 @@ loc_2A031:
 		add	ax, 0Ch
 		push	ax
 		push	400154h
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 14h
 		mov	word_35E03, 2
 
@@ -27448,7 +27448,7 @@ loc_2A6B0:
 		push	word_36C26
 		push	word_3B039
 		push	word_3B037
-		call	sub_11FF0
+		call	_vector_between
 		mov	ax, word_36C26
 		mov	word_3B03F, ax
 		push	480044h
@@ -27493,7 +27493,7 @@ loc_2A735:
 		push	ax
 		push	word_3B039
 		push	word_3B037
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		push	80032h
 		push	7
@@ -27525,7 +27525,7 @@ loc_2A79B:
 		push	word_36C26
 		push	word_3B039
 		push	word_3B037
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		push	80032h
 		push	7
@@ -27555,7 +27555,7 @@ loc_2A7FC:
 		push	word_36C26
 		push	word_3B039
 		push	word_3B037
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		push	80032h
 		push	7
@@ -28103,7 +28103,7 @@ loc_2AD01:
 		add	ax, 0FFE0h
 		push	ax
 		push	word_3B043
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	ax, word_3B043
 		mov	[bp+var_A], ax
@@ -29656,7 +29656,7 @@ loc_2BBB2:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	bx, si
 		add	bx, bx
@@ -32305,7 +32305,7 @@ loc_2D44D:
 		push	offset word_3B43A
 		push	1800000h
 		push	0EC013Ch
-		call	sub_11FF0
+		call	_vector_between
 		push	7
 		push	ds
 		push	offset word_3B440
@@ -32313,7 +32313,7 @@ loc_2D44D:
 		push	offset word_3B43C
 		push	400000h
 		push	0EC013Ch
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 30h
 		xor	si, si
 		jmp	short loc_2D4C5
@@ -32837,7 +32837,7 @@ loc_2D96A:
 		push	offset unk_3B483
 		push	ds
 		push	offset unk_3B47F
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	word_3B461, 3E7h
 		push	0Ch
@@ -32956,7 +32956,7 @@ loc_2DA78:
 		add	ax, ax
 		add	ax, 6ADFh
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, si
 		imul	bx, 0Ah
@@ -33095,7 +33095,7 @@ loc_2DBCA:
 		push	offset unk_3B485
 		push	ds
 		push	offset unk_3B481
-		call	sub_12053
+		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -33222,7 +33222,7 @@ loc_2DCAE:
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_12053
+		call	_vector
 		pushd	0
 		pushd	0
 		push	[bp+var_C]
@@ -33328,7 +33328,7 @@ loc_2DD76:
 		push	offset word_3B48F
 		push	400040h
 		push	0C80122h
-		call	sub_11FF0
+		call	_vector_between
 		mov	word_3B493, 122h
 		mov	word_3B495, 0C8h ; '?'
 		mov	word_3B499, 30h	; '0'
@@ -33627,7 +33627,7 @@ loc_2E052:
 		push	offset unk_3B4F9
 		push	ds
 		push	offset unk_3B4F1
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	si, 1
 		jmp	short loc_2E07E
@@ -33758,7 +33758,7 @@ loc_2E17C:
 		add	ax, ax
 		add	ax, 6B51h
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, si
 		imul	bx, 0Ah
@@ -33897,7 +33897,7 @@ loc_2E2CE:
 		push	offset unk_3B4FB
 		push	ds
 		push	offset unk_3B4F3
-		call	sub_12053
+		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -33952,7 +33952,7 @@ loc_2E346:
 		push	offset unk_3B4FD
 		push	ds
 		push	offset unk_3B4F5
-		call	sub_12053
+		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -34007,7 +34007,7 @@ loc_2E3C0:
 		push	offset unk_3B4FF
 		push	ds
 		push	offset unk_3B4F7
-		call	sub_12053
+		call	_vector
 
 loc_2E3D8:
 		push	0Ch
@@ -37246,7 +37246,7 @@ loc_3015A:
 		push	ax
 		push	[bp+arg_12]
 		push	[bp+arg_10]
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 
 loc_3017D:
@@ -37470,7 +37470,7 @@ loc_3030A:
 		push	[bp+arg_A]
 		pushd	[bp+arg_4]
 		pushd	[bp+arg_0]
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 
 loc_30320:
@@ -37803,7 +37803,7 @@ loc_3057A:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, word_3B530
 		mov	ax, [bp+var_2]
@@ -37829,7 +37829,7 @@ loc_305F9:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, word_3B530
 		mov	ax, [bp+arg_E]
@@ -37923,7 +37923,7 @@ loc_3069B:
 
 loc_306B4:
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, word_3B530
 		add	word ptr [bx+26h], 8
@@ -37948,7 +37948,7 @@ loc_306B4:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	bx, word_3B530
 		mov	word ptr [bx+0Eh], 0Ch
@@ -38063,7 +38063,7 @@ loc_30809:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		call	sub_11FF0
+		call	_vector_between
 		add	sp, 12h
 		mov	bx, word_3B530
 		cmp	word ptr [bx+4], 1400h
@@ -38422,7 +38422,7 @@ loc_30AC6:
 		mov	ax, word_3B530
 		add	ax, 10h
 		push	ax
-		call	sub_12053
+		call	_vector
 		add	sp, 0Ch
 		mov	bx, word_3B530
 		cmp	word ptr [bx+0Eh], 0

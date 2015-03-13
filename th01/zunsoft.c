@@ -64,10 +64,10 @@ void zunsoft_exit(void)
 	egc_start();
 }
 
-void pascal cossin_times(int *cos, int *sin, unsigned char angle, int x)
+void pascal vector(int *dx, int *dy, unsigned char angle, int r)
 {
-	*cos = (x * (long)Cos8(angle)) >> 8;
-	*sin = (x * (long)Sin8(angle)) >> 8;
+	*dx = (r * (long)Cos8(angle)) >> 8;
+	*dy = (r * (long)Sin8(angle)) >> 8;
 }
 
 void objects_setup(void)
@@ -126,13 +126,13 @@ void stars_render_and_update(void)
 	int i;
 	grcg_setcolor(GC_RMW, 5);
 	for(i = 0; i < STAR_COUNT; i++) {
-		int cos, sin;
+		int dx, dy;
 
 		grcg_pset(star_pos[i].x, star_pos[i].y);
 
-		cossin_times(&cos, &sin, star_angle, star_speed[i]);
-		star_pos[i].x += cos;
-		star_pos[i].y += sin;
+		vector(&dx, &dy, star_angle, star_speed[i]);
+		star_pos[i].x += dx;
+		star_pos[i].y += dy;
 		if(star_pos[i].x < 0) {
 			star_pos[i].x += 640;
 		} else if(star_pos[i].x >= 640) {
