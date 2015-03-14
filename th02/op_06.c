@@ -57,9 +57,9 @@ void pascal near draw_track(unsigned char sel, unsigned char color)
 {
 	unsigned char other_page = 1 - music_page;
 	graph_accesspage(other_page);
-	graph_putsa_fx(16, (sel + 6) * 16, color | 0x20, MUSIC_TITLES[sel]);
+	graph_putsa_fx(16, (sel + 6) * 16, FX(color, 2, 0), MUSIC_TITLES[sel]);
 	graph_accesspage(music_page);
-	graph_putsa_fx(16, (sel + 6) * 16, color | 0x20, MUSIC_TITLES[sel]);
+	graph_putsa_fx(16, (sel + 6) * 16, FX(color, 2, 0), MUSIC_TITLES[sel]);
 }
 
 void pascal near draw_tracks(unsigned char sel)
@@ -226,9 +226,9 @@ void pascal near draw_cmt(int track)
 	screen_back_B_put();
 	cmt_back_put();
 
-	graph_putsa_fx(160, 64, 15 | 0x10, music_cmt[0]);
+	graph_putsa_fx(160, 64, FX(15, 1, 0), music_cmt[0]);
 	for(line = 1; line < MUSIC_CMT_LINE_COUNT; line++) {
-		graph_putsa_fx(304, (line + 4) * 16, 13 | 0x10, music_cmt[line]);
+		graph_putsa_fx(304, (line + 4) * 16, FX(13, 1, 0), music_cmt[line]);
 	}
 	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
 }

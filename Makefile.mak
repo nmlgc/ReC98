@@ -43,17 +43,17 @@ bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_06.c th01\fuuin_11.c th01\fuui
 $**
 |
 
-bin\th02\op.exe: bin\th02\op.obj th02\op_02.c th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
+bin\th02\op.exe: bin\th02\op.obj th02\op_02_1.c th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj th02\main_02.c
+bin\th02\main.exe: bin\th02\main.obj th02\main02_1.c th02\main02_2.c
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 
-bin\th02\maine.exe: bin\th02\maine.obj th02\maine_02.c th02\maine_03.c th02\maine_04.c th02\maine_05.c
+bin\th02\maine.exe: bin\th02\maine.obj th02\maine021.c th02\maine022.c th02\maine_03.c th02\maine_04.c th02\maine_05.c
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

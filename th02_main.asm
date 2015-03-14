@@ -158,8 +158,8 @@ arg_4		= word ptr  0Ah
 		mov	di, ax
 		mov	ax, [bp+arg_0]
 		shl	ax, 7
-		mov	dx, word ptr dword_1FFBC+2
-		mov	bx, word ptr dword_1FFBC
+		mov	dx, word ptr _mptn_buffer+2
+		mov	bx, word ptr _mptn_buffer
 		add	bx, ax
 		mov	ds, dx
 		mov	si, bx
@@ -1915,11 +1915,11 @@ _envp		= dword	ptr  0Ch
 		call	sub_C273
 		or	ax, ax
 		jz	short loc_B17E
-		call	sub_F913
+		call	_game_init_main
 		or	ax, ax
 		jz	short loc_B183
 		push	3
-		call	sub_F458
+		call	zun_error
 
 loc_B17E:
 		mov	ax, 1
@@ -2342,10 +2342,10 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	sub_F4D1
+		call	mptn_load
 		push	30h ; '0'       ; n
 		push	ds
-		push	offset unk_1FFC0 ; src
+		push	offset _mptn_palette ; src
 		push	ds
 		push	offset unk_1F4AD ; dest
 		call	_memcpy
@@ -2495,10 +2495,10 @@ loc_B8B5:
 		mov	al, 0
 		out	dx, al
 		call	sub_4782
-		call	sub_F4EF
+		call	mptn_free
 		push	ds
 		push	offset aMiko_k_mpn ; "miko_k.mpn"
-		call	sub_F4D1
+		call	mptn_load
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B922
@@ -3745,13 +3745,13 @@ _arg0		= dword	ptr  6
 		mov	bp, sp
 		freePISlotLarge	0
 		call	sub_E24A
-		call	sub_F4EF
+		call	mptn_free
 		call	sub_1C608
 		call	super_free
 		call	graph_clear
 		call	text_clear
 		call	sub_DC4B
-		call	sub_F70E
+		call	_game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path
@@ -9735,396 +9735,28 @@ off_F443	dw offset loc_F238
 		dw offset loc_F260
 		dw offset loc_F288
 		dw offset loc_F2A4
-		db    0
 main_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 main_02_TEXT	segment	word public 'CODE' use16
-		assume cs:main_02_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F458	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		int	59h		; GSS Computer Graphics	Interface (GSS*CGI)
-					; DS:DX	-> block of 5 array pointers
-					; Return:   CF set on error, AX	= error	code
-					; CF clear if successful, AX = return code
-		pop	bp
-		retf	2
-sub_F458	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F464	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	al, byte_1E300
-		cbw
-		push	ax
-		call	key_sense
-		mov	si, ax
-		mov	al, byte_1E301
-		cbw
-		push	ax
-		call	key_sense
-		or	si, ax
-		mov	al, byte_1E302
-		cbw
-		push	ax
-		call	key_sense
-		or	si, ax
-		push	2
-		nopcall	frame_delay
-		mov	al, byte_1E300
-		cbw
-		push	ax
-		call	key_sense
-		or	si, ax
-		mov	al, byte_1E301
-		cbw
-		push	ax
-		call	key_sense
-		or	si, ax
-		mov	al, byte_1E302
-		cbw
-		push	ax
-		call	key_sense
-		or	si, ax
-		mov	ax, si
-		pop	si
-		pop	bp
-		retf
-sub_F464	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F4BC	proc far
-		push	bp
-		mov	bp, sp
-
-loc_F4BF:
-		call	sub_F464
-		or	ax, ax
-		jnz	short loc_F4BF
-
-loc_F4C7:
-		call	sub_F464
-		or	ax, ax
-		jz	short loc_F4C7
-		pop	bp
-		retf
-sub_F4BC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F4D1	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	byte_1E30C, 0
-		pushd	[bp+arg_0]
-		nopcall	sub_F886
-		mov	[bp+var_2], ax
-		mov	byte_1E30C, 1
-		leave
-		retf	4
-sub_F4D1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F4EF	proc far
-		push	bp
-		mov	bp, sp
-		cmp	dword_1FFBC, 0
-		jz	short loc_F503
-		push	word ptr dword_1FFBC+2
-		call	hmem_free
-
-loc_F503:
-		mov	dword_1FFBC, 0
-		pop	bp
-		retf
-sub_F4EF	endp
-
-include th01/hardware/vram_planes_set.asm
-include th02/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F562	proc far
-
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	cl, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		movsx	eax, si
-		mov	dl, cl
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_8]
-		mov	es:[bx], ax
-		movsx	eax, si
-		mov	dl, cl
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_F562	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F5B1	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= dword	ptr  0Ch
-arg_A		= byte ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-arg_10		= word ptr  16h
-arg_12		= word ptr  18h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	ax, [bp+arg_C]
-		sub	ax, [bp+arg_10]
-		push	ax
-		mov	ax, [bp+arg_E]
-		sub	ax, [bp+arg_12]
-		push	ax
-		call	iatan2
-		add	al, [bp+arg_A]
-		mov	[bp+arg_A], al
-		movsx	eax, si
-		mov	dl, [bp+arg_A]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_6]
-		mov	es:[bx], ax
-		movsx	eax, si
-		mov	dl, [bp+arg_A]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_2]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	14h
-sub_F5B1	endp
-
-include th02/hardware/frame_delay.asm
-		db 0
-include th02/hardware/input_sense.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F70E	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
-		call	vsync_end
-		call	mem_unassign
-		call	text_clear
-		call	egc_start
-		pop	bp
-		retf
-sub_F70E	endp
-
-include th02/hardware/snd_mmd_resident.asm
-include th02/hardware/snd_determine_mode.asm
-include th02/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_delay_until_volume.asm
-include th02/hardware/snd_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F86A	proc far
-		push	bp
-		mov	bp, sp
-		push	30h ; '0'       ; n
-		push	ds
-		push	offset unk_1FFC0 ; src
-		push	ds
-		push	offset Palettes ; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf
-sub_F86A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F886	proc far
-
-var_6		= byte ptr -6
-var_2		= byte ptr -2
-arg_0		= dword	ptr  6
-
-		enter	6, 0
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	6
-		call	file_read
-		mov	al, [bp+var_2]
-		mov	byte_1E30D, al
-		push	ds
-		push	offset unk_1FFC0
-		push	30h ; '0'
-		call	file_read
-		cmp	byte_1E30C, 0
-		jz	short loc_F8BB
-		call	sub_F86A
-
-loc_F8BB:
-		cmp	dword_1FFBC, 0
-		jz	short loc_F8C8
-		nopcall	sub_F4EF
-
-loc_F8C8:
-		mov	al, byte_1E30D
-		mov	ah, 0
-		inc	ax
-		shl	ax, 7
-		push	ax
-		call	hmem_allocbyte
-		mov	word ptr dword_1FFBC+2,	ax
-		mov	word ptr dword_1FFBC, 0
-		cmp	dword_1FFBC, 0
-		jnz	short loc_F8F4
-		call	file_close
-		mov	ax, 0FFFFh
-		leave
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_F8F4:
-		pushd	[dword_1FFBC]
-		mov	al, byte_1E30D
-		mov	ah, 0
-		inc	ax
-		shl	ax, 7
-		push	ax
-		call	file_read
-		call	file_close
-		xor	ax, ax
-		leave
-		retf	4
-sub_F886	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F913	proc far
-		push	bp
-		mov	bp, sp
-		push	4650h
-		call	mem_assign_dos
-		or	ax, ax
-		jz	short loc_F927
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F927:
-		nopcall	vram_planes_set
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		mov	pfkey, 12h
-		push	ds
-		push	offset aUmx	; "“Œ•û••–‚.˜^"
-		call	pfstart
-		xor	ax, ax
-		pop	bp
-		retf
-sub_F913	endp
-
+	extern ZUN_ERROR:proc
+	extern _key_delay:proc
+	extern MPTN_LOAD:proc
+	extern MPTN_FREE:proc
+	extern _vram_planes_set:proc
+	extern _pi_slot_load:proc
+	extern VECTOR:proc
+	extern VECTOR_BETWEEN:proc
+	extern FRAME_DELAY:proc
+	extern _input_sense:proc
+	extern _game_exit:proc
+	extern _snd_mmd_resident:proc
+	extern _snd_determine_mode:proc
+	extern _snd_pmd_resident:proc
+	extern _snd_delay_until_volume:proc
+	extern _snd_load:proc
+	extern _game_init_main:proc
 	extern _pi_slot_palette_apply:proc
 	extern _pi_slot_put:proc
 	extern _snd_kaja_func:proc
@@ -10550,7 +10182,7 @@ loc_FD5A:
 		call	sub_DE4E
 		call	_snd_se_update
 		mov	_input, 1
-		call	sub_F4BC
+		call	_key_delay
 		pop	si
 		leave
 		retn
@@ -10689,7 +10321,7 @@ loc_FEB9:
 		call	sub_DE4E
 		call	_snd_se_update
 		mov	_input, 1
-		call	sub_F4BC
+		call	_key_delay
 		pop	si
 		leave
 		retn
@@ -11520,7 +11152,7 @@ loc_1065D:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	[bp+arg_0]
-		call	sub_F5B1
+		call	vector_between
 		jmp	short loc_1069D
 ; ---------------------------------------------------------------------------
 
@@ -11535,7 +11167,7 @@ loc_10684:
 		add	al, byte ptr [bp+var_2]
 		push	ax
 		push	[bp+arg_0]
-		call	sub_F562
+		call	vector
 
 loc_1069D:
 		les	bx, [bp+arg_6]
@@ -11913,7 +11545,7 @@ loc_10924:
 		push	ax
 		push	[bp+arg_6]
 		push	[bp+arg_0]
-		call	sub_F562
+		call	vector
 		jmp	short loc_1096B
 ; ---------------------------------------------------------------------------
 
@@ -12041,7 +11673,7 @@ loc_10A23:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	sub_F5B1
+		call	vector_between
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
@@ -12076,7 +11708,7 @@ loc_10A57:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	sub_F5B1
+		call	vector_between
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -12108,7 +11740,7 @@ loc_10AC3:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	sub_F562
+		call	vector
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -12131,7 +11763,7 @@ loc_10B02:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	sub_F562
+		call	vector
 		mov	ax, [bp+var_4]
 		cmp	ax, [bp+var_6]
 		jge	short loc_10B34
@@ -16889,7 +16521,7 @@ loc_130EA:
 loc_130F7:
 		cmp	si, 50h	; 'P'
 		jle	short loc_13090
-		call	sub_F4BC
+		call	_key_delay
 		inc	byte_24E7A
 		pop	di
 		pop	si
@@ -18245,7 +17877,7 @@ sub_13B8B	proc far
 		push	1
 		call	sub_1310B
 		call	sub_FC53
-		call	sub_F4BC
+		call	_key_delay
 		call	sub_E162
 		inc	stage_id
 		mov	word_1EB0A, 0
@@ -20902,7 +20534,7 @@ sub_15218	proc far
 		push	1
 		call	sub_1310B
 		call	sub_FC53
-		call	sub_F4BC
+		call	_key_delay
 		call	sub_E162
 		inc	stage_id
 		mov	word_1EB0A, 0
@@ -22978,7 +22610,7 @@ loc_16458:
 		push	ds
 		push	offset word_255A6
 		push	30h ; '0'
-		call	sub_F5B1
+		call	vector_between
 		mov	ax, word_255A4
 		neg	ax
 		mov	word_255AC, ax
@@ -23611,7 +23243,7 @@ sub_16A21	proc far
 		push	1
 		call	sub_1310B
 		call	sub_FE12
-		call	sub_F4BC
+		call	_key_delay
 		les	bx, mikoconfig
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
 		mov	eax, dword_1E598
@@ -23767,7 +23399,7 @@ var_2		= word ptr -2
 		mov	al, [bx+2]
 		mov	ah, 0
 		push	ax
-		call	sub_F5B1
+		call	vector_between
 		mov	bx, word_26C52
 		mov	al, byte ptr [bp+var_4]
 		mov	[bx], al
@@ -23836,7 +23468,7 @@ loc_16B9F:
 		mov	al, [bx+si+2]
 		mov	ah, 0
 		push	ax
-		call	sub_F562
+		call	vector
 		mov	bx, word_26C4A
 		mov	ax, [bp+var_2]
 		add	[bx], ax
@@ -23919,7 +23551,7 @@ loc_16C2D:
 		mov	al, [bx+si]
 		mov	ah, 0
 		push	ax
-		call	sub_F562
+		call	vector
 		les	bx, [bp+var_4]
 		mov	ax, [bp+var_A]
 		add	es:[bx], ax
@@ -27092,7 +26724,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset unk_26CD8
 		push	30h ; '0'
-		call	sub_F5B1
+		call	vector_between
 
 loc_188F8:
 		push	ds
@@ -27396,7 +27028,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset unk_26CE0
 		push	34h ; '4'
-		call	sub_F5B1
+		call	vector_between
 
 loc_18B99:
 		push	ds
@@ -34404,7 +34036,7 @@ loc_1CA1D:
 		jle	short loc_1CA50
 		push	0FFFFh
 		call	sub_1C785
-		call	sub_F4BC
+		call	_key_delay
 		jmp	loc_1CD32
 ; ---------------------------------------------------------------------------
 
@@ -34975,17 +34607,19 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
-byte_1E300	db 5
-byte_1E301	db 3
-byte_1E302	db 0
+public _key_delay_groups
+_key_delay_groups	db 5, 3, 0
 		db 0
 include th02/formats/pfopen[data].asm
 public _snd_active
 _snd_active	db 0
 		db 0
-byte_1E30C	db 1
-byte_1E30D	db 0
-aUmx		db '“Œ•û••–‚.˜^',0
+public _mptn_show_palette_on_load
+_mptn_show_palette_on_load	db 1
+public _mptn_count
+_mptn_count	db 0
+public _pf_fn
+_pf_fn		db '“Œ•û••–‚.˜^',0
 include th02/hardware/snd_se[data].asm
 		db    0
 		db  80h
@@ -37298,22 +36932,10 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/hardware/snd[bss].asm
 include th02/hardware/snd_load[bss].asm
-dword_1FFBC	dd ?
-unk_1FFC0	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+public _mptn_buffer
+_mptn_buffer	dd ?
+public _mptn_palette
+_mptn_palette	db 16 * 3 dup(?)
 word_1FFF0	dw ?
 word_1FFF2	dw ?
 word_1FFF4	dw ?

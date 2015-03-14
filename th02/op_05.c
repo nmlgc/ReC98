@@ -90,9 +90,9 @@ void draw_shottype_desc(int sel, int color)
 	grcg_round_boxfill(x, y, x + 192, y + 64, 8);
 	grcg_off();
 
-	graph_putsa_fx(x + 8, y + 8 +  0, color | 0x20, DESC[sel][0]);
-	graph_putsa_fx(x + 8, y + 8 + 16, color | 0x20, DESC[sel][1]);
-	graph_putsa_fx(x + 8, y + 8 + 32, color | 0x20, DESC[sel][2]);
+	graph_putsa_fx(x + 8, y + 8 +  0, FX(color, 2, 0), DESC[sel][0]);
+	graph_putsa_fx(x + 8, y + 8 + 16, FX(color, 2, 0), DESC[sel][1]);
+	graph_putsa_fx(x + 8, y + 8 + 32, FX(color, 2, 0), DESC[sel][2]);
 }
 
 void pascal draw_header(void)
@@ -101,14 +101,14 @@ void pascal draw_header(void)
 	grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(128, 16, 512, 48, 8);
 	grcg_off();
 
-	graph_putsa_fx(144, 24, 12 | 0x20, CHOOSE);
+	graph_putsa_fx(144, 24, FX(12, 2, 0), CHOOSE);
 	if(mikoconfig->stage == 5) {
 		grcg_setcolor(GC_RMW, 12); grcg_round_boxfill(24, 56, 632, 104, 8);
 		grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(16, 48, 624,  96, 8);
 		grcg_off();
 
-		graph_putsa_fx(32, 56, 15 | 0x20, EXTRA_NOTE[0]);
-		graph_putsa_fx(32, 72, 15 | 0x20, EXTRA_NOTE[1]);
+		graph_putsa_fx(32, 56, FX(15, 2, 0), EXTRA_NOTE[0]);
+		graph_putsa_fx(32, 72, FX(15, 2, 0), EXTRA_NOTE[1]);
 	}
 }
 
@@ -116,13 +116,13 @@ void pascal shottype_menu_init(void)
 {
 	#define DRAW_CLEARED_FOR(mode) \
 		if(cleared_##mode##_with[0]) { \
-			graph_putsa_fx(16, 112, 15 | 0x20, CLEARED); \
+			graph_putsa_fx(16, 112, FX(15, 2, 0), CLEARED); \
 		} \
 		if(cleared_##mode##_with[1]) { \
-			graph_putsa_fx(224, 112, 15 | 0x20, CLEARED); \
+			graph_putsa_fx(224, 112, FX(15, 2, 0), CLEARED); \
 		} \
 		if(cleared_##mode##_with[2]) { \
-			graph_putsa_fx(432, 112, 15 | 0x20, CLEARED); \
+			graph_putsa_fx(432, 112, FX(15, 2, 0), CLEARED); \
 		}
 
 	palette_black();

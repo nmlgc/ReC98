@@ -155,7 +155,7 @@ void pascal score_enter(void)
 	score_init();
 	if(hi.score.points[SCORE_PLACES - 1] > score) {
 		scores_put(-1);
-		sub_B4B7();
+		key_delay();
 		return;
 	}
 	for(place = SCORE_PLACES - 1; place > 0; place--) {

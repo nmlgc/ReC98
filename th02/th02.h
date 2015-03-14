@@ -7,12 +7,30 @@
 #include "th01\ranks.h"
 
 // Formats
+// -------
+typedef struct {
+	char magic[4]; // = "MPTN"
+	char count;
+	char unused;
+} mptn_header_t;
+
+#define MPTN_SIZE (8 * 16)
+
+extern char mptn_show_palette_on_load;
+extern unsigned char mptn_count;
+extern int *mptn_buffer;
+extern char mptn_palette[16 * 3];
+
+int pascal mptn_load(const char *fn);
+void pascal mptn_palette_show(void);
+void pascal mptn_free(void);
+
 #define PI_SLOTS 6
 
 extern void far *pi_slot_buffers[PI_SLOTS];
 extern PiHeader pi_slot_headers[PI_SLOTS];
 
-void pi_slot_load(int slot, const char *fn);
+int pi_slot_load(int slot, const char *fn);
 void pi_slot_palette_apply(int slot);
 void pi_slot_put(int x, int y, int slot);
 
@@ -22,8 +40,22 @@ void pi_slot_put(int x, int y, int slot);
 	pi_slot_put(0, 0, slot); \
 	graph_pi_free(&pi_slot_headers[slot], pi_slot_buffers[slot]);
 
+// ""東方封魔.録" in Shift-JIS
+#define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E" 
+#define PF_KEY 0x12
+// -------
+
 // Hardware
-void graph_putsa_fx(int x, int y, int color, const char *str);
+// -------
+#define graph_clear_both() \
+	graph_accesspage(1);	graph_clear(); \
+	graph_accesspage(0);	graph_clear(); \
+	graph_accesspage(0);	graph_showpage(0);
+
+#define FX(color, weight, spacing) \
+	(color | (weight & 3) << 4 | (spacing & 7) << 6)
+void graph_putsa_fx(int x, int y, int fx, const unsigned char *str);
+// -------
 
 // Gaiji characters
 /* ZUN messed up and swapped M and N in MIKOFT.BFT for both regular and bold
@@ -114,8 +146,11 @@ typedef enum {
 extern input_t input;
 
 void input_sense(void);
+
 void pascal frame_delay(int frames);
 void pascal frame_delay_2(int frames);
+
+void key_delay(void);
 
 // Sound
 #include "libs\kaja\kaja.h"
@@ -224,3 +259,19 @@ typedef struct {
 
 extern char cleared_game_with[SHOTTYPE_COUNT];
 extern char cleared_extra_with[SHOTTYPE_COUNT];
+
+// Debugging
+// ---------
+// Calls ZUN's interrupt vector set up in ZUNINIT.COM to display an error
+// message.
+typedef enum {
+	ERROR_FILE_NOT_FOUND = 2,
+	ERROR_OUT_OF_MEMORY = 3,
+	ERROR_MISSING_DRIVER = 4,
+	ERROR_HISCORE_CORRUPT = 5
+} zun_error_t;
+
+void pascal zun_error(zun_error_t err);
+// ---------
+
+void game_exit(void);

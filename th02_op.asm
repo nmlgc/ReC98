@@ -23,15 +23,7 @@ include ReC98.inc
 include th02/th02.asm
 include th02/music/music.inc
 
-	extern F_LMOD@:proc
-	extern LDIV@:proc
-	extern LXMUL@:proc
-	extern LXRSH@:proc
-	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mbctype:byte
 	extern _execl:proc
-	extern _memcpy:proc
 
 ; ===========================================================================
 
@@ -538,7 +530,7 @@ sub_9FAF	proc far
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
-		call	sub_B019
+		call	_game_exit
 		les	bx, _mikoconfig
 		cmp	es:[bx+mikoconfig_t.debug_flag], 0
 		jz	short loc_A011
@@ -594,7 +586,7 @@ sub_A027	proc far
 		freePISlot	2
 		call	gaiji_restore
 		call	super_free
-		call	sub_B019
+		call	_game_exit
 		push	0
 		push	0
 		push	ds
@@ -631,7 +623,7 @@ sub_A0C6	proc far
 		add	sp, 8
 		call	gaiji_restore
 		call	super_free
-		call	sub_B019
+		call	_game_exit
 		les	bx, _mikoconfig
 		cmp	es:[bx+mikoconfig_t.debug_flag], 0
 		jz	short loc_A13A
@@ -1677,11 +1669,11 @@ _envp		= dword	ptr  0Ch
 		or	ax, ax
 		jz	short loc_A9EE
 		call	_snd_mmd_resident
-		call	sub_AFB0
+		call	_game_init_op
 		or	ax, ax
 		jz	short loc_A9DD
 		push	3
-		call	sub_AB41
+		call	zun_error
 		jmp	short loc_A9EE
 ; ---------------------------------------------------------------------------
 
@@ -1789,550 +1781,27 @@ loc_AAF0:
 		call	sub_9CA2
 		call	text_clear
 		call	graph_clear
-		call	sub_AB28
+		call	_game_exit_to_dos
 		call	gaiji_restore
 		mov	al, [bp-1]
 		mov	ah, 0
 		leave
 		retf
 _main		endp
-		db 0
 
 op_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 op_02_TEXT	segment	word public 'CODE' use16
-		assume cs:op_02_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AB28	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	sub_B019
-		call	key_beep_on
-		call	text_systemline_show
-		call	text_cursor_show
-		pop	bp
-		retf
-sub_AB28	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AB41	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		int	59h		; GSS Computer Graphics	Interface (GSS*CGI)
-					; DS:DX	-> block of 5 array pointers
-					; Return:   CF set on error, AX	= error	code
-					; CF clear if successful, AX = return code
-		pop	bp
-		retf	2
-sub_AB41	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public _graph_putsa_fx
-_graph_putsa_fx	proc far
-
-var_32		= byte ptr -32h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= dword	ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= dword	ptr  0Ch
-
-		enter	32h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		sar	ax, 4
-		and	ax, 3
-		mov	[bp+var_E], ax
-		mov	ax, [bp+arg_4]
-		sar	ax, 6
-		and	ax, 7
-		mov	[bp+var_10], ax
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_4]
-		mov	dx, 68h	; 'h'
-		mov	al, 0Bh
-		out	dx, al
-		jmp	loc_AD92
-; ---------------------------------------------------------------------------
-
-loc_AB82:
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, di
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	word ptr [bp+var_8+2], 0A800h
-		mov	word ptr [bp+var_8], dx
-		mov	ax, di
-		cwd
-		idiv	bx
-		mov	[bp+var_C], dx
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 4
-		jz	short loc_ABD7
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		cbw
-		shl	ax, 8
-		mov	dl, es:[bx+1]
-		mov	dh, 0
-		add	ax, dx
-		push	ax
-		call	__mbcjmstojis
-		pop	cx
-		mov	[bp+var_2], ax
-		add	word ptr [bp+arg_6], 2
-		jmp	short loc_AC1D
-; ---------------------------------------------------------------------------
-
-loc_ABD7:
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 3
-		jz	short loc_ABF5
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		add	ax, 2980h
-		jmp	short loc_AC10
-; ---------------------------------------------------------------------------
-
-loc_ABF5:
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		cbw
-		mov	bx, ax
-		test	byte ptr [bx+0E91h], 5Eh
-		jz	short loc_AC15
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		add	ax, 2900h
-
-loc_AC10:
-		mov	[bp+var_2], ax
-		jmp	short loc_AC1A
-; ---------------------------------------------------------------------------
-
-loc_AC15:
-		mov	[bp+var_2], 2B21h
-
-loc_AC1A:
-		inc	word ptr [bp+arg_6]
-
-loc_AC1D:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 0FFh
-		mov	dx, 0A1h ; '¡'
-		out	dx, al
-		mov	ax, [bp+var_2]
-		shr	ax, 8
-		sub	al, 20h	; ' '
-		mov	dx, 0A3h ; '£'
-		out	dx, al
-		cmp	[bp+var_2], 2921h
-		jb	short loc_AC7E
-		cmp	[bp+var_2], 2B7Eh
-		ja	short loc_AC7E
-		cmp	di, 278h
-		jg	loc_AD9D
-		mov	[bp+var_12], 0
-		jmp	short loc_AC71
-; ---------------------------------------------------------------------------
-
-loc_AC4F:
-		mov	al, byte ptr [bp+var_12]
-		or	al, 20h
-		mov	dx, 0A5h ; '¥'
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		shl	ax, 8
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	dx, [bp+var_32]
-		add	bx, dx
-		mov	ss:[bx], ax
-		inc	[bp+var_12]
-
-loc_AC71:
-		cmp	[bp+var_12], 10h
-		jl	short loc_AC4F
-		mov	[bp+var_A], 0
-		jmp	short loc_ACD4
-; ---------------------------------------------------------------------------
-
-loc_AC7E:
-		cmp	di, 270h
-		jg	loc_AD9D
-		mov	[bp+var_12], 0
-		jmp	short loc_ACC9
-; ---------------------------------------------------------------------------
-
-loc_AC8D:
-		mov	al, byte ptr [bp+var_12]
-		or	al, 20h
-		mov	dx, 0A5h ; '¥'
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		shl	ax, 8
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	dx, [bp+var_32]
-		add	bx, dx
-		mov	ss:[bx], ax
-		mov	dx, 0A5h ; '¥'
-		mov	al, byte ptr [bp+var_12]
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	dx, [bp+var_32]
-		add	bx, dx
-		add	ss:[bx], ax
-		inc	[bp+var_12]
-
-loc_ACC9:
-		cmp	[bp+var_12], 10h
-		jl	short loc_AC8D
-		mov	[bp+var_A], 1
-
-loc_ACD4:
-		mov	[bp+var_12], 0
-		jmp	loc_AD79
-; ---------------------------------------------------------------------------
-
-loc_ACDC:
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	ax, [bp+var_32]
-		add	bx, ax
-		mov	ax, ss:[bx]
-		mov	[bp+var_4], ax
-		mov	ax, [bp+var_E]
-		cmp	ax, 1
-		jz	short loc_AD00
-		cmp	ax, 2
-		jz	short loc_AD16
-		cmp	ax, 3
-		jz	short loc_AD0C
-		jmp	short loc_AD2C
-; ---------------------------------------------------------------------------
-
-loc_AD00:
-		mov	si, [bp+var_4]
-		mov	ax, si
-		add	ax, ax
-		or	[bp+var_4], ax
-		jmp	short loc_AD2C
-; ---------------------------------------------------------------------------
-
-loc_AD0C:
-		mov	si, [bp+var_4]
-		mov	ax, si
-		add	ax, ax
-		or	[bp+var_4], ax
-
-loc_AD16:
-		mov	si, [bp+var_4]
-		mov	ax, si
-		add	ax, ax
-		or	[bp+var_4], ax
-		xor	si, [bp+var_4]
-		mov	ax, si
-		add	ax, ax
-		not	ax
-		and	[bp+var_4], ax
-
-loc_AD2C:
-		cmp	[bp+var_C], 0
-		jz	short loc_AD5F
-		mov	cl, byte ptr [bp+var_C]
-		add	cl, 8
-		mov	ax, [bp+var_4]
-		shr	ax, cl
-		les	bx, [bp+var_8]
-		mov	es:[bx], al
-		mov	ax, [bp+var_4]
-		mov	cl, byte ptr [bp+var_C]
-		shr	ax, cl
-		mov	es:[bx+1], al
-		mov	cl, 8
-		sub	cl, byte ptr [bp+var_C]
-		mov	al, byte ptr [bp+var_4]
-		shl	al, cl
-		mov	es:[bx+2], al
-		jmp	short loc_AD72
-; ---------------------------------------------------------------------------
-
-loc_AD5F:
-		mov	ax, [bp+var_4]
-		shr	ax, 8
-		les	bx, [bp+var_8]
-		mov	es:[bx], al
-		mov	al, byte ptr [bp+var_4]
-		mov	es:[bx+1], al
-
-loc_AD72:
-		add	word ptr [bp+var_8], 50h ; 'P'
-		inc	[bp+var_12]
-
-loc_AD79:
-		cmp	[bp+var_12], 10h
-		jl	loc_ACDC
-		cmp	[bp+var_A], 0
-		jz	short loc_AD8A
-		add	di, 8
-
-loc_AD8A:
-		mov	ax, [bp+var_10]
-		add	ax, 8
-		add	di, ax
-
-loc_AD92:
-		les	bx, [bp+arg_6]
-		cmp	byte ptr es:[bx], 0
-		jnz	loc_AB82
-
-loc_AD9D:
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		call	grcg_off
-		pop	di
-		pop	si
-		leave
-		retf
-_graph_putsa_fx	endp
-
-include th01/hardware/vram_planes_set.asm
-include th02/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GRAPH_COPY_RECT_1_TO_0
-graph_copy_rect_1_to_0	proc far
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_6]
-		sar	ax, 3
-		mov	dx, [bp+arg_4]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_4]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		xor	di, di
-		jmp	loc_AEAE
-; ---------------------------------------------------------------------------
-
-loc_AE23:
-		mov	[bp+var_2], 0
-		mov	cx, si
-		jmp	short loc_AE9F
-; ---------------------------------------------------------------------------
-
-loc_AE2C:
-		or	si, si
-		jl	short loc_AE99
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		les	bx, _VRAM_PLANE_B
-		add	bx, cx
-		mov	ax, es:[bx]
-		mov	[bp+var_A], ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, cx
-		mov	ax, es:[bx]
-		mov	[bp+var_8], ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, cx
-		mov	ax, es:[bx]
-		mov	[bp+var_6], ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, cx
-		mov	ax, es:[bx]
-		mov	[bp+var_4], ax
-		mov	al, 0
-		out	dx, al
-		les	bx, _VRAM_PLANE_B
-		add	bx, cx
-		mov	ax, [bp+var_A]
-		mov	es:[bx], ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, cx
-		mov	ax, [bp+var_8]
-		mov	es:[bx], ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, cx
-		mov	ax, [bp+var_6]
-		mov	es:[bx], ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, cx
-		mov	ax, [bp+var_4]
-		mov	es:[bx], ax
-
-loc_AE99:
-		inc	[bp+var_2]
-		add	cx, 2
-
-loc_AE9F:
-		mov	ax, [bp+arg_2]
-		sar	ax, 4
-		cmp	ax, [bp+var_2]
-		jg	short loc_AE2C
-		add	si, 50h	; 'P'
-		inc	di
-
-loc_AEAE:
-		cmp	di, [bp+arg_0]
-		jl	loc_AE23
-		pop	di
-		pop	si
-		leave
-		retf	8
-graph_copy_rect_1_to_0	endp
-
-include th02/hardware/frame_delay_.asm
-include th02/hardware/input_sense.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AFB0	proc far
-		push	bp
-		mov	bp, sp
-		push	3E80h
-		call	mem_assign_dos
-		or	ax, ax
-		jz	short loc_AFC4
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_AFC4:
-		nopcall	vram_planes_set
-		call	graph_start
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
-		call	vsync_start
-		call	key_beep_off
-		call	text_systemline_hide
-		call	text_cursor_hide
-		call	egc_start
-		mov	pfkey, 12h
-		push	ds
-		push	offset aUmx	; "“Œ•û••–‚.˜^"
-		call	pfstart
-		xor	ax, ax
-		pop	bp
-		retf
-sub_AFB0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B019	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
-		call	vsync_end
-		call	mem_unassign
-		call	text_clear
-		call	egc_start
-		pop	bp
-		retf
-sub_B019	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-
+	extern _game_exit_to_dos:proc
+	extern ZUN_ERROR:proc
+	extern _graph_putsa_fx:proc
+	extern _pi_slot_load:proc
+	extern GRAPH_COPY_RECT_1_TO_0:proc
+	extern _input_sense:proc
+	extern _game_init_op:proc
+	extern _game_exit:proc
 	extern _snd_mmd_resident:proc
 	extern _snd_determine_mode:proc
 	extern _snd_pmd_resident:proc
@@ -2354,7 +1823,6 @@ op_03_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 op_04_TEXT	segment	byte public 'CODE' use16
 	extern SCORE_MENU:proc
 	extern SCORE_CLEARED_LOAD:proc
@@ -2447,7 +1915,6 @@ include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
-aUmx		db '“Œ•û••–‚.˜^',0
 extern _snd_active:byte
 extern _rank:byte
 

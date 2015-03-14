@@ -1,3 +1,5 @@
+#pragma option -k-
+
 int snd_mmd_resident(void)
 {
 	_AX = 0;

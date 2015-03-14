@@ -1,4 +1,5 @@
 ; void vram_planes_set(void)
+public VRAM_PLANES_SET
 vram_planes_set	proc
 	push	bp
 	mov	bp, sp
