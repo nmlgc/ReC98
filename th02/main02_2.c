@@ -58,7 +58,7 @@ int pascal mptn_load_inner(const char *fn)
 
 #include "th02/initmain.c"
 #include "th02/formats/pi_put.c"
-#include "th02/snd/kajafunc.c"
+#include "th02/snd/kajaint.c"
 #include "th02/snd/delaymea.c"
 #pragma codestring "\x00"
 #include "th02/snd/se.c"

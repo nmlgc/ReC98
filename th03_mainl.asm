@@ -2672,7 +2672,7 @@ loc_AB89:
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AB8B:
-		call	snd_kaja_func
+		call	snd_kaja_interrupt
 
 loc_AB90:
 		jmp	loc_AC1E	; default
@@ -6657,7 +6657,7 @@ include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th03/formats/pi_slot_put_interlace.asm
 include th02/snd/se.asm
-include th02/snd/kajafunc.asm
+include th02/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

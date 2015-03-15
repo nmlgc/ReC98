@@ -3,7 +3,7 @@ include defconv_c.inc
 include th02/hardware/input.inc
 
 kajacall	macro func, param := <0>
-	call	_snd_kaja_func pascal, (func shl 8) or (param and 0ffh)
+	call	_snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
 endm
 
 mikoconfig_t	struc

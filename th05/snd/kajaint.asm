@@ -1,5 +1,5 @@
-; int __pascal snd_kaja_func(int ax)
-snd_kaja_func	proc
+; int __pascal snd_kaja_interrupt(int ax)
+snd_kaja_interrupt	proc
 @@ax	= word ptr (cPtrSize)
 
 	cmp	_snd_bgm_mode, SND_BGM_OFF
@@ -16,5 +16,5 @@ snd_kaja_func	proc
 
 @@ret:
 	ret	2
-snd_kaja_func	endp
+snd_kaja_interrupt	endp
 	nop	; word alignment

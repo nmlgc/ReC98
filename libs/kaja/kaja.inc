@@ -14,5 +14,5 @@ PMD_SE_PLAY equ 0Ch
 PMD_GET_WORKAREA_ADDRESS equ 10h
 
 kajacall	macro func, param := <0>
-	call	snd_kaja_func pascal, (func shl 8) or (param and 0ffh)
+	call	snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
 endm

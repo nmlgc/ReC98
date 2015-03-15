@@ -9582,7 +9582,7 @@ loc_F0AD:
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_F0BB:
-		call	snd_kaja_func
+		call	snd_kaja_interrupt
 		jmp	short loc_F068
 ; ---------------------------------------------------------------------------
 
@@ -21432,7 +21432,7 @@ arg_8		= word ptr  0Eh
 sub_14E6C	endp
 
 include th05/snd/load.asm
-include th05/snd/kajafunc.asm
+include th05/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

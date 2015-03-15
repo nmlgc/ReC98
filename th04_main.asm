@@ -5900,7 +5900,7 @@ loc_D3FF:
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_D40B:
-		call	snd_kaja_func
+		call	snd_kaja_interrupt
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -18320,7 +18320,7 @@ sub_1333C	endp
 
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
-include th04/snd/kajafunc.asm
+include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 include th04/snd/load.asm
 

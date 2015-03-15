@@ -6854,7 +6854,7 @@ sub_DB3C	endp
 		nop
 
 include th05/snd/load.asm
-include th05/snd/kajafunc.asm
+include th05/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

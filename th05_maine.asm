@@ -1526,7 +1526,7 @@ loc_AEF0:
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AF11:
-		call	snd_kaja_func
+		call	snd_kaja_interrupt
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -8980,7 +8980,7 @@ sub_ECDE	endp
 		nop
 
 include th05/snd/load.asm
-include th05/snd/kajafunc.asm
+include th05/snd/kajaint.asm
 
 		push	bp
 		mov	bp, sp

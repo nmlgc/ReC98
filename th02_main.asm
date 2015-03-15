@@ -9759,7 +9759,7 @@ main_02_TEXT	segment	word public 'CODE' use16
 	extern _game_init_main:proc
 	extern _pi_slot_palette_apply:proc
 	extern _pi_slot_put:proc
-	extern _snd_kaja_func:proc
+	extern _snd_kaja_interrupt:proc
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc
 	extern _snd_se_update:proc

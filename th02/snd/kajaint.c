@@ -1,4 +1,4 @@
-int snd_kaja_func(kaja_func_t ax)
+int snd_kaja_interrupt(int ax)
 {
 	if(snd_active) {
 		_AX = ax;

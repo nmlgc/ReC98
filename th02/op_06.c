@@ -301,7 +301,7 @@ controls:
 				snd_midi_active = 0;
 				snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);
 				snd_midi_active = midi_active;
-				snd_kaja_func(KAJA_SONG_PLAY);
+				snd_kaja_func(KAJA_SONG_PLAY, 0);
 				track_playing = music_sel;
 
 				draw_cmt(music_sel);

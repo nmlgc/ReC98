@@ -1,5 +1,5 @@
-; int __pascal snd_kaja_func(int ax)
-snd_kaja_func	proc
+; int __pascal snd_kaja_interrupt(int ax)
+snd_kaja_interrupt	proc
 @@ax	= word ptr (cPtrSize + 2)
 
 	push	bp
@@ -18,4 +18,4 @@ snd_kaja_func	proc
 @@ret:
 	pop	bp
 	ret	2
-snd_kaja_func	endp
+snd_kaja_interrupt	endp

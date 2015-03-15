@@ -58,7 +58,7 @@ snd_load	proc
 	cmp	_snd_bgm_mode, SND_BGM_OFF
 	jz	short @@ret
 	push	(KAJA_SONG_STOP shl 8)
-	nopcall	snd_kaja_func
+	nopcall	snd_kaja_interrupt
 	mov	al, _snd_bgm_mode
 	mov	ah, 0
 	shl	ax, 2

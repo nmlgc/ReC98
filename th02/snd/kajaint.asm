@@ -1,5 +1,5 @@
-; int DEFCONV snd_kaja_func(int ax)
-proc_defconv snd_kaja_func
+; int DEFCONV snd_kaja_interrupt(int ax)
+proc_defconv snd_kaja_interrupt
 @@ax	= word ptr (cPtrSize + 2)
 
 	push	bp

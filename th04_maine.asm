@@ -1760,7 +1760,7 @@ loc_AD24:
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_AD26:
-		call	snd_kaja_func
+		call	snd_kaja_interrupt
 
 loc_AD2B:
 		; Hack
@@ -5546,7 +5546,7 @@ sub_CED0	endp
 
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
-include th04/snd/kajafunc.asm
+include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================

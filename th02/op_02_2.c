@@ -41,7 +41,7 @@ int game_init_op(void)
 #include "th02/snd/pmd_res.c"
 #include "th02/snd/load.c"
 #include "th02/formats/pi_put.c"
-#include "th02/snd/kajafunc.c"
+#include "th02/snd/kajaint.c"
 #include "th02/snd/delaymea.c"
 #include "th02/snd/se.c"
 #include "th02/hardware/frmdely1.c"

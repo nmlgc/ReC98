@@ -9785,7 +9785,7 @@ sub_EA8C	endp
 ; ---------------------------------------------------------------------------
 		nop
 include th02/snd/se.asm
-include th02/snd/kajafunc.asm
+include th02/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

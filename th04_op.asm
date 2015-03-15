@@ -6242,7 +6242,7 @@ sub_DBB8	endp
 
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
-include th04/snd/kajafunc.asm
+include th04/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

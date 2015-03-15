@@ -5258,7 +5258,7 @@ sub_C1B4	endp
 
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
-include th02/snd/kajafunc.asm
+include th02/snd/kajaint.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
