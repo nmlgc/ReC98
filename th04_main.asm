@@ -18318,11 +18318,11 @@ arg_8		= word ptr  0Eh
 		retf	0Ah
 sub_1333C	endp
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_kaja_func.asm
-include th04/hardware/snd_determine_modes.asm
-include th04/hardware/snd_load.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/kajafunc.asm
+include th04/snd/detmodes.asm
+include th04/snd/load.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -18757,7 +18757,7 @@ sub_137A4	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -43294,11 +43294,11 @@ byte_21AF2	db 1
 		db 0
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
-include th04/hardware/snd[data].asm
+include th04/snd/se_priority[data].asm
+include th04/snd/snd[data].asm
 		db    0
-include th04/hardware/snd_load[data].asm
-include th03/hardware/snd_se_state[data].asm
+include th04/snd/load[data].asm
+include th03/snd/se_state[data].asm
 byte_21C56	db 0
 		db 0
 word_21C58	dw 0
@@ -46910,10 +46910,10 @@ include libs/master.lib/pfint21[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_24CB2	dw ?
 word_24CB4	dw ?
 byte_24CB6	db ?

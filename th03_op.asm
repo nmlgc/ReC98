@@ -4795,9 +4795,9 @@ sub_BEB8	proc far
 sub_BEB8	endp
 
 include th01/hardware/vram_planes_set.asm
-include th02/hardware/snd_determine_mode.asm
-include th02/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_load.asm
+include th02/snd/detmode.asm
+include th02/snd/pmd_res.asm
+include th02/snd/load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5258,7 +5258,7 @@ sub_C1B4	endp
 
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
-include th02/hardware/snd_kaja_func.asm
+include th02/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6553,8 +6553,8 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
-include th02/hardware/snd[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/snd[bss].asm
+include th02/snd/load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_F292	dw ?
 word_F294	dw ?

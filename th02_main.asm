@@ -34620,7 +34620,7 @@ public _mptn_count
 _mptn_count	db 0
 public _pf_fn
 _pf_fn		db '“Œ•û••–‚.˜^',0
-include th02/hardware/snd_se[data].asm
+include th02/snd/se[data].asm
 		db    0
 		db  80h
 		db 0C0h
@@ -36930,8 +36930,8 @@ include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
-include th02/hardware/snd[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/snd[bss].asm
+include th02/snd/load[bss].asm
 public _mptn_buffer
 _mptn_buffer	dd ?
 public _mptn_palette

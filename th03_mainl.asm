@@ -6145,10 +6145,10 @@ mainl_02_TEXT	segment	word public 'CODE' use16
 
 include th01/hardware/vram_planes_set.asm
 		db 0
-include th02/hardware/snd_determine_mode.asm
-include th02/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_delay_until_volume.asm
-include th02/hardware/snd_load.asm
+include th02/snd/detmode.asm
+include th02/snd/pmd_res.asm
+include th02/snd/delayvol.asm
+include th02/snd/load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6656,8 +6656,8 @@ sub_CB68	endp
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th03/formats/pi_slot_put_interlace.asm
-include th02/hardware/snd_se.asm
-include th02/hardware/snd_kaja_func.asm
+include th02/snd/se.asm
+include th02/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7874,11 +7874,11 @@ include libs/master.lib/superpa[data].asm
 _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
 byte_EC84	db 0
 		db 0
-include th03/hardware/snd_se_priority[data].asm
+include th03/snd/se_priority[data].asm
 		db  30h	; 0
 		db    0
 aOver_pi	db 'over.pi',0
@@ -8304,8 +8304,8 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
-include th02/hardware/snd[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/snd[bss].asm
+include th02/snd/load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_100F8	dw ?
 word_100FA	dw ?

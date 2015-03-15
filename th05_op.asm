@@ -5795,9 +5795,9 @@ loc_D319:
 		retf
 sub_D304	endp
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_determine_modes.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6111,7 +6111,7 @@ loc_D5EE:
 		retf	6
 sub_D590	endp
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6853,8 +6853,8 @@ sub_DB3C	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th05/hardware/snd_load.asm
-include th05/hardware/snd_kaja_func.asm
+include th05/snd/load.asm
+include th05/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7839,7 +7839,7 @@ include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
+include th04/snd/se_priority[data].asm
 		db  71h	; q
 		db    0
 		db  6Bh	; k
@@ -7902,7 +7902,7 @@ include th04/hardware/snd_se_priority[data].asm
 		db  55h	; U
 word_F9BE	dw 2
 word_F9C0	dw 10h
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 word_F9C4	dw 0
 word_F9C6	dw 0
 word_F9C8	dw 0
@@ -8008,8 +8008,8 @@ unk_F9F0	db 0C0h	; À
 		db 0C1h
 		db  63h	; c
 		db  3Ch	; <
-include th05/hardware/snd_load[data].asm
-include th04/hardware/snd[data].asm
+include th05/snd/load[data].asm
+include th04/snd/snd[data].asm
 		db    0
 		db    0
 		db  11h
@@ -8746,14 +8746,14 @@ include libs/master.lib/super_put_rect[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
 dword_1281A	dd ?
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_1282C	dw ?
 word_1282E	dw ?
 word_12830	dw ?

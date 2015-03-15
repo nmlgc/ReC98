@@ -21174,9 +21174,9 @@ loc_14B79:
 		retf
 sub_14B64	endp
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_determine_modes.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21245,7 +21245,7 @@ loc_14CDA:
 		retf	6
 sub_14C7C	endp
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21431,8 +21431,8 @@ arg_8		= word ptr  0Eh
 		retf	0Ah
 sub_14E6C	endp
 
-include th05/hardware/snd_load.asm
-include th05/hardware/snd_kaja_func.asm
+include th05/snd/load.asm
+include th05/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -42236,11 +42236,11 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
-include th03/hardware/snd_se_state[data].asm
+include th04/snd/se_priority[data].asm
+include th03/snd/se_state[data].asm
 word_21216	dw 4E20h
-include th05/hardware/snd_load[data].asm
-include th04/hardware/snd[data].asm
+include th05/snd/load[data].asm
+include th04/snd/snd[data].asm
 include th05/hardware/vram_planes[data].asm
 byte_2123A	db 0
 		db 0
@@ -45484,9 +45484,9 @@ include libs/master.lib/super_put_rect[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_23A56	dw ?
 byte_23A58	db ?
 		db ?

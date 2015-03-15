@@ -5544,10 +5544,10 @@ sub_CED0	endp
 		pop	bp
 		retf	0Ah
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_kaja_func.asm
-include th04/hardware/snd_determine_modes.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/kajafunc.asm
+include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5686,7 +5686,7 @@ loc_D107:
 		retf	8
 sub_D078	endp
 
-include th04/hardware/snd_load.asm
+include th04/snd/load.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -6193,7 +6193,7 @@ locret_D592:
 		retf
 sub_D492	endp
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6616,7 +6616,7 @@ include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
+include th04/snd/se_priority[data].asm
 		db 0FFh
 		db 0FFh
 		db  7Fh
@@ -6649,9 +6649,9 @@ include th04/hardware/snd_se_priority[data].asm
 		db    3
 		db    0
 		db    1
-include th04/hardware/snd[data].asm
+include th04/snd/snd[data].asm
 		db    0
-include th04/hardware/snd_load[data].asm
+include th04/snd/load[data].asm
 		db  71h	; q
 		db    0
 		db  6Bh	; k
@@ -6714,7 +6714,7 @@ include th04/hardware/snd_load[data].asm
 		db  55h	; U
 word_EB2C	dw 2
 word_EB2E	dw 10h
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 word_EB32	dw 0
 word_EB34	dw 0
 word_EB36	dw 0
@@ -6948,9 +6948,9 @@ include th02/formats/pi_slots[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_10070	dw ?
 word_10072	dw ?
 byte_10074	db ?

@@ -6240,9 +6240,9 @@ sub_DBB8	endp
 		pop	bp
 		retf	0Ah
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_kaja_func.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6296,7 +6296,7 @@ sub_DC92	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-include th04/hardware/snd_determine_modes.asm
+include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6355,7 +6355,7 @@ sub_DDB1	proc far
 		retf
 sub_DDB1	endp
 
-include th04/hardware/snd_load.asm
+include th04/snd/load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6971,7 +6971,7 @@ locret_E2E4:
 		retf
 sub_E1E4	endp
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7612,10 +7612,10 @@ include libs/master.lib/draw_trapezoid[data].asm
 include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
-include th04/hardware/snd[data].asm
+include th04/snd/se_priority[data].asm
+include th04/snd/snd[data].asm
 		db    0
-include th04/hardware/snd_load[data].asm
+include th04/snd/load[data].asm
 		db  71h	; q
 		db    0
 		db  6Bh	; k
@@ -7678,7 +7678,7 @@ include th04/hardware/snd_load[data].asm
 		db  55h	; U
 word_FD7C	dw 2
 word_FD7E	dw 10h
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 word_FD82	dw 0
 word_FD84	dw 0
 word_FD86	dw 0
@@ -7960,9 +7960,9 @@ include th02/formats/pi_slots[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_11A4E	dw ?
 word_11A50	dw ?
 byte_11A52	db ?

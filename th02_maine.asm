@@ -4551,8 +4551,8 @@ include th01/hardware/vram_planes[bss].asm
 include th02/formats/pi_slots[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
-include th02/hardware/snd[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/snd[bss].asm
+include th02/snd/load[bss].asm
 extern _mikoconfig:dword
 extern _score:dword
 

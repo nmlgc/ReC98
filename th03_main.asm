@@ -9457,8 +9457,8 @@ main_02_TEXT	segment	word public 'CODE' use16
 
 include th01/hardware/vram_planes_set.asm
 		db 0
-include th02/hardware/snd_determine_mode.asm
-include th02/hardware/snd_pmd_resident.asm
+include th02/snd/detmode.asm
+include th02/snd/pmd_res.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9784,8 +9784,8 @@ sub_EA8C	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-include th02/hardware/snd_se.asm
-include th02/hardware/snd_kaja_func.asm
+include th02/snd/se.asm
+include th02/snd/kajafunc.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37342,9 +37342,9 @@ _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
-include th03/hardware/snd_se_priority[data].asm
+include th03/snd/se_priority[data].asm
 aYume_cfg	db 'YUME.CFG',0
 		db 0
 byte_1DB9E	db 0FFh
@@ -38420,7 +38420,7 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
-include th02/hardware/snd[bss].asm
+include th02/snd/snd[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_1EFF6	dw ?
 word_1EFF8	dw ?

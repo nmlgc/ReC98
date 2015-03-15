@@ -8418,9 +8418,9 @@ loc_E811:
 		pop	di
 		retf
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_determine_modes.asm
+include th04/snd/pmd_res.asm
+include th02/snd/mmd_res.asm
+include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8719,7 +8719,7 @@ sub_EA6E	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th04/hardware/snd_se.asm
+include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8979,8 +8979,8 @@ sub_ECDE	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th05/hardware/snd_load.asm
-include th05/hardware/snd_kaja_func.asm
+include th05/snd/load.asm
+include th05/snd/kajafunc.asm
 
 		push	bp
 		mov	bp, sp
@@ -9814,7 +9814,7 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
+include th04/snd/se_priority[data].asm
 word_10780	dw  71h
 		dw  6Bh
 		dw  78h
@@ -9867,14 +9867,14 @@ word_1078C	dw  19h
 		db  55h	; U
 word_107BC	dw 2
 word_107BE	dw 10h
-include th03/hardware/snd_se_state[data].asm
+include th03/snd/se_state[data].asm
 word_107C2	dw 0
 word_107C4	dw 0
 word_107C6	dw 0
 word_107C8	dw 0
 word_107CA	dw 4E20h
-include th05/hardware/snd_load[data].asm
-include th04/hardware/snd[data].asm
+include th05/snd/load[data].asm
+include th04/snd/snd[data].asm
 		dw    0
 		db  11h
 		db  11h
@@ -10355,9 +10355,9 @@ include libs/master.lib/super_put_rect[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-include th02/hardware/snd_load[bss].asm
+include th02/snd/load[bss].asm
 word_128B4	dw ?
 word_128B6	dw ?
 word_128B8	dw ?
