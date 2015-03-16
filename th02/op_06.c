@@ -334,8 +334,7 @@ controls:
 	graph_clear();
 	graph_accesspage(1);
 	pi_load_put_free(0, "op2.pi");
-	palette_entry_rgb("op.rgb");
-	palette_show();
+	palette_entry_rgb_show("op.rgb");
 	graph_copy_page(0);
 	graph_accesspage(0);
 }

@@ -7,13 +7,10 @@
 
 #include "th02\score.c"
 
-extern char rank;
 extern long score;
 
 long score_highest;
 score_file_t hi;
-
-void pascal sub_B4B7(void);
 
 void pascal score_defaults_set(void)
 {

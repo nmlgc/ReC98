@@ -11,19 +11,20 @@ char rank = RANK_NORMAL;
 
 #include "th02\score.c"
 
-const unsigned char gbcRANK[4][8] = {
+const unsigned char gbcRANKS[4][8] = {
 	gb_SP, gb_E_, gb_A_, gb_S_, gb_Y_, gb_SP, gb_SP, 0,
 	gb_N_, gb_O_, gb_R_, gb_M_, gb_A_, gb_L_, gb_SP, 0,
 	gb_SP, gb_H_, gb_A_, gb_R_, gb_D_, gb_SP, gb_SP, 0,
 	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
 };
+
 const char *SHOTTYPES[] = {"高機動", "防御", "攻撃"};
 int logo_step = 0;
 char need_op_h_bft = 1;
 
 score_file_t hi;
 char extra_unlocked;
-unsigned score_duration;
+unsigned int score_duration;
 
 #include "th02\scorelod.c"
 
@@ -89,7 +90,7 @@ void pascal near scores_put(int place_to_highlight)
 	unsigned atrb = TX_WHITE;
 	int i;
 	gaiji_putsa(22, 2, gbHI_SCORE, TX_GREEN);
-	gaiji_putsa(40, 2, gbcRANK[rank], TX_GREEN);
+	gaiji_putsa(40, 2, gbcRANKS[rank], TX_GREEN);
 	text_putsa(
 		8, 4,
 		"      お名前　　　　　　得点　　　 STAGE  TYPE   日付",
@@ -156,8 +157,7 @@ void pascal score_menu(void)
 		need_op_h_bft = 0;
 		super_entry_bfnt("op_h.bft");
 	}
-	palette_entry_rgb("op_h.rgb");
-	palette_show();
+	palette_entry_rgb_show("op_h.rgb");
 	grc_setclip(128, 96, 512, 304);
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();

@@ -40,7 +40,7 @@ void pi_slot_put(int x, int y, int slot);
 	pi_slot_put(0, 0, slot); \
 	graph_pi_free(&pi_slot_headers[slot], pi_slot_buffers[slot]);
 
-// ""東方封魔.録" in Shift-JIS
+// "東方封魔.録" in Shift-JIS
 #define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E" 
 #define PF_KEY 0x12
 // -------
@@ -55,9 +55,12 @@ void pi_slot_put(int x, int y, int slot);
 #define FX(color, weight, spacing) \
 	(color | (weight & 3) << 4 | (spacing & 7) << 6)
 void graph_putsa_fx(int x, int y, int fx, const unsigned char *str);
+
+void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h);
 // -------
 
 // Gaiji characters
+// ----------------
 /* ZUN messed up and swapped M and N in MIKOFT.BFT for both regular and bold
  * fonts. Therefore, other code shouldn't really use the straightforward
  * solution of just adding char literals to a defined start offset, as it may
@@ -124,8 +127,16 @@ typedef enum {
 	gs_ARROW_LEFT, // ←
 	gs_ARROW_RIGHT, // →
 	gs_END, // "End"
-	gs_ALL = 240 // "All"
+
+	// Unused 32x16 rank sprites
+	gs_EA, gs_SY, // "Ea", "sy"
+	gs_NOR, gs_MAL, // "Nor, "mal"
+	gs_HA, gs_RD, // "Ha, "rd"
+	gs_LUN, gs_ATIC, // "Lun", "atic"
+
+	gs_ALL, // "All"
 } gaiji_symbols_t;
+// ----------------
 
 typedef enum {
 	INPUT_UP = 0x1,
@@ -154,15 +165,29 @@ void key_delay(void);
 
 // Sound
 // -----
+typedef enum {
+	SND_BGM_OFF,
+	SND_BGM_FM,
+	SND_BGM_MIDI
+} snd_bgm_mode_t;
+
 #include "libs\kaja\kaja.h"
 
-extern char snd_midi_active;
+extern char snd_active;
+extern char snd_interrupt_if_midi;
+extern unsigned char snd_midi_active;
 extern char snd_midi_possible;
+extern char snd_fm_possible;
 
+int snd_pmd_resident(void);
+int snd_mmd_resident(void);
+
+int snd_determine_mode(void);
 int snd_kaja_interrupt(int ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
 #define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
+#define SND_LOAD_SE (PMD_GET_SE_ADDRESS << 8)
 
 void snd_load(const char *fn, kaja_func_t func);
 
@@ -177,10 +202,12 @@ void snd_se_update(void);
 #define MUSIC_CMT_LINE_COUNT 20
 
 // Configuration file
+// ------------------
+#define CFG_FN "huuma.cfg"
 #pragma option -a1
 typedef struct {
 	char rank;
-	char music;
+	char bgm_mode;
 	char bombs;
 	char lives;
 	char perf;
@@ -188,8 +215,10 @@ typedef struct {
 	char debug;
 } huuma_cfg_t;
 #pragma option -a2
+// ------------------
 
 // Resident structure
+// ------------------
 typedef struct {
 	char id[11];	// = "MIKOConfig"
 	char stage;
@@ -206,8 +235,8 @@ typedef struct {
 	long frame;
 	int unused_1;
 	char unused_2;
-	char op_main_retval;
-	char perf;
+	unsigned char op_main_retval;
+	unsigned char perf;
 	char unused_3;
 	char shottype;
 	char demo_num;
@@ -218,9 +247,15 @@ typedef struct {
 
 extern resident_t *mikoconfig;
 
+extern char rank;
+extern char bombs;
+extern char lives;
+// ------------------
+
 #define SHOTTYPE_COUNT 3
 
 // Highscores
+// ---------
 #define SCORE_PLACES 10
 #define SCORE_NAME_LEN 6 /* excluding the terminating 0 */
 #define EXTRA_CLEAR_FLAGS {1, 2, 4}
@@ -262,6 +297,9 @@ typedef struct {
 
 extern char cleared_game_with[SHOTTYPE_COUNT];
 extern char cleared_extra_with[SHOTTYPE_COUNT];
+
+int pascal score_cleared_load(void);
+// ---------
 
 // Debugging
 // ---------

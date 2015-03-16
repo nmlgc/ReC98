@@ -3,7 +3,6 @@
  * Code segment #3 of TH02's MAINE.EXE
  */
 
-#include <stddef.h>
 #include "th02\th02.h"
 
 char rank = RANK_NORMAL;
@@ -23,7 +22,7 @@ int pascal cfg_load(void)
 {
 	int resident_sgm;
 
-	file_ropen("huuma.cfg");
+	file_ropen(CFG_FN);
 	file_seek(offsetof(huuma_cfg_t, resident_sgm), 0);
 	file_read(&resident_sgm, sizeof(resident_sgm));
 	file_close();

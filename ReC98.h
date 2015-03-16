@@ -4,6 +4,14 @@
  */
 
 #include <master.h>
+#include <stddef.h>
+
+// master.lib extensions
+// ---------------------
+#define palette_entry_rgb_show(fn) \
+	palette_entry_rgb(fn); \
+	palette_show();
+// ---------------------
 
 // Macros
 // ------

@@ -10,10 +10,6 @@
 
 #define frame_delay_2 frame_delay
 
-extern char snd_active;
-extern char snd_interrupt_if_midi;
-extern char snd_fm_possible;
-
 extern const char pf_fn[];
 
 #include "th02/hardware/input.c"
