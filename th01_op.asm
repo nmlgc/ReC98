@@ -2113,10 +2113,10 @@ arg_0		= word ptr  6
 		mov	bp, sp
 
 loc_B26C:
-		mov	ax, word_1355C
+		mov	ax, _vsync_frame
 		cmp	ax, [bp+arg_0]
 		jb	short loc_B26C
-		mov	word_1355C, 0
+		mov	_vsync_frame, 0
 		pop	bp
 		retf
 sub_B269	endp
@@ -2127,175 +2127,9 @@ op_02_TEXT	ends
 
 ; Segment type:	Pure code
 op_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_03_TEXT
-		;org 0Ch
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; void __interrupt isr()
-isr		proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		push	ax
-		push	bx
-		push	cx
-		push	dx
-		push	es
-		push	ds
-		push	si
-		push	di
-		push	bp
-		mov	bp, seg	_DATA
-		mov	ds, bp
-		mov	bp, sp
-		sub	sp, 4
-		mov	ax, word_1290D
-		mov	[bp+var_2], ax
-		mov	ax, word_1290F
-		mov	[bp+var_4], ax
-		inc	word_1355C
-		inc	word_1355E
-		cmp	word_12903, 0
-		jz	short loc_B2AE
-		call	farfp_13564
-
-loc_B2AE:
-		xor	dx, dx
-		mov	al, 20h	; ' '
-		out	dx, al
-		mov	dx, 64h	; 'd'
-		mov	al, 0
-		out	dx, al		; AT Keyboard controller 8042.
-		leave
-		pop	di
-		pop	si
-		pop	ds
-		pop	es
-		pop	dx
-		pop	cx
-		pop	bx
-		pop	ax
-		iret
-isr		endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2C3	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_12902, 0
-		jnz	short loc_B303
-		mov	byte_12902, 1
-		cli
-		push	0Ah		; interruptno
-		call	_getvect
-		pop	cx
-		mov	word_13562, dx
-		mov	off_13560, ax
-		push	seg op_03_TEXT
-		push	offset isr	; isr
-		push	0Ah		; interruptno
-		call	_setvect
-		add	sp, 6
-		mov	dx, 2
-		in	al, dx		; DMA controller, 8237A-5.
-					; channel 1 current address
-		and	al, 0FBh
-		mov	dx, 2
-		out	dx, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		mov	dx, 64h	; 'd'
-		mov	al, 0
-		out	dx, al		; AT Keyboard controller 8042.
-		sti
-
-loc_B303:
-		pop	bp
-		retf
-sub_B2C3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B305	proc far
-		push	bp
-		mov	bp, sp
-		cmp	byte_12902, 1
-		jnz	short loc_B332
-		mov	byte_12902, 0
-		cli
-		mov	dx, 2
-		in	al, dx		; DMA controller, 8237A-5.
-					; channel 1 current address
-		or	al, 4
-		mov	dx, 2
-		out	dx, al		; DMA controller, 8237A-5.
-					; channel 1 base address
-					; (also	sets current address)
-		push	word_13562
-		push	off_13560	; isr
-		push	0Ah		; interruptno
-		call	_setvect
-		add	sp, 6
-		sti
-
-loc_B332:
-		pop	bp
-		retf
-sub_B305	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B334	proc far
-		push	bp
-		mov	bp, sp
-
-loc_B337:
-		mov	dx, 60h
-		in	al, dx		; AT Keyboard controller 8042.
-		test	al, 20h
-		jnz	short loc_B337
-
-loc_B33F:
-		mov	dx, 60h
-		in	al, dx		; AT Keyboard controller 8042.
-		test	al, 20h
-		jz	short loc_B33F
-		pop	bp
-		retf
-sub_B334	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	word_12903, 0
-		mov	dx, [bp+8]
-		mov	ax, [bp+6]
-		mov	word ptr farfp_13564+2,	dx
-		mov	word ptr farfp_13564, ax
-		mov	word_12903, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		mov	word_12903, 0
-		pop	bp
-		retf
+	extern _vsync_init:proc
+	extern _vsync_exit:proc
+	extern _z_vsync_wait:proc
 op_03_TEXT	ends
 
 ; ===========================================================================
@@ -2368,7 +2202,7 @@ sub_B6E9	proc far
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 6
-		call	sub_B2C3
+		call	_vsync_init
 		call	_z_text_init
 		call	egc_start
 		call	graph_start
@@ -2437,7 +2271,7 @@ sub_B784	proc far
 		push	offset sub_B6C3	; isr
 		push	6		; interruptno
 		call	_setvect
-		call	sub_B305
+		call	_vsync_exit
 		call	_z_text_clear
 		call	sub_BD3A
 		call	sub_B8D0
@@ -3261,7 +3095,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_BCAC:
-		call	sub_B334
+		call	_z_vsync_wait
 		xor	si, si
 		jmp	short loc_BD1E
 ; ---------------------------------------------------------------------------
@@ -3366,7 +3200,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_BD5A:
-		call	sub_B334
+		call	_z_vsync_wait
 		xor	si, si
 		jmp	short loc_BDC1
 ; ---------------------------------------------------------------------------
@@ -3476,7 +3310,7 @@ loc_BDF4:
 ; ---------------------------------------------------------------------------
 
 loc_BE1D:
-		call	sub_B334
+		call	_z_vsync_wait
 		xor	si, si
 		jmp	short loc_BE8F
 ; ---------------------------------------------------------------------------
@@ -3568,7 +3402,7 @@ loc_BE9F:
 ; ---------------------------------------------------------------------------
 
 loc_BECB:
-		call	sub_B334
+		call	_z_vsync_wait
 		xor	si, si
 		jmp	short loc_BF32
 ; ---------------------------------------------------------------------------
@@ -5592,7 +5426,7 @@ loc_CFFD:
 ; ---------------------------------------------------------------------------
 
 loc_D009:
-		call	sub_B334
+		call	_z_vsync_wait
 		mov	word ptr [bp-2], 0
 		jmp	loc_D0C8
 ; ---------------------------------------------------------------------------
@@ -8205,85 +8039,7 @@ aGogbgGtg@gcglv	db 'バッチファイルから起動してよ',0
 aCon		db 'CON',0
 ; char format[]
 format		db 'おつかれさまでした！！',0Ah,0
-byte_12902	db 0
-word_12903	dw 0
-		db    7
-		dd    0
-		db    0
-		db    0
-		db    0
-word_1290D	dw 140h
-word_1290F	dw 0C8h
-		dd    0
-		db  7Fh
-		db    2
-		db  8Fh
-		db    1
-		db    0
-		db 0C0h
-		db    0
-		db 0E0h
-		db    0
-		db 0F0h
-		db    0
-		db 0F8h
-		db    0
-		db 0FCh
-		db    0
-		db 0FEh
-		db    0
-		db 0FFh
-		db  80h
-		db 0FFh
-		db 0C0h
-		db 0FFh
-		db 0E0h
-		db 0FFh
-		db    0
-		db 0FEh
-		db    0
-		db 0EFh
-		db    0
-		db 0CFh
-		db  80h
-		db    7
-		db  80h
-		db    7
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db  40h
-		db    0
-		db  60h
-		db    0
-		db  70h	; p
-		db    0
-		db  78h	; x
-		db    0
-		db  7Ch	; |
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  7Fh
-		db  80h
-		db  7Fh
-		db    0
-		db  7Ch	; |
-		db    0
-		db  6Ch	; l
-		db    0
-		db  46h	; F
-		db    0
-		db    6
-		db    0
-		db    3
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
+include th01/hardware/vsync[data].asm
 include th01/ztext[data].asm
 byte_12978	db 0
 		db 0
@@ -8450,12 +8206,7 @@ dword_13418	dd ?
 		dd    ?
 		dd    ?
 		dd    ?
-word_1355C	dw ?
-word_1355E	dw ?
-; void (__interrupt far	*off_13560)()
-off_13560	dw ?
-word_13562	dw ?
-farfp_13564	dd ?
+include th01/hardware/vsync[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
