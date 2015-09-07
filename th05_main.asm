@@ -14266,7 +14266,7 @@ loc_115CE:
 		add	si, 1Ah
 
 loc_115D4:
-		cmp	[bp+var_2], 40h	
+		cmp	[bp+var_2], 40h
 		jl	short loc_11568
 		mov	dx, 7Ch
 		mov	al, GC_OFF

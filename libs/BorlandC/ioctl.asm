@@ -17,7 +17,7 @@ argcx		= word ptr  0Eh
 		mov	al, byte ptr [bp+_func]
 		mov	bx, [bp+handle]
 		mov	cx, [bp+argcx]
-		int	21h	
+		int	21h
 		pop	ds
 		jb	short @@ioctlFailed
 		cmp	[bp+_func], 0

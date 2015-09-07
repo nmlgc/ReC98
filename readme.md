@@ -26,7 +26,7 @@ To achieve this, ReC98 has been kept in an openly available Git repository from 
 Moreover, a clear line will be drawn between the original content and fanmade modifications, which will only be available as optional packages. This also means that we won't ship the reconstructed games with any existing English translation patch. For the visible modifications that *will* be necessary (read: the "Mods" screen in the main menu), great care will be taken to keep them in the spirit of the original PC-98 games.
 
 #### Is this even viable?
-It certainly *seems* to be. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:    
+It certainly *seems* to be. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
 
 * [master.lib](http://www.koizuka.jp/~koizuka/master.lib/), a 16-bit x86 assembly library providing an abstraction layer for all components of a PC-98 DOS system
 * as well as the Borland C/C++ runtime library, version 4.0.

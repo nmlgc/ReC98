@@ -21,7 +21,7 @@
 
 include ReC98.inc
 include th02/th02.asm
-	
+
 	extern SCOPY@:proc
 	extern __mbcjmstojis:proc
 	extern __mbctype:byte

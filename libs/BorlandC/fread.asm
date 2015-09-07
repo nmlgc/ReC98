@@ -1,5 +1,5 @@
 ; int __stdcall	fgetn(FILE *fp, int n, void *ptr)
-_fgetn		proc near 
+_fgetn		proc near
 @@var_4		= word ptr -4
 @@Temp		= word ptr -2
 @@fp		= dword	ptr  4
@@ -13,7 +13,7 @@ _fgetn		proc near
 		push	di
 		jmp	@@while
 
-@@loop: 
+@@loop:
 		inc	[bp+@@n]
 		les	bx, [bp+@@fp]
 		mov	ax, es:[bx+FILE._bsize]
@@ -22,23 +22,23 @@ _fgetn		proc near
 		mov	ax, [bp+@@n]
 		jmp	short @@bin?
 
-@@len_bsize: 
+@@len_bsize:
 		les	bx, [bp+@@fp]
 		mov	ax, es:[bx+FILE._bsize]
 
-@@bin?: 
+@@bin?:
 		mov	[bp+@@Temp], ax
 		les	bx, [bp+@@fp]
 		test	byte ptr es:[bx+FILE.flags], 40h
 		jnz	short @@bsize?
 		jmp	@@getc?
 
-@@bsize?: 
+@@bsize?:
 		cmp	es:[bx+FILE._bsize], 0
 		jnz	short @@greater?
 		jmp	@@getc?
 
-@@greater?: 
+@@greater?:
 		mov	ax, es:[bx+FILE._bsize]
 		cmp	ax, [bp+@@n]
 		jnb	short @@getc?
@@ -48,7 +48,7 @@ _fgetn		proc near
 		mov	[bp+@@Temp], 0
 		jmp	short @@adjust?
 
-@@adjust: 
+@@adjust:
 		les	bx, [bp+@@fp]
 		add	bx, FILE._bsize
 		mov	[bp+@@var_4], bx
@@ -56,7 +56,7 @@ _fgetn		proc near
 		add	[bp+@@Temp], ax
 		sub	[bp+@@n], ax
 
-@@adjust?: 
+@@adjust?:
 		les	bx, [bp+@@fp]
 		mov	ax, es:[bx+FILE._bsize]
 		cmp	ax, [bp+@@n]
@@ -76,7 +76,7 @@ _fgetn		proc near
 		les	bx, [bp+@@fp]
 		or	es:[bx+FILE.flags], 10h
 
-@@advance: 
+@@advance:
 		add	word ptr [bp+@@ptr], dx
 		cmp	dx, [bp+@@Temp]
 		jz	short @@while
@@ -84,17 +84,17 @@ _fgetn		proc near
 		sub	ax, dx
 		add	[bp+@@n], ax
 
-@@setEOF: 
+@@setEOF:
 		les	bx, [bp+@@fp]
 		or	es:[bx+FILE.flags], 20h
 		jmp	short @@ret
 
-@@writec: 
+@@writec:
 		les	bx, [bp+@@ptr]
 		mov	es:[bx], dl
 		inc	word ptr [bp+@@ptr]
 
-@@getc?: 
+@@getc?:
 		dec	[bp+@@n]
 		mov	ax, [bp+@@n]
 		or	ax, ax
@@ -112,28 +112,28 @@ _fgetn		proc near
 		mov	ah, 0
 		jmp	short @@gotEOF?
 
-@@getc: 
+@@getc:
 		push	word ptr [bp+@@fp+2]
 		push	word ptr [bp+@@fp]
 		nopcall	__fgetc
 		pop	cx
 		pop	cx
 
-@@gotEOF?: 
+@@gotEOF?:
 		mov	dx, ax
 		cmp	ax, 0FFFFh
 		jnz	short @@writec
 
-@@EOF?: 
+@@EOF?:
 		cmp	dx, 0FFFFh
 		jz	short @@setEOF
 
-@@while: 
+@@while:
 		cmp	[bp+@@n], 0
 		jz	short @@ret
 		jmp	@@loop
 
-@@ret: 
+@@ret:
 		mov	ax, [bp+@@n]
 		pop	di
 		pop	si
@@ -191,13 +191,13 @@ _fread		proc
 		div	[bp+@@psize]
 		jmp	short @@ret
 
-@@huge: 
+@@huge:
 		mov	ax, [bp+@@nitems]
 		inc	ax
 		mov	[bp+@@n], ax
 		jmp	short @@hugeGet
 
-@@hugeAdvance: 
+@@hugeAdvance:
 		mov	bx, [bp+@@psize]
 		xor	cx, cx
 		mov	dx, word ptr [bp+@@ptr+2]
@@ -206,7 +206,7 @@ _fread		proc
 		mov	word ptr [bp+@@ptr+2], dx
 		mov	word ptr [bp+@@ptr], ax
 
-@@hugeGet: 
+@@hugeGet:
 		dec	[bp+@@n]
 		mov	ax, [bp+@@n]
 		or	ax, ax
@@ -220,11 +220,11 @@ _fread		proc
 		or	ax, ax
 		jz	short @@hugeAdvance
 
-@@retItemsMinusN: 
+@@retItemsMinusN:
 		mov	ax, [bp+@@nitems]
 		sub	ax, [bp+@@n]
 
-@@ret: 
+@@ret:
 		pop	di
 		pop	si
 		mov	sp, bp

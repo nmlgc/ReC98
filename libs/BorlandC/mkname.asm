@@ -1,6 +1,6 @@
 ; char *__pascal __near _MKNAME(char *s, char *prefix, unsigned int num)
 		public __MKNAME
-__MKNAME	proc near 
+__MKNAME	proc near
 @@num		= word ptr  4
 @@prefix	= dword	ptr  6
 @@s		= dword	ptr  0Ah
@@ -15,7 +15,7 @@ __MKNAME	proc near
 		mov	word ptr [bp+@@s+2], ds
 		mov	word ptr [bp+@@s], offset mkname_template
 
-@@haveS: 
+@@haveS:
 		push	[bp+@@num]
 		mov	ax, word ptr [bp+@@prefix]
 		or	ax, word ptr [bp+@@prefix+2]
@@ -24,11 +24,11 @@ __MKNAME	proc near
 		mov	ax, offset mkname_TMP
 		jmp	short @@build
 
-@@havePrefix: 
+@@havePrefix:
 		mov	dx, word ptr [bp+@@prefix+2]
 		mov	ax, word ptr [bp+@@prefix]
 
-@@build: 
+@@build:
 		push	dx
 		push	ax
 		push	word ptr [bp+@@s+2]
@@ -66,7 +66,7 @@ __TMPNAM	proc near
 		push	si
 		push	di
 
-@@loop: 
+@@loop:
 		push	word ptr [bp+@@s+2]
 		push	word ptr [bp+@@s]
 		xor	ax, ax
@@ -78,10 +78,10 @@ __TMPNAM	proc near
 		mov	ax, 2
 		jmp	short @@mkname
 
-@@incNumP: 
+@@incNumP:
 		mov	ax, 1
 
-@@mkname: 
+@@mkname:
 		LES_	bx, [bp+@@numP]
 		add	ES_[bx], ax
 		mov	ax, ES_[bx]

@@ -101,7 +101,7 @@ endif
 		push	[bp+@@size]
 		nopcall	_malloc
 		pop	cx
-if LDATA		
+if LDATA
 		mov	word ptr [bp+@@buf+2], dx
 		mov	word ptr [bp+@@buf], ax
 		or	ax, dx
