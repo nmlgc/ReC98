@@ -26,7 +26,7 @@ _gettime	proc
 		push	si
 		push	di
 		mov	ah, 2Ch
-		int	21h	
+		int	21h
 		LES_	bx, [bp+@@timep]
 		mov	es:[bx], cx
 		mov	es:[bx+2], dx

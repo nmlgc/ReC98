@@ -193,7 +193,7 @@ int pascal score_cleared_load(void)
 	unsigned char extra_clear_flags[SHOTTYPE_COUNT] = EXTRA_CLEAR_FLAGS;
 	int extra_unlocked = 1;
 	int shottype;
-	
+
 	for(rank = 0; rank < 3; rank++) {
 		score_load();
 		if(hi.score.cleared != game_clear_constants[rank]) {

@@ -6,7 +6,7 @@
 ;   reason)
 ; * PROC DIST and LABEL DIST being changed to just PROC and LABEL PROC,
 ;   respectively
-; * and a small section of code in ExtendHeap, which is present in the 
+; * and a small section of code in ExtendHeap, which is present in the
 ;   original Touhou builds, but was not included in the original version of
 ;   this file.
 

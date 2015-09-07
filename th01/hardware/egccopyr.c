@@ -26,7 +26,7 @@ void egc_copy_rect_1_to_0(int x, int y, int w, int h)
 	int row_p;
 	int bits;
 	int p;
-	
+
 	x_end += w;
 	x_floor &= 0xFFF0;
 	row_p = VRAM_OFFSET(x_floor, y);

@@ -5425,7 +5425,7 @@ loc_C032:
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_BCD5
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0 
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	10008h
 		push	4E0187h
 		call	grcg_byteboxfill_x

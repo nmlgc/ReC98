@@ -104,7 +104,7 @@ void pascal near polygon_build(Point near *pts, int x, int y, int rad, int npoin
 void pascal near polygons_update_and_render(void)
 {
 	#define VERTICES(i) (i / 4) + 3
-	
+
 	#define POLYGON_INIT_PART2 \
 		if(move_speed[i].x == 0) { \
 			move_speed[i].x = 1; \
@@ -115,7 +115,7 @@ void pascal near polygons_update_and_render(void)
 		if(rot_speed[i] == 0) { \
 			rot_speed[i] = 4; \
 		}
-	
+
 	static char initialized = 0;
 
 	static Point points[10];

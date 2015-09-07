@@ -141,7 +141,7 @@ __openfp	proc near
 		push	[bp+@@mode]
 		mov	ax, [bp+@@oflag]
 		or	ax, [bp+@@shflag]
-		push	ax	
+		push	ax
 		push	word ptr [bp+@@filename+2]
 		push	word ptr [bp+@@filename]
 		nopcall	_open

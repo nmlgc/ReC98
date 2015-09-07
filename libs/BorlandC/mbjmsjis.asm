@@ -28,7 +28,7 @@ __mbcjmstojis	proc
 		jb	short @@_1
 		sub	al, 0A2h
 
-@@_1:	
+@@_1:
 		rcl	ah, 1
 		and	ah, 7Fh
 		add	ax, 1F21h
@@ -37,7 +37,7 @@ __mbcjmstojis	proc
 @@_invalid_jms:
 		xor	ax, ax
 
-@@_rts:	
+@@_rts:
 		pop	di
 		pop	si
 		pop	bp

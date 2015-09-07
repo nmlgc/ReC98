@@ -16383,7 +16383,7 @@ loc_12508:
 		ja	loc_127EC
 		add	bx, bx
 		jmp	word ptr cs:table_1287D[bx]
-		
+
 loc_12522:
 		cmp	byte_26719, 2
 		jbe	short loc_12567

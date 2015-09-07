@@ -26,8 +26,8 @@
 ;	The TH03 version improves upon the original by preloading all pfHeader
 ;	structures of an archive on pfstart(). In doing this, seeking to the
 ;	desired file becomes much more efficient and the SEEK function can be
-;	eliminated entirely. For some reason, It also saw fit to reduce the
-;	size fields in pfHeader to 16-bit for some reason.
+;	eliminated entirely. It also saw fit to reduce the size fields in
+;	pfHeader to 16-bit for some reason.
 ;
 ;	TH05 further optimizes the implementation by using 32-bit registers
 ;	and instructions where possible, and removing unnecessary instructions

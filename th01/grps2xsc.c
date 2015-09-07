@@ -47,7 +47,7 @@ void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int 
 				*(long*)(VRAM_PLANE_B + p0 + scale_p) = px32_nonzero;
 				grcg_off();
 
-				scale_2x(&dst32, px16.B);  
+				scale_2x(&dst32, px16.B);
 				*(long*)(VRAM_PLANE_B + p0 + scale_p) |= dst32;
 
 				scale_2x(&dst32, px16.R);

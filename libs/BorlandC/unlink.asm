@@ -9,7 +9,7 @@ _unlink		proc
 		pushDS_
 		mov	ah, 41h
 		LDS_	dx, [bp+@@path]
-		int	21h	
+		int	21h
 		popDS_
 		jb	short @@unlinkFailed
 		xor	ax, ax

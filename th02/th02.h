@@ -41,7 +41,7 @@ void pi_slot_put(int x, int y, int slot);
 	graph_pi_free(&pi_slot_headers[slot], pi_slot_buffers[slot]);
 
 // "東方封魔.録" in Shift-JIS
-#define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E" 
+#define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E"
 #define PF_KEY 0x12
 // -------
 

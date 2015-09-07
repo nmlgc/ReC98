@@ -21,7 +21,7 @@ endif
 @@valid:
 if LDATA
 		push	word ptr [bp+@@s+2]
-endif		
+endif
 		push	word ptr [bp+@@s]
 		nopcall	_strlen
 		pop	cx
@@ -50,7 +50,7 @@ endif
 		mov	ax, 0Ah
 		push	ax
 		nopcall	_fputc
-if LDATA		
+if LDATA
 		add	sp, 6
 else
 		pop	cx
