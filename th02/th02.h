@@ -211,6 +211,10 @@ typedef struct {
 	char bombs;
 	char lives;
 	char perf;
+} huuma_options_t;
+
+typedef struct {
+	huuma_options_t opts;
 	int resident_sgm;
 	char debug;
 } huuma_cfg_t;

@@ -45,16 +45,16 @@ int cfg_load(void)
 	if(file_exist(cfg_fn)) {
 		file_ropen(cfg_fn);
 		file_read(&cfg, sizeof(cfg));
-		rank = cfg.rank;
-		snd_bgm_mode = cfg.bgm_mode;
-		bombs = cfg.bombs;
-		lives = cfg.lives;
+		rank = cfg.opts.rank;
+		snd_bgm_mode = cfg.opts.bgm_mode;
+		bombs = cfg.opts.bombs;
+		lives = cfg.opts.lives;
 		mikoconfig_sgm = cfg.resident_sgm;
 		if(!mikoconfig_sgm) {
 			return 1;
 		}
 		mikoconfig = MK_FP(mikoconfig_sgm, 0);
-		mikoconfig->perf = cfg.perf;
+		mikoconfig->perf = cfg.opts.perf;
 		mikoconfig->debug = cfg.debug;
 		file_close();
 
@@ -79,11 +79,11 @@ void cfg_save(void)
 	huuma_cfg_t cfg;
 
 	cfg.debug = 0;
-	cfg.rank = rank;
-	cfg.bgm_mode = snd_bgm_mode;
-	cfg.bombs = bombs;
-	cfg.lives = lives;
-	cfg.perf = mikoconfig->perf;
+	cfg.opts.rank = rank;
+	cfg.opts.bgm_mode = snd_bgm_mode;
+	cfg.opts.bombs = bombs;
+	cfg.opts.lives = lives;
+	cfg.opts.perf = mikoconfig->perf;
 
 	file_create(cfg_fn);
 	file_write(&cfg, offsetof(huuma_cfg_t, resident_sgm));
