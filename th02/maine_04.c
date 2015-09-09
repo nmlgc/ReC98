@@ -6,6 +6,7 @@
 #include "th02\th02.h"
 
 #include "th02\score.c"
+#include "th02\scoreenc.c"
 
 extern long score;
 
@@ -119,20 +120,7 @@ void pascal near score_name_puts(int place, int char_to_highlight)
 
 void pascal score_save(void)
 {
-	int i;
-	hi.score.points_sum = 0;
-	hi.score.g_name_first_sum = 0;
-	hi.score.stage_sum = 0;
-	hi.score_sum = 0;
-	for(i = 0; i < SCORE_PLACES; i++) {
-		hi.score.points_sum += hi.score.points[i];
-		hi.score.g_name_first_sum += hi.score.g_name[i][0];
-		hi.score.stage_sum += hi.score.stage[i];
-	}
-	for(i = 0; i < sizeof(hi.score); i++) {
-		hi.score_sum += *((unsigned char*)(&hi.score) + i);
-		*((unsigned char*)(&hi.score) + i) += 0x12;
-	}
+	HI_SCORE_ENCODE();
 	file_append(SCORE_FN);
 	file_seek(rank * sizeof(hi), 0);
 	file_write(&hi, sizeof(hi));
