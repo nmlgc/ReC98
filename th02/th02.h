@@ -218,13 +218,14 @@ typedef struct {
 	int resident_sgm;
 	char debug;
 } huuma_cfg_t;
-#pragma option -a2
+#pragma option -a.
 // ------------------
 
 // Resident structure
 // ------------------
+#define RES_ID "MIKOConfig"
 typedef struct {
-	char id[11];	// = "MIKOConfig"
+	char id[11];	// = RES_ID
 	char stage;
 	char debug;
 	long score;

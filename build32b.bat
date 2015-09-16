@@ -14,7 +14,6 @@ if errorlevel 9009 goto no_tasm32
 %ReC98_ASM% th01_fuuin.asm bin\th01\fuuin.obj
 
 %ReC98_ASM% th02_zuninit.asm bin\th02\zuninit.obj
-%ReC98_ASM% th02_zun_res.asm bin\th02\zun_res.obj
 %ReC98_ASM% th02_op.asm bin\th02\op.obj
 %ReC98_ASM% th02_main.asm bin\th02\main.obj
 %ReC98_ASM% th02_maine.asm bin\th02\maine.obj

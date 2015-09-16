@@ -43,6 +43,11 @@ bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_05.c th01\fuuin_06.c th01\fuui
 $**
 |
 
+bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c
+	$(CC) $(CFLAGS) -mt -lt -Z -nbin\th02\ -eZUN_RES.COM @&&|
+$**
+| masters.lib
+
 bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.c th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
