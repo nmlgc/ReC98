@@ -35,7 +35,7 @@
 ;
 ; Revision History:
 ;
-;$Id: largepu_d.asm 0.04 92/05/29 20:06:02 Kazumi Rel $
+;$Id: largeput.asm 0.04 92/05/29 20:06:02 Kazumi Rel $
 ;
 ;	93/ 3/10 Initial: master.lib <- super.lib 0.22b
 ;

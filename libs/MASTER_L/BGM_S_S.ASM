@@ -37,7 +37,7 @@
 ;	steelman(千野  裕司)	: アセンブリ言語版
 ;
 ; Revision History:
-;	93/12/19 Initial: b_sp_sn_d.asm / master.lib 0.22 <- bgmlibs.lib 1.12
+;	93/12/19 Initial: b_sp_snd.asm / master.lib 0.22 <- bgmlibs.lib 1.12
 
 func BGM_STOP_SOUND
 	cmp	glb.effect,ON

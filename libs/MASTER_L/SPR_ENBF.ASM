@@ -34,7 +34,7 @@
 ;
 ; Revision History:
 ;
-;$Id: superbf_d.asm 0.06 93/01/16 14:17:53 Kazumi Rel $
+;$Id: superbft.asm 0.06 93/01/16 14:17:53 Kazumi Rel $
 ;
 ;	93/ 3/20 Initial: master.lib <- super.lib 0.22b
 ;

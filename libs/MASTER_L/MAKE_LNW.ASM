@@ -32,7 +32,7 @@ PAGE 98,120
 ;
 ;
 ; Revision History:
-;	92/3/21 Initial(koizoi_d.asm)
+;	92/3/21 Initial(koizoid.asm)
 ;	92/3/29 bug fix, 台形に側辺の交差を認めるようにした
 ;	92/4/2 少々加速
 ;	92/4/18 三角形ﾙｰﾁﾝから分離。ｸﾘｯﾋﾟﾝｸﾞ付加。
@@ -40,7 +40,7 @@ PAGE 98,120
 ;	92/5/7 自己書き換えにより加速
 ;	92/5/20 任意ｸﾘｯﾋﾟﾝｸﾞの横にだけ対応。:-)
 ;	92/5/22 ↑これも自己書き換え〜
-;	92/6/4	grcg_trapezoid()関数をgc_zoi_d.asmに分割。
+;	92/6/4	grcg_trapezoid()関数をgc_zoid.asmに分割。
 ;	92/6/5	bugfix(make_lineworkのCXが0の時のdiv 0回避)
 ;	92/6/5	下端クリップ対応
 ;	92/6/12 加速〜

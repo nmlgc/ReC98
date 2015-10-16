@@ -34,7 +34,7 @@
 ;
 ; Revision History:
 ;
-;$Id: blackou_d.asm 0.01 93/02/19 20:15:27 Kazumi Rel $
+;$Id: blackout.asm 0.01 93/02/19 20:15:27 Kazumi Rel $
 ;	93/ 3/20 Initial: master.lib <- super.lib 0.22b
 ;	93/ 6/25 [M0.19] palette_show使用
 

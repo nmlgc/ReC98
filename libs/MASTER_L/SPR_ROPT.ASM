@@ -51,7 +51,7 @@
 ;	恋塚(恋塚昭彦)
 ;
 ; Revision History:
-;	93/ 9/19 Initial: superrp_d.asm / master.lib 0.21
+;	93/ 9/19 Initial: superrpt.asm / master.lib 0.21
 ;
 
 WIDE_RANGE	equ 0		; 1 なら yは -400〜784対応

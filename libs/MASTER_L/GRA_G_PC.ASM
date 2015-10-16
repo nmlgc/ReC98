@@ -39,7 +39,7 @@
 ;	Kazumi
 ;
 ; Revision History:
-;	93/ 7/16 Initial: grpgjpu_d.asm/master.lib 0.20
+;	93/ 7/16 Initial: grpgjput.asm/master.lib 0.20
 
 func GRAPH_GAIJI_PUTC	; graph_gaiji_putc() {
 	push	BP

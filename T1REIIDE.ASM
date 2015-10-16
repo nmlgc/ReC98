@@ -15842,7 +15842,7 @@ loc_13E94:
 
 loc_13E9A:
 		push	ds
-		push	offse_d.asmRgcId	; "‘¾Œ³ƒ–¾‰¤"
+		push	offset aSMRgcId	; "‘¾Œ³ƒ–¾‰¤"
 		jmp	short loc_13ECE
 ; ---------------------------------------------------------------------------
 

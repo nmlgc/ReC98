@@ -56,7 +56,7 @@
 ;	恋塚昭彦
 ;
 ; Revision History:
-;	94/ 1/ 8 Initial: grpextm_d.asm/master.lib 0.22
+;	94/ 1/ 8 Initial: grpextmd.asm/master.lib 0.22
 
 func GRAPH_EXTMODE	; graph_extmode() {
 	xor	AX,AX

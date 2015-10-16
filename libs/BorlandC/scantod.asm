@@ -6,7 +6,7 @@
 ;   differentiate the actual implementation from the jump procedures here
 
 ;[]-----------------------------------------------------------------[]
-;|      SCANTO_d.asm -- Ascii to double conversion                    |
+;|      SCANTOD.asm -- Ascii to double conversion                    |
 ;[]-----------------------------------------------------------------[]
 
 ;

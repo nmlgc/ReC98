@@ -36,7 +36,7 @@
 ;
 ; Revision History:
 ;
-;$Id: superpu_d.asm 0.17 92/05/29 20:38:10 Kazumi Rel $
+;$Id: superput.asm 0.17 92/05/29 20:38:10 Kazumi Rel $
 ;
 ;	93/ 3/20 Initial: master.lib <- super.lib 0.22b
 ;	93/ 5/ 4 [M0.16]

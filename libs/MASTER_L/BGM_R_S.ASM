@@ -39,7 +39,7 @@
 ;	steelman(千野  裕司)	: アセンブリ言語版
 ;
 ; Revision History:
-;	93/12/19 Initial: b_r_sda_d.asm / master.lib 0.22 <- bgmlibs.lib 1.12
+;	93/12/19 Initial: b_r_sdat.asm / master.lib 0.22 <- bgmlibs.lib 1.12
 
 MRETURN macro
 	pop	SI

@@ -68,7 +68,7 @@
 ;		 16 byte から 12 byte check に変更
 ;	93/12/11 Initial: getmachi.asm/master.lib 0.22 (from hiper.lib)
 ;	94/01/05 get_machine() を、get_machine_at()、get_machine_98() に分割
-;		 それに伴い、それぞれ、getmachi.asm、getmaca_d.asm、gatmac98.asm
+;		 それに伴い、それぞれ、getmachi.asm、getmacat.asm、gatmac98.asm
 ;		 にファイルを分離。
 ;	95/ 2/21 各機種部分へjumpしていたのをcallに変更し、戻ってきたら
 ;		 DOS BOX判定をするように追加。

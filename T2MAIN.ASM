@@ -10118,7 +10118,7 @@ loc_FCFB:
 		call	sub_FC15
 		push	0Eh
 		push	ds
-		push	offse_d.asmvpik	; "èËŒ‚‰Šú”"
+		push	offset aSMvpik	; "èËŒ‚‰Šú”"
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax

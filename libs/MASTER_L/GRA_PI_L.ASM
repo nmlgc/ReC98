@@ -61,7 +61,7 @@
 ; Rivision History:
 ;	93/10/13 initial
 ;	93/11/05 加速と、ヘッダー読み込みの追加
-;	93/11/21 Initial: grppilo_d.asm/master.lib 0.21
+;	93/11/21 Initial: grppilod.asm/master.lib 0.21
 ;	93/11/24 展開後データを1byte 2pixel方式へ変更 (ちょっと加速)
 ;	93/12/ 7 [M0.22] palette幅変更, 拡張領域があるときの修正
 ;	93/12/10 [M0.22] 引数と戻り値変更

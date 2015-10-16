@@ -36,8 +36,8 @@
 ;	Kazumi
 ;
 ; Revision History:
-;$Id: lshift_d.asm 0.04 92/05/28 22:57:03 Kazumi Rel $
-;	94/ 5/16 Initial: egcsftl_d.asm/master.lib 0.23
+;$Id: lshifta.asm 0.04 92/05/28 22:57:03 Kazumi Rel $
+;	94/ 5/16 Initial: egcsftla.asm/master.lib 0.23
 ;
 
 func EGC_SHIFT_LEFT_ALL	; egc_shift_left_all() {

@@ -38,7 +38,7 @@
 ;	恋塚
 ;
 ; Revision History:
-;	93/12/19 Initial: b_e_sn_d.asm / master.lib 0.22 <- bgmlibs.lib 1.12
+;	93/12/19 Initial: b_e_snd.asm / master.lib 0.22 <- bgmlibs.lib 1.12
 ;	94/ 2/15 [M0.22a] 38未満の値があってもdiv zeroが出ないように(by 恋塚)
 ;	94/ 4/11 [M0.23] AT互換機対応
 

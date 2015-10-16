@@ -35,7 +35,7 @@
 ;	恋塚昭彦
 ;
 ; Revision History:
-;	93/ 5/12 Initial: jsen_d.asm/master.lib 0.16
+;	93/ 5/12 Initial: jsend.asm/master.lib 0.16
 
 func JS_END	; {
 	nopcall	DOS_KEYCLEAR

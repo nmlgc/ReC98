@@ -36,7 +36,7 @@
 ;	Kazumi
 ;
 ; Revision History:
-;$Id: lshif_d.asm 0.04 92/05/28 22:55:10 Kazumi Rel $
+;$Id: lshift.asm 0.04 92/05/28 22:55:10 Kazumi Rel $
 ;	94/ 5/16 Initial: egcsftl.asm/master.lib 0.23
 ;
 

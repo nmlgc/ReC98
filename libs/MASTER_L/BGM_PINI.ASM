@@ -36,7 +36,7 @@
 ;	steelman(千野  裕司)	: アセンブリ言語版
 ;
 ; Revision History:
-;	93/12/19 Initial: b_pini_d.asm / master.lib 0.22 <- bgmlibs.lib 1.12
+;	93/12/19 Initial: b_pinit.asm / master.lib 0.22 <- bgmlibs.lib 1.12
 
 func _BGM_PINIT
 	mov	BX,SP

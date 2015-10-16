@@ -40,7 +40,7 @@
 ;	恋塚昭彦
 ;
 ; Revision History:
-;	93/ 8/ 3 Initial: doscrea_d.asm/master.lib 0.20
+;	93/ 8/ 3 Initial: doscreat.asm/master.lib 0.20
 
 func DOS_CREATE	; dos_create() {
 	mov	BX,SP

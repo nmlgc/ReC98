@@ -38,7 +38,7 @@
 ;
 ; Revision History:
 ;
-;$Id: bftpals_d.asm 0.05 93/02/19 20:07:23 Kazumi Rel $
+;$Id: bftpalst.asm 0.05 93/02/19 20:07:23 Kazumi Rel $
 ;
 ;	93/ 3/20 Initial: master.lib <- super.lib 0.22b
 ;

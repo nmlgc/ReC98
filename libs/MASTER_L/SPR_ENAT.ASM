@@ -43,7 +43,7 @@
 ;	恋塚昭彦
 ;
 ; Revision History:
-;	93/12/ 7 Initial: supera_d.asm/master.lib 0.22
+;	93/12/ 7 Initial: superat.asm/master.lib 0.22
 ;	95/ 2/14 [M0.22k] mem_AllocID対応
 
 BUFFER_SIZE equ (16+2)*128*4

@@ -4,7 +4,7 @@
 ; * removal of the 'CODE' segment declaration (for obvious reasons)
 
 ;[]-----------------------------------------------------------------[]
-;|      H_PAD_d.asm -- long pointer routines                          |
+;|      H_PADA.asm -- long pointer routines                          |
 ;[]-----------------------------------------------------------------[]
 
 ;
