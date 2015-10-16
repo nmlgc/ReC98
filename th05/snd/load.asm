@@ -4,7 +4,7 @@
 ; following file is loaded:
 ; • '[fn].m' if SND_BGM_FM26
 ; • '[fn].m2' if SND_BGM_FM86
-; • '[fn].md' if SND_BGM_MIDI (yes, see this game's snd_load[data].asm)
+; • '[fn].md' if SND_BGM_MIDI (yes, see this game's snd_load_d.asm)
 ; • '[fn].efc' if SND_SE_FM
 ; • '[fn].efs' if SND_SE_BEEP (using master.lib's BGM driver)
 ; Note that the TH05 version will infinitely loop if neither the file for the
