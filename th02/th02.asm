@@ -1,5 +1,5 @@
 GAME = 2
-include defconv_c.inc
+include defcon_c.inc
 include th02/hardware/input.inc
 
 kajacall	macro func, param := <0>

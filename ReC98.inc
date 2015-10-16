@@ -18,12 +18,12 @@ include libs/BorlandC/RULES.ASI
 include libs/BorlandC/doserror.inc
 include libs/BorlandC/errno.inc
 include libs/BorlandC/stdio.inc
-include libs/master.lib/func.inc
-include libs/master.lib/super.inc
-include libs/master.lib/bgm.inc
-include libs/master.lib/pf.inc
-include libs/master.lib/clip.inc
-include libs/master.lib/macros.inc
+include libs/master_l/func.inc
+include libs/master_l/super.inc
+include libs/master_l/bgm.inc
+include libs/master_l/pf.inc
+include libs/master_l/clip.inc
+include libs/master_l/macros.inc
 include libs/kaja/kaja.inc
 include th02/formats/pi_slots.inc
 

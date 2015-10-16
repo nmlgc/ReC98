@@ -1,2 +1,2 @@
 GAME = 5
-include defconv_pascal.inc
+include defcon_p.inc
