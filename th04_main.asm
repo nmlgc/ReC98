@@ -46698,7 +46698,7 @@ word_237F8	dw 0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 		dw ?
 fp_23D90	dw ?
 dword_23D92	dd ?

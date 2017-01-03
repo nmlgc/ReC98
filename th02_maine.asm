@@ -3291,7 +3291,7 @@ extern _rank:byte
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 unk_DE32	db    ?	;
 		dd    ?	;
 		dd    ?	;

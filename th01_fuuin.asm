@@ -10447,7 +10447,7 @@ include libs/master.lib/rand[data].asm
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 _continues_total	dd ?
 ; char word_13EDC[]
 word_13EDC	dw ?

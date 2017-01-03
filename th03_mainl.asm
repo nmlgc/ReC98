@@ -8229,7 +8229,7 @@ aStf12_cdg	db 'stf12.cdg',0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 unk_F72C	db    ?	;
 		dd    ?	;
 		dd    ?	;

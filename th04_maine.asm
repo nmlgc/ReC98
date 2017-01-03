@@ -6866,7 +6866,7 @@ aName		db 'name',0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 dword_F3CE	dd ?
 		dd ?
 		dd ?

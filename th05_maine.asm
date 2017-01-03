@@ -10275,7 +10275,7 @@ aStf00_bft	db 'stf00.bft',0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 dword_11E6E	dd ?
 		dd ?
 		dd ?
