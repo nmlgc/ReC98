@@ -9701,7 +9701,7 @@ aXx		db '••',0
 		db 0
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 dword_13418	dd ?
 		dd    ?
 		dd    ?

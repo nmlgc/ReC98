@@ -33325,7 +33325,7 @@ _INIT_	ends
 
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 byte_36C14	db ?
 byte_36C15	db ?
 dword_36C16	dd ?

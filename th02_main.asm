@@ -37407,7 +37407,7 @@ aBoss3_m	db 'boss3.m',0
 		db 0
 	.data?
 
-; TODO: Missing clip[bss].asm (8 bytes) somewhere in there...
+; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 byte_1F466	db ?
 stage1_gaiji_halflen	db ?
 stage_title_halflen	db ?
