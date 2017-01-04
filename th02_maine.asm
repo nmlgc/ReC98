@@ -135,7 +135,7 @@ arg_0		= dword	ptr  4
 		call	file_size
 		mov	[bp+var_2], ax
 		push	ds
-		push	offset unk_DE32
+		push	offset end_buf
 		push	ax
 		call	file_read
 		call	file_close
@@ -453,7 +453,7 @@ arg_4		= word ptr  0Ah
 		push	ss
 		push	ax
 		push	ds
-		push	offset aKkuukkuukkuukk ; "ªªUUªªUUªªUUªªUUªªUUªªUUªªUUªªUU3333ÌÌÌ"...
+		push	offset byte_D080
 		mov	cx, 60h
 		call	SCOPY@
 		xor	di, di
@@ -910,7 +910,7 @@ sub_9AD4	proc near
 		mov	bp, sp
 		push	si
 		push	ds
-		push	(offset	aKkuukkuukkuukk+60h)
+		push	offset aEnd3_txt ; "end3.txt"
 		call	sub_95A3
 		push	1Eh
 		call	frame_delay
@@ -993,7 +993,7 @@ sub_9B64	proc near
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_DE32
+		push	offset end_buf
 		push	6
 		call	sub_9643
 		push	14h
@@ -1048,7 +1048,7 @@ loc_9C54:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_DF46
+		push	offset end_buf + (END_LINE_LEN * 6)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
@@ -1075,14 +1075,14 @@ loc_9C91:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_DFFE
+		push	offset end_buf + (END_LINE_LEN * 10)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E02C
+		push	offset end_buf + (END_LINE_LEN * 11)
 		push	6
 		call	sub_9643
 		push	14h
@@ -1090,7 +1090,7 @@ loc_9C91:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E05A
+		push	offset end_buf + (END_LINE_LEN * 12)
 		push	6
 		call	sub_9643
 		xor	si, si
@@ -1123,7 +1123,7 @@ loc_9D10:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E088
+		push	offset end_buf + (END_LINE_LEN * 13)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
@@ -1190,21 +1190,21 @@ loc_9D96:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E1F8
+		push	offset end_buf + (END_LINE_LEN * 21)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E226
+		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E254
+		push	offset end_buf + (END_LINE_LEN * 23)
 		push	6
 		call	sub_9643
 		mov	dx, 0A6h ; '¦'
@@ -1243,7 +1243,7 @@ loc_9E3B:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E282
+		push	offset end_buf + (END_LINE_LEN * 24)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
@@ -1315,21 +1315,21 @@ loc_9ED8:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E3C4
+		push	offset end_buf + (END_LINE_LEN * 31)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E3F2
+		push	offset end_buf + (END_LINE_LEN * 32)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E420
+		push	offset end_buf + (END_LINE_LEN * 33)
 		jmp	loc_A092
 ; ---------------------------------------------------------------------------
 
@@ -1340,21 +1340,21 @@ loc_9F22:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E44E
+		push	offset end_buf + (END_LINE_LEN * 34)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E47C
+		push	offset end_buf + (END_LINE_LEN * 35)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E4AA
+		push	offset end_buf + (END_LINE_LEN * 36)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
@@ -1381,21 +1381,21 @@ loc_9F8E:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E534
+		push	offset end_buf + (END_LINE_LEN * 39)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E562
+		push	offset end_buf + (END_LINE_LEN * 40)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E590
+		push	offset end_buf + (END_LINE_LEN * 41)
 		jmp	loc_A092
 ; ---------------------------------------------------------------------------
 
@@ -1406,14 +1406,14 @@ loc_9FD3:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E5BE
+		push	offset end_buf + (END_LINE_LEN * 42)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E5EC
+		push	offset end_buf + (END_LINE_LEN * 43)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 26h ; '&'
@@ -1460,21 +1460,21 @@ loc_A050:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E6D2
+		push	offset end_buf + (END_LINE_LEN * 48)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E700
+		push	offset end_buf + (END_LINE_LEN * 49)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E72E
+		push	offset end_buf + (END_LINE_LEN * 50)
 
 loc_A092:
 		push	9
@@ -1523,7 +1523,7 @@ sub_A09D	proc near
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_DE32
+		push	offset end_buf
 		push	6
 		call	sub_9643
 		push	14h
@@ -1669,14 +1669,14 @@ loc_A247:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E112
+		push	offset end_buf + (END_LINE_LEN * 16)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E140
+		push	offset end_buf + (END_LINE_LEN * 17)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
@@ -1725,7 +1725,7 @@ loc_A316:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E226
+		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
@@ -1752,14 +1752,14 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E2B0
+		push	offset end_buf + (END_LINE_LEN * 25)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E2DE
+		push	offset end_buf + (END_LINE_LEN * 26)
 		push	6
 		call	sub_9643
 		push	0Ah
@@ -1770,7 +1770,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E30C
+		push	offset end_buf + (END_LINE_LEN * 27)
 		push	6
 		call	sub_9643
 		push	1Eh
@@ -1781,7 +1781,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E33A
+		push	offset end_buf + (END_LINE_LEN * 28)
 		push	6
 		call	sub_9643
 		push	3
@@ -1789,7 +1789,7 @@ loc_A353:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E368
+		push	offset end_buf + (END_LINE_LEN * 29)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
@@ -1856,7 +1856,7 @@ loc_A451:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E534
+		push	offset end_buf + (END_LINE_LEN * 39)
 		push	6
 		call	sub_9643
 		push	2
@@ -1896,7 +1896,7 @@ loc_A4D3:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E6A4
+		push	offset end_buf + (END_LINE_LEN * 47)
 		jmp	loc_A869
 ; ---------------------------------------------------------------------------
 
@@ -1907,27 +1907,27 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E6D2
+		push	offset end_buf + (END_LINE_LEN * 48)
 		push	6
 		call	sub_9643
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E700
+		push	offset end_buf + (END_LINE_LEN * 49)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E72E
+		push	offset end_buf + (END_LINE_LEN * 50)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E75C
+		push	offset end_buf + (END_LINE_LEN * 51)
 		push	6
 		call	sub_9643
 		push	1Eh
@@ -1938,7 +1938,7 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E78A
+		push	offset end_buf + (END_LINE_LEN * 52)
 		push	6
 		call	sub_9643
 		push	3
@@ -1946,35 +1946,35 @@ loc_A4EC:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E7B8
+		push	offset end_buf + (END_LINE_LEN * 53)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E7E6
+		push	offset end_buf + (END_LINE_LEN * 54)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E814
+		push	offset end_buf + (END_LINE_LEN * 55)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E842
+		push	offset end_buf + (END_LINE_LEN * 56)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_E870
+		push	offset end_buf + (END_LINE_LEN * 57)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
@@ -2053,14 +2053,14 @@ loc_A68C:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EA98
+		push	offset end_buf + (END_LINE_LEN * 69)
 		push	0Ch
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EAC6
+		push	offset end_buf + (END_LINE_LEN * 70)
 		jmp	loc_A869
 ; ---------------------------------------------------------------------------
 
@@ -2068,21 +2068,21 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EAF4
+		push	offset end_buf + (END_LINE_LEN * 71)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EB22
+		push	offset end_buf + (END_LINE_LEN * 72)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EB50
+		push	offset end_buf + (END_LINE_LEN * 73)
 		push	6
 		call	sub_9643
 		push	1Eh
@@ -2093,7 +2093,7 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EB7E
+		push	offset end_buf + (END_LINE_LEN * 74)
 		push	6
 		call	sub_9643
 		push	3
@@ -2101,63 +2101,63 @@ loc_A6B6:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EBAC
+		push	offset end_buf + (END_LINE_LEN * 75)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EBDA
+		push	offset end_buf + (END_LINE_LEN * 76)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EC08
+		push	offset end_buf + (END_LINE_LEN * 77)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EC36
+		push	offset end_buf + (END_LINE_LEN * 78)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EC64
+		push	offset end_buf + (END_LINE_LEN * 79)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EC92
+		push	offset end_buf + (END_LINE_LEN * 80)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_ECC0
+		push	offset end_buf + (END_LINE_LEN * 81)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 29h ; ')'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_ECEE
+		push	offset end_buf + (END_LINE_LEN * 82)
 		push	6
 		call	sub_9643
 		mov	byte_F02A, 2Fh ; '/'
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_ED1C
+		push	offset end_buf + (END_LINE_LEN * 83)
 		push	6
 		call	sub_9643
 		push	2
@@ -2196,14 +2196,14 @@ loc_A842:
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EEBA
+		push	offset end_buf + (END_LINE_LEN * 92)
 		push	6
 		call	sub_9643
 		mov	byte_F02B, 0
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
-		push	offset unk_EEE8
+		push	offset end_buf + (END_LINE_LEN * 93)
 
 loc_A869:
 		push	0Ch
@@ -3136,88 +3136,21 @@ maine_05_TEXT	ends
 	.data
 
 include th02/strings/ranks_center[data].asm
-unk_D030	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-aKkuukkuukkuukk	db 'ªªUUªªUUªªUUªªUUªªUUªªUUªªUUªªUU3333ÌÌÌÌ3333ÌÌÌÌ3333ÌÌÌÌ3333ÌÌÌÌÌ'
-		db 'ÌÌÌ3333ÌÌÌÌ3333ÌÌÌÌ3333ÌÌÌÌ3333end3.txt',0
+unk_D030	db 50h dup(0)
+label byte_D080 byte
+	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
+	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
+	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
+	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
+	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
+	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
+	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
+	db  33h,  33h,  33h,  33h, 0CCh, 0CCh, 0CCh, 0CCh
+	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
+	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
+	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
+	db 0CCh, 0CCh, 0CCh, 0CCh,  33h,  33h,  33h,  33h
+aEnd3_txt	db 'end3.txt',0
 aEnding_m	db 'ending.m',0
 aEnd1_txt	db 'end1.txt',0
 aEnd1_m		db 'end1.m',0
@@ -3291,1256 +3224,10 @@ extern _rank:byte
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
-unk_DE32	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_DF46	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_DFFE	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E02C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E05A	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E088	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E112	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E140	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_E1F8	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E226	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E254	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E282	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E2B0	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E2DE	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E30C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E33A	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E368	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_E3C4	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E3F2	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E420	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E44E	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E47C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E4AA	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E534	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E562	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E590	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E5BE	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E5EC	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_E6A4	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E6D2	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E700	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E72E	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E75C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E78A	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E7B8	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E7E6	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E814	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E842	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_E870	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-unk_EA98	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EAC6	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EAF4	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EB22	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EB50	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EB7E	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EBAC	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EBDA	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EC08	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EC36	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EC64	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EC92	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_ECC0	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_ECEE	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_ED1C	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EEBA	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-unk_EEE8	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+end_buf	db 100 dup(END_LINE_LEN dup(?))
 byte_F02A	db ?
 byte_F02B	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm

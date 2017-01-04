@@ -34,3 +34,5 @@ mikoconfig_t	struc
 	unused_4 dw ?
 	score_highest dd ?
 mikoconfig_t	ends
+
+END_LINE_LEN = 46
