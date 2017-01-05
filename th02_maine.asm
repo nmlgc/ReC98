@@ -1012,8 +1012,8 @@ loc_9C15:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1033,8 +1033,8 @@ loc_9C3C:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1060,8 +1060,8 @@ loc_9C79:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1135,8 +1135,8 @@ loc_9D30:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1155,8 +1155,8 @@ loc_9D57:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1175,8 +1175,8 @@ loc_9D7E:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1255,8 +1255,8 @@ loc_9E65:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1278,8 +1278,8 @@ loc_9E99:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1298,8 +1298,8 @@ loc_9EC0:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1366,8 +1366,8 @@ loc_9F76:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1425,8 +1425,8 @@ loc_A011:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1445,8 +1445,8 @@ loc_A038:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1550,8 +1550,8 @@ loc_A185:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1571,8 +1571,8 @@ loc_A1AC:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1592,8 +1592,8 @@ loc_A1D3:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1613,8 +1613,8 @@ loc_A1FA:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1637,8 +1637,8 @@ loc_A22F:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1688,8 +1688,8 @@ loc_A2D2:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1710,8 +1710,8 @@ loc_A2FE:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1737,8 +1737,8 @@ loc_A33B:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1801,8 +1801,8 @@ loc_A3EB:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1821,8 +1821,8 @@ loc_A412:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1841,8 +1841,8 @@ loc_A439:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1881,8 +1881,8 @@ loc_A4BB:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -1986,8 +1986,8 @@ loc_A5E1:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -2006,8 +2006,8 @@ loc_A608:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -2039,8 +2039,8 @@ loc_A674:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -2182,8 +2182,8 @@ loc_A82A:
 		push	90014Ch
 		push	2Ch ; ','
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		push	6
@@ -2864,8 +2864,8 @@ loc_AF53:
 
 loc_AF56:
 		mov	ax, si
-		imul	ax, 2Eh
-		add	ax, 0EB2h
+		imul	ax, END_LINE_LEN
+		add	ax, offset end_buf
 		push	ds
 		push	ax
 		mov	al, byte_F02A
