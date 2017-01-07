@@ -21144,36 +21144,7 @@ arg_12		= word ptr  18h
 		retf	14h
 sub_14B0A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14B64	proc far
-		push	di
-		xor	ax, ax
-		mov	di, 2EA0h
-		xor	dl, dl
-		jmp	short loc_14B79
-; ---------------------------------------------------------------------------
-
-loc_14B6E:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_14B73:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_14B73
-
-loc_14B79:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_14B6E
-		pop	di
-		retf
-sub_14B64	endp
-
+include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
@@ -45420,70 +45391,7 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_put_rect[bss].asm
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
+include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm

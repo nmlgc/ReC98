@@ -5769,32 +5769,7 @@ op_02_TEXT	segment	word public 'CODE' use16
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-sub_D304	proc near
-		push	di
-		xor	ax, ax
-		mov	di, 3662h
-		xor	dl, dl
-		jmp	short loc_D319
-; ---------------------------------------------------------------------------
-
-loc_D30E:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_D313:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_D313
-
-loc_D319:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_D30E
-		pop	di
-		retf
-sub_D304	endp
-
+include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
@@ -8682,70 +8657,7 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_put_rect[bss].asm
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
+include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 		dd    ?	;

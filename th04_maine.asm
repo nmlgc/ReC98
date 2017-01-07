@@ -5418,31 +5418,7 @@ include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
-
-; ---------------------------------------------------------------------------
-		push	di
-		xor	ax, ax
-		mov	di, 196Ah
-		xor	dl, dl
-		jmp	short loc_CE71
-; ---------------------------------------------------------------------------
-
-loc_CE66:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_CE6B:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_CE6B
-
-loc_CE71:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_CE66
-		pop	di
-		retf
+include th03/formats/hfliplut.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6884,70 +6860,7 @@ include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/formats/pi_slots[bss].asm
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
+include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm

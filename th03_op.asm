@@ -3427,7 +3427,7 @@ sub_B38D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_CB68
+		call	hflip_lut_generate
 		xor	si, si
 		jmp	short loc_B3B0
 ; ---------------------------------------------------------------------------
@@ -4999,7 +4999,7 @@ arg_4		= word ptr  0Ah
 		add	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	bx, 1E70h
+		mov	bx, offset hflip_lut
 		mov	fs, word ptr [si+0Ch]
 		xor	si, si
 
@@ -6216,35 +6216,7 @@ sub_CAF6	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CB68	proc far
-		push	di
-		xor	ax, ax
-		mov	di, 1E70h
-		xor	dl, dl
-		jmp	short loc_CB7D
-; ---------------------------------------------------------------------------
-
-loc_CB72:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_CB77:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_CB77
-
-loc_CB7D:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_CB72
-		pop	di
-		retf
-sub_CB68	endp
-
+include th03/formats/hfliplut.asm
 	extern FRAME_DELAY_2:proc
 op_02_TEXT	ends
 
@@ -6688,70 +6660,7 @@ word_F296	dw ?
 		dd    ?	;
 		dd    ?	;
 include th02/formats/pi_slots[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/formats/hfliplut[bss].asm
 unk_F760	db    ?	;
 		dd    ?	;
 		dd    ?	;

@@ -1087,7 +1087,7 @@ loc_9DAD:
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		call	snd_se_reset
-		call	sub_D784
+		call	hflip_lut_generate
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+35h], 0
 		jz	short loc_9E04
@@ -6397,7 +6397,7 @@ arg_4		= word ptr  0Ah
 		add	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	bx, 20D6h
+		mov	bx, offset hflip_lut
 		mov	fs, word ptr [si+0Ch]
 		xor	si, si
 
@@ -7706,35 +7706,7 @@ sub_D712	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D784	proc far
-		push	di
-		xor	ax, ax
-		mov	di, 20D6h
-		xor	dl, dl
-		jmp	short loc_D799
-; ---------------------------------------------------------------------------
-
-loc_D78E:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_D793:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_D793
-
-loc_D799:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_D78E
-		pop	di
-		retf
-sub_D784	endp
-
+include th03/formats/hfliplut.asm
 mainl_02_TEXT	ends
 
 	.data
@@ -8439,70 +8411,7 @@ word_100FC	dw ?
 		dd    ?	;
 		dd    ?	;
 include th02/formats/pi_slots[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/formats/hfliplut[bss].asm
 dword_105C6	dd ?
 dword_105CA	dd ?
 byte_105CE	db ?

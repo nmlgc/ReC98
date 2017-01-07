@@ -6115,30 +6115,8 @@ include th02/formats/pi_slot_load.asm
 
 ; ---------------------------------------------------------------------------
 		db    0
-; ---------------------------------------------------------------------------
-		push	di
-		xor	ax, ax
-		mov	di, 2538h
-		xor	dl, dl
-		jmp	short loc_DB59
-; ---------------------------------------------------------------------------
 
-loc_DB4E:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_DB53:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_DB53
-
-loc_DB59:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_DB4E
-		pop	di
-		retf
+include th03/formats/hfliplut.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7896,70 +7874,7 @@ include libs/master.lib/super_put_rect[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th02/formats/pi_slots[bss].asm
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
+include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm

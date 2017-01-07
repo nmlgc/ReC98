@@ -707,7 +707,7 @@ var_2		= word ptr -2
 		call	sub_13CDD
 		mov	byte_207E3, 0
 		call	sub_9EBF
-		call	sub_EEC4
+		call	hflip_lut_generate
 		nopcall	sub_D5A2
 		mov	byte_23AFA, 0
 		les	bx, dword_1F2F0
@@ -10051,35 +10051,7 @@ sub_EE77	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EEC4	proc far
-		push	di
-		xor	ax, ax
-		mov	di, 1C64h
-		xor	dl, dl
-		jmp	short loc_EED9
-; ---------------------------------------------------------------------------
-
-loc_EECE:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_EED3:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_EED3
-
-loc_EED9:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_EECE
-		pop	di
-		retf
-sub_EEC4	endp
-
+include th03/formats/hfliplut.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10345,7 +10317,7 @@ loc_F0A9:
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
 		les	di, [bx+1D64h]
-		mov	bx, 1C64h
+		mov	bx, offset hflip_lut
 
 loc_F0BB:
 		mov	al, es:[di]
@@ -38427,70 +38399,7 @@ word_1EFF8	dw ?
 unk_1EFFA	db    ?	;
 byte_1EFFB	db ?
 include th02/formats/pi_slots[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/formats/hfliplut[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

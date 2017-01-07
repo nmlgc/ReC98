@@ -8394,30 +8394,8 @@ maine_02_TEXT	segment	word public 'CODE' use16
 		assume cs:maine_02_TEXT
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		push	di
-		xor	ax, ax
-		mov	di, 25DEh
-		xor	dl, dl
-		jmp	short loc_E811
-; ---------------------------------------------------------------------------
 
-loc_E806:
-		xor	dl, dl
-		mov	cx, 8
-
-loc_E80B:
-		rol	al, 1
-		rcr	dl, 1
-		loop	loc_E80B
-
-loc_E811:
-		mov	[di], dl
-		inc	di
-		inc	al
-		jnz	short loc_E806
-		pop	di
-		retf
-
+include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
@@ -10291,70 +10269,7 @@ include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
 include libs/master.lib/super_put_rect[bss].asm
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
-		dd ?
+include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
