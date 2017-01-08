@@ -1993,7 +1993,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -2002,7 +2002,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2021,7 +2021,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -2030,7 +2030,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2049,7 +2049,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -2058,7 +2058,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2077,7 +2077,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -2086,7 +2086,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2150,7 +2150,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+192
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -2159,7 +2159,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+64
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2172,12 +2172,12 @@ loc_B04E:
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+128
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
 		push	_CosTable8
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2194,7 +2194,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+448
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -2203,7 +2203,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+320
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2216,12 +2216,12 @@ loc_B04E:
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+384
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
 		push	_CosTable8+256
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2282,7 +2282,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -2291,7 +2291,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_SinTable8
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2304,12 +2304,12 @@ loc_B165:
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
 		push	_SinTable8
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2326,7 +2326,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+256
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -2335,7 +2335,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+128
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2348,12 +2348,12 @@ loc_B165:
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+256
-		call	sub_CED0
+		call	vector1_at
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
 		push	_CosTable8+128
-		call	sub_CED0
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -5475,51 +5475,8 @@ loc_CECA:
 		retf	2
 sub_CE7A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CED0	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_0]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		pop	bp
-		retf	6
-sub_CED0	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+0Eh]
-		mov	bx, [bp+6]
-		add	bx, bx
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+1F4h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ch]
-		mov	[si], ax
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+174h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ah]
-		mov	[si+2],	ax
-		pop	si
-		pop	bp
-		retf	0Ah
-
+include th04/math/vector1_at.asm
+include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm

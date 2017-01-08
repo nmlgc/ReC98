@@ -3756,7 +3756,7 @@ loc_BD00:
 		mov	bx, ax
 		push	word ptr [bx+396h]
 		push	500000h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	bx, word_20CE4
@@ -3766,7 +3766,7 @@ loc_BD00:
 		mov	bx, ax
 		push	word ptr [bx+316h]
 		push	500000h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	bx, word_20CE4
@@ -4332,7 +4332,7 @@ arg_2		= byte ptr  6
 		push	word ptr [bx+396h]
 		push	word_20E42
 		push	word_20E3E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	dl, byte ptr word_23AF0
 		mov	dh, 0
@@ -4347,7 +4347,7 @@ arg_2		= byte ptr  6
 		push	word ptr [bx+316h]
 		push	word_20E42
 		push	word_20E40
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
@@ -6181,7 +6181,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	bx, di
 		add	bx, bx
@@ -6197,7 +6197,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+4]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -6313,7 +6313,7 @@ loc_D06E:
 		mov	al, [si+8]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		inc	di
 		add	si, 10h
 
@@ -6572,7 +6572,7 @@ loc_D254:
 		push	ax
 		mov	al, [di+8]
 		push	ax
-		call	sub_E97A
+		call	vector2
 
 loc_D276:
 		add	di, 10h
@@ -6822,7 +6822,7 @@ loc_D466:
 		push	ax
 		mov	al, [di+8]
 		push	ax
-		call	sub_E97A
+		call	vector2
 
 loc_D488:
 		add	di, 10h
@@ -8451,7 +8451,7 @@ loc_E036:
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		mov	al, [bp+var_2]
 		mov	byte_23AE6, al
 		mov	al, [bp+var_4]
@@ -9459,94 +9459,9 @@ include th01/hardware/vram_planes_set.asm
 		db 0
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E97A	proc far
-
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	dl, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+396h]
-		movsx	ecx, word ptr [bx+316h]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_8]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_E97A	endp
-
-; ---------------------------------------------------------------------------
+include th03/math/vector2.asm
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E9C0	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= dword	ptr  0Ch
-arg_A		= byte ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-arg_10		= word ptr  16h
-arg_12		= word ptr  18h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	ax, [bp+arg_C]
-		sub	ax, [bp+arg_10]
-		push	ax
-		mov	ax, [bp+arg_E]
-		sub	ax, [bp+arg_12]
-		push	ax
-		call	iatan2
-		add	al, [bp+arg_A]
-		mov	dl, al
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+396h]
-		movsx	ecx, word ptr [bx+316h]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_6]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+arg_2]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	14h
-sub_E9C0	endp
-
+include th03/math/vector2_between_plus.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9578,28 +9493,7 @@ sub_EA1A	proc far
 		retf
 sub_EA1A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA5D	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_4]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_0]
-		pop	bp
-		retf
-sub_EA5D	endp
-
+include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10629,7 +10523,7 @@ loc_F26E:
 		push	word ptr [bx+396h]
 		push	[bp+arg_0]
 		push	di
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, 0FFE8h
 		mov	[bp+var_2], ax
@@ -10640,7 +10534,7 @@ loc_F26E:
 		push	word ptr [bx+316h]
 		push	[bp+arg_0]
 		push	[bp+arg_2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, 0FFE8h
 		mov	[bp+var_4], ax
@@ -10673,7 +10567,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	di
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, 0FFE8h
 		mov	[bp+var_2], ax
@@ -10686,7 +10580,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	[bp+arg_2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, 0FFE8h
 		mov	[bp+var_4], ax
@@ -10742,7 +10636,7 @@ sub_F356	proc near
 		mov	bx, ax
 		push	word ptr [bx+316h]
 		push	100000h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_1F348, ax
 		cmp	word_1F33E, 300h
@@ -12015,7 +11909,7 @@ loc_FE54:
 		push	word ptr [bx+396h]
 		push	300h
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E3E, ax
 		mov	al, byte_20E2B
@@ -12025,7 +11919,7 @@ loc_FE54:
 		push	word ptr [bx+316h]
 		push	300h
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E40, ax
 		mov	al, byte_20E2B
@@ -12394,7 +12288,7 @@ arg_2		= word ptr  6
 		push	word ptr [bx+396h]
 		push	si
 		push	[bp+var_2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+arg_0]
@@ -12404,7 +12298,7 @@ arg_2		= word ptr  6
 		push	word ptr [bx+316h]
 		push	si
 		push	[bp+var_4]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_6], ax
 		push	di
@@ -12423,7 +12317,7 @@ arg_2		= word ptr  6
 		push	word ptr [bx+396h]
 		push	si
 		push	[bp+var_2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+arg_0]
@@ -12433,7 +12327,7 @@ arg_2		= word ptr  6
 		push	word ptr [bx+316h]
 		push	si
 		push	[bp+var_4]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_6], ax
 		push	di
@@ -13634,7 +13528,7 @@ loc_10C8D:
 		push	word ptr [bx+396h]
 		push	200h
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E3E, ax
 		mov	al, [bp+var_1]
@@ -13644,7 +13538,7 @@ loc_10C8D:
 		push	word ptr [bx+316h]
 		push	200h
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E40, ax
 		call	sub_17730
@@ -13661,7 +13555,7 @@ loc_10C8D:
 		push	word ptr [bx+396h]
 		push	200h
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E3E, ax
 		mov	al, [bp+var_1]
@@ -13671,7 +13565,7 @@ loc_10C8D:
 		push	word ptr [bx+316h]
 		push	200h
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E40, ax
 		call	sub_17730
@@ -13693,7 +13587,7 @@ loc_10D62:
 		push	word ptr [bx+316h]
 		push	300h
 		push	word_1F344
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_1F340, ax
 		cmp	word_1F3B0, 80h
@@ -13804,7 +13698,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -13819,7 +13713,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -13861,7 +13755,7 @@ loc_10EC9:
 		push	word ptr [bx+396h]
 		push	300h
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -13873,7 +13767,7 @@ loc_10EC9:
 		push	word ptr [bx+316h]
 		push	300h
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -14356,7 +14250,7 @@ loc_11330:
 		push	word ptr [bx+396h]
 		push	[bp+arg_0]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+arg_2]
@@ -14366,7 +14260,7 @@ loc_11330:
 		push	word ptr [bx+316h]
 		push	[bp+arg_0]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -15125,7 +15019,7 @@ loc_11978:
 		push	word ptr [bx+396h]
 		push	[bp+arg_4]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+arg_0]
@@ -15135,7 +15029,7 @@ loc_11978:
 		push	word ptr [bx+316h]
 		push	[bp+arg_4]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -15317,7 +15211,7 @@ loc_11ADD:
 		push	word ptr [bx+396h]
 		push	word_1F356
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	al, [bp+var_5]
@@ -15327,7 +15221,7 @@ loc_11ADD:
 		push	word ptr [bx+316h]
 		push	word_1F356
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
@@ -15581,7 +15475,7 @@ loc_11D77:
 		push	word ptr [bx+396h]
 		push	word_1F356
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	al, [bp+var_5]
@@ -15591,7 +15485,7 @@ loc_11D77:
 		push	word ptr [bx+316h]
 		push	word_1F356
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
@@ -15894,7 +15788,7 @@ loc_12021:
 		push	word ptr [bx+396h]
 		push	[bp+var_6]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+var_7]
@@ -15904,7 +15798,7 @@ loc_12021:
 		push	word ptr [bx+316h]
 		push	[bp+var_6]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -16942,7 +16836,7 @@ loc_129A0:
 		push	word ptr [bx+396h]
 		push	[bp+var_8]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+var_9]
@@ -16952,7 +16846,7 @@ loc_129A0:
 		push	word ptr [bx+316h]
 		push	[bp+var_8]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -17988,7 +17882,7 @@ loc_13286:
 		push	word ptr [bx+396h]
 		push	[bp+var_6]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+var_7]
@@ -17998,7 +17892,7 @@ loc_13286:
 		push	word ptr [bx+316h]
 		push	[bp+var_6]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -18201,7 +18095,7 @@ loc_13426:
 		push	word ptr [bx+396h]
 		push	300h
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E3E, ax
 		mov	al, [bp+var_1]
@@ -18211,7 +18105,7 @@ loc_13426:
 		push	word ptr [bx+316h]
 		push	300h
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	word_23E40, ax
 		mov	al, [bp+var_1]
@@ -18667,7 +18561,7 @@ loc_1383D:
 		push	word ptr [bx+396h]
 		push	30h ; '0'
 		push	[bp+var_2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_6], ax
 		mov	al, [bp+var_9]
@@ -18677,7 +18571,7 @@ loc_1383D:
 		push	word ptr [bx+316h]
 		push	30h ; '0'
 		push	[bp+var_4]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_8], ax
 		test	di, 3
@@ -18771,7 +18665,7 @@ loc_13910:
 		push	word ptr [bx+396h]
 		push	[bp+var_6]
 		push	word_1F33E
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+var_7]
@@ -18781,7 +18675,7 @@ loc_13910:
 		push	word ptr [bx+316h]
 		push	[bp+var_6]
 		push	word_1F340
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -19610,7 +19504,7 @@ sub_13EA8	proc near
 		mov	al, [bx+1Fh]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		pop	es
 		pop	bp
 		retn
@@ -21276,7 +21170,7 @@ loc_14BF1:
 		mov	al, [bx+1Fh]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		mov	bx, word_205CA
 		mov	ax, [bp+var_2]
 		add	[bx+2],	ax
@@ -22253,7 +22147,7 @@ loc_1541D:
 		mov	al, [bx+678h]
 		push	ax
 		push	0B0h ; '°'
-		call	sub_E97A
+		call	vector2
 		mov	bx, word_20E22
 		mov	byte ptr [bx+1], 0
 		inc	si
@@ -23038,7 +22932,7 @@ loc_15A91:
 		push	word ptr [bx+396h]
 		push	di
 		push	90h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, [bp+var_2]
 		mov	bx, si
@@ -23053,7 +22947,7 @@ loc_15A91:
 		push	word ptr [bx+316h]
 		push	di
 		push	0C8h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -23096,7 +22990,7 @@ loc_15B29:
 		push	word ptr [bx+396h]
 		push	di
 		push	90h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		add	ax, [bp+var_2]
 		mov	bx, si
@@ -23111,7 +23005,7 @@ loc_15B29:
 		push	word ptr [bx+316h]
 		push	di
 		push	0C8h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -25161,7 +25055,7 @@ loc_16BEC:
 		push	word ptr [bx+396h]
 		push	[bp+arg_2]
 		push	[bp+var_6]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	al, [bp+var_A]
@@ -25172,7 +25066,7 @@ loc_16BEC:
 		push	word ptr [bx+316h]
 		push	[bp+arg_2]
 		push	[bp+var_8]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		push	di
@@ -26515,7 +26409,7 @@ loc_1767D:
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		push	ax
-		call	sub_E9C0
+		call	vector2_between_plus
 		jmp	short loc_176C3
 ; ---------------------------------------------------------------------------
 
@@ -26530,7 +26424,7 @@ loc_176A8:
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 
 loc_176C3:
 		mov	al, byte ptr [bp+var_2]
@@ -26798,7 +26692,7 @@ loc_1787E:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	[bp+var_A]
-		call	sub_E9C0
+		call	vector2_between_plus
 		push	[bp+var_6]
 		mov	al, byte ptr word_23E44
 		mov	ah, 0
@@ -27550,7 +27444,7 @@ loc_17E83:
 		mov	al, [bp+var_8]
 		mov	ah, 0
 		push	ax
-		call	sub_E9C0
+		call	vector2_between_plus
 		push	di
 		mov	al, [bp+var_7]
 		mov	ah, 0
@@ -28470,7 +28364,7 @@ loc_18667:
 		call	sub_13A24
 		push	ax
 		push	0E0h
-		call	sub_E97A
+		call	vector2
 
 loc_18692:
 		inc	si
@@ -28902,7 +28796,7 @@ loc_18A68:
 		mov	bx, ax
 		push	word ptr [bx+396h]
 		push	900090h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	si, ax
 		mov	al, byte_1FBD4
@@ -28911,7 +28805,7 @@ loc_18A68:
 		mov	bx, ax
 		push	word ptr [bx+316h]
 		push	9000B8h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	ax, si
@@ -28932,7 +28826,7 @@ loc_18A68:
 		mov	bx, ax
 		push	word ptr [bx+396h]
 		push	900090h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	si, ax
 		mov	al, byte_1FBD4
@@ -28941,7 +28835,7 @@ loc_18A68:
 		mov	bx, ax
 		push	word ptr [bx+316h]
 		push	9000B8h
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	di, ax
 		mov	ax, si
@@ -30352,7 +30246,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+2]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[di+2],	ax
 		mov	bx, [di]
@@ -30364,7 +30258,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+4]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[di+10h], ax
 		mov	ax, [di+2]
@@ -30783,7 +30677,7 @@ loc_199C6:
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		inc	byte ptr [si+13h]
 		mov	ax, [bp+var_2]
 		add	[si+2],	ax
@@ -31984,7 +31878,7 @@ arg_A		= word ptr  0Eh
 		idiv	bx
 		add	ax, [bp+arg_0]
 		push	ax
-		call	sub_E9C0
+		call	vector2_between_plus
 		push	di
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -32098,7 +31992,7 @@ loc_1A2E4:
 		push	ax
 		push	[bp+arg_0]
 		push	50h ; 'P'
-		call	sub_E97A
+		call	vector2
 		jmp	short loc_1A324
 ; ---------------------------------------------------------------------------
 
@@ -32449,7 +32343,7 @@ loc_1A58A:
 		idiv	bx
 		add	ax, 32h	; '2'
 		push	ax
-		call	sub_E97A
+		call	vector2
 		jmp	short loc_1A5E5
 ; ---------------------------------------------------------------------------
 
@@ -32795,7 +32689,7 @@ loc_1A81C:
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 
 loc_1A83A:
 		mov	byte_20E2C, 1
@@ -33970,7 +33864,7 @@ loc_1B146:
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		mov	ax, [bp+var_2]
 		add	[si+2],	ax
 		mov	ax, [bp+var_4]
@@ -34881,7 +34775,7 @@ loc_1B7BC:
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		mov	bx, word_1F868
 		mov	al, [bp+var_9]
 		mov	[bx+3],	al
@@ -34907,7 +34801,7 @@ loc_1B7BC:
 		push	ax
 		push	word ptr [bx+2]
 		push	0A0h
-		call	sub_E97A
+		call	vector2
 		jmp	short loc_1B896
 ; ---------------------------------------------------------------------------
 
@@ -35524,7 +35418,7 @@ loc_1BD1B:
 		mov	al, [si+35h]
 		mov	ah, 0
 		push	ax
-		call	sub_E97A
+		call	vector2
 		mov	[bp+var_6], 0Ch
 		jmp	short loc_1BD5D
 ; ---------------------------------------------------------------------------
@@ -36652,7 +36546,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3930h]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[si], ax
 		mov	al, [si+4]
@@ -36666,7 +36560,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3934h]
-		call	sub_EA5D
+		call	vector1_at
 		add	sp, 6
 		mov	[si+2],	ax
 		test	byte ptr [bp+var_2], 1

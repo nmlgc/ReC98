@@ -3673,7 +3673,7 @@ loc_BF3E:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		mov	ax, [si+0Ah]
 		add	[si+2],	ax
 		mov	ax, [si+0Ch]
@@ -5958,7 +5958,7 @@ loc_D3B3:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		inc	di
 		add	si, 14h
 
@@ -6058,7 +6058,7 @@ loc_D4A9:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		inc	di
 		add	si, 14h
 
@@ -6151,7 +6151,7 @@ loc_D53E:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		lea	ax, [si+8]
 		push	ax
 		pushd	0
@@ -6159,7 +6159,7 @@ loc_D53E:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		movsx	eax, word_151D2
 		mov	[si], eax
 		movsx	eax, word_151D4
@@ -6303,7 +6303,7 @@ loc_D6E4:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 
 loc_D6F9:
 		inc	[bp+var_2]
@@ -6503,7 +6503,7 @@ sub_D853	proc near
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		movsx	eax, word_151D2
 		mov	[si], eax
 		movsx	eax, word_151D4
@@ -6808,7 +6808,7 @@ loc_DABC:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 
 loc_DAD4:
 		pop	si
@@ -6905,7 +6905,7 @@ loc_DB81:
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
-		call	sub_EC9A
+		call	vector2_at
 		inc	di
 		add	si, 14h
 
@@ -8829,53 +8829,8 @@ sub_EC36	proc far
 		retf
 sub_EC36	endp
 
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bp+6]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ah]
-		pop	bp
-		retf	6
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EC9A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_8]
-		mov	bx, [bp+arg_0]
-		xor	bh, bh
-		add	bx, bx
-		movsx	eax, [bp+arg_2]
-		movsx	edx, word ptr [bx+2FAh]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_6]
-		mov	[si], ax
-		movsx	eax, [bp+arg_2]
-		movsx	edx, word ptr [bx+27Ah]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		mov	[si+2],	ax
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_EC9A	endp
-
+include th04/math/vector1_at.asm
+include th04/math/vector2_at.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

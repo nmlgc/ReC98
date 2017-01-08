@@ -3196,7 +3196,7 @@ loc_C19A:
 		push	word ptr [si+4]
 		push	ax
 		push	di
-		call	sub_1333C
+		call	vector2_at
 		cmp	word_266DC, 0
 		jl	short loc_C1E6
 		cmp	word_266DC, 1700h
@@ -6502,7 +6502,7 @@ loc_D8B4:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	[bp+var_2], ax
 		push	word ptr [si+4]
 		push	word ptr [si+8]
@@ -6512,7 +6512,7 @@ loc_D8B4:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	[bp+var_4], ax
 		sar	ax, 4
 		add	ax, 8
@@ -6595,7 +6595,7 @@ loc_D970:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	di, ax
 		sar	ax, 4
 		mov	di, ax
@@ -6607,7 +6607,7 @@ loc_D970:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	[bp+var_4], ax
 		sar	ax, 4
 		add	ax, 0FFF0h
@@ -7272,7 +7272,7 @@ loc_DEA3:
 		add	al, 0BCh
 		push	ax
 		push	100h
-		call	sub_13117
+		call	vector2
 		mov	byte ptr [si+10h], 6
 
 loc_DEC6:
@@ -7338,7 +7338,7 @@ loc_DF23:
 		add	al, 0BCh
 		push	ax
 		push	100h
-		call	sub_13117
+		call	vector2
 		mov	word ptr [si+0Eh], 24h ; '$'
 		mov	byte ptr [si+10h], 5
 
@@ -11776,7 +11776,7 @@ loc_10096:
 		push	800h
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		push	word_266DA
 		push	word_266DC
 		nopcall	sub_C64A
@@ -11788,7 +11788,7 @@ loc_10096:
 		push	800h
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		push	word_266DA
 		push	word_266DC
 		nopcall	sub_C64A
@@ -12130,7 +12130,7 @@ loc_1038E:
 		mov	al, [si+5]
 		mov	ah, 0
 		push	ax
-		call	sub_13117
+		call	vector2
 		mov	ax, [bp+var_2]
 		add	[si], ax
 		mov	ax, [bp+var_4]
@@ -12722,7 +12722,7 @@ loc_10822:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		cmp	word_266DC, 0FF80h
 		jl	short loc_10862
 		cmp	word_266DC, 1780h
@@ -13279,7 +13279,7 @@ loc_10CE0:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		cmp	word_266DC, 0FF80h
 		jl	short loc_10D36
 		cmp	word_266DC, 1780h
@@ -14968,7 +14968,7 @@ loc_11AC4:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	si, ax
 		push	word ptr dword_266F4+2
 		push	[bp+var_4]
@@ -14977,7 +14977,7 @@ loc_11AC4:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	di, ax
 		cmp	di, 0FF00h
 		jle	short loc_11B2F
@@ -16726,7 +16726,7 @@ loc_127F7:
 		mov	al, [si+5]
 		mov	ah, 0
 		push	ax
-		call	sub_13117
+		call	vector2
 		mov	ax, [bp+var_6]
 		add	[si], ax
 		mov	ax, [bp+var_8]
@@ -17976,78 +17976,9 @@ main_02_TEXT	segment	word public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th01/hardware/vram_planes_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13117	proc far
-
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	dl, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+566h]
-		movsx	ecx, word ptr [bx+4E6h]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_8]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_13117	endp
-
-; ---------------------------------------------------------------------------
-		db 90h
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+6]
-		mov	ax, [bp+12h]
-		sub	ax, [bp+16h]
-		push	ax
-		mov	ax, [bp+14h]
-		sub	ax, [bp+18h]
-		push	ax
-		call	iatan2
-		add	al, [bp+10h]
-		mov	dl, al
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+566h]
-		movsx	ecx, word ptr [bx+4E6h]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+0Ch]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+8]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	14h
-
+include th03/math/vector2.asm
+		nop
+include th03/math/vector2_between_plus.asm
 include th02/hardware/frame_delay.asm
 include th03/formats/hfliplut.asm
 
@@ -18236,64 +18167,8 @@ loc_1331A:
 		retf	6
 sub_1328E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13320	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_0]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		pop	bp
-		retf	6
-sub_13320	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1333C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_8]
-		mov	bx, [bp+arg_0]
-		add	bx, bx
-		movsx	eax, [bp+arg_2]
-		movsx	edx, word ptr [bx+566h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_6]
-		mov	[si], ax
-		movsx	eax, [bp+arg_2]
-		movsx	edx, word ptr [bx+4E6h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		mov	[si+2],	ax
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_1333C	endp
-
+include th04/math/vector1_at.asm
+include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
@@ -19303,7 +19178,7 @@ loc_13C8F:
 		push	word ptr [si+0Eh]
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		call	sub_13C32
 		or	al, al
 		jz	short loc_13CD1
@@ -19509,37 +19384,7 @@ sub_13DAA	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13DF2	proc near
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		movsx	edx, [bp+arg_0]
-		mov	bl, [bp+arg_2]
-		mov	bh, 0
-		add	bx, bx
-		movsx	eax, word ptr [bx+566h]
-		movsx	ecx, word ptr [bx+4E6h]
-		imul	eax, edx
-		sar	eax, 8
-		imul	edx, ecx
-		sar	edx, 8
-		mov	bx, [bp+arg_4]
-		mov	[bx], ax
-		mov	[bx+2],	dx
-		pop	bp
-		retn	6
-sub_13DF2	endp
-
-; ---------------------------------------------------------------------------
+include th04/math/vector2_near.asm
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19580,7 +19425,7 @@ loc_13E40:
 		push	bx
 		push	word ptr [si+0Eh]
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 
 loc_13E70:
 		add	word_25534, 10h
@@ -19642,7 +19487,7 @@ loc_13EA5:
 		xor	ah, ah
 		push	ax
 		push	[bp+arg_2]
-		call	sub_13DF2
+		call	vector2_near
 
 loc_13ED6:
 		add	word_25534, 10h
@@ -20417,7 +20262,7 @@ loc_145C9:
 		push	offset word_266FE
 		push	word ptr [bp+var_1]
 		push	20h ; ' '
-		call	sub_13117
+		call	vector2
 		inc	byte_2559A
 		mov	byte_26704, 1
 		mov	word_2A8D0, 8
@@ -20517,7 +20362,7 @@ sub_146AF	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_266F4, ax
 		push	600h
 		push	word_26702
@@ -20526,7 +20371,7 @@ sub_146AF	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_266F4+2,	ax
 		mov	al, byte_26709
 		add	al, 0FEh
@@ -20575,7 +20420,7 @@ loc_14749:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_266F4+2,	ax
 		mov	al, byte_26709
 		add	al, 2
@@ -22190,7 +22035,7 @@ sub_15592	proc near
 		push	ax
 		push	word ptr [si+1Eh]
 		push	word ptr [si+1Ch]
-		call	sub_13DF2
+		call	vector2_near
 		pop	si
 		pop	bp
 		retn
@@ -22220,7 +22065,7 @@ sub_155AA	proc near
 		push	ax
 		push	word ptr [si+1Eh]
 		push	word ptr [si+1Ch]
-		call	sub_13DF2
+		call	vector2_near
 		pop	es
 		assume es:nothing
 		pop	si
@@ -24968,7 +24813,7 @@ loc_16CB4:
 		mov	al, [si+1]
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		cmp	byte ptr [si], 1
 		jnz	short loc_16CEF
 		cmp	word ptr [si+10h], 400h
@@ -28472,7 +28317,7 @@ loc_18A20:
 		push	ax
 		push	[bp+arg_0]
 		push	100h
-		call	sub_13117
+		call	vector2
 		call	snd_se_play pascal, 5
 		jmp	short loc_18A73
 ; ---------------------------------------------------------------------------
@@ -28625,7 +28470,7 @@ sub_18B68	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	5B00140h
 		mov	al, byte_2671E
@@ -28633,7 +28478,7 @@ sub_18B68	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		inc	byte_2671E
 		pop	bp
@@ -28654,7 +28499,7 @@ sub_18BA7	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	5B00140h
 		mov	al, byte_2671E
@@ -28662,7 +28507,7 @@ sub_18BA7	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		dec	byte_2671E
 		pop	bp
@@ -30114,7 +29959,7 @@ loc_1989A:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word_26714, ax
 		cmp	word ptr dword_2670A+2,	600h
 		jl	short loc_198C0
@@ -31119,7 +30964,7 @@ loc_1A12A:
 		mov	al, [si+18h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		mov	ax, [si+0Ah]
 		add	[si+2],	ax
 		mov	ax, [si+0Ch]
@@ -31334,7 +31179,7 @@ loc_1A32D:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		sub	word ptr dword_266E4, 20h ; ' '
 		sub	word ptr dword_266E4+2,	10h
 		mov	ax, 10h
@@ -31424,7 +31269,7 @@ loc_1A3E5:
 		mov	al, [bx+1ED4h]
 		push	ax
 		push	8
-		call	sub_13DF2
+		call	vector2_near
 		jmp	short loc_1A41C
 ; ---------------------------------------------------------------------------
 
@@ -31554,7 +31399,7 @@ loc_1A4DE:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		mov	al, byte_2671E
 		add	al, 2
@@ -32655,7 +32500,7 @@ loc_1ABFF:
 		push	220h
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		call	fp_2D000
 		mov	al, 80h
 		sub	al, [bp+var_1]
@@ -32666,7 +32511,7 @@ loc_1ABFF:
 		push	220h
 		mov	ah, 0
 		push	ax
-		call	sub_1333C
+		call	vector2_at
 		mov	ax, word_2671A
 		cwd
 		sub	ax, dx
@@ -34350,7 +34195,7 @@ loc_1BBA8:
 		mov	al, byte ptr word_25A36+1
 		mov	ah, 0
 		push	ax
-		call	sub_13117
+		call	vector2
 		mov	word_257E2, 200h
 		mov	word_257E4, 200h
 		mov	ax, word_25A28
@@ -34484,7 +34329,7 @@ loc_1BCE9:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	600h
 		push	word ptr dword_2670E
@@ -34493,7 +34338,7 @@ loc_1BCE9:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		pop	bp
 		retn
@@ -35645,7 +35490,7 @@ loc_1C6ED:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		pop	si
 		pop	bp
 		retn	2
@@ -35680,7 +35525,7 @@ loc_1C721:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		pop	si
 		pop	bp
 		retn	2
@@ -35743,7 +35588,7 @@ loc_1C790:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		dec	byte ptr [si+10h]
 		jmp	loc_1C8B1
 ; ---------------------------------------------------------------------------
@@ -35767,7 +35612,7 @@ loc_1C7C0:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		mov	al, byte_2CFF7
 		add	[si+10h], al
 		jmp	loc_1C8B1
@@ -35782,7 +35627,7 @@ loc_1C7D9:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		cmp	byte ptr [si+10h], 1
 		jbe	short loc_1C7FF
 		mov	al, [si+10h]
@@ -35824,7 +35669,7 @@ loc_1C831:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		jmp	short loc_1C8B1
 ; ---------------------------------------------------------------------------
 
@@ -36085,7 +35930,7 @@ loc_1CA17:
 		mov	al, [si+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 
 loc_1CA27:
 		lea	ax, [si+2]
@@ -37200,7 +37045,7 @@ loc_1D1A5:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		mov	al, byte ptr [bp+var_2]
 		add	al, byte_266ED
 		mov	byte ptr word_2D008, al
@@ -38759,7 +38604,7 @@ loc_1DE90:
 		push	ax
 		push	word ptr [bp+var_1]
 		push	0A0h
-		call	sub_13DF2
+		call	vector2_near
 		jmp	short loc_1DEDB
 ; ---------------------------------------------------------------------------
 
@@ -39995,7 +39840,7 @@ loc_1EB3D:
 		mov	al, byte_2D056
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		jmp	short loc_1EB88
 ; ---------------------------------------------------------------------------
 
@@ -40106,7 +39951,7 @@ loc_1EC01:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+566h]
-		call	sub_13320
+		call	vector1_at
 		mov	[si+2],	ax
 		push	word ptr [si+8]
 		push	word ptr [si+10h]
@@ -40115,7 +39960,7 @@ loc_1EC01:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+4E6h]
-		call	sub_13320
+		call	vector1_at
 		mov	[si+4],	ax
 		cmp	word ptr [si+10h], 400h
 		jge	short loc_1EC4E
@@ -40146,7 +39991,7 @@ loc_1EC6F:
 		mov	al, [si+18h]
 		mov	ah, 0
 		push	ax
-		call	sub_13DF2
+		call	vector2_near
 		inc	byte ptr [si]
 		jmp	short loc_1ECBC
 ; ---------------------------------------------------------------------------

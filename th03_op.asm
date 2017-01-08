@@ -1909,7 +1909,7 @@ loc_A628:
 		push	word ptr [bx+396h]
 		push	[bp+arg_4]
 		push	[bp+arg_8]
-		call	sub_C005
+		call	vector1_at
 		add	sp, 6
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -1921,7 +1921,7 @@ loc_A628:
 		push	word ptr [bx+316h]
 		push	[bp+arg_4]
 		push	[bp+arg_6]
-		call	sub_C005
+		call	vector1_at
 		add	sp, 6
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -3904,7 +3904,7 @@ loc_B6CF:
 		push	word ptr [bx+396h]
 		push	si
 		push	140h
-		call	sub_C005
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
@@ -3922,7 +3922,7 @@ loc_B6CF:
 		push	word ptr [bx+316h]
 		push	si
 		push	0C8h ; 'È'
-		call	sub_C005
+		call	vector1_at
 		add	sp, 6
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
@@ -4829,27 +4829,7 @@ sub_BFC2	proc far
 		retf
 sub_BFC2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C005	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_4]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_0]
-		pop	bp
-		retf
-sub_C005	endp
+include th03/math/vector1_at.asm
 
 ; ---------------------------------------------------------------------------
 		db 0

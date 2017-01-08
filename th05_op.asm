@@ -2501,7 +2501,7 @@ loc_B70D:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+610h]
-		call	sub_D834
+		call	vector1_at
 		add	ax, 0FF80h
 		mov	[bp+var_4], ax
 		push	word ptr [si+4]
@@ -2511,7 +2511,7 @@ loc_B70D:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+590h]
-		call	sub_D834
+		call	vector1_at
 		add	ax, 0FF80h
 		jmp	short loc_B799
 ; ---------------------------------------------------------------------------
@@ -2528,7 +2528,7 @@ loc_B754:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+610h]
-		call	sub_D834
+		call	vector1_at
 		add	ax, 0FF00h
 		mov	[bp+var_4], ax
 		push	word ptr [si+4]
@@ -2538,7 +2538,7 @@ loc_B754:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+590h]
-		call	sub_D834
+		call	vector1_at
 		add	ax, 0FF00h
 
 loc_B799:
@@ -3599,7 +3599,7 @@ loc_C028:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+610h]
-		call	sub_D834
+		call	vector1_at
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		mov	[bx+di], ax
@@ -3610,7 +3610,7 @@ loc_C028:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+590h]
-		call	sub_D834
+		call	vector1_at
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		mov	[bx+di+2], ax
@@ -6318,51 +6318,8 @@ sub_D7EC	proc far
 		retf
 sub_D7EC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D834	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_0]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		pop	bp
-		retf	6
-sub_D834	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+0Eh]
-		mov	bx, [bp+6]
-		xor	bh, bh
-		add	bx, bx
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+610h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ch]
-		mov	[si], ax
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+590h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ah]
-		mov	[si+2],	ax
-		pop	si
-		pop	bp
-		retf	0Ah
+include th04/math/vector1_at.asm
+include th04/math/vector2_at.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

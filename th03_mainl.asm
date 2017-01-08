@@ -4827,7 +4827,7 @@ loc_BBD1:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		push	ax
-		call	sub_C8F0
+		call	vector2
 
 loc_BC16:
 		inc	di
@@ -6149,76 +6149,9 @@ include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
 include th02/snd/delayvol.asm
 include th02/snd/load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C8F0	proc far
-
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	dl, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+63Ah]
-		movsx	ecx, word ptr [bx+5BAh]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+arg_8]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	0Ch
-sub_C8F0	endp
-
-; ---------------------------------------------------------------------------
+include th03/math/vector2.asm
 		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+6]
-		mov	ax, [bp+12h]
-		sub	ax, [bp+16h]
-		push	ax
-		mov	ax, [bp+14h]
-		sub	ax, [bp+18h]
-		push	ax
-		call	iatan2
-		add	al, [bp+10h]
-		mov	dl, al
-		movsx	eax, si
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, word ptr [bx+63Ah]
-		movsx	ecx, word ptr [bx+5BAh]
-		imul	eax, edx
-		sar	eax, 8
-		les	bx, [bp+0Ch]
-		mov	es:[bx], ax
-		movsx	eax, si
-		imul	eax, ecx
-		sar	eax, 8
-		les	bx, [bp+8]
-		mov	es:[bx], ax
-		pop	si
-		pop	bp
-		retf	14h
+include th03/math/vector2_between_plus.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -2558,7 +2558,7 @@ loc_BB3C:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+648h]
-		call	sub_DBB8
+		call	vector1_at
 		add	ax, 0FF80h
 		mov	[bp+var_4], ax
 		push	word ptr [si+4]
@@ -2568,7 +2568,7 @@ loc_BB3C:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5C8h]
-		call	sub_DBB8
+		call	vector1_at
 		add	ax, 0FF80h
 		jmp	short loc_BBC8
 ; ---------------------------------------------------------------------------
@@ -2585,7 +2585,7 @@ loc_BB83:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+648h]
-		call	sub_DBB8
+		call	vector1_at
 		add	ax, 0FF00h
 		mov	[bp+var_4], ax
 		push	word ptr [si+4]
@@ -2595,7 +2595,7 @@ loc_BB83:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5C8h]
-		call	sub_DBB8
+		call	vector1_at
 		add	ax, 0FF00h
 
 loc_BBC8:
@@ -3181,7 +3181,7 @@ loc_BFD9:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+648h]
-		call	sub_DBB8
+		call	vector1_at
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		mov	[bx+di], ax
@@ -3192,7 +3192,7 @@ loc_BFD9:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5C8h]
-		call	sub_DBB8
+		call	vector1_at
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		mov	[bx+di+2], ax
@@ -6173,51 +6173,8 @@ loc_DBB2:
 		retf	2
 sub_DB62	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DBB8	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		movsx	eax, [bp+arg_2]
-		movsx	edx, [bp+arg_0]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_4]
-		pop	bp
-		retf	6
-sub_DBB8	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+0Eh]
-		mov	bx, [bp+6]
-		add	bx, bx
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+648h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ch]
-		mov	[si], ax
-		movsx	eax, word ptr [bp+8]
-		movsx	edx, word ptr [bx+5C8h]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0Ah]
-		mov	[si+2],	ax
-		pop	si
-		pop	bp
-		retf	0Ah
-
+include th04/math/vector1_at.asm
+include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
