@@ -3143,278 +3143,7 @@ sub_BFA7	proc near
 		retn
 sub_BFA7	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BFC5	proc near
-
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_A]
-		sar	[bp+arg_6], 4
-		mov	[bp+var_2], 0
-		jmp	short loc_C02A
-; ---------------------------------------------------------------------------
-
-loc_BFD9:
-		mov	ax, [bp+var_2]
-		shl	ax, 8
-		cwd
-		idiv	[bp+arg_2]
-		add	al, [bp+arg_0]
-		mov	[bp+var_3], al
-		push	[bp+arg_8]
-		push	[bp+arg_4]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr [bx+648h]
-		call	vector1_at
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	[bx+di], ax
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr [bx+5C8h]
-		call	vector1_at
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	[bx+di+2], ax
-		inc	[bp+var_2]
-
-loc_C02A:
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+arg_2]
-		jl	short loc_BFD9
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	ax, [di]
-		mov	[bx+di], ax
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	ax, [di+2]
-		mov	[bx+di+2], ax
-		pop	di
-		pop	si
-		leave
-		retn	0Ch
-sub_BFC5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C04E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	byte_102AE, 0
-		jnz	loc_C0FD
-		xor	si, si
-		jmp	loc_C0F1
-; ---------------------------------------------------------------------------
-
-loc_C060:
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+39DCh], dx
-		call	IRand
-		mov	bx, 1900h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+39DEh], dx
-		call	IRand
-		and	ax, 7
-		mov	dx, 4
-		sub	dx, ax
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+3A1Ch], dx
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+3A1Ch], 0
-		jnz	short loc_C0B5
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+3A1Ch], 1
-
-loc_C0B5:
-		call	IRand
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 20h	; ' '
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+3A1Eh], ax
-		call	IRand
-		mov	[si+3A5Ch], al
-		call	IRand
-		and	al, 7
-		mov	dl, 4
-		sub	dl, al
-		mov	[si+3A6Ch], dl
-		cmp	byte ptr [si+3A6Ch], 0
-		jnz	short loc_C0F0
-		mov	byte ptr [si+3A6Ch], 4
-
-loc_C0F0:
-		inc	si
-
-loc_C0F1:
-		cmp	si, 10h
-		jl	loc_C060
-		mov	byte_102AE, 1
-
-loc_C0FD:
-		xor	si, si
-		jmp	loc_C23A
-; ---------------------------------------------------------------------------
-
-loc_C102:
-		push	39B4h
-		mov	bx, si
-		shl	bx, 2
-		push	word ptr [bx+39DCh]
-		mov	bx, si
-		shl	bx, 2
-		push	word ptr [bx+39DEh]
-		mov	ax, si
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 40h
-		push	ax
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	ax, 3
-		push	ax
-		mov	al, [si+3A5Ch]
-		push	ax
-		call	sub_BFC5
-		mov	bx, si
-		shl	bx, 2
-		mov	ax, [bx+3A1Ch]
-		mov	bx, si
-		shl	bx, 2
-		add	[bx+39DCh], ax
-		mov	bx, si
-		shl	bx, 2
-		mov	ax, [bx+3A1Eh]
-		mov	bx, si
-		shl	bx, 2
-		add	[bx+39DEh], ax
-		mov	al, [si+3A6Ch]
-		add	[si+3A5Ch], al
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+39DCh], 0
-		jle	short loc_C17C
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+39DCh], 27Fh
-		jl	short loc_C18E
-
-loc_C17C:
-		mov	bx, si
-		shl	bx, 2
-		mov	dx, 0FFFFh
-		mov	ax, [bx+3A1Ch]
-		imul	dx
-		mov	[bx+3A1Ch], ax
-
-loc_C18E:
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+39DEh], 1F40h
-		jl	loc_C224
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+39DCh], dx
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+39DEh], 0F9C0h
-		call	IRand
-		and	ax, 0Fh
-		mov	dx, 8
-		sub	dx, ax
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+3A1Ch], dx
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+3A1Ch], 0
-		jnz	short loc_C1E9
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+3A1Ch], 1
-
-loc_C1E9:
-		call	IRand
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 20h	; ' '
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+3A1Eh], ax
-		call	IRand
-		mov	[si+3A5Ch], al
-		call	IRand
-		and	al, 7
-		mov	dl, 4
-		sub	dl, al
-		mov	[si+3A6Ch], dl
-		cmp	byte ptr [si+3A6Ch], 0
-		jnz	short loc_C224
-		mov	byte ptr [si+3A6Ch], 4
-
-loc_C224:
-		push	ds
-		push	offset unk_12CF4
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	ax, 3
-		push	ax
-		call	grcg_polygon_c
-		inc	si
-
-loc_C23A:
-		cmp	si, 10h
-		jl	loc_C102
-		pop	si
-		pop	bp
-		retn
-sub_C04E	endp
-
+include th02/music/polygons.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3425,7 +3154,7 @@ sub_C244	proc near
 		mov	bp, sp
 		call	sub_BFA7
 		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
-		call	sub_C04E
+		call	polygons_update_and_render
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
@@ -3609,7 +3338,7 @@ sub_C3B7	proc near
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		mov	al, byte_102AF
+		mov	al, music_track_playing
 		mov	byte ptr word_12DBC, al
 		push	word_12DBC
 		call	sub_BF41
@@ -3623,7 +3352,7 @@ sub_C3B7	proc near
 		mov	al, 0
 		out	dx, al
 		call	sub_BF68
-		mov	al, byte_102AF
+		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_C36F pascal, ax
 		mov	PaletteTone, 64h ; 'd'
@@ -3699,7 +3428,7 @@ loc_C4E4:
 		jz	short loc_C533
 		kajacall	KAJA_SONG_FADE, 32
 		mov	al, byte ptr word_12DBC
-		mov	byte_102AF, al
+		mov	music_track_playing, al
 		mov	ah, 0
 		call	sub_C36F pascal, ax
 		mov	al, byte ptr word_12DBC
@@ -7718,8 +7447,8 @@ aZun03_bft	db 'zun03.bft',0
 		dd aEnd2		; "end2"
 		dd aStaff		; "staff"
 		dd aName_0		; "name"
-byte_102AE	db 0
-byte_102AF	db 0
+include th02/music/polygons[data].asm
+music_track_playing	db 0
 aNo_1MSzlBLotus	db 'No.1   å∂ëzãΩ  Å` Lotus Land Story',0
 aNo_2WitchingDr	db 'No.2         Witching Dream       ',0
 aNo_3SeleneSLig	db 'No.3         Selene',27h,'s light       ',0
@@ -9034,62 +8763,7 @@ word_11E8A	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-unk_12CF4	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-		db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/music/polygons[bss].asm
 word_12DBC	dw ?
 byte_12DBE	db ?
 		db    ?	;

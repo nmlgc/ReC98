@@ -1871,280 +1871,7 @@ sub_A5F6	proc near
 		retn
 sub_A5F6	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A614	proc near
-
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_A]
-		sar	[bp+arg_6], 4
-		mov	[bp+var_2], 0
-		jmp	short loc_A67F
-; ---------------------------------------------------------------------------
-
-loc_A628:
-		mov	ax, [bp+var_2]
-		shl	ax, 8
-		cwd
-		idiv	[bp+arg_2]
-		add	al, [bp+arg_0]
-		mov	[bp+var_3], al
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr [bx+396h]
-		push	[bp+arg_4]
-		push	[bp+arg_8]
-		call	vector1_at
-		add	sp, 6
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	[bx+di], ax
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr [bx+316h]
-		push	[bp+arg_4]
-		push	[bp+arg_6]
-		call	vector1_at
-		add	sp, 6
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	[bx+di+2], ax
-		inc	[bp+var_2]
-
-loc_A67F:
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+arg_2]
-		jl	short loc_A628
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	ax, [di]
-		mov	[bx+di], ax
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		mov	ax, [di+2]
-		mov	[bx+di+2], ax
-		pop	di
-		pop	si
-		leave
-		retn	0Ch
-sub_A614	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A6A3	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	byte_DE82, 0
-		jnz	loc_A752
-		xor	si, si
-		jmp	loc_A746
-; ---------------------------------------------------------------------------
-
-loc_A6B5:
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1F98h], dx
-		call	IRand
-		mov	bx, 1900h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1F9Ah], dx
-		call	IRand
-		and	ax, 7
-		mov	dx, 4
-		sub	dx, ax
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1FD8h], dx
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+1FD8h], 0
-		jnz	short loc_A70A
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+1FD8h], 1
-
-loc_A70A:
-		call	IRand
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 20h	; ' '
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1FDAh], ax
-		call	IRand
-		mov	[si+2018h], al
-		call	IRand
-		and	al, 7
-		mov	dl, 4
-		sub	dl, al
-		mov	[si+2028h], dl
-		cmp	byte ptr [si+2028h], 0
-		jnz	short loc_A745
-		mov	byte ptr [si+2028h], 4
-
-loc_A745:
-		inc	si
-
-loc_A746:
-		cmp	si, 10h
-		jl	loc_A6B5
-		mov	byte_DE82, 1
-
-loc_A752:
-		xor	si, si
-		jmp	loc_A88F
-; ---------------------------------------------------------------------------
-
-loc_A757:
-		push	1F70h
-		mov	bx, si
-		shl	bx, 2
-		push	word ptr [bx+1F98h]
-		mov	bx, si
-		shl	bx, 2
-		push	word ptr [bx+1F9Ah]
-		mov	ax, si
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 40h
-		push	ax
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	ax, 3
-		push	ax
-		mov	al, [si+2018h]
-		push	ax
-		call	sub_A614
-		mov	bx, si
-		shl	bx, 2
-		mov	ax, [bx+1FD8h]
-		mov	bx, si
-		shl	bx, 2
-		add	[bx+1F98h], ax
-		mov	bx, si
-		shl	bx, 2
-		mov	ax, [bx+1FDAh]
-		mov	bx, si
-		shl	bx, 2
-		add	[bx+1F9Ah], ax
-		mov	al, [si+2028h]
-		add	[si+2018h], al
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+1F98h], 0
-		jle	short loc_A7D1
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+1F98h], 27Fh
-		jl	short loc_A7E3
-
-loc_A7D1:
-		mov	bx, si
-		shl	bx, 2
-		mov	dx, 0FFFFh
-		mov	ax, [bx+1FD8h]
-		imul	dx
-		mov	[bx+1FD8h], ax
-
-loc_A7E3:
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+1F9Ah], 1F40h
-		jl	loc_A879
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1F98h], dx
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+1F9Ah], 0F9C0h
-		call	IRand
-		and	ax, 0Fh
-		mov	dx, 8
-		sub	dx, ax
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1FD8h], dx
-		mov	bx, si
-		shl	bx, 2
-		cmp	word ptr [bx+1FD8h], 0
-		jnz	short loc_A83E
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+1FD8h], 1
-
-loc_A83E:
-		call	IRand
-		and	ax, 3
-		shl	ax, 4
-		add	ax, 20h	; ' '
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+1FDAh], ax
-		call	IRand
-		mov	[si+2018h], al
-		call	IRand
-		and	al, 7
-		mov	dl, 4
-		sub	dl, al
-		mov	[si+2028h], dl
-		cmp	byte ptr [si+2028h], 0
-		jnz	short loc_A879
-		mov	byte ptr [si+2028h], 4
-
-loc_A879:
-		push	ds
-		push	offset unk_F760
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	ax, 3
-		push	ax
-		call	grcg_polygon_c
-		inc	si
-
-loc_A88F:
-		cmp	si, 10h
-		jl	loc_A757
-		pop	si
-		pop	bp
-		retn
-sub_A6A3	endp
-
+include th02/music/polygons.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2155,7 +1882,7 @@ sub_A899	proc near
 		mov	bp, sp
 		call	sub_A5F6
 		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
-		call	sub_A6A3
+		call	polygons_update_and_render
 		call	grcg_off
 		mov	dx, 0A4h ; '§'
 		mov	al, byte ptr word_F828+1
@@ -2559,7 +2286,7 @@ loc_AC15:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		mov	al, byte_DE83
+		mov	al, music_track_playing
 		mov	byte ptr word_F828, al
 		push	word_F828
 		call	sub_A590
@@ -2576,13 +2303,13 @@ loc_AC15:
 		mov	dx, 0A6h ; '¶'
 		mov	al, 1
 		out	dx, al
-		mov	al, byte_DE83
+		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
 		mov	dx, 0A6h ; '¶'
 		mov	al, 0
 		out	dx, al
-		mov	al, byte_DE83
+		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
 		mov	PaletteTone, 64h ; 'd'
@@ -2667,7 +2394,7 @@ loc_AD52:
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
 		mov	al, byte ptr word_F828
-		mov	byte_DE83, al
+		mov	music_track_playing, al
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
 		call	sub_A899
@@ -6367,8 +6094,8 @@ byte_DDE0	db 0
 		dd aDemo5_m		; "demo5.m"
 		dd aEd_m		; "ed.m"
 		dd aScore_m		; "score.m"
-byte_DE82	db 0
-byte_DE83	db 0
+include th02/music/polygons[data].asm
+music_track_playing	db 0
 aNo_1B@cVOul	db 'NO.1     Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ     ',0
 aNo_2B@B@Select	db 'NO.2    Å@ Å@ Selection         ',0
 aNo_3Umx	db 'NO.3          ìåï˚ódóˆík        ',0
@@ -6641,59 +6368,7 @@ word_F296	dw ?
 		dd    ?	;
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-unk_F760	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th02/music/polygons[bss].asm
 word_F828	dw ?
 word_F82A	dw ?
 unk_F82C	db    ?	;
