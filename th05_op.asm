@@ -2500,7 +2500,7 @@ loc_B70D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+610h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		add	ax, 0FF80h
 		mov	[bp+var_4], ax
@@ -2510,7 +2510,7 @@ loc_B70D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+590h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		add	ax, 0FF80h
 		jmp	short loc_B799
@@ -2527,7 +2527,7 @@ loc_B754:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+610h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		add	ax, 0FF00h
 		mov	[bp+var_4], ax
@@ -2537,7 +2537,7 @@ loc_B754:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+590h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		add	ax, 0FF00h
 

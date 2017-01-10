@@ -3628,7 +3628,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+396h]
+		push	_CosTable8[bx]
 		push	si
 		push	140h
 		call	vector1_at
@@ -3646,7 +3646,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+316h]
+		push	_SinTable8[bx]
 		push	si
 		push	0C8h ; 'È'
 		call	vector1_at

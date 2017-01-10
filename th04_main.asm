@@ -6501,7 +6501,7 @@ loc_D8B4:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	[bp+var_2], ax
 		push	word ptr [si+4]
@@ -6511,7 +6511,7 @@ loc_D8B4:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	[bp+var_4], ax
 		sar	ax, 4
@@ -6606,7 +6606,7 @@ loc_D970:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	[bp+var_4], ax
 		sar	ax, 4
@@ -14967,7 +14967,7 @@ loc_11AC4:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	si, ax
 		push	word ptr dword_266F4+2
@@ -14976,7 +14976,7 @@ loc_11AC4:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	di, ax
 		cmp	di, 0FF00h
@@ -20361,7 +20361,7 @@ sub_146AF	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_266F4, ax
 		push	600h
@@ -20370,7 +20370,7 @@ sub_146AF	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_266F4+2,	ax
 		mov	al, byte_26709
@@ -20419,7 +20419,7 @@ loc_14749:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_266F4+2,	ax
 		mov	al, byte_26709
@@ -22264,7 +22264,7 @@ loc_1575A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+566h]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	[si+0Ah], ax
@@ -28469,7 +28469,7 @@ sub_18B68	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	5B00140h
@@ -28477,7 +28477,7 @@ sub_18B68	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		inc	byte_2671E
@@ -28498,7 +28498,7 @@ sub_18BA7	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	5B00140h
@@ -28506,7 +28506,7 @@ sub_18BA7	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		dec	byte_2671E
@@ -29958,7 +29958,7 @@ loc_1989A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word_26714, ax
 		cmp	word ptr dword_2670A+2,	600h
@@ -31398,7 +31398,7 @@ loc_1A4DE:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		mov	al, byte_2671E
@@ -34328,7 +34328,7 @@ loc_1BCE9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A, ax
 		push	600h
@@ -34337,7 +34337,7 @@ loc_1BCE9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	word ptr dword_2670A+2,	ax
 		pop	bp
@@ -39950,7 +39950,7 @@ loc_1EC01:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+566h]
+		push	_CosTable8[bx]
 		call	vector1_at
 		mov	[si+2],	ax
 		push	word ptr [si+8]
@@ -39959,7 +39959,7 @@ loc_1EC01:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+4E6h]
+		push	_SinTable8[bx]
 		call	vector1_at
 		mov	[si+4],	ax
 		cmp	word ptr [si+10h], 400h

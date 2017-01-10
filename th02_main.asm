@@ -4401,7 +4401,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+5ECh]
+		mov	ax, _CosTable8[bx]
 		imul	ax, 0Ch
 		sar	ax, 4
 		mov	[si+0Ah], ax
@@ -4409,7 +4409,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+56Ch]
+		mov	ax, _SinTable8[bx]
 		imul	ax, 0Ch
 		sar	ax, 4
 		mov	[si+0Ch], ax
@@ -7735,7 +7735,7 @@ loc_E30C:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C4
@@ -7745,7 +7745,7 @@ loc_E30C:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C6
@@ -7860,7 +7860,7 @@ loc_E42A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C4
@@ -7870,7 +7870,7 @@ loc_E42A:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C6
@@ -7925,7 +7925,7 @@ loc_E4AE:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C4
@@ -7935,7 +7935,7 @@ loc_E4AE:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_218C6
@@ -10468,7 +10468,7 @@ loc_100DB:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_4]
@@ -10482,7 +10482,7 @@ loc_100DB:
 		and	dx, 0FFh
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_2]
@@ -10536,7 +10536,7 @@ loc_1019D:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_4]
@@ -10550,7 +10550,7 @@ loc_1019D:
 		and	dx, 0FFh
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_2]
@@ -12375,7 +12375,7 @@ loc_11013:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_22DA0
@@ -12385,7 +12385,7 @@ loc_11013:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_22DA2
@@ -22198,7 +22198,7 @@ loc_1607A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+5ECh]
+		movsx	eax, _CosTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_2559A
@@ -22207,7 +22207,7 @@ loc_1607A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+56Ch]
+		movsx	eax, _SinTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_2559C
@@ -22222,7 +22222,7 @@ loc_1607A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+5ECh]
+		movsx	eax, _CosTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_2559A
@@ -22231,7 +22231,7 @@ loc_1607A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+56Ch]
+		movsx	eax, _SinTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_2559C
@@ -23890,7 +23890,7 @@ loc_16F19:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		imul	word ptr [bx+5ECh]
+		imul	_CosTable8[bx]
 		sar	ax, 8
 		mov	bx, word_26C52
 		mov	[bx], al
@@ -23900,7 +23900,7 @@ loc_16F19:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		imul	word ptr [bx+56Ch]
+		imul	_SinTable8[bx]
 		sar	ax, 8
 		mov	bx, word_26C54
 		mov	[bx], al
@@ -25219,7 +25219,7 @@ loc_17AA9:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, 0E0h
@@ -25231,7 +25231,7 @@ loc_17AA9:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, 0C8h
@@ -26061,7 +26061,7 @@ loc_18246:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+5ECh]
+		movsx	eax, _CosTable8[bx]
 		imul	eax, 190h
 		sar	eax, 8
 		add	ax, word_26C58
@@ -26070,7 +26070,7 @@ loc_18246:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+56Ch]
+		movsx	eax, _SinTable8[bx]
 		imul	eax, 190h
 		sar	eax, 8
 		add	ax, word_26C60
@@ -26264,7 +26264,7 @@ loc_18451:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCC
@@ -26281,7 +26281,7 @@ loc_18451:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCE
@@ -26322,7 +26322,7 @@ loc_184FB:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCC
@@ -26341,7 +26341,7 @@ loc_184FB:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCE
@@ -26634,7 +26634,7 @@ loc_18811:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCC
@@ -26653,7 +26653,7 @@ loc_18811:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CCE
@@ -27421,7 +27421,7 @@ loc_18F32:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CE6
@@ -27438,7 +27438,7 @@ loc_18F32:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		mov	dx, word_26CE8
@@ -27477,7 +27477,7 @@ loc_18FD3:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26CE6
@@ -27494,7 +27494,7 @@ loc_18FD3:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26CE8
@@ -31350,7 +31350,7 @@ loc_1B3E7:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26D76
@@ -31366,7 +31366,7 @@ loc_1B3E7:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26D78
@@ -31526,7 +31526,7 @@ loc_1B592:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+5ECh]
+		movsx	eax, _CosTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_26D82
@@ -31536,7 +31536,7 @@ loc_1B592:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		movsx	eax, word ptr [bx+56Ch]
+		movsx	eax, _SinTable8[bx]
 		imul	eax, 70h
 		sar	eax, 8
 		add	ax, word_26D84
@@ -33073,7 +33073,7 @@ loc_1C2A7:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, di
@@ -33083,7 +33083,7 @@ loc_1C2A7:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_4]
@@ -33157,7 +33157,7 @@ loc_1C35B:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+5ECh]
+		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_6]
@@ -33167,7 +33167,7 @@ loc_1C35B:
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		movsx	edx, word ptr [bx+56Ch]
+		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, [bp+arg_4]
