@@ -8902,7 +8902,7 @@ include th03/hardware/input_sense.asm
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
-include th02/formats/pi_slot_load.asm
+include th02/formats/pi_load.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0

@@ -825,9 +825,9 @@ loc_AF51:
 loc_AF56:
 		call	start_extra
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp1_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -850,9 +850,9 @@ loc_AFB7:
 
 loc_AFBD:
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp1_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -1559,9 +1559,9 @@ sub_B9CE	proc near
 		call	far ptr	palette_show
 		call	super_entry_bfnt pascal, ds, offset aMswin_bft ; "mswin.bft"
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aMs_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aMs_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -1820,9 +1820,9 @@ musicroom	proc near
 		graph_accesspage al
 		call	graph_clear
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aMusic_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aMusic_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
@@ -2255,11 +2255,11 @@ score_menu	proc near
 		mov	bp, sp
 		push	si
 		graph_accesspage 1
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -2314,7 +2314,7 @@ sub_CA94	proc near
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	scoredat_load
-		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
+		call	pi_load pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
 		call	score_menu
@@ -2363,9 +2363,9 @@ loc_CB58:
 		call	palette_black_out
 		freePISlotLarge	0
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp1_pi_0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -2511,13 +2511,13 @@ var_3		= byte ptr -3
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 0
-		call	pi_slot_load pascal, 0, ds, offset aOp5b_pi
-		call	pi_slot_load pascal, 1, ds, offset aOp4b_pi
-		call	pi_slot_load pascal, 2, ds, offset aOp3b_pi
-		call	pi_slot_load pascal, 3, ds, offset aOp2b_pi
-		call	pi_slot_load pascal, 4, ds, offset aOp1b_pi
-		call	pi_slot_load pascal, 5, ds, offset aOp0b_pi
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_load pascal, 0, ds, offset aOp5b_pi
+		call	pi_load pascal, 1, ds, offset aOp4b_pi
+		call	pi_load pascal, 2, ds, offset aOp3b_pi
+		call	pi_load pascal, 3, ds, offset aOp2b_pi
+		call	pi_load pascal, 4, ds, offset aOp1b_pi
+		call	pi_load pascal, 5, ds, offset aOp0b_pi
+		call	pi_palette_apply pascal, 0
 		push	4
 		call	palette_black_in
 		graph_showpage 0
@@ -2542,7 +2542,7 @@ loc_CD7A:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	pi_slot_put
+		call	pi_put
 		inc	[bp+var_3]
 		graph_accesspage [bp+@@page]
 		mov	al, 1
@@ -2579,9 +2579,9 @@ loc_CDC4:
 
 loc_CE50:
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_1
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp1_pi_1
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		xor	si, si
@@ -2646,7 +2646,7 @@ loc_CF01:
 		mov	bx, di
 		imul	bx, size rgb_t
 		add	bx, [bp+@@component]
-		mov	al, _pi_slot_headers._palette[bx]
+		mov	al, _pi_headers._palette[bx]
 		mov	bx, di
 		imul	bx, size rgb_t
 		add	bx, [bp+@@component]
@@ -2680,7 +2680,7 @@ loc_CF34:
 loc_CF4E:
 		cmp	si, 63
 		jl	short loc_CEF5
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		pop	di
 		pop	si
 		leave
@@ -3541,11 +3541,11 @@ playchar_menu_init	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_slot_load pascal, 0, ds, offset aSlb1_pi
+		call	pi_load pascal, 0, ds, offset aSlb1_pi
 		graph_accesspage 1
 		graph_showpage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		call	sub_CF5E
 		push	0
 		call	sub_D338
@@ -3748,7 +3748,7 @@ loc_D881:
 		graph_accesspage 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		call	sub_D650
 		call	graph_copy_page pascal, 0
 		push	1
@@ -3900,9 +3900,9 @@ seg2	segment	word public 'CODE' use16
 
 include th01/hardware/vram_planes_set.asm
 include th02/hardware/frame_delay.asm
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
-include th02/formats/pi_slot_load.asm
+include th02/formats/pi_palette_apply.asm
+include th02/formats/pi_put.asm
+include th02/formats/pi_load.asm
 		db    0
 include th03/formats/hfliplut.asm
 include th04/hardware/input_wait.asm

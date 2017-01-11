@@ -1515,9 +1515,9 @@ loc_AC15:
 		graph_accesspage al
 		call	graph_clear
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp3_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp3_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
@@ -1665,14 +1665,14 @@ var_2		= word ptr -2
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		call	pi_slot_load pascal, 0, ds, offset aTl01_pi
+		call	pi_load pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
 		mov	Palettes+45, 0
 		mov	Palettes+46, 0
@@ -1683,7 +1683,7 @@ var_2		= word ptr -2
 		mov	Palettes+35, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
+		call	pi_load pascal, 0, ds, offset aTl02_pi
 		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
@@ -1770,8 +1770,8 @@ loc_AF65:
 		kajacall	KAJA_SONG_PLAY
 		graph_showpage 0
 		graph_accesspage al
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		push	1
 		call	frame_delay
 		mov	PaletteTone, 100
@@ -1797,7 +1797,7 @@ loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1820,14 +1820,14 @@ sub_B008	proc near
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
+		call	pi_load pascal, 0, ds, offset aTl02_pi
 		graph_showpage 0
 		call	sub_B3EF
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -3631,13 +3631,13 @@ include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
 		db 0
 include th03/hardware/input_sense.asm
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
+include th02/formats/pi_palette_apply.asm
+include th02/formats/pi_put.asm
 include th02/snd/kajaint.asm
 include th02/initop.asm
 include th03/formats/cdg_load.asm
 include th03/hardware/grppsafx.asm
-include th02/formats/pi_slot_load.asm
+include th02/formats/pi_load.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0

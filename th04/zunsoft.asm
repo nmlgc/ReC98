@@ -253,11 +253,11 @@ zunsoft	proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_slot_load pascal, 0, ds, offset aZun00_pi
-	call	pi_slot_palette_apply pascal, 0
-	call	pi_slot_put pascal, large 0, 0
+	call	pi_load pascal, 0, ds, offset aZun00_pi
+	call	pi_palette_apply pascal, 0
+	call	pi_put pascal, large 0, 0
 if GAME eq 5
-	call	pi_slot_free pascal, 0
+	call	pi_free pascal, 0
 else
 	freePISlotLarge	0
 endif

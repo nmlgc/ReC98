@@ -1980,7 +1980,7 @@ sub_B2AB	proc near
 		push	si
 		call	_snd_load stdcall, offset aHuuma_efc, ds, SND_LOAD_SE
 		call	sub_1CD36
-		call	_pi_slot_load stdcall, 0, offset aEye_pi, ds
+		call	_pi_load stdcall, 0, offset aEye_pi, ds
 		add	sp, 0Ch
 		call	super_entry_bfnt pascal, ds, offset aMiko_bft ; "miko.bft"
 		call	super_entry_bfnt pascal, ds, offset aMiko32_bft ; "miko32.bft"
@@ -2127,9 +2127,9 @@ var_C		= byte ptr -0Ch
 		graph_showpage 0
 		call	hud_put
 		call	_playfield_tram_wipe
-		call	_pi_slot_palette_apply stdcall, 0
-		call	_pi_slot_palette_apply stdcall, 0
-		call	_pi_slot_put stdcall, 96, large 144
+		call	_pi_palette_apply stdcall, 0
+		call	_pi_palette_apply stdcall, 0
+		call	_pi_put stdcall, 96, large 144
 		add	sp, 0Ah
 		call	sub_102D6
 		call	sub_16A6B
@@ -7178,7 +7178,7 @@ sub_E178	proc near
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E1D2
-		call	_pi_slot_load c, 1, offset aBomb1_pi, ds
+		call	_pi_load c, 1, offset aBomb1_pi, ds
 		mov	_playchar_bomb_func, offset bomb_reimu_a
 		pop	bp
 		retn
@@ -7188,7 +7188,7 @@ loc_E1D2:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	short loc_E1F3
-		call	_pi_slot_load c, 1, offset aBomb3_pi, ds
+		call	_pi_load c, 1, offset aBomb3_pi, ds
 		mov	_playchar_bomb_func, offset bomb_reimu_c
 		pop	bp
 		retn
@@ -7198,7 +7198,7 @@ loc_E1F3:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E248
-		call	_pi_slot_load c, 1, offset aBomb2_pi, ds
+		call	_pi_load c, 1, offset aBomb2_pi, ds
 		push	ds
 		push	offset aBomb1_bft ; "bomb1.bft"
 		call	file_ropen
@@ -7818,7 +7818,7 @@ loc_E782:
 		sub	si, RES_Y
 
 loc_E793:
-		call	_pi_slot_put c, 112, si, 1
+		call	_pi_put c, 112, si, 1
 
 loc_E7A0:
 		cmp	_bomb_frame, 86
@@ -8032,7 +8032,7 @@ loc_E9A6:
 		sub	[bp+var_2], RES_Y
 
 loc_E9DB:
-		call	_pi_slot_put stdcall, 32, [bp+var_2], 1
+		call	_pi_put stdcall, 32, [bp+var_2], 1
 		call	_snd_se_play stdcall, 16
 		add	sp, 8
 		jmp	short loc_EA60
@@ -8235,7 +8235,7 @@ loc_EBCC:
 		sub	si, RES_Y
 
 loc_EBE2:
-		call	_pi_slot_put c, 32, si, 1
+		call	_pi_put c, 32, si, 1
 
 loc_EBEF:
 		test	byte ptr _bomb_frame, 3
@@ -9308,7 +9308,7 @@ seg2	segment	word public 'CODE' use16
 	extern MPTN_LOAD:proc
 	extern MPTN_FREE:proc
 	extern _vram_planes_set:proc
-	extern _pi_slot_load:proc
+	extern _pi_load:proc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
 	extern FRAME_DELAY:proc
@@ -9320,8 +9320,8 @@ seg2	segment	word public 'CODE' use16
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
 	extern _game_init_main:proc
-	extern _pi_slot_palette_apply:proc
-	extern _pi_slot_put:proc
+	extern _pi_palette_apply:proc
+	extern _pi_put:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc

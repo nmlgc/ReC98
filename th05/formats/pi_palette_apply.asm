@@ -1,4 +1,4 @@
-pi_slot_palette_apply	proc
+pi_palette_apply	proc
 @@slot	= word ptr cPtrSize
 
 	mov	bx, sp
@@ -6,7 +6,7 @@ pi_slot_palette_apply	proc
 	push	di
 	mov	si, ss:[bx+@@slot]
 	imul	si, size PiHeader
-	add	si, offset _pi_slot_headers + PiHeader._palette
+	add	si, offset _pi_headers + PiHeader._palette
 	mov	di, offset Palettes
 	mov	ax, ds
 	mov	es, ax
@@ -16,4 +16,4 @@ pi_slot_palette_apply	proc
 	pop	di
 	pop	si
 	ret	2
-pi_slot_palette_apply	endp
+pi_palette_apply	endp

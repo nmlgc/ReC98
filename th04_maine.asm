@@ -270,9 +270,9 @@ loc_A187:
 		les	bx, [bp+var_4]
 		mov	es:[bx+5], al
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, word ptr [bp+var_4+2], bx
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, word ptr [bp+var_4+2], bx
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -300,9 +300,9 @@ loc_A1FE:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, large [bp+var_4]
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, large [bp+var_4]
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -464,7 +464,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, _pi_slot_buffers
+		mov	eax, _pi_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A39A
@@ -1391,10 +1391,10 @@ loc_AB7A:
 		graph_accesspage 1
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_AB8D
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 
 loc_AB8D:
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	sub_A4AE
@@ -1411,7 +1411,7 @@ loc_ABAA:
 loc_ABC1:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_ABD1
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -1457,7 +1457,7 @@ loc_AC18:
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	pi_slot_load
+		call	pi_load
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1521,7 +1521,7 @@ loc_ACCF:
 		graph_accesspage 0
 
 loc_ACE0:
-		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_ACF0:
 		graph_showpage 0
@@ -2403,9 +2403,9 @@ sub_B44D	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aSff1_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aSff1_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	bgimage_snap
@@ -2451,9 +2451,9 @@ sub_B44D	proc near
 		call	palette_black_out
 		call	cdg_free_all
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aSff2_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aSff2_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	bgimage_snap
@@ -3402,9 +3402,9 @@ sub_C0F8	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aUde_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aUde_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	4
@@ -4205,9 +4205,9 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
@@ -4702,10 +4702,10 @@ seg2	segment	word public 'CODE' use16
 
 include th01/hardware/vram_planes_set.asm
 include th02/hardware/frame_delay.asm
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
-include th02/formats/pi_slot_load.asm
-include th03/formats/pi_slot_put_quarter.asm
+include th02/formats/pi_palette_apply.asm
+include th02/formats/pi_put.asm
+include th02/formats/pi_load.asm
+include th03/formats/pi_put_quarter.asm
 seg2	ends
 
 seg2_	segment	word public 'CODE' use16
@@ -4778,7 +4778,7 @@ include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 include th04/bgimage[data].asm
 include th03/formats/cdg[data].asm
-include th03/formats/pi_slot_put_mask[data].asm
+include th03/formats/pi_put_mask[data].asm
 		db  88h
 		db  88h
 		db    0

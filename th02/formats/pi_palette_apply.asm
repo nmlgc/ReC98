@@ -2,7 +2,7 @@ if GAME ge 3
 	align	2
 endif
 
-proc_defconv pi_slot_palette_apply
+proc_defconv pi_palette_apply
 @@slot	= word ptr (cPtrSize + 2)
 
 	push	bp
@@ -11,7 +11,7 @@ proc_defconv pi_slot_palette_apply
 	push	ds
 	mov	ax, [bp+@@slot]
 	imul	ax, size PiHeader
-	add	ax, offset _pi_slot_headers + PiHeader._palette
+	add	ax, offset _pi_headers + PiHeader._palette
 	push	ax
 	push	ds
 	push	offset Palettes

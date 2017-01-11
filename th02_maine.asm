@@ -963,10 +963,10 @@ sub_9B64	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd01_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd01_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -1189,10 +1189,10 @@ loc_9D96:
 		push	6
 		call	sub_9643
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd02_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd02_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_out
@@ -1484,10 +1484,10 @@ sub_A09D	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd01_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd01_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
@@ -1508,10 +1508,10 @@ sub_A09D	proc near
 		push	1
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd03_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd03_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -1626,10 +1626,10 @@ loc_A247:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd04_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd04_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
 		push	0
@@ -1833,10 +1833,10 @@ loc_A451:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -1989,10 +1989,10 @@ loc_A620:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	1
 		call	sub_98B5
@@ -2130,10 +2130,10 @@ loc_A6B6:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	sub_98B5
@@ -2348,10 +2348,10 @@ loc_A992:
 		call	_snd_delay_until_measure
 		pop	cx
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd06_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd06_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
 		push	4
@@ -2391,8 +2391,8 @@ loc_A992:
 		push	29h ; ')'
 		call	rotrect
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd07_pi, ds
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_load c, 0, offset aEd07_pi, ds
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
 		push	19h
@@ -2465,13 +2465,13 @@ loc_A992:
 		push	0E9h
 		call	rotrect
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd08_pi, ds
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_load c, 0, offset aEd08_pi, ds
+		call	_pi_put c, 0, large 0
 		graph_accesspage 0
 		push	29h ; ')'
 		call	_snd_delay_until_measure
 		pop	cx
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
 		freePISlotLarge	0
 		push	0F8h
@@ -2548,10 +2548,10 @@ loc_A992:
 		push	4
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd09_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd09_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	4
@@ -2860,19 +2860,19 @@ sub_AFE7	proc far
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_B07D
-		call	_pi_slot_load c, 0, offset aAll_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aAll_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
 		push	96h
 		call	frame_delay
-		call	_pi_slot_load c, 0, offset aBut_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aBut_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		call	_key_delay
 		push	5
@@ -2896,19 +2896,19 @@ sub_B07F	proc far
 		jz	loc_B115
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	_pi_slot_load c, 0, offset aAll_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aAll_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
 		push	96h
 		call	frame_delay
-		call	_pi_slot_load c, 0, offset aExtra_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aExtra_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put c, 0, large 0
 		freePISlotLarge	0
 		call	_key_delay
 		push	5
@@ -3028,7 +3028,7 @@ seg2	segment	word public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
 	extern _vram_planes_set:proc
-	extern _pi_slot_load:proc
+	extern _pi_load:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
 	extern _game_exit:proc
@@ -3037,8 +3037,8 @@ seg2	segment	word public 'CODE' use16
 	extern _snd_pmd_resident:proc
 	extern _snd_load:proc
 	extern _game_init_main:proc
-	extern _pi_slot_palette_apply:proc
-	extern _pi_slot_put:proc
+	extern _pi_palette_apply:proc
+	extern _pi_put:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_delay_until_measure:proc
 seg2	ends

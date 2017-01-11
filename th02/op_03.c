@@ -21,11 +21,11 @@ void title_flash(void)
 		page = 1 - page;
 
 		if(frame == 0) {
-			pi_slot_put(0, 0, 0);
+			pi_put(0, 0, 0);
 		} else if(frame == 5) {
-			pi_slot_put(0, 0, 1);
+			pi_put(0, 0, 1);
 		} else if(frame == 10) {
-			pi_slot_put(0, 0, 2);
+			pi_put(0, 0, 2);
 		}
 
 		if(frame % 3 == 0) {
@@ -36,7 +36,7 @@ void title_flash(void)
 		frame_delay(1);
 	}
 	graph_showpage(0);
-	graph_pi_free(&pi_slot_headers[0], pi_slot_buffers[0]);
-	graph_pi_free(&pi_slot_headers[1], pi_slot_buffers[1]);
-	graph_pi_free(&pi_slot_headers[2], pi_slot_buffers[2]);
+	graph_pi_free(&pi_headers[0], pi_buffers[0]);
+	graph_pi_free(&pi_headers[1], pi_buffers[1]);
+	graph_pi_free(&pi_headers[2], pi_buffers[2]);
 }

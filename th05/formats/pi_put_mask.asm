@@ -1,5 +1,5 @@
-public PI_SLOT_PUT_MASK
-pi_slot_put_mask	proc far
+public PI_PUT_MASK
+pi_put_mask	proc far
 @@mask_id	= word ptr  6
 @@slot	= word ptr  8
 @@top	= word ptr  0Ah
@@ -12,28 +12,28 @@ pi_slot_put_mask	proc far
 	mov	si, [bp+@@slot]
 	mov	di, si
 	shl	si, 2
-	les	si, _pi_slot_buffers[si]
+	les	si, _pi_buffers[si]
 	assume es:nothing
 	imul	di, size PiHeader
 	push	[bp+@@left]
 	push	[bp+@@top]
-	mov	ax, _pi_slot_headers._xsize[di]
+	mov	ax, _pi_headers._xsize[di]
 	push	ax
 	shr	ax, 1
 	push	ax
-	mov	di, _pi_slot_headers._ysize[di]
+	mov	di, _pi_headers._ysize[di]
 	mov	ax, [bp+@@mask_id]
-	call	pi_slot_put_mask_rowloop
+	call	pi_put_mask_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	8
-pi_slot_put_mask	endp
+pi_put_mask	endp
 
 ; ---------------------------------------------------------------------------
 
-public PI_SLOT_PUT_QUARTER_MASK
-pi_slot_put_quarter_mask	proc far
+public PI_PUT_QUARTER_MASK
+pi_put_quarter_mask	proc far
 
 @@mask_id	= word ptr  6
 @@quarter	= byte ptr  8
@@ -60,7 +60,7 @@ pi_slot_put_quarter_mask	proc far
 
 @@put:
 	shl	si, 2
-	les	si, _pi_slot_buffers[si]
+	les	si, _pi_buffers[si]
 	add	si, ax
 	mov	ax, es
 	add	ax, dx
@@ -72,23 +72,23 @@ pi_slot_put_quarter_mask	proc far
 	push	320
 	push	320
 	mov	ax, [bp+@@mask_id]
-	call	pi_slot_put_mask_rowloop
+	call	pi_put_mask_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	0Ah
-pi_slot_put_quarter_mask	endp
+pi_put_quarter_mask	endp
 	even
 
 ; ---------------------------------------------------------------------------
 
-; void pascal pi_slot_put_mask_rowloop(
+; void pascal pi_put_mask_rowloop(
 ;	int mask_id<ax>,
 ;	void far *pi_buf<es:si>,
 ;	pixel_t h<di>,
 ;	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 ; );
-pi_slot_put_mask_rowloop	proc near
+pi_put_mask_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
 @@top	= word ptr [bp+6]
@@ -152,7 +152,7 @@ TEMP_ROW = RES_Y
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_slot_put_mask_rowloop	endp
+pi_put_mask_rowloop	endp
 
 
 ; ---------------------------------------------------------------------------

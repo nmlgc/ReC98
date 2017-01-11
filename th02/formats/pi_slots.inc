@@ -3,15 +3,15 @@
 
 freePISlot	macro slot
 	push	ds
-	push	offset _pi_slot_headers + (slot * size PiHeader)
-	push	word ptr _pi_slot_buffers + (slot * dPtrSize) + 2
-	push	word ptr _pi_slot_buffers + (slot * dPtrSize)
+	push	offset _pi_headers + (slot * size PiHeader)
+	push	word ptr _pi_buffers + (slot * dPtrSize) + 2
+	push	word ptr _pi_buffers + (slot * dPtrSize)
 	call	graph_pi_free
 endm
 
 freePISlotLarge	macro slot
 	push	ds
-	push	offset _pi_slot_headers + (slot * size PiHeader)
-	push	large [_pi_slot_buffers + (slot * dPtrSize)]
+	push	offset _pi_headers + (slot * size PiHeader)
+	push	large [_pi_buffers + (slot * dPtrSize)]
 	call	graph_pi_free
 endm

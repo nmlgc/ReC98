@@ -104,11 +104,11 @@ void text_wipe(void)
 
 void pascal near pi_load_put_free_to(const char near *fn, char page)
 {
-	pi_slot_load(0, fn);
+	pi_load(0, fn);
 	graph_accesspage(page);
-	pi_slot_palette_apply(0);
-	pi_slot_put(0, 0, 0);
-	graph_pi_free(&pi_slot_headers[0], pi_slot_buffers[0]);
+	pi_palette_apply(0);
+	pi_put(0, 0, 0);
+	graph_pi_free(&pi_headers[0], pi_buffers[0]);
 }
 
 void op_animate(void)
@@ -122,9 +122,9 @@ void op_animate(void)
 	snd_load("huuma.efc", SND_LOAD_SE);
 	pi_load_put_free_to("op2.pi", 1);
 	pi_load_put_free_to("op.pi", 0);
-	pi_slot_load(0, "opa.pi");
-	pi_slot_load(1, "opb.pi");
-	pi_slot_load(2, "opc.pi");
+	pi_load(0, "opa.pi");
+	pi_load(1, "opb.pi");
+	pi_load(2, "opc.pi");
 	palette_white();
 
 	for(door_x = 0; door_x < 40; door_x++) {
@@ -196,7 +196,7 @@ void pascal near start_init(void)
 
 #define start_exec() \
 	cfg_save(); \
-	pi_slot_load(0, "ts1.pi"); \
+	pi_load(0, "ts1.pi"); \
 	text_clear(); \
 	shottype_menu(); \
 	snd_kaja_func(KAJA_SONG_FADE, 15); \
@@ -231,9 +231,9 @@ void start_demo(void)
 	resident->shottype = 0;
 	cfg_save();
 	text_clear();
-	graph_pi_free(&pi_slot_headers[0], pi_slot_buffers[0]);
-	graph_pi_free(&pi_slot_headers[1], pi_slot_buffers[1]);
-	graph_pi_free(&pi_slot_headers[2], pi_slot_buffers[2]);
+	graph_pi_free(&pi_headers[0], pi_buffers[0]);
+	graph_pi_free(&pi_headers[1], pi_buffers[1]);
+	graph_pi_free(&pi_headers[2], pi_buffers[2]);
 	gaiji_restore();
 	super_free();
 	game_exit();
@@ -648,8 +648,8 @@ int main(void)
 	}
 
 	op_animate();
-	pi_slot_load(2, "ts3.pi");
-	pi_slot_load(1, "ts2.pi");
+	pi_load(2, "ts3.pi");
+	pi_load(1, "ts2.pi");
 	key_det = 0;
 	idle_frames = 0;
 

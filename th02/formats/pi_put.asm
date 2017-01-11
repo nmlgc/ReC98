@@ -1,4 +1,4 @@
-proc_defconv pi_slot_put
+proc_defconv pi_put
 	arg @@left:word, @@top:word, @@slot:word
 if GAME ge 3
 	local @@y:word, @@row_buf:dword
@@ -12,8 +12,8 @@ endif
 	mov	di, @@slot
 	mov	bx, di
 	shl	bx, 2
-	mov	ax, word ptr (_pi_slot_buffers+2)[bx]
-	mov	dx, word ptr _pi_slot_buffers[bx]
+	mov	ax, word ptr (_pi_buffers+2)[bx]
+	mov	dx, word ptr _pi_buffers[bx]
 	mov	word ptr @@row_buf+2, ax
 	mov	word ptr @@row_buf, dx
 	mov	@@y, 0
@@ -25,7 +25,7 @@ endif
 	pushd	@@row_buf
 	mov	bx, di
 	imul	bx, size PiHeader
-	push	_pi_slot_headers.PiHeader._xsize[bx]
+	push	_pi_headers.PiHeader._xsize[bx]
 	call	graph_pack_put_8
 	inc	si
 	cmp	si, 400
@@ -35,7 +35,7 @@ endif
 @@next_row:
 	mov	bx, di
 	imul	bx, size PiHeader
-	mov	ax, _pi_slot_headers.PiHeader._xsize[bx]
+	mov	ax, _pi_headers.PiHeader._xsize[bx]
 	shr	ax, 1
 	add	word ptr @@row_buf, ax
 	mov	eax, @@row_buf
@@ -52,7 +52,7 @@ endif
 @@check:
 	mov	bx, di
 	imul	bx, size PiHeader
-	mov	ax, _pi_slot_headers.PiHeader._ysize[bx]
+	mov	ax, _pi_headers.PiHeader._ysize[bx]
 	cmp	ax, @@y
 	ja	short @@put
 	pop	di

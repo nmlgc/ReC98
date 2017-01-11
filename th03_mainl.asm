@@ -543,11 +543,11 @@ loc_99D4:
 		mov	byte_F7E5, 0
 
 loc_99F1:
-		call	pi_slot_load pascal, 0, ds, offset aStnx0_pi
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aStnx0_pi
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
-		call	pi_slot_load pascal, 0, ds, word_E504
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, word_E504
+		call	pi_put pascal, large 0, 0
 		leave
 		retn
 sub_990C	endp
@@ -568,7 +568,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 3AAh
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		call	graph_copy_page pascal, 0
 		freePISlotLarge	0
 		push	(96 shl 16) or 96
@@ -638,8 +638,8 @@ loc_9A8E:
 		call	sub_9D20
 		push	1
 		call	sub_9D20
-		call	pi_slot_load pascal, 0, ds, offset aEn2_pi
-		call	pi_slot_put_interlace pascal, large 280, 0
+		call	pi_load pascal, 0, ds, offset aEn2_pi
+		call	pi_put_interlace pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
@@ -689,10 +689,10 @@ loc_9BB7:
 		push	offset aEnemy04_pi ; "ENEMY04.pi"
 
 loc_9BBD:
-		call	pi_slot_load
+		call	pi_load
 
 loc_9BC2:
-		call	pi_slot_put_interlace pascal, large 304, 0
+		call	pi_put_interlace pascal, large 304, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -761,7 +761,7 @@ loc_9C5E:
 		push	1
 		call	palette_white_in
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		freePISlotLarge	0
 		call	respal_set_palettes
 		pop	si
@@ -793,18 +793,18 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_4]
-		call	pi_slot_load pascal, 0, large [bp+arg_0]
+		call	pi_load pascal, 0, large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 320
-		call	pi_slot_put_interlace pascal, ax, (200 shl 16)
+		call	pi_put_interlace pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'e'
 		mov	byte ptr es:[bx+3], 'x'
-		call	pi_slot_load pascal, 0, word ptr [bp+arg_0+2], bx
+		call	pi_load pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
 		imul	ax, 320
-		call	pi_slot_put_interlace pascal, ax, (208 shl 16)
+		call	pi_put_interlace pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -1196,9 +1196,9 @@ loc_A0C5:
 		graph_showpage al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_slot_load pascal, 0, ds, offset aOver_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOver_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -1358,7 +1358,7 @@ arg_6		= word ptr  0Ah
 		enter	8, 0
 		push	si
 		push	di
-		mov	eax, _pi_slot_buffers
+		mov	eax, _pi_buffers
 		mov	[bp+var_8], eax
 		cmp	[bp+arg_2], 1
 		jnz	short loc_A257
@@ -2226,10 +2226,10 @@ loc_A9EB:
 		graph_accesspage 1
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_A9FE
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 
 loc_A9FE:
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	sub_A36B
@@ -2246,7 +2246,7 @@ loc_AA1B:
 loc_AA32:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_AA42
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2291,7 +2291,7 @@ loc_AA8A:
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	pi_slot_load
+		call	pi_load
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -2355,7 +2355,7 @@ loc_AB33:
 		graph_accesspage 0
 
 loc_AB44:
-		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_AB54:
 		graph_showpage 0
@@ -2939,9 +2939,9 @@ sub_AFAC	proc near
 		call	far ptr	palette_show
 		graph_accesspage 0
 		graph_showpage al
-		call	pi_slot_load pascal, 0, ds, offset aRegib_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aRegib_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
@@ -4116,9 +4116,9 @@ loc_B879:
 		jz	short loc_B8F1
 		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
 		jz	short loc_B8F1
-		call	pi_slot_load pascal, 0, ds, offset aConti_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aConti_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
@@ -4126,9 +4126,9 @@ loc_B879:
 ; ---------------------------------------------------------------------------
 
 loc_B8F1:
-		call	pi_slot_load pascal, 0, ds, offset aOver_pi_0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOver_pi_0
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	snd_delay_until_volume stdcall, 255
 		pop	cx
@@ -5553,9 +5553,9 @@ include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
 		db 0
 include th03/hardware/input_sense.asm
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
-include th03/formats/pi_slot_put_interlace.asm
+include th02/formats/pi_palette_apply.asm
+include th02/formats/pi_put.asm
+include th03/formats/pi_put_interlace.asm
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
@@ -5582,8 +5582,8 @@ sub_D16F	endp
 include th03/hardware/grppsafx.asm
 include th03/snd/delaymea.asm
 include th03/hardware/input_wait_ok.asm
-include th02/formats/pi_slot_load.asm
-include th03/formats/pi_slot_put_quarter.asm
+include th02/formats/pi_load.asm
+include th03/formats/pi_put_quarter.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
@@ -5728,7 +5728,7 @@ include th03/formats/cdg[data].asm
 include th03/snd/se_priority[data].asm
 a0		db  '0',0
 aOver_pi	db 'over.pi',0
-include th03/formats/pi_slot_put_mask[data].asm
+include th03/formats/pi_put_mask[data].asm
 asc_EFC2	db  '  ', 0
 	even
 aSCORE_PLAYCHARS label dword

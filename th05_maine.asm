@@ -431,7 +431,7 @@ arg_6		= word ptr  0Ah
 		push	0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	pi_slot_put_quarter_mask
+		call	pi_put_quarter_mask
 		call	egc_copy_rect_1_to_0_16 pascal, si, di, (320 shl 16) or 200
 		pop	di
 		pop	si
@@ -1126,10 +1126,10 @@ loc_ACE1:
 		graph_accesspage 1
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_ACF4
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 
 loc_ACF4:
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	bgimage_snap
@@ -1139,14 +1139,14 @@ loc_ACF4:
 loc_AD13:
 		cmp	[bp+arg_0], 2Dh	; '-'
 		jnz	short loc_AD23
-		call	pi_slot_free pascal, 0
+		call	pi_free pascal, 0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
 loc_AD23:
 		cmp	[bp+arg_0], 70h	; 'p'
 		jnz	short loc_AD33
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1189,12 +1189,12 @@ loc_AD7A:
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
 		mov	byte ptr ss:[bx], 0
-		call	pi_slot_free pascal, 0
+		call	pi_free pascal, 0
 		push	0
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	pi_slot_load
+		call	pi_load
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1215,7 +1215,7 @@ loc_AD9A:
 		graph_accesspage 1
 		cmp	[bp+var_2], 4
 		jge	short loc_ADE3
-		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		jmp	loc_AE64
 ; ---------------------------------------------------------------------------
 
@@ -1260,7 +1260,7 @@ loc_AE42:
 		cmp	si, 4
 		jl	short loc_AE25
 		graph_accesspage 1
-		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		push	1
 		call	frame_delay
 
@@ -1621,7 +1621,7 @@ loc_B18D:
 
 loc_B196:
 		call	bgimage_free
-		call	pi_slot_free pascal, 0
+		call	pi_free pascal, 0
 		pop	si
 		leave
 		retn
@@ -1741,7 +1741,7 @@ arg_2		= word ptr  6
 		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_palette_apply pascal, 0
 		xor	si, si
 		jmp	short loc_B309
 ; ---------------------------------------------------------------------------
@@ -1756,16 +1756,16 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_slot_put_quarter_mask
+		call	pi_put_quarter_mask
 		call	sub_B37C
 		inc	si
 
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		call	pi_slot_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
+		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
 		call	sub_B37C
-		call	pi_slot_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
+		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -1778,7 +1778,7 @@ loc_B309:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr [bx+760h]
-		call	pi_slot_load
+		call	pi_load
 
 loc_B357:
 		add	word_15012, 2
@@ -1871,8 +1871,8 @@ sub_B3CB	proc near
 		shl	ax, 5
 		mov	bx, ax
 		pushd	dword ptr [bx+760h]
-		call	pi_slot_load
-		call	pi_slot_palette_apply pascal, 0
+		call	pi_load
+		call	pi_palette_apply pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_15012, 2
@@ -1905,7 +1905,7 @@ loc_B4B5:
 		jz	short loc_B4B5
 		push	4
 		call	palette_black_out
-		call	pi_slot_free pascal, 0
+		call	pi_free pascal, 0
 		graph_accesspage 0
 		graph_showpage al
 		pop	bp
@@ -3539,10 +3539,10 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
-		call	pi_slot_free pascal, 0
+		call	pi_load pascal, 0, ds, offset aHi01_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
+		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
@@ -5179,10 +5179,10 @@ sub_D1B1	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aUde_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
-		call	pi_slot_free pascal, 0
+		call	pi_load pascal, 0, ds, offset aUde_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put pascal, large 0, 0
+		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
@@ -7793,11 +7793,11 @@ include th04/math/vector2_at.asm
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-include th05/formats/pi_slot_put_mask.asm
-include th05/formats/pi_slot_load.asm
-include th05/formats/pi_slot_put.asm
-include th05/formats/pi_slot_palette_apply.asm
-include th05/formats/pi_slot_free.asm
+include th05/formats/pi_put_mask.asm
+include th05/formats/pi_load.asm
+include th05/formats/pi_put.asm
+include th05/formats/pi_palette_apply.asm
+include th05/formats/pi_free.asm
 include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
@@ -7852,8 +7852,8 @@ include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
-include th03/formats/pi_slot_put_mask[data].asm
-include th05/formats/pi_slot_buffers[bss].asm
+include th03/formats/pi_put_mask[data].asm
+include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
 byte_10830	db 0
@@ -8235,8 +8235,8 @@ include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
-include th05/formats/pi_slot_put_mask[bss].asm
-include th05/formats/pi_slot_headers[bss].asm
+include th05/formats/pi_put_mask[bss].asm
+include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
