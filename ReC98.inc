@@ -26,6 +26,7 @@ include libs/master.lib/clip.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
 include th02/formats/pi_slots.inc
+include th03/formats/cdg.inc
 
 nopcall macro func
 if LDATA

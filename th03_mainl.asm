@@ -180,15 +180,8 @@ var_1		= byte ptr -1
 		push	offset aLogo0_rgb ; "logo0.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		push	0
-		push	ds
-		push	offset aLogo_cd2 ; "logo.cd2"
-		call	sub_D114
-		push	5
-		push	ds
-		push	offset aLogo5_cdg ; "logo5.cdg"
-		push	0
-		call	sub_CF1E
+		call	_cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
+		call	_cdg_load_single_forcealpha pascal, 5, ds, offset aLogo5_cdg, 0
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_965E
@@ -260,7 +253,7 @@ loc_96B7:
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	sub_CFA8
+		call	_cdg_load_single_noalpha
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		cwd
@@ -338,12 +331,11 @@ sub_9776	proc near
 ; ---------------------------------------------------------------------------
 
 loc_977E:
-		push	si
-		call	sub_D130
+		call	_cdg_free pascal, si
 		inc	si
 
 loc_9785:
-		cmp	si, 20h	; ' '
+		cmp	si, CDG_SLOT_COUNT
 		jl	short loc_977E
 		pop	si
 		pop	bp
@@ -546,7 +538,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	sub_CF1E
+		call	_cdg_load_single_forcealpha
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Dh]
 		add	al, 0FFh
@@ -564,7 +556,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	sub_CF1E
+		call	_cdg_load_single_forcealpha
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		cwd
@@ -621,7 +613,7 @@ loc_99D4:
 		mov	ah, 0
 		inc	ax
 		push	ax
-		call	sub_CF1E
+		call	_cdg_load_single_forcealpha
 		mov	byte_F7E5, 0
 
 loc_99F1:
@@ -667,12 +659,9 @@ var_2		= word ptr -2
 		call	sub_C9D4
 
 loc_9A8E:
-		push	0
-		call	sub_D130
-		push	1
-		call	sub_D130
-		push	2
-		call	sub_D130
+		call	_cdg_free pascal, 0
+		call	_cdg_free pascal, 1
+		call	_cdg_free pascal, 2
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -3151,16 +3140,11 @@ sub_AFAC	proc near
 		mov	al, es:[bx+0Bh]
 		mov	bx, word_ED68
 		add	[bx+3],	al
-		push	0
-		push	ds
-		push	bx
-		push	0
-		call	sub_CF1E
+		call	_cdg_load_single_forcealpha pascal, 0, ds, bx, 0
 		push	1400138h
 		push	0
 		call	sub_C9D4
-		push	0
-		call	sub_D130
+		call	_cdg_free pascal, 0
 		push	ds
 		push	offset aRegi2_bft ; "regi2.bft"
 		call	super_entry_bfnt
@@ -4352,10 +4336,7 @@ loc_B879:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		push	ds
-		push	offset aConti_cd2 ; "conti.cd2"
-		call	sub_D02E
+		call	_cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -4404,12 +4385,9 @@ sub_B972	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		push	0
-		call	sub_D130
-		push	1
-		call	sub_D130
-		push	2
-		call	sub_D130
+		call	_cdg_free pascal, 0
+		call	_cdg_free pascal, 1
+		call	_cdg_free pascal, 2
 		freePISlotLarge	0
 		les	bx, dword_105DA
 		mov	al, es:[bx+0Ch]
@@ -5841,66 +5819,18 @@ loc_C4D8:
 		mov	dx, 0A4h
 		mov	al, 1
 		out	dx, al
-		push	0
-		push	ds
-		push	offset aStf1_cdg ; "stf1.cdg"
-		push	0
-		call	sub_CFA8
-		push	1
-		push	ds
-		push	offset aStf11_cdg ; "stf11.cdg"
-		push	0
-		call	sub_CFA8
-		push	2
-		push	ds
-		push	offset aStf3_cdg ; "stf3.cdg"
-		push	0
-		call	sub_CF1E
-		push	3
-		push	ds
-		push	offset aStf4_cdg ; "stf4.cdg"
-		push	0
-		call	sub_CF1E
-		push	4
-		push	ds
-		push	offset aStf5_cdg ; "stf5.cdg"
-		push	0
-		call	sub_CFA8
-		push	5
-		push	ds
-		push	offset aStf6_cdg ; "stf6.cdg"
-		push	0
-		call	sub_CFA8
-		push	6
-		push	ds
-		push	offset aStf7_cdg ; "stf7.cdg"
-		push	0
-		call	sub_CFA8
-		push	7
-		push	ds
-		push	offset aStf8_cdg ; "stf8.cdg"
-		push	0
-		call	sub_CFA8
-		push	8
-		push	ds
-		push	offset aStf9_cdg ; "stf9.cdg"
-		push	0
-		call	sub_CFA8
-		push	9
-		push	ds
-		push	offset aStf10_cdg ; "stf10.cdg"
-		push	0
-		call	sub_CFA8
-		push	0Ah
-		push	ds
-		push	offset aStf2_cdg ; "stf2.cdg"
-		push	0
-		call	sub_CFA8
-		push	0Bh
-		push	ds
-		push	offset aStf12_cdg ; "stf12.cdg"
-		push	0
-		call	sub_CFA8
+		call	_cdg_load_single_noalpha pascal, 0, ds, offset aStf1_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aStf11_cdg, 0
+		call	_cdg_load_single_forcealpha pascal, 2, ds, offset aStf3_cdg, 0
+		call	_cdg_load_single_forcealpha pascal, 3, ds, offset aStf4_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 4, ds, offset aStf5_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 5, ds, offset aStf6_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 6, ds, offset aStf7_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 7, ds, offset aStf8_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 8, ds, offset aStf9_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 9, ds, offset aStf10_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 10, ds, offset aStf2_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
 		call	sub_BB66
 		mov	word_10BB2, 0
 		les	bx, dword_105DA
@@ -6030,12 +5960,11 @@ loc_C7CD:
 ; ---------------------------------------------------------------------------
 
 loc_C7D1:
-		push	si
-		call	sub_D130
+		call	_cdg_free pascal, si
 		inc	si
 
 loc_C7D8:
-		cmp	si, 20h	; ' '
+		cmp	si, CDG_SLOT_COUNT
 		jl	short loc_C7D1
 		pop	di
 		pop	si
@@ -6355,302 +6284,7 @@ loc_CEF6:
 		retf	4
 sub_CEE0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF1E	proc far
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_6]
-		push	di
-		nopcall	sub_D130
-		mov	ax, di
-		shl	ax, 4
-		add	ax, 1D0Eh
-		mov	si, ax
-		pushd	[bp+arg_2]
-		call	file_ropen
-		push	ds
-		push	si
-		push	10h
-		call	file_read
-		mov	ax, [si]
-		imul	ax, 5
-		movzx	eax, ax
-		mov	[bp+var_4], eax
-		movsx	eax, [bp+arg_0]
-		imul	eax, [bp+var_4]
-		push	eax
-		push	1
-		call	file_seek
-		push	word ptr [si]
-		call	hmem_allocbyte
-		mov	[si+0Ch], ax
-		push	word ptr [si+0Ch]
-		push	0
-		push	word ptr [si]
-		call	file_read
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[si+0Eh], ax
-		push	word ptr [si+0Eh]
-		push	0
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	file_read
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retf	8
-sub_CF1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CFA8	proc far
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_6]
-		push	di
-		nopcall	sub_D130
-		mov	ax, di
-		shl	ax, 4
-		add	ax, 1D0Eh
-		mov	si, ax
-		pushd	[bp+arg_2]
-		call	file_ropen
-		push	ds
-		push	si
-		push	10h
-		call	file_read
-		mov	ax, [si]
-		imul	ax, 5
-		movzx	eax, ax
-		mov	[bp+var_4], eax
-		movsx	eax, [bp+arg_0]
-		imul	eax, [bp+var_4]
-		push	eax
-		push	1
-		call	file_seek
-		movzx	eax, word ptr [si]
-		push	eax
-		push	1
-		call	file_seek
-		mov	word ptr [si+0Ch], 0
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[si+0Eh], ax
-		push	word ptr [si+0Eh]
-		push	0
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	file_read
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retf	8
-sub_CFA8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D02E	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	[bp+arg_4]
-		nopcall	sub_D130
-		mov	ax, [bp+arg_4]
-		shl	ax, 4
-		add	ax, 1D0Eh
-		mov	si, ax
-		push	ds
-		push	ax
-		push	10h
-		call	file_read
-		mov	di, si
-		mov	[bp+var_2], 1
-		jmp	short loc_D071
-; ---------------------------------------------------------------------------
-
-loc_D062:
-		mov	ax, [bp+arg_4]
-		add	ax, [bp+var_2]
-		push	ax
-		nopcall	sub_D130
-		inc	[bp+var_2]
-
-loc_D071:
-		mov	al, [di+0Ah]
-		mov	ah, 0
-		cmp	ax, [bp+var_2]
-		jg	short loc_D062
-		mov	[bp+var_2], 0
-		jmp	short loc_D0FD
-; ---------------------------------------------------------------------------
-
-loc_D082:
-		mov	ax, [di]
-		mov	[si], ax
-		mov	ax, [di+2]
-		mov	[si+2],	ax
-		mov	ax, [di+4]
-		mov	[si+4],	ax
-		mov	ax, [di+6]
-		mov	[si+6],	ax
-		mov	ax, [di+8]
-		mov	[si+8],	ax
-		mov	al, [di+0Ah]
-		mov	[si+0Ah], al
-		mov	byte ptr [si+0Bh], 0
-		cmp	byte_EC84, 0
-		jnz	short loc_D0C7
-		push	word ptr [si]
-		call	hmem_allocbyte
-		mov	[si+0Ch], ax
-		push	word ptr [si+0Ch]
-		push	0
-		push	word ptr [si]
-		call	file_read
-		jmp	short loc_D0D9
-; ---------------------------------------------------------------------------
-
-loc_D0C7:
-		mov	word ptr [si+0Ch], 0
-		movzx	eax, word ptr [si]
-		push	eax
-		push	1
-		call	file_seek
-
-loc_D0D9:
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[si+0Eh], ax
-		push	word ptr [si+0Eh]
-		push	0
-		mov	ax, [si]
-		shl	ax, 2
-		push	ax
-		call	file_read
-		inc	[bp+var_2]
-		add	si, 10h
-
-loc_D0FD:
-		mov	al, [di+0Ah]
-		mov	ah, 0
-		cmp	ax, [bp+var_2]
-		jg	loc_D082
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_D02E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D114	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		mov	byte_EC84, 1
-		push	[bp+arg_4]
-		pushd	[bp+arg_0]
-		call	sub_D02E
-		mov	byte_EC84, 0
-		pop	bp
-		retf	6
-sub_D114	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D130	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		shl	ax, 4
-		add	ax, 1D0Eh
-		mov	di, ax
-		xor	si, si
-		jmp	short loc_D164
-; ---------------------------------------------------------------------------
-
-loc_D144:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+di+0Ch], 0
-		jz	short loc_D163
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+di+0Ch]
-		call	hmem_free
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+di+0Ch], 0
-
-loc_D163:
-		inc	si
-
-loc_D164:
-		cmp	si, 2
-		jl	short loc_D144
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_D130	endp
-
+include th03/formats/cdg_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7328,8 +6962,7 @@ _snd_active	db 0
 include libs/master.lib/respal_exist[data].asm
 include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
-byte_EC84	db 0
-		db 0
+include th03/formats/cdg[data].asm
 include th03/snd/se_priority[data].asm
 		db  30h	; 0
 		db    0
@@ -7758,134 +7391,7 @@ include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th03/hardware/input[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
 dword_105C6	dd ?
