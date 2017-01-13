@@ -646,17 +646,17 @@ var_2		= word ptr -2
 		push	0
 		call	graph_copy_page
 		freePISlotLarge	0
-		push	600060h
+		push	(96 shl 16) or 96
 		push	0
-		call	sub_C9D4
+		call	_cdg_put
 		push	1600060h
 		push	1
 		call	sub_CA88
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
-		push	180002Eh
+		push	(384 shl 16) or 46
 		push	2
-		call	sub_C9D4
+		call	_cdg_put
 
 loc_9A8E:
 		call	_cdg_free pascal, 0
@@ -3141,9 +3141,9 @@ sub_AFAC	proc near
 		mov	bx, word_ED68
 		add	[bx+3],	al
 		call	_cdg_load_single_forcealpha pascal, 0, ds, bx, 0
-		push	1400138h
+		push	(320 shl 16) or 312
 		push	0
-		call	sub_C9D4
+		call	_cdg_put
 		call	_cdg_free pascal, 0
 		push	ds
 		push	offset aRegi2_bft ; "regi2.bft"
@@ -4910,18 +4910,18 @@ var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@slot		= word ptr  6
 arg_4		= word ptr  8
 arg_6		= word ptr  0Ah
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	bx, [bp+arg_2]
+		mov	bx, [bp+@@slot]
 		shl	bx, 4
 		mov	ax, [bx+1D10h]
 		mov	[bp+var_4], ax
-		mov	bx, [bp+arg_2]
+		mov	bx, [bp+@@slot]
 		shl	bx, 4
 		mov	ax, [bx+1D12h]
 		mov	[bp+var_6], ax
@@ -4949,10 +4949,7 @@ loc_BD65:
 ; ---------------------------------------------------------------------------
 
 loc_BD75:
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	sub_C9D4
+		call	_cdg_put pascal, [bp+arg_6], [bp+arg_4], [bp+@@slot]
 
 loc_BD83:
 		and	[bp+arg_0], 7
@@ -6026,107 +6023,7 @@ sub_C990	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C9D4	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1D0Eh
-		mov	ax, [si+0Eh]
-		mov	word ptr cs:loc_CA4B+1,	ax
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	word ptr cs:loc_CA44+1,	ax
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_CA36+1,	ax
-		mov	word ptr cs:loc_CA50+1,	ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	word ptr cs:loc_CA32+1,	ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ax, [si+0Ch]
-		mov	ds, ax
-		xor	si, si
-
-loc_CA32:
-		mov	dx, 1234h
-		cld
-
-loc_CA36:
-		mov	cx, 1234h
-		rep movsd
-		sub	di, dx
-		jns	short loc_CA36
-		xor	al, al
-		out	7Ch, al
-
-loc_CA44:
-		mov	bx, 1234h
-		mov	di, bx
-		xor	si, si
-
-loc_CA4B:
-		mov	ax, 1234h
-		mov	ds, ax
-		assume ds:nothing
-
-loc_CA50:
-		mov	cx, 1234h
-
-loc_CA53:
-		mov	eax, [si]
-		or	es:[di], eax
-		add	si, 4
-		add	di, 4
-		loop	loc_CA53
-		sub	di, dx
-		jns	short loc_CA50
-		mov	di, bx
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_CA50
-		cmp	ax, 0C800h
-		jnb	short loc_CA80
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_CA50
-
-loc_CA80:
-		pop	ds
-		assume ds:_DATA
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_C9D4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th03/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

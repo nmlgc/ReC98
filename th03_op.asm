@@ -3235,7 +3235,7 @@ sub_B4D7	endp
 sub_B4F3	proc near
 		push	bp
 		mov	bp, sp
-		push	200060h
+		push	(32 shl 16) or 96
 		cmp	byte_FC5A, 0
 		jnz	short loc_B50C
 		mov	al, byte_FC58
@@ -3249,7 +3249,7 @@ loc_B50C:
 
 loc_B50E:
 		push	ax
-		call	sub_C020
+		call	_cdg_put
 		push	1A00060h
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
@@ -3277,7 +3277,7 @@ sub_B4F3	endp
 sub_B535	proc near
 		push	bp
 		mov	bp, sp
-		push	200060h
+		push	(32 shl 16) or 96
 		cmp	byte_FC5A, 0
 		jnz	short loc_B54E
 		mov	al, byte_FC58
@@ -3291,10 +3291,10 @@ loc_B54E:
 
 loc_B550:
 		push	ax
-		call	sub_C020
-		push	1A00060h
+		call	_cdg_put
+		push	(416 shl 16) or 96
 		push	1
-		call	sub_C020
+		call	_cdg_put
 		pop	bp
 		retn
 sub_B535	endp
@@ -4450,108 +4450,7 @@ include th03/math/vector1_at.asm
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C020	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1AA8h
-		mov	ax, [si+0Eh]
-		mov	word ptr cs:loc_C097+1,	ax
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	word ptr cs:loc_C090+1,	ax
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_C082+1,	ax
-		mov	word ptr cs:loc_C09C+1,	ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	word ptr cs:loc_C07E+1,	ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ax, [si+0Ch]
-		mov	ds, ax
-		xor	si, si
-
-loc_C07E:
-		mov	dx, 1234h
-		cld
-
-loc_C082:
-		mov	cx, 1234h
-		rep movsd
-		sub	di, dx
-		jns	short loc_C082
-		xor	al, al
-		out	7Ch, al
-
-loc_C090:
-		mov	bx, 1234h
-		mov	di, bx
-		xor	si, si
-
-loc_C097:
-		mov	ax, 1234h
-		mov	ds, ax
-		assume ds:nothing
-
-loc_C09C:
-		mov	cx, 1234h
-
-loc_C09F:
-		mov	eax, [si]
-		or	es:[di], eax
-		add	si, 4
-		add	di, 4
-		loop	loc_C09F
-		sub	di, dx
-		jns	short loc_C09C
-		mov	di, bx
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_C09C
-		cmp	ax, 0C800h
-		jnb	short loc_C0CC
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_C09C
-; ---------------------------------------------------------------------------
-
-loc_C0CC:
-		pop	ds
-		assume ds:_DATA
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_C020	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th03/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
