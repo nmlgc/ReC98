@@ -3312,15 +3312,15 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		push	200130h
-		push	0Bh
-		call	sub_CAF6
+		push	(32 shl 16) or 304
+		push	11
+		call	_cdg_put_noalpha
 		les	bx, dword_FC54
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B590
-		push	1A00130h
-		push	0Bh
-		call	sub_CAF6
+		push	(416 shl 16) or 304
+		push	11
+		call	_cdg_put_noalpha
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -3453,27 +3453,27 @@ sub_B636	endp
 sub_B670	proc near
 		push	bp
 		mov	bp, sp
-		push	0A00130h
-		push	0Ch
-		call	sub_CAF6
-		push	0B0013Ch
+		push	(160 shl 16) or 304
+		push	12
+		call	_cdg_put_noalpha
+		push	(176 shl 16) or 316
 		mov	al, byte_FC58
 		cbw
-		add	ax, 0Dh
+		add	ax, 13
 		push	ax
-		call	sub_CAF6
+		call	_cdg_put_noalpha
 		les	bx, dword_FC54
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B6BE
-		push	2200130h
-		push	0Ch
-		call	sub_CAF6
-		push	230013Ch
+		push	(544 shl 16) or 304
+		push	12
+		call	_cdg_put_noalpha
+		push	(560 shl 16) or 316
 		mov	al, byte_FC59
 		cbw
-		add	ax, 0Dh
+		add	ax, 13
 		push	ax
-		call	sub_CAF6
+		call	_cdg_put_noalpha
 
 loc_B6BE:
 		pop	bp
@@ -4937,78 +4937,7 @@ include th02/formats/pi_slot_load.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CAF6	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1AA8h
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_CB3C+1,	ax
-		jmp	short $+2
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	bx, di
-		cld
-		nop
-
-loc_CB3C:
-		mov	cx, 1234h
-		rep movsd
-		sub	di, dx
-		jns	short loc_CB3C
-		mov	di, bx
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_CB3C
-		cmp	ax, 0C800h
-		jnb	short loc_CB60
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_CB3C
-
-loc_CB60:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_CAF6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th03/formats/cdg_put_noalpha.asm
 include th03/formats/hfliplut.asm
 	extern FRAME_DELAY_2:proc
 op_02_TEXT	ends

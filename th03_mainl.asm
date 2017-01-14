@@ -365,9 +365,9 @@ sub_978D	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	graph_show
-		push	160012Ch
+		push	(352 shl 16) or 300
 		push	0
-		call	sub_D712
+		call	_cdg_put_noalpha
 		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
@@ -378,9 +378,9 @@ sub_978D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_97E8:
-		push	160012Ch
+		push	(352 shl 16) or 300
 		push	si
-		call	sub_D712
+		call	_cdg_put_noalpha
 		push	6
 		call	frame_delay
 		inc	si
@@ -392,12 +392,12 @@ loc_97FC:
 		call	sub_D3FC
 		mov	PaletteTone, 0C8h
 		call	far ptr	palette_show
-		push	0E00040h
+		push	(224 shl 16) or 64
 		push	6
-		call	sub_D712
-		push	160012Ch
+		call	_cdg_put_noalpha
+		push	(352 shl 16) or 300
 		push	5
-		call	sub_D712
+		call	_cdg_put_noalpha
 		push	ds
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
@@ -1192,12 +1192,12 @@ loc_9FB3:
 ; ---------------------------------------------------------------------------
 
 loc_9FC8:
-		push	0C00110h
+		push	(192 shl 16) or 272
 		push	0
-		call	sub_D712
-		push	1600110h
+		call	_cdg_put_noalpha
+		push	(352 shl 16) or 272
 		push	3
-		call	sub_D712
+		call	_cdg_put_noalpha
 		les	bx, dword_105DA
 		mov	al, es:[bx+36h]
 		les	bx, [bp+var_6]
@@ -1224,18 +1224,18 @@ loc_A01E:
 		mov	ax, 1
 		sub	ax, si
 		mov	si, ax
-		push	0C00110h
+		push	(192 shl 16) or 272
 		add	ax, ax
 		mov	dx, 2
 		sub	dx, ax
 		push	dx
-		call	sub_D712
-		push	1600110h
+		call	_cdg_put_noalpha
+		push	(352 shl 16) or 272
 		mov	ax, si
 		add	ax, ax
 		inc	ax
 		push	ax
-		call	sub_D712
+		call	_cdg_put_noalpha
 		mov	[bp+var_2], 1
 		jmp	short loc_A05B
 ; ---------------------------------------------------------------------------
@@ -4941,10 +4941,7 @@ arg_6		= word ptr  0Ah
 		jnz	short loc_BD75
 
 loc_BD65:
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	sub_D712
+		call	_cdg_put_noalpha pascal, [bp+arg_6], [bp+arg_4], [bp+@@slot]
 		jmp	short loc_BD83
 ; ---------------------------------------------------------------------------
 
@@ -6651,78 +6648,7 @@ include th03/formats/pi_slot_put_quarter.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D712	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+6]
-		shl	si, 4
-		add	si, 1D0Eh
-		mov	ax, [bp+0Ah]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_D758+1,	ax
-		jmp	short $+2
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [bp+8]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	bx, di
-		cld
-		nop
-
-loc_D758:
-		mov	cx, 1234h
-		rep movsd
-		sub	di, dx
-		jns	short loc_D758
-		mov	di, bx
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_D758
-		cmp	ax, 0C800h
-		jnb	short loc_D77C
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_D758
-
-loc_D77C:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_D712	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th03/formats/cdg_put_noalpha.asm
 include th03/formats/hfliplut.asm
 mainl_02_TEXT	ends
 
