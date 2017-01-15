@@ -649,9 +649,9 @@ var_2		= word ptr -2
 		push	(96 shl 16) or 96
 		push	0
 		call	_cdg_put
-		push	1600060h
+		push	(352 shl 16) or 96
 		push	1
-		call	sub_CA88
+		call	_cdg_put_hflip
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
 		push	(384 shl 16) or 46
@@ -6021,122 +6021,7 @@ sub_C990	endp
 		db 0
 
 include th03/formats/cdg_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CA88	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1D0Eh
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	bx, [si+8]
-		shl	bx, 2
-		add	ax, bx
-		dec	ax
-		mov	di, ax
-		mov	word ptr cs:loc_CB08+1,	ax
-		mov	word ptr cs:loc_CB30+1,	ax
-		mov	word ptr cs:loc_CAF2+1,	bx
-		mov	word ptr cs:loc_CB1E+1,	bx
-		mov	ax, 50h	; 'P'
-		sub	ax, bx
-		mov	word ptr cs:loc_CAEE+1,	ax
-		mov	word ptr cs:loc_CB1A+1,	ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	bx, offset hflip_lut
-		mov	fs, word ptr [si+0Ch]
-		xor	si, si
-
-loc_CAEE:
-		mov	dx, 1234h
-		nop
-
-loc_CAF2:
-		mov	cx, 1234h
-
-loc_CAF5:
-		mov	al, fs:[si]
-		xlat
-		mov	es:[di], al
-		inc	si
-		dec	di
-		loop	loc_CAF5
-		sub	di, dx
-		jns	short loc_CAF2
-		xor	al, al
-		out	7Ch, al
-
-loc_CB08:
-		mov	di, 1234h
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1D0Eh
-		mov	fs, word ptr [si+0Eh]
-		xor	si, si
-
-loc_CB1A:
-		mov	dx, 1234h
-		nop
-
-loc_CB1E:
-		mov	cx, 4D2h
-
-loc_CB21:
-		mov	al, fs:[si]
-		xlat
-		or	es:[di], al
-		inc	si
-		dec	di
-		loop	loc_CB21
-		sub	di, dx
-		jns	short loc_CB1E
-
-loc_CB30:
-		mov	di, 1234h
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_CB1E
-		cmp	ax, 0C800h
-		jnb	short loc_CB4B
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_CB1E
-
-loc_CB4B:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_CA88	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
 		db 0
 include th03/hardware/input_sense.asm

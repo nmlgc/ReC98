@@ -3250,7 +3250,7 @@ loc_B50C:
 loc_B50E:
 		push	ax
 		call	_cdg_put
-		push	1A00060h
+		push	(416 shl 16) or 96
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
 		mov	al, byte_FC59
@@ -3264,7 +3264,7 @@ loc_B52A:
 
 loc_B52D:
 		push	ax
-		call	sub_C0D4
+		call	_cdg_put_hflip
 		pop	bp
 		retn
 sub_B4F3	endp
@@ -4451,123 +4451,7 @@ include th03/math/vector1_at.asm
 		db 0
 
 include th03/formats/cdg_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C0D4	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1AA8h
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, [si+6]
-		mov	bx, [si+8]
-		shl	bx, 2
-		add	ax, bx
-		dec	ax
-		mov	di, ax
-		mov	word ptr cs:loc_C154+1,	ax
-		mov	word ptr cs:loc_C17C+1,	ax
-		mov	word ptr cs:loc_C13E+1,	bx
-		mov	word ptr cs:loc_C16A+1,	bx
-		mov	ax, 50h	; 'P'
-		sub	ax, bx
-		mov	word ptr cs:loc_C13A+1,	ax
-		mov	word ptr cs:loc_C166+1,	ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	bx, offset hflip_lut
-		mov	fs, word ptr [si+0Ch]
-		xor	si, si
-
-loc_C13A:
-		mov	dx, 1234h
-		nop
-
-loc_C13E:
-		mov	cx, 1234h
-
-loc_C141:
-		mov	al, fs:[si]
-		xlat
-		mov	es:[di], al
-		inc	si
-		dec	di
-		loop	loc_C141
-		sub	di, dx
-		jns	short loc_C13E
-		xor	al, al
-		out	7Ch, al
-
-loc_C154:
-		mov	di, 1234h
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1AA8h
-		mov	fs, word ptr [si+0Eh]
-		xor	si, si
-
-loc_C166:
-		mov	dx, 1234h
-		nop
-
-loc_C16A:
-		mov	cx, 4D2h
-
-loc_C16D:
-		mov	al, fs:[si]
-		xlat
-		or	es:[di], al
-		inc	si
-		dec	di
-		loop	loc_C16D
-		sub	di, dx
-		jns	short loc_C16A
-
-loc_C17C:
-		mov	di, 1234h
-		mov	ax, es
-		add	ax, 800h
-		mov	es, ax
-		assume es:nothing
-		cmp	ax, 0C000h
-		jb	short loc_C16A
-		cmp	ax, 0C800h
-		jnb	short loc_C197
-		add	ax, 2000h
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_C16A
-; ---------------------------------------------------------------------------
-
-loc_C197:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_C0D4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
 		db 0
 include th03/hardware/input_sense.asm
