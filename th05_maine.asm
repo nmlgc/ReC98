@@ -285,7 +285,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	sub_F3EE
+		call	_cdg_freeall
 		call	graph_hide
 		call	text_clear
 		call	sub_EC36
@@ -7960,50 +7960,17 @@ var_2		= word ptr -2
 		out	dx, al
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
-		push	0
-		push	ds
-		push	offset aStf00_cdg ; "stf00.cdg"
-		call	sub_F356
-		push	1
-		push	ds
-		push	offset aStf01_cdg ; "stf01.cdg"
-		call	sub_F356
-		push	2
-		push	ds
-		push	offset aStf02_cdg ; "stf02.cdg"
-		call	sub_F356
-		push	3
-		push	ds
-		push	offset aStf03_cdg ; "stf03.cdg"
-		call	sub_F356
-		push	4
-		push	ds
-		push	offset aStf04_cdg ; "stf04.cdg"
-		call	sub_F356
-		push	5
-		push	ds
-		push	offset aStf05_cdg ; "stf05.cdg"
-		call	sub_F356
-		push	6
-		push	ds
-		push	offset aStf06_cdg ; "stf06.cdg"
-		call	sub_F356
-		push	7
-		push	ds
-		push	offset aStf07_cdg ; "stf07.cdg"
-		call	sub_F356
-		push	8
-		push	ds
-		push	offset aStf08_cdg ; "stf08.cdg"
-		call	sub_F356
-		push	9
-		push	ds
-		push	offset aStf09_cdg ; "stf09.cdg"
-		call	sub_F356
-		push	0Ah
-		push	ds
-		push	offset aStf10_cdg ; "stf10.cdg"
-		call	sub_F356
+		call	_cdg_load_all_noalpha pascal,  0, ds, offset aStf00_cdg
+		call	_cdg_load_all_noalpha pascal,  1, ds, offset aStf01_cdg
+		call	_cdg_load_all_noalpha pascal,  2, ds, offset aStf02_cdg
+		call	_cdg_load_all_noalpha pascal,  3, ds, offset aStf03_cdg
+		call	_cdg_load_all_noalpha pascal,  4, ds, offset aStf04_cdg
+		call	_cdg_load_all_noalpha pascal,  5, ds, offset aStf05_cdg
+		call	_cdg_load_all_noalpha pascal,  6, ds, offset aStf06_cdg
+		call	_cdg_load_all_noalpha pascal,  7, ds, offset aStf07_cdg
+		call	_cdg_load_all_noalpha pascal,  8, ds, offset aStf08_cdg
+		call	_cdg_load_all_noalpha pascal,  9, ds, offset aStf09_cdg
+		call	_cdg_load_all_noalpha pascal, 10, ds, offset aStf10_cdg
 		push	ds
 		push	offset aStf01_bft ; "stf01.bft"
 		call	super_entry_bfnt
@@ -8297,7 +8264,7 @@ loc_E7CC:
 		dec	si
 		or	si, si
 		jg	short loc_E7CC
-		call	sub_F3EE
+		call	_cdg_freeall
 		call	super_free
 		pushd	0
 		push	27F018Fh
@@ -9134,197 +9101,7 @@ sub_F25F	endp
 
 include th05/hardware/frame_delay.asm
 		db 0
-		mov	byte_1082E, 1
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+0Ch]
-		push	di
-		nopcall	sub_F3B8
-		shl	di, 4
-		add	di, 29FEh
-		pushd	dword ptr [bp+8]
-		call	file_ropen
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	ax, [di]
-		mov	dx, ax
-		cmp	byte ptr [di+0Bh], 0
-		jz	short loc_F2DA
-		shl	ax, 2
-		cmp	byte ptr [di+0Bh], 2
-		jz	short loc_F2DA
-		add	ax, dx
-
-loc_F2DA:
-		mul	word ptr [bp+6]
-		movzx	eax, ax
-		push	eax
-		push	1
-		call	file_seek
-		call	sub_F2FE
-		call	file_close
-		mov	byte_1082E, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F2FE	proc near
-		mov	al, [di+0Bh]
-		or	al, al
-		jz	short loc_F333
-		cmp	al, 2
-		jz	short loc_F310
-		cmp	byte_1082E, 0
-		jnz	short loc_F326
-
-loc_F310:
-		push	word ptr [di]
-		call	hmem_allocbyte
-		mov	[di+0Ch], ax
-		push	ax
-		push	0
-		push	word ptr [di]
-		call	file_read
-		jmp	short loc_F333
-; ---------------------------------------------------------------------------
-
-loc_F326:
-		movzx	eax, word ptr [di]
-		push	eax
-		push	1
-		call	file_seek
-
-loc_F333:
-		cmp	byte ptr [di+0Bh], 2
-		jz	short locret_F355
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[di+0Eh], ax
-		push	ax
-		push	0
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	file_read
-
-locret_F355:
-		retn
-sub_F2FE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F356	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		mov	byte_1082E, 1
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		pushd	[bp+arg_0]
-		call	file_ropen
-		mov	di, [bp+arg_4]
-		shl	di, 4
-		add	di, 29FEh
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	si, di
-		mov	bp, [bp+arg_4]
-		mov	al, [si+0Ah]
-		mov	byte_12EFE, al
-		push	ds
-		pop	es
-		assume es:_DATA
-
-loc_F38A:
-		push	bp
-		call	sub_F3B8
-		mov	cx, 3
-		rep movsd
-		sub	si, 0Ch
-		sub	di, 0Ch
-		call	sub_F2FE
-		inc	bp
-		add	di, 10h
-		dec	byte_12EFE
-		jnz	short loc_F38A
-		call	file_close
-		mov	byte_1082E, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_F356	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F3B8	proc far
-		mov	bx, sp
-		push	di
-		mov	di, ss:[bx+4]
-		shl	di, 4
-		add	di, 2A0Ah
-		cmp	word ptr [di], 0
-		jz	short loc_F3D6
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_F3D6:
-		add	di, 2
-		cmp	word ptr [di], 0
-		jz	short loc_F3E9
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_F3E9:
-		pop	di
-		retf	2
-sub_F3B8	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F3EE	proc far
-		push	si
-		mov	si, 3Fh	; '?'
-
-loc_F3F2:
-		push	si
-		call	sub_F3B8
-		dec	si
-		jge	short loc_F3F2
-		pop	si
-		retf
-sub_F3EE	endp
-
+include th04/formats/cdg_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9576,8 +9353,7 @@ include th04/snd/snd[data].asm
 		db 0DDh
 include th05/formats/pi_slot_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
-byte_1082E	db 0
-		db 0
+include th03/formats/cdg[data].asm
 byte_10830	db 0
 		db    0
 		db  88h
@@ -9966,264 +9742,7 @@ word_128B6	dw ?
 word_128B8	dw ?
 include th05/formats/pi_slot_headers[bss].asm
 include th04/hardware/input[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-byte_12EFE	db ?
-		db    ?	;
+include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
 word_12F86	dw ?
 		dd    ?	;

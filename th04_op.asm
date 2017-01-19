@@ -2978,7 +2978,7 @@ sub_C3B7	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_12DBE, 0
-		call	sub_E6D0
+		call	_cdg_freeall
 		call	text_clear
 		mov	byte ptr word_12DBC+1, 1
 		mov	PaletteTone, 0
@@ -3985,22 +3985,10 @@ sub_CBE3	endp
 sub_CC97	proc near
 		push	bp
 		mov	bp, sp
-		push	0
-		push	ds
-		push	offset aSft1_cd2 ; "sft1.cd2"
-		call	sub_E63E
-		push	0Ah
-		push	ds
-		push	offset aSft2_cd2 ; "sft2.cd2"
-		call	sub_E63E
-		push	23h ; '#'
-		push	ds
-		push	offset aCar_cd2	; "car.cd2"
-		call	sub_E63E
-		push	28h ; '('
-		push	ds
-		push	offset aSl_cd2	; "sl.cd2"
-		call	far ptr	sub_E638
+		call	_cdg_load_all pascal,  0, ds, offset aSft1_cd2
+		call	_cdg_load_all pascal, 10, ds, offset aSft2_cd2
+		call	_cdg_load_all pascal, 35, ds, offset aCar_cd2
+		call	_cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn
 sub_CC97	endp
@@ -4013,7 +4001,7 @@ sub_CC97	endp
 sub_CCC8	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_E6D0
+		call	_cdg_freeall
 		pop	bp
 		retn
 sub_CCC8	endp
@@ -6413,225 +6401,8 @@ sub_E4F8	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E57A	proc near
-		mov	byte_FD8A, 1
-		nop
-sub_E57A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E580	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+0Ch]
-		push	di
-		nopcall	sub_E69A
-		shl	di, 4
-		add	di, 2716h
-		pushd	[bp+arg_2]
-		call	file_ropen
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	ax, [di]
-		mov	dx, ax
-		cmp	byte ptr [di+0Bh], 0
-		jz	short loc_E5BC
-		shl	ax, 2
-		cmp	byte ptr [di+0Bh], 2
-		jz	short loc_E5BC
-		add	ax, dx
-
-loc_E5BC:
-		mul	[bp+arg_0]
-		movzx	eax, ax
-		push	eax
-		push	1
-		call	file_seek
-		call	sub_E5E0
-		call	file_close
-		mov	byte_FD8A, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_E580	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E5E0	proc near
-		mov	al, [di+0Bh]
-		or	al, al
-		jz	short loc_E615
-		cmp	al, 2
-		jz	short loc_E5F2
-		cmp	byte_FD8A, 0
-		jnz	short loc_E608
-
-loc_E5F2:
-		push	word ptr [di]
-		call	hmem_allocbyte
-		mov	[di+0Ch], ax
-		push	ax
-		push	0
-		push	word ptr [di]
-		call	file_read
-		jmp	short loc_E615
-; ---------------------------------------------------------------------------
-
-loc_E608:
-		movzx	eax, word ptr [di]
-		push	eax
-		push	1
-		call	file_seek
-
-loc_E615:
-		cmp	byte ptr [di+0Bh], 2
-		jz	short locret_E637
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[di+0Eh], ax
-		push	ax
-		push	0
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	file_read
-
-locret_E637:
-		retn
-sub_E5E0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E638	proc near
-		mov	byte_FD8A, 1
-		nop
-sub_E638	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E63E	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		pushd	[bp+arg_0]
-		call	file_ropen
-		mov	di, [bp+arg_4]
-		shl	di, 4
-		add	di, 2716h
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	si, di
-		mov	bp, [bp+arg_4]
-		mov	al, [si+0Ah]
-		mov	byte_11E56, al
-		push	ds
-		pop	es
-		assume es:_DATA
-
-loc_E66C:
-		push	bp
-		call	sub_E69A
-		mov	cx, 3
-		rep movsd
-		sub	si, 0Ch
-		sub	di, 0Ch
-		call	sub_E5E0
-		inc	bp
-		add	di, 10h
-		dec	byte_11E56
-		jnz	short loc_E66C
-		call	file_close
-		mov	byte_FD8A, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_E63E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E69A	proc far
-		mov	bx, sp
-		push	di
-		mov	di, ss:[bx+4]
-		shl	di, 4
-		add	di, 2722h
-		cmp	word ptr [di], 0
-		jz	short loc_E6B8
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_E6B8:
-		add	di, 2
-		cmp	word ptr [di], 0
-		jz	short loc_E6CB
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_E6CB:
-		pop	di
-		retf	2
-sub_E69A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E6D0	proc far
-		push	si
-		mov	si, 3Fh	; '?'
-
-loc_E6D4:
-		push	si
-		call	sub_E69A
-		dec	si
-		jge	short loc_E6D4
-		pop	si
-		retf
-sub_E6D0	endp
-
+include th04/formats/cdg_load.asm
 	extern FRAME_DELAY_2:proc
-
 op_02_TEXT	ends
 
 	.data
@@ -6815,8 +6586,7 @@ word_FD82	dw 0
 word_FD84	dw 0
 word_FD86	dw 0
 word_FD88	dw 0
-byte_FD8A	db 0
-		db    0
+include th03/formats/cdg[data].asm
 		dd aGxgegmgivevliM
 		dd aB@b@b@b@b@b@b@
 		dd aB@b@b@b@b@b@_0
@@ -7033,6 +6803,7 @@ include th02/snd/load[bss].asm
 word_11A4E	dw ?
 include th04/hardware/input[bss].asm
 word_11A54	dw ?
+include th04/formats/cdg[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -7045,264 +6816,6 @@ word_11A54	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-byte_11E56	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
 word_11E88	dw ?
 word_11E8A	dw ?
 include th04/zunsoft[bss].asm

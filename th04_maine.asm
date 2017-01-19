@@ -191,7 +191,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	sub_D8CE
+		call	_cdg_freeall
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
@@ -2374,12 +2374,12 @@ loc_B2AF:
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	word ptr [bx+1B48h]
+		push	_cdg_slots.pixel_width[bx]
 		mov	al, byte_124C6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	word ptr [bx+1B4Ah]
+		push	_cdg_slots.pixel_height[bx]
 		lea	ax, [si+1]
 		push	ax
 		call	sub_B25B
@@ -2448,12 +2448,12 @@ loc_B339:
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	word ptr [bx+1B48h]
+		push	_cdg_slots.pixel_width[bx]
 		mov	al, byte_124C6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	word ptr [bx+1B4Ah]
+		push	_cdg_slots.pixel_height[bx]
 		push	si
 		call	sub_B25B
 		inc	si
@@ -2522,14 +2522,14 @@ loc_B3C7:
 		out	dx, al
 		push	di
 		push	[bp+arg_4]
-		push	word_10098
-		push	word_1009A
+		push	_cdg_slots.pixel_width + (size CDGSlot * 2)
+		push	_cdg_slots.pixel_height + (size CDGSlot * 2)
 		push	si
 		call	sub_B25B
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	word_10078
-		push	word_1007A
+		push	_cdg_slots.pixel_width + (size CDGSlot * 0)
+		push	_cdg_slots.pixel_height + (size CDGSlot * 0)
 		push	si
 		call	sub_B25B
 		inc	si
@@ -2600,32 +2600,16 @@ sub_B44D	proc near
 		kajacall	KAJA_SONG_PLAY
 		push	0Ch
 		call	palette_black_in
-		push	0
-		push	ds
-		push	offset aSff1_cdg ; "sff1.cdg"
-		push	0
-		call	sub_D77E
-		push	1
-		push	ds
-		push	offset aSff1b_cdg ; "sff1b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
 		push	30040h
 		call	sub_D046
 		mov	byte_124C6, 0
 		mov	fp_124C8, offset sub_AED0
 		push	16000A0h
 		call	sub_B291
-		push	2
-		push	ds
-		push	offset aSff2_cdg ; "sff2.cdg"
-		push	0
-		call	sub_D77E
-		push	3
-		push	ds
-		push	offset aSff2b_cdg ; "sff2b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
 		push	700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
@@ -2639,16 +2623,8 @@ sub_B44D	proc near
 		mov	al, 0
 		out	dx, al
 		mov	byte_124C6, 0
-		push	0
-		push	ds
-		push	offset aSff3_cdg ; "sff3.cdg"
-		push	0
-		call	sub_D77E
-		push	1
-		push	ds
-		push	offset aSff3b_cdg ; "sff3b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
 		push	0B00A0h
 		call	sub_D046
 		push	12000C8h
@@ -2661,7 +2637,7 @@ sub_B44D	proc near
 		call	sub_B3AC
 		push	4
 		call	palette_black_out
-		call	sub_D8CE
+		call	_cdg_freeall
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2674,50 +2650,25 @@ sub_B44D	proc near
 		call	sub_D626
 		push	4
 		call	palette_black_in
-		push	2
-		push	ds
-		push	offset aSff4_cdg ; "sff4.cdg"
-		push	0
-		call	sub_D77E
-		push	3
-		push	ds
-		push	offset aSff4b_cdg ; "sff4b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
 		push	1700A0h
 		call	sub_D046
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
 		push	200070h
 		call	sub_B291
-		push	2
-		call	sub_D898
-		push	4
-		push	ds
-		push	offset aSff5_cdg ; "sff5.cdg"
-		push	0
-		call	sub_D77E
-		push	5
-		push	ds
-		push	offset aSff5b_cdg ; "sff5b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_free pascal, 2
+		call	_cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
 		push	1B00A0h
 		call	sub_D046
 		mov	byte_124C6, 4
 		mov	fp_124C8, offset sub_B02D
 		push	2000B8h
 		call	sub_B291
-		push	0
-		push	ds
-		push	offset aSff8_cdg ; "sff8.cdg"
-		push	0
-		call	sub_D77E
-		push	1
-		push	ds
-		push	offset aSff8b_cdg ; "sff8b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
 		push	1F00A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B144
@@ -2726,16 +2677,8 @@ sub_B44D	proc near
 		mov	byte_124C6, 0
 		push	4000B8h
 		call	sub_B291
-		push	4
-		push	ds
-		push	offset aSff9_cdg ; "sff9.cdg"
-		push	0
-		call	sub_D77E
-		push	5
-		push	ds
-		push	offset aSff9b_cdg ; "sff9b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
 		push	2300A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_AED0
@@ -2744,16 +2687,8 @@ sub_B44D	proc near
 		mov	byte_124C6, 4
 		push	4000B8h
 		call	sub_B291
-		push	0
-		push	ds
-		push	offset aSff6_cdg ; "sff6.cdg"
-		push	0
-		call	sub_D77E
-		push	1
-		push	ds
-		push	offset aSff6b_cdg ; "sff6b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
 		push	2700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
@@ -2768,23 +2703,15 @@ sub_B44D	proc near
 		push	200070h
 		push	2000B8h
 		call	sub_B3AC
-		push	0
-		push	ds
-		push	offset aSff7_cdg ; "sff7.cdg"
-		push	0
-		call	sub_D77E
-		push	1
-		push	ds
-		push	offset aSff7b_cdg ; "sff7b.cdg"
-		push	0
-		call	far ptr	sub_D778
+		call	_cdg_load_single pascal, 0, ds, offset aSff7_cdg, 0
+		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff7b_cdg, 0
 		mov	byte_124C6, 0
 		push	200150h
 		call	sub_B291
 		push	3000A0h
 		call	sub_D046
 		call	sub_D6C4
-		call	sub_D8CE
+		call	_cdg_freeall
 		push	4
 		call	palette_black_out
 		pop	bp
@@ -6049,206 +5976,7 @@ sub_D6F6	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D778	proc near
-		mov	byte_EB3A, 1
-		nop
-sub_D778	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D77E	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_6]
-		push	di
-		nopcall	sub_D898
-		shl	di, 4
-		add	di, 1B46h
-		pushd	[bp+arg_2]
-		call	file_ropen
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	ax, [di]
-		mov	dx, ax
-		cmp	byte ptr [di+0Bh], 0
-		jz	short loc_D7BA
-		shl	ax, 2
-		cmp	byte ptr [di+0Bh], 2
-		jz	short loc_D7BA
-		add	ax, dx
-
-loc_D7BA:
-		mul	[bp+arg_0]
-		movzx	eax, ax
-		push	eax
-		push	1
-		call	file_seek
-		call	sub_D7DE
-		call	file_close
-		mov	byte_EB3A, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_D77E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D7DE	proc near
-		mov	al, [di+0Bh]
-		or	al, al
-		jz	short loc_D813
-		cmp	al, 2
-		jz	short loc_D7F0
-		cmp	byte_EB3A, 0
-		jnz	short loc_D806
-
-loc_D7F0:
-		push	word ptr [di]
-		call	hmem_allocbyte
-		mov	[di+0Ch], ax
-		push	ax
-		push	0
-		push	word ptr [di]
-		call	file_read
-		jmp	short loc_D813
-; ---------------------------------------------------------------------------
-
-loc_D806:
-		movzx	eax, word ptr [di]
-		push	eax
-		push	1
-		call	file_seek
-
-loc_D813:
-		cmp	byte ptr [di+0Bh], 2
-		jz	short locret_D835
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	[di+0Eh], ax
-		push	ax
-		push	0
-		mov	ax, [di]
-		shl	ax, 2
-		push	ax
-		call	file_read
-
-locret_D835:
-		retn
-sub_D7DE	endp
-
-; ---------------------------------------------------------------------------
-		mov	byte_EB3A, 1
-		nop
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		pushd	dword ptr [bp+6]
-		call	file_ropen
-		mov	di, [bp+0Ah]
-		shl	di, 4
-		add	di, 1B46h
-		push	ds
-		push	di
-		push	10h
-		call	file_read
-		mov	si, di
-		mov	bp, [bp+0Ah]
-		mov	al, [si+0Ah]
-		mov	byte_10476, al
-		push	ds
-		pop	es
-		assume es:_DATA
-
-loc_D86A:
-		push	bp
-		call	sub_D898
-		mov	cx, 3
-		rep movsd
-		sub	si, 0Ch
-		sub	di, 0Ch
-		call	sub_D7DE
-		inc	bp
-		add	di, 10h
-		dec	byte_10476
-		jnz	short loc_D86A
-		call	file_close
-		mov	byte_EB3A, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D898	proc far
-		mov	bx, sp
-		push	di
-		mov	di, ss:[bx+4]
-		shl	di, 4
-		add	di, 1B52h
-		cmp	word ptr [di], 0
-		jz	short loc_D8B6
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_D8B6:
-		add	di, 2
-		cmp	word ptr [di], 0
-		jz	short loc_D8C9
-		push	word ptr [di]
-		call	hmem_free
-		mov	word ptr [di], 0
-
-loc_D8C9:
-		pop	di
-		retf	2
-sub_D898	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D8CE	proc far
-		push	si
-		mov	si, 3Fh	; '?'
-
-loc_D8D2:
-		push	si
-		call	sub_D898
-		dec	si
-		jge	short loc_D8D2
-		pop	si
-		retf
-sub_D8CE	endp
-
+include th04/formats/cdg_load.asm
 maine_02_TEXT	ends
 
 	.data
@@ -6391,8 +6119,7 @@ word_EB32	dw 0
 word_EB34	dw 0
 word_EB36	dw 0
 word_EB38	dw 0
-byte_EB3A	db 0
-		db    0
+include th03/formats/cdg[data].asm
 		db    0
 		db    0
 		db  11h
@@ -6560,267 +6287,7 @@ include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
 word_10070	dw ?
 include th04/hardware/input[bss].asm
-		dw ?
-word_10078	dw ?
-word_1007A	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-word_10098	dw ?
-word_1009A	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-byte_10476	db ?
+include th04/formats/cdg[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -8870,7 +8337,6 @@ byte_10476	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		db    ?	;
 		db    ?	;
 		db    ?	;
 word_12478	dw ?
