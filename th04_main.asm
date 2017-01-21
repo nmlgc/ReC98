@@ -5675,7 +5675,7 @@ loc_D38A:
 
 loc_D3A6:
 		push	[bp+var_2]
-		call	far ptr	loc_13580
+		call	_cdg_put
 		jmp	short loc_D3E3
 ; ---------------------------------------------------------------------------
 
@@ -18048,97 +18048,7 @@ include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 include th04/snd/load.asm
-
-; ---------------------------------------------------------------------------
-
-loc_13580:
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		cli
-		mov	al, GC_RMW
-		out	7Ch, al
-		mov	dx, 7Eh	; '~'
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	si, [bp+6]
-		shl	si, 4
-		add	si, 3978h
-		mov	ax, [si+0Eh]
-		mov	word ptr cs:loc_135F7+1, ax
-		jmp	short $+2
-		mov	ax, [bp+8]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	0
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	ax, [bp+0Ah]
-		shr	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	bx, ax
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Ch]
-		mov	ds, ax
-		xor	si, si
-		cld
-		nop
-
-loc_135E8:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_135E8
-		xor	al, al
-		out	7Ch, al
-		xor	si, si
-
-loc_135F7:
-		mov	ax, 1234h
-		mov	ds, ax
-
-loc_135FC:
-		mov	di, bx
-
-loc_135FE:
-		mov	cx, bp
-
-loc_13600:
-		lodsd
-		or	es:[di], eax
-		add	di, 4
-		loop	loc_13600
-		sub	di, dx
-		jns	short loc_135FE
-		pop	ax
-		mov	es, ax
-		or	ax, ax
-		jnz	short loc_135FC
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -9791,10 +9791,7 @@ loc_F432:
 		call	sub_EF2A
 		cmp	[bp+arg_0], 0FFh
 		jz	short loc_F45D
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	2
-		call	sub_14D74
+		call	_cdg_put pascal, [bp+arg_4], [bp+arg_2], 2
 		call	_cdg_free pascal, 2
 
 loc_F45D:
@@ -20936,100 +20933,7 @@ loc_14CDA:
 sub_14C7C	endp
 
 include th04/snd/se.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14D74	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		cli
-		mov	al, GC_RMW
-		out	7Ch, al
-		mov	dx, 7Eh	; '~'
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 307Eh
-		mov	ax, [bp+arg_2]
-		shl	ax, 2
-		add	ax, [bp+arg_2]
-		add	ax, 0A800h
-		mov	es, ax
-		push	0
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	ax, [bp+arg_4]
-		shr	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	bx, ax
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	cx, [si+0Ch]
-		mov	ds, cx
-		xor	si, si
-		cld
-
-loc_14DD4:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_14DD4
-		mov	ds, ax
-		xor	al, al
-		out	7Ch, al
-		xor	si, si
-		nop
-
-loc_14DE6:
-		mov	di, bx
-
-loc_14DE8:
-		mov	cx, bp
-
-loc_14DEA:
-		lodsd
-		or	es:[di], eax
-		add	di, 4
-		loop	loc_14DEA
-		sub	di, dx
-		jns	short loc_14DE8
-		pop	ax
-		mov	es, ax
-		or	ax, ax
-		jnz	short loc_14DE6
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_14D74	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -613,14 +613,8 @@ loc_AB59:
 		out	dx, al
 		cmp	[bp+arg_0], 8
 		jnz	short loc_ABC4
-		push	100h
-		push	di
-		push	23h ; '#'
-		call	sub_E00E
-		push	160h
-		push	di
-		push	24h ; '$'
-		call	sub_E00E
+		call	_cdg_put pascal, 256, di, 35
+		call	_cdg_put pascal, 352, di, 36
 		pushd	180h
 		push	2800010h
 		call	sub_E378
@@ -842,11 +836,8 @@ loc_AD9A:
 		out	dx, al
 		cmp	[bp+arg_0], 8
 		jnz	short loc_AE11
-		push	di
-		push	[bp+var_4]
-		push	23h ; '#'
-		call	sub_E00E
-		cmp	di, 100h
+		call	_cdg_put pascal, di, [bp+var_4], 35
+		cmp	di, 256
 		jnz	short loc_ADBD
 		lea	ax, [di+60h]
 		push	ax
@@ -854,12 +845,12 @@ loc_AD9A:
 ; ---------------------------------------------------------------------------
 
 loc_ADBD:
-		push	180h
+		push	384
 
 loc_ADC0:
 		push	[bp+var_4]
-		push	24h ; '$'
-		call	sub_E00E
+		push	36
+		call	_cdg_put
 		pushd	180h
 		push	2800010h
 		call	sub_E378
@@ -5832,108 +5823,7 @@ loc_E008:
 		and	ax, fs:[bx+1234h]
 		retn
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E00E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		cli
-		mov	al, GC_RMW
-		out	7Ch, al
-		mov	dx, 7Eh
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 2716h
-		mov	ax, [si+0Eh]
-		mov	word ptr cs:loc_E085+1,	ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		push	0
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	ax, [bp+arg_4]
-		shr	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	bx, ax
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Ch]
-		mov	ds, ax
-		xor	si, si
-		cld
-		nop
-
-loc_E076:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_E076
-		xor	al, al
-		out	7Ch, al
-		xor	si, si
-
-loc_E085:
-		mov	ax, 1234h
-		mov	ds, ax
-		assume ds:nothing
-
-loc_E08A:
-		mov	di, bx
-
-loc_E08C:
-		mov	cx, bp
-
-loc_E08E:
-		lodsd
-		or	es:[di], eax
-		add	di, 4
-		loop	loc_E08E
-		sub	di, dx
-		jns	short loc_E08C
-		pop	ax
-		mov	es, ax
-		or	ax, ax
-		jnz	short loc_E08A
-		pop	ds
-		assume ds:_DATA
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_E00E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

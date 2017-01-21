@@ -1901,7 +1901,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	sub_D356
+		call	_cdg_put
 		jmp	loc_B027
 ; ---------------------------------------------------------------------------
 
@@ -2059,7 +2059,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	sub_D356
+		call	_cdg_put
 		jmp	loc_B13E
 ; ---------------------------------------------------------------------------
 
@@ -2191,7 +2191,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	sub_D356
+		call	_cdg_put
 		jmp	loc_B255
 ; ---------------------------------------------------------------------------
 
@@ -5622,108 +5622,7 @@ loc_D350:
 		and	ax, fs:[bx+1234h]
 		retn
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D356	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		cli
-		mov	al, GC_RMW
-		out	7Ch, al
-		mov	dx, 7Eh	; '~'
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 1B46h
-		mov	ax, [si+0Eh]
-		mov	word ptr cs:loc_D3CD+1, ax
-		jmp	short $+2
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		push	0
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	ax, [bp+arg_4]
-		shr	ax, 3
-		add	ax, [si+6]
-		mov	di, ax
-		mov	bx, ax
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Ch]
-		mov	ds, ax
-		xor	si, si
-		cld
-		nop
-
-loc_D3BE:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_D3BE
-		xor	al, al
-		out	7Ch, al
-		xor	si, si
-
-loc_D3CD:
-		mov	ax, 1234h
-		mov	ds, ax
-		assume ds:nothing
-
-loc_D3D2:
-		mov	di, bx
-
-loc_D3D4:
-		mov	cx, bp
-
-loc_D3D6:
-		lodsd
-		or	es:[di], eax
-		add	di, 4
-		loop	loc_D3D6
-		sub	di, dx
-		jns	short loc_D3D4
-		pop	ax
-		mov	es, ax
-		or	ax, ax
-		jnz	short loc_D3D2
-		pop	ds
-		assume ds:_DATA
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_D356	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
