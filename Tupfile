@@ -1,0 +1,29 @@
+AS = tasm32 /m /mx /kh32768 /t
+!as = |> $(AS) %f %o |> %o
+
+: th01_zunsoft.asm |> !as |> bin\\th01\\zunsoft.obj
+: th01_op.asm |> !as |> bin\\th01\\op.obj
+: th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
+: th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
+
+: th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
+: th02_zun_res.asm |> !as |> bin\\th02\\zun_res.obj
+: th02_op.asm |> !as |> bin\\th02\\op.obj
+: th02_main.asm |> !as |> bin\\th02\\main.obj
+: th02_maine.asm |> !as |> bin\\th02\\maine.obj
+
+: th03_zunsp.asm |> !as |> bin\\th03\\zunsp.obj
+: th03_res_yume.asm |> !as |> bin\\th03\\res_yume.obj
+: th03_op.asm |> !as |> bin\\th03\\op.obj
+: th03_main.asm |> !as |> bin\\th03\\main.obj
+: th03_mainl.asm |> !as |> bin\\th03\\mainl.obj
+
+: th04_res_huma.asm |> !as |> bin\\th04\\res_huma.obj
+: th04_op.asm |> !as |> bin\\th04\\op.obj
+: th04_main.asm |> !as |> bin\\th04\\main.obj
+: th04_maine.asm |> !as |> bin\\th04\\maine.obj
+
+: th05_res_kso.asm |> !as |> bin\\th05\\res_kso.obj
+: th05_op.asm |> !as |> bin\\th05\\op.obj
+: th05_main.asm |> !as |> bin\\th05\\main.obj
+: th05_maine.asm |> !as |> bin\\th05\\maine.obj

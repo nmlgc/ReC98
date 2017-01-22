@@ -1,2 +1,3 @@
 bin/*
+.tup/*
 !bin/masters.lib
