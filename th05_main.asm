@@ -1640,9 +1640,9 @@ loc_BA9C:
 loc_BAAA:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	500070h
+		push	(80 shl 16) or 112
 		push	31
-		call	sub_14C7C
+		call	_cdg_put_noalpha
 		call	_cdg_free pascal, 31
 		push	1
 		call	palette_black_in
@@ -3453,9 +3453,9 @@ sub_C567	endp
 sub_C73A	proc near
 		push	bp
 		mov	bp, sp
-		push	500010h
+		push	(80 shl 16) or 16
 		push	0
-		call	sub_14C7C
+		call	_cdg_put_noalpha
 		call	sub_CEC2
 		call	sub_C567
 		mov	byte_2C92C, 9
@@ -3737,9 +3737,9 @@ sub_C84F	endp
 sub_C99E	proc near
 		push	bp
 		mov	bp, sp
-		push	700010h
+		push	(112 shl 16) or 16
 		push	0
-		call	sub_14C7C
+		call	_cdg_put_noalpha
 		call	sub_CEF2
 		cmp	byte_2429B, 10h
 		jnb	short loc_C9D0
@@ -3935,9 +3935,9 @@ sub_CB30	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	400040h
+		push	(64 shl 16) or 64
 		push	0
-		call	sub_14C7C
+		call	_cdg_put_noalpha
 		call	sub_CF50
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
 		push	0D10010h
@@ -4131,9 +4131,9 @@ sub_CC9E	endp
 sub_CD1C	proc near
 		push	bp
 		mov	bp, sp
-		push	600010h
+		push	(96 shl 16) or 16
 		push	0
-		call	sub_14C7C
+		call	_cdg_put_noalpha
 		call	sub_CFBA
 		call	sub_CC9E
 		mov	byte_2C92C, 9
@@ -4647,10 +4647,7 @@ arg_4		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	10h
-		call	sub_14C7C
+		call	_cdg_put_noalpha pascal, [bp+arg_4], [bp+arg_2], 16
 		call	sub_E6E8
 		mov	ah, [bp+arg_0]
 		call	sub_E6EE
@@ -4762,9 +4759,9 @@ loc_D124:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	200010h
-		push	10h
-		call	sub_14C7C
+		push	(32 shl 16) or 16
+		push	16
+		call	_cdg_put_noalpha
 
 loc_D142:
 		mov	byte_24498, 0
@@ -4842,9 +4839,9 @@ loc_D1B0:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	2000DDh
-		push	10h
-		call	sub_14C7C
+		push	(32 shl 16) or 221
+		push	16
+		call	_cdg_put_noalpha
 
 loc_D1CE:
 		mov	byte_24498, 0Fh
@@ -4923,9 +4920,9 @@ loc_D23E:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	600048h
-		push	10h
-		call	sub_14C7C
+		push	(96 shl 16) or 72
+		push	16
+		call	_cdg_put_noalpha
 
 loc_D25C:
 		mov	byte_24498, 9
@@ -5000,9 +4997,9 @@ loc_D2C7:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	200010h
-		push	10h
-		call	sub_14C7C
+		push	(32 shl 16) or 16
+		push	16
+		call	_cdg_put_noalpha
 
 loc_D2E5:
 		mov	byte_24498, 0Fh
@@ -6132,9 +6129,9 @@ loc_DAFB:
 ; ---------------------------------------------------------------------------
 
 loc_DB0A:
-		push	200100h
-		push	11h
-		call	sub_14C7C
+		push	(32 shl 16) or 256
+		push	17
+		call	_cdg_put_noalpha
 		call	sub_E950
 		call	sub_DA25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
@@ -20864,74 +20861,7 @@ include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14C7C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 307Eh
-		mov	bx, [bp+arg_4]
-		sar	bx, 3
-		add	bx, [si+6]
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	al, 4
-		cld
-		nop
-
-loc_14CC8:
-		mov	di, bx
-
-loc_14CCA:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_14CCA
-		dec	al
-		jz	short loc_14CDA
-		pop	es
-		jmp	short loc_14CC8
-; ---------------------------------------------------------------------------
-
-loc_14CDA:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_14C7C	endp
-
+include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/formats/cdg_put.asm
 

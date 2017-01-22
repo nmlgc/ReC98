@@ -1371,9 +1371,9 @@ loc_B64C:
 loc_B65A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	200070h
+		push	(32 shl 16) or 112
 		push	31
-		call	sub_136B4
+		call	_cdg_put_noalpha
 		call	_cdg_free pascal, 31
 		push	1
 		call	palette_black_in
@@ -11677,9 +11677,9 @@ var_1		= byte ptr -1
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	200038h
+		push	(32 shl 16) or 56
 		push	0
-		call	sub_136B4
+		call	_cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_10096
 		mov	byte_25592, 9
@@ -11756,9 +11756,9 @@ var_2		= word ptr -2
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	200038h
+		push	(32 shl 16) or 56
 		push	0
-		call	sub_136B4
+		call	_cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_1015E
 		mov	byte_25592, 0Fh
@@ -15754,15 +15754,12 @@ sub_12124	endp
 sub_12157	proc near
 
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@y		= word ptr  6
+@@x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	10h
-		call	sub_136B4
+		call	_cdg_put_noalpha pascal, [bp+@@x], [bp+@@y], 16
 		call	sub_C15C
 		mov	ah, [bp+arg_0]
 		call	sub_C162
@@ -16012,9 +16009,9 @@ loc_12309:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	600048h
-		push	10h
-		call	sub_136B4
+		push	(96 shl 16) or 72
+		push	16
+		call	_cdg_put_noalpha
 
 loc_12327:
 		mov	ax, word_2D02E
@@ -16094,9 +16091,9 @@ loc_12396:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	800080h
-		push	10h
-		call	sub_136B4
+		push	(128 shl 16) or 128
+		push	16
+		call	_cdg_put_noalpha
 
 loc_123B4:
 		mov	ax, word_2D02E
@@ -16895,9 +16892,9 @@ loc_129B4:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		push	200010h
-		push	10h
-		call	sub_136B4
+		push	(32 shl 16) or 16
+		push	16
+		call	_cdg_put_noalpha
 
 loc_129D2:
 		mov	ax, word_2D02E
@@ -18120,76 +18117,7 @@ sub_13666	endp
 ; ---------------------------------------------------------------------------
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_136B4	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 3978h
-		mov	bx, [bp+arg_4]
-		sar	bx, 3
-		add	bx, [si+6]
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	al, 4
-		cld
-		nop
-
-loc_13700:
-		mov	di, bx
-
-loc_13702:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_13702
-		dec	al
-		jz	short loc_13712
-		pop	es
-		jmp	short loc_13700
-; ---------------------------------------------------------------------------
-
-loc_13712:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_136B4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/formats/cdg_put_noalpha.asm
 loc_1371A:
 		push	bp
 		mov	bp, sp

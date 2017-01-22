@@ -7050,7 +7050,7 @@ sub_DCFC	proc near
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@slot		= word ptr  6
 arg_4		= word ptr  8
 arg_6		= word ptr  0Ah
 
@@ -7082,10 +7082,7 @@ arg_6		= word ptr  0Ah
 		mov	word_151C4, ax
 		mov	word_151C6, 0
 		inc	word_11848
-		push	[bp+arg_6]
-		push	di
-		push	[bp+arg_2]
-		call	sub_EA6E
+		call	_cdg_put_noalpha pascal, [bp+arg_6], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DDB1
 ; ---------------------------------------------------------------------------
@@ -7237,7 +7234,7 @@ sub_DE74	proc near
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@slot		= word ptr  6
 arg_4		= word ptr  8
 arg_6		= word ptr  0Ah
 
@@ -7269,10 +7266,7 @@ arg_6		= word ptr  0Ah
 		mov	word_151C8, ax
 		mov	word_151CA, 0
 		inc	word_1184A
-		push	[bp+arg_6]
-		push	di
-		push	[bp+arg_2]
-		call	sub_EA6E
+		call	_cdg_put_noalpha pascal, [bp+arg_6], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DF29
 ; ---------------------------------------------------------------------------
@@ -8516,78 +8510,7 @@ loc_EA68:
 		retn
 sub_EA5E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA6E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 29FEh
-		mov	bx, [bp+arg_4]
-		sar	bx, 3
-		add	bx, [si+6]
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	al, 4
-		cld
-		nop
-
-loc_EABA:
-		mov	di, bx
-
-loc_EABC:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_EABC
-		dec	al
-		jz	short loc_EACC
-		pop	es
-		jmp	short loc_EABA
-; ---------------------------------------------------------------------------
-
-loc_EACC:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_EA6E	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================

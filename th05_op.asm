@@ -4707,7 +4707,7 @@ loc_CF59:
 		push	ax
 		mov	al, byte ptr word_14118
 		mov	ah, 0
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		jmp	short loc_CF8C
 ; ---------------------------------------------------------------------------
@@ -4717,10 +4717,10 @@ loc_CF82:
 		push	ax
 		lea	ax, [di-8]
 		push	ax
-		push	2Dh ; '-'
+		push	45
 
 loc_CF8C:
-		call	sub_D590
+		call	_cdg_put_noalpha
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [si+0D8h]
 		mov	bx, 8
@@ -4801,10 +4801,10 @@ loc_D012:
 loc_D050:
 		push	si
 		push	di
-		push	2Dh ; '-'
+		push	45
 
 loc_D054:
-		call	sub_D590
+		call	_cdg_put_noalpha
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		imul	ax, 5
@@ -5360,75 +5360,7 @@ loc_D58A:
 		retn
 sub_D580	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D590	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 3A96h
-		mov	bx, [bp+arg_4]
-		sar	bx, 3
-		add	bx, [si+6]
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	al, 4
-		cld
-		nop
-
-loc_D5DC:
-		mov	di, bx
-
-loc_D5DE:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_D5DE
-		dec	al
-		jz	short loc_D5EE
-		pop	es
-		jmp	short loc_D5DC
-; ---------------------------------------------------------------------------
-
-loc_D5EE:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_D590	endp
-
+include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================

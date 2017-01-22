@@ -4760,14 +4760,14 @@ sub_D3A2	proc near
 		mov	bp, sp
 		cmp	byte_132B8, 0
 		jnz	short loc_D407
-		push	28002Ch
-		push	28h ; '('
-		call	sub_E176
+		push	(40 shl 16) or 44
+		push	40
+		call	_cdg_put_noalpha
 		push	1
 		call	sub_D0FF
-		push	1500034h
-		push	29h ; ')'
-		call	sub_E176
+		push	(336 shl 16) or 52
+		push	41
+		call	_cdg_put_noalpha
 		push	1
 		call	sub_D20A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -4785,14 +4785,14 @@ sub_D3A2	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D407:
-		push	148002Ch
-		push	29h ; ')'
-		call	sub_E176
+		push	(328 shl 16) or 44
+		push	41
+		call	_cdg_put_noalpha
 		push	0
 		call	sub_D0FF
-		push	300034h
-		push	28h ; '('
-		call	sub_E176
+		push	(48 shl 16) or 52
+		push	40
+		call	_cdg_put_noalpha
 		push	0
 		call	sub_D20A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -5054,17 +5054,17 @@ sub_D650	proc near
 		mov	bp, sp
 		cmp	byte_132B8, 0
 		jnz	short loc_D664
-		push	0B8002Ch
-		push	28h ; '('
+		push	(184 shl 16) or 44
+		push	40
 		jmp	short loc_D66C
 ; ---------------------------------------------------------------------------
 
 loc_D664:
-		push	0B8002Ch
-		push	29h ; ')'
+		push	(184 shl 16) or 44
+		push	41
 
 loc_D66C:
-		call	sub_E176
+		call	_cdg_put_noalpha
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		push	370034h
 		push	37011Fh
@@ -5916,76 +5916,7 @@ sub_E0F4	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E176	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		add	ax, 3800h
-		push	ax
-		sub	ax, 2800h
-		push	ax
-		sub	ax, 800h
-		push	ax
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 2716h
-		mov	bx, [bp+arg_4]
-		sar	bx, 3
-		add	bx, [si+6]
-		mov	ax, [si+8]
-		mov	bp, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [si+0Eh]
-		mov	ds, ax
-		xor	si, si
-		mov	al, 4
-		cld
-		nop
-
-loc_E1C2:
-		mov	di, bx
-
-loc_E1C4:
-		mov	cx, bp
-		rep movsd
-		sub	di, dx
-		jns	short loc_E1C4
-		dec	al
-		jz	short loc_E1D4
-		pop	es
-		jmp	short loc_E1C2
-; ---------------------------------------------------------------------------
-
-loc_E1D4:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_E176	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 
