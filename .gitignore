@@ -1,4 +1,5 @@
 bin/*
+.tup/*
 !bin/masters.lib
 Research/*.exe
 Research/*.obj

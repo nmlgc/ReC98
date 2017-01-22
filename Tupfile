@@ -1,0 +1,80 @@
+AS = tasm32 /m /mx /kh32768 /t
+CXX32 = bcc32
+
+# Silence incorrect warnings for Borland C++ 5.5
+# ----------------------------------------------
+# 'identifier' is assigned a value that is never used
+CXX32FLAGS += -w-8004
+# Comparing signed and unsigned values
+CXX32FLAGS += -w-8012
+# ----------------------------------------------
+
+CXX32FLAGS += -O2 -v- -x-
+
+BMP2ARR = bin/Pipeline/bmp2arr.exe
+
+: Pipeline\\bmp2arr.c Pipeline\\bmp2arrl.c \
+	|> $(CXX32) $(CXX32FLAGS) -nbin/Pipeline/ %f \
+	|> bin/Pipeline/bmp2arrl.obj \
+		bin/Pipeline/bmp2arr.obj \
+		bin/Pipeline/bmp2arr.tds \
+		$(BMP2ARR)
+
+!bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -i %f -o %o |> %o
+
+: th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of c -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
+: th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
+: th01/sprites/shape8x8.bmp |> !bmp2arr -sym _sSHAPE8X8 -of asm -sw 8 -sh 8 |> th01/sprites/shape8x8.asp
+: th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
+: th02/sprites/sparks.bmp |> !bmp2arr -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/sparks.asp
+: th02/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 |> th02/sprites/pointnum.asp
+: th03/sprites/score.bmp |> !bmp2arr -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u |> th03/sprites/score.asp
+: th04/sprites/pelletbt.bmp |> !bmp2arr -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer |> th04/sprites/pelletbt.asp
+: th04/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner |> th04/sprites/pointnum.asp
+: th05/sprites/gaiji.bmp |> !bmp2arr -sym _sGAIJI -of asm -sw 16 -sh 16 |> th05/sprites/gaiji.asp
+: th05/sprites/piano_l.bmp |> !bmp2arr -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8 |> th05/sprites/piano_l.asp
+
+!as = |> $(AS) %f %o |> %o
+
+: th01_op.asm |> !as |> bin\\th01\\op.obj
+: th01_reiiden.asm | \
+	th01/sprites/pellet_c.asp \
+	th01/sprites/shape8x8.asp \
+	|> !as |> bin\\th01\\reiiden.obj
+: th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
+
+: th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
+: th02_op.asm |> !as |> bin\\th02\\op.obj
+: th02_main.asm | \
+	th02/sprites/pellet.asp \
+	th02/sprites/sparks.asp \
+	th02/sprites/pointnum.asp \
+	|> !as |> bin\\th02\\main.obj
+: th02_maine.asm |> !as |> bin\\th02\\maine.obj
+
+: libs/sprite16/sprite16.asm |> $(AS) /DTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
+: th03_op.asm |> !as |> bin\\th03\\op.obj
+: th03_main.asm | \
+	th03/sprites/score.asp \
+	|> !as |> bin\\th03\\main.obj
+: th03_mainl.asm |> !as |> bin\\th03\\mainl.obj
+
+: th04_op.asm |> !as |> bin\\th04\\op.obj
+: th04_main.asm | \
+	th02/sprites/pellet.asp \
+	th04/sprites/pelletbt.asp \
+	th02/sprites/sparks.asp \
+	th04/sprites/pointnum.asp \
+	|> !as |> bin\\th04\\main.obj
+: th04_maine.asm |> !as |> bin\\th04\\maine.obj
+
+: th05_op.asm | \
+	th05/sprites/piano_l.asp \
+	|> !as |> bin\\th05\\op.obj
+: th05_main.asm | \
+	th02/sprites/pellet.asp \
+	th04/sprites/pelletbt.asp \
+	th02/sprites/sparks.asp \
+	th04/sprites/pointnum.asp \
+	|> !as |> bin\\th05\\main.obj
+: th05_maine.asm |> !as |> bin\\th05\\maine.obj

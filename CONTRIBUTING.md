@@ -53,6 +53,12 @@ These cases should gradually be removed as development goes along, though.
 * Use `__asm` as the keyword for inline assembly. This form works in Borland
 C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 
+## Build system
+
+* Whenever you edit the `Tupfile`:
+  * Make sure that the `B32_OBJS` list in `build32b.bat` still matches the
+    list of `.obj` files generated from the `Tupfile`
+
 ## Code organization
 
 * Try to avoid repeating numeric constants – after all, easy moddability

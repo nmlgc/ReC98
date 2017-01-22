@@ -107,6 +107,12 @@ You will need:
 
   ----
 
+* [**Tup**](http://gittup.org/tup/), for Windows
+
+  A sane, parallel build system, used to ensure minimal rebuilds during the 32-bit build part. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
+
+  ----
+
 * **DOSBox** (if you're running a 64-bit version of Windows, or a non-Windows operating system)
 
   For the most part, it shouldn't matter whether you use [the original DOSBox](https://dosbox.com) or your favorite fork. A DOSBox with dynamic recompilation is highly recommended for faster compilation, though. Make sure to enable that feature by setting the following options in its configuration file (`dosbox.conf` for the original version):
