@@ -317,31 +317,7 @@ sub_973E	proc near
 		retn
 sub_973E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9776	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_9785
-; ---------------------------------------------------------------------------
-
-loc_977E:
-		call	_cdg_free pascal, si
-		inc	si
-
-loc_9785:
-		cmp	si, CDG_SLOT_COUNT
-		jl	short loc_977E
-		pop	si
-		pop	bp
-		retn
-sub_9776	endp
-
+include th03/formats/cdg_freeall.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -402,7 +378,7 @@ loc_97FC:
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		call	sub_9776
+		call	_cdg_freeall
 		push	0B0004h
 		call	sub_D3FC
 		push	1
@@ -1048,7 +1024,7 @@ loc_9E7B:
 		jnz	loc_9F38
 
 loc_9E89:
-		call	sub_9776
+		call	_cdg_freeall
 		freePISlotLarge	0
 		mov	al, byte_F7E3
 		mov	ah, 0
@@ -1118,7 +1094,7 @@ loc_9F2E:
 ; ---------------------------------------------------------------------------
 
 loc_9F38:
-		call	sub_9776
+		call	_cdg_freeall
 		freePISlotLarge	0
 		call	sub_B7D2
 		call	sub_9F8D
@@ -1129,7 +1105,7 @@ loc_9F38:
 ; ---------------------------------------------------------------------------
 
 loc_9F58:
-		call	sub_9776
+		call	_cdg_freeall
 		freePISlotLarge	0
 
 loc_9F69:
