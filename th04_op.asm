@@ -560,9 +560,9 @@ arg_2		= word ptr  6
 		jmp	cs:off_ABCB[bx]
 
 loc_AAF3:
-		push	11000E0h
-		push	0Ah
-		call	sub_DC92
+		push	(272 shl 16) or 224
+		push	10
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
@@ -577,35 +577,35 @@ loc_AB12:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 12
 
 loc_AB24:
-		push	11000F4h
-		push	0Bh
+		push	(272 shl 16) or 244
+		push	11
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB2E:
-		push	1100108h
-		push	0Ch
+		push	(272 shl 16) or 264
+		push	12
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB38:
-		push	110011Ch
-		push	0Dh
+		push	(272 shl 16) or 284
+		push	13
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB42:
-		push	1100130h
-		push	0Eh
+		push	(272 shl 16) or 304
+		push	14
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
 
 loc_AB4C:
-		push	1100144h
-		push	0Fh
+		push	(272 shl 16) or 324
+		push	15
 
 loc_AB54:
-		call	sub_DC92
+		call	_cdg_put_nocolors
 
 loc_AB59:
 		mov	dx, 7Ch
@@ -688,16 +688,16 @@ loc_AC08:
 		jmp	cs:off_AE18[bx]
 
 loc_AC24:
-		push	0E000E0h
-		push	10h
-		call	sub_DC92
-		push	14000E0h
+		push	(224 shl 16) or 224
+		push	16
+		call	_cdg_put_nocolors
+		push	(320 shl 16) or 224
 		les	bx, dword_10DA4
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
-		add	ax, 15h
+		add	ax, 21
 		push	ax
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
@@ -709,37 +709,37 @@ loc_AC57:
 ; ---------------------------------------------------------------------------
 
 loc_AC5C:
-		push	0E000F0h
-		push	11h
-		call	sub_DC92
+		push	(224 shl 16) or 240
+		push	17
+		call	_cdg_put_nocolors
 		push	14000F0h
 		les	bx, dword_10DA4
 		mov	al, es:[bx+3Ah]
 		mov	ah, 0
 		push	ax
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		mov	si, 0Ah
 		jmp	loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_AC85:
-		push	0E00100h
-		push	12h
-		call	sub_DC92
+		push	(224 shl 16) or 256
+		push	18
+		call	_cdg_put_nocolors
 		push	1400100h
 		les	bx, dword_10DA4
 		mov	al, es:[bx+3Bh]
 		mov	ah, 0
 		push	ax
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		mov	si, 0Bh
 		jmp	loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_ACAE:
-		push	0E00110h
-		push	13h
-		call	sub_DC92
+		push	(224 shl 16) or 272
+		push	19
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+10h], 0
 		jnz	short loc_ACCB
@@ -755,9 +755,9 @@ loc_ACCB:
 
 loc_ACD8:
 		mov	[bp+var_2], ax
-		push	1400110h
+		push	(320 shl 16) or 272
 		push	ax
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -766,9 +766,9 @@ loc_ACD8:
 ; ---------------------------------------------------------------------------
 
 loc_ACF7:
-		push	0E00120h
-		push	14h
-		call	sub_DC92
+		push	(224 shl 16) or 288
+		push	20
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		cmp	byte ptr es:[bx+18h], 0
 		jnz	short loc_AD14
@@ -787,9 +787,9 @@ loc_AD14:
 
 loc_AD25:
 		mov	[bp+var_2], ax
-		push	1400120h
+		push	(320 shl 16) or 288
 		push	ax
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		les	bx, dword_10DA4
 		mov	al, es:[bx+18h]
 		mov	ah, 0
@@ -798,14 +798,14 @@ loc_AD25:
 ; ---------------------------------------------------------------------------
 
 loc_AD44:
-		push	1100130h
+		push	(272 shl 16) or 304
 		les	bx, dword_10DA4
 		mov	al, es:[bx+49h]
 		mov	ah, 0
 		mov	dx, 21h	; '!'
 		sub	dx, ax
 		push	dx
-		call	sub_DC92
+		call	_cdg_put_nocolors
 		mov	di, 100h
 		les	bx, dword_10DA4
 		mov	al, es:[bx+49h]
@@ -815,18 +815,18 @@ loc_AD44:
 ; ---------------------------------------------------------------------------
 
 loc_AD72:
-		push	1100140h
-		push	1Fh
-		call	sub_DC92
+		push	(272 shl 16) or 320
+		push	31
+		call	_cdg_put_nocolors
 		mov	di, 100h
 		mov	si, 14h
 		jmp	short loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_AD87:
-		push	1100154h
-		push	0Fh
-		call	sub_DC92
+		push	(272 shl 16) or 340
+		push	15
+		call	_cdg_put_nocolors
 		mov	di, 100h
 		mov	si, 15h
 
@@ -5489,59 +5489,7 @@ include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DC92	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 2716h
-		mov	di, [bp+arg_4]
-		sar	di, 3
-		add	di, [si+6]
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_DCD2+1,	ax
-		jmp	short $+2
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [bp+arg_2]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ds, word ptr [si+0Ch]
-		xor	si, si
-		cld
-		nop
-
-loc_DCD2:
-		mov	cx, 1234h
-		rep movsd
-		sub	di, dx
-		jns	short loc_DCD2
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_DC92	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/cdg_put_nocolors.asm
 include th04/snd/detmodes.asm
 
 ; =============== S U B	R O U T	I N E =======================================

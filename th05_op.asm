@@ -462,9 +462,9 @@ arg_2		= word ptr  6
 		jmp	cs:off_A70B[bx]
 
 loc_A634:
-		push	11000FAh
-		push	0Ah
-		call	sub_E114
+		push	(272 shl 16) or 250
+		push	10
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -481,35 +481,35 @@ loc_A658:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 
 loc_A665:
-		push	110010Eh
-		push	0Bh
+		push	(272 shl 16) or 270
+		push	11
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A66F:
-		push	1100122h
-		push	0Ch
+		push	(272 shl 16) or 290
+		push	12
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A679:
-		push	1100136h
-		push	0Dh
+		push	(272 shl 16) or 310
+		push	13
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A683:
-		push	110014Ah
-		push	0Eh
+		push	(272 shl 16) or 330
+		push	14
 		jmp	short loc_A695
 ; ---------------------------------------------------------------------------
 
 loc_A68D:
-		push	110015Eh
-		push	0Fh
+		push	(272 shl 16) or 350
+		push	15
 
 loc_A695:
-		call	sub_E114
+		call	_cdg_put_nocolors
 
 loc_A69A:
 		mov	dx, 7Ch
@@ -589,16 +589,16 @@ loc_A737:
 		jmp	cs:off_A958[bx]
 
 loc_A764:
-		push	0E000FAh
-		push	10h
-		call	sub_E114
+		push	(224 shl 16) or 250
+		push	16
+		call	_cdg_put_nocolors
 		push	14000FAh
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	ah, 0
-		add	ax, 15h
+		add	ax, 21
 		push	ax
-		call	sub_E114
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -610,37 +610,37 @@ loc_A797:
 ; ---------------------------------------------------------------------------
 
 loc_A79C:
-		push	0E0010Ah
-		push	11h
-		call	sub_E114
+		push	(224 shl 16) or 266
+		push	17
+		call	_cdg_put_nocolors
 		push	140010Ah
 		les	bx, dword_11DCC
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		push	ax
-		call	sub_E114
+		call	_cdg_put_nocolors
 		mov	si, 0Ah
 		jmp	loc_A8DA
 ; ---------------------------------------------------------------------------
 
 loc_A7C5:
-		push	0E0011Ah
-		push	12h
-		call	sub_E114
+		push	(224 shl 16) or 282
+		push	18
+		call	_cdg_put_nocolors
 		push	140011Ah
 		les	bx, dword_11DCC
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
-		call	sub_E114
+		call	_cdg_put_nocolors
 		mov	si, 0Bh
 		jmp	loc_A8DA
 ; ---------------------------------------------------------------------------
 
 loc_A7EE:
-		push	0E0012Ah
-		push	13h
-		call	sub_E114
+		push	(224 shl 16) or 298
+		push	19
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+12h], 0
 		jnz	short loc_A80B
@@ -656,9 +656,9 @@ loc_A80B:
 
 loc_A818:
 		mov	[bp+var_2], ax
-		push	140012Ah
+		push	(320 shl 16) or 298
 		push	ax
-		call	sub_E114
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -667,9 +667,9 @@ loc_A818:
 ; ---------------------------------------------------------------------------
 
 loc_A837:
-		push	0E0013Ah
-		push	14h
-		call	sub_E114
+		push	(224 shl 16) or 314
+		push	20
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+15h], 0
 		jnz	short loc_A854
@@ -690,9 +690,9 @@ loc_A858:
 
 loc_A865:
 		mov	[bp+var_2], ax
-		push	140013Ah
+		push	(320 shl 16) or 314
 		push	ax
-		call	sub_E114
+		call	_cdg_put_nocolors
 		les	bx, dword_11DCC
 		mov	al, es:[bx+15h]
 		mov	ah, 0
@@ -701,14 +701,14 @@ loc_A865:
 ; ---------------------------------------------------------------------------
 
 loc_A884:
-		push	110014Ah
+		push	(272 shl 16) or 330
 		les	bx, dword_11DCC
 		mov	al, es:[bx+16h]
 		mov	ah, 0
-		mov	dx, 21h	; '!'
+		mov	dx, 33
 		sub	dx, ax
 		push	dx
-		call	sub_E114
+		call	_cdg_put_nocolors
 		mov	di, 100h
 		les	bx, dword_11DCC
 		mov	al, es:[bx+16h]
@@ -718,19 +718,19 @@ loc_A884:
 ; ---------------------------------------------------------------------------
 
 loc_A8B2:
-		push	110015Ah
-		push	1Fh
-		call	sub_E114
+		push	(272 shl 16) or 346
+		push	31
+		call	_cdg_put_nocolors
 		mov	di, 100h
 		mov	si, 14h
 		jmp	short loc_A8DA
 ; ---------------------------------------------------------------------------
 
 loc_A8C7:
-		push	110016Eh
-		push	0Fh
-		call	sub_E114
-		mov	di, 100h
+		push	(272 shl 16) or 366
+		push	15
+		call	_cdg_put_nocolors
+		mov	di, 256
 		mov	si, 15h
 
 loc_A8DA:
@@ -6283,54 +6283,7 @@ sub_E0F1	endp
 ; ---------------------------------------------------------------------------
 		db 0
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E114	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		shl	si, 4
-		add	si, 3A96h
-		mov	di, [bp+arg_4]
-		sar	di, 3
-		add	di, [si+6]
-		mov	ax, [si+8]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [bp+arg_2]
-		mov	cx, ax
-		shl	ax, 2
-		add	ax, cx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		push	ds
-		mov	ds, word ptr [si+0Ch]
-		xor	si, si
-
-loc_E14E:
-		mov	cx, bx
-		rep movsd
-		sub	di, dx
-		jns	short loc_E14E
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_E114	endp
-
+include th04/formats/cdg_put_nocolors.asm
 include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
