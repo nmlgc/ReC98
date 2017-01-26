@@ -4875,112 +4875,7 @@ loc_BCFE:
 		retn
 sub_BCD5	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BD21	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-@@slot		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	bx, [bp+@@slot]
-		shl	bx, 4
-		mov	ax, [bx+1D10h]
-		mov	[bp+var_4], ax
-		mov	bx, [bp+@@slot]
-		shl	bx, 4
-		mov	ax, [bx+1D12h]
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_4]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		sub	[bp+arg_6], ax
-		mov	ax, [bp+var_6]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		sub	[bp+arg_4], ax
-		cmp	byte_10BC7, 0
-		jz	short loc_BD65
-		cmp	byte_10BB5, 0
-		jnz	short loc_BD75
-
-loc_BD65:
-		call	_cdg_put_noalpha pascal, [bp+arg_6], [bp+arg_4], [bp+@@slot]
-		jmp	short loc_BD83
-; ---------------------------------------------------------------------------
-
-loc_BD75:
-		call	_cdg_put pascal, [bp+arg_6], [bp+arg_4], [bp+@@slot]
-
-loc_BD83:
-		and	[bp+arg_0], 7
-		cmp	[bp+arg_0], 0
-		jz	short loc_BDEE
-		mov	bx, 10h
-		mov	ax, [bp+var_4]
-		cwd
-		idiv	bx
-		mov	[bp+var_4], ax
-		mov	ax, [bp+arg_4]
-		add	[bp+var_6], ax
-		mov	ax, [bp+arg_6]
-		sar	ax, 3
-		mov	dx, [bp+arg_4]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_4]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	ax, 0E000h
-		mov	es, ax
-		assume es:nothing
-		mov	bx, [bp+arg_0]
-		shl	bx, 3
-		add	bx, 0AA2h
-		mov	dx, [bp+arg_4]
-
-loc_BDCA:
-		mov	si, dx
-		; Hack (and si, 3)
-		db 081h
-		db 0e6h
-		db 003h
-		db 000h
-		shl	si, 1
-		mov	ax, [bx+si]
-		not	ax
-		mov	di, [bp+var_2]
-		mov	cx, [bp+var_4]
-
-loc_BDDC:
-		and	es:[di], ax
-		add	di, 2
-		loop	loc_BDDC
-		add	[bp+var_2], 50h	; 'P'
-		inc	dx
-		cmp	dx, [bp+var_6]
-		jb	short loc_BDCA
-
-loc_BDEE:
-		pop	di
-		pop	si
-		leave
-		retn	8
-sub_BD21	endp
-
+include th03/formats/cdg_put_dissolve.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5056,16 +4951,16 @@ loc_BE84:
 		jz	short loc_BEA7
 		cmp	byte_10BC6, 0
 		jz	short loc_BEA7
-		push	1F800C8h
+		push	(504 shl 16) or 200
 		mov	al, byte_10BC6
 		mov	ah, 0
 		push	ax
 		push	si
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		mov	byte_10BC7, 1
 
 loc_BEA7:
-		push	140h
+		push	320
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -5073,7 +4968,7 @@ loc_BEA7:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 
 loc_BEC1:
@@ -5129,16 +5024,16 @@ loc_BF18:
 		jz	short loc_BF3B
 		cmp	byte_10BC6, 0
 		jz	short loc_BF3B
-		push	1F800C8h
+		push	(504 shl 16) or 200
 		mov	al, byte_10BC6
 		mov	ah, 0
 		push	ax
 		push	si
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		mov	byte_10BC7, 1
 
 loc_BF3B:
-		push	140h
+		push	320
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -5146,7 +5041,7 @@ loc_BF3B:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 		jmp	short loc_BF78
 ; ---------------------------------------------------------------------------
@@ -5172,9 +5067,9 @@ sub_BEC7	endp
 
 sub_BF7E	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@slot    	= word ptr  4
+@@y_center	= word ptr  6
+@@x_center	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -5193,11 +5088,7 @@ arg_4		= word ptr  8
 		xor	si, si
 
 loc_BFA0:
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	si
-		call	sub_BD21
+		call	_cdg_put_dissolve_e pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot], si
 
 loc_BFAD:
 		pop	si
@@ -5340,12 +5231,12 @@ loc_C0DC:
 		push	si
 		call	sub_BDF4
 		mov	byte_10BC7, 1
-		push	140h
+		push	320
 		push	word_10BC2
 		lea	ax, [si-1]
 		push	ax
 		push	0
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 		call	sub_BCD5
 		inc	word_10BB2
@@ -5389,12 +5280,12 @@ loc_C155:
 		mov	byte_10BC7, 1
 		cmp	word_10BB2, 0A0h
 		jge	short loc_C173
-		push	140h
+		push	320
 		push	word_10BC2
 		lea	ax, [si-1]
 		push	ax
 		push	di
-		call	sub_BD21
+		call	_cdg_put_dissolve_e
 		jmp	short loc_C194
 ; ---------------------------------------------------------------------------
 
@@ -6866,70 +6757,8 @@ off_EE4E	dd a@00ed_txt
 		db    0
 		db    0
 		db    0
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  22h	; "
-		db  22h	; "
-		db  55h	; U
-		db  55h	; U
-		db  88h
-		db  88h
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  55h	; U
-		db  55h	; U
-		db 0EEh
-		db 0EEh
-		db  55h	; U
-		db  55h	; U
-		db 0BBh
-		db 0BBh
-		db  55h	; U
-		db  55h	; U
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh
-		db 0BBh
-		db 0DDh
-		db 0DDh
-		db 0FFh
-		db 0FFh
-		db  55h	; U
-		db  55h	; U
-		db 0FFh
-		db 0FFh
-		db  55h	; U
-		db  55h	; U
-		db 0FFh
-		db 0FFh
-		db 0EEh
-		db 0EEh
-		db 0FFh
-		db 0FFh
-		db 0BBh
-		db 0BBh
-		db 0FFh
-		db 0FFh
-		db  77h	; w
-		db  77h	; w
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
+include th03/formats/cdg_put_dissolve[data].asm
+
 		dd aFocab@sC_0		; "   îéóÌÅ@ËÀñ≤"
 		dd aCgCv_0		; "	ñ£ ñÇ"
 		dd aCIjb@cvcan_0	; "  ñ∂âJÅ@ñÇóùçπ "
