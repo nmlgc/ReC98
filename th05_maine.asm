@@ -7047,34 +7047,34 @@ sub_DBE6	endp
 
 sub_DCFC	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-@@slot		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+var_4     	= word ptr -4
+var_2     	= word ptr -2
+arg_0     	= word ptr  4
+@@slot    	= word ptr  6
+@@y_center	= word ptr  8
+@@x_center	= word ptr  0Ah
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
-		mov	ax, [bp+arg_2]
+		mov	di, [bp+@@y_center]
+		mov	ax, [bp+@@slot]
 		shl	ax, 4
-		add	ax, 29FEh
+		add	ax, offset _cdg_slots
 		mov	si, ax
-		mov	ax, [si+2]
+		mov	ax, [si+CDGSlot.pixel_width]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		sub	[bp+arg_6], ax
-		mov	ax, [si+4]
+		sub	[bp+@@x_center], ax
+		mov	ax, [si+CDGSlot.pixel_height]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	di, ax
 		cmp	word_11848, 1
 		jg	loc_DDBC
-		mov	ax, [si+2]
+		mov	ax, [si+CDGSlot.pixel_width]
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -7082,7 +7082,7 @@ arg_6		= word ptr  0Ah
 		mov	word_151C4, ax
 		mov	word_151C6, 0
 		inc	word_11848
-		call	_cdg_put_noalpha pascal, [bp+arg_6], di, [bp+@@slot]
+		call	_cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DDB1
 ; ---------------------------------------------------------------------------
@@ -7093,7 +7093,7 @@ loc_DD5A:
 ; ---------------------------------------------------------------------------
 
 loc_DD61:
-		mov	ax, [bp+arg_6]
+		mov	ax, [bp+@@x_center]
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -7105,7 +7105,7 @@ loc_DD61:
 		add	dx, ax
 		cmp	dx, 50h	; 'P'
 		jge	short loc_DD9E
-		mov	ax, [bp+arg_6]
+		mov	ax, [bp+@@x_center]
 		cwd
 		idiv	bx
 		push	ax
@@ -7155,10 +7155,10 @@ loc_DDBC:
 		dec	word_151C4
 
 loc_DDD8:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	word_151C4
 		push	1
 		call	sub_DBE6
@@ -7188,10 +7188,10 @@ loc_DE01:
 		inc	word_151C4
 
 loc_DE2C:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	word_151C4
 		push	0FFFFh
 		call	sub_DBE6
@@ -7202,10 +7202,10 @@ loc_DE2C:
 ; ---------------------------------------------------------------------------
 
 loc_DE49:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	80FFFFh
 		call	sub_DBE6
 		mov	word_11848, 0
@@ -7231,34 +7231,34 @@ sub_DCFC	endp
 
 sub_DE74	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-@@slot		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+var_4     	= word ptr -4
+var_2     	= word ptr -2
+arg_0     	= word ptr  4
+@@slot    	= word ptr  6
+@@y_center	= word ptr  8
+@@x_center	= word ptr  0Ah
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
-		mov	ax, [bp+arg_2]
+		mov	di, [bp+@@y_center]
+		mov	ax, [bp+@@slot]
 		shl	ax, 4
-		add	ax, 29FEh
+		add	ax, offset _cdg_slots
 		mov	si, ax
-		mov	ax, [si+2]
+		mov	ax, [si+CDGSlot.pixel_width]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		sub	[bp+arg_6], ax
-		mov	ax, [si+4]
+		sub	[bp+@@x_center], ax
+		mov	ax, [si+CDGSlot.pixel_height]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	di, ax
 		cmp	word_1184A, 1
 		jg	loc_DF34
-		mov	ax, [si+2]
+		mov	ax, [si+CDGSlot.pixel_width]
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -7266,7 +7266,7 @@ arg_6		= word ptr  0Ah
 		mov	word_151C8, ax
 		mov	word_151CA, 0
 		inc	word_1184A
-		call	_cdg_put_noalpha pascal, [bp+arg_6], di, [bp+@@slot]
+		call	_cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DF29
 ; ---------------------------------------------------------------------------
@@ -7277,7 +7277,7 @@ loc_DED2:
 ; ---------------------------------------------------------------------------
 
 loc_DED9:
-		mov	ax, [bp+arg_6]
+		mov	ax, [bp+@@x_center]
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -7289,7 +7289,7 @@ loc_DED9:
 		add	dx, ax
 		cmp	dx, 50h	; 'P'
 		jge	short loc_DF16
-		mov	ax, [bp+arg_6]
+		mov	ax, [bp+@@x_center]
 		cwd
 		idiv	bx
 		push	ax
@@ -7313,14 +7313,14 @@ loc_DF16:
 		add	[bp+var_4], 10h
 
 loc_DF1A:
-		mov	ax, [si+2]
+		mov	ax, [si+CDGSlot.pixel_width]
 		cmp	ax, [bp+var_4]
 		jge	short loc_DED9
 		add	[bp+var_2], 10h
 		add	di, 10h
 
 loc_DF29:
-		mov	ax, [si+4]
+		mov	ax, [si+CDGSlot.pixel_height]
 		cmp	ax, [bp+var_2]
 		jge	short loc_DED2
 		jmp	loc_DFE4
@@ -7339,10 +7339,10 @@ loc_DF34:
 		dec	word_151C8
 
 loc_DF50:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	word_151C8
 		push	1
 		call	sub_DBE6
@@ -7372,10 +7372,10 @@ loc_DF79:
 		inc	word_151C8
 
 loc_DFA4:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	word_151C8
 		push	0FFFFh
 		call	sub_DBE6
@@ -7386,10 +7386,10 @@ loc_DFA4:
 ; ---------------------------------------------------------------------------
 
 loc_DFC1:
-		push	[bp+arg_6]
+		push	[bp+@@x_center]
 		push	di
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+CDGSlot.pixel_width]
+		push	[si+CDGSlot.pixel_height]
 		push	80FFFFh
 		call	sub_DBE6
 		mov	word_1184A, 0
