@@ -1937,7 +1937,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	0
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1965,7 +1965,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	1
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1993,7 +1993,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	2
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2021,7 +2021,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	3
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -2094,7 +2094,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	0
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+128
@@ -2112,7 +2112,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	1
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		mov	ax, si
 		cwd
@@ -2138,7 +2138,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	2
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+384
@@ -2156,7 +2156,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	3
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
@@ -2226,7 +2226,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	0
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8
@@ -2244,7 +2244,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	1
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		mov	ax, si
 		cwd
@@ -2270,7 +2270,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	2
-		call	sub_D078
+		call	_cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+256
@@ -2288,7 +2288,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	3
-		call	sub_D078
+		call	_cdg_put_plane
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
@@ -5323,100 +5323,7 @@ sub_D046	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	__far sub_D078(int, int	slot, int, int)
-sub_D078	proc far
-
-arg_0		= word ptr  6
-@@slot		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@slot]
-		shl	si, 4
-		add	si, 1B46h
-		mov	cx, [bp+arg_6]
-		mov	di, cx
-		sar	di, 4
-		shl	di, 1
-		add	di, [si+6]
-		mov	ax, [si+8]
-		shl	ax, 1
-		mov	byte ptr cs:loc_D0DC+1,	al
-		and	cx, 0Fh
-		mov	bx, cx
-		shl	bx, 1
-		mov	bx, [bx+580h]
-		mov	word ptr cs:loc_D0E3+1,	bx
-		mov	word ptr cs:loc_D0F0+1,	bx
-		jmp	short $+2
-		shl	ax, 1
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		mov	ax, [bp+arg_4]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, 0A800h
-		mov	es, ax
-		push	ds
-		mov	ax, [si+0Eh]
-		mov	si, [si]
-		mov	ds, ax
-		mov	ax, [bp+arg_0]
-		mov	bp, dx
-		mul	si
-		mov	si, ax
-		cld
-
-loc_D0DC:
-		mov	ch, 80h
-		lodsw
-		ror	ax, cl
-		mov	dx, ax
-
-loc_D0E3:
-		and	ax, 1234h
-		xor	dx, ax
-		stosw
-		dec	ch
-
-loc_D0EB:
-		lodsw
-		ror	ax, cl
-		mov	bx, ax
-
-loc_D0F0:
-		and	ax, 1234h
-		xor	bx, ax
-		or	ax, dx
-		mov	dx, bx
-		stosw
-		dec	ch
-		jnz	short loc_D0EB
-		or	dx, dx
-		jz	short loc_D107
-		mov	es:[di], dx
-		xor	dx, dx
-
-loc_D107:
-		sub	di, bp
-		jns	short loc_D0DC
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_D078	endp
-
+include th04/formats/cdg_put_plane.asm
 include th04/snd/load.asm
 
 ; ---------------------------------------------------------------------------
@@ -5916,38 +5823,7 @@ include th02/formats/pfopen[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
-		db 0FFh
-		db 0FFh
-		db  7Fh
-		db 0FFh
-		db  3Fh	; ?
-		db 0FFh
-		db  1Fh
-		db 0FFh
-		db  0Fh
-		db 0FFh
-		db    7
-		db 0FFh
-		db    3
-		db 0FFh
-		db    1
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db  7Fh
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  1Fh
-		db    0
-		db  0Fh
-		db    0
-		db    7
-		db    0
-		db    3
-		db    0
-		db    1
+include th04/formats/cdg_put_plane[data].asm
 include th04/snd/snd[data].asm
 		db    0
 include th04/snd/load[data].asm
