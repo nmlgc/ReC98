@@ -4,11 +4,11 @@ echo If this fails or shows other weird behavior, run BUILD16B separately in DOS
 REM (Yes, we don't use %0%, as it actually has to be %0 on DOS. Just spelling
 REM out the name saves us that trouble.)
 
-tlink 1>NUL 2>NUL
+tlink >NUL
 if errorlevel 9009 goto no_tlink
 if errorlevel 216 goto 64_bit
 
-tcc 1>NUL 2>NUL
+tcc >NUL
 if errorlevel 9009 goto no_tcc
 if errorlevel 216 goto 64_bit
 
