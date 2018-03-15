@@ -721,7 +721,7 @@ loc_B13E:
 
 loc_B145:
 		mov	byte_25FEC, 20h	; ' '
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_B15D
 
 loc_B151:
@@ -825,10 +825,10 @@ sub_B237	proc near
 		mov	vsync_Count2, 0
 		les	bx, dword_23EF0
 		mov	al, es:[bx+13h]
-		mov	byte_25FEA, al
-		cmp	byte_25FEA, 0
+		mov	stage_id, al
+		cmp	stage_id, 0
 		jz	short loc_B260
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_B2DD
 
 loc_B260:
@@ -842,7 +842,7 @@ loc_B260:
 		mov	al, es:[bx+18h]
 		mov	es:[bx+13h], al
 		mov	al, es:[bx+13h]
-		mov	byte_25FEA, al
+		mov	stage_id, al
 		mov	al, es:[bx+19h]
 		mov	byte_2CEBE, al
 		mov	byte ptr es:[bx+17h], 0
@@ -856,7 +856,7 @@ loc_B2A5:
 		les	bx, dword_23EF0
 		mov	al, es:[bx+1Dh]
 		mov	es:[bx+13h], al
-		mov	byte_25FEA, al
+		mov	stage_id, al
 		cmp	byte ptr es:[bx+1Fh], 5
 		jz	short loc_B2CE
 		mov	byte_2CEBE, 80h
@@ -995,7 +995,7 @@ loc_B3C5:
 loc_B3CA:
 		nopcall	sub_BF27
 		mov	word_2CC8E, 9
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 6
@@ -1132,7 +1132,7 @@ loc_B4BB:
 loc_B506:
 		les	bx, off_20A86
 		mov	byte ptr es:[bx+2], 30h	; '0'
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+3], al
 		push	word ptr off_20A86+2
@@ -1449,8 +1449,8 @@ sub_B827	proc near
 		mov	bp, sp
 		les	bx, dword_23EF0
 		mov	al, es:[bx+13h]
-		mov	byte_25FEA, al
-		cmp	byte_25FEA, 6
+		mov	stage_id, al
+		cmp	stage_id, 6
 		jnz	short loc_B843
 		mov	byte_25FEB, 4
 		jmp	short loc_B84E
@@ -1828,7 +1828,7 @@ sub_BAF8	endp
 sub_BB3E	proc near
 		push	si
 		call	sub_BB82
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	aSt00_map+3, al
 		mov	ax, 3D00h
@@ -2178,7 +2178,7 @@ loc_BDB7:
 		mov	byte_23F04, al
 		mov	al, [bp+var_1]
 		add	byte_23EFC, al
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_BD81
 		cmp	byte_2CE00, 0
 		jz	short loc_BD81
@@ -2203,7 +2203,7 @@ sub_BDEC	proc near
 		push	di
 		push	ds
 		call	sub_BEA4
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	byte ptr aSt00_std+3, al
 		mov	dx, offset aSt00_std
@@ -3702,7 +3702,7 @@ loc_C7D8:
 		cmp	byte_2429B, 80h
 		jnz	short loc_C7F9
 		call	snd_se_play pascal, 15
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_C7F2
 		mov	byte_2CE00, 1
 
@@ -3728,7 +3728,7 @@ loc_C800:
 		mov	byte_25FE9, 1
 		cmp	byte_2429B, 82h
 		jnz	short loc_C849
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_C849
 		push	word_2CDFC
 		call	graph_scrollup
@@ -3958,7 +3958,7 @@ loc_CA05:
 		cmp	byte_2429B, 50h	; 'P'
 		jnz	short loc_CA26
 		call	snd_se_play pascal, 15
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CA1F
 		mov	byte_2CE00, 1
 
@@ -3984,7 +3984,7 @@ loc_CA2D:
 		mov	byte_25FE9, 1
 		cmp	byte_2429B, 52h	; 'R'
 		jnz	short loc_CA75
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CA75
 		push	word_2CDFC
 		call	graph_scrollup
@@ -4191,7 +4191,7 @@ loc_CC28:
 		cmp	byte_2429B, 40h
 		jnz	short loc_CC49
 		call	snd_se_play pascal, 15
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CC42
 		mov	byte_2CE00, 1
 
@@ -4217,7 +4217,7 @@ loc_CC50:
 		mov	byte_25FE9, 1
 		cmp	byte_2429B, 42h	; 'B'
 		jnz	short loc_CC98
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CC98
 		push	word_2CDFC
 		call	graph_scrollup
@@ -4399,7 +4399,7 @@ loc_CDDE:
 		cmp	byte_2429B, 0A0h
 		jnz	short loc_CDFF
 		call	snd_se_play pascal, 15
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CDF8
 		mov	byte_2CE00, 1
 
@@ -4425,7 +4425,7 @@ loc_CE06:
 		mov	byte_25FE9, 1
 		cmp	byte_2429B, 0A1h
 		jnz	short loc_CE4F
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_CE4F
 		push	word_2CDFC
 		call	graph_scrollup
@@ -8446,7 +8446,7 @@ loc_E8D5:
 		add	byte ptr [di], 0A0h
 		inc	di
 		loop	loc_E8D5
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		cmp	al, 6
 		jnz	short loc_E8E4
 		xor	al, al
@@ -9190,7 +9190,7 @@ sub_EE17	proc near
 		mov	bp, sp
 		les	bx, off_221D0
 		assume es:nothing
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+4], al
 		push	word ptr off_221D0+2
@@ -9555,7 +9555,7 @@ loc_F068:
 ; ---------------------------------------------------------------------------
 
 loc_F07C:
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jz	short loc_F091
 		push	0B40140h
 		call	super_clean
@@ -9941,7 +9941,7 @@ loc_F3A4:
 loc_F40F:
 		cmp	word_2C938, 0
 		jz	short loc_F41B
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		jmp	short loc_F421
 ; ---------------------------------------------------------------------------
 
@@ -10827,7 +10827,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jz	loc_FBF5
 		xor	di, di
 		mov	si, 1
@@ -11739,7 +11739,7 @@ sub_100C6	endp
 sub_10214	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jnz	short loc_10223
 		mov	byte_2CE00, 0
 
@@ -11754,7 +11754,7 @@ loc_10223:
 		jz	short loc_1024F
 		cmp	byte_2CE00, 0
 		jz	short loc_1024F
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_1024F
 		push	dx
 		call	graph_scrollup
@@ -15010,7 +15010,7 @@ loc_11AF8:
 		call	sub_E6E2
 		mov	ah, 0Bh
 		call	sub_E6EE
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jnb	short loc_11B11
 		push	150A80h
 		push	0Eh
@@ -15070,10 +15070,10 @@ loc_11B91:
 		jb	loc_11CB5
 		cmp	byte_228EC, 16h
 		jnz	loc_11C2D
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		add	al, 0A1h
 		mov	gStage_1+6, al
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jnz	short loc_11BBE
 		push	(17 shl 16) + 11
 		push	ds
@@ -15082,7 +15082,7 @@ loc_11B91:
 ; ---------------------------------------------------------------------------
 
 loc_11BBE:
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_11BD1
 		push	(17 shl 16) + 11
 		push	ds
@@ -15116,7 +15116,7 @@ loc_11C2D:
 		call	sub_E6E2
 		mov	ah, 0Bh
 		call	sub_E6EE
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jnb	short loc_11C46
 		push	150A80h
 		push	0Eh
@@ -16463,7 +16463,7 @@ loc_127BD:
 		jb	short loc_12821
 
 loc_127D2:
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_127E7
 		mov	ax, 5
 		imul	si
@@ -16484,7 +16484,7 @@ loc_127E7:
 ; ---------------------------------------------------------------------------
 
 loc_127FA:
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_1281A
 		cmp	byte_25FEF, 0
 		jnz	short loc_1281A
@@ -24057,7 +24057,7 @@ loc_1626C:
 		mov	[bp+var_2], dl
 
 loc_16279:
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		shl	al, 4
 		mov	dl, [bp+var_2]
 		sub	dl, al
@@ -24498,7 +24498,7 @@ loc_165DF:
 
 loc_165F8:
 		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		mov	ah, 0
 		imul	ax, 64h
 		add	ax, 64h	; 'd'
@@ -24533,7 +24533,7 @@ loc_165F8:
 		push	si
 		push	0E1h
 		nopcall	sub_1F9F4
-		mov	al, byte_25FEA
+		mov	al, stage_id
 		mov	ah, 0
 		imul	ax, 1388h
 		add	ax, 2710h
@@ -41832,10 +41832,10 @@ loc_1FC95:
 		assume es:nothing
 		mov	ax, word_2C97A
 		add	es:[bx+3Ah], ax
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jz	short loc_1FCD1
 		call	sub_F2B4
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jz	short loc_1FCCB
 		call	sub_16510
 		jmp	loc_1FD51
@@ -41855,7 +41855,7 @@ loc_1FCD6:
 		cmp	word_26346, 1A0h
 		jnz	short loc_1FD35
 		call	sub_14AB1
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnb	short loc_1FD0B
 		xor	si, si
 		jmp	short loc_1FD06
@@ -41863,7 +41863,7 @@ loc_1FCD6:
 
 loc_1FCEE:
 		mov	al, [si-3BD6h]
-		mov	dl, byte_25FEA
+		mov	dl, stage_id
 		mov	dh, 0
 		shl	dx, 3
 		les	bx, dword_23EF0
@@ -41876,14 +41876,14 @@ loc_1FD06:
 		jl	short loc_1FCEE
 
 loc_1FD0B:
-		cmp	byte_25FEA, 5
+		cmp	stage_id, 5
 		jnz	short loc_1FD19
 		call	sub_E448
 		jmp	short loc_1FD25
 ; ---------------------------------------------------------------------------
 
 loc_1FD19:
-		cmp	byte_25FEA, 6
+		cmp	stage_id, 6
 		jnz	short loc_1FD25
 		call	sub_E480
 
@@ -47666,7 +47666,7 @@ byte_25FE5	db ?
 word_25FE6	dw ?
 byte_25FE8	db ?
 byte_25FE9	db ?
-byte_25FEA	db ?
+stage_id	db ?
 byte_25FEB	db ?
 byte_25FEC	db ?
 byte_25FED	db ?
