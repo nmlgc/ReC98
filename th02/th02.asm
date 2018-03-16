@@ -36,3 +36,5 @@ mikoconfig_t	struc
 mikoconfig_t	ends
 
 END_LINE_LEN = 46
+
+MAP_SIZE = 0C00h

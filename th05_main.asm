@@ -1097,7 +1097,7 @@ loc_B4A6:
 		call	sub_BAF8
 
 loc_B4A9:
-		call	sub_BB3E
+		call	map_load
 		call	sub_BDEC
 		call	sub_EE17
 		call	sub_BB9A
@@ -1224,7 +1224,7 @@ sub_B609	proc near
 		call	sub_14529
 		call	sub_EE32
 		call	sub_BEA4
-		call	sub_BB82
+		call	map_free
 		push	0B40100h
 		call	super_clean
 		mov	si, 1
@@ -1825,9 +1825,9 @@ sub_BAF8	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_BB3E	proc near
+map_load	proc near
 		push	si
-		call	sub_BB82
+		call	map_free
 		mov	al, stage_id
 		add	al, 30h	; '0'
 		mov	aSt00_map+3, al
@@ -1840,17 +1840,17 @@ sub_BB3E	proc near
 		mov	bx, ax
 		mov	si, ax
 		mov	ah, 3Fh	; '?'
-		mov	dx, 3514h
+		mov	dx, offset map_header
 		mov	cx, 8
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
-		push	word_23EF4
+		push	map_header.map_size
 		call	hmem_allocbyte
-		mov	word_25354, ax
+		mov	map_seg, ax
 		push	ds
 		mov	bx, si
-		mov	cx, word_23EF4
+		mov	cx, map_header.map_size
 		mov	ds, ax
 		xor	dx, dx
 		mov	ah, 3Fh
@@ -1863,22 +1863,22 @@ sub_BB3E	proc near
 					; BX = file handle
 		pop	si
 		retn
-sub_BB3E	endp
+map_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_BB82	proc near
-		cmp	word_25354, 0
+map_free	proc near
+		cmp	map_seg, 0
 		jz	short locret_BB98
-		push	word_25354
+		push	map_seg
 		call	hmem_free
-		mov	word_25354, 0
+		mov	map_seg, 0
 
 locret_BB98:
 		retn
-sub_BB82	endp
+map_free	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -1900,7 +1900,7 @@ sub_BB9A	proc near
 		assume es:_DATA
 		mov	ax, word_21290
 		mov	fs, ax
-		mov	ax, word_25354
+		mov	ax, map_seg
 		mov	ds, ax
 		mov	al, 5
 
@@ -2165,7 +2165,7 @@ loc_BD88:
 		pop	es
 		assume es:_DATA
 		push	ds
-		mov	ax, word_25354
+		mov	ax, map_seg
 		mov	ds, ax
 		mov	cx, 18h
 		rep movsw
@@ -10398,7 +10398,7 @@ loc_F71C:
 		call	sub_EE32
 		call	sub_CE68
 		call	sub_BEA4
-		call	sub_BB82
+		call	map_free
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -45501,10 +45501,7 @@ include libs/master.lib/pfint21[bss].asm
 word_23EEC	dw ?
 		dw ?
 dword_23EF0	dd ?
-word_23EF4	dw ?
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+map_header	map_header_t ?
 byte_23EFC	db ?
 word_23EFD	dw ?
 word_23EFF	dw ?
@@ -46852,7 +46849,7 @@ byte_25350	db ?
 byte_25351	db ?
 byte_25352	db ?
 byte_25353	db ?
-word_25354	dw ?
+map_seg	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

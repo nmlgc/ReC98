@@ -978,7 +978,7 @@ loc_B141:
 		call	sub_B8FC
 
 loc_B144:
-		call	sub_B971
+		call	map_load
 		call	sub_B6D1
 		call	sub_CED4
 		call	sub_BAA2
@@ -1091,7 +1091,7 @@ sub_B29E	proc near
 		call	sub_1DFD4
 		call	sub_CF1E
 		call	sub_B79E
-		call	sub_B9BB
+		call	map_free
 		push	800100h
 		call	super_clean
 		mov	si, 8
@@ -1765,7 +1765,7 @@ loc_B89D:
 		pop	es
 		assume es:_DATA
 		push	ds
-		mov	ax, word_25A3E
+		mov	ax, map_seg
 		mov	ds, ax
 		mov	cx, 18h
 		rep movsw
@@ -1865,11 +1865,11 @@ sub_B8FC	endp
 
 ; Attributes: bp-based frame
 
-sub_B971	proc near
+map_load	proc near
 
-var_8		= word ptr -8
+@@mh		= map_header_t ptr -(size map_header_t)
 
-		enter	8, 0
+		enter	size map_header_t, 0
 		les	bx, dword_2CDC6
 		assume es:nothing
 		mov	al, es:[bx+13h]
@@ -1879,41 +1879,41 @@ var_8		= word ptr -8
 		push	bx
 		call	file_ropen
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@mh]
 		push	ax
-		push	8
+		push	size map_header_t
 		call	file_read
-		call	sub_B9BB
-		push	[bp+var_8]
+		call	map_free
+		push	[bp+@@mh.map_size]
 		call	hmem_allocbyte
-		mov	word_25A3E, ax
+		mov	map_seg, ax
 		push	ax
 		push	0
-		push	[bp+var_8]
+		push	[bp+@@mh.map_size]
 		call	file_read
 		call	file_close
 		leave
 		retn
-sub_B971	endp
+map_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_B9BB	proc near
+map_free	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_25A3E, 0
+		cmp	map_seg, 0
 		jz	short loc_B9D4
-		push	word_25A3E
+		push	map_seg
 		call	hmem_free
-		mov	word_25A3E, 0
+		mov	map_seg, 0
 
 loc_B9D4:
 		pop	bp
 		retn
-sub_B9BB	endp
+map_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2041,7 +2041,7 @@ sub_BAA2	proc near
 		mov	es, ax
 		mov	ax, word_21C58
 		mov	fs, ax
-		mov	ax, word_25A3E
+		mov	ax, map_seg
 		mov	ds, ax
 		mov	al, 5
 
@@ -5297,7 +5297,7 @@ loc_CF63:
 		push	1Fh
 		call	sub_13A58
 		call	sub_B79E
-		call	sub_B9BB
+		call	map_free
 
 loc_CF70:
 		nopcall	sub_D6EB
@@ -8547,7 +8547,7 @@ loc_E813:
 		call	sub_CF1E
 		call	sub_FF89
 		call	sub_B79E
-		call	sub_B9BB
+		call	map_free
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -47704,7 +47704,7 @@ byte_25A38	db ?
 word_25A3A	dw ?
 byte_25A3C	db ?
 byte_25A3D	db ?
-word_25A3E	dw ?
+map_seg	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
