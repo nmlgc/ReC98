@@ -85,7 +85,7 @@ Since this will most likely result in graphics mods that exceed the specificatio
 You will need:
 
 * Borland Turbo C++ 4.0J
-* Borland Turbo Assembler (TASM), version 5.0 or later, in a 32-bit version (`TASM32.EXE`)
+* Borland Turbo Assembler (TASM), version 5.0 or later, in a 32-bit Windows version (`TASM32.EXE`) and version 4.1 or later in a 16-bit DOS version (`TASM.EXE`)
 * [DOSBox](http://dosbox.com) if you're running a 64-bit version of Windows, or a non-Windows operating system
 
 The Borland tools are the only ones that will, with the correct command-line switches for each game, deterministically compile this source code to executables that are bit-perfect to ZUN's original ones. Hence, they are the only supported build tools during all of the reconstruction phase.
