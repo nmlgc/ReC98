@@ -604,10 +604,10 @@ loc_B003:
 		xor	byte_25352, 1
 		call	snd_se_update
 		inc	dword_25FDC
-		mov	ax, word_25FE0
+		mov	ax, frame
 		mov	dx, ax
 		inc	ax
-		mov	word_25FE0, ax
+		mov	frame, ax
 		and	ax, 0Fh
 		mov	byte_25FE5, al
 		and	al, 7
@@ -616,7 +616,7 @@ loc_B003:
 		mov	byte_25FE3, al
 		and	al, 1
 		mov	byte_25FE2, al
-		test	word_25FE0, 0FFFh
+		test	frame, 0FFFh
 		jnz	short loc_B055
 		push	1
 		nopcall	sub_E720
@@ -1175,7 +1175,7 @@ sub_B55A	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_EACE
-		mov	word_25FE0, 0
+		mov	frame, 0
 		mov	byte_2C96C, 0
 		mov	word_2CDFC, 0
 		mov	word_23F06, 0
@@ -1409,11 +1409,11 @@ loc_B7CC:
 		test	word_23A56, 0F0F0h
 		jnz	short loc_B80C
 		les	bx, dword_25FF4
-		add	bx, word_25FE0
+		add	bx, frame
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	word_23A56, ax
-		mov	ax, word_25FE0
+		mov	ax, frame
 		add	ax, [bp+var_2]
 		mov	bx, word ptr dword_25FF4
 		add	bx, ax
@@ -1422,7 +1422,7 @@ loc_B7CC:
 		les	bx, dword_23EF0
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short locret_B825
-		cmp	word_25FE0, 1384h
+		cmp	frame, 1384h
 		jb	short locret_B825
 
 loc_B80C:
@@ -8709,7 +8709,7 @@ sub_EACE	proc near
 		mov	word_2D05E, ax
 		mov	word_2D05C, ax
 		mov	dword_25FDC, 0
-		mov	word_25FE0, 0
+		mov	frame, 0
 		mov	byte_25FE2, 0
 		mov	byte_25FE3, 0
 		mov	byte_25FE4, 0
@@ -9770,7 +9770,7 @@ sub_F2B4	proc far
 		push	9C40h
 		call	file_read
 		call	file_close
-		mov	word_25FE0, 0
+		mov	frame, 0
 		inc	byte_221EC
 		pop	bp
 		retf
@@ -12822,7 +12822,7 @@ loc_10B2E:
 		jle	loc_10C38
 		cmp	di, 180h
 		jge	loc_10C38
-		mov	ax, word_25FE0
+		mov	ax, frame
 		and	ax, 1Fh
 		cmp	ax, 10h
 		jnb	short loc_10B7B
@@ -13753,7 +13753,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
-		mov	ax, word_25FE0
+		mov	ax, frame
 		and	ax, 0FFFh
 		mov	di, ax
 		cmp	di, 3E8h
@@ -13987,13 +13987,13 @@ loc_113B9:
 		jge	loc_1162C
 
 loc_113C9:
-		cmp	word_25FE0, 130h
+		cmp	frame, 130h
 		jnb	loc_11475
 		mov	byte_2CE00, 0
-		cmp	word_25FE0, 100h
+		cmp	frame, 100h
 		jb	loc_1146F
 		mov	ax, 12Fh
-		sub	ax, word_25FE0
+		sub	ax, frame
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes, al
@@ -14011,7 +14011,7 @@ loc_113C9:
 		mov	byte_22859, al
 		cmp	byte_25FE3, 0
 		jnz	short loc_1146F
-		mov	ax, word_25FE0
+		mov	ax, frame
 		sub	ax, 100h
 		shr	ax, 2
 		mov	[bp+var_2], ax
@@ -14050,7 +14050,7 @@ loc_1146F:
 ; ---------------------------------------------------------------------------
 
 loc_11475:
-		cmp	word_25FE0, 132h
+		cmp	frame, 132h
 		jnb	short loc_114CD
 		push	word_2CDFC
 		call	graph_scrollup
@@ -20636,7 +20636,7 @@ sub_14544	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_180BF
 		mov	fp_2C99A, offset sub_10844
-		mov	word_2632C, 9C4h
+		mov	frames_until_midboss, 2500
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26320+2,	600h
 		mov	word ptr dword_26324, 0C00h
@@ -20686,7 +20686,7 @@ sub_14613	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_18A2F
 		mov	fp_2C99A, offset sub_109A3
-		mov	word_2632C, 0ABEh
+		mov	frames_until_midboss, 2750
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FE00h
@@ -20733,7 +20733,7 @@ sub_146D0	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_194E8
 		mov	fp_2C99A, offset sub_10A9E
-		mov	word_2632C, 1676h
+		mov	frames_until_midboss, 5750
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FE00h
@@ -20783,7 +20783,7 @@ sub_1479F	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_1B26F
 		mov	fp_2C99A, offset sub_10E33
-		mov	word_2632C, 0F3Ch
+		mov	frames_until_midboss, 3900
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FE00h
@@ -20835,7 +20835,7 @@ sub_14879	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_1F87B
 		mov	fp_2C99A, offset sub_1186C
-		mov	word_2632C, 12C0h
+		mov	frames_until_midboss, 4800
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FE00h
@@ -20894,7 +20894,7 @@ sub_14976	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, nullsub_1
 		mov	fp_2C99A, offset nullsub_2
-		mov	word_2632C, 7530h
+		mov	frames_until_midboss, 30000
 		call	sub_144CB
 		mov	word_26335+1, 0C00h
 		mov	word_2633A, 0C00h
@@ -20934,7 +20934,7 @@ sub_14A06	proc near
 		mov	bp, sp
 		setfarfp	farfp_2C996, sub_1E70E
 		mov	fp_2C99A, offset sub_11630
-		mov	word_2632C, 16A8h
+		mov	frames_until_midboss, 5800
 		mov	word ptr dword_26320, 0C00h
 		mov	word ptr dword_26324, 0C00h
 		mov	word ptr dword_26320+2,	0FF00h
@@ -23693,7 +23693,7 @@ var_1		= byte ptr -1
 		call	near ptr sub_17322
 		les	bx, dword_23F4A
 		mov	ax, es:[bx]
-		cmp	ax, word_25FE0
+		cmp	ax, frame
 		jnz	short locret_16063
 		add	word ptr dword_23F4A, 2
 		les	bx, dword_23F4A
@@ -23972,7 +23972,7 @@ loc_16297:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		push	ax
-		mov	ax, word_25FE0
+		mov	ax, frame
 		xor	dx, dx
 		pop	bx
 		div	bx
@@ -26023,8 +26023,8 @@ sub_172FF	endp
 sub_17322	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word_2632C
-		cmp	ax, word_25FE0
+		mov	ax, frames_until_midboss
+		cmp	ax, frame
 		jnz	short loc_17352
 		mov	fp_2C98E, offset sub_D032
 		mov	ax, fp_2C99A
@@ -30773,7 +30773,7 @@ loc_19A9C:
 		cmp	word ptr [si+0Eh], 20h ; ' '
 		jb	short loc_19ADC
 		mov	word ptr [si+12h], 0C2h
-		test	byte ptr word_25FE0, 1Fh
+		test	byte ptr frame, 1Fh
 		jnz	short loc_19ADC
 		mov	byte ptr word_25FFA+1, 0
 		mov	eax, [si+2]
@@ -47489,7 +47489,7 @@ byte_25FD8	db ?
 		db ?
 word_25FDA	dw ?
 dword_25FDC	dd ?
-word_25FE0	dw ?
+frame	dw ?
 byte_25FE2	db ?
 byte_25FE3	db ?
 byte_25FE4	db ?
@@ -47740,7 +47740,7 @@ dword_26320	dd ?
 dword_26324	dd ?
 word_26328	dw ?
 word_2632A	dw ?
-word_2632C	dw ?
+frames_until_midboss	dw ?
 word_2632E	dw ?
 byte_26330	db ?
 byte_26331	db ?
