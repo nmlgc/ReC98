@@ -12,7 +12,7 @@ tcc >NUL
 if errorlevel 9009 goto no_tcc
 if errorlevel 216 goto 64_bit
 
-make
+maker
 if errorlevel 9009 goto no_make
 if errorlevel 216 goto 64_bit
 goto eof
@@ -28,7 +28,7 @@ goto tc4j_bin
 echo Could not find TLINK.
 goto tc4j_bin
 :no_make
-echo Could not find MAKE.
+echo Could not find MAKER.
 goto tc4j_bin
 :tc4j_bin
 echo Please make sure that the BIN directory of Turbo C++ 4.0J is in your PATH.
