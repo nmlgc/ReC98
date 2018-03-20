@@ -45,8 +45,8 @@ func PALETTE_WHITE_IN	; palette_white_in() {
 	push	SI
 	push	DI
 	; 引数
-	speed	= (RETSIZE+0)*2
-	mov	SI,SS:[BX+speed]
+	@@speed	= (RETSIZE+0)*2
+	mov	SI,SS:[BX+@@speed]
 
 	mov	PaletteTone,200
 	call	VSYNC_WAIT	; 表示タイミングあわせ
