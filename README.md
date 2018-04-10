@@ -88,6 +88,13 @@ You will need:
 * Borland Turbo Assembler (TASM), version 5.0 or later, in a 32-bit version (`TASM32.EXE`)
 * [DOSBox](http://dosbox.com) if you're running a 64-bit version of Windows, or a non-Windows operating system
 
+  To speed up compilation, make sure to set the following in `dosbox.conf`:
+  ```
+  [cpu]
+  core=dynamic
+  cycles=max
+  ```
+
 The Borland tools are the only ones that will, with the correct command-line switches for each game, deterministically compile this source code to executables that are bit-perfect to ZUN's original ones. Hence, they are the only supported build tools during all of the reconstruction phase.
 
 To build, simply run `build.bat` and follow the instructions.
