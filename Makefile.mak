@@ -5,8 +5,8 @@
 CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -a2
 
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
-TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe
-TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe
+TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe \zun.com
+TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe \zun.com
 TH04 = \res_huma.com \op.exe \main.exe \maine.exe
 TH05 = \res_kso.com \op.exe \main.exe \maine.exe
 
@@ -72,3 +72,47 @@ bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
 	$(CC) $(CFLAGS) -ml -DGAME=4 -nbin\th04\ -eOP.EXE @&&|
 $**
 |
+
+# ZUN.COM packing
+
+bin\zuncom\gensize.com: zuncom\gensize.c
+	mkdir bin\zuncom
+	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eGENSIZE.COM $**
+
+bin\zuncom\copycat.com: zuncom\copycat.c
+	mkdir bin\zuncom
+	$(CC) $(CLFAGS) -mt -lt -nbin\zuncom\ -eCOPYCAT.COM $**
+
+bin\zuncom\moveup.bin: zuncom\moveup.asm
+	mkdir bin\zuncom
+	tasm zuncom\moveup.asm,bin\zuncom\moveup
+	tlink -t bin\zuncom\moveup.obj,bin\zuncom\moveup.bin
+
+ZUNCOM_PREREQ = bin\zuncom\gensize.com bin\zuncom\copycat.com zuncom\zun_stub.asm bin\zuncom\moveup.bin
+
+bin\th02\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th02\zun_res.com bin\th01\zunsoft.com
+	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
+	tasm -DGAME=2 zuncom\zun_stub.asm,bin\th02\zun_stub
+	tlink -t bin\th02\zun_stub.obj,bin\th02\zun_stub.bin
+	bin\zuncom\copycat &&|
+bin\th02\zun_stub.bin
+libs\kaja\ongchk.com
+bin\th02\zuninit.com
+bin\th02\zun_res.com
+bin\th01\zunsoft.com
+bin\zuncom\moveup.bin
+| bin\th02\zun.com
+
+bin\th03\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th01\zunsoft.com bin\th03\zunsp.com bin\th03\res_yume.com
+	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
+	tasm -DGAME=3 zuncom\zun_stub.asm,bin\th03\zun_stub
+	tlink -t bin\th03\zun_stub.obj,bin\th03\zun_stub.bin
+	bin\zuncom\copycat &&|
+bin\th03\zun_stub.bin
+libs\kaja\ongchk.com
+bin\th02\zuninit.com
+bin\th01\zunsoft.com
+bin\th03\zunsp.com
+bin\th03\res_yume.com
+bin\zuncom\moveup.bin
+| bin\th03\zun.com
