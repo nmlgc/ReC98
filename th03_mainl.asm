@@ -160,7 +160,7 @@ sub_2AEA	proc far
 		popf
 
 loc_2B03:
-		or	word_F80A, si
+		or	js_stat, si
 		pop	di
 		pop	si
 		pop	bp
@@ -6446,7 +6446,7 @@ sub_CB68	proc far
 		mov	word_100F8, ax
 		mov	word_100FA, ax
 		mov	word_100FC, ax
-		mov	word_F80A, ax
+		mov	js_stat, ax
 		jmp	short $+2
 		mov	bl, 2
 		xor	ax, ax
@@ -7430,7 +7430,7 @@ sub_D5A2	proc far
 		cmp	js_bexist, 0
 		jz	short loc_D5BD
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		or	word_100FC, ax
 
 loc_D5BD:
@@ -7453,7 +7453,7 @@ sub_D5A2	endp
 		cmp	js_bexist, 0
 		jz	short loc_D5F0
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		mov	word_100F8, ax
 		mov	ax, word_100FC
 		mov	word_100FA, ax
@@ -7468,7 +7468,7 @@ loc_D5F0:
 		cmp	js_bexist, 0
 		jz	short loc_D612
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		mov	word_100FA, ax
 		mov	ax, word_100FC
 		mov	word_100F8, ax
@@ -7485,7 +7485,7 @@ loc_D612:
 		cmp	js_bexist, 0
 		jz	short loc_D636
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		or	word_100F8, ax
 
 loc_D636:
@@ -7502,7 +7502,7 @@ loc_D636:
 		cmp	js_bexist, 0
 		jz	short loc_D663
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		or	word_100FA, ax
 
 loc_D663:
@@ -7533,7 +7533,7 @@ loc_D687:
 		cmp	js_bexist, 0
 		jz	short loc_D6B0
 		call	sub_2AEA
-		mov	ax, word_F80A
+		mov	ax, js_stat
 		or	word_100FC, ax
 
 loc_D6B0:
@@ -7819,13 +7819,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 include libs/master.lib/rand[data].asm
@@ -8260,9 +8254,7 @@ byte_F7E5	db ?
 		dd    ?	;
 		dd    ?	;
 include libs/master.lib/fil[bss].asm
-word_F80A	dw ?
-		db    ?	;
-		db    ?	;
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

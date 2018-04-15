@@ -163,7 +163,7 @@ sub_2DF4	proc far
 		popf
 
 loc_2E0D:
-		or	word_E9A4, si
+		or	js_stat, si
 		pop	di
 		pop	si
 		pop	bp
@@ -5049,7 +5049,7 @@ sub_C1B4	proc far
 		mov	word_F292, ax
 		mov	word_F294, ax
 		mov	word_F296, ax
-		mov	word_E9A4, ax
+		mov	js_stat, ax
 		jmp	short $+2
 		mov	bl, 2
 		xor	ax, ax
@@ -5891,7 +5891,7 @@ sub_C986	proc far
 		cmp	js_bexist, 0
 		jz	short loc_C9A1
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		or	word_F296, ax
 
 loc_C9A1:
@@ -5926,7 +5926,7 @@ sub_C9B4	proc far
 		cmp	js_bexist, 0
 		jz	short loc_C9D4
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		mov	word_F292, ax
 		mov	ax, word_F296
 		mov	word_F294, ax
@@ -5948,7 +5948,7 @@ sub_C9D6	proc far
 		cmp	js_bexist, 0
 		jz	short loc_C9F6
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		mov	word_F294, ax
 		mov	ax, word_F296
 		mov	word_F292, ax
@@ -5972,7 +5972,7 @@ sub_C9F8	proc far
 		cmp	js_bexist, 0
 		jz	short loc_CA1A
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		or	word_F292, ax
 
 loc_CA1A:
@@ -5996,7 +5996,7 @@ sub_CA22	proc far
 		cmp	js_bexist, 0
 		jz	short loc_CA47
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		or	word_F294, ax
 
 loc_CA47:
@@ -6041,7 +6041,7 @@ sub_CA79	proc far
 		cmp	js_bexist, 0
 		jz	short loc_CA94
 		call	sub_2DF4
-		mov	ax, word_E9A4
+		mov	ax, js_stat
 		or	word_F296, ax
 
 loc_CA94:
@@ -6317,13 +6317,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 include libs/master.lib/rand[data].asm
@@ -6510,9 +6504,7 @@ byte_E97C	db ?
 fp_E97E	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
-word_E9A4	dw ?
-		db ?
-		db    ?	;
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

@@ -9172,7 +9172,7 @@ sub_F0B4	endp
 sub_F0FC	proc near
 		xor	ax, ax
 		mov	word_12AFA, ax
-		mov	word_11E96, ax
+		mov	js_stat, ax
 sub_F0FC	endp ; sp-analysis failed
 
 
@@ -9759,13 +9759,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -10247,9 +10241,7 @@ dword_11E6E	dd ?
 		dd ?
 		dd ?
 include libs/master.lib/fil[bss].asm
-word_11E96	dw ?
-		db ?
-		db ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
