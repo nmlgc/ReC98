@@ -84,11 +84,6 @@ bin\zuncom\zun_stub.bin: zuncom\zun_stub.asm
 	tasm zuncom\zun_stub.asm,bin\zuncom\zun_stub
 	tlink -t bin\zuncom\zun_stub.obj,bin\zuncom\zun_stub.bin
 
-bin\zuncom\moveup.bin: zuncom\moveup.asm
-	mkdir bin\zuncom
-	tasm zuncom\moveup.asm,bin\zuncom\moveup
-	tlink -t bin\zuncom\moveup.obj,bin\zuncom\moveup.bin
-
 bin\zuncom\comcstm.com: zuncom\comcstm.c
 	mkdir bin\zuncom
 	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eCOMCSTM.com $**
@@ -98,10 +93,10 @@ bin\zuncom\cstmstub.bin: zuncom\cstmstub.asm
 	tasm zuncom\cstmstub.asm,bin\zuncom\cstmstub
 	tlink -t bin\zuncom\cstmstub.obj,bin\zuncom\cstmstub.bin
 
-ZUNCOM_PREREQ = bin\zuncom\zungen.com bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin
+ZUNCOM_PREREQ = bin\zuncom\zungen.com bin\zuncom\zun_stub.bin
 
 bin\th02\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th02\zun_res.com bin\th01\zunsoft.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
 4
 ONGCHK
 ZUNINIT
@@ -114,7 +109,7 @@ bin\th01\zunsoft.com
 | bin\th02\zun.com
 
 bin\th03\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th01\zunsoft.com bin\th03\zunsp.com bin\th03\res_yume.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
 5
 -1
 -2
@@ -129,7 +124,7 @@ bin\th03\res_yume.com
 | bin\th03\zun.com
 
 bin\th04\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th04\zuninit.com bin\th04\res_huma.com bin\th04\memchk.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
 4
 -O
 -I
@@ -142,7 +137,7 @@ bin\th04\memchk.com
 | bin\th04\zuncom.bin
 
 bin\th05\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th05\zuninit.com bin\th05\res_kso.com bin\th05\gjinit.com bin\th05\memchk.com
-	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin &&|
 5
 -O
 -I

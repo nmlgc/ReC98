@@ -16,6 +16,13 @@ int readline(char *path, size_t size, FILE* fl) {
 }
 #define MAX_COUNT 32
 #define DATA_SIZE (2+MAX_COUNT*10+2+3)
+static const char moveup[] = {
+	0xF3, 0xA4,       /* REP MOVSB    */
+	0x58,             /* POP AX       */
+	0xB8, 0x00, 0x01, /* MOV AX, 100h */
+	0x50,             /* PUSH AX      */
+	0xC3,             /* RETN         */
+};
 int main(int argc, char** argv) {
 	static char path[MAXPATH+1];
 	static char names[8*MAX_COUNT];
@@ -27,16 +34,16 @@ int main(int argc, char** argv) {
 	int i,j;
 	int errval;
 
-	if(argc != 5) {
-		printf("Usage: zungen zun_stub.bin moveup.bin listfile.txt outfile.bin\n");
+	if(argc != 4) {
+		printf("Usage: zungen zun_stub.bin listfile.txt outfile.bin\n");
 		return 1;
 	}
-	fl = fopen(argv[3],"r");
+	fl = fopen(argv[2],"r");
 	if(!fl) {
 		printf("Error: couldn't open listfile: %s\n", strerror(errno));
 		return 2;
 	}
-	fo = fopen(argv[4],"wb");
+	fo = fopen(argv[3],"wb");
 	if(!fo) {
 		fclose(fl);
 		printf("Error: couldn't open outfile: %s\n", strerror(errno));
@@ -122,7 +129,8 @@ int main(int argc, char** argv) {
 	}
 
 	/* append moveup */
-	if(append(argv[2], fo)) {
+	if(sizeof(moveup) != fwrite(moveup, 1, sizeof(moveup), fo)) {
+		printf("Error: write error\n");
 		errval = 14; goto err;
 	}
 
