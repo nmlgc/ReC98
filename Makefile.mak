@@ -75,13 +75,14 @@ $**
 
 # ZUN.COM packing
 
-bin\zuncom\gensize.com: zuncom\gensize.c
+bin\zuncom\zungen.com: zuncom\zungen.c
 	mkdir bin\zuncom
-	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eGENSIZE.COM $**
+	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eZUNGEN.COM $**
 
-bin\zuncom\copycat.com: zuncom\copycat.c
+bin\zuncom\zun_stub.bin: zuncom\zun_stub.asm
 	mkdir bin\zuncom
-	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eCOPYCAT.COM $**
+	tasm zuncom\zun_stub.asm,bin\zuncom\zun_stub
+	tlink -t bin\zuncom\zun_stub.obj,bin\zuncom\zun_stub.bin
 
 bin\zuncom\moveup.bin: zuncom\moveup.asm
 	mkdir bin\zuncom
@@ -97,64 +98,66 @@ bin\zuncom\cstmstub.bin: zuncom\cstmstub.asm
 	tasm zuncom\cstmstub.asm,bin\zuncom\cstmstub
 	tlink -t bin\zuncom\cstmstub.obj,bin\zuncom\cstmstub.bin
 
-ZUNCOM_PREREQ = bin\zuncom\gensize.com bin\zuncom\copycat.com zuncom\zun_stub.asm bin\zuncom\moveup.bin
+ZUNCOM_PREREQ = bin\zuncom\zungen.com bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin
 
 bin\th02\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th02\zun_res.com bin\th01\zunsoft.com
-	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
-	tasm -DGAME=2 zuncom\zun_stub.asm,bin\th02\zun_stub
-	tlink -t bin\th02\zun_stub.obj,bin\th02\zun_stub.bin
-	bin\zuncom\copycat &&|
-bin\th02\zun_stub.bin
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+4
+ONGCHK
+ZUNINIT
+ZUN_RES
+ZUNSOFT
 libs\kaja\ongchk.com
 bin\th02\zuninit.com
 bin\th02\zun_res.com
 bin\th01\zunsoft.com
-bin\zuncom\moveup.bin
 | bin\th02\zun.com
 
 bin\th03\zun.com : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th02\zuninit.com bin\th01\zunsoft.com bin\th03\zunsp.com bin\th03\res_yume.com
-	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
-	tasm -DGAME=3 zuncom\zun_stub.asm,bin\th03\zun_stub
-	tlink -t bin\th03\zun_stub.obj,bin\th03\zun_stub.bin
-	bin\zuncom\copycat &&|
-bin\th03\zun_stub.bin
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+5
+-1
+-2
+-3
+-4
+-5
 libs\kaja\ongchk.com
 bin\th02\zuninit.com
 bin\th01\zunsoft.com
 bin\th03\zunsp.com
 bin\th03\res_yume.com
-bin\zuncom\moveup.bin
 | bin\th03\zun.com
 
 bin\th04\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th04\zuninit.com bin\th04\res_huma.com bin\th04\memchk.com
-	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
-	tasm -DGAME=4 zuncom\zun_stub.asm,bin\th04\zun_stub
-	tlink -t bin\th04\zun_stub.obj,bin\th04\zun_stub.bin
-	bin\zuncom\copycat &&|
-bin\th04\zun_stub.bin
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+4
+-O
+-I
+-S
+-M
 libs\kaja\ongchk.com
 bin\th04\zuninit.com
 bin\th04\res_huma.com
 bin\th04\memchk.com
-bin\zuncom\moveup.bin
 | bin\th04\zuncom.bin
 
 bin\th05\zuncom.bin : $(ZUNCOM_PREREQ) libs\kaja\ongchk.com bin\th05\zuninit.com bin\th05\res_kso.com bin\th05\gjinit.com bin\th05\memchk.com
-	bin\zuncom\gensize.com > bin\zuncom\gensize.inc
-	tasm -DGAME=5 zuncom\zun_stub.asm,bin\th05\zun_stub
-	tlink -t bin\th05\zun_stub.obj,bin\th05\zun_stub.bin
-	bin\zuncom\copycat &&|
-bin\th05\zun_stub.bin
+	bin\zuncom\zungen bin\zuncom\zun_stub.bin bin\zuncom\moveup.bin &&|
+5
+-O
+-I
+-S
+-G
+-M
 libs\kaja\ongchk.com
 bin\th05\zuninit.com
 bin\th05\res_kso.com
 bin\th05\gjinit.com
 bin\th05\memchk.com
-bin\zuncom\moveup.bin
 | bin\th05\zuncom.bin
 
 bin\th04\zun.com : bin\zuncom\comcstm.com zuncom\zun4.txt bin\th04\zuncom.bin bin\zuncom\cstmstub.bin
-	bin\zuncom\comcstm.com zuncom\zun4.txt bin\th04\zuncom.bin bin\zuncom\cstmstub.bin 621381155 bin\th04\zun.com
+	bin\zuncom\comcstm zuncom\zun4.txt bin\th04\zuncom.bin bin\zuncom\cstmstub.bin 621381155 bin\th04\zun.com
 
 bin\th05\zun.com : bin\zuncom\comcstm.com zuncom\zun5.txt bin\th05\zuncom.bin bin\zuncom\cstmstub.bin
-	bin\zuncom\comcstm.com zuncom\zun5.txt bin\th05\zuncom.bin bin\zuncom\cstmstub.bin 628731748 bin\th05\zun.com
+	bin\zuncom\comcstm zuncom\zun5.txt bin\th05\zuncom.bin bin\zuncom\cstmstub.bin 628731748 bin\th05\zun.com

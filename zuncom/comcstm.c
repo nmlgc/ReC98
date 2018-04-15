@@ -2,52 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <dir.h>
-#include <dos.h>
-
-long filesize(const char *filename) {
-	struct ffblk ff;
-	if(!findfirst(filename,&ff,FA_NORMAL)) {
-		return ff.ff_fsize;
-	}
-	else {
-		printf("Error: couldn't find '%s'\n",filename);
-		exit(3);
-		return -1;
-	}
-}
-
-void append(const char *filename, FILE *fo) {
-	FILE *fi;
-	static char cluster[512];
-	int bytesread, byteswrite;
-	fi = fopen(filename, "rb");
-	if(!fi) {
-		printf("Error: couldn't open file '%s': %s\n", filename, strerror(errno));
-		fclose(fo);
-		exit(2);
-	}
-	while(!feof(fi)) {
-		bytesread = fread(cluster, 1, sizeof(cluster), fi);
-		if(bytesread) {
-			byteswrite = fwrite(cluster, 1, bytesread, fo);
-			if(bytesread != byteswrite) {
-				printf("Error: write error\n");
-				fclose(fi);
-				fclose(fo);
-				exit(5);
-			}
-		}
-	}
-	fclose(fi);
-}
-
-void fputw(int word, FILE *fo) {
-	fwrite(&word, sizeof(word), 1, fo);
-}
-void fputd(long dword, FILE *fo) {
-	fwrite(&dword, sizeof(dword), 1, fo);
-}
+#include "zuncom/common.h"
 static const char copyright[] = "comcstm (c)O.Morikawa 1996";
 #define HEADER_SIZE (3+2+2+2+4+sizeof(copyright)-1)
 int main(int argc, char **argv) {
@@ -60,11 +15,13 @@ int main(int argc, char **argv) {
 	}
 
 	sz_usage = filesize(argv[1]);
+	if(sz_usage == -1) return 3;
 	sz_program = filesize(argv[2]);
+	if(sz_program == -1) return 3;
 	fo = fopen(argv[5], "wb");
 	if(!fo) {
 		printf("Error: couldn't open file '%s': %s\n", argv[5], strerror(errno));
-		return 4;
+		return 2;
 	}
 
 	fputc('\xE9', fo); /* jmp rel16 */
@@ -78,9 +35,13 @@ int main(int argc, char **argv) {
 	fputd(atol(argv[4]), fo);
 	fputs(copyright, fo);
 	fflush(fo);
-	append(argv[1], fo);
-	append(argv[2], fo);
-	append(argv[3], fo);
-	fclose(fo);
+	if(append(argv[1], fo) || append(argv[2], fo) || append(argv[3], fo)) {
+		fclose(fo);
+		return 3;
+	}
+	if(fclose(fo)) {
+		printf("Error while closing outfile\n");
+		return 4;
+	}
 	return 0;
 }

@@ -128,100 +128,17 @@ fixup:
 		jmp	moveup_indirect
 
 ; ---------------------------------------------------------------------------
-		include bin\zuncom\gensize.inc
-
-	IF GAME EQ 2
-
-proc_count	dw 4
-
-proc_names	db 'ONGCHK  '
-		db 'ZUNINIT '
-		db 'ZUN_RES '
-		db 'ZUNSOFT '
-		db 28 dup('        ')
-proc_entries	dw offset ongchk
-		dw offset zuninit
-		dw offset zun_res
-		dw offset zunsoft
-		dw offset moveup	; last entry points to moveup
-		dw 28 dup(0)
+proc_count:
+		org $+2
+proc_names:
+		org $+8*32
+proc_entries:
+		org $+2*33
 moveup_indirect:
-		call	moveup
-ongchk:		org $+GENSIZE_ONGCHK
-zuninit:	org $+GENSIZE_ZUNINIT2
-zun_res:	org $+GENSIZE_ZUN_RES
-zunsoft:	org $+GENSIZE_ZUNSOFT
-
-	ELSEIF GAME EQ 3
-
-proc_count	dw 5
-proc_names	db '-1      '
-		db '-2      '
-		db '-3      '
-		db '-4      '
-		db '-5      '
-		db 27 dup('        ')
-proc_entries	dw offset ongchk
-		dw offset zuninit
-		dw offset zunsoft
-		dw offset zunsp
-		dw offset res_yume
-		dw offset moveup	; last entry points to moveup
-		dw 27 dup(0)
-moveup_indirect:
-		call	moveup
-ongchk:		org $+GENSIZE_ONGCHK
-zuninit:	org $+GENSIZE_ZUNINIT2
-zunsoft:	org $+GENSIZE_ZUNSOFT
-zunsp:		org $+GENSIZE_ZUNSP
-res_yume:	org $+GENSIZE_RES_YUME
-
-	ELSEIF GAME EQ 4
-
-proc_count	dw 4
-proc_names	db '-O      '
-		db '-I      '
-		db '-S      '
-		db '-M      '
-		db 28 dup('        ')
-proc_entries	dw offset ongchk
-		dw offset zuninit
-		dw offset res_huma
-		dw offset memchk
-		dw offset moveup
-		dw 28 dup(0)
-moveup_indirect:
-		call	moveup
-ongchk:		org $+GENSIZE_ONGCHK
-zuninit:	org $+GENSIZE_ZUNINIT4
-res_huma:	org $+GENSIZE_RES_HUMA
-memchk:		org $+GENSIZE_MEMCHK4
-
-	ELSEIF GAME EQ 5
-
-proc_count	dw 5
-proc_names	db '-O      '
-		db '-I      '
-		db '-S      '
-		db '-G      '
-		db '-M      '
-		db 27 dup('        ')
-proc_entries	dw offset ongchk
-		dw offset zuninit
-		dw offset res_kso
-		dw offset gjinit
-		dw offset memchk
-		dw offset moveup
-		dw 27 dup(0)
-moveup_indirect:
-		call	moveup
-ongchk:		org $+GENSIZE_ONGCHK
-zuninit:	org $+GENSIZE_ZUNINIT5
-res_kso:	org $+GENSIZE_RES_KSO
-gjinit:		org $+GENSIZE_GJINIT
-memchk:		org $+GENSIZE_MEMCHK5
-
-	ENDIF
+		;jmp	moveup
+		org $+3
+; ---------------------------------------------------------------------------
+; subprograms go here
 ; ---------------------------------------------------------------------------
 moveup:		; the following code is split into moveup.asm
 		;rep movsb
