@@ -115,61 +115,7 @@ include libs/master.lib/respal_get_palettes.asm
 include libs/master.lib/pfint21.asm
 		db 0
 include libs/master.lib/js_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2BEE	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2BEE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2C00	proc far
-		push	bp
-		push	si
-		push	di
-		xor	bp, bp
-		cmp	js_bexist, 0
-		jz	short loc_2C19
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2BEE
-		and	ax, 3Fh
-		mov	si, ax
-		popf
-
-loc_2C19:
-		or	js_stat, si
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2C00	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/js_sense.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9796,7 +9742,7 @@ sub_ED54	proc far
 		nopcall	sub_EA8C
 		cmp	js_bexist, 0
 		jz	short loc_ED6F
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		or	word ptr unk_1EFFA, ax
 
@@ -9831,7 +9777,7 @@ sub_ED82	proc far
 		nopcall	sub_EA8C
 		cmp	js_bexist, 0
 		jz	short loc_EDA2
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_1EFF6, ax
 		mov	ax, word ptr unk_1EFFA
@@ -9853,7 +9799,7 @@ sub_EDA4	proc far
 		nopcall	sub_EA8C
 		cmp	js_bexist, 0
 		jz	short loc_EDC4
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_1EFF8, ax
 		mov	ax, word ptr unk_1EFFA
@@ -9877,7 +9823,7 @@ sub_EDC6	proc far
 		or	word_1EFF6, ax
 		cmp	js_bexist, 0
 		jz	short loc_EDE8
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		or	word_1EFF6, ax
 
@@ -9901,7 +9847,7 @@ sub_EDF0	proc far
 		mov	word_1EFF8, ax
 		cmp	js_bexist, 0
 		jz	short loc_EE15
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		or	word_1EFF8, ax
 
@@ -9946,7 +9892,7 @@ sub_EE47	proc far
 		nopcall	sub_EA8C
 		cmp	js_bexist, 0
 		jz	short loc_EE62
-		call	sub_2C00
+		call	js_sense
 		mov	ax, js_stat
 		or	word ptr unk_1EFFA, ax
 

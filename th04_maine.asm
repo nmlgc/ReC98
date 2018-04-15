@@ -123,48 +123,7 @@ include libs/master.lib/pfint21.asm
 include libs/master.lib/js_start.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2CEA	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2CEA	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2CFC	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2CEA
-		and	ax, 3Fh
-		popf
-		retf
-sub_2CFC	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
@@ -6153,7 +6112,7 @@ loc_D579:
 		mov	byte_10074, al
 		cmp	js_bexist, 0
 		jz	short locret_D592
-		call	sub_2CFC
+		call	js_sense
 		or	word_10072, ax
 
 locret_D592:

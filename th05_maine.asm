@@ -213,48 +213,7 @@ loc_2E3F:
 sub_2DB6	endp
 
 include libs/master.lib/js_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2E70	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2E70	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2E82	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2E70
-		and	ax, 3Fh
-		popf
-		retf
-sub_2E82	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
@@ -9288,7 +9247,7 @@ loc_F1E4:
 		mov	byte_12AFC, al
 		cmp	js_bexist, 0
 		jz	short loc_F1FD
-		call	sub_2E82
+		call	js_sense
 		or	word_12AFA, ax
 
 loc_F1FD:

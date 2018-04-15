@@ -131,48 +131,7 @@ include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
 include libs/master.lib/js_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3668	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_3668	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_367A	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_3668
-		and	ax, 3Fh
-		popf
-		retf
-sub_367A	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
@@ -21556,7 +21515,7 @@ loc_150B6:
 		mov	byte_23A58, al
 		cmp	js_bexist, 0
 		jz	short loc_150CF
-		call	sub_367A
+		call	js_sense
 		or	word_23A56, ax
 
 loc_150CF:

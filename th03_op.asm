@@ -124,64 +124,8 @@ include libs/master.lib/respal_free.asm
 include libs/master.lib/pfint21.asm
 		db 0
 include libs/master.lib/js_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2DE2	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2DE2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2DF4	proc far
-		push	bp
-		push	si
-		push	di
-		xor	bp, bp
-		cmp	js_bexist, 0
-		jz	short loc_2E0D
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2DE2
-		and	ax, 3Fh
-		mov	si, ax
-		popf
-
-loc_2E0D:
-		or	js_stat, si
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2DF4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/js_sense.asm
 		db 0
-; ---------------------------------------------------------------------------
-
 include libs/master.lib/draw_trapezoid.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
@@ -5890,7 +5834,7 @@ sub_C986	proc far
 		nopcall	sub_C1B4
 		cmp	js_bexist, 0
 		jz	short loc_C9A1
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		or	word_F296, ax
 
@@ -5925,7 +5869,7 @@ sub_C9B4	proc far
 		nopcall	sub_C1B4
 		cmp	js_bexist, 0
 		jz	short loc_C9D4
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_F292, ax
 		mov	ax, word_F296
@@ -5947,7 +5891,7 @@ sub_C9D6	proc far
 		nopcall	sub_C1B4
 		cmp	js_bexist, 0
 		jz	short loc_C9F6
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_F294, ax
 		mov	ax, word_F296
@@ -5971,7 +5915,7 @@ sub_C9F8	proc far
 		or	word_F292, ax
 		cmp	js_bexist, 0
 		jz	short loc_CA1A
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		or	word_F292, ax
 
@@ -5995,7 +5939,7 @@ sub_CA22	proc far
 		mov	word_F294, ax
 		cmp	js_bexist, 0
 		jz	short loc_CA47
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		or	word_F294, ax
 
@@ -6040,7 +5984,7 @@ sub_CA79	proc far
 		nopcall	sub_C1B4
 		cmp	js_bexist, 0
 		jz	short loc_CA94
-		call	sub_2DF4
+		call	js_sense
 		mov	ax, js_stat
 		or	word_F296, ax
 

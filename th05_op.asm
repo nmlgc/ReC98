@@ -119,48 +119,7 @@ include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
 include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2CA8	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2CA8	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2CBA	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2CA8
-		and	ax, 3Fh
-		popf
-		retf
-sub_2CBA	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
@@ -7181,7 +7140,7 @@ loc_E076:
 		mov	byte_12A74, al
 		cmp	js_bexist, 0
 		jz	short loc_E08F
-		call	sub_2CBA
+		call	js_sense
 		or	word_12A72, ax
 
 loc_E08F:
