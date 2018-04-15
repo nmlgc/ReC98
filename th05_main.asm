@@ -21210,7 +21210,7 @@ sub_14F86	endp
 sub_14FCE	proc near
 		xor	ax, ax
 		mov	word_23A56, ax
-		mov	word_23038, ax
+		mov	js_stat, ax
 sub_14FCE	endp ; sp-analysis failed
 
 
@@ -41879,13 +41879,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -45075,8 +45069,7 @@ fp_2300E	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
-word_23038	dw ?
-		dw ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

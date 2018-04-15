@@ -5970,7 +5970,7 @@ sub_D43C	endp
 sub_D48A	proc near
 		xor	ax, ax
 		mov	word_10072, ax
-		mov	word_F3F6, ax
+		mov	js_stat, ax
 sub_D48A	endp ; sp-analysis failed
 
 
@@ -6498,10 +6498,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		dw 0
-		dw 0
-		dw 0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -6773,9 +6770,7 @@ dword_F3CE	dd ?
 		dd ?
 		dd ?
 include libs/master.lib/fil[bss].asm
-word_F3F6	dw ?
-		db ?
-		db ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

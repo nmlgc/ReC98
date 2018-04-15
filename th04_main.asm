@@ -18393,7 +18393,7 @@ loc_13792:
 sub_1379C	proc near
 		xor	ax, ax
 		mov	word_24CB4, ax
-		mov	word_23DBE, ax
+		mov	js_stat, ax
 sub_1379C	endp ; sp-analysis failed
 
 
@@ -42961,13 +42961,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -46399,9 +46393,7 @@ dword_23D92	dd ?
 		dd ?
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
-word_23DBE	dw ?
-		db ?
-		db ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

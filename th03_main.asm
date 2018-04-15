@@ -154,7 +154,7 @@ sub_2C00	proc far
 		popf
 
 loc_2C19:
-		or	word_1E716, si
+		or	js_stat, si
 		pop	di
 		pop	si
 		pop	bp
@@ -9418,7 +9418,7 @@ sub_EA8C	proc far
 		mov	word_1EFF6, ax
 		mov	word_1EFF8, ax
 		mov	word ptr unk_1EFFA, ax
-		mov	word_1E716, ax
+		mov	js_stat, ax
 		jmp	short $+2
 		mov	bl, 2
 		xor	ax, ax
@@ -9640,7 +9640,7 @@ sub_ED54	proc far
 		cmp	js_bexist, 0
 		jz	short loc_ED6F
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		or	word ptr unk_1EFFA, ax
 
 loc_ED6F:
@@ -9675,7 +9675,7 @@ sub_ED82	proc far
 		cmp	js_bexist, 0
 		jz	short loc_EDA2
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		mov	word_1EFF6, ax
 		mov	ax, word ptr unk_1EFFA
 		mov	word_1EFF8, ax
@@ -9697,7 +9697,7 @@ sub_EDA4	proc far
 		cmp	js_bexist, 0
 		jz	short loc_EDC4
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		mov	word_1EFF8, ax
 		mov	ax, word ptr unk_1EFFA
 		mov	word_1EFF6, ax
@@ -9721,7 +9721,7 @@ sub_EDC6	proc far
 		cmp	js_bexist, 0
 		jz	short loc_EDE8
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		or	word_1EFF6, ax
 
 loc_EDE8:
@@ -9745,7 +9745,7 @@ sub_EDF0	proc far
 		cmp	js_bexist, 0
 		jz	short loc_EE15
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		or	word_1EFF8, ax
 
 loc_EE15:
@@ -9790,7 +9790,7 @@ sub_EE47	proc far
 		cmp	js_bexist, 0
 		jz	short loc_EE62
 		call	sub_2C00
-		mov	ax, word_1E716
+		mov	ax, js_stat
 		or	word ptr unk_1EFFA, ax
 
 loc_EE62:
@@ -36986,13 +36986,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
 include libs/master.lib/rand[data].asm
@@ -38076,9 +38070,7 @@ include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
 include libs/master.lib/grcg_triangle[bss].asm
-word_1E716	dw ?
-		db    ?	;
-		db    ?	;
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

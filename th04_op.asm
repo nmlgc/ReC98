@@ -6211,7 +6211,7 @@ sub_E176	endp
 sub_E1DC	proc near
 		xor	ax, ax
 		mov	word_11A50, ax
-		mov	word_10DD2, ax
+		mov	js_stat, ax
 sub_E1DC	endp ; sp-analysis failed
 
 
@@ -6952,13 +6952,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -7247,9 +7241,7 @@ byte_10DAC	db ?
 byte_10DAD	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
-word_10DD2	dw ?
-		db ?
-		db ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm

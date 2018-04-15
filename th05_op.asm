@@ -6461,7 +6461,7 @@ sub_DF12	endp
 sub_DF8E	proc near
 		xor	ax, ax
 		mov	word_12A72, ax
-		mov	word_11DFA, ax
+		mov	js_stat, ax
 sub_DF8E	endp ; sp-analysis failed
 
 
@@ -7177,13 +7177,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-js_bexist	dw 0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include libs/master.lib/js[data].asm
 include libs/master.lib/machine[data].asm
 include libs/master.lib/pal[data].asm
 include libs/master.lib/pf[data].asm
@@ -8033,9 +8027,7 @@ byte_11DD4	db ?
 byte_11DD5	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
-word_11DFA	dw ?
-		db ?
-		db ?
+include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
