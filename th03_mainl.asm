@@ -120,42 +120,7 @@ include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_set_palettes.asm
 include libs/master.lib/pfint21.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2AAE	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_2AB4:
-		in	al, dx
-		inc	al
-		jnz	short loc_2ABF
-		loop	loc_2AB4
-		xor	ax, ax
-		jmp	short loc_2AD3
-; ---------------------------------------------------------------------------
-
-loc_2ABF:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_2AD3:
-		mov	word_E960, ax
-		retf
-sub_2AAE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/js_start.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -184,7 +149,7 @@ sub_2AEA	proc far
 		push	si
 		push	di
 		xor	bp, bp
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_2B03
 		pushf
 		cli
@@ -6683,7 +6648,7 @@ loc_CEF6:
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
-		call	sub_2AAE
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		xor	ax, ax
@@ -7462,7 +7427,7 @@ sub_D5A2	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	sub_CB68
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D5BD
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7485,7 +7450,7 @@ sub_D5A2	endp
 		push	bp
 		mov	bp, sp
 		nopcall	sub_CB68
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D5F0
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7500,7 +7465,7 @@ loc_D5F0:
 		push	bp
 		mov	bp, sp
 		nopcall	sub_CB68
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D612
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7517,7 +7482,7 @@ loc_D612:
 		nopcall	sub_CB68
 		mov	ax, word_100FC
 		or	word_100F8, ax
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D636
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7534,7 +7499,7 @@ loc_D636:
 		mov	ax, word_100FC
 		or	ax, word_100F8
 		mov	word_100FA, ax
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D663
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7565,7 +7530,7 @@ loc_D687:
 		push	bp
 		mov	bp, sp
 		nopcall	sub_CB68
-		cmp	word_E960, 0
+		cmp	js_bexist, 0
 		jz	short loc_D6B0
 		call	sub_2AEA
 		mov	ax, word_F80A
@@ -7854,7 +7819,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-word_E960	dw 0
+js_bexist	dw 0
 		db 0
 		db    0
 		db    0

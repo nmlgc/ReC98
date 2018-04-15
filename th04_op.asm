@@ -128,43 +128,7 @@ include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
 include libs/master.lib/pfint21.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_323A	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_3240:
-		in	al, dx
-		inc	al
-		jnz	short loc_324B
-		loop	loc_3240
-		xor	ax, ax
-		jmp	short loc_325F
-; ---------------------------------------------------------------------------
-
-loc_324B:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_325F:
-		mov	word_F8BC, ax
-		retf
-sub_323A	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
@@ -6753,7 +6717,7 @@ loc_E109:
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
-		call	sub_323A
+		call	js_start
 		les	bx, [bp+arg_0]
 		cmp	byte ptr es:[bx], 0
 		jz	short loc_E169
@@ -6962,7 +6926,7 @@ loc_E2CB:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_11A52, al
-		cmp	word_F8BC, 0
+		cmp	js_bexist, 0
 		jz	short locret_E2E4
 		call	sub_349A
 		or	word_11A50, ax
@@ -7589,7 +7553,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-word_F8BC	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0

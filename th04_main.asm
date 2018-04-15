@@ -141,40 +141,7 @@ include libs/master.lib/super_convert_tiny.asm
 include libs/master.lib/super_zoom.asm
 include libs/master.lib/pfint21.asm
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_34DC	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_34E2:
-		in	al, dx
-		inc	al
-		jnz	short loc_34ED
-		loop	loc_34E2
-		xor	ax, ax
-		jmp	short loc_3501
-; ---------------------------------------------------------------------------
-
-loc_34ED:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_3501:
-		mov	word_216DA, ax
-		retf
-sub_34DC	endp
-
+include libs/master.lib/js_start.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
 
@@ -18472,7 +18439,7 @@ loc_1367D:
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
-		call	sub_34DC
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		push	800h
@@ -18745,7 +18712,7 @@ loc_1388B:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_24CB6, al
-		cmp	word_216DA, 0
+		cmp	js_bexist, 0
 		jz	short locret_138A4
 		call	sub_366A
 		or	word_24CB4, ax
@@ -43270,7 +43237,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-word_216DA	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0

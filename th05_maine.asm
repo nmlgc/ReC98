@@ -212,42 +212,7 @@ loc_2E3F:
 		retf	6
 sub_2DB6	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2E46	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_2E4C:
-		in	al, dx
-		inc	al
-		jnz	short loc_2E57
-		loop	loc_2E4C
-		xor	ax, ax
-		jmp	short loc_2E6B
-; ---------------------------------------------------------------------------
-
-loc_2E57:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_2E6B:
-		mov	word_1032E, ax
-		retf
-sub_2E46	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/js_start.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9190,7 +9155,7 @@ loc_F0CB:
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
-		call	sub_2E46
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		push	800h
@@ -9321,7 +9286,7 @@ loc_F1E4:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_12AFC, al
-		cmp	word_1032E, 0
+		cmp	js_bexist, 0
 		jz	short loc_F1FD
 		call	sub_2E82
 		or	word_12AFA, ax
@@ -9794,7 +9759,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-word_1032E	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0
