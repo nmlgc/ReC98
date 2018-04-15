@@ -117,43 +117,7 @@ include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2BAC	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_2BB2:
-		in	al, dx
-		inc	al
-		jnz	short loc_2BBD
-		loop	loc_2BB2
-		xor	ax, ax
-		jmp	short loc_2BD1
-; ---------------------------------------------------------------------------
-
-loc_2BBD:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_2BD1:
-		mov	word_F524, ax
-		retf
-sub_2BAC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6473,7 +6437,7 @@ loc_DF27:
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
-		call	sub_2BAC
+		call	js_start
 		les	bx, [bp+arg_0]
 		assume es:nothing
 		cmp	byte ptr es:[bx], 0
@@ -6611,7 +6575,7 @@ loc_E076:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_12A74, al
-		cmp	word_F524, 0
+		cmp	js_bexist, 0
 		jz	short loc_E08F
 		call	sub_2CBA
 		or	word_12A72, ax
@@ -7213,7 +7177,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-word_F524	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0

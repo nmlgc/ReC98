@@ -130,42 +130,7 @@ include libs/master.lib/super_roll_put.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_363E	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_3644:
-		in	al, dx
-		inc	al
-		jnz	short loc_364F
-		loop	loc_3644
-		xor	ax, ax
-		jmp	short loc_3663
-; ---------------------------------------------------------------------------
-
-loc_364F:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_3663:
-		mov	word_20DC2, ax
-		retf
-sub_363E	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/js_start.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21228,7 +21193,7 @@ loc_14F9D:
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
-		call	sub_363E
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		push	800h
@@ -21359,7 +21324,7 @@ loc_150B6:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_23A58, al
-		cmp	word_20DC2, 0
+		cmp	js_bexist, 0
 		jz	short loc_150CF
 		call	sub_367A
 		or	word_23A56, ax
@@ -41914,7 +41879,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/get_machine_98[data].asm
 include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/grp[data].asm
-word_20DC2	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0

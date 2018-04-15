@@ -120,40 +120,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/pfint21.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2B6E	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_2B74:
-		in	al, dx
-		inc	al
-		jnz	short loc_2B7F
-		loop	loc_2B74
-		xor	ax, ax
-		jmp	short loc_2B93
-; ---------------------------------------------------------------------------
-
-loc_2B7F:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_2B93:
-		mov	word_E658, ax
-		retf
-sub_2B6E	endp
-
+include libs/master.lib/js_start.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
 
@@ -5984,7 +5951,7 @@ loc_D453:
 		call	vsync_start
 		call	egc_start
 		call	graph_400line
-		call	sub_2B6E
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		push	800h
@@ -6117,7 +6084,7 @@ loc_D579:
 					; often	reboots	a compatible; often has	no effect at all
 		and	al, 1
 		mov	byte_10074, al
-		cmp	word_E658, 0
+		cmp	js_bexist, 0
 		jz	short locret_D592
 		call	sub_2CFC
 		or	word_10072, ax
@@ -6531,7 +6498,7 @@ include libs/master.lib/get_machine_at[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-word_E658	dw 0
+js_bexist	dw 0
 		dw 0
 		dw 0
 		dw 0

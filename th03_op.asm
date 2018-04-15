@@ -123,42 +123,7 @@ include libs/master.lib/respal_exist.asm
 include libs/master.lib/respal_free.asm
 include libs/master.lib/pfint21.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2DB8	proc far
-		mov	cx, 100h
-		mov	dx, 188h
-
-loc_2DBE:
-		in	al, dx
-		inc	al
-		jnz	short loc_2DC9
-		loop	loc_2DBE
-		xor	ax, ax
-		jmp	short loc_2DDD
-; ---------------------------------------------------------------------------
-
-loc_2DC9:
-		pushf
-		cli
-		mov	bh, 7
-		call	sound_i
-		and	al, 3Fh
-		or	al, 80h
-		mov	bl, al
-		call	sound_o
-		popf
-		mov	ax, 1
-
-loc_2DDD:
-		mov	word_DABC, ax
-		retf
-sub_2DB8	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include libs/master.lib/js_start.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -187,7 +152,7 @@ sub_2DF4	proc far
 		push	si
 		push	di
 		xor	bp, bp
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_2E0D
 		pushf
 		cli
@@ -5007,7 +4972,7 @@ loc_C435:
 		call	text_systemline_hide
 		call	text_cursor_hide
 		call	egc_start
-		call	sub_2DB8
+		call	js_start
 		pushd	[bp+arg_0]
 		call	pfstart
 		xor	ax, ax
@@ -5630,7 +5595,7 @@ sub_C986	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	sub_C1B4
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_C9A1
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -5665,7 +5630,7 @@ sub_C9B4	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	sub_C1B4
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_C9D4
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -5687,7 +5652,7 @@ sub_C9D6	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	sub_C1B4
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_C9F6
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -5711,7 +5676,7 @@ sub_C9F8	proc far
 		nopcall	sub_C1B4
 		mov	ax, word_F296
 		or	word_F292, ax
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_CA1A
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -5735,7 +5700,7 @@ sub_CA22	proc far
 		mov	ax, word_F296
 		or	ax, word_F292
 		mov	word_F294, ax
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_CA47
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -5780,7 +5745,7 @@ sub_CA79	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	sub_C1B4
-		cmp	word_DABC, 0
+		cmp	js_bexist, 0
 		jz	short loc_CA94
 		call	sub_2DF4
 		mov	ax, word_E9A4
@@ -6030,7 +5995,7 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/gaiji_backup[data].asm
 include libs/master.lib/gaiji_entry_bfnt[data].asm
 include libs/master.lib/grp[data].asm
-word_DABC	dw 0
+js_bexist	dw 0
 		db    0
 		db    0
 		db    0
