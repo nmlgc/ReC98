@@ -1,1 +1,2 @@
 *.asm text merge=union eol=crlf
+zuncom/zun*.txt -text
