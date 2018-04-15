@@ -144,47 +144,7 @@ include libs/master.lib/pfint21.asm
 include libs/master.lib/js_start.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3658	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_3658	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_366A	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_3658
-		and	ax, 3Fh
-		popf
-		retf
-sub_366A	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/js_sense.asm
 		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18511,7 +18471,7 @@ loc_1388B:
 		mov	byte_24CB6, al
 		cmp	js_bexist, 0
 		jz	short locret_138A4
-		call	sub_366A
+		call	js_sense
 		or	word_24CB4, ax
 
 locret_138A4:

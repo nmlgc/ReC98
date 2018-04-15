@@ -132,48 +132,7 @@ include libs/master.lib/js_start.asm
 include libs/master.lib/draw_trapezoid.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_3488	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_3488	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_349A	proc far
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_3488
-		and	ax, 3Fh
-		popf
-		retf
-sub_349A	endp
-
-; ---------------------------------------------------------------------------
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
-
+include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
 include libs/master.lib/bgm_mget.asm
 include libs/master.lib/bgm_read_sdata.asm
@@ -6327,7 +6286,7 @@ loc_E2CB:
 		mov	byte_11A52, al
 		cmp	js_bexist, 0
 		jz	short locret_E2E4
-		call	sub_349A
+		call	js_sense
 		or	word_11A50, ax
 
 locret_E2E4:

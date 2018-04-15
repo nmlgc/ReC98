@@ -121,61 +121,7 @@ include libs/master.lib/respal_set_palettes.asm
 include libs/master.lib/pfint21.asm
 		db 0
 include libs/master.lib/js_start.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2AD8	proc near
-		mov	bh, 0Fh
-		call	sound_o
-		mov	dx, 188h
-		mov	al, 0Eh
-		out	dx, al
-		inc	dx
-		inc	dx
-		in	al, dx
-		not	al
-		retn
-sub_2AD8	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2AEA	proc far
-		push	bp
-		push	si
-		push	di
-		xor	bp, bp
-		cmp	js_bexist, 0
-		jz	short loc_2B03
-		pushf
-		cli
-		mov	bl, 80h
-		call	sub_2AD8
-		and	ax, 3Fh
-		mov	si, ax
-		popf
-
-loc_2B03:
-		or	js_stat, si
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2AEA	endp
-
-; ---------------------------------------------------------------------------
-		nop
-		xchg	dx, bx
-		out	dx, al
-		xchg	dx, bx
-		in	al, dx
-		not	al
-		retn
-; ---------------------------------------------------------------------------
+include libs/master.lib/js_sense.asm
 		db 0
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
@@ -7362,7 +7308,7 @@ sub_D5A2	proc far
 		nopcall	sub_CB68
 		cmp	js_bexist, 0
 		jz	short loc_D5BD
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		or	word_100FC, ax
 
@@ -7385,7 +7331,7 @@ sub_D5A2	endp
 		nopcall	sub_CB68
 		cmp	js_bexist, 0
 		jz	short loc_D5F0
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_100F8, ax
 		mov	ax, word_100FC
@@ -7400,7 +7346,7 @@ loc_D5F0:
 		nopcall	sub_CB68
 		cmp	js_bexist, 0
 		jz	short loc_D612
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		mov	word_100FA, ax
 		mov	ax, word_100FC
@@ -7417,7 +7363,7 @@ loc_D612:
 		or	word_100F8, ax
 		cmp	js_bexist, 0
 		jz	short loc_D636
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		or	word_100F8, ax
 
@@ -7434,7 +7380,7 @@ loc_D636:
 		mov	word_100FA, ax
 		cmp	js_bexist, 0
 		jz	short loc_D663
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		or	word_100FA, ax
 
@@ -7465,7 +7411,7 @@ loc_D687:
 		nopcall	sub_CB68
 		cmp	js_bexist, 0
 		jz	short loc_D6B0
-		call	sub_2AEA
+		call	js_sense
 		mov	ax, js_stat
 		or	word_100FC, ax
 
