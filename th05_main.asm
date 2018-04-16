@@ -533,13 +533,13 @@ loc_B003:
 		inc	ax
 		mov	frame, ax
 		and	ax, 0Fh
-		mov	byte_25FE5, al
+		mov	frame_mod16, al
 		and	al, 7
-		mov	byte_25FE4, al
+		mov	frame_mod8, al
 		and	al, 3
-		mov	byte_25FE3, al
+		mov	frame_mod4, al
 		and	al, 1
-		mov	byte_25FE2, al
+		mov	frame_mod2, al
 		test	frame, 0FFFh
 		jnz	short loc_B055
 		push	1
@@ -3457,7 +3457,7 @@ loc_C683:
 		add	si, 8Ch
 		cmp	byte_2429B, 70h	; 'p'
 		ja	short loc_C72B
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cmp	ax, [bp+var_5+1]
 		jnz	short loc_C72B
@@ -3510,7 +3510,7 @@ sub_C73A	proc near
 loc_C777:
 		cmp	byte_2429B, 70h	; 'p'
 		ja	short loc_C78C
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_C78C
 		call	snd_se_play pascal, 9
 
@@ -5630,7 +5630,7 @@ loc_D751:
 loc_D758:
 		cmp	word ptr [si+0Ah], 0A0h
 		jge	short loc_D767
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		add	[si+0Ah], ax
 
@@ -5676,7 +5676,7 @@ loc_D789:
 		add	[si+2],	ax
 		cmp	word ptr [si+50h], 0FF20h
 		jle	short loc_D7AB
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_D7A6
 		mov	ax, 1
 		jmp	short loc_D7A8
@@ -5835,7 +5835,7 @@ loc_D8B7:
 loc_D8BE:
 		cmp	word ptr [si+0Ah], 0FF60h
 		jle	short loc_D8CD
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		sub	[si+0Ah], ax
 
@@ -5878,7 +5878,7 @@ loc_D8EE:
 		add	[si+2],	ax
 		cmp	word ptr [si+50h], 0E0h
 		jge	short loc_D907
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		add	[si+50h], ax
 
@@ -8634,10 +8634,10 @@ sub_EACE	proc near
 		mov	word_2D05C, ax
 		mov	dword_25FDC, 0
 		mov	frame, 0
-		mov	byte_25FE2, 0
-		mov	byte_25FE3, 0
-		mov	byte_25FE4, 0
-		mov	byte_25FE5, 0
+		mov	frame_mod2, 0
+		mov	frame_mod4, 0
+		mov	frame_mod8, 0
+		mov	frame_mod16, 0
 		mov	word_25FE6, 1
 		mov	byte_25FF8, 0
 		mov	byte_25FE8, 0
@@ -11658,7 +11658,7 @@ sub_10287	proc near
 		mov	bp, sp
 		cmp	word_2CE06, 0
 		jz	short loc_102B9
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jnz	short loc_1029D
 		mov	ax, 0FFFEh
 		jmp	short loc_102A0
@@ -11669,7 +11669,7 @@ loc_1029D:
 
 loc_102A0:
 		mov	word_2CE02, ax
-		cmp	byte_25FE3, 1
+		cmp	frame_mod4, 1
 		ja	short loc_102AF
 		mov	ax, 0FFFEh
 		jmp	short loc_102B2
@@ -12320,7 +12320,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		mov	al, byte_26330
 		mov	ah, 0
-		mov	dl, byte_25FE5
+		mov	dl, frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -12344,7 +12344,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		cmp	byte_26331, 2
 		jnz	short loc_108C2
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -12363,7 +12363,7 @@ loc_108B6:
 loc_108C2:
 		cmp	byte_26331, 3
 		jnz	short loc_10900
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -12434,7 +12434,7 @@ loc_10934:
 loc_10942:
 		mov	al, byte_26344
 		mov	ah, 0
-		mov	dl, byte_25FE4
+		mov	dl, frame_mod8
 		jmp	short loc_1095D
 ; ---------------------------------------------------------------------------
 
@@ -12443,7 +12443,7 @@ loc_1094D:
 		jnz	short loc_1096F
 		mov	al, byte_26344
 		mov	ah, 0
-		mov	dl, byte_25FE5
+		mov	dl, frame_mod16
 
 loc_1095D:
 		mov	dh, 0
@@ -12515,7 +12515,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		cmp	byte_26330, 0CAh
 		jnz	short loc_109E3
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -12525,7 +12525,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_109E3:
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -12600,7 +12600,7 @@ loc_10A57:
 loc_10A59:
 		mov	al, byte_26344
 		mov	ah, 0
-		mov	dl, byte_25FE5
+		mov	dl, frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -12661,7 +12661,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		cmp	byte_26330, 0D0h
 		jnz	short loc_10ADE
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -12750,13 +12750,13 @@ loc_10B2E:
 		and	ax, 1Fh
 		cmp	ax, 10h
 		jnb	short loc_10B7B
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		mov	ah, 0
 		jmp	short loc_10B87
 ; ---------------------------------------------------------------------------
 
 loc_10B7B:
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		mov	ah, 0
 		push	ax
 		mov	ax, 10h
@@ -12772,7 +12772,7 @@ loc_10B87:
 		mov	[bp+var_6], ax
 		cmp	byte ptr [si], 1
 		jnz	short loc_10BA1
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		add	[bp+var_6], ax
 
@@ -12800,7 +12800,7 @@ loc_10BC7:
 		mov	di, ax
 		cmp	byte_2D07F, 1
 		jnz	short loc_10BFD
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+var_4]
@@ -12919,20 +12919,20 @@ loc_10CCA:
 		mov	si, ax
 		cmp	si, 0B4h
 		jnz	short loc_10CDC
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		jmp	short loc_10CEC
 ; ---------------------------------------------------------------------------
 
 loc_10CDC:
 		cmp	si, 0B8h
 		jnz	short loc_10CE9
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		jmp	short loc_10CF4
 ; ---------------------------------------------------------------------------
 
 loc_10CE9:
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 
 loc_10CEC:
 		mov	ah, 0
@@ -12994,7 +12994,7 @@ arg_6		= word ptr  0Ah
 		jnz	short loc_10D49
 
 loc_10D3D:
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -13155,7 +13155,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	al, byte_26330
 		mov	ah, 0
-		mov	dl, byte_25FE5
+		mov	dl, frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -13300,7 +13300,7 @@ loc_10F42:
 		jnz	short loc_10F63
 
 loc_10F57:
-		mov	al, byte_25FE4
+		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -13429,7 +13429,7 @@ loc_11001:
 loc_11029:
 		mov	al, byte_26344
 		mov	ah, 0
-		mov	dl, byte_25FE5
+		mov	dl, frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -13933,7 +13933,7 @@ loc_113C9:
 		mov	al, byte_22859
 		add	al, 2
 		mov	byte_22859, al
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_1146F
 		mov	ax, frame
 		sub	ax, 100h
@@ -14037,7 +14037,7 @@ loc_114EA:
 loc_114F8:
 		cmp	word_22856, 40h
 		jge	short loc_11553
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jnz	short loc_11553
 		mov	ax, word_22856
 		imul	ax, 1Ah
@@ -14135,7 +14135,7 @@ loc_115D4:
 		mov	dx, 7Ch
 		mov	al, GC_OFF
 		out	dx, al
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_1162C
 		cmp	byte_2CE4C, 0
 		jnz	short loc_115FF
@@ -14458,7 +14458,7 @@ loc_1183A:
 		jg	short loc_11862
 		cmp	byte_26345, 2
 		jb	short loc_11862
-		mov	al, byte_25FE5
+		mov	al, frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -15415,7 +15415,7 @@ loc_12092:
 		jbe	short loc_120B1
 		cmp	byte_26345, 0
 		jz	short loc_120A7
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_120B6
 
 loc_120A7:
@@ -15652,7 +15652,7 @@ loc_122A9:
 loc_122AB:
 		cmp	byte_2CEBC, 0
 		jz	short loc_122CB
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_122CB
 		push	di
 		push	[bp+var_2]
@@ -16288,7 +16288,7 @@ loc_1274B:
 		mov	si, ax
 
 loc_12769:
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_12783
 		push	30004h
 		push	0F0003h
@@ -16461,7 +16461,7 @@ loc_128AD:
 loc_128CA:
 		cmp	byte_25FEB, 0
 		jnz	short loc_128D8
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_128EA
 
 loc_128D8:
@@ -26619,7 +26619,7 @@ loc_1780B:
 
 loc_17811:
 		mov	al, [si+18h]
-		add	al, byte_25FE2
+		add	al, frame_mod2
 		inc	al
 		mov	[si+18h], al
 		mov	al, [si+18h]
@@ -27160,7 +27160,7 @@ loc_17BA3:
 ; ---------------------------------------------------------------------------
 
 loc_17BA9:
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_17BEB
 		mov	al, byte_2C976
 		mov	ah, 0
@@ -27500,7 +27500,7 @@ loc_17E78:
 		add	di, ax
 		cmp	[bp+var_2], di
 		jl	short loc_17EAB
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jnz	loc_17FB7
 		jmp	short loc_17EB5
 ; ---------------------------------------------------------------------------
@@ -28346,7 +28346,7 @@ loc_1863B:
 		inc	byte_2D083
 
 loc_1863F:
-		cmp	byte_25FE5, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_1869C
 		mov	byte ptr word_25FFA, 10h
 		mov	al, byte_2D085
@@ -28703,7 +28703,7 @@ sub_18905	endp
 sub_18987	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25FE5, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_189FA
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 30h ; '0'
@@ -28749,7 +28749,7 @@ sub_18987	endp
 sub_189FC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_18A2D
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
@@ -30472,7 +30472,7 @@ loc_198CF:
 		jb	short loc_19921
 		cmp	word ptr [si+0Eh], 40h
 		jnb	short loc_19912
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_19912
 		mov	byte ptr word_25FFA+1, 0
 		mov	byte ptr word_25FFA, 10h
@@ -32954,7 +32954,7 @@ loc_1AE98:
 loc_1AEB7:
 		cmp	word_26346, 0Ch	; jumptable 0001AC18 case 254
 		jge	short loc_1AEE2
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jnz	short loc_1AECA
 		mov	ax, 0FFFCh
 		jmp	short loc_1AECD
@@ -32965,7 +32965,7 @@ loc_1AECA:
 
 loc_1AECD:
 		mov	word_2CE02, ax
-		cmp	byte_25FE3, 1
+		cmp	frame_mod4, 1
 		ja	short loc_1AEDC
 		mov	ax, 0FFFCh
 		jmp	short loc_1AEDF
@@ -33094,7 +33094,7 @@ loc_1B004:
 		mov	si, ax
 
 loc_1B01C:
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_1B02E
 		mov	ax, si
 		shl	ax, 5
@@ -33139,7 +33139,7 @@ loc_1B058:
 loc_1B071:
 		mov	ax, word_2CE3A
 		mov	word ptr dword_26320, ax
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_1B089
 		mov	ax, si
 		shl	ax, 5
@@ -35357,7 +35357,7 @@ loc_1C417:
 loc_1C426:
 		cmp	[bp+var_2], 70h	; 'p'
 		jg	short loc_1C445
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		add	word_2CE3E, ax
 		cmp	word_2CE3E, 80h
@@ -35377,7 +35377,7 @@ loc_1C445:
 ; ---------------------------------------------------------------------------
 
 loc_1C460:
-		mov	al, byte_25FE2
+		mov	al, frame_mod2
 		mov	ah, 0
 		add	word_2CE3E, ax
 		cmp	[bp+var_2], 0D4h
@@ -37592,7 +37592,7 @@ loc_1D8F7:
 		jle	loc_1DA17
 		cmp	byte_26042, 80h
 		jnb	short loc_1D954
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	loc_1DA17
 		mov	al, byte_26012
 		inc	al
@@ -37676,7 +37676,7 @@ loc_1D9C1:
 ; ---------------------------------------------------------------------------
 
 loc_1D9D5:
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jz	short loc_1D9E4
 		mov	PaletteTone, 96h
 		jmp	short loc_1D9EA
@@ -38435,7 +38435,7 @@ sub_1E022	endp
 sub_1E15D	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25FE3, 0
+		cmp	frame_mod4, 0
 		jnz	short loc_1E195
 		cmp	byte_22854, 0
 		jnz	short loc_1E17F
@@ -38638,7 +38638,7 @@ loc_1E36F:
 loc_1E377:
 		cmp	Palettes+2, 80h
 		jnb	short loc_1E38E
-		cmp	byte_25FE5, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_1E389
 		inc	Palettes+2
 
@@ -38674,7 +38674,7 @@ loc_1E3C4:
 loc_1E3D0:
 		cmp	Palettes+2, 0
 		jbe	short loc_1E3E7
-		cmp	byte_25FE4, 0
+		cmp	frame_mod8, 0
 		jnz	short loc_1E3E2
 		dec	Palettes+2
 
@@ -38695,7 +38695,7 @@ loc_1E3E7:
 loc_1E406:
 		cmp	Palettes+2, 0
 		jbe	short loc_1E41A
-		cmp	byte_25FE4, 0
+		cmp	frame_mod8, 0
 		jnz	short loc_1E42C
 		dec	Palettes+2
 		jmp	short loc_1E42C
@@ -38704,7 +38704,7 @@ loc_1E406:
 loc_1E41A:
 		cmp	Palettes, 80h
 		jnb	short loc_1E431
-		cmp	byte_25FE5, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_1E42C
 		inc	Palettes
 
@@ -41603,7 +41603,7 @@ loc_1FC23:
 		jnz	short loc_1FC95
 		cmp	word_26346, 0Ch
 		jge	short loc_1FC55
-		cmp	byte_25FE2, 0
+		cmp	frame_mod2, 0
 		jnz	short loc_1FC3D
 		mov	ax, 0FFFCh
 		jmp	short loc_1FC40
@@ -41614,7 +41614,7 @@ loc_1FC3D:
 
 loc_1FC40:
 		mov	word_2CE02, ax
-		cmp	byte_25FE3, 1
+		cmp	frame_mod4, 1
 		ja	short loc_1FC4F
 		mov	ax, 0FFFCh
 		jmp	short loc_1FC52
@@ -47407,10 +47407,7 @@ byte_25FD8	db ?
 word_25FDA	dw ?
 dword_25FDC	dd ?
 frame	dw ?
-byte_25FE2	db ?
-byte_25FE3	db ?
-byte_25FE4	db ?
-byte_25FE5	db ?
+include th03/frame_mod[bss].asm
 word_25FE6	dw ?
 byte_25FE8	db ?
 byte_25FE9	db ?

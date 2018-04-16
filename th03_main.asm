@@ -509,13 +509,13 @@ loc_9A62:
 		inc	word_23AF6
 		mov	al, byte ptr dword_23AF2
 		and	al, 0Fh
-		mov	byte_23B05, al
+		mov	frame_mod16, al
 		and	al, 7
-		mov	byte_23B04, al
+		mov	frame_mod8, al
 		and	al, 3
-		mov	byte_23B03, al
+		mov	frame_mod4, al
 		and	al, 1
-		mov	byte_23B02, al
+		mov	frame_mod2, al
 		test	byte ptr word_23AF6, 3Fh
 		jnz	short loc_9AC9
 		cmp	byte_23AF8, 7Fh
@@ -1252,10 +1252,10 @@ loc_A117:
 		mov	byte_20E3C, 0
 		mov	byte_207E2, 1
 		mov	word_21434, 1400h
-		mov	byte_23B05, 0
-		mov	byte_23B04, 0
-		mov	byte_23B03, 0
-		mov	byte_23B02, 0
+		mov	frame_mod16, 0
+		mov	frame_mod8, 0
+		mov	frame_mod4, 0
+		mov	frame_mod2, 0
 		mov	si, 65A6h
 		xor	di, di
 		jmp	loc_A206
@@ -13481,7 +13481,7 @@ sub_10DA0	proc near
 		mov	word_23E40, ax
 		cmp	word_1F3B0, 40h
 		jnb	short loc_10DEF
-		cmp	byte_23B05, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_10E14
 		mov	byte ptr word_23E42+1, 20h ; ' '
 		mov	byte ptr word_23E44+1, 8
@@ -13497,7 +13497,7 @@ loc_10DE8:
 loc_10DEF:
 		cmp	word_1F3B0, 64h	; 'd'
 		jnb	short loc_10E09
-		cmp	byte_23B05, 0
+		cmp	frame_mod16, 0
 		jnz	short loc_10E14
 		mov	byte ptr word_23E44+1, 15h
 		mov	byte ptr word_23E42+1, 40h
@@ -13642,7 +13642,7 @@ loc_10F26:
 		mov	al, byte_23DC8
 		add	al, 8
 		mov	byte_23DC8, al
-		cmp	byte_23B05, 0
+		cmp	frame_mod16, 0
 		jnz	loc_10FCE
 		mov	byte_23E4E, 2
 		mov	al, byte_1F3A3
@@ -14052,7 +14052,7 @@ arg_2		= byte ptr  6
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_6], al
-		cmp	byte_23B02, 0
+		cmp	frame_mod2, 0
 		jz	short loc_112C5
 		cmp	word_1F3B0, 40h
 		jb	loc_113A3
@@ -14850,7 +14850,7 @@ loc_11936:
 loc_11942:
 		push	si
 		call	sub_11814
-		cmp	byte_23B02, 0
+		cmp	frame_mod2, 0
 		jz	short loc_11956
 		cmp	word_1F3B0, 40h
 		jb	loc_119FB
@@ -15749,7 +15749,7 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_23B02, 0
+		cmp	frame_mod2, 0
 		jz	short loc_12114
 		cmp	word_1F3B0, 40h
 		jb	short loc_1213C
@@ -16849,7 +16849,7 @@ sub_12ADD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_23B02, 0
+		cmp	frame_mod2, 0
 		jz	short loc_12AEF
 		cmp	word_1F3B0, 40h
 		jb	short loc_12B35
@@ -17710,7 +17710,7 @@ var_2		= word ptr -2
 		mov	word_1F2E8, 10h
 		cmp	word_1F3B0, 20h	; ' '
 		jnb	short loc_13254
-		cmp	byte_23B02, 0
+		cmp	frame_mod2, 0
 		jnz	loc_132FA
 
 loc_13254:
@@ -42750,10 +42750,7 @@ byte_23AFA	db ?
 		dd    ?	;
 byte_23B00	db ?
 byte_23B01	db ?
-byte_23B02	db ?
-byte_23B03	db ?
-byte_23B04	db ?
-byte_23B05	db ?
+include th03/frame_mod[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
