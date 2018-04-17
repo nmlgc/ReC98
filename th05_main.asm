@@ -571,9 +571,9 @@ sub_B063	proc near
 		mov	al, es:[bx+14h]
 		mov	byte_25FEF, al
 		mov	al, es:[bx+0Eh]
-		mov	byte_25351, al
+		mov	bombs, al
 		mov	al, es:[bx+0Dh]
-		mov	byte_25350, al
+		mov	lives, al
 		xor	si, si
 		jmp	short loc_B09F
 ; ---------------------------------------------------------------------------
@@ -3182,7 +3182,7 @@ sub_C483	proc near
 		mov	bp, sp
 		cmp	byte_2429A, 0
 		jnz	loc_C518
-		cmp	byte_25351, 0
+		cmp	bombs, 0
 		jz	loc_C518
 		cmp	byte_2C96C, 0
 		jnz	short loc_C518
@@ -3195,7 +3195,7 @@ sub_C483	proc near
 		mov	byte_2CEBD, 0
 
 loc_C4BC:
-		dec	byte_25351
+		dec	bombs
 		nopcall	sub_104BB
 		mov	byte_2429A, 1
 		mov	byte_2429B, 0
@@ -10793,9 +10793,9 @@ loc_FBB5:
 		mov	byte_2CEC3, 1
 		les	bx, dword_23EF0
 		mov	al, es:[bx+0Eh]
-		mov	byte_25351, al
+		mov	bombs, al
 		mov	al, es:[bx+0Dh]
-		mov	byte_25350, al
+		mov	lives, al
 		nopcall	sub_E4FC
 		nopcall	sub_10407
 		nopcall	sub_104BB
@@ -11839,7 +11839,7 @@ var_1		= byte ptr -1
 		mov	bp, sp
 		sub	sp, 2
 		push	si
-		mov	al, byte_25350
+		mov	al, lives
 		dec	al
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 6
@@ -11923,10 +11923,10 @@ var_1		= byte ptr -1
 		sub	sp, 2
 		push	si
 		mov	[bp+var_2], 0
-		cmp	byte_25351, 5
+		cmp	bombs, 5
 		ja	short loc_10514
 		mov	si, 3Eh	; '>'
-		mov	al, byte_25351
+		mov	al, bombs
 		mov	[bp+var_1], al
 		jmp	short loc_104ED
 ; ---------------------------------------------------------------------------
@@ -11955,7 +11955,7 @@ loc_1050C:
 ; ---------------------------------------------------------------------------
 
 loc_10514:
-		mov	al, byte_25351
+		mov	al, bombs
 		mov	[bp+var_1], al
 		call	text_putsa pascal, (62 shl 16) + 11, ds, offset aB@b@bB@b@_0, TX_WHITE
 		cmp	[bp+var_1], 0Ah
@@ -15436,7 +15436,7 @@ loc_120B6:
 		mov	byte_2CEC8, al
 		cmp	byte_2CEC2, 4
 		jnb	short locret_12148
-		cmp	byte_25350, 1
+		cmp	lives, 1
 		jbe	short loc_120F0
 		test	byte_2CEC2, 1
 		jz	short loc_120E5
@@ -15459,13 +15459,13 @@ loc_120F0:
 		mov	word ptr dword_2CEA4+2,	1700h
 		mov	word_2CEA8, 0
 		mov	word_2CEAA, 0FFE0h
-		cmp	byte_25350, 1
+		cmp	lives, 1
 		jbe	short loc_12142
-		dec	byte_25350
+		dec	lives
 		nopcall	sub_10407
 		les	bx, dword_23EF0
 		mov	al, es:[bx+0Eh]
-		mov	byte_25351, al
+		mov	bombs, al
 		nopcall	sub_104BB
 		mov	byte_2C979, 20h	; ' '
 		leave
@@ -24522,7 +24522,7 @@ loc_1683E:
 		push	22000Ah
 		push	eax
 		nopcall	sub_1FA0E
-		mov	al, byte_25350
+		mov	al, lives
 		mov	ah, 0
 		imul	ax, 3E8h
 		add	ax, 0FC18h
@@ -25418,7 +25418,7 @@ loc_16EC6:
 		mov	[bp+var_8], 3
 
 loc_16ECB:
-		cmp	byte_25350, 1
+		cmp	lives, 1
 		jnz	short loc_16ED7
 		mov	[bp+var_8], 6
 
@@ -25466,9 +25466,9 @@ sub_16F05	proc near
 		push	4
 		call	sub_E720
 		inc	byte_226C4
-		cmp	byte_25350, 63h	; 'c'
+		cmp	lives, 99
 		jnb	short loc_16F52
-		inc	byte_25350
+		inc	lives
 		cmp	byte_2C979, 14h
 		jnb	short loc_16F3B
 		mov	byte_2C979, 14h
@@ -25677,7 +25677,7 @@ loc_1710E:
 ; ---------------------------------------------------------------------------
 
 loc_1711E:
-		inc	byte_25351
+		inc	bombs
 		mov	si, 64h	; 'd'
 		call	sub_104BB
 		jmp	short loc_17174
@@ -25686,7 +25686,7 @@ loc_1711E:
 loc_1712C:
 		push	3
 		call	sub_E720
-		inc	byte_25350
+		inc	lives
 		call	sub_10407
 		call	snd_se_play pascal, 7
 		mov	byte_2CE87, 1
@@ -46596,8 +46596,8 @@ byte_25348	db ?
 word_25349	dw ?
 dword_2534B	dd ?
 		db ?
-byte_25350	db ?
-byte_25351	db ?
+lives	db ?
+bombs	db ?
 byte_25352	db ?
 byte_25353	db ?
 map_seg	dw ?

@@ -3423,9 +3423,9 @@ var_2		= word ptr -2
 		mov	al, es:[bx+mikoconfig_t.stage]
 		mov	stage_id, al
 		mov	al, es:[bx+mikoconfig_t.start_lives]
-		mov	byte_1E59C, al
+		mov	lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	byte_1E59D, al
+		mov	bombs, al
 		mov	al, es:[bx+mikoconfig_t.rank]
 		mov	byte_1E364, al
 		mov	al, es:[bx+mikoconfig_t.start_power]
@@ -3642,9 +3642,9 @@ loc_C516:
 		les	bx, mikoconfig
 		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	al, es:[bx+mikoconfig_t.start_lives]
-		mov	byte_1E59C, al
+		mov	lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	byte_1E59D, al
+		mov	bombs, al
 		mov	byte_1E516, 1
 		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
@@ -6144,7 +6144,7 @@ arg_4		= word ptr  0Ah
 loc_D6EB:
 		mov	si, 3CE6h
 		shl	cx, 4
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		cmp	ax, 5
 		jnz	short loc_D705
@@ -6553,11 +6553,11 @@ loc_D9E5:
 ; ---------------------------------------------------------------------------
 
 loc_D9FA:
-		mov	al, byte_1E59D
+		mov	al, bombs
 		cbw
 		cmp	ax, 5
 		jge	short loc_DA21
-		inc	byte_1E59D
+		inc	bombs
 		add	dword_218A4, 3E8h
 		push	si
 		push	word_2189C
@@ -6619,11 +6619,11 @@ loc_DA85:
 ; ---------------------------------------------------------------------------
 
 loc_DA9C:
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		cmp	ax, 5
 		jge	short loc_DAB6
-		inc	byte_1E59C
+		inc	lives
 		call	sub_DF76
 		call	_snd_se_play c, 8
 
@@ -7046,21 +7046,21 @@ loc_DE01:
 		mov	eax, [bx+0B2Eh]
 		cmp	eax, dword_1E598
 		jg	short locret_DE4C
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		cmp	ax, 5
 		jge	short loc_DE26
-		inc	byte_1E59C
+		inc	lives
 		call	sub_DF76
 		jmp	short loc_DE36
 ; ---------------------------------------------------------------------------
 
 loc_DE26:
-		mov	al, byte_1E59D
+		mov	al, bombs
 		cbw
 		cmp	ax, 5
 		jge	short loc_DE36
-		inc	byte_1E59D
+		inc	bombs
 		call	sub_DFC4
 
 loc_DE36:
@@ -7105,11 +7105,11 @@ loc_DE7A:
 		mov	eax, [bx+0B2Eh]
 		cmp	eax, dword_1E598
 		jg	short loc_DEAB
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		cmp	ax, 5
 		jge	short loc_DEA7
-		inc	byte_1E59C
+		inc	lives
 		call	sub_DF76
 		call	_snd_se_play c, 8
 
@@ -7249,11 +7249,11 @@ loc_DF7E:
 		inc	si
 
 loc_DF95:
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		cmp	ax, si
 		jg	short loc_DF7E
-		mov	al, byte_1E59C
+		mov	al, lives
 		cbw
 		mov	si, ax
 		jmp	short loc_DFBC
@@ -7295,11 +7295,11 @@ loc_DFCC:
 		inc	si
 
 loc_DFE3:
-		mov	al, byte_1E59D
+		mov	al, bombs
 		cbw
 		cmp	ax, si
 		jg	short loc_DFCC
-		mov	al, byte_1E59D
+		mov	al, bombs
 		cbw
 		mov	si, ax
 		jmp	short loc_E00A
@@ -7612,11 +7612,11 @@ sub_E280	proc near
 		mov	bp, sp
 		cmp	byte_218B4, 0
 		jnz	short loc_E2D7
-		cmp	byte_1E59D, 0
+		cmp	bombs, 0
 		jz	short loc_E2D7
 		mov	byte_218B4, 1
 		mov	byte_20606, 1
-		dec	byte_1E59D
+		dec	bombs
 		call	sub_DFC4
 		mov	word_218B6, 0
 		inc	byte_218C2
@@ -9247,7 +9247,7 @@ loc_F0B9:
 		push	800020h
 		push	1
 		call	sub_4090
-		cmp	byte_1E59C, 0
+		cmp	lives, 0
 		jnz	short loc_F107
 		mov	byte_20609, 0
 		mov	byte_218A1, 1
@@ -9287,16 +9287,16 @@ loc_F12A:
 loc_F13B:
 		cmp	byte_20609, 2Bh	; '+'
 		jnz	short loc_F198
-		dec	byte_1E59C
+		dec	lives
 		call	sub_DF76
 		les	bx, mikoconfig
 		assume es:nothing
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	byte_1E59D, al
-		cmp	byte_1E59C, 0
+		mov	bombs, al
+		cmp	lives, 0
 		jnz	short loc_F160
 		add	al, 2
-		mov	byte_1E59D, al
+		mov	bombs, al
 
 loc_F160:
 		call	sub_DFC4
@@ -28656,9 +28656,9 @@ loc_19C4A:
 		add	eax, edx
 		mov	es:[bx+mikoconfig_t.score], eax
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
-		mov	al, byte_1E59C
+		mov	al, lives
 		mov	es:[bx+mikoconfig_t.rem_lives], al
-		mov	al, byte_1E59D
+		mov	al, bombs
 		mov	es:[bx+mikoconfig_t.rem_bombs], al
 		call	sub_19949
 		push	ds
@@ -34838,8 +34838,8 @@ word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
 byte_1E597	db 0
 dword_1E598	dd 0
-byte_1E59C	db 3
-byte_1E59D	db 3
+lives	db 3
+bombs	db 3
 		db 0A0h
 		db  86h
 		db    1
