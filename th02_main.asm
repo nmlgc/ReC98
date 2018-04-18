@@ -3310,7 +3310,7 @@ sub_C13E	proc far
 		call	hmem_allocbyte
 		mov	word ptr dword_1F4A8+2,	ax
 		mov	word ptr dword_1F4A8, 0
-		mov	byte_1E516, 50h	; 'P'
+		mov	power, 80
 		mov	word_20272, 0Ch
 		les	bx, mikoconfig
 		mov	es:[bx+mikoconfig_t.frame], 12h
@@ -3429,10 +3429,10 @@ var_2		= word ptr -2
 		mov	al, es:[bx+mikoconfig_t.rank]
 		mov	byte_1E364, al
 		mov	al, es:[bx+mikoconfig_t.start_power]
-		mov	byte_1E516, al
-		cmp	byte_1E516, 0
+		mov	power, al
+		cmp	power, 0
 		jnz	short loc_C2DF
-		inc	byte_1E516
+		inc	power
 
 loc_C2DF:
 		mov	word_20272, 0
@@ -3645,7 +3645,7 @@ loc_C516:
 		mov	lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	bombs, al
-		mov	byte_1E516, 1
+		mov	power, 1
 		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
 		mov	al, stage_id
@@ -4435,7 +4435,7 @@ loc_CB53:
 		shl	bx, 4
 		cmp	byte ptr [bx+2908h], 0
 		jnz	loc_CD00
-		mov	al, byte_218B2
+		mov	al, power_level
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 9
@@ -4752,7 +4752,7 @@ loc_CD54:
 		jnz	loc_D035
 		cmp	[bp+var_3], 0
 		jnz	loc_CEF7
-		mov	al, byte_218B2
+		mov	al, power_level
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 9
@@ -6473,9 +6473,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_DAE6[bx]
 
 loc_D949:
-		cmp	byte_1E516, 50h	; 'P'
+		cmp	power, 80
 		jnb	short loc_D964
-		inc	byte_1E516
+		inc	power
 		call	sub_DEAD
 		mov	word_1E51C, 0
 		inc	dword_218A4
@@ -6580,11 +6580,11 @@ loc_DA21:
 ; ---------------------------------------------------------------------------
 
 loc_DA3F:
-		cmp	byte_1E516, 46h	; 'F'
+		cmp	power, 70
 		jnb	short loc_DA5B
-		mov	al, byte_1E516
-		add	al, 0Ah
-		mov	byte_1E516, al
+		mov	al, power
+		add	al, 10
+		mov	power, al
 		inc	dword_218A4
 		mov	word_1E51C, 0
 		jmp	short loc_DA85
@@ -6601,7 +6601,7 @@ loc_DA69:
 		mov	word_1E51C, 2Ah	; '*'
 
 loc_DA6F:
-		mov	byte_1E516, 50h	; 'P'
+		mov	power, 80
 		mov	bx, word_1E51C
 		add	bx, bx
 		movsx	eax, word ptr [bx+0AC0h]
@@ -7168,7 +7168,7 @@ var_2		= word ptr -2
 		mov	[bp+var_16], ax
 		mov	ax, word_1E5EB
 		mov	[bp+var_14], ax
-		mov	al, byte_1E516
+		mov	al, power
 		mov	ah, 0
 		sar	ax, 2
 		mov	bx, ax
@@ -7185,7 +7185,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_DF20:
-		mov	al, byte_1E516
+		mov	al, power
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		sub	[bp+var_2], 10h
@@ -7200,7 +7200,7 @@ loc_DF2E:
 loc_DF37:
 		cmp	[bp+var_2], 0
 		jg	short loc_DF2E
-		mov	al, byte_1E516
+		mov	al, power
 		mov	ah, 0
 		dec	ax
 		and	ax, 0Fh
@@ -9124,7 +9124,7 @@ loc_EF9E:
 		call	super_roll_put
 
 loc_EFAC:
-		cmp	byte_1E516, 8
+		cmp	power, 8
 		jb	short loc_EFEF
 		mov	bx, word_205F4
 		mov	si, [bx]
@@ -9266,7 +9266,7 @@ loc_F107:
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+109Fh]
-		mov	byte_1E516, al
+		mov	power, al
 		call	sub_DEAD
 		mov	bx, word_205EE
 		push	word ptr [bx]
@@ -30266,7 +30266,7 @@ loc_1AB43:
 		mov	bx, 50h	; 'P'
 		cwd
 		idiv	bx
-		mov	al, byte_1E516
+		mov	al, power
 		mov	ah, 0
 		cmp	dx, ax
 		jl	short loc_1ABD1
@@ -34716,7 +34716,7 @@ byte_1E510	db 20h
 word_1E512	dw 0
 		db    0
 		db    0
-byte_1E516	db 1
+power	db 1
 byte_1E517	db 0
 byte_1E518	db 4
 byte_1E519	db 40h

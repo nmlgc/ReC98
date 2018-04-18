@@ -585,7 +585,7 @@ loc_B099:
 loc_B09F:
 		cmp	si, 8
 		jl	short loc_B099
-		mov	byte_2CEBE, 1
+		mov	power, 1
 		mov	byte_2CEC3, 1
 		call	sub_E528
 		mov	al, byte_25FEF
@@ -768,7 +768,7 @@ loc_B260:
 		mov	al, es:[bx+13h]
 		mov	stage_id, al
 		mov	al, es:[bx+19h]
-		mov	byte_2CEBE, al
+		mov	power, al
 		mov	byte ptr es:[bx+17h], 0
 		mov	byte_20A71, 1
 
@@ -783,7 +783,7 @@ loc_B2A5:
 		mov	stage_id, al
 		cmp	byte ptr es:[bx+1Fh], 5
 		jz	short loc_B2CE
-		mov	byte_2CEBE, 80h
+		mov	power, 128
 
 loc_B2CE:
 		mov	fp_2300E, offset sub_B7B5
@@ -7667,7 +7667,7 @@ sub_E4DE	endp
 sub_E4FC	proc far
 		xor	bx, bx
 		xor	ax, ax
-		mov	al, byte_2CEBE
+		mov	al, power
 		mov	cx, 9
 
 loc_E506:
@@ -10789,7 +10789,7 @@ loc_FBB5:
 		or	di, di
 		jnz	short loc_FBF5
 		call	sub_E8F2
-		mov	byte_2CEBE, 1
+		mov	power, 1
 		mov	byte_2CEC3, 1
 		les	bx, dword_23EF0
 		mov	al, es:[bx+0Eh]
@@ -12107,7 +12107,7 @@ var_A		= byte ptr -0Ah
 		mov	cx, 5
 		rep movsw
 		push	16h
-		mov	al, byte_2CEBE
+		mov	al, power
 		mov	ah, 0
 		push	ax
 		mov	al, byte_2CEBF
@@ -15385,7 +15385,7 @@ var_1		= byte ptr -1
 		mov	word_22642, 0
 		mov	word_2CEC4, 0
 		call	sub_16E29
-		mov	al, byte_2CEBE
+		mov	al, power
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -15397,7 +15397,7 @@ var_1		= byte ptr -1
 
 loc_12064:
 		mov	al, [bp+var_1]
-		sub	byte_2CEBE, al
+		sub	power, al
 		nopcall	sub_E4FC
 		call	snd_se_play pascal, 2
 		cmp	byte_25FEC, 26h	; '&'
@@ -25509,9 +25509,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_171BA[bx]
 
 loc_16F76:
-		cmp	byte_2CEBE, 80h
+		cmp	power, 128
 		jnb	short loc_16FAA
-		cmp	byte_2CEBE, 7Fh
+		cmp	power, 127
 		jnz	short loc_16F9B
 		mov	byte_2CE87, 3
 		mov	fp_2CE8A, offset sub_11DEA
@@ -25520,7 +25520,7 @@ loc_16F76:
 		mov	byte_2C979, 14h
 
 loc_16F9B:
-		inc	byte_2CEBE
+		inc	power
 		call	sub_E4FC
 		mov	si, 1
 		jmp	loc_17174
@@ -25639,14 +25639,14 @@ loc_17097:
 ; ---------------------------------------------------------------------------
 
 loc_170B5:
-		cmp	byte_2CEBE, 80h
+		cmp	power, 128
 		jnb	short loc_170F2
-		mov	al, byte_2CEBE
-		add	al, 0Ah
-		mov	byte_2CEBE, al
-		cmp	byte_2CEBE, 80h
+		mov	al, power
+		add	al, 10
+		mov	power, al
+		cmp	power, 128
 		jb	short loc_170E7
-		mov	byte_2CEBE, 80h
+		mov	power, 128
 		mov	byte_2CE87, 3
 		mov	fp_2CE8A, offset sub_11DEA
 		cmp	byte_2C979, 14h
@@ -25702,7 +25702,7 @@ loc_17150:
 loc_1715C:
 		mov	byte_2CE87, 3
 		mov	fp_2CE8A, offset sub_11DEA
-		mov	byte_2CEBE, 80h
+		mov	power, 128
 		call	sub_E4FC
 
 loc_17171:
@@ -41465,7 +41465,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	byte_2CEBE, 80h
+		cmp	power, 128
 		jnb	short loc_1FB2A
 		xor	di, di
 		jmp	short loc_1FB2D
@@ -54652,7 +54652,7 @@ dword_2CEB4	dd ?
 dword_2CEB8	dd ?
 byte_2CEBC	db ?
 byte_2CEBD	db ?
-byte_2CEBE	db ?
+power	db ?
 byte_2CEBF	db ?
 byte_2CEC0	db ?
 byte_2CEC1	db ?
