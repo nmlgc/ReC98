@@ -569,7 +569,7 @@ sub_B063	proc near
 		mov	byte ptr es:[bx+1Ch], 0
 		mov	byte ptr es:[bx+1Ah], 37h ; '7'
 		mov	al, es:[bx+14h]
-		mov	byte_25FEF, al
+		mov	playchar, al
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
 		mov	al, es:[bx+0Dh]
@@ -588,7 +588,7 @@ loc_B09F:
 		mov	power, 1
 		mov	byte_2CEC3, 1
 		call	sub_E528
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -623,7 +623,7 @@ loc_B100:
 		mov	fp_2429C, offset sub_CD94
 
 loc_B112:
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		imul	ax, 14h
 		add	ax, 1F4Eh
@@ -813,7 +813,7 @@ loc_B2DD:
 		call	sub_DDD6
 		call	sub_B8C2
 		call	sub_CE56
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -853,7 +853,7 @@ loc_B359:
 		push	ds
 		push	offset aMiko32_bft ; "miko32.bft"
 		call	super_entry_bfnt
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -902,7 +902,7 @@ loc_B3A7:
 loc_B3AE:
 		cmp	si, 0ACh ; '¬'
 		jl	short loc_B3A7
-		cmp	byte_25FEF, 3
+		cmp	playchar, 3
 		jnz	short loc_B3C1
 		push	ds
 		push	offset aBomb3_bft ; "bomb3.bft"
@@ -1458,7 +1458,7 @@ var_4		= dword	ptr -4
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -4314,7 +4314,7 @@ sub_CD94	endp
 
 
 sub_CE56	proc near
-		mov	al, byte_25FEF
+		mov	al, playchar
 		add	byte ptr aBb0_bb+2, al
 		push	ds
 		push	offset aBb0_bb
@@ -8058,7 +8058,7 @@ sub_E73A	endp
 
 
 sub_E752	proc far
-		mov	al, byte_25FEF
+		mov	al, playchar
 		jmp	short loc_E75B
 sub_E752	endp
 
@@ -8173,7 +8173,7 @@ sub_E7DC	proc near
 loc_E7E7:
 		mov	bx, ax
 		xor	ah, ah
-		mov	al, byte_25FEF
+		mov	al, playchar
 		imul	ax, 5
 		add	al, byte_25FEB
 		imul	ax, 60h
@@ -8209,7 +8209,7 @@ sub_E813	proc near
 					; 2 - read & write
 		mov	bx, ax
 		xor	ah, ah
-		mov	al, byte_25FEF
+		mov	al, playchar
 		imul	ax, 5
 		add	al, byte_25FEB
 		imul	ax, 60h
@@ -9006,14 +9006,14 @@ loc_ED9D:
 		push	ax
 		push	0Ah
 		call	file_read
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_8]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
-		mov	dl, byte_25FEF
+		mov	dl, playchar
 		mov	dh, 0
 		add	dx, dx
 		lea	bx, [bp+var_A]
@@ -9025,7 +9025,7 @@ loc_ED9D:
 		call	hmem_allocbyte
 		mov	word ptr dword_2C930+2,	ax
 		mov	word ptr dword_2C930, 0
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_A]
@@ -9811,7 +9811,7 @@ loc_F40F:
 
 loc_F41B:
 		mov	di, [bp+var_6]
-		mov	al, byte_25FEF
+		mov	al, playchar
 
 loc_F421:
 		add	al, 30h	; '0'
@@ -9872,7 +9872,7 @@ sub_F463	proc near
 ; ---------------------------------------------------------------------------
 
 loc_F499:
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -9948,7 +9948,7 @@ loc_F4FA:
 loc_F501:
 		cmp	si, 0ACh ; '¬'
 		jl	short loc_F4FA
-		cmp	byte_25FEF, 3
+		cmp	playchar, 3
 		jnz	short loc_F514
 		push	ds
 		push	offset aBomb3_bft_0 ; "bomb3.bft"
@@ -12213,7 +12213,7 @@ sub_106F3	proc far
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
 		call	sub_143CA
-		mov	al, byte_25FEF
+		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -16296,7 +16296,7 @@ loc_12769:
 		add	si, ax
 
 loc_12783:
-		cmp	byte_25FEF, 1
+		cmp	playchar, 1
 		jnz	short loc_127BD
 		cmp	byte_2429B, 10h
 		jb	short loc_127BD
@@ -16321,9 +16321,9 @@ loc_12783:
 loc_127BD:
 		cmp	byte_2297E, 0
 		jz	short loc_127FA
-		cmp	byte_25FEF, 0
+		cmp	playchar, 0
 		jbe	short loc_127D2
-		cmp	byte_25FEF, 3
+		cmp	playchar, 3
 		jb	short loc_12821
 
 loc_127D2:
@@ -16338,7 +16338,7 @@ loc_127D2:
 ; ---------------------------------------------------------------------------
 
 loc_127E7:
-		cmp	byte_25FEF, 0
+		cmp	playchar, 0
 		jnz	short loc_12833
 		mov	ax, 8
 		imul	si
@@ -16350,7 +16350,7 @@ loc_127E7:
 loc_127FA:
 		cmp	stage_id, 6
 		jnz	short loc_1281A
-		cmp	byte_25FEF, 0
+		cmp	playchar, 0
 		jnz	short loc_1281A
 		mov	ax, 4
 		imul	si
@@ -16362,7 +16362,7 @@ loc_127FA:
 		mov	si, ax
 
 loc_1281A:
-		cmp	byte_25FEF, 3
+		cmp	playchar, 3
 		jnz	short loc_12833
 
 loc_12821:
@@ -47399,7 +47399,7 @@ byte_25FEB	db ?
 byte_25FEC	db ?
 byte_25FED	db ?
 byte_25FEE	db ?
-byte_25FEF	db ?
+playchar	db ?
 word_25FF0	dw ?
 byte_25FF2	db ?
 		db ?

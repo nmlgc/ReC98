@@ -507,7 +507,7 @@ loc_AD2C:
 		xor	ax, ax
 
 loc_AD2E:
-		mov	byte_266D8, al
+		mov	playchar, al
 		xor	si, si
 		jmp	short loc_AD3B
 ; ---------------------------------------------------------------------------
@@ -526,7 +526,7 @@ loc_AD3B:
 		mov	al, es:[bx+0Ch]
 		mov	es:[bx+0Bh], al
 		call	sub_11551
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_AD90
 		mov	word_259B4, 26h	; '&'
 		les	bx, dword_2CDC6
@@ -722,7 +722,7 @@ loc_AF4A:
 		jz	short loc_AFD5
 		call	sub_B530
 		call	sub_FF34
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_AFA0
 		push	ds
 		push	offset aMiko_bft ; "miko.bft"
@@ -832,7 +832,7 @@ loc_B071:
 
 loc_B097:
 		mov	word_2CFF4, 9
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_B0AC
 		push	8
 		push	ds
@@ -1301,7 +1301,7 @@ var_4		= dword	ptr -4
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_B58D
 		push	2
 		push	ds
@@ -5187,7 +5187,7 @@ loc_CF70:
 		mov	bgm_title_id, al
 		cmp	stage_id, 3
 		jnz	short loc_CFAC
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jz	short loc_CFAC
 		mov	bgm_title_id, 10h
 
@@ -6214,7 +6214,7 @@ loc_D7C9:
 ; ---------------------------------------------------------------------------
 
 loc_D7D0:
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_D7DF
 		push	2
 		push	ds
@@ -6311,7 +6311,7 @@ loc_D83A:
 ; ---------------------------------------------------------------------------
 
 loc_D86C:
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_D87B
 		push	0
 		push	ds
@@ -11583,7 +11583,7 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_10038
 		mov	al, 0Fh
 		jmp	short loc_1003A
@@ -13604,7 +13604,7 @@ loc_10FED:
 		mov	bgm_title_id, al
 		cmp	stage_id, 0
 		jnz	short loc_11023
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jnz	short loc_11023
 		mov	stage_title_id, 0
 		mov	bgm_title_id, 0
@@ -38751,7 +38751,7 @@ sub_1E245	proc far
 		mov	word ptr dword_2670A+2,	400h
 		mov	word ptr dword_2670E+2,	400h
 		mov	fp_2D016, offset sub_122D7
-		cmp	byte_266D8, 1
+		cmp	playchar, 1
 		jnz	loc_1E359
 		setfarfp	farfp_2D018, sub_1F3AB
 		mov	fp_2D01C, offset sub_12E93
@@ -38799,7 +38799,7 @@ loc_1E371:
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
-		cmp	byte_266D8, 0
+		cmp	playchar, 0
 		jz	short loc_1E3A0
 		push	10h
 		push	ds
@@ -48260,7 +48260,7 @@ stage_id	db ?
 byte_266D5	db ?
 byte_266D6	db ?
 byte_266D7	db ?
-byte_266D8	db ?
+playchar	db ?
 		db ?
 word_266DA	dw ?
 word_266DC	dw ?
