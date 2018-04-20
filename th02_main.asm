@@ -4435,7 +4435,7 @@ loc_CB53:
 		shl	bx, 4
 		cmp	byte ptr [bx+2908h], 0
 		jnz	loc_CD00
-		mov	al, power_level
+		mov	al, shot_level
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 9
@@ -4752,7 +4752,7 @@ loc_CD54:
 		jnz	loc_D035
 		cmp	[bp+var_3], 0
 		jnz	loc_CEF7
-		mov	al, power_level
+		mov	al, shot_level
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 9
@@ -4992,9 +4992,9 @@ loc_CEE8:
 ; ---------------------------------------------------------------------------
 
 loc_CEF7:
-		cmp	byte_218B2, 2
+		cmp	shot_level, 2
 		jb	loc_D042
-		cmp	byte_218B2, 9
+		cmp	shot_level, 9
 		jnz	short loc_CF0F
 		mov	ax, word_205D8
 		mov	word_205DC, ax
@@ -5007,7 +5007,7 @@ loc_CF0F:
 loc_CF15:
 		cmp	byte_205DE, 0
 		jnz	loc_D042
-		mov	al, byte_218B2
+		mov	al, shot_level
 		mov	ah, 0
 		sub	ax, 2
 		mov	bx, ax
@@ -5227,7 +5227,7 @@ var_2		= word ptr -2
 		add	ax, 20h	; ' '
 		shl	ax, 4
 		mov	word_205E4, ax
-		cmp	byte_218B2, 2
+		cmp	shot_level, 2
 		jb	short loc_D09C
 		mov	byte_1E519, 7Ch	; '|'
 
@@ -5243,7 +5243,7 @@ loc_D0A5:
 		jnz	loc_D341
 		cmp	[bp+var_3], 0
 		jnz	loc_D17D
-		mov	al, byte_218B2
+		mov	al, shot_level
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 9
@@ -5353,9 +5353,9 @@ loc_D16E:
 ; ---------------------------------------------------------------------------
 
 loc_D17D:
-		cmp	byte_218B2, 2
+		cmp	shot_level, 2
 		jb	loc_D34E
-		cmp	byte_218B2, 3
+		cmp	shot_level, 3
 		jnb	short loc_D197
 		cmp	byte_205DE, 0
 		jz	short loc_D1E3
@@ -5363,7 +5363,7 @@ loc_D17D:
 ; ---------------------------------------------------------------------------
 
 loc_D197:
-		cmp	byte_218B2, 4
+		cmp	shot_level, 4
 		jnb	short loc_D1B0
 		mov	al, byte_20350
 		mov	ah, 0
@@ -5376,7 +5376,7 @@ loc_D197:
 ; ---------------------------------------------------------------------------
 
 loc_D1B0:
-		cmp	byte_218B2, 6
+		cmp	shot_level, 6
 		jnb	short loc_D1C1
 		test	byte_20350, 3
 		jz	short loc_D1E3
@@ -5384,7 +5384,7 @@ loc_D1B0:
 ; ---------------------------------------------------------------------------
 
 loc_D1C1:
-		cmp	byte_218B2, 9
+		cmp	shot_level, 9
 		jnb	short loc_D1DA
 		mov	al, byte_20350
 		mov	ah, 0
@@ -5401,7 +5401,7 @@ loc_D1DA:
 		jnz	loc_D34E
 
 loc_D1E3:
-		mov	al, byte_218B2
+		mov	al, shot_level
 		mov	ah, 0
 		sub	ax, 2
 		mov	bx, ax
@@ -7172,9 +7172,9 @@ var_2		= word ptr -2
 		mov	ah, 0
 		sar	ax, 2
 		mov	bx, ax
-		mov	al, [bx+0BC9h]
-		mov	byte_218B2, al
-		cmp	byte_218B2, 9
+		mov	al, SHOT_LEVELS[bx]
+		mov	shot_level, al
+		cmp	shot_level, 9
 		jnz	short loc_DF20
 		push	(62 shl 16) + 20
 		push	ss
@@ -7212,7 +7212,7 @@ loc_DF37:
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		mov	al, byte_218B2
+		mov	al, shot_level
 		mov	ah, 0
 		lea	dx, [bp+var_12]
 		add	ax, dx
@@ -9262,7 +9262,7 @@ loc_F0B9:
 ; ---------------------------------------------------------------------------
 
 loc_F107:
-		mov	al, byte_218B2
+		mov	al, shot_level
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+109Fh]
@@ -9571,7 +9571,7 @@ loc_F368:
 		jz	short loc_F3B3
 		cmp	byte_22D4A, 0
 		jnz	short loc_F3AF
-		cmp	byte_218B2, 9
+		cmp	shot_level, 9
 		jnz	short loc_F38B
 		mov	al, byte_2060E
 		mov	byte_1E519, al
@@ -9600,7 +9600,7 @@ loc_F3B3:
 		jnb	short loc_F434
 		cmp	byte_22D4B, 0
 		jnz	short loc_F426
-		cmp	byte_218B2, 9
+		cmp	shot_level, 9
 		jnz	short loc_F40D
 		mov	al, byte_2060E
 		mov	byte_1E519, al
@@ -15254,7 +15254,7 @@ arg_6		= word ptr  0Ah
 		sub	sp, 12h
 		push	si
 		push	di
-		mov	bl, byte_218B2
+		mov	bl, shot_level
 		mov	bh, 0
 		add	bx, bx
 		mov	ax, [bx+10DAh]
@@ -34912,27 +34912,8 @@ gsREIMU		db 0C9h, 0CAh, 0, 0, 0
 gsREIGEKI	db 0CCh, 0CDh, 0, 0, 0
 gsREIRYOKU	db 0C7h, 0C8h, 0, 0, 0
 aMikoft_bft	db 'MIKOFT.bft',0
-		db 0
-		db    1
-		db    2
-		db    2
-		db    3
-		db    3
-		db    4
-		db    4
-		db    5
-		db    5
-		db    6
-		db    6
-		db    6
-		db    7
-		db    7
-		db    7
-		db    8
-		db    8
-		db    8
-		db    8
-		db    9
+; Indexed with (power / 4).
+SHOT_LEVELS	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
 byte_1E64E	db 0
 		db 0
 		db    4
@@ -38441,7 +38422,7 @@ byte_218A8	db ?
 word_218AA	dw ?
 dword_218AC	dd ?
 word_218B0	dw ?
-byte_218B2	db ?
+shot_level	db ?
 		db ?
 byte_218B4	db ?
 		db ?

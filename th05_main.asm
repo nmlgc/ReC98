@@ -7671,7 +7671,7 @@ sub_E4FC	proc far
 		mov	cx, 9
 
 loc_E506:
-		cmp	ax, [bx+13B2h]
+		cmp	ax, SHOT_LEVELS[bx]
 		jb	short loc_E511
 		add	bx, 2
 		loop	loc_E506
@@ -7679,7 +7679,7 @@ loc_E506:
 loc_E511:
 		mov	dx, bx
 		shr	dx, 1
-		mov	byte_2CEBF, dl
+		mov	shot_level, dl
 		add	bx, word_2CED0
 		mov	ax, [bx]
 		mov	fp_2CECE, ax
@@ -12110,7 +12110,7 @@ var_A		= byte ptr -0Ah
 		mov	al, power
 		mov	ah, 0
 		push	ax
-		mov	al, byte_2CEBF
+		mov	al, shot_level
 		mov	ah, 0
 		lea	dx, [bp+var_A]
 		add	ax, dx
@@ -15669,7 +15669,7 @@ loc_122CB:
 		call	super_roll_put
 
 loc_122D5:
-		cmp	byte_2CEBF, 2
+		cmp	shot_level, 2
 		jb	loc_123A9
 		call	sub_E6E2
 		mov	ax, word ptr dword_2CEB4
@@ -43283,24 +43283,7 @@ aLs00_bb	db 'LS00.BB',0
 aMaine		db 'maine',0
 ; char aMaine_0[]
 aMaine_0	db 'maine',0
-		db    6
-		db    0
-		db  0Ch
-		db    0
-		db  10h
-		db    0
-		db  18h
-		db    0
-		db  20h
-		db    0
-		db  30h	; 0
-		db    0
-		db  48h	; H
-		db    0
-		db  60h
-		db    0
-		db  80h
-		db    0
+include th04/shot_levels[data].asm
 aTxt1_bb	db 'txt1.bb',0
 		db 0C0h
 		db    0
@@ -54653,7 +54636,7 @@ dword_2CEB8	dd ?
 byte_2CEBC	db ?
 byte_2CEBD	db ?
 power	db ?
-byte_2CEBF	db ?
+shot_level	db ?
 byte_2CEC0	db ?
 byte_2CEC1	db ?
 byte_2CEC2	db ?

@@ -9524,7 +9524,7 @@ var_A		= byte ptr -0Ah
 		mov	al, power
 		mov	ah, 0
 		push	ax
-		mov	al, byte_259A5
+		mov	al, shot_level
 		mov	ah, 0
 		lea	dx, [bp+var_A]
 		add	ax, dx
@@ -13098,7 +13098,7 @@ loc_10C65:
 		call	super_roll_put
 
 loc_10C6F:
-		cmp	byte_259A5, 2
+		cmp	shot_level, 2
 		jb	loc_10D47
 		call	sub_C156
 		mov	ax, word ptr dword_259AC
@@ -15239,7 +15239,7 @@ sub_11DE6	proc far
 		mov	cx, 9
 
 loc_11DF0:
-		cmp	ax, [bx+1EDEh]
+		cmp	ax, SHOT_LEVELS[bx]
 		jb	short loc_11DFB
 		add	bx, 2
 		loop	loc_11DF0
@@ -15247,7 +15247,7 @@ loc_11DF0:
 loc_11DFB:
 		mov	dx, bx
 		shr	dx, 1
-		mov	byte_259A5, dl
+		mov	shot_level, dl
 		add	bx, word_257DC
 		mov	ax, [bx]
 		mov	fp_257DA, ax
@@ -45976,24 +45976,7 @@ byte_23212	db 0
 		db  90h
 		db 0F0h
 		db  10h
-		db    6
-		db    0
-		db  0Ch
-		db    0
-		db  10h
-		db    0
-		db  18h
-		db    0
-		db  20h
-		db    0
-		db  30h	; 0
-		db    0			; jumptable 0001F922 case 25248
-		db  48h	; H
-		db    0
-		db  60h
-		db    0
-		db  80h
-		db    0
+include th04/shot_levels[data].asm
 aMiko_cfg	db 'MIKO.CFG',0
 		db    0
 word_2323A	dw 0AF30h
@@ -47369,7 +47352,7 @@ word_259A0	dw ?
 byte_259A2	db ?
 byte_259A3	db ?
 power	db ?
-byte_259A5	db ?
+shot_level	db ?
 byte_259A6	db ?
 byte_259A7	db ?
 		db    ?	;
