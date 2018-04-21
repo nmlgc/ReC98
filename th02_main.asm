@@ -3747,7 +3747,7 @@ loc_C5C2:
 ; ---------------------------------------------------------------------------
 
 loc_C634:
-		mov	fp_20602, offset sub_CB2D
+		mov	playchar_shot_func, offset shot_a
 		mov	byte_2060A, 5
 		mov	byte_2060B, 5
 		mov	byte_2060C, 4
@@ -3758,7 +3758,7 @@ loc_C634:
 ; ---------------------------------------------------------------------------
 
 loc_C655:
-		mov	fp_20602, offset sub_CD2A
+		mov	playchar_shot_func, offset shot_b
 		mov	byte_2060A, 4
 		mov	byte_2060B, 4
 		mov	byte_2060C, 3
@@ -3771,7 +3771,7 @@ loc_C655:
 ; ---------------------------------------------------------------------------
 
 loc_C67F:
-		mov	fp_20602, offset sub_D06B
+		mov	playchar_shot_func, offset shot_c
 		mov	byte_2060A, 3
 		mov	byte_2060B, 3
 		mov	byte_2060C, 3
@@ -4410,7 +4410,7 @@ sub_CAD2	endp
 
 ; Attributes: bp-based frame
 
-sub_CB2D	proc near
+shot_a	proc near
 
 var_2		= word ptr -2
 
@@ -4705,7 +4705,7 @@ loc_CD0D:
 		pop	si
 		leave
 		retn
-sub_CB2D	endp
+shot_a	endp
 
 ; ---------------------------------------------------------------------------
 off_CD16	dw offset loc_CB78
@@ -4723,7 +4723,7 @@ off_CD16	dw offset loc_CB78
 
 ; Attributes: bp-based frame
 
-sub_CD2A	proc near
+shot_b	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -5181,7 +5181,7 @@ loc_D042:
 		pop	si
 		leave
 		retn
-sub_CD2A	endp
+shot_b	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -5208,7 +5208,7 @@ off_D057	dw offset loc_CD81
 
 ; Attributes: bp-based frame
 
-sub_D06B	proc near
+shot_c	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -5637,7 +5637,7 @@ loc_D34E:
 		pop	si
 		leave
 		retn
-sub_D06B	endp
+shot_c	endp
 
 ; ---------------------------------------------------------------------------
 off_D352	dw offset loc_D1FB
@@ -9585,7 +9585,7 @@ loc_F38B:
 		mov	byte_1E51A, 3Fh	; '?'
 
 loc_F395:
-		call	fp_20602
+		call	playchar_shot_func
 		call	_snd_se_play c, 1
 		mov	byte_22D4A, 8
 		inc	byte_1EB0D
@@ -9636,7 +9636,7 @@ loc_F40D:
 		mov	byte_1E51A, 3Fh	; '?'
 
 loc_F417:
-		call	fp_20602
+		call	playchar_shot_func
 		mov	byte_22D4B, 8
 		inc	byte_1EB0E
 		jmp	short loc_F434
@@ -37167,7 +37167,7 @@ word_205F6	dw ?
 word_205F8	dw ?
 		dd    ?	;
 		dd    ?	;
-fp_20602	dw ?
+playchar_shot_func	dw ?
 byte_20604	db ?
 byte_20605	db ?
 byte_20606	db ?

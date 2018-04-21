@@ -625,9 +625,9 @@ loc_B100:
 loc_B112:
 		mov	al, playchar
 		mov	ah, 0
-		imul	ax, 14h
-		add	ax, 1F4Eh
-		mov	word_2CED0, ax
+		imul	ax, 20
+		add	ax, offset SHOT_FUNCS
+		mov	playchar_shot_funcs, ax
 		les	bx, dword_23EF0
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B145
@@ -7680,9 +7680,9 @@ loc_E511:
 		mov	dx, bx
 		shr	dx, 1
 		mov	shot_level, dl
-		add	bx, word_2CED0
+		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
-		mov	fp_2CECE, ax
+		mov	playchar_shot_func, ax
 		nopcall	sub_10625
 		retf
 sub_E4FC	endp
@@ -15570,7 +15570,7 @@ loc_12207:
 loc_12213:
 		cmp	byte_2CEC0, 0
 		jz	short loc_1222E
-		call	fp_2CECE
+		call	playchar_shot_func
 		dec	byte_2CEC0
 		jmp	short loc_1222E
 ; ---------------------------------------------------------------------------
@@ -16573,7 +16573,7 @@ table_12966	dw loc_1294B
 
 ; Attributes: bp-based frame
 
-sub_12986	proc near
+shot_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -16590,14 +16590,14 @@ loc_1299E:
 		pop	si
 		pop	bp
 		retn
-sub_12986	endp
+shot_l0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_129A1	proc near
+shot_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -16621,14 +16621,14 @@ loc_129C8:
 		pop	si
 		pop	bp
 		retn
-sub_129A1	endp
+shot_l1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_129CB	proc near
+shot_reimu_l2	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 1
@@ -16695,14 +16695,14 @@ loc_12A49:
 		pop	si
 		leave
 		retn
-sub_129CB	endp
+shot_reimu_l2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12A4C	proc near
+shot_reimu_l3	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 2
@@ -16772,14 +16772,14 @@ loc_12ACD:
 		pop	si
 		leave
 		retn
-sub_12A4C	endp
+shot_reimu_l3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12AD0	proc near
+shot_reimu_l4	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 3
@@ -16847,14 +16847,14 @@ loc_12B51:
 		pop	si
 		leave
 		retn
-sub_12AD0	endp
+shot_reimu_l4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12B54	proc near
+shot_reimu_l5	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 3
@@ -16933,14 +16933,14 @@ loc_12BEE:
 		pop	si
 		leave
 		retn
-sub_12B54	endp
+shot_reimu_l5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12BF1	proc near
+shot_reimu_l6	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 3
@@ -17019,14 +17019,14 @@ loc_12C8B:
 		pop	si
 		leave
 		retn
-sub_12BF1	endp
+shot_reimu_l6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12C8E	proc near
+shot_reimu_l7	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 5
@@ -17105,14 +17105,14 @@ loc_12D28:
 		pop	si
 		leave
 		retn
-sub_12C8E	endp
+shot_reimu_l7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12D2B	proc near
+shot_reimu_l8	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 7
@@ -17180,14 +17180,14 @@ loc_12DA9:
 		pop	si
 		leave
 		retn
-sub_12D2B	endp
+shot_reimu_l8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12DAC	proc near
+shot_reimu_l9	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 7
@@ -17276,14 +17276,14 @@ loc_12E5F:
 		pop	si
 		leave
 		retn
-sub_12DAC	endp
+shot_reimu_l9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12E62	proc near
+shot_marisa_l2	proc near
 
 var_1		= byte ptr -1
 
@@ -17351,14 +17351,14 @@ loc_12EE1:
 		pop	si
 		leave
 		retn
-sub_12E62	endp
+shot_marisa_l2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12EE4	proc near
+shot_marisa_l3	proc near
 
 var_1		= byte ptr -1
 
@@ -17453,7 +17453,7 @@ loc_12F94:
 		pop	si
 		leave
 		retn
-sub_12EE4	endp
+shot_marisa_l3	endp
 
 ; ---------------------------------------------------------------------------
 table_12F97	dw loc_12F3B
@@ -17465,7 +17465,7 @@ table_12F97	dw loc_12F3B
 
 ; Attributes: bp-based frame
 
-sub_12F9F	proc near
+shot_marisa_l4	proc near
 
 var_2		= word ptr -2
 
@@ -17578,7 +17578,7 @@ loc_1308E:
 		pop	si
 		leave
 		retn
-sub_12F9F	endp
+shot_marisa_l4	endp
 
 ; ---------------------------------------------------------------------------
 table_13091	dw loc_13001
@@ -17592,7 +17592,7 @@ table_13091	dw loc_13001
 
 ; Attributes: bp-based frame
 
-sub_1309D	proc near
+shot_marisa_l5	proc near
 
 var_2		= word ptr -2
 
@@ -17707,7 +17707,7 @@ loc_13195:
 		pop	si
 		leave
 		retn
-sub_1309D	endp
+shot_marisa_l5	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -17722,7 +17722,7 @@ table_13199	dw loc_130FF
 
 ; Attributes: bp-based frame
 
-sub_131A5	proc near
+shot_marisa_l6	proc near
 
 var_1		= byte ptr -1
 
@@ -17845,7 +17845,7 @@ loc_1329E:
 		pop	si
 		leave
 		retn
-sub_131A5	endp
+shot_marisa_l6	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -17862,7 +17862,7 @@ table_132A3	dw loc_131FB
 
 ; Attributes: bp-based frame
 
-sub_132B3	proc near
+shot_marisa_l7	proc near
 
 var_1		= byte ptr -1
 
@@ -18001,7 +18001,7 @@ loc_133D8:
 		pop	si
 		leave
 		retn
-sub_132B3	endp
+shot_marisa_l7	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18020,7 +18020,7 @@ table_133DD	dw loc_13309
 
 ; Attributes: bp-based frame
 
-sub_133F1	proc near
+shot_marisa_l8	proc near
 
 var_1		= byte ptr -1
 
@@ -18159,7 +18159,7 @@ loc_13516:
 		pop	si
 		leave
 		retn
-sub_133F1	endp
+shot_marisa_l8	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18178,7 +18178,7 @@ table_1351B	dw loc_13447
 
 ; Attributes: bp-based frame
 
-sub_1352F	proc near
+shot_marisa_l9	proc near
 
 var_1		= byte ptr -1
 
@@ -18345,7 +18345,7 @@ loc_13697:
 		pop	si
 		leave
 		retn
-sub_1352F	endp
+shot_marisa_l9	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18368,7 +18368,7 @@ table_1369C	dw loc_13585
 
 ; Attributes: bp-based frame
 
-sub_136B8	proc near
+shot_mima_l2	proc near
 
 var_1		= byte ptr -1
 
@@ -18430,14 +18430,14 @@ loc_13720:
 		pop	si
 		leave
 		retn
-sub_136B8	endp
+shot_mima_l2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13723	proc near
+shot_mima_l3	proc near
 
 var_1		= byte ptr -1
 
@@ -18505,14 +18505,14 @@ loc_13798:
 		pop	si
 		leave
 		retn
-sub_13723	endp
+shot_mima_l3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1379B	proc near
+shot_mima_l4	proc near
 
 var_1		= byte ptr -1
 
@@ -18594,7 +18594,7 @@ loc_13828:
 		pop	si
 		leave
 		retn
-sub_1379B	endp
+shot_mima_l4	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18607,7 +18607,7 @@ table_1382C	dw loc_137DF
 
 ; Attributes: bp-based frame
 
-sub_13834	proc near
+shot_mima_l5	proc near
 
 var_2		= word ptr -2
 
@@ -18688,7 +18688,7 @@ loc_138C0:
 		pop	si
 		leave
 		retn
-sub_13834	endp
+shot_mima_l5	endp
 
 ; ---------------------------------------------------------------------------
 table_138C3	dw loc_13870
@@ -18700,7 +18700,7 @@ table_138C3	dw loc_13870
 
 ; Attributes: bp-based frame
 
-sub_138CB	proc near
+shot_mima_l6	proc near
 
 var_2		= word ptr -2
 
@@ -18790,7 +18790,7 @@ loc_1396C:
 		pop	si
 		leave
 		retn
-sub_138CB	endp
+shot_mima_l6	endp
 
 ; ---------------------------------------------------------------------------
 table_1396F	dw loc_13909
@@ -18802,7 +18802,7 @@ table_1396F	dw loc_13909
 
 ; Attributes: bp-based frame
 
-sub_13977	proc near
+shot_mima_l7	proc near
 
 var_2		= word ptr -2
 
@@ -18895,7 +18895,7 @@ loc_13A1F:
 		pop	si
 		leave
 		retn
-sub_13977	endp
+shot_mima_l7	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18910,7 +18910,7 @@ table_13A23	dw loc_139B5
 
 ; Attributes: bp-based frame
 
-sub_13A2F	proc near
+shot_mima_l8	proc near
 
 var_2		= word ptr -2
 
@@ -19006,7 +19006,7 @@ loc_13AE7:
 		pop	si
 		leave
 		retn
-sub_13A2F	endp
+shot_mima_l8	endp
 
 ; ---------------------------------------------------------------------------
 table_13AEA	dw loc_13A73
@@ -19020,7 +19020,7 @@ table_13AEA	dw loc_13A73
 
 ; Attributes: bp-based frame
 
-sub_13AF6	proc near
+shot_mima_l9	proc near
 
 var_2		= word ptr -2
 
@@ -19148,7 +19148,7 @@ loc_13BE8:
 		pop	si
 		leave
 		retn
-sub_13AF6	endp
+shot_mima_l9	endp
 
 ; ---------------------------------------------------------------------------
 table_13BEB	dw loc_13BA3
@@ -19166,7 +19166,7 @@ table_13BF3	dw loc_13B38
 
 ; Attributes: bp-based frame
 
-sub_13BFF	proc near
+shot_yuuka_l2	proc near
 
 var_2		= word ptr -2
 
@@ -19232,14 +19232,14 @@ loc_13C74:
 		pop	si
 		leave
 		retn
-sub_13BFF	endp
+shot_yuuka_l2	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13C77	proc near
+shot_yuuka_l3	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19317,14 +19317,14 @@ loc_13CFF:
 		pop	si
 		leave
 		retn
-sub_13C77	endp
+shot_yuuka_l3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13D02	proc near
+shot_yuuka_l4	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19407,14 +19407,14 @@ loc_13D9D:
 		pop	si
 		leave
 		retn
-sub_13D02	endp
+shot_yuuka_l4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13DA0	proc near
+shot_yuuka_l5	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19512,7 +19512,7 @@ loc_13E53:
 		pop	si
 		leave
 		retn
-sub_13DA0	endp
+shot_yuuka_l5	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -19525,7 +19525,7 @@ table_13E57	dw loc_13DF6
 
 ; Attributes: bp-based frame
 
-sub_13E5F	proc near
+shot_yuuka_l6	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19643,7 +19643,7 @@ loc_13F34:
 		pop	si
 		leave
 		retn
-sub_13E5F	endp
+shot_yuuka_l6	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -19660,7 +19660,7 @@ table_13F40	dw loc_13E9B
 
 ; Attributes: bp-based frame
 
-sub_13F48	proc near
+shot_yuuka_l7	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19790,7 +19790,7 @@ loc_14033:
 		pop	si
 		leave
 		retn
-sub_13F48	endp
+shot_yuuka_l7	endp
 
 ; ---------------------------------------------------------------------------
 table_14036	dw loc_13FC0
@@ -19808,7 +19808,7 @@ table_14042	dw loc_13F84
 
 ; Attributes: bp-based frame
 
-sub_1404A	proc near
+shot_yuuka_l8	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -19941,7 +19941,7 @@ loc_14131:
 		pop	si
 		leave
 		retn
-sub_1404A	endp
+shot_yuuka_l8	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -19961,7 +19961,7 @@ table_14141	dw loc_14086
 
 ; Attributes: bp-based frame
 
-sub_1414B	proc near
+shot_yuuka_l9	proc near
 
 var_3		= byte ptr -3
 var_2		= word ptr -2
@@ -20106,7 +20106,7 @@ loc_14248:
 		pop	si
 		leave
 		retn
-sub_1414B	endp
+shot_yuuka_l9	endp
 
 ; ---------------------------------------------------------------------------
 table_1424B	dw loc_141BF
@@ -44843,86 +44843,51 @@ off_228EE	dd asc_228FC
 include th04/strings/demoplay[data].asm
 asc_228FC	db '                                                ',0
 		db 0
-		db  76h	; v
-		db  7Bh	; {
-		db  91h
-		db  7Bh	; {
-		db 0BBh
-		db  7Bh	; {
-		db  3Ch	; <
-		db  7Ch	; |
-		db 0C0h
-		db  7Ch	; |
-		db  44h	; D
-		db  7Dh	; }
-		db 0E1h
-		db  7Dh	; }
-		db  7Eh	; ~
-		db  7Eh	; ~
-		db  1Bh
-		db  7Fh
-		db  9Ch
-		db  7Fh
-		db  76h	; v
-		db  7Bh	; {
-		db  91h
-		db  7Bh	; {
-		db  52h	; R
-		db  80h
-		db 0D4h
-		db  80h
-		db  8Fh
-		db  81h
-		db  8Dh
-		db  82h
-		db  95h
-		db  83h
-		db 0A3h	; £
-		db  84h
-		db 0E1h
-		db  85h
-		db  1Fh
-		db  87h
-		db  76h	; v
-		db  7Bh	; {
-		db  91h
-		db  7Bh	; {
-		db 0A8h	; ¨
-		db  88h
-		db  13h
-		db  89h
-		db  8Bh	; E
-		db  89h
-		db  24h	; $
-		db  8Ah
-		db 0BBh
-		db  8Ah
-		db  67h	; g
-		db  8Bh	; E
-		db  1Fh
-		db  8Ch
-		db 0E6h
-		db  8Ch
-		db  76h	; v
-		db  7Bh	; {
-		db  91h
-		db  7Bh	; {
-		db 0EFh
-		db  8Dh
-		db  67h	; g
-		db  8Eh
-		db 0F2h
-		db  8Eh
-		db  90h
-		db  8Fh
-		db  4Fh	; O
-		db  90h
-		db  38h	; 8
-		db  91h
-		db  3Ah	; :
-		db  92h
-		db  3Bh	; ;
-		db  93h
+SHOT_FUNCS label word
+	; Reimu
+	dw shot_l0
+	dw shot_l1
+	dw shot_reimu_l2
+	dw shot_reimu_l3
+	dw shot_reimu_l4
+	dw shot_reimu_l5
+	dw shot_reimu_l6
+	dw shot_reimu_l7
+	dw shot_reimu_l8
+	dw shot_reimu_l9
+	; Marisa
+	dw shot_l0
+	dw shot_l1
+	dw shot_marisa_l2
+	dw shot_marisa_l3
+	dw shot_marisa_l4
+	dw shot_marisa_l5
+	dw shot_marisa_l6
+	dw shot_marisa_l7
+	dw shot_marisa_l8
+	dw shot_marisa_l9
+	; Mima
+	dw shot_l0
+	dw shot_l1
+	dw shot_mima_l2
+	dw shot_mima_l3
+	dw shot_mima_l4
+	dw shot_mima_l5
+	dw shot_mima_l6
+	dw shot_mima_l7
+	dw shot_mima_l8
+	dw shot_mima_l9
+	; Yuuka
+	dw shot_l0
+	dw shot_l1
+	dw shot_yuuka_l2
+	dw shot_yuuka_l3
+	dw shot_yuuka_l4
+	dw shot_yuuka_l5
+	dw shot_yuuka_l6
+	dw shot_yuuka_l7
+	dw shot_yuuka_l8
+	dw shot_yuuka_l9
 byte_2297E	db 0
 		db 0
 		db  40h
@@ -54646,8 +54611,8 @@ word_2CEC6	dw ?
 byte_2CEC8	db ?
 		dd    ?	;
 		db    ?	;
-fp_2CECE	dw ?
-word_2CED0	dw ?
+playchar_shot_func	dw ?
+playchar_shot_funcs	dw ?
 dword_2CED2	dd ?
 word_2CED6	dw ?
 word_2CED8	dw ?

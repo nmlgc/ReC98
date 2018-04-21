@@ -532,12 +532,12 @@ loc_AD3B:
 		les	bx, dword_2CDC6
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_AD7C
-		mov	word_257DC, 1B0Ch
+		mov	playchar_shot_funcs, offset SHOT_FUNCS_REIMU_A
 		jmp	short loc_AD82
 ; ---------------------------------------------------------------------------
 
 loc_AD7C:
-		mov	word_257DC, 1B20h
+		mov	playchar_shot_funcs, offset SHOT_FUNCS_REIMU_B
 
 loc_AD82:
 		mov	fp_256AA, offset sub_FFB4
@@ -550,12 +550,12 @@ loc_AD90:
 		les	bx, dword_2CDC6
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_ADA9
-		mov	word_257DC, 1B34h
+		mov	playchar_shot_funcs, offset SHOT_FUNCS_MARISA_A
 		jmp	short loc_ADAF
 ; ---------------------------------------------------------------------------
 
 loc_ADA9:
-		mov	word_257DC, 1B48h
+		mov	playchar_shot_funcs, offset SHOT_FUNCS_MARISA_B
 
 loc_ADAF:
 		mov	fp_256AA, offset sub_FFB4
@@ -6558,6 +6558,8 @@ loc_DA4B:
 sub_D955	endp
 
 ; ---------------------------------------------------------------------------
+
+shot_marisa_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6574,7 +6576,11 @@ loc_DA70:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_l0	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6598,6 +6604,8 @@ loc_DAA3:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_l1	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6672,6 +6680,8 @@ loc_DB45:
 sub_DAA6	endp
 
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l2	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6706,7 +6716,11 @@ loc_DB85:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_a_l2	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l3	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6747,7 +6761,11 @@ loc_DBCA:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_a_l3	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l4	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6788,7 +6806,11 @@ loc_DC10:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_a_l4	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l5	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -6826,7 +6848,11 @@ loc_DC5C:
 		pop	si
 		leave
 		retn
+shot_marisa_a_l5	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l6	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -6864,7 +6890,11 @@ loc_DCA9:
 		pop	si
 		leave
 		retn
+shot_marisa_a_l6	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l7	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -6902,7 +6932,11 @@ loc_DCF6:
 		pop	si
 		leave
 		retn
+shot_marisa_a_l7	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l8	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -6940,7 +6974,11 @@ loc_DD43:
 		pop	si
 		leave
 		retn
+shot_marisa_a_l8	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_a_l9	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -6978,7 +7016,11 @@ loc_DD90:
 		pop	si
 		leave
 		retn
+shot_marisa_a_l9	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_b_l2	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7034,7 +7076,11 @@ loc_DDF3:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_b_l2	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_b_l3	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7093,7 +7139,11 @@ loc_DE58:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_b_l3	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_b_l4	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7163,7 +7213,11 @@ loc_DED2:
 		pop	si
 		pop	bp
 		retn
+shot_marisa_b_l4	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_b_l5	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -7230,7 +7284,11 @@ loc_DF52:
 		pop	si
 		leave
 		retn
+shot_marisa_b_l5	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_marisa_b_l6	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -7304,6 +7362,8 @@ loc_DFDD:
 		pop	si
 		leave
 		retn
+shot_marisa_b_l6	endp
+
 ; ---------------------------------------------------------------------------
 		db    0
 off_DFE2	dw offset loc_DFB8
@@ -7315,7 +7375,7 @@ off_DFE2	dw offset loc_DFB8
 
 ; Attributes: bp-based frame
 
-sub_DFEA	proc near
+shot_marisa_b_l7	proc near
 
 var_3		= word ptr -3
 
@@ -7392,7 +7452,7 @@ loc_E071:
 		pop	si
 		leave
 		retn
-sub_DFEA	endp
+shot_marisa_b_l7	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -7405,7 +7465,7 @@ off_E076	dw offset loc_E04C
 
 ; Attributes: bp-based frame
 
-sub_E07E	proc near
+shot_marisa_b_l8	proc near
 
 var_3		= word ptr -3
 
@@ -7496,7 +7556,7 @@ loc_E123:
 		pop	si
 		leave
 		retn
-sub_E07E	endp
+shot_marisa_b_l8	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -7509,7 +7569,7 @@ off_E128	dw offset loc_E0FC
 
 ; Attributes: bp-based frame
 
-sub_E130	proc near
+shot_marisa_b_l9	proc near
 
 var_3		= word ptr -3
 
@@ -7610,7 +7670,7 @@ loc_E1E3:
 		pop	si
 		leave
 		retn
-sub_E130	endp
+shot_marisa_b_l9	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -9850,6 +9910,8 @@ arg_2		= word ptr  6
 sub_F33C	endp
 
 ; ---------------------------------------------------------------------------
+
+shot_reimu_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9866,7 +9928,11 @@ loc_F38D:
 		pop	si
 		pop	bp
 		retn
+shot_reimu_l0	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9890,7 +9956,11 @@ loc_F3C0:
 		pop	si
 		pop	bp
 		retn
+shot_reimu_l1	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_a_l2	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9970,7 +10040,11 @@ loc_F44F:
 		pop	si
 		pop	bp
 		retn
+shot_reimu_a_l2	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_a_l3	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -10054,7 +10128,11 @@ loc_F4E5:
 		pop	si
 		pop	bp
 		retn
+shot_reimu_a_l3	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_a_l4	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -10135,7 +10213,11 @@ loc_F581:
 		pop	si
 		leave
 		retn
+shot_reimu_a_l4	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_a_l5	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -10216,7 +10298,11 @@ loc_F61D:
 		pop	si
 		leave
 		retn
+shot_reimu_a_l5	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_a_l6	proc near
 		enter	2, 0
 		push	si
 		push	di
@@ -10297,12 +10383,13 @@ loc_F6B9:
 		pop	si
 		leave
 		retn
+shot_reimu_a_l6 endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F6BD	proc near
+shot_reimu_a_l7	proc near
 
 var_2		= word ptr -2
 
@@ -10412,14 +10499,14 @@ loc_F78B:
 		pop	si
 		leave
 		retn
-sub_F6BD	endp
+shot_reimu_a_l7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F78F	proc near
+shot_reimu_a_l8	proc near
 
 var_2		= word ptr -2
 
@@ -10514,14 +10601,14 @@ loc_F83E:
 		pop	si
 		leave
 		retn
-sub_F78F	endp
+shot_reimu_a_l8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F842	proc near
+shot_reimu_a_l9	proc near
 
 var_2		= word ptr -2
 
@@ -10666,14 +10753,14 @@ loc_F953:
 		pop	si
 		leave
 		retn
-sub_F842	endp
+shot_reimu_a_l9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_F957	proc near
+shot_reimu_b_l2	proc near
 
 var_1		= byte ptr -1
 
@@ -10751,8 +10838,11 @@ loc_F9E2:
 		pop	si
 		leave
 		retn
-sub_F957	endp
+shot_reimu_b_l2	endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l3	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -10832,7 +10922,11 @@ loc_FA79:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l3 endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l4	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -10912,7 +11006,11 @@ loc_FB1E:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l4 endp
+
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l5	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -11016,12 +11114,16 @@ loc_FBE4:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l5 endp
+
 ; ---------------------------------------------------------------------------
 off_FBE8	dw offset loc_FBB9
 		dw offset loc_FBB3
 		dw offset loc_FBAD
 		dw offset loc_FBA7
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l6	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -11125,12 +11227,16 @@ loc_FCB2:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l6 endp
+
 ; ---------------------------------------------------------------------------
 off_FCB6	dw offset loc_FC87
 		dw offset loc_FC81
 		dw offset loc_FC7B
 		dw offset loc_FC75
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l7	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -11234,12 +11340,16 @@ loc_FD80:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l7 endp
+
 ; ---------------------------------------------------------------------------
 off_FD84	dw offset loc_FD55
 		dw offset loc_FD4F
 		dw offset loc_FD49
 		dw offset loc_FD43
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l8	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -11343,12 +11453,16 @@ loc_FE4E:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l8 endp
+
 ; ---------------------------------------------------------------------------
 off_FE52	dw offset loc_FE23
 		dw offset loc_FE1D
 		dw offset loc_FE17
 		dw offset loc_FE11
 ; ---------------------------------------------------------------------------
+
+shot_reimu_b_l9	proc near
 		enter	4, 0
 		push	si
 		push	di
@@ -11457,6 +11571,8 @@ loc_FF24:
 		pop	si
 		leave
 		retn
+shot_reimu_b_l9 endp
+
 ; ---------------------------------------------------------------------------
 off_FF28	dw offset loc_FEE7
 		dw offset loc_FEE1
@@ -12999,7 +13115,7 @@ loc_10B97:
 		jnz	short loc_10BC7
 
 loc_10BB0:
-		call	fp_257DA
+		call	playchar_shot_func
 		call	snd_se_play pascal, 1
 		jmp	short loc_10BC7
 ; ---------------------------------------------------------------------------
@@ -15248,9 +15364,9 @@ loc_11DFB:
 		mov	dx, bx
 		shr	dx, 1
 		mov	shot_level, dl
-		add	bx, word_257DC
+		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
-		mov	fp_257DA, ax
+		mov	playchar_shot_func, ax
 		nopcall	sub_F0A5
 		retf
 sub_11DE6	endp
@@ -45780,86 +45896,50 @@ off_22E38	dd aBb0_cdg_1
 aBb0_bb		db 'BB0.BB',0
 aBb0_cdg_1	db 'BB0.CDG',0
 		db    0
-		db  7Ch	; |
-		db  48h	; H
-		db 0A0h
-		db  48h	; H
-		db 0D3h
-		db  48h	; H
-		db  63h	; c
-		db  49h	; I
-		db 0F9h
-		db  49h	; I
-		db  95h
-		db  4Ah	; J
-		db  31h	; 1
-		db  4Bh	; K
-		db 0CDh
-		db  4Bh	; K
-		db  9Fh
-		db  4Ch	; L
-		db  52h	; R
-		db  4Dh	; M
-		db  7Ch	; |
-		db  48h	; H
-		db 0A0h
-		db  48h	; H
-		db  67h	; g
-		db  4Eh	; N
-		db 0F6h
-		db  4Eh	; N
-		db  8Dh
-		db  4Fh	; O
-		db  32h	; 2
-		db  50h	; P
-		db    0
-		db  51h	; Q
-		db 0CEh
-		db  51h	; Q
-		db  9Ch
-		db  52h	; R
-		db  6Ah	; j
-		db  53h	; S
-		db  5Fh	; _
-		db  2Fh	; /
-		db  83h
-		db  2Fh	; /
-		db  5Ah	; Z
-		db  30h	; 0
-		db  98h
-		db  30h	; 0
-		db 0DEh
-		db  30h	; 0
-		db  24h	; $
-		db  31h	; 1
-		db  70h	; p
-		db  31h	; 1
-		db 0BDh
-		db  31h	; 1
-		db  0Ah
-		db  32h	; 2
-		db  57h	; W
-		db  32h	; 2
-		db  5Fh	; _
-		db  2Fh	; /
-		db  83h
-		db  2Fh	; /
-		db 0A4h
-		db  32h	; 2
-		db    7
-		db  33h	; 3
-		db  6Ch	; l
-		db  33h	; 3
-		db 0E6h
-		db  33h	; 3
-		db  66h	; f
-		db  34h	; 4
-		db 0FAh
-		db  34h	; 4
-		db  8Eh
-		db  35h	; 5
-		db  40h
-		db  36h	; 6
+SHOT_FUNCS_REIMU_A label word
+	dw shot_reimu_l0
+	dw shot_reimu_l1
+	dw shot_reimu_a_l2
+	dw shot_reimu_a_l3
+	dw shot_reimu_a_l4
+	dw shot_reimu_a_l5
+	dw shot_reimu_a_l6
+	dw shot_reimu_a_l7
+	dw shot_reimu_a_l8
+	dw shot_reimu_a_l9
+SHOT_FUNCS_REIMU_B label word
+	dw shot_reimu_l0
+	dw shot_reimu_l1
+	dw shot_reimu_b_l2
+	dw shot_reimu_b_l3
+	dw shot_reimu_b_l4
+	dw shot_reimu_b_l5
+	dw shot_reimu_b_l6
+	dw shot_reimu_b_l7
+	dw shot_reimu_b_l8
+	dw shot_reimu_b_l9
+SHOT_FUNCS_MARISA_A label word
+	dw shot_marisa_l0
+	dw shot_marisa_l1
+	dw shot_marisa_a_l2
+	dw shot_marisa_a_l3
+	dw shot_marisa_a_l4
+	dw shot_marisa_a_l5
+	dw shot_marisa_a_l6
+	dw shot_marisa_a_l7
+	dw shot_marisa_a_l8
+	dw shot_marisa_a_l9
+SHOT_FUNCS_MARISA_B label word
+	dw shot_marisa_l0
+	dw shot_marisa_l1
+	dw shot_marisa_b_l2
+	dw shot_marisa_b_l3
+	dw shot_marisa_b_l4
+	dw shot_marisa_b_l5
+	dw shot_marisa_b_l6
+	dw shot_marisa_b_l7
+	dw shot_marisa_b_l8
+	dw shot_marisa_b_l9
 byte_22E9C	db 0
 		db    0
 word_22E9E	dw 0
@@ -47226,8 +47306,8 @@ byte_257D6	db ?
 byte_257D7	db ?
 byte_257D8	db ?
 		db ?
-fp_257DA	dw ?
-word_257DC	dw ?
+playchar_shot_func	dw ?
+playchar_shot_funcs	dw ?
 dword_257DE	dd ?
 word_257E2	dw ?
 word_257E4	dw ?
