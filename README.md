@@ -12,18 +12,20 @@ The original games in question are:
 * TH04: 東方幻想郷　～ Lotus Land Story (1998)
 * TH05: 東方怪綺談　～ Mystic Square (1998)
 
-With the games completely opened, we can then build an efficient environment for modifications on top. This project could easily achieve what [thcrap](http://thcrap.nmlgc.net) has always wanted to do but struggled to realize, due to its nature of only being a patching framework targeted at 32-bit Windows binaries.
+After completely decompiling the games first, we can then build an efficient environment for modifications on top. This project could then easily achieve what [thcrap](http://thcrap.nmlgc.net) has always wanted to do but struggled to realize, due to its nature of only being a patching framework targeted at 32-bit Windows binaries.
 
-ReC98 is sort of inspired by [PyTouhou](http://pytouhou.linkmauve.fr/), a similar project to provide a free/libre Python reimplementation of the engine of TH06, [東方紅魔郷 ～ the Embodiment of Scarlet Devil](http://en.wikipedia.org/wiki/The_Embodiment_of_Scarlet_Devil). However, ReC98 trades proper free software decorum and compatibility to the original data for more accuracy in the beginning, and more freedom in the final implementation. This seems to be a more appropriate approach for the games in question, for two reasons:
+This approach is different from a project like [PyTouhou](http://pytouhou.linkmauve.fr/), a free/libre black-box reimplementation of the engine of TH06, [東方紅魔郷 ～ the Embodiment of Scarlet Devil](http://en.wikipedia.org/wiki/The_Embodiment_of_Scarlet_Devil). There are a number reasons why decompilation seems to be more worthwhile for the PC-98 games:
 
 * From a cursory inspection of their code, these games appear to have not much of an "engine", much less a common one. The gameplay is mainly driven by stage- and boss-specific callback functions hardcoded into the executable, rather than the ECL scripts in the Windows games, which would merely require an alternate VM to interpret them.
+* Even though complete decompilation will take a long time, partial reverse-engineering results will be very useful to modders who just want to work on the original PC-98 versions of the games.
+* PC-98 emulation is messy and overly complicated. It has been getting better as of 2018 thanks to [DOSBox-X](https://github.com/joncampbell123/dosbox-x) adding support for the platform, but even at its best, it will always consume way more system resources than what would be appropriate for those games.
+* thcrap-style multilingual translation on PC-98 would be painful for languages with non-ASCII scripts. The obvious method of modifying the font ROM specifically for each language is ugly and won't work on real hardware, so a custom renderer would be needed. That by itself requires a lot of reverse-engineering and, preferably, compilable source code to avoid the limits of hex-editing. Or, even better, the prospect to do this entirely on a more modern system.
 * These games stopped being sold in 2002, ZUN has confirmed on multiple occasions to have lost all the data of the "earlier games" <sup>[citation needed]</sup>, and PC-98 hardware is long obsolete. In short, these games are as abandoned as they can possibly be, and are unlikely to ever turn a profit again.
 
-Although this project might be classified as a *remake* of the games in question, it should be noted that ReC98 has much higher aspirations than, say, [a remake in Danmakufu created from scratch](https://www.youtube.com/watch?v=-W5YIY4UWsY). The main objective of this project is to provide *exact, credible ports* that fully replace the need for the proprietary, PC-98-exclusive original releases and their emulation for even the most conservative fan. Ultimately, this project should merely serve as the *foundation* for future remastered versions of these games, developed by third parties. And after all, preserving the game's source code is undoubtedly more valuable than preserving a bunch of binaries.
+#### So is this about remakes?
+Even once we get to porting the games to modern systems, our goal will still be quite different from the typical idea of [a from-scratch *remake* in a modern engine](https://www.youtube.com/watch?v=-W5YIY4UWsY), which typically involves little or no original data. ReC98 by itself will only ever be about providing *exact, credible, source ports* that fully replace the need for the proprietary, PC-98-exclusive original releases and their emulation for even the most conservative fan. Ultimately, this project should merely serve as the *foundation* for future remastered versions of these games, developed by third parties. And after all, preserving a reconstructed, readable version of the games' source code is undoubtedly more valuable than preserving a bunch of binaries.
 
 To achieve this, ReC98 has been kept in an openly available Git repository from day one. Each commit represents an atomic step along the way. This makes it easy to prove the correctness of the reconstruction process, or to track down potential regressions.
-
-Moreover, a clear line will be drawn between the original content and fanmade modifications, which will only be available as optional packages. This also means that we won't ship the reconstructed games with any existing English translation patch. For the visible modifications that *will* be necessary (read: the "Mods" screen in the main menu), great care will be taken to keep them in the spirit of the original PC-98 games.
 
 #### Is this even viable?
 It certainly *seems* to be. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
@@ -34,7 +36,7 @@ It certainly *seems* to be. During the development of the static English patches
 
 The two main libraries make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
 
-With [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we also have an open-source PC-9821 emulator, capable of running the games. This will greatly help in understanding and porting all hardware-specific code.
+With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we now also have two open-source PC-9821 emulators capable of running the games. This will greatly help in understanding and porting all hardware-specific code.
 
 Still, it will no doubt take a long time until this project will have made any visible and useful progress. Any help will be appreciated!
 
@@ -78,6 +80,8 @@ Get rid of any bad coding practices and the remaining hardware-specific formats,
 
 ##### Step 6: Moddability
 Do whatever else is necessary to easily modify the game elements people like to modify. This may involve further changes to the formats used by the games, and the addition of one or more scripting languages (and subsequent porting of previously hardcoded functions). Mods will use the thcrap patch format, complete with support for patch stacking and dependencies, and will be easily selectable from a new menu added to every game.
+
+A clear line will be drawn between the original content and fanmade modifications, which will only be available as optional packages. This also means that we won't ship the reconstructed games with any existing English translation patch. For the visible modifications that *will* be necessary (read: the "Mods" screen in the main menu), great care will be taken to keep them in the spirit of the original PC-98 games.
 
 Since this will most likely result in graphics mods that exceed the specifications of PC-98 hardware, there will also be an optional filter to reduce the rendered output to the original resolution of 640x400 and a 16-color palette, for the sake of keeping the original spirit.
 
