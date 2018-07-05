@@ -986,7 +986,7 @@ loc_AB31:
 
 loc_AB3B:
 		call	sub_C490
-		call	sub_BC0F
+		call	load_char_select_sprite_function
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -1442,7 +1442,7 @@ loc_AF97:
 		les	bx, dword_11DCC
 		cmp	byte ptr es:[bx+0Ah], 0
 		jnz	short loc_AFD1
-		call	sub_B806
+		call	opening_function
 		les	bx, dword_11DCC
 		mov	byte ptr es:[bx+0Ah], 1
 
@@ -1460,7 +1460,7 @@ loc_AFE1:
 
 loc_AFF4:
 		call	sub_BC8D
-		call	sub_BC0F
+		call	load_char_select_sprite_function
 		call	sub_CD94
 		mov	byte_11DD0, 0
 		mov	byte_F072, 0
@@ -2284,21 +2284,21 @@ include th04/zunsoft.asm
 
 ; Attributes: bp-based frame
 
-sub_B806	proc near
+opening_function	proc near
 
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
+opening_switch_frame 		= word ptr -8
+var_6						= word ptr -6
+opening_scr_fade_multi		= byte ptr -4
+opening_scr_fade			= byte ptr -3
+opening_key_pressed			= byte ptr -2
+var_1						= byte ptr -1
 
 		enter	8, 0
 		push	si
-		push	di
-		mov	[bp+var_2], 0
-		mov	[bp+var_3], 0
-		mov	[bp+var_4], 64h	; 'd'
+		push	di			;m_curFrame=-1?
+		mov	[bp+opening_key_pressed], 0
+		mov	[bp+opening_scr_fade], 0
+		mov	[bp+opening_scr_fade_multi], 100	; 'd'
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
@@ -2322,7 +2322,7 @@ var_1		= byte ptr -1
 		xor	si, si
 		jmp	short loc_B8C7
 ; ---------------------------------------------------------------------------
-
+;fps hack?
 loc_B872:
 		mov	bx, si
 		imul	bx, 3
@@ -2354,7 +2354,7 @@ loc_B872:
 		inc	si
 
 loc_B8C7:
-		cmp	si, 0Fh
+		cmp	si, 15
 		jl	short loc_B872
 		call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -2362,7 +2362,7 @@ loc_B8C7:
 		xor	si, si
 		jmp	short loc_B8F4
 ; ---------------------------------------------------------------------------
-
+;void COpParticle::Initialize(){?
 loc_B8E8:
 		mov	bx, [bp+var_6]
 		mov	word ptr [bx], 0
@@ -2370,8 +2370,9 @@ loc_B8E8:
 		add	[bp+var_6], 0Eh
 
 loc_B8F4:
-		cmp	si, 100h
+		cmp	si, 256
 		jl	short loc_B8E8
+;}
 		push	20000h
 		call	sub_E0F1
 		mov	PaletteTone, 64h ; 'd'
@@ -2403,79 +2404,79 @@ loc_B949:
 		call	sub_E094
 		cmp	word_12A72, 0
 		jz	short loc_B959
-		mov	[bp+var_2], 1
+		mov	[bp+opening_key_pressed], 1;m_bKeyPressed=true?
 
 loc_B959:
-		mov	[bp+var_8], di
-		mov	cx, 0Ch		; switch 12 cases
+		mov	[bp+opening_switch_frame], di
+		mov	cx, 12 	; switch 12 cases
 		mov	bx, offset word_BA64
 
 loc_B962:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_8]
+		cmp	ax, [bp+opening_switch_frame]
 		jz	short loc_B971
 		add	bx, 2
 		loop	loc_B962
-		jmp	short loc_B9DA	; default
+		jmp	short opening_frame_case_default	; default
 ; ---------------------------------------------------------------------------
 
 loc_B971:
 		jmp	word ptr cs:[bx+18h] ; switch jump
 
 loc_B975:
-		push	0B400B4h	; jumptable 0000B971 case 0
+		push	(180 shl 16) or 180	; jumptable 0000B971 case 0
 		jmp	short loc_B9B3
 ; ---------------------------------------------------------------------------
 
 loc_B97D:
-		push	1CC00DCh	; jumptable 0000B971 case 16
+		push	(460 shl 16) or 220	; jumptable 0000B971 case 16
 		jmp	short loc_B9BD
 ; ---------------------------------------------------------------------------
 
 loc_B985:
-		push	0DC00A0h	; jumptable 0000B971 case 24
+		push	(220 shl 16) or 160	; jumptable 0000B971 case 24
 		jmp	short loc_B9B3
 ; ---------------------------------------------------------------------------
 
 loc_B98D:
-		push	17C00F0h	; jumptable 0000B971 case 32
+		push	(380 shl 16) or 240	; jumptable 0000B971 case 32
 		jmp	short loc_B9BD
 ; ---------------------------------------------------------------------------
 
 loc_B995:
-		push	15400C8h	; jumptable 0000B971 case 44
+		push	(340 shl 16) or 200	; jumptable 0000B971 case 44
 		jmp	short loc_B9BD
 ; ---------------------------------------------------------------------------
 
 loc_B99D:
-		push	11800AAh	; jumptable 0000B971 case 48
+		push	(280 shl 16) or 170	; jumptable 0000B971 case 48
 		jmp	short loc_B9B3
 ; ---------------------------------------------------------------------------
 
 loc_B9A5:
-		push	17C0104h	; jumptable 0000B971 case 52
+		push	(380 shl 16) or 260	; jumptable 0000B971 case 52
 		jmp	short loc_B9BD
 ; ---------------------------------------------------------------------------
 
 loc_B9AD:
-		push	0C800BEh	; jumptable 0000B971 cases 40,56
+		push	(200 shl 16) or 190	; jumptable 0000B971 cases 40,56
 
 loc_B9B3:
-		push	14h
+		push	20
 		jmp	short loc_B9C9
 ; ---------------------------------------------------------------------------
 
 loc_B9B7:
-		push	1B800D2h	; jumptable 0000B971 case 60
+		push	(440 shl 16) or 210	; jumptable 0000B971 case 60
 
 loc_B9BD:
-		push	14h
+		push	20
 		jmp	short loc_B9D5
 ; ---------------------------------------------------------------------------
 
 loc_B9C1:
-		push	14000C8h	; jumptable 0000B971 case 64
-		push	40h
+		push	(320 shl 16) or 200	; jumptable 0000B971 case 64
+		push	64
 
 loc_B9C9:
 		push	0
@@ -2483,16 +2484,16 @@ loc_B9C9:
 ; ---------------------------------------------------------------------------
 
 loc_B9CD:
-		push	14000C8h	; jumptable 0000B971 case 68
-		push	40h
+		push	(320 shl 16) or 200	; jumptable 0000B971 case 68
+		push	64
 
 loc_B9D5:
-		push	0Ah
+		push	10
 
 loc_B9D7:
 		call	_zunsoft_pyro_new
 
-loc_B9DA:
+opening_frame_case_default:
 		call	sub_D6F0	; default
 		call	_zunsoft_update_and_render
 
@@ -2508,18 +2509,18 @@ loc_B9E2:
 		mov	[bp+var_1], al
 		mov	dx, 0A4h
 		out	dx, al
-		cmp	[bp+var_2], 0
+		cmp	[bp+opening_key_pressed], 0
 		jnz	short loc_BA26
-		cmp	di, 10h
+		cmp	di, 16	;if (m_curFrame>=16)
 		jl	short loc_BA1B
-		cmp	[bp+var_3], 64h	; 'd'
-		jnb	short loc_BA1B
-		mov	al, [bp+var_3]
+		cmp	[bp+opening_scr_fade], 100
+		jnb	short loc_BA1B		;if (m_curScrFade<100)
+		mov	al, [bp+opening_scr_fade]		;m_curScrFade+=2;
 		add	al, 2
-		mov	[bp+var_3], al
+		mov	[bp+opening_scr_fade], al
 
 loc_BA1B:
-		mov	al, [bp+var_3]
+		mov	al, [bp+opening_scr_fade]
 		mov	ah, 0
 		push	ax
 		call	_zunsoft_palette_update_and_show
@@ -2527,22 +2528,22 @@ loc_BA1B:
 ; ---------------------------------------------------------------------------
 
 loc_BA26:
-		cmp	[bp+var_4], 0
+		cmp	[bp+opening_scr_fade_multi], 0
 		jbe	short loc_BA56
-		mov	al, [bp+var_4]
+		mov	al, [bp+opening_scr_fade_multi]
 		add	al, 0FEh
-		mov	[bp+var_4], al
-		mov	al, [bp+var_4]
+		mov	[bp+opening_scr_fade_multi], al
+		mov	al, [bp+opening_scr_fade_multi]
 		mov	ah, 0
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 
 loc_BA41:
 		call	snd_se_update
-		inc	di
+		inc	di							;m_curFrame++
 
 loc_BA47:
-		cmp	di, 0AAh ; 'ª'
+		cmp	di, 170 				;if (m_curFrame<170)
 		jl	loc_B949
 		push	1
 		call	palette_black_out
@@ -2554,7 +2555,7 @@ loc_BA56:
 		pop	si
 		leave
 		retn
-sub_B806	endp
+opening_function	endp
 
 ; ---------------------------------------------------------------------------
 word_BA64	dw	0,   10h,   18h,   20h
@@ -2754,14 +2755,14 @@ sub_BB91	endp
 
 ; Attributes: bp-based frame
 
-sub_BC0F	proc near
+load_char_select_sprite_function	proc near
 		push	bp
 		mov	bp, sp
 		push	0
 		push	ds
 		push	offset aSft1_cd2 ; "sft1.cd2"
 		call	sub_E238
-		push	0Ah
+		push	10
 		push	ds
 		push	offset aSft2_cd2 ; "sft2.cd2"
 		call	sub_E238
@@ -2801,7 +2802,7 @@ sub_BC0F	proc near
 		call	far ptr	sub_E174
 		pop	bp
 		retn
-sub_BC0F	endp
+load_char_select_sprite_function	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2883,7 +2884,7 @@ loc_BD55:
 		cwd
 		idiv	bx
 		call	pi_slot_palette_apply pascal, ax
-		pushd	278
+		pushd	278;draw(0.278)
 		mov	ax, si
 		mov	bx, 8
 		cwd
@@ -2938,7 +2939,7 @@ loc_BDE8:
 		out	dx, al
 		mov	dx, 0A4h
 		out	dx, al
-		push	10h
+		push	16
 		call	frame_delay
 		xor	si, si
 		jmp	short loc_BE46
@@ -6832,8 +6833,14 @@ locret_E231:
 sub_E1DA	endp
 
 ; ---------------------------------------------------------------------------
+LoadCDGAllSprite	proc far
+arg_0		= dword	ptr  6
+arg_4		= word ptr  0Ah
+
 		mov	byte_FA94, 1
 		nop
+
+LoadCDGAllSprite	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
