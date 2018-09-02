@@ -586,7 +586,7 @@ loc_B09F:
 		cmp	si, 8
 		jl	short loc_B099
 		mov	power, 1
-		mov	byte_2CEC3, 1
+		mov	dream, 1
 		call	sub_E528
 		mov	al, playchar
 		mov	ah, 0
@@ -3267,9 +3267,9 @@ sub_C52D	proc near
 		jz	short loc_C565
 
 loc_C555:
-		cmp	byte_2CEC3, 1
+		cmp	dream, 1
 		jbe	short loc_C560
-		dec	byte_2CEC3
+		dec	dream
 
 loc_C560:
 		nopcall	sub_1059D
@@ -10790,7 +10790,7 @@ loc_FBB5:
 		jnz	short loc_FBF5
 		call	sub_E8F2
 		mov	power, 1
-		mov	byte_2CEC3, 1
+		mov	dream, 1
 		les	bx, dword_23EF0
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
@@ -12040,7 +12040,7 @@ var_2		= byte ptr -2
 		mov	[bp+var_2], al
 		cmp	byte_22720, 7Fh
 		ja	short loc_105E6
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jb	short loc_105E6
 		mov	byte_2CE87, 4
 		mov	fp_2CE8A, offset sub_11DEA
@@ -12049,12 +12049,12 @@ var_2		= byte ptr -2
 		mov	byte_2C979, 14h
 
 loc_105E6:
-		mov	al, byte_2CEC3
+		mov	al, dream
 		mov	byte_22720, al
 		push	14h
 		mov	ah, 0
 		push	ax
-		mov	al, byte_2CEC3
+		mov	al, dream
 		mov	ah, 0
 		mov	bx, 10h
 		cwd
@@ -15411,7 +15411,7 @@ loc_12083:
 		inc	byte ptr es:[bx+1Bh]
 
 loc_12092:
-		cmp	byte_2CEC3, 2
+		cmp	dream, 2
 		jbe	short loc_120B1
 		cmp	boss_phase, 0
 		jz	short loc_120A7
@@ -15419,14 +15419,14 @@ loc_12092:
 		jz	short loc_120B6
 
 loc_120A7:
-		mov	al, byte_2CEC3
+		mov	al, dream
 		add	al, 0FEh
-		mov	byte_2CEC3, al
+		mov	dream, al
 		jmp	short loc_120B6
 ; ---------------------------------------------------------------------------
 
 loc_120B1:
-		mov	byte_2CEC3, 1
+		mov	dream, 1
 
 loc_120B6:
 		nopcall	sub_1059D
@@ -23902,9 +23902,9 @@ loc_16297:
 		div	bx
 		or	dx, dx
 		jnz	short loc_162B9
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jnb	short loc_162B9
-		inc	byte_2CEC3
+		inc	dream
 		call	sub_1059D
 
 loc_162B9:
@@ -24330,7 +24330,7 @@ loc_165F8:
 		push	220008h
 		push	eax
 		nopcall	sub_1FA0E
-		mov	al, byte_2CEC3
+		mov	al, dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
@@ -24505,7 +24505,7 @@ loc_1683E:
 		push	220006h
 		push	eax
 		nopcall	sub_1FA0E
-		mov	al, byte_2CEC3
+		mov	al, dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
@@ -25534,9 +25534,9 @@ loc_16FAA:
 		mov	[bp+var_3], 1
 		cmp	byte_2264E, 0
 		jnz	short loc_16FD1
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jnb	short loc_16FD1
-		inc	byte_2CEC3
+		inc	dream
 
 loc_16FD1:
 		mov	bx, power_overflow_level
@@ -25547,9 +25547,9 @@ loc_16FD1:
 ; ---------------------------------------------------------------------------
 
 loc_16FE3:
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jnb	short loc_17003
-		mov	al, byte_2CEC3
+		mov	al, dream
 		mov	ah, 0
 		imul	ax, 18h
 		mov	dx, [di+4]
@@ -25576,11 +25576,11 @@ loc_1700C:
 		idiv	bx
 		mov	dl, 6
 		sub	dl, al
-		add	dl, byte_2CEC3
-		mov	byte_2CEC3, dl
-		cmp	byte_2CEC3, 80h
+		add	dl, dream
+		mov	dream, dl
+		cmp	dream, 128
 		jbe	short loc_1703E
-		mov	byte_2CEC3, 80h
+		mov	dream, 128
 
 loc_1703E:
 		call	sub_1059D
@@ -25615,7 +25615,7 @@ loc_17074:
 ; ---------------------------------------------------------------------------
 
 loc_1707F:
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jb	short loc_1708F
 		mov	si, 3200h
 		mov	[bp+var_3], 1
@@ -25624,7 +25624,7 @@ loc_1707F:
 
 loc_1708F:
 		mov	si, 1
-		mov	byte_2CEC3, 80h
+		mov	dream, 128
 
 loc_17097:
 		call	sub_1059D
@@ -25777,11 +25777,11 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_171E5:
-		cmp	byte_2CEC3, 1
+		cmp	dream, 1
 		jbe	short loc_17204
-		cmp	byte_2CEC3, 80h
+		cmp	dream, 128
 		jnb	short loc_17204
-		dec	byte_2CEC3
+		dec	dream
 		jmp	short loc_17204
 ; ---------------------------------------------------------------------------
 
@@ -54443,7 +54443,7 @@ shot_level	db ?
 byte_2CEC0	db ?
 byte_2CEC1	db ?
 byte_2CEC2	db ?
-byte_2CEC3	db ?
+dream	db ?
 word_2CEC4	dw ?
 word_2CEC6	dw ?
 byte_2CEC8	db ?
