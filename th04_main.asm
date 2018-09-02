@@ -987,7 +987,7 @@ sub_B1D0	proc near
 		mov	byte_259A9, 0
 		mov	byte_259A2, 40h
 		mov	byte_259AB, 0
-		mov	byte_259B6, 0
+		mov	dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
 		mov	byte_255BC, 1
 		call	sub_1042A
@@ -8382,7 +8382,7 @@ loc_E796:
 		jnz	short loc_E7D8
 		call	sub_12CB5
 		mov	power, 1
-		mov	byte_259B6, 0
+		mov	dream_items_collected, 0
 		les	bx, dword_2CDC6
 		mov	al, es:[bx+0Eh]
 		mov	es:[bx+0Dh], al
@@ -9537,7 +9537,7 @@ sub_F07A	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0011h
-		mov	ax, word_2D00C
+		mov	ax, dream_score
 		imul	ax, 0Ah
 		push	ax
 		call	sub_1D519
@@ -12932,17 +12932,17 @@ var_1		= byte ptr -1
 loc_109D7:
 		mov	al, [bp+var_1]
 		sub	power, al
-		cmp	byte_259B6, 0
+		cmp	dream_items_collected, 0
 		jz	short loc_109E9
-		dec	byte_259B6
+		dec	dream_items_collected
 
 loc_109E9:
-		mov	al, byte_259B6
+		mov	al, dream_items_collected
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2386h]
-		mov	word_2D00C, ax
+		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
+		mov	dream_score, ax
 		nopcall	sub_F07A
 		nopcall	sub_11DE6
 		call	snd_se_play pascal, 2
@@ -37742,7 +37742,7 @@ var_4		= dword	ptr -4
 		push	9
 		push	eax
 		call	sub_1D48E
-		mov	si, word_2D00C
+		mov	si, dream_score
 		movzx	eax, si
 		add	[bp+var_4], eax
 		push	0Bh
@@ -37895,7 +37895,7 @@ loc_1D922:
 		push	8
 		push	eax
 		call	sub_1D48E
-		mov	si, word_2D00C
+		mov	si, dream_score
 		movzx	eax, si
 		add	[bp+var_4], eax
 		push	0Ah
@@ -37969,7 +37969,7 @@ sub_1DA1B	proc far
 		mov	byte_2D00E, al
 		call	sub_13F16
 		mov	byte_236E0, 0
-		mov	word_2D00C, 0
+		mov	dream_score, 0
 		pop	bp
 		retf
 sub_1DA1B	endp
@@ -38268,25 +38268,25 @@ loc_1DC78:
 
 loc_1DC7B:
 		inc	word_236DC
-		add	si, word_2D00C
+		add	si, dream_score
 		inc	byte_259AB
 		call	sub_F064
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
 loc_1DC8F:
-		cmp	byte_259B6, 6
+		cmp	dream_items_collected, 6
 		ja	short loc_1DC9A
-		inc	byte_259B6
+		inc	dream_items_collected
 
 loc_1DC9A:
-		mov	al, byte_259B6
+		mov	al, dream_items_collected
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+2386h]
-		mov	word_2D00C, ax
-		mov	si, word_2D00C
+		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
+		mov	dream_score, ax
+		mov	si, dream_score
 		call	sub_F07A
 		mov	al, byte_23660
 		add	al, 2
@@ -46132,22 +46132,7 @@ byte_23661	db 0
 		db  32h	; 2
 		db    0
 include th02/power_overflow[data].asm
-		db    0
-		db    0
-		db  64h	; d
-		db    0
-		db 0C8h
-		db    0
-		db  90h
-		db    1
-		db  58h	; X
-		db    2
-		db  20h
-		db    3
-		db 0E8h
-		db    3
-		db    0
-		db    5
+include th04/dream_score[data].asm
 power_overflow_level	dw 0
 word_236D8	dw 0
 word_236DA	dw 0
@@ -47294,7 +47279,7 @@ byte_259AB	db ?
 dword_259AC	dd ?
 dword_259B0	dd ?
 word_259B4	dw ?
-byte_259B6	db ?
+dream_items_collected	db ?
 		db    ?	;
 		db    ?	;
 byte_259B9	db ?
@@ -54980,7 +54965,7 @@ word_2D006	dw ?
 word_2D008	dw ?
 byte_2D00A	db ?
 		db ?
-word_2D00C	dw ?
+dream_score	dw ?
 byte_2D00E	db ?
 		db ?
 farfp_2D010	dd ?

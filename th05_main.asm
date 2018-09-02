@@ -44435,22 +44435,7 @@ byte_225CC	db 0
 		db    0
 
 include th02/power_overflow[data].asm
-		db    0
-		db    0
-		db  64h	; d
-		db    0
-		db 0C8h
-		db    0
-		db  90h
-		db    1
-		db  58h	; X
-		db    2
-		db  20h
-		db    3
-		db 0E8h
-		db    3
-		db    0
-		db    5
+include th04/dream_score[data].asm
 power_overflow_level	dw 0
 word_22644	dw 0
 word_22646	dw 0
