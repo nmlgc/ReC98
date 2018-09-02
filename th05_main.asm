@@ -1110,10 +1110,10 @@ sub_B55A	proc near
 		mov	byte_23F04, 0
 		mov	word_2CE02, 0
 		mov	word_2CE04, 0
-		mov	word ptr dword_2CEA0, 3072;curx
-		mov	word ptr dword_2CEA0+2,	5120;cury
-		mov	word ptr dword_2CEA4, 3072
-		mov	word ptr dword_2CEA4+2,	5120
+		mov	player_pos.cur.x, 192 * 16
+		mov	player_pos.cur.y, 320 * 16
+		mov	player_pos.prev.x, 192 * 16
+		mov	player_pos.prev.y, 320 * 16
 		mov	byte_2CEBD, 0
 		mov	byte_2CEC2, 0
 		mov	byte_2CEC1, 0
@@ -3642,12 +3642,12 @@ loc_C87C:
 		imul	ax, 0Ah
 		add	ax, 38C2h
 		mov	si, ax
-		mov	eax, dword_2CEA0
+		mov	eax, player_pos.cur
 		mov	[si], eax
 		call	sub_158CC
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		mov	[si], ax
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		mov	[si+2],	ax
 		mov	word ptr [si+6], 18h
 		call	snd_se_play pascal, 15
@@ -3894,7 +3894,7 @@ loc_CAA7:
 		imul	ax, 0Ah
 		add	ax, 38C2h
 		mov	si, ax
-		mov	eax, dword_2CEA0
+		mov	eax, player_pos.cur
 		mov	[si], eax
 		mov	word ptr [si+6], 100h
 		call	_randring1_next16
@@ -7611,7 +7611,7 @@ loc_E4AC:
 		cmp	byte ptr [bx], 0
 		jnz	short loc_E4AC
 		mov	word ptr [bx], 1
-		mov	eax, dword_2CEA0
+		mov	eax, player_pos.cur
 		mov	[bx+2],	eax
 		mov	dword ptr [bx+0Ah], 0FF400000h
 		mov	word ptr [bx+0Eh], 14h
@@ -8578,12 +8578,12 @@ arg_0		= word ptr  4
 loc_EA98:
 		call	vector2_at_opt
 		add	ax, 60h
-		sub	ax, word ptr dword_2CEA0+2
+		sub	ax, player_pos.cur.y
 		cmp	ax, 0C0h
 		jnb	short loc_EABD
 		mov	ax, ss:[di]
 		add	ax, 60h
-		sub	ax, word ptr dword_2CEA0
+		sub	ax, player_pos.cur.x
 		cmp	ax, 0C0h
 		jnb	short loc_EABD
 		mov	byte_2CEC1, 1
@@ -14291,14 +14291,14 @@ loc_11701:
 		call	grcg_byteboxfill_x
 
 loc_11727:
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		mov	bx, 10h
 		cwd
 		idiv	bx
 		sub	ax, si
 		cmp	ax, 10h
 		jnb	short loc_1178F
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		cwd
 		idiv	bx
 		mov	dx, [bp+var_6]
@@ -14324,14 +14324,14 @@ loc_11749:
 		call	grcg_byteboxfill_x
 
 loc_1176A:
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		mov	bx, 10h
 		cwd
 		idiv	bx
 		sub	ax, si
 		cmp	ax, 10h
 		jnb	short loc_1178F
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		cwd
 		idiv	bx
 		mov	dx, [bp+var_6]
@@ -15341,8 +15341,8 @@ loc_12005:
 		mov	dx, 1600h
 
 loc_1200E:
-		mov	word ptr dword_2CEA0, ax
-		mov	word ptr dword_2CEA0+2,	dx
+		mov	player_pos.cur.x, ax
+		mov	player_pos.cur.y, dx
 		pop	bp
 		retn
 sub_11FDF	endp
@@ -15362,8 +15362,8 @@ var_1		= byte ptr -1
 		ja	locret_12148
 		cmp	byte_2CEC2, 20h	; ' '
 		jnz	short loc_12092
-		mov	word_2CEA8, 0
-		mov	word_2CEAA, 0
+		mov	player_pos.velocity.x, 0
+		mov	player_pos.velocity.y, 0
 		mov	power_overflow_level, 0
 		mov	word_2CEC4, 0
 		call	sub_16E29
@@ -15435,12 +15435,12 @@ loc_120EB:
 loc_120F0:
 		cmp	byte_2CEC2, 0
 		jnz	short locret_12148
-		mov	word ptr dword_2CEA0, 0C00h
-		mov	word ptr dword_2CEA4, 0C00h
-		mov	word ptr dword_2CEA0+2,	1700h
-		mov	word ptr dword_2CEA4+2,	1700h
-		mov	word_2CEA8, 0
-		mov	word_2CEAA, 0FFE0h
+		mov	player_pos.cur.x, 192 * 16
+		mov	player_pos.prev.x, 192 * 16
+		mov	player_pos.cur.y, 368 * 16
+		mov	player_pos.prev.y, 368 * 16
+		mov	player_pos.velocity.x, 0
+		mov	player_pos.velocity.y, -32
 		cmp	lives, 1
 		jbe	short loc_12142
 		dec	lives
@@ -15488,14 +15488,14 @@ loc_12161:
 		mov	byte_2CEC1, 0
 		mov	chara_invulnerable_time_left, 0C0h
 		mov	byte_2CEBD, 48h	; 'H'
-		mov	word_2CEA8, 0
-		mov	word_2CEAA, 0
+		mov	player_pos.velocity.x, 0
+		mov	player_pos.velocity.y, 0
 
 loc_12188:
 		cmp	byte_2CEBD, 0
 		jnz	loc_12224
-		mov	word_2CEA8, 0
-		mov	word_2CEAA, 0
+		mov	player_pos.velocity.x, 0
+		mov	player_pos.velocity.y, 0
 		mov	ax, word_23A56
 		and	ax, 0F0Fh
 		mov	si, ax
@@ -15520,16 +15520,16 @@ loc_121A9:
 loc_121CA:
 		cmp	byte_23A58, 0
 		jz	short loc_121E7
-		mov	ax, word_2CEA8
+		mov	ax, player_pos.velocity.x
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	word_2CEA8, ax
-		mov	ax, word_2CEAA
+		mov	player_pos.velocity.x, ax
+		mov	ax, player_pos.velocity.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	word_2CEAA, ax
+		mov	player_pos.velocity.y, ax
 
 loc_121E7:
 		call	sub_11FDF
@@ -15565,11 +15565,11 @@ loc_12224:
 loc_1222E:
 		mov	eax, dword_2CEB4
 		mov	dword_2CEB8, eax
-		mov	eax, dword_2CEA0
+		mov	eax, player_pos.cur
 		mov	dword_2CEB4, eax
-		mov	ax, word_2CEA8
+		mov	ax, player_pos.velocity.x
 		sub	word ptr dword_2CEB4, ax
-		mov	ax, word_2CEAA
+		mov	ax, player_pos.velocity.y
 		sub	word ptr dword_2CEB4+2,	ax
 		test	byte ptr word_23A56, 10h
 		jz	short loc_12256
@@ -15606,23 +15606,23 @@ var_2		= word ptr -2
 		jbe	loc_12314
 
 loc_12279:
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sar	ax, 4
 		add	ax, 10h
 		mov	di, ax
-		mov	ax, word ptr dword_2CEA0+2
-		add	ax, 0FF80h
+		mov	ax, player_pos.cur.y
+		add	ax, -128
 		push	ax
 		call	sub_BFB2
 		mov	[bp+var_2], ax
-		cmp	word_2CEA8, 0
+		cmp	player_pos.velocity.x, 0
 		jge	short loc_1229D
 		mov	si, 1
 		jmp	short loc_122AB
 ; ---------------------------------------------------------------------------
 
 loc_1229D:
-		cmp	word_2CEA8, 0
+		cmp	player_pos.velocity.x, 0
 		jz	short loc_122A9
 		mov	si, 2
 		jmp	short loc_122AB
@@ -15699,8 +15699,8 @@ loc_1232B:
 
 loc_12342:
 		push	48FEh
-		push	word ptr dword_2CEA0
-		push	word ptr dword_2CEA0+2
+		push	player_pos.cur.x
+		push	player_pos.cur.y
 		push	si
 		mov	al, [bp+var_5]
 		mov	ah, 0
@@ -16291,11 +16291,11 @@ loc_12783:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_127BD
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, [bp+var_4]
 		cmp	ax, [bp+var_8]
 		ja	short loc_127BD
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		cmp	ax, [bp+var_6]
 		jb	short loc_127BD
 		add	si, 16h
@@ -20130,8 +20130,8 @@ loc_14288:
 loc_14291:
 		push	ax
 		push	48FEh
-		push	word ptr dword_2CEA0
-		push	word ptr dword_2CEA0+2
+		push	player_pos.cur.x
+		push	player_pos.cur.y
 		push	di
 		push	ax
 		call	vector2_at
@@ -20157,7 +20157,7 @@ loc_142CA:
 
 loc_142D4:
 		mov	word ptr dword_23F52, 20h ; ' '
-		pushd	[dword_2CEA4]
+		pushd	[player_pos.prev]
 		call	sub_E24C
 		mov	word ptr dword_23F52, 40h
 		mov	word ptr dword_23F52+2,	10h
@@ -20199,7 +20199,7 @@ loc_14328:
 		neg	dx
 
 loc_1432A:
-		mov	word_2CEAA, dx
+		mov	player_pos.velocity.y, dx
 		jmp	short loc_14351
 ; ---------------------------------------------------------------------------
 
@@ -20207,7 +20207,7 @@ loc_14330:
 		neg	dx
 
 loc_14332:
-		mov	word_2CEA8, dx
+		mov	player_pos.velocity.x, dx
 		jmp	short loc_14351
 ; ---------------------------------------------------------------------------
 
@@ -20223,8 +20223,8 @@ loc_1433E:
 		neg	ax
 
 loc_14340:
-		mov	word_2CEA8, ax
-		mov	word_2CEAA, cx
+		mov	player_pos.velocity.x, ax
+		mov	player_pos.velocity.y, cx
 		jmp	short loc_14351
 ; ---------------------------------------------------------------------------
 
@@ -22494,8 +22494,8 @@ sub_15888	endp
 sub_158CC	proc far
 		push	bp
 		mov	bp, sp
-		push	word ptr dword_2CEA0
-		push	word ptr dword_2CEA0+2
+		push	player_pos.cur.x
+		push	player_pos.cur.y
 		push	0C00018h
 		call	sub_1597C
 		pop	bp
@@ -22688,10 +22688,10 @@ arg_4		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, [bp+arg_2]
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, [bp+arg_4]
 		push	ax
 		call	iatan2
@@ -23037,13 +23037,13 @@ loc_15C47:
 		jle	short loc_15C44
 		cmp	dx, 1780h
 		jge	short loc_15C44
-		sub	ax, word ptr dword_2CEA0
-		add	ax, 40h
-		cmp	ax, 80h
+		sub	ax, player_pos.cur.x
+		add	ax, 4 * 16
+		cmp	ax, 8 * 16
 		ja	short loc_15C81
-		sub	dx, word ptr dword_2CEA0+2
-		add	dx, 40h
-		cmp	dx, 80h
+		sub	dx, player_pos.cur.y
+		add	dx, 4 * 16
+		cmp	dx, 8 * 16
 		ja	short loc_15C81
 		mov	byte_2CEC1, 1
 
@@ -23676,14 +23676,14 @@ loc_160B9:
 		cmp	byte ptr [si+24h], 0
 		jz	short loc_160F2
 		mov	ax, [si+2]
-		sub	ax, word ptr dword_2CEA0
-		add	ax, 0C0h
-		cmp	ax, 180h
+		sub	ax, player_pos.cur.x
+		add	ax, 12 * 16
+		cmp	ax, 24 * 16
 		jnb	short loc_160F2
 		mov	ax, [si+4]
-		sub	ax, word ptr dword_2CEA0+2
-		add	ax, 0C0h
-		cmp	ax, 180h
+		sub	ax, player_pos.cur.y
+		add	ax, 12 * 16
+		cmp	ax, 24 * 16
 		jnb	short loc_160F2
 		mov	byte_2CEC1, 1
 		jmp	short loc_16161
@@ -23774,14 +23774,14 @@ loc_161C6:
 		cmp	word ptr [si+4], 1300h
 		jge	short loc_1621C
 		mov	ax, [si+2]
-		sub	ax, word ptr dword_2CEA0
-		add	ax, 300h
-		cmp	ax, 600h
+		sub	ax, player_pos.cur.x
+		add	ax, 48 * 16
+		cmp	ax, 96 * 16
 		jnb	short loc_161FC
 		mov	ax, [si+4]
-		sub	ax, word ptr dword_2CEA0+2
-		add	ax, 300h
-		cmp	ax, 600h
+		sub	ax, player_pos.cur.y
+		add	ax, 48 * 16
+		cmp	ax, 96 * 16
 		jb	short loc_1621C
 
 loc_161FC:
@@ -25324,14 +25324,14 @@ loc_16E37:
 		mov	[bp+var_A], ax
 		cmp	ax, [bp+var_6]
 		jz	short loc_16E37
-		cmp	word ptr dword_2CEA0, 800h
+		cmp	player_pos.cur.x, 128 * 16
 		jge	short loc_16E53
 		mov	[bp+var_4], 0
 		jmp	short loc_16E67
 ; ---------------------------------------------------------------------------
 
 loc_16E53:
-		cmp	word ptr dword_2CEA0, 1000h
+		cmp	player_pos.cur.x, 256 * 16
 		jg	short loc_16E62
 		mov	[bp+var_4], 1
 		jmp	short loc_16E67
@@ -25352,9 +25352,9 @@ loc_16E74:
 		jnz	short loc_16EF3
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+0Fh], 0
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		mov	[si+2],	ax
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		mov	[si+4],	ax
 		mov	bx, [bp+var_4]
 		imul	bx, 14h
@@ -25799,10 +25799,10 @@ loc_1722E:
 		jz	short loc_17264
 		mov	byte_21762, 1
 		mov	word ptr [si+12h], 1
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, [si+4]
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -25853,15 +25853,15 @@ loc_172A3:
 loc_172AE:
 		cmp	byte_2CEC2, 0
 		jnz	short loc_172E5
-		mov	bx, word ptr dword_2CEA0
-		add	bx, 180h
+		mov	bx, player_pos.cur.x
+		add	bx, 24 * 16
 		sub	bx, ax
-		cmp	bx, 300h
+		cmp	bx, 48 * 16
 		ja	short loc_172E5
-		mov	bx, word ptr dword_2CEA0+2
-		add	bx, 180h
+		mov	bx, player_pos.cur.y
+		add	bx, 24 * 16
 		sub	bx, dx
-		cmp	bx, 260h
+		cmp	bx, 38 * 16
 		ja	short loc_172E5
 		push	si
 		call	sub_16F54
@@ -26514,16 +26514,16 @@ loc_1774D:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		mov	ax, [bx+di+2]
-		sub	ax, word ptr dword_2CEA0
-		add	ax, 60h
-		cmp	ax, 0C0h
+		sub	ax, player_pos.cur.x
+		add	ax, 6 * 16
+		cmp	ax, 12 * 16
 		ja	short loc_17790
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		mov	ax, [bx+di+4]
-		sub	ax, word ptr dword_2CEA0+2
-		add	ax, 60h
-		cmp	ax, 0C0h
+		sub	ax, player_pos.cur.y
+		add	ax, 6 * 16
+		cmp	ax, 12 * 16
 		ja	short loc_17790
 		mov	byte_2CEC1, 1
 
@@ -26559,13 +26559,13 @@ loc_177D5:
 		lea	ax, [si+2]
 		push	ax
 		call	_motion_update_2
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
-		add	ax, 80h
-		cmp	ax, 100h
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
+		add	ax, 8 * 16
+		cmp	ax, 16 * 16
 		ja	short loc_177FB
-		add	dx, 80h
-		cmp	dx, 100h
+		add	dx, 8 * 16
+		cmp	dx, 16 * 16
 		ja	short loc_177FB
 		mov	byte_2CEC1, 1
 
@@ -26950,10 +26950,10 @@ loc_17A4E:
 
 loc_17A56:
 		inc	byte ptr [si+16h]
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, [si+4]
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -27394,8 +27394,8 @@ loc_17DBF:
 loc_17DC5:
 		cmp	byte_2C979, 0
 		jnz	loc_17E74
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
 		cmp	chara_invulnerable_time_left, 0
 		jnz	short loc_17E41
 		cmp	byte ptr [si+12h], 0
@@ -29714,7 +29714,7 @@ sub_19280	proc near
 		jb	short loc_192F1
 		mov	midboss_cur_image, 0DBh
 		add	word ptr dword_26320+2,	0C0h
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		mov	word ptr dword_26320, ax
 		cmp	word ptr dword_26320, 400h
 		jge	short loc_192BD
@@ -30327,14 +30327,14 @@ loc_197D9:
 
 loc_197DC:
 		mov	ax, [si+2]
-		sub	ax, word ptr dword_2CEA0
-		add	ax, 0C0h
-		cmp	ax, 180h
+		sub	ax, player_pos.cur.x
+		add	ax, 12 * 16
+		cmp	ax, 24 * 16
 		jnb	short loc_197FF
 		mov	ax, [si+4]
-		sub	ax, word ptr dword_2CEA0+2
-		add	ax, 0C0h
-		cmp	ax, 180h
+		sub	ax, player_pos.cur.y
+		add	ax, 12 * 16
+		cmp	ax, 24 * 16
 		jnb	short loc_197FF
 		mov	byte_2CEC1, 1
 
@@ -31012,12 +31012,12 @@ loc_19D56:
 		call	snd_se_play pascal, 9
 
 loc_19D9D:
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, word_2BC71+1
 		cmp	ax, 800h
 		jnb	short loc_19DBD
 		mov	ax, word_2BC74
-		sub	ax, word ptr dword_2CEA0+2
+		sub	ax, player_pos.cur.y
 		add	ax, 40h
 		cmp	ax, 80h
 		jnb	short loc_19DBD
@@ -31087,10 +31087,10 @@ loc_19E43:
 		mov	dword_2630A, eax
 		mov	word_26318, 28h	; '('
 		mov	word_26314, 50h	; 'P'
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, word ptr dword_2630A+2
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, word ptr dword_2630A
 		push	ax
 		call	iatan2
@@ -32094,10 +32094,10 @@ var_1		= byte ptr -1
 		jnz	short loc_1A7AF
 		mov	eax, dword ptr word_26335+1
 		mov	dword_2630A, eax
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, word ptr dword_2630A+2
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, word ptr dword_2630A
 		push	ax
 		call	iatan2
@@ -32134,10 +32134,10 @@ loc_1A7D7:
 		jnz	short loc_1A81A
 
 loc_1A7E4:
-		mov	ax, word ptr dword_2CEA0+2
+		mov	ax, player_pos.cur.y
 		sub	ax, word ptr dword_2630A+2
 		push	ax
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		sub	ax, word ptr dword_2630A
 		push	ax
 		call	iatan2
@@ -33603,13 +33603,13 @@ loc_1B488:
 loc_1B48B:
 		cmp	byte ptr [si], 2
 		jz	loc_1B535
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
-		add	ax, 80h
-		cmp	ax, 100h
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
+		add	ax, 8 * 16
+		cmp	ax, 16 * 16
 		ja	short loc_1B4B1
-		add	dx, 80h
-		cmp	dx, 100h
+		add	dx, 8 * 16
+		cmp	dx, 16 * 16
 		ja	short loc_1B4B1
 		mov	byte_2CEC1, 1
 
@@ -35895,13 +35895,13 @@ loc_1C93D:
 loc_1C93F:
 		cmp	byte ptr [si], 2
 		jz	short loc_1C969
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
-		add	ax, 70h	; 'p'
-		cmp	ax, 0E0h
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
+		add	ax, 7 * 16
+		cmp	ax, 14 * 16
 		ja	short loc_1C967
-		add	dx, 70h	; 'p'
-		cmp	dx, 0E0h
+		add	dx, 7 * 16
+		cmp	dx, 14 * 16
 		ja	short loc_1C967
 		mov	byte_2CEC1, 1
 		mov	byte ptr [si], 2
@@ -37205,13 +37205,13 @@ loc_1D5E5:
 loc_1D5E7:
 		cmp	byte ptr [si], 3
 		jz	short loc_1D612
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
-		add	ax, 80h
-		cmp	ax, 100h
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
+		add	ax, 8 * 16
+		cmp	ax, 16 * 16
 		ja	short loc_1D610
-		add	dx, 80h
-		cmp	dx, 100h
+		add	dx, 8 * 16
+		cmp	dx, 16 * 16
 		ja	short loc_1D610
 		mov	byte_2CEC1, 1
 		mov	byte ptr [si], 3
@@ -40230,7 +40230,7 @@ loc_1F122:
 		dec	byte_2D084
 		cmp	byte_2D084, 0
 		jnz	short loc_1F137
-		mov	ax, word ptr dword_2CEA0
+		mov	ax, player_pos.cur.x
 		mov	word_22872, ax
 		mov	al, 1
 		pop	bp
@@ -41709,13 +41709,13 @@ sub_1FD62	proc near
 		mov	bp, sp
 		mov	ax, word_26335+1
 		mov	dx, word_26338
-		sub	ax, word ptr dword_2CEA0
-		sub	dx, word ptr dword_2CEA0+2
-		add	dx, 100h
-		cmp	dx, 200h
+		sub	ax, player_pos.cur.x
+		sub	dx, player_pos.cur.y
+		add	dx, 16 * 16
+		cmp	dx, 32 * 16
 		ja	short loc_1FD8B
-		add	ax, 100h
-		cmp	ax, 200h
+		add	ax, 16 * 16
+		cmp	ax, 32 * 16
 		ja	short loc_1FD8B
 		mov	byte_2CEC1, 1
 
@@ -54391,10 +54391,7 @@ dword_2CE92	dd ?
 dword_2CE96	dd ?
 dword_2CE9A	dd ?
 word_2CE9E	dw ?
-dword_2CEA0	dd ?
-dword_2CEA4	dd ?
-word_2CEA8	dw ?
-word_2CEAA	dw ?
+player_pos	motion_t <?>
 word_2CEAC	dw ?
 		dw ?
 word_2CEB0	dw ?
