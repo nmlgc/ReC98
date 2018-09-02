@@ -25283,7 +25283,7 @@ loc_16DA0:
 		cwd
 		idiv	bx
 		mov	bx, dx
-		mov	al, [bx+1BACh]
+		mov	al, ENEMY_DROPS[bx]
 		mov	[bp+arg_0], al
 
 loc_16DCA:
@@ -44416,16 +44416,7 @@ word_22586	dw 180h
 word_22588	dw 800h
 		db    0
 		db    0
-;unsigned char
-;byte_enemyDropTable;form uth0twin/Game/Stage/Enemy/Enemy.cpp
-		db    0,1,0,0,1,1,0,1
-		db    0,1,1,1,0,0,0,1
-		db    0,1,1,0,0,1,0,1
-		db    0,1,1,1,1,0,1,1
-		db    0,0,1,1,0,1,0,1
-		db    1,1,0,0,1,1,0,1
-		db    1,0,0,1,0,1,1,0
-		db    0,1,1,1,0,1,0,3
+include th05/enemy_drops[data].asm
 byte_225CC	db 0
 		db 0
 		db  24h	; $

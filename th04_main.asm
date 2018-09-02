@@ -38008,7 +38008,7 @@ arg_4		= word ptr  8
 		cwd
 		idiv	bx
 		mov	bx, dx
-		mov	al, [bx+22E0h]
+		mov	al, ENEMY_DROPS[bx]
 		mov	[bp+arg_0], al
 
 loc_1DA6F:
@@ -46114,70 +46114,7 @@ aPLAYER_REM_30000	db 'écÇËêlêîÅ@Å~ÇRÇOÇOÇOÇO',0
 aBONUS_POINT_2	db 'ÇoÇnÇhÇmÇsÅ@ÇaÇèÇéÇïÇìÅ@Å@Å@Å@Å@Å@Å~',0
 aBONUS_TOTAL_2	db 'Å@Å@Å@ÇsÇnÇsÇ`Çk',0
 		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    1
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    2
-		db    1
-		db    0
-		db    1
-		db    1
-		db    0
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    2
-		db    0
-		db    1
-		db    0
-		db    0
-		db    1
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    2
-		db    1
-		db    0
-		db    1
-		db    1
-		db    0
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    3
+include th04/enemy_drops[data].asm
 byte_23660	db 0
 byte_23661	db 0
 		db  2Ch	; ,
