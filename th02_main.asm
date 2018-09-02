@@ -3655,7 +3655,7 @@ loc_C516:
 		idiv	bx
 		add	dx, 2
 		mov	word_1E51E, dx
-		mov	word_1E51C, 0Ah
+		mov	power_overflow_level, 10
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	sub_FBE9
@@ -6477,20 +6477,20 @@ loc_D949:
 		jnb	short loc_D964
 		inc	power
 		call	sub_DEAD
-		mov	word_1E51C, 0
+		mov	power_overflow_level, 0
 		inc	dword_218A4
 		jmp	short loc_D984
 ; ---------------------------------------------------------------------------
 
 loc_D964:
-		cmp	word_1E51C, 2Ah	; '*'
+		cmp	power_overflow_level, 42
 		jge	short loc_D96F
-		inc	word_1E51C
+		inc	power_overflow_level
 
 loc_D96F:
-		mov	bx, word_1E51C
+		mov	bx, power_overflow_level
 		add	bx, bx
-		movsx	eax, word ptr [bx+0AC0h]
+		movsx	eax, POWER_OVERFLOW_BONUS[bx]
 		add	dword_218A4, eax
 		inc	byte_218A8
 
@@ -6498,9 +6498,9 @@ loc_D984:
 		inc	byte_218A8
 		push	si
 		push	word_2189C
-		mov	bx, word_1E51C
+		mov	bx, power_overflow_level
 		add	bx, bx
-		push	word ptr [bx+0AC0h]
+		push	POWER_OVERFLOW_BONUS[bx]
 		call	sub_C7CA
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
@@ -6586,33 +6586,33 @@ loc_DA3F:
 		add	al, 10
 		mov	power, al
 		inc	dword_218A4
-		mov	word_1E51C, 0
+		mov	power_overflow_level, 0
 		jmp	short loc_DA85
 ; ---------------------------------------------------------------------------
 
 loc_DA5B:
-		cmp	word_1E51C, 26h	; '&'
+		cmp	power_overflow_level, 38
 		jge	short loc_DA69
-		add	word_1E51C, 5
+		add	power_overflow_level, 5
 		jmp	short loc_DA6F
 ; ---------------------------------------------------------------------------
 
 loc_DA69:
-		mov	word_1E51C, 2Ah	; '*'
+		mov	power_overflow_level, 42
 
 loc_DA6F:
 		mov	power, 80
-		mov	bx, word_1E51C
+		mov	bx, power_overflow_level
 		add	bx, bx
-		movsx	eax, word ptr [bx+0AC0h]
+		movsx	eax, POWER_OVERFLOW_BONUS[bx]
 		add	dword_218A4, eax
 
 loc_DA85:
 		push	si
 		push	word_2189C
-		mov	bx, word_1E51C
+		mov	bx, power_overflow_level
 		add	bx, bx
-		push	word ptr [bx+0AC0h]
+		push	POWER_OVERFLOW_BONUS[bx]
 		call	sub_C7CA
 		call	sub_DEAD
 		jmp	short loc_DAB6
@@ -34722,7 +34722,7 @@ byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
 byte_1E51B	db 48h
-word_1E51C	dw 0
+power_overflow_level	dw 0
 word_1E51E	dw 0
 		db    0
 		db    1
@@ -34740,92 +34740,7 @@ word_1E51E	dw 0
 		db  47h	; G
 		db  57h	; W
 		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    2
-		db    0
-		db    3
-		db    0
-		db    4
-		db    0
-		db    5
-		db    0
-		db    6
-		db    0
-		db    7
-		db    0
-		db    8
-		db    0
-		db    9
-		db    0
-		db  0Ah
-		db    0
-		db  14h
-		db    0
-		db  1Eh
-		db    0
-		db  28h	; (
-		db    0
-		db  32h	; 2
-		db    0
-		db  3Ch	; <
-		db    0
-		db  46h	; F
-		db    0
-		db  50h	; P
-		db    0
-		db  5Ah	; Z
-		db    0
-		db  64h	; d
-		db    0
-		db  96h
-		db    0
-		db 0C8h
-		db    0
-		db 0FAh
-		db    0
-		db  2Ch	; ,
-		db    1
-		db  5Eh	; ^
-		db    1
-		db  90h
-		db    1
-		db 0C2h
-		db    1
-		db 0F4h
-		db    1
-		db  26h	; &
-		db    2
-		db  58h	; X
-		db    2
-		db  8Ah
-		db    2
-		db 0BCh
-		db    2
-		db 0EEh
-		db    2
-		db  20h
-		db    3
-		db  52h	; R
-		db    3
-		db  84h
-		db    3
-		db 0B6h
-		db    3
-		db 0E8h
-		db    3
-		db  1Ah
-		db    4
-		db  4Ch	; L
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0E2h
-		db    4
-		db    0
-		db    5
+include th02/power_overflow[data].asm
 word_1E586	dw 0
 word_1E588	dw 0BCB0h
 word_1E58A	dw 0D4C8h

@@ -12916,7 +12916,7 @@ var_1		= byte ptr -1
 		jnz	loc_10A25
 		mov	word_25996, 0
 		mov	word_25998, 0
-		mov	word_236D6, 0
+		mov	power_overflow_level, 0
 		mov	word_259BA, 0
 		call	sub_1DACE
 		mov	al, power
@@ -38217,16 +38217,16 @@ loc_1DBF5:
 ; ---------------------------------------------------------------------------
 
 loc_1DC04:
-		inc	word_236D6
-		cmp	word_236D6, 2Ah	; '*'
+		inc	power_overflow_level
+		cmp	power_overflow_level, 42
 		jb	short loc_1DC19
-		mov	word_236D6, 2Ah	; '*'
+		mov	power_overflow_level, 42
 		mov	[bp+var_1], 1
 
 loc_1DC19:
-		mov	bx, word_236D6
+		mov	bx, power_overflow_level
 		add	bx, bx
-		mov	si, [bx+2330h]
+		mov	si, POWER_OVERFLOW_BONUS[bx]
 		cmp	byte_21CC8, 0
 		jz	loc_1DD93
 		inc	byte_23660
@@ -38320,16 +38320,16 @@ loc_1DCFE:
 ; ---------------------------------------------------------------------------
 
 loc_1DD09:
-		add	word_236D6, 5
-		mov	bx, word_236D6
+		add	power_overflow_level, 5
+		mov	bx, power_overflow_level
 		add	bx, bx
-		mov	si, [bx+2330h]
-		cmp	word_236D6, 2Ah	; '*'
+		mov	si, POWER_OVERFLOW_BONUS[bx]
+		cmp	power_overflow_level, 42
 		jbe	short loc_1DD25
-		mov	word_236D6, 2Ah	; '*'
+		mov	power_overflow_level, 42
 
 loc_1DD25:
-		cmp	word_236D6, 2Ah	; '*'
+		cmp	power_overflow_level, 42
 		jnz	short loc_1DD93
 		mov	si, 0A00h
 		mov	[bp+var_1], 1
@@ -46131,92 +46131,7 @@ byte_23661	db 0
 		db    0
 		db  32h	; 2
 		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    2
-		db    0
-		db    3
-		db    0
-		db    4
-		db    0
-		db    5
-		db    0
-		db    6
-		db    0
-		db    7
-		db    0
-		db    8
-		db    0
-		db    9
-		db    0
-		db  0Ah
-		db    0
-		db  14h
-		db    0			; jumptable 0001C46F cases 32823,35584
-		db  1Eh
-		db    0
-		db  28h	; (
-		db    0
-		db  32h	; 2
-		db    0
-		db  3Ch	; <
-		db    0
-		db  46h	; F
-		db    0
-		db  50h	; P
-		db    0
-		db  5Ah	; Z
-		db    0
-		db  64h	; d
-		db    0
-		db  96h
-		db    0
-		db 0C8h
-		db    0
-		db 0FAh
-		db    0
-		db  2Ch	; ,
-		db    1
-		db  5Eh	; ^
-		db    1
-		db  90h
-		db    1
-		db 0C2h
-		db    1
-		db 0F4h
-		db    1
-		db  26h	; &
-		db    2
-		db  58h	; X
-		db    2
-		db  8Ah
-		db    2
-		db 0BCh
-		db    2
-		db 0EEh
-		db    2
-		db  20h
-		db    3
-		db  52h	; R
-		db    3
-		db  84h
-		db    3
-		db 0B6h
-		db    3
-		db 0E8h
-		db    3
-		db  1Ah
-		db    4
-		db  4Ch	; L
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0E2h
-		db    4
-		db    0
-		db    5
+include th02/power_overflow[data].asm
 		db    0
 		db    0
 		db  64h	; d
@@ -46233,7 +46148,7 @@ byte_23661	db 0
 		db    3
 		db    0
 		db    5
-word_236D6	dw 0
+power_overflow_level	dw 0
 word_236D8	dw 0
 word_236DA	dw 0
 word_236DC	dw 0

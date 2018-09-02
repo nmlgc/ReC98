@@ -15382,7 +15382,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12092
 		mov	word_2CEA8, 0
 		mov	word_2CEAA, 0
-		mov	word_22642, 0
+		mov	power_overflow_level, 0
 		mov	word_2CEC4, 0
 		call	sub_16E29
 		mov	al, power
@@ -25527,10 +25527,10 @@ loc_16F9B:
 ; ---------------------------------------------------------------------------
 
 loc_16FAA:
-		inc	word_22642
-		cmp	word_22642, 2Ah	; '*'
+		inc	power_overflow_level
+		cmp	power_overflow_level, 42
 		jb	short loc_16FD1
-		mov	word_22642, 2Ah	; '*'
+		mov	power_overflow_level, 42
 		mov	[bp+var_3], 1
 		cmp	byte_2264E, 0
 		jnz	short loc_16FD1
@@ -25539,9 +25539,9 @@ loc_16FAA:
 		inc	byte_2CEC3
 
 loc_16FD1:
-		mov	bx, word_22642
+		mov	bx, power_overflow_level
 		add	bx, bx
-		mov	si, [bx+1BFCh]
+		mov	si, POWER_OVERFLOW_BONUS[bx]
 		call	sub_1059D
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
@@ -25660,16 +25660,16 @@ loc_170E7:
 ; ---------------------------------------------------------------------------
 
 loc_170F2:
-		add	word_22642, 5
-		mov	bx, word_22642
+		add	power_overflow_level, 5
+		mov	bx, power_overflow_level
 		add	bx, bx
-		mov	si, [bx+1BFCh]
-		cmp	word_22642, 2Ah	; '*'
+		mov	si, POWER_OVERFLOW_BONUS[bx]
+		cmp	power_overflow_level, 42
 		jbe	short loc_1710E
-		mov	word_22642, 2Ah	; '*'
+		mov	power_overflow_level, 42
 
 loc_1710E:
-		cmp	word_22642, 2Ah	; '*'
+		cmp	power_overflow_level, 42
 		jnz	short loc_17174
 		mov	si, 0A00h
 		mov	[bp+var_3], 1
@@ -44434,15 +44434,7 @@ byte_225CC	db 0
 		db  2Ah	; *
 		db    0
 
-
-;int powerOverflowBonus[]
-		dw  1,1,2,3,4,5,6,7,8,9
-		dw  10,20,30,40,50,60,70,80,90,100
-		dw	150,200,250,300,350,400,450,500,550,600
-		dw	650,700,750,800,850,900,950,1000,1050,1100
-		dw	1200,1250,1280
-
-
+include th02/power_overflow[data].asm
 		db    0
 		db    0
 		db  64h	; d
@@ -44459,7 +44451,7 @@ byte_225CC	db 0
 		db    3
 		db    0
 		db    5
-word_22642	dw 0
+power_overflow_level	dw 0
 word_22644	dw 0
 word_22646	dw 0
 word_22648	dw 0
