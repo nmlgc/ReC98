@@ -2425,25 +2425,7 @@ locret_BFD7:
 		retn	2
 sub_BFB2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BFDA	proc near
-		mov	bx, sp
-		mov	bx, ss:[bx+2]
-		mov	ax, [bx]
-		mov	[bx+4],	ax
-		add	ax, [bx+8]
-		mov	[bx], ax
-		add	bx, 2
-		mov	dx, [bx]
-		mov	[bx+4],	dx
-		add	dx, [bx+8]
-		mov	[bx], dx
-		retn	2
-sub_BFDA	endp
-
+MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
 		nop
@@ -2731,7 +2713,7 @@ loc_C1BE:
 loc_C1CD:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_BFDA
+		call	_motion_update_1
 		add	ax, 40h
 		cmp	ax, 1880h
 		jnb	short loc_C1E5
@@ -14080,7 +14062,7 @@ loc_11568:
 		jz	short loc_115CE
 		lea	ax, [si+2]
 		push	ax
-		call	sub_BFDA
+		call	_motion_update_1
 		cmp	ax, 0FF80h
 		jle	short loc_11589
 		cmp	ax, 1880h
@@ -15334,7 +15316,7 @@ sub_11FDF	proc near
 		push	bp
 		mov	bp, sp
 		push	0C4C0h
-		call	sub_BFDA
+		call	_motion_update_1
 		cmp	ax, 80h
 		jge	short loc_11FF2
 		mov	ax, 80h
@@ -15577,7 +15559,7 @@ loc_12213:
 
 loc_12224:
 		push	0C4C0h
-		call	sub_BFDA
+		call	_motion_update_1
 		dec	byte_2CEBD
 
 loc_1222E:
@@ -15952,7 +15934,7 @@ loc_124F6:
 loc_124FA:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_BFDA
+		call	_motion_update_1
 		cmp	ax, 0FF80h
 		jle	short loc_12516
 		cmp	ax, 1880h
@@ -15998,7 +15980,7 @@ loc_12551:
 		jz	short loc_1258B
 		lea	ax, [di+2]
 		push	ax
-		call	sub_BFDA
+		call	_motion_update_1
 		cmp	ax, 0FF80h
 		jle	short loc_12572
 		cmp	ax, 1880h
@@ -21626,24 +21608,7 @@ locret_152CE:
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_152D2	proc near
-		mov	bx, sp
-		mov	bx, ss:[bx+2]
-		mov	ax, [bx]
-		mov	[bx+4],	ax
-		add	ax, [bx+8]
-		mov	[bx], ax
-		add	bx, 2
-		mov	dx, [bx]
-		mov	[bx+4],	dx
-		add	dx, [bx+8]
-		mov	[bx], dx
-		retn	2
-sub_152D2	endp
-
+MOTION_UPDATE_DEF 2
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21651,7 +21616,7 @@ sub_152D2	endp
 sub_152F2	proc near
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		test	byte ptr [si+1Fh], 1
 		jz	short loc_15307
 		add	ax, 100h
@@ -23839,7 +23804,7 @@ loc_1621C:
 loc_16221:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		mov	al, [si]
 		inc	al
 		mov	[si], al
@@ -24822,7 +24787,7 @@ loc_16ABC:
 loc_16ACB:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		mov	ax, [si+0Eh]
 		mov	[si+14h], ax
 		mov	ax, [si+16h]
@@ -25860,7 +25825,7 @@ loc_17264:
 loc_17279:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	ax, 0FF80h
 		jle	short loc_17290
 		cmp	ax, 1880h
@@ -26593,7 +26558,7 @@ loc_177CC:
 loc_177D5:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		sub	ax, word ptr dword_2CEA0
 		sub	dx, word ptr dword_2CEA0+2
 		add	ax, 80h
@@ -27276,7 +27241,7 @@ loc_17C7B:
 		jb	short loc_17C91
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		mov	byte ptr [si], 2
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
@@ -27321,7 +27286,7 @@ loc_17CE1:
 		jnz	short loc_17CF0
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		jmp	short loc_17D0D
 ; ---------------------------------------------------------------------------
 
@@ -27411,7 +27376,7 @@ loc_17D93:
 loc_17DA3:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	ax, 0FF80h
 		jle	short loc_17DBF
 		cmp	ax, 1880h
@@ -27551,7 +27516,7 @@ loc_17F0B:
 		mov	word ptr [si+0Ch], 0
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	[bp+var_9], 4Ch	; 'L'
 		jnb	short loc_17F31
 		mov	al, [bp+var_9]
@@ -28790,7 +28755,7 @@ sub_18A2F	proc far
 
 loc_18A56:
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		push	1800180h
 		push	0Ah
 		call	sub_1FA9D
@@ -28852,7 +28817,7 @@ loc_18ADC:
 loc_18B24:
 		call	sub_189FC
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		push	1800180h
 		push	4
 		call	sub_1FA9D
@@ -30033,7 +29998,7 @@ sub_194E8	proc far
 
 loc_1950C:
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		push	1800180h
 		push	0Ah
 		call	sub_1FA9D
@@ -33391,7 +33356,7 @@ loc_1B293:
 
 loc_1B29F:
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		push	1800180h
 		push	0Ah
 		call	sub_1FA9D
@@ -33621,7 +33586,7 @@ loc_1B461:
 		inc	word ptr [si+0Eh]
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	ax, 0FF00h
 		jle	short loc_1B488
 		cmp	ax, 1900h
@@ -35913,7 +35878,7 @@ loc_1C90C:
 loc_1C920:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	ax, 0FF00h
 		jle	short loc_1C93D
 		cmp	ax, 1900h
@@ -37223,7 +37188,7 @@ loc_1D5C5:
 		inc	word ptr [si+0Eh]
 		lea	ax, [si+2]
 		push	ax
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	ax, 0FF00h
 		jle	short loc_1D5E5
 		cmp	ax, 1900h
@@ -38878,7 +38843,7 @@ loc_1E580:
 		push	ax
 		call	vector2_near
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	si, 10h
 		jge	short loc_1E5A7
 		mov	ax, 1
@@ -40873,7 +40838,7 @@ loc_1F6D3:
 
 loc_1F6DC:
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		cmp	word_26332, 20h	; ' '
 		jl	short loc_1F6ED
 		mov	al, 1
@@ -41098,7 +41063,7 @@ sub_1F87B	proc far
 
 loc_1F89F:
 		push	5940h
-		call	sub_152D2
+		call	_motion_update_2
 		push	1800180h
 		push	0Ah
 		call	sub_1FA9D

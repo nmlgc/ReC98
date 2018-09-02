@@ -2182,25 +2182,7 @@ locret_BC35:
 		retn	2
 sub_BC10	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BC38	proc near
-		mov	bx, sp
-		mov	bx, ss:[bx+2]
-		mov	ax, [bx]
-		mov	[bx+4],	ax
-		add	ax, [bx+8]
-		mov	[bx], ax
-		add	bx, 2
-		mov	dx, [bx]
-		mov	[bx+4],	dx
-		add	dx, [bx+8]
-		mov	[bx], dx
-		retn	2
-sub_BC38	endp
-
+MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
 	nop
@@ -3198,7 +3180,7 @@ loc_C26E:
 loc_C27D:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_BC38
+		call	_motion_update_1
 		add	ax, 40h
 		cmp	ax, 1880h
 		jnb	short loc_C295
@@ -12292,7 +12274,7 @@ loc_104D7:
 		jz	short loc_10527
 		lea	ax, [si+2]
 		push	ax
-		call	sub_BC38
+		call	_motion_update_1
 		cmp	ax, 0FF80h
 		jle	short loc_104F8
 		cmp	ax, 1880h
@@ -12868,7 +12850,7 @@ sub_10950	proc near
 		push	bp
 		mov	bp, sp
 		push	464Eh
-		call	sub_BC38
+		call	_motion_update_1
 		cmp	ax, 80h
 		jge	short loc_10963
 		mov	ax, 80h
@@ -13122,7 +13104,7 @@ loc_10BB0:
 
 loc_10BBD:
 		push	464Eh
-		call	sub_BC38
+		call	_motion_update_1
 		dec	byte_259A3
 
 loc_10BC7:
@@ -19055,7 +19037,7 @@ loc_13BDA:
 loc_13BE9:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		mov	ax, [si+0Eh]
 		mov	[si+26h], ax
 		mov	ax, [si+28h]
@@ -19258,24 +19240,7 @@ sub_13D10	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13D32	proc near
-		mov	bx, sp
-		mov	bx, ss:[bx+2]
-		mov	ax, [bx]
-		mov	[bx+4],	ax
-		add	ax, [bx+8]
-		mov	[bx], ax
-		add	bx, 2
-		mov	dx, [bx]
-		mov	[bx+4],	dx
-		add	dx, [bx+8]
-		mov	[bx], dx
-		retn	2
-sub_13D32	endp
-
+MOTION_UPDATE_DEF 2
 RANDRING_NEXT_DEF 2
 		db    0
 
@@ -19654,7 +19619,7 @@ sub_14017	proc far
 		jnz	loc_1411F
 		mov	word_266FE, 0FFF0h
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		mov	ax, word ptr dword_266F4
 		add	ax, 0FF00h
 		push	ax
@@ -19732,7 +19697,7 @@ loc_1411F:
 		cmp	byte_26705, 1
 		jnz	loc_141BF
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		mov	ax, word ptr dword_266F4
 		mov	word_25982, ax
 		mov	ax, word ptr dword_266F4+2
@@ -19785,7 +19750,7 @@ loc_141BF:
 		cmp	byte_26705, 2
 		jnz	short loc_1422D
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		mov	ax, word ptr dword_266F4
 		mov	word_25982, ax
 		mov	ax, word ptr dword_266F4+2
@@ -19829,7 +19794,7 @@ loc_1422D:
 		cmp	byte_26705, 3
 		jnz	loc_142E1
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	byte_255B7, 2
 		ja	short loc_142AC
 		mov	ax, word ptr dword_266F4
@@ -20082,7 +20047,7 @@ var_1		= byte ptr -1
 		cmp	byte_26705, 0
 		jnz	short loc_144F1
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
 		push	0Ah
@@ -20108,7 +20073,7 @@ loc_144F1:
 		cmp	byte_26705, 1
 		jnz	loc_1468A
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
 		mov	ax, word ptr dword_266F4
@@ -21056,7 +21021,7 @@ var_2		= word ptr -2
 		cmp	byte_26705, 0
 		jnz	short loc_14D5D
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
 		push	0Ah
@@ -21078,7 +21043,7 @@ loc_14D5D:
 		cmp	byte_26705, 1
 		jnz	loc_14F16
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
 		mov	ax, word ptr dword_266F4
@@ -21253,7 +21218,7 @@ loc_14F16:
 		cmp	byte_26705, 2
 		jnz	short loc_14F52
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		cmp	word ptr dword_266F4+2,	0
 		jg	short loc_14F38
@@ -21679,7 +21644,7 @@ var_2		= word ptr -2
 		cmp	byte_26705, 0
 		jnz	short loc_15314
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
 		push	0Ah
@@ -21701,7 +21666,7 @@ loc_15314:
 		cmp	byte_26705, 1
 		jnz	loc_15490
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
 		mov	ax, word ptr dword_266F4
@@ -21866,7 +21831,7 @@ loc_15490:
 		mov	word_266FC, 0
 		mov	word_266FE, 0
 		push	53B4h
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_26706
 		mov	ax, word_26706
 		mov	bx, 10h
@@ -21936,7 +21901,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		add	ax, 2
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		mov	si, [bp+var_2]
 		cmp	byte ptr [si+20h], 0
 		jz	short loc_15572
@@ -23259,7 +23224,7 @@ loc_15F46:
 		cmp	byte_25667, 2
 		jnz	short loc_15F67
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	word_2671A, 40h
 		jl	short loc_15F8F
 		mov	word_2671A, 0
@@ -24564,7 +24529,7 @@ loc_16B7A:
 
 loc_16B7D:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		leave
 		retn
 sub_16AE9	endp
@@ -24638,7 +24603,7 @@ loc_16BEB:
 
 loc_16BF8:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		mov	al, 0
 
 loc_16C00:
@@ -26939,7 +26904,7 @@ loc_17FEF:
 loc_17FF4:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		mov	al, [si]
 		inc	al
 		mov	[si], al
@@ -29451,7 +29416,7 @@ loc_194A8:
 
 loc_194B6:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		jmp	short loc_194C1
 ; ---------------------------------------------------------------------------
 
@@ -29514,7 +29479,7 @@ loc_1953A:
 
 loc_19548:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1955E
@@ -29629,7 +29594,7 @@ loc_19647:
 		cmp	word_2671A, 46h	; 'F'
 		jge	short loc_19656
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
 
@@ -29921,7 +29886,7 @@ loc_198CE:
 		add	al, 2
 		mov	byte_2671E, al
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	ax, 200h
 		jbe	short loc_198E6
 		cmp	ax, 1600h
@@ -30407,7 +30372,7 @@ loc_19D85:
 
 loc_19D93:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		jmp	short loc_19D9E
 ; ---------------------------------------------------------------------------
 
@@ -30470,7 +30435,7 @@ loc_19E19:
 
 loc_19E27:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_19E3D
@@ -34154,7 +34119,7 @@ loc_1BBA8:
 		sub	dx, ax
 		mov	word_25A32, dx
 		push	46E8h
-		call	sub_13D32
+		call	_motion_update_2
 		mov	ax, word_25A28
 		add	ax, 0FE80h
 		cmp	ax, word ptr dword_2598E
@@ -34997,7 +34962,7 @@ loc_1C301:
 
 loc_1C32D:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		mov	al, byte_2671D
 		mov	ah, 0
 		or	ax, ax
@@ -35067,7 +35032,7 @@ loc_1C39E:
 
 loc_1C3D4:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	word ptr dword_2670A, 0C00h
 		jge	short loc_1C3EA
 		mov	word_26712, 20h	; ' '
@@ -35771,7 +35736,7 @@ loc_1C939:
 		jb	short loc_1C94F
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		mov	byte ptr [si], 2
 		jmp	loc_1CAF8
 ; ---------------------------------------------------------------------------
@@ -35816,7 +35781,7 @@ loc_1C99C:
 		jnz	short loc_1C9AB
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		jmp	short loc_1C9C8
 ; ---------------------------------------------------------------------------
 
@@ -35881,7 +35846,7 @@ loc_1CA17:
 loc_1CA27:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	ax, 0FF80h
 		jle	short loc_1CA43
 		cmp	ax, 1880h
@@ -36031,7 +35996,7 @@ loc_1CB91:
 		mov	word ptr [si+0Ch], 0
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	[bp+var_9], 4Ch	; 'L'
 		jnb	short loc_1CBB7
 		mov	al, [bp+var_9]
@@ -38564,7 +38529,7 @@ loc_1DEC6:
 loc_1DEDB:
 		lea	ax, [si+2]
 		push	ax
-		call	sub_13D32
+		call	_motion_update_2
 		cmp	ax, 0FF80h
 		jle	short loc_1DEF2
 		cmp	ax, 1880h
@@ -39517,7 +39482,7 @@ loc_1E962:
 
 loc_1E96E:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		mov	si, 20h	; ' '
 		mov	al, byte_2671F
 		mov	ah, 0
@@ -39590,7 +39555,7 @@ loc_1E9FC:
 
 loc_1EA08:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		mov	si, 20h	; ' '
 		mov	al, byte_2671F
 		mov	ah, 0
@@ -40843,7 +40808,7 @@ loc_1F4D6:
 
 loc_1F4DC:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	word_2671A, 40h
@@ -40950,7 +40915,7 @@ loc_1F5C3:
 
 loc_1F5C9:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	word_2671A, 40h
@@ -41041,7 +41006,7 @@ loc_1F67D:
 		push	53CAh
 
 loc_1F680:
-		call	sub_13D32
+		call	_motion_update_2
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	word_2671A, 40h
@@ -41185,7 +41150,7 @@ loc_1F7B4:
 
 loc_1F7BA:
 		push	53CAh
-		call	sub_13D32
+		call	_motion_update_2
 		mov	al, Palettes
 		add	al, 3
 		mov	Palettes, al
