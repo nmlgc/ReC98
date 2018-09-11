@@ -425,7 +425,7 @@ loc_97FC:
 
 loc_9868:
 		call	sub_D5A2
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
 		push	1
 		call	frame_delay
@@ -824,7 +824,7 @@ loc_9C25:
 		call	snd_load
 		add	sp, 6
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
-		mov	word_100FC, 0
+		mov	_input_sp, INPUT_NONE
 
 loc_9C42:
 		cmp	vsync_Count1, 20h ; ' '
@@ -838,7 +838,7 @@ loc_9C4B:
 loc_9C50:
 		cmp	vsync_Count1, 60h
 		ja	short loc_9C5E
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jz	short loc_9C4B
 
 loc_9C5E:
@@ -1224,9 +1224,9 @@ loc_9FC8:
 
 loc_A00B:
 		call	sub_D5A2
-		test	byte ptr word_100FC, 4
+		test	_input_sp.lo, low INPUT_LEFT
 		jnz	short loc_A01E
-		test	byte ptr word_100FC, 8
+		test	_input_sp.lo, low INPUT_RIGHT
 		jz	short loc_A056
 
 loc_A01E:
@@ -1255,9 +1255,9 @@ loc_A056:
 		mov	[bp+var_2], 0
 
 loc_A05B:
-		test	byte ptr word_100FC+1, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jnz	short loc_A069
-		test	byte ptr word_100FC, 20h
+		test	_input_sp.lo, low INPUT_SHOT
 		jz	short loc_A0B0
 
 loc_A069:
@@ -1281,7 +1281,7 @@ loc_A069:
 ; ---------------------------------------------------------------------------
 
 loc_A0B0:
-		test	byte ptr word_100FC+1, 10h
+		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_A0BB
 		xor	si, si
 		jmp	short loc_A0C5
@@ -2709,7 +2709,7 @@ var_1		= byte ptr -1
 
 loc_ACA3:
 		call	sub_D5A2
-		test	byte ptr word_100FC+1, 10h
+		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_ACB6
 		mov	byte_105CE, 1
 		jmp	short loc_ACBB
@@ -2778,7 +2778,7 @@ loc_ACFB:
 		call	sub_A5FC
 		cmp	byte_105CE, 0
 		jnz	loc_ACA3
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_AD7A
 		push	word_105D4
 		call	frame_delay
@@ -3840,7 +3840,7 @@ var_2		= word ptr -2
 
 loc_B4A8:
 		call	sub_D5A2
-		test	byte ptr word_100FC, 1
+		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_B4F2
 		cmp	[bp+var_A], 0
 		jz	short loc_B4CD
@@ -3876,7 +3876,7 @@ loc_B4F2:
 		mov	[bp+var_A], 0
 
 loc_B4F7:
-		test	byte ptr word_100FC, 2
+		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_B53C
 		cmp	[bp+var_8], 0
 		jz	short loc_B517
@@ -3912,7 +3912,7 @@ loc_B53C:
 		mov	[bp+var_8], 0
 
 loc_B541:
-		test	byte ptr word_100FC, 4
+		test	_input_sp.lo, low INPUT_LEFT
 		jz	short loc_B59A
 		cmp	[bp+var_6], 0
 		jz	short loc_B561
@@ -3965,7 +3965,7 @@ loc_B59A:
 		mov	[bp+var_6], 0
 
 loc_B59F:
-		test	byte ptr word_100FC, 8
+		test	_input_sp.lo, low INPUT_RIGHT
 		jz	short loc_B5F9
 		cmp	[bp+var_4], 0
 		jz	short loc_B5BF
@@ -4018,9 +4018,9 @@ loc_B5F9:
 		mov	[bp+var_4], 0
 
 loc_B5FE:
-		test	byte ptr word_100FC+1, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jnz	short loc_B60C
-		test	byte ptr word_100FC, 20h
+		test	_input_sp.lo, low INPUT_SHOT
 		jz	short loc_B683
 
 loc_B60C:
@@ -4083,7 +4083,7 @@ loc_B683:
 		mov	[bp+var_D], 0
 
 loc_B687:
-		test	byte ptr word_100FC, 10h
+		test	_input_sp.lo, low INPUT_BOMB
 		jz	short loc_B6CF
 		cmp	[bp+var_F], 0
 		jnz	short loc_B6C9
@@ -6014,7 +6014,7 @@ loc_C781:
 ; ---------------------------------------------------------------------------
 
 loc_C7AB:
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jz	short loc_C781
 		cmp	word_10BB2, 100h
 		jle	short loc_C781
@@ -6316,187 +6316,7 @@ sub_CA88	endp
 
 include th02/hardware/frame_delay.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CB68	proc far
-		xor	ax, ax
-		mov	word_100F8, ax
-		mov	word_100FA, ax
-		mov	word_100FC, ax
-		mov	js_stat, ax
-		jmp	short $+2
-		mov	bl, 2
-		xor	ax, ax
-		mov	es, ax
-
-loc_CB7E:
-		mov	ah, byte ptr es:[531h]
-		test	ah, 4
-		jz	short loc_CB8D
-		or	word_100FC, 1
-
-loc_CB8D:
-		test	ah, 20h
-		jz	short loc_CB97
-		or	word_100FC, 2
-
-loc_CB97:
-		test	ah, 8
-		jz	short loc_CBA6
-		or	word_100FA, 20h
-		or	word_100FC, 4
-
-loc_CBA6:
-		test	ah, 10h
-		jz	short loc_CBB5
-		or	word_100FA, 10h
-		or	word_100FC, 8
-
-loc_CBB5:
-		mov	ah, byte ptr es:[533h]
-		test	ah, 1
-		jz	short loc_CBC9
-		or	word_100FA, 8
-		or	word_100FC, 8
-
-loc_CBC9:
-		test	ah, 4
-		jz	short loc_CBDA
-		or	word_100FA, 200h
-		or	word_100FC, 200h
-
-loc_CBDA:
-		test	ah, 8
-		jz	short loc_CBE9
-		or	word_100FA, 2
-		or	word_100FC, 2
-
-loc_CBE9:
-		test	ah, 10h
-		jz	short loc_CBFA
-		or	word_100FA, 800h
-		or	word_100FC, 800h
-
-loc_CBFA:
-		mov	ah, byte ptr es:[532h]
-		test	ah, 40h
-		jz	short loc_CC0E
-		or	word_100FA, 4
-		or	word_100FC, 4
-
-loc_CC0E:
-		test	ah, 4
-		jz	short loc_CC1F
-		or	word_100FA, 100h
-		or	word_100FC, 100h
-
-loc_CC1F:
-		test	ah, 8
-		jz	short loc_CC2E
-		or	word_100FA, 1
-		or	word_100FC, 1
-
-loc_CC2E:
-		test	ah, 10h
-		jz	short loc_CC3F
-		or	word_100FA, 400h
-		or	word_100FC, 400h
-
-loc_CC3F:
-		mov	ah, byte ptr es:[52Fh]
-		test	ah, 2
-		jz	short loc_CC53
-		or	word_100F8, 20h
-		or	word_100FC, 20h
-
-loc_CC53:
-		test	ah, 4
-		jz	short loc_CC62
-		or	word_100F8, 10h
-		or	word_100FC, 10h
-
-loc_CC62:
-		test	ah, 10h
-		jz	short loc_CC6D
-		or	word_100F8, 200h
-
-loc_CC6D:
-		test	ah, 20h
-		jz	short loc_CC77
-		or	word_100F8, 2
-
-loc_CC77:
-		test	ah, 40h
-		jz	short loc_CC82
-		or	word_100F8, 800h
-
-loc_CC82:
-		mov	ah, byte ptr es:[52Eh]
-		test	ah, 1
-		jz	short loc_CC91
-		or	word_100F8, 4
-
-loc_CC91:
-		test	ah, 4
-		jz	short loc_CC9B
-		or	word_100F8, 8
-
-loc_CC9B:
-		mov	ah, byte ptr es:[52Ch]
-		test	ah, 8
-		jz	short loc_CCAB
-		or	word_100F8, 100h
-
-loc_CCAB:
-		test	ah, 10h
-		jz	short loc_CCB5
-		or	word_100F8, 1
-
-loc_CCB5:
-		test	ah, 20h
-		jz	short loc_CCC0
-		or	word_100F8, 400h
-
-loc_CCC0:
-		test	ah, 1
-		jz	short loc_CCCB
-		or	word_100FC, 4000h
-
-loc_CCCB:
-		mov	ah, byte ptr es:[52Ah]
-		test	ah, 1
-		jz	short loc_CCDB
-		or	word_100FC, 1000h
-
-loc_CCDB:
-		mov	ah, byte ptr es:[52Dh]
-		test	ah, 10h
-		jz	short loc_CCEB
-		or	word_100FC, 2000h
-
-loc_CCEB:
-		mov	ah, byte ptr es:[530h]
-		test	ah, 10h
-		jz	short loc_CCFA
-		or	word_100FC, 20h
-
-loc_CCFA:
-		dec	bl
-		jz	short locret_CD08
-		mov	cx, 400h
-
-loc_CD01:
-		out	5Fh, al
-		loop	loc_CD01
-		jmp	loc_CB7E
-; ---------------------------------------------------------------------------
-
-locret_CD08:
-		retf
-sub_CB68	endp
-
+include th03/hardware/input_sense.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th03/formats/pi_slot_put_interlace.asm
@@ -7241,9 +7061,9 @@ loc_D450:
 
 loc_D455:
 		nopcall	sub_D5A2
-		test	byte ptr word_100FC, 20h
+		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D468
-		test	byte ptr word_100FC+1, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jz	short loc_D46F
 
 loc_D468:
@@ -7275,9 +7095,9 @@ arg_0		= word ptr  6
 
 loc_D483:
 		nopcall	sub_D5A2
-		test	byte ptr word_100FC, 20h
+		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D496
-		test	byte ptr word_100FC+1, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jz	short loc_D49D
 
 loc_D496:
@@ -7305,16 +7125,16 @@ include th03/formats/pi_slot_put_quarter.asm
 sub_D5A2	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_D5BD
 		call	js_sense
 		mov	ax, js_stat
-		or	word_100FC, ax
+		or	_input_sp, ax
 
 loc_D5BD:
-		mov	ax, word_100F8
-		or	word_100FC, ax
+		mov	ax, _input_mp_p1
+		or	_input_sp, ax
 		pop	bp
 		retf
 sub_D5A2	endp
@@ -7322,20 +7142,20 @@ sub_D5A2	endp
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
+		nopcall	_input_reset_sense_key_held
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_D5F0
 		call	js_sense
 		mov	ax, js_stat
-		mov	word_100F8, ax
-		mov	ax, word_100FC
-		mov	word_100FA, ax
+		mov	_input_mp_p1, ax
+		mov	ax, _input_sp
+		mov	_input_mp_p2, ax
 
 loc_D5F0:
 		pop	bp
@@ -7343,14 +7163,14 @@ loc_D5F0:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_D612
 		call	js_sense
 		mov	ax, js_stat
-		mov	word_100FA, ax
-		mov	ax, word_100FC
-		mov	word_100F8, ax
+		mov	_input_mp_p2, ax
+		mov	ax, _input_sp
+		mov	_input_mp_p1, ax
 
 loc_D612:
 		pop	bp
@@ -7358,68 +7178,68 @@ loc_D612:
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
-		mov	ax, word_100FC
-		or	word_100F8, ax
+		nopcall	_input_reset_sense_key_held
+		mov	ax, _input_sp
+		or	_input_mp_p1, ax
 		cmp	js_bexist, 0
 		jz	short loc_D636
 		call	js_sense
 		mov	ax, js_stat
-		or	word_100F8, ax
+		or	_input_mp_p1, ax
 
 loc_D636:
-		mov	word_100FA, 0
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
-		mov	ax, word_100FC
-		or	ax, word_100F8
-		mov	word_100FA, ax
+		nopcall	_input_reset_sense_key_held
+		mov	ax, _input_sp
+		or	ax, _input_mp_p1
+		mov	_input_mp_p2, ax
 		cmp	js_bexist, 0
 		jz	short loc_D663
 		call	js_sense
 		mov	ax, js_stat
-		or	word_100FA, ax
+		or	_input_mp_p2, ax
 
 loc_D663:
-		mov	word_100F8, 0
+		mov	_input_mp_p1, INPUT_NONE
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
-		test	byte ptr word_100FC+1, 10h
+		nopcall	_input_reset_sense_key_held
+		test	_input_sp.hi, high INPUT_CANCEL
 		jnz	short loc_D681
-		test	byte ptr word_100FC+1, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jz	short loc_D687
 
 loc_D681:
-		mov	word_100FC, 1000h
+		mov	_input_sp, INPUT_CANCEL
 
 loc_D687:
-		mov	word_100F8, 0
-		mov	word_100FA, 0
+		mov	_input_mp_p1, INPUT_NONE
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 		push	bp
 		mov	bp, sp
-		nopcall	sub_CB68
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_D6B0
 		call	js_sense
 		mov	ax, js_stat
-		or	word_100FC, ax
+		or	_input_sp, ax
 
 loc_D6B0:
-		mov	ax, word_100F8
-		or	word_100FC, ax
-		mov	word_100F8, 0
-		mov	word_100FA, 0
+		mov	ax, _input_mp_p1
+		or	_input_sp, ax
+		mov	_input_mp_p1, INPUT_NONE
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 
@@ -7440,7 +7260,7 @@ arg_0		= word ptr  6
 
 loc_D6CF:
 		call	sub_D5A2
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jz	short loc_D6E3
 		push	1
 		nopcall	frame_delay
@@ -7456,7 +7276,7 @@ loc_D6E3:
 
 loc_D6EC:
 		call	sub_D5A2
-		cmp	word_100FC, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_D70B
 		inc	di
 		push	1
@@ -8115,9 +7935,7 @@ include th01/hardware/vram_planes[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
 include libs/master.lib/pfint21[bss].asm
-word_100F8	dw ?
-word_100FA	dw ?
-word_100FC	dw ?
+include th03/hardware/input[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

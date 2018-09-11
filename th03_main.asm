@@ -311,15 +311,15 @@ loc_977E:
 		nopcall	sub_CEB2
 		call	farfp_1E6E2
 		mov	byte ptr word_23AF0, 0
-		push	word_1EFF6
+		push	_input_mp_p1
 		push	65A6h
 		call	sub_DA43
 		mov	byte ptr word_23AF0, 1
-		push	word_1EFF8
+		push	_input_mp_p2
 		push	6626h
 		call	sub_DA43
 		call	snd_se_update
-		test	byte_1EFFB, 10h
+		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_9845
 		call	sub_C7A5
 
@@ -574,7 +574,7 @@ loc_9AF5:
 		mov	byte_23B00, 1
 
 loc_9B01:
-		cmp	word ptr unk_1EFFA, 0
+		cmp	_input_sp, INPUT_NONE
 		jz	short loc_9B0D
 		mov	byte_23B00, 1
 
@@ -5071,19 +5071,19 @@ loc_C7C8:
 ; ---------------------------------------------------------------------------
 
 loc_C7DB:
-		call	sub_EA8C
+		call	_input_reset_sense_key_held
 		push	1
 		call	frame_delay
 
 loc_C7E7:
-		cmp	word ptr unk_1EFFA, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_C7DB
 
 loc_C7EE:
-		call	sub_EA8C
-		test	byte_1EFFB, 40h
+		call	_input_reset_sense_key_held
+		test	_input_sp.hi, high INPUT_Q
 		jnz	short loc_C7C1
-		test	byte_1EFFB, 10h
+		test	_input_sp.hi, high INPUT_CANCEL
 		jnz	short loc_C816
 		push	1
 		call	frame_delay
@@ -5091,12 +5091,12 @@ loc_C7EE:
 ; ---------------------------------------------------------------------------
 
 loc_C80A:
-		call	sub_EA8C
+		call	_input_reset_sense_key_held
 		push	1
 		call	frame_delay
 
 loc_C816:
-		cmp	word ptr unk_1EFFA, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_C80A
 		call	snd_se_reset
 		call	snd_se_play pascal, 21
@@ -5439,8 +5439,8 @@ loc_CA95:
 ; ---------------------------------------------------------------------------
 
 loc_CA99:
-		call	sub_EA8C
-		test	byte_1EFFB, 10h
+		call	_input_reset_sense_key_held
+		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_CAA8
 		call	sub_C7A5
 
@@ -9355,188 +9355,7 @@ sub_EA1A	endp
 
 include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EA8C	proc far
-		xor	ax, ax
-		mov	word_1EFF6, ax
-		mov	word_1EFF8, ax
-		mov	word ptr unk_1EFFA, ax
-		mov	js_stat, ax
-		jmp	short $+2
-		mov	bl, 2
-		xor	ax, ax
-		mov	es, ax
-
-loc_EAA2:
-		mov	ah, byte ptr es:[531h]
-		test	ah, 4
-		jz	short loc_EAB1
-		or	word ptr unk_1EFFA, 1
-
-loc_EAB1:
-		test	ah, 20h
-		jz	short loc_EABB
-		or	word ptr unk_1EFFA, 2
-
-loc_EABB:
-		test	ah, 8
-		jz	short loc_EACA
-		or	word_1EFF8, 20h
-		or	word ptr unk_1EFFA, 4
-
-loc_EACA:
-		test	ah, 10h
-		jz	short loc_EAD9
-		or	word_1EFF8, 10h
-		or	word ptr unk_1EFFA, 8
-
-loc_EAD9:
-		mov	ah, byte ptr es:[533h]
-		test	ah, 1
-		jz	short loc_EAED
-		or	word_1EFF8, 8
-		or	word ptr unk_1EFFA, 8
-
-loc_EAED:
-		test	ah, 4
-		jz	short loc_EAFE
-		or	word_1EFF8, 200h
-		or	word ptr unk_1EFFA, 200h
-
-loc_EAFE:
-		test	ah, 8
-		jz	short loc_EB0D
-		or	word_1EFF8, 2
-		or	word ptr unk_1EFFA, 2
-
-loc_EB0D:
-		test	ah, 10h
-		jz	short loc_EB1E
-		or	word_1EFF8, 800h
-		or	word ptr unk_1EFFA, 800h
-
-loc_EB1E:
-		mov	ah, byte ptr es:[532h]
-		test	ah, 40h
-		jz	short loc_EB32
-		or	word_1EFF8, 4
-		or	word ptr unk_1EFFA, 4
-
-loc_EB32:
-		test	ah, 4
-		jz	short loc_EB43
-		or	word_1EFF8, 100h
-		or	word ptr unk_1EFFA, 100h
-
-loc_EB43:
-		test	ah, 8
-		jz	short loc_EB52
-		or	word_1EFF8, 1
-		or	word ptr unk_1EFFA, 1
-
-loc_EB52:
-		test	ah, 10h
-		jz	short loc_EB63
-		or	word_1EFF8, 400h
-		or	word ptr unk_1EFFA, 400h
-
-loc_EB63:
-		mov	ah, byte ptr es:[52Fh]
-		test	ah, 2
-		jz	short loc_EB77
-		or	word_1EFF6, 20h
-		or	word ptr unk_1EFFA, 20h
-
-loc_EB77:
-		test	ah, 4
-		jz	short loc_EB86
-		or	word_1EFF6, 10h
-		or	word ptr unk_1EFFA, 10h
-
-loc_EB86:
-		test	ah, 10h
-		jz	short loc_EB91
-		or	word_1EFF6, 200h
-
-loc_EB91:
-		test	ah, 20h
-		jz	short loc_EB9B
-		or	word_1EFF6, 2
-
-loc_EB9B:
-		test	ah, 40h
-		jz	short loc_EBA6
-		or	word_1EFF6, 800h
-
-loc_EBA6:
-		mov	ah, byte ptr es:[52Eh]
-		test	ah, 1
-		jz	short loc_EBB5
-		or	word_1EFF6, 4
-
-loc_EBB5:
-		test	ah, 4
-		jz	short loc_EBBF
-		or	word_1EFF6, 8
-
-loc_EBBF:
-		mov	ah, byte ptr es:[52Ch]
-		test	ah, 8
-		jz	short loc_EBCF
-		or	word_1EFF6, 100h
-
-loc_EBCF:
-		test	ah, 10h
-		jz	short loc_EBD9
-		or	word_1EFF6, 1
-
-loc_EBD9:
-		test	ah, 20h
-		jz	short loc_EBE4
-		or	word_1EFF6, 400h
-
-loc_EBE4:
-		test	ah, 1
-		jz	short loc_EBEF
-		or	word ptr unk_1EFFA, 4000h
-
-loc_EBEF:
-		mov	ah, byte ptr es:[52Ah]
-		test	ah, 1
-		jz	short loc_EBFF
-		or	word ptr unk_1EFFA, 1000h
-
-loc_EBFF:
-		mov	ah, byte ptr es:[52Dh]
-		test	ah, 10h
-		jz	short loc_EC0F
-		or	word ptr unk_1EFFA, 2000h
-
-loc_EC0F:
-		mov	ah, byte ptr es:[530h]
-		test	ah, 10h
-		jz	short loc_EC1E
-		or	word ptr unk_1EFFA, 20h
-
-loc_EC1E:
-		dec	bl
-		jz	short locret_EC2C
-		mov	cx, 400h
-
-loc_EC25:
-		out	5Fh, al
-		loop	loc_EC25
-		jmp	loc_EAA2
-; ---------------------------------------------------------------------------
-
-locret_EC2C:
-		retf
-sub_EA8C	endp
-
-; ---------------------------------------------------------------------------
+include th03/hardware/input_sense.asm
 		nop
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
@@ -9582,16 +9401,16 @@ include th02/formats/pi_slot_load.asm
 sub_ED54	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_ED6F
 		call	js_sense
 		mov	ax, js_stat
-		or	word ptr unk_1EFFA, ax
+		or	_input_sp, ax
 
 loc_ED6F:
-		mov	ax, word_1EFF6
-		or	word ptr unk_1EFFA, ax
+		mov	ax, _input_mp_p1
+		or	_input_sp, ax
 		pop	bp
 		retf
 sub_ED54	endp
@@ -9604,7 +9423,7 @@ sub_ED54	endp
 sub_ED78	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
+		nopcall	_input_reset_sense_key_held
 		pop	bp
 		retf
 sub_ED78	endp
@@ -9617,14 +9436,14 @@ sub_ED78	endp
 sub_ED82	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_EDA2
 		call	js_sense
 		mov	ax, js_stat
-		mov	word_1EFF6, ax
-		mov	ax, word ptr unk_1EFFA
-		mov	word_1EFF8, ax
+		mov	_input_mp_p1, ax
+		mov	ax, _input_sp
+		mov	_input_mp_p2, ax
 
 loc_EDA2:
 		pop	bp
@@ -9639,14 +9458,14 @@ sub_ED82	endp
 sub_EDA4	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_EDC4
 		call	js_sense
 		mov	ax, js_stat
-		mov	word_1EFF8, ax
-		mov	ax, word ptr unk_1EFFA
-		mov	word_1EFF6, ax
+		mov	_input_mp_p2, ax
+		mov	ax, _input_sp
+		mov	_input_mp_p1, ax
 
 loc_EDC4:
 		pop	bp
@@ -9661,17 +9480,17 @@ sub_EDA4	endp
 sub_EDC6	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
-		mov	ax, word ptr unk_1EFFA
-		or	word_1EFF6, ax
+		nopcall	_input_reset_sense_key_held
+		mov	ax, _input_sp
+		or	_input_mp_p1, ax
 		cmp	js_bexist, 0
 		jz	short loc_EDE8
 		call	js_sense
 		mov	ax, js_stat
-		or	word_1EFF6, ax
+		or	_input_mp_p1, ax
 
 loc_EDE8:
-		mov	word_1EFF8, 0
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 sub_EDC6	endp
@@ -9684,18 +9503,18 @@ sub_EDC6	endp
 sub_EDF0	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
-		mov	ax, word ptr unk_1EFFA
-		or	ax, word_1EFF6
-		mov	word_1EFF8, ax
+		nopcall	_input_reset_sense_key_held
+		mov	ax, _input_sp
+		or	ax, _input_mp_p1
+		mov	_input_mp_p2, ax
 		cmp	js_bexist, 0
 		jz	short loc_EE15
 		call	js_sense
 		mov	ax, js_stat
-		or	word_1EFF8, ax
+		or	_input_mp_p2, ax
 
 loc_EE15:
-		mov	word_1EFF6, 0
+		mov	_input_mp_p1, INPUT_NONE
 		pop	bp
 		retf
 sub_EDF0	endp
@@ -9708,18 +9527,18 @@ sub_EDF0	endp
 sub_EE1D	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
-		test	byte_1EFFB, 10h
+		nopcall	_input_reset_sense_key_held
+		test	_input_sp.hi, high INPUT_CANCEL
 		jnz	short loc_EE33
-		test	byte_1EFFB, 20h
+		test	_input_sp.hi, high INPUT_OK
 		jz	short loc_EE39
 
 loc_EE33:
-		mov	word ptr unk_1EFFA, 1000h
+		mov	_input_sp, INPUT_CANCEL
 
 loc_EE39:
-		mov	word_1EFF6, 0
-		mov	word_1EFF8, 0
+		mov	_input_mp_p1, INPUT_NONE
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 sub_EE1D	endp
@@ -9732,18 +9551,18 @@ sub_EE1D	endp
 sub_EE47	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_EA8C
+		nopcall	_input_reset_sense_key_held
 		cmp	js_bexist, 0
 		jz	short loc_EE62
 		call	js_sense
 		mov	ax, js_stat
-		or	word ptr unk_1EFFA, ax
+		or	_input_sp, ax
 
 loc_EE62:
-		mov	ax, word_1EFF6
-		or	word ptr unk_1EFFA, ax
-		mov	word_1EFF6, 0
-		mov	word_1EFF8, 0
+		mov	ax, _input_mp_p1
+		or	_input_sp, ax
+		mov	_input_mp_p1, INPUT_NONE
+		mov	_input_mp_p2, INPUT_NONE
 		pop	bp
 		retf
 sub_EE47	endp
@@ -9766,7 +9585,7 @@ arg_0		= word ptr  6
 
 loc_EE81:
 		call	sub_ED54
-		cmp	word ptr unk_1EFFA, 0
+		cmp	_input_sp, INPUT_NONE
 		jz	short loc_EE95
 		push	1
 		nopcall	frame_delay
@@ -9782,7 +9601,7 @@ loc_EE95:
 
 loc_EE9E:
 		call	sub_ED54
-		cmp	word ptr unk_1EFFA, 0
+		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_EEBD
 		inc	di
 		push	1
@@ -38025,10 +37844,7 @@ include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include th02/snd/snd[bss].asm
 include libs/master.lib/pfint21[bss].asm
-word_1EFF6	dw ?
-word_1EFF8	dw ?
-unk_1EFFA	db    ?	;
-byte_1EFFB	db ?
+include th03/hardware/input[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
 		dd    ?	;

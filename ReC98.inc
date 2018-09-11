@@ -52,3 +52,8 @@ if LDATA
 	pop cx
 endif
 endm
+
+twobyte_t struc
+	lo	db ?
+	hi	db ?
+twobyte_t ends

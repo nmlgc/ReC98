@@ -342,12 +342,12 @@ sub_AB88	proc near
 		mov	word_266D0, 1
 		push	1
 		call	frame_delay
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 
 loc_AB9E:
-		call	sub_137A4
+		call	_input_sense
 		call	fp_23D90
-		test	byte ptr word_24CB4+1, 10h
+		test	_input.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
 		call	sub_B2CF
 		or	ax, ax
@@ -399,7 +399,7 @@ loc_ABD8:
 		call	fp_259DC
 		call	fp_259DE
 		call	sub_CD36
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
 		cmp	ax, word_266D0
 		jb	short loc_AC56
@@ -1052,10 +1052,10 @@ sub_B2CF	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B2D7:
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 
 loc_B2DC:
-		cmp	word_24CB4, 0
+		cmp	_input, INPUT_NONE
 		jnz	short loc_B2D7
 		call	gaiji_putsa pascal, (26 shl 16) + 12, ds, offset gsCHUUDAN, TX_YELLOW
 		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
@@ -1064,9 +1064,9 @@ loc_B2DC:
 loc_B319:
 		push	0
 		call	sub_13213
-		test	byte ptr word_24CB4, 1
+		test	_input.lo, low INPUT_UP
 		jnz	short loc_B32E
-		test	byte ptr word_24CB4, 2
+		test	_input.lo, low INPUT_DOWN
 		jz	short loc_B37E
 
 loc_B32E:
@@ -1094,32 +1094,32 @@ loc_B379:
 		call	gaiji_putsa
 
 loc_B37E:
-		test	byte ptr word_24CB4+1, 40h
+		test	_input.hi, high INPUT_Q
 		jz	short loc_B38A
 		mov	ax, 1
 		jmp	short loc_B3EB
 ; ---------------------------------------------------------------------------
 
 loc_B38A:
-		test	byte ptr word_24CB4+1, 10h
+		test	_input.hi, high INPUT_CANCEL
 		jz	short loc_B395
 		xor	si, si
 		jmp	short loc_B3AC
 ; ---------------------------------------------------------------------------
 
 loc_B395:
-		test	byte ptr word_24CB4, 20h
+		test	_input.lo, low INPUT_SHOT
 		jnz	short loc_B3AC
-		test	byte ptr word_24CB4+1, 20h
+		test	_input.hi, high INPUT_OK
 		jz	loc_B319
 		jmp	short loc_B3AC
 ; ---------------------------------------------------------------------------
 
 loc_B3A7:
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 
 loc_B3AC:
-		cmp	word_24CB4, 0
+		cmp	_input, INPUT_NONE
 		jnz	short loc_B3A7
 		call	text_putsa pascal, (26 shl 16) + 12, ds, offset asc_2151E, TX_WHITE
 		call	text_putsa pascal, (26 shl 16) + 14, ds, offset asc_21523, TX_WHITE
@@ -1172,19 +1172,19 @@ sub_B3EE	endp
 sub_B439	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_24CB4, 0
+		cmp	_input, INPUT_NONE
 		jnz	short loc_B46D
 		les	bx, dword_23D92
 		add	bx, frame
 		mov	al, es:[bx]
 		mov	ah, 0
-		mov	word_24CB4, ax
+		mov	_input, ax
 		mov	ax, frame
 		add	ax, 0FA0h
 		mov	bx, word ptr dword_23D92
 		add	bx, ax
 		mov	al, es:[bx]
-		mov	byte_24CB6, al
+		mov	_input_focus, al
 		cmp	frame, 3996
 		jb	short loc_B486
 
@@ -6024,7 +6024,7 @@ loc_D62B:
 		mov	[bp+var_2], 0
 
 loc_D63F:
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 		les	bx, dword_255CC
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
@@ -6072,7 +6072,7 @@ loc_D684:
 		push	TX_WHITE
 		call	text_putsa
 		add	word_255D0, 10h
-		cmp	word_24CB4, 0
+		cmp	_input, INPUT_NONE
 		jnz	short loc_D6D2
 		push	2
 		jmp	short loc_D6DC
@@ -8283,13 +8283,13 @@ var_1		= byte ptr -1
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 
 loc_E703:
-		call	sub_137A4
+		call	_input_sense
 		or	si, si
 		jnz	short loc_E783
-		mov	si, word_24CB4
+		mov	si, _input
 		test	si, 1
 		jnz	short loc_E71C
 		test	si, 2
@@ -8350,10 +8350,10 @@ loc_E775:
 ; ---------------------------------------------------------------------------
 
 loc_E783:
-		mov	si, word_24CB4
+		mov	si, _input
 
 loc_E787:
-		call	far ptr	sub_1379C
+		call	far ptr	_input_reset_sense
 		push	1
 		call	frame_delay
 		jmp	loc_E703
@@ -13036,7 +13036,7 @@ loc_10B11:
 		jnz	loc_10BBD
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
-		mov	ax, word_24CB4
+		mov	ax, _input
 		and	ax, 0F0Fh
 		mov	si, ax
 		mov	[bp+var_1], 1
@@ -13059,7 +13059,7 @@ loc_10B32:
 ; ---------------------------------------------------------------------------
 
 loc_10B58:
-		cmp	byte_24CB6, 0
+		cmp	_input_focus, 0
 		jz	short loc_10B75
 		mov	ax, player_pos.velocity.x
 		cwd
@@ -13079,7 +13079,7 @@ loc_10B75:
 		mov	word_2598C, si
 
 loc_10B82:
-		test	byte ptr word_24CB4, 20h
+		test	_input.lo, low INPUT_SHOT
 		jz	short loc_10B97
 		cmp	byte_259A6, 1
 		ja	short loc_10B97
@@ -13116,7 +13116,7 @@ loc_10BC7:
 		sub	word ptr dword_259AC, ax
 		mov	ax, player_pos.velocity.y
 		sub	word ptr dword_259AC+2,	ax
-		test	byte ptr word_24CB4, 10h
+		test	_input.lo, low INPUT_BOMB
 		jz	short loc_10BF0
 		call	fp_256AA
 
@@ -17998,14 +17998,13 @@ arg_0		= word ptr  6
 
 loc_1321D:
 		nop
-		push	cs
-		call	sub_1379C
+		call	_input_reset_sense
 		push	1
 		nopcall	frame_delay
 
 loc_13229:
-		nopcall	sub_137A4
-		cmp	word_24CB4, 0
+		nopcall	_input_sense
+		cmp	_input, INPUT_NONE
 		jnz	short loc_1321D
 		or	si, si
 		jnz	short loc_1325F
@@ -18015,12 +18014,11 @@ loc_13229:
 
 loc_1323E:
 		nop
-		push	cs
-		call	sub_1379C
+		call	_input_reset_sense
 		push	1
 		nopcall	frame_delay
-		nopcall	sub_137A4
-		cmp	word_24CB4, 0
+		nopcall	_input_sense
+		cmp	_input, INPUT_NONE
 		jnz	short loc_13263
 		inc	di
 		cmp	si, 270Fh
@@ -18445,140 +18443,7 @@ loc_13792:
 		pop	bp
 		retf	0Ah
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1379C	proc near
-		xor	ax, ax
-		mov	word_24CB4, ax
-		mov	js_stat, ax
-sub_1379C	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_137A4	proc far
-		xor	ax, ax
-		mov	es, ax
-		mov	ah, byte ptr es:[531h]
-		test	ah, 4
-		jz	short loc_137B7
-		or	word_24CB4, 1
-
-loc_137B7:
-		test	ah, 20h
-		jz	short loc_137C1
-		or	word_24CB4, 2
-
-loc_137C1:
-		test	ah, 8
-		jz	short loc_137CB
-		or	word_24CB4, 4
-
-loc_137CB:
-		test	ah, 10h
-		jz	short loc_137D5
-		or	word_24CB4, 8
-
-loc_137D5:
-		mov	ah, byte ptr es:[533h]
-		test	ah, 1
-		jz	short loc_137E4
-		or	word_24CB4, 8
-
-loc_137E4:
-		test	ah, 4
-		jz	short loc_137EF
-		or	word_24CB4, 400h
-
-loc_137EF:
-		test	ah, 8
-		jz	short loc_137F9
-		or	word_24CB4, 2
-
-loc_137F9:
-		test	ah, 10h
-		jz	short loc_13804
-		or	word_24CB4, 800h
-
-loc_13804:
-		mov	ah, byte ptr es:[532h]
-		test	ah, 40h
-		jz	short loc_13813
-		or	word_24CB4, 4
-
-loc_13813:
-		test	ah, 4
-		jz	short loc_1381E
-		or	word_24CB4, 100h
-
-loc_1381E:
-		test	ah, 8
-		jz	short loc_13828
-		or	word_24CB4, 1
-
-loc_13828:
-		test	ah, 10h
-		jz	short loc_13833
-		or	word_24CB4, 200h
-
-loc_13833:
-		mov	ah, byte ptr es:[52Fh]
-		test	ah, 2
-		jz	short loc_13842
-		or	word_24CB4, 20h
-
-loc_13842:
-		test	ah, 4
-		jz	short loc_1384C
-		or	word_24CB4, 10h
-
-loc_1384C:
-		mov	ah, byte ptr es:[52Ch]
-		test	ah, 1
-		jz	short loc_1385C
-		or	word_24CB4, 4000h
-
-loc_1385C:
-		mov	ah, byte ptr es:[52Ah]
-		test	ah, 1
-		jz	short loc_1386C
-		or	word_24CB4, 1000h
-
-loc_1386C:
-		mov	ah, byte ptr es:[52Dh]
-		test	ah, 10h
-		jz	short loc_1387C
-
-loc_13876:
-		or	word_24CB4, 2000h
-
-loc_1387C:
-		mov	ah, byte ptr es:[530h]
-		test	ah, 10h
-		jz	short loc_1388B
-		or	word_24CB4, 20h
-
-loc_1388B:
-		mov	ah, 2
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		and	al, 1
-		mov	byte_24CB6, al
-		cmp	js_bexist, 0
-		jz	short locret_138A4
-		call	js_sense
-		or	word_24CB4, ax
-
-locret_138A4:
-		retf
-sub_137A4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -46360,9 +46225,7 @@ include libs/master.lib/bgm[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
 include th02/snd/load[bss].asm
 word_24CB2	dw ?
-word_24CB4	dw ?
-byte_24CB6	db ?
-		db ?
+include th04/hardware/input[bss].asm
 word_24CB8	dw ?
 		dd    ?	;
 		dd    ?	;

@@ -1809,8 +1809,8 @@ var_1		= byte ptr -1
 		mov	byte_1247E, 0
 
 loc_AE2D:
-		call	far ptr	sub_D48A
-		test	byte ptr word_10072+1, 10h
+		call	far ptr	_input_reset_sense
+		test	_input.hi, high INPUT_CANCEL
 		jz	short loc_AE40
 		mov	byte_1247E, 1
 		jmp	short loc_AE45
@@ -4975,35 +4975,35 @@ loc_C9CB:
 		call	gaiji_putca
 		xor	di, di
 		mov	[bp+var_2], 0
-		call	far ptr	sub_D48A
+		call	far ptr	_input_reset_sense
 		mov	[bp+var_4], 1
 
 loc_C9F6:
-		call	sub_D492
+		call	_input_sense
 		cmp	[bp+var_4], 0
 		jnz	loc_CB3B
-		test	byte ptr word_10072, 0Fh
+		test	_input.lo, low INPUT_MOVEMENT
 		jz	short loc_CA6A
 		push	di
 		push	[bp+var_2]
 		push	TX_WHITE
 		call	sub_C7E3
-		test	byte ptr word_10072, 1
+		test	_input.lo, low INPUT_UP
 		jz	short loc_CA1E
 		dec	[bp+var_2]
 
 loc_CA1E:
-		test	byte ptr word_10072, 2
+		test	_input.lo, low INPUT_DOWN
 		jz	short loc_CA28
 		inc	[bp+var_2]
 
 loc_CA28:
-		test	byte ptr word_10072, 4
+		test	_input.lo, low INPUT_LEFT
 		jz	short loc_CA30
 		dec	di
 
 loc_CA30:
-		test	byte ptr word_10072, 8
+		test	_input.lo, low INPUT_RIGHT
 		jz	short loc_CA38
 		inc	di
 
@@ -5038,9 +5038,9 @@ loc_CA60:
 		call	sub_C7E3
 
 loc_CA6A:
-		test	byte ptr word_10072, 20h
+		test	_input.lo, low INPUT_SHOT
 		jnz	short loc_CA7A
-		test	byte ptr word_10072+1, 20h
+		test	_input.hi, high INPUT_OK
 		jz	loc_CB03
 
 loc_CA7A:
@@ -5115,7 +5115,7 @@ loc_CAF5:
 		call	sub_C665
 
 loc_CB03:
-		test	byte ptr word_10072, 10h
+		test	_input.lo, low INPUT_BOMB
 		jz	short loc_CB2C
 		mov	al, byte_125B6
 		mov	ah, 0
@@ -5135,15 +5135,15 @@ loc_CB1E:
 		call	sub_C665
 
 loc_CB2C:
-		test	byte ptr word_10072+1, 10h
+		test	_input.hi, high INPUT_CANCEL
 		jnz	short loc_CB7A
-		mov	ax, word_10072
+		mov	ax, _input
 		mov	[bp+var_4], ax
 		jmp	short loc_CB6B
 ; ---------------------------------------------------------------------------
 
 loc_CB3B:
-		mov	ax, word_10072
+		mov	ax, _input
 		cmp	ax, [bp+var_4]
 		jnz	short loc_CB59
 		inc	[bp+var_9]
@@ -5156,7 +5156,7 @@ loc_CB3B:
 ; ---------------------------------------------------------------------------
 
 loc_CB59:
-		cmp	word_10072, 0
+		cmp	_input, INPUT_NONE
 		jz	short loc_CB62
 		jmp	short loc_CB67
 ; ---------------------------------------------------------------------------
@@ -5168,7 +5168,7 @@ loc_CB67:
 		mov	[bp+var_9], 0
 
 loc_CB6B:
-		call	far ptr	sub_D48A
+		call	far ptr	_input_reset_sense
 		push	1
 		call	frame_delay
 		jmp	loc_C9F6
@@ -5363,12 +5363,11 @@ arg_0		= word ptr  6
 
 loc_CE84:
 		nop
-		push	cs
-		call	sub_D48A
+		call	_input_reset_sense
 		push	1
 		nopcall	frame_delay
-		nopcall	sub_D492
-		cmp	word_10072, 0
+		nopcall	_input_sense
+		cmp	_input, INPUT_NONE
 		jnz	short loc_CE84
 		or	si, si
 		jnz	short loc_CEC6
@@ -5378,12 +5377,11 @@ loc_CE84:
 
 loc_CEA5:
 		nop
-		push	cs
-		call	sub_D48A
+		call	_input_reset_sense
 		push	1
 		nopcall	frame_delay
-		nopcall	sub_D492
-		cmp	word_10072, 0
+		nopcall	_input_sense
+		cmp	_input, INPUT_NONE
 		jnz	short loc_CECA
 		inc	di
 		cmp	si, 270Fh
@@ -5922,136 +5920,7 @@ sub_D43C	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D48A	proc near
-		xor	ax, ax
-		mov	word_10072, ax
-		mov	js_stat, ax
-sub_D48A	endp ; sp-analysis failed
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D492	proc far
-		xor	ax, ax
-		mov	es, ax
-		mov	ah, byte ptr es:[531h]
-		test	ah, 4
-		jz	short loc_D4A5
-		or	word_10072, 1
-
-loc_D4A5:
-		test	ah, 20h
-		jz	short loc_D4AF
-		or	word_10072, 2
-
-loc_D4AF:
-		test	ah, 8
-		jz	short loc_D4B9
-		or	word_10072, 4
-
-loc_D4B9:
-		test	ah, 10h
-		jz	short loc_D4C3
-		or	word_10072, 8
-
-loc_D4C3:
-		mov	ah, byte ptr es:[533h]
-		test	ah, 1
-		jz	short loc_D4D2
-		or	word_10072, 8
-
-loc_D4D2:
-		test	ah, 4
-		jz	short loc_D4DD
-		or	word_10072, 400h
-
-loc_D4DD:
-		test	ah, 8
-		jz	short loc_D4E7
-		or	word_10072, 2
-
-loc_D4E7:
-		test	ah, 10h
-		jz	short loc_D4F2
-		or	word_10072, 800h
-
-loc_D4F2:
-		mov	ah, byte ptr es:[532h]
-		test	ah, 40h
-		jz	short loc_D501
-		or	word_10072, 4
-
-loc_D501:
-		test	ah, 4
-		jz	short loc_D50C
-		or	word_10072, 100h
-
-loc_D50C:
-		test	ah, 8
-		jz	short loc_D516
-		or	word_10072, 1
-
-loc_D516:
-		test	ah, 10h
-		jz	short loc_D521
-		or	word_10072, 200h
-
-loc_D521:
-		mov	ah, byte ptr es:[52Fh]
-		test	ah, 2
-		jz	short loc_D530
-		or	word_10072, 20h
-
-loc_D530:
-		test	ah, 4
-		jz	short loc_D53A
-		or	word_10072, 10h
-
-loc_D53A:
-		mov	ah, byte ptr es:[52Ch]
-		test	ah, 1
-		jz	short loc_D54A
-		or	word_10072, 4000h
-
-loc_D54A:
-		mov	ah, byte ptr es:[52Ah]
-		test	ah, 1
-		jz	short loc_D55A
-		or	word_10072, 1000h
-
-loc_D55A:
-		mov	ah, byte ptr es:[52Dh]
-		test	ah, 10h
-		jz	short loc_D56A
-		or	word_10072, 2000h
-
-loc_D56A:
-		mov	ah, byte ptr es:[530h]
-		test	ah, 10h
-		jz	short loc_D579
-		or	word_10072, 20h
-
-loc_D579:
-		mov	ah, 2
-		int	18h		; TRANSFER TO ROM BASIC
-					; causes transfer to ROM-based BASIC (IBM-PC)
-					; often	reboots	a compatible; often has	no effect at all
-		and	al, 1
-		mov	byte_10074, al
-		cmp	js_bexist, 0
-		jz	short locret_D592
-		call	js_sense
-		or	word_10072, ax
-
-locret_D592:
-		retf
-sub_D492	endp
-
+include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6743,9 +6612,7 @@ include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
 word_10070	dw ?
-word_10072	dw ?
-byte_10074	db ?
-		db    ?	;
+include th04/hardware/input[bss].asm
 		dw ?
 word_10078	dw ?
 word_1007A	dw ?
