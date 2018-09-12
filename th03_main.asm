@@ -309,7 +309,7 @@ loc_977E:
 		call	p2_202A8
 		call	p2_202B0
 		nopcall	sub_CEB2
-		call	farfp_1E6E2
+		call	_input_mode_func
 		mov	byte ptr word_23AF0, 0
 		push	_input_mp_p1
 		push	65A6h
@@ -787,7 +787,7 @@ loc_9CD0:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+39h], 0
 		jz	short loc_9CF0
-		setfarfp	farfp_1E6E2, sub_EE47
+		setfarfp	_input_mode_func, _input_mode_attract
 		jmp	loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -797,7 +797,7 @@ loc_9CF0:
 		jz	short loc_9D10
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D10
-		setfarfp	farfp_1E6E2, sub_EE1D
+		setfarfp	_input_mode_func, _input_mode_cpu_vs_cpu
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -805,7 +805,7 @@ loc_9D10:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+0Fh], 0
 		jz	short loc_9D29
-		setfarfp	farfp_1E6E2, sub_EDC6
+		setfarfp	_input_mode_func, _input_mode_1p_vs_cpu
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -813,7 +813,7 @@ loc_9D29:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D42
-		setfarfp	farfp_1E6E2, sub_EDF0
+		setfarfp	_input_mode_func, _input_mode_cpu_vs_1p
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -821,7 +821,7 @@ loc_9D42:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_9D5B
-		setfarfp	farfp_1E6E2, sub_ED78
+		setfarfp	_input_mode_func, _input_mode_key_vs_key
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -829,12 +829,12 @@ loc_9D5B:
 		les	bx, dword_1F2F0
 		cmp	byte ptr es:[bx+16h], 1
 		jnz	short loc_9D74
-		setfarfp	farfp_1E6E2, sub_ED82
+		setfarfp	_input_mode_func, _input_mode_joy_vs_key
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
 loc_9D74:
-		setfarfp	farfp_1E6E2, sub_EDA4
+		setfarfp	_input_mode_func, _input_mode_key_vs_joy
 
 loc_9D80:
 		xor	si, si
@@ -9393,180 +9393,7 @@ loc_ECE6:
 sub_ECD0	endp
 
 include th02/formats/pi_slot_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED54	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_ED6F
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_sp, ax
-
-loc_ED6F:
-		mov	ax, _input_mp_p1
-		or	_input_sp, ax
-		pop	bp
-		retf
-sub_ED54	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED78	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		pop	bp
-		retf
-sub_ED78	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED82	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_EDA2
-		call	js_sense
-		mov	ax, js_stat
-		mov	_input_mp_p1, ax
-		mov	ax, _input_sp
-		mov	_input_mp_p2, ax
-
-loc_EDA2:
-		pop	bp
-		retf
-sub_ED82	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EDA4	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_EDC4
-		call	js_sense
-		mov	ax, js_stat
-		mov	_input_mp_p2, ax
-		mov	ax, _input_sp
-		mov	_input_mp_p1, ax
-
-loc_EDC4:
-		pop	bp
-		retf
-sub_EDA4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EDC6	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		mov	ax, _input_sp
-		or	_input_mp_p1, ax
-		cmp	js_bexist, 0
-		jz	short loc_EDE8
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_mp_p1, ax
-
-loc_EDE8:
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
-sub_EDC6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EDF0	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		mov	ax, _input_sp
-		or	ax, _input_mp_p1
-		mov	_input_mp_p2, ax
-		cmp	js_bexist, 0
-		jz	short loc_EE15
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_mp_p2, ax
-
-loc_EE15:
-		mov	_input_mp_p1, INPUT_NONE
-		pop	bp
-		retf
-sub_EDF0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE1D	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		test	_input_sp.hi, high INPUT_CANCEL
-		jnz	short loc_EE33
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_EE39
-
-loc_EE33:
-		mov	_input_sp, INPUT_CANCEL
-
-loc_EE39:
-		mov	_input_mp_p1, INPUT_NONE
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
-sub_EE1D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE47	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_EE62
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_sp, ax
-
-loc_EE62:
-		mov	ax, _input_mp_p1
-		or	_input_sp, ax
-		mov	_input_mp_p1, INPUT_NONE
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
-sub_EE47	endp
-
+include th03/hardware/input_modes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9584,7 +9411,7 @@ arg_0		= word ptr  6
 		xor	di, di
 
 loc_EE81:
-		call	sub_ED54
+		call	_input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_EE95
 		push	1
@@ -9600,7 +9427,7 @@ loc_EE95:
 ; ---------------------------------------------------------------------------
 
 loc_EE9E:
-		call	sub_ED54
+		call	_input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_EEBD
 		inc	di
@@ -37827,7 +37654,7 @@ byte_1E14C	db 0
 
 	.data?
 
-farfp_1E6E2	dd ?
+_input_mode_func	dd ?
 word_1E6E6	dw ?
 word_1E6E8	dw ?
 fp_1E6EA	dw ?

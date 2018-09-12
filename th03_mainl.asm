@@ -424,7 +424,7 @@ loc_97FC:
 		call	sub_990C
 
 loc_9868:
-		call	sub_D5A2
+		call	_input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
 		push	1
@@ -833,7 +833,7 @@ loc_9C42:
 ; ---------------------------------------------------------------------------
 
 loc_9C4B:
-		call	sub_D5A2
+		call	_input_mode_interface
 
 loc_9C50:
 		cmp	vsync_Count1, 60h
@@ -1223,7 +1223,7 @@ loc_9FC8:
 		call	palette_black_in
 
 loc_A00B:
-		call	sub_D5A2
+		call	_input_mode_interface
 		test	_input_sp.lo, low INPUT_LEFT
 		jnz	short loc_A01E
 		test	_input_sp.lo, low INPUT_RIGHT
@@ -2708,7 +2708,7 @@ var_1		= byte ptr -1
 		mov	byte_105CE, 0
 
 loc_ACA3:
-		call	sub_D5A2
+		call	_input_mode_interface
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_ACB6
 		mov	byte_105CE, 1
@@ -3839,7 +3839,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_B4A8:
-		call	sub_D5A2
+		call	_input_mode_interface
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_B4F2
 		cmp	[bp+var_A], 0
@@ -5997,7 +5997,7 @@ loc_C735:
 		xor	di, di
 
 loc_C781:
-		call	sub_D5A2
+		call	_input_mode_interface
 		call	sub_BB51
 		call	sub_BCD5
 		inc	word_10BB2
@@ -7060,7 +7060,7 @@ loc_D450:
 		int	61h		; reserved for user interrupt
 
 loc_D455:
-		nopcall	sub_D5A2
+		nopcall	_input_mode_interface
 		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D468
 		test	_input_sp.hi, high INPUT_OK
@@ -7094,7 +7094,7 @@ arg_0		= word ptr  6
 		mov	vsync_Count1, 0
 
 loc_D483:
-		nopcall	sub_D5A2
+		nopcall	_input_mode_interface
 		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D496
 		test	_input_sp.hi, high INPUT_OK
@@ -7117,131 +7117,7 @@ sub_D47A	endp
 
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D5A2	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_D5BD
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_sp, ax
-
-loc_D5BD:
-		mov	ax, _input_mp_p1
-		or	_input_sp, ax
-		pop	bp
-		retf
-sub_D5A2	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_D5F0
-		call	js_sense
-		mov	ax, js_stat
-		mov	_input_mp_p1, ax
-		mov	ax, _input_sp
-		mov	_input_mp_p2, ax
-
-loc_D5F0:
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_D612
-		call	js_sense
-		mov	ax, js_stat
-		mov	_input_mp_p2, ax
-		mov	ax, _input_sp
-		mov	_input_mp_p1, ax
-
-loc_D612:
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		mov	ax, _input_sp
-		or	_input_mp_p1, ax
-		cmp	js_bexist, 0
-		jz	short loc_D636
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_mp_p1, ax
-
-loc_D636:
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		mov	ax, _input_sp
-		or	ax, _input_mp_p1
-		mov	_input_mp_p2, ax
-		cmp	js_bexist, 0
-		jz	short loc_D663
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_mp_p2, ax
-
-loc_D663:
-		mov	_input_mp_p1, INPUT_NONE
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		test	_input_sp.hi, high INPUT_CANCEL
-		jnz	short loc_D681
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_D687
-
-loc_D681:
-		mov	_input_sp, INPUT_CANCEL
-
-loc_D687:
-		mov	_input_mp_p1, INPUT_NONE
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		nopcall	_input_reset_sense_key_held
-		cmp	js_bexist, 0
-		jz	short loc_D6B0
-		call	js_sense
-		mov	ax, js_stat
-		or	_input_sp, ax
-
-loc_D6B0:
-		mov	ax, _input_mp_p1
-		or	_input_sp, ax
-		mov	_input_mp_p1, INPUT_NONE
-		mov	_input_mp_p2, INPUT_NONE
-		pop	bp
-		retf
+include th03/hardware/input_modes.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7259,7 +7135,7 @@ arg_0		= word ptr  6
 		xor	di, di
 
 loc_D6CF:
-		call	sub_D5A2
+		call	_input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_D6E3
 		push	1
@@ -7275,7 +7151,7 @@ loc_D6E3:
 ; ---------------------------------------------------------------------------
 
 loc_D6EC:
-		call	sub_D5A2
+		call	_input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_D70B
 		inc	di
