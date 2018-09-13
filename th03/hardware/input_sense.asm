@@ -1,5 +1,12 @@
 ; Basic keyboard input function in this game, resets and updates all three
 ; variables according to the keyboard state.
+;
+; The key state is checked twice, 614.4 µs apart, to ignore the momentary "key
+; released" events sent by PC-98 keyboards at the typematic rate if a key is
+; held down. This ensures that the game consistently sees that specific input
+; being pressed. See the HOLDKEY example in the Research/ subdirectory for
+; more explanation and sample code showing off this effect.
+;
 ; void input_reset_sense_key_held();
 _input_reset_sense_key_held	proc far
 	xor	ax, ax

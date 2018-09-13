@@ -2,3 +2,7 @@ bin/th*
 bin/TH*
 bin/zuncom
 bin/ZUNCOM
+Research/*.exe
+Research/*.obj
+RESEARCH/*.EXE
+RESEARCH/*.OBJ
