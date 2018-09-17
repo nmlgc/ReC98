@@ -1063,7 +1063,7 @@ loc_B2DC:
 
 loc_B319:
 		push	0
-		call	sub_13213
+		call	_input_wait_for_change
 		test	_input.lo, low INPUT_UP
 		jnz	short loc_B32E
 		test	_input.lo, low INPUT_DOWN
@@ -5675,7 +5675,7 @@ loc_D337:
 		push	ax
 		call	sub_D0CA
 		push	[bp+var_2]
-		call	sub_13213
+		call	_input_wait_for_change
 		jmp	loc_D478
 ; ---------------------------------------------------------------------------
 
@@ -5883,7 +5883,7 @@ loc_D516:
 
 loc_D51D:
 		push	0		; jumptable 0000D1EC case 36
-		call	sub_13213
+		call	_input_wait_for_change
 
 loc_D524:
 		mov	al, 0FFh	; jumptable 0000D1EC case 35
@@ -8197,7 +8197,7 @@ loc_E5EF:
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
 		push	0
-		call	sub_13213
+		call	_input_wait_for_change
 		call	sub_10D4B
 		call	sub_E67A
 		mov	ah, 0
@@ -17980,62 +17980,7 @@ loc_1320E:
 		retf	2
 sub_131EA	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13213	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_1321D:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-
-loc_13229:
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_1321D
-		or	si, si
-		jnz	short loc_1325F
-		mov	si, 270Fh
-		jmp	short loc_1325F
-; ---------------------------------------------------------------------------
-
-loc_1323E:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_13263
-		inc	di
-		cmp	si, 270Fh
-		jnz	short loc_1325F
-		xor	di, di
-
-loc_1325F:
-		cmp	di, si
-		jl	short loc_1323E
-
-loc_13263:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_13213	endp
-
+include th04/hardware/input_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

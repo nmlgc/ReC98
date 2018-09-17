@@ -2116,7 +2116,7 @@ loc_B7EB:
 
 loc_B80E:
 		push	0
-		call	sub_DB62
+		call	_input_wait_for_change
 		push	1
 		call	frame_delay
 		test	_input.hi, high INPUT_OK
@@ -2234,7 +2234,7 @@ loc_B908:
 
 loc_B92B:
 		push	0
-		call	sub_DB62
+		call	_input_wait_for_change
 		push	1
 		call	frame_delay
 		test	_input.hi, high INPUT_OK
@@ -5504,60 +5504,7 @@ include th02/formats/pi_slot_load.asm
 		db    0
 
 include th03/formats/hfliplut.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DB62	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_DB6C:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_DB6C
-		or	si, si
-		jnz	short loc_DBAE
-		mov	si, 270Fh
-		jmp	short loc_DBAE
-; ---------------------------------------------------------------------------
-
-loc_DB8D:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_DBB2
-		inc	di
-		cmp	si, 270Fh
-		jnz	short loc_DBAE
-		xor	di, di
-
-loc_DBAE:
-		cmp	di, si
-		jl	short loc_DB8D
-
-loc_DBB2:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_DB62	endp
-
+include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm

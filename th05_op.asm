@@ -2059,7 +2059,7 @@ loc_B3C3:
 
 loc_B3E6:
 		push	0
-		call	sub_E0A4
+		call	_input_wait_for_change
 		push	1
 		call	frame_delay
 		test	_input.hi, high INPUT_OK
@@ -2177,7 +2177,7 @@ loc_B4E0:
 
 loc_B503:
 		push	0
-		call	sub_E0A4
+		call	_input_wait_for_change
 		push	1
 		call	frame_delay
 		test	_input.hi, high INPUT_OK
@@ -6416,43 +6416,7 @@ sub_DF12	endp
 
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0A4	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_E0A7:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_E0A7
-		mov	bp, [bp+arg_0]
-
-loc_E0B2:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_E0CA
-		mov	ax, vsync_Count1
-
-loc_E0BD:
-		cmp	ax, vsync_Count1
-		jz	short loc_E0BD
-		or	bp, bp
-		jz	short loc_E0B2
-		dec	bp
-		jnz	short loc_E0B2
-
-loc_E0CA:
-		pop	bp
-		retf	2
-sub_E0A4	endp
-
+include th05/hardware/input_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

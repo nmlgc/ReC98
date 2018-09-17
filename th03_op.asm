@@ -5351,61 +5351,7 @@ sub_C6DB	endp
 
 include th02/formats/pi_slot_load.asm
 include th03/hardware/input_modes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CAA9	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_CAB3:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_CAC7
-		push	1
-		nopcall	frame_delay
-		jmp	short loc_CAB3
-; ---------------------------------------------------------------------------
-
-loc_CAC7:
-		or	si, si
-		jnz	short loc_CAEB
-		mov	si, 270Fh
-		jmp	short loc_CAEB
-; ---------------------------------------------------------------------------
-
-loc_CAD0:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_CAEF
-		inc	di
-		push	1
-		nopcall	frame_delay
-		cmp	si, 270Fh
-		jnz	short loc_CAEB
-		xor	di, di
-
-loc_CAEB:
-		cmp	di, si
-		jl	short loc_CAD0
-
-loc_CAEF:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_CAA9	endp
-
-; ---------------------------------------------------------------------------
+include th03/hardware/input_wait.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

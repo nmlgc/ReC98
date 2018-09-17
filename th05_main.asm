@@ -1193,7 +1193,7 @@ loc_B645:
 
 loc_B682:
 		push	0
-		call	sub_150E4
+		call	_input_wait_for_change
 		test	_input.lo, low INPUT_UP
 		jnz	short loc_B697
 		test	_input.lo, low INPUT_DOWN
@@ -9595,7 +9595,7 @@ loc_F227:
 		cmp	[bp+var_1], 0FFh
 		jnz	short loc_F249
 		push	0
-		call	sub_150E4
+		call	_input_wait_for_change
 		jmp	short loc_F2AB
 ; ---------------------------------------------------------------------------
 
@@ -10607,7 +10607,7 @@ loc_FA18:
 		jl	short loc_F9EB
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
 		push	0
-		call	sub_150E4
+		call	_input_wait_for_change
 		call	sub_118D1
 		call	sub_FAA3
 		mov	ah, 0
@@ -21146,43 +21146,7 @@ sub_14F86	endp
 
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_150E4	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_150E7:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_150E7
-		mov	bp, [bp+arg_0]
-
-loc_150F2:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_1510A
-		mov	ax, vsync_Count1
-
-loc_150FD:
-		cmp	ax, vsync_Count1
-		jz	short loc_150FD
-		or	bp, bp
-		jz	short loc_150F2
-		dec	bp
-		jnz	short loc_150F2
-
-loc_1510A:
-		pop	bp
-		retf	2
-sub_150E4	endp
-
+include th05/hardware/input_wait.asm
 include th05/hardware/frame_delay.asm
 		db 0
 

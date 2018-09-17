@@ -307,7 +307,7 @@ loc_A187:
 		push	1
 		call	palette_black_in
 		push	0
-		call	sub_CE7A
+		call	_input_wait_for_change
 		push	4
 		call	palette_black_out
 
@@ -342,7 +342,7 @@ loc_A1FE:
 		push	1
 		call	palette_black_in
 		push	0
-		call	sub_CE7A
+		call	_input_wait_for_change
 		push	4
 		call	palette_black_out
 		jmp	short loc_A27E
@@ -1000,7 +1000,7 @@ sub_A73B	proc near
 		cmp	byte_1247E, 0
 		jnz	short loc_A76F
 		push	0
-		call	sub_CE7A
+		call	_input_wait_for_change
 
 loc_A76F:
 		mov	word_124BC, 50h	; 'P'
@@ -1192,7 +1192,7 @@ loc_A88F:
 		cmp	byte_1247E, 0
 		jnz	short loc_A8C4
 		push	[bp+var_2]
-		call	sub_CE7A
+		call	_input_wait_for_change
 		jmp	short loc_A8C4
 ; ---------------------------------------------------------------------------
 
@@ -1476,7 +1476,7 @@ loc_AB26:
 		cmp	byte_1247E, 0
 		jnz	loc_ADB5	; default
 		push	[bp+var_2]
-		call	sub_CE7A
+		call	_input_wait_for_change
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -3729,7 +3729,7 @@ loc_C0AE:
 loc_C0CB:
 		call	far ptr	loc_D1FC
 		push	0
-		call	sub_CE7A
+		call	_input_wait_for_change
 		push	2
 		call	palette_black_out
 		pop	si
@@ -5182,7 +5182,7 @@ loc_CB7A:
 loc_CB7F:
 		call	sub_C316
 		push	0
-		call	sub_CE7A
+		call	_input_wait_for_change
 
 loc_CB89:
 		call	super_free
@@ -5345,60 +5345,7 @@ include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
 include th03/formats/hfliplut.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CE7A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_CE84:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_CE84
-		or	si, si
-		jnz	short loc_CEC6
-		mov	si, 270Fh
-		jmp	short loc_CEC6
-; ---------------------------------------------------------------------------
-
-loc_CEA5:
-		nop
-		call	_input_reset_sense
-		push	1
-		nopcall	frame_delay
-		nopcall	_input_sense
-		cmp	_input, INPUT_NONE
-		jnz	short loc_CECA
-		inc	di
-		cmp	si, 270Fh
-		jnz	short loc_CEC6
-		xor	di, di
-
-loc_CEC6:
-		cmp	di, si
-		jl	short loc_CEA5
-
-loc_CECA:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_CE7A	endp
-
+include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm

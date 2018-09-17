@@ -1966,7 +1966,7 @@ sub_A5FC	proc near
 		cmp	byte_105CE, 0
 		jnz	short loc_A62D
 		push	0
-		call	sub_D6C5
+		call	_input_wait_for_change
 
 loc_A62D:
 		mov	word_105D0, 50h	; 'P'
@@ -2043,7 +2043,7 @@ loc_A695:
 		cmp	byte_105CE, 0
 		jnz	short loc_A6C8
 		push	[bp+var_2]
-		call	sub_D6C5
+		call	_input_wait_for_change
 		jmp	short loc_A6C8
 ; ---------------------------------------------------------------------------
 
@@ -2376,7 +2376,7 @@ loc_A997:
 		cmp	byte_105CE, 0
 		jnz	loc_AC1E	; default
 		push	0
-		call	sub_D6C5
+		call	_input_wait_for_change
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -4317,7 +4317,7 @@ loc_B835:
 
 loc_B858:
 		push	0
-		call	sub_D6C5
+		call	_input_wait_for_change
 		les	bx, dword_105DA
 		cmp	byte ptr es:[bx+36h], 0
 		jz	short loc_B871
@@ -7118,61 +7118,7 @@ sub_D47A	endp
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
 include th03/hardware/input_modes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D6C5	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_D6CF:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_D6E3
-		push	1
-		nopcall	frame_delay
-		jmp	short loc_D6CF
-; ---------------------------------------------------------------------------
-
-loc_D6E3:
-		or	si, si
-		jnz	short loc_D707
-		mov	si, 270Fh
-		jmp	short loc_D707
-; ---------------------------------------------------------------------------
-
-loc_D6EC:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_D70B
-		inc	di
-		push	1
-		nopcall	frame_delay
-		cmp	si, 270Fh
-		jnz	short loc_D707
-		xor	di, di
-
-loc_D707:
-		cmp	di, si
-		jl	short loc_D6EC
-
-loc_D70B:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_D6C5	endp
-
-; ---------------------------------------------------------------------------
+include th03/hardware/input_wait.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

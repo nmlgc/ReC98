@@ -4348,7 +4348,7 @@ loc_C5BE:
 loc_C5C3:
 		call	sub_B6A3
 		push	0
-		call	sub_F212
+		call	_input_wait_for_change
 
 loc_C5CD:
 		call	sub_EC04
@@ -5653,7 +5653,7 @@ sub_D1B1	proc near
 		call	frame_delay
 		call	sub_D16F
 		push	0
-		call	sub_F212
+		call	_input_wait_for_change
 		push	2
 		call	palette_black_out
 		pop	bp
@@ -9059,43 +9059,7 @@ sub_F0B4	endp
 
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F212	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_F215:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_F215
-		mov	bp, [bp+arg_0]
-
-loc_F220:
-		call	_input_reset_sense_held
-		or	ax, ax
-		jnz	short loc_F238
-		mov	ax, vsync_Count1
-
-loc_F22B:
-		cmp	ax, vsync_Count1
-		jz	short loc_F22B
-		or	bp, bp
-		jz	short loc_F220
-		dec	bp
-		jnz	short loc_F220
-
-loc_F238:
-		pop	bp
-		retf	2
-sub_F212	endp
-
+include th05/hardware/input_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

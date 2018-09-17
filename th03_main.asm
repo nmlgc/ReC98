@@ -9394,63 +9394,8 @@ sub_ECD0	endp
 
 include th02/formats/pi_slot_load.asm
 include th03/hardware/input_modes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE77	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-
-loc_EE81:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jz	short loc_EE95
-		push	1
-		nopcall	frame_delay
-		jmp	short loc_EE81
-; ---------------------------------------------------------------------------
-
-loc_EE95:
-		or	si, si
-		jnz	short loc_EEB9
-		mov	si, 270Fh
-		jmp	short loc_EEB9
-; ---------------------------------------------------------------------------
-
-loc_EE9E:
-		call	_input_mode_interface
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_EEBD
-		inc	di
-		push	1
-		nopcall	frame_delay
-		cmp	si, 270Fh
-		jnz	short loc_EEB9
-		xor	di, di
-
-loc_EEB9:
-		cmp	di, si
-		jl	short loc_EE9E
-
-loc_EEBD:
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_EE77	endp
-
-; ---------------------------------------------------------------------------
+include th03/hardware/input_wait.asm
 		db 0
-
 include th03/formats/hfliplut.asm
 
 ; =============== S U B	R O U T	I N E =======================================
