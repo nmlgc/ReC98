@@ -4506,73 +4506,7 @@ loc_BAC0:
 		retn	6
 sub_BA8A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BAD6	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	bx, [bp+arg_0]
-		shl	bx, 4
-		mov	ax, [bx+1D10h]
-		mov	[bp+var_2], ax
-		mov	bx, [bp+arg_0]
-		shl	bx, 4
-		mov	ax, [bx+1D12h]
-		mov	[bp+var_4], ax
-		mov	ax, [bp+var_2]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		sub	[bp+arg_4], ax
-		mov	ax, [bp+var_4]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, 0FFFEh
-		add	[bp+arg_2], ax
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	ax, 0E000h
-		mov	es, ax
-		assume es:nothing
-		mov	dx, [bp+var_2]
-		shr	dx, 4
-		mov	si, 50h	; 'P'
-		sub	si, dx
-		sub	si, dx
-		xor	ax, ax
-		mov	cx, dx
-		rep stosw
-		add	di, si
-		mov	cx, dx
-		rep stosw
-		add	di, si
-		mov	cx, dx
-		rep stosw
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_BAD6	endp
-
+include th03/formats/cdg_unput_for_upwards_motion.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4901,7 +4835,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	sub_BAD6
+		call	_cdg_unput_for_upwards_motion_e
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -5004,7 +4938,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	sub_BAD6
+		call	_cdg_unput_for_upwards_motion_e
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -5250,11 +5184,11 @@ loc_C0DC:
 loc_C114:
 		cmp	word_10BB2, 0A1h
 		jg	short loc_C12A
-		push	140h
+		push	320
 		push	word_10BC2
 		lea	ax, [si-1]
 		push	ax
-		call	sub_BAD6
+		call	_cdg_unput_for_upwards_motion_e
 
 loc_C12A:
 		push	si
