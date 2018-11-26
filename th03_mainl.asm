@@ -4506,7 +4506,7 @@ loc_BAC0:
 		retn	6
 sub_BA8A	endp
 
-include th03/formats/cdg_unput_for_upwards_motion.asm
+include th03/formats/cdg_unput_upwards.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
