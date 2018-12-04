@@ -157,11 +157,7 @@ arg_4		= word ptr  0Ah
 		lodsw
 		cmp	al, 80h
 		jnz	short loc_2E3F
-		mov	al, GC_RMW
-		pushf
-		cli
-		out	7Ch, al
-		popf
+		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		push	ax
 		mov	dx, bp
 		mov	al, 50h	; 'P'
@@ -1336,9 +1332,7 @@ loc_ADE3:
 		push	140040h
 		push	3B0107h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_AE64
 ; ---------------------------------------------------------------------------
 
@@ -1891,9 +1885,7 @@ arg_2		= word ptr  6
 		push	4F018Fh
 		call	grcg_byteboxfill_x
 		call	sub_B37C
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	pi_slot_palette_apply pascal, 0
@@ -2029,9 +2021,7 @@ sub_B3CB	proc near
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	allcast_screen_plus_one, 0
 		push	0
 		mov	al, byte_15018
@@ -3073,9 +3063,7 @@ loc_BB00:
 		lea	ax, [di+10h]
 		push	ax
 		call	grcg_hline
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		pop	bp
@@ -6929,9 +6917,7 @@ loc_DBFF:
 		dec	ax
 		push	ax
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	al, 2
 		jmp	loc_DCF6
 ; ---------------------------------------------------------------------------
@@ -7457,9 +7443,7 @@ var_2		= word ptr -2
 		dec	ax
 		push	ax
 		call	grcg_boxfill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		xor	di, di
 		jmp	short loc_E098
 ; ---------------------------------------------------------------------------
@@ -7528,9 +7512,7 @@ loc_E0A6:
 		push	[bp+var_4]
 		push	10h
 		call	grcg_circlefill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_E0F6:
 		inc	di
@@ -7585,9 +7567,7 @@ loc_E161:
 		mov	ah, 0
 		push	ax
 		call	grcg_circlefill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_E18B:
 		sub	si, 14h
@@ -7770,9 +7750,7 @@ loc_E21D:
 		add	ax, 7
 		push	ax
 		call	grcg_boxfill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -7898,9 +7876,7 @@ loc_E406:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_E406
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		pop	bp
@@ -7933,9 +7909,7 @@ var_2		= word ptr -2
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		call	sub_D21D
 		push	3700h
 		call	sub_E39F
@@ -7949,9 +7923,7 @@ var_2		= word ptr -2
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		call	_cdg_load_all_noalpha pascal,  0, ds, offset aStf00_cdg
@@ -8302,11 +8274,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		push	ds
 		mov	dx, [bp+arg_4]
-		mov	al, GC_RMW
-		pushf
-		cli
-		out	7Ch, al
-		popf
+		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		shr	dx, 1
 		sbb	al, al
 		out	7Eh, al
@@ -8419,8 +8387,7 @@ loc_E9F4:
 loc_E9FD:
 		mov	al, 0Ah
 		out	68h, al
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
 		pop	si
@@ -9112,8 +9079,7 @@ sub_F478	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	es:[495h], al
 		popf
 		pop	es

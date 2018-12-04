@@ -5144,8 +5144,7 @@ loc_C86E:
 		call	grcg_setcolor pascal, GC_RMW, si
 		mov	bx, 232h
 		call	sub_B398
-		xor	ax, ax
-		out	7Ch, ax
+		GRCG_OFF_VIA_XOR ax
 
 loc_C881:
 		cmp	byte_23BA4, 0
@@ -5175,8 +5174,7 @@ loc_C8AE:
 		call	grcg_setcolor pascal, GC_RMW, si
 		mov	bx, 25Ah
 		call	sub_B398
-		xor	ax, ax
-		out	7Ch, ax
+		GRCG_OFF_VIA_XOR ax
 
 loc_C8C1:
 		pop	si
@@ -5348,8 +5346,7 @@ loc_C9E0:
 		call	sub_B3F6
 
 loc_C9F6:
-		xor	ax, ax
-		out	7Ch, ax
+		GRCG_OFF_VIA_XOR ax
 		pop	di
 		pop	si
 		leave
@@ -6103,8 +6100,7 @@ loc_D00D:
 loc_D013:
 		cmp	[bp+var_2], 0Ch
 		jl	loc_CEFC
-		xor	ax, ax
-		out	7Ch, ax
+		GRCG_OFF_VIA_XOR ax
 		pushd	0
 		push	27F00C7h
 		call	grc_setclip
@@ -9499,8 +9495,7 @@ loc_EF8A:
 		rep movsd
 		sub	di, 74h	; 't'
 		jnb	short loc_EF8A
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		xor	si, si
 		add	di, 3980h
 		mov	ax, gs
@@ -26634,8 +26629,7 @@ loc_17D9C:
 		inc	di
 		cmp	di, 140h
 		jb	short loc_17D71
-		xor	ax, ax
-		out	7Ch, ax
+		GRCG_OFF_VIA_XOR ax
 		pop	di
 		pop	si
 		leave

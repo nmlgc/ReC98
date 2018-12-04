@@ -1608,9 +1608,7 @@ loc_AC70:
 		push	140040h
 		push	3B0107h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_ACF0
 ; ---------------------------------------------------------------------------
 
@@ -2025,9 +2023,7 @@ loc_AEF1:
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_B027:
 		pop	di
@@ -2157,9 +2153,7 @@ loc_B04E:
 		push	ax
 		push	3
 		call	_cdg_put_plane
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_B13E:
 		pop	di
@@ -2289,9 +2283,7 @@ loc_B165:
 		push	ax
 		push	3
 		call	_cdg_put_plane
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_B255:
 		pop	di
@@ -5140,16 +5132,14 @@ off_CB9E	dw offset loc_CA9A
 sub_CBB0	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, GC_OFF
-		out	7Ch, al
+		GRCG_OFF_VIA_MOV al
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
@@ -5335,11 +5325,7 @@ loc_D1FC:
 		push	di
 		push	ds
 		mov	dx, [bp+0Ah]
-		mov	al, GC_RMW
-		pushf
-		cli
-		out	7Ch, al
-		popf
+		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		shr	dx, 1
 		sbb	al, al
 		out	7Eh, al
@@ -5452,8 +5438,7 @@ loc_D2DC:
 loc_D2E5:
 		mov	al, 0Ah
 		out	68h, al
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
 		pop	si

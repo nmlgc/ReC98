@@ -512,9 +512,7 @@ loc_A695:
 		call	_cdg_put_nocolors
 
 loc_A69A:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A705
 		call	_cdg_put pascal, 256, di, 35
@@ -734,9 +732,7 @@ loc_A8C7:
 		mov	si, 15h
 
 loc_A8DA:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A951
 		call	_cdg_put pascal, di, [bp+var_4], 35
@@ -2815,9 +2811,7 @@ var_1		= byte ptr -1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	1
 		call	graph_copy_page
 		mov	[bp+var_1], 1
@@ -3000,9 +2994,7 @@ arg_2		= byte ptr  6
 		lea	ax, [si+6Fh]
 		push	ax
 		call	grcg_vline
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_BF05
 ; ---------------------------------------------------------------------------
 
@@ -3191,9 +3183,7 @@ sub_C293	proc near
 		call	sub_D96E
 		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
 		call	polygons_update_and_render
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	1
 		call	frame_delay
 		mov	dx, 0A4h
@@ -4626,9 +4616,7 @@ loc_CEDB:
 loc_CEE5:
 		cmp	di, 0A0h
 		jl	short loc_CEA7
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -4749,9 +4737,7 @@ loc_CF8C:
 		lea	ax, [di+9Fh]
 		push	ax
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		imul	ax, 5
@@ -5152,11 +5138,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		push	ds
 		mov	dx, [bp+arg_4]
-		mov	al, GC_RMW
-		pushf
-		cli
-		out	7Ch, al
-		popf
+		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		shr	dx, 1
 		sbb	al, al
 		out	7Eh, al
@@ -5269,8 +5251,7 @@ loc_D516:
 loc_D51F:
 		mov	al, 0Ah
 		out	68h, al
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
 		pop	si
@@ -5509,8 +5490,7 @@ include th04/math/vector2_at.asm
 sub_D894	proc far
 		push	si
 		push	di
-		mov	al, GC_RMW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -5582,8 +5562,7 @@ sub_D894	proc far
 		mov	al, 8
 		mov	di, 318Eh
 		call	sub_DB0D
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		push	ds
 		mov	ah, PMD_GET_WORKAREA_ADDRESS
 		int	60h
@@ -5606,8 +5585,7 @@ sub_D96E	proc far
 		push	ds
 		push	ds
 		pop	fs
-		mov	al, GC_RMW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 3020h
@@ -5641,8 +5619,7 @@ sub_D96E	proc far
 		add	bx, 2
 		call	sub_DA12
 		call	near ptr sub_DA6B
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
 		pop	si
@@ -6374,8 +6351,7 @@ sub_E354	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	es:[495h], al
 		popf
 		pop	es

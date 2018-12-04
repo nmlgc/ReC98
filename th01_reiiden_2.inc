@@ -11459,9 +11459,7 @@ sub_21884	endp
 sub_21889	proc far
 		push	bp
 		mov	bp, sp
-		mov	dx, 7Ch	; '|'
-		mov	al, 0C0h ; '?'
-		out	dx, al
+		GRCG_SETMODE_CLOBBERING dx, GC_RMW
 		mov	dx, 7Eh	; '~'
 		mov	al, 55h	; 'U'
 		out	dx, al
@@ -13158,9 +13156,7 @@ loc_22652:
 loc_22655:
 		cmp	[bp+var_1], 28h	; '('
 		jb	short loc_2261D
-		mov	dx, 7Ch	; '|'
-		mov	al, 0
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_22661:
 		pop	si

@@ -17,6 +17,8 @@
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
+include libs/master.lib/macros.inc
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -1960,8 +1962,7 @@ sub_BD0		proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, 80h
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 4A0h
 		mov	ax, 0FFF0h
 		out	dx, ax
@@ -2012,8 +2013,7 @@ sub_C10		proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		sti
 		pop	dx
 		pop	ax

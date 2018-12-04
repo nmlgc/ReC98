@@ -443,9 +443,7 @@ loc_AF2D:
 		call	sub_C346
 		call	sub_100C6
 		call	sub_ED54
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		call	fp_2CE88
 		call	fp_2CE8A
 		call	sub_10287
@@ -1882,16 +1880,14 @@ sub_BBE8	endp
 
 
 sub_BC2A	proc near
-		mov	al, GC_OFF
-		out	7Ch, al
+		GRCG_OFF_VIA_MOV al
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
@@ -3720,9 +3716,7 @@ loc_C989:
 loc_C98D:
 		cmp	di, 8
 		jl	loc_C8E4
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -3981,9 +3975,7 @@ sub_CB30	proc near
 		call	grcg_circle
 
 loc_CBE4:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	al, byte_2429B
 		mov	ah, 0
 		add	ax, 64h	; 'd'
@@ -4359,8 +4351,7 @@ sub_CEC2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
 		out	dx, al
@@ -4381,8 +4372,7 @@ loc_CEDB:
 		sub	di, 56h	; 'V'
 		jge	short loc_CEDB
 		pop	di
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		retn
 sub_CEC2	endp
 
@@ -4394,8 +4384,7 @@ sub_CEF2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
 		out	dx, al
@@ -4418,8 +4407,7 @@ loc_CF0D:
 		sub	di, 5Ah	; 'Z'
 		jge	short loc_CF0D
 		pop	di
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		retn
 sub_CEF2	endp
 
@@ -4459,8 +4447,7 @@ sub_CF50	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
 		out	dx, al
@@ -4515,8 +4502,7 @@ loc_CFAC:
 		sub	di, 54h	; 'T'
 		jge	short loc_CFAC
 		pop	di
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		retn
 sub_CF50	endp
 
@@ -4530,8 +4516,7 @@ sub_CFBA	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		xor	al, al
 		out	dx, al
@@ -4552,8 +4537,7 @@ loc_CFD5:
 		sub	di, 58h	; 'X'
 		jge	short loc_CFD5
 		pop	di
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		retn
 sub_CFBA	endp
 
@@ -4563,8 +4547,7 @@ sub_CFBA	endp
 
 sub_CFEE	proc near
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
 		out	dx, al
@@ -4588,8 +4571,7 @@ sub_CFEE	proc near
 		xor	di, di
 		rep stosd
 		pop	di
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		retn
 sub_CFEE	endp
 
@@ -4652,9 +4634,7 @@ arg_4		= word ptr  8
 		mov	ah, [bp+arg_0]
 		call	sub_E6EE
 		call	fp_2449A
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	bp
 		retn	6
 sub_D065	endp
@@ -4756,9 +4736,7 @@ loc_D124:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEA6
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
 		call	_cdg_put_noalpha
@@ -4836,9 +4814,7 @@ loc_D1B0:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEB4
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 221
 		push	16
 		call	_cdg_put_noalpha
@@ -4917,9 +4893,7 @@ loc_D23E:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEC2
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
 		push	16
 		call	_cdg_put_noalpha
@@ -4994,9 +4968,7 @@ loc_D2C7:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_E01E
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
 		call	_cdg_put_noalpha
@@ -5486,9 +5458,7 @@ loc_D630:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		pop	bp
@@ -5752,9 +5722,7 @@ loc_D82E:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -5980,9 +5948,7 @@ loc_D9C6:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -6136,9 +6102,7 @@ loc_DB0A:
 		call	sub_DA25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
 		call	sub_D327
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		leave
 		retn
 sub_DA86	endp
@@ -6317,9 +6281,7 @@ loc_DCC5:
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		pop	bp
@@ -6814,9 +6776,7 @@ loc_DFA1:
 		add	[bp+var_6], 10h
 		cmp	[bp+var_6], 180h
 		jb	short loc_DF59
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		leave
 		retn	2
@@ -7918,8 +7878,7 @@ sub_E696	endp
 
 
 sub_E6E2	proc near
-		mov	al, GC_RMW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		retn
 sub_E6E2	endp
 
@@ -7930,8 +7889,7 @@ sub_E6E2	endp
 
 
 sub_E6E8	proc near
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		retn
 sub_E6E8	endp
 
@@ -8352,8 +8310,7 @@ sub_E914	endp
 sub_E92E	proc near
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		xor	al, al
 		out	dx, al
@@ -8367,8 +8324,7 @@ sub_E92E	proc near
 		assume es:nothing
 		mov	di, 72B4h
 		call	sub_D024
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
 sub_E92E	endp
@@ -8380,8 +8336,7 @@ sub_E92E	endp
 sub_E950	proc near
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	dx, 7Eh	; '~'
 		xor	al, al
 		out	dx, al
@@ -8394,8 +8349,7 @@ sub_E950	proc near
 		mov	es, ax
 		mov	di, 4AB4h
 		call	sub_D024
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
 sub_E950	endp
@@ -9135,9 +9089,7 @@ loc_EEE1:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_EECC
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	bp
 		retn	6
@@ -10014,9 +9966,7 @@ loc_F5D2:
 loc_F5D8:
 		cmp	[bp+var_6], 2
 		jl	loc_F539
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -12778,9 +12728,7 @@ loc_10BFD:
 		call	grcg_circlefill
 
 loc_10C1F:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 
 loc_10C25:
 		mov	bx, [bp+var_2]
@@ -12805,9 +12753,7 @@ loc_10C3E:
 		push	[bp+var_8]
 		push	di
 		call	grcg_hline
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_10C96
 ; ---------------------------------------------------------------------------
 
@@ -14086,9 +14032,7 @@ loc_115CE:
 loc_115D4:
 		cmp	[bp+var_2], 40h
 		jl	short loc_11568
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		cmp	frame_mod4, 0
 		jnz	short loc_1162C
 		cmp	byte_2CE4C, 0
@@ -14864,9 +14808,7 @@ loc_11B19:
 		push	0C80h
 		push	word_2CE6A
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	loc_11CB5
 ; ---------------------------------------------------------------------------
 
@@ -14970,9 +14912,7 @@ loc_11C4E:
 		push	0C80h
 		push	word_2CE6A
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		test	byte_2CE8C, 3
 		jnz	short loc_11CB5
 		cmp	byte_2CE8C, 0
@@ -15038,9 +14978,7 @@ loc_11CFE:
 		push	1680h
 		push	word_2CE6E
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	loc_11DE4
 ; ---------------------------------------------------------------------------
 
@@ -15082,9 +15020,7 @@ loc_11D90:
 		push	1680h
 		push	word_2CE6E
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		test	byte_2288B, 3
 		jnz	short loc_11DE4
 		cmp	byte_2288B, 0
@@ -15642,9 +15578,7 @@ loc_122D5:
 		mov	dx, [bp+var_2]
 		push	1Ah
 		call	sub_E148
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		jmp	loc_123A9
 ; ---------------------------------------------------------------------------
 
@@ -16079,9 +16013,7 @@ loc_12631:
 loc_12637:
 		cmp	[bp+var_2], 18h
 		jl	short loc_12609
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -22061,8 +21993,7 @@ sub_15A04	proc near
 sub_15A04	endp
 
 ; ---------------------------------------------------------------------------
-		mov	al, 0C0h
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		retn
 ; ---------------------------------------------------------------------------
 		nop

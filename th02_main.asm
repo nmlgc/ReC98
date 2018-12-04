@@ -2860,8 +2860,7 @@ loc_BD26:
 		mov	al, 4
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, GC_OFF
-		out	7Ch, al
+		GRCG_OFF_VIA_MOV al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
@@ -2967,8 +2966,7 @@ loc_BE3B:
 		mov	al, 4
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, 0
-		out	7Ch, al
+		GRCG_OFF_VIA_MOV al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;

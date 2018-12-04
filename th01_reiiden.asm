@@ -5672,9 +5672,7 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		nopcall	sub_E9FC
 		leave
 		retf
@@ -5712,9 +5710,7 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		nopcall	sub_E9FC
 		leave
 		retf
@@ -5739,9 +5735,7 @@ sub_E9CB	proc far
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	bp
 		retf
 sub_E9CB	endp
@@ -5872,9 +5866,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_RMW
-		out	dx, al
+		GRCG_SETMODE_CLOBBERING dx, GC_RMW
 		test	bl, 1
 		jz	short loc_EA86
 		mov	al, 0FFh
@@ -5939,9 +5931,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_TDW
-		out	dx, al
+		GRCG_SETMODE_CLOBBERING dx, GC_TDW
 		test	bl, 1
 		jz	short loc_EAD0
 		mov	al, 0FFh
@@ -6002,9 +5992,7 @@ public _grcg_off_func
 _grcg_off_func	proc far
 		push	bp
 		mov	bp, sp
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	bp
 		retf
 _grcg_off_func	endp

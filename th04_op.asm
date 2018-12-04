@@ -608,9 +608,7 @@ loc_AB54:
 		call	_cdg_put_nocolors
 
 loc_AB59:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_ABC4
 		call	_cdg_put pascal, 256, di, 35
@@ -831,9 +829,7 @@ loc_AD87:
 		mov	si, 15h
 
 loc_AD9A:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_AE11
 		call	_cdg_put pascal, di, [bp+var_4], 35
@@ -2804,9 +2800,7 @@ sub_C244	proc near
 		call	sub_BFA7
 		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
 		call	polygons_update_and_render
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		mov	dx, 0A4h ; '¤'
 		mov	al, byte ptr word_12DBC+1
 		out	dx, al
@@ -4020,9 +4014,7 @@ var_2		= word ptr -2
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	0
 		call	graph_copy_page
 		call	pi_slot_load pascal, 0, ds, offset aOp5b_pi
@@ -4584,9 +4576,7 @@ loc_D269:
 loc_D273:
 		cmp	di, 0F4h
 		jl	short loc_D235
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
@@ -4741,9 +4731,7 @@ loc_D353:
 		push	ax
 		push	8
 		call	grcg_round_boxfill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		pop	bp
@@ -4777,9 +4765,7 @@ sub_D3A2	proc near
 		push	60120h
 		push	250127h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	0
 		jmp	short loc_D460
 ; ---------------------------------------------------------------------------
@@ -4802,9 +4788,7 @@ loc_D407:
 		push	2A0120h
 		push	490127h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	1
 
 loc_D460:
@@ -5028,9 +5012,7 @@ sub_D595	proc near
 		push	ax
 		push	8
 		call	grcg_round_boxfill
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		push	98h
 		lea	ax, [si+4]
 		push	ax
@@ -5072,9 +5054,7 @@ loc_D66C:
 		push	180120h
 		push	370127h
 		call	grcg_byteboxfill_x
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		call	sub_D595
 		mov	al, byte_132B9
 		mov	ah, 0
@@ -5568,11 +5548,7 @@ arg_8		= word ptr  0Eh
 		push	di
 		push	ds
 		mov	dx, [bp+arg_4]
-		mov	al, GC_RMW
-		pushf
-		cli
-		out	7Ch, al
-		popf
+		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		shr	dx, 1
 		sbb	al, al
 		out	7Eh, al
@@ -5685,8 +5661,7 @@ loc_DF94:
 loc_DF9D:
 		mov	al, 0Ah
 		out	68h, al
-		xor	al, al
-		out	7Ch, al
+		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
 		pop	si
@@ -5949,8 +5924,7 @@ sub_E3E8	proc near
 		pop	es
 		pushf
 		cli
-		mov	al, GC_TDW
-		out	7Ch, al
+		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		mov	byte ptr es:[495h], al
 		popf
 		pop	es

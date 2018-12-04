@@ -1,3 +1,6 @@
+; ReC98
+; ASM equivalents of relevant #defines from master.h
+
 Point struc
 	x dw ?
 	y dw ?
@@ -42,3 +45,38 @@ GC_OFF	equ 0
 GC_TDW	equ 080h	; 書き込みﾃﾞｰﾀは無視して、ﾀｲﾙﾚｼﾞｽﾀの内容を書く
 GC_TCR	equ 080h	; ﾀｲﾙﾚｼﾞｽﾀと同じ色のﾋﾞｯﾄが立って読み込まれる
 GC_RMW	equ 0c0h	; 書き込みﾋﾞｯﾄが立っているﾄﾞｯﾄにﾀｲﾙﾚｼﾞｽﾀから書く
+
+; GRCG mode setting macros
+; ------------------------
+GRCG_SETMODE_CLOBBERING macro port_reg:req, mode:req
+	mov	port_reg, 7Ch
+	mov	al, mode
+	out	port_reg, al
+endm
+
+GRCG_SETMODE_VIA_MOV macro value_reg:req, mode:req
+	mov	value_reg, mode
+	out	7Ch, value_reg
+endm
+
+GRCG_NOINT_SETMODE_VIA_MOV macro value_reg:req, mode:req
+	mov	value_reg, mode
+	pushf
+	cli
+	out	7Ch, al
+	popf
+endm
+
+GRCG_OFF_CLOBBERING macro port_reg:req
+	GRCG_SETMODE_CLOBBERING dx, GC_OFF
+endm
+
+GRCG_OFF_VIA_MOV macro value_reg:req
+	GRCG_SETMODE_VIA_MOV value_reg, GC_OFF
+endm
+
+GRCG_OFF_VIA_XOR macro value_reg:req
+	xor	value_reg, value_reg
+	out	7Ch, value_reg
+endm
+; ------------------------

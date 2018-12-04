@@ -2379,9 +2379,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		nopcall	sub_B901
 		leave
 		retf
@@ -2409,9 +2407,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		nopcall	sub_B901
 		leave
 		retf
@@ -2434,9 +2430,7 @@ sub_B8D0	proc far
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	bp
 		retf
 sub_B8D0	endp
@@ -2567,9 +2561,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_RMW
-		out	dx, al
+		GRCG_SETMODE_CLOBBERING dx, GC_RMW
 		test	bl, 1
 		jz	short loc_B98B
 		mov	al, 0FFh
@@ -2634,9 +2626,7 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_TDW
-		out	dx, al
+		GRCG_SETMODE_CLOBBERING dx, GC_TDW
 		test	bl, 1
 		jz	short loc_B9D5
 		mov	al, 0FFh
@@ -2697,9 +2687,7 @@ sub_B9C0	endp
 sub_BA0A	proc far
 		push	bp
 		mov	bp, sp
-		mov	dx, 7Ch
-		mov	al, GC_OFF
-		out	dx, al
+		GRCG_OFF_CLOBBERING dx
 		pop	bp
 		retf
 sub_BA0A	endp
