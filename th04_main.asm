@@ -369,7 +369,7 @@ loc_ABD4:
 
 loc_ABD8:
 		call	sub_BCF4
-		call	sub_C6E2
+		call	_circles_update
 		call	sub_C266
 		call	sub_10ABF
 		call	sub_104B6
@@ -392,7 +392,7 @@ loc_ABD8:
 		call	sub_12DF0
 		call	loc_BD64
 		call	sub_12CE5
-		call	sub_C718
+		call	_circles_render
 		GRCG_OFF_CLOBBERING dx
 		call	fp_259DC
 		call	fp_259DE
@@ -3671,192 +3671,7 @@ loc_C626:
 		retn	2
 sub_C546	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C64A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9594h
-		xor	cx, cx
-		jmp	short loc_C68C
-; ---------------------------------------------------------------------------
-
-loc_C655:
-		cmp	byte ptr [si], 0
-		jnz	short loc_C688
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		add	ax, 20h	; ' '
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		add	ax, 10h
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 4
-		mov	word ptr [si+8], 8
-		jmp	short loc_C691
-; ---------------------------------------------------------------------------
-
-loc_C688:
-		inc	cx
-		add	si, 0Ah
-
-loc_C68C:
-		cmp	cx, 10h
-		jl	short loc_C655
-
-loc_C691:
-		pop	si
-		pop	bp
-		retf	4
-sub_C64A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C696	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9594h
-		xor	cx, cx
-		jmp	short loc_C6D8
-; ---------------------------------------------------------------------------
-
-loc_C6A1:
-		cmp	byte ptr [si], 0
-		jnz	short loc_C6D4
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		add	ax, 20h
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		add	ax, 10h
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 84h
-		mov	word ptr [si+8], 0FFF8h
-		jmp	short loc_C6DD
-; ---------------------------------------------------------------------------
-
-loc_C6D4:
-		inc	cx
-		add	si, 0Ah
-
-loc_C6D8:
-		cmp	cx, 10h
-		jl	short loc_C6A1
-
-loc_C6DD:
-		pop	si
-		pop	bp
-		retf	4
-sub_C696	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C6E2	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9594h
-		xor	dx, dx
-		jmp	short loc_C710
-; ---------------------------------------------------------------------------
-
-loc_C6ED:
-		cmp	byte ptr [si], 2
-		jnz	short loc_C6F5
-		mov	byte ptr [si], 0
-
-loc_C6F5:
-		cmp	byte ptr [si], 1
-		jnz	short loc_C70C
-		mov	ax, [si+8]
-		add	[si+6],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 10h
-		jbe	short loc_C70C
-		mov	byte ptr [si], 2
-
-loc_C70C:
-		inc	dx
-		add	si, 0Ah
-
-loc_C710:
-		cmp	dx, 10h
-		jl	short loc_C6ED
-		pop	si
-		pop	bp
-		retn
-sub_C6E2	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C718	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, grcgcolor_25592
-		call	_grcg_setcolor_direct_noint_1
-		mov	si, 9594h
-		xor	di, di
-		jmp	short loc_C742
-; ---------------------------------------------------------------------------
-
-loc_C72B:
-		cmp	byte ptr [si], 1
-		jnz	short loc_C73E
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	word ptr [si+6]
-		call	grcg_circle
-
-loc_C73E:
-		inc	di
-		add	si, 0Ah
-
-loc_C742:
-		cmp	di, 10h
-		jl	short loc_C72B
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_C718	endp
-
-; ---------------------------------------------------------------------------
+include th04/circles.asm
 		db    0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11573,7 +11388,7 @@ var_1		= byte ptr -1
 		call	_cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_10096
-		mov	grcgcolor_25592, GC_RG
+		mov	_circles_color, GC_RG
 		mov	al, byte_256A9
 		mov	ah, 0
 		add	ax, 0FFD0h
@@ -11601,7 +11416,7 @@ loc_10096:
 		call	vector2_at
 		push	word_266DA
 		push	word_266DC
-		nopcall	sub_C64A
+		nopcall	_circles_add_growing
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
@@ -11613,7 +11428,7 @@ loc_10096:
 		call	vector2_at
 		push	word_266DA
 		push	word_266DC
-		nopcall	sub_C64A
+		nopcall	_circles_add_growing
 		call	snd_se_play pascal, 9
 
 loc_100FE:
@@ -11648,7 +11463,7 @@ var_2		= word ptr -2
 		call	_cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_1015E
-		mov	grcgcolor_25592, 0Fh
+		mov	_circles_color, 0Fh
 		mov	al, byte_256A9
 		mov	ah, 0
 		add	ax, 0FFD0h
@@ -11717,7 +11532,7 @@ loc_101D7:
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		push	ax
-		nopcall	sub_C64A
+		nopcall	_circles_add_growing
 		call	snd_se_play pascal, 9
 
 loc_101F4:
@@ -11839,7 +11654,7 @@ loc_102F2:
 		mov	byte_256A8, 0
 		mov	PaletteTone, 64h	; 'd'
 		mov	byte_266D3, 1
-		mov	grcgcolor_25592, GC_R
+		mov	_circles_color, GC_R
 
 loc_10307:
 		inc	byte_256A9
@@ -15291,7 +15106,7 @@ sub_11ECB	proc near
 		mov	byte_266D3, 0
 		mov	byte_2CFF9, 0
 		mov	word_2CFFC, 0
-		mov	grcgcolor_25592, GC_R
+		mov	_circles_color, GC_R
 		push	200010h
 		push	19F017Fh
 		call	grc_setclip
@@ -15310,8 +15125,8 @@ sub_11ECB	proc near
 		push	0B204h
 		push	0D0h
 		call	sub_C34E
-		push	9594h
-		push	28h ; '('
+		push	offset _circles
+		push	size _circles / 4
 		call	sub_C34E
 		push	0AF34h
 		push	0A0h
@@ -22750,8 +22565,8 @@ loc_16221:
 loc_16228:
 		push	word ptr dword_266E4 ; jumptable 000161F6 case 17
 		push	word ptr dword_266E4+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		mov	byte_266E2, 2
 		mov	byte_266EE, 10h
 		mov	byte_266F2, 87h
@@ -22927,10 +22742,10 @@ loc_163B5:
 		mov	byte_25666, 64h	; 'd'
 
 loc_163C6:
-		mov	grcgcolor_25592, 0Fh	; jumptable 000163A9 cases 56,64,72,80
+		mov	_circles_color, 0Fh	; jumptable 000163A9 cases 56,64,72,80
 		push	word ptr dword_266E4
 		push	word ptr dword_266E4+2
-		call	sub_C696
+		call	_circles_add_shrinking
 
 loc_163D8:
 		mov	al, byte_2A8D3	; jumptable 000163A9 case 40
@@ -23071,8 +22886,8 @@ sub_1653D	proc near
 		jnz	short loc_1656A
 		push	word ptr dword_266E4
 		push	word ptr dword_266E4+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		mov	byte_2671E, 10h
 		mov	byte_2D02D, 10h
 		mov	byte_266F2, 0FFh
@@ -23619,7 +23434,7 @@ loc_16A86:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF80h
 		push	ax
-		call	sub_C696
+		call	_circles_add_shrinking
 		jmp	short loc_16ADA
 ; ---------------------------------------------------------------------------
 
@@ -26225,8 +26040,8 @@ loc_18090:
 loc_18097:
 		push	word ptr dword_2A8C6 ; jumptable 00018067 case 48
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_180A9:
 		leave			; default
@@ -27539,10 +27354,10 @@ loc_18AFA:
 		jl	short loc_18AEC
 		inc	byte ptr [si]
 		call	snd_se_play pascal, 6
-		mov	grcgcolor_25592, GC_RG
+		mov	_circles_color, GC_RG
 		push	word ptr dword_266E4
 		push	word ptr dword_266E4+2
-		call	sub_C64A
+		call	_circles_add_growing
 		jmp	short loc_18B4D
 ; ---------------------------------------------------------------------------
 
@@ -27672,8 +27487,8 @@ loc_18BF7:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		pop	bp
 		retn
@@ -27737,8 +27552,8 @@ loc_18C87:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		pop	bp
 		retn
@@ -27803,15 +27618,15 @@ loc_18D16:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
+		call	_circles_add_shrinking
 		mov	ax, word ptr dword_2670A
 		add	ax, 0FF40h
 		push	ax
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		leave
 		retn
@@ -27944,8 +27759,8 @@ loc_18E54:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		pop	bp
 		retn
@@ -28022,8 +27837,8 @@ loc_18EF8:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		pop	bp
 		retn
@@ -28101,15 +27916,15 @@ loc_18F9C:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
+		call	_circles_add_shrinking
 		mov	ax, word ptr dword_2670A
 		add	ax, 0C0h
 		push	ax
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 0FF60h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		call	snd_se_play pascal, 8
 		pop	bp
 		retn
@@ -28602,8 +28417,8 @@ loc_19444:
 		jnz	short loc_1945E
 		push	word ptr dword_2670A
 		push	word ptr dword_2670A+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 loc_1945E:
 		cmp	word_2671A, 40h
@@ -28826,8 +28641,8 @@ loc_19656:
 		jnz	short loc_19671
 		push	word ptr dword_2670A
 		push	word ptr dword_2670A+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
 
@@ -29227,8 +29042,8 @@ loc_199BC:
 loc_199DB:
 		push	word ptr dword_266E4
 		push	word ptr dword_266E4+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 loc_199ED:
 		cmp	frame_mod4, 0
@@ -29560,8 +29375,8 @@ loc_19D2B:
 		jnz	short loc_19D44
 		push	word ptr dword_266E4
 		push	word ptr dword_266E4+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 loc_19D44:
 		cmp	word_2671A, 80h
@@ -31280,13 +31095,13 @@ loc_1A96C:
 loc_1A981:
 		push	word ptr dword_2A8C6 ; jumptable 0001A926 case 32
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
+		call	_circles_add_shrinking
 		mov	ax, word ptr dword_2A8C6
 		add	ax, 2C0h
 		push	ax
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_1A9A3:
 		leave			; default
@@ -31368,8 +31183,8 @@ loc_1AA19:
 loc_1AA20:
 		push	word ptr dword_2A8C6 ; jumptable 0001A9E9 case 64
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_1AA32:
 		leave			; default
@@ -31444,13 +31259,13 @@ loc_1AAAD:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 200h
 		push	ax
-		call	sub_C696
+		call	_circles_add_shrinking
 		push	word_25A0C
 		mov	ax, word_25A0E
 		add	ax, 200h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_1AAD2:
 		leave			; default
@@ -31516,8 +31331,8 @@ loc_1AB31:
 loc_1AB38:
 		push	word ptr dword_2A8C6 ; jumptable 0001AB04 case 32
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_1AB4A:
 		leave			; default
@@ -31675,8 +31490,8 @@ loc_1ACA5:
 		mov	ax, word ptr dword_2670A+2
 		add	ax, 280h
 		push	ax
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -33602,8 +33417,8 @@ loc_1BDFF:
 loc_1BE11:
 		push	word ptr dword_2670A
 		push	word ptr dword_2670A+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 loc_1BE23:
 		mov	byte_2A8D2, 7
@@ -38820,7 +38635,7 @@ loc_1EA6F:
 		call	sub_13B21
 		mov	byte_26718, 81h
 		call	snd_se_play pascal, 8
-		mov	grcgcolor_25592, 0Fh
+		mov	_circles_color, 0Fh
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -38846,7 +38661,7 @@ loc_1EAC0:
 		mov	byte_26718, 84h
 		push	word ptr dword_2A8C6
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
+		call	_circles_add_shrinking
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -40535,8 +40350,8 @@ loc_1F94E:
 loc_1F955:
 		push	word ptr dword_2A8C6
 		push	word ptr dword_2A8C6+2
-		call	sub_C696
-		mov	grcgcolor_25592, 0Fh
+		call	_circles_add_shrinking
+		mov	_circles_color, 0Fh
 
 locret_1F967:
 		leave			; default
@@ -45814,8 +45629,7 @@ word_25534	dw ?
 		db    ?	;
 byte_25590	db ?
 		db ?
-grcgcolor_25592	db ?
-		db ?
+include th04/circles_color[bss].asm
 byte_25594	db ?
 		db ?
 word_25596	dw ?
@@ -51321,46 +51135,7 @@ word_2A8CE	dw ?
 word_2A8D0	dw ?
 byte_2A8D2	db ?
 byte_2A8D3	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/circles[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

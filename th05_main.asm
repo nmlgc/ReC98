@@ -412,7 +412,7 @@ loc_AEEC:
 
 loc_AEF0:
 		call	sub_C2D6
-		call	sub_ED1E
+		call	_circles_update
 		call	sub_C1B6
 		call	sub_1214A
 		call	sub_1240B
@@ -442,7 +442,7 @@ loc_AF2D:
 		call	sub_F7A5
 		call	sub_C346
 		call	sub_100C6
-		call	sub_ED54
+		call	_circles_render
 		GRCG_OFF_CLOBBERING dx
 		call	fp_2CE88
 		call	fp_2CE8A
@@ -3427,7 +3427,7 @@ loc_C683:
 		mov	ax, [si+2]
 		add	ax, 100h
 		push	ax
-		nopcall	sub_EC86
+		nopcall	_circles_add_growing
 
 loc_C72B:
 		inc	[bp+var_5+1]
@@ -3454,7 +3454,7 @@ sub_C73A	proc near
 		call	_cdg_put_noalpha
 		call	sub_CEC2
 		call	sub_C567
-		mov	grcgcolor_2C92C, GC_RG
+		mov	_circles_color, GC_RG
 		cmp	byte_2429B, 40h
 		ja	short loc_C777
 		mov	al, byte_2429B
@@ -4128,7 +4128,7 @@ sub_CD1C	proc near
 		call	_cdg_put_noalpha
 		call	sub_CFBA
 		call	sub_CC9E
-		mov	grcgcolor_2C92C, GC_RG
+		mov	_circles_color, GC_RG
 		cmp	byte_2429B, 40h
 		ja	short loc_CD59
 		mov	al, byte_2429B
@@ -8474,7 +8474,7 @@ sub_EACE	proc near
 		mov	byte_25FE9, 0
 		mov	byte_2C978, 0
 		mov	word_2C97A, 0
-		mov	grcgcolor_2C92C, GC_R
+		mov	_circles_color, GC_R
 		push	200010h
 		push	19F017Fh
 		call	grc_setclip
@@ -8499,8 +8499,8 @@ sub_EACE	proc near
 		push	0B290h
 		push	1A0h
 		call	sub_E708
-		push	9D50h
-		push	14h
+		push	offset _circles
+		push	size _circles / 4
 		call	sub_E708
 		push	0AF20h
 		push	0C8h
@@ -8625,191 +8625,7 @@ loc_EC7A:
 		retn
 sub_EBB7	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EC86	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9D50h
-		xor	cx, cx
-		jmp	short loc_ECC8
-; ---------------------------------------------------------------------------
-
-loc_EC91:
-		cmp	byte ptr [si], 0
-		jnz	short loc_ECC4
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		add	ax, 20h	; ' '
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		add	ax, 10h
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 4
-		mov	word ptr [si+8], 8
-		jmp	short loc_ECCD
-; ---------------------------------------------------------------------------
-
-loc_ECC4:
-		inc	cx
-		add	si, 0Ah
-
-loc_ECC8:
-		cmp	cx, 8
-		jl	short loc_EC91
-
-loc_ECCD:
-		pop	si
-		pop	bp
-		retf	4
-sub_EC86	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECD2	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9D50h
-		xor	cx, cx
-		jmp	short loc_ED14
-; ---------------------------------------------------------------------------
-
-loc_ECDD:
-		cmp	byte ptr [si], 0
-		jnz	short loc_ED10
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		add	ax, 20h	; ' '
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		add	ax, 10h
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 84h
-		mov	word ptr [si+8], 0FFF8h
-		jmp	short loc_ED19
-; ---------------------------------------------------------------------------
-
-loc_ED10:
-		inc	cx
-		add	si, 0Ah
-
-loc_ED14:
-		cmp	cx, 8
-		jl	short loc_ECDD
-
-loc_ED19:
-		pop	si
-		pop	bp
-		retf	4
-sub_ECD2	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED1E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9D50h
-		xor	dx, dx
-		jmp	short loc_ED4C
-; ---------------------------------------------------------------------------
-
-loc_ED29:
-		cmp	byte ptr [si], 2
-		jnz	short loc_ED31
-		mov	byte ptr [si], 0
-
-loc_ED31:
-		cmp	byte ptr [si], 1
-		jnz	short loc_ED48
-		mov	ax, [si+8]
-		add	[si+6],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 10h
-		jbe	short loc_ED48
-		mov	byte ptr [si], 2
-
-loc_ED48:
-		inc	dx
-		add	si, 0Ah
-
-loc_ED4C:
-		cmp	dx, 8
-		jl	short loc_ED29
-		pop	si
-		pop	bp
-		retn
-sub_ED1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED54	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ah, grcgcolor_2C92C
-		call	_grcg_setcolor_direct_noint_1
-		mov	si, 9D50h
-		xor	di, di
-		jmp	short loc_ED7E
-; ---------------------------------------------------------------------------
-
-loc_ED67:
-		cmp	byte ptr [si], 1
-		jnz	short loc_ED7A
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	word ptr [si+6]
-		call	grcg_circle
-
-loc_ED7A:
-		inc	di
-		add	si, 0Ah
-
-loc_ED7E:
-		cmp	di, 8
-		jl	short loc_ED67
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_ED54	endp
-
+include th04/circles.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29640,7 +29456,7 @@ arg_0		= word ptr  4
 		jnz	short loc_198CF
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	sub_ECD2
+		call	_circles_add_shrinking
 
 loc_198CF:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -29697,7 +29513,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19940
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	sub_ECD2
+		call	_circles_add_shrinking
 
 loc_19940:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -29752,7 +29568,7 @@ arg_0		= word ptr  4
 		jnz	short loc_199B2
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	sub_ECD2
+		call	_circles_add_shrinking
 
 loc_199B2:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -29809,7 +29625,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19A27
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	sub_ECD2
+		call	_circles_add_shrinking
 
 loc_19A27:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -29866,7 +29682,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19A9C
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	sub_ECD2
+		call	_circles_add_shrinking
 
 loc_19A9C:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -33499,7 +33315,7 @@ loc_1BAAD:
 		mov	word ptr dword_2634E+2,	ax
 		push	word_26335+1
 		push	word_26338
-		call	sub_EC86
+		call	_circles_add_growing
 		push	4
 		call	add_explode_effect_function
 		mov	fp_2CE42, offset sub_1B557
@@ -34709,7 +34525,7 @@ loc_1C5D8:
 		call	add_explode_effect_function
 		push	word_26335+1
 		push	word_26338
-		call	sub_EC86
+		call	_circles_add_growing
 		mov	fp_2CE42, offset sub_1BD2C
 		mov	word_2C96E, 0BEh
 		mov	word_2C970, 0BDh
@@ -34978,7 +34794,7 @@ var_2		= word ptr -2
 		call	sub_15A42
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	grcgcolor_2C92C, GC_RG
+		mov	_circles_color, GC_RG
 		mov	si, 0B2AAh
 		mov	di, 1
 		jmp	short loc_1C89A
@@ -34992,7 +34808,7 @@ loc_1C848:
 		mov	[si+2],	eax
 		push	word_2BC71+1
 		push	word_2BC74
-		call	sub_ECD2
+		call	_circles_add_shrinking
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word_2BC71
@@ -50727,26 +50543,7 @@ word_2A72A	dw ?
 word_2A72C	dw ?
 byte_2A72E	db ?
 byte_2A72F	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/circles[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -52914,8 +52711,7 @@ word_2C0C8	dw ?
 dword_2C922	dd ?
 farfp_2C926	dd ?
 word_2C92A	dw ?
-grcgcolor_2C92C	db ?
-		db ?
+include th04/circles_color[bss].asm
 fp_2C92E	dw ?
 dword_2C930	dd ?
 word_2C934	dw ?
