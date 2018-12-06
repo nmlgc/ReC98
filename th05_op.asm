@@ -5495,8 +5495,8 @@ sub_D894	proc far
 		call	sub_DA30
 		mov	di, 3020h
 		call	sub_DA30
-		mov	ah, 5
-		call	sub_DB21
+		mov	ah, GC_RI
+		call	_grcg_setcolor_direct_noint_1
 		mov	al, 0
 		mov	di, 156Ch
 		call	sub_DB0D
@@ -5599,8 +5599,8 @@ sub_D96E	proc far
 		mov	di, 2A80h
 		mov	si, 4
 		call	sub_D9E2
-		mov	ah, 5
-		call	sub_DB21
+		mov	ah, GC_RI
+		call	_grcg_setcolor_direct_noint_1
 		mov	di, 3020h
 		add	bx, 4
 		call	sub_DA12
@@ -5634,8 +5634,8 @@ loc_D9F5:
 		mov	[si+3832h], ah
 		mov	[si+382Ah], al
 		call	sub_DA30
-		mov	ah, 5
-		call	sub_DB21
+		mov	ah, GC_RI
+		call	_grcg_setcolor_direct_noint_1
 		mov	al, [si+382Ah]
 		call	near ptr sub_DA6B
 
@@ -5680,8 +5680,8 @@ sub_DA12	endp
 sub_DA30	proc near
 		push	di
 		push	si
-		mov	ah, 3
-		call	sub_DB21
+		mov	ah, GC_GI
+		call	_grcg_setcolor_direct_noint_1
 		add	di, 30h	; '0'
 		mov	ax, 0EEEEh
 		mov	dl, 0Fh
@@ -5692,8 +5692,8 @@ loc_DA3F:
 		add	di, 34h	; '4'
 		dec	dl
 		jnz	short loc_DA3F
-		mov	ah, 1
-		call	sub_DB21
+		mov	ah, GC_RGI
+		call	_grcg_setcolor_direct_noint_1
 		mov	si, 9EEh
 		sub	di, 4B0h
 		mov	dl, 9
@@ -5826,18 +5826,7 @@ loc_DB1A:
 		retn
 sub_DB0D	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DB21	proc near
-		cli
-		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
-		sti
-		retn
-sub_DB21	endp
-
-; ---------------------------------------------------------------------------
+GRCG_SETCOLOR_DIRECT_NOINT_DEF 1
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

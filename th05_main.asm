@@ -434,7 +434,7 @@ loc_AF2D:
 		call	sub_EBB7
 		call	sub_125A3
 		call	sub_12263
-		call	sub_E6E2
+		call	_grcg_setmode_rmw_1
 		call	fp_2D06C
 		call	sub_FD33
 		call	sub_16B4E
@@ -916,7 +916,7 @@ loc_B3C5:
 
 loc_B3CA:
 		nopcall	sub_BF27
-		mov	word_2CC8E, 9
+		mov	grcgcolor_2CC8E, GC_RG
 		mov	al, stage_id
 		mov	ah, 0
 		mov	bx, ax
@@ -2729,8 +2729,8 @@ sub_C1B6	endp
 sub_C202	proc near
 		push	si
 		push	di
-		mov	ah, 0Ch
-		call	sub_E6EE
+		mov	ah, GC_BR
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	di, 40h
@@ -3454,7 +3454,7 @@ sub_C73A	proc near
 		call	_cdg_put_noalpha
 		call	sub_CEC2
 		call	sub_C567
-		mov	byte_2C92C, 9
+		mov	grcgcolor_2C92C, GC_RG
 		cmp	byte_2429B, 40h
 		ja	short loc_C777
 		mov	al, byte_2429B
@@ -3640,7 +3640,7 @@ loc_C8CE:
 
 loc_C8D4:
 		call	far ptr	palette_show
-		call	sub_E6E2
+		call	_grcg_setmode_rmw_1
 		mov	si, 38C2h
 		xor	di, di
 		jmp	loc_C98D
@@ -3660,8 +3660,8 @@ loc_C8E4:
 		idiv	bx
 		add	ax, 10h
 		mov	[bp+var_4], ax
-		mov	ah, 8
-		call	sub_E6EE
+		mov	ah, GC_BRG
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, [si+6]
 		cwd
 		sub	ax, dx
@@ -3676,8 +3676,8 @@ loc_C8E4:
 		push	ax
 		push	[bp+var_4]
 		call	grcg_boxfill
-		mov	ah, 9
-		call	sub_E6EE
+		mov	ah, GC_RG
+		call	_grcg_setcolor_direct_noint_1
 		dec	[bp+var_6]
 		mov	ax, [bp+var_2]
 		sub	ax, [bp+var_6]
@@ -3689,7 +3689,7 @@ loc_C8E4:
 		push	[bp+var_4]
 		call	grcg_boxfill
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		dec	[bp+var_6]
 		mov	ax, [bp+var_2]
 		sub	ax, [bp+var_6]
@@ -3946,8 +3946,8 @@ sub_CB30	proc near
 		push	0EE0150h
 		push	17Fh
 		call	grcg_vline
-		mov	ah, 6
-		call	sub_E6EE
+		mov	ah, GC_BI
+		call	_grcg_setcolor_direct_noint_1
 		push	0D00010h
 		push	3Fh ; '?'
 		call	grcg_vline
@@ -3961,7 +3961,7 @@ sub_CB30	proc near
 		push	17Fh
 		call	grcg_vline
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_CA7B
 		mov	al, byte_2429B
 		mov	ah, 0
@@ -4128,7 +4128,7 @@ sub_CD1C	proc near
 		call	_cdg_put_noalpha
 		call	sub_CFBA
 		call	sub_CC9E
-		mov	byte_2C92C, 9
+		mov	grcgcolor_2C92C, GC_RG
 		cmp	byte_2429B, 40h
 		ja	short loc_CD59
 		mov	al, byte_2429B
@@ -4630,9 +4630,9 @@ arg_4		= word ptr  8
 		push	bp
 		mov	bp, sp
 		call	_cdg_put_noalpha pascal, [bp+arg_4], [bp+arg_2], 16
-		call	sub_E6E8
+		call	_grcg_setmode_tdw
 		mov	ah, [bp+arg_0]
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		call	fp_2449A
 		GRCG_OFF_CLOBBERING dx
 		pop	bp
@@ -4732,9 +4732,9 @@ loc_D108:
 ; ---------------------------------------------------------------------------
 
 loc_D124:
-		call	sub_E6E8
-		mov	ah, 1
-		call	sub_E6EE
+		call	_grcg_setmode_tdw
+		mov	ah, GC_RGI
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_DEA6
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
@@ -4810,9 +4810,9 @@ loc_D194:
 ; ---------------------------------------------------------------------------
 
 loc_D1B0:
-		call	sub_E6E8
-		mov	ah, 1
-		call	sub_E6EE
+		call	_grcg_setmode_tdw
+		mov	ah, GC_RGI
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_DEB4
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 221
@@ -4889,9 +4889,9 @@ loc_D220:
 ; ---------------------------------------------------------------------------
 
 loc_D23E:
-		call	sub_E6E8
-		mov	ah, 1
-		call	sub_E6EE
+		call	_grcg_setmode_tdw
+		mov	ah, GC_RGI
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_DEC2
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
@@ -4964,9 +4964,9 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_D2C7:
-		call	sub_E6E8
-		mov	ah, 1
-		call	sub_E6EE
+		call	_grcg_setmode_tdw
+		mov	ah, GC_RGI
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_E01E
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
@@ -5426,9 +5426,9 @@ loc_D62B:
 loc_D630:
 		cmp	di, 2
 		jl	short loc_D5F1
-		call	sub_E6E2
-		mov	ah, 8
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_BRG
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -5442,8 +5442,8 @@ loc_D630:
 		push	3B4Eh
 		push	0Ch
 		call	sub_D4F8
-		mov	ah, 9
-		call	sub_E6EE
+		mov	ah, GC_RG
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -5451,7 +5451,7 @@ loc_D630:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -5690,9 +5690,9 @@ loc_D829:
 		jl	short loc_D808
 
 loc_D82E:
-		call	sub_E6E2
-		mov	ah, 8
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_BRG
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -5706,8 +5706,8 @@ loc_D82E:
 		push	3B4Eh
 		push	0Ch
 		call	sub_D4F8
-		mov	ah, 9
-		call	sub_E6EE
+		mov	ah, GC_RG
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -5715,7 +5715,7 @@ loc_D82E:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -5916,9 +5916,9 @@ loc_D9C1:
 		jl	short loc_D9A0
 
 loc_D9C6:
-		call	sub_E6E2
-		mov	ah, 8
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_BRG
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -5932,8 +5932,8 @@ loc_D9C6:
 		push	3B4Eh
 		push	0Ch
 		call	sub_D4F8
-		mov	ah, 9
-		call	sub_E6EE
+		mov	ah, GC_RG
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -5941,7 +5941,7 @@ loc_D9C6:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -6886,7 +6886,7 @@ sub_E02E	proc near
 		jnz	short loc_E094
 
 loc_E066:
-		call	sub_E0C2
+		call	_grcg_setcolor_direct
 		mov	ch, 20h	; ' '
 		mov	di, cs:word_E02C
 		cmp	di, 7350h
@@ -6914,7 +6914,7 @@ loc_E08E:
 ; ---------------------------------------------------------------------------
 
 loc_E094:
-		call	sub_E0C2
+		call	_grcg_setcolor_direct
 		mov	ch, 20h	; ' '
 		mov	di, cs:word_E02C
 		cmp	di, 7350h
@@ -6939,17 +6939,7 @@ loc_E0B2:
 		retn	2
 sub_E02E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E0C2	proc near
-		GRCG_SETCOLOR_DIRECT ah
-		retn
-sub_E0C2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/grcg_setcolor_direct.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7840,39 +7830,7 @@ sub_E696	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E6E2	proc near
-		GRCG_SETMODE_VIA_MOV al, GC_RMW
-		retn
-sub_E6E2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E6E8	proc near
-		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		retn
-sub_E6E8	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E6EE	proc near
-		cli
-		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
-		sti
-		retn
-sub_E6EE	endp
-
+include th04/hardware/grcg_modecol.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8516,7 +8474,7 @@ sub_EACE	proc near
 		mov	byte_25FE9, 0
 		mov	byte_2C978, 0
 		mov	word_2C97A, 0
-		mov	byte_2C92C, 0Dh
+		mov	grcgcolor_2C92C, GC_R
 		push	200010h
 		push	19F017Fh
 		call	grc_setclip
@@ -8824,8 +8782,8 @@ sub_ED54	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ah, byte_2C92C
-		call	sub_E6EE
+		mov	ah, grcgcolor_2C92C
+		call	_grcg_setcolor_direct_noint_1
 		mov	si, 9D50h
 		xor	di, di
 		jmp	short loc_ED7E
@@ -9845,7 +9803,7 @@ var_2		= word ptr -2
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		call	sub_E6E2
+		call	_grcg_setmode_rmw_1
 		mov	si, 0BF5Ch
 		mov	[bp+var_6], 0
 		jmp	loc_F5D8
@@ -10907,7 +10865,7 @@ loc_FD96:
 		cmp	byte ptr [si+0Bh], 3
 		jb	short loc_FDF4
 		mov	ah, [si+1]
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		cmp	word ptr [si+6], 100h
 		jg	short loc_FDC2
 		push	[bp+var_4]
@@ -10949,7 +10907,7 @@ loc_FDF1:
 
 loc_FDF4:
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		cmp	word ptr [si+6], 100h
 		jg	short loc_FE11
 		push	[bp+var_4]
@@ -11014,7 +10972,7 @@ loc_FE8A:
 
 loc_FE9D:
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		shl	[bp+var_A], 3
 		push	48FEh
 		push	word ptr [si+2]
@@ -11132,7 +11090,7 @@ loc_FF96:
 		cmp	byte ptr [di], 0
 		jz	loc_1002D
 		mov	ah, [di+1]
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	si, 0Fh
 		jmp	short loc_FFF0
 ; ---------------------------------------------------------------------------
@@ -11225,7 +11183,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	si, 0C252h
 		mov	[bp+var_2], 0
 		jmp	short loc_100BC
@@ -11412,10 +11370,10 @@ loc_101BD:
 		or	ax, ax
 		jnz	short loc_1018A
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_C054
-		mov	ah, byte ptr word_2CC8E
-		call	sub_E6EE
+		mov	ah, byte ptr grcgcolor_2CC8E
+		call	_grcg_setcolor_direct_noint_1
 		call	sub_C0E6
 		jmp	short loc_10210
 ; ---------------------------------------------------------------------------
@@ -13343,7 +13301,7 @@ loc_11080:
 		cmp	byte ptr [si], 1
 		jnz	short loc_110B4
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 20h	; ' '
@@ -14724,9 +14682,9 @@ loc_11AD6:
 ; ---------------------------------------------------------------------------
 
 loc_11AF8:
-		call	sub_E6E2
-		mov	ah, 0Bh
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_G
+		call	_grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_11B11
 		push	150A80h
@@ -14746,7 +14704,7 @@ loc_11B19:
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
@@ -14828,9 +14786,9 @@ loc_11BDB:
 		call	text_putsa pascal, ax, 23, dword_2CE96, TX_WHITE
 
 loc_11C2D:
-		call	sub_E6E2
-		mov	ah, 0Bh
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_G
+		call	_grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_11C46
 		push	150A80h
@@ -14850,7 +14808,7 @@ loc_11C4E:
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
@@ -14917,16 +14875,16 @@ loc_11CE1:
 ; ---------------------------------------------------------------------------
 
 loc_11CFE:
-		call	sub_E6E2
-		mov	ah, 0Bh
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_G
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax
@@ -14959,16 +14917,16 @@ loc_11D53:
 		call	text_putsa pascal, ax, 23, dword_2CE9A, TX_WHITE
 
 loc_11D90:
-		call	sub_E6E2
-		mov	ah, 0Bh
-		call	sub_E6EE
+		call	_grcg_setmode_rmw_1
+		mov	ah, GC_G
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	sub_E6EE
+		call	_grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax
@@ -15516,7 +15474,7 @@ loc_122CB:
 loc_122D5:
 		cmp	shot_level, 2
 		jb	loc_123A9
-		call	sub_E6E2
+		call	_grcg_setmode_rmw_1
 		mov	ax, word ptr dword_2CEB4
 		sar	ax, 4
 		mov	di, ax
@@ -15901,7 +15859,7 @@ var_2		= word ptr -2
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		call	sub_E6E2
+		call	_grcg_setmode_rmw_1
 		mov	di, 0C4FAh
 		mov	[bp+var_2], 0
 		jmp	short loc_125F6
@@ -21925,21 +21883,8 @@ sub_159E6	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15A04	proc near
-		cli
-		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
-		sti
-		retn
-sub_15A04	endp
-
-; ---------------------------------------------------------------------------
-		GRCG_SETMODE_VIA_MOV al, GC_RMW
-		retn
-; ---------------------------------------------------------------------------
-		nop
+GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
+GRCG_SETMODE_RMW_DEF 2
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24152,7 +24097,7 @@ loc_16B67:
 		jz	short loc_16B7D
 		mov	[bp+var_4], al
 		mov	ah, [bp+var_4]
-		call	sub_15A04
+		call	_grcg_setcolor_direct_noint_2
 
 loc_16B7D:
 		xor	di, di
@@ -35033,7 +34978,7 @@ var_2		= word ptr -2
 		call	sub_15A42
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	byte_2C92C, 9
+		mov	grcgcolor_2C92C, GC_RG
 		mov	si, 0B2AAh
 		mov	di, 1
 		jmp	short loc_1C89A
@@ -38711,7 +38656,7 @@ sub_1EA14	proc near
 		jnz	short loc_1EA2E
 		mov	byte_2D084, 40h
 		mov	byte_2D083, 0
-		mov	word_2CC8E, 7
+		mov	grcgcolor_2CC8E, GC_I
 
 loc_1EA2E:
 		mov	ax, boss_phase_frame
@@ -39905,7 +39850,7 @@ loc_1F51A:
 		call	sub_1F23B
 
 loc_1F523:
-		mov	word_2CC8E, 9
+		mov	grcgcolor_2CC8E, GC_RG
 		mov	word_2CE64, 0C8h
 		inc	byte_2D07F
 		jmp	loc_1F666
@@ -52969,7 +52914,7 @@ word_2C0C8	dw ?
 dword_2C922	dd ?
 farfp_2C926	dd ?
 word_2C92A	dw ?
-byte_2C92C	db ?
+grcgcolor_2C92C	db ?
 		db ?
 fp_2C92E	dw ?
 dword_2C930	dd ?
@@ -53217,7 +53162,7 @@ word_2C9A0	dw ?
 		db    ?	;
 byte_2CC8C	db ?
 		db ?
-word_2CC8E	dw ?
+grcgcolor_2CC8E	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
