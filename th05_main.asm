@@ -6944,18 +6944,7 @@ sub_E02E	endp
 
 
 sub_E0C2	proc near
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
+		GRCG_SETCOLOR_DIRECT ah
 		retn
 sub_E0C2	endp
 
@@ -7068,18 +7057,7 @@ sub_E148	proc near
 		nop
 
 loc_E17C:
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
+		GRCG_SETCOLOR_DIRECT ah
 		mov	ch, 10h
 		mov	di, bx
 		cmp	di, 7850h
@@ -7129,18 +7107,7 @@ loc_E1DE:
 ; ---------------------------------------------------------------------------
 
 loc_E1E4:
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	ah, 1
-		sbb	al, al
-		out	7Eh, al
+		GRCG_SETCOLOR_DIRECT ah
 		mov	ch, 10h
 		mov	di, bx
 		cmp	di, 7850h
@@ -7901,19 +7868,7 @@ sub_E6E8	endp
 
 sub_E6EE	proc near
 		cli
-		mov	dx, 7Eh	; '~'
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
+		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
 		sti
 		retn
 sub_E6EE	endp
@@ -21975,19 +21930,7 @@ sub_159E6	endp
 
 sub_15A04	proc near
 		cli
-		mov	dx, 7Eh	; '~'
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
+		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
 		sti
 		retn
 sub_15A04	endp

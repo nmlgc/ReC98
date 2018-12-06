@@ -5139,18 +5139,7 @@ arg_8		= word ptr  0Eh
 		push	ds
 		mov	dx, [bp+arg_4]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
-		shr	dx, 1
-		sbb	al, al
-		out	7Eh, al
+		GRCG_SETCOLOR_DIRECT dx
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -5843,19 +5832,7 @@ sub_DB0D	endp
 
 sub_DB21	proc near
 		cli
-		mov	dx, 7Eh	; '~'
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
+		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
 		sti
 		retn
 sub_DB21	endp
