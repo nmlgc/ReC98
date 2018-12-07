@@ -27406,7 +27406,7 @@ loc_186EF:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_18702
 		mov	_boss_hp, 4650
-		mov	word_2634C, 9F6h
+		mov	_boss_phase_end_hp, 2550
 
 loc_18702:
 		call	sub_1FB07
@@ -28500,7 +28500,7 @@ loc_19073:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_19097
 		mov	_boss_hp, 4400
-		mov	word_2634C, 0BB8h
+		mov	_boss_phase_end_hp, 3000
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -30335,7 +30335,7 @@ loc_1A089:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1A0AD
 		mov	_boss_hp, 9600
-		mov	word_2634C, 1CE8h
+		mov	_boss_phase_end_hp, 7400
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -30462,16 +30462,16 @@ loc_1A208:
 		mov	boss_phase_frame, 0
 		mov	byte ptr word_2634A+1, 0
 		mov	byte_26349, 0
-		mov	ax, word_2634C
+		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
 		cmp	boss_phase, 0Ch
 		jnb	short loc_1A236
-		sub	word_2634C, 898h
+		sub	_boss_phase_end_hp, 2200
 		jmp	short loc_1A23C
 ; ---------------------------------------------------------------------------
 
 loc_1A236:
-		mov	word_2634C, 0
+		mov	_boss_phase_end_hp, 0
 
 loc_1A23C:
 		mov	word_2CE2E, 0
@@ -31690,7 +31690,7 @@ loc_1AC1C:
 		cmp	boss_phase_frame, 1	; jumptable 0001AC18 case 0
 		jnz	short loc_1AC5E
 		mov	_boss_hp, 4500
-		mov	word_2634C, 0
+		mov	_boss_phase_end_hp, 0
 		mov	word_2635A, 1194h
 		mov	word_26364, 0
 		mov	word_2A72A, 400h
@@ -33265,7 +33265,7 @@ loc_1BA22:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1BA63
 		mov	_boss_hp, 7900
-		mov	word_2634C, 11F8h
+		mov	_boss_phase_end_hp, 4600
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -34478,7 +34478,7 @@ loc_1C54D:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1C58E
 		mov	_boss_hp, 7800
-		mov	word_2634C, 16A8h
+		mov	_boss_phase_end_hp, 5800
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -35282,8 +35282,8 @@ loc_1CC3E:
 
 loc_1CC7F:
 		mov	ax, _boss_hp
-		sub	ax, word_2634C
-		cmp	ax, 258h
+		sub	ax, _boss_phase_end_hp
+		cmp	ax, 600
 		jge	short loc_1CCD0
 		cmp	byte_2D083, 0
 		jnz	short loc_1CCD0
@@ -35625,8 +35625,8 @@ loc_1D02B:
 
 loc_1D030:
 		mov	ax, _boss_hp
-		sub	ax, word_2634C
-		cmp	ax, 1F4h
+		sub	ax, _boss_phase_end_hp
+		cmp	ax, 500
 		jge	short loc_1D081
 		cmp	byte_2D083, 0
 		jnz	short loc_1D081
@@ -35861,7 +35861,7 @@ loc_1D29C:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1D2EF
 		mov	_boss_hp, 8300
-		mov	word_2634C, 1D4Ch
+		mov	_boss_phase_end_hp, 7500
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -37481,7 +37481,7 @@ loc_1E1CD:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1E220
 		mov	_boss_hp, 22800
-		mov	word_2634C, 5078h
+		mov	_boss_phase_end_hp, 20600
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -39407,10 +39407,10 @@ loc_1F25F:
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 0
 		mov	byte ptr word_2634A+1, 0
-		mov	ax, word_2634C
+		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
 		mov	ax, [bp+arg_0]
-		mov	word_2634C, ax
+		mov	_boss_phase_end_hp, ax
 		pop	si
 		pop	bp
 		retn	4
@@ -39449,7 +39449,7 @@ loc_1F2C9:
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1F333
 		mov	_boss_hp, 26500
-		mov	word_2634C, 5CF8h
+		mov	_boss_phase_end_hp, 23800
 		mov	word_2A72A, 800h
 		mov	byte_2A72F, 2
 		mov	word_2A72C, 8
@@ -40414,7 +40414,7 @@ sub_1FADD	proc near
 		mov	ah, 0
 		sub	_boss_hp, ax
 		mov	ax, _boss_hp
-		cmp	ax, word_2634C
+		cmp	ax, _boss_phase_end_hp
 		jg	short loc_1FB03
 		mov	al, 1
 		pop	bp
@@ -40534,10 +40534,10 @@ loc_1FB94:
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 0
 		mov	byte ptr word_2634A+1, 0
-		mov	ax, word_2634C
+		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
 		mov	ax, [bp+arg_0]
-		mov	word_2634C, ax
+		mov	_boss_phase_end_hp, ax
 		pop	si
 		pop	bp
 		retn	4
@@ -46184,7 +46184,7 @@ boss_phase_frame	dw ?
 byte_26348	db ?
 byte_26349	db ?
 word_2634A	dw ?
-word_2634C	dw ?
+_boss_phase_end_hp	dw ?
 dword_2634E	dd ?
 word_26352	dw ?
 word_26354	dw ?
