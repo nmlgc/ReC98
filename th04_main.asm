@@ -3715,11 +3715,11 @@ sub_C778	proc near
 		push	di
 		cmp	byte_26705, 1
 		jnz	short loc_C7A1
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	di, ax
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.y
 		call	sub_BC10
 		mov	si, ax
 		push	di
@@ -3732,11 +3732,11 @@ sub_C778	proc near
 loc_C7A1:
 		cmp	byte_26705, 2
 		jnz	short loc_C7E6
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	si, ax
@@ -3746,8 +3746,8 @@ loc_C7A1:
 		mov	ah, 0
 		push	ax
 		call	super_roll_put
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 100h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	si, ax
@@ -3768,11 +3768,11 @@ loc_C7DE:
 loc_C7E6:
 		cmp	byte_26705, 3
 		jnz	loc_C877
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	si, ax
@@ -3788,8 +3788,8 @@ loc_C7E6:
 		add	dx, 93h
 		push	dx
 		call	super_roll_put
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 100h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	si, ax
@@ -3811,8 +3811,8 @@ loc_C836:
 		push	dx
 		pushd	0FFC0h
 		call	super_roll_put_1plane
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 100h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	si, ax
@@ -3849,19 +3849,19 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word ptr dword_266F4+2,	0
+		cmp	_midboss_pos.cur.y, 0
 		jle	loc_C946
-		cmp	word ptr dword_266F4+2,	1700h
+		cmp	_midboss_pos.cur.y, (368 shl 4)
 		jge	loc_C946
-		cmp	word ptr dword_266F4, 0
+		cmp	_midboss_pos.cur.x, 0
 		jle	loc_C946
-		cmp	word ptr dword_266F4, 1800h
+		cmp	_midboss_pos.cur.x, (384 shl 4)
 		jge	loc_C946
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	[bp+var_2], ax
@@ -3945,17 +3945,17 @@ var_4		= word ptr -4
 var_2		= word ptr -2
 
 		enter	6, 0
-		cmp	word ptr dword_266F4+2,	0FF00h
+		cmp	_midboss_pos.cur.y, (-16 shl 4)
 		jle	short locret_C999
-		cmp	word ptr dword_266F4, 0FF00h
+		cmp	_midboss_pos.cur.x, (-16 shl 4)
 		jle	short locret_C999
-		cmp	word ptr dword_266F4, 1880h
+		cmp	_midboss_pos.cur.x, (392 shl 4)
 		jge	short locret_C999
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	[bp+var_2], ax
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.y
 		call	sub_BC10
 		mov	[bp+var_4], ax
 		mov	al, frame_mod16
@@ -4430,13 +4430,13 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word ptr dword_266F4+2,	0
+		cmp	_midboss_pos.cur.y, 0
 		jle	loc_CCD2
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	[bp+var_2], ax
@@ -4654,19 +4654,19 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word ptr dword_266F4+2,	0
+		cmp	_midboss_pos.cur.y, 0
 		jle	short loc_CE8F
-		cmp	word ptr dword_266F4+2,	1700h
+		cmp	_midboss_pos.cur.y, (368 shl 4)
 		jge	short loc_CE8F
-		cmp	word ptr dword_266F4, 0
+		cmp	_midboss_pos.cur.x, 0
 		jle	short loc_CE8F
-		cmp	word ptr dword_266F4, 1800h
+		cmp	_midboss_pos.cur.x, (384 shl 4)
 		jge	short loc_CE8F
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	[bp+var_2], ax
@@ -4676,7 +4676,7 @@ var_2		= word ptr -2
 		mov	ah, 0
 		add	ax, 9Ch
 		mov	si, ax
-		cmp	word ptr dword_266F4, 0C00h
+		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jl	short loc_CE5B
 		add	si, 4
 
@@ -14576,7 +14576,7 @@ loc_11ABD:
 ; ---------------------------------------------------------------------------
 
 loc_11AC4:
-		push	word ptr dword_266F4
+		push	_midboss_pos.cur.x
 		push	[bp+var_4]
 		mov	al, byte_23212
 		mov	ah, 0
@@ -14585,7 +14585,7 @@ loc_11AC4:
 		push	_CosTable8[bx]
 		call	vector1_at
 		mov	si, ax
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.y
 		push	[bp+var_4]
 		mov	al, byte_23212
 		mov	ah, 0
@@ -15411,14 +15411,14 @@ sub_12124	proc near
 		jnb	short loc_12141
 		mov	word ptr dword_255A4, 40h
 		mov	word ptr dword_255A4+2,	40h
-		pushd	[dword_266F8]
+		pushd	[_midboss_pos.prev]
 		jmp	short loc_12152
 ; ---------------------------------------------------------------------------
 
 loc_12141:
 		mov	word ptr dword_255A4, 80h
 		mov	word ptr dword_255A4+2,	80h
-		pushd	[dword_266F4]
+		pushd	[_midboss_pos.cur]
 
 loc_12152:
 		call	sub_B9D6
@@ -18607,7 +18607,7 @@ sub_13FB2	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word ptr dword_266F4+2,	1000h
+		cmp	_midboss_pos.cur.y, (256 shl 4)
 		jge	short loc_14014
 		mov	si, word_26706
 		cmp	si, 1
@@ -18655,31 +18655,31 @@ sub_14017	proc far
 		push	si
 		cmp	byte_26705, 0
 		jnz	loc_1411F
-		mov	word_266FE, 0FFF0h
-		push	53B4h
+		mov	_midboss_pos.velocity.y, (-1 shl 4)
+		push	offset _midboss_pos
 		call	_motion_update_2
-		mov	ax, word ptr dword_266F4
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.x
+		add	ax, (-16 shl 4)
 		push	ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		push	4B4Ah
 		call	sub_B682
-		push	word ptr dword_266F4
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		push	_midboss_pos.cur.x
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		push	504Ah
 		call	sub_B682
-		mov	ax, word ptr dword_266F4
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.x
+		add	ax, (-16 shl 4)
 		push	ax
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.y
 		push	1E4Ch
 		call	sub_B682
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	234Ch
 		call	sub_B682
 		inc	word_26706
@@ -18687,41 +18687,41 @@ sub_14017	proc far
 		jl	loc_142E4
 		mov	byte_26705, 1
 		mov	word_26706, 0
-		mov	word_266FE, 2
-		mov	ax, word ptr dword_266F4
-		add	ax, 0FF00h
+		mov	_midboss_pos.velocity.y, 2
+		mov	ax, _midboss_pos.cur.x
+		add	ax, (-16 shl 4)
 		push	ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		push	554Ah
 		call	sub_B682
-		push	word ptr dword_266F4
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		push	_midboss_pos.cur.x
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		push	5A4Ah
 		call	sub_B682
-		mov	ax, word ptr dword_266F4
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.x
+		add	ax, (-16 shl 4)
 		push	ax
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.y
 		push	284Ch
 		call	sub_B682
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	2D4Ch
 		call	sub_B682
 		mov	byte_26704, 88h
-		sub	word ptr dword_266F4+2,	40h
+		sub	_midboss_pos.cur.y, (4 shl 4)
 		mov	al, byte_255B6
 		mov	ah, 0
-		add	word ptr dword_266F4+2,	ax
-		push	word ptr dword_266F4+2
+		add	_midboss_pos.cur.y, ax
+		push	_midboss_pos.cur.y
 		call	sub_13CE8
 		mov	word_25596, ax
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	300020h
 		call	sub_13E8C
 		push	9
@@ -18734,11 +18734,11 @@ loc_14117:
 loc_1411F:
 		cmp	byte_26705, 1
 		jnz	loc_141BF
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		inc	word_26706
 		cmp	byte_26704, 8Bh	; '‹'
@@ -18759,14 +18759,14 @@ loc_14158:
 		mov	byte_26705, 2
 		mov	word_26706, 0
 		mov	byte_26704, 8Ch
-		sub	word ptr dword_266F4+2,	100h
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		sub	_midboss_pos.cur.y, (16 shl 4)
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_13CE8
 		mov	word_25596, ax
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	300020h
 		call	sub_13E8C
 		call	snd_se_play pascal, 9
@@ -18774,9 +18774,9 @@ loc_14158:
 loc_1419A:
 		mov	word_257E2, 100h
 		mov	word_257E4, 0C0h
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_257DE, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_257DE+2,	ax
 		call	sub_105B9
 		or	ax, ax
@@ -18787,11 +18787,11 @@ loc_1419A:
 loc_141BF:
 		cmp	byte_26705, 2
 		jnz	short loc_1422D
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		inc	word_26706
 		cmp	byte_26704, 92h
@@ -18815,9 +18815,9 @@ loc_141FA:
 loc_14205:
 		mov	word_257E2, 180h
 		mov	word_257E4, 100h
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_257DE, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_257DE+2,	ax
 		call	sub_105B9
 		or	ax, ax
@@ -18831,28 +18831,28 @@ loc_14228:
 loc_1422D:
 		cmp	byte_26705, 3
 		jnz	loc_142E1
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		cmp	byte_255B7, 2
 		ja	short loc_142AC
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		inc	word_26706
 		mov	word_257E2, 180h
 		mov	word_257E4, 100h
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_257DE, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_257DE+2,	ax
 		call	sub_105B9
 		mov	si, ax
 		mov	byte_266E2, 1
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FFF0h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-1 shl 4)
 		mov	word ptr dword_266E4+2,	ax
 		call	sub_13FB2
 		or	si, si
@@ -18874,9 +18874,9 @@ loc_142AC:
 		mov	byte_26705, 0FEh
 		mov	byte_26704, 4
 		mov	word_26706, 0
-		mov	word_266FE, 0
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		mov	_midboss_pos.velocity.y, 0
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	800030h
 		call	sub_13E8C
 		call	snd_se_play pascal, 12
@@ -18907,10 +18907,10 @@ sub_142F1	proc near
 		cmp	word_26706, 2
 		jnz	short loc_14339
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_266F4+2
+		sub	ax, _midboss_pos.cur.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_266F4
+		sub	ax, _midboss_pos.cur.x
 		push	ax
 		call	iatan2
 		mov	byte_26709, al
@@ -19078,13 +19078,13 @@ var_1		= byte ptr -1
 
 		enter	4, 0
 		push	si
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		cmp	byte_26705, 0
 		jnz	short loc_144F1
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
@@ -19095,8 +19095,8 @@ var_1		= byte ptr -1
 		jl	loc_1468D
 		inc	byte_26705
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		mov	word_266FE, 0
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, 0
 		push	3
 		call	_randring2_next16_and
 		mov	byte_25598, al
@@ -19110,14 +19110,14 @@ var_1		= byte ptr -1
 loc_144F1:
 		cmp	byte_26705, 1
 		jnz	loc_1468A
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		mov	word ptr dword_266E4+2,	ax
 		mov	al, byte_25598
 		mov	ah, 0
@@ -19160,9 +19160,9 @@ loc_1454C:
 loc_14552:
 		cmp	byte_2559A, 0Bh	; jumptable 00014536 case 255
 		ja	short loc_145A5
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_2A8C6+2,	ax
 		mov	ax, word_26706
 		add	ax, 0FFC0h
@@ -19178,8 +19178,8 @@ loc_14552:
 ; ---------------------------------------------------------------------------
 
 loc_14584:
-		mov	word_266FC, 0
-		mov	word_266FE, 0
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, 0
 		jmp	short loc_145A5
 ; ---------------------------------------------------------------------------
 
@@ -19206,9 +19206,9 @@ loc_145A5:
 
 loc_145C9:
 		push	ds
-		push	offset word_266FC
+		push	offset _midboss_pos.velocity.x
 		push	ds
-		push	offset word_266FE
+		push	offset _midboss_pos.velocity.y
 		push	word ptr [bp+var_1]
 		push	20h ; ' '
 		call	vector2
@@ -19217,11 +19217,11 @@ loc_145C9:
 		mov	word_2A8D0, 8
 
 loc_145EA:
-		cmp	word ptr dword_266F4+2,	1700h
+		cmp	_midboss_pos.cur.y, (368 shl 4)
 		jge	short loc_14601
-		cmp	word ptr dword_266F4, 0
+		cmp	_midboss_pos.cur.x, 0
 		jle	short loc_14601
-		cmp	word ptr dword_266F4, 1800h
+		cmp	_midboss_pos.cur.x, (384 shl 4)
 		jl	short loc_14606
 
 loc_14601:
@@ -19243,8 +19243,8 @@ loc_14606:
 
 loc_14629:
 		mov	byte_26708, 1
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_13D10
 		mov	si, ax
@@ -19258,14 +19258,14 @@ loc_14629:
 		mov	byte_26705, 0FEh
 		mov	byte_26704, 4
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		mov	_midboss_pos.velocity.x, 0
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	600030h
 		call	sub_13E8C
 		call	snd_se_play pascal, 12
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	5
 		call	sub_1DA38
 		jmp	short loc_1468D
@@ -19300,11 +19300,11 @@ word_1469B	dw	0,     1,     2,     3
 sub_146AF	proc near
 		push	bp
 		mov	bp, sp
-		mov	ax, word ptr dword_266F4
-		mov	word ptr dword_266F8, ax
-		mov	ax, word ptr dword_266F4+2
-		mov	word ptr dword_266F8+2,	ax
-		push	0C00h
+		mov	ax, _midboss_pos.cur.x
+		mov	_midboss_pos.prev.x, ax
+		mov	ax, _midboss_pos.cur.y
+		mov	_midboss_pos.prev.y, ax
+		push	(192 shl 4)
 		push	word_26702
 		mov	al, byte_26709
 		mov	ah, 0
@@ -19312,8 +19312,8 @@ sub_146AF	proc near
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	vector1_at
-		mov	word ptr dword_266F4, ax
-		push	600h
+		mov	_midboss_pos.cur.x, ax
+		push	(96 shl 4)
 		push	word_26702
 		mov	al, byte_26709
 		mov	ah, 0
@@ -19321,7 +19321,7 @@ sub_146AF	proc near
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	word ptr dword_266F4+2,	ax
+		mov	_midboss_pos.cur.y, ax
 		mov	al, byte_26709
 		add	al, 0FEh
 		mov	byte_26709, al
@@ -19337,32 +19337,32 @@ sub_146AF	endp
 sub_14700	proc near
 		push	bp
 		mov	bp, sp
-		mov	ax, word ptr dword_266F4
-		mov	word ptr dword_266F8, ax
-		mov	ax, word ptr dword_266F4+2
-		mov	word ptr dword_266F8+2,	ax
+		mov	ax, _midboss_pos.cur.x
+		mov	_midboss_pos.prev.x, ax
+		mov	ax, _midboss_pos.cur.y
+		mov	_midboss_pos.prev.y, ax
 		cmp	word_26706, 1
 		jnz	short loc_14721
-		mov	word_266FC, 10h
+		mov	_midboss_pos.velocity.x, (1 shl 4)
 		mov	byte_26709, 0
 
 loc_14721:
-		mov	ax, word_266FC
-		add	word ptr dword_266F4, ax
+		mov	ax, _midboss_pos.velocity.x
+		add	_midboss_pos.cur.x, ax
 		cmp	byte_26705, 5
 		ja	short loc_14749
-		cmp	word ptr dword_266F4, 100h
+		cmp	_midboss_pos.cur.x, (16 shl 4)
 		jle	short loc_1473F
-		cmp	word ptr dword_266F4, 1700h
+		cmp	_midboss_pos.cur.x, (368 shl 4)
 		jl	short loc_14749
 
 loc_1473F:
-		mov	ax, 0FFFFh
-		imul	word_266FC
-		mov	word_266FC, ax
+		mov	ax, -1
+		imul	_midboss_pos.velocity.x
+		mov	_midboss_pos.velocity.x, ax
 
 loc_14749:
-		push	600h
+		push	(96 shl 4)
 		push	word_26702
 		mov	al, byte_26709
 		mov	ah, 0
@@ -19370,7 +19370,7 @@ loc_14749:
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	word ptr dword_266F4+2,	ax
+		mov	_midboss_pos.cur.y, ax
 		mov	al, byte_26709
 		add	al, 2
 		mov	byte_26709, al
@@ -19522,8 +19522,8 @@ loc_1488D:
 
 loc_14891:
 		call	snd_se_play pascal, 9		; jumptable 0001488D cases 250,258,266,274
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	2
 		jmp	short loc_148F2
 ; ---------------------------------------------------------------------------
@@ -19546,16 +19546,16 @@ loc_148CE:
 
 loc_148D0:
 		call	snd_se_play
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	3
 		jmp	short loc_148F2
 ; ---------------------------------------------------------------------------
 
 loc_148E1:
 		call	snd_se_play pascal, 9		; jumptable 0001488D case 450
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	5
 
 loc_148F2:
@@ -19603,9 +19603,9 @@ word_148F8	dw   0FAh,  102h,  10Ah,  112h
 sub_1494C	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_266E4+2,	ax
 		mov	byte_266E2, 1
 		mov	al, byte_26705
@@ -19722,9 +19722,9 @@ loc_14A65:
 loc_14A6B:
 		call	sub_14700
 		inc	word_26706
-		cmp	word ptr dword_266F4, 0FF00h
+		cmp	_midboss_pos.cur.x, (-16 shl 4)
 		jle	short loc_14A82
-		cmp	word ptr dword_266F4, 1900h
+		cmp	_midboss_pos.cur.x, (400 shl 4)
 		jl	short loc_14A87
 
 loc_14A82:
@@ -19979,10 +19979,10 @@ sub_14C45	proc near
 		or	si, si
 		jnz	short loc_14C6B
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_266F4+2
+		sub	ax, _midboss_pos.cur.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_266F4
+		sub	ax, _midboss_pos.cur.x
 		push	ax
 		call	iatan2
 		mov	byte_26709, al
@@ -20005,10 +20005,10 @@ loc_14C6B:
 		call	fp_2D000
 		mov	byte_266EE, 0Ah
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_266F4+2
+		sub	ax, _midboss_pos.cur.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_266F4
+		sub	ax, _midboss_pos.cur.x
 		push	ax
 		call	iatan2
 		mov	byte_266ED, al
@@ -20052,13 +20052,13 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		cmp	byte_26705, 0
 		jnz	short loc_14D5D
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
@@ -20069,8 +20069,8 @@ var_2		= word ptr -2
 		jl	loc_14F57
 		inc	byte_26705
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		mov	word_266FE, 0
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, 0
 		mov	byte_255B2, 0
 		mov	byte_255B3, 1
 		mov	byte_255B4, 0
@@ -20080,13 +20080,13 @@ var_2		= word ptr -2
 loc_14D5D:
 		cmp	byte_26705, 1
 		jnz	loc_14F16
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		add	ax, 0FF00h
 		mov	word ptr dword_266E4+2,	ax
 		mov	al, byte_255B2
@@ -20128,9 +20128,9 @@ loc_14DB8:
 ; ---------------------------------------------------------------------------
 
 loc_14DBE:
-		mov	ax, word ptr dword_266F4 ; jumptable 00014DA2 case 255
+		mov	ax, _midboss_pos.cur.x ; jumptable 00014DA2 case 255
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_2A8C6+2,	ax
 		mov	ax, word_26706
 		add	ax, 0FFD0h
@@ -20148,7 +20148,7 @@ loc_14DBE:
 ; ---------------------------------------------------------------------------
 
 loc_14DEF:
-		mov	word_266FC, 0
+		mov	_midboss_pos.velocity.x, 0
 		jmp	loc_14E8E	; default
 ; ---------------------------------------------------------------------------
 
@@ -20178,14 +20178,14 @@ loc_14E20:
 		jz	short loc_14E4C
 		mov	byte_26704, 1
 		mov	byte_255B3, 0
-		mov	word_266FC, 0FFD0h
+		mov	_midboss_pos.velocity.x, (-3 shl 4)
 		jmp	short loc_14E8E	; default
 ; ---------------------------------------------------------------------------
 
 loc_14E4C:
 		mov	byte_26704, 2
 		mov	byte_255B3, 2
-		mov	word_266FC, 30h	; '0'
+		mov	_midboss_pos.velocity.x, (3 shl 4)
 		jmp	short loc_14E8E	; default
 ; ---------------------------------------------------------------------------
 
@@ -20193,7 +20193,7 @@ loc_14E5E:
 		cmp	byte_255B3, 0
 		jnz	short loc_14E77
 		mov	byte_255B3, 1
-		mov	word_266FC, 30h	; '0'
+		mov	_midboss_pos.velocity.x, (3 shl 4)
 		mov	byte_26704, 2
 		jmp	short loc_14E8E	; default
 ; ---------------------------------------------------------------------------
@@ -20202,7 +20202,7 @@ loc_14E77:
 		cmp	byte_255B3, 2
 		jnz	short loc_14E8E	; default
 		mov	byte_255B3, 1
-		mov	word_266FC, 0FFD0h
+		mov	_midboss_pos.velocity.x, (-3 shl 4)
 		mov	byte_26704, 1
 
 loc_14E8E:
@@ -20229,8 +20229,8 @@ loc_14EB5:
 		sub	dx, ax
 		push	dx
 		call	sub_19F6E
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	4
 		call	sub_1DA38
 		mov	word_255C2, 0Ch
@@ -20239,10 +20239,10 @@ loc_14EE0:
 		mov	byte_26705, 2
 		mov	byte_26704, 0
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		mov	word_266FE, 0FFF0h
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, (-1 shl 4)
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	800030h
 		call	sub_13E8C
 		push	12
@@ -20255,10 +20255,10 @@ loc_14F0F:
 loc_14F16:
 		cmp	byte_26705, 2
 		jnz	short loc_14F52
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
-		cmp	word ptr dword_266F4+2,	0
+		cmp	_midboss_pos.cur.y, 0
 		jg	short loc_14F38
 		inc	byte_26705
 		mov	word_26702, 0
@@ -20266,8 +20266,8 @@ loc_14F16:
 loc_14F38:
 		cmp	frame_mod16, 0
 		jnz	short loc_14F57
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	800010h
 		call	sub_13E8C
 		jmp	short loc_14F57
@@ -20393,7 +20393,7 @@ var_1		= byte ptr -1
 		cmp	word_26706, 18h
 		jnz	locret_1511B
 		call	snd_se_play pascal, 6
-		cmp	word ptr dword_266F4, 0C00h
+		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jge	short loc_1505D
 		mov	byte_266ED, 36h	; '6'
 		jmp	short loc_15062
@@ -20419,10 +20419,10 @@ loc_15068:
 		test	byte_22B9E, 1
 		jz	short loc_150A1
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_266F4+2
+		sub	ax, _midboss_pos.cur.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_266F4
+		sub	ax, _midboss_pos.cur.x
 		push	ax
 		call	iatan2
 		jmp	short loc_150A6
@@ -20444,7 +20444,7 @@ loc_150A6:
 		mov	byte_266EF, 0Ch
 		mov	byte_266F0, 7
 		call	sub_1CFA2
-		cmp	word ptr dword_266F4, 0C00h
+		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jle	short loc_150E2
 		mov	al, 0A0h
 		jmp	short loc_150E4
@@ -20535,10 +20535,10 @@ loc_1517E:
 		or	si, si
 		jnz	short loc_151A5
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_266F4+2
+		sub	ax, _midboss_pos.cur.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_266F4
+		sub	ax, _midboss_pos.cur.x
 		push	ax
 		call	iatan2
 		mov	byte_26709, al
@@ -20618,7 +20618,7 @@ loc_1522F:
 		mov	byte_266EF, 3
 		mov	byte_266F0, 6
 		mov	byte_266EE, 3Ch	; '<'
-		cmp	word ptr dword_266F4, 0C00h
+		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jge	short loc_15263
 		mov	al, 80h
 		sub	al, byte_266ED
@@ -20627,7 +20627,7 @@ loc_1522F:
 loc_15263:
 		call	fp_2D004
 		call	fp_2D000
-		cmp	word ptr dword_266F4, 0C00h
+		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jge	short loc_1527C
 		mov	al, 80h
 		sub	al, byte_266ED
@@ -20675,13 +20675,13 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word_25984, ax
 		cmp	byte_26705, 0
 		jnz	short loc_15314
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		push	1800180h
@@ -20692,8 +20692,8 @@ var_2		= word ptr -2
 		jl	loc_1552D
 		inc	byte_26705
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		mov	word_266FE, 0
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, 0
 		mov	byte_255C8, 0
 		mov	byte_255C6, 0
 		mov	byte_255C7, 0
@@ -20703,13 +20703,13 @@ var_2		= word ptr -2
 loc_15314:
 		cmp	byte_26705, 1
 		jnz	loc_15490
-		push	53B4h
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		mov	byte_266E2, 1
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		add	ax, 0FF00h
 		mov	word ptr dword_266E4+2,	ax
 		mov	al, byte_255C6
@@ -20753,7 +20753,7 @@ loc_1536B:
 loc_15370:
 		cmp	word_26706, 1	; jumptable 00015358 case 255
 		jnz	short loc_1538C
-		cmp	word ptr dword_266F4, 0B40h
+		cmp	_midboss_pos.cur.x, (180 shl 4)
 		jl	short loc_15384
 		mov	ax, 0FFC0h
 		jmp	short loc_15387
@@ -20763,22 +20763,22 @@ loc_15384:
 		mov	ax, 40h
 
 loc_15387:
-		mov	word_266FC, ax
+		mov	_midboss_pos.velocity.x, ax
 		jmp	short loc_153D2	; default
 ; ---------------------------------------------------------------------------
 
 loc_1538C:
 		cmp	byte_255C7, 8
 		jnb	short loc_153BD
-		cmp	word ptr dword_266F4, 300h
+		cmp	_midboss_pos.cur.x, (48 shl 4)
 		jle	short loc_153A3
 
 loc_1539B:
-		cmp	word ptr dword_266F4, 1500h
+		cmp	_midboss_pos.cur.x, (336 shl 4)
 		jl	short loc_153D2	; default
 
 loc_153A3:
-		mov	word_266FC, 0
+		mov	_midboss_pos.velocity.x, 0
 		mov	word_26706, 0
 		inc	byte_255C7
 		mov	al, byte_255C7
@@ -20788,20 +20788,20 @@ loc_153A3:
 ; ---------------------------------------------------------------------------
 
 loc_153BD:
-		cmp	word ptr dword_266F4, 0FE00h
+		cmp	_midboss_pos.cur.x, (-32 shl 4)
 		jle	short loc_153CD
-		cmp	word ptr dword_266F4, 1A00h
+		cmp	_midboss_pos.cur.x, (416 shl 4)
 		jl	short loc_153D2	; default
 
 loc_153CD:
 		mov	byte_26705, 3
 
 loc_153D2:
-		cmp	word ptr dword_266F4+2,	1700h ;	default
+		cmp	_midboss_pos.cur.y, (368 shl 4) 	; default
 		jge	short loc_153E9
-		cmp	word ptr dword_266F4, 0
+		cmp	_midboss_pos.cur.x, 0
 		jle	short loc_153E9
-		cmp	word ptr dword_266F4, 1800h
+		cmp	_midboss_pos.cur.x, (384 shl 4)
 		jl	short loc_153EE
 
 loc_153E9:
@@ -20823,8 +20823,8 @@ loc_153EE:
 
 loc_15414:
 		mov	byte_26708, 1
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FF00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-16 shl 4)
 		push	ax
 		call	sub_13D10
 		mov	si, ax
@@ -20839,23 +20839,23 @@ loc_15414:
 		mov	byte_26705, 0FEh
 		mov	byte_26704, 4
 		mov	word_26706, 0
-		mov	word_266FC, 0
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		mov	_midboss_pos.velocity.x, 0
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	600030h
 		call	sub_13E8C
 		call	snd_se_play pascal, 12
 		cmp	frames_until_midboss, 2800
 		jnz	short loc_15480
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	4
 		jmp	short loc_1548A
 ; ---------------------------------------------------------------------------
 
 loc_15480:
-		push	word ptr dword_266F4
-		push	word ptr dword_266F4+2
+		push	_midboss_pos.cur.x
+		push	_midboss_pos.cur.y
 		push	5
 
 loc_1548A:
@@ -20866,9 +20866,9 @@ loc_1548A:
 loc_15490:
 		cmp	byte_26705, 0FEh
 		jnz	short loc_154D1
-		mov	word_266FC, 0
-		mov	word_266FE, 0
-		push	53B4h
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, 0
+		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	word_26706
 		mov	ax, word_26706
@@ -20892,12 +20892,12 @@ loc_154D1:
 		mov	frames_until_midboss, 5600
 		setfarfp	farfp_259FC, sub_152B4
 		mov	fp_25A00, offset sub_CE06
-		mov	word ptr dword_266F4, 0F00h
-		mov	word ptr dword_266F4+2,	0FE00h
-		mov	word ptr dword_266F8, 0F00h
-		mov	word ptr dword_266F8+2,	0FE00h
-		mov	word_266FC, 0FFC0h
-		mov	word_266FE, 20h	; ' '
+		mov	_midboss_pos.cur.x, (240 shl 4)
+		mov	_midboss_pos.cur.y, (-32 shl 4)
+		mov	_midboss_pos.prev.x, (240 shl 4)
+		mov	_midboss_pos.prev.y, (-32 shl 4)
+		mov	_midboss_pos.velocity.x, (-4 shl 4)
+		mov	_midboss_pos.velocity.y, (2 shl 4)
 		mov	word_26702, 4B0h
 		mov	byte_26704, 0
 		mov	word_26706, 0
@@ -29655,11 +29655,11 @@ arg_0		= word ptr  4
 		movzx	eax, ax
 		add	dword_2569A, eax
 		mov	byte_21CC8, 0
-		mov	ax, word ptr dword_266F4
-		add	ax, 0FC00h
+		mov	ax, _midboss_pos.cur.x
+		add	ax, (-64 shl 4)
 		mov	[bp+var_2], ax
-		mov	ax, word ptr dword_266F4+2
-		add	ax, 0FC00h
+		mov	ax, _midboss_pos.cur.y
+		add	ax, (-64 shl 4)
 		mov	[bp+var_4], ax
 		xor	di, di
 		jmp	short loc_19FCD
@@ -37707,12 +37707,12 @@ sub_1DFEF	proc far
 		setfarfp	farfp_259FC, sub_14017
 		mov	fp_25A00, offset sub_C778
 		mov	frames_until_midboss, 3100
-		mov	word ptr dword_266F4, 0C00h
-		mov	word ptr dword_266F4+2,	1700h
-		mov	word ptr dword_266F8, 0C00h
-		mov	word ptr dword_266F8+2,	1700h
-		mov	word_266FC, 0
-		mov	word_266FE, 10h
+		mov	_midboss_pos.cur.x, (192 shl 4)
+		mov	_midboss_pos.cur.y, (368 shl 4)
+		mov	_midboss_pos.prev.x, (192 shl 4)
+		mov	_midboss_pos.prev.y, (368 shl 4)
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	word_26702, 320h
 		call	sub_1DF61
 		mov	word ptr dword_2670A, 0C00h
@@ -37752,12 +37752,12 @@ sub_1E0B3	proc far
 		setfarfp	farfp_259FC, sub_14CFD
 		mov	fp_25A00, offset sub_CC3A
 		mov	frames_until_midboss, 2600
-		mov	word ptr dword_266F4, 0C00h
-		mov	word ptr dword_266F4+2,	0FE00h
-		mov	word ptr dword_266F8, 0C00h
-		mov	word ptr dword_266F8+2,	0FE00h
-		mov	word_266FC, 0
-		mov	word_266FE, 10h
+		mov	_midboss_pos.cur.x, (192 shl 4)
+		mov	_midboss_pos.cur.y, (-32 shl 4)
+		mov	_midboss_pos.prev.x, (192 shl 4)
+		mov	_midboss_pos.prev.y, (-32 shl 4)
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	word_26702, 2EEh
 		mov	byte_26704, 0
 		call	sub_1DF61
@@ -37800,12 +37800,12 @@ sub_1E186	proc far
 		setfarfp	farfp_259FC, sub_1448B
 		mov	fp_25A00, offset sub_C885
 		mov	frames_until_midboss, 1600
-		mov	word ptr dword_266F4, 0C00h
-		mov	word ptr dword_266F4+2,	0FE00h
-		mov	word ptr dword_266F8, 0C00h
-		mov	word ptr dword_266F8+2,	0FE00h
-		mov	word_266FC, 0
-		mov	word_266FE, 40h
+		mov	_midboss_pos.cur.x, (192 shl 4)
+		mov	_midboss_pos.cur.y, (-32 shl 4)
+		mov	_midboss_pos.prev.x, (192 shl 4)
+		mov	_midboss_pos.prev.y, (-32 shl 4)
+		mov	_midboss_pos.velocity.x, 0
+		mov	_midboss_pos.velocity.y, (4 shl 4)
 		mov	word_26702, 352h
 		mov	byte_26704, 0
 		call	sub_1DF61
@@ -37844,12 +37844,12 @@ sub_1E245	proc far
 		setfarfp	farfp_259FC, sub_152B4
 		mov	fp_25A00, offset sub_CE06
 		mov	frames_until_midboss, 2800
-		mov	word ptr dword_266F4, 900h
-		mov	word ptr dword_266F4+2,	0FE00h
-		mov	word ptr dword_266F8, 900h
-		mov	word ptr dword_266F8+2,	0FE00h
-		mov	word_266FC, 40h
-		mov	word_266FE, 20h	; ' '
+		mov	_midboss_pos.cur.x, (144 shl 4)
+		mov	_midboss_pos.cur.y, (-32 shl 4)
+		mov	_midboss_pos.prev.x, (144 shl 4)
+		mov	_midboss_pos.prev.y, (-32 shl 4)
+		mov	_midboss_pos.velocity.x, (4 shl 4)
+		mov	_midboss_pos.velocity.y, (2 shl 4)
 		mov	word_26702, 4B0h
 		mov	byte_26704, 0
 		call	sub_1DF61
@@ -38022,12 +38022,12 @@ sub_1E518	proc far
 		setfarfp	farfp_259FC, sub_1494C
 		mov	fp_25A00, offset sub_C94A
 		mov	frames_until_midboss, 5400
-		mov	word ptr dword_266F4, 0FF00h
-		mov	word ptr dword_266F4+2,	1000h
-		mov	word ptr dword_266F8, 0FF00h
-		mov	word ptr dword_266F8+2,	1000h
-		mov	word_266FC, 40h
-		mov	word_266FE, 0FFC0h
+		mov	_midboss_pos.cur.x, (-16 shl 4)
+		mov	_midboss_pos.cur.y, (256 shl 4)
+		mov	_midboss_pos.prev.x, (-16 shl 4)
+		mov	_midboss_pos.prev.y, (256 shl 4)
+		mov	_midboss_pos.velocity.x, (4 shl 4)
+		mov	_midboss_pos.velocity.y, (-4 shl 4)
 		mov	word_26702, 1000h
 		mov	byte_26704, 0
 		mov	byte_26709, 60h
@@ -38109,9 +38109,9 @@ arg_4		= word ptr  8
 		mov	word_257E2, ax
 		mov	ax, [bp+arg_2]
 		mov	word_257E4, ax
-		mov	ax, word ptr dword_266F4
+		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_257DE, ax
-		mov	ax, word ptr dword_266F4+2
+		mov	ax, _midboss_pos.cur.y
 		mov	word ptr dword_257DE+2,	ax
 		call	sub_105B9
 		mov	si, ax
@@ -46899,10 +46899,7 @@ byte_266F0	db ?
 		db ?
 byte_266F2	db ?
 		db ?
-dword_266F4	dd ?
-dword_266F8	dd ?
-word_266FC	dw ?
-word_266FE	dw ?
+_midboss_pos	motion_t <?>
 frames_until_midboss	dw ?
 word_26702	dw ?
 byte_26704	db ?
