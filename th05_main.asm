@@ -30675,8 +30675,8 @@ loc_1A439:
 		call	sub_1A3EF
 		mov	byte_26360, al
 		mov	ah, 0
-		sub	word_2635A, ax
-		mov	ax, word_2635A
+		sub	_yuki_hp, ax
+		mov	ax, _yuki_hp
 		cmp	ax, word_26364
 		jg	short loc_1A45A
 		mov	al, 2
@@ -31691,7 +31691,7 @@ loc_1AC1C:
 		jnz	short loc_1AC5E
 		mov	_boss_hp, 4500
 		mov	_boss_phase_end_hp, 0
-		mov	word_2635A, 1194h
+		mov	_yuki_hp, 4500
 		mov	word_26364, 0
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
@@ -31855,8 +31855,8 @@ loc_1ADC9:
 
 loc_1ADCF:
 		mov	ax, _boss_hp
-		add	ax, word_2635A
-		cmp	ax, 157Ch
+		add	ax, _yuki_hp
+		cmp	ax, 5500
 		jge	short loc_1ADF4
 		cmp	byte ptr word_2634A+1, 9
 		jnb	short loc_1ADF4
@@ -31868,8 +31868,8 @@ loc_1ADCF:
 
 loc_1ADF4:
 		mov	ax, _boss_hp
-		add	ax, word_2635A
-		cmp	ax, 8CAh
+		add	ax, _yuki_hp
+		cmp	ax, 2250
 		jge	short loc_1AE17
 		cmp	byte ptr word_2634A+1, 0Eh
 		jnb	short loc_1AE17
@@ -32031,9 +32031,9 @@ loc_1AF85:
 loc_1AFA7:
 		call	sub_17726	; default
 		mov	ax, _boss_hp
-		add	ax, word_2635A
+		add	ax, _yuki_hp
 		push	ax
-		push	2328h
+		push	9000
 		call	sub_17354
 		pop	si
 		leave
@@ -46189,7 +46189,7 @@ dword_2634E	dd ?
 word_26352	dw ?
 word_26354	dw ?
 		dd    ?	;
-word_2635A	dw ?
+_yuki_hp	dw ?
 byte_2635C	db ?
 		db ?
 		db ?
