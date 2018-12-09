@@ -20182,7 +20182,7 @@ sub_14544	proc near
 		mov	_midboss_pos.prev.y, (96 shl 4)
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 0
-		mov	midboss_cur_hp, 1000
+		mov	_midboss_hp, 1000
 		mov	midboss_cur_image, 200
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -20229,7 +20229,7 @@ sub_14613	proc near
 		mov	_midboss_pos.prev.y, (-32 shl 4)
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 8
-		mov	midboss_cur_hp, 578h
+		mov	_midboss_hp, 1400
 		mov	midboss_cur_image, 0CAh
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -20273,7 +20273,7 @@ sub_146D0	proc near
 		mov	_midboss_pos.prev.y, (-32 shl 4)
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 8
-		mov	midboss_cur_hp, 578h
+		mov	_midboss_hp, 1400
 		mov	midboss_cur_image, 0D0h
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -20320,7 +20320,7 @@ sub_1479F	proc near
 		mov	_midboss_pos.prev.y, (-32 shl 4)
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 8
-		mov	midboss_cur_hp, 44Ch
+		mov	_midboss_hp, 1100
 		mov	midboss_cur_image, 0D0h
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (96 shl 4)
@@ -20369,7 +20369,7 @@ sub_14879	proc near
 		mov	_midboss_pos.prev.y, (-32 shl 4)
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 8
-		mov	midboss_cur_hp, 60Eh
+		mov	_midboss_hp, 1550
 		mov	midboss_cur_image, 0D4h
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (96 shl 4)
@@ -20458,7 +20458,7 @@ sub_14A06	proc near
 		mov	_midboss_pos.cur.y, (-16 shl 4)
 		mov	_midboss_pos.prev.y, (-16 shl 4)
 		mov	byte_26335, 40h
-		mov	midboss_cur_hp, 0BB8h
+		mov	_midboss_hp, 3000
 		mov	midboss_cur_image, 0DCh
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -24925,7 +24925,7 @@ sub_172FF	proc far
 		mov	fp_2C98E, offset nullsub_2
 		mov	fp_2C994, offset nullsub_2
 		setfarfp	farfp_2C990, nullsub_1
-		mov	midboss_cur_hp, 0
+		mov	_midboss_hp, 0
 		pop	bp
 		retf
 sub_172FF	endp
@@ -26663,7 +26663,7 @@ sub_18017	proc near
 		mov	bp, sp
 		push	si
 		mov	si, 10h
-		cmp	midboss_cur_hp, 0C8h
+		cmp	_midboss_hp, 200
 		jg	short loc_18029
 		mov	si, 0Ch
 
@@ -26765,9 +26765,9 @@ loc_1812B:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
-		mov	ax, 3E8h
-		sub	ax, midboss_cur_hp
+		sub	_midboss_hp, ax
+		mov	ax, 1000
+		sub	ax, _midboss_hp
 		cwde
 		shl	eax, 6
 		shl	eax, 4
@@ -26778,7 +26778,7 @@ loc_1812B:
 		call	sub_17FC6
 		cmp	word_26332, 5DCh
 		jge	short loc_1818B
-		cmp	midboss_cur_hp, 0
+		cmp	_midboss_hp, 0
 		jg	short loc_181C4
 		mov	byte_2C978, 1
 		push	5
@@ -26802,16 +26802,16 @@ loc_1818B:
 
 loc_181B5:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	3E8h
+		push	_midboss_hp
+		push	1000
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_181C4:
-		push	midboss_cur_hp
-		push	3E8h
+		push	_midboss_hp
+		push	1000
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -27709,14 +27709,14 @@ sub_18987	proc near
 		mov	byte ptr word_25FFA+1, 0
 		mov	byte_26000, 0Dh
 		mov	byte ptr dword_26002, 3
-		cmp	midboss_cur_hp, 258h
+		cmp	_midboss_hp, 600
 		jg	short loc_189DB
 		mov	byte ptr dword_26002, 6
 		jmp	short loc_189E8
 ; ---------------------------------------------------------------------------
 
 loc_189DB:
-		cmp	midboss_cur_hp, 320h
+		cmp	_midboss_hp, 800
 		jg	short loc_189E8
 		mov	byte ptr dword_26002, 4
 
@@ -27807,10 +27807,10 @@ loc_18A9F:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
+		sub	_midboss_hp, ax
 		cmp	word_26332, 3E8h
 		jge	short loc_18ADC
-		cmp	midboss_cur_hp, 190h
+		cmp	_midboss_hp, 400
 		jg	loc_18BA0
 		push	5
 		call	sub_173AC
@@ -27849,10 +27849,10 @@ loc_18B24:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
+		sub	_midboss_hp, ax
 		cmp	word_26332, 320h
 		jge	short loc_18B67
-		cmp	midboss_cur_hp, 0
+		cmp	_midboss_hp, 0
 		jg	short loc_18BA0
 		mov	byte_2C978, 1
 		push	0Fh
@@ -27876,16 +27876,16 @@ loc_18B67:
 
 loc_18B91:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	578h
+		push	_midboss_hp
+		push	1400
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_18BA0:
-		push	midboss_cur_hp
-		push	578h
+		push	_midboss_hp
+		push	1400
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -29089,10 +29089,10 @@ loc_195A1:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
+		sub	_midboss_hp, ax
 
 loc_195BC:
-		cmp	midboss_cur_hp, 0
+		cmp	_midboss_hp, 0
 		jg	short loc_19613
 		mov	byte_2C978, 1
 		push	0Fh
@@ -29116,16 +29116,16 @@ loc_195DA:
 
 loc_19604:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	578h
+		push	_midboss_hp
+		push	1400
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_19613:
-		push	midboss_cur_hp
-		push	578h
+		push	_midboss_hp
+		push	1400
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -32447,10 +32447,10 @@ loc_1B32F:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
+		sub	_midboss_hp, ax
 
 loc_1B34A:
-		cmp	midboss_cur_hp, 0
+		cmp	_midboss_hp, 0
 		jg	short loc_1B3A1
 		mov	byte_2C978, 1
 		push	0Fh
@@ -32474,16 +32474,16 @@ loc_1B368:
 
 loc_1B392:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	44Ch
+		push	_midboss_hp
+		push	1100
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1B3A1:
-		push	midboss_cur_hp
-		push	44Ch
+		push	_midboss_hp
+		push	1100
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -38132,7 +38132,7 @@ loc_1E776:
 		jz	short loc_1E7F2
 		cmp	byte_2D082, 0
 		jnz	short loc_1E7AF
-		cmp	midboss_cur_hp, 3E8h
+		cmp	_midboss_hp, 1000
 		jge	short loc_1E7AF
 		push	0Ah
 		call	sub_173AC
@@ -38176,10 +38176,10 @@ loc_1E7F2:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
+		sub	_midboss_hp, ax
 		cmp	byte_2D084, 14h
 		jnb	short loc_1E82B
-		cmp	midboss_cur_hp, 0
+		cmp	_midboss_hp, 0
 		jg	short loc_1E864
 		mov	byte_2C978, 1
 		push	1Eh
@@ -38203,16 +38203,16 @@ loc_1E82B:
 
 loc_1E855:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	0BB8h
+		push	_midboss_hp
+		push	3000
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1E864:
-		push	midboss_cur_hp
-		push	0BB8h
+		push	_midboss_hp
+		push	3000
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -40148,8 +40148,8 @@ loc_1F936:
 		call	sub_1FA9D
 		mov	byte_26334, al
 		mov	ah, 0
-		sub	midboss_cur_hp, ax
-		cmp	midboss_cur_hp, 0
+		sub	_midboss_hp, ax
+		cmp	_midboss_hp, 0
 		jg	short loc_1F9A1
 		mov	byte_2C978, 1
 		push	1Eh
@@ -40173,16 +40173,16 @@ loc_1F968:
 
 loc_1F992:
 		call	sub_17486
-		push	midboss_cur_hp
-		push	60Eh
+		push	_midboss_hp
+		push	1550
 		call	sub_17354
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1F9A1:
-		push	midboss_cur_hp
-		push	60Eh
+		push	_midboss_hp
+		push	1550
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_2C922, ax
@@ -46162,7 +46162,7 @@ word_2631A	dw ?
 		dd ?
 _midboss_pos	motion_t <?>
 frames_until_midboss	dw ?
-midboss_cur_hp	dw ?
+_midboss_hp	dw ?
 midboss_cur_image	db ?
 byte_26331	db ?
 word_26332	dw ?
