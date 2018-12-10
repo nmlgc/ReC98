@@ -469,7 +469,7 @@ loc_ACDE:
 		or	dx, dx
 		jnz	short loc_ACF4
 		push	1
-		nopcall	sub_C364
+		nopcall	_playperf_raise
 		jmp	short $+2
 
 loc_ACF4:
@@ -563,7 +563,7 @@ loc_ADBB:
 		les	bx, dword_2CDC6
 		cmp	byte ptr es:[bx+3Eh], 0
 		jz	short loc_ADD7
-		mov	byte_266D5, 1Ch
+		mov	_playperf, 28
 		mov	byte_25688, 2
 
 loc_ADD0:
@@ -572,7 +572,7 @@ loc_ADD0:
 ; ---------------------------------------------------------------------------
 
 loc_ADD7:
-		mov	byte_266D5, 10h
+		mov	_playperf, 16
 		cmp	stage_id, 6
 		jnz	short loc_ADEA
 		mov	byte_25688, 4
@@ -599,8 +599,8 @@ loc_ADFC:
 
 loc_AE17:
 		mov	word_2CFFE, 64h	; 'd'
-		mov	byte_266D7, 4
-		mov	byte_266D6, 10h
+		mov	_playperf_min, 4
+		mov	_playperf_max, 16
 		mov	fp_2D000, offset sub_1CEEE
 		mov	fp_2D002, offset sub_1CF4E
 		mov	fp_2D004, offset sub_1CEC5
@@ -609,16 +609,16 @@ loc_AE17:
 
 loc_AE3C:
 		mov	word_2CFFE, 0FAh
-		mov	byte_266D7, 0Bh
-		mov	byte_266D6, 18h
+		mov	_playperf_min, 11
+		mov	_playperf_max, 24
 		jmp	short loc_AEB0
 ; ---------------------------------------------------------------------------
 
 loc_AE4E:
-		mov	byte_266D5, 14h
+		mov	_playperf, 20
 		mov	word_2CFFE, 190h
-		mov	byte_266D7, 14h
-		mov	byte_266D6, 20h	; ' '
+		mov	_playperf_min, 20
+		mov	_playperf_max, 32
 		mov	fp_2D000, offset sub_1CF32
 		mov	fp_2D002, offset sub_1CF86
 		mov	fp_2D004, offset sub_1CED8
@@ -627,9 +627,9 @@ loc_AE4E:
 
 loc_AE77:
 		mov	word_2CFFE, 1F4h
-		mov	byte_266D5, 16h
-		mov	byte_266D7, 16h
-		mov	byte_266D6, 22h	; '"'
+		mov	_playperf, 22
+		mov	_playperf_min, 22
+		mov	_playperf_max, 34
 		mov	fp_2D000, offset sub_1CF32
 		mov	fp_2D002, offset sub_1CF86
 		mov	fp_2D004, offset sub_1CEE3
@@ -638,8 +638,8 @@ loc_AE77:
 
 loc_AEA0:
 		mov	word_2CFFE, 0A00h
-		mov	byte_266D7, 10h
-		mov	byte_266D6, 14h
+		mov	_playperf_min, 16
+		mov	_playperf_max, 20
 
 loc_AEB0:
 		mov	fp_2D000, offset sub_1CF16
@@ -3252,42 +3252,7 @@ sub_C34E	proc near
 		retn	4
 sub_C34E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C364	proc far
-		mov	bx, sp
-		mov	al, ss:[bx+4]
-		add	al, byte_266D5
-		cmp	al, byte_266D6
-		jbe	short loc_C377
-		mov	al, byte_266D6
-
-loc_C377:
-		mov	byte_266D5, al
-		retf	2
-sub_C364	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C37E	proc far
-		mov	bx, sp
-		mov	al, byte_266D5
-		sub	al, ss:[bx+4]
-		cmp	al, byte_266D7
-		jge	short loc_C390
-		mov	al, byte_266D7
-
-loc_C390:
-		mov	byte_266D5, al
-		retf	2
-sub_C37E	endp
-
+include th04/playperf.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8935,7 +8900,7 @@ loc_EE60:
 		cmp	[bp+var_1], 0
 		jz	short locret_EEA3
 		push	4
-		nopcall	sub_C364
+		nopcall	_playperf_raise
 		inc	byte_22DA6
 		les	bx, dword_2CDC6
 		assume es:nothing
@@ -12586,13 +12551,13 @@ loc_109E9:
 		nopcall	sub_F07A
 		nopcall	sub_11DE6
 		call	snd_se_play pascal, 2
-		cmp	byte_266D5, 16h
+		cmp	_playperf, 22
 		jb	short loc_10A16
-		mov	byte_266D5, 15h
+		mov	_playperf, 21
 
 loc_10A16:
 		push	4
-		nopcall	sub_C37E
+		nopcall	_playperf_lower
 		les	bx, dword_2CDC6
 		assume es:nothing
 		inc	byte ptr es:[bx+31h]
@@ -21396,11 +21361,11 @@ loc_158F7:
 		mov	al, es:[di+1]
 		mov	ah, 0
 		mov	[bp+var_4], ax
-		cmp	byte_266D5, 10h
+		cmp	_playperf, 16
 		jbe	short loc_1593A
-		mov	al, byte_266D5
+		mov	al, _playperf
 		mov	ah, 0
-		add	ax, 0FFF0h
+		add	ax, -16
 		imul	[bp+var_4]
 		mov	[bp+var_4], ax
 		mov	bx, 20h	; ' '
@@ -21419,9 +21384,9 @@ loc_158F7:
 ; ---------------------------------------------------------------------------
 
 loc_1593A:
-		cmp	byte_266D5, 10h
+		cmp	_playperf, 16
 		jnb	short loc_15977
-		mov	al, byte_266D5
+		mov	al, _playperf
 		mov	ah, 0
 		push	ax
 		mov	ax, 10h
@@ -34965,8 +34930,8 @@ loc_1CAFC:
 		jl	loc_1C8EC
 		cmp	byte_266E0, 0
 		jnz	loc_1CC19
-		mov	di, 18h
-		mov	al, byte_266D5
+		mov	di, 24
+		mov	al, _playperf
 		mov	ah, 0
 		add	di, ax
 		mov	al, byte_25688
@@ -35423,7 +35388,7 @@ sub_1CE12	proc near
 		jmp	cs:off_1CEAF[bx]
 
 loc_1CE2D:
-		cmp	byte_266D5, 18h
+		cmp	_playperf, 24
 		jb	short loc_1CE3A
 		inc	byte_266EF
 		pop	bp
@@ -35431,7 +35396,7 @@ loc_1CE2D:
 ; ---------------------------------------------------------------------------
 
 loc_1CE3A:
-		cmp	byte_266D5, 6
+		cmp	_playperf, 6
 		ja	short loc_1CEAD
 		cmp	byte_266EF, 2
 		jb	short loc_1CEAD
@@ -35441,13 +35406,13 @@ loc_1CE3A:
 ; ---------------------------------------------------------------------------
 
 loc_1CE4E:
-		cmp	byte_266D5, 18h
+		cmp	_playperf, 24
 		jb	short loc_1CE57
 		jmp	short loc_1CE81
 ; ---------------------------------------------------------------------------
 
 loc_1CE57:
-		cmp	byte_266D5, 6
+		cmp	_playperf, 6
 		ja	short loc_1CEAD
 		cmp	byte_266EF, 3
 		jb	short loc_1CEAD
@@ -35457,7 +35422,7 @@ loc_1CE57:
 ; ---------------------------------------------------------------------------
 
 loc_1CE6C:
-		cmp	byte_266D5, 18h
+		cmp	_playperf, 24
 		jb	short loc_1CE7A
 		mov	al, byte_266EF
 		add	al, 4
@@ -35465,7 +35430,7 @@ loc_1CE6C:
 ; ---------------------------------------------------------------------------
 
 loc_1CE7A:
-		cmp	byte_266D5, 14h
+		cmp	_playperf, 20
 		jb	short loc_1CE88
 
 loc_1CE81:
@@ -35477,14 +35442,14 @@ loc_1CE81:
 loc_1CE88:
 		cmp	byte_266EF, 5
 		jb	short loc_1CEAD
-		cmp	byte_266D5, 0Ah
+		cmp	_playperf, 10
 		ja	short loc_1CE9E
 		mov	al, byte_266EF
 		add	al, 0FEh
 		mov	byte_266EF, al
 
 loc_1CE9E:
-		cmp	byte_266D5, 4
+		cmp	_playperf, 4
 		ja	short loc_1CEAD
 		mov	al, byte_266EF
 		add	al, 0FCh
@@ -36021,7 +35986,7 @@ sub_1D1CD	proc near
 		mov	byte_266EE, al
 		mov	ah, 0
 		mov	cx, ax
-		mov	al, byte_266D5
+		mov	al, _playperf
 		mov	ah, 0
 		imul	cx
 		mov	cx, ax
@@ -36798,7 +36763,7 @@ loc_1D822:
 		push	1
 
 loc_1D82E:
-		call	sub_C364
+		call	_playperf_raise
 		jmp	short loc_1D854
 ; ---------------------------------------------------------------------------
 
@@ -36815,7 +36780,7 @@ loc_1D843:
 		push	1
 
 loc_1D84F:
-		call	sub_C37E
+		call	_playperf_lower
 
 loc_1D854:
 		les	bx, dword_2CDC6
@@ -36825,8 +36790,7 @@ loc_1D854:
 		mov	al, es:[bx+31h]
 		cmp	al, stage_id
 		ja	short loc_1D876
-		push	2
-		call	sub_C364
+		call	_playperf_raise pascal, 2
 
 loc_1D876:
 		les	bx, dword_2CDC6
@@ -36837,8 +36801,7 @@ loc_1D876:
 		add	dx, dx
 		cmp	ax, dx
 		jg	short loc_1D893
-		push	2
-		call	sub_C364
+		call	_playperf_raise pascal, 2
 
 loc_1D893:
 		pop	si
@@ -37348,8 +37311,7 @@ loc_1DD35:
 ; ---------------------------------------------------------------------------
 
 loc_1DD47:
-		push	3
-		call	sub_C364
+		call	_playperf_raise pascal, 3
 		les	bx, dword_2CDC6
 		inc	byte ptr es:[bx+0Bh]
 		call	sub_EEE8
@@ -37408,8 +37370,7 @@ loc_1DDC9:
 		mov	al, byte_23660
 		add	al, 0E0h
 		mov	byte_23660, al
-		push	1
-		call	sub_C364
+		call	_playperf_raise pascal, 1
 
 loc_1DDDF:
 		inc	word_236DA
@@ -37476,7 +37437,7 @@ loc_1DE2F:
 		push	4
 
 loc_1DE31:
-		call	sub_C37E
+		call	_playperf_lower
 
 loc_1DE36:
 		cmp	byte_23661, 40h
@@ -37484,8 +37445,7 @@ loc_1DE36:
 		mov	al, byte_23661
 		add	al, 0D0h
 		mov	byte_23661, al
-		push	1
-		call	sub_C37E
+		call	_playperf_lower pascal, 1
 
 loc_1DE4C:
 		pop	si
@@ -46875,9 +46835,7 @@ word_266D0	dw ?
 byte_266D2	db ?
 byte_266D3	db ?
 stage_id	db ?
-byte_266D5	db ?
-byte_266D6	db ?
-byte_266D7	db ?
+include th04/playperf[bss].asm
 playchar	db ?
 		db ?
 word_266DA	dw ?

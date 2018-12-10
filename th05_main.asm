@@ -541,7 +541,7 @@ loc_B003:
 		test	frame, 0FFFh
 		jnz	short loc_B055
 		push	1
-		nopcall	sub_E720
+		nopcall	_playperf_raise
 		jmp	short $+2
 
 loc_B055:
@@ -631,18 +631,18 @@ loc_B112:
 		jz	short loc_B145
 		cmp	byte ptr es:[bx+1Fh], 5
 		jnb	short loc_B13E
-		mov	byte_25FEC, 28h	; '('
+		mov	_playperf, 40
 		mov	byte_25FEB, 3
 		jmp	short loc_B156
 ; ---------------------------------------------------------------------------
 
 loc_B13E:
-		mov	byte_25FEC, 20h	; ' '
+		mov	_playperf, 32
 		jmp	short loc_B151
 ; ---------------------------------------------------------------------------
 
 loc_B145:
-		mov	byte_25FEC, 20h	; ' '
+		mov	_playperf, 32
 		cmp	stage_id, 6
 		jnz	short loc_B15D
 
@@ -675,8 +675,8 @@ loc_B16F:
 loc_B18A:
 		mov	word_2C988, 1770h
 		mov	word_2C97C, 19h
-		mov	byte_25FEE, 10h
-		mov	byte_25FED, 20h	; ' '
+		mov	_playperf_min, 16
+		mov	_playperf_max, 32
 		mov	fp_25344, offset sub_15EF4
 		jmp	short loc_B222
 ; ---------------------------------------------------------------------------
@@ -684,17 +684,17 @@ loc_B18A:
 loc_B1A8:
 		mov	word_2C988, 2710h
 		mov	word_2C97C, 32h	; '2'
-		mov	byte_25FEE, 18h
-		mov	byte_25FED, 28h	; '('
+		mov	_playperf_min, 24
+		mov	_playperf_max, 40
 		jmp	short loc_B21C
 ; ---------------------------------------------------------------------------
 
 loc_B1C0:
 		mov	word_2C988, 3A98h
-		mov	byte_25FEC, 2Ch	; ','
+		mov	_playperf, 44
 		mov	word_2C97C, 64h	; 'd'
-		mov	byte_25FEE, 2Ch	; ','
-		mov	byte_25FED, 36h	; '6'
+		mov	_playperf_min, 44
+		mov	_playperf_max, 54
 		mov	fp_25344, offset sub_15F00
 		jmp	short loc_B222
 ; ---------------------------------------------------------------------------
@@ -702,9 +702,9 @@ loc_B1C0:
 loc_B1E3:
 		mov	word_2C988, 4E20h
 		mov	word_2C97C, 0C8h
-		mov	byte_25FEC, 30h	; '0'
-		mov	byte_25FEE, 30h	; '0'
-		mov	byte_25FED, 3Ah	; ':'
+		mov	_playperf, 48
+		mov	_playperf_min, 48
+		mov	_playperf_max, 58
 		mov	fp_25344, offset sub_15F08
 		jmp	short loc_B222
 ; ---------------------------------------------------------------------------
@@ -712,8 +712,8 @@ loc_B1E3:
 loc_B206:
 		mov	word_2C988, 9C40h
 		mov	word_2C97C, 1F4h
-		mov	byte_25FEE, 20h	; ' '
-		mov	byte_25FED, 24h	; '$'
+		mov	_playperf_min, 32
+		mov	_playperf_max, 36
 
 loc_B21C:
 		mov	fp_25344, offset sub_15EFC
@@ -3177,7 +3177,7 @@ loc_C4BC:
 		assume es:nothing
 		inc	byte ptr es:[bx+1Ch]
 		push	1
-		nopcall	sub_E73A
+		nopcall	_playperf_lower
 
 loc_C518:
 		pop	bp
@@ -7851,42 +7851,7 @@ sub_E708	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E720	proc far
-		mov	bx, sp
-		mov	al, ss:[bx+4]
-		add	al, byte_25FEC
-		cmp	al, byte_25FED
-		jbe	short loc_E733
-		mov	al, byte_25FED
-
-loc_E733:
-		mov	byte_25FEC, al
-		retf	2
-sub_E720	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E73A	proc far
-		mov	bx, sp
-		mov	al, byte_25FEC
-		sub	al, ss:[bx+4]
-		cmp	al, byte_25FEE
-		jge	short loc_E74C
-		mov	al, byte_25FEE
-
-loc_E74C:
-		mov	byte_25FEC, al
-		retf	2
-sub_E73A	endp
-
+include th04/playperf.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15019,13 +14984,13 @@ loc_12064:
 		sub	power, al
 		nopcall	sub_E4FC
 		call	snd_se_play pascal, 2
-		cmp	byte_25FEC, 26h	; '&'
+		cmp	_playperf, 38
 		jbe	short loc_12083
-		mov	byte_25FEC, 26h	; '&'
+		mov	_playperf, 38
 
 loc_12083:
 		push	4
-		nopcall	sub_E73A
+		nopcall	_playperf_lower
 		les	bx, dword_23EF0
 		inc	byte ptr es:[bx+1Bh]
 
@@ -21079,10 +21044,10 @@ loc_1559C:
 loc_155A1:
 		mov	al, ah
 		xor	ah, ah
-		mov	dl, byte_25FEC
-		cmp	dl, 20h	; ' '
+		mov	dl, _playperf
+		cmp	dl, 32
 		jbe	short loc_155C7
-		sub	dl, 20h	; ' '
+		sub	dl, 32
 		mul	dl
 		shr	ax, 6
 		xor	dh, dh
@@ -21735,12 +21700,12 @@ sub_15A24	endp
 sub_15A42	proc near
 		shr	al, 1
 		mov	cl, al
-		mul	byte_25FEC
+		mul	_playperf
 		shr	ax, 5
 		add	al, cl
-		cmp	al, 80h
+		cmp	al, 128
 		jbe	short loc_15A55
-		mov	al, 80h
+		mov	al, 128
 
 loc_15A55:
 		cmp	al, 8
@@ -22413,8 +22378,8 @@ sub_15ECE	proc near
 		and	al, 0FEh
 		cmp	al, 6
 		jnz	short locret_15EF2
-		mov	al, byte_25FEC
-		cmp	al, 26h	; '&'
+		mov	al, _playperf
+		cmp	al, 38
 		jb	short loc_15EE3
 		inc	byte ptr dword_26002+2
 		retn
@@ -23388,7 +23353,7 @@ loc_166E9:
 		push	1
 
 loc_166F5:
-		call	sub_E720
+		call	_playperf_raise
 		jmp	short loc_1671B
 ; ---------------------------------------------------------------------------
 
@@ -23405,7 +23370,7 @@ loc_1670A:
 		push	1
 
 loc_16716:
-		call	sub_E73A
+		call	_playperf_lower
 
 loc_1671B:
 		push	ss
@@ -24454,8 +24419,7 @@ sub_16F05	proc near
 		add	ax, 64h	; 'd'
 		cmp	ax, word_22648
 		ja	short loc_16F52
-		push	4
-		call	sub_E720
+		call	_playperf_raise pascal, 4
 		inc	byte_226C4
 		cmp	lives, 99
 		jnb	short loc_16F52
@@ -24676,7 +24640,7 @@ loc_1711E:
 
 loc_1712C:
 		push	3
-		call	sub_E720
+		call	_playperf_raise
 		inc	lives
 		call	sub_10407
 		call	snd_se_play pascal, 7
@@ -24723,8 +24687,7 @@ loc_17199:
 		mov	al, byte_225CC
 		add	al, 0E0h
 		mov	byte_225CC, al
-		push	1
-		call	sub_E720
+		call	_playperf_raise pascal, 1
 
 loc_171AF:
 		inc	word_22646
@@ -24785,7 +24748,7 @@ loc_171FD:
 		push	4
 
 loc_171FF:
-		call	sub_E73A
+		call	_playperf_lower
 
 loc_17204:
 		call	sub_1059D
@@ -45923,9 +45886,7 @@ byte_25FE8	db ?
 byte_25FE9	db ?
 stage_id	db ?
 byte_25FEB	db ?
-byte_25FEC	db ?
-byte_25FED	db ?
-byte_25FEE	db ?
+include th04/playperf[bss].asm
 playchar	db ?
 word_25FF0	dw ?
 byte_25FF2	db ?
