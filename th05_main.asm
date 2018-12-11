@@ -8446,8 +8446,8 @@ sub_EACE	proc near
 		push	0BDF2h
 		push	54h ; 'T'
 		call	sub_E708
-		push	5628h
-		push	0C0h
+		push	offset _lasers
+		push	size _lasers / 4
 		call	sub_E708
 		push	0B92Ah
 		push	120h
@@ -10424,7 +10424,7 @@ sub_FBFB	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 5628h
+		mov	si, offset _lasers
 		xor	di, di
 		jmp	loc_FD1A
 ; ---------------------------------------------------------------------------
@@ -10609,7 +10609,7 @@ var_2		= word ptr -2
 		sub	sp, 0Ah
 		push	si
 		push	di
-		mov	si, 5628h
+		mov	si, offset _lasers
 		mov	[bp+var_2], 0
 		jmp	loc_FF6D
 ; ---------------------------------------------------------------------------
@@ -25156,11 +25156,11 @@ var_2		= word ptr -2
 		sub	sp, 2
 		push	si
 		push	di
-		mov	al, byte ptr word_26314
+		mov	al, byte ptr _laser_template.shootout_speed
 		call	sub_15A42
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		mov	si, 5628h
+		mov	si, offset _lasers
 		xor	di, di
 		jmp	short loc_1753F
 ; ---------------------------------------------------------------------------
@@ -25172,22 +25172,22 @@ loc_174E1:
 		mov	word ptr [si+6], 100h
 		mov	word ptr [si+8], 100h
 		mov	word ptr [si+0Eh], 0
-		mov	ax, word_26318
+		mov	ax, _laser_template.grow_at_age
 		mov	[si+10h], ax
-		mov	al, byte_26309
+		mov	al, _laser_template.LASER_color
 		mov	[si+1],	al
 		mov	ax, [bp+var_2]
 		mov	[si+0Ch], ax
 		mov	byte ptr [si+14h], 6
 		mov	byte ptr [si+0Bh], 6
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		mov	[si+0Ah], al
 		lea	ax, [si+2]
 		push	ax
-		push	word ptr dword_2630A
-		push	word ptr dword_2630A+2
+		push	_laser_template.origin.x
+		push	_laser_template.origin.y
 		push	80h
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -25197,10 +25197,10 @@ loc_174E1:
 
 loc_1753B:
 		inc	di
-		add	si, 18h
+		add	si, size laser_t
 
 loc_1753F:
-		cmp	di, 20h	; ' '
+		cmp	di, LASER_COUNT
 		jl	short loc_174E1
 
 loc_17544:
@@ -25223,27 +25223,27 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	ax, [bp+arg_0]
-		imul	ax, 18h
-		add	ax, 5628h
+		imul	ax, size laser_t
+		add	ax, offset _lasers
 		mov	si, ax
 		cmp	byte ptr [si], 0
 		jnz	short loc_1759F
 		mov	byte ptr [si], 2
-		mov	eax, dword_2630A
+		mov	eax, _laser_template.origin
 		mov	[si+2],	eax
 		mov	word ptr [si+6], 100h
 		mov	word ptr [si+8], 2260h
 		mov	word ptr [si+0Eh], 0
-		mov	ax, word_26318
+		mov	ax, _laser_template.grow_at_age
 		mov	[si+10h], ax
-		mov	ax, word_2631A
+		mov	ax, _laser_template.shrink_at_age
 		mov	[si+12h], ax
-		mov	al, byte_26309
+		mov	al, _laser_template.LASER_color
 		mov	[si+1],	al
-		mov	al, byte_26313
+		mov	al, _laser_template.LASER_width
 		mov	[si+14h], al
 		mov	byte ptr [si+0Bh], 1
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		mov	[si+0Ah], al
 		call	snd_se_play pascal, 5
 
@@ -25266,25 +25266,25 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	ax, [bp+arg_0]
-		imul	ax, 18h
-		add	ax, 5628h
+		imul	ax, size laser_t
+		add	ax, offset _lasers
 		mov	si, ax
 		cmp	byte ptr [si], 0
 		jnz	short loc_175F9
 		mov	byte ptr [si], 2
-		mov	eax, dword_2630A
+		mov	eax, _laser_template.origin
 		mov	[si+2],	eax
 		mov	word ptr [si+6], 100h
 		mov	word ptr [si+8], 2260h
 		mov	word ptr [si+0Eh], 0
 		mov	word ptr [si+10h], 0FFFFh
 		mov	word ptr [si+12h], 0FFFFh
-		mov	al, byte_26309
+		mov	al, _laser_template.LASER_color
 		mov	[si+1],	al
 		mov	byte ptr [si+0Bh], 1
-		mov	al, byte_26313
+		mov	al, _laser_template.LASER_width
 		mov	[si+14h], al
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		mov	[si+0Ah], al
 		call	snd_se_play pascal, 5
 
@@ -25308,12 +25308,12 @@ arg_0		= word ptr  4
 		push	si
 		mov	si, [bp+arg_0]
 		mov	bx, si
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 2
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_FIXED_WAIT_TO_GROW
 		jnz	short loc_17622
 		mov	bx, si
-		imul	bx, 18h
-		mov	byte ptr [bx+5628h], 3
+		imul	bx, size laser_t
+		mov	_lasers[bx].mode, LM_FIXED_GROW
 		call	snd_se_play pascal, 6
 
 loc_17622:
@@ -25335,40 +25335,40 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		mov	ax, [bp+arg_0]
 		mov	bx, ax
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 4
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_FIXED_ACTIVE
 		jnz	short loc_17647
 		mov	bx, ax
-		imul	bx, 18h
-		mov	byte ptr [bx+5628h], 5
+		imul	bx, size laser_t
+		mov	_lasers[bx].mode, LM_FIXED_SHRINK
 		pop	bp
 		retn	2
 ; ---------------------------------------------------------------------------
 
 loc_17647:
 		mov	bx, ax
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 1
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_SHOOTOUT
 		jnz	short loc_17661
 		mov	bx, ax
-		imul	bx, 18h
-		mov	byte ptr [bx+5628h], 7
+		imul	bx, size laser_t
+		mov	_lasers[bx].mode, LM_SHOOTOUT_DECAY
 		pop	bp
 		retn	2
 ; ---------------------------------------------------------------------------
 
 loc_17661:
 		mov	bx, ax
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 5
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_FIXED_SHRINK
 		jz	short loc_17683
 		mov	bx, ax
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 7
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_SHOOTOUT_DECAY
 		jz	short loc_17683
 		mov	bx, ax
-		imul	bx, 18h
-		mov	byte ptr [bx+5628h], 0
+		imul	bx, size laser_t
+		mov	_lasers[bx].mode, LM_NONE
 
 loc_17683:
 		pop	bp
@@ -27243,13 +27243,13 @@ loc_1859F:
 		cmp	boss_phase_frame, 20h	; ' '
 		jnz	short loc_185DD
 		mov	eax, _boss_pos.cur
-		mov	dword_2630A, eax
-		mov	byte_26312, 0E0h
-		mov	byte_26309, 8
-		mov	byte_26313, 8
+		mov	_laser_template.origin, eax
+		mov	_laser_template.angle, -32
+		mov	_laser_template.LASER_color, 8
+		mov	_laser_template.LASER_width, 8
 		push	0
 		call	sub_175A4
-		mov	byte_26312, 0A0h
+		mov	_laser_template.angle, -96
 		push	1
 		call	sub_175A4
 		mov	byte_2D085, 0
@@ -27279,21 +27279,21 @@ loc_185F7:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1863F
-		cmp	byte_2602A, 4Ah	; 'J'
+		cmp	_lasers[1 * size laser_t].angle, 74
 		jbe	short loc_1863F
-		mov	al, byte_26012
+		mov	al, _lasers[0 * size laser_t].angle
 		inc	al
-		mov	byte_26012, al
-		mov	al, byte_2602A
-		add	al, 0FFh
-		mov	byte_2602A, al
-		cmp	byte_2602A, 80h
+		mov	_lasers[0 * size laser_t].angle, al
+		mov	al, _lasers[1 * size laser_t].angle
+		add	al, -1
+		mov	_lasers[1 * size laser_t].angle, al
+		cmp	_lasers[1 * size laser_t].angle, 128
 		jz	short loc_1863B
-		cmp	byte_2602A, 60h
+		cmp	_lasers[1 * size laser_t].angle, 96
 		jz	short loc_1863B
-		cmp	byte_2602A, 58h	; 'X'
+		cmp	_lasers[1 * size laser_t].angle, 88
 		jz	short loc_1863B
-		cmp	byte_2602A, 50h	; 'P'
+		cmp	_lasers[1 * size laser_t].angle, 80
 		jnz	short loc_1863F
 
 loc_1863B:
@@ -28273,20 +28273,20 @@ sub_18EBD	proc near
 
 loc_18ED9:
 		mov	eax, _boss_pos.cur
-		mov	dword_2630A, eax
-		mov	byte_26313, 6
-		mov	byte_26309, 8
-		mov	byte_26312, 0F0h
-		mov	word_26318, 1Eh
-		mov	word_26314, 68h	; 'h'
+		mov	_laser_template.origin, eax
+		mov	_laser_template.LASER_width, 6
+		mov	_laser_template.LASER_color, 8
+		mov	_laser_template.angle, -16
+		mov	_laser_template.grow_at_age, 30
+		mov	_laser_template.shootout_speed, 104
 		push	1
 		call	_randring2_next16_and
 		mov	byte_2D085, al
 
 loc_18F04:
-		cmp	byte_26312, 0F0h
+		cmp	_laser_template.angle, -16
 		jnb	short loc_18F12
-		cmp	byte_26312, 80h
+		cmp	_laser_template.angle, 128
 		ja	short loc_18F5A
 
 loc_18F12:
@@ -28303,18 +28303,18 @@ loc_18F12:
 ; ---------------------------------------------------------------------------
 
 loc_18F2B:
-		mov	al, 80h
-		sub	al, byte_26312
-		mov	byte_26312, al
+		mov	al, 128
+		sub	al, _laser_template.angle
+		mov	_laser_template.angle, al
 		call	sub_174C7
-		mov	al, 80h
-		sub	al, byte_26312
-		mov	byte_26312, al
+		mov	al, 128
+		sub	al, _laser_template.angle
+		mov	_laser_template.angle, al
 
 loc_18F40:
-		mov	al, byte_26312
-		add	al, 0Ah
-		mov	byte_26312, al
+		mov	al, _laser_template.angle
+		add	al, 10
+		mov	_laser_template.angle, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -30070,28 +30070,28 @@ sub_19E12	proc near
 loc_19E43:
 		cmp	boss_phase_frame, 40h
 		jnz	short loc_19EC6
-		mov	byte_26309, 6
-		mov	byte_26313, 8
+		mov	_laser_template.LASER_color, 6
+		mov	_laser_template.LASER_width, 8
 		mov	eax, dword_25FFC
-		mov	dword_2630A, eax
-		mov	word_26318, 28h	; '('
-		mov	word_26314, 50h	; 'P'
+		mov	_laser_template.origin, eax
+		mov	_laser_template.grow_at_age, 40
+		mov	_laser_template.shootout_speed, (5 shl 4)
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_2630A+2
+		sub	ax, _laser_template.origin.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_2630A
+		sub	ax, _laser_template.origin.x
 		push	ax
 		call	iatan2
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		call	sub_174C7
-		mov	al, byte_26312
-		add	al, 10h
-		mov	byte_26312, al
+		mov	al, _laser_template.angle
+		add	al, 16
+		mov	_laser_template.angle, al
 		call	sub_174C7
-		mov	al, byte_26312
-		add	al, 0E0h
-		mov	byte_26312, al
+		mov	al, _laser_template.angle
+		add	al, -32
+		mov	_laser_template.angle, al
 		call	sub_174C7
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 0Dh
@@ -31082,17 +31082,17 @@ var_1		= byte ptr -1
 		cmp	boss_phase_frame, 30h	; '0'
 		jnz	short loc_1A7AF
 		mov	eax, _boss_pos.cur
-		mov	dword_2630A, eax
+		mov	_laser_template.origin, eax
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_2630A+2
+		sub	ax, _laser_template.origin.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_2630A
+		sub	ax, _laser_template.origin.x
 		push	ax
 		call	iatan2
-		mov	byte_26312, al
-		mov	byte_26309, 8
-		mov	byte_26313, 8
+		mov	_laser_template.angle, al
+		mov	_laser_template.LASER_color, 8
+		mov	_laser_template.LASER_width, 8
 		push	0
 		call	sub_175A4
 
@@ -31124,14 +31124,14 @@ loc_1A7D7:
 
 loc_1A7E4:
 		mov	ax, player_pos.cur.y
-		sub	ax, word ptr dword_2630A+2
+		sub	ax, _laser_template.origin.y
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, word ptr dword_2630A
+		sub	ax, _laser_template.origin.x
 		push	ax
 		call	iatan2
 		mov	[bp-1],	al
-		mov	al, byte_26012
+		mov	al, _lasers[0 * size laser_t].angle
 		sub	[bp-1],	al
 		cmp	byte ptr [bp-1], 0
 		jle	short loc_1A80C
@@ -31142,11 +31142,11 @@ loc_1A7E4:
 loc_1A80C:
 		cmp	byte ptr [bp-1], 0
 		jge	short loc_1A81A
-		mov	al, byte_26012
-		add	al, 0FFh
+		mov	al, _lasers[0 * size laser_t].angle
+		add	al, -1
 
 loc_1A817:
-		mov	byte_26012, al
+		mov	_lasers[0 * size laser_t].angle, al
 
 loc_1A81A:
 		cmp	boss_phase_frame, 0A0h
@@ -31854,7 +31854,7 @@ loc_1AE2C:
 		mov	byte_26363, al
 		mov	boss_phase, 0FDh
 		mov	boss_phase_frame, 0
-		cmp	byte_26008, 0
+		cmp	_lasers[0 * size laser_t].mode, LM_NONE
 		jz	loc_1AFA7	; default
 		push	0
 		call	sub_17627
@@ -34107,30 +34107,30 @@ var_2		= word ptr -2
 		call	_randring2_next16_and
 		add	ax, 10h
 		mov	[bp+var_2], ax
-		mov	word_26318, 20h	; ' '
-		mov	word_2631A, 5Ah	; 'Z'
+		mov	_laser_template.grow_at_age, 32
+		mov	_laser_template.shrink_at_age, 90
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dl, 40h
+		mov	dl, 64
 		sub	dl, byte ptr [bp+var_2]
 		sub	dl, al
-		mov	byte_26312, dl
+		mov	_laser_template.angle, dl
 		push	0
 		call	sub_17548
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		push	1
 		call	sub_17548
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		push	2
 		call	sub_17548
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		push	3
 		call	sub_17548
 		mov	byte_2D083, 0F8h
@@ -34208,8 +34208,8 @@ var_2		= word ptr -2
 		push	si
 		cmp	boss_phase_frame, 20h	; ' '
 		jnz	short loc_1C3B0
-		mov	byte_26309, 8
-		mov	byte_26313, 8
+		mov	_laser_template.LASER_color, 8
+		mov	_laser_template.LASER_width, 8
 		call	_randring2_next16
 		mov	[bp+var_2], ax
 		mov	al, byte_25FEB
@@ -34226,7 +34226,7 @@ loc_1C376:
 		cwd
 		idiv	word_2CE3C
 		add	al, byte ptr [bp+var_2]
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		push	si
 		call	sub_175A4
 		inc	si
@@ -34257,9 +34257,9 @@ loc_1C3B0:
 
 loc_1C3CC:
 		mov	bx, si
-		imul	bx, 18h
+		imul	bx, size laser_t
 		mov	eax, _boss_pos.cur
-		mov	[bx+562Ah], eax
+		mov	_lasers[bx].origin, eax
 		inc	si
 
 loc_1C3DB:
@@ -34291,8 +34291,8 @@ loc_1C3F9:
 
 loc_1C404:
 		mov	bx, si
-		imul	bx, 18h
-		mov	byte ptr [bx+5628h], 6
+		imul	bx, size laser_t
+		mov	_lasers[bx].mode, LM_FIXED_SHRINK_AND_WAIT_TO_GROW
 		inc	si
 
 loc_1C40F:
@@ -34394,12 +34394,12 @@ loc_1C4C7:
 
 loc_1C4F7:
 		mov	bx, si
-		imul	bx, 18h
-		mov	al, [bx+5632h]
+		imul	bx, size laser_t
+		mov	al, _lasers[bx].angle
 		add	al, byte ptr [bp+var_2]
 		mov	bx, si
-		imul	bx, 18h
-		mov	[bx+5632h], al
+		imul	bx, size laser_t
+		mov	_lasers[bx].angle, al
 		inc	si
 
 loc_1C50D:
@@ -34426,7 +34426,7 @@ sub_1C518	proc far
 		mov	dword_2C922, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
-		mov	dword_2630A, eax
+		mov	_laser_template.origin, eax
 		mov	dword ptr word_2BC71+1,	eax
 		inc	boss_phase_frame
 		mov	al, boss_phase
@@ -35486,11 +35486,11 @@ var_1		= byte ptr -1
 		mov	byte ptr word_26006+1, 60h
 		call	fp_25344
 		call	snd_se_play pascal, 8
-		mov	word_26316, 18h
-		mov	word_26314, 64h	; 'd'
-		mov	byte_26313, 6
-		mov	byte_26309, 8
-		mov	word_26318, 1Ch
+		mov	_laser_template.LASER_age, 24
+		mov	_laser_template.shootout_speed, (6 shl 4) + 4
+		mov	_laser_template.LASER_width, 6
+		mov	_laser_template.LASER_color, 8
+		mov	_laser_template.grow_at_age, 28
 		mov	byte_2D083, 0
 		mov	byte_2D082, 20h	; ' '
 		mov	word_2BC7E, 20h	; ' '
@@ -35547,16 +35547,16 @@ loc_1CFC3:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D030
-		mov	word ptr dword_2630A+2,	200h
-		push	1000h
+		mov	_laser_template.origin.y, (32 shl 4)
+		push	(256 shl 4)
 		call	_randring2_next16_mod
-		add	ax, 400h
-		mov	word ptr dword_2630A, ax
+		add	ax, (64 shl 4)
+		mov	_laser_template.origin.x, ax
 		push	ax
-		push	word ptr dword_2630A+2
+		push	_laser_template.origin.y
 		push	0
 		call	sub_15A24
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		call	sub_174C7
 		xor	si, si
 		jmp	short loc_1D02B
@@ -36518,22 +36518,22 @@ sub_1D89A	proc near
 		push	si
 		cmp	boss_phase_frame, 10h
 		jnz	short loc_1D8F7
-		mov	byte_26312, 50h	; 'P'
+		mov	_laser_template.angle, 80
 		push	0
 		call	sub_175A4
-		mov	byte_26312, 48h	; 'H'
+		mov	_laser_template.angle, 72
 		push	1
 		call	sub_175A4
-		mov	byte_26312, 40h
+		mov	_laser_template.angle, 64
 		push	2
 		call	sub_175A4
-		mov	byte_26312, 40h
+		mov	_laser_template.angle, 64
 		push	3
 		call	sub_175A4
-		mov	byte_26312, 38h	; '8'
+		mov	_laser_template.angle, 56
 		push	4
 		call	sub_175A4
-		mov	byte_26312, 30h	; '0'
+		mov	_laser_template.angle, 48
 		push	5
 		call	sub_175A4
 		call	snd_se_play pascal, 8
@@ -36544,28 +36544,28 @@ sub_1D89A	proc near
 loc_1D8F7:
 		cmp	boss_phase_frame, 10h
 		jle	loc_1DA17
-		cmp	byte_26042, 80h
+		cmp	_lasers[2 * size laser_t].angle, 128
 		jnb	short loc_1D954
 		cmp	frame_mod2, 0
 		jz	loc_1DA17
-		mov	al, byte_26012
+		mov	al, _lasers[0 * size laser_t].angle
 		inc	al
-		mov	byte_26012, al
-		mov	al, byte_2602A
+		mov	_lasers[0 * size laser_t].angle, al
+		mov	al, _lasers[1 * size laser_t].angle
 		inc	al
-		mov	byte_2602A, al
-		mov	al, byte_26042
+		mov	_lasers[1 * size laser_t].angle, al
+		mov	al, _lasers[2 * size laser_t].angle
 		inc	al
-		mov	byte_26042, al
-		mov	al, byte_2605A
-		add	al, 0FFh
-		mov	byte_2605A, al
-		mov	al, byte_26072
-		add	al, 0FFh
-		mov	byte_26072, al
-		mov	al, byte_2608A
-		add	al, 0FFh
-		mov	byte_2608A, al
+		mov	_lasers[2 * size laser_t].angle, al
+		mov	al, _lasers[3 * size laser_t].angle
+		add	al, -1
+		mov	_lasers[3 * size laser_t].angle, al
+		mov	al, _lasers[4 * size laser_t].angle
+		add	al, -1
+		mov	_lasers[4 * size laser_t].angle, al
+		mov	al, _lasers[5 * size laser_t].angle
+		add	al, -1
+		mov	_lasers[5 * size laser_t].angle, al
 		mov	al, byte_2D084
 		mov	ah, 0
 		mov	PaletteTone, ax
@@ -36999,19 +36999,19 @@ var_2		= word ptr -2
 loc_1DD27:
 		cmp	word_22852, 0
 		jnz	short loc_1DD72
-		mov	byte_26313, 6
-		mov	byte_26312, 40h
-		mov	byte_26309, 0Eh
-		add	word ptr dword_2630A, 600h
+		mov	_laser_template.LASER_width, 6
+		mov	_laser_template.angle, 64
+		mov	_laser_template.LASER_color, 14
+		add	_laser_template.origin.x, (96 shl 4)
 		push	0
 		call	sub_175A4
-		sub	word ptr dword_2630A, 400h
+		sub	_laser_template.origin.x, (64 shl 4)
 		push	1
 		call	sub_175A4
-		sub	word ptr dword_2630A, 400h
+		sub	_laser_template.origin.x, (64 shl 4)
 		push	2
 		call	sub_175A4
-		sub	word ptr dword_2630A, 400h
+		sub	_laser_template.origin.x, (64 shl 4)
 		push	3
 		call	sub_175A4
 		inc	word_22852
@@ -37212,15 +37212,15 @@ loc_1DF8F:
 		or	dx, dx
 		jnz	locret_1E020
 		mov	al, byte_2D07F
-		mov	byte_26012, al
+		mov	_lasers[0 * size laser_t].angle, al
 		mov	al, byte_2D07E
-		mov	byte_2602A, al
-		mov	al, 80h
-		sub	al, byte_2602A
-		mov	byte_26042, al
-		mov	al, 80h
-		sub	al, byte_26012
-		mov	byte_2605A, al
+		mov	_lasers[1 * size laser_t].angle, al
+		mov	al, 128
+		sub	al, _lasers[1 * size laser_t].angle
+		mov	_lasers[2 * size laser_t].angle, al
+		mov	al, 128
+		sub	al, _lasers[0 * size laser_t].angle
+		mov	_lasers[3 * size laser_t].angle, al
 		cmp	byte_2D07D, 0
 		jnz	short loc_1DFD8
 		inc	byte_2D07F
@@ -37429,7 +37429,7 @@ sub_1E197	proc far
 		mov	dword_2C922, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
-		mov	dword_2630A, eax
+		mov	_laser_template.origin, eax
 		mov	dword ptr word_2BC71+1,	eax
 		inc	boss_phase_frame
 		mov	al, boss_phase
@@ -37770,7 +37770,7 @@ loc_1E527:
 		call	sub_1D58B
 		call	sub_17726
 		push	_boss_hp
-		push	5910h
+		push	22800
 		call	sub_17354
 		pop	di
 		pop	si
@@ -38747,19 +38747,19 @@ sub_1ECD4	proc near
 		cwd
 		idiv	bx
 		mov	di, dx
-		mov	byte_26309, 3
-		mov	byte_26313, 8
-		mov	word_26318, 2Fh	; '/'
-		mov	word_2631A, 50h	; 'P'
+		mov	_laser_template.LASER_color, 3
+		mov	_laser_template.LASER_width, 8
+		mov	_laser_template.grow_at_age, 47
+		mov	_laser_template.shrink_at_age, 80
 		cmp	boss_phase_frame, 90h
 		jge	short loc_1ED67
 		or	di, di
 		jnz	short loc_1ED46
-		push	word ptr dword_2630A
-		push	word ptr dword_2630A+2
+		push	_laser_template.origin.x
+		push	_laser_template.origin.y
 		push	30h ; '0'
 		call	sub_15A24
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		mov	ax, word_22870
 		inc	word_22870
 		push	ax
@@ -38778,11 +38778,11 @@ sub_1ECD4	proc near
 loc_1ED46:
 		cmp	di, 8
 		jnz	short loc_1ED67
-		push	word ptr dword_2630A
-		push	word ptr dword_2630A+2
+		push	_laser_template.origin.x
+		push	_laser_template.origin.y
 		push	0D0h
 		call	sub_15A24
-		mov	byte_26312, al
+		mov	_laser_template.angle, al
 		mov	ax, word_22870
 		inc	word_22870
 		push	ax
@@ -38796,28 +38796,28 @@ loc_1ED67:
 
 loc_1ED70:
 		mov	bx, si
-		imul	bx, 18h
-		cmp	byte ptr [bx+5628h], 2
+		imul	bx, size laser_t
+		cmp	_lasers[bx].mode, LM_FIXED_WAIT_TO_GROW
 		jnz	short loc_1EDA3
 		test	si, 1
 		jz	short loc_1ED8F
 		mov	bx, si
-		imul	bx, 18h
-		mov	al, [bx+5632h]
+		imul	bx, size laser_t
+		mov	al, _lasers[bx].angle
 		inc	al
 		jmp	short loc_1ED9A
 ; ---------------------------------------------------------------------------
 
 loc_1ED8F:
 		mov	bx, si
-		imul	bx, 18h
-		mov	al, [bx+5632h]
-		add	al, 0FFh
+		imul	bx, size laser_t
+		mov	al, _lasers[bx].angle
+		add	al, -1
 
 loc_1ED9A:
 		mov	bx, si
-		imul	bx, 18h
-		mov	[bx+5632h], al
+		imul	bx, size laser_t
+		mov	_lasers[bx].angle, al
 
 loc_1EDA3:
 		inc	si
@@ -38901,11 +38901,11 @@ sub_1EE2F	proc near
 		mov	bp, sp
 		cmp	boss_phase_frame, 40h
 		jnz	short loc_1EE59
-		mov	byte_26309, 2
-		mov	byte_26313, 6
-		mov	byte_26312, 0
-		mov	word_26318, 1Eh
-		mov	word_26314, 58h	; 'X'
+		mov	_laser_template.LASER_color, 2
+		mov	_laser_template.LASER_width, 6
+		mov	_laser_template.angle, 0
+		mov	_laser_template.grow_at_age, 30
+		mov	_laser_template.shootout_speed, (5 shl 4) + 8
 		mov	byte_2D085, 0
 
 loc_1EE59:
@@ -38917,10 +38917,10 @@ loc_1EE59:
 		jnz	short loc_1EEA1
 		cmp	byte_2D085, 0
 		jnz	short loc_1EE83
-		mov	al, byte_26312
+		mov	al, _laser_template.angle
 		add	al, 8
-		mov	byte_26312, al
-		cmp	byte_26312, 80h
+		mov	_laser_template.angle, al
+		cmp	_laser_template.angle, 128
 		jb	short loc_1EE9E
 		mov	byte_2D085, 1
 		jmp	short loc_1EE9E
@@ -38929,10 +38929,10 @@ loc_1EE59:
 loc_1EE83:
 		cmp	byte_2D085, 1
 		jnz	short loc_1EEA1
-		mov	al, byte_26312
-		add	al, 0F8h
-		mov	byte_26312, al
-		cmp	byte_26312, 0
+		mov	al, _laser_template.angle
+		add	al, -8
+		mov	_laser_template.angle, al
+		cmp	_laser_template.angle, 0
 		jnz	short loc_1EE9E
 		mov	byte_2D085, 0
 
@@ -39397,7 +39397,7 @@ loc_1F298:
 		mov	dword_2C922, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
-		mov	dword_2630A, eax
+		mov	_laser_template.origin, eax
 		mov	dword ptr word_2BC71+1,	eax
 		inc	boss_phase_frame
 		mov	al, boss_phase
@@ -45900,227 +45900,7 @@ byte_26000	db ?
 byte_26001	db ?
 dword_26002	dd ?
 word_26006	dw ?
-byte_26008	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-byte_26012	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_2602A	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_26042	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_2605A	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_26072	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_2608A	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-byte_26309	db ?
-dword_2630A	dd ?
-		dd    ?	;
-byte_26312	db ?
-byte_26313	db ?
-word_26314	dw ?
-word_26316	dw ?
-word_26318	dw ?
-word_2631A	dw ?
-		dd ?
+include th05/lasers[bss].asm
 _midboss_pos	motion_t <?>
 frames_until_midboss	dw ?
 _midboss_hp	dw ?
