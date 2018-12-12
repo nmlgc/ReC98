@@ -21691,31 +21691,8 @@ arg_4		= word ptr  8
 		retn	6
 sub_15A24	endp
 
-; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15A42	proc near
-		shr	al, 1
-		mov	cl, al
-		mul	_playperf
-		shr	ax, 5
-		add	al, cl
-		cmp	al, 128
-		jbe	short loc_15A55
-		mov	al, 128
-
-loc_15A55:
-		cmp	al, 8
-		jnb	short locret_15A5B
-		mov	al, 8
-
-locret_15A5B:
-		retn
-sub_15A42	endp
-
+include th05/playperf_adjust_speed.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22042,7 +22019,7 @@ loc_15C81:
 		cmp	byte_25346, 0
 		jnz	short loc_15C91
 		mov	al, byte ptr word_26006+1
-		call	sub_15A42
+		call	@playperf_adjust_speed
 		mov	byte ptr word_26006+1, al
 
 loc_15C91:
@@ -25157,7 +25134,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	al, byte ptr _laser_template.shootout_speed
-		call	sub_15A42
+		call	@playperf_adjust_speed
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	si, offset _lasers
@@ -32502,7 +32479,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	al, byte_2BC88
-		call	sub_15A42
+		call	@playperf_adjust_speed
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	si, 0B2AAh
@@ -34754,7 +34731,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	al, byte_2BC88
-		call	sub_15A42
+		call	@playperf_adjust_speed
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	_circles_color, GC_RG
@@ -36099,7 +36076,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	al, byte_2BC88
-		call	sub_15A42
+		call	@playperf_adjust_speed
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	si, 0B2AAh
