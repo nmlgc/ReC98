@@ -9,7 +9,7 @@ LM_FIXED_GROW = 3
 LM_FIXED_ACTIVE = 4
 LM_FIXED_SHRINK = 5
 LM_FIXED_SHRINK_AND_WAIT_TO_GROW = 6
-LM_SHOOTOUT_DECAY = 7
+LM_DECAY = 7
 ; -----------
 
 ; [origin], the two distances, and [shootout_speed] are stored in units of

@@ -25119,239 +25119,7 @@ loc_174C5:
 		retn
 sub_17486	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_174C7	proc near
-
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	al, byte ptr _laser_template.shootout_speed
-		call	@playperf_adjust_speed
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		mov	si, offset _lasers
-		xor	di, di
-		jmp	short loc_1753F
-; ---------------------------------------------------------------------------
-
-loc_174E1:
-		cmp	byte ptr [si], 0
-		jnz	short loc_1753B
-		mov	byte ptr [si], 1
-		mov	word ptr [si+6], 100h
-		mov	word ptr [si+8], 100h
-		mov	word ptr [si+0Eh], 0
-		mov	ax, _laser_template.grow_at_age
-		mov	[si+10h], ax
-		mov	al, _laser_template.LASER_color
-		mov	[si+1],	al
-		mov	ax, [bp+var_2]
-		mov	[si+0Ch], ax
-		mov	byte ptr [si+14h], 6
-		mov	byte ptr [si+0Bh], 6
-		mov	al, _laser_template.angle
-		mov	[si+0Ah], al
-		lea	ax, [si+2]
-		push	ax
-		push	_laser_template.origin.x
-		push	_laser_template.origin.y
-		push	80h
-		mov	al, _laser_template.angle
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		call	snd_se_play pascal, 5
-		jmp	short loc_17544
-; ---------------------------------------------------------------------------
-
-loc_1753B:
-		inc	di
-		add	si, size laser_t
-
-loc_1753F:
-		cmp	di, LASER_COUNT
-		jl	short loc_174E1
-
-loc_17544:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_174C7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17548	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+arg_0]
-		imul	ax, size laser_t
-		add	ax, offset _lasers
-		mov	si, ax
-		cmp	byte ptr [si], 0
-		jnz	short loc_1759F
-		mov	byte ptr [si], 2
-		mov	eax, _laser_template.origin
-		mov	[si+2],	eax
-		mov	word ptr [si+6], 100h
-		mov	word ptr [si+8], 2260h
-		mov	word ptr [si+0Eh], 0
-		mov	ax, _laser_template.grow_at_age
-		mov	[si+10h], ax
-		mov	ax, _laser_template.shrink_at_age
-		mov	[si+12h], ax
-		mov	al, _laser_template.LASER_color
-		mov	[si+1],	al
-		mov	al, _laser_template.LASER_width
-		mov	[si+14h], al
-		mov	byte ptr [si+0Bh], 1
-		mov	al, _laser_template.angle
-		mov	[si+0Ah], al
-		call	snd_se_play pascal, 5
-
-loc_1759F:
-		pop	si
-		pop	bp
-		retn	2
-sub_17548	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_175A4	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+arg_0]
-		imul	ax, size laser_t
-		add	ax, offset _lasers
-		mov	si, ax
-		cmp	byte ptr [si], 0
-		jnz	short loc_175F9
-		mov	byte ptr [si], 2
-		mov	eax, _laser_template.origin
-		mov	[si+2],	eax
-		mov	word ptr [si+6], 100h
-		mov	word ptr [si+8], 2260h
-		mov	word ptr [si+0Eh], 0
-		mov	word ptr [si+10h], 0FFFFh
-		mov	word ptr [si+12h], 0FFFFh
-		mov	al, _laser_template.LASER_color
-		mov	[si+1],	al
-		mov	byte ptr [si+0Bh], 1
-		mov	al, _laser_template.LASER_width
-		mov	[si+14h], al
-		mov	al, _laser_template.angle
-		mov	[si+0Ah], al
-		call	snd_se_play pascal, 5
-
-loc_175F9:
-		pop	si
-		pop	bp
-		retn	2
-sub_175A4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_175FE	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		mov	bx, si
-		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_FIXED_WAIT_TO_GROW
-		jnz	short loc_17622
-		mov	bx, si
-		imul	bx, size laser_t
-		mov	_lasers[bx].mode, LM_FIXED_GROW
-		call	snd_se_play pascal, 6
-
-loc_17622:
-		pop	si
-		pop	bp
-		retn	2
-sub_175FE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17627	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		mov	bx, ax
-		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_FIXED_ACTIVE
-		jnz	short loc_17647
-		mov	bx, ax
-		imul	bx, size laser_t
-		mov	_lasers[bx].mode, LM_FIXED_SHRINK
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_17647:
-		mov	bx, ax
-		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_SHOOTOUT
-		jnz	short loc_17661
-		mov	bx, ax
-		imul	bx, size laser_t
-		mov	_lasers[bx].mode, LM_SHOOTOUT_DECAY
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_17661:
-		mov	bx, ax
-		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_FIXED_SHRINK
-		jz	short loc_17683
-		mov	bx, ax
-		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_SHOOTOUT_DECAY
-		jz	short loc_17683
-		mov	bx, ax
-		imul	bx, size laser_t
-		mov	_lasers[bx].mode, LM_NONE
-
-loc_17683:
-		pop	bp
-		retn	2
-sub_17627	endp
-
+include th05/lasers_control.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27224,11 +26992,9 @@ loc_1859F:
 		mov	_laser_template.angle, -32
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.LASER_width, 8
-		push	0
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 0
 		mov	_laser_template.angle, -96
-		push	1
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 1
 		mov	byte_2D085, 0
 		mov	byte_2D084, 1
 		mov	byte_2D083, 1
@@ -27241,10 +27007,8 @@ loc_185DD:
 		jle	loc_186B4
 		cmp	boss_phase_frame, 40h
 		jnz	short loc_185F7
-		push	0
-		call	sub_175FE
-		push	1
-		call	sub_175FE
+		call	lasers_grow_manual_in_slot pascal, 0
+		call	lasers_grow_manual_in_slot pascal, 1
 
 loc_185F7:
 		mov	al, byte_2D083
@@ -27537,10 +27301,8 @@ loc_188C6:
 		mov	byte ptr word_2634A+1, 1
 
 loc_188D2:
-		push	0
-		call	sub_17627
-		push	1
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, 0
+		call	lasers_stop_in_slot pascal, 1
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		jmp	short loc_188EE
@@ -28275,7 +28037,7 @@ loc_18F12:
 		jnz	short loc_18F5A
 		cmp	byte_2D085, 0
 		jz	short loc_18F2B
-		call	sub_174C7
+		call	lasers_add_shoutout
 		jmp	short loc_18F40
 ; ---------------------------------------------------------------------------
 
@@ -28283,7 +28045,7 @@ loc_18F2B:
 		mov	al, 128
 		sub	al, _laser_template.angle
 		mov	_laser_template.angle, al
-		call	sub_174C7
+		call	lasers_add_shoutout
 		mov	al, 128
 		sub	al, _laser_template.angle
 		mov	_laser_template.angle, al
@@ -30061,15 +29823,15 @@ loc_19E43:
 		push	ax
 		call	iatan2
 		mov	_laser_template.angle, al
-		call	sub_174C7
+		call	lasers_add_shoutout
 		mov	al, _laser_template.angle
 		add	al, 16
 		mov	_laser_template.angle, al
-		call	sub_174C7
+		call	lasers_add_shoutout
 		mov	al, _laser_template.angle
 		add	al, -32
 		mov	_laser_template.angle, al
-		call	sub_174C7
+		call	lasers_add_shoutout
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 0Dh
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
@@ -31070,14 +30832,12 @@ var_1		= byte ptr -1
 		mov	_laser_template.angle, al
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.LASER_width, 8
-		push	0
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 0
 
 loc_1A7AF:
 		cmp	boss_phase_frame, 50h	; 'P'
 		jnz	short loc_1A7BB
-		push	0
-		call	sub_175FE
+		call	lasers_grow_manual_in_slot pascal, 0
 
 loc_1A7BB:
 		mov	ax, boss_phase_frame
@@ -31128,8 +30888,7 @@ loc_1A817:
 loc_1A81A:
 		cmp	boss_phase_frame, 0A0h
 		jnz	short loc_1A82B
-		push	0
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, 0
 		mov	al, 1
 		leave
 		retn
@@ -31833,8 +31592,7 @@ loc_1AE2C:
 		mov	boss_phase_frame, 0
 		cmp	_lasers[0 * size laser_t].mode, LM_NONE
 		jz	loc_1AFA7	; default
-		push	0
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, 0
 		jmp	short loc_1AE69
 ; ---------------------------------------------------------------------------
 
@@ -34093,23 +33851,19 @@ var_2		= word ptr -2
 		sub	dl, byte ptr [bp+var_2]
 		sub	dl, al
 		mov	_laser_template.angle, dl
-		push	0
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, 0
 		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.angle, al
-		push	1
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, 1
 		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.angle, al
-		push	2
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, 2
 		mov	al, _laser_template.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.angle, al
-		push	3
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, 3
 		mov	byte_2D083, 0F8h
 		jmp	loc_1C347
 ; ---------------------------------------------------------------------------
@@ -34204,8 +33958,7 @@ loc_1C376:
 		idiv	word_2CE3C
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.angle, al
-		push	si
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, si
 		inc	si
 
 loc_1C38B:
@@ -34249,8 +34002,7 @@ loc_1C3DB:
 ; ---------------------------------------------------------------------------
 
 loc_1C3EC:
-		push	si
-		call	sub_175FE
+		call	lasers_grow_manual_in_slot pascal, si
 		inc	si
 
 loc_1C3F1:
@@ -34547,8 +34299,7 @@ loc_1C6CB:
 ; ---------------------------------------------------------------------------
 
 loc_1C6CF:
-		push	si
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, si
 		inc	si
 
 loc_1C6D4:
@@ -35534,7 +35285,7 @@ loc_1CFC3:
 		push	0
 		call	sub_15A24
 		mov	_laser_template.angle, al
-		call	sub_174C7
+		call	lasers_add_shoutout
 		xor	si, si
 		jmp	short loc_1D02B
 ; ---------------------------------------------------------------------------
@@ -36496,23 +36247,17 @@ sub_1D89A	proc near
 		cmp	boss_phase_frame, 10h
 		jnz	short loc_1D8F7
 		mov	_laser_template.angle, 80
-		push	0
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 0
 		mov	_laser_template.angle, 72
-		push	1
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 1
 		mov	_laser_template.angle, 64
-		push	2
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 2
 		mov	_laser_template.angle, 64
-		push	3
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 3
 		mov	_laser_template.angle, 56
-		push	4
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 4
 		mov	_laser_template.angle, 48
-		push	5
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 5
 		call	snd_se_play pascal, 8
 		mov	_boss_sprite_cur, 181
 		mov	byte_2D085, 0
@@ -36594,8 +36339,7 @@ loc_1D9AE:
 ; ---------------------------------------------------------------------------
 
 loc_1D9BC:
-		push	si
-		call	sub_175FE
+		call	lasers_grow_manual_in_slot pascal, si
 		inc	si
 
 loc_1D9C1:
@@ -36627,8 +36371,7 @@ loc_1D9EA:
 ; ---------------------------------------------------------------------------
 
 loc_1DA05:
-		push	si
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, si
 		inc	si
 
 loc_1DA0A:
@@ -36980,17 +36723,13 @@ loc_1DD27:
 		mov	_laser_template.angle, 64
 		mov	_laser_template.LASER_color, 14
 		add	_laser_template.origin.x, (96 shl 4)
-		push	0
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 0
 		sub	_laser_template.origin.x, (64 shl 4)
-		push	1
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 1
 		sub	_laser_template.origin.x, (64 shl 4)
-		push	2
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 2
 		sub	_laser_template.origin.x, (64 shl 4)
-		push	3
-		call	sub_175A4
+		call	lasers_new_fixed_and_manual_in_slot pascal, 3
 		inc	word_22852
 		push	0
 		call	add_explode_effect_function
@@ -37156,14 +36895,10 @@ loc_1DF48:
 		jl	short loc_1DF73
 		cmp	word_22852, 40h
 		jnz	short loc_1DF79
-		push	0
-		call	sub_175FE
-		push	1
-		call	sub_175FE
-		push	2
-		call	sub_175FE
-		push	3
-		call	sub_175FE
+		call	lasers_grow_manual_in_slot pascal, 0
+		call	lasers_grow_manual_in_slot pascal, 1
+		call	lasers_grow_manual_in_slot pascal, 2
+		call	lasers_grow_manual_in_slot pascal, 3
 
 loc_1DF73:
 		inc	word_22852
@@ -37683,14 +37418,10 @@ loc_1E488:
 		push	30000h
 		call	boss_end_phase_function
 		mov	word_2CE06, 10h
-		push	0
-		call	sub_17627
-		push	1
-		call	sub_17627
-		push	2
-		call	sub_17627
-		push	3
-		call	sub_17627
+		call	lasers_stop_in_slot pascal, 0
+		call	lasers_stop_in_slot pascal, 1
+		call	lasers_stop_in_slot pascal, 2
+		call	lasers_stop_in_slot pascal, 3
 		jmp	short loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -38739,8 +38470,7 @@ sub_1ECD4	proc near
 		mov	_laser_template.angle, al
 		mov	ax, word_22870
 		inc	word_22870
-		push	ax
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, ax
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 44h ; 'D'
 		mov	byte_26000, 4
@@ -38762,8 +38492,7 @@ loc_1ED46:
 		mov	_laser_template.angle, al
 		mov	ax, word_22870
 		inc	word_22870
-		push	ax
-		call	sub_17548
+		call	lasers_new_fixed_in_slot pascal, ax
 
 loc_1ED67:
 		and	word_22870, 0Fh
@@ -38914,7 +38643,7 @@ loc_1EE83:
 		mov	byte_2D085, 0
 
 loc_1EE9E:
-		call	sub_174C7
+		call	lasers_add_shoutout
 
 loc_1EEA1:
 		cmp	boss_phase_frame, 100h
