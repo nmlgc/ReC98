@@ -620,7 +620,7 @@ loc_1B5F1:
 		jle	short loc_1B60E
 
 loc_1B609:
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_1B60E:
 		cmp	word_3A6CA, 0B4h ; '?'
@@ -664,7 +664,7 @@ loc_1B66D:
 		jle	short loc_1B68A
 
 loc_1B685:
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_1B68A:
 		cmp	word_3A6CA, 0C8h ; '?'
@@ -686,12 +686,12 @@ loc_1B68A:
 		add	ax, 14h
 		cmp	ax, word_36C26
 		jle	short loc_1B6CB
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_1B6CB:
 		cmp	word_34A78, 0
 		jz	short loc_1B6D7
-		mov	byte_34A4F, 0
+		mov	_player_is_hit, 0
 
 loc_1B6D7:
 		pop	bp
@@ -7247,7 +7247,7 @@ loc_1F495:
 		add	ax, 8
 		cmp	ax, word_36C26
 		jle	short loc_1F4ED
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_1F4ED:
 		mov	bx, si
@@ -8944,7 +8944,7 @@ loc_2037C:
 		mov	word_34A82, 1
 
 loc_20390:
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_20395:
 		pop	di
@@ -12638,7 +12638,7 @@ loc_221D4:
 		sar	ax, 4
 		cmp	ax, 168h
 		jle	short loc_2222B
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_22231
 ; ---------------------------------------------------------------------------
 
@@ -13840,7 +13840,7 @@ loc_22B60:
 		jl	short loc_22B86
 		cmp	word ptr dword_3982A+2,	110h
 		jl	short loc_22B86
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_22B86:
 		pop	bp
@@ -15342,7 +15342,7 @@ arg_2		= word ptr  6
 		add	ax, [bp+arg_0]
 		cmp	ax, word_36C26
 		jl	short loc_2370F
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		mov	ax, 1
 		pop	bp
 		retn	4
@@ -22043,10 +22043,10 @@ loc_274E5:
 		push	64h ; 'd'
 		call	_delay
 		pop	cx
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_274F2:
-		cmp	byte_34A4F, 1
+		cmp	_player_is_hit, 1
 		jnz	short loc_274FF
 		mov	word_3A76B, 0C8h ; '?'
 
@@ -24776,7 +24776,7 @@ loc_28DBF:
 		mov	ax, [bp+var_2]
 		sahf
 		jnb	short loc_28E98
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		push	64h ; 'd'
 		call	_delay
 		pop	cx
@@ -27011,7 +27011,7 @@ loc_2A2BA:
 		jge	short loc_2A2EB
 		cmp	word_35E03, 3
 		jl	short loc_2A2EB
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_2A2EB:
 		pop	bp
@@ -30131,7 +30131,7 @@ loc_2C06B:
 		jge	short loc_2C0BC
 		cmp	word_34A78, 0
 		jnz	short loc_2C0BC
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_2C0BC:
 		inc	si
@@ -33034,7 +33034,7 @@ loc_2DAF6:
 		jge	short loc_2DB6C
 		cmp	word_34A78, 0
 		jnz	short loc_2DB6C
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_2DB6C:
 		inc	si
@@ -33836,7 +33836,7 @@ loc_2E1FA:
 		jge	short loc_2E270
 		cmp	word_34A78, 0
 		jnz	short loc_2E270
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_2E270:
 		inc	si
@@ -38953,7 +38953,7 @@ sub_30F06	proc far
 		sar	ax, 4
 		cmp	ax, 188h
 		jge	short loc_30F6C
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		mov	ax, 1
 		pop	bp
 		retf

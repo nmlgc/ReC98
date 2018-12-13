@@ -505,7 +505,7 @@ loc_AFDF:
 ; ---------------------------------------------------------------------------
 
 loc_AFEB:
-		mov	byte_2CEC1, 0
+		mov	_player_is_hit, 0
 
 loc_AFF0:
 		cmp	byte_25FE9, 0
@@ -1114,7 +1114,7 @@ sub_B55A	proc near
 		mov	player_pos.prev.y, 320 * 16
 		mov	byte_2CEBD, 0
 		mov	byte_2CEC2, 0
-		mov	byte_2CEC1, 0
+		mov	_player_is_hit, 0
 		mov	chara_invulnerable_time_left, 64;m_invulnerableTimeLeft
 		mov	word_2CEC6, 0
 		mov	byte_2CEC0, 0
@@ -3153,7 +3153,7 @@ sub_C483	proc near
 		cmp	byte_2CEC2, 20h	; ' '
 		jbe	short loc_C518
 		mov	byte_2CEC2, 0
-		mov	byte_2CEC1, 0
+		mov	_player_is_hit, 0
 		mov	byte_2CEBD, 0
 
 loc_C4BC:
@@ -8399,7 +8399,7 @@ loc_EA98:
 		sub	ax, player_pos.cur.x
 		cmp	ax, 0C0h
 		jnb	short loc_EABD
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_EAC5
 ; ---------------------------------------------------------------------------
 
@@ -13950,7 +13950,7 @@ loc_1176A:
 		jle	short loc_1178F
 
 loc_1178A:
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_1178F:
 		mov	ax, 0A800h
@@ -15079,15 +15079,15 @@ var_1		= byte ptr -1
 		cmp	chara_invulnerable_time_left, 0
 		jz	short loc_12161
 		dec	chara_invulnerable_time_left
-		mov	byte_2CEC1, 0
+		mov	_player_is_hit, 0
 		jmp	short loc_12188
 ; ---------------------------------------------------------------------------
 
 loc_12161:
-		cmp	byte_2CEC1, 0
+		cmp	_player_is_hit, 0
 		jz	short loc_12188
 		mov	byte_2CEC2, 28h	; '('
-		mov	byte_2CEC1, 0
+		mov	_player_is_hit, 0
 		mov	chara_invulnerable_time_left, 0C0h
 		mov	byte_2CEBD, 48h	; 'H'
 		mov	player_pos.velocity.x, 0
@@ -22013,7 +22013,7 @@ loc_15C47:
 		add	dx, 4 * 16
 		cmp	dx, 8 * 16
 		ja	short loc_15C81
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_15C81:
 		cmp	byte_25346, 0
@@ -22653,7 +22653,7 @@ loc_160B9:
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_160F2
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_16161
 ; ---------------------------------------------------------------------------
 
@@ -25259,7 +25259,7 @@ loc_1774D:
 		add	ax, 6 * 16
 		cmp	ax, 12 * 16
 		ja	short loc_17790
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_17790:
 		mov	bx, [bp+var_4]
@@ -25301,7 +25301,7 @@ loc_177D5:
 		add	dx, 8 * 16
 		cmp	dx, 16 * 16
 		ja	short loc_177FB
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_177FB:
 		cmp	byte ptr [di], 1
@@ -26141,7 +26141,7 @@ loc_17DC5:
 		cmp	dx, 80h
 		ja	short loc_17E41
 		mov	byte ptr [si], 2
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_17E74
 ; ---------------------------------------------------------------------------
 
@@ -29064,7 +29064,7 @@ loc_197DC:
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_197FF
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_197FF:
 		cmp	byte_2D07F, 3
@@ -29749,7 +29749,7 @@ loc_19D9D:
 		add	ax, 40h
 		cmp	ax, 80h
 		jnb	short loc_19DBD
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_19DBD:
 		mov	ax, boss_phase_frame
@@ -32335,7 +32335,7 @@ loc_1B48B:
 		add	dx, 8 * 16
 		cmp	dx, 16 * 16
 		ja	short loc_1B4B1
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_1B4B1:
 		mov	eax, [si+2]
@@ -34620,7 +34620,7 @@ loc_1C93F:
 		add	dx, 7 * 16
 		cmp	dx, 14 * 16
 		ja	short loc_1C967
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 		mov	byte ptr [si], 2
 		jmp	short loc_1C9AF
 ; ---------------------------------------------------------------------------
@@ -35930,7 +35930,7 @@ loc_1D5E7:
 		add	dx, 8 * 16
 		cmp	dx, 16 * 16
 		ja	short loc_1D610
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 		mov	byte ptr [si], 3
 		jmp	short loc_1D658
 ; ---------------------------------------------------------------------------
@@ -40412,7 +40412,7 @@ sub_1FD62	proc near
 		add	ax, 16 * 16
 		cmp	ax, 32 * 16
 		ja	short loc_1FD8B
-		mov	byte_2CEC1, 1
+		mov	_player_is_hit, 1
 
 loc_1FD8B:
 		pop	bp
@@ -52581,7 +52581,7 @@ byte_2CEBD	db ?
 power	db ?
 shot_level	db ?
 byte_2CEC0	db ?
-byte_2CEC1	db ?
+include th01/player_is_hit[bss].asm
 byte_2CEC2	db ?
 dream	db ?
 word_2CEC4	dw ?

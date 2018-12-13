@@ -413,7 +413,7 @@ loc_B793:
 		jnz	short loc_B7C3
 		cmp	byte_34A4E, 1
 		jnz	short loc_B7C3
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_B7C3:
 		mov	byte_34A52, 1
@@ -2524,7 +2524,7 @@ loc_C879:
 loc_C88B:
 		cmp	word_34A86, 0
 		jnz	short loc_C8B6
-		cmp	byte_34A4F, 0
+		cmp	_player_is_hit, 0
 		jnz	short loc_C8B6
 		mov	ax, word_34A7E
 		mov	bx, 3
@@ -2669,7 +2669,7 @@ loc_C9A2:
 		push	0
 		call	sub_B502
 		pop	cx
-		cmp	byte_34A4F, 1
+		cmp	_player_is_hit, 1
 		jz	loc_CB91
 		cmp	byte_34A4B, 2
 		jnz	short loc_C9E6
@@ -2758,7 +2758,7 @@ loc_CACF:
 		push	0
 		call	sub_B502
 		pop	cx
-		cmp	byte_34A4F, 1
+		cmp	_player_is_hit, 1
 		jz	loc_CB91
 		cmp	byte_34A4B, 2
 		jnz	short loc_CB13
@@ -3025,7 +3025,7 @@ loc_CD70:
 ; ---------------------------------------------------------------------------
 
 loc_CDA2:
-		mov	byte_34A4F, 0
+		mov	_player_is_hit, 0
 		mov	byte_34A51, 0
 		mov	_continues_total, 0
 		call	_mdrv2_bgm_stop
@@ -3037,7 +3037,7 @@ loc_CDBC:
 		ja	short loc_CDA2
 		cmp	byte_34A51, 1
 		jnz	short loc_CDD8
-		mov	byte_34A4F, 0
+		mov	_player_is_hit, 0
 		mov	byte_34A51, 0
 
 loc_CDD3:
@@ -3800,7 +3800,7 @@ loc_D414:
 		push	offset a40h	; "\x1B[4;0H"
 		call	_printf
 		add	sp, 4
-		mov	al, byte_34A4F
+		mov	al, _player_is_hit
 		mov	ah, 0
 		push	ax
 		mov	al, byte_34A51
@@ -4794,7 +4794,7 @@ loc_DCFA:
 loc_DD0E:
 		cmp	byte_34A55, 0
 		jz	short loc_DD20
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		mov	_rem_lives, 0
 
 loc_DD20:
@@ -4936,7 +4936,7 @@ loc_DE67:
 		call	sub_D4C2
 
 loc_DE72:
-		cmp	byte_34A4F, 0
+		cmp	_player_is_hit, 0
 		jz	loc_DC64
 		mov	byte_34A47, 0
 		push	0
@@ -4958,7 +4958,7 @@ loc_DE72:
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_rem_lives
 		call	sub_1AE0D
-		mov	byte_34A4F, 0
+		mov	_player_is_hit, 0
 		inc	si
 		mov	word_36C24, 96h
 		jmp	loc_DB3E
@@ -4968,7 +4968,7 @@ loc_DEDA:
 		cmp	word_34A82, 1
 		jnz	loc_E104
 		mov	word_34A82, 0
-		mov	byte_34A4F, 0
+		mov	_player_is_hit, 0
 		cmp	byte_34ADF, 0
 		jz	short loc_DF03
 		call	sub_D4DD
@@ -11598,7 +11598,7 @@ arg_8		= word ptr  0Eh
 		jle	short loc_11523
 		cmp	word_34A78, 0
 		jnz	short loc_11523
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_11523:
 		pop	di
@@ -11649,7 +11649,7 @@ loc_1155E:
 
 loc_11563:
 		jnz	short loc_1156A
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_1156A:
 		pop	di
@@ -12619,7 +12619,7 @@ loc_12237:
 		add	ax, 18h
 		cmp	ax, si
 		jle	short loc_12299
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 
 loc_12299:
 		les	bx, [bp+arg_0]
@@ -13365,7 +13365,7 @@ loc_12A1F:
 		mov	al, byte ptr [bp+var_A]
 		mov	_route, al
 		mov	word_34A82, 1
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		pop	di
 		pop	si
 		leave
@@ -13573,7 +13573,7 @@ loc_12B9C:
 		mov	word_34A82, 1
 
 loc_12BA2:
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		pop	di
 		pop	si
 		leave
@@ -28932,7 +28932,7 @@ loc_1ACC2:
 loc_1ACC8:
 		cmp	ax, 10h
 		jge	loc_1AE0A
-		mov	byte_34A4F, 1
+		mov	_player_is_hit, 1
 		jmp	loc_1AE0A
 ; ---------------------------------------------------------------------------
 
@@ -29370,7 +29370,7 @@ byte_34A4B	db 0
 byte_34A4C	db 0
 byte_34A4D	db 0
 byte_34A4E	db 0
-byte_34A4F	db 0
+include th01/player_is_hit[bss].asm
 byte_34A50	db 0
 byte_34A51	db 0
 byte_34A52	db 0

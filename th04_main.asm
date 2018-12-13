@@ -11800,7 +11800,7 @@ sub_1042A	proc near
 		mov	word_25608, 0
 		mov	byte_2560A, 0
 		mov	byte_259A6, 0
-		mov	byte_259A7, 0
+		mov	_player_is_hit, 0
 		pop	bp
 		retn
 sub_1042A	endp
@@ -45932,7 +45932,7 @@ byte_259A3	db ?
 power	db ?
 shot_level	db ?
 byte_259A6	db ?
-byte_259A7	db ?
+include th01/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?
 byte_259AA	db ?

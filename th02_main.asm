@@ -3723,7 +3723,7 @@ loc_C5C2:
 		mov	byte_20609, 0
 		mov	byte_205DF, 8
 		mov	byte_205E0, 0
-		mov	byte_20604, 0
+		mov	_player_is_hit, 0
 		mov	byte_1E517, 0
 		mov	byte_1E51B, 48h	; 'H'
 		mov	word_205D8, 0FFFFh
@@ -6739,7 +6739,7 @@ loc_DB98:
 loc_DB9D:
 		inc	word ptr [si+0Eh]
 		inc	word ptr [si+0Ah]
-		cmp	byte_20604, 0
+		cmp	_player_is_hit, 0
 		jnz	short loc_DBCA
 		mov	ax, word_205F6
 		add	ax, 0FFF8h
@@ -9084,7 +9084,7 @@ sub_EF36	proc near
 		jnz	short loc_EF54
 
 loc_EF4F:
-		mov	byte_20604, 0
+		mov	_player_is_hit, 0
 
 loc_EF54:
 		cmp	byte_20605, 0
@@ -9093,13 +9093,13 @@ loc_EF54:
 
 loc_EF5F:
 		call	sub_D488
-		cmp	byte_20604, 0
+		cmp	_player_is_hit, 0
 		jz	short loc_EF7F
 		call	sub_EFF2
-		cmp	byte_20604, 0FFh
+		cmp	_player_is_hit, 0FFh
 		jnz	short loc_EFEF
 		mov	byte_20607, 1
-		mov	byte_20604, 0
+		mov	_player_is_hit, 0
 		jmp	short loc_EFEF
 ; ---------------------------------------------------------------------------
 
@@ -9255,7 +9255,7 @@ loc_F0B9:
 		push	word ptr [bx]
 		call	sub_D743
 		mov	byte_218A1, 0
-		mov	byte_20604, 0FFh
+		mov	_player_is_hit, 0FFh
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
 
@@ -9341,7 +9341,7 @@ loc_F1B6:
 loc_F1C6:
 		mov	byte_20609, 0
 		mov	byte_1E517, 0
-		mov	byte_20604, 0
+		mov	_player_is_hit, 0
 
 loc_F1D5:
 		pop	si
@@ -9367,10 +9367,10 @@ sub_F1D8	proc near
 		jnz	short loc_F1F7
 
 loc_F1F2:
-		mov	byte_20604, 0
+		mov	_player_is_hit, 0
 
 loc_F1F7:
-		cmp	byte_20604, 0
+		cmp	_player_is_hit, 0
 		jnz	loc_F43E
 		mov	ax, _input
 		and	ax, 0F000h
@@ -11869,7 +11869,7 @@ loc_10CA9:
 		jl	short loc_10CDC
 
 loc_10CD5:
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_10C6C
 ; ---------------------------------------------------------------------------
 
@@ -15689,9 +15689,9 @@ loc_12B5E:
 		mov	ax, word_205F8
 		cmp	ax, word_23A6E
 		jl	short loc_12B98
-		cmp	byte_20604, 0
+		cmp	_player_is_hit, 0
 		jnz	short loc_12B98
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_12B98:
 		pop	di
@@ -18968,7 +18968,7 @@ var_2		= word ptr -2
 		lea	ax, [si+20h]
 		cmp	ax, word_205F8
 		jle	short loc_1461A
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_1461A:
 		add	si, word_20344
@@ -19169,7 +19169,7 @@ loc_14757:
 		mov	ax, [si+4]
 		cmp	ax, word_205F8
 		jle	loc_14829
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		jmp	loc_14829
 ; ---------------------------------------------------------------------------
 
@@ -21164,7 +21164,7 @@ loc_1579B:
 		mov	bx, ax
 		cmp	dx, [bx+2B7Ah]
 		jle	loc_158CD
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		jmp	loc_158CD
 ; ---------------------------------------------------------------------------
 
@@ -21310,7 +21310,7 @@ loc_1594A:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jge	short loc_159A4
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_159A4:
 		call	sub_158DC
@@ -21477,7 +21477,7 @@ loc_15AD0:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jge	short loc_15B57
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_15B57:
 		mov	al, byte_2558E
@@ -21553,7 +21553,7 @@ loc_15BC2:
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25594
 		jge	loc_15D51
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		jmp	loc_15D51
 ; ---------------------------------------------------------------------------
 
@@ -21595,7 +21595,7 @@ loc_15C67:
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25594
 		jge	short loc_15C95
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_15C95:
 		mov	ax, word_20650
@@ -21643,7 +21643,7 @@ loc_15CBC:
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25594
 		jge	short loc_15D51
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_15D51
 ; ---------------------------------------------------------------------------
 
@@ -24538,7 +24538,7 @@ var_2		= word ptr -2
 		jle	short loc_175D1
 		mov	bx, word_26C46
 		mov	word ptr [bx+0Ah], 0
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 		mov	byte ptr [bx+10h], 1
 
 loc_175D1:
@@ -25369,7 +25369,7 @@ loc_17CF9:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jge	short locret_17D57
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 locret_17D57:
 		leave
@@ -25480,7 +25480,7 @@ loc_17D7A:
 		mov	bx, dx
 		cmp	ax, [bx+2B7Ah]
 		jle	short loc_17E50
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_17E50:
 		mov	al, byte_20618
@@ -26032,7 +26032,7 @@ loc_182DD:
 		add	ax, 60h
 		cmp	ax, word_205F6
 		jle	short loc_1834B
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_1834B:
 		test	byte ptr word_20650, 0
@@ -30209,7 +30209,7 @@ loc_1AAD6:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jge	short locret_1AB33
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 locret_1AB33:
 		leave
@@ -30335,7 +30335,7 @@ loc_1ABEE:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jge	short loc_1AC6B
-		mov	byte_20604, 1
+		mov	_player_is_hit, 1
 
 loc_1AC6B:
 		inc	si
@@ -37081,7 +37081,7 @@ word_205F8	dw ?
 		dd    ?	;
 		dd    ?	;
 playchar_shot_func	dw ?
-byte_20604	db ?
+include th01/player_is_hit[bss].asm
 byte_20605	db ?
 byte_20606	db ?
 byte_20607	db ?
