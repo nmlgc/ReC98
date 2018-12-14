@@ -21,8 +21,8 @@ lasers_add_shoutout	proc near
 	cmp	[si+laser_t.mode], LM_NONE
 	jnz	short @@next
 	mov	[si+laser_t.mode], LM_SHOOTOUT
-	mov	[si+laser_t.starts_at_distance], (16 shl 4)
-	mov	[si+laser_t.ends_at_distance], (16 shl 4)
+	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
+	mov	[si+laser_t.coords.ends_at_distance], (16 shl 4)
 	mov	[si+laser_t.LASER_age], 0
 	mov	ax, _laser_template.moveout_at_age
 	mov	[si+laser_t.moveout_at_age], ax
@@ -31,15 +31,15 @@ lasers_add_shoutout	proc near
 	mov	ax, [bp+@@speed]
 	mov	[si+laser_t.shootout_speed], ax
 	mov	[si+laser_t.grow_to_width], 6
-	mov	[si+laser_t.LASER_width], 6
-	mov	al, _laser_template.angle
-	mov	[si+laser_t.angle], al
-	lea	ax, [si+laser_t.origin]
+	mov	[si+laser_t.coords.LASER_width], 6
+	mov	al, _laser_template.coords.angle
+	mov	[si+laser_t.coords.angle], al
+	lea	ax, [si+laser_t.coords]
 	push	ax
-	push	_laser_template.origin.x
-	push	_laser_template.origin.y
+	push	_laser_template.coords.origin.x
+	push	_laser_template.coords.origin.y
 	push	128
-	mov	al, _laser_template.angle
+	mov	al, _laser_template.coords.angle
 	mov	ah, 0
 	push	ax
 	call	vector2_at
@@ -79,10 +79,10 @@ lasers_new_fixed_in_slot	proc near
 	cmp	[si+laser_t.mode], LM_NONE
 	jnz	short @@ret
 	mov	[si+laser_t.mode], LM_FIXED_WAIT_TO_GROW
-	mov	eax, _laser_template.origin
-	mov	dword ptr [si+laser_t.origin], eax
-	mov	[si+laser_t.starts_at_distance], (16 shl 4)
-	mov	[si+laser_t.ends_at_distance], (550 shl 4)
+	mov	eax, _laser_template.coords.origin
+	mov	dword ptr [si+laser_t.coords.origin], eax
+	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
+	mov	[si+laser_t.coords.ends_at_distance], (550 shl 4)
 	mov	[si+laser_t.LASER_age], 0
 	mov	ax, _laser_template.grow_at_age
 	mov	[si+laser_t.grow_at_age], ax
@@ -90,11 +90,11 @@ lasers_new_fixed_in_slot	proc near
 	mov	[si+laser_t.shrink_at_age], ax
 	mov	al, _laser_template.LASER_color
 	mov	[si+laser_t.LASER_color], al
-	mov	al, _laser_template.LASER_width
+	mov	al, _laser_template.coords.LASER_width
 	mov	[si+laser_t.grow_to_width], al
-	mov	[si+laser_t.LASER_width], 1
-	mov	al, _laser_template.angle
-	mov	[si+laser_t.angle], al
+	mov	[si+laser_t.coords.LASER_width], 1
+	mov	al, _laser_template.coords.angle
+	mov	[si+laser_t.coords.angle], al
 	call	snd_se_play pascal, 5
 
 @@ret:
@@ -121,20 +121,20 @@ lasers_new_fixed_and_manual_in_slot	proc near
 	cmp	[si+laser_t.mode], LM_NONE
 	jnz	short @@ret
 	mov	[si+laser_t.mode], LM_FIXED_WAIT_TO_GROW
-	mov	eax, _laser_template.origin
-	mov	dword ptr [si+laser_t.origin], eax
-	mov	[si+laser_t.starts_at_distance], (16 shl 4)
-	mov	[si+laser_t.ends_at_distance], (550 shl 4)
+	mov	eax, _laser_template.coords.origin
+	mov	dword ptr [si+laser_t.coords.origin], eax
+	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
+	mov	[si+laser_t.coords.ends_at_distance], (550 shl 4)
 	mov	[si+laser_t.LASER_age], 0
 	mov	[si+laser_t.grow_at_age], -1
 	mov	[si+laser_t.shrink_at_age], -1
 	mov	al, _laser_template.LASER_color
 	mov	[si+laser_t.LASER_color], al
-	mov	[si+laser_t.LASER_width], 1
-	mov	al, _laser_template.LASER_width
+	mov	[si+laser_t.coords.LASER_width], 1
+	mov	al, _laser_template.coords.LASER_width
 	mov	[si+laser_t.grow_to_width], al
-	mov	al, _laser_template.angle
-	mov	[si+laser_t.angle], al
+	mov	al, _laser_template.coords.angle
+	mov	[si+laser_t.coords.angle], al
 	call	snd_se_play pascal, 5
 
 @@ret:
