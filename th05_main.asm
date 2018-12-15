@@ -8232,190 +8232,7 @@ sub_E950	proc near
 		retn
 sub_E950	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-vector2_at_opt	proc near
-		push	si
-		mov	si, cx
-		add	si, si
-		movsx	eax, bx
-		movsx	edx, _CosTable8[si]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+0]
-		mov	ss:[di], ax
-		movsx	eax, bx
-		movsx	edx, _SinTable8[si]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+2]
-		mov	ss:[di+2], ax
-		pop	si
-		retn
-vector2_at_opt	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E9AA	proc near
-		mov	ax, [bp+4]
-		mov	dx, ss:[di]
-		add	ax, dx
-		sar	ax, 4
-		sar	dx, 4
-		mov	ss:[bx], ax
-		mov	ss:[di], dx
-		mov	ax, [bp+6]
-		mov	dx, ss:[di+2]
-		add	ax, dx
-		sar	ax, 4
-		sar	dx, 4
-		mov	ss:[bx+2], ax
-		mov	ss:[di+2], dx
-		retn
-sub_E9AA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E9D6	proc near
-
-var_20		= byte ptr -20h
-var_14		= byte ptr -14h
-var_10		= byte ptr -10h
-var_8		= word ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	20h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	bl, [si+9]
-		mov	bh, 0
-		shl	bx, 3
-		mov	ax, [si]
-		add	ax, 200h
-		mov	[bp+var_4], ax
-		mov	ax, [si+2]
-		add	ax, 100h
-		mov	[bp+var_2], ax
-		mov	cl, [si+8]
-		add	cl, 40h
-		mov	ch, 0
-		lea	di, [bp+var_8]
-		sub	bp, 4
-		call	vector2_at_opt
-		add	cl, 80h
-		sub	di, 4
-		call	vector2_at_opt
-		sub	[bp+var_2], ax
-		mov	ax, [bp+var_8]
-		sub	[bp+var_4], ax
-		mov	cl, [si+8]
-		mov	bx, [si+4]
-		sub	di, 14h
-		sub	bp, 8
-		call	vector2_at_opt
-		mov	bx, [si+6]
-		add	di, 0Ch
-		call	vector2_at_opt
-		lea	di, [bp+var_14]
-		lea	bx, [bp+var_10]
-		call	sub_E9AA
-		add	di, 0Ch
-		add	bx, 4
-		call	sub_E9AA
-		add	bp, 0Ch
-		lea	di, [bp+var_20]
-		push	ss
-		push	di
-		push	8
-		push	ss
-		push	di
-		push	4
-		call	grc_clip_polygon_n
-		or	ax, ax
-		jz	short loc_EA6D
-		jge	short loc_EA61
-		mov	ax, 4
-
-loc_EA61:
-		push	ss
-		push	di
-		push	ax
-		call	grcg_polygon_cx
-		xor	ax, ax
-		jmp	short loc_EA70
-; ---------------------------------------------------------------------------
-
-loc_EA6D:
-		mov	ax, 1
-
-loc_EA70:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_E9D6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA76	proc near
-
-var_4		= byte ptr -4
-arg_0		= word ptr  4
-
-		enter	8, 0
-		push	di
-		push	si
-		mov	di, [bp+arg_0]
-		mov	bx, [di+8]
-		mov	si, [di+6]
-		sub	bp, 4
-		mov	eax, [di+2]
-		mov	[bp+0],	eax
-		mov	cl, [di+0Ah]
-		xor	ch, ch
-		lea	di, [bp+var_4]
-
-loc_EA98:
-		call	vector2_at_opt
-		add	ax, 60h
-		sub	ax, player_pos.cur.y
-		cmp	ax, 0C0h
-		jnb	short loc_EABD
-		mov	ax, ss:[di]
-		add	ax, 60h
-		sub	ax, player_pos.cur.x
-		cmp	ax, 0C0h
-		jnb	short loc_EABD
-		mov	_player_is_hit, 1
-		jmp	short loc_EAC5
-; ---------------------------------------------------------------------------
-
-loc_EABD:
-		sub	bx, 100h
-		cmp	bx, si
-		jge	short loc_EA98
-
-loc_EAC5:
-		add	bp, 4
-		pop	si
-		pop	di
-		leave
-		retn	2
-sub_EA76	endp
-
+include th05/laser_render_hittest.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10471,8 +10288,7 @@ loc_FC52:
 		add	[si+6],	ax
 
 loc_FC60:
-		push	si
-		call	sub_EA76
+		call	laser_hittest pascal, si
 		jmp	loc_FD13
 ; ---------------------------------------------------------------------------
 
@@ -10502,8 +10318,7 @@ loc_FC93:
 ; ---------------------------------------------------------------------------
 
 loc_FC9D:
-		push	si
-		call	sub_EA76
+		call	laser_hittest pascal, si
 		cmp	word ptr [si+12h], 0
 		jle	short loc_FD13
 		mov	ax, [si+0Eh]
@@ -10666,8 +10481,7 @@ loc_FDC2:
 		mov	[bp+var_8], ax
 		sub	word ptr [si+8], 20h ; ' '
 		lea	ax, [si+2]
-		push	ax
-		call	sub_E9D6
+		call	laser_render_ray pascal, ax
 		mov	ax, [bp+var_8]
 		mov	[si+8],	ax
 
@@ -10743,8 +10557,7 @@ loc_FE11:
 
 loc_FE8A:
 		lea	ax, [si+2]
-		push	ax
-		call	sub_E9D6
+		call	laser_render_ray pascal, ax
 		or	ax, ax
 		jz	loc_FF61
 		mov	byte ptr [si], 0
