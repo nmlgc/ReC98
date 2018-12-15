@@ -2964,28 +2964,28 @@ loc_C191:
 loc_C19A:
 		mov	ax, [si+6]
 		mov	[bp+var_4], ax
-		push	539Ah
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	ax
 		push	di
 		call	vector2_at
-		cmp	word_266DC, 0
+		cmp	_drawpoint.y, 0
 		jl	short loc_C1E6
-		cmp	word_266DC, 1700h
+		cmp	_drawpoint.y, (368 shl 4)
 		jge	short loc_C1E6
-		cmp	word_266DA, 0
+		cmp	_drawpoint.x, 0
 		jl	short loc_C1E6
-		cmp	word_266DA, 1800h
+		cmp	_drawpoint.x, (384 shl 4)
 		jge	short loc_C1E6
-		mov	ax, word_266DC
-		add	ax, 100h
+		mov	ax, _drawpoint.y
+		add	ax, (16 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	dx, ax
-		mov	ax, word_266DA
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		call	sub_C332
 
 loc_C1E6:
@@ -11373,26 +11373,26 @@ loc_10096:
 		mov	al, byte ptr frame
 		shl	al, 2
 		mov	[bp+var_1], al
-		push	539Ah
+		push	offset _drawpoint
 		push	0C000B80h
 		push	800h
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		push	word_266DA
-		push	word_266DC
+		push	_drawpoint.x
+		push	_drawpoint.y
 		nopcall	_circles_add_growing
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
-		push	539Ah
+		push	offset _drawpoint
 		push	0C000B80h
 		push	800h
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		push	word_266DA
-		push	word_266DC
+		push	_drawpoint.x
+		push	_drawpoint.y
 		nopcall	_circles_add_growing
 		call	snd_se_play pascal, 9
 
@@ -12309,7 +12309,7 @@ loc_1080C:
 		mov	[bp+var_1], al
 
 loc_10822:
-		push	539Ah
+		push	offset _drawpoint
 		push	player_pos.cur.x
 		push	player_pos.cur.y
 		push	di
@@ -12317,16 +12317,16 @@ loc_10822:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		cmp	word_266DC, 0FF80h
+		cmp	_drawpoint.y, (-8 shl 4)
 		jl	short loc_10862
-		cmp	word_266DC, 1780h
+		cmp	_drawpoint.y, (376 shl 4)
 		jge	short loc_10862
-		cmp	word_266DA, 0FF80h
+		cmp	_drawpoint.x, (-8 shl 4)
 		jl	short loc_10862
-		cmp	word_266DA, 1880h
+		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_10862
-		push	word_266DC
-		push	word_266DA
+		push	_drawpoint.y
+		push	_drawpoint.x
 		call	sub_B9D6
 
 loc_10862:
@@ -12864,7 +12864,7 @@ loc_10CC9:
 		mov	[bp+var_5], al
 
 loc_10CE0:
-		push	539Ah
+		push	offset _drawpoint
 		push	player_pos.cur.x
 		push	player_pos.cur.y
 		push	si
@@ -12872,20 +12872,20 @@ loc_10CE0:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		cmp	word_266DC, 0FF80h
+		cmp	_drawpoint.y, (-8 shl 4)
 		jl	short loc_10D36
-		cmp	word_266DC, 1780h
+		cmp	_drawpoint.y, (376 shl 4)
 		jge	short loc_10D36
-		cmp	word_266DA, 0FF80h
+		cmp	_drawpoint.x, (-8 shl 4)
 		jl	short loc_10D36
-		cmp	word_266DA, 1880h
+		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_10D36
-		mov	ax, word_266DA
+		mov	ax, _drawpoint.x
 		sar	ax, 4
 		add	ax, 8
 		mov	di, ax
-		mov	ax, word_266DC
-		add	ax, 0FF80h
+		mov	ax, _drawpoint.y
+		add	ax, (-8 shl 4)
 		push	ax
 		call	sub_BC10
 		mov	[bp+var_2], ax
@@ -18113,13 +18113,13 @@ sub_13BCE	endp
 sub_13C32	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_266DA, 0FFC0h
+		cmp	_drawpoint.x, (-4 shl 4)
 		jle	short loc_13C58
-		cmp	word_266DA, 1840h
+		cmp	_drawpoint.x, (388 shl 4)
 		jge	short loc_13C58
-		cmp	word_266DC, 0FFC0h
+		cmp	_drawpoint.y, (-4 shl 4)
 		jle	short loc_13C58
-		cmp	word_266DC, 1740h
+		cmp	_drawpoint.y, (372 shl 4)
 		jge	short loc_13C58
 		mov	ax, 1
 		jmp	short loc_13C5A
@@ -18178,7 +18178,7 @@ loc_13C8F:
 		idiv	word ptr [si+10h]
 		add	al, [si+12h]
 		mov	[bp+var_3], al
-		push	539Ah
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	word ptr [si+0Eh]
@@ -18188,14 +18188,14 @@ loc_13C8F:
 		call	sub_13C32
 		or	al, al
 		jz	short loc_13CD1
-		mov	ax, word_266DC
-		add	ax, 0C0h
+		mov	ax, _drawpoint.y
+		add	ax, (12 shl 4)
 		push	ax
 		call	sub_13CE8
 		mov	dx, ax
-		mov	ax, word_266DA
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 1Ch
+		add	ax, 28
 		call	sub_14A98
 
 loc_13CD1:
@@ -46838,8 +46838,7 @@ stage_id	db ?
 include th04/playperf[bss].asm
 playchar	db ?
 		db ?
-word_266DA	dw ?
-word_266DC	dw ?
+include th04/drawpoint[bss].asm
 word_266DE	dw ?
 byte_266E0	db ?
 		db ?

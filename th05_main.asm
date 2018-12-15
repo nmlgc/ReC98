@@ -5273,7 +5273,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		push	48FEh
+		push	offset _drawpoint
 		mov	bx, di
 		shl	bx, 2
 		push	word ptr [bx+si]
@@ -5288,15 +5288,15 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	[bp+var_2], ax
-		mov	ax, word ptr dword_252DE+2
+		mov	ax, _drawpoint.y
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	[bp+var_4], ax
-		push	48FEh
+		push	offset _drawpoint
 		mov	bx, di
 		shl	bx, 2
 		push	word ptr [bx+si]
@@ -5312,13 +5312,13 @@ arg_2		= word ptr  6
 		add	ax, 80h
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	[bp+var_6], ax
-		mov	ax, word ptr dword_252DE+2
+		mov	ax, _drawpoint.y
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	[bp+var_8], ax
 		push	[bp+var_2]
 		push	[bp+var_4]
@@ -6133,7 +6133,7 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_DB58:
-		push	48FEh
+		push	offset _drawpoint
 		push	0E000C80h
 		push	di
 		push	si
@@ -6150,14 +6150,14 @@ loc_DB58:
 		lea	ax, [si-55h]
 		push	ax
 		call	vector2_at
-		sar	word ptr dword_252DE, 4
-		sar	word ptr dword_252DE+2,	4
+		sar	_drawpoint.x, 4
+		sar	_drawpoint.y, 4
 		sar	word_24490, 4
 		sar	word_24492, 4
 		sar	word_24494, 4
 		sar	word_24496, 4
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word_24490
 		push	word_24492
 		call	grcg_line
@@ -6166,8 +6166,8 @@ loc_DB58:
 		push	word_24494
 		push	word_24496
 		call	grcg_line
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word_24494
 		push	word_24496
 		call	grcg_line
@@ -10435,21 +10435,21 @@ loc_FD46:
 		mov	al, [si+0Bh]
 		mov	[bp+var_9], al
 		mov	[bp+var_A], al
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		push	100h
+		push	(16 shl 4)
 		mov	al, [si+0Ah]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	[bp+var_4], ax
-		mov	ax, word ptr dword_252DE+2
+		mov	ax, _drawpoint.y
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	[bp+var_6], ax
 		cmp	byte ptr [si], 7
 		jz	loc_FE9D
@@ -10515,7 +10515,7 @@ loc_FDF4:
 loc_FE11:
 		cmp	byte ptr [si+0Bh], 1
 		ja	short loc_FE8A
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	word ptr [si+6]
@@ -10531,24 +10531,24 @@ loc_FE11:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	word ptr dword_252DE, ax
-		mov	ax, word ptr dword_252DE+2
+		add	ax, 32
+		mov	_drawpoint.x, ax
+		mov	ax, _drawpoint.y
 		sar	ax, 4
-		add	ax, 10h
-		mov	word ptr dword_252DE+2,	ax
+		add	ax, 16
+		mov	_drawpoint.y, ax
 		mov	ax, word_2C99E
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	word_2C99E, ax
 		mov	ax, word_2C9A0
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	word_2C9A0, ax
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word_2C99E
 		push	ax
 		call	grcg_line
@@ -10568,7 +10568,7 @@ loc_FE9D:
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_noint_1
 		shl	[bp+var_A], 3
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		mov	al, [bp+var_A]
@@ -10585,43 +10585,43 @@ loc_FE9D:
 
 loc_FEC8:
 		push	0BFBEh
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word ptr [si+8]
 		mov	al, [si+0Ah]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		push	48FEh
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	offset _drawpoint
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word ptr [si+6]
 		mov	al, [si+0Ah]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	word ptr dword_252DE, ax
-		mov	ax, word ptr dword_252DE+2
+		add	ax, 32
+		mov	_drawpoint.x, ax
+		mov	ax, _drawpoint.y
 		sar	ax, 4
-		add	ax, 10h
-		mov	word ptr dword_252DE+2,	ax
+		add	ax, 16
+		mov	_drawpoint.y, ax
 		mov	ax, word_2C99E
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	word_2C99E, ax
 		mov	ax, word_2C9A0
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	word_2C9A0, ax
-		push	word ptr dword_252DE
-		push	word ptr dword_252DE+2
+		push	_drawpoint.x
+		push	_drawpoint.y
 		push	word_2C99E
 		push	ax
 		call	grcg_line
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		mov	al, [bp+var_A]
@@ -10629,7 +10629,7 @@ loc_FEC8:
 		push	ax
 		mov	al, [si+0Ah]
 		mov	ah, 0
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		push	ax
 		call	vector2_at
 		inc	di
@@ -10793,28 +10793,28 @@ loc_10058:
 loc_10061:
 		mov	ax, [si+6]
 		mov	[bp+var_4], ax
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	ax
 		push	di
 		call	vector2_at
-		cmp	word ptr dword_252DE+2,	0
+		cmp	_drawpoint.y, 0
 		jl	short loc_100AD
-		cmp	word ptr dword_252DE+2,	1700h
+		cmp	_drawpoint.y, (368 shl 4)
 		jge	short loc_100AD
-		cmp	word ptr dword_252DE, 0
+		cmp	_drawpoint.x, 0
 		jl	short loc_100AD
-		cmp	word ptr dword_252DE, 1800h
+		cmp	_drawpoint.x, (384 shl 4)
 		jge	short loc_100AD
-		mov	ax, word ptr dword_252DE+2
-		add	ax, 100h
+		mov	ax, _drawpoint.y
+		add	ax, (16 shl 4)
 		push	ax
 		call	sub_BFB2
 		mov	dx, ax
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, 32
 		call	sub_C282
 
 loc_100AD:
@@ -15111,7 +15111,7 @@ loc_1232B:
 		mov	[bp+var_5], al
 
 loc_12342:
-		push	48FEh
+		push	offset _drawpoint
 		push	player_pos.cur.x
 		push	player_pos.cur.y
 		push	si
@@ -15119,20 +15119,20 @@ loc_12342:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		cmp	word ptr dword_252DE+2,	0FF80h
+		cmp	_drawpoint.y, (-8 shl 4)
 		jl	short loc_12398
-		cmp	word ptr dword_252DE+2,	1780h
+		cmp	_drawpoint.y, (376 shl 4)
 		jge	short loc_12398
-		cmp	word ptr dword_252DE, 0FF80h
+		cmp	_drawpoint.x, (-8 shl 4)
 		jl	short loc_12398
-		cmp	word ptr dword_252DE, 1880h
+		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_12398
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
 		add	ax, 8
 		mov	di, ax
-		mov	ax, word ptr dword_252DE+2
-		add	ax, 0FF80h
+		mov	ax, _drawpoint.y
+		add	ax, (-8 shl 4)
 		push	ax
 		call	sub_BFB2
 		mov	[bp+var_2], ax
@@ -19540,21 +19540,21 @@ loc_14288:
 
 loc_14291:
 		push	ax
-		push	48FEh
+		push	offset _drawpoint
 		push	player_pos.cur.x
 		push	player_pos.cur.y
 		push	di
 		push	ax
 		call	vector2_at
-		cmp	word ptr dword_252DE+2,	0FF80h
+		cmp	_drawpoint.y, (-8 shl 4)
 		jl	short loc_142CA
-		cmp	word ptr dword_252DE+2,	1780h
+		cmp	_drawpoint.y, (376 shl 4)
 		jge	short loc_142CA
-		cmp	word ptr dword_252DE, 0FF80h
+		cmp	_drawpoint.x, (-8 shl 4)
 		jl	short loc_142CA
-		cmp	word ptr dword_252DE, 1880h
+		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_142CA
-		pushd	[dword_252DE]
+		pushd	[_drawpoint]
 		call	sub_E24C
 
 loc_142CA:
@@ -23617,13 +23617,13 @@ sub_16AB0	endp
 sub_16B24	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word ptr dword_252DE, 0FFC0h
+		cmp	_drawpoint.x, (-4 shl 4)
 		jle	short loc_16B4A
-		cmp	word ptr dword_252DE, 1840h
+		cmp	_drawpoint.x, (388 shl 4)
 		jge	short loc_16B4A
-		cmp	word ptr dword_252DE+2,	0FFC0h
+		cmp	_drawpoint.y, (-4 shl 4)
 		jle	short loc_16B4A
-		cmp	word ptr dword_252DE+2,	1740h
+		cmp	_drawpoint.y, (372 shl 4)
 		jge	short loc_16B4A
 		mov	ax, 1
 		jmp	short loc_16B4C
@@ -23682,7 +23682,7 @@ loc_16B81:
 		idiv	word ptr [si+10h]
 		add	al, [si+12h]
 		mov	[bp+var_3], al
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	word ptr [si+0Eh]
@@ -23692,14 +23692,14 @@ loc_16B81:
 		call	sub_16B24
 		or	al, al
 		jz	short loc_16BC3
-		mov	ax, word ptr dword_252DE+2
-		add	ax, 0C0h
+		mov	ax, _drawpoint.y
+		add	ax, (12 shl 4)
 		push	ax
 		call	sub_15288
 		mov	dx, ax
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sar	ax, 4
-		add	ax, 1Ch
+		add	ax, 28
 		call	sub_15814
 
 loc_16BC3:
@@ -25684,7 +25684,7 @@ loc_17BBA:
 		mov	al, [si+10h]
 		mov	ah, 0
 		add	[si+1Eh], ax
-		push	48FEh
+		push	offset _drawpoint
 		push	word ptr [si+1Ah]
 		push	word ptr [si+1Ch]
 		push	word ptr [si+1Eh]
@@ -25692,10 +25692,10 @@ loc_17BBA:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, word ptr dword_252DE
+		mov	ax, _drawpoint.x
 		sub	ax, [si+2]
 		mov	[si+0Ah], ax
-		mov	ax, word ptr dword_252DE+2
+		mov	ax, _drawpoint.y
 		sub	ax, [si+4]
 		mov	[si+0Ch], ax
 
@@ -44554,7 +44554,7 @@ byte_24F6B	db ?
 word_252D8	dw ?
 word_252DA	dw ?
 word_252DC	dw ?
-dword_252DE	dd ?
+include th04/drawpoint[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
