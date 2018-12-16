@@ -3168,7 +3168,7 @@ loc_C4BC:
 		push	0C00080h
 		push	6000C0h
 		nopcall	sub_E752
-		mov	byte_2C979, al
+		mov	_bullet_clear_time, al
 		mov	ax, fp_23F5A
 		mov	fp_23F58, ax
 		call	snd_se_play pascal, 13
@@ -7711,9 +7711,9 @@ sub_E5EE	proc near
 		mov	si, 5DC6h
 		mov	di, 0B4h
 		mov	dword_23F52, 80008h
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jnz	short loc_E638
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jnz	short loc_E638
 
 loc_E60D:
@@ -8254,7 +8254,7 @@ sub_EACE	proc near
 		mov	byte_25FF8, 0
 		mov	byte_25FE8, 0
 		mov	byte_25FE9, 0
-		mov	byte_2C978, 0
+		mov	_bullet_clear_trigger, 0
 		mov	word_2C97A, 0
 		mov	_circles_color, GC_R
 		push	200010h
@@ -10249,9 +10249,9 @@ sub_FBFB	proc near
 loc_FC08:
 		cmp	byte ptr [si], 0
 		jz	loc_FD16
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jnz	short loc_FC1D
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jz	short loc_FC30
 
 loc_FC1D:
@@ -10929,9 +10929,9 @@ loc_1016B:
 loc_10171:
 		cmp	[bp+var_2], 0DCh
 		jl	loc_100DE
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jnz	short loc_101DC
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jnz	short loc_101DC
 		jmp	short loc_101BD
 ; ---------------------------------------------------------------------------
@@ -11455,9 +11455,9 @@ var_2		= byte ptr -2
 		jb	short loc_105E6
 		mov	byte_2CE87, 4
 		mov	fp_2CE8A, offset sub_11DEA
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_105E6
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_105E6:
 		mov	al, dream
@@ -14864,7 +14864,7 @@ loc_120F0:
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
 		nopcall	sub_104BB
-		mov	byte_2C979, 20h	; ' '
+		mov	_bullet_clear_time, 32
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -21511,7 +21511,7 @@ include th05/playperf_adjust_speed.asm
 
 
 sub_15A5C	proc near
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jnz	short locret_15A6E
 		push	word_26006
 		call	loc_15C94
@@ -21528,7 +21528,7 @@ sub_15A5C	endp
 
 
 sub_15A70	proc near
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jnz	short locret_15A8C
 		mov	byte_221C0, 1
 		push	word_26006
@@ -21797,9 +21797,9 @@ off_15C16	dw offset loc_15AE3
 
 
 sub_15C36	proc near
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jz	short loc_15C47
-		cmp	byte_2C979, 11h
+		cmp	_bullet_clear_time, 17
 		jnb	short loc_15C47
 
 loc_15C44:
@@ -21908,7 +21908,7 @@ loc_15D18:
 		mov	al, 2
 		cmp	byte ptr word_26006+1, 40h
 		jb	short loc_15D2F
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jz	short loc_15D38
 
 loc_15D2F:
@@ -24214,9 +24214,9 @@ sub_16F05	proc near
 		cmp	lives, 99
 		jnb	short loc_16F52
 		inc	lives
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_16F3B
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_16F3B:
 		call	sub_10407
@@ -24260,9 +24260,9 @@ loc_16F76:
 		jnz	short loc_16F9B
 		mov	byte_2CE87, 3
 		mov	fp_2CE8A, offset sub_11DEA
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_16F9B
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_16F9B:
 		inc	power
@@ -24394,9 +24394,9 @@ loc_170B5:
 		mov	power, 128
 		mov	byte_2CE87, 3
 		mov	fp_2CE8A, offset sub_11DEA
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_170E7
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_170E7:
 		call	sub_E4FC
@@ -24440,9 +24440,9 @@ loc_1712C:
 ; ---------------------------------------------------------------------------
 
 loc_17150:
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1715C
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1715C:
 		mov	byte_2CE87, 3
@@ -25738,7 +25738,7 @@ var_2		= word ptr -2
 		mov	word_2CDF8, 0
 		mov	word_2C97E, 0
 		mov	si, 8FA6h
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jnz	loc_17EC3
 		xor	di, di
 		jmp	loc_17E78
@@ -25755,7 +25755,7 @@ loc_17C2E:
 
 loc_17C40:
 		inc	[bp+var_2]
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jz	short loc_17CA3
 		cmp	byte ptr [si+13h], 4
 		jnb	short loc_17C7B
@@ -25939,7 +25939,7 @@ loc_17DBF:
 ; ---------------------------------------------------------------------------
 
 loc_17DC5:
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jnz	loc_17E74
 		sub	ax, player_pos.cur.x
 		sub	dx, player_pos.cur.y
@@ -26029,7 +26029,7 @@ loc_17EB5:
 ; ---------------------------------------------------------------------------
 
 loc_17EC3:
-		mov	al, byte_2C978
+		mov	al, _bullet_clear_trigger
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -26120,15 +26120,15 @@ loc_17F8D:
 		mov	fp_2CE8A, offset sub_11DEA
 
 loc_17FA8:
-		inc	byte_2C978
+		inc	_bullet_clear_trigger
 		cmp	[bp+var_9], 4Ch	; 'L'
 		jb	short loc_17FB7
-		mov	byte_2C978, 0
+		mov	_bullet_clear_trigger, 0
 
 loc_17FB7:
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jz	short loc_17FC2
-		dec	byte_2C979
+		dec	_bullet_clear_time
 
 loc_17FC2:
 		pop	di
@@ -26301,7 +26301,7 @@ loc_1812B:
 		jge	short loc_1818B
 		cmp	_midboss_hp, 0
 		jg	short loc_181C4
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	5
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -27329,9 +27329,9 @@ loc_18A9F:
 		jg	loc_18BA0
 		push	5
 		call	sub_173AC
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_18ADC
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_18ADC:
 		inc	byte_26331
@@ -27369,7 +27369,7 @@ loc_18B24:
 		jge	short loc_18B67
 		cmp	_midboss_hp, 0
 		jg	short loc_18BA0
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -28609,7 +28609,7 @@ loc_195A1:
 loc_195BC:
 		cmp	_midboss_hp, 0
 		jg	short loc_19613
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -29966,9 +29966,9 @@ loc_1A1E7:
 
 loc_1A1F8:
 		inc	byte_2D07D
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A208
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1A208:
 		push	1
@@ -30028,9 +30028,9 @@ loc_1A284:
 		call	sub_17416
 		push	1
 		call	add_explode_effect_function
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A2D7
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1A2D7:
 		inc	boss_phase
@@ -31276,9 +31276,9 @@ loc_1ACF1:
 		mov	[bp+var_2], ax
 		cmp	boss_phase_frame, 10h
 		jnz	short loc_1AD29
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1AD0D
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1AD0D:
 		call	snd_se_play pascal, 15
@@ -31446,7 +31446,7 @@ loc_1AE8B:
 loc_1AE98:
 		inc	boss_phase
 		mov	al, byte ptr word_2634A+1
-		mov	byte_2C978, al
+		mov	_bullet_clear_trigger, al
 		mov	boss_phase_frame, 0
 		call	snd_se_play pascal, 12
 		mov	chara_invulnerable_time_left, 0FFh
@@ -31963,7 +31963,7 @@ loc_1B32F:
 loc_1B34A:
 		cmp	_midboss_hp, 0
 		jg	short loc_1B3A1
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -34365,7 +34365,7 @@ sub_1C8A3	proc near
 loc_1C8B1:
 		cmp	byte ptr [si], 0
 		jz	loc_1C9AF
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jz	short loc_1C8CC
 		cmp	byte ptr [si], 1
 		jnz	short loc_1C8CC
@@ -34802,9 +34802,9 @@ loc_1CC7F:
 		mov	byte_2D082, al
 		push	0
 		call	add_explode_effect_function
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1CCD0
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1CCD0:
 		pop	si
@@ -35145,9 +35145,9 @@ loc_1D030:
 		mov	byte_2D082, al
 		push	0
 		call	add_explode_effect_function
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1D081
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1D081:
 		pop	di
@@ -35706,9 +35706,9 @@ loc_1D599:
 		inc	byte ptr [si]
 
 loc_1D5B4:
-		cmp	byte_2C979, 0
+		cmp	_bullet_clear_time, 0
 		jnz	short loc_1D5C2
-		cmp	byte_2C978, 0
+		cmp	_bullet_clear_trigger, 0
 		jz	short loc_1D5C5
 
 loc_1D5C2:
@@ -37620,9 +37620,9 @@ loc_1E776:
 		jge	short loc_1E7AF
 		push	0Ah
 		call	sub_173AC
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1E7A4
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1E7A4:
 		call	snd_se_play pascal, 15
@@ -37665,7 +37665,7 @@ loc_1E7F2:
 		jnb	short loc_1E82B
 		cmp	_midboss_hp, 0
 		jg	short loc_1E864
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	1Eh
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -38880,7 +38880,7 @@ arg_2		= word ptr  6
 		cmp	byte_229BA, 0
 		jnz	short loc_1F25F
 		mov	byte_226C0, 1
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		call	sub_1FB19
 
 loc_1F25F:
@@ -39633,7 +39633,7 @@ loc_1F936:
 		sub	_midboss_hp, ax
 		cmp	_midboss_hp, 0
 		jg	short loc_1F9A1
-		mov	byte_2C978, 1
+		mov	_bullet_clear_trigger, 1
 		push	1Eh
 		call	sub_173AC
 		push	_midboss_pos.cur.x
@@ -40003,9 +40003,9 @@ arg_2		= word ptr  6
 		call	add_explode_effect_function
 		cmp	byte_229BA, 0
 		jnz	short loc_1FB94
-		cmp	byte_2C979, 14h
+		cmp	_bullet_clear_time, 20
 		jnb	short loc_1FB91
-		mov	byte_2C979, 14h
+		mov	_bullet_clear_time, 20
 
 loc_1FB91:
 		call	sub_1FB19
@@ -40058,7 +40058,7 @@ loc_1FBED:
 		call	sub_1637A
 		inc	boss_phase
 		mov	al, byte ptr word_2634A+1
-		mov	byte_2C978, al
+		mov	_bullet_clear_trigger, al
 		cmp	byte ptr word_2634A+1, 0;m_bSuccessDefeat
 		jz	short loc_1FC10
 		push	[bp+n1000]
@@ -51997,8 +51997,7 @@ byte_2C974	db ?
 		db ?
 byte_2C976	db ?
 byte_2C977	db ?
-byte_2C978	db ?
-byte_2C979	db ?
+include th04/bullet_clear[bss].asm
 word_2C97A	dw ?
 word_2C97C	dw ?
 word_2C97E	dw ?
