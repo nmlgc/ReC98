@@ -360,7 +360,7 @@ loc_ABBA:
 		call	farfp_25986
 		cmp	byte_256A8, 0
 		jnz	short loc_ABD4
-		call	fp_255A8
+		call	_boss_bg_render
 		jmp	short loc_ABD8
 ; ---------------------------------------------------------------------------
 
@@ -376,12 +376,12 @@ loc_ABD8:
 		call	sub_1C8C8
 		call	sub_17E59
 		call	farfp_259F6
-		call	farfp_2D010
+		call	_boss_update
 		call	sub_1DE5D
 		call	sub_13BCE
 		call	fp_2566C
 		call	sub_1020A
-		call	fp_2D014
+		call	_boss_fg_render
 		call	fp_259FA
 		call	sub_10713
 		call	sub_10552
@@ -4263,7 +4263,7 @@ sub_CB80	proc near
 		dec	byte_255B0
 		cmp	byte_255B0, 0
 		jnz	short loc_CB97
-		mov	fp_255A8, offset sub_CB58
+		mov	_boss_bg_render, offset sub_CB58
 
 loc_CB97:
 		pop	bp
@@ -4278,7 +4278,7 @@ sub_CB80	endp
 sub_CB99	proc far
 		push	bp
 		mov	bp, sp
-		mov	fp_255A8, offset sub_CB58
+		mov	_boss_bg_render, offset sub_CB58
 		pop	bp
 		retf
 sub_CB99	endp
@@ -4296,7 +4296,7 @@ arg_0		= byte ptr  6
 		mov	bp, sp
 		mov	al, [bp+arg_0]
 		mov	byte_255B0, al
-		mov	fp_255A8, offset sub_CB80
+		mov	_boss_bg_render, offset sub_CB80
 		pop	bp
 		retf	2
 sub_CBA4	endp
@@ -4809,12 +4809,12 @@ loc_CF63:
 loc_CF70:
 		nopcall	sub_D6EB
 		mov	fp_255CA, offset sub_CF3D
-		mov	ax, fp_2D016
-		mov	fp_255A8, ax
-		mov	eax, farfp_2D018
-		mov	farfp_2D010, eax
-		mov	ax, fp_2D01C
-		mov	fp_2D014, ax
+		mov	ax, _boss_bg_render_func
+		mov	_boss_bg_render, ax
+		mov	eax, _boss_update_func
+		mov	_boss_update, eax
+		mov	ax, _boss_fg_render_func
+		mov	_boss_fg_render, ax
 		mov	al, stage_id
 		add	al, al
 		add	al, 2
@@ -37598,8 +37598,8 @@ sub_1DE5D	endp
 sub_1DF61	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2D010, nullsub_2
-		mov	fp_2D014, offset nullsub_1
+		setfarfp	_boss_update, nullsub_2
+		mov	_boss_fg_render, offset nullsub_1
 		mov	byte_26719, 0
 		mov	byte_2671D, 0
 		mov	byte_2671F, 0
@@ -37679,9 +37679,9 @@ sub_1DFEF	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (40 shl 4)
 		mov	_boss_pos.prev.y, (40 shl 4)
-		mov	fp_2D016, offset sub_1217E
-		setfarfp	farfp_2D018, sub_19AA3
-		mov	fp_2D01C, offset sub_1196B
+		mov	_boss_bg_render_func, offset sub_1217E
+		setfarfp	_boss_update_func, sub_19AA3
+		mov	_boss_fg_render_func, offset sub_1196B
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 100h
@@ -37725,9 +37725,9 @@ sub_1E0B3	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (81 shl 4)
 		mov	_boss_pos.prev.y, (81 shl 4)
-		mov	fp_2D016, offset sub_121EB
-		setfarfp	farfp_2D018, sub_1915D
-		mov	fp_2D01C, offset sub_11793
+		mov	_boss_bg_render_func, offset sub_121EB
+		setfarfp	_boss_update_func, sub_1915D
+		mov	_boss_fg_render_func, offset sub_11793
 		mov	_boss_sprite_cur, 0
 		mov	word_2D030, 180h
 		mov	word_2D032, 180h
@@ -37773,9 +37773,9 @@ sub_1E186	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D016, offset sub_1226F
-		setfarfp	farfp_2D018, sub_1C2E5
-		mov	fp_2D01C, offset sub_11E12
+		mov	_boss_bg_render_func, offset sub_1226F
+		setfarfp	_boss_update_func, sub_1C2E5
+		mov	_boss_fg_render_func, offset sub_11E12
 		mov	_boss_sprite_cur, 134
 		mov	word_2D030, 180h
 		mov	word_2D032, 180h
@@ -37817,11 +37817,11 @@ sub_1E245	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D016, offset sub_122D7
+		mov	_boss_bg_render_func, offset sub_122D7
 		cmp	playchar, 1
 		jnz	loc_1E359
-		setfarfp	farfp_2D018, sub_1F3AB
-		mov	fp_2D01C, offset sub_12E93
+		setfarfp	_boss_update_func, sub_1F3AB
+		mov	_boss_fg_render_func, offset sub_12E93
 		push	40006h
 		push	8000Ch
 		call	sub_C396
@@ -37854,8 +37854,8 @@ sub_1E245	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1E359:
-		setfarfp	farfp_2D018, sub_179F4
-		mov	fp_2D01C, offset sub_ED71
+		setfarfp	_boss_update_func, sub_179F4
+		mov	_boss_fg_render_func, offset sub_ED71
 		mov	_boss_hp, 6000
 
 loc_1E371:
@@ -37907,9 +37907,9 @@ sub_1E3C2	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D016, offset sub_12364
-		setfarfp	farfp_2D018, sub_16610
-		mov	fp_2D01C, offset sub_E8A3
+		mov	_boss_bg_render_func, offset sub_12364
+		setfarfp	_boss_update_func, sub_16610
+		mov	_boss_fg_render_func, offset sub_E8A3
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 1A0h
 		mov	word_2D032, 1A0h
@@ -37948,9 +37948,9 @@ sub_1E47C	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	fp_2D016, offset sub_128B9
-		setfarfp	farfp_2D018, sub_1B47E
-		mov	fp_2D01C, offset sub_11C1A
+		mov	_boss_bg_render_func, offset sub_128B9
+		setfarfp	_boss_update_func, sub_1B47E
+		mov	_boss_fg_render_func, offset sub_11C1A
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
@@ -37996,9 +37996,9 @@ sub_1E518	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	fp_2D016, offset sub_12979
-		setfarfp	farfp_2D018, sub_186EB
-		mov	fp_2D01C, offset sub_115B6
+		mov	_boss_bg_render_func, offset sub_12979
+		setfarfp	_boss_update_func, sub_186EB
+		mov	_boss_fg_render_func, offset sub_115B6
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
@@ -38331,9 +38331,9 @@ loc_1E801:
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.y, (96 shl 4)
-		mov	fp_255A8, offset sub_12979
-		setfarfp	farfp_2D010, sub_2026A
-		mov	fp_2D014, offset sub_12F5F
+		mov	_boss_bg_render, offset sub_12979
+		setfarfp	_boss_update, sub_2026A
+		mov	_boss_fg_render, offset sub_12F5F
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
@@ -45599,7 +45599,7 @@ byte_2559A	db ?
 word_255A0	dw ?
 word_255A2	dw ?
 dword_255A4	dd ?
-fp_255A8	dw ?
+_boss_bg_render	dw ?
 fp_255AA	dw ?
 fp_255AC	dw ?
 		dw ?
@@ -53580,11 +53580,7 @@ byte_2D00A	db ?
 dream_score	dw ?
 byte_2D00E	db ?
 		db ?
-farfp_2D010	dd ?
-fp_2D014	dw ?
-fp_2D016	dw ?
-farfp_2D018	dd ?
-fp_2D01C	dw ?
+include th04/boss_funcs[bss].asm
 byte_2D01E	db ?
 byte_2D01F	db ?
 byte_2D020	db ?

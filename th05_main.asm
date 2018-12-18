@@ -403,7 +403,7 @@ loc_AED7:
 		call	farfp_2C926
 		cmp	byte_2429A, 0
 		jnz	short loc_AEEC
-		call	fp_23F56
+		call	_boss_bg_render
 		jmp	short loc_AEF0
 ; ---------------------------------------------------------------------------
 
@@ -420,7 +420,7 @@ loc_AEF0:
 		call	sub_17C04
 		call	sub_1607D
 		call	farfp_2C990
-		call	farfp_2D066
+		call	_boss_update
 		call	sub_1720E
 		call	sub_16AB0
 		call	fp_2CE50
@@ -429,13 +429,13 @@ loc_AEF0:
 		call	fp_2429C
 
 loc_AF2D:
-		call	fp_2D06A
+		call	_boss_fg_render
 		call	fp_2C994
 		call	sub_EBB7
 		call	sub_125A3
 		call	sub_12263
 		call	_grcg_setmode_rmw_1
-		call	fp_2D06C
+		call	_boss_custombullets_render
 		call	lasers_render
 		call	sub_16B4E
 		call	sub_C202
@@ -998,7 +998,7 @@ loc_B469:
 		push	offset aSt04_bft_0 ; "st04.bft"
 		call	super_entry_bfnt
 		call	sub_14976
-		mov	fp_23F56, offset sub_DA86
+		mov	_boss_bg_render, offset sub_DA86
 		mov	fp_23F5A, offset sub_DA86
 		jmp	short loc_B4A9
 ; ---------------------------------------------------------------------------
@@ -2274,7 +2274,7 @@ sub_BF0E	proc near
 		dec	byte_23F5E
 		cmp	byte_23F5E, 0
 		jnz	short loc_BF25
-		mov	fp_23F56, offset sub_BEE6
+		mov	_boss_bg_render, offset sub_BEE6
 
 loc_BF25:
 		pop	bp
@@ -2289,7 +2289,7 @@ sub_BF0E	endp
 sub_BF27	proc far
 		push	bp
 		mov	bp, sp
-		mov	fp_23F56, offset sub_BEE6
+		mov	_boss_bg_render, offset sub_BEE6
 		pop	bp
 		retf
 sub_BF27	endp
@@ -2307,7 +2307,7 @@ arg_0		= byte ptr  6
 		mov	bp, sp
 		mov	al, [bp+arg_0]
 		mov	byte_23F5E, al
-		mov	fp_23F56, offset sub_BF0E
+		mov	_boss_bg_render, offset sub_BF0E
 		pop	bp
 		retf	2
 sub_BF32	endp
@@ -8538,12 +8538,12 @@ sub_EE58	proc near
 		jnz	short loc_EE92
 		nopcall	sub_F2B4
 		mov	fp_2C92E, offset sub_EE51
-		mov	ax, fp_2D06E
-		mov	fp_23F56, ax
-		mov	eax, farfp_2D070
-		mov	farfp_2D066, eax
-		mov	ax, fp_2D074
-		mov	fp_2D06A, ax
+		mov	ax, _boss_bg_render_func
+		mov	_boss_bg_render, ax
+		mov	eax, _boss_update_func
+		mov	_boss_update, eax
+		mov	ax, _boss_fg_render_func
+		mov	_boss_fg_render, ax
 		mov	fp_2CE88, offset sub_11CBB
 		mov	al, 1
 		pop	bp
@@ -19467,9 +19467,9 @@ stage_step_score_function	endp
 sub_144CB	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2D066, nullsub_1
-		mov	fp_2D06A, offset nullsub_2
-		mov	fp_2D06C, offset nullsub_2
+		setfarfp	_boss_update, nullsub_1
+		mov	_boss_fg_render, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullsub_2
 		mov	boss_phase, 0
 		mov	byte_26349, 0
 		mov	byte ptr word_2634A+1, 0
@@ -19544,9 +19544,9 @@ sub_14544	proc near
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D06E, offset sub_D08C
-		setfarfp	farfp_2D070, sub_186B6
-		mov	fp_2D074, offset sub_10904
+		mov	_boss_bg_render_func, offset sub_D08C
+		setfarfp	_boss_update_func, sub_186B6
+		mov	_boss_fg_render_func, offset sub_10904
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -19591,9 +19591,9 @@ sub_14613	proc near
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D06E, offset sub_D0F4
-		setfarfp	farfp_2D070, sub_1903A
-		mov	fp_2D074, offset sub_10A2A
+		mov	_boss_bg_render_func, offset sub_D0F4
+		setfarfp	_boss_update_func, sub_1903A
+		mov	_boss_fg_render_func, offset sub_10A2A
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -19635,9 +19635,9 @@ sub_146D0	proc near
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D06E, offset sub_D180
-		setfarfp	farfp_2D070, sub_1A044
-		mov	fp_2D074, offset sub_10C9A
+		mov	_boss_bg_render_func, offset sub_D180
+		setfarfp	_boss_update_func, sub_1A044
+		mov	_boss_fg_render_func, offset sub_10C9A
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -19686,9 +19686,9 @@ sub_1479F	proc near
 		mov	word_26352, 1200h
 		mov	word ptr dword_2634E+2,	400h
 		mov	word_26354, 400h
-		mov	fp_2D06E, offset sub_D20C
-		setfarfp	farfp_2D070, sub_1ABDA
-		mov	fp_2D074, offset sub_10D71
+		mov	_boss_bg_render_func, offset sub_D20C
+		setfarfp	_boss_update_func, sub_1ABDA
+		mov	_boss_fg_render_func, offset sub_10D71
 		mov	_boss_sprite_cur, 180
 		mov	byte_2635C, 0B4h
 		mov	word_2D088, 180h
@@ -19735,9 +19735,9 @@ sub_14879	proc near
 		mov	word_26352, 0C00h
 		mov	word ptr dword_2634E+2,	400h
 		mov	word_26354, 400h
-		mov	fp_2D06E, offset sub_D29E
-		setfarfp	farfp_2D070, sub_1D26B
-		mov	fp_2D074, offset sub_10FD2
+		mov	_boss_bg_render_func, offset sub_D29E
+		setfarfp	_boss_update_func, sub_1D26B
+		mov	_boss_fg_render_func, offset sub_10FD2
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -19779,9 +19779,9 @@ sub_14976	proc near
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D06E, offset sub_DA86
-		setfarfp	farfp_2D070, sub_1E197
-		mov	fp_2D074, offset sub_110E4
+		mov	_boss_bg_render_func, offset sub_DA86
+		setfarfp	_boss_update_func, sub_1E197
+		mov	_boss_fg_render_func, offset sub_110E4
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -19820,9 +19820,9 @@ sub_14A06	proc near
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	fp_2D06E, offset sub_DCDB
-		setfarfp	farfp_2D070, sub_1F289
-		mov	fp_2D074, offset sub_117C9
+		mov	_boss_bg_render_func, offset sub_DCDB
+		setfarfp	_boss_update_func, sub_1F289
+		mov	_boss_fg_render_func, offset sub_117C9
 		mov	_boss_sprite_cur, 180
 		mov	word_2D088, 180h
 		mov	word_2D08A, 180h
@@ -30827,7 +30827,7 @@ loc_1ACAB:
 		mov	byte ptr word_2634A+1, 0
 		mov	fp_2CE36, offset sub_1A5EB
 		mov	fp_2CE38, offset sub_1A8C9
-		mov	fp_2D06C, offset sub_FF79
+		mov	_boss_custombullets_render, offset sub_FF79
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -31096,7 +31096,7 @@ loc_1AF24:
 		mov	word ptr dword_2CE9A, offset aTH05_10
 		mov	eax, dword_2634E
 		mov	_boss_pos.cur, eax
-		setfarfp	farfp_2D066, sub_1B9F2
+		setfarfp	_boss_update, sub_1B9F2
 		jmp	short loc_1AF85
 ; ---------------------------------------------------------------------------
 
@@ -31106,14 +31106,14 @@ loc_1AF66:
 		call	sub_ED87
 		mov	word ptr dword_2CE9A+2,	ds
 		mov	word ptr dword_2CE9A, offset aTH05_11
-		setfarfp	farfp_2D066, sub_1C518
+		setfarfp	_boss_update, sub_1C518
 
 loc_1AF85:
 		call	sub_F2B4
 		mov	fp_2CE88, offset sub_11CBB
 		mov	boss_phase, 0
 		mov	boss_phase_frame, 0
-		mov	fp_2D06A, offset sub_10F12
+		mov	_boss_fg_render, offset sub_10F12
 		mov	_boss_hp, 7900
 
 loc_1AFA7:
@@ -32381,7 +32381,7 @@ loc_1BA89:
 		mov	_boss_sprite_cur, 204
 		inc	boss_phase
 		mov	boss_phase_frame, 0
-		mov	fp_2D06C, offset sub_10EB2
+		mov	_boss_custombullets_render, offset sub_10EB2
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -32616,7 +32616,7 @@ loc_1BCE7:
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
-		mov	fp_2D06C, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullsub_2
 		jmp	short loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -33588,7 +33588,7 @@ loc_1C5B4:
 		mov	_boss_sprite_cur, 204
 		inc	boss_phase
 		mov	boss_phase_frame, 0
-		mov	fp_2D06C, offset sub_10EB2
+		mov	_boss_custombullets_render, offset sub_10EB2
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -33825,7 +33825,7 @@ loc_1C7E3:
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
-		mov	fp_2D06C, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullsub_2
 		jmp	short loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -35006,7 +35006,7 @@ loc_1D360:
 		mov	byte_26349, 1
 		mov	byte ptr word_2634A+1, 0
 		mov	fp_2CE46, offset sub_1CA42
-		mov	fp_2D06C, offset sub_10F90
+		mov	_boss_custombullets_render, offset sub_10F90
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -35169,7 +35169,7 @@ loc_1D4F4:
 		call	add_explode_effect_function
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
-		mov	fp_2D06C, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullsub_2
 		jmp	short loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -36679,7 +36679,7 @@ loc_1E333:
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	_boss_pos.velocity.y, 0
-		mov	fp_2D06C, offset sub_11073
+		mov	_boss_custombullets_render, offset sub_11073
 		push	3200230h
 		push	2D00320h
 		call	sub_E752
@@ -38558,7 +38558,7 @@ loc_1F374:
 		mov	byte_26349, 1
 		mov	byte ptr word_2634A+1, 0
 		mov	boss_phase_frame, 0
-		mov	fp_2D06C, offset sub_11695
+		mov	_boss_custombullets_render, offset sub_11695
 		mov	byte_2D085, 0
 		mov	fp_2CE66, offset sub_1E922
 		mov	byte_2D07F, 0
@@ -38847,7 +38847,7 @@ loc_1F643:
 		call	add_explode_effect_function
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
-		mov	fp_2D06C, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullsub_2
 		mov	byte_226C0, 0
 		jmp	short loc_1F666
 ; ---------------------------------------------------------------------------
@@ -39691,7 +39691,7 @@ loc_1FC55:
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	byte_2C96C, 1
-		mov	fp_2D06A, offset nullsub_2
+		mov	_boss_fg_render, offset nullsub_2
 		jmp	loc_1FD5D
 ; ---------------------------------------------------------------------------
 
@@ -42915,7 +42915,7 @@ dword_23F4A	dd ?
 word_23F4E	dw ?
 word_23F50	dw ?
 dword_23F52	dd ?
-fp_23F56	dw ?
+_boss_bg_render	dw ?
 fp_23F58	dw ?
 fp_23F5A	dw ?
 		db    ?	;
@@ -52086,12 +52086,7 @@ byte_2D060	db ?
 word_2D062	dw ?
 byte_2D064	db ?
 		db ?
-farfp_2D066	dd ?
-fp_2D06A	dw ?
-fp_2D06C	dw ?
-fp_2D06E	dw ?
-farfp_2D070	dd ?
-fp_2D074	dw ?
+include th04/boss_funcs[bss].asm
 byte_2D076	db ?
 byte_2D077	db ?
 		dd    ?	;

@@ -2352,8 +2352,8 @@ loc_B4D7:
 		call	sub_1C608
 		call	sub_1C3DF
 		call	sub_12C72
-		setfarfp	farfp_1F478, sub_BF90
-		setfarfp	farfp_1F47C, sub_BF95
+		setfarfp	_boss_bg_render, sub_BF90
+		setfarfp	_boss_update, sub_BF95
 		setfarfp	farfp_1F490, sub_BF90
 		setfarfp	farfp_1F4A0, sub_BF90
 		setfarfp	farfp_23A72, sub_BF90
@@ -2378,10 +2378,10 @@ loc_B63C:
 		mov	word_20616, 74h	; 't'
 		setfarfp	farfp_1F474, sub_13786
 		setfarfp	farfp_1F470, sub_13909
-		setfarfp	farfp_1F484, sub_13ADE
-		setfarfp	farfp_1F488, sub_13B8B
-		setfarfp	farfp_1F49C, sub_13BB5
-		setfarfp	farfp_1F480, sub_13FE5
+		setfarfp	_boss_init, sub_13ADE
+		setfarfp	_boss_end, sub_13B8B
+		setfarfp	_boss_bg_render_func, sub_13BB5
+		setfarfp	_boss_update_func, sub_13FE5
 		setfarfp	farfp_1F490, sub_13671
 		jmp	short loc_B6F2
 ; ---------------------------------------------------------------------------
@@ -2390,10 +2390,10 @@ loc_B698:
 		mov	word_20616, 50h	; 'P'
 		setfarfp	farfp_1F474, sub_1410A
 		setfarfp	farfp_1F470, sub_1424A
-		setfarfp	farfp_1F484, sub_1523C
-		setfarfp	farfp_1F488, sub_15218
-		setfarfp	farfp_1F49C, sub_143E5
-		setfarfp	farfp_1F480, sub_150F4
+		setfarfp	_boss_init, sub_1523C
+		setfarfp	_boss_end, sub_15218
+		setfarfp	_boss_bg_render_func, sub_143E5
+		setfarfp	_boss_update_func, sub_150F4
 		setfarfp	farfp_1F490, sub_140AE
 
 loc_B6F2:
@@ -2405,10 +2405,10 @@ loc_B701:
 		mov	word_20616, 67h	; 'g'
 		setfarfp	farfp_1F474, sub_110B7
 		setfarfp	farfp_1F470, sub_114D6
-		setfarfp	farfp_1F484, sub_12754
-		setfarfp	farfp_1F488, sub_1273B
-		setfarfp	farfp_1F49C, sub_116AD
-		setfarfp	farfp_1F480, sub_123A9
+		setfarfp	_boss_init, sub_12754
+		setfarfp	_boss_end, sub_1273B
+		setfarfp	_boss_bg_render_func, sub_116AD
+		setfarfp	_boss_update_func, sub_123A9
 		setfarfp	farfp_1F490, sub_10E95
 		setfarfp	farfp_1F4A0, sub_10E4F
 		jmp	loc_B88A
@@ -2418,10 +2418,10 @@ loc_B76A:
 		mov	word_20616, 3B0h
 		setfarfp	farfp_1F474, sub_19EF3
 		setfarfp	farfp_1F470, sub_1A1FF
-		setfarfp	farfp_1F484, sub_1A7D5
-		setfarfp	farfp_1F488, sub_1C270
-		setfarfp	farfp_1F49C, sub_1C16A
-		setfarfp	farfp_1F480, sub_1BEF2
+		setfarfp	_boss_init, sub_1A7D5
+		setfarfp	_boss_end, sub_1C270
+		setfarfp	_boss_bg_render_func, sub_1C16A
+		setfarfp	_boss_update_func, sub_1BEF2
 		cmp	byte_2066C, 0
 		jnz	short loc_B7CB
 		setfarfp	farfp_1F490, sub_19E2F
@@ -2437,10 +2437,10 @@ loc_B7DD:
 		mov	word_20616, 0FFFFh
 		setfarfp	farfp_1F474, sub_BF95
 		setfarfp	farfp_1F470, sub_BF90
-		setfarfp	farfp_1F484, sub_199B3
-		setfarfp	farfp_1F488, sub_19D96
-		setfarfp	farfp_1F49C, sub_17B75
-		setfarfp	farfp_1F480, sub_19456
+		setfarfp	_boss_init, sub_199B3
+		setfarfp	_boss_end, sub_19D96
+		setfarfp	_boss_bg_render_func, sub_17B75
+		setfarfp	_boss_update_func, sub_19456
 		mov	byte_1E500, 1
 		jmp	short loc_B88A
 ; ---------------------------------------------------------------------------
@@ -2449,10 +2449,10 @@ loc_B832:
 		mov	word_20616, 0C8h
 		setfarfp	farfp_1F474, sub_15402
 		setfarfp	farfp_1F470, sub_1540C
-		setfarfp	farfp_1F484, sub_1696B
-		setfarfp	farfp_1F488, sub_16A21
-		setfarfp	farfp_1F49C, sub_159AF
-		setfarfp	farfp_1F480, sub_16744
+		setfarfp	_boss_init, sub_1696B
+		setfarfp	_boss_end, sub_16A21
+		setfarfp	_boss_bg_render_func, sub_159AF
+		setfarfp	_boss_update_func, sub_16744
 		call	sub_129FC
 		mov	byte_1E500, 2
 
@@ -2824,7 +2824,7 @@ loc_BCC3:
 		mov	bx, ax
 		mov	ax, ss:[bx]
 		mov	word_20344, ax
-		call	farfp_1F478
+		call	_boss_bg_render
 		cmp	byte_2061A, 0
 		jz	short loc_BCF9
 		call	farfp_1F474
@@ -2914,7 +2914,7 @@ loc_BDCC:
 		call	sub_F1D8
 		call	sub_ECAC
 		call	farfp_26C40
-		call	farfp_1F47C
+		call	_boss_update
 		mov	byte_1F466, al
 		cmp	byte_2061A, 0
 		jz	short loc_BDE8
@@ -3145,7 +3145,7 @@ sub_BF9C	proc far
 		call	far ptr	palette_show
 
 loc_BFC3:
-		call	farfp_1F488
+		call	_boss_end
 		mov	ax, 1
 		pop	bp
 		retf
@@ -3187,14 +3187,14 @@ loc_BFF8:
 		call	far ptr	palette_show
 
 loc_C015:
-		call	farfp_1F484
+		call	_boss_init
 		call	sub_17A55
 		call	sub_16A8A
 		setfarfp	farfp_1F494, sub_BF90
-		mov	eax, farfp_1F49C
-		mov	farfp_1F478, eax
-		mov	eax, farfp_1F480
-		mov	farfp_1F47C, eax
+		mov	eax, _boss_bg_render_func
+		mov	_boss_bg_render, eax
+		mov	eax, _boss_update_func
+		mov	_boss_update, eax
 		setfarfp	farfp_1F48C, sub_BF9C
 		mov	byte_20343, 0FFh
 		mov	bgm_show_timer, 1
@@ -36669,16 +36669,12 @@ byte_1F46E	db ?
 		db ?
 farfp_1F470	dd ?
 farfp_1F474	dd ?
-farfp_1F478	dd ?
-farfp_1F47C	dd ?
-farfp_1F480	dd ?
-farfp_1F484	dd ?
-farfp_1F488	dd ?
+include th02/boss_funcs[bss].asm
 farfp_1F48C	dd ?
 farfp_1F490	dd ?
 farfp_1F494	dd ?
 farfp_1F498	dd ?
-farfp_1F49C	dd ?
+_boss_bg_render_func	dd ?
 farfp_1F4A0	dd ?
 farfp_1F4A4	dd ?
 dword_1F4A8	dd ?
