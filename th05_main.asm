@@ -419,7 +419,7 @@ loc_AEF0:
 		call	lasers_update
 		call	sub_17C04
 		call	sub_1607D
-		call	farfp_2C990
+		call	_midboss_update
 		call	_boss_update
 		call	sub_1720E
 		call	sub_16AB0
@@ -430,7 +430,7 @@ loc_AEF0:
 
 loc_AF2D:
 		call	_boss_fg_render
-		call	fp_2C994
+		call	_midboss_render
 		call	sub_EBB7
 		call	sub_125A3
 		call	sub_12263
@@ -2238,7 +2238,7 @@ sub_BEE6	proc near
 		call	sub_E696
 		call	sub_C23E
 		call	sub_C2AA
-		call	fp_2C98E
+		call	_midboss_invalidate?
 		call	fp_2CE4E
 		call	sub_BF46
 		pop	bp
@@ -19429,8 +19429,8 @@ sub_14529	endp
 sub_14544	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_180BF
-		mov	fp_2C99A, offset sub_10844
+		setfarfp	_midboss_update_func, sub_180BF
+		mov	_midboss_render_func, offset sub_10844
 		mov	frames_until_midboss, 2500
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (96 shl 4)
@@ -19476,8 +19476,8 @@ sub_14544	endp
 sub_14613	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_18A2F
-		mov	fp_2C99A, offset sub_109A3
+		setfarfp	_midboss_update_func, sub_18A2F
+		mov	_midboss_render_func, offset sub_109A3
 		mov	frames_until_midboss, 2750
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.prev.x, (192 shl 4)
@@ -19520,8 +19520,8 @@ sub_14613	endp
 sub_146D0	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_194E8
-		mov	fp_2C99A, offset sub_10A9E
+		setfarfp	_midboss_update_func, sub_194E8
+		mov	_midboss_render_func, offset sub_10A9E
 		mov	frames_until_midboss, 5750
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.prev.x, (192 shl 4)
@@ -19567,8 +19567,8 @@ sub_146D0	endp
 sub_1479F	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_1B26F
-		mov	fp_2C99A, offset sub_10E33
+		setfarfp	_midboss_update_func, sub_1B26F
+		mov	_midboss_render_func, offset sub_10E33
 		mov	frames_until_midboss, 3900
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.prev.x, (192 shl 4)
@@ -19616,8 +19616,8 @@ sub_1479F	endp
 sub_14879	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_1F87B
-		mov	fp_2C99A, offset sub_1186C
+		setfarfp	_midboss_update_func, sub_1F87B
+		mov	_midboss_render_func, offset sub_1186C
 		mov	frames_until_midboss, 4800
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.prev.x, (192 shl 4)
@@ -19672,8 +19672,8 @@ sub_14879	endp
 sub_14976	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, nullsub_1
-		mov	fp_2C99A, offset nullsub_2
+		setfarfp	_midboss_update_func, nullsub_1
+		mov	_midboss_render_func, offset nullsub_2
 		mov	frames_until_midboss, 30000
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -19706,8 +19706,8 @@ sub_14976	endp
 sub_14A06	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_2C996, sub_1E70E
-		mov	fp_2C99A, offset sub_11630
+		setfarfp	_midboss_update_func, sub_1E70E
+		mov	_midboss_render_func, offset sub_11630
 		mov	frames_until_midboss, 5800
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.prev.x, (192 shl 4)
@@ -21850,7 +21850,7 @@ var_1		= byte ptr -1
 		inc	word ptr dword_23F4A
 
 loc_16035:
-		cmp	byte_2C98C, 0
+		cmp	_midboss_active, 0
 		jnz	short loc_1603F
 		call	sub_15F10
 
@@ -24153,9 +24153,9 @@ sub_1720E	endp
 sub_172FF	proc far
 		push	bp
 		mov	bp, sp
-		mov	fp_2C98E, offset nullsub_2
-		mov	fp_2C994, offset nullsub_2
-		setfarfp	farfp_2C990, nullsub_1
+		mov	_midboss_invalidate?, offset nullsub_2
+		mov	_midboss_render, offset nullsub_2
+		setfarfp	_midboss_update, nullsub_1
 		mov	_midboss_hp, 0
 		pop	bp
 		retf
@@ -24172,14 +24172,14 @@ sub_17322	proc far
 		mov	ax, frames_until_midboss
 		cmp	ax, frame
 		jnz	short loc_17352
-		mov	fp_2C98E, offset sub_D032
-		mov	ax, fp_2C99A
-		mov	fp_2C994, ax
-		mov	eax, farfp_2C996
-		mov	farfp_2C990, eax
+		mov	_midboss_invalidate?, offset sub_D032
+		mov	ax, _midboss_render_func
+		mov	_midboss_render, ax
+		mov	eax, _midboss_update_func
+		mov	_midboss_update, eax
 		mov	byte_26331, 0
 		mov	word_26332, 0
-		mov	byte_2C98C, 1
+		mov	_midboss_active, 1
 
 loc_17352:
 		pop	bp
@@ -24385,7 +24385,7 @@ sub_17486	proc near
 		cmp	word_26332, 1
 		jnz	short loc_174A2
 		mov	word_2CE06, 0Ah
-		mov	byte_2C98C, 0
+		mov	_midboss_active, 0
 
 loc_174A2:
 		mov	ax, word_26332
@@ -51486,13 +51486,7 @@ word_2C986	dw ?
 word_2C988	dw ?
 byte_2C98A	db ?
 		db ?
-byte_2C98C	db ?
-		db ?
-fp_2C98E	dw ?
-farfp_2C990	dd ?
-fp_2C994	dw ?
-farfp_2C996	dd ?
-fp_2C99A	dw ?
+include th04/midboss_funcs[bss].asm
 byte_2C99C	db ?
 		db ?
 include th05/lasers_render[bss].asm

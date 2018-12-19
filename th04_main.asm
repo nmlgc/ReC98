@@ -375,14 +375,14 @@ loc_ABD8:
 		call	sub_104B6
 		call	sub_1C8C8
 		call	sub_17E59
-		call	farfp_259F6
+		call	_midboss_update
 		call	_boss_update
 		call	sub_1DE5D
 		call	sub_13BCE
 		call	fp_2566C
 		call	sub_1020A
 		call	_boss_fg_render
-		call	fp_259FA
+		call	_midboss_render
 		call	sub_10713
 		call	sub_10552
 		call	sub_10BFD
@@ -4232,7 +4232,7 @@ sub_CB58	proc near
 		call	sub_C0FC
 		call	sub_C2EE
 		call	sub_BCBE
-		call	fp_259F4
+		call	_midboss_invalidate?
 		call	fp_2566A
 		call	sub_BBA4
 		pop	bp
@@ -20745,8 +20745,8 @@ loc_154D1:
 		cmp	frames_until_midboss, 2800
 		jnz	short loc_1552D
 		mov	frames_until_midboss, 5600
-		setfarfp	farfp_259FC, sub_152B4
-		mov	fp_25A00, offset sub_CE06
+		setfarfp	_midboss_update_func, sub_152B4
+		mov	_midboss_render_func, offset sub_CE06
 		mov	_midboss_pos.cur.x, (240 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
 		mov	_midboss_pos.prev.x, (240 shl 4)
@@ -25580,7 +25580,7 @@ var_1		= byte ptr -1
 		inc	word ptr dword_250FA
 
 loc_17DF5:
-		cmp	byte_259F2, 0
+		cmp	_midboss_active, 0
 		jnz	short loc_17E18
 		les	bx, dword_250FA
 		mov	al, es:[bx]
@@ -29399,10 +29399,10 @@ off_19EB0	dw offset loc_19AC8
 sub_19EBC	proc far
 		push	bp
 		mov	bp, sp
-		mov	fp_259F4, offset nullsub_1
-		mov	fp_259FA, offset nullsub_1
-		setfarfp	farfp_259F6, nullsub_2
-		mov	byte_259F2, 0
+		mov	_midboss_invalidate?, offset nullsub_1
+		mov	_midboss_render, offset nullsub_1
+		setfarfp	_midboss_update, nullsub_2
+		mov	_midboss_active, 0
 		mov	_midboss_hp, 0
 		pop	bp
 		retf
@@ -29419,14 +29419,14 @@ sub_19EE4	proc far
 		mov	ax, frames_until_midboss
 		cmp	ax, frame
 		jnz	short loc_19F14
-		mov	fp_259F4, offset sub_12124
-		mov	ax, fp_25A00
-		mov	fp_259FA, ax
-		mov	eax, farfp_259FC
-		mov	farfp_259F6, eax
+		mov	_midboss_invalidate?, offset sub_12124
+		mov	ax, _midboss_render_func
+		mov	_midboss_render, ax
+		mov	eax, _midboss_update_func
+		mov	_midboss_update, eax
 		mov	byte_26705, 0
 		mov	word_26706, 0
-		mov	byte_259F2, 1
+		mov	_midboss_active, 1
 
 loc_19F14:
 		pop	bp
@@ -37554,8 +37554,8 @@ sub_1DFD4	endp
 sub_1DFEF	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, sub_14017
-		mov	fp_25A00, offset sub_C778
+		setfarfp	_midboss_update_func, sub_14017
+		mov	_midboss_render_func, offset sub_C778
 		mov	frames_until_midboss, 3100
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (368 shl 4)
@@ -37599,8 +37599,8 @@ sub_1DFEF	endp
 sub_1E0B3	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, sub_14CFD
-		mov	fp_25A00, offset sub_CC3A
+		setfarfp	_midboss_update_func, sub_14CFD
+		mov	_midboss_render_func, offset sub_CC3A
 		mov	frames_until_midboss, 2600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -37647,8 +37647,8 @@ sub_1E0B3	endp
 sub_1E186	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, sub_1448B
-		mov	fp_25A00, offset sub_C885
+		setfarfp	_midboss_update_func, sub_1448B
+		mov	_midboss_render_func, offset sub_C885
 		mov	frames_until_midboss, 1600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -37691,8 +37691,8 @@ sub_1E186	endp
 sub_1E245	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, sub_152B4
-		mov	fp_25A00, offset sub_CE06
+		setfarfp	_midboss_update_func, sub_152B4
+		mov	_midboss_render_func, offset sub_CE06
 		mov	frames_until_midboss, 2800
 		mov	_midboss_pos.cur.x, (144 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -37789,8 +37789,8 @@ sub_1E245	endp
 sub_1E3C2	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, nullsub_2
-		mov	fp_25A00, offset nullsub_1
+		setfarfp	_midboss_update_func, nullsub_2
+		mov	_midboss_render_func, offset nullsub_1
 		mov	frames_until_midboss, 60000
 		call	sub_1DF61
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -37830,8 +37830,8 @@ sub_1E3C2	endp
 sub_1E47C	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, nullsub_2
-		mov	fp_25A00, offset nullsub_1
+		setfarfp	_midboss_update_func, nullsub_2
+		mov	_midboss_render_func, offset nullsub_1
 		mov	frames_until_midboss, 60000
 		call	sub_1DF61
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -37869,8 +37869,8 @@ sub_1E47C	endp
 sub_1E518	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	farfp_259FC, sub_1494C
-		mov	fp_25A00, offset sub_C94A
+		setfarfp	_midboss_update_func, sub_1494C
+		mov	_midboss_render_func, offset sub_C94A
 		mov	frames_until_midboss, 5400
 		mov	_midboss_pos.cur.x, (-16 shl 4)
 		mov	_midboss_pos.cur.y, (256 shl 4)
@@ -45867,13 +45867,7 @@ byte_259EE	db ?
 byte_259EF	db ?
 byte_259F0	db ?
 byte_259F1	db ?
-byte_259F2	db ?
-		db ?
-fp_259F4	dw ?
-farfp_259F6	dd ?
-fp_259FA	dw ?
-farfp_259FC	dd ?
-fp_25A00	dw ?
+include th04/midboss_funcs[bss].asm
 byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?
