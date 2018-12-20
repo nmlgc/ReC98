@@ -25,6 +25,7 @@ include libs/master.lib/pf.inc
 include libs/master.lib/clip.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
+include th01/hardware/egc.inc
 include th02/formats/pi_slots.inc
 include th03/formats/cdg.inc
 

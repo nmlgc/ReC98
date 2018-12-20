@@ -423,24 +423,7 @@ sub_A2D6	proc near
 		push	bp
 		mov	bp, sp
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retn
 sub_A2D6	endp
@@ -585,24 +568,16 @@ loc_A3B2:
 loc_A3F7:
 		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
 		call	sub_A2D6
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		egc_selectpat
+		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_BITLENGTHREG, 0Fh
 		mov	bx, [bp+arg_0]
 		shl	bx, 3
 		mov	ax, di
 		and	ax, 3
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+60Ch]
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_MASKREG, [bx+60Ch]
 		mov	[bp+var_4], 7D00h
 		mov	[bp+var_2], 0
 		jmp	short loc_A461
@@ -1037,24 +1012,16 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A79A:
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		egc_selectpat
+		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_BITLENGTHREG, 0Fh
 		mov	bx, [bp+arg_0]
 		shl	bx, 3
 		mov	ax, cx
 		and	ax, 3
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+62Ch]
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_MASKREG, [bx+62Ch]
 		mov	ax, cx
 		shl	ax, 6
 		mov	dx, cx
@@ -5143,24 +5110,7 @@ sub_CBB0	proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retn
 sub_CBB0	endp

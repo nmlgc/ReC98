@@ -532,7 +532,7 @@ sub_402		proc near
 		mov	ax, word_105A
 		and	ax, 0Fh
 		mov	word_1050, ax
-		mov	dx, 4ACh
+		mov	dx, EGC_ADDRRESSREG
 		mov	ax, word_1050
 		shl	ax, 4
 		out	dx, ax
@@ -544,7 +544,7 @@ sub_402		proc near
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	dx, 4AEh
+		mov	dx, EGC_BITLENGTHREG
 		mov	ax, word_1060
 		shl	ax, 4
 		dec	ax
@@ -559,21 +559,11 @@ sub_402		proc near
 		mov	word_1056, dx
 		cmp	cs:word_1064, 0
 		jz	short loc_49C
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, cs:word_106C
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 40FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 0CACh
-		out	dx, ax
-		mov	dx, 4A6h
-		mov	ax, cs:word_1066
-		out	dx, ax
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, cs:word_106C
+		outw	EGC_READPLANEREG, 40FFh
+		outw	EGC_MODE_ROP_REG, EGC_WS_ROP or EGC_SHIFT_CPU or 0ACh
+		outw	EGC_FGCOLORREG, cs:word_1066
 		mov	ds, cs:word_F3E
 		jmp	short loc_4EB
 ; ---------------------------------------------------------------------------
@@ -581,44 +571,28 @@ sub_402		proc near
 loc_49C:
 		cmp	cs:word_1068, 0
 		jz	short loc_4CB
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 0CC0h
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, cs:word_106C
-		out	dx, ax
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MODE_ROP_REG, EGC_WS_ROP or EGC_SHIFT_CPU or 0C0h
+		outw	EGC_MASKREG, cs:word_106C
 		mov	ds, cs:word_F3C
 		call	sub_4F8
 		jmp	short loc_4DA
 ; ---------------------------------------------------------------------------
 
 loc_4CB:
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, cs:word_106C
-		out	dx, ax
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, cs:word_106C
 
 loc_4DA:
-		mov	dx, 4A4h
-		mov	ax, cs:word_106A
-		out	dx, ax
+		outw	EGC_MODE_ROP_REG, cs:word_106A
 		mov	ax, 0A800h
 		mov	ds, ax
 		assume ds:nothing
 		add	si, 3E80h
 
 loc_4EB:
-		mov	dx, 4A0h
-		mov	ax, cs:word_106E
-		out	dx, ax
+		outw	EGC_ACTIVEPLANEREG, cs:word_106E
 		call	sub_4F8
 		retn
 sub_402		endp
@@ -833,9 +807,7 @@ sub_610		proc near
 		push	es
 		pusha
 		call	sub_BD0
-		mov	dx, 4A4h
-		mov	ax, 0
-		out	dx, ax
+		outw	EGC_MODE_ROP_REG, 0
 		mov	ax, 0A800h
 		mov	es, ax
 		xor	di, di
@@ -1963,24 +1935,14 @@ sub_BD0		proc near
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A4h
-		mov	ax, 28F0h
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or 0F0h
+		outw	EGC_MASKREG, 0FFFFh
+		mov	dx, EGC_ADDRRESSREG
 		xor	ax, ax
 		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
+		outw	EGC_BITLENGTHREG, 0Fh
 		sti
 		pop	dx
 		pop	ax
@@ -1995,15 +1957,9 @@ sub_C10		proc near
 		push	ax
 		push	dx
 		cli
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, 0FFFFh
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
 					;

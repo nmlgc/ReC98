@@ -102,3 +102,46 @@ GRCG_SETCOLOR_DIRECT macro col_reg:req
 	endm
 endm
 ; -------------------------
+
+; EGC
+; ---
+
+; These directly translate to the C OUTW and OUTW2 macros.
+outw macro port:req, value:rest
+	mov	dx, port
+	mov	ax, value
+	out	dx, ax
+endm
+outw2 macro port:req, value:rest
+	mov	ax, value
+	mov	dx, port
+	out	dx, ax
+endm
+
+EGC_ACTIVEPLANEREG	equ 04a0h
+EGC_READPLANEREG  	equ 04a2h
+EGC_MODE_ROP_REG  	equ 04a4h
+EGC_FGCOLORREG    	equ 04a6h
+EGC_MASKREG       	equ 04a8h
+EGC_BGCOLORREG    	equ 04aah
+EGC_ADDRRESSREG   	equ 04ach
+EGC_BITLENGTHREG  	equ 04aeh
+
+EGC_COMPAREREAD	equ 02000h
+EGC_WS_PATREG  	equ 01000h	; WS = write source
+EGC_WS_ROP     	equ 00800h	; parren reg, ans of rop, cpu data
+EGC_WS_CPU     	equ 00000h
+EGC_SHIFT_CPU  	equ 00400h	; input to shifter
+EGC_SHIFT_VRAM 	equ 00000h	; cpu write, vram read
+EGC_RL_MEMWRITE	equ 00200h	; RL = pattern Register Load
+EGC_RL_MEMREAD 	equ 00100h	; ^at mem write, <-at mem read
+EGC_RL_NONE    	equ 00000h	; no touch
+
+egc_selectpat	macro
+	outw2	EGC_READPLANEREG, 000FFh
+endm
+
+egc_setrop	macro mode_rop:rest
+	outw2	EGC_MODE_ROP_REG, mode_rop
+endm
+; ---

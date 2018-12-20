@@ -6062,29 +6062,17 @@ sub_DD10	endp
 
 sub_DD97	proc near
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
+		egc_selectpat
+		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_ADDRRESSREG, 0
+		outw2	EGC_BITLENGTHREG, 0Fh
 		mov	bx, word_1282C
 		mov	ax, word_1282E
 		and	ax, 3
 		shl	ax, 1
 		add	bx, ax
-		mov	ax, [bx]
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_MASKREG, [bx]
 		inc	word_1282E
 		retn
 sub_DD97	endp
@@ -6246,9 +6234,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	di
 		call	sub_E354
-		mov	dx, 4A4h
-		mov	ax, 29F0h
-		out	dx, ax
+		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
 		mov	ax, [bp+arg_6]
 		mov	dx, [bp+arg_4]
 		mov	bx, ax
@@ -6331,21 +6317,13 @@ sub_E354	proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, 0FFFFh
+		mov	dx, EGC_ADDRRESSREG
 		sub	ax, ax
 		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
+		outw	EGC_BITLENGTHREG, 0Fh
 		retn
 sub_E354	endp
 	align 2

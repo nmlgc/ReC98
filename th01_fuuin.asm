@@ -5245,24 +5245,7 @@ sub_C757	proc far
 		push	bp
 		mov	bp, sp
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retf
 sub_C757	endp

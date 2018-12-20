@@ -5848,9 +5848,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		cld
 		call	sub_E3E8
-		mov	dx, 4A4h
-		mov	ax, 29F0h
-		out	dx, ax
+		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
 		mov	ax, [bp+arg_6]
 		mov	dx, [bp+arg_4]
 		mov	bx, ax
@@ -5927,21 +5925,13 @@ sub_E3E8	proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, 0FFFFh
+		mov	dx, EGC_ADDRRESSREG
 		sub	ax, ax
 		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
+		outw	EGC_BITLENGTHREG, 0Fh
 		retn
 sub_E3E8	endp
 

@@ -1088,24 +1088,7 @@ sub_4344	endp
 
 sub_43B0	proc far
 		nopcall	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		retf
 sub_43B0	endp
 
@@ -2848,12 +2831,8 @@ loc_BD26:
 		call	farfp_1F4A0
 		call	sub_4692
 		call	farfp_1F490
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw2	EGC_MASKREG, 0FFFFh
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
@@ -2954,12 +2933,8 @@ loc_BE3B:
 		push	ax
 		call	sub_445A
 		mov	byte_1E501, al
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw2	EGC_MASKREG, 0FFFFh
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
@@ -3274,24 +3249,7 @@ sub_C10A	proc near
 		push	bp
 		mov	bp, sp
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retn
 sub_C10A	endp
@@ -15858,24 +15816,7 @@ sub_12CB1	proc near
 		push	bp
 		mov	bp, sp
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retn
 sub_12CB1	endp
@@ -28846,31 +28787,17 @@ var_2		= word ptr -2
 		cmp	byte_20618, 0
 		jnz	loc_19EEF
 		call	egc_on
-		mov	ax, 0FFF7h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 3FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
-		mov	ax, 1100h
-		mov	dx, 4A4h
-		out	dx, ax
+		outw2	EGC_ACTIVEPLANEREG, 0FFF7h
+		outw2	EGC_READPLANEREG, 3FFh
+		outw2	EGC_MASKREG, 0FFFFh
+		outw2	EGC_ADDRRESSREG, 0
+		outw2	EGC_BITLENGTHREG, 0Fh
+		egc_setrop	EGC_WS_PATREG or EGC_RL_MEMREAD
 		push	0B0009Ch
 		push	600060h
 		call	sub_45FC
 		call	sub_4692
-		mov	ax, 8FCh
-		mov	dx, 4A4h
-		out	dx, ax
+		egc_setrop	EGC_WS_ROP or 0FCh
 		mov	word_26D54, 98h
 		mov	ax, word_20344
 		add	word_26D54, ax

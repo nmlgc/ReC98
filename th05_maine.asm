@@ -442,24 +442,7 @@ sub_A6D1	proc near
 		push	bp
 		mov	bp, sp
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0FFFFh
-		mov	dx, 4A8h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		EGC_SETUP_COPY
 		pop	bp
 		retn
 sub_A6D1	endp
@@ -673,24 +656,16 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_A871:
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		egc_selectpat
+		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_BITLENGTHREG, 0Fh
 		mov	bx, [bp+arg_0]
 		shl	bx, 3
 		mov	ax, cx
 		and	ax, 3
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+732h]
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_MASKREG, [bx+732h]
 		mov	ax, cx
 		shl	ax, 6
 		mov	dx, cx
@@ -8824,29 +8799,17 @@ sub_EEB2	endp
 
 sub_EF39	proc near
 		call	egc_on
-		mov	ax, 0FFF0h
-		mov	dx, 4A0h
-		out	dx, ax
-		mov	ax, 0FFh
-		mov	dx, 4A2h
-		out	dx, ax
-		mov	ax, 3100h
-		mov	dx, 4A4h
-		out	dx, ax
-		mov	ax, 0
-		mov	dx, 4ACh
-		out	dx, ax
-		mov	ax, 0Fh
-		mov	dx, 4AEh
-		out	dx, ax
+		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
+		egc_selectpat
+		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
+		outw2	EGC_ADDRRESSREG, 0
+		outw2	EGC_BITLENGTHREG, 0Fh
 		mov	bx, word_128B4
 		mov	ax, word_128B6
 		and	ax, 3
 		shl	ax, 1
 		add	bx, ax
-		mov	ax, [bx]
-		mov	dx, 4A8h
-		out	dx, ax
+		outw2	EGC_MASKREG, [bx]
 		inc	word_128B6
 		retn
 sub_EF39	endp
@@ -8986,9 +8949,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	di
 		call	sub_F478
-		mov	dx, 4A4h
-		mov	ax, 29F0h
-		out	dx, ax
+		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
 		mov	ax, [bp+arg_6]
 		mov	dx, [bp+arg_4]
 		mov	bx, ax
@@ -9071,21 +9032,13 @@ sub_F478	proc near
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	dx, 4A0h
-		mov	ax, 0FFF0h
-		out	dx, ax
-		mov	dx, 4A2h
-		mov	ax, 0FFh
-		out	dx, ax
-		mov	dx, 4A8h
-		mov	ax, 0FFFFh
-		out	dx, ax
-		mov	dx, 4ACh
+		outw	EGC_ACTIVEPLANEREG, 0FFF0h
+		outw	EGC_READPLANEREG, 0FFh
+		outw	EGC_MASKREG, 0FFFFh
+		mov	dx, EGC_ADDRRESSREG
 		sub	ax, ax
 		out	dx, ax
-		mov	dx, 4AEh
-		mov	ax, 0Fh
-		out	dx, ax
+		outw	EGC_BITLENGTHREG, 0Fh
 		retn
 sub_F478	endp
 
