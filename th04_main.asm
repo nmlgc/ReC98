@@ -1973,7 +1973,7 @@ sub_BAEE	proc near
 		push	bp
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	dx, word_255B8
@@ -2066,7 +2066,7 @@ sub_BBA4	proc near
 		push	si
 		push	di
 		call	sub_CBFA
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		mov	bx, 4D20h
 		mov	di, 7A84h
@@ -2092,10 +2092,10 @@ loc_BBD1:
 loc_BBD4:
 		mov	ax, es:[si]
 		mov	es:[di], ax
-		add	si, 50h	; 'P'
-		add	di, 50h	; 'P'
+		add	si, ROW_SIZE
+		add	di, ROW_SIZE
 		loop	loc_BBD4
-		sub	di, 280h
+		sub	di, ROW_SIZE * 8
 		pop	si
 
 loc_BBE7:
@@ -2302,7 +2302,7 @@ loc_BD64:
 		out	dx, al
 		out	dx, al
 		sti
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		mov	di, 3ED0h
 		mov	si, [di]
@@ -2468,7 +2468,7 @@ sub_BE68	proc near
 		add	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	dx, 0A800h
+		mov	dx, GRAM_400
 		mov	es, dx
 		shr	si, 4
 		mov	cx, si
@@ -2525,10 +2525,10 @@ sub_BE68	endp
 
 sub_BECC	proc near
 		push	di
-		mov	ax, 0AA80h
+		mov	ax, GRAM_400 + ((112 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 4FB4h
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -2540,33 +2540,33 @@ sub_BECC	endp
 
 sub_BEDA	proc near
 		push	di
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 1134h
+		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		nop
 
 loc_BEE4:
-		mov	cx, 0Ch
+		mov	cx, PLAYFIELD_VRAM_W / 4
 
 loc_BEE7:
-		mov	es:[di+6180h], eax
+		mov	es:[di+(312 * ROW_SIZE)], eax
 		stosd
 		loop	loc_BEE7
-		sub	di, 80h
+		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
 		jge	short loc_BEE4
-		mov	ax, 0A968h
+		mov	ax, GRAM_400 + ((56 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 4FB4h
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		nop
 
 loc_BF00:
-		mov	es:[di+28h], eax
+		mov	es:[di+(320 / 8)], eax
 		stosd
-		mov	es:[di+28h], eax
+		mov	es:[di+(320 / 8)], eax
 		stosd
-		sub	di, 58h	; 'X'
+		sub	di, ROW_SIZE + 8
 		jge	short loc_BF00
 		pop	di
 		retn
@@ -2707,22 +2707,22 @@ sub_BF94	endp
 
 sub_BFF8	proc near
 		push	di
-		mov	ax, 0AA80h
+		mov	ax, GRAM_400 + ((112 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 4FB4h
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		nop
 
 loc_C002:
 		stosd
 		stosd
 		stosd
-		sub	di, 5Ch
+		sub	di, ROW_SIZE + 12
 		jge	short loc_C002
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 22B4h
+		mov	di, (111 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -2924,10 +2924,10 @@ sub_C0FC	endp
 
 sub_C148	proc near
 		push	di
-		mov	ax, 0AC10h
+		mov	ax, GRAM_400 + (((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
 		mov	es, ax
 		assume es:nothing
-		mov	di, 36B4h
+		mov	di, (175 * ROW_SIZE) + 4
 		call	sub_12068
 		pop	di
 		retn
@@ -3136,7 +3136,7 @@ sub_C2B2	proc near
 		push	di
 		mov	ah, GC_BR
 		call	_grcg_setcolor_direct_noint_1
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	di, 60h
@@ -4313,7 +4313,7 @@ sub_CBB8	proc near
 		call	sub_CBFA
 		mov	di, 7804h
 		mov	bx, 5340h
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 
@@ -4837,7 +4837,7 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	di
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [bp+arg_4]
@@ -4881,10 +4881,10 @@ sub_D016	proc near
 		mov	bp, sp
 		push	di
 		call	sub_CBFA
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 72B4h
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_25A3D
 
@@ -4900,7 +4900,7 @@ loc_D02E:
 		mov	es:[di], bx
 		add	di, 2
 		loop	loc_D02E
-		sub	di, 80h
+		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
 		jge	short loc_D02B
 		out	dx, al
 		call	egc_off
@@ -4927,10 +4927,10 @@ arg_2		= word ptr  6
 		mov	bx, ax
 		shl	ax, 2
 		add	ax, bx
-		add	ax, 0A800h
+		add	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	di, 27B0h
+		mov	di, 127 * ROW_SIZE
 		mov	ax, [bp+arg_2]
 		shr	ax, 3
 		add	di, ax
@@ -4949,7 +4949,7 @@ loc_D078:
 		mov	es:[di], bx
 		add	di, 2
 		loop	loc_D078
-		sub	di, 60h
+		sub	di, ROW_SIZE + 16
 		jge	short loc_D075
 		call	egc_off
 		pop	di
@@ -5961,7 +5961,7 @@ var_2		= word ptr -2
 		enter	8, 0
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		call	_grcg_setmode_rmw_1
@@ -8316,15 +8316,15 @@ sub_E8A3	endp
 
 sub_EA70	proc near
 		push	di
-		mov	ax, 0AC10h
+		mov	ax, GRAM_400 + ((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 3BB4h
+		mov	di, (191 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 18B4h
+		mov	di, (79 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -8801,10 +8801,10 @@ sub_ED71	endp
 
 sub_EDE2	proc near
 		push	di
-		mov	dx, 0A850h
+		mov	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, dx
 		assume es:nothing
-		mov	di, 2534h
+		mov	di, (119 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		cli
 		mov	dx, 7Eh	; '~'
@@ -8814,10 +8814,10 @@ sub_EDE2	proc near
 		out	dx, al
 		out	dx, al
 		sti
-		mov	ax, 0AD28h
+		mov	ax, GRAM_400 + ((248 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 2534h
+		mov	di, (119 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -11747,7 +11747,7 @@ loc_103EB:
 		mov	word ptr [si+2], 1780h
 
 loc_103F8:
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [si]
@@ -11950,7 +11950,7 @@ sub_10552	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		call	_grcg_setmode_rmw_1
 		cmp	word_25608, 20h	; ' '
@@ -13154,7 +13154,7 @@ arg_4		= word ptr  8
 		push	[bp+arg_2]
 		call	sub_BC10
 		mov	[bp+arg_2], ax
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		jmp	short loc_10EE3
@@ -15140,7 +15140,7 @@ sub_11FC8	proc near
 		shr	dx, 2
 		add	ax, dx
 		mov	di, ax
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		cmp	bx, 180h
@@ -15158,7 +15158,7 @@ loc_11FEC:
 
 loc_11FF6:
 		stosw
-		add	di, 4Eh	; 'N'
+		add	di, ROW_SIZE - 2
 		loop	loc_11FF6
 		or	bx, bx
 		jz	short loc_12008
@@ -15178,15 +15178,15 @@ sub_11FC8	endp
 
 sub_1200A	proc near
 		push	di
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 0C34h
+		mov	di, (39 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
-		mov	ax, 0AE72h
+		mov	ax, GRAM_400 + (((314 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
 		mov	es, ax
 		assume es:nothing
-		mov	di, 1094h
+		mov	di, (53 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -15210,17 +15210,17 @@ sub_12024	proc near
 		out	dx, al
 		sti
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ax, 1
 		out	0A6h, ax
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep stosd
 		xor	ax, ax
 		out	0A6h, ax
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		xor	di, di
 		rep stosd
 		pop	di
@@ -15234,10 +15234,10 @@ sub_12024	endp
 
 sub_1205A	proc near
 		push	di
-		mov	ax, 0A850h
+		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, 72B4h
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
 		call	sub_12068
 		pop	di
 		retn
@@ -15282,7 +15282,7 @@ loc_12086:
 ; ---------------------------------------------------------------------------
 
 loc_12096:
-		mov	dx, 0A850h
+		mov	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	di, bx
 		and	di, 0FFh
 		add	di, word_2323E
@@ -15308,7 +15308,7 @@ loc_120B4:
 		jge	short loc_120B1
 		xor	bl, 0Ch
 		sub	dx, 0A0h
-		cmp	dx, 0A850h
+		cmp	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		jg	short loc_120A5
 		cmp	dx, 0A7B0h
 		jnz	short loc_12096
@@ -16289,7 +16289,7 @@ loc_127F7:
 loc_12823:
 		cmp	di, 38h	; '8'
 		jl	short loc_127F7
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	si, 0BA92h
@@ -16976,7 +16976,7 @@ var_2		= word ptr -2
 		sub	sp, 2
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	si, 86B8h
@@ -17114,7 +17114,7 @@ sub_12DF0	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		call	sub_C17C
 		mov	si, 0AF34h
@@ -18130,7 +18130,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	[bp+var_4], 0FFh

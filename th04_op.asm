@@ -2772,14 +2772,14 @@ sub_BFA7	proc near
 		push	si
 		push	di
 		push	ds
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ax, word_12DC0
 		mov	ds, ax
 		xor	di, di
 		xor	si, si
-		mov	cx, 3E80h
+		mov	cx, (ROW_SIZE * RES_Y) / 2
 		rep movsw
 		pop	ds
 		pop	di
@@ -5976,7 +5976,7 @@ loc_E47C:
 		pop	ds
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_E47C
@@ -6009,7 +6009,7 @@ loc_E4B1:
 		pop	es
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_E4B1

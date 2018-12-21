@@ -7816,16 +7816,16 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		call	grcg_setcolor pascal, (GC_TDW shl 16) + 1
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		xor	di, di
 		mov	dx, 160h
 
 loc_E3E4:
-		mov	cx, 14h
+		mov	cx, (40 / 2)
 		rep stosw
-		add	di, 28h	; '('
+		add	di, ROW_SIZE - 40
 		dec	dx
 		jnz	short loc_E3E4
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
@@ -7835,9 +7835,9 @@ loc_E3E4:
 		mov	dx, 160h
 
 loc_E406:
-		mov	cx, 14h
+		mov	cx, (40 / 2)
 		rep movsw
-		add	di, 28h	; '('
+		add	di, ROW_SIZE - 40
 		dec	dx
 		jnz	short loc_E406
 		GRCG_OFF_CLOBBERING dx
@@ -8240,7 +8240,7 @@ arg_8		= word ptr  0Eh
 		mov	dx, [bp+arg_4]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT dx
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	dx, [bp+arg_6]
@@ -8471,7 +8471,7 @@ loc_EBBA:
 		pop	ds
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_EBBA
@@ -8500,7 +8500,7 @@ loc_EBEF:
 		pop	es
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_EBEF
@@ -8765,7 +8765,7 @@ loc_EEDA:
 
 loc_EF04:
 		call	sub_EF39
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ds, ax
@@ -8975,7 +8975,7 @@ loc_F433:
 		shl	cx, 1
 		mov	bx, [bp+arg_0]
 		mov	bp, cx
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 

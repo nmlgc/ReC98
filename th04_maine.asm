@@ -5277,7 +5277,7 @@ loc_D1FC:
 		mov	dx, [bp+0Ah]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT dx
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	dx, [bp+0Ch]
@@ -5358,7 +5358,7 @@ loc_D2BA:
 		xchg	ah, al
 		stosw
 		mov	es:[di], bl
-		add	di, 4Eh
+		add	di, ROW_SIZE - 2
 		inc	ch
 		cmp	ch, 10h
 		jb	short loc_D2AA
@@ -5566,7 +5566,7 @@ loc_D67A:
 		pop	ds
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_D67A
@@ -5595,7 +5595,7 @@ loc_D6AF:
 		pop	es
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_D6AF

@@ -3154,14 +3154,14 @@ sub_BFF6	proc near
 		push	si
 		push	di
 		push	ds
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ax, word_13E98
 		mov	ds, ax
 		xor	di, di
 		xor	si, si
-		mov	cx, 3E80h
+		mov	cx, (ROW_SIZE * RES_Y) / 2
 		rep movsw
 		pop	ds
 		pop	di
@@ -5371,7 +5371,7 @@ loc_D6DC:
 		pop	ds
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_D6DC
@@ -5404,7 +5404,7 @@ loc_D711:
 		pop	es
 		xor	si, si
 		xor	di, di
-		mov	cx, 1F40h
+		mov	cx, (ROW_SIZE * RES_Y) / 4
 		rep movsd
 		dec	dl
 		jnz	short loc_D711
@@ -6028,7 +6028,7 @@ loc_DD38:
 
 loc_DD62:
 		call	sub_DD97
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 		mov	ds, ax
@@ -6260,7 +6260,7 @@ loc_E30F:
 		shl	cx, 1
 		mov	bx, [bp+arg_0]
 		mov	bp, cx
-		mov	ax, 0A800h
+		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 
