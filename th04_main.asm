@@ -2525,11 +2525,7 @@ sub_BE68	endp
 
 sub_BECC	proc near
 		push	di
-		mov	ax, GRAM_400 + ((112 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	112, 256
 		pop	di
 		retn
 sub_BECC	endp
@@ -2719,11 +2715,7 @@ loc_C002:
 		stosd
 		sub	di, ROW_SIZE + 12
 		jge	short loc_C002
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (111 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	0, 112
 		pop	di
 		retn
 sub_BFF8	endp
@@ -2924,11 +2916,7 @@ sub_C0FC	endp
 
 sub_C148	proc near
 		push	di
-		mov	ax, GRAM_400 + (((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
-		mov	es, ax
-		assume es:nothing
-		mov	di, (175 * ROW_SIZE) + 4
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
 sub_C148	endp
@@ -8316,16 +8304,8 @@ sub_E8A3	endp
 
 sub_EA70	proc near
 		push	di
-		mov	ax, GRAM_400 + ((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (191 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (79 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	192, 192
+		GRCG_FILL_PLAYFIELD_ROWS	  0,  80
 		pop	di
 		retn
 sub_EA70	endp
@@ -8801,11 +8781,7 @@ sub_ED71	endp
 
 sub_EDE2	proc near
 		push	di
-		mov	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, dx
-		assume es:nothing
-		mov	di, (119 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	  0, 120, dx
 		cli
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -8814,11 +8790,7 @@ sub_EDE2	proc near
 		out	dx, al
 		out	dx, al
 		sti
-		mov	ax, GRAM_400 + ((248 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (119 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	248, 120
 		pop	di
 		retn
 sub_EDE2	endp
@@ -15178,16 +15150,8 @@ sub_11FC8	endp
 
 sub_1200A	proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (39 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
-		mov	ax, GRAM_400 + (((314 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
-		mov	es, ax
-		assume es:nothing
-		mov	di, (53 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	  0, 40
+		GRCG_FILL_PLAYFIELD_ROWS	314, 54
 		pop	di
 		retn
 sub_1200A	endp
@@ -15234,29 +15198,12 @@ sub_12024	endp
 
 sub_1205A	proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
-		call	sub_12068
+		GRCG_FILL_PLAYFIELD_ROWS	0, PLAYFIELD_H
 		pop	di
 		retn
 sub_1205A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12068	proc near
-		mov	cx, 0Ch
-		rep stosd
-		sub	di, 80h
-		jge	short sub_12068
-		retn
-sub_12068	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/grcg_fill_rows.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -4558,20 +4558,7 @@ sub_CFEE	proc near
 		retn
 sub_CFEE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D024	proc near
-		mov	cx, 0Ch
-		rep stosd
-		sub	di, 80h
-		jge	short sub_D024
-		retn
-sub_D024	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/grcg_fill_rows.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6349,11 +6336,7 @@ sub_DD42	proc near
 		out	dx, al
 		out	dx, al
 		sti
-		mov	dx, GRAM_400 + (((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
-		mov	es, dx
-		assume es:nothing
-		mov	di, (175 * ROW_SIZE) + 4
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	192, 176, dx
 		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
@@ -6592,11 +6575,7 @@ sub_DE7A	endp
 
 sub_DEA6	proc near
 		push	di
-		mov	ax, GRAM_400 + (((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
-		mov	es, ax
-		assume es:nothing
-		mov	di, (175 * ROW_SIZE) + 4
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
 sub_DEA6	endp
@@ -6607,11 +6586,7 @@ sub_DEA6	endp
 
 sub_DEB4	proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (204 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	  0, 205
 		pop	di
 		retn
 sub_DEB4	endp
@@ -6827,11 +6802,7 @@ sub_DFBA	endp
 
 sub_E01E	proc near
 		push	di
-		mov	ax, GRAM_400 + (((192 + PLAYFIELD_Y) * ROW_SIZE) shr 4)
-		mov	es, ax
-		assume es:nothing
-		mov	di, (175 * ROW_SIZE) + 4
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
 sub_E01E	endp
@@ -8148,16 +8119,8 @@ sub_E8FE	endp
 
 sub_E914	proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (103 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_D024
-		mov	ax, GRAM_400 + ((296 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (71 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	  0, 104
+		GRCG_FILL_PLAYFIELD_ROWS	296,  72
 		pop	di
 		retn
 sub_E914	endp
@@ -8180,11 +8143,7 @@ sub_E92E	proc near
 		out	dx, al
 		popf
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	0, PLAYFIELD_H
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
@@ -8206,10 +8165,7 @@ sub_E950	proc near
 		out	dx, al
 		popf
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		mov	di, (239 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		call	sub_D024
+		GRCG_FILL_PLAYFIELD_ROWS	0, 240
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
