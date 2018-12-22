@@ -15321,29 +15321,7 @@ loc_12152:
 		retn
 sub_12124	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12157	proc near
-
-arg_0		= byte ptr  4
-@@y		= word ptr  6
-@@x		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		call	_cdg_put_noalpha pascal, [bp+@@x], [bp+@@y], 16
-		call	_grcg_setmode_tdw
-		mov	ah, [bp+arg_0]
-		call	_grcg_setcolor_direct_noint_1
-		call	fp_2CDCC
-		GRCG_OFF_CLOBBERING dx
-		pop	bp
-		retn	6
-sub_12157	endp
-
+include th04/boss_backdrop.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15364,9 +15342,7 @@ sub_1217E	proc near
 loc_12199:
 		cmp	byte_26719, 1
 		jnz	short loc_121BF
-		push	200088h
-		push	1
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 136, 1
 		mov	ax, word_2D02E
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
@@ -15381,9 +15357,7 @@ loc_12199:
 loc_121BF:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_121D3
-		push	200088h
-		push	1
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 136, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15418,9 +15392,7 @@ sub_121EB	proc near
 		jz	short loc_1223D
 		cmp	byte_26719, 1
 		jnz	short loc_1221B
-		push	200060h
-		push	0
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 96, 0
 		mov	ax, word_2D02E
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
@@ -15435,9 +15407,7 @@ sub_121EB	proc near
 loc_1221B:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_1222F
-		push	200060h
-		push	0
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 96, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15501,9 +15471,7 @@ sub_1226F	proc near
 loc_12285:
 		cmp	byte_26719, 2
 		jnz	short loc_122AB
-		push	200010h
-		push	0
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 0
 		mov	ax, word_2D02E
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
@@ -15518,9 +15486,7 @@ loc_12285:
 loc_122AB:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_122BF
-		push	200010h
-		push	0
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15598,9 +15564,7 @@ loc_12327:
 loc_12338:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_1234C
-		push	600048h
-		push	1
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (96 shl 16) or 72, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -15678,9 +15642,7 @@ loc_123B4:
 loc_123C5:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_123D9
-		push	800080h
-		push	0
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (128 shl 16) or 128, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -16471,9 +16433,7 @@ loc_129D2:
 loc_129E3:
 		cmp	byte_26719, 0FEh
 		jnb	short loc_129F7
-		push	200010h
-		push	1
-		call	sub_12157
+		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -37615,7 +37575,7 @@ sub_1DFEF	proc far
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 100h
-		mov	fp_2CDCC, offset sub_EDE2
+		mov	_boss_backdrop_colorfill, offset sub_EDE2
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
@@ -37661,7 +37621,7 @@ sub_1E0B3	proc far
 		mov	_boss_sprite_cur, 0
 		mov	word_2D030, 180h
 		mov	word_2D032, 180h
-		mov	fp_2CDCC, offset sub_EA70
+		mov	_boss_backdrop_colorfill, offset sub_EA70
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
@@ -37709,7 +37669,7 @@ sub_1E186	proc far
 		mov	_boss_sprite_cur, 134
 		mov	word_2D030, 180h
 		mov	word_2D032, 180h
-		mov	fp_2CDCC, offset sub_BECC
+		mov	_boss_backdrop_colorfill, offset sub_BECC
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
@@ -37792,7 +37752,7 @@ loc_1E371:
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 180h
-		mov	fp_2CDCC, offset sub_BEDA
+		mov	_boss_backdrop_colorfill, offset sub_BEDA
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
@@ -37843,7 +37803,7 @@ sub_1E3C2	proc far
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 1A0h
 		mov	word_2D032, 1A0h
-		mov	fp_2CDCC, offset sub_BFF8
+		mov	_boss_backdrop_colorfill, offset sub_BFF8
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
 		push	ds
 		push	offset aSt04_bb	; "st04.bb"
@@ -37932,7 +37892,7 @@ sub_1E518	proc far
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
-		mov	fp_2CDCC, offset sub_C148
+		mov	_boss_backdrop_colorfill, offset sub_C148
 		mov	byte_2D01E, 0
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
 		push	ds
@@ -53344,7 +53304,7 @@ include th04/circles[bss].asm
 dword_2CDC6	dd ?
 byte_2CDCA	db ?
 		db ?
-fp_2CDCC	dw ?
+include th04/boss_backdrop[bss].asm
 word_2CDCE	dw ?
 byte_2CDD0	db ?
 byte_2CDD1	db ?
