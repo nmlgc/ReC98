@@ -400,7 +400,7 @@ loc_AEBB:
 
 loc_AED7:
 		call	fp_2C92E
-		call	farfp_2C926
+		call	_stage_vm
 		cmp	byte_2429A, 0
 		jnz	short loc_AEEC
 		call	_boss_bg_render
@@ -1020,7 +1020,7 @@ loc_B4A6:
 
 loc_B4A9:
 		call	map_load
-		call	sub_BDEC
+		call	std_load
 		call	sub_EE17
 		call	sub_BB9A
 		mov	dx, 0A6h ; '¦'
@@ -1145,7 +1145,7 @@ sub_B609	proc near
 		push	si
 		call	sub_14529
 		call	sub_EE32
-		call	sub_BEA4
+		call	std_free
 		call	map_free
 		push	0B40100h
 		call	super_clean
@@ -1796,7 +1796,7 @@ sub_BB9A	proc near
 		push	di
 		push	si
 		push	ds
-		mov	bx, word_25FD6
+		mov	bx, _tile_index_ptr
 		sub	bx, 4
 		mov	di, 4FB6h
 		add	di, 600h
@@ -1804,7 +1804,7 @@ sub_BB9A	proc near
 		mov	ax, ds
 		mov	es, ax
 		assume es:_DATA
-		mov	ax, word_21290
+		mov	ax, _std_seg
 		mov	fs, ax
 		mov	ax, map_seg
 		mov	ds, ax
@@ -2007,24 +2007,24 @@ var_1		= byte ptr -1
 		jz	loc_BDE8
 
 loc_BD36:
-		cmp	byte_2CDFB, 0
+		cmp	_tile_scrollspeed, 0
 		jz	loc_BDE8
 		mov	ax, word_2CDFC
 		shr	ax, 4
 		cmp	ax, word_23F06
 		jz	short loc_BDB7
 		mov	word_23F06, ax
-		mov	bx, word_21290
+		mov	bx, _std_seg
 		mov	es, bx
 		assume es:nothing
-		dec	byte_25FD8
+		dec	_tile_row
 		jns	short loc_BD88
-		mov	byte_25FD8, 4
-		inc	word_25FD6
-		inc	word_25FDA
-		mov	bx, word_25FDA
+		mov	_tile_row, 4
+		inc	_tile_index_ptr
+		inc	_tile_scrollspeed_ptr
+		mov	bx, _tile_scrollspeed_ptr
 		mov	dl, es:[bx]
-		mov	byte_2CDFB, dl
+		mov	_tile_scrollspeed, dl
 		or	dl, dl
 		jnz	short loc_BD88
 		mov	word_2CDFC, 0
@@ -2040,9 +2040,9 @@ loc_BD88:
 		add	ax, 4FB6h
 		mov	di, ax
 		xor	ax, ax
-		mov	al, byte_25FD8
+		mov	al, _tile_row
 		shl	ax, 6
-		mov	bx, word_25FD6
+		mov	bx, _tile_index_ptr
 		mov	bl, es:[bx]
 		xor	bh, bh
 		mov	bx, [bx+870h]
@@ -2081,112 +2081,7 @@ loc_BDE8:
 		retn
 sub_BD20	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BDEC	proc near
-		push	si
-		push	di
-		push	ds
-		call	sub_BEA4
-		mov	al, stage_id
-		add	al, 30h	; '0'
-		mov	byte ptr aSt00_std+3, al
-		mov	dx, offset aSt00_std
-		mov	ax, 3D00h
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	dx, 3528h
-		mov	ah, 3Fh	; '?'
-		mov	cx, 2
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		push	bx
-		mov	si, word_23F08
-		push	si
-		call	hmem_allocbyte
-		mov	word_21290, ax
-		mov	ds, ax
-		mov	es, ax
-		assume es:nothing
-		xor	di, di
-		pop	bx
-		mov	dx, di
-		mov	ah, 3Fh	; '?'
-		mov	cx, si
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		pop	ds
-		mov	word ptr dword_2CE92+2,	es
-		mov	word ptr dword_2CE92, di
-		xor	ax, ax
-		mov	cx, 0FFFFh
-		repne scasb
-		mov	word ptr dword_2CE96+2,	es
-		mov	word ptr dword_2CE96, di
-		repne scasb
-		mov	word ptr dword_2CE9A+2,	es
-		mov	word ptr dword_2CE9A, di
-		repne scasb
-		lea	ax, [di+5]
-		mov	word_25FD6, ax
-		mov	byte_25FD8, 0
-		movzx	ax, byte ptr es:[di]
-		inc	ax
-		add	di, ax
-		lea	ax, [di+5]
-		mov	word_25FDA, ax
-		movzx	ax, byte ptr es:[di]
-		mov	byte_2CDFB, al
-		inc	ax
-		add	di, ax
-		mov	dl, es:[di]
-		inc	di
-		mov	bx, 352Ah
-
-loc_BE7C:
-		movzx	ax, byte ptr es:[di]
-		inc	di
-		mov	[bx], di
-		add	bx, 2
-		add	di, ax
-		dec	dl
-		jnz	short loc_BE7C
-		inc	di
-		mov	word ptr dword_23F4A+2, es
-		mov	word ptr dword_23F4A, di
-		setfarfp	farfp_2C926, sub_1600C
-		pop	di
-		pop	si
-		retn
-sub_BDEC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BEA4	proc near
-		cmp	word_21290, 0
-		jz	short locret_BEBA
-		push	word_21290
-		call	hmem_free
-		mov	word_21290, 0
-
-locret_BEBA:
-		retn
-sub_BEA4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8433,7 +8328,7 @@ sub_EE51	endp
 sub_EE58	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_2CDFB, 0
+		cmp	_tile_scrollspeed, 0
 		jnz	short loc_EE92
 		cmp	byte_25352, 1
 		jnz	short loc_EE92
@@ -9577,7 +9472,7 @@ loc_F71C:
 		call	sub_14529
 		call	sub_EE32
 		call	sub_CE68
-		call	sub_BEA4
+		call	std_free
 		call	map_free
 		call	super_free
 		call	graph_hide
@@ -10515,7 +10410,7 @@ loc_10223:
 loc_1024F:
 		mov	word_2CDFE, 0
 		mov	al, byte_2CDFA
-		add	al, byte_2CDFB
+		add	al, _tile_scrollspeed
 		mov	byte_2CDFA, al
 		cmp	al, 10h
 		jb	short loc_10282
@@ -13801,11 +13696,11 @@ loc_11B65:
 		cmp	byte_2CE8C, 0
 		jnz	short loc_11B91
 		mov	byte_228EC, 10h
-		pushd	[dword_2CE92]
+		pushd	[_stage_title]
 		call	_strlen
 		add	sp, 4
 		mov	word_2CE6A, ax
-		pushd	[dword_2CE96]
+		pushd	[_stage_bgm_title]
 		call	_strlen
 		add	sp, 4
 		mov	word_2CE6C, ax
@@ -13849,13 +13744,13 @@ loc_11BDB:
 		sar	ax, 1
 		mov	dx, 1Ch
 		sub	dx, ax
-		call	text_putsa pascal, dx, 13, dword_2CE92, TX_WHITE
+		call	text_putsa pascal, dx, 13, _stage_title, TX_WHITE
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6C
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
-		call	text_putsa pascal, ax, 23, dword_2CE96, TX_WHITE
+		call	text_putsa pascal, ax, 23, _stage_bgm_title, TX_WHITE
 
 loc_11C2D:
 		call	_grcg_setmode_rmw_1
@@ -13971,7 +13866,7 @@ loc_11D37:
 		cmp	byte_2288B, 0
 		jnz	short loc_11D53
 		mov	byte_228EC, 10h
-		pushd	[dword_2CE9A]
+		pushd	[_boss_bgm_title]
 		call	_strlen
 		add	sp, 4
 		mov	word_2CE6E, ax
@@ -13986,7 +13881,7 @@ loc_11D53:
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
-		call	text_putsa pascal, ax, 23, dword_2CE9A, TX_WHITE
+		call	text_putsa pascal, ax, 23, _boss_bgm_title, TX_WHITE
 
 loc_11D90:
 		call	_grcg_setmode_rmw_1
@@ -20012,7 +19907,7 @@ sub_1535A	proc near
 		push	si
 		push	di
 		mov	si, word_2C92A
-		mov	es, word_21290
+		mov	es, _std_seg
 
 loc_15364:
 		mov	di, [si+12h]
@@ -21724,7 +21619,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		les	bx, dword_23F4A
+		les	bx, _std_ip
 		mov	di, es:[bx+1]
 		mov	ax, es:[bx+3]
 		mov	[bp+var_4], ax
@@ -21741,12 +21636,12 @@ loc_15F30:
 		mov	byte ptr [si+18h], 0
 		mov	byte ptr [si+19h], 0
 		mov	word ptr [si+14h], 0
-		les	bx, dword_23F4A
+		les	bx, _std_ip
 		mov	al, es:[bx]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+352Ah]
+		mov	ax, _enemy_script_ptrs[bx]
 		mov	[si+12h], ax
 		cmp	di, 3E70h
 		jnz	short loc_15F6D
@@ -21776,7 +21671,7 @@ loc_15F7C:
 loc_15F8F:
 		mov	ax, [bp+var_4]
 		mov	[si+4],	ax
-		les	bx, dword_23F4A
+		les	bx, _std_ip
 		mov	al, es:[bx+5]
 		mov	[si+20h], al
 		mov	al, es:[bx+6]
@@ -21831,7 +21726,7 @@ sub_15F10	endp
 
 ; Attributes: bp-based frame
 
-sub_1600C	proc far
+std_run	proc far
 
 var_1		= byte ptr -1
 
@@ -21839,15 +21734,15 @@ var_1		= byte ptr -1
 		nop
 		push	cs
 		call	near ptr sub_17322
-		les	bx, dword_23F4A
+		les	bx, _std_ip
 		mov	ax, es:[bx]
 		cmp	ax, frame
 		jnz	short locret_16063
-		add	word ptr dword_23F4A, 2
-		les	bx, dword_23F4A
+		add	word ptr _std_ip, 2
+		les	bx, _std_ip
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_23F4A
+		inc	word ptr _std_ip
 
 loc_16035:
 		cmp	_midboss_active, 0
@@ -21855,19 +21750,19 @@ loc_16035:
 		call	sub_15F10
 
 loc_1603F:
-		add	word ptr dword_23F4A, 8
+		add	word ptr _std_ip, 8
 		dec	[bp+var_1]
 		cmp	[bp+var_1], 0
 		ja	short loc_16035
-		les	bx, dword_23F4A
+		les	bx, _std_ip
 		cmp	word ptr es:[bx], 0
 		jnz	short locret_16063
-		setfarfp	farfp_2C926, nullsub_1
+		setfarfp	_stage_vm, nullsub_1
 
 locret_16063:
 		leave
 		retf
-sub_1600C	endp
+std_run	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30993,8 +30888,8 @@ loc_1AF24:
 		push	ds
 		push	offset a_dm09_tx2 ; "_DM09.TX2"
 		call	sub_ED87
-		mov	word ptr dword_2CE9A+2,	ds
-		mov	word ptr dword_2CE9A, offset aTH05_10
+		mov	word ptr _boss_bgm_title+2, ds
+		mov	word ptr _boss_bgm_title, offset aTH05_10
 		mov	eax, dword_2634E
 		mov	_boss_pos.cur, eax
 		setfarfp	_boss_update, sub_1B9F2
@@ -31005,8 +30900,8 @@ loc_1AF66:
 		push	ds
 		push	offset a_dm08_tx2 ; "_DM08.TX2"
 		call	sub_ED87
-		mov	word ptr dword_2CE9A+2,	ds
-		mov	word ptr dword_2CE9A, offset aTH05_11
+		mov	word ptr _boss_bgm_title+2, ds
+		mov	word ptr _boss_bgm_title, offset aTH05_11
 		setfarfp	_boss_update, sub_1C518
 
 loc_1AF85:
@@ -39878,9 +39773,7 @@ aSt00_map	db  'st00.map',0
 		db  25h	; %
 		db 0C0h
 		db  26h	; &
-word_21290	dw 0
-aSt00_std	db  'ST00.STD',0
-		db 0
+include th04/formats/std[data].asm
 off_2129C	dw offset sub_15A5C
 		dw offset sub_15A8E
 		dw offset sub_15A70
@@ -42795,24 +42688,7 @@ word_23F01	dw ?
 byte_23F04	db ?
 		db ?
 word_23F06	dw ?
-word_23F08	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-dword_23F4A	dd ?
+include th04/formats/std[bss].asm
 word_23F4E	dw ?
 word_23F50	dw ?
 dword_23F52	dd ?
@@ -44871,10 +44747,7 @@ map_seg	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_25FD6	dw ?
-byte_25FD8	db ?
-		db ?
-word_25FDA	dw ?
+include th04/formats/tiles[bss].asm
 dword_25FDC	dd ?
 frame	dw ?
 include th03/frame_mod[bss].asm
@@ -51439,7 +51312,8 @@ word_2C0C8	dw ?
 		dd    ?	;
 		dd    ?	;
 dword_2C922	dd ?
-farfp_2C926	dd ?
+public _stage_vm
+_stage_vm	dd ?
 word_2C92A	dw ?
 include th04/circles_color[bss].asm
 fp_2C92E	dw ?
@@ -51773,7 +51647,8 @@ grcgcolor_2CC8E	dw ?
 		dd    ?	;
 word_2CDF8	dw ?
 byte_2CDFA	db ?
-byte_2CDFB	db ?
+public _tile_scrollspeed
+_tile_scrollspeed	db ?
 word_2CDFC	dw ?
 word_2CDFE	dw ?
 byte_2CE00	db ?
@@ -51848,9 +51723,10 @@ fp_2CE8A	dw ?
 byte_2CE8C	db ?
 		db ?
 dword_2CE8E	dd ?
-dword_2CE92	dd ?
-dword_2CE96	dd ?
-dword_2CE9A	dd ?
+public _stage_title, _stage_bgm_title, _boss_bgm_title
+_stage_title    	dd ?
+_stage_bgm_title	dd ?
+_boss_bgm_title 	dd ?
 word_2CE9E	dw ?
 player_pos	motion_t <?>
 word_2CEAC	dw ?

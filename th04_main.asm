@@ -357,7 +357,7 @@ loc_AB9E:
 loc_ABBA:
 		call	fp_255CA
 		call	sub_19EE4
-		call	farfp_25986
+		call	_stage_vm
 		cmp	byte_256A8, 0
 		jnz	short loc_ABD4
 		call	_boss_bg_render
@@ -886,7 +886,7 @@ loc_B141:
 
 loc_B144:
 		call	map_load
-		call	sub_B6D1
+		call	std_load
 		call	sub_CED4
 		call	sub_BAA2
 		mov	dx, 0A6h ; '¦'
@@ -997,7 +997,7 @@ sub_B29E	proc near
 		push	si
 		call	sub_1DFD4
 		call	sub_CF1E
-		call	sub_B79E
+		call	std_free
 		call	map_free
 		push	800100h
 		call	super_clean
@@ -1427,112 +1427,7 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_B682	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B6D1	proc near
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		call	sub_B79E
-		les	bx, _humaconfig
-		mov	al, es:[bx+13h]
-		les	bx, off_21C5A
-		mov	es:[bx+3], al
-		push	word ptr off_21C5A+2
-		push	bx
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	2
-		call	file_read
-		push	ss
-		lea	ax, [bp+var_3]
-		push	ax
-		push	1
-		call	file_read
-		dec	[bp+var_2]
-		push	[bp+var_2]
-		call	hmem_allocbyte
-		mov	word_21C58, ax
-		mov	es, word_21C58
-		xor	si, si
-		push	es
-		push	si
-		push	[bp+var_2]
-		call	file_read
-		call	file_close
-		mov	es, word_21C58
-		mov	word_266C0, 4
-		mov	byte_266C2, 0
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		add	si, ax
-		mov	al, es:[si]
-		mov	[bp+var_3], al
-		lea	ax, [si+5]
-		mov	word_266C4, ax
-		mov	al, es:[si]
-		mov	byte_255B7, al
-		mov	al, [bp+var_3]
-		mov	ah, 0
-		inc	ax
-		add	si, ax
-		xor	di, di
-		mov	al, es:[si]
-		mov	[bp+var_4], al
-		inc	si
-
-loc_B768:
-		mov	al, es:[si]
-		mov	[bp+var_3], al
-		inc	si
-		mov	bx, di
-		add	bx, bx
-		mov	[bx+3D7Ah], si
-		inc	di
-		mov	ah, 0
-		add	si, ax
-		dec	[bp+var_4]
-		cmp	[bp+var_4], 0
-		ja	short loc_B768
-		inc	si
-		mov	word ptr dword_250FA+2,	es
-		mov	word ptr dword_250FA, si
-		setfarfp	farfp_25986, sub_17DD1
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B6D1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B79E	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_21C58, 0
-		jz	short loc_B7B7
-		push	word_21C58
-		call	hmem_free
-		mov	word_21C58, 0
-
-loc_B7B7:
-		pop	bp
-		retn
-sub_B79E	endp
-
+include th04/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1613,23 +1508,23 @@ var_1		= byte ptr -1
 		jz	loc_B8F8
 
 loc_B84B:
-		cmp	byte_255B7, 0
+		cmp	_tile_scrollspeed, 0
 		jz	loc_B8F8
 		mov	ax, word_255B8
 		shr	ax, 4
 		cmp	ax, word_25100
 		jz	short loc_B8CE
 		mov	word_25100, ax
-		mov	bx, word_21C58
+		mov	bx, _std_seg
 		mov	es, bx
-		dec	byte_266C2
+		dec	_tile_row
 		jns	short loc_B89D
-		mov	byte_266C2, 4
-		inc	word_266C0
-		inc	word_266C4
-		mov	bx, word_266C4
+		mov	_tile_row, 4
+		inc	_tile_index
+		inc	_tile_scrollspeed_ptr
+		mov	bx, _tile_scrollspeed_ptr
 		mov	dl, es:[bx]
-		mov	byte_255B7, dl
+		mov	_tile_scrollspeed, dl
 		or	dl, dl
 		jnz	short loc_B89D
 		mov	word_255B8, 0
@@ -1645,9 +1540,9 @@ loc_B89D:
 		add	ax, 4D40h
 		mov	di, ax
 		xor	ax, ax
-		mov	al, byte_266C2
+		mov	al, _tile_row
 		shl	ax, 6
-		mov	bx, word_266C0
+		mov	bx, _tile_index
 		mov	bl, es:[bx]
 		xor	bh, bh
 		add	bl, bl
@@ -1932,7 +1827,7 @@ sub_BAA2	proc near
 		xor	dx, dx
 		mov	ax, ds
 		mov	es, ax
-		mov	ax, word_21C58
+		mov	ax, _std_seg
 		mov	fs, ax
 		mov	ax, map_seg
 		mov	ds, ax
@@ -4463,7 +4358,7 @@ sub_CCD6	proc near
 loc_CCFE:
 		mov	word_255BA, 0
 		mov	al, byte_255B6
-		add	al, byte_255B7
+		add	al, _tile_scrollspeed
 		mov	byte_255B6, al
 		cmp	al, 10h
 		jb	short loc_CD31
@@ -4763,7 +4658,7 @@ sub_CF3D	endp
 sub_CF44	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_255B7, 0
+		cmp	_tile_scrollspeed, 0
 		jnz	short loc_CFB6
 		cmp	byte_25A3C, 1
 		jnz	short loc_CFB6
@@ -4774,7 +4669,7 @@ sub_CF44	proc near
 
 loc_CF63:
 		call	_cdg_free pascal, 31
-		call	sub_B79E
+		call	std_free
 		call	map_free
 
 loc_CF70:
@@ -8074,7 +7969,7 @@ loc_E813:
 		call	sub_1DFD4
 		call	sub_CF1E
 		call	sub_FF89
-		call	sub_B79E
+		call	std_free
 		call	map_free
 		call	super_free
 		call	graph_hide
@@ -18688,7 +18583,7 @@ loc_1422D:
 		jnz	loc_142E1
 		push	offset _midboss_pos
 		call	_motion_update_2
-		cmp	byte_255B7, 2
+		cmp	_tile_scrollspeed, 2
 		ja	short loc_142AC
 		mov	ax, _midboss_pos.cur.x
 		mov	word_25982, ax
@@ -18735,7 +18630,7 @@ loc_142AC:
 		push	800030h
 		call	sub_13E8C
 		call	snd_se_play pascal, 12
-		mov	byte_255B7, 4
+		mov	_tile_scrollspeed, 4
 		jmp	short loc_142E4
 ; ---------------------------------------------------------------------------
 
@@ -20892,7 +20787,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	si, word_2598A
-		mov	es, word_21C58
+		mov	es, _std_seg
 
 loc_155EB:
 		mov	di, [si+16h]
@@ -22827,7 +22722,7 @@ var_2		= word ptr -2
 loc_16638:
 		cmp	word_2671A, 0
 		jnz	short loc_16651
-		setfarfp	farfp_25986, nullsub_2
+		setfarfp	_stage_vm, nullsub_2
 		mov	frames_until_midboss, 0
 
 loc_16651:
@@ -25479,7 +25374,7 @@ loc_17D0E:
 		mov	word ptr [si+18h], 0
 		mov	bx, [bp+arg_6]
 		add	bx, bx
-		mov	ax, [bx+3D7Ah]
+		mov	ax, _enemy_script_ptrs[bx]
 		mov	[si+16h], ax
 		cmp	di, 3E70h
 		jnz	short loc_17D3C
@@ -25563,26 +25458,26 @@ sub_17CF3	endp
 
 ; Attributes: bp-based frame
 
-sub_17DD1	proc far
+std_run	proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		les	bx, dword_250FA
+		les	bx, _std_ip
 		assume es:nothing
 		mov	ax, es:[bx]
 		cmp	ax, frame
 		jnz	short locret_17E3C
-		add	word ptr dword_250FA, 2
-		les	bx, dword_250FA
+		add	word ptr _std_ip, 2
+		les	bx, _std_ip
 		mov	al, es:[bx]
 		mov	[bp-1],	al
-		inc	word ptr dword_250FA
+		inc	word ptr _std_ip
 
 loc_17DF5:
 		cmp	_midboss_active, 0
 		jnz	short loc_17E18
-		les	bx, dword_250FA
+		les	bx, _std_ip
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax
@@ -25594,19 +25489,19 @@ loc_17DF5:
 		call	sub_17CF3
 
 loc_17E18:
-		add	word ptr dword_250FA, 8
+		add	word ptr _std_ip, 8
 		dec	byte ptr [bp-1]
 		cmp	byte ptr [bp-1], 0
 		ja	short loc_17DF5
-		les	bx, dword_250FA
+		les	bx, _std_ip
 		cmp	word ptr es:[bx], 0
 		jnz	short locret_17E3C
-		setfarfp	farfp_25986, nullsub_2
+		setfarfp	_stage_vm, nullsub_2
 
 locret_17E3C:
 		leave
 		retf
-sub_17DD1	endp
+std_run	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26769,7 +26664,7 @@ loc_18706:
 loc_1872F:
 		cmp	word_2671A, 0
 		jnz	short loc_1876B
-		setfarfp	farfp_25986, nullsub_2
+		setfarfp	_stage_vm, nullsub_2
 		mov	frames_until_midboss, 0
 		mov	fp_259E8, offset sub_180BB
 		mov	byte_259EF, 0
@@ -32228,7 +32123,7 @@ var_2		= word ptr -2
 loc_1B497:
 		cmp	word_2671A, 0
 		jnz	short loc_1B4BA
-		setfarfp	farfp_25986, nullsub_2
+		setfarfp	_stage_vm, nullsub_2
 		mov	frames_until_midboss, 0
 		mov	byte_25A08, 0
 		mov	byte_25A1B, 0
@@ -41883,11 +41778,7 @@ include th04/snd/snd[data].asm
 include th04/snd/load[data].asm
 include th03/snd/se_state[data].asm
 include th03/formats/cdg[data].asm
-word_21C58	dw 0
-off_21C5A	dd aSt00_std
-					; "ST00.STD"
-aSt00_std	db 'ST00.STD',0
-		db 0
+include th04/formats/std[data].asm
 ; char aMaine[]
 aMaine		db 'maine',0
 ; char aMaine_0[]
@@ -45218,23 +45109,7 @@ include th02/snd/load[bss].asm
 word_24CB2	dw ?
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-dword_250FA	dd ?
+include th04/formats/std[bss].asm
 byte_250FE	db ?
 		db ?
 word_25100	dw ?
@@ -45500,7 +45375,8 @@ byte_255B3	db ?
 byte_255B4	db ?
 		db ?
 byte_255B6	db ?
-byte_255B7	db ?
+public _tile_scrollspeed
+_tile_scrollspeed	db ?
 word_255B8	dw ?
 word_255BA	dw ?
 byte_255BC	db ?
@@ -45809,7 +45685,8 @@ byte_25980	db ?
 		db ?
 word_25982	dw ?
 word_25984	dw ?
-farfp_25986	dd ?
+public _stage_vm
+_stage_vm	dd ?
 word_2598A	dw ?
 word_2598C	dw ?
 player_pos	motion_t <?>
@@ -46708,10 +46585,7 @@ map_seg	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_266C0	dw ?
-byte_266C2	db ?
-		db ?
-word_266C4	dw ?
+include th04/formats/tiles[bss].asm
 dword_266C6	dd ?
 frame	dw ?
 include th03/frame_mod[bss].asm
