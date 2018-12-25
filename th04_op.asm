@@ -185,9 +185,9 @@ var_4		= word ptr -4
 		call	file_close
 		mov	ax, [bp+var_4]
 		mov	[bp+var_C], ax
-		mov	word ptr dword_10DA4+2,	ax
-		mov	word ptr dword_10DA4, 0
-		les	bx, dword_10DA4
+		mov	word ptr _humaconfig+2, ax
+		mov	word ptr _humaconfig, 0
+		les	bx, _humaconfig
 		mov	al, [bp+var_A]
 		mov	es:[bx+0Fh], al
 		mov	al, [bp+var_9]
@@ -206,23 +206,23 @@ var_4		= word ptr -4
 		jnz	short loc_A7BE
 
 loc_A7B5:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+3Ah], 3
 
 loc_A7BE:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Bh], 2
 		jbe	short loc_A7CE
 		mov	byte ptr es:[bx+3Bh], 2
 
 loc_A7CE:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+10h], 3
 		jb	short loc_A7DE
 		mov	byte ptr es:[bx+10h], 0
 
 loc_A7DE:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+18h], 3
 		jb	short locret_A7EE
 		mov	byte ptr es:[bx+18h], 0
@@ -254,7 +254,7 @@ var_2		= byte ptr -2
 		pushd	0
 		push	0
 		call	file_seek
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	[bp+var_8], al
 		mov	al, es:[bx+3Ah]
@@ -321,7 +321,7 @@ var_1		= byte ptr -1
 		pushd	0
 		push	0
 		call	file_seek
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	[bp+var_A], al
 		mov	al, es:[bx+3Ah]
@@ -359,7 +359,7 @@ sub_A873	endp
 sub_A8F1	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+11h], 0
 		mov	al, es:[bx+3Ah]
 		mov	es:[bx+0Ch], al
@@ -370,14 +370,14 @@ sub_A8F1	proc near
 		call	sub_D708
 		or	ax, ax
 		jnz	short loc_A96A
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
 		call	sub_A7F0
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
 		call	sub_E0AC
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+1Ah], 0
 		jnz	short loc_A957
 		pushd	0
@@ -412,7 +412,7 @@ sub_A8F1	endp
 sub_A96C	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+11h], 6
 		mov	byte ptr es:[bx+0Ch], 3
 		mov	byte ptr es:[bx+0Eh], 2
@@ -421,7 +421,7 @@ sub_A96C	proc near
 		call	sub_D708
 		or	ax, ax
 		jnz	short loc_A9C7
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
 		call	sub_A7F0
@@ -449,7 +449,7 @@ sub_A96C	endp
 sub_A9C9	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+11h], 0
 		mov	byte ptr es:[bx+0Ch], 3
 		mov	byte ptr es:[bx+0Eh], 3
@@ -459,7 +459,7 @@ sub_A9C9	proc near
 		mov	byte ptr es:[bx+3Eh], 1
 
 loc_A9EF:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+3Eh]
 		mov	ah, 0
 		dec	ax
@@ -470,7 +470,7 @@ loc_A9EF:
 		jmp	cs:off_AAAD[bx]
 
 loc_AA08:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+12h], 30h ; '0'
 		mov	byte ptr es:[bx+13h], 33h ; '3'
 		mov	byte ptr es:[bx+19h], 0
@@ -479,7 +479,7 @@ loc_AA08:
 ; ---------------------------------------------------------------------------
 
 loc_AA22:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+12h], 31h ; '1'
 		mov	byte ptr es:[bx+13h], 30h ; '0'
 		mov	byte ptr es:[bx+19h], 0
@@ -488,7 +488,7 @@ loc_AA22:
 ; ---------------------------------------------------------------------------
 
 loc_AA3C:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+12h], 30h ; '0'
 		mov	byte ptr es:[bx+13h], 32h ; '2'
 		mov	byte ptr es:[bx+19h], 1
@@ -497,7 +497,7 @@ loc_AA3C:
 ; ---------------------------------------------------------------------------
 
 loc_AA56:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+12h], 31h ; '1'
 		mov	byte ptr es:[bx+13h], 31h ; '1'
 		mov	byte ptr es:[bx+19h], 1
@@ -563,7 +563,7 @@ loc_AAF3:
 		push	(272 shl 16) or 224
 		push	10
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		add	ax, 16h
@@ -690,13 +690,13 @@ loc_AC24:
 		push	16
 		call	_cdg_put_nocolors
 		push	(320 shl 16) or 224
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		add	ax, 21
 		push	ax
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		add	ax, 6
@@ -711,7 +711,7 @@ loc_AC5C:
 		push	17
 		call	_cdg_put_nocolors
 		push	14000F0h
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+3Ah]
 		mov	ah, 0
 		push	ax
@@ -725,7 +725,7 @@ loc_AC85:
 		push	18
 		call	_cdg_put_nocolors
 		push	1400100h
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+3Bh]
 		mov	ah, 0
 		push	ax
@@ -738,7 +738,7 @@ loc_ACAE:
 		push	(224 shl 16) or 272
 		push	19
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+10h], 0
 		jnz	short loc_ACCB
 		mov	ax, 1Ch
@@ -746,7 +746,7 @@ loc_ACAE:
 ; ---------------------------------------------------------------------------
 
 loc_ACCB:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		add	ax, 18h
@@ -756,7 +756,7 @@ loc_ACD8:
 		push	(320 shl 16) or 272
 		push	ax
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		add	ax, 0Ch
@@ -767,7 +767,7 @@ loc_ACF7:
 		push	(224 shl 16) or 288
 		push	20
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+18h], 0
 		jnz	short loc_AD14
 		mov	ax, 1Ch
@@ -775,7 +775,7 @@ loc_ACF7:
 ; ---------------------------------------------------------------------------
 
 loc_AD14:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+18h]
 		mov	ah, 0
 		push	ax
@@ -788,7 +788,7 @@ loc_AD25:
 		push	(320 shl 16) or 288
 		push	ax
 		call	_cdg_put_nocolors
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+18h]
 		mov	ah, 0
 		add	ax, 0Fh
@@ -797,7 +797,7 @@ loc_AD25:
 
 loc_AD44:
 		push	(272 shl 16) or 304
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+49h]
 		mov	ah, 0
 		mov	dx, 21h	; '!'
@@ -805,7 +805,7 @@ loc_AD44:
 		push	dx
 		call	_cdg_put_nocolors
 		mov	di, 100h
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+49h]
 		mov	ah, 0
 		add	ax, 12h
@@ -1192,7 +1192,7 @@ loc_B0E3:
 ; ---------------------------------------------------------------------------
 
 loc_B0F4:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+0Fh], 1
 		mov	byte ptr es:[bx+3Ah], 3
 		mov	byte ptr es:[bx+3Bh], 2
@@ -1200,7 +1200,7 @@ loc_B0F4:
 		mov	byte ptr es:[bx+18h], 1
 		mov	byte ptr es:[bx+49h], 1
 		kajacall	KAJA_SONG_STOP
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -1236,7 +1236,7 @@ loc_B178:
 		jmp	cs:off_B36B[bx]
 
 loc_B18C:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	byte ptr es:[bx+0Fh]
 		cmp	byte ptr es:[bx+0Fh], 3
 		jbe	loc_B246
@@ -1245,7 +1245,7 @@ loc_B18C:
 ; ---------------------------------------------------------------------------
 
 loc_B1A5:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	byte ptr es:[bx+3Ah]
 		cmp	byte ptr es:[bx+3Ah], 6
 		jbe	loc_B246
@@ -1254,7 +1254,7 @@ loc_B1A5:
 ; ---------------------------------------------------------------------------
 
 loc_B1BE:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	byte ptr es:[bx+3Bh]
 		cmp	byte ptr es:[bx+3Bh], 2
 		jbe	short loc_B246
@@ -1263,7 +1263,7 @@ loc_B1BE:
 ; ---------------------------------------------------------------------------
 
 loc_B1D4:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	byte ptr es:[bx+10h]
 		cmp	byte ptr es:[bx+10h], 3
 		jb	short loc_B1E8
@@ -1271,7 +1271,7 @@ loc_B1D4:
 
 loc_B1E8:
 		kajacall	KAJA_SONG_STOP
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -1285,7 +1285,7 @@ loc_B1E8:
 ; ---------------------------------------------------------------------------
 
 loc_B21C:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+18h], 0
 		jnz	short loc_B22E
 		mov	byte ptr es:[bx+18h], 2
@@ -1293,13 +1293,13 @@ loc_B21C:
 ; ---------------------------------------------------------------------------
 
 loc_B22E:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		dec	byte ptr es:[bx+18h]
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B238:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, 1
 		sub	al, es:[bx+49h]
 		mov	es:[bx+49h], al
@@ -1323,43 +1323,43 @@ loc_B250:
 		jmp	cs:off_B35F[bx]
 
 loc_B26D:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+0Fh], 0
 		jnz	short loc_B27D
 		mov	byte ptr es:[bx+0Fh], 4
 
 loc_B27D:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		dec	byte ptr es:[bx+0Fh]
 		jmp	loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B288:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Ah], 1
 		jnz	short loc_B298
 		mov	byte ptr es:[bx+3Ah], 7
 
 loc_B298:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		dec	byte ptr es:[bx+3Ah]
 		jmp	loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B2A3:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Bh], 0
 		jnz	short loc_B2B3
 		mov	byte ptr es:[bx+3Bh], 3
 
 loc_B2B3:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		dec	byte ptr es:[bx+3Bh]
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B2BD:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+10h], 0
 		jnz	short loc_B2CF
 		mov	byte ptr es:[bx+10h], 2
@@ -1367,12 +1367,12 @@ loc_B2BD:
 ; ---------------------------------------------------------------------------
 
 loc_B2CF:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		dec	byte ptr es:[bx+10h]
 
 loc_B2D7:
 		kajacall	KAJA_SONG_STOP
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -1386,7 +1386,7 @@ loc_B2D7:
 ; ---------------------------------------------------------------------------
 
 loc_B30B:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	byte ptr es:[bx+18h]
 		cmp	byte ptr es:[bx+18h], 3
 		jb	short loc_B32F
@@ -1395,7 +1395,7 @@ loc_B30B:
 ; ---------------------------------------------------------------------------
 
 loc_B321:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, 1
 		sub	al, es:[bx+49h]
 		mov	es:[bx+49h], al
@@ -1476,15 +1476,15 @@ loc_B3AB:
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
 		call	sub_A74C
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+0Fh], 0FFh
 		jnz	short loc_B3D3
 		call	sub_B9CE
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+0Fh], 1
 
 loc_B3D3:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -1493,15 +1493,15 @@ loc_B3D3:
 		push	ax
 		call	snd_determine_modes
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+48h], 0
 		jnz	short loc_B40D
 		call	sub_BC35
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	byte ptr es:[bx+48h], 1
 
 loc_B40D:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_B420
 		kajacall	KAJA_SONG_STOP
@@ -1549,7 +1549,7 @@ loc_B469:
 		xor	si, si
 
 loc_B46B:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		inc	dword ptr es:[bx+14h]
 		push	1
 		call	frame_delay
@@ -2160,7 +2160,7 @@ loc_B87A:
 		mov	word_11E8A, 4
 		push	200080h
 		call	sub_B65C
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+10h], al
 		leave
@@ -2278,7 +2278,7 @@ loc_B997:
 		mov	word_11E8A, 4
 		push	200080h
 		call	sub_B65C
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+18h], al
 		leave
@@ -3803,7 +3803,7 @@ sub_CA94	proc near
 		kajacall	KAJA_SONG_FADE, -128
 		push	1
 		call	palette_black_out
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		assume es:nothing
 		mov	al, es:[bx+0Fh]
 		mov	byte_1327B, al
@@ -3949,7 +3949,7 @@ loc_CC6F:
 		jb	loc_CBEE
 
 loc_CC78:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	byte_1327B, al
 		push	ds
@@ -4087,7 +4087,7 @@ loc_CDC4:
 		freePISlotLarge	3
 		freePISlotLarge	4
 		freePISlotLarge	5
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_CE50
 		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
@@ -4813,7 +4813,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_D47E
 		mov	ax, 4
@@ -4821,7 +4821,7 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_D47E:
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 
@@ -5110,7 +5110,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_D78D
 		xor	di, di
@@ -5396,7 +5396,7 @@ loc_D994:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
-		les	bx, dword_10DA4
+		les	bx, _humaconfig
 		mov	al, byte_132B9
 		mov	es:[bx+19h], al
 		mov	al, byte_132B8
@@ -6500,7 +6500,8 @@ aSlb1_pi	db 'slb1.pi',0
 
 	.data?
 
-dword_10DA4	dd ?
+public _humaconfig
+_humaconfig	dd ?
 byte_10DA8	db ?
 		db ?
 fp_10DAA	dw ?

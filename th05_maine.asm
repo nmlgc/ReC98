@@ -250,8 +250,8 @@ var_4		= word ptr -4
 		call	file_read
 		call	file_close
 		mov	si, [bp+var_4]
-		mov	word ptr dword_11E6E+2,	si
-		mov	word ptr dword_11E6E, 0
+		mov	word ptr _ksoconfig+2, si
+		mov	word ptr _ksoconfig, 0
 		mov	ax, si
 		pop	si
 		leave
@@ -291,7 +291,7 @@ sub_A576	endp
 sub_A5A4	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FEh
 		jnz	short loc_A5BD
 		les	bx, off_10190
@@ -300,7 +300,7 @@ sub_A5A4	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A5BD:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jnz	short loc_A5D3
 		les	bx, off_10190
@@ -313,7 +313,7 @@ loc_A5D3:
 		mov	byte ptr es:[bx+3], 31h	; '1'
 
 loc_A5DC:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
 		add	al, 30h	; '0'
 		les	bx, off_10190
@@ -348,7 +348,7 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aKaikidan1_dat
 		call	sub_F0B4
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -358,12 +358,12 @@ _envp		= dword	ptr  0Ch
 		call	snd_determine_modes
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		call	graph_show
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
 		push	64h ; 'd'
 		call	frame_delay
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FEh
 		jb	short loc_A665
 		call	sub_A5A4
@@ -372,7 +372,7 @@ _envp		= dword	ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_A665:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jnz	short loc_A67E
 		call	sub_A5A4
@@ -1967,7 +1967,7 @@ sub_B3CB	proc near
 		push	bp
 		mov	bp, sp
 		mov	allcast_step, 0
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
 		mov	byte_15018, al
 		mov	PaletteTone, 0
@@ -2382,7 +2382,7 @@ loc_B73B:
 ; ---------------------------------------------------------------------------
 
 loc_B740:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		add	bx, cx
 		mov	al, es:[bx+20h]
 		mov	ah, 0
@@ -2394,7 +2394,7 @@ loc_B740:
 		add	dx, 0FF60h
 		cmp	ax, dx
 		jg	short loc_B789
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		add	bx, cx
 		mov	al, es:[bx+20h]
 		mov	ah, 0
@@ -2508,7 +2508,7 @@ loc_B828:
 ; ---------------------------------------------------------------------------
 
 loc_B831:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		add	bx, cx
 		mov	al, es:[bx+20h]
 		add	al, 0A0h
@@ -2523,7 +2523,7 @@ loc_B831:
 loc_B84F:
 		or	cx, cx
 		jge	short loc_B831
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jb	short loc_B86C
 		mov	al, byte_15176
@@ -2537,7 +2537,7 @@ loc_B84F:
 loc_B86C:
 		cmp	byte_15177, 4
 		jnb	short loc_B88B
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+13h]
 		add	al, 0A1h ; '°'
 		mov	dl, byte_15176
@@ -3910,7 +3910,7 @@ var_2		= word ptr -2
 		push	ds
 		push	offset aSctm1_bft ; "sctm1.bft"
 		call	super_entry_bfnt
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_C256
 		mov	al, 4
@@ -3918,12 +3918,12 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_C256:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 
 loc_C25E:
 		mov	byte_15177, al
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
 		mov	byte ptr word_15178, al
 		mov	[bp+var_4], 0
@@ -3950,7 +3950,7 @@ loc_C28C:
 		mov	ah, 0
 		push	ax
 		call	sub_B646
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_C2AD
 		cmp	byte_15177, 4
@@ -3984,7 +3984,7 @@ loc_C2BB:
 
 loc_C2EB:
 		call	sub_EB66
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jb	short loc_C307
 		cmp	byte ptr es:[bx+20h], 0
@@ -4682,7 +4682,7 @@ sub_C8AE	proc near
 var_4		= dword	ptr -4
 
 		enter	4, 0
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
 		mov	al, es:[bx+0Dh]
@@ -4723,7 +4723,7 @@ loc_C906:
 		mov	[bp+var_4], 0
 
 loc_C90E:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+0Eh]
 		mov	ah, 0
 		or	ax, ax
@@ -4749,13 +4749,13 @@ loc_C93C:
 		add	[bp+var_4], 3E8h
 
 loc_C944:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+16h], 0
 		jz	short loc_C957
 		add	[bp+var_4], 7D0h
 
 loc_C957:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	word ptr es:[bx+3Ah], 0
 		jz	short loc_C971
 		mov	ax, es:[bx+3Ah]
@@ -4764,7 +4764,7 @@ loc_C957:
 		add	[bp+var_4], eax
 
 loc_C971:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+1Bh]
 		mov	ah, 0
 		mov	dl, es:[bx+1Ch]
@@ -4826,14 +4826,14 @@ off_C9F6	dw offset loc_C8D4
 sub_CA02	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FFh
 		jz	short loc_CA17
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jnz	short loc_CA57
 
 loc_CA17:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+11h], 0
 		jnz	short loc_CA26
 		mov	al, 4
@@ -4842,7 +4842,7 @@ loc_CA17:
 ; ---------------------------------------------------------------------------
 
 loc_CA26:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+27h], 7
 		ja	short loc_CA35
 		mov	al, 1
@@ -4851,7 +4851,7 @@ loc_CA26:
 ; ---------------------------------------------------------------------------
 
 loc_CA35:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Bh], 6
 		jb	short loc_CA44
 		mov	al, 7
@@ -4860,7 +4860,7 @@ loc_CA35:
 ; ---------------------------------------------------------------------------
 
 loc_CA44:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+0Ch], 0Fh
 		jb	short loc_CA53
 		mov	al, 8
@@ -4875,7 +4875,7 @@ loc_CA53:
 ; ---------------------------------------------------------------------------
 
 loc_CA57:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FEh
 		jnz	short loc_CA66
 		mov	al, 2
@@ -4884,7 +4884,7 @@ loc_CA57:
 ; ---------------------------------------------------------------------------
 
 loc_CA66:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+1Ch]
 		mov	ah, 0
 		mov	dl, es:[bx+1Bh]
@@ -4898,7 +4898,7 @@ loc_CA66:
 ; ---------------------------------------------------------------------------
 
 loc_CA80:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 4
 		jb	short loc_CA97
 		cmp	word ptr es:[bx+32h], 15Eh
@@ -5021,7 +5021,7 @@ var_4		= dword	ptr -4
 		push	ds
 		push	offset aVavVVSrso ; "Ç†Ç»ÇΩÇÃòrëO"
 		call	sub_E914
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_CBDB
 		mov	al, 4
@@ -5029,7 +5029,7 @@ var_4		= dword	ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_CBDB:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 
 loc_CBE3:
@@ -5055,9 +5055,9 @@ loc_CBE3:
 		mov	ax, word_116E8
 		add	ax, 30h	; '0'
 		push	ax
-		mov	ax, word ptr dword_11E6E
+		mov	ax, word ptr _ksoconfig
 		add	ax, 20h	; ' '
-		push	word ptr dword_11E6E+2
+		push	word ptr _ksoconfig+2
 		push	ax
 		call	sub_C67F
 		mov	ax, word_116E2
@@ -5066,7 +5066,7 @@ loc_CBE3:
 		mov	ax, word_116E8
 		add	ax, 48h	; 'H'
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+1Bh]
 		mov	ah, 0
 		push	ax
@@ -5077,7 +5077,7 @@ loc_CBE3:
 		mov	ax, word_116E8
 		add	ax, 60h
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+1Ch]
 		mov	ah, 0
 		push	ax
@@ -5103,7 +5103,7 @@ loc_CBE3:
 		push	offset aI_0
 		call	sub_E914
 		mov	byte_1517C, 1
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jz	short loc_CCC6
 		cmp	byte ptr es:[bx+1Ah], 0FEh
@@ -5122,7 +5122,7 @@ loc_CCB3:
 ; ---------------------------------------------------------------------------
 
 loc_CCC6:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jnz	short loc_CCD7
 		mov	word ptr es:[bx+2Ch], 3200h
@@ -5137,7 +5137,7 @@ loc_CCD7:
 		push	3200h
 
 loc_CCE8:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		push	word ptr es:[bx+2Ch]
 		call	sub_C729
 		mov	byte_1517C, 0
@@ -5147,7 +5147,7 @@ loc_CCE8:
 		mov	ax, word_116E8
 		add	ax, 90h	; 'ÅE
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		push	word ptr es:[bx+36h]
 		push	word ptr es:[bx+38h]
 		call	sub_C729
@@ -5157,7 +5157,7 @@ loc_CCE8:
 		mov	ax, word_116E8
 		add	ax, 0A8h ; '®'
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		push	word ptr es:[bx+2Eh]
 		push	word ptr es:[bx+30h]
 		call	sub_C729
@@ -5167,7 +5167,7 @@ loc_CCE8:
 		mov	ax, word_116E8
 		add	ax, 0C0h
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		push	word ptr es:[bx+32h]
 		push	word ptr es:[bx+34h]
 		call	sub_C729
@@ -5179,13 +5179,13 @@ loc_CCE8:
 		mov	ax, word_116E8
 		add	ax, 0F0h ; 'ÅE
 		push	ax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	eax, es:[bx+40h]
 		mov	ebx, 0Ah
 		xor	edx, edx
 		div	ebx
 		push	ax
-		mov	bx, word ptr dword_11E6E
+		mov	bx, word ptr _ksoconfig
 		mov	eax, es:[bx+3Ch]
 		mov	ebx, 0Ah
 		xor	edx, edx
@@ -5200,7 +5200,7 @@ loc_CCE8:
 		mov	dword_1517E, eax
 		mov	eax, dword_15182
 		add	dword_1517E, eax
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+4Bh], 0Ah
 		jb	short loc_CDCB
 		add	dword_1517E, 7A120h
@@ -5208,7 +5208,7 @@ loc_CCE8:
 ; ---------------------------------------------------------------------------
 
 loc_CDCB:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		movzx	eax, byte ptr es:[bx+4Ah]
 		imul	eax, 1388h
 		add	dword_1517E, eax
@@ -5274,7 +5274,7 @@ loc_CE83:
 		mov	[bp+var_4], 1E8480h
 
 loc_CEAF:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -5310,7 +5310,7 @@ loc_CF02:
 		sub	[bp+var_4], 124F8h
 
 loc_CF0A:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	al, es:[bx+0Eh]
 		mov	ah, 0
 		or	ax, ax
@@ -5339,14 +5339,14 @@ loc_CF4A:
 		add	[bp+var_4], 61A8h
 
 loc_CF5B:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_CF77
 		sub	dword_1517E, 30D40h
 		sub	[bp+var_4], 186A0h
 
 loc_CF77:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Bh], 0Ah
 		jb	short loc_CF8D
 		sub	dword_1517E, 493E0h
@@ -5354,13 +5354,13 @@ loc_CF77:
 ; ---------------------------------------------------------------------------
 
 loc_CF8D:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		movzx	eax, byte ptr es:[bx+1Bh]
 		imul	eax, 7530h
 		sub	dword_1517E, eax
 
 loc_CFA3:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ch], 0Fh
 		jb	short loc_CFB9
 		sub	dword_1517E, 36EE8h
@@ -5368,13 +5368,13 @@ loc_CFA3:
 ; ---------------------------------------------------------------------------
 
 loc_CFB9:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		movzx	eax, byte ptr es:[bx+1Ch]
 		imul	eax, 3A98h
 		sub	dword_1517E, eax
 
 loc_CFCF:
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jnb	short loc_CFF5
 		mov	eax, dword_1517E
@@ -5402,7 +5402,7 @@ loc_D008:
 loc_D01A:
 		mov	byte_15187, 0
 		mov	byte_151A5, 0
-		les	bx, dword_11E6E
+		les	bx, _ksoconfig
 		mov	eax, es:[bx+40h]
 		shr	eax, 1
 		cmp	eax, es:[bx+3Ch]
@@ -5695,10 +5695,10 @@ loc_D2E0:
 		push	di
 		mov	ax, si
 		shl	ax, 3
-		mov	dx, word ptr dword_11E6E
+		mov	dx, word ptr _ksoconfig
 		add	dx, ax
 		add	dx, 4Ch	; 'L'
-		push	word ptr dword_11E6E+2
+		push	word ptr _ksoconfig+2
 		push	dx
 		call	sub_C67F
 		inc	si
@@ -5711,9 +5711,9 @@ loc_D2FE:
 		mov	ax, word_116E8
 		add	ax, 120h
 		push	ax
-		mov	ax, word ptr dword_11E6E
+		mov	ax, word ptr _ksoconfig
 		add	ax, 20h	; ' '
-		push	word ptr dword_11E6E+2
+		push	word ptr _ksoconfig+2
 		push	ax
 		call	sub_C67F
 		pop	di
@@ -9540,7 +9540,8 @@ aStf00_bft	db 'stf00.bft',0
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
-dword_11E6E	dd ?
+public _ksoconfig
+_ksoconfig	dd ?
 		dd ?
 		dd ?
 		dd ?
