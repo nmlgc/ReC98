@@ -594,30 +594,30 @@ loc_B09F:
 		add	bx, bx
 		jmp	cs:off_B22F[bx]
 
-loc_B0C4:
-		mov	word_2CEAC, 38h	; '8'
-		mov	word_2CEB0, 28h	; '('
+playchar_reimu:
+		mov	_playchar_speed_aligned, 56
+		mov	_playchar_speed_diagonal, 40
 		mov	fp_2429C, offset sub_C78E
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-loc_B0D8:
-		mov	word_2CEAC, 40h
-		mov	word_2CEB0, 30h	; '0'
+playchar_marisa:
+		mov	_playchar_speed_aligned, 64
+		mov	_playchar_speed_diagonal, 48
 		mov	fp_2429C, offset sub_C9DA
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-loc_B0EC:
-		mov	word_2CEAC, 48h	; 'H'
-		mov	word_2CEB0, 34h	; '4'
+playchar_mima:
+		mov	_playchar_speed_aligned, 72
+		mov	_playchar_speed_diagonal, 52
 		mov	fp_2429C, offset sub_CBFD
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-loc_B100:
-		mov	word_2CEAC, 38h	; '8'
-		mov	word_2CEB0, 28h	; '('
+playchar_yuuka:
+		mov	_playchar_speed_aligned, 56
+		mov	_playchar_speed_diagonal, 40
 		mov	fp_2429C, offset sub_CD94
 
 loc_B112:
@@ -730,10 +730,10 @@ off_B225	dw offset loc_B18A
 		dw offset loc_B1C0
 		dw offset loc_B1E3
 		dw offset loc_B206
-off_B22F	dw offset loc_B0C4
-		dw offset loc_B0D8
-		dw offset loc_B0EC
-		dw offset loc_B100
+off_B22F	dw offset playchar_reimu
+		dw offset playchar_marisa
+		dw offset playchar_mima
+		dw offset playchar_yuuka
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14103,7 +14103,7 @@ sub_11DEA	endp
 sub_11FDF	proc near
 		push	bp
 		mov	bp, sp
-		push	0C4C0h
+		push	offset player_pos
 		call	_motion_update_1
 		cmp	ax, 80h
 		jge	short loc_11FF2
@@ -14346,7 +14346,7 @@ loc_12213:
 ; ---------------------------------------------------------------------------
 
 loc_12224:
-		push	0C4C0h
+		push	offset player_pos
 		call	_motion_update_1
 		dec	byte_2CEBD
 
@@ -18963,9 +18963,9 @@ sub_142F8	proc near
 		mov	bx, ss:[bx+2]
 		cmp	bl, 0Ah
 		ja	short loc_1434D
-		mov	cx, word_2CEB0
+		mov	cx, _playchar_speed_diagonal
 		mov	ax, cx
-		mov	dx, word_2CEAC
+		mov	dx, _playchar_speed_aligned
 		and	bh, 0Fh
 		jz	short loc_14321
 		or	bl, bl
@@ -51729,10 +51729,7 @@ _stage_bgm_title	dd ?
 _boss_bgm_title 	dd ?
 word_2CE9E	dw ?
 player_pos	motion_t <?>
-word_2CEAC	dw ?
-		dw ?
-word_2CEB0	dw ?
-		dw ?
+include th05/playchar_speed[bss].asm
 dword_2CEB4	dd ?
 dword_2CEB8	dd ?
 chara_invulnerable_time_left	db ?

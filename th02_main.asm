@@ -3704,10 +3704,10 @@ loc_C5C2:
 
 loc_C634:
 		mov	playchar_shot_func, offset shot_a
-		mov	byte_2060A, 5
-		mov	byte_2060B, 5
-		mov	byte_2060C, 4
-		mov	byte_2060D, 4
+		mov	_playchar_speed_aligned_x, 5
+		mov	_playchar_speed_aligned_y, 5
+		mov	_playchar_speed_diagonal_x, 4
+		mov	_playchar_speed_diagonal_y, 4
 		mov	byte_2060E, 30h	; '0'
 		pop	bp
 		retn
@@ -3715,10 +3715,10 @@ loc_C634:
 
 loc_C655:
 		mov	playchar_shot_func, offset shot_b
-		mov	byte_2060A, 4
-		mov	byte_2060B, 4
-		mov	byte_2060C, 3
-		mov	byte_2060D, 3
+		mov	_playchar_speed_aligned_x, 4
+		mov	_playchar_speed_aligned_y, 4
+		mov	_playchar_speed_diagonal_x, 3
+		mov	_playchar_speed_diagonal_y, 3
 		mov	byte_2060E, 34h	; '4'
 		mov	byte_2060F, 37h	; '7'
 		inc	byte_1E51B
@@ -3728,10 +3728,10 @@ loc_C655:
 
 loc_C67F:
 		mov	playchar_shot_func, offset shot_c
-		mov	byte_2060A, 3
-		mov	byte_2060B, 3
-		mov	byte_2060C, 3
-		mov	byte_2060D, 3
+		mov	_playchar_speed_aligned_x, 3
+		mov	_playchar_speed_aligned_y, 3
+		mov	_playchar_speed_diagonal_x, 3
+		mov	_playchar_speed_diagonal_y, 3
 		mov	byte_1E518, 3
 		mov	byte_2060E, 7Dh	; '}'
 		mov	byte_2060F, 3Bh	; ';'
@@ -9356,7 +9356,7 @@ loc_F222:
 		jmp	cs:off_F443[bx]
 
 loc_F238:
-		mov	al, byte_2060B
+		mov	al, _playchar_speed_aligned_y
 		cbw
 		neg	ax
 		mov	di, ax
@@ -9365,7 +9365,7 @@ loc_F238:
 ; ---------------------------------------------------------------------------
 
 loc_F244:
-		mov	al, byte_2060B
+		mov	al, _playchar_speed_aligned_y
 		cbw
 		mov	di, ax
 		xor	si, si
@@ -9373,7 +9373,7 @@ loc_F244:
 ; ---------------------------------------------------------------------------
 
 loc_F24E:
-		mov	al, byte_2060A
+		mov	al, _playchar_speed_aligned_x
 		cbw
 		neg	ax
 		mov	si, ax
@@ -9383,7 +9383,7 @@ loc_F24E:
 ; ---------------------------------------------------------------------------
 
 loc_F260:
-		mov	al, byte_2060A
+		mov	al, _playchar_speed_aligned_x
 		cbw
 		mov	si, ax
 		xor	di, di
@@ -9392,13 +9392,13 @@ loc_F260:
 ; ---------------------------------------------------------------------------
 
 loc_F270:
-		mov	al, byte_2060D
+		mov	al, _playchar_speed_diagonal_y
 		cbw
 		neg	ax
 
 loc_F276:
 		mov	di, ax
-		mov	al, byte_2060C
+		mov	al, _playchar_speed_diagonal_x
 		cbw
 		neg	ax
 		mov	si, ax
@@ -9407,11 +9407,11 @@ loc_F276:
 ; ---------------------------------------------------------------------------
 
 loc_F288:
-		mov	al, byte_2060D
+		mov	al, _playchar_speed_diagonal_y
 		cbw
 		neg	ax
 		mov	di, ax
-		mov	al, byte_2060C
+		mov	al, _playchar_speed_diagonal_x
 		cbw
 		mov	si, ax
 		mov	word_1E512, 3
@@ -9419,16 +9419,16 @@ loc_F288:
 ; ---------------------------------------------------------------------------
 
 loc_F29E:
-		mov	al, byte_2060D
+		mov	al, _playchar_speed_diagonal_y
 		cbw
 		jmp	short loc_F276
 ; ---------------------------------------------------------------------------
 
 loc_F2A4:
-		mov	al, byte_2060D
+		mov	al, _playchar_speed_diagonal_y
 		cbw
 		mov	di, ax
-		mov	al, byte_2060C
+		mov	al, _playchar_speed_diagonal_x
 		cbw
 		mov	si, ax
 		mov	word_1E512, 3
@@ -9443,7 +9443,7 @@ loc_F2BC:
 		mov	word_1E512, 0
 
 loc_F2C2:
-		mov	al, byte_2060A
+		mov	al, _playchar_speed_aligned_x
 		cbw
 		cmp	ax, 5
 		jnz	short loc_F2FB
@@ -37010,10 +37010,7 @@ byte_20606	db ?
 byte_20607	db ?
 byte_20608	db ?
 byte_20609	db ?
-byte_2060A	db ?
-byte_2060B	db ?
-byte_2060C	db ?
-byte_2060D	db ?
+include th02/playchar_speed[bss].asm
 byte_2060E	db ?
 byte_2060F	db ?
 byte_20610	db ?
