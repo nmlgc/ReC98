@@ -56,14 +56,15 @@ std_load	proc near
 	repne scasb
 	lea	ax, [di+5]
 	mov	_tile_index_ptr, ax
-	mov	_tile_row, 0
+	xor	al, al
+	mov	_tile_row, al
+	mov	_tile_scrollspeed, al	; 0 immediately triggers the boss battle
 	movzx	ax, byte ptr es:[di]
 	inc	ax
 	add	di, ax
 	lea	ax, [di+5]
 	mov	_tile_scrollspeed_ptr, ax
 	movzx	ax, byte ptr es:[di]
-	mov	_tile_scrollspeed, al
 	inc	ax
 	add	di, ax
 	mov	dl, es:[di]
@@ -81,7 +82,7 @@ std_load	proc near
 	inc	di
 	mov	word ptr _std_ip+2, es
 	mov	word ptr _std_ip, di
-	setfarfp	_stage_vm, std_run
+	setfarfp	_stage_vm, nullsub_1
 	pop	di
 	pop	si
 	retn

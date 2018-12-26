@@ -583,7 +583,7 @@ loc_B099:
 loc_B09F:
 		cmp	si, 8
 		jl	short loc_B099
-		mov	power, 1
+		mov	power, 128	; Start with full power
 		mov	dream, 1
 		call	sub_E528
 		mov	al, playchar
@@ -24062,6 +24062,7 @@ sub_172FF	endp
 ; Attributes: bp-based frame
 
 sub_17322	proc far
+		retf	; Disable midbosses
 		push	bp
 		mov	bp, sp
 		mov	ax, frames_until_midboss
@@ -24078,7 +24079,6 @@ sub_17322	proc far
 
 loc_17352:
 		pop	bp
-		retf
 sub_17322	endp
 
 
