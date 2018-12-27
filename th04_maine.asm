@@ -414,20 +414,7 @@ sub_A2D1	proc near
 		retn
 sub_A2D1	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A2D6	proc near
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retn
-sub_A2D6	endp
-
+EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -452,7 +439,7 @@ arg_2		= word ptr  6
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		call	sub_A2D6
+		call	egc_start_copy_1
 		xor	di, di
 		jmp	short loc_A368
 ; ---------------------------------------------------------------------------
@@ -567,7 +554,7 @@ loc_A3B2:
 
 loc_A3F7:
 		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
-		call	sub_A2D6
+		call	egc_start_copy_1
 		egc_selectpat
 		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
 		outw2	EGC_BITLENGTHREG, 0Fh
@@ -1073,7 +1060,7 @@ sub_A815	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_A2D6
+		call	egc_start_copy_1
 		cmp	byte_1247E, 0
 		jnz	short loc_A83A
 		xor	si, si
@@ -5096,24 +5083,13 @@ off_CB9E	dw offset loc_CA9A
 
 ; Attributes: bp-based frame
 
-sub_CBB0	proc near
+_egc_start_copy_inlined	proc near
 		push	bp
 		mov	bp, sp
-		GRCG_OFF_VIA_MOV al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		EGC_SETUP_COPY
+		EGC_START_COPY_INLINED
 		pop	bp
 		retn
-sub_CBB0	endp
+_egc_start_copy_inlined	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5135,7 +5111,7 @@ arg_6		= word ptr  0Ah
 		push	si
 		push	di
 		mov	di, [bp+arg_2]
-		call	sub_CBB0
+		call	_egc_start_copy_inlined
 		mov	ax, [bp+arg_6]
 		sar	ax, 3
 		mov	dx, [bp+arg_4]

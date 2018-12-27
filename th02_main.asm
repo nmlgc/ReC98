@@ -1079,18 +1079,17 @@ loc_43A6:
 		pop	bp
 		retf
 sub_4344	endp
-
-; ---------------------------------------------------------------------------
 		nop
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_43B0	proc far
+egc_start_copy_noframe	proc far
 		nopcall	egc_on
 		EGC_SETUP_COPY
 		retf
-sub_43B0	endp
+egc_start_copy_noframe	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1690,7 +1689,7 @@ var_2		= word ptr -2
 		assume es:nothing
 		mov	word_22862, 0
 		mov	word_22864, 10h
-		call	sub_43B0
+		call	egc_start_copy_noframe
 		cmp	byte_2287E, 1
 		jnz	short loc_47E6
 		mov	[bp+var_2], 0
@@ -1783,7 +1782,7 @@ arg_4		= word ptr  0Ah
 		add	bx, [bp+var_4]
 		mov	al, byte ptr [bp+@@tile]
 		mov	_tile_ring[bx], al
-		call	sub_43B0
+		call	egc_start_copy_noframe
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al
@@ -2827,7 +2826,7 @@ loc_BCF9:
 		mov	word_2034C, 0
 
 loc_BD26:
-		call	sub_C10A
+		call	egc_start_copy_1
 		call	farfp_1F4A0
 		call	sub_4692
 		call	farfp_1F490
@@ -2927,7 +2926,7 @@ loc_BE0F:
 		mov	word_2034C, 1
 
 loc_BE3B:
-		call	sub_C10A
+		call	egc_start_copy_1
 		mov	al, byte_20342
 		mov	ah, 0
 		push	ax
@@ -3240,20 +3239,7 @@ loc_C108:
 		retn
 bgm_show	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C10A	proc near
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retn
-sub_C10A	endp
-
+EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10246,7 +10232,7 @@ loc_10025:
 		add	[bp+arg_4], 7
 		cmp	[bp+arg_0], 2
 		jl	short loc_1005C
-		call	sub_43B0
+		call	egc_start_copy_noframe
 		sub	[bp+arg_0], 2
 		mov	ax, [bp+arg_0]
 		shl	ax, 3
@@ -10303,7 +10289,7 @@ loc_100BA:
 		mov	ax, [bp+arg_0]
 		shl	ax, 4
 		mov	si, ax
-		call	sub_43B0
+		call	egc_start_copy_noframe
 		mov	[bp+var_8], 0
 		jmp	loc_1015A
 ; ---------------------------------------------------------------------------
@@ -14500,7 +14486,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, 5546h
-		call	sub_43B0
+		call	egc_start_copy_noframe
 		xor	di, di
 		mov	[bp+var_2], 20h	; ' '
 		jmp	short loc_122A7
@@ -15807,20 +15793,7 @@ var_4		= dword	ptr -4
 		retf
 sub_12C72	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12CB1	proc near
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retn
-sub_12CB1	endp
-
+EGC_START_COPY_DEF 2, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16028,7 +16001,7 @@ loc_12E4F:
 		mov	[bp+var_2], ax
 		push	1
 		call	frame_delay
-		call	sub_12CB1
+		call	egc_start_copy_2
 		push	200140h
 		push	1800050h
 		call	sub_45FC
@@ -16087,7 +16060,7 @@ loc_12EC5:
 		mov	[bp+var_2], ax
 		push	1
 		call	frame_delay
-		call	sub_12CB1
+		call	egc_start_copy_2
 		push	200140h
 		push	1800050h
 		call	sub_45FC

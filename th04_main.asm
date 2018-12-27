@@ -1568,7 +1568,7 @@ loc_B8CE:
 		add	byte_25104, al
 		cmp	byte_255BC, 0
 		jz	short loc_B896
-		call	sub_CBFA
+		call	egc_start_copy_inlined_noframe
 		call	sub_BAEE
 		mov	byte_25104, 0
 		call	egc_off
@@ -1960,7 +1960,7 @@ sub_BAEE	endp
 sub_BBA4	proc near
 		push	si
 		push	di
-		call	sub_CBFA
+		call	egc_start_copy_inlined_noframe
 		mov	ax, GRAM_400
 		mov	es, ax
 		mov	bx, 4D20h
@@ -4193,7 +4193,7 @@ sub_CBA4	endp
 sub_CBB8	proc near
 		push	si
 		push	di
-		call	sub_CBFA
+		call	egc_start_copy_inlined_noframe
 		mov	di, 7804h
 		mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
 		mov	ax, GRAM_400
@@ -4225,29 +4225,16 @@ loc_CBD0:
 		pop	di
 		pop	si
 		retn
-sub_CBB8	endp
+tiles_render_all	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_CBFA	proc near
-		GRCG_OFF_VIA_MOV al
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		EGC_SETUP_COPY
+egc_start_copy_inlined_noframe	proc near
+		EGC_START_COPY_INLINED
 		retn
-sub_CBFA	endp
-
-; ---------------------------------------------------------------------------
+egc_start_copy_inlined_noframe	endp
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4763,7 +4750,7 @@ sub_D016	proc near
 		push	bp
 		mov	bp, sp
 		push	di
-		call	sub_CBFA
+		call	egc_start_copy_inlined_noframe
 		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
@@ -4805,7 +4792,7 @@ arg_2		= word ptr  6
 		push	bp
 		mov	bp, sp
 		push	di
-		call	sub_CBFA
+		call	egc_start_copy_inlined_noframe
 		mov	ax, [bp+arg_0]
 		mov	bx, ax
 		shl	ax, 2

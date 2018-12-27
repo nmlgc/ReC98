@@ -433,20 +433,7 @@ loc_A6AD:
 		retn	4
 sub_A695	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A6D1	proc near
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retn
-sub_A6D1	endp
-
+EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -720,7 +707,7 @@ sub_A8EC	proc near
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
 		out	dx, al
-		call	sub_A6D1
+		call	egc_start_copy_1
 		cmp	byte_14F8E, 0
 		jnz	short loc_A917
 		xor	si, si

@@ -9310,20 +9310,7 @@ loc_103C3:
 sub_1031B	endp
 
 include th01/hardware/vram_planes_set.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-egc_start_copy	proc far
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retf
-egc_start_copy	endp
-
+EGC_START_COPY_DEF 1, far
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9357,7 +9344,7 @@ arg_6		= word ptr  0Ch
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_6], ax
-		call	egc_start_copy
+		call	egc_start_copy_1
 		mov	[bp+var_2], 0
 		jmp	short loc_104B1
 ; ---------------------------------------------------------------------------

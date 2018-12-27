@@ -5236,20 +5236,7 @@ arg_2		= word ptr  8
 		retf	4
 sub_C73A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C757	proc far
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retf
-sub_C757	endp
-
+EGC_START_COPY_DEF 1, far
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5267,7 +5254,7 @@ arg_0		= word ptr  6
 		enter	0Ah, 0
 		push	si
 		push	di
-		call	sub_C757
+		call	egc_start_copy_1
 		mov	ax, [bp+arg_0]
 		mov	bx, 2
 		cwd

@@ -1346,20 +1346,7 @@ loc_A191:
 		retn
 sub_A174	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A193	proc near
-		push	bp
-		mov	bp, sp
-		call	egc_on
-		EGC_SETUP_COPY
-		pop	bp
-		retn
-sub_A193	endp
-
+EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1384,7 +1371,7 @@ arg_2		= word ptr  6
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		call	sub_A193
+		call	egc_start_copy_1
 		xor	di, di
 		jmp	short loc_A225
 ; ---------------------------------------------------------------------------
@@ -1499,7 +1486,7 @@ loc_A26F:
 
 loc_A2B4:
 		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
-		call	sub_A193
+		call	egc_start_copy_1
 		egc_selectpat
 		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
 		outw2	EGC_BITLENGTHREG, 0Fh
