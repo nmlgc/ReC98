@@ -1244,7 +1244,7 @@ loc_44BF:
 		mov	al, map[bx]
 		mov	[si+4DF6h], al
 		mov	bx, [bp+var_2]
-		mov	[bx+si+4E0Fh], al
+		mov	_tile_ring[bx+si], al
 		inc	si
 		inc	cx
 
@@ -1410,12 +1410,12 @@ loc_45CB:
 		mov	al, map[bx+si]
 		mov	bx, 17h
 		sub	bx, di
-		imul	bx, 18h
-		mov	[bx+si+4E0Fh], al
+		imul	bx, TILES_X
+		mov	_tile_ring[bx+si], al
 		inc	si
 
 loc_45ED:
-		cmp	si, 18h
+		cmp	si, TILES_X
 		jl	short loc_45CB
 		inc	di
 
@@ -1569,8 +1569,8 @@ loc_46C6:
 loc_46D9:
 		push	[bp+var_2]
 		mov	bx, si
-		imul	bx, 18h
-		mov	al, [bx+di+4E0Fh]
+		imul	bx, TILES_X
+		mov	al, _tile_ring[bx+di]
 		mov	ah, 0
 		push	ax
 		call	sub_4419
@@ -1706,8 +1706,8 @@ loc_47B2:
 
 loc_47B9:
 		mov	bx, [bp+var_2]
-		imul	bx, 18h
-		mov	al, [bx+si+4E0Fh]
+		imul	bx, TILES_X
+		mov	al, _tile_ring[bx+si]
 		mov	ah, 0
 		mov	[bp+var_4], ax
 		push	di
@@ -1717,7 +1717,7 @@ loc_47B9:
 		add	di, 2
 
 loc_47D1:
-		cmp	si, 18h
+		cmp	si, TILES_X
 		jl	short loc_47B9
 		inc	[bp+var_2]
 		add	[bp+var_6], 500h
@@ -1757,7 +1757,7 @@ sub_480C	proc far
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
+@@tile		= word ptr  6
 arg_2		= word ptr  8
 arg_4		= word ptr  0Ah
 
@@ -1779,10 +1779,10 @@ arg_4		= word ptr  0Ah
 		mov	word_22862, 0
 		mov	word_22864, 10h
 		mov	bx, [bp+var_2]
-		imul	bx, 18h
+		imul	bx, TILES_X
 		add	bx, [bp+var_4]
-		mov	al, byte ptr [bp+arg_0]
-		mov	[bx+4E0Fh], al
+		mov	al, byte ptr [bp+@@tile]
+		mov	_tile_ring[bx], al
 		call	sub_43B0
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
@@ -1799,13 +1799,13 @@ arg_4		= word ptr  0Ah
 		add	ax, dx
 		mov	[bp+var_6], ax
 		push	ax
-		push	[bp+arg_0]
+		push	[bp+@@tile]
 		call	sub_43E0
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20618
 		out	dx, al
 		push	[bp+var_6]
-		push	[bp+arg_0]
+		push	[bp+@@tile]
 		call	sub_43E0
 		nopcall	egc_off
 		pop	di
@@ -38522,156 +38522,7 @@ word_22864	dw ?
 		dd    ?	;
 		dd    ?	;
 byte_2287E	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th02/tiles[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

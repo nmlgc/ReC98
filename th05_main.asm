@@ -1798,8 +1798,8 @@ sub_BB9A	proc near
 		push	ds
 		mov	bx, _tile_index_ptr
 		sub	bx, 4
-		mov	di, 4FB6h
-		add	di, 600h
+		mov	di, offset _tile_ring
+		add	di, TILES_MEMORY_X * (TILES_Y - 1) * 2
 		xor	dx, dx
 		mov	ax, ds
 		mov	es, ax
@@ -1819,10 +1819,10 @@ loc_BBBD:
 		mov	ah, 5
 
 loc_BBCF:
-		mov	cx, 0Ch
+		mov	cx, TILES_X / 2
 		rep movsd
-		sub	di, 70h	; 'p'
-		sub	si, 70h	; 'p'
+		sub	di, (TILES_MEMORY_X + TILES_X) * 2
+		sub	si, (TILES_MEMORY_X + TILES_X) * 2
 		dec	ah
 		jnz	short loc_BBCF
 		inc	bx
@@ -1843,13 +1843,13 @@ sub_BBE8	proc near
 		push	di
 		call	sub_BC2A
 		mov	di, 7804h
-		mov	bx, 55B6h
+		mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
 
 loc_BBF8:
-		mov	dl, 18h
+		mov	dl, TILES_X
 
 loc_BBFA:
 		mov	si, [bx]
@@ -1866,7 +1866,7 @@ loc_BC00:
 		add	bx, 2
 		dec	dl
 		jnz	short loc_BBFA
-		sub	bx, 70h	; 'p'
+		sub	bx, (TILES_MEMORY_X + TILES_X) * 2
 		sub	di, 530h
 		jge	short loc_BBF8
 		call	egc_off
@@ -1919,7 +1919,7 @@ sub_BC6A	proc near
 		shr	ax, 4
 		shl	ax, 6
 		mov	bx, ax
-		mov	si, [bx+4FB6h]
+		mov	si, _tile_ring[bx]
 		mov	bx, dx
 		and	bx, 0Fh
 		mov	cx, bx
@@ -1945,7 +1945,7 @@ loc_BCC5:
 		xor	dh, dh
 
 loc_BCC7:
-		mov	dl, 18h
+		mov	dl, TILES_X
 		mov	word_23F01, cx
 
 loc_BCCD:
@@ -1971,7 +1971,7 @@ loc_BCDC:
 		sub	bx, 640h
 
 loc_BD03:
-		mov	si, [bx+4FB6h]
+		mov	si, _tile_ring[bx]
 		xor	bx, bx
 		jmp	short loc_BCDC
 ; ---------------------------------------------------------------------------
@@ -1980,7 +1980,7 @@ loc_BD0B:
 		mov	cx, word_23F01
 		add	ax, 2
 		mov	bx, ax
-		mov	si, [bx+4FB6h]
+		mov	si, _tile_ring[bx]
 		dec	dl
 		jnz	short loc_BCCD
 		pop	di
@@ -2037,7 +2037,7 @@ loc_BD81:
 
 loc_BD88:
 		shl	ax, 6
-		add	ax, 4FB6h
+		add	ax, offset _tile_ring
 		mov	di, ax
 		xor	ax, ax
 		mov	al, _tile_row
@@ -2054,7 +2054,7 @@ loc_BD88:
 		push	ds
 		mov	ax, map_seg
 		mov	ds, ax
-		mov	cx, 18h
+		mov	cx, TILES_X
 		rep movsw
 		pop	ds
 
@@ -2206,17 +2206,17 @@ sub_BF46	proc near
 		mov	bx, 4F96h
 		mov	di, 7A84h
 		mov	dh, 32h	; '2'
-		mov	si, 600h
+		mov	si, TILES_MEMORY_X * (TILES_Y - 1) * 2
 
 loc_BF5B:
-		mov	dl, 18h
+		mov	dl, TILES_X
 
 loc_BF5D:
 		cmp	byte ptr [bx], 0
 		jz	short loc_BF89
 		push	si
 		mov	byte ptr [bx], 0
-		mov	si, [si+4FB6h]
+		mov	si, _tile_ring[si]
 		test	dh, 1
 		jnz	short loc_BF73
 		add	si, 280h
@@ -2991,7 +2991,7 @@ numerals_draw	endp
 		pop	bx
 		add	bx, ax
 		mov	ax, [bp+6]
-		mov	[bx+4FB6h], ax
+		mov	_tile_ring[bx], ax
 		mov	al, [bp-1]
 		mov	byte_2CE00, al
 		pop	di
@@ -12735,13 +12735,13 @@ loc_11441:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		mov	word ptr [bx+4FB6h], 5048h
+		mov	_tile_ring[bx], 5048h
 		mov	bx, [bp+var_2]
 		shl	bx, 6
 		mov	ax, [bp+var_4]
 		add	ax, ax
 		add	bx, ax
-		mov	word ptr [bx+4FB6h], 5048h
+		mov	_tile_ring[bx], 5048h
 		inc	[bp+var_2]
 
 loc_11469:
@@ -12773,7 +12773,7 @@ loc_11491:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		mov	word ptr [bx+4FB6h], 48h ; 'H'
+		mov	_tile_ring[bx], 48h
 		inc	[bp+var_2]
 
 loc_114A6:
@@ -44347,407 +44347,7 @@ map_seg	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-include th04/formats/tiles[bss].asm
+include th04/tiles[bss].asm
 dword_25FDC	dd ?
 frame	dw ?
 include th03/frame_mod[bss].asm
