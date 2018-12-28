@@ -1130,8 +1130,7 @@ loc_AC75:
 		mov	ax, [bp+var_4]
 		cmp	ax, [bp+var_2]
 		jle	short loc_AC52
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 

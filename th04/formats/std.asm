@@ -38,7 +38,7 @@ std_load	proc near
 	lea	ax, [si+5]
 	mov	_tile_scrollspeed_ptr, ax
 	mov	al, es:[si]
-	mov	_tile_scrollspeed, al
+	mov	_scroll_speed, al
 	mov	al, [bp+@@chunk_size]
 	mov	ah, 0
 	inc	ax

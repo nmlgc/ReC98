@@ -1099,11 +1099,11 @@ sub_B55A	proc near
 		call	sub_EACE
 		mov	frame, 0
 		mov	byte_2C96C, 0
-		mov	word_2CDFC, 0
+		mov	_scroll_line, 0
 		mov	word_23F06, 0
 		mov	word_23F4E, 0
 		mov	word_23F50, 0
-		mov	byte_2CDFA, 0
+		mov	_scroll_subpixel_line, 0
 		mov	byte_23EFC, 0
 		mov	byte_23F04, 0
 		mov	word_2CE02, 0
@@ -1119,7 +1119,7 @@ sub_B55A	proc near
 		mov	word_2CEC6, 0
 		mov	byte_2CEC0, 0
 		mov	fp_2C92E, offset sub_EE58
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 		nopcall	sub_E4FC
 		call	_randring_fill
 		call	sub_16D67
@@ -1845,7 +1845,7 @@ sub_BC6A	proc near
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		mov	dx, word_2CDFC
+		mov	dx, _scroll_line
 		mov	ax, 4
 		mov	cx, dx
 		shl	cx, 6
@@ -1945,9 +1945,9 @@ var_1		= byte ptr -1
 		jz	loc_BDE8
 
 loc_BD36:
-		cmp	_tile_scrollspeed, 0
+		cmp	_scroll_speed, 0
 		jz	loc_BDE8
-		mov	ax, word_2CDFC
+		mov	ax, _scroll_line
 		shr	ax, 4
 		cmp	ax, word_23F06
 		jz	short loc_BDB7
@@ -1962,10 +1962,10 @@ loc_BD36:
 		inc	_tile_scrollspeed_ptr
 		mov	bx, _tile_scrollspeed_ptr
 		mov	dl, es:[bx]
-		mov	_tile_scrollspeed, dl
+		mov	_scroll_speed, dl
 		or	dl, dl
 		jnz	short loc_BD88
-		mov	word_2CDFC, 0
+		mov	_scroll_line, 0
 		mov	byte_23F04, 0
 
 loc_BD81:
@@ -2005,7 +2005,7 @@ loc_BDB7:
 		add	byte_23EFC, al
 		cmp	stage_id, 5
 		jz	short loc_BD81
-		cmp	byte_2CE00, 0
+		cmp	_scroll_active, 0
 		jz	short loc_BD81
 		call	egc_start_copy_inlined_noframe
 		call	sub_BC6A
@@ -2201,21 +2201,21 @@ sub_BFB2	proc near
 		mov	bx, sp
 		mov	ax, ss:[bx+2]
 		sar	ax, 4
-		cmp	byte_2CE00, 0
+		cmp	_scroll_active, 0
 		jz	short loc_BFC6
-		add	ax, word_2CDFC
+		add	ax, _scroll_line
 
 loc_BFC6:
 		or	ax, ax
 		jge	short loc_BFCF
-		add	ax, 190h
+		add	ax, RES_Y
 		jmp	short locret_BFD7
 ; ---------------------------------------------------------------------------
 
 loc_BFCF:
-		cmp	ax, 190h
+		cmp	ax, RES_Y
 		jl	short locret_BFD7
-		sub	ax, 190h
+		sub	ax, RES_Y
 
 locret_BFD7:
 		retn	2
@@ -2910,9 +2910,9 @@ numerals_draw	endp
 		mov	ax, si
 		sar	ax, 4
 		mov	si, ax
-		mov	al, byte_2CE00
+		mov	al, _scroll_active
 		mov	[bp-1],	al
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 		lea	ax, [di+100h]
 		push	ax
 		call	sub_BFB2
@@ -2931,7 +2931,7 @@ numerals_draw	endp
 		mov	ax, [bp+6]
 		mov	_tile_ring[bx], ax
 		mov	al, [bp-1]
-		mov	byte_2CE00, al
+		mov	_scroll_active, al
 		pop	di
 		pop	si
 		leave
@@ -3323,9 +3323,8 @@ loc_C7AB:
 loc_C7AE:
 		cmp	byte_2429B, 20h	; ' '
 		jnz	short loc_C7C9
-		mov	byte_2CE00, 0
-		push	0
-		call	graph_scrollup
+		mov	_scroll_active, 0
+		call	graph_scrollup pascal, 0
 		mov	fp_23F58, offset nullsub_2
 		jmp	short loc_C7D0
 ; ---------------------------------------------------------------------------
@@ -3346,7 +3345,7 @@ loc_C7D8:
 		call	snd_se_play pascal, 15
 		cmp	stage_id, 5
 		jz	short loc_C7F2
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 
 loc_C7F2:
 		mov	byte_2264E, 0
@@ -3372,8 +3371,7 @@ loc_C800:
 		jnz	short loc_C849
 		cmp	stage_id, 5
 		jz	short loc_C849
-		push	word_2CDFC
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		jmp	loc_C7AB
 ; ---------------------------------------------------------------------------
 
@@ -3583,9 +3581,8 @@ sub_C9DA	proc near
 		jnb	short loc_CA05
 		cmp	byte_2429B, 2
 		jnz	short loc_C9FD
-		mov	byte_2CE00, 0
-		push	0
-		call	graph_scrollup
+		mov	_scroll_active, 0
+		call	graph_scrollup pascal, 0
 		mov	fp_23F58, offset nullsub_2
 
 loc_C9FD:
@@ -3600,7 +3597,7 @@ loc_CA05:
 		call	snd_se_play pascal, 15
 		cmp	stage_id, 5
 		jz	short loc_CA1F
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 
 loc_CA1F:
 		mov	byte_2264E, 0
@@ -3626,8 +3623,7 @@ loc_CA2D:
 		jnz	short loc_CA75
 		cmp	stage_id, 5
 		jz	short loc_CA75
-		push	word_2CDFC
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		jmp	short loc_CA75
 ; ---------------------------------------------------------------------------
 
@@ -3814,9 +3810,8 @@ sub_CBFD	proc near
 		jnb	short loc_CC28
 		cmp	byte_2429B, 2
 		jnz	short loc_CC20
-		mov	byte_2CE00, 0
-		push	0
-		call	graph_scrollup
+		mov	_scroll_active, 0
+		call	graph_scrollup pascal, 0
 		mov	fp_23F58, offset nullsub_2
 
 loc_CC20:
@@ -3831,7 +3826,7 @@ loc_CC28:
 		call	snd_se_play pascal, 15
 		cmp	stage_id, 5
 		jz	short loc_CC42
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 
 loc_CC42:
 		mov	byte_2264E, 0
@@ -3857,8 +3852,7 @@ loc_CC50:
 		jnz	short loc_CC98
 		cmp	stage_id, 5
 		jz	short loc_CC98
-		push	word_2CDFC
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		jmp	short loc_CC98
 ; ---------------------------------------------------------------------------
 
@@ -4016,9 +4010,8 @@ loc_CDB1:
 loc_CDB4:
 		cmp	byte_2429B, 20h	; ' '
 		jnz	short loc_CDCF
-		mov	byte_2CE00, 0
-		push	0
-		call	graph_scrollup
+		mov	_scroll_active, 0
+		call	graph_scrollup pascal, 0
 		mov	fp_23F58, offset nullsub_2
 		jmp	short loc_CDD6
 ; ---------------------------------------------------------------------------
@@ -4039,7 +4032,7 @@ loc_CDDE:
 		call	snd_se_play pascal, 15
 		cmp	stage_id, 5
 		jz	short loc_CDF8
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 
 loc_CDF8:
 		mov	byte_2264E, 0
@@ -4065,8 +4058,7 @@ loc_CE06:
 		jnz	short loc_CE4F
 		cmp	stage_id, 5
 		jz	short loc_CE4F
-		push	word_2CDFC
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		jmp	loc_CDB1
 ; ---------------------------------------------------------------------------
 
@@ -6501,14 +6493,14 @@ loc_DF68:
 		jz	short loc_DF8C
 		mov	ax, [bp+var_4]
 		mov	dx, [bp+var_6]
-		cmp	byte_2CE00, 0
+		cmp	_scroll_active, 0
 		jz	short loc_DF7F
-		add	dx, word_2CDFC
+		add	dx, _scroll_line
 
 loc_DF7F:
-		cmp	dx, 190h
+		cmp	dx, RES_Y
 		jl	short loc_DF89
-		sub	dx, 190h
+		sub	dx, RES_Y
 
 loc_DF89:
 		call	sub_CE80
@@ -8266,7 +8258,7 @@ sub_EE51	endp
 sub_EE58	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_tile_scrollspeed, 0
+		cmp	_scroll_speed, 0
 		jnz	short loc_EE92
 		cmp	byte_25352, 1
 		jnz	short loc_EE92
@@ -10327,42 +10319,41 @@ sub_10214	proc near
 		mov	bp, sp
 		cmp	stage_id, 5
 		jnz	short loc_10223
-		mov	byte_2CE00, 0
+		mov	_scroll_active, 0
 
 loc_10223:
 		mov	al, byte_25352
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, word_2CDFC
+		mov	dx, _scroll_line
 		mov	bx, ax
 		mov	[bx+356Eh], dx
 		cmp	byte_23F04, 0
 		jz	short loc_1024F
-		cmp	byte_2CE00, 0
+		cmp	_scroll_active, 0
 		jz	short loc_1024F
 		cmp	stage_id, 5
 		jz	short loc_1024F
-		push	dx
-		call	graph_scrollup
+		call	graph_scrollup pascal, dx
 
 loc_1024F:
-		mov	word_2CDFE, 0
-		mov	al, byte_2CDFA
-		add	al, _tile_scrollspeed
-		mov	byte_2CDFA, al
-		cmp	al, 10h
+		mov	_scroll_last_delta, 0
+		mov	al, _scroll_subpixel_line
+		add	al, _scroll_speed
+		mov	_scroll_subpixel_line, al
+		cmp	al, 16
 		jb	short loc_10282
 		mov	ah, 0
 		shr	ax, 4
-		sub	word_2CDFC, ax
+		sub	_scroll_line, ax
 		jns	short loc_10274
-		add	word_2CDFC, 190h
+		add	_scroll_line, RES_Y
 
 loc_10274:
 		mov	byte_23EFC, al
-		and	byte_2CDFA, 0Fh
+		and	_scroll_subpixel_line, 0Fh
 		shl	ax, 4
-		mov	word_2CDFE, ax
+		mov	_scroll_last_delta, ax
 
 loc_10282:
 		call	sub_BD20
@@ -10436,7 +10427,7 @@ loc_1030C:
 loc_10311:
 		cmp	word_2CE04, 0
 		jge	short loc_10346
-		cmp	word_2CDFC, 0
+		cmp	_scroll_line, 0
 		jnz	short loc_1032D
 		push	200010h
 		push	19F017Fh
@@ -10458,7 +10449,7 @@ loc_10339:
 loc_10346:
 		cmp	word_2CE04, 0
 		jle	short loc_1037C
-		cmp	word_2CDFC, 0
+		cmp	_scroll_line, 0
 		jnz	short loc_10362
 		push	200010h
 		push	19F017Fh
@@ -12631,7 +12622,7 @@ loc_113B9:
 loc_113C9:
 		cmp	frame, 130h
 		jnb	loc_11475
-		mov	byte_2CE00, 0
+		mov	_scroll_active, 0
 		cmp	frame, 100h
 		jb	loc_1146F
 		mov	ax, 12Fh
@@ -12694,8 +12685,7 @@ loc_1146F:
 loc_11475:
 		cmp	frame, 132h
 		jnb	short loc_114CD
-		push	word_2CDFC
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		xor	di, di
 		jmp	short loc_114AD
 ; ---------------------------------------------------------------------------
@@ -12723,7 +12713,7 @@ loc_114AD:
 		cmp	di, 18h
 		jl	short loc_1148A
 		call	sub_BED0
-		mov	byte_2CE00, 1
+		mov	_scroll_active, 1
 		mov	word_22856, 0
 		mov	byte_22858, 0
 		mov	byte_2CE4C, 0
@@ -19708,21 +19698,21 @@ sub_15288	proc near
 		mov	bx, sp
 		mov	ax, ss:[bx+2]
 		sar	ax, 4
-		cmp	byte_2CE00, 0
+		cmp	_scroll_active, 0
 		jz	short loc_1529C
-		add	ax, word_2CDFC
+		add	ax, _scroll_line
 
 loc_1529C:
-		cmp	ax, 190h
+		cmp	ax, RES_Y
 		jl	short loc_152A6
-		sub	ax, 190h
+		sub	ax, RES_Y
 		jmp	short locret_152AD
 ; ---------------------------------------------------------------------------
 
 loc_152A6:
 		or	ax, ax
 		jge	short locret_152AD
-		add	ax, 190h
+		add	ax, RES_Y
 
 locret_152AD:
 		retn	2
@@ -19732,17 +19722,17 @@ sub_15288	endp
 		mov	bx, sp
 		mov	ax, ss:[bx+2]
 		sar	ax, 4
-		add	ax, word_2CDFC
-		cmp	ax, 190h
+		add	ax, _scroll_line
+		cmp	ax, RES_Y
 		jl	short loc_152C7
-		sub	ax, 190h
+		sub	ax, RES_Y
 		jmp	short locret_152CE
 ; ---------------------------------------------------------------------------
 
 loc_152C7:
 		or	ax, ax
 		jge	short locret_152CE
-		add	ax, 190h
+		add	ax, RES_Y
 
 locret_152CE:
 		retn	2
@@ -19994,7 +19984,7 @@ loc_15467:
 		mov	word ptr [si+0Ah], 0
 
 loc_15470:
-		mov	ax, word_2CDFE
+		mov	ax, _scroll_last_delta
 		mov	[si+0Ch], ax
 		call	sub_152F2
 		jb	loc_15388
@@ -51184,13 +51174,7 @@ grcgcolor_2CC8E	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2CDF8	dw ?
-byte_2CDFA	db ?
-public _tile_scrollspeed
-_tile_scrollspeed	db ?
-word_2CDFC	dw ?
-word_2CDFE	dw ?
-byte_2CE00	db ?
-		db ?
+include th04/scroll[bss].asm
 word_2CE02	dw ?
 word_2CE04	dw ?
 word_2CE06	dw ?

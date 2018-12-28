@@ -63,7 +63,7 @@ std_load	proc near
 	lea	ax, [di+5]
 	mov	_tile_scrollspeed_ptr, ax
 	movzx	ax, byte ptr es:[di]
-	mov	_tile_scrollspeed, al
+	mov	_scroll_speed, al
 	inc	ax
 	add	di, ax
 	mov	dl, es:[di]

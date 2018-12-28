@@ -1395,8 +1395,7 @@ loc_AAE0:
 		mov	ax, [bp+var_4]
 		cmp	ax, [bp+var_2]
 		jle	short loc_AABD
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
