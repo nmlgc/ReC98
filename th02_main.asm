@@ -855,10 +855,10 @@ loc_4240:
 ; ---------------------------------------------------------------------------
 
 loc_4245:
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jb	short loc_4253
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_4253:
 		push	[bp+var_C]
@@ -1203,7 +1203,7 @@ arg_0		= word ptr  6
 		mov	al, byte_22798
 		sub	al, byte ptr [bp+arg_0]
 		mov	byte_22798, al
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		sar	ax, 4
 		imul	ax, 18h
 		mov	[bp+var_2], ax
@@ -1257,7 +1257,7 @@ loc_44D9:
 		mov	word_22862, ax
 		mov	ax, [bp+arg_0]
 		mov	word_22864, ax
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		shl	ax, 6
 		mov	dx, ax
 		shr	dx, 2
@@ -1457,17 +1457,17 @@ loc_460B:
 		sub	[bp+arg_6], 2
 		sub	[bp+arg_2], 2
 		mov	ax, [bp+arg_4]
-		add	ax, word_20344
-		cmp	ax, 190h
+		add	ax, _scroll_line
+		cmp	ax, RES_Y
 		jl	short loc_4635
-		sub	ax, 190h
+		sub	ax, RES_Y
 		jmp	short loc_463D
 ; ---------------------------------------------------------------------------
 
 loc_4635:
 		cmp	ax, 0
 		jnb	short loc_463D
-		add	ax, 190h
+		add	ax, RES_Y
 
 loc_463D:
 		mov	di, [bp+arg_0]
@@ -2184,8 +2184,7 @@ var_C		= byte ptr -0Ch
 		call	sub_B396
 		mov	vsync_Count1, 0
 		call	sub_BF7B
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 1
 		out	dx, al
@@ -2797,7 +2796,7 @@ loc_BCC3:
 		call	_snd_se_update
 		call	farfp_1F498
 		call	bgm_show
-		mov	si, word_20344
+		mov	si, _scroll_line
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
@@ -2805,7 +2804,7 @@ loc_BCC3:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
-		mov	word_20344, ax
+		mov	_scroll_line, ax
 		call	_boss_bg_render
 		cmp	byte_2061A, 0
 		jz	short loc_BCF9
@@ -2849,7 +2848,7 @@ loc_BD26:
 
 loc_BD62:
 		mov	byte_1E503, 0
-		mov	word_20344, si
+		mov	_scroll_line, si
 		cmp	byte_1E501, 0
 		jnz	short loc_BDA2
 		mov	al, byte_20343
@@ -2864,10 +2863,10 @@ loc_BD62:
 		jnz	short loc_BDA2
 		mov	al, byte_20342
 		mov	ah, 0
-		sub	word_20344, ax
-		cmp	word_20344, 0
+		sub	_scroll_line, ax
+		cmp	_scroll_line, 0
 		jge	short loc_BD9C
-		add	word_20344, 190h
+		add	_scroll_line, RES_Y
 
 loc_BD9C:
 		mov	al, byte_20342
@@ -2879,7 +2878,7 @@ loc_BDA2:
 		add	ax, ax
 		lea	dx, [bp+var_8]
 		add	ax, dx
-		mov	dx, word_20344
+		mov	dx, _scroll_line
 		mov	bx, ax
 		mov	ss:[bx], dx
 		call	_input_sense
@@ -2914,13 +2913,13 @@ loc_BDE8:
 loc_BE0F:
 		cmp	byte_1E503, 0
 		jz	loc_BEDC
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		shl	ax, 5
-		mov	dx, word_20344
+		mov	dx, _scroll_line
 		shl	dx, 3
 		add	ax, dx
 		mov	word_20348, ax
-		test	byte ptr word_20344, 7
+		test	byte ptr _scroll_line, 7
 		jnz	short loc_BE3B
 		inc	word_2034A
 		mov	word_2034C, 1
@@ -2946,13 +2945,13 @@ loc_BE3B:
 					;
 		cmp	byte_1E501, 0
 		jz	short loc_BE77
-		inc	word_20344
+		inc	_scroll_line
 		jmp	short loc_BEE0
 ; ---------------------------------------------------------------------------
 
 loc_BE77:
-		mov	ax, 190h
-		sub	ax, word_20344
+		mov	ax, RES_Y
+		sub	ax, _scroll_line
 		mov	[bp+var_2], ax
 		mov	ax, word_20348
 		mov	[bp+var_4], ax
@@ -4113,10 +4112,10 @@ loc_C95E:
 		add	ax, ax
 		add	bx, ax
 		mov	di, [bx+2830h]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_C982
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_C982:
 		mov	bx, si
@@ -4227,7 +4226,7 @@ sub_CA1C	proc far
 		mov	bp, sp
 		mov	byte_20342, 1
 		mov	byte_20343, 0
-		mov	word_20344, 0
+		mov	_scroll_line, 0
 		mov	word_20346, 0
 		mov	word_2034A, 0
 		mov	byte_1E500, 4
@@ -5824,10 +5823,10 @@ loc_D508:
 ; ---------------------------------------------------------------------------
 
 loc_D50E:
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_D51C
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_D51C:
 		cmp	byte ptr [si+0Fh], 0
@@ -6699,11 +6698,11 @@ loc_DB9D:
 		jnz	short loc_DBFA
 
 loc_DBCA:
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	word_2189C, ax
-		cmp	word_2189C, 190h
+		cmp	word_2189C, RES_Y
 		jl	short loc_DBDF
-		sub	word_2189C, 190h
+		sub	word_2189C, RES_Y
 
 loc_DBDF:
 		push	word_2189A
@@ -7717,7 +7716,7 @@ var_2		= word ptr -2
 		mov	al, byte_20618
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, word_20344
+		mov	dx, _scroll_line
 		mov	bx, ax
 		mov	[bx+3E5Ch], dx
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
@@ -8104,11 +8103,11 @@ loc_E774:
 		jz	short loc_E7A0
 
 loc_E782:
-		mov	si, 5Ah	; 'Z'
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 90
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_E793
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_E793:
 		call	_pi_slot_put c, 112, si, 1
@@ -8322,11 +8321,11 @@ loc_E9A6:
 		jz	short loc_E9F3
 		call	grcg_off
 		mov	[bp+var_2], 10h
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	[bp+var_2], ax
-		cmp	[bp+var_2], 190h
+		cmp	[bp+var_2], RES_Y
 		jl	short loc_E9DB
-		sub	[bp+var_2], 190h
+		sub	[bp+var_2], RES_Y
 
 loc_E9DB:
 		call	_pi_slot_put stdcall, 32, [bp+var_2], 1
@@ -8533,11 +8532,11 @@ loc_EB9E:
 
 loc_EBCC:
 		call	grcg_off
-		mov	si, 54h	; 'T'
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 84
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_EBE2
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_EBE2:
 		call	_pi_slot_put c, 32, si, 1
@@ -8706,10 +8705,10 @@ arg_2		= word ptr  6
 		mov	es, ax
 		assume es:nothing
 		mov	dx, [bp+arg_0]
-		add	dx, word_20344
-		cmp	dx, 190h
+		add	dx, _scroll_line
+		cmp	dx, RES_Y
 		jl	short loc_ED47
-		sub	dx, 190h
+		sub	dx, RES_Y
 
 loc_ED47:
 		mov	bx, [bp+arg_2]
@@ -8777,10 +8776,10 @@ arg_4		= word ptr  8
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	dx, [bp+arg_2]
-		add	dx, word_20344
-		cmp	dx, 190h
+		add	dx, _scroll_line
+		cmp	dx, RES_Y
 		jl	short loc_EDBA
-		sub	dx, 190h
+		sub	dx, RES_Y
 
 loc_EDBA:
 		mov	ax, [bp+arg_4]
@@ -8827,11 +8826,11 @@ arg_2		= word ptr  6
 		push	di
 		mov	ax, 0A800h
 		mov	es, ax
-		mov	dx, 10h
-		add	dx, word_20344
-		cmp	dx, 190h
+		mov	dx, 16
+		add	dx, _scroll_line
+		cmp	dx, RES_Y
 		jl	short loc_EE0B
-		sub	dx, 190h
+		sub	dx, RES_Y
 
 loc_EE0B:
 		mov	ax, [bp+arg_2]
@@ -8920,10 +8919,10 @@ arg_4		= word ptr  8
 		mov	ax, 0A800h
 		mov	es, ax
 		mov	dx, [bp+arg_2]
-		add	dx, word_20344
-		cmp	dx, 190h
+		add	dx, _scroll_line
+		cmp	dx, RES_Y
 		jl	short loc_EE91
-		sub	dx, 190h
+		sub	dx, RES_Y
 
 loc_EE91:
 		mov	ax, [bp+arg_4]
@@ -9054,10 +9053,10 @@ loc_EF7F:
 		cmp	ax, 3
 		jge	short loc_EFAC
 		mov	si, word_205F8
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_EF9E
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_EF9E:
 		push	word_205F6
@@ -9070,10 +9069,10 @@ loc_EFAC:
 		jb	short loc_EFEF
 		mov	bx, word_205F4
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_EFC7
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_EFC7:
 		mov	bx, word_205F2
@@ -9147,10 +9146,10 @@ loc_F03D:
 		add	ax, 4
 		mov	[bp+var_2], ax
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_F078
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_F078:
 		mov	bx, word_205EE
@@ -9268,10 +9267,10 @@ loc_F198:
 		mov	bx, word_205F0
 		sub	word ptr [bx], 2
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_F1B6
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_F1B6:
 		mov	bx, word_205EE
@@ -10391,11 +10390,11 @@ loc_1019D:
 		add	ax, [bp+arg_2]
 		mov	[bp+var_2], ax
 		mov	[bp+var_6], ax
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	[bp+var_6], ax
-		cmp	[bp+var_6], 190h
+		cmp	[bp+var_6], RES_Y
 		jl	short loc_10208
-		sub	[bp+var_6], 190h
+		sub	[bp+var_6], RES_Y
 
 loc_10208:
 		cmp	di, 10h
@@ -10433,11 +10432,11 @@ loc_10258:
 		mov	ax, [bp+arg_0]
 		and	ax, 1
 		mov	[bp+var_8], ax
-		mov	ax, 190h
-		sub	ax, word_20344
+		mov	ax, RES_Y
+		sub	ax, _scroll_line
 		push	ax
-		mov	ax, word_20344
-		imul	ax, 28h
+		mov	ax, _scroll_line
+		imul	ax, 40
 		add	ax, [bp+var_8]
 		push	ax
 		push	[bp+var_8]
@@ -11818,10 +11817,10 @@ loc_10CD5:
 ; ---------------------------------------------------------------------------
 
 loc_10CDC:
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_10CEA
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_10CEA:
 		mov	al, [si+1]
@@ -12098,11 +12097,11 @@ loc_10EE4:
 		mov	ax, word_20686
 		and	ax, 1
 		mov	di, ax
-		mov	ax, 190h
-		sub	ax, word_20344
+		mov	ax, RES_Y
+		sub	ax, _scroll_line
 		push	ax
-		mov	ax, word_20344
-		imul	ax, 28h
+		mov	ax, _scroll_line
+		imul	ax, 40
 		add	ax, di
 		push	ax
 		push	di
@@ -12242,10 +12241,10 @@ loc_11013:
 		add	ax, dx
 		mov	bx, ax
 		mov	[bx+5338h], si
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_11095
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_11095:
 		push	[bp+var_2]
@@ -12387,10 +12386,10 @@ arg_0		= word ptr  4
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	si, es:[bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_111AF
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_111AF:
 		mov	bx, di
@@ -12425,10 +12424,10 @@ arg_0		= word ptr  4
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	si, es:[bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_111F3
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_111F3:
 		mov	bx, di
@@ -12519,10 +12518,10 @@ loc_112BA:
 		shl	bx, 2
 		les	bx, [bx+5300h]
 		mov	di, es:[bx]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_112D4
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_112D4:
 		mov	bx, si
@@ -12825,9 +12824,9 @@ loc_1152C:
 loc_11581:
 		cmp	word_20650, 80h
 		jge	short loc_115F0
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		and	ax, 3
-		add	ax, 90h
+		add	ax, 144
 		mov	word_22D4C, ax
 		xor	si, si
 		jmp	short loc_115E8
@@ -12877,9 +12876,9 @@ loc_115E8:
 ; ---------------------------------------------------------------------------
 
 loc_115F0:
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		and	ax, 3
-		add	ax, 90h
+		add	ax, 144
 		mov	word_22D4C, ax
 		cmp	word_20650, 80h
 		jnz	short loc_11608
@@ -13026,10 +13025,10 @@ loc_116F5:
 		mov	bx, si
 		add	bx, bx
 		mov	di, [bx+531Eh]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_11712
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_11712:
 		cmp	byte ptr [si+2BF5h], 0
@@ -13105,10 +13104,10 @@ arg_0		= word ptr  4
 		mov	bx, si
 		add	bx, bx
 		mov	di, [bx+531Eh]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_117B6
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_117B6:
 		cmp	si, 4
@@ -15155,11 +15154,11 @@ loc_127A5:
 		mov	byte_22D57, 0
 		mov	byte_1E510, 20h	; ' '
 		mov	word_22D9C, 60h
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	word_22D9C, ax
-		cmp	word_22D9C, 190h
+		cmp	word_22D9C, RES_Y
 		jl	short loc_12835
-		sub	word_22D9C, 190h
+		sub	word_22D9C, RES_Y
 
 loc_12835:
 		call	sub_11997
@@ -15568,13 +15567,13 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	si, word_20344
+		mov	si, _scroll_line
 		mov	ax, word_23A6E
 		mov	[bp+var_2], ax
 		add	si, word_23A6E
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jl	short loc_12B05
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12B05:
 		cmp	byte ptr [di+1], 5
@@ -15676,10 +15675,10 @@ loc_12BB1:
 		jnb	short loc_12C00
 		add	ax, 0FFF8h
 		mov	di, ax
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_12BDD
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_12BDD:
 		mov	ax, word_23A6C
@@ -15804,10 +15803,10 @@ sub_12CE5	proc near
 		mov	bp, sp
 		push	si
 		mov	si, word_205F8
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_12CFB
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12CFB:
 		push	word_205F6
@@ -15819,10 +15818,10 @@ loc_12CFB:
 		shl	ax, 2
 		mov	bx, ax
 		mov	si, [bx+2B8Ch]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_12D23
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12D23:
 		mov	al, byte_20618
@@ -15958,31 +15957,30 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, 20h	; ' '
+		mov	di, 32
 		nopcall	sub_FBE9
 		call	sub_DE4E
-		push	word_20344
-		call	graph_scrollup
+		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al
 		nopcall	sub_FBE9
-		mov	si, 140h
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 320
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_12E24
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12E24:
 		add	di, si
-		cmp	di, 190h
+		cmp	di, RES_Y
 		jl	short loc_12E30
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_12E30:
-		mov	[bp+var_4], 190h
+		mov	[bp+var_4], RES_Y
 		cmp	byte_2287E, 2
 		jnz	short loc_12E48
 		mov	byte_24E7B, 1
@@ -16039,17 +16037,17 @@ var_2		= word ptr -2
 		push	di
 		mov	di, 20h	; ' '
 		nopcall	sub_FBE9
-		mov	si, 140h
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 320
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_12EB4
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12EB4:
 		add	di, si
-		cmp	di, 190h
+		cmp	di, RES_Y
 		jl	short loc_12EC0
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_12EC0:
 		mov	[bp+var_4], 20h	; ' '
@@ -16107,11 +16105,11 @@ arg_0		= word ptr  4
 		mov	di, [bp+arg_0]
 		mov	[bp+var_2], 0
 		mov	[bp+var_4], 0
-		mov	si, 148h
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 328
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_12F47
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_12F47:
 		lea	ax, [si+10h]
@@ -17098,10 +17096,10 @@ loc_13630:
 		jge	short loc_13659
 		cmp	di, 1A0h
 		jge	short loc_13659
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1364A
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1364A:
 		mov	word_20164, di
@@ -17349,10 +17347,10 @@ loc_1387B:
 loc_13888:
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1389C
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1389C:
 		mov	bx, word_2065C
@@ -17461,22 +17459,22 @@ loc_1395A:
 		mov	bx, word_2065E
 		add	word ptr [bx], 2
 		mov	si, [bx]
-		add	si, word_20344
+		add	si, _scroll_line
 		or	si, si
 		jge	short loc_13979
-		add	si, 190h
+		add	si, RES_Y
 		jmp	loc_13AA8
 ; ---------------------------------------------------------------------------
 
 loc_13979:
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jl	loc_13AA8
-		sub	si, 190h
+		sub	si, RES_Y
 		jmp	loc_13AA8
 ; ---------------------------------------------------------------------------
 
 loc_13988:
-		test	byte ptr word_20344, 1
+		test	byte ptr _scroll_line, 1
 		jz	short loc_13997
 		mov	word_24E84, 95h
 		jmp	short loc_1399D
@@ -17494,13 +17492,13 @@ loc_1399D:
 
 loc_139AA:
 		call	sub_138B3
-		test	byte ptr word_20344, 0Fh
+		test	byte ptr _scroll_line, 0Fh
 		jnz	short loc_13A09
-		mov	si, 30h	; '0'
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 48
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_139C5
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_139C5:
 		mov	bx, word_2065C
@@ -17533,10 +17531,10 @@ loc_139C5:
 loc_13A09:
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_13A1D
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_13A1D:
 		mov	bx, word_2065C
@@ -17642,11 +17640,11 @@ sub_13ADE	proc far
 		nopcall	sub_129FC
 		mov	word_2064E, 96h
 		mov	word_24E7E, 30h	; '0'
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	word_24E7E, ax
-		cmp	word_24E7E, 190h
+		cmp	word_24E7E, RES_Y
 		jl	short loc_13B4E
-		sub	word_24E7E, 190h
+		sub	word_24E7E, RES_Y
 
 loc_13B4E:
 		cmp	byte_1E364, 0
@@ -18401,10 +18399,10 @@ loc_141A1:
 loc_141DC:
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_141F0
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_141F0:
 		mov	bx, word_2065C
@@ -18498,7 +18496,7 @@ var_2		= word ptr -2
 loc_1429E:
 		cmp	word_20650, 140h
 		jge	short loc_14321
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		sar	ax, 1
 		and	ax, 3
 		mov	[bp+var_2], ax
@@ -18512,17 +18510,17 @@ loc_1429E:
 loc_142C3:
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
+		add	si, _scroll_line
 		or	si, si
 		jge	short loc_142D7
-		add	si, 190h
+		add	si, RES_Y
 		jmp	short loc_142E1
 ; ---------------------------------------------------------------------------
 
 loc_142D7:
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jl	short loc_142E1
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_142E1:
 		mov	bx, word_2065C
@@ -18545,7 +18543,7 @@ loc_142E1:
 ; ---------------------------------------------------------------------------
 
 loc_14321:
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		sar	ax, 1
 		and	ax, 3
 		mov	[bp+var_2], ax
@@ -18561,17 +18559,17 @@ loc_1433E:
 		call	sub_14203
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
+		add	si, _scroll_line
 		or	si, si
 		jge	short loc_14355
-		add	si, 190h
+		add	si, RES_Y
 		jmp	short loc_1435F
 ; ---------------------------------------------------------------------------
 
 loc_14355:
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jl	short loc_1435F
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1435F:
 		mov	bx, word_2065C
@@ -18820,10 +18818,10 @@ sub_14519	proc near
 loc_1459F:
 		mov	bx, word_2065E
 		mov	si, [bx]
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_145B3
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_145B3:
 		cmp	word_20650, 20h	; ' '
@@ -18885,10 +18883,10 @@ var_2		= word ptr -2
 		mov	_player_is_hit, 1
 
 loc_1461A:
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_14628
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_14628:
 		mov	bx, word_2065C
@@ -19056,10 +19054,10 @@ loc_14739:
 		cmp	byte ptr [si+0Ah], 0
 		jbe	short loc_147A3
 		mov	di, [si+4]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_14757
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_14757:
 		push	word ptr [si+2]
@@ -19107,10 +19105,10 @@ loc_147C3:
 		add	ax, 1Ah
 		mov	[bp+var_4], ax
 		mov	di, [si+4]
-		add	di, word_20344
-		cmp	di, 190h
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_147E2
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_147E2:
 		push	word ptr [si+2]
@@ -20136,11 +20134,11 @@ loc_15093:
 		add	bx, bx
 		add	bx, [bp+var_8]
 		mov	[bp+var_4], ax
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	[bp+var_4], ax
-		cmp	[bp+var_4], 190h
+		cmp	[bp+var_4], RES_Y
 		jl	short loc_150D1
-		sub	[bp+var_4], 190h
+		sub	[bp+var_4], RES_Y
 
 loc_150D1:
 		mov	bx, di
@@ -20376,11 +20374,11 @@ sub_1523C	proc far
 		mov	word_2065E, ax
 		push	1
 		call	palette_white_out
-		mov	si, 30h	; '0'
-		add	si, word_20344
-		cmp	si, 190h
+		mov	si, 48
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_15296
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_15296:
 		mov	bx, word_2065C
@@ -20540,11 +20538,11 @@ loc_15393:
 		inc	byte ptr [si]
 		cmp	byte ptr [si], 7
 		jb	short loc_153F5
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		sub	[si+4],	ax
 		cmp	word ptr [si+4], 0
 		jge	short loc_153D5
-		add	word ptr [si+4], 190h
+		add	word ptr [si+4], RES_Y
 
 loc_153D5:
 		mov	ax, [si+2]
@@ -21515,11 +21513,11 @@ loc_15C95:
 		mov	ax, word_20650
 		and	ax, 1
 		mov	si, ax
-		mov	ax, 190h
-		sub	ax, word_20344
+		mov	ax, RES_Y
+		sub	ax, _scroll_line
 		push	ax
-		mov	ax, word_20344
-		imul	ax, 28h
+		mov	ax, _scroll_line
+		imul	ax, 40
 		add	ax, si
 		push	ax
 		push	si
@@ -24037,10 +24035,10 @@ loc_17226:
 		mov	al, [bx+1]
 		mov	ah, 0
 		mov	si, ax
-		sub	si, word_20344
+		sub	si, _scroll_line
 		or	si, si
 		jge	short loc_17244
-		add	si, 190h
+		add	si, RES_Y
 
 loc_17244:
 		mov	bx, word_26C48
@@ -24079,10 +24077,10 @@ loc_1728A:
 		mov	al, [bx+1]
 		mov	ah, 0
 		mov	si, ax
-		sub	si, word_20344
+		sub	si, _scroll_line
 		or	si, si
 		jge	short loc_172A8
-		add	si, 190h
+		add	si, RES_Y
 
 loc_172A8:
 		mov	bx, word_26C48
@@ -24520,10 +24518,10 @@ loc_17635:
 
 loc_1764B:
 		mov	si, word_26C50
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1765D
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1765D:
 		push	word_26C4E
@@ -24762,15 +24760,15 @@ loc_1789D:
 
 loc_178A8:
 		call	_snd_se_play c, 4
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_178C0
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_178C0:
 		or	si, si
 		jge	short loc_178C8
-		add	si, 190h
+		add	si, RES_Y
 
 loc_178C8:
 		push	word_26C4E
@@ -24806,15 +24804,15 @@ loc_17913:
 		mov	bx, word_26C48
 		cmp	word ptr [bx+8], 0
 		jz	short loc_17964
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1792B
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1792B:
 		or	si, si
 		jge	short loc_17933
-		add	si, 190h
+		add	si, RES_Y
 
 loc_17933:
 		mov	bx, word_26C46
@@ -28772,11 +28770,11 @@ var_2		= word ptr -2
 		call	sub_4692
 		egc_setrop	EGC_WS_ROP or 0FCh
 		mov	word_26D54, 98h
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	word_26D54, ax
-		cmp	word_26D54, 190h
+		cmp	word_26D54, RES_Y
 		jl	short loc_19EA7
-		sub	word_26D54, 190h
+		sub	word_26D54, RES_Y
 
 loc_19EA7:
 		mov	ax, word_26D54
@@ -28875,17 +28873,17 @@ sub_19F52	proc near
 		mov	bp, sp
 		push	si
 		mov	si, word_26D78
-		add	si, word_20344
+		add	si, _scroll_line
 		or	si, si
 		jge	short loc_19F68
-		add	si, 190h
+		add	si, RES_Y
 		jmp	short loc_19F72
 ; ---------------------------------------------------------------------------
 
 loc_19F68:
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jl	short loc_19F72
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_19F72:
 		cmp	byte_2066B, 0
@@ -28960,10 +28958,10 @@ loc_19FDA:
 
 loc_1A021:
 		mov	si, word_26D78
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1A033
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1A033:
 		push	word_26D76
@@ -29001,17 +28999,17 @@ sub_1A044	proc near
 		mov	byte_2066B, 1
 		add	word_2065A, di
 		mov	si, word_26D78
-		add	si, word_20344
-		cmp	si, 190h
+		add	si, _scroll_line
+		cmp	si, RES_Y
 		jl	short loc_1A07E
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_1A07E:
 		cmp	word_2065A, 190h
 		jl	short loc_1A0CA
-		cmp	si, 150h
+		cmp	si, 336
 		jge	short loc_1A0CA
-		cmp	si, 60h
+		cmp	si, 96
 		jle	short loc_1A0CA
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
@@ -29517,18 +29515,18 @@ var_2		= word ptr -2
 		push	di
 		xor	di, di
 		mov	[bp+var_2], 0
-		mov	di, 140h
-		add	di, word_20344
-		cmp	di, 190h
+		mov	di, 320
+		add	di, _scroll_line
+		cmp	di, RES_Y
 		jl	short loc_1A48B
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_1A48B:
 		lea	ax, [di+20h]
 		add	[bp+var_2], ax
-		cmp	[bp+var_2], 190h
+		cmp	[bp+var_2], RES_Y
 		jl	short loc_1A49D
-		sub	[bp+var_2], 190h
+		sub	[bp+var_2], RES_Y
 
 loc_1A49D:
 		push	20h ; ' '
@@ -29745,7 +29743,7 @@ sub_1A6C5	proc near
 		mov	dx, word_205F8
 		mov	bx, ax
 		mov	[bx+2B7Ah], dx
-		mov	word_20344, 0
+		mov	_scroll_line, 0
 		mov	word_20348, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, 0
@@ -29758,8 +29756,7 @@ sub_1A6C5	proc near
 		mov	vsync_Count1, 0
 		push	1
 		call	frame_delay
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		mov	dx, 0A6h ; '¦'
 		mov	al, byte_20619
 		out	dx, al
@@ -32887,11 +32884,11 @@ loc_1C2A7:
 		jle	short loc_1C32C
 		cmp	word_20166, 180h
 		jge	short loc_1C32C
-		mov	ax, word_20344
+		mov	ax, _scroll_line
 		add	word_20166, ax
-		cmp	word_20166, 190h
+		cmp	word_20166, RES_Y
 		jl	short loc_1C321
-		sub	word_20166, 190h
+		sub	word_20166, RES_Y
 
 loc_1C321:
 		mov	al, [bp+var_4]
@@ -36783,7 +36780,7 @@ byte_20340	db ?
 byte_20341	db ?
 byte_20342	db ?
 byte_20343	db ?
-word_20344	dw ?
+_scroll_line	dw ?
 word_20346	dw ?
 word_20348	dw ?
 word_2034A	dw ?
