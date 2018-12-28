@@ -1035,7 +1035,7 @@ loc_B4BB:
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	sub_118F3
-		call	sub_BBE8
+		call	tiles_render_all
 		mov	byte_25352, 1
 		mov	byte_25353, 0
 		mov	dx, 0A6h ; '¦'
@@ -1044,7 +1044,7 @@ loc_B4BB:
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
-		call	sub_BBE8
+		call	tiles_render_all
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B506
@@ -1128,7 +1128,7 @@ sub_B55A	proc near
 		call	sub_143CA
 		call	sub_C29E
 		nopcall	sub_106F3
-		mov	fp_23F5A, offset sub_BBE8
+		mov	fp_23F5A, offset tiles_render_all
 		call	sub_BEBC
 		pop	bp
 		retn
@@ -1834,56 +1834,7 @@ loc_BBCF:
 		retn
 sub_BB9A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BBE8	proc near
-		push	si
-		push	di
-		call	egc_start_copy_inlined_noframe
-		mov	di, 7804h
-		mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-
-loc_BBF8:
-		mov	dl, TILES_X
-
-loc_BBFA:
-		mov	si, [bx]
-		mov	cx, 10h
-		nop
-
-loc_BC00:
-		mov	ax, es:[si]
-		mov	es:[di], ax
-		add	si, ROW_SIZE
-		add	di, ROW_SIZE
-		loop	loc_BC00
-		sub	di, 4FEh
-		add	bx, 2
-		dec	dl
-		jnz	short loc_BBFA
-		sub	bx, (TILES_MEMORY_X + TILES_X) * 2
-		sub	di, 530h
-		jge	short loc_BBF8
-		call	egc_off
-		pop	di
-		pop	si
-		retn
-tiles_render_all	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-egc_start_copy_inlined_noframe	proc near
-		EGC_START_COPY_INLINED
-		retn
-egc_start_copy_inlined_noframe	endp
-		nop
+include th04/tiles_render_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2135,7 +2086,7 @@ sub_BEE6	endp
 sub_BF0E	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_BBE8
+		call	tiles_render_all
 		dec	byte_23F5E
 		cmp	byte_23F5E, 0
 		jnz	short loc_BF25
@@ -4516,7 +4467,7 @@ loc_D0DC:
 		jg	short loc_D0EF
 
 loc_D0EA:
-		call	sub_BBE8
+		call	tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -4553,7 +4504,7 @@ loc_D108:
 		mov	si, ax
 		cmp	si, 8
 		jge	short loc_D124
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D142
 ; ---------------------------------------------------------------------------
 
@@ -4590,7 +4541,7 @@ loc_D167:
 		jg	short loc_D17A
 
 loc_D175:
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D17D
 ; ---------------------------------------------------------------------------
 
@@ -4629,7 +4580,7 @@ loc_D194:
 		mov	si, ax
 		cmp	si, 8
 		jge	short loc_D1B0
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D1CE
 ; ---------------------------------------------------------------------------
 
@@ -4666,7 +4617,7 @@ loc_D1F3:
 		jg	short loc_D206
 
 loc_D201:
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D209
 ; ---------------------------------------------------------------------------
 
@@ -4706,7 +4657,7 @@ loc_D220:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_D23E
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D25C
 ; ---------------------------------------------------------------------------
 
@@ -4747,7 +4698,7 @@ loc_D286:
 		jg	short loc_D299
 
 loc_D294:
-		call	sub_BBE8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -4779,7 +4730,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_D2C7
-		call	sub_BBE8
+		call	tiles_render_all
 		jmp	short loc_D2E5
 ; ---------------------------------------------------------------------------
 
@@ -4820,7 +4771,7 @@ loc_D30F:
 		jg	short loc_D322
 
 loc_D31D:
-		call	sub_BBE8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -6155,7 +6106,7 @@ loc_DD2A:
 		jg	short loc_DD3D
 
 loc_DD38:
-		call	sub_BBE8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -30840,7 +30791,7 @@ loc_1AEDF:
 		mov	word_2CE04, ax
 
 loc_1AEE2:
-		mov	fp_23F5A, offset sub_BBE8
+		mov	fp_23F5A, offset tiles_render_all
 		mov	word_25FE6, 2
 		mov	ax, boss_phase_frame
 		mov	bx, 8
@@ -39460,7 +39411,7 @@ loc_1FC52:
 		mov	word_2CE04, ax
 
 loc_1FC55:
-		mov	fp_23F5A, offset sub_BBE8
+		mov	fp_23F5A, offset tiles_render_all
 		mov	word_25FE6, 2
 		mov	ax, boss_phase_frame
 		mov	bx, 8

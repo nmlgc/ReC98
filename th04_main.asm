@@ -901,7 +901,7 @@ loc_B156:
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		call	sub_10D77
-		call	sub_CBB8
+		call	tiles_render_all
 		mov	byte_25A3C, 1
 		mov	byte_25A3D, 0
 		mov	dx, 0A6h ; '¦'
@@ -910,7 +910,7 @@ loc_B156:
 		mov	dx, 0A4h
 		mov	al, 0
 		out	dx, al
-		call	sub_CBB8
+		call	tiles_render_all
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_B1AE
@@ -980,7 +980,7 @@ sub_B1D0	proc near
 		call	sub_15D74
 		call	sub_BCB2
 		nopcall	sub_F204
-		mov	fp_255AC, offset sub_CBB8
+		mov	fp_255AC, offset tiles_render_all
 		call	sub_CB2E
 		pop	bp
 		retn
@@ -4142,7 +4142,7 @@ sub_CB58	endp
 sub_CB80	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_CBB8
+		call	tiles_render_all
 		dec	byte_255B0
 		cmp	byte_255B0, 0
 		jnz	short loc_CB97
@@ -4186,56 +4186,7 @@ sub_CBA4	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CBB8	proc near
-		push	si
-		push	di
-		call	egc_start_copy_inlined_noframe
-		mov	di, 7804h
-		mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-
-loc_CBC8:
-		mov	dl, TILES_X
-
-loc_CBCA:
-		mov	si, [bx]
-		mov	cx, 10h
-		nop
-
-loc_CBD0:
-		mov	ax, es:[si]
-		mov	es:[di], ax
-		add	si, ROW_SIZE
-		add	di, ROW_SIZE
-		loop	loc_CBD0
-		sub	di, 4FEh
-		add	bx, 2
-		dec	dl
-		jnz	short loc_CBCA
-		sub	bx, (TILES_MEMORY_X + TILES_X) * 2
-		sub	di, 530h
-		jge	short loc_CBC8
-		call	egc_off
-		pop	di
-		pop	si
-		retn
-tiles_render_all	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-egc_start_copy_inlined_noframe	proc near
-		EGC_START_COPY_INLINED
-		retn
-egc_start_copy_inlined_noframe	endp
-		nop
+include th04/tiles_render_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15251,7 +15202,7 @@ loc_121D3:
 		jg	short loc_121E6
 
 loc_121E1:
-		call	sub_CBB8
+		call	tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15301,7 +15252,7 @@ loc_1222F:
 		jg	short loc_12242
 
 loc_1223D:
-		call	sub_CBB8
+		call	tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15380,7 +15331,7 @@ loc_122BF:
 		jg	short loc_122D2
 
 loc_122CD:
-		call	sub_CBB8
+		call	tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -15418,7 +15369,7 @@ loc_122EB:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_12309
-		call	sub_CBB8
+		call	tiles_render_all
 		jmp	short loc_12327
 ; ---------------------------------------------------------------------------
 
@@ -15458,7 +15409,7 @@ loc_1234C:
 		jg	short loc_1235F
 
 loc_1235A:
-		call	sub_CBB8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -15496,7 +15447,7 @@ loc_12378:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_12396
-		call	sub_CBB8
+		call	tiles_render_all
 		jmp	short loc_123B4
 ; ---------------------------------------------------------------------------
 
@@ -15536,7 +15487,7 @@ loc_123D9:
 		jg	short loc_123EC
 
 loc_123E7:
-		call	sub_CBB8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -16272,7 +16223,7 @@ var_1		= byte ptr -1
 		mov	fp_2566C, offset nullsub_1
 
 loc_12991:
-		call	sub_CBB8
+		call	tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -16287,7 +16238,7 @@ loc_12996:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_129B4
-		call	sub_CBB8
+		call	tiles_render_all
 		jmp	short loc_129D2
 ; ---------------------------------------------------------------------------
 
@@ -38048,7 +37999,7 @@ loc_1E775:
 		mov	word_255C0, ax
 
 loc_1E778:
-		mov	fp_255AC, offset sub_CBB8
+		mov	fp_255AC, offset tiles_render_all
 		mov	word_266D0, 2
 		inc	word_2671A
 		mov	ax, word_2671A

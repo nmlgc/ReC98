@@ -6,6 +6,8 @@
 ; anything with?
 TILES_MEMORY_X = 512 / TILE_W
 
+; TH04 starts addressing individual tiles directly via their 16-bit offset
+; in the VRAM.
 public _tile_ring
 _tile_ring	dw (TILES_MEMORY_X * TILES_Y) dup(?)
 
