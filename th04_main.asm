@@ -421,10 +421,10 @@ loc_AC58:
 
 loc_AC7A:
 		call	sub_CCD6
-		graph_accesspage byte_25A3D
-		graph_showpage byte_25A3C
-		mov	byte_25A3D, al
-		xor	byte_25A3C, 1
+		graph_accesspage _page_front
+		graph_showpage _page_back
+		mov	_page_front, al
+		xor	_page_back, 1
 		call	snd_se_update
 		inc	dword_266C6
 		mov	ax, frame
@@ -893,8 +893,8 @@ loc_B156:
 		call	far ptr	palette_show
 		call	sub_10D77
 		call	tiles_render_all
-		mov	byte_25A3C, 1
-		mov	byte_25A3D, 0
+		mov	_page_back, 1
+		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
 		call	tiles_render_all
@@ -1738,7 +1738,7 @@ loc_BA2E:
 		cmp	ax, 180h
 		jge	short locret_B9EC
 		mov	bh, 0
-		mov	bl, byte_25A3C
+		mov	bl, _page_back
 		add	bx, bx
 		add	ax, [bx+4260h]
 		jns	short loc_BA46
@@ -4129,7 +4129,7 @@ sub_CC3A	endp
 sub_CCD6	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_25A3C
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, _scroll_line
@@ -4445,7 +4445,7 @@ sub_CF44	proc near
 		mov	bp, sp
 		cmp	_scroll_speed, 0
 		jnz	short loc_CFB6
-		cmp	byte_25A3C, 1
+		cmp	_page_back, 1
 		jnz	short loc_CFB6
 		cmp	stage_id, 5
 		jz	short loc_CF63
@@ -4554,7 +4554,7 @@ sub_D016	proc near
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
 		mov	dx, 0A6h
-		mov	al, byte_25A3D
+		mov	al, _page_front
 
 loc_D02B:
 		mov	cx, 18h
@@ -4603,7 +4603,7 @@ arg_2		= word ptr  6
 		shr	ax, 3
 		add	di, ax
 		mov	dx, 0A6h
-		mov	al, byte_25A3C
+		mov	al, _page_back
 
 loc_D075:
 		mov	cx, 8
@@ -5407,14 +5407,14 @@ sub_D6EB	proc far
 		call	sub_10D4B
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		graph_accesspage byte_25A3D
+		graph_accesspage _page_front
 		call	sub_D098
 		call	sub_D016
 		call	sub_D56C
 		push	2
 		nopcall	sub_CBA4
 		call	sub_D7EE
-		graph_accesspage byte_25A3C
+		graph_accesspage _page_back
 		push	1
 		call	frame_delay
 		pop	bp
@@ -45474,8 +45474,7 @@ word_25A36	dw ?
 byte_25A38	db ?
 		db ?
 word_25A3A	dw ?
-byte_25A3C	db ?
-byte_25A3D	db ?
+include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/tiles[bss].asm
 dword_266C6	dd ?

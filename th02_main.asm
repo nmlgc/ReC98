@@ -407,7 +407,7 @@ sub_3EF4	proc far
 loc_3F15:
 		cmp	byte ptr [si], 0
 		jz	short loc_3F77
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -419,7 +419,7 @@ loc_3F15:
 		mov	word_20166, ax
 		cmp	byte_2066C, 0
 		jz	short loc_3F4B
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		mov	dx, di
 		and	dx, 1
@@ -440,7 +440,7 @@ loc_3F54:
 ; ---------------------------------------------------------------------------
 
 loc_3F5E:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -526,7 +526,7 @@ loc_3FC1:
 		db 0e8h
 		db 075h
 		db 0b5h
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -579,7 +579,7 @@ loc_4055:
 		mov	[si+0Ah], bl
 		cmp	byte_2066C, 0
 		jz	short loc_406E
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		mov	dx, [bp+var_2]
 		and	dx, 1
@@ -646,7 +646,7 @@ loc_40A1:
 		mov	cl, 14h
 		imul	cl
 		add	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	[bp+var_6], ax
@@ -808,7 +808,7 @@ loc_41C7:
 ; ---------------------------------------------------------------------------
 
 loc_41CF:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
@@ -913,7 +913,7 @@ sub_4288	proc far
 loc_4296:
 		cmp	byte ptr [si], 0
 		jz	short loc_42EB
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -943,7 +943,7 @@ loc_42C3:
 ; ---------------------------------------------------------------------------
 
 loc_42D2:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -973,7 +973,7 @@ sub_4288	endp
 sub_42F8	proc far
 		mov	word_22796, 17h
 		mov	byte_22798, 0
-		mov	byte_20618, 0
+		mov	_page_back, 0
 		mov	byte_2287E, 1
 		mov	byte_22D48, 0
 		retf
@@ -1260,7 +1260,7 @@ loc_44D9:
 		add	ax, dx
 		add	ax, 4
 		mov	di, ax
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		mov	ax, 0A800h
 		mov	es, ax
 		xor	si, si
@@ -1279,7 +1279,7 @@ loc_4508:
 loc_4517:
 		cmp	si, 18h
 		jl	short loc_4508
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		jmp	short loc_4534
 ; ---------------------------------------------------------------------------
 
@@ -1775,7 +1775,7 @@ arg_4		= word ptr  0Ah
 		mov	al, byte ptr [bp+@@tile]
 		mov	_tile_ring[bx], al
 		call	egc_start_copy_noframe
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		mov	si, ax
@@ -1790,7 +1790,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	[bp+@@tile]
 		call	sub_43E0
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		push	[bp+var_6]
 		push	[bp+@@tile]
 		call	sub_43E0
@@ -2480,12 +2480,12 @@ loc_B922:
 		push	23F018Fh
 		call	grcg_boxfill
 		call	grcg_off
-		mov	byte_20619, 1
-		mov	al, byte_20619
+		mov	_page_front, 1
+		mov	al, _page_front
 		out	0A4h, al
 		xor	al, al
 		out	0A6h, al
-		mov	byte_20618, al
+		mov	_page_back, al
 		pop	si
 		leave
 		retn
@@ -2516,9 +2516,9 @@ sub_B98E	proc near
 		mov	word_205EA, ax
 		call	sub_C5B0
 		mov	byte_20605, 0C8h
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		call	sub_4782
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		call	sub_4782
 		call	sub_10E0A
 		mov	PaletteTone, 64h	; 'd'
@@ -2767,7 +2767,7 @@ loc_BCC3:
 		call	farfp_1F498
 		call	bgm_show
 		mov	si, _scroll_line
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_8]
@@ -2843,7 +2843,7 @@ loc_BD9C:
 		mov	byte_1E503, al
 
 loc_BDA2:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_8]
@@ -2980,11 +2980,11 @@ loc_BEED:
 		cmp	ax, vsync_Count1
 		ja	short loc_BEED
 		mov	vsync_Count1, 0
-		mov	al, byte_20618
-		mov	byte_20619, al
+		mov	al, _page_back
+		mov	_page_front, al
 		out	0A4h, al
-		xor	byte_20618, 1
-		mov	al, byte_20618
+		xor	_page_back, 1
+		mov	al, _page_back
 		out	0A6h, al
 		call	farfp_1F494
 		les	bx, mikoconfig
@@ -3712,22 +3712,22 @@ var_2		= word ptr -2
 		push	si
 		mov	[bp+var_2], 2
 		call	sub_D38F
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2B76h
 		mov	word_205EE, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2B7Ah
 		mov	word_205F0, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 2B8Ah
 		mov	word_205F2, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 2B8Ch
@@ -3751,14 +3751,14 @@ var_2		= word ptr -2
 		push	word ptr [bx]
 		push	100010h
 		call	sub_45FC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2B76h]
 		mov	bx, word_205EE
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -3911,7 +3911,7 @@ loc_C825:
 		push	word ptr [bx+2808h]
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
@@ -3927,14 +3927,14 @@ loc_C825:
 loc_C85F:
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
 		mov	ax, [bx+2830h]
 		mov	bx, si
 		shl	bx, 2
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	bx, dx
@@ -4062,7 +4062,7 @@ loc_C930:
 		jbe	short loc_C95E
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
@@ -4077,7 +4077,7 @@ loc_C95E:
 		inc	byte ptr [si+28BCh]
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
@@ -4228,7 +4228,7 @@ arg_2		= word ptr  6
 		shl	ax, 4
 		add	ax, 2908h
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	cx, ax
@@ -4285,7 +4285,7 @@ arg_4		= word ptr  8
 		shl	ax, 4
 		add	ax, 2908h
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, ax
@@ -5234,7 +5234,7 @@ loc_D133:
 		jl	short loc_D158
 		mov	bx, word_205E2
 		shl	bx, 4
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -5620,7 +5620,7 @@ loc_D3A3:
 		jz	loc_D46E
 		cmp	byte_2066C, 0
 		jz	short loc_D3BF
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		mov	dx, di
 		and	dx, 1
@@ -5628,7 +5628,7 @@ loc_D3A3:
 		jnz	short loc_D419
 
 loc_D3BF:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -5642,7 +5642,7 @@ loc_D3BF:
 
 loc_D3DE:
 		push	[bp+var_2]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -5655,7 +5655,7 @@ loc_D3DE:
 
 loc_D3FA:
 		push	[bp+var_2]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -5677,24 +5677,24 @@ loc_D419:
 loc_D423:
 		mov	bx, di
 		shl	bx, 4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, [bx+290Ah]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
 		mov	[bx+si+2], ax
 		mov	bx, di
 		shl	bx, 4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, [bx+290Ch]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
@@ -5742,10 +5742,10 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	al, byte_2066C
-		mov	cl, byte_20618
+		mov	cl, _page_back
 		shl	al, cl
 		mov	[bp+var_9], al
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	[bp+var_C], ax
@@ -6298,7 +6298,7 @@ loc_D880:
 		jz	short loc_D8F9
 		mov	ax, si
 		shl	ax, 4
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
@@ -6313,7 +6313,7 @@ loc_D880:
 		call	sub_45FC
 		mov	bx, si
 		shl	bx, 4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -6321,7 +6321,7 @@ loc_D880:
 		mov	[di], ax
 		mov	bx, si
 		shl	bx, 4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -6594,7 +6594,7 @@ var_2		= word ptr -2
 loc_DB0D:
 		cmp	byte ptr [si], 1
 		jnz	loc_DBFA
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
@@ -7683,7 +7683,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		inc	word_218C8
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, _scroll_line
@@ -9404,7 +9404,7 @@ loc_F2C2:
 		jnz	short loc_F2FB
 		or	si, si
 		jge	short loc_F2D8
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	si, ax
 		jmp	short loc_F2E3
@@ -9413,14 +9413,14 @@ loc_F2C2:
 loc_F2D8:
 		or	si, si
 		jle	short loc_F2E3
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		sub	si, ax
 
 loc_F2E3:
 		or	di, di
 		jge	short loc_F2F0
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	di, ax
 		jmp	short loc_F2FB
@@ -9429,7 +9429,7 @@ loc_F2E3:
 loc_F2F0:
 		or	di, di
 		jle	short loc_F2FB
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		sub	di, ax
 
@@ -10140,14 +10140,14 @@ sub_FF91	proc near
 		push	bp
 		mov	bp, sp
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		push	20000h
 		push	3018Fh
 		call	grcg_byteboxfill_x
 		push	340000h
 		push	35018Fh
 		call	grcg_byteboxfill_x
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		push	20000h
 		push	3018Fh
 		call	grcg_byteboxfill_x
@@ -10604,7 +10604,7 @@ arg_6		= dword	ptr  0Ah
 		mov	si, [bp+arg_2]
 		mov	[bp+var_2], 0
 		xor	di, di
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -10616,7 +10616,7 @@ arg_6		= dword	ptr  0Ah
 		mov	ax, word_205F6
 		add	ax, 0Ch
 		mov	[bp+var_8], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -10972,12 +10972,12 @@ loc_10684:
 loc_1069D:
 		les	bx, [bp+arg_6]
 		inc	word ptr es:[bx]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		shl	word ptr [bx+si+2], 4
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -11162,13 +11162,13 @@ loc_107D9:
 		imul	ax, 14h
 		add	ax, 2C18h
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, [bp+arg_8]
 		mov	bx, ax
 		mov	[bx+si+2], dx
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, [bp+arg_6]
@@ -11296,13 +11296,13 @@ loc_108B8:
 		inc	di
 		cmp	[bp+arg_4], 80h
 		jnb	short loc_10924
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, [bp+arg_A]
 		mov	bx, ax
 		mov	[bx+si+2], dx
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, [bp+arg_8]
@@ -11325,14 +11325,14 @@ loc_108B8:
 loc_10924:
 		mov	ax, [bp+arg_A]
 		shl	ax, 4
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
 		mov	[bx+si+2], ax
 		mov	ax, [bp+arg_8]
 		shl	ax, 4
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
@@ -11686,13 +11686,13 @@ loc_10BDB:
 		imul	ax, 14h
 		add	ax, 2C18h
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
 		add	ax, 2
 		mov	word_2174E, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
@@ -11849,7 +11849,7 @@ loc_10D4C:
 		jz	loc_10DFD
 		mov	ax, si
 		imul	ax, 14h
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
@@ -11857,7 +11857,7 @@ loc_10D4C:
 		mov	word_2174E, ax
 		mov	ax, si
 		imul	ax, 14h
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
@@ -11895,7 +11895,7 @@ loc_10D4C:
 loc_10DCB:
 		mov	bx, si
 		imul	bx, 14h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -11904,7 +11904,7 @@ loc_10DCB:
 		mov	[bx], ax
 		mov	bx, si
 		imul	bx, 14h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -11995,7 +11995,7 @@ sub_10E4F	proc far
 ; ---------------------------------------------------------------------------
 
 loc_10E57:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 8
 		mov	dx, si
@@ -12003,7 +12003,7 @@ loc_10E57:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr [bx+5336h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 8
 		mov	dx, si
@@ -12190,7 +12190,7 @@ loc_11013:
 		sar	eax, 8
 		add	ax, word_22DA2
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 8
 		mov	dx, di
@@ -12199,7 +12199,7 @@ loc_11013:
 		mov	dx, [bp+var_2]
 		mov	bx, ax
 		mov	[bx+5336h], dx
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 8
 		mov	dx, di
@@ -12258,7 +12258,7 @@ loc_110C3:
 loc_110CE:
 		mov	ax, si
 		shl	ax, 2
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	ax, dx
@@ -12269,7 +12269,7 @@ loc_110CE:
 		mov	[bx+52ECh], ax
 		mov	ax, si
 		shl	ax, 2
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	ax, dx
@@ -12290,7 +12290,7 @@ loc_110CE:
 		call	sub_45FC
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
@@ -12301,7 +12301,7 @@ loc_110CE:
 		mov	es:[bx], ax
 		mov	bx, si
 		shl	bx, 2
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
@@ -12736,14 +12736,14 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 0
 		cmp	byte_20660, 0
 		jnz	short loc_1150C
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BACh]
 		add	ax, 18h
 		mov	word_205D8, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -12752,14 +12752,14 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_1150C:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BB0h]
 		add	ax, 18h
 		mov	word_205D8, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -15174,7 +15174,7 @@ arg_6		= word ptr  0Ah
 		mov	ax, [bp+arg_6]
 		add	ax, [bp+arg_2]
 		mov	[bp+var_A], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		shl	al, 2
 		add	al, 4
 		mov	[bp+var_B], al
@@ -15779,7 +15779,7 @@ loc_12CFB:
 		push	si
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -15790,7 +15790,7 @@ loc_12CFB:
 		sub	si, RES_Y
 
 loc_12D23:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -15798,7 +15798,7 @@ loc_12D23:
 		push	si
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -15929,7 +15929,7 @@ var_2		= word ptr -2
 		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		nopcall	sub_FBE9
 		mov	si, 320
 		add	si, _scroll_line
@@ -16043,7 +16043,7 @@ loc_12EC5:
 		mov	byte_2287E, 2
 
 loc_12F18:
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		pop	di
 		pop	si
 		leave
@@ -16937,13 +16937,13 @@ loc_13527:
 		les	bx, [bp+var_4]
 		cmp	byte ptr es:[bx], 0
 		jz	short loc_135AC
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		les	bx, [bp+var_4]
 		add	bx, ax
 		push	word ptr es:[bx+2]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word ptr [bp+var_4]
@@ -16959,25 +16959,25 @@ loc_13527:
 ; ---------------------------------------------------------------------------
 
 loc_1356A:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		les	bx, [bp+var_4]
 		add	bx, ax
 		mov	ax, es:[bx+2]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, word ptr [bp+var_4]
 		add	bx, dx
 		mov	es:[bx+2], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word ptr [bp+var_4]
 		add	bx, ax
 		mov	ax, es:[bx+6]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, word ptr [bp+var_4]
@@ -17023,24 +17023,24 @@ loc_135D3:
 		jnz	short loc_13659
 		les	bx, [bp+var_6]
 		mov	ax, es:[bx+0Ah]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	bx, dx
 		sub	es:[bx+2], ax
 		mov	bx, word ptr [bp+var_6]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	bx, dx
 		add	es:[bx+6], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word ptr [bp+var_6]
 		add	bx, ax
 		mov	di, es:[bx+2]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word ptr [bp+var_6]
@@ -17202,12 +17202,12 @@ sub_13671	endp
 sub_13786	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -17234,14 +17234,14 @@ loc_137BE:
 loc_137CC:
 		push	60h
 		call	sub_45FC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -17659,7 +17659,7 @@ sub_13B8B	endp
 sub_13BB5	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
@@ -17669,7 +17669,7 @@ sub_13BB5	proc far
 		push	300040h
 		push	60h
 		call	sub_45FC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -18278,12 +18278,12 @@ sub_140AE	endp
 sub_1410A	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -18294,14 +18294,14 @@ sub_1410A	proc far
 		push	word ptr [bx]
 		push	400040h
 		call	sub_45FC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -18595,12 +18595,12 @@ sub_143E5	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -18618,7 +18618,7 @@ sub_143E5	proc far
 ; ---------------------------------------------------------------------------
 
 loc_14428:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18629,7 +18629,7 @@ loc_14428:
 		mov	bx, word_2065C
 		cmp	ax, [bx]
 		jz	short loc_14493
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18640,7 +18640,7 @@ loc_14428:
 		mov	bx, word_2065E
 		cmp	ax, [bx]
 		jz	short loc_14493
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18648,7 +18648,7 @@ loc_14428:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr [bx+7676h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18660,7 +18660,7 @@ loc_14428:
 		call	sub_45FC
 
 loc_14493:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18668,7 +18668,7 @@ loc_14493:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, [bx+7676h]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		imul	dx, 6
 		mov	bx, si
@@ -18676,7 +18676,7 @@ loc_14493:
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+7676h], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		imul	ax, 6
 		mov	dx, si
@@ -18684,7 +18684,7 @@ loc_14493:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, [bx+7682h]
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		imul	dx, 6
 		mov	bx, si
@@ -18699,14 +18699,14 @@ loc_144E6:
 		jl	loc_14428
 
 loc_144ED:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -19927,12 +19927,12 @@ var_2		= word ptr -2
 		push	di
 		cmp	word_20650, 32h	; '2'
 		jl	loc_150F0
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		add	ax, 7676h
 		mov	[bp+var_6], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
 		add	ax, 7682h
@@ -20324,12 +20324,12 @@ sub_1523C	proc far
 		mov	word_20654, ax
 		mov	word_20656, 30h	; '0'
 		mov	word_20658, 30h	; '0'
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -20936,7 +20936,7 @@ loc_15721:
 		les	bx, [bp+var_4]
 		cmp	byte ptr es:[bx], 3
 		jnz	loc_15849
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		mov	dx, si
 		and	dx, 1
@@ -20982,7 +20982,7 @@ loc_1579B:
 		cbw
 		pop	dx
 		add	dx, ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -20999,7 +20999,7 @@ loc_1579B:
 		pop	dx
 		sub	dx, ax
 		add	dx, 0FFE0h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21015,7 +21015,7 @@ loc_1579B:
 		cbw
 		pop	dx
 		add	dx, ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21032,7 +21032,7 @@ loc_1579B:
 		pop	dx
 		sub	dx, ax
 		add	dx, 0FFE0h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21046,7 +21046,7 @@ loc_15849:
 		les	bx, [bp+var_4]
 		cmp	byte ptr es:[bx], 4
 		jnz	short loc_158CD
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		mov	dx, si
 		and	dx, 1
@@ -21153,7 +21153,7 @@ var_2		= word ptr -2
 		add	word_2065A, ax
 
 loc_1594A:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_254E6
@@ -21161,7 +21161,7 @@ loc_1594A:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jle	short loc_159A4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_254E6
@@ -21169,14 +21169,14 @@ loc_1594A:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jge	short loc_159A4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2B7Ah]
 		cmp	ax, word_254E8
 		jle	short loc_159A4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_254E8
@@ -21207,24 +21207,24 @@ var_2		= word ptr -2
 		mov	bp, sp
 		sub	sp, 2
 		mov	[bp+var_2], 8
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
 		mov	word_2065E, ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21271,7 +21271,7 @@ loc_15A54:
 		cmp	word_20650, 5Ah	; 'Z'
 		jge	short loc_15AD0
 		call	sub_158DC
-		cmp	byte_20618, 0
+		cmp	_page_back, 0
 		jnz	short loc_15A8A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, word_254E6
@@ -21287,7 +21287,7 @@ loc_15A54:
 loc_15A8A:
 		cmp	word_20650, 32h	; '2'
 		jl	short loc_15ABA
-		cmp	byte_20618, 0
+		cmp	_page_back, 0
 		jz	short loc_15ABA
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, word_254E6
@@ -21335,13 +21335,13 @@ loc_15AD0:
 		mov	dx, word_254E6
 		add	dx, 38h	; '8'
 		sub	dx, ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	dx, [bx+2B76h]
 		jge	short loc_15B57
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dl, byte_2558E
@@ -21413,14 +21413,14 @@ loc_15BC2:
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_158DC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25592
 		jle	loc_15D51
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21455,14 +21455,14 @@ loc_15C25:
 
 loc_15C67:
 		call	sub_158DC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25592
 		jle	short loc_15C95
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21503,14 +21503,14 @@ loc_15CBC:
 		push	17Fh
 		call	grcg_byteboxfill_x
 		call	grcg_off
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2B76h]
 		cmp	ax, word_25592
 		jle	short loc_15D51
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -21882,7 +21882,7 @@ var_1		= byte ptr -1
 loc_15FB7:
 		cmp	word_20650, 64h	; 'd'
 		jge	short loc_15FCF
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 80h
@@ -21941,7 +21941,7 @@ loc_16042:
 loc_1604A:
 		cmp	word_20650, 1C2h
 		jge	loc_16146
-		cmp	byte_20618, 0
+		cmp	_page_back, 0
 		jnz	short loc_1607A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		push	word_2559A
@@ -22025,7 +22025,7 @@ loc_16122:
 ; ---------------------------------------------------------------------------
 
 loc_16146:
-		cmp	byte_20618, 0
+		cmp	_page_back, 0
 		jnz	short loc_16172
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	word_2559A
@@ -22085,7 +22085,7 @@ sub_1619C	proc near
 loc_161B9:
 		cmp	word_20650, 64h	; 'd'
 		jge	short loc_161D0
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 80h
@@ -22349,7 +22349,7 @@ var_2		= word ptr -2
 loc_16441:
 		cmp	word_20650, 64h	; 'd'
 		jge	short loc_16458
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 80h
@@ -23355,14 +23355,14 @@ arg_6		= word ptr  0Ah
 		mov	byte ptr [bx+7B5Eh], 1
 		mov	bx, [bp+arg_2]
 		imul	bx, 26h
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	[bx+7B50h], si
 		mov	bx, [bp+arg_2]
 		imul	bx, 26h
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -24388,7 +24388,7 @@ var_2		= word ptr -2
 		cmp	byte ptr [bx+23h], 0
 		jnz	short loc_175D1
 		mov	si, word_26C50
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26C4E
@@ -24396,7 +24396,7 @@ var_2		= word ptr -2
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jle	short loc_175D1
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26C4E
@@ -24534,12 +24534,12 @@ loc_17697:
 		imul	ax, 24h
 		add	ax, 7F06h
 		mov	word_26C48, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, word_26C46
 		mov	word_26C4A, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, word_26C46
@@ -24840,14 +24840,14 @@ loc_1798E:
 		jz	loc_17A46
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	si, [bx+7B50h]
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
@@ -24872,28 +24872,28 @@ loc_179EC:
 		mov	byte_1EE52, al
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, [bx+7B50h]
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	bx, dx
 		mov	[bx+7B50h], ax
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
 		mov	ax, [bx+7B52h]
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 2
 		add	bx, dx
@@ -25059,24 +25059,24 @@ var_1		= byte ptr -1
 		mov	bp, sp
 		sub	sp, 2
 		call	sub_17E91
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
 		mov	word_2065E, ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -25209,7 +25209,7 @@ var_2		= word ptr -2
 		mov	byte_20605, 0C8h
 
 loc_17CF9:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word_2065C
@@ -25218,7 +25218,7 @@ loc_17CF9:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jle	short locret_17D57
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word_2065C
@@ -25227,7 +25227,7 @@ loc_17CF9:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jge	short locret_17D57
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -25235,7 +25235,7 @@ loc_17CF9:
 		mov	bx, word_2065E
 		cmp	ax, [bx]
 		jle	short locret_17D57
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, [bx]
@@ -25274,7 +25274,7 @@ loc_17D68:
 ; ---------------------------------------------------------------------------
 
 loc_17D7A:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25284,7 +25284,7 @@ loc_17D7A:
 		mov	ax, [bx-6E04h]
 		add	ax, 4
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25294,7 +25294,7 @@ loc_17D7A:
 		push	word ptr [bx-6DE4h]
 		push	180020h
 		call	sub_1283C
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25303,13 +25303,13 @@ loc_17D7A:
 		mov	bx, ax
 		mov	ax, [bx-6E04h]
 		add	ax, 0FFF0h
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
 		cmp	ax, [bx+2B76h]
 		jge	short loc_17E50
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25318,13 +25318,13 @@ loc_17D7A:
 		mov	bx, ax
 		mov	ax, [bx-6E04h]
 		add	ax, 10h
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
 		cmp	ax, [bx+2B76h]
 		jle	short loc_17E50
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25333,13 +25333,13 @@ loc_17D7A:
 		mov	bx, ax
 		mov	ax, [bx-6DE4h]
 		add	ax, 0FFF0h
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
 		cmp	ax, [bx+2B7Ah]
 		jge	short loc_17E50
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25348,7 +25348,7 @@ loc_17D7A:
 		mov	bx, ax
 		mov	ax, [bx-6DE4h]
 		add	ax, 10h
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
@@ -25357,7 +25357,7 @@ loc_17D7A:
 		mov	_player_is_hit, 1
 
 loc_17E50:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25365,7 +25365,7 @@ loc_17E50:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr [bx-6E04h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25408,7 +25408,7 @@ loc_17E9A:
 		add	bx, bx
 		cmp	word ptr [bx-6DC4h], 0
 		jz	short loc_17F1C
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25417,7 +25417,7 @@ loc_17E9A:
 		mov	bx, ax
 		cmp	word ptr [bx-6DE4h], 0FFF0h
 		jle	short loc_17F1C
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25426,7 +25426,7 @@ loc_17E9A:
 		mov	bx, ax
 		cmp	word ptr [bx-6DE4h], 17Eh
 		jge	short loc_17F1C
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25434,7 +25434,7 @@ loc_17E9A:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr [bx-6E04h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, si
@@ -25589,26 +25589,26 @@ loc_18024:
 ; ---------------------------------------------------------------------------
 
 loc_18033:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE2h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -25617,14 +25617,14 @@ loc_18033:
 		inc	ax
 		push	ax
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 60h
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -26093,7 +26093,7 @@ loc_184FB:
 		mov	dx, word_26CCC
 		sar	dx, 4
 		add	ax, dx
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_2]
@@ -26112,7 +26112,7 @@ loc_184FB:
 		mov	dx, word_26CCE
 		sar	dx, 4
 		add	ax, dx
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_2]
@@ -26161,7 +26161,7 @@ loc_185C5:
 ; ---------------------------------------------------------------------------
 
 loc_185EA:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_2]
@@ -26171,7 +26171,7 @@ loc_185EA:
 		mov	ax, [bx-6E04h]
 		add	ax, 0Ch
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_2]
@@ -26280,7 +26280,7 @@ loc_186CA:
 ; ---------------------------------------------------------------------------
 
 loc_1870B:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_2]
@@ -26290,7 +26290,7 @@ loc_1870B:
 		mov	ax, [bx-6E04h]
 		add	ax, 0Ch
 		mov	si, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_2]
@@ -26405,7 +26405,7 @@ loc_18811:
 		mov	dx, word_26CCC
 		sar	dx, 4
 		add	ax, dx
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_2]
@@ -26424,7 +26424,7 @@ loc_18811:
 		mov	dx, word_26CCE
 		sar	dx, 4
 		add	ax, dx
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_2]
@@ -27246,7 +27246,7 @@ loc_18FD3:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26CE6
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_3+1]
@@ -27263,7 +27263,7 @@ loc_18FD3:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, word_26CE8
-		mov	dl, byte_20618
+		mov	dl, _page_back
 		mov	dh, 0
 		shl	dx, 4
 		mov	bx, [bp+var_3+1]
@@ -27281,7 +27281,7 @@ loc_18FD3:
 		test	byte ptr word_20650, 3
 		jnz	loc_19127
 		call	_snd_se_play c, 3
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -27290,7 +27290,7 @@ loc_18FD3:
 		mov	bx, ax
 		cmp	word ptr [bx-6E04h], 0
 		jle	loc_19127
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -27299,7 +27299,7 @@ loc_18FD3:
 		mov	bx, ax
 		cmp	word ptr [bx-6E04h], 1A0h
 		jge	loc_19127
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -27308,7 +27308,7 @@ loc_18FD3:
 		mov	bx, ax
 		cmp	word ptr [bx-6DE4h], 0
 		jle	short loc_19127
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -27334,7 +27334,7 @@ loc_190E3:
 
 loc_190EF:
 		mov	byte ptr [bp+var_3], al
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -27342,7 +27342,7 @@ loc_190EF:
 		add	ax, dx
 		mov	bx, ax
 		push	word ptr [bx-6E04h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, [bp+var_3+1]
@@ -28353,26 +28353,26 @@ sub_199B3	proc far
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
 		call	grcg_off
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE2h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28381,14 +28381,14 @@ sub_199B3	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 60h
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28401,26 +28401,26 @@ sub_199B3	proc far
 		push	word_205F8
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ah]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -28452,17 +28452,17 @@ sub_199B3	proc far
 		mov	byte_26CC3, 0Dh
 		mov	byte_26CC5, 3
 		mov	byte_26CC4, 0Ch
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		call	graph_clear
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		call	graph_clear
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 		push	1A00000h
 		push	27F018Fh
 		call	grc_setclip
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		call	grcg_fill
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		call	grcg_fill
 		call	grcg_off
 		push	200000h
@@ -28543,26 +28543,26 @@ sub_19C8D	proc near
 		mov	bp, sp
 		call	sub_D376
 		nopcall	sub_10E0A
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE2h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28571,14 +28571,14 @@ sub_19C8D	proc near
 		inc	ax
 		push	ax
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 60h
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28613,10 +28613,10 @@ loc_19D48:
 		push	offset aMima2_bft ; "mima2.bft"
 		call	super_entry_bfnt
 		call	sub_12E95
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		call	grcg_fill
 		call	grcg_off
 		mov	byte_26CC0, 0
@@ -28633,26 +28633,26 @@ sub_19C8D	endp
 sub_19D96	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE2h]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+2BE6h]
 		push	word_2064E
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28661,14 +28661,14 @@ sub_19D96	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		add	ax, 60h
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -28705,7 +28705,7 @@ var_2		= word ptr -2
 		sub	sp, 4
 		push	si
 		push	di
-		cmp	byte_20618, 0
+		cmp	_page_back, 0
 		jnz	loc_19EEF
 		call	egc_on
 		outw2	EGC_ACTIVEPLANEREG, 0FFF7h
@@ -28778,12 +28778,12 @@ sub_19E2F	endp
 sub_19EF3	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -28794,14 +28794,14 @@ sub_19EF3	proc far
 		push	word ptr [bx]
 		push	400040h
 		call	sub_45FC
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -29627,26 +29627,26 @@ loc_1A613:
 		push	word_205F8
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ah]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -29687,7 +29687,7 @@ sub_1A529	endp
 sub_1A6C5	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_205F8
@@ -29703,65 +29703,65 @@ sub_1A6C5	proc near
 		push	1
 		call	frame_delay
 		call	graph_scrollup pascal, 0
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		push	word_205F6
 		push	word_205F8
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, word_205F6
 		add	dx, 0FFF0h
 		mov	bx, ax
 		mov	[bx+2B8Ah], dx
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	dx, word_205F8
 		add	dx, 10h
 		mov	bx, ax
 		mov	[bx+2B8Ch], dx
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
 		mov	[bx+2B8Ah], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ch]
-		mov	dl, byte_20619
+		mov	dl, _page_front
 		mov	dh, 0
 		shl	dx, 2
 		mov	bx, dx
 		mov	[bx+2B8Ch], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ah]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -29838,26 +29838,26 @@ sub_1A7D5	proc far
 		push	word_205F8
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ah]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -29891,38 +29891,38 @@ sub_1A7D5	proc far
 		push	word_205F8
 		push	0
 		call	super_roll_put
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ah]
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+2B8Ah]
 		add	ax, 30h	; '0'
 		push	ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		push	word ptr [bx+2B8Ch]
 		push	48h ; 'H'
 		call	super_roll_put_tiny
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		push	ax
 		call	graph_copy_page
-		graph_accesspage byte_20618
-		graph_showpage byte_20619
+		graph_accesspage _page_back
+		graph_showpage _page_front
 		mov	byte_2287E, 2
 		call	sub_D376
 		mov	word_2065A, 0
@@ -30014,7 +30014,7 @@ loc_1AABB:
 		mov	byte_20605, 0C8h
 
 loc_1AAD6:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26D76
@@ -30022,7 +30022,7 @@ loc_1AAD6:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jle	short locret_1AB33
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26D76
@@ -30030,7 +30030,7 @@ loc_1AAD6:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jge	short locret_1AB33
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26D78
@@ -30038,7 +30038,7 @@ loc_1AAD6:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jle	short locret_1AB33
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, word_26D78
@@ -30128,7 +30128,7 @@ loc_1ABD1:
 		add	dword_218AC, 1388h
 
 loc_1ABEE:
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, si
@@ -30139,7 +30139,7 @@ loc_1ABEE:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jle	short loc_1AC6B
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, si
@@ -30150,7 +30150,7 @@ loc_1ABEE:
 		mov	bx, ax
 		cmp	[bx+2B76h], dx
 		jge	short loc_1AC6B
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, si
@@ -30161,7 +30161,7 @@ loc_1ABEE:
 		mov	bx, ax
 		cmp	[bx+2B7Ah], dx
 		jle	short loc_1AC6B
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, si
@@ -30352,9 +30352,9 @@ arg_0		= word ptr  4
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx-6D46h], 2
-		graph_accesspage byte_20619
+		graph_accesspage _page_front
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -30365,7 +30365,7 @@ arg_0		= word ptr  4
 		sar	ax, 3
 		mov	[bp+var_2], ax
 		push	ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -30376,7 +30376,7 @@ arg_0		= word ptr  4
 		mov	ax, [bp+var_2]
 		add	ax, 5
 		push	ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -30388,7 +30388,7 @@ arg_0		= word ptr  4
 		push	ax
 		call	grcg_byteboxfill_x
 		call	grcg_off
-		graph_accesspage byte_20618
+		graph_accesspage _page_back
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx-6D4Eh], 0
@@ -32631,12 +32631,12 @@ sub_1C16A	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE2h
 		mov	word_2065C, ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 2BE6h
@@ -32647,14 +32647,14 @@ sub_1C16A	proc far
 		push	33017Fh
 		call	grcg_byteboxfill_x
 		call	sub_3EF4
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, [bx+2BE2h]
 		mov	bx, word_2065C
 		mov	[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -32666,7 +32666,7 @@ sub_1C16A	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1C1D9:
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -32677,7 +32677,7 @@ loc_1C1D9:
 		shl	bx, 2
 		mov	word ptr [bx-6D18h], ds
 		mov	[bx-6D1Ah], ax
-		mov	al, byte_20618
+		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -32692,7 +32692,7 @@ loc_1C1D9:
 		add	bx, bx
 		cmp	word ptr [bx-6D46h], 2
 		jge	short loc_1C260
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -32704,7 +32704,7 @@ loc_1C1D9:
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	es:[bx], ax
-		mov	al, byte_20619
+		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, si
@@ -36923,8 +36923,7 @@ byte_20610	db ?
 byte_20611	db ?
 dword_20612	dd ?
 word_20616	dw ?
-byte_20618	db ?
-byte_20619	db ?
+include th02/hardware/pages[bss].asm
 byte_2061A	db ?
 		db ?
 word_2061C	dw ?

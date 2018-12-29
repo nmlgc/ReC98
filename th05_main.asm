@@ -516,10 +516,10 @@ loc_AFF0:
 
 loc_B003:
 		call	sub_10214
-		graph_accesspage byte_25353
-		graph_showpage byte_25352
-		mov	byte_25353, al
-		xor	byte_25352, 1
+		graph_accesspage _page_front
+		graph_showpage _page_back
+		mov	_page_front, al
+		xor	_page_back, 1
 		call	snd_se_update
 		inc	dword_25FDC
 		mov	ax, frame
@@ -1027,8 +1027,8 @@ loc_B4BB:
 		call	far ptr	palette_show
 		call	sub_118F3
 		call	tiles_render_all
-		mov	byte_25352, 1
-		mov	byte_25353, 0
+		mov	_page_back, 1
+		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
 		call	tiles_render_all
@@ -6798,7 +6798,7 @@ loc_E2A4:
 		cmp	ax, 180h
 		jge	short locret_E262
 		mov	bh, 0
-		mov	bl, byte_25352
+		mov	bl, _page_back
 		add	bx, bx
 		add	ax, [bx+356Eh]
 		jns	short loc_E2BC
@@ -8123,7 +8123,7 @@ sub_EE58	proc near
 		mov	bp, sp
 		cmp	_scroll_speed, 0
 		jnz	short loc_EE92
-		cmp	byte_25352, 1
+		cmp	_page_back, 1
 		jnz	short loc_EE92
 		nopcall	sub_F2B4
 		mov	fp_2C92E, offset sub_EE51
@@ -8210,7 +8210,7 @@ sub_EEF2	proc near
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
 		mov	dx, 0A6h
-		mov	al, byte_25353
+		mov	al, _page_front
 
 loc_EF07:
 		mov	cx, 24
@@ -8259,7 +8259,7 @@ arg_2		= word ptr  6
 		shr	ax, 3
 		add	di, ax
 		mov	dx, 0A6h
-		mov	al, byte_25352
+		mov	al, _page_back
 
 loc_EF51:
 		mov	cx, 8
@@ -8732,12 +8732,12 @@ loc_F333:
 		call	sub_118D1
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		graph_accesspage byte_25353
+		graph_accesspage _page_front
 		call	sub_EFAC
 		call	sub_EEF2
 		call	sub_F1A6
 		call	sub_F463
-		graph_accesspage byte_25352
+		graph_accesspage _page_back
 		push	1
 		call	frame_delay
 		pop	bp
@@ -10174,7 +10174,7 @@ sub_10214	proc near
 		mov	_scroll_active, 0
 
 loc_10223:
-		mov	al, byte_25352
+		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, _scroll_line
@@ -36582,7 +36582,7 @@ sub_1E60E	endp
 sub_1E66F	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25352, 0
+		cmp	_page_back, 0
 		jz	short loc_1E696
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 0Dh
@@ -43652,8 +43652,7 @@ dword_2534B	dd ?
 		db ?
 lives	db ?
 bombs	db ?
-byte_25352	db ?
-byte_25353	db ?
+include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/tiles[bss].asm
 dword_25FDC	dd ?

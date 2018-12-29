@@ -488,10 +488,10 @@ loc_9A14:
 		mov	byte_23B01, 0
 
 loc_9A25:
-		graph_accesspage byte_23AEF
-		graph_showpage byte_23AEE
-		mov	byte_23AEF, al
-		xor	byte_23AEE, 1
+		graph_accesspage _page_front
+		graph_showpage _page_back
+		mov	_page_front, al
+		xor	_page_back, 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	bx, 3932h
 		call	sub_B37C
@@ -951,8 +951,8 @@ loc_9E24:
 		push	0
 		call	graph_200line
 		call	sub_F0EE
-		mov	byte_23AEE, 0
-		mov	byte_23AEF, 1
+		mov	_page_back, 0
+		mov	_page_front, 1
 		graph_accesspage 0
 		graph_showpage 1
 		call	snd_se_reset
@@ -8018,7 +8018,7 @@ loc_DE6A:
 
 loc_DE6E:
 		mov	byte ptr [si+0Fh], 0
-		cmp	byte_23AEE, 0
+		cmp	_page_back, 0
 		jz	short loc_DE8F
 		cmp	byte ptr [si+1Eh], 0
 		jz	short loc_DE85
@@ -42277,8 +42277,7 @@ byte_23AEA	db ?
 		db    ?	;
 		db    ?	;
 		db    ?	;
-byte_23AEE	db ?
-byte_23AEF	db ?
+include th02/hardware/pages[bss].asm
 word_23AF0	dw ?
 dword_23AF2	dd ?
 word_23AF6	dw ?
