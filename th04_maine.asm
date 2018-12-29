@@ -295,9 +295,7 @@ loc_A187:
 		add	al, es:[bx+0Fh]
 		les	bx, [bp+var_4]
 		mov	es:[bx+5], al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, word ptr [bp+var_4+2], bx
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -330,9 +328,7 @@ loc_A1FE:
 		mov	byte ptr es:[bx+5], 34h	; '4'
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, large [bp+var_4]
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -450,9 +446,7 @@ loc_A32F:
 ; ---------------------------------------------------------------------------
 
 loc_A336:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -476,9 +470,7 @@ loc_A368:
 		cmp	di, 0C8h
 		jl	short loc_A32F
 		call	egc_off
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		pop	di
 		pop	si
 		leave
@@ -533,9 +525,7 @@ loc_A3B2:
 		and	dx, 0Fh
 		mov	word ptr [bp+var_8+2], ax
 		mov	word ptr [bp+var_8], dx
-		mov	dx, 0A4h
-		mov	al, 1
-		out	dx, al
+		graph_showpage 1
 		mov	ax, [bp+arg_6]
 		sar	ax, 3
 		mov	dx, [bp+arg_4]
@@ -545,9 +535,7 @@ loc_A3B2:
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		xor	di, di
 		jmp	loc_A491
 ; ---------------------------------------------------------------------------
@@ -601,9 +589,7 @@ loc_A461:
 loc_A491:
 		cmp	di, 0C8h
 		jl	loc_A3F7
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		push	[bp+arg_6]
 		push	[bp+arg_4]
 		call	sub_A30A
@@ -629,9 +615,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		call	sub_A57F
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	3C00h
 		call	hmem_allocbyte
 		mov	word ptr dword_1247A+2,	ax
@@ -967,13 +951,9 @@ sub_A73B	proc near
 loc_A76F:
 		mov	word_124BC, 50h	; 'P'
 		mov	word_124BE, 140h
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	sub_A59E
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	sub_A59E
 
 loc_A78D:
@@ -1021,9 +1001,7 @@ loc_A79A:
 ; ---------------------------------------------------------------------------
 
 loc_A7DB:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -1156,13 +1134,9 @@ loc_A8C0:
 loc_A8C4:
 		mov	word_124BC, 50h	; 'P'
 		mov	word_124BE, 140h
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	sub_A59E
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	sub_A59E
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
@@ -1290,9 +1264,7 @@ loc_A9F2:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A64D
-		mov	dx, 0A4h
-		mov	al, byte ptr [bp+var_2]
-		out	dx, al
+		graph_showpage byte ptr [bp+var_2]
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1406,9 +1378,7 @@ loc_AAF2:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A64D
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	word_124BC
 		push	word_124BE
 		push	[bp+var_2]
@@ -1434,13 +1404,9 @@ loc_AB26:
 ; ---------------------------------------------------------------------------
 
 loc_AB48:
-		mov	dx, 0A6h ; '¦'  ; jumptable 0000A876 case 64
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1	; jumptable 0000A876 case 64
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
@@ -1456,9 +1422,7 @@ loc_AB61:
 		jnz	short loc_ABAA
 
 loc_AB7A:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_AB8D
 		call	pi_slot_palette_apply pascal, 0
@@ -1467,9 +1431,7 @@ loc_AB8D:
 		call	pi_slot_put pascal, large 0, 0
 		push	0
 		call	graph_copy_page
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	sub_A4AE
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
@@ -1545,12 +1507,8 @@ loc_AC3F:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A64D
-		mov	dx, 0A4h
-		mov	al, 1
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 1
+		graph_accesspage 0
 		cmp	[bp+var_2], 4
 		jge	short loc_AC70
 		jmp	short loc_ACE0
@@ -1596,20 +1554,14 @@ loc_ACCE:
 loc_ACCF:
 		cmp	si, 4
 		jl	short loc_ACB2
-		mov	dx, 0A4h
-		mov	al, 1
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 1
+		graph_accesspage 0
 
 loc_ACE0:
 		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_ACF0:
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		push	0A00040h
 		call	sub_A30A
 
@@ -1804,12 +1756,8 @@ loc_AE82:
 		mov	bx, word ptr [bp+var_6]
 		mov	es:[bx+1], al
 		inc	word_12478
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage 1
 		push	word_124BC
 		push	word_124BE
 		mov	al, byte_124C2
@@ -2294,7 +2242,7 @@ sub_B25B	endp
 
 sub_B291	proc near
 
-var_2		= word ptr -2
+@@page		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -2303,10 +2251,8 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		mov	si, 3Fh	; '?'
-		mov	[bp+var_2], 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		mov	[bp+@@page], 0
+		graph_accesspage 0
 		mov	dx, 0A4h
 		mov	al, 1
 		jmp	short loc_B30B
@@ -2341,20 +2287,18 @@ loc_B2E8:
 		cmp	vsync_Count1, 2
 		jb	short loc_B2E8
 		mov	vsync_Count1, 0
-		mov	dx, 0A4h
-		mov	al, byte ptr [bp+var_2]
-		out	dx, al
+		graph_showpage byte ptr [bp+@@page]
 		mov	ax, 1
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte ptr [bp+var_2]
+		sub	ax, [bp+@@page]
+		mov	[bp+@@page], ax
+		mov	dx, 0A6h
+		mov	al, byte ptr [bp+@@page]
 
 loc_B30B:
 		out	dx, al
 		or	si, si
 		jg	short loc_B2AF
-		push	[bp+var_2]
+		push	[bp+@@page]
 		call	graph_copy_page
 		pop	di
 		pop	si
@@ -2369,7 +2313,7 @@ sub_B291	endp
 
 sub_B31E	proc near
 
-var_2		= word ptr -2
+@@page		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -2378,10 +2322,8 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		xor	si, si
-		mov	[bp+var_2], 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		mov	[bp+@@page], 0
+		graph_accesspage 0
 		mov	dx, 0A4h
 		mov	al, 1
 
@@ -2416,20 +2358,18 @@ loc_B375:
 		cmp	vsync_Count1, 2
 		jb	short loc_B375
 		mov	vsync_Count1, 0
-		mov	dx, 0A4h
-		mov	al, byte ptr [bp+var_2]
-		out	dx, al
+		graph_showpage byte ptr [bp+@@page]
 		mov	ax, 1
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte ptr [bp+var_2]
+		sub	ax, [bp+@@page]
+		mov	[bp+@@page], ax
+		mov	dx, 0A6h
+		mov	al, byte ptr [bp+@@page]
 		jmp	short loc_B339
 ; ---------------------------------------------------------------------------
 
 loc_B39A:
 		mov	ax, 1
-		sub	ax, [bp+var_2]
+		sub	ax, [bp+@@page]
 		push	ax
 		call	graph_copy_page
 		pop	di
@@ -2445,7 +2385,7 @@ sub_B31E	endp
 
 sub_B3AC	proc near
 
-var_2		= word ptr -2
+@@page		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
@@ -2456,10 +2396,8 @@ arg_6		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_6]
 		xor	si, si
-		mov	[bp+var_2], 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		mov	[bp+@@page], 0
+		graph_accesspage 0
 		mov	dx, 0A4h
 		mov	al, 1
 
@@ -2498,20 +2436,18 @@ loc_B416:
 		cmp	vsync_Count1, 2
 		jb	short loc_B416
 		mov	vsync_Count1, 0
-		mov	dx, 0A4h
-		mov	al, byte ptr [bp+var_2]
-		out	dx, al
+		graph_showpage byte ptr [bp+@@page]
 		mov	ax, 1
-		sub	ax, [bp+var_2]
-		mov	[bp+var_2], ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte ptr [bp+var_2]
+		sub	ax, [bp+@@page]
+		mov	[bp+@@page], ax
+		mov	dx, 0A6h
+		mov	al, byte ptr [bp+@@page]
 		jmp	short loc_B3C7
 ; ---------------------------------------------------------------------------
 
 loc_B43B:
 		mov	ax, 1
-		sub	ax, [bp+var_2]
+		sub	ax, [bp+@@page]
 		push	ax
 		call	graph_copy_page
 		pop	di
@@ -2530,9 +2466,7 @@ sub_B44D	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aSff1_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -2564,9 +2498,7 @@ sub_B44D	proc near
 		mov	fp_124C8, offset sub_B144
 		push	0C00080h
 		call	sub_B291
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		mov	byte_124C6, 0
 		call	_cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
 		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
@@ -2583,9 +2515,7 @@ sub_B44D	proc near
 		push	4
 		call	palette_black_out
 		call	_cdg_freeall
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aSff2_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -3147,11 +3077,8 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		mov	word_EB2C, 2
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		push	100030h
 		push	0Fh
 		push	ds
@@ -3632,9 +3559,7 @@ sub_C0F8	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aUde_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -4668,9 +4593,7 @@ var_2		= word ptr -2
 		mov	[bp+var_9], 0
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -5136,9 +5059,7 @@ loc_CC29:
 ; ---------------------------------------------------------------------------
 
 loc_CC33:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -5438,19 +5359,12 @@ sub_D3F4	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear

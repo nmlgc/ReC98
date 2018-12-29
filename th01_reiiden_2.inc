@@ -26187,9 +26187,7 @@ loc_29AE4:
 		cwd
 		idiv	bx
 		mov	[bp+var_4], dx
-		mov	dx, 0A6h ; '?'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		xor	di, di
 		jmp	short loc_29B77
 ; ---------------------------------------------------------------------------
@@ -26257,9 +26255,7 @@ loc_29B77:
 		jl	short loc_29B04
 
 loc_29B7C:
-		mov	dx, 0A6h ; '?'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		xor	di, di
 		jmp	loc_29C16
 ; ---------------------------------------------------------------------------

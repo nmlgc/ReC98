@@ -1,6 +1,25 @@
 ; ReC98
 ; ASM equivalents of relevant #defines from master.h
 
+; These directly translate to the C OUTB, OUTW and OUTW2 macros.
+outb macro port:req, value:rest
+	mov	dx, port
+ifdifi <value>, <al>
+	mov	al, value
+endif
+	out	dx, al
+endm
+outw macro port:req, value:rest
+	mov	dx, port
+	mov	ax, value
+	out	dx, ax
+endm
+outw2 macro port:req, value:rest
+	mov	ax, value
+	mov	dx, port
+	out	dx, ax
+endm
+
 Point struc
 	x dw ?
 	y dw ?
@@ -21,6 +40,16 @@ TX_WHITE	equ 0e1h
 TX_BLINK	equ 2
 TX_REVERSE	equ 4
 TX_UNDERLINE	equ 8
+
+; グラフィック画面関係 ----------------------------------------------------
+
+graph_showpage	macro	page:rest
+	outb	0A4h, page
+endm
+
+graph_accesspage	macro	page:rest
+	outb	0A6h, page
+endm
 
 ; グラフィック画面への多角形描画処理 --------------------------------------
 ; 出典: gc_poly.h 0.16
@@ -107,18 +136,6 @@ endm
 
 ; EGC
 ; ---
-
-; These directly translate to the C OUTW and OUTW2 macros.
-outw macro port:req, value:rest
-	mov	dx, port
-	mov	ax, value
-	out	dx, ax
-endm
-outw2 macro port:req, value:rest
-	mov	ax, value
-	mov	dx, port
-	out	dx, ax
-endm
 
 EGC_ACTIVEPLANEREG	equ 04a0h
 EGC_READPLANEREG  	equ 04a2h

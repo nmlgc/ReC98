@@ -1624,8 +1624,7 @@ arg_2		= byte ptr  6
 		mov	al, 1
 		sub	al, byte ptr word_F828+1
 		mov	[bp+var_1], al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		graph_accesspage al
 		push	10h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -1642,9 +1641,7 @@ arg_2		= byte ptr  6
 		mov	bx, ax
 		pushd	dword ptr [bx+5F2h]
 		call	sub_C6DB
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte ptr word_F828+1
-		out	dx, al
+		graph_accesspage byte ptr word_F828+1
 		push	10h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -1793,14 +1790,11 @@ sub_A899	proc near
 		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
 		call	polygons_update_and_render
 		call	grcg_off
-		mov	dx, 0A4h ; '¤'
-		mov	al, byte ptr word_F828+1
-		out	dx, al
+		graph_showpage byte ptr word_F828+1
 		mov	al, 1
 		sub	al, byte ptr word_F828+1
 		mov	byte ptr word_F828+1, al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		graph_accesspage al
 		push	1
 		call	frame_delay_2
 		pop	bp
@@ -2181,15 +2175,10 @@ loc_AC15:
 		mov	byte ptr word_F828+1, 1
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage al
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aOp3_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -2200,23 +2189,15 @@ loc_AC15:
 		call	sub_A590
 		push	0
 		call	graph_copy_page
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 1
+		graph_showpage 0
 		call	sub_A5B7
 		call	sub_A8CF
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
@@ -2330,15 +2311,10 @@ loc_ADB0:
 loc_ADC1:
 		call	sub_A5E8
 		call	sub_AA53
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage al
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		mov	al, 0
 		out	dx, al
 		pop	si
@@ -2353,13 +2329,13 @@ sub_AC06	endp
 
 sub_ADE2	proc near
 
-var_3		= byte ptr -3
+@@page		= byte ptr -3
 var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
 		mov	[bp+var_2], 0
-		mov	[bp+var_3], 0
+		mov	[bp+@@page], 0
 		push	ds
 		push	offset aOpwin_bft ; "opwin.bft"
 		call	super_entry_bfnt
@@ -2368,13 +2344,9 @@ var_2		= word ptr -2
 		call	pi_slot_load pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_put pascal, large 0, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		push	2
@@ -2389,9 +2361,7 @@ var_2		= word ptr -2
 		call	far ptr	palette_show
 		freePISlotLarge	0
 		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
-		mov	dx, 0A4h ; '¤'
-		mov	al, 1
-		out	dx, al
+		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
 ; ---------------------------------------------------------------------------
@@ -2421,14 +2391,11 @@ loc_AECB:
 
 loc_AEE1:
 		add	[bp+var_2], 2
-		mov	dx, 0A4h ; '¤'
-		mov	al, [bp+var_3]
-		out	dx, al
+		graph_showpage [bp+@@page]
 		mov	al, 1
-		sub	al, [bp+var_3]
-		mov	[bp+var_3], al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		sub	al, [bp+@@page]
+		mov	[bp+@@page], al
+		graph_accesspage al
 		push	4
 		call	egc_shift_left_all
 		sub	si, 2
@@ -2479,11 +2446,8 @@ loc_AF65:
 		mov	PaletteTone, 0C8h	; 'È'
 		call	far ptr	palette_show
 		kajacall	KAJA_SONG_PLAY
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage al
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		push	1
@@ -2510,13 +2474,9 @@ loc_AFB4:
 loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_put pascal, large 0, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
 		pop	si
@@ -2541,22 +2501,14 @@ sub_B008	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		call	sub_B3EF
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_put pascal, large 0, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
 		kajacall	KAJA_SONG_PLAY
@@ -3156,17 +3108,11 @@ sub_B424	proc near
 		push	ds
 		push	offset aChname_bft ; "chname.bft"
 		call	super_entry_bfnt
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		mov	byte_FC5C, 0
 		push	ds
 		push	offset aTlsl_rgb ; "TLSL.RGB"
@@ -4039,13 +3985,9 @@ loc_BB37:
 		call	sub_B908
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BB82
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		call	text_clear
 		call	sub_B4D7
 		kajacall	KAJA_SONG_STOP
@@ -4084,14 +4026,11 @@ loc_BBB7:
 
 loc_BBD0:
 		mov	vsync_Count1, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_FC5C
-		out	dx, al
+		graph_accesspage byte_FC5C
 		mov	al, 1
 		sub	al, byte_FC5C
 		mov	byte_FC5C, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
+		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
@@ -4188,13 +4127,9 @@ loc_BCAE:
 		call	sub_B908
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BCE3
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		call	text_clear
 		call	sub_B4D7
 		kajacall	KAJA_SONG_STOP
@@ -4240,14 +4175,11 @@ loc_BD29:
 
 loc_BD42:
 		mov	vsync_Count1, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_FC5C
-		out	dx, al
+		graph_accesspage byte_FC5C
 		mov	al, 1
 		sub	al, byte_FC5C
 		mov	byte_FC5C, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
+		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
@@ -4315,13 +4247,9 @@ loc_BDDF:
 		call	sub_B908
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_BE21
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A4h ; '¤'
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		call	text_clear
 		call	sub_B4D7
 		kajacall	KAJA_SONG_STOP
@@ -4358,14 +4286,11 @@ loc_BE4F:
 
 loc_BE68:
 		mov	vsync_Count1, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_FC5C
-		out	dx, al
+		graph_accesspage byte_FC5C
 		mov	al, 1
 		sub	al, byte_FC5C
 		mov	byte_FC5C, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
+		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		pushd	0
 		push	4F018Fh
@@ -4423,19 +4348,12 @@ sub_BFC2	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	vsync_end
 		call	mem_unassign
 		call	text_clear
@@ -4481,19 +4399,12 @@ arg_0		= dword	ptr  6
 loc_C435:
 		nopcall	vram_planes_set
 		call	graph_start
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h ; '¤'
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	vsync_start
 		call	key_beep_off
 		call	text_systemline_hide

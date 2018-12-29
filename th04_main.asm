@@ -421,12 +421,8 @@ loc_AC58:
 
 loc_AC7A:
 		call	sub_CCD6
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25A3D
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, byte_25A3C
-		out	dx, al
+		graph_accesspage byte_25A3D
+		graph_showpage byte_25A3C
 		mov	byte_25A3D, al
 		xor	byte_25A3C, 1
 		call	snd_se_update
@@ -699,11 +695,8 @@ loc_AEF9:
 
 loc_AF4A:
 		call	sub_12024
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		push	ds
 		push	offset aEye_rgb	; "eye.rgb"
 		call	palette_entry_rgb
@@ -889,9 +882,7 @@ loc_B144:
 		call	std_load
 		call	sub_CED4
 		call	sub_BAA2
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 
 loc_B156:
 		cmp	vsync_Count2, 80h
@@ -904,12 +895,8 @@ loc_B156:
 		call	tiles_render_all
 		mov	byte_25A3C, 1
 		mov	byte_25A3D, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 1
+		graph_showpage 0
 		call	tiles_render_all
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
@@ -1610,17 +1597,13 @@ loc_B91C:
 ; ---------------------------------------------------------------------------
 
 loc_B925:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	si
 		push	di
 		push	0
 		push	[bp+var_6]
 		call	sub_3680
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	si
 		push	di
 		push	0
@@ -4570,7 +4553,7 @@ sub_D016	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
-		mov	dx, 0A6h ; '¦'
+		mov	dx, 0A6h
 		mov	al, byte_25A3D
 
 loc_D02B:
@@ -4619,7 +4602,7 @@ arg_2		= word ptr  6
 		mov	ax, [bp+arg_2]
 		shr	ax, 3
 		add	di, ax
-		mov	dx, 0A6h ; '¦'
+		mov	dx, 0A6h
 		mov	al, byte_25A3C
 
 loc_D075:
@@ -5424,18 +5407,14 @@ sub_D6EB	proc far
 		call	sub_10D4B
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25A3D
-		out	dx, al
+		graph_accesspage byte_25A3D
 		call	sub_D098
 		call	sub_D016
 		call	sub_D56C
 		push	2
 		nopcall	sub_CBA4
 		call	sub_D7EE
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25A3C
-		out	dx, al
+		graph_accesspage byte_25A3C
 		push	1
 		call	frame_delay
 		pop	bp
@@ -17256,19 +17235,12 @@ sub_1361E	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear

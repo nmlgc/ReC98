@@ -355,9 +355,7 @@ arg_4		= dword	ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_9724:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -624,9 +622,7 @@ loc_98EF:
 ; ---------------------------------------------------------------------------
 
 loc_98F6:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -720,9 +716,7 @@ loc_9991:
 ; ---------------------------------------------------------------------------
 
 loc_9998:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -812,9 +806,7 @@ loc_9A27:
 ; ---------------------------------------------------------------------------
 
 loc_9A2E:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -974,9 +966,7 @@ sub_9B64	proc near
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd01_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -1098,9 +1088,7 @@ loc_9C91:
 ; ---------------------------------------------------------------------------
 
 loc_9CDE:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	0A00064h
 		push	1DF0129h
 		push	2
@@ -1207,9 +1195,7 @@ loc_9D96:
 		push	offset end_buf + (END_LINE_LEN * 23)
 		push	6
 		call	sub_9643
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd02_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -1504,9 +1490,7 @@ sub_A09D	proc near
 		pop	cx
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd01_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -1530,9 +1514,7 @@ sub_A09D	proc near
 		call	frame_delay
 		push	1
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd03_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -1650,17 +1632,13 @@ loc_A247:
 		jle	short loc_A22F
 		push	2
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd04_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
 		call	_pi_slot_put c, 0, large 0
 		freePISlotLarge	0
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	0
 		call	sub_98B5
 		push	2
@@ -1861,9 +1839,7 @@ loc_A451:
 		call	sub_9643
 		push	2
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd05_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -2019,9 +1995,7 @@ loc_A620:
 		jle	short loc_A608
 		push	2
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd05_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -2162,9 +2136,7 @@ loc_A6B6:
 		call	sub_9643
 		push	2
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd05_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -2382,17 +2354,13 @@ loc_A992:
 		push	0Dh
 		call	_snd_delay_until_measure
 		pop	cx
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd06_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
 		call	_pi_slot_put c, 0, large 0
 		freePISlotLarge	0
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	4
 		push	0
 		push	29h ; ')'
@@ -2429,15 +2397,11 @@ loc_A992:
 		push	3
 		push	29h ; ')'
 		call	rotrect
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd07_pi, ds
 		call	_pi_slot_put c, 0, large 0
 		freePISlotLarge	0
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	19h
 		call	_snd_delay_until_measure
 		pop	cx
@@ -2507,14 +2471,10 @@ loc_A992:
 		push	3
 		push	0E9h
 		call	rotrect
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd08_pi, ds
 		call	_pi_slot_put c, 0, large 0
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	29h ; ')'
 		call	_snd_delay_until_measure
 		pop	cx
@@ -2594,9 +2554,7 @@ loc_A992:
 		pop	cx
 		push	4
 		call	palette_black_out
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	_pi_slot_load c, 0, offset aEd09_pi, ds
 		call	_pi_slot_palette_apply stdcall, 0
 		pop	cx
@@ -2608,9 +2566,7 @@ loc_A992:
 		call	palette_black_in
 		push	64h ; 'd'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aVsvivbvovlb@vs
 		mov	al, byte_F02A
@@ -2625,9 +2581,7 @@ loc_A992:
 		add	sp, 6
 		push	0C8h ; 'ﾈ'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aB@nPiuU_ ; "　最終得点"
 		mov	al, byte_F02A
@@ -2645,9 +2599,7 @@ loc_A992:
 		add	sp, 6
 		push	64h ; 'd'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aGrgugegbgjgeb ;	"コンティニュー"
 		mov	al, byte_F02A
@@ -2669,9 +2621,7 @@ loc_A992:
 		add	sp, 6
 		push	64h ; 'd'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aB@Gigugn ; "　 ランク"
 		mov	al, byte_F02A
@@ -2696,9 +2646,7 @@ loc_A992:
 		add	sp, 6
 		push	64h ; 'd'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aGvgmgcgdbPik ; "プレイヤー初期"
 		mov	al, byte_F02A
@@ -2721,9 +2669,7 @@ loc_A992:
 		add	sp, 6
 		push	64h ; 'd'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aCMvpik	; " 霊撃初期数"
 		mov	al, byte_F02A
@@ -2746,9 +2692,7 @@ loc_A992:
 		add	sp, 6
 		push	96h
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _mikoconfig
 		mov	di, es:[bx+mikoconfig_t.skill]
 		cmp	di, 64h	; 'd'
@@ -2886,9 +2830,7 @@ loc_AF56:
 		add	sp, 6
 		push	0C8h ; 'ﾈ'
 		call	frame_delay
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	ds
 		push	offset aVpvxvxvvb@vyvt ; "１９９７　ＺＵＮ  (Amusement Makers)"
 		mov	al, byte_F02A
@@ -3039,9 +2981,7 @@ loc_B184:
 		call	_snd_determine_mode
 
 loc_B189:
-		mov	dx, 0A6h ; 'ｦ'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		mov	dx, 0A4h
 		out	dx, al
 		push	ds

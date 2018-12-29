@@ -452,9 +452,7 @@ arg_6		= word ptr  0Ah
 		push	di
 		mov	si, [bp+arg_6]
 		mov	di, [bp+arg_4]
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	si
 		push	di
 		push	0
@@ -665,9 +663,7 @@ loc_A871:
 ; ---------------------------------------------------------------------------
 
 loc_A8B2:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	ax, es:[bx]
@@ -704,9 +700,7 @@ sub_A8EC	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	egc_start_copy_1
 		cmp	byte_14F8E, 0
 		jnz	short loc_A917
@@ -769,9 +763,7 @@ loc_A950:
 		mov	[bp+var_2], 1
 
 loc_A95C:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 
 loc_A962:
 		call	_input_reset_sense_held
@@ -883,13 +875,11 @@ loc_AA3A:
 loc_AA3E:
 		mov	word_15004, 50h	; 'P'
 		mov	word_15006, 140h
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	500140h
 		push	1E00040h
 		call	sub_ECDE
-		mov	dx, 0A6h ; '¦'
+		mov	dx, 0A6h
 		mov	al, 0
 
 loc_AA66:
@@ -1149,13 +1139,9 @@ loc_AC87:
 ; ---------------------------------------------------------------------------
 
 loc_ACAA:
-		mov	dx, 0A6h ; '¦'  ; jumptable 0000A9F2 case 64
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1	; jumptable 0000A9F2 case 64
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
 		call	sub_EB66
 		jmp	loc_AF8F	; default
@@ -1172,9 +1158,7 @@ loc_ACC8:
 		jnz	short loc_AD13
 
 loc_ACE1:
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		cmp	[bp+arg_0], 3Dh	; '='
 		jnz	short loc_ACF4
 		call	pi_slot_palette_apply pascal, 0
@@ -1183,9 +1167,7 @@ loc_ACF4:
 		call	pi_slot_put pascal, large 0, 0
 		push	0
 		call	graph_copy_page
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	sub_EB66
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
@@ -1265,12 +1247,8 @@ loc_AD9A:
 		call	sub_A738
 		push	1
 		call	frame_delay
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage 1
 		cmp	[bp+var_2], 4
 		jge	short loc_ADE3
 		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
@@ -1319,9 +1297,7 @@ loc_AE41:
 loc_AE42:
 		cmp	si, 4
 		jl	short loc_AE25
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		push	1
 		call	frame_delay
@@ -1615,12 +1591,8 @@ loc_B0E2:
 		call	sub_A738
 
 loc_B0F4:
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage 1
 		push	word_15004
 		push	word_15006
 		push	[bp+var_3+1]
@@ -1669,12 +1641,8 @@ loc_B15B:
 		jg	short loc_B140
 
 loc_B164:
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_showpage 0
+		graph_accesspage 1
 		push	word_15004
 		push	word_15006
 		mov	al, byte_1500A
@@ -1682,9 +1650,7 @@ loc_B164:
 		push	ax
 		pushd	[bp+var_8]
 		call	sub_E914
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 
 loc_B18D:
 		call	sub_A826
@@ -1822,15 +1788,11 @@ arg_2		= word ptr  6
 		push	2
 		call	palette_black_out
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -1909,14 +1871,11 @@ sub_B37C	proc near
 		mov	bp, sp
 		push	2
 		call	frame_delay
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_1085E
-		out	dx, al
+		graph_accesspage byte_1085E
 		mov	al, 1
 		sub	al, byte_1085E
 		mov	byte_1085E, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_showpage al
 		inc	word_15010
 		call	sub_F23C
 		mov	word_1500E, ax
@@ -1959,15 +1918,11 @@ sub_B3CB	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -2014,11 +1969,8 @@ loc_B4B5:
 		push	4
 		call	palette_black_out
 		call	pi_slot_free pascal, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		pop	bp
 		retn
 sub_B3CB	endp
@@ -2182,7 +2134,7 @@ loc_B5CD:
 
 loc_B5DF:
 		mov	bx, [bp+var_2]
-		mov	al, 0A6h ; '¦'
+		mov	al, 0A6h
 		sub	al, byte ptr [bp+var_2]
 		mov	[bx+4F73h], al
 		xor	si, si
@@ -3243,14 +3195,11 @@ sub_BD1E	proc near
 		call	sub_BE76
 		push	1
 		call	frame_delay
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_11621
-		out	dx, al
+		graph_accesspage byte_11621
 		mov	al, 1
 		sub	al, byte_11621
 		mov	byte_11621, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_showpage al
 		pop	bp
 		retn
 sub_BD1E	endp
@@ -3871,16 +3820,11 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_7], 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -3994,18 +3938,14 @@ loc_C307:
 		push	word_15178
 		push	0
 		call	sub_BA84
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		mov	al, byte_15176
 		mov	ah, 0
 		push	ax
 		push	word_15178
 		push	0
 		call	sub_BA84
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		mov	[bp+var_4], 0
 		jmp	short loc_C3AA
 ; ---------------------------------------------------------------------------
@@ -5570,9 +5510,7 @@ sub_D1B1	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aUde_pi
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
@@ -5581,11 +5519,8 @@ sub_D1B1	proc near
 		call	graph_copy_page
 		push	4
 		call	palette_black_in
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	sub_CA9B
 		push	40h
 		call	frame_delay
@@ -7719,14 +7654,11 @@ sub_E349	proc near
 		call	sub_DFEC
 		push	1
 		call	frame_delay
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_1183A
-		out	dx, al
+		graph_accesspage byte_1183A
 		mov	al, 1
 		sub	al, byte_1183A
 		mov	byte_1183A, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_showpage al
 		cmp	byte_11846, 0
 		jz	short loc_E37E
 		call	text_clear
@@ -7853,9 +7785,7 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -7867,9 +7797,7 @@ var_2		= word ptr -2
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		pushd	0
 		push	4F018Fh
 		call	grcg_byteboxfill_x
@@ -8526,19 +8454,12 @@ sub_EC36	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear

@@ -1024,9 +1024,7 @@ sub_4344	proc far
 
 loc_434D:
 		mov	di, 1
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 
 loc_4356:
 		mov	ax, si
@@ -1046,9 +1044,7 @@ loc_4356:
 		cmp	di, 0
 		jz	short loc_4383
 		xor	di, di
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		jmp	short loc_4356
 ; ---------------------------------------------------------------------------
 
@@ -1264,9 +1260,7 @@ loc_44D9:
 		add	ax, dx
 		add	ax, 4
 		mov	di, ax
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		mov	ax, 0A800h
 		mov	es, ax
 		xor	si, si
@@ -1285,9 +1279,7 @@ loc_4508:
 loc_4517:
 		cmp	si, 18h
 		jl	short loc_4508
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		jmp	short loc_4534
 ; ---------------------------------------------------------------------------
 
@@ -1783,9 +1775,7 @@ arg_4		= word ptr  0Ah
 		mov	al, byte ptr [bp+@@tile]
 		mov	_tile_ring[bx], al
 		call	egc_start_copy_noframe
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		mov	si, ax
@@ -1800,9 +1790,7 @@ arg_4		= word ptr  0Ah
 		push	ax
 		push	[bp+@@tile]
 		call	sub_43E0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		push	[bp+var_6]
 		push	[bp+@@tile]
 		call	sub_43E0
@@ -2185,17 +2173,11 @@ var_C		= byte ptr -0Ch
 		mov	vsync_Count1, 0
 		call	sub_BF7B
 		call	graph_scrollup pascal, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
+		graph_showpage 0
 		call	sub_E012
 		call	sub_FBE9
 		call	_pi_slot_palette_apply stdcall, 0
@@ -2467,13 +2449,9 @@ loc_B8B5:
 		call	_memcpy
 		add	sp, 0Ah
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	sub_4596
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	sub_4782
 		call	mptn_free
 		push	ds
@@ -2493,15 +2471,11 @@ loc_B922:
 		push	27F018Fh
 		call	grc_setclip
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	1A00000h
 		push	23F018Fh
 		call	grcg_boxfill
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	1A00000h
 		push	23F018Fh
 		call	grcg_boxfill
@@ -2542,13 +2516,9 @@ sub_B98E	proc near
 		mov	word_205EA, ax
 		call	sub_C5B0
 		mov	byte_20605, 0C8h
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		call	sub_4782
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		call	sub_4782
 		call	sub_10E0A
 		mov	PaletteTone, 64h	; 'd'
@@ -10170,18 +10140,14 @@ sub_FF91	proc near
 		push	bp
 		mov	bp, sp
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		push	20000h
 		push	3018Fh
 		call	grcg_byteboxfill_x
 		push	340000h
 		push	35018Fh
 		call	grcg_byteboxfill_x
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		push	20000h
 		push	3018Fh
 		call	grcg_byteboxfill_x
@@ -15963,9 +15929,7 @@ var_2		= word ptr -2
 		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		nopcall	sub_FBE9
 		mov	si, 320
 		add	si, _scroll_line
@@ -16079,9 +16043,7 @@ loc_12EC5:
 		mov	byte_2287E, 2
 
 loc_12F18:
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		pop	di
 		pop	si
 		leave
@@ -28490,25 +28452,17 @@ sub_199B3	proc far
 		mov	byte_26CC3, 0Dh
 		mov	byte_26CC5, 3
 		mov	byte_26CC4, 0Ch
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		call	graph_clear
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 		push	1A00000h
 		push	27F018Fh
 		call	grc_setclip
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		call	grcg_fill
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		call	grcg_fill
 		call	grcg_off
 		push	200000h
@@ -28659,14 +28613,10 @@ loc_19D48:
 		push	offset aMima2_bft ; "mima2.bft"
 		call	super_entry_bfnt
 		call	sub_12E95
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		call	grcg_fill
 		call	grcg_off
 		mov	byte_26CC0, 0
@@ -29745,21 +29695,15 @@ sub_1A6C5	proc near
 		mov	[bx+2B7Ah], dx
 		mov	_scroll_line, 0
 		mov	word_20348, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
 		mov	vsync_Count1, 0
 		push	1
 		call	frame_delay
 		call	graph_scrollup pascal, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		push	word_205F6
 		push	word_205F8
 		push	0
@@ -29977,12 +29921,8 @@ sub_1A7D5	proc far
 		mov	ah, 0
 		push	ax
 		call	graph_copy_page
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20618
+		graph_showpage byte_20619
 		mov	byte_2287E, 2
 		call	sub_D376
 		mov	word_2065A, 0
@@ -30412,9 +30352,7 @@ arg_0		= word ptr  4
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx-6D46h], 2
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20619
-		out	dx, al
+		graph_accesspage byte_20619
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	al, byte_20619
 		mov	ah, 0
@@ -30450,9 +30388,7 @@ arg_0		= word ptr  4
 		push	ax
 		call	grcg_byteboxfill_x
 		call	grcg_off
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_20618
-		out	dx, al
+		graph_accesspage byte_20618
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx-6D4Eh], 0

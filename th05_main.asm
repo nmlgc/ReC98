@@ -516,12 +516,8 @@ loc_AFF0:
 
 loc_B003:
 		call	sub_10214
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25353
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, byte_25352
-		out	dx, al
+		graph_accesspage byte_25353
+		graph_showpage byte_25352
 		mov	byte_25353, al
 		xor	byte_25352, 1
 		call	snd_se_update
@@ -789,11 +785,8 @@ loc_B2CE:
 
 loc_B2DD:
 		call	sub_CFEE
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		push	ds
 		push	offset aEye_rgb	; "eye.rgb"
 		call	palette_entry_rgb
@@ -1023,9 +1016,7 @@ loc_B4A9:
 		call	std_load
 		call	sub_EE17
 		call	sub_BB9A
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 
 loc_B4BB:
 		cmp	vsync_Count2, 80h
@@ -1038,12 +1029,8 @@ loc_B4BB:
 		call	tiles_render_all
 		mov	byte_25352, 1
 		mov	byte_25353, 0
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 1
+		graph_showpage 0
 		call	tiles_render_all
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 0
@@ -8222,7 +8209,7 @@ sub_EEF2	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
-		mov	dx, 0A6h ; '¦'
+		mov	dx, 0A6h
 		mov	al, byte_25353
 
 loc_EF07:
@@ -8271,7 +8258,7 @@ arg_2		= word ptr  6
 		mov	ax, [bp+arg_2]
 		shr	ax, 3
 		add	di, ax
-		mov	dx, 0A6h ; '¦'
+		mov	dx, 0A6h
 		mov	al, byte_25352
 
 loc_EF51:
@@ -8745,16 +8732,12 @@ loc_F333:
 		call	sub_118D1
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25353
-		out	dx, al
+		graph_accesspage byte_25353
 		call	sub_EFAC
 		call	sub_EEF2
 		call	sub_F1A6
 		call	sub_F463
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_25352
-		out	dx, al
+		graph_accesspage byte_25352
 		push	1
 		call	frame_delay
 		pop	bp
@@ -19466,19 +19449,12 @@ sub_14E08	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	mem_unassign
 		call	vsync_end
 		call	text_clear

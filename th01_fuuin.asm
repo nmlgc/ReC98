@@ -6107,44 +6107,7 @@ inregs		= REGS ptr -10h
 		retf
 sub_D0E0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-_graph_showpage_func	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, 0A4h ; '¤'
-		mov	al, [bp+arg_0]
-		out	dx, al
-		pop	bp
-		retf
-_graph_showpage_func	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _graph_accesspage_func
-_graph_accesspage_func	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		mov	_graph_page, bl
-		mov	dx, 0A6h ; '¦'
-		mov	al, bl
-		out	dx, al
-		pop	bp
-		retf
-_graph_accesspage_func	endp
-
+include th01/hardware/graph_page.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6575,7 +6538,7 @@ var_152		= byte ptr -152h
 var_102		= byte ptr -102h
 var_B2		= byte ptr -0B2h
 dest		= byte ptr -62h
-var_11		= byte ptr -11h
+@@page_other	= byte ptr -11h
 var_10		= dword	ptr -10h
 var_C		= dword	ptr -0Ch
 var_8		= dword	ptr -8
@@ -6589,7 +6552,7 @@ _src		= dword	ptr -4
 		mov	[bp+var_10], 0E0000000h
 		mov	al, _graph_page
 		xor	al, 1
-		mov	[bp+var_11], al
+		mov	[bp+@@page_other], al
 		xor	si, si
 		jmp	loc_D426
 ; ---------------------------------------------------------------------------
@@ -6619,9 +6582,7 @@ loc_D37B:
 		lea	ax, [bp+var_152]
 		push	ax		; dest
 		call	_memcpy
-		mov	dx, 0A6h ; '¦'
-		mov	al, [bp+var_11]
-		out	dx, al
+		graph_accesspage [bp+@@page_other]
 		push	50h ; 'P'       ; n
 		push	ss
 		lea	ax, [bp+dest]
@@ -6648,9 +6609,7 @@ loc_D37B:
 		pushd	[bp+var_10] ; dest
 		call	_memcpy
 		add	sp, 1Eh
-		mov	dx, 0A6h ; '¦'
-		mov	al, _graph_page
-		out	dx, al
+		graph_accesspage _graph_page
 		add	word ptr [bp+_src], 50h ; 'P'
 		add	word ptr [bp+var_8], 50h ; 'P'
 		add	word ptr [bp+var_C], 50h ; 'P'
@@ -8807,7 +8766,7 @@ var_106		= byte ptr -106h
 var_B6		= byte ptr -0B6h
 dest		= byte ptr -66h
 var_16		= word ptr -16h
-var_13		= byte ptr -13h
+@@page_other	= byte ptr -13h
 var_12		= dword	ptr -12h
 var_E		= dword	ptr -0Eh
 var_A		= dword	ptr -0Ah
@@ -8837,7 +8796,7 @@ arg_6		= word ptr  0Ch
 		mov	[bp+var_12], 0E0000000h
 		mov	al, _graph_page
 		xor	al, 1
-		mov	[bp+var_13], al
+		mov	[bp+@@page_other], al
 		mov	ax, di
 		cwd
 		idiv	bx
@@ -8895,9 +8854,7 @@ loc_E4BA:
 		lea	ax, [bp+var_156]
 		push	ax		; dest
 		call	_memcpy
-		mov	dx, 0A6h ; '¦'
-		mov	al, [bp+var_13]
-		out	dx, al
+		graph_accesspage [bp+@@page_other]
 		push	si		; n
 		push	ss
 		lea	ax, [bp+dest]
@@ -8924,9 +8881,7 @@ loc_E4BA:
 		pushd	[bp+var_12] ; dest
 		call	_memcpy
 		add	sp, 1Eh
-		mov	dx, 0A6h ; '¦'
-		mov	al, _graph_page
-		out	dx, al
+		graph_accesspage _graph_page
 		add	word ptr [bp+_src], 50h ; 'P'
 		add	word ptr [bp+var_A], 50h ; 'P'
 		add	word ptr [bp+var_E], 50h ; 'P'
@@ -8970,8 +8925,8 @@ arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= word ptr  0Eh
 arg_A		= word ptr  10h
-arg_C		= byte ptr  12h
-arg_E		= byte ptr  14h
+@@page		= byte ptr  12h
+@@page_other	= byte ptr  14h
 
 		enter	164h, 0
 		push	si
@@ -9079,9 +9034,7 @@ loc_E658:
 		lea	ax, [bp+var_164]
 		push	ax		; dest
 		call	_memcpy
-		mov	dx, 0A6h ; '¦'
-		mov	al, [bp+arg_E]
-		out	dx, al
+		graph_accesspage [bp+@@page_other]
 		push	si		; n
 		push	ss
 		lea	ax, [bp+dest]
@@ -9108,9 +9061,7 @@ loc_E658:
 		pushd	[bp+var_22] ; dest
 		call	_memcpy
 		add	sp, 1Eh
-		mov	dx, 0A6h ; '¦'
-		mov	al, [bp+arg_C]
-		out	dx, al
+		graph_accesspage [bp+@@page]
 		add	word ptr [bp+_src], 50h ; 'P'
 		add	word ptr [bp+var_A], 50h ; 'P'
 		add	word ptr [bp+var_E], 50h ; 'P'
@@ -9125,9 +9076,7 @@ loc_E70D:
 		mov	ax, [bp+var_24]
 		cmp	ax, [bp+var_2]
 		jl	loc_E658
-		mov	dx, 0A6h ; '¦'
-		mov	al, _graph_page
-		out	dx, al
+		graph_accesspage _graph_page
 		pop	di
 		pop	si
 		leave

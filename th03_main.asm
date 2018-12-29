@@ -488,12 +488,8 @@ loc_9A14:
 		mov	byte_23B01, 0
 
 loc_9A25:
-		mov	dx, 0A6h ; '¦'
-		mov	al, byte_23AEF
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, byte_23AEE
-		out	dx, al
+		graph_accesspage byte_23AEF
+		graph_showpage byte_23AEE
 		mov	byte_23AEF, al
 		xor	byte_23AEE, 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
@@ -957,12 +953,8 @@ loc_9E24:
 		call	sub_F0EE
 		mov	byte_23AEE, 0
 		mov	byte_23AEF, 1
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage 1
 		call	snd_se_reset
 		nopcall	sub_B8F7
 		nopcall	sub_BAE0
@@ -1347,17 +1339,11 @@ sub_A21F	proc near
 		pushd	0
 		push	27F00C7h
 		call	grc_setclip
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	grcg_fill
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	grcg_fill
-		mov	dx, 0A4h
-		mov	al, 1
-		out	dx, al
+		graph_showpage 1
 		call	grcg_off
 		inc	byte_207E3
 		call	sub_9EBF
@@ -8606,9 +8592,7 @@ sub_E24B	endp
 sub_E266	proc near
 		push	bp
 		mov	bp, sp
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		push	2200148h
 		push	0
 		call	super_put
@@ -8627,9 +8611,7 @@ sub_E266	proc near
 		push	2600168h
 		push	0Fh
 		call	super_put
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		push	2200148h
 		push	0
 		call	super_put
@@ -9310,19 +9292,12 @@ sub_EA1A	proc far
 		push	bp
 		mov	bp, sp
 		call	pfend
-		mov	dx, 0A6h ; '¦'
-		mov	al, 1
-		out	dx, al
+		graph_accesspage 1
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		call	graph_clear
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
-		mov	dx, 0A4h
-		out	dx, al
+		graph_accesspage 0
+		graph_showpage al
 		call	vsync_end
 		call	mem_unassign
 		call	text_clear
@@ -9681,9 +9656,7 @@ sub_F0A6	endp
 sub_F0EE	proc far
 		push	1
 		call	sub_2C42
-		mov	dx, 0A6h ; '¦'
-		mov	al, 0
-		out	dx, al
+		graph_accesspage 0
 		mov	ah, 1
 		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
 		retf
