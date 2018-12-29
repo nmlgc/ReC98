@@ -1088,8 +1088,8 @@ sub_B55A	proc near
 		mov	byte_2C96C, 0
 		mov	_scroll_line, 0
 		mov	word_23F06, 0
-		mov	word_23F4E, 0
-		mov	word_23F50, 0
+		mov	_scroll_line_on_plane[0 * 2], 0
+		mov	_scroll_line_on_plane[1 * 2], 0
 		mov	_scroll_subpixel_line, 0
 		mov	byte_23EFC, 0
 		mov	byte_23F04, 0
@@ -2450,15 +2450,14 @@ sub_C202	endp
 sub_C23E	proc near
 		push	si
 		push	di
-		mov	dword_23F52, 80008h
+		mov	_tile_invalidate_box, (8 shl 16) or 8
 		mov	di, 60h
 		mov	si, 5986h
 
 loc_C24F:
 		cmp	byte ptr [si], 0
 		jz	short loc_C25B
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_C25B:
 		add	si, 10h
@@ -2529,7 +2528,7 @@ sub_C29E	endp
 sub_C2AA	proc near
 		push	si
 		push	di
-		mov	word ptr dword_23F52+2,	8
+		mov	_tile_invalidate_box.y, 8
 		mov	si, 9DA0h
 		mov	di, 118h
 
@@ -2537,11 +2536,9 @@ loc_C2B8:
 		cmp	byte ptr [si], 0
 		jz	short loc_C2CD
 		mov	ax, [si+8]
-		mov	word ptr dword_23F52, ax
+		mov	_tile_invalidate_box.x, ax
 		mov	ax, [si+2]
-		push	word ptr [si+6]
-		push	ax
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, word ptr [si+6], ax
 
 loc_C2CD:
 		add	si, 10h
@@ -4258,19 +4255,19 @@ sub_D032	proc near
 		mov	bp, sp
 		cmp	byte_26331, 0FEh
 		jnb	short loc_D04F
-		mov	word ptr dword_23F52, 40h
-		mov	word ptr dword_23F52+2,	40h
+		mov	_tile_invalidate_box.x, 64
+		mov	_tile_invalidate_box.y, 64
 		pushd	[_midboss_pos.prev]
 		jmp	short loc_D060
 ; ---------------------------------------------------------------------------
 
 loc_D04F:
-		mov	word ptr dword_23F52, 80h
-		mov	word ptr dword_23F52+2,	80h
+		mov	_tile_invalidate_box.x, 128
+		mov	_tile_invalidate_box.y, 128
 		pushd	[_midboss_pos.cur]
 
 loc_D060:
-		call	sub_E24C
+		call	tiles_invalidate_around
 		pop	bp
 		retn
 sub_D032	endp
@@ -6405,15 +6402,15 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	di
-		mov	dword_23F52, 20002h
+		mov	_tile_invalidate_box, (2 shl 16) or 2
 		mov	ax, word_2D086
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
-		mov	word ptr [bp+var_6+2], 80h
+		mov	word ptr [bp+var_6+2], (8 shl 4)
 
 loc_DFD8:
-		mov	word ptr [bp+var_6], 80h
+		mov	word ptr [bp+var_6], (8 shl 4)
 		mov	[bp+var_2], 18h
 
 loc_DFE1:
@@ -6423,12 +6420,11 @@ loc_DFE1:
 loc_DFE7:
 		test	[bp+var_1], 80h
 		jnz	short loc_DFF4
-		pushd	[bp+var_6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large [bp+var_6]
 
 loc_DFF4:
 		shl	[bp+var_1], 1
-		add	word ptr [bp+var_6], 100h
+		add	word ptr [bp+var_6], (16 shl 4)
 		dec	[bp+var_2]
 		jz	short loc_E00A
 		test	[bp+var_2], 7
@@ -6439,8 +6435,8 @@ loc_DFF4:
 
 loc_E00A:
 		add	di, 2
-		add	word ptr [bp+var_6+2], 100h
-		cmp	word ptr [bp+var_6+2], 1700h
+		add	word ptr [bp+var_6+2], (16 shl 4)
+		cmp	word ptr [bp+var_6+2], (PLAYFIELD_H shl 4)
 		jb	short loc_DFD8
 		pop	di
 		leave
@@ -6745,116 +6741,7 @@ loc_E228:
 		retn	2
 sub_E148	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E24C	proc near
-		mov	bx, sp
-		mov	dx, word ptr dword_23F52
-		shr	dx, 1
-		mov	ax, ss:[bx+2]
-		sar	ax, 4
-		sub	ax, dx
-		cmp	ax, 180h
-		jl	short loc_E265
-
-locret_E262:
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_E265:
-		mov	cx, ax
-		or	ax, ax
-		js	short loc_E26E
-		and	ax, 0Fh
-
-loc_E26E:
-		add	ax, word ptr dword_23F52
-		dec	ax
-		js	short locret_E262
-		sar	cx, 4
-		jns	short loc_E27C
-		xor	cx, cx
-
-loc_E27C:
-		mov	word_252DA, cx
-		shr	ax, 4
-		inc	ax
-		mov	cx, ax
-		mov	dx, word ptr dword_23F52+2
-		sar	dx, 1
-		mov	ax, ss:[bx+4]
-		sar	ax, 4
-		add	ax, 10h
-		sub	ax, dx
-		jns	short loc_E2A4
-		mov	dx, word ptr dword_23F52+2
-		add	dx, ax
-		or	dx, dx
-		jle	short locret_E262
-
-loc_E2A4:
-		cmp	ax, 180h
-		jge	short locret_E262
-		mov	bh, 0
-		mov	bl, _page_back
-		add	bx, bx
-		add	ax, [bx+356Eh]
-		jns	short loc_E2BC
-		add	ax, 190h
-		jmp	short loc_E2C4
-; ---------------------------------------------------------------------------
-
-loc_E2BC:
-		cmp	ax, 190h
-		jl	short loc_E2C4
-		sub	ax, 190h
-
-loc_E2C4:
-		mov	dx, ax
-		and	dx, 7
-		add	dx, word ptr dword_23F52+2
-		mov	bx, dx
-		add	bx, ax
-		shr	ax, 3
-		shl	ax, 5
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	di, ax
-		add	di, word_252DA
-		add	di, offset _halftiles_dirty
-		mov	si, 20h	; ' '
-		sub	si, cx
-		mov	ah, cl
-		mov	al, 1
-		cmp	bx, 190h
-		jl	short loc_E308
-		mov	bx, offset _halftiles_dirty_end
-
-loc_E2F7:
-		mov	cl, ah
-		rep stosb
-		sub	dx, 8
-		add	di, si
-		cmp	di, bx
-		jl	short loc_E2F7
-		sub	di, 640h
-
-loc_E308:
-		mov	cl, ah
-		rep stosb
-		add	di, si
-		sub	dx, 8
-		jg	short loc_E308
-		pop	di
-		pop	si
-		retn	4
-sub_E24C	endp
-
+include th04/tiles_invalidate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7025,7 +6912,7 @@ sub_E318	endp
 sub_E41C	proc near
 		push	si
 		push	di
-		mov	dword_23F52, 200020h
+		mov	_tile_invalidate_box, (32 shl 16) or 32
 		mov	si, 9296h
 		mov	di, 20h	; ' '
 
@@ -7034,8 +6921,7 @@ loc_E42D:
 		jz	short loc_E43E
 		cmp	byte ptr [si], 3
 		jz	short loc_E43E
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_E43E:
 		add	si, 40h
@@ -7315,7 +7201,7 @@ sub_E5EE	proc near
 		push	di
 		mov	si, 5DC6h
 		mov	di, 0B4h
-		mov	dword_23F52, 80008h
+		mov	_tile_invalidate_box, (8 shl 16) or 8
 		cmp	_bullet_clear_trigger, 0
 		jnz	short loc_E638
 		cmp	_bullet_clear_time, 0
@@ -7326,16 +7212,14 @@ loc_E60D:
 		jz	short loc_E632
 		cmp	byte ptr [si+12h], 1
 		jbe	short loc_E62B
-		shl	dword_23F52, 1
-		pushd	dword ptr [si+6]
-		call	sub_E24C
-		shr	dword_23F52, 1
+		shl	_tile_invalidate_box, 1
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		shr	_tile_invalidate_box, 1
 		jmp	short loc_E632
 ; ---------------------------------------------------------------------------
 
 loc_E62B:
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_E632:
 		add	si, 20h	; ' '
@@ -7344,23 +7228,21 @@ loc_E632:
 
 loc_E638:
 		add	di, 0DCh
-		shl	dword_23F52, 1
+		shl	_tile_invalidate_box, 1
 
 loc_E641:
 		cmp	byte ptr [si], 0
 		jz	short loc_E666
 		cmp	byte ptr [si+12h], 1
 		jbe	short loc_E65F
-		shl	dword_23F52, 1
-		pushd	dword ptr [si+6]
-		call	sub_E24C
-		shr	dword_23F52, 1
+		shl	_tile_invalidate_box, 1
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		shr	_tile_invalidate_box, 1
 		jmp	short loc_E666
 ; ---------------------------------------------------------------------------
 
 loc_E65F:
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_E666:
 		add	si, 20h	; ' '
@@ -7374,11 +7256,10 @@ loc_E672:
 		jz	short loc_E68D
 		mov	ax, [si+0Eh]
 		shr	ax, 3
-		add	ax, 10h
-		mov	word ptr dword_23F52, ax
-		mov	word ptr dword_23F52+2,	ax
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		add	ax, 16
+		mov	_tile_invalidate_box.x, ax
+		mov	_tile_invalidate_box.y, ax
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_E68D:
 		add	si, 26h	; '&'
@@ -7396,15 +7277,14 @@ sub_E5EE	endp
 sub_E696	proc near
 		push	si
 		push	di
-		mov	dword_23F52, 100010h
+		mov	_tile_invalidate_box, (16 shl 16) or 16
 		mov	si, 0AF20h
 		mov	di, 20h	; ' '
 
 loc_E6A7:
 		cmp	byte ptr [si], 0
 		jz	short loc_E6B3
-		pushd	dword ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_E6B3:
 		add	si, 14h
@@ -7419,10 +7299,9 @@ loc_E6BF:
 		mov	ax, [si+8]
 		shr	ax, 3
 		inc	ax
-		mov	word ptr dword_23F52, ax
-		mov	word ptr dword_23F52+2,	ax
-		pushd	dword ptr [si+2]
-		call	sub_E24C
+		mov	_tile_invalidate_box.x, ax
+		mov	_tile_invalidate_box.y, ax
+		call	tiles_invalidate_around pascal, large dword ptr [si+2]
 
 loc_E6D8:
 		add	si, 0Ah
@@ -10179,7 +10058,7 @@ loc_10223:
 		add	ax, ax
 		mov	dx, _scroll_line
 		mov	bx, ax
-		mov	[bx+356Eh], dx
+		mov	_scroll_line_on_plane[bx], dx
 		cmp	byte_23F04, 0
 		jz	short loc_1024F
 		cmp	_scroll_active, 0
@@ -12190,8 +12069,8 @@ sub_11184	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word ptr dword_23F52, 8
-		mov	word ptr dword_23F52+2,	8
+		mov	_tile_invalidate_box.x, 8
+		mov	_tile_invalidate_box.y, 8
 		mov	si, 0B290h
 		xor	di, di
 		jmp	short loc_111AE
@@ -12200,9 +12079,7 @@ sub_11184	proc near
 loc_1119C:
 		cmp	byte ptr [si], 0
 		jz	short loc_111AA
-		push	word ptr [si+8]
-		push	word ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, word ptr [si+8], word ptr [si+6]
 
 loc_111AA:
 		inc	di
@@ -13369,14 +13246,11 @@ var_1		= byte ptr -1
 		ja	short locret_11AAC
 
 loc_11A85:
-		mov	word ptr dword_23F52, 180h
-		mov	word ptr dword_23F52+2,	20h ; ' '
-		push	0A800C00h
-		call	sub_E24C
-		push	0C800C00h
-		call	sub_E24C
-		push	16800C00h
-		call	sub_E24C
+		mov	_tile_invalidate_box.x, PLAYFIELD_W
+		mov	_tile_invalidate_box.y, 32
+		call	tiles_invalidate_around pascal, large ((168 shl 4) shl 16) or (192 shl 4)
+		call	tiles_invalidate_around pascal, large ((200 shl 4) shl 16) or (192 shl 4)
+		call	tiles_invalidate_around pascal, large ((360 shl 4) shl 16) or (192 shl 4)
 
 locret_11AAC:
 		leave
@@ -14309,8 +14183,8 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		mov	word ptr dword_23F52, 10h
-		mov	word ptr dword_23F52+2,	10h
+		mov	_tile_invalidate_box.x, 16
+		mov	_tile_invalidate_box.y, 16
 		mov	si, 0B92Ah
 		mov	di, 0BDF2h
 		mov	[bp+var_2], 0
@@ -14320,9 +14194,7 @@ var_2		= word ptr -2
 loc_123CC:
 		cmp	byte ptr [si], 0
 		jz	short loc_123DA
-		push	word ptr [si+8]
-		push	word ptr [si+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, word ptr [si+8], word ptr [si+6]
 
 loc_123DA:
 		inc	[bp+var_2]
@@ -14338,9 +14210,7 @@ loc_123E0:
 loc_123ED:
 		cmp	byte ptr [di], 0
 		jz	short loc_123FB
-		push	word ptr [di+8]
-		push	word ptr [di+6]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, word ptr [di+8], word ptr [di+6]
 
 loc_123FB:
 		inc	[bp+var_2]
@@ -18658,11 +18528,11 @@ table_1425B	dw loc_14187
 
 
 sub_14266	proc near
-		mov	word ptr dword_23F52+2,	30h ; '0'
+		mov	_tile_invalidate_box.y, 48
 		cmp	byte_2CEC2, 0
 		jz	short loc_142D4
 		push	di
-		mov	word ptr dword_23F52, 30h ; '0'
+		mov	_tile_invalidate_box.x, 48
 		mov	di, word_2CEC4
 		add	di, 0FF90h
 		mov	al, byte_2CEC8
@@ -18691,8 +18561,7 @@ loc_14291:
 		jl	short loc_142CA
 		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_142CA
-		pushd	[_drawpoint]
-		call	sub_E24C
+		call	tiles_invalidate_around pascal, large [_drawpoint]
 
 loc_142CA:
 		pop	ax
@@ -18704,13 +18573,11 @@ loc_142CA:
 ; ---------------------------------------------------------------------------
 
 loc_142D4:
-		mov	word ptr dword_23F52, 20h ; ' '
-		pushd	[player_pos.prev]
-		call	sub_E24C
-		mov	word ptr dword_23F52, 40h
-		mov	word ptr dword_23F52+2,	10h
-		pushd	[dword_2CEB8]
-		call	sub_E24C
+		mov	_tile_invalidate_box.x, 32
+		call	tiles_invalidate_around pascal, large [player_pos.prev]
+		mov	_tile_invalidate_box.x, 64
+		mov	_tile_invalidate_box.y, 16
+		call	tiles_invalidate_around pascal, large [dword_2CEB8]
 
 locret_142F6:
 		retn
@@ -42397,9 +42264,7 @@ byte_23F04	db ?
 		db ?
 word_23F06	dw ?
 include th04/formats/std[bss].asm
-word_23F4E	dw ?
-word_23F50	dw ?
-dword_23F52	dd ?
+include th04/tiles_invalidate[bss].asm
 _boss_bg_render	dw ?
 fp_23F58	dw ?
 fp_23F5A	dw ?
@@ -43614,7 +43479,7 @@ byte_24F6B	db ?
 		dd    ?	;
 		dd    ?	;
 word_252D8	dw ?
-word_252DA	dw ?
+_invalidate_left_x_tile	dw ?
 word_252DC	dw ?
 include th04/drawpoint[bss].asm
 		dd    ?	;
