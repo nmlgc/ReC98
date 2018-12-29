@@ -1402,9 +1402,8 @@ arg_4		= word ptr  0Ah
 		mov	al, _scroll_active
 		mov	[bp+var_1], al
 		mov	_scroll_active, 1
-		lea	ax, [di+100h]
-		push	ax
-		call	sub_BC10
+		lea	ax, [di+(16 shl 4)]
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	di, ax
 		mov	bx, 10h
 		cwd
@@ -2015,34 +2014,7 @@ loc_BBFA:
 		retn
 sub_BBA4	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BC10	proc near
-		mov	bx, sp
-		mov	ax, ss:[bx+2]
-		sar	ax, 4
-		cmp	_scroll_active, 0
-		jz	short loc_BC24
-		add	ax, _scroll_line
-
-loc_BC24:
-		or	ax, ax
-		jge	short loc_BC2D
-		add	ax, RES_Y
-		jmp	short locret_BC35
-; ---------------------------------------------------------------------------
-
-loc_BC2D:
-		cmp	ax, RES_Y
-		jl	short locret_BC35
-		sub	ax, RES_Y
-
-locret_BC35:
-		retn	2
-sub_BC10	endp
-
+include th04/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
@@ -2223,9 +2195,8 @@ loc_BD96:
 		sar	dx, 4
 		add	dx, 0Ch
 		mov	ax, [si+4]
-		add	ax, 0C0h
-		push	ax
-		call	sub_BC10
+		add	ax, (12 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	bp, 4
 		add	si, 0Bh
 
@@ -2863,8 +2834,7 @@ loc_C19A:
 		jge	short loc_C1E6
 		mov	ax, _drawpoint.y
 		add	ax, (16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, _drawpoint.x
 		sar	ax, 4
@@ -3029,12 +2999,11 @@ loc_C2C4:
 		cmp	byte ptr [si], 1
 		jnz	short loc_C2E4
 		mov	ax, [si+4]
-		add	ax, 0C0h
-		push	ax
-		call	sub_BC10
+		add	ax, (12 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
-		add	ax, 1C0h
+		add	ax, (28 shl 4)
 		sar	ax, 4
 		mov	cl, [si+1]
 		call	sub_C200
@@ -3567,8 +3536,7 @@ sub_C778	proc near
 		sar	ax, 4
 		add	ax, 16
 		mov	di, ax
-		push	_midboss_pos.cur.y
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
 		mov	si, ax
 		push	di
 		push	ax
@@ -3585,8 +3553,7 @@ loc_C7A1:
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3596,8 +3563,7 @@ loc_C7A1:
 		call	super_roll_put
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3621,8 +3587,7 @@ loc_C7E6:
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		cmp	byte_26708, 0
 		jnz	short loc_C836
@@ -3638,8 +3603,7 @@ loc_C7E6:
 		call	super_roll_put
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3661,8 +3625,7 @@ loc_C836:
 		call	super_roll_put_1plane
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3710,8 +3673,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	byte_26705, 0FEh
 		jnz	short loc_C8D2
@@ -3803,8 +3765,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, 16
 		mov	[bp+var_2], ax
-		push	_midboss_pos.cur.y
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
 		mov	[bp+var_4], ax
 		mov	al, frame_mod16
 		mov	ah, 0
@@ -4206,8 +4167,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	byte_26705, 2
 		ja	short loc_CCD2
@@ -4435,8 +4395,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	byte_26705, 2
 		ja	short loc_CE85
@@ -7205,8 +7164,7 @@ loc_E276:
 		mov	ah, al
 		call	_grcg_setcolor_direct_noint_1
 		mov	si, word ptr dword_2560C+2
-		push	100h
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
 		mov	dx, ax
 		mov	ax, word ptr dword_2560C
 		sar	ax, 4
@@ -7214,8 +7172,7 @@ loc_E276:
 		mov	bx, di
 		call	sub_BE68
 		mov	si, word ptr dword_2560C+2
-		push	100h
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
 		mov	dx, ax
 		mov	ax, word ptr dword_2560C
 		sar	ax, 4
@@ -8372,9 +8329,8 @@ loc_EC24:
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx-430Ch]
-		add	ax, 0FE80h
-		push	ax
-		call	sub_BC10
+		add	ax, (-24 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		mov	ax, si
 		shl	ax, 7
@@ -11780,9 +11736,8 @@ loc_10570:
 
 loc_1058D:
 		mov	ax, [si+4]
-		add	ax, 80h
-		push	ax
-		call	sub_BC10
+		add	ax, (8 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
@@ -12010,8 +11965,7 @@ loc_10776:
 		sar	ax, 4
 		add	ax, 10h
 		mov	di, ax
-		push	word ptr [si+4]
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
 		mov	[bp+var_4], ax
 		or	di, di
 		jle	short loc_107D0
@@ -12564,8 +12518,7 @@ loc_10C13:
 		mov	di, ax
 		mov	ax, player_pos.cur.y
 		add	ax, -128
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	player_pos.velocity.x, 0
 		jge	short loc_10C37
@@ -12610,9 +12563,8 @@ loc_10C6F:
 		sar	ax, 4
 		mov	di, ax
 		mov	ax, word ptr dword_259AC+2
-		add	ax, 80h
-		push	ax
-		call	sub_BC10
+		add	ax, (8 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		mov	ax, di
 		mov	dx, [bp+var_2]
@@ -12670,8 +12622,7 @@ loc_10CE0:
 		mov	di, ax
 		mov	ax, _drawpoint.y
 		add	ax, (-8 shl 4)
-		push	ax
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -12935,7 +12886,7 @@ sub_10E39	endp
 sub_10EA5	proc near
 
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y		= word ptr  6
 arg_4		= word ptr  8
 
 		push	bp
@@ -12952,9 +12903,8 @@ arg_4		= word ptr  8
 		mov	ax, 8
 		imul	si
 		mov	si, ax
-		push	[bp+arg_2]
-		call	sub_BC10
-		mov	[bp+arg_2], ax
+		call	scroll_subpixel_y_to_vram_seg1 pascal, [bp+@@y]
+		mov	[bp+@@y], ax
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
@@ -12965,7 +12915,7 @@ loc_10ED1:
 		mov	al, byte_22EF6
 		mov	ah, 0
 		mov	cx, ax
-		mov	dx, [bp+arg_2]
+		mov	dx, [bp+@@y]
 		mov	ax, si
 		call	sub_C09A
 		add	si, 10h
@@ -14355,8 +14305,7 @@ loc_11AC4:
 		sar	ax, 4
 		add	ax, 10h
 		mov	si, ax
-		push	di
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, di
 		mov	di, ax
 		push	si
 		push	ax
@@ -16726,9 +16675,8 @@ loc_12CFA:
 		cmp	byte ptr [si+12h], 3
 		ja	short loc_12D24
 		mov	ax, [si+4]
-		add	ax, 80h
-		push	ax
-		call	sub_BC10
+		add	ax, (8 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
@@ -16777,8 +16725,7 @@ loc_12D6D:
 		cwd
 		idiv	bx
 		add	[bp+var_2], ax
-		push	word ptr [si+4]
-		call	sub_BC10
+		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
@@ -16815,9 +16762,8 @@ loc_12DC2:
 		cmp	byte ptr [si], 1
 		jnz	short loc_12DE2
 		mov	ax, [si+4]
-		add	ax, 80h
-		push	ax
-		call	sub_BC10
+		add	ax, (8 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
@@ -16864,9 +16810,8 @@ loc_12E04:
 		cmp	word ptr [si+4], 0FF80h
 		jle	short loc_12E2A
 		mov	ax, [si+4]
-		add	ax, 80h
-		push	ax
-		call	sub_BC10
+		add	ax, (8 shl 4)
+		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
@@ -17909,8 +17854,7 @@ loc_13C8F:
 		jz	short loc_13CD1
 		mov	ax, _drawpoint.y
 		add	ax, (12 shl 4)
-		push	ax
-		call	sub_13CE8
+		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	dx, ax
 		mov	ax, _drawpoint.x
 		sar	ax, 4
@@ -17940,60 +17884,7 @@ sub_13C5C	endp
 ; ---------------------------------------------------------------------------
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13CE8	proc near
-		mov	bx, sp
-		mov	ax, ss:[bx+2]
-		sar	ax, 4
-		cmp	_scroll_active, 0
-		jz	short loc_13CFC
-		add	ax, _scroll_line
-
-loc_13CFC:
-		cmp	ax, RES_Y
-		jl	short loc_13D06
-		sub	ax, RES_Y
-		jmp	short locret_13D0D
-; ---------------------------------------------------------------------------
-
-loc_13D06:
-		or	ax, ax
-		jge	short locret_13D0D
-		add	ax, RES_Y
-
-locret_13D0D:
-		retn	2
-sub_13CE8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13D10	proc near
-		mov	bx, sp
-		mov	ax, ss:[bx+2]
-		sar	ax, 4
-		add	ax, _scroll_line
-		cmp	ax, RES_Y
-		jl	short loc_13D27
-		sub	ax, RES_Y
-		jmp	short locret_13D2E
-; ---------------------------------------------------------------------------
-
-loc_13D27:
-		or	ax, ax
-		jge	short locret_13D2E
-		add	ax, RES_Y
-
-locret_13D2E:
-		retn	2
-sub_13D10	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/scroll_y_3.asm
 MOTION_UPDATE_DEF 2
 RANDRING_NEXT_DEF 2
 		db    0
@@ -18401,8 +18292,7 @@ sub_14017	proc far
 		mov	al, _scroll_subpixel_line
 		mov	ah, 0
 		add	_midboss_pos.cur.y, ax
-		push	_midboss_pos.cur.y
-		call	sub_13CE8
+		call	scroll_subpixel_y_to_vram_seg3 pascal, _midboss_pos.cur.y
 		mov	word_25596, ax
 		push	_midboss_pos.cur.x
 		push	_midboss_pos.cur.y
@@ -18446,8 +18336,7 @@ loc_14158:
 		sub	_midboss_pos.cur.y, (16 shl 4)
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_13CE8
+		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	word_25596, ax
 		push	_midboss_pos.cur.x
 		push	_midboss_pos.cur.y
@@ -18929,8 +18818,7 @@ loc_14629:
 		mov	byte_26708, 1
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_13D10
+		call	scroll_subpixel_y_to_vram_always pascal, ax
 		mov	si, ax
 		mov	_bullet_clear_trigger, 1
 		mov	al, byte_2559A
@@ -20509,8 +20397,7 @@ loc_15414:
 		mov	byte_26708, 1
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		call	sub_13D10
+		call	scroll_subpixel_y_to_vram_always pascal, ax
 		mov	si, ax
 		mov	_bullet_clear_trigger, 1
 		mov	al, byte_255C7
@@ -34632,9 +34519,8 @@ loc_1CAC5:
 		shl	bx, 2
 		mov	[bx-792Eh], ax
 		mov	ax, [si+4]
-		add	ax, 0C0h
-		push	ax
-		call	sub_13CE8
+		add	ax, (12 shl 4)
+		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	bx, word_2D006
 		shl	bx, 2
 		mov	[bx-792Ch], ax
