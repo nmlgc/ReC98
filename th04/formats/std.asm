@@ -28,8 +28,8 @@ std_load	proc near
 	call	file_read pascal, es, si, [bp+@@std_size]
 	call	file_close
 	mov	es, _std_seg
-	mov	_tile_index, 4
-	mov	_tile_row, 0
+	mov	_tile_section, 4
+	mov	_tile_row_in_section, 0
 	mov	al, [bp+@@chunk_size]
 	mov	ah, 0
 	add	si, ax

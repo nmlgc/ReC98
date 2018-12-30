@@ -55,8 +55,8 @@ std_load	proc near
 	mov	word ptr _boss_bgm_title, di
 	repne scasb
 	lea	ax, [di+5]
-	mov	_tile_index_ptr, ax
-	mov	_tile_row, 0
+	mov	_tile_section_ptr, ax
+	mov	_tile_row_in_section, 0
 	movzx	ax, byte ptr es:[di]
 	inc	ax
 	add	di, ax

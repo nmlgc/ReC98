@@ -1783,7 +1783,7 @@ sub_BB9A	proc near
 		push	di
 		push	si
 		push	ds
-		mov	bx, _tile_index_ptr
+		mov	bx, _tile_section_ptr
 		sub	bx, 4
 		mov	di, offset _tile_ring
 		add	di, TILES_MEMORY_X * (TILES_Y - 1) * 2
@@ -1942,10 +1942,10 @@ loc_BD36:
 		mov	bx, _std_seg
 		mov	es, bx
 		assume es:nothing
-		dec	_tile_row
+		dec	_tile_row_in_section
 		jns	short loc_BD88
-		mov	_tile_row, 4
-		inc	_tile_index_ptr
+		mov	_tile_row_in_section, 4
+		inc	_tile_section_ptr
 		inc	_tile_scrollspeed_ptr
 		mov	bx, _tile_scrollspeed_ptr
 		mov	dl, es:[bx]
@@ -1965,9 +1965,9 @@ loc_BD88:
 		add	ax, offset _tile_ring
 		mov	di, ax
 		xor	ax, ax
-		mov	al, _tile_row
+		mov	al, _tile_row_in_section
 		shl	ax, 6
-		mov	bx, _tile_index_ptr
+		mov	bx, _tile_section_ptr
 		mov	bl, es:[bx]
 		xor	bh, bh
 		mov	bx, [bx+870h]
