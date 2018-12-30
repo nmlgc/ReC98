@@ -9015,10 +9015,10 @@ arg_2		= word ptr  6
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_2]
-		mov	ax, word_25984
+		mov	ax, _homing_target.y
 		sub	ax, player_pos.cur.y
 		push	ax
-		mov	ax, word_25982
+		mov	ax, _homing_target.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -9136,7 +9136,7 @@ loc_F421:
 		add	word ptr [si+2], 180h
 
 loc_F426:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F43A
 		push	si
 		push	7
@@ -9224,7 +9224,7 @@ loc_F4B7:
 		add	word ptr [si+2], 180h
 
 loc_F4BC:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F4D0
 		push	si
 		push	7
@@ -9309,7 +9309,7 @@ loc_F553:
 		add	word ptr [si+2], 180h
 
 loc_F558:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F56C
 		push	si
 		push	7
@@ -9394,7 +9394,7 @@ loc_F5EF:
 		add	word ptr [si+2], 180h
 
 loc_F5F4:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F608
 		push	si
 		push	7
@@ -9479,7 +9479,7 @@ loc_F68B:
 		add	word ptr [si+2], 180h
 
 loc_F690:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F6A4
 		push	si
 		push	7
@@ -9593,7 +9593,7 @@ loc_F75B:
 		add	word ptr [si+2], 180h
 
 loc_F760:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F774
 		push	si
 		push	7
@@ -9695,7 +9695,7 @@ loc_F80E:
 		add	word ptr [si+2], 180h
 
 loc_F813:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F827
 		push	si
 		push	7
@@ -9816,7 +9816,7 @@ loc_F8E9:
 		mov	byte ptr [bp-2], 0CCh
 
 loc_F8F2:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F908
 		push	si
 		push	7
@@ -9850,7 +9850,7 @@ loc_F929:
 		add	word ptr [si+2], 180h
 
 loc_F92E:
-		cmp	word_25984, 0C190h
+		cmp	_homing_target.y, HOMING_TARGET_NONE
 		jz	short loc_F93C
 		push	si
 		push	0
@@ -18057,9 +18057,9 @@ loc_1411F:
 		push	offset _midboss_pos
 		call	_motion_update_2
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		inc	word_26706
 		cmp	byte_26704, 8Bh	; '‹'
 		jnb	short loc_14158
@@ -18109,9 +18109,9 @@ loc_141BF:
 		push	offset _midboss_pos
 		call	_motion_update_2
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		inc	word_26706
 		cmp	byte_26704, 92h
 		jnb	short loc_141FA
@@ -18155,9 +18155,9 @@ loc_1422D:
 		cmp	_scroll_speed, 2
 		ja	short loc_142AC
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		inc	word_26706
 		mov	word_257E2, 180h
 		mov	word_257E4, 100h
@@ -18398,9 +18398,9 @@ var_1		= byte ptr -1
 		enter	4, 0
 		push	si
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		cmp	byte_26705, 0
 		jnz	short loc_144F1
 		push	offset _midboss_pos
@@ -19371,9 +19371,9 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		cmp	byte_26705, 0
 		jnz	short loc_14D5D
 		push	offset _midboss_pos
@@ -19994,9 +19994,9 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	ax, _midboss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		cmp	byte_26705, 0
 		jnz	short loc_15314
 		push	offset _midboss_pos
@@ -22648,9 +22648,9 @@ loc_169B3:
 
 loc_169B8:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		call	sub_15DE8
 		push	_boss_hp
 		push	9000
@@ -23139,12 +23139,12 @@ loc_16D53:
 
 loc_16D7E:
 		mov	ax, [si+4]
-		cmp	ax, word_25984
+		cmp	ax, _homing_target.y
 		jge	short loc_16D93
 		mov	ax, [si+2]
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, [si+4]
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 
 loc_16D93:
 		mov	ax, [si+2]
@@ -24877,9 +24877,9 @@ loc_17C9F:
 
 loc_17CA4:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		call	sub_16C6A
 		push	_boss_hp
 		push	6000
@@ -25109,8 +25109,8 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	word_25982, 0C190h
-		mov	word_25984, 0C190h
+		mov	_homing_target.x, HOMING_TARGET_NONE
+		mov	_homing_target.y, HOMING_TARGET_NONE
 		mov	word_257E2, 100h
 		mov	word_257E4, 0C0h
 		mov	si, 8A92h
@@ -25162,14 +25162,14 @@ loc_17ECA:
 		cmp	ax, 1800h
 		jnb	loc_17F9B
 		mov	ax, [si+4]
-		cmp	ax, word_25984
+		cmp	ax, _homing_target.y
 		jle	short loc_17F0F
 		cmp	ax, player_pos.cur.y
 		jg	short loc_17F0F
 		mov	ax, [si+2]
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, [si+4]
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 
 loc_17F0F:
 		mov	eax, [si+2]
@@ -26481,9 +26481,9 @@ loc_1899C:
 
 loc_189A1:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		push	_boss_hp
 		push	9400
 		call	sub_19F16
@@ -27871,9 +27871,9 @@ loc_195A4:
 
 loc_195A9:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		push	_boss_hp
 		push	4800
 		call	sub_19F16
@@ -28828,9 +28828,9 @@ loc_19E88:
 
 loc_19E8D:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		push	_boss_hp
 		push	3050
 		call	sub_19F16
@@ -32154,9 +32154,9 @@ loc_1B8E5:
 
 loc_1B8EA:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		call	sub_15DE8
 		call	sub_1A110
 		push	_boss_hp
@@ -33686,9 +33686,9 @@ loc_1C675:
 
 loc_1C67A:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		push	_boss_hp
 		push	6000
 		call	sub_19F16
@@ -37751,8 +37751,8 @@ loc_1E8E5:
 
 loc_1E905:
 		inc	word_2671A
-		mov	word_25982, 0C190h
-		mov	word_25984, 0C190h
+		mov	_homing_target.x, HOMING_TARGET_NONE
+		mov	_homing_target.y, HOMING_TARGET_NONE
 
 loc_1E915:
 		pop	bp
@@ -39557,9 +39557,9 @@ loc_1F8A0:
 
 loc_1F8A5:
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 		call	sub_1EBF3
 		push	_boss_hp
 		push	9100
@@ -41222,9 +41222,9 @@ loc_206B6:
 		cmp	byte ptr word_237F8, 0
 		jnz	short loc_206C9
 		mov	ax, _boss_pos.cur.x
-		mov	word_25982, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25984, ax
+		mov	_homing_target.y, ax
 
 loc_206C9:
 		call	sub_15DE8
@@ -45241,8 +45241,7 @@ word_257E4	dw ?
 word_2597E	dw ?
 byte_25980	db ?
 		db ?
-word_25982	dw ?
-word_25984	dw ?
+include th04/homing_target[bss].asm
 public _stage_vm
 _stage_vm	dd ?
 word_2598A	dw ?

@@ -14273,12 +14273,12 @@ loc_12456:
 		mov	byte ptr [si+0Fh], 0
 
 loc_12460:
-		cmp	word ptr dword_2C922, 0C190h
+		cmp	_homing_target.x, HOMING_TARGET_NONE
 		jz	loc_124FA
-		mov	ax, word ptr dword_2C922+2
+		mov	ax, _homing_target.y
 		sub	ax, [si+4]
 		push	ax
-		mov	ax, word ptr dword_2C922
+		mov	ax, _homing_target.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -14319,10 +14319,10 @@ loc_124B0:
 		jnb	short loc_124DC
 
 loc_124C4:
-		mov	ax, word ptr dword_2C922+2
+		mov	ax, _homing_target.y
 		sub	ax, [si+4]
 		push	ax
-		mov	ax, word ptr dword_2C922
+		mov	ax, _homing_target.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -21380,8 +21380,8 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	word ptr dword_2C922, 0C190h
-		mov	word ptr dword_2C922+2,	0C190h
+		mov	_homing_target.x, HOMING_TARGET_NONE
+		mov	_homing_target.y, HOMING_TARGET_NONE
 		mov	word_2CED6, 100h
 		mov	word_2CED8, 0C0h
 		mov	[bp+var_2], 0
@@ -21435,12 +21435,12 @@ loc_160F2:
 		jnb	loc_161C6
 		inc	[bp+var_2]
 		mov	ax, [si+4]
-		cmp	ax, word ptr dword_2C922+2
+		cmp	ax, _homing_target.y
 		jle	short loc_16134
 		mov	ax, [si+2]
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, [si+4]
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 
 loc_16134:
 		mov	eax, [si+2]
@@ -21559,7 +21559,7 @@ loc_1624D:
 loc_16251:
 		cmp	di, 20h	; ' '
 		jl	loc_160A7
-		cmp	word ptr dword_2C922, 0C190h
+		cmp	_homing_target.x, HOMING_TARGET_NONE
 		jz	short loc_162B9
 		cmp	[bp+var_2], 8
 		jb	short loc_1626C
@@ -25283,9 +25283,9 @@ loc_181C4:
 		push	1000
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_180BF	endp
@@ -25851,9 +25851,9 @@ sub_186B6	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		inc	boss_phase_frame
 		mov	byte ptr word_25FFA, 0
 		mov	eax, _boss_pos.cur
@@ -26351,9 +26351,9 @@ loc_18BA0:
 		push	1400
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_18A2F	endp
@@ -26943,9 +26943,9 @@ sub_1903A	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		inc	boss_phase_frame
 		mov	byte ptr word_25FFA, 0
 		mov	eax, _boss_pos.cur
@@ -27591,9 +27591,9 @@ loc_19613:
 		push	1400
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_194E8	endp
@@ -28774,9 +28774,9 @@ sub_1A044	proc far
 		mov	bp, sp
 		push	si
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		inc	boss_phase_frame
 		mov	byte ptr word_25FFA, 0
 		mov	ax, _boss_pos.cur.x
@@ -30126,7 +30126,7 @@ loc_1ABEE:
 		mov	eax, dword_2634E
 
 loc_1ABF2:
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		inc	boss_phase_frame
 		mov	al, boss_phase
 		mov	ah, 0
@@ -30945,9 +30945,9 @@ loc_1B3A1:
 		push	1100
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_1B26F	endp
@@ -31707,7 +31707,7 @@ sub_1B9F2	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _boss_pos.cur
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
 		mov	dword ptr word_2BC71+1,	eax
@@ -32913,7 +32913,7 @@ sub_1C518	proc far
 		mov	bp, sp
 		push	si
 		mov	eax, _boss_pos.cur
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
 		mov	_laser_template.coords.origin, eax
@@ -34296,7 +34296,7 @@ sub_1D26B	proc far
 		mov	bp, sp
 		push	si
 		mov	eax, _boss_pos.cur
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
 		mov	dword ptr word_2BC71+1,	eax
@@ -35899,7 +35899,7 @@ sub_1E197	proc far
 		push	si
 		push	di
 		mov	eax, _boss_pos.cur
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
 		mov	_laser_template.coords.origin, eax
@@ -36647,9 +36647,9 @@ loc_1E864:
 		push	3000
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_1E70E	endp
@@ -37861,7 +37861,7 @@ sub_1F289	proc far
 
 loc_1F298:
 		mov	eax, _boss_pos.cur
-		mov	dword_2C922, eax
+		mov	_homing_target, eax
 		mov	dword_25FFC, eax
 		mov	dword_2A722, eax
 		mov	_laser_template.coords.origin, eax
@@ -38615,9 +38615,9 @@ loc_1F9A1:
 		push	1550
 		call	sub_17354
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2C922, ax
+		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2C922+2,	ax
+		mov	_homing_target.y, ax
 		pop	bp
 		retf
 sub_1F87B	endp
@@ -39146,8 +39146,8 @@ loc_1FD35:
 		call	frame_delay
 
 loc_1FD51:
-		mov	word ptr dword_2C922, 0C190h
-		mov	word ptr dword_2C922+2,	0C190h
+		mov	_homing_target.x, HOMING_TARGET_NONE
+		mov	_homing_target.y, HOMING_TARGET_NONE
 
 loc_1FD5D:
 		pop	si
@@ -50083,7 +50083,7 @@ word_2C0C8	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-dword_2C922	dd ?
+include th04/homing_target[bss].asm
 public _stage_vm
 _stage_vm	dd ?
 word_2C92A	dw ?
