@@ -6617,130 +6617,7 @@ loc_E137:
 		retn
 sub_E10E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E148	proc near
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, ss:[bx+2]
-		shl	bx, 1
-		mov	ds, word ptr [bx+269Eh]
-		mov	bx, dx
-		shl	bx, 2
-		add	bx, dx
-		shl	bx, 4
-		mov	cx, ax
-		and	cx, 7
-		shr	ax, 3
-		add	bx, ax
-		xor	si, si
-		lodsw
-		cmp	al, 80h
-		jnz	short loc_E1DE
-		mov	dl, 0FFh
-		shr	dl, cl
-		test	bl, 1
-		jnz	short loc_E1E4
-		nop
-
-loc_E17C:
-		GRCG_SETCOLOR_DIRECT ah
-		mov	ch, 10h
-		mov	di, bx
-		cmp	di, 7850h
-		jb	short loc_E1C0
-
-loc_E19E:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], ax
-		xor	al, dh
-		jz	short loc_E1B0
-		mov	es:[di+2], al
-
-loc_E1B0:
-		add	di, 50h	; 'P'
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_E19E
-		sub	di, 7D00h
-		nop
-
-loc_E1C0:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], ax
-		xor	al, dh
-		jz	short loc_E1D2
-		mov	es:[di+2], al
-
-loc_E1D2:
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_E1C0
-		lodsw
-		cmp	al, 80h
-		jz	short loc_E17C
-
-loc_E1DE:
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_E1E4:
-		GRCG_SETCOLOR_DIRECT ah
-		mov	ch, 10h
-		mov	di, bx
-		cmp	di, 7850h
-		jb	short loc_E228
-
-loc_E206:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], al
-		xor	al, dh
-		xchg	ah, al
-		mov	es:[di+1], ax
-		add	di, 50h	; 'P'
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_E206
-		sub	di, 7D00h
-		nop
-
-loc_E228:
-		lodsw
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		mov	es:[di], al
-		xor	al, dh
-		xchg	ah, al
-		mov	es:[di+1], ax
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_E228
-		lodsw
-		cmp	al, 80h
-		jz	short loc_E1E4
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-sub_E148	endp
-
+include th04/formats/super_roll_put_tiny.asm
 include th04/tiles_invalidate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8914,7 +8791,7 @@ loc_F548:
 		cmp	dx, 180h
 		jnb	short loc_F5AC
 		push	0A4h
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_F5AC:
 		inc	di
@@ -9187,7 +9064,7 @@ loc_F7B9:
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+10h]
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_F7DF:
 		inc	di
@@ -9909,7 +9786,7 @@ loc_100DE:
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+18h]
-		call	sub_E148
+		call	z_super_roll_put_tiny
 		jmp	short loc_1016B
 ; ---------------------------------------------------------------------------
 
@@ -9991,7 +9868,7 @@ loc_1018A:
 		sar	ax, 4
 		add	ax, 18h
 		push	di
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_101BD:
 		mov	ax, word_2CDF8
@@ -10023,7 +9900,7 @@ loc_101E3:
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+18h]
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_10203:
 		inc	[bp+var_2]
@@ -12792,7 +12669,7 @@ loc_1178F:
 		mov	dx, si
 		mov	ax, [bp+var_A]
 		push	[bp+var_8]
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_1179F:
 		sub	si, 10h
@@ -14094,11 +13971,11 @@ loc_122D5:
 		mov	ax, di
 		mov	dx, [bp+var_2]
 		push	1Ah
-		call	sub_E148
+		call	z_super_roll_put_tiny
 		lea	ax, [di+30h]
 		mov	dx, [bp+var_2]
 		push	1Ah
-		call	sub_E148
+		call	z_super_roll_put_tiny
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_123A9
 ; ---------------------------------------------------------------------------
@@ -14488,7 +14365,7 @@ loc_125BB:
 		sar	ax, 4
 		add	ax, 18h
 		push	cx
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_125F0:
 		inc	[bp+var_2]
@@ -14518,7 +14395,7 @@ loc_12609:
 		sar	ax, 4
 		add	ax, 18h
 		push	cx
-		call	sub_E148
+		call	z_super_roll_put_tiny
 
 loc_12631:
 		inc	[bp+var_2]
