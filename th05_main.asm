@@ -6868,22 +6868,22 @@ sub_E480	endp
 
 sub_E4A6	proc near
 		xor	ax, ax
-		mov	bx, word_2D062
+		mov	bx, _shot_ptr
 
 loc_E4AC:
-		cmp	bx, 0BDAAh
+		cmp	bx, offset _shots_end
 		jnb	short locret_E4DC
-		add	bx, 12h
-		cmp	byte ptr [bx], 0
+		add	bx, size shot_t
+		cmp	[bx+shot_t.flag], 0
 		jnz	short loc_E4AC
-		mov	word ptr [bx], 1
+		mov	word ptr [bx+shot_t.flag], 1
 		mov	eax, player_pos.cur
-		mov	[bx+2],	eax
-		mov	dword ptr [bx+0Ah], 0FF400000h
-		mov	word ptr [bx+0Eh], 14h
+		mov	dword ptr [bx+shot_t.pos.cur],	eax
+		mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
+		mov	word ptr [bx+shot_t.patnum_base], 20
 		mov	ax, bx
-		add	bx, 12h
-		mov	word_2D062, bx
+		add	bx, size shot_t
+		mov	_shot_ptr, bx
 
 locret_E4DC:
 		retn
@@ -7612,8 +7612,8 @@ sub_EACE	proc near
 		push	offset _lasers
 		push	size _lasers / 4
 		call	sub_E708
-		push	0B92Ah
-		push	120h
+		push	offset _shots
+		push	size _shots / 4
 		call	sub_E708
 		push	9296h
 		push	200h
@@ -14055,32 +14055,32 @@ sub_12263	endp
 
 sub_123AD	proc near
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	_tile_invalidate_box.x, 16
 		mov	_tile_invalidate_box.y, 16
-		mov	si, 0B92Ah
+		mov	si, offset _shots
 		mov	di, 0BDF2h
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_123E0
 ; ---------------------------------------------------------------------------
 
 loc_123CC:
-		cmp	byte ptr [si], 0
+		cmp	[si+shot_t.flag], 0
 		jz	short loc_123DA
-		call	tiles_invalidate_around pascal, word ptr [si+8], word ptr [si+6]
+		call	tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
 loc_123DA:
-		inc	[bp+var_2]
-		add	si, 12h
+		inc	[bp+@@i]
+		add	si, size shot_t
 
 loc_123E0:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+@@i], SHOT_COUNT
 		jl	short loc_123CC
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_12401
 ; ---------------------------------------------------------------------------
 
@@ -14090,11 +14090,11 @@ loc_123ED:
 		call	tiles_invalidate_around pascal, word ptr [di+8], word ptr [di+6]
 
 loc_123FB:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	di, 0Eh
 
 loc_12401:
-		cmp	[bp+var_2], 18h
+		cmp	[bp+@@i], 18h
 		jl	short loc_123ED
 		pop	di
 		pop	si
@@ -14111,15 +14111,15 @@ sub_1240B	proc near
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
 		mov	word_2D05A, 0
-		mov	si, 0B92Ah
+		mov	si, offset _shots
 		mov	[bp+var_4], 0C4FAh
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_12537
 ; ---------------------------------------------------------------------------
 
@@ -14258,14 +14258,14 @@ loc_1251B:
 		inc	byte ptr [si+1]
 
 loc_12531:
-		inc	[bp+var_2]
-		add	si, 12h
+		inc	[bp+@@i]
+		add	si, size shot_t
 
 loc_12537:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+@@i], SHOT_COUNT
 		jl	loc_12427
 		mov	di, 0BDF2h
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_12591
 ; ---------------------------------------------------------------------------
 
@@ -14306,11 +14306,11 @@ loc_12577:
 		inc	byte ptr [di+1]
 
 loc_1258B:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	di, 0Eh
 
 loc_12591:
-		cmp	[bp+var_2], 18h
+		cmp	[bp+@@i], 18h
 		jl	short loc_12549
 		pop	di
 		pop	si
@@ -14820,7 +14820,7 @@ loc_12951:
 ; ---------------------------------------------------------------------------
 
 loc_12955:
-		mov	word_2D062, 0B92Ah
+		mov	_shot_ptr, offset _shots
 		mov	byte_2D064, 0
 		mov	al, [bp+var_1]
 		leave
@@ -48547,294 +48547,7 @@ word_2C0C8	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -49471,7 +49184,7 @@ word_2D05C	dw ?
 word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
-word_2D062	dw ?
+_shot_ptr	dw ?
 byte_2D064	db ?
 		db ?
 include th04/boss_funcs[bss].asm

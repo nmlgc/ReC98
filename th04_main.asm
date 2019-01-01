@@ -5592,7 +5592,7 @@ shot_marisa_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		call	sub_11D96
 		mov	si, ax
@@ -5613,7 +5613,7 @@ shot_marisa_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		call	sub_11D96
 		mov	si, ax
@@ -5670,7 +5670,7 @@ loc_DADA:
 		inc	byte_22C1A
 		cmp	byte_22C1A, 4
 		ja	short loc_DB39
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		call	sub_11D96
 		mov	si, ax
@@ -5717,7 +5717,7 @@ shot_marisa_a_l2	proc near
 		push	40h
 		push	0
 		call	sub_DAA6
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DB7C
 ; ---------------------------------------------------------------------------
@@ -5758,7 +5758,7 @@ shot_marisa_a_l3	proc near
 		push	48h ; 'H'
 		push	0
 		call	sub_DAA6
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DBC1
 ; ---------------------------------------------------------------------------
@@ -5803,7 +5803,7 @@ shot_marisa_a_l4	proc near
 		push	58h ; 'X'
 		push	1
 		call	sub_DAA6
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DC07
 ; ---------------------------------------------------------------------------
@@ -5848,7 +5848,7 @@ shot_marisa_a_l5	proc near
 		push	1
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DC53
 ; ---------------------------------------------------------------------------
@@ -5890,7 +5890,7 @@ shot_marisa_a_l6	proc near
 		push	2
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DCA0
 ; ---------------------------------------------------------------------------
@@ -5932,7 +5932,7 @@ shot_marisa_a_l7	proc near
 		push	3
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DCED
 ; ---------------------------------------------------------------------------
@@ -5974,7 +5974,7 @@ shot_marisa_a_l8	proc near
 		push	3
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DD3A
 ; ---------------------------------------------------------------------------
@@ -6016,7 +6016,7 @@ shot_marisa_a_l9	proc near
 		push	4
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DD87
 ; ---------------------------------------------------------------------------
@@ -6055,7 +6055,7 @@ shot_marisa_b_l2	proc near
 		push	si
 		push	di
 		mov	di, 3
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DDEA
 ; ---------------------------------------------------------------------------
@@ -6115,7 +6115,7 @@ shot_marisa_b_l3	proc near
 		push	si
 		push	di
 		mov	di, 4
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DE4F
 ; ---------------------------------------------------------------------------
@@ -6178,7 +6178,7 @@ shot_marisa_b_l4	proc near
 		push	si
 		push	di
 		mov	di, 4
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DEC9
 ; ---------------------------------------------------------------------------
@@ -6252,7 +6252,7 @@ shot_marisa_b_l5	proc near
 		push	di
 		mov	di, 5
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DF49
 ; ---------------------------------------------------------------------------
@@ -6323,7 +6323,7 @@ shot_marisa_b_l6	proc near
 		push	di
 		mov	di, 7
 		mov	byte ptr [bp-3], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_DFD4
 ; ---------------------------------------------------------------------------
@@ -6413,7 +6413,7 @@ var_3		= word ptr -3
 		push	di
 		mov	di, 7
 		mov	byte ptr [bp+var_3], 0B6h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_E068
 ; ---------------------------------------------------------------------------
@@ -6503,7 +6503,7 @@ var_3		= word ptr -3
 		push	di
 		mov	di, 8
 		mov	byte ptr [bp+var_3], 0B6h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_E118
 ; ---------------------------------------------------------------------------
@@ -6607,7 +6607,7 @@ var_3		= word ptr -3
 		push	di
 		mov	di, 0Ah
 		mov	byte ptr [bp+var_3], 0B6h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_E1D8
 ; ---------------------------------------------------------------------------
@@ -8916,7 +8916,7 @@ shot_reimu_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		call	sub_11D96
 		mov	si, ax
@@ -8937,7 +8937,7 @@ shot_reimu_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		call	sub_11D96
 		mov	si, ax
@@ -8983,7 +8983,7 @@ loc_F3D7:
 
 loc_F3E9:
 		inc	byte_256A2
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F446
 ; ---------------------------------------------------------------------------
@@ -9067,7 +9067,7 @@ loc_F467:
 
 loc_F479:
 		inc	byte_256A2
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F4DC
 ; ---------------------------------------------------------------------------
@@ -9155,7 +9155,7 @@ loc_F4FE:
 loc_F510:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F578
 ; ---------------------------------------------------------------------------
@@ -9240,7 +9240,7 @@ loc_F59A:
 loc_F5AC:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F614
 ; ---------------------------------------------------------------------------
@@ -9325,7 +9325,7 @@ loc_F636:
 loc_F648:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F6B0
 ; ---------------------------------------------------------------------------
@@ -9415,7 +9415,7 @@ loc_F6D2:
 loc_F6E4:
 		inc	byte_256A2
 		mov	byte ptr [bp+var_2+1], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_F780
 ; ---------------------------------------------------------------------------
@@ -9518,7 +9518,7 @@ var_2		= word ptr -2
 		add	di, 2
 		inc	byte_256A2
 		mov	byte ptr [bp+var_2+1], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_F833
 ; ---------------------------------------------------------------------------
@@ -9635,7 +9635,7 @@ loc_F85A:
 loc_F86C:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_F948
 ; ---------------------------------------------------------------------------
@@ -9785,7 +9785,7 @@ loc_F96C:
 
 loc_F97E:
 		inc	byte_256A2
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_F9D9
 ; ---------------------------------------------------------------------------
@@ -9864,7 +9864,7 @@ loc_F9FB:
 
 loc_FA0D:
 		inc	byte_256A2
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FA70
 ; ---------------------------------------------------------------------------
@@ -9949,7 +9949,7 @@ loc_FA92:
 loc_FAA4:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FB15
 ; ---------------------------------------------------------------------------
@@ -10033,7 +10033,7 @@ loc_FB37:
 loc_FB49:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FBD9
 ; ---------------------------------------------------------------------------
@@ -10146,7 +10146,7 @@ loc_FC05:
 loc_FC17:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FCA7
 ; ---------------------------------------------------------------------------
@@ -10259,7 +10259,7 @@ loc_FCD3:
 loc_FCE5:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FD75
 ; ---------------------------------------------------------------------------
@@ -10372,7 +10372,7 @@ loc_FDA1:
 loc_FDB3:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	short loc_FE43
 ; ---------------------------------------------------------------------------
@@ -10485,7 +10485,7 @@ loc_FE6F:
 loc_FE81:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0B8h
-		mov	word_256A4, 0B55Eh
+		mov	_shot_ptr, offset _shots
 		mov	byte_256A6, 0
 		jmp	loc_FF19
 ; ---------------------------------------------------------------------------
@@ -11198,22 +11198,22 @@ sub_10444	proc near
 		push	di
 		mov	_tile_invalidate_box.x, 16
 		mov	_tile_invalidate_box.y, 16
-		mov	si, 0B55Eh
+		mov	si, offset _shots
 		xor	di, di
 		jmp	short loc_1046E
 ; ---------------------------------------------------------------------------
 
 loc_1045C:
-		cmp	byte ptr [si], 0
+		cmp	[si+shot_t.flag], 0
 		jz	short loc_1046A
-		call	tiles_invalidate_around pascal, word ptr [si+8], word ptr [si+6]
+		call	tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
 loc_1046A:
 		inc	di
-		add	si, 12h
+		add	si, size shot_t
 
 loc_1046E:
-		cmp	di, 44h	; 'D'
+		cmp	di, SHOT_COUNT
 		jl	short loc_1045C
 		cmp	word_25608, 20h	; ' '
 		jb	short loc_104B2
@@ -11256,15 +11256,15 @@ sub_10444	endp
 
 sub_104B6	proc near
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	word_2597E, 0
-		mov	si, 0B55Eh
+		mov	si, offset _shots
 		mov	di, 44A6h
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_1052D
 ; ---------------------------------------------------------------------------
 
@@ -11315,11 +11315,11 @@ loc_10515:
 		inc	byte ptr [si+1]
 
 loc_10527:
-		inc	[bp+var_2]
-		add	si, 12h
+		inc	[bp+@@i]
+		add	si, size shot_t
 
 loc_1052D:
-		cmp	[bp+var_2], 44h	; 'D'
+		cmp	[bp+@@i], SHOT_COUNT
 		jl	short loc_104CF
 		cmp	word_25608, 0
 		jz	short loc_1054E
@@ -11354,7 +11354,7 @@ sub_10552	proc near
 		call	sub_E1F4
 
 loc_10569:
-		mov	si, 0BA14h
+		mov	si, offset _shots[(SHOT_COUNT - 1) * size shot_t]
 		xor	di, di
 		jmp	short loc_105AA
 ; ---------------------------------------------------------------------------
@@ -11389,7 +11389,7 @@ loc_105A6:
 		sub	si, 12h
 
 loc_105AA:
-		cmp	di, 44h	; 'D'
+		cmp	di, SHOT_COUNT
 		jl	short loc_10570
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -14260,11 +14260,11 @@ sub_11D96	proc near
 		xor	ax, ax
 
 loc_11D98:
-		cmp	byte_256A6, 44h	; 'D'
+		cmp	byte_256A6, SHOT_COUNT
 		jnb	short locret_11DC9
-		mov	bx, word_256A4
-		add	word_256A4, 12h
-		cmp	byte ptr [bx], 0
+		mov	bx, _shot_ptr
+		add	_shot_ptr, size shot_t
+		cmp	[bx+shot_t.flag], 0
 		jz	short loc_11DB3
 		inc	byte_256A6
 		jmp	short loc_11D98
@@ -14273,8 +14273,8 @@ loc_11D98:
 loc_11DB3:
 		mov	word ptr [bx], 1
 		mov	eax, player_pos.cur
-		mov	[bx+2],	eax
-		mov	dword ptr [bx+0Ah], 0FF400000h
+		mov	dword ptr [bx+shot_t.pos.cur], eax
+		mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
 		mov	ax, bx
 
 locret_11DC9:
@@ -14440,8 +14440,8 @@ sub_11ECB	proc near
 		push	200010h
 		push	19F017Fh
 		call	grc_setclip
-		push	0B55Eh
-		push	132h
+		push	offset _shots
+		push	size _shots / 4
 		call	sub_C34E
 		push	8A92h
 		push	200h
@@ -43899,7 +43899,7 @@ dword_2569A	dd ?
 dword_2569E	dd ?
 byte_256A2	db ?
 		db ?
-word_256A4	dw ?
+_shot_ptr	dw ?
 byte_256A6	db ?
 		db ?
 byte_256A8	db ?
@@ -50448,338 +50448,33 @@ include th04/circles[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
 		db    ?	;
+include th04/shots[bss].asm
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
 public _humaconfig
 _humaconfig	dd ?
 byte_2CDCA	db ?
