@@ -5593,8 +5593,8 @@ shot_marisa_l0	proc near
 		mov	bp, sp
 		push	si
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
-		call	sub_11D96
+		mov	_shot_last_id, 0
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DA70
@@ -5614,8 +5614,8 @@ shot_marisa_l1	proc near
 		mov	bp, sp
 		push	si
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
-		call	sub_11D96
+		mov	_shot_last_id, 0
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DAA3
@@ -5671,8 +5671,8 @@ loc_DADA:
 		cmp	byte_22C1A, 4
 		ja	short loc_DB39
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
-		call	sub_11D96
+		mov	_shot_last_id, 0
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB17
@@ -5684,7 +5684,7 @@ loc_DADA:
 		mov	[si+2],	ax
 
 loc_DB17:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB45
@@ -5718,7 +5718,7 @@ shot_marisa_a_l2	proc near
 		push	0
 		call	sub_DAA6
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DB7C
 ; ---------------------------------------------------------------------------
 
@@ -5736,7 +5736,7 @@ loc_DB62:
 ; ---------------------------------------------------------------------------
 
 loc_DB7C:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DB62
@@ -5759,7 +5759,7 @@ shot_marisa_a_l3	proc near
 		push	0
 		call	sub_DAA6
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DBC1
 ; ---------------------------------------------------------------------------
 
@@ -5780,7 +5780,7 @@ loc_DBB5:
 		jle	short loc_DBCA
 
 loc_DBC1:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBA4
@@ -5804,7 +5804,7 @@ shot_marisa_a_l4	proc near
 		push	1
 		call	sub_DAA6
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DC07
 ; ---------------------------------------------------------------------------
 
@@ -5825,7 +5825,7 @@ loc_DBFB:
 		jle	short loc_DC10
 
 loc_DC07:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBEA
@@ -5849,7 +5849,7 @@ shot_marisa_a_l5	proc near
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DC53
 ; ---------------------------------------------------------------------------
 
@@ -5867,7 +5867,7 @@ loc_DC35:
 		jle	short loc_DC5C
 
 loc_DC53:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC35
@@ -5891,7 +5891,7 @@ shot_marisa_a_l6	proc near
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DCA0
 ; ---------------------------------------------------------------------------
 
@@ -5909,7 +5909,7 @@ loc_DC82:
 		jle	short loc_DCA9
 
 loc_DCA0:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC82
@@ -5933,7 +5933,7 @@ shot_marisa_a_l7	proc near
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DCED
 ; ---------------------------------------------------------------------------
 
@@ -5951,7 +5951,7 @@ loc_DCCF:
 		jle	short loc_DCF6
 
 loc_DCED:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DCCF
@@ -5975,7 +5975,7 @@ shot_marisa_a_l8	proc near
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DD3A
 ; ---------------------------------------------------------------------------
 
@@ -5993,7 +5993,7 @@ loc_DD1C:
 		jle	short loc_DD43
 
 loc_DD3A:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD1C
@@ -6017,7 +6017,7 @@ shot_marisa_a_l9	proc near
 		call	sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DD87
 ; ---------------------------------------------------------------------------
 
@@ -6035,7 +6035,7 @@ loc_DD69:
 		jle	short loc_DD90
 
 loc_DD87:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD69
@@ -6056,7 +6056,7 @@ shot_marisa_b_l2	proc near
 		push	di
 		mov	di, 3
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DDEA
 ; ---------------------------------------------------------------------------
 
@@ -6095,7 +6095,7 @@ loc_DDE7:
 		jle	short loc_DDF3
 
 loc_DDEA:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DDA9
@@ -6116,7 +6116,7 @@ shot_marisa_b_l3	proc near
 		push	di
 		mov	di, 4
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DE4F
 ; ---------------------------------------------------------------------------
 
@@ -6158,7 +6158,7 @@ loc_DE4C:
 		jle	short loc_DE58
 
 loc_DE4F:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE0C
@@ -6179,7 +6179,7 @@ shot_marisa_b_l4	proc near
 		push	di
 		mov	di, 4
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DEC9
 ; ---------------------------------------------------------------------------
 
@@ -6232,7 +6232,7 @@ loc_DEC6:
 		jle	short loc_DED2
 
 loc_DEC9:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE71
@@ -6253,7 +6253,7 @@ shot_marisa_b_l5	proc near
 		mov	di, 5
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DF49
 ; ---------------------------------------------------------------------------
 
@@ -6303,7 +6303,7 @@ loc_DF46:
 		jle	short loc_DF52
 
 loc_DF49:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DEF0
@@ -6324,7 +6324,7 @@ shot_marisa_b_l6	proc near
 		mov	di, 7
 		mov	byte ptr [bp-3], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_DFD4
 ; ---------------------------------------------------------------------------
 
@@ -6381,7 +6381,7 @@ loc_DFD1:
 		jle	short loc_DFDD
 
 loc_DFD4:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DF70
@@ -6414,7 +6414,7 @@ var_3		= word ptr -3
 		mov	di, 7
 		mov	byte ptr [bp+var_3], 0B6h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_E068
 ; ---------------------------------------------------------------------------
 
@@ -6471,7 +6471,7 @@ loc_E065:
 		jle	short loc_E071
 
 loc_E068:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_E004
@@ -6504,7 +6504,7 @@ var_3		= word ptr -3
 		mov	di, 8
 		mov	byte ptr [bp+var_3], 0B6h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_E118
 ; ---------------------------------------------------------------------------
 
@@ -6575,7 +6575,7 @@ loc_E115:
 		jle	short loc_E123
 
 loc_E118:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E099
@@ -6608,7 +6608,7 @@ var_3		= word ptr -3
 		mov	di, 0Ah
 		mov	byte ptr [bp+var_3], 0B6h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_E1D8
 ; ---------------------------------------------------------------------------
 
@@ -6689,7 +6689,7 @@ loc_E1D5:
 		jle	short loc_E1E3
 
 loc_E1D8:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E14B
@@ -8917,8 +8917,8 @@ shot_reimu_l0	proc near
 		mov	bp, sp
 		push	si
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
-		call	sub_11D96
+		mov	_shot_last_id, 0
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F38D
@@ -8938,8 +8938,8 @@ shot_reimu_l1	proc near
 		mov	bp, sp
 		push	si
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
-		call	sub_11D96
+		mov	_shot_last_id, 0
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F3C0
@@ -8984,7 +8984,7 @@ loc_F3D7:
 loc_F3E9:
 		inc	byte_256A2
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F446
 ; ---------------------------------------------------------------------------
 
@@ -9031,7 +9031,7 @@ loc_F43F:
 		jle	short loc_F44F
 
 loc_F446:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F3FA
@@ -9068,7 +9068,7 @@ loc_F467:
 loc_F479:
 		inc	byte_256A2
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F4DC
 ; ---------------------------------------------------------------------------
 
@@ -9119,7 +9119,7 @@ loc_F4D9:
 		jle	short loc_F4E5
 
 loc_F4DC:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F48A
@@ -9156,7 +9156,7 @@ loc_F510:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F578
 ; ---------------------------------------------------------------------------
 
@@ -9204,7 +9204,7 @@ loc_F575:
 		jle	short loc_F581
 
 loc_F578:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F525
@@ -9241,7 +9241,7 @@ loc_F5AC:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F614
 ; ---------------------------------------------------------------------------
 
@@ -9289,7 +9289,7 @@ loc_F611:
 		jle	short loc_F61D
 
 loc_F614:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F5C1
@@ -9326,7 +9326,7 @@ loc_F648:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F6B0
 ; ---------------------------------------------------------------------------
 
@@ -9374,7 +9374,7 @@ loc_F6AD:
 		jle	short loc_F6B9
 
 loc_F6B0:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F65D
@@ -9416,7 +9416,7 @@ loc_F6E4:
 		inc	byte_256A2
 		mov	byte ptr [bp+var_2+1], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_F780
 ; ---------------------------------------------------------------------------
 
@@ -9490,7 +9490,7 @@ loc_F77D:
 		jle	short loc_F78B
 
 loc_F780:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F6FA
@@ -9519,7 +9519,7 @@ var_2		= word ptr -2
 		inc	byte_256A2
 		mov	byte ptr [bp+var_2+1], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_F833
 ; ---------------------------------------------------------------------------
 
@@ -9592,7 +9592,7 @@ loc_F830:
 		jle	short loc_F83E
 
 loc_F833:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F7B1
@@ -9636,7 +9636,7 @@ loc_F86C:
 		inc	byte_256A2
 		mov	byte ptr [bp-1], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_F948
 ; ---------------------------------------------------------------------------
 
@@ -9744,7 +9744,7 @@ loc_F945:
 		jle	short loc_F953
 
 loc_F948:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F882
@@ -9786,7 +9786,7 @@ loc_F96C:
 loc_F97E:
 		inc	byte_256A2
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_F9D9
 ; ---------------------------------------------------------------------------
 
@@ -9829,7 +9829,7 @@ loc_F9D2:
 		jle	short loc_F9E2
 
 loc_F9D9:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F98F
@@ -9865,7 +9865,7 @@ loc_F9FB:
 loc_FA0D:
 		inc	byte_256A2
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FA70
 ; ---------------------------------------------------------------------------
 
@@ -9913,7 +9913,7 @@ loc_FA63:
 		jle	short loc_FA79
 
 loc_FA70:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FA1E
@@ -9950,7 +9950,7 @@ loc_FAA4:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FB15
 ; ---------------------------------------------------------------------------
 
@@ -9997,7 +9997,7 @@ loc_FB0C:
 		jle	short loc_FB1E
 
 loc_FB15:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FAB9
@@ -10034,7 +10034,7 @@ loc_FB49:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FBD9
 ; ---------------------------------------------------------------------------
 
@@ -10105,7 +10105,7 @@ loc_FBD0:
 		jle	short loc_FBE4
 
 loc_FBD9:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FB5E
@@ -10147,7 +10147,7 @@ loc_FC17:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FCA7
 ; ---------------------------------------------------------------------------
 
@@ -10218,7 +10218,7 @@ loc_FC9E:
 		jle	short loc_FCB2
 
 loc_FCA7:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FC2C
@@ -10260,7 +10260,7 @@ loc_FCE5:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0BAh
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FD75
 ; ---------------------------------------------------------------------------
 
@@ -10331,7 +10331,7 @@ loc_FD6C:
 		jle	short loc_FD80
 
 loc_FD75:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FCFA
@@ -10373,7 +10373,7 @@ loc_FDB3:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	short loc_FE43
 ; ---------------------------------------------------------------------------
 
@@ -10444,7 +10444,7 @@ loc_FE3A:
 		jle	short loc_FE4E
 
 loc_FE43:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FDC8
@@ -10486,7 +10486,7 @@ loc_FE81:
 		inc	byte_256A2
 		mov	byte ptr [bp-3], 0B8h
 		mov	_shot_ptr, offset _shots
-		mov	byte_256A6, 0
+		mov	_shot_last_id, 0
 		jmp	loc_FF19
 ; ---------------------------------------------------------------------------
 
@@ -10562,7 +10562,7 @@ loc_FF10:
 		jle	short loc_FF24
 
 loc_FF19:
-		call	sub_11D96
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FE97
@@ -14252,35 +14252,7 @@ loc_11D92:
 		retn
 sub_11C1A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11D96	proc near
-		xor	ax, ax
-
-loc_11D98:
-		cmp	byte_256A6, SHOT_COUNT
-		jnb	short locret_11DC9
-		mov	bx, _shot_ptr
-		add	_shot_ptr, size shot_t
-		cmp	[bx+shot_t.flag], 0
-		jz	short loc_11DB3
-		inc	byte_256A6
-		jmp	short loc_11D98
-; ---------------------------------------------------------------------------
-
-loc_11DB3:
-		mov	word ptr [bx], 1
-		mov	eax, player_pos.cur
-		mov	dword ptr [bx+shot_t.pos.cur], eax
-		mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
-		mov	ax, bx
-
-locret_11DC9:
-		retn
-sub_11D96	endp
-
+include th04/shots_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -43899,9 +43871,7 @@ dword_2569A	dd ?
 dword_2569E	dd ?
 byte_256A2	db ?
 		db ?
-_shot_ptr	dw ?
-byte_256A6	db ?
-		db ?
+include th04/shots_add[bss].asm
 byte_256A8	db ?
 byte_256A9	db ?
 fp_256AA	dw ?

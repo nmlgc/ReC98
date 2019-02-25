@@ -6862,35 +6862,7 @@ sub_E480	proc far
 		retf
 sub_E480	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E4A6	proc near
-		xor	ax, ax
-		mov	bx, _shot_ptr
-
-loc_E4AC:
-		cmp	bx, offset _shots_end
-		jnb	short locret_E4DC
-		add	bx, size shot_t
-		cmp	[bx+shot_t.flag], 0
-		jnz	short loc_E4AC
-		mov	word ptr [bx+shot_t.flag], 1
-		mov	eax, player_pos.cur
-		mov	dword ptr [bx+shot_t.pos.cur],	eax
-		mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
-		mov	word ptr [bx+shot_t.patnum_base], 20
-		mov	ax, bx
-		add	bx, size shot_t
-		mov	_shot_ptr, bx
-
-locret_E4DC:
-		retn
-sub_E4A6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/shots_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14821,7 +14793,7 @@ loc_12951:
 
 loc_12955:
 		mov	_shot_ptr, offset _shots
-		mov	byte_2D064, 0
+		mov	_shot_last_id, 0
 		mov	al, [bp+var_1]
 		leave
 		retn
@@ -14857,7 +14829,7 @@ shot_l0	proc near
 		call	sub_12914
 		test	al, 1
 		jz	short loc_1299E
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_1299E
@@ -14881,7 +14853,7 @@ shot_l1	proc near
 		call	sub_12914
 		test	al, 1
 		jz	short loc_129C8
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_129C8
@@ -14963,7 +14935,7 @@ loc_12A34:
 		jbe	short loc_12A49
 
 loc_12A40:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_129E9
@@ -15040,7 +15012,7 @@ loc_12AB8:
 		jbe	short loc_12ACD
 
 loc_12AC4:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12A6A
@@ -15115,7 +15087,7 @@ loc_12B32:
 		jbe	short loc_12B51
 
 loc_12B48:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12AEE
@@ -15201,7 +15173,7 @@ loc_12BCF:
 		jbe	short loc_12BEE
 
 loc_12BE5:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12B75
@@ -15287,7 +15259,7 @@ loc_12C6C:
 		jbe	short loc_12C8B
 
 loc_12C82:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12C12
@@ -15373,7 +15345,7 @@ loc_12D09:
 		jbe	short loc_12D28
 
 loc_12D1F:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12CAF
@@ -15448,7 +15420,7 @@ loc_12D8A:
 		jbe	short loc_12DA9
 
 loc_12DA0:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12D3D
@@ -15544,7 +15516,7 @@ loc_12E3E:
 		jbe	short loc_12E5F
 
 loc_12E54:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12DCE
@@ -15619,7 +15591,7 @@ loc_12ECC:
 		jbe	short loc_12EE1
 
 loc_12ED8:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12E80
@@ -15721,7 +15693,7 @@ loc_12F7D:
 		jbe	short loc_12F94
 
 loc_12F89:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12F07
@@ -15846,7 +15818,7 @@ loc_13077:
 		jbe	short loc_1308E
 
 loc_13083:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12FC2
@@ -15975,7 +15947,7 @@ loc_1317E:
 		jbe	short loc_13195
 
 loc_1318A:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_130C0
@@ -16112,7 +16084,7 @@ loc_13287:
 		jbe	short loc_1329E
 
 loc_13293:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_131CA
@@ -16268,7 +16240,7 @@ loc_133C1:
 		jbe	short loc_133D8
 
 loc_133CD:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_132D8
@@ -16426,7 +16398,7 @@ loc_134FF:
 		jbe	short loc_13516
 
 loc_1350B:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13416
@@ -16612,7 +16584,7 @@ loc_13680:
 		jbe	short loc_13697
 
 loc_1368C:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13554
@@ -16698,7 +16670,7 @@ loc_1370B:
 		jbe	short loc_13720
 
 loc_13717:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_136D1
@@ -16773,7 +16745,7 @@ loc_13783:
 		jbe	short loc_13798
 
 loc_1378F:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13741
@@ -16862,7 +16834,7 @@ loc_13813:
 		jbe	short loc_13828
 
 loc_1381F:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_137B9
@@ -16956,7 +16928,7 @@ loc_138AB:
 		jbe	short loc_138C0
 
 loc_138B7:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13856
@@ -17058,7 +17030,7 @@ loc_13957:
 		jbe	short loc_1396C
 
 loc_13963:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_138EF
@@ -17163,7 +17135,7 @@ loc_13A08:
 		jbe	short loc_13A1F
 
 loc_13A14:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1399B
@@ -17274,7 +17246,7 @@ loc_13AD0:
 		jbe	short loc_13AE7
 
 loc_13ADC:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13A54
@@ -17416,7 +17388,7 @@ loc_13BD1:
 		jbe	short loc_13BE8
 
 loc_13BDD:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13B19
@@ -17500,7 +17472,7 @@ loc_13C55:
 		jbe	short loc_13C74
 
 loc_13C6B:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13C1D
@@ -17585,7 +17557,7 @@ loc_13CEA:
 		jbe	short loc_13CFF
 
 loc_13CF6:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13C96
@@ -17675,7 +17647,7 @@ loc_13D7E:
 		jbe	short loc_13D9D
 
 loc_13D94:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13D23
@@ -17780,7 +17752,7 @@ loc_13E32:
 		jbe	short loc_13E53
 
 loc_13E48:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13DC2
@@ -17911,7 +17883,7 @@ loc_13F13:
 		jbe	short loc_13F34
 
 loc_13F29:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13E81
@@ -18058,7 +18030,7 @@ loc_14012:
 		jbe	short loc_14033
 
 loc_14028:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13F6A
@@ -18209,7 +18181,7 @@ loc_14110:
 		jbe	short loc_14131
 
 loc_14126:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1406C
@@ -18374,7 +18346,7 @@ loc_14227:
 		jbe	short loc_14248
 
 loc_1423D:
-		call	sub_E4A6
+		call	_shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1416D
@@ -49184,9 +49156,7 @@ word_2D05C	dw ?
 word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
-_shot_ptr	dw ?
-byte_2D064	db ?
-		db ?
+include th04/shots_add[bss].asm
 include th04/boss_funcs[bss].asm
 byte_2D076	db ?
 byte_2D077	db ?
