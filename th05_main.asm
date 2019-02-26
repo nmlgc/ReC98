@@ -14107,7 +14107,7 @@ loc_12432:
 		jz	loc_12531
 		cmp	byte ptr [si], 1
 		jnz	loc_124FA
-		mov	al, [si+0Fh]
+		mov	al, [si+shot_t.SHOT_type]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -14116,10 +14116,10 @@ loc_12432:
 		add	bx, bx
 		jmp	word ptr cs:table_1259B[bx]
 
-loc_12456:
+shots_update_homing:
 		cmp	byte ptr [si+1], 10h
 		jb	short loc_12460
-		mov	byte ptr [si+0Fh], 0
+		mov	[si+shot_t.SHOT_type], ST_NORMAL
 
 loc_12460:
 		cmp	_homing_target.x, HOMING_TARGET_NONE
@@ -14191,15 +14191,15 @@ loc_124E2:
 		jmp	short loc_124FA
 ; ---------------------------------------------------------------------------
 
-loc_124EE:
+shots_update_missile_left:
 		inc	word ptr [si+0Ah]
-		jmp	short loc_124F6
+		jmp	short shots_update_missile_straight
 ; ---------------------------------------------------------------------------
 
-loc_124F3:
+shots_update_missile_right:
 		dec	word ptr [si+0Ah]
 
-loc_124F6:
+shots_update_missile_straight:
 		sub	word ptr [si+0Ch], 4
 
 loc_124FA:
@@ -14291,10 +14291,10 @@ loc_12591:
 sub_1240B	endp
 
 ; ---------------------------------------------------------------------------
-table_1259B	dw loc_12456
-		dw loc_124EE
-		dw loc_124F3
-		dw loc_124F6
+table_1259B	dw shots_update_homing
+		dw shots_update_missile_left
+		dw shots_update_missile_right
+		dw shots_update_missile_straight
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14925,7 +14925,7 @@ loc_12A1E:
 		call	sub_E4DE
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 4
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12A34:
 		mov	al, [bp-1]
@@ -15002,7 +15002,7 @@ loc_12AA2:
 		call	sub_E4DE
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 4
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12AB8:
 		mov	al, [bp-1]
@@ -15073,7 +15073,7 @@ loc_12B1D:
 loc_12B26:
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 3
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12B32:
 		lea	ax, [si+0Ah]
@@ -15159,7 +15159,7 @@ loc_12BAA:
 loc_12BC3:
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 3
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12BCF:
 		lea	ax, [si+0Ah]
@@ -15245,7 +15245,7 @@ loc_12C47:
 loc_12C60:
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 3
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12C6C:
 		lea	ax, [si+0Ah]
@@ -15331,7 +15331,7 @@ loc_12CE4:
 loc_12CFD:
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 3
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12D09:
 		lea	ax, [si+0Ah]
@@ -15406,7 +15406,7 @@ loc_12D7B:
 		mov	[bp-2],	al
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 3
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12D8A:
 		lea	ax, [si+0Ah]
@@ -15502,7 +15502,7 @@ loc_12E1F:
 loc_12E32:
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 2
-		mov	byte ptr [si+0Fh], 1
+		mov	[si+shot_t.SHOT_type], ST_HOMING
 
 loc_12E3E:
 		lea	ax, [si+0Ah]
@@ -15568,14 +15568,14 @@ loc_12E9B:
 		cmp	[bp+var_1], 3
 		jnz	short loc_12EB1
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE6h
 		jmp	short loc_12EBF
 ; ---------------------------------------------------------------------------
 
 loc_12EB1:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 1Ah
 
 loc_12EBF:
@@ -15654,14 +15654,14 @@ loc_12F25:
 
 loc_12F3B:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFEAh
 		jmp	short loc_12F59
 ; ---------------------------------------------------------------------------
 
 loc_12F4B:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 16h
 
 loc_12F59:
@@ -15678,7 +15678,7 @@ loc_12F67:
 		add	word ptr [si+2], 180h
 
 loc_12F6C:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFD0h
 
 loc_12F75:
@@ -15763,7 +15763,7 @@ loc_12FEB:
 
 loc_13001:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFEAh
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_1306F
@@ -15771,7 +15771,7 @@ loc_13001:
 
 loc_13016:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 16h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_1306F
@@ -15779,7 +15779,7 @@ loc_13016:
 
 loc_1302B:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 0FFF0h
 		mov	word ptr [si+0Ch], 0FFD0h
 		jmp	short loc_1306F
@@ -15787,7 +15787,7 @@ loc_1302B:
 
 loc_13040:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 10h
 		mov	word ptr [si+0Ch], 0FFD0h
 		jmp	short loc_1306F
@@ -15802,7 +15802,7 @@ loc_1305C:
 		add	word ptr [si+2], 180h
 
 loc_13061:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 0
 		mov	word ptr [si+0Ch], 0FFC0h
 
@@ -15890,7 +15890,7 @@ loc_130E9:
 
 loc_130FF:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFEAh
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_13176
@@ -15898,7 +15898,7 @@ loc_130FF:
 
 loc_13114:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 16h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_13176
@@ -15906,7 +15906,7 @@ loc_13114:
 
 loc_13129:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 0FFF0h
 		mov	word ptr [si+0Ch], 0FFD0h
 		jmp	short loc_13176
@@ -15914,7 +15914,7 @@ loc_13129:
 
 loc_1313E:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 10h
 		mov	word ptr [si+0Ch], 0FFD0h
 		jmp	short loc_13176
@@ -15922,14 +15922,14 @@ loc_1313E:
 
 loc_13153:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 8
 		jmp	short loc_13171
 ; ---------------------------------------------------------------------------
 
 loc_13163:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 0FFF8h
 
 loc_13171:
@@ -16015,7 +16015,7 @@ loc_131E3:
 
 loc_131FB:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFEAh
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_1327F
@@ -16023,7 +16023,7 @@ loc_131FB:
 
 loc_13210:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 16h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	short loc_1327F
@@ -16031,14 +16031,14 @@ loc_13210:
 
 loc_13225:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 0FFF0h
 		jmp	short loc_13243
 ; ---------------------------------------------------------------------------
 
 loc_13235:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ah], 10h
 
 loc_13243:
@@ -16048,14 +16048,14 @@ loc_13243:
 
 loc_1324A:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_1327F
 ; ---------------------------------------------------------------------------
 
 loc_1325A:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_1327F
 ; ---------------------------------------------------------------------------
@@ -16069,7 +16069,7 @@ loc_13271:
 		add	word ptr [si+2], 180h
 
 loc_13276:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFE0h
 
 loc_1327F:
@@ -16155,7 +16155,7 @@ loc_132F1:
 
 loc_13309:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE4h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_133B9
@@ -16163,7 +16163,7 @@ loc_13309:
 
 loc_1331F:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 1Ch
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_133B9
@@ -16171,14 +16171,14 @@ loc_1331F:
 
 loc_13335:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 20h ; ' '
 		jmp	short loc_13353
 ; ---------------------------------------------------------------------------
 
 loc_13345:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE0h
 
 loc_13353:
@@ -16188,7 +16188,7 @@ loc_13353:
 
 loc_1335A:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		mov	word ptr [si+0Ah], 0FFF0h
 		jmp	short loc_133B9
@@ -16196,7 +16196,7 @@ loc_1335A:
 
 loc_1336F:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		mov	word ptr [si+0Ah], 10h
 		jmp	short loc_133B9
@@ -16204,14 +16204,14 @@ loc_1336F:
 
 loc_13384:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_133B9
 ; ---------------------------------------------------------------------------
 
 loc_13394:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_133B9
 ; ---------------------------------------------------------------------------
@@ -16225,7 +16225,7 @@ loc_133AB:
 		add	word ptr [si+2], 180h
 
 loc_133B0:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFE0h
 
 loc_133B9:
@@ -16313,7 +16313,7 @@ loc_1342F:
 
 loc_13447:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE4h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_134F7
@@ -16321,7 +16321,7 @@ loc_13447:
 
 loc_1345D:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 1Ch
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_134F7
@@ -16329,14 +16329,14 @@ loc_1345D:
 
 loc_13473:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 20h ; ' '
 		jmp	short loc_13491
 ; ---------------------------------------------------------------------------
 
 loc_13483:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE0h
 
 loc_13491:
@@ -16346,7 +16346,7 @@ loc_13491:
 
 loc_13498:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		mov	word ptr [si+0Ah], 0FFF0h
 		jmp	short loc_134F7
@@ -16354,7 +16354,7 @@ loc_13498:
 
 loc_134AD:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		mov	word ptr [si+0Ah], 10h
 		jmp	short loc_134F7
@@ -16362,14 +16362,14 @@ loc_134AD:
 
 loc_134C2:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_134F7
 ; ---------------------------------------------------------------------------
 
 loc_134D2:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFB0h
 		jmp	short loc_134F7
 ; ---------------------------------------------------------------------------
@@ -16383,7 +16383,7 @@ loc_134E9:
 		add	word ptr [si+2], 180h
 
 loc_134EE:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFE0h
 
 loc_134F7:
@@ -16471,7 +16471,7 @@ loc_1356D:
 
 loc_13585:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE0h
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_13678
@@ -16479,7 +16479,7 @@ loc_13585:
 
 loc_1359B:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 20h ; ' '
 		mov	word ptr [si+0Ch], 24h ; '$'
 		jmp	loc_13678
@@ -16487,14 +16487,14 @@ loc_1359B:
 
 loc_135B1:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 3
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_RIGHT
 		mov	word ptr [si+0Ah], 20h ; ' '
 		jmp	short loc_135CF
 ; ---------------------------------------------------------------------------
 
 loc_135C1:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 2
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_LEFT
 		mov	word ptr [si+0Ah], 0FFE0h
 
 loc_135CF:
@@ -16504,21 +16504,21 @@ loc_135CF:
 
 loc_135D7:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		jmp	loc_13678
 ; ---------------------------------------------------------------------------
 
 loc_135E8:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 30h ; '0'
 		jmp	loc_13678
 ; ---------------------------------------------------------------------------
 
 loc_135F9:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0
 		mov	word ptr [si+0Ah], 0FFF0h
 		jmp	short loc_13678
@@ -16526,7 +16526,7 @@ loc_135F9:
 
 loc_1360E:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0
 		mov	word ptr [si+0Ah], 10h
 		jmp	short loc_13678
@@ -16534,28 +16534,28 @@ loc_1360E:
 
 loc_13623:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FF80h
 		jmp	short loc_13678
 ; ---------------------------------------------------------------------------
 
 loc_13633:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FF80h
 		jmp	short loc_13678
 ; ---------------------------------------------------------------------------
 
 loc_13643:
 		sub	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFC0h
 		jmp	short loc_13678
 ; ---------------------------------------------------------------------------
 
 loc_13653:
 		add	word ptr [si+2], 180h
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFC0h
 		jmp	short loc_13678
 ; ---------------------------------------------------------------------------
@@ -16569,7 +16569,7 @@ loc_1366A:
 		add	word ptr [si+2], 180h
 
 loc_1366F:
-		mov	byte ptr [si+0Fh], 4
+		mov	[si+shot_t.SHOT_type], ST_MISSILE_STRAIGHT
 		mov	word ptr [si+0Ch], 0FFF0h
 
 loc_13678:
