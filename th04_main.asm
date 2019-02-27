@@ -370,7 +370,7 @@ loc_ABD4:
 loc_ABD8:
 		call	sub_BCF4
 		call	_circles_update
-		call	sub_C266
+		call	sparks_update
 		call	sub_10ABF
 		call	sub_104B6
 		call	sub_1C8C8
@@ -388,7 +388,7 @@ loc_ABD8:
 		call	sub_10BFD
 		call	_grcg_setmode_rmw_1
 		call	sub_13C5C
-		call	sub_C2B2
+		call	sparks_render
 		call	sub_12DF0
 		call	loc_BD64
 		call	sub_12CE5
@@ -962,7 +962,7 @@ sub_B1D0	proc near
 		call	_randring_fill
 		call	sub_1DA1B
 		call	sub_FFA4
-		call	sub_C314
+		call	sparks_init
 		call	sub_11692
 		call	sub_15D74
 		call	sub_BCB2
@@ -2673,143 +2673,7 @@ sub_C17C	endp
 		db    0
 
 include th04/spark_render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C266	proc near
-		push	si
-		push	di
-		mov	di, 60h
-		mov	si, 53E2h
-
-loc_C26E:
-		cmp	byte ptr [si], 0
-		jz	short loc_C2A9
-		cmp	byte ptr [si], 1
-		jz	short loc_C27D
-		mov	byte ptr [si], 0
-		jmp	short loc_C2A9
-; ---------------------------------------------------------------------------
-
-loc_C27D:
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_1
-		add	ax, 40h
-		cmp	ax, 1880h
-		jnb	short loc_C295
-		add	dx, 40h
-		cmp	dx, 1780h
-		jb	short loc_C29A
-
-loc_C295:
-		mov	byte ptr [si], 2
-		jmp	short loc_C2A9
-; ---------------------------------------------------------------------------
-
-loc_C29A:
-		inc	word ptr [si+0Ch]
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 28h ; '('
-		jbe	short loc_C2A9
-		mov	byte ptr [si], 2
-
-loc_C2A9:
-		add	si, 10h
-		dec	di
-		jg	short loc_C26E
-		pop	di
-		pop	si
-		retn
-sub_C266	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C2B2	proc near
-		push	si
-		push	di
-		mov	ah, GC_BR
-		call	_grcg_setcolor_direct_noint_1
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	di, 60h
-		mov	si, 53E2h
-
-loc_C2C4:
-		cmp	byte ptr [si], 1
-		jnz	short loc_C2E4
-		mov	ax, [si+4]
-		add	ax, (12 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	dx, ax
-		mov	ax, [si+2]
-		add	ax, (28 shl 4)
-		sar	ax, 4
-		mov	cl, [si+1]
-		call	@spark_render
-
-loc_C2E4:
-		add	si, 10h
-		dec	di
-		jg	short loc_C2C4
-		pop	di
-		pop	si
-		retn
-sub_C2B2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C2EE	proc near
-		push	si
-		push	di
-		mov	_tile_invalidate_box, (8 shl 16) or 8
-		mov	di, 60h
-		mov	si, 53E2h
-
-loc_C2FF:
-		cmp	byte ptr [si], 0
-		jz	short loc_C30B
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
-
-loc_C30B:
-		add	si, 10h
-		dec	di
-		jg	short loc_C2FF
-		pop	di
-		pop	si
-		retn
-sub_C2EE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C314	proc near
-		push	si
-		push	di
-		mov	si, 53E2h
-		mov	di, 60h
-
-loc_C31C:
-		call	IRand
-		mov	[si+0Eh], al
-		add	si, 10h
-		dec	di
-		jnz	short loc_C31C
-		mov	byte ptr word_25534, 0
-		pop	di
-		pop	si
-		retn
-sub_C314	endp
-
+include th04/sparks.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3668,7 +3532,7 @@ sub_CB58	proc near
 		call	sub_C74C
 		call	sub_CA98
 		call	sub_C0FC
-		call	sub_C2EE
+		call	sparks_invalidate
 		call	sub_BCBE
 		call	_midboss_invalidate?
 		call	fp_2566A
@@ -11407,10 +11271,7 @@ loc_105F5:
 		inc	byte_25980
 		test	byte_25980, 1
 		jz	short loc_1065D
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	800001h
-		call	sub_13E2A
+		call	sparks_add_random pascal, word ptr [si+2], word ptr [si+4], large (((8 shl 4) shl 16) or 1)
 
 loc_1065D:
 		inc	[bp+var_2]
@@ -11451,10 +11312,7 @@ loc_1068C:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_106D4
-		push	[bp+var_E]
-		push	word ptr dword_257DE+2
-		push	800001h
-		call	sub_13E2A
+		call	sparks_add_random pascal, [bp+var_E], word ptr dword_257DE+2, large (((8 shl 4) shl 16) or 1)
 
 loc_106D4:
 		add	[bp+var_E], 300h
@@ -11466,10 +11324,7 @@ loc_106D4:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_10704
-		push	[bp+var_E]
-		push	word ptr dword_257DE+2
-		push	800001h
-		call	sub_13E2A
+		call	sparks_add_random pascal, [bp+var_E], word ptr dword_257DE+2, large (((8 shl 4) shl 16) or 1)
 
 loc_10704:
 		movzx	eax, di
@@ -14354,8 +14209,8 @@ sub_11ECB	proc near
 		push	8A92h
 		push	200h
 		call	sub_C34E
-		push	53E2h
-		push	180h
+		push	offset _sparks
+		push	size _sparks / 4
 		call	sub_C34E
 		push	5A22h
 		push	0B2Ch
@@ -17473,129 +17328,7 @@ sub_13DAA	endp
 		nop
 include th04/math/vector2_near.asm
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13E2A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_6], 1800h
-		ja	short loc_13E88
-		cmp	[bp+arg_4], 1700h
-		ja	short loc_13E88
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-
-loc_13E40:
-		mov	si, word_25534
-		add	si, 53E2h
-		cmp	byte ptr [si], 0
-		jnz	short loc_13E70
-		mov	word ptr [si], 1
-		mov	ax, [bp+arg_6]
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_4]
-		mov	[si+4],	ax
-		push	1Fh
-		call	_randring2_next16_and
-		add	ax, [bp+arg_2]
-		lea	bx, [si+0Ah]
-		push	bx
-		push	word ptr [si+0Eh]
-		push	ax
-		call	vector2_near
-
-loc_13E70:
-		add	word_25534, 10h
-		cmp	word_25534, 600h
-
-loc_13E7B:
-		jb	short loc_13E83	; jumptable 0001CCD9 case 65534
-		mov	word_25534, 0
-
-loc_13E83:
-		dec	di
-		jnz	short loc_13E40
-		pop	di
-		pop	si
-
-loc_13E88:
-		pop	bp
-		retf	8
-sub_13E2A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13E8C	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_6], 1800h
-		ja	short loc_13EF1
-		cmp	[bp+arg_4], 1700h
-		ja	short loc_13EF1
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		shl	di, 8
-
-loc_13EA5:
-		mov	si, word_25534
-		add	si, 53E2h
-		cmp	byte ptr [si], 0
-		jnz	short loc_13ED6
-		mov	word ptr [si], 1
-		mov	ax, [bp+arg_6]
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_4]
-		mov	[si+4],	ax
-		lea	ax, [si+0Ah]
-		push	ax
-		xor	dx, dx
-		mov	ax, di
-		div	[bp+arg_0]
-		xor	ah, ah
-		push	ax
-		push	[bp+arg_2]
-		call	vector2_near
-
-loc_13ED6:
-		add	word_25534, 10h
-		cmp	word_25534, 600h
-		jb	short loc_13EE9
-		mov	word_25534, 0
-
-loc_13EE9:
-		sub	di, 100h
-		jnz	short loc_13EA5
-		pop	di
-		pop	si
-
-loc_13EF1:
-		pop	bp
-		retn	8
-sub_13E8C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/sparks_add.asm
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
 GRCG_SETMODE_RMW_DEF 2
 
@@ -17825,10 +17558,7 @@ sub_14017	proc far
 		add	_midboss_pos.cur.y, ax
 		call	scroll_subpixel_y_to_vram_seg3 pascal, _midboss_pos.cur.y
 		mov	word_25596, ax
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	300020h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
 		push	9
 
 loc_14117:
@@ -17869,10 +17599,7 @@ loc_14158:
 		add	ax, (-16 shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	word_25596, ax
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	300020h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
 		call	snd_se_play pascal, 9
 
 loc_1419A:
@@ -17979,10 +17706,7 @@ loc_142AC:
 		mov	byte_26704, 4
 		mov	word_26706, 0
 		mov	_midboss_pos.velocity.y, 0
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	800030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		mov	_scroll_speed, 4
 		jmp	short loc_142E4
@@ -18362,10 +18086,7 @@ loc_14629:
 		mov	byte_26704, 4
 		mov	word_26706, 0
 		mov	_midboss_pos.velocity.x, 0
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	600030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		push	_midboss_pos.cur.x
 		push	_midboss_pos.cur.y
@@ -19344,10 +19065,7 @@ loc_14EE0:
 		mov	word_26706, 0
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, (-1 shl 4)
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	800030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		push	12
 
 loc_14F0F:
@@ -19369,10 +19087,7 @@ loc_14F16:
 loc_14F38:
 		cmp	frame_mod16, 0
 		jnz	short loc_14F57
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	800010h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 16)
 		jmp	short loc_14F57
 ; ---------------------------------------------------------------------------
 
@@ -19942,10 +19657,7 @@ loc_15414:
 		mov	byte_26704, 4
 		mov	word_26706, 0
 		mov	_midboss_pos.velocity.x, 0
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	600030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		cmp	frames_until_midboss, 2800
 		jnz	short loc_15480
@@ -22900,8 +22612,8 @@ loc_16CFC:
 		add	dword_2569A, 1400h
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		push	400008h
-		nopcall	sub_13E2A
+		push	large (((4 shl 4) shl 16) or 8)
+		nopcall	sparks_add_random
 		jmp	short loc_16DC5
 ; ---------------------------------------------------------------------------
 
@@ -24990,8 +24702,8 @@ loc_17F3C:
 		add	dword_2569A, eax
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		push	400008h
-		nopcall	sub_13E2A
+		push	large (((4 shl 4) shl 16) or 8)
+		nopcall	sparks_add_random
 		inc	word_22E9E
 		inc	word_22EA0
 		jmp	loc_18020
@@ -27572,10 +27284,7 @@ loc_194C1:
 
 loc_194D2:
 		inc	byte_26719
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	800030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		push	4
 		call	sub_15C7C
 		cmp	word_2671A, 258h
@@ -28542,10 +28251,7 @@ loc_19DC3:
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	800030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -29095,8 +28801,8 @@ loc_1A1EE:
 		mov	word ptr [si+0Eh], 0
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		push	400008h
-		nopcall	sub_13E2A
+		push	large (((4 shl 4) shl 16) or 8)
+		nopcall	sparks_add_random
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	3
@@ -33382,10 +33088,7 @@ loc_1C585:
 
 loc_1C591:
 		inc	byte_26719
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	800030h
-		call	sub_13E8C
+		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		push	4
 		call	sub_15C7C
 		mov	word_2671A, 0
@@ -34030,8 +33733,8 @@ loc_1CA82:
 		ja	short loc_1CAC5
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		push	200002h
-		nopcall	sub_13E2A
+		push	large (((2 shl 4) shl 16) or 2)
+		nopcall	sparks_add_random
 		mov	byte ptr [si+12h], 1
 		cmp	word_2CFFC, 3E7h
 		jnb	short loc_1CAC5
@@ -42631,7 +42334,7 @@ byte_2520F	db ?
 		db    ?	;
 		db    ?	;
 word_25532	dw ?
-word_25534	dw ?
+include th04/sparks_add[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -43124,406 +42827,7 @@ byte_2671D	db ?
 byte_2671E	db ?
 byte_2671F	db ?
 _boss_phase_end_hp	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/sparks[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
