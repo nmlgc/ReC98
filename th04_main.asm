@@ -379,7 +379,7 @@ loc_ABD8:
 		call	_boss_update
 		call	sub_1DE5D
 		call	sub_13BCE
-		call	fp_2566C
+		call	_stage_render
 		call	sub_1020A
 		call	_boss_fg_render
 		call	_midboss_render
@@ -836,7 +836,7 @@ loc_B0B2:
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
 		call	sub_B8FC
-		mov	fp_2566C, offset sub_EAE4
+		mov	_stage_render, offset stage4_render
 		jmp	short loc_B144
 ; ---------------------------------------------------------------------------
 
@@ -3535,7 +3535,7 @@ sub_CB58	proc near
 		call	sparks_invalidate
 		call	sub_BCBE
 		call	_midboss_invalidate?
-		call	fp_2566A
+		call	_stage_invalidate
 		call	tiles_redraw_invalidated
 		pop	bp
 		retn
@@ -7608,7 +7608,7 @@ sub_EA8A	endp
 
 ; Attributes: bp-based frame
 
-sub_EAE4	proc near
+stage4_render	proc near
 
 var_2		= word ptr -2
 
@@ -7724,21 +7724,21 @@ loc_EBD8:
 ; ---------------------------------------------------------------------------
 
 loc_EBE4:
-		mov	fp_2566C, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
 
 loc_EBEA:
 		pop	di
 		pop	si
 		leave
 		retn
-sub_EAE4	endp
+stage4_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_EBEE	proc near
+stage5_render	proc near
 
 var_2		= word ptr -2
 
@@ -7791,14 +7791,14 @@ loc_EC56:
 		pop	si
 		leave
 		retn
-sub_EBEE	endp
+stage5_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_EC59	proc near
+stage5_invalidate	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7827,7 +7827,7 @@ loc_EC86:
 		pop	si
 		pop	bp
 		retn
-sub_EC59	endp
+stage5_invalidate	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15558,7 +15558,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12996
 		cmp	word_2671A, 2
 		jg	short loc_12A05
-		mov	fp_2566C, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
 
 loc_12991:
 		call	tiles_render_all
@@ -36534,8 +36534,8 @@ sub_1DFEF	proc far
 		call	sub_1DFA8
 		mov	Palettes, 0FFh
 		mov	Palettes+1, 0FFh
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
 		retf
 sub_1DFEF	endp
@@ -36582,8 +36582,8 @@ sub_1E0B3	proc far
 		push	200008h
 		call	sub_C396
 		mov	byte_2D01E, al
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
 		retf
 sub_1E0B3	endp
@@ -36626,8 +36626,8 @@ sub_1E186	proc far
 		push	ds
 		push	offset aSt02_bb	; "st02.bb"
 		call	sub_1DFA8
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
 		retf
 sub_1E186	endp
@@ -36724,8 +36724,8 @@ loc_1E3A6:
 		push	ds
 		push	offset aSt03_bb	; "st03.bb"
 		call	sub_1DFA8
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
 		retf
 sub_1E245	endp
@@ -36761,8 +36761,8 @@ sub_1E3C2	proc far
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
 		mov	word_2D038, 0BE0h
-		mov	fp_2566C, offset sub_EBEE
-		mov	fp_2566A, offset sub_EC59
+		mov	_stage_render, offset stage5_render
+		mov	_stage_invalidate, offset stage5_invalidate
 		push	9000A0h
 		push	0A800B4h
 		call	sub_C396
@@ -36796,8 +36796,8 @@ sub_1E47C	proc far
 		push	ds
 		push	offset aSt05_bb	; "st05.bb"
 		call	sub_1DFA8
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		push	300040h
 		push	500060h
 		call	sub_C396
@@ -36847,8 +36847,8 @@ sub_1E518	proc far
 		push	ds
 		push	offset aSt06_bb	; "st06.bb"
 		call	sub_1DFA8
-		mov	fp_2566C, offset nullsub_1
-		mov	fp_2566A, offset nullsub_1
+		mov	_stage_render, offset nullsub_1
+		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
 		retf
 sub_1E518	endp
@@ -42455,8 +42455,7 @@ byte_25666	db ?
 byte_25667	db ?
 byte_25668	db ?
 		db ?
-fp_2566A	dw ?
-fp_2566C	dw ?
+include th04/stage_funcs[bss].asm
 byte_2566E	db ?
 byte_2566F	db ?
 byte_25670	db ?

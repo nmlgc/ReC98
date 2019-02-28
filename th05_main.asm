@@ -423,7 +423,7 @@ loc_AEF0:
 		call	_boss_update
 		call	sub_1720E
 		call	sub_16AB0
-		call	fp_2CE50
+		call	_stage_render
 		cmp	byte_2429A, 0
 		jz	short loc_AF2D
 		call	fp_2429C
@@ -2025,7 +2025,7 @@ sub_BEE6	proc near
 		call	sparks_invalidate
 		call	sub_C2AA
 		call	_midboss_invalidate?
-		call	fp_2CE4E
+		call	_stage_invalidate
 		call	tiles_redraw_invalidated
 		pop	bp
 		retn
@@ -11713,7 +11713,7 @@ sub_110E4	endp
 
 ; Attributes: bp-based frame
 
-sub_11184	proc near
+stage2_invalidate	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -11741,7 +11741,7 @@ loc_111AE:
 		pop	si
 		pop	bp
 		retn
-sub_11184	endp
+stage2_invalidate	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11971,7 +11971,7 @@ sub_111B7	endp
 
 ; Attributes: bp-based frame
 
-sub_113A3	proc near
+stage2_update	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -12247,7 +12247,7 @@ loc_1162C:
 		pop	si
 		leave
 		retn
-sub_113A3	endp
+stage2_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18567,8 +18567,8 @@ sub_14544	proc near
 		push	ds
 		push	offset aSt00_bb	; "st00.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_14544	endp
@@ -18611,8 +18611,8 @@ sub_14613	proc near
 		push	ds
 		push	offset aSt01_bb	; "st01.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset sub_113A3
-		mov	fp_2CE4E, offset sub_11184
+		mov	_stage_render, offset stage2_update
+		mov	_stage_invalidate, offset stage2_invalidate
 		pop	bp
 		retn
 sub_14613	endp
@@ -18658,8 +18658,8 @@ sub_146D0	proc near
 		push	ds
 		push	offset aSt02_bb	; "st02.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_146D0	endp
@@ -18707,8 +18707,8 @@ sub_1479F	proc near
 		push	ds
 		push	offset aSt03_bb	; "st03.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_1479F	endp
@@ -18763,8 +18763,8 @@ sub_14879	proc near
 		push	180018h
 		nopcall	sub_E758
 		mov	byte_2D077, al
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_14879	endp
@@ -18797,8 +18797,8 @@ sub_14976	proc near
 		push	ds
 		push	offset aSt05_bb	; "st05.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_14976	endp
@@ -18839,8 +18839,8 @@ sub_14A06	proc near
 		push	ds
 		push	offset aSt03_bb_0 ; "st03.bb"
 		call	sub_14518
-		mov	fp_2CE50, offset nullsub_2
-		mov	fp_2CE4E, offset nullsub_2
+		mov	_stage_render, offset nullsub_2
+		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
 		retn
 sub_14A06	endp
@@ -47206,8 +47206,7 @@ fp_2CE48	dw ?
 fp_2CE4A	dw ?
 byte_2CE4C	db ?
 		db ?
-fp_2CE4E	dw ?
-fp_2CE50	dw ?
+include th04/stage_funcs[bss].asm
 word_2CE52	dw ?
 word_2CE54	dw ?
 byte_2CE56	db ?
