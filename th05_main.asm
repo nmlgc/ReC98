@@ -7361,7 +7361,7 @@ sub_EACE	proc near
 		mov	bp, sp
 		xor	ax, ax
 		mov	word_2D05E, ax
-		mov	word_2D05C, ax
+		mov	_hitshot_next_free_id, ax
 		mov	dword_25FDC, 0
 		mov	frame, 0
 		mov	frame_mod2, 0
@@ -7378,8 +7378,8 @@ sub_EACE	proc near
 		push	200010h
 		push	19F017Fh
 		call	grc_setclip
-		push	0BDF2h
-		push	54h ; 'T'
+		push	offset _hitshots
+		push	size _hitshots / 4
 		call	sub_E708
 		push	offset _lasers
 		push	size _lasers / 4
@@ -13835,7 +13835,7 @@ sub_123AD	proc near
 		mov	_tile_invalidate_box.x, 16
 		mov	_tile_invalidate_box.y, 16
 		mov	si, offset _shots
-		mov	di, 0BDF2h
+		mov	di, offset _hitshots
 		mov	[bp+@@i], 0
 		jmp	short loc_123E0
 ; ---------------------------------------------------------------------------
@@ -13853,21 +13853,21 @@ loc_123E0:
 		cmp	[bp+@@i], SHOT_COUNT
 		jl	short loc_123CC
 		mov	[bp+@@i], 0
-		jmp	short loc_12401
+		jmp	short @@hitshot_more?
 ; ---------------------------------------------------------------------------
 
-loc_123ED:
-		cmp	byte ptr [di], 0
-		jz	short loc_123FB
-		call	tiles_invalidate_around pascal, word ptr [di+8], word ptr [di+6]
+@@hitshot_loop:
+		cmp	[di+hitshot_t.HITSHOT_age], 0
+		jz	short @@hitshot_next
+		call	tiles_invalidate_around pascal, [di+hitshot_t.pos.prev.y], [di+hitshot_t.pos.prev.x]
 
-loc_123FB:
+@@hitshot_next:
 		inc	[bp+@@i]
-		add	di, 0Eh
+		add	di, size hitshot_t
 
-loc_12401:
-		cmp	[bp+@@i], 18h
-		jl	short loc_123ED
+@@hitshot_more?:
+		cmp	[bp+@@i], HITSHOT_COUNT
+		jl	short @@hitshot_loop
 		pop	di
 		pop	si
 		leave
@@ -14036,54 +14036,54 @@ loc_12531:
 loc_12537:
 		cmp	[bp+@@i], SHOT_COUNT
 		jl	loc_12427
-		mov	di, 0BDF2h
+		mov	di, offset _hitshots
 		mov	[bp+@@i], 0
-		jmp	short loc_12591
+		jmp	short @@hitshot_more?
 ; ---------------------------------------------------------------------------
 
-loc_12549:
-		cmp	byte ptr [di], 0Dh
-		jb	short loc_12551
-		mov	byte ptr [di], 0
+@@hitshot_loop:
+		cmp	[di+hitshot_t.HITSHOT_age], HITSHOT_AGE_MAX
+		jb	short @@hitshot_active?
+		mov	[di+hitshot_t.HITSHOT_age], 0
 
-loc_12551:
-		cmp	byte ptr [di], 0
-		jz	short loc_1258B
-		lea	ax, [di+2]
+@@hitshot_active?:
+		cmp	[di+hitshot_t.HITSHOT_age], 0
+		jz	short @@hitshot_next
+		lea	ax, [di+hitshot_t.pos]
 		push	ax
 		call	_motion_update_1
-		cmp	ax, 0FF80h
-		jle	short loc_12572
-		cmp	ax, 1880h
-		jge	short loc_12572
-		cmp	dx, 0FF80h
-		jle	short loc_12572
-		cmp	dx, 1780h
-		jl	short loc_12577
+		cmp	ax, -(HITSHOT_W / 2) shl 4
+		jle	short @@hitshot_clipped
+		cmp	ax, (PLAYFIELD_W + (HITSHOT_W / 2)) shl 4
+		jge	short @@hitshot_clipped
+		cmp	dx, -(HITSHOT_H / 2) shl 4
+		jle	short @@hitshot_clipped
+		cmp	dx, (PLAYFIELD_H + (HITSHOT_H / 2)) shl 4
+		jl	short @@hitshot_update
 
-loc_12572:
-		mov	byte ptr [di], 12h
-		jmp	short loc_1258B
+@@hitshot_clipped:
+		mov	[di+hitshot_t.HITSHOT_age], HITSHOT_AGE_CLIPPED
+		jmp	short @@hitshot_next
 ; ---------------------------------------------------------------------------
 
-loc_12577:
-		inc	byte ptr [di]
-		mov	al, [di]
+@@hitshot_update:
+		inc	[di+hitshot_t.HITSHOT_age]
+		mov	al, [di+hitshot_t.HITSHOT_age]
 		mov	ah, 0
 		mov	bx, 3
 		cwd
 		idiv	bx
 		cmp	dx, 1
-		jnz	short loc_1258B
-		inc	byte ptr [di+1]
+		jnz	short @@hitshot_next
+		inc	[di+hitshot_t.patnum]
 
-loc_1258B:
+@@hitshot_next:
 		inc	[bp+@@i]
-		add	di, 0Eh
+		add	di, size hitshot_t
 
-loc_12591:
-		cmp	[bp+@@i], 18h
-		jl	short loc_12549
+@@hitshot_more?:
+		cmp	[bp+@@i], HITSHOT_COUNT
+		jl	short @@hitshot_loop
 		pop	di
 		pop	si
 		leave
@@ -14103,7 +14103,7 @@ table_1259B	dw shots_update_homing
 sub_125A3	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -14113,7 +14113,7 @@ var_2		= word ptr -2
 		assume es:nothing
 		call	_grcg_setmode_rmw_1
 		mov	di, 0C4FAh
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_125F6
 ; ---------------------------------------------------------------------------
 
@@ -14140,42 +14140,42 @@ loc_125BB:
 		call	z_super_roll_put_tiny
 
 loc_125F0:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	di, 6
 
 loc_125F6:
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@i]
 		cmp	ax, word_2D05A
 		jb	short loc_125BB
-		mov	si, 0BDF2h
-		mov	[bp+var_2], 0
-		jmp	short loc_12637
+		mov	si, offset _hitshots
+		mov	[bp+@@i], 0
+		jmp	short @@hitshot_more?
 ; ---------------------------------------------------------------------------
 
-loc_12609:
-		cmp	byte ptr [si], 0Dh
-		jnb	short loc_12631
-		cmp	byte ptr [si], 0
-		jbe	short loc_12631
+@@hitshot_loop:
+		cmp	[si+hitshot_t.HITSHOT_age], HITSHOT_AGE_MAX
+		jnb	short @@hitshot_next
+		cmp	[si+hitshot_t.HITSHOT_age], 0
+		jbe	short @@hitshot_next
 		mov	ch, 0
-		mov	cl, [si+1]
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
+		mov	cl, [si+hitshot_t.patnum]
+		mov	ax, [si+hitshot_t.pos.cur.y]
+		add	ax, ((PLAYFIELD_Y - (HITSHOT_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [si+2]
+		mov	ax, [si+hitshot_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 18h
+		add	ax, PLAYFIELD_X - (HITSHOT_W / 2)
 		push	cx
 		call	z_super_roll_put_tiny
 
-loc_12631:
-		inc	[bp+var_2]
-		add	si, 0Eh
+@@hitshot_next:
+		inc	[bp+@@i]
+		add	si, size hitshot_t
 
-loc_12637:
-		cmp	[bp+var_2], 18h
-		jl	short loc_12609
+@@hitshot_more?:
+		cmp	[bp+@@i], HITSHOT_COUNT
+		jl	short @@hitshot_loop
 		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
@@ -14183,69 +14183,7 @@ loc_12637:
 		retn
 sub_125A3	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12647	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	ax, word_2D05C
-		imul	ax, 0Eh
-		add	ax, 0BDF2h
-		mov	si, ax
-		cmp	word_2D05C, 17h
-		jnb	short loc_12667
-		inc	word_2D05C
-		jmp	short loc_1266D
-; ---------------------------------------------------------------------------
-
-loc_12667:
-		mov	word_2D05C, 0
-
-loc_1266D:
-		mov	byte ptr [di], 2
-		cmp	byte ptr [si], 0
-		jnz	short loc_126AD
-		mov	byte ptr [si], 1
-		cmp	byte ptr [di+0Eh], 14h
-		jnz	short loc_12684
-		mov	byte ptr [si+1], 1Ch
-		jmp	short loc_12688
-; ---------------------------------------------------------------------------
-
-loc_12684:
-		mov	byte ptr [si+1], 20h ; ' '
-
-loc_12688:
-		mov	eax, [di+2]
-		mov	[si+2],	eax
-		mov	eax, [di+6]
-		mov	[si+6],	eax
-		mov	ax, [di+0Ah]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		mov	[si+0Ah], ax
-		mov	ax, [di+0Ch]
-		cwd
-		idiv	bx
-		mov	[si+0Ch], ax
-
-loc_126AD:
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_12647	endp
-
+include th05/hitshot_from.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14313,8 +14251,7 @@ loc_1271E:
 		call	sparks_add_random pascal, word ptr [di], word ptr [di+2], large (((8 shl 4) shl 16) or 1)
 
 loc_1273B:
-		push	word ptr [di+4]
-		call	sub_12647
+		call	hitshot_from pascal, word ptr [di+4]
 		mov	word ptr [di], 0C190h
 
 loc_12745:
@@ -14515,8 +14452,7 @@ loc_128D8:
 		call	sub_15DE2
 
 loc_128EA:
-		push	word ptr [si+4]
-		call	sub_12647
+		call	hitshot_from pascal, word ptr [si+4]
 		mov	word ptr [si], 0C190h
 
 loc_128F4:
@@ -46895,90 +46831,7 @@ include th04/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th05/hitshots[bss].asm
 include th04/homing_target[bss].asm
 public _stage_vm
 _stage_vm	dd ?
@@ -47509,7 +47362,7 @@ word_2CED8	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2D05A	dw ?
-word_2D05C	dw ?
+include th05/hitshot_from[bss].asm
 word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
