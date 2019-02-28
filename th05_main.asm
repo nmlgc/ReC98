@@ -581,7 +581,7 @@ loc_B09F:
 		jl	short loc_B099
 		mov	power, 1
 		mov	dream, 1
-		call	sub_E528
+		call	bb_txt_load
 		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
@@ -801,9 +801,9 @@ loc_B2DD:
 		call	sub_172FF
 		cmp	word_20A84, 0
 		jz	loc_B3CA
-		call	sub_DDD6
+		call	bb_curvebullet_load
 		call	sub_B8C2
-		call	sub_CE56
+		call	bb_playchar_load
 		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
@@ -1130,7 +1130,7 @@ sub_B609	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_14529
+		call	bb_stage_free
 		call	sub_EE32
 		call	std_free
 		call	map_free
@@ -2672,7 +2672,7 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		mov	ax, word_2429E
+		mov	ax, _bb_playchar_seg
 		mov	word_2449C, ax
 		push	[bp+arg_0]
 		call	sub_DF36
@@ -3737,36 +3737,7 @@ sub_CD94	endp
 ; ---------------------------------------------------------------------------
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE56	proc near
-		mov	al, playchar
-		add	byte ptr aBb0_bb+2, al
-		push	ds
-		push	offset aBb0_bb
-		call	sub_DEFE
-		mov	word_2429E, ax
-		retn
-sub_CE56	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE68	proc near
-		cmp	word_2429E, 0
-		jz	short locret_CE7E
-		push	word_2429E
-		call	hmem_free
-		mov	word_2429E, 0
-
-locret_CE7E:
-		retn
-sub_CE68	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/bb_playchar.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4092,7 +4063,7 @@ loc_D09F:
 		cmp	boss_phase, 1
 		jnz	short loc_D0C8
 		call	_boss_backdrop_render pascal, (64 shl 16) or 16, 0
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	ax, boss_phase_frame
 		cwd
@@ -4173,7 +4144,7 @@ loc_D124:
 
 loc_D142:
 		mov	byte_24498, 0
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		push	si
 		call	sub_DF36
@@ -4249,7 +4220,7 @@ loc_D1B0:
 
 loc_D1CE:
 		mov	byte_24498, 0Fh
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		push	si
 		call	sub_DF36
@@ -4326,7 +4297,7 @@ loc_D23E:
 
 loc_D25C:
 		mov	byte_24498, 9
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -4399,7 +4370,7 @@ loc_D2C7:
 
 loc_D2E5:
 		mov	byte_24498, 0Fh
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -5475,7 +5446,7 @@ loc_DAC4:
 
 loc_DAC7:
 		mov	byte_24498, 0Fh
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -5733,7 +5704,7 @@ loc_DCEF:
 		mov	[bp+var_1], al
 		call	sub_E92E
 		mov	byte_24498, 0Fh
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -5875,29 +5846,7 @@ sub_DD72	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_DDD6	proc near
-		mov	ax, 3D00h
-		mov	dx, offset aLs00_bb
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ah, 3Fh	; '?'
-		mov	dx, 40F8h
-		mov	cx, 800h
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		retn
-sub_DDD6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/bb_curvebullet.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5907,7 +5856,7 @@ sub_DDF0	proc near
 		push	di
 		shl	bx, 7
 		mov	si, bx
-		add	si, 40F8h
+		add	si, offset _bb_curvebullet
 		mov	di, dx
 		shl	di, 2
 		add	di, dx
@@ -6079,42 +6028,7 @@ sub_DEC2	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DEFE	proc near
-		push	si
-		push	800h
-		call	hmem_allocbyte
-		mov	word_252D8, ax
-		mov	bx, sp
-		mov	si, ds
-		mov	ax, 3D00h
-		lds	dx, ss:[bx+4]
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ds, si
-		mov	ds, word_252D8
-		mov	cx, 800h
-		xor	dx, dx
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ds, si
-		pop	si
-		mov	ax, word_252D8
-		retn	4
-sub_DEFE	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/bb_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6203,7 +6117,7 @@ arg_0		= word ptr  4
 		enter	6, 0
 		push	di
 		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, word_2D086
+		mov	ax, _bb_stage_seg
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
@@ -6707,73 +6621,7 @@ loc_E511:
 		retf
 sub_E4FC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E528	proc near
-		push	0C00h
-		call	hmem_allocbyte
-		mov	word_2288E, ax
-		mov	ax, 3D00h
-		mov	dx, offset aTxt1_bb
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		push	ds
-		mov	ds, word_2288E
-		mov	cx, 800h
-		xor	dx, dx
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	byte ptr aTxt1_bb+3, '2'
-		mov	ax, 3D00h
-		mov	dx, offset aTxt1_bb
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		push	ds
-		mov	ds, word_2288E
-		mov	cx, 400h
-		mov	dx, 800h
-		mov	ah, 3Fh
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		pop	ds
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		retn
-sub_E528	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E574	proc near
-		cmp	word_2288E, 0
-		jz	short locret_E58A
-		push	word_2288E
-		call	hmem_free
-		mov	word_2288E, 0
-
-locret_E58A:
-		retn
-sub_E574	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/bb_txt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6791,7 +6639,7 @@ sub_E58C	proc near
 		mov	di, ax
 		shl	cx, 7
 		mov	si, cx
-		mov	ax, word_2288E
+		mov	ax, _bb_txt_seg
 		mov	ds, ax
 		cmp	bx, 170h
 		ja	short loc_E5CB
@@ -8784,11 +8632,11 @@ loc_F71C:
 		mov	es:[bx+3Ch], eax
 		mov	eax, dword_221CA
 		mov	es:[bx+40h], eax
-		call	sub_E574
+		call	bb_txt_free
 		call	_cdg_freeall
-		call	sub_14529
+		call	bb_stage_free
 		call	sub_EE32
-		call	sub_CE68
+		call	bb_playchar_free
 		call	std_free
 		call	map_free
 		call	super_free
@@ -18489,43 +18337,7 @@ sub_144CB	proc near
 		retn
 sub_144CB	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14518	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	sub_DEFE
-		mov	word_2D086, ax
-		pop	bp
-		retn	4
-sub_14518	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14529	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_2D086, 0
-		jz	short loc_14542
-		push	word_2D086
-		call	hmem_free
-		mov	word_2D086, 0
-
-loc_14542:
-		pop	bp
-		retn
-sub_14529	endp
-
+include th04/formats/bb_stage.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18564,9 +18376,7 @@ sub_14544	proc near
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt00bk_cdg
-		push	ds
-		push	offset aSt00_bb	; "st00.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -18608,9 +18418,7 @@ sub_14613	proc near
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt01bk_cdg
-		push	ds
-		push	offset aSt01_bb	; "st01.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt01_bb
 		mov	_stage_render, offset stage2_update
 		mov	_stage_invalidate, offset stage2_invalidate
 		pop	bp
@@ -18655,9 +18463,7 @@ sub_146D0	proc near
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt02bk_cdg
-		push	ds
-		push	offset aSt02_bb	; "st02.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -18704,9 +18510,7 @@ sub_1479F	proc near
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt03bk_cdg
-		push	ds
-		push	offset aSt03_bb	; "st03.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt03_bb
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -18752,9 +18556,7 @@ sub_14879	proc near
 		push	offset aSt04_bmt ; "st04.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt04bk_cdg
-		push	ds
-		push	offset aSt04_bb	; "st04.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt04_bb
 		push	14000Ah
 		push	60006h
 		nopcall	sub_E758
@@ -18794,9 +18596,7 @@ sub_14976	proc near
 		mov	_boss_backdrop_colorfill, offset sub_E914
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt05bk_cdg
 		call	_cdg_load_all_noalpha pascal, 17, ds, offset aSt05bk2_cdg
-		push	ds
-		push	offset aSt05_bb	; "st05.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -18836,9 +18636,7 @@ sub_14A06	proc near
 		push	ds
 		push	offset aSt06_bmt ; "st06.bmt"
 		call	super_entry_bfnt
-		push	ds
-		push	offset aSt03_bb_0 ; "st03.bb"
-		call	sub_14518
+		call	bb_stage_load pascal, ds, offset aSt03_bb_0
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -39091,8 +38889,7 @@ NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0
 		db    1,0E0h,	2, 30h,	  2, 30h,   0, 30h,   1,0E0h,	3,   0,	  6,   8,   7,0F8h
 		db    0,0F0h,	1, 18h,	  1, 18h,   0, 18h,   0,0F0h,	1, 80h,	  3,   4,   3,0FCh
 		db    0, 78h,	0, 8Ch,	  0, 8Ch,   0, 0Ch,   0, 78h,	0,0C0h,	  1, 82h,   1,0FEh
-aBb0_bb	db 'BB0.BB',0
-		db    0
+include th05/formats/bb_playchar[data].asm
 byte_21D6C	db 0
 		db 0
 word_21D6E	dw 0FFh
@@ -39108,14 +38905,13 @@ byte_21D76	db 0
 		db  7Eh	; ~
 		db 0BDh
 		db 0FFh
-aLs00_bb	db 'LS00.BB',0
-		db    0
+include th05/formats/bb_curvebullet[data].asm
 ; char aMaine[]
 aMaine		db 'maine',0
 ; char aMaine_0[]
 aMaine_0	db 'maine',0
 include th04/shot_levels[data].asm
-aTxt1_bb	db 'txt1.bb',0
+include th05/formats/bb_txt_load[data].asm
 include th04/shot_velocity[data].asm
 aGENSOU_SCR	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
@@ -39474,7 +39270,7 @@ byte_2288A	db 0
 byte_2288B	db 0
 byte_2288C	db 0
 		db 0
-word_2288E	dw 0
+include th04/formats/bb_txt[data].asm
 include th04/strings/popup[data].asm
 gpDREAMBONUS_MAX db 65h, 66h, 67h, 68h,	69h, 6Ah, 6Bh, 6Ch, 6Dh, 6Eh, 0
 off_228D8	dd gpHISCORE_ENTRY
@@ -39812,7 +39608,7 @@ word_24298	dw ?
 byte_2429A	db ?
 byte_2429B	db ?
 fp_2429C	dw ?
-word_2429E	dw ?
+include th04/formats/bb_playchar[bss].asm
 		db    ?	;
 		db    ?	;
 word_242A2	dw ?
@@ -40022,633 +39818,9 @@ byte_2451A	db ?
 		dd    ?	;
 		db    ?	;
 byte_245A8	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
 		db    ?	;
-byte_24F6B	db ?
+		db    ?	;
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -40868,7 +40040,120 @@ byte_24F6B	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_252D8	dw ?
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+include th05/formats/bb_curvebullet[bss].asm
+include th05/formats/bb_load[bss].asm
 _invalidate_left_x_tile	dw ?
 include th04/sparks_add[bss].asm
 include th04/drawpoint[bss].asm
@@ -47380,7 +46665,7 @@ byte_2D082	db ?
 byte_2D083	db ?
 byte_2D084	db ?
 byte_2D085	db ?
-word_2D086	dw ?
+include th04/formats/bb_stage[bss].asm
 word_2D088	dw ?
 word_2D08A	dw ?
 		dd    ?	;

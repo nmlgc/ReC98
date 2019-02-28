@@ -519,7 +519,7 @@ loc_AD3B:
 		mov	es:[bx+0Dh], al
 		mov	al, es:[bx+0Ch]
 		mov	es:[bx+0Bh], al
-		call	sub_11551
+		call	bb_txt_load
 		cmp	playchar, 0
 		jnz	short loc_AD90
 		mov	word_259B4, 26h	; '&'
@@ -712,7 +712,7 @@ loc_AF4A:
 		cmp	word_213DE, 0
 		jz	short loc_AFD5
 		call	sub_B530
-		call	sub_FF34
+		call	bb_playchar_load
 		cmp	playchar, 0
 		jnz	short loc_AFA0
 		push	ds
@@ -982,7 +982,7 @@ sub_B29E	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_1DFD4
+		call	bb_stage_free
 		call	sub_CF1E
 		call	std_free
 		call	map_free
@@ -2333,7 +2333,7 @@ arg_0		= word ptr  4
 		enter	6, 0
 		push	di
 		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
@@ -2490,7 +2490,7 @@ sub_C09A	proc near
 		mov	di, ax
 		shl	cx, 7
 		mov	si, cx
-		mov	ax, word_22EA6
+		mov	ax, _bb_txt_seg
 		mov	ds, ax
 		cmp	bx, 170h
 		ja	short loc_C0D9
@@ -7299,11 +7299,11 @@ loc_E813:
 		mov	es:[bx+40h], eax
 		mov	eax, dword_22BA4
 		mov	es:[bx+44h], eax
-		call	sub_1159B
+		call	bb_txt_free
 		call	_cdg_freeall
-		call	sub_1DFD4
+		call	bb_stage_free
 		call	sub_CF1E
-		call	sub_FF89
+		call	bb_playchar_free
 		call	std_free
 		call	map_free
 		call	super_free
@@ -10382,53 +10382,7 @@ off_FF28	dw offset loc_FEE7
 		dw offset loc_FECF
 		dw offset loc_FECF
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FF34	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _humaconfig
-		mov	al, es:[bx+12h]
-		les	bx, off_22E34
-		mov	es:[bx+2], al
-		les	bx, _humaconfig
-		les	bx, off_22E38
-		mov	es:[bx+2], al
-		pushd	[off_22E34]
-		call	file_ropen
-		push	800h
-		call	hmem_allocbyte
-		mov	word_256AE, ax
-		push	ax
-		pushd	800h
-		call	file_read
-		call	file_close
-		call	_cdg_load_single_noalpha pascal, 0, [off_22E38], 0
-		pop	bp
-		retn
-sub_FF34	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FF89	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_256AE, 0
-		jz	short loc_FFA2
-		push	word_256AE
-		call	hmem_free
-		mov	word_256AE, 0
-
-loc_FFA2:
-		pop	bp
-		retn
-sub_FF89	endp
-
+include th04/formats/bb_playchar.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10508,7 +10462,7 @@ loc_10038:
 
 loc_1003A:
 		mov	byte_2CDCA, al
-		mov	ax, word_256AE
+		mov	ax, _bb_playchar_seg
 		mov	word_2CDCE, ax
 		push	[bp+arg_0]
 		call	sub_BF16
@@ -12991,54 +12945,7 @@ loc_11521:
 		retn	4
 sub_114C5	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11551	proc near
-		push	bp
-		mov	bp, sp
-		push	0C00h
-		call	hmem_allocbyte
-		mov	word_22EA6, ax
-		push	ds
-		push	offset aTxt_bb	; "txt.bb"
-		call	file_ropen
-		push	word_22EA6
-		pushd	800h
-		call	file_read
-		call	file_close
-		push	ds
-		push	offset aTxt2_bb	; "txt2.bb"
-		call	file_ropen
-		push	word_22EA6
-		push	8000400h
-		call	file_read
-		call	file_close
-		pop	bp
-		retn
-sub_11551	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1159B	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_22EA6, 0
-		jz	short loc_115B4
-		push	word_22EA6
-		call	hmem_free
-		mov	word_22EA6, 0
-
-loc_115B4:
-		pop	bp
-		retn
-sub_1159B	endp
-
+include th04/formats/bb_txt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14516,7 +14423,7 @@ loc_12199:
 		cmp	byte_26719, 1
 		jnz	short loc_121BF
 		call	_boss_backdrop_render pascal, (32 shl 16) or 136, 1
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
 		sar	ax, 1
@@ -14566,7 +14473,7 @@ sub_121EB	proc near
 		cmp	byte_26719, 1
 		jnz	short loc_1221B
 		call	_boss_backdrop_render pascal, (32 shl 16) or 96, 0
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
 		sar	ax, 1
@@ -14643,7 +14550,7 @@ loc_12285:
 		cmp	byte_26719, 2
 		jnz	short loc_122AB
 		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 0
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, word_2671A
 		sar	ax, 1
@@ -14722,7 +14629,7 @@ loc_12309:
 		call	_cdg_put_noalpha
 
 loc_12327:
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -14800,7 +14707,7 @@ loc_12396:
 		call	_cdg_put_noalpha
 
 loc_123B4:
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -15512,7 +15419,7 @@ loc_12944:
 		call	sub_12076
 
 loc_12947:
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -15591,7 +15498,7 @@ loc_129B4:
 		call	_cdg_put_noalpha
 
 loc_129D2:
-		mov	ax, word_2D02E
+		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -36452,49 +36359,7 @@ sub_1DF61	proc near
 		retn
 sub_1DF61	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DFA8	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	800h
-		call	hmem_allocbyte
-		mov	word_2D02E, ax
-		push	ax
-		pushd	800h
-		call	file_read
-		call	file_close
-		pop	bp
-		retn	4
-sub_1DFA8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DFD4	proc far
-		push	bp
-		mov	bp, sp
-		cmp	word_2D02E, 0
-		jz	short loc_1DFED
-		push	word_2D02E
-		call	hmem_free
-		mov	word_2D02E, 0
-
-loc_1DFED:
-		pop	bp
-		retf
-sub_1DFD4	endp
-
+include th04/formats/bb_stage.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -36529,9 +36394,7 @@ sub_1DFEF	proc far
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
-		push	ds
-		push	offset aSt00_bb	; "st00.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	Palettes, 0FFh
 		mov	Palettes+1, 0FFh
 		mov	_stage_render, offset nullsub_1
@@ -36575,9 +36438,7 @@ sub_1E0B3	proc far
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
-		push	ds
-		push	offset aSt01_bb	; "st01.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt01_bb
 		push	0FF0080h
 		push	200008h
 		call	sub_C396
@@ -36623,9 +36484,7 @@ sub_1E186	proc far
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
-		push	ds
-		push	offset aSt02_bb	; "st02.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
@@ -36721,9 +36580,7 @@ loc_1E3A0:
 loc_1E3A6:
 		push	0
 		call	_cdg_load_single_noalpha
-		push	ds
-		push	offset aSt03_bb	; "st03.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt03_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
@@ -36754,9 +36611,7 @@ sub_1E3C2	proc far
 		mov	word_2D032, 1A0h
 		mov	_boss_backdrop_colorfill, offset sub_BFF8
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
-		push	ds
-		push	offset aSt04_bb	; "st04.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt04_bb
 		call	_cdg_load_single_noalpha pascal, 17, ds, offset aSt04_cdg, 0
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
@@ -36793,9 +36648,7 @@ sub_1E47C	proc far
 		mov	_boss_sprite_cur, 128
 		mov	word_2D030, 180h
 		mov	word_2D032, 300h
-		push	ds
-		push	offset aSt05_bb	; "st05.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
 		push	300040h
@@ -36844,9 +36697,7 @@ sub_1E518	proc far
 		mov	_boss_backdrop_colorfill, offset sub_C148
 		mov	byte_2D01E, 0
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
-		push	ds
-		push	offset aSt06_bb	; "st06.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
 		pop	bp
@@ -37179,11 +37030,9 @@ loc_1E801:
 		mov	bgm_title_id, 0Fh
 		mov	fp_259DC, offset sub_11195
 		call	_cdg_free pascal, 16
-		call	sub_1DFD4
+		call	bb_stage_free
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
-		push	ds
-		push	offset aSt06b_bb ; "st06b.bb"
-		call	sub_1DFA8
+		call	bb_stage_load pascal, ds, offset aSt06b_bb
 		mov	byte_2D00A, 0
 		pop	bp
 		retn
@@ -41610,13 +41459,7 @@ word_22E1B	dw 3736h
 byte_22E1D	db 0
 aB@b@bB@b@	db 'Å@Å@Å~Å@Å@',0
 aB@b@bB@b@_0	db 'Å@Å@Å~Å@Å@',0
-off_22E34	dd aBb0_bb
-					; "BB0.BB"
-off_22E38	dd aBb0_cdg_1
-					; "BB0.CDG"
-aBb0_bb		db 'BB0.BB',0
-aBb0_cdg_1	db 'BB0.CDG',0
-		db    0
+include th04/formats/bb_playchar[data].asm
 SHOT_FUNCS_REIMU_A label word
 	dw shot_reimu_l0
 	dw shot_reimu_l1
@@ -41669,7 +41512,7 @@ byte_22EA2	db 0
 byte_22EA3	db 0
 byte_22EA4	db 0
 		db    0
-word_22EA6	dw 0
+include th04/formats/bb_txt[data].asm
 include th04/strings/popup[data].asm
 		db    0
 off_22EE6	dd gpHISCORE_ENTRY
@@ -41732,9 +41575,7 @@ aLVVVsv		db 'ã÷Ç∂Ç¥ÇÈÇÇ¶Ç»Ç¢óVãY ',0
 aGbgcghmSzb@bIc	db 'ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic ',0
 aVivavvvvilcvb@	db 'Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence',0
 aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0
-aTxt_bb		db 'txt.bb',0
-aTxt2_bb	db 'txt2.bb',0
-		db    0
+include th04/formats/bb_txt_load[data].asm
 word_231F2	dw 10h
 		db  10h
 		db  27h	; '
@@ -42491,7 +42332,7 @@ byte_256A8	db ?
 byte_256A9	db ?
 fp_256AA	dw ?
 fp_256AC	dw ?
-word_256AE	dw ?
+include th04/formats/bb_playchar[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -48848,7 +48689,7 @@ byte_2D028	db ?
 byte_2D02B	db ?
 byte_2D02C	db ?
 byte_2D02D	db ?
-word_2D02E	dw ?
+include th04/formats/bb_stage[bss].asm
 word_2D030	dw ?
 word_2D032	dw ?
 word_2D034	dw ?

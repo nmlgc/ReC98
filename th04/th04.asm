@@ -1,6 +1,7 @@
 GAME = 4
 include defconv_pascal.inc
 
+include th04/formats/bb.inc
 include th04/formats/map.inc
 include th04/hardware/grcg.inc
 include th04/hardware/input.inc
