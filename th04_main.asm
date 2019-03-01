@@ -28459,7 +28459,7 @@ loc_1A025:
 loc_1A037:
 		cmp	di, [bp+arg_0]
 		jb	short loc_1A009
-		mov	byte_2372D, 0
+		mov	_boss_phase_timed_out, 0
 		pop	di
 		pop	si
 		leave
@@ -36340,7 +36340,7 @@ sub_1DF61	proc near
 		mov	_boss_pos.velocity.y, 0
 		mov	byte_2671C, 0
 		nopcall	sub_15C6D
-		mov	byte_2372D, 1
+		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
 sub_1DF61	endp
@@ -36886,7 +36886,7 @@ arg_2		= word ptr  6
 		jz	short loc_1E719
 		push	si
 		call	sub_15C7C
-		cmp	byte_2372D, 0
+		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1E719
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1E716
@@ -36896,7 +36896,7 @@ loc_1E716:
 		call	sub_1E692
 
 loc_1E719:
-		mov	byte_2372D, 1
+		mov	_boss_phase_timed_out, 1
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
@@ -41757,7 +41757,7 @@ byte_236E0	db 0
 		db    1
 		db    1
 		db    1
-byte_2372D	db 0
+include th04/boss/phase_timed_out[data].asm
 aSt00_bmt	db 'st00.bmt',0
 aSt00bk_cdg	db 'st00bk.cdg',0
 aSt00_bb	db 'st00.bb',0

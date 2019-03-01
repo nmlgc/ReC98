@@ -18306,7 +18306,7 @@ sub_144CB	proc near
 		mov	_boss_pos.velocity.y, 0
 		mov	byte_26348, 0
 		call	sub_162BD
-		mov	byte_229BA, 1
+		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
 sub_144CB	endp
@@ -23065,7 +23065,7 @@ loc_17464:
 loc_17476:
 		cmp	di, [bp+arg_0]
 		jb	short loc_17448
-		mov	byte_229BA, 0
+		mov	_boss_phase_timed_out, 0
 		pop	di
 		pop	si
 		leave
@@ -37036,14 +37036,14 @@ arg_2		= word ptr  6
 		jz	short loc_1F25F
 		push	si
 		call	add_explode_effect_function
-		cmp	byte_229BA, 0
+		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1F25F
 		mov	byte_226C0, 1
 		mov	_bullet_clear_trigger, 1
 		call	sub_1FB19
 
 loc_1F25F:
-		mov	byte_229BA, 1
+		mov	_boss_phase_timed_out, 1
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 0
@@ -38151,7 +38151,7 @@ arg_2		= word ptr  6
 		jz	short loc_1FB94
 		push	si
 		call	add_explode_effect_function
-		cmp	byte_229BA, 0
+		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1FB94
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1FB91
@@ -38161,7 +38161,7 @@ loc_1FB91:
 		call	sub_1FB19
 
 loc_1FB94:
-		mov	byte_229BA, 1
+		mov	_boss_phase_timed_out, 1
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 0
@@ -39355,7 +39355,7 @@ dword_229AA	dd 0
 		db    1
 		db    1
 		db    1
-byte_229BA	db 0
+include th04/boss/phase_timed_out[data].asm
 aSt00_bmt	db 'st00.bmt',0
 aSt00bk_cdg	db 'st00bk.cdg',0
 aSt00_bb	db 'st00.bb',0
