@@ -2712,21 +2712,7 @@ sub_C34E	proc near
 sub_C34E	endp
 
 include th04/playperf.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C396	proc far
-		mov	al, _rank
-		xor	ah, ah
-		add	ax, ax
-		mov	bx, 0Ah
-		sub	bx, ax
-		add	bx, sp
-		mov	ax, ss:[bx]
-		retf	8
-sub_C396	endp
-
+include th04/select_for_rank.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -36439,9 +36425,9 @@ sub_1E0B3	proc far
 		call	super_entry_bfnt
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt01_bb
-		push	0FF0080h
-		push	200008h
-		call	sub_C396
+		push	(255 shl 16) or 128
+		push	( 32 shl 16) or   8
+		call	select_for_rank
 		mov	byte_2D01E, al
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
@@ -36520,33 +36506,33 @@ sub_1E245	proc far
 		jnz	loc_1E359
 		setfarfp	_boss_update_func, sub_1F3AB
 		mov	_boss_fg_render_func, offset sub_12E93
-		push	40006h
-		push	8000Ch
-		call	sub_C396
+		push	( 4 shl 16) or  6
+		push	( 8 shl 16) or 12
+		call	select_for_rank
 		mov	byte_2D01E, al
-		push	10000Ch
-		push	80006h
-		call	sub_C396
+		push	(16 shl 16) or 12
+		push	( 8 shl 16) or  6
+		call	select_for_rank
 		mov	byte_2D01F, al
-		push	10002h
-		push	30004h
-		call	sub_C396
+		push	( 1 shl 16) or  2
+		push	( 3 shl 16) or  4
+		call	select_for_rank
 		mov	byte_2D020, al
-		push	170017h
-		push	180018h
-		call	sub_C396
+		push	(23 shl 16) or 23
+		push	(24 shl 16) or 24
+		call	select_for_rank
 		mov	byte_2D021, al
-		push	80009h
-		push	9000Ah
-		call	sub_C396
+		push	( 8 shl 16) or  9
+		push	( 9 shl 16) or 10
+		call	select_for_rank
 		mov	byte_2D022, al
-		push	120010h
-		push	0E000Ah
-		call	sub_C396
+		push	(18 shl 16) or 16
+		push	(14 shl 16) or 10
+		call	select_for_rank
 		mov	byte_2D023, al
-		push	60008h
-		push	9000Ah
-		call	sub_C396
+		push	( 6 shl 16) or  8
+		push	( 9 shl 16) or 10
+		call	select_for_rank
 		mov	byte_2D024, al
 		jmp	short loc_1E371
 ; ---------------------------------------------------------------------------
@@ -36618,9 +36604,9 @@ sub_1E3C2	proc far
 		mov	word_2D038, 0BE0h
 		mov	_stage_render, offset stage5_render
 		mov	_stage_invalidate, offset stage5_invalidate
-		push	9000A0h
-		push	0A800B4h
-		call	sub_C396
+		push	(144 shl 16) or 160
+		push	(168 shl 16) or 180
+		call	select_for_rank
 		mov	byte_2D01E, al
 		pop	bp
 		retf
@@ -36651,13 +36637,13 @@ sub_1E47C	proc far
 		call	bb_stage_load pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
-		push	300040h
-		push	500060h
-		call	sub_C396
+		push	(48 shl 16) or 64
+		push	(80 shl 16) or 96
+		call	select_for_rank
 		mov	byte_2D01E, al
-		push	10001h
-		push	20004h
-		call	sub_C396
+		push	( 1 shl 16) or  1
+		push	( 2 shl 16) or  4
+		call	select_for_rank
 		mov	byte_2D01F, al
 		pop	bp
 		retf

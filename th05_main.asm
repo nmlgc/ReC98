@@ -2638,13 +2638,13 @@ loc_C4BC:
 		nopcall	sub_104BB
 		mov	byte_2429A, 1
 		mov	byte_2429B, 0
-		push	0C000A0h
-		push	9000E0h
-		nopcall	sub_E752
+		push	(192 shl 16) or 160
+		push	(144 shl 16) or 224
+		nopcall	select_for_playchar
 		mov	chara_invulnerable_time_left, al
-		push	0C00080h
-		push	6000C0h
-		nopcall	sub_E752
+		push	(192 shl 16) or 128
+		push	( 96 shl 16) or 192
+		nopcall	select_for_playchar
 		mov	_bullet_clear_time, al
 		mov	ax, fp_23F5A
 		mov	fp_23F58, ax
@@ -6833,34 +6833,8 @@ sub_E708	endp
 ; ---------------------------------------------------------------------------
 		nop
 include th04/playperf.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E752	proc far
-		mov	al, playchar
-		jmp	short loc_E75B
-sub_E752	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E758	proc far
-		mov	al, _rank
-
-loc_E75B:
-		xor	ah, ah
-		add	ax, ax
-		mov	bx, 0Ah
-		sub	bx, ax
-		add	bx, sp
-		mov	ax, ss:[bx]
-		retf	8
-sub_E758	endp
-
+include th05/select_for_playchar.asm
+include th04/select_for_rank.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14121,9 +14095,9 @@ loc_1274B:
 loc_12769:
 		cmp	frame_mod4, 0
 		jnz	short loc_12783
-		push	30004h
-		push	0F0003h
-		nopcall	sub_E752
+		push	( 3 shl 16) or  4
+		push	(15 shl 16) or  3
+		nopcall	select_for_playchar
 		add	si, ax
 
 loc_12783:
@@ -18557,13 +18531,13 @@ sub_14879	proc near
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt04bk_cdg
 		call	bb_stage_load pascal, ds, offset aSt04_bb
-		push	14000Ah
-		push	60006h
-		nopcall	sub_E758
+		push	(20 shl 16) or 10
+		push	( 6 shl 16) or  6
+		nopcall	select_for_rank
 		mov	byte_2D076, al
-		push	300020h
-		push	180018h
-		nopcall	sub_E758
+		push	(48 shl 16) or 32
+		push	(24 shl 16) or 24
+		nopcall	select_for_rank
 		mov	byte_2D077, al
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
@@ -24248,9 +24222,9 @@ loc_17EC3:
 ; ---------------------------------------------------------------------------
 
 loc_17EE9:
-		push	3C00500h
-		push	5000500h
-		call	sub_E758
+		push	(3C0h shl 16) or 500h
+		push	(500h shl 16) or 500h
+		call	select_for_rank
 
 loc_17EFA:
 		mov	[bp+var_8], ax
@@ -25061,9 +25035,9 @@ loc_1863F:
 		mov	byte ptr word_26006, al
 		mov	byte_26000, 2
 		mov	byte_26001, 0Ah
-		push	1050106h
-		push	1070108h
-		call	sub_E758
+		push	(261 shl 16) or 262
+		push	(263 shl 16) or 264
+		call	select_for_rank
 		mov	word ptr dword_26002, ax
 		mov	byte ptr word_26006+1, 20h ; ' '
 		mov	byte ptr word_25FFA+1, 0
@@ -25844,9 +25818,9 @@ loc_18D6F:
 		mov	byte ptr word_25FFA+1, 54h ; 'T'
 		mov	byte_26000, 6
 		mov	byte ptr word_26006+1, 20h ; ' '
-		push	50A050Ch
-		push	60C060Eh
-		call	sub_E758
+		push	(50Ah shl 16) or 50Ch
+		push	(60Ch shl 16) or 60Eh
+		call	select_for_rank
 		mov	word ptr dword_26002+2,	ax
 		mov	byte ptr word_26006, 0C0h
 		pop	bp
@@ -26609,11 +26583,11 @@ loc_193F5:
 		jnz	short loc_19437
 		mov	byte_26000, 9
 		mov	byte ptr word_25FFA+1, 30h ; '0'
-		push	1010402h
-		push	3030404h
+		push	(101h shl 16) or 402h
+		push	(303h shl 16) or 404h
 
 loc_19412:
-		call	sub_E758
+		call	select_for_rank
 		mov	word ptr dword_26002, ax
 		mov	word ptr dword_26002+2,	808h
 
@@ -32980,13 +32954,13 @@ loc_1CC7F:
 		cmp	byte_2D083, 0
 		jnz	short loc_1CCD0
 		mov	byte_2D083, 1
-		push	100008h
-		push	40004h
-		call	sub_E758
+		push	(16 shl 16) or  8
+		push	( 4 shl 16) or  4
+		call	select_for_rank
 		mov	byte_2D076, al
-		push	280030h
-		push	340034h
-		call	sub_E758
+		push	(40 shl 16) or 48
+		push	(52 shl 16) or 52
+		call	select_for_rank
 		mov	byte_2D082, al
 		push	0
 		call	add_explode_effect_function
@@ -33323,13 +33297,13 @@ loc_1D030:
 		cmp	byte_2D083, 0
 		jnz	short loc_1D081
 		mov	byte_2D083, 1
-		push	22001Ch
-		push	140014h
-		call	sub_E758
+		push	(34 shl 16) or 28
+		push	(20 shl 16) or 20
+		call	select_for_rank
 		mov	byte_2D077, al
-		push	280030h
-		push	340030h
-		call	sub_E758
+		push	(40 shl 16) or 48
+		push	(52 shl 16) or 48
+		call	select_for_rank
 		mov	byte_2D082, al
 		push	0
 		call	add_explode_effect_function
@@ -33366,9 +33340,9 @@ yumeko_1D085	proc near
 		mov	byte ptr word_25FFA+1, 34h ; '4'
 		mov	byte_26000, 2
 		mov	byte ptr dword_26002, 5
-		push	180010h
-		push	0C000Ah
-		call	sub_E758
+		push	(24 shl 16) or 16
+		push	(12 shl 16) or 10
+		call	select_for_rank
 		mov	byte ptr dword_26002+1,	al
 		mov	byte ptr word_26006+1, 80h
 		call	snd_se_play pascal, 8
@@ -33377,9 +33351,9 @@ yumeko_1D085	proc near
 		push	200h
 		call	_randring2_next16_mod
 		mov	_boss2_pos.cur.y, ax
-		push	28001Eh
-		push	180010h
-		call	sub_E758
+		push	(40 shl 16) or 30
+		push	(24 shl 16) or 16
+		call	select_for_rank
 		mov	byte_2D085, al
 		mov	byte_2D084, 0
 
@@ -34065,9 +34039,9 @@ sub_1D6E1	proc near
 		call	_randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr dword_26002, 10h
-		push	10000Ch
-		push	80004h
-		call	sub_E758
+		push	(16 shl 16) or 12
+		push	( 8 shl 16) or  4
+		call	select_for_rank
 		mov	byte_2D085, al
 
 loc_1D719:
@@ -34211,9 +34185,9 @@ sub_1D83A	proc near
 		mov	byte_26000, 9
 		mov	byte ptr word_26006, 0
 		mov	word ptr dword_26002, 402h
-		push	0C050C06h
-		push	0D060D07h
-		call	sub_E758
+		push	(0C05h shl 16) or 0C06h
+		push	(0D06h shl 16) or 0D07h
+		call	select_for_rank
 		mov	word ptr dword_26002+2,	ax
 		mov	byte ptr word_26006+1, 20h ; ' '
 
@@ -34447,9 +34421,9 @@ loc_1DA6A:
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
 		mov	byte_26000, 3
 		mov	byte ptr dword_26002, 5
-		push	10000Ch
-		push	0A0008h
-		call	sub_E758
+		push	(16 shl 16) or 12
+		push	(10 shl 16) or  8
+		call	select_for_rank
 		mov	byte ptr dword_26002+1,	al
 		mov	byte ptr word_26006, 0
 		mov	byte ptr word_26006+1, 30h ; '0'
@@ -34474,13 +34448,13 @@ sub_1DAD2	proc near
 		jl	loc_1DB78
 		cmp	boss_phase_frame, 80h
 		jnz	short loc_1DB10
-		push	800030h
-		push	200018h
-		call	sub_E758
+		push	(128 shl 16) or 48
+		push	( 32 shl 16) or 24
+		call	select_for_rank
 		mov	byte_2D084, al
-		push	200028h
-		push	300038h
-		call	sub_E758
+		push	( 32 shl 16) or 40
+		push	( 48 shl 16) or 56
+		call	select_for_rank
 		mov	byte_2D085, al
 
 loc_1DB10:
@@ -34624,9 +34598,9 @@ sub_1DC2F	proc near
 		jle	loc_1DCFD
 		cmp	boss_phase_frame, 81h
 		jnz	short loc_1DC59
-		push	600020h
-		push	1C0018h
-		call	sub_E758
+		push	(96 shl 16) or 32
+		push	(28 shl 16) or 24
+		call	select_for_rank
 		mov	byte_2D085, al
 
 loc_1DC59:
@@ -34746,9 +34720,9 @@ loc_1DD72:
 		jnz	short loc_1DDC3
 		mov	byte_2D084, 20h	; ' '
 		mov	byte_2D085, 0
-		push	400028h
-		push	20001Ch
-		call	sub_E758
+		push	(64 shl 16) or 40
+		push	(32 shl 16) or 28
+		call	select_for_rank
 		mov	byte_2D083, al
 		mov	byte_2D082, 0
 		mov	byte_2D081, 0
@@ -34962,9 +34936,9 @@ loc_1DFFB:
 		inc	word_22852
 		cmp	ax, 41h	; 'A'
 		jnz	short locret_1E020
-		push	340014h
-		push	10000Ch
-		call	sub_E758
+		push	(52 shl 16) or 20
+		push	(16 shl 16) or 12
+		call	select_for_rank
 		mov	byte_2D083, al
 		push	0
 		call	add_explode_effect_function
@@ -35291,9 +35265,9 @@ loc_1E333:
 		mov	boss_phase_frame, 0
 		mov	_boss_pos.velocity.y, 0
 		mov	_boss_custombullets_render, offset sub_11073
-		push	3200230h
-		push	2D00320h
-		call	sub_E752
+		push	((50 shl 4) shl 16) or (35 shl 4)
+		push	((45 shl 4) shl 16) or (50 shl 4)
+		call	select_for_playchar
 		mov	_boss_hitbox_radius.x, ax
 		mov	fp_2CE4A, offset sub_1DA1C
 
