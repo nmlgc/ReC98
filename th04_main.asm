@@ -36387,8 +36387,8 @@ sub_1DFEF	proc far
 		setfarfp	_boss_update_func, sub_19AA3
 		mov	_boss_fg_render_func, offset sub_1196B
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 180h
-		mov	word_2D032, 100h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (16 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_EDE2
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
@@ -36431,8 +36431,8 @@ sub_1E0B3	proc far
 		setfarfp	_boss_update_func, sub_1915D
 		mov	_boss_fg_render_func, offset sub_11793
 		mov	_boss_sprite_cur, 0
-		mov	word_2D030, 180h
-		mov	word_2D032, 180h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_EA70
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
@@ -36477,8 +36477,8 @@ sub_1E186	proc far
 		setfarfp	_boss_update_func, sub_1C2E5
 		mov	_boss_fg_render_func, offset sub_11E12
 		mov	_boss_sprite_cur, 134
-		mov	word_2D030, 180h
-		mov	word_2D032, 180h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_BECC
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
@@ -36558,8 +36558,8 @@ loc_1E359:
 
 loc_1E371:
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 180h
-		mov	word_2D032, 180h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_BEDA
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
@@ -36607,8 +36607,8 @@ sub_1E3C2	proc far
 		setfarfp	_boss_update_func, sub_16610
 		mov	_boss_fg_render_func, offset sub_E8A3
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 1A0h
-		mov	word_2D032, 1A0h
+		mov	_boss_hitbox_radius.x, (26 shl 4)
+		mov	_boss_hitbox_radius.y, (26 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_BFF8
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt04_bb
@@ -36646,8 +36646,8 @@ sub_1E47C	proc far
 		setfarfp	_boss_update_func, sub_1B47E
 		mov	_boss_fg_render_func, offset sub_11C1A
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 180h
-		mov	word_2D032, 300h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (48 shl 4)
 		call	bb_stage_load pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullsub_1
 		mov	_stage_invalidate, offset nullsub_1
@@ -36692,8 +36692,8 @@ sub_1E518	proc far
 		setfarfp	_boss_update_func, sub_186EB
 		mov	_boss_fg_render_func, offset sub_115B6
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 180h
-		mov	word_2D032, 300h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_C148
 		mov	byte_2D01E, 0
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
@@ -36785,10 +36785,7 @@ sub_1E64E	proc near
 		push	bp
 		mov	bp, sp
 		inc	word_2671A
-		push	word_2D030
-		push	word_2D032
-		push	4
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, _boss_hitbox_radius.x, _boss_hitbox_radius.y, 4
 		mov	byte_2671C, al
 		mov	ah, 0
 		sub	_boss_hp, ax
@@ -36815,10 +36812,7 @@ sub_1E67C	proc near
 		push	bp
 		mov	bp, sp
 		inc	word_2671A
-		push	word_2D030
-		push	word_2D032
-		push	0Ah
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, _boss_hitbox_radius.x, _boss_hitbox_radius.y, 10
 		pop	bp
 		retn
 sub_1E67C	endp
@@ -37025,8 +37019,8 @@ loc_1E801:
 		setfarfp	_boss_update, sub_2026A
 		mov	_boss_fg_render, offset sub_12F5F
 		mov	_boss_sprite_cur, 128
-		mov	word_2D030, 180h
-		mov	word_2D032, 300h
+		mov	_boss_hitbox_radius.x, (24 shl 4)
+		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	bgm_title_id, 0Fh
 		mov	fp_259DC, offset sub_11195
 		call	_cdg_free pascal, 16
@@ -48690,8 +48684,7 @@ byte_2D02B	db ?
 byte_2D02C	db ?
 byte_2D02D	db ?
 include th04/formats/bb_stage[bss].asm
-word_2D030	dw ?
-word_2D032	dw ?
+include th04/boss_hitbox[bss].asm
 word_2D034	dw ?
 word_2D036	dw ?
 word_2D038	dw ?
