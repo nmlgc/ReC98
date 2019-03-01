@@ -18534,11 +18534,11 @@ sub_14879	proc near
 		push	(20 shl 16) or 10
 		push	( 6 shl 16) or  6
 		nopcall	select_for_rank
-		mov	byte_2D076, al
+		mov	_yumeko_interval_phase4, al
 		push	(48 shl 16) or 32
 		push	(24 shl 16) or 24
 		nopcall	select_for_rank
-		mov	byte_2D077, al
+		mov	_yumeko_interval_phase7, al
 		mov	_stage_render, offset nullsub_2
 		mov	_stage_invalidate, offset nullsub_2
 		pop	bp
@@ -32919,7 +32919,7 @@ loc_1CC1F:
 		call	snd_se_play pascal, 3
 
 loc_1CC3E:
-		mov	al, byte_2D076
+		mov	al, _yumeko_interval_phase4
 		mov	ah, 0
 		push	ax
 		mov	ax, boss_phase_frame
@@ -32957,7 +32957,7 @@ loc_1CC7F:
 		push	(16 shl 16) or  8
 		push	( 4 shl 16) or  4
 		call	select_for_rank
-		mov	byte_2D076, al
+		mov	_yumeko_interval_phase4, al
 		push	(40 shl 16) or 48
 		push	(52 shl 16) or 52
 		call	select_for_rank
@@ -33241,7 +33241,7 @@ loc_1CFA4:
 		call	snd_se_play pascal, 3
 
 loc_1CFC3:
-		mov	al, byte_2D077
+		mov	al, _yumeko_interval_phase7
 		mov	ah, 0
 		push	ax
 		mov	ax, boss_phase_frame
@@ -33300,7 +33300,7 @@ loc_1D030:
 		push	(34 shl 16) or 28
 		push	(20 shl 16) or 20
 		call	select_for_rank
-		mov	byte_2D077, al
+		mov	_yumeko_interval_phase7, al
 		push	(40 shl 16) or 48
 		push	(52 shl 16) or 48
 		call	select_for_rank
@@ -46612,8 +46612,7 @@ byte_2D060	db ?
 		db ?
 include th04/shots_add[bss].asm
 include th04/boss_funcs[bss].asm
-byte_2D076	db ?
-byte_2D077	db ?
+include th05/boss/b5_intervals[bss].asm
 		dd    ?	;
 		db    ?	;
 byte_2D07D	db ?
