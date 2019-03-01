@@ -10963,7 +10963,7 @@ sub_10D26	endp
 
 ; Attributes: bp-based frame
 
-sub_10D71	proc near
+mai_yuki_render	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -10978,12 +10978,12 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	di, ax
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		sar	ax, 4
 		mov	[bp+var_2], ax
-		mov	ax, word ptr dword_2634E+2
+		mov	ax, _yuki_pos.cur.y
 		sar	ax, 4
-		add	ax, 0FFF0h
+		add	ax, (-1 shl 4)
 		mov	[bp+var_4], ax
 		cmp	boss_phase, 0FEh
 		jnz	short loc_10DDA
@@ -11001,7 +11001,7 @@ var_2		= word ptr -2
 loc_10DBC:
 		push	[bp+var_2]
 		push	[bp+var_4]
-		mov	al, byte_2635C
+		mov	al, _yuki_sprite
 		mov	ah, 0
 		push	ax
 		call	super_large_put
@@ -11040,7 +11040,7 @@ loc_10DF9:
 loc_10E07:
 		push	[bp+var_2]
 		push	[bp+var_4]
-		mov	al, byte_2635C
+		mov	al, _yuki_sprite
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
@@ -11060,7 +11060,7 @@ loc_10E1F:
 		pop	si
 		leave
 		retn
-sub_10D71	endp
+mai_yuki_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11314,7 +11314,7 @@ sub_10F90	endp
 
 ; Attributes: bp-based frame
 
-sub_10FD2	proc near
+yumeko_render	proc near
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -11344,12 +11344,12 @@ var_2		= word ptr -2
 loc_11001:
 		cmp	boss_phase, 0
 		jnz	short loc_11029
-		mov	ax, word ptr dword_2634E
+		mov	ax, _boss2_pos.x
 		sar	ax, 4
 		mov	[bp+var_4], ax
-		mov	ax, word ptr dword_2634E+2
+		mov	ax, _boss2_pos.y
 		sar	ax, 4
-		add	ax, 0FFF0h
+		add	ax, (-1 shl 4)
 		mov	[bp+var_6], ax
 		push	[bp+var_4]
 		push	ax
@@ -11395,7 +11395,7 @@ loc_11069:
 		pop	si
 		leave
 		retn
-sub_10FD2	endp
+yumeko_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18494,15 +18494,15 @@ sub_1479F	proc near
 		mov	_boss_pos.prev.x, (96 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	word ptr dword_2634E, 1200h
-		mov	word_26352, 1200h
-		mov	word ptr dword_2634E+2,	400h
-		mov	word_26354, 400h
+		mov	_yuki_pos.cur.x, (288 shl 4)
+		mov	_yuki_pos.prev.x, (288 shl 4)
+		mov	_yuki_pos.cur.y, (64 shl 4)
+		mov	_yuki_pos.prev.y, (64 shl 4)
 		mov	_boss_bg_render_func, offset sub_D20C
-		setfarfp	_boss_update_func, sub_1ABDA
-		mov	_boss_fg_render_func, offset sub_10D71
+		setfarfp	_boss_update_func, mai_yuki_update
+		mov	_boss_fg_render_func, offset mai_yuki_render
 		mov	_boss_sprite_cur, 180
-		mov	byte_2635C, 0B4h
+		mov	_yuki_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset sub_DEC2
@@ -18541,13 +18541,13 @@ sub_14879	proc near
 		mov	_boss_pos.prev.x, (96 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	word ptr dword_2634E, 0C00h
-		mov	word_26352, 0C00h
-		mov	word ptr dword_2634E+2,	400h
-		mov	word_26354, 400h
+		mov	_boss2_pos.cur.x, (192 shl 4)
+		mov	_boss2_pos.prev.x, (192 shl 4)
+		mov	_boss2_pos.cur.y, (64 shl 4)
+		mov	_boss2_pos.prev.y, (64 shl 4)
 		mov	_boss_bg_render_func, offset sub_D29E
 		setfarfp	_boss_update_func, sub_1D26B
-		mov	_boss_fg_render_func, offset sub_10FD2
+		mov	_boss_fg_render_func, offset yumeko_render
 		mov	_boss_sprite_cur, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
@@ -20952,28 +20952,28 @@ off_16344	dw offset loc_16316
 
 ; Attributes: bp-based frame
 
-sub_1634C	proc near
+mai_yuki_1634C	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y	= word ptr -4
+@@x	= word ptr -2
 arg_0		= word ptr  4
 
 		enter	4, 0
 		mov	ax, _boss_pos.cur.x
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		mov	ax, _boss_pos.cur.y
-		mov	[bp+var_4], ax
-		mov	eax, dword_2634E
+		mov	[bp+@@y], ax
+		mov	eax, _yuki_pos.cur
 		mov	_boss_pos.cur, eax
 		push	[bp+arg_0]
 		call	add_explode_effect_function
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		mov	_boss_pos.cur.x, ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@y]
 		mov	_boss_pos.cur.y, ax
 		leave
 		retn	2
-sub_1634C	endp
+mai_yuki_1634C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21007,26 +21007,26 @@ sub_1637A	endp
 
 ; Attributes: bp-based frame
 
-sub_163B6	proc near
+mai_yuki_163B6	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	4, 0
 		mov	ax, _boss_pos.cur.x
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		mov	ax, _boss_pos.cur.y
-		mov	[bp+var_4], ax
-		mov	eax, dword_2634E
+		mov	[bp+@@y], ax
+		mov	eax, _yuki_pos.cur
 		mov	_boss_pos.cur, eax
 		call	sub_1637A
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		mov	_boss_pos.cur.x, ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@y]
 		mov	_boss_pos.cur.y, ax
 		leave
 		retn
-sub_163B6	endp
+mai_yuki_163B6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28329,7 +28329,7 @@ off_1A3D1	dw offset loc_1A089
 
 ; Attributes: bp-based frame
 
-sub_1A3EF	proc near
+mai_yuki_1A3EF	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -28343,7 +28343,7 @@ arg_4		= word ptr  8
 		mov	word_2CED6, ax
 		mov	ax, [bp+arg_2]
 		mov	word_2CED8, ax
-		mov	eax, dword_2634E
+		mov	eax, _yuki_pos.cur
 		mov	dword_2CED2, eax
 		call	sub_126B3
 		mov	si, ax
@@ -28357,14 +28357,14 @@ loc_1A41F:
 		pop	si
 		pop	bp
 		retn	6
-sub_1A3EF	endp
+mai_yuki_1A3EF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A42B	proc near
+mai_yuki_1A42B	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_1FADD
@@ -28378,7 +28378,7 @@ sub_1A42B	proc near
 loc_1A439:
 		push	1800180h
 		push	4
-		call	sub_1A3EF
+		call	mai_yuki_1A3EF
 		mov	byte_26360, al
 		mov	ah, 0
 		sub	_yuki_hp, ax
@@ -28394,7 +28394,7 @@ loc_1A45A:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1A42B	endp
+mai_yuki_1A42B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28542,7 +28542,7 @@ arg_0		= word ptr  4
 		push	si
 		push	0C454h
 		call	sub_1A45E
-		push	596Eh
+		push	offset _boss2_pos
 		push	si
 		push	0C455h
 		call	sub_1A45E
@@ -28556,7 +28556,7 @@ sub_1A536	endp
 
 ; Attributes: bp-based frame
 
-sub_1A556	proc near
+mai_yuki_1A556	proc near
 		push	bp
 		mov	bp, sp
 		cmp	boss_phase_frame, 30h	; '0'
@@ -28589,31 +28589,31 @@ loc_1A59C:
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 0
 		mov	_boss_sprite_cur, 180
-		mov	byte_2635C, 0B4h
+		mov	_yuki_sprite, 180
 
 loc_1A5B1:
 		pop	bp
 		retn
-sub_1A556	endp
+mai_yuki_1A556	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A5B3	proc near
+mai_yuki_1A5B3	proc near
 		push	bp
 		mov	bp, sp
 		cmp	boss_phase_frame, 30h	; '0'
 		jge	short loc_1A5DC
-		mov	eax, dword_2634E
+		mov	eax, _yuki_pos.cur
 		mov	dword_2A722, eax
 		mov	ax, boss_phase_frame
 		add	ax, 0FFE8h
 		push	ax
 		push	90008h
 		call	sub_16A6B
-		mov	byte_2635C, 0B7h
+		mov	_yuki_sprite, 183
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -28622,12 +28622,12 @@ loc_1A5DC:
 		call	fp_2CE38
 		or	al, al
 		jnz	short loc_1A5E9
-		mov	byte_2635C, 0B8h
+		mov	_yuki_sprite, 184
 
 loc_1A5E9:
 		pop	bp
 		retn
-sub_1A5B3	endp
+mai_yuki_1A5B3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28978,7 +28978,7 @@ sub_1A82F	endp
 
 ; Attributes: bp-based frame
 
-sub_1A8C9	proc near
+mai_yuki_1A8C9	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, boss_phase_frame
@@ -28994,14 +28994,14 @@ sub_1A8C9	proc near
 		sub	al, 20h	; ' '
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002, 507h
 		mov	byte_26001, 0Ah
-		push	1Fh
+		push	31
 		call	_randring2_next16_and
 		add	al, 10h
 		mov	byte ptr word_26006+1, al
@@ -29012,7 +29012,7 @@ loc_1A91D:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1A8C9	endp
+mai_yuki_1A8C9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29033,10 +29033,10 @@ sub_1A921	proc near
 		call	_randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	byte ptr dword_26002, 20h ; ' '
 		mov	byte ptr word_26006+1, 28h ; '('
@@ -29067,10 +29067,10 @@ sub_1A96A	proc near
 		mov	byte_26000, 7
 		mov	byte ptr word_26006, 0
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002+2,	408h
 		mov	byte ptr word_26006+1, 20h ; ' '
@@ -29088,7 +29088,7 @@ sub_1A96A	endp
 
 ; Attributes: bp-based frame
 
-sub_1A9B3	proc near
+mai_yuki_1A9B3	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, boss_phase_frame
@@ -29101,10 +29101,10 @@ sub_1A9B3	proc near
 		mov	byte_26000, 2
 		mov	byte ptr word_26006, 40h
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002, 0C08h
 		mov	byte ptr word_26006+1, 40h
@@ -29116,14 +29116,14 @@ loc_1A9FF:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1A9B3	endp
+mai_yuki_1A9B3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AA03	proc near
+mai_yuki_1AA03	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, boss_phase_frame
@@ -29136,10 +29136,10 @@ sub_1AA03	proc near
 		mov	byte_26000, 7
 		mov	byte ptr word_26006, 0
 		mov	byte ptr word_25FFA+1, 30h ; '0'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002+2,	608h
 		mov	byte ptr word_26006+1, 20h ; ' '
@@ -29150,14 +29150,14 @@ loc_1AA48:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1AA03	endp
+mai_yuki_1AA03	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AA4C	proc near
+mai_yuki_1AA4C	proc near
 		push	bp
 		mov	bp, sp
 		mov	ax, boss_phase_frame
@@ -29171,13 +29171,13 @@ sub_1AA4C	proc near
 		call	_randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 0
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002, 202h
-		push	1Fh
+		push	31
 		call	_randring2_next16_and
 		add	al, 18h
 		mov	byte ptr word_26006+1, al
@@ -29188,14 +29188,14 @@ loc_1AA97:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1AA4C	endp
+mai_yuki_1AA4C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AA9B	proc near
+mai_yuki_1AA9B	proc near
 		push	bp
 		mov	bp, sp
 		cmp	boss_phase_frame, 30h	; '0'
@@ -29217,10 +29217,10 @@ loc_1AAAF:
 		mov	al, byte_2D083
 		add	byte_2D084, al
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	ax, word ptr dword_2634E
+		mov	ax, _yuki_pos.cur.x
 		mov	word ptr dword_25FFC, ax
-		mov	ax, word ptr dword_2634E+2
-		add	ax, 0FF80h
+		mov	ax, _yuki_pos.cur.y
+		add	ax, (-8 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
 		mov	byte ptr dword_26002, 4
 		mov	byte ptr word_26006+1, 26h ; '&'
@@ -29245,14 +29245,14 @@ loc_1AB1B:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1AA9B	endp
+mai_yuki_1AA9B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AB1F	proc near
+mai_yuki_1AB1F	proc near
 
 var_1		= byte ptr -1
 
@@ -29263,12 +29263,12 @@ var_1		= byte ptr -1
 		jnz	short loc_1AB72
 
 loc_1AB31:
-		mov	eax, dword_2634E
+		mov	eax, _yuki_pos.cur
 		mov	dword ptr word_2BC71+1,	eax
 		mov	word_2BC82, 0Bh
 		mov	byte_2BC88, 20h	; ' '
 		mov	ax, _boss_pos.cur.x
-		cmp	ax, word ptr dword_2634E
+		cmp	ax, _yuki_pos.cur.x
 		jl	short loc_1AB53
 		mov	[bp+var_1], 40h
 		jmp	short loc_1AB57
@@ -29290,14 +29290,14 @@ loc_1AB72:
 		mov	al, 0
 		leave
 		retn
-sub_1AB1F	endp
+mai_yuki_1AB1F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AB76	proc near
+mai_yuki_1AB76	proc near
 
 var_1		= byte ptr -1
 
@@ -29313,7 +29313,7 @@ loc_1AB88:
 		mov	word_2BC82, 9
 		mov	byte_2BC88, 20h	; ' '
 		mov	ax, _boss_pos.cur.x
-		cmp	ax, word ptr dword_2634E
+		cmp	ax, _yuki_pos.cur.x
 		jge	short loc_1ABAA
 		mov	[bp+var_1], 40h
 		jmp	short loc_1ABAE
@@ -29344,14 +29344,14 @@ loc_1ABD6:
 locret_1ABD8:
 		leave
 		retn
-sub_1AB76	endp
+mai_yuki_1AB76	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1ABDA	proc far
+mai_yuki_update	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -29359,14 +29359,14 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	ax, _boss_pos.cur.y
-		cmp	ax, word ptr dword_2634E+2
+		cmp	ax, _yuki_pos.cur.y
 		jle	short loc_1ABEE
 		mov	eax, _boss_pos.cur
 		jmp	short loc_1ABF2
 ; ---------------------------------------------------------------------------
 
 loc_1ABEE:
-		mov	eax, dword_2634E
+		mov	eax, _yuki_pos.cur
 
 loc_1ABF2:
 		mov	_homing_target, eax
@@ -29416,7 +29416,7 @@ loc_1AC5E:
 		call	sub_1FB07
 		push	1800180h
 		push	0Ah
-		call	sub_1A3EF
+		call	mai_yuki_1A3EF
 		cmp	boss_phase_frame, 80h
 		jl	loc_1AFA7	; default
 		inc	boss_phase
@@ -29430,7 +29430,7 @@ loc_1AC90:
 		call	sub_1FB07	; jumptable 0001AC18 case 1
 		push	1800180h
 		push	0Ah
-		call	sub_1A3EF
+		call	mai_yuki_1A3EF
 		cmp	boss_phase_frame, 40h
 		jl	loc_1AFA7	; default
 		inc	boss_phase
@@ -29440,7 +29440,7 @@ loc_1ACAB:
 		mov	byte_26349, 1
 		mov	byte ptr word_2634A+1, 0
 		mov	fp_2CE36, offset sub_1A5EB
-		mov	fp_2CE38, offset sub_1A8C9
+		mov	fp_2CE38, offset mai_yuki_1A8C9
 		mov	_boss_custombullets_render, offset sub_FF79
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
@@ -29476,7 +29476,7 @@ loc_1AD0D:
 		push	1
 		call	add_explode_effect_function
 		push	2
-		call	sub_1634C
+		call	mai_yuki_1634C
 		jmp	short loc_1AD29
 ; ---------------------------------------------------------------------------
 
@@ -29553,8 +29553,8 @@ loc_1ADBD:
 ; ---------------------------------------------------------------------------
 
 loc_1ADC9:
-		call	sub_1A556
-		call	sub_1A5B3
+		call	mai_yuki_1A556
+		call	mai_yuki_1A5B3
 
 loc_1ADCF:
 		mov	ax, _boss_hp
@@ -29581,7 +29581,7 @@ loc_1ADF4:
 		mov	byte ptr word_2634A+1, 0Eh
 
 loc_1AE17:
-		call	sub_1A42B
+		call	mai_yuki_1A42B
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		cmp	[bp+var_2], 0
@@ -29612,7 +29612,7 @@ loc_1AE4F:
 
 loc_1AE64:
 		push	4
-		call	sub_1634C
+		call	mai_yuki_1634C
 
 loc_1AE69:
 		jmp	loc_1AFA7	; default
@@ -29625,13 +29625,13 @@ loc_1AE6C:
 		jnz	short loc_1AE8B
 		call	sub_1637A
 		mov	_boss_sprite_cur, 4
-		mov	byte_2635C, 0B4h
+		mov	_yuki_sprite, 180
 		jmp	short loc_1AE98
 ; ---------------------------------------------------------------------------
 
 loc_1AE8B:
-		call	sub_163B6
-		mov	byte_2635C, 4
+		call	mai_yuki_163B6
+		mov	_yuki_sprite, 4
 		mov	_boss_sprite_cur, 180
 
 loc_1AE98:
@@ -29686,7 +29686,7 @@ loc_1AEE2:
 ; ---------------------------------------------------------------------------
 
 loc_1AF0A:
-		inc	byte_2635C
+		inc	_yuki_sprite
 
 loc_1AF0E:
 		cmp	boss_phase_frame, 40h
@@ -29708,9 +29708,9 @@ loc_1AF24:
 		call	sub_ED87
 		mov	word ptr _boss_bgm_title+2, ds
 		mov	word ptr _boss_bgm_title, offset aTH05_10
-		mov	eax, dword_2634E
+		mov	eax, _yuki_pos.cur
 		mov	_boss_pos.cur, eax
-		setfarfp	_boss_update, sub_1B9F2
+		setfarfp	_boss_update, yuki_update
 		jmp	short loc_1AF85
 ; ---------------------------------------------------------------------------
 
@@ -29740,7 +29740,7 @@ loc_1AFA7:
 		pop	si
 		leave
 		retf
-sub_1ABDA	endp
+mai_yuki_update	endp
 ; ---------------------------------------------------------------------------
 		db 0
 word_1AFBC	dw	0,     1,     2,  0FDh
@@ -30943,7 +30943,7 @@ sub_1B973	endp
 
 ; Attributes: bp-based frame
 
-sub_1B9F2	proc far
+yuki_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _boss_pos.cur
@@ -31008,10 +31008,10 @@ loc_1BAAD:
 		mov	byte_26349, 1
 		mov	byte ptr word_2634A+1, 0
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2634E, ax
+		mov	_yuki_pos.cur.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (16 shl 4)
-		mov	word ptr dword_2634E+2,	ax
+		mov	_yuki_pos.cur.y, ax
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		call	_circles_add_growing
@@ -31035,14 +31035,14 @@ loc_1BB14:
 ; ---------------------------------------------------------------------------
 
 loc_1BB24:
-		push	word ptr dword_2634E
-		push	word ptr dword_2634E+2
+		push	_yuki_pos.cur.x
+		push	_yuki_pos.cur.y
 		call	sub_16CCC
 		or	al, al
 		jz	short loc_1BB6D
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2634E, ax
-		mov	word ptr dword_2634E+2,	600h
+		mov	_yuki_pos.cur.x, ax
+		mov	_yuki_pos.cur.y, (96 shl 4)
 		mov	boss_phase_frame, 0
 		inc	byte_26349
 		inc	byte ptr word_2634A+1
@@ -31245,7 +31245,7 @@ loc_1BD09:
 		call	sub_17354
 		pop	bp
 		retf
-sub_1B9F2	endp
+yuki_update	endp
 
 ; ---------------------------------------------------------------------------
 off_1BD18	dw offset loc_1BA22
@@ -33349,7 +33349,7 @@ sub_1CED9	endp
 
 ; Attributes: bp-based frame
 
-sub_1D085	proc near
+yumeko_1D085	proc near
 		push	bp
 		mov	bp, sp
 		cmp	boss_phase_frame, 20h	; ' '
@@ -33376,7 +33376,7 @@ sub_1D085	proc near
 		mov	byte_2BC88, 40h
 		push	200h
 		call	_randring2_next16_mod
-		mov	word ptr dword_2634E+2,	ax
+		mov	_boss2_pos.cur.y, ax
 		push	28001Eh
 		push	180010h
 		call	sub_E758
@@ -33410,21 +33410,21 @@ loc_1D142:
 		mov	word_2BC71+1, 1700h
 
 loc_1D148:
-		mov	ax, word ptr dword_2634E+2
+		mov	ax, _boss2_pos.cur.y
 		mov	word_2BC74, ax
 		call	sub_1C82A
 		mov	al, byte_2D085
 		mov	ah, 0
 		shl	ax, 4
-		add	word ptr dword_2634E+2,	ax
+		add	_boss2_pos.cur.y, ax
 		mov	al, byte_2D084
 		add	al, 80h
 		mov	byte_2D084, al
-		cmp	word ptr dword_2634E+2,	1780h
+		cmp	_boss2_pos.cur.y, (376 shl 4)
 		jl	short loc_1D1C4
 		push	200h
 		call	_randring2_next16_mod
-		mov	word ptr dword_2634E+2,	ax
+		mov	_boss2_pos.cur.y, ax
 		inc	byte_2D083
 		pop	bp
 		retn
@@ -33459,7 +33459,7 @@ loc_1D1B9:
 loc_1D1C4:
 		pop	bp
 		retn
-sub_1D085	endp
+yumeko_1D085	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33576,12 +33576,12 @@ loc_1D2D7:
 		mov	_boss_sprite_stay, 180
 
 loc_1D2EF:
-		cmp	word ptr dword_2634E+2,	0FE00h
+		cmp	_boss2_pos.cur.y, (-32 shl 4)
 		jl	short loc_1D320
-		sub	word ptr dword_2634E+2,	10h
+		sub	_boss2_pos.cur.y, (1 shl 4)
 		mov	word_2CED6, 180h
 		mov	word_2CED8, 180h
-		mov	eax, dword_2634E
+		mov	eax, _boss2_pos.cur
 		mov	dword_2CED2, eax
 		call	sub_126B3
 		or	ax, ax
@@ -33737,7 +33737,7 @@ loc_1D493:
 ; ---------------------------------------------------------------------------
 
 loc_1D49A:
-		call	sub_1D085
+		call	yumeko_1D085
 		cmp	boss_phase_frame, 7D0h
 		jge	short loc_1D4B1
 		call	sub_1FADD
@@ -39164,7 +39164,7 @@ off_22788	dw offset sub_1A5EB
 		dw offset sub_1A6AB
 		dw offset sub_1A651
 		dw offset sub_1A719
-off_22790	dw offset sub_1AB76
+off_22790	dw offset mai_yuki_1AB76
 		dw offset sub_1A6AB
 		dw offset sub_1A82F
 		dw offset sub_1A82F
@@ -39172,17 +39172,17 @@ off_22790	dw offset sub_1AB76
 		dw 0
 		dw 0
 		dw 0
-off_227A0	dw offset sub_1A8C9
+off_227A0	dw offset mai_yuki_1A8C9
 		dw offset sub_1A96A
 		dw offset sub_1A921
-		dw offset sub_1A9B3
+		dw offset mai_yuki_1A9B3
 off_227A8	dw offset sub_1A921
-		dw offset sub_1AA4C
-		dw offset sub_1AA03
-		dw offset sub_1A8C9
-off_227B0	dw offset sub_1AB1F
-		dw offset sub_1AA9B
-		dw offset sub_1AA9B
+		dw offset mai_yuki_1AA4C
+		dw offset mai_yuki_1AA03
+		dw offset mai_yuki_1A8C9
+off_227B0	dw offset mai_yuki_1AB1F
+		dw offset mai_yuki_1AA9B
+		dw offset mai_yuki_1AA9B
 		dw offset sub_1A96A
 a_dm09_tx2	db '_DM09.TX2',0
 aTH05_10	db 'ê^çgÇÃè≠èóÅ@Å` Crimson Dead!!',0
@@ -40229,15 +40229,7 @@ byte_26348	db ?
 byte_26349	db ?
 word_2634A	dw ?
 _boss_phase_end_hp	dw ?
-dword_2634E	dd ?
-word_26352	dw ?
-word_26354	dw ?
-		dd    ?	;
-_yuki_hp	dw ?
-byte_2635C	db ?
-		db ?
-		db ?
-		db ?
+include th05/boss/vars2[bss].asm
 byte_26360	db ?
 		db    ?	;
 		db    ?	;
