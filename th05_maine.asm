@@ -2204,7 +2204,7 @@ arg_0		= word ptr  4
 		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 5
-		mov	dl, byte_15177
+		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
 		imul	ax, 60h
@@ -2250,7 +2250,7 @@ sub_B6A3	proc near
 		mov	al, byte ptr word_15178
 		mov	ah, 0
 		imul	ax, 5
-		mov	dl, byte_15177
+		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
 		imul	ax, 60h
@@ -2473,7 +2473,7 @@ loc_B84F:
 ; ---------------------------------------------------------------------------
 
 loc_B86C:
-		cmp	byte_15177, 4
+		cmp	_hiscore_rank, RANK_EXTRA
 		jnb	short loc_B88B
 		les	bx, _ksoconfig
 		mov	al, es:[bx+13h]
@@ -3852,7 +3852,7 @@ loc_C256:
 		mov	al, es:[bx+11h]
 
 loc_C25E:
-		mov	byte_15177, al
+		mov	_hiscore_rank, al
 		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
 		mov	byte ptr word_15178, al
@@ -3883,7 +3883,7 @@ loc_C28C:
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_C2AD
-		cmp	byte_15177, 4
+		cmp	_hiscore_rank, RANK_EXTRA
 		jnz	short loc_C2BB
 
 loc_C2AD:
@@ -4959,7 +4959,7 @@ loc_CBDB:
 		mov	al, es:[bx+11h]
 
 loc_CBE3:
-		mov	byte_15186, al
+		mov	_verdict_rank, al
 		mov	ax, word_116E2
 		add	ax, 0A0h
 		push	ax
@@ -4968,7 +4968,7 @@ loc_CBE3:
 		push	ax
 		push	10h
 		push	ds
-		mov	al, byte_15186
+		mov	al, _verdict_rank
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, offset grEASY
@@ -5143,10 +5143,10 @@ loc_CDCB:
 		add	dword_1517E, eax
 
 loc_CDF3:
-		mov	al, byte_15186
+		mov	al, _verdict_rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 4
+		cmp	bx, RANK_EXTRA
 		ja	loc_CEAF
 		add	bx, bx
 		jmp	cs:off_D165[bx]
@@ -11669,14 +11669,14 @@ byte_15078	db ?
 		dd    ?	;
 		db    ?	;
 byte_15176	db ?
-byte_15177	db ?
+_hiscore_rank	db ?
 word_15178	dw ?
 		dw ?
 byte_1517C	db ?
 		db ?
 dword_1517E	dd ?
 dword_15182	dd ?
-byte_15186	db ?
+_verdict_rank	db ?
 byte_15187	db ?
 		dd    ?	;
 		dd    ?	;

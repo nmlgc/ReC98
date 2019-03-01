@@ -2028,7 +2028,7 @@ loc_B333:
 		mov	word_1E51E, dx
 
 loc_B34C:
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_B35A
 		mov	byte_1F4AC, 4
 		jmp	short loc_B35F
@@ -3287,7 +3287,7 @@ var_2		= word ptr -2
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	bombs, al
 		mov	al, es:[bx+mikoconfig_t.rank]
-		mov	byte_1E364, al
+		mov	_rank, al
 		mov	al, es:[bx+mikoconfig_t.start_power]
 		mov	power, al
 		cmp	power, 0
@@ -3416,9 +3416,9 @@ loc_C400:
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.continues_used], 3
 		jnb	loc_C4F5
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 4
+		cmp	ax, RANK_EXTRA
 		jge	loc_C4F5
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gCONTINUE?, TX_WHITE
 		push	0E500E1h
@@ -3740,10 +3740,10 @@ loc_C772:
 		cmp	si, 14h
 		jl	short loc_C76C
 		mov	byte_20276, 0Fh
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		mov	bx, ax
-		cmp	bx, 4
+		cmp	bx, RANK_EXTRA
 		ja	short loc_C7BC
 		add	bx, bx
 		jmp	cs:off_C7C0[bx]
@@ -6643,11 +6643,11 @@ loc_DBFE:
 		jl	loc_DB0D
 		cmp	dword_218A4, 0
 		jz	short loc_DC31
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jl	short loc_DC28
-		mov	cl, byte_1E364
+		mov	cl, _rank
 		add	cl, 0FFh
 		mov	eax, dword_218A4
 		shl	eax, cl
@@ -7214,30 +7214,30 @@ sub_E012	proc near
 		call	sub_DEAD
 		push	(57 shl 16) + 22
 		push	ds
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		shl	ax, 3
 		add	ax, offset glEASY
 		push	ax
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_E0C2
 		mov	ax, TX_GREEN
 		jmp	short loc_E0E1
 ; ---------------------------------------------------------------------------
 
 loc_E0C2:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_E0D0
 		mov	ax, TX_CYAN
 		jmp	short loc_E0E1
 ; ---------------------------------------------------------------------------
 
 loc_E0D0:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_E0DE
 		mov	ax, TX_MAGENTA
 		jmp	short loc_E0E1
@@ -9815,7 +9815,7 @@ var_4		= dword	ptr -4
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		imul	ax, 7D0h
 		push	ax
@@ -10468,34 +10468,34 @@ loc_1033F:
 		mov	word_21744, 1
 		mov	word_21746, 40h
 		mov	word_21748, 1
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_10361
 		mov	al, 0F6h
 		jmp	short loc_1038A
 ; ---------------------------------------------------------------------------
 
 loc_10361:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1036E
 		mov	al, 0
 		jmp	short loc_1038A
 ; ---------------------------------------------------------------------------
 
 loc_1036E:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1037B
 		mov	al, 0
 		jmp	short loc_1038A
 ; ---------------------------------------------------------------------------
 
 loc_1037B:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_10388
 		mov	al, 0Ch
 		jmp	short loc_1038A
@@ -10507,13 +10507,13 @@ loc_10388:
 loc_1038A:
 		mov	byte_2174A, al
 		mov	byte_21752, 0
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jz	short loc_103A4
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_103A9
 
 loc_103A4:
@@ -11004,7 +11004,7 @@ arg_0		= dword	ptr  4
 		cmp	word ptr es:[bx], 10h
 		jge	short loc_1075D
 		inc	byte_21753
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_10755
 		test	byte_21753, 1
 		jz	short loc_10755
@@ -11152,9 +11152,9 @@ loc_10835:
 		cmp	ax, [bp+var_4]
 		jle	short loc_1085F
 		sar	[bp+arg_0], 1
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1084F
 		add	[bp+arg_0], 8
 
@@ -11308,9 +11308,9 @@ loc_1096B:
 		cmp	ax, [bp+var_4]
 		jle	short loc_10995
 		sar	[bp+arg_0], 1
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_10985
 		add	[bp+arg_0], 8
 
@@ -12541,7 +12541,7 @@ loc_11381:
 		add	dl, dl
 		add	al, dl
 		mov	[si+5536h], al
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_113BD
 		mov	byte ptr [bp+var_3], 0Eh
 		jmp	short loc_113C1
@@ -13271,7 +13271,7 @@ sub_11877	endp
 sub_11997	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_119B7
 		mov	byte ptr word_2066E, 18h
 		mov	byte ptr word_2066E+1, 0
@@ -13610,7 +13610,7 @@ var_2		= word ptr -2
 		sub	sp, 2
 		cmp	word_20650, 18h
 		jl	short locret_11C88
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		mov	dx, ax
 		add	dx, dx
@@ -13918,7 +13918,7 @@ loc_11EBE:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_11F2B
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_11F2B
 		push	word_22D98
 		push	word_22D9A
@@ -17558,7 +17558,7 @@ sub_13ADE	proc far
 		sub	word_24E7E, RES_Y
 
 loc_13B4E:
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_13B70
 		mov	byte ptr word_2066E, 0Bh
 		mov	byte ptr word_2066E+1, 15h
@@ -18002,9 +18002,9 @@ var_1		= byte ptr -1
 		jge	short loc_13F80
 		test	byte ptr word_20650, 3
 		jnz	locret_13FE3
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jl	short loc_13F62
 		mov	al, byte ptr word_20650
 		mov	[bp+var_1], al
@@ -19035,7 +19035,7 @@ loc_147F3:
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		pop	dx
 		cmp	dx, ax
@@ -20313,7 +20313,7 @@ loc_15296:
 		mov	byte_252F6, 0
 		mov	byte_252F7, 0
 		mov	word_250FE, 0
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_152FF
 		mov	byte ptr word_2066E, 1Ah
 		mov	byte ptr word_2066E+1, 15h
@@ -24648,9 +24648,9 @@ loc_17864:
 		mov	bx, word_26C48
 		mov	eax, [bx+12h]
 		add	dword_218AC, eax
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1789D
 		mov	ax, [bx+4]
 		add	ax, word_26C4E
@@ -25598,7 +25598,7 @@ sub_17F27	endp
 sub_180AC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_180D1
 		mov	byte ptr word_2066E, 25h ; '%'
 		mov	byte ptr word_2066E+1, 17h
@@ -25886,7 +25886,7 @@ loc_1836D:
 		mov	word_20650, 107h
 
 loc_1838D:
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_183CC
 		mov	ax, word_20650
 		mov	bx, 10h
@@ -26544,7 +26544,7 @@ loc_189D0:
 loc_189DC:
 		cmp	word_20650, 64h	; 'd'
 		jle	short loc_18A19
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		mov	bx, 8
 		sub	bx, ax
@@ -26906,7 +26906,7 @@ loc_18CEE:
 		or	dx, dx
 		jnz	loc_18DA9
 		call	_snd_se_play c, 10
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_18D75
 		push	word_26C5A
 		push	word_26C62
@@ -27220,7 +27220,7 @@ loc_18FD3:
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx-6DE4h], ax
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		shl	ax, 4
 		mov	dx, 0B4h
@@ -27488,7 +27488,7 @@ loc_192CA:
 		call	sub_1078E
 
 loc_192FF:
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		or	ax, ax
 		jle	short loc_19338
@@ -28210,7 +28210,7 @@ sub_19949	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		imul	ax, 14h
 		mov	cx, ax
@@ -28987,7 +28987,7 @@ var_1		= byte ptr -1
 		or	dx, dx
 		jnz	short locret_1A14F
 		call	_snd_se_play c, 3
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1A12B
 		mov	al, 0Fh
 		jmp	short loc_1A12D
@@ -29055,7 +29055,7 @@ sub_1A151	endp
 sub_1A17E	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		add	ax, ax
 		mov	bx, 10h
@@ -30786,7 +30786,7 @@ sub_1B19D	endp
 sub_1B214	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_1B234
 		mov	byte ptr word_2066E, 17h
 		mov	byte ptr word_2066E+1, 11h
@@ -31418,7 +31418,7 @@ loc_1B762:
 		mov	al, byte ptr word_26D87
 		add	al, 0Dh
 		mov	byte ptr word_26D87, al
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		mov	dx, word_20650
 		and	dx, 1
@@ -31522,7 +31522,7 @@ loc_1B839:
 loc_1B845:
 		cmp	si, 4
 		jl	short loc_1B839
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_1B8B2
 		mov	si, 1
 		jmp	short loc_1B861
@@ -31543,7 +31543,7 @@ loc_1B861:
 loc_1B868:
 		cmp	word_20650, 1A4h
 		jge	short loc_1B88E
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_1B8B2
 		mov	si, 1
 		jmp	short loc_1B887
@@ -31581,7 +31581,7 @@ loc_1B8C5:
 		jnz	short loc_1B903
 		mov	word_2064E, 82h
 		mov	al, 18h
-		sub	al, byte_1E364
+		sub	al, _rank
 		mov	dl, byte ptr word_26D87+1
 		sub	dl, al
 		mov	byte ptr word_26D87+1, dl
@@ -32983,16 +32983,16 @@ loc_1C473:
 		mov	[bx+1Eh], ax
 		mov	ax, [bx+1Ah]
 		mov	[bp+var_4], ax
-		cmp	byte_1E364, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1C4CE
 		shl	[bp+var_4], 1
 		jmp	short loc_1C4DF
 ; ---------------------------------------------------------------------------
 
 loc_1C4CE:
-		cmp	byte_1E364, 2
+		cmp	_rank, RANK_HARD
 		jz	short loc_1C4DC
-		cmp	byte_1E364, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_1C4DF
 
 loc_1C4DC:
@@ -33265,7 +33265,7 @@ sub_1C6C7	proc near
 		push	si
 		pushd	[HUUHI_DAT]
 		call	file_ropen
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		imul	ax, 0B6h
 		movzx	eax, ax
@@ -33651,7 +33651,7 @@ loc_1C9C5:
 		jl	short loc_1C9AF
 		pushd	[HUUHI_DAT]
 		call	file_append
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		imul	ax, 0B6h
 		movzx	eax, ax
@@ -34093,7 +34093,7 @@ sub_1CD36	endp
 
 sub_1CD8E	proc far
 
-var_7		= byte ptr -7
+@@rank		= byte ptr -7
 var_6		= byte ptr -6
 
 		enter	8, 0
@@ -34104,13 +34104,13 @@ var_6		= byte ptr -6
 		push	offset unk_1EE02
 		mov	cx, 6
 		call	SCOPY@
-		mov	al, byte_1E364
-		mov	[bp+var_7], al
+		mov	al, _rank
+		mov	[bp+@@rank], al
 		les	bx, mikoconfig
 		mov	al, es:[bx+mikoconfig_t.shottype]
-		mov	byte_1E364, al
+		mov	_rank, al
 		call	sub_1C6C7
-		mov	al, byte_1E364
+		mov	al, _rank
 		cbw
 		add	ax, ax
 		lea	dx, [bp+var_6]
@@ -34119,8 +34119,8 @@ var_6		= byte ptr -6
 		mov	ax, ss:[bx]
 		mov	word_252FE, ax
 		call	sub_1C95D
-		mov	al, [bp+var_7]
-		mov	byte_1E364, al
+		mov	al, [bp+@@rank]
+		mov	_rank, al
 		leave
 		retf
 sub_1CD8E	endp
@@ -34132,7 +34132,7 @@ sub_1CD8E	endp
 
 sub_1CDD6	proc far
 
-var_5		= byte ptr -5
+@@rank		= byte ptr -5
 var_4		= byte ptr -4
 
 		enter	6, 0
@@ -34143,9 +34143,9 @@ var_4		= byte ptr -4
 		push	offset unk_1EE08
 		mov	cx, 3
 		call	SCOPY@
-		mov	al, byte_1E364
-		mov	[bp+var_5], al
-		mov	byte_1E364, 3
+		mov	al, _rank
+		mov	[bp+@@rank], al
+		mov	_rank, RANK_LUNATIC
 		call	sub_1C6C7
 		les	bx, mikoconfig
 		mov	al, es:[bx+mikoconfig_t.shottype]
@@ -34162,8 +34162,8 @@ loc_1CE0F:
 
 loc_1CE14:
 		call	near ptr sub_1C95D
-		mov	al, [bp+var_5]
-		mov	byte_1E364, al
+		mov	al, [bp+@@rank]
+		mov	_rank, al
 		leave
 		retf
 sub_1CDD6	endp
@@ -34300,7 +34300,7 @@ include th02/snd/se[data].asm
 		db 0E0h
 		db 0F0h
 		db 0F8h
-byte_1E364	db 1
+_rank	db RANK_NORMAL
 stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
 		db '<',0

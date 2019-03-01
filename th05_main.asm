@@ -628,7 +628,7 @@ loc_B112:
 		cmp	byte ptr es:[bx+1Fh], 5
 		jnb	short loc_B13E
 		mov	_playperf, 40
-		mov	byte_25FEB, 3
+		mov	_rank, RANK_LUNATIC
 		jmp	short loc_B156
 ; ---------------------------------------------------------------------------
 
@@ -643,7 +643,7 @@ loc_B145:
 		jnz	short loc_B15D
 
 loc_B151:
-		mov	byte_25FEB, 4
+		mov	_rank, RANK_EXTRA
 
 loc_B156:
 		mov	byte_25FF2, 1
@@ -653,17 +653,17 @@ loc_B156:
 loc_B15D:
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
-		mov	byte_25FEB, al
+		mov	_rank, al
 		mov	al, es:[bx+16h]
 		mov	byte_25FF2, al
 
 loc_B16F:
 		call	sub_10398
 		call	sub_E8FE
-		mov	al, byte_25FEB
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 4
+		cmp	bx, RANK_EXTRA
 		ja	loc_B222
 		add	bx, bx
 		jmp	cs:off_B225[bx]
@@ -1360,14 +1360,14 @@ sub_B827	proc near
 		mov	stage_id, al
 		cmp	stage_id, 6
 		jnz	short loc_B843
-		mov	byte_25FEB, 4
+		mov	_rank, RANK_EXTRA
 		jmp	short loc_B84E
 ; ---------------------------------------------------------------------------
 
 loc_B843:
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
-		mov	byte_25FEB, al
+		mov	_rank, al
 
 loc_B84E:
 		mov	word_25FF0, 0
@@ -6849,7 +6849,7 @@ sub_E752	endp
 
 
 sub_E758	proc far
-		mov	al, byte_25FEB
+		mov	al, _rank
 
 loc_E75B:
 		xor	ah, ah
@@ -6955,7 +6955,7 @@ loc_E7E7:
 		xor	ah, ah
 		mov	al, playchar
 		imul	ax, 5
-		add	al, byte_25FEB
+		add	al, _rank
 		imul	ax, 60h
 		mov	dx, ax
 		xor	cx, cx
@@ -6991,7 +6991,7 @@ sub_E813	proc near
 		xor	ah, ah
 		mov	al, playchar
 		imul	ax, 5
-		add	al, byte_25FEB
+		add	al, _rank
 		imul	ax, 60h
 		mov	dx, ax
 		xor	cx, cx
@@ -10195,26 +10195,26 @@ loc_10796:
 		call	sub_10625
 		push	(57 shl 16) + 23
 		push	ds
-		mov	al, byte_25FEB
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, offset glEASY
 		push	ax
-		cmp	byte_25FEB, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_10812
 		mov	ax, TX_GREEN
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_10812:
-		cmp	byte_25FEB, 1
+		cmp	_rank, RANK_NORMAL
 		jnz	short loc_1081E
 		mov	ax, TX_CYAN
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_1081E:
-		cmp	byte_25FEB, 2
+		cmp	_rank, RANK_HARD
 		jnz	short loc_1082A
 		mov	ax, TX_MAGENTA
 		jmp	short loc_1082D
@@ -14287,7 +14287,7 @@ loc_128AD:
 		call	sparks_add_random pascal, word ptr [si], word ptr [si+2], large (((8 shl 4) shl 16) or 1)
 
 loc_128CA:
-		cmp	byte_25FEB, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_128D8
 		cmp	frame_mod4, 0
 		jnz	short loc_128EA
@@ -19212,7 +19212,7 @@ loc_155C7:
 		mov	dl, 0FFh
 
 loc_155E0:
-		cmp	byte_25FEB, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_155E9
 		mov	dl, 0FFh
 
@@ -19334,7 +19334,7 @@ loc_1568E:
 
 loc_15694:
 		mov	byte ptr [si+22h], 1
-		cmp	byte_25FEB, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_1568E
 		inc	dl
 		jmp	short loc_1568E
@@ -20509,7 +20509,7 @@ loc_15F8F:
 		mov	al, es:[bx+6]
 		mov	[si+36h], al
 		mov	byte ptr [si+21h], 0
-		cmp	byte_25FEB, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_15FB7
 		mov	ax, 1
 		jmp	short loc_15FB9
@@ -21163,7 +21163,7 @@ loc_164BD:
 		call	sub_163DF
 
 loc_164C4:
-		mov	al, byte_25FEB
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -24209,7 +24209,7 @@ loc_17E78:
 		jnz	loc_17FB7
 		mov	byte_25FF8, 0
 		mov	di, 2Ah	; '*'
-		mov	al, byte_25FEB
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 3
 		add	di, ax
@@ -24241,7 +24241,7 @@ loc_17EC3:
 		mov	[bp+var_9], al
 		mov	[bp+var_4], 1
 		mov	[bp+var_6], 1
-		cmp	byte_25FEB, 4
+		cmp	_rank, RANK_EXTRA
 		jnz	short loc_17EE9
 		mov	ax, 640h
 		jmp	short loc_17EFA
@@ -30427,7 +30427,7 @@ sub_1B557	proc near
 		mov	byte_26000, 4
 		mov	byte_26001, 0Ah
 		mov	byte ptr word_25FFA+1, 32h ; '2'
-		mov	al, byte_25FEB
+		mov	al, _rank
 		add	al, 5
 		mov	byte ptr dword_26002, al
 		mov	byte ptr word_26006+1, 36h ; '6'
@@ -30889,7 +30889,7 @@ sub_1B973	proc near
 		mov	byte_26001, 3
 		mov	byte_2C976, 1
 		mov	byte ptr word_25FFA+1, 54h ; 'T'
-		mov	al, byte_25FEB
+		mov	al, _rank
 		add	al, al
 		add	al, 4
 		mov	byte ptr dword_26002, al
@@ -31353,7 +31353,7 @@ sub_1BDD0	proc near
 		mov	byte_2C976, 1
 		mov	byte_26001, 2
 		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	al, byte_25FEB
+		mov	al, _rank
 		add	al, 4
 		mov	byte ptr dword_26002+2,	al
 		mov	byte ptr dword_26002+3,	10h
@@ -31944,7 +31944,7 @@ var_2		= word ptr -2
 		mov	_laser_template.coords.LASER_width, 8
 		call	_randring2_next16
 		mov	[bp+var_2], ax
-		mov	al, byte_25FEB
+		mov	al, _rank
 		mov	ah, 0
 		add	ax, 5
 		mov	word_2CE3C, ax
@@ -40196,7 +40196,7 @@ word_25FE6	dw ?
 byte_25FE8	db ?
 byte_25FE9	db ?
 stage_id	db ?
-byte_25FEB	db ?
+_rank	db ?
 include th04/playperf[bss].asm
 playchar	db ?
 word_25FF0	dw ?

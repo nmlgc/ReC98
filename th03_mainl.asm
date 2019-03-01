@@ -5221,7 +5221,7 @@ var_2		= word ptr -2
 		call	sub_D197
 		push	16800C7h
 		push	2Fh ; '/'
-		mov	al, byte_10BD6
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -5397,7 +5397,7 @@ loc_C44B:
 		sar	ax, 1
 		mov	byte_10BD7, al
 		mov	al, es:[bx+0Bh]
-		mov	byte_10BD6, al
+		mov	_rank, al
 		mov	al, es:[bx+38h]
 		mov	byte_10BD8, al
 		mov	al, byte_10BD3
@@ -7104,7 +7104,7 @@ byte_10BD2	db ?
 byte_10BD3	db ?
 byte_10BD4	db ?
 		db ?
-byte_10BD6	db ?
+_rank	db ?
 byte_10BD7	db ?
 byte_10BD8	db ?
 		db    ?	;

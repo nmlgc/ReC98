@@ -149,7 +149,7 @@ loc_9F7A:
 		mov	byte_14021, al
 		les	bx, [bp+reiidenconfig]
 		mov	al, es:[bx+reiidenconfig_t.rank]
-		mov	byte_14022, al
+		mov	_rank, al
 		les	bx, [bp+reiidenconfig]
 		mov	dx, word ptr es:[bx+reiidenconfig_t.score_highest+2]
 		mov	ax, word ptr es:[bx+reiidenconfig_t.score_highest]
@@ -824,10 +824,10 @@ var_2		= word ptr -2
 		mov	word ptr [bp+var_12], 1AFh
 		mov	[bp+var_14], ds
 		mov	[bp+var_16], 1C0h
-		mov	al, byte_14022
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_A4F5
 		add	bx, bx
 		jmp	cs:off_A614[bx]
@@ -1031,10 +1031,10 @@ stream		= dword	ptr -4
 
 		enter	46h, 0
 		push	si
-		mov	al, byte_14022
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_A659
 		add	bx, bx
 		jmp	cs:off_A7C7[bx]
@@ -2876,10 +2876,10 @@ stream		= dword	ptr -4
 		push	offset aHiscore_0 ; "HISCORE"
 		mov	cx, 8
 		call	SCOPY@
-		mov	al, byte_14022
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_B45C
 		add	bx, bx
 		jmp	cs:off_B533[bx]
@@ -3149,7 +3149,7 @@ arg_6		= dword	ptr  0Ch
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		mov	al, byte_14022
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
 		lea	dx, [bp+var_D0]
@@ -4777,28 +4777,28 @@ loc_C369:
 		sub	si, 0Ah
 
 loc_C36C:
-		cmp	byte_14022, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_C378
 		add	si, 32h	; '2'
 		jmp	short loc_C39A
 ; ---------------------------------------------------------------------------
 
 loc_C378:
-		cmp	byte_14022, 2
+		cmp	_rank, RANK_HARD
 		jnz	short loc_C384
 		add	si, 1Eh
 		jmp	short loc_C39A
 ; ---------------------------------------------------------------------------
 
 loc_C384:
-		cmp	byte_14022, 1
+		cmp	_rank, RANK_NORMAL
 		jnz	short loc_C390
 		add	si, 0Ah
 		jmp	short loc_C39A
 ; ---------------------------------------------------------------------------
 
 loc_C390:
-		cmp	byte_14022, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_C39A
 		sub	si, 0Ah
 
@@ -4957,7 +4957,7 @@ var_10		= byte ptr -10h
 		push	1Eh
 		call	sub_C82D
 		pop	cx
-		mov	al, byte_14022
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
 		lea	dx, [bp+var_10]
@@ -10447,7 +10447,7 @@ word_13EEA	dw ?
 		dd    ?
 byte_14020	db ?
 byte_14021	db ?
-byte_14022	db ?
+_rank	db ?
 		db ?
 ; void (*font)(void)
 font		dd ?

@@ -560,7 +560,7 @@ loc_ADBB:
 		cmp	byte ptr es:[bx+3Eh], 0
 		jz	short loc_ADD7
 		mov	_playperf, 28
-		mov	byte_25688, 2
+		mov	_rank, RANK_HARD
 
 loc_ADD0:
 		mov	byte_266E0, 1
@@ -571,21 +571,21 @@ loc_ADD7:
 		mov	_playperf, 16
 		cmp	stage_id, 6
 		jnz	short loc_ADEA
-		mov	byte_25688, 4
+		mov	_rank, RANK_EXTRA
 		jmp	short loc_ADD0
 ; ---------------------------------------------------------------------------
 
 loc_ADEA:
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
-		mov	byte_25688, al
+		mov	_rank, al
 		mov	al, es:[bx+49h]
 		mov	byte_266E0, al
 
 loc_ADFC:
 		call	sub_EEB0
 		call	sub_12CC7
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
@@ -1181,18 +1181,18 @@ sub_B488	proc near
 		mov	stage_id, al
 		cmp	stage_id, 6
 		jnz	short loc_B4A4
-		mov	byte_25688, 4
+		mov	_rank, RANK_EXTRA
 		jmp	short loc_B4AF
 ; ---------------------------------------------------------------------------
 
 loc_B4A4:
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
-		mov	byte_25688, al
+		mov	_rank, al
 
 loc_B4AF:
 		les	bx, off_213DA
-		mov	al, byte_25688
+		mov	al, _rank
 		add	al, 30h	; '0'
 		mov	es:[bx+3], al
 		mov	word_266DE, 0
@@ -2717,7 +2717,7 @@ include th04/playperf.asm
 
 
 sub_C396	proc far
-		mov	al, byte_25688
+		mov	al, _rank
 		xor	ah, ah
 		add	ax, ax
 		mov	bx, 0Ah
@@ -8641,26 +8641,26 @@ loc_F2E8:
 		call	sub_F0A5
 		push	(57 shl 16) + 23
 		push	ds
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, offset glEASY
 		push	ax
-		cmp	byte_25688, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_F313
 		mov	ax, TX_GREEN
 		jmp	short loc_F32E
 ; ---------------------------------------------------------------------------
 
 loc_F313:
-		cmp	byte_25688, 1
+		cmp	_rank, RANK_NORMAL
 		jnz	short loc_F31F
 		mov	ax, TX_CYAN
 		jmp	short loc_F32E
 ; ---------------------------------------------------------------------------
 
 loc_F31F:
-		cmp	byte_25688, 2
+		cmp	_rank, RANK_HARD
 		jnz	short loc_F32B
 		mov	ax, TX_MAGENTA
 		jmp	short loc_F32E
@@ -15648,7 +15648,7 @@ sub_12AB7	proc near
 		push	ds
 		push	offset aGensou_scr_1 ; "GENSOU.SCR"
 		call	file_ropen
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		imul	ax, 0C4h
 		movzx	eax, ax
@@ -15695,7 +15695,7 @@ sub_12B1E	proc near
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		imul	ax, 0C4h
 		movzx	eax, ax
@@ -20164,7 +20164,7 @@ loc_1593A:
 		mov	[bp+var_4], 0FFh
 
 loc_15977:
-		cmp	byte_25688, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_15983
 		mov	[bp+var_4], 0FFh
 
@@ -20254,7 +20254,7 @@ loc_15A0F:
 loc_15A1E:
 		mov	byte ptr [si+28h], 1
 		mov	[bp+var_2], 1
-		cmp	byte_25688, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_15A32
 		mov	ax, 1
 		jmp	short loc_15A34
@@ -21139,7 +21139,7 @@ sub_160A5	proc near
 		mov	byte_266E2, 4
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EC, 26h	; '&'
-		mov	al, byte_25688
+		mov	al, _rank
 		inc	al
 		mov	byte_266EF, al
 		mov	byte_266EE, 40h
@@ -21173,7 +21173,7 @@ loc_160F4:
 		call	sub_1CFB5
 		mov	byte_266E2, 4
 		mov	byte_266EE, 40h
-		mov	al, byte_25688
+		mov	al, _rank
 		inc	al
 		mov	byte_266EF, al
 		mov	byte_25664, 1
@@ -24367,7 +24367,7 @@ loc_17D4C:
 		mov	al, [bp+arg_0]
 		mov	[si+23h], al
 		mov	byte ptr [si+24h], 0
-		cmp	byte_25688, 3
+		cmp	_rank, RANK_LUNATIC
 		jnz	short loc_17D6B
 		mov	ax, 1
 		jmp	short loc_17D6D
@@ -27656,7 +27656,7 @@ loc_198E6:
 loc_198F0:
 		cmp	frame_mod4, 0
 		jnz	loc_19989
-		cmp	byte_25688, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_19909
 		cmp	frame_mod8, 0
 		jz	loc_19989
@@ -27672,7 +27672,7 @@ loc_19909:
 		mov	byte_266EF, 1
 		cmp	_boss_hp, 700
 		jg	short loc_19942
-		cmp	byte_25688, 3
+		cmp	_rank, RANK_LUNATIC
 		jnb	short loc_1993D
 		mov	byte_266EF, 2
 		jmp	short loc_19942
@@ -30653,7 +30653,7 @@ loc_1B0E0:
 ; ---------------------------------------------------------------------------
 
 loc_1B0F0:
-		cmp	byte_25688, 2
+		cmp	_rank, RANK_HARD
 		jb	short loc_1B120
 		cmp	word_2671A, 96h
 		jge	short loc_1B120
@@ -30705,7 +30705,7 @@ loc_1B13C:
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 8
 		mov	byte_266EE, 90h
-		cmp	byte_25688, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_1B196
 		push	1
 		call	_randring2_next16_and
@@ -30731,7 +30731,7 @@ loc_1B196:
 ; ---------------------------------------------------------------------------
 
 loc_1B19D:
-		cmp	byte_25688, 2
+		cmp	_rank, RANK_HARD
 		jnb	short loc_1B1AF
 
 loc_1B1A4:
@@ -33680,7 +33680,7 @@ loc_1CAFC:
 		mov	al, _playperf
 		mov	ah, 0
 		add	di, ax
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 3
 		add	di, ax
@@ -33711,10 +33711,10 @@ loc_1CB44:
 		mov	[bp+var_9], al
 		mov	[bp+var_4], 1
 		mov	[bp+var_6], 1
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 4
+		cmp	bx, RANK_EXTRA
 		ja	short loc_1CB84
 		add	bx, bx
 		jmp	cs:off_1CC29[bx]
@@ -35370,10 +35370,10 @@ loc_1D66E:
 		call	sub_1D58F
 
 loc_1D675:
-		mov	al, byte_25688
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_1D6B5
 		add	bx, bx
 		jmp	cs:off_1D6B9[bx]
@@ -35574,7 +35574,7 @@ var_4		= dword	ptr -4
 		call	text_putsa pascal, (6 shl 16) + 8, ds, offset aPOWERX50_2, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 10, ds, offset aBONUS_DREAM_2, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 12, ds, offset aGRAZEX50_2, TX_WHITE
-		cmp	byte_25688, 4
+		cmp	_rank, RANK_EXTRA
 		jz	short loc_1D918
 		push	(6 shl 16) + 14
 		push	ds
@@ -35621,7 +35621,7 @@ loc_1D922:
 		push	0Ch
 		push	eax
 		call	sub_1D48E
-		cmp	byte_25688, 4
+		cmp	_rank, RANK_EXTRA
 		jz	short loc_1D9BD
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Bh]
@@ -36993,7 +36993,7 @@ loc_1E7B5:
 		jnz	short loc_1E801
 		cmp	byte_25689, 0
 		jnz	short loc_1E7F2
-		cmp	byte_25688, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1E801
 
 loc_1E7F2:
@@ -37925,7 +37925,7 @@ var_1		= byte ptr -1
 		add	ax, dx
 		mov	word ptr dword_266E4+2,	ax
 		mov	byte_266EC, 30h	; '0'
-		mov	al, byte_25688
+		mov	al, _rank
 		add	al, 3
 		mov	byte_266EF, al
 		mov	byte_266F0, 10h
@@ -42308,7 +42308,7 @@ word_25680	dw ?
 		dw ?
 		dw ?
 		dw ?
-byte_25688	db ?
+_rank	db ?
 byte_25689	db ?
 		dd    ?	;
 		db    ?	;

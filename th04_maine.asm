@@ -3151,7 +3151,7 @@ loc_BC71:
 		mov	al, es:[bx+0Fh]
 
 loc_BC79:
-		mov	byte_124D2, al
+		mov	_verdict_rank, al
 		push	0B00048h
 		push	10h
 		push	ds
@@ -3270,10 +3270,10 @@ loc_BDD4:
 		add	dword_124CE, eax
 
 loc_BE08:
-		mov	al, byte_124D2
+		mov	al, _verdict_rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 4
+		cmp	bx, RANK_EXTRA
 		ja	short loc_BE6F
 		add	bx, bx
 		jmp	cs:off_C0EE[bx]
@@ -3400,7 +3400,7 @@ loc_BF6F:
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+30h], 0FDh
 		jnb	short loc_BFA1
-		cmp	byte_124D2, 4
+		cmp	_verdict_rank, RANK_EXTRA
 		jz	short loc_BF96
 		mov	ebx, 2
 		mov	eax, dword_124CE
@@ -3803,7 +3803,7 @@ arg_0		= byte ptr  4
 		push	ds
 		push	offset aGensou_scr_1 ; "GENSOU.SCR"
 		call	file_ropen
-		mov	al, byte_125B7
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		imul	ax, 0C4h
 		movzx	eax, ax
@@ -3852,7 +3852,7 @@ sub_C316	proc near
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
-		mov	al, byte_125B7
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		imul	ax, 0C4h
 		movzx	eax, ax
@@ -4615,7 +4615,7 @@ loc_C87A:
 		mov	al, es:[bx+0Fh]
 
 loc_C882:
-		mov	byte_125B7, al
+		mov	_hiscore_rank, al
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 31h ; '1'
 		jnz	short loc_C895
@@ -4643,7 +4643,7 @@ loc_C897:
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+49h], 0
 		jnz	short loc_C8CB
-		cmp	byte_125B7, 4
+		cmp	_hiscore_rank, RANK_EXTRA
 		jnz	short loc_C8D9
 
 loc_C8CB:
@@ -4678,7 +4678,7 @@ loc_C909:
 		jz	short loc_C922
 		cmp	byte ptr es:[bx+30h], 0FDh
 		jz	short loc_C922
-		cmp	byte_125B7, 0
+		cmp	_hiscore_rank, RANK_EASY
 		jnz	short loc_C95E
 
 loc_C922:
@@ -7960,7 +7960,7 @@ fp_124C8	dw ?
 byte_124CC	db ?
 		db    ?	;
 dword_124CE	dd ?
-byte_124D2	db ?
+_verdict_rank	db ?
 unk_124D3	db    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -8031,7 +8031,7 @@ byte_125A0	db ?
 		dd    ?	;
 		db    ?	;
 byte_125B6	db ?
-byte_125B7	db ?
+_hiscore_rank	db ?
 word_125B8	dw ?
 
 		end

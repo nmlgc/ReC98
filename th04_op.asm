@@ -3352,7 +3352,7 @@ sub_C733	proc near
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
 		call	file_ropen
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		imul	ax, 0C4h
 		movzx	eax, ax
@@ -3730,14 +3730,14 @@ loc_CA5B:
 		push	9
 		call	sub_C8F5
 		push	1F00178h
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 0Ah
 		push	ax
 		call	super_put
 		push	2300178h
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 0Bh
@@ -3765,7 +3765,7 @@ sub_CA94	proc near
 		les	bx, _humaconfig
 		assume es:nothing
 		mov	al, es:[bx+0Fh]
-		mov	byte_1327B, al
+		mov	_rank, al
 		call	sub_C733
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 
@@ -3788,9 +3788,9 @@ loc_CAE4:
 		jnz	short loc_CB58
 		test	_input.lo, low INPUT_LEFT
 		jz	short loc_CB36
-		cmp	byte_1327B, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_CB36
-		dec	byte_1327B
+		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	sub_C733
@@ -3801,9 +3801,9 @@ loc_CAE4:
 loc_CB36:
 		test	_input.lo, low INPUT_RIGHT
 		jz	short loc_CAE4
-		cmp	byte_1327B, 4
+		cmp	_rank, RANK_EXTRA
 		jnb	short loc_CAE4
-		inc	byte_1327B
+		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	sub_C733
@@ -3846,7 +3846,7 @@ sub_CA94	endp
 sub_CBE3	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_1327B, 0
+		mov	_rank, RANK_EASY
 		jmp	loc_CC6F
 ; ---------------------------------------------------------------------------
 
@@ -3854,61 +3854,61 @@ loc_CBEE:
 		call	sub_C733
 		or	al, al
 		jnz	loc_CC78
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	dl, byte_131A0
 		mov	bx, ax
 		mov	[bx+3F3Ch], dl
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	dl, byte_13264
 		mov	bx, ax
 		mov	[bx+3F41h], dl
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3F3Ch], 3
 		jbe	short loc_CC2F
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3F3Ch], 0
 
 loc_CC2F:
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+3F41h], 3
 		jbe	short loc_CC49
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3F41h], 0
 
 loc_CC49:
-		cmp	byte_1327B, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_CC6B
-		mov	al, byte_1327B
+		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+3F3Ch]
-		mov	dl, byte_1327B
+		mov	dl, _rank
 		mov	dh, 0
 		mov	bx, dx
 		or	al, [bx+3F41h]
 		or	byte_13286, al
 
 loc_CC6B:
-		inc	byte_1327B
+		inc	_rank
 
 loc_CC6F:
-		cmp	byte_1327B, 5
+		cmp	_rank, RANK_COUNT
 		jb	loc_CBEE
 
 loc_CC78:
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
-		mov	byte_1327B, al
+		mov	_rank, al
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt
@@ -6587,7 +6587,7 @@ byte_13264	db ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-byte_1327B	db ?
+_rank	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;

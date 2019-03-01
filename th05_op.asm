@@ -3912,7 +3912,7 @@ arg_0		= word ptr  4
 		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 5
-		mov	dl, byte_14101
+		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
 		imul	ax, 60h
@@ -4258,14 +4258,14 @@ loc_CC27:
 		cmp	si, 4
 		jl	short loc_CC13
 		push	1F00178h
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 14h
 		push	ax
 		call	super_put
 		push	2300178h
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 15h
@@ -4293,7 +4293,7 @@ sub_CC5C	proc near
 		call	palette_black_out
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
-		mov	byte_14101, al
+		mov	_hiscore_rank, al
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 
 loc_CC9F:
@@ -4315,9 +4315,9 @@ loc_CCA9:
 		jnz	short loc_CD17
 		test	_input.lo, low INPUT_LEFT
 		jz	short loc_CCF8
-		cmp	byte_14101, 0
+		cmp	_hiscore_rank, RANK_EASY
 		jz	short loc_CCF8
-		dec	byte_14101
+		dec	_hiscore_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	sub_CBDC
@@ -4327,9 +4327,9 @@ loc_CCA9:
 loc_CCF8:
 		test	_input.lo, low INPUT_RIGHT
 		jz	short loc_CCA9
-		cmp	byte_14101, 4
+		cmp	_hiscore_rank, RANK_EXTRA
 		jnb	short loc_CCA9
-		inc	byte_14101
+		inc	_hiscore_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		jmp	short loc_CC9F
@@ -4378,7 +4378,7 @@ sub_CD94	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CDA1:
-		mov	byte_14101, 0
+		mov	_hiscore_rank, RANK_EASY
 		jmp	short loc_CE06
 ; ---------------------------------------------------------------------------
 
@@ -4389,41 +4389,41 @@ loc_CDA8:
 		jnz	short loc_CE0D
 		mov	bx, si
 		imul	bx, 5
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
 		mov	al, byte_1409E
 		mov	[bx+5122h], al
 		mov	bx, si
 		imul	bx, 5
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
 		cmp	byte ptr [bx+5122h], 80h
 		jz	short loc_CDE7
 		mov	bx, si
 		imul	bx, 5
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
 		mov	byte ptr [bx+5122h], 0
 
 loc_CDE7:
-		cmp	byte_14101, 4
+		cmp	_hiscore_rank, RANK_EXTRA
 		jnb	short loc_CE02
 		mov	bx, si
 		imul	bx, 5
-		mov	al, byte_14101
+		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
 		mov	al, [bx+5122h]
 		or	byte_14116, al
 
 loc_CE02:
-		inc	byte_14101
+		inc	_hiscore_rank
 
 loc_CE06:
-		cmp	byte_14101, 5
+		cmp	_hiscore_rank, RANK_COUNT
 		jb	short loc_CDA8
 
 loc_CE0D:
@@ -4434,7 +4434,7 @@ loc_CE0E:
 		jl	short loc_CDA1
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
-		mov	byte_14101, al
+		mov	_hiscore_rank, al
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt
@@ -4674,7 +4674,7 @@ loc_CF8C:
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		imul	ax, 5
-		mov	dl, byte_1411A
+		mov	dl, _rank
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -4727,7 +4727,7 @@ loc_D054:
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		imul	ax, 5
-		mov	dl, byte_1411A
+		mov	dl, _rank
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -4842,7 +4842,7 @@ loc_D146:
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_D18A
-		mov	byte_1411A, 4
+		mov	_rank, RANK_EXTRA
 		mov	byte ptr word_14118, 0FFh
 		mov	[bp+var_4], 0
 		jmp	short loc_D182
@@ -4881,7 +4881,7 @@ loc_D19C:
 		jl	short loc_D191
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
-		mov	byte_1411A, al
+		mov	_rank, al
 		mov	byte ptr word_14118, 0
 
 loc_D1B2:
@@ -7296,7 +7296,7 @@ byte_140A2	db ?
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-byte_14101	db ?
+_hiscore_rank	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -7305,7 +7305,7 @@ byte_14101	db ?
 byte_14116	db ?
 		db ?
 word_14118	dw ?
-byte_1411A	db ?
+_rank	db ?
 		dd    ?	;
 byte_1411F	db ?
 byte_14120	db ?

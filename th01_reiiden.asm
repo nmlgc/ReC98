@@ -15000,7 +15000,7 @@ var_2		= word ptr -2
 		mov	al, _rank
 		cbw
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_139BC
 		add	bx, bx
 		jmp	cs:off_13A75[bx]
@@ -15155,7 +15155,7 @@ s1		= byte ptr -32h
 		mov	al, _rank
 		cbw
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_13AB7
 		add	bx, bx
 		jmp	cs:off_13BA2[bx]
@@ -16750,7 +16750,7 @@ stream		= dword	ptr -4
 		mov	al, _rank
 		cbw
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	short loc_1473E
 		add	bx, bx
 		jmp	cs:off_14806[bx]
@@ -27099,7 +27099,7 @@ arg_0		= word ptr  6
 		mov	byte_34A59, 0
 		mov	byte_34A57, 0
 		mov	byte_39DB3, 40h
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_19E93
 		mov	al, 0Fh
 		jmp	short loc_19EBC
@@ -27108,7 +27108,7 @@ arg_0		= word ptr  6
 loc_19E93:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_19EA0
 		mov	al, 0Ch
 		jmp	short loc_19EBC
@@ -27117,7 +27117,7 @@ loc_19E93:
 loc_19EA0:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_19EAD
 		mov	al, 0Ah
 		jmp	short loc_19EBC
@@ -27126,7 +27126,7 @@ loc_19EA0:
 loc_19EAD:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_19EBA
 		mov	al, 8
 		jmp	short loc_19EBC
@@ -29236,7 +29236,7 @@ include th01_reiiden_2.inc
 
 	.data
 
-_rank	db 1
+_rank	db RANK_NORMAL
 byte_34A31	db 1
 _bombs	db 1
 unk_34A33	db    2
