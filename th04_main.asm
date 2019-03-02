@@ -5152,225 +5152,8 @@ loc_D888:
 		retn
 sub_D7EE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D88C	proc near
-
-var_7		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		call	_grcg_setmode_rmw_1
-		mov	si, 4298h
-		mov	[bp+var_6], 0
-		jmp	loc_D943
-; ---------------------------------------------------------------------------
-
-loc_D8A5:
-		cmp	byte ptr [si], 0
-		jz	loc_D93D
-		xor	di, di
-		mov	[bp+var_7], 0
-		jmp	short loc_D920
-; ---------------------------------------------------------------------------
-
-loc_D8B4:
-		push	word ptr [si+2]
-		push	word ptr [si+6]
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_CosTable8[bx]
-		call	vector1_at
-		mov	[bp+var_2], ax
-		push	word ptr [si+4]
-		push	word ptr [si+8]
-		mov	al, [si+0Fh]
-		add	al, [bp+var_7]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	[bp+var_4], ax
-		sar	ax, 4
-		add	ax, 8
-		mov	dx, ax
-		mov	ax, [bp+var_2]
-		sar	ax, 4
-		add	ax, 18h
-		cmp	ax, 10h
-		jbe	short loc_D917
-		cmp	ax, 1A0h
-		jnb	short loc_D917
-		or	dx, dx
-		jbe	short loc_D917
-		cmp	dx, 180h
-		jnb	short loc_D917
-		push	44h ; 'D'
-		call	z_super_roll_put_tiny
-
-loc_D917:
-		inc	di
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-
-loc_D920:
-		cmp	di, 40h
-		jl	short loc_D8B4
-		mov	ax, [si+0Ah]
-		add	[si+6],	ax
-		mov	ax, [si+0Ch]
-		add	[si+8],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 20h ; ' '
-		jb	short loc_D93D
-		mov	byte ptr [si], 0
-
-loc_D93D:
-		inc	[bp+var_6]
-		add	si, 10h
-
-loc_D943:
-		cmp	[bp+var_6], 2
-		jl	loc_D8A5
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D88C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D955	proc near
-
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, 42B8h
-		cmp	byte ptr [si], 0
-		jz	loc_DA45
-		mov	[bp+var_2], 0
-		mov	[bp+var_5], 0
-		jmp	short loc_D9E1
-; ---------------------------------------------------------------------------
-
-loc_D970:
-		push	word ptr [si+2]
-		push	word ptr [si+6]
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	word ptr [bx+566h]
-		call	vector1_at
-		mov	di, ax
-		sar	ax, 4
-		mov	di, ax
-		push	word ptr [si+4]
-		push	word ptr [si+8]
-		mov	al, [si+0Fh]
-		add	al, [bp+var_5]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	[bp+var_4], ax
-		sar	ax, 4
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
-		or	di, di
-		jl	short loc_D9D6
-		cmp	di, 180h
-		jg	short loc_D9D6
-		cmp	[bp+var_4], 0
-		jl	short loc_D9D6
-		cmp	[bp+var_4], 150h
-		jg	short loc_D9D6
-		push	di
-		push	ax
-		push	3
-		call	super_put
-
-loc_D9D6:
-		inc	[bp+var_2]
-		mov	al, [bp+var_5]
-		add	al, 10h
-		mov	[bp+var_5], al
-
-loc_D9E1:
-		cmp	[bp+var_2], 10h
-		jl	short loc_D970
-		mov	ax, [si+0Ah]
-		add	[si+6],	ax
-		mov	ax, [si+0Ch]
-		add	[si+8],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 20h ; ' '
-		jb	short loc_D9FF
-		mov	byte ptr [si], 0
-
-loc_D9FF:
-		inc	word_22C18
-		cmp	word_22C18, 8
-		jge	short loc_DA19
-		test	byte ptr word_22C18, 1
-		jz	short loc_DA19
-		mov	PaletteTone, 96h
-		jmp	short loc_DA36
-; ---------------------------------------------------------------------------
-
-loc_DA19:
-		cmp	word_22C18, 8
-		jl	short loc_DA3D
-		cmp	word_22C18, 10h
-		jge	short loc_DA3D
-		mov	ax, word_22C18
-		imul	ax, 6
-		mov	dx, 0C4h
-		sub	dx, ax
-		mov	PaletteTone, dx
-
-loc_DA36:
-		mov	_palette_changed, 1
-		jmp	short loc_DA4B
-; ---------------------------------------------------------------------------
-
-loc_DA3D:
-		mov	PaletteTone, 64h	; 'd'
-		jmp	short loc_DA36
-; ---------------------------------------------------------------------------
-
-loc_DA45:
-		mov	word_22C18, 0
-
-loc_DA4B:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D955	endp
+include th04/boss/explosions_small.asm
+include th04/boss/explosions_big.asm
 
 ; ---------------------------------------------------------------------------
 
@@ -7499,8 +7282,8 @@ loc_EA55:
 		GRCG_OFF_CLOBBERING dx
 
 loc_EA5B:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		cmp	byte_26719, 0FFh
 		jnb	short loc_EA6B
 		call	sub_E2C3
@@ -7979,8 +7762,8 @@ loc_EDC3:
 		call	super_large_put
 
 loc_EDD7:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -13003,8 +12786,8 @@ loc_11629:
 		call	super_large_put
 
 loc_1163D:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -13415,8 +13198,8 @@ loc_1193A:
 		call	super_large_put
 
 loc_11961:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -13554,8 +13337,8 @@ loc_11A69:
 		call	super_large_put
 
 loc_11A90:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -13924,8 +13707,8 @@ loc_11D7A:
 		mov	byte_25A1E, 0
 
 loc_11D86:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		call	sub_E2C3
 		call	sub_11B44
 
@@ -14065,8 +13848,8 @@ loc_11E71:
 		call	super_put
 
 loc_11EC1:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -16271,8 +16054,8 @@ loc_12F2E:
 		call	super_large_put
 
 loc_12F55:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -16420,8 +16203,8 @@ loc_1306D:
 		call	super_zoom
 
 loc_13083:
-		call	sub_D88C
-		call	sub_D955
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		call	sub_E2C3
 		cmp	byte_26719, 5
 		jnz	short loc_130E9
@@ -20553,150 +20336,9 @@ off_15B4D	dw offset loc_159A4
 		dw offset loc_15A81
 		dw offset loc_15AD2
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15C6D	proc far
-		push	bp
-		mov	bp, sp
-		mov	byte_255D8, 0
-		mov	byte_255E8, 0
-		pop	bp
-		retf
-sub_15C6D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15C7C	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 4298h
-		cmp	byte ptr [si], 0
-		jz	short loc_15C8B
-		add	si, 10h
-
-loc_15C8B:
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, _boss_pos.cur.x
-		mov	[si+2],	ax
-		mov	ax, _boss_pos.cur.y
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 8
-		mov	word ptr [si+8], 8
-		mov	word ptr [si+0Ah], 0B0h	; '°'
-		mov	word ptr [si+0Ch], 0B0h	; '°'
-		mov	byte ptr [si+0Fh], 0
-		mov	bx, [bp+arg_0]
-		dec	bx
-		cmp	bx, 3
-		ja	short loc_15CE8
-		add	bx, bx
-		jmp	cs:off_15CF4[bx]
-
-loc_15CC6:
-		mov	byte ptr [si+0Fh], 20h ; ' '
-		jmp	short loc_15CE8
-; ---------------------------------------------------------------------------
-
-loc_15CCC:
-		mov	byte ptr [si+0Fh], 0E0h
-		jmp	short loc_15CE8
-; ---------------------------------------------------------------------------
-
-loc_15CD2:
-		mov	word ptr [si+0Ah], 0D0h
-		mov	word ptr [si+0Ch], 70h ; 'p'
-		jmp	short loc_15CE8
-; ---------------------------------------------------------------------------
-
-loc_15CDE:
-		mov	word ptr [si+0Ah], 70h ; 'p'
-		mov	word ptr [si+0Ch], 0D0h
-
-loc_15CE8:
-		call	snd_se_play pascal, 15
-		pop	si
-		pop	bp
-		retn	2
-sub_15C7C	endp
-
-; ---------------------------------------------------------------------------
-off_15CF4	dw offset loc_15CC6
-		dw offset loc_15CCC
-		dw offset loc_15CD2
-		dw offset loc_15CDE
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15CFC	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 42B8h
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, _boss_pos.cur.x
-		mov	[si+2],	ax
-		mov	ax, _boss_pos.cur.y
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 8
-		mov	word ptr [si+8], 8
-		mov	word ptr [si+0Ah], 0B0h	; '°'
-		mov	word ptr [si+0Ch], 0B0h	; '°'
-		mov	byte ptr [si+0Fh], 0
-		mov	bx, [bp+arg_0]
-		dec	bx
-		cmp	bx, 3
-		ja	short loc_15D60
-		add	bx, bx
-		jmp	cs:off_15D6C[bx]
-
-loc_15D3E:
-		mov	byte ptr [si+0Fh], 20h ; ' '
-		jmp	short loc_15D60
-; ---------------------------------------------------------------------------
-
-loc_15D44:
-		mov	byte ptr [si+0Fh], 0E0h
-		jmp	short loc_15D60
-; ---------------------------------------------------------------------------
-
-loc_15D4A:
-		mov	word ptr [si+0Ah], 0D0h
-		mov	word ptr [si+0Ch], 70h ; 'p'
-		jmp	short loc_15D60
-; ---------------------------------------------------------------------------
-
-loc_15D56:
-		mov	word ptr [si+0Ah], 70h ; 'p'
-		mov	word ptr [si+0Ch], 0D0h
-
-loc_15D60:
-		call	snd_se_play pascal, 15
-		pop	si
-		pop	bp
-		retn	2
-sub_15CFC	endp
-
-; ---------------------------------------------------------------------------
-off_15D6C	dw offset loc_15D3E
-		dw offset loc_15D44
-		dw offset loc_15D4A
-		dw offset loc_15D56
+include th04/boss/explosions_reset.asm
+include th04/boss/explode_small.asm
+include th04/boss/explode_big.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21781,8 +21423,7 @@ loc_16742:
 		mov	_bullet_clear_time, 20
 
 loc_1674E:
-		push	0
-		call	sub_15C7C
+		call	boss_explode_small pascal, 0
 		inc	byte_26719
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -21825,8 +21466,7 @@ loc_167AF:
 		mov	_bullet_clear_time, 20
 
 loc_167BB:
-		push	1
-		call	sub_15C7C
+		call	boss_explode_small pascal, 1
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671F, 0
@@ -21907,8 +21547,7 @@ loc_1685D:
 		mov	_bullet_clear_time, 20
 
 loc_16869:
-		push	0
-		call	sub_15C7C
+		call	boss_explode_small pascal, 0
 		inc	byte_26719
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -21938,8 +21577,7 @@ loc_168A8:
 		call	sub_1E67C
 		cmp	word_2671A, 120h
 		jl	loc_169B8
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_168C9
 		mov	_bullet_clear_time, 20
@@ -21981,8 +21619,7 @@ loc_1691A:
 		jl	loc_169B8
 
 loc_1692E:
-		push	1
-		call	sub_15C7C
+		call	boss_explode_small pascal, 1
 		inc	byte_26719
 		cmp	word_2671A, 3E8h
 		jge	short loc_16946
@@ -22002,14 +21639,12 @@ loc_16953:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_16963
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_16963:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_169B8
-		push	2
-		call	sub_15CFC
+		call	boss_explode_big pascal, 2
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -24163,8 +23798,7 @@ loc_17B98:
 		mov	byte_2671F, 1
 
 loc_17BA4:
-		push	3
-		call	sub_15C7C
+		call	boss_explode_small pascal, 3
 		inc	byte_26719
 		mov	word_2671A, 0
 
@@ -24222,8 +23856,7 @@ loc_17C30:
 		call	sub_19FD8
 		mov	al, byte_25674
 		mov	ah, 0
-		push	ax
-		call	sub_15C7C
+		call	boss_explode_small pascal, ax
 		inc	byte_25674
 		jmp	short loc_17CA4
 ; ---------------------------------------------------------------------------
@@ -24232,14 +23865,12 @@ loc_17C44:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_17C54
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_17C54:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_17CA4
-		push	2
-		call	sub_15CFC
+		call	boss_explode_big pascal, 2
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -25530,13 +25161,12 @@ sub_18655	endp
 sub_18684	proc near
 
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@type		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		call	sub_1E692
-		push	[bp+arg_2]
-		call	sub_15C7C
+		call	boss_explode_small pascal, [bp+@@type]
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
@@ -25784,8 +25414,7 @@ loc_188BD:
 		call	sub_18556
 		cmp	word_2671A, 0
 		jnz	loc_189A1
-		push	3
-		call	sub_15C7C
+		call	boss_explode_small pascal, 3
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	_boss_sprite_cur, 129
@@ -25814,8 +25443,7 @@ loc_18904:
 		jl	loc_189A1
 
 loc_18915:
-		push	1
-		call	sub_15C7C
+		call	boss_explode_small pascal, 1
 		inc	byte_26719
 		cmp	word_2671A, 0FA0h
 		jge	short loc_1892D
@@ -25838,14 +25466,12 @@ loc_1894A:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1895A
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_1895A:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_189A1
-		push	2
-		call	sub_15CFC
+		call	boss_explode_big pascal, 2
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -27178,8 +26804,7 @@ loc_194C1:
 loc_194D2:
 		inc	byte_26719
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 		cmp	word_2671A, 258h
 		jge	short loc_194FB
 		mov	byte_2671F, 1
@@ -27225,14 +26850,12 @@ loc_19548:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1955E
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_1955E:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_195A9
-		push	0
-		call	sub_15CFC
+		call	boss_explode_big pascal, 0
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -28139,8 +27762,7 @@ loc_19DBE:
 		mov	byte_2671F, 0
 
 loc_19DC3:
-		push	3
-		call	sub_15C7C
+		call	boss_explode_small pascal, 3
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
@@ -28178,14 +27800,12 @@ loc_19E27:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_19E3D
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_19E3D:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_19E8D
-		push	0
-		call	sub_15CFC
+		call	boss_explode_big pascal, 0
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -31024,7 +30644,7 @@ sub_1B3E2	endp
 sub_1B42F	proc near
 
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@type		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -31033,8 +30653,7 @@ arg_2		= word ptr  6
 		mov	_bullet_clear_time, 20
 
 loc_1B43E:
-		push	[bp+arg_2]
-		call	sub_15C7C
+		call	boss_explode_small pascal, [bp+@@type]
 		inc	byte_26719
 		mov	word_2671A, 0
 		mov	byte_2671F, 0
@@ -31255,8 +30874,7 @@ loc_1B652:
 		jl	loc_1B8EA
 		cmp	_boss_pos.cur.y, (80 shl 4)
 		jnz	loc_1B8EA
-		push	2
-		call	sub_15C7C
+		call	boss_explode_small pascal, 2
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1B681
 		mov	_bullet_clear_time, 20
@@ -31481,8 +31099,7 @@ loc_1B84B:
 		jl	loc_1B8EA
 
 loc_1B85F:
-		push	1
-		call	sub_15C7C
+		call	boss_explode_small pascal, 1
 		inc	byte_26719
 		cmp	word_2671A, 9C4h
 		jge	short loc_1B877
@@ -31505,14 +31122,12 @@ loc_1B894:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1B8A4
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_1B8A4:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_1B8EA
-		push	2
-		call	sub_15CFC
+		call	boss_explode_big pascal, 2
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -32905,8 +32520,7 @@ loc_1C4D3:
 loc_1C4EB:
 		mov	al, byte_25A24
 		mov	ah, 0
-		push	ax
-		call	sub_15C7C
+		call	boss_explode_small pascal, ax
 		mov	byte_2671D, 0FFh
 		inc	byte_25A24
 		mov	al, byte_25A24
@@ -32982,8 +32596,7 @@ loc_1C585:
 loc_1C591:
 		inc	byte_26719
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 		mov	word_2671A, 0
 
 loc_1C5B1:
@@ -33021,8 +32634,7 @@ loc_1C600:
 		call	sub_19FD8
 		mov	al, byte_25A24
 		mov	ah, 0
-		push	ax
-		call	sub_15C7C
+		call	boss_explode_small pascal, ax
 		mov	byte_2671D, 0FFh
 		mov	word_2671A, 0
 		inc	byte_25A24
@@ -33033,14 +32645,12 @@ loc_1C61F:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1C62F
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_1C62F:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_1C67A
-		push	3
-		call	sub_15CFC
+		call	boss_explode_big pascal, 3
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -36339,7 +35949,7 @@ sub_1DF61	proc near
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_pos.velocity.y, 0
 		mov	byte_2671C, 0
-		nopcall	sub_15C6D
+		nopcall	explosions_small_reset
 		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
@@ -36884,8 +36494,7 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_2]
 		cmp	si, 0FFFFh
 		jz	short loc_1E719
-		push	si
-		call	sub_15C7C
+		call	boss_explode_small pascal, si
 		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1E719
 		cmp	_bullet_clear_time, 20
@@ -38822,8 +38431,7 @@ loc_1F802:
 		jl	loc_1F8A5
 
 loc_1F822:
-		push	3
-		call	sub_15C7C
+		call	boss_explode_small pascal, 3
 		inc	byte_26719
 		mov	byte_2671F, 0
 		cmp	word_2671A, 3E8h
@@ -38839,14 +38447,12 @@ loc_1F845:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_1F855
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_1F855:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_1F8A5
-		push	2
-		call	sub_15CFC
+		call	boss_explode_big pascal, 2
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -40480,8 +40086,7 @@ loc_20619:
 		jl	loc_206B6
 
 loc_2062A:
-		push	1
-		call	sub_15C7C
+		call	boss_explode_small pascal, 1
 		inc	byte_26719
 		cmp	word_2671A, 1388h
 		jge	short loc_20642
@@ -40504,14 +40109,12 @@ loc_2065F:
 		inc	word_2671A
 		cmp	word_2671A, 10h
 		jnz	short loc_2066F
-		push	4
-		call	sub_15C7C
+		call	boss_explode_small pascal, 4
 
 loc_2066F:
 		cmp	word_2671A, 20h	; ' '
 		jnz	short loc_206B6
-		push	3
-		call	sub_15CFC
+		call	boss_explode_big pascal, 3
 		mov	byte_26719, 0FEh
 		mov	al, byte_2671F
 		mov	_bullet_clear_trigger, al
@@ -41104,7 +40707,7 @@ aBss8_cd2	db 'bss8.cd2',0
 aBb0_cdg	db 'bb0.cdg',0
 aBb1_cdg	db 'bb1.cdg',0
 		db    0
-word_22C18	dw 0
+include th04/boss/explosions_big[data].asm
 byte_22C1A	db 0
 		db    0
 include th04/strings/gameover[data].asm
@@ -42218,24 +41821,7 @@ word_255D0	dw ?
 word_255D2	dw ?
 word_255D4	dw ?
 word_255D6	dw ?
-byte_255D8	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_255E8	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th04/boss/explosions[bss].asm
 word_25608	dw ?
 byte_2560A	db ?
 		db ?

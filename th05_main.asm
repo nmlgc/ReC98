@@ -8318,226 +8318,8 @@ loc_F518:
 		retn
 sub_F4DD	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F520	proc near
-
-var_7		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		call	_grcg_setmode_rmw_1
-		mov	si, 0BF5Ch
-		mov	[bp+var_6], 0
-		jmp	loc_F5D8
-; ---------------------------------------------------------------------------
-
-loc_F539:
-		cmp	byte ptr [si], 0
-		jz	loc_F5D2
-		xor	di, di
-		mov	[bp+var_7], 0
-		jmp	short loc_F5B5
-; ---------------------------------------------------------------------------
-
-loc_F548:
-		push	word ptr [si+2]
-		push	word ptr [si+6]
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_CosTable8[bx]
-		call	vector1_at
-		mov	[bp+var_2], ax
-		push	word ptr [si+4]
-		push	word ptr [si+8]
-		mov	al, [si+0Fh]
-		add	al, [bp+var_7]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	[bp+var_4], ax
-		sar	ax, 4
-		add	ax, 8
-		mov	dx, ax
-		mov	ax, [bp+var_2]
-		sar	ax, 4
-		add	ax, 18h
-		cmp	ax, 10h
-		jbe	short loc_F5AC
-		cmp	ax, 1A0h
-		jnb	short loc_F5AC
-		or	dx, dx
-		jbe	short loc_F5AC
-		cmp	dx, 180h
-		jnb	short loc_F5AC
-		push	0A4h
-		call	z_super_roll_put_tiny
-
-loc_F5AC:
-		inc	di
-		mov	al, [bp+var_7]
-		add	al, 4
-		mov	[bp+var_7], al
-
-loc_F5B5:
-		cmp	di, 40h
-		jl	short loc_F548
-		mov	ax, [si+0Ah]
-		add	[si+6],	ax
-		mov	ax, [si+0Ch]
-		add	[si+8],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 20h ; ' '
-		jb	short loc_F5D2
-		mov	byte ptr [si], 0
-
-loc_F5D2:
-		inc	[bp+var_6]
-		add	si, 10h
-
-loc_F5D8:
-		cmp	[bp+var_6], 2
-		jl	loc_F539
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		leave
-		retn
-sub_F520	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F5EA	proc near
-
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, 0BF7Ch
-		cmp	byte ptr [si], 0
-		jz	loc_F6DA
-		mov	[bp+var_2], 0
-		mov	[bp+var_5], 0
-		jmp	short loc_F676
-; ---------------------------------------------------------------------------
-
-loc_F605:
-		push	word ptr [si+2]
-		push	word ptr [si+6]
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_CosTable8[bx]
-		call	vector1_at
-		mov	di, ax
-		sar	ax, 4
-		mov	di, ax
-		push	word ptr [si+4]
-		push	word ptr [si+8]
-		mov	al, [si+0Fh]
-		add	al, [bp+var_5]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	[bp+var_4], ax
-		sar	ax, 4
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
-		or	di, di
-		jl	short loc_F66B
-		cmp	di, 180h
-		jg	short loc_F66B
-		cmp	[bp+var_4], 0
-		jl	short loc_F66B
-		cmp	[bp+var_4], 150h
-		jg	short loc_F66B
-		push	di
-		push	ax
-		push	3
-		call	super_put
-
-loc_F66B:
-		inc	[bp+var_2]
-		mov	al, [bp+var_5]
-		add	al, 10h
-		mov	[bp+var_5], al
-
-loc_F676:
-		cmp	[bp+var_2], 10h
-		jl	short loc_F605
-		mov	ax, [si+0Ah]
-		add	[si+6],	ax
-		mov	ax, [si+0Ch]
-		add	[si+8],	ax
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+1], 20h ; ' '
-		jb	short loc_F694
-		mov	byte ptr [si], 0
-
-loc_F694:
-		inc	word_22272
-		cmp	word_22272, 8
-		jge	short loc_F6AE
-		test	byte ptr word_22272, 1
-		jz	short loc_F6AE
-		mov	PaletteTone, 96h
-		jmp	short loc_F6CB
-; ---------------------------------------------------------------------------
-
-loc_F6AE:
-		cmp	word_22272, 8
-		jl	short loc_F6D2
-		cmp	word_22272, 10h
-		jge	short loc_F6D2
-		mov	ax, word_22272
-		imul	ax, 6
-		mov	dx, 0C4h
-		sub	dx, ax
-		mov	PaletteTone, dx
-
-loc_F6CB:
-		mov	_palette_changed, 1
-		jmp	short loc_F6E0
-; ---------------------------------------------------------------------------
-
-loc_F6D2:
-		mov	PaletteTone, 64h	; 'd'
-		jmp	short loc_F6CB
-; ---------------------------------------------------------------------------
-
-loc_F6DA:
-		mov	word_22272, 0
-
-loc_F6E0:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_F5EA	endp
-
+include th04/boss/explosions_small.asm
+include th04/boss/explosions_big.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10394,8 +10176,8 @@ loc_10989:
 		call	super_put_1plane
 
 loc_10999:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -10539,8 +10321,8 @@ loc_10A84:
 		call	super_put_1plane
 
 loc_10A94:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -10869,8 +10651,8 @@ loc_10D19:
 		call	sub_10B1D
 
 loc_10D1C:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -11026,8 +10808,8 @@ loc_10E19:
 		call	sub_10D26
 
 loc_10E1F:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		mov	byte_26348, 0
 		mov	byte_26360, 0
 		pop	di
@@ -11230,8 +11012,8 @@ loc_10F76:
 		call	super_put_1plane
 
 loc_10F86:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -11363,8 +11145,8 @@ loc_11064:
 		mov	byte_26348, 0
 
 loc_11069:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -11522,8 +11304,8 @@ loc_11175:
 		mov	byte_26348, 0
 
 loc_1117A:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -12368,8 +12150,8 @@ loc_1183A:
 		call	super_put
 
 loc_11862:
-		call	sub_F520
-		call	sub_F5EA
+		call	explosions_small_update_and_render
+		call	explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -18305,7 +18087,7 @@ sub_144CB	proc near
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_pos.velocity.y, 0
 		mov	byte_26348, 0
-		call	sub_162BD
+		call	explosions_small_reset
 		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
@@ -20839,169 +20621,11 @@ loc_162B9:
 		retf
 sub_1607D	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_162BD	proc far
-		push	bp
-		mov	bp, sp
-		mov	byte_2C93C, 0
-		mov	byte_2C94C, 0
-		pop	bp
-		retf
-sub_162BD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-add_explode_effect_function	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 0BF5Ch
-		cmp	byte ptr [si], 0
-		jz	short loc_162DB
-		add	si, 10h
-
-loc_162DB:
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, _boss_pos.cur.x
-		mov	[si+2],	ax
-		mov	ax, _boss_pos.cur.y
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 8
-		mov	word ptr [si+8], 8
-		mov	word ptr [si+0Ah], 0B0h	; '°'
-		mov	word ptr [si+0Ch], 0B0h	; '°'
-		mov	byte ptr [si+0Fh], 0
-		mov	bx, [bp+arg_0]
-		dec	bx
-		cmp	bx, 3
-		ja	short loc_16338
-		add	bx, bx
-		jmp	cs:off_16344[bx]
-
-loc_16316:
-		mov	byte ptr [si+0Fh], 20h ; ' '
-		jmp	short loc_16338
-; ---------------------------------------------------------------------------
-
-loc_1631C:
-		mov	byte ptr [si+0Fh], 0E0h
-		jmp	short loc_16338
-; ---------------------------------------------------------------------------
-
-loc_16322:
-		mov	word ptr [si+0Ah], 0D0h
-		mov	word ptr [si+0Ch], 70h ; 'p'
-		jmp	short loc_16338
-; ---------------------------------------------------------------------------
-
-loc_1632E:
-		mov	word ptr [si+0Ah], 70h ; 'p'
-		mov	word ptr [si+0Ch], 0D0h
-
-loc_16338:
-		call	snd_se_play pascal, 15
-		pop	si
-		pop	bp
-		retn	2
-add_explode_effect_function	endp
-
-; ---------------------------------------------------------------------------
-off_16344	dw offset loc_16316
-		dw offset loc_1631C
-		dw offset loc_16322
-		dw offset loc_1632E
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-mai_yuki_1634C	proc near
-
-@@y	= word ptr -4
-@@x	= word ptr -2
-arg_0		= word ptr  4
-
-		enter	4, 0
-		mov	ax, _boss_pos.cur.x
-		mov	[bp+@@x], ax
-		mov	ax, _boss_pos.cur.y
-		mov	[bp+@@y], ax
-		mov	eax, _yuki_pos.cur
-		mov	_boss_pos.cur, eax
-		push	[bp+arg_0]
-		call	add_explode_effect_function
-		mov	ax, [bp+@@x]
-		mov	_boss_pos.cur.x, ax
-		mov	ax, [bp+@@y]
-		mov	_boss_pos.cur.y, ax
-		leave
-		retn	2
-mai_yuki_1634C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1637A	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 0BF7Ch
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	ax, _boss_pos.cur.x
-		mov	[si+2],	ax
-		mov	ax, _boss_pos.cur.y
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 8
-		mov	word ptr [si+8], 8
-		mov	word ptr [si+0Ah], 0C0h
-		mov	word ptr [si+0Ch], 0C0h
-		mov	byte ptr [si+0Fh], 0
-		call	snd_se_play pascal, 12
-		pop	si
-		pop	bp
-		retn
-sub_1637A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-mai_yuki_163B6	proc near
-
-@@y		= word ptr -4
-@@x		= word ptr -2
-
-		enter	4, 0
-		mov	ax, _boss_pos.cur.x
-		mov	[bp+@@x], ax
-		mov	ax, _boss_pos.cur.y
-		mov	[bp+@@y], ax
-		mov	eax, _yuki_pos.cur
-		mov	_boss_pos.cur, eax
-		call	sub_1637A
-		mov	ax, [bp+@@x]
-		mov	_boss_pos.cur.x, ax
-		mov	ax, [bp+@@y]
-		mov	_boss_pos.cur.y, ax
-		leave
-		retn
-mai_yuki_163B6	endp
-
+include th04/boss/explosions_reset.asm
+include th04/boss/explode_small.asm
+include th05/boss/2_explode_small.asm
+include th05/boss/explode_big.asm
+include th05/boss/2_explode_big.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28136,8 +27760,7 @@ loc_1A1F8:
 		mov	_bullet_clear_time, 20
 
 loc_1A208:
-		push	1
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 1
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	byte ptr word_2634A+1, 0
@@ -28191,8 +27814,7 @@ loc_1A284:
 		jl	loc_1A3B2
 		push	5
 		call	sub_17416
-		push	1
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 1
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A2D7
 		mov	_bullet_clear_time, 20
@@ -29447,10 +29069,8 @@ loc_1ACF1:
 
 loc_1AD0D:
 		call	snd_se_play pascal, 15
-		push	1
-		call	add_explode_effect_function
-		push	2
-		call	mai_yuki_1634C
+		call	boss_explode_small pascal, 1
+		call	boss2_explode_small pascal, 2
 		jmp	short loc_1AD29
 ; ---------------------------------------------------------------------------
 
@@ -29579,14 +29199,12 @@ loc_1AE4F:
 		jnz	short loc_1AE6C
 		cmp	byte_26363, 0
 		jnz	short loc_1AE64
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		jmp	short loc_1AE69
 ; ---------------------------------------------------------------------------
 
 loc_1AE64:
-		push	4
-		call	mai_yuki_1634C
+		call	boss2_explode_small pascal, 4
 
 loc_1AE69:
 		jmp	loc_1AFA7	; default
@@ -29597,14 +29215,14 @@ loc_1AE6C:
 		jnz	loc_1AFA7	; default
 		cmp	byte_26363, 0
 		jnz	short loc_1AE8B
-		call	sub_1637A
+		call	boss_explode_big
 		mov	_boss_sprite_cur, 4
 		mov	_yuki_sprite, 180
 		jmp	short loc_1AE98
 ; ---------------------------------------------------------------------------
 
 loc_1AE8B:
-		call	mai_yuki_163B6
+		call	boss2_explode_big
 		mov	_yuki_sprite, 4
 		mov	_boss_sprite_cur, 180
 
@@ -30989,8 +30607,7 @@ loc_1BAAD:
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		call	_circles_add_growing
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	fp_2CE42, offset sub_1B557
 		mov	_boss_sprite_left, 206
 		mov	_boss_sprite_right, 205
@@ -31196,8 +30813,7 @@ loc_1BCDB:
 		mov	byte ptr word_2634A+1, 1
 
 loc_1BCE7:
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
@@ -32188,8 +31804,7 @@ loc_1C5D8:
 		mov	boss_phase_frame, 0
 		mov	byte_26349, 1
 		mov	byte ptr word_2634A+1, 0
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		call	_circles_add_growing
@@ -32405,8 +32020,7 @@ loc_1C7D7:
 		mov	byte ptr word_2634A+1, 1
 
 loc_1C7E3:
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
@@ -32962,8 +32576,7 @@ loc_1CC7F:
 		push	(52 shl 16) or 52
 		call	select_for_rank
 		mov	byte_2D082, al
-		push	0
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 0
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1CCD0
 		mov	_bullet_clear_time, 20
@@ -33305,8 +32918,7 @@ loc_1D030:
 		push	(52 shl 16) or 48
 		call	select_for_rank
 		mov	byte_2D082, al
-		push	0
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 0
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1D081
 		mov	_bullet_clear_time, 20
@@ -33750,8 +33362,7 @@ loc_1D4DD:
 		mov	byte ptr word_2634A+1, 1
 
 loc_1D4F4:
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		mov	_boss_custombullets_render, offset nullsub_2
@@ -34706,8 +34317,7 @@ loc_1DD27:
 		sub	_laser_template.coords.origin.x, (64 shl 4)
 		call	lasers_new_fixed_and_manual_in_slot pascal, 3
 		inc	word_22852
-		push	0
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 0
 
 loc_1DD72:
 		mov	ax, boss_phase_frame
@@ -34940,8 +34550,7 @@ loc_1DFFB:
 		push	(16 shl 16) or 12
 		call	select_for_rank
 		mov	byte_2D083, al
-		push	0
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 0
 
 locret_1E020:
 		leave
@@ -35438,8 +35047,7 @@ loc_1E4F9:
 		mov	byte ptr word_2634A+1, 1
 
 loc_1E510:
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		jmp	short loc_1E527
@@ -37034,8 +36642,7 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_2]
 		cmp	si, 0FFFFh
 		jz	short loc_1F25F
-		push	si
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, si
 		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1F25F
 		mov	byte_226C0, 1
@@ -37425,8 +37032,7 @@ loc_1F626:
 		mov	byte ptr word_2634A+1, 1
 
 loc_1F643:
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		mov	_boss_custombullets_render, offset nullsub_2
@@ -38149,8 +37755,7 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_2]
 		cmp	si, 0FFFFh
 		jz	short loc_1FB94
-		push	si
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, si
 		cmp	_boss_phase_timed_out, 0
 		jnz	short loc_1FB94
 		cmp	_bullet_clear_time, 20
@@ -38192,20 +37797,18 @@ n1000		= word ptr  4
 		cmp	boss_phase_frame, 1
 		jnz	short loc_1FBE1
 		mov	byte_26348, 0;m_bHitThisFrame?
-		push	0
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 0
 		call	snd_se_play pascal, 13
 
 loc_1FBE1:
 		cmp	boss_phase_frame, 16
 		jnz	short loc_1FBED
-		push	4
-		call	add_explode_effect_function
+		call	boss_explode_small pascal, 4
 
 loc_1FBED:
 		cmp	boss_phase_frame, 32	; ' '
 		jnz	loc_1FD51
-		call	sub_1637A
+		call	boss_explode_big
 		inc	boss_phase
 		mov	al, byte ptr word_2634A+1
 		mov	_bullet_clear_trigger, al
@@ -38935,7 +38538,7 @@ aSt06_16_bft	db 'st06_16.bft',0
 aBomb3_bft_0	db 'bomb3.bft',0
 aBomb0_bft_0	db 'bomb0.bft',0
 		db 0
-word_22272	dw 0
+include th04/boss/explosions_big[data].asm
 byte_22274	db 0
 byte_22275	db 0
 off_22276	dw offset aBOSS_FINAL_TIMEOUT
@@ -46088,24 +45691,7 @@ word_2C934	dw ?
 word_2C936	dw ?
 word_2C938	dw ?
 		dw ?
-byte_2C93C	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
-byte_2C94C	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
+include th04/boss/explosions[bss].asm
 byte_2C96C	db ?
 		db ?
 _boss_sprite_left	dw ?
