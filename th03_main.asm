@@ -482,10 +482,10 @@ loc_9A04:
 		mov	byte_23AF9, 2
 
 loc_9A14:
-		cmp	byte_23B01, 0
+		cmp	_palette_changed, 0
 		jz	short loc_9A25
 		call	far ptr	palette_show
-		mov	byte_23B01, 0
+		mov	_palette_changed, 0
 
 loc_9A25:
 		graph_accesspage _page_front
@@ -1597,7 +1597,7 @@ loc_A3BC:
 		lea	si, [bx+1D94h]
 		movsw
 		movsb
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		pop	di
 		pop	si
 		pop	bp
@@ -1634,7 +1634,7 @@ loc_A3EB:
 		mov	[di], al
 		inc	di
 		loop	loc_A3EB
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		pop	di
 		pop	bp
 		retf	4
@@ -5629,7 +5629,7 @@ loc_CC89:
 		mov	byte ptr [bx+11BAh], 78h ; 'x'
 
 loc_CC98:
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_CC9D:
 		push	[bp+arg_0]
@@ -5743,7 +5743,7 @@ loc_CD99:
 		imul	dx, 3
 		mov	bx, dx
 		mov	[bx+11BAh], al
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_CDB7:
 		pop	di
@@ -20190,7 +20190,7 @@ loc_149E8:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_14A1C:
 		call	egc_on
@@ -21256,7 +21256,7 @@ loc_152D7:
 		imul	ax, 50h
 		add	ax, 64h	; 'd'
 		mov	PaletteTone, ax
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		imul	ax, 140h
@@ -21276,7 +21276,7 @@ loc_152D7:
 
 loc_15318:
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_15323:
 		mov	al, [bp+var_1]
@@ -21335,7 +21335,7 @@ loc_15360:
 		mov	[bx+11BCh], dl
 
 loc_153A6:
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_153AB:
 		call	egc_on
@@ -22422,7 +22422,7 @@ loc_15C7E:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_15CB0:
 		call	egc_on
@@ -25124,7 +25124,7 @@ loc_17202:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		call	egc_on
 		call	sub_1714F
 		jmp	loc_1737D
@@ -25162,7 +25162,7 @@ loc_1728A:
 		imul	ax, 3
 		mov	bx, ax
 		mov	byte ptr [bx+11BCh], 0
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, 8
@@ -25247,7 +25247,7 @@ loc_17332:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_1737D:
 		call	egc_on
@@ -27419,14 +27419,14 @@ loc_1840A:
 loc_18455:
 		cmp	[bp+var_1], 90h
 		jnb	loc_1853F
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
 		jge	short loc_1848B
 		mov	PaletteTone, 3Ch	; '<'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		add	ax, ax
@@ -27442,7 +27442,7 @@ loc_1848B:
 		mov	bx, ax
 		mov	word ptr [bx+659Ch], 0FFFCh
 		mov	PaletteTone, 78h	; 'x'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_184A5:
 		mov	al, [bp+var_1]
@@ -27512,7 +27512,7 @@ loc_18526:
 
 loc_1853F:
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		add	ax, ax
@@ -27543,7 +27543,7 @@ loc_1853F:
 		mov	dl, [bp+var_1]
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_185A3:
 		call	egc_on
@@ -27814,7 +27814,7 @@ loc_187AF:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	word_1FB3C, 0
 		jmp	loc_18964
 ; ---------------------------------------------------------------------------
@@ -27861,7 +27861,7 @@ loc_18845:
 		mov	byte ptr [bx+11BCh], 20h ; ' '
 
 loc_18872:
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		and	ax, 3
@@ -27954,7 +27954,7 @@ loc_18911:
 		imul	ax, 3
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_18964:
 		call	egc_on
@@ -28194,7 +28194,7 @@ loc_18B77:
 		mov	dl, [bp+var_1]
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_18BB4:
 		pop	di
@@ -28266,7 +28266,7 @@ loc_18C04:
 		mov	dl, [bp+var_2]
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, 8
@@ -28297,7 +28297,7 @@ loc_18C04:
 loc_18C95:
 		cmp	[bp+var_1], 80h
 		jnb	loc_18D5B
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 3
@@ -28305,7 +28305,7 @@ loc_18C95:
 		jge	short loc_18CD2
 		call	snd_se_play pascal, 10
 		mov	PaletteTone, 0AAh ; 'ª'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		add	ax, ax
@@ -28321,7 +28321,7 @@ loc_18CD2:
 		mov	bx, ax
 		mov	word ptr [bx+659Ch], 0FFFCh
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_18CEC:
 		mov	al, [bp+var_1]
@@ -28382,7 +28382,7 @@ loc_18D42:
 
 loc_18D5B:
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		add	ax, ax
@@ -28413,7 +28413,7 @@ loc_18D5B:
 		mov	dl, [bp+var_1]
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_18DBF:
 		call	egc_on
@@ -28638,7 +28638,7 @@ loc_18F89:
 		mov	dl, [bp+var_1]
 		mov	bx, ax
 		mov	[bx+11BCh], dl
-		mov	byte_23B01, 1
+		mov	_palette_changed, 1
 
 loc_18FE2:
 		call	egc_on
@@ -42287,7 +42287,7 @@ byte_23AFA	db ?
 		db ?
 		dd    ?	;
 byte_23B00	db ?
-byte_23B01	db ?
+include th03/hardware/palette_changed[bss].asm
 include th03/frame_mod[bss].asm
 		dd    ?	;
 		dd    ?	;

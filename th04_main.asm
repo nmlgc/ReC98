@@ -413,10 +413,10 @@ loc_AC58:
 		add	dword_22BA0, eax
 		inc	dword_22BA4
 		call	sub_AAF2
-		cmp	byte_266D3, 0
+		cmp	_palette_changed, 0
 		jz	short loc_AC7A
 		call	far ptr	palette_show
-		mov	byte_266D3, 0
+		mov	_palette_changed, 0
 		jmp	short $+2
 
 loc_AC7A:
@@ -5353,7 +5353,7 @@ loc_DA19:
 		mov	PaletteTone, dx
 
 loc_DA36:
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_DA4B
 ; ---------------------------------------------------------------------------
 
@@ -10484,7 +10484,7 @@ var_1		= byte ptr -1
 		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_100FE
 ; ---------------------------------------------------------------------------
 
@@ -10559,7 +10559,7 @@ var_2		= word ptr -2
 		mov	dx, 0C4h
 		sub	dx, ax
 		mov	PaletteTone, dx
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	loc_101F4
 ; ---------------------------------------------------------------------------
 
@@ -10729,7 +10729,7 @@ loc_102AF:
 		mov	dx, 0C8h
 		sub	dx, ax
 		mov	PaletteTone, dx
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		cmp	byte_256A9, 0B1h
 		jnz	short loc_10307
 		call	graph_scrollup pascal, _scroll_line
@@ -10739,7 +10739,7 @@ loc_102AF:
 loc_102F2:
 		mov	byte_256A8, 0
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	_circles_color, GC_R
 
 loc_10307:
@@ -11686,7 +11686,7 @@ loc_10A55:
 		mov	PaletteTone, 64h	; 'd'
 
 loc_10A5B:
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 
 loc_10A60:
 		cmp	byte_259AA, 0
@@ -14089,7 +14089,7 @@ sub_11ECB	proc near
 		mov	frame_mod16, 0
 		mov	word_266D0, 1
 		mov	byte_266D2, 0
-		mov	byte_266D3, 0
+		mov	_palette_changed, 0
 		mov	_bullet_clear_trigger, 0
 		mov	word_2CFFC, 0
 		mov	_circles_color, GC_R
@@ -14898,7 +14898,7 @@ loc_124D7:
 		mov	byte_23242, 1
 
 loc_12508:
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	al, byte_2CDD0
 		mov	ah, 0
 		mov	bx, ax
@@ -21514,7 +21514,7 @@ loc_16469:
 		mov	al, byte_25666
 		mov	ah, 0
 		mov	PaletteTone, ax
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 
 loc_16476:
 		cmp	word_2671A, 80h
@@ -21702,7 +21702,7 @@ loc_16682:
 		mov	Palettes, 40h
 		mov	Palettes+1, 40h
 		mov	Palettes+2, 40h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 
 loc_166A0:
 		cmp	word_2671A, 40h
@@ -21954,7 +21954,7 @@ loc_168C9:
 		mov	Palettes, 80h
 		mov	Palettes+1, 40h
 		mov	Palettes+2, 40h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_168FC
 ; ---------------------------------------------------------------------------
 
@@ -21968,7 +21968,7 @@ loc_168FC:
 loc_16907:
 		mov	byte_2671D, 0
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
 
@@ -22025,7 +22025,7 @@ loc_16986:
 		mov	Palettes, 0
 		mov	Palettes+1, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_169B8
 ; ---------------------------------------------------------------------------
@@ -24010,7 +24010,7 @@ loc_17A31:
 		mov	Palettes, 0
 		mov	Palettes+1, 0
 		mov	Palettes+2, 7
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 13
 		mov	fp_255AC, offset sub_122D7
@@ -24191,7 +24191,7 @@ loc_17BD7:
 		mov	byte_25670, 0
 
 loc_17BEB:
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 
 loc_17BF0:
 		cmp	_boss_hp, 4500
@@ -24254,7 +24254,7 @@ loc_17C77:
 		call	snd_se_play pascal, 12
 		mov	Palettes, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_17CA4
 ; ---------------------------------------------------------------------------
@@ -25830,7 +25830,7 @@ loc_18932:
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -25858,7 +25858,7 @@ loc_1897E:
 		mov	_boss_sprite_cur, 4
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 12
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_189A1
 ; ---------------------------------------------------------------------------
@@ -26823,7 +26823,7 @@ loc_19178:
 		mov	Palettes, 60h
 		mov	Palettes+1, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	word ptr [bp-2], 0B204h
 		xor	si, si
 		jmp	short loc_191B3
@@ -27246,7 +27246,7 @@ loc_19581:
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 12
 		mov	Palettes, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_195A9
 ; ---------------------------------------------------------------------------
@@ -27850,7 +27850,7 @@ loc_19AC8:
 		mov	Palettes, 0
 		mov	Palettes+1, 0
 		mov	Palettes+2, 60h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 
 loc_19AEF:
 		inc	word_2671A
@@ -28002,7 +28002,7 @@ loc_19C6F:
 		call	sub_1E6F3
 		mov	Palettes, 70h	; 'p'
 		mov	Palettes+2, 70h	; 'p'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -28044,7 +28044,7 @@ loc_19CC8:
 		mov	_boss_sprite_cur, al
 		mov	Palettes, 90h
 		mov	Palettes+2, 20h	; ' '
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_2A8D2, 9
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
@@ -28200,7 +28200,7 @@ loc_19E60:
 		call	snd_se_play pascal, 12
 		mov	Palettes, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_19E8D
 ; ---------------------------------------------------------------------------
@@ -31497,7 +31497,7 @@ loc_1B87C:
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
 		mov	PaletteTone, 64h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -31525,7 +31525,7 @@ loc_1B8C7:
 		mov	_boss_sprite_cur, 4
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 12
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -32693,7 +32693,7 @@ loc_1C301:
 		inc	byte_26719
 		mov	byte_2671D, 0
 		mov	Palettes+2, 80h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	_boss_hp, 6000
 		mov	_boss_phase_end_hp, 6000
 		jmp	loc_1C67A
@@ -32794,7 +32794,7 @@ loc_1C400:
 		jl	loc_1C67A
 		mov	_boss_pos.velocity.x, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	word_25A3A, 0
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
@@ -36967,7 +36967,7 @@ loc_1E778:
 
 loc_1E7B5:
 		mov	PaletteTone, 3Ch	; '<'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		cmp	word_2671A, 0
 		jnz	loc_1E8B3
 		les	bx, _humaconfig
@@ -38306,7 +38306,7 @@ loc_1F394:
 		mov	byte_237F7, 0
 
 loc_1F3A4:
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		pop	bp
 		retn
 sub_1F378	endp
@@ -38348,7 +38348,7 @@ loc_1F3E2:
 		mov	Palettes, 80h
 		mov	Palettes+1, 0
 		mov	Palettes+2, 0E0h
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 13
 		mov	fp_255AC, offset sub_122D7
@@ -38794,7 +38794,7 @@ loc_1F7BA:
 		mov	al, Palettes+2
 		add	al, 0FEh
 		mov	Palettes+2, al
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		call	sub_1E64E
 		cmp	word_2671A, 40h
 		jl	loc_1F8A5
@@ -38861,7 +38861,7 @@ loc_1F878:
 		call	snd_se_play pascal, 12
 		mov	Palettes, 0
 		mov	Palettes+2, 0
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -40496,7 +40496,7 @@ loc_20647:
 		mov	word_2671A, 0
 		mov	byte_2671D, 0
 		mov	PaletteTone, 64h	; 'd'
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		jmp	short loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -40524,7 +40524,7 @@ loc_20693:
 		mov	_boss_sprite_cur, 4
 		mov	word_2671A, 0
 		call	snd_se_play pascal, 12
-		mov	byte_266D3, 1
+		mov	_palette_changed, 1
 		mov	byte_259A2, 0FFh
 		jmp	short loc_206B6
 ; ---------------------------------------------------------------------------
@@ -42608,7 +42608,7 @@ frame	dw ?
 include th03/frame_mod[bss].asm
 word_266D0	dw ?
 byte_266D2	db ?
-byte_266D3	db ?
+include th03/hardware/palette_changed[bss].asm
 stage_id	db ?
 include th04/playperf[bss].asm
 playchar	db ?
