@@ -507,11 +507,11 @@ loc_AD2E:
 ; ---------------------------------------------------------------------------
 
 loc_AD35:
-		mov	byte ptr [si+4349h], 0
+		mov	_score_lebcd[si], 0
 		inc	si
 
 loc_AD3B:
-		cmp	si, 8
+		cmp	si, SCORE_DIGITS
 		jl	short loc_AD35
 		mov	power, 1
 		les	bx, _humaconfig
@@ -594,7 +594,7 @@ loc_ADFC:
 		jmp	cs:off_AEC6[bx]
 
 loc_AE17:
-		mov	word_2CFFE, 64h	; 'd'
+		mov	score_2CFFE, 100
 		mov	_playperf_min, 4
 		mov	_playperf_max, 16
 		mov	fp_2D000, offset sub_1CEEE
@@ -604,7 +604,7 @@ loc_AE17:
 ; ---------------------------------------------------------------------------
 
 loc_AE3C:
-		mov	word_2CFFE, 0FAh
+		mov	score_2CFFE, 250
 		mov	_playperf_min, 11
 		mov	_playperf_max, 24
 		jmp	short loc_AEB0
@@ -612,7 +612,7 @@ loc_AE3C:
 
 loc_AE4E:
 		mov	_playperf, 20
-		mov	word_2CFFE, 190h
+		mov	score_2CFFE, 400
 		mov	_playperf_min, 20
 		mov	_playperf_max, 32
 		mov	fp_2D000, offset sub_1CF32
@@ -622,7 +622,7 @@ loc_AE4E:
 ; ---------------------------------------------------------------------------
 
 loc_AE77:
-		mov	word_2CFFE, 1F4h
+		mov	score_2CFFE, 500
 		mov	_playperf, 22
 		mov	_playperf_min, 22
 		mov	_playperf_max, 34
@@ -633,7 +633,7 @@ loc_AE77:
 ; ---------------------------------------------------------------------------
 
 loc_AEA0:
-		mov	word_2CFFE, 0A00h
+		mov	score_2CFFE, 2560
 		mov	_playperf_min, 16
 		mov	_playperf_max, 20
 
@@ -6880,7 +6880,7 @@ var_1		= byte ptr -1
 		xor	di, di
 		mov	si, 1
 		mov	al, 3
-		sub	al, byte_25689
+		sub	al, _continues_used
 		mov	[bp+var_2], al
 		cmp	[bp+var_2], 0
 		jz	loc_E7D8
@@ -6985,7 +6985,7 @@ loc_E796:
 		nopcall	sub_11DE6
 		nopcall	sub_EEE8
 		nopcall	sub_EFA1
-		inc	byte_25689
+		inc	_continues_used
 		call	sub_EEB0
 		call	sub_11692
 		mov	al, 0
@@ -7016,14 +7016,14 @@ sub_E7DE	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E7E6:
-		mov	al, [si+4349h]
+		mov	al, _score_lebcd[si]
 		les	bx, _humaconfig
 		add	bx, si
 		mov	es:[bx+1Dh], al
 		inc	si
 
 loc_E7F5:
-		cmp	si, 8
+		cmp	si, SCORE_DIGITS
 		jl	short loc_E7E6
 		pop	si
 		pop	bp
@@ -7814,35 +7814,35 @@ var_1		= byte ptr -1
 		jmp	cs:off_EEA6[bx]
 
 loc_EE23:
-		cmp	byte_2568F, 3
+		cmp	_score_lebcd[6], 3
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE2C:
-		cmp	byte_2568F, 8
+		cmp	_score_lebcd[6], 8
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE35:
-		cmp	byte_25690, 1
+		cmp	_score_lebcd[7], 1
 		jb	short loc_EE60
-		cmp	byte_2568F, 5
+		cmp	_score_lebcd[6], 5
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE45:
-		cmp	byte_25690, 2
+		cmp	_score_lebcd[7], 2
 		jb	short loc_EE60
-		cmp	byte_2568F, 2
+		cmp	_score_lebcd[6], 2
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE55:
-		cmp	byte_25690, 3
+		cmp	_score_lebcd[7], 3
 		jb	short loc_EE60
 
 loc_EE5C:
@@ -7895,17 +7895,17 @@ sub_EEB0	proc near
 ; ---------------------------------------------------------------------------
 
 loc_EEB9:
-		mov	byte ptr [si+4349h], 0
+		mov	_score_lebcd[si], 0
 		inc	si
 
 loc_EEBF:
-		cmp	si, 8
+		cmp	si, SCORE_DIGITS
 		jl	short loc_EEB9
-		mov	dword_2569A, 0
-		mov	dword_2569E, 0
-		mov	byte_25699, 0
+		mov	_score_delta, 0
+		mov	_score_delta_frame, 0
+		mov	_score_unused, 0
 		mov	byte_22DA6, 0
-		mov	byte_22DA7, 0
+		mov	_is_hiscore, 0
 		pop	si
 		pop	bp
 		retn
@@ -11051,7 +11051,7 @@ loc_106D4:
 
 loc_10704:
 		movzx	eax, di
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		mov	ax, di
 		pop	di
 		pop	si
@@ -12844,11 +12844,11 @@ sub_11647	endp
 sub_11692	proc near
 		push	si
 		push	di
-		mov	si, 4358h
+		mov	si, offset _hiscore_lebcd[SCORE_DIGITS - 1]
 		mov	di, 4
 
 loc_1169A:
-		mov	cx, 8
+		mov	cx, SCORE_DIGITS
 		mov	bx, 1EC6h
 
 loc_116A0:
@@ -12872,12 +12872,12 @@ sub_11692	endp
 
 
 sub_116C4	proc near
-		mov	eax, dword_2569A
+		mov	eax, _score_delta
 		or	eax, eax
 		jz	short locret_1172C
-		cmp	dword_2569E, eax
+		cmp	_score_delta_frame, eax
 		jbe	short loc_116D7
-		mov	word ptr dword_2569E, ax
+		mov	word ptr _score_delta_frame, ax
 
 loc_116D7:
 		shr	eax, 5
@@ -12888,34 +12888,34 @@ loc_116D7:
 ; ---------------------------------------------------------------------------
 
 loc_116E3:
-		cmp	eax, 17DFh
+		cmp	eax, SCORE_DELTA_FRAME_LIMIT
 		jbe	short loc_116EE
-		mov	ax, 17DFh
+		mov	ax, SCORE_DELTA_FRAME_LIMIT
 
 loc_116EE:
-		cmp	word ptr dword_2569E, ax
+		cmp	word ptr _score_delta_frame, ax
 		jnb	short loc_116F7
-		mov	word ptr dword_2569E, ax
+		mov	word ptr _score_delta_frame, ax
 
 loc_116F7:
-		mov	cx, word ptr dword_2569E
+		mov	cx, word ptr _score_delta_frame
 		jmp	short loc_1172E
 ; ---------------------------------------------------------------------------
 
 loc_116FD:
-		cmp	byte_22DA7, 0
+		cmp	_is_hiscore, 0
 		jnz	short loc_11718
 		or	al, al
 		jz	short loc_11718
-		mov	byte_22DA7, 1
+		mov	_is_hiscore, 1
 		mov	byte_259DB, 0
 		mov	fp_259DE, offset sub_112D8
 
 loc_11718:
-		mov	eax, dword_2569E
-		sub	dword_2569A, eax
+		mov	eax, _score_delta_frame
+		sub	_score_delta, eax
 		call	sub_11692
-		mov	byte_25699, 0
+		mov	_score_unused, 0
 		call	sub_EE06
 
 locret_1172C:
@@ -12940,8 +12940,8 @@ loc_11736:
 		cmp	word ptr [si], 1
 		ja	short loc_11736
 		mov	[bx], cl
-		mov	si, 434Ah
-		mov	cx, 6
+		mov	si, offset _score_lebcd[1]
+		mov	cx, SCORE_DIGITS - 2
 		xor	ah, ah
 
 loc_11753:
@@ -12959,11 +12959,11 @@ loc_11753:
 		push	ds
 		pop	es
 		assume es:_DATA
-		mov	si, 4350h
-		mov	di, 4358h
+		mov	si, offset _score_lebcd[SCORE_DIGITS - 1]
+		mov	di, offset _hiscore_lebcd[SCORE_DIGITS - 1]
 		xor	dl, dl
-		mov	cx, 8
-		cmp	byte_22DA7, 0
+		mov	cx, SCORE_DIGITS
+		cmp	_is_hiscore, 0
 		jnz	short loc_11786
 
 loc_1177A:
@@ -15512,12 +15512,12 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_12B8E:
-		mov	si, 7
+		mov	si, SCORE_DIGITS - 1
 		jmp	short loc_12BC8
 ; ---------------------------------------------------------------------------
 
 loc_12B93:
-		mov	al, [si+4349h]
+		mov	al, _score_lebcd[si]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -15526,7 +15526,7 @@ loc_12B93:
 		add	dx, 0FF60h
 		cmp	ax, dx
 		jg	short loc_12BCC
-		mov	al, [si+4349h]
+		mov	al, _score_lebcd[si]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -15632,7 +15632,7 @@ loc_12C65:
 ; ---------------------------------------------------------------------------
 
 loc_12C6E:
-		mov	al, [si+4349h]
+		mov	al, _score_lebcd[si]
 		add	al, 0A0h
 		mov	dl, byte_2CFF2
 		mov	dh, 0
@@ -15705,7 +15705,7 @@ sub_12CC7	proc near
 loc_12CD2:
 		mov	al, [si-43B4h]
 		add	al, 60h
-		mov	[si+4351h], al
+		mov	_hiscore_lebcd[si], al
 		inc	si
 
 loc_12CDD:
@@ -22137,7 +22137,7 @@ loc_16CFC:
 		mov	word ptr [si+6], 4
 		mov	byte ptr [si], 80h
 		call	snd_se_play pascal, 3
-		add	dword_2569A, 1400h
+		add	_score_delta, 5120
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 8)
@@ -24223,7 +24223,7 @@ loc_17F3C:
 		call	sub_1DA38
 		call	snd_se_play pascal, 3
 		movzx	eax, word ptr [si+14h]
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 8)
@@ -27972,9 +27972,9 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	ax, [bp+arg_0]
-		imul	ax, 500h
+		imul	ax, 1280
 		movzx	eax, ax
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		mov	byte_21CC8, 0
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-64 shl 4)
@@ -28036,9 +28036,9 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	ax, [bp+arg_0]
-		imul	ax, 500h
+		imul	ax, 1280
 		movzx	eax, ax
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		mov	byte_21CC8, 0
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-64 shl 4)
@@ -28309,7 +28309,7 @@ loc_1A1EE:
 		cmp	word ptr [si+14h], 0
 		jg	short loc_1A22E
 		call	snd_se_play pascal, 3
-		add	dword_2569A, 0BB8h
+		add	_score_delta, 3000
 		mov	byte ptr [si], 10h
 		mov	word ptr [si+0Eh], 0
 		push	word ptr [si+2]
@@ -33067,12 +33067,12 @@ loc_1C920:
 		mov	[si+18h], ax
 		cmp	byte ptr [si+1], 0
 		jz	short loc_1C931
-		add	dword_2569A, 64h ; 'd'
+		add	_score_delta, 100
 		jmp	short loc_1C961
 ; ---------------------------------------------------------------------------
 
 loc_1C931:
-		add	dword_2569A, 0Ah
+		add	_score_delta, 10
 		jmp	short loc_1C961
 ; ---------------------------------------------------------------------------
 
@@ -33243,8 +33243,8 @@ loc_1CA82:
 		jnb	short loc_1CAC5
 		inc	word_2CFFC
 		call	sub_F091
-		movzx	eax, word_2CFFE
-		add	dword_2569A, eax
+		movzx	eax, score_2CFFE
+		add	_score_delta, eax
 
 loc_1CAC5:
 		cmp	di, 0C8h
@@ -33353,7 +33353,7 @@ loc_1CB91:
 loc_1CBB7:
 		movzx	eax, [bp+var_4]
 		add	dword_259E2, eax
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	[bp+var_4]
@@ -34934,7 +34934,7 @@ loc_1D635:
 		call	sub_1D58F
 
 loc_1D63C:
-		mov	al, byte_25689
+		mov	al, _continues_used
 		mov	ah, 0
 		cmp	ax, 1
 		jz	short loc_1D652
@@ -35085,7 +35085,7 @@ var_4		= dword	ptr -4
 		pushd	[bp+var_4]
 		call	sub_1D48E
 		mov	eax, [bp+var_4]
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		cmp	[bp+var_8], 124F80h
 		jb	short loc_1D814
 		push	4
@@ -35258,7 +35258,7 @@ loc_1D9CE:
 		pushd	[bp+var_4]
 		call	sub_1D48E
 		mov	eax, [bp+var_4]
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		pop	si
 		leave
 		retn
@@ -35690,7 +35690,7 @@ loc_1DDA0:
 		movzx	eax, ax
 
 loc_1DDA8:
-		add	dword_2569A, eax
+		add	_score_delta, eax
 		cmp	[bp+var_1], 0
 		jnz	short loc_1DDBF
 		push	word ptr [di+2]
@@ -36586,7 +36586,7 @@ loc_1E7B5:
 		jz	loc_1E8AE
 		cmp	stage_id, 4
 		jnz	short loc_1E801
-		cmp	byte_25689, 0
+		cmp	_continues_used, 0
 		jnz	short loc_1E7F2
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1E801
@@ -41024,7 +41024,7 @@ unk_22D9E	db 0DCh
 		db 0C2h
 		db    1
 byte_22DA6	db 0
-byte_22DA7	db 0
+include th04/score[data].asm
 include th04/strings/hud[data].asm
 include th04/hud/bar_colors[data].asm
 word_22E07	dw 202h
@@ -41881,16 +41881,7 @@ word_25680	dw ?
 		dw ?
 		dw ?
 _rank	db ?
-byte_25689	db ?
-		dd    ?	;
-		db    ?	;
-byte_2568F	db ?
-byte_25690	db ?
-		dd    ?	;
-		dd    ?	;
-byte_25699	db ?
-dword_2569A	dd ?
-dword_2569E	dd ?
+include th04/score[bss].asm
 byte_256A2	db ?
 		db ?
 include th04/shots_add[bss].asm
@@ -48227,7 +48218,7 @@ byte_2CFF8	db ?
 include th04/bullet_clear[bss].asm
 		db ?
 word_2CFFC	dw ?
-word_2CFFE	dw ?
+score_2CFFE	dw ?
 fp_2D000	dw ?
 fp_2D002	dw ?
 fp_2D004	dw ?
