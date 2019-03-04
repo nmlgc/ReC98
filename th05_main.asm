@@ -17874,14 +17874,14 @@ sub_1437E	proc near
 		push	ds
 		pop	es
 		assume es:_DATA
-		mov	di, 1FC6h
+		mov	di, offset _hud_gaiji_row
 		push	38h ; '8'
 		push	word ptr ss:[bx+6]
 		push	ds
 		push	di
 		push	word ptr ss:[bx+2]
 		mov	al, 30h	; '0'
-		mov	cx, 8
+		mov	cx, HUD_TRAM_W
 		mov	bl, ss:[bx+4]
 		cmp	bl, 80h
 		jb	short loc_143A7
@@ -17931,8 +17931,8 @@ sub_143CA	proc near
 		mov	di, 4
 
 loc_143D2:
-		mov	cx, 8
-		mov	bx, 1FC6h
+		mov	cx, HUD_TRAM_W
+		mov	bx, offset _hud_gaiji_row
 
 loc_143D8:
 		mov	al, [si]
@@ -17941,7 +17941,7 @@ loc_143D8:
 		inc	bx
 		dec	si
 		loop	loc_143D8
-		call	gaiji_putsa pascal, 56, di, ds, offset unk_229A6, TX_WHITE
+		call	gaiji_putsa pascal, 56, di, ds, offset _hud_gaiji_row, TX_WHITE
 		add	di, 2
 		cmp	di, 6
 		jz	short loc_143D2
@@ -18009,8 +18009,8 @@ loc_1445E:
 		push	di
 		push	ds
 		pop	es
-		mov	dword_229AA, 0
-		mov	di, 1FCAh
+		mov	dword ptr _hud_gaiji_row[4], 0
+		mov	di, offset _hud_gaiji_row[4]
 		mov	bx, 1FBCh
 		mov	cx, 4
 
@@ -37528,9 +37528,9 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	di
 		mov	edx, [bp+arg_0]
-		mov	di, 1FC6h
+		mov	di, offset _hud_gaiji_row
 		mov	ax, TX_WHITE
-		mov	byte ptr dword_229AA+3,	0A0h
+		mov	_hud_gaiji_row[HUD_TRAM_W - 1], 0A0h
 		mov	bx, 1FA0h
 		mov	cx, 6
 
@@ -38941,13 +38941,7 @@ unk_22988	db  10h
 		db    0
 		db    1
 		db    0
-unk_229A6	db    0
-		db    0
-		db    0
-unk_229A9	db    0
-dword_229AA	dd 0
-		db    0
-		db    0
+include th05/hud/gaiji_row[data].asm
 		db    0
 		db    0
 		db    3
