@@ -2,6 +2,7 @@ GAME = 2
 include defconv_c.inc
 include th02/hardware/input.inc
 include th02/math/randring_next.inc
+include th02/gaiji_boldfont.inc
 
 kajacall	macro func, param := <0>
 	call	_snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)

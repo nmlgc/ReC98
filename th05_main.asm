@@ -9697,14 +9697,8 @@ sub_104BB	endp
 sub_10574	proc far
 		push	bp
 		mov	bp, sp
-		push	3E0010h
-		push	word_2CEC6
-		push	0E1h
-		call	sub_1F9F4
-		push	3E000Fh
-		push	word_22648
-		push	0A1h
-		call	sub_1F9F4
+		call	hud_int_put pascal, (62 shl 16) + 16, word_2CEC6, TX_WHITE
+		call	hud_int_put pascal, (62 shl 16) + 15, word_22648, TX_CYAN
 		pop	bp
 		retf
 sub_10574	endp
@@ -9775,10 +9769,7 @@ sub_1059D	endp
 sub_1060E	proc far
 		push	bp
 		mov	bp, sp
-		push	3E0012h
-		push	word_2C97A
-		push	0E1h
-		call	sub_1F9F4
+		call	hud_int_put pascal, (62 shl 16) + 18, word_2C97A, TX_WHITE
 		pop	bp
 		retf
 sub_1060E	endp
@@ -12981,9 +12972,7 @@ loc_11FA5:
 		call	gaiji_putsa
 		cmp	byte_2CE72, 2
 		jnz	short loc_11FD9
-		push	1C0002h
-		pushd	[dword_2CE8E]
-		call	sub_1FA0E
+		call	hud_points_put pascal, ((PLAYFIELD_TRAM_X + (PLAYFIELD_TRAM_W / 2)) shl 16) + 2, large [dword_2CE8E]
 
 loc_11FD9:
 		inc	byte_2288C
@@ -20876,55 +20865,55 @@ loc_165F8:
 		mov	si, ax
 		movzx	eax, si
 		mov	[bp+var_4], eax
-		push	220008h
+		push	(34 shl 16) + 8
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	al, dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	22000Ah
+		push	(34 shl 16) + 10
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	ax, word_2C97A
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	22000Ch
+		push	(34 shl 16) + 12
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	si, word_2CEC6
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		push	28000Eh
+		push	(40 shl 16) + 14
 		push	si
-		push	0E1h
-		nopcall	sub_1F9F4
+		push	TX_WHITE
+		nopcall	hud_int_put
 		mov	al, stage_id
 		mov	ah, 0
-		imul	ax, 1388h
-		add	ax, 2710h
+		imul	ax, 5000
+		add	ax, 10000
 		mov	si, ax
 		cmp	[bp+var_5], 0
 		jz	short loc_166B2
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	220010h
+		push	(34 shl 16) + 16
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 
 loc_166B2:
 		cmp	[bp+var_6], 0
 		jz	short loc_166CD
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	220011h
+		push	(34 shl 16) + 17
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 
 loc_166CD:
 		cmp	[bp+var_4], 124F80h
@@ -20970,9 +20959,9 @@ loc_1671B:
 		lea	ax, [bp+var_4]
 		push	ax
 		call	sub_16438
-		push	220015h
+		push	(34 shl 16) + 21
 		pushd	[bp+var_4]
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	eax, [bp+var_4]
 		add	_score_delta, eax
 		pop	si
@@ -21051,77 +21040,77 @@ loc_1683E:
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax
-		push	220006h
+		push	(34 shl 16) + 6
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	al, dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	220008h
+		push	(34 shl 16) + 8
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	ax, word_2C97A
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	22000Ah
+		push	(34 shl 16) + 10
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	al, lives
 		mov	ah, 0
-		imul	ax, 3E8h
-		add	ax, 0FC18h
+		imul	ax, 1000
+		add	ax, 64536
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
-		push	22000Ch
+		push	(34 shl 16) + 12
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	si, word_2CEC6
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		push	28000Eh
+		push	(40 shl 16) + 14
 		push	si
-		push	0E1h
-		nopcall	sub_1F9F4
-		mov	[bp+var_8], 0C350h
+		push	TX_WHITE
+		nopcall	hud_int_put
+		mov	[bp+var_8], 50000
 		cmp	[bp+var_9], 0
 		jz	short loc_1691E
 		mov	eax, [bp+var_8]
 		add	[bp+var_4], eax
-		push	220010h
+		push	(34 shl 16) + 16
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 
 loc_1691E:
 		cmp	[bp+var_A], 0
 		jz	short loc_16939
 		mov	eax, [bp+var_8]
 		add	[bp+var_4], eax
-		push	220011h
+		push	(34 shl 16) + 17
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 
 loc_16939:
 		movzx	eax, word_22648
-		imul	eax, 0FAh
+		imul	eax, 250
 		mov	[bp+var_8], eax
 		add	[bp+var_4], eax
-		push	220012h
+		push	(34 shl 16) + 18
 		push	eax
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
 		call	sub_16438
-		push	220015h
+		push	(34 shl 16) + 21
 		pushd	[bp+var_4]
-		nopcall	sub_1FA0E
+		nopcall	hud_points_put
 		mov	eax, [bp+var_4]
 		add	_score_delta, eax
 		pop	si
@@ -37483,92 +37472,7 @@ sub_1F9BA	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1F9F4	proc far
-
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	di
-		; Hack?!? What is this I don't even
-		db 08dh
-		db 03eh
-		db 0c9h
-		db 01fh
-		movzx	edx, [bp+arg_4]
-		db 08dh
-		db 01eh
-		db 0a8h
-		db 01fh
-		mov	ax, [bp+arg_2]
-		mov	cx, 4
-		jmp	short loc_1FA27
-sub_1F9F4	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FA0E	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	edx, [bp+arg_0]
-		mov	di, offset _hud_gaiji_row
-		mov	ax, TX_WHITE
-		mov	_hud_gaiji_row[HUD_TRAM_W - 1], 0A0h
-		mov	bx, 1FA0h
-		mov	cx, 6
-
-loc_1FA27:
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	ds
-		push	di
-		push	ax
-		mov	ax, ds
-		mov	es, ax
-
-loc_1FA34:
-		mov	eax, edx
-		xor	edx, edx
-		div	dword ptr [bx]
-		or	ch, al
-		jz	short loc_1FA45
-		add	al, 0A0h
-		jmp	short loc_1FA47
-; ---------------------------------------------------------------------------
-
-loc_1FA45:
-		mov	al, 2
-
-loc_1FA47:
-		stosb
-		add	bx, 4
-		dec	cl
-		jnz	short loc_1FA34
-		add	dl, 0A0h
-		mov	[di], dl
-		call	gaiji_putsa
-		pop	di
-		pop	bp
-		retf	8
-sub_1FA0E	endp
-
+include th05/hud/number_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38903,34 +38807,7 @@ SHOT_FUNCS label word
 	dw shot_yuuka_l9
 byte_2297E	db 0
 		db 0
-		db  40h
-		db  42h	; B
-		db  0Fh
-		db    0
-		db 0A0h
-		db  86h
-		db    1
-		db    0
-unk_22988	db  10h
-		db  27h	; '
-		db    0
-		db    0
-		db 0E8h
-		db    3
-		db    0
-		db    0
-		db  64h	; d
-		db    0
-		db    0
-		db    0
-		db  0Ah
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
+include th02/hud/number_put[data].asm
 		db  10h
 		db  27h	; '
 		db 0E8h

@@ -6711,7 +6711,7 @@ arg_4		= word ptr  8
 		sub	sp, 4
 		push	si
 		push	di
-		mov	si, 0B4Ch
+		mov	si, offset _POWERS_OF_10_LONG
 		mov	di, 38h	; '8'
 		jmp	short loc_DC9A
 ; ---------------------------------------------------------------------------
@@ -6726,13 +6726,9 @@ loc_DC65:
 		sub	[bp+arg_0], eax
 		add	si, 4
 		mov	ax, [bp+var_4]
-		add	ax, 0A0h
+		add	ax, GB_DIGITS
 		mov	[bp+var_2], ax
-		push	di
-		push	[bp+arg_4]
-		push	ax
-		push	0E1h
-		call	gaiji_putca
+		call	gaiji_putca pascal, di, [bp+arg_4], ax, TX_WHITE
 		add	di, 2
 
 loc_DC9A:
@@ -34561,34 +34557,7 @@ bombs	db 3
 		db    5
 word_1E5B6	dw 0
 dword_1E5B8	dd 9C40h
-		db  40h
-		db  42h	; B
-		db  0Fh
-		db    0
-		db 0A0h
-		db  86h
-		db    1
-		db    0
-		db  10h
-		db  27h	; '
-		db    0
-		db    0
-		db 0E8h
-		db    3
-		db    0
-		db    0
-		db  64h	; d
-		db    0
-		db    0
-		db    0
-		db  0Ah
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
+include th02/hud/number_put[data].asm
 word_1E5D8	dw 4140h
 word_1E5DA	dw 4342h
 word_1E5DC	dw 44h
