@@ -444,8 +444,8 @@ loc_AF2D:
 		call	sub_100C6
 		call	_circles_render
 		GRCG_OFF_CLOBBERING dx
-		call	fp_2CE88
-		call	fp_2CE8A
+		call	_overlay_text_fp
+		call	_popup_fp
 		call	sub_10287
 		call	far ptr	_input_reset_sense
 		mov	al, byte_25FF8
@@ -752,7 +752,7 @@ sub_B237	proc near
 loc_B260:
 		mov	word_20A84, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		mov	fp_2300E, offset nullsub_2
+		mov	fp_2300E, offset nullfunc_near
 		call	sub_B063
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+17h], 0
@@ -1051,8 +1051,8 @@ loc_B506:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B52C:
-		mov	fp_2CE88, offset sub_11914
-		mov	fp_2CE8A, offset nullsub_2
+		mov	_overlay_text_fp, offset sub_11914
+		mov	_popup_fp, offset nullfunc_near
 		pop	si
 		pop	bp
 		retn
@@ -2095,10 +2095,10 @@ RANDRING_NEXT_DEF 1
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-nullsub_2	proc near
+public nullfunc_near
+nullfunc_near	proc near
 		retn
-nullsub_2	endp
+nullfunc_near	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -2606,7 +2606,7 @@ sub_C473	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_2429A, 0
-		mov	fp_23F58, offset nullsub_2
+		mov	fp_23F58, offset nullfunc_near
 		pop	bp
 		retn
 sub_C473	endp
@@ -2986,7 +2986,7 @@ loc_C7AE:
 		jnz	short loc_C7C9
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullsub_2
+		mov	fp_23F58, offset nullfunc_near
 		jmp	short loc_C7D0
 ; ---------------------------------------------------------------------------
 
@@ -3244,7 +3244,7 @@ sub_C9DA	proc near
 		jnz	short loc_C9FD
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullsub_2
+		mov	fp_23F58, offset nullfunc_near
 
 loc_C9FD:
 		call	sub_C99E
@@ -3473,7 +3473,7 @@ sub_CBFD	proc near
 		jnz	short loc_CC20
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullsub_2
+		mov	fp_23F58, offset nullfunc_near
 
 loc_CC20:
 		call	sub_CB30
@@ -3673,7 +3673,7 @@ loc_CDB4:
 		jnz	short loc_CDCF
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullsub_2
+		mov	fp_23F58, offset nullfunc_near
 		jmp	short loc_CDD6
 ; ---------------------------------------------------------------------------
 
@@ -7483,7 +7483,7 @@ sub_EE58	proc near
 		mov	_boss_update, eax
 		mov	ax, _boss_fg_render_func
 		mov	_boss_fg_render, ax
-		mov	fp_2CE88, offset sub_11CBB
+		mov	_overlay_text_fp, offset sub_11CBB
 		mov	al, 1
 		pop	bp
 		retn
@@ -8553,7 +8553,7 @@ var_1		= byte ptr -1
 		cmp	byte_2C99C, 24h	; '$'
 		jb	short loc_F8B0
 		call	sub_118D1
-		mov	fp_2CE88, offset nullsub_2
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F902
 ; ---------------------------------------------------------------------------
@@ -8629,7 +8629,7 @@ var_1		= byte ptr -1
 		cmp	byte_2C99C, 0
 		jnz	short loc_F920
 		call	sub_118F3
-		mov	fp_2CE88, offset nullsub_2
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F972
 ; ---------------------------------------------------------------------------
@@ -9733,8 +9733,8 @@ var_2		= byte ptr -2
 		ja	short loc_105E6
 		cmp	dream, 128
 		jb	short loc_105E6
-		mov	byte_2CE87, 4
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_DREAMBONUS_MAX
+		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_105E6
 		mov	_bullet_clear_time, 20
@@ -12219,7 +12219,7 @@ sub_118D1	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118DA:
-		call	text_putsa pascal, 4, si, off_228EE, TX_WHITE
+		call	text_putsa pascal, 4, si, _PLAYFIELD_BLANK_ROW, TX_WHITE
 		inc	si
 
 loc_118EB:
@@ -12244,7 +12244,7 @@ sub_118F3	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118FC:
-		call	text_putsa pascal, 4, si, off_228EE, TX_BLACK + TX_REVERSE
+		call	text_putsa pascal, 4, si, _PLAYFIELD_BLANK_ROW, TX_BLACK + TX_REVERSE
 		inc	si
 
 loc_1190C:
@@ -12278,16 +12278,16 @@ var_1		= byte ptr -1
 		jnz	short loc_1193E
 
 loc_11936:
-		mov	fp_2CE88, offset sub_11AAE
+		mov	_overlay_text_fp, offset sub_11AAE
 		jmp	short loc_11956
 ; ---------------------------------------------------------------------------
 
 loc_1193E:
-		mov	fp_2CE88, offset nullsub_2
+		mov	_overlay_text_fp, offset nullfunc_near
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
-		mov	byte_2CE8C, 0
+		mov	_popup_byte_unknown, 0
 		jmp	short loc_119AD
 ; ---------------------------------------------------------------------------
 
@@ -12361,7 +12361,7 @@ var_1		= byte ptr -1
 		cmp	byte_2288A, 0
 		jnz	short loc_119C9
 		call	sub_118F3
-		mov	fp_2CE88, offset nullsub_2
+		mov	_overlay_text_fp, offset nullfunc_near
 		jmp	short loc_11A19
 ; ---------------------------------------------------------------------------
 
@@ -12479,7 +12479,7 @@ sub_11A65	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		mov	al, byte_2CE8C
+		mov	al, _popup_byte_unknown
 		add	al, byte_2288B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
@@ -12509,9 +12509,9 @@ sub_11A65	endp
 sub_11AAE	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_2CE8C, 0C0h
+		cmp	_popup_byte_unknown, 0C0h
 		jb	loc_11B65
-		cmp	byte_2CE8C, 0C0h
+		cmp	_popup_byte_unknown, 0C0h
 		jnz	short loc_11ACB
 		call	sub_118D1
 		mov	byte_228EC, 0
@@ -12519,17 +12519,17 @@ sub_11AAE	proc near
 ; ---------------------------------------------------------------------------
 
 loc_11ACB:
-		test	byte_2CE8C, 1
+		test	_popup_byte_unknown, 1
 		jnz	short loc_11AD6
 		inc	byte_228EC
 
 loc_11AD6:
 		cmp	byte_228EC, 10h
 		jb	short loc_11AF8
-		test	byte_2CE8C, 1
+		test	_popup_byte_unknown, 1
 		jz	loc_11CB5
-		mov	fp_2CE88, offset nullsub_2
-		mov	byte_2CE8C, 0
+		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_popup_byte_unknown, 0
 		mov	byte_228EC, 0
 		pop	bp
 		retn
@@ -12580,7 +12580,7 @@ loc_11B19:
 ; ---------------------------------------------------------------------------
 
 loc_11B65:
-		cmp	byte_2CE8C, 0
+		cmp	_popup_byte_unknown, 0
 		jnz	short loc_11B91
 		mov	byte_228EC, 10h
 		pushd	[_stage_title]
@@ -12680,9 +12680,9 @@ loc_11C4E:
 		push	word_2CE6A
 		call	sub_11A1D
 		GRCG_OFF_CLOBBERING dx
-		test	byte_2CE8C, 3
+		test	_popup_byte_unknown, 3
 		jnz	short loc_11CB5
-		cmp	byte_2CE8C, 0
+		cmp	_popup_byte_unknown, 0
 		jz	short loc_11CB5
 		inc	byte_228EC
 		cmp	byte_228EC, 18h
@@ -12690,7 +12690,7 @@ loc_11C4E:
 		mov	byte_228EC, 0
 
 loc_11CB5:
-		inc	byte_2CE8C
+		inc	_popup_byte_unknown
 		pop	bp
 		retn
 sub_11AAE	endp
@@ -12722,7 +12722,7 @@ loc_11CE1:
 		jb	short loc_11CFE
 		test	byte_2288B, 1
 		jz	loc_11DE4
-		mov	fp_2CE88, offset nullsub_2
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	byte_2288B, 0
 		pop	bp
 		retn
@@ -12803,183 +12803,7 @@ loc_11DE4:
 		retn
 sub_11CBB	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11DEA	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		mov	al, byte_2CE87
-		cmp	al, byte_2CE72
-		jz	short loc_11E29
-		cmp	byte_2288C, 40h
-		jb	short loc_11E29
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
-		call	text_putsa pascal, (4 shl 16) + 23, off_228EE, TX_WHITE
-		mov	byte_2288C, 0
-
-loc_11E29:
-		cmp	byte_2288C, 0
-		jnz	short loc_11E9D
-		mov	al, byte_2CE87
-		mov	byte_2CE72, al
-		mov	[bp+var_1], 0
-		jmp	short loc_11E4B
-; ---------------------------------------------------------------------------
-
-loc_11E3C:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx-3B6Ch], 2
-		inc	[bp+var_1]
-
-loc_11E4B:
-		cmp	[bp+var_1], 8
-		jb	short loc_11E3C
-		mov	al, byte_2CE72
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	dword ptr [bx+1EF8h]
-		call	_strlen
-		add	sp, 4
-		mov	word_2CE70, ax
-		mov	bx, word_2CE70
-		mov	byte ptr [bx-3B6Ch], 0
-		add	ax, ax
-		mov	dx, 34h	; '4'
-		sub	dx, ax
-		mov	word_2CE82, dx
-		cmp	byte_2CE87, 2
-		jz	short loc_11E92
-		mov	ax, 1Ch
-		sub	ax, word_2CE70
-		mov	word_2CE84, ax
-		jmp	short loc_11E98
-; ---------------------------------------------------------------------------
-
-loc_11E92:
-		mov	word_2CE84, 10h
-
-loc_11E98:
-		mov	byte_2CE73, 0
-
-loc_11E9D:
-		cmp	byte_2288C, 80h
-		jb	short loc_11EC4
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
-		mov	byte_2288C, 0
-		mov	fp_2CE8A, offset nullsub_2
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_11EC4:
-		mov	al, byte_2288C
-		mov	ah, 0
-		mov	dx, word_2CE70
-		dec	dx
-		cmp	ax, dx
-		jge	short loc_11F36
-		mov	[bp+var_1], 0
-		jmp	short loc_11EF1
-; ---------------------------------------------------------------------------
-
-loc_11ED8:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx-3B6Bh]
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		mov	bx, dx
-		mov	[bx-3B6Ch], al
-		inc	[bp+var_1]
-
-loc_11EF1:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, word_2CE70
-		dec	dx
-		cmp	ax, dx
-		jl	short loc_11ED8
-		mov	al, byte_2CE72
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		les	bx, [bx+1EF8h]
-		assume es:nothing
-		mov	al, byte_2288C
-		mov	ah, 0
-		add	bx, ax
-		mov	al, es:[bx]
-		mov	bx, 0C494h
-		dec	bx
-		add	bx, word_2CE70
-		mov	[bx], al
-		call	gaiji_putsa pascal, word_2CE82, 2, ds, offset unk_2CE74, TX_WHITE
-		jmp	loc_11FD9
-; ---------------------------------------------------------------------------
-
-loc_11F36:
-		mov	ax, word_2CE82
-		cmp	ax, word_2CE84
-		jle	short loc_11F86
-		push	ax
-		push	2
-		mov	al, byte_2CE72
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	off_228D8[bx]
-		push	TX_WHITE
-		call	gaiji_putsa
-		mov	ax, word_2CE70
-		add	ax, ax
-		add	ax, word_2CE82
-		cmp	ax, 32h	; '2'
-		jg	short loc_11F7F
-		mov	ax, word_2CE70
-		add	ax, ax
-		add	ax, word_2CE82
-		call	text_putca pascal, ax, 22020h, TX_WHITE
-
-loc_11F7F:
-		sub	word_2CE82, 2
-		jmp	short loc_11FD9
-; ---------------------------------------------------------------------------
-
-loc_11F86:
-		cmp	byte_2CE73, 0
-		jnz	short loc_11FA5
-		mov	byte_2CE73, 1
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
-
-loc_11FA5:
-		push	word_2CE84
-		push	2
-		mov	al, byte_2CE72
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	off_228D8[bx]
-		push	TX_WHITE
-		call	gaiji_putsa
-		cmp	byte_2CE72, 2
-		jnz	short loc_11FD9
-		call	hud_points_put pascal, ((PLAYFIELD_TRAM_X + (PLAYFIELD_TRAM_W / 2)) shl 16) + 2, large [dword_2CE8E]
-
-loc_11FD9:
-		inc	byte_2288C
-		leave
-		retn
-sub_11DEA	endp
-
+include th04/hud/popup.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17980,8 +17804,8 @@ loc_14435:
 		or	al, al
 		jz	short loc_14450
 		mov	_is_hiscore, 1
-		mov	byte_2CE87, 0
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
+		mov	_popup_fp, offset popup_update_and_render
 
 loc_14450:
 		mov	eax, _score_delta_frame
@@ -18067,8 +17891,8 @@ sub_144CB	proc near
 		push	bp
 		mov	bp, sp
 		setfarfp	_boss_update, nullsub_1
-		mov	_boss_fg_render, offset nullsub_2
-		mov	_boss_custombullets_render, offset nullsub_2
+		mov	_boss_fg_render, offset nullfunc_near
+		mov	_boss_custombullets_render, offset nullfunc_near
 		mov	boss_phase, 0
 		mov	byte_26349, 0
 		mov	byte ptr word_2634A+1, 0
@@ -18122,8 +17946,8 @@ sub_14544	proc near
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt00bk_cdg
 		call	bb_stage_load pascal, ds, offset aSt00_bb
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_14544	endp
@@ -18209,8 +18033,8 @@ sub_146D0	proc near
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt02bk_cdg
 		call	bb_stage_load pascal, ds, offset aSt02_bb
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_146D0	endp
@@ -18256,8 +18080,8 @@ sub_1479F	proc near
 		call	super_entry_bfnt
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt03bk_cdg
 		call	bb_stage_load pascal, ds, offset aSt03_bb
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_1479F	endp
@@ -18310,8 +18134,8 @@ sub_14879	proc near
 		push	(24 shl 16) or 24
 		nopcall	select_for_rank
 		mov	_yumeko_interval_phase7, al
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_14879	endp
@@ -18325,7 +18149,7 @@ sub_14976	proc near
 		push	bp
 		mov	bp, sp
 		setfarfp	_midboss_update_func, nullsub_1
-		mov	_midboss_render_func, offset nullsub_2
+		mov	_midboss_render_func, offset nullfunc_near
 		mov	frames_until_midboss, 30000
 		call	sub_144CB
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -18342,8 +18166,8 @@ sub_14976	proc near
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt05bk_cdg
 		call	_cdg_load_all_noalpha pascal, 17, ds, offset aSt05bk2_cdg
 		call	bb_stage_load pascal, ds, offset aSt05_bb
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_14976	endp
@@ -18382,8 +18206,8 @@ sub_14A06	proc near
 		push	offset aSt06_bmt ; "st06.bmt"
 		call	super_entry_bfnt
 		call	bb_stage_load pascal, ds, offset aSt03_bb_0
-		mov	_stage_render, offset nullsub_2
-		mov	_stage_invalidate, offset nullsub_2
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retn
 sub_14A06	endp
@@ -22011,8 +21835,8 @@ sub_16F05	proc near
 
 loc_16F3B:
 		call	sub_10407
-		mov	byte_2CE87, 1
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_EXTEND
+		mov	_popup_fp, offset popup_update_and_render
 		call	snd_se_play pascal, 7
 
 loc_16F52:
@@ -22049,8 +21873,8 @@ loc_16F76:
 		jnb	short loc_16FAA
 		cmp	power, 127
 		jnz	short loc_16F9B
-		mov	byte_2CE87, 3
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_16F9B
 		mov	_bullet_clear_time, 20
@@ -22183,8 +22007,8 @@ loc_170B5:
 		cmp	power, 128
 		jb	short loc_170E7
 		mov	power, 128
-		mov	byte_2CE87, 3
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_170E7
 		mov	_bullet_clear_time, 20
@@ -22225,8 +22049,8 @@ loc_1712C:
 		inc	lives
 		call	sub_10407
 		call	snd_se_play pascal, 7
-		mov	byte_2CE87, 1
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_EXTEND
+		mov	_popup_fp, offset popup_update_and_render
 		jmp	short loc_17171
 ; ---------------------------------------------------------------------------
 
@@ -22236,8 +22060,8 @@ loc_17150:
 		mov	_bullet_clear_time, 20
 
 loc_1715C:
-		mov	byte_2CE87, 3
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		mov	power, 128
 		call	sub_E4FC
 
@@ -22466,8 +22290,8 @@ sub_1720E	endp
 sub_172FF	proc far
 		push	bp
 		mov	bp, sp
-		mov	_midboss_invalidate?, offset nullsub_2
-		mov	_midboss_render, offset nullsub_2
+		mov	_midboss_invalidate?, offset nullfunc_near
+		mov	_midboss_render, offset nullfunc_near
 		setfarfp	_midboss_update, nullsub_1
 		mov	_midboss_hp, 0
 		pop	bp
@@ -23841,7 +23665,7 @@ loc_17EE9:
 
 loc_17EFA:
 		mov	[bp+var_8], ax
-		mov	dword_2CE8E, 0
+		mov	_popup_bonus, 0
 		xor	di, di
 		jmp	loc_17F8D
 ; ---------------------------------------------------------------------------
@@ -23864,7 +23688,7 @@ loc_17F0B:
 
 loc_17F31:
 		movzx	eax, [bp+var_4]
-		add	dword_2CE8E, eax
+		add	_popup_bonus, eax
 		add	_score_delta, eax
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -23904,10 +23728,10 @@ loc_17F89:
 loc_17F8D:
 		cmp	di, 190h
 		jl	loc_17F0B
-		cmp	dword_2CE8E, 0
+		cmp	_popup_bonus, 0
 		jz	short loc_17FA8
-		mov	byte_2CE87, 2
-		mov	fp_2CE8A, offset sub_11DEA
+		mov	_popup_id_new, POPUP_ID_BONUS
+		mov	_popup_fp, offset popup_update_and_render
 
 loc_17FA8:
 		inc	_bullet_clear_trigger
@@ -29305,7 +29129,7 @@ loc_1AF66:
 
 loc_1AF85:
 		call	sub_F2B4
-		mov	fp_2CE88, offset sub_11CBB
+		mov	_overlay_text_fp, offset sub_11CBB
 		mov	boss_phase, 0
 		mov	boss_phase_frame, 0
 		mov	_boss_fg_render, offset sub_10F12
@@ -30806,7 +30630,7 @@ loc_1BCE7:
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
-		mov	_boss_custombullets_render, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -32013,7 +31837,7 @@ loc_1C7E3:
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
 		call	sub_1B3C2
-		mov	_boss_custombullets_render, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -33354,7 +33178,7 @@ loc_1D4F4:
 		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
-		mov	_boss_custombullets_render, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -37024,7 +36848,7 @@ loc_1F643:
 		call	boss_explode_small pascal, 4
 		mov	boss_phase_frame, 0
 		mov	boss_phase, 0FDh
-		mov	_boss_custombullets_render, offset nullsub_2
+		mov	_boss_custombullets_render, offset nullfunc_near
 		mov	byte_226C0, 0
 		jmp	short loc_1F666
 ; ---------------------------------------------------------------------------
@@ -37771,7 +37595,7 @@ loc_1FC55:
 		inc	boss_phase
 		mov	boss_phase_frame, 0
 		mov	byte_2C96C, 1
-		mov	_boss_fg_render, offset nullsub_2
+		mov	_boss_fg_render, offset nullfunc_near
 		jmp	loc_1FD5D
 ; ---------------------------------------------------------------------------
 
@@ -37840,7 +37664,7 @@ loc_1FD19:
 		call	sub_E480
 
 loc_1FD25:
-		mov	fp_2CE88, offset sub_119B1
+		mov	_overlay_text_fp, offset sub_119B1
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
@@ -38743,22 +38567,17 @@ off_22884	dw offset sub_1F776
 		dw offset sub_1F823
 byte_2288A	db 0
 byte_2288B	db 0
-byte_2288C	db 0
+public _popup_frame
+_popup_frame	db 0
 		db 0
 include th04/formats/bb_txt[data].asm
-include th04/strings/popup[data].asm
-gpDREAMBONUS_MAX db 65h, 66h, 67h, 68h,	69h, 6Ah, 6Bh, 6Ch, 6Dh, 6Eh, 0
-off_228D8	dd gpHISCORE_ENTRY
-		dd gpEXTEND
-		dd gpBONUS
-		dd gpFULL_POWERUP
-		dd gpDREAMBONUS_MAX
+include th04/hud/popup[data].asm
 byte_228EC	db 0
 		db 0
-off_228EE	dd asc_228FC
-					; "					  "...
+public _PLAYFIELD_BLANK_ROW
+_PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 include th04/strings/demoplay[data].asm
-asc_228FC	db '                                                ',0
+aPLAYFIELD_BLANK_ROW	db '                                                ',0
 		db 0
 SHOT_FUNCS label word
 	; Reimu
@@ -45914,23 +45733,9 @@ fp_2CE68	dw ?
 word_2CE6A	dw ?
 word_2CE6C	dw ?
 word_2CE6E	dw ?
-word_2CE70	dw ?
-byte_2CE72	db ?
-byte_2CE73	db ?
-unk_2CE74	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-word_2CE82	dw ?
-word_2CE84	dw ?
-		db    ?	;
-byte_2CE87	db ?
-fp_2CE88	dw ?
-fp_2CE8A	dw ?
-byte_2CE8C	db ?
-		db ?
-dword_2CE8E	dd ?
+
+include th04/hud/popup[bss].asm
+
 public _stage_title, _stage_bgm_title, _boss_bgm_title
 _stage_title    	dd ?
 _stage_bgm_title	dd ?

@@ -394,8 +394,8 @@ loc_ABD8:
 		call	sub_12CE5
 		call	_circles_render
 		GRCG_OFF_CLOBBERING dx
-		call	fp_259DC
-		call	fp_259DE
+		call	_overlay_text_fp
+		call	_popup_fp
 		call	sub_CD36
 		call	far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
@@ -677,7 +677,7 @@ sub_AED0	proc near
 loc_AEF9:
 		mov	word_213DE, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		mov	fp_23D90, offset nullsub_1
+		mov	fp_23D90, offset nullfunc_near
 		call	sub_AD03
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
@@ -906,8 +906,8 @@ loc_B156:
 
 loc_B1AE:
 		nopcall	sub_CB99
-		mov	fp_259DC, offset sub_10DA3
-		mov	fp_259DE, offset nullsub_1
+		mov	_overlay_text_fp, offset sub_10DA3
+		mov	_popup_fp, offset nullfunc_near
 		pop	si
 		pop	bp
 		retn
@@ -1835,10 +1835,10 @@ RANDRING_NEXT_DEF 1
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-nullsub_1	proc near
+public nullfunc_near
+nullfunc_near	proc near
 		retn
-nullsub_1	endp
+nullfunc_near	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -4012,15 +4012,15 @@ loc_CF70:
 		mov	al, stage_id
 		add	al, al
 		add	al, 2
-		mov	bgm_title_id, al
+		mov	_bgm_title_id, al
 		cmp	stage_id, 3
 		jnz	short loc_CFAC
 		cmp	playchar, 0
 		jz	short loc_CFAC
-		mov	bgm_title_id, 10h
+		mov	_bgm_title_id, 10h
 
 loc_CFAC:
-		mov	fp_259DC, offset sub_11195
+		mov	_overlay_text_fp, offset sub_11195
 		mov	al, 1
 		pop	bp
 		retn
@@ -6602,7 +6602,7 @@ var_1		= byte ptr -1
 		cmp	byte_25660, 24h	; '$'
 		jb	short loc_E47B
 		call	sub_10D4B
-		mov	fp_259DC, offset nullsub_1
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E4CD
 ; ---------------------------------------------------------------------------
@@ -6678,7 +6678,7 @@ var_1		= byte ptr -1
 		cmp	byte_25660, 0
 		jnz	short loc_E4EB
 		call	sub_10D77
-		mov	fp_259DC, offset nullsub_1
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E53D
 ; ---------------------------------------------------------------------------
@@ -7493,7 +7493,7 @@ loc_EBD8:
 ; ---------------------------------------------------------------------------
 
 loc_EBE4:
-		mov	_stage_render, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
 
 loc_EBEA:
 		pop	di
@@ -7865,8 +7865,8 @@ loc_EE60:
 
 loc_EE8C:
 		nopcall	sub_EEE8
-		mov	byte_259DB, 1
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_EXTEND
+		mov	_popup_fp, offset popup_update_and_render
 		call	snd_se_play pascal, 7
 
 locret_EEA3:
@@ -10161,7 +10161,7 @@ sub_FFA4	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_256A8, 0
-		mov	fp_255AA, offset nullsub_1
+		mov	fp_255AA, offset nullfunc_near
 		pop	bp
 		retn
 sub_FFA4	endp
@@ -10461,7 +10461,7 @@ loc_10245:
 		jnz	short loc_10281
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_255AA, offset nullsub_1
+		mov	fp_255AA, offset nullfunc_near
 		mov	al, Palettes+42
 		mov	byte_257D6, al
 		mov	al, Palettes+43
@@ -11887,16 +11887,16 @@ var_1		= byte ptr -1
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_10DC6
-		mov	fp_259DC, offset sub_10F36
+		mov	_overlay_text_fp, offset sub_10F36
 		jmp	short loc_10DDE
 ; ---------------------------------------------------------------------------
 
 loc_10DC6:
-		mov	fp_259DC, offset nullsub_1
+		mov	_overlay_text_fp, offset nullfunc_near
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_10DDE:
-		mov	byte_259E0, 0
+		mov	_popup_byte_unknown, 0
 		jmp	short loc_10E35
 ; ---------------------------------------------------------------------------
 
@@ -11970,7 +11970,7 @@ var_1		= byte ptr -1
 		cmp	byte_22EA2, 0
 		jnz	short loc_10E51
 		call	sub_10D77
-		mov	fp_259DC, offset nullsub_1
+		mov	_overlay_text_fp, offset nullfunc_near
 		jmp	short loc_10EA1
 ; ---------------------------------------------------------------------------
 
@@ -12088,7 +12088,7 @@ sub_10EED	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		mov	al, byte_259E0
+		mov	al, _popup_byte_unknown
 		add	al, byte_22EA3
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
@@ -12118,9 +12118,9 @@ sub_10EED	endp
 sub_10F36	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_259E0, 0C0h
+		cmp	_popup_byte_unknown, 0C0h
 		jb	loc_10FED
-		cmp	byte_259E0, 0C0h
+		cmp	_popup_byte_unknown, 0C0h
 		jnz	short loc_10F53
 		call	sub_10D4B
 		mov	byte_22EF6, 0
@@ -12128,17 +12128,17 @@ sub_10F36	proc near
 ; ---------------------------------------------------------------------------
 
 loc_10F53:
-		test	byte_259E0, 1
+		test	_popup_byte_unknown, 1
 		jnz	short loc_10F5E
 		inc	byte_22EF6
 
 loc_10F5E:
 		cmp	byte_22EF6, 10h
 		jb	short loc_10F80
-		test	byte_259E0, 1
+		test	_popup_byte_unknown, 1
 		jz	loc_1118F
-		mov	fp_259DC, offset nullsub_1
-		mov	byte_259E0, 0
+		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_popup_byte_unknown, 0
 		mov	byte_22EF6, 0
 		pop	bp
 		retn
@@ -12189,7 +12189,7 @@ loc_10FA1:
 ; ---------------------------------------------------------------------------
 
 loc_10FED:
-		cmp	byte_259E0, 0
+		cmp	_popup_byte_unknown, 0
 		jnz	short loc_11057
 		mov	byte_22EF6, 10h
 		mov	al, stage_id
@@ -12198,13 +12198,13 @@ loc_10FED:
 		mov	al, stage_id
 		add	al, al
 		inc	al
-		mov	bgm_title_id, al
+		mov	_bgm_title_id, al
 		cmp	stage_id, 0
 		jnz	short loc_11023
 		cmp	playchar, 0
 		jnz	short loc_11023
 		mov	stage_title_id, 0
-		mov	bgm_title_id, 0
+		mov	_bgm_title_id, 0
 
 loc_11023:
 		mov	al, stage_title_id
@@ -12215,7 +12215,7 @@ loc_11023:
 		call	_strlen
 		add	sp, 4
 		mov	stage_title_len, ax
-		mov	al, bgm_title_id
+		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -12279,7 +12279,7 @@ loc_110A1:
 		sub	ax, bgm_title_len
 		push	ax
 		push	23
-		mov	al, bgm_title_id
+		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -12328,9 +12328,9 @@ loc_11128:
 		push	stage_title_len
 		call	sub_10EA5
 		GRCG_OFF_CLOBBERING dx
-		test	byte_259E0, 3
+		test	_popup_byte_unknown, 3
 		jnz	short loc_1118F
-		cmp	byte_259E0, 0
+		cmp	_popup_byte_unknown, 0
 		jz	short loc_1118F
 		inc	byte_22EF6
 		cmp	byte_22EF6, 18h
@@ -12338,7 +12338,7 @@ loc_11128:
 		mov	byte_22EF6, 0
 
 loc_1118F:
-		inc	byte_259E0
+		inc	_popup_byte_unknown
 		pop	bp
 		retn
 sub_10F36	endp
@@ -12370,7 +12370,7 @@ loc_111BB:
 		jb	short loc_111D8
 		test	byte_22EA3, 1
 		jz	loc_112D2
-		mov	fp_259DC, offset nullsub_1
+		mov	_overlay_text_fp, offset nullfunc_near
 		mov	byte_22EA3, 0
 		pop	bp
 		retn
@@ -12401,7 +12401,7 @@ loc_11211:
 		cmp	byte_22EA3, 0
 		jnz	short loc_11237
 		mov	byte_22EF6, 10h
-		mov	al, bgm_title_id
+		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -12422,7 +12422,7 @@ loc_11237:
 		sub	ax, word_259C6
 		push	ax
 		push	23
-		mov	al, bgm_title_id
+		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -12463,257 +12463,7 @@ loc_112D2:
 		retn
 sub_11195	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_112D8	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		mov	al, byte_259DB
-		cmp	al, byte_259CA
-		jz	short loc_11317
-		cmp	byte_22EA4, 40h
-		jb	short loc_11317
-		call	text_putsa pascal, (4 shl 16) + 2, off_22EF8, TX_WHITE
-		call	text_putsa pascal, (4 shl 16) + 23, off_22EF8, TX_WHITE
-		mov	byte_22EA4, 0
-
-loc_11317:
-		cmp	byte_22EA4, 0
-		jnz	short loc_1138B
-		mov	al, byte_259DB
-		mov	byte_259CA, al
-		mov	[bp+var_1], 0
-		jmp	short loc_11339
-; ---------------------------------------------------------------------------
-
-loc_1132A:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+468Ch], 2
-		inc	[bp+var_1]
-
-loc_11339:
-		cmp	[bp+var_1], 8
-		jb	short loc_1132A
-		mov	al, byte_259CA
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	dword ptr [bx+1BA6h]
-		call	_strlen
-		add	sp, 4
-		mov	word_259C8, ax
-		mov	bx, word_259C8
-		mov	byte ptr [bx+468Ch], 0
-		add	ax, ax
-		mov	dx, 34h	; '4'
-		sub	dx, ax
-		mov	word_259D6, dx
-		cmp	byte_259DB, 2
-		jz	short loc_11380
-		mov	ax, 1Ch
-		sub	ax, word_259C8
-		mov	word_259D8, ax
-		jmp	short loc_11386
-; ---------------------------------------------------------------------------
-
-loc_11380:
-		mov	word_259D8, 10h
-
-loc_11386:
-		mov	byte_259CB, 0
-
-loc_1138B:
-		cmp	byte_22EA4, 80h
-		jb	short loc_113B2
-		call	text_putsa pascal, (4 shl 16) + 2, off_22EF8, TX_WHITE
-		mov	byte_22EA4, 0
-		mov	fp_259DE, offset nullsub_1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_113B2:
-		mov	al, byte_22EA4
-		mov	ah, 0
-		mov	dx, word_259C8
-		dec	dx
-		cmp	ax, dx
-		jge	short loc_11424
-		mov	[bp+var_1], 0
-		jmp	short loc_113DF
-; ---------------------------------------------------------------------------
-
-loc_113C6:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+468Dh]
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		mov	bx, dx
-		mov	[bx+468Ch], al
-		inc	[bp+var_1]
-
-loc_113DF:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, word_259C8
-		dec	dx
-		cmp	ax, dx
-		jl	short loc_113C6
-		mov	al, byte_259CA
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		les	bx, off_22EE6[bx]
-		assume es:nothing
-		mov	al, byte_22EA4
-		mov	ah, 0
-		add	bx, ax
-		mov	al, es:[bx]
-		mov	bx, 468Ch
-		dec	bx
-		add	bx, word_259C8
-		mov	[bx], al
-		call	gaiji_putsa pascal, word_259D6, 2, ds, offset unk_259CC, TX_WHITE
-		jmp	loc_114BF
-; ---------------------------------------------------------------------------
-
-loc_11424:
-		mov	ax, word_259D6
-		cmp	ax, word_259D8
-		jle	short loc_11474
-		push	ax
-		push	2
-		mov	al, byte_259CA
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	off_22EE6[bx] ; strp
-		push	TX_WHITE
-		call	gaiji_putsa
-		mov	ax, word_259C8
-		add	ax, ax
-		add	ax, word_259D6
-		cmp	ax, 32h	; '2'
-		jg	short loc_1146D
-		mov	ax, word_259C8
-		add	ax, ax
-		add	ax, word_259D6
-		call	text_putca pascal, ax, (2 shl 16) + '  ', TX_WHITE
-
-loc_1146D:
-		sub	word_259D6, 2
-		jmp	short loc_114BF
-; ---------------------------------------------------------------------------
-
-loc_11474:
-		cmp	byte_259CB, 0
-		jnz	short loc_11493
-		mov	byte_259CB, 1
-		call	text_putsa pascal, (4 shl 16) + 2, off_22EF8, TX_WHITE
-
-loc_11493:
-		push	word_259D8
-		push	2
-		mov	al, byte_259CA
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	off_22EE6[bx] ; strp
-		push	TX_WHITE
-		call	gaiji_putsa
-		cmp	byte_259CA, 2
-		jnz	short loc_114BF
-		pushd	[dword_259E2]
-		call	sub_114C5
-
-loc_114BF:
-		inc	byte_22EA4
-		leave
-		retn
-sub_112D8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_114C5	proc near
-
-var_12		= dword	ptr -12h
-var_E		= dword	ptr -0Eh
-var_A		= byte ptr -0Ah
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-arg_0		= dword	ptr  4
-
-		enter	12h, 0
-		push	si
-		push	di
-		mov	[bp+var_E], 0F4240h
-		xor	si, si
-		xor	di, di
-		jmp	short loc_11521
-; ---------------------------------------------------------------------------
-
-loc_114D9:
-		mov	eax, [bp+arg_0]
-		xor	edx, edx
-		div	[bp+var_E]
-		mov	[bp+var_12], eax
-		mov	eax, [bp+arg_0]
-		xor	edx, edx
-		div	[bp+var_E]
-		mov	[bp+arg_0], edx
-		or	di, word ptr [bp+var_12]
-		or	di, di
-		jz	short loc_11508
-		mov	al, byte ptr [bp+var_12]
-		add	al, 0A0h
-		mov	[bp+si+var_A], al
-		jmp	short loc_1150C
-; ---------------------------------------------------------------------------
-
-loc_11508:
-		mov	[bp+si+var_A], 2
-
-loc_1150C:
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_E]
-		xor	edx, edx
-		div	ebx
-		mov	[bp+var_E], eax
-		inc	si
-
-loc_11521:
-		cmp	[bp+var_E], 1
-		ja	short loc_114D9
-		mov	al, byte ptr [bp+arg_0]
-		add	al, 0A0h
-		mov	[bp+var_4], al
-		mov	[bp+var_3], 0A0h
-		mov	[bp+var_2], 0
-		push	(28 shl 16) + 2
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_114C5	endp
-
+include th04/hud/popup.asm
 include th04/formats/bb_txt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12908,8 +12658,8 @@ loc_116FD:
 		or	al, al
 		jz	short loc_11718
 		mov	_is_hiscore, 1
-		mov	byte_259DB, 0
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
+		mov	_popup_fp, offset popup_update_and_render
 
 loc_11718:
 		mov	eax, _score_delta_frame
@@ -15234,7 +14984,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12996
 		cmp	word_2671A, 2
 		jg	short loc_12A05
-		mov	_stage_render, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
 
 loc_12991:
 		call	tiles_render_all
@@ -27865,8 +27615,8 @@ off_19EB0	dw offset loc_19AC8
 sub_19EBC	proc far
 		push	bp
 		mov	bp, sp
-		mov	_midboss_invalidate?, offset nullsub_1
-		mov	_midboss_render, offset nullsub_1
+		mov	_midboss_invalidate?, offset nullfunc_near
+		mov	_midboss_render, offset nullfunc_near
 		setfarfp	_midboss_update, nullsub_2
 		mov	_midboss_active, 0
 		mov	_midboss_hp, 0
@@ -33329,7 +33079,7 @@ loc_1CB7F:
 		mov	[bp+var_8], 7D0h
 
 loc_1CB84:
-		mov	dword_259E2, 0
+		mov	_popup_bonus, 0
 		xor	di, di
 		jmp	short loc_1CBF1
 ; ---------------------------------------------------------------------------
@@ -33352,7 +33102,7 @@ loc_1CB91:
 
 loc_1CBB7:
 		movzx	eax, [bp+var_4]
-		add	dword_259E2, eax
+		add	_popup_bonus, eax
 		add	_score_delta, eax
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -33377,10 +33127,10 @@ loc_1CBED:
 loc_1CBF1:
 		cmp	di, 1B8h
 		jl	short loc_1CB91
-		cmp	dword_259E2, 0
+		cmp	_popup_bonus, 0
 		jz	short loc_1CC0A
-		mov	byte_259DB, 2
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_BONUS
+		mov	_popup_fp, offset popup_update_and_render
 
 loc_1CC0A:
 		inc	_bullet_clear_trigger
@@ -35511,8 +35261,8 @@ loc_1DBD0:
 		jnb	short loc_1DC04
 		cmp	power, 127
 		jnz	short loc_1DBF5
-		mov	byte_259DB, 3
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DBF5
 		mov	_bullet_clear_time, 20
@@ -35615,8 +35365,8 @@ loc_1DCCC:
 		cmp	power, 128
 		jb	short loc_1DCFE
 		mov	power, 128
-		mov	byte_259DB, 3
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DCFE
 		mov	_bullet_clear_time, 20
@@ -35658,8 +35408,8 @@ loc_1DD47:
 		inc	byte ptr es:[bx+0Bh]
 		call	sub_EEE8
 		call	snd_se_play pascal, 7
-		mov	byte_259DB, 1
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_EXTEND
+		mov	_popup_fp, offset popup_update_and_render
 		jmp	short loc_1DD90	; jumptable 0001CCD9 case 696
 ; ---------------------------------------------------------------------------
 
@@ -35669,8 +35419,8 @@ loc_1DD6F:
 		mov	_bullet_clear_time, 20
 
 loc_1DD7B:
-		mov	byte_259DB, 3
-		mov	fp_259DE, offset sub_112D8
+		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_popup_fp, offset popup_update_and_render
 		mov	power, 128
 		call	sub_11DE6
 
@@ -35941,7 +35691,7 @@ sub_1DF61	proc near
 		push	bp
 		mov	bp, sp
 		setfarfp	_boss_update, nullsub_2
-		mov	_boss_fg_render, offset nullsub_1
+		mov	_boss_fg_render, offset nullfunc_near
 		mov	byte_26719, 0
 		mov	byte_2671D, 0
 		mov	byte_2671F, 0
@@ -35993,8 +35743,8 @@ sub_1DFEF	proc far
 		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	Palettes, 0FFh
 		mov	Palettes+1, 0FFh
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
 sub_1DFEF	endp
@@ -36039,8 +35789,8 @@ sub_1E0B3	proc far
 		push	( 32 shl 16) or   8
 		call	select_for_rank
 		mov	byte_2D01E, al
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
 sub_1E0B3	endp
@@ -36081,8 +35831,8 @@ sub_1E186	proc far
 		call	super_entry_bfnt
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt02_bb
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
 sub_1E186	endp
@@ -36177,8 +35927,8 @@ loc_1E3A6:
 		push	0
 		call	_cdg_load_single_noalpha
 		call	bb_stage_load pascal, ds, offset aSt03_bb
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
 sub_1E245	endp
@@ -36192,7 +35942,7 @@ sub_1E3C2	proc far
 		push	bp
 		mov	bp, sp
 		setfarfp	_midboss_update_func, nullsub_2
-		mov	_midboss_render_func, offset nullsub_1
+		mov	_midboss_render_func, offset nullfunc_near
 		mov	frames_until_midboss, 60000
 		call	sub_1DF61
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -36231,7 +35981,7 @@ sub_1E47C	proc far
 		push	bp
 		mov	bp, sp
 		setfarfp	_midboss_update_func, nullsub_2
-		mov	_midboss_render_func, offset nullsub_1
+		mov	_midboss_render_func, offset nullfunc_near
 		mov	frames_until_midboss, 60000
 		call	sub_1DF61
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -36245,8 +35995,8 @@ sub_1E47C	proc far
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		call	bb_stage_load pascal, ds, offset aSt05_bb
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		push	(48 shl 16) or 64
 		push	(80 shl 16) or 96
 		call	select_for_rank
@@ -36294,8 +36044,8 @@ sub_1E518	proc far
 		mov	byte_2D01E, 0
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06_bb
-		mov	_stage_render, offset nullsub_1
-		mov	_stage_invalidate, offset nullsub_1
+		mov	_stage_render, offset nullfunc_near
+		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
 sub_1E518	endp
@@ -36616,8 +36366,8 @@ loc_1E801:
 		mov	_boss_sprite_cur, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
-		mov	bgm_title_id, 0Fh
-		mov	fp_259DC, offset sub_11195
+		mov	_bgm_title_id, 0Fh
+		mov	_overlay_text_fp, offset sub_11195
 		call	_cdg_free pascal, 16
 		call	bb_stage_free
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
@@ -36660,7 +36410,7 @@ loc_1E8C9:
 		call	sub_B80F
 
 loc_1E8D5:
-		mov	fp_259DC, offset sub_10E39
+		mov	_overlay_text_fp, offset sub_10E39
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------
@@ -41093,19 +40843,15 @@ word_22E9E	dw 0
 word_22EA0	dw 0
 byte_22EA2	db 0
 byte_22EA3	db 0
-byte_22EA4	db 0
+public _popup_frame
+_popup_frame	db 0
 		db    0
 include th04/formats/bb_txt[data].asm
-include th04/strings/popup[data].asm
-		db    0
-off_22EE6	dd gpHISCORE_ENTRY
-		dd gpEXTEND
-		dd gpBONUS
-		dd gpFULL_POWERUP
+include th04/hud/popup[data].asm
 byte_22EF6	db 0
 		db 0
-off_22EF8	dd asc_22F6A
-					; "					  "...
+public _PLAYFIELD_BLANK_ROW
+_PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 STAGE_TITLE		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
 		dd aMCsb@bPhantomN	; "å∂ñÈÅ@Å` Phantom Night"
 		dd aMKib@bLakeOfBl	; "åÕäâÅ@Å` Lake of Blood"
@@ -41132,7 +40878,7 @@ BGM_TITLE		dd aWitchingDream	; "Witching Dream"
 		dd aVivavvvvilcvb@	; "Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence"
 		dd aPnpcuyszlB@bCa	; "è≠èó„Yëzã»Å@Å` Capriccio "
 include th04/strings/demoplay[data].asm
-asc_22F6A	db '                                                ',0
+aPLAYFIELD_BLANK_ROW	db '                                                ',0
 aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0
 aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0
 aMKib@bLakeOfBl	db 'åÕäâÅ@Å` Lake of Blood',0
@@ -42114,22 +41860,7 @@ bgm_title_len	dw ?
 stage_title_id	db ?
 		db ?
 word_259C6	dw ?
-word_259C8	dw ?
-byte_259CA	db ?
-byte_259CB	db ?
-unk_259CC	db    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-word_259D6	dw ?
-word_259D8	dw ?
-bgm_title_id	db ?
-byte_259DB	db ?
-fp_259DC	dw ?
-fp_259DE	dw ?
-byte_259E0	db ?
-		db ?
-dword_259E2	dd ?
+include th04/hud/popup[bss].asm
 byte_259E6	db ?
 		db ?
 fp_259E8	dw ?
