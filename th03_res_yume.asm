@@ -307,7 +307,7 @@ include libs/BorlandC/files[data].asm
 __heaplen	dw 0
 include libs/BorlandC/ioerror[data].asm
 include libs/BorlandC/stklen[data].asm
-include libs/borlandC/nearheap[data].asm
+include libs/BorlandC/nearheap[data].asm
 include libs/BorlandC/pathops[data].asm
 include libs/BorlandC/setvbuf[data].asm
 include libs/BorlandC/sysnerr[data].asm
