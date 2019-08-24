@@ -21,8 +21,8 @@ _flags		dw ?
 WORDREGS	ends
 
 REGS		union ;	(sizeof=0x10, standard type)
-_w		WORDREGS <?>
-_h		BYTEREGS <?>
+x		WORDREGS <?>
+h		BYTEREGS <?>
 REGS		ends
 
 SREGS		struc ;	(sizeof=0x8, standard type)

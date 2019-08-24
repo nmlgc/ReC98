@@ -47,9 +47,9 @@ func EGC_SHIFT_LEFT_ALL	; egc_shift_left_all() {
 	push	SI
 	push	DI
 
-	@@x	= (RETSIZE+1)*2
+	x	= (RETSIZE+1)*2
 
-	mov	BX,[BP+@@x]
+	mov	BX,[BP+x]
 	mov	AL,00000111b		; RegWriteEnable
 	out	6ah,AL
 	mov	AL,80h			; CGmode = 1

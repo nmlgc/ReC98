@@ -1,4 +1,0 @@
-VRAM_PLANE_B	dd ?
-VRAM_PLANE_R	dd ?
-VRAM_PLANE_G	dd ?
-VRAM_PLANE_E	dd ?

@@ -6936,7 +6936,7 @@ loc_1F1C7:
 		sub	bx, dx
 		shl	bx, 2
 		mov	eax, [bx+11DDh]
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	es:[bx], eax
 		inc	si
@@ -6960,7 +6960,7 @@ loc_1F1F8:
 		sub	bx, dx
 		shl	bx, 2
 		mov	eax, [bx+11FDh]
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	es:[bx], eax
 		inc	si
@@ -9190,7 +9190,7 @@ loc_20513:
 		mov	eax, es:[bx+1]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, si
 		mov	es:[bx], eax
 		mov	eax, [bp+var_4]
@@ -9208,7 +9208,7 @@ loc_20513:
 		mov	eax, es:[bx+81h]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_3892C
 		add	bx, si
 		mov	es:[bx], eax
 		mov	eax, [bp+var_4]
@@ -9226,7 +9226,7 @@ loc_20513:
 		mov	eax, es:[bx+101h]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_38930
 		add	bx, si
 		mov	es:[bx], eax
 		mov	eax, [bp+var_4]
@@ -9244,7 +9244,7 @@ loc_20513:
 		mov	eax, es:[bx+181h]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_38934
 		add	bx, si
 		mov	es:[bx], eax
 		add	si, 50h	; 'P'
@@ -9267,7 +9267,7 @@ loc_20626:
 		les	bx, [bp+var_10]
 		add	bx, ax
 		mov	eax, es:[bx+1]
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, si
 		mov	es:[bx], eax
 		mov	ax, cx
@@ -9275,7 +9275,7 @@ loc_20626:
 		les	bx, [bp+var_10]
 		add	bx, ax
 		mov	eax, es:[bx+81h]
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_3892C
 		add	bx, si
 		mov	es:[bx], eax
 		mov	ax, cx
@@ -9283,7 +9283,7 @@ loc_20626:
 		les	bx, [bp+var_10]
 		add	bx, ax
 		mov	eax, es:[bx+101h]
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_38930
 		add	bx, si
 		mov	es:[bx], eax
 		mov	ax, cx
@@ -9291,7 +9291,7 @@ loc_20626:
 		les	bx, [bp+var_10]
 		add	bx, ax
 		mov	eax, es:[bx+181h]
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_38934
 		add	bx, si
 		mov	es:[bx], eax
 		add	si, 50h	; 'P'
@@ -9348,7 +9348,7 @@ arg_4		= word ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_206D8:
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	eax, es:[bx]
 		mov	dx, si
@@ -9356,7 +9356,7 @@ loc_206D8:
 		les	bx, [bp+var_4]
 		add	bx, dx
 		mov	es:[bx+1], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_3892C
 		add	bx, di
 		mov	eax, es:[bx]
 		mov	dx, si
@@ -9364,7 +9364,7 @@ loc_206D8:
 		les	bx, [bp+var_4]
 		add	bx, dx
 		mov	es:[bx+81h], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_38930
 		add	bx, di
 		mov	eax, es:[bx]
 		mov	dx, si
@@ -9372,7 +9372,7 @@ loc_206D8:
 		les	bx, [bp+var_4]
 		add	bx, dx
 		mov	es:[bx+101h], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_38934
 		add	bx, di
 		mov	eax, es:[bx]
 		mov	dx, si
@@ -11525,14 +11525,14 @@ loc_218D8:
 loc_218DE:
 		push	1
 		call	sub_EA3E
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, si
 		mov	al, [bp+var_1]
 		mov	es:[bx], al
 		push	0
 		call	sub_EA3E
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, si
 		mov	al, [bp+var_1]
 		mov	es:[bx], al
@@ -13125,7 +13125,9 @@ loc_22601:
 loc_22604:
 		cmp	[bp+var_1], 28h	; '('
 		jb	loc_2253F
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_2]
+		push	0C0h ; '?'
+		push	[bp+arg_2]
+		call	grcg_setcolor
 		mov	[bp+var_1], 0
 		jmp	short loc_22655
 ; ---------------------------------------------------------------------------
@@ -17262,7 +17264,7 @@ loc_248B0:
 ; ---------------------------------------------------------------------------
 
 loc_248BE:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
@@ -17324,7 +17326,7 @@ loc_24941:
 ; ---------------------------------------------------------------------------
 
 loc_2495E:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
@@ -17376,7 +17378,7 @@ loc_249D8:
 ; ---------------------------------------------------------------------------
 
 loc_249EA:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
@@ -23916,7 +23918,8 @@ sub_2869E	proc far
 		mov	bp, sp
 		push	si
 		mov	byte_360CC, 1
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
+		push	200005h
+		call	text_fillca
 		push	ds
 		push	offset aBoss6_l_grp ; "boss6_l.grp"
 		call	sub_10BAE
@@ -23937,7 +23940,8 @@ sub_2869E	proc far
 		call	sub_12559
 		add	sp, 16h
 		call	sub_12569
-		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
+		push	2000E1h
+		call	text_fillca
 		mov	si, 18Fh
 		jmp	short loc_2871C
 ; ---------------------------------------------------------------------------
@@ -26240,7 +26244,7 @@ loc_29B04:
 		add	dx, [bp+var_4]
 		sub	dx, ax
 		jl	short loc_29B76
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, word_3AC5C
 		add	bx, [bp+var_4]
 		mov	ax, di
@@ -26325,7 +26329,7 @@ loc_29BE7:
 		push	ax
 		call	sub_EA71
 		pop	cx
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, word_3AC5C
 		add	bx, [bp+var_4]
 		mov	ax, di
@@ -26399,7 +26403,7 @@ loc_29C2A:
 		add	dx, 0FFF6h
 		sub	dx, ax
 		jl	short loc_29CAB
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, word_3AC5C
 		add	bx, [bp+var_4]
 		add	bx, 0FFF6h
@@ -26625,11 +26629,11 @@ loc_29E46:
 loc_29EA2:
 		push	1
 		call	sub_EA3E
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, es:[bx]
 		mov	[bp+var_4], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+50h]
 		mov	[bp+var_3], al
@@ -26647,7 +26651,7 @@ loc_29EA2:
 		add	sp, 6
 		cmp	[bp+var_4], 0
 		jz	short loc_29EF8
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_4]
 		mov	es:[bx], al
@@ -26655,7 +26659,7 @@ loc_29EA2:
 loc_29EF8:
 		cmp	[bp+var_3], 0
 		jz	short loc_29F0B
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_3]
 		mov	es:[bx+50h], al
@@ -26696,11 +26700,11 @@ loc_29F62:
 		call	sub_EABB
 		push	1
 		call	sub_EA3E
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, es:[bx]
 		mov	[bp+var_4], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+50h]
 		mov	[bp+var_3], al
@@ -26720,7 +26724,7 @@ loc_29F62:
 		add	sp, 8
 		cmp	[bp+var_4], 0
 		jz	short loc_29FC3
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_4]
 		mov	es:[bx], al
@@ -26728,7 +26732,7 @@ loc_29F62:
 loc_29FC3:
 		cmp	[bp+var_3], 0
 		jz	short loc_29FD6
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_3]
 		mov	es:[bx+50h], al
@@ -27299,7 +27303,7 @@ loc_2A4D9:
 		add	sp, 8
 		cmp	[bp+var_6], 0
 		jz	short loc_2A58C
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		assume es:nothing
 		add	bx, di
 		mov	al, [bp+var_6]
@@ -27308,7 +27312,7 @@ loc_2A4D9:
 loc_2A58C:
 		cmp	[bp+var_5], 0
 		jz	short loc_2A59F
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_5]
 		mov	es:[bx+50h], al
@@ -27388,7 +27392,7 @@ loc_2A618:
 		add	sp, 8
 		cmp	[bp+var_6], 0
 		jz	short loc_2A677
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		assume es:nothing
 		add	bx, di
 		mov	al, [bp+var_6]
@@ -27397,7 +27401,7 @@ loc_2A618:
 loc_2A677:
 		cmp	[bp+var_5], 0
 		jz	short loc_2A68A
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_5]
 		mov	es:[bx+50h], al
@@ -28883,11 +28887,11 @@ loc_2B3F4:
 		push	1
 		call	sub_EA3E
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, es:[bx]
 		mov	[bp+var_6], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+50h]
 		mov	[bp+var_5], al
@@ -28900,11 +28904,11 @@ loc_2B3F4:
 		and	[bp+var_5], al
 		cmp	[bp+var_2], 7
 		jnz	short loc_2B4A2
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+1]
 		mov	[bp+var_4], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+51h]
 		mov	[bp+var_3], al
@@ -28919,7 +28923,7 @@ loc_2B4A2:
 		add	sp, 4
 		cmp	[bp+var_6], 0
 		jz	short loc_2B4C5
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_6]
 		mov	es:[bx], al
@@ -28927,7 +28931,7 @@ loc_2B4A2:
 loc_2B4C5:
 		cmp	[bp+var_5], 0
 		jz	short loc_2B4D8
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_5]
 		mov	es:[bx+50h], al
@@ -28937,7 +28941,7 @@ loc_2B4D8:
 		jnz	short loc_2B504
 		cmp	[bp+var_4], 0
 		jz	short loc_2B4F1
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_4]
 		mov	es:[bx+1], al
@@ -28945,7 +28949,7 @@ loc_2B4D8:
 loc_2B4F1:
 		cmp	[bp+var_3], 0
 		jz	short loc_2B504
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_3]
 		mov	es:[bx+51h], al
@@ -29050,11 +29054,11 @@ loc_2B60C:
 		push	1
 		call	sub_EA3E
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, es:[bx]
 		mov	[bp+var_6], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+50h]
 		mov	[bp+var_5], al
@@ -29067,11 +29071,11 @@ loc_2B60C:
 		and	[bp+var_5], al
 		cmp	[bp+var_2], 7
 		jnz	short loc_2B671
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+1]
 		mov	[bp+var_4], al
-		mov	bx, word ptr VRAM_PLANE_B
+		mov	bx, word ptr dword_38928
 		add	bx, di
 		mov	al, es:[bx+51h]
 		mov	[bp+var_3], al
@@ -29088,7 +29092,7 @@ loc_2B671:
 		add	sp, 4
 		cmp	[bp+var_6], 0
 		jz	short loc_2B698
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_6]
 		mov	es:[bx], al
@@ -29096,7 +29100,7 @@ loc_2B671:
 loc_2B698:
 		cmp	[bp+var_5], 0
 		jz	short loc_2B6AB
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_5]
 		mov	es:[bx+50h], al
@@ -29106,7 +29110,7 @@ loc_2B6AB:
 		jnz	short loc_2B6D7
 		cmp	[bp+var_4], 0
 		jz	short loc_2B6C4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_4]
 		mov	es:[bx+1], al
@@ -29114,7 +29118,7 @@ loc_2B6AB:
 loc_2B6C4:
 		cmp	[bp+var_3], 0
 		jz	short loc_2B6D7
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_38928
 		add	bx, di
 		mov	al, [bp+var_3]
 		mov	es:[bx+51h], al
@@ -30230,7 +30234,7 @@ loc_2C162:
 ; ---------------------------------------------------------------------------
 
 loc_2C16E:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -30283,7 +30287,7 @@ loc_2C1E5:
 ; ---------------------------------------------------------------------------
 
 loc_2C202:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -30326,7 +30330,7 @@ loc_2C270:
 ; ---------------------------------------------------------------------------
 
 loc_2C282:
-		pushd	[VRAM_PLANE_R]
+		pushd	[dword_3892C]
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -31633,7 +31637,8 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	byte_360CC, 1
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
+		push	200005h
+		call	text_fillca
 		push	ds
 		push	offset aBoss7_d1_grp ; "boss7_d1.grp"
 		call	sub_10BAE
@@ -31683,7 +31688,8 @@ loc_2CF26:
 		push	ds
 		push	offset unk_35090
 		call	sub_EB10
-		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
+		push	2000E1h
+		call	text_fillca
 		mov	word_39854, 1
 		push	0
 		push	ds

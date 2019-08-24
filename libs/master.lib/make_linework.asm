@@ -49,10 +49,10 @@ PAGE 98,120
 
 ; LINEWORK構造体の各メンバの定義
 ; 名称  - ｵﾌｾｯﾄ - 説明
-make_lin_x	= 0	; 現在のx座標
-make_lin_dlx	= 2	; 誤差変数への加算値
-make_lin_s	= 4	; 誤差変数
-make_lin_d	= 6	; 最小横移動量(符号付き)
+x	= 0	; 現在のx座標
+dlx	= 2	; 誤差変数への加算値
+s	= 4	; 誤差変数
+d	= 6	; 最小横移動量(符号付き)
 
 ;-------------------------------------------------------------------------
 ; make_linework - DDA LINE用構造体の作成
@@ -69,7 +69,7 @@ make_lin_d	= 6	; 最小横移動量(符号付き)
 	EVEN
 make_linework	PROC NEAR
 	push	SI
-	mov	[BX+make_lin_x],DX	; w.x = x1
+	mov	[BX+x],DX	; w.x = x1
 
 	sub	AX,DX		; AX = (x2 - x1)
 	cmp	CX,1
@@ -78,7 +78,7 @@ make_linework	PROC NEAR
 	idiv	CX
 	cmp	DX,8000h
 	adc	AX,-1
-	mov	[BX+make_lin_d],AX	; w.d = (x2-x1)/(y2-y1)
+	mov	[BX+d],AX	; w.d = (x2-x1)/(y2-y1)
 	cmp	DX,8000h
 	cmc
 	sbb	SI,SI
@@ -88,8 +88,8 @@ make_linework	PROC NEAR
 	div	CX
 	add	AX,SI
 	xor	AX,SI
-	mov	[BX+make_lin_dlx],AX	; w.dlx = (x2-x1)%(y2-y1)*0x10000L
-	mov	word ptr [BX+make_lin_s],8000h	; w.s = 8000h
+	mov	[BX+dlx],AX	; w.dlx = (x2-x1)%(y2-y1)*0x10000L
+	mov	word ptr [BX+s],8000h	; w.s = 8000h
 	pop	SI
 	ret
 	EVEN

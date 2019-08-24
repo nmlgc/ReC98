@@ -5322,14 +5322,14 @@ loc_C7DD:
 		push	1
 		call	sub_D107
 		pop	cx
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	ax, es:[bx]
 		mov	[bp+var_A], ax
 		push	0
 		call	sub_D107
 		pop	cx
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, di
 		mov	ax, [bp+var_A]
 		mov	es:[bx], ax
@@ -6537,7 +6537,7 @@ sub_CEAD	proc far
 		call	graph_start
 		call	respal_create
 		call	sub_E984
-		call	vram_planes_set
+		call	sub_EC46
 
 loc_CEFE:
 		pop	bp
@@ -6731,8 +6731,8 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		nopcall	sub_D0C5
 		leave
@@ -6771,8 +6771,8 @@ inregs		= REGS ptr -10h
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		nopcall	sub_D0C5
 		leave
@@ -6798,8 +6798,8 @@ sub_D094	proc far
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	bp
 		retf
@@ -6931,8 +6931,8 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_RMW
+		mov	dx, 7Ch	; '|'
+		mov	al, 0C0h ; 'À'
 		out	dx, al
 		test	bl, 1
 		jz	short loc_D14F
@@ -6998,8 +6998,8 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
-		mov	dx, 7Ch
-		mov	al, GC_TDW
+		mov	dx, 7Ch	; '|'
+		mov	al, 80h
 		out	dx, al
 		test	bl, 1
 		jz	short loc_D199
@@ -7061,8 +7061,8 @@ sub_D184	endp
 sub_D1CE	proc far
 		push	bp
 		mov	bp, sp
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	bp
 		retf
@@ -8264,7 +8264,7 @@ loc_D95A:
 ; ---------------------------------------------------------------------------
 
 loc_D99D:
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, [bp+var_8]
 		mov	ax, [bp+var_6]
 		mov	es:[bx], ax
@@ -8607,7 +8607,7 @@ loc_DC61:
 		mov	si, ax
 		cmp	byte_134EA, 0
 		jnz	short loc_DC87
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	ax, [bp+var_16]
 		mov	es:[bx], ax
@@ -8619,38 +8619,38 @@ loc_DC87:
 		dec	si
 		push	1
 		call	sub_D107
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_28], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_24], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_20], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
 		call	sub_D107
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, [bp+var_28]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, [bp+var_24]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, [bp+var_20]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, [bp+var_1C]
 		mov	es:[bx], eax
@@ -8721,7 +8721,7 @@ loc_DD8E:
 		mov	si, ax
 		cmp	byte_134EA, 0
 		jnz	short loc_DDB4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	ax, [bp+var_16]
 		mov	es:[bx], ax
@@ -8733,38 +8733,38 @@ loc_DDB4:
 		dec	si
 		push	1
 		call	sub_D107
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_28], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_24], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_20], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
 		call	sub_D107
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, [bp+var_28]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, [bp+var_24]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, [bp+var_20]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, [bp+var_1C]
 		mov	es:[bx], eax
@@ -8822,38 +8822,38 @@ loc_DE93:
 		mov	si, ax
 		push	1
 		call	sub_D107
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_28], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_24], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_20], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, es:[bx]
 		mov	[bp+var_1C], eax
 		push	0
 		call	sub_D107
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, si
 		mov	eax, [bp+var_28]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, si
 		mov	eax, [bp+var_24]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, si
 		mov	eax, [bp+var_20]
 		mov	es:[bx], eax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, si
 		mov	eax, [bp+var_1C]
 		mov	es:[bx], eax
@@ -10700,7 +10700,21 @@ fuuin_11_TEXT	segment	byte public 'CODE' use16
 		leave
 		retf
 
-include th01/hardware/vram_planes_set.asm
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_EC46	proc far
+		push	bp
+		mov	bp, sp
+		mov	dword_1464E, 0A8000000h
+		mov	dword_14652, 0B0000000h
+		mov	dword_14656, 0B8000000h
+		mov	dword_1465A, 0E0000000h
+		pop	bp
+		retf
+sub_EC46	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10780,14 +10794,14 @@ loc_ECD7:
 loc_ECE2:
 		push	1
 		call	sub_D107
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, [bp+var_A]
 		mov	ax, es:[bx]
 		mov	[bp+var_8], ax
 		push	0
 		call	sub_D107
 		add	sp, 4
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, [bp+var_A]
 		mov	ax, [bp+var_8]
 		mov	es:[bx], ax
@@ -10974,19 +10988,19 @@ loc_EE59:
 		push	1
 		call	sub_D107
 		pop	cx
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, [bp+var_14]
 		mov	ax, es:[bx]
 		mov	[bp+var_10], ax
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, [bp+var_14]
 		mov	ax, es:[bx]
 		mov	[bp+var_E], ax
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, [bp+var_14]
 		mov	ax, es:[bx]
 		mov	[bp+var_C], ax
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, [bp+var_14]
 		mov	ax, es:[bx]
 		mov	[bp+var_A], ax
@@ -11009,7 +11023,7 @@ loc_EEA9:
 		call	sub_ED32
 		push	0
 		call	sub_D13A
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, di
 		mov	eax, [bp+var_1C]
 		mov	es:[bx+si], eax
@@ -11019,7 +11033,7 @@ loc_EEA9:
 		lea	ax, [bp+var_18]
 		push	ax
 		call	sub_ED32
-		les	bx, VRAM_PLANE_B
+		les	bx, dword_1464E
 		add	bx, di
 		mov	eax, [bp+var_18]
 		or	es:[bx+si], eax
@@ -11028,7 +11042,7 @@ loc_EEA9:
 		lea	ax, [bp+var_18]
 		push	ax
 		call	sub_ED32
-		les	bx, VRAM_PLANE_R
+		les	bx, dword_14652
 		add	bx, di
 		mov	eax, [bp+var_18]
 		or	es:[bx+si], eax
@@ -11037,7 +11051,7 @@ loc_EEA9:
 		lea	ax, [bp+var_18]
 		push	ax
 		call	sub_ED32
-		les	bx, VRAM_PLANE_G
+		les	bx, dword_14656
 		add	bx, di
 		mov	eax, [bp+var_18]
 		or	es:[bx+si], eax
@@ -11047,7 +11061,7 @@ loc_EEA9:
 		push	ax
 		call	sub_ED32
 		add	sp, 22h
-		les	bx, VRAM_PLANE_E
+		les	bx, dword_1465A
 		add	bx, di
 		mov	eax, [bp+var_18]
 		or	es:[bx+si], eax
@@ -12358,7 +12372,10 @@ unk_141AA	db    ?	;
 ; void (*off_1464A)(void)
 off_1464A	dw ?
 word_1464C	dw ?
-include th01/hardware/vram_planes[bss].asm
+dword_1464E	dd ?
+dword_14652	dd ?
+dword_14656	dd ?
+dword_1465A	dd ?
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 		dd    ?

@@ -59,10 +59,10 @@ PAGE 98,120
 
 ; LINEWORK構造体の各メンバの定義
 ; 名称  - ｵﾌｾｯﾄ - 説明
-koizoid_x	= 0	; 現在のx座標
-koizoid_dlx	= 2	; 誤差変数への加算値
-koizoid_s	= 4	; 誤差変数
-koizoid_d	= 6	; 最小横移動量(符号付き)
+x	= 0	; 現在のx座標
+dlx	= 2	; 誤差変数への加算値
+s	= 4	; 誤差変数
+d	= 6	; 最小横移動量(符号付き)
 
 ;-------------------------------------------------------------------------
 ; draw_trapezoid - 台形の描画
@@ -82,14 +82,14 @@ koizoid_d	= 6	; 最小横移動量(符号付き)
 draw_trapezoid	PROC NEAR
 	mov	AX,ClipYB_adr
 	mov	CS:[koizoid_yb_adr],AX
-	mov	AX,[trapez_a+koizoid_d]
+	mov	AX,[trapez_a+d]
 	mov	CS:[koizoid_trapez_a_d],AX
-	mov	AX,[trapez_b+koizoid_d]
+	mov	AX,[trapez_b+d]
 	mov	CS:[koizoid_trapez_b_d],AX
 
-	mov	AX,[trapez_a+koizoid_dlx]
+	mov	AX,[trapez_a+dlx]
 	mov	CS:[koizoid_trapez_a_dlx],AX
-	mov	AX,[trapez_b+koizoid_dlx]
+	mov	AX,[trapez_b+dlx]
 	mov	CS:[koizoid_trapez_b_dlx],AX
 
 	mov	AX,ClipXL
@@ -102,8 +102,8 @@ draw_trapezoid	PROC NEAR
 
 	push	BP
 
-	mov	CX,[trapez_a+koizoid_x]
-	mov	BP,[trapez_b+koizoid_x]
+	mov	CX,[trapez_a+x]
+	mov	BP,[trapez_b+x]
 
 @@YLOOP:
 	; 水平線 (with clipping) start ===================================
@@ -179,16 +179,16 @@ endif
 	; 水平線 (with clipping) end ===================================
 
 @@SKIP_HLINE:
-	add	[trapez_a+koizoid_s],1234h
+	add	[trapez_a+s],1234h
 	org $-2
 koizoid_trapez_a_dlx	dw ?
-	mov	CX,[trapez_a+koizoid_x]
+	mov	CX,[trapez_a+x]
 	adc	CX,1234h
 	org $-2
 koizoid_trapez_a_d	dw ?
-	mov	[trapez_a+koizoid_x],CX
+	mov	[trapez_a+x],CX
 
-	add	[trapez_b+koizoid_s],1234h
+	add	[trapez_b+s],1234h
 	org $-2
 koizoid_trapez_b_dlx	dw ?
 	adc	BP,1234h
@@ -200,7 +200,7 @@ koizoid_trapez_b_d	dw ?
 	js	short @@OWARI
 	jmp	@@YLOOP		; うぐぐ(;_;)
 @@OWARI:
-	mov	[trapez_b+koizoid_x],BP
+	mov	[trapez_b+x],BP
 	pop	BP
 	ret
 	EVEN

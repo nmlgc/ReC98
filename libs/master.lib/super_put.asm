@@ -51,16 +51,16 @@ func SUPER_PUT
 	push	SI
 	push	DI
 
-	@@x	= (RETSIZE+3)*2
-	@@y	= (RETSIZE+2)*2
-	@@num	= (RETSIZE+1)*2
+	x	= (RETSIZE+3)*2
+	y	= (RETSIZE+2)*2
+	num	= (RETSIZE+1)*2
 
-	mov	BX,[BP+@@num]
+	mov	BX,[BP+num]
 	shl	BX,1		;integer size & near pointer
 	mov	DX,super_patsize[BX]	;pattern size (1-8)
 
-	mov	CX,[BP+@@x]
-	mov	BP,[BP+@@y]
+	mov	CX,[BP+x]
+	mov	BP,[BP+y]
 	mov	AX,BP		;-+
 	shl	AX,2		; |
 	add	BP,AX		; |BP=y*80

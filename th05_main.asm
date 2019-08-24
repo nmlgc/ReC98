@@ -353,8 +353,11 @@ _envp		= dword	ptr  0Ch
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		push	ax
-		call	snd_determine_modes
-		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
+		call	sub_14BE0
+		push	ds
+		push	offset aMiko	; "miko"
+		push	0B00h
+		call	sub_14EB0
 
 loc_AE89:
 		call	sub_B237
@@ -385,7 +388,7 @@ sub_AEA6	proc near
 		mov	bp, sp
 		mov	word_25FE6, 1
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		call	far ptr	sub_14FCE
 
 loc_AEBB:
@@ -443,8 +446,8 @@ loc_AF2D:
 		call	sub_C346
 		call	sub_100C6
 		call	sub_ED54
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		call	fp_2CE88
 		call	fp_2CE8A
@@ -526,7 +529,7 @@ loc_B003:
 		out	dx, al
 		mov	byte_25353, al
 		xor	byte_25352, 1
-		call	snd_se_update
+		call	sub_14D28
 		inc	dword_25FDC
 		mov	ax, word_25FE0
 		mov	dx, ax
@@ -757,7 +760,8 @@ sub_B237	proc near
 
 loc_B260:
 		mov	word_20A84, 1
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
+		push	200005h
+		call	text_fillca
 		mov	fp_2300E, offset nullsub_2
 		call	sub_B063
 		les	bx, dword_23EF0
@@ -1061,9 +1065,10 @@ loc_B506:
 		mov	es:[bx+3], al
 		push	word ptr off_20A86+2
 		push	bx
-		push	SND_LOAD_SONG
-		call	snd_load
-		kajacall	KAJA_SONG_PLAY
+		push	600h
+		call	sub_14EB0
+		push	0
+		call	sub_14F68
 
 loc_B52C:
 		mov	fp_2CE88, offset sub_11914
@@ -1187,9 +1192,21 @@ loc_B640:
 loc_B645:
 		cmp	word_23A56, 0
 		jnz	short loc_B640
-		call	gaiji_putsa pascal, (26 shl 16) + 12, ds, offset gsCHUUDAN, TX_YELLOW
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
-		call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
+		push	1A000Ch
+		push	ds
+		push	offset gsCHUUDAN
+		push	0C1h
+		call	gaiji_putsa
+		push	1A000Eh
+		push	ds
+		push	offset gsSAIKAI
+		push	0E9h
+		call	gaiji_putsa
+		push	1A000Fh
+		push	ds
+		push	offset gsSHUURYOU
+		push	0C1h
+		call	gaiji_putsa
 
 loc_B682:
 		push	0
@@ -1205,20 +1222,28 @@ loc_B697:
 		mov	si, ax
 		or	si, si
 		jnz	short loc_B6C3
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
-		push	(26 shl 16) + 15
+		push	1A000Eh
+		push	ds
+		push	offset gsSAIKAI
+		push	0E9h
+		call	gaiji_putsa
+		push	1A000Fh
 		push	ds
 		push	offset gsSHUURYOU
-		push	TX_YELLOW
+		push	0C1h
 		jmp	short loc_B6E2
 ; ---------------------------------------------------------------------------
 
 loc_B6C3:
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_YELLOW
-		push	(26 shl 16) + 15
+		push	1A000Eh
+		push	ds
+		push	offset gsSAIKAI
+		push	0C1h
+		call	gaiji_putsa
+		push	1A000Fh
 		push	ds
 		push	offset gsSHUURYOU
-		push	TX_WHITE + TX_UNDERLINE
+		push	0E9h
 
 loc_B6E2:
 		call	gaiji_putsa
@@ -1251,9 +1276,21 @@ loc_B710:
 loc_B715:
 		test	byte ptr word_23A56+1, 10h
 		jnz	short loc_B710
-		call	text_putsa pascal, (26 shl 16) + 12, ds, offset asc_20BFE, TX_WHITE
-		call	text_putsa pascal, (26 shl 16) + 14, ds, offset asc_20C03, TX_WHITE
-		call	text_putsa pascal, (26 shl 16) + 15, ds, offset asc_20C08, TX_WHITE
+		push	1A000Ch
+		push	ds
+		push	offset asc_20BFE ; "	"
+		push	0E1h
+		call	text_putsa
+		push	1A000Eh
+		push	ds
+		push	offset asc_20C03 ; "	"
+		push	0E1h
+		call	text_putsa
+		push	1A000Fh
+		push	ds
+		push	offset asc_20C08 ; "	"
+		push	0E1h
+		call	text_putsa
 		mov	ax, si
 
 loc_B754:
@@ -1898,7 +1935,7 @@ sub_BBE8	endp
 
 
 sub_BC2A	proc near
-		mov	al, GC_OFF
+		mov	al, 0
 		out	7Ch, al
 		mov	al, 7
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -1906,7 +1943,7 @@ sub_BC2A	proc near
 		mov	al, 5
 		out	6Ah, al		; PC-98	GDC (6a):
 					;
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	al, 6
 		out	6Ah, al		; PC-98	GDC (6a):
@@ -3269,7 +3306,8 @@ loc_C4BC:
 		mov	byte_2C979, al
 		mov	ax, fp_23F5A
 		mov	fp_23F58, ax
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	byte_2264E, 1
 		les	bx, dword_23EF0
 		assume es:nothing
@@ -3572,7 +3610,8 @@ loc_C777:
 		ja	short loc_C78C
 		cmp	byte_25FE3, 0
 		jnz	short loc_C78C
-		call	snd_se_play pascal, 9
+		push	9
+		call	sub_14CEE
 
 loc_C78C:
 		pop	bp
@@ -3625,7 +3664,8 @@ loc_C7D0:
 loc_C7D8:
 		cmp	byte_2429B, 80h
 		jnz	short loc_C7F9
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		cmp	byte_25FEA, 5
 		jz	short loc_C7F2
 		mov	byte_2CE00, 1
@@ -3728,7 +3768,8 @@ loc_C87C:
 		mov	ax, word ptr dword_2CEA0+2
 		mov	[si+2],	ax
 		mov	word ptr [si+6], 18h
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	PaletteTone, 0AAh ; 'ｪ'
 		jmp	short loc_C8D4
 ; ---------------------------------------------------------------------------
@@ -3814,8 +3855,8 @@ loc_C989:
 loc_C98D:
 		cmp	di, 8
 		jl	loc_C8E4
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -3881,7 +3922,8 @@ loc_C9FD:
 loc_CA05:
 		cmp	byte_2429B, 50h	; 'P'
 		jnz	short loc_CA26
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		cmp	byte_25FEA, 5
 		jz	short loc_CA1F
 		mov	byte_2CE00, 1
@@ -4033,7 +4075,8 @@ sub_CB30	proc near
 		push	0
 		call	sub_14C7C
 		call	sub_CF50
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
+		push	0C00007h
+		call	grcg_setcolor
 		push	0D10010h
 		push	3Fh ; '?'
 		call	grcg_vline
@@ -4075,8 +4118,8 @@ sub_CB30	proc near
 		call	grcg_circle
 
 loc_CBE4:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		mov	al, byte_2429B
 		mov	ah, 0
@@ -4114,7 +4157,8 @@ loc_CC20:
 loc_CC28:
 		cmp	byte_2429B, 40h
 		jnz	short loc_CC49
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		cmp	byte_25FEA, 5
 		jz	short loc_CC42
 		mov	byte_2CE00, 1
@@ -4253,7 +4297,8 @@ loc_CD59:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_CD77
-		call	snd_se_play pascal, 9
+		push	9
+		call	sub_14CEE
 		mov	PaletteTone, 96h
 		jmp	short loc_CD8D
 ; ---------------------------------------------------------------------------
@@ -4322,7 +4367,8 @@ loc_CDD6:
 loc_CDDE:
 		cmp	byte_2429B, 0A0h
 		jnz	short loc_CDFF
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		cmp	byte_25FEA, 5
 		jz	short loc_CDF8
 		mov	byte_2CE00, 1
@@ -4453,7 +4499,7 @@ sub_CEC2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -4488,7 +4534,7 @@ sub_CEF2	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -4553,7 +4599,7 @@ sub_CF50	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -4624,7 +4670,7 @@ sub_CFBA	proc near
 		push	di
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -4657,7 +4703,7 @@ sub_CFBA	endp
 
 sub_CFEE	proc near
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -4749,8 +4795,8 @@ arg_4		= word ptr  8
 		mov	ah, [bp+arg_0]
 		call	sub_E6EE
 		call	fp_2449A
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	bp
 		retn	6
@@ -4853,8 +4899,8 @@ loc_D124:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEA6
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		push	200010h
 		push	10h
@@ -4933,8 +4979,8 @@ loc_D1B0:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEB4
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		push	2000DDh
 		push	10h
@@ -5014,8 +5060,8 @@ loc_D23E:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_DEC2
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		push	600048h
 		push	10h
@@ -5091,8 +5137,8 @@ loc_D2C7:
 		mov	ah, 1
 		call	sub_E6EE
 		call	sub_E01E
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		push	200010h
 		push	10h
@@ -5583,8 +5629,8 @@ loc_D630:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -5849,8 +5895,8 @@ loc_D82E:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -6077,8 +6123,8 @@ loc_D9C6:
 		push	3B4Eh
 		push	0
 		call	sub_D4F8
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -6231,10 +6277,11 @@ loc_DB0A:
 		call	sub_14C7C
 		call	sub_E950
 		call	sub_DA25
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
+		push	0C00006h
+		call	grcg_setcolor
 		call	sub_D327
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		leave
 		retn
@@ -6388,13 +6435,15 @@ loc_DC74:
 
 loc_DC79:
 		mov	[si+7Ah], al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
+		push	0C00008h
+		call	grcg_setcolor
 		push	word ptr [si+76h]
 		mov	al, [si+8Ch]
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
+		push	0C00009h
+		call	grcg_setcolor
 		push	word ptr [si+64h]
 		mov	al, [si+83h]
 		mov	ah, 0
@@ -6406,7 +6455,8 @@ loc_DC79:
 		jbe	short loc_DCC5
 
 loc_DCBA:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		push	0C0000Fh
+		call	grcg_setcolor
 
 loc_DCC5:
 		push	word ptr [si+52h]
@@ -6414,8 +6464,8 @@ loc_DCC5:
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -6859,7 +6909,7 @@ arg_0		= word ptr  4
 
 		enter	6, 0
 		push	di
-		push	GC_TDW
+		push	80h
 		mov	al, byte_24498
 		mov	ah, 0
 		push	ax
@@ -6911,8 +6961,8 @@ loc_DFA1:
 		add	[bp+var_6], 10h
 		cmp	[bp+var_6], 180h
 		jb	short loc_DF59
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		leave
@@ -7644,7 +7694,8 @@ loc_E45D:
 		mov	byte ptr es:[bx+1Ah], 0FFh
 
 loc_E466:
-		kajacall	KAJA_SONG_FADE, 4
+		push	204h
+		call	sub_14F68
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -7664,7 +7715,8 @@ sub_E480	proc far
 		mov	bp, sp
 		les	bx, dword_23EF0
 		mov	byte ptr es:[bx+1Ah], 0FDh
-		kajacall	KAJA_SONG_FADE, 4
+		push	204h
+		call	sub_14F68
 		push	10h
 		call	palette_black_out
 		push	ds
@@ -8015,7 +8067,7 @@ sub_E696	endp
 
 
 sub_E6E2	proc near
-		mov	al, GC_RMW
+		mov	al, 0C0h
 		out	7Ch, al
 		retn
 sub_E6E2	endp
@@ -8027,7 +8079,7 @@ sub_E6E2	endp
 
 
 sub_E6E8	proc near
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		retn
 sub_E6E8	endp
@@ -8449,7 +8501,7 @@ sub_E914	endp
 sub_E92E	proc near
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -8477,7 +8529,7 @@ sub_E92E	endp
 sub_E950	proc near
 		pushf
 		cli
-		mov	al, GC_TDW
+		mov	al, 80h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -9203,7 +9255,8 @@ arg_4		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
+		push	0C00001h
+		call	grcg_setcolor
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -9232,8 +9285,8 @@ loc_EEE1:
 		add	di, 28h	; '('
 		dec	dx
 		jnz	short loc_EECC
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	bp
@@ -9350,7 +9403,10 @@ loc_EF7E:
 ; ---------------------------------------------------------------------------
 
 loc_EF83:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
+		push	di
+		push	si
+		push	2000E1h
+		call	text_putca
 		inc	di
 
 loc_EF91:
@@ -9393,7 +9449,7 @@ loc_EFBA:
 		push	si
 		call	sub_EE9A
 		push	0Ch
-		call	frame_delay
+		call	sub_1510E
 		inc	si
 
 loc_EFD6:
@@ -9445,7 +9501,7 @@ loc_F021:
 		mov	[bp+arg_0], al
 		inc	word ptr dword_2C930
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		cmp	word_2C938, 0
 		jnz	short loc_F045
 		push	2000F0h
@@ -9497,16 +9553,18 @@ loc_F097:
 		les	bx, [bp+s]
 		cmp	byte ptr es:[bx], 24h ;	'$'
 		jnz	short loc_F0AD
-		push	(KAJA_SONG_STOP shl 8)
+		push	100h
 		jmp	short loc_F0BB
 ; ---------------------------------------------------------------------------
 
 loc_F0AD:
-		call	snd_load pascal, [bp+s], SND_LOAD_SONG
-		push	(KAJA_SONG_PLAY shl 8)
+		pushd	[bp+s]
+		push	600h
+		call	sub_14EB0
+		push	0
 
 loc_F0BB:
-		call	snd_kaja_func
+		call	sub_14F68
 		jmp	short loc_F068
 ; ---------------------------------------------------------------------------
 
@@ -9582,7 +9640,7 @@ loc_F14A:
 		push	word_2C936
 		mov	ah, 0
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putca
 		add	word_2C934, 2
 
@@ -9657,8 +9715,14 @@ loc_F1E6:
 		mov	word_2C936, 0Ch
 
 loc_F1F2:
-		call	text_boxfilla pascal, (20 shl 16) + 20, (50 shl 16) + 23, TX_BLUE
-		call	text_boxfilla pascal, (6 shl 16) + 12, (36 shl 16) + 15, TX_BLUE
+		push	140014h
+		push	320017h
+		push	21h ; '!'
+		call	text_boxfilla
+		push	6000Ch
+		push	24000Fh
+		push	21h ; '!'
+		call	text_boxfilla
 		push	word_2C934
 		push	word_2C936
 		call	sub_EF74
@@ -9691,7 +9755,12 @@ loc_F249:
 		pop	es
 		mov	es:[bx+1], al
 		inc	word ptr dword_2C930
-		call	text_putsa pascal, word_2C934, word_2C936, word ptr [bp+var_6+2], bx, TX_WHITE
+		push	word_2C934
+		push	word_2C936
+		push	word ptr [bp+var_6+2]
+		push	bx
+		push	0E1h
+		call	text_putsa
 		add	word_2C934, 2
 		call	sub_14FD6
 		cmp	word_23A56, 0
@@ -9706,7 +9775,7 @@ loc_F296:
 		push	1
 
 loc_F29E:
-		call	frame_delay
+		call	sub_1510E
 		jmp	short loc_F227
 ; ---------------------------------------------------------------------------
 
@@ -9745,8 +9814,12 @@ sub_F2B4	proc far
 		push	ds
 		push	offset aSt06_bb2 ; "st06.bb2"
 		call	super_entry_bfnt
-		call	snd_load pascal, ds, offset aSt06b, SND_LOAD_SONG
-		kajacall	KAJA_SONG_PLAY
+		push	ds
+		push	offset aSt06b	; "st06b"
+		push	600h
+		call	sub_14EB0
+		push	0
+		call	sub_14F68
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
 		call	file_ropen
@@ -9789,7 +9862,7 @@ loc_F333:
 		mov	al, byte_25352
 		out	dx, al
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		pop	bp
 		retf
 sub_F2B4	endp
@@ -9884,7 +9957,7 @@ loc_F421:
 
 loc_F432:
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		call	sub_EF2A
@@ -10120,8 +10193,8 @@ loc_F5D2:
 loc_F5D8:
 		cmp	[bp+var_6], 2
 		jl	loc_F539
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -10520,17 +10593,17 @@ loc_F8DA:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	TX_BLACK
+		push	1
 		call	gaiji_putca
 		add	di, 2
 
 loc_F8F1:
-		cmp	di, 52
+		cmp	di, 34h	; '4'
 		jl	short loc_F8DA
 		inc	si
 
 loc_F8F7:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_F8D5
 
 loc_F8FC:
@@ -10597,17 +10670,17 @@ loc_F94E:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	TX_BLACK
+		push	1
 		call	gaiji_putca
 		add	di, 2
 
 loc_F965:
-		cmp	di, 52
+		cmp	di, 34h	; '4'
 		jl	short loc_F94E
 		inc	si
 
 loc_F96B:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_F949
 
 loc_F970:
@@ -10637,7 +10710,7 @@ loc_F97F:
 		or	al, al
 		jnz	short loc_F98F
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		jmp	short loc_F97F
 ; ---------------------------------------------------------------------------
 
@@ -10650,7 +10723,7 @@ loc_F99A:
 		or	al, al
 		jnz	short loc_F9AA
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		jmp	short loc_F99A
 ; ---------------------------------------------------------------------------
 
@@ -10660,10 +10733,18 @@ loc_F9AA:
 ; ---------------------------------------------------------------------------
 
 loc_F9B1:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		push	[bp+var_2]
+		push	0C00B0h
+		push	0E1h
+		call	gaiji_putca
 		push	1
-		call	frame_delay
-		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B3, TX_WHITE
+		call	sub_1510E
+		push	[bp+var_2]
+		push	0Ch
+		push	ds
+		push	offset asc_226B3 ; "  "
+		push	0E1h
+		call	text_putsa
 		sub	[bp+var_2], 2
 
 loc_F9DE:
@@ -10674,16 +10755,28 @@ loc_F9DE:
 ; ---------------------------------------------------------------------------
 
 loc_F9EB:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		push	[bp+var_2]
+		push	0C00B0h
+		push	0E1h
+		call	gaiji_putca
 		push	1
-		call	frame_delay
-		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B6, TX_WHITE
+		call	sub_1510E
+		push	[bp+var_2]
+		push	0Ch
+		push	ds
+		push	offset asc_226B6 ; "  "
+		push	0E1h
+		call	text_putsa
 		add	[bp+var_2], 2
 
 loc_FA18:
 		cmp	[bp+var_2], 14h
 		jl	short loc_F9EB
-		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
+		push	14000Ch
+		push	ds
+		push	offset gGAMEOVER
+		push	0E1h
+		call	gaiji_putsa
 		push	0
 		call	sub_150E4
 		call	sub_118D1
@@ -10697,7 +10790,7 @@ loc_FA47:
 		or	al, al
 		jnz	short loc_FA57
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		jmp	short loc_FA47
 ; ---------------------------------------------------------------------------
 
@@ -10712,7 +10805,7 @@ loc_FA68:
 		or	al, al
 		jnz	short loc_FA78
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		jmp	short loc_FA68
 ; ---------------------------------------------------------------------------
 
@@ -10725,7 +10818,8 @@ loc_FA7D:
 		les	bx, dword_23EF0
 		assume es:nothing
 		mov	byte ptr es:[bx+1Ah], 0
-		kajacall	KAJA_SONG_FADE, 4
+		push	204h
+		call	sub_14F68
 		push	4
 		call	palette_black_out
 		push	ds
@@ -10760,16 +10854,32 @@ var_1		= byte ptr -1
 		mov	[bp+var_2], al
 		cmp	[bp+var_2], 0
 		jz	loc_FBF5
-		call	gaiji_putsa pascal, (19 shl 16) + 10, ds, offset gCONTINUE?, TX_WHITE
-		call	gaiji_putsa pascal, (24 shl 16) + 13, ds, offset gYES, TX_GREEN + TX_REVERSE
-		call	gaiji_putsa pascal, (25 shl 16) + 15, ds, offset gNO, TX_WHITE
-		call	gaiji_putsa pascal, (19 shl 16) + 22, ds, offset gCREDIT, TX_GREEN
-		push	(33 shl 16) + 22
+		push	13000Ah
+		push	ds
+		push	offset gCONTINUE?
+		push	0E1h
+		call	gaiji_putsa
+		push	18000Dh
+		push	ds
+		push	offset gYES
+		push	85h
+		call	gaiji_putsa
+		push	19000Fh
+		push	ds
+		push	offset gNO
+		push	0E1h
+		call	gaiji_putsa
+		push	130016h
+		push	ds
+		push	offset gCREDIT
+		push	81h
+		call	gaiji_putsa
+		push	210016h
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		add	ax, 0A0h
 		push	ax
-		push	TX_GREEN
+		push	81h
 		call	gaiji_putca
 
 loc_FB27:
@@ -10788,7 +10898,7 @@ loc_FB40:
 		mov	di, ax
 		or	di, di
 		jnz	short loc_FB51
-		mov	[bp+var_1], TX_GREEN + TX_REVERSE
+		mov	[bp+var_1], 85h
 		jmp	short loc_FB55
 ; ---------------------------------------------------------------------------
 
@@ -10796,7 +10906,7 @@ loc_FB51:
 		mov	[bp+var_1], 0E1h
 
 loc_FB55:
-		push	(24 shl 16) + 13
+		push	18000Dh
 		push	ds
 		push	offset gYES
 		mov	al, [bp+var_1]
@@ -10805,15 +10915,15 @@ loc_FB55:
 		call	gaiji_putsa
 		cmp	di, 1
 		jnz	short loc_FB75
-		mov	[bp+var_1], TX_GREEN + TX_REVERSE
+		mov	[bp+var_1], 85h
 		jmp	short loc_FB79
 ; ---------------------------------------------------------------------------
 
 loc_FB75:
-		mov	[bp+var_1], TX_WHITE
+		mov	[bp+var_1], 0E1h
 
 loc_FB79:
-		push	(25 shl 16) + 15
+		push	19000Fh
 		push	ds
 		push	offset gNO
 		mov	al, [bp+var_1]
@@ -10841,7 +10951,7 @@ loc_FBA7:
 
 loc_FBAB:
 		push	1
-		call	frame_delay
+		call	sub_1510E
 		jmp	loc_FB27
 ; ---------------------------------------------------------------------------
 
@@ -10945,7 +11055,8 @@ loc_FC67:
 		cmp	ax, [si+10h]
 		jl	loc_FD13
 		inc	byte ptr [si]
-		call	snd_se_play pascal, 6
+		push	6
+		call	sub_14CEE
 		jmp	loc_FD13
 ; ---------------------------------------------------------------------------
 
@@ -11910,7 +12021,10 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_10425:
-		call	gaiji_putca pascal, si, (13 shl 16) + 0D4h, TX_WHITE
+		push	si
+		push	0D00D4h
+		push	0E1h
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -11922,7 +12036,10 @@ loc_1043A:
 ; ---------------------------------------------------------------------------
 
 loc_10444:
-		call	gaiji_putca pascal, si, (13 shl 16) + 2, TX_WHITE
+		push	si
+		push	0D0002h
+		push	0E1h
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -11933,10 +12050,14 @@ loc_10459:
 ; ---------------------------------------------------------------------------
 
 loc_10461:
-		call	text_putsa pascal, (62 shl 16) + 13, ds, offset aB@b@bB@b@, TX_WHITE
+		push	3E000Dh
+		push	ds
+		push	offset aB@b@bB@b@ ; "　　×　　"
+		push	0E1h
+		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_104A2
-		push	(68 shl 16) + 13
+		push	44000Dh
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -11944,7 +12065,7 @@ loc_10461:
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -11954,12 +12075,12 @@ loc_10461:
 		mov	[bp+var_1], dl
 
 loc_104A2:
-		push	(70 shl 16) + 13
+		push	46000Dh
 		mov	al, [bp+var_1]
 		cbw
 		add	ax, 0A0h
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putca
 
 loc_104B8:
@@ -11992,7 +12113,10 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_104D8:
-		call	gaiji_putca pascal, si, (11 shl 16) + 0D3h, TX_WHITE
+		push	si
+		push	0B00D3h
+		push	0E1h
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12004,7 +12128,10 @@ loc_104ED:
 ; ---------------------------------------------------------------------------
 
 loc_104F7:
-		call	gaiji_putca pascal, si, (11 shl 16) + 2, TX_WHITE
+		push	si
+		push	0B0002h
+		push	0E1h
+		call	gaiji_putca
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -12017,10 +12144,14 @@ loc_1050C:
 loc_10514:
 		mov	al, byte_25351
 		mov	[bp+var_1], al
-		call	text_putsa pascal, (62 shl 16) + 11, ds, offset aB@b@bB@b@_0, TX_WHITE
+		push	3E000Bh
+		push	ds
+		push	offset aB@b@bB@b@_0 ; "　　×　　"
+		push	0E1h
+		call	text_putsa
 		cmp	[bp+var_1], 0Ah
 		jl	short loc_1055B
-		push	(68 shl 16) + 11
+		push	44000Bh
 		mov	al, [bp+var_1]
 		cbw
 		mov	bx, 0Ah
@@ -12028,7 +12159,7 @@ loc_10514:
 		idiv	bx
 		add	ax, 0A0h
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
@@ -12038,12 +12169,12 @@ loc_10514:
 		mov	[bp+var_1], dl
 
 loc_1055B:
-		push	(70 shl 16) + 11
+		push	46000Bh
 		mov	al, [bp+var_1]
 		cbw
 		add	ax, 0A0h
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putca
 
 loc_10571:
@@ -12225,7 +12356,11 @@ arg_0		= word ptr  6
 		mov	[bp+var_C], al
 		or	si, si
 		jz	short loc_106C8
-		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
+		push	3D0008h
+		push	ds
+		push	offset gsENEMY
+		push	0C1h
+		call	gaiji_putsa
 		push	9
 		push	si
 		mov	ax, si
@@ -12243,17 +12378,17 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_106C8:
-		push	(61 shl 16) + 8
+		push	3D0008h
 		push	ss
 		lea	ax, [bp+var_6+1]
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putsa
-		push	(56 shl 16) + 9
+		push	380009h
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putsa
 
 loc_106EE:
@@ -12270,8 +12405,16 @@ sub_1065B	endp
 sub_106F3	proc far
 		push	bp
 		mov	bp, sp
-		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
-		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
+		push	3C0003h
+		push	ds
+		push	offset gsHISCORE
+		push	0C1h
+		call	gaiji_putsa
+		push	3D0005h
+		push	ds
+		push	offset gsSCORE
+		push	0C1h
+		call	gaiji_putsa
 		call	sub_143CA
 		mov	al, byte_25FEF
 		mov	ah, 0
@@ -12282,37 +12425,63 @@ sub_106F3	proc far
 		jmp	word ptr cs:table_1083C[bx]
 
 loc_10730:
-		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsREIGEKI, TX_YELLOW
-		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsREIMU, TX_YELLOW
-		push	(62 shl 16) + 21
+		push	39000Bh
+		push	ds
+		push	offset gsREIGEKI
+		push	0C1h
+		call	gaiji_putsa
+		push	39000Dh
+		push	ds
+		push	offset gsREIMU
+		push	0C1h
+		call	gaiji_putsa
+		push	3E0015h
 		push	ds
 		push	offset gsREIRYOKU
 		jmp	short loc_1078E
 ; ---------------------------------------------------------------------------
 
 loc_10760:
-		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsBOMB, TX_YELLOW
-		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsPLAYER, TX_YELLOW
-		push	(62 shl 16) + 21
+		push	39000Bh
+		push	ds
+		push	offset gsBOMB
+		push	0C1h
+		call	gaiji_putsa
+		push	39000Dh
+		push	ds
+		push	offset gsPLAYER
+		push	0C1h
+		call	gaiji_putsa
+		push	3E0015h
 		push	ds
 		push	offset gsPOWER
 
 loc_1078E:
-		push	TX_YELLOW
+		push	0C1h
 		call	gaiji_putsa
 
 loc_10796:
 		call	sub_104BB
 		call	sub_10407
-		call	gaiji_putca pascal, (58 shl 16) + 16, (0E6h shl 16) + TX_YELLOW
-		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsRUIKEI, TX_CYAN
+		push	3A0010h
+		push	0E600C1h
+		call	gaiji_putca
+		push	39000Fh
+		push	ds
+		push	offset gsRUIKEI
+		push	0A1h
+		call	gaiji_putsa
 		call	sub_10574
-		call	gaiji_putca pascal, (63 shl 16) + 19, (0E7h shl 16) + TX_YELLOW
+		push	3F0013h
+		push	0E700C1h
+		call	gaiji_putca
 		call	sub_1059D
-		call	gaiji_putca pascal, (58 shl 16) + 18, (0E8h shl 16) + TX_YELLOW
+		push	3A0012h
+		push	0E800C1h
+		call	gaiji_putca
 		call	sub_1060E
 		call	sub_10625
-		push	(57 shl 16) + 23
+		push	390017h
 		push	ds
 		mov	al, byte_25FEB
 		mov	ah, 0
@@ -12321,26 +12490,26 @@ loc_10796:
 		push	ax
 		cmp	byte_25FEB, 0
 		jnz	short loc_10812
-		mov	ax, TX_GREEN
+		mov	ax, 81h
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_10812:
 		cmp	byte_25FEB, 1
 		jnz	short loc_1081E
-		mov	ax, TX_CYAN
+		mov	ax, 0A1h
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_1081E:
 		cmp	byte_25FEB, 2
 		jnz	short loc_1082A
-		mov	ax, TX_MAGENTA
+		mov	ax, 61h	; 'a'
 		jmp	short loc_1082D
 ; ---------------------------------------------------------------------------
 
 loc_1082A:
-		mov	ax, TX_RED
+		mov	ax, 41h	; 'A'
 
 loc_1082D:
 		push	ax
@@ -12862,7 +13031,8 @@ loc_10BC7:
 		jnz	short loc_10BFD
 		cmp	byte_25FE2, 0
 		jz	short loc_10C25
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		push	0C0000Fh
+		call	grcg_setcolor
 		mov	ax, [bp+var_4]
 		add	ax, 10h
 		push	ax
@@ -12875,7 +13045,8 @@ loc_10BC7:
 loc_10BFD:
 		cmp	byte_2D07F, 2
 		jnz	short loc_10C25
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		push	0C0000Fh
+		call	grcg_setcolor
 		mov	ax, [bp+var_4]
 		add	ax, 10h
 		push	ax
@@ -12884,8 +13055,8 @@ loc_10BFD:
 		call	grcg_circlefill
 
 loc_10C1F:
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 
 loc_10C25:
@@ -12906,13 +13077,14 @@ loc_10C3E:
 		jl	loc_10B2E
 		cmp	byte_2D07F, 2
 		jnz	short loc_10C6C
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
+		push	0C00009h
+		call	grcg_setcolor
 		push	[bp+var_A]
 		push	[bp+var_8]
 		push	di
 		call	grcg_hline
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		jmp	short loc_10C96
 ; ---------------------------------------------------------------------------
@@ -14129,7 +14301,8 @@ loc_114F8:
 		inc	word_22856
 
 loc_11553:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
+		push	0C00000h
+		call	grcg_setcolor
 		mov	si, 0B290h
 		mov	[bp+var_2], 0
 		jmp	short loc_115D4
@@ -14192,8 +14365,8 @@ loc_115CE:
 loc_115D4:
 		cmp	[bp+var_2], 40h
 		jl	short loc_11568
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		cmp	byte_25FE3, 0
 		jnz	short loc_1162C
@@ -14610,11 +14783,15 @@ sub_118D1	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118DA:
-		call	text_putsa pascal, 4, si, off_228EE, TX_WHITE
+		push	4
+		push	si
+		pushd	[off_228EE]
+		push	0E1h
+		call	text_putsa
 		inc	si
 
 loc_118EB:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_118DA
 		pop	si
 		pop	bp
@@ -14635,11 +14812,15 @@ sub_118F3	proc near
 ; ---------------------------------------------------------------------------
 
 loc_118FC:
-		call	text_putsa pascal, 4, si, off_228EE, TX_BLACK + TX_REVERSE
+		push	4
+		push	si
+		pushd	[off_228EE]
+		push	5
+		call	text_putsa
 		inc	si
 
 loc_1190C:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_118FC
 		pop	si
 		pop	bp
@@ -14675,7 +14856,11 @@ loc_11936:
 
 loc_1193E:
 		mov	fp_2CE88, offset nullsub_2
-		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
+		push	12000Ch
+		push	ds
+		push	offset gDEMO_PLAY
+		push	0C3h
+		call	gaiji_putsa
 
 loc_11956:
 		mov	byte_2CE8C, 0
@@ -14714,17 +14899,17 @@ loc_11987:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	TX_BLACK
+		push	1
 		call	gaiji_putca
 		add	di, 2
 
 loc_1199E:
-		cmp	di, 52
+		cmp	di, 34h	; '4'
 		jl	short loc_11987
 		inc	si
 
 loc_119A4:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_11982
 
 loc_119A9:
@@ -14789,17 +14974,17 @@ loc_119F7:
 		mov	dx, 40h
 		sub	dx, ax
 		push	dx
-		push	TX_BLACK
+		push	1
 		call	gaiji_putca
 		add	di, 2
 
 loc_11A0E:
-		cmp	di, 52
+		cmp	di, 34h	; '4'
 		jl	short loc_119F7
 		inc	si
 
 loc_11A14:
-		cmp	si, 24
+		cmp	si, 18h
 		jl	short loc_119F2
 
 loc_11A19:
@@ -14970,8 +15155,8 @@ loc_11B19:
 		push	0C80h
 		push	word_2CE6A
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		jmp	loc_11CB5
 ; ---------------------------------------------------------------------------
@@ -14999,7 +15184,7 @@ loc_11B91:
 		mov	gStage_1+6, al
 		cmp	byte_25FEA, 5
 		jnz	short loc_11BBE
-		push	(17 shl 16) + 11
+		push	11000Bh
 		push	ds
 		push	offset gFINAL_STAGE
 		jmp	short loc_11BDB
@@ -15008,19 +15193,19 @@ loc_11B91:
 loc_11BBE:
 		cmp	byte_25FEA, 6
 		jnz	short loc_11BD1
-		push	(17 shl 16) + 11
+		push	11000Bh
 		push	ds
 		push	offset gEXTRA_STAGE
 		jmp	short loc_11BDB
 ; ---------------------------------------------------------------------------
 
 loc_11BD1:
-		push	(21 shl 16) + 11
+		push	15000Bh
 		push	ds
 		push	offset gStage_1
 
 loc_11BDB:
-		push	TX_YELLOW
+		push	0C1h
 		call	gaiji_putsa
 		mov	ax, word_2CE6A
 		cwd
@@ -15028,13 +15213,24 @@ loc_11BDB:
 		sar	ax, 1
 		mov	dx, 1Ch
 		sub	dx, ax
-		call	text_putsa pascal, dx, 13, dword_2CE92, TX_WHITE
+		push	dx
+		push	0Dh
+		pushd	[dword_2CE92]
+		push	0E1h
+		call	text_putsa
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6C
-		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
+		push	ax
+		push	170003h
+		push	0C1h
+		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
-		call	text_putsa pascal, ax, 23, dword_2CE96, TX_WHITE
+		push	ax
+		push	17h
+		pushd	[dword_2CE96]
+		push	0E1h
+		call	text_putsa
 
 loc_11C2D:
 		call	sub_E6E2
@@ -15076,8 +15272,8 @@ loc_11C4E:
 		push	0C80h
 		push	word_2CE6A
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		test	byte_2CE8C, 3
 		jnz	short loc_11CB5
@@ -15144,8 +15340,8 @@ loc_11CFE:
 		push	1680h
 		push	word_2CE6E
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		jmp	loc_11DE4
 ; ---------------------------------------------------------------------------
@@ -15166,10 +15362,17 @@ loc_11D53:
 		jnz	short loc_11D90
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
-		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
+		push	ax
+		push	170003h
+		push	0C1h
+		call	gaiji_putca
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
-		call	text_putsa pascal, ax, 23, dword_2CE9A, TX_WHITE
+		push	ax
+		push	17h
+		pushd	[dword_2CE9A]
+		push	0E1h
+		call	text_putsa
 
 loc_11D90:
 		call	sub_E6E2
@@ -15188,8 +15391,8 @@ loc_11D90:
 		push	1680h
 		push	word_2CE6E
 		call	sub_11A1D
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		test	byte_2288B, 3
 		jnz	short loc_11DE4
@@ -15221,8 +15424,14 @@ var_1		= byte ptr -1
 		jz	short loc_11E29
 		cmp	byte_2288C, 40h
 		jb	short loc_11E29
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
-		call	text_putsa pascal, (4 shl 16) + 23, off_228EE, TX_WHITE
+		push	40002h
+		pushd	[off_228EE]
+		push	0E1h
+		call	text_putsa
+		push	40017h
+		pushd	[off_228EE]
+		push	0E1h
+		call	text_putsa
 		mov	byte_2288C, 0
 
 loc_11E29:
@@ -15275,7 +15484,10 @@ loc_11E98:
 loc_11E9D:
 		cmp	byte_2288C, 80h
 		jb	short loc_11EC4
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
+		push	40002h
+		pushd	[off_228EE]
+		push	0E1h
+		call	text_putsa
 		mov	byte_2288C, 0
 		mov	fp_2CE8A, offset nullsub_2
 		leave
@@ -15325,7 +15537,12 @@ loc_11EF1:
 		dec	bx
 		add	bx, word_2CE70
 		mov	[bx], al
-		call	gaiji_putsa pascal, word_2CE82, 2, ds, offset unk_2CE74, TX_WHITE
+		push	word_2CE82
+		push	2
+		push	ds
+		push	offset unk_2CE74
+		push	0E1h
+		call	gaiji_putsa
 		jmp	loc_11FD9
 ; ---------------------------------------------------------------------------
 
@@ -15340,7 +15557,7 @@ loc_11F36:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	off_228D8[bx]
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putsa
 		mov	ax, word_2CE70
 		add	ax, ax
@@ -15350,7 +15567,10 @@ loc_11F36:
 		mov	ax, word_2CE70
 		add	ax, ax
 		add	ax, word_2CE82
-		call	text_putca pascal, ax, 22020h, TX_WHITE
+		push	ax
+		push	22020h
+		push	0E1h
+		call	text_putca
 
 loc_11F7F:
 		sub	word_2CE82, 2
@@ -15361,7 +15581,10 @@ loc_11F86:
 		cmp	byte_2CE73, 0
 		jnz	short loc_11FA5
 		mov	byte_2CE73, 1
-		call	text_putsa pascal, (4 shl 16) + 2, off_228EE, TX_WHITE
+		push	40002h
+		pushd	[off_228EE]
+		push	0E1h
+		call	text_putsa
 
 loc_11FA5:
 		push	word_2CE84
@@ -15371,7 +15594,7 @@ loc_11FA5:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	off_228D8[bx]
-		push	TX_WHITE
+		push	0E1h
 		call	gaiji_putsa
 		cmp	byte_2CE72, 2
 		jnz	short loc_11FD9
@@ -15459,7 +15682,8 @@ loc_12064:
 		mov	al, [bp+var_1]
 		sub	byte_2CEBE, al
 		nopcall	sub_E4FC
-		call	snd_se_play pascal, 2
+		push	2
+		call	sub_14CEE
 		cmp	byte_25FEC, 26h	; '&'
 		jbe	short loc_12083
 		mov	byte_25FEC, 26h	; '&'
@@ -15748,8 +15972,8 @@ loc_122D5:
 		mov	dx, [bp+var_2]
 		push	1Ah
 		call	sub_E148
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		jmp	loc_123A9
 ; ---------------------------------------------------------------------------
@@ -16185,8 +16409,8 @@ loc_12631:
 loc_12637:
 		cmp	[bp+var_2], 18h
 		jl	short loc_12609
-		mov	dx, 7Ch
-		mov	al, GC_OFF
+		mov	dx, 7Ch	; '|'
+		mov	al, 0
 		out	dx, al
 		pop	di
 		pop	si
@@ -16587,7 +16811,8 @@ loc_1293E:
 		mov	[bp+var_1], 5
 
 loc_12942:
-		call	snd_se_play pascal, 1
+		push	1
+		call	sub_14CEE
 		jmp	short loc_12955
 ; ---------------------------------------------------------------------------
 
@@ -20421,7 +20646,12 @@ loc_143D8:
 		inc	bx
 		dec	si
 		loop	loc_143D8
-		call	gaiji_putsa pascal, 56, di, ds, offset unk_229A6, TX_WHITE
+		push	38h ; '8'
+		push	di
+		push	ds
+		push	offset unk_229A6
+		push	0E1h
+		call	gaiji_putsa
 		add	di, 2
 		cmp	di, 6
 		jz	short loc_143D2
@@ -20976,7 +21206,7 @@ main_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_02_TEXT	segment	word public 'CODE' use16
+main_02_TEXT		segment	word public 'CODE' use16
 		assume cs:main_02_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -21098,9 +21328,158 @@ loc_14B79:
 		retf
 sub_14B64	endp
 
-include th04/hardware/snd_pmd_resident.asm
-include th02/hardware/snd_mmd_resident.asm
-include th04/hardware/snd_determine_modes.asm
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14B82	proc far
+		xor	ax, ax
+		mov	byte_23980, 60h
+		mov	byte_21229, al
+		mov	byte_21228, al
+		mov	byte_21227, al
+		mov	es, ax
+		les	bx, dword ptr es:[0180h]
+		assume es:nothing
+		cmp	byte ptr es:[bx+2], 50h	; 'P'
+		jnz	short locret_14BAF
+		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
+		jnz	short locret_14BAF
+		cmp	byte ptr es:[bx+4], 44h	; 'D'
+		jnz	short locret_14BAF
+		inc	ax
+
+locret_14BAF:
+		retf
+sub_14B82	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14BB0	proc far
+		xor	ax, ax
+		mov	es, ax
+		les	bx, dword ptr es:[0184h]
+		assume es:nothing
+		cmp	byte ptr es:[bx+2], 4Dh	; 'M'
+		jnz	short loc_14BDC
+		cmp	byte ptr es:[bx+3], 4Dh	; 'M'
+		jnz	short loc_14BDC
+		cmp	byte ptr es:[bx+4], 44h	; 'D'
+		jnz	short loc_14BDC
+		mov	byte_23980, 61h	; 'a'
+		mov	byte_21229, 1
+		mov	ax, 1
+		retf
+; ---------------------------------------------------------------------------
+
+loc_14BDC:
+		xor	ax, ax
+		retf
+sub_14BB0	endp
+
+; ---------------------------------------------------------------------------
+		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_14BE0	proc far
+
+arg_0		= word ptr  6
+arg_2		= word ptr  8
+
+		push	bp
+		mov	bp, sp
+		push	si
+		push	di
+		mov	si, [bp+arg_2]
+		mov	di, [bp+arg_0]
+		nopcall	sub_14B82
+		cmp	si, 3
+		jnz	short loc_14BFA
+		nopcall	sub_14BB0
+
+loc_14BFA:
+		mov	ah, 9
+		int	60h
+		cmp	al, 0FFh
+		jnz	short loc_14C09
+		mov	byte_21228, 0
+		jmp	short loc_14C19
+; ---------------------------------------------------------------------------
+
+loc_14C09:
+		or	al, al
+		jnz	short loc_14C14
+		mov	byte_21228, 1
+		jmp	short loc_14C19
+; ---------------------------------------------------------------------------
+
+loc_14C14:
+		mov	byte_21228, 2
+
+loc_14C19:
+		cmp	di, 1
+		jnz	short loc_14C31
+		cmp	byte_21228, 0
+		jz	short loc_14C2A
+		mov	ax, 1
+		jmp	short loc_14C2C
+; ---------------------------------------------------------------------------
+
+loc_14C2A:
+		xor	ax, ax
+
+loc_14C2C:
+		mov	byte_21227, al
+		jmp	short loc_14C42
+; ---------------------------------------------------------------------------
+
+loc_14C31:
+		cmp	di, 2
+		jnz	short loc_14C3D
+		mov	byte_21227, 2
+		jmp	short loc_14C42
+; ---------------------------------------------------------------------------
+
+loc_14C3D:
+		mov	byte_21227, 0
+
+loc_14C42:
+		or	si, si
+		jnz	short loc_14C4D
+		mov	byte_21228, 0
+		jmp	short loc_14C71
+; ---------------------------------------------------------------------------
+
+loc_14C4D:
+		cmp	si, 3
+		jnz	short loc_14C60
+		cmp	byte_21229, 0
+		jz	short loc_14C60
+		mov	byte_21228, 3
+		jmp	short loc_14C71
+; ---------------------------------------------------------------------------
+
+loc_14C60:
+		cmp	si, 1
+		jnz	short loc_14C71
+		cmp	byte_21228, 0
+		jz	short loc_14C71
+		mov	byte_21228, 1
+
+loc_14C71:
+		mov	al, byte_21228
+		mov	ah, 0
+		pop	di
+		pop	si
+		pop	bp
+		retf	4
+sub_14BE0	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21169,7 +21548,91 @@ loc_14CDA:
 		retf	6
 sub_14C7C	endp
 
-include th04/hardware/snd_se.asm
+; ---------------------------------------------------------------------------
+		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14CE2	proc far
+		mov	byte_21215, 0
+		mov	byte_21214, 0FFh
+		retf
+sub_14CE2	endp
+
+; ---------------------------------------------------------------------------
+		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14CEE	proc far
+		mov	bx, sp
+		mov	dx, ss:[bx+4]
+		cmp	byte_21227, 0
+		jz	short locret_14D24
+		cmp	byte_21214, 0FFh
+		jnz	short loc_14D09
+		mov	byte_21214, dl
+		retf	2
+; ---------------------------------------------------------------------------
+
+loc_14D09:
+		mov	bl, byte_21214
+		xor	bh, bh
+		mov	al, [bx+812h]
+		mov	bx, dx
+		cmp	al, [bx+812h]
+		ja	short locret_14D24
+		mov	byte_21214, dl
+		mov	byte_21215, 0
+
+locret_14D24:
+		retf	2
+sub_14CEE	endp
+
+; ---------------------------------------------------------------------------
+		nop
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14D28	proc far
+		cmp	byte_21227, 0
+		jz	short locret_14D73
+		cmp	byte_21214, 0FFh
+		jz	short locret_14D73
+		cmp	byte_21215, 0
+		jnz	short loc_14D55
+		mov	al, byte_21214
+		cmp	byte_21227, 2
+		jz	short loc_14D4D
+		mov	ah, 0Ch
+		int	60h		; - Banyan VINES, 3com - GET STATION ADDRESS
+					; Return: AL = status, 00h successful, ES:SI ->	6-byte station address
+					; 02h semaphore	service	is unavailable
+		jmp	short loc_14D55
+; ---------------------------------------------------------------------------
+
+loc_14D4D:
+		xor	ah, ah
+		push	ax
+		call	bgm_sound
+
+loc_14D55:
+		inc	byte_21215
+		mov	bl, byte_21214
+		xor	bh, bh
+		mov	al, [bx+823h]
+		cmp	al, byte_21215
+		jnb	short locret_14D73
+		mov	byte_21215, 0
+		mov	byte_21214, 0FFh
+
+locret_14D73:
+		retf
+sub_14D28	endp
+
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21187,7 +21650,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		push	ds
 		cli
-		mov	al, GC_RMW
+		mov	al, 0C0h
 		out	7Ch, al
 		mov	dx, 7Eh	; '~'
 		xor	al, al
@@ -21355,8 +21818,136 @@ arg_8		= word ptr  0Eh
 		retf	0Ah
 sub_14E6C	endp
 
-include th05/hardware/snd_load.asm
-include th05/hardware/snd_kaja_func.asm
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame
+
+sub_14EB0	proc far
+
+arg_0		= word ptr  6
+arg_2		= dword	ptr  8
+
+		push	bp
+		mov	bp, sp
+		push	si
+		push	di
+		mov	dx, ds
+		mov	es, dx
+		assume es:_DATA
+		mov	di, 3068h
+		lds	si, [bp+arg_2]
+		mov	bp, [bp+arg_0]
+		mov	cx, 0Dh
+		rep movsb
+		mov	ds, dx
+		mov	di, 3068h
+		dec	cx
+		xor	ax, ax
+		repne scasb
+		dec	di
+		mov	byte ptr [di], 2Eh ; '.'
+		inc	di
+		cmp	bp, 0B00h
+		jnz	short loc_14F0B
+		cmp	byte_21227, 0
+		jz	short loc_14F62
+		xor	bx, bx
+		cmp	byte_21227, 2
+		jnz	short loc_14F21
+		mov	dword ptr [di],	736665h
+		call	bgm_finish
+		push	800h
+		call	bgm_init
+		push	ds
+		push	offset unk_23A48
+		call	bgm_read_sdata
+		jmp	short loc_14F62
+; ---------------------------------------------------------------------------
+
+loc_14F0B:
+		cmp	byte_21228, 0
+		jz	short loc_14F62
+		push	100h
+		call	sub_14F68
+		movzx	bx, byte_21228
+		shl	bx, 2
+
+loc_14F21:
+		mov	eax, [bx+838h]
+
+loc_14F26:
+		mov	[di], eax
+		mov	dx, 3068h
+		mov	ax, 3D00h
+		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
+					; DS:DX	-> ASCIZ filename
+					; AL = access mode
+					; 0 - read
+		jnb	short loc_14F3E
+		cmp	ax, 2
+		jnz	short loc_14F62
+		mov	eax, dword_2121C
+		jmp	short loc_14F26
+; ---------------------------------------------------------------------------
+
+loc_14F3E:
+		mov	bx, ax
+		mov	ax, bp
+		cmp	ah, 6
+		jnz	short loc_14F52
+		cmp	byte_21228, 3
+		jnz	short loc_14F52
+		int	61h		; reserved for user interrupt
+		jmp	short loc_14F54
+; ---------------------------------------------------------------------------
+
+loc_14F52:
+		int	60h
+
+loc_14F54:
+		mov	ax, 3F00h
+		mov	cx, 0FFFFh
+		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
+					; BX = file handle, CX = number	of bytes to read
+					; DS:DX	-> buffer
+		mov	ah, 3Eh
+		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
+					; BX = file handle
+		push	es
+		pop	ds
+
+loc_14F62:
+		pop	di
+		pop	si
+		pop	bp
+		retf	6
+sub_14EB0	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_14F68	proc far
+		cmp	byte_21228, 0
+		jz	short locret_14F82
+		mov	bx, sp
+		mov	ax, ss:[bx+4]
+		cmp	byte_21228, 3
+		jz	short loc_14F80
+		int	60h
+		jmp	short locret_14F82
+; ---------------------------------------------------------------------------
+
+loc_14F80:
+		int	61h		; reserved for user interrupt
+
+locret_14F82:
+		retf	2
+sub_14F68	endp
+
+; ---------------------------------------------------------------------------
+		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21578,7 +22169,22 @@ loc_1510A:
 		retf	2
 sub_150E4	endp
 
-include th05/frame_delay.asm
+
+; =============== S U B	R O U T	I N E =======================================
+
+
+sub_1510E	proc far
+		mov	bx, sp
+		mov	bx, ss:[bx+4]
+		mov	vsync_Count1, 0
+
+loc_1511A:
+		cmp	vsync_Count1, bx
+		jb	short loc_1511A
+		retf	2
+sub_1510E	endp
+
+; ---------------------------------------------------------------------------
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21802,9 +22408,11 @@ main_02_TEXT	ends
 
 ; ===========================================================================
 
+; ===========================================================================
+
 ; Segment type:	Pure code
-main_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_03_TEXT
+seg003		segment	byte public 'CODE' use16
+		assume cs:seg003
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -22420,7 +23028,8 @@ loc_15668:
 loc_15677:
 		mov	al, ah
 		mov	ah, 0
-		call	snd_se_play pascal, ax
+		push	ax
+		call	sub_14CEE
 
 loc_15681:
 		mov	al, 2
@@ -24081,7 +24690,8 @@ loc_16161:
 		call	sub_16D84
 
 loc_1618C:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		movzx	eax, word ptr [si+10h]
 		add	dword_2CE1A, eax
 		push	word ptr [si+2]
@@ -24099,7 +24709,8 @@ loc_161B9:
 ; ---------------------------------------------------------------------------
 
 loc_161BF:
-		call	snd_se_play pascal, 10
+		push	0Ah
+		call	sub_14CEE
 
 loc_161C6:
 		cmp	byte ptr [si+23h], 0
@@ -24287,7 +24898,8 @@ loc_1632E:
 		mov	word ptr [si+0Ch], 0D0h
 
 loc_16338:
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		pop	si
 		pop	bp
 		retn	2
@@ -24347,7 +24959,8 @@ sub_1637A	proc near
 		mov	word ptr [si+0Ah], 0C0h
 		mov	word ptr [si+0Ch], 0C0h
 		mov	byte ptr [si+0Fh], 0
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		pop	si
 		pop	bp
 		retn
@@ -24408,12 +25021,12 @@ arg_8		= word ptr  0Ch
 		mov	es:[bx], eax
 		cmp	si, 0Ah
 		jge	short loc_16418
-		mov	ax, TX_RED
+		mov	ax, 41h	; 'A'
 		jmp	short loc_1641B
 ; ---------------------------------------------------------------------------
 
 loc_16418:
-		mov	ax, TX_GREEN
+		mov	ax, 81h
 
 loc_1641B:
 		mov	[bp+var_2], ax
@@ -24606,22 +25219,54 @@ loc_1654F:
 		mov	byte_22275, al
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
-		call	gaiji_putsa pascal, (20 shl 16) + 4, ds, offset gpCLEAR_BONUS, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 8, ds, BONUS_STAGE, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 10, ds, BONUS_DREAM, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 12, ds, GRAZEX50, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 14, ds, POINT_ITEMS, TX_WHITE
+		push	140004h
+		push	ds
+		push	offset gpCLEAR_BONUS
+		push	0E1h
+		call	gaiji_putsa
+		push	60008h
+		push	ds
+		push	BONUS_STAGE
+		push	0E1h
+		call	text_putsa
+		push	6000Ah
+		push	ds
+		push	BONUS_DREAM
+		push	0E1h
+		call	text_putsa
+		push	6000Ch
+		push	ds
+		push	GRAZEX50
+		push	0E1h
+		call	text_putsa
+		push	6000Eh
+		push	ds
+		push	POINT_ITEMS
+		push	0E1h
+		call	text_putsa
 		cmp	[bp+var_5], 0
 		jz	short loc_165DF
-		call	text_putsa pascal, (6 shl 16) + 16, ds, BONUS_NOMISS, TX_CYAN
+		push	60010h
+		push	ds
+		push	BONUS_NOMISS
+		push	0A1h
+		call	text_putsa
 
 loc_165DF:
 		cmp	[bp+var_6], 0
 		jz	short loc_165F8
-		call	text_putsa pascal, (6 shl 16) + 17, ds, BONUS_NOBOMB, TX_CYAN
+		push	60011h
+		push	ds
+		push	BONUS_NOBOMB
+		push	0A1h
+		call	text_putsa
 
 loc_165F8:
-		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
+		push	60015h
+		push	ds
+		push	BONUS_TOTAL
+		push	0E1h
+		call	text_putsa
 		mov	al, byte_25FEA
 		mov	ah, 0
 		imul	ax, 64h
@@ -24783,24 +25428,64 @@ loc_1677D:
 		mov	PaletteTone, 3Ch	; '<'
 		call	far ptr	palette_show
 		mov	byte_226C4, 0Ah
-		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 6, ds, ALL_CLEAR, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 8, ds, BONUS_DREAM, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 10, ds, GRAZEX50, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 12, ds, PLAYER_REM, TX_WHITE
-		call	text_putsa pascal, (6 shl 16) + 14, ds, POINT_ITEMS, TX_WHITE
+		push	130004h
+		push	ds
+		push	offset gpCONGRATULATION
+		push	0E1h
+		call	gaiji_putsa
+		push	60006h
+		push	ds
+		push	ALL_CLEAR
+		push	0E1h
+		call	text_putsa
+		push	60008h
+		push	ds
+		push	BONUS_DREAM
+		push	0E1h
+		call	text_putsa
+		push	6000Ah
+		push	ds
+		push	GRAZEX50
+		push	0E1h
+		call	text_putsa
+		push	6000Ch
+		push	ds
+		push	PLAYER_REM
+		push	0E1h
+		call	text_putsa
+		push	6000Eh
+		push	ds
+		push	POINT_ITEMS
+		push	0E1h
+		call	text_putsa
 		cmp	[bp+var_9], 0
 		jz	short loc_16825
-		call	text_putsa pascal, (6 shl 16) + 16, ds, BONUS_NOMISS, TX_CYAN
+		push	60010h
+		push	ds
+		push	BONUS_NOMISS
+		push	0A1h
+		call	text_putsa
 
 loc_16825:
 		cmp	[bp+var_A], 0
 		jz	short loc_1683E
-		call	text_putsa pascal, (6 shl 16) + 17, ds, BONUS_NOBOMB, TX_CYAN
+		push	60011h
+		push	ds
+		push	BONUS_NOBOMB
+		push	0A1h
+		call	text_putsa
 
 loc_1683E:
-		call	text_putsa pascal, (6 shl 16) + 18, ds, POINT_TOTAL, TX_CYAN
-		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
+		push	60012h
+		push	ds
+		push	POINT_TOTAL
+		push	0A1h
+		call	text_putsa
+		push	60015h
+		push	ds
+		push	BONUS_TOTAL
+		push	0E1h
+		call	text_putsa
 		mov	si, 3E8h
 		movzx	eax, si
 		mov	[bp+var_4], eax
@@ -25779,7 +26464,8 @@ loc_16F3B:
 		call	sub_10407
 		mov	byte_2CE87, 1
 		mov	fp_2CE8A, offset sub_11DEA
-		call	snd_se_play pascal, 7
+		push	7
+		call	sub_14CEE
 
 loc_16F52:
 		pop	bp
@@ -25990,7 +26676,8 @@ loc_1712C:
 		call	sub_E720
 		inc	byte_25350
 		call	sub_10407
-		call	snd_se_play pascal, 7
+		push	7
+		call	sub_14CEE
 		mov	byte_2CE87, 1
 		mov	fp_2CE8A, offset sub_11DEA
 		jmp	short loc_17171
@@ -26202,7 +26889,8 @@ loc_172AE:
 		ja	short loc_172E5
 		push	si
 		call	sub_16F54
-		call	snd_se_play pascal, 11
+		push	0Bh
+		call	sub_14CEE
 		mov	byte ptr [si], 2
 		jmp	short loc_172E8
 ; ---------------------------------------------------------------------------
@@ -26539,7 +27227,8 @@ loc_174E1:
 		mov	ah, 0
 		push	ax
 		call	sub_14E6C
-		call	snd_se_play pascal, 5
+		push	5
+		call	sub_14CEE
 		jmp	short loc_17544
 ; ---------------------------------------------------------------------------
 
@@ -26593,7 +27282,8 @@ arg_0		= word ptr  4
 		mov	byte ptr [si+0Bh], 1
 		mov	al, byte_26312
 		mov	[si+0Ah], al
-		call	snd_se_play pascal, 5
+		push	5
+		call	sub_14CEE
 
 loc_1759F:
 		pop	si
@@ -26634,7 +27324,8 @@ arg_0		= word ptr  4
 		mov	[si+14h], al
 		mov	al, byte_26312
 		mov	[si+0Ah], al
-		call	snd_se_play pascal, 5
+		push	5
+		call	sub_14CEE
 
 loc_175F9:
 		pop	si
@@ -26662,7 +27353,8 @@ arg_0		= word ptr  4
 		mov	bx, si
 		imul	bx, 18h
 		mov	byte ptr [bx+5628h], 3
-		call	snd_se_play pascal, 6
+		push	6
+		call	sub_14CEE
 
 loc_17622:
 		pop	si
@@ -28107,7 +28799,8 @@ loc_1818B:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_181C4
 ; ---------------------------------------------------------------------------
 
@@ -28155,7 +28848,8 @@ sub_181E5	proc near
 		call	sub_16A6B
 		cmp	word_26346, 1
 		jnz	short loc_18239
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_2D085, 80h
 		mov	byte_2D084, 0
 		mov	byte_2D083, 8
@@ -28261,7 +28955,8 @@ sub_182B1	proc near
 		mov	byte ptr word_26006+1, 10h
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_182EB:
 		pop	bp
@@ -28296,7 +28991,8 @@ sub_182ED	proc near
 		mov	al, byte_2D083
 		add	al, 0F8h
 		mov	byte_2D083, al
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_18339:
 		pop	bp
@@ -28320,7 +29016,8 @@ sub_1833B	proc near
 		call	sub_16A6B
 		cmp	word_26346, 10h
 		jnz	loc_183F3
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_26344, 0BCh
 		mov	byte_2D085, 38h	; '8'
 		mov	byte_2D084, 48h	; 'H'
@@ -28436,7 +29133,8 @@ sub_183F5	proc near
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1847B:
 		pop	bp
@@ -28466,7 +29164,8 @@ sub_1847D	proc near
 		mov	byte ptr dword_26002, 0Ch
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_184BA:
 		pop	bp
@@ -28511,7 +29210,8 @@ sub_184BC	proc near
 loc_18506:
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		mov	al, byte_2D085
 		add	al, 6
 		mov	byte_2D085, al
@@ -28562,7 +29262,8 @@ sub_18526	proc near
 loc_18570:
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		mov	al, byte_2D084
 		add	al, 0FAh
 		mov	byte_2D084, al
@@ -28752,7 +29453,8 @@ loc_1874E:
 		mov	word_2A72C, 8
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 
 loc_1877A:
 		mov	fp_23F5A, offset sub_D08C
@@ -29137,7 +29839,8 @@ loc_18ADC:
 		push	word ptr dword_26320+2
 		push	400020h
 		call	sub_1597C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		push	word ptr dword_26320
 		push	word ptr dword_26320+2
 		push	0C000400h
@@ -29181,7 +29884,8 @@ loc_18B67:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_18BA0
 ; ---------------------------------------------------------------------------
 
@@ -29294,7 +29998,8 @@ arg_0		= word ptr  4
 		call	sub_16A6B
 		cmp	word_26346, 10h
 		jnz	short loc_18C8E
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		jmp	short loc_18C8E
 ; ---------------------------------------------------------------------------
 
@@ -29371,7 +30076,8 @@ loc_18CE8:
 
 loc_18CED:
 		call	fp_25344
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		cmp	byte_2D080, 24h	; '$'
 		jnb	short loc_18D07
 		mov	al, byte_2D080
@@ -29476,7 +30182,8 @@ loc_18DBC:
 
 loc_18DC1:
 		mov	byte ptr word_26006, al
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -29725,7 +30432,8 @@ loc_18FBB:
 
 loc_18FC0:
 		call	fp_25344
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		call	sub_15A70
 		pop	bp
 		retn
@@ -29775,7 +30483,8 @@ loc_19029:
 
 loc_1902E:
 		call	sub_15A70
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_19038:
 		pop	bp
@@ -29822,7 +30531,8 @@ loc_19097:
 		jl	loc_19263
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D0F4
 		jmp	loc_19263
 ; ---------------------------------------------------------------------------
@@ -30099,7 +30809,8 @@ sub_192F3	proc near
 		call	sub_16A6B
 		cmp	word_26332, 1
 		jnz	short loc_19319
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_26330, 0D2h
 		pop	bp
 		retn
@@ -30143,7 +30854,8 @@ loc_19336:
 loc_1935F:
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	ax, word ptr dword_26320+2
 		mov	word ptr dword_26324+2,	ax
 		sub	word ptr dword_26320+2,	40h
@@ -30221,7 +30933,8 @@ loc_19412:
 
 loc_19420:
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	ax, word ptr dword_26320+2
 		mov	word ptr dword_26324+2,	ax
 		sub	word ptr dword_26320+2,	40h
@@ -30277,7 +30990,8 @@ loc_1946C:
 loc_19496:
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	ax, word ptr dword_26320+2
 		mov	word ptr dword_26324+2,	ax
 		sub	word ptr dword_26320+2,	40h
@@ -30421,7 +31135,8 @@ loc_195DA:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_19613
 ; ---------------------------------------------------------------------------
 
@@ -30684,7 +31399,8 @@ loc_197FF:
 		mov	[si+16h], ax
 		cmp	word ptr [si+16h], 0
 		jz	short loc_19823
-		call	snd_se_play pascal, 4
+		push	4
+		call	sub_14CEE
 
 loc_19823:
 		mov	ax, [si+16h]
@@ -30694,7 +31410,8 @@ loc_19823:
 		inc	byte ptr [si]
 		mov	word ptr [si+12h], 4
 		mov	word ptr [si+16h], 0
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		add	dword_2CE1A, 64h ; 'd'
 		jmp	short loc_198A5
 ; ---------------------------------------------------------------------------
@@ -31127,10 +31844,10 @@ loc_19B8A:
 		cmp	si, 20h	; ' '
 		jl	short loc_19B4D
 		mov	byte_26344, 0B6h
-		push	15
+		push	0Fh
 
 loc_19B96:
-		call	snd_se_play
+		call	sub_14CEE
 
 loc_19B9B:
 		pop	si
@@ -31194,7 +31911,7 @@ loc_19BE2:
 		push	0Fh
 
 loc_19C19:
-		call	snd_se_play
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31244,10 +31961,10 @@ loc_19C5E:
 		call	fp_25344
 		call	sub_15A5C
 		mov	byte_26344, 0B4h
-		push	15
+		push	0Fh
 
 loc_19C95:
-		call	snd_se_play
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31314,7 +32031,8 @@ loc_19D22:
 		jnb	short loc_19D56
 		cmp	word_2CE2E, 40h
 		jnz	short loc_19D37
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_19D37:
 		mov	byte_2D07F, 3
@@ -31346,7 +32064,8 @@ loc_19D56:
 		mov	[bp+var_2], ax
 		cmp	[bp+var_2], 0
 		jz	short loc_19D9D
-		call	snd_se_play pascal, 9
+		push	9
+		call	sub_14CEE
 
 loc_19D9D:
 		mov	ax, word ptr dword_2CEA0
@@ -31385,7 +32104,8 @@ loc_19DBD:
 		mov	byte ptr word_26006+1, 20h ; ' '
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 locret_19E10:
 		leave
@@ -31410,7 +32130,8 @@ sub_19E12	proc near
 		mov	byte_26344, 0B8h
 		cmp	word_26346, 28h	; '('
 		jnz	loc_19ED8
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31484,7 +32205,8 @@ sub_19EDA	proc near
 		mov	byte_2D085, 8
 		cmp	word_26346, 28h	; '('
 		jnz	short loc_19F73
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31513,7 +32235,8 @@ loc_19F0E:
 		add	al, 5
 		mov	byte_2D085, al
 		mov	byte_26344, 0B4h
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_19F61:
 		cmp	word_26346, 60h
@@ -31545,7 +32268,8 @@ sub_19F75	proc near
 		mov	byte_2D085, 0
 		cmp	word_26346, 28h	; '('
 		jnz	short loc_1A003
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31570,7 +32294,8 @@ loc_19FA9:
 		add	al, 2
 		mov	byte_2D085, al
 		mov	byte_26344, 0B4h
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_19FF1:
 		cmp	word_26346, 60h
@@ -31605,7 +32330,8 @@ sub_1A005	proc near
 		mov	word ptr dword_26002, 0A0Dh
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A042:
 		pop	bp
@@ -31657,7 +32383,8 @@ loc_1A0AD:
 		jl	loc_1A3B2
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D180
 		jmp	loc_1A3B2
 ; ---------------------------------------------------------------------------
@@ -31954,7 +32681,8 @@ arg_4		= word ptr  8
 		mov	si, ax
 		or	si, si
 		jz	short loc_1A41F
-		call	snd_se_play pascal, [bp+arg_0]
+		push	[bp+arg_0]
+		call	sub_14CEE
 
 loc_1A41F:
 		mov	byte_2297E, 0
@@ -32176,7 +32904,8 @@ sub_1A556	proc near
 		mov	byte_26344, 0B7h
 		cmp	word_26346, 20h	; ' '
 		jnz	short loc_1A5B1
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -32267,7 +32996,8 @@ sub_1A5EB	proc near
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A641:
 		cmp	word_26346, 80h
@@ -32307,7 +33037,8 @@ sub_1A651	proc near
 		mov	byte ptr word_26006+1, 3Ch ; '<'
 		call	fp_25344
 		call	sub_15A9C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A69C:
 		cmp	word_26346, 60h
@@ -32358,7 +33089,8 @@ loc_1A6BA:
 		mov	byte ptr word_26006+1, 32h ; '2'
 		call	fp_25344
 		call	sub_15A8E
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A709:
 		cmp	word_26346, 0A0h
@@ -32401,7 +33133,8 @@ sub_1A719	proc near
 		mov	byte ptr word_26006+1, 40h
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A765:
 		cmp	word_26346, 80h
@@ -32565,7 +33298,8 @@ loc_1A843:
 		mov	byte_2D082, al
 
 loc_1A8B2:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A8B9:
 		cmp	word_26346, 100h
@@ -32718,7 +33452,8 @@ sub_1A9B3	proc near
 		mov	byte ptr word_26006+1, 40h
 		call	fp_25344
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1A9FF:
 		mov	al, 0
@@ -32892,7 +33627,8 @@ loc_1AB57:
 		call	sub_15A24
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1AB72:
 		mov	al, 0
@@ -32937,7 +33673,8 @@ loc_1ABAE:
 		call	sub_15A24
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1ABC9:
 		cmp	word_26346, 80h
@@ -33029,7 +33766,8 @@ loc_1AC5E:
 		jl	loc_1AFA7	; default
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D20C
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
@@ -33080,7 +33818,8 @@ loc_1ACF1:
 		mov	byte_2C979, 14h
 
 loc_1AD0D:
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		push	1
 		call	sub_162CC
 		push	2
@@ -33248,7 +33987,8 @@ loc_1AE98:
 		mov	al, byte ptr word_2634A+1
 		mov	byte_2C978, al
 		mov	word_26346, 0
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		mov	byte_2CEBC, 0FFh
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
@@ -33379,7 +34119,8 @@ sub_1AFD4	proc near
 		or	si, si
 		jnz	short loc_1B004
 		mov	byte_2D085, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	ax, word ptr dword_26320
 		mov	word_2CE3A, ax
 
@@ -33482,7 +34223,8 @@ sub_1B0A4	proc near
 		push	si
 		cmp	word_26332, 10h
 		jnz	short loc_1B0CE
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte ptr word_25FFA, 2
 		mov	byte_26000, 0Dh
 		mov	byte ptr dword_26002, 7
@@ -33536,7 +34278,8 @@ loc_1B0FE:
 loc_1B12D:
 		cmp	si, 4
 		jl	short loc_1B0F2
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B139:
 		cmp	word_26332, 60h
@@ -33561,7 +34304,8 @@ sub_1B153	proc near
 		mov	bp, sp
 		cmp	word_26332, 10h
 		jnz	short loc_1B17C
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_26000, 4
 		mov	byte ptr dword_26002, 10h
 		call	fp_25344
@@ -33599,7 +34343,8 @@ loc_1B1BA:
 		mov	al, byte ptr word_26006
 		add	al, 4
 		mov	byte ptr word_26006, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1B1CC:
 		cmp	word_26332, 60h
@@ -33623,7 +34368,8 @@ sub_1B1E5	proc near
 		mov	bp, sp
 		cmp	word_26332, 10h
 		jnz	short loc_1B221
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 9
 		mov	byte ptr word_26006, 20h ; ' '
@@ -33651,7 +34397,8 @@ loc_1B221:
 		mov	al, byte ptr word_26006
 		add	al, 0F8h
 		mov	byte ptr word_26006, al
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B256:
 		cmp	word_26332, 60h
@@ -33779,7 +34526,8 @@ loc_1B368:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_1B3A1
 ; ---------------------------------------------------------------------------
 
@@ -33959,7 +34707,7 @@ loc_1B4B1:
 		jz	loc_1B548
 		cmp	word ptr [si+12h], 0D4h
 		jz	short loc_1B4D2
-		push	10
+		push	0Ah
 		jmp	short loc_1B52E
 ; ---------------------------------------------------------------------------
 
@@ -33967,7 +34715,8 @@ loc_1B4D2:
 		mov	word ptr [si+16h], 1
 		mov	ax, [bp+var_2]
 		sub	[si+14h], ax
-		call	snd_se_play pascal, 4
+		push	4
+		call	sub_14CEE
 		cmp	word ptr [si+14h], 0
 		jge	short loc_1B548
 		inc	byte ptr [si]
@@ -33995,7 +34744,7 @@ loc_1B52C:
 		push	3
 
 loc_1B52E:
-		call	snd_se_play
+		call	sub_14CEE
 		jmp	short loc_1B548
 ; ---------------------------------------------------------------------------
 
@@ -34075,7 +34824,8 @@ loc_1B599:
 		mov	byte_2D085, al
 
 loc_1B5DB:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1B5E2:
 		cmp	word_26346, 0A0h
@@ -34152,7 +34902,8 @@ loc_1B64D:
 		mov	al, byte ptr word_26006
 		add	al, 6
 		mov	byte ptr word_26006, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1B68E:
 		cmp	word_26346, 100h
@@ -34217,7 +34968,8 @@ loc_1B6ED:
 		add	al, 20h	; ' '
 		mov	byte ptr word_26006+1, al
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B71B:
 		cmp	word_26346, 0A0h
@@ -34308,7 +35060,8 @@ loc_1B799:
 		add	al, 0Ch
 		mov	byte ptr word_2BC71, al
 		call	sub_1B3DD
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B7F9:
 		cmp	word_26346, 0A0h
@@ -34362,7 +35115,8 @@ sub_1B832	proc near
 loc_1B858:
 		cmp	word_26346, 20h	; ' '
 		jnz	short loc_1B866
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B866:
 		mov	ax, word_26346
@@ -34444,7 +35198,8 @@ loc_1B8FC:
 		call	sub_15A5C
 		mov	al, byte_2D084
 		add	byte_2D085, al
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1B927:
 		cmp	word_26346, 40h
@@ -34592,7 +35347,8 @@ loc_1BA63:
 		jl	loc_1BD09
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D20C
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
@@ -34918,7 +35674,8 @@ loc_1BD79:
 loc_1BD8D:
 		cmp	si, 8
 		jl	short loc_1BD79
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1BD99:
 		cmp	word_26346, 0A0h
@@ -35007,7 +35764,8 @@ loc_1BE4E:
 		mov	al, byte_2D085
 		add	al, 9
 		mov	byte_2D085, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1BE60:
 		cmp	word_26346, 0C0h
@@ -35239,7 +35997,8 @@ loc_1C043:
 loc_1C057:
 		cmp	si, 8
 		jl	short loc_1C043
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		mov	byte_26000, 0Ch
 		mov	byte ptr word_25FFA+1, 0
 		mov	byte ptr dword_26002, 3
@@ -35337,7 +36096,8 @@ loc_1C121:
 		neg	al
 		add	al, 8
 		mov	byte_2C977, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1C15E:
 		cmp	word_26346, 0C0h
@@ -35407,7 +36167,8 @@ loc_1C1C1:
 		call	sub_1B3DD
 		mov	al, byte_2D081
 		add	byte_2D080, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		jmp	short loc_1C239
 ; ---------------------------------------------------------------------------
 
@@ -35518,7 +36279,8 @@ loc_1C2AB:
 		mov	byte_2D083, 0F8h
 
 loc_1C316:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1C31D:
 		mov	byte ptr word_25FFA, 10h
@@ -35805,7 +36567,8 @@ loc_1C58E:
 		jl	loc_1C805
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D20C
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
@@ -36190,7 +36953,8 @@ loc_1C8CC:
 		call	sub_159E6
 		mov	ah, 0
 		mov	[si+12h], ax
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		jmp	short loc_1C920
 ; ---------------------------------------------------------------------------
 
@@ -36452,7 +37216,8 @@ sub_1CAD7	proc near
 		mov	byte ptr word_26006+1, 3Ch ; '<'
 		mov	byte ptr dword_26002, 10h
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -36477,7 +37242,8 @@ loc_1CB23:
 		push	ax
 		call	sub_14E6C
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1CB5D:
 		cmp	word_26346, 50h	; 'P'
@@ -36516,7 +37282,8 @@ var_1		= byte ptr -1
 		mov	byte_26000, 0
 		mov	byte ptr word_26006+1, 60h
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	word_2BC7E, 20h	; ' '
 		mov	byte_2BC88, 4Ch	; 'L'
 		mov	byte_2D083, 0
@@ -36561,7 +37328,8 @@ loc_1CC1F:
 		mov	al, byte_2D084
 		mov	byte ptr word_26006, al
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1CC3E:
 		mov	al, byte_2D076
@@ -36642,7 +37410,8 @@ sub_1CCD3	proc near
 		mov	byte_26001, 0Ah
 		mov	byte ptr word_26006+1, 38h ; '8'
 		mov	word ptr dword_26002, 205h
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_2D085, 60h
 		mov	byte_2D084, 40h
 		pop	bp
@@ -36718,7 +37487,8 @@ loc_1CD26:
 		mov	al, byte_2D084
 		add	al, 0FAh
 		mov	byte_2D084, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1CDF8:
 		cmp	word_26346, 100h
@@ -36756,7 +37526,8 @@ sub_1CE0D	proc near
 		mov	byte ptr word_26006, 0
 		mov	byte ptr word_25FFA+1, 44h ; 'D'
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_2D085, 80h
 		pop	bp
 		retn
@@ -36793,7 +37564,8 @@ loc_1CE63:
 		mov	al, byte_2D085
 		add	al, 8
 		mov	byte_2D085, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1CEC4:
 		cmp	word_26346, 0C0h
@@ -36833,7 +37605,8 @@ var_1		= byte ptr -1
 		mov	byte_26000, 0
 		mov	byte ptr word_26006+1, 60h
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	word_26316, 18h
 		mov	word_26314, 64h	; 'd'
 		mov	byte_26313, 6
@@ -36883,7 +37656,8 @@ loc_1CFA4:
 		mov	al, byte_2D084
 		mov	byte ptr word_26006, al
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1CFC3:
 		mov	al, byte_2D077
@@ -36990,7 +37764,8 @@ sub_1D085	proc near
 		call	sub_E758
 		mov	byte ptr dword_26002+1,	al
 		mov	byte ptr word_26006+1, 80h
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	word_2BC7E, 20h	; ' '
 		mov	byte_2BC88, 40h
 		push	200h
@@ -37059,7 +37834,8 @@ loc_1D17C:
 		cmp	byte ptr word_26006+1, 60h
 		jbe	short loc_1D1B9
 		mov	byte ptr word_26006+1, 8
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		inc	byte_2D083
 		cmp	byte_2D083, 5
 		ja	loc_1D110
@@ -37105,7 +37881,8 @@ sub_1D1C6	proc near
 		mov	byte_26001, 2
 		mov	byte ptr word_26006+1, 26h ; '&'
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_2D085, 0
 		mov	byte_2C976, 2
 		mov	byte_2D084, 0
@@ -37138,7 +37915,8 @@ loc_1D257:
 		call	sub_15A9C
 		inc	byte_2D084
 		inc	byte_2D085
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1D269:
 		pop	bp
@@ -37205,7 +37983,8 @@ loc_1D2EF:
 		call	sub_126B3
 		or	ax, ax
 		jz	short loc_1D320
-		call	snd_se_play pascal, 10
+		push	0Ah
+		call	sub_14CEE
 
 loc_1D320:
 		cmp	word_26346, 40h
@@ -37222,7 +38001,8 @@ loc_1D32D:
 		mov	byte_26344, 0B4h
 		inc	byte_26345
 		mov	word_26346, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_D29E
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
@@ -37637,7 +38417,8 @@ loc_1D6A2:
 loc_1D6A4:
 		mov	byte_2D085, al
 		call	fp_25344
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1D6B2:
 		mov	ax, word_26346
@@ -37716,7 +38497,8 @@ loc_1D719:
 		add	al, 8
 		mov	byte ptr word_26006, al
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1D766:
 		cmp	word_26346, 60h
@@ -37757,7 +38539,8 @@ sub_1D776	proc near
 		mov	byte ptr word_26006+1, 3Ch ; '<'
 		mov	byte ptr dword_26002, 10h
 		call	fp_25344
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -37790,7 +38573,8 @@ sub_1D7DC	proc near
 		mov	byte_26000, 0Dh
 		mov	byte ptr dword_26002, 3
 		call	fp_25344
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1D805:
 		mov	ax, word_26346
@@ -37844,7 +38628,8 @@ loc_1D877:
 		or	dx, dx
 		jnz	short loc_1D88E
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1D88E:
 		mov	ax, word_26346
@@ -37884,7 +38669,8 @@ sub_1D89A	proc near
 		mov	byte_26312, 30h	; '0'
 		push	5
 		call	sub_175A4
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte_26344, 0B5h
 		mov	byte_2D085, 0
 		mov	byte_2D084, 64h	; 'd'
@@ -37972,7 +38758,8 @@ loc_1D9BC:
 loc_1D9C1:
 		cmp	si, 6
 		jl	short loc_1D9BC
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	word_2CE06, 8
 		jmp	short loc_1DA13
 ; ---------------------------------------------------------------------------
@@ -38051,7 +38838,8 @@ sub_1DA1C	proc near
 		mov	byte_2BC88, al
 		mov	word_2BC82, 0C8h
 		call	sub_1D53A
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1DA6A:
 		mov	ax, word_26346
@@ -38142,7 +38930,8 @@ loc_1DB10:
 		shl	al, 6
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1DB78:
 		pop	si
@@ -38170,7 +38959,8 @@ loc_1DB8C:
 		jge	short loc_1DBB8
 		cmp	word_26346, 80h
 		jnz	short loc_1DBA3
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_1DBA3:
 		test	byte ptr word_26346, 1
@@ -38219,7 +39009,8 @@ loc_1DC06:
 		cmp	si, 10h
 		jl	short loc_1DBCA
 		mov	byte_26344, 0C0h
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		mov	word_2CE06, 8
 
 loc_1DC1D:
@@ -38316,7 +39107,8 @@ loc_1DCE1:
 		mov	byte ptr word_26006, al
 		add	word ptr dword_25FFC, 1000h
 		call	sub_15A70
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1DCFD:
 		pop	si
@@ -38518,7 +39310,8 @@ loc_1DEEA:
 		call	sub_1D53A
 
 loc_1DF41:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1DF48:
 		cmp	word_22852, 0
@@ -38657,7 +39450,8 @@ loc_1E047:
 		mov	al, byte ptr word_2BC71
 		add	al, 88h
 		mov	byte ptr word_2BC71, al
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1E0A6:
 		cmp	word_26346, 100h
@@ -38820,7 +39614,8 @@ loc_1E220:
 		jl	loc_1E527
 		mov	word_26346, 0
 		inc	byte_26345
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	fp_23F5A, offset sub_DA86
 		jmp	loc_1E527
 ; ---------------------------------------------------------------------------
@@ -39089,7 +39884,8 @@ loc_1E4CB:
 		mov	word_2D088, 180h
 		mov	Palettes, 60h
 		mov	Palettes+2, 0
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		jmp	short loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -39167,7 +39963,8 @@ loc_1E570:
 		jge	short loc_1E5C6
 		or	si, si
 		jnz	short loc_1E580
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_1E580:
 		mov	ax, 2
@@ -39222,7 +40019,8 @@ loc_1E5C6:
 		jge	short loc_1E5EA
 		cmp	si, 1Eh
 		jnz	short loc_1E5D7
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1E5D7:
 		mov	eax, dword_26320
@@ -39378,7 +40176,8 @@ sub_1E6A6	proc near
 		mov	byte ptr word_26006, 0
 		mov	byte_2C977, 38h	; '8'
 		call	sub_15A70
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1E6FE:
 		cmp	word_26332, 80h
@@ -39452,7 +40251,8 @@ loc_1E776:
 		mov	byte_2C979, 14h
 
 loc_1E7A4:
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 		inc	byte_2D082
 
 loc_1E7AF:
@@ -39508,7 +40308,8 @@ loc_1E82B:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_1E864
 ; ---------------------------------------------------------------------------
 
@@ -39627,7 +40428,8 @@ sub_1E8DA	proc near
 		cmp	word_26346, 30h	; '0'
 		jnz	short loc_1E900
 		mov	byte_26344, 0B5h
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_1E900:
 		cmp	word_26346, 40h
@@ -39676,7 +40478,8 @@ sub_1E922	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E967
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1E967:
 		cmp	word_26346, 80h
@@ -39750,7 +40553,8 @@ loc_1E9E4:
 		call	sub_15A70
 
 loc_1E9F2:
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1E9F9:
 		mov	ax, word_26346
@@ -39889,7 +40693,8 @@ loc_1EB2C:
 loc_1EB2E:
 		push	ax
 		call	sub_1E87C
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 
 loc_1EB39:
 		cmp	word_26346, 100h
@@ -39941,7 +40746,8 @@ sub_1EB52	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EBF0
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		mov	byte ptr word_25FFA, 12h
 		push	600h
 		call	sub_157FA
@@ -40015,7 +40821,8 @@ loc_1EC3E:
 		mov	word ptr dword_26002, 816h
 		mov	byte ptr word_25FFA+1, 34h ; '4'
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1EC5B:
 		cmp	word_26346, 80h
@@ -40072,7 +40879,8 @@ loc_1ECB9:
 		add	al, 2
 		mov	byte ptr word_26006, al
 		call	sub_15A70
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1ECD0:
 		mov	al, 0
@@ -40218,7 +41026,8 @@ sub_1EDC1	proc near
 		mov	word ptr dword_25FFC, ax
 		mov	byte ptr word_26006, 0
 		call	sub_15A70
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1EE14:
 		mov	ax, word_26346
@@ -40367,7 +41176,8 @@ loc_1EF5F:
 		call	sub_15A24
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1EF6F:
 		cmp	word_26346, 100h
@@ -40421,7 +41231,8 @@ loc_1EFBF:
 		call	sub_15A24
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1EFCF:
 		mov	ax, word_26346
@@ -40469,7 +41280,8 @@ sub_1EFED	proc near
 		mov	byte_2D085, 0
 		mov	byte_2D084, 0
 		mov	byte_2D083, 0
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_1F045:
 		cmp	word_26346, 80h
@@ -40543,7 +41355,8 @@ loc_1F0D0:
 		sub	al, byte ptr word_26006
 		mov	byte ptr word_26006, al
 		call	sub_15A8E
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 		mov	al, byte_2D085
 		sub	byte ptr word_26006, al
 		mov	ax, word_26346
@@ -40596,7 +41409,8 @@ sub_1F13B	proc near
 		cmp	word_26346, 40h
 		jnz	short loc_1F182
 		mov	byte_26344, 0B5h
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 		mov	byte ptr word_25FFA+1, 74h ; 't'
 		mov	byte_26000, 2
 		call	sub_157D6
@@ -40631,7 +41445,8 @@ loc_1F182:
 		mov	al, byte ptr word_26006
 		add	al, 87h
 		mov	byte ptr word_26006, al
-		call	snd_se_play pascal, 9
+		push	9
+		call	sub_14CEE
 
 loc_1F1D4:
 		push	0C00h
@@ -40792,7 +41607,8 @@ loc_1F333:
 		jl	loc_1F666
 		mov	word_26346, 0
 		inc	byte_26345
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 		mov	Palettes, 0
 		mov	Palettes+1, 0
 		mov	Palettes+2, 0
@@ -41206,7 +42022,8 @@ sub_1F6F1	proc near
 		call	sub_16A6B
 		cmp	word_26332, 10h
 		jnz	short loc_1F719
-		call	snd_se_play pascal, 8
+		push	8
+		call	sub_14CEE
 
 loc_1F719:
 		cmp	word_26332, 14h
@@ -41273,7 +42090,8 @@ sub_1F776	proc near
 		mov	byte_26000, 2
 		mov	word ptr dword_26002, 70Dh
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1F7AA:
 		cmp	word_26332, 60h
@@ -41322,7 +42140,8 @@ sub_1F7BA	proc near
 		call	sub_157D6
 		mov	byte ptr word_26006, al
 		call	sub_15A5C
-		call	snd_se_play pascal, 3
+		push	3
+		call	sub_14CEE
 
 loc_1F813:
 		cmp	word_26332, 60h
@@ -41360,7 +42179,8 @@ sub_1F823	proc near
 		mov	byte ptr dword_26002+3,	4
 		mov	byte ptr dword_26002, 20h ; ' '
 		call	sub_15A5C
-		call	snd_se_play pascal, 15
+		push	0Fh
+		call	sub_14CEE
 
 loc_1F86B:
 		cmp	word_26332, 40h
@@ -41478,7 +42298,8 @@ loc_1F968:
 		push	word ptr dword_26320+2
 		push	800030h
 		call	sub_1597C
-		call	snd_se_play pascal, 12
+		push	0Ch
+		call	sub_14CEE
 		jmp	short loc_1F9A1
 ; ---------------------------------------------------------------------------
 
@@ -41596,7 +42417,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	edx, [bp+arg_0]
 		mov	di, 1FC6h
-		mov	ax, TX_WHITE
+		mov	ax, 0E1h
 		mov	byte ptr dword_229AA+3,	0A0h
 		mov	bx, 1FA0h
 		mov	cx, 6
@@ -41661,7 +42482,8 @@ arg_4		= word ptr  8
 		mov	si, ax
 		or	si, si
 		jz	short loc_1FA8E
-		call	snd_se_play pascal, [bp+arg_0]
+		push	[bp+arg_0]
+		call	sub_14CEE
 
 loc_1FA8E:
 		mov	byte_2297E, 0
@@ -41699,7 +42521,8 @@ arg_4		= word ptr  8
 		mov	si, ax
 		or	si, si
 		jz	short loc_1FAD1
-		call	snd_se_play pascal, [bp+arg_0]
+		push	[bp+arg_0]
+		call	sub_14CEE
 
 loc_1FAD1:
 		mov	byte_2297E, 0
@@ -41873,7 +42696,8 @@ arg_0		= word ptr  4
 		mov	byte_26348, 0
 		push	0
 		call	sub_162CC
-		call	snd_se_play pascal, 13
+		push	0Dh
+		call	sub_14CEE
 
 loc_1FBE1:
 		cmp	word_26346, 10h
@@ -42013,7 +42837,8 @@ loc_1FD19:
 
 loc_1FD25:
 		mov	fp_2CE88, offset sub_119B1
-		kajacall	KAJA_SONG_FADE, 10
+		push	20Ah
+		call	sub_14F68
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
 
@@ -42024,7 +42849,7 @@ loc_1FD35:
 		inc	byte ptr es:[bx+13h]
 		mov	byte_25FE8, 2
 		push	1
-		call	frame_delay
+		call	sub_1510E
 
 loc_1FD51:
 		mov	word ptr dword_2C922, 0C190h
@@ -42061,7 +42886,9 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-main_03_TEXT	ends
+seg003		ends
+
+; ===========================================================================
 
 	.data
 
@@ -42154,12 +42981,65 @@ include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
-include th04/hardware/snd_se_priority[data].asm
-include th03/hardware/snd_se_state[data].asm
+		dw    0
+		db  20h
+		db  10h
+		db    2
+		db  12h
+		db  12h
+		db  40h
+		db  10h
+		db  11h
+		db    2
+		db  12h
+		db  20h
+		db  20h
+		db  20h
+		db  20h
+		db    0
+		db    0
+		db    0
+		db  24h	; $
+		db  10h
+		db    4
+		db  10h
+		db    8
+		db  30h	; 0
+		db  50h	; P
+		db  11h
+		db    4
+		db  0Bh
+		db  50h	; P
+		db  50h	; P
+		db  50h	; P
+		db  20h
+		db    0
+byte_21214	db 0FFh
+byte_21215	db 0
 word_21216	dw 4E20h
-include th05/hardware/snd_load[data].asm
-include th04/hardware/snd[data].asm
-include th05/hardware/vram_planes[data].asm
+aEfc		db 'efc',0
+dword_2121C	dd 6Dh
+aM2		db 'm2',0
+aMmd		db 'mmd',0
+byte_21227	db 0
+byte_21228	db 0
+byte_21229	db 0
+		db    0
+		db    0
+		db    0
+		db 0A8h	; ｨ
+		db    0
+		db    0
+		db    0
+		db 0B0h	; ｰ
+		db    0
+		db    0
+		db    0
+		db 0B8h	; ｸ
+		db    0
+		db    0
+		db    0
+		db 0E0h
 byte_2123A	db 0
 		db 0
 aMiko_cfg	db 'MIKO.CFG',0
@@ -45008,7 +45888,16 @@ word_22723	dw 6161h
 word_22725	dw 8121h
 word_22727	dw 0C1A1h
 byte_22729	db 0E1h
-include th04/hud/bar_colors[data].asm
+		db  41h	; A
+		db  41h	; A
+		db  41h	; A
+		db  61h	; a
+		db  61h	; a
+		db  21h	; !
+		db  81h
+		db 0A1h
+		db 0C1h
+		db 0E1h
 word_22734	dw 202h
 word_22736	dw 202h
 word_22738	dw 202h
@@ -45401,9 +46290,14 @@ include libs/master.lib/super_put_rect[bss].asm
 		dd ?
 		dd ?
 		dd ?
-include th04/hardware/snd_interrupt[bss].asm
+byte_23980	db ?
+		db ?
 include libs/master.lib/bgm[bss].asm
-include th02/hardware/snd_load[bss].asm
+unk_23A48	db    ?	;
+		dd    ?	;
+		dd    ?	;
+		dd    ?	;
+		db    ?	;
 word_23A56	dw ?
 byte_23A58	db ?
 		db ?
