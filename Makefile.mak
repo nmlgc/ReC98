@@ -24,6 +24,3 @@ th05:: $(TH05:\=bin\th05\)
 
 .obj.com:
 	tlink /t /3 $**
-
-bin\th01\zunsoft.com: th01\zunsoft.c
-	$(CC) $(CFLAGS) -mt -lt -O -a2 -nbin\th01\ $** masters.lib

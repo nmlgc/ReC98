@@ -21,9 +21,6 @@ goto eof
 echo You're running a 64-bit OS. Run BUILD16B.BAT separately in DOSBox instead.
 goto eof
 
-:no_tcc
-echo Could not find TCC.
-goto tc4j_bin
 :no_tlink
 echo Could not find TLINK.
 goto tc4j_bin
