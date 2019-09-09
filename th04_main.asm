@@ -41870,7 +41870,7 @@ byte_259EE	db ?
 byte_259EF	db ?
 byte_259F0	db ?
 byte_259F1	db ?
-include th04/midboss_funcs[bss].asm
+include th04/midboss/funcs[bss].asm
 byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?

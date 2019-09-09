@@ -45402,7 +45402,7 @@ word_2C986	dw ?
 word_2C988	dw ?
 byte_2C98A	db ?
 		db ?
-include th04/midboss_funcs[bss].asm
+include th04/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
 include th05/lasers_render[bss].asm
