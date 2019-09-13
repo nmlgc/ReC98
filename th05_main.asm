@@ -4136,7 +4136,7 @@ loc_D124:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_DEA6
+		call	playfield_fillm_0_0_384_192__1
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
@@ -4212,7 +4212,7 @@ loc_D1B0:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_DEB4
+		call	playfield_fillm_0_205_384_163
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 221
 		push	16
@@ -4289,7 +4289,7 @@ loc_D23E:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_DEC2
+		call	playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
 		push	16
@@ -4362,7 +4362,7 @@ loc_D2C7:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_E01E
+		call	playfield_fillm_0_0_384_192__2
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
@@ -5745,7 +5745,7 @@ sub_DCDB	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_DD42	proc near
+playfield_fillm_32_0_320_192	proc near
 		push	di
 		cli
 		mov	dx, 7Eh	; '~'
@@ -5768,7 +5768,7 @@ loc_DD61:
 		jge	short loc_DD61
 		pop	di
 		retn
-sub_DD42	endp
+playfield_fillm_32_0_320_192	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -5970,64 +5970,25 @@ sub_DE7A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_DEA6	proc near
+playfield_fillm_0_0_384_192__1	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-sub_DEA6	endp
+playfield_fillm_0_0_384_192__1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_DEB4	proc near
+playfield_fillm_0_205_384_163	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 205
 		pop	di
 		retn
-sub_DEB4	endp
+playfield_fillm_0_205_384_163	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DEC2	proc near
-		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		nop
-
-loc_DECC:
-		mov	cx, PLAYFIELD_VRAM_W / 4
-
-loc_DECF:
-		mov	es:[di+(312 * ROW_SIZE)], eax
-		stosd
-		loop	loc_DECF
-		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
-		jge	short loc_DECC
-		mov	ax, GRAM_400 + ((56 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		nop
-
-loc_DEE8:
-		mov	es:[di+(320 / 8)], eax
-		stosd
-		mov	es:[di+(320 / 8)], eax
-		stosd
-		sub	di, ROW_SIZE + 8
-		jge	short loc_DEE8
-		pop	di
-		retn
-sub_DEC2	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/hardware/fillm64-56_256-256.asm
 include th05/formats/bb_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6161,12 +6122,12 @@ sub_DFBA	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_E01E	proc near
+playfield_fillm_0_0_384_192__2	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-sub_E01E	endp
+playfield_fillm_0_0_384_192__2	endp
 
 ; ---------------------------------------------------------------------------
 word_E02C	dw 0
@@ -7118,13 +7079,13 @@ sub_E8FE	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_E914	proc near
+playfield_fillm_0_104_384_192	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 104
 		GRCG_FILL_PLAYFIELD_ROWS	296,  72
 		pop	di
 		retn
-sub_E914	endp
+playfield_fillm_0_104_384_192	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -17940,7 +17901,7 @@ sub_14544	proc near
 		mov	_boss_sprite_left, 186
 		mov	_boss_sprite_right, 184
 		mov	_boss_sprite_stay, 180
-		mov	_boss_backdrop_colorfill, offset sub_DD42
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_32_0_320_192
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
@@ -17982,7 +17943,7 @@ sub_14613	proc near
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_DEA6
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192__1
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
@@ -18024,7 +17985,7 @@ sub_146D0	proc near
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_DEB4
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_205_384_163
 		mov	_boss_sprite_left, 188
 		mov	_boss_sprite_right, 186
 		mov	_boss_sprite_stay, 180
@@ -18074,7 +18035,7 @@ sub_1479F	proc near
 		mov	_yuki_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_DEC2
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_64_56_256_256
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
@@ -18120,7 +18081,7 @@ sub_14879	proc near
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_E01E
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192__2
 		push	ds
 		push	offset aSt04_bmt ; "st04.bmt"
 		call	super_entry_bfnt
@@ -18162,7 +18123,7 @@ sub_14976	proc near
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_E914
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_104_384_192
 		call	_cdg_load_all_noalpha pascal, 16, ds, offset aSt05bk_cdg
 		call	_cdg_load_all_noalpha pascal, 17, ds, offset aSt05bk2_cdg
 		call	bb_stage_load pascal, ds, offset aSt05_bb
@@ -18201,7 +18162,7 @@ sub_14A06	proc near
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_E914
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_104_384_192
 		push	ds
 		push	offset aSt06_bmt ; "st06.bmt"
 		call	super_entry_bfnt

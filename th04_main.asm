@@ -2200,53 +2200,14 @@ sub_BE68	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_BECC	proc near
+playfield_fillm_0_0_384_112	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	112, 256
 		pop	di
 		retn
-sub_BECC	endp
+playfield_fillm_0_0_384_112	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BEDA	proc near
-		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		nop
-
-loc_BEE4:
-		mov	cx, PLAYFIELD_VRAM_W / 4
-
-loc_BEE7:
-		mov	es:[di+(312 * ROW_SIZE)], eax
-		stosd
-		loop	loc_BEE7
-		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
-		jge	short loc_BEE4
-		mov	ax, GRAM_400 + ((56 + PLAYFIELD_Y) * ROW_SIZE) shr 4
-		mov	es, ax
-		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
-		nop
-
-loc_BF00:
-		mov	es:[di+(320 / 8)], eax
-		stosd
-		mov	es:[di+(320 / 8)], eax
-		stosd
-		sub	di, ROW_SIZE + 8
-		jge	short loc_BF00
-		pop	di
-		retn
-sub_BEDA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/fillm64-56_256-256.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2377,7 +2338,7 @@ sub_BF94	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_BFF8	proc near
+playfield_fillm_96_112_288_256	proc near
 		push	di
 		mov	ax, GRAM_400 + ((112 + PLAYFIELD_Y) * ROW_SIZE) shr 4
 		mov	es, ax
@@ -2385,16 +2346,16 @@ sub_BFF8	proc near
 		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
 		nop
 
-loc_C002:
+@@left_rect:
 		stosd
 		stosd
 		stosd
 		sub	di, ROW_SIZE + 12
-		jge	short loc_C002
+		jge	short @@left_rect
 		GRCG_FILL_PLAYFIELD_ROWS	0, 112
 		pop	di
 		retn
-sub_BFF8	endp
+playfield_fillm_96_112_288_256	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2588,12 +2549,12 @@ sub_C0FC	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_C148	proc near
+playfield_fillm_0_0_384_192	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-sub_C148	endp
+playfield_fillm_0_0_384_192	endp
 
 include th04/hardware/grcg_modecol.asm
 
@@ -7301,13 +7262,13 @@ sub_E8A3	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_EA70	proc near
+playfield_fillm_0_80_384_112	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 192
 		GRCG_FILL_PLAYFIELD_ROWS	  0,  80
 		pop	di
 		retn
-sub_EA70	endp
+playfield_fillm_0_80_384_112	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -7776,7 +7737,7 @@ sub_ED71	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_EDE2	proc near
+playfield_fillm_0_120_384_128	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 120, dx
 		cli
@@ -7790,7 +7751,7 @@ sub_EDE2	proc near
 		GRCG_FILL_PLAYFIELD_ROWS	248, 120
 		pop	di
 		retn
-sub_EDE2	endp
+playfield_fillm_0_120_384_128	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10252,7 +10213,7 @@ var_1		= byte ptr -1
 		call	_grcg_setmode_tdw
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_1200A
+		call	playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
@@ -10327,7 +10288,7 @@ var_2		= word ptr -2
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_1200A
+		call	playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
@@ -13747,13 +13708,13 @@ sub_11FC8	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_1200A	proc near
+playfield_fillm_0_40_384_274	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 40
 		GRCG_FILL_PLAYFIELD_ROWS	314, 54
 		pop	di
 		retn
-sub_1200A	endp
+playfield_fillm_0_40_384_274	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -13795,12 +13756,12 @@ sub_12024	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_1205A	proc near
+playfield_fill	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	0, PLAYFIELD_H
 		pop	di
 		retn
-sub_1205A	endp
+playfield_fill	endp
 
 include th04/hardware/grcg_fill_rows.asm
 
@@ -14141,7 +14102,7 @@ loc_12309:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_BEDA
+		call	playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
 		push	16
@@ -14219,7 +14180,7 @@ loc_12396:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_BRGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_BFF8
+		call	playfield_fillm_96_112_288_256
 		GRCG_OFF_CLOBBERING dx
 		push	(128 shl 16) or 128
 		push	16
@@ -14887,7 +14848,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12921
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_1205A
+		call	playfield_fill
 		GRCG_OFF_CLOBBERING dx
 		cmp	_boss_phase_frame, 2
 		jnz	loc_12975
@@ -14930,7 +14891,7 @@ loc_12921:
 		call	_grcg_setcolor_direct_noint_1
 		cmp	[bp+var_1], 8
 		jnb	short loc_12944
-		call	sub_1205A
+		call	playfield_fill
 		jmp	short loc_12947
 ; ---------------------------------------------------------------------------
 
@@ -14957,7 +14918,7 @@ loc_12958:
 loc_12964:
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_1205A
+		call	playfield_fill
 		GRCG_OFF_CLOBBERING dx
 
 loc_12972:
@@ -15010,7 +14971,7 @@ loc_129B4:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_noint_1
-		call	sub_C148
+		call	playfield_fillm_0_0_384_192
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
@@ -35735,7 +35696,7 @@ sub_1DFEF	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (16 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_EDE2
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
@@ -35779,7 +35740,7 @@ sub_1E0B3	proc far
 		mov	_boss_sprite, 0
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_EA70
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
@@ -35825,7 +35786,7 @@ sub_1E186	proc far
 		mov	_boss_sprite, 134
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_BECC
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
@@ -35906,7 +35867,7 @@ loc_1E371:
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_BEDA
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_64_56_256_256
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
@@ -35955,7 +35916,7 @@ sub_1E3C2	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_BFF8
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt04_bb
 		call	_cdg_load_single_noalpha pascal, 17, ds, offset aSt04_cdg, 0
@@ -36040,7 +36001,7 @@ sub_1E518	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
-		mov	_boss_backdrop_colorfill, offset sub_C148
+		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	byte_2D01E, 0
 		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06_bb
