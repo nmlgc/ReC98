@@ -17728,6 +17728,7 @@ sub_143CA	endp
 ; =============== S U B	R O U T	I N E =======================================
 ;uth05win:CStage::StepScore()
 ;;_score_delta==curDelta=m_curScore-m_drawScore
+public SCORE_UPDATE_AND_RENDER
 score_update_and_render	proc near
 		mov	eax, _score_delta
 		or	eax, eax				;if (eax==0)
@@ -18166,27 +18167,7 @@ stagex_setup	proc near
 		retn
 stagex_setup	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-score_delta_commit	proc far
-		push	bp
-		mov	bp, sp
-		jmp	short loc_14AB9
-; ---------------------------------------------------------------------------
-
-loc_14AB6:
-		call	score_update_and_render
-
-loc_14AB9:
-		cmp	_score_delta, 0
-		ja	short loc_14AB6
-		pop	bp
-		retf
-score_delta_commit	endp
-
+	extern SCORE_DELTA_COMMIT:proc
 main_01_TEXT	ends
 
 ; ===========================================================================
