@@ -773,7 +773,7 @@ loc_B003:
 		push	ds
 		push	offset aSt00_bft ; "st00.bft"
 		call	super_entry_bfnt
-		call	sub_1DFEF
+		call	stage1_setup
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
 		jnz	short loc_B044
@@ -794,7 +794,7 @@ loc_B04B:
 		push	ds
 		push	offset aSt01_bft ; "st01.bft"
 		call	super_entry_bfnt
-		call	sub_1E0B3
+		call	stage2_setup
 		push	ds
 		push	offset aSt01_mpn ; "st01.mpn"
 		jmp	loc_B141
@@ -806,7 +806,7 @@ loc_B071:
 		push	ds
 		push	offset aSt02_bft ; "st02.bft"
 		call	super_entry_bfnt
-		call	sub_1E186
+		call	stage3_setup
 		push	ds
 		push	offset aSt02_mpn ; "st02.mpn"
 		jmp	loc_B141
@@ -832,7 +832,7 @@ loc_B0B2:
 		push	ds
 		push	offset aSt03_bft ; "st03.bft"
 		call	super_entry_bfnt
-		call	sub_1E245
+		call	stage4_setup
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
 		call	sub_B8FC
@@ -846,7 +846,7 @@ loc_B0D4:
 		push	ds
 		push	offset aSt04_bft ; "st04.bft"
 		call	super_entry_bfnt
-		call	sub_1E3C2
+		call	stage5_setup
 		push	ds
 		push	offset aSt04_mpn ; "st04.mpn"
 		jmp	short loc_B141
@@ -858,7 +858,7 @@ loc_B0F9:
 		push	offset aSt05_bft ; "st05.bft"
 		call	super_entry_bfnt
 		call	_cdg_load_all pascal, 8, ds, offset aBss5_cd2
-		call	sub_1E47C
+		call	stage6_setup
 		push	ds
 		push	offset aSt05_mpn ; "st05.mpn"
 		jmp	short loc_B141
@@ -870,7 +870,7 @@ loc_B11E:
 		push	offset aSt06_bft ; "st06.bft"
 		call	super_entry_bfnt
 		call	_cdg_load_all pascal, 8, ds, offset aBss6_cd2
-		call	sub_1E518
+		call	stagex_setup
 		push	ds
 		push	offset aSt06_mpn ; "st06.mpn"
 
@@ -2955,7 +2955,7 @@ sub_C74C	endp
 
 ; Attributes: bp-based frame
 
-sub_C778	proc near
+midboss1_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -3076,14 +3076,14 @@ loc_C881:
 		pop	si
 		pop	bp
 		retn
-sub_C778	endp
+midboss1_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_C885	proc near
+midboss3_render	proc near
 
 var_2		= word ptr -2
 
@@ -3171,14 +3171,14 @@ loc_C946:
 		pop	si
 		leave
 		retn
-sub_C885	endp
+midboss3_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_C94A	proc near
+midbossx_render	proc near
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -3212,7 +3212,7 @@ var_2		= word ptr -2
 locret_C999:
 		leave
 		retn
-sub_C94A	endp
+midbossx_render	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -3546,7 +3546,7 @@ include th04/tiles_render_all.asm
 
 ; Attributes: bp-based frame
 
-sub_CC3A	proc near
+midboss2_render	proc near
 
 var_2		= word ptr -2
 
@@ -3623,7 +3623,7 @@ loc_CCD2:
 		pop	si
 		leave
 		retn
-sub_CC3A	endp
+midboss2_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3768,7 +3768,7 @@ sub_CD36	endp
 
 ; Attributes: bp-based frame
 
-sub_CE06	proc near
+midboss4_render	proc near
 
 var_2		= word ptr -2
 
@@ -3830,7 +3830,7 @@ loc_CE8F:
 		pop	si
 		leave
 		retn
-sub_CE06	endp
+midboss4_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7055,7 +7055,7 @@ sub_E7FD	endp
 
 ; Attributes: bp-based frame
 
-sub_E8A3	proc near
+yuuka5_fg_render	proc near
 
 var_2		= word ptr -2
 
@@ -7254,7 +7254,7 @@ loc_EA6B:
 		pop	si
 		leave
 		retn
-sub_E8A3	endp
+yuuka5_fg_render	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -7672,7 +7672,7 @@ sub_EC8E	endp
 
 ; Attributes: bp-based frame
 
-sub_ED71	proc near
+marisa_fg_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7729,7 +7729,7 @@ loc_EDD7:
 		pop	si
 		pop	bp
 		retn
-sub_ED71	endp
+marisa_fg_render	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -12431,7 +12431,7 @@ include th04/formats/bb_txt_load.asm
 
 ; Attributes: bp-based frame
 
-sub_115B6	proc near
+mugetsu_fg_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12503,7 +12503,7 @@ loc_1163D:
 		pop	si
 		pop	bp
 		retn
-sub_115B6	endp
+mugetsu_fg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12704,7 +12704,7 @@ sub_116C4	endp
 
 ; Attributes: bp-based frame
 
-sub_11793	proc near
+kurumi_fg_render	proc near
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -12915,14 +12915,14 @@ loc_11961:
 		pop	si
 		leave
 		retn
-sub_11793	endp
+kurumi_fg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1196B	proc near
+orange_fg_render	proc near
 
 var_2		= word ptr -2
 
@@ -13054,7 +13054,7 @@ loc_11A90:
 		pop	si
 		leave
 		retn
-sub_1196B	endp
+orange_fg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13250,7 +13250,7 @@ sub_11B44	endp
 
 ; Attributes: bp-based frame
 
-sub_11C1A	proc near
+yuuka6_fg_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -13428,7 +13428,7 @@ loc_11D92:
 		pop	si
 		pop	bp
 		retn
-sub_11C1A	endp
+yuuka6_fg_render	endp
 
 include th04/shots_add.asm
 
@@ -13480,7 +13480,7 @@ sub_11DE6	endp
 
 ; Attributes: bp-based frame
 
-sub_11E12	proc near
+elly_fg_render	proc near
 
 var_2		= word ptr -2
 
@@ -13565,7 +13565,7 @@ loc_11EC1:
 		pop	si
 		leave
 		retn
-sub_11E12	endp
+elly_fg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13887,7 +13887,7 @@ include th04/boss_backdrop.asm
 
 ; Attributes: bp-based frame
 
-sub_1217E	proc near
+orange_bg_render	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 0
@@ -13938,14 +13938,14 @@ loc_121E6:
 		call	sub_CB58
 		pop	bp
 		retn
-sub_1217E	endp
+orange_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_121EB	proc near
+kurumi_bg_render	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 0
@@ -13988,7 +13988,7 @@ loc_12242:
 		call	sub_CB58
 		pop	bp
 		retn
-sub_121EB	endp
+kurumi_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14015,7 +14015,7 @@ sub_12247	endp
 
 ; Attributes: bp-based frame
 
-sub_1226F	proc near
+elly_bg_render	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 1
@@ -14065,14 +14065,14 @@ loc_122D2:
 		call	sub_CB58
 		pop	bp
 		retn
-sub_1226F	endp
+elly_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_122D7	proc near
+reimu_marisa_bg_render	proc near
 
 var_1		= byte ptr -1
 
@@ -14143,14 +14143,14 @@ loc_1235F:
 		call	sub_CB58
 		leave
 		retn
-sub_122D7	endp
+reimu_marisa_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12364	proc near
+yuuka5_bg_render	proc near
 
 var_1		= byte ptr -1
 
@@ -14221,7 +14221,7 @@ loc_123EC:
 		call	sub_CB58
 		leave
 		retn
-sub_12364	endp
+yuuka5_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14836,7 +14836,7 @@ table_1289F	dw loc_12484
 
 ; Attributes: bp-based frame
 
-sub_128B9	proc near
+yuuka6_bg_render	proc near
 
 var_1		= byte ptr -1
 
@@ -14929,14 +14929,14 @@ loc_12975:
 		pop	si
 		leave
 		retn
-sub_128B9	endp
+yuuka6_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12979	proc near
+mugetsu_gengetsu_bg_render	proc near
 
 var_1		= byte ptr -1
 
@@ -15006,7 +15006,7 @@ loc_12A05:
 		call	sub_CB58
 		leave
 		retn
-sub_12979	endp
+mugetsu_gengetsu_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15674,7 +15674,7 @@ sub_12E37	endp
 
 ; Attributes: bp-based frame
 
-sub_12E93	proc near
+reimu_fg_render	proc near
 
 var_2		= word ptr -2
 
@@ -15771,14 +15771,14 @@ loc_12F55:
 		pop	si
 		leave
 		retn
-sub_12E93	endp
+reimu_fg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12F5F	proc near
+gengetsu_fg_render	proc near
 
 var_2		= word ptr -2
 
@@ -15966,7 +15966,7 @@ loc_130E9:
 		pop	si
 		leave
 		retn
-sub_12F5F	endp
+gengetsu_fg_render	endp
 
 main_01_TEXT	ends
 
@@ -16875,7 +16875,7 @@ sub_13FB2	endp
 
 ; Attributes: bp-based frame
 
-sub_14017	proc far
+midboss1_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -17109,7 +17109,7 @@ loc_142E4:
 		pop	si
 		pop	bp
 		retf
-sub_14017	endp
+midboss1_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17286,7 +17286,7 @@ sub_14425	endp
 
 ; Attributes: bp-based frame
 
-sub_1448B	proc far
+midboss3_update	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -17492,7 +17492,7 @@ loc_1468D:
 		pop	si
 		leave
 		retf
-sub_1448B	endp
+midboss3_update	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -17811,7 +17811,7 @@ word_148F8	dw   0FAh,  102h,  10Ah,  112h
 
 ; Attributes: bp-based frame
 
-sub_1494C	proc far
+midbossx_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _midboss_pos.cur.x
@@ -17944,7 +17944,7 @@ loc_14A82:
 loc_14A87:
 		pop	bp
 		retf
-sub_1494C	endp
+midbossx_update	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -18257,7 +18257,7 @@ sub_14C45	endp
 
 ; Attributes: bp-based frame
 
-sub_14CFD	proc far
+midboss2_update	proc far
 
 var_2		= word ptr -2
 
@@ -18488,7 +18488,7 @@ loc_14F57:
 		pop	si
 		leave
 		retf
-sub_14CFD	endp
+midboss2_update	endp
 
 ; ---------------------------------------------------------------------------
 word_14F64	dw	0,     1,     2,     3
@@ -18874,7 +18874,7 @@ sub_15202	endp
 
 ; Attributes: bp-based frame
 
-sub_152B4	proc far
+midboss4_update	proc far
 
 var_2		= word ptr -2
 
@@ -19091,8 +19091,8 @@ loc_154D1:
 		cmp	_midboss_frames_until, 2800
 		jnz	short loc_1552D
 		mov	_midboss_frames_until, 5600
-		setfarfp	_midboss_update_func, sub_152B4
-		mov	_midboss_render_func, offset sub_CE06
+		setfarfp	_midboss_update_func, midboss4_update
+		mov	_midboss_render_func, offset midboss4_render
 		mov	_midboss_pos.cur.x, (240 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
 		mov	_midboss_pos.prev.x, (240 shl 4)
@@ -19114,7 +19114,7 @@ loc_15537:
 		pop	si
 		leave
 		retf
-sub_152B4	endp
+midboss4_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -21010,7 +21010,7 @@ sub_1653D	endp
 
 ; Attributes: bp-based frame
 
-sub_16610	proc far
+yuuka5_update	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -21044,7 +21044,7 @@ loc_16651:
 		call	snd_se_play pascal, 13
 		mov	byte_25667, 0
 		mov	byte_2CDCA, 0Fh
-		mov	fp_255AC, offset sub_12364
+		mov	fp_255AC, offset yuuka5_bg_render
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
 
@@ -21393,7 +21393,7 @@ loc_169B8:
 		call	sub_19F16
 		leave
 		retf
-sub_16610	endp
+yuuka5_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -23322,7 +23322,7 @@ sub_179BC	endp
 
 ; Attributes: bp-based frame
 
-sub_179F4	proc far
+marisa_update	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -23359,7 +23359,7 @@ loc_17A31:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_255AC, offset sub_122D7
+		mov	fp_255AC, offset reimu_marisa_bg_render
 		mov	byte_2CDCA, 0Fh
 		mov	byte_25670, 0
 		jmp	loc_17CA4
@@ -23618,7 +23618,7 @@ loc_17CA4:
 		call	sub_19F16
 		leave
 		retf
-sub_179F4	endp
+marisa_update	endp
 
 ; ---------------------------------------------------------------------------
 word_17CBF	dw	0,     1,     2,     3
@@ -24929,7 +24929,7 @@ sub_186B9	endp
 
 ; Attributes: bp-based frame
 
-sub_186EB	proc far
+mugetsu_update	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -24981,7 +24981,7 @@ loc_1876B:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_2CDCA, 0Fh
-		mov	fp_255AC, offset sub_12979
+		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -25216,7 +25216,7 @@ loc_189A1:
 		call	sub_19F16
 		leave
 		retf
-sub_186EB	endp
+mugetsu_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -26137,7 +26137,7 @@ sub_1905A	endp
 
 ; Attributes: bp-based frame
 
-sub_1915D	proc far
+kurumi_update	proc far
 
 var_2		= word ptr -2
 
@@ -26205,7 +26205,7 @@ loc_191FB:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_259F1, 0
-		mov	fp_255AC, offset sub_121EB
+		mov	fp_255AC, offset kurumi_bg_render
 		mov	byte_2CDCA, 0
 		jmp	short loc_19235
 ; ---------------------------------------------------------------------------
@@ -26604,7 +26604,7 @@ loc_195BF:
 		pop	si
 		leave
 		retf
-sub_1915D	endp
+kurumi_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -27160,7 +27160,7 @@ sub_1998B	endp
 
 ; Attributes: bp-based frame
 
-sub_19AA3	proc far
+orange_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -27227,7 +27227,7 @@ loc_19B56:
 		call	snd_se_play pascal, 13
 		mov	byte_2D02D, 0
 		mov	byte_2D02C, 0FFh
-		mov	fp_255AC, offset sub_1217E
+		mov	fp_255AC, offset orange_bg_render
 		mov	byte_2CDCA, 0
 		jmp	short loc_19C02
 ; ---------------------------------------------------------------------------
@@ -27554,7 +27554,7 @@ loc_19EA3:
 		pop	si
 		pop	bp
 		retf
-sub_19AA3	endp
+orange_update	endp
 
 ; ---------------------------------------------------------------------------
 off_19EA6	dw offset loc_19C23
@@ -30386,7 +30386,7 @@ sub_1B42F	endp
 
 ; Attributes: bp-based frame
 
-sub_1B47E	proc far
+yuuka6_update	proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -30417,7 +30417,7 @@ loc_1B4BA:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_25A02, 0
-		mov	fp_255AC, offset sub_128B9
+		mov	fp_255AC, offset yuuka6_bg_render
 		mov	byte_2CDCA, 0Fh
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -30874,7 +30874,7 @@ loc_1B8EA:
 		call	sub_19F16
 		leave
 		retf
-sub_1B47E	endp
+yuuka6_update	endp
 
 ; ---------------------------------------------------------------------------
 		dw	0,     1,     2,  0FFh ; value table for switch	statement
@@ -31999,7 +31999,7 @@ sub_1C251	endp
 
 ; Attributes: bp-based frame
 
-sub_1C2E5	proc far
+elly_update	proc far
 
 var_2		= word ptr -2
 
@@ -32090,7 +32090,7 @@ loc_1C39E:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_boss_pos.velocity.y, 8
-		mov	fp_255AC, offset sub_1226F
+		mov	fp_255AC, offset elly_bg_render
 		mov	byte_2CDCA, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -32396,7 +32396,7 @@ loc_1C67A:
 		call	sub_19F16
 		leave
 		retf
-sub_1C2E5	endp
+elly_update	endp
 ; ---------------------------------------------------------------------------
 
 off_1C692	dw offset loc_1C4D3
@@ -35648,7 +35648,7 @@ sub_1DE5D	endp
 
 ; Attributes: bp-based frame
 
-sub_1DF61	proc near
+boss_reset	proc near
 		push	bp
 		mov	bp, sp
 		setfarfp	_boss_update, nullsub_2
@@ -35664,7 +35664,7 @@ sub_1DF61	proc near
 		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
-sub_1DF61	endp
+boss_reset	endp
 
 include th04/formats/bb_stage.asm
 
@@ -35672,11 +35672,11 @@ include th04/formats/bb_stage.asm
 
 ; Attributes: bp-based frame
 
-sub_1DFEF	proc far
+stage1_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, sub_14017
-		mov	_midboss_render_func, offset sub_C778
+		setfarfp	_midboss_update_func, midboss1_update
+		mov	_midboss_render_func, offset midboss1_render
 		mov	_midboss_frames_until, 3100
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (368 shl 4)
@@ -35685,14 +35685,14 @@ sub_1DFEF	proc far
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	_midboss_hp, 800
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (40 shl 4)
 		mov	_boss_pos.prev.y, (40 shl 4)
-		mov	_boss_bg_render_func, offset sub_1217E
-		setfarfp	_boss_update_func, sub_19AA3
-		mov	_boss_fg_render_func, offset sub_1196B
+		mov	_boss_bg_render_func, offset orange_bg_render
+		setfarfp	_boss_update_func, orange_update
+		mov	_boss_fg_render_func, offset orange_fg_render
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (16 shl 4)
@@ -35708,18 +35708,18 @@ sub_1DFEF	proc far
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
-sub_1DFEF	endp
+stage1_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E0B3	proc far
+stage2_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, sub_14CFD
-		mov	_midboss_render_func, offset sub_CC3A
+		setfarfp	_midboss_update_func, midboss2_update
+		mov	_midboss_render_func, offset midboss2_render
 		mov	_midboss_frames_until, 2600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -35729,14 +35729,14 @@ sub_1E0B3	proc far
 		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	_midboss_hp, 750
 		mov	_midboss_sprite, 0
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (81 shl 4)
 		mov	_boss_pos.prev.y, (81 shl 4)
-		mov	_boss_bg_render_func, offset sub_121EB
-		setfarfp	_boss_update_func, sub_1915D
-		mov	_boss_fg_render_func, offset sub_11793
+		mov	_boss_bg_render_func, offset kurumi_bg_render
+		setfarfp	_boss_update_func, kurumi_update
+		mov	_boss_fg_render_func, offset kurumi_fg_render
 		mov	_boss_sprite, 0
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
@@ -35754,18 +35754,18 @@ sub_1E0B3	proc far
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
-sub_1E0B3	endp
+stage2_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E186	proc far
+stage3_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, sub_1448B
-		mov	_midboss_render_func, offset sub_C885
+		setfarfp	_midboss_update_func, midboss3_update
+		mov	_midboss_render_func, offset midboss3_render
 		mov	_midboss_frames_until, 1600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -35775,14 +35775,14 @@ sub_1E186	proc far
 		mov	_midboss_pos.velocity.y, (4 shl 4)
 		mov	_midboss_hp, 850
 		mov	_midboss_sprite, 0
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset sub_1226F
-		setfarfp	_boss_update_func, sub_1C2E5
-		mov	_boss_fg_render_func, offset sub_11E12
+		mov	_boss_bg_render_func, offset elly_bg_render
+		setfarfp	_boss_update_func, elly_update
+		mov	_boss_fg_render_func, offset elly_fg_render
 		mov	_boss_sprite, 134
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
@@ -35796,18 +35796,18 @@ sub_1E186	proc far
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
-sub_1E186	endp
+stage3_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E245	proc far
+stage4_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, sub_152B4
-		mov	_midboss_render_func, offset sub_CE06
+		setfarfp	_midboss_update_func, midboss4_update
+		mov	_midboss_render_func, offset midboss4_render
 		mov	_midboss_frames_until, 2800
 		mov	_midboss_pos.cur.x, (144 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -35817,16 +35817,16 @@ sub_1E245	proc far
 		mov	_midboss_pos.velocity.y, (2 shl 4)
 		mov	_midboss_hp, 1200
 		mov	_midboss_sprite, 0
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset sub_122D7
+		mov	_boss_bg_render_func, offset reimu_marisa_bg_render
 		cmp	playchar, 1
-		jnz	loc_1E359
-		setfarfp	_boss_update_func, sub_1F3AB
-		mov	_boss_fg_render_func, offset sub_12E93
+		jnz	@@playing_as_reimu
+		setfarfp	_boss_update_func, reimu_update
+		mov	_boss_fg_render_func, offset reimu_fg_render
 		push	( 4 shl 16) or  6
 		push	( 8 shl 16) or 12
 		call	select_for_rank
@@ -35858,9 +35858,9 @@ sub_1E245	proc far
 		jmp	short loc_1E371
 ; ---------------------------------------------------------------------------
 
-loc_1E359:
-		setfarfp	_boss_update_func, sub_179F4
-		mov	_boss_fg_render_func, offset sub_ED71
+@@playing_as_reimu:
+		setfarfp	_boss_update_func, marisa_update
+		mov	_boss_fg_render_func, offset marisa_fg_render
 		mov	_boss_hp, 6000
 
 loc_1E371:
@@ -35892,27 +35892,27 @@ loc_1E3A6:
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
-sub_1E245	endp
+stage4_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E3C2	proc far
+stage5_setup	proc far
 		push	bp
 		mov	bp, sp
 		setfarfp	_midboss_update_func, nullsub_2
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset sub_12364
-		setfarfp	_boss_update_func, sub_16610
-		mov	_boss_fg_render_func, offset sub_E8A3
+		mov	_boss_bg_render_func, offset yuuka5_bg_render
+		setfarfp	_boss_update_func, yuuka5_update
+		mov	_boss_fg_render_func, offset yuuka5_fg_render
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
@@ -35931,27 +35931,27 @@ sub_1E3C2	proc far
 		mov	byte_2D01E, al
 		pop	bp
 		retf
-sub_1E3C2	endp
+stage5_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E47C	proc far
+stage6_setup	proc far
 		push	bp
 		mov	bp, sp
 		setfarfp	_midboss_update_func, nullsub_2
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	_boss_bg_render_func, offset sub_128B9
-		setfarfp	_boss_update_func, sub_1B47E
-		mov	_boss_fg_render_func, offset sub_11C1A
+		mov	_boss_bg_render_func, offset yuuka6_bg_render
+		setfarfp	_boss_update_func, yuuka6_update
+		mov	_boss_fg_render_func, offset yuuka6_fg_render
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
@@ -35968,18 +35968,18 @@ sub_1E47C	proc far
 		mov	byte_2D01F, al
 		pop	bp
 		retf
-sub_1E47C	endp
+stage6_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E518	proc far
+stagex_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, sub_1494C
-		mov	_midboss_render_func, offset sub_C94A
+		setfarfp	_midboss_update_func, midbossx_update
+		mov	_midboss_render_func, offset midbossx_render
 		mov	_midboss_frames_until, 5400
 		mov	_midboss_pos.cur.x, (-16 shl 4)
 		mov	_midboss_pos.cur.y, (256 shl 4)
@@ -35990,14 +35990,14 @@ sub_1E518	proc far
 		mov	_midboss_hp, 4096
 		mov	_midboss_sprite, 0
 		mov	_midboss_angle, 96
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	_boss_bg_render_func, offset sub_12979
-		setfarfp	_boss_update_func, sub_186EB
-		mov	_boss_fg_render_func, offset sub_115B6
+		mov	_boss_bg_render_func, offset mugetsu_gengetsu_bg_render
+		setfarfp	_boss_update_func, mugetsu_update
+		mov	_boss_fg_render_func, offset mugetsu_fg_render
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
@@ -36009,7 +36009,7 @@ sub_1E518	proc far
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
 		retf
-sub_1E518	endp
+stagex_setup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36316,14 +36316,14 @@ loc_1E801:
 		cmp	byte_2D01E, 0
 		jnz	short loc_1E89B
 		mov	byte_2D01E, 1
-		call	sub_1DF61
+		call	boss_reset
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.y, (96 shl 4)
-		mov	_boss_bg_render, offset sub_12979
-		setfarfp	_boss_update, sub_2026A
-		mov	_boss_fg_render, offset sub_12F5F
+		mov	_boss_bg_render, offset mugetsu_gengetsu_bg_render
+		setfarfp	_boss_update, gengetsu_update
+		mov	_boss_fg_render, offset gengetsu_fg_render
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
@@ -37636,7 +37636,7 @@ sub_1F378	endp
 
 ; Attributes: bp-based frame
 
-sub_1F3AB	proc far
+reimu_update	proc far
 
 var_2		= word ptr -2
 
@@ -37671,7 +37671,7 @@ loc_1F3E2:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_255AC, offset sub_122D7
+		mov	fp_255AC, offset reimu_marisa_bg_render
 		mov	byte_2CDCA, 0Fh
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -38200,7 +38200,7 @@ loc_1F8A5:
 		call	sub_19F16
 		leave
 		retf
-sub_1F3AB	endp
+reimu_update	endp
 
 ; ---------------------------------------------------------------------------
 word_1F8C0	dw 0
@@ -39375,7 +39375,7 @@ sub_2023B	endp
 
 ; Attributes: bp-based frame
 
-sub_2026A	proc far
+gengetsu_update	proc far
 		push	bp
 		mov	bp, sp
 		cmp	byte_256A8, 0
@@ -39413,7 +39413,7 @@ loc_202B0:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_2CDCA, 0Fh
-		mov	fp_255AC, offset sub_12979
+		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -39864,7 +39864,7 @@ loc_206C9:
 		call	sub_19F16
 		pop	bp
 		retf
-sub_2026A	endp
+gengetsu_update	endp
 
 ; ---------------------------------------------------------------------------
 off_206D8	dw offset loc_202B0

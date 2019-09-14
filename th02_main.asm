@@ -2290,10 +2290,10 @@ loc_B63C:
 		mov	word_20616, 74h	; 't'
 		setfarfp	farfp_1F474, sub_13786
 		setfarfp	farfp_1F470, sub_13909
-		setfarfp	_boss_init, sub_13ADE
-		setfarfp	_boss_end, sub_13B8B
-		setfarfp	_boss_bg_render_func, sub_13BB5
-		setfarfp	_boss_update_func, sub_13FE5
+		setfarfp	_boss_init, rika_init
+		setfarfp	_boss_end, rika_end
+		setfarfp	_boss_bg_render_func, rika_bg_render
+		setfarfp	_boss_update_func, rika_update
 		setfarfp	farfp_1F490, sub_13671
 		jmp	short loc_B6F2
 ; ---------------------------------------------------------------------------
@@ -2302,10 +2302,10 @@ loc_B698:
 		mov	word_20616, 50h	; 'P'
 		setfarfp	farfp_1F474, sub_1410A
 		setfarfp	farfp_1F470, sub_1424A
-		setfarfp	_boss_init, sub_1523C
-		setfarfp	_boss_end, sub_15218
-		setfarfp	_boss_bg_render_func, sub_143E5
-		setfarfp	_boss_update_func, sub_150F4
+		setfarfp	_boss_init, meira_init
+		setfarfp	_boss_end, meira_end
+		setfarfp	_boss_bg_render_func, meira_bg_render
+		setfarfp	_boss_update_func, meira_update
 		setfarfp	farfp_1F490, sub_140AE
 
 loc_B6F2:
@@ -2317,10 +2317,10 @@ loc_B701:
 		mov	word_20616, 67h	; 'g'
 		setfarfp	farfp_1F474, sub_110B7
 		setfarfp	farfp_1F470, sub_114D6
-		setfarfp	_boss_init, sub_12754
-		setfarfp	_boss_end, sub_1273B
-		setfarfp	_boss_bg_render_func, sub_116AD
-		setfarfp	_boss_update_func, sub_123A9
+		setfarfp	_boss_init, stones_init
+		setfarfp	_boss_end, stones_end
+		setfarfp	_boss_bg_render_func, stones_bg_render
+		setfarfp	_boss_update_func, stones_update
 		setfarfp	farfp_1F490, sub_10E95
 		setfarfp	farfp_1F4A0, sub_10E4F
 		jmp	loc_B88A
@@ -2330,10 +2330,10 @@ loc_B76A:
 		mov	word_20616, 3B0h
 		setfarfp	farfp_1F474, sub_19EF3
 		setfarfp	farfp_1F470, sub_1A1FF
-		setfarfp	_boss_init, sub_1A7D5
-		setfarfp	_boss_end, sub_1C270
-		setfarfp	_boss_bg_render_func, sub_1C16A
-		setfarfp	_boss_update_func, sub_1BEF2
+		setfarfp	_boss_init, marisa_init
+		setfarfp	_boss_end, marisa_end
+		setfarfp	_boss_bg_render_func, marisa_bg_render
+		setfarfp	_boss_update_func, marisa_update
 		cmp	byte_2066C, 0
 		jnz	short loc_B7CB
 		setfarfp	farfp_1F490, sub_19E2F
@@ -2349,10 +2349,10 @@ loc_B7DD:
 		mov	word_20616, 0FFFFh
 		setfarfp	farfp_1F474, sub_BF95
 		setfarfp	farfp_1F470, sub_BF90
-		setfarfp	_boss_init, sub_199B3
-		setfarfp	_boss_end, sub_19D96
-		setfarfp	_boss_bg_render_func, sub_17B75
-		setfarfp	_boss_update_func, sub_19456
+		setfarfp	_boss_init, mima_init
+		setfarfp	_boss_end, mima_end
+		setfarfp	_boss_bg_render_func, mima_bg_render
+		setfarfp	_boss_update_func, mima_update
 		mov	byte_1E500, 1
 		jmp	short loc_B88A
 ; ---------------------------------------------------------------------------
@@ -2361,10 +2361,10 @@ loc_B832:
 		mov	word_20616, 0C8h
 		setfarfp	farfp_1F474, sub_15402
 		setfarfp	farfp_1F470, sub_1540C
-		setfarfp	_boss_init, sub_1696B
-		setfarfp	_boss_end, sub_16A21
-		setfarfp	_boss_bg_render_func, sub_159AF
-		setfarfp	_boss_update_func, sub_16744
+		setfarfp	_boss_init, evileye_init
+		setfarfp	_boss_end, evileye_end
+		setfarfp	_boss_bg_render_func, evileye_bg_render
+		setfarfp	_boss_update_func, evileye_update
 		call	sub_129FC
 		mov	byte_1E500, 2
 
@@ -12882,7 +12882,7 @@ sub_114D6	endp
 
 ; Attributes: bp-based frame
 
-sub_116AD	proc far
+stones_bg_render	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12914,7 +12914,7 @@ loc_116E4:
 		pop	si
 		pop	bp
 		retf
-sub_116AD	endp
+stones_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14598,7 +14598,7 @@ sub_1232F	endp
 
 ; Attributes: bp-based frame
 
-sub_123A9	proc far
+stones_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -14975,14 +14975,14 @@ loc_12737:
 		pop	si
 		pop	bp
 		retf
-sub_123A9	endp
+stones_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1273B	proc far
+stones_end	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -14993,14 +14993,14 @@ sub_1273B	proc far
 		inc	stage_id
 		pop	bp
 		retf
-sub_1273B	endp
+stones_end	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_12754	proc far
+stones_init	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -15015,7 +15015,7 @@ sub_12754	proc far
 		nopcall	sub_129FC
 		pop	bp
 		retf
-sub_12754	endp
+stones_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17525,7 +17525,7 @@ sub_13ABB	endp
 
 ; Attributes: bp-based frame
 
-sub_13ADE	proc far
+rika_init	proc far
 		push	bp
 		mov	bp, sp
 		push	ds
@@ -17573,14 +17573,14 @@ loc_13B70:
 		mov	byte_20672, 7
 		pop	bp
 		retf
-sub_13ADE	endp
+rika_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13B8B	proc far
+rika_end	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -17594,14 +17594,14 @@ sub_13B8B	proc far
 		mov	word_1EDA4, 0
 		pop	bp
 		retf
-sub_13B8B	endp
+rika_end	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_13BB5	proc far
+rika_bg_render	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _page_back
@@ -17632,7 +17632,7 @@ sub_13BB5	proc far
 loc_13C0A:
 		pop	bp
 		retf
-sub_13BB5	endp
+rika_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18085,7 +18085,7 @@ sub_13F34	endp
 
 ; Attributes: bp-based frame
 
-sub_13FE5	proc far
+rika_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, word_24E7C
@@ -18125,7 +18125,7 @@ loc_14039:
 		mov	ax, 1
 		pop	bp
 		retf
-sub_13FE5	endp
+rika_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18536,7 +18536,7 @@ sub_1424A	endp
 
 ; Attributes: bp-based frame
 
-sub_143E5	proc far
+meira_bg_render	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -18662,7 +18662,7 @@ loc_144ED:
 		pop	si
 		pop	bp
 		retf
-sub_143E5	endp
+meira_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20076,7 +20076,7 @@ sub_14F16	endp
 
 ; Attributes: bp-based frame
 
-sub_150F4	proc far
+meira_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -20224,7 +20224,7 @@ loc_1520C:
 		pop	si
 		pop	bp
 		retf
-sub_150F4	endp
+meira_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -20237,7 +20237,7 @@ off_15210	dw offset loc_15145
 
 ; Attributes: bp-based frame
 
-sub_15218	proc far
+meira_end	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -20250,14 +20250,14 @@ sub_15218	proc far
 		mov	word_1EB0A, 0
 		pop	bp
 		retf
-sub_15218	endp
+meira_end	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1523C	proc far
+meira_init	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -20326,7 +20326,7 @@ loc_1530E:
 		pop	si
 		pop	bp
 		retf
-sub_1523C	endp
+meira_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21144,7 +21144,7 @@ sub_15907	endp
 
 ; Attributes: bp-based frame
 
-sub_159AF	proc far
+evileye_bg_render	proc far
 
 var_2		= word ptr -2
 
@@ -21185,7 +21185,7 @@ var_2		= word ptr -2
 		call	sub_15645
 		leave
 		retf
-sub_159AF	endp
+evileye_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22696,7 +22696,7 @@ sub_166DE	endp
 
 ; Attributes: bp-based frame
 
-sub_16744	proc far
+evileye_update	proc far
 
 var_1		= byte ptr -1
 
@@ -22886,14 +22886,14 @@ loc_16968:
 		pop	si
 		leave
 		retf
-sub_16744	endp
+evileye_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1696B	proc far
+evileye_init	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_1A6C5
@@ -22939,14 +22939,14 @@ sub_1696B	proc far
 		call	sub_12E95
 		pop	bp
 		retf
-sub_1696B	endp
+evileye_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16A21	proc far
+evileye_end	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -22968,7 +22968,7 @@ sub_16A21	proc far
 		add	sp, 4
 		pop	bp
 		retf
-sub_16A21	endp
+evileye_end	endp
 
 ; ---------------------------------------------------------------------------
 
@@ -24996,7 +24996,7 @@ sub_17A7F	endp
 
 ; Attributes: bp-based frame
 
-sub_17B75	proc far
+mima_bg_render	proc far
 
 var_1		= byte ptr -1
 
@@ -25113,7 +25113,7 @@ var_1		= byte ptr -1
 		call	grcg_off
 		leave
 		retf
-sub_17B75	endp
+mima_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27665,7 +27665,7 @@ sub_193A4	endp
 
 ; Attributes: bp-based frame
 
-sub_19456	proc far
+mima_update	proc far
 
 var_1		= byte ptr -1
 
@@ -28177,14 +28177,14 @@ loc_198A8:
 loc_19924:
 		cmp	word_26C68, 0Ah
 		jnz	short loc_19930
-		nopcall	sub_19D96
+		nopcall	mima_end
 
 loc_19930:
 		mov	ax, 1
 		pop	si
 		leave
 		retf
-sub_19456	endp
+mima_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -28257,7 +28257,7 @@ sub_19949	endp
 
 ; Attributes: bp-based frame
 
-sub_199B3	proc far
+mima_init	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28432,7 +28432,7 @@ loc_19C0D:
 		pop	si
 		pop	bp
 		retf
-sub_199B3	endp
+mima_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28575,7 +28575,7 @@ sub_19C8D	endp
 
 ; Attributes: bp-based frame
 
-sub_19D96	proc far
+mima_end	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _page_back
@@ -28633,7 +28633,7 @@ loc_19E2A:
 		call	sub_19C1D
 		pop	bp
 		retf
-sub_19D96	endp
+mima_end	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29722,7 +29722,7 @@ sub_1A6C5	endp
 
 ; Attributes: bp-based frame
 
-sub_1A7D5	proc far
+marisa_init	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29910,7 +29910,7 @@ loc_1AA1A:
 		pop	si
 		pop	bp
 		retf
-sub_1A7D5	endp
+marisa_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32254,7 +32254,7 @@ sub_1BE72	endp
 
 ; Attributes: bp-based frame
 
-sub_1BEF2	proc far
+marisa_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32558,7 +32558,7 @@ loc_1C15B:
 		pop	si
 		pop	bp
 		retf
-sub_1BEF2	endp
+marisa_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -32572,7 +32572,7 @@ off_1C160	dw offset loc_1C032
 
 ; Attributes: bp-based frame
 
-sub_1C16A	proc far
+marisa_bg_render	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32672,14 +32672,14 @@ loc_1C261:
 		pop	si
 		pop	bp
 		retf
-sub_1C16A	endp
+marisa_bg_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C270	proc far
+marisa_end	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_12DE0
@@ -32693,7 +32693,7 @@ loc_1C27C:
 
 locret_1C286:
 		retf
-sub_1C270	endp
+marisa_end	endp
 
 main_03_TEXT	ends
 
