@@ -469,7 +469,7 @@ loc_ACDE:
 		jmp	short $+2
 
 loc_ACF4:
-		call	sub_116C4
+		call	score_update_and_render
 		cmp	byte_266D2, 0
 		jz	loc_AB9E
 		pop	si
@@ -12582,7 +12582,7 @@ sub_11692	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_116C4	proc near
+score_update_and_render	proc near
 		mov	eax, _score_delta
 		or	eax, eax
 		jz	short locret_1172C
@@ -12697,7 +12697,7 @@ loc_1178C:
 		pop	di
 		pop	si
 		jmp	loc_116FD
-sub_116C4	endp
+score_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

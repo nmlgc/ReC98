@@ -541,7 +541,7 @@ loc_B003:
 		jmp	short $+2
 
 loc_B055:
-		call	stage_step_score_function
+		call	score_update_and_render
 		cmp	byte_25FE8, 0
 		jz	loc_AEBB
 		pop	bp
@@ -17728,7 +17728,7 @@ sub_143CA	endp
 ; =============== S U B	R O U T	I N E =======================================
 ;uth05win:CStage::StepScore()
 ;;_score_delta==curDelta=m_curScore-m_drawScore
-stage_step_score_function	proc near
+score_update_and_render	proc near
 		mov	eax, _score_delta
 		or	eax, eax				;if (eax==0)
 		jz	short locret_1445C		;	goto locret_1445C
@@ -17841,7 +17841,7 @@ loc_144C4:
 		pop	di
 		pop	si
 		jmp	loc_14435
-stage_step_score_function	endp
+score_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18171,21 +18171,21 @@ stagex_setup	endp
 
 ; Attributes: bp-based frame
 
-sub_14AB1	proc far
+score_delta_commit	proc far
 		push	bp
 		mov	bp, sp
 		jmp	short loc_14AB9
 ; ---------------------------------------------------------------------------
 
 loc_14AB6:
-		call	stage_step_score_function
+		call	score_update_and_render
 
 loc_14AB9:
 		cmp	_score_delta, 0
 		ja	short loc_14AB6
 		pop	bp
 		retf
-sub_14AB1	endp
+score_delta_commit	endp
 
 main_01_TEXT	ends
 
@@ -37584,7 +37584,7 @@ loc_1FCD1:
 loc_1FCD6:
 		cmp	_boss_phase_frame, 416;stuck at frame 416 until all score has been added
 		jnz	short loc_1FD35
-		call	sub_14AB1
+		call	score_delta_commit
 		cmp	stage_id, 6
 		jnb	short loc_1FD0B
 		xor	si, si
