@@ -4,4 +4,5 @@
  */
 
 #include "ReC98.h"
-#include "th04/shared.h"
+#include "th04/shared.hpp"
+/// ------

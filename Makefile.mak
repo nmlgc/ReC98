@@ -73,7 +73,7 @@ bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
 $**
 |
 
-bin\th05\main.exe: bin\th05\main.obj th05\main_01.c
+bin\th05\main.exe: bin\th05\main.obj th05\main_01.cpp
 	$(CC) $(CFLAGS) -ml -3 -DGAME=5 -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |
