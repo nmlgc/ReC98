@@ -45,6 +45,17 @@
 #define RES_PARASIZE ((sizeof(resident_t) + 0xF) >> 4)
 // ------
 
+/// Typedefs
+/// --------
+// Generic callback function types. Note the difference between function
+// distance (nearfunc / farfunc) and pointer variable distance
+// (t_near / t_far).
+typedef void (near pascal *near nearfunc_t_near)(void);
+typedef void ( far pascal *near  farfunc_t_near)(void);
+typedef void (near pascal * far  nearfunc_t_far)(void);
+typedef void ( far pascal * far   farfunc_t_far)(void);
+/// --------
+
 #define RES_X 640
 #define RES_Y 400
 
