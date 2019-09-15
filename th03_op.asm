@@ -2164,7 +2164,7 @@ sub_AC06	proc far
 ; ---------------------------------------------------------------------------
 
 loc_AC0E:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_AC15:
@@ -3026,13 +3026,13 @@ loc_B39A:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		inc	si
 
 loc_B3B0:
 		cmp	si, 3
 		jl	short loc_B39A
-		call	_cdg_load_all_noalpha pascal, 13, ds, offset aSlex_cd2
+		call	cdg_load_all_noalpha pascal, 13, ds, offset aSlex_cd2
 		pop	si
 		pop	bp
 		retn
@@ -3046,9 +3046,9 @@ sub_B38D	endp
 sub_B3C3	proc near
 		push	bp
 		mov	bp, sp
-		call	_cdg_load_single_forcealpha pascal, 1, ds, offset a99sl_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 11, ds, offset aSlwin_cdg , 0
-		call	_cdg_load_single_noalpha pascal, 12, ds, offset aSlex_cdg, 0
+		call	cdg_load_single_forcealpha pascal, 1, ds, offset a99sl_cdg, 0
+		call	cdg_load_single_noalpha pascal, 11, ds, offset aSlwin_cdg , 0
+		call	cdg_load_single_noalpha pascal, 12, ds, offset aSlex_cdg, 0
 		pop	bp
 		retn
 sub_B3C3	endp
@@ -3062,7 +3062,7 @@ sub_B3EF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	_cdg_load_single_forcealpha pascal, 0, [off_E1FE], 0
+		call	cdg_load_single_forcealpha pascal, 0, [off_E1FE], 0
 		mov	si, 3
 		jmp	short loc_B41C
 ; ---------------------------------------------------------------------------
@@ -3074,7 +3074,7 @@ loc_B406:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		inc	si
 
 loc_B41C:
@@ -3129,7 +3129,7 @@ loc_B4A6:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		inc	si
 
 loc_B4BC:
@@ -3161,7 +3161,7 @@ sub_B4D7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B4DF:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_B4E6:
@@ -3195,7 +3195,7 @@ loc_B50C:
 
 loc_B50E:
 		push	ax
-		call	_cdg_put
+		call	cdg_put
 		push	(416 shl 16) or 96
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
@@ -3210,7 +3210,7 @@ loc_B52A:
 
 loc_B52D:
 		push	ax
-		call	_cdg_put_hflip
+		call	cdg_put_hflip
 		pop	bp
 		retn
 sub_B4F3	endp
@@ -3237,10 +3237,10 @@ loc_B54E:
 
 loc_B550:
 		push	ax
-		call	_cdg_put
+		call	cdg_put
 		push	(416 shl 16) or 96
 		push	1
-		call	_cdg_put
+		call	cdg_put
 		pop	bp
 		retn
 sub_B535	endp
@@ -3260,13 +3260,13 @@ var_2		= word ptr -2
 		push	di
 		push	(32 shl 16) or 304
 		push	11
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B590
 		push	(416 shl 16) or 304
 		push	11
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -3401,25 +3401,25 @@ sub_B670	proc near
 		mov	bp, sp
 		push	(160 shl 16) or 304
 		push	12
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	(176 shl 16) or 316
 		mov	al, byte_FC58
 		cbw
 		add	ax, 13
 		push	ax
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_B6BE
 		push	(544 shl 16) or 304
 		push	12
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	(560 shl 16) or 316
 		mov	al, byte_FC59
 		cbw
 		add	ax, 13
 		push	ax
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 
 loc_B6BE:
 		pop	bp
@@ -3821,7 +3821,7 @@ loc_B9CC:
 		push	0
 
 loc_B9DA:
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
@@ -3876,7 +3876,7 @@ loc_BA53:
 		push	1
 
 loc_BA61:
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0

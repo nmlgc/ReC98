@@ -2,8 +2,8 @@
 ; color planes.
 
 ; void pascal cdg_put_nocolors(int x, int y, int slot);
-public _cdg_put_nocolors
-_cdg_put_nocolors	proc far
+public cdg_put_nocolors
+cdg_put_nocolors	proc far
 
 @@slot	= word ptr  6
 @@y   	= word ptr  8
@@ -63,5 +63,5 @@ endif
 	pop	si
 	pop	bp
 	retf	6
-_cdg_put_nocolors	endp
+cdg_put_nocolors	endp
 	align 2

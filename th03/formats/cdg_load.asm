@@ -4,7 +4,7 @@
 ; Loads the [n]th image of the CDG file [fn] into [slot].
 
 ; void pascal cdg_load_single_forcealpha(int slot, const char *fn, int n)
-_cdg_load_single_forcealpha	proc far
+cdg_load_single_forcealpha	proc far
 
 @@image_size	= dword	ptr -4
 @@n         	=  word ptr  6
@@ -16,7 +16,7 @@ _cdg_load_single_forcealpha	proc far
 	push	di
 	mov	di, [bp+@@slot]
 	push	di
-	nopcall	_cdg_free
+	nopcall	cdg_free
 	mov	ax, di
 	shl	ax, 4
 	add	ax, offset _cdg_slots
@@ -59,14 +59,14 @@ _cdg_load_single_forcealpha	proc far
 	pop	si
 	leave
 	retf	8
-_cdg_load_single_forcealpha	endp
+cdg_load_single_forcealpha	endp
 
 
 ; Loads the [n]th image of the CDG file [fn] into [slot], skipping the alpha
 ; plane.
 
 ; void pascal cdg_load_single_noalpha(int slot, const char *fn, int n)
-_cdg_load_single_noalpha	proc far
+cdg_load_single_noalpha	proc far
 
 @@image_size	= dword	ptr -4
 @@n         	=  word ptr  6
@@ -78,7 +78,7 @@ _cdg_load_single_noalpha	proc far
 	push	di
 	mov	di, [bp+@@slot]
 	push	di
-	nopcall	_cdg_free
+	nopcall	cdg_free
 	mov	ax, di
 	shl	ax, 4
 	add	ax, offset _cdg_slots
@@ -119,14 +119,14 @@ _cdg_load_single_noalpha	proc far
 	pop	si
 	leave
 	retf	8
-_cdg_load_single_noalpha	endp
+cdg_load_single_noalpha	endp
 
 
 ; Loads all images of the CDG file [fn], starting at [slot_first] and
 ; incrementing the slot number for every further image.
 
 ; void pascal cdg_load_all(int slot_first, const char *fn);
-_cdg_load_all	proc far
+cdg_load_all	proc far
 
 @@i         	=  word ptr -2
 @@fn        	= dword	ptr  6
@@ -138,7 +138,7 @@ _cdg_load_all	proc far
 	pushd	[bp+@@fn]
 	call	file_ropen
 	push	[bp+@@slot_first]
-	nopcall	_cdg_free
+	nopcall	cdg_free
 	mov	ax, [bp+@@slot_first]
 	shl	ax, 4
 	add	ax, offset _cdg_slots
@@ -155,7 +155,7 @@ _cdg_load_all	proc far
 	mov	ax, [bp+@@slot_first]
 	add	ax, [bp+@@i]
 	push	ax
-	nopcall	_cdg_free
+	nopcall	cdg_free
 	inc	[bp+@@i]
 
 @@free_loop:
@@ -223,7 +223,7 @@ _cdg_load_all	proc far
 	pop	si
 	leave
 	retf	6
-_cdg_load_all	endp
+cdg_load_all	endp
 
 
 ; Loads all images of the CDG file [fn], disregarding their alpha planes,
@@ -231,7 +231,7 @@ _cdg_load_all	endp
 ; image.
 
 ; void pascal cdg_load_all_noalpha(int slot_first, const char *fn);
-_cdg_load_all_noalpha	proc far
+cdg_load_all_noalpha	proc far
 
 @@fn        	= dword	ptr  6
 @@slot_first	=  word ptr  10
@@ -241,17 +241,17 @@ _cdg_load_all_noalpha	proc far
 	mov	cdg_noalpha, 1
 	push	[bp+@@slot_first]
 	pushd	[bp+@@fn]
-	call	_cdg_load_all
+	call	cdg_load_all
 	mov	cdg_noalpha, 0
 	pop	bp
 	retf	6
-_cdg_load_all_noalpha	endp
+cdg_load_all_noalpha	endp
 
 
 ; Frees the CDG image in the given [slot].
 
 ; void cdg_free(int slot);
-_cdg_free	proc far
+cdg_free	proc far
 
 @@slot		= word ptr  6
 
@@ -289,4 +289,4 @@ _cdg_free	proc far
 	pop	si
 	pop	bp
 	retf	2
-_cdg_free	endp
+cdg_free	endp

@@ -270,7 +270,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	_cdg_freeall
+		call	cdg_freeall
 		call	graph_hide
 		call	text_clear
 		call	sub_EC36
@@ -6953,7 +6953,7 @@ arg_0     	= word ptr  4
 		mov	word_151C4, ax
 		mov	word_151C6, 0
 		inc	word_11848
-		call	_cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
+		call	cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DDB1
 ; ---------------------------------------------------------------------------
@@ -7137,7 +7137,7 @@ arg_0     	= word ptr  4
 		mov	word_151C8, ax
 		mov	word_151CA, 0
 		inc	word_1184A
-		call	_cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
+		call	cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DF29
 ; ---------------------------------------------------------------------------
@@ -7804,17 +7804,17 @@ var_2		= word ptr -2
 		GRCG_OFF_CLOBBERING dx
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
-		call	_cdg_load_all_noalpha pascal,  0, ds, offset aStf00_cdg
-		call	_cdg_load_all_noalpha pascal,  1, ds, offset aStf01_cdg
-		call	_cdg_load_all_noalpha pascal,  2, ds, offset aStf02_cdg
-		call	_cdg_load_all_noalpha pascal,  3, ds, offset aStf03_cdg
-		call	_cdg_load_all_noalpha pascal,  4, ds, offset aStf04_cdg
-		call	_cdg_load_all_noalpha pascal,  5, ds, offset aStf05_cdg
-		call	_cdg_load_all_noalpha pascal,  6, ds, offset aStf06_cdg
-		call	_cdg_load_all_noalpha pascal,  7, ds, offset aStf07_cdg
-		call	_cdg_load_all_noalpha pascal,  8, ds, offset aStf08_cdg
-		call	_cdg_load_all_noalpha pascal,  9, ds, offset aStf09_cdg
-		call	_cdg_load_all_noalpha pascal, 10, ds, offset aStf10_cdg
+		call	cdg_load_all_noalpha pascal,  0, ds, offset aStf00_cdg
+		call	cdg_load_all_noalpha pascal,  1, ds, offset aStf01_cdg
+		call	cdg_load_all_noalpha pascal,  2, ds, offset aStf02_cdg
+		call	cdg_load_all_noalpha pascal,  3, ds, offset aStf03_cdg
+		call	cdg_load_all_noalpha pascal,  4, ds, offset aStf04_cdg
+		call	cdg_load_all_noalpha pascal,  5, ds, offset aStf05_cdg
+		call	cdg_load_all_noalpha pascal,  6, ds, offset aStf06_cdg
+		call	cdg_load_all_noalpha pascal,  7, ds, offset aStf07_cdg
+		call	cdg_load_all_noalpha pascal,  8, ds, offset aStf08_cdg
+		call	cdg_load_all_noalpha pascal,  9, ds, offset aStf09_cdg
+		call	cdg_load_all_noalpha pascal, 10, ds, offset aStf10_cdg
 		push	ds
 		push	offset aStf01_bft ; "stf01.bft"
 		call	super_entry_bfnt
@@ -8108,7 +8108,7 @@ loc_E7CC:
 		dec	si
 		or	si, si
 		jg	short loc_E7CC
-		call	_cdg_freeall
+		call	cdg_freeall
 		call	super_free
 		pushd	0
 		push	27F018Fh

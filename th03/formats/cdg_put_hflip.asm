@@ -2,7 +2,7 @@
 ; horizontally.
 
 ; void DEFCONV cdg_put_hflip(int x, int y, int slot);
-proc_defconv _cdg_put_hflip
+proc_defconv cdg_put_hflip
 
 @@slot	= word ptr  6
 @@y   	= word ptr  8

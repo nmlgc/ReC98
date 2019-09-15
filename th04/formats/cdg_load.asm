@@ -2,14 +2,14 @@
 
 ; void pascal cdg_load_single_noalpha(int slot, const char *fn, int n);
 ; void pascal cdg_load_single(int slot, const char *fn, int n);
-public _cdg_load_single_noalpha
-public _cdg_load_single
+public cdg_load_single_noalpha
+public cdg_load_single
 
-_cdg_load_single_noalpha	label proc
+cdg_load_single_noalpha	label proc
 	mov	cdg_noalpha, 1
 	align	2
 
-_cdg_load_single	proc far
+cdg_load_single	proc far
 
 @@n   	=  word ptr  6
 @@fn  	= dword	ptr  8
@@ -21,7 +21,7 @@ _cdg_load_single	proc far
 	push	di
 	mov	di, [bp+@@slot]
 	push	di
-	nopcall	_cdg_free
+	nopcall	cdg_free
 	shl	di, 4
 	add	di, offset _cdg_slots
 	pushd	[bp+@@fn]
@@ -45,19 +45,19 @@ _cdg_load_single	proc far
 	push	eax
 	push	1
 	call	file_seek
-	call	_cdg_read_single
+	call	cdg_read_single
 	call	file_close
 	mov	cdg_noalpha, 0
 	pop	di
 	pop	si
 	pop	bp
 	retf	8
-_cdg_load_single	endp
+cdg_load_single	endp
 	align	2
 
 ; Reads a single CDG image from the master.lib file, which previously has been
 ; positioned at the beginning of the image data, into the slot in DI.
-_cdg_read_single	proc near
+cdg_read_single	proc near
 	mov	al, [di+CDGSlot.alpha]
 	or	al, al
 	jz	short @@colors
@@ -99,22 +99,22 @@ _cdg_read_single	proc near
 
 @@ret:
 	retn
-_cdg_read_single	endp
+cdg_read_single	endp
 
 
 ; Loads all images of the CDG file [fn], starting at [slot_first] and
 ; incrementing the slot number for every further image.
 
-; void pascal _cdg_load_all_noalpha(int slot, const char *fn);
-; void pascal _cdg_load_all(int slot, const char *fn);
-public _cdg_load_all_noalpha
-public _cdg_load_all
+; void pascal cdg_load_all_noalpha(int slot, const char *fn);
+; void pascal cdg_load_all(int slot, const char *fn);
+public cdg_load_all_noalpha
+public cdg_load_all
 
-_cdg_load_all_noalpha	label proc
+cdg_load_all_noalpha	label proc
 	mov	cdg_noalpha, 1
 	align	2
 
-_cdg_load_all	proc far
+cdg_load_all	proc far
 
 @@fn        	= dword	ptr  6
 @@slot_first	=  word ptr  10
@@ -142,12 +142,12 @@ _cdg_load_all	proc far
 
 @@loop:
 	push	bp
-	call	_cdg_free
+	call	cdg_free
 	mov	cx, 3
 	rep movsd
 	sub	si, CDGSlot.sgm_alpha
 	sub	di, CDGSlot.sgm_alpha
-	call	_cdg_read_single
+	call	cdg_read_single
 	inc	bp
 	add	di, size CDGSlot
 	dec	cdg_images_to_load
@@ -158,14 +158,14 @@ _cdg_load_all	proc far
 	pop	si
 	pop	bp
 	retf	6
-_cdg_load_all	endp
+cdg_load_all	endp
 
 
 ; Frees the CDG image in the given [slot].
 
-; void _cdg_free(int slot);
-public _cdg_free
-_cdg_free	proc far
+; void cdg_free(int slot);
+public cdg_free
+cdg_free	proc far
 	mov	bx, sp
 	push	di
 	mov	di, ss:[bx+4]
@@ -188,22 +188,22 @@ _cdg_free	proc far
 @@ret:
 	pop	di
 	retf	2
-_cdg_free	endp
+cdg_free	endp
 	align 2
 
 
 ; Frees the CDG images in all slots.
 
-; void _cdg_freeall();
-public _cdg_freeall
-_cdg_freeall	proc far
+; void cdg_freeall();
+public cdg_freeall
+cdg_freeall	proc far
 	push	si
 	mov	si, CDG_SLOT_COUNT - 1
 
 @@loop:
-	call	_cdg_free pascal, si
+	call	cdg_free pascal, si
 	dec	si
 	jge	short @@loop
 	pop	si
 	retf
-_cdg_freeall	endp
+cdg_freeall	endp

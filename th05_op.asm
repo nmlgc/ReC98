@@ -464,7 +464,7 @@ arg_2		= word ptr  6
 loc_A634:
 		push	(272 shl 16) or 250
 		push	10
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -509,14 +509,14 @@ loc_A68D:
 		push	15
 
 loc_A695:
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 
 loc_A69A:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A705
-		call	_cdg_put pascal, 256, di, 35
-		call	_cdg_put pascal, 352, di, 36
+		call	cdg_put pascal, 256, di, 35
+		call	cdg_put pascal, 352, di, 36
 		pushd	180h
 		push	2800010h
 		call	sub_E2D8
@@ -589,14 +589,14 @@ loc_A737:
 loc_A764:
 		push	(224 shl 16) or 250
 		push	16
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		push	14000FAh
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	ah, 0
 		add	ax, 21
 		push	ax
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -610,13 +610,13 @@ loc_A797:
 loc_A79C:
 		push	(224 shl 16) or 266
 		push	17
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		push	140010Ah
 		les	bx, _ksoconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		push	ax
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		mov	si, 0Ah
 		jmp	loc_A8DA
 ; ---------------------------------------------------------------------------
@@ -624,13 +624,13 @@ loc_A79C:
 loc_A7C5:
 		push	(224 shl 16) or 282
 		push	18
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		push	140011Ah
 		les	bx, _ksoconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		mov	si, 0Bh
 		jmp	loc_A8DA
 ; ---------------------------------------------------------------------------
@@ -638,7 +638,7 @@ loc_A7C5:
 loc_A7EE:
 		push	(224 shl 16) or 298
 		push	19
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+12h], 0
 		jnz	short loc_A80B
@@ -656,7 +656,7 @@ loc_A818:
 		mov	[bp+var_2], ax
 		push	(320 shl 16) or 298
 		push	ax
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -667,7 +667,7 @@ loc_A818:
 loc_A837:
 		push	(224 shl 16) or 314
 		push	20
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+15h], 0
 		jnz	short loc_A854
@@ -690,7 +690,7 @@ loc_A865:
 		mov	[bp+var_2], ax
 		push	(320 shl 16) or 314
 		push	ax
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		les	bx, _ksoconfig
 		mov	al, es:[bx+15h]
 		mov	ah, 0
@@ -706,7 +706,7 @@ loc_A884:
 		mov	dx, 33
 		sub	dx, ax
 		push	dx
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		mov	di, 100h
 		les	bx, _ksoconfig
 		mov	al, es:[bx+16h]
@@ -718,7 +718,7 @@ loc_A884:
 loc_A8B2:
 		push	(272 shl 16) or 346
 		push	31
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		mov	di, 100h
 		mov	si, 14h
 		jmp	short loc_A8DA
@@ -727,7 +727,7 @@ loc_A8B2:
 loc_A8C7:
 		push	(272 shl 16) or 366
 		push	15
-		call	_cdg_put_nocolors
+		call	cdg_put_nocolors
 		mov	di, 256
 		mov	si, 15h
 
@@ -735,7 +735,7 @@ loc_A8DA:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 0Eh
 		jnz	short loc_A951
-		call	_cdg_put pascal, di, [bp+var_4], 35
+		call	cdg_put pascal, di, [bp+var_4], 35
 		cmp	di, 256
 		jnz	short loc_A8FD
 		lea	ax, [di+96]
@@ -749,7 +749,7 @@ loc_A8FD:
 loc_A900:
 		push	[bp+var_4]
 		push	36
-		call	_cdg_put
+		call	cdg_put
 		pushd	180h
 		push	2800010h
 		call	sub_E2D8
@@ -2724,15 +2724,15 @@ sub_BB91	endp
 load_char_select_sprite_function	proc near
 		push	bp
 		mov	bp, sp
-		call	_cdg_load_all pascal, 0, ds, offset aSft1_cd2
-		call	_cdg_load_all pascal, 10, ds, offset aSft2_cd2
-		call	_cdg_load_all pascal, 35, ds, offset aCar_cd2
-		call	_cdg_load_single_noalpha pascal, 40, ds, offset aSl00_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 41, ds, offset aSl01_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 42, ds, offset aSl02_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 43, ds, offset aSl03_cdg, 0
-		call	_cdg_load_single pascal, 44, ds, offset aSlcl_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 45, ds, offset aSl04_cdg, 0
+		call	cdg_load_all pascal, 0, ds, offset aSft1_cd2
+		call	cdg_load_all pascal, 10, ds, offset aSft2_cd2
+		call	cdg_load_all pascal, 35, ds, offset aCar_cd2
+		call	cdg_load_single_noalpha pascal, 40, ds, offset aSl00_cdg, 0
+		call	cdg_load_single_noalpha pascal, 41, ds, offset aSl01_cdg, 0
+		call	cdg_load_single_noalpha pascal, 42, ds, offset aSl02_cdg, 0
+		call	cdg_load_single_noalpha pascal, 43, ds, offset aSl03_cdg, 0
+		call	cdg_load_single pascal, 44, ds, offset aSlcl_cdg, 0
+		call	cdg_load_single_noalpha pascal, 45, ds, offset aSl04_cdg, 0
 		pop	bp
 		retn
 load_char_select_sprite_function	endp
@@ -2745,7 +2745,7 @@ load_char_select_sprite_function	endp
 sub_BC83	proc near
 		push	bp
 		mov	bp, sp
-		call	_cdg_freeall
+		call	cdg_freeall
 		pop	bp
 		retn
 sub_BC83	endp
@@ -3347,7 +3347,7 @@ var_1		= byte ptr -1
 		mov	ax, [bx+14A0h]
 		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
-		call	_cdg_freeall
+		call	cdg_freeall
 		call	text_clear
 		mov	byte ptr word_13E94+1, 1
 		mov	PaletteTone, 0
@@ -4641,7 +4641,7 @@ loc_CF82:
 		push	45
 
 loc_CF8C:
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [si+0D8h]
 		mov	bx, 8
@@ -4687,7 +4687,7 @@ loc_CF8C:
 		add	ax, 0FFF8h
 		push	ax
 		push	44
-		call	_cdg_put
+		call	cdg_put
 		jmp	short loc_D086
 ; ---------------------------------------------------------------------------
 
@@ -4723,7 +4723,7 @@ loc_D050:
 		push	45
 
 loc_D054:
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		imul	ax, 5
@@ -4733,7 +4733,7 @@ loc_D054:
 		mov	bx, ax
 		cmp	byte ptr [bx+5122h], 0
 		jz	short loc_D07F
-		call	_cdg_put pascal, [bp+var_2], [bp+var_4], 44
+		call	cdg_put pascal, [bp+var_2], [bp+var_4], 44
 
 loc_D07F:
 		push	word_14118

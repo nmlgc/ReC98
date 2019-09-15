@@ -180,8 +180,8 @@ var_1		= byte ptr -1
 		push	offset aLogo0_rgb ; "logo0.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		call	_cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
-		call	_cdg_load_single_forcealpha pascal, 5, ds, offset aLogo5_cdg, 0
+		call	cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
+		call	cdg_load_single_forcealpha pascal, 5, ds, offset aLogo5_cdg, 0
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_965E
@@ -253,7 +253,7 @@ loc_96B7:
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	_cdg_load_single_noalpha
+		call	cdg_load_single_noalpha
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		cwd
@@ -337,7 +337,7 @@ sub_978D	proc near
 		call	graph_show
 		push	(352 shl 16) or 300
 		push	0
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
@@ -350,7 +350,7 @@ sub_978D	proc near
 loc_97E8:
 		push	(352 shl 16) or 300
 		push	si
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	6
 		call	frame_delay
 		inc	si
@@ -364,15 +364,15 @@ loc_97FC:
 		call	far ptr	palette_show
 		push	(224 shl 16) or 64
 		push	6
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	(352 shl 16) or 300
 		push	5
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	ds
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		call	_cdg_freeall
+		call	cdg_freeall
 		push	0B0004h
 		call	sub_D3FC
 		push	1
@@ -504,7 +504,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		les	bx, _yumeconfig
 		mov	al, es:[bx+0Dh]
 		add	al, 0FFh
@@ -522,7 +522,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		cwd
@@ -579,7 +579,7 @@ loc_99D4:
 		mov	ah, 0
 		inc	ax
 		push	ax
-		call	_cdg_load_single_forcealpha
+		call	cdg_load_single_forcealpha
 		mov	byte_F7E5, 0
 
 loc_99F1:
@@ -614,20 +614,20 @@ var_2		= word ptr -2
 		freePISlotLarge	0
 		push	(96 shl 16) or 96
 		push	0
-		call	_cdg_put
+		call	cdg_put
 		push	(352 shl 16) or 96
 		push	1
-		call	_cdg_put_hflip
+		call	cdg_put_hflip
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
 		push	(384 shl 16) or 46
 		push	2
-		call	_cdg_put
+		call	cdg_put
 
 loc_9A8E:
-		call	_cdg_free pascal, 0
-		call	_cdg_free pascal, 1
-		call	_cdg_free pascal, 2
+		call	cdg_free pascal, 0
+		call	cdg_free pascal, 1
+		call	cdg_free pascal, 2
 		les	bx, _yumeconfig
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -1010,7 +1010,7 @@ loc_9E7B:
 		jnz	loc_9F38
 
 loc_9E89:
-		call	_cdg_freeall
+		call	cdg_freeall
 		freePISlotLarge	0
 		mov	al, byte_F7E3
 		mov	ah, 0
@@ -1077,7 +1077,7 @@ loc_9F2E:
 ; ---------------------------------------------------------------------------
 
 loc_9F38:
-		call	_cdg_freeall
+		call	cdg_freeall
 		freePISlotLarge	0
 		call	sub_B7D2
 		call	sub_9F8D
@@ -1088,7 +1088,7 @@ loc_9F38:
 ; ---------------------------------------------------------------------------
 
 loc_9F58:
-		call	_cdg_freeall
+		call	cdg_freeall
 		freePISlotLarge	0
 
 loc_9F69:
@@ -1153,10 +1153,10 @@ loc_9FB3:
 loc_9FC8:
 		push	(192 shl 16) or 272
 		push	0
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	(352 shl 16) or 272
 		push	3
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		les	bx, _yumeconfig
 		mov	al, es:[bx+36h]
 		les	bx, [bp+var_6]
@@ -1188,13 +1188,13 @@ loc_A01E:
 		mov	dx, 2
 		sub	dx, ax
 		push	dx
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		push	(352 shl 16) or 272
 		mov	ax, si
 		add	ax, ax
 		inc	ax
 		push	ax
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		mov	[bp+var_2], 1
 		jmp	short loc_A05B
 ; ---------------------------------------------------------------------------
@@ -3007,11 +3007,11 @@ sub_AFAC	proc near
 		mov	al, es:[bx+0Bh]
 		mov	bx, word_ED68
 		add	[bx+3],	al
-		call	_cdg_load_single_forcealpha pascal, 0, ds, bx, 0
+		call	cdg_load_single_forcealpha pascal, 0, ds, bx, 0
 		push	(320 shl 16) or 312
 		push	0
-		call	_cdg_put
-		call	_cdg_free pascal, 0
+		call	cdg_put
+		call	cdg_free pascal, 0
 		push	ds
 		push	offset aRegi2_bft ; "regi2.bft"
 		call	super_entry_bfnt
@@ -4194,7 +4194,7 @@ loc_B879:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		call	_cdg_load_all pascal, 0, ds, offset aConti_cd2
+		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -4243,9 +4243,9 @@ sub_B972	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	_cdg_free pascal, 0
-		call	_cdg_free pascal, 1
-		call	_cdg_free pascal, 2
+		call	cdg_free pascal, 0
+		call	cdg_free pascal, 1
+		call	cdg_free pascal, 2
 		freePISlotLarge	0
 		les	bx, _yumeconfig
 		mov	al, es:[bx+0Ch]
@@ -4705,7 +4705,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	_cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -4760,7 +4760,7 @@ loc_BE84:
 		mov	ah, 0
 		push	ax
 		push	si
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		mov	byte_10BC7, 1
 
 loc_BEA7:
@@ -4772,7 +4772,7 @@ loc_BEA7:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 
 loc_BEC1:
@@ -4808,7 +4808,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	_cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -4833,7 +4833,7 @@ loc_BF18:
 		mov	ah, 0
 		push	ax
 		push	si
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		mov	byte_10BC7, 1
 
 loc_BF3B:
@@ -4845,7 +4845,7 @@ loc_BF3B:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 		jmp	short loc_BF78
 ; ---------------------------------------------------------------------------
@@ -4892,7 +4892,7 @@ sub_BF7E	proc near
 		xor	si, si
 
 loc_BFA0:
-		call	_cdg_put_dissolve_e pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot], si
+		call	cdg_put_dissolve_e pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot], si
 
 loc_BFAD:
 		pop	si
@@ -5040,7 +5040,7 @@ loc_C0DC:
 		lea	ax, [si-1]
 		push	ax
 		push	0
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		mov	byte_10BC7, 0
 		call	sub_BCD5
 		inc	word_10BB2
@@ -5058,7 +5058,7 @@ loc_C114:
 		push	word_10BC2
 		lea	ax, [si-1]
 		push	ax
-		call	_cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e
 
 loc_C12A:
 		push	si
@@ -5089,7 +5089,7 @@ loc_C155:
 		lea	ax, [si-1]
 		push	ax
 		push	di
-		call	_cdg_put_dissolve_e
+		call	cdg_put_dissolve_e
 		jmp	short loc_C194
 ; ---------------------------------------------------------------------------
 
@@ -5474,18 +5474,18 @@ loc_C4D8:
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		graph_showpage 1
-		call	_cdg_load_single_noalpha pascal, 0, ds, offset aStf1_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aStf11_cdg, 0
-		call	_cdg_load_single_forcealpha pascal, 2, ds, offset aStf3_cdg, 0
-		call	_cdg_load_single_forcealpha pascal, 3, ds, offset aStf4_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 4, ds, offset aStf5_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 5, ds, offset aStf6_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 6, ds, offset aStf7_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 7, ds, offset aStf8_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 8, ds, offset aStf9_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 9, ds, offset aStf10_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 10, ds, offset aStf2_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
+		call	cdg_load_single_noalpha pascal, 0, ds, offset aStf1_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aStf11_cdg, 0
+		call	cdg_load_single_forcealpha pascal, 2, ds, offset aStf3_cdg, 0
+		call	cdg_load_single_forcealpha pascal, 3, ds, offset aStf4_cdg, 0
+		call	cdg_load_single_noalpha pascal, 4, ds, offset aStf5_cdg, 0
+		call	cdg_load_single_noalpha pascal, 5, ds, offset aStf6_cdg, 0
+		call	cdg_load_single_noalpha pascal, 6, ds, offset aStf7_cdg, 0
+		call	cdg_load_single_noalpha pascal, 7, ds, offset aStf8_cdg, 0
+		call	cdg_load_single_noalpha pascal, 8, ds, offset aStf9_cdg, 0
+		call	cdg_load_single_noalpha pascal, 9, ds, offset aStf10_cdg, 0
+		call	cdg_load_single_noalpha pascal, 10, ds, offset aStf2_cdg, 0
+		call	cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
 		call	sub_BB66
 		mov	word_10BB2, 0
 		les	bx, _yumeconfig
@@ -5612,7 +5612,7 @@ loc_C7CD:
 ; ---------------------------------------------------------------------------
 
 loc_C7D1:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_C7D8:

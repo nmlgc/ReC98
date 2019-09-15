@@ -3,8 +3,8 @@
 ; (mod 8, 0 = none, 7 = full) on the E bitplane.
 
 ; void pascal cdg_put_dissolve_e(int x_center, int y_center, int slot, int strength);
-public _cdg_put_dissolve_e
-_cdg_put_dissolve_e	proc near
+public cdg_put_dissolve_e
+cdg_put_dissolve_e	proc near
 
 @@h       	= word ptr -6
 @@w       	= word ptr -4
@@ -41,11 +41,11 @@ _cdg_put_dissolve_e	proc near
 	jnz	short @@put_alpha
 
 @@put_noalpha:
-	call	_cdg_put_noalpha pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
+	call	cdg_put_noalpha pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
 	jmp	short @@dissolve_prepare
 
 @@put_alpha:
-	call	_cdg_put pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
+	call	cdg_put pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
 
 @@dissolve_prepare:
 	and	[bp+@@strength], 7
@@ -102,4 +102,4 @@ _cdg_put_dissolve_e	proc near
 	pop	si
 	leave
 	retn	8
-_cdg_put_dissolve_e	endp
+cdg_put_dissolve_e	endp

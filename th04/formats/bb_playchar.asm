@@ -15,7 +15,7 @@ bb_playchar_load	proc near
 	mov	_bb_playchar_seg, ax
 	call	file_read pascal, ax, large BB_SIZE
 	call	file_close
-	call	_cdg_load_single_noalpha pascal, 0, [_bb_playchar_cdg_fn], 0
+	call	cdg_load_single_noalpha pascal, 0, [_bb_playchar_cdg_fn], 0
 	pop	bp
 	retn
 bb_playchar_load	endp

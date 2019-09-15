@@ -191,7 +191,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	_cdg_freeall
+		call	cdg_freeall
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
@@ -1800,7 +1800,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	_cdg_put
+		call	cdg_put
 		jmp	loc_B027
 ; ---------------------------------------------------------------------------
 
@@ -1836,7 +1836,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	0
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1864,7 +1864,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	1
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1892,7 +1892,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	2
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1920,7 +1920,7 @@ loc_AEF1:
 		inc	ax
 		push	ax
 		push	3
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		mov	al, byte_124C7
 		add	al, 40h
 		mov	byte_124C7, al
@@ -1956,7 +1956,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	_cdg_put
+		call	cdg_put
 		jmp	loc_B13E
 ; ---------------------------------------------------------------------------
 
@@ -1991,7 +1991,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	0
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+128
@@ -2009,7 +2009,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	1
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		mov	ax, si
 		cwd
@@ -2035,7 +2035,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	2
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+384
@@ -2053,7 +2053,7 @@ loc_B04E:
 		inc	ax
 		push	ax
 		push	3
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		GRCG_OFF_CLOBBERING dx
 
 loc_B13E:
@@ -2086,7 +2086,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	_cdg_put
+		call	cdg_put
 		jmp	loc_B255
 ; ---------------------------------------------------------------------------
 
@@ -2121,7 +2121,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	0
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8
@@ -2139,7 +2139,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	1
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		mov	ax, si
 		cwd
@@ -2165,7 +2165,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	2
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		push	[bp+arg_4]
 		push	si
 		push	_CosTable8+256
@@ -2183,7 +2183,7 @@ loc_B165:
 		inc	ax
 		push	ax
 		push	3
-		call	_cdg_put_plane
+		call	cdg_put_plane
 		GRCG_OFF_CLOBBERING dx
 
 loc_B255:
@@ -2479,16 +2479,16 @@ sub_B44D	proc near
 		kajacall	KAJA_SONG_PLAY
 		push	0Ch
 		call	palette_black_in
-		call	_cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
+		call	cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
 		push	30040h
 		call	sub_D046
 		mov	byte_124C6, 0
 		mov	fp_124C8, offset sub_AED0
 		push	16000A0h
 		call	sub_B291
-		call	_cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
+		call	cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
+		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
 		push	700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
@@ -2500,8 +2500,8 @@ sub_B44D	proc near
 		call	sub_B291
 		graph_accesspage 0
 		mov	byte_124C6, 0
-		call	_cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
+		call	cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
 		push	0B00A0h
 		call	sub_D046
 		push	12000C8h
@@ -2514,7 +2514,7 @@ sub_B44D	proc near
 		call	sub_B3AC
 		push	4
 		call	palette_black_out
-		call	_cdg_freeall
+		call	cdg_freeall
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aSff2_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -2525,25 +2525,25 @@ sub_B44D	proc near
 		call	sub_D626
 		push	4
 		call	palette_black_in
-		call	_cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
+		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
+		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
 		push	1700A0h
 		call	sub_D046
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
 		push	200070h
 		call	sub_B291
-		call	_cdg_free pascal, 2
-		call	_cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
+		call	cdg_free pascal, 2
+		call	cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
+		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
 		push	1B00A0h
 		call	sub_D046
 		mov	byte_124C6, 4
 		mov	fp_124C8, offset sub_B02D
 		push	2000B8h
 		call	sub_B291
-		call	_cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
+		call	cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
 		push	1F00A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B144
@@ -2552,8 +2552,8 @@ sub_B44D	proc near
 		mov	byte_124C6, 0
 		push	4000B8h
 		call	sub_B291
-		call	_cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
+		call	cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
+		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
 		push	2300A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_AED0
@@ -2562,8 +2562,8 @@ sub_B44D	proc near
 		mov	byte_124C6, 4
 		push	4000B8h
 		call	sub_B291
-		call	_cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
+		call	cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
 		push	2700A0h
 		call	sub_D046
 		mov	fp_124C8, offset sub_B02D
@@ -2578,15 +2578,15 @@ sub_B44D	proc near
 		push	200070h
 		push	2000B8h
 		call	sub_B3AC
-		call	_cdg_load_single pascal, 0, ds, offset aSff7_cdg, 0
-		call	_cdg_load_single_noalpha pascal, 1, ds, offset aSff7b_cdg, 0
+		call	cdg_load_single pascal, 0, ds, offset aSff7_cdg, 0
+		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff7b_cdg, 0
 		mov	byte_124C6, 0
 		push	200150h
 		call	sub_B291
 		push	3000A0h
 		call	sub_D046
 		call	sub_D6C4
-		call	_cdg_freeall
+		call	cdg_freeall
 		push	4
 		call	palette_black_out
 		pop	bp

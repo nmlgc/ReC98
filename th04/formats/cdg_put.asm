@@ -1,8 +1,8 @@
 ; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y).
 
 ; void pascal cdg_put(int x, int y, int slot);
-public _cdg_put
-_cdg_put	proc far
+public cdg_put
+cdg_put	proc far
 
 @@slot	= word ptr  6
 @@y   	= word ptr  8
@@ -116,5 +116,5 @@ endif
 	pop	si
 	pop	bp
 	retf	6
-_cdg_put	endp
+cdg_put	endp
 	align 2

@@ -765,7 +765,7 @@ loc_AFD5:
 
 loc_B003:
 		mov	word_2CFF4, 9
-		call	_cdg_load_all pascal, 8, ds, offset aBss0_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss0_cd2
 		les	bx, _humaconfig
 		mov	al, es:[bx+12h]
 		les	bx, off_213E0
@@ -790,7 +790,7 @@ loc_B044:
 
 loc_B04B:
 		mov	word_2CFF4, 9
-		call	_cdg_load_all pascal, 8, ds, offset aBss1_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss1_cd2
 		push	ds
 		push	offset aSt01_bft ; "st01.bft"
 		call	super_entry_bfnt
@@ -802,7 +802,7 @@ loc_B04B:
 
 loc_B071:
 		mov	word_2CFF4, 9
-		call	_cdg_load_all pascal, 8, ds, offset aBss2_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss2_cd2
 		push	ds
 		push	offset aSt02_bft ; "st02.bft"
 		call	super_entry_bfnt
@@ -828,7 +828,7 @@ loc_B0AC:
 		push	offset aKao2_cd2 ; "KAO2.CD2"
 
 loc_B0B2:
-		call	_cdg_load_all
+		call	cdg_load_all
 		push	ds
 		push	offset aSt03_bft ; "st03.bft"
 		call	super_entry_bfnt
@@ -842,7 +842,7 @@ loc_B0B2:
 
 loc_B0D4:
 		mov	word_2CFF4, 9
-		call	_cdg_load_all pascal, 8, ds, offset aBss4_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss4_cd2
 		push	ds
 		push	offset aSt04_bft ; "st04.bft"
 		call	super_entry_bfnt
@@ -857,7 +857,7 @@ loc_B0F9:
 		push	ds
 		push	offset aSt05_bft ; "st05.bft"
 		call	super_entry_bfnt
-		call	_cdg_load_all pascal, 8, ds, offset aBss5_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss5_cd2
 		call	stage6_setup
 		push	ds
 		push	offset aSt05_mpn ; "st05.mpn"
@@ -869,7 +869,7 @@ loc_B11E:
 		push	ds
 		push	offset aSt06_bft ; "st06.bft"
 		call	super_entry_bfnt
-		call	_cdg_load_all pascal, 8, ds, offset aBss6_cd2
+		call	cdg_load_all pascal, 8, ds, offset aBss6_cd2
 		call	stagex_setup
 		push	ds
 		push	offset aSt06_mpn ; "st06.mpn"
@@ -993,7 +993,7 @@ sub_B29E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B2C0:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_B2C7:
@@ -1214,7 +1214,7 @@ loc_B4AF:
 		push	ds
 		push	offset aGensoems ; "GENSOEMS"
 		call	ems_setname
-		call	_cdg_load_single_noalpha pascal, 31, [off_213DA], 0
+		call	cdg_load_single_noalpha pascal, 31, [off_213DA], 0
 		push	word_266DE
 		pushd	0
 		push	_cdg_slots.sgm_colors + (size CDGSlot * 31)
@@ -1224,7 +1224,7 @@ loc_B4AF:
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		call	_cdg_free pascal, 31
+		call	cdg_free pascal, 31
 
 loc_B52E:
 		pop	bp
@@ -1247,7 +1247,7 @@ var_4		= dword	ptr -4
 		mov	al, es:[bx+12h]
 		les	bx, off_213E4
 		mov	es:[bx+2], al
-		call	_cdg_load_single_noalpha pascal, 0, word ptr off_213E4+2, bx, 0
+		call	cdg_load_single_noalpha pascal, 0, word ptr off_213E4+2, bx, 0
 		cmp	word_266DE, 0
 		jz	loc_B612
 		push	word_266DE
@@ -1273,7 +1273,7 @@ loc_B58D:
 		push	offset aKao1_cd2 ; "KAO1.cd2"
 
 loc_B593:
-		call	_cdg_load_all
+		call	cdg_load_all
 		mov	si, 2
 		mov	[bp+var_4], 16F30h
 		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 2)
@@ -1307,7 +1307,7 @@ loc_B5A9:
 		shl	ax, 2
 		movzx	eax, ax
 		add	[bp+var_4], eax
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_B606:
@@ -1351,15 +1351,15 @@ sub_B616	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B64C:
-		call	_cdg_load_single_noalpha pascal, 31, [off_213DA], 0
+		call	cdg_load_single_noalpha pascal, 31, [off_213DA], 0
 
 loc_B65A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	(32 shl 16) or 112
 		push	31
-		call	_cdg_put_noalpha
-		call	_cdg_free pascal, 31
+		call	cdg_put_noalpha
+		call	cdg_free pascal, 31
 		push	1
 		call	palette_black_in
 		pop	bp
@@ -3957,7 +3957,7 @@ sub_CF44	proc near
 		jnz	short loc_CF70
 
 loc_CF63:
-		call	_cdg_free pascal, 31
+		call	cdg_free pascal, 31
 		call	std_free
 		call	map_free
 
@@ -4512,7 +4512,7 @@ loc_D38A:
 
 loc_D3A6:
 		push	[bp+var_2]
-		call	_cdg_put
+		call	cdg_put
 		jmp	short loc_D3E3
 ; ---------------------------------------------------------------------------
 
@@ -4675,7 +4675,7 @@ loc_D50A:
 ; ---------------------------------------------------------------------------
 
 loc_D50F:
-		call	_cdg_free pascal, di
+		call	cdg_free pascal, di
 		inc	di
 
 loc_D516:
@@ -4937,7 +4937,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		push	di
-		call	_cdg_free pascal, 0
+		call	cdg_free pascal, 0
 		cmp	word_266DE, 0
 		jz	loc_D7D0
 		mov	[bp+var_4], 16F30h
@@ -5008,7 +5008,7 @@ loc_D7DF:
 		push	offset aKao1_cd2_0 ; "KAO1.cd2"
 
 loc_D7E5:
-		call	_cdg_load_all
+		call	cdg_load_all
 
 loc_D7EA:
 		pop	di
@@ -5032,7 +5032,7 @@ sub_D7EE	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D7F8:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_D7FF:
@@ -5045,7 +5045,7 @@ loc_D7FF:
 ; ---------------------------------------------------------------------------
 
 loc_D810:
-		call	_cdg_free pascal, si
+		call	cdg_free pascal, si
 		inc	si
 
 loc_D817:
@@ -5067,7 +5067,7 @@ loc_D82F:
 		push	offset aBss8_cd2 ; "bss8.cd2"
 
 loc_D835:
-		call	_cdg_load_all
+		call	cdg_load_all
 
 loc_D83A:
 		cmp	word_266DE, 0
@@ -5104,7 +5104,7 @@ loc_D87B:
 
 loc_D881:
 		push	0
-		call	_cdg_load_single_noalpha
+		call	cdg_load_single_noalpha
 
 loc_D888:
 		pop	di
@@ -7030,7 +7030,7 @@ loc_E813:
 		mov	eax, dword_22BA4
 		mov	es:[bx+44h], eax
 		call	bb_txt_free
-		call	_cdg_freeall
+		call	cdg_freeall
 		call	bb_stage_free
 		call	sub_CF1E
 		call	bb_playchar_free
@@ -10217,7 +10217,7 @@ var_1		= byte ptr -1
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_10096
 		mov	_circles_color, GC_RG
@@ -10292,7 +10292,7 @@ var_2		= word ptr -2
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 		cmp	byte_256A9, 50h	; 'P'
 		ja	short loc_1015E
 		mov	_circles_color, 0Fh
@@ -14106,7 +14106,7 @@ loc_12309:
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
 		push	16
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 
 loc_12327:
 		mov	ax, _bb_stage_seg
@@ -14184,7 +14184,7 @@ loc_12396:
 		GRCG_OFF_CLOBBERING dx
 		push	(128 shl 16) or 128
 		push	16
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 
 loc_123B4:
 		mov	ax, _bb_stage_seg
@@ -14975,7 +14975,7 @@ loc_129B4:
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
-		call	_cdg_put_noalpha
+		call	cdg_put_noalpha
 
 loc_129D2:
 		mov	ax, _bb_stage_seg
@@ -35700,7 +35700,7 @@ stage1_setup	proc far
 		push	ds
 		push	offset aSt00_bmt ; "st00.bmt"
 		call	super_entry_bfnt
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	Palettes, 0FFh
 		mov	Palettes+1, 0FFh
@@ -35744,7 +35744,7 @@ stage2_setup	proc far
 		push	ds
 		push	offset aSt01_bmt ; "st01.bmt"
 		call	super_entry_bfnt
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt01_bb
 		push	(255 shl 16) or 128
 		push	( 32 shl 16) or   8
@@ -35790,7 +35790,7 @@ stage3_setup	proc far
 		push	ds
 		push	offset aSt02_bmt ; "st02.bmt"
 		call	super_entry_bfnt
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
@@ -35886,7 +35886,7 @@ loc_1E3A0:
 
 loc_1E3A6:
 		push	0
-		call	_cdg_load_single_noalpha
+		call	cdg_load_single_noalpha
 		call	bb_stage_load pascal, ds, offset aSt03_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
@@ -35917,9 +35917,9 @@ stage5_setup	proc far
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt04_bb
-		call	_cdg_load_single_noalpha pascal, 17, ds, offset aSt04_cdg, 0
+		call	cdg_load_single_noalpha pascal, 17, ds, offset aSt04_cdg, 0
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
 		mov	word_2D038, 0BE0h
@@ -36003,7 +36003,7 @@ stagex_setup	proc far
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	byte_2D01E, 0
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
@@ -36329,9 +36329,9 @@ loc_1E801:
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_bgm_title_id, 0Fh
 		mov	_overlay_text_fp, offset sub_11195
-		call	_cdg_free pascal, 16
+		call	cdg_free pascal, 16
 		call	bb_stage_free
-		call	_cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
+		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06b_bb
 		mov	byte_2D00A, 0
 		pop	bp

@@ -3,9 +3,9 @@
 ; at the bottom of that image, as well as the one line immediately below, from
 ; the VRAM's E plane.
 
-; void cdg_unput_for_upwards_motion_e(int x, int y, int slot);
-public _cdg_unput_for_upwards_motion_e
-_cdg_unput_for_upwards_motion_e	proc near
+; void cdg_unput_for_upwards_motion_e(int x_center, int y_center, int slot);
+public cdg_unput_for_upwards_motion_e
+cdg_unput_for_upwards_motion_e	proc near
 
 @@h	      	= word ptr -4
 @@w       	= word ptr -2
@@ -65,4 +65,4 @@ _cdg_unput_for_upwards_motion_e	proc near
 	pop	si
 	leave
 	retn	6
-_cdg_unput_for_upwards_motion_e	endp
+cdg_unput_for_upwards_motion_e	endp
