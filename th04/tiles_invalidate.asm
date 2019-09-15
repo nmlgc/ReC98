@@ -2,8 +2,8 @@
 ; by [tile_invalidate_box] around [center] (in playfield space and 16th-pixel
 ; units).
 
-; void pascal tiles_invalidate_around(Point center)
-public tiles_invalidate_around
+; void pascal near tiles_invalidate_around(Point center);
+public TILES_INVALIDATE_AROUND
 tiles_invalidate_around	proc near
 @@center	= Point ptr 2
 

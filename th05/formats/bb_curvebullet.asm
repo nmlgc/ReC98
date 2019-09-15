@@ -1,5 +1,5 @@
-; void near bb_curvebullet_load(void)
-public bb_curvebullet_load
+; void pascal near bb_curvebullet_load(void);
+public BB_CURVEBULLET_LOAD
 bb_curvebullet_load	proc near
 	mov	ax, 3D00h
 	mov	dx, offset aLs00_bb

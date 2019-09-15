@@ -1,8 +1,8 @@
 ; TH05 adds stage and BGM titles to the format, but the rest of the format is
 ; identical to TH04.
 
-; void std_load();
-public std_load
+; void pascal near std_load(void);
+public STD_LOAD
 std_load	proc near
 	push	si
 	push	di
@@ -88,8 +88,8 @@ std_load	proc near
 std_load	endp
 
 
-; void std_free();
-public std_free
+; void pascal near std_free(void);
+public STD_FREE
 std_free	proc near
 	cmp	_std_seg, 0
 	jz	short @@ret

@@ -8,8 +8,8 @@ motion_t	ends
 MOTION_UPDATE_DEF macro instance
 	; Returns the new current position in AX (X) and DX (Y).
 	;
-	; Point pascal motion_update(motion_t near *motion)
-	public _motion_update_&instance
+	; Point pascal near motion_update(motion_t near *motion);
+	public _MOTION_UPDATE_&instance
 	_motion_update_&instance	proc near
 	motion	= word ptr 2
 

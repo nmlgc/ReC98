@@ -1,7 +1,7 @@
 ; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y).
 
 ; void pascal cdg_put(int x, int y, int slot);
-public cdg_put
+public CDG_PUT
 cdg_put	proc far
 
 @@slot	= word ptr  6

@@ -125,7 +125,8 @@ GRCG_SETCOLOR_DIRECT_CLOBBERING macro port_reg:req, col_reg:req
 	endm
 endm
 
-GRCG_SETCOLOR_DIRECT macro col_reg:req
+; Yup, regular GRCG_SETCOLOR_DIRECT is an exported function, so...
+GRCG_SETCOLOR_DIRECT_INLINED macro col_reg:req
 	rept 4
 		shr	col_reg, 1
 		sbb	al, al

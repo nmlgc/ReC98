@@ -1,5 +1,5 @@
-; void near sparks_update(void);
-public sparks_update
+; void pascal near sparks_update(void);
+public SPARKS_UPDATE
 sparks_update	proc near
 	push	si
 	push	di
@@ -46,13 +46,13 @@ sparks_update	proc near
 sparks_update	endp
 
 
-; void near sparks_render(void);
-public sparks_render
+; void pascal near sparks_render(void);
+public SPARKS_RENDER
 sparks_render	proc near
 	push	si
 	push	di
 	mov	ah, GC_BR
-	call	_grcg_setcolor_direct_noint_1
+	call	grcg_setcolor_direct_noint_1
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
@@ -83,8 +83,8 @@ sparks_render	endp
 	even
 
 
-; void near sparks_invalidate(void);
-public sparks_invalidate
+; void pascal near sparks_invalidate(void);
+public SPARKS_INVALIDATE
 sparks_invalidate	proc near
 	push	si
 	push	di
@@ -107,8 +107,8 @@ sparks_invalidate	proc near
 sparks_invalidate	endp
 
 
-; void near sparks_init(void);
-public sparks_init
+; void pascal near sparks_init(void);
+public SPARKS_INIT
 sparks_init	proc near
 	push	si
 	push	di

@@ -1,7 +1,7 @@
 ; Blits all tiles in the ring buffer to the playfield in VRAM.
 
-; void tiles_render_all();
-public tiles_render_all
+; void pascal near tiles_render_all(void);
+public TILES_RENDER_ALL
 tiles_render_all	proc near
 	push	si
 	push	di
@@ -40,8 +40,8 @@ tiles_render_all	proc near
 tiles_render_all	endp
 
 
-; void egc_start_copy_inlined_noframe();
-public egc_start_copy_inlined_noframe
+; void pascal near egc_start_copy_inlined_noframe(void);
+public EGC_START_COPY_INLINED_NOFRAME
 egc_start_copy_inlined_noframe	proc near
 		EGC_START_COPY_INLINED
 		retn

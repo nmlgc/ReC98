@@ -3,7 +3,7 @@
 ; (mod 8, 0 = none, 7 = full) on the E bitplane.
 
 ; void pascal cdg_put_dissolve_e(int x_center, int y_center, int slot, int strength);
-public cdg_put_dissolve_e
+public CDG_PUT_DISSOLVE_E
 cdg_put_dissolve_e	proc near
 
 @@h       	= word ptr -6

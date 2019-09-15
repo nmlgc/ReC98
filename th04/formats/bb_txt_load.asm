@@ -1,5 +1,5 @@
-; void near bb_txt_load(void);
-public bb_txt_load
+; void pascal near bb_txt_load(void);
+public BB_TXT_LOAD
 bb_txt_load	proc near
 	push	bp
 	mov	bp, sp
@@ -16,8 +16,8 @@ bb_txt_load	proc near
 bb_txt_load	endp
 
 
-; void near bb_txt_free(void);
-public bb_txt_free
+; void pascal near bb_txt_free(void);
+public BB_TXT_FREE
 bb_txt_free	proc near
 	push	bp
 	mov	bp, sp

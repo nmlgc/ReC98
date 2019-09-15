@@ -9,7 +9,7 @@
 ; 	int for_easy, int for_normal,
 ; 	int for_hard, int for_lunatic
 ; );
-public select_for_rank
+public SELECT_FOR_RANK
 select_for_rank	proc far
 	mov	al, _rank
 

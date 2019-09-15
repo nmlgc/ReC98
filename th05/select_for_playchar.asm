@@ -9,7 +9,7 @@
 ; 	int for_reimu, int for_marisa,
 ; 	int for_mima, int for_yuuka
 ; );
-public select_for_playchar
+public SELECT_FOR_PLAYCHAR
 select_for_playchar	proc far
 	mov	al, playchar
 	jmp	short select_for

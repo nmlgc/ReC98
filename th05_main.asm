@@ -412,7 +412,7 @@ loc_AEEC:
 
 loc_AEF0:
 		call	sub_C2D6
-		call	_circles_update
+		call	circles_update
 		call	sparks_update
 		call	sub_1214A
 		call	sub_1240B
@@ -434,7 +434,7 @@ loc_AF2D:
 		call	sub_EBB7
 		call	sub_125A3
 		call	sub_12263
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		call	_boss_custombullets_render
 		call	lasers_render
 		call	sub_16B4E
@@ -442,7 +442,7 @@ loc_AF2D:
 		call	sub_F7A5
 		call	sub_C346
 		call	sub_100C6
-		call	_circles_render
+		call	circles_render
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay_text_fp
 		call	_popup_fp
@@ -1108,7 +1108,7 @@ sub_B55A	proc near
 		mov	fp_2C92E, offset sub_EE58
 		mov	_scroll_active, 1
 		nopcall	sub_E4FC
-		call	_randring_fill
+		call	randring_fill
 		call	sub_16D67
 		call	sub_C473
 		call	sparks_init
@@ -2095,7 +2095,7 @@ RANDRING_NEXT_DEF 1
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public nullfunc_near
+public NULLFUNC_NEAR
 nullfunc_near	proc near
 		retn
 nullfunc_near	endp
@@ -2741,11 +2741,11 @@ var_2		= word ptr -2
 
 loc_C583:
 		push	1400h
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	ax, 200h
 		mov	[si], ax
 		push	1700h
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		mov	[si+2],	ax
 		mov	eax, [si]
 		mov	[di], eax
@@ -2763,11 +2763,11 @@ loc_C583:
 		mov	[di], eax
 		add	di, 64h	; 'd'
 		push	7Fh
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	ax, 0A0h
 		mov	[bp+var_2], ax
 		push	30h ; '0'
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		sub	al, 18h
 		add	al, 40h
 		mov	byte ptr [bp+var_5], al
@@ -2904,7 +2904,7 @@ loc_C683:
 		mov	ax, [si+2]
 		add	ax, 100h
 		push	ax
-		nopcall	_circles_add_growing
+		nopcall	circles_add_growing
 
 loc_C72B:
 		inc	[bp+var_5+1]
@@ -3115,7 +3115,7 @@ loc_C8CE:
 
 loc_C8D4:
 		call	far ptr	palette_show
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	si, 38C2h
 		xor	di, di
 		jmp	loc_C98D
@@ -3136,7 +3136,7 @@ loc_C8E4:
 		add	ax, 10h
 		mov	[bp+var_4], ax
 		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, [si+6]
 		cwd
 		sub	ax, dx
@@ -3152,7 +3152,7 @@ loc_C8E4:
 		push	[bp+var_4]
 		call	grcg_boxfill
 		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		dec	[bp+var_6]
 		mov	ax, [bp+var_2]
 		sub	ax, [bp+var_6]
@@ -3164,7 +3164,7 @@ loc_C8E4:
 		push	[bp+var_4]
 		call	grcg_boxfill
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		dec	[bp+var_6]
 		mov	ax, [bp+var_2]
 		sub	ax, [bp+var_6]
@@ -3348,7 +3348,7 @@ loc_CAA7:
 		mov	eax, player_pos.cur
 		mov	[si], eax
 		mov	word ptr [si+6], 100h
-		call	_randring1_next16
+		call	randring1_next16
 		mov	[si+8],	al
 
 loc_CAE0:
@@ -3420,7 +3420,7 @@ sub_CB30	proc near
 		push	17Fh
 		call	grcg_vline
 		mov	ah, GC_BI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	0D00010h
 		push	3Fh ; '?'
 		call	grcg_vline
@@ -3434,7 +3434,7 @@ sub_CB30	proc near
 		push	17Fh
 		call	grcg_vline
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_CA7B
 		mov	al, byte_2429B
 		mov	ah, 0
@@ -4062,7 +4062,7 @@ sara_bg_render	proc near
 loc_D09F:
 		cmp	_boss_phase, 1
 		jnz	short loc_D0C8
-		call	_boss_backdrop_render pascal, (64 shl 16) or 16, 0
+		call	boss_backdrop_render pascal, (64 shl 16) or 16, 0
 		mov	ax, _bb_stage_seg
 		mov	word_2449C, ax
 		mov	ax, _boss_phase_frame
@@ -4079,7 +4079,7 @@ loc_D09F:
 loc_D0C8:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_D0DC
-		call	_boss_backdrop_render pascal, (64 shl 16) or 16, 0
+		call	boss_backdrop_render pascal, (64 shl 16) or 16, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -4133,9 +4133,9 @@ loc_D108:
 ; ---------------------------------------------------------------------------
 
 loc_D124:
-		call	_grcg_setmode_tdw
+		call	grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	playfield_fillm_0_0_384_192__1
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
@@ -4154,7 +4154,7 @@ loc_D142:
 loc_D153:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_D167
-		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 1
+		call	boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		jmp	short loc_D17D
 ; ---------------------------------------------------------------------------
 
@@ -4209,9 +4209,9 @@ loc_D194:
 ; ---------------------------------------------------------------------------
 
 loc_D1B0:
-		call	_grcg_setmode_tdw
+		call	grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	playfield_fillm_0_205_384_163
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 221
@@ -4230,7 +4230,7 @@ loc_D1CE:
 loc_D1DF:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_D1F3
-		call	_boss_backdrop_render pascal, (32 shl 16) or 221, 1
+		call	boss_backdrop_render pascal, (32 shl 16) or 221, 1
 		jmp	short loc_D209
 ; ---------------------------------------------------------------------------
 
@@ -4286,9 +4286,9 @@ loc_D220:
 ; ---------------------------------------------------------------------------
 
 loc_D23E:
-		call	_grcg_setmode_tdw
+		call	grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
@@ -4310,7 +4310,7 @@ loc_D25C:
 loc_D272:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_D286
-		call	_boss_backdrop_render pascal, (96 shl 16) or 72, 1
+		call	boss_backdrop_render pascal, (96 shl 16) or 72, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -4359,9 +4359,9 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_D2C7:
-		call	_grcg_setmode_tdw
+		call	grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	playfield_fillm_0_0_384_192__2
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
@@ -4383,7 +4383,7 @@ loc_D2E5:
 loc_D2FB:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_D30F
-		call	_boss_backdrop_render pascal, (32 shl 16) or 16, 1
+		call	boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -4596,14 +4596,14 @@ loc_D471:
 		mov	word ptr [si+2], 0B80h
 		mov	word ptr [si+4], 0C00h
 		mov	word ptr [si+6], 0B80h
-		call	_randring1_next16
+		call	randring1_next16
 		mov	[si+0Eh], al
 		mov	word ptr [si+0Ch], 0
 		lea	ax, [si+8]
 		push	ax
 		pushd	0
 		push	3Fh ; '?'
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	ax, 20h	; ' '
 		push	ax
 		mov	al, [si+0Eh]
@@ -4819,9 +4819,9 @@ loc_D62B:
 loc_D630:
 		cmp	di, 2
 		jl	short loc_D5F1
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -4836,7 +4836,7 @@ loc_D630:
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -4844,7 +4844,7 @@ loc_D630:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -4923,10 +4923,10 @@ loc_D707:
 
 loc_D713:
 		push	1800h
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		mov	[si], ax
 		push	1800h
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		mov	[si+2],	ax
 		mov	ax, [si]
 		mov	[si+4],	ax
@@ -4934,7 +4934,7 @@ loc_D713:
 		mov	word ptr [si+8], 0
 		mov	word ptr [si+0Ah], 0
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0ACh ; '¬'
 		mov	[si+0Fh], al
 		inc	di
@@ -5083,9 +5083,9 @@ loc_D829:
 		jl	short loc_D808
 
 loc_D82E:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -5100,7 +5100,7 @@ loc_D82E:
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -5108,7 +5108,7 @@ loc_D82E:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -5309,9 +5309,9 @@ loc_D9C1:
 		jl	short loc_D9A0
 
 loc_D9C6:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_D327
 		push	3AC0h
 		push	12h
@@ -5326,7 +5326,7 @@ loc_D9C6:
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	6
 		call	sub_D4F8
@@ -5334,7 +5334,7 @@ loc_D9C6:
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		push	3AC0h
 		push	0
 		call	sub_D4F8
@@ -5422,7 +5422,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		cmp	_boss_phase, 0
 		jnz	short loc_DA9E
-		call	_boss_backdrop_render pascal, (32 shl 16) or 120, 1
+		call	boss_backdrop_render pascal, (32 shl 16) or 120, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -5437,7 +5437,7 @@ loc_DA9E:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_DAC4
-		call	_boss_backdrop_render pascal, (32 shl 16) or 120, 1
+		call	boss_backdrop_render pascal, (32 shl 16) or 120, 1
 		jmp	short loc_DAC7
 ; ---------------------------------------------------------------------------
 
@@ -6162,7 +6162,7 @@ sub_E02E	proc near
 		jnz	short loc_E094
 
 loc_E066:
-		call	_grcg_setcolor_direct
+		call	grcg_setcolor_direct
 		mov	ch, 20h	; ' '
 		mov	di, cs:word_E02C
 		cmp	di, 7350h
@@ -6190,7 +6190,7 @@ loc_E08E:
 ; ---------------------------------------------------------------------------
 
 loc_E094:
-		call	_grcg_setcolor_direct
+		call	grcg_setcolor_direct
 		mov	ch, 20h	; ' '
 		mov	di, cs:word_E02C
 		cmp	di, 7350h
@@ -8937,7 +8937,7 @@ loc_FF96:
 		cmp	byte ptr [di], 0
 		jz	loc_1002D
 		mov	ah, [di+1]
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	si, 0Fh
 		jmp	short loc_FFF0
 ; ---------------------------------------------------------------------------
@@ -9030,7 +9030,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	si, 0C252h
 		mov	[bp+var_2], 0
 		jmp	short loc_100BC
@@ -9213,10 +9213,10 @@ loc_101BD:
 		or	ax, ax
 		jnz	short loc_1018A
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_C054
 		mov	ah, byte ptr grcgcolor_2CC8E
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		call	sub_C0E6
 		jmp	short loc_10210
 ; ---------------------------------------------------------------------------
@@ -11126,7 +11126,7 @@ loc_11080:
 		cmp	byte ptr [si], 1
 		jnz	short loc_110B4
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 20h	; ' '
@@ -11319,7 +11319,7 @@ arg_0		= word ptr  4
 		cmp	di, 3E8h
 		jge	short loc_111EF
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, 30h	; '0'
 		mov	[si+1],	al
 		mov	al, [si+1]
@@ -11343,7 +11343,7 @@ loc_111EF:
 		add	ax, 30h	; '0'
 		mov	[bp+var_2], ax
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, byte ptr [bp+var_2]
 		mov	[si+1],	al
 		mov	ax, di
@@ -11365,7 +11365,7 @@ loc_11235:
 		cmp	di, 7D0h
 		jge	short loc_1125C
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, 40h
 		mov	[si+1],	al
 		mov	al, [si+1]
@@ -11390,7 +11390,7 @@ loc_1125C:
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, byte ptr [bp+var_2]
 		mov	[si+1],	al
 		mov	ax, di
@@ -11411,7 +11411,7 @@ loc_112A0:
 		cmp	di, 0BB8h
 		jge	short loc_112C7
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, 30h	; '0'
 		mov	[si+1],	al
 		mov	al, [si+1]
@@ -11436,7 +11436,7 @@ loc_112C7:
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, byte ptr [bp+var_2]
 		mov	[si+1],	al
 		mov	ax, di
@@ -11461,7 +11461,7 @@ loc_1130F:
 		cmp	di, 0F80h
 		jge	short loc_11331
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, 20h	; ' '
 		mov	[si+1],	al
 		mov	al, [si+1]
@@ -11482,7 +11482,7 @@ loc_11331:
 		add	ax, 20h	; ' '
 		mov	[bp+var_2], ax
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, byte ptr [bp+var_2]
 		mov	[si+1],	al
 		mov	ax, di
@@ -11680,7 +11680,7 @@ loc_114F8:
 		mov	si, ax
 		mov	byte ptr [si], 1
 		push	20h ; ' '
-		call	_randring1_next16_mod
+		call	randring1_next16_mod
 		add	al, 30h	; '0'
 		mov	[si+1],	al
 		mov	al, [si+1]
@@ -12497,9 +12497,9 @@ loc_11AD6:
 ; ---------------------------------------------------------------------------
 
 loc_11AF8:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_11B11
 		push	150A80h
@@ -12519,7 +12519,7 @@ loc_11B19:
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
@@ -12601,9 +12601,9 @@ loc_11BDB:
 		call	text_putsa pascal, ax, 23, _stage_bgm_title, TX_WHITE
 
 loc_11C2D:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_11C46
 		push	150A80h
@@ -12623,7 +12623,7 @@ loc_11C4E:
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6C
 		push	ax
@@ -12690,16 +12690,16 @@ loc_11CE1:
 ; ---------------------------------------------------------------------------
 
 loc_11CFE:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax
@@ -12732,16 +12732,16 @@ loc_11D53:
 		call	text_putsa pascal, ax, 23, _boss_bgm_title, TX_WHITE
 
 loc_11D90:
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_2CE6E
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_2CE6E
 		push	ax
@@ -13110,7 +13110,7 @@ loc_122CB:
 loc_122D5:
 		cmp	shot_level, 2
 		jb	loc_123A9
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	ax, word ptr dword_2CEB4
 		sar	ax, 4
 		mov	di, ax
@@ -13489,7 +13489,7 @@ var_4		= word ptr -4
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		call	_grcg_setmode_rmw_1
+		call	grcg_setmode_rmw_1
 		mov	di, 0C4FAh
 		mov	[bp+@@i], 0
 		jmp	short loc_125F6
@@ -13825,7 +13825,7 @@ loc_128CA:
 loc_128D8:
 		mov	eax, [si]
 		mov	dword_25FFC, eax
-		call	_randring1_next16
+		call	randring1_next16
 		mov	byte ptr word_26006, al
 		call	sub_15DE2
 
@@ -13937,7 +13937,7 @@ shot_l0	proc near
 		call	sub_12914
 		test	al, 1
 		jz	short loc_1299E
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_1299E
@@ -13961,14 +13961,14 @@ shot_l1	proc near
 		call	sub_12914
 		test	al, 1
 		jz	short loc_129C8
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_129C8
 		add	ax, 0Ah
 		push	ax
 		push	7
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0BCh
 		push	ax
 		call	sub_E4DE
@@ -14006,7 +14006,7 @@ loc_129E9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
 		call	sub_E4DE
@@ -14043,7 +14043,7 @@ loc_12A34:
 		jbe	short loc_12A49
 
 loc_12A40:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_129E9
@@ -14120,7 +14120,7 @@ loc_12AB8:
 		jbe	short loc_12ACD
 
 loc_12AC4:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12A6A
@@ -14195,7 +14195,7 @@ loc_12B32:
 		jbe	short loc_12B51
 
 loc_12B48:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12AEE
@@ -14248,7 +14248,7 @@ loc_12B93:
 		jnz	short loc_12BAA
 		sub	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12BC3
@@ -14257,7 +14257,7 @@ loc_12B93:
 loc_12BAA:
 		add	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
@@ -14281,7 +14281,7 @@ loc_12BCF:
 		jbe	short loc_12BEE
 
 loc_12BE5:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12B75
@@ -14334,7 +14334,7 @@ loc_12C30:
 		jnz	short loc_12C47
 		sub	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12C60
@@ -14343,7 +14343,7 @@ loc_12C30:
 loc_12C47:
 		add	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
@@ -14367,7 +14367,7 @@ loc_12C6C:
 		jbe	short loc_12C8B
 
 loc_12C82:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12C12
@@ -14420,7 +14420,7 @@ loc_12CCD:
 		jnz	short loc_12CE4
 		sub	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B6h
 		mov	[bp-2],	al
 		jmp	short loc_12CFD
@@ -14429,7 +14429,7 @@ loc_12CCD:
 loc_12CE4:
 		add	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0C6h
 		mov	[bp-2],	al
 		cmp	byte ptr [bp-3], 0
@@ -14453,7 +14453,7 @@ loc_12D09:
 		jbe	short loc_12D28
 
 loc_12D1F:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12CAF
@@ -14499,7 +14499,7 @@ loc_12D5B:
 		jnz	short loc_12D6F
 		sub	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B6h
 		jmp	short loc_12D7B
 ; ---------------------------------------------------------------------------
@@ -14507,7 +14507,7 @@ loc_12D5B:
 loc_12D6F:
 		add	word ptr [si+2], 180h
 		push	3
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0C6h
 
 loc_12D7B:
@@ -14528,7 +14528,7 @@ loc_12D8A:
 		jbe	short loc_12DA9
 
 loc_12DA0:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12D3D
@@ -14624,7 +14624,7 @@ loc_12E3E:
 		jbe	short loc_12E5F
 
 loc_12E54:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12DCE
@@ -14664,7 +14664,7 @@ loc_12E80:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
 		call	sub_E4DE
@@ -14699,7 +14699,7 @@ loc_12ECC:
 		jbe	short loc_12EE1
 
 loc_12ED8:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_12E80
@@ -14801,7 +14801,7 @@ loc_12F7D:
 		jbe	short loc_12F94
 
 loc_12F89:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12F07
@@ -14926,7 +14926,7 @@ loc_13077:
 		jbe	short loc_1308E
 
 loc_13083:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_12FC2
@@ -15055,7 +15055,7 @@ loc_1317E:
 		jbe	short loc_13195
 
 loc_1318A:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_130C0
@@ -15192,7 +15192,7 @@ loc_13287:
 		jbe	short loc_1329E
 
 loc_13293:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_131CA
@@ -15348,7 +15348,7 @@ loc_133C1:
 		jbe	short loc_133D8
 
 loc_133CD:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_132D8
@@ -15506,7 +15506,7 @@ loc_134FF:
 		jbe	short loc_13516
 
 loc_1350B:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13416
@@ -15692,7 +15692,7 @@ loc_13680:
 		jbe	short loc_13697
 
 loc_1368C:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13554
@@ -15764,7 +15764,7 @@ loc_136F8:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
 		call	sub_E4DE
@@ -15778,7 +15778,7 @@ loc_1370B:
 		jbe	short loc_13720
 
 loc_13717:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_136D1
@@ -15853,7 +15853,7 @@ loc_13783:
 		jbe	short loc_13798
 
 loc_1378F:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13741
@@ -15942,7 +15942,7 @@ loc_13813:
 		jbe	short loc_13828
 
 loc_1381F:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_137B9
@@ -16036,7 +16036,7 @@ loc_138AB:
 		jbe	short loc_138C0
 
 loc_138B7:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13856
@@ -16138,7 +16138,7 @@ loc_13957:
 		jbe	short loc_1396C
 
 loc_13963:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_138EF
@@ -16243,7 +16243,7 @@ loc_13A08:
 		jbe	short loc_13A1F
 
 loc_13A14:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1399B
@@ -16354,7 +16354,7 @@ loc_13AD0:
 		jbe	short loc_13AE7
 
 loc_13ADC:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13A54
@@ -16496,7 +16496,7 @@ loc_13BD1:
 		jbe	short loc_13BE8
 
 loc_13BDD:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13B19
@@ -16545,7 +16545,7 @@ loc_13C1D:
 		cmp	byte ptr [bp+var_2+1], 1
 		jnz	short loc_13C33
 		push	0Fh
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B8h
 		mov	byte ptr [bp+var_2], al
 		mov	byte ptr [si+10h], 9
@@ -16580,7 +16580,7 @@ loc_13C55:
 		jbe	short loc_13C74
 
 loc_13C6B:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13C1D
@@ -16665,7 +16665,7 @@ loc_13CEA:
 		jbe	short loc_13CFF
 
 loc_13CF6:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13C96
@@ -16722,7 +16722,7 @@ loc_13D41:
 		jnz	short loc_13D58
 		sub	word ptr [si+2], 180h
 		push	7
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0B4h
 		mov	byte ptr [bp+var_2], al
 		jmp	short loc_13D71
@@ -16731,7 +16731,7 @@ loc_13D41:
 loc_13D58:
 		add	word ptr [si+2], 180h
 		push	7
-		call	_randring1_next16_and
+		call	randring1_next16_and
 		add	al, 0C4h ; 'A'
 		mov	byte ptr [bp+var_2], al
 		cmp	[bp+var_3], 0
@@ -16755,7 +16755,7 @@ loc_13D7E:
 		jbe	short loc_13D9D
 
 loc_13D94:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_13D23
@@ -16860,7 +16860,7 @@ loc_13E32:
 		jbe	short loc_13E53
 
 loc_13E48:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13DC2
@@ -16991,7 +16991,7 @@ loc_13F13:
 		jbe	short loc_13F34
 
 loc_13F29:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13E81
@@ -17138,7 +17138,7 @@ loc_14012:
 		jbe	short loc_14033
 
 loc_14028:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_13F6A
@@ -17289,7 +17289,7 @@ loc_14110:
 		jbe	short loc_14131
 
 loc_14126:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1406C
@@ -17454,7 +17454,7 @@ loc_14227:
 		jbe	short loc_14248
 
 loc_1423D:
-		call	_shots_add
+		call	shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_1416D
@@ -18589,7 +18589,7 @@ loc_154FF:
 ; ---------------------------------------------------------------------------
 
 loc_15507:
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[si+1Ah], al
 		mov	al, 1
 		jmp	loc_15740
@@ -18656,7 +18656,7 @@ loc_1557A:
 ; ---------------------------------------------------------------------------
 
 loc_1557F:
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[si+34h], al
 		mov	al, 1
 		jmp	loc_15740
@@ -19982,7 +19982,7 @@ loc_15F30:
 		cmp	di, 3E70h
 		jnz	short loc_15F6D
 		push	1800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	di, ax
 
 loc_15F6D:
@@ -20001,7 +20001,7 @@ loc_15F7C:
 		cmp	[bp+var_4], 3E70h
 		jnz	short loc_15F8F
 		push	1700h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	[bp+var_4], ax
 
 loc_15F8F:
@@ -20030,7 +20030,7 @@ loc_15FB9:
 		mov	byte ptr [si+1Eh], 0
 		mov	byte ptr [si+22h], 0
 		mov	byte ptr [si+24h], 0
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[si+26h], al
 		mov	byte ptr [si+27h], 80h
 		mov	byte ptr [si+2Eh], 0Fh
@@ -21219,7 +21219,7 @@ loc_16B67:
 		jz	short loc_16B7D
 		mov	[bp+var_4], al
 		mov	ah, [bp+var_4]
-		call	_grcg_setcolor_direct_noint_2
+		call	grcg_setcolor_direct_noint_2
 
 loc_16B7D:
 		xor	di, di
@@ -21290,7 +21290,7 @@ arg_0		= word ptr  4
 		cmp	_boss_pos.cur.x, (144 shl 4)
 		jge	short loc_16BF5
 		push	60h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	al, 30h	; '0'
 		jmp	short loc_16C09
 ; ---------------------------------------------------------------------------
@@ -21299,13 +21299,13 @@ loc_16BF5:
 		cmp	_boss_pos.cur.x, (240 shl 4)
 		jle	short loc_16C06
 		push	60h
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 30h	; '0'
 		jmp	short loc_16C09
 ; ---------------------------------------------------------------------------
 
 loc_16C06:
-		call	_randring2_next16
+		call	randring2_next16
 
 loc_16C09:
 		mov	_boss_angle, al
@@ -21646,12 +21646,12 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	5
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	[bp+var_6], ax
 
 loc_16E37:
 		push	5
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	[bp+var_A], ax
 		cmp	ax, [bp+var_6]
 		jz	short loc_16E37
@@ -21705,7 +21705,7 @@ loc_16E74:
 		cmp	[bp+var_6], di
 		jz	short loc_16EC6
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		mov	[bp+var_8], ax
 		jmp	short loc_16ECB
 ; ---------------------------------------------------------------------------
@@ -22347,7 +22347,7 @@ arg_0		= word ptr  4
 
 loc_173DD:
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_2]
 		mov	si, ax
 		or	si, si
@@ -22364,7 +22364,7 @@ loc_173F0:
 loc_173F9:
 		push	si
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_4]
 		push	ax
 		push	500h
@@ -22410,7 +22410,7 @@ arg_0		= word ptr  4
 
 loc_17448:
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_2]
 		mov	si, ax
 		or	si, si
@@ -22427,7 +22427,7 @@ loc_1745B:
 loc_17464:
 		push	si
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_4]
 		push	ax
 		push	3E8h
@@ -23760,7 +23760,7 @@ loc_18029:
 		mov	byte ptr word_26006+1, 18h
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
 		call	fp_25344
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		push	_midboss_pos.cur.x
 		push	(32 shl 4)
@@ -24164,14 +24164,14 @@ sub_183F5	proc near
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		push	ax
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	al, byte ptr _boss_phase_frame
 		add	al, 64
 		mov	byte ptr word_26006, al
 		mov	word ptr dword_26002, 303h
 		mov	byte_26001, 0Ah
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 10h
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
@@ -24182,12 +24182,12 @@ sub_183F5	proc near
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		push	ax
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	al, byte ptr _boss_phase_frame
 		add	al, 64
 		mov	byte ptr word_26006, al
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 18h
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
@@ -24216,7 +24216,7 @@ sub_1847D	proc near
 		mov	byte ptr word_25FFA, 2
 		mov	byte ptr word_25FFA+1, 30h ; '0'
 		mov	byte_26000, 4
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_26006+1, 20h ; ' '
 		mov	byte ptr dword_26002, 0Ch
@@ -24548,7 +24548,7 @@ loc_187BA:
 
 loc_187DE:
 		push	4
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		inc	al
 		mov	_boss_mode, al
 		cmp	al, byte_2D080
@@ -24608,7 +24608,7 @@ loc_18843:
 
 loc_18862:
 		push	4
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		inc	al
 		mov	_boss_mode, al
 		cmp	al, byte_2D080
@@ -24762,7 +24762,7 @@ sub_18987	proc near
 		mov	byte_26000, 6
 		mov	word ptr dword_26002+2,	803h
 		mov	byte ptr word_26006+1, 18h
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		call	fp_25344
 		call	sub_15A5C
@@ -24783,7 +24783,7 @@ loc_189DB:
 
 loc_189E8:
 		mov	byte ptr word_26006+1, 18h
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		call	fp_25344
 		call	sub_15A5C
@@ -24808,7 +24808,7 @@ sub_189FC	proc near
 		mov	byte_26000, 6
 		mov	word ptr dword_26002+2,	0F03h
 		mov	byte ptr word_26006+1, 18h
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		call	fp_25344
 		call	sub_15A5C
@@ -24964,7 +24964,7 @@ arg_2		= word ptr  6
 		enter	2, 0
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_18BDC
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[bp+var_1], al
 		push	ds
 		push	offset _boss_pos.velocity.x
@@ -25372,7 +25372,7 @@ loc_18ED9:
 		mov	_laser_template.grow_at_age, 30
 		mov	_laser_template.shootout_speed, 104
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		mov	byte_2D085, al
 
 loc_18F04:
@@ -25457,7 +25457,7 @@ loc_18F93:
 		mov	byte_26001, 2
 		mov	byte_2C976, 1
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		or	ax, ax
 		jz	short loc_18FBB
 		mov	byte_2C977, 20h	; ' '
@@ -26369,17 +26369,17 @@ loc_1978A:
 		or	di, di
 		jz	short loc_197D9
 		push	1400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 200h
 		mov	[si+6],	ax
 		push	0A00h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 100h
 		mov	[si+8],	ax
 		cmp	[bp+var_2], 0
 		jnz	short loc_197C2
 		push	3
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, off_22768[bx]
@@ -26389,7 +26389,7 @@ loc_1978A:
 
 loc_197C2:
 		push	3
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, off_22768[bx]
@@ -26508,7 +26508,7 @@ arg_0		= word ptr  4
 		jnz	short loc_198CF
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 
 loc_198CF:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -26523,7 +26523,7 @@ loc_198CF:
 		mov	byte_26000, 0
 		mov	eax, [si+2]
 		mov	dword_25FFC, eax
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		call	fp_25344
 		call	sub_15A5C
@@ -26565,7 +26565,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19940
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 
 loc_19940:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -26620,7 +26620,7 @@ arg_0		= word ptr  4
 		jnz	short loc_199B2
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 
 loc_199B2:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -26677,7 +26677,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19A27
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 
 loc_19A27:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -26734,7 +26734,7 @@ arg_0		= word ptr  4
 		jnz	short loc_19A9C
 		push	word ptr [si+2]
 		push	word ptr [si+4]
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 
 loc_19A9C:
 		cmp	word ptr [si+0Eh], 20h ; ' '
@@ -26848,16 +26848,16 @@ loc_19B57:
 loc_19B59:
 		mov	byte ptr word_25FFA+1, al
 		push	3Fh ; '?'
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 0Ch
 		mov	byte ptr word_26006+1, al
 		push	300h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (24 shl 4)
 		mov	word ptr dword_25FFC, ax
 		push	300h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.y
 		sub	ax, (32 shl 4)
 		mov	word ptr dword_25FFC+2,	ax
@@ -27478,7 +27478,7 @@ loc_1A1A2:
 		cmp	_boss_mode_change, 24
 		jnb	short loc_1A1F8
 		push	3
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, ax
 		mov	dl, byte_2D07D
 		mov	dh, 0
@@ -27762,7 +27762,7 @@ arg_4		= word ptr  8
 		cmp	word ptr [si], 900h
 		jge	short loc_1A47E
 		push	60h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	al, 30h	; '0'
 		jmp	short loc_1A490
 ; ---------------------------------------------------------------------------
@@ -27771,13 +27771,13 @@ loc_1A47E:
 		cmp	word ptr [si], 0F00h
 		jle	short loc_1A48D
 		push	60h
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 30h	; '0'
 		jmp	short loc_1A490
 ; ---------------------------------------------------------------------------
 
 loc_1A48D:
-		call	_randring2_next16
+		call	randring2_next16
 
 loc_1A490:
 		mov	[si+14h], al
@@ -27990,7 +27990,7 @@ sub_1A5EB	proc near
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 7
 		push	3Fh ; '?'
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		sub	al, 20h	; ' '
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 2Fh ; '/'
@@ -28001,7 +28001,7 @@ sub_1A5EB	proc near
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002+2,	602h
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 10h
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
@@ -28291,7 +28291,7 @@ loc_1A843:
 		or	dx, dx
 		jnz	short loc_1A8B2
 		push	7
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 10h
 		mov	dl, byte_2D085
 		sub	dl, al
@@ -28334,7 +28334,7 @@ mai_yuki_1A8C9	proc near
 		mov	byte ptr word_25FFA, 10h
 		mov	byte_26000, 3
 		push	3Fh ; '?'
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		sub	al, 20h	; ' '
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 32h ; '2'
@@ -28346,7 +28346,7 @@ mai_yuki_1A8C9	proc near
 		mov	word ptr dword_26002, 507h
 		mov	byte_26001, 0Ah
 		push	31
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 10h
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
@@ -28374,7 +28374,7 @@ sub_1A921	proc near
 		jnz	short loc_1A966
 		mov	byte ptr word_25FFA, 10h
 		mov	byte_26000, 4
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 32h ; '2'
 		mov	ax, _yuki_pos.cur.x
@@ -28512,7 +28512,7 @@ mai_yuki_1AA4C	proc near
 		jnz	short loc_1AA97
 		mov	byte ptr word_25FFA, 10h
 		mov	byte_26000, 2
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_25FFA+1, 0
 		mov	ax, _yuki_pos.cur.x
@@ -28522,7 +28522,7 @@ mai_yuki_1AA4C	proc near
 		mov	word ptr dword_25FFC+2,	ax
 		mov	word ptr dword_26002, 202h
 		push	31
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 18h
 		mov	byte ptr word_26006+1, al
 		call	fp_25344
@@ -28577,7 +28577,7 @@ loc_1AAAF:
 		or	dx, dx
 		jnz	short loc_1AB1B
 		push	7
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, byte_2D084
 		add	al, 10h
 		mov	byte_2D084, al
@@ -29146,11 +29146,11 @@ loc_1B039:
 		cmp	si, 32
 		jnz	short loc_1B058
 		push	1000h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 400h
 		mov	word_2CE3A, ax
 		push	200h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 400h
 		mov	_midboss_pos.cur.y, ax
 		jmp	short loc_1B09F
@@ -29249,12 +29249,12 @@ loc_1B0FC:
 loc_1B0FE:
 		mov	byte ptr word_25FFA+1, al
 		push	300h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _midboss_pos.cur.x
 		sub	ax, 180h
 		mov	word ptr dword_25FFC, ax
 		push	300h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _midboss_pos.cur.y
 		sub	ax, 200h
 		mov	word ptr dword_25FFC+2,	ax
@@ -29760,7 +29760,7 @@ sub_1B557	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1B599
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte_2D085, al
 		mov	byte_2D084, 1
 		mov	byte ptr word_25FFA, 10h
@@ -29868,11 +29868,11 @@ loc_1B64D:
 		or	dx, dx
 		jnz	short loc_1B68E
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 8
 		mov	byte ptr word_26006+1, al
 		push	7
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		mov	byte ptr dword_26002, al
 		mov	byte ptr dword_26002+1,	6
 		call	fp_25344
@@ -29938,10 +29938,10 @@ loc_1B6ED:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1B71B
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 20h	; ' '
 		mov	byte ptr word_26006+1, al
 		call	sub_15A5C
@@ -30010,7 +30010,7 @@ loc_1B799:
 		or	dx, dx
 		jnz	short loc_1B7F9
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 10h
 		mov	byte ptr word_26006+1, al
 		call	sub_15A5C
@@ -30354,7 +30354,7 @@ loc_1BAAD:
 		mov	_yuki_pos.cur.y, ax
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	_circles_add_growing
+		call	circles_add_growing
 		call	boss_explode_small pascal, 4
 		mov	fp_2CE42, offset sub_1B557
 		mov	_boss_sprite_left, 206
@@ -31178,7 +31178,7 @@ var_2		= word ptr -2
 		jnz	short loc_1C2AB
 		mov	_boss_sprite, 192
 		push	0Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	ax, 10h
 		mov	[bp+var_2], ax
 		mov	_laser_template.grow_at_age, 32
@@ -31280,7 +31280,7 @@ var_2		= word ptr -2
 		jnz	short loc_1C3B0
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.coords.LASER_width, 8
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[bp+var_2], ax
 		mov	al, _rank
 		mov	ah, 0
@@ -31405,7 +31405,7 @@ loc_1C460:
 		cmp	[bp+var_2], 0D4h
 		jle	short loc_1C483
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		or	ax, ax
 		jnz	short loc_1C483
 		mov	ax, 0FFh
@@ -31555,7 +31555,7 @@ loc_1C5D8:
 		call	boss_explode_small pascal, 4
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		call	_circles_add_growing
+		call	circles_add_growing
 		mov	fp_2CE42, offset sub_1BD2C
 		mov	_boss_sprite_left, 190
 		mov	_boss_sprite_right, 189
@@ -31836,7 +31836,7 @@ loc_1C848:
 		mov	[si+2],	eax
 		push	word_2BC71+1
 		push	word_2BC74
-		call	_circles_add_shrinking
+		call	circles_add_shrinking
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word_2BC71
@@ -32026,7 +32026,7 @@ arg_2		= word ptr  6
 		enter	2, 0
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1C9E7
-		call	_randring2_next16
+		call	randring2_next16
 		mov	[bp+var_1], al
 		push	ds
 		push	offset _boss_pos.velocity.x
@@ -32094,7 +32094,7 @@ sub_1CA42	proc near
 		mov	byte_2BC88, 50h	; 'P'
 		mov	byte ptr word_2BC71, 70h ; 'p'
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		mov	byte_2D085, al
 		pop	bp
 		retn
@@ -32181,13 +32181,13 @@ loc_1CB23:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1CB5D
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		push	561Ch
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		push	ax
 		mov	al, byte ptr word_26006
 		mov	ah, 0
@@ -32291,14 +32291,14 @@ loc_1CC3E:
 		or	dx, dx
 		jnz	short loc_1CC7F
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		sub	al, 0Fh
 		mov	[bp+var_1], al
 		push	600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	word_2BC74, ax
 		push	1600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 100h
 		mov	word_2BC71+1, ax
 		push	ax
@@ -32613,7 +32613,7 @@ loc_1CFC3:
 		jnz	short loc_1D030
 		mov	_laser_template.coords.origin.y, (32 shl 4)
 		push	(256 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, (64 shl 4)
 		mov	_laser_template.coords.origin.x, ax
 		push	ax
@@ -32628,14 +32628,14 @@ loc_1CFC3:
 
 loc_1CFFA:
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		sub	al, 0Fh
 		mov	[bp+var_1], al
 		push	600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	word_2BC74, ax
 		push	1600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 100h
 		mov	word_2BC71+1, ax
 		push	ax
@@ -32709,7 +32709,7 @@ yumeko_1D085	proc near
 		mov	word_2BC7E, 20h	; ' '
 		mov	byte_2BC88, 40h
 		push	200h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	_boss2_pos.cur.y, ax
 		push	(40 shl 16) or 30
 		push	(24 shl 16) or 16
@@ -32757,7 +32757,7 @@ loc_1D148:
 		cmp	_boss2_pos.cur.y, (376 shl 4)
 		jl	short loc_1D1C4
 		push	200h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	_boss2_pos.cur.y, ax
 		inc	byte_2D083
 		pop	bp
@@ -33334,11 +33334,11 @@ sub_1D667	proc near
 		mov	byte ptr word_26006+1, 20h ; ' '
 		mov	byte_26000, 4
 		mov	byte_26001, 0Ah
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr dword_26002, 10h
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		or	ax, ax
 		jz	short loc_1D6A2
 		mov	al, 2
@@ -33395,7 +33395,7 @@ sub_1D6E1	proc near
 		mov	byte ptr word_25FFA, 12h
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
 		mov	byte_26000, 4
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr dword_26002, 10h
 		push	(16 shl 16) or 12
@@ -33417,7 +33417,7 @@ loc_1D719:
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		push	ax
 		mov	al, byte ptr word_26006
 		mov	ah, 0
@@ -33643,22 +33643,22 @@ loc_1D954:
 
 loc_1D972:
 		push	(256 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
 		mov	word ptr dword_25FFC, ax
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
 		mov	word ptr dword_25FFC+2,	dx
 		push	60h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	al, 10h
 		mov	byte ptr word_26006, al
 		push	3Fh ; '?'
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 18h
 		mov	byte ptr word_26006+1, al
 		call	sub_15A5C
@@ -33744,15 +33744,15 @@ sub_1DA1C	proc near
 		or	dx, dx
 		jnz	short loc_1DA6A
 		push	1800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	word_2BC71+1, ax
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, 200h
 		mov	word_2BC74, ax
 		mov	byte ptr word_2BC71, 40h
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 30h	; '0'
 		mov	byte_2BC88, al
 		mov	word_2BC82, 0C8h
@@ -33767,12 +33767,12 @@ loc_1DA6A:
 		or	dx, dx
 		jnz	short loc_1DAD0
 		push	1000h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
 		mov	word ptr dword_25FFC, ax
 		push	(64 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		mov	word ptr dword_25FFC+2,	dx
@@ -33831,7 +33831,7 @@ loc_1DB10:
 		mov	byte ptr word_25FFA, 12h
 		mov	byte_26000, 2
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 30h	; '0'
 		mov	byte ptr word_26006+1, al
 		mov	word ptr dword_26002, 806h
@@ -33844,7 +33844,7 @@ loc_1DB10:
 		mov	word_2BC82, 0Bh
 		mov	byte_2BC88, 40h
 		push	3
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		shl	al, 6
 		mov	byte ptr word_2BC71, al
 		call	sub_17687
@@ -33900,22 +33900,22 @@ loc_1DBB8:
 
 loc_1DBCA:
 		push	(256 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, 800h
 		mov	word_2BC71+1, ax
 		push	(64 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
 		mov	word_2BC74, dx
 		push	40h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	al, 20h	; ' '
 		mov	byte ptr word_2BC71, al
 		push	3Fh ; '?'
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 20h	; ' '
 		mov	byte_2BC88, al
 		call	sub_1D53A
@@ -34199,12 +34199,12 @@ loc_1DEEA:
 		or	dx, dx
 		jnz	short loc_1DF41
 		push	(256 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
 		mov	word_2BC71+1, ax
 		push	(64 shl 4)
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
@@ -34970,7 +34970,7 @@ sub_1E60E	proc near
 		cmp	_midboss_phase_frame, 94
 		jnz	short loc_1E62A
 		push	1
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		or	ax, ax
 		jz	short loc_1E625
 		mov	al, 1
@@ -35346,11 +35346,11 @@ sub_1E922	proc near
 		mov	bp, sp
 		mov	byte ptr word_25FFA, 10h
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 28h	; '('
 		mov	byte ptr word_26006+1, al
 		push	7Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		and	al, 0F8h
 		sub	al, 40h
 		mov	byte ptr word_26006, al
@@ -35525,12 +35525,12 @@ loc_1EAA9:
 		or	dx, dx
 		jnz	short loc_1EAE3
 		push	600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, word ptr dword_25FFC
 		sub	ax, 300h
 		mov	word_2CE52, ax
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, word ptr dword_25FFC+2
 		sub	ax, 200h
 		mov	word_2CE54, ax
@@ -35610,11 +35610,11 @@ sub_1EB52	proc near
 		jnz	loc_1EBF0
 		mov	byte ptr word_25FFA, 10h
 		push	1Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 0Ch
 		mov	byte ptr word_26006+1, al
 		push	7Fh
-		call	_randring2_next16_and
+		call	randring2_next16_and
 		add	al, 80h
 		mov	byte ptr word_26006, al
 		mov	byte_26000, 2
@@ -35632,12 +35632,12 @@ sub_1EB52	proc near
 		call	snd_se_play pascal, 3
 		mov	byte ptr word_25FFA, 12h
 		push	600h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	ax, 300h
 		add	ax, word ptr dword_25FFC
 		mov	word ptr dword_25FFC, ax
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	ax, 200h
 		add	ax, word ptr dword_25FFC+2
 		mov	word ptr dword_25FFC+2,	ax
@@ -35802,7 +35802,7 @@ sub_1ECD4	proc near
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 44h ; 'D'
 		mov	byte_26000, 4
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	byte ptr word_26006+1, 40h
 		mov	word ptr dword_26002, 0A20h
@@ -35898,7 +35898,7 @@ sub_1EDC1	proc near
 		mov	word ptr dword_26002, 907h
 		mov	byte ptr word_25FFA+1, 44h ; 'D'
 		push	300h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	ax, 180h
 		add	ax, word ptr dword_25FFC
 		mov	word ptr dword_25FFC, ax
@@ -36285,7 +36285,7 @@ sub_1F13B	proc near
 		call	snd_se_play pascal, 8
 		mov	byte ptr word_25FFA+1, 74h ; 't'
 		mov	byte_26000, 2
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		mov	word ptr dword_26002, 1505h
 		mov	byte_2D085, 0
@@ -36994,16 +36994,16 @@ sub_1F7BA	proc near
 		mov	byte_26000, 4
 		mov	byte ptr dword_26002, 10h
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	ax, 200h
 		add	ax, word ptr dword_25FFC
 		mov	word ptr dword_25FFC, ax
 		push	400h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		sub	ax, 200h
 		add	ax, word ptr dword_25FFC+2
 		mov	word ptr dword_25FFC+2,	ax
-		call	_randring2_next16
+		call	randring2_next16
 		mov	byte ptr word_26006, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -37379,11 +37379,11 @@ loc_1FB2D:
 
 loc_1FB43:
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_2]
 		push	ax
 		push	800h
-		call	_randring2_next16_mod
+		call	randring2_next16_mod
 		add	ax, [bp+var_4]
 		push	ax
 		mov	bx, di

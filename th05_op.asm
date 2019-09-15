@@ -5054,7 +5054,7 @@ arg_8		= word ptr  0Eh
 		push	ds
 		mov	dx, [bp+arg_4]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		GRCG_SETCOLOR_DIRECT dx
+		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -5404,7 +5404,7 @@ sub_D894	proc far
 		mov	di, 3020h
 		call	sub_DA30
 		mov	ah, GC_RI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	al, 0
 		mov	di, 156Ch
 		call	sub_DB0D
@@ -5508,7 +5508,7 @@ sub_D96E	proc far
 		mov	si, 4
 		call	sub_D9E2
 		mov	ah, GC_RI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	di, 3020h
 		add	bx, 4
 		call	sub_DA12
@@ -5543,7 +5543,7 @@ loc_D9F5:
 		mov	[si+382Ah], al
 		call	sub_DA30
 		mov	ah, GC_RI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	al, [si+382Ah]
 		call	near ptr sub_DA6B
 
@@ -5589,7 +5589,7 @@ sub_DA30	proc near
 		push	di
 		push	si
 		mov	ah, GC_GI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		add	di, 30h	; '0'
 		mov	ax, 0EEEEh
 		mov	dl, 0Fh
@@ -5601,7 +5601,7 @@ loc_DA3F:
 		dec	dl
 		jnz	short loc_DA3F
 		mov	ah, GC_RGI
-		call	_grcg_setcolor_direct_noint_1
+		call	grcg_setcolor_direct_noint_1
 		mov	si, 9EEh
 		sub	di, 4B0h
 		mov	dl, 9

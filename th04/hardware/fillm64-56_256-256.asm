@@ -3,7 +3,7 @@
 ; Assumes that the GRCG is set to TDW mode.
 
 ; void pascal playfield_fillm_64_56_256_256();
-public playfield_fillm_64_56_256_256
+public PLAYFIELD_FILLM_64_56_256_256
 playfield_fillm_64_56_256_256	proc near
 		push	di
 		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4

@@ -3,8 +3,8 @@
 ; support more than that anyway.
 
 ; void pascal circles_add_growing(int center_x, int center_y);
-public _circles_add_growing
-_circles_add_growing	proc far
+public CIRCLES_ADD_GROWING
+circles_add_growing	proc far
 @@center_y	= word ptr  6
 @@center_x	= word ptr  8
 
@@ -47,12 +47,12 @@ _circles_add_growing	proc far
 	pop	si
 	pop	bp
 	retf	4
-_circles_add_growing	endp
+circles_add_growing	endp
 
 
 ; void pascal circles_add_shrinking(int center_x, int center_y);
-public _circles_add_shrinking
-_circles_add_shrinking	proc far
+public CIRCLES_ADD_SHRINKING
+circles_add_shrinking	proc far
 @@center_y	= word ptr  6
 @@center_x	= word ptr  8
 
@@ -95,12 +95,12 @@ _circles_add_shrinking	proc far
 	pop	si
 	pop	bp
 	retf	4
-_circles_add_shrinking	endp
+circles_add_shrinking	endp
 
 
-; void circles_update(void);
-public _circles_update
-_circles_update	proc near
+; void pascal near circles_update(void);
+public CIRCLES_UPDATE
+circles_update	proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -133,18 +133,18 @@ _circles_update	proc near
 	pop	si
 	pop	bp
 	retn
-_circles_update	endp
+circles_update	endp
 
 
-; void circles_render(void);
-public _circles_render
-_circles_render	proc near
+; void pascal near circles_render(void);
+public CIRCLES_RENDER
+circles_render	proc near
 	push	bp
 	mov	bp, sp
 	push	si
 	push	di
 	mov	ah, _circles_color
-	call	_grcg_setcolor_direct_noint_1
+	call	grcg_setcolor_direct_noint_1
 	mov	si, offset _circles
 	xor	di, di
 	jmp	short @@more?
@@ -168,4 +168,4 @@ _circles_render	proc near
 	pop	si
 	pop	bp
 	retn
-_circles_render	endp
+circles_render	endp

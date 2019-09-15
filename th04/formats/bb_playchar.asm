@@ -1,5 +1,5 @@
-; void bb_playchar_load(void);
-public bb_playchar_load
+; void pascal near bb_playchar_load(void);
+public BB_PLAYCHAR_LOAD
 bb_playchar_load	proc near
 	push	bp
 	mov	bp, sp
@@ -21,8 +21,8 @@ bb_playchar_load	proc near
 bb_playchar_load	endp
 
 
-; void bb_playchar_free(void);
-public bb_playchar_free
+; void pascal near bb_playchar_free(void);
+public BB_PLAYCHAR_FREE
 bb_playchar_free	proc near
 	push	bp
 	mov	bp, sp

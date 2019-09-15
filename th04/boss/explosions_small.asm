@@ -1,5 +1,5 @@
-; void explosions_small_update_and_render(void);
-public explosions_small_update_and_render
+; void pascal near explosions_small_update_and_render(void);
+public EXPLOSIONS_SMALL_UPDATE_AND_RENDER
 explosions_small_update_and_render	proc near
 
 @@angle		= byte ptr -7
@@ -13,7 +13,7 @@ explosions_small_update_and_render	proc near
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
-	call	_grcg_setmode_rmw_1
+	call	grcg_setmode_rmw_1
 	mov	si, offset _explosions_small
 	mov	[bp+@@i], 0
 	jmp	@@more_explosions?

@@ -2,7 +2,7 @@
 ; color planes.
 
 ; void pascal cdg_put_nocolors(int x, int y, int slot);
-public cdg_put_nocolors
+public CDG_PUT_NOCOLORS
 cdg_put_nocolors	proc far
 
 @@slot	= word ptr  6

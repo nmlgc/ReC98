@@ -1,5 +1,5 @@
-; void std_load();
-public std_load
+; void pascal near std_load(void);
+public STD_LOAD
 std_load	proc near
 @@enemy_script_count	= byte ptr -4
 @@chunk_size	= byte ptr -3
@@ -72,8 +72,8 @@ std_load	proc near
 std_load	endp
 
 
-; void std_free();
-public std_free
+; void pascal near std_free(void);
+public STD_FREE
 std_free	proc near
 	push	bp
 	mov	bp, sp

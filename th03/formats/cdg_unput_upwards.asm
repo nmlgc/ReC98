@@ -4,7 +4,7 @@
 ; the VRAM's E plane.
 
 ; void cdg_unput_for_upwards_motion_e(int x_center, int y_center, int slot);
-public cdg_unput_for_upwards_motion_e
+public CDG_UNPUT_FOR_UPWARDS_MOTION_E
 cdg_unput_for_upwards_motion_e	proc near
 
 @@h	      	= word ptr -4

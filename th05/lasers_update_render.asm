@@ -1,5 +1,5 @@
-; void lasers_update(void);
-public lasers_update
+; void pascal near lasers_update(void);
+public LASERS_UPDATE
 lasers_update	proc near
 	push	bp
 	mov	bp, sp
@@ -171,8 +171,8 @@ lasers_update_switch	label word
 	dw offset laser_update_decay
 ; ---------------------------------------------------------------------------
 
-; void near lasers_render(void);
-public lasers_render
+; void pascal near lasers_render(void);
+public LASERS_RENDER
 lasers_render	proc near
 
 @@radius	= byte ptr -0Ah
@@ -224,7 +224,7 @@ lasers_render	proc near
 	cmp	[si+laser_t.coords.LASER_width], 3
 	jb	short @@draw_inner_circle?
 	mov	ah, [si+laser_t.LASER_color]
-	call	_grcg_setcolor_direct_noint_1
+	call	grcg_setcolor_direct_noint_1
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_outer_ray?
 	push	[bp+@@draw_x]
@@ -265,7 +265,7 @@ lasers_render	proc near
 
 @@draw_inner_circle?:
 	mov	ah, 15
-	call	_grcg_setcolor_direct_noint_1
+	call	grcg_setcolor_direct_noint_1
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_inner_ray_or_line?
 	push	[bp+@@draw_x]
@@ -329,7 +329,7 @@ lasers_render	proc near
 
 @@decay:
 	mov	ah, 15
-	call	_grcg_setcolor_direct_noint_1
+	call	grcg_setcolor_direct_noint_1
 	shl	[bp+@@radius], 3
 	push	offset _drawpoint
 	push	[si+laser_t.coords.origin.x]

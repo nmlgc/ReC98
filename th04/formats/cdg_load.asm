@@ -2,8 +2,8 @@
 
 ; void pascal cdg_load_single_noalpha(int slot, const char *fn, int n);
 ; void pascal cdg_load_single(int slot, const char *fn, int n);
-public cdg_load_single_noalpha
-public cdg_load_single
+public CDG_LOAD_SINGLE_NOALPHA
+public CDG_LOAD_SINGLE
 
 cdg_load_single_noalpha	label proc
 	mov	cdg_noalpha, 1
@@ -107,8 +107,8 @@ cdg_read_single	endp
 
 ; void pascal cdg_load_all_noalpha(int slot, const char *fn);
 ; void pascal cdg_load_all(int slot, const char *fn);
-public cdg_load_all_noalpha
-public cdg_load_all
+public CDG_LOAD_ALL_NOALPHA
+public CDG_LOAD_ALL
 
 cdg_load_all_noalpha	label proc
 	mov	cdg_noalpha, 1
@@ -164,7 +164,7 @@ cdg_load_all	endp
 ; Frees the CDG image in the given [slot].
 
 ; void cdg_free(int slot);
-public cdg_free
+public CDG_FREE
 cdg_free	proc far
 	mov	bx, sp
 	push	di
@@ -195,7 +195,7 @@ cdg_free	endp
 ; Frees the CDG images in all slots.
 
 ; void cdg_freeall();
-public cdg_freeall
+public CDG_FREEALL
 cdg_freeall	proc far
 	push	si
 	mov	si, CDG_SLOT_COUNT - 1

@@ -1,7 +1,7 @@
 ; No longer using a type parameter in TH05.
 
-; void boss_explode_big(void);
-public boss_explode_big
+; void pascal near boss_explode_big(void);
+public BOSS_EXPLODE_BIG
 boss_explode_big	proc near
 	push	bp
 	mov	bp, sp

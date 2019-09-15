@@ -5172,7 +5172,7 @@ loc_D1FC:
 		push	ds
 		mov	dx, [bp+0Ah]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		GRCG_SETCOLOR_DIRECT dx
+		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing

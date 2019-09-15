@@ -2,7 +2,7 @@
 ; alpha plane.
 
 ; void pascal cdg_put_noalpha(int x, int y, int slot);
-public cdg_put_noalpha
+public CDG_PUT_NOALPHA
 cdg_put_noalpha	proc far
 
 @@slot	= word ptr  6

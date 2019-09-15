@@ -168,7 +168,7 @@ arg_4		= word ptr  0Ah
 		nop
 
 loc_2E02:
-		GRCG_SETCOLOR_DIRECT ah
+		GRCG_SETCOLOR_DIRECT_INLINED ah
 		mov	ch, dl
 
 loc_2E1C:
@@ -8153,7 +8153,7 @@ arg_8		= word ptr  0Eh
 		push	ds
 		mov	dx, [bp+arg_4]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		GRCG_SETCOLOR_DIRECT dx
+		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing

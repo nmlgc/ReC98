@@ -1,5 +1,5 @@
-; void bb_playchar_load(void);
-public bb_playchar_load
+; void pascal near bb_playchar_load(void);
+public BB_PLAYCHAR_LOAD
 bb_playchar_load	proc near
 	mov	al, playchar
 	add	byte ptr _bb_playchar_fn+2, al
@@ -9,8 +9,8 @@ bb_playchar_load	proc near
 bb_playchar_load	endp
 
 
-; void bb_playchar_free(void);
-public bb_playchar_free
+; void pascal near bb_playchar_free(void);
+public BB_PLAYCHAR_FREE
 bb_playchar_free	proc near
 	cmp	_bb_playchar_seg, 0
 	jz	short @@ret

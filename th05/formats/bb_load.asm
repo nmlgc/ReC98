@@ -1,5 +1,5 @@
 ; void* pascal near bb_load(const char far *fn);
-public bb_load
+public BB_LOAD
 bb_load	proc near
 	push	si
 	call	hmem_allocbyte pascal, BB_SIZE

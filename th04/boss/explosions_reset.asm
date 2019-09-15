@@ -1,5 +1,5 @@
-; void explosions_small_reset(void);
-public explosions_small_reset
+; void pascal explosions_small_reset(void);
+public EXPLOSIONS_SMALL_RESET
 explosions_small_reset	proc far
 	push	bp
 	mov	bp, sp

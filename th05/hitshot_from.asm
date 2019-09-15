@@ -2,7 +2,7 @@
 ; the process.
 
 ; void pascal near hitshot_from(shot_t near *shot)
-public hitshot_from
+public HITSHOT_FROM
 hitshot_from	proc near
 
 @@shot	= word ptr  4

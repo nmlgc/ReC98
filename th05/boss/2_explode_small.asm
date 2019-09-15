@@ -1,5 +1,5 @@
-; void boss2_explode_small(unsigned int type);
-public boss2_explode_small
+; void pascal near boss2_explode_small(unsigned int type);
+public BOSS2_EXPLODE_SMALL
 boss2_explode_small	proc near
 
 @@y   	= word ptr -4

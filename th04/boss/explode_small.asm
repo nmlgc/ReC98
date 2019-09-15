@@ -50,8 +50,8 @@ EXPLOSION_TYPED macro
 	dw offset @@type4
 endm
 
-; void boss_explode_small(unsigned int type);
-public boss_explode_small
+; void pascal near boss_explode_small(unsigned int type);
+public BOSS_EXPLODE_SMALL
 boss_explode_small	proc near
 
 @@type	= word ptr  4

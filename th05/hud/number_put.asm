@@ -1,7 +1,7 @@
 ; Prints [val] using the bold gaiji font, right-aligned at ([x+5], [y]), with
 ; the given attribute.
 ; void pascal far hud_int_put(unsigned int x, unsigned int y, unsigned int val, unsigned int atrb);
-public hud_int_put
+public HUD_INT_PUT
 hud_int_put	proc far
 
 @@atrb		= word ptr  6
@@ -29,7 +29,7 @@ hud_int_put	endp
 ; Larger numbers will overflow the most significant digit into the A-Z range.
 
 ; void pascal far hud_points_put(unsigned int x, unsigned int y, unsigned long points);
-public hud_points_put
+public HUD_POINTS_PUT
 hud_points_put	proc far
 
 @@points	= dword	ptr  6

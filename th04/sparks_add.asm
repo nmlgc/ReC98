@@ -6,7 +6,7 @@
 ; directions away from ([playfield_x], [playfield_y]).
 
 ; int pascal sparks_add_random(unsigned int playfield_x, unsigned int playfield_y, int distance, int count);
-public sparks_add_random
+public SPARKS_ADD_RANDOM
 sparks_add_random	proc far
 
 @@count      	= word ptr  6
@@ -34,7 +34,7 @@ sparks_add_random	proc far
 	mov	[si+spark_t.pos.cur.x],	ax
 	mov	ax, [bp+@@playfield_y]
 	mov	[si+spark_t.pos.cur.y],	ax
-	call	_randring2_next16_and pascal, ((2 shl 4) - 1)
+	call	randring2_next16_and pascal, ((2 shl 4) - 1)
 	add	ax, [bp+@@distance]
 	lea	bx, [si+spark_t.pos.velocity]
 	call	vector2_near pascal, bx, [si+spark_t.SPARK_ANGLE], ax
@@ -62,7 +62,7 @@ sparks_add_random	endp
 ; in sparks_init().
 
 ; int pascal sparks_add_circle(unsigned int playfield_x, unsigned int playfield_y, int distance, int count);
-public sparks_add_circle
+public SPARKS_ADD_CIRCLE
 sparks_add_circle	proc near
 
 @@count      	= word ptr  4

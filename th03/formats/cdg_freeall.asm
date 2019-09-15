@@ -1,7 +1,7 @@
 ; Frees the CDG images in all slots.
 
-; void cdg_freeall(void);
-public cdg_freeall
+; void pascal cdg_freeall(void);
+public CDG_FREEALL
 cdg_freeall	proc near
 	push	bp
 	mov	bp, sp

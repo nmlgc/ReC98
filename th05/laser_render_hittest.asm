@@ -51,8 +51,8 @@ build_line_in_pixels	endp
 
 ; Returns 1 if the laser is entirely off-screen.
 
-; int pascal laser_render_ray(laser_coords_t near *coords)
-public laser_render_ray
+; int pascal near laser_render_ray(laser_coords_t near *coords)
+public LASER_RENDER_RAY
 laser_render_ray	proc near
 point0  	= Point ptr -20h
 point1  	= Point ptr -1Ch
@@ -127,8 +127,8 @@ point7  	= Point ptr -4
 laser_render_ray	endp
 
 
-; void pascal laser_hittest(laser_t near *laser);
-public laser_hittest
+; void pascal near laser_hittest(laser_t near *laser);
+public LASER_HITTEST
 laser_hittest	proc near
 testrect_center		= byte ptr -4
 laser		= word ptr  4

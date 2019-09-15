@@ -1,5 +1,5 @@
-; void popup_update_and_render(void);
-public popup_update_and_render
+; void pascal near popup_update_and_render(void);
+public POPUP_UPDATE_AND_RENDER
 popup_update_and_render	proc near
 
 @@i	= byte ptr -1
@@ -182,7 +182,7 @@ if GAME eq 4
 ; Yes, specific to the bonus popup, due to the hardcoded position.
 
 ; void pascal near popup_points_put(unsigned long points);
-public popup_points_put
+public POPUP_POINTS_PUT
 popup_points_put	proc pascal near
 	arg  	@@points:dword
 	local	@@digit:dword, @@divisor:dword, @@buf:byte:SCORE_DIGITS + 2 ; padding...

@@ -1,5 +1,5 @@
-; void boss_explode_big(unsigned int type);
-public boss_explode_big
+; void pascal near boss_explode_big(unsigned int type);
+public BOSS_EXPLODE_BIG
 boss_explode_big	proc near
 
 @@type	= word ptr  4

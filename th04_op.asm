@@ -5474,7 +5474,7 @@ arg_8		= word ptr  0Eh
 		push	ds
 		mov	dx, [bp+arg_4]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		GRCG_SETCOLOR_DIRECT dx
+		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing

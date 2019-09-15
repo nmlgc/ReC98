@@ -1,9 +1,9 @@
 ; Searches and returns the next free shot slot, or NULL if there are no more
 ; free ones.
 
-; shot_t* shots_add(void)
-public _shots_add
-_shots_add	proc near
+; shot_t* pascal near shots_add(void);
+public SHOTS_ADD
+shots_add	proc near
 	xor	ax, ax
 	mov	bx, _shot_ptr
 
@@ -24,5 +24,5 @@ _shots_add	proc near
 
 @@ret:
 	retn
-_shots_add	endp
+shots_add	endp
 	even

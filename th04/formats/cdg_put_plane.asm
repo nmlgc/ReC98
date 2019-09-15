@@ -7,7 +7,7 @@
 ; the individual planes being pre-dissolved.)
 
 ; void pascal cdg_put_plane(int x, int y, int slot, int plane)
-public cdg_put_plane
+public CDG_PUT_PLANE
 cdg_put_plane	proc far
 
 @@plane	= word ptr  6

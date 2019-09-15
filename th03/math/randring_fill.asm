@@ -1,6 +1,6 @@
-; void randring_fill(void)
-public _randring_fill
-_randring_fill	proc near
+; void pascal near randring_fill(void);
+public RANDRING_FILL
+randring_fill	proc near
 	push	si
 	mov	si, RANDRING_SIZE - 1
 
@@ -14,4 +14,4 @@ if GAME ge 4
 endif
 	pop	si
 	ret
-_randring_fill	endp
+randring_fill	endp

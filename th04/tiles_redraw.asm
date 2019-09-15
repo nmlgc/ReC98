@@ -1,5 +1,5 @@
-; void tiles_redraw_invalidated();
-public tiles_redraw_invalidated
+; void pascal near tiles_redraw_invalidated(void);
+public TILES_REDRAW_INVALIDATED
 tiles_redraw_invalidated	proc near
 	push	si
 	push	di

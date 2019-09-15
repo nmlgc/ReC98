@@ -1,5 +1,5 @@
 ; void pascal near bb_stage_load(const char far* fn);
-public bb_stage_load
+public BB_STAGE_LOAD
 bb_stage_load	proc near
 
 @@fn	= dword	ptr  4
@@ -22,7 +22,7 @@ bb_stage_load	endp
 
 
 ; void pascal bb_stage_free(void);
-public bb_stage_free
+public BB_STAGE_FREE
 if GAME eq 5
 bb_stage_free	proc near
 else
