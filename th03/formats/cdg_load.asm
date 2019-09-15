@@ -4,6 +4,7 @@
 ; Loads the [n]th image of the CDG file [fn] into [slot].
 
 ; void pascal cdg_load_single_forcealpha(int slot, const char *fn, int n)
+public CDG_LOAD_SINGLE_FORCEALPHA
 cdg_load_single_forcealpha	proc far
 
 @@image_size	= dword	ptr -4
@@ -231,6 +232,7 @@ cdg_load_all	endp
 ; image.
 
 ; void pascal cdg_load_all_noalpha(int slot_first, const char *fn);
+public CDG_LOAD_ALL_NOALPHA
 cdg_load_all_noalpha	proc far
 
 @@fn        	= dword	ptr  6

@@ -2099,18 +2099,15 @@ public NULLFUNC_NEAR
 nullfunc_near	proc near
 		retn
 nullfunc_near	endp
-
-; ---------------------------------------------------------------------------
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
 
+public NULLSUB_1
 nullsub_1	proc far
 		retf
 nullsub_1	endp
-
-; ---------------------------------------------------------------------------
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4049,6 +4046,7 @@ include th04/boss_backdrop.asm
 
 ; Attributes: bp-based frame
 
+public SARA_BG_RENDER
 sara_bg_render	proc near
 		push	bp
 		mov	bp, sp
@@ -4107,6 +4105,7 @@ sara_bg_render	endp
 
 ; Attributes: bp-based frame
 
+public LOUISE_BG_RENDER
 louise_bg_render	proc near
 		push	bp
 		mov	bp, sp
@@ -4183,6 +4182,7 @@ louise_bg_render	endp
 
 ; Attributes: bp-based frame
 
+public ALICE_BG_RENDER
 alice_bg_render	proc near
 		push	bp
 		mov	bp, sp
@@ -4259,6 +4259,7 @@ alice_bg_render	endp
 
 ; Attributes: bp-based frame
 
+public MAI_YUKI_BG_RENDER
 mai_yuki_bg_render	proc near
 
 var_1		= byte ptr -1
@@ -4338,6 +4339,7 @@ mai_yuki_bg_render	endp
 
 ; Attributes: bp-based frame
 
+public YUMEKO_BG_RENDER
 yumeko_bg_render	proc near
 
 var_1		= byte ptr -1
@@ -5415,6 +5417,7 @@ sub_DA25	endp
 
 ; Attributes: bp-based frame
 
+public SHINKI_BG_RENDER
 shinki_bg_render	proc near
 
 var_1		= byte ptr -1
@@ -5682,6 +5685,7 @@ sub_DBFF	endp
 
 ; Attributes: bp-based frame
 
+public EXALICE_BG_RENDER
 exalice_bg_render	proc near
 
 var_1		= byte ptr -1
@@ -5744,7 +5748,7 @@ exalice_bg_render	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public PLAYFIELD_FILLM_32_0_320_192
 playfield_fillm_32_0_320_192	proc near
 		push	di
 		cli
@@ -5969,7 +5973,7 @@ sub_DE7A	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public PLAYFIELD_FILLM_0_0_384_192__1
 playfield_fillm_0_0_384_192__1	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
@@ -5980,7 +5984,7 @@ playfield_fillm_0_0_384_192__1	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public PLAYFIELD_FILLM_0_205_384_163
 playfield_fillm_0_205_384_163	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 205
@@ -6121,7 +6125,7 @@ sub_DFBA	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public PLAYFIELD_FILLM_0_0_384_192__2
 playfield_fillm_0_0_384_192__2	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
@@ -7078,7 +7082,7 @@ sub_E8FE	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public PLAYFIELD_FILLM_0_104_384_192
 playfield_fillm_0_104_384_192	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 104
@@ -9951,6 +9955,7 @@ table_1083C	dw loc_10730
 
 ; Attributes: bp-based frame
 
+public MIDBOSS1_RENDER
 midboss1_render	proc near
 
 var_2		= word ptr -2
@@ -10045,6 +10050,7 @@ midboss1_render	endp
 
 ; Attributes: bp-based frame
 
+public SARA_FG_RENDER
 sara_fg_render	proc near
 
 var_2		= word ptr -2
@@ -10141,6 +10147,7 @@ sara_fg_render	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS2_RENDER
 midboss2_render	proc near
 
 var_2		= word ptr -2
@@ -10216,6 +10223,7 @@ midboss2_render	endp
 
 ; Attributes: bp-based frame
 
+public LOUISE_FG_RENDER
 louise_fg_render	proc near
 
 var_2		= word ptr -2
@@ -10286,6 +10294,7 @@ louise_fg_render	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS3_RENDER
 midboss3_render	proc near
 
 var_2		= word ptr -2
@@ -10529,6 +10538,7 @@ sub_10B1D	endp
 
 ; Attributes: bp-based frame
 
+public ALICE_FG_RENDER
 alice_fg_render	proc near
 
 var_2		= word ptr -2
@@ -10671,6 +10681,7 @@ sub_10D26	endp
 
 ; Attributes: bp-based frame
 
+public MAI_YUKI_FG_RENDER
 mai_yuki_fg_render	proc near
 
 var_4		= word ptr -4
@@ -10775,6 +10786,7 @@ mai_yuki_fg_render	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS4_RENDER
 midboss4_render	proc near
 
 var_2		= word ptr -2
@@ -11022,6 +11034,7 @@ sub_10F90	endp
 
 ; Attributes: bp-based frame
 
+public YUMEKO_FG_RENDER
 yumeko_fg_render	proc near
 
 var_6		= word ptr -6
@@ -11177,6 +11190,7 @@ sub_11073	endp
 
 ; Attributes: bp-based frame
 
+public SHINKI_FG_RENDER
 shinki_fg_render	proc near
 
 var_4		= word ptr -4
@@ -11269,6 +11283,7 @@ shinki_fg_render	endp
 
 ; Attributes: bp-based frame
 
+public STAGE2_INVALIDATE
 stage2_invalidate	proc near
 		push	bp
 		mov	bp, sp
@@ -11526,7 +11541,7 @@ sub_111B7	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public STAGE2_UPDATE
 stage2_update	proc near
 
 var_4		= word ptr -4
@@ -11810,6 +11825,7 @@ stage2_update	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSSX_RENDER
 midbossx_render	proc near
 		push	bp
 		mov	bp, sp
@@ -12028,6 +12044,7 @@ sub_11695	endp
 
 ; Attributes: bp-based frame
 
+public EXALICE_FG_RENDER
 exalice_fg_render	proc near
 
 var_2		= word ptr -2
@@ -12115,6 +12132,7 @@ exalice_fg_render	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS5_RENDER
 midboss5_render	proc near
 		push	bp
 		mov	bp, sp
@@ -17848,7 +17866,7 @@ score_update_and_render	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public BOSS_RESET
 boss_reset	proc near
 		push	bp
 		mov	bp, sp
@@ -23792,6 +23810,7 @@ sub_18017	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS1_UPDATE
 midboss1_update	proc far
 		push	bp
 		mov	bp, sp
@@ -24445,6 +24464,7 @@ sub_18590	endp
 
 ; Attributes: bp-based frame
 
+public SARA_UPDATE
 sara_update	proc far
 		push	bp
 		mov	bp, sp
@@ -24823,6 +24843,7 @@ sub_189FC	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS2_UPDATE
 midboss2_update	proc far
 		push	bp
 		mov	bp, sp
@@ -25531,6 +25552,7 @@ sub_18FE2	endp
 
 ; Attributes: bp-based frame
 
+public LOUISE_UPDATE
 louise_update	proc far
 		push	bp
 		mov	bp, sp
@@ -26061,6 +26083,7 @@ sub_1945D	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS3_UPDATE
 midboss3_update	proc far
 		push	bp
 		mov	bp, sp
@@ -27358,6 +27381,7 @@ sub_1A005	endp
 
 ; Attributes: bp-based frame
 
+public ALICE_UPDATE
 alice_update	proc far
 		push	bp
 		mov	bp, sp
@@ -28695,6 +28719,7 @@ mai_yuki_1AB76	endp
 
 ; Attributes: bp-based frame
 
+public MAI_YUKI_UPDATE
 mai_yuki_update	proc far
 
 var_4		= word ptr -4
@@ -29401,6 +29426,7 @@ sub_1B1E5	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS4_UPDATE
 midboss4_update	proc far
 		push	bp
 		mov	bp, sp
@@ -30283,6 +30309,7 @@ sub_1B973	endp
 
 ; Attributes: bp-based frame
 
+public YUKI_UPDATE
 yuki_update	proc far
 		push	bp
 		mov	bp, sp
@@ -32865,6 +32892,7 @@ sub_1D1C6	endp
 
 ; Attributes: bp-based frame
 
+public YUMEKO_UPDATE
 yumeko_update	proc far
 		push	bp
 		mov	bp, sp
@@ -34464,6 +34492,7 @@ sub_1E15D	endp
 
 ; Attributes: bp-based frame
 
+public SHINKI_UPDATE
 shinki_update	proc far
 		push	bp
 		mov	bp, sp
@@ -35090,6 +35119,7 @@ sub_1E6A6	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSSX_UPDATE
 midbossx_update	proc far
 		push	bp
 		mov	bp, sp
@@ -36417,6 +36447,7 @@ sub_1F23B	endp
 
 ; Attributes: bp-based frame
 
+public EXALICE_UPDATE
 exalice_update	proc far
 		push	bp
 		mov	bp, sp
@@ -37066,6 +37097,7 @@ sub_1F823	endp
 
 ; Attributes: bp-based frame
 
+public MIDBOSS5_UPDATE
 midboss5_update	proc far
 		push	bp
 		mov	bp, sp
@@ -45299,9 +45331,7 @@ word_2C938	dw ?
 include th04/boss/explosions[bss].asm
 byte_2C96C	db ?
 		db ?
-_boss_sprite_left	dw ?
-_boss_sprite_right	dw ?
-_boss_sprite_stay	dw ?
+include th05/boss/sprites[bss].asm
 byte_2C974	db ?
 		db ?
 byte_2C976	db ?
