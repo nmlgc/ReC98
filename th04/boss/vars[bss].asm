@@ -1,7 +1,9 @@
+public _boss
 public _boss_pos, _boss_hp, _boss_sprite, _boss_phase, _boss_phase_frame
 public _boss_damage_this_frame, _boss_mode, _boss_angle, _boss_mode_change
 public _boss_phase_end_hp
 
+label _boss byte
 _boss_pos	motion_t <?>
 _boss_hp	dw ?
 _boss_sprite	db ?
