@@ -20,6 +20,7 @@ char boss_phase_timed_out = 0;
 
 void pascal near boss_reset(void);
 
+#include "th04/formats/bb_stage.c"
 #include "th05/stage/setup.cpp"
 
 // Adds the entire score delta at once to the current score.
@@ -29,5 +30,7 @@ void pascal score_delta_commit(void)
 		score_update_and_render();
 	}
 }
+
+static int unused_6CAC[3];
 
 }

@@ -6,6 +6,11 @@
 #include "ReC98.h"
 #include "th04/shared.hpp"
 
+/// Formats
+/// -------
+bb_seg_t pascal near bb_load(const char far *fn);
+/// -------
+
 /// Stages
 /// ------
 void pascal near stage2_update(void);

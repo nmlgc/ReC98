@@ -17886,7 +17886,8 @@ boss_reset	proc near
 		retn
 boss_reset	endp
 
-include th04/formats/bb_stage.asm
+	BB_STAGE_LOAD procdesc near
+	BB_STAGE_FREE procdesc near
 	STAGE1_SETUP procdesc near
 	STAGE2_SETUP procdesc near
 	STAGE3_SETUP procdesc near
@@ -45513,8 +45514,5 @@ byte_2D084	db ?
 byte_2D085	db ?
 include th04/formats/bb_stage[bss].asm
 include th04/boss/hitbox[bss].asm
-		dd    ?	;
-		db    ?	;
-		db    ?	;
 
 		end

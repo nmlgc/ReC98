@@ -50,15 +50,11 @@ int pascal far select_for_rank(
 );
 /// ----
 
-/// Formats - .BB
-/// -------------
-void pascal near bb_stage_load(const char far* fn);
-/// -------------
-
-/// Formats - .CDG/.CD2
-/// -------------------
+/// Formats
+/// -------
 #include "th03/formats/cdg.h"
-/// -------------------
+#include "th04/formats/bb.h"
+/// -------
 
 /// Stages
 /// ------
