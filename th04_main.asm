@@ -13881,7 +13881,7 @@ loc_12152:
 		retn
 sub_12124	endp
 
-include th04/boss_backdrop.asm
+include th04/boss/backdrop.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -47739,7 +47739,7 @@ public _humaconfig
 _humaconfig	dd ?
 byte_2CDCA	db ?
 		db ?
-include th04/boss_backdrop[bss].asm
+include th04/boss/backdrop[bss].asm
 word_2CDCE	dw ?
 byte_2CDD0	db ?
 byte_2CDD1	db ?
@@ -47905,7 +47905,7 @@ byte_2D00A	db ?
 dream_score	dw ?
 byte_2D00E	db ?
 		db ?
-include th04/boss_funcs[bss].asm
+include th04/boss/funcs[bss].asm
 byte_2D01E	db ?
 byte_2D01F	db ?
 byte_2D020	db ?
@@ -47923,7 +47923,7 @@ byte_2D02B	db ?
 byte_2D02C	db ?
 byte_2D02D	db ?
 include th04/formats/bb_stage[bss].asm
-include th04/boss_hitbox[bss].asm
+include th04/boss/hitbox[bss].asm
 word_2D034	dw ?
 word_2D036	dw ?
 word_2D038	dw ?

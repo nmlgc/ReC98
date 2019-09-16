@@ -4040,7 +4040,7 @@ loc_D060:
 		retn
 sub_D032	endp
 
-include th04/boss_backdrop.asm
+include th04/boss/backdrop.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38663,7 +38663,7 @@ word_24494	dw ?
 word_24496	dw ?
 byte_24498	db ?
 		db ?
-include th04/boss_backdrop[bss].asm
+include th04/boss/backdrop[bss].asm
 word_2449C	dw ?
 		dd    ?	;
 		dd    ?	;
@@ -45498,7 +45498,7 @@ word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
 include th04/shots_add[bss].asm
-include th04/boss_funcs[bss].asm
+include th04/boss/funcs[bss].asm
 include th05/boss/b5_intervals[bss].asm
 		dd    ?	;
 		db    ?	;
@@ -45512,7 +45512,7 @@ byte_2D083	db ?
 byte_2D084	db ?
 byte_2D085	db ?
 include th04/formats/bb_stage[bss].asm
-include th04/boss_hitbox[bss].asm
+include th04/boss/hitbox[bss].asm
 		dd    ?	;
 		db    ?	;
 		db    ?	;
