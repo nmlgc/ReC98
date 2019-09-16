@@ -107,6 +107,8 @@ extern boss_stuff_t boss;
 extern SPPoint boss_hitbox_radius;
 
 // Callbacks
+extern  farfunc_t_near boss_update;
+extern nearfunc_t_near boss_fg_render;
 extern  farfunc_t_near boss_update_func;
 extern nearfunc_t_near boss_backdrop_colorfill;
 extern nearfunc_t_near boss_bg_render_func;
@@ -116,6 +118,9 @@ extern nearfunc_t_near boss_fg_render_func;
 	void pascal  far name##_update(void); \
 	void pascal near name##_bg_render(void); \
 	void pascal near name##_fg_render(void);
+
+// Explosions
+void pascal far explosions_small_reset(void);
 // ------
 
 /// Score

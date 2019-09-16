@@ -17862,30 +17862,7 @@ loc_144C4:
 		jmp	loc_14435
 score_update_and_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public BOSS_RESET
-boss_reset	proc near
-		push	bp
-		mov	bp, sp
-		setfarfp	_boss_update, nullsub_1
-		mov	_boss_fg_render, offset nullfunc_near
-		mov	_boss_custombullets_render, offset nullfunc_near
-		mov	_boss_phase, 0
-		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
-		mov	_boss_phase_frame, 0
-		mov	_boss_pos.velocity.x, 0
-		mov	_boss_pos.velocity.y, 0
-		mov	_boss_damage_this_frame, 0
-		call	explosions_small_reset
-		mov	_boss_phase_timed_out, 1
-		pop	bp
-		retn
-boss_reset	endp
-
+	BOSS_RESET procdesc near
 	BB_STAGE_LOAD procdesc near
 	BB_STAGE_FREE procdesc near
 	STAGE1_SETUP procdesc near

@@ -29,6 +29,9 @@ MIDBOSS_DEC(x);
 
 /// Bosses
 /// ------
+// Callbacks
+extern nearfunc_t_near boss_custombullets_render;
+
 extern unsigned int boss_sprite_left;
 extern unsigned int boss_sprite_right;
 extern unsigned int boss_sprite_stay;

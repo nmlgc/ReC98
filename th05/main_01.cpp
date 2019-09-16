@@ -16,10 +16,7 @@ void pascal near playfield_fillm_64_56_256_256(void);
 void pascal near playfield_fillm_0_0_384_192__1(void);
 void pascal near playfield_fillm_0_104_384_192(void);
 
-char boss_phase_timed_out = 0;
-
-void pascal near boss_reset(void);
-
+#include "th04/boss/reset.cpp"
 #include "th04/formats/bb_stage.c"
 #include "th05/stage/setup.cpp"
 
