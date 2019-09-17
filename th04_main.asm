@@ -28,6 +28,9 @@ include th04/th04.asm
 	extern _strlen:proc
 	extern _tolower:proc
 
+	.seq
+main_01 group main_01_TEXT, main_011_TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -248,7 +251,7 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 main_01_TEXT	segment	word public 'CODE' use16
-		assume cs:main_01_TEXT
+		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -285,7 +288,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_11F96
+		call	main_01:sub_11F96
 		or	ax, ax
 		jz	short loc_AB86
 		mov	word_24CB2, 4E20h
@@ -295,7 +298,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _humaconfig
 		mov	eax, es:[bx+14h]
 		mov	random_seed, eax
-		call	sub_B488
+		call	main_01:sub_B488
 		call	text_clear
 		call	gaiji_backup
 		push	ds
@@ -312,18 +315,18 @@ _envp		= dword	ptr  0Ch
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 
 loc_AB6B:
-		call	sub_AED0
-		call	sub_AB88
+		call	main_01:sub_AED0
+		call	main_01:sub_AB88
 		cmp	byte_266D2, 2
 		jnz	short loc_AB7D
-		call	sub_B29E
+		call	main_01:sub_B29E
 		jmp	short loc_AB6B
 ; ---------------------------------------------------------------------------
 
 loc_AB7D:
 		push	ds
 		push	offset arg0	; "op"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 
 loc_AB86:
 		pop	bp
@@ -342,14 +345,14 @@ sub_AB88	proc near
 		mov	word_266D0, 1
 		push	1
 		call	frame_delay
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 
 loc_AB9E:
 		call	_input_sense
 		call	fp_23D90
 		test	_input.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
-		call	sub_B2CF
+		call	main_01:sub_B2CF
 		or	ax, ax
 		jz	short loc_ABBA
 		mov	byte_266D2, 1
@@ -368,11 +371,11 @@ loc_ABD4:
 		call	fp_255AA
 
 loc_ABD8:
-		call	sub_BCF4
-		call	circles_update
+		call	main_01:sub_BCF4
+		call	main_01:circles_update
 		call	sparks_update
-		call	sub_10ABF
-		call	sub_104B6
+		call	main_01:sub_10ABF
+		call	main_01:sub_104B6
 		call	sub_1C8C8
 		call	sub_17E59
 		call	_midboss_update
@@ -380,24 +383,24 @@ loc_ABD8:
 		call	sub_1DE5D
 		call	sub_13BCE
 		call	_stage_render
-		call	sub_1020A
+		call	main_01:sub_1020A
 		call	_boss_fg_render
 		call	_midboss_render
-		call	sub_10713
-		call	sub_10552
-		call	sub_10BFD
-		call	grcg_setmode_rmw_1
+		call	main_01:sub_10713
+		call	main_01:sub_10552
+		call	main_01:sub_10BFD
+		call	main_01:grcg_setmode_rmw_1
 		call	sub_13C5C
-		call	sparks_render
-		call	sub_12DF0
-		call	loc_BD64
-		call	sub_12CE5
-		call	circles_render
+		call	main_01:sparks_render
+		call	main_01:sub_12DF0
+		call	main_01:loc_BD64
+		call	main_01:sub_12CE5
+		call	main_01:circles_render
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay_text_fp
 		call	_popup_fp
-		call	sub_CD36
-		call	far ptr	_input_reset_sense
+		call	main_01:sub_CD36
+		call	main_01:far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
 		cmp	ax, word_266D0
 		jb	short loc_AC56
@@ -412,7 +415,7 @@ loc_AC58:
 		cwde
 		add	dword_22BA0, eax
 		inc	dword_22BA4
-		call	sub_AAF2
+		call	main_01:sub_AAF2
 		cmp	_palette_changed, 0
 		jz	short loc_AC7A
 		call	far ptr	palette_show
@@ -420,7 +423,7 @@ loc_AC58:
 		jmp	short $+2
 
 loc_AC7A:
-		call	sub_CCD6
+		call	main_01:sub_CCD6
 		graph_accesspage _page_front
 		graph_showpage _page_back
 		mov	_page_front, al
@@ -469,7 +472,7 @@ loc_ACDE:
 		jmp	short $+2
 
 loc_ACF4:
-		call	score_update_and_render
+		call	main_01:score_update_and_render
 		cmp	byte_266D2, 0
 		jz	loc_AB9E
 		pop	si
@@ -519,7 +522,7 @@ loc_AD3B:
 		mov	es:[bx+0Dh], al
 		mov	al, es:[bx+0Ch]
 		mov	es:[bx+0Bh], al
-		call	bb_txt_load
+		call	main_01:bb_txt_load
 		cmp	playchar, 0
 		jnz	short loc_AD90
 		mov	word_259B4, 26h	; '&'
@@ -583,8 +586,8 @@ loc_ADEA:
 		mov	byte_266E0, al
 
 loc_ADFC:
-		call	sub_EEB0
-		call	sub_12CC7
+		call	main_01:sub_EEB0
+		call	main_01:sub_12CC7
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
@@ -678,11 +681,11 @@ loc_AEF9:
 		mov	word_213DE, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		mov	fp_23D90, offset nullfunc_near
-		call	sub_AD03
+		call	main_01:sub_AD03
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jz	short loc_AF4A
-		call	sub_B3EE
+		call	main_01:sub_B3EE
 		les	bx, _humaconfig
 		mov	al, es:[bx+3Ch]
 		mov	es:[bx+11h], al
@@ -694,7 +697,7 @@ loc_AEF9:
 		mov	random_seed, 13Eh
 
 loc_AF4A:
-		call	sub_12024
+		call	main_01:sub_12024
 		graph_accesspage 0
 		graph_showpage al
 		push	ds
@@ -703,16 +706,16 @@ loc_AF4A:
 		call	far ptr	palette_show
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_12024
-		call	sub_10D4B
-		call	sub_B1D0
-		nopcall	sub_F204
-		call	sub_B616
+		call	main_01:sub_12024
+		call	main_01:sub_10D4B
+		call	main_01:sub_B1D0
+		nopcall	main_01:sub_F204
+		call	main_01:sub_B616
 		call	sub_19EBC
 		cmp	word_213DE, 0
 		jz	short loc_AFD5
-		call	sub_B530
-		call	bb_playchar_load
+		call	main_01:sub_B530
+		call	main_01:bb_playchar_load
 		cmp	playchar, 0
 		jnz	short loc_AFA0
 		push	ds
@@ -835,7 +838,7 @@ loc_B0B2:
 		call	stage4_setup
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
-		call	sub_B8FC
+		call	main_01:sub_B8FC
 		mov	_stage_render, offset stage4_render
 		jmp	short loc_B144
 ; ---------------------------------------------------------------------------
@@ -875,13 +878,13 @@ loc_B11E:
 		push	offset aSt06_mpn ; "st06.mpn"
 
 loc_B141:
-		call	sub_B8FC
+		call	main_01:sub_B8FC
 
 loc_B144:
-		call	map_load
-		call	std_load
-		call	sub_CED4
-		call	sub_BAA2
+		call	main_01:map_load
+		call	main_01:std_load
+		call	main_01:sub_CED4
+		call	main_01:sub_BAA2
 		graph_accesspage 0
 
 loc_B156:
@@ -891,13 +894,13 @@ loc_B156:
 		call	palette_black_out
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		call	sub_10D77
-		call	tiles_render_all
+		call	main_01:sub_10D77
+		call	main_01:tiles_render_all
 		mov	_page_back, 1
 		mov	_page_front, 0
 		graph_accesspage 1
 		graph_showpage 0
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_B1AE
@@ -905,7 +908,7 @@ loc_B156:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B1AE:
-		nopcall	sub_CB99
+		nopcall	main_01:sub_CB99
 		mov	_overlay_text_fp, offset sub_10DA3
 		mov	_popup_fp, offset nullfunc_near
 		pop	si
@@ -929,7 +932,7 @@ off_B1C2	dw offset loc_B003
 sub_B1D0	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_11ECB
+		call	main_01:sub_11ECB
 		mov	frame, 0
 		mov	byte_2D00A, 0
 		mov	_scroll_line, 0
@@ -957,18 +960,18 @@ sub_B1D0	proc near
 		mov	dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
 		mov	_scroll_active, 1
-		call	sub_1042A
-		nopcall	sub_11DE6
-		call	randring_fill
+		call	main_01:sub_1042A
+		nopcall	main_01:sub_11DE6
+		call	main_01:randring_fill
 		call	sub_1DA1B
-		call	sub_FFA4
+		call	main_01:sub_FFA4
 		call	sparks_init
-		call	sub_11692
+		call	main_01:sub_11692
 		call	sub_15D74
-		call	sub_BCB2
-		nopcall	sub_F204
+		call	main_01:sub_BCB2
+		nopcall	main_01:sub_F204
 		mov	fp_255AC, offset tiles_render_all
-		call	tiles_invalidate_reset
+		call	main_01:tiles_invalidate_reset
 		pop	bp
 		retn
 sub_B1D0	endp
@@ -983,9 +986,9 @@ sub_B29E	proc near
 		mov	bp, sp
 		push	si
 		call	bb_stage_free
-		call	sub_CF1E
-		call	std_free
-		call	map_free
+		call	main_01:sub_CF1E
+		call	main_01:std_free
+		call	main_01:map_free
 		push	800100h
 		call	super_clean
 		mov	si, 8
@@ -1018,7 +1021,7 @@ sub_B2CF	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B2D7:
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 
 loc_B2DC:
 		cmp	_input, INPUT_NONE
@@ -1082,7 +1085,7 @@ loc_B395:
 ; ---------------------------------------------------------------------------
 
 loc_B3A7:
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 
 loc_B3AC:
 		cmp	_input, INPUT_NONE
@@ -1161,7 +1164,7 @@ loc_B46D:
 		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 
 loc_B486:
 		pop	bp
@@ -1390,7 +1393,7 @@ arg_4		= word ptr  0Ah
 		mov	[bp+var_1], al
 		mov	_scroll_active, 1
 		lea	ax, [di+(16 shl 4)]
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	di, ax
 		mov	bx, 10h
 		cwd
@@ -1430,7 +1433,7 @@ sub_B7B9	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 		pop	bp
 		retf
 sub_B7B9	endp
@@ -1451,7 +1454,7 @@ sub_B7E4	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 		pop	bp
 		retf
 sub_B7E4	endp
@@ -1471,7 +1474,7 @@ sub_B80F	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 		pop	bp
 		retf
 sub_B80F	endp
@@ -1554,8 +1557,8 @@ loc_B8CE:
 		add	byte_25104, al
 		cmp	_scroll_active, 0
 		jz	short loc_B896
-		call	egc_start_copy_inlined_noframe
-		call	sub_BAEE
+		call	main_01:egc_start_copy_inlined_noframe
+		call	main_01:sub_BAEE
 		mov	byte_25104, 0
 		call	egc_off
 
@@ -1653,7 +1656,7 @@ map_load	proc near
 		push	ax
 		push	size map_header_t
 		call	file_read
-		call	map_free
+		call	main_01:map_free
 		push	[bp+@@mh.map_size]
 		call	hmem_allocbyte
 		mov	map_seg, ax
@@ -1886,7 +1889,7 @@ loc_BCCC:
 		add	ax, (8 shl 4)
 
 loc_BCE3:
-		call	tiles_invalidate_around pascal, word ptr [si+6], ax
+		call	main_01:tiles_invalidate_around pascal, word ptr [si+6], ax
 
 loc_BCEA:
 		add	si, 10h
@@ -2007,7 +2010,7 @@ loc_BD96:
 		add	dx, 0Ch
 		mov	ax, [si+4]
 		add	ax, (12 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	bp, 4
 		add	si, 0Bh
 
@@ -2028,12 +2031,12 @@ loc_BDBB:
 loc_BDC6:
 		xor	cx, cx
 		mov	cl, [si]
-		call	numerals_draw
+		call	main_01:numerals_draw
 		dec	si
 		dec	bp
 		jnz	short loc_BDC6
 		xor	cx, cx
-		call	numerals_draw
+		call	main_01:numerals_draw
 
 loc_BDD6:
 		mov	word ptr [si+5], 28h
@@ -2041,9 +2044,9 @@ loc_BDD6:
 		jz	short loc_BDF1
 		add	word ptr [si+5], 10h
 		mov	cx, 0Ah
-		call	numerals_draw
+		call	main_01:numerals_draw
 		mov	cx, 0Bh
-		call	numerals_draw
+		call	main_01:numerals_draw
 
 loc_BDF1:
 		add	di, 2
@@ -2253,7 +2256,7 @@ loc_BF48:
 		sub	dx, RES_Y
 
 loc_BF62:
-		call	sub_11FC8
+		call	main_01:sub_11FC8
 
 loc_BF65:
 		shl	[bp+var_1], 1
@@ -2311,7 +2314,7 @@ loc_BFBB:
 loc_BFC1:
 		test	[bp+var_1], 80h
 		jnz	short loc_BFCE
-		call	tiles_invalidate_around pascal, large [bp+var_6]
+		call	main_01:tiles_invalidate_around pascal, large [bp+var_6]
 
 loc_BFCE:
 		shl	[bp+var_1], 1
@@ -2515,7 +2518,7 @@ sub_C0FC	proc near
 loc_C10D:
 		cmp	byte ptr [si], 0
 		jz	short loc_C119
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_C119:
 		add	si, 14h
@@ -2532,7 +2535,7 @@ loc_C125:
 		inc	ax
 		mov	_tile_invalidate_box.x, ax
 		mov	_tile_invalidate_box.y, ax
-		call	tiles_invalidate_around pascal, large dword ptr [si+2]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+2]
 
 loc_C13E:
 		add	si, 0Ah
@@ -2571,7 +2574,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	si, 41F6h
 		mov	[bp+var_2], 0
 		jmp	short loc_C1F5
@@ -2603,12 +2606,12 @@ loc_C19A:
 		jge	short loc_C1E6
 		mov	ax, _drawpoint.y
 		add	ax, (16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, _drawpoint.x
 		sar	ax, 4
 		add	ax, 32
-		call	sub_C332
+		call	main_01:sub_C332
 
 loc_C1E6:
 		add	di, 4
@@ -2795,14 +2798,14 @@ loc_C464:
 		jb	short loc_C482
 
 loc_C474:
-		call	sub_C4DA
+		call	main_01:sub_C4DA
 		cmp	di, 7D00h
 		jb	short loc_C474
 		sub	di, 7D00h
 		nop
 
 loc_C482:
-		call	sub_C4DA
+		call	main_01:sub_C4DA
 		jnz	short loc_C482
 		lodsw
 		cmp	al, 80h
@@ -2823,14 +2826,14 @@ loc_C492:
 		jb	short loc_C4B0
 
 loc_C4A2:
-		call	sub_C50C
+		call	main_01:sub_C50C
 		cmp	di, 7D00h
 		jb	short loc_C4A2
 		sub	di, 7D00h
 		nop
 
 loc_C4B0:
-		call	sub_C50C
+		call	main_01:sub_C50C
 		jnz	short loc_C4B0
 		lodsw
 		cmp	al, 80h
@@ -2937,7 +2940,7 @@ loc_C75D:
 		jz	short loc_C76E
 		cmp	byte ptr [si], 3
 		jz	short loc_C76E
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_C76E:
 		add	si, 40h
@@ -2966,7 +2969,7 @@ midboss1_render	proc near
 		sar	ax, 4
 		add	ax, 16
 		mov	di, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
 		mov	si, ax
 		push	di
 		push	ax
@@ -2983,7 +2986,7 @@ loc_C7A1:
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -2993,7 +2996,7 @@ loc_C7A1:
 		call	super_roll_put
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3017,7 +3020,7 @@ loc_C7E6:
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		cmp	_midboss_damage_this_frame, 0
 		jnz	short loc_C836
@@ -3033,7 +3036,7 @@ loc_C7E6:
 		call	super_roll_put
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3055,7 +3058,7 @@ loc_C836:
 		call	super_roll_put_1plane
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	si, ax
 		push	di
 		push	ax
@@ -3069,7 +3072,7 @@ loc_C836:
 loc_C877:
 		cmp	_midboss_phase, 0FEh
 		jnz	short loc_C881
-		call	sub_11A9A
+		call	main_01:sub_11A9A
 
 loc_C881:
 		pop	di
@@ -3103,11 +3106,11 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	_midboss_phase, 0FEh
 		jnz	short loc_C8D2
-		call	sub_11A9A
+		call	main_01:sub_11A9A
 		jmp	short loc_C946
 ; ---------------------------------------------------------------------------
 
@@ -3195,7 +3198,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, 16
 		mov	[bp+var_2], ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
 		mov	[bp+var_4], ax
 		mov	al, frame_mod16
 		mov	ah, 0
@@ -3411,7 +3414,7 @@ sub_CA98	proc near
 loc_CABA:
 		cmp	byte ptr [si], 0
 		jz	short loc_CAC6
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_CAC6:
 		add	si, 1Ah
@@ -3428,13 +3431,13 @@ loc_CAD8:
 		cmp	byte ptr [si+12h], 1
 		jbe	short loc_CAF6
 		shl	_tile_invalidate_box, 1
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 		shr	_tile_invalidate_box, 1
 		jmp	short loc_CAFD
 ; ---------------------------------------------------------------------------
 
 loc_CAF6:
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_CAFD:
 		add	si, 1Ah
@@ -3451,7 +3454,7 @@ loc_CB09:
 		add	ax, 16
 		mov	_tile_invalidate_box.x, ax
 		mov	_tile_invalidate_box.y, ax
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
 
 loc_CB24:
 		add	si, 2Ah	; '*'
@@ -3473,17 +3476,17 @@ include th04/tiles_invalidate_all.asm
 sub_CB58	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_10EED
-		call	sub_107E2
-		call	sub_10444
-		call	sub_C74C
-		call	sub_CA98
-		call	sub_C0FC
+		call	main_01:sub_10EED
+		call	main_01:sub_107E2
+		call	main_01:sub_10444
+		call	main_01:sub_C74C
+		call	main_01:sub_CA98
+		call	main_01:sub_C0FC
 		call	sparks_invalidate
-		call	sub_BCBE
+		call	main_01:sub_BCBE
 		call	_midboss_invalidate?
 		call	_stage_invalidate
-		call	tiles_redraw_invalidated
+		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
 sub_CB58	endp
@@ -3496,7 +3499,7 @@ sub_CB58	endp
 sub_CB80	proc near
 		push	bp
 		mov	bp, sp
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		dec	byte_255B0
 		cmp	byte_255B0, 0
 		jnz	short loc_CB97
@@ -3560,7 +3563,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	_midboss_phase, 2
 		ja	short loc_CCD2
@@ -3665,7 +3668,7 @@ loc_CD23:
 		mov	_scroll_last_delta, ax
 
 loc_CD31:
-		call	sub_B835
+		call	main_01:sub_B835
 		pop	bp
 		retn
 sub_CCD6	endp
@@ -3754,7 +3757,7 @@ loc_CDEA:
 		cmp	byte_22B9C, 0	; value	table for switch statement
 		jz	short loc_CE04
 		dec	byte_22B9C
-		call	tiles_invalidate_all
+		call	main_01:tiles_invalidate_all
 		mov	word_255BE, 0
 		mov	word_255C0, 0	; jump table for switch	statement
 
@@ -3788,7 +3791,7 @@ var_2		= word ptr -2
 		mov	di, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	_midboss_phase, 2
 		ja	short loc_CE85
@@ -3823,7 +3826,7 @@ loc_CE6E:
 loc_CE85:
 		cmp	_midboss_phase, 0FEh
 		jnz	short loc_CE8F
-		call	sub_11A9A
+		call	main_01:sub_11A9A
 
 loc_CE8F:
 		pop	di
@@ -3883,7 +3886,7 @@ sub_CED4	proc near
 		mov	es:[bx+4], al
 		push	word ptr off_22BAA+2
 		push	bx
-		call	sub_CE93
+		call	main_01:sub_CE93
 		pop	bp
 		retn
 sub_CED4	endp
@@ -3902,7 +3905,7 @@ sub_CF01	proc far
 		mov	es:[bx+3], al
 		push	word ptr off_22BAE+2
 		push	bx
-		call	sub_CE93
+		call	main_01:sub_CE93
 		pop	bp
 		retf
 sub_CF01	endp
@@ -3958,11 +3961,11 @@ sub_CF44	proc near
 
 loc_CF63:
 		call	cdg_free pascal, 31
-		call	std_free
-		call	map_free
+		call	main_01:std_free
+		call	main_01:map_free
 
 loc_CF70:
-		nopcall	sub_D6EB
+		nopcall	main_01:sub_D6EB
 		mov	fp_255CA, offset sub_CF3D
 		mov	ax, _boss_bg_render_func
 		mov	_boss_bg_render, ax
@@ -4052,7 +4055,7 @@ sub_D016	proc near
 		push	bp
 		mov	bp, sp
 		push	di
-		call	egc_start_copy_inlined_noframe
+		call	main_01:egc_start_copy_inlined_noframe
 		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
@@ -4094,7 +4097,7 @@ arg_2		= word ptr  6
 		push	bp
 		mov	bp, sp
 		push	di
-		call	egc_start_copy_inlined_noframe
+		call	main_01:egc_start_copy_inlined_noframe
 		mov	ax, [bp+arg_0]
 		mov	bx, ax
 		shl	ax, 2
@@ -4146,10 +4149,10 @@ sub_D098	proc near
 loc_D0A6:
 		push	3000C0h
 		push	si
-		call	sub_CFBE
+		call	main_01:sub_CFBE
 		push	500140h
 		push	si
-		call	sub_CFBE
+		call	main_01:sub_CFBE
 		push	0Ch
 		call	frame_delay
 		inc	si
@@ -4271,7 +4274,7 @@ arg_0		= dword	ptr  4
 		jnz	short loc_D1AF
 		inc	word ptr dword_255CC
 		pushd	[bp+arg_0]
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		pop	bp
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -4345,7 +4348,7 @@ loc_D20A:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		push	1
 		call	frame_delay
 		mov	ax, [bp+var_2]
@@ -4369,7 +4372,7 @@ loc_D245:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_D268
 		push	[bp+var_2]
@@ -4398,7 +4401,7 @@ loc_D28B:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		cmp	[bp+arg_0], 69h	; 'i'
 		jnz	short loc_D2AE
 		push	[bp+var_2]
@@ -4420,7 +4423,7 @@ loc_D2B9:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		xor	si, si
 		jmp	short loc_D2EF
 ; ---------------------------------------------------------------------------
@@ -4454,7 +4457,7 @@ loc_D2FE:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		mov	ax, word_255D0
 		mov	bx, 8
 		cwd
@@ -4477,7 +4480,7 @@ loc_D337:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		push	[bp+var_2]
 		call	_input_wait_for_change
 		jmp	loc_D478
@@ -4488,13 +4491,13 @@ loc_D350:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		push	1
 		call	frame_delay
 		cmp	word_255D4, 0
 		jnz	short loc_D38A
 		push	2000F0h
-		call	sub_D04E
+		call	main_01:sub_D04E
 		cmp	[bp+var_2], 0FFh
 		jz	loc_D528	; default
 		add	[bp+var_2], 2
@@ -4504,7 +4507,7 @@ loc_D350:
 
 loc_D38A:
 		push	1200070h
-		call	sub_D04E
+		call	main_01:sub_D04E
 		cmp	[bp+var_2], 0FFh
 		jz	loc_D528	; default
 		add	[bp+var_2], 8
@@ -4521,15 +4524,15 @@ loc_D3B0:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		call	sub_D193
+		call	main_01:sub_D193
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D193
+		call	main_01:sub_D193
 		push	1
 		call	frame_delay
 		push	[bp+var_4]
@@ -4611,7 +4614,7 @@ loc_D47B:
 		push	ss		; jumptable 0000D1EC case 101
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_D0CA
+		call	main_01:sub_D0CA
 		call	snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
 		call	snd_se_update
@@ -4758,7 +4761,7 @@ loc_D57A:
 		mov	[bp+var_1], al
 		inc	word ptr dword_255CC
 		push	word ptr [bp+var_1]
-		call	sub_D1BC
+		call	main_01:sub_D1BC
 		cmp	al, 0FFh
 		jnz	short loc_D57A
 		jmp	loc_D6E4
@@ -4827,7 +4830,7 @@ loc_D62B:
 		mov	[bp+var_2], 0
 
 loc_D63F:
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 		les	bx, dword_255CC
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
@@ -4845,7 +4848,7 @@ loc_D63F:
 		mov	[bp+var_1], al
 		inc	word ptr dword_255CC
 		push	word ptr [bp+var_1]
-		call	sub_D1BC
+		call	main_01:sub_D1BC
 		cmp	al, 0FFh
 		jnz	short loc_D63F
 		jmp	loc_D57A
@@ -4892,7 +4895,7 @@ loc_D6DC:
 ; ---------------------------------------------------------------------------
 
 loc_D6E4:
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		pop	di
 		pop	si
 		leave
@@ -4907,17 +4910,17 @@ sub_D56C	endp
 sub_D6EB	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_D729
-		call	sub_10D4B
+		call	main_01:sub_D729
+		call	main_01:sub_10D4B
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		call	sub_D098
-		call	sub_D016
-		call	sub_D56C
+		call	main_01:sub_D098
+		call	main_01:sub_D016
+		call	main_01:sub_D56C
 		push	2
-		nopcall	sub_CBA4
-		call	sub_D7EE
+		nopcall	main_01:sub_CBA4
+		call	main_01:sub_D7EE
 		graph_accesspage _page_back
 		push	1
 		call	frame_delay
@@ -5124,7 +5127,7 @@ shot_marisa_l0	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DA70
@@ -5145,17 +5148,17 @@ shot_marisa_l1	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DAA3
 		add	ax, 0Ah
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 0Ah
 
@@ -5202,7 +5205,7 @@ loc_DADA:
 		ja	short loc_DB39
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB17
@@ -5214,7 +5217,7 @@ loc_DADA:
 		mov	[si+2],	ax
 
 loc_DB17:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB45
@@ -5246,7 +5249,7 @@ shot_marisa_a_l2	proc near
 		push	si
 		push	40h
 		push	0
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DB7C
@@ -5256,17 +5259,17 @@ loc_DB62:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 9
 		jmp	short loc_DB85
 ; ---------------------------------------------------------------------------
 
 loc_DB7C:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DB62
@@ -5287,7 +5290,7 @@ shot_marisa_a_l3	proc near
 		mov	di, 2
 		push	48h ; 'H'
 		push	0
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DBC1
@@ -5310,7 +5313,7 @@ loc_DBB5:
 		jle	short loc_DBCA
 
 loc_DBC1:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBA4
@@ -5332,7 +5335,7 @@ shot_marisa_a_l4	proc near
 		mov	di, 2
 		push	58h ; 'X'
 		push	1
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DC07
@@ -5355,7 +5358,7 @@ loc_DBFB:
 		jle	short loc_DC10
 
 loc_DC07:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBEA
@@ -5376,7 +5379,7 @@ shot_marisa_a_l5	proc near
 		mov	di, 3
 		push	68h ; 'h'
 		push	1
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -5387,7 +5390,7 @@ loc_DC35:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5397,7 +5400,7 @@ loc_DC35:
 		jle	short loc_DC5C
 
 loc_DC53:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC35
@@ -5418,7 +5421,7 @@ shot_marisa_a_l6	proc near
 		mov	di, 3
 		push	80h
 		push	2
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -5429,7 +5432,7 @@ loc_DC82:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5439,7 +5442,7 @@ loc_DC82:
 		jle	short loc_DCA9
 
 loc_DCA0:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC82
@@ -5460,7 +5463,7 @@ shot_marisa_a_l7	proc near
 		mov	di, 3
 		push	90h
 		push	3
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	byte ptr [bp-1], 0B8h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -5471,7 +5474,7 @@ loc_DCCF:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5481,7 +5484,7 @@ loc_DCCF:
 		jle	short loc_DCF6
 
 loc_DCED:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DCCF
@@ -5502,7 +5505,7 @@ shot_marisa_a_l8	proc near
 		mov	di, 5
 		push	0A8h ; '¨'
 		push	3
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -5513,7 +5516,7 @@ loc_DD1C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -5523,7 +5526,7 @@ loc_DD1C:
 		jle	short loc_DD43
 
 loc_DD3A:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD1C
@@ -5544,7 +5547,7 @@ shot_marisa_a_l9	proc near
 		mov	di, 5
 		push	0C0h
 		push	4
-		call	sub_DAA6
+		call	main_01:sub_DAA6
 		mov	byte ptr [bp-1], 0B4h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -5555,7 +5558,7 @@ loc_DD69:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -5565,7 +5568,7 @@ loc_DD69:
 		jle	short loc_DD90
 
 loc_DD87:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD69
@@ -5597,10 +5600,10 @@ loc_DDA9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 0Ah
 		jmp	short loc_DDE7
 ; ---------------------------------------------------------------------------
@@ -5625,7 +5628,7 @@ loc_DDE7:
 		jle	short loc_DDF3
 
 loc_DDEA:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DDA9
@@ -5688,7 +5691,7 @@ loc_DE4C:
 		jle	short loc_DE58
 
 loc_DE4F:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE0C
@@ -5750,7 +5753,7 @@ loc_DEA3:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
 		push	100h
@@ -5762,7 +5765,7 @@ loc_DEC6:
 		jle	short loc_DED2
 
 loc_DEC9:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE71
@@ -5794,7 +5797,7 @@ loc_DEF0:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-1]
 		add	al, 8
@@ -5820,7 +5823,7 @@ loc_DF23:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
 		push	100h
@@ -5833,7 +5836,7 @@ loc_DF46:
 		jle	short loc_DF52
 
 loc_DF49:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DEF0
@@ -5865,7 +5868,7 @@ loc_DF70:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
 		add	al, 8
@@ -5911,7 +5914,7 @@ loc_DFD1:
 		jle	short loc_DFDD
 
 loc_DFD4:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DF70
@@ -5955,7 +5958,7 @@ loc_E004:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 8
 		mov	al, byte ptr [bp+var_3]
 		add	al, 0Ah
@@ -6001,7 +6004,7 @@ loc_E065:
 		jle	short loc_E071
 
 loc_E068:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_E004
@@ -6057,7 +6060,7 @@ loc_E0B4:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E115
@@ -6105,7 +6108,7 @@ loc_E115:
 		jle	short loc_E123
 
 loc_E118:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E099
@@ -6161,7 +6164,7 @@ loc_E166:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E1D5
@@ -6219,7 +6222,7 @@ loc_E1D5:
 		jle	short loc_E1E3
 
 loc_E1D8:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E14B
@@ -6334,23 +6337,23 @@ loc_E276:
 		mov	al, frame_mod2
 		add	al, 8
 		mov	ah, al
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	si, word ptr dword_2560C+2
-		call	scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
 		mov	dx, ax
 		mov	ax, word ptr dword_2560C
 		sar	ax, 4
 		add	ax, 4
 		mov	bx, di
-		call	sub_BE68
+		call	main_01:sub_BE68
 		mov	si, word ptr dword_2560C+2
-		call	scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
 		mov	dx, ax
 		mov	ax, word ptr dword_2560C
 		sar	ax, 4
 		add	ax, 34h	; '4'
 		mov	bx, di
-		call	sub_BE68
+		call	main_01:sub_BE68
 
 loc_E2B4:
 		pop	di
@@ -6562,7 +6565,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 24h	; '$'
 		jb	short loc_E47B
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E4CD
@@ -6638,7 +6641,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 0
 		jnz	short loc_E4EB
-		call	sub_10D77
+		call	main_01:sub_10D77
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E53D
@@ -6712,13 +6715,13 @@ var_2		= word ptr -2
 		enter	2, 0
 		cmp	stage_id, 5
 		jnz	short loc_E551
-		nopcall	sub_B7E4
+		nopcall	main_01:sub_B7E4
 
 loc_E551:
 		mov	byte_25660, 20h	; ' '
 
 loc_E556:
-		call	sub_E4D1
+		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E566
 		push	1
@@ -6731,7 +6734,7 @@ loc_E566:
 		call	far ptr	palette_show
 
 loc_E571:
-		call	sub_E461
+		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E581
 		push	1
@@ -6771,14 +6774,14 @@ loc_E5EF:
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
 		push	0
 		call	_input_wait_for_change
-		call	sub_10D4B
-		call	sub_E67A
+		call	main_01:sub_10D4B
+		call	main_01:sub_E67A
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	byte_25660, 20h	; ' '
 
 loc_E61E:
-		call	sub_E4D1
+		call	main_01:sub_E4D1
 		or	al, al
 		jnz	short loc_E62E
 		push	1
@@ -6793,7 +6796,7 @@ loc_E62E:
 		call	far ptr	palette_show
 
 loc_E63F:
-		call	sub_E461
+		call	main_01:sub_E461
 		or	al, al
 		jnz	short loc_E64F
 		push	1
@@ -6802,7 +6805,7 @@ loc_E63F:
 ; ---------------------------------------------------------------------------
 
 loc_E64F:
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		jmp	short loc_E675
 ; ---------------------------------------------------------------------------
 
@@ -6815,7 +6818,7 @@ loc_E654:
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_2	; "maine"
-		nopcall	sub_E7FD
+		nopcall	main_01:sub_E7FD
 
 loc_E675:
 		mov	al, byte ptr [bp+var_2]
@@ -6856,7 +6859,7 @@ var_1		= byte ptr -1
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 
 loc_E703:
 		call	_input_sense
@@ -6926,7 +6929,7 @@ loc_E783:
 		mov	si, _input
 
 loc_E787:
-		call	far ptr	_input_reset_sense
+		call	main_01:far ptr	_input_reset_sense
 		push	1
 		call	frame_delay
 		jmp	loc_E703
@@ -6935,7 +6938,7 @@ loc_E787:
 loc_E796:
 		or	di, di
 		jnz	short loc_E7D8
-		call	sub_12CB5
+		call	main_01:sub_12CB5
 		mov	power, 1
 		mov	dream_items_collected, 0
 		les	bx, _humaconfig
@@ -6943,9 +6946,9 @@ loc_E796:
 		mov	es:[bx+0Dh], al
 		mov	al, es:[bx+0Ch]
 		mov	es:[bx+0Bh], al
-		nopcall	sub_11DE6
-		nopcall	sub_EEE8
-		nopcall	sub_EFA1
+		nopcall	main_01:sub_11DE6
+		nopcall	main_01:sub_EEE8
+		nopcall	main_01:sub_EFA1
 		inc	_continues_used
 		call	sub_EEB0
 		call	sub_11692
@@ -7003,7 +7006,7 @@ _arg0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		call	sub_E7DE
+		call	main_01:sub_E7DE
 		cmp	word_266DE, 0
 		jz	short loc_E813
 		push	word_266DE
@@ -7029,13 +7032,13 @@ loc_E813:
 		mov	es:[bx+40h], eax
 		mov	eax, dword_22BA4
 		mov	es:[bx+44h], eax
-		call	bb_txt_free
+		call	main_01:bb_txt_free
 		call	cdg_freeall
 		call	bb_stage_free
-		call	sub_CF1E
-		call	bb_playchar_free
-		call	std_free
-		call	map_free
+		call	main_01:sub_CF1E
+		call	main_01:bb_playchar_free
+		call	main_01:std_free
+		call	main_01:map_free
 		call	super_free
 		call	graph_hide
 		call	text_clear
@@ -7168,9 +7171,9 @@ loc_E98E:
 		sar	ax, 4
 		add	ax, -16
 		mov	di, ax
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		mov	dx, 80
@@ -7201,9 +7204,9 @@ loc_E9DD:
 		sar	ax, 4
 		add	ax, 16
 		mov	di, ax
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	si
 		push	di
 		push	10h
@@ -7221,9 +7224,9 @@ loc_EA0D:
 		sar	ax, 4
 		add	ax, -16
 		mov	di, ax
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, _boss_phase_frame
 		shl	ax, 3
 		add	ax, 16
@@ -7247,7 +7250,7 @@ loc_EA5B:
 		call	explosions_big_update_and_render
 		cmp	_boss_phase, 0FFh
 		jnb	short loc_EA6B
-		call	sub_E2C3
+		call	main_01:sub_E2C3
 
 loc_EA6B:
 		pop	di
@@ -7347,7 +7350,7 @@ var_2		= word ptr -2
 		push	di
 		mov	_tile_invalidate_box.x, PLAYFIELD_W
 		mov	_tile_invalidate_box.y, 2
-		call	tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
+		call	main_01:tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
 		mov	ax, _scroll_line
 		mov	bx, 10h
 		cwd
@@ -7414,7 +7417,7 @@ loc_EB72:
 loc_EB7A:
 		cmp	[bp+var_2], 19h
 		jl	short loc_EB55
-		call	tiles_invalidate_all
+		call	main_01:tiles_invalidate_all
 		mov	byte_25668, 0
 		jmp	short loc_EBEA
 ; ---------------------------------------------------------------------------
@@ -7426,7 +7429,7 @@ loc_EB8A:
 		jb	short loc_EBEA
 		push	word_22D9C
 		push	1
-		call	sub_EA8A
+		call	main_01:sub_EA8A
 		cmp	frame_mod4, 0
 		jnz	short loc_EBEA
 		inc	word_22D9C
@@ -7440,7 +7443,7 @@ loc_EBB6:
 		jnz	short loc_EBE4
 		push	word_22D9C
 		push	2
-		call	sub_EA8A
+		call	main_01:sub_EA8A
 		cmp	frame_mod4, 0
 		jnz	short loc_EBEA
 		inc	word_22D9C
@@ -7501,7 +7504,7 @@ loc_EC24:
 		add	bx, bx
 		mov	ax, [bx-430Ch]
 		add	ax, (-24 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		mov	ax, si
 		shl	ax, 7
@@ -7548,7 +7551,7 @@ loc_EC6D:
 		shl	ax, 0Bh
 		add	ax, (64 shl 4)
 		push	ax
-		call	tiles_invalidate_around
+		call	main_01:tiles_invalidate_around
 		inc	si
 
 loc_EC86:
@@ -7572,9 +7575,9 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_RG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	di, 1
 		jmp	short loc_ECC7
 ; ---------------------------------------------------------------------------
@@ -7708,7 +7711,7 @@ loc_EDA6:
 		mov	_boss_damage_this_frame, 0
 
 loc_EDBE:
-		call	sub_EC8E
+		call	main_01:sub_EC8E
 		jmp	short loc_EDD7
 ; ---------------------------------------------------------------------------
 
@@ -7825,7 +7828,7 @@ loc_EE60:
 		mov	_bullet_clear_time, 20
 
 loc_EE8C:
-		nopcall	sub_EEE8
+		nopcall	main_01:sub_EEE8
 		mov	_popup_id_new, POPUP_ID_EXTEND
 		mov	_popup_fp, offset popup_update_and_render
 		call	snd_se_play pascal, 7
@@ -8123,7 +8126,7 @@ var_A		= byte ptr -0Ah
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		nopcall	sub_F177
+		nopcall	main_01:sub_F177
 		pop	di
 		pop	si
 		leave
@@ -8183,7 +8186,7 @@ arg_0		= word ptr  6
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		nopcall	sub_F177
+		nopcall	main_01:sub_F177
 		jmp	short loc_F172
 ; ---------------------------------------------------------------------------
 
@@ -8326,8 +8329,8 @@ loc_F245:
 loc_F24F:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		call	sub_EFA1
-		call	sub_EEE8
+		call	main_01:sub_EFA1
+		call	main_01:sub_EEE8
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
 		jnz	short loc_F276
@@ -8346,11 +8349,11 @@ loc_F280:
 		push	TX_YELLOW
 		call	gaiji_putsa
 		call	gaiji_putca pascal, (58 shl 16) + 15, (0E6h shl 16) + TX_YELLOW
-		call	sub_F064
+		call	main_01:sub_F064
 		call	gaiji_putca pascal, (58 shl 16) + 17, (0E7h shl 16) + TX_YELLOW
-		call	sub_F07A
+		call	main_01:sub_F07A
 		call	gaiji_putca pascal, (58 shl 16) + 19, (0E8h shl 16) + TX_YELLOW
-		call	sub_F091
+		call	main_01:sub_F091
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
 		jnz	short loc_F2DE
@@ -8368,7 +8371,7 @@ loc_F2DE:
 loc_F2E8:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		call	sub_F0A5
+		call	main_01:sub_F0A5
 		push	(57 shl 16) + 23
 		push	ds
 		mov	al, _rank
@@ -8403,7 +8406,7 @@ loc_F32E:
 		push	ax
 		call	gaiji_putsa
 		push	0
-		call	sub_F0DD
+		call	main_01:sub_F0DD
 		pop	bp
 		retf
 sub_F204	endp
@@ -8434,7 +8437,7 @@ arg_2		= word ptr  6
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+arg_0]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		pop	si
 		pop	bp
 		retn	4
@@ -8448,7 +8451,7 @@ shot_reimu_l0	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F38D
@@ -8469,17 +8472,17 @@ shot_reimu_l1	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F3C0
 		add	ax, 0Ah
 		push	ax
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 0Ah
 
@@ -8524,10 +8527,10 @@ loc_F3FA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F43F
 ; ---------------------------------------------------------------------------
@@ -8547,10 +8550,10 @@ loc_F426:
 		jz	short loc_F43A
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F43A:
 		mov	word ptr [si+0Eh], 1Eh
@@ -8561,7 +8564,7 @@ loc_F43F:
 		jle	short loc_F44F
 
 loc_F446:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F3FA
@@ -8635,10 +8638,10 @@ loc_F4BC:
 		jz	short loc_F4D0
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F4D0:
 		mov	word ptr [si+0Eh], 1Eh
@@ -8649,7 +8652,7 @@ loc_F4D9:
 		jle	short loc_F4E5
 
 loc_F4DC:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F48A
@@ -8696,7 +8699,7 @@ loc_F525:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -8720,10 +8723,10 @@ loc_F558:
 		jz	short loc_F56C
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F56C:
 		mov	word ptr [si+0Eh], 1Eh
@@ -8734,7 +8737,7 @@ loc_F575:
 		jle	short loc_F581
 
 loc_F578:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F525
@@ -8781,7 +8784,7 @@ loc_F5C1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -8805,10 +8808,10 @@ loc_F5F4:
 		jz	short loc_F608
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F608:
 		mov	word ptr [si+0Eh], 1Eh
@@ -8819,7 +8822,7 @@ loc_F611:
 		jle	short loc_F61D
 
 loc_F614:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F5C1
@@ -8866,7 +8869,7 @@ loc_F65D:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -8890,10 +8893,10 @@ loc_F690:
 		jz	short loc_F6A4
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F6A4:
 		mov	word ptr [si+0Eh], 1Eh
@@ -8904,7 +8907,7 @@ loc_F6AD:
 		jle	short loc_F6B9
 
 loc_F6B0:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F65D
@@ -8956,7 +8959,7 @@ loc_F6FA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 4
 		mov	byte ptr [si+10h], 7
@@ -8984,7 +8987,7 @@ loc_F73E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F779
 ; ---------------------------------------------------------------------------
@@ -9004,10 +9007,10 @@ loc_F760:
 		jz	short loc_F774
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F774:
 		mov	word ptr [si+0Eh], 1Eh
@@ -9020,7 +9023,7 @@ loc_F77D:
 		jle	short loc_F78B
 
 loc_F780:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F6FA
@@ -9059,7 +9062,7 @@ loc_F7B1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, byte ptr [bp+var_2+1]
@@ -9086,7 +9089,7 @@ loc_F7F1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F82C
 ; ---------------------------------------------------------------------------
@@ -9106,10 +9109,10 @@ loc_F813:
 		jz	short loc_F827
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F827:
 		mov	word ptr [si+0Eh], 1Eh
@@ -9122,7 +9125,7 @@ loc_F830:
 		jle	short loc_F83E
 
 loc_F833:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F7B1
@@ -9176,7 +9179,7 @@ loc_F882:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 6
 		mov	al, [bp-1]
@@ -9203,7 +9206,7 @@ loc_F8C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F941
 ; ---------------------------------------------------------------------------
@@ -9227,10 +9230,10 @@ loc_F8F2:
 		jz	short loc_F908
 		push	si
 		push	7
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		sub	al, 4
 		push	ax
-		call	sub_F33C
+		call	main_01:sub_F33C
 		jmp	short loc_F912
 ; ---------------------------------------------------------------------------
 
@@ -9238,7 +9241,7 @@ loc_F908:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 
 loc_F912:
 		mov	word ptr [si+0Eh], 1Eh
@@ -9261,7 +9264,7 @@ loc_F92E:
 		jz	short loc_F93C
 		push	si
 		push	0
-		call	sub_F33C
+		call	main_01:sub_F33C
 
 loc_F93C:
 		mov	word ptr [si+0Eh], 1Eh
@@ -9274,7 +9277,7 @@ loc_F945:
 		jle	short loc_F953
 
 loc_F948:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F882
@@ -9326,10 +9329,10 @@ loc_F98F:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F9D2
 ; ---------------------------------------------------------------------------
@@ -9350,7 +9353,7 @@ loc_F9C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp+var_1]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_F9D2:
@@ -9359,7 +9362,7 @@ loc_F9D2:
 		jle	short loc_F9E2
 
 loc_F9D9:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F98F
@@ -9432,7 +9435,7 @@ loc_FA54:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_FA63:
@@ -9443,7 +9446,7 @@ loc_FA63:
 		jle	short loc_FA79
 
 loc_FA70:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FA1E
@@ -9491,7 +9494,7 @@ loc_FAB9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
@@ -9516,7 +9519,7 @@ loc_FAF9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9527,7 +9530,7 @@ loc_FB0C:
 		jle	short loc_FB1E
 
 loc_FB15:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FAB9
@@ -9575,7 +9578,7 @@ loc_FB5E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9624,7 +9627,7 @@ loc_FBBD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9635,7 +9638,7 @@ loc_FBD0:
 		jle	short loc_FBE4
 
 loc_FBD9:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FB5E
@@ -9688,7 +9691,7 @@ loc_FC2C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9737,7 +9740,7 @@ loc_FC8B:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9748,7 +9751,7 @@ loc_FC9E:
 		jle	short loc_FCB2
 
 loc_FCA7:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FC2C
@@ -9801,7 +9804,7 @@ loc_FCFA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9850,7 +9853,7 @@ loc_FD59:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9861,7 +9864,7 @@ loc_FD6C:
 		jle	short loc_FD80
 
 loc_FD75:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FCFA
@@ -9914,7 +9917,7 @@ loc_FDC8:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9963,7 +9966,7 @@ loc_FE27:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9974,7 +9977,7 @@ loc_FE3A:
 		jle	short loc_FE4E
 
 loc_FE43:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FDC8
@@ -10027,7 +10030,7 @@ loc_FE97:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -10081,7 +10084,7 @@ loc_FEFD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	sub_11DCA
+		call	main_01:sub_11DCA
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -10092,7 +10095,7 @@ loc_FF10:
 		jle	short loc_FF24
 
 loc_FF19:
-		call	shots_add
+		call	main_01:shots_add
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FE97
@@ -10153,7 +10156,7 @@ sub_FFB4	proc near
 loc_FFED:
 		les	bx, _humaconfig
 		dec	byte ptr es:[bx+0Dh]
-		nopcall	sub_EFA1
+		nopcall	main_01:sub_EFA1
 		mov	byte_256A8, 1
 		mov	byte_256A9, 0
 		mov	byte_259A2, 0FFh
@@ -10195,7 +10198,7 @@ loc_1003A:
 		mov	ax, _bb_playchar_seg
 		mov	word_2CDCE, ax
 		push	[bp+arg_0]
-		call	sub_BF16
+		call	main_01:sub_BF16
 		pop	bp
 		retn	2
 sub_1002A	endp
@@ -10210,10 +10213,10 @@ sub_1004D	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fillm_0_40_384_274
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
@@ -10248,7 +10251,7 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	circles_add_growing
+		nopcall	main_01:circles_add_growing
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
@@ -10260,15 +10263,15 @@ loc_10096:
 		call	vector2_at
 		push	_drawpoint.x
 		push	_drawpoint.y
-		nopcall	circles_add_growing
+		nopcall	main_01:circles_add_growing
 		call	snd_se_play pascal, 9
 
 loc_100FE:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_B
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	0
-		call	sub_1030D
+		call	main_01:sub_1030D
 		GRCG_OFF_CLOBBERING dx
 		leave
 		retn
@@ -10285,10 +10288,10 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fillm_0_40_384_274
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
 		push	0
@@ -10331,7 +10334,7 @@ loc_1015E:
 		add	ax, 0FFB0h
 		shl	ax, 3
 		push	ax
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	dl, byte_256A9
 		mov	dh, 0
 		add	dx, 0FFC0h
@@ -10347,7 +10350,7 @@ loc_101B6:
 		sub	dx, ax
 		shl	dx, 3
 		push	dx
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	dl, byte_256A9
 		mov	dh, 0
 		mov	bx, 0A1h
@@ -10364,15 +10367,15 @@ loc_101D7:
 		mov	ax, [bp+var_2]
 		shl	ax, 4
 		push	ax
-		nopcall	circles_add_growing
+		nopcall	main_01:circles_add_growing
 		call	snd_se_play pascal, 9
 
 loc_101F4:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_BRG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	1
-		call	sub_1030D
+		call	main_01:sub_1030D
 		GRCG_OFF_CLOBBERING dx
 		pop	si
 		leave
@@ -10411,7 +10414,7 @@ loc_1022A:
 
 loc_1023E:
 		push	ax
-		call	sub_1002A
+		call	main_01:sub_1002A
 
 loc_10242:
 		jmp	loc_10307
@@ -10517,10 +10520,10 @@ arg_0		= word ptr  4
 
 loc_10321:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 		push	1700h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si+2],	ax
 		cmp	[bp+arg_0], 0
 		jnz	short loc_1036F
@@ -10530,7 +10533,7 @@ loc_10321:
 
 loc_1033E:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 
 loc_10346:
@@ -10562,7 +10565,7 @@ loc_10364:
 loc_1036F:
 		mov	byte ptr [si+4], 0E0h
 		push	7Fh
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0A0h
 
 loc_1037A:
@@ -10617,14 +10620,14 @@ loc_103D6:
 		jz	short loc_103EB
 		mov	word ptr [si], 0FF80h
 		push	1700h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si+2],	ax
 		jmp	short loc_103F8
 ; ---------------------------------------------------------------------------
 
 loc_103EB:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 		mov	word ptr [si+2], 1780h
 
@@ -10641,7 +10644,7 @@ loc_103F8:
 		add	ax, 8
 		mov	cx, [bp+var_2]
 		push	78h ; 'x'
-		call	sub_C01A
+		call	main_01:sub_C01A
 		inc	di
 		add	si, 6
 
@@ -10690,7 +10693,7 @@ sub_10444	proc near
 loc_1045C:
 		cmp	[si+shot_t.flag], 0
 		jz	short loc_1046A
-		call	tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
+		call	main_01:tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
 loc_1046A:
 		inc	di
@@ -10715,7 +10718,7 @@ loc_1046E:
 		mov	ax, word ptr dword_25610
 		add	ax, (-24 shl 4)
 		push	ax
-		call	tiles_invalidate_around
+		call	main_01:tiles_invalidate_around
 		mov	ax, word ptr dword_25610+2
 		cwd
 		sub	ax, dx
@@ -10724,7 +10727,7 @@ loc_1046E:
 		mov	ax, word ptr dword_25610
 		add	ax, (24 shl 4)
 		push	ax
-		call	tiles_invalidate_around
+		call	main_01:tiles_invalidate_around
 
 loc_104B2:
 		pop	di
@@ -10832,10 +10835,10 @@ sub_10552	proc near
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		cmp	word_25608, 20h	; ' '
 		jbe	short loc_10569
-		call	sub_E1F4
+		call	main_01:sub_E1F4
 
 loc_10569:
 		mov	si, offset _shots[(SHOT_COUNT - 1) * size shot_t]
@@ -10860,13 +10863,13 @@ loc_10570:
 loc_1058D:
 		mov	ax, [si+4]
 		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 18h
 		push	cx
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 
 loc_105A6:
 		inc	di
@@ -11079,7 +11082,7 @@ loc_10776:
 		sar	ax, 4
 		add	ax, 10h
 		mov	di, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
 		mov	[bp+var_4], ax
 		or	di, di
 		jle	short loc_107D0
@@ -11177,7 +11180,7 @@ loc_10822:
 		jl	short loc_10862
 		cmp	_drawpoint.x, (392 shl 4)
 		jge	short loc_10862
-		call	tiles_invalidate_around pascal, _drawpoint.y, _drawpoint.x
+		call	main_01:tiles_invalidate_around pascal, _drawpoint.y, _drawpoint.x
 
 loc_10862:
 		inc	si
@@ -11193,10 +11196,10 @@ loc_10868:
 
 loc_10872:
 		mov	_tile_invalidate_box.x, 32
-		call	tiles_invalidate_around pascal, large [player_pos.prev]
+		call	main_01:tiles_invalidate_around pascal, large [player_pos.prev]
 		mov	_tile_invalidate_box.x, 64
 		mov	_tile_invalidate_box.y, 16
-		call	tiles_invalidate_around pascal, large [dword_259B0]
+		call	main_01:tiles_invalidate_around pascal, large [dword_259B0]
 
 loc_10894:
 		pop	di
@@ -11396,8 +11399,8 @@ loc_109E9:
 		mov	bx, ax
 		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
 		mov	dream_score, ax
-		nopcall	sub_F07A
-		nopcall	sub_11DE6
+		nopcall	main_01:sub_F07A
+		nopcall	main_01:sub_11DE6
 		call	snd_se_play pascal, 2
 		cmp	_playperf, 22
 		jb	short loc_10A16
@@ -11445,18 +11448,18 @@ loc_10A60:
 		cmp	byte ptr es:[bx+0Bh], 1
 		jbe	short loc_10AB7
 		dec	byte ptr es:[bx+0Bh]
-		nopcall	sub_EEE8
+		nopcall	main_01:sub_EEE8
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Eh]
 		mov	es:[bx+0Dh], al
-		nopcall	sub_EFA1
+		nopcall	main_01:sub_EFA1
 		mov	_bullet_clear_time, 32
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_10AB7:
-		call	sub_E541
+		call	main_01:sub_E541
 		mov	byte_266D2, al
 
 locret_10ABD:
@@ -11514,7 +11517,7 @@ loc_10B11:
 
 loc_10B32:
 		push	si
-		call	sub_10898
+		call	main_01:sub_10898
 		mov	[bp+var_2], al
 		cmp	[bp+var_2], 0
 		jnz	short loc_10B58
@@ -11544,7 +11547,7 @@ loc_10B58:
 		mov	player_pos.velocity.y, ax
 
 loc_10B75:
-		call	sub_10950
+		call	main_01:sub_10950
 		cmp	[bp+var_1], 0
 		jz	short loc_10B82
 		mov	word_2598C, si
@@ -11594,7 +11597,7 @@ loc_10BC7:
 loc_10BF0:
 		cmp	byte_259AA, 0
 		jz	short loc_10BFA
-		call	sub_10988
+		call	main_01:sub_10988
 
 loc_10BFA:
 		pop	si
@@ -11628,7 +11631,7 @@ loc_10C13:
 		mov	di, ax
 		mov	ax, player_pos.cur.y
 		add	ax, -128
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		cmp	player_pos.velocity.x, 0
 		jge	short loc_10C37
@@ -11668,22 +11671,22 @@ loc_10C65:
 loc_10C6F:
 		cmp	shot_level, 2
 		jb	loc_10D47
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ax, word ptr dword_259AC
 		sar	ax, 4
 		mov	di, ax
 		mov	ax, word ptr dword_259AC+2
 		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		mov	ax, di
 		mov	dx, [bp+var_2]
 		push	word_259B4
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 		lea	ax, [di+30h]
 		mov	dx, [bp+var_2]
 		push	word_259B4
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_10D47
 ; ---------------------------------------------------------------------------
@@ -11732,7 +11735,7 @@ loc_10CE0:
 		mov	di, ax
 		mov	ax, _drawpoint.y
 		add	ax, (-8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -11844,7 +11847,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 48h	; 'H'
 		jb	short loc_10DE5
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jnz	short loc_10DC6
@@ -11930,7 +11933,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 0
 		jnz	short loc_10E51
-		call	sub_10D77
+		call	main_01:sub_10D77
 		mov	_overlay_text_fp, offset nullfunc_near
 		jmp	short loc_10EA1
 ; ---------------------------------------------------------------------------
@@ -12013,7 +12016,7 @@ arg_4		= word ptr  8
 		mov	ax, 8
 		imul	si
 		mov	si, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, [bp+@@y]
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, [bp+@@y]
 		mov	[bp+@@y], ax
 		mov	ax, GRAM_400
 		mov	es, ax
@@ -12027,7 +12030,7 @@ loc_10ED1:
 		mov	cx, ax
 		mov	dx, [bp+@@y]
 		mov	ax, si
-		call	sub_C09A
+		call	main_01:sub_C09A
 		add	si, 10h
 
 loc_10EE3:
@@ -12062,9 +12065,9 @@ var_1		= byte ptr -1
 loc_10F0D:
 		mov	_tile_invalidate_box.x, PLAYFIELD_W
 		mov	_tile_invalidate_box.y, 32
-		call	tiles_invalidate_around pascal, large ((168 shl 4) shl 16) or (192 shl 4)
-		call	tiles_invalidate_around pascal, large ((200 shl 4) shl 16) or (192 shl 4)
-		call	tiles_invalidate_around pascal, large ((360 shl 4) shl 16) or (192 shl 4)
+		call	main_01:tiles_invalidate_around pascal, large ((168 shl 4) shl 16) or (192 shl 4)
+		call	main_01:tiles_invalidate_around pascal, large ((200 shl 4) shl 16) or (192 shl 4)
+		call	main_01:tiles_invalidate_around pascal, large ((360 shl 4) shl 16) or (192 shl 4)
 
 locret_10F34:
 		leave
@@ -12083,7 +12086,7 @@ sub_10F36	proc near
 		jb	loc_10FED
 		cmp	_popup_byte_unknown, 0C0h
 		jnz	short loc_10F53
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		mov	byte_22EF6, 0
 		jmp	short loc_10F5E
 ; ---------------------------------------------------------------------------
@@ -12106,9 +12109,9 @@ loc_10F5E:
 ; ---------------------------------------------------------------------------
 
 loc_10F80:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_10F99
 		push	150A80h
@@ -12121,20 +12124,20 @@ loc_10F99:
 		push	16h
 
 loc_10FA1:
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ax, 30h	; '0'
 		sub	ax, bgm_title_len
 		push	ax
 		push	16800002h
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, bgm_title_len
 		push	ax
 		push	1680h
 		push	bgm_title_len
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ax, stage_title_len
 		cwd
 		sub	ax, dx
@@ -12144,7 +12147,7 @@ loc_10FA1:
 		push	dx
 		push	0C80h
 		push	stage_title_len
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_1118F
 ; ---------------------------------------------------------------------------
@@ -12249,9 +12252,9 @@ loc_110A1:
 		call	text_putsa
 
 loc_11107:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		cmp	stage_id, 5
 		jnb	short loc_11120
 		push	150A80h
@@ -12264,20 +12267,20 @@ loc_11120:
 		push	16h
 
 loc_11128:
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ax, 30h	; '0'
 		sub	ax, bgm_title_len
 		push	ax
 		push	16800002h
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, bgm_title_len
 		push	ax
 		push	1680h
 		push	bgm_title_len
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ax, stage_title_len
 		cwd
 		sub	ax, dx
@@ -12287,7 +12290,7 @@ loc_11128:
 		push	dx
 		push	0C80h
 		push	stage_title_len
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		test	_popup_byte_unknown, 3
 		jnz	short loc_1118F
@@ -12316,7 +12319,7 @@ sub_11195	proc near
 		jb	short loc_11211
 		cmp	byte_22EA3, 0C0h
 		jnz	short loc_111B0
-		call	sub_10D4B
+		call	main_01:sub_10D4B
 		mov	byte_22EF6, 0
 		jmp	short loc_111BB
 ; ---------------------------------------------------------------------------
@@ -12338,22 +12341,22 @@ loc_111BB:
 ; ---------------------------------------------------------------------------
 
 loc_111D8:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_259C6
 		push	ax
 		push	16800002h
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_259C6
 		push	ax
 		push	1680h
 		push	word_259C6
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_112D2
 ; ---------------------------------------------------------------------------
@@ -12392,22 +12395,22 @@ loc_11237:
 		call	text_putsa
 
 loc_1127E:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_G
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
 		sub	ax, word_259C6
 		push	ax
 		push	16800002h
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
 		sub	ax, word_259C6
 		push	ax
 		push	1680h
 		push	word_259C6
-		call	sub_10EA5
+		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		test	byte_22EA3, 3
 		jnz	short loc_112D2
@@ -12455,7 +12458,7 @@ mugetsu_fg_render	proc near
 		mov	ah, 0
 		push	ax
 		call	super_put
-		call	sub_11647
+		call	main_01:sub_11647
 		jmp	short loc_1163D
 ; ---------------------------------------------------------------------------
 
@@ -12698,7 +12701,10 @@ loc_1178C:
 		pop	si
 		jmp	loc_116FD
 score_update_and_render	endp
+main_01_TEXT	ends
 
+main_011_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_01
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12751,15 +12757,15 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		add	si, 20h	; ' '
 		add	di, 18h
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_I
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	si
 		push	di
 		push	[bp+var_2]
 		call	grcg_circle
 		mov	ah, GC_BI
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	si
 		push	di
 		mov	ax, [bp+var_2]
@@ -12835,9 +12841,9 @@ loc_118AE:
 		call	super_put_1plane
 
 loc_118BE:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_RG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	[bp+var_A], 0B204h
 		mov	[bp+var_4], 0
 		jmp	short loc_11932
@@ -12965,15 +12971,15 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		add	si, 18h
 		add	di, 8
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	si
 		push	di
 		push	[bp+var_2]
 		call	grcg_circle
 		mov	ah, GC_RG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	si
 		push	di
 		mov	ax, [bp+var_2]
@@ -13115,7 +13121,7 @@ loc_11AC4:
 		sar	ax, 4
 		add	ax, 10h
 		mov	si, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, di
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, di
 		mov	di, ax
 		push	si
 		push	ax
@@ -13219,9 +13225,9 @@ loc_11BD1:
 		jl	loc_11B52
 		cmp	byte ptr [si], 0
 		jz	short loc_11C16
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		mov	ah, GC_BGI
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	word ptr [si+10h]
@@ -13229,7 +13235,7 @@ loc_11BD1:
 		cmp	byte ptr [si], 1
 		jz	short loc_11C16
 		mov	ah, [si+18h]
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		mov	ax, [si+12h]
@@ -13420,8 +13426,8 @@ loc_11D7A:
 loc_11D86:
 		call	explosions_small_update_and_render
 		call	explosions_big_update_and_render
-		call	sub_E2C3
-		call	sub_11B44
+		call	main_01:sub_E2C3
+		call	main_01:sub_11B44
 
 loc_11D92:
 		pop	di
@@ -13471,7 +13477,7 @@ loc_11DFB:
 		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
 		mov	playchar_shot_func, ax
-		nopcall	sub_F0A5
+		nopcall	main_01:sub_F0A5
 		retf
 sub_11DE6	endp
 
@@ -13592,31 +13598,31 @@ sub_11ECB	proc near
 		call	grc_setclip
 		push	offset _shots
 		push	size _shots / 4
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	8A92h
 		push	200h
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	offset _sparks
 		push	size _sparks / 4
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	5A22h
 		push	0B2Ch
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	0B204h
 		push	0D0h
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	offset _circles
 		push	size _circles / 4
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	0AF34h
 		push	0A0h
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	9634h
 		push	640h
-		call	sub_C34E
+		call	main_01:sub_C34E
 		push	9292h
 		push	0A8h ; '¨'
-		call	sub_C34E
+		call	main_01:sub_C34E
 		mov	word_2A8D0, 8
 		mov	byte_2A8D2, 9
 		mov	word_2A8CE, 400h
@@ -13876,7 +13882,7 @@ loc_12141:
 		pushd	[_midboss_pos.cur]
 
 loc_12152:
-		call	tiles_invalidate_around
+		call	main_01:tiles_invalidate_around
 		pop	bp
 		retn
 sub_12124	endp
@@ -13902,14 +13908,14 @@ orange_bg_render	proc near
 loc_12199:
 		cmp	_boss_phase, 1
 		jnz	short loc_121BF
-		call	boss_backdrop_render pascal, (32 shl 16) or 136, 1
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 136, 1
 		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
-		call	sub_BF94
-		call	tiles_redraw_invalidated
+		call	main_01:sub_BF94
+		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13917,7 +13923,7 @@ loc_12199:
 loc_121BF:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_121D3
-		call	boss_backdrop_render pascal, (32 shl 16) or 136, 1
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 136, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13929,13 +13935,13 @@ loc_121D3:
 		jg	short loc_121E6
 
 loc_121E1:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_121E6:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		pop	bp
 		retn
 orange_bg_render	endp
@@ -13952,14 +13958,14 @@ kurumi_bg_render	proc near
 		jz	short loc_1223D
 		cmp	_boss_phase, 1
 		jnz	short loc_1221B
-		call	boss_backdrop_render pascal, (32 shl 16) or 96, 0
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 96, 0
 		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
-		call	sub_BF94
-		call	tiles_redraw_invalidated
+		call	main_01:sub_BF94
+		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13967,7 +13973,7 @@ kurumi_bg_render	proc near
 loc_1221B:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_1222F
-		call	boss_backdrop_render pascal, (32 shl 16) or 96, 0
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 96, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -13979,13 +13985,13 @@ loc_1222F:
 		jg	short loc_12242
 
 loc_1223D:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_12242:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		pop	bp
 		retn
 kurumi_bg_render	endp
@@ -14000,10 +14006,10 @@ sub_12247	proc near
 		mov	bp, sp
 		mov	_tile_invalidate_box.x, 64
 		mov	_tile_invalidate_box.y, 64
-		call	tiles_invalidate_around pascal, large [_boss_pos.prev]
+		call	main_01:tiles_invalidate_around pascal, large [_boss_pos.prev]
 		cmp	byte_25A27, 0
 		jz	short loc_1226D
-		call	tiles_invalidate_around pascal, large [dword_25A2C]
+		call	main_01:tiles_invalidate_around pascal, large [dword_25A2C]
 
 loc_1226D:
 		pop	bp
@@ -14022,21 +14028,21 @@ elly_bg_render	proc near
 		ja	short loc_12285
 		cmp	_boss_phase_frame, 2
 		jle	short loc_122CD
-		call	sub_12247
+		call	main_01:sub_12247
 		jmp	short loc_122D2
 ; ---------------------------------------------------------------------------
 
 loc_12285:
 		cmp	_boss_phase, 2
 		jnz	short loc_122AB
-		call	boss_backdrop_render pascal, (32 shl 16) or 16, 0
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 0
 		mov	ax, _bb_stage_seg
 		mov	word_2CDCE, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
-		call	sub_BF94
-		call	tiles_redraw_invalidated
+		call	main_01:sub_BF94
+		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -14044,7 +14050,7 @@ loc_12285:
 loc_122AB:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_122BF
-		call	boss_backdrop_render pascal, (32 shl 16) or 16, 0
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -14056,13 +14062,13 @@ loc_122BF:
 		jg	short loc_122D2
 
 loc_122CD:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_122D2:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		pop	bp
 		retn
 elly_bg_render	endp
@@ -14094,15 +14100,15 @@ loc_122EB:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_12309
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		jmp	short loc_12327
 ; ---------------------------------------------------------------------------
 
 loc_12309:
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fillm_64_56_256_256
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
 		push	16
@@ -14114,7 +14120,7 @@ loc_12327:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_BF16
+		call	main_01:sub_BF16
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14122,7 +14128,7 @@ loc_12327:
 loc_12338:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_1234C
-		call	boss_backdrop_render pascal, (96 shl 16) or 72, 1
+		call	main_01:boss_backdrop_render pascal, (96 shl 16) or 72, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14134,13 +14140,13 @@ loc_1234C:
 		jg	short loc_1235F
 
 loc_1235A:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1235F:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		leave
 		retn
 reimu_marisa_bg_render	endp
@@ -14172,15 +14178,15 @@ loc_12378:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_12396
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		jmp	short loc_123B4
 ; ---------------------------------------------------------------------------
 
 loc_12396:
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_BRGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fillm_96_112_288_256
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fillm_96_112_288_256
 		GRCG_OFF_CLOBBERING dx
 		push	(128 shl 16) or 128
 		push	16
@@ -14192,7 +14198,7 @@ loc_123B4:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_BF16
+		call	main_01:sub_BF16
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14200,7 +14206,7 @@ loc_123B4:
 loc_123C5:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_123D9
-		call	boss_backdrop_render pascal, (128 shl 16) or 128, 0
+		call	main_01:boss_backdrop_render pascal, (128 shl 16) or 128, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14212,13 +14218,13 @@ loc_123D9:
 		jg	short loc_123EC
 
 loc_123E7:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_123EC:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		leave
 		retn
 yuuka5_bg_render	endp
@@ -14336,7 +14342,7 @@ loc_1248C:
 		mov	fp_2CF2C, offset sub_123F1
 
 loc_12492:
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		cmp	byte_2CDD1, 80h
 		jnb	short loc_124A1
 		mov	al, byte_2CDD1
@@ -14352,7 +14358,7 @@ loc_124A7:
 		cmp	byte_2CDD0, 10h
 		jnb	short loc_124D7
 		mov	ah, GC_BRG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		test	byte_2CDD0, 1
 		jz	short loc_124C5
 		mov	al, [bp+var_9]
@@ -14375,7 +14381,7 @@ loc_124D2:
 
 loc_124D7:
 		mov	ah, GC_RG
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		cmp	byte_23242, 0
 		jnz	short loc_12508
 		mov	Palettes, 0
@@ -14531,13 +14537,13 @@ loc_12647:
 
 loc_12651:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 		push	1700h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si+2],	ax
 		push	0Fh
-		call	randring1_next16_and
+		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		mov	[si+4],	al
 		mov	byte ptr [si+5], 48h ; 'H'
@@ -14670,10 +14676,10 @@ loc_12743:
 
 loc_12773:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 		push	1700h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si+2],	ax
 		mov	byte ptr [si+4], 40h
 		mov	byte ptr [si+5], 0C0h
@@ -14785,7 +14791,7 @@ loc_1284C:
 		add	ax, 8
 		mov	cx, [bp+var_2]
 		push	[bp+var_4]
-		call	sub_C01A
+		call	main_01:sub_C01A
 		inc	di
 		add	si, 6
 
@@ -14843,12 +14849,12 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		cmp	_boss_phase, 0
 		jnz	short loc_12921
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fill
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
 		cmp	_boss_phase_frame, 2
 		jnz	loc_12975
@@ -14859,10 +14865,10 @@ var_1		= byte ptr -1
 
 loc_128E7:
 		push	1800h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si], ax
 		push	1700h
-		call	randring1_next16_mod
+		call	main_01:randring1_next16_mod
 		mov	[si+2],	ax
 		mov	byte ptr [si+4], 60h
 		mov	byte ptr [si+5], 10h
@@ -14888,15 +14894,15 @@ loc_12921:
 		idiv	bx
 		mov	[bp+var_1], al
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		cmp	[bp+var_1], 8
 		jnb	short loc_12944
-		call	playfield_fill
+		call	main_01:playfield_fill
 		jmp	short loc_12947
 ; ---------------------------------------------------------------------------
 
 loc_12944:
-		call	sub_12076
+		call	main_01:sub_12076
 
 loc_12947:
 		mov	ax, _bb_stage_seg
@@ -14904,25 +14910,25 @@ loc_12947:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_BF16
+		call	main_01:sub_BF16
 		jmp	short loc_12975
 ; ---------------------------------------------------------------------------
 
 loc_12958:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_12964
-		call	sub_12076
+		call	main_01:sub_12076
 		jmp	short loc_12972
 ; ---------------------------------------------------------------------------
 
 loc_12964:
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fill
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
 
 loc_12972:
-		call	sub_12461
+		call	main_01:sub_12461
 
 loc_12975:
 		pop	di
@@ -14948,7 +14954,7 @@ var_1		= byte ptr -1
 		mov	_stage_render, offset nullfunc_near
 
 loc_12991:
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14963,15 +14969,15 @@ loc_12996:
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 8
 		jnb	short loc_129B4
-		call	tiles_render_all
+		call	main_01:tiles_render_all
 		jmp	short loc_129D2
 ; ---------------------------------------------------------------------------
 
 loc_129B4:
-		call	grcg_setmode_tdw
+		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	grcg_setcolor_direct_noint_1
-		call	playfield_fillm_0_0_384_192
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:playfield_fillm_0_0_384_192
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
 		push	16
@@ -14983,7 +14989,7 @@ loc_129D2:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		call	sub_BF16
+		call	main_01:sub_BF16
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -14991,7 +14997,7 @@ loc_129D2:
 loc_129E3:
 		cmp	_boss_phase, 0FEh
 		jnb	short loc_129F7
-		call	boss_backdrop_render pascal, (32 shl 16) or 16, 1
+		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -15003,7 +15009,7 @@ loc_129F7:
 		jle	short loc_12991
 
 loc_12A05:
-		call	sub_CB58
+		call	main_01:sub_CB58
 		leave
 		retn
 mugetsu_gengetsu_bg_render	endp
@@ -15093,13 +15099,13 @@ loc_12A7E:
 
 loc_12A90:
 		push	0BBEEh
-		call	sub_C3EA
+		call	main_01:sub_C3EA
 		push	ds
 		push	offset unk_2CF2E
 		push	0C4h
 		call	file_write
 		push	0BBEEh
-		call	sub_C3AA
+		call	main_01:sub_C3AA
 		inc	si
 
 loc_12AA9:
@@ -15150,12 +15156,12 @@ loc_12AFE:
 		call	file_read
 		call	file_close
 		push	0BBEEh
-		call	sub_C3AA
+		call	main_01:sub_C3AA
 		or	al, al
 		jz	short loc_12B1C
 
 loc_12B19:
-		call	sub_12A0A
+		call	main_01:sub_12A0A
 
 loc_12B1C:
 		pop	bp
@@ -15171,7 +15177,7 @@ sub_12B1E	proc near
 		push	bp
 		mov	bp, sp
 		push	0BBEEh
-		call	sub_C3EA
+		call	main_01:sub_C3EA
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
@@ -15373,7 +15379,7 @@ loc_12CA3:
 		mov	byte ptr [bx-4362h], 0A1h
 
 loc_12CAF:
-		call	sub_12B1E
+		call	main_01:sub_12B1E
 
 loc_12CB2:
 		pop	si
@@ -15389,10 +15395,10 @@ sub_12B71	endp
 sub_12CB5	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_12AB7
+		call	main_01:sub_12AB7
 		cmp	byte_266E0, 0
 		jz	short loc_12CC5
-		call	sub_12B71
+		call	main_01:sub_12B71
 
 loc_12CC5:
 		pop	bp
@@ -15408,7 +15414,7 @@ sub_12CC7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_12AB7
+		call	main_01:sub_12AB7
 		xor	si, si
 		jmp	short loc_12CDD
 ; ---------------------------------------------------------------------------
@@ -15456,13 +15462,13 @@ loc_12CFA:
 		ja	short loc_12D24
 		mov	ax, [si+4]
 		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+18h]
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 		jmp	short loc_12D92
 ; ---------------------------------------------------------------------------
 
@@ -15505,13 +15511,13 @@ loc_12D6D:
 		cwd
 		idiv	bx
 		add	[bp+var_2], ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 10h
 		push	[bp+var_2]
-		call	sub_C42C
+		call	main_01:sub_C42C
 
 loc_12D92:
 		inc	di
@@ -15525,11 +15531,11 @@ loc_12D96:
 		cmp	_bullet_clear_time, 0
 		jnz	short loc_12DBE
 		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
-		call	sub_C99C
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:sub_C99C
 		mov	ah, GC_RG
-		call	grcg_setcolor_direct_noint_1
-		call	sub_CA2E
+		call	main_01:grcg_setcolor_direct_noint_1
+		call	main_01:sub_CA2E
 		jmp	short loc_12DEC
 ; ---------------------------------------------------------------------------
 
@@ -15543,13 +15549,13 @@ loc_12DC2:
 		jnz	short loc_12DE2
 		mov	ax, [si+4]
 		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+18h]
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 
 loc_12DE2:
 		inc	di
@@ -15578,7 +15584,7 @@ sub_12DF0	proc near
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		call	sub_C17C
+		call	main_01:sub_C17C
 		mov	si, 0AF34h
 		xor	di, di
 		jmp	short loc_12E2E
@@ -15591,13 +15597,13 @@ loc_12E04:
 		jle	short loc_12E2A
 		mov	ax, [si+4]
 		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
+		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 18h
 		push	word ptr [si+10h]
-		call	z_super_roll_put_tiny
+		call	main_01:z_super_roll_put_tiny
 
 loc_12E2A:
 		inc	di
@@ -15743,7 +15749,7 @@ loc_12F14:
 		mov	_boss_damage_this_frame, 0
 
 loc_12F29:
-		call	sub_12E37
+		call	main_01:sub_12E37
 		jmp	short loc_12F55
 ; ---------------------------------------------------------------------------
 
@@ -15854,7 +15860,7 @@ loc_12FE7:
 		inc	ax
 		push	ax
 		call	super_put
-		call	sub_11647
+		call	main_01:sub_11647
 		jmp	short loc_13083
 ; ---------------------------------------------------------------------------
 
@@ -15916,7 +15922,7 @@ loc_1306D:
 loc_13083:
 		call	explosions_small_update_and_render
 		call	explosions_big_update_and_render
-		call	sub_E2C3
+		call	main_01:sub_E2C3
 		cmp	_boss_phase, 5
 		jnz	short loc_130E9
 		cmp	_boss_mode, 1
@@ -15925,7 +15931,7 @@ loc_13083:
 		jl	short loc_130E9
 		cmp	_boss_phase_frame, 96
 		jge	short loc_130E9
-		call	grcg_setmode_rmw_1
+		call	main_01:grcg_setmode_rmw_1
 		cmp	frame_mod2, 0
 		jz	short loc_130B6
 		mov	ah, GC_RG
@@ -15936,7 +15942,7 @@ loc_130B6:
 		mov	ah, 0Fh
 
 loc_130B8:
-		call	grcg_setcolor_direct_noint_1
+		call	main_01:grcg_setcolor_direct_noint_1
 		mov	[bp+var_2], 0B204h
 		xor	si, si
 		jmp	short loc_130E4
@@ -15968,7 +15974,7 @@ loc_130E9:
 		retn
 gengetsu_fg_render	endp
 
-main_01_TEXT	ends
+main_011_TEXT	ends
 
 ; ===========================================================================
 
