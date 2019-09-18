@@ -3,7 +3,7 @@ include defconv_c.inc
 
 include th02/hardware/input.inc
 include th02/math/randring_next.inc
-include th02/gaiji_boldfont.inc
+include th02/gaiji/boldfont.inc
 include th02/hud/hud.inc
 include th02/score.inc
 

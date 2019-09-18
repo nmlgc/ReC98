@@ -15,7 +15,7 @@ pushstate
 nosmart
 	lea	di, _hud_gaiji_row + (SCORE_DIGITS - 5)
 	movzx	edx, [bp+@@val]
-	lea	bx, _POWERS_OF_10_LONG + (2 * 4)
+	lea	bx, _SEVEN_DIGIT_POWERS_OF_10 + (2 * 4)
 popstate
 	mov	ax, [bp+@@atrb]
 	mov	cx, 4
@@ -43,7 +43,7 @@ hud_points_put	proc far
 	mov	di, offset _hud_gaiji_row
 	mov	ax, TX_WHITE
 	mov	_hud_gaiji_row[SCORE_DIGITS - 1], gb_0_	; ("continues used" digit)
-	mov	bx, offset _POWERS_OF_10_LONG
+	mov	bx, offset _SEVEN_DIGIT_POWERS_OF_10
 	mov	cx, SCORE_DIGITS - 2
 
 hud_digits_put:

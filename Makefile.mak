@@ -19,6 +19,16 @@ th03:: $(TH03:\=bin\th03\)
 th04:: $(TH04:\=bin\th04\)
 th05:: $(TH05:\=bin\th05\)
 
+# Shared TH04/TH05 assembly units
+# -------------------------------
+# Need to go into separate .obj directories since they will have different
+# AFLAGS per game.
+{th04}.asm{bin\th04}.obj:
+	$(AS) /dGAME=4 $**, $@
+{th04}.asm{bin\th05}.obj:
+	$(AS) /dGAME=5 $**, $@
+# -------------------------------
+
 .obj.exe:
 	$(CC) $(CFLAGS) -ml $**
 
@@ -73,7 +83,14 @@ bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
 $**
 |
 
-bin\th05\main.exe: bin\th05\main.obj th05\main_01.cpp
+bin\th04\scoreupd.obj: th04\scoreupd.asm
+bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj
+	$(CC) $(CFLAGS) -ml -DGAME=4 -nbin\th04\ -eMAIN.EXE @&&|
+$**
+|
+
+bin\th05\scoreupd.obj: th04\scoreupd.asm
+bin\th05\main.exe: bin\th05\main.obj bin\th05\scoreupd.obj th05\main012.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |

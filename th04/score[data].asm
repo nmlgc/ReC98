@@ -1,2 +1,2 @@
-public _is_hiscore
-_is_hiscore	db 0
+public _HISCORE_POPUP_SHOWN
+_hiscore_popup_shown	db 0

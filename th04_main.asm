@@ -966,7 +966,7 @@ sub_B1D0	proc near
 		call	sub_1DA1B
 		call	main_01:sub_FFA4
 		call	sparks_init
-		call	main_01:sub_11692
+		call	hud_score_put
 		call	sub_15D74
 		call	main_01:sub_BCB2
 		nopcall	main_01:sub_F204
@@ -6951,7 +6951,7 @@ loc_E796:
 		nopcall	main_01:sub_EFA1
 		inc	_continues_used
 		call	sub_EEB0
-		call	sub_11692
+		call	hud_score_put
 		mov	al, 0
 		jmp	short loc_E7DA
 ; ---------------------------------------------------------------------------
@@ -7760,8 +7760,8 @@ playfield_fillm_0_120_384_128	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_EE06	proc near
+public SCORE_EXTEND_UPDATE
+score_extend_update	proc near
 
 var_1		= byte ptr -1
 
@@ -7836,7 +7836,7 @@ loc_EE8C:
 locret_EEA3:
 		leave
 		retn
-sub_EE06	endp
+score_extend_update	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -7869,7 +7869,7 @@ loc_EEBF:
 		mov	_score_delta_frame, 0
 		mov	_score_unused, 0
 		mov	byte_22DA6, 0
-		mov	_is_hiscore, 0
+		mov	_hiscore_popup_shown, 0
 		pop	si
 		pop	bp
 		retn
@@ -8311,7 +8311,7 @@ sub_F204	proc far
 		mov	bp, sp
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
-		call	sub_11692
+		call	hud_score_put
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
 		jnz	short loc_F245
@@ -12550,158 +12550,10 @@ loc_1168E:
 		pop	bp
 		retn
 sub_11647	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11692	proc near
-		push	si
-		push	di
-		mov	si, offset _hiscore_lebcd[SCORE_DIGITS - 1]
-		mov	di, 4
-
-loc_1169A:
-		mov	cx, SCORE_DIGITS
-		mov	bx, 1EC6h
-
-loc_116A0:
-		mov	al, [si]
-		add	al, 0A0h
-		mov	[bx], al
-		inc	bx
-		dec	si
-		loop	loc_116A0
-		call	gaiji_putsa pascal, 56, di, ds, offset unk_23206, TX_WHITE
-		add	di, 2
-		cmp	di, 6
-		jz	short loc_1169A
-		pop	si
-		pop	di
-		retn
-sub_11692	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-score_update_and_render	proc near
-		mov	eax, _score_delta
-		or	eax, eax
-		jz	short locret_1172C
-		cmp	_score_delta_frame, eax
-		jbe	short loc_116D7
-		mov	word ptr _score_delta_frame, ax
-
-loc_116D7:
-		shr	eax, 5
-		or	eax, eax
-		jnz	short loc_116E3
-		inc	ax
-		jmp	short loc_116EE
-; ---------------------------------------------------------------------------
-
-loc_116E3:
-		cmp	eax, SCORE_DELTA_FRAME_LIMIT
-		jbe	short loc_116EE
-		mov	ax, SCORE_DELTA_FRAME_LIMIT
-
-loc_116EE:
-		cmp	word ptr _score_delta_frame, ax
-		jnb	short loc_116F7
-		mov	word ptr _score_delta_frame, ax
-
-loc_116F7:
-		mov	cx, word ptr _score_delta_frame
-		jmp	short loc_1172E
-; ---------------------------------------------------------------------------
-
-loc_116FD:
-		cmp	_is_hiscore, 0
-		jnz	short loc_11718
-		or	al, al
-		jz	short loc_11718
-		mov	_is_hiscore, 1
-		mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-		mov	_popup_fp, offset popup_update_and_render
-
-loc_11718:
-		mov	eax, _score_delta_frame
-		sub	_score_delta, eax
-		call	sub_11692
-		mov	_score_unused, 0
-		call	sub_EE06
-
-locret_1172C:
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1172E:
-		push	si
-		push	di
-		mov	bx, 1EC2h
-		mov	si, 1EB4h
-
-loc_11736:
-		mov	ax, cx
-		xor	dx, dx
-		div	word ptr [si]
-		mov	cx, dx
-		mov	[bx], al
-		dec	bx
-		add	si, 2
-		cmp	word ptr [si], 1
-		ja	short loc_11736
-		mov	[bx], cl
-		mov	si, offset _score_lebcd[1]
-		mov	cx, SCORE_DIGITS - 2
-		xor	ah, ah
-
-loc_11753:
-		mov	al, [bx]
-		add	al, [si]
-		aaa
-		mov	[si], al
-		inc	bx
-		inc	si
-		add	[si], ah
-		mov	ah, 0
-		loop	loc_11753
-		mov	al, [bx]
-		add	[si], al
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	si, offset _score_lebcd[SCORE_DIGITS - 1]
-		mov	di, offset _hiscore_lebcd[SCORE_DIGITS - 1]
-		xor	dl, dl
-		mov	cx, SCORE_DIGITS
-		cmp	_is_hiscore, 0
-		jnz	short loc_11786
-
-loc_1177A:
-		mov	al, [si]
-		cmp	[di], al
-		ja	short loc_1178C
-		jb	short loc_11786
-		dec	di
-		dec	si
-		loop	loc_1177A
-
-loc_11786:
-		std
-		rep movsb
-		cld
-		inc	dl
-
-loc_1178C:
-		mov	al, dl
-		pop	di
-		pop	si
-		jmp	loc_116FD
-score_update_and_render	endp
 main_01_TEXT	ends
+
+	HUD_SCORE_PUT procdesc near
+	SCORE_UPDATE_AND_RENDER procdesc near
 
 main_011_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01
@@ -40873,34 +40725,8 @@ aVivavvvvilcvb@	db 'Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence',0
 aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0
 include th04/formats/bb_txt_load[data].asm
 word_231F2	dw 10h
-		db  10h
-		db  27h	; '
-		db 0E8h
-		db    3
-		db  64h	; d
-		db    0
-		db  0Ah
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-unk_23206	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th04/scoreupd[data].asm
+include th04/hud/gaiji_row[data].asm
 word_23210	dw 0
 byte_23212	db 0
 		db    0

@@ -1112,7 +1112,7 @@ sub_B55A	proc near
 		call	sub_16D67
 		call	sub_C473
 		call	sparks_init
-		call	sub_143CA
+		call	hud_score_put
 		call	sub_C29E
 		nopcall	sub_106F3
 		mov	fp_23F5A, offset tiles_render_all
@@ -8896,7 +8896,7 @@ loc_FBB5:
 		nopcall	sub_104BB
 		inc	_continues_used
 		call	sub_10398
-		call	sub_143CA
+		call	hud_score_put
 		mov	al, 0
 		jmp	short loc_FBF7
 ; ---------------------------------------------------------------------------
@@ -9481,7 +9481,7 @@ loc_103E9:
 		jg	short loc_103A4
 		mov	_score_delta, 0
 		mov	_score_delta_frame, 0
-		mov	_is_hiscore, 0
+		mov	_hiscore_popup_shown, 0
 		pop	si
 		pop	bp
 		retn
@@ -9865,7 +9865,7 @@ sub_106F3	proc far
 		mov	bp, sp
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
-		call	sub_143CA
+		call	hud_score_put
 		mov	al, playchar
 		mov	ah, 0
 		mov	bx, ax
@@ -17712,156 +17712,8 @@ loc_143C1:
 		retn	6
 sub_1437E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_143CA	proc near
-		push	si
-		push	di
-		mov	si, offset _hiscore_lebcd[SCORE_DIGITS - 1]
-		mov	di, 4
-
-loc_143D2:
-		mov	cx, HUD_TRAM_W
-		mov	bx, offset _hud_gaiji_row
-
-loc_143D8:
-		mov	al, [si]
-		add	al, 0A0h
-		mov	[bx], al
-		inc	bx
-		dec	si
-		loop	loc_143D8
-		call	gaiji_putsa pascal, 56, di, ds, offset _hud_gaiji_row, TX_WHITE
-		add	di, 2
-		cmp	di, 6
-		jz	short loc_143D2
-		pop	si
-		pop	di
-		retn
-sub_143CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-;uth05win:CStage::StepScore()
-;;_score_delta==curDelta=m_curScore-m_drawScore
-public SCORE_UPDATE_AND_RENDER
-score_update_and_render	proc near
-		mov	eax, _score_delta
-		or	eax, eax				;if (eax==0)
-		jz	short locret_1445C		;	goto locret_1445C
-		cmp	_score_delta_frame, eax		;if (m_drawScoreDelta<=m_curScore-m_drawScore)
-		jbe	short loc_1440F			;	goto loc_1440F
-		mov	word ptr _score_delta_frame, ax;m_drawScoreDelta=curDelta;
-
-loc_1440F:
-		shr	eax, 5			;curDelta/=32
-		or	eax, eax		;if (curDelta!=0)
-		jnz	short loc_1441B ;	goto loc_1441B
-		inc	ax				;curDelta=1
-		jmp	short loc_14426 ;goto loc_14426
-; ---------------------------------------------------------------------------
-
-loc_1441B:
-		cmp	eax, SCORE_DELTA_FRAME_LIMIT
-		jbe	short loc_14426	;	goto loc_14426
-		mov	ax, SCORE_DELTA_FRAME_LIMIT
-
-loc_14426:
-		cmp	word ptr _score_delta_frame, ax
-		jnb	short loc_1442F
-		mov	word ptr _score_delta_frame, ax
-
-loc_1442F:
-		mov	dx, word ptr _score_delta_frame
-		jmp	short loc_1445E
-; ---------------------------------------------------------------------------
-
-loc_14435:
-		cmp	_is_hiscore, 0
-		jnz	short loc_14450
-		or	al, al
-		jz	short loc_14450
-		mov	_is_hiscore, 1
-		mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-		mov	_popup_fp, offset popup_update_and_render
-
-loc_14450:
-		mov	eax, _score_delta_frame
-		sub	_score_delta, eax
-		call	sub_143CA
-
-locret_1445C:
-		retn
-; ---------------------------------------------------------------------------
-		nop
-
-loc_1445E:
-		push	si
-		push	di
-		push	ds
-		pop	es
-		mov	dword ptr _hud_gaiji_row[4], 0
-		mov	di, offset _hud_gaiji_row[4]
-		mov	bx, 1FBCh
-		mov	cx, 4
-
-loc_14474:
-		mov	ax, dx
-		xor	dx, dx
-		div	word ptr [bx]
-		add	bx, 2
-		mov	[di], al
-		dec	di
-		loop	loc_14474
-		mov	[di], dl
-		mov	si, offset _score_lebcd[1]
-		mov	cx, SCORE_DIGITS - 2
-		xor	ah, ah
-
-loc_1448C:
-		movzx	ax, byte ptr [di]
-		add	al, [si]
-		aaa
-		mov	[si], al
-		inc	di
-		inc	si
-		add	[si], ah
-		loop	loc_1448C
-		mov	al, [di]
-		add	[si], al
-		mov	si, offset _score_lebcd[SCORE_DIGITS - 1]
-		mov	di, offset _hiscore_lebcd[SCORE_DIGITS - 1]
-		xor	dl, dl
-		mov	cx, SCORE_DIGITS
-		cmp	_is_hiscore, 0
-		jnz	short loc_144BC
-
-loc_144B0:
-		mov	al, [si]
-		cmp	[di], al
-		ja	short loc_144C4
-		jb	short loc_144BC
-		dec	di
-		dec	si
-		loop	loc_144B0
-
-loc_144BC:
-		cli
-		std
-		rep movsb
-		cld
-		sti
-		inc	dl
-
-loc_144C4:
-		mov	al, dl
-		pop	di
-		pop	si
-		jmp	loc_14435
-score_update_and_render	endp
-
+	HUD_SCORE_PUT procdesc near
+	SCORE_UPDATE_AND_RENDER procdesc near
 	BOSS_RESET procdesc near
 	BB_STAGE_LOAD procdesc near
 	BB_STAGE_FREE procdesc near
@@ -38280,18 +38132,9 @@ SHOT_FUNCS label word
 	dw shot_yuuka_l9
 byte_2297E	db 0
 		db 0
-include th02/hud/number_put[data].asm
-		db  10h
-		db  27h	; '
-		db 0E8h
-		db    3
-		db  64h	; d
-		db    0
-		db  0Ah
-		db    0
-		db    1
-		db    0
-include th05/hud/gaiji_row[data].asm
+include th02/hud/score_put[data].asm
+include th04/scoreupd[data].asm
+include th04/hud/gaiji_row[data].asm
 		db    0
 		db    0
 		db    3

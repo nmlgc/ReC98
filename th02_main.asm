@@ -6694,81 +6694,7 @@ sub_DC4B	proc near
 		retn
 sub_DC4B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DC55	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	si, offset _POWERS_OF_10_LONG
-		mov	di, HUD_X
-		jmp	short loc_DC9A
-; ---------------------------------------------------------------------------
-
-loc_DC65:
-		mov	eax, [bp+arg_0]
-		cdq
-		idiv	dword ptr [si]
-		mov	[bp+var_4], ax
-		movsx	eax, [bp+var_4]
-		imul	eax, [si]
-		sub	[bp+arg_0], eax
-		add	si, 4
-		mov	ax, [bp+var_4]
-		add	ax, GB_DIGITS
-		mov	[bp+var_2], ax
-		call	gaiji_putca pascal, di, [bp+arg_4], ax, TX_WHITE
-		add	di, 2
-
-loc_DC9A:
-		cmp	di, HUD_X + ((SCORE_DIGITS - 1) * 2)
-		jl	short loc_DC65
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_DC55	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DCA5	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	si, 0Ah
-		jl	short loc_DCB7
-		mov	si, 9
-
-loc_DCB7:
-		lea	ax, [si+GB_DIGITS]
-		mov	[bp+var_2], ax
-		call	gaiji_putca pascal, HUD_X + ((SCORE_DIGITS - 1) * 2), [bp+arg_2], ax, TX_WHITE
-		pop	si
-		leave
-		retn	4
-sub_DCA5	endp
-
+include th02/hud/score_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6885,16 +6811,12 @@ loc_DDCE:
 		mov	dword_218AC, eax
 		movzx	eax, word_218B0
 		add	dword_1E598, eax
-		push	6
-		pushd	[dword_1E598]
-		call	sub_DC55
+		call	hud_score_put pascal, 6, large [dword_1E598]
 		mov	eax, dword_1E598
 		cmp	eax, dword_252F8
 		jle	short loc_DE01
 		mov	dword_252F8, eax
-		push	4
-		push	eax
-		call	sub_DC55
+		call	hud_score_put pascal, 4, eax
 
 loc_DE01:
 		mov	bx, word_1E5B6
@@ -6944,16 +6866,12 @@ sub_DE4E	proc far
 		mov	bp, sp
 		mov	eax, dword_218AC
 		add	dword_1E598, eax
-		push	6
-		pushd	[dword_1E598]
-		call	sub_DC55
+		call	hud_score_put pascal, 6, large [dword_1E598]
 		mov	eax, dword_1E598
 		cmp	eax, dword_252F8
 		jle	short loc_DE7A
 		mov	dword_252F8, eax
-		push	4
-		push	eax
-		call	sub_DC55
+		call	hud_score_put pascal, 4, eax
 
 loc_DE7A:
 		mov	bx, word_1E5B6
@@ -7185,23 +7103,19 @@ sub_E012	proc near
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
-		push	6
-		pushd	[dword_1E598]
-		call	sub_DC55
+		call	hud_score_put pascal, 6, large [dword_1E598]
 		push	6
 		les	bx, mikoconfig
 		assume es:nothing
 		push	es:[bx+mikoconfig_t.continues_used]
-		call	sub_DCA5
+		call	hud_continues_put
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
-		push	4
-		pushd	[dword_252F8]
-		call	sub_DC55
+		call	hud_score_put pascal, 4, large [dword_252F8]
 		push	4
 		mov	al, byte_252FC
 		mov	ah, 0
 		push	ax
-		call	sub_DCA5
+		call	hud_continues_put
 		call	gaiji_putsa pascal, (57 shl 16) + 17, ds, offset gsREIMU, TX_YELLOW
 		call	sub_DF76
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
@@ -34557,7 +34471,7 @@ bombs	db 3
 		db    5
 word_1E5B6	dw 0
 dword_1E5B8	dd 9C40h
-include th02/hud/number_put[data].asm
+include th02/hud/score_put[data].asm
 word_1E5D8	dw 4140h
 word_1E5DA	dw 4342h
 word_1E5DC	dw 44h
