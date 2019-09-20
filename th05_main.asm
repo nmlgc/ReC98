@@ -9721,7 +9721,7 @@ loc_105E6:
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_1437E
+		call	hud_bar_put
 		leave
 		retf
 sub_1059D	endp
@@ -9771,7 +9771,7 @@ var_A		= byte ptr -0Ah
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_1437E
+		call	hud_bar_put
 		pop	di
 		pop	si
 		leave
@@ -9831,7 +9831,7 @@ arg_0		= word ptr  6
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_1437E
+		call	hud_bar_put
 		jmp	short loc_106EE
 ; ---------------------------------------------------------------------------
 
@@ -17657,61 +17657,7 @@ table_14356	dw loc_14349
 		dw loc_1434D
 		dw loc_14340
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1437E	proc near
-		mov	bx, sp
-		push	di
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	di, offset _hud_gaiji_row
-		push	38h ; '8'
-		push	word ptr ss:[bx+6]
-		push	ds
-		push	di
-		push	word ptr ss:[bx+2]
-		mov	al, 30h	; '0'
-		mov	cx, HUD_TRAM_W
-		mov	bl, ss:[bx+4]
-		cmp	bl, 80h
-		jb	short loc_143A7
-
-loc_143A0:
-		stosb
-		inc	al
-		loop	loc_143A0
-		jmp	short loc_143C1
-; ---------------------------------------------------------------------------
-
-loc_143A7:
-		mov	dl, bl
-		dec	al
-		jmp	short loc_143AE
-; ---------------------------------------------------------------------------
-
-loc_143AD:
-		stosb
-
-loc_143AE:
-		dec	cx
-		sub	dl, 10h
-		jg	short loc_143AD
-		mov	al, bl
-		dec	al
-		and	al, 0Fh
-		add	al, 20h	; ' '
-		stosb
-		mov	al, 2
-		rep stosb
-
-loc_143C1:
-		call	gaiji_putsa
-		pop	di
-		retn	6
-sub_1437E	endp
-
+	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
 	BOSS_RESET procdesc near

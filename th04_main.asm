@@ -8126,7 +8126,7 @@ var_A		= byte ptr -0Ah
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		nopcall	main_01:sub_F177
+		nopcall	main_01:hud_bar_put
 		pop	di
 		pop	si
 		leave
@@ -8186,7 +8186,7 @@ arg_0		= word ptr  6
 		mov	al, ss:[bx]
 		mov	ah, 0
 		push	ax
-		nopcall	main_01:sub_F177
+		nopcall	main_01:hud_bar_put
 		jmp	short loc_F172
 ; ---------------------------------------------------------------------------
 
@@ -8210,97 +8210,7 @@ loc_F172:
 		retf	2
 sub_F0DD	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F177	proc far
-
-var_16		= byte ptr -16h
-var_E		= byte ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= byte ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 16h
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	ax, word_22E15
-		mov	[bp+var_C], ax
-		mov	ax, word_22E17
-		mov	[bp+var_A], ax
-		mov	ax, word_22E19
-		mov	[bp+var_8], ax
-		mov	ax, word_22E1B
-		mov	[bp+var_6], ax
-		mov	al, byte_22E1D
-		mov	[bp+var_4], al
-		cmp	di, 80h
-		jl	short loc_F1B1
-		push	38h ; '8'
-		push	[bp+arg_4]
-		push	ss
-		lea	ax, [bp+var_C]
-		jmp	short loc_F1F5
-; ---------------------------------------------------------------------------
-
-loc_F1B1:
-		mov	[bp+var_2], di
-		sub	[bp+var_2], 10h
-		xor	si, si
-		jmp	short loc_F1C5
-; ---------------------------------------------------------------------------
-
-loc_F1BC:
-		mov	[bp+si+var_16],	2Fh ; '/'
-		sub	[bp+var_2], 10h
-		inc	si
-
-loc_F1C5:
-		cmp	[bp+var_2], 0
-		jg	short loc_F1BC
-		lea	ax, [di-1]
-		and	ax, 0Fh
-		mov	[bp+var_2], ax
-		mov	al, byte ptr [bp+var_2]
-		add	al, 20h	; ' '
-		mov	[bp+si+var_16],	al
-		jmp	short loc_F1E2
-; ---------------------------------------------------------------------------
-
-loc_F1DE:
-		mov	[bp+si+var_16],	2
-
-loc_F1E2:
-		inc	si
-		cmp	si, 7
-		jle	short loc_F1DE
-		mov	[bp+var_E], 0
-		push	56
-		push	[bp+arg_4]
-		push	ss
-		lea	ax, [bp+var_16]
-
-loc_F1F5:
-		push	ax
-		push	[bp+arg_0]
-		call	gaiji_putsa
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_F177	endp
-
+include th04/hud/bar_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40604,11 +40514,7 @@ byte_22E0F	db 0
 word_22E10	dw 6141h
 word_22E12	dw 0C1A1h
 byte_22E14	db 0E1h
-word_22E15	dw 3130h
-word_22E17	dw 3332h
-word_22E19	dw 3534h
-word_22E1B	dw 3736h
-byte_22E1D	db 0
+include th04/hud/bar_put[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0
 include th04/formats/bb_playchar[data].asm
