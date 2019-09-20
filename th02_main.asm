@@ -6712,7 +6712,7 @@ arg_4		= word ptr  8
 		push	si
 		push	di
 		mov	si, offset _POWERS_OF_10_LONG
-		mov	di, 38h	; '8'
+		mov	di, HUD_X
 		jmp	short loc_DC9A
 ; ---------------------------------------------------------------------------
 
@@ -6732,7 +6732,7 @@ loc_DC65:
 		add	di, 2
 
 loc_DC9A:
-		cmp	di, 46h	; 'F'
+		cmp	di, HUD_X + ((SCORE_DIGITS - 1) * 2)
 		jl	short loc_DC65
 		pop	di
 		pop	si
@@ -6761,9 +6761,9 @@ arg_2		= word ptr  6
 		mov	si, 9
 
 loc_DCB7:
-		lea	ax, [si+0A0h]
+		lea	ax, [si+GB_DIGITS]
 		mov	[bp+var_2], ax
-		call	gaiji_putca pascal, 70, [bp+arg_2], ax, TX_WHITE
+		call	gaiji_putca pascal, HUD_X + ((SCORE_DIGITS - 1) * 2), [bp+arg_2], ax, TX_WHITE
 		pop	si
 		leave
 		retn	4

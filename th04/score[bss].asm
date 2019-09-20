@@ -3,7 +3,6 @@
 ; which is then taken "times 10" ([score_delta] += 1 → 10 more on-screen
 ; points).
 
-SCORE_DIGITS = 8
 ; Also ignoring the last digit. (= 61,110 points)
 SCORE_DELTA_FRAME_LIMIT = 6111
 

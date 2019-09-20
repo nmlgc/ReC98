@@ -1,0 +1,3 @@
+HUD_X = 56
+HUD_TRAM_W = 8
+BAR_MAX = 128

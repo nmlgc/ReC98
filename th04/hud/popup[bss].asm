@@ -1,7 +1,3 @@
-POPUP_TRAM_Y = 2
-POPUP_LEN = 8
-POPUP_DURATION = 128
-
 public _popup_gaiji_len, _popup_id_cur, _popup_dest_reached, _popup_shiftbuf
 public _popup_cur_tram_x, _popup_dest_tram_x, _bgm_title_id, _popup_id_new
 public _overlay_text_fp, _popup_fp, _popup_byte_unknown, _popup_bonus
