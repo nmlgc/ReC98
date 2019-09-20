@@ -20,7 +20,7 @@
 		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
-include th03/th03.asm
+include th03/th03.inc
 
 	extern _execl:proc
 
