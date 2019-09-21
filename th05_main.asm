@@ -12973,13 +12973,12 @@ loc_12188:
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
 		mov	ax, _input
-		and	ax, 0F0Fh
+		and	ax, INPUT_MOVEMENT
 		mov	si, ax
 		mov	[bp+var_1], 1
 
 loc_121A9:
-		push	si
-		call	sub_142F8
+		call	player_move pascal, si
 		or	al, al
 		jnz	short loc_121CA
 		cmp	[bp+var_1], 0
@@ -17557,106 +17556,10 @@ loc_142D4:
 locret_142F6:
 		retn
 sub_14266	endp
-
-; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_142F8	proc near
-		mov	bx, sp
-		mov	bx, ss:[bx+2]
-		cmp	bl, 0Ah
-		ja	short loc_1434D
-		mov	cx, _playchar_speed_diagonal
-		mov	ax, cx
-		mov	dx, _playchar_speed_aligned
-		and	bh, 0Fh
-		jz	short loc_14321
-		or	bl, bl
-		jnz	short loc_1434D
-		shr	bx, 8
-		cmp	bl, 8
-		ja	short loc_1434D
-		add	bl, 0Bh
-
-loc_14321:
-		add	bx, bx
-		jmp	word ptr cs:table_14356[bx]
-
-loc_14328:
-		neg	dx
-
-loc_1432A:
-		mov	player_pos.velocity.y, dx
-		jmp	short loc_14351
-; ---------------------------------------------------------------------------
-
-loc_14330:
-		neg	dx
-
-loc_14332:
-		mov	player_pos.velocity.x, dx
-		jmp	short loc_14351
-; ---------------------------------------------------------------------------
-
-loc_14338:
-		neg	cx
-		jmp	short loc_14340
-; ---------------------------------------------------------------------------
-
-loc_1433C:
-		neg	cx
-
-loc_1433E:
-		neg	ax
-
-loc_14340:
-		mov	player_pos.velocity.x, ax
-		mov	player_pos.velocity.y, cx
-		jmp	short loc_14351
-; ---------------------------------------------------------------------------
-
-loc_14349:
-		mov	al, 2
-		jmp	short locret_14353
-; ---------------------------------------------------------------------------
-
-loc_1434D:
-		xor	al, al
-		jmp	short locret_14353
-; ---------------------------------------------------------------------------
-
-loc_14351:
-		mov	al, 1
-
-locret_14353:
-		retn	2
-sub_142F8	endp
-
-; ---------------------------------------------------------------------------
-table_14356	dw loc_14349
-		dw loc_14328
-		dw loc_1432A
-		dw loc_1434D
-		dw loc_14330
-		dw loc_1433C
-		dw loc_1433E
-		dw loc_1434D
-		dw loc_14332
-		dw loc_14338
-		dw loc_14340
-		dw loc_1434D
-		dw loc_1433C
-		dw loc_14338
-		dw loc_1434D
-		dw loc_1433E
-		dw loc_1434D
-		dw loc_1434D
-		dw loc_1434D
-		dw loc_14340
-
+	PLAYER_MOVE procdesc pascal near \
+		input:word
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
@@ -45141,7 +45044,7 @@ _stage_title    	dd ?
 _stage_bgm_title	dd ?
 _boss_bgm_title 	dd ?
 word_2CE9E	dw ?
-player_pos	motion_t <?>
+include th04/player/pos[bss].asm
 include th05/playchar_speed[bss].asm
 dword_2CEB4	dd ?
 dword_2CEB8	dd ?

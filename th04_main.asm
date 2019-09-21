@@ -11118,113 +11118,7 @@ loc_10894:
 		retn
 sub_107E2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10898	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	2, 0
-		mov	dl, 1
-		mov	ax, [bp+arg_0]
-		mov	[bp+var_2], ax
-		mov	cx, 0Dh		; switch 13 cases
-		mov	bx, offset table_10898
-
-loc_108AA:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_108B9
-		add	bx, 2
-		loop	loc_108AA
-		jmp	short loc_10913	; default
-; ---------------------------------------------------------------------------
-
-loc_108B9:
-		jmp	word ptr cs:[bx+1Ah] ; switch jump
-
-loc_108BD:
-		mov	dl, 2		; jumptable 000108B9 case 0
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108C1:
-		mov	player_pos.velocity.x, -64 ; jumptable 000108B9	case 4
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108C9:
-		mov	player_pos.velocity.x, -48 ; jumptable 000108B9	cases 6,1024
-		mov	player_pos.velocity.y, 48
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108D7:
-		mov	player_pos.velocity.y, 64 ; jumptable 000108B9 case 2
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108DF:
-		mov	player_pos.velocity.x, 48	; jumptable 000108B9 cases 10,2048
-		mov	player_pos.velocity.y, 48
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108ED:
-		mov	player_pos.velocity.x, 64 ; jumptable 000108B9 case 8
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_108F5:
-		mov	player_pos.velocity.x, 48	; jumptable 000108B9 cases 9,512
-		jmp	short loc_1090B
-; ---------------------------------------------------------------------------
-
-loc_108FD:
-		mov	player_pos.velocity.y, -64 ; jumptable 000108B9	case 1
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_10905:
-		mov	player_pos.velocity.x, -48 ; jumptable 000108B9	cases 5,256
-
-loc_1090B:
-		mov	player_pos.velocity.y, -48
-		jmp	short loc_10915
-; ---------------------------------------------------------------------------
-
-loc_10913:
-		mov	dl, 0		; default
-
-loc_10915:
-		mov	al, dl
-		leave
-		retn	2
-sub_10898	endp
-
-; ---------------------------------------------------------------------------
-		db    0
-table_10898	dw	0,     1,     2,     4 ; value table for switch	statement
-		dw	5,     6,     8,     9
-		dw    0Ah,  100h,  200h,  400h
-		dw   800h
-		dw offset loc_108BD ; jump table for switch statement
-		dw offset loc_108FD
-		dw offset loc_108D7
-		dw offset loc_108C1
-		dw offset loc_10905
-		dw offset loc_108C9
-		dw offset loc_108ED
-		dw offset loc_108F5
-		dw offset loc_108DF
-		dw offset loc_10905
-		dw offset loc_108F5
-		dw offset loc_108C9
-		dw offset loc_108DF
+include th04/player/move.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11384,8 +11278,8 @@ sub_10988	endp
 
 sub_10ABF	proc near
 
-var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@move_ret	= byte ptr -2
+var_1     	= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -11421,15 +11315,14 @@ loc_10B11:
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
 		mov	ax, _input
-		and	ax, 0F0Fh
+		and	ax, INPUT_MOVEMENT
 		mov	si, ax
 		mov	[bp+var_1], 1
 
 loc_10B32:
-		push	si
-		call	main_01:sub_10898
-		mov	[bp+var_2], al
-		cmp	[bp+var_2], 0
+		call	main_01:player_move pascal, si
+		mov	[bp+@@move_ret], al
+		cmp	[bp+@@move_ret], 0
 		jnz	short loc_10B58
 		cmp	[bp+var_1], 0
 		jz	short loc_10B58
@@ -41529,7 +41422,7 @@ public _stage_vm
 _stage_vm	dd ?
 word_2598A	dw ?
 word_2598C	dw ?
-player_pos	motion_t <?>
+include th04/player/pos[bss].asm
 word_2599A	dw ?
 word_2599C	dw ?
 word_2599E	dw ?
