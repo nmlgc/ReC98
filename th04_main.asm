@@ -525,7 +525,7 @@ loc_AD3B:
 		call	main_01:bb_txt_load
 		cmp	playchar, 0
 		jnz	short loc_AD90
-		mov	word_259B4, 26h	; '&'
+		mov	_player_option_patnum, 38
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_AD7C
@@ -543,7 +543,7 @@ loc_AD82:
 ; ---------------------------------------------------------------------------
 
 loc_AD90:
-		mov	word_259B4, 27h	; '''
+		mov	_player_option_patnum, 39
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_ADA9
@@ -11484,11 +11484,11 @@ loc_10C6F:
 		mov	[bp+var_2], ax
 		mov	ax, di
 		mov	dx, [bp+var_2]
-		push	word_259B4
+		push	_player_option_patnum
 		call	main_01:z_super_roll_put_tiny
 		lea	ax, [di+30h]
 		mov	dx, [bp+var_2]
-		push	word_259B4
+		push	_player_option_patnum
 		call	main_01:z_super_roll_put_tiny
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_10D47
@@ -41439,7 +41439,7 @@ byte_259AA	db ?
 byte_259AB	db ?
 dword_259AC	dd ?
 dword_259B0	dd ?
-word_259B4	dw ?
+include th04/player/option[bss].asm
 dream_items_collected	db ?
 		db    ?	;
 		db    ?	;

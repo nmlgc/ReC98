@@ -3587,7 +3587,7 @@ loc_C5C2:
 		mov	byte_205E0, 0
 		mov	_player_is_hit, 0
 		mov	byte_1E517, 0
-		mov	byte_1E51B, 48h	; 'H'
+		mov	_player_option_patnum, 72
 		mov	word_205D8, 0FFFFh
 		mov	word_205DC, 0FFFFh
 		mov	word_205DA, 0FFFFh
@@ -3625,7 +3625,7 @@ loc_C655:
 		mov	_playchar_speed_diagonal_y, 3
 		mov	byte_2060E, 34h	; '4'
 		mov	byte_2060F, 37h	; '7'
-		inc	byte_1E51B
+		inc	_player_option_patnum
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -3639,9 +3639,9 @@ loc_C67F:
 		mov	byte_1E518, 3
 		mov	byte_2060E, 7Dh	; '}'
 		mov	byte_2060F, 3Bh	; ';'
-		mov	al, byte_1E51B
+		mov	al, _player_option_patnum
 		add	al, 2
-		mov	byte_1E51B, al
+		mov	_player_option_patnum, al
 		pop	bp
 		retn
 sub_C5B0	endp
@@ -8907,7 +8907,7 @@ loc_EFC7:
 		mov	bx, word_205F2
 		push	word ptr [bx]
 		push	si
-		mov	al, byte_1E51B
+		mov	al, _player_option_patnum
 		mov	ah, 0
 		push	ax
 		call	super_roll_put_tiny
@@ -8916,7 +8916,7 @@ loc_EFC7:
 		add	ax, 30h	; '0'
 		push	ax
 		push	si
-		mov	al, byte_1E51B
+		mov	al, _player_option_patnum
 		mov	ah, 0
 		push	ax
 		call	super_roll_put_tiny
@@ -34411,7 +34411,8 @@ byte_1E517	db 0
 byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
-byte_1E51B	db 48h
+public _PLAYER_OPTION_PATNUM
+_player_option_patnum	db 72
 power_overflow_level	dw 0
 word_1E51E	dw 0
 		db    0

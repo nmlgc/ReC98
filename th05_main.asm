@@ -13137,11 +13137,11 @@ loc_122D5:
 		mov	[bp+var_2], ax
 		mov	ax, di
 		mov	dx, [bp+var_2]
-		push	1Ah
+		push	_player_option_patnum
 		call	z_super_roll_put_tiny
 		lea	ax, [di+30h]
 		mov	dx, [bp+var_2]
-		push	1Ah
+		push	_player_option_patnum
 		call	z_super_roll_put_tiny
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_123A9
