@@ -5187,13 +5187,13 @@ arg_2		= word ptr  6
 		mov	word_25608, ax
 		mov	al, [bp+arg_0]
 		mov	byte_2560A, al
-		mov	ax, word ptr dword_259AC
+		mov	ax, _player_option_pos_cur.x
 		mov	word ptr dword_2560C, ax
-		mov	ax, word ptr dword_259AC+2
+		mov	ax, _player_option_pos_cur.y
 		mov	word ptr dword_2560C+2,	ax
-		mov	ax, word ptr dword_259AC
+		mov	ax, _player_option_pos_cur.x
 		mov	word ptr dword_25610, ax
-		mov	ax, word ptr dword_259AC+2
+		mov	ax, _player_option_pos_cur.y
 		mov	word ptr dword_25610+2,	ax
 		mov	byte_22C1A, 0
 
@@ -5212,8 +5212,8 @@ loc_DADA:
 		mov	word ptr [si+0Eh], 46h ; 'F'
 		mov	byte ptr [si+10h], 9
 		mov	word ptr [si+0Ch], 0FEE0h
-		mov	ax, word ptr dword_259AC
-		add	ax, 0FE80h
+		mov	ax, _player_option_pos_cur.x
+		add	ax, (-24 shl 4)
 		mov	[si+2],	ax
 
 loc_DB17:
@@ -5224,8 +5224,8 @@ loc_DB17:
 		mov	word ptr [si+0Eh], 46h ; 'F'
 		mov	byte ptr [si+10h], 9
 		mov	word ptr [si+0Ch], 0FEE0h
-		mov	ax, word ptr dword_259AC
-		add	ax, 180h
+		mov	ax, _player_option_pos_cur.x
+		add	ax, (24 shl 4)
 		mov	[si+2],	ax
 		jmp	short loc_DB45
 ; ---------------------------------------------------------------------------
@@ -10722,7 +10722,7 @@ loc_1052D:
 		jz	short loc_1054E
 		mov	eax, dword_2560C
 		mov	dword_25610, eax
-		mov	eax, dword_259AC
+		mov	eax, _player_option_pos_cur
 		mov	dword_2560C, eax
 		dec	word_25608
 
@@ -11109,7 +11109,7 @@ loc_10872:
 		call	main_01:tiles_invalidate_around pascal, large [player_pos.prev]
 		mov	_tile_invalidate_box.x, 64
 		mov	_tile_invalidate_box.y, 16
-		call	main_01:tiles_invalidate_around pascal, large [dword_259B0]
+		call	main_01:tiles_invalidate_around pascal, large [_player_option_pos_prev]
 
 loc_10894:
 		pop	di
@@ -11385,14 +11385,14 @@ loc_10BBD:
 		dec	byte_259A3
 
 loc_10BC7:
-		mov	eax, dword_259AC
-		mov	dword_259B0, eax
+		mov	eax, _player_option_pos_cur
+		mov	_player_option_pos_prev, eax
 		mov	eax, player_pos.cur
-		mov	dword_259AC, eax
+		mov	_player_option_pos_cur, eax
 		mov	ax, player_pos.velocity.x
-		sub	word ptr dword_259AC, ax
+		sub	_player_option_pos_cur.x, ax
 		mov	ax, player_pos.velocity.y
-		sub	word ptr dword_259AC+2,	ax
+		sub	_player_option_pos_cur.y, ax
 		test	_input.lo, low INPUT_BOMB
 		jz	short loc_10BF0
 		call	fp_256AA
@@ -11475,10 +11475,10 @@ loc_10C6F:
 		cmp	shot_level, 2
 		jb	loc_10D47
 		call	main_01:grcg_setmode_rmw_1
-		mov	ax, word ptr dword_259AC
+		mov	ax, _player_option_pos_cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_259AC+2
+		mov	ax, _player_option_pos_cur.y
 		add	ax, (8 shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
@@ -41437,8 +41437,6 @@ include th01/player_is_hit[bss].asm
 byte_259A9	db ?
 byte_259AA	db ?
 byte_259AB	db ?
-dword_259AC	dd ?
-dword_259B0	dd ?
 include th04/player/option[bss].asm
 dream_items_collected	db ?
 		db    ?	;

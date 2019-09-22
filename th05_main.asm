@@ -13038,14 +13038,14 @@ loc_12224:
 		dec	byte_2CEBD
 
 loc_1222E:
-		mov	eax, dword_2CEB4
-		mov	dword_2CEB8, eax
+		mov	eax, _player_option_pos_cur
+		mov	_player_option_pos_prev, eax
 		mov	eax, player_pos.cur
-		mov	dword_2CEB4, eax
+		mov	_player_option_pos_cur, eax
 		mov	ax, player_pos.velocity.x
-		sub	word ptr dword_2CEB4, ax
+		sub	_player_option_pos_cur.x, ax
 		mov	ax, player_pos.velocity.y
-		sub	word ptr dword_2CEB4+2,	ax
+		sub	_player_option_pos_cur.y, ax
 		test	_input.lo, low INPUT_BOMB
 		jz	short loc_12256
 		call	sub_C483
@@ -13128,10 +13128,10 @@ loc_122D5:
 		cmp	shot_level, 2
 		jb	loc_123A9
 		call	grcg_setmode_rmw_1
-		mov	ax, word ptr dword_2CEB4
+		mov	ax, _player_option_pos_cur.x
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, word ptr dword_2CEB4+2
+		mov	ax, _player_option_pos_cur.y
 		add	ax, (8 shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	[bp+var_2], ax
@@ -17551,7 +17551,7 @@ loc_142D4:
 		call	tiles_invalidate_around pascal, large [player_pos.prev]
 		mov	_tile_invalidate_box.x, 64
 		mov	_tile_invalidate_box.y, 16
-		call	tiles_invalidate_around pascal, large [dword_2CEB8]
+		call	tiles_invalidate_around pascal, large [_player_option_pos_prev]
 
 locret_142F6:
 		retn
@@ -45046,8 +45046,7 @@ _boss_bgm_title 	dd ?
 word_2CE9E	dw ?
 include th04/player/pos[bss].asm
 include th05/playchar_speed[bss].asm
-dword_2CEB4	dd ?
-dword_2CEB8	dd ?
+include th04/player/option[bss].asm
 chara_invulnerable_time_left	db ?
 byte_2CEBD	db ?
 power	db ?
