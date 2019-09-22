@@ -10,8 +10,6 @@ private:
 	int v;
 
 public:
-	Subpixel() {}
-	Subpixel(float screen_v) { *this = screen_v; }
 
 	Subpixel& operator =(float screen_v) {
 		v = static_cast<int>(screen_v * 16.0f);
