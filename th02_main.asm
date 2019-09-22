@@ -5900,7 +5900,7 @@ loc_D639:
 loc_D644:
 		cmp	si, 14h
 		jl	short loc_D639
-		mov	word_2189E, 0
+		mov	_point_items_collected, 0
 		call	sub_C764
 		mov	byte_218A1, 0
 		pop	si
@@ -6366,7 +6366,7 @@ loc_D984:
 ; ---------------------------------------------------------------------------
 
 loc_D99D:
-		inc	word_2189E
+		inc	_point_items_collected
 		cmp	[bp+var_2], 40h
 		jg	short loc_D9B4
 		mov	al, byte_218A8
@@ -9815,7 +9815,7 @@ loc_FD5A:
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
 		push	0A0012h
 		push	3
-		movsx	eax, word_2189E
+		movsx	eax, _point_items_collected
 		push	eax
 		call	sub_FB42
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
@@ -9828,7 +9828,7 @@ loc_FD5A:
 		push	eax
 		call	sub_FB42
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
-		movsx	eax, word_2189E
+		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
 		push	260012h
@@ -9954,7 +9954,7 @@ loc_FEB9:
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
 		push	0A0012h
 		push	3
-		movsx	eax, word_2189E
+		movsx	eax, _point_items_collected
 		push	eax
 		call	sub_FB42
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
@@ -9967,7 +9967,7 @@ loc_FEB9:
 		push	eax
 		call	sub_FB42
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
-		movsx	eax, word_2189E
+		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
 		push	240012h
@@ -36959,7 +36959,8 @@ word_21896	dw ?
 word_21898	dw ?
 word_2189A	dw ?
 word_2189C	dw ?
-word_2189E	dw ?
+public _POINT_ITEMS_COLLECTED
+_point_items_collected	dw ?
 byte_218A0	db ?
 byte_218A1	db ?
 byte_218A2	db ?

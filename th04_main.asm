@@ -956,7 +956,7 @@ sub_B1D0	proc near
 		mov	byte_259AA, 0
 		mov	byte_259A9, 0
 		mov	byte_259A2, 40h
-		mov	byte_259AB, 0
+		mov	_point_items_collected, 0
 		mov	dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
 		mov	_scroll_active, 1
@@ -8054,7 +8054,7 @@ sub_F064	proc far
 		push	bp
 		mov	bp, sp
 		push	3E000Fh
-		mov	al, byte_259AB
+		mov	al, _point_items_collected
 		mov	ah, 0
 		push	ax
 		call	sub_1D519
@@ -34438,7 +34438,7 @@ var_4		= dword	ptr -4
 		push	0Dh
 		push	eax
 		call	sub_1D48E
-		mov	al, byte_259AB
+		mov	al, _point_items_collected
 		mov	ah, 0
 		mov	si, ax
 		movzx	eax, si
@@ -34613,7 +34613,7 @@ loc_1D9CE:
 		push	0Eh
 		push	eax
 		call	sub_1D48E
-		mov	al, byte_259AB
+		mov	al, _point_items_collected
 		mov	ah, 0
 		mov	si, ax
 		movzx	eax, si
@@ -34949,7 +34949,7 @@ loc_1DC78:
 loc_1DC7B:
 		inc	word_236DC
 		add	si, dream_score
-		inc	byte_259AB
+		inc	_point_items_collected
 		call	sub_F064
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
@@ -41436,7 +41436,8 @@ include th01/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?
 byte_259AA	db ?
-byte_259AB	db ?
+public _POINT_ITEMS_COLLECTED
+_point_items_collected	db ?
 include th04/player/option[bss].asm
 dream_items_collected	db ?
 		db    ?	;

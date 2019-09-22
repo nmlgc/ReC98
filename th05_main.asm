@@ -1103,7 +1103,7 @@ sub_B55A	proc near
 		mov	byte_2CEC2, 0
 		mov	_player_is_hit, 0
 		mov	chara_invulnerable_time_left, 64;m_invulnerableTimeLeft
-		mov	word_2CEC6, 0
+		mov	_point_items_collected, 0
 		mov	byte_2CEC0, 0
 		mov	fp_2C92E, offset sub_EE58
 		mov	_scroll_active, 1
@@ -9662,7 +9662,7 @@ sub_104BB	endp
 sub_10574	proc far
 		push	bp
 		mov	bp, sp
-		call	hud_int_put pascal, (62 shl 16) + 16, word_2CEC6, TX_WHITE
+		call	hud_int_put pascal, (62 shl 16) + 16, _point_items_collected, TX_WHITE
 		call	hud_int_put pascal, (62 shl 16) + 15, word_22648, TX_CYAN
 		pop	bp
 		retf
@@ -20050,7 +20050,7 @@ loc_165F8:
 		push	(34 shl 16) + 12
 		push	eax
 		nopcall	hud_points_put
-		mov	si, word_2CEC6
+		mov	si, _point_items_collected
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -20235,7 +20235,7 @@ loc_1683E:
 		push	(34 shl 16) + 12
 		push	eax
 		nopcall	hud_points_put
-		mov	si, word_2CEC6
+		mov	si, _point_items_collected
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -21305,9 +21305,9 @@ loc_1705C:
 		inc	byte_225CC
 		inc	word_22648
 		inc	word_2264A
-		cmp	word_2CEC6, 3E7h
+		cmp	_point_items_collected, POINT_ITEMS_MAX
 		jnb	short loc_17074
-		inc	word_2CEC6
+		inc	_point_items_collected
 
 loc_17074:
 		call	sub_16F05
@@ -45056,7 +45056,8 @@ include th01/player_is_hit[bss].asm
 byte_2CEC2	db ?
 dream	db ?
 word_2CEC4	dw ?
-word_2CEC6	dw ?
+public _POINT_ITEMS_COLLECTED
+_point_items_collected	dw ?
 byte_2CEC8	db ?
 		dd    ?	;
 		db    ?	;
