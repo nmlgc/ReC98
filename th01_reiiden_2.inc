@@ -31065,7 +31065,7 @@ loc_2C9DA:
 		mov	word_35E95, 0
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 64h	; 'd'
-		mov	word_36C24, 0
+		mov	_player_invincibility_time, 0
 		mov	word_34A78, 0
 		call	sub_232A4
 		push	ds

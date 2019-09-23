@@ -43,3 +43,19 @@ mikoconfig_t	ends
 END_LINE_LEN = 46
 
 MAP_SIZE = 0C00h
+
+; Player
+; ------
+MISS_INVINCIBILITY_FRAMES = 220
+CONTINUE_INVINCIBILITY_FRAMES = 200
+; ------
+
+; Bombs
+; -----
+BOMB_INVINCIBILITY_FRAMES_AFTER = 70
+; -----
+
+; Bosses
+; ------
+BOSS_DEFEAT_INVINCIBILITY_FRAMES = 200
+; ------

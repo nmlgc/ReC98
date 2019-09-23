@@ -1102,7 +1102,7 @@ sub_B55A	proc near
 		mov	byte_2CEBD, 0
 		mov	_miss_time, 0
 		mov	_player_is_hit, 0
-		mov	chara_invulnerable_time_left, 64;m_invulnerableTimeLeft
+		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_point_items_collected, 0
 		mov	byte_2CEC0, 0
 		mov	fp_2C92E, offset sub_EE58
@@ -2638,7 +2638,7 @@ loc_C4BC:
 		push	(192 shl 16) or 160
 		push	(144 shl 16) or 224
 		nopcall	select_for_playchar
-		mov	chara_invulnerable_time_left, al
+		mov	_player_invincibility_time, al
 		push	(192 shl 16) or 128
 		push	( 96 shl 16) or 192
 		nopcall	select_for_playchar
@@ -12950,9 +12950,9 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		cmp	chara_invulnerable_time_left, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_12161
-		dec	chara_invulnerable_time_left
+		dec	_player_invincibility_time
 		mov	_player_is_hit, 0
 		jmp	short loc_12188
 ; ---------------------------------------------------------------------------
@@ -12962,7 +12962,7 @@ loc_12161:
 		jz	short loc_12188
 		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
 		mov	_player_is_hit, 0
-		mov	chara_invulnerable_time_left, 0C0h
+		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		mov	byte_2CEBD, 48h	; 'H'
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
@@ -13106,7 +13106,7 @@ loc_122A9:
 		xor	si, si
 
 loc_122AB:
-		cmp	chara_invulnerable_time_left, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_122CB
 		cmp	frame_mod4, 0
 		jnz	short loc_122CB
@@ -22899,7 +22899,7 @@ loc_17DC5:
 		jnz	loc_17E74
 		sub	ax, player_pos.cur.x
 		sub	dx, player_pos.cur.y
-		cmp	chara_invulnerable_time_left, 0
+		cmp	_player_invincibility_time, 0
 		jnz	short loc_17E41
 		cmp	byte ptr [si+12h], 0
 		jz	short loc_17DFE
@@ -28393,7 +28393,7 @@ loc_1AE98:
 		mov	_bullet_clear_trigger, al
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	chara_invulnerable_time_left, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -36903,7 +36903,7 @@ loc_1FBED:
 loc_1FC10:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
-		mov	chara_invulnerable_time_left, 255
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	loc_1FD51
 ; ---------------------------------------------------------------------------
 
@@ -45047,7 +45047,8 @@ word_2CE9E	dw ?
 include th04/player/pos[bss].asm
 include th05/playchar_speed[bss].asm
 include th04/player/option[bss].asm
-chara_invulnerable_time_left	db ?
+public _PLAYER_INVINCIBILITY_TIME
+_player_invincibility_time	db ?
 byte_2CEBD	db ?
 power	db ?
 shot_level	db ?

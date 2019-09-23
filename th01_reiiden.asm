@@ -1956,7 +1956,7 @@ loc_C3EE:
 		push	offset unk_39B8C
 		call	sub_EB10
 		add	sp, 4
-		mov	word_36C24, 64h	; 'd'
+		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
 		mov	byte_34A58, 0
 		mov	ax, 1
 		jmp	short loc_C430
@@ -4312,7 +4312,7 @@ loc_D7E4:
 		mov	byte_34ADF, 0
 		mov	word_360CA, 0
 		mov	word_34A78, 0
-		mov	word_36C24, 0
+		mov	_player_invincibility_time, 0
 		mov	ax, [bp+var_2]
 		mov	[bp+var_E], ax
 		mov	cx, 4		; switch 4 cases
@@ -4665,7 +4665,7 @@ loc_DB3E:
 
 loc_DBCC:
 		call	sub_B87C
-		cmp	word_36C24, 1
+		cmp	_player_invincibility_time, 1
 		jle	short loc_DBDD
 		mov	word_34A78, 1
 
@@ -4757,18 +4757,18 @@ loc_DC9D:
 		push	0
 		call	sub_B502
 		pop	cx
-		cmp	word_36C24, 1
+		cmp	_player_invincibility_time, 1
 		jle	short loc_DCB7
-		dec	word_36C24
+		dec	_player_invincibility_time
 		mov	word_34A78, 1
 		jmp	short loc_DCCA
 ; ---------------------------------------------------------------------------
 
 loc_DCB7:
-		cmp	word_36C24, 1
+		cmp	_player_invincibility_time, 1
 		jnz	short loc_DCCA
 		mov	word_34A78, 0
-		mov	word_36C24, 0
+		mov	_player_invincibility_time, 0
 
 loc_DCCA:
 		push	1
@@ -4960,7 +4960,7 @@ loc_DE72:
 		call	sub_1AE0D
 		mov	_player_is_hit, 0
 		inc	si
-		mov	word_36C24, 96h
+		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		jmp	loc_DB3E
 ; ---------------------------------------------------------------------------
 
@@ -30881,7 +30881,8 @@ dword_36C1A	dd ?
 byte_36C1E	db ?
 _mode_debug	db ?
 dword_36C20	dd ?
-word_36C24	dw ?
+public _PLAYER_INVINCIBILITY_TIME
+_player_invincibility_time	dw ?
 word_36C26	dw ?
 word_36C28	dw ?
 word_36C2A	dw ?

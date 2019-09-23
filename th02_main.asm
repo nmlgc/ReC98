@@ -2464,7 +2464,7 @@ sub_B98E	proc near
 		mov	word_205EC, ax
 		mov	word_205EA, ax
 		call	sub_C5B0
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, CONTINUE_INVINCIBILITY_FRAMES
 		graph_accesspage _page_front
 		call	sub_4782
 		graph_accesspage _page_back
@@ -3578,7 +3578,7 @@ loc_C5C2:
 		cmp	dx, 26h	; '&'
 		jl	short loc_C5B7
 		mov	byte_205DE, 0
-		mov	byte_20605, 0
+		mov	_player_invincibility_time, 0
 		mov	byte_20606, 0
 		mov	byte_20607, 0
 		mov	byte_20608, 0
@@ -8497,7 +8497,7 @@ loc_ECF0:
 		jz	short loc_ED0E
 		mov	byte_218B4, 0
 		mov	byte_20606, 0
-		mov	byte_20605, 46h	; 'F'
+		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
 
@@ -8850,7 +8850,7 @@ sub_EF36	proc near
 		push	si
 		cmp	byte_20606, 0
 		jnz	short loc_EF4F
-		cmp	byte_20605, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_EF54
 		cmp	byte_1E517, 0
 		jnz	short loc_EF54
@@ -8859,9 +8859,9 @@ loc_EF4F:
 		mov	_player_is_hit, 0
 
 loc_EF54:
-		cmp	byte_20605, 0
+		cmp	_player_invincibility_time, 0
 		jbe	short loc_EF5F
-		dec	byte_20605
+		dec	_player_invincibility_time
 
 loc_EF5F:
 		call	sub_D488
@@ -8876,7 +8876,7 @@ loc_EF5F:
 ; ---------------------------------------------------------------------------
 
 loc_EF7F:
-		mov	al, byte_20605
+		mov	al, _player_invincibility_time
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 3
@@ -8992,7 +8992,7 @@ loc_F078:
 loc_F08A:
 		cmp	byte_20609, 18h
 		jnz	loc_F12A
-		mov	byte_20605, 0DCh
+		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		cmp	word_20272, 2
 		jle	short loc_F0A7
 		mov	word_20272, 0
@@ -9133,7 +9133,7 @@ sub_F1D8	proc near
 		push	di
 		cmp	byte_20606, 0
 		jnz	short loc_F1F2
-		cmp	byte_20605, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_F1F7
 		cmp	byte_1E517, 0
 		jnz	short loc_F1F7
@@ -13118,7 +13118,7 @@ loc_11927:
 ; ---------------------------------------------------------------------------
 
 loc_11939:
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_1193E:
 		inc	si
@@ -17880,7 +17880,7 @@ var_2		= word ptr -2
 loc_13F18:
 		mov	byte_2066A, 1
 		add	dword_218AC, 4E20h
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_13F2B:
 		mov	ax, 1
@@ -18733,7 +18733,7 @@ loc_14628:
 		jl	short loc_14699
 		mov	byte_2066A, 1
 		add	dword_218AC, 7530h
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_14699
 ; ---------------------------------------------------------------------------
 
@@ -25065,7 +25065,7 @@ var_2		= word ptr -2
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
 		add	dword_1E598, 7A120h
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_17CF9:
 		mov	al, _page_front
@@ -29870,7 +29870,7 @@ loc_1AABB:
 		jl	short loc_1AAD6
 		mov	byte_2066A, 1
 		add	dword_218AC, 4E20h
-		mov	byte_20605, 0C8h
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_1AAD6:
 		mov	al, _page_front
@@ -35721,7 +35721,8 @@ word_205F8	dw ?
 		dd    ?	;
 playchar_shot_func	dw ?
 include th01/player_is_hit[bss].asm
-byte_20605	db ?
+public _PLAYER_INVINCIBILITY_TIME
+_player_invincibility_time	db ?
 byte_20606	db ?
 byte_20607	db ?
 byte_20608	db ?

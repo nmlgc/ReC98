@@ -25,3 +25,13 @@ reiidenconfig_t struc ; (sizeof=0x4B)
 	score_highest dd ?	; among all continues
 	p_value dw ?
 reiidenconfig_t ends
+
+; Player
+; ------
+MISS_INVINCIBILITY_FRAMES = 150
+; ------
+
+; Bombs
+; -----
+BOMB_INVINCIBILITY_FRAMES_AFTER = 100
+; -----

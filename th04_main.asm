@@ -955,7 +955,7 @@ sub_B1D0	proc near
 		mov	byte_259A3, 0
 		mov	_miss_time, 0
 		mov	byte_259A9, 0
-		mov	byte_259A2, 40h
+		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_point_items_collected, 0
 		mov	dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
@@ -10069,7 +10069,7 @@ loc_FFED:
 		nopcall	main_01:sub_EFA1
 		mov	byte_256A8, 1
 		mov	byte_256A9, 0
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES
 		mov	ax, fp_255AC
 		mov	fp_255AA, ax
 		mov	_bullet_clear_time, 192
@@ -11283,14 +11283,14 @@ var_1     	= byte ptr -1
 
 		enter	2, 0
 		push	si
-		cmp	byte_259A2, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_10ACF
-		dec	byte_259A2
+		dec	_player_invincibility_time
 
 loc_10ACF:
 		cmp	byte_259A9, 0
 		jz	short loc_10B11
-		cmp	byte_259A2, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_10AE4
 		mov	byte_259A9, 0
 		jmp	short loc_10B11
@@ -11304,7 +11304,7 @@ loc_10AE4:
 loc_10AF1:
 		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
 		mov	byte_259A9, 0
-		mov	byte_259A2, 0C0h
+		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		mov	byte_259A3, 48h	; 'H'
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
@@ -11453,7 +11453,7 @@ loc_10C43:
 		xor	si, si
 
 loc_10C45:
-		cmp	byte_259A2, 0
+		cmp	_player_invincibility_time, 0
 		jz	short loc_10C65
 		cmp	frame_mod4, 0
 		jnz	short loc_10C65
@@ -21033,7 +21033,7 @@ loc_16986:
 		mov	Palettes+1, 0
 		mov	Palettes+2, 0
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_169B8
 ; ---------------------------------------------------------------------------
 
@@ -23258,7 +23258,7 @@ loc_17C77:
 		mov	Palettes, 0
 		mov	Palettes+2, 0
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_17CA4
 ; ---------------------------------------------------------------------------
 
@@ -24857,7 +24857,7 @@ loc_1897E:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -26242,7 +26242,7 @@ loc_19581:
 		call	snd_se_play pascal, 12
 		mov	Palettes, 0
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_195A9
 ; ---------------------------------------------------------------------------
 
@@ -27193,7 +27193,7 @@ loc_19E60:
 		mov	Palettes, 0
 		mov	Palettes+2, 0
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -30513,7 +30513,7 @@ loc_1B8C7:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -32035,7 +32035,7 @@ loc_1C652:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		mov	byte_25A26, 0
 		mov	byte_25A27, 0
 		jmp	short loc_1C67A
@@ -32584,7 +32584,7 @@ loc_1CA49:
 		jnz	loc_1CAF8
 		sub	ax, player_pos.cur.x
 		sub	dx, player_pos.cur.y
-		cmp	byte_259A2, 0
+		cmp	_player_invincibility_time, 0
 		jnz	short loc_1CAC5
 		cmp	byte ptr [si+12h], 0
 		jz	short loc_1CA82
@@ -37840,7 +37840,7 @@ loc_1F878:
 		mov	Palettes, 0
 		mov	Palettes+2, 0
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -39500,7 +39500,7 @@ loc_20693:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
 		mov	_palette_changed, 1
-		mov	byte_259A2, 0FFh
+		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -41427,7 +41427,8 @@ word_2599A	dw ?
 word_2599C	dw ?
 word_2599E	dw ?
 word_259A0	dw ?
-byte_259A2	db ?
+public _PLAYER_INVINCIBILITY_TIME
+_player_invincibility_time	db ?
 byte_259A3	db ?
 power	db ?
 shot_level	db ?
