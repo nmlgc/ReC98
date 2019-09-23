@@ -60,6 +60,12 @@ twobyte_t struc
 	hi	db ?
 twobyte_t ends
 
+; master.lib extensions
+; ---------------------
+; super_roll_put_1plane() plane_put constants
+PLANE_PUT  = 0FF00h or GC_RMW
+; ---------------------
+
 RES_X = 640
 RES_Y = 400
 

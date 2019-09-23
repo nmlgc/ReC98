@@ -51,6 +51,12 @@ graph_accesspage	macro	page:rest
 	outb	0A6h, page
 endm
 
+; スーパーインポーズ処理 --------------------------------------------------*
+; 出典: super.lib(c)Kazumi supersfx.lib(c)iR
+; $Id: super.h 0.36 93/02/19 20:23:11 Kazumi Rel $
+
+PLANE_ERASE = 00c0h
+
 ; グラフィック画面への多角形描画処理 --------------------------------------
 ; 出典: gc_poly.h 0.16
 

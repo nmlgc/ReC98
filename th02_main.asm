@@ -12220,11 +12220,7 @@ loc_111AF:
 		mov	bx, di
 		shl	bx, 2
 		les	bx, [bx+52ECh]
-		push	word ptr es:[bx]
-		push	si
-		push	word_22D4C
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr es:[bx], si, word_22D4C, large PLANE_PUT or GC_BRGI
 		pop	di
 		pop	si
 		pop	bp
@@ -12866,7 +12862,7 @@ loc_11712:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+52DCh]
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
 		mov	byte ptr [si+2BF5h], 0
 		jmp	short loc_1175C
@@ -17376,11 +17372,7 @@ loc_13A1D:
 loc_13A4B:
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	si
-		push	940000h
-		push	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr [bx], si, (148 shl 16) or 0, PLANE_PUT or GC_BRGI
 		jmp	short loc_13AB8
 ; ---------------------------------------------------------------------------
 
@@ -17869,11 +17861,7 @@ var_2		= word ptr -2
 		cmp	word_2065A, 8D4h
 		jg	short loc_13F18
 		call	_snd_se_play c, 4
-		push	word_24E7C
-		push	word_24E7E
-		push	word_2064E
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word_24E7C, word_24E7E, word_2064E, large PLANE_PUT or GC_BRGI
 		jmp	short loc_13F2B
 ; ---------------------------------------------------------------------------
 
@@ -18354,11 +18342,7 @@ loc_142E1:
 		jz	loc_143D4
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	si
-		push	880000h
-		push	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr [bx], si, (136 shl 16) or 0, PLANE_PUT or GC_BRGI
 		inc	word_2065A
 		jmp	loc_143E1
 ; ---------------------------------------------------------------------------
@@ -18411,11 +18395,7 @@ loc_1435F:
 loc_1438D:
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	si
-		push	880000h
-		push	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr [bx], si, (136 shl 16) or 0, PLANE_PUT or GC_BRGI
 		jmp	short loc_143E1
 ; ---------------------------------------------------------------------------
 
@@ -18724,11 +18704,7 @@ loc_14628:
 		add	word_2065A, ax
 		call	_snd_se_play c, 4
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	si
-		push	word_2064E
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr [bx], si, word_2064E, large PLANE_PUT or GC_BRGI
 		cmp	word_2065A, 960h
 		jl	short loc_14699
 		mov	byte_2066A, 1
@@ -19965,11 +19941,7 @@ loc_150D1:
 		mov	bx, di
 		add	bx, bx
 		add	bx, [bp+var_6]
-		push	word ptr [bx]
-		push	[bp+var_4]
-		push	930000h
-		push	0FFC1h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word ptr [bx], [bp+var_4], (147 shl 16) or 0, PLANE_PUT or GC_RGI
 
 loc_150EA:
 		inc	di
@@ -24599,7 +24571,7 @@ loc_178C8:
 		mov	bx, word_26C46
 		add	ax, [bx+12h]
 		push	ax
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
 		jmp	short loc_17964
 ; ---------------------------------------------------------------------------
@@ -28698,11 +28670,7 @@ loc_19F72:
 		cmp	byte_2066B, 0
 		jz	short loc_19F9E
 		call	_snd_se_play c, 4
-		push	word_26D76
-		push	si
-		push	word_2064E
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word_26D76, si, word_2064E, large PLANE_PUT or GC_BRGI
 		mov	byte_2066B, 0
 		jmp	short loc_19FAC
 ; ---------------------------------------------------------------------------
@@ -30600,7 +30568,7 @@ loc_1B0E5:
 		push	word ptr es:[bx]
 		lea	ax, [si+8Ah]
 		push	ax
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_put_1plane
 
 loc_1B163:

@@ -2848,8 +2848,8 @@ loc_C683:
 		cwd
 		idiv	bx
 		push	ax
-		push	0B30000h
-		push	0C9h
+		push	(179 shl 16) or 0
+		push	PLANE_ERASE or GC_RG
 		call	super_roll_put_1plane
 		sub	di, 14h
 		mov	ax, [di]
@@ -2861,8 +2861,8 @@ loc_C683:
 		cwd
 		idiv	bx
 		push	ax
-		push	0B30000h
-		push	0C9h
+		push	(179 shl 16) or 0
+		push	PLANE_ERASE or GC_RG
 		call	super_roll_put_1plane
 		sub	di, 14h
 		mov	ax, [di]
@@ -2874,8 +2874,8 @@ loc_C683:
 		cwd
 		idiv	bx
 		push	ax
-		push	0B30000h
-		push	0C9h
+		push	(179 shl 16) or 0
+		push	PLANE_ERASE or GC_RG
 		call	super_roll_put_1plane
 		mov	ax, [si]
 		mov	bx, 10h
@@ -2886,8 +2886,8 @@ loc_C683:
 		cwd
 		idiv	bx
 		push	ax
-		push	0B30000h
-		push	0C8h
+		push	(179 shl 16) or 0
+		push	PLANE_ERASE or GC_BRG
 		call	super_roll_put_1plane
 		add	di, 82h
 		add	si, 8Ch
@@ -3559,11 +3559,7 @@ loc_CCB3:
 		jl	short loc_CCFE
 		cmp	word_242A4, 150h
 		jg	short loc_CCFE
-		push	word_242A2
-		push	word_242A4
-		push	0B30000h
-		push	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, word_242A2, word_242A4, (179 shl 16) or 0, PLANE_PUT or GC_BRGI
 
 loc_CCFE:
 		inc	si
@@ -7294,7 +7290,7 @@ loc_EC5B:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
 		mov	byte ptr [si+21h], 0
 
@@ -10024,11 +10020,7 @@ loc_108C2:
 		mov	si, ax
 		cmp	_midboss_damage_this_frame, 0
 		jz	short loc_108B6
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_10900
 ; ---------------------------------------------------------------------------
@@ -10127,11 +10119,7 @@ loc_10976:
 ; ---------------------------------------------------------------------------
 
 loc_10989:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 
 loc_10999:
 		call	explosions_small_update_and_render
@@ -10197,11 +10185,7 @@ loc_109F0:
 ; ---------------------------------------------------------------------------
 
 loc_10A05:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_10A26
 ; ---------------------------------------------------------------------------
@@ -10274,11 +10258,7 @@ loc_10A59:
 ; ---------------------------------------------------------------------------
 
 loc_10A84:
-		push	si
-		push	di
-		push	word ptr [bp-2]
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, si, di, word ptr [bp-2], large PLANE_PUT or GC_BRGI
 
 loc_10A94:
 		call	explosions_small_update_and_render
@@ -10340,11 +10320,7 @@ loc_10AE3:
 ; ---------------------------------------------------------------------------
 
 loc_10AF8:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_10B19
 ; ---------------------------------------------------------------------------
@@ -10441,11 +10417,7 @@ loc_10BA1:
 ; ---------------------------------------------------------------------------
 
 loc_10BB5:
-		push	[bp+var_4]
-		push	di
-		push	[bp+var_6]
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, [bp+var_4], di, [bp+var_6], large PLANE_PUT or GC_BRGI
 
 loc_10BC7:
 		mov	ax, [si+4]
@@ -10603,11 +10575,7 @@ loc_10CF4:
 ; ---------------------------------------------------------------------------
 
 loc_10D09:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 
 loc_10D19:
 		call	sub_10B1D
@@ -10663,11 +10631,7 @@ loc_10D49:
 ; ---------------------------------------------------------------------------
 
 loc_10D5B:
-		push	di
-		push	[bp+arg_4]
-		push	si
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, di, [bp+arg_4], si, large PLANE_PUT or GC_BRGI
 
 loc_10D6B:
 		pop	di
@@ -10829,11 +10793,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_10E8D:
-		push	si
-		push	di
-		push	[bp+var_2]
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, si, di, [bp+var_2], large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_10EAE
 ; ---------------------------------------------------------------------------
@@ -10969,11 +10929,7 @@ loc_10F63:
 ; ---------------------------------------------------------------------------
 
 loc_10F76:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 
 loc_10F86:
 		call	explosions_small_update_and_render
@@ -11100,11 +11056,7 @@ loc_11029:
 ; ---------------------------------------------------------------------------
 
 loc_11054:
-		push	si
-		push	di
-		push	[bp+var_2]
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, si, di, [bp+var_2], large PLANE_PUT or GC_BRGI
 
 loc_11064:
 		mov	_boss_damage_this_frame, 0
@@ -11233,11 +11185,7 @@ loc_11114:
 ; ---------------------------------------------------------------------------
 
 loc_11134:
-		push	si
-		push	[bp+var_2]
-		push	di
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, si, [bp+var_2], di, large PLANE_PUT or GC_BRGI
 		jmp	short loc_11175
 ; ---------------------------------------------------------------------------
 
@@ -11859,7 +11807,7 @@ loc_1166D:
 		mov	al, _midboss_sprite
 		mov	ah, 0
 		push	ax
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_11691
@@ -12094,11 +12042,7 @@ loc_11812:
 ; ---------------------------------------------------------------------------
 
 loc_11825:
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_put_1plane
+		call	super_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 		mov	_boss_damage_this_frame, 0
 
 loc_1183A:
@@ -12166,7 +12110,7 @@ loc_118A9:
 		mov	al, _midboss_sprite
 		mov	ah, 0
 		push	ax
-		pushd	0FFC0h
+		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_118CD
@@ -13110,11 +13054,7 @@ loc_122AB:
 		jz	short loc_122CB
 		cmp	frame_mod4, 0
 		jnz	short loc_122CB
-		push	di
-		push	[bp+var_2]
-		push	si
-		pushd	0FFC0h
-		call	super_roll_put_1plane
+		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
 		jmp	short loc_122D5
 ; ---------------------------------------------------------------------------
 
