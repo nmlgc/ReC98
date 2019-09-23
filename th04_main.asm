@@ -388,7 +388,7 @@ loc_ABD8:
 		call	_midboss_render
 		call	main_01:sub_10713
 		call	main_01:sub_10552
-		call	main_01:sub_10BFD
+		call	main_01:player_render
 		call	main_01:grcg_setmode_rmw_1
 		call	sub_13C5C
 		call	main_01:sparks_render
@@ -11384,156 +11384,7 @@ loc_10BFA:
 		retn
 sub_10ABF	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10BFD	proc near
-
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	_miss_time, 0
-		jz	short loc_10C13
-		cmp	_miss_time, MISS_ANIM_FRAMES
-		jbe	loc_10CB2
-
-loc_10C13:
-		mov	ax, player_pos.cur.x
-		sar	ax, 4
-		add	ax, 10h
-		mov	di, ax
-		mov	ax, player_pos.cur.y
-		add	ax, -128
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
-		cmp	player_pos.velocity.x, 0
-		jge	short loc_10C37
-		mov	si, 1
-		jmp	short loc_10C45
-; ---------------------------------------------------------------------------
-
-loc_10C37:
-		cmp	player_pos.velocity.x, 0
-		jz	short loc_10C43
-		mov	si, 2
-		jmp	short loc_10C45
-; ---------------------------------------------------------------------------
-
-loc_10C43:
-		xor	si, si
-
-loc_10C45:
-		cmp	_player_invincibility_time, 0
-		jz	short loc_10C65
-		cmp	frame_mod4, 0
-		jnz	short loc_10C65
-		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
-		jmp	short loc_10C6F
-; ---------------------------------------------------------------------------
-
-loc_10C65:
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	super_roll_put
-
-loc_10C6F:
-		cmp	shot_level, 2
-		jb	loc_10D47
-		call	main_01:grcg_setmode_rmw_1
-		mov	ax, _player_option_pos_cur.x
-		sar	ax, 4
-		mov	di, ax
-		mov	ax, _player_option_pos_cur.y
-		add	ax, (8 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
-		mov	ax, di
-		mov	dx, [bp+var_2]
-		push	_player_option_patnum
-		call	main_01:z_super_roll_put_tiny
-		lea	ax, [di+30h]
-		mov	dx, [bp+var_2]
-		push	_player_option_patnum
-		call	main_01:z_super_roll_put_tiny
-		GRCG_OFF_CLOBBERING dx
-		jmp	loc_10D47
-; ---------------------------------------------------------------------------
-
-loc_10CB2:
-		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_EXPLODE_UNTIL
-		jbe	loc_10D47
-		mov	si, _miss_explosion_radius
-		mov	[bp+var_4], 0
-		mov	al, _miss_explosion_angle
-		jmp	short loc_10D3E
-; ---------------------------------------------------------------------------
-
-loc_10CC9:
-		cmp	[bp+var_4], 4
-		jnz	short loc_10CE0
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	si, ax
-		mov	al, [bp+var_5]
-		neg	al
-		mov	[bp+var_5], al
-
-loc_10CE0:
-		push	offset _drawpoint
-		push	player_pos.cur.x
-		push	player_pos.cur.y
-		push	si
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		cmp	_drawpoint.y, (-8 shl 4)
-		jl	short loc_10D36
-		cmp	_drawpoint.y, (376 shl 4)
-		jge	short loc_10D36
-		cmp	_drawpoint.x, (-8 shl 4)
-		jl	short loc_10D36
-		cmp	_drawpoint.x, (392 shl 4)
-		jge	short loc_10D36
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 8
-		mov	di, ax
-		mov	ax, _drawpoint.y
-		add	ax, (-8 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	3
-		call	super_roll_put
-
-loc_10D36:
-		inc	[bp+var_4]
-		mov	al, [bp+var_5]
-		add	al, 40h
-
-loc_10D3E:
-		mov	[bp+var_5], al
-		cmp	[bp+var_4], 8
-		jl	short loc_10CC9
-
-loc_10D47:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_10BFD	endp
-
+include th04/player/render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13212,9 +13063,7 @@ sub_11ECB	proc near
 		mov	_bullet_clear_trigger, 0
 		mov	word_2CFFC, 0
 		mov	_circles_color, GC_R
-		push	200010h
-		push	19F017Fh
-		call	grc_setclip
+		call	grc_setclip pascal, large (PLAYFIELD_X shl 16) or PLAYFIELD_Y, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _shots
 		push	size _shots / 4
 		call	main_01:sub_C34E
