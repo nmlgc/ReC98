@@ -1100,7 +1100,7 @@ sub_B55A	proc near
 		mov	player_pos.prev.x, 192 * 16
 		mov	player_pos.prev.y, 320 * 16
 		mov	byte_2CEBD, 0
-		mov	byte_2CEC2, 0
+		mov	_miss_time, 0
 		mov	_player_is_hit, 0
 		mov	chara_invulnerable_time_left, 64;m_invulnerableTimeLeft
 		mov	_point_items_collected, 0
@@ -2622,11 +2622,11 @@ sub_C483	proc near
 		jz	loc_C518
 		cmp	byte_2C96C, 0
 		jnz	short loc_C518
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jz	short loc_C4BC
-		cmp	byte_2CEC2, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jbe	short loc_C518
-		mov	byte_2CEC2, 0
+		mov	_miss_time, 0
 		mov	_player_is_hit, 0
 		mov	byte_2CEBD, 0
 
@@ -12833,15 +12833,15 @@ sub_12017	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		dec	byte_2CEC2
-		cmp	byte_2CEC2, 20h	; ' '
+		dec	_miss_time
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		ja	locret_12148
-		cmp	byte_2CEC2, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jnz	short loc_12092
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
 		mov	power_overflow_level, 0
-		mov	word_2CEC4, 0
+		mov	_miss_explosion_radius, 0
 		call	sub_16E29
 		mov	al, power
 		mov	ah, 0
@@ -12888,28 +12888,28 @@ loc_120B1:
 
 loc_120B6:
 		nopcall	sub_1059D
-		add	word_2CEC4, 70h	; 'p'
-		mov	al, byte_2CEC8
+		add	_miss_explosion_radius, (7 shl 4)
+		mov	al, _miss_explosion_angle
 		add	al, 8
-		mov	byte_2CEC8, al
-		cmp	byte_2CEC2, 4
+		mov	_miss_explosion_angle, al
+		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_FLASH_AT
 		jnb	short locret_12148
 		cmp	lives, 1
 		jbe	short loc_120F0
-		test	byte_2CEC2, 1
+		test	_miss_time, 1
 		jz	short loc_120E5
-		mov	PaletteTone, 96h
+		mov	PaletteTone, 150
 		jmp	short loc_120EB
 ; ---------------------------------------------------------------------------
 
 loc_120E5:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 
 loc_120EB:
 		mov	_palette_changed, 1
 
 loc_120F0:
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jnz	short locret_12148
 		mov	player_pos.cur.x, 192 * 16
 		mov	player_pos.prev.x, 192 * 16
@@ -12960,7 +12960,7 @@ var_1		= byte ptr -1
 loc_12161:
 		cmp	_player_is_hit, 0
 		jz	short loc_12188
-		mov	byte_2CEC2, 28h	; '('
+		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
 		mov	_player_is_hit, 0
 		mov	chara_invulnerable_time_left, 0C0h
 		mov	byte_2CEBD, 48h	; 'H'
@@ -13051,7 +13051,7 @@ loc_1222E:
 		call	sub_C483
 
 loc_12256:
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jz	short loc_12260
 		call	sub_12017
 
@@ -13075,9 +13075,9 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jz	short loc_12279
-		cmp	byte_2CEC2, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jbe	loc_12314
 
 loc_12279:
@@ -13148,11 +13148,11 @@ loc_122D5:
 ; ---------------------------------------------------------------------------
 
 loc_12314:
-		cmp	byte_2CEC2, 1
+		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_EXPLODE_UNTIL
 		jbe	loc_123A9
-		mov	si, word_2CEC4
+		mov	si, _miss_explosion_radius
 		mov	[bp+var_4], 0
-		mov	al, byte_2CEC8
+		mov	al, _miss_explosion_angle
 		jmp	short loc_123A0
 ; ---------------------------------------------------------------------------
 
@@ -17503,14 +17503,14 @@ table_1425B	dw loc_14187
 
 sub_14266	proc near
 		mov	_tile_invalidate_box.y, 48
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jz	short loc_142D4
 		push	di
 		mov	_tile_invalidate_box.x, 48
-		mov	di, word_2CEC4
-		add	di, 0FF90h
-		mov	al, byte_2CEC8
-		add	al, 0F8h
+		mov	di, _miss_explosion_radius
+		add	di, (-7 shl 4)
+		mov	al, _miss_explosion_angle
+		add	al, -8
 		mov	ah, 8
 
 loc_14288:
@@ -21586,7 +21586,7 @@ loc_172A3:
 		mov	word ptr [si+0Ah], 0
 
 loc_172AE:
-		cmp	byte_2CEC2, 0
+		cmp	_miss_time, 0
 		jnz	short loc_172E5
 		mov	bx, player_pos.cur.x
 		add	bx, 24 * 16
@@ -45053,12 +45053,15 @@ power	db ?
 shot_level	db ?
 byte_2CEC0	db ?
 include th01/player_is_hit[bss].asm
-byte_2CEC2	db ?
+public _MISS_TIME
+_miss_time	db ?
 dream	db ?
-word_2CEC4	dw ?
+public _MISS_EXPLOSION_RADIUS
+_miss_explosion_radius	dw ?
 public _POINT_ITEMS_COLLECTED
 _point_items_collected	dw ?
-byte_2CEC8	db ?
+public _MISS_EXPLOSION_ANGLE
+_miss_explosion_angle	db ?
 		dd    ?	;
 		db    ?	;
 playchar_shot_func	dw ?

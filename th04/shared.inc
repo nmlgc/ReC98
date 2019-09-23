@@ -10,6 +10,13 @@ include th04/formats/bb.inc
 include th04/formats/map.inc
 ; --------
 
+include th04/player/player.inc
+
+; Bombs
+; -----
+DEATHBOMB_WINDOW = 8
+; -----
+
 include th02/hud/hud.inc
 include th04/hardware/grcg.inc
 include th04/hardware/input.inc

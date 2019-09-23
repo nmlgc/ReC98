@@ -953,7 +953,7 @@ sub_B1D0	proc near
 		mov	word_2599E, 30h	; '0'
 		mov	word_259A0, 30h	; '0'
 		mov	byte_259A3, 0
-		mov	byte_259AA, 0
+		mov	_miss_time, 0
 		mov	byte_259A9, 0
 		mov	byte_259A2, 40h
 		mov	_point_items_collected, 0
@@ -10055,11 +10055,11 @@ sub_FFB4	proc near
 		jz	short loc_10028
 		cmp	byte_2D00A, 0
 		jnz	short loc_10028
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jz	short loc_FFED
-		cmp	byte_259AA, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jbe	short loc_10028
-		mov	byte_259AA, 0
+		mov	_miss_time, 0
 		mov	byte_259A9, 0
 		mov	byte_259A3, 0
 
@@ -11049,15 +11049,15 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	_tile_invalidate_box.y, 48
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jz	short loc_10872
 		mov	_tile_invalidate_box.x, 48
-		mov	ax, word_259BA
-		add	ax, 0FF90h
+		mov	ax, _miss_explosion_radius
+		add	ax, (-7 shl 4)
 		mov	di, ax
 		xor	si, si
-		mov	al, byte_259B9
-		add	al, 0F8h
+		mov	al, _miss_explosion_angle
+		add	al, -8
 		jmp	short loc_10868
 ; ---------------------------------------------------------------------------
 
@@ -11169,15 +11169,15 @@ sub_10988	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		dec	byte_259AA
-		cmp	byte_259AA, 20h	; ' '
+		dec	_miss_time
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		ja	locret_10ABD
-		cmp	byte_259AA, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jnz	loc_10A25
 		mov	player_pos.velocity.x, 0
 		mov	player_pos.velocity.y, 0
 		mov	power_overflow_level, 0
-		mov	word_259BA, 0
+		mov	_miss_explosion_radius, 0
 		call	sub_1DACE
 		mov	al, power
 		mov	ah, 0
@@ -11218,29 +11218,29 @@ loc_10A16:
 		inc	byte ptr es:[bx+31h]
 
 loc_10A25:
-		add	word_259BA, 70h	; 'p'
-		mov	al, byte_259B9
+		add	_miss_explosion_radius, (7 shl 4)
+		mov	al, _miss_explosion_angle
 		add	al, 8
-		mov	byte_259B9, al
-		cmp	byte_259AA, 4
+		mov	_miss_explosion_angle, al
+		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_FLASH_AT
 		jnb	locret_10ABD
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+0Bh], 1
 		jbe	short loc_10A60
-		test	byte_259AA, 1
+		test	_miss_time, 1
 		jz	short loc_10A55
-		mov	PaletteTone, 96h
+		mov	PaletteTone, 150
 		jmp	short loc_10A5B
 ; ---------------------------------------------------------------------------
 
 loc_10A55:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 
 loc_10A5B:
 		mov	_palette_changed, 1
 
 loc_10A60:
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jnz	short locret_10ABD
 		mov	player_pos.cur.x, 192 * 16
 		mov	player_pos.prev.x, 192 * 16
@@ -11302,7 +11302,7 @@ loc_10AE4:
 		mov	word_25608, 21h	; '!'
 
 loc_10AF1:
-		mov	byte_259AA, 28h	; '('
+		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
 		mov	byte_259A9, 0
 		mov	byte_259A2, 0C0h
 		mov	byte_259A3, 48h	; 'H'
@@ -11398,7 +11398,7 @@ loc_10BC7:
 		call	fp_256AA
 
 loc_10BF0:
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jz	short loc_10BFA
 		call	main_01:sub_10988
 
@@ -11422,9 +11422,9 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jz	short loc_10C13
-		cmp	byte_259AA, 20h	; ' '
+		cmp	_miss_time, MISS_ANIM_FRAMES
 		jbe	loc_10CB2
 
 loc_10C13:
@@ -11495,11 +11495,11 @@ loc_10C6F:
 ; ---------------------------------------------------------------------------
 
 loc_10CB2:
-		cmp	byte_259AA, 1
+		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_EXPLODE_UNTIL
 		jbe	loc_10D47
-		mov	si, word_259BA
+		mov	si, _miss_explosion_radius
 		mov	[bp+var_4], 0
-		mov	al, byte_259B9
+		mov	al, _miss_explosion_angle
 		jmp	short loc_10D3E
 ; ---------------------------------------------------------------------------
 
@@ -35267,7 +35267,7 @@ loc_1DF05:
 		mov	word ptr [si+0Ah], 0
 
 loc_1DF10:
-		cmp	byte_259AA, 0
+		cmp	_miss_time, 0
 		jnz	short loc_1DF47
 		mov	bx, player_pos.cur.x
 		add	bx, 180h
@@ -41435,15 +41435,18 @@ byte_259A6	db ?
 include th01/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?
-byte_259AA	db ?
+public _MISS_TIME
+_miss_time	db ?
 public _POINT_ITEMS_COLLECTED
 _point_items_collected	db ?
 include th04/player/option[bss].asm
 dream_items_collected	db ?
 		db    ?	;
 		db    ?	;
-byte_259B9	db ?
-word_259BA	dw ?
+public _MISS_EXPLOSION_ANGLE
+_miss_explosion_angle	db ?
+public _MISS_EXPLOSION_RADIUS
+_miss_explosion_radius	dw ?
 		dw ?
 		dw ?
 stage_title_len	dw ?
