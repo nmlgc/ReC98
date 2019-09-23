@@ -2,7 +2,7 @@
 ; -----
 ; Types shared between TH04 and TH05
 
-include defconv_pascal.inc
+include th03/defconv.inc
 
 ; Formats
 ; --------
@@ -30,7 +30,7 @@ BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255
 include th02/hud/hud.inc
 include th04/hardware/grcg.inc
 include th04/hardware/input.inc
-include th04/math/randring_next.inc
+include th04/math/randring.inc
 include th04/math/motion.inc
 include th04/gaiji.inc
 include th04/hud/popup.inc
