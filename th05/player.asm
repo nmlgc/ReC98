@@ -1,9 +1,24 @@
-	.186
+	.386
 	locals
 
-include libs/master.lib/macros.inc
+include libs/master.lib/master.inc
+include th02/playfld.inc
 include th04/math/motion.inc
 include th04/hardware/input.inc
+include th04/player/player.inc
+
+VECTOR2_AT procdesc pascal far \
+	ret:ptr Point, origin_x:word, origin_y:word, length:word, angle:byte
+
+TILES_INVALIDATE_AROUND procdesc pascal near \
+	center:Point
+
+extrn _tile_invalidate_box:Point
+extrn _miss_time:byte
+extrn _miss_explosion_angle:byte
+extrn _miss_explosion_radius:word
+extrn _drawpoint:Point
+extrn _player_option_pos_prev:Point
 
 extrn player_pos:motion_t
 extrn _playchar_speed_aligned:word
@@ -13,6 +28,57 @@ extrn _playchar_speed_diagonal:word
 
 main_01_TEXT	segment	word public 'CODE' use16
 	assume cs:main_01_TEXT
+
+; void pascal near player_invalidate(void);
+public PLAYER_INVALIDATE
+player_invalidate	proc pascal near
+	mov	_tile_invalidate_box.y, PLAYER_H
+	cmp	_miss_time, 0
+	jz	short @@alive
+	push	di
+	mov	_tile_invalidate_box.x, MISS_EXPLOSION_W
+	mov	di, _miss_explosion_radius
+	; Go back a frame
+	add	di, -MISS_EXPLOSION_RADIUS_VELOCITY
+	mov	al, _miss_explosion_angle
+	add	al, -MISS_EXPLOSION_ANGLE_VELOCITY
+	mov	ah, MISS_EXPLOSION_COUNT
+
+@@loop:
+	cmp	ah, MISS_EXPLOSION_COUNT / 2
+	jnz	short @@invalidate
+	shr	di, 1
+	neg	al
+
+@@invalidate:
+	push	ax
+	call	vector2_at pascal, offset _drawpoint, player_pos.cur.x, player_pos.cur.y, di, ax
+	MISS_EXPLOSION_CLIP	 @@next
+	call	tiles_invalidate_around pascal, large [_drawpoint]
+
+@@next:
+	pop	ax
+	add	al, 256 / (MISS_EXPLOSION_COUNT / 2)
+	dec	ah
+	jnz	short @@loop
+	pop	di
+	jmp	short @@ret
+; ---------------------------------------------------------------------------
+
+@@alive:
+	mov	_tile_invalidate_box.x, PLAYER_W
+	call	tiles_invalidate_around pascal, large [player_pos.prev]
+	mov	_tile_invalidate_box.x, PLAYER_OPTION_W + PLAYER_W + PLAYER_OPTION_W
+	mov	_tile_invalidate_box.y, PLAYER_OPTION_H
+	call	tiles_invalidate_around pascal, large [_player_option_pos_prev]
+
+@@ret:
+	retn
+player_invalidate	endp
+
+
+	even
+
 
 ; move_ret_t pascal near player_move(int input);
 public PLAYER_MOVE

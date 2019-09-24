@@ -92,10 +92,10 @@ bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj
 $**
 |
 
-bin\th05\playermv.obj: th05\playermv.asm
+bin\th05\player.obj: th05\player.asm
 bin\th05\hud_bar.obj: th05\hud_bar.asm
 bin\th05\scoreupd.obj: th04\scoreupd.asm
-bin\th05\main.exe: bin\th05\main.obj bin\th05\playermv.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main012.cpp
+bin\th05\main.exe: bin\th05\main.obj bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main012.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |

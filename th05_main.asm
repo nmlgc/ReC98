@@ -2017,7 +2017,7 @@ sub_BEE6	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_11A65
-		call	sub_14266
+		call	player_invalidate
 		call	sub_123AD
 		call	sub_E41C
 		call	sub_E5EE
@@ -12830,9 +12830,9 @@ loc_120B1:
 
 loc_120B6:
 		nopcall	sub_1059D
-		add	_miss_explosion_radius, (7 shl 4)
+		add	_miss_explosion_radius, MISS_EXPLOSION_RADIUS_VELOCITY
 		mov	al, _miss_explosion_angle
-		add	al, 8
+		add	al, MISS_EXPLOSION_ANGLE_VELOCITY
 		mov	_miss_explosion_angle, al
 		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_FLASH_AT
 		jnb	short locret_12148
@@ -17287,66 +17287,7 @@ table_1425B	dw loc_14187
 		dw loc_1419F
 		db    0
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_14266	proc near
-		mov	_tile_invalidate_box.y, 48
-		cmp	_miss_time, 0
-		jz	short loc_142D4
-		push	di
-		mov	_tile_invalidate_box.x, 48
-		mov	di, _miss_explosion_radius
-		add	di, (-7 shl 4)
-		mov	al, _miss_explosion_angle
-		add	al, -8
-		mov	ah, 8
-
-loc_14288:
-		cmp	ah, 4
-		jnz	short loc_14291
-		shr	di, 1
-		neg	al
-
-loc_14291:
-		push	ax
-		push	offset _drawpoint
-		push	player_pos.cur.x
-		push	player_pos.cur.y
-		push	di
-		push	ax
-		call	vector2_at
-		cmp	_drawpoint.y, (-8 shl 4)
-		jl	short loc_142CA
-		cmp	_drawpoint.y, (376 shl 4)
-		jge	short loc_142CA
-		cmp	_drawpoint.x, (-8 shl 4)
-		jl	short loc_142CA
-		cmp	_drawpoint.x, (392 shl 4)
-		jge	short loc_142CA
-		call	tiles_invalidate_around pascal, large [_drawpoint]
-
-loc_142CA:
-		pop	ax
-		add	al, 40h
-		dec	ah
-		jnz	short loc_14288
-		pop	di
-		jmp	short locret_142F6
-; ---------------------------------------------------------------------------
-
-loc_142D4:
-		mov	_tile_invalidate_box.x, 32
-		call	tiles_invalidate_around pascal, large [player_pos.prev]
-		mov	_tile_invalidate_box.x, 64
-		mov	_tile_invalidate_box.y, 16
-		call	tiles_invalidate_around pascal, large [_player_option_pos_prev]
-
-locret_142F6:
-		retn
-sub_14266	endp
-		nop
-
+	PLAYER_INVALIDATE procdesc pascal near
 	PLAYER_MOVE procdesc pascal near \
 		input:word
 	HUD_BAR_PUT procdesc near

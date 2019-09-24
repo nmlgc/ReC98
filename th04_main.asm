@@ -3469,7 +3469,7 @@ sub_CB58	proc near
 		push	bp
 		mov	bp, sp
 		call	main_01:sub_10EED
-		call	main_01:sub_107E2
+		call	main_01:player_invalidate
 		call	main_01:sub_10444
 		call	main_01:sub_C74C
 		call	main_01:sub_CA98
@@ -11012,88 +11012,7 @@ loc_107D6:
 		retn
 sub_10713	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_107E2	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	_tile_invalidate_box.y, 48
-		cmp	_miss_time, 0
-		jz	short loc_10872
-		mov	_tile_invalidate_box.x, 48
-		mov	ax, _miss_explosion_radius
-		add	ax, (-7 shl 4)
-		mov	di, ax
-		xor	si, si
-		mov	al, _miss_explosion_angle
-		add	al, -8
-		jmp	short loc_10868
-; ---------------------------------------------------------------------------
-
-loc_1080C:
-		cmp	si, 4
-		jnz	short loc_10822
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	di, ax
-		mov	al, [bp+var_1]
-		neg	al
-		mov	[bp+var_1], al
-
-loc_10822:
-		push	offset _drawpoint
-		push	player_pos.cur.x
-		push	player_pos.cur.y
-		push	di
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		cmp	_drawpoint.y, (-8 shl 4)
-		jl	short loc_10862
-		cmp	_drawpoint.y, (376 shl 4)
-		jge	short loc_10862
-		cmp	_drawpoint.x, (-8 shl 4)
-		jl	short loc_10862
-		cmp	_drawpoint.x, (392 shl 4)
-		jge	short loc_10862
-		call	main_01:tiles_invalidate_around pascal, _drawpoint.y, _drawpoint.x
-
-loc_10862:
-		inc	si
-		mov	al, [bp+var_1]
-		add	al, 40h
-
-loc_10868:
-		mov	[bp+var_1], al
-		cmp	si, 8
-		jl	short loc_1080C
-		jmp	short loc_10894
-; ---------------------------------------------------------------------------
-
-loc_10872:
-		mov	_tile_invalidate_box.x, 32
-		call	main_01:tiles_invalidate_around pascal, large [player_pos.prev]
-		mov	_tile_invalidate_box.x, 64
-		mov	_tile_invalidate_box.y, 16
-		call	main_01:tiles_invalidate_around pascal, large [_player_option_pos_prev]
-
-loc_10894:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_107E2	endp
-
+include th04/player/invalidate.asm
 include th04/player/move.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11194,9 +11113,9 @@ loc_10A16:
 		inc	byte ptr es:[bx+31h]
 
 loc_10A25:
-		add	_miss_explosion_radius, (7 shl 4)
+		add	_miss_explosion_radius, MISS_EXPLOSION_RADIUS_VELOCITY
 		mov	al, _miss_explosion_angle
-		add	al, 8
+		add	al, MISS_EXPLOSION_ANGLE_VELOCITY
 		mov	_miss_explosion_angle, al
 		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_FLASH_AT
 		jnb	locret_10ABD
