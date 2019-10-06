@@ -54,6 +54,21 @@ int pascal far select_for_rank(
 #include "th04/formats/bb.h"
 /// -------
 
+/// Player
+/// ------
+// Shots
+// -----
+// Sets [velocity] to a vector with the given [angle] and a 12-pixel length.
+//
+// TH05 also insists on setting shot_t::angle via a ridiculous out-of-bounds
+// access, and therefore *must* be called with [velocity] pointing inside a
+// shot_t structure!
+SPPoint pascal near shot_velocity_set(
+	SPPoint near* velocity, unsigned char angle
+);
+// -----
+/// ------
+
 /// Stages
 /// ------
 extern nearfunc_t_near stage_invalidate;

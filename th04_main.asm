@@ -5142,7 +5142,7 @@ shot_marisa_l1	proc near
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 0Ah
 
@@ -5246,7 +5246,7 @@ loc_DB62:
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 9
 		jmp	short loc_DB85
@@ -5374,7 +5374,7 @@ loc_DC35:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5416,7 +5416,7 @@ loc_DC82:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5458,7 +5458,7 @@ loc_DCCF:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -5500,7 +5500,7 @@ loc_DD1C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -5542,7 +5542,7 @@ loc_DD69:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -5587,7 +5587,7 @@ loc_DDA9:
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 0Ah
 		jmp	short loc_DDE7
 ; ---------------------------------------------------------------------------
@@ -5781,7 +5781,7 @@ loc_DEF0:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-1]
 		add	al, 8
@@ -5852,7 +5852,7 @@ loc_DF70:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
 		add	al, 8
@@ -5942,7 +5942,7 @@ loc_E004:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 8
 		mov	al, byte ptr [bp+var_3]
 		add	al, 0Ah
@@ -6044,7 +6044,7 @@ loc_E0B4:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E115
@@ -6148,7 +6148,7 @@ loc_E166:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E1D5
@@ -8323,7 +8323,7 @@ arg_2		= word ptr  6
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+arg_0]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		pop	si
 		pop	bp
 		retn	4
@@ -8368,7 +8368,7 @@ shot_reimu_l1	proc near
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 0Ah
 
@@ -8416,7 +8416,7 @@ loc_F3FA:
 		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F43F
 ; ---------------------------------------------------------------------------
@@ -8585,7 +8585,7 @@ loc_F525:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -8670,7 +8670,7 @@ loc_F5C1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -8755,7 +8755,7 @@ loc_F65D:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -8845,7 +8845,7 @@ loc_F6FA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 4
 		mov	byte ptr [si+10h], 7
@@ -8873,7 +8873,7 @@ loc_F73E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F779
 ; ---------------------------------------------------------------------------
@@ -8948,7 +8948,7 @@ loc_F7B1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, byte ptr [bp+var_2+1]
@@ -8975,7 +8975,7 @@ loc_F7F1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F82C
 ; ---------------------------------------------------------------------------
@@ -9065,7 +9065,7 @@ loc_F882:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 6
 		mov	al, [bp-1]
@@ -9092,7 +9092,7 @@ loc_F8C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F941
 ; ---------------------------------------------------------------------------
@@ -9127,7 +9127,7 @@ loc_F908:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 
 loc_F912:
 		mov	word ptr [si+0Eh], 1Eh
@@ -9218,7 +9218,7 @@ loc_F98F:
 		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F9D2
 ; ---------------------------------------------------------------------------
@@ -9239,7 +9239,7 @@ loc_F9C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp+var_1]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_F9D2:
@@ -9321,7 +9321,7 @@ loc_FA54:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_FA63:
@@ -9380,7 +9380,7 @@ loc_FAB9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
@@ -9405,7 +9405,7 @@ loc_FAF9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9464,7 +9464,7 @@ loc_FB5E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9513,7 +9513,7 @@ loc_FBBD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9577,7 +9577,7 @@ loc_FC2C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9626,7 +9626,7 @@ loc_FC8B:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9690,7 +9690,7 @@ loc_FCFA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9739,7 +9739,7 @@ loc_FD59:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9803,7 +9803,7 @@ loc_FDC8:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9852,7 +9852,7 @@ loc_FE27:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -9916,7 +9916,7 @@ loc_FE97:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -9970,7 +9970,7 @@ loc_FEFD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:sub_11DCA
+		call	main_01:shot_velocity_set
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -12826,22 +12826,7 @@ loc_11D92:
 yuuka6_fg_render	endp
 
 include th04/player/shots_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11DCA	proc near
-		mov	bx, sp
-		push	si
-		mov	si, ss:[bx+4]
-		mov	bl, ss:[bx+2]
-		xor	bh, bh
-		shl	bx, 2
-		mov	eax, _VELOCITY_192_AT_ANGLE[bx]
-		mov	[si], eax
-		pop	si
-		retn	4
-sub_11DCA	endp
+include th04/player/shot_velocity.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

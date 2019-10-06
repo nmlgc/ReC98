@@ -6538,22 +6538,7 @@ sub_E480	proc far
 sub_E480	endp
 
 include th05/player/shots_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E4DE	proc near
-		mov	bx, sp
-		push	si
-		mov	si, ss:[bx+4]
-		movzx	bx, byte ptr ss:[bx+2]
-		mov	[si+7],	bl
-		shl	bx, 2
-		mov	eax, _VELOCITY_192_AT_ANGLE[bx]
-		mov	[si], eax
-		pop	si
-		retn	4
-sub_E4DE	endp
+include th04/player/shot_velocity.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13170,7 +13155,7 @@ loc_124E2:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [si+11h]
-		call	sub_E4DE
+		call	shot_velocity_set
 		jmp	short loc_124FA
 ; ---------------------------------------------------------------------------
 
@@ -13776,7 +13761,7 @@ shot_l1	proc near
 		call	randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+10h], 0Ah
 
 loc_129C8:
@@ -13814,7 +13799,7 @@ loc_129E9:
 		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+10h], 0Ah
 		jmp	short loc_12A34
 ; ---------------------------------------------------------------------------
@@ -13835,7 +13820,7 @@ loc_12A1E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 4
 		mov	[si+shot_t.SHOT_type], ST_HOMING
@@ -13912,7 +13897,7 @@ loc_12AA2:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+0Eh], 16h
 		mov	byte ptr [si+10h], 4
 		mov	[si+shot_t.SHOT_type], ST_HOMING
@@ -13992,7 +13977,7 @@ loc_12B32:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14078,7 +14063,7 @@ loc_12BCF:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14164,7 +14149,7 @@ loc_12C6C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14250,7 +14235,7 @@ loc_12D09:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14325,7 +14310,7 @@ loc_12D8A:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14421,7 +14406,7 @@ loc_12E3E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, [bp-1]
 		add	al, 0FFh
 		mov	[bp-1],	al
@@ -14472,7 +14457,7 @@ loc_12E80:
 		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+10h], 8
 		jmp	short loc_12ECC
 ; ---------------------------------------------------------------------------
@@ -14660,7 +14645,7 @@ loc_12FD2:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		jmp	loc_13077
 ; ---------------------------------------------------------------------------
 
@@ -14787,7 +14772,7 @@ loc_130D4:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		jmp	loc_1317E
 ; ---------------------------------------------------------------------------
 
@@ -15572,7 +15557,7 @@ loc_136F8:
 		call	randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+10h], 8
 
 loc_1370B:
@@ -15827,7 +15812,7 @@ loc_13895:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2]
 		add	al, 6
 		mov	byte ptr [bp+var_2], al
@@ -15929,7 +15914,7 @@ loc_13941:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2]
 		add	al, 6
 		mov	byte ptr [bp+var_2], al
@@ -16034,7 +16019,7 @@ loc_139F2:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2]
 		add	al, 6
 		mov	byte ptr [bp+var_2], al
@@ -16145,7 +16130,7 @@ loc_13ABA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2]
 		add	al, 6
 		mov	byte ptr [bp+var_2], al
@@ -16290,7 +16275,7 @@ loc_13BC3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	byte ptr [si+10h], 7
 
 loc_13BD1:
@@ -16377,7 +16362,7 @@ loc_13C55:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -16460,7 +16445,7 @@ loc_13CD8:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 
 loc_13CEA:
 		mov	al, byte ptr [bp+var_2+1]
@@ -16552,7 +16537,7 @@ loc_13D7E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -16657,7 +16642,7 @@ loc_13E32:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -16788,7 +16773,7 @@ loc_13F13:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -16935,7 +16920,7 @@ loc_14012:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -17086,7 +17071,7 @@ loc_14110:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
@@ -17251,7 +17236,7 @@ loc_14227:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	sub_E4DE
+		call	shot_velocity_set
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 0FFh
 		mov	byte ptr [bp+var_2+1], al
