@@ -56,6 +56,8 @@ int pascal far select_for_rank(
 
 /// Player
 /// ------
+#include "th04/player/player.h"
+
 // Shots
 // -----
 // Sets [velocity] to a vector with the given [angle] and a 12-pixel length.

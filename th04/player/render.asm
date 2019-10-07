@@ -56,7 +56,7 @@ player_render	proc near
 	call	grcg_setmode_rmw_1
 	mov	ax, _player_option_pos_cur.x
 	sar	ax, 4
-	; Technically, DI = AX + PLAYFIELD_X - (PLAYER_W / 2) - PLAYER_OPTION_W
+	; Technically, DI = AX + PLAYFIELD_X - PLAYER_OPTION_DISTANCE - (PLAYER_OPTION_W / 2)
 	mov	di, ax
 	mov	ax, _player_option_pos_cur.y
 	add	ax, ((PLAYFIELD_Y - (PLAYER_OPTION_H / 2)) shl 4)
@@ -66,7 +66,7 @@ player_render	proc near
 	mov	dx, [bp+@@screen_y]
 	push	_player_option_patnum
 	call	z_super_roll_put_tiny
-	lea	ax, [di + PLAYER_OPTION_W + PLAYER_W]
+	lea	ax, [di + PLAYER_OPTION_DISTANCE * 2]
 	mov	dx, [bp+@@screen_y]
 	push	_player_option_patnum
 	call	z_super_roll_put_tiny
