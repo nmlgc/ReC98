@@ -3,6 +3,15 @@ PLAYER_OPTION_W = 16
 PLAYER_OPTION_H = 16
 PLAYER_OPTION_DISTANCE = (PLAYER_W / 2) + (PLAYER_OPTION_W / 2)
 
+; Shots
+; -----
+; Shots are always fired for multiples of this number of frames, even if
+; INPUT_SHOT is held for a shorter amount of time.
+SHOT_CYCLE_FRAMES = 18
+; Set shot_time to this value to block shots from being fired this frame.
+SHOT_BLOCKED_FOR_THIS_FRAME = 0FFh
+; -----
+
 MISS_ANIM_FRAMES = 32
 MISS_ANIM_FLASH_AT = 28
 MISS_ANIM_EXPLODE_UNTIL = 31

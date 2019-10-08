@@ -8386,7 +8386,7 @@ shot_reimu_a_l2	proc near
 		push	si
 		push	di
 		mov	di, 1
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F3D7
 		mov	byte_256A2, 0
 
@@ -8470,7 +8470,7 @@ shot_reimu_a_l3	proc near
 		push	si
 		push	di
 		mov	di, 2
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F467
 		mov	byte_256A2, 0
 
@@ -8557,7 +8557,7 @@ shot_reimu_a_l4	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F4FE
 		mov	byte_256A2, 0
 
@@ -8642,7 +8642,7 @@ shot_reimu_a_l5	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F59A
 		mov	byte_256A2, 0
 
@@ -8727,7 +8727,7 @@ shot_reimu_a_l6	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F636
 		mov	byte_256A2, 0
 
@@ -8817,7 +8817,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, 5
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F6D2
 		mov	byte_256A2, 0
 
@@ -9037,7 +9037,7 @@ var_2		= word ptr -2
 		push	di
 		mov	di, 5
 		add	di, 2
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F85A
 		mov	byte_256A2, 0
 
@@ -9188,7 +9188,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	di, 1
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F96C
 		mov	byte_256A2, 0
 
@@ -9267,7 +9267,7 @@ shot_reimu_b_l3	proc near
 		push	si
 		push	di
 		mov	di, 2
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_F9FB
 		mov	byte_256A2, 0
 
@@ -9351,7 +9351,7 @@ shot_reimu_b_l4	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FA92
 		mov	byte_256A2, 0
 
@@ -9435,7 +9435,7 @@ shot_reimu_b_l5	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FB37
 		mov	byte_256A2, 0
 
@@ -9548,7 +9548,7 @@ shot_reimu_b_l6	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FC05
 		mov	byte_256A2, 0
 
@@ -9661,7 +9661,7 @@ shot_reimu_b_l7	proc near
 		push	si
 		push	di
 		mov	di, 3
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FCD3
 		mov	byte_256A2, 0
 
@@ -9774,7 +9774,7 @@ shot_reimu_b_l8	proc near
 		push	si
 		push	di
 		mov	di, 5
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FDA1
 		mov	byte_256A2, 0
 
@@ -9887,7 +9887,7 @@ shot_reimu_b_l9	proc near
 		push	si
 		push	di
 		mov	di, 7
-		cmp	byte_259A6, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jnz	short loc_FE6F
 		mov	byte_256A2, 0
 
@@ -10553,7 +10553,7 @@ sub_1042A	proc near
 		mov	bp, sp
 		mov	word_25608, 0
 		mov	byte_2560A, 0
-		mov	byte_259A6, 0
+		mov	_shot_time, 0
 		mov	_player_is_hit, 0
 		pop	bp
 		retn
@@ -11253,19 +11253,19 @@ loc_10B75:
 loc_10B82:
 		test	_input.lo, low INPUT_SHOT
 		jz	short loc_10B97
-		cmp	byte_259A6, 1
+		cmp	_shot_time, 1
 		ja	short loc_10B97
-		mov	byte_259A6, 12h
+		mov	_shot_time, SHOT_CYCLE_FRAMES
 		jmp	short loc_10BB0
 ; ---------------------------------------------------------------------------
 
 loc_10B97:
-		cmp	byte_259A6, 0
+		cmp	_shot_time, 0
 		jz	short loc_10BC7
-		dec	byte_259A6
-		cmp	byte_259A6, 6
+		dec	_shot_time
+		cmp	_shot_time, (SHOT_CYCLE_FRAMES / 3) * 1
 		jz	short loc_10BB0
-		cmp	byte_259A6, 0Ch
+		cmp	_shot_time, (SHOT_CYCLE_FRAMES / 3) * 2
 		jnz	short loc_10BC7
 
 loc_10BB0:
@@ -41144,7 +41144,8 @@ _player_invincibility_time	db ?
 byte_259A3	db ?
 power	db ?
 shot_level	db ?
-byte_259A6	db ?
+public _SHOT_TIME
+_shot_time	db ?
 include th01/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?

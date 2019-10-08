@@ -1104,7 +1104,7 @@ sub_B55A	proc near
 		mov	_player_is_hit, 0
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_point_items_collected, 0
-		mov	byte_2CEC0, 0
+		mov	_shot_time, 0
 		mov	fp_2C92E, offset sub_EE58
 		mov	_scroll_active, 1
 		nopcall	sub_E4FC
@@ -3222,7 +3222,7 @@ sub_C99E	proc near
 
 loc_C9D0:
 		call	sub_C84F
-		mov	byte_2CEC0, 0FFh
+		mov	_shot_time, SHOT_BLOCKED_FOR_THIS_FRAME
 		pop	bp
 		retn
 sub_C99E	endp
@@ -12941,20 +12941,20 @@ loc_121E7:
 loc_121F4:
 		test	_input.lo, low INPUT_SHOT
 		jz	short loc_12207
-		cmp	byte_2CEC0, 0
+		cmp	_shot_time, 0
 		jnz	short loc_12207
-		mov	byte_2CEC0, 12h
+		mov	_shot_time, SHOT_CYCLE_FRAMES
 
 loc_12207:
-		cmp	byte_2CEC0, 12h
+		cmp	_shot_time, SHOT_CYCLE_FRAMES
 		jbe	short loc_12213
-		mov	byte_2CEC0, 0
+		mov	_shot_time, 0
 
 loc_12213:
-		cmp	byte_2CEC0, 0
+		cmp	_shot_time, 0
 		jz	short loc_1222E
 		call	playchar_shot_func
-		dec	byte_2CEC0
+		dec	_shot_time
 		jmp	short loc_1222E
 ; ---------------------------------------------------------------------------
 
@@ -13651,7 +13651,7 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		mov	[bp+var_1], 0
-		mov	al, byte_2CEC0
+		mov	al, _shot_time
 		mov	ah, 0
 		sub	ax, 3
 		mov	bx, ax
@@ -44766,7 +44766,8 @@ _player_invincibility_time	db ?
 byte_2CEBD	db ?
 power	db ?
 shot_level	db ?
-byte_2CEC0	db ?
+public _SHOT_TIME
+_shot_time	db ?
 include th01/player_is_hit[bss].asm
 public _MISS_TIME
 _miss_time	db ?
