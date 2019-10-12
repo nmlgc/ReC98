@@ -1,3 +1,20 @@
+## Local variables
+
+| | |
+|-|-|
+| `DX` | First 8-bit variable declared *if no other function is called* |
+| `[bp-1]` | First 8-bit variable declared *otherwise* |
+| `SI` | First 16-bit variable declared |
+| `DI` | Second 16-bit variable declared |
+
+Example:
+
+|      ASM | Declaration sequence in C |
+|----------|---------------------------|
+|     `SI` | `int near *var_1;`        |
+| `[bp-1]` | `char var_2;`             |
+| `[bp-2]` | `char var_3;`             |
+
 ## Signedness
 
 | | |
@@ -30,6 +47,11 @@ case it's part of an arithmetic expression that was promoted to `int`.
 * Sequence of the individual cases is identical in both C and ASM
 * Multiple cases with the same offset in the table, to code that doesn't
   return? Code was compiled with `-O`
+
+## Pushing byte arguments to functions
+
+Borland C++ just pushes the entire word. Will cause IDA to mis-identify
+certain local variables as `word`s when they aren't.
 
 ## Inlining
 
@@ -69,6 +91,8 @@ code out of Turbo C++ – even though it will most certainly look horrible, and
 barely more readable than assembly (or even less so), with tons of inline ASM
 and register pseudovariables. However, it's futile to even try if the function
 contains one of the following:
+
+<a id="clobbering-di"></a>
 
 * A reference to the `DI` register. In that case, Turbo C++ always inserts a
   `PUSH DI` at the beginning (before the `MOV BX, SP`), and a `POP DI` before
