@@ -13640,81 +13640,7 @@ loc_128FA:
 		retf
 sub_12842	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12914	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		mov	[bp+var_1], 0
-		mov	al, _shot_time
-		mov	ah, 0
-		sub	ax, 3
-		mov	bx, ax
-		cmp	bx, 0Fh
-		ja	short loc_12951
-		add	bx, bx
-		jmp	word ptr cs:table_12966[bx]
-
-loc_12932:
-		mov	[bp+var_1], 0Fh
-		jmp	short loc_12942
-; ---------------------------------------------------------------------------
-
-loc_12938:
-		mov	[bp+var_1], 6
-		jmp	short loc_12955
-; ---------------------------------------------------------------------------
-
-loc_1293E:
-		mov	[bp+var_1], 5
-
-loc_12942:
-		call	snd_se_play pascal, 1
-		jmp	short loc_12955
-; ---------------------------------------------------------------------------
-
-loc_1294B:
-		mov	[bp+var_1], 4
-		jmp	short loc_12955
-; ---------------------------------------------------------------------------
-
-loc_12951:
-		mov	al, 0
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_12955:
-		mov	_shot_ptr, offset _shots
-		mov	_shot_last_id, 0
-		mov	al, [bp+var_1]
-		leave
-		retn
-sub_12914	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-table_12966	dw loc_1294B
-		dw loc_12951
-		dw loc_12951
-		dw loc_1293E
-		dw loc_12951
-		dw loc_12951
-		dw loc_12938
-		dw loc_12951
-		dw loc_12951
-		dw loc_1293E
-		dw loc_12951
-		dw loc_12951
-		dw loc_1294B
-		dw loc_12951
-		dw loc_12951
-		dw loc_12932
+include th05/player/shot_cycle_init.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13724,7 +13650,7 @@ shot_l0	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 1
 		jz	short loc_1299E
 		call	shots_add
@@ -13748,7 +13674,7 @@ shot_l1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 1
 		jz	short loc_129C8
 		call	shots_add
@@ -13779,7 +13705,7 @@ shot_reimu_l2	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 1
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	short loc_12A49
 		test	al, 8
@@ -13853,7 +13779,7 @@ shot_reimu_l3	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 2
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	short loc_12ACD
 		test	al, 8
@@ -13930,7 +13856,7 @@ shot_reimu_l4	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	short loc_12B51
 		test	al, 8
@@ -14005,7 +13931,7 @@ shot_reimu_l5	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_12BEE
 		test	al, 2
@@ -14091,7 +14017,7 @@ shot_reimu_l6	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_12C8B
 		test	al, 2
@@ -14177,7 +14103,7 @@ shot_reimu_l7	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 5
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_12D28
 		test	al, 2
@@ -14263,7 +14189,7 @@ shot_reimu_l8	proc near
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp-1], 7
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 1
 		jnz	short loc_12DA0
 		jmp	short loc_12DA9
@@ -14338,7 +14264,7 @@ shot_reimu_l9	proc near
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp-1], 7
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_12E5F
 		test	al, 2
@@ -14437,7 +14363,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 1
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	short loc_12EE1
 		test	al, 8
@@ -14512,7 +14438,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 2
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_12F94
 		test	al, 8
@@ -14619,7 +14545,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_1308E
 		test	al, 8
@@ -14746,7 +14672,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_13195
 		test	al, 8
@@ -14877,7 +14803,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_1329E
 		test	al, 8
@@ -15017,7 +14943,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_133D8
 		test	al, 8
@@ -15175,7 +15101,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_13516
 		test	al, 8
@@ -15333,7 +15259,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 6
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	loc_13697
 		test	al, 8
@@ -15522,7 +15448,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 2
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	short loc_13720
 		test	al, 1
@@ -15591,7 +15517,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 2
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	short loc_13798
 		test	al, 1
@@ -15666,7 +15592,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		mov	[bp+var_1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	short loc_13828
 		test	al, 1
@@ -15761,7 +15687,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	short loc_138C0
 		test	al, 1
@@ -15854,7 +15780,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	loc_1396C
 		test	al, 1
@@ -15956,7 +15882,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 6
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	loc_13A1F
 		test	al, 1
@@ -16064,7 +15990,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 6
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	loc_13AE7
 		test	al, 1
@@ -16174,7 +16100,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 6
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 5
 		jz	loc_13BE8
 		test	al, 1
@@ -16320,7 +16246,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 1
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 9
 		jz	short loc_13C74
 		test	al, 8
@@ -16394,7 +16320,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 2
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	short loc_13CFF
 		test	al, 2
@@ -16479,7 +16405,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_13D9D
 		test	al, 2
@@ -16569,7 +16495,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 3
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_13E53
 		test	al, 2
@@ -16680,7 +16606,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_13F34
 		test	al, 2
@@ -16815,7 +16741,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 4
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_14033
 		test	al, 2
@@ -16963,7 +16889,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 5
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_14131
 		test	al, 2
@@ -17116,7 +17042,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		mov	byte ptr [bp+var_2+1], 5
-		call	sub_12914
+		call	shot_cycle_init
 		test	al, 3
 		jz	loc_14248
 		test	al, 2

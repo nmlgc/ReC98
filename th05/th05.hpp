@@ -11,6 +11,22 @@
 bb_seg_t pascal near bb_load(const char far *fn);
 /// -------
 
+/// Player
+/// ------
+// Shots
+// -----
+// Shot cycle bitflags
+#define SC_1X 0x8 // Triggered 1× per cycle
+#define SC_2X 0x2 // Triggered 2× per cycle
+#define SC_3X 0x1 // Triggered 3× per cycle
+#define SC_6X 0x4 // Triggered 6× per cycle
+
+// Returns the current shot cycle, and prepares everything for more shots
+// being added.
+char pascal near shot_cycle_init(void);
+// -----
+/// ------
+
 /// Stages
 /// ------
 void pascal near stage2_update(void);
