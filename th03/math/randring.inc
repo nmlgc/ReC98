@@ -1,5 +1,4 @@
 RANDRING_NEXT_DEF_NOMOD macro instance, dist
-	; void pascal randring_next16(void);
 	public RANDRING&instance&_NEXT16
 	randring&instance&_next16	proc dist
 		xor	bh, bh
@@ -11,7 +10,6 @@ RANDRING_NEXT_DEF_NOMOD macro instance, dist
 	randring&instance&_next16	endp
 		nop
 
-	; void pascal randring_next16_and(unsigned short mask);
 	public RANDRING&instance&_NEXT16_AND
 	randring&instance&_next16_and	proc dist
 	arg @@mask:word

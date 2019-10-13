@@ -1,5 +1,4 @@
 RANDRING_NEXT_DEF macro instance
-	; void pascal near randring_next16(void);
 	public RANDRING&instance&_NEXT16
 	randring&instance&_next16	proc near
 		mov	bx, _randring_p
@@ -9,7 +8,6 @@ RANDRING_NEXT_DEF macro instance
 	randring&instance&_next16	endp
 		nop
 
-	; void pascal near randring_next16_and(unsigned char mask);
 	public RANDRING&instance&_NEXT16_AND
 	randring&instance&_next16_and	proc near
 	arg @@mask:byte

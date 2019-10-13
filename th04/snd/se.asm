@@ -7,7 +7,7 @@ endfunc
 
 
 ; void DEFCONV snd_se_play(unsigned char se)
-func snd_se_play
+func SND_SE_PLAY
 	mov	bx, sp
 	mov	dx, ss:[bx+4]
 	cmp	_snd_se_mode, SND_SE_OFF

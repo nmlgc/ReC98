@@ -1,7 +1,3 @@
-; Searches and returns the next free shot slot, or NULL if there are no more
-; free ones.
-
-; shot_t* pascal near shots_add(void);
 public SHOTS_ADD
 shots_add	proc near
 	xor	ax, ax

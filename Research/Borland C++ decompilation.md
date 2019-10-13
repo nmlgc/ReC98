@@ -42,7 +42,12 @@ inline optimally though:
 
 ## C++
 
-* Every class method that returns `*this` inlines to the ideal representation.
+* Every class method that returns `void` inlines to the ideal representation.
+* Every class method that returns `*this` inlines to the ideal representation
+  *only at the first nesting level*. Example: A class method calling an
+  overloaded operator returning `*this` will generate (needless) instructions
+  equivalent to `MOV AX, *this`. Thus, any overloaded `=`, `+=`, `-=`, etc.
+  operator should always return `void`.
 
   **Certainty**: See the examples in `9d121c7`. This is what allows us to use
   custom types with overloaded assignment operators, with the resulting code
