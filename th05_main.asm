@@ -6537,7 +6537,7 @@ sub_E480	proc far
 		retf
 sub_E480	endp
 
-include th05/shots_add.asm
+include th05/player/shots_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6554,7 +6554,6 @@ sub_E4DE	proc near
 		pop	si
 		retn	4
 sub_E4DE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13367,7 +13366,7 @@ loc_125F6:
 		retn
 sub_125A3	endp
 
-include th05/hitshot_from.asm
+include th05/player/hitshot_from.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37294,9 +37293,9 @@ include th05/formats/bb_curvebullet[data].asm
 aMaine		db 'maine',0
 ; char aMaine_0[]
 aMaine_0	db 'maine',0
-include th04/shot_levels[data].asm
+include th04/player/shot_levels[data].asm
 include th05/formats/bb_txt_load[data].asm
-include th04/shot_velocity[data].asm
+include th04/player/shot_velocity[data].asm
 aGENSOU_SCR	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 byte_221C0	db 0
@@ -44385,7 +44384,7 @@ word_2C0C8	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-include th04/shots[bss].asm
+include th04/player/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -44404,7 +44403,7 @@ include th04/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-include th05/hitshots[bss].asm
+include th05/player/hitshots[bss].asm
 include th04/homing_target[bss].asm
 public _stage_vm
 _stage_vm	dd ?
@@ -44897,11 +44896,11 @@ word_2CED8	dw ?
 		dd    ?	;
 		dd    ?	;
 word_2D05A	dw ?
-include th05/hitshot_from[bss].asm
+include th05/player/hitshot_from[bss].asm
 word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
-include th04/shots_add[bss].asm
+include th04/player/shots_add[bss].asm
 include th04/boss/funcs[bss].asm
 include th05/boss/b5_intervals[bss].asm
 		dd    ?	;

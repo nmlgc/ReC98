@@ -12825,7 +12825,7 @@ loc_11D92:
 		retn
 yuuka6_fg_render	endp
 
-include th04/shots_add.asm
+include th04/player/shots_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12842,7 +12842,6 @@ sub_11DCA	proc near
 		pop	si
 		retn	4
 sub_11DCA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39556,7 +39555,7 @@ NUMERALS	db    0,   0, 38h,   0,	44h,   0, 82h,	 0, 82h,   0, 82h,   0,	44h,   0
 		db 0FFh
 		db    0
 include th02/sprites/sparks.asm
-include th04/shot_velocity[data].asm
+include th04/player/shot_velocity[data].asm
 		db  18h
 		db  68h	; h
 		db  98h
@@ -40267,7 +40266,7 @@ byte_23212	db 0
 		db  90h
 		db 0F0h
 		db  10h
-include th04/shot_levels[data].asm
+include th04/player/shot_levels[data].asm
 aMiko_cfg	db 'MIKO.CFG',0
 		db    0
 word_2323A	dw 0AF30h
@@ -40950,7 +40949,7 @@ _rank	db ?
 include th04/score[bss].asm
 byte_256A2	db ?
 		db ?
-include th04/shots_add[bss].asm
+include th04/player/shots_add[bss].asm
 byte_256A8	db ?
 byte_256A9	db ?
 fp_256AA	dw ?
@@ -47072,7 +47071,7 @@ include th04/circles[bss].asm
 		dd    ?	;
 		db    ?	;
 		db    ?	;
-include th04/shots[bss].asm
+include th04/player/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
