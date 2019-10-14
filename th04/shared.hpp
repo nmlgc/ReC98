@@ -14,10 +14,10 @@ inline subpixel_t to_sp(float screen_v) {
 }
 
 class Subpixel {
-private:
-	subpixel_t v;
-
 public:
+	// Code generation will require direct access to v, if performing
+	// arithmetic with a local variable...
+	subpixel_t v;
 
 	void operator +=(float screen_v) {
 		this->v += to_sp(screen_v);

@@ -15,6 +15,13 @@ bb_seg_t pascal near bb_load(const char far *fn);
 /// ------
 // Shots
 // -----
+// Shot types
+#define ST_NORMAL 0
+#define ST_HOMING 1
+#define ST_MISSILE_LEFT 2
+#define ST_MISSILE_RIGHT 3
+#define ST_MISSILE_STRAIGHT 4
+
 // Shot cycle bitflags
 #define SC_1X 0x8 // Triggered 1× per cycle
 #define SC_2X 0x2 // Triggered 2× per cycle
