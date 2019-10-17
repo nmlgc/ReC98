@@ -1,5 +1,18 @@
 # The Touhou PC-98 Restoration Project (*"ReC98"*)
 
+[![4-week crowdfunding goal…](https://rec98.nmlgc.net/badge/cap)](https://rec98.nmlgc.net)
+
+|    Reverse-engineered: | [![All games…](https://rec98.nmlgc.net/badge/re)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/re/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/re/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/re/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/re/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/re/5)][HP] |
+|-----------------------:|---|---|---|---|---|--|
+| [Position independence]: | [![All games…](https://rec98.nmlgc.net/badge/pi)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/pi/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/pi/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/pi/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/pi/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/pi/5)][HP] |
+
+[Check the homepage for more detailed progress numbers and information about the crowdfunding!][HP]
+
+[HP]: https://rec98.nmlgc.net
+[Position independence]: https://rec98.nmlgc.net/faq#position-independence
+
+----
+
 ### Overview
 
 This project aims to rebuild the first five games of the [Touhou Project](http://en.wikipedia.org/wiki/Touhou_Project) series by *ZUN Soft* (now *Team Shanghai Alice*), which were originally released exclusively for the NEC PC-9801 system, into a cross-platform, open and truly moddable form.
