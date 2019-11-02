@@ -1,7 +1,5 @@
-bin/th*
-bin/TH*
-bin/zuncom
-bin/ZUNCOM
+bin/*
+!bin/masters.lib
 Research/*.exe
 Research/*.obj
 RESEARCH/*.EXE
