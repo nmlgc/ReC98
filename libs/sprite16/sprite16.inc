@@ -1,0 +1,14 @@
+; Function numbers for the SPRITE16.COM driver, according to SPRITE16.DOC.
+; Only includes functions that are actually used in TH03.
+
+SPRITE16 = 42h
+
+SPRITE16_GENERATE_ALPHA = 1
+SPRITE16_PUT = 2
+SPRITE16_SET_MONO = 3
+SPRITE16_SET_COLOR = 4
+SPRITE16_SET_OVERLAP = 5
+SPRITE16_SET_MASK = 8
+
+OVERLAP_CLEAR = 1
+OVERLAP_OR = 0

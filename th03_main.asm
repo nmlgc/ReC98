@@ -21,6 +21,7 @@
 
 include ReC98.inc
 include th03/th03.inc
+include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
 
@@ -2942,19 +2943,19 @@ var_2		= word ptr -2
 		push	di
 		mov	si, 2832h
 		mov	dx, 1
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
 		mov	dx, word_23AF6
 		; Hack (and dx, 1)
 		db 081h
 		db 0e2h
 		db 001h
 		db 000h
-		add	dx, 0Bh
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		add	dx, 11
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		xor	di, di
 		jmp	short loc_B88F
 ; ---------------------------------------------------------------------------
@@ -3001,9 +3002,9 @@ loc_B88B:
 loc_B88F:
 		cmp	di, 0Ch
 		jl	short loc_B839
-		mov	dx, 0Fh
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	dx, 15
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
 		cmp	byte ptr [si], 0
 		jz	short loc_B8ED
 		cmp	byte ptr [si+1], 0
@@ -3040,8 +3041,8 @@ loc_B8C0:
 
 loc_B8ED:
 		xor	dx, dx
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
 		pop	di
 		pop	si
 		leave
@@ -4211,8 +4212,8 @@ loc_C263:
 		mov	word_1F2E6, 27Fh
 
 loc_C26F:
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		xor	di, di
 		mov	ax, word_20E42
 		mov	bx, 4
@@ -6259,8 +6260,8 @@ sub_D135	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 3
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 3
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
@@ -6404,8 +6405,8 @@ loc_D276:
 		inc	si
 		cmp	si, 30h	; '0'
 		jb	short loc_D254
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 3
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 3
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
@@ -6505,8 +6506,8 @@ sub_D340	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
@@ -6654,8 +6655,8 @@ loc_D488:
 		inc	si
 		cmp	si, 32h	; '2'
 		jb	short loc_D466
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
@@ -8069,8 +8070,8 @@ loc_DEB2:
 		jnz	short loc_DF12
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 32
 		push	word ptr [si]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
@@ -9211,8 +9212,8 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, 66A6h
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		xor	di, di
@@ -9657,8 +9658,8 @@ sub_F0EE	proc far
 		push	1
 		call	sub_2C42
 		graph_accesspage 0
-		mov	ah, 1
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_GENERATE_ALPHA
+		int	SPRITE16
 		retf
 sub_F0EE	endp
 
@@ -9679,7 +9680,7 @@ arg_4		= word ptr  0Ah
 		push	di
 		mov	di, [bp+arg_0]
 		mov	dx, [bp+arg_4]
-		mov	al, byte_1F2EA
+		mov	al, _sprite16_put_w
 		xor	bh, bh
 		mov	bl, al
 		shl	bx, 4
@@ -9692,11 +9693,11 @@ arg_4		= word ptr  0Ah
 		jl	short loc_F136
 
 loc_F127:
-		mov	ah, 2
+		mov	ah, SPRITE16_PUT
 		mov	bx, [bp+arg_2]
 		sar	bx, 1
-		mov	cx, word_1F2E8
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	cx, _sprite16_put_h
+		int	SPRITE16
 		jmp	short loc_F15B
 ; ---------------------------------------------------------------------------
 
@@ -9754,7 +9755,7 @@ arg_6		= word ptr  0Ch
 		push	di
 		mov	di, [bp+arg_2]
 		mov	dx, [bp+arg_6]
-		mov	al, byte_1F2EA
+		mov	al, _sprite16_put_w
 		xor	bh, bh
 		mov	bl, al
 		shl	bx, 4
@@ -9767,14 +9768,14 @@ arg_6		= word ptr  0Ch
 		jl	short loc_F1A6
 
 loc_F189:
-		mov	ah, 2
+		mov	ah, SPRITE16_PUT
 		mov	bx, [bp+arg_4]
 		sar	bx, 1
-		mov	cx, word_1F2E8
+		mov	cx, _sprite16_put_h
 
 loc_F194:
 		mov	si, [bp+arg_0]
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		dec	si
 		jz	short loc_F1CB
 		add	bx, cx
@@ -9827,24 +9828,24 @@ sub_F162	endp
 sub_F1D2	proc far
 
 arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@screen_y		= word ptr  8
+@@x		= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	di
 		mov	di, [bp+arg_0]
-		mov	dx, [bp+arg_4]
+		mov	dx, [bp+@@x]
 		xor	bh, bh
 		mov	bl, al
 		shl	bx, 4
 		add	bx, dx
-		mov	ah, 2
-		mov	bx, [bp+arg_2]
+		mov	ah, SPRITE16_PUT
+		mov	bx, [bp+@@screen_y]
 		sar	bx, 1
-		mov	al, byte_1F2EA
-		mov	cx, word_1F2E8
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	al, _sprite16_put_w
+		mov	cx, _sprite16_put_h
+		int	SPRITE16
 		pop	di
 		pop	bp
 		retf	6
@@ -9911,8 +9912,8 @@ loc_F253:
 		mov	word_1F2E6, 27Fh
 
 loc_F25F:
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		xor	si, si
 		jmp	short loc_F2C3
 ; ---------------------------------------------------------------------------
@@ -10780,8 +10781,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_3], al
-		mov	byte_1F2EA, 0Bh
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (176 / 16)
+		mov	_sprite16_put_h, 48
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -10798,8 +10799,8 @@ var_2		= word ptr -2
 		call	sub_F100
 		cmp	byte_1F34E, 0
 		jz	short loc_FA0A
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 28h	; '('
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 40
 		add	si, 40h
 		add	di, 10h
 		push	si
@@ -10817,8 +10818,8 @@ loc_FA0A:
 		and	ax, 3
 		cmp	ax, 2
 		jnb	short loc_FA49
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 28h	; '('
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 40
 		add	si, 40h
 		add	di, 10h
 		push	si
@@ -10842,8 +10843,8 @@ loc_FA49:
 
 loc_FA55:
 		mov	[bp+var_2], ax
-		mov	byte_1F2EA, 7
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (112 / 16)
+		mov	_sprite16_put_h, 8
 		push	si
 		push	di
 		push	[bp+var_2]
@@ -10876,8 +10877,8 @@ arg_0		= word ptr  4
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_3], al
-		mov	byte_1F2EA, 0Bh
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (176 / 16)
+		mov	_sprite16_put_h, 48
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -10888,27 +10889,27 @@ arg_0		= word ptr  4
 		sar	ax, 4
 		add	ax, 0FFE0h
 		mov	[bp+var_2], ax
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0AAAAh
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		mov	ax, di
 		sub	ax, si
 		push	ax
 		push	[bp+var_2]
 		push	word_1F34C
 		call	sub_F100
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 5555h
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		mov	ax, di
 		add	ax, si
 		push	ax
 		push	[bp+var_2]
 		push	word_1F34C
 		call	sub_F100
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0FFFFh
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		pop	di
 		pop	si
 		leave
@@ -11530,8 +11531,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_3], al
-		mov	byte_1F2EA, 9
-		mov	word_1F2E8, 38h	; '8'
+		mov	_sprite16_put_w, (144 / 16)
+		mov	_sprite16_put_h, 56
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -11548,8 +11549,8 @@ var_2		= word ptr -2
 		call	sub_F100
 		cmp	byte_1F34E, 0
 		jz	short loc_100B8
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 28h	; '('
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 40
 		add	si, 20h	; ' '
 		add	di, 10h
 		push	si
@@ -11567,8 +11568,8 @@ loc_100B8:
 		jnz	short loc_10121
 
 loc_100BF:
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	ax, word_1F34C
 		add	ax, 1Ah
 		mov	[bp+var_2], ax
@@ -11578,8 +11579,8 @@ loc_100BF:
 		push	ax
 		push	[bp+var_2]
 		call	sub_F100
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		add	si, 50h	; 'P'
 		mov	ax, word_1F34C
 		add	ax, 0EF4h
@@ -11603,8 +11604,8 @@ loc_10111:
 loc_10121:
 		cmp	byte_1F353, 3
 		jnz	short loc_10144
-		mov	byte_1F2EA, 5
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (80 / 16)
+		mov	_sprite16_put_h, 24
 		lea	ax, [si+20h]
 		push	ax
 		lea	ax, [di+10h]
@@ -11617,8 +11618,8 @@ loc_10121:
 loc_10144:
 		cmp	byte_1F353, 4
 		jnz	short loc_10171
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	ax, word_1F34C
 		add	ax, 1Ah
 		mov	[bp+var_2], ax
@@ -11668,8 +11669,8 @@ arg_2		= word ptr  6
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_7], al
-		mov	byte_1F2EA, 9
-		mov	word_1F2E8, 38h	; '8'
+		mov	_sprite16_put_w, (144 / 16)
+		mov	_sprite16_put_h, 56
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -11680,9 +11681,9 @@ arg_2		= word ptr  6
 		sar	ax, 4
 		add	ax, 0FFD8h
 		mov	[bp+var_4], ax
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0AAAAh
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
@@ -11707,9 +11708,9 @@ arg_2		= word ptr  6
 		push	ax
 		push	word_1F34C
 		call	sub_F100
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 5555h
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		mov	al, [bp+arg_0]
 		add	al, 80h
 		mov	[bp+arg_0], al
@@ -11736,9 +11737,9 @@ arg_2		= word ptr  6
 		push	ax
 		push	word_1F34C
 		call	sub_F100
-		mov	ah, 8
+		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0FFFFh
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		pop	di
 		pop	si
 		leave
@@ -12464,8 +12465,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_7], al
-		mov	byte_1F2EA, 7
-		mov	word_1F2E8, 38h	; '8'
+		mov	_sprite16_put_w, (112 / 16)
+		mov	_sprite16_put_h, 56
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -12482,8 +12483,8 @@ var_2		= word ptr -2
 		call	sub_F100
 		cmp	byte_1F353, 0
 		jz	short loc_1093C
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 32
 		mov	ax, word_1F34C
 		add	ax, 0Eh
 		mov	[bp+var_2], ax
@@ -12502,8 +12503,8 @@ loc_10932:
 loc_1093C:
 		cmp	byte_1F34E, 0
 		jz	short loc_1095F
-		mov	byte_1F2EA, 5
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (80 / 16)
+		mov	_sprite16_put_h, 48
 		add	si, 10h
 		push	si
 		push	di
@@ -12605,10 +12606,10 @@ var_2		= word ptr -2
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_3], al
 		xor	dx, dx
-		mov	ah, 5
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
-		mov	byte_1F2EA, 7
-		mov	word_1F2E8, 38h	; '8'
+		mov	ah, SPRITE16_SET_OVERLAP
+		int	SPRITE16
+		mov	_sprite16_put_w, (112 / 16)
+		mov	_sprite16_put_h, 56
 		mov	ax, word_1F340
 		sar	ax, 4
 		add	ax, 0FFD8h
@@ -12773,9 +12774,9 @@ loc_10B9C:
 		jge	short loc_10B8C
 
 loc_10BA0:
-		mov	dx, 1
-		mov	ah, 5
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	dx, OVERLAP_CLEAR
+		mov	ah, SPRITE16_SET_OVERLAP
+		int	SPRITE16
 		pop	di
 		pop	si
 		leave
@@ -13471,8 +13472,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_5], al
-		mov	byte_1F2EA, 6
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (96 / 16)
+		mov	_sprite16_put_h, 48
 		cmp	[bp+var_5], 0
 		jnz	short loc_111D1
 		mov	word_1F2E4, 0
@@ -13508,8 +13509,8 @@ loc_111EB:
 		call	sub_F100
 		cmp	byte_1F353, 1
 		jnz	loc_112A2
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		mov	ax, word_1F34C
 		add	ax, 0FFF4h
 		mov	si, ax
@@ -13600,8 +13601,8 @@ arg_2		= byte ptr  6
 		jb	loc_113A3
 
 loc_112C5:
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_112E5
 		mov	word_1F2E4, 0
@@ -14240,14 +14241,14 @@ arg_0		= word ptr  4
 		add	ax, word_1F34C
 		add	ax, 0FB10h
 		mov	[bp+var_6], ax
-		mov	byte_1F2EA, 6
+		mov	_sprite16_put_w, (96 / 16)
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+8C4h]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	word_1F2E8, ax
+		mov	_sprite16_put_h, ax
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -14290,8 +14291,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, byte ptr word_1FE88
 		mov	[bp+var_5], al
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 48
 		push	word_1F33E
 		mov	ah, 0
 		push	ax
@@ -14398,8 +14399,8 @@ loc_11942:
 		jb	loc_119FB
 
 loc_11956:
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 28Ch
@@ -15171,8 +15172,8 @@ arg_0		= word ptr  4
 		add	[bp+var_4], 0A00h
 
 loc_12012:
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		xor	si, si
 		jmp	short loc_12095
 ; ---------------------------------------------------------------------------
@@ -15242,8 +15243,8 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	byte_1F2EA, 8
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (128 / 16)
+		mov	_sprite16_put_h, 48
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -15297,8 +15298,8 @@ arg_0		= word ptr  4
 		jb	short loc_1213C
 
 loc_12114:
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	byte_1F353, 1
 		mov	al, byte_1F355
 		add	al, 2
@@ -16216,8 +16217,8 @@ var_2		= word ptr -2
 		mov	ax, word_1F356
 		shl	ax, 4
 		mov	[bp+var_8], ax
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	ax, word_1F34C
 		add	ax, 790h
 		mov	[bp+var_4], ax
@@ -16291,8 +16292,8 @@ var_2		= word ptr -2
 		push	di
 		cmp	byte_1F353, 0
 		jnz	loc_12AA5
-		mov	byte_1F2EA, 8
-		mov	word_1F2E8, 40h
+		mov	_sprite16_put_w, (128 / 16)
+		mov	_sprite16_put_h, 64
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -16315,8 +16316,8 @@ var_2		= word ptr -2
 		add	[bp+var_2], 20h	; ' '
 		cmp	byte_1F34E, 0
 		jz	short loc_12A7A
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 28h	; '('
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 40
 		add	si, 778h
 		jmp	short loc_12A99
 ; ---------------------------------------------------------------------------
@@ -16324,8 +16325,8 @@ var_2		= word ptr -2
 loc_12A7A:
 		cmp	byte_1F354, 0
 		jz	short loc_12AD9
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 24
 		mov	al, byte_1F354
 		mov	ah, 0
 		shl	ax, 2
@@ -16450,11 +16451,11 @@ sub_12B38	proc near
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@col		= word ptr  4
 
 		enter	6, 0
-		mov	byte_1F2EA, 8
-		mov	word_1F2E8, 40h
+		mov	_sprite16_put_w, (128 / 16)
+		mov	_sprite16_put_h, 64
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -16470,19 +16471,19 @@ arg_0		= word ptr  4
 		mov	[bp+var_4], ax
 		mov	ax, word_1F34C
 		mov	[bp+var_6], ax
-		mov	ah, 3
+		mov	ah, SPRITE16_SET_MONO
 		mov	dx, 1
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
-		mov	ah, 4
-		mov	dx, [bp+arg_0]
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
+		mov	ah, SPRITE16_SET_COLOR
+		mov	dx, [bp+@@col]
+		int	SPRITE16
 		push	[bp+var_2]
 		push	[bp+var_4]
 		push	[bp+var_6]
 		call	sub_F100
-		mov	ah, 3
+		mov	ah, SPRITE16_SET_MONO
 		xor	dx, dx
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		int	SPRITE16
 		leave
 		retn	2
 sub_12B38	endp
@@ -17150,8 +17151,8 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		mov	byte_1F2EA, 8
-		mov	word_1F2E8, 28h	; '('
+		mov	_sprite16_put_w, (128 / 16)
+		mov	_sprite16_put_h, 40
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -17175,8 +17176,8 @@ loc_131B8:
 		push	[bp+var_2]
 		push	si
 		call	sub_F100
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 32
 		add	di, 20h	; ' '
 		cmp	byte_1F353, 1
 		jnz	short loc_131E4
@@ -17248,8 +17249,8 @@ var_2		= word ptr -2
 		mov	dx, 0C80h
 		sub	dx, ax
 		mov	[bp+var_6], dx
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		cmp	word_1F3B0, 20h	; ' '
 		jnb	short loc_13254
 		cmp	frame_mod2, 0
@@ -17920,8 +17921,8 @@ var_2		= word ptr -2
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	byte_1F2EA, 6
-		mov	word_1F2E8, 30h	; '0'
+		mov	_sprite16_put_w, (96 / 16)
+		mov	_sprite16_put_h, 48
 		push	word_1F33E
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -17945,8 +17946,8 @@ loc_13814:
 		push	[bp+var_4]
 		push	si
 		call	sub_F100
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	al, byte_1F354
 		mov	[bp+var_9], al
 		add	[bp+var_2], 28h	; '('
@@ -18032,8 +18033,8 @@ var_2		= word ptr -2
 		mov	dx, 0C80h
 		sub	dx, ax
 		mov	[bp+var_6], dx
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		cmp	word_1F3B0, 40h
 		jnb	short loc_138E4
 		test	byte ptr word_23AF6, 1
@@ -20198,8 +20199,8 @@ loc_14A1C:
 		jb	short loc_14A72
 		cmp	[bp+var_1], 80h
 		jnb	short loc_14A72
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		mov	al, byte ptr word_23AF0
@@ -20670,8 +20671,8 @@ loc_14DAB:
 		mov	word_1F2E6, 27Fh
 
 loc_14DB7:
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		xor	si, si
 		jmp	short loc_14E33
 ; ---------------------------------------------------------------------------
@@ -20681,35 +20682,35 @@ loc_14DC6:
 		cmp	byte ptr [bx], 0
 		jz	short loc_14E2D
 		mov	dx, 1
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
 		mov	dx, 2
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
 		mov	bx, word_205CA
 		push	word ptr [bx+0Eh]
 		push	word ptr [bx+1Ch]
 		push	3
 		call	sub_14C8C
 		mov	dx, 5
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
 		mov	bx, word_205CA
 		push	word ptr [bx+0Ah]
 		push	word ptr [bx+18h]
 		push	2
 		call	sub_14C8C
 		mov	dx, 6
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
 		mov	bx, word_205CA
 		push	word ptr [bx+6]
 		push	word ptr [bx+14h]
 		push	1
 		call	sub_14C8C
 		xor	dx, dx
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
 		mov	bx, word_205CA
 		push	word ptr [bx+2]
 		push	word ptr [bx+10h]
@@ -21105,8 +21106,8 @@ var_2		= word ptr -2
 		shl	ax, 8
 		add	ax, 3080h
 		mov	word_207E0, ax
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		mov	al, byte ptr word_23AF0
@@ -21734,8 +21735,8 @@ loc_15695:
 		mov	ah, 0
 		add	ax, 10h
 		mov	[bp+var_2], ax
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 8
 		xor	si, si
 		jmp	short loc_156DA
 ; ---------------------------------------------------------------------------
@@ -22928,17 +22929,17 @@ loc_16044:
 		mov	bx, word_2203C
 		mov	al, [bx+9]
 		mov	ah, 0
-		add	ax, 10h
+		add	ax, 16
 		mov	si, ax
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		mov	byte_1F2EA, al
+		mov	_sprite16_put_w, al
 		mov	ax, si
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	word_1F2E8, ax
+		mov	_sprite16_put_h, ax
 		sar	si, 1
 		mov	bx, word_2203C
 		push	word ptr [bx+2]
@@ -23471,13 +23472,13 @@ loc_164E9:
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		mov	byte_1F2EA, al
+		mov	_sprite16_put_w, al
 		mov	al, [si+9]
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	word_1F2E8, ax
+		mov	_sprite16_put_h, ax
 		cmp	byte ptr [si+8], 0
 		jnz	short loc_16526
 		mov	word_1F2E4, 0
@@ -24405,8 +24406,8 @@ var_2		= word ptr -2
 		mov	di, ax
 		cmp	byte ptr [di], 0
 		jz	loc_16DC4
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_16C9F
 		mov	word_1F2E4, 0
@@ -25028,8 +25029,8 @@ var_2		= word ptr -2
 		shl	ax, 5
 		add	ax, 689Ah
 		mov	word_23E3A, ax
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		xor	si, si
@@ -26407,8 +26408,8 @@ var_2		= word ptr -2
 		call	egc_on
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	[bp+var_C], 68F2h
 		mov	[bp+var_D], 0
 		mov	[bp+var_2], 0
@@ -26508,13 +26509,13 @@ loc_17CD9:
 		cmp	[bp+var_D], 0
 		jz	short loc_17D56
 		mov	dx, 1
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
-		mov	dx, 0Fh
-		mov	ah, 4
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
+		mov	dx, 15
+		mov	ah, SPRITE16_SET_COLOR
+		int	SPRITE16
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	[bp+var_C], 68F2h
 		mov	[bp+var_2], 0
 		jmp	short loc_17D48
@@ -26548,8 +26549,8 @@ loc_17D48:
 		cmp	[bp+var_2], 140h
 		jl	short loc_17D0D
 		mov	dx, 0
-		mov	ah, 3
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_MONO
+		int	SPRITE16
 
 loc_17D56:
 		call	egc_off
@@ -26788,8 +26789,8 @@ var_2		= word ptr -2
 		add	di, 4
 
 loc_17F24:
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	[bp+var_5], 10h
 		jmp	short loc_17F5A
 ; ---------------------------------------------------------------------------
@@ -26805,8 +26806,8 @@ loc_17F35:
 		add	di, 2
 
 loc_17F4B:
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	[bp+var_5], 8
 
 loc_17F5A:
@@ -26919,8 +26920,8 @@ loc_1800B:
 		mov	si, word_1DDAC
 
 loc_18019:
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 32
 		mov	bx, word_2203C
 		push	word ptr [bx+2]
 		mov	al, [bx+8]
@@ -27695,8 +27696,8 @@ var_2		= word ptr -2
 		shl	ax, 6
 		add	ax, 25DEh
 		mov	word_1FBBE, ax
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 32
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_186F6
 		mov	word_1F2E4, 0
@@ -29386,8 +29387,8 @@ loc_1956B:
 		mov	bx, [bx]
 		cmp	byte ptr [bx], 1
 		jnz	short loc_195EF
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 28Ch
@@ -29869,8 +29870,8 @@ loc_1992A:
 		mov	byte ptr [bp+var_5], al
 		cmp	byte ptr [si], 1
 		jnz	short loc_19976
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 284h
@@ -30223,8 +30224,8 @@ loc_19B8B:
 loc_19B97:
 		cmp	byte ptr [si], 1
 		jnz	short loc_19C14
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 1Ah
@@ -30635,8 +30636,8 @@ loc_19E91:
 		cmp	byte ptr [si+11h], 0
 		jnz	short loc_19EBC
 		add	di, 282h
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	ax, [bp+var_2]
 		add	ax, 0FFF0h
 		push	ax
@@ -30651,8 +30652,8 @@ loc_19EB3:
 ; ---------------------------------------------------------------------------
 
 loc_19EBC:
-		mov	byte_1F2EA, 4
-		mov	word_1F2E8, 20h	; ' '
+		mov	_sprite16_put_w, (64 / 16)
+		mov	_sprite16_put_h, 32
 		mov	ax, [bp+var_2]
 		add	ax, 0FFE0h
 		push	ax
@@ -31322,8 +31323,8 @@ arg_4		= word ptr  8
 		add	si, 4
 
 loc_1A347:
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		mov	word_1F2E4, 0
 		mov	word_1F2E6, 27Fh
 		mov	ax, [bp+arg_4]
@@ -31359,8 +31360,8 @@ arg_4		= word ptr  8
 
 loc_1A381:
 		mov	word_1F2E6, 27Fh
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		mov	si, 1930h
 		mov	al, [bp+arg_0]
 		mov	ah, 0
@@ -31410,8 +31411,8 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, 10h
 		mov	[bp+var_4], ax
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1A40B
 		mov	word_1F2E4, 0
@@ -31779,8 +31780,8 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, 10h
 		mov	[bp+var_5+1], ax
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1A6CB
 		mov	word_1F2E4, 0
@@ -32568,8 +32569,8 @@ loc_1ACCF:
 		push	27F00C7h
 		call	grc_setclip
 		sub	di, 10h
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 8
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 280h
@@ -32627,8 +32628,8 @@ loc_1AD5F:
 		sub	si, 10h
 		cmp	si, [bp+var_6]
 		jg	short loc_1AD57
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 16
 		sub	[bp+var_6], 10h
 		mov	bx, [bp+var_A]
 		mov	ax, di
@@ -32680,8 +32681,8 @@ loc_1ADD1:
 		mov	bx, [bp+var_A]
 		cmp	word ptr [bx+14h], 18h
 		jle	short loc_1AE2A
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		push	di
 		push	[bp+var_6]
 		mov	ax, [bp+var_2]
@@ -33030,8 +33031,8 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, word_2028A
-		mov	byte_1F2EA, 3
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (48 / 16)
+		mov	_sprite16_put_h, 24
 		push	word ptr [si+2]
 		mov	al, [si+10h]
 		mov	ah, 0
@@ -33575,8 +33576,8 @@ chiyuri_1B427	proc far
 		imul	ax, 30h
 		add	ax, 1F84h
 		mov	word_1F51A, ax
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 18h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1B459
 		mov	word_1F2E4, 0
@@ -34259,8 +34260,8 @@ ellen_1B979	proc far
 		imul	ax, 180h
 		add	ax, 2008h
 		mov	word_1F868, ax
-		mov	byte_1F2EA, 1
-		mov	word_1F2E8, 8
+		mov	_sprite16_put_w, (16 / 16)
+		mov	_sprite16_put_h, 8
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1B9AC
 		mov	word_1F2E4, 0
@@ -34968,8 +34969,8 @@ kana_1BEF3	proc far
 		imul	ax, 0D8h
 		add	ax, 267Ch
 		mov	word_1FD8C, ax
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1BF34
 		mov	word_1F2E4, 0
@@ -34983,8 +34984,8 @@ loc_1BF34:
 
 loc_1BF40:
 		xor	dx, dx
-		mov	ah, 5
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	ah, SPRITE16_SET_OVERLAP
+		int	SPRITE16
 		xor	si, si
 		jmp	short loc_1BF53
 ; ---------------------------------------------------------------------------
@@ -34997,9 +34998,9 @@ loc_1BF4A:
 loc_1BF53:
 		cmp	si, 4
 		jl	short loc_1BF4A
-		mov	dx, 1
-		mov	ah, 5
-		int	42h		;  - EGA/VGA/PS	- Relocated (by	EGA) Video Handler (original INT 10h)
+		mov	dx, OVERLAP_CLEAR
+		mov	ah, SPRITE16_SET_OVERLAP
+		int	SPRITE16
 
 loc_1BF5F:
 		pop	si
@@ -35437,8 +35438,8 @@ kotohime_1C295	proc far
 		mov	bx, word_1FE6A
 		cmp	byte ptr [bx], 0
 		jz	short loc_1C2DE
-		mov	byte_1F2EA, 6
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (96 / 16)
+		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1C2CF
 		mov	word_1F2E4, 0
@@ -36043,8 +36044,8 @@ rikako_1C6E8	proc far
 		imul	ax, 18h
 		add	ax, 38F6h
 		mov	word_20E86, ax
-		mov	byte_1F2EA, 2
-		mov	word_1F2E8, 10h
+		mov	_sprite16_put_w, (32 / 16)
+		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1C728
 		mov	word_1F2E4, 0
@@ -37579,9 +37580,7 @@ include th03/formats/hfliplut[bss].asm
 		dd    ?	;
 word_1F2E4	dw ?
 word_1F2E6	dw ?
-word_1F2E8	dw ?
-byte_1F2EA	db ?
-		db ?
+include th03/sprite16[bss].asm
 word_1F2EC	dw ?
 word_1F2EE	dw ?
 public _yumeconfig
