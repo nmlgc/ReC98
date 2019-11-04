@@ -51,7 +51,7 @@ The two main libraries make up a sizable amount of the code in all the executabl
 
 With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we now also have two open-source PC-9821 emulators capable of running the games. This will greatly help in understanding and porting all hardware-specific code.
 
-Still, it will no doubt take a long time until this project will have made any visible and useful progress. Any help will be appreciated!
+Still, it will no doubt take a long time until this project will have made any visible and useful progress. Any help will be appreciated! If you are interested, check [`CONTRIBUTING.md`](CONTRIBUTING.md) for the general contribution guidelines.
 
 ## Roadmap
 
