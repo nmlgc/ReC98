@@ -28,6 +28,26 @@ typedef enum {
 } mdrv2_func_t;
 
 extern char mdrv2_have_board;
+struct hack { char x[12]; }; // XXX
+extern const struct hack mdrv2_magic;
+
+int far mdrv2_resident(void)
+{
+	char s1[sizeof(mdrv2_magic)];
+	const struct hack s2 = mdrv2_magic;
+	char far *magicp = (char far *)(
+		((long)peek(0, MDRV2 * 4 + 2) << 16) + 0x102
+	);
+	int i;
+
+	for(i = 0; i < sizeof(s1); i++) {
+		s1[i] = magicp[i];
+	}
+	if(strcmp(s1, s2.x) != 0) {
+		return 0;
+	}
+	return 1;
+}
 
 static void near pascal mdrv2_load(const char *fn, char func)
 {

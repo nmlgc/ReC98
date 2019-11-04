@@ -316,7 +316,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_EF80
+		call	_mdrv2_resident
 		or	ax, ax
 		jnz	short loc_A105
 		pop	bp
@@ -9909,74 +9909,7 @@ fuuin_12_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_13_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_13_TEXT
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF80	proc far
-
-s2		= byte ptr -1Ch
-s1		= byte ptr -10h
-var_4		= dword	ptr -4
-
-		enter	1Ch, 0
-		push	si
-		lea	ax, [bp+s2]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aMdrv2system ; "Mdrv2System"
-		mov	cx, 0Ch
-		call	SCOPY@
-		xor	ax, ax
-		mov	es, ax
-		movsx	eax, word ptr es:[03CAh]
-		shl	eax, 10h
-		add	eax, 102h
-		shld	edx, eax, 10h
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		xor	si, si
-		jmp	short loc_EFC6
-; ---------------------------------------------------------------------------
-
-loc_EFBA:
-		les	bx, [bp+var_4]
-		assume es:nothing
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+s1], al
-		inc	si
-
-loc_EFC6:
-		cmp	si, 0Ch
-		jl	short loc_EFBA
-		push	ss
-		lea	ax, [bp+s2]
-		push	ax		; s2
-		push	ss
-		lea	ax, [bp+s1]
-		push	ax		; s1
-		call	_strcmp
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_EFE5
-		xor	ax, ax
-		jmp	short loc_EFE8
-; ---------------------------------------------------------------------------
-
-loc_EFE5:
-		mov	ax, 1
-
-loc_EFE8:
-		pop	si
-		leave
-		retf
-sub_EF80	endp
-
+	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_se_load:proc
 	extern _mdrv2_bgm_play:proc
@@ -10338,10 +10271,7 @@ word_134FA	dw 1
 		db    0
 word_13507	dw 64h
 byte_13509	db 0
-public _mdrv2_have_board
-_mdrv2_have_board	db 0
-		db 0
-aMdrv2system	db 'Mdrv2System',0
+include th01/mdrv2[data].asm
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm

@@ -7578,75 +7578,7 @@ op_10_TEXT	ends
 
 ; Segment type:	Pure code
 op_11_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_11_TEXT
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-_mdrv2_resident	proc far
-
-s2		= byte ptr -1Ch
-s1		= byte ptr -10h
-var_4		= dword	ptr -4
-
-		enter	1Ch, 0
-		push	si
-		lea	ax, [bp+s2]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aMdrv2system ; "Mdrv2System"
-		mov	cx, 0Ch
-		call	SCOPY@
-		xor	ax, ax
-		mov	es, ax
-		movsx	eax, word ptr es:[03CAh]
-		shl	eax, 10h
-		add	eax, 102h
-		shld	edx, eax, 10h
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		xor	si, si
-		jmp	short loc_E42B
-; ---------------------------------------------------------------------------
-
-loc_E41F:
-		les	bx, [bp+var_4]
-		assume es:nothing
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+s1], al
-		inc	si
-
-loc_E42B:
-		cmp	si, 0Ch
-		jl	short loc_E41F
-		push	ss
-		lea	ax, [bp+s2]
-		push	ax		; s2
-		push	ss
-		lea	ax, [bp+s1]
-		push	ax		; s1
-		call	_strcmp
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_E44A
-		xor	ax, ax
-		jmp	short loc_E44D
-; ---------------------------------------------------------------------------
-
-loc_E44A:
-		mov	ax, 1
-
-loc_E44D:
-		pop	si
-		leave
-		retf
-_mdrv2_resident	endp
-
+	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
@@ -7654,7 +7586,6 @@ _mdrv2_resident	endp
 	extern _mdrv2_check_board:proc
 op_11_TEXT	ends
 
-; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 op_12_TEXT	segment	byte public 'CODE' use16
@@ -8025,10 +7956,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
 public _res_id
 _res_id	db 'ReiidenConfig',0
-public _mdrv2_have_board
-_mdrv2_have_board	db 0
-		db 0
-aMdrv2system	db 'Mdrv2System',0
+include th01/mdrv2[data].asm
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...

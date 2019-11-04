@@ -4012,7 +4012,7 @@ _envp		= dword	ptr  0Ch
 		mov	[bp+var_2], 0
 		xor	si, si
 		mov	[bp+var_4], 0
-		call	sub_12455
+		call	_mdrv2_resident
 		or	ax, ax
 		jnz	short loc_D54F
 		jmp	short loc_D579
@@ -12723,75 +12723,7 @@ main_15_TEXT	ends
 
 ; Segment type:	Pure code
 main_16_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_16_TEXT
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12455	proc far
-
-_s2		= byte ptr -1Ch
-s1		= byte ptr -10h
-var_4		= dword	ptr -4
-
-		enter	1Ch, 0
-		push	si
-		lea	ax, [bp+_s2]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aMdrv2system ; "Mdrv2System"
-		mov	cx, 0Ch
-		call	SCOPY@
-		xor	ax, ax
-		mov	es, ax
-		movsx	eax, word ptr es:[03CAh]
-		shl	eax, 10h
-		add	eax, 102h
-		shld	edx, eax, 10h
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], ax
-		xor	si, si
-		jmp	short loc_1249B
-; ---------------------------------------------------------------------------
-
-loc_1248F:
-		les	bx, [bp+var_4]
-		assume es:nothing
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+si+s1], al
-		inc	si
-
-loc_1249B:
-		cmp	si, 0Ch
-		jl	short loc_1248F
-		push	ss
-		lea	ax, [bp+_s2]
-		push	ax		; s2
-		push	ss
-		lea	ax, [bp+s1]
-		push	ax		; s1
-		call	_strcmp
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_124BA
-		xor	ax, ax
-		jmp	short loc_124BD
-; ---------------------------------------------------------------------------
-
-loc_124BA:
-		mov	ax, 1
-
-loc_124BD:
-		pop	si
-		leave
-		retf
-sub_12455	endp
-
+	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_se_load:proc
 	extern _mdrv2_bgm_play:proc
@@ -29839,10 +29771,7 @@ unk_355EC	db    0
 		db 0FCh
 		db    1
 		db 0FEh
-public _mdrv2_have_board
-_mdrv2_have_board	db 0
-		db 0
-aMdrv2system	db 'Mdrv2System',0
+include th01/mdrv2[data].asm
 aVqvnvtvmvcb@vp	db 'ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq',0
 aVbvpvovzvtvbvf	db 'ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI',0
 aVrvevmvevgvfb@	db 'ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ',0
