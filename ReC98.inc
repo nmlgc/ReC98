@@ -25,6 +25,7 @@ include libs/master.lib/pf.inc
 include libs/master.lib/clip.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
+include pc98.inc
 include th01/hardware/egc.inc
 include th02/playfld.inc
 include th02/formats/pi_slots.inc
@@ -79,13 +80,6 @@ palette_t struc
 	colors	rgb_t PALETTE_COLORS dup(<?>)
 palette_t ends
 ; ---------------------
-
-RES_X = 640
-RES_Y = 400
-
-GAIJI_TRAM_W = 2
-
-ROW_SIZE = (RES_X / 8)
 
 TILE_W = 16
 TILE_H = 16
