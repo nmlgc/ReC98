@@ -10,6 +10,7 @@ struct item_t {
 
 #define ITEM_W 16
 #define ITEM_H 16
+#define ITEM_PULL_SPEED 10
 
 #if GAME == 5
 # define ITEM_COUNT 40

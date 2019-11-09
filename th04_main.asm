@@ -380,7 +380,7 @@ loc_ABD8:
 		call	sub_17E59
 		call	_midboss_update
 		call	_boss_update
-		call	sub_1DE5D
+		call	items_update
 		call	sub_13BCE
 		call	_stage_render
 		call	main_01:sub_1020A
@@ -392,7 +392,7 @@ loc_ABD8:
 		call	main_01:grcg_setmode_rmw_1
 		call	sub_13C5C
 		call	main_01:sparks_render
-		call	main_01:sub_12DF0
+		call	main_01:items_render
 		call	main_01:loc_BD64
 		call	main_01:sub_12CE5
 		call	main_01:circles_render
@@ -14808,52 +14808,7 @@ loc_12DEC:
 		retn
 sub_12CE5	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12DF0	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		call	main_01:item_splashes_render
-		mov	si, offset _items
-		xor	di, di
-		jmp	short loc_12E2E
-; ---------------------------------------------------------------------------
-
-loc_12E04:
-		cmp	byte ptr [si], 1
-		jnz	short loc_12E2A
-		cmp	word ptr [si+4], 0FF80h
-		jle	short loc_12E2A
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	dx, ax
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, 18h
-		push	word ptr [si+10h]
-		call	main_01:z_super_roll_put_tiny
-
-loc_12E2A:
-		inc	di
-		add	si, size item_t
-
-loc_12E2E:
-		cmp	di, ITEM_COUNT
-		jl	short loc_12E04
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_12DF0	endp
-
+include th04/item/render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34178,8 +34133,8 @@ loc_1DA76:
 		mov	[si+2],	ax
 		mov	ax, [bp+@@y]
 		mov	[si+4],	ax
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0FFD0h
+		mov	[si+item_t.pos.velocity.x], 0
+		mov	[si+item_t.pos.velocity.y], (-3 shl 4)
 		mov	al, [bp+arg_0]
 		mov	[si+0Eh], al
 		mov	ah, 0
@@ -34648,10 +34603,10 @@ off_1DE51	dw offset loc_1DE11
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public ITEMS_UPDATE
+items_update	proc far
 
-sub_1DE5D	proc far
-
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -34684,39 +34639,36 @@ loc_1DE90:
 		cmp	byte_236E0, 0
 		jz	short loc_1DEC6
 		mov	byte_21CC8, 1
-		mov	word ptr [si+12h], 1
+		mov	[si+item_t.pulled_to_player], 1
 		mov	ax, player_pos.cur.y
-		sub	ax, [si+4]
+		sub	ax, [si+item_t.pos.cur.y]
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, [si+2]
+		sub	ax, [si+item_t.pos.cur.x]
 		push	ax
 		call	iatan2
-		mov	[bp+var_1], al
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp+var_1]
-		push	0A0h
-		call	vector2_near
+		mov	[bp+@@angle], al
+		lea	ax, [si+item_t.pos.velocity]
+		call	vector2_near pascal, ax, word ptr [bp+@@angle], (ITEM_PULL_SPEED shl 4)
 		jmp	short loc_1DEDB
 ; ---------------------------------------------------------------------------
 
 loc_1DEC6:
-		cmp	word ptr [si+12h], 0
+		cmp	[si+item_t.pulled_to_player], 0
 		jz	short loc_1DEDB
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0
-		mov	word ptr [si+12h], 0
+		mov	[si+item_t.pos.velocity.x], 0
+		mov	[si+item_t.pos.velocity.y], 0
+		mov	[si+item_t.pulled_to_player], 0
 
 loc_1DEDB:
-		lea	ax, [si+2]
+		lea	ax, [si+item_t.pos]
 		push	ax
 		call	_motion_update_2
-		cmp	ax, 0FF80h
+		cmp	ax, (-(ITEM_W / 2) shl 4)
 		jle	short loc_1DEF2
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + (ITEM_W / 2)) shl 4)
 		jge	short loc_1DEF2
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + (ITEM_H / 2)) shl 4)
 		jl	short loc_1DEFB
 
 loc_1DEF2:
@@ -34727,27 +34679,27 @@ loc_1DEF2:
 ; ---------------------------------------------------------------------------
 
 loc_1DEFB:
-		cmp	dx, 0FF80h
+		cmp	dx, (-(ITEM_H / 2) shl 4)
 		jge	short loc_1DF05
-		mov	word ptr [si+4], 0FF80h
+		mov	[si+item_t.pos.cur.y], (-(ITEM_H / 2) shl 4)
 
 loc_1DF05:
 		cmp	word ptr [si+0Ch], 0
-		jl	short loc_1DF10
+		jl	short @@hittest
 		mov	word ptr [si+0Ah], 0
 
-loc_1DF10:
+@@hittest:
 		cmp	_miss_time, 0
 		jnz	short loc_1DF47
 		mov	bx, player_pos.cur.x
-		add	bx, 180h
+		add	bx, (24 shl 4)
 		sub	bx, ax
-		cmp	bx, 300h
+		cmp	bx, (48 shl 4)
 		ja	short loc_1DF47
 		mov	bx, player_pos.cur.y
-		add	bx, 180h
+		add	bx, (24 shl 4)
 		sub	bx, dx
-		cmp	bx, 260h
+		cmp	bx, (38 shl 4)
 		ja	short loc_1DF47
 		push	si
 		call	sub_1DBAE
@@ -34757,7 +34709,7 @@ loc_1DF10:
 ; ---------------------------------------------------------------------------
 
 loc_1DF47:
-		inc	word ptr [si+0Ch]
+		inc	[si+item_t.pos.velocity.y]
 
 loc_1DF4A:
 		inc	di
@@ -34772,7 +34724,7 @@ loc_1DF4E:
 		pop	si
 		leave
 		retf
-sub_1DE5D	endp
+items_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

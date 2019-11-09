@@ -10,6 +10,7 @@ item_t ends
 
 ITEM_W = 16
 ITEM_H = 16
+ITEM_PULL_SPEED = 10
 
 if GAME eq 5
 ITEM_COUNT = 40

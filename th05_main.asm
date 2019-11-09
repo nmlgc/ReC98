@@ -421,7 +421,7 @@ loc_AEF0:
 		call	sub_1607D
 		call	_midboss_update
 		call	_boss_update
-		call	sub_1720E
+		call	items_update
 		call	sub_16AB0
 		call	_stage_render
 		cmp	byte_2429A, 0
@@ -439,7 +439,7 @@ loc_AF2D:
 		call	lasers_render
 		call	sub_16B4E
 		call	sparks_render
-		call	sub_F7A5
+		call	items_render
 		call	sub_C346
 		call	sub_100C6
 		call	circles_render
@@ -8290,53 +8290,7 @@ loc_F71C:
 		retf	4
 sub_F706	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F7A5	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		call	item_splashes_render
-		mov	si, offset _items
-		xor	di, di
-		jmp	short loc_F7E3
-; ---------------------------------------------------------------------------
-
-loc_F7B9:
-		cmp	byte ptr [si], 1
-		jnz	short loc_F7DF
-		cmp	word ptr [si+4], 0FF80h
-		jle	short loc_F7DF
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	dx, ax
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, 18h
-		push	word ptr [si+10h]
-		call	z_super_roll_put_tiny
-
-loc_F7DF:
-		inc	di
-		add	si, size item_t
-
-loc_F7E3:
-		cmp	di, ITEM_COUNT
-		jl	short loc_F7B9
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_F7A5	endp
-
+include th04/item/render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17688,8 +17642,8 @@ loc_16DD1:
 		mov	[si+2],	ax
 		mov	ax, [bp+@@y]
 		mov	[si+4],	ax
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0FFD0h
+		mov	[si+item_t.pos.velocity.x], 0
+		mov	[si+item_t.pos.velocity.y], (-3 shl 4)
 		mov	al, [bp+arg_0]
 		mov	[si+0Eh], al
 		mov	ah, 0
@@ -18190,10 +18144,10 @@ sub_171C8	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public ITEMS_UPDATE
+items_update	proc far
 
-sub_1720E	proc far
-
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -18216,39 +18170,36 @@ loc_1722E:
 		cmp	byte_2264E, 0
 		jz	short loc_17264
 		mov	byte_21762, 1
-		mov	word ptr [si+12h], 1
+		mov	[si+item_t.pulled_to_player], 1
 		mov	ax, player_pos.cur.y
-		sub	ax, [si+4]
+		sub	ax, [si+item_t.pos.cur.y]
 		push	ax
 		mov	ax, player_pos.cur.x
-		sub	ax, [si+2]
+		sub	ax, [si+item_t.pos.cur.x]
 		push	ax
 		call	iatan2
 		mov	[bp+var_1], al
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp+var_1]
-		push	0A0h
-		call	vector2_near
+		lea	ax, [si+item_t.pos.velocity]
+		call	vector2_near pascal, ax, word ptr [bp+@@angle], (ITEM_PULL_SPEED shl 4)
 		jmp	short loc_17279
 ; ---------------------------------------------------------------------------
 
 loc_17264:
-		cmp	word ptr [si+12h], 0
+		cmp	[si+item_t.pulled_to_player], 0
 		jz	short loc_17279
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0
-		mov	word ptr [si+12h], 0
+		mov	[si+item_t.pos.velocity.x], 0
+		mov	[si+item_t.pos.velocity.y], 0
+		mov	[si+item_t.pulled_to_player], 0
 
 loc_17279:
-		lea	ax, [si+2]
+		lea	ax, [si+item_t.pos]
 		push	ax
 		call	_motion_update_2
-		cmp	ax, 0FF80h
+		cmp	ax, (-(ITEM_W / 2) shl 4)
 		jle	short loc_17290
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + (ITEM_W / 2)) shl 4)
 		jge	short loc_17290
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + (ITEM_H / 2)) shl 4)
 		jl	short loc_17299
 
 loc_17290:
@@ -18259,27 +18210,27 @@ loc_17290:
 ; ---------------------------------------------------------------------------
 
 loc_17299:
-		cmp	dx, 0FF80h
+		cmp	dx, (-(ITEM_H / 2) shl 4)
 		jge	short loc_172A3
-		mov	word ptr [si+4], 0FF80h
+		mov	[si+item_t.pos.cur.y], (-(ITEM_H / 2) shl 4)
 
 loc_172A3:
 		cmp	word ptr [si+0Ch], 0
-		jl	short loc_172AE
+		jl	short @@hittest
 		mov	word ptr [si+0Ah], 0
 
-loc_172AE:
+@@hittest:
 		cmp	_miss_time, 0
 		jnz	short loc_172E5
 		mov	bx, player_pos.cur.x
-		add	bx, 24 * 16
+		add	bx, (24 shl 4)
 		sub	bx, ax
-		cmp	bx, 48 * 16
+		cmp	bx, (48 shl 4)
 		ja	short loc_172E5
 		mov	bx, player_pos.cur.y
-		add	bx, 24 * 16
+		add	bx, (24 shl 4)
 		sub	bx, dx
-		cmp	bx, 38 * 16
+		cmp	bx, (38 shl 4)
 		ja	short loc_172E5
 		push	si
 		call	sub_16F54
@@ -18289,7 +18240,7 @@ loc_172AE:
 ; ---------------------------------------------------------------------------
 
 loc_172E5:
-		inc	word ptr [si+0Ch]
+		inc	[si+item_t.pos.velocity.y]
 
 loc_172E8:
 		inc	di
@@ -18304,7 +18255,7 @@ loc_172EC:
 		pop	si
 		leave
 		retf
-sub_1720E	endp
+items_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

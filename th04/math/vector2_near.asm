@@ -1,4 +1,4 @@
-; int pascal near vector2_near(int r, unsigned char angle, Point near *ret)
+public VECTOR2_NEAR
 vector2_near	proc near
 
 @@r	= word ptr  4
