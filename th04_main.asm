@@ -2524,23 +2524,23 @@ loc_C119:
 		add	si, 14h
 		dec	di
 		jnz	short loc_C10D
-		mov	si, 41F6h
-		mov	di, 8
+		mov	si, offset _item_splashes
+		mov	di, ITEM_SPLASH_COUNT
 
-loc_C125:
-		cmp	byte ptr [si], 0
-		jz	short loc_C13E
-		mov	ax, [si+8]
+@@item_splash_loop:
+		cmp	[si+item_splash_t.flag], 0
+		jz	short @@item_splash_next
+		mov	ax, [si+item_splash_t.radius_prev]
 		shr	ax, 3
 		inc	ax
 		mov	_tile_invalidate_box.x, ax
 		mov	_tile_invalidate_box.y, ax
-		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+2]
+		call	tiles_invalidate_around pascal, large dword ptr [si+item_splash_t.center]
 
-loc_C13E:
-		add	si, 0Ah
+@@item_splash_next:
+		add	si, size item_splash_t
 		dec	di
-		jnz	short loc_C125
+		jnz	short @@item_splash_loop
 		pop	di
 		pop	si
 		retn
@@ -2560,103 +2560,11 @@ playfield_fillm_0_0_384_192	proc near
 playfield_fillm_0_0_384_192	endp
 
 include th04/hardware/grcg_modecol.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C17C	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
-		mov	si, 41F6h
-		mov	[bp+var_2], 0
-		jmp	short loc_C1F5
-; ---------------------------------------------------------------------------
-
-loc_C191:
-		cmp	byte ptr [si], 1
-		jnz	short loc_C1EF
-		xor	di, di
-		jmp	short loc_C1E9
-; ---------------------------------------------------------------------------
-
-loc_C19A:
-		mov	ax, [si+6]
-		mov	[bp+var_4], ax
-		push	offset _drawpoint
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	ax
-		push	di
-		call	vector2_at
-		cmp	_drawpoint.y, 0
-		jl	short loc_C1E6
-		cmp	_drawpoint.y, (368 shl 4)
-		jge	short loc_C1E6
-		cmp	_drawpoint.x, 0
-		jl	short loc_C1E6
-		cmp	_drawpoint.x, (384 shl 4)
-		jge	short loc_C1E6
-		mov	ax, _drawpoint.y
-		add	ax, (16 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	dx, ax
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 32
-		call	main_01:sub_C332
-
-loc_C1E6:
-		add	di, 4
-
-loc_C1E9:
-		cmp	di, 100h
-		jl	short loc_C19A
-
-loc_C1EF:
-		inc	[bp+var_2]
-		add	si, 0Ah
-
-loc_C1F5:
-		cmp	[bp+var_2], 8
-		jl	short loc_C191
-		pop	di
-		pop	si
-		leave
-		retn
-sub_C17C	endp
-
-; ---------------------------------------------------------------------------
+include th04/item/splashes_render.asm
 		db    0
-
 include th04/spark_render.asm
 include th04/sparks.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C332	proc near
-		mov	cx, ax
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	bx, ax
-		mov	al, 80h
-		and	cl, 7
-		shr	al, cl
-		mov	es:[bx], al
-		retn
-sub_C332	endp
-
+include th04/item/splash_dot_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14955,7 +14863,7 @@ sub_12DF0	proc near
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		call	main_01:sub_C17C
+		call	main_01:item_splashes_render
 		mov	si, 0AF34h
 		xor	di, di
 		jmp	short loc_12E2E
@@ -16091,112 +15999,7 @@ include th04/math/vector2_near.asm
 include th04/sparks_add.asm
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
 GRCG_SETMODE_RMW_DEF 2
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13F16	proc near
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, 28h	; '('
-		mov	ax, ds
-		mov	es, ax
-		assume es:_DATA
-		xor	ax, ax
-		mov	di, 41F6h
-		rep stosw
-		mov	byte_25590, 0
-		pop	di
-		pop	bp
-		retn
-sub_13F16	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13F30	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	al, byte_25590
-		mov	ah, 0
-		imul	ax, 0Ah
-		add	ax, 41F6h
-		mov	si, ax
-		inc	byte_25590
-		cmp	byte_25590, 8
-		jb	short loc_13F51
-		mov	byte_25590, 0
-
-loc_13F51:
-		cmp	byte ptr [si], 0
-		jnz	short loc_13F73
-		mov	byte ptr [si], 1
-		mov	ax, [bp+arg_2]
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 20h ; ' '
-		mov	byte ptr [si+1], 10h
-		mov	word ptr [si+8], 20h ; ' '
-
-loc_13F73:
-		pop	si
-		pop	bp
-		retn	4
-sub_13F30	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13F78	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 41F6h
-		xor	dx, dx
-		jmp	short loc_13FAA
-; ---------------------------------------------------------------------------
-
-loc_13F83:
-		cmp	byte ptr [si], 0
-		jz	short loc_13FA6
-		cmp	byte ptr [si], 2
-		jnz	short loc_13F92
-		mov	byte ptr [si], 0
-		jmp	short loc_13FA6
-; ---------------------------------------------------------------------------
-
-loc_13F92:
-		mov	ax, [si+6]
-		mov	[si+8],	ax
-		add	word ptr [si+6], 20h ; ' '
-		cmp	word ptr [si+6], 200h
-		jl	short loc_13FA6
-		mov	byte ptr [si], 2
-
-loc_13FA6:
-		inc	dx
-		add	si, 0Ah
-
-loc_13FAA:
-		cmp	dx, 8
-		jl	short loc_13F83
-		pop	si
-		pop	bp
-		retn
-sub_13F78	endp
-
+include th04/item/splashes_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34359,7 +34162,7 @@ sub_1DA1B	proc far
 		call	IRand
 		and	al, 0Fh
 		mov	byte_2D00E, al
-		call	sub_13F16
+		call	item_splashes_init
 		mov	byte_236E0, 0
 		mov	dream_score, 0
 		pop	bp
@@ -34374,8 +34177,8 @@ sub_1DA1B	endp
 sub_1DA38	proc near
 
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@y		= word ptr  6
+@@x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -34414,9 +34217,9 @@ loc_1DA76:
 		jnz	short loc_1DABF
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+0Fh], 0
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@x]
 		mov	[si+2],	ax
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@y]
 		mov	[si+4],	ax
 		mov	word ptr [si+0Ah], 0
 		mov	word ptr [si+0Ch], 0FFD0h
@@ -34427,9 +34230,7 @@ loc_1DA76:
 		mov	bx, ax
 		mov	ax, [bx+2322h]
 		mov	[si+10h], ax
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		call	sub_13F30
+		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
 		inc	word_236D8
 		jmp	short loc_1DAC8
@@ -35008,7 +34809,7 @@ loc_1DF4A:
 loc_1DF4E:
 		cmp	di, 20h	; ' '
 		jl	loc_1DE7E
-		call	sub_13F78
+		call	item_splashes_update
 		mov	byte_21CC8, 0
 		pop	di
 		pop	si
@@ -40809,32 +40610,7 @@ byte_2520F	db ?
 		db    ?	;
 word_25532	dw ?
 include th04/sparks_add[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-byte_25590	db ?
-		db ?
+include th04/item/splashes[bss].asm
 include th04/circles_color[bss].asm
 byte_25594	db ?
 		db ?
