@@ -2021,7 +2021,7 @@ sub_BEE6	proc near
 		call	sub_123AD
 		call	sub_E41C
 		call	sub_E5EE
-		call	sub_E696
+		call	items_invalidate
 		call	sparks_invalidate
 		call	sub_C2AA
 		call	_midboss_invalidate?
@@ -6694,50 +6694,7 @@ loc_E68D:
 		retn
 sub_E5EE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E696	proc near
-		push	si
-		push	di
-		mov	_tile_invalidate_box, (16 shl 16) or 16
-		mov	si, 0AF20h
-		mov	di, 20h	; ' '
-
-loc_E6A7:
-		cmp	byte ptr [si], 0
-		jz	short loc_E6B3
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
-
-loc_E6B3:
-		add	si, 14h
-		dec	di
-		jnz	short loc_E6A7
-		mov	si, offset _item_splashes
-		mov	di, ITEM_SPLASH_COUNT
-
-@@item_splash_loop:
-		cmp	[si+item_splash_t.flag], 0
-		jz	short @@item_splash_next
-		mov	ax, [si+item_splash_t.radius_prev]
-		shr	ax, 3
-		inc	ax
-		mov	_tile_invalidate_box.x, ax
-		mov	_tile_invalidate_box.y, ax
-		call	tiles_invalidate_around pascal, large dword ptr [si+item_splash_t.center]
-
-@@item_splash_next:
-		add	si, size item_splash_t
-		dec	di
-		jnz	short @@item_splash_loop
-		pop	di
-		pop	si
-		retn
-sub_E696	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/item/invalidate.asm
 include th04/hardware/grcg_modecol.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7149,8 +7106,8 @@ sub_EACE	proc near
 		push	offset _circles
 		push	size _circles / 4
 		call	sub_E708
-		push	0AF20h
-		push	0C8h
+		push	offset _items
+		push	size _items / 4
 		call	sub_E708
 		push	9DA0h
 		push	460h
@@ -8347,7 +8304,7 @@ sub_F7A5	proc near
 		mov	es, ax
 		assume es:nothing
 		call	item_splashes_render
-		mov	si, 0AF20h
+		mov	si, offset _items
 		xor	di, di
 		jmp	short loc_F7E3
 ; ---------------------------------------------------------------------------
@@ -8369,10 +8326,10 @@ loc_F7B9:
 
 loc_F7DF:
 		inc	di
-		add	si, 14h
+		add	si, size item_t
 
 loc_F7E3:
-		cmp	di, 28h	; '('
+		cmp	di, ITEM_COUNT
 		jl	short loc_F7B9
 		pop	di
 		pop	si
@@ -17717,7 +17674,7 @@ loc_16DA0:
 		mov	[bp+arg_0], al
 
 loc_16DCA:
-		mov	si, 0AF20h
+		mov	si, offset _items
 		xor	di, di
 		jmp	short loc_16E1E
 ; ---------------------------------------------------------------------------
@@ -17748,10 +17705,10 @@ loc_16DD1:
 
 loc_16E1A:
 		inc	di
-		add	si, 14h
+		add	si, size item_t
 
 loc_16E1E:
-		cmp	di, 28h	; '('
+		cmp	di, ITEM_COUNT
 		jl	short loc_16DD1
 
 loc_16E23:
@@ -17805,7 +17762,7 @@ loc_16E62:
 
 loc_16E67:
 		xor	di, di
-		mov	si, 0AF20h
+		mov	si, offset _items
 		mov	[bp+var_2], 0
 		jmp	loc_16EF9
 ; ---------------------------------------------------------------------------
@@ -17864,10 +17821,10 @@ loc_16ED7:
 
 loc_16EF3:
 		inc	[bp+var_2]
-		add	si, 14h
+		add	si, size item_t
 
 loc_16EF9:
-		cmp	[bp+var_2], 28h	; '('
+		cmp	[bp+var_2], ITEM_COUNT
 		jl	loc_16E74
 
 loc_16F01:
@@ -18241,7 +18198,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, 0AF20h
+		mov	si, offset _items
 		xor	di, di
 		jmp	loc_172EC
 ; ---------------------------------------------------------------------------
@@ -18336,10 +18293,10 @@ loc_172E5:
 
 loc_172E8:
 		inc	di
-		add	si, 14h
+		add	si, size item_t
 
 loc_172EC:
-		cmp	di, 28h	; '('
+		cmp	di, ITEM_COUNT
 		jl	loc_1721C
 		call	item_splashes_update
 		mov	byte_21762, 0
@@ -40622,226 +40579,7 @@ include th04/circles[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/item/items[bss].asm
 byte_2BC70	db ?
 word_2BC71	dw ?
 		db ?
