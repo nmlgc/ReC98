@@ -40309,7 +40309,7 @@ aPLAYER_REM_30000	db 'c‚èl”@~‚R‚O‚O‚O‚O',0
 aBONUS_POINT_2	db '‚o‚n‚h‚m‚s@‚a‚‚‚•‚“@@@@@@~',0
 aBONUS_TOTAL_2	db '@@@‚s‚n‚s‚`‚k',0
 		db    0
-include th04/enemy_drops[data].asm
+include th04/item/enemy_drops[data].asm
 byte_23660	db 0
 byte_23661	db 0
 		db  2Ch	; ,

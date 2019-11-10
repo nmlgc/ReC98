@@ -34492,7 +34492,7 @@ word_22586	dw 180h
 word_22588	dw 800h
 		db    0
 		db    0
-include th05/enemy_drops[data].asm
+include th05/item/enemy_drops[data].asm
 byte_225CC	db 0
 		db 0
 		db  24h	; $
