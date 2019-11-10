@@ -1,3 +1,14 @@
+enum item_type_t {
+	IT_POWER = 0,
+	IT_POINT = 1,
+	IT_DREAM = 2,
+	IT_BIGPOWER = 3,
+	IT_BOMB = 4,
+	IT_1UP = 5,
+	IT_FULLPOWER = 6,
+	IT_COUNT,
+};
+
 struct item_t {
 	char flag;
 	char unused;
@@ -19,3 +30,7 @@ struct item_t {
 #endif
 
 extern item_t items[ITEM_COUNT];
+
+extern const int ITEM_TYPE_PATNUM[IT_COUNT];
+
+void pascal near items_add(Subpixel x, Subpixel y, item_type_t type);

@@ -16273,10 +16273,7 @@ loc_16161:
 		mov	word ptr [si+0Ch], 0
 		cmp	byte ptr [si+20h], 0FEh
 		jz	short loc_1618C
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	word ptr [si+20h]
-		call	sub_16D84
+		call	items_add pascal, word ptr [si+2], word ptr [si+4], word ptr [si+20h]
 
 loc_1618C:
 		call	snd_se_play pascal, 3
@@ -17588,10 +17585,10 @@ sub_16D67	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public ITEMS_ADD
+items_add	proc near
 
-sub_16D84	proc near
-
-arg_0		= byte ptr  4
+@@type		= byte ptr  4
 @@y		= word ptr  6
 @@x		= word ptr  8
 
@@ -17601,16 +17598,16 @@ arg_0		= byte ptr  4
 		push	di
 		cmp	byte_2264E, 0
 		jz	short loc_16DA0
-		cmp	[bp+arg_0], 3
+		cmp	[bp+@@type], IT_BIGPOWER
 		jb	short loc_16D9C
-		cmp	[bp+arg_0], 0FFh
+		cmp	[bp+@@type], -1
 		jnz	short loc_16DA0
 
 loc_16D9C:
-		mov	[bp+arg_0], 0
+		mov	[bp+@@type], IT_POWER
 
 loc_16DA0:
-		cmp	[bp+arg_0], 0FFh
+		cmp	[bp+@@type], -1
 		jnz	short loc_16DCA
 		inc	byte_2C98A
 		test	byte_2C98A, 1
@@ -17625,7 +17622,7 @@ loc_16DA0:
 		idiv	bx
 		mov	bx, dx
 		mov	al, ENEMY_DROPS[bx]
-		mov	[bp+arg_0], al
+		mov	[bp+@@type], al
 
 loc_16DCA:
 		mov	si, offset _items
@@ -17644,13 +17641,13 @@ loc_16DD1:
 		mov	[si+4],	ax
 		mov	[si+item_t.pos.velocity.x], 0
 		mov	[si+item_t.pos.velocity.y], (-3 shl 4)
-		mov	al, [bp+arg_0]
-		mov	[si+0Eh], al
+		mov	al, [bp+@@type]
+		mov	[si+item_t.ITEM_type], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+1BEEh]
-		mov	[si+10h], ax
+		mov	ax, ITEM_TYPE_PATNUM[bx]
+		mov	[si+item_t.ITEM_patnum], ax
 		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
 		inc	word_22644
@@ -17670,7 +17667,7 @@ loc_16E23:
 		pop	si
 		pop	bp
 		retn	6
-sub_16D84	endp
+items_add	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17680,7 +17677,7 @@ sub_16D84	endp
 sub_16E29	proc far
 
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
+@@type		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -17749,25 +17746,25 @@ loc_16E74:
 		jz	short loc_16EC6
 		push	1
 		call	randring2_next16_and
-		mov	[bp+var_8], ax
+		mov	[bp+@@type], ax
 		jmp	short loc_16ECB
 ; ---------------------------------------------------------------------------
 
 loc_16EC6:
-		mov	[bp+var_8], 3
+		mov	[bp+@@type], IT_BIGPOWER
 
 loc_16ECB:
 		cmp	lives, 1
 		jnz	short loc_16ED7
-		mov	[bp+var_8], 6
+		mov	[bp+@@type], IT_FULLPOWER
 
 loc_16ED7:
-		mov	al, byte ptr [bp+var_8]
-		mov	[si+0Eh], al
-		mov	bx, [bp+var_8]
+		mov	al, byte ptr [bp+@@type]
+		mov	[si+item_t.ITEM_type], al
+		mov	bx, [bp+@@type]
 		add	bx, bx
-		mov	ax, [bx+1BEEh]
-		mov	[si+10h], ax
+		mov	ax, ITEM_TYPE_PATNUM[bx]
+		mov	[si+item_t.ITEM_patnum], ax
 		inc	di
 		inc	word_22644
 		cmp	di, 5
@@ -19583,10 +19580,7 @@ loc_17F64:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_17F86
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	1
-		call	sub_16D84
+		call	items_add pascal, word ptr [si+2], word ptr [si+4], IT_POINT
 
 loc_17F86:
 		inc	[bp+var_2]
@@ -19789,10 +19783,7 @@ loc_1812B:
 		mov	_bullet_clear_trigger, 1
 		push	5
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	3
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BIGPOWER
 
 loc_1818B:
 		mov	_midboss_phase, 0FEh
@@ -20853,10 +20844,7 @@ loc_18B24:
 		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	4
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_18B67:
 		mov	_midboss_phase, 0FEh
@@ -22092,10 +22080,7 @@ loc_195BC:
 		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	5
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_195DA:
 		mov	_midboss_phase, 0FEh
@@ -25440,10 +25425,7 @@ loc_1B34A:
 		mov	_bullet_clear_trigger, 1
 		push	0Fh
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	4
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_1B368:
 		mov	_midboss_phase, 0FEh
@@ -31133,10 +31115,7 @@ loc_1E7F2:
 		mov	_bullet_clear_trigger, 1
 		push	1Eh
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	5
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1E82B:
 		mov	_midboss_phase, 0FEh
@@ -33098,10 +33077,7 @@ loc_1F936:
 		mov	_bullet_clear_trigger, 1
 		push	1Eh
 		call	sub_173AC
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	5
-		call	sub_16D84
+		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1F968:
 		mov	_midboss_phase, 0FEh
@@ -33339,7 +33315,7 @@ loc_1FB43:
 		imul	bx, 5
 		mov	al, [bx+si+1FD0h]
 		push	ax
-		call	sub_16D84
+		call	items_add
 		inc	si
 
 loc_1FB65:
@@ -34206,21 +34182,7 @@ word_22588	dw 800h
 include th05/item/enemy_drops[data].asm
 byte_225CC	db 0
 		db 0
-		db  24h	; $
-		db    0
-		db  25h	; %
-		db    0
-		db  26h	; &
-		db    0
-		db  27h	; '
-		db    0
-		db  28h	; (
-		db    0
-		db  29h	; )
-		db    0
-		db  2Ah	; *
-		db    0
-
+include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
 power_overflow_level	dw 0

@@ -1,3 +1,12 @@
+; item_type_t
+IT_POWER = 0
+IT_POINT = 1
+IT_DREAM = 2
+IT_BIGPOWER = 3
+IT_BOMB = 4
+IT_1UP = 5
+IT_FULLPOWER = 6
+
 item_t struc
 	flag	db ?
 	db ?
@@ -14,8 +23,10 @@ ITEM_PULL_SPEED = 10
 
 if GAME eq 5
 ITEM_COUNT = 40
+ITEM_TYPE_PATNUM_OFFSET = 36
 else
 ITEM_COUNT = 32
+ITEM_TYPE_PATNUM_OFFSET = 44
 endif
 
 public _items
