@@ -929,12 +929,12 @@ loc_9B1B:
 		push	12B0004h
 		call	egc_shift_left
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		lea	ax, [si+138h]
+		lea	ax, [si+312]
 		push	ax
-		push	64h ; 'd'
-		lea	ax, [si+13Fh]
+		push	100
+		lea	ax, [si+319]
 		push	ax
-		push	12Bh
+		push	299
 		call	grcg_boxfill
 		call	grcg_off
 		push	1
@@ -2314,11 +2314,11 @@ loc_A920:
 
 loc_A947:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	210h
+		push	528
 		lea	ax, [si+4]
 		push	ax
-		push	24Fh
-		lea	ax, [si+13h]
+		push	591
+		lea	ax, [si+19]
 		push	ax
 		call	grcg_boxfill
 		call	grcg_off

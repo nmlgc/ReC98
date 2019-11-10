@@ -1672,10 +1672,10 @@ loc_47E6:
 		push	GC_RMW
 		push	0
 		nopcall	grcg_setcolor
-		push	4
-		push	10h
-		push	34h ; '4'
-		push	180h
+		push	PLAYFIELD_VRAM_X
+		push	PLAYFIELD_Y
+		push	PLAYFIELD_VRAM_RIGHT
+		push	PLAYFIELD_BOTTOM
 		nopcall	grcg_byteboxfill_x
 		nopcall	grcg_off
 
@@ -2416,18 +2416,12 @@ loc_B8B5:
 		add	sp, 4
 
 loc_B922:
-		pushd	0
-		push	27F018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 		graph_accesspage 0
-		push	1A00000h
-		push	23F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_RIGHT shl 16) or 0, (575 shl 16) or (RES_Y - 1)
 		graph_accesspage 1
-		push	1A00000h
-		push	23F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_RIGHT shl 16) or 0, (575 shl 16) or (RES_Y - 1)
 		call	grcg_off
 		mov	_page_front, 1
 		mov	al, _page_front
@@ -7870,9 +7864,7 @@ loc_E680:
 		mov	al, byte_2287E
 		mov	byte_21A4C, al
 		mov	byte_2287E, 2
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_E892
 ; ---------------------------------------------------------------------------
 
@@ -7884,9 +7876,7 @@ loc_E6CC:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 
 loc_E6E8:
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		cmp	word_218B6, 40h
 		jg	short loc_E74D
@@ -8073,9 +8063,7 @@ loc_E8C9:
 		mov	al, byte_2287E
 		mov	byte_21A53, al
 		mov	byte_2287E, 2
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	[bp+var_4], 0
 		jmp	short loc_E902
 ; ---------------------------------------------------------------------------
@@ -8096,9 +8084,7 @@ loc_E902:
 loc_E915:
 		cmp	word_218B6, 64h	; 'd'
 		jge	loc_E9A6
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		cmp	word_218B6, 50h	; 'P'
 		jl	short loc_E94C
 		mov	ax, word_218B6
@@ -8165,9 +8151,7 @@ loc_E9DB:
 
 loc_E9F3:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	short loc_EA60
 ; ---------------------------------------------------------------------------
 
@@ -8308,9 +8292,7 @@ loc_EB07:
 		mov	al, byte_2287E
 		mov	byte_21A54, al
 		mov	byte_2287E, 2
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_ECA2
 ; ---------------------------------------------------------------------------
 
@@ -8339,9 +8321,7 @@ loc_EB5D:
 		mov	word_218B6, 84h
 
 loc_EB7C:
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 4
 		call	sub_E512
 		jmp	loc_ECA2
@@ -8350,9 +8330,7 @@ loc_EB7C:
 loc_EB9E:
 		cmp	word_218B6, 0A4h
 		jge	loc_EC56
-		push	200000h
-		push	19F018Fh
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	byte_2066D, 2
 		cmp	byte_2066C, 0
 		jz	short loc_EBCC
@@ -10000,19 +9978,11 @@ sub_FF91	proc near
 		mov	bp, sp
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		graph_accesspage _page_front
-		push	20000h
-		push	3018Fh
-		call	grcg_byteboxfill_x
-		push	340000h
-		push	35018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, (( 16 / 8) shl 16) or 0, (( 24 / 8) shl 16) or (RES_Y - 1)
+		call	grcg_byteboxfill_x pascal, ((416 / 8) shl 16) or 0, ((424 / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage _page_back
-		push	20000h
-		push	3018Fh
-		call	grcg_byteboxfill_x
-		push	340000h
-		push	35018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, (( 16 / 8) shl 16) or 0, (( 24 / 8) shl 16) or (RES_Y - 1)
+		call	grcg_byteboxfill_x pascal, ((416 / 8) shl 16) or 0, ((424 / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		pop	bp
 		retn
@@ -15947,10 +15917,10 @@ loc_12F6E:
 		cmp	di, 0FFh
 		jnz	short loc_12F94
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	28h ; '('
+		push	40
 		push	si
-		push	57h ; 'W'
-		lea	ax, [si+2Fh]
+		push	87
+		lea	ax, [si+47]
 		push	ax
 		call	grcg_boxfill
 		call	grcg_off
@@ -17003,9 +16973,7 @@ var_2		= byte ptr -2
 		cmp	[bp+var_4], 80h
 		ja	short loc_13732
 		mov	word_1ED94, 3E8h
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	Palettes+42, 0E0h
 		mov	Palettes+43, 0C0h
 		mov	Palettes+44, 0B0h ; '°'
@@ -18089,9 +18057,7 @@ sub_140AE	proc far
 		mov	bp, sp
 		cmp	byte_1EDA6, 0
 		jz	short loc_140D4
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	byte_1EDA6, 0
 		mov	word_1EB0A, 0FFFFh
 
@@ -20885,10 +20851,7 @@ loc_15849:
 		jnz	short loc_158CD
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		les	bx, [bp+var_4]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx+4]
-		push	word ptr es:[bx+6]
-		call	grcg_circlefill
+		call	grcg_circlefill pascal, word ptr es:[bx+2], word ptr es:[bx+4], word ptr es:[bx+6]
 		call	grcg_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		les	bx, [bp+var_4]
@@ -21064,9 +21027,7 @@ var_2		= word ptr -2
 		mov	[bx], ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	40010h
-		push	33017Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 		call	sub_15645
 		leave
@@ -21106,12 +21067,12 @@ loc_15A54:
 		jnz	short loc_15A8A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, word_254E6
-		add	ax, 40h
+		add	ax, 64
 		push	ax
 		mov	ax, word_254E8
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	18h
+		push	24
 		call	grcg_circlefill
 		call	grcg_off
 
@@ -21122,10 +21083,8 @@ loc_15A8A:
 		jz	short loc_15ABA
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, word_254E6
-		add	ax, 40h
-		push	ax
-		push	10017Fh
-		call	grcg_vline
+		add	ax, 64
+		call	grcg_vline pascal, ax, (PLAYFIELD_Y shl 16) or PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 
 loc_15ABA:
@@ -21158,7 +21117,7 @@ loc_15AD0:
 		cwd
 		idiv	bx
 		push	ax
-		push	17Fh
+		push	PLAYFIELD_BOTTOM - 1
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	al, byte_2558E
@@ -21240,7 +21199,7 @@ loc_15BC2:
 		mov	al, byte_25590
 		mov	ah, 0
 		push	ax
-		push	17Fh
+		push	PLAYFIELD_BOTTOM - 1
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		call	sub_158DC
@@ -21273,7 +21232,7 @@ loc_15C25:
 		mov	al, byte_25590
 		mov	ah, 0
 		push	ax
-		push	17Fh
+		push	PLAYFIELD_BOTTOM - 1
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	ax, word_20650
@@ -21331,7 +21290,7 @@ loc_15CBC:
 		mov	al, byte_25590
 		mov	ah, 0
 		push	ax
-		push	17Fh
+		push	PLAYFIELD_BOTTOM - 1
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		mov	al, _page_front
@@ -21363,7 +21322,7 @@ loc_15D1C:
 		mov	al, byte_25590
 		mov	ah, 0
 		push	ax
-		push	17Fh
+		push	PLAYFIELD_BOTTOM - 1
 		call	grcg_byteboxfill_x
 		call	grcg_off
 		jmp	short loc_15D51
@@ -21759,10 +21718,7 @@ loc_1601A:
 
 loc_1602E:
 		call	grcg_setcolor
-		push	word_2559A
-		push	word_2559C
-		push	70h ; 'p'
-		call	grcg_circle
+		call	grcg_circle pascal, word_2559A, word_2559C, 112
 
 loc_16042:
 		call	grcg_off
@@ -21775,10 +21731,7 @@ loc_1604A:
 		cmp	_page_back, 0
 		jnz	short loc_1607A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		push	word_2559A
-		push	word_2559C
-		push	70h ; 'p'
-		call	grcg_circle
+		call	grcg_circle pascal, word_2559A, word_2559C, 112
 		call	grcg_off
 
 loc_1607A:
@@ -21859,10 +21812,7 @@ loc_16146:
 		cmp	_page_back, 0
 		jnz	short loc_16172
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	word_2559A
-		push	word_2559C
-		push	70h ; 'p'
-		call	grcg_circle
+		call	grcg_circle pascal, word_2559A, word_2559C, 112
 		call	grcg_off
 		mov	word_20650, 0
 
@@ -22794,9 +22744,7 @@ evileye_init	proc far
 		push	ds
 		push	offset aStage5b2_bft ; "stage5b2.bft"
 		call	super_entry_bfnt
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		call	sub_134A0
 		mov	word_20652, 0A0h
 		mov	word_20654, 0A0h
@@ -24855,7 +24803,7 @@ loc_17B24:
 		mov	ah, 0
 		push	ax
 		call	grcg_setcolor
-		push	0E000C8h
+		push	(224 shl 16) or 200
 		mov	al, byte_26CC2
 		mov	ah, 0
 		push	ax
@@ -24916,9 +24864,7 @@ var_1		= byte ptr -1
 		mov	[bx], ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	40010h
-		push	33017Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		mov	al, byte_2066C
 		mov	ah, 0
 		mov	dx, ax
@@ -25658,7 +25604,7 @@ loc_18246:
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
-		imul	eax, 190h
+		imul	eax, 400
 		sar	eax, 8
 		add	ax, word_26C58
 		mov	di, ax
@@ -25667,15 +25613,11 @@ loc_18246:
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
-		imul	eax, 190h
+		imul	eax, 400
 		sar	eax, 8
 		add	ax, word_26C60
 		mov	[bp+var_4], ax
-		push	word_26C58
-		push	word_26C60
-		push	di
-		push	ax
-		call	grcg_line
+		call	grcg_line pascal, word_26C58, word_26C60, di, ax
 		mov	al, [bp+var_2]
 		add	[bp+var_1], al
 		inc	si
@@ -25722,11 +25664,7 @@ loc_182DD:
 		add	ax, [bx]
 		add	ax, 8
 		mov	di, ax
-		push	ax
-		push	10h
-		push	ax
-		push	17Fh
-		call	grcg_line
+		call	grcg_line pascal, ax, PLAYFIELD_Y, ax, PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 		mov	bx, word_2065C
 		mov	ax, [bx]
@@ -28178,9 +28116,7 @@ mima_init	proc far
 		call	sub_13337
 		push	1
 		call	palette_white_out
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
 		call	grcg_off
@@ -28288,17 +28224,13 @@ mima_init	proc far
 		graph_accesspage _page_back
 		call	graph_clear
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
-		push	1A00000h
-		push	27F018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_RIGHT shl 16) or 0, ((RES_X - 1) shl 16) or (RES_Y - 1)
 		graph_accesspage _page_front
 		call	grcg_fill
 		graph_accesspage _page_back
 		call	grcg_fill
 		call	grcg_off
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	word_26C6A, 0
 		xor	si, si
 		jmp	short loc_19C0D
@@ -29377,9 +29309,7 @@ sub_1A529	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	200010h
-		push	1A00140h
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or PLAYFIELD_Y, (PLAYFIELD_RIGHT shl 16) or 320
 		call	_snd_se_play c, 9
 		mov	si, 96h
 		jmp	loc_1A613
@@ -29387,22 +29317,20 @@ sub_1A529	proc near
 
 loc_1A54E:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
-		push	0E00090h
-		push	si
-		call	grcg_circlefill
+		call	grcg_circlefill pascal, (224 shl 16) or 144, si
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
-		push	0E00090h
+		push	(224 shl 16) or 144
 		mov	ax, si
-		mov	bx, 32h	; '2'
+		mov	bx, 50
 		cwd
 		idiv	bx
 		shl	dx, 2
 		push	dx
 		call	grcg_circle
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		push	0E00090h
+		push	(224 shl 16) or 144
 		mov	ax, si
-		mov	bx, 1Eh
+		mov	bx, 30
 		cwd
 		idiv	bx
 		imul	dx, 7
@@ -29411,20 +29339,18 @@ loc_1A54E:
 		push	1
 		call	frame_delay
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	0E00090h
-		push	si
-		call	grcg_circlefill
-		push	0E00090h
+		call	grcg_circlefill pascal, (224 shl 16) or 144, si
+		push	(224 shl 16) or 144
 		mov	ax, si
-		mov	bx, 32h	; '2'
+		mov	bx, 50
 		cwd
 		idiv	bx
 		shl	dx, 2
 		push	dx
 		call	grcg_circle
-		push	0E00090h
+		push	(224 shl 16) or 144
 		mov	ax, si
-		mov	bx, 1Eh
+		mov	bx, 30
 		cwd
 		idiv	bx
 		imul	dx, 7
@@ -29436,7 +29362,7 @@ loc_1A54E:
 		cwd
 		idiv	bx
 		add	ax, ax
-		add	ax, 64h	; 'd'
+		add	ax, 100
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 		call	_snd_se_update
@@ -29646,9 +29572,7 @@ marisa_init	proc far
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
 		call	grcg_off
-		push	200000h
-		push	1A0018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		push	word_26D76
 		push	word_26D78
 		push	word_2064E
@@ -30498,25 +30422,25 @@ loc_1B06F:
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		mov	bx, [bp+var_C]
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		mov	bx, [bp+var_E]
 		shl	bx, 2
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		mov	bx, [bp+var_E]
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		call	grcg_line
 		inc	si
@@ -32470,9 +32394,7 @@ marisa_bg_render	proc far
 		mov	word_2065E, ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	40010h
-		push	33017Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		call	sub_3EF4
 		mov	al, _page_front
 		mov	ah, 0

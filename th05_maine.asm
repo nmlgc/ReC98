@@ -1257,9 +1257,7 @@ loc_AD9A:
 
 loc_ADE3:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	140040h
-		push	3B0107h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((160 / 8) shl 16) or 64, ((472 / 8) shl 16) or 263
 		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_AE64
 ; ---------------------------------------------------------------------------
@@ -1789,13 +1787,9 @@ arg_2		= word ptr  6
 		call	palette_black_out
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
 		graph_accesspage 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	sub_B37C
 		GRCG_OFF_CLOBBERING dx
 		mov	PaletteTone, 64h	; 'd'
@@ -1919,13 +1913,9 @@ sub_B3CB	proc near
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
 		graph_accesspage 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		mov	allcast_screen_plus_one, 0
 		push	0
@@ -2932,37 +2922,37 @@ loc_BB00:
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, si
-		add	ax, 10h
+		add	ax, 16
 		push	ax
-		lea	ax, [di+0Fh]
-		push	ax
-		call	grcg_hline
-		lea	ax, [si-2]
-		push	ax
-		lea	ax, [di-1]
-		push	ax
-		lea	ax, [di+10h]
-		push	ax
-		call	grcg_vline
-		lea	ax, [si+132h]
-		push	ax
-		lea	ax, [di-1]
-		push	ax
-		lea	ax, [di+10h]
-		push	ax
-		call	grcg_vline
-		lea	ax, [si-2]
-		push	ax
-		lea	ax, [si+132h]
-		push	ax
-		lea	ax, [di-1]
+		lea	ax, [di+15]
 		push	ax
 		call	grcg_hline
 		lea	ax, [si-2]
 		push	ax
-		lea	ax, [si+132h]
+		lea	ax, [di-1]
 		push	ax
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
+		push	ax
+		call	grcg_vline
+		lea	ax, [si+306]
+		push	ax
+		lea	ax, [di-1]
+		push	ax
+		lea	ax, [di+16]
+		push	ax
+		call	grcg_vline
+		lea	ax, [si-2]
+		push	ax
+		lea	ax, [si+306]
+		push	ax
+		lea	ax, [di-1]
+		push	ax
+		call	grcg_hline
+		lea	ax, [si-2]
+		push	ax
+		lea	ax, [si+306]
+		push	ax
+		lea	ax, [di+16]
 		push	ax
 		call	grcg_hline
 		GRCG_OFF_CLOBBERING dx
@@ -7393,10 +7383,7 @@ loc_E0A6:
 		inc	[bp+var_6]
 		push	ax
 		call	grcg_setcolor
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	10h
-		call	grcg_circlefill
+		call	grcg_circlefill pascal, [bp+var_2], [bp+var_4], 16
 		GRCG_OFF_CLOBBERING dx
 
 loc_E0F6:
@@ -7786,21 +7773,15 @@ var_2		= word ptr -2
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		graph_accesspage 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	sub_D21D
 		push	3700h
 		call	sub_E39F
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -8110,9 +8091,7 @@ loc_E7CC:
 		jg	short loc_E7CC
 		call	cdg_freeall
 		call	super_free
-		pushd	0
-		push	27F018Fh
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (RES_Y - 1)
 		pop	di
 		pop	si
 		leave

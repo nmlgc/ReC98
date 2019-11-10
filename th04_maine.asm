@@ -1516,9 +1516,7 @@ loc_AC3F:
 
 loc_AC70:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	140040h
-		push	3B0107h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((160 / 8) shl 16) or 64, ((472 / 8) shl 16) or 263
 		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_ACF0
 ; ---------------------------------------------------------------------------

@@ -3966,9 +3966,7 @@ var_2		= word ptr -2
 		call	far ptr	palette_show
 		graph_accesspage 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		push	0
 		call	graph_copy_page
@@ -4645,32 +4643,32 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_D34B:
-		mov	si, 50h	; 'P'
+		mov	si, 80
 		jmp	short loc_D353
 ; ---------------------------------------------------------------------------
 
 loc_D350:
-		mov	si, 170h
+		mov	si, 368
 
 loc_D353:
-		mov	di, 138h
+		mov	di, 312
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [si+8]
 		push	ax
 		lea	ax, [di+8]
 		push	ax
-		lea	ax, [si+0C8h]
+		lea	ax, [si+200]
 		push	ax
-		lea	ax, [di+48h]
+		lea	ax, [di+72]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 		push	si
 		push	di
-		lea	ax, [si+0C0h]
+		lea	ax, [si+192]
 		push	ax
-		lea	ax, [di+40h]
+		lea	ax, [di+64]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
@@ -4702,12 +4700,8 @@ sub_D3A2	proc near
 		push	1
 		call	sub_D20A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		push	250034h
-		push	25011Fh
-		call	grcg_byteboxfill_x
-		push	60120h
-		push	250127h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((296 / 8) shl 16) or  52, ((296 / 8) shl 16) or 287
+		call	grcg_byteboxfill_x pascal, (( 48 / 8) shl 16) or 288, ((296 / 8) shl 16) or 295
 		GRCG_OFF_CLOBBERING dx
 		push	0
 		jmp	short loc_D460
@@ -4725,12 +4719,8 @@ loc_D407:
 		push	0
 		call	sub_D20A
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		push	490034h
-		push	49011Fh
-		call	grcg_byteboxfill_x
-		push	2A0120h
-		push	490127h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((584 / 8) shl 16) or  52, ((584 / 8) shl 16) or 287
+		call	grcg_byteboxfill_x pascal, ((336 / 8) shl 16) or 288, ((584 / 8) shl 16) or 295
 		GRCG_OFF_CLOBBERING dx
 		push	1
 
@@ -4899,59 +4889,59 @@ sub_D595	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 138h
-		mov	di, 140h
+		mov	si, 312
+		mov	di, 320
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		lea	ax, [di+8]
 		push	ax
 		lea	ax, [si+8]
 		push	ax
-		lea	ax, [di+0C7h]
+		lea	ax, [di+199]
 		push	ax
-		lea	ax, [si+1Fh]
+		lea	ax, [si+31]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
 		lea	ax, [di+8]
 		push	ax
-		lea	ax, [si+20h]
+		lea	ax, [si+32]
 		push	ax
-		lea	ax, [di+0C7h]
+		lea	ax, [di+199]
 		push	ax
-		lea	ax, [si+37h]
+		lea	ax, [si+55]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
-		push	88h
+		push	136
 		lea	ax, [si+8]
 		push	ax
-		push	147h
-		lea	ax, [si+1Fh]
+		push	327
+		lea	ax, [si+31]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
 		push	di
 		push	si
-		lea	ax, [di+0C0h]
+		lea	ax, [di+192]
 		push	ax
-		lea	ax, [si+17h]
+		lea	ax, [si+23]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
 		push	di
-		lea	ax, [si+18h]
+		lea	ax, [si+24]
 		push	ax
-		lea	ax, [di+0C0h]
+		lea	ax, [di+192]
 		push	ax
-		lea	ax, [si+2Fh]
+		lea	ax, [si+47]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
-		push	80h
+		push	128
 		push	si
-		push	13Fh
-		lea	ax, [si+17h]
+		push	319
+		lea	ax, [si+23]
 		push	ax
 		push	8
 		call	grcg_round_boxfill
@@ -4991,12 +4981,8 @@ loc_D664:
 loc_D66C:
 		call	cdg_put_noalpha
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		push	370034h
-		push	37011Fh
-		call	grcg_byteboxfill_x
-		push	180120h
-		push	370127h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((440 / 8) shl 16) or  52, ((440 / 8) shl 16) or 287
+		call	grcg_byteboxfill_x pascal, ((192 / 8) shl 16) or 288, ((440 / 8) shl 16) or 295
 		GRCG_OFF_CLOBBERING dx
 		call	sub_D595
 		mov	al, byte_132B9

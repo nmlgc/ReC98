@@ -959,9 +959,7 @@ loc_9E24:
 		call	snd_se_reset
 		nopcall	sub_B8F7
 		nopcall	sub_BAE0
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		kajacall	KAJA_SONG_PLAY
 		pop	di
 		pop	si
@@ -1337,9 +1335,7 @@ sub_A21F	proc near
 		push	bp
 		mov	bp, sp
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		graph_accesspage 1
 		call	grcg_fill
 		graph_accesspage 0
@@ -2575,9 +2571,7 @@ sub_B4A8	proc near
 		mov	word_1FBD2, 10h
 
 loc_B4E3:
-		push	80000h
-		push	26F00BFh
-		call	grc_setclip
+		call	grc_setclip pascal, (8 shl 16) or 0, (623 shl 16) or 191
 		sub	word_1FBC4, 12h
 		sub	word_1FBCA, 17h
 		add	word_1FBCC, 12h
@@ -2589,12 +2583,12 @@ loc_B4E3:
 ; ---------------------------------------------------------------------------
 
 loc_B51D:
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
 		push	8
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBC4
 		add	ax, si
 		push	ax
@@ -2604,12 +2598,12 @@ loc_B51D:
 		sar	ax, 1
 		push	ax
 		call	grcg_triangle
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
 		push	8
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBCC
 		add	ax, si
 		push	ax
@@ -2630,12 +2624,12 @@ loc_B565:
 ; ---------------------------------------------------------------------------
 
 loc_B575:
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		push	0BFh
-		lea	ax, [si+12Fh]
+		push	191
+		lea	ax, [si+303]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBC8
 		add	ax, si
 		push	ax
@@ -2645,10 +2639,10 @@ loc_B575:
 		sar	ax, 1
 		push	ax
 		call	grcg_triangle
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
 		push	8
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
 		push	8
 		mov	ax, word_1FBD0
@@ -2679,9 +2673,7 @@ loc_B5BD:
 loc_B5EE:
 		mov	trapezoid_hmask, 0FFFFh
 		call	grcg_off
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		pop	si
 		pop	bp
 		retn
@@ -2708,9 +2700,7 @@ sub_B60A	proc near
 		mov	word_1FBD2, 10h
 
 loc_B645:
-		push	100000h
-		push	26F00BFh
-		call	grc_setclip
+		call	grc_setclip pascal, (16 shl 16) or 0, (623 shl 16) or 191
 		add	word_1FBC6, 17h
 		sub	word_1FBC8, 12h
 		sub	word_1FBCE, 17h
@@ -2721,12 +2711,12 @@ loc_B645:
 ; ---------------------------------------------------------------------------
 
 loc_B67A:
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		push	0BFh
-		lea	ax, [si+12Fh]
+		push	191
+		lea	ax, [si+303]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBC4
 		add	ax, si
 		push	ax
@@ -2736,12 +2726,12 @@ loc_B67A:
 		sar	ax, 1
 		push	ax
 		call	grcg_triangle
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
 		push	8
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBC8
 		add	ax, si
 		push	ax
@@ -2751,10 +2741,10 @@ loc_B67A:
 		sar	ax, 1
 		push	ax
 		call	grcg_triangle
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
 		push	8
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
 		push	8
 		mov	ax, word_1FBCC
@@ -2766,12 +2756,12 @@ loc_B67A:
 		sar	ax, 1
 		push	ax
 		call	grcg_triangle
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
 		push	8
-		lea	ax, [si+12Fh]
+		lea	ax, [si+303]
 		push	ax
-		push	0BFh
+		push	191
 		mov	ax, word_1FBD0
 		add	ax, si
 		push	ax
@@ -2794,9 +2784,7 @@ loc_B706:
 
 loc_B724:
 		call	grcg_off
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		pop	si
 		pop	bp
 		retn
@@ -5951,17 +5939,17 @@ loc_CEFC:
 		jz	loc_D00D
 		cmp	word ptr [si+2], 140h
 		jge	short loc_CF15
-		push	100008h
-		push	12Fh
+		push	(16 shl 16) or 8
+		push	303
 		jmp	short loc_CF1E
 ; ---------------------------------------------------------------------------
 
 loc_CF15:
-		push	1500008h
-		push	26Fh
+		push	(336 shl 16) or 8
+		push	623
 
 loc_CF1E:
-		push	0BFh
+		push	191
 		call	grc_setclip
 		cmp	byte ptr [si], 1
 		jnz	short loc_CF42
@@ -6042,26 +6030,10 @@ loc_CFC1:
 		mov	[bp+var_13], al
 		cmp	di, 4
 		jl	short loc_CF62
-		push	[bp+var_A]
-		push	[bp+var_12]
-		push	[bp+var_8]
-		push	[bp+var_10]
-		call	grcg_line
-		push	[bp+var_8]
-		push	[bp+var_10]
-		push	[bp+var_6]
-		push	[bp+var_E]
-		call	grcg_line
-		push	[bp+var_6]
-		push	[bp+var_E]
-		push	[bp+var_4]
-		push	[bp+var_C]
-		call	grcg_line
-		push	[bp+var_4]
-		push	[bp+var_C]
-		push	[bp+var_A]
-		push	[bp+var_12]
-		call	grcg_line
+		call	grcg_line pascal, [bp+var_A], [bp+var_12], [bp+var_8], [bp+var_10]
+		call	grcg_line pascal, [bp+var_8], [bp+var_10], [bp+var_6], [bp+var_E]
+		call	grcg_line pascal, [bp+var_6], [bp+var_E], [bp+var_4], [bp+var_C]
+		call	grcg_line pascal, [bp+var_4], [bp+var_C], [bp+var_A], [bp+var_12]
 
 loc_D00D:
 		inc	[bp+var_2]
@@ -6071,9 +6043,7 @@ loc_D013:
 		cmp	[bp+var_2], 0Ch
 		jl	loc_CEFC
 		GRCG_OFF_VIA_XOR ax
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		pop	di
 		pop	si
 		leave
@@ -12550,10 +12520,7 @@ loc_1098A:
 		mov	di, ax
 		cmp	byte_1F354, 0
 		jnz	short loc_109D2
-		push	si
-		push	ax
-		push	word_1F356
-		call	grcg_circle
+		call	grcg_circle pascal, si, ax, word_1F356
 		jmp	short loc_109FB
 ; ---------------------------------------------------------------------------
 
@@ -12568,18 +12535,12 @@ loc_109D2:
 		sar	ax, 5
 		add	ax, 8
 		mov	[bp+var_6], ax
-		push	si
-		push	di
-		push	[bp+var_4]
-		push	ax
-		call	grcg_line
+		call	grcg_line pascal, si, di, [bp+var_4], ax
 
 loc_109FB:
 		call	grcg_off
 		call	egc_on
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 
 loc_10A13:
 		pop	di
@@ -22194,17 +22155,13 @@ loc_15A53:
 		call	grcg_setcolor
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_15A77
-		push	100008h
-		push	12F00BFh
-		call	grc_setclip
+		call	grc_setclip pascal, ( 16 shl 16) or 8, (303 shl 16) or 191
 		mov	[bp+var_2], 10h
 		jmp	short loc_15A8D
 ; ---------------------------------------------------------------------------
 
 loc_15A77:
-		push	1500008h
-		push	26F00BFh
-		call	grc_setclip
+		call	grc_setclip pascal, (336 shl 16) or 8, (623 shl 16) or 191
 		mov	[bp+var_2], 150h
 
 loc_15A8D:
@@ -22250,13 +22207,7 @@ loc_15A91:
 loc_15AE6:
 		cmp	si, 3
 		jl	short loc_15A91
-		push	[bp+var_8]
-		push	[bp+var_E]
-		push	[bp+var_6]
-		push	[bp+var_C]
-		push	[bp+var_4]
-		push	[bp+var_A]
-		call	grcg_triangle
+		call	grcg_triangle pascal, [bp+var_8], [bp+var_E], [bp+var_6], [bp+var_C], [bp+var_4], [bp+var_A]
 		cmp	[bp+var_F], 20h	; ' '
 		jbe	loc_15B9A
 		mov	al, [bp+var_F]
@@ -22308,18 +22259,10 @@ loc_15B29:
 loc_15B7E:
 		cmp	si, 6
 		jl	short loc_15B29
-		push	[bp+var_8]
-		push	[bp+var_E]
-		push	[bp+var_6]
-		push	[bp+var_C]
-		push	[bp+var_4]
-		push	[bp+var_A]
-		call	grcg_triangle
+		call	grcg_triangle pascal, [bp+var_8], [bp+var_E], [bp+var_6], [bp+var_C], [bp+var_4], [bp+var_A]
 
 loc_15B9A:
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		call	grcg_off
 		mov	al, [bp+var_F]
 		shl	al, 2
@@ -28524,9 +28467,7 @@ loc_18E7C:
 		push	ax
 		call	sub_A2D0
 		mov	si, ax
-		push	ax
-		push	800C0h
-		call	grcg_vline
+		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
 		add	ax, 900h
 		push	ax
@@ -28535,9 +28476,7 @@ loc_18E7C:
 		push	ax
 		call	sub_A2D0
 		mov	si, ax
-		push	ax
-		push	800C0h
-		call	grcg_vline
+		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
 		add	ax, ax
 		mov	dx, 900h
@@ -28548,9 +28487,7 @@ loc_18E7C:
 		push	ax
 		call	sub_A2D0
 		mov	si, ax
-		push	ax
-		push	800C0h
-		call	grcg_vline
+		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		mov	ax, word_220EC
 		add	ax, ax
 		add	ax, 900h
@@ -28560,9 +28497,7 @@ loc_18E7C:
 		push	ax
 		call	sub_A2D0
 		mov	si, ax
-		push	ax
-		push	800C0h
-		call	grcg_vline
+		call	grcg_vline pascal, ax, (8 shl 16) or 192
 		add	word_220EC, 41h	; 'A'
 		cmp	word_220EC, 480h
 		jl	short loc_18F38
@@ -28786,14 +28721,14 @@ loc_190CF:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
 		push	8
 		mov	ax, [bp+var_4]
-		add	ax, 0FFFAh
+		add	ax, -6
 		push	ax
 		mov	ax, [bp+var_4]
 		add	ax, 6
 		push	ax
-		push	0C0h
+		push	192
 		mov	ax, [bp+var_8]
-		add	ax, 0FFFAh
+		add	ax, -6
 		push	ax
 		mov	ax, [bp+var_8]
 		add	ax, 6
@@ -28802,14 +28737,14 @@ loc_190CF:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		push	8
 		mov	ax, [bp+var_4]
-		add	ax, 0FFFDh
+		add	ax, -3
 		push	ax
 		mov	ax, [bp+var_4]
 		add	ax, 3
 		push	ax
-		push	0C0h
+		push	192
 		mov	ax, [bp+var_8]
-		add	ax, 0FFFDh
+		add	ax, -3
 		push	ax
 		mov	ax, [bp+var_8]
 		add	ax, 3
@@ -28823,7 +28758,7 @@ loc_190CF:
 		mov	ax, [bp+var_4]
 		inc	ax
 		push	ax
-		push	0C0h
+		push	192
 		mov	ax, [bp+var_8]
 		dec	ax
 		push	ax
@@ -28857,7 +28792,7 @@ loc_19179:
 		mov	ax, [bp+var_4]
 		add	ax, di
 		push	ax
-		push	0C0h
+		push	192
 		mov	ax, [bp+var_8]
 		sub	ax, di
 		push	ax
@@ -28878,7 +28813,7 @@ loc_19179:
 		mov	ax, [bp+var_4]
 		add	ax, di
 		push	ax
-		push	0C0h
+		push	192
 		mov	ax, [bp+var_8]
 		sub	ax, di
 		push	ax
@@ -28889,11 +28824,7 @@ loc_19179:
 
 loc_191E4:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		push	[bp+var_4]
-		push	8
-		push	[bp+var_8]
-		push	0C0h
-		call	grcg_line
+		call	grcg_line pascal, [bp+var_4], 8, [bp+var_8], 192
 
 loc_191FF:
 		call	grcg_off
@@ -32243,17 +32174,17 @@ loc_1A9FF:
 		jnz	loc_1AE09
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1AA1B
-		push	100008h
-		push	12Fh
+		push	(16 shl 16) or 8
+		push	303
 		jmp	short loc_1AA24
 ; ---------------------------------------------------------------------------
 
 loc_1AA1B:
-		push	1500008h
-		push	26Fh
+		push	(336 shl 16) or 8
+		push	623
 
 loc_1AA24:
-		push	0BFh
+		push	191
 		call	grc_setclip
 		mov	bx, [bp+var_A]
 		cmp	byte ptr [bx+1], 10h
@@ -32565,9 +32496,7 @@ loc_1ACCF:
 		call	grcg_vline
 		call	grcg_off
 		call	egc_on
-		pushd	0
-		push	27F00C7h
-		call	grc_setclip
+		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		sub	di, 10h
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 8

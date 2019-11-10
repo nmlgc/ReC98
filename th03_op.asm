@@ -3287,7 +3287,7 @@ loc_B5AF:
 		lea	ax, [si+8]
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 0Fh
+		add	ax, 15
 		push	ax
 		call	grcg_boxfill
 		dec	di
@@ -3317,7 +3317,7 @@ loc_B5F0:
 		lea	ax, [si+8]
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 0Fh
+		add	ax, 15
 		push	ax
 		call	grcg_boxfill
 		dec	di
@@ -4032,9 +4032,7 @@ loc_BBD0:
 		mov	byte_FC5C, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _yumeconfig
@@ -4181,9 +4179,7 @@ loc_BD42:
 		mov	byte_FC5C, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _yumeconfig
@@ -4292,9 +4288,7 @@ loc_BE68:
 		mov	byte_FC5C, al
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _yumeconfig

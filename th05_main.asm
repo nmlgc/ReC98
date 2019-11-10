@@ -3154,10 +3154,7 @@ loc_C8E4:
 		push	ax
 		push	[bp+var_4]
 		call	grcg_boxfill
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	word ptr [si+6]
-		call	grcg_circlefill
+		call	grcg_circlefill pascal, [bp+var_2], [bp+var_4], word ptr [si+6]
 		dec	word ptr [si+6]
 		cmp	word ptr [si+6], 4
 		jge	short loc_C989
@@ -3340,7 +3337,7 @@ loc_CAE7:
 		cmp	word ptr [si], 0FC19h
 		jz	short loc_CB23
 		push	si
-		push	0E00075h
+		push	(224 shl 16) or 117
 		push	word ptr [si+6]
 		mov	al, [si+8]
 		mov	ah, 0
@@ -3386,51 +3383,33 @@ sub_CB30	proc near
 		call	cdg_put_noalpha
 		call	sub_CF50
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
-		push	0D10010h
-		push	3Fh ; '?'
-		call	grcg_vline
-		push	0D10150h
-		push	17Fh
-		call	grcg_vline
-		push	0EE0010h
-		push	3Fh ; '?'
-		call	grcg_vline
-		push	0EE0150h
-		push	17Fh
-		call	grcg_vline
+		call	grcg_vline pascal, (209 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (209 shl 16) or 336, PLAYFIELD_BOTTOM - 1
+		call	grcg_vline pascal, (238 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (238 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, GC_BI
 		call	grcg_setcolor_direct_noint_1
-		push	0D00010h
-		push	3Fh ; '?'
-		call	grcg_vline
-		push	0D00150h
-		push	17Fh
-		call	grcg_vline
-		push	0EF0010h
-		push	3Fh ; '?'
-		call	grcg_vline
-		push	0EF0150h
-		push	17Fh
-		call	grcg_vline
-		mov	ah, 0Fh
+		call	grcg_vline pascal, (208 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (208 shl 16) or 336, PLAYFIELD_BOTTOM - 1
+		call	grcg_vline pascal, (239 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (239 shl 16) or 336, PLAYFIELD_BOTTOM - 1
+		mov	ah, 15
 		call	grcg_setcolor_direct_noint_1
 		call	sub_CA7B
 		mov	al, byte_2429B
 		mov	ah, 0
-		mov	dx, 0E0h
+		mov	dx, 224
 		sub	dx, ax
 		mov	si, dx
 		or	si, si
 		jle	short loc_CBE4
-		push	0E00075h
-		push	dx
-		call	grcg_circle
+		call	grcg_circle pascal, (224 shl 16) or 117, dx
 
 loc_CBE4:
 		GRCG_OFF_CLOBBERING dx
 		mov	al, byte_2429B
 		mov	ah, 0
-		add	ax, 64h	; 'd'
+		add	ax, 100
 		mov	PaletteTone, ax
 		mov	_palette_changed, 1
 		pop	si
@@ -4693,11 +4672,7 @@ arg_2		= word ptr  6
 		sar	ax, 4
 		add	ax, 16
 		mov	[bp+var_8], ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	[bp+var_6]
-		push	ax
-		call	grcg_line
+		call	grcg_line pascal, [bp+var_2], [bp+var_4], [bp+var_6], ax
 		pop	di
 		pop	si
 		leave
@@ -5493,7 +5468,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		mov	si, [bp+arg_0]
-		push	0E000C8h
+		push	(224 shl 16) or 200
 		mov	ax, di
 		sar	ax, 4
 		push	ax
@@ -5503,21 +5478,17 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_DB58:
-		push	offset _drawpoint
-		push	0E000C80h
-		push	di
-		push	si
-		call	vector2_at
+		call	vector2_at pascal, offset _drawpoint, ((224 shl 4) shl 16) or (200 shl 4), di, si
 		push	3AB0h
-		push	0E000C80h
+		push	((224 shl 4) shl 16) or (200 shl 4)
 		push	di
-		lea	ax, [si+55h]
+		lea	ax, [si+85]
 		push	ax
 		call	vector2_at
 		push	3AB4h
-		push	0E000C80h
+		push	((224 shl 4) shl 16) or (200 shl 4)
 		push	di
-		lea	ax, [si-55h]
+		lea	ax, [si-85]
 		push	ax
 		call	vector2_at
 		sar	_drawpoint.x, 4
@@ -5526,21 +5497,9 @@ loc_DB58:
 		sar	word_24492, 4
 		sar	word_24494, 4
 		sar	word_24496, 4
-		push	_drawpoint.x
-		push	_drawpoint.y
-		push	word_24490
-		push	word_24492
-		call	grcg_line
-		push	word_24490
-		push	word_24492
-		push	word_24494
-		push	word_24496
-		call	grcg_line
-		push	_drawpoint.x
-		push	_drawpoint.y
-		push	word_24494
-		push	word_24496
-		call	grcg_line
+		call	grcg_line pascal, _drawpoint.x, _drawpoint.y, word_24490, word_24492
+		call	grcg_line pascal, word_24490, word_24492, word_24494, word_24496
+		call	grcg_line pascal, _drawpoint.x, _drawpoint.y, word_24494, word_24496
 		inc	[bp+var_2]
 		add	si, 2Ah	; '*'
 
@@ -10233,11 +10192,8 @@ loc_10BC7:
 		jz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+var_4]
-		add	ax, 10h
-		push	ax
-		push	di
-		push	word ptr [si+10h]
-		call	grcg_circle
+		add	ax, 16
+		call	grcg_circle pascal, ax, di, word ptr [si+10h]
 		jmp	short loc_10C1F
 ; ---------------------------------------------------------------------------
 
@@ -10246,11 +10202,8 @@ loc_10BFD:
 		jnz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+var_4]
-		add	ax, 10h
-		push	ax
-		push	di
-		push	word ptr [si+10h]
-		call	grcg_circlefill
+		add	ax, 16
+		call	grcg_circlefill pascal, ax, di, word ptr [si+10h]
 
 loc_10C1F:
 		GRCG_OFF_CLOBBERING dx
@@ -10274,10 +10227,7 @@ loc_10C3E:
 		cmp	byte_2D07F, 2
 		jnz	short loc_10C6C
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
-		push	[bp+var_A]
-		push	[bp+var_8]
-		push	di
-		call	grcg_hline
+		call	grcg_hline pascal, [bp+var_A], [bp+var_8], di
 		GRCG_OFF_CLOBBERING dx
 		jmp	short loc_10C96
 ; ---------------------------------------------------------------------------
@@ -10897,14 +10847,14 @@ loc_11080:
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 20h	; ' '
+		add	ax, PLAYFIELD_X
 		push	ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, PLAYFIELD_Y
 		push	ax
 		mov	ax, [si+10h]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -11668,7 +11618,7 @@ loc_116A6:
 ; ---------------------------------------------------------------------------
 
 loc_116CE:
-		cmp	si, 180h
+		cmp	si, PLAYFIELD_Y + PLAYFIELD_H
 		jge	loc_1179F
 		push	0
 		push	word ptr [di+4]
@@ -11684,7 +11634,7 @@ loc_116CE:
 ; ---------------------------------------------------------------------------
 
 loc_116F8:
-		mov	ax, 1A0h
+		mov	ax, PLAYFIELD_RIGHT
 		sub	ax, [bp+var_6]
 		mov	[bp+var_6], ax
 
@@ -11702,7 +11652,7 @@ loc_11701:
 		cwd
 		idiv	bx
 		push	ax
-		lea	ax, [si+0Fh]
+		lea	ax, [si+15]
 		push	ax
 		call	grcg_byteboxfill_x
 
@@ -11725,8 +11675,8 @@ loc_11727:
 ; ---------------------------------------------------------------------------
 
 loc_11749:
-		add	[bp+var_6], 10h
-		cmp	[bp+var_6], 1A0h
+		add	[bp+var_6], 16
+		cmp	[bp+var_6], PLAYFIELD_RIGHT
 		jge	short loc_1176A
 		mov	ax, [bp+var_6]
 		mov	bx, 8
@@ -11734,8 +11684,8 @@ loc_11749:
 		idiv	bx
 		push	ax
 		push	si
-		push	33h ; '3'
-		lea	ax, [si+0Fh]
+		push	PLAYFIELD_VRAM_RIGHT - 1
+		lea	ax, [si+15]
 		push	ax
 		call	grcg_byteboxfill_x
 

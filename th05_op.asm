@@ -2776,13 +2776,9 @@ sub_BC8D	proc near
 		graph_showpage al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		graph_accesspage 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		push	1
 		call	graph_copy_page
@@ -2923,29 +2919,29 @@ arg_2		= byte ptr  6
 		mov	si, ax
 		or	si, si
 		jl	loc_BF48
-		cmp	si, 0C0h
+		cmp	si, 192
 		jge	loc_BF48
 		cmp	[bp+arg_0], 0
 		jz	short loc_BEF4
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 5
-		push	0C012Ch
-		lea	ax, [si+60h]
+		push	(12 shl 16) or 300
+		lea	ax, [si+96]
 		push	ax
 		call	grcg_hline
-		push	0C012Ch
-		lea	ax, [si+6Fh]
+		push	(12 shl 16) or 300
+		lea	ax, [si+111]
 		push	ax
 		call	grcg_hline
-		push	0Ch
-		lea	ax, [si+60h]
+		push	12
+		lea	ax, [si+96]
 		push	ax
-		lea	ax, [si+6Fh]
+		lea	ax, [si+111]
 		push	ax
 		call	grcg_vline
-		push	12Ch
-		lea	ax, [si+60h]
+		push	300
+		lea	ax, [si+96]
 		push	ax
-		lea	ax, [si+6Fh]
+		lea	ax, [si+111]
 		push	ax
 		call	grcg_vline
 		GRCG_OFF_CLOBBERING dx
@@ -2954,7 +2950,7 @@ arg_2		= byte ptr  6
 
 loc_BEF4:
 		push	0
-		lea	ax, [si+60h]
+		lea	ax, [si+96]
 		push	ax
 		push	1400010h
 		call	sub_DB3C
@@ -4643,17 +4639,17 @@ loc_CF82:
 loc_CF8C:
 		call	cdg_put_noalpha
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		lea	ax, [si+0D8h]
+		lea	ax, [si+216]
 		mov	bx, 8
 		cwd
 		idiv	bx
 		push	ax
 		push	di
-		lea	ax, [si+0DFh]
+		lea	ax, [si+223]
 		cwd
 		idiv	bx
 		push	ax
-		lea	ax, [di+97h]
+		lea	ax, [di+151]
 		push	ax
 		call	grcg_byteboxfill_x
 		mov	ax, si
@@ -4661,13 +4657,13 @@ loc_CF8C:
 		cwd
 		idiv	bx
 		push	ax
-		lea	ax, [di+98h]
+		lea	ax, [di+152]
 		push	ax
-		lea	ax, [si+0DFh]
+		lea	ax, [si+223]
 		cwd
 		idiv	bx
 		push	ax
-		lea	ax, [di+9Fh]
+		lea	ax, [di+159]
 		push	ax
 		call	grcg_byteboxfill_x
 		GRCG_OFF_CLOBBERING dx

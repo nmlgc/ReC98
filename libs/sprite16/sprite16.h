@@ -33,3 +33,5 @@ typedef enum {
 	OVERLAP_CLEAR = 1,
 	OVERLAP_OR = 0
 } sprite16_overlap_t;
+
+#define SPRITE16_RES_Y 200

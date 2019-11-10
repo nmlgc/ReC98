@@ -1162,7 +1162,7 @@ loc_9FC8:
 		les	bx, [bp+var_6]
 		add	al, es:[bx]
 		mov	es:[bx], al
-		push	2400173h
+		push	(576 shl 16) or 371
 		push	2Fh ; '/'
 		push	word ptr [bp+var_6+2]
 		push	bx
@@ -1212,15 +1212,13 @@ loc_A069:
 		cmp	si, 1
 		jnz	short loc_A0C5
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	2400173h
-		push	2500183h
-		call	grcg_boxfill
+		call	grcg_boxfill pascal, (576 shl 16) or 371, (592 shl 16) or 387
 		call	grcg_off
 		les	bx, _yumeconfig
 		dec	byte ptr es:[bx+36h]
 		les	bx, [bp+var_6]
 		dec	byte ptr es:[bx]
-		push	2400173h
+		push	(576 shl 16) or 371
 		push	2Fh ; '/'
 		push	word ptr [bp+var_6+2]
 		push	bx
@@ -2373,9 +2371,7 @@ loc_AAA3:
 
 loc_AAD5:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	140040h
-		push	3B0107h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((160 / 8) shl 16) or 64, ((472 / 8) shl 16) or 263
 		call	grcg_off
 		jmp	short loc_AB54
 ; ---------------------------------------------------------------------------
@@ -4852,9 +4848,7 @@ loc_BF3B:
 
 loc_BF57:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 
 loc_BF78:
@@ -4974,15 +4968,11 @@ loc_C032:
 		or	ax, ax
 		jz	short loc_C032
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 		call	sub_BCD5
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 		call	sub_BCD5
 		pop	si
@@ -5095,9 +5085,7 @@ loc_C155:
 
 loc_C173:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 
 loc_C194:
@@ -5112,15 +5100,11 @@ loc_C199:
 		or	ax, ax
 		jz	loc_C114
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 		call	sub_BCD5
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 		call	sub_BCD5
 		pop	di
@@ -5456,22 +5440,14 @@ loc_C4D8:
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
 		graph_accesspage 1
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 0
-		pushd	0
-		push	4F018Fh
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		graph_accesspage 1
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		graph_accesspage 0
-		push	10008h
-		push	4E0187h
-		call	grcg_byteboxfill_x
+		call	grcg_byteboxfill_x pascal, ((8 / 8) shl 16) or 8, (((RES_X - 1 - 8) / 8) shl 16) or (RES_Y - 1 - 8)
 		call	grcg_off
 		graph_showpage 1
 		call	cdg_load_single_noalpha pascal, 0, ds, offset aStf1_cdg, 0
