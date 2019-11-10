@@ -34,3 +34,18 @@ extern item_t items[ITEM_COUNT];
 extern const int ITEM_TYPE_PATNUM[IT_COUNT];
 
 void pascal near items_add(Subpixel x, Subpixel y, item_type_t type);
+
+// Items dropped when losing a life
+// --------------------------------
+#define MISS_ITEM_COUNT 5
+typedef enum {
+	MISS_FIELD_LEFT = 0,
+	MISS_FIELD_CENTER = 1,
+	MISS_FIELD_RIGHT = 2,
+	MISS_FIELD_COUNT,
+};
+// Yes, these have Y first and X second.
+extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][MISS_ITEM_COUNT];
+
+void pascal near items_miss_add(void);
+// --------------------------------

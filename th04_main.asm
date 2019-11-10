@@ -6865,7 +6865,7 @@ loc_E813:
 		les	bx, _humaconfig
 		mov	ax, word_22BA8
 		mov	es:[bx+26h], ax
-		mov	ax, word_236D8
+		mov	ax, _items_spawned
 		mov	es:[bx+28h], ax
 		mov	ax, word_236DA
 		mov	es:[bx+2Ah], ax
@@ -10938,7 +10938,7 @@ var_1		= byte ptr -1
 		mov	player_pos.velocity.y, 0
 		mov	power_overflow_level, 0
 		mov	_miss_explosion_radius, 0
-		call	sub_1DACE
+		call	items_miss_add
 		mov	al, power
 		mov	ah, 0
 		mov	bx, 4
@@ -34132,7 +34132,7 @@ loc_1DA76:
 		mov	[si+item_t.ITEM_patnum], ax
 		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
-		inc	word_236D8
+		inc	_items_spawned
 		jmp	short loc_1DAC8
 ; ---------------------------------------------------------------------------
 
@@ -34151,123 +34151,7 @@ loc_1DAC8:
 		retn	6
 items_add	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DACE	proc far
-
-var_A		= word ptr -0Ah
-@@type		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		push	5
-		call	randring2_next16_mod
-		mov	[bp+var_6], ax
-
-loc_1DADC:
-		push	5
-		call	randring2_next16_mod
-		mov	[bp+var_A], ax
-		cmp	ax, [bp+var_6]
-		jz	short loc_1DADC
-		cmp	player_pos.cur.x, 128 * 16
-		jge	short loc_1DAF8
-		mov	[bp+var_4], 0
-		jmp	short loc_1DB0C
-; ---------------------------------------------------------------------------
-
-loc_1DAF8:
-		cmp	player_pos.cur.x, 256 * 16
-		jg	short loc_1DB07
-		mov	[bp+var_4], 1
-		jmp	short loc_1DB0C
-; ---------------------------------------------------------------------------
-
-loc_1DB07:
-		mov	[bp+var_4], 2
-
-loc_1DB0C:
-		xor	di, di
-		mov	si, offset _items
-		mov	[bp+var_2], 0
-		jmp	loc_1DBA2
-; ---------------------------------------------------------------------------
-
-loc_1DB19:
-		cmp	byte ptr [si], 0
-		jnz	short loc_1DB9C
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+0Fh], 0
-		mov	ax, player_pos.cur.x
-		mov	[si+2],	ax
-		mov	ax, player_pos.cur.y
-		mov	[si+4],	ax
-		mov	bx, [bp+var_4]
-		imul	bx, 14h
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+23A2h]
-		mov	[si+0Ch], ax
-		mov	bx, [bp+var_4]
-		imul	bx, 14h
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+23ACh]
-		mov	[si+0Ah], ax
-		mov	word ptr [si+12h], 0
-		cmp	[bp+var_6], di
-		jz	short loc_1DB6B
-		push	1
-		call	randring2_next16_and
-		mov	[bp+@@type], ax
-		jmp	short loc_1DB70
-; ---------------------------------------------------------------------------
-
-loc_1DB6B:
-		mov	[bp+@@type], IT_BIGPOWER
-
-loc_1DB70:
-		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+0Bh], 1
-		jnz	short loc_1DB80
-		mov	[bp+@@type], IT_FULLPOWER
-
-loc_1DB80:
-		mov	al, byte ptr [bp+@@type]
-		mov	[si+item_t.ITEM_type], al
-		mov	bx, [bp+@@type]
-		add	bx, bx
-		mov	ax, ITEM_TYPE_PATNUM[bx]
-		mov	[si+item_t.ITEM_patnum], ax
-		inc	di
-		inc	word_236D8
-		cmp	di, 5
-		jge	short loc_1DBAA
-
-loc_1DB9C:
-		inc	[bp+var_2]
-		add	si, size item_t
-
-loc_1DBA2:
-		cmp	[bp+var_2], ITEM_COUNT
-		jl	loc_1DB19
-
-loc_1DBAA:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1DACE	endp
-
+include th04/item/miss_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40014,72 +39898,14 @@ include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
 power_overflow_level	dw 0
-word_236D8	dw 0
+public _items_spawned
+_items_spawned	dw 0
 word_236DA	dw 0
 word_236DC	dw 0
 word_236DE	dw 0
 byte_236E0	db 0
 		db 0
-		db 0D0h
-		db 0FFh
-		db 0C8h
-		db 0FFh
-		db 0C0h
-		db 0FFh
-		db 0B8h	; ¸
-		db 0FFh
-		db 0B0h	; °
-		db 0FFh
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db  18h
-		db    0
-		db  24h	; $
-		db    0
-		db  30h	; 0
-		db    0
-		db 0D0h
-		db 0FFh
-		db 0C8h
-		db 0FFh
-		db 0C0h
-		db 0FFh
-		db 0C8h
-		db 0FFh
-		db 0D0h
-		db 0FFh
-		db 0E8h
-		db 0FFh
-		db 0F4h
-		db 0FFh
-		db    0
-		db    0
-		db  0Ch
-		db    0
-		db  18h
-		db    0
-		db 0D0h
-		db 0FFh
-		db 0C8h
-		db 0FFh
-		db 0C0h
-		db 0FFh
-		db 0B8h	; ¸
-		db 0FFh
-		db 0B0h	; °
-		db 0FFh
-		db    0
-		db    0
-		db 0F4h
-		db 0FFh
-		db 0E8h
-		db 0FFh
-		db 0DCh
-		db 0FFh
-		db 0D0h
-		db 0FFh
+include th04/item/miss_add[data].asm
 		db    0
 		db    0
 		db    3
