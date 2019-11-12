@@ -48,7 +48,7 @@ It certainly *seems* to be. During the development of the static English patches
 * Additionally, TH01 includes the [Pi loader library by 電脳科学研究所/BERO](http://www.vector.co.jp/soft/dos/prog/se037608.html),
 * and TH03's `ZUNSP.COM` (accessible via `ZUN.COM -4`) is a rebranded version of Promisence Soft's `SPRITE16.COM`, a 16-color PC-98 EGC display driver, version 0.04, which was bundled with the sample game *StormySpace*.
 
-The two main libraries make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
+master.lib and the C/C++ runtime alone make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
 
 With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we now also have two open-source PC-9821 emulators capable of running the games. This will greatly help in understanding and porting all hardware-specific code.
 
