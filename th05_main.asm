@@ -21,6 +21,7 @@
 
 include ReC98.inc
 include th05/th05.inc
+include th04/phase.inc
 
 	extern _execl:proc
 	extern _strlen:proc
@@ -3978,7 +3979,7 @@ include th04/hardware/grcg_fill_rows.asm
 sub_D032	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_D04F
 		mov	_tile_invalidate_box.x, 64
 		mov	_tile_invalidate_box.y, 64
@@ -4032,7 +4033,7 @@ loc_D09F:
 ; ---------------------------------------------------------------------------
 
 loc_D0C8:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_D0DC
 		call	boss_backdrop_render pascal, (64 shl 16) or 16, 0
 		pop	bp
@@ -4040,7 +4041,7 @@ loc_D0C8:
 ; ---------------------------------------------------------------------------
 
 loc_D0DC:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_D0EA
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D0EF
@@ -4108,14 +4109,14 @@ loc_D142:
 ; ---------------------------------------------------------------------------
 
 loc_D153:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_D167
 		call	boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		jmp	short loc_D17D
 ; ---------------------------------------------------------------------------
 
 loc_D167:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_D175
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D17A
@@ -4185,14 +4186,14 @@ loc_D1CE:
 ; ---------------------------------------------------------------------------
 
 loc_D1DF:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_D1F3
 		call	boss_backdrop_render pascal, (32 shl 16) or 221, 1
 		jmp	short loc_D209
 ; ---------------------------------------------------------------------------
 
 loc_D1F3:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_D201
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D206
@@ -4266,7 +4267,7 @@ loc_D25C:
 ; ---------------------------------------------------------------------------
 
 loc_D272:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_D286
 		call	boss_backdrop_render pascal, (96 shl 16) or 72, 1
 		leave
@@ -4274,7 +4275,7 @@ loc_D272:
 ; ---------------------------------------------------------------------------
 
 loc_D286:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_D294
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D299
@@ -4340,7 +4341,7 @@ loc_D2E5:
 ; ---------------------------------------------------------------------------
 
 loc_D2FB:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_D30F
 		call	boss_backdrop_render pascal, (32 shl 16) or 16, 1
 		leave
@@ -4348,7 +4349,7 @@ loc_D2FB:
 ; ---------------------------------------------------------------------------
 
 loc_D30F:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_D31D
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D322
@@ -5656,7 +5657,7 @@ loc_DCEF:
 ; ---------------------------------------------------------------------------
 
 loc_DD1B:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_DD2A
 		call	sub_E92E
 		call	sub_DBFF
@@ -5665,7 +5666,7 @@ loc_DD1B:
 ; ---------------------------------------------------------------------------
 
 loc_DD2A:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jz	short loc_DD38
 		cmp	_boss_phase_frame, 2
 		jg	short loc_DD3D
@@ -9721,7 +9722,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	loc_108F6
 		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
@@ -9788,7 +9789,7 @@ loc_108C2:
 ; ---------------------------------------------------------------------------
 
 loc_108F6:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10900
 		call	sub_F7EC
 
@@ -9819,7 +9820,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_2], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_10934
 		push	di
 		push	ax
@@ -9905,7 +9906,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_10A1C
 		cmp	_midboss_pos.cur.y, 0
 		jl	short loc_10A26
@@ -9953,7 +9954,7 @@ loc_10A05:
 ; ---------------------------------------------------------------------------
 
 loc_10A1C:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10A26
 		call	sub_F7EC
 
@@ -9984,7 +9985,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	di, ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_10A59
 		push	si
 		push	ax
@@ -10044,7 +10045,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_10B0F
 		cmp	_midboss_pos.cur.y, 0
 		jl	short loc_10B19
@@ -10088,7 +10089,7 @@ loc_10AF8:
 ; ---------------------------------------------------------------------------
 
 loc_10B0F:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10B19
 		call	sub_F7EC
 
@@ -10278,7 +10279,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_2], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_10CCA
 		push	di
 		push	ax
@@ -10421,7 +10422,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_4], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_10DDA
 		cmp	_boss2_mode_change, 0
 		jnz	short loc_10DBC
@@ -10451,7 +10452,7 @@ loc_10DBC:
 ; ---------------------------------------------------------------------------
 
 loc_10DDA:
-		cmp	_boss_phase, 0FDh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jbe	short loc_10DE8
 		cmp	_boss2_mode_change, 0
 		jz	short loc_10DF9
@@ -10468,7 +10469,7 @@ loc_10DE8:
 		call	sub_10D26
 
 loc_10DF9:
-		cmp	_boss_phase, 0FDh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jbe	short loc_10E07
 		cmp	_boss2_mode_change, 0
 		jnz	short loc_10E1F
@@ -10511,7 +10512,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_10EA4
 		cmp	_midboss_pos.cur.y, 0
 		jl	short loc_10EAE
@@ -10552,7 +10553,7 @@ loc_10E8D:
 ; ---------------------------------------------------------------------------
 
 loc_10EA4:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10EAE
 		call	sub_F7EC
 
@@ -10641,7 +10642,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_2], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_10F42
 		push	di
 		push	ax
@@ -10760,7 +10761,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	di, ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_11001
 		push	si
 		push	ax
@@ -10911,7 +10912,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_2], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_11114
 		push	si
 		push	ax
@@ -11253,7 +11254,7 @@ var_2		= word ptr -2
 		push	di
 		cmp	_boss_phase, 1
 		jbe	short loc_113B9
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jb	loc_1162C
 
 loc_113B9:
@@ -11532,7 +11533,7 @@ midbossx_render	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_11687
 		cmp	_midboss_pos.cur.y, 0
 		jl	short loc_11691
@@ -11567,7 +11568,7 @@ loc_1166D:
 ; ---------------------------------------------------------------------------
 
 loc_11687:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_11691
 		call	sub_F7EC
 
@@ -11760,7 +11761,7 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, (-1 shl 4)
 		mov	[bp+var_2], ax
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_117F9
 		push	di
 		push	ax
@@ -11835,7 +11836,7 @@ midboss5_render	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_118C3
 		cmp	_midboss_pos.cur.y, 0
 		jl	short loc_118CD
@@ -11870,7 +11871,7 @@ loc_118A9:
 ; ---------------------------------------------------------------------------
 
 loc_118C3:
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_118CD
 		call	sub_F7EC
 
@@ -18324,7 +18325,7 @@ sub_17416	endp
 sub_17486	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_midboss_phase, 0FEh
+		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_174C1
 		cmp	_midboss_phase_frame, 1
 		jnz	short loc_174A2
@@ -18341,7 +18342,7 @@ loc_174A2:
 		inc	_midboss_sprite
 		cmp	_midboss_sprite, 12
 		jb	short loc_174C5
-		mov	_midboss_phase, 0FFh
+		mov	_midboss_phase, PHASE_NONE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -19621,7 +19622,7 @@ loc_1812B:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BIGPOWER
 
 loc_1818B:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -20426,7 +20427,7 @@ loc_188D2:
 		call	lasers_stop_in_slot pascal, 0
 		call	lasers_stop_in_slot pascal, 1
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jmp	short loc_188EE
 ; ---------------------------------------------------------------------------
 
@@ -20682,7 +20683,7 @@ loc_18B24:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_18B67:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -21514,7 +21515,7 @@ loc_19245:
 
 loc_19251:
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jmp	short loc_19263
 ; ---------------------------------------------------------------------------
 
@@ -21918,7 +21919,7 @@ loc_195BC:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_195DA:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -23386,7 +23387,7 @@ loc_1A35E:
 
 loc_1A396:
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	byte_2BC70, 2
 		mov	byte_2BC8A, 2
 		jmp	short loc_1A3B2
@@ -23402,7 +23403,7 @@ loc_1A3B2:
 		call	sub_17354
 		cmp	_boss_phase, 3
 		jb	short loc_1A3CD
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_1A3CD
 		call	sub_196D3
 
@@ -24696,7 +24697,7 @@ loc_1AE2C:
 		mov	al, byte ptr [bp+var_2]
 		add	al, 0FFh
 		mov	_boss2_mode_change, al
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_phase_frame, 0
 		cmp	_lasers[0 * size laser_t].mode, LM_NONE
 		jz	loc_1AFA7	; default
@@ -25263,7 +25264,7 @@ loc_1B34A:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_1B368:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -26324,7 +26325,7 @@ loc_1BCDB:
 loc_1BCE7:
 		call	boss_explode_small pascal, 4
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		call	sub_1B3C2
 		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1BD09
@@ -27531,7 +27532,7 @@ loc_1C7D7:
 loc_1C7E3:
 		call	boss_explode_small pascal, 4
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		call	sub_1B3C2
 		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1C805
@@ -28874,7 +28875,7 @@ loc_1D4DD:
 loc_1D4F4:
 		call	boss_explode_small pascal, 4
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
 		jmp	short loc_1D513
 ; ---------------------------------------------------------------------------
@@ -30560,7 +30561,7 @@ loc_1E4F9:
 loc_1E510:
 		call	boss_explode_small pascal, 4
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jmp	short loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -30953,7 +30954,7 @@ loc_1E7F2:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1E82B:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -32544,7 +32545,7 @@ loc_1F626:
 loc_1F643:
 		call	boss_explode_small pascal, 4
 		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0FDh
+		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
 		mov	byte_226C0, 0
 		jmp	short loc_1F666
@@ -32915,7 +32916,7 @@ loc_1F936:
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1F968:
-		mov	_midboss_phase, 0FEh
+		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
@@ -33215,7 +33216,7 @@ n1000		= word ptr  4
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	_boss_phase, 0FDh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jnz	short loc_1FC23
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1FBE1
@@ -33248,7 +33249,7 @@ loc_1FC10:
 ; ---------------------------------------------------------------------------
 
 loc_1FC23:
-		cmp	_boss_phase, 0FEh
+		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnz	short loc_1FC95
 		cmp	_boss_phase_frame, 12
 		jge	short loc_1FC55
