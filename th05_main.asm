@@ -1096,10 +1096,10 @@ sub_B55A	proc near
 		mov	byte_23F04, 0
 		mov	word_2CE02, 0
 		mov	word_2CE04, 0
-		mov	player_pos.cur.x, 192 * 16
-		mov	player_pos.cur.y, 320 * 16
-		mov	player_pos.prev.x, 192 * 16
-		mov	player_pos.prev.y, 320 * 16
+		mov	_player_pos.cur.x, 192 * 16
+		mov	_player_pos.cur.y, 320 * 16
+		mov	_player_pos.prev.x, 192 * 16
+		mov	_player_pos.prev.y, 320 * 16
 		mov	byte_2CEBD, 0
 		mov	_miss_time, 0
 		mov	_player_is_hit, 0
@@ -3077,12 +3077,12 @@ loc_C87C:
 		imul	ax, 0Ah
 		add	ax, 38C2h
 		mov	si, ax
-		mov	eax, player_pos.cur
+		mov	eax, _player_pos.cur
 		mov	[si], eax
 		call	sub_158CC
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		mov	[si], ax
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		mov	[si+2],	ax
 		mov	word ptr [si+6], 18h
 		call	snd_se_play pascal, 15
@@ -3322,7 +3322,7 @@ loc_CAA7:
 		imul	ax, 0Ah
 		add	ax, 38C2h
 		mov	si, ax
-		mov	eax, player_pos.cur
+		mov	eax, _player_pos.cur
 		mov	[si], eax
 		mov	word ptr [si+6], 100h
 		call	randring1_next16
@@ -11658,14 +11658,14 @@ loc_11701:
 		call	grcg_byteboxfill_x
 
 loc_11727:
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		mov	bx, 10h
 		cwd
 		idiv	bx
 		sub	ax, si
 		cmp	ax, 10h
 		jnb	short loc_1178F
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		cwd
 		idiv	bx
 		mov	dx, [bp+var_6]
@@ -11691,14 +11691,14 @@ loc_11749:
 		call	grcg_byteboxfill_x
 
 loc_1176A:
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		mov	bx, 10h
 		cwd
 		idiv	bx
 		sub	ax, si
 		cmp	ax, 10h
 		jnb	short loc_1178F
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		cwd
 		idiv	bx
 		mov	dx, [bp+var_6]
@@ -12489,7 +12489,7 @@ include th04/hud/popup.asm
 sub_11FDF	proc near
 		push	bp
 		mov	bp, sp
-		push	offset player_pos
+		push	offset _player_pos
 		call	_motion_update_1
 		cmp	ax, 80h
 		jge	short loc_11FF2
@@ -12515,8 +12515,8 @@ loc_12005:
 		mov	dx, 1600h
 
 loc_1200E:
-		mov	player_pos.cur.x, ax
-		mov	player_pos.cur.y, dx
+		mov	_player_pos.cur.x, ax
+		mov	_player_pos.cur.y, dx
 		pop	bp
 		retn
 sub_11FDF	endp
@@ -12536,8 +12536,8 @@ var_1		= byte ptr -1
 		ja	locret_12148
 		cmp	_miss_time, MISS_ANIM_FRAMES
 		jnz	short loc_12092
-		mov	player_pos.velocity.x, 0
-		mov	player_pos.velocity.y, 0
+		mov	_player_pos.velocity.x, 0
+		mov	_player_pos.velocity.y, 0
 		mov	power_overflow_level, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
@@ -12609,12 +12609,12 @@ loc_120EB:
 loc_120F0:
 		cmp	_miss_time, 0
 		jnz	short locret_12148
-		mov	player_pos.cur.x, 192 * 16
-		mov	player_pos.prev.x, 192 * 16
-		mov	player_pos.cur.y, 368 * 16
-		mov	player_pos.prev.y, 368 * 16
-		mov	player_pos.velocity.x, 0
-		mov	player_pos.velocity.y, -32
+		mov	_player_pos.cur.x, 192 * 16
+		mov	_player_pos.prev.x, 192 * 16
+		mov	_player_pos.cur.y, 368 * 16
+		mov	_player_pos.prev.y, 368 * 16
+		mov	_player_pos.velocity.x, 0
+		mov	_player_pos.velocity.y, -32
 		cmp	lives, 1
 		jbe	short loc_12142
 		dec	lives
@@ -12662,14 +12662,14 @@ loc_12161:
 		mov	_player_is_hit, 0
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		mov	byte_2CEBD, 48h	; 'H'
-		mov	player_pos.velocity.x, 0
-		mov	player_pos.velocity.y, 0
+		mov	_player_pos.velocity.x, 0
+		mov	_player_pos.velocity.y, 0
 
 loc_12188:
 		cmp	byte_2CEBD, 0
 		jnz	loc_12224
-		mov	player_pos.velocity.x, 0
-		mov	player_pos.velocity.y, 0
+		mov	_player_pos.velocity.x, 0
+		mov	_player_pos.velocity.y, 0
 		mov	ax, _input
 		and	ax, INPUT_MOVEMENT
 		mov	si, ax
@@ -12693,16 +12693,16 @@ loc_121A9:
 loc_121CA:
 		cmp	_input_focus, 0
 		jz	short loc_121E7
-		mov	ax, player_pos.velocity.x
+		mov	ax, _player_pos.velocity.x
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	player_pos.velocity.x, ax
-		mov	ax, player_pos.velocity.y
+		mov	_player_pos.velocity.x, ax
+		mov	ax, _player_pos.velocity.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	player_pos.velocity.y, ax
+		mov	_player_pos.velocity.y, ax
 
 loc_121E7:
 		call	sub_11FDF
@@ -12731,18 +12731,18 @@ loc_12213:
 ; ---------------------------------------------------------------------------
 
 loc_12224:
-		push	offset player_pos
+		push	offset _player_pos
 		call	_motion_update_1
 		dec	byte_2CEBD
 
 loc_1222E:
 		mov	eax, _player_option_pos_cur
 		mov	_player_option_pos_prev, eax
-		mov	eax, player_pos.cur
+		mov	eax, _player_pos.cur
 		mov	_player_option_pos_cur, eax
-		mov	ax, player_pos.velocity.x
+		mov	ax, _player_pos.velocity.x
 		sub	_player_option_pos_cur.x, ax
-		mov	ax, player_pos.velocity.y
+		mov	ax, _player_pos.velocity.y
 		sub	_player_option_pos_cur.y, ax
 		test	_input.lo, low INPUT_BOMB
 		jz	short loc_12256
@@ -13232,11 +13232,11 @@ loc_12783:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_127BD
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, [bp+var_4]
 		cmp	ax, [bp+var_8]
 		ja	short loc_127BD
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		cmp	ax, [bp+var_6]
 		jb	short loc_127BD
 		add	si, 16h
@@ -15151,7 +15151,7 @@ sub_15888	endp
 sub_158CC	proc far
 		push	bp
 		mov	bp, sp
-		call	sparks_add_circle pascal, player_pos.cur.x, player_pos.cur.y, large (((12 shl 4) shl 16) or 24)
+		call	sparks_add_circle pascal, _player_pos.cur.x, _player_pos.cur.y, large (((12 shl 4) shl 16) or 24)
 		pop	bp
 		retf
 sub_158CC	endp
@@ -15197,10 +15197,10 @@ arg_4		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, [bp+arg_2]
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, [bp+arg_4]
 		push	ax
 		call	iatan2
@@ -15523,11 +15523,11 @@ loc_15C47:
 		jle	short loc_15C44
 		cmp	dx, 1780h
 		jge	short loc_15C44
-		sub	ax, player_pos.cur.x
+		sub	ax, _player_pos.cur.x
 		add	ax, 4 * 16
 		cmp	ax, 8 * 16
 		ja	short loc_15C81
-		sub	dx, player_pos.cur.y
+		sub	dx, _player_pos.cur.y
 		add	dx, 4 * 16
 		cmp	dx, 8 * 16
 		ja	short loc_15C81
@@ -16162,12 +16162,12 @@ loc_160B9:
 		cmp	byte ptr [si+24h], 0
 		jz	short loc_160F2
 		mov	ax, [si+2]
-		sub	ax, player_pos.cur.x
+		sub	ax, _player_pos.cur.x
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_160F2
 		mov	ax, [si+4]
-		sub	ax, player_pos.cur.y
+		sub	ax, _player_pos.cur.y
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_160F2
@@ -16257,12 +16257,12 @@ loc_161C6:
 		cmp	word ptr [si+4], 1300h
 		jge	short loc_1621C
 		mov	ax, [si+2]
-		sub	ax, player_pos.cur.x
+		sub	ax, _player_pos.cur.x
 		add	ax, 48 * 16
 		cmp	ax, 96 * 16
 		jnb	short loc_161FC
 		mov	ax, [si+4]
-		sub	ax, player_pos.cur.y
+		sub	ax, _player_pos.cur.y
 		add	ax, 48 * 16
 		cmp	ax, 96 * 16
 		jb	short loc_1621C
@@ -18004,10 +18004,10 @@ loc_1722E:
 		jz	short loc_17264
 		mov	byte_21762, 1
 		mov	[si+item_t.pulled_to_player], 1
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, [si+item_t.pos.cur.y]
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, [si+item_t.pos.cur.x]
 		push	ax
 		call	iatan2
@@ -18055,12 +18055,12 @@ loc_172A3:
 @@hittest:
 		cmp	_miss_time, 0
 		jnz	short loc_172E5
-		mov	bx, player_pos.cur.x
+		mov	bx, _player_pos.cur.x
 		add	bx, (24 shl 4)
 		sub	bx, ax
 		cmp	bx, (48 shl 4)
 		ja	short loc_172E5
-		mov	bx, player_pos.cur.y
+		mov	bx, _player_pos.cur.y
 		add	bx, (24 shl 4)
 		sub	bx, dx
 		cmp	bx, (38 shl 4)
@@ -18484,14 +18484,14 @@ loc_1774D:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		mov	ax, [bx+di+2]
-		sub	ax, player_pos.cur.x
+		sub	ax, _player_pos.cur.x
 		add	ax, 6 * 16
 		cmp	ax, 12 * 16
 		ja	short loc_17790
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		mov	ax, [bx+di+4]
-		sub	ax, player_pos.cur.y
+		sub	ax, _player_pos.cur.y
 		add	ax, 6 * 16
 		cmp	ax, 12 * 16
 		ja	short loc_17790
@@ -18529,8 +18529,8 @@ loc_177D5:
 		lea	ax, [si+2]
 		push	ax
 		call	_motion_update_2
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		add	ax, 8 * 16
 		cmp	ax, 16 * 16
 		ja	short loc_177FB
@@ -18815,10 +18815,10 @@ loc_17A4E:
 
 loc_17A56:
 		inc	byte ptr [si+16h]
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, [si+4]
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
@@ -19259,8 +19259,8 @@ loc_17DBF:
 loc_17DC5:
 		cmp	_bullet_clear_time, 0
 		jnz	loc_17E74
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		cmp	_player_invincibility_time, 0
 		jnz	short loc_17E41
 		cmp	byte ptr [si+12h], 0
@@ -21558,7 +21558,7 @@ sub_19280	proc near
 		jb	short loc_192F1
 		mov	_midboss_sprite, 219
 		add	_midboss_pos.cur.y, (12 shl 4)
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		mov	_midboss_pos.cur.x, ax
 		cmp	_midboss_pos.cur.x, (64 shl 4)
 		jge	short loc_192BD
@@ -22166,12 +22166,12 @@ loc_197D9:
 
 loc_197DC:
 		mov	ax, [si+2]
-		sub	ax, player_pos.cur.x
+		sub	ax, _player_pos.cur.x
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_197FF
 		mov	ax, [si+4]
-		sub	ax, player_pos.cur.y
+		sub	ax, _player_pos.cur.y
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_197FF
@@ -22851,12 +22851,12 @@ loc_19D56:
 		call	snd_se_play pascal, 9
 
 loc_19D9D:
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, word_2BC71+1
 		cmp	ax, 800h
 		jnb	short loc_19DBD
 		mov	ax, word_2BC74
-		sub	ax, player_pos.cur.y
+		sub	ax, _player_pos.cur.y
 		add	ax, 40h
 		cmp	ax, 80h
 		jnb	short loc_19DBD
@@ -22926,10 +22926,10 @@ loc_19E43:
 		mov	_laser_template.coords.origin, eax
 		mov	_laser_template.grow_at_age, 40
 		mov	_laser_template.shootout_speed, (5 shl 4)
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, _laser_template.coords.origin.y
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, _laser_template.coords.origin.x
 		push	ax
 		call	iatan2
@@ -23932,10 +23932,10 @@ var_1		= byte ptr -1
 		jnz	short loc_1A7AF
 		mov	eax, _boss_pos.cur
 		mov	_laser_template.coords.origin, eax
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, _laser_template.coords.origin.y
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, _laser_template.coords.origin.x
 		push	ax
 		call	iatan2
@@ -23970,10 +23970,10 @@ loc_1A7D7:
 		jnz	short loc_1A81A
 
 loc_1A7E4:
-		mov	ax, player_pos.cur.y
+		mov	ax, _player_pos.cur.y
 		sub	ax, _laser_template.coords.origin.y
 		push	ax
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		sub	ax, _laser_template.coords.origin.x
 		push	ax
 		call	iatan2
@@ -25429,8 +25429,8 @@ loc_1B488:
 loc_1B48B:
 		cmp	byte ptr [si], 2
 		jz	loc_1B535
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		add	ax, 8 * 16
 		cmp	ax, 16 * 16
 		ja	short loc_1B4B1
@@ -27711,8 +27711,8 @@ loc_1C93D:
 loc_1C93F:
 		cmp	byte ptr [si], 2
 		jz	short loc_1C969
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		add	ax, 7 * 16
 		cmp	ax, 14 * 16
 		ja	short loc_1C967
@@ -29019,8 +29019,8 @@ loc_1D5E5:
 loc_1D5E7:
 		cmp	byte ptr [si], 3
 		jz	short loc_1D612
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		add	ax, 8 * 16
 		cmp	ax, 16 * 16
 		ja	short loc_1D610
@@ -32015,7 +32015,7 @@ loc_1F122:
 		dec	byte_2D084
 		cmp	byte_2D084, 0
 		jnz	short loc_1F137
-		mov	ax, player_pos.cur.x
+		mov	ax, _player_pos.cur.x
 		mov	word_22872, ax
 		mov	al, 1
 		pop	bp
@@ -33394,8 +33394,8 @@ sub_1FD62	proc near
 		mov	bp, sp
 		mov	ax, _boss_pos.cur.x
 		mov	dx, _boss_pos.cur.y
-		sub	ax, player_pos.cur.x
-		sub	dx, player_pos.cur.y
+		sub	ax, _player_pos.cur.x
+		sub	dx, _player_pos.cur.y
 		add	dx, 16 * 16
 		cmp	dx, 32 * 16
 		ja	short loc_1FD8B

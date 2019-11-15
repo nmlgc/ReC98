@@ -18,13 +18,13 @@ items_miss_add	proc far
 	mov	[bp+@@unused_index], ax
 	cmp	ax, [bp+@@bigpower_index]
 	jz	short @@unused_loop
-	cmp	player_pos.cur.x, ((PLAYFIELD_W / 3) * 1) shl 4
+	cmp	_player_pos.cur.x, ((PLAYFIELD_W / 3) * 1) shl 4
 	jge	short @@field_center?
 	mov	[bp+@@field], MISS_FIELD_LEFT
 	jmp	short @@field_decided
 
 @@field_center?:
-	cmp	player_pos.cur.x, ((PLAYFIELD_W / 3) * 2) shl 4
+	cmp	_player_pos.cur.x, ((PLAYFIELD_W / 3) * 2) shl 4
 	jg	short @@field_right
 	mov	[bp+@@field], MISS_FIELD_CENTER
 	jmp	short @@field_decided
@@ -43,9 +43,9 @@ items_miss_add	proc far
 	jnz	short @@next
 	mov	[si+item_t.flag], 1
 	mov	[si+item_t.ITEM_unknown], 0
-	mov	ax, player_pos.cur.x
+	mov	ax, _player_pos.cur.x
 	mov	[si+item_t.pos.cur.x], ax
-	mov	ax, player_pos.cur.y
+	mov	ax, _player_pos.cur.y
 	mov	[si+item_t.pos.cur.y],	ax
 	mov	bx, [bp+@@field]
 	imul	bx, MISS_ITEM_COUNT * word * 2

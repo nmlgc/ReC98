@@ -14,7 +14,7 @@ shots_add	proc near
 
 @@found:
 	mov	word ptr [bx+shot_t.flag], 1
-	mov	eax, player_pos.cur
+	mov	eax, _player_pos.cur
 	mov	dword ptr [bx+shot_t.pos.cur], eax
 	mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
 	mov	ax, bx

@@ -15,21 +15,21 @@ player_render	proc near
 	jbe	@@in_miss_anim
 
 @@alive:
-	mov	ax, player_pos.cur.x
+	mov	ax, _player_pos.cur.x
 	sar	ax, 4
 	add	ax, PLAYFIELD_X - (PLAYER_W / 2)
 	mov	di, ax
-	mov	ax, player_pos.cur.y
+	mov	ax, _player_pos.cur.y
 	add	ax, ((PLAYFIELD_Y - (PLAYER_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	[bp+@@screen_y], ax
-	cmp	player_pos.velocity.x, 0
+	cmp	_player_pos.velocity.x, 0
 	jge	short @@moving_right?
 	mov	@@patnum, 1
 	jmp	short @@invincible?
 
 @@moving_right?:
-	cmp	player_pos.velocity.x, 0
+	cmp	_player_pos.velocity.x, 0
 	jz	short @@no_x_movement
 	mov	@@patnum, 2
 	jmp	short @@invincible?
@@ -96,8 +96,8 @@ player_render	proc near
 
 @@put:
 	push	offset _drawpoint
-	push	player_pos.cur.x
-	push	player_pos.cur.y
+	push	_player_pos.cur.x
+	push	_player_pos.cur.y
 	push	si
 	mov	al, [bp+@@angle]
 	mov	ah, 0

@@ -149,12 +149,12 @@ laser		= word ptr  4
 @@loop:
 	call	vector2_at_opt
 	add	ax, (6 shl 4)
-	sub	ax, player_pos.cur.y
+	sub	ax, _player_pos.cur.y
 	cmp	ax, (12 shl 4)
 	jnb	short @@testrect_move_up
 	mov	ax, ss:[di+Point.x]
 	add	ax, (6 shl 4)
-	sub	ax, player_pos.cur.x
+	sub	ax, _player_pos.cur.x
 	cmp	ax, (12 shl 4)
 	jnb	short @@testrect_move_up
 	mov	_player_is_hit, 1

@@ -33,8 +33,8 @@ player_invalidate	proc near
 
 @@invalidate:
 	push	offset _drawpoint
-	push	player_pos.cur.x
-	push	player_pos.cur.y
+	push	_player_pos.cur.x
+	push	_player_pos.cur.y
 	push	di
 	mov	al, @@angle
 	mov	ah, 0
@@ -57,7 +57,7 @@ player_invalidate	proc near
 
 @@alive:
 	mov	_tile_invalidate_box.x, PLAYER_W
-	call	main_01:tiles_invalidate_around pascal, large [player_pos.prev]
+	call	main_01:tiles_invalidate_around pascal, large [_player_pos.prev]
 	mov	_tile_invalidate_box.x, PLAYER_OPTION_W + PLAYER_W + PLAYER_OPTION_W
 	mov	_tile_invalidate_box.y, PLAYER_OPTION_H
 	call	main_01:tiles_invalidate_around pascal, large [_player_option_pos_prev]

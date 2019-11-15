@@ -20,7 +20,7 @@ extrn _miss_explosion_radius:word
 extrn _drawpoint:Point
 extrn _player_option_pos_prev:Point
 
-extrn player_pos:motion_t
+extrn _player_pos:motion_t
 extrn _playchar_speed_aligned:word
 extrn _playchar_speed_diagonal:word
 
@@ -52,7 +52,7 @@ player_invalidate	proc pascal near
 
 @@invalidate:
 	push	ax
-	call	vector2_at pascal, offset _drawpoint, player_pos.cur.x, player_pos.cur.y, di, ax
+	call	vector2_at pascal, offset _drawpoint, _player_pos.cur.x, _player_pos.cur.y, di, ax
 	MISS_EXPLOSION_CLIP	 @@next
 	call	tiles_invalidate_around pascal, large [_drawpoint]
 
@@ -67,7 +67,7 @@ player_invalidate	proc pascal near
 
 @@alive:
 	mov	_tile_invalidate_box.x, PLAYER_W
-	call	tiles_invalidate_around pascal, large [player_pos.prev]
+	call	tiles_invalidate_around pascal, large [_player_pos.prev]
 	mov	_tile_invalidate_box.x, PLAYER_OPTION_W + PLAYER_W + PLAYER_OPTION_W
 	mov	_tile_invalidate_box.y, PLAYER_OPTION_H
 	call	tiles_invalidate_around pascal, large [_player_option_pos_prev]
@@ -113,7 +113,7 @@ player_move	proc near
 	neg	@@aligned
 
 @@down:
-	mov	player_pos.velocity.y, @@aligned
+	mov	_player_pos.velocity.y, @@aligned
 	jmp	short @@moved
 ; ---------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ player_move	proc near
 	neg	@@aligned
 
 @@right:
-	mov	player_pos.velocity.x, @@aligned
+	mov	_player_pos.velocity.x, @@aligned
 	jmp	short @@moved
 ; ---------------------------------------------------------------------------
 
@@ -137,8 +137,8 @@ player_move	proc near
 	neg	@@diagonal_x
 
 @@down_right:
-	mov	player_pos.velocity.x, @@diagonal_x
-	mov	player_pos.velocity.y, @@diagonal_y
+	mov	_player_pos.velocity.x, @@diagonal_x
+	mov	_player_pos.velocity.y, @@diagonal_y
 	jmp	short @@moved
 ; ---------------------------------------------------------------------------
 

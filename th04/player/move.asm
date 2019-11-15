@@ -29,47 +29,47 @@ player_move	proc near
 ; ---------------------------------------------------------------------------
 
 @@left:
-	mov	player_pos.velocity.x, -playchar_speed_aligned
+	mov	_player_pos.velocity.x, -playchar_speed_aligned
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@down_left:
-	mov	player_pos.velocity.x, -playchar_speed_diagonal
-	mov	player_pos.velocity.y, playchar_speed_diagonal
+	mov	_player_pos.velocity.x, -playchar_speed_diagonal
+	mov	_player_pos.velocity.y, playchar_speed_diagonal
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@down:
-	mov	player_pos.velocity.y, playchar_speed_aligned
+	mov	_player_pos.velocity.y, playchar_speed_aligned
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@down_right:
-	mov	player_pos.velocity.x, playchar_speed_diagonal
-	mov	player_pos.velocity.y, playchar_speed_diagonal
+	mov	_player_pos.velocity.x, playchar_speed_diagonal
+	mov	_player_pos.velocity.y, playchar_speed_diagonal
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@right:
-	mov	player_pos.velocity.x, playchar_speed_aligned
+	mov	_player_pos.velocity.x, playchar_speed_aligned
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@up_right:
-	mov	player_pos.velocity.x, playchar_speed_diagonal
+	mov	_player_pos.velocity.x, playchar_speed_diagonal
 	jmp	short @@up_left_y
 ; ---------------------------------------------------------------------------
 
 @@up:
-	mov	player_pos.velocity.y, -playchar_speed_aligned
+	mov	_player_pos.velocity.y, -playchar_speed_aligned
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 @@up_left:
-	mov	player_pos.velocity.x, -playchar_speed_diagonal
+	mov	_player_pos.velocity.x, -playchar_speed_diagonal
 
 @@up_left_y:
-	mov	player_pos.velocity.y, -playchar_speed_diagonal
+	mov	_player_pos.velocity.y, -playchar_speed_diagonal
 	jmp	short @@ret
 ; ---------------------------------------------------------------------------
 

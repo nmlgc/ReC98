@@ -1,2 +1,2 @@
-public PLAYER_POS
-player_pos	motion_t <?>
+public _PLAYER_POS
+_player_pos	motion_t <?>

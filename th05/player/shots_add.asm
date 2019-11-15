@@ -10,7 +10,7 @@ shots_add	proc near
 	cmp	[bx+shot_t.flag], 0
 	jnz	short @@loop
 	mov	word ptr [bx+shot_t.flag], 1
-	mov	eax, player_pos.cur
+	mov	eax, _player_pos.cur
 	mov	dword ptr [bx+shot_t.pos.cur],	eax
 	mov	dword ptr [bx+shot_t.pos.velocity], (-12 shl 4) shl 16 or (0)
 	mov	word ptr [bx+shot_t.patnum_base], 20
