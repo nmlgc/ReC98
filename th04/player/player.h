@@ -11,3 +11,9 @@
 extern motion_t player_pos;
 
 void pascal near player_pos_update_and_clamp(void);
+
+// Shots
+// -----
+#define SHOT_W 16
+#define SHOT_H 16
+// -----

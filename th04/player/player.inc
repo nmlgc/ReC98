@@ -9,6 +9,9 @@ PLAYER_OPTION_DISTANCE = (PLAYER_W / 2) + (PLAYER_OPTION_W / 2)
 
 ; Shots
 ; -----
+SHOT_W = 16
+SHOT_H = 16
+
 ; Shots are always fired for multiples of this number of frames, even if
 ; INPUT_SHOT is held for a shorter amount of time.
 SHOT_CYCLE_FRAMES = 18

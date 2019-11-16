@@ -10503,15 +10503,14 @@ loc_104D7:
 		cmp	byte ptr [si], 0
 		jz	short loc_10527
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_1
-		cmp	ax, 0FF80h
+		call	_motion_update_1 pascal, ax
+		cmp	ax, (-(SHOT_W / 2) shl 4)
 		jle	short loc_104F8
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + (SHOT_W / 2)) shl 4)
 		jge	short loc_104F8
-		cmp	dx, 0FF80h
+		cmp	dx, (-(SHOT_H / 2) shl 4)
 		jle	short loc_104F8
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + (SHOT_H / 2)) shl 4)
 		jl	short loc_104FD
 
 loc_104F8:
@@ -12710,18 +12709,18 @@ loc_11E5D:
 loc_11E71:
 		cmp	byte_25A27, 1
 		jnz	short loc_11EC1
-		cmp	word_25A28, 0
+		cmp	motion_25A28.cur.x, 0
 		jl	short loc_11EC1
-		cmp	word_25A28, 1800h
+		cmp	motion_25A28.cur.x, 1800h
 		jge	short loc_11EC1
-		cmp	word_25A2A, 0
+		cmp	motion_25A28.cur.y, 0
 		jl	short loc_11EC1
-		cmp	word_25A2A, 1700h
+		cmp	motion_25A28.cur.y, 1700h
 		jge	short loc_11EC1
-		mov	ax, word_25A28
+		mov	ax, motion_25A28.cur.x
 		sar	ax, 4
 		mov	si, ax
-		mov	ax, word_25A2A
+		mov	ax, motion_25A28.cur.y
 		sar	ax, 4
 		add	ax, 0FFF0h
 		mov	di, ax
@@ -13180,7 +13179,7 @@ sub_12247	proc near
 		call	main_01:tiles_invalidate_around pascal, large [_boss_pos.prev]
 		cmp	byte_25A27, 0
 		jz	short loc_1226D
-		call	main_01:tiles_invalidate_around pascal, large [dword_25A2C]
+		call	main_01:tiles_invalidate_around pascal, large [motion_25A28.prev]
 
 loc_1226D:
 		pop	bp
@@ -17929,7 +17928,7 @@ loc_15314:
 		mov	ax, _midboss_pos.cur.x
 		mov	word ptr dword_266E4, ax
 		mov	ax, _midboss_pos.cur.y
-		add	ax, 0FF00h
+		add	ax, (-16 shl 4)
 		mov	word ptr dword_266E4+2,	ax
 		mov	al, byte_255C6
 		mov	ah, 0
@@ -18153,20 +18152,19 @@ var_2		= word ptr -2
 		mov	ax, word_2598A
 		mov	[bp+var_2], ax
 		add	ax, 2
-		push	ax
-		call	_motion_update_2
+		call	_motion_update_2 pascal, ax
 		mov	si, [bp+var_2]
 		cmp	byte ptr [si+20h], 0
 		jz	short loc_15572
-		add	ax, 100h
-		cmp	ax, 1A00h
+		add	ax, (16 shl 4)
+		cmp	ax, ((PLAYFIELD_W + 32) shl 4)
 		jnb	short loc_15586
 
 loc_15572:
 		cmp	byte ptr [si+21h], 0
 		jz	short loc_15582
-		add	dx, 100h
-		cmp	dx, 1900h
+		add	dx, (16 shl 4)
+		cmp	dx, ((PLAYFIELD_H + 32) shl 4)
 		jnb	short loc_15586
 
 loc_15582:
@@ -29966,9 +29964,9 @@ loc_1B9AC:
 		call	snd_se_play pascal, 9
 		mov	byte_25A27, 1
 		mov	ax, _boss_pos.cur.x
-		mov	word_25A28, ax
+		mov	motion_25A28.cur.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word_25A2A, ax
+		mov	motion_25A28.cur.y, ax
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
@@ -29982,10 +29980,10 @@ loc_1B9E1:
 		cmp	word_25A34, 50h	; 'P'
 		jnb	short loc_1BA49
 		mov	ax, _player_pos.cur.y
-		sub	ax, word_25A2A
+		sub	ax, motion_25A28.cur.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word_25A28
+		sub	ax, motion_25A28.cur.x
 		push	ax
 		call	iatan2
 		mov	[bp+var_1], al
@@ -30029,28 +30027,28 @@ loc_1BA49:
 		add	byte ptr word_25A36+1, al
 
 loc_1BA50:
-		cmp	word_25A28, 400h
+		cmp	motion_25A28.cur.x, 400h
 		jg	short loc_1BA60
 		mov	byte_25A26, 3
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA60:
-		cmp	word_25A28, 1400h
+		cmp	motion_25A28.cur.x, 1400h
 		jl	short loc_1BA70
 		mov	byte_25A26, 4
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA70:
-		cmp	word_25A2A, 1300h
+		cmp	motion_25A28.cur.y, 1300h
 		jl	short loc_1BA80
 		mov	byte_25A26, 5
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA80:
-		cmp	word_25A2A, 200h
+		cmp	motion_25A28.cur.y, 200h
 		jg	loc_1BBA4
 		mov	byte_25A26, 6
 		jmp	loc_1BBA4
@@ -30116,10 +30114,10 @@ loc_1BB0C:
 
 loc_1BB14:
 		mov	ax, _boss_pos.cur.y
-		sub	ax, word_25A2A
+		sub	ax, motion_25A28.cur.y
 		push	ax
 		mov	ax, _boss_pos.cur.x
-		sub	ax, word_25A28
+		sub	ax, motion_25A28.cur.x
 		push	ax
 		call	iatan2
 		mov	byte ptr word_25A36, al
@@ -30128,19 +30126,19 @@ loc_1BB14:
 		mov	byte ptr word_25A36+1, al
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-16 shl 4)
-		cmp	ax, word_25A28
+		cmp	ax, motion_25A28.cur.x
 		jge	short loc_1BBA8
 		mov	ax, _boss_pos.cur.x
 		add	ax, (16 shl 4)
-		cmp	ax, word_25A28
+		cmp	ax, motion_25A28.cur.x
 		jle	short loc_1BBA8
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-16 shl 4)
-		cmp	ax, word_25A2A
+		cmp	ax, motion_25A28.cur.y
 		jge	short loc_1BBA8
 		mov	ax, _boss_pos.cur.y
 		add	ax, (16 shl 4)
-		cmp	ax, word_25A2A
+		cmp	ax, motion_25A28.cur.y
 		jle	short loc_1BBA8
 		mov	byte_25A26, 8
 		mov	byte_25A27, 2
@@ -30172,9 +30170,9 @@ loc_1BBA8:
 		cmp	byte_25A27, 1
 		jnz	short locret_1BC2A
 		push	ds
-		push	offset unk_25A30
+		push	offset motion_25A28.velocity.x
 		push	ds
-		push	offset word_25A32
+		push	offset motion_25A28.velocity.y
 		push	word_25A36
 		mov	al, byte ptr word_25A36+1
 		mov	ah, 0
@@ -30182,31 +30180,30 @@ loc_1BBA8:
 		call	vector2
 		mov	word_257E2, 200h
 		mov	word_257E4, 200h
-		mov	ax, word_25A28
+		mov	ax, motion_25A28.cur.x
 		mov	word ptr dword_257DE, ax
-		mov	ax, word_25A2A
+		mov	ax, motion_25A28.cur.y
 		mov	word ptr dword_257DE+2,	ax
 		call	sub_105B9
 		shr	ax, 1
-		mov	dx, word_25A32
+		mov	dx, motion_25A28.velocity.y
 		sub	dx, ax
-		mov	word_25A32, dx
-		push	46E8h
-		call	_motion_update_2
-		mov	ax, word_25A28
-		add	ax, 0FE80h
+		mov	motion_25A28.velocity.y, dx
+		call	_motion_update_2 pascal, offset motion_25A28
+		mov	ax, motion_25A28.cur.x
+		add	ax, (-24 shl 4)
 		cmp	ax, _player_pos.cur.x
 		jge	short locret_1BC2A
-		mov	ax, word_25A28
-		add	ax, 180h
+		mov	ax, motion_25A28.cur.x
+		add	ax, (24 shl 4)
 		cmp	ax, _player_pos.cur.x
 		jle	short locret_1BC2A
-		mov	ax, word_25A2A
-		add	ax, 0FE80h
+		mov	ax, motion_25A28.cur.y
+		add	ax, (-24 shl 4)
 		cmp	ax, _player_pos.cur.y
 		jge	short locret_1BC2A
-		mov	ax, word_25A2A
-		add	ax, 180h
+		mov	ax, motion_25A28.cur.y
+		add	ax, (24 shl 4)
 		cmp	ax, _player_pos.cur.y
 		jle	short locret_1BC2A
 		mov	byte_259A9, 1
@@ -31910,15 +31907,14 @@ loc_1CA17:
 
 loc_1CA27:
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
-		cmp	ax, 0FF80h
+		call	_motion_update_2 pascal, ax
+		cmp	ax, (-8 shl 4)
 		jle	short loc_1CA43
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
 		jge	short loc_1CA43
-		cmp	dx, 0FF80h
+		cmp	dx, (-8 shl 4)
 		jle	short loc_1CA43
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + 8) shl 4)
 		jl	short loc_1CA49
 
 loc_1CA43:
@@ -40623,12 +40619,7 @@ byte_25A24	db ?
 		db ?
 byte_25A26	db ?
 byte_25A27	db ?
-word_25A28	dw ?
-word_25A2A	dw ?
-dword_25A2C	dd ?
-unk_25A30	db    ?	;
-		db    ?	;
-word_25A32	dw ?
+motion_25A28	motion_t <?>
 word_25A34	dw ?
 word_25A36	dw ?
 byte_25A38	db ?

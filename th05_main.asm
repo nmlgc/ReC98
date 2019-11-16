@@ -11431,15 +11431,14 @@ loc_11568:
 		cmp	byte ptr [si], 0
 		jz	short loc_115CE
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_1
-		cmp	ax, 0FF80h
+		call	_motion_update_1 pascal, ax
+		cmp	ax, (-8 shl 4)
 		jle	short loc_11589
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
 		jge	short loc_11589
-		cmp	dx, 0FF80h
+		cmp	dx, (-8 shl 4)
 		jle	short loc_11589
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + 8) shl 4)
 		jl	short loc_1158F
 
 loc_11589:
@@ -12905,15 +12904,14 @@ shots_update_missile_straight:
 
 loc_124FA:
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_1
-		cmp	ax, 0FF80h
+		call	_motion_update_1 pascal, ax
+		cmp	ax, (-(SHOT_W / 2) shl 4)
 		jle	short loc_12516
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + (SHOT_W / 2)) shl 4)
 		jge	short loc_12516
-		cmp	dx, 0FF80h
+		cmp	dx, (-(SHOT_H / 2) shl 4)
 		jle	short loc_12516
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + (SHOT_H / 2)) shl 4)
 		jl	short loc_1251B
 
 loc_12516:
@@ -14233,19 +14231,18 @@ MOTION_UPDATE_DEF 2
 
 sub_152F2	proc near
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		call	_motion_update_2 pascal, ax
 		test	byte ptr [si+1Fh], 1
 		jz	short loc_15307
-		add	ax, 100h
-		cmp	ax, 1A00h
+		add	ax, (16 shl 4)
+		cmp	ax, (416 shl 4)
 		jnb	short loc_15319
 
 loc_15307:
 		test	byte ptr [si+1Fh], 10h
 		jz	short loc_15317
-		add	dx, 100h
-		cmp	dx, 1900h
+		add	dx, (16 shl 4)
+		cmp	dx, (400 shl 4)
 		jnb	short loc_15319
 
 loc_15317:
@@ -19201,15 +19198,14 @@ loc_17D93:
 
 loc_17DA3:
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
-		cmp	ax, 0FF80h
+		call	_motion_update_2 pascal, ax
+		cmp	ax, (-8 shl 4)
 		jle	short loc_17DBF
-		cmp	ax, 1880h
+		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
 		jge	short loc_17DBF
-		cmp	dx, 0FF80h
+		cmp	dx, (-8 shl 4)
 		jle	short loc_17DBF
-		cmp	dx, 1780h
+		cmp	dx, ((PLAYFIELD_H + 8) shl 4)
 		jl	short loc_17DC5
 
 loc_17DBF:
@@ -19226,11 +19222,11 @@ loc_17DC5:
 		jnz	short loc_17E41
 		cmp	byte ptr [si+12h], 0
 		jz	short loc_17DFE
-		add	ax, 40h
-		cmp	ax, 80h
+		add	ax, (4 shl 4)
+		cmp	ax, (8 shl 4)
 		ja	short loc_17E41
-		add	dx, 40h
-		cmp	dx, 80h
+		add	dx, (4 shl 4)
+		cmp	dx, (8 shl 4)
 		ja	short loc_17E41
 		mov	byte ptr [si], 2
 		mov	_player_is_hit, 1
@@ -19238,11 +19234,11 @@ loc_17DC5:
 ; ---------------------------------------------------------------------------
 
 loc_17DFE:
-		add	ax, 100h
-		cmp	ax, 240h
+		add	ax, (16 shl 4)
+		cmp	ax, (36 shl 4)
 		ja	short loc_17E41
-		add	dx, 160h
-		cmp	dx, 2C0h
+		add	dx, (22 shl 4)
+		cmp	dx, (44 shl 4)
 		ja	short loc_17E41
 		push	word ptr [si+2]
 		push	word ptr [si+4]
@@ -25372,15 +25368,14 @@ loc_1B461:
 		jz	loc_1B548
 		inc	word ptr [si+0Eh]
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		call	_motion_update_2 pascal, ax
 		cmp	ax, (-16 shl 4)
 		jle	short loc_1B488
-		cmp	ax, 1900h
+		cmp	ax, ((PLAYFIELD_W + 16) shl 4)
 		jge	short loc_1B488
 		cmp	dx, (-16 shl 4)
 		jle	short loc_1B488
-		cmp	dx, 1800h
+		cmp	dx, ((PLAYFIELD_H + 16) shl 4)
 		jl	short loc_1B48B
 
 loc_1B488:
@@ -27654,15 +27649,14 @@ loc_1C90C:
 
 loc_1C920:
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		call	_motion_update_2 pascal, ax
 		cmp	ax, (-16 shl 4)
 		jle	short loc_1C93D
-		cmp	ax, 1900h
+		cmp	ax, ((PLAYFIELD_W + 16) shl 4)
 		jge	short loc_1C93D
 		cmp	dx, (-16 shl 4)
 		jle	short loc_1C93D
-		cmp	dx, 1800h
+		cmp	dx, ((PLAYFIELD_H + 16) shl 4)
 		jl	short loc_1C93F
 
 loc_1C93D:
@@ -28962,15 +28956,14 @@ loc_1D5C2:
 loc_1D5C5:
 		inc	word ptr [si+0Eh]
 		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		call	_motion_update_2 pascal, ax
 		cmp	ax, (-16 shl 4)
 		jle	short loc_1D5E5
-		cmp	ax, 1900h
+		cmp	ax, ((PLAYFIELD_W + 16) shl 4)
 		jge	short loc_1D5E5
 		cmp	dx, (-16 shl 4)
 		jle	short loc_1D5E5
-		cmp	dx, 1800h
+		cmp	dx, ((PLAYFIELD_H + 16) shl 4)
 		jl	short loc_1D5E7
 
 loc_1D5E5:
