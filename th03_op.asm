@@ -2349,8 +2349,7 @@ var_2		= word ptr -2
 		graph_accesspage 0
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
-		push	2
-		call	egc_shift_left_all
+		call	egc_shift_left_all pascal, 2
 		mov	Palettes+45, 0
 		mov	Palettes+46, 0
 		mov	Palettes+47, 0
@@ -2396,8 +2395,7 @@ loc_AEE1:
 		sub	al, [bp+@@page]
 		mov	[bp+@@page], al
 		graph_accesspage al
-		push	4
-		call	egc_shift_left_all
+		call	egc_shift_left_all pascal, 4
 		sub	si, 2
 
 loc_AF02:

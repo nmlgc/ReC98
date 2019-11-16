@@ -9106,14 +9106,14 @@ loc_102B2:
 loc_102B9:
 		cmp	word_2CE02, 0
 		jge	short loc_102F0
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_2CE02
 		neg	ax
 		push	ax
 		call	egc_shift_left
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_2CE02
 		neg	ax
 		push	ax
@@ -9124,8 +9124,8 @@ loc_102B9:
 loc_102F0:
 		cmp	word_2CE02, 0
 		jle	short loc_10311
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_2CE02
 		call	egc_shift_right
 
@@ -9137,14 +9137,14 @@ loc_10311:
 		jge	short loc_10346
 		cmp	_scroll_line, 0
 		jnz	short loc_1032D
-		push	200010h
-		push	19F017Fh
+		push	(PLAYFIELD_X shl 16) or PLAYFIELD_Y
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		jmp	short loc_10339
 ; ---------------------------------------------------------------------------
 
 loc_1032D:
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 
 loc_10339:
 		mov	ax, word_2CE04
@@ -9159,14 +9159,14 @@ loc_10346:
 		jle	short loc_1037C
 		cmp	_scroll_line, 0
 		jnz	short loc_10362
-		push	200010h
-		push	19F017Fh
+		push	(PLAYFIELD_X shl 16) or PLAYFIELD_Y
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		jmp	short loc_1036E
 ; ---------------------------------------------------------------------------
 
 loc_10362:
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 
 loc_1036E:
 		push	word_2CE04

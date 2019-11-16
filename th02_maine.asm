@@ -923,10 +923,10 @@ sub_9AD4	proc near
 
 loc_9B1B:
 		push	si
-		push	64h ; 'd'
-		lea	ax, [si+13Fh]
+		push	100
+		lea	ax, [si+319]
 		push	ax
-		push	12B0004h
+		push	(299 shl 16) or 4
 		call	egc_shift_left
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		lea	ax, [si+312]
@@ -1089,10 +1089,7 @@ loc_9C91:
 
 loc_9CDE:
 		graph_accesspage 0
-		push	0A00064h
-		push	1DF0129h
-		push	2
-		call	egc_shift_down
+		call	egc_shift_down pascal, (160 shl 16) or 100, (479 shl 16) or 297, 2
 		push	3
 		mov	ax, si
 		add	ax, ax

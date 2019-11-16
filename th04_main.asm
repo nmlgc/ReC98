@@ -3564,8 +3564,8 @@ loc_CD61:
 loc_CD68:
 		cmp	word_255BE, 0
 		jge	short loc_CD88
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_255BE
 		neg	ax
 		push	ax
@@ -3576,8 +3576,8 @@ loc_CD68:
 loc_CD88:
 		cmp	word_255BE, 0
 		jle	short loc_CDA9
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_255BE
 		call	egc_shift_right
 
@@ -3587,8 +3587,8 @@ loc_CDA4:
 loc_CDA9:
 		cmp	word_255C0, 0
 		jge	short loc_CDC9
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_255C0
 		neg	ax
 		push	ax
@@ -3599,8 +3599,8 @@ loc_CDA9:
 loc_CDC9:
 		cmp	word_255C0, 0
 		jle	short loc_CDEA
-		push	200000h
-		push	19F018Fh
+		push	(PLAYFIELD_X shl 16) or 0
+		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_255C0
 		call	egc_shift_down
 
