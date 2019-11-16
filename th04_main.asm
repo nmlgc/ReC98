@@ -10867,46 +10867,7 @@ sub_10713	endp
 
 include th04/player/invalidate.asm
 include th04/player/move.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10950	proc near
-		push	bp
-		mov	bp, sp
-		push	464Eh
-		call	_motion_update_1
-		cmp	ax, 80h
-		jge	short loc_10963
-		mov	ax, 80h
-		jmp	short loc_1096B
-; ---------------------------------------------------------------------------
-
-loc_10963:
-		cmp	ax, 1780h
-		jle	short loc_1096B
-		mov	ax, 1780h
-
-loc_1096B:
-		cmp	dx, 80h
-		jge	short loc_10976
-		mov	dx, 80h
-		jmp	short loc_1097F
-; ---------------------------------------------------------------------------
-
-loc_10976:
-		cmp	dx, 1600h
-		jle	short loc_1097F
-		mov	dx, 1600h
-
-loc_1097F:
-		mov	_player_pos.cur.x, ax
-		mov	_player_pos.cur.y, dx
-		pop	bp
-		retn
-sub_10950	endp
-
+include th04/player/pos_update_and_clamp.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11098,7 +11059,7 @@ loc_10B58:
 		mov	_player_pos.velocity.y, ax
 
 loc_10B75:
-		call	main_01:sub_10950
+		call	main_01:player_pos_update_and_clamp
 		cmp	[bp+var_1], 0
 		jz	short loc_10B82
 		mov	word_2598C, si
@@ -11128,8 +11089,7 @@ loc_10BB0:
 ; ---------------------------------------------------------------------------
 
 loc_10BBD:
-		push	464Eh
-		call	_motion_update_1
+		call	_motion_update_1 pascal, offset _player_pos
 		dec	byte_259A3
 
 loc_10BC7:

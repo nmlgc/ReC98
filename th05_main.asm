@@ -12481,46 +12481,7 @@ loc_11DE4:
 sub_11CBB	endp
 
 include th04/hud/popup.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11FDF	proc near
-		push	bp
-		mov	bp, sp
-		push	offset _player_pos
-		call	_motion_update_1
-		cmp	ax, 80h
-		jge	short loc_11FF2
-		mov	ax, 80h
-		jmp	short loc_11FFA
-; ---------------------------------------------------------------------------
-
-loc_11FF2:
-		cmp	ax, 1780h
-		jle	short loc_11FFA
-		mov	ax, 1780h
-
-loc_11FFA:
-		cmp	dx, 80h
-		jge	short loc_12005
-		mov	dx, 80h
-		jmp	short loc_1200E
-; ---------------------------------------------------------------------------
-
-loc_12005:
-		cmp	dx, 1600h
-		jle	short loc_1200E
-		mov	dx, 1600h
-
-loc_1200E:
-		mov	_player_pos.cur.x, ax
-		mov	_player_pos.cur.y, dx
-		pop	bp
-		retn
-sub_11FDF	endp
-
+include th04/player/pos_update_and_clamp.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12705,7 +12666,7 @@ loc_121CA:
 		mov	_player_pos.velocity.y, ax
 
 loc_121E7:
-		call	sub_11FDF
+		call	player_pos_update_and_clamp
 		cmp	[bp+var_1], 0
 		jz	short loc_121F4
 		mov	word_2CE9E, si
