@@ -3461,11 +3461,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_CosTable8[bx]
-		push	si
-		push	140h
-		call	vector1_at
-		add	sp, 6
+		call	vector1_at c, (RES_X / 2), si, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_6]
@@ -3479,11 +3475,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_SinTable8[bx]
-		push	si
-		push	0C8h ; 'È'
-		call	vector1_at
-		add	sp, 6
+		call	vector1_at c, (RES_Y / 2), si, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax

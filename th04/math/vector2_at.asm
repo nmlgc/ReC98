@@ -1,6 +1,3 @@
-; int pascal far vector2_at(
-; 	Point *ret, int origin_x, int origin_y, int length, int angle
-; );
 public VECTOR2_AT
 vector2_at	proc far
 

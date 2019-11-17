@@ -54,11 +54,6 @@ typedef struct {
 	}
 } motion_t;
 
-// Vectors
-// -------
-int pascal near vector2_near(Point near *ret, unsigned char angle, int r);
-// -------
-
 #include "th03/math/randring.h"
 
 inline char randring_angle(char random_range, char offset)

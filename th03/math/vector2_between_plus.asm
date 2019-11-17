@@ -1,7 +1,3 @@
-; Constructs a vector from (x1|y1) to (x2|y2), and additionally applies
-; [plus_angle] to the resulting angle between the two points.
-
-; int pascal far vector2(int r, int far *dx, int far *dy, char plus_angle, int y2, int x2, int y1, int x1)
 vector2_between_plus	proc far
 
 @@r	= word ptr  6

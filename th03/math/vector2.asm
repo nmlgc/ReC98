@@ -1,4 +1,3 @@
-; int pascal far vector2(int r, unsigned char angle, int far *dx, int far *dy)
 vector2	proc far
 
 @@r		= word ptr  6

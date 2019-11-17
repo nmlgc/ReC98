@@ -465,7 +465,7 @@ loc_1B3D8:
 		push	3000B0h
 		push	0C0h ; '?'
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_166D2
 		push	1300040h
 		push	2E00000h
@@ -602,21 +602,21 @@ sub_1B58F	proc far
 		add	sp, 10h
 		mov	ax, word ptr dword_3982A
 		add	ax, 4
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1B5F1
 		mov	ax, word ptr dword_3982A
 		add	ax, 14h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jg	short loc_1B609
 
 loc_1B5F1:
 		mov	ax, word ptr dword_3985C
 		add	ax, 4
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1B60E
 		mov	ax, word ptr dword_3985C
 		add	ax, 2Ch	; ','
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_1B60E
 
 loc_1B609:
@@ -628,10 +628,10 @@ loc_1B60E:
 		cmp	word_3A6CA, 140h
 		jge	short loc_1B68A
 		push	7018Eh
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	sub_F236
@@ -644,23 +644,23 @@ loc_1B60E:
 		push	ax
 		call	sub_F236
 		add	sp, 10h
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 4
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1B66D
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jg	short loc_1B685
 
 loc_1B66D:
 		mov	ax, word_398C0
 		add	ax, 4
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1B68A
 		mov	ax, word_398C0
 		add	ax, 14h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_1B68A
 
 loc_1B685:
@@ -680,11 +680,11 @@ loc_1B68A:
 		add	sp, 8
 		mov	ax, word_398F2
 		add	ax, 4
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1B6CB
 		mov	ax, word_398F2
 		add	ax, 14h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_1B6CB
 		mov	_player_is_hit, 1
 
@@ -888,10 +888,10 @@ arg_2		= word ptr  6
 		sub	sp, 8
 		fstp	[bp+var_18]
 		fwait
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax		; int
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax		; int
 		push	ds
@@ -989,7 +989,7 @@ loc_1B956:
 		movsx	edx, word ptr [bx+8FAh]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_39DFC
+		add	ax, point_39DFC.x
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5446h], ax
@@ -1002,7 +1002,7 @@ loc_1B956:
 		movsx	edx, word ptr [bx+87Ah]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_39DFE
+		add	ax, point_39DFC.y
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5450h], ax
@@ -1114,7 +1114,7 @@ loc_1BA6C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		push	30000h
 		pushd	0
@@ -1243,10 +1243,10 @@ loc_1BBD3:
 		push	offset unk_37635
 		call	sub_30368
 		push	36001Bh
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		push	ds
@@ -1293,10 +1293,10 @@ loc_1BC8C:
 		push	offset unk_37635
 		call	sub_30368
 		push	36001Bh
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		push	ds
@@ -1376,13 +1376,13 @@ loc_1BDCD:
 		mov	word_39852, 0
 		mov	word_39884, 0
 		push	190h
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	sub_F2F5
@@ -1487,7 +1487,7 @@ loc_1BEC0:
 		add	sp, 18h
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1BF11
 		mov	word_3984E, 4
@@ -1497,7 +1497,7 @@ loc_1BEC0:
 loc_1BF11:
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1BF2A
@@ -1511,7 +1511,7 @@ loc_1BF2A:
 loc_1BF30:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1BF47
 		mov	word_39880, 4
@@ -1521,7 +1521,7 @@ loc_1BF30:
 loc_1BF47:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1BF60
@@ -1557,7 +1557,7 @@ loc_1BF88:
 
 loc_1BFA0:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -1693,7 +1693,7 @@ loc_1C0CA:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		push	30000h
 		pushd	0
@@ -1701,9 +1701,9 @@ loc_1C0CA:
 		push	offset word_398C0
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C11B
 		mov	word_398B2, 4
@@ -1711,9 +1711,9 @@ loc_1C0CA:
 ; ---------------------------------------------------------------------------
 
 loc_1C11B:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C134
@@ -1727,7 +1727,7 @@ loc_1C134:
 loc_1C13A:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C151
 		mov	word_398E4, 4
@@ -1737,7 +1737,7 @@ loc_1C13A:
 loc_1C151:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C16A
@@ -1780,15 +1780,15 @@ loc_1C1AF:
 		shl	dx, 2
 		inc	dx
 		mov	word_39E08, dx
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFF8h
 		mov	word_39E0A, ax
 		mov	ax, 190h
-		sub	ax, word ptr dword_3988E+2
+		sub	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, word ptr dword_3988E
+		sub	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	iatan2
@@ -1938,7 +1938,7 @@ loc_1C345:
 
 loc_1C35D:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -2095,7 +2095,7 @@ loc_1C493:
 		add	sp, 18h
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C4EC
 		mov	word_3984E, 4
@@ -2105,7 +2105,7 @@ loc_1C493:
 loc_1C4EC:
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C505
@@ -2119,7 +2119,7 @@ loc_1C505:
 loc_1C50B:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C522
 		mov	word_39880, 4
@@ -2129,7 +2129,7 @@ loc_1C50B:
 loc_1C522:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C53B
@@ -2279,7 +2279,7 @@ loc_1C69B:
 
 loc_1C6B3:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -2418,7 +2418,7 @@ loc_1C7E4:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		push	30000h
 		pushd	0
@@ -2426,9 +2426,9 @@ loc_1C7E4:
 		push	offset word_398C0
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C835
 		mov	word_398B2, 4
@@ -2436,9 +2436,9 @@ loc_1C7E4:
 ; ---------------------------------------------------------------------------
 
 loc_1C835:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C84E
@@ -2452,7 +2452,7 @@ loc_1C84E:
 loc_1C854:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1C86B
 		mov	word_398E4, 4
@@ -2462,7 +2462,7 @@ loc_1C854:
 loc_1C86B:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1C884
@@ -2503,15 +2503,15 @@ loc_1C8C2:
 		shl	dx, 2
 		inc	dx
 		mov	word_39E08, dx
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFF8h
 		mov	word_39E0A, ax
 		mov	ax, 190h
-		sub	ax, word ptr dword_3988E+2
+		sub	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, word ptr dword_3988E
+		sub	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	iatan2
@@ -2664,7 +2664,7 @@ loc_1CA56:
 
 loc_1CA6E:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -3139,7 +3139,7 @@ loc_1CF75:
 
 loc_1CF8D:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -3256,7 +3256,7 @@ loc_1D08C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		push	30000h
 		pushd	0
@@ -3272,7 +3272,7 @@ loc_1D08C:
 		add	sp, 0Ch
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1D116
 		mov	word_3984E, 4
@@ -3282,7 +3282,7 @@ loc_1D08C:
 loc_1D116:
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1D12F
@@ -3296,7 +3296,7 @@ loc_1D12F:
 loc_1D135:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1D14C
 		mov	word_39880, 4
@@ -3306,7 +3306,7 @@ loc_1D135:
 loc_1D14C:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1D165
@@ -3318,9 +3318,9 @@ loc_1D165:
 		mov	word_39880, 3
 
 loc_1D16B:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1D182
 		mov	word_398B2, 4
@@ -3328,9 +3328,9 @@ loc_1D16B:
 ; ---------------------------------------------------------------------------
 
 loc_1D182:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1D19B
@@ -3344,7 +3344,7 @@ loc_1D19B:
 loc_1D1A1:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1D1B8
 		mov	word_398E4, 4
@@ -3354,7 +3354,7 @@ loc_1D1A1:
 loc_1D1B8:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1D1D1
@@ -3368,7 +3368,7 @@ loc_1D1D1:
 loc_1D1D7:
 		mov	ax, word_398F2
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1D1EE
 		mov	word_39916, 4
@@ -3378,7 +3378,7 @@ loc_1D1D7:
 loc_1D1EE:
 		mov	ax, word_398F2
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1D207
@@ -3399,15 +3399,15 @@ loc_1D21D:
 		cmp	word_39E08, 0
 		jnz	short loc_1D230
 		mov	word_39E08, 1
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		mov	word_39E0A, ax
 
 loc_1D230:
 		push	7
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_398F4
@@ -3424,10 +3424,10 @@ loc_1D230:
 		mov	ax, word ptr dword_3985C
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	sub_114E3
@@ -3492,14 +3492,14 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word ptr dword_3988E+2
+		add	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, word ptr dword_3988E
+		add	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
@@ -3528,13 +3528,13 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word ptr dword_3988E+2
+		add	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
 		cwd
 		idiv	bx
-		add	ax, word ptr dword_3988E
+		add	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	sub_114CA
@@ -3618,14 +3618,14 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word ptr dword_3988E+2
+		add	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, word ptr dword_3988E
+		add	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
@@ -3656,13 +3656,13 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word ptr dword_3988E+2
+		add	ax, point_3988E.y
 		add	ax, 1Ch
 		push	ax
 		mov	ax, word_39E06
 		cwd
 		idiv	bx
-		add	ax, word ptr dword_3988E
+		add	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
 		call	sub_114E3
@@ -3760,14 +3760,14 @@ loc_1D2F6:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, word ptr dword_3988E
+		add	ax, point_3988E.x
 		add	ax, 1Ch
 		mov	word_39DE8, ax
 		mov	ax, word_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word ptr dword_3988E+2
+		add	ax, point_3988E.y
 		add	ax, 1Ch
 		mov	word_39DF2, ax
 		mov	ax, word ptr dword_3985C
@@ -3830,7 +3830,7 @@ loc_1D65D:
 
 loc_1D675:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -3945,10 +3945,10 @@ loc_1D76D:
 		mov	word_39E04, 0
 		mov	word_39E06, 0
 		mov	ax, word_39DF0
-		add	ax, 40h
-		mov	word_39DFE, ax
+		add	ax, 64
+		mov	point_39DFC.y, ax
 		mov	ax, word_39DE6
-		mov	word_39DFC, ax
+		mov	point_39DFC.x, ax
 		mov	word_39DFA, 40h
 		xor	si, si
 		jmp	short loc_1D808
@@ -3963,7 +3963,7 @@ loc_1D7B1:
 		movsx	edx, word ptr [bx+8FAh]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_39DFC
+		add	ax, point_39DFC.x
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5446h], ax
@@ -3975,7 +3975,7 @@ loc_1D7B1:
 		movsx	edx, word ptr [bx+87Ah]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_39DFE
+		add	ax, point_39DFC.y
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5450h], ax
@@ -4046,7 +4046,7 @@ loc_1D852:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D88A
-		sub	word_39DFE, 3
+		sub	point_39DFC.y, 3
 		push	0C0h ; '?'
 		call	sub_1B8DE
 
@@ -4113,7 +4113,7 @@ loc_1D92E:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -4194,7 +4194,7 @@ loc_1DA05:
 		jz	short loc_1DA42
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1DA23
 		mov	word_3984E, 4
@@ -4204,7 +4204,7 @@ loc_1DA05:
 loc_1DA23:
 		mov	ax, word ptr dword_3982A
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1DA3C
@@ -4220,7 +4220,7 @@ loc_1DA42:
 		jz	short loc_1DA7F
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1DA60
 		mov	word_39880, 4
@@ -4230,7 +4230,7 @@ loc_1DA42:
 loc_1DA60:
 		mov	ax, word ptr dword_3985C
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1DA79
@@ -4244,9 +4244,9 @@ loc_1DA79:
 loc_1DA7F:
 		test	byte ptr word_39E14, 4
 		jz	short loc_1DABC
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1DA9D
 		mov	word_398B2, 4
@@ -4254,9 +4254,9 @@ loc_1DA7F:
 ; ---------------------------------------------------------------------------
 
 loc_1DA9D:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1DAB6
@@ -4272,7 +4272,7 @@ loc_1DABC:
 		jz	short loc_1DAF9
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1DADA
 		mov	word_398E4, 4
@@ -4282,7 +4282,7 @@ loc_1DABC:
 loc_1DADA:
 		mov	ax, word_398C0
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1DAF3
@@ -4298,7 +4298,7 @@ loc_1DAF9:
 		jz	short loc_1DB36
 		mov	ax, word_398F2
 		add	ax, 20h	; ' '
-		sub	ax, word_36C26
+		sub	ax, x_36C26
 		cmp	ax, 20h	; ' '
 		jle	short loc_1DB17
 		mov	word_39916, 4
@@ -4308,7 +4308,7 @@ loc_1DAF9:
 loc_1DB17:
 		mov	ax, word_398F2
 		add	ax, 20h	; ' '
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		sub	dx, ax
 		cmp	dx, 20h	; ' '
 		jle	short loc_1DB30
@@ -4339,12 +4339,12 @@ loc_1DB5B:
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5450h]
-		sub	ax, word_39DFE
+		sub	ax, point_39DFC.y
 		push	ax
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5446h]
-		sub	ax, word_39DFC
+		sub	ax, point_39DFC.x
 		push	ax
 		call	iatan2
 		mov	byte ptr word_39E16, al
@@ -4452,17 +4452,17 @@ loc_1DC6D:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DCD0
-		cmp	word_39DFE, 12Ch
+		cmp	point_39DFC.y, 300
 		jge	short loc_1DCAB
 		push	bx
 		push	ds
-		push	offset word_39E00
+		push	offset y_39E00
 		push	ds
-		push	offset word_39E02
-		push	190h
-		push	word_36C26
-		push	word_39DFE
-		push	word_39DFC
+		push	offset x_39E02
+		push	RES_Y
+		push	x_36C26
+		push	point_39DFC.y
+		push	point_39DFC.x
 		call	_vector_between
 		add	sp, 12h
 
@@ -4473,15 +4473,15 @@ loc_1DCAB:
 		idiv	bx
 		add	ax, 2
 		add	word_39E12, ax
-		mov	ax, word_39E00
-		add	word_39DFE, ax
-		mov	ax, word_39E02
-		add	word_39DFC, ax
+		mov	ax, y_39E00
+		add	point_39DFC.y, ax
+		mov	ax, x_39E02
+		add	point_39DFC.x, ax
 		push	word_39E12
 		call	sub_1B8DE
 
 loc_1DCD0:
-		cmp	word_39DFE, 1A4h
+		cmp	point_39DFC.y, 420
 		jl	loc_1DDD4
 		mov	word_3A6CA, 0
 		mov	byte_3A6CE, 0Ah
@@ -4547,13 +4547,13 @@ loc_1DDAD:
 		mov	word_3A6CA, 0
 		push	4
 		push	ds
-		push	offset word_39E00
+		push	offset y_39E00
 		push	ds
-		push	offset word_39E02
-		push	190h
-		push	word_36C26
-		push	word_39DFE
-		push	word_39DFC
+		push	offset x_39E02
+		push	RES_Y
+		push	x_36C26
+		push	point_39DFC.y
+		push	point_39DFC.x
 		call	_vector_between
 		add	sp, 12h
 
@@ -4566,25 +4566,25 @@ loc_1DDD4:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DE37
-		cmp	word_39DFE, 104h
+		cmp	point_39DFC.y, 260
 		jge	short loc_1DE12
 		push	bx
 		push	ds
-		push	offset word_39E00
+		push	offset y_39E00
 		push	ds
-		push	offset word_39E02
-		push	190h
-		push	word_36C26
-		push	word_39DFE
-		push	word_39DFC
+		push	offset x_39E02
+		push	RES_Y
+		push	x_36C26
+		push	point_39DFC.y
+		push	point_39DFC.x
 		call	_vector_between
 		add	sp, 12h
 
 loc_1DE12:
-		mov	ax, word_39E00
-		add	word_39DFE, ax
-		mov	ax, word_39E02
-		add	word_39DFC, ax
+		mov	ax, y_39E00
+		add	point_39DFC.y, ax
+		mov	ax, x_39E02
+		add	point_39DFC.x, ax
 		mov	ax, word_3A6CA
 		mov	bx, 40h
 		cwd
@@ -4595,7 +4595,7 @@ loc_1DE12:
 		call	sub_1B8DE
 
 loc_1DE37:
-		cmp	word_39DFE, 1A4h
+		cmp	point_39DFC.y, 420
 		jl	loc_1DED5
 		mov	word_39E10, 0
 		mov	word_3A6CA, 0
@@ -4655,7 +4655,7 @@ loc_1DEF3:
 
 loc_1DF0B:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
@@ -4837,7 +4837,7 @@ loc_1E07C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -6073,7 +6073,7 @@ loc_1EA31:
 		add	bx, bx
 		lea	ax, [bp+var_8]
 		add	bx, ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, ss:[bx]
 		push	ax
@@ -6252,8 +6252,8 @@ loc_1EB64:
 loc_1EBC7:
 		cmp	word_3A6CA, 0E0h
 		jnz	short loc_1EBD8
-		mov	ax, word_36C26
-		mov	word_39E20, ax
+		mov	ax, x_36C26
+		mov	x_39E20, ax
 		jmp	loc_1EC70
 ; ---------------------------------------------------------------------------
 
@@ -6267,8 +6267,8 @@ loc_1EBD8:
 		push	ss
 		lea	ax, [bp+var_14]
 		push	ax
-		push	180h
-		mov	ax, word_39E20
+		push	384
+		mov	ax, x_39E20
 		add	ax, 8
 		push	ax
 		push	di
@@ -7239,13 +7239,13 @@ loc_1F495:
 		add	bx, bx
 		mov	ax, [bx+5497h]
 		add	ax, 0FFD8h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_1F4ED
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5497h]
 		add	ax, 8
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_1F4ED
 		mov	_player_is_hit, 1
 
@@ -7817,7 +7817,7 @@ loc_1F9DA:
 		push	140007h
 		push	word_39E18
 		push	190h
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Eh
 		push	ax
 		mov	bx, [bp+var_2]
@@ -12620,13 +12620,13 @@ loc_221D4:
 		add	bx, ax
 		mov	ax, es:[bx]
 		sar	ax, 4
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 0FFF8h
 		cmp	ax, dx
 		jle	short loc_2222B
 		mov	ax, es:[bx]
 		sar	ax, 4
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 18h
 		cmp	ax, dx
 		jge	short loc_2222B
@@ -13229,7 +13229,7 @@ sub_22694	proc far
 		push	ds
 		push	offset aBoss1_3_bos ; "boss1_3.bos"
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_1568F
 		mov	word_398B8, 0
 		push	ds
@@ -13783,11 +13783,11 @@ loc_22ABA:
 		call	sub_2281A
 		push	word_3A385
 		push	ds
-		push	offset word_3A38B
+		push	offset point_3A389.y
 		push	ds
-		push	offset word_3A389
-		push	170h
-		push	word_36C26
+		push	offset point_3A389.x
+		push	368
+		push	x_36C26
 		mov	ax, word ptr dword_3982A+2
 		add	ax, 20h	; ' '
 		push	ax
@@ -13798,31 +13798,31 @@ loc_22ABA:
 		add	sp, 1Eh
 
 loc_22AFE:
-		cmp	word_3A389, 3E7h
+		cmp	point_3A389.x, 999
 		jz	short loc_22B31
 		push	10001h
-		push	word_3A38B
-		push	word_3A389
+		push	point_3A389.y
+		push	point_3A389.x
 		call	sub_2290C
 		add	sp, 8
 		cmp	word ptr dword_3982A+2,	130h
 		jle	short loc_22B60
-		mov	word_3A389, 3E7h
-		mov	word_3A38B, 0FFFCh
+		mov	point_3A389.x, 999
+		mov	point_3A389.y, -4
 		jmp	short loc_22B60
 ; ---------------------------------------------------------------------------
 
 loc_22B31:
-		cmp	word_3A38B, 0FFFCh
+		cmp	point_3A389.y, -4
 		jnz	short loc_22B5A
 		push	10001h
-		push	word_3A38B
+		push	point_3A389.y
 		push	0
 		call	sub_2290C
 		add	sp, 8
 		cmp	word ptr dword_3982A+2,	60h
 		jge	short loc_22B60
-		mov	word_3A38B, 0
+		mov	point_3A389.y, 0
 		jmp	short loc_22B60
 ; ---------------------------------------------------------------------------
 
@@ -13833,10 +13833,10 @@ loc_22B60:
 		cmp	word_34A78, 0
 		jnz	short loc_22B86
 		mov	ax, word ptr dword_3982A
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jg	short loc_22B86
 		add	ax, 40h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jl	short loc_22B86
 		cmp	word ptr dword_3982A+2,	110h
 		jl	short loc_22B86
@@ -13887,7 +13887,7 @@ loc_22BA1:
 		push	ax
 		pushd	[dword_3982A]
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		jmp	loc_22C8A
 ; ---------------------------------------------------------------------------
 
@@ -13905,7 +13905,7 @@ loc_22BD5:
 		push	ax
 		pushd	[dword_3982A]
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_2]
@@ -13932,7 +13932,7 @@ loc_22C25:
 loc_22C27:
 		pushd	[dword_3982A]
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_6]
@@ -13951,7 +13951,7 @@ loc_22C3E:
 		push	ax
 		pushd	[dword_3982A]
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_A]
@@ -14013,7 +14013,7 @@ loc_22CC1:
 		push	word_398B2
 		pushd	[dword_3982A]
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_15F4A
 		add	sp, 0Ah
 
@@ -15336,11 +15336,11 @@ arg_2		= word ptr  6
 		jz	short loc_2370F
 		mov	ax, dx
 		add	ax, 0FFF0h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jg	short loc_2370F
 		mov	ax, dx
 		add	ax, [bp+arg_0]
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jl	short loc_2370F
 		mov	_player_is_hit, 1
 		mov	ax, 1
@@ -16204,7 +16204,7 @@ loc_23E9A:
 		add	ax, 0E0h
 		mov	[bp+var_4], ax
 		push	0A4h ; '?'
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FED4h
 		push	ax
 		call	iatan2
@@ -16462,7 +16462,7 @@ sub_240DE	proc near
 		push	80014h
 		push	0A0032h
 		push	190h
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 3Ch	; '<'
 		push	ax
 		push	930133h
@@ -16472,7 +16472,7 @@ sub_240DE	proc near
 		push	80014h
 		push	0A0032h
 		push	190h
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFC4h
 		push	ax
 		push	930150h
@@ -16718,7 +16718,7 @@ sub_24316	proc near
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -16741,7 +16741,7 @@ loc_24378:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -16764,7 +16764,7 @@ loc_243B7:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -16787,7 +16787,7 @@ loc_243F6:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -16810,7 +16810,7 @@ loc_24434:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -16833,7 +16833,7 @@ loc_24472:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, word_36C26
+		add	dx, x_36C26
 		add	dx, 0FFC4h
 		push	dx
 		push	930133h
@@ -17230,7 +17230,7 @@ loc_24857:
 
 loc_24871:
 		push	400170h
-		push	word_36C26
+		push	x_36C26
 		call	sub_197E1
 		push	3
 		push	word_36C2A
@@ -18035,7 +18035,7 @@ sub_24F41	proc far
 		push	ds
 		push	offset aBoss5_3_bos ; "boss5_3.bos"
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_1568F
 		mov	word_398B8, 0
 		push	ds
@@ -18088,7 +18088,7 @@ sub_24FE0	proc far
 		push	300060h
 		push	100h
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_166D2
 		add	sp, 12h
 		mov	word_3983E, 20h	; ' '
@@ -20954,9 +20954,9 @@ loc_26ABF:
 		mov	ax, word ptr dword_3982A
 		add	ax, 28h	; '('
 		mov	[bp+var_6], ax
-		mov	word ptr dword_3988E, ax
+		mov	point_3988E.x, ax
 		mov	ax, [bp+var_4]
-		mov	word ptr dword_3988E+2,	ax
+		mov	point_3988E.y, ax
 		mov	word_398B2, 0
 		push	1
 		call	_graph_accesspage_func
@@ -21046,7 +21046,7 @@ loc_26B8B:
 		mov	bx, 0C0h ; '?'
 		cwd
 		idiv	bx
-		add	dx, word ptr dword_3988E
+		add	dx, point_3988E.x
 		add	dx, 0FFB8h
 		mov	bx, si
 		add	bx, bx
@@ -21055,7 +21055,7 @@ loc_26B8B:
 		mov	bx, 80h	; '?'
 		cwd
 		idiv	bx
-		add	dx, word ptr dword_3988E+2
+		add	dx, point_3988E.y
 		add	dx, 0FFD0h
 		mov	bx, si
 		add	bx, bx
@@ -21121,13 +21121,13 @@ loc_26C3C:
 		cmp	word_3A6CA, 64h	; 'd'
 		jle	loc_26D0B
 		push	200030h
-		pushd	[dword_3988E]
+		pushd	[point_3988E]
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 0FFD8h
 		mov	di, ax
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0FFE0h
 		mov	[bp+var_4], ax
 		or	di, di
@@ -21228,23 +21228,23 @@ loc_26D39:
 		mov	bx, 200h
 		cwd
 		idiv	bx
-		mov	word_3A765, dx
+		mov	x_3A765, dx
 		call	IRand
 		mov	bx, 88h
 		cwd
 		idiv	bx
-		add	dx, 60h
-		mov	word_3A767, dx
-		mov	ax, word ptr dword_3988E
-		sub	ax, word_3A765
+		add	dx, 96
+		mov	y_3A767, dx
+		mov	ax, point_3988E.x
+		sub	ax, x_3A765
 		mov	[bp+var_2], ax
 		cwd
 		xor	ax, dx
 		sub	ax, dx
 		cmp	ax, 80h	; '?'
 		jge	short loc_26D82
-		mov	ax, word ptr dword_3988E+2
-		sub	ax, word_3A767
+		mov	ax, point_3988E.y
+		sub	ax, y_3A767
 		mov	[bp+var_4], ax
 		cwd
 		xor	ax, dx
@@ -21253,16 +21253,9 @@ loc_26D39:
 		jl	short loc_26D39
 
 loc_26D82:
-		push	2
-		pushd	[bp+arg_4]
-		pushd	[bp+arg_0]
-		push	word_3A767
-		push	word_3A765
-		pushd	[dword_3988E]
-		call	_vector_between
-		add	sp, 12h
-		mov	ax, word_3A765
-		sub	ax, word ptr dword_3988E
+		call	_vector_between c, large [point_3988E], x_3A765, y_3A767, large [bp+arg_0], large [bp+arg_4], 2
+		mov	ax, x_3A765
+		sub	ax, point_3988E.x
 		mov	[bp+var_6], ax
 		cwd
 		xor	ax, dx
@@ -21330,10 +21323,10 @@ var_2		= word ptr -2
 		call	sub_253A2
 		push	38h ; '8'
 		push	[bp+var_2]
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -21371,10 +21364,10 @@ loc_26E6A:
 		push	580015h
 
 loc_26E70:
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -21408,10 +21401,10 @@ sub_26E8C	proc far
 		or	dx, dx
 		jnz	short loc_26ECA
 		push	550016h
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -21438,10 +21431,10 @@ loc_26ECA:
 		or	dx, dx
 		jnz	short loc_26F10
 		push	550018h
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -21473,10 +21466,10 @@ sub_26F12	proc far
 		push	2
 		call	IRand
 		push	ax
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 0Ch
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -21886,7 +21879,7 @@ loc_272E1:
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		mov	word_3A76D, ax
 
 loc_27317:
@@ -22032,11 +22025,11 @@ loc_274C6:
 		jnz	short loc_274F2
 		mov	ax, word_3A76D
 		add	ax, 68h	; 'h'
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_274E5
 		mov	ax, word_3A76D
 		add	ax, 0FF80h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jl	short loc_274F2
 
 loc_274E5:
@@ -22128,10 +22121,10 @@ loc_275A1:
 		or	dx, dx
 		jnz	short loc_275D2
 		push	48000Ch
-		mov	ax, word ptr dword_3988E+2
+		mov	ax, point_3988E.y
 		add	ax, 2Ch	; ','
 		push	ax
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 		add	ax, 3Ch	; '<'
 		push	ax
 		push	ds
@@ -22569,7 +22562,7 @@ loc_27A65:
 		push	80014h
 		push	70032h
 		push	190h
-		push	word_36C26
+		push	x_36C26
 		mov	ax, word ptr dword_3982A+2
 		add	ax, 1Ch
 		push	ax
@@ -23428,7 +23421,7 @@ loc_28258:
 
 loc_28279:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 
 loc_2827D:
 		call	sub_16970
@@ -23556,7 +23549,7 @@ loc_283AF:
 
 loc_283D0:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 
 loc_283D4:
 		call	sub_16970
@@ -23653,7 +23646,7 @@ loc_284B3:
 		push	word_3A77D
 		push	0
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_16733
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
@@ -23726,7 +23719,7 @@ loc_2856D:
 ; ---------------------------------------------------------------------------
 
 loc_2857D:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 
 loc_28580:
 		push	ax
@@ -23738,7 +23731,7 @@ loc_28580:
 ; ---------------------------------------------------------------------------
 
 loc_28590:
-		mov	ax, word ptr dword_3988E
+		mov	ax, point_3988E.x
 
 loc_28593:
 		push	ax
@@ -23751,7 +23744,7 @@ loc_28593:
 
 loc_285A1:
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 
 loc_285A5:
 		call	sub_16970
@@ -24735,7 +24728,7 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFF8h
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
@@ -24748,7 +24741,7 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 8
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
@@ -25989,7 +25982,7 @@ loc_298FD:
 loc_29905:
 		call	IRand
 		and	al, 7Fh
-		add	al, 80h	; '?'
+		add	al, 128
 		push	ax
 		push	3
 		push	ss
@@ -26780,16 +26773,16 @@ loc_2A031:
 		call	_mdrv2_se_play
 		mov	word_3AF32, 1540h
 		mov	word_3AF36, 400h
-		push	70h ; 'p'
+		push	112
 		push	ds
-		push	offset word_3AF3A
+		push	offset y_3AF3A
 		push	ds
-		push	offset word_3AF3C
-		push	17Ch
-		mov	ax, word_36C26
-		add	ax, 0Ch
+		push	offset x_3AF3C
+		push	380
+		mov	ax, x_36C26
+		add	ax, 12
 		push	ax
-		push	400154h
+		push	(64 shl 16) or 340
 		call	_vector_between
 		add	sp, 14h
 		mov	word_35E03, 2
@@ -26806,7 +26799,7 @@ loc_2A073:
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		mov	ax, word_3AF3A
+		mov	ax, y_3AF3A
 		add	word_3AF36, ax
 		cmp	word_3AF36, 18C0h
 		jl	short loc_2A0B0
@@ -26817,7 +26810,7 @@ loc_2A073:
 ; ---------------------------------------------------------------------------
 
 loc_2A0B0:
-		mov	ax, word_3AF3C
+		mov	ax, x_3AF3C
 		add	word_3AF32, ax
 		push	7
 		mov	ax, word_3AF36
@@ -26998,12 +26991,12 @@ loc_2A2BA:
 		mov	ax, word_3AF32
 		sar	ax, 4
 		add	ax, 20h	; ' '
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_2A2EB
 		mov	ax, word_3AF32
 		sar	ax, 4
 		add	ax, 0FFC0h
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jge	short loc_2A2EB
 		cmp	word_35E03, 3
 		jl	short loc_2A2EB
@@ -27429,19 +27422,19 @@ loc_2A6B0:
 		jl	loc_2A894
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2A735
-		mov	word_3B037, 1CCh
-		mov	word_3B039, 78h	; 'x'
-		push	10h
+		mov	point_3B037.x, 460
+		mov	point_3B037.y, 120
+		push	16
 		push	ds
-		push	offset word_3B03B
+		push	offset y_3B03B
 		push	ds
-		push	offset word_3B03D
-		push	190h
-		push	word_36C26
-		push	word_3B039
-		push	word_3B037
+		push	offset x_3B03D
+		push	RES_Y
+		push	x_36C26
+		push	point_3B037.y
+		push	point_3B037.x
 		call	_vector_between
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		mov	word_3B03F, ax
 		push	480044h
 		push	40003Ch
@@ -27453,7 +27446,7 @@ loc_2A6B0:
 		push	7
 		push	word_3A780
 		push	190h
-		push	word_36C26
+		push	x_36C26
 		push	7801CCh
 		push	ds
 		push	offset unk_391A0
@@ -27472,19 +27465,19 @@ loc_2A735:
 		jl	loc_2A863
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2A79B
-		mov	word_3B037, 0B4h ; '?'
-		mov	word_3B039, 78h	; 'x'
-		push	10h
+		mov	point_3B037.x, 180
+		mov	point_3B037.y, 120
+		push	16
 		push	ds
-		push	offset word_3B03B
+		push	offset y_3B03B
 		push	ds
-		push	offset word_3B03D
-		push	190h
-		mov	ax, 27Fh
+		push	offset x_3B03D
+		push	RES_Y
+		mov	ax, RES_X - 1
 		sub	ax, word_3B03F
 		push	ax
-		push	word_3B039
-		push	word_3B037
+		push	point_3B037.y
+		push	point_3B037.x
 		call	_vector_between
 		add	sp, 12h
 		push	80032h
@@ -27494,8 +27487,8 @@ loc_2A735:
 		mov	ax, 27Fh
 		sub	ax, word_3B03F
 		push	ax
-		push	word_3B039
-		push	word_3B037
+		push	point_3B037.y
+		push	point_3B037.x
 		push	ds
 		push	offset unk_391E5
 		jmp	short loc_2A724
@@ -27506,26 +27499,26 @@ loc_2A79B:
 		jl	loc_2A863
 		cmp	word_3A6CA, 96h
 		jnz	short loc_2A7FC
-		mov	word_3B037, 260h
-		mov	word_3B039, 0A4h ; '?'
-		push	10h
+		mov	point_3B037.x, 608
+		mov	point_3B037.y, 164
+		push	16
 		push	ds
-		push	offset word_3B03B
+		push	offset y_3B03B
 		push	ds
-		push	offset word_3B03D
-		push	190h
-		push	word_36C26
-		push	word_3B039
-		push	word_3B037
+		push	offset x_3B03D
+		push	RES_Y
+		push	x_36C26
+		push	point_3B037.y
+		push	point_3B037.x
 		call	_vector_between
 		add	sp, 12h
 		push	80032h
 		push	7
 		push	word_3A780
 		push	190h
-		push	word_36C26
-		push	word_3B039
-		push	word_3B037
+		push	x_36C26
+		push	point_3B037.y
+		push	point_3B037.x
 		push	ds
 		push	offset unk_3922A
 		jmp	loc_2A724
@@ -27536,26 +27529,26 @@ loc_2A7FC:
 		jl	short loc_2A863
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_2A85B
-		mov	word_3B037, 18h
-		mov	word_3B039, 0A4h ; '?'
-		push	10h
+		mov	point_3B037.x, 24
+		mov	point_3B037.y, 164
+		push	16
 		push	ds
-		push	offset word_3B03B
+		push	offset y_3B03B
 		push	ds
-		push	offset word_3B03D
-		push	190h
-		push	word_36C26
-		push	word_3B039
-		push	word_3B037
+		push	offset x_3B03D
+		push	RES_Y
+		push	x_36C26
+		push	point_3B037.y
+		push	point_3B037.x
 		call	_vector_between
 		add	sp, 12h
 		push	80032h
 		push	7
 		push	word_3A780
 		push	190h
-		push	word_36C26
-		push	word_3B039
-		push	word_3B037
+		push	x_36C26
+		push	point_3B037.y
+		push	point_3B037.x
 		push	ds
 		push	offset unk_3926F
 		jmp	loc_2A724
@@ -27567,14 +27560,14 @@ loc_2A85B:
 
 loc_2A863:
 		push	1400078h
-		push	word_3B037
-		push	word_3B039
+		push	point_3B037.x
+		push	point_3B037.y
 		push	7
 		call	sub_28948
-		mov	ax, word_3B03D
-		add	word_3B037, ax
-		mov	ax, word_3B03B
-		add	word_3B039, ax
+		mov	ax, x_3B03D
+		add	point_3B037.x, ax
+		mov	ax, y_3B03B
+		add	point_3B037.y, ax
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -27974,8 +27967,8 @@ var_8		= qword	ptr -8
 		add	sp, 0Ch
 		mov	word_3B043, 2
 		mov	word_3B045, 18Fh
-		mov	word_3B047, 2
-		mov	word_3B049, 0FFFEh
+		mov	point_3B047.x, 2
+		mov	point_3B047.y, -2
 		mov	word_3B04B, 3
 		leave
 		retn
@@ -28084,9 +28077,9 @@ loc_2AD01:
 		fstp	[bp+var_8]
 		push	4
 		push	ds
-		push	offset word_3B049
+		push	offset point_3B047.y
 		push	ds
-		push	offset word_3B047
+		push	offset point_3B047.x
 		push	0
 		fld	[bp+var_8]
 		call	ftol@
@@ -28110,13 +28103,13 @@ loc_2AD01:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		mov	ax, word_3B047
+		mov	ax, point_3B047.x
 		mov	[bp+var_A], ax
 		fild	[bp+var_A]
 		sub	sp, 8
 		fstp	[bp+var_22]
 		fwait
-		mov	ax, word_3B049
+		mov	ax, point_3B047.y
 		mov	[bp+var_A], ax
 		fild	[bp+var_A]
 		sub	sp, 8
@@ -28138,14 +28131,14 @@ loc_2AD01:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		mov	ax, word_3B047
+		mov	ax, point_3B047.x
 		neg	ax
 		mov	[bp+var_A], ax
 		fild	[bp+var_A]
 		sub	sp, 8
 		fstp	[bp+var_22]
 		fwait
-		mov	ax, word_3B049
+		mov	ax, point_3B047.y
 		mov	[bp+var_A], ax
 		fild	[bp+var_A]
 		sub	sp, 8
@@ -28518,7 +28511,7 @@ loc_2B125:
 ; ---------------------------------------------------------------------------
 
 loc_2B14D:
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 10h
 		sub	ax, word_3B04D
 		mov	[bp+var_4], ax
@@ -28542,7 +28535,7 @@ loc_2B14D:
 		add	sp, 14h
 
 loc_2B188:
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 10h
 		mov	dx, 27Fh
 		sub	dx, word_3B04D
@@ -29616,17 +29609,17 @@ loc_2BBB2:
 		add	dx, 4B0h
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+69DDh], dx
+		mov	 word_3B37D[bx], dx
 		push	28h ; '('
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6A55h
+		add	ax, offset word_3B3F5
 		push	ax
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6A19h
+		add	ax, offset word_3B3B9
 		push	ax
 		push	40h
 		call	IRand
@@ -29636,14 +29629,14 @@ loc_2BBB2:
 		push	dx
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+69DDh]
+		mov	ax, word_3B37D[bx]
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+69A1h]
+		mov	ax, word_3B341[bx]
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
@@ -30113,7 +30106,7 @@ loc_2C06B:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_2C0BC
 		mov	bx, si
 		add	bx, bx
@@ -30121,7 +30114,7 @@ loc_2C06B:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 18h
 		cmp	ax, dx
 		jge	short loc_2C0BC
@@ -30928,7 +30921,7 @@ loc_2C8AE:
 		jb	short loc_2C868
 		mov	word_36C28, 258h
 		mov	word_36C2A, 118h
-		mov	word_36C26, 130h
+		mov	x_36C26, 304
 		fld	dbl_35FAA
 		fstp	dbl_34A9C
 		fwait
@@ -31697,7 +31690,7 @@ loc_2CF26:
 		push	ds
 		push	offset aBoss8_e2_bos ; "boss8_e2.bos"
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_1568F
 		add	sp, 22h
 		mov	word_398B8, 0
@@ -32095,7 +32088,7 @@ arg_0		= word ptr  6
 		push	si
 		push	800118h
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -32103,7 +32096,7 @@ arg_0		= word ptr  6
 		push	si
 		push	800118h
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		jmp	short loc_2D334
 ; ---------------------------------------------------------------------------
 
@@ -32168,7 +32161,7 @@ arg_0		= word ptr  6
 		push	word_35FEE
 		push	800118h
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -32176,7 +32169,7 @@ arg_0		= word ptr  6
 		push	word_35FEE
 		push	800118h
 		push	ds
-		push	offset dword_3988E
+		push	offset point_3988E
 		jmp	short loc_2D403
 ; ---------------------------------------------------------------------------
 
@@ -32292,19 +32285,19 @@ loc_2D44D:
 		call	sub_2CDD2
 		push	7
 		push	ds
-		push	offset word_3B43E
+		push	offset y_3B43E
 		push	ds
-		push	offset word_3B43A
-		push	1800000h
-		push	0EC013Ch
+		push	offset x_3B43A
+		push	(384 shl 16) or 0
+		push	(236 shl 16) or 316
 		call	_vector_between
 		push	7
 		push	ds
-		push	offset word_3B440
+		push	offset y_3B440
 		push	ds
-		push	offset word_3B43C
-		push	400000h
-		push	0EC013Ch
+		push	offset x_3B43C
+		push	( 64 shl 16) or 0
+		push	(236 shl 16) or 316
 		call	_vector_between
 		add	sp, 30h
 		xor	si, si
@@ -32362,21 +32355,21 @@ loc_2D50D:
 loc_2D52C:
 		cmp	si, 4
 		jl	short loc_2D50D
-		mov	ax, word_3B43A
+		mov	ax, x_3B43A
 		add	word_3B442, ax
-		mov	ax, word_3B43E
+		mov	ax, y_3B43E
 		add	word_3B44A, ax
-		mov	ax, word_3B43A
+		mov	ax, x_3B43A
 		sub	word_3B444, ax
-		mov	ax, word_3B43E
+		mov	ax, y_3B43E
 		add	word_3B44C, ax
-		mov	ax, word_3B43C
+		mov	ax, x_3B43C
 		add	word_3B446, ax
-		mov	ax, word_3B440
+		mov	ax, y_3B440
 		add	word_3B44E, ax
-		mov	ax, word_3B43C
+		mov	ax, x_3B43C
 		sub	word_3B448, ax
-		mov	ax, word_3B440
+		mov	ax, y_3B440
 		add	word_3B450, ax
 		cmp	word_3B442, 0
 		jg	short loc_2D58B
@@ -32801,7 +32794,7 @@ loc_2D935:
 		mov	ax, 180h
 		sub	ax, word_3B46B
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B457
 		push	ax
@@ -32826,9 +32819,9 @@ loc_2D96A:
 		push	[bp+var_5]
 		push	6
 		push	ds
-		push	offset unk_3B483
+		push	offset y_3B483
 		push	ds
-		push	offset unk_3B47F
+		push	offset x_3B47F
 		call	_vector
 		add	sp, 0Ch
 		mov	word_3B461, 3E7h
@@ -32901,7 +32894,7 @@ loc_2DA02:
 		jnz	short loc_2DA39
 		mov	bx, si
 		add	bx, bx
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		mov	[bx+6AEBh], ax
 
 loc_2DA39:
@@ -32941,12 +32934,12 @@ loc_2DA78:
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6AE3h
+		add	ax, offset y_3B483
 		push	ax
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6ADFh
+		add	ax, offset x_3B47F
 		push	ax
 		call	_vector
 		add	sp, 0Ch
@@ -33008,11 +33001,11 @@ loc_2DAF6:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, [bx+6AB7h]
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_2DB6C
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 18h
 		cmp	[bx+6AB7h], ax
 		jge	short loc_2DB6C
@@ -33059,7 +33052,7 @@ loc_2DB95:
 		mov	ax, 180h
 		sub	ax, word_3B475
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B461
 		push	ax
@@ -33084,9 +33077,9 @@ loc_2DBCA:
 		push	[bp+var_5]
 		push	6
 		push	ds
-		push	offset unk_3B485
+		push	offset y_3B485
 		push	ds
-		push	offset unk_3B481
+		push	offset x_3B481
 		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
@@ -33313,13 +33306,13 @@ loc_2DD76:
 		jl	loc_2DF0A
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2DDD9
-		push	10h
+		push	16
 		push	ds
-		push	offset word_3B491
+		push	offset y_3B491
 		push	ds
-		push	offset word_3B48F
-		push	400040h
-		push	0C80122h
+		push	offset x_3B48F
+		push	(64 shl 16) or 64
+		push	(200 shl 16) or 290
 		call	_vector_between
 		mov	word_3B493, 122h
 		mov	word_3B495, 0C8h ; '?'
@@ -33345,9 +33338,9 @@ loc_2DDD9:
 		push	word_3B493
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		mov	ax, word_3B48F
+		mov	ax, x_3B48F
 		add	word_3B493, ax
-		mov	ax, word_3B491
+		mov	ax, y_3B491
 		add	word_3B495, ax
 		cmp	word_3B495, 40h
 		jg	short loc_2DE1F
@@ -33498,7 +33491,7 @@ loc_2DF55:
 		or	dx, dx
 		jnz	short loc_2DFBA
 		push	0B8h ; '?'
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FEEAh
 		push	ax
 		call	iatan2
@@ -33591,7 +33584,7 @@ loc_2E01D:
 		mov	ax, 180h
 		sub	ax, word_3B4C9
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B4A1
 		push	ax
@@ -33616,9 +33609,9 @@ loc_2E052:
 		push	word ptr [bp+var_1]
 		push	6
 		push	ds
-		push	offset unk_3B4F9
+		push	offset y_3B4F9
 		push	ds
-		push	offset unk_3B4F1
+		push	offset x_3B4F1
 		call	_vector
 		add	sp, 0Ch
 		mov	si, 1
@@ -33703,7 +33696,7 @@ loc_2E106:
 		jnz	short loc_2E13D
 		mov	bx, si
 		add	bx, bx
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		mov	[bx+6B69h], ax
 
 loc_2E13D:
@@ -33743,12 +33736,12 @@ loc_2E17C:
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6B59h
+		add	ax, offset y_3B4F9
 		push	ax
 		push	ds
 		mov	ax, si
 		add	ax, ax
-		add	ax, 6B51h
+		add	ax, offset x_3B4F1
 		push	ax
 		call	_vector
 		add	sp, 0Ch
@@ -33810,11 +33803,11 @@ loc_2E1FA:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, [bx+6B01h]
-		cmp	ax, word_36C26
+		cmp	ax, x_36C26
 		jle	short loc_2E270
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 18h
 		cmp	[bx+6B01h], ax
 		jge	short loc_2E270
@@ -33861,7 +33854,7 @@ loc_2E299:
 		mov	ax, 180h
 		sub	ax, word_3B4D3
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B4AB
 		push	ax
@@ -33886,9 +33879,9 @@ loc_2E2CE:
 		push	word ptr [bp+var_1]
 		push	6
 		push	ds
-		push	offset unk_3B4FB
+		push	offset y_3B4FB
 		push	ds
-		push	offset unk_3B4F3
+		push	offset x_3B4F3
 		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
@@ -33916,7 +33909,7 @@ loc_2E311:
 		mov	ax, 180h
 		sub	ax, word_3B4DD
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B4B5
 		push	ax
@@ -33941,9 +33934,9 @@ loc_2E346:
 		push	word ptr [bp+var_1]
 		push	6
 		push	ds
-		push	offset unk_3B4FD
+		push	offset y_3B4FD
 		push	ds
-		push	offset unk_3B4F5
+		push	offset x_3B4F5
 		call	_vector
 		push	0Ch
 		call	_mdrv2_se_play
@@ -33971,7 +33964,7 @@ loc_2E38B:
 		mov	ax, 180h
 		sub	ax, word_3B4E7
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, word_3B4BF
 		push	ax
@@ -33996,9 +33989,9 @@ loc_2E3C0:
 		push	word ptr [bp+var_1]
 		push	6
 		push	ds
-		push	offset unk_3B4FF
+		push	offset y_3B4FF
 		push	ds
-		push	offset unk_3B4F7
+		push	offset x_3B4F7
 		call	_vector
 
 loc_2E3D8:
@@ -35082,14 +35075,14 @@ loc_2EED9:
 loc_2EEFE:
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2EF13
 		mov	ax, 1
 		jmp	short loc_2EF22
 ; ---------------------------------------------------------------------------
 
 loc_2EF13:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2EF1F
 		xor	ax, ax
 		jmp	short loc_2EF22
@@ -35212,14 +35205,14 @@ loc_2F02C:
 		jnz	loc_2F136
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F04C
 		mov	ax, 1
 		jmp	short loc_2F05B
 ; ---------------------------------------------------------------------------
 
 loc_2F04C:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F058
 		xor	ax, ax
 		jmp	short loc_2F05B
@@ -35325,14 +35318,14 @@ loc_2F136:
 		jnz	loc_2F27C
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F156
 		mov	ax, 1
 		jmp	short loc_2F165
 ; ---------------------------------------------------------------------------
 
 loc_2F156:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F162
 		xor	ax, ax
 		jmp	short loc_2F165
@@ -35462,14 +35455,14 @@ loc_2F27C:
 		jnz	loc_2F386
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F29C
 		mov	ax, 1
 		jmp	short loc_2F2AB
 ; ---------------------------------------------------------------------------
 
 loc_2F29C:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F2A8
 		xor	ax, ax
 		jmp	short loc_2F2AB
@@ -35575,14 +35568,14 @@ loc_2F386:
 		jnz	loc_2F4D7
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F3A6
 		mov	ax, 1
 		jmp	short loc_2F3B5
 ; ---------------------------------------------------------------------------
 
 loc_2F3A6:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F3B2
 		xor	ax, ax
 		jmp	short loc_2F3B5
@@ -35711,14 +35704,14 @@ loc_2F4D7:
 		jnz	loc_2F600
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F4F7
 		mov	ax, 1
 		jmp	short loc_2F506
 ; ---------------------------------------------------------------------------
 
 loc_2F4F7:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F503
 		xor	ax, ax
 		jmp	short loc_2F506
@@ -35833,14 +35826,14 @@ loc_2F600:
 		jnz	loc_2FC40
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	word_36C26, 0C6h ; '?'
+		cmp	x_36C26, 198
 		jge	short loc_2F620
 		mov	ax, 1
 		jmp	short loc_2F62F
 ; ---------------------------------------------------------------------------
 
 loc_2F620:
-		cmp	word_36C26, 18Ch
+		cmp	x_36C26, 396
 		jle	short loc_2F62C
 		xor	ax, ax
 		jmp	short loc_2F62F
@@ -37154,7 +37147,7 @@ arg_E		= byte ptr  14h
 		mov	ax, 180h
 		sub	ax, [bp+arg_2]
 		push	ax
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0Ch
 		sub	ax, [bp+arg_0]
 		push	ax
@@ -37232,8 +37225,8 @@ loc_3015A:
 		push	[bp+arg_A]
 		pushd	[bp+arg_4]
 		pushd	[bp+arg_0]
-		push	180h
-		mov	ax, word_36C26
+		push	384
+		mov	ax, x_36C26
 		add	ax, 8
 		push	ax
 		push	[bp+arg_12]
@@ -37458,12 +37451,7 @@ loc_302ED:
 ; ---------------------------------------------------------------------------
 
 loc_3030A:
-		push	word ptr [bp+var_1]
-		push	[bp+arg_A]
-		pushd	[bp+arg_4]
-		pushd	[bp+arg_0]
-		call	_vector
-		add	sp, 0Ch
+		call	_vector c, [bp+arg_0], [bp+arg_4], [bp+arg_A], word ptr [bp+var_1]
 
 loc_30320:
 		les	bx, [bp+arg_C]
@@ -37930,8 +37918,8 @@ loc_306B4:
 		mov	ax, word_3B530
 		add	ax, 10h
 		push	ax
-		push	180h
-		mov	ax, word_36C26
+		push	384
+		mov	ax, x_36C26
 		add	ax, 8
 		push	ax
 		mov	ax, [bx+4]
@@ -38045,8 +38033,8 @@ loc_30809:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		push	180h
-		mov	ax, word_36C26
+		push	384
+		mov	ax, x_36C26
 		add	ax, 8
 		push	ax
 		mov	ax, [bx+4]
@@ -38359,13 +38347,13 @@ loc_30A47:
 loc_30A5E:
 		cmp	byte_34A57, 1
 		jnz	loc_30AF6
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFF8h
 		mov	dx, di
 		sub	dx, ax
 		cmp	dx, 30h	; '0'
 		jge	short loc_30AA0
-		mov	ax, word_36C26
+		mov	ax, x_36C26
 		add	ax, 0FFF8h
 		mov	dx, di
 		sub	dx, ax
@@ -38392,7 +38380,7 @@ loc_30AA2:
 		mov	bx, word_3B530
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 0Ch
 		cmp	ax, dx
 		jg	short loc_30AC2
@@ -38927,13 +38915,13 @@ sub_30F06	proc far
 		mov	bx, word_3B530
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 4
 		cmp	ax, dx
 		jl	short loc_30F6C
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, word_36C26
+		mov	dx, x_36C26
 		add	dx, 14h
 		cmp	ax, dx
 		jg	short loc_30F6C

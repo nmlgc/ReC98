@@ -5604,9 +5604,9 @@ loc_DEA3:
 		push	ax
 		push	7
 		call	main_01:randring1_next16_and
-		add	al, 0BCh
+		add	al, 188
 		push	ax
-		push	100h
+		push	(16 shl 4)
 		call	vector2
 		mov	byte ptr [si+10h], 6
 
@@ -5674,9 +5674,9 @@ loc_DF23:
 		push	ax
 		push	7
 		call	main_01:randring1_next16_and
-		add	al, 0BCh
+		add	al, 188
 		push	ax
-		push	100h
+		push	(16 shl 4)
 		call	vector2
 		mov	word ptr [si+0Eh], 24h ; '$'
 		mov	byte ptr [si+10h], 5
@@ -9983,8 +9983,8 @@ loc_10096:
 		shl	al, 2
 		mov	[bp+var_1], al
 		push	offset _drawpoint
-		push	0C000B80h
-		push	800h
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or ((PLAYFIELD_H / 2) shl 4)
+		push	(128 shl 4)
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -9995,8 +9995,8 @@ loc_10096:
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
 		push	offset _drawpoint
-		push	0C000B80h
-		push	800h
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or ((PLAYFIELD_H / 2) shl 4)
+		push	(128 shl 4)
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -12300,17 +12300,17 @@ loc_11AC4:
 		push	_SinTable8[bx]
 		call	vector1_at
 		mov	di, ax
-		cmp	di, 0FF00h
+		cmp	di, (-16 shl 4)
 		jle	short loc_11B2F
-		cmp	di, 1800h
+		cmp	di, ((PLAYFIELD_H + 16) shl 4)
 		jge	short loc_11B2F
-		cmp	si, 0FF00h
+		cmp	si, (-16 shl 4)
 		jle	short loc_11B2F
-		cmp	si, 1900h
+		cmp	si, ((PLAYFIELD_W + 16) shl 4)
 		jge	short loc_11B2F
 		mov	ax, si
 		sar	ax, 4
-		add	ax, 10h
+		add	ax,  (PLAYFIELD_X - 16)
 		mov	si, ax
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, di
 		mov	di, ax
@@ -15648,9 +15648,9 @@ loc_13BE9:
 		push	si
 		call	sub_13BB3
 		mov	ax, [si+2]
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, [si+4]
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	fp_2D000
 
 loc_13C25:
@@ -16087,10 +16087,10 @@ loc_1422D:
 		mov	si, ax
 		mov	byte_266E2, 1
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-1 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	sub_13FB2
 		or	si, si
 		jz	short loc_142E4
@@ -16349,10 +16349,10 @@ loc_144F1:
 		inc	_midboss_phase_frame
 		mov	byte_266E2, 1
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, byte_25598
 		mov	ah, 0
 		mov	[bp+var_4], ax
@@ -16439,13 +16439,7 @@ loc_145A5:
 		mov	[bp+var_1], al
 
 loc_145C9:
-		push	ds
-		push	offset _midboss_pos.velocity.x
-		push	ds
-		push	offset _midboss_pos.velocity.y
-		push	word ptr [bp+var_1]
-		push	20h ; ' '
-		call	vector2
+		call	vector2 pascal, ds, offset _midboss_pos.velocity.x, ds, offset _midboss_pos.velocity.y, word ptr [bp+var_1], (2 shl 4)
 		inc	byte_2559A
 		mov	_midboss_sprite, 1
 		mov	word_2A8D0, 8
@@ -16831,9 +16825,9 @@ midbossx_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 1
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -17312,10 +17306,10 @@ loc_14D5D:
 		inc	_midboss_phase_frame
 		mov	byte_266E2, 1
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _midboss_pos.cur.y
-		add	ax, 0FF00h
-		mov	word ptr dword_266E4+2,	ax
+		add	ax, (-16 shl 4)
+		mov	point_266E4.y, ax
 		mov	al, byte_255B2
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -17926,10 +17920,10 @@ loc_15314:
 		inc	_midboss_phase_frame
 		mov	byte_266E2, 1
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, byte_255C6
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -18490,10 +18484,10 @@ loc_157EB:
 		mov	byte_266E3, al
 		mov	ax, [si+2Eh]
 		add	ax, [si+2]
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, [si+30h]
 		add	ax, [si+4]
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, [si+36h]
 		mov	byte_266EC, al
 		mov	al, [si+37h]
@@ -19465,9 +19459,9 @@ loc_1607E:
 		cmp	dx, 15
 		jnz	short loc_160A3
 		mov	ax, word_25662
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 
@@ -19615,9 +19609,9 @@ loc_161F6:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_161FA:
-		mov	ax, word ptr dword_266E4 ; jumptable 000161F6 case 1
+		mov	ax, point_266E4.x ; jumptable 000161F6 case 1
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word ptr dword_2A8C6+2,	ax
 		mov	word_2A8D0, 20h	; ' '
 		mov	byte_2A8D2, 0Bh
@@ -19635,9 +19629,7 @@ loc_16221:
 ; ---------------------------------------------------------------------------
 
 loc_16228:
-		push	word ptr dword_266E4 ; jumptable 000161F6 case 17
-		push	word ptr dword_266E4+2
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, point_266E4.x, point_266E4.y
 		mov	_circles_color, 0Fh
 		mov	byte_266E2, 2
 		mov	byte_266EE, 10h
@@ -19733,10 +19725,10 @@ sub_1630D	proc near
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_16353
 		mov	ax, _player_pos.cur.y
-		sub	ax, word ptr dword_266E4+2
+		sub	ax, point_266E4.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word ptr dword_266E4
+		sub	ax, point_266E4.x
 		push	ax
 		call	iatan2
 		mov	byte_266ED, al
@@ -19815,17 +19807,15 @@ loc_163B5:
 
 loc_163C6:
 		mov	_circles_color, 0Fh	; jumptable 000163A9 cases 56,64,72,80
-		push	word ptr dword_266E4
-		push	word ptr dword_266E4+2
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, point_266E4.x, point_266E4.y
 
 loc_163D8:
 		mov	al, byte_2A8D3	; jumptable 000163A9 case 40
 		neg	al
 		mov	byte_2A8D3, al
-		mov	ax, word ptr dword_266E4
+		mov	ax, point_266E4.x
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word ptr dword_2A8C6+2,	ax
 		mov	word_2A8D0, 8
 		mov	byte_2A8D2, 9
@@ -19842,9 +19832,9 @@ loc_16402:
 ; ---------------------------------------------------------------------------
 
 loc_16409:
-		mov	ax, word ptr dword_266E4 ; jumptable 000163A9 case 96
+		mov	ax, point_266E4.x ; jumptable 000163A9 case 96
 		mov	word_2561A, ax
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word_2561C, ax
 		mov	al, byte_2D01E
 		mov	ah, 0
@@ -19956,9 +19946,7 @@ sub_1653D	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1656A
-		push	word ptr dword_266E4
-		push	word ptr dword_266E4+2
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, point_266E4.x, point_266E4.y
 		mov	_circles_color, 0Fh
 		mov	_boss_angle, 16
 		mov	byte_2D02D, 10h
@@ -19983,17 +19971,17 @@ loc_1656A:
 		mov	byte_266E3, 39h	; '9'
 		mov	byte_266EE, 28h	; '('
 		call	fp_2D004
-		add	word ptr dword_266E4, 200h
+		add	point_266E4.x, (32 shl 4)
 		mov	al, _boss_angle
 		mov	byte_266ED, al
 		call	fp_2D002
-		sub	word ptr dword_266E4, 400h
-		mov	al, 80h
+		sub	point_266E4.x, (64 shl 4)
+		mov	al, 128
 		sub	al, _boss_angle
 		mov	byte_266ED, al
 		call	fp_2D002
 		mov	al, _boss_angle
-		add	al, 0F0h
+		add	al, -16
 		mov	_boss_angle, al
 		mov	byte_266E2, 1
 		mov	byte_266EF, 3
@@ -20002,8 +19990,8 @@ loc_1656A:
 		mov	al, byte_2D02D
 		mov	byte_266ED, al
 		call	fp_2D002
-		add	word ptr dword_266E4, 400h
-		mov	al, 80h
+		add	point_266E4.x, (64 shl 4)
+		mov	al, 128
 		sub	al, byte_2D02D
 		mov	byte_266ED, al
 		call	fp_2D002
@@ -20029,10 +20017,10 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (16 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -21006,7 +20994,7 @@ loc_16E2E:
 		mov	al, byte_266ED
 		add	al, 0F8h
 		mov	byte_266ED, al
-		sub	word ptr dword_266E4, 60h
+		sub	point_266E4.x, (6 shl 4)
 		call	fp_2D000
 		push	3
 		call	randring2_next16_and
@@ -21016,7 +21004,7 @@ loc_16E2E:
 		call	randring2_next16_and
 		add	al, 20h	; ' '
 		mov	byte_266EE, al
-		add	word ptr dword_266E4, 0C0h
+		add	point_266E4.x, (12 shl 4)
 		call	fp_2D000
 
 loc_16E84:
@@ -21140,7 +21128,7 @@ loc_16F44:
 		add	al, [bp+var_1]
 		mov	byte_266ED, al
 		mov	eax, [si+2]
-		mov	dword_266E4, eax
+		mov	point_266E4, eax
 		call	fp_2D000
 		pop	si
 		leave
@@ -21269,7 +21257,7 @@ arg_0		= word ptr  4
 		push	si
 		mov	si, [bp+4]
 		mov	eax, [si+2]
-		mov	dword_266E4, eax
+		mov	point_266E4, eax
 		call	fp_2D000
 		pop	si
 		pop	bp
@@ -21551,7 +21539,7 @@ loc_172D0:
 
 loc_172D5:
 		mov	byte_266ED, al
-		sub	word ptr dword_266E4, 60h
+		sub	point_266E4.x, (6 shl 4)
 		call	fp_2D000
 		push	3
 		call	randring2_next16_and
@@ -21561,7 +21549,7 @@ loc_172D5:
 		call	randring2_next16_and
 		add	al, 10h
 		mov	byte_266EE, al
-		add	word ptr dword_266E4, 0C0h
+		add	point_266E4.x, (12 shl 4)
 		call	fp_2D000
 		cmp	byte_266ED, 0
 		jz	short loc_1730D
@@ -21688,13 +21676,13 @@ loc_17409:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-52 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-40 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		push	60h
 		call	randring2_next16_mod
 		add	ax, 10h
@@ -22013,10 +22001,10 @@ loc_17707:
 		jg	loc_17794
 		cmp	frame_mod4, 0
 		jnz	locret_17811
-		mov	word ptr dword_266E4, 0
+		mov	point_266E4.x, 0
 		push	0C00h
 		call	randring2_next16_mod
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		push	1Fh
 		call	randring2_next16_and
 		add	al, 10h
@@ -22027,10 +22015,10 @@ loc_17707:
 		sub	dl, al
 		mov	byte_266ED, dl
 		call	fp_2D002
-		mov	word ptr dword_266E4, 1800h
+		mov	point_266E4.x, (384 shl 4)
 		push	0C00h
 		call	randring2_next16_mod
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		push	1Fh
 		call	randring2_next16_and
 		add	al, 10h
@@ -22042,8 +22030,8 @@ loc_17707:
 		call	fp_2D002
 		push	1800h
 		call	randring2_next16_mod
-		mov	word ptr dword_266E4, ax
-		mov	word ptr dword_266E4+2,	0
+		mov	point_266E4.x, ax
+		mov	point_266E4.y, 0
 		push	1Fh
 		call	randring2_next16_and
 		add	al, 10h
@@ -22342,10 +22330,10 @@ var_2		= word ptr -2
 		enter	4, 0
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-20 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -22986,9 +22974,9 @@ loc_17FD1:
 		push	si
 		call	sub_17E3E
 		mov	ax, [si+2]
-		add	word ptr dword_266E4, ax
+		add	point_266E4.x, ax
 		mov	ax, [si+4]
-		add	word ptr dword_266E4+2,	ax
+		add	point_266E4.y, ax
 		call	fp_2D004
 		call	fp_2D000
 
@@ -23695,13 +23683,13 @@ loc_184D9:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266ED, 0
 		mov	byte_2CFF8, 40h
 		call	fp_2D002
@@ -23770,13 +23758,13 @@ loc_18580:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	200h
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	randring2_next16
 		mov	byte_266ED, al
 		call	fp_2D000
@@ -23955,10 +23943,10 @@ loc_186FB:
 
 loc_18706:
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 1
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -24384,10 +24372,10 @@ loc_18A94:
 loc_18AC4:
 		mov	ax, [si+2]
 		sub	ax, [si+0Ah]
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, [si+4]
 		sub	ax, [si+0Ch]
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266F2, 82h
 		mov	byte_2CFF7, 1
 		mov	[bp+var_4], 0
@@ -24408,9 +24396,7 @@ loc_18AFA:
 		inc	byte ptr [si]
 		call	snd_se_play pascal, 6
 		mov	_circles_color, GC_RG
-		push	word ptr dword_266E4
-		push	word ptr dword_266E4+2
-		call	circles_add_growing
+		call	circles_add_growing pascal, point_266E4.x, point_266E4.y
 		jmp	short loc_18B4D
 ; ---------------------------------------------------------------------------
 
@@ -24466,7 +24452,7 @@ sub_18A79	endp
 sub_18B68	proc near
 		push	bp
 		mov	bp, sp
-		push	0C000400h
+		push	((192 shl 4) shl 16) or (64 shl 4)
 		mov	al, _boss_angle
 		mov	ah, 0
 		add	ax, ax
@@ -24474,7 +24460,7 @@ sub_18B68	proc near
 		push	_CosTable8[bx]
 		call	vector1_at
 		mov	_boss_pos.cur.x, ax
-		push	5B00140h
+		push	((91 shl 4) shl 16) or (20 shl 4)
 		mov	al, _boss_angle
 		mov	ah, 0
 		add	ax, ax
@@ -24495,7 +24481,7 @@ sub_18B68	endp
 sub_18BA7	proc near
 		push	bp
 		mov	bp, sp
-		push	0C000400h
+		push	((192 shl 4) shl 16) or (64 shl 4)
 		mov	al, _boss_angle
 		mov	ah, 0
 		add	ax, ax
@@ -24503,7 +24489,7 @@ sub_18BA7	proc near
 		push	_CosTable8[bx]
 		call	vector1_at
 		mov	_boss_pos.cur.x, ax
-		push	5B00140h
+		push	((91 shl 4) shl 16) or (20 shl 4)
 		mov	al, _boss_angle
 		mov	ah, 0
 		add	ax, ax
@@ -24753,7 +24739,7 @@ loc_18DCF:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	eax, _boss_pos.cur
-		mov	dword_266E4, eax
+		mov	point_266E4, eax
 		mov	byte_266EC, 2Ch	; ','
 		mov	byte_266EF, 10h
 		mov	byte_266F2, 81h
@@ -25100,14 +25086,14 @@ loc_190DE:
 		mov	byte_266EC, 0
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	ax, _boss_pos.cur.x
 		add	ax, (12 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	al, byte_2D02D
 		mov	byte_266ED, al
 		call	sub_1CFA2
-		sub	word ptr dword_266E4, 180h
+		sub	point_266E4.x, (24 shl 4)
 		mov	al, byte_2D02C
 		mov	byte_266ED, al
 		call	sub_1CFA2
@@ -25264,9 +25250,9 @@ loc_19279:
 		ja	short loc_19317
 		mov	byte_266E2, 1
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 16h
@@ -25388,9 +25374,9 @@ loc_19387:
 		ja	short loc_19425
 		mov	byte_266E2, 1
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 16h
@@ -25759,9 +25745,9 @@ loc_196C2:
 		jnz	short loc_19712
 		mov	byte_266E2, 1
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 2
 		mov	al, _boss_angle
@@ -25816,9 +25802,9 @@ loc_19751:
 		mov	byte_266E2, 4
 		mov	byte_266E3, 34h	; '4'
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 2Dh	; '-'
 		mov	byte_266EF, 3
 		mov	byte_266F0, 0Ch
@@ -25863,9 +25849,9 @@ sub_197BB	proc near
 		mov	byte_266E2, 2
 		mov	byte_266E3, 34h	; '4'
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 2Ch	; ','
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 20h	; ' '
@@ -25900,9 +25886,9 @@ sub_19814	proc near
 		mov	byte_266E2, 1
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-32 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 8
 		mov	byte_266EE, 1Eh
@@ -25911,7 +25897,7 @@ sub_19814	proc near
 		mov	byte_266ED, al
 		call	fp_2D004
 		call	fp_2D000
-		add	word ptr dword_266E4, 400h
+		add	point_266E4.x, (64 shl 4)
 		call	fp_2D000
 		call	snd_se_play pascal, 9
 
@@ -25994,9 +25980,9 @@ loc_19909:
 		mov	byte_266E3, 34h	; '4'
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-32 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 1Bh
 		mov	byte_266EF, 1
 		cmp	_boss_hp, 700
@@ -26029,7 +26015,7 @@ loc_19956:
 		mov	byte_266ED, al
 		call	fp_2D004
 		call	fp_2D000
-		add	word ptr dword_266E4, 400h
+		add	point_266E4.x, (64 shl 4)
 		push	1
 		call	randring2_next16_and
 		or	ax, ax
@@ -26070,9 +26056,9 @@ sub_1998B	proc near
 		jnz	short loc_199BC
 
 loc_199AD:
-		mov	ax, word ptr dword_266E4
+		mov	ax, point_266E4.x
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word ptr dword_2A8C6+2,	ax
 		call	sub_13B21
 
@@ -26087,9 +26073,7 @@ loc_199BC:
 		jnz	short loc_199ED
 
 loc_199DB:
-		push	word ptr dword_266E4
-		push	word ptr dword_266E4+2
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, point_266E4.x, point_266E4.y
 		mov	_circles_color, 0Fh
 
 loc_199ED:
@@ -26256,9 +26240,9 @@ loc_19B88:
 		mov	_boss_sprite, al
 		mov	byte_266E2, 1
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 40h
@@ -26395,10 +26379,10 @@ loc_19CC8:
 loc_19CF0:
 		mov	ax, _boss_pos.cur.x
 		add	ax, (8 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-16 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, _boss_mode
 		mov	ah, 0
 		or	ax, ax
@@ -26411,18 +26395,16 @@ loc_19CF0:
 loc_19D15:
 		cmp	_boss_phase_frame, 96
 		jnz	short loc_19D2B
-		mov	ax, word ptr dword_266E4
+		mov	ax, point_266E4.x
 		mov	word ptr dword_2A8C6, ax
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word ptr dword_2A8C6+2,	ax
 		call	sub_13B21
 
 loc_19D2B:
 		cmp	_boss_phase_frame, 112
 		jnz	short loc_19D44
-		push	word ptr dword_266E4
-		push	word ptr dword_266E4+2
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, point_266E4.x, point_266E4.y
 		mov	_circles_color, 0Fh
 
 loc_19D44:
@@ -27126,10 +27108,10 @@ loc_1A2BE:
 		test	byte ptr [si+0Eh], 1Fh
 		jnz	short loc_1A309
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		add	ax, 200h
-		mov	word ptr dword_266E4+2,	ax
+		add	ax, (32 shl 4)
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Ch	; '<'
 		mov	byte_266EC, 2Ch	; ','
@@ -27159,7 +27141,7 @@ loc_1A32D:
 		mov	al, [bp+var_5]
 		add	al, [bp+var_6]
 		mov	byte_266ED, al
-		push	53A4h
+		push	offset point_266E4
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	[bp+var_2]
@@ -27167,14 +27149,14 @@ loc_1A32D:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		sub	word ptr dword_266E4, 20h ; ' '
-		sub	word ptr dword_266E4+2,	10h
-		mov	ax, 10h
-		imul	word ptr dword_266E4
-		mov	word ptr dword_266E4, ax
-		mov	ax, 10h
-		imul	word ptr dword_266E4+2
-		mov	word ptr dword_266E4+2,	ax
+		sub	point_266E4.x, (2 shl 4)
+		sub	point_266E4.y, (1 shl 4)
+		mov	ax, (1 shl 4)
+		imul	point_266E4.x
+		mov	point_266E4.x, ax
+		mov	ax, (1 shl 4)
+		imul	point_266E4.y
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 2Fh	; '/'
 		mov	byte_266EF, 8
 		mov	byte_266EE, 10h
@@ -27380,7 +27362,7 @@ loc_1A4D4:
 		mov	_boss_pos.velocity.x, ax
 
 loc_1A4DE:
-		push	5000300h
+		push	((80 shl 4) shl 16) or (48 shl 4)
 		mov	al, _boss_angle
 		mov	ah, 0
 		add	ax, ax
@@ -28417,10 +28399,10 @@ loc_1AB86:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Bh	; ';'
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-4 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266ED, 0
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266F2, 81h
@@ -28481,7 +28463,7 @@ loc_1ABFF:
 		mov	byte_266EE, 28h	; '('
 		mov	al, [bp+var_1]
 		mov	byte_266ED, al
-		push	53A4h
+		push	offset point_266E4
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(34 shl 4)
@@ -28492,7 +28474,7 @@ loc_1ABFF:
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		mov	[bp+var_1], al
-		push	53A4h
+		push	offset point_266E4
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(34 shl 4)
@@ -28570,7 +28552,7 @@ loc_1ACD9:
 		mov	byte_266E3, 3Ch	; '<'
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-4 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 1Ch
 		mov	byte_266EF, 4
 		mov	byte_266F2, 88h
@@ -28580,7 +28562,7 @@ loc_1ACD9:
 		mov	byte_266EE, al
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-20 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	randring2_next16
 		mov	byte_266ED, al
 		mov	byte_2CFF7, 1
@@ -28588,7 +28570,7 @@ loc_1ACD9:
 		call	sub_1CFB5
 		call	randring2_next16
 		mov	byte_266ED, al
-		add	word ptr dword_266E4, 2C0h
+		add	point_266E4.x, (44 shl 4)
 		call	sub_1CFB5
 		call	snd_se_play pascal, 9
 		jmp	short loc_1AD6A
@@ -28676,9 +28658,9 @@ sub_1ADDB	proc near
 		cmp	frame_mod16, 0
 		jnz	loc_1AE8D
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		cmp	_boss_phase, 6
 		jnz	short loc_1AE40
 		mov	byte_266E2, 2
@@ -28762,9 +28744,9 @@ loc_1AEB7:
 		cmp	frame_mod8, 0
 		jnz	loc_1AF59
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 4
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EC, 2Dh	; '-'
@@ -28776,7 +28758,7 @@ loc_1AEB7:
 		mov	byte_266ED, 20h	; ' '
 		call	fp_2D000
 		mov	ax, word_25A0C
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	fp_2D000
 		mov	byte_266ED, 60h
 		call	fp_2D000
@@ -28868,7 +28850,7 @@ loc_1AFD0:
 		jnz	loc_1B094
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 2
 		mov	byte_266E3, 5Ch
 		mov	byte_266EC, 2Dh	; '-'
@@ -28888,7 +28870,7 @@ loc_1AFD0:
 		add	al, dl
 		mov	byte_266ED, al
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	fp_2D000
 		mov	al, byte_2D02D
 		mov	ah, 0
@@ -28900,7 +28882,7 @@ loc_1AFD0:
 		add	al, dl
 		mov	byte_266ED, al
 		mov	ax, word_25A0C
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	fp_2D000
 		call	snd_se_play pascal, 9
 		mov	al, byte_2D02D
@@ -29022,9 +29004,9 @@ loc_1B13C:
 		mov	byte_266E2, 4
 		mov	byte_266E3, 3Dh	; '='
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 8
 		mov	byte_266EE, 90h
@@ -29190,9 +29172,9 @@ var_1		= byte ptr -1
 		test	[bp+var_1], 3
 		jnz	short loc_1B2ED
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, 3
 		sub	al, byte_266E2
 		mov	byte_266E2, al
@@ -29281,12 +29263,12 @@ loc_1B382:
 loc_1B391:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	fp_2D000
 		mov	ax, word_25A0C
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 		jmp	short loc_1B3DD
@@ -30914,23 +30896,23 @@ sub_1C1CF	proc near
 		mov	byte_266EF, 10h
 		call	randring2_next16
 		mov	byte_266ED, al
-		sub	word ptr dword_266E4, 200h
+		sub	point_266E4.x, (32 shl 4)
 		call	fp_2D004
 		call	fp_2D000
 		call	randring2_next16
 		mov	byte_266ED, al
-		add	word ptr dword_266E4, 400h
+		add	point_266E4.x, (64 shl 4)
 		call	fp_2D000
 		call	randring2_next16
 
 loc_1C21B:
 		mov	byte_266ED, al
-		sub	word ptr dword_266E4, 200h
-		sub	word ptr dword_266E4+2,	200h
+		sub	point_266E4.x, (32 shl 4)
+		sub	point_266E4.y, (32 shl 4)
 		call	fp_2D000
 		call	randring2_next16
 		mov	byte_266ED, al
-		add	word ptr dword_266E4+2,	400h
+		add	point_266E4.y, (64 shl 4)
 		call	fp_2D000
 		call	snd_se_play pascal, 9
 
@@ -31138,9 +31120,9 @@ loc_1C400:
 
 loc_1C445:
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, _boss_mode
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -33000,16 +32982,16 @@ loc_1D186:
 
 loc_1D18D:
 		mov	ax, _player_pos.cur.y
-		sub	ax, word ptr dword_266E4+2
+		sub	ax, point_266E4.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word ptr dword_266E4
+		sub	ax, point_266E4.x
 		push	ax
 		call	iatan2
 		add	[bp+var_2], ax
 
 loc_1D1A5:
-		push	53A8h
+		push	offset point_266E8
 		mov	al, byte ptr [bp+var_2]
 		add	al, byte_266ED
 		push	ax
@@ -33108,23 +33090,23 @@ sub_1D230	proc near
 		jbe	short loc_1D282
 
 loc_1D241:
-		cmp	word ptr dword_266E4, 0FF80h
+		cmp	point_266E4.x, (-8 shl 4)
 		jle	short loc_1D282
-		cmp	word ptr dword_266E4, 1880h
+		cmp	point_266E4.x, ((PLAYFIELD_W + 8) shl 4)
 		jge	short loc_1D282
-		cmp	word ptr dword_266E4+2,	0FF80h
+		cmp	point_266E4.y, (-8 shl 4)
 		jle	short loc_1D282
-		cmp	word ptr dword_266E4+2,	1780h
+		cmp	point_266E4.y, ((PLAYFIELD_H + 8) shl 4)
 		jge	short loc_1D282
-		mov	ax, word ptr dword_266E4
+		mov	ax, point_266E4.x
 		sub	ax, _player_pos.cur.x
-		add	ax, 40h
-		cmp	ax, 80h
+		add	ax, (4 shl 4)
+		cmp	ax, (8 shl 4)
 		ja	short loc_1D286
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		sub	ax, _player_pos.cur.y
-		add	ax, 40h
-		cmp	ax, 80h
+		add	ax, (4 shl 4)
+		cmp	ax, (8 shl 4)
 		ja	short loc_1D286
 		mov	byte_259A9, 1
 
@@ -33164,7 +33146,7 @@ var_2		= word ptr -2
 		push	di
 		cmp	byte_266E2, 3
 		jnz	short loc_1D2D5
-		mov	eax, dword_266E4
+		mov	eax, point_266E4
 		mov	dword_2A8C6, eax
 		mov	dword_2A8CA, 0
 		mov	word_2A8CE, 400h
@@ -33240,7 +33222,7 @@ loc_1D33C:
 		sub	al, byte_266EE
 		mov	[si+17h], al
 		mov	byte ptr [si+1], 0
-		mov	eax, dword_266E4
+		mov	eax, point_266E4
 		mov	[si+2],	eax
 		mov	al, byte_266EC
 		mov	[si+0Eh], al
@@ -33260,7 +33242,7 @@ loc_1D33C:
 		add	[si+18h], ax
 
 loc_1D391:
-		mov	eax, dword_266E8
+		mov	eax, point_266E8
 		mov	[si+0Ah], eax
 		mov	al, byte ptr word_2D008
 		mov	[si+11h], al
@@ -33351,7 +33333,7 @@ loc_1D40A:
 		mov	al, byte_2CFF8
 		mov	[si+17h], al
 		mov	byte ptr [si+1], 0
-		mov	eax, dword_266E4
+		mov	eax, point_266E4
 		mov	[si+2],	eax
 		mov	al, byte_266EC
 		mov	[si+0Eh], al
@@ -33371,7 +33353,7 @@ loc_1D40A:
 		add	[si+18h], ax
 
 loc_1D460:
-		mov	eax, dword_266E8
+		mov	eax, point_266E8
 		mov	[si+0Ah], eax
 		mov	al, byte ptr word_2D008
 		mov	[si+11h], al
@@ -35986,13 +35968,13 @@ var_1		= byte ptr -1
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	randring2_next16
 		mov	byte_266ED, al
 		mov	byte_266E2, 5
@@ -36019,13 +36001,13 @@ loc_1EEF5:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	randring2_next16
 		mov	byte_266ED, al
 		mov	byte_266E2, 1
@@ -36106,13 +36088,13 @@ var_1		= byte ptr -1
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 30h	; '0'
 		mov	al, _rank
 		add	al, 3
@@ -36301,13 +36283,13 @@ loc_1F1AA:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	randring2_next16
 		mov	byte_266ED, al
 		mov	byte_266E2, 1
@@ -36394,13 +36376,13 @@ loc_1F263:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, byte_237F6
 		add	byte_266ED, al
 		call	fp_2D002
@@ -36526,10 +36508,10 @@ var_2		= word ptr -2
 		enter	2, 0
 		mov	ax, _boss_pos.cur.x
 		add	ax, (4 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-28 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -37014,9 +36996,9 @@ loc_1F7E1:
 
 loc_1F802:
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		call	sub_1F17C
 		call	sub_1E64E
 		or	al, al
@@ -37444,10 +37426,10 @@ loc_1FB10:
 		mov	byte_266EC, 2Dh	; '-'
 		mov	byte_266F0, 8
 		mov	ax, _player_pos.cur.y
-		sub	ax, word ptr dword_266E4+2
+		sub	ax, point_266E4.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word ptr dword_266E4
+		sub	ax, point_266E4.x
 		push	ax
 		call	iatan2
 		add	al, 0C0h
@@ -37533,13 +37515,13 @@ loc_1FBAD:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266ED, 0E0h
 		call	fp_2D002
 		push	3Fh ; '?'
@@ -37611,13 +37593,13 @@ loc_1FC68:
 		mov	dx, _boss_pos.cur.x ; jumptable 0001EA6B case 32792
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		push	3Fh ; '?'
 		call	randring2_next16_and
 		add	al, 10h
@@ -37637,7 +37619,7 @@ loc_1FCE0:
 		mov	word_2A8CE, 400h
 		mov	byte_2A8D2, 0Eh
 		mov	byte_266E2, 1
-		mov	ax, word ptr dword_266E4+2
+		mov	ax, point_266E4.y
 		mov	word ptr dword_2A8C6+2,	ax
 		push	1400h
 		call	randring2_next16_mod
@@ -37779,10 +37761,10 @@ loc_1FE17:
 		mov	byte_266EF, 1
 		mov	byte_266F0, 6
 		mov	ax, _player_pos.cur.y
-		sub	ax, word ptr dword_266E4+2
+		sub	ax, point_266E4.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word ptr dword_266E4
+		sub	ax, point_266E4.x
 		push	ax
 		call	iatan2
 		mov	byte_266ED, al
@@ -37937,10 +37919,10 @@ loc_1FF44:
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 		mov	ax, _player_pos.cur.y
-		sub	ax, word ptr dword_266E4+2
+		sub	ax, point_266E4.y
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, word ptr dword_266E4
+		sub	ax, point_266E4.x
 		push	ax
 		call	iatan2
 		add	al, 0D0h
@@ -37949,7 +37931,7 @@ loc_1FF44:
 ; ---------------------------------------------------------------------------
 
 loc_1FF93:
-		mov	ax, word ptr dword_266E4
+		mov	ax, point_266E4.x
 		mov	word_2561A, ax
 		mov	ax, _boss_pos.cur.y
 		mov	word_2561C, ax
@@ -37983,7 +37965,7 @@ loc_1FFF8:
 		mov	byte_266ED, 40h
 		mov	byte_266E3, 34h	; '4'
 		mov	byte_266E2, 2
-		mov	word ptr dword_266E4+2,	0
+		mov	point_266E4.y, 0
 		mov	byte_266EC, 0
 		mov	si, 0B204h
 		xor	di, di
@@ -37992,7 +37974,7 @@ loc_1FFF8:
 
 loc_2001E:
 		mov	ax, [si+2]
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		call	sub_1CFA2
 		inc	di
 		add	si, 1Ah
@@ -38038,13 +38020,13 @@ sub_20050	proc near
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 10h
 		mov	byte_266E2, 2
@@ -38103,12 +38085,12 @@ loc_200F6:
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	al, byte_2D02D
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, _boss_pos.cur.x
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	al, byte_2D02C
 		mov	byte_266ED, al
 		call	fp_2D000
@@ -38117,7 +38099,7 @@ loc_200F6:
 		shl	ax, 4
 		mov	dx, _boss_pos.cur.x
 		sub	dx, ax
-		mov	word ptr dword_266E4, dx
+		mov	point_266E4.x, dx
 		mov	al, byte_2D02C
 		neg	al
 		mov	byte_266ED, al
@@ -38174,13 +38156,13 @@ loc_201B4:
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266EC, 26h	; '&'
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
@@ -38273,10 +38255,10 @@ loc_20279:
 loc_20284:
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-13 shl 4)
-		mov	word ptr dword_266E4, ax
+		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-48 shl 4)
-		mov	word ptr dword_266E4+2,	ax
+		mov	point_266E4.y, ax
 		mov	byte_266E2, 1
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -40644,8 +40626,8 @@ byte_266E0	db ?
 		db ?
 byte_266E2	db ?
 byte_266E3	db ?
-dword_266E4	dd ?
-dword_266E8	dd ?
+point_266E4	Point <?>
+point_266E8	Point <?>
 byte_266EC	db ?
 byte_266ED	db ?
 byte_266EE	db ?

@@ -1,5 +1,3 @@
-; int __cdecl far vector1_at(int angle, int length, int origin)
-; (different calling convention than the TH04/TH05 one)
 vector1_at	proc far
 
 @@origin	= word ptr  6

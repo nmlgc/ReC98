@@ -5931,10 +5931,10 @@ loc_D53E:
 		idiv	bx
 		add	dx, 5Ch
 		mov	[si+0Eh], dx
-		push	50D2h
-		push	word_156E4
-		push	word_156E8
-		push	0C0h
+		push	offset point_151D2
+		push	x_156E4
+		push	y_156E8
+		push	(12 shl 4)
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
@@ -5947,9 +5947,9 @@ loc_D53E:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		movsx	eax, word_151D2
+		movsx	eax, point_151D2.x
 		mov	[si], eax
-		movsx	eax, word_151D4
+		movsx	eax, point_151D2.y
 		mov	[si+4],	eax
 		inc	di
 		add	si, 14h
@@ -6228,7 +6228,7 @@ loc_D7F2:
 loc_D7F8:
 		cmp	[bp+var_2], 30h	; '0'
 		jl	loc_D73A
-		mov	si, 55E4h
+		mov	si, offset x_156E4
 		cmp	dword ptr [si],	0FFFFC190h
 		jz	short loc_D83F
 		mov	ax, [si+8]
@@ -6283,17 +6283,17 @@ sub_D853	proc near
 		and	al, 7Fh
 		mov	[si+12h], al
 		mov	word ptr [si+0Eh], 30h ; '0'
-		push	50D2h
-		push	word_156E4
-		push	word_156E8
-		push	0C0h
+		push	offset point_151D2
+		push	x_156E4
+		push	y_156E8
+		push	(12 shl 4)
 		mov	al, [si+12h]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		movsx	eax, word_151D2
+		movsx	eax, point_151D2.x
 		mov	[si], eax
-		movsx	eax, word_151D4
+		movsx	eax, point_151D2.y
 		mov	[si+4],	eax
 		cmp	word_1183C, 40h
 		jl	short loc_D8B3
@@ -6335,9 +6335,9 @@ loc_D8BE:
 loc_D8E3:
 		or	dx, dx
 		jge	short loc_D8BE
-		mov	ax, word_156E4
+		mov	ax, x_156E4
 		mov	word_156F8, ax
-		mov	ax, word_156E8
+		mov	ax, y_156E8
 		mov	word_156FA, ax
 		pop	bp
 		retn
@@ -11688,8 +11688,7 @@ byte_151CC	db ?
 		db ?
 word_151CE	dw ?
 word_151D0	dw ?
-word_151D2	dw ?
-word_151D4	dw ?
+point_151D2	Point <?>
 word_151D6	dw ?
 word_151D8	dw ?
 word_151DA	dw ?
@@ -12017,9 +12016,9 @@ word_151E2	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_156E4	dw ?
+x_156E4	dw ?
 		dw ?
-word_156E8	dw ?
+y_156E8	dw ?
 		dw ?
 word_156EC	dw ?
 		dd    ?	;

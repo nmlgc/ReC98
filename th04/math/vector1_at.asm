@@ -1,5 +1,4 @@
-; int pascal far vector1_at(int angle, int length, int origin)
-; (different calling convention than the TH03 one)
+public VECTOR1_AT
 vector1_at	proc far
 
 @@angle	= word ptr  6
