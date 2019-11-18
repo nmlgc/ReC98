@@ -764,7 +764,7 @@ loc_A6C8:
 		call	sub_A629
 		pop	cx
 		push	1
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 
 loc_A6F5:
@@ -816,7 +816,7 @@ sub_A719	proc far
 		pop	cx
 		call	sub_BC8B
 		push	64h ; 'd'
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 		call	sub_A66A
 		pop	bp
@@ -1952,7 +1952,7 @@ loc_B0D6:
 
 loc_B126:
 		push	1
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 		push	di
 		call	sub_A92C
@@ -2031,7 +2031,7 @@ loc_B1C3:
 
 loc_B1C9:
 		push	0Fh
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 		mov	byte_1232A, 0
 		jmp	short loc_B1EE
@@ -2043,7 +2043,7 @@ loc_B1D8:
 		cmp	ax, 4
 		jnz	short loc_B1EE
 		push	0Fh
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 		mov	byte_1232A, 1
 
@@ -2060,7 +2060,7 @@ loc_B1EE:
 		mov	byte ptr es:[0528h], 0
 		inc	dword_13418
 		push	1
-		call	sub_B269
+		call	_frame_delay
 		pop	cx
 
 loc_B21A:
@@ -2097,30 +2097,7 @@ op_01_TEXT	ends
 
 ; Segment type:	Pure code
 op_02_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_02_TEXT
-		;org 9
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B269	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_B26C:
-		mov	ax, _vsync_frame
-		cmp	ax, [bp+arg_0]
-		jb	short loc_B26C
-		mov	_vsync_frame, 0
-		pop	bp
-		retf
-sub_B269	endp
-
+	extern _frame_delay:proc
 op_02_TEXT	ends
 
 ; ===========================================================================
