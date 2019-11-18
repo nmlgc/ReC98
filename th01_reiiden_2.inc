@@ -7918,7 +7918,7 @@ loc_1FAE7:
 		cmp	di, 1
 		jz	short loc_1FAF6
 		push	2
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	short loc_1FACA
 ; ---------------------------------------------------------------------------
@@ -10232,7 +10232,7 @@ loc_20DAD:
 loc_20DD6:
 		inc	[bp+var_14]
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_20CF9
 ; ---------------------------------------------------------------------------
@@ -14430,7 +14430,7 @@ loc_23013:
 
 loc_23024:
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 
 loc_2302C:
@@ -17237,7 +17237,7 @@ loc_24871:
 		push	word_36C28
 		call	sub_197E1
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 0Eh
 		jmp	loc_24796
 ; ---------------------------------------------------------------------------
@@ -17487,7 +17487,7 @@ loc_24AFF:
 		or	dx, dx
 		jz	loc_2489C
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_2489C
 ; ---------------------------------------------------------------------------
@@ -23036,7 +23036,7 @@ loc_27E35:
 		idiv	bx
 		inc	ax
 		push	ax
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_27C72
 ; ---------------------------------------------------------------------------
@@ -23324,7 +23324,7 @@ loc_28150:
 
 loc_28158:
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_27E6E
 ; ---------------------------------------------------------------------------
@@ -23945,7 +23945,7 @@ loc_28703:
 		push	si
 		call	sub_11816
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 8
 		dec	si
 
@@ -30403,7 +30403,7 @@ loc_2C37F:
 		or	dx, dx
 		jz	loc_2C14E
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_2C14E
 ; ---------------------------------------------------------------------------
@@ -31085,7 +31085,7 @@ loc_2C9DA:
 
 loc_2CA9E:
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		jmp	loc_2C949
 ; ---------------------------------------------------------------------------
 
@@ -31436,7 +31436,7 @@ loc_2CD98:
 
 loc_2CDA0:
 		push	2
-		call	sub_E364
+		call	_frame_delay
 		jmp	loc_2CCDC
 ; ---------------------------------------------------------------------------
 
@@ -31805,7 +31805,7 @@ loc_2D059:
 loc_2D06B:
 		inc	[bp+var_8]
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_2CFA2
 ; ---------------------------------------------------------------------------
@@ -31850,7 +31850,7 @@ loc_2D079:
 		push	6
 		call	sub_1117C
 		push	28h ; '('
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 0Ah
 		xor	si, si
 		jmp	short loc_2D120
@@ -31879,7 +31879,7 @@ loc_2D0EC:
 
 loc_2D117:
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		inc	si
 
@@ -31897,7 +31897,7 @@ loc_2D12A:
 		push	di
 		call	sub_11816
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 8
 		sub	di, 20h	; ' '
 
@@ -31919,7 +31919,7 @@ loc_2D14D:
 		push	ax
 		call	sub_11738
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 4
 		inc	si
 
@@ -31927,7 +31927,7 @@ loc_2D16E:
 		cmp	si, 20h	; ' '
 		jl	short loc_2D14D
 		push	1Eh
-		call	sub_E364
+		call	_frame_delay
 		push	0F000Fh
 		push	0F0009h
 		call	sub_EB59
@@ -31974,7 +31974,7 @@ loc_2D1DC:
 		push	offset unk_35090
 		call	sub_EB10
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		add	sp, 6
 		inc	di
 
@@ -36028,7 +36028,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	8
@@ -36045,7 +36045,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	9
@@ -36062,7 +36062,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Ah
@@ -36079,7 +36079,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Bh
@@ -36096,7 +36096,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Ch
@@ -36113,7 +36113,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Dh
@@ -36130,7 +36130,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Eh
@@ -36147,7 +36147,7 @@ loc_2F766:
 		call	sub_10CDD
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		call	sub_EC0D
 		push	0Fh
@@ -36167,7 +36167,7 @@ loc_2F766:
 		call	sub_110ED
 		pop	cx
 		push	0Ah
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		mov	word_3A6CA, 0
 
@@ -36243,7 +36243,7 @@ loc_2F9F9:
 		cmp	word_3A6CA, 40h
 		jg	short loc_2FA23
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_2F99A
 ; ---------------------------------------------------------------------------
@@ -36500,7 +36500,7 @@ loc_2FC06:
 loc_2FC0E:
 		inc	[bp+var_6]
 		push	1
-		call	sub_E364
+		call	_frame_delay
 		pop	cx
 		jmp	loc_2FAEB
 ; ---------------------------------------------------------------------------
