@@ -419,7 +419,7 @@ loc_9B4E:
 		call	sub_9980
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	sub_BFC2
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -631,7 +631,7 @@ loc_9D19:
 		call	sub_9980
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	sub_BFC2
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -712,7 +712,7 @@ loc_9DDF:
 		call	sub_9980
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	sub_BFC2
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -810,7 +810,7 @@ loc_9EA6:
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
-		call	sub_BFC2
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -4311,7 +4311,7 @@ op_02_TEXT	segment	word public 'CODE' use16
 sub_BEB8	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_BFC2
+		nopcall	game_exit
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -4323,35 +4323,9 @@ include th01/hardware/vram_planes_set.asm
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
 include th02/snd/load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BFC2	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	vsync_end
-		call	mem_unassign
-		call	text_clear
-		call	js_end
-		call	egc_start
-		pop	bp
-		retf
-sub_BFC2	endp
-
+include th02/exit.asm
 include th03/math/vector1_at.asm
-
-; ---------------------------------------------------------------------------
 		db 0
-
 include th03/formats/cdg_put.asm
 include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm

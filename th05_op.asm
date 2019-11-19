@@ -204,7 +204,7 @@ loc_A400:
 		call	sub_BC83
 		call	sub_BB0E
 		kajacall	KAJA_SONG_FADE, 10
-		call	sub_D7EC
+		call	game_exit
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_A430
@@ -286,7 +286,7 @@ loc_A4A0:
 		call	sub_BC83
 		call	sub_BB0E
 		kajacall	KAJA_SONG_FADE, 10
-		call	sub_D7EC
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -409,7 +409,7 @@ loc_A5BF:
 		call	sub_BB0E
 		push	1
 		call	palette_black_out
-		call	sub_D7EC
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -5021,7 +5021,7 @@ include th04/snd/detmodes.asm
 sub_D41C	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_D7EC
+		nopcall	game_exit
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -5349,31 +5349,7 @@ locret_D757:
 sub_D726	endp
 
 include th04/formats/cdg_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D7EC	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	mem_unassign
-		call	vsync_end
-		call	text_clear
-		call	js_end
-		call	egc_start
-		call	bgm_finish
-		pop	bp
-		retf
-sub_D7EC	endp
-
+include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 

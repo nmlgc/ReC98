@@ -4,6 +4,7 @@
  */
 
 #include "th02/th02.h"
+#include "th02/initexit.h"
 
 #pragma codeseg op_02_TEXT
 #pragma option -3

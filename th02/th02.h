@@ -319,5 +319,3 @@ typedef enum {
 
 void pascal zun_error(zun_error_t err);
 // ---------
-
-void game_exit(void);

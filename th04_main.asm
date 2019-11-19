@@ -6883,7 +6883,7 @@ loc_E813:
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	sub_1361E
+		call	game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path
@@ -15245,31 +15245,7 @@ include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 include th04/snd/load.asm
 include th04/formats/cdg_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1361E	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	mem_unassign
-		call	vsync_end
-		call	text_clear
-		call	js_end
-		call	egc_start
-		call	bgm_finish
-		pop	bp
-		retf
-sub_1361E	endp
-
+include th02/exit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

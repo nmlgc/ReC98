@@ -5,6 +5,7 @@
 
 #include <process.h>
 #include "th02/th02.h"
+#include "th02/initexit.h"
 
 #pragma option -d
 

@@ -376,7 +376,7 @@ sub_A8F1	proc near
 		call	sub_A7F0
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	sub_E0AC
+		call	game_exit
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+1Ah], 0
 		jnz	short loc_A957
@@ -427,7 +427,7 @@ sub_A96C	proc near
 		call	sub_A7F0
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	sub_E0AC
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -511,7 +511,7 @@ loc_AA6E:
 		call	sub_CCC8
 		call	sub_A7F0
 		call	gaiji_restore
-		call	sub_E0AC
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -5432,7 +5432,7 @@ sub_DD80	endp
 sub_DDB1	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_E0AC
+		nopcall	game_exit
 		call	key_beep_on
 		call	text_systemline_show
 		call	text_cursor_show
@@ -5647,31 +5647,7 @@ loc_E008:
 		retn
 
 include th04/formats/cdg_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0AC	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	mem_unassign
-		call	vsync_end
-		call	text_clear
-		call	js_end
-		call	egc_start
-		call	bgm_finish
-		pop	bp
-		retf
-sub_E0AC	endp
-
+include th02/exit.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

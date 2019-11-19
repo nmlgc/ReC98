@@ -2528,7 +2528,7 @@ _arg0		= dword	ptr  6
 		call	sub_EF1C
 		push	1
 		call	sub_EF1C
-		call	sub_EA1A
+		call	game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path
@@ -9240,30 +9240,7 @@ include th02/snd/pmd_res.asm
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA1A	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	vsync_end
-		call	mem_unassign
-		call	text_clear
-		call	js_end
-		call	egc_start
-		pop	bp
-		retf
-sub_EA1A	endp
-
+include th02/exit.asm
 include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
 include th03/hardware/input_sense.asm

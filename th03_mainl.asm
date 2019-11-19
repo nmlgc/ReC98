@@ -956,7 +956,7 @@ loc_9DAD:
 		call	sub_B7D2
 		call	text_clear
 		call	gaiji_restore
-		call	sub_C990
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -1094,7 +1094,7 @@ loc_9F58:
 loc_9F69:
 		call	text_clear
 		call	gaiji_restore
-		call	sub_C990
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -4311,7 +4311,7 @@ loc_B9DD:
 loc_BA66:
 		call	text_clear
 		call	gaiji_restore
-		call	sub_C990
+		call	game_exit
 		pushd	0
 		push	ds
 		push	offset aOp_0	; "op"
@@ -5620,33 +5620,8 @@ include th02/snd/load.asm
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C990	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	vsync_end
-		call	mem_unassign
-		call	text_clear
-		call	js_end
-		call	egc_start
-		pop	bp
-		retf
-sub_C990	endp
-
-; ---------------------------------------------------------------------------
+include th02/exit.asm
 		db 0
-
 include th03/formats/cdg_put.asm
 include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
