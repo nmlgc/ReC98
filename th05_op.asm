@@ -1390,10 +1390,7 @@ _envp		= dword	ptr  0Ch
 		call	text_clear
 		call	respal_create
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
-		push	ds
-		push	offset aKaikidan1_dat0
-		call	sub_DF12
-		add	sp, 4
+		call	_game_init_op c, offset aKaikidan1_dat0, ds
 		or	ax, ax
 		jz	short loc_AF7D
 		push	ds
@@ -5945,56 +5942,7 @@ include th05/formats/pi_slot_load.asm
 include th05/formats/pi_slot_put.asm
 include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DF12	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_DF27
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_DF27:
-		call	graph_start
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		mov	bbufsiz, 2000h
-		call	vsync_start
-		call	key_beep_off
-		call	text_systemline_hide
-		call	text_cursor_hide
-		call	egc_start
-		call	js_start
-		les	bx, [bp+arg_0]
-		assume es:nothing
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_DF82
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	pfstart
-
-loc_DF82:
-		push	400h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf
-sub_DF12	endp
-
+include th02/initop.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm

@@ -1521,10 +1521,7 @@ loc_A446:
 ; ---------------------------------------------------------------------------
 
 loc_A452:
-		push	ds
-		push	offset aCOul	; "–²Žž‹ó1.dat"
-		call	sub_C421
-		add	sp, 4
+		call	_game_init_op c, offset aCOul, ds
 		or	ax, ax
 		jz	short loc_A468
 		push	ds
@@ -4320,47 +4317,7 @@ include th03/hardware/input_sense.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th02/snd/kajaint.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C421	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, (352000 shr 4)
-		or	ax, ax
-		jz	short loc_C435
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_C435:
-		nopcall	vram_planes_set
-		call	graph_start
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		call	vsync_start
-		call	key_beep_off
-		call	text_systemline_hide
-		call	text_cursor_hide
-		call	egc_start
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		xor	ax, ax
-		pop	bp
-		retf
-sub_C421	endp
-
+include th02/initop.asm
 include th03/formats/cdg_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================

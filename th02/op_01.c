@@ -30,8 +30,6 @@ putfunc_t near *putfunc;
 extern char extra_unlocked;
 extern unsigned int score_duration;
 
-int game_init_op(void);
-
 void title_flash(void);
 void pascal score_menu(void);
 void pascal shottype_menu(void);

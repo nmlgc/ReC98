@@ -1455,10 +1455,7 @@ _envp		= dword	ptr  0Ch
 		call	text_clear
 		call	respal_create
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
-		push	ds
-		push	offset aMSzlEd_dat ; "Œ¶‘z‹½ed.dat"
-		call	sub_E0F4
-		add	sp, 4
+		call	_game_init_op c, offset aMSzlEd_dat, ds
 		or	ax, ax
 		jz	short loc_B3AB
 		push	ds
@@ -5633,57 +5630,7 @@ loc_E008:
 
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0F4	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_E109
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_E109:
-		nopcall	vram_planes_set
-		call	graph_start
-		graph_accesspage 1
-		call	graph_clear
-		graph_accesspage 0
-		call	graph_clear
-		graph_accesspage 0
-		graph_showpage al
-		mov	bbufsiz, 2000h
-		call	vsync_start
-		call	key_beep_off
-		call	text_systemline_hide
-		call	text_cursor_hide
-		call	egc_start
-		call	js_start
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_E169
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	pfstart
-
-loc_E169:
-		push	400h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf
-sub_E0F4	endp
-
-; ---------------------------------------------------------------------------
+include th02/initop.asm
 		db    0
 include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_sense.asm
