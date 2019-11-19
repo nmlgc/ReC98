@@ -78,6 +78,15 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
+## Decompilation
+
+* Don't try to decompile self-modifying code. Yes, it may be *possible* by
+  calculating addresses relative to the start of the function, but as soon as
+  someone starts modding or porting that function, things *will* crash at
+  runtime. Inline ASM in C/C++ source files is fine, that will trip up future
+  port developers at compile time. Self-modifying code can only do the same if
+  it's kept in separate ASM files.
+
 ## Naming conventions
 
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't
