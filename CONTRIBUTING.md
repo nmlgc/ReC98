@@ -33,15 +33,17 @@ Other branches are, of course, free to experiment with mods or refactorings.
 
 * Try to avoid repeating numeric constants – after all, easy moddability
   should be one of the goals of this project. For local arrays, use `sizeof()`
-  if the size can be expressed in terms of another array. Otherwise, `#define`
-  a macro if there is a clear intent behind a number. (Counterexample: Small,
-  insignificant amounts of pixels in e.g. entity movement code.)
+  if the size can be expressed in terms of another array or type. Otherwise,
+  `#define` a macro if there is a clear intent behind a number.
+  (Counterexample: Small, insignificant amounts of pixels in e.g. entity
+  movement code.)
+
 * Documenting function comments exclusively go into C/C++ header files, right
   above the corresponding function prototype, *not* into ASM slices.
 
-* New `struc`ts or "sequence of numeric equate" enums defined in ASM land
-  should immediately be reflected in a header file in C/C++ land, with the
-  correct types and calling conventions.
+* Newly found function prototypes, `struc`ts, and "sequence of numeric equate"
+  enums defined in ASM land should immediately be reflected in a header file
+  in C/C++ land, with the correct types and calling conventions.
 
 * Try moving repeated sections of code into a separate `inline` function
   before grabbing the `#define` hammer. Turbo C++ will generally inline
@@ -49,7 +51,7 @@ Other branches are, of course, free to experiment with mods or refactorings.
   `goto`, `switch`, `break`, `continue`, or `case`.
 
 * These inlining rules also apply to C++ class methods, so feel free to
-  declar classes if you keep thinking "overloaded operators would be nice
+  declare classes if you keep thinking "overloaded operators would be nice
   here" or "this code would read really nicely if this functionality was
   encapsulated in a method". (Sometimes, you will have little choice, in
   fact!) Despite Turbo C++'s notoriously outdated C++ implementation, [there
@@ -61,9 +63,10 @@ Other branches are, of course, free to experiment with mods or refactorings.
 
 ## Naming conventions
 
+* ASM file extensions: `.asm` if they emit code, `.inc` if they don't
 * Macros defining the number of instances of an entity: `<ENTITY>_COUNT`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 
 [mzdiff]: https://github.com/nmlgc/mzdiff
-[1]: Research/Borland%20C++%20decompilation.md#C++
+[1]: Research/Borland%20C++%20decompilation.md#c
