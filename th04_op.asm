@@ -1557,7 +1557,7 @@ loc_B47B:
 		call	sub_A873
 		call	gaiji_restore
 		call	text_clear
-		call	sub_DDB1
+		call	game_exit_to_dos
 		call	respal_free
 		pop	si
 		pop	bp
@@ -5424,22 +5424,7 @@ loc_DDA8:
 		retf	4
 sub_DD80	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DDB1	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	game_exit
-		call	key_beep_on
-		call	text_systemline_show
-		call	text_cursor_show
-		pop	bp
-		retf
-sub_DDB1	endp
-
+include th02/exit_dos.asm
 include th04/snd/load.asm
 
 ; =============== S U B	R O U T	I N E =======================================

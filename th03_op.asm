@@ -1603,7 +1603,7 @@ loc_A4FE:
 		call	sub_99C3
 		call	gaiji_restore
 		call	text_clear
-		call	sub_BEB8
+		call	game_exit_to_dos
 		call	respal_free
 		pop	bp
 		retf
@@ -4304,21 +4304,7 @@ op_02_TEXT	segment	word public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BEB8	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	game_exit
-		call	key_beep_on
-		call	text_systemline_show
-		call	text_cursor_show
-		pop	bp
-		retf
-sub_BEB8	endp
-
+include th02/exit_dos.asm
 include th01/hardware/vram_planes_set.asm
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm

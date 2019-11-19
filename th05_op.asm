@@ -1498,7 +1498,7 @@ loc_B058:
 		call	sub_BC83
 		call	sub_BB91
 		call	text_clear
-		call	sub_D41C
+		call	game_exit_to_dos
 		call	respal_free
 		pop	si
 		pop	bp
@@ -5013,23 +5013,7 @@ include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D41C	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	game_exit
-		call	key_beep_on
-		call	text_systemline_show
-		call	text_cursor_show
-		pop	bp
-		retf
-sub_D41C	endp
-
-; ---------------------------------------------------------------------------
+include th02/exit_dos.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================

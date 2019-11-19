@@ -31,7 +31,6 @@ extern char extra_unlocked;
 extern unsigned int score_duration;
 
 int game_init_op(void);
-void game_exit_to_dos(void);
 
 void title_flash(void);
 void pascal score_menu(void);
