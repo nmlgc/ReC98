@@ -1,3 +1,22 @@
+## Welcome!
+
+If we've seen you doing any kind of reverse-engineering or modding work on the
+PC-98 Touhou games before, you might have already been [invited as a
+collaborator][2]. In that case, feel free to create separate branches for your
+work directly in this repository – this will immediately inform anyone who
+watches this repo or subscribed to a webhook. If you prefer, you can still
+use your own fork though.
+
+### What can I do on these separate branches?
+
+Anything – reverse-engineering and decompilation of original ZUN code (which
+then could be merged back into `master` after review) or your own custom mods,
+no matter how large or small.
+
+For starters, simply naming functions or global variables to reflect their
+actual intent will already be helpful. *Any* name is better than
+`sub_<something>`, and can always be fixed or improved later.
+
 # Contribution guidelines
 
 ## Rule #1
@@ -7,8 +26,6 @@ program image, or the unordered set of relocations, of any original game
 binary, as compared using [mzdiff].** The only allowed exceptions are:
 1) different encodings of identical x86 instructions within code segments
 2) padding with `00` bytes at the end of the file.
-
-Other branches are, of course, free to experiment with mods or refactorings.
 
 ## Taste issues
 
@@ -70,3 +87,4 @@ Other branches are, of course, free to experiment with mods or refactorings.
 
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
+[2]: https://github.com/nmlgc/ReC98/invitations
