@@ -204,9 +204,7 @@ _envp		= dword	ptr  0Ch
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aCOul	; "–²Žž‹ó2.dat"
-		call	sub_ECD0
+		call	game_init_main pascal, ds, offset aCOul
 		call	sub_A346
 		or	ax, ax
 		jz	short loc_9775
@@ -9247,38 +9245,7 @@ include th03/hardware/input_sense.asm
 		nop
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECD0	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, MEM_ASSIGN_PARAS_MAIN
-		or	ax, ax
-		jz	short loc_ECE6
-		mov	ax, 1
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_ECE6:
-		nopcall	vram_planes_set
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_ECD0	endp
-
+include th02/initmain.asm
 include th02/formats/pi_slot_load.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm

@@ -293,9 +293,7 @@ _envp		= dword	ptr  0Ch
 		or	ax, ax
 		jz	short loc_AB86
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		push	ds
-		push	offset aUmx	; "“Œ•ûŒ¶‘z.‹½"
-		call	sub_13666
+		call	game_init_main pascal, ds, offset aUmx
 		les	bx, _humaconfig
 		mov	eax, es:[bx+14h]
 		mov	random_seed, eax
@@ -15246,42 +15244,7 @@ include th04/snd/detmodes.asm
 include th04/snd/load.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13666	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_1367D
-		mov	ax, 1
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_1367D:
-		mov	bbufsiz, 1000h
-		nopcall	vram_planes_set
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		push	800h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_13666	endp
-
-; ---------------------------------------------------------------------------
+include th02/initmain.asm
 		db    0
 
 include th04/formats/cdg_put_noalpha.asm

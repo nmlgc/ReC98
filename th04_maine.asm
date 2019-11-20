@@ -260,9 +260,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		push	ds
-		push	offset aMSzlEd_dat ; "Œ¶‘z‹½ed.dat"
-		call	sub_D43C
+		call	game_init_main pascal, ds, offset aMSzlEd_dat
 		call	gaiji_backup
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
@@ -5349,42 +5347,7 @@ loc_D350:
 
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D43C	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_D453
-		mov	ax, 1
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_D453:
-		mov	bbufsiz, 1000h
-		nopcall	vram_planes_set
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		push	800h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_D43C	endp
-
-; ---------------------------------------------------------------------------
+include th02/initmain.asm
 		db    0
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm

@@ -345,9 +345,7 @@ _envp		= dword	ptr  0Ch
 		or	ax, ax
 		jz	loc_A693
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
-		push	ds
-		push	offset aKaikidan1_dat
-		call	sub_F0B4
+		call	game_init_main pascal, ds, offset aKaikidan1_dat
 		les	bx, _ksoconfig
 		mov	al, es:[bx+12h]
 		mov	ah, 0
@@ -8680,42 +8678,7 @@ include th05/formats/pi_slot_load.asm
 include th05/formats/pi_slot_put.asm
 include th05/formats/pi_slot_palette_apply.asm
 include th05/formats/pi_slot_free.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0B4	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_F0CB
-		mov	ax, 1
-		pop	bp
-
-locret_F0C8:
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_F0CB:
-		mov	bbufsiz, 1000h
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		push	800h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_F0B4	endp
-
+include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm

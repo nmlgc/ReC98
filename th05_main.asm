@@ -339,9 +339,7 @@ _envp		= dword	ptr  0Ch
 		or	ax, ax
 		jz	short loc_AEA4
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
-		push	ds
-		push	offset aKAIKIDAN2_DAT
-		call	sub_14F86
+		call	game_init_main pascal, ds, offset aKAIKIDAN2_DAT
 		les	bx, _ksoconfig
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
@@ -14148,40 +14146,7 @@ include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14F86	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	mem_assign_dos pascal, _mem_assign_paras
-		or	ax, ax
-		jz	short loc_14F9D
-		mov	ax, 1
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_14F9D:
-		mov	bbufsiz, 1000h
-		call	vsync_start
-		call	egc_start
-		call	graph_400line
-		call	js_start
-		pushd	[bp+arg_0]
-		call	pfstart
-		push	800h
-		call	bgm_init
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_14F86	endp
-
+include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
