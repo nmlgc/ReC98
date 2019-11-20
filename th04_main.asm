@@ -297,7 +297,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _humaconfig
 		mov	eax, es:[bx+14h]
 		mov	random_seed, eax
-		call	main_01:sub_B488
+		call	main_01:EmsSetup
 		call	text_clear
 		call	gaiji_backup
 		push	ds
@@ -713,7 +713,7 @@ loc_AF4A:
 		call	sub_19EBC
 		cmp	word_213DE, 0
 		jz	short loc_AFD5
-		call	main_01:sub_B530
+		call	main_01:EmsLoad
 		call	main_01:bb_playchar_load
 		cmp	playchar, 0
 		jnz	short loc_AFA0
@@ -1171,50 +1171,49 @@ DemoPlay	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B488	proc near
+public EMSSETUP
+EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
 		les	bx, _humaconfig
 		mov	al, es:[bx+11h]
 		mov	stage_id, al
 		cmp	stage_id, 6
-		jnz	short loc_B4A4
+		jnz	short @@game_is_not_extra
 		mov	_rank, RANK_EXTRA
 		jmp	short loc_B4AF
 ; ---------------------------------------------------------------------------
 
-loc_B4A4:
+@@game_is_not_extra:
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	_rank, al
 
 loc_B4AF:
-		les	bx, off_213DA
+		les	bx, eyename
 		mov	al, _rank
 		add	al, 30h	; '0'
 		mov	es:[bx+3], al
-		mov	word_266DE, 0
+		mov	_Ems, 0
 		call	ems_exist
 		or	ax, ax
-		jz	short loc_B52E
+		jz	short @@ret
 		call	ems_space
 		push	dx
 		push	ax
 		pop	eax
-		cmp	eax, 2BF20h
-		jb	short loc_B52E
-		push	2BF20h
-		call	ems_allocate
-		mov	word_266DE, ax
-		cmp	word_266DE, 0
-		jz	short loc_B52E
+		cmp	eax, EMSSIZE
+		jb	short @@ret
+		call	ems_allocate pascal, EMSSIZE
+		mov	_Ems, ax
+		cmp	_Ems, 0
+		jz	short @@ret
 		push	ax
 		push	ds
 		push	offset aGensoems ; "GENSOEMS"
 		call	ems_setname
-		call	cdg_load_single_noalpha pascal, 31, [off_213DA], 0
-		push	word_266DE
+		call	cdg_load_single_noalpha pascal, 31, [eyename], 0
+		push	_Ems
 		pushd	0
 		push	_cdg_slots.sgm_colors + (size CDGSlot * 31)
 		push	0
@@ -1225,32 +1224,32 @@ loc_B4AF:
 		call	ems_write
 		call	cdg_free pascal, 31
 
-loc_B52E:
+@@ret:
 		pop	bp
 		retn
-sub_B488	endp
+EmsSetup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public EMSLOAD
+EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 
-sub_B530	proc near
-
-var_4		= dword	ptr -4
+@@size		= dword	ptr -4 ; ZUN symbol [MAGNet2010]
 
 		enter	4, 0
 		push	si
 		push	di
 		les	bx, _humaconfig
 		mov	al, es:[bx+12h]
-		les	bx, off_213E4
+		les	bx, bbname
 		mov	es:[bx+2], al
-		call	cdg_load_single_noalpha pascal, 0, word ptr off_213E4+2, bx, 0
-		cmp	word_266DE, 0
-		jz	loc_B612
-		push	word_266DE
-		pushd	84D0h
+		call	cdg_load_single_noalpha pascal, 0, word ptr bbname+2, bx, 0
+		cmp	_Ems, 0
+		jz	@@ret
+		push	_Ems
+		pushd	34000
 		push	_cdg_slots.sgm_colors + (size CDGSlot * 0)
 		push	0
 		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
@@ -1259,14 +1258,14 @@ var_4		= dword	ptr -4
 		push	eax
 		call	ems_write
 		cmp	playchar, 0
-		jnz	short loc_B58D
+		jnz	short @@not_reimu
 		push	2
 		push	ds
 		push	offset aKao0_cd2 ; "KAO0.cd2"
 		jmp	short loc_B593
 ; ---------------------------------------------------------------------------
 
-loc_B58D:
+@@not_reimu:
 		push	2
 		push	ds
 		push	offset aKao1_cd2 ; "KAO1.cd2"
@@ -1274,14 +1273,14 @@ loc_B58D:
 loc_B593:
 		call	cdg_load_all
 		mov	si, 2
-		mov	[bp+var_4], 16F30h
+		mov	[bp+@@size], 94000
 		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 2)
 		jmp	short loc_B606
 ; ---------------------------------------------------------------------------
 
 loc_B5A9:
-		push	word_266DE
-		pushd	[bp+var_4]
+		push	_Ems
+		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
 		push	_cdg_slots.sgm_alpha[bx]
@@ -1290,9 +1289,9 @@ loc_B5A9:
 		push	eax
 		call	ems_write
 		movzx	eax, di
-		add	[bp+var_4], eax
-		push	word_266DE
-		pushd	[bp+var_4]
+		add	[bp+@@size], eax
+		push	_Ems
+		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
 		push	_cdg_slots.sgm_colors[bx]
@@ -1305,7 +1304,7 @@ loc_B5A9:
 		mov	ax, di
 		shl	ax, 2
 		movzx	eax, ax
-		add	[bp+var_4], eax
+		add	[bp+@@size], eax
 		call	cdg_free pascal, si
 		inc	si
 
@@ -1315,12 +1314,12 @@ loc_B606:
 		cmp	_cdg_slots.sgm_alpha[bx], 0
 		jnz	short loc_B5A9
 
-loc_B612:
+@@ret:
 		pop	di
 		pop	si
 		leave
 		retn
-sub_B530	endp
+EmsLoad	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1330,14 +1329,14 @@ sub_B530	endp
 sub_B616	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_266DE, 0
+		cmp	_Ems, 0
 		jz	short loc_B64C
 		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_colors + (size CDGSlot * 31), ax
-		push	word_266DE
+		push	_Ems
 		pushd	0
 		push	ax
 		push	0
@@ -1350,7 +1349,7 @@ sub_B616	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B64C:
-		call	cdg_load_single_noalpha pascal, 31, [off_213DA], 0
+		call	cdg_load_single_noalpha pascal, 31, [eyename], 0
 
 loc_B65A:
 		mov	PaletteTone, 0
@@ -4786,7 +4785,7 @@ var_4		= dword	ptr -4
 		push	si
 		push	di
 		call	cdg_free pascal, 0
-		cmp	word_266DE, 0
+		cmp	_Ems, 0
 		jz	loc_D7D0
 		mov	[bp+var_4], 16F30h
 		mov	si, _cdg_slots.bitplane_size + (size CDGSlot * 2)
@@ -4800,7 +4799,7 @@ loc_D750:
 		mov	bx, di
 		shl	bx, 4
 		mov	_cdg_slots.sgm_alpha[bx], ax
-		push	word_266DE
+		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, di
 		shl	bx, 4
@@ -4819,7 +4818,7 @@ loc_D750:
 		mov	bx, di
 		shl	bx, 4
 		mov	_cdg_slots.sgm_colors[bx], ax
-		push	word_266DE
+		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, di
 		shl	bx, 4
@@ -4918,7 +4917,7 @@ loc_D835:
 		call	cdg_load_all
 
 loc_D83A:
-		cmp	word_266DE, 0
+		cmp	_Ems, 0
 		jz	short loc_D86C
 		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
 		shl	ax, 2
@@ -4926,7 +4925,7 @@ loc_D83A:
 		push	ax
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_colors + (size CDGSlot * 0), ax
-		push	word_266DE
+		push	_Ems
 		pushd	84D0h
 		push	ax
 		push	0
@@ -6842,9 +6841,9 @@ _arg0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		call	main_01:sub_E7DE
-		cmp	word_266DE, 0
+		cmp	_Ems, 0
 		jz	short loc_E813
-		push	word_266DE
+		push	_Ems
 		call	ems_free
 
 loc_E813:
@@ -38686,13 +38685,11 @@ main_03_TEXT	ends
 
 include th04/strings/pause[data].asm
 		db    0
-off_213DA	dd aEye0_cdg
-					; "eye0.cdg"
+eyename	dd aEye0_cdg	; original ZUN variable name
 word_213DE	dw 0
 off_213E0	dd aSt00
 					; "ST00"
-off_213E4	dd aBb0_cdg_0
-					; "BB0.CDG"
+bbname	dd aBb0_cdg_0	; original ZUN variable name
 aEye0_cdg	db 'eye0.cdg',0
 aUmx		db '“Œ•ûŒ¶‘z.‹½',0
 aGameft_bft	db 'GAMEFT.bft',0
@@ -40556,7 +40553,7 @@ include th04/playperf[bss].asm
 playchar	db ?
 		db ?
 include th04/drawpoint[bss].asm
-word_266DE	dw ?
+include th04/ems[bss].asm
 byte_266E0	db ?
 		db ?
 byte_266E2	db ?

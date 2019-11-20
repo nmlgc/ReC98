@@ -343,7 +343,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _ksoconfig
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
-		call	sub_B827
+		call	EmsSetup
 		call	text_clear
 		les	bx, _ksoconfig
 		mov	al, es:[bx+12h]
@@ -801,7 +801,7 @@ loc_B2DD:
 		cmp	word_20A84, 0
 		jz	loc_B3CA
 		call	bb_curvebullet_load
-		call	sub_B8C2
+		call	EmsLoad
 		call	bb_playchar_load
 		mov	al, playchar
 		mov	ah, 0
@@ -1347,46 +1347,45 @@ DemoPlay	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B827	proc near
+public EMSSETUP
+EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
 		les	bx, _ksoconfig
 		mov	al, es:[bx+13h]
 		mov	stage_id, al
 		cmp	stage_id, 6
-		jnz	short loc_B843
+		jnz	short @@game_is_not_extra
 		mov	_rank, RANK_EXTRA
 		jmp	short loc_B84E
 ; ---------------------------------------------------------------------------
 
-loc_B843:
+@@game_is_not_extra:
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	_rank, al
 
 loc_B84E:
-		mov	word_25FF0, 0
+		mov	_Ems, 0
 		call	ems_exist
 		or	ax, ax
-		jz	short loc_B8C0
+		jz	short @@ret
 		call	ems_space
 		push	dx
 		push	ax
 		pop	eax
-		cmp	eax, 4E200h
-		jb	short loc_B8C0
-		push	4E200h
-		call	ems_allocate
-		mov	word_25FF0, ax
-		cmp	word_25FF0, 0
-		jz	short loc_B8C0
+		cmp	eax, EMSSIZE
+		jb	short @@ret
+		call	ems_allocate pascal, EMSSIZE
+		mov	_Ems, ax
+		cmp	_Ems, 0
+		jz	short @@ret
 		push	ax
 		push	ds
 		push	offset aKaikiems ; "KAIKIEMS"
 		call	ems_setname
 		call	cdg_load_single_noalpha pascal, 31, [off_20A80], 0
-		push	word_25FF0
+		push	_Ems
 		pushd	0
 		push	_cdg_slots.sgm_colors + (size CDGSlot * 31)
 		push	0
@@ -1397,19 +1396,19 @@ loc_B84E:
 		call	ems_write
 		call	cdg_free pascal, 31
 
-loc_B8C0:
+@@ret:
 		pop	bp
 		retn
-sub_B827	endp
+EmsSetup	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public EMSLOAD
+EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 
-sub_B8C2	proc near
-
-var_4		= dword	ptr -4
+@@size		= dword	ptr -4 ; ZUN symbol [MAGNet2010]
 
 		enter	4, 0
 		push	si
@@ -1417,12 +1416,12 @@ var_4		= dword	ptr -4
 		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
 		add	al, 30h	; '0'
-		les	bx, off_20A8A
+		les	bx, bbname
 		mov	es:[bx+2], al
-		call	cdg_load_all_noalpha pascal, 0, word ptr off_20A8A+2, bx
-		cmp	word_25FF0, 0
-		jz	loc_B9C0
-		push	word_25FF0
+		call	cdg_load_all_noalpha pascal, 0, word ptr bbname+2, bx
+		cmp	_Ems, 0
+		jz	@@ret
+		push	_Ems
 		pushd	84D0h
 		push	_cdg_slots.sgm_colors + (size CDGSlot * 0)
 		push	0
@@ -1470,14 +1469,14 @@ loc_B941:
 
 loc_B946:
 		mov	si, 2
-		mov	[bp+var_4], 186A0h
+		mov	[bp+@@size], 186A0h
 		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 2)
 		jmp	short loc_B9B4
 ; ---------------------------------------------------------------------------
 
 loc_B957:
-		push	word_25FF0
-		pushd	[bp+var_4]
+		push	_Ems
+		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
 		push	_cdg_slots.sgm_alpha[bx]
@@ -1486,9 +1485,9 @@ loc_B957:
 		push	eax
 		call	ems_write
 		movzx	eax, di
-		add	[bp+var_4], eax
-		push	word_25FF0
-		pushd	[bp+var_4]
+		add	[bp+@@size], eax
+		push	_Ems
+		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
 		push	_cdg_slots.sgm_colors[bx]
@@ -1501,7 +1500,7 @@ loc_B957:
 		mov	ax, di
 		shl	ax, 2
 		movzx	eax, ax
-		add	[bp+var_4], eax
+		add	[bp+@@size], eax
 		call	cdg_free pascal, si
 		inc	si
 
@@ -1511,12 +1510,12 @@ loc_B9B4:
 		cmp	_cdg_slots.sgm_alpha[bx], 0
 		jnz	short loc_B957
 
-loc_B9C0:
+@@ret:
 		pop	di
 		pop	si
 		leave
 		retn
-sub_B8C2	endp
+EmsLoad	endp
 
 ; ---------------------------------------------------------------------------
 off_B9C4	dw offset loc_B923
@@ -1536,7 +1535,7 @@ arg_0		= dword	ptr  4
 		enter	4, 0
 		push	si
 		push	di
-		cmp	word_25FF0, 0
+		cmp	_Ems, 0
 		jz	loc_BA60
 		call	cdg_load_all pascal, 8, [bp+arg_0]
 		mov	si, 8
@@ -1546,7 +1545,7 @@ arg_0		= dword	ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_B9F7:
-		push	word_25FF0
+		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, si
 		shl	bx, 4
@@ -1557,7 +1556,7 @@ loc_B9F7:
 		call	ems_write
 		movzx	eax, di
 		add	[bp+var_4], eax
-		push	word_25FF0
+		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, si
 		shl	bx, 4
@@ -1596,14 +1595,14 @@ sub_B9CC	endp
 sub_BA66	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_25FF0, 0
+		cmp	_Ems, 0
 		jz	short loc_BA9C
 		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_colors + (size CDGSlot * 31), ax
-		push	word_25FF0
+		push	_Ems
 		pushd	0
 		push	ax
 		push	0
@@ -7949,7 +7948,7 @@ arg_4		= word ptr  8
 		mov	[bp+var_6], offset aKao0_cd2_0
 		cmp	[bp+arg_0], 0FFh
 		jz	loc_F432
-		cmp	word_25FF0, 0
+		cmp	_Ems, 0
 		jz	loc_F40F
 		cmp	word_2C938, 0
 		jnz	short loc_F39C
@@ -7970,7 +7969,7 @@ loc_F3A4:
 		push	si
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_alpha + (size CDGSlot * 2), ax
-		push	word_25FF0
+		push	_Ems
 		pushd	[bp+var_4]
 		push	ax
 		push	0
@@ -7985,7 +7984,7 @@ loc_F3A4:
 		push	si
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_colors + (size CDGSlot * 2), ax
-		push	word_25FF0
+		push	_Ems
 		pushd	[bp+var_4]
 		push	ax
 		push	0
@@ -8040,7 +8039,7 @@ sub_F463	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_25FF0, 0
+		cmp	_Ems, 0
 		jz	short loc_F499
 		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
 		shl	ax, 2
@@ -8048,7 +8047,7 @@ sub_F463	proc near
 		push	ax
 		call	hmem_allocbyte
 		mov	_cdg_slots.sgm_colors + (size CDGSlot * 0), ax
-		push	word_25FF0
+		push	_Ems
 		pushd	84D0h
 		push	ax
 		push	0
@@ -8198,9 +8197,9 @@ _arg0		= dword	ptr  6
 		push	bp
 		mov	bp, sp
 		call	sub_F6E4
-		cmp	word_25FF0, 0
+		cmp	_Ems, 0
 		jz	short loc_F71C
-		push	word_25FF0
+		push	_Ems
 		call	ems_free
 
 loc_F71C:
@@ -33282,8 +33281,7 @@ off_20A80	dd aEye_cdg
 word_20A84	dw 0
 off_20A86	dd aSt00
 					; "ST00"
-off_20A8A	dd aBb0_cdg_0
-					; "BB0.CDG"
+bbname	dd aBb0_cdg_0	; ZUN symbol [MAGNet2010]
 aVersion1_01	db 'version 1.01',0
 aEye_cdg	db 'eye.cdg',0
 aKAIKIDAN2_DAT	db '‰öãY’k2.dat',0
@@ -34917,7 +34915,7 @@ stage_id	db ?
 _rank	db ?
 include th04/playperf[bss].asm
 playchar	db ?
-word_25FF0	dw ?
+include th04/ems[bss].asm
 byte_25FF2	db ?
 		db ?
 include th02/demo[bss].asm
