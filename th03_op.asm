@@ -1637,7 +1637,7 @@ arg_2		= byte ptr  6
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+5F2h]
-		call	sub_C6DB
+		call	graph_putsa_fx
 		graph_accesspage byte ptr word_F828+1
 		push	10h
 		mov	al, [bp+arg_2]
@@ -1654,7 +1654,7 @@ arg_2		= byte ptr  6
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+5F2h]
-		call	sub_C6DB
+		call	graph_putsa_fx
 		leave
 		retn	4
 sub_A51E	endp
@@ -2104,7 +2104,7 @@ sub_AB99	proc near
 		push	1Fh
 		push	ds
 		push	offset _music_cmt
-		call	sub_C6DB
+		call	graph_putsa_fx
 		mov	di, 1
 		jmp	short loc_ABDC
 ; ---------------------------------------------------------------------------
@@ -2120,7 +2120,7 @@ loc_ABC0:
 		imul	ax, MUSIC_CMT_LINE_LEN
 		add	ax, offset _music_cmt
 		push	ax
-		call	sub_C6DB
+		call	graph_putsa_fx
 		inc	di
 
 loc_ABDC:
@@ -4322,9 +4322,8 @@ include th03/formats/cdg_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-; Attributes: bp-based frame
-
-sub_C6DB	proc far
+;void pascal graph_putsa_fx(int x, int y, int fx, const unsigned char *str)
+graph_putsa_fx	proc far
 
 var_32		= byte ptr -32h
 var_12		= word ptr -12h
@@ -4626,7 +4625,7 @@ loc_C92F:
 		pop	si
 		leave
 		retf	0Ah
-sub_C6DB	endp
+graph_putsa_fx	endp
 
 include th02/formats/pi_slot_load.asm
 include th03/hardware/input_modes.asm

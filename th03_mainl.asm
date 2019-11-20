@@ -302,17 +302,17 @@ sub_973E	proc near
 		push	2Fh ; '/'
 		push	ds
 		push	offset unk_F72C
-		call	sub_D197
+		call	graph_putsa_fx
 		push	500120h
 		push	2Fh ; '/'
 		push	ds
 		push	offset unk_F769
-		call	sub_D197
+		call	graph_putsa_fx
 		push	500130h
 		push	2Fh ; '/'
 		push	ds
 		push	offset unk_F7A6
-		call	sub_D197
+		call	graph_putsa_fx
 		pop	bp
 		retn
 sub_973E	endp
@@ -642,13 +642,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	sub_D197
+		call	graph_putsa_fx
 		push	800134h
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	sub_D197
+		call	graph_putsa_fx
 		les	bx, _yumeconfig
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
@@ -663,13 +663,13 @@ loc_9A8E:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
-		call	sub_D197
+		call	graph_putsa_fx
 		push	1800134h
 		push	2Fh ; '/'
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
-		call	sub_D197
+		call	graph_putsa_fx
 		push	1
 		call	palette_black_in
 		mov	vsync_Count1, 0
@@ -1166,7 +1166,7 @@ loc_9FC8:
 		push	2Fh ; '/'
 		push	word ptr [bp+var_6+2]
 		push	bx
-		call	sub_D197
+		call	graph_putsa_fx
 		push	1
 		call	palette_black_in
 
@@ -1222,7 +1222,7 @@ loc_A069:
 		push	2Fh ; '/'
 		push	word ptr [bp+var_6+2]
 		push	bx
-		call	sub_D197
+		call	graph_putsa_fx
 		jmp	short loc_A0C5
 ; ---------------------------------------------------------------------------
 
@@ -2620,7 +2620,7 @@ loc_ACFB:
 		push	ax
 		push	word ptr [bp+var_6+2]
 		push	bx
-		call	sub_D197
+		call	graph_putsa_fx
 		graph_accesspage 0
 		push	word_105D0
 		push	word_105D2
@@ -2629,7 +2629,7 @@ loc_ACFB:
 		mov	ah, 0
 		push	ax
 		pushd	[bp+var_6]
-		call	sub_D197
+		call	graph_putsa_fx
 		call	sub_A5FC
 		cmp	byte_105CE, 0
 		jnz	loc_ACA3
@@ -3567,7 +3567,7 @@ loc_B3E0:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+906h]
-		call	sub_D197
+		call	graph_putsa_fx
 		add	si, 70h	; 'p'
 		push	si
 		push	[bp+arg_2]
@@ -5202,7 +5202,7 @@ var_2		= word ptr -2
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+0AE2h]
-		call	sub_D197
+		call	graph_putsa_fx
 		push	16800C7h
 		push	2Fh ; '/'
 		mov	al, _rank
@@ -5210,7 +5210,7 @@ var_2		= word ptr -2
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+0B06h]
-		call	sub_D197
+		call	graph_putsa_fx
 		mov	si, 198h
 		mov	[bp+var_4], 0
 		mov	[bp+var_2], 8
@@ -5239,7 +5239,7 @@ loc_C2F7:
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		add	si, 10h
 
 loc_C316:
@@ -5256,13 +5256,13 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		push	19800F8h
 		push	2Fh ; '/'
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		mov	al, byte_10BD8
 		mov	ah, 0
 		mov	bx, 64h	; 'd'
@@ -5280,7 +5280,7 @@ loc_C319:
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		add	si, 10h
 
 loc_C38D:
@@ -5309,7 +5309,7 @@ loc_C3B4:
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		add	si, 10h
 
 loc_C3D3:
@@ -5324,13 +5324,13 @@ loc_C3D3:
 		mov	bx, di
 		shl	bx, 2
 		pushd	dword ptr [bx+0B16h]
-		call	sub_D197
+		call	graph_putsa_fx
 		lea	ax, [si+10h]
 		push	ax
 		push	123002Fh
 		push	ds
 		push	offset aU_	; "“_"
-		call	sub_D197
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -5687,9 +5687,8 @@ sub_D16F	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-; Attributes: bp-based frame
-
-sub_D197	proc far
+;void graph_putsa_fx(int x, int y, int fx, const unsigned char *str)
+graph_putsa_fx	proc far
 
 var_32		= byte ptr -32h
 var_12		= word ptr -12h
@@ -5991,7 +5990,7 @@ loc_D3EB:
 		pop	si
 		leave
 		retf	0Ah
-sub_D197	endp
+graph_putsa_fx	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
