@@ -769,7 +769,7 @@ loc_B2A5:
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B2DD
-		call	sub_B757
+		call	demo_load
 		les	bx, _ksoconfig
 		mov	al, es:[bx+1Dh]
 		mov	es:[bx+13h], al
@@ -779,7 +779,7 @@ loc_B2A5:
 		mov	power, 128
 
 loc_B2CE:
-		mov	fp_2300E, offset sub_B7B5
+		mov	fp_2300E, offset DemoPlay
 		mov	random_seed, 13Eh
 
 loc_B2DD:
@@ -1249,8 +1249,8 @@ sub_B638	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B757	proc near
+public demo_load
+demo_load	proc near
 
 var_4		= dword	ptr -4
 
@@ -1258,20 +1258,19 @@ var_4		= dword	ptr -4
 		push	si
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 4
-		ja	short loc_B76C
-		mov	ax, 2710h
+		ja	short @@demo_extra
+		mov	ax, DEMO_N * 2
 		jmp	short loc_B76F
 ; ---------------------------------------------------------------------------
 
-loc_B76C:
-		mov	ax, 9C40h
+@@demo_extra:
+		mov	ax, (DEMO_N * 4) * 2
 
 loc_B76F:
 		mov	si, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	word ptr dword_25FF4+2,	ax
-		mov	word ptr dword_25FF4, 0
+		call	hmem_allocbyte pascal, ax
+		mov	word ptr _DemoBuf+2, ax
+		mov	word ptr _DemoBuf, 0
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 22Dh
 		les	bx, _ksoconfig
@@ -1282,58 +1281,56 @@ loc_B76F:
 		push	word ptr [bp+var_4+2]
 		push	bx
 		call	file_ropen
-		pushd	[dword_25FF4]
-		push	si
-		call	file_read
+		call	file_read pascal, large [_DemoBuf], si
 		call	file_close
 		pop	si
 		leave
 		retn
-sub_B757	endp
+demo_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B7B5	proc near
+public DEMOPLAY
+DemoPlay	proc near ; ZUN symbol [MAGNet2010]
 
 var_2		= word ptr -2
 
 		enter	2, 0
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 4
-		ja	short loc_B7C9
-		mov	ax, 1388h
+		ja	short @@demo_extra
+		mov	ax, DEMO_N
 		jmp	short loc_B7CC
 ; ---------------------------------------------------------------------------
 
-loc_B7C9:
-		mov	ax, 4E20h
+@@demo_extra:
+		mov	ax, DEMO_N * 4
 
 loc_B7CC:
 		mov	[bp+var_2], ax
 		test	_input, INPUT_REPLAY_END
 		jnz	short loc_B80C
-		les	bx, dword_25FF4
+		les	bx, _DemoBuf
 		add	bx, frame
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	_input, ax
 		mov	ax, frame
 		add	ax, [bp+var_2]
-		mov	bx, word ptr dword_25FF4
+		mov	bx, word ptr _DemoBuf
 		add	bx, ax
 		mov	al, es:[bx]
 		mov	_input_focus, al
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short locret_B825
-		cmp	frame, 1384h
+		cmp	frame, DEMO_N - 4
 		jb	short locret_B825
 
 loc_B80C:
-		push	word ptr dword_25FF4+2
+		push	word ptr _DemoBuf+2
 		call	hmem_free
 		push	8
 		call	palette_black_out
@@ -1344,7 +1341,7 @@ loc_B80C:
 locret_B825:
 		leave
 		retn
-sub_B7B5	endp
+DemoPlay	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7895,9 +7892,7 @@ sub_F2B4	proc far
 		push	ds
 		push	offset aDemo5_rec ; "DEMO5.REC"
 		call	file_ropen
-		pushd	[dword_25FF4]
-		push	9C40h
-		call	file_read
+		call	file_read pascal, large [_DemoBuf], (DEMO_N * 4) * 2
 		call	file_close
 		mov	frame, 0
 		inc	byte_221EC
@@ -7906,7 +7901,7 @@ sub_F2B4	proc far
 ; ---------------------------------------------------------------------------
 
 loc_F318:
-		push	word ptr dword_25FF4+2
+		push	word ptr _DemoBuf+2
 		call	hmem_free
 		push	8
 		call	palette_black_out
@@ -34925,7 +34920,7 @@ playchar	db ?
 word_25FF0	dw ?
 byte_25FF2	db ?
 		db ?
-dword_25FF4	dd ?
+include th02/demo[bss].asm
 byte_25FF8	db ?
 		db ?
 word_25FFA	dw ?

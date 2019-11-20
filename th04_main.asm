@@ -684,7 +684,7 @@ loc_AEF9:
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+3Eh], 0
 		jz	short loc_AF4A
-		call	main_01:sub_B3EE
+		call	main_01:demo_load
 		les	bx, _humaconfig
 		mov	al, es:[bx+3Ch]
 		mov	es:[bx+11h], al
@@ -692,7 +692,7 @@ loc_AEF9:
 		mov	power, 128
 		add	al, 30h	; '0'
 		mov	es:[bx+13h], al
-		mov	fp_23D90, offset sub_B439
+		mov	fp_23D90, offset DemoPlay
 		mov	random_seed, 13Eh
 
 loc_AF4A:
@@ -1104,16 +1104,15 @@ sub_B2CF	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B3EE	proc near
+public demo_load
+demo_load	proc near
 
 var_4		= dword	ptr -4
 
 		enter	4, 0
-		push	1F40h
-		call	hmem_allocbyte
-		mov	word ptr dword_23D92+2,	ax
-		mov	word ptr dword_23D92, 0
+		call	hmem_allocbyte pascal, DEMO_N * 2
+		mov	word ptr _DemoBuf+2, ax
+		mov	word ptr _DemoBuf, 0
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 1EDh
 		les	bx, _humaconfig
@@ -1124,51 +1123,49 @@ var_4		= dword	ptr -4
 		push	word ptr [bp+var_4+2]
 		push	bx
 		call	file_ropen
-		pushd	[dword_23D92]
-		push	1F40h
-		call	file_read
+		call	file_read pascal, large [_DemoBuf], DEMO_N * 2
 		call	file_close
 		leave
 		retn
-sub_B3EE	endp
+demo_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B439	proc near
+public DEMOPLAY
+DemoPlay	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_input, INPUT_NONE
-		jnz	short loc_B46D
-		les	bx, dword_23D92
+		jnz	short @@demo_end
+		les	bx, _DemoBuf
 		add	bx, frame
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	_input, ax
 		mov	ax, frame
-		add	ax, 0FA0h
-		mov	bx, word ptr dword_23D92
+		add	ax, DEMO_N
+		mov	bx, word ptr _DemoBuf
 		add	bx, ax
 		mov	al, es:[bx]
 		mov	_input_focus, al
-		cmp	frame, 3996
-		jb	short loc_B486
+		cmp	frame, DEMO_N - 4
+		jb	short @@demo_not_end
 
-loc_B46D:
-		push	word ptr dword_23D92+2
+@@demo_end:
+		push	word ptr _DemoBuf+2
 		call	hmem_free
-		push	0Ah
+		push	10
 		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
 		nopcall	main_01:sub_E7FD
 
-loc_B486:
+@@demo_not_end:
 		pop	bp
 		retn
-sub_B439	endp
+DemoPlay	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -39800,7 +39797,7 @@ word_237F8	dw 0
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 		dw ?
 fp_23D90	dw ?
-dword_23D92	dd ?
+include th02/demo[bss].asm
 		dd ?
 		dd ?
 		dd ?

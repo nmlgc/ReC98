@@ -1870,7 +1870,7 @@ loc_B1BA:
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_B1CA
-		nopcall	sub_C13E
+		nopcall	demo_load
 
 loc_B1CA:
 		call	sub_B2AB
@@ -1949,7 +1949,7 @@ loc_B27A:
 ; ---------------------------------------------------------------------------
 
 loc_B287:
-		push	word ptr dword_1F4A8+2
+		push	word ptr _DemoBuf+2
 		call	hmem_free
 
 loc_B290:
@@ -2798,7 +2798,7 @@ loc_BDA2:
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_BDCC
-		nopcall	sub_C1E4
+		nopcall	DemoPlay
 
 loc_BDCC:
 		call	sub_F1D8
@@ -3156,14 +3156,13 @@ EGC_START_COPY_DEF 1, near
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C13E	proc far
+public demo_load
+demo_load	proc far
 		push	bp
 		mov	bp, sp
-		push	36B0h
-		call	hmem_allocbyte
-		mov	word ptr dword_1F4A8+2,	ax
-		mov	word ptr dword_1F4A8, 0
+		call	hmem_allocbyte pascal, DEMO_N * 2
+		mov	word ptr _DemoBuf+2, ax
+		mov	word ptr _DemoBuf, 0
 		mov	power, 80
 		mov	word_20272, 0Ch
 		les	bx, mikoconfig
@@ -3204,32 +3203,30 @@ loc_C1AE:
 		mov	es:[bx+mikoconfig_t.shottype], 1
 
 loc_C1D0:
-		pushd	[dword_1F4A8]
-		push	36B0h
-		call	file_read
+		call	file_read pascal, large [_DemoBuf], DEMO_N * 2
 		call	file_close
 		pop	bp
 		retf
-sub_C13E	endp
+demo_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C1E4	proc far
+public DEMOPLAY
+DemoPlay	proc far ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
 		cmp	_input, 0
 		jnz	short loc_C20B
-		mov	ax, word_1DB86
+		mov	ax, _demo_frame
 		add	ax, ax
-		les	bx, dword_1F4A8
+		les	bx, _DemoBuf
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	_input, ax
-		inc	word_1DB86
-		cmp	word_1DB86, 1B26h
+		inc	_demo_frame
+		cmp	_demo_frame, DEMO_N - 50
 		jl	short loc_C222
 
 loc_C20B:
@@ -3242,7 +3239,7 @@ loc_C20B:
 loc_C222:
 		pop	bp
 		retf
-sub_C1E4	endp
+DemoPlay	endp
 
 include th02/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
@@ -33976,7 +33973,7 @@ off_1DB7A	dd aVdvVVBbvVVVV
 off_1DB7E	dd aB@b@vVvbavtvVV
 					; "　　はい、やめます。　"
 dword_1DB82	dd 0
-word_1DB86	dw 0
+include th02/demo[data].asm
 aTH02_02	db '　 博麗　～Eastern Wind ',0
 aTH02_03	db '　  She',27h,'s in a temper!! ',0
 aTH02_04	db '　   End of Daylight　  ',0
@@ -35169,7 +35166,7 @@ farfp_1F498	dd ?
 _boss_bg_render_func	dd ?
 farfp_1F4A0	dd ?
 farfp_1F4A4	dd ?
-dword_1F4A8	dd ?
+include th02/demo[bss].asm
 byte_1F4AC	db ?
 unk_1F4AD	db    ?	;
 		dd    ?	;
