@@ -21,6 +21,7 @@
 
 include ReC98.inc
 include th03/th03.inc
+include th03/playfld.inc
 include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
@@ -2951,14 +2952,14 @@ loc_B839:
 		jz	short loc_B88B
 		cmp	byte ptr [si+1], 0
 		jnz	short loc_B852
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_B85E
 ; ---------------------------------------------------------------------------
 
 loc_B852:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_B85E:
 		mov	al, [si]
@@ -2995,14 +2996,14 @@ loc_B88F:
 		jz	short loc_B8ED
 		cmp	byte ptr [si+1], 0
 		jnz	short loc_B8B4
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_B8C0
 ; ---------------------------------------------------------------------------
 
 loc_B8B4:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_B8C0:
 		mov	al, [si]
@@ -4174,14 +4175,14 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte ptr word_23AF0, 0
 		jnz	short loc_C263
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_C26F
 ; ---------------------------------------------------------------------------
 
 loc_C263:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_C26F:
 		mov	_sprite16_put_w, (48 / 16)
@@ -6216,8 +6217,8 @@ sub_D135	proc far
 		push	di
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 3
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		mov	ax, 0A800h
 		mov	es, ax
@@ -6361,8 +6362,8 @@ loc_D276:
 		jb	short loc_D254
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 3
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 10
 		mov	ax, 0A800h
 		mov	es, ax
@@ -6462,8 +6463,8 @@ sub_D340	proc far
 		push	di
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	ax, 0A800h
 		mov	es, ax
@@ -6611,8 +6612,8 @@ loc_D488:
 		jb	short loc_D466
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	ax, 0A800h
 		mov	es, ax
@@ -8022,8 +8023,8 @@ arg_0		= word ptr  4
 loc_DEB2:
 		cmp	byte ptr [si+0Fh], 0
 		jnz	short loc_DF12
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 32
 		push	word ptr [si]
@@ -9168,8 +9169,8 @@ var_2		= word ptr -2
 		mov	si, 66A6h
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		xor	di, di
 		jmp	short loc_E8EF
 ; ---------------------------------------------------------------------------
@@ -9584,8 +9585,8 @@ arg_4		= word ptr  0Ah
 		mov	bl, al
 		shl	bx, 4
 		add	bx, dx
-		mov	si, word_1F2E4
-		mov	cx, word_1F2E6
+		mov	si, _sprite16_clip_left
+		mov	cx, _sprite16_clip_right
 		cmp	bx, cx
 		jge	short loc_F14A
 		cmp	dx, si
@@ -9659,8 +9660,8 @@ arg_6		= word ptr  0Ch
 		mov	bl, al
 		shl	bx, 4
 		add	bx, dx
-		mov	si, word_1F2E4
-		mov	cx, word_1F2E6
+		mov	si, _sprite16_clip_left
+		mov	cx, _sprite16_clip_right
 		cmp	bx, cx
 		jge	short loc_F1BA
 		cmp	dx, si
@@ -9801,14 +9802,14 @@ loc_F210:
 		mov	[bp+var_5], al
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_F253
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_F25F
 ; ---------------------------------------------------------------------------
 
 loc_F253:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_F25F:
 		mov	_sprite16_put_w, (48 / 16)
@@ -10822,14 +10823,14 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jnz	short loc_FB12
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_FB1E
 ; ---------------------------------------------------------------------------
 
 loc_FB12:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_FB1E:
 		cmp	byte_1F34F, 0
@@ -11628,14 +11629,14 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jnz	short loc_1028D
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_10299
 ; ---------------------------------------------------------------------------
 
 loc_1028D:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_10299:
 		cmp	byte_1F34F, 0
@@ -12656,14 +12657,14 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jnz	short loc_10BD5
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_10BE1
 ; ---------------------------------------------------------------------------
 
 loc_10BD5:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_10BE1:
 		cmp	byte_1F34F, 0
@@ -13303,14 +13304,14 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 48
 		cmp	[bp+var_5], 0
 		jnz	short loc_111D1
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_111DD
 ; ---------------------------------------------------------------------------
 
 loc_111D1:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_111DD:
 		mov	si, word_1F34C
@@ -13432,14 +13433,14 @@ loc_112C5:
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_112E5
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_112F1
 ; ---------------------------------------------------------------------------
 
 loc_112E5:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_112F1:
 		mov	al, byte ptr word_23AF0
@@ -14301,14 +14302,14 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jnz	short loc_11A2B
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_11A37
 ; ---------------------------------------------------------------------------
 
 loc_11A2B:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_11A37:
 		cmp	byte_1F34F, 0
@@ -15118,14 +15119,14 @@ kotohime_12140	proc far
 		mov	dx, 1
 		sub	dx, ax
 		jnz	short loc_12166
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_12172
 ; ---------------------------------------------------------------------------
 
 loc_12166:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_12172:
 		cmp	byte_1F34F, 0
@@ -16283,14 +16284,14 @@ chiyuri_12B99	proc far
 		mov	dx, 1
 		sub	dx, ax
 		jnz	short loc_12BBF
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_12BCB
 ; ---------------------------------------------------------------------------
 
 loc_12BBF:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_12BCB:
 		cmp	byte_1F34F, 0
@@ -17117,14 +17118,14 @@ kana_132FE	proc far
 		mov	dx, 1
 		sub	dx, ax
 		jnz	short loc_13324
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_13330
 ; ---------------------------------------------------------------------------
 
 loc_13324:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_13330:
 		cmp	byte_1F34F, 0
@@ -17877,14 +17878,14 @@ rikako_1398B	proc far
 		mov	dx, 1
 		sub	dx, ax
 		jnz	short loc_139B1
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_139BD
 ; ---------------------------------------------------------------------------
 
 loc_139B1:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_139BD:
 		cmp	byte_1F34F, 0
@@ -19948,8 +19949,8 @@ loc_14A1C:
 		jnb	short loc_14A72
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 0F16h
@@ -20408,14 +20409,14 @@ reimu_14D83	proc far
 		mov	word_205CA, ax
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_14DAB
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_14DB7
 ; ---------------------------------------------------------------------------
 
 loc_14DAB:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_14DB7:
 		mov	_sprite16_put_w, (48 / 16)
@@ -20855,8 +20856,8 @@ var_2		= word ptr -2
 		mov	word_207E0, ax
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 18h
@@ -21468,14 +21469,14 @@ var_2		= word ptr -2
 		mov	word_20E22, ax
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_15689
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_15695
 ; ---------------------------------------------------------------------------
 
 loc_15689:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_15695:
 		mov	al, byte ptr word_23AF0
@@ -23194,14 +23195,14 @@ loc_164E9:
 		mov	_sprite16_put_h, ax
 		cmp	byte ptr [si+8], 0
 		jnz	short loc_16526
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_16532
 ; ---------------------------------------------------------------------------
 
 loc_16526:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_16532:
 		cmp	byte ptr [si], 1
@@ -24115,14 +24116,14 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_16C9F
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_16CAB
 ; ---------------------------------------------------------------------------
 
 loc_16C9F:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_16CAB:
 		mov	al, byte ptr word_23AF0
@@ -24736,8 +24737,8 @@ var_2		= word ptr -2
 		mov	word_23E3A, ax
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		xor	si, si
 		jmp	short loc_171B2
 ; ---------------------------------------------------------------------------
@@ -26111,8 +26112,8 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		call	egc_on
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
 		mov	[bp+var_C], 68F2h
@@ -26516,8 +26517,8 @@ loc_17F4B:
 		mov	[bp+var_5], 8
 
 loc_17F5A:
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		push	word ptr [si+2]
 		mov	al, [si+8]
 		mov	ah, 0
@@ -27017,8 +27018,8 @@ sub_1837C	proc far
 		mov	bp, sp
 		push	si
 		call	sub_181C3
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	word_2203C, 4656h
 		xor	si, si
 		jmp	short loc_183B9
@@ -27405,14 +27406,14 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 32
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_186F6
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_18702
 ; ---------------------------------------------------------------------------
 
 loc_186F6:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_18702:
 		mov	al, byte ptr word_23AF0
@@ -29062,14 +29063,14 @@ var_2		= word ptr -2
 		mov	bx, [bx]
 		cmp	byte ptr [bx+10h], 0
 		jnz	short loc_1955F
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1956B
 ; ---------------------------------------------------------------------------
 
 loc_1955F:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1956B:
 		mov	bx, word_1FB3A
@@ -29549,14 +29550,14 @@ var_2		= word ptr -2
 		mov	dx, 1
 		sub	dx, ax
 		jnz	short loc_1991E
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1992A
 ; ---------------------------------------------------------------------------
 
 loc_1991E:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1992A:
 		mov	al, [si+1]
@@ -29905,14 +29906,14 @@ var_2		= word ptr -2
 		mov	[bp+var_4], ax
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_19B8B
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_19B97
 ; ---------------------------------------------------------------------------
 
 loc_19B8B:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_19B97:
 		cmp	byte ptr [si], 1
@@ -30302,8 +30303,8 @@ var_2		= word ptr -2
 		sar	ax, 4
 		add	ax, 10h
 		mov	[bp+var_5+1], ax
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	al, [si+1]
 		mov	byte ptr [bp+var_5], al
 		cmp	byte ptr [si], 1
@@ -31018,8 +31019,8 @@ arg_4		= word ptr  8
 loc_1A347:
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	ax, [bp+arg_4]
 		add	ax, 0FFF0h
 		push	ax
@@ -31049,10 +31050,10 @@ arg_4		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_1F2E4, 0
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 
 loc_1A381:
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
 		mov	si, 1930h
@@ -31108,14 +31109,14 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1A40B
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1A417
 ; ---------------------------------------------------------------------------
 
 loc_1A40B:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1A417:
 		cmp	byte ptr [si], 1
@@ -31477,14 +31478,14 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1A6CB
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1A6D7
 ; ---------------------------------------------------------------------------
 
 loc_1A6CB:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1A6D7:
 		mov	al, [si+0Eh]
@@ -31921,14 +31922,14 @@ var_2		= word ptr -2
 		mov	[bp+var_6], ax
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_1A9F3
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1A9FF
 ; ---------------------------------------------------------------------------
 
 loc_1A9F3:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1A9FF:
 		mov	bx, [bp+var_A]
@@ -32736,14 +32737,14 @@ var_2		= word ptr -2
 		mov	[bp+var_5+1], ax
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_1B0A1
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1B0AD
 ; ---------------------------------------------------------------------------
 
 loc_1B0A1:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1B0AD:
 		mov	al, [si+1]
@@ -33271,14 +33272,14 @@ chiyuri_1B427	proc far
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1B459
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1B465
 ; ---------------------------------------------------------------------------
 
 loc_1B459:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1B465:
 		xor	si, si
@@ -33955,14 +33956,14 @@ ellen_1B979	proc far
 		mov	_sprite16_put_h, 8
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1B9AC
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1B9B8
 ; ---------------------------------------------------------------------------
 
 loc_1B9AC:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1B9B8:
 		xor	si, si
@@ -34664,14 +34665,14 @@ kana_1BEF3	proc far
 		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1BF34
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1BF40
 ; ---------------------------------------------------------------------------
 
 loc_1BF34:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1BF40:
 		xor	dx, dx
@@ -35133,14 +35134,14 @@ kotohime_1C295	proc far
 		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1C2CF
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1C2DB
 ; ---------------------------------------------------------------------------
 
 loc_1C2CF:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1C2DB:
 		call	sub_1C1E9
@@ -35739,14 +35740,14 @@ rikako_1C6E8	proc far
 		mov	_sprite16_put_h, 16
 		cmp	byte ptr word_1FE88, 0
 		jnz	short loc_1C728
-		mov	word_1F2E4, 0
-		mov	word_1F2E6, 13Fh
+		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
 		jmp	short loc_1C734
 ; ---------------------------------------------------------------------------
 
 loc_1C728:
-		mov	word_1F2E4, 140h
-		mov	word_1F2E6, 27Fh
+		mov	_sprite16_clip_left, PLAYFIELD2_CLIP_LEFT
+		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_1C734:
 		xor	si, si
@@ -37270,8 +37271,6 @@ include th03/formats/hfliplut[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_1F2E4	dw ?
-word_1F2E6	dw ?
 include th03/sprite16[bss].asm
 word_1F2EC	dw ?
 word_1F2EE	dw ?
