@@ -22,6 +22,7 @@
 include ReC98.inc
 include th03/th03.inc
 include th03/playfld.inc
+include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
@@ -2923,7 +2924,7 @@ sub_B7E5	endp
 
 sub_B80B	proc near
 
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -2976,11 +2977,8 @@ loc_B85E:
 		add	ax, bx
 		add	ax, bx
 		add	ax, 1910h
-		mov	[bp+var_2], ax
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	ax
-		call	sub_F100
+		mov	[bp+@@sprite_offset], ax
+		call	sprite16_put pascal, word ptr [si+2], word ptr [si+4], ax
 
 loc_B88B:
 		inc	di
@@ -3020,11 +3018,8 @@ loc_B8C0:
 		add	ax, bx
 		add	ax, bx
 		add	ax, 1910h
-		mov	[bp+var_2], ax
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	ax
-		call	sub_F100
+		mov	[bp+@@sprite_offset], ax
+		call	sprite16_put pascal, word ptr [si+2], word ptr [si+4], ax
 
 loc_B8ED:
 		xor	dx, dx
@@ -4130,8 +4125,8 @@ sub_C0D8	endp
 
 sub_C1E6	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
 
@@ -4146,17 +4141,14 @@ arg_2		= byte ptr  6
 		add	dx, dx
 		mov	bx, dx
 		add	ax, [bx+659Ch]
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_20E40, word_20E42, _SinTable8[bx]
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	34B4h
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, 34B4h
 		leave
 		retn	4
 sub_C1E6	endp
@@ -6256,7 +6248,7 @@ loc_D195:
 		sar	ax, 4
 		push	ax
 		push	word ptr [di+0Ah]
-		call	sub_F100
+		call	sprite16_put
 		add	di, 10h
 		inc	si
 		cmp	si, 30h	; '0'
@@ -6387,7 +6379,7 @@ loc_D2C1:
 		sar	ax, 4
 		push	ax
 		push	word ptr [di+0Ah]
-		call	sub_F1D2
+		call	sprite16_put_noclip
 		add	di, 10h
 		inc	si
 		cmp	si, 30h	; '0'
@@ -6506,7 +6498,7 @@ loc_D3AF:
 		sar	ax, 4
 		push	ax
 		push	word ptr [di+0Ah]
-		call	sub_F1D2
+		call	sprite16_put_noclip
 		add	di, 10h
 		inc	si
 		cmp	si, 32h	; '2'
@@ -6651,7 +6643,7 @@ loc_D4E6:
 		push	ax
 		add	dx, [di+0Ah]
 		push	dx
-		call	sub_F1D2
+		call	sprite16_put_noclip
 		add	di, 10h
 		inc	si
 		cmp	si, 32h	; '2'
@@ -8001,8 +7993,8 @@ sub_DA43	endp
 
 sub_DE95	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -8032,12 +8024,12 @@ loc_DEB2:
 		mov	ah, 0
 		push	ax
 		nopcall	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
+		add	ax, -16
+		mov	[bp+@@top], ax
 		mov	al, [si+0Eh]
 		mov	ah, 0
 		shl	ax, 2
@@ -8048,10 +8040,7 @@ loc_DEB2:
 		add	di, 0A00h
 
 loc_DF06:
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	di
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], di
 
 loc_DF12:
 		pop	di
@@ -9159,9 +9148,9 @@ sub_E83F	endp
 
 sub_E86A	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -6
+@@left		= word ptr -4
+@@sprite_offset		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -9181,27 +9170,21 @@ loc_E88E:
 		mov	al, [si+0Ah]
 		mov	ah, 0
 		add	ax, [si+8]
-		mov	[bp+var_2], ax
+		mov	[bp+@@sprite_offset], ax
 		push	word ptr [si+2]
 		mov	al, [si+0Ch]
 		mov	ah, 0
 		push	ax
 		nopcall	sub_A2D0
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_6], ax
-		push	[bp+var_4]
-		push	ax
-		push	[bp+var_2]
-		call	sub_F100
-		mov	ax, [bp+var_4]
-		add	ax, 10h
-		push	ax
-		push	[bp+var_6]
-		push	[bp+var_2]
-		call	sub_F100
+		add	ax, 16
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
+		mov	ax, [bp+@@left]
+		add	ax, 16
+		call	sprite16_put pascal, ax, [bp+@@top], [bp+@@sprite_offset]
 		mov	al, [si+0Ah]
 		add	al, 2
 		mov	[si+0Ah], al
@@ -9563,194 +9546,12 @@ sub_F0EE	proc far
 		retf
 sub_F0EE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F100	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	dx, [bp+arg_4]
-		mov	al, _sprite16_put_w
-		xor	bh, bh
-		mov	bl, al
-		shl	bx, 4
-		add	bx, dx
-		mov	si, _sprite16_clip_left
-		mov	cx, _sprite16_clip_right
-		cmp	bx, cx
-		jge	short loc_F14A
-		cmp	dx, si
-		jl	short loc_F136
-
-loc_F127:
-		mov	ah, SPRITE16_PUT
-		mov	bx, [bp+arg_2]
-		sar	bx, 1
-		mov	cx, _sprite16_put_h
-		int	SPRITE16
-		jmp	short loc_F15B
-; ---------------------------------------------------------------------------
-
-loc_F136:
-		cmp	bx, si
-		jl	short loc_F15B
-
-loc_F13A:
-		add	dx, 10h
-		dec	al
-		jz	short loc_F15B
-		add	di, 2
-		cmp	dx, si
-		jl	short loc_F13A
-		jmp	short loc_F127
-; ---------------------------------------------------------------------------
-
-loc_F14A:
-		cmp	dx, cx
-		jge	short loc_F15B
-
-loc_F14E:
-		sub	bx, 10h
-		dec	al
-		jz	short loc_F15B
-		cmp	bx, cx
-		jge	short loc_F14E
-		jmp	short loc_F127
-; ---------------------------------------------------------------------------
-
-loc_F15B:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_F100	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F162	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	dx, [bp+arg_6]
-		mov	al, _sprite16_put_w
-		xor	bh, bh
-		mov	bl, al
-		shl	bx, 4
-		add	bx, dx
-		mov	si, _sprite16_clip_left
-		mov	cx, _sprite16_clip_right
-		cmp	bx, cx
-		jge	short loc_F1BA
-		cmp	dx, si
-		jl	short loc_F1A6
-
-loc_F189:
-		mov	ah, SPRITE16_PUT
-		mov	bx, [bp+arg_4]
-		sar	bx, 1
-		mov	cx, _sprite16_put_h
-
-loc_F194:
-		mov	si, [bp+arg_0]
-		int	SPRITE16
-		dec	si
-		jz	short loc_F1CB
-		add	bx, cx
-		cmp	bx, 0C8h
-		jge	short loc_F1CB
-		jmp	short loc_F194
-; ---------------------------------------------------------------------------
-
-loc_F1A6:
-		cmp	bx, si
-		jl	short loc_F1CB
-
-loc_F1AA:
-		add	dx, 10h
-		dec	al
-		jz	short loc_F1CB
-		add	di, 2
-		cmp	dx, si
-		jl	short loc_F1AA
-		jmp	short loc_F189
-; ---------------------------------------------------------------------------
-
-loc_F1BA:
-		cmp	dx, cx
-		jge	short loc_F1CB
-
-loc_F1BE:
-		sub	bx, 10h
-		dec	al
-		jz	short loc_F1CB
-		cmp	bx, cx
-		jge	short loc_F1BE
-		jmp	short loc_F189
-; ---------------------------------------------------------------------------
-
-loc_F1CB:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_F162	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F1D2	proc far
-
-arg_0		= word ptr  6
-@@screen_y		= word ptr  8
-@@x		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	di, [bp+arg_0]
-		mov	dx, [bp+@@x]
-		xor	bh, bh
-		mov	bl, al
-		shl	bx, 4
-		add	bx, dx
-		mov	ah, SPRITE16_PUT
-		mov	bx, [bp+@@screen_y]
-		sar	bx, 1
-		mov	al, _sprite16_put_w
-		mov	cx, _sprite16_put_h
-		int	SPRITE16
-		pop	di
-		pop	bp
-		retf	6
-sub_F1D2	endp
-
+	SPRITE16_PUT procdesc pascal far \
+		left:word, screen_top:word, sprite_offset:word
+	SPRITE16_PUTX procdesc pascal far \
+		left:word, screen_top:word, sprite_offset:word, func:word
+	SPRITE16_PUT_NOCLIP procdesc pascal far \
+		left:word, screen_top:word, sprite_offset:word
 main_02_TEXT	ends
 
 ; ===========================================================================
@@ -9768,8 +9569,8 @@ main_03_TEXT	segment	byte public 'CODE' use16
 sub_F1FA	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
@@ -9824,19 +9625,16 @@ loc_F26E:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, di, [bp+arg_0], _CosTable8[bx]
-		add	ax, 0FFE8h
-		mov	[bp+var_2], ax
+		add	ax, -24
+		mov	[bp+@@left], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, [bp+arg_2], [bp+arg_0], _SinTable8[bx]
-		add	ax, 0FFE8h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	1930h
-		call	sub_F100
+		add	ax, -24
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, 1930h
 		inc	si
 		mov	al, [bp+var_5]
 		add	al, 10h
@@ -9864,8 +9662,8 @@ loc_F2D4:
 		push	di
 		call	vector1_at
 		add	sp, 6
-		add	ax, 0FFE8h
-		mov	[bp+var_2], ax
+		add	ax, -24
+		mov	[bp+@@left], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
@@ -9877,12 +9675,9 @@ loc_F2D4:
 		push	[bp+arg_2]
 		call	vector1_at
 		add	sp, 6
-		add	ax, 0FFE8h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	1930h
-		call	sub_F100
+		add	ax, -24
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, 1930h
 		inc	si
 		mov	al, [bp+var_5]
 		add	al, 20h	; ' '
@@ -10676,16 +10471,13 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFA8h
+		add	ax, -88
 		mov	si, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
+		add	ax, -32
 		mov	di, ax
-		push	si
-		push	ax
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, ax, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_FA0A
 		mov	_sprite16_put_w, (48 / 16)
@@ -10694,7 +10486,7 @@ var_2		= word ptr -2
 		add	di, 10h
 		push	si
 		push	di
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 16h
 		push	ax
 		jmp	short loc_FA68
@@ -10709,17 +10501,17 @@ loc_FA0A:
 		jnb	short loc_FA49
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 40
-		add	si, 40h
-		add	di, 10h
+		add	si, 64
+		add	di, 16
 		push	si
 		push	di
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 1Ch
 		push	ax
-		call	sub_F100
-		sub	si, 20h	; ' '
-		add	di, 20h	; ' '
-		mov	ax, word_1F34C
+		call	sprite16_put
+		sub	si, 32
+		add	di, 32
+		mov	ax, sprite_1F34C
 		add	ax, 0F00h
 		jmp	short loc_FA55
 ; ---------------------------------------------------------------------------
@@ -10727,7 +10519,7 @@ loc_FA0A:
 loc_FA49:
 		add	si, 20h	; ' '
 		add	di, 30h	; '0'
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 1180h
 
 loc_FA55:
@@ -10739,7 +10531,7 @@ loc_FA55:
 		push	[bp+var_2]
 
 loc_FA68:
-		call	sub_F100
+		call	sprite16_put
 
 loc_FA6D:
 		pop	di
@@ -10756,7 +10548,7 @@ sub_F9A6	endp
 sub_FA71	proc near
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@top		= word ptr -2
 arg_0		= word ptr  4
 
 		enter	4, 0
@@ -10772,30 +10564,24 @@ arg_0		= word ptr  4
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFA8h
+		add	ax, -88
 		mov	di, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
-		mov	[bp+var_2], ax
+		add	ax, -32
+		mov	[bp+@@top], ax
 		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0AAAAh
 		int	SPRITE16
 		mov	ax, di
 		sub	ax, si
-		push	ax
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, ax, [bp+@@top], sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 5555h
 		int	SPRITE16
 		mov	ax, di
 		add	ax, si
-		push	ax
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, ax, [bp+@@top], sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0FFFFh
 		int	SPRITE16
@@ -11404,7 +11190,7 @@ word_10003	dw	0,     1,     2,     3
 sub_10053	proc near
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -11418,25 +11204,22 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFB8h
+		add	ax, -72
 		mov	si, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFD8h
+		add	ax, -40
 		mov	di, ax
-		push	si
-		push	ax
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, ax, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_100B8
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 40
-		add	si, 20h	; ' '
-		add	di, 10h
+		add	si, 32
+		add	di, 16
 		push	si
 		push	di
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 12h
 
 loc_100B4:
@@ -11451,33 +11234,30 @@ loc_100B8:
 loc_100BF:
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 1Ah
-		mov	[bp+var_2], ax
-		lea	ax, [si+30h]
+		mov	[bp+@@sprite_offset], ax
+		lea	ax, [si+48]
 		push	ax
-		lea	ax, [di+20h]
+		lea	ax, [di+32]
 		push	ax
-		push	[bp+var_2]
-		call	sub_F100
+		push	[bp+@@sprite_offset]
+		call	sprite16_put
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		add	si, 50h	; 'P'
-		mov	ax, word_1F34C
+		add	si, 80
+		mov	ax, sprite_1F34C
 		add	ax, 0EF4h
-		mov	[bp+var_2], ax
+		mov	[bp+@@sprite_offset], ax
 		cmp	byte_1F354, 10h
 		jb	short loc_10111
-		add	[bp+var_2], 4
+		add	[bp+@@sprite_offset], 4
 		cmp	byte_1F354, 20h	; ' '
 		jb	short loc_10111
 		mov	byte_1F353, 3
 
 loc_10111:
-		push	si
-		push	di
-		push	[bp+var_2]
-		call	sub_F100
+		call	sprite16_put pascal, si, di, [bp+@@sprite_offset]
 		inc	byte_1F354
 		jmp	short loc_10180
 ; ---------------------------------------------------------------------------
@@ -11491,7 +11271,7 @@ loc_10121:
 		push	ax
 		lea	ax, [di+10h]
 		push	ax
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 0C92h
 		jmp	loc_100B4
 ; ---------------------------------------------------------------------------
@@ -11501,17 +11281,17 @@ loc_10144:
 		jnz	short loc_10171
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 1Ah
-		mov	[bp+var_2], ax
-		lea	ax, [si+30h]
+		mov	[bp+@@sprite_offset], ax
+		lea	ax, [si+48]
 		push	ax
-		lea	ax, [di+20h]
+		lea	ax, [di+32]
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@sprite_offset]
 
 loc_1016A:
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_10180
 ; ---------------------------------------------------------------------------
 
@@ -11537,7 +11317,7 @@ sub_10053	endp
 sub_10184	proc near
 
 var_7		= byte ptr -7
-var_6		= word ptr -6
+@@top		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= byte ptr  4
@@ -11576,11 +11356,8 @@ arg_2		= word ptr  6
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, [bp+var_4], si, _SinTable8[bx]
-		mov	[bp+var_6], ax
-		push	di
-		push	ax
-		push	word_1F34C
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 5555h
 		int	SPRITE16
@@ -11597,11 +11374,8 @@ arg_2		= word ptr  6
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, [bp+var_4], si, _SinTable8[bx]
-		mov	[bp+var_6], ax
-		push	di
-		push	ax
-		push	word_1F34C
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
 		mov	dx, 0FFFFh
 		int	SPRITE16
@@ -12336,21 +12110,18 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFC8h
+		add	ax, -56
 		mov	si, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFD8h
+		add	ax, -40
 		mov	di, ax
-		push	si
-		push	ax
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, ax, sprite_1F34C
 		cmp	byte_1F353, 0
 		jz	short loc_1093C
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 0Eh
 		mov	[bp+var_2], ax
 		cmp	byte_1F353, 2
@@ -12358,7 +12129,7 @@ var_2		= word ptr -2
 		add	[bp+var_2], 0A00h
 
 loc_10932:
-		lea	ax, [si+20h]
+		lea	ax, [si+32]
 		push	ax
 		push	di
 		push	[bp+var_2]
@@ -12370,15 +12141,15 @@ loc_1093C:
 		jz	short loc_1095F
 		mov	_sprite16_put_w, (80 / 16)
 		mov	_sprite16_put_h, 48
-		add	si, 10h
+		add	si, 16
 		push	si
 		push	di
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 16h
 		push	ax
 
 loc_1095A:
-		call	sub_F100
+		call	sprite16_put
 
 loc_1095F:
 		cmp	word_1F356, 0
@@ -12453,7 +12224,7 @@ sub_10A17	proc near
 
 var_4		= byte ptr -4
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -12468,8 +12239,8 @@ var_2		= word ptr -2
 		mov	_sprite16_put_h, 56
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFD8h
-		mov	[bp+var_2], ax
+		add	ax, -40
+		mov	[bp+@@top], ax
 		cmp	word_1F3B0, 18h
 		jnb	short loc_10A8D
 		push	0F980h
@@ -12492,10 +12263,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_10A76:
-		push	si
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, [bp+@@top], sprite_1F34C
 		add	si, 8
 
 loc_10A86:
@@ -12530,10 +12298,7 @@ loc_10A8D:
 ; ---------------------------------------------------------------------------
 
 loc_10AC7:
-		push	si
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, [bp+@@top], sprite_1F34C
 		add	si, 8
 
 loc_10AD7:
@@ -12570,10 +12335,7 @@ loc_10ADE:
 ; ---------------------------------------------------------------------------
 
 loc_10B1D:
-		push	si
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, [bp+@@top], sprite_1F34C
 		sub	si, 8
 
 loc_10B2D:
@@ -12585,10 +12347,7 @@ loc_10B2D:
 		push	ax
 		call	sub_A2D0
 		mov	si, ax
-		push	ax
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, ax, [bp+@@top], sprite_1F34C
 		jmp	short loc_10BA0
 ; ---------------------------------------------------------------------------
 
@@ -12619,10 +12378,7 @@ loc_10B50:
 ; ---------------------------------------------------------------------------
 
 loc_10B8C:
-		push	si
-		push	[bp+var_2]
-		push	word_1F34C
-		call	sub_F100
+		call	sprite16_put pascal, si, [bp+@@top], sprite_1F34C
 		sub	si, 8
 
 loc_10B9C:
@@ -13291,8 +13047,8 @@ sub_111A3	proc near
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -13314,7 +13070,7 @@ loc_111D1:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_111DD:
-		mov	si, word_1F34C
+		mov	si, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_111EB
 		add	si, 0Ch
@@ -13325,21 +13081,18 @@ loc_111EB:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFD0h
-		mov	[bp+var_2], ax
+		add	ax, -48
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		call	sub_F100
+		add	ax, -32
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		cmp	byte_1F353, 1
 		jnz	loc_112A2
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 0FFF4h
 		mov	si, ax
 		mov	ax, word_1F3B0
@@ -13376,18 +13129,15 @@ loc_11264:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE8h
-		mov	[bp+var_2], ax
+		add	ax, -24
+		mov	[bp+@@left], ax
 		mov	bx, di
 		add	bx, bx
 		mov	ax, [bx+6876h]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		inc	di
 
 loc_11299:
@@ -13413,7 +13163,7 @@ sub_112A6	proc near
 var_6		= byte ptr -6
 var_5		= byte ptr -5
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= byte ptr  6
 
@@ -13485,22 +13235,19 @@ loc_11330:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+arg_0], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		mov	al, [bp+var_6]
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE8h
+		add	ax, -24
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	si
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, si
 		inc	[bp+var_4]
 		mov	al, [bp+arg_2]
 		add	al, 20h	; ' '
@@ -14046,9 +13793,9 @@ word_117C4	dw	0,     1,     2,     3
 
 sub_11814	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  4
 
 		enter	6, 0
@@ -14058,9 +13805,9 @@ arg_0		= word ptr  4
 		add	bx, bx
 		mov	ax, [bx+8B2h]
 		imul	ax, 28h
-		add	ax, word_1F34C
+		add	ax, sprite_1F34C
 		add	ax, 0FB10h
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	_sprite16_put_w, (96 / 16)
 		mov	bx, si
 		add	bx, bx
@@ -14076,19 +13823,16 @@ arg_0		= word ptr  4
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFD0h
-		mov	[bp+var_2], ax
+		add	ax, -48
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
 		mov	bx, si
 		add	bx, bx
 		add	ax, [bx+8B2h]
-		add	ax, 0FFD8h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		add	ax, -40
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		pop	si
 		leave
 		retn	2
@@ -14102,8 +13846,8 @@ sub_11814	endp
 sub_11885	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -14117,22 +13861,19 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE0h
-		mov	[bp+var_2], ax
+		add	ax, -32
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
-		mov	[bp+var_4], ax
-		mov	di, word_1F34C
+		add	ax, -32
+		mov	[bp+@@top], ax
+		mov	di, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_118CB
 		add	di, 8
 
 loc_118CB:
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	di
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], di
 		mov	al, byte_1F354
 		mov	ah, 0
 		mov	bx, 4
@@ -14174,9 +13915,9 @@ sub_11885	endp
 sub_1190A	proc near
 
 var_8		= word ptr -8
-var_6		= word ptr -6
+@@sprite_offset		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
 arg_4		= word ptr  8
@@ -14224,7 +13965,7 @@ loc_11956:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 28Ch
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		xor	si, si
 		jmp	loc_119F4
 ; ---------------------------------------------------------------------------
@@ -14246,19 +13987,16 @@ loc_11978:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+arg_4], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		push	[bp+var_4]
 		call	sub_A2D0
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		mov	al, [bp+arg_0]
 		add	al, 20h	; ' '
 		mov	[bp+arg_0], al
@@ -14270,7 +14008,7 @@ loc_119E1:
 		mov	al, [bp+arg_0]
 		add	al, 3
 		mov	[bp+arg_0], al
-		sub	[bp+var_6], 4
+		sub	[bp+@@sprite_offset], 4
 		inc	si
 
 loc_119F4:
@@ -14946,8 +14684,8 @@ sub_11FE4	proc near
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -4
+@@top		= word ptr -2
 arg_0		= word ptr  4
 
 		enter	8, 0
@@ -14958,14 +14696,14 @@ arg_0		= word ptr  4
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 502h
-		mov	[bp+var_4], ax
+		mov	[bp+@@sprite_offset], ax
 		cmp	byte_1F353, 2
 		jnz	short loc_12012
 		mov	ax, word_1F3B0
 		and	ax, 3
 		cmp	ax, 2
 		jnb	short loc_12012
-		add	[bp+var_4], 0A00h
+		add	[bp+@@sprite_offset], 0A00h
 
 loc_12012:
 		mov	_sprite16_put_w, (32 / 16)
@@ -14991,7 +14729,7 @@ loc_12021:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -14999,15 +14737,12 @@ loc_12021:
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+var_4]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
 
 loc_12095:
@@ -15026,8 +14761,8 @@ sub_11FE4	endp
 
 sub_120A0	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -15040,22 +14775,19 @@ var_2		= word ptr -2
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFC0h
-		mov	[bp+var_2], ax
+		add	ax, -64
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
-		mov	[bp+var_4], ax
-		mov	si, word_1F34C
+		add	ax, -32
+		mov	[bp+@@top], ax
+		mov	si, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_120E4
 		add	si, 10h
 
 loc_120E4:
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	si
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], si
 		cmp	byte_1F353, 0
 		jz	short loc_12100
 		mov	al, byte_1F3A0
@@ -15991,8 +15723,8 @@ sub_1295E	proc near
 var_9		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -4
+@@top		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -16007,13 +15739,13 @@ var_2		= word ptr -2
 		mov	[bp+var_8], ax
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 790h
-		mov	[bp+var_4], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	al, byte_1F354
 		mov	ah, 0
 		shl	ax, 2
-		add	[bp+var_4], ax
+		add	[bp+@@sprite_offset], ax
 		xor	si, si
 		mov	al, byte_1F355
 		jmp	short loc_12A04
@@ -16031,19 +15763,16 @@ loc_129A0:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+var_8], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		push	[bp+var_6]
 		call	sub_A2D0
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+var_4]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
 		mov	al, [bp+var_9]
 		add	al, 10h
@@ -16065,7 +15794,7 @@ sub_1295E	endp
 
 sub_12A10	proc near
 
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -16081,19 +15810,16 @@ var_2		= word ptr -2
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFC0h
+		add	ax, -64
 		mov	di, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFD0h
-		mov	[bp+var_2], ax
-		mov	si, word_1F34C
-		push	di
-		push	ax
-		push	si
-		call	sub_F100
-		add	di, 30h	; '0'
-		add	[bp+var_2], 20h	; ' '
+		add	ax, -48
+		mov	[bp+@@top], ax
+		mov	si, sprite_1F34C
+		call	sprite16_put pascal, di, ax, si
+		add	di, 48
+		add	[bp+@@top], 32
 		cmp	byte_1F34E, 0
 		jz	short loc_12A7A
 		mov	_sprite16_put_w, (48 / 16)
@@ -16114,10 +15840,7 @@ loc_12A7A:
 		add	si, ax
 
 loc_12A99:
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	sub_F100
+		call	sprite16_put pascal, di, [bp+@@top], si
 		jmp	short loc_12AD9
 ; ---------------------------------------------------------------------------
 
@@ -16228,9 +15951,9 @@ sub_12ADD	endp
 
 sub_12B38	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 @@col		= word ptr  4
 
 		enter	6, 0
@@ -16243,24 +15966,21 @@ var_2		= word ptr -2
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFC0h
-		mov	[bp+var_2], ax
+		add	ax, -64
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFD0h
-		mov	[bp+var_4], ax
-		mov	ax, word_1F34C
-		mov	[bp+var_6], ax
+		add	ax, -48
+		mov	[bp+@@top], ax
+		mov	ax, sprite_1F34C
+		mov	[bp+@@sprite_offset], ax
 		mov	ah, SPRITE16_SET_MONO
 		mov	dx, 1
 		int	SPRITE16
 		mov	ah, SPRITE16_SET_COLOR
 		mov	dx, [bp+@@col]
 		int	SPRITE16
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	[bp+var_6]
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], [bp+@@sprite_offset]
 		mov	ah, SPRITE16_SET_MONO
 		xor	dx, dx
 		int	SPRITE16
@@ -16926,7 +16646,7 @@ word_13124	dw	0,     1,     2,     3
 
 sub_13174	proc near
 
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -16940,30 +16660,27 @@ var_2		= word ptr -2
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFC0h
+		add	ax, -64
 		mov	di, ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE8h
-		mov	[bp+var_2], ax
-		mov	si, word_1F34C
+		add	ax, -24
+		mov	[bp+@@top], ax
+		mov	si, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_131B8
 		add	si, 10h
 
 loc_131B8:
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	sub_F100
+		call	sprite16_put pascal, di, [bp+@@top], si
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
-		add	di, 20h	; ' '
+		add	di, 32
 		cmp	byte_1F353, 1
 		jnz	short loc_131E4
 		push	di
-		push	[bp+var_2]
-		mov	ax, word_1F34C
+		push	[bp+@@top]
+		mov	ax, sprite_1F34C
 		add	ax, 0C80h
 		push	ax
 		jmp	short loc_1321A
@@ -16972,7 +16689,7 @@ loc_131B8:
 loc_131E4:
 		cmp	byte_1F353, 2
 		jnz	short loc_1321F
-		mov	ax, word_1F34C
+		mov	ax, sprite_1F34C
 		add	ax, 0C80h
 		mov	si, ax
 		cmp	byte_1F354, 8
@@ -16995,11 +16712,11 @@ loc_13212:
 
 loc_13215:
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	si
 
 loc_1321A:
-		call	sub_F100
+		call	sprite16_put
 
 loc_1321F:
 		pop	di
@@ -17017,8 +16734,8 @@ sub_13223	proc near
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -4
+@@top		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -17040,14 +16757,14 @@ loc_13254:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 284h
-		mov	[bp+var_4], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	ax, word_1F3B0
 		shr	ax, 2
 		and	ax, 3
 		shl	ax, 5
 		imul	ax, 28h
-		add	ax, [bp+var_4]
-		mov	[bp+var_4], ax
+		add	ax, [bp+@@sprite_offset]
+		mov	[bp+@@sprite_offset], ax
 		mov	al, byte_1F355
 		mov	[bp+var_7], al
 		mov	al, 0
@@ -17069,7 +16786,7 @@ loc_13286:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -17077,15 +16794,12 @@ loc_13286:
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+var_4]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
 		mov	al, [bp+var_7]
 		add	al, 10h
@@ -17679,8 +17393,8 @@ sub_137CF	proc near
 var_9		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -17694,28 +17408,25 @@ var_2		= word ptr -2
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFD0h
-		mov	[bp+var_2], ax
+		add	ax, -48
+		mov	[bp+@@left], ax
 		mov	ax, word_1F340
 		sar	ax, 4
-		add	ax, 0FFE0h
-		mov	[bp+var_4], ax
-		mov	si, word_1F34C
+		add	ax, -32
+		mov	[bp+@@top], ax
+		mov	si, sprite_1F34C
 		cmp	byte_1F34E, 0
 		jz	short loc_13814
 		add	si, 0Ch
 
 loc_13814:
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	si
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], si
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
 		mov	al, byte_1F354
 		mov	[bp+var_9], al
-		add	[bp+var_2], 28h	; '('
-		add	[bp+var_4], 28h	; '('
+		add	[bp+@@left], 40
+		add	[bp+@@top], 40
 		xor	di, di
 		jmp	short loc_138AA
 ; ---------------------------------------------------------------------------
@@ -17725,13 +17436,13 @@ loc_1383D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_2], 48, _CosTable8[bx]
+		call	vector1_at c, [bp+@@left], 48, _CosTable8[bx]
 		mov	[bp+var_6], ax
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_4], 48, _SinTable8[bx]
+		call	vector1_at c, [bp+@@top], 48, _SinTable8[bx]
 		mov	[bp+var_8], ax
 		test	di, 3
 		jz	short loc_1388B
@@ -17753,7 +17464,7 @@ loc_1388E:
 		mov	ah, 0
 		add	ax, si
 		push	ax
-		call	sub_F100
+		call	sprite16_put
 		inc	di
 		mov	al, [bp+var_9]
 		add	al, 20h	; ' '
@@ -17777,8 +17488,8 @@ sub_138B3	proc near
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -4
+@@top		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -17800,10 +17511,10 @@ loc_138E4:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 780h
-		mov	[bp+var_4], ax
+		mov	[bp+@@sprite_offset], ax
 		test	byte ptr word_1F3B0, 1
 		jz	short loc_138FB
-		add	[bp+var_4], 780h
+		add	[bp+@@sprite_offset], 780h
 
 loc_138FB:
 		mov	al, byte ptr word_1F3B0
@@ -17828,7 +17539,7 @@ loc_13910:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -17836,16 +17547,13 @@ loc_13910:
 		sub	dx, ax
 		push	dx
 		call	sub_A2D0
-		add	ax, 0FFE8h
+		add	ax, -24
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+var_4]
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
 		mov	al, [bp+var_7]
 		add	al, 10h
@@ -19888,26 +19596,26 @@ loc_14967:
 		jnz	loc_14A1C
 		push	1200h
 		call	randring2_next16_mod
-		mov	word_1FE52, ax
+		mov	point_1FE52.x, ax
 		push	1700h
 		call	randring2_next16_mod
-		mov	word_1FE54, ax
-		push	word_1FE52
+		mov	point_1FE52.y, ax
+		push	point_1FE52.x
 		push	ax
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		push	word_1FE52
+		push	point_1FE52.x
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	word_1FE52, ax
-		mov	ax, word_1FE54
+		mov	point_1FE52.x, ax
+		mov	ax, point_1FE52.y
 		sar	ax, 4
-		add	ax, 10h
-		mov	word_1FE54, ax
+		add	ax, 16
+		mov	point_1FE52.y, ax
 		jmp	short loc_14A1C
 ; ---------------------------------------------------------------------------
 
@@ -19963,14 +19671,14 @@ loc_14A1C:
 		add	di, 6
 
 loc_14A5E:
-		mov	ax, word_1FE52
-		add	ax, 0FFE8h
+		mov	ax, point_1FE52.x
+		add	ax, -24
 		push	ax
-		mov	ax, word_1FE54
-		add	ax, 0FFE8h
+		mov	ax, point_1FE52.y
+		add	ax, -24
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 
 loc_14A72:
 		pop	di
@@ -20272,9 +19980,9 @@ reimu_14B7C	endp
 
 sub_14C8C	proc near
 
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@top		= word ptr  6
 arg_4		= word ptr  8
 
 		enter	2, 0
@@ -20292,22 +20000,19 @@ arg_4		= word ptr  8
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 1180h
-		mov	[bp+var_2], ax
+		mov	[bp+@@sprite_offset], ax
 		push	di
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE8h
+		add	ax, -24
 		mov	di, ax
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+arg_2], ax
-		push	di
-		push	ax
-		push	[bp+var_2]
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		pop	di
 		pop	si
 		leave
@@ -20843,9 +20548,9 @@ reimu_1508C	endp
 
 sub_1515D	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -20861,7 +20566,7 @@ var_2		= word ptr -2
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 18h
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		xor	si, si
 		jmp	short loc_151D9
 ; ---------------------------------------------------------------------------
@@ -20876,17 +20581,14 @@ loc_15196:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF8h
-		mov	[bp+var_2], ax
+		add	ax, -8
+		mov	[bp+@@left], ax
 		mov	bx, word_207E0
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, 8
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 
 loc_151D3:
 		inc	si
@@ -21415,7 +21117,7 @@ mima_15597	endp
 
 sub_1561C	proc near
 
-arg_0		= word ptr  4
+@@sprite_offset		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -21430,16 +21132,13 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	si, ax
 		mov	ax, di
 		sar	ax, 4
 		add	ax, 8
 		mov	di, ax
-		push	si
-		push	ax
-		push	[bp+arg_0]
-		call	sub_F100
+		call	sprite16_put pascal, si, ax, [bp+@@sprite_offset]
 		pop	di
 		pop	si
 		pop	bp
@@ -22492,8 +22191,8 @@ sub_15EDB	endp
 sub_15F2A	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -22525,19 +22224,16 @@ var_2		= word ptr -2
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	bx, word_2203C
 		mov	ax, [bx+4]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		pop	si
 		leave
 		retn
@@ -22587,8 +22283,8 @@ sub_15F9D	endp
 
 sub_15FD4	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@top		= word ptr -6
+@@left		= word ptr -4
 var_1		= byte ptr -1
 
 		enter	6, 0
@@ -22662,17 +22358,14 @@ loc_16044:
 		push	ax
 		call	sub_A2D0
 		sub	ax, si
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		mov	bx, word_2203C
 		mov	ax, [bx+4]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		sub	ax, si
-		mov	[bp+var_6], ax
-		push	[bp+var_4]
-		push	ax
-		push	di
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, di
 		pop	di
 		pop	si
 		leave
@@ -24022,10 +23715,10 @@ var_9		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 arg_0		= byte ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@sprite_offset		= word ptr  8
 
 		enter	0Ah, 0
 		push	si
@@ -24062,21 +23755,18 @@ loc_16BEC:
 		add	ax, ax
 		mov	bx, ax
 		call	vector1_at c, [bp+var_8], [bp+arg_2], _SinTable8[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	di
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
 		mov	di, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_2], ax
-		push	di
-		push	ax
-		push	[bp+arg_4]
-		call	sub_F100
+		add	ax, 16
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	[bp+var_4]
 		mov	al, [bp+var_A]
 		add	al, 10h
@@ -24099,8 +23789,8 @@ sub_16BB5	endp
 yumemi_16C65	proc far
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -24144,15 +23834,12 @@ loc_16CC4:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	ax, [di+4]
 		sar	ax, 4
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		jmp	loc_16DC4
 ; ---------------------------------------------------------------------------
 
@@ -24755,11 +24442,11 @@ loc_1717D:
 		call	sub_A2D0
 		mov	[bp+var_2], ax
 		push	ax
-		push	10h
+		push	PLAYFIELD_Y
 		mov	bx, word_23E3A
 		push	word ptr [bx+2]
-		push	18h
-		call	sub_F162
+		push	SPF_DOWNWARDS_COLUMN
+		call	sprite16_putx
 		inc	si
 		add	word_23E3A, 4
 
@@ -26101,9 +25788,9 @@ sub_17BD1	proc far
 var_D		= byte ptr -0Dh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@sprite_offset		= word ptr -8
+@@top		= word ptr -6
+@@left		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -26127,10 +25814,10 @@ loc_17C06:
 		cmp	byte ptr [bx], 2
 		jnz	loc_17CC6
 		mov	ax, [bx+12h]
-		mov	[bp+var_8], ax
+		mov	[bp+@@sprite_offset], ax
 		cmp	byte ptr [bx+17h], 0
 		jz	short loc_17C7D
-		add	[bp+var_8], 6
+		add	[bp+@@sprite_offset], 6
 		mov	[bp+var_A], 5
 		jmp	short loc_17C77
 ; ---------------------------------------------------------------------------
@@ -26148,7 +25835,7 @@ loc_17C27:
 		push	ax
 		call	sub_A2D0
 		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		mov	ax, [bp+var_A]
 		add	ax, ax
 		mov	bx, [bp+var_C]
@@ -26157,13 +25844,10 @@ loc_17C27:
 		mov	ax, [bx+0Ch]
 		sar	ax, 4
 		add	ax, 8
-		mov	[bp+var_6], ax
-		push	[bp+var_4]
-		push	ax
-		push	[bp+var_8]
-		call	sub_F1D2
+		mov	[bp+@@top], ax
+		call	sprite16_put_noclip pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		sub	[bp+var_A], 2
-		sub	[bp+var_8], 2
+		sub	[bp+@@sprite_offset], 2
 
 loc_17C77:
 		cmp	[bp+var_A], 0
@@ -26177,25 +25861,22 @@ loc_17C7D:
 		push	ax
 		call	sub_A2D0
 		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		mov	bx, [bp+var_C]
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, 8
-		mov	[bp+var_6], ax
+		mov	[bp+@@top], ax
 		cmp	byte ptr [bx+16h], 0
 		jz	short loc_17CB6
 		mov	al, [bx+1]
 		mov	ah, 0
 		and	ax, 3
 		add	ax, ax
-		add	[bp+var_8], ax
+		add	[bp+@@sprite_offset], ax
 
 loc_17CB6:
-		push	[bp+var_4]
-		push	[bp+var_6]
-		push	[bp+var_8]
-		call	sub_F1D2
+		call	sprite16_put_noclip pascal, [bp+@@left], [bp+@@top], [bp+@@sprite_offset]
 		jmp	short loc_17CD2
 ; ---------------------------------------------------------------------------
 
@@ -26236,16 +25917,13 @@ loc_17D0D:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	bx, [bp+var_C]
 		mov	ax, [bx+4]
 		sar	ax, 4
-		mov	[bp+var_6], ax
-		push	[bp+var_4]
-		push	ax
-		push	word ptr [bx+12h]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, word ptr [bx+12h]
 
 loc_17D41:
 		inc	[bp+var_2]
@@ -26473,8 +26151,8 @@ sub_17EF7	proc near
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -26527,18 +26205,15 @@ loc_17F5A:
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		mov	dl, [bp+var_5]
 		mov	dh, 0
 		sub	ax, dx
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	di
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, di
 		pop	di
 		pop	si
 		leave
@@ -26588,8 +26263,8 @@ sub_17F9F	endp
 
 sub_17FCF	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@top		= word ptr -6
+@@left		= word ptr -4
 var_1		= byte ptr -1
 
 		enter	6, 0
@@ -26634,17 +26309,14 @@ loc_18019:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE0h
-		mov	[bp+var_4], ax
+		add	ax, -32
+		mov	[bp+@@left], ax
 		mov	bx, word_2203C
 		mov	ax, [bx+4]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+var_6], ax
-		push	[bp+var_4]
-		push	ax
-		push	si
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		pop	si
 		leave
 		retn
@@ -27391,9 +27063,9 @@ ellen_185AB	endp
 
 sub_186C3	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -27419,7 +27091,7 @@ loc_18702:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 29Ch
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		xor	si, si
 		jmp	short loc_1875E
 ; ---------------------------------------------------------------------------
@@ -27437,17 +27109,14 @@ loc_18711:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFE0h
-		mov	[bp+var_2], ax
+		add	ax, -32
+		mov	[bp+@@left], ax
 		mov	bx, word_1FBBE
 		mov	ax, [bx+2]
 		sar	ax, 4
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		add	ax, -16
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 
 loc_18758:
 		inc	si
@@ -29036,7 +28705,8 @@ sub_194A9	endp
 sub_19510	proc near
 
 var_9		= word ptr -9
-var_6		= word ptr -6
+@@left		= word ptr -8
+@@top		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -29102,22 +28772,22 @@ loc_1959C:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	[bp+var_9+1], ax
+		mov	[bp+@@left], ax
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FB3A
 		mov	ax, [bx+10h]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_9+1]
-		add	ax, 0FFF0h
+		add	ax, 16
+		mov	[bp+@@top], ax
+		mov	ax, [bp+@@left]
+		add	ax, -16
 		push	ax
-		mov	ax, [bp+var_6]
-		add	ax, 0FFF0h
+		mov	ax, [bp+@@top]
+		add	ax, -16
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		sub	di, 4
 		sub	si, 2
 
@@ -29529,7 +29199,8 @@ sub_19896	endp
 sub_198DD	proc near
 
 var_5		= word ptr -5
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -29540,11 +29211,11 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
 		add	ax, 10h
-		mov	[bp+var_5+1], ax
+		mov	[bp+@@top], ax
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		mov	dx, 1
@@ -29580,30 +29251,30 @@ loc_1992A:
 		shl	dx, 5
 		imul	dx, 28h
 		add	di, dx
-		mov	ax, [bp+var_2]
-		add	ax, 0FFF0h
+		mov	ax, [bp+@@left]
+		add	ax, -16
 		push	ax
-		mov	ax, [bp+var_5+1]
-		add	ax, 0FFF0h
+		mov	ax, [bp+@@top]
+		add	ax, -16
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_19995
 ; ---------------------------------------------------------------------------
 
 loc_19976:
 		cmp	byte ptr [si], 2
 		jnz	short loc_19989
-		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	[bp+var_5]
 		call	sub_1A32A
 		jmp	short loc_19995
 ; ---------------------------------------------------------------------------
 
 loc_19989:
-		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	[bp+var_5]
 		call	sub_1A377
 
@@ -29887,8 +29558,8 @@ sub_19B06	endp
 sub_19B4F	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -29899,11 +29570,11 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_4], ax
+		add	ax, 16
+		mov	[bp+@@top], ax
 		cmp	byte ptr word_1FE88, 1
 		jnz	short loc_19B8B
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
@@ -29924,16 +29595,13 @@ loc_19B97:
 		mov	ah, 0
 		add	ax, 1Ah
 		mov	di, ax
-		sub	[bp+var_2], 8
-		sub	[bp+var_4], 8
+		sub	[bp+@@left], 8
+		sub	[bp+@@top], 8
 		mov	al, [si+1]
 		mov	[bp+var_5], al
 		cmp	[bp+var_5], 30h	; '0'
 		jnb	short loc_19BD6
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	di
-		call	sub_F100
+		call	sprite16_put pascal, [bp+@@left], [bp+@@top], di
 
 loc_19BD1:
 		add	di, 2
@@ -29967,29 +29635,29 @@ loc_19BFD:
 		add	di, 0Ah
 
 loc_19C00:
-		push	[bp+var_2]
-		mov	ax, [bp+var_4]
-		add	ax, 10h
+		push	[bp+@@left]
+		mov	ax, [bp+@@top]
+		add	ax, 16
 		push	ax
 		push	di
-		push	18h
-		call	sub_F162
+		push	SPF_DOWNWARDS_COLUMN
+		call	sprite16_putx
 		jmp	short loc_19C32
 ; ---------------------------------------------------------------------------
 
 loc_19C14:
 		cmp	byte ptr [si], 2
 		jnz	short loc_19C27
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	word ptr [si+1]
 		call	sub_1A32A
 		jmp	short loc_19C32
 ; ---------------------------------------------------------------------------
 
 loc_19C27:
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	word ptr [si]
 		call	sub_1A377
 
@@ -30302,7 +29970,7 @@ var_2		= word ptr -2
 		mov	ax, [si+4]
 		sar	ax, 4
 		add	ax, 10h
-		mov	[bp+var_5+1], ax
+		mov	[bp+var_4], ax
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	al, [si+1]
@@ -30333,15 +30001,15 @@ loc_19E91:
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
 		mov	ax, [bp+var_2]
-		add	ax, 0FFF0h
+		add	ax, -16
 		push	ax
-		mov	ax, [bp+var_5+1]
-		add	ax, 0FFF0h
+		mov	ax, [bp+var_4]
+		add	ax, -16
 
 loc_19EB3:
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_19EF5
 ; ---------------------------------------------------------------------------
 
@@ -30349,10 +30017,10 @@ loc_19EBC:
 		mov	_sprite16_put_w, (64 / 16)
 		mov	_sprite16_put_h, 32
 		mov	ax, [bp+var_2]
-		add	ax, 0FFE0h
+		add	ax, -32
 		push	ax
-		mov	ax, [bp+var_5+1]
-		add	ax, 0FFE0h
+		mov	ax, [bp+var_4]
+		add	ax, -32
 		jmp	short loc_19EB3
 ; ---------------------------------------------------------------------------
 
@@ -30360,7 +30028,7 @@ loc_19ED6:
 		cmp	byte ptr [si], 2
 		jnz	short loc_19EE9
 		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+var_4]
 		push	[bp+var_5]
 		call	sub_1A32A
 		jmp	short loc_19EF5
@@ -30368,7 +30036,7 @@ loc_19ED6:
 
 loc_19EE9:
 		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+var_4]
 		push	[bp+var_5]
 		call	sub_1A377
 
@@ -31000,8 +30668,8 @@ sub_1A2CE	endp
 sub_1A32A	proc near
 
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@top		= word ptr  6
+@@left		= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -31021,14 +30689,14 @@ loc_1A347:
 		mov	_sprite16_put_h, 16
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	ax, [bp+arg_4]
-		add	ax, 0FFF0h
+		mov	ax, [bp+@@left]
+		add	ax, -16
 		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, 0FFF0h
+		mov	ax, [bp+@@top]
+		add	ax, -16
 		push	ax
 		push	si
-		call	sub_F100
+		call	sprite16_put
 
 loc_1A372:
 		pop	si
@@ -31044,15 +30712,13 @@ sub_1A32A	endp
 sub_1A377	proc near
 
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@top		= word ptr  6
+@@left		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-
-loc_1A381:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
@@ -31067,14 +30733,14 @@ loc_1A381:
 		idiv	bx
 		imul	dx, 6
 		add	si, dx
-		mov	ax, [bp+arg_4]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@left]
+		add	ax, -24
 		push	ax
-		mov	ax, [bp+arg_2]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@top]
+		add	ax, -24
 		push	ax
 		push	si
-		call	sub_F100
+		call	sprite16_put
 		pop	si
 		pop	bp
 		retn	6
@@ -31088,8 +30754,8 @@ sub_1A377	endp
 sub_1A3C4	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -31100,11 +30766,11 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_4], ax
+		add	ax, 16
+		mov	[bp+@@top], ax
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
@@ -31150,30 +30816,30 @@ loc_1A443:
 		add	di, ax
 
 loc_1A459:
-		mov	ax, [bp+var_2]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@left]
+		add	ax, -24
 		push	ax
-		mov	ax, [bp+var_4]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@top]
+		add	ax, -24
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_1A48D
 ; ---------------------------------------------------------------------------
 
 loc_1A46F:
 		cmp	byte ptr [si], 2
 		jnz	short loc_1A482
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	word ptr [si+1]
 		call	sub_1A32A
 		jmp	short loc_1A48D
 ; ---------------------------------------------------------------------------
 
 loc_1A482:
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	word ptr [si]
 		call	sub_1A377
 
@@ -31458,7 +31124,8 @@ mima_1A62B	endp
 sub_1A684	proc near
 
 var_5		= word ptr -5
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -31469,11 +31136,11 @@ var_2		= word ptr -2
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_5+1], ax
+		add	ax, 16
+		mov	[bp+@@top], ax
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
 		cmp	byte ptr word_1FE88, 1
@@ -31515,30 +31182,30 @@ loc_1A704:
 		add	di, 6
 
 loc_1A70D:
-		mov	ax, [bp+var_2]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@left]
+		add	ax, -24
 		push	ax
-		mov	ax, [bp+var_5+1]
-		add	ax, 0FFE8h
+		mov	ax, [bp+@@top]
+		add	ax, -24
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_1A741
 ; ---------------------------------------------------------------------------
 
 loc_1A723:
 		cmp	byte ptr [si], 2
 		jnz	short loc_1A736
-		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	[bp+var_5]
 		call	sub_1A32A
 		jmp	short loc_1A741
 ; ---------------------------------------------------------------------------
 
 loc_1A736:
-		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	word ptr [si]
 		call	sub_1A377
 
@@ -32260,7 +31927,7 @@ loc_1ACCF:
 		call	grcg_off
 		call	egc_on
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
-		sub	di, 10h
+		sub	di, 16
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 8
 		mov	al, byte ptr word_23AF0
@@ -32285,7 +31952,7 @@ loc_1AD1A:
 		push	ax
 
 loc_1AD23:
-		call	sub_F100
+		call	sprite16_put
 		add	si, 10h
 		mov	ax, [bp+var_6]
 		add	ax, 0FFF0h
@@ -32316,7 +31983,7 @@ loc_1AD57:
 
 loc_1AD5F:
 		push	ax
-		call	sub_F100
+		call	sprite16_put
 		sub	si, 10h
 		cmp	si, [bp+var_6]
 		jg	short loc_1AD57
@@ -32342,7 +32009,7 @@ loc_1AD93:
 		push	ax
 
 loc_1ADA0:
-		call	sub_F100
+		call	sprite16_put
 		add	[bp+var_4], 10h
 		cmp	[bp+var_4], di
 		jl	short loc_1AD93
@@ -32365,9 +32032,9 @@ loc_1ADC5:
 
 loc_1ADD1:
 		push	ax
-		call	sub_F100
+		call	sprite16_put
 		sub	[bp+var_4], 10h
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		cmp	ax, [bp+var_4]
 		jl	short loc_1ADC5
 		mov	bx, [bp+var_A]
@@ -32380,7 +32047,7 @@ loc_1ADD1:
 		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_1AE2A
 ; ---------------------------------------------------------------------------
 
@@ -32717,6 +32384,7 @@ sub_1B006	endp
 sub_1B05A	proc near
 
 var_5		= word ptr -5
+var_4		= word ptr -4
 var_2		= word ptr -2
 
 		enter	6, 0
@@ -32734,7 +32402,7 @@ var_2		= word ptr -2
 		mov	ax, [si+4]
 		sar	ax, 4
 		add	ax, 10h
-		mov	[bp+var_5+1], ax
+		mov	[bp+var_4], ax
 		cmp	byte ptr word_1FE88, 0
 		jz	short loc_1B0A1
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
@@ -32761,13 +32429,13 @@ loc_1B0AD:
 
 loc_1B0CC:
 		mov	ax, [bp+var_2]
-		add	ax, 0FFE8h
+		add	ax, -24
 		push	ax
-		mov	ax, [bp+var_5+1]
-		add	ax, 0FFE8h
+		mov	ax, [bp+var_4]
+		add	ax, -24
 		push	ax
 		push	di
-		call	sub_F100
+		call	sprite16_put
 		jmp	short loc_1B101
 ; ---------------------------------------------------------------------------
 
@@ -32775,7 +32443,7 @@ loc_1B0E2:
 		cmp	byte ptr [si], 2
 		jnz	short loc_1B0F5
 		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+var_4]
 		push	[bp+var_5]
 		call	sub_1A32A
 		jmp	short loc_1B101
@@ -32783,7 +32451,7 @@ loc_1B0E2:
 
 loc_1B0F5:
 		push	[bp+var_2]
-		push	[bp+var_5+1]
+		push	[bp+var_4]
 		push	[bp+var_5]
 		call	sub_1A377
 
@@ -33150,8 +32818,8 @@ chiyuri_1B2C2	endp
 
 sub_1B35F	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -33171,17 +32839,14 @@ loc_1B37B:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	bx, word_1F51A
 		mov	ax, [bx+4]
 		sar	ax, 4
-		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		call	sub_F100
+		add	ax, -8
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, si
 		pop	si
 		leave
 		retn
@@ -33834,7 +33499,7 @@ ellen_1B723	endp
 sub_1B8A6	proc near
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -33846,7 +33511,7 @@ arg_2		= word ptr  6
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 10h
-		mov	[bp+var_2], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	bx, word_1F868
 		mov	al, [bx+2]
 		add	al, 10h
@@ -33855,22 +33520,19 @@ arg_2		= word ptr  6
 		shl	[bp+var_3], 1
 		mov	al, [bp+var_3]
 		mov	ah, 0
-		add	[bp+var_2], ax
+		add	[bp+@@sprite_offset], ax
 		push	si
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF8h
+		add	ax, -8
 		mov	si, ax
 		mov	ax, di
 		sar	ax, 4
 		add	ax, 8
 		mov	di, ax
-		push	si
-		push	ax
-		push	[bp+var_2]
-		call	sub_F100
+		call	sprite16_put pascal, si, ax, [bp+@@sprite_offset]
 		pop	di
 		pop	si
 		leave
@@ -34502,8 +34164,8 @@ kana_1BCD5	endp
 
 sub_1BDF8	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -34525,18 +34187,15 @@ loc_1BE0D:
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FD8C
 		mov	ax, [bx+1Ah]
 		sar	ax, 4
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	di
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, di
 		sub	si, 4
 		sub	di, 500h
 
@@ -35034,32 +34693,29 @@ kotohime_1C19F	endp
 
 sub_1C1E9	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 1188h
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	bx, word_1FE6A
 		push	word ptr [bx+2]
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFD0h
-		mov	[bp+var_2], ax
+		add	ax, -48
+		mov	[bp+@@left], ax
 		mov	bx, word_1FE6A
 		mov	ax, [bx+4]
 		sar	ax, 4
 		add	ax, 8
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
 sub_1C1E9	endp
@@ -35615,31 +35271,28 @@ rikako_1C4C5	endp
 
 sub_1C62A	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@sprite_offset		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 280h
-		mov	[bp+var_6], ax
+		mov	[bp+@@sprite_offset], ax
 		mov	bx, word_20E86
 		push	word ptr [bx]
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		push	ax
 		call	sub_A2D0
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@left], ax
 		mov	bx, word_20E86
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	[bp+var_6]
-		call	sub_F100
+		mov	[bp+@@top], ax
+		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		leave
 		retn
 sub_1C62A	endp
@@ -37305,7 +36958,7 @@ word_1F344	dw ?
 word_1F346	dw ?
 word_1F348	dw ?
 word_1F34A	dw ?
-word_1F34C	dw ?
+sprite_1F34C	dw ?
 byte_1F34E	db ?
 byte_1F34F	db ?
 byte_1F350	db ?
@@ -37995,8 +37648,7 @@ byte_1FE1C	db ?
 word_1FE4E	dw ?
 byte_1FE50	db ?
 		db ?
-word_1FE52	dw ?
-word_1FE54	dw ?
+point_1FE52	Point <?>
 word_1FE56	dw ?
 		db    ?	;
 		db    ?	;
