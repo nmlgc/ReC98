@@ -1,4 +1,5 @@
 GAME = 5
+include th05/mem.inc
 include th04/shared.inc
 
 include th05/player/shot_types.inc

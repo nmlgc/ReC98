@@ -344,7 +344,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_A545
 		or	ax, ax
 		jz	loc_A693
-		mov	_mem_assign_paras, (336000 shr 4)
+		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
 		push	ds
 		push	offset aKaikidan1_dat
 		call	sub_F0B4

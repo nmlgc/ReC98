@@ -259,7 +259,7 @@ _envp		= dword	ptr  0Ch
 		mov	al, es:[bx+12h]
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
-		mov	_mem_assign_paras, (336000 shr 4)
+		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
 		push	ds
 		push	offset aMSzlEd_dat ; "Œ¶‘z‹½ed.dat"
 		call	sub_D43C

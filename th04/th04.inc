@@ -1,4 +1,5 @@
 GAME = 4
+include th04/mem.inc
 include th04/shared.inc
 
 playchar_speed_aligned = 4 shl 4

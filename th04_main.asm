@@ -292,7 +292,7 @@ _envp		= dword	ptr  0Ch
 		call	main_01:sub_11F96
 		or	ax, ax
 		jz	short loc_AB86
-		mov	_mem_assign_paras, (320000 shr 4)
+		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
 		push	ds
 		push	offset aUmx	; "“Œ•ûŒ¶‘z.‹½"
 		call	sub_13666

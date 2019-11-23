@@ -1,5 +1,6 @@
 GAME = 2
 include th02/defconv.inc
+include th02/mem.inc
 
 include th02/hardware/input.inc
 include th02/math/randring.inc

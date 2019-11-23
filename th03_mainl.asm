@@ -5643,7 +5643,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		call	mem_assign_dos pascal, (288000 shr 4)
+		call	mem_assign_dos pascal, MEM_ASSIGN_PARAS_MAINL
 		or	ax, ax
 		jz	short loc_CEF6
 		mov	ax, 1

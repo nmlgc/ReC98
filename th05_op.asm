@@ -1389,7 +1389,7 @@ _envp		= dword	ptr  0Ch
 		xor	si, si
 		call	text_clear
 		call	respal_create
-		mov	_mem_assign_paras, (336000 shr 4)
+		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
 		push	ds
 		push	offset aKaikidan1_dat0
 		call	sub_DF12

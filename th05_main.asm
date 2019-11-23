@@ -338,7 +338,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_BAD2
 		or	ax, ax
 		jz	short loc_AEA4
-		mov	_mem_assign_paras, (291200 shr 4)
+		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
 		push	ds
 		push	offset aKAIKIDAN2_DAT
 		call	sub_14F86

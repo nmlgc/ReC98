@@ -4,6 +4,7 @@
  */
 
 #include "th02/th02.h"
+#include "th02/mem.h"
 
 #pragma codeseg op_02_TEXT
 #pragma option -3
@@ -16,7 +17,7 @@ const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-	if(mem_assign_dos(256000 >> 4)) {
+	if(mem_assign_dos(MEM_ASSIGN_PARAS_OP)) {
 		return 1;
 	}
 	vram_planes_set();
