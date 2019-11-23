@@ -1,6 +1,6 @@
 int game_init_main(void)
 {
-	if(mem_assign_dos(18000)) {
+	if(mem_assign_dos(288000 >> 4)) {
 		return 1;
 	}
 	vram_planes_set();

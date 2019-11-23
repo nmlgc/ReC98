@@ -1389,7 +1389,7 @@ _envp		= dword	ptr  0Ch
 		xor	si, si
 		call	text_clear
 		call	respal_create
-		mov	word_F9CC, 5208h
+		mov	_mem_assign_paras, (336000 shr 4)
 		push	ds
 		push	offset aKaikidan1_dat0
 		call	sub_DF12
@@ -5956,8 +5956,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	word_F9CC
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, _mem_assign_paras
 		or	ax, ax
 		jz	short loc_DF27
 		mov	ax, 1
@@ -6351,7 +6350,7 @@ word_F9C4	dw 0
 word_F9C6	dw 0
 word_F9C8	dw 0
 word_F9CA	dw 0
-word_F9CC	dw 4E20h
+include th05/mem[data].asm
 		db  3Bh	; ;
 		db  83h
 		db 0BBh	; »

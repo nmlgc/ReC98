@@ -292,7 +292,7 @@ _envp		= dword	ptr  0Ch
 		call	main_01:sub_11F96
 		or	ax, ax
 		jz	short loc_AB86
-		mov	word_24CB2, 4E20h
+		mov	_mem_assign_paras, (320000 shr 4)
 		push	ds
 		push	offset aUmx	; "“Œ•ûŒ¶‘z.‹½"
 		call	sub_13666
@@ -15257,8 +15257,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	word_24CB2
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, _mem_assign_paras
 		or	ax, ax
 		jz	short loc_1367D
 		mov	ax, 1
@@ -39986,7 +39985,7 @@ include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
 include th02/snd/load[bss].asm
-word_24CB2	dw ?
+include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include th04/formats/std[bss].asm

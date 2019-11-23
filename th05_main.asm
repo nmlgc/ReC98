@@ -338,7 +338,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_BAD2
 		or	ax, ax
 		jz	short loc_AEA4
-		mov	word_21216, 4718h
+		mov	_mem_assign_paras, (291200 shr 4)
 		push	ds
 		push	offset aKAIKIDAN2_DAT
 		call	sub_14F86
@@ -14159,8 +14159,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	word_21216
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, _mem_assign_paras
 		or	ax, ax
 		jz	short loc_14F9D
 		mov	ax, 1
@@ -33404,7 +33403,7 @@ include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
 include th03/snd/se_state[data].asm
-word_21216	dw 4E20h
+include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 include th05/hardware/vram_planes[data].asm

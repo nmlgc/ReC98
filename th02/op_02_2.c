@@ -16,7 +16,7 @@ const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-	if(mem_assign_dos(16000)) {
+	if(mem_assign_dos(256000 >> 4)) {
 		return 1;
 	}
 	vram_planes_set();

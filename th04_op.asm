@@ -1454,7 +1454,7 @@ _envp		= dword	ptr  0Ch
 		xor	si, si
 		call	text_clear
 		call	respal_create
-		mov	word_11A4E, 5208h
+		mov	_mem_assign_paras, (336000 shr 4)
 		push	ds
 		push	offset aMSzlEd_dat ; "Œ¶‘z‹½ed.dat"
 		call	sub_E0F4
@@ -5644,8 +5644,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	word_11A4E
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, _mem_assign_paras
 		or	ax, ax
 		jz	short loc_E109
 		mov	ax, 1
@@ -6381,7 +6380,7 @@ include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
-word_11A4E	dw ?
+include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
 word_11A54	dw ?
 include th04/formats/cdg[bss].asm

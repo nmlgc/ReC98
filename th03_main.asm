@@ -9258,8 +9258,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	4650h
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, (288000 shr 4)
 		or	ax, ax
 		jz	short loc_ECE6
 		mov	ax, 1

@@ -344,7 +344,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_A545
 		or	ax, ax
 		jz	loc_A693
-		mov	word_107CA, 5208h
+		mov	_mem_assign_paras, (336000 shr 4)
 		push	ds
 		push	offset aKaikidan1_dat
 		call	sub_F0B4
@@ -8691,8 +8691,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	word_107CA
-		call	mem_assign_dos
+		call	mem_assign_dos pascal, _mem_assign_paras
 		or	ax, ax
 		jz	short loc_F0CB
 		mov	ax, 1
@@ -8999,7 +8998,7 @@ word_107C2	dw 0
 word_107C4	dw 0
 word_107C6	dw 0
 word_107C8	dw 0
-word_107CA	dw 4E20h
+include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 		dw    0
