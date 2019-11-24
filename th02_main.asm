@@ -2120,7 +2120,7 @@ var_C		= byte ptr -0Ch
 		push	ax
 		call	sub_B396
 		mov	vsync_Count1, 0
-		call	sub_BF7B
+		call	text_wipe
 		call	graph_scrollup pascal, 0
 		graph_accesspage 1
 		call	graph_clear
@@ -2976,15 +2976,15 @@ sub_BCB1	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BF7B	proc near
+public TEXT_WIPE
+text_wipe	proc near
 		push	bp
 		mov	bp, sp
 		call	text_clear
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		pop	bp
 		retn
-sub_BF7B	endp
+text_wipe	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
