@@ -2342,7 +2342,7 @@ loc_B8F4:
 		jl	short loc_B8E8
 ;}
 		push	20000h
-		call	sub_E0F1
+		call	snd_delay_until_measure
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	ds
@@ -5945,43 +5945,7 @@ include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
 include th05/snd/measure.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0F1	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-
-loc_E0F5:
-		call	_snd_bgm_measure
-		mov	si, ax
-		or	si, si
-		jge	short loc_E109
-		push	[bp+arg_0]
-		nopcall	frame_delay
-		jmp	short loc_E10E
-; ---------------------------------------------------------------------------
-
-loc_E109:
-		cmp	si, [bp+arg_2]
-		jl	short loc_E0F5
-
-loc_E10E:
-		pop	si
-		pop	bp
-		retf	4
-sub_E0F1	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-
+include th05/snd/delaymea.asm
 include th04/formats/cdg_put_nocolors.asm
 include th05/hardware/frame_delay.asm
 		db 0

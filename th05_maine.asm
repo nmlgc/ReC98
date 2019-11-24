@@ -992,7 +992,7 @@ loc_AB4A:
 		jnz	loc_AF8F	; default
 		push	[bp+var_2]
 		push	[bp+var_4]
-		call	sub_F25F
+		call	snd_delay_until_measure
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -8681,43 +8681,7 @@ include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
 include th05/snd/measure.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F25F	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-
-loc_F263:
-		call	_snd_bgm_measure
-		mov	si, ax
-		or	si, si
-		jge	short loc_F277
-		push	[bp+arg_0]
-		nopcall	frame_delay
-		jmp	short loc_F27C
-; ---------------------------------------------------------------------------
-
-loc_F277:
-		cmp	si, [bp+arg_2]
-		jl	short loc_F263
-
-loc_F27C:
-		pop	si
-		pop	bp
-		retf	4
-sub_F25F	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-
+include th05/snd/delaymea.asm
 include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm

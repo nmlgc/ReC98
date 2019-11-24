@@ -2400,7 +2400,7 @@ loc_BD2A:
 		cmp	si, 100h
 		jl	short loc_BD1E
 		push	20000h
-		call	sub_DD80
+		call	snd_delay_until_measure
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		push	ds
@@ -5377,48 +5377,7 @@ include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/formats/cdg_put_nocolors.asm
 include th04/snd/detmodes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DD80	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		cmp	_snd_bgm_mode, SND_BGM_OFF
-		jnz	short loc_DD96
-		push	[bp+arg_0]
-		nopcall	frame_delay
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_DD96:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_DDA3
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_DDA8
-; ---------------------------------------------------------------------------
-
-loc_DDA3:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_DDA8:
-		cmp	ax, [bp+arg_2]
-		jb	short loc_DD96
-		pop	bp
-		retf	4
-sub_DD80	endp
-
+include th03/snd/delaymea.asm
 include th02/exit_dos.asm
 include th04/snd/load.asm
 

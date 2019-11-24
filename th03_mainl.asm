@@ -342,7 +342,7 @@ sub_978D	proc near
 		push	2
 		call	palette_black_in
 		push	60010h
-		call	sub_D3FC
+		call	snd_delay_until_measure
 		mov	si, 1
 		jmp	short loc_97FC
 ; ---------------------------------------------------------------------------
@@ -359,7 +359,7 @@ loc_97FC:
 		cmp	si, 5
 		jl	short loc_97E8
 		push	0A0040h
-		call	sub_D3FC
+		call	snd_delay_until_measure
 		mov	PaletteTone, 0C8h
 		call	far ptr	palette_show
 		push	(224 shl 16) or 64
@@ -374,7 +374,7 @@ loc_97FC:
 		call	far ptr	palette_show
 		call	cdg_freeall
 		push	0B0004h
-		call	sub_D3FC
+		call	snd_delay_until_measure
 		push	1
 		call	palette_white_in
 		push	8
@@ -2073,7 +2073,7 @@ loc_A7E7:
 		jz	short loc_A814
 		push	[bp+var_2]
 		push	[bp+var_4]
-		call	sub_D3FC
+		call	snd_delay_until_measure
 		jmp	loc_AB63
 ; ---------------------------------------------------------------------------
 
@@ -4215,7 +4215,7 @@ sub_B92E	proc near
 		push	1
 		call	palette_black_in
 		push	30040h
-		call	sub_D3FC
+		call	snd_delay_until_measure
 		push	1
 		call	palette_black_out
 		kajacall	KAJA_SONG_STOP
@@ -5955,48 +5955,7 @@ loc_D3EB:
 		retf	0Ah
 graph_putsa_fx	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D3FC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		cmp	_snd_active, 0
-		jnz	short loc_D412
-		push	[bp+arg_0]
-		nopcall	frame_delay
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_D412:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_midi_active, 1
-		jz	short loc_D41F
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_D424
-; ---------------------------------------------------------------------------
-
-loc_D41F:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_D424:
-		cmp	ax, [bp+arg_2]
-		jb	short loc_D412
-		pop	bp
-		retf	4
-sub_D3FC	endp
-
+include th03/snd/delaymea.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

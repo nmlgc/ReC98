@@ -1233,7 +1233,7 @@ loc_A9AB:
 		jnz	loc_ADB5	; default
 		push	[bp+var_2]
 		push	[bp+var_4]
-		call	sub_D046
+		call	snd_delay_until_measure
 		jmp	loc_ACFF
 ; ---------------------------------------------------------------------------
 
@@ -2473,7 +2473,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
 		push	30040h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	byte_124C6, 0
 		mov	fp_124C8, offset sub_AED0
 		push	16000A0h
@@ -2481,7 +2481,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
 		push	700A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_B02D
 		push	16000A0h
 		call	sub_B31E
@@ -2494,11 +2494,11 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
 		push	0B00A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		push	12000C8h
 		call	sub_B291
 		push	1300A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_B02D
 		push	0C00080h
 		push	12000C8h
@@ -2519,7 +2519,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
 		push	1700A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
 		push	200070h
@@ -2528,7 +2528,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
 		push	1B00A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	byte_124C6, 4
 		mov	fp_124C8, offset sub_B02D
 		push	2000B8h
@@ -2536,7 +2536,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
 		push	1F00A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_B144
 		push	2000B8h
 		call	sub_B31E
@@ -2546,7 +2546,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
 		push	2300A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_AED0
 		push	4000B8h
 		call	sub_B31E
@@ -2556,7 +2556,7 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
 		push	2700A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_B02D
 		push	4000B8h
 		call	sub_B31E
@@ -2564,7 +2564,7 @@ sub_B44D	proc near
 		push	2000B8h
 		call	sub_B291
 		push	2B00A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		mov	fp_124C8, offset sub_B144
 		push	200070h
 		push	2000B8h
@@ -2575,7 +2575,7 @@ sub_B44D	proc near
 		push	200150h
 		call	sub_B291
 		push	3000A0h
-		call	sub_D046
+		call	snd_delay_until_measure
 		call	sub_D6C4
 		call	cdg_freeall
 		push	4
@@ -5104,49 +5104,7 @@ include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D046	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		cmp	_snd_bgm_mode, SND_BGM_OFF
-		jnz	short loc_D05C
-		push	[bp+arg_0]
-		nopcall	frame_delay
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_D05C:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_D069
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_D06E
-; ---------------------------------------------------------------------------
-
-loc_D069:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_D06E:
-		cmp	ax, [bp+arg_2]
-		jb	short loc_D05C
-		pop	bp
-		retf	4
-sub_D046	endp
-
-; ---------------------------------------------------------------------------
+include th03/snd/delaymea.asm
 		db    0
 include th04/formats/cdg_put_plane.asm
 include th04/snd/load.asm
