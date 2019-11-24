@@ -94,6 +94,21 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 
+## Identifiers from ZUN's original code
+
+On some occasions, ZUN leaked pieces of the actual PC-98 Touhou source code
+during interviews. From these, we can derive ZUN's original names for certain
+variables, functions, or macros. To indicate one of those and protect them
+from being renamed, put a `/* ZUN symbol [reference] */` comment next to the
+declaration of the identifier in question.
+
+Currently, we know about the following [references]:
+
+* `[MAGNet2010]`: Interview with ZUN for the NHK BS2 TV program MAG・ネット
+  (MAG.Net), originally broadcast 2010-05-02. At 09m36s, ZUN's monitor briefly
+  displays a piece of TH04's `MAIN.EXE`, handling demo recording and the setup
+  of the game's EMS area.
+
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
