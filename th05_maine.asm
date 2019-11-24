@@ -1645,7 +1645,7 @@ loc_B164:
 		mov	ah, 0
 		push	ax
 		pushd	[bp+var_8]
-		call	sub_E914
+		call	graph_putsa_fx
 		graph_accesspage 0
 
 loc_B18D:
@@ -1708,13 +1708,13 @@ loc_B1F7:
 		push	si
 		push	0Fh
 		pushd	[bp+var_4]
-		call	sub_E914
+		call	graph_putsa_fx
 		call	sub_B37C
 		push	40h
 		push	si
 		push	0Fh
 		pushd	[bp+var_4]
-		call	sub_E914
+		call	graph_putsa_fx
 		call	sub_B37C
 		dec	word_107BC
 		inc	di
@@ -1727,13 +1727,13 @@ loc_B21E:
 		push	si
 		push	0Fh
 		pushd	[bp+var_4]
-		call	sub_E914
+		call	graph_putsa_fx
 		call	sub_B37C
 		push	40h
 		push	si
 		push	0Fh
 		pushd	[bp+var_4]
-		call	sub_E914
+		call	graph_putsa_fx
 		call	sub_B37C
 		inc	allcast_step
 		inc	allcast_line_on_screen
@@ -3893,12 +3893,12 @@ loc_C2BB:
 		push	9
 		push	ds
 		push	offset aGxgnbGvbGhvVGv
-		call	sub_E914
+		call	graph_putsa_fx
 		push	7800C0h
 		push	2
 		push	ds
 		push	offset aGxgnbGvbGhvV_0
-		call	sub_E914
+		call	graph_putsa_fx
 
 loc_C2EB:
 		call	sub_EB66
@@ -4405,7 +4405,7 @@ loc_C6F1:
 		push	word_116E4
 		push	ds
 		push	offset aU__0
-		call	sub_E914
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -4515,14 +4515,14 @@ loc_C7B6:
 		push	word_116E4
 		push	ds
 		push	offset aBd
-		call	sub_E914
+		call	graph_putsa_fx
 		lea	ax, [si+60h]
 		push	ax
 		push	di
 		push	word_116E4
 		push	ds
 		push	offset aBu
-		call	sub_E914
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -4578,7 +4578,7 @@ arg_6		= word ptr  0Ah
 		push	word_116E4
 		push	ds
 		push	offset aBd_0
-		call	sub_E914
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -4719,7 +4719,7 @@ loc_C9B3:
 		push	word_116E4
 		push	ds
 		push	offset aBu_0
-		call	sub_E914
+		call	graph_putsa_fx
 		leave
 		retn
 sub_C8AE	endp
@@ -4845,7 +4845,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 18h
@@ -4853,7 +4853,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aUqiUx	; "難易度"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 30h	; '0'
@@ -4861,7 +4861,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aNPiuU_	; "最終得点"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 48h	; 'H'
@@ -4869,7 +4869,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGGxi
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 60h
@@ -4877,7 +4877,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGGaogcpi
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 78h	; 'x'
@@ -4885,7 +4885,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGqbGatbrmcj ; "ゲーム達成率"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 90h	; '・
@@ -4893,7 +4893,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aIlcSObcj ; "悪霊退治率"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0A8h ; 'ｨ'
@@ -4901,7 +4901,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aGagcgegai
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0C0h
@@ -4909,7 +4909,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0D8h
@@ -4917,7 +4917,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aLcnzvv	; "気合い"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0F0h ; '・
@@ -4925,7 +4925,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aPicacovCj ; "処理落ち率"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 110h
@@ -4933,7 +4933,7 @@ var_4		= dword	ptr -4
 		push	word_116E4
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
-		call	sub_E914
+		call	graph_putsa_fx
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_CBDB
@@ -5004,7 +5004,7 @@ loc_CBE3:
 		push	word_116E4
 		push	ds
 		push	offset aI
-		call	sub_E914
+		call	graph_putsa_fx
 		mov	ax, word_116E2
 		add	ax, 110h
 		push	ax
@@ -5014,7 +5014,7 @@ loc_CBE3:
 		push	word_116E4
 		push	ds
 		push	offset aI_0
-		call	sub_E914
+		call	graph_putsa_fx
 		mov	byte_1517C, 1
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
@@ -5337,7 +5337,7 @@ loc_D01A:
 		push	word_116E4
 		push	ds
 		push	offset aU_
-		call	sub_E914
+		call	graph_putsa_fx
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
@@ -5421,7 +5421,7 @@ loc_D120:
 		push	word_116E4
 		push	ds
 		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
-		call	sub_E914
+		call	graph_putsa_fx
 		mov	ax, word_116E2
 		add	ax, 30h	; '0'
 		push	ax
@@ -5431,7 +5431,7 @@ loc_D120:
 		push	word_116E6
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
-		call	sub_E914
+		call	graph_putsa_fx
 
 loc_D156:
 		pop	si
@@ -5470,7 +5470,7 @@ sub_D16F	proc near
 		push	word_116E6
 		push	ds
 		push	offset byte_15187
-		call	sub_E914
+		call	graph_putsa_fx
 		mov	ax, word_116E2
 		add	ax, 30h	; '0'
 		push	ax
@@ -5480,7 +5480,7 @@ sub_D16F	proc near
 		push	word_116E6
 		push	ds
 		push	offset byte_151A5
-		call	sub_E914
+		call	graph_putsa_fx
 
 loc_D1AF:
 		pop	bp
@@ -5538,7 +5538,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vpcB@	; "　１面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 60h
@@ -5546,7 +5546,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vqcB@	; "　２面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 80h
@@ -5554,7 +5554,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vrcB@	; "　３面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0A0h
@@ -5562,7 +5562,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vscB@	; "　４面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0C0h
@@ -5570,7 +5570,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vtcB@	; "　５面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 0E0h ; '・
@@ -5578,7 +5578,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aB@vucB@	; "　６面　"
-		call	sub_E914
+		call	graph_putsa_fx
 		push	word_116E2
 		mov	ax, word_116E8
 		add	ax, 120h
@@ -5586,7 +5586,7 @@ var_2		= word ptr -2
 		push	word_116E4
 		push	ds
 		push	offset aNPiuU__0 ; "最終得点"
-		call	sub_E914
+		call	graph_putsa_fx
 		mov	ax, word_116E2
 		add	ax, 80h
 		mov	[bp+var_2], ax
@@ -8114,30 +8114,30 @@ include th04/snd/detmodes.asm
 
 ; Attributes: bp-based frame
 
-sub_E914	proc far
+graph_putsa_fx	proc far
 
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@str  	= dword	ptr  6
+@@color	= word ptr  0Ah
+@@y    	= word ptr  0Ch
+@@x    	= word ptr  0Eh
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+arg_4]
+		mov	dx, [bp+@@color]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+arg_6]
+		mov	dx, [bp+@@y]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+arg_8]
+		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_107BC
@@ -8161,7 +8161,7 @@ loc_E970:
 		push	ds
 		pop	fs
 		assume fs:_DATA
-		lds	si, [bp+arg_0]
+		lds	si, [bp+@@str]
 		lodsb
 		or	al, al
 		jz	short loc_E9FD
@@ -8269,7 +8269,7 @@ loc_EA38:
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_E9F4
-sub_E914	endp
+graph_putsa_fx	endp
 
 ; ---------------------------------------------------------------------------
 		nop

@@ -630,7 +630,7 @@ loc_AB59:
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	dword ptr [bx+9Eh]
-		call	sub_DEB4
+		call	graph_putsa_fx
 
 loc_ABC4:
 		pop	di
@@ -864,7 +864,7 @@ loc_ADC0:
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr [bx+9Eh]
-		call	sub_DEB4
+		call	graph_putsa_fx
 
 loc_AE11:
 		pop	di
@@ -1913,7 +1913,7 @@ loc_B6D3:
 		push	si
 		push	[bp+arg_0]
 		pushd	[bp+var_4]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		pop	si
 		leave
 		retn	4
@@ -1966,7 +1966,7 @@ loc_B724:
 		push	si
 		push	[bp+arg_0]
 		pushd	[bp+var_4]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		pop	si
 		leave
 		retn	4
@@ -1994,7 +1994,7 @@ loc_B744:
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr [bx+0A4Ch]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		inc	si
 		add	di, 10h
 
@@ -2029,7 +2029,7 @@ loc_B772:
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr [bx+0A70h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		inc	si
 		add	di, 10h
 
@@ -2059,7 +2059,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aB@b@b@b@b@ogcp ; "　　　　　使用する音源を選択して下さい・...
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	word_11E88, 0Ah
 		mov	word_11E8A, 4
 		push	200080h
@@ -2176,7 +2176,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aB@b@b@b@m ; "　　　　効果音に使用する音源を選択して・...
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	word_11E88, 0Ah
 		mov	word_11E8A, 4
 		push	200080h
@@ -2625,7 +2625,7 @@ arg_2		= byte ptr  6
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+0EB6h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		graph_accesspage byte ptr word_12DBC+1
 		push	10h
 		mov	al, [bp+arg_2]
@@ -2641,7 +2641,7 @@ arg_2		= byte ptr  6
 		shl	ax, 2
 		mov	bx, ax
 		pushd	dword ptr [bx+0EB6h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		leave
 		retn	4
 sub_BED5	endp
@@ -2799,7 +2799,7 @@ sub_C2C4	proc near
 		push	7
 		push	ds
 		push	offset _music_cmt
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	si, 1
 		jmp	short loc_C306
 ; ---------------------------------------------------------------------------
@@ -2819,7 +2819,7 @@ loc_C2DE:
 		imul	ax, MUSIC_CMT_LINE_LEN
 		add	ax, offset _music_cmt
 		push	ax
-		call	sub_DEB4
+		call	graph_putsa_fx
 
 loc_C305:
 		inc	si
@@ -4560,7 +4560,7 @@ loc_D2A3:
 		mov	bx, si
 		shl	bx, 3
 		pushd	dword ptr [bx+13D4h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		lea	ax, [di+8]
 		push	ax
 		mov	ax, [bp+var_2]
@@ -4570,7 +4570,7 @@ loc_D2A3:
 		mov	bx, si
 		shl	bx, 3
 		pushd	dword ptr [bx+13D8h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	ax, 1
 		sub	ax, si
 		mov	si, ax
@@ -4599,7 +4599,7 @@ loc_D2FA:
 		mov	bx, si
 		shl	bx, 3
 		pushd	dword ptr [bx+13D4h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		lea	ax, [di+8]
 		push	ax
 		mov	ax, [bp+var_2]
@@ -4609,7 +4609,7 @@ loc_D2FA:
 		mov	bx, si
 		shl	bx, 3
 		pushd	dword ptr [bx+13D8h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -4792,7 +4792,7 @@ loc_D4A8:
 		push	0Fh
 		push	ds
 		push	offset aStar
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	word_FD7C, 2
 
 loc_D4E5:
@@ -4810,7 +4810,7 @@ loc_D4E5:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr [bx+13E4h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	ax, 1
 		sub	ax, di
 		mov	di, ax
@@ -4849,7 +4849,7 @@ loc_D52F:
 		push	0Fh
 		push	ds
 		push	offset aStar
-		call	sub_DEB4
+		call	graph_putsa_fx
 		mov	word_FD7C, 2
 
 loc_D567:
@@ -4867,7 +4867,7 @@ loc_D567:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr [bx+13E4h]
-		call	sub_DEB4
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -4947,7 +4947,7 @@ sub_D595	proc near
 		push	3
 		push	ds
 		push	offset aGtgugegfgGuvSi ; "サブウェポンの選択"
-		call	sub_DEB4
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		pop	bp
@@ -5385,30 +5385,30 @@ include th04/snd/load.asm
 
 ; Attributes: bp-based frame
 
-sub_DEB4	proc far
+graph_putsa_fx	proc far
 
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@str  	= dword	ptr  6
+@@color	= word ptr  0Ah
+@@y    	= word ptr  0Ch
+@@x    	= word ptr  0Eh
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+arg_4]
+		mov	dx, [bp+@@color]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+arg_6]
+		mov	dx, [bp+@@y]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+arg_8]
+		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_FD7C
@@ -5432,7 +5432,7 @@ loc_DF10:
 		push	ds
 		pop	fs
 		assume fs:_DATA
-		lds	si, [bp+arg_0]
+		lds	si, [bp+@@str]
 		lodsb
 		or	al, al
 		jz	short loc_DF9D
@@ -5540,7 +5540,7 @@ loc_DFD8:
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_DF94
-sub_DEB4	endp
+graph_putsa_fx	endp
 
 ; ---------------------------------------------------------------------------
 		nop

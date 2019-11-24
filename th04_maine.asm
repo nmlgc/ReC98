@@ -1756,7 +1756,7 @@ loc_AE82:
 		push	ax
 		push	word ptr [bp+var_6+2]
 		push	bx
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		call	sub_A73B
 		jmp	loc_AE2D
 ; ---------------------------------------------------------------------------
@@ -2726,7 +2726,7 @@ loc_B851:
 		push	0Eh
 		push	ds
 		push	offset aU_	; "点"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		pop	si
 		leave
 		retn
@@ -2828,14 +2828,14 @@ loc_B8FC:
 		push	0Eh
 		push	ds
 		push	offset aBd	; "．"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		lea	ax, [si+60h]
 		push	ax
 		push	di
 		push	0Eh
 		push	ds
 		push	offset aBu	; "％"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -2891,7 +2891,7 @@ arg_6		= word ptr  0Ah
 		push	0Eh
 		push	ds
 		push	offset aBd_0	; "．"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		pop	di
 		pop	si
 		leave
@@ -3043,7 +3043,7 @@ loc_BB48:
 		push	0Eh
 		push	ds
 		push	offset aBu_0	; "％"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		leave
 		retn
 sub_B9F2	endp
@@ -3074,62 +3074,62 @@ var_4		= dword	ptr -4
 		push	0Fh
 		push	ds
 		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100048h
 		push	0Fh
 		push	ds
 		push	offset aUqiUx	; "難易度"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100060h
 		push	0Fh
 		push	ds
 		push	offset aNPiuU_	; "最終得点"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100078h
 		push	0Fh
 		push	ds
 		push	offset aGGxi	; "ミス回数"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100090h
 		push	0Fh
 		push	ds
 		push	offset aGGaogcpi ; "ボム使用回数"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	1000A8h
 		push	0Fh
 		push	ds
 		push	offset aGqbGatbrmcj ; "ゲーム達成率"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	1000C0h
 		push	0Fh
 		push	ds
 		push	offset aIlcSObcj ; "悪霊退治率"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	1000D8h
 		push	0Fh
 		push	ds
 		push	offset aGagcgegai ; "アイテム回収率"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	1000F0h
 		push	0Fh
 		push	ds
 		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100108h
 		push	0Fh
 		push	ds
 		push	offset aLcnzvv	; "気合い"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100120h
 		push	0Fh
 		push	ds
 		push	offset aPicacovCj ; "処理落ち率"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	100150h
 		push	0Fh
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_BC71
@@ -3169,12 +3169,12 @@ loc_BC79:
 		push	0Eh
 		push	ds
 		push	offset aTimes	; "回"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	1200090h
 		push	0Eh
 		push	ds
 		push	offset aTimes_0	; "回"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		mov	byte_124CC, 1
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
@@ -3439,7 +3439,7 @@ loc_BFD9:
 		push	0Eh
 		push	ds
 		push	offset aPoint	; "点"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
@@ -3510,14 +3510,14 @@ loc_C0AE:
 		push	0Eh
 		push	ds
 		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	400168h
 		push	0Fh
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
 
 loc_C0CB:
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		call	input_wait_for_change pascal, 0
 		push	2
 		call	palette_black_out
@@ -4655,12 +4655,12 @@ loc_C8D9:
 		push	9
 		push	ds
 		push	offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 		push	7800C0h
 		push	2
 		push	ds
 		push	offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
-		call	far ptr	loc_D1FC
+		call	graph_putsa_fx
 
 loc_C909:
 		les	bx, _humaconfig
@@ -5109,26 +5109,34 @@ include th03/snd/delaymea.asm
 include th04/formats/cdg_put_plane.asm
 include th04/snd/load.asm
 
-; ---------------------------------------------------------------------------
+; =============== S U B	R O U T	I N E =======================================
 
-loc_D1FC:
+; Attributes: bp-based frame
+
+graph_putsa_fx	proc far
+
+@@str  	= dword	ptr  6
+@@color	= word ptr  0Ah
+@@y    	= word ptr  0Ch
+@@x    	= word ptr  0Eh
+
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+0Ah]
+		mov	dx, [bp+@@color]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+0Ch]
+		mov	dx, [bp+@@y]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+0Eh]
+		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_EB2C
@@ -5152,7 +5160,7 @@ loc_D258:
 		push	ds
 		pop	fs
 		assume fs:_DATA
-		lds	si, [bp+6]
+		lds	si, [bp+@@str]
 		lodsb
 		or	al, al
 		jz	short loc_D2E5
@@ -5260,6 +5268,7 @@ loc_D320:
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_D2DC
+graph_putsa_fx	endp
 ; ---------------------------------------------------------------------------
 		nop
 		mov	dx, ax
@@ -5272,7 +5281,6 @@ loc_D320:
 		or	ax, dx
 
 ; =============== S U B	R O U T	I N E =======================================
-
 
 sub_D335	proc near
 		mov	dx, ax

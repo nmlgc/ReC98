@@ -534,7 +534,7 @@ loc_A69A:
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	dword ptr MENU_DESC[bx]
-		call	sub_D436
+		call	graph_putsa_fx
 
 loc_A705:
 		pop	di
@@ -767,7 +767,7 @@ loc_A900:
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr MENU_DESC[bx]
-		call	sub_D436
+		call	graph_putsa_fx
 
 loc_A951:
 		pop	di
@@ -1854,7 +1854,7 @@ loc_B2AB:
 		push	si
 		push	[bp+arg_0]
 		pushd	[bp+var_4]
-		call	sub_D436
+		call	graph_putsa_fx
 		pop	si
 		leave
 		retn	4
@@ -1907,7 +1907,7 @@ loc_B2FC:
 		push	si
 		push	[bp+arg_0]
 		pushd	[bp+var_4]
-		call	sub_D436
+		call	graph_putsa_fx
 		pop	si
 		leave
 		retn	4
@@ -1935,7 +1935,7 @@ loc_B31C:
 		mov	bx, si
 		shl	bx, 2
 		pushd	[SETUP_BGM_BODY+bx]
-		call	sub_D436
+		call	graph_putsa_fx
 		inc	si
 		add	di, 10h
 
@@ -1970,7 +1970,7 @@ loc_B34A:
 		mov	bx, si
 		shl	bx, 2
 		pushd	[SETUP_SFX_BODY+bx]
-		call	sub_D436
+		call	graph_putsa_fx
 		inc	si
 		add	di, 10h
 
@@ -2000,7 +2000,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aSETUP_BGM_HEAD ; "　　　　　使用する音源を選択して下さい・...
-		call	sub_D436
+		call	graph_putsa_fx
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	200080h
@@ -2117,7 +2117,7 @@ var_2		= word ptr -2
 		push	0Fh
 		push	ds
 		push	offset aSETUP_SFX_HEAD ; "　　　　効果音に使用する音源を選択して・...
-		call	sub_D436
+		call	graph_putsa_fx
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	200080h
@@ -2976,7 +2976,7 @@ loc_BF14:
 		push	ax
 		push	[bp+var_2]
 		push	dx
-		call	sub_D436
+		call	graph_putsa_fx
 
 loc_BF48:
 		pop	si
@@ -3026,17 +3026,17 @@ loc_BF6B:
 		push	0C0050h
 		push	5
 		pushd	[MUSICROOM_UP]
-		call	sub_D436
+		call	graph_putsa_fx
 		push	0C0120h
 		push	5
 		pushd	[MUSICROOM_DOWN]
-		call	sub_D436
+		call	graph_putsa_fx
 		push	0C0020h
 		push	3
 		mov	bx, music_game
 		shl	bx, 2
 		pushd	dword ptr MUSICROOM_GAME[bx]
-		call	sub_D436
+		call	graph_putsa_fx
 		pop	si
 		pop	bp
 		retn	2
@@ -3155,7 +3155,7 @@ sub_C32D	proc pascal near
 		push	7
 		push	ds
 		push	offset _music_cmt
-		call	sub_D436
+		call	graph_putsa_fx
 		mov	si, offset _music_cmt + MUSIC_CMT_LINE_LEN
 		mov	di, 1
 		mov	@@y, 180
@@ -3170,7 +3170,7 @@ loc_C351:
 		push	7
 		push	ds
 		push	si
-		call	sub_D436
+		call	graph_putsa_fx
 
 loc_C365:
 		inc	di
@@ -5015,30 +5015,30 @@ include th02/exit_dos.asm
 
 ; Attributes: bp-based frame
 
-sub_D436	proc far
+graph_putsa_fx	proc far
 
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@str  	= dword	ptr  6
+@@color	= word ptr  0Ah
+@@y    	= word ptr  0Ch
+@@x    	= word ptr  0Eh
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	dx, [bp+arg_4]
+		mov	dx, [bp+@@color]
 		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
 		GRCG_SETCOLOR_DIRECT_INLINED dx
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	dx, [bp+arg_6]
+		mov	dx, [bp+@@y]
 		shl	dx, 6
 		mov	di, dx
 		shr	dx, 2
 		add	di, dx
-		mov	cx, [bp+arg_8]
+		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
 		mov	bx, word_F9BE
@@ -5062,7 +5062,7 @@ loc_D492:
 		push	ds
 		pop	fs
 		assume fs:_DATA
-		lds	si, [bp+arg_0]
+		lds	si, [bp+@@str]
 		lodsb
 		or	al, al
 		jz	short loc_D51F
@@ -5170,7 +5170,7 @@ loc_D55A:
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_D516
-sub_D436	endp
+graph_putsa_fx	endp
 
 ; ---------------------------------------------------------------------------
 		nop
