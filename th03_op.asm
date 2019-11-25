@@ -1702,292 +1702,9 @@ loc_A5AD:
 sub_A590	endp
 
 include th02/music/music.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A8CF	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	[bp+var_6], 0
-		jmp	short loc_A8F7
-; ---------------------------------------------------------------------------
-
-loc_A8DC:
-		push	3200h
-		call	hmem_allocbyte
-		mov	bx, [bp+var_6]
-		shl	bx, 2
-		mov	[bx+203Eh], ax
-		mov	word ptr [bx+203Ch], 0
-		inc	[bp+var_6]
-
-loc_A8F7:
-		cmp	[bp+var_6], 4
-		jl	short loc_A8DC
-		xor	si, si
-		mov	di, 40h
-		jmp	short loc_A97D
-; ---------------------------------------------------------------------------
-
-loc_A904:
-		mov	[bp+var_2], 130h
-		jmp	short loc_A975
-; ---------------------------------------------------------------------------
-
-loc_A90B:
-		mov	ax, [bp+var_2]
-		sar	ax, 3
-		mov	dx, di
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, di
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_4], ax
-		les	bx, _VRAM_PLANE_B
-		assume es:nothing
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F82C
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F830
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F834
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F838
-		mov	es:[bx+si], eax
-		add	si, 4
-		add	[bp+var_2], 20h	; ' '
-
-loc_A975:
-		cmp	[bp+var_2], 270h
-		jl	short loc_A90B
-		inc	di
-
-loc_A97D:
-		cmp	di, 50h	; 'P'
-		jl	short loc_A904
-		mov	di, 50h	; 'P'
-		jmp	short loc_AA00
-; ---------------------------------------------------------------------------
-
-loc_A987:
-		mov	[bp+var_2], 130h
-		jmp	short loc_A9F8
-; ---------------------------------------------------------------------------
-
-loc_A98E:
-		mov	ax, [bp+var_2]
-		sar	ax, 3
-		mov	dx, di
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, di
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_4], ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F82C
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F830
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F834
-		mov	es:[bx+si], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_4]
-		mov	eax, es:[bx]
-		les	bx, dword ptr unk_F838
-		mov	es:[bx+si], eax
-		add	si, 4
-		add	[bp+var_2], 20h	; ' '
-
-loc_A9F8:
-		cmp	[bp+var_2], 270h
-		jl	short loc_A98E
-		inc	di
-
-loc_AA00:
-		cmp	di, 180h
-		jl	short loc_A987
-		pop	di
-		pop	si
-		leave
-		retn
-sub_A8CF	endp
-
+include th03/music/cmt_back_snap.asm
 include th02/music/music_cmt_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AA53	proc near
-		push	bp
-		mov	bp, sp
-		push	word_F82E
-		call	hmem_free
-		push	word_F832
-		call	hmem_free
-		push	word_F836
-		call	hmem_free
-		push	word_F83A
-		call	hmem_free
-		pop	bp
-		retn
-sub_AA53	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AA7C	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	cx, cx
-		mov	si, 40h
-		jmp	short loc_AB05
-; ---------------------------------------------------------------------------
-
-loc_AA89:
-		mov	di, 130h
-		jmp	short loc_AAFE
-; ---------------------------------------------------------------------------
-
-loc_AA8E:
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, si
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		les	bx, dword ptr unk_F82C
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F830
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F834
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F838
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		add	cx, 4
-		add	di, 20h	; ' '
-
-loc_AAFE:
-		cmp	di, 270h
-		jl	short loc_AA8E
-		inc	si
-
-loc_AB05:
-		cmp	si, 50h	; 'P'
-		jl	loc_AA89
-		mov	si, 50h	; 'P'
-		jmp	short loc_AB8D
-; ---------------------------------------------------------------------------
-
-loc_AB11:
-		mov	di, 130h
-		jmp	short loc_AB86
-; ---------------------------------------------------------------------------
-
-loc_AB16:
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, si
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		les	bx, dword ptr unk_F82C
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F830
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F834
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		les	bx, dword ptr unk_F838
-		add	bx, cx
-		mov	eax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+var_2]
-		mov	es:[bx], eax
-		add	cx, 4
-		add	di, 20h	; ' '
-
-loc_AB86:
-		cmp	di, 270h
-		jl	short loc_AB16
-		inc	si
-
-loc_AB8D:
-		cmp	si, 180h
-		jl	loc_AB11
-		pop	di
-		pop	si
-		leave
-		retn
-sub_AA7C	endp
-
+include th03/music/cmt_back_free_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2003,7 +1720,7 @@ sub_AB99	proc near
 		push	di
 		call	music_cmt_load pascal, [bp+@@track]
 		call	screen_back_B_put
-		call	sub_AA7C
+		call	cmt_back_put
 		push	1300040h
 		push	1Fh
 		push	ds
@@ -2093,7 +1810,7 @@ loc_AC15:
 		graph_accesspage 1
 		graph_showpage 0
 		call	screen_back_B_snap
-		call	sub_A8CF
+		call	cmt_back_snap
 		graph_accesspage 1
 		mov	al, music_track_playing
 		mov	ah, 0
@@ -2211,7 +1928,7 @@ loc_ADB0:
 
 loc_ADC1:
 		call	screen_back_B_free
-		call	sub_AA53
+		call	cmt_back_free
 		graph_showpage 0
 		graph_accesspage al
 		call	graph_clear
@@ -4850,18 +4567,7 @@ include th03/formats/hfliplut[bss].asm
 include th02/music/music[bss].asm
 public _screen_back_B
 _screen_back_B	dw ?
-unk_F82C	db    ?	;
-		db    ?	;
-word_F82E	dw ?
-unk_F830	db    ?	;
-		db    ?	;
-word_F832	dw ?
-unk_F834	db    ?	;
-		db    ?	;
-word_F836	dw ?
-unk_F838	db    ?	;
-		db    ?	;
-word_F83A	dw ?
+include th03/music/cmt_back[bss].asm
 include th02/music/music_cmt[bss].asm
 word_FB84	dw ?
 		dd    ?	;
