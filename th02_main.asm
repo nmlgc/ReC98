@@ -2018,7 +2018,7 @@ loc_B32B:
 
 loc_B333:
 		movzx	eax, ax
-		mov	dword_1E598, eax
+		mov	_score, eax
 		mov	al, stage_id
 		cbw
 		mov	bx, 5
@@ -3479,9 +3479,9 @@ loc_C4F5:
 loc_C4F7:
 		les	bx, mikoconfig
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jnb	short loc_C50D
-		mov	eax, dword_1E598
+		mov	eax, _score
 		jmp	short loc_C516
 ; ---------------------------------------------------------------------------
 
@@ -6677,7 +6677,7 @@ loc_DCE0:
 		mov	bx, word_1E5B6
 		shl	bx, 2
 		mov	eax, [bx+0B2Eh]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jle	short loc_DCDC
 		mov	dword_218AC, 0
 		pop	bp
@@ -6693,7 +6693,7 @@ sub_DCFE	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, dword_218AC
-		add	dword_1E598, eax
+		add	_score, eax
 		mov	dword_218AC, 0
 		mov	word_218B0, 0
 		pop	bp
@@ -6708,7 +6708,7 @@ sub_DCFE	endp
 sub_DD1B	proc near
 		push	bp
 		mov	bp, sp
-		mov	dword_1E598, 0
+		mov	_score, 0
 		mov	dword_218AC, 0
 		mov	word_218B0, 0
 		mov	dword_1E5B8, 9C40h
@@ -6773,19 +6773,19 @@ loc_DDCE:
 		mov	eax, [bp+var_4]
 		mov	dword_218AC, eax
 		movzx	eax, word_218B0
-		add	dword_1E598, eax
-		call	hud_score_put pascal, 6, large [dword_1E598]
-		mov	eax, dword_1E598
-		cmp	eax, dword_252F8
+		add	_score, eax
+		call	hud_score_put pascal, 6, large [_score]
+		mov	eax, _score
+		cmp	eax, _hiscore
 		jle	short loc_DE01
-		mov	dword_252F8, eax
+		mov	_hiscore, eax
 		call	hud_score_put pascal, 4, eax
 
 loc_DE01:
 		mov	bx, word_1E5B6
 		shl	bx, 2
 		mov	eax, [bx+0B2Eh]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jg	short locret_DE4C
 		mov	al, lives
 		cbw
@@ -6828,19 +6828,19 @@ sub_DE4E	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, dword_218AC
-		add	dword_1E598, eax
-		call	hud_score_put pascal, 6, large [dword_1E598]
-		mov	eax, dword_1E598
-		cmp	eax, dword_252F8
+		add	_score, eax
+		call	hud_score_put pascal, 6, large [_score]
+		mov	eax, _score
+		cmp	eax, _hiscore
 		jle	short loc_DE7A
-		mov	dword_252F8, eax
+		mov	_hiscore, eax
 		call	hud_score_put pascal, 4, eax
 
 loc_DE7A:
 		mov	bx, word_1E5B6
 		shl	bx, 2
 		mov	eax, [bx+0B2Eh]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jg	short loc_DEAB
 		mov	al, lives
 		cbw
@@ -7066,14 +7066,14 @@ sub_E012	proc near
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
-		call	hud_score_put pascal, 6, large [dword_1E598]
+		call	hud_score_put pascal, 6, large [_score]
 		push	6
 		les	bx, mikoconfig
 		assume es:nothing
 		push	es:[bx+mikoconfig_t.continues_used]
 		call	hud_continues_put
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
-		call	hud_score_put pascal, 4, large [dword_252F8]
+		call	hud_score_put pascal, 4, large [_hiscore]
 		push	4
 		mov	al, byte_252FC
 		mov	ah, 0
@@ -22664,7 +22664,7 @@ loc_1691C:
 		cmp	word_2065A, 514h
 		jl	short loc_16948
 		mov	byte_2066A, 1
-		add	dword_1E598, 493E0h
+		add	_score, 300000
 		mov	word_20650, 0
 
 loc_16948:
@@ -22753,8 +22753,8 @@ evileye_end	proc far
 		call	_key_delay
 		les	bx, mikoconfig
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
-		mov	eax, dword_1E598
-		imul	eax, 0Ah
+		mov	eax, _score
+		imul	eax, 10
 		movzx	edx, es:[bx+mikoconfig_t.continues_used]
 		add	eax, edx
 		mov	es:[bx+mikoconfig_t.score], eax
@@ -24945,7 +24945,7 @@ var_2		= word ptr -2
 		jl	short loc_17CF9
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
-		add	dword_1E598, 7A120h
+		add	_score, 500000
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_17CF9:
@@ -28204,9 +28204,9 @@ sub_19C1D	proc near
 		call	far ptr	palette_show
 		les	bx, mikoconfig
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jnb	short loc_19C41
-		mov	eax, dword_1E598
+		mov	eax, _score
 		jmp	short loc_19C4A
 ; ---------------------------------------------------------------------------
 
@@ -28217,7 +28217,7 @@ loc_19C41:
 loc_19C4A:
 		les	bx, mikoconfig
 		mov	es:[bx+mikoconfig_t.score_highest], eax
-		mov	eax, dword_1E598
+		mov	eax, _score
 		imul	eax, 0Ah
 		movzx	edx, es:[bx+mikoconfig_t.continues_used]
 		add	eax, edx
@@ -28301,7 +28301,7 @@ sub_19C8D	proc near
 		call	palette_white_out
 		push	32h ; '2'
 		call	frame_delay
-		add	dword_1E598, 0C350h
+		add	_score, 50000
 		call	sub_19C1D
 		mov	ax, 1
 		pop	bp
@@ -28381,7 +28381,7 @@ mima_end	proc far
 		push	ax
 		call	super_put_rect
 		call	sub_13439
-		add	dword_1E598, 186A0h
+		add	_score, 100000
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_19E2A
@@ -33426,14 +33426,14 @@ loc_1CA1A:
 		call	sub_1C6C7
 
 loc_1CA1D:
-		mov	eax, dword_1E598
-		imul	eax, 0Ah
-		mov	dword_1E598, eax
+		mov	eax, _score
+		imul	eax, 10
+		mov	_score, eax
 		les	bx, mikoconfig
 		movzx	eax, es:[bx+mikoconfig_t.continues_used]
-		add	dword_1E598, eax
+		add	_score, eax
 		mov	eax, dword_25324
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jle	short loc_1CA50
 		push	0FFFFh
 		call	sub_1C785
@@ -33450,7 +33450,7 @@ loc_1CA57:
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		mov	eax, [bx+788Ch]
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jg	short loc_1CA72
 		dec	[bp+var_2]
 
@@ -33519,7 +33519,7 @@ loc_1CB0C:
 		jg	loc_1CA7A
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		mov	eax, dword_1E598
+		mov	eax, _score
 		mov	[bx+7890h], eax
 		mov	bx, [bp+var_2]
 		mov	al, stage_id
@@ -33789,10 +33789,10 @@ loc_1CD4D:
 
 loc_1CD50:
 		mov	eax, dword_25300
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
-		cmp	eax, dword_1E598
+		cmp	eax, _score
 		jl	short loc_1CD71
 		mov	eax, dword_25300
 		cdq
@@ -33801,10 +33801,10 @@ loc_1CD50:
 ; ---------------------------------------------------------------------------
 
 loc_1CD71:
-		mov	eax, dword_1E598
+		mov	eax, _score
 
 loc_1CD75:
-		mov	dword_252F8, eax
+		mov	_hiscore, eax
 		mov	eax, dword_25300
 		mov	ebx, 0Ah
 		cdq
@@ -34261,7 +34261,8 @@ word_1E592	dw 0BCC8h
 word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
 byte_1E597	db 0
-dword_1E598	dd 0
+public _score
+_score	dd 0
 lives	db 3
 bombs	db 3
 		db 0A0h
@@ -39672,7 +39673,8 @@ word_252F2	dw ?
 word_252F4	dw ?
 byte_252F6	db ?
 byte_252F7	db ?
-dword_252F8	dd ?
+public _hiscore
+_hiscore	dd ?
 byte_252FC	db ?
 		db ?
 word_252FE	dw ?

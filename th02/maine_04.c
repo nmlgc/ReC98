@@ -4,11 +4,9 @@
  */
 
 #include "th02\th02.h"
-
+#include "th02/score.h"
 #include "th02\score.c"
 #include "th02\scoreenc.c"
-
-extern long score;
 
 long score_highest;
 score_file_t hi;
