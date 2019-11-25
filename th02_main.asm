@@ -2127,7 +2127,7 @@ var_C		= byte ptr -0Ch
 		graph_accesspage 0
 		call	graph_clear
 		graph_showpage 0
-		call	sub_E012
+		call	hud_put
 		call	sub_FBE9
 		call	_pi_slot_palette_apply stdcall, 0
 		call	_pi_slot_palette_apply stdcall, 0
@@ -2449,7 +2449,7 @@ off_B982	dw offset loc_B63C
 sub_B98E	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_E012
+		call	hud_put
 		nopcall	sub_E162
 		mov	ax, 0D0h
 		mov	word_205E8, ax
@@ -6327,7 +6327,7 @@ loc_D949:
 		cmp	power, 80
 		jnb	short loc_D964
 		inc	power
-		call	sub_DEAD
+		call	hud_power_put
 		mov	power_overflow_level, 0
 		inc	dword_218A4
 		jmp	short loc_D984
@@ -6414,7 +6414,7 @@ loc_D9FA:
 		push	word_2189C
 		push	3E8h
 		call	sub_C7CA
-		call	sub_DFC4
+		call	hud_bombs_put
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -6465,7 +6465,7 @@ loc_DA85:
 		add	bx, bx
 		push	POWER_OVERFLOW_BONUS[bx]
 		call	sub_C7CA
-		call	sub_DEAD
+		call	hud_power_put
 		jmp	short loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -6475,7 +6475,7 @@ loc_DA9C:
 		cmp	ax, 5
 		jge	short loc_DAB6
 		inc	lives
-		call	sub_DF76
+		call	hud_lives_put
 		call	_snd_se_play c, 8
 
 loc_DAB6:
@@ -6792,7 +6792,7 @@ loc_DE01:
 		cmp	ax, 5
 		jge	short loc_DE26
 		inc	lives
-		call	sub_DF76
+		call	hud_lives_put
 		jmp	short loc_DE36
 ; ---------------------------------------------------------------------------
 
@@ -6802,7 +6802,7 @@ loc_DE26:
 		cmp	ax, 5
 		jge	short loc_DE36
 		inc	bombs
-		call	sub_DFC4
+		call	hud_bombs_put
 
 loc_DE36:
 		call	_snd_se_play c, 8
@@ -6847,7 +6847,7 @@ loc_DE7A:
 		cmp	ax, 5
 		jge	short loc_DEA7
 		inc	lives
-		call	sub_DF76
+		call	hud_lives_put
 		call	_snd_se_play c, 8
 
 loc_DEA7:
@@ -6862,8 +6862,8 @@ sub_DE4E	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_DEAD	proc near
+public HUD_POWER_PUT
+hud_power_put	proc near
 
 var_18		= word ptr -18h
 var_16		= word ptr -16h
@@ -6963,14 +6963,14 @@ loc_DF6E:
 		pop	si
 		leave
 		retn
-sub_DEAD	endp
+hud_power_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_DF76	proc near
+public HUD_LIVES_PUT
+hud_lives_put	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7009,14 +7009,14 @@ loc_DFBC:
 		pop	si
 		pop	bp
 		retn
-sub_DF76	endp
+hud_lives_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_DFC4	proc near
+public HUD_BOMBS_PUT
+hud_bombs_put	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7055,14 +7055,14 @@ loc_E00A:
 		pop	si
 		pop	bp
 		retn
-sub_DFC4	endp
+hud_bombs_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E012	proc near
+public HUD_PUT
+hud_put	proc near
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
@@ -7080,11 +7080,11 @@ sub_E012	proc near
 		push	ax
 		call	hud_continues_put
 		call	gaiji_putsa pascal, (57 shl 16) + 17, ds, offset gsREIMU, TX_YELLOW
-		call	sub_DF76
+		call	hud_lives_put
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
-		call	sub_DFC4
+		call	hud_bombs_put
 		call	gaiji_putsa pascal, (57 shl 16) + 20, ds, offset gsREIRYOKU, TX_YELLOW
-		call	sub_DEAD
+		call	hud_power_put
 		push	(57 shl 16) + 22
 		push	ds
 		mov	al, _rank
@@ -7124,7 +7124,7 @@ loc_E0E1:
 		call	gaiji_putsa
 		pop	bp
 		retn
-sub_E012	endp
+hud_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7350,7 +7350,7 @@ sub_E280	proc near
 		mov	byte_218B4, 1
 		mov	byte_20606, 1
 		dec	bombs
-		call	sub_DFC4
+		call	hud_bombs_put
 		mov	word_218B6, 0
 		inc	byte_218C2
 		inc	byte_1E64E
@@ -8981,7 +8981,7 @@ loc_F107:
 		mov	bx, ax
 		mov	al, [bx+109Fh]
 		mov	power, al
-		call	sub_DEAD
+		call	hud_power_put
 		mov	bx, word_205EE
 		push	word ptr [bx]
 		mov	bx, word_205F0
@@ -9002,7 +9002,7 @@ loc_F13B:
 		cmp	byte_20609, 2Bh	; '+'
 		jnz	short loc_F198
 		dec	lives
-		call	sub_DF76
+		call	hud_lives_put
 		les	bx, mikoconfig
 		assume es:nothing
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
@@ -9013,7 +9013,7 @@ loc_F13B:
 		mov	bombs, al
 
 loc_F160:
-		call	sub_DFC4
+		call	hud_bombs_put
 		mov	bx, word_205EE
 		mov	ax, [bx]
 		add	ax, 10h

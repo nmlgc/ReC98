@@ -795,7 +795,7 @@ loc_B2DD:
 		call	sub_CFEE
 		call	sub_118D1
 		call	sub_B55A
-		nopcall	sub_106F3
+		nopcall	hud_put
 		call	sub_BA66
 		call	sub_172FF
 		cmp	word_20A84, 0
@@ -1113,7 +1113,7 @@ sub_B55A	proc near
 		call	sparks_init
 		call	hud_score_put
 		call	sub_C29E
-		nopcall	sub_106F3
+		nopcall	hud_put
 		mov	fp_23F5A, offset tiles_render_all
 		call	tiles_invalidate_reset
 		pop	bp
@@ -2592,7 +2592,7 @@ loc_C555:
 		dec	dream
 
 loc_C560:
-		nopcall	sub_1059D
+		nopcall	hud_dream_put
 
 loc_C565:
 		pop	bp
@@ -6405,7 +6405,7 @@ loc_E511:
 		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
 		mov	playchar_shot_func, ax
-		nopcall	sub_10625
+		nopcall	hud_power_put
 		retf
 sub_E4FC	endp
 
@@ -9314,22 +9314,22 @@ sub_104BB	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10574	proc far
+public HUD_POINT_ITEMS_PUT
+hud_point_items_put	proc far
 		push	bp
 		mov	bp, sp
 		call	hud_int_put pascal, (62 shl 16) + 16, _point_items_collected, TX_WHITE
 		call	hud_int_put pascal, (62 shl 16) + 15, word_22648, TX_CYAN
 		pop	bp
 		retf
-sub_10574	endp
+hud_point_items_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1059D	proc far
+public HUD_DREAM_PUT
+hud_dream_put	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -9380,27 +9380,27 @@ loc_105E6:
 		call	hud_bar_put
 		leave
 		retf
-sub_1059D	endp
+hud_dream_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1060E	proc far
+public HUD_GRAZE_PUT
+hud_graze_put	proc far
 		push	bp
 		mov	bp, sp
 		call	hud_int_put pascal, (62 shl 16) + 18, word_2C97A, TX_WHITE
 		pop	bp
 		retf
-sub_1060E	endp
+hud_graze_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10625	proc far
+public HUD_POWER_PUT
+hud_power_put	proc far
 
 var_A		= byte ptr -0Ah
 
@@ -9432,7 +9432,7 @@ var_A		= byte ptr -0Ah
 		pop	si
 		leave
 		retf
-sub_10625	endp
+hud_power_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9515,8 +9515,8 @@ sub_1065B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_106F3	proc far
+public HUD_PUT
+hud_put	proc far
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
@@ -9555,12 +9555,12 @@ loc_10796:
 		call	sub_10407
 		call	gaiji_putca pascal, (58 shl 16) + 16, (0E6h shl 16) + TX_YELLOW
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsRUIKEI, TX_CYAN
-		call	sub_10574
+		call	hud_point_items_put
 		call	gaiji_putca pascal, (63 shl 16) + 19, (0E7h shl 16) + TX_YELLOW
-		call	sub_1059D
+		call	hud_dream_put
 		call	gaiji_putca pascal, (58 shl 16) + 18, (0E8h shl 16) + TX_YELLOW
-		call	sub_1060E
-		call	sub_10625
+		call	hud_graze_put
+		call	hud_power_put
 		push	(57 shl 16) + 23
 		push	ds
 		mov	al, _rank
@@ -9598,7 +9598,7 @@ loc_1082D:
 		call	sub_1065B
 		pop	bp
 		retf
-sub_106F3	endp
+hud_put	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -12442,7 +12442,7 @@ loc_120B1:
 		mov	dream, 1
 
 loc_120B6:
-		nopcall	sub_1059D
+		nopcall	hud_dream_put
 		add	_miss_explosion_radius, MISS_EXPLOSION_RADIUS_VELOCITY
 		mov	al, _miss_explosion_angle
 		add	al, MISS_EXPLOSION_ANGLE_VELOCITY
@@ -16150,7 +16150,7 @@ loc_16297:
 		cmp	dream, 128
 		jnb	short loc_162B9
 		inc	dream
-		call	sub_1059D
+		call	hud_dream_put
 
 loc_162B9:
 		pop	di
@@ -17510,7 +17510,7 @@ loc_16FD1:
 		mov	bx, power_overflow_level
 		add	bx, bx
 		mov	si, POWER_OVERFLOW_BONUS[bx]
-		call	sub_1059D
+		call	hud_dream_put
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
 
@@ -17551,7 +17551,7 @@ loc_1700C:
 		mov	dream, 128
 
 loc_1703E:
-		call	sub_1059D
+		call	hud_dream_put
 
 loc_17043:
 		inc	word_2264C
@@ -17578,7 +17578,7 @@ loc_1705C:
 
 loc_17074:
 		call	sub_16F05
-		call	sub_10574
+		call	hud_point_items_put
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
 
@@ -17595,7 +17595,7 @@ loc_1708F:
 		mov	dream, 128
 
 loc_17097:
-		call	sub_1059D
+		call	hud_dream_put
 		mov	al, byte_225CC
 		add	al, 2
 		mov	byte_225CC, al
@@ -17764,7 +17764,7 @@ loc_171FF:
 		call	_playperf_lower
 
 loc_17204:
-		call	sub_1059D
+		call	hud_dream_put
 		pop	si
 		pop	bp
 		retn	2
@@ -19087,7 +19087,7 @@ loc_17DFE:
 		cmp	word_2C97A, 3E7h
 		jnb	short loc_17E41
 		inc	word_2C97A
-		call	sub_1060E
+		call	hud_graze_put
 		movzx	eax, score_2C97C
 		add	_score_delta, eax
 

@@ -708,7 +708,7 @@ loc_AF4A:
 		call	main_01:sub_12024
 		call	main_01:sub_10D4B
 		call	main_01:sub_B1D0
-		nopcall	main_01:sub_F204
+		nopcall	main_01:hud_put
 		call	main_01:sub_B616
 		call	sub_19EBC
 		cmp	word_213DE, 0
@@ -968,7 +968,7 @@ sub_B1D0	proc near
 		call	hud_score_put
 		call	sub_15D74
 		call	main_01:sub_BCB2
-		nopcall	main_01:sub_F204
+		nopcall	main_01:hud_put
 		mov	fp_255AC, offset tiles_render_all
 		call	main_01:tiles_invalidate_reset
 		pop	bp
@@ -7776,8 +7776,8 @@ sub_EFA1	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F064	proc far
+public HUD_POINT_ITEMS_PUT
+hud_point_items_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E000Fh
@@ -7787,14 +7787,14 @@ sub_F064	proc far
 		call	sub_1D519
 		pop	bp
 		retf
-sub_F064	endp
+hud_point_items_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F07A	proc far
+public HUD_DREAM_PUT
+hud_dream_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0011h
@@ -7804,14 +7804,14 @@ sub_F07A	proc far
 		call	sub_1D519
 		pop	bp
 		retf
-sub_F07A	endp
+hud_dream_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F091	proc far
+public HUD_GRAZE_PUT
+hud_graze_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0013h
@@ -7819,14 +7819,14 @@ sub_F091	proc far
 		call	sub_1D519
 		pop	bp
 		retf
-sub_F091	endp
+hud_graze_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F0A5	proc far
+public HUD_POWER_PUT
+hud_power_put	proc far
 
 var_A		= byte ptr -0Ah
 
@@ -7858,7 +7858,7 @@ var_A		= byte ptr -0Ah
 		pop	si
 		leave
 		retf
-sub_F0A5	endp
+hud_power_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7942,8 +7942,8 @@ include th04/hud/bar_put.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F204	proc far
+public HUD_PUT
+hud_put	proc far
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
@@ -7986,11 +7986,11 @@ loc_F280:
 		push	TX_YELLOW
 		call	gaiji_putsa
 		call	gaiji_putca pascal, (58 shl 16) + 15, (0E6h shl 16) + TX_YELLOW
-		call	main_01:sub_F064
+		call	main_01:hud_point_items_put
 		call	gaiji_putca pascal, (58 shl 16) + 17, (0E7h shl 16) + TX_YELLOW
-		call	main_01:sub_F07A
+		call	main_01:hud_dream_put
 		call	gaiji_putca pascal, (58 shl 16) + 19, (0E8h shl 16) + TX_YELLOW
-		call	main_01:sub_F091
+		call	main_01:hud_graze_put
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
 		jnz	short loc_F2DE
@@ -8008,7 +8008,7 @@ loc_F2DE:
 loc_F2E8:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		call	main_01:sub_F0A5
+		call	main_01:hud_power_put
 		push	(57 shl 16) + 23
 		push	ds
 		mov	al, _rank
@@ -8046,7 +8046,7 @@ loc_F32E:
 		call	main_01:sub_F0DD
 		pop	bp
 		retf
-sub_F204	endp
+hud_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10809,7 +10809,7 @@ loc_109E9:
 		mov	bx, ax
 		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
 		mov	dream_score, ax
-		nopcall	main_01:sub_F07A
+		nopcall	main_01:hud_dream_put
 		nopcall	main_01:sub_11DE6
 		call	snd_se_play pascal, 2
 		cmp	_playperf, 22
@@ -12547,7 +12547,7 @@ loc_11DFB:
 		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
 		mov	playchar_shot_func, ax
-		nopcall	main_01:sub_F0A5
+		nopcall	main_01:hud_power_put
 		retf
 sub_11DE6	endp
 
@@ -31777,7 +31777,7 @@ loc_1CA82:
 		cmp	word_2CFFC, 3E7h
 		jnb	short loc_1CAC5
 		inc	word_2CFFC
-		call	sub_F091
+		call	hud_graze_put
 		movzx	eax, score_2CFFE
 		add	_score_delta, eax
 
@@ -33995,7 +33995,7 @@ loc_1DC7B:
 		inc	word_236DC
 		add	si, dream_score
 		inc	_point_items_collected
-		call	sub_F064
+		call	hud_point_items_put
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
@@ -34012,7 +34012,7 @@ loc_1DC9A:
 		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
 		mov	dream_score, ax
 		mov	si, dream_score
-		call	sub_F07A
+		call	hud_dream_put
 		mov	al, byte_23660
 		add	al, 2
 		mov	byte_23660, al
