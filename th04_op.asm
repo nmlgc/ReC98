@@ -1053,7 +1053,7 @@ loc_AFAD:
 ; ---------------------------------------------------------------------------
 
 loc_AFB7:
-		call	sub_C3B7
+		call	musicroom
 		call	sub_CC97
 
 loc_AFBD:
@@ -2316,12 +2316,12 @@ include th04/zunsoft.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BED5	proc near
+public DRAW_TRACK
+draw_track	proc near
 
 var_1		= byte ptr -1
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
+@@color		= byte ptr  4
+@@sel		= byte ptr  6
 
 		enter	2, 0
 		mov	al, 1
@@ -2329,15 +2329,15 @@ arg_2		= byte ptr  6
 		mov	[bp+var_1], al
 		graph_accesspage al
 		push	10h
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, 8
 		push	ax
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@color]
 		mov	ah, 0
 		push	ax
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -2345,15 +2345,15 @@ arg_2		= byte ptr  6
 		call	graph_putsa_fx
 		graph_accesspage _music_page
 		push	10h
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, 8
 		push	ax
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@color]
 		mov	ah, 0
 		push	ax
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -2361,16 +2361,16 @@ arg_2		= byte ptr  6
 		call	graph_putsa_fx
 		leave
 		retn	4
-sub_BED5	endp
+draw_track	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public DRAW_TRACKS
+draw_tracks	proc near
 
-sub_BF41	proc near
-
-arg_0		= byte ptr  4
+@@sel		= byte ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -2381,7 +2381,7 @@ arg_0		= byte ptr  4
 
 loc_BF49:
 		push	si
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@sel]
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_BF57
@@ -2394,7 +2394,7 @@ loc_BF57:
 
 loc_BF59:
 		push	ax
-		call	sub_BED5
+		call	draw_track
 		inc	si
 
 loc_BF5E:
@@ -2403,7 +2403,7 @@ loc_BF5E:
 		pop	si
 		pop	bp
 		retn	2
-sub_BF41	endp
+draw_tracks	endp
 
 include th02/music/music.asm
 include th02/music/music_cmt_load.asm
@@ -2411,8 +2411,8 @@ include th02/music/music_cmt_load.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C2C4	proc near
+public DRAW_CMT_LINES
+draw_cmt_lines	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -2451,7 +2451,7 @@ loc_C306:
 		pop	si
 		pop	bp
 		retn
-sub_C2C4	endp
+draw_cmt_lines	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2468,9 +2468,9 @@ sub_C30E	proc near
 
 loc_C317:
 		mov	_graph_putsa_fx_func, si
-		call	sub_C2C4
+		call	draw_cmt_lines
 		call	music_flip
-		call	sub_C2C4
+		call	draw_cmt_lines
 		call	music_flip
 		inc	si
 
@@ -2478,9 +2478,9 @@ loc_C328:
 		cmp	si, 8
 		jl	short loc_C317
 		mov	_graph_putsa_fx_func, 2
-		call	sub_C2C4
+		call	draw_cmt_lines
 		call	music_flip
-		call	sub_C2C4
+		call	draw_cmt_lines
 		pop	si
 		pop	bp
 		retn
@@ -2510,8 +2510,8 @@ sub_C33F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C36F	proc near
+public DRAW_CMT
+draw_cmt	proc near
 
 @@track		= word ptr  4
 
@@ -2535,22 +2535,22 @@ loc_C37C:
 
 loc_C3A2:
 		mov	byte_12DBE, 1
-		call	sub_C2C4
+		call	draw_cmt_lines
 		call	music_flip
-		call	sub_C2C4
+		call	draw_cmt_lines
 
 loc_C3B0:
 		call	screen_back_B_put
 		pop	bp
 		retn	2
-sub_C36F	endp
+draw_cmt	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C3B7	proc near
+public MUSICROOM
+musicroom	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_12DBE, 0
@@ -2569,8 +2569,7 @@ sub_C3B7	proc near
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
-		push	word ptr _music_sel
-		call	sub_BF41
+		call	draw_tracks pascal, word ptr _music_sel
 		push	0
 		call	graph_copy_page
 		call	bgimage_snap
@@ -2579,7 +2578,7 @@ sub_C3B7	proc near
 		call	screen_back_B_snap
 		mov	al, music_track_playing
 		mov	ah, 0
-		call	sub_C36F pascal, ax
+		call	draw_cmt pascal, ax
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 
@@ -2595,9 +2594,7 @@ loc_C465:
 		call	far ptr	_input_reset_sense
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_C4A0
-		push	word ptr _music_sel
-		push	5
-		call	sub_BED5
+		call	draw_track pascal, word ptr _music_sel, 5
 		cmp	_music_sel, 0
 		jbe	short loc_C487
 		dec	_music_sel
@@ -2613,16 +2610,12 @@ loc_C48C:
 		dec	_music_sel
 
 loc_C497:
-		push	word ptr _music_sel
-		push	3
-		call	sub_BED5
+		call	draw_track pascal, word ptr _music_sel, 3
 
 loc_C4A0:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_C4D6
-		push	word ptr _music_sel
-		push	5
-		call	sub_BED5
+		call	draw_track pascal, word ptr _music_sel, 5
 		cmp	_music_sel, 17h
 		jnb	short loc_C4BD
 		inc	_music_sel
@@ -2638,9 +2631,7 @@ loc_C4C2:
 		inc	_music_sel
 
 loc_C4CD:
-		push	word ptr _music_sel
-		push	3
-		call	sub_BED5
+		call	draw_track pascal, word ptr _music_sel, 3
 
 loc_C4D6:
 		test	_key_det.lo, low INPUT_SHOT
@@ -2655,7 +2646,7 @@ loc_C4E4:
 		mov	al, _music_sel
 		mov	music_track_playing, al
 		mov	ah, 0
-		call	sub_C36F pascal, ax
+		call	draw_cmt pascal, ax
 		mov	al, _music_sel
 		mov	ah, 0
 		shl	ax, 2
@@ -2692,7 +2683,7 @@ loc_C544:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-sub_C3B7	endp
+musicroom	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
