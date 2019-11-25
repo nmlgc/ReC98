@@ -367,7 +367,7 @@ loc_AE89:
 loc_AE9B:
 		push	ds
 		push	offset arg0	; "op"
-		nopcall	sub_F706
+		nopcall	GameCore
 
 loc_AEA4:
 		pop	bp
@@ -1243,7 +1243,7 @@ loc_B80C:
 		call	palette_black_out
 		push	ds
 		push	offset aOp_1	; "op"
-		nopcall	sub_F706
+		nopcall	GameCore
 
 locret_B825:
 		leave
@@ -6355,7 +6355,7 @@ loc_E466:
 		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
-		nopcall	sub_F706
+		nopcall	GameCore
 		pop	bp
 		retf
 sub_E448	endp
@@ -6375,7 +6375,7 @@ sub_E480	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
-		nopcall	sub_F706
+		nopcall	GameCore
 		pop	bp
 		retf
 sub_E480	endp
@@ -7812,7 +7812,7 @@ loc_F318:
 		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
-		nopcall	sub_F706
+		nopcall	GameCore
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -8095,8 +8095,9 @@ sub_F6E4	endp
 
 ; Attributes: bp-based frame
 
-; int __stdcall	__far sub_F706(char *arg0)
-sub_F706	proc far
+; int pascal far GameCore(char *arg0);
+public GAMECORE
+GameCore	proc far ; ZUN symbol [MAGNet2010]
 
 _arg0		= dword	ptr  6
 
@@ -8146,7 +8147,7 @@ loc_F71C:
 		add	sp, 0Ch
 		pop	bp
 		retf	4
-sub_F706	endp
+GameCore	endp
 
 include th04/item/render.asm
 
@@ -8493,7 +8494,7 @@ loc_FA7D:
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
-		nopcall	sub_F706
+		nopcall	GameCore
 
 loc_FA9E:
 		mov	al, byte ptr [bp+var_2]

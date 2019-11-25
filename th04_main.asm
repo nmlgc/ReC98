@@ -325,7 +325,7 @@ loc_AB6B:
 loc_AB7D:
 		push	ds
 		push	offset arg0	; "op"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 
 loc_AB86:
 		pop	bp
@@ -1067,7 +1067,7 @@ DemoPlay	proc near
 		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 
 @@demo_not_end:
 		pop	bp
@@ -1335,7 +1335,7 @@ sub_B7B9	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 		pop	bp
 		retf
 sub_B7B9	endp
@@ -1356,7 +1356,7 @@ sub_B7E4	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 		pop	bp
 		retf
 sub_B7E4	endp
@@ -1376,7 +1376,7 @@ sub_B80F	proc far
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 		pop	bp
 		retf
 sub_B80F	endp
@@ -6556,7 +6556,7 @@ loc_E654:
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_2	; "maine"
-		nopcall	main_01:sub_E7FD
+		nopcall	main_01:GameCore
 
 loc_E675:
 		mov	al, byte ptr [bp+var_2]
@@ -6737,8 +6737,9 @@ sub_E7DE	endp
 
 ; Attributes: bp-based frame
 
-; int __stdcall	__far sub_E7FD(char *arg0)
-sub_E7FD	proc far
+; int pascal far GameCore(char *arg0);
+public GAMECORE
+GameCore	proc far ; ZUN symbol [MAGNet2010]
 
 _arg0		= dword	ptr  6
 
@@ -6789,7 +6790,7 @@ loc_E813:
 		add	sp, 0Ch
 		pop	bp
 		retf	4
-sub_E7FD	endp
+GameCore	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
