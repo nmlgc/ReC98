@@ -1998,7 +1998,7 @@ loc_B2EE:
 loc_B2F5:
 		cmp	si, 80h
 		jl	short loc_B2EE
-		call	sub_DC38
+		call	gaiji_load
 		call	sub_E178
 		les	bx, mikoconfig
 		mov	al, es:[bx+mikoconfig_t.perf]
@@ -3536,7 +3536,7 @@ _arg0		= dword	ptr  6
 		call	super_free
 		call	graph_clear
 		call	text_clear
-		call	sub_DC4B
+		call	gaiji_free
 		call	_game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
@@ -6656,35 +6656,7 @@ loc_DC31:
 		retn
 sub_DAF0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DC38	proc near
-		push	bp
-		mov	bp, sp
-		call	gaiji_backup
-		push	ds
-		push	offset aMikoft_bft ; "MIKOFT.bft"
-		call	gaiji_entry_bfnt
-		pop	bp
-		retn
-sub_DC38	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DC4B	proc near
-		push	bp
-		mov	bp, sp
-		call	gaiji_restore
-		pop	bp
-		retn
-sub_DC4B	endp
-
+include th02/gaiji/loadfree.asm
 include th02/hud/score_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
