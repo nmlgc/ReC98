@@ -10,6 +10,68 @@ else
 POLYGONS_RENDERED = 16
 endif
 
+public SCREEN_BACK_B_SNAP
+screen_back_B_snap	proc near
+	push	bp
+	mov	bp, sp
+	push	si
+	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	mov	_screen_back_B, ax
+	xor	si, si
+	jmp	short loc_A5DF
+; ---------------------------------------------------------------------------
+
+loc_A5CA:
+	les	bx, _VRAM_PLANE_B
+	add	bx, si
+	mov	eax, es:[bx]
+	mov	es, _screen_back_B
+	mov	es:[si], eax
+	add	si, 4
+
+loc_A5DF:
+	cmp	si, (ROW_SIZE * RES_Y)
+	jl	short loc_A5CA
+	pop	si
+	pop	bp
+	retn
+screen_back_B_snap	endp
+
+
+public SCREEN_BACK_B_FREE
+screen_back_B_free	proc near
+	push	bp
+	mov	bp, sp
+	call	hmem_free pascal, _screen_back_B
+	pop	bp
+	retn
+screen_back_B_free	endp
+
+
+public SCREEN_BACK_B_PUT
+screen_back_B_put	proc near
+	push	bp
+	mov	bp, sp
+	push	si
+	push	di
+	push	ds
+	mov	ax, 0A800h
+	mov	es, ax
+	assume es:nothing
+	mov	ax, _screen_back_B
+	mov	ds, ax
+	xor	di, di
+	xor	si, si
+	mov	cx, (ROW_SIZE * RES_Y) / 2
+	rep movsw
+	pop	ds
+	pop	di
+	pop	si
+	pop	bp
+	retn
+screen_back_B_put	endp
+
+
 polygon_build	proc near
 
 var_3	= byte ptr -3
@@ -295,3 +357,34 @@ loc_A88F:
 	pop	bp
 	retn
 polygons_update_and_render	endp
+
+
+public MUSIC_FLIP
+music_flip	proc near
+	push	bp
+	mov	bp, sp
+	call	screen_back_B_put
+if GAME eq 5
+	call	_piano_render
+endif
+	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
+	call	polygons_update_and_render
+if GAME ge 4
+	GRCG_OFF_CLOBBERING dx
+	if GAME eq 5
+		call	frame_delay pascal, 1
+	endif
+else
+	call	grcg_off
+endif
+	graph_showpage _music_page
+	mov	al, 1
+	sub	al, _music_page
+	mov	_music_page, al
+	graph_accesspage al
+if GAME le 4
+	call	frame_delay_2 pascal, 1
+endif
+	pop	bp
+	retn
+music_flip	endp

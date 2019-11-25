@@ -2608,7 +2608,7 @@ arg_2		= byte ptr  6
 
 		enter	2, 0
 		mov	al, 1
-		sub	al, byte ptr word_12DBC+1
+		sub	al, _music_page
 		mov	[bp+var_1], al
 		graph_accesspage al
 		push	10h
@@ -2626,7 +2626,7 @@ arg_2		= byte ptr  6
 		mov	bx, ax
 		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
-		graph_accesspage byte ptr word_12DBC+1
+		graph_accesspage _music_page
 		push	10h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -2688,103 +2688,7 @@ loc_BF5E:
 		retn	2
 sub_BF41	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF68	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_12DC0, ax
-		xor	si, si
-		jmp	short loc_BF90
-; ---------------------------------------------------------------------------
-
-loc_BF7B:
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	es, word_12DC0
-		mov	es:[si], eax
-		add	si, 4
-
-loc_BF90:
-		cmp	si, 7D00h
-		jl	short loc_BF7B
-		pop	si
-		pop	bp
-		retn
-sub_BF68	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF99	proc near
-		push	bp
-		mov	bp, sp
-		push	word_12DC0
-		call	hmem_free
-		pop	bp
-		retn
-sub_BF99	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BFA7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	ax, word_12DC0
-		mov	ds, ax
-		xor	di, di
-		xor	si, si
-		mov	cx, (ROW_SIZE * RES_Y) / 2
-		rep movsw
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_BFA7	endp
-
-include th02/music/polygons.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C244	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_BFA7
-		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
-		call	polygons_update_and_render
-		GRCG_OFF_CLOBBERING dx
-		graph_showpage byte ptr word_12DBC+1
-		mov	al, 1
-		sub	al, byte ptr word_12DBC+1
-		mov	byte ptr word_12DBC+1, al
-		graph_accesspage al
-		push	1
-		call	frame_delay_2
-		pop	bp
-		retn
-sub_C244	endp
-
+include th02/music/music.asm
 include th02/music/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2848,9 +2752,9 @@ sub_C30E	proc near
 loc_C317:
 		mov	_graph_putsa_fx_func, si
 		call	sub_C2C4
-		call	sub_C244
+		call	music_flip
 		call	sub_C2C4
-		call	sub_C244
+		call	music_flip
 		inc	si
 
 loc_C328:
@@ -2858,7 +2762,7 @@ loc_C328:
 		jl	short loc_C317
 		mov	_graph_putsa_fx_func, 2
 		call	sub_C2C4
-		call	sub_C244
+		call	music_flip
 		call	sub_C2C4
 		pop	si
 		pop	bp
@@ -2877,7 +2781,7 @@ sub_C33F	proc near
 		push	1400040h
 		push	1400140h
 		call	sub_E4F8
-		call	sub_C244
+		call	music_flip
 		push	1400040h
 		push	1400140h
 		call	sub_E4F8
@@ -2902,7 +2806,7 @@ sub_C36F	proc near
 
 loc_C37C:
 		call	music_cmt_load pascal, [bp+@@track]
-		call	sub_BFA7
+		call	screen_back_B_put
 		push	1400040h
 		push	1400140h
 		call	sub_E4F8
@@ -2915,11 +2819,11 @@ loc_C37C:
 loc_C3A2:
 		mov	byte_12DBE, 1
 		call	sub_C2C4
-		call	sub_C244
+		call	music_flip
 		call	sub_C2C4
 
 loc_C3B0:
-		call	sub_BFA7
+		call	screen_back_B_put
 		pop	bp
 		retn	2
 sub_C36F	endp
@@ -2935,7 +2839,7 @@ sub_C3B7	proc near
 		mov	byte_12DBE, 0
 		call	cdg_freeall
 		call	text_clear
-		mov	byte ptr word_12DBC+1, 1
+		mov	_music_page, 1
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_showpage 0
@@ -2947,15 +2851,15 @@ sub_C3B7	proc near
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
-		mov	byte ptr word_12DBC, al
-		push	word_12DBC
+		mov	_music_sel, al
+		push	word ptr _music_sel
 		call	sub_BF41
 		push	0
 		call	graph_copy_page
 		call	sub_E428
 		graph_accesspage 1
 		graph_showpage 0
-		call	sub_BF68
+		call	screen_back_B_snap
 		mov	al, music_track_playing
 		mov	ah, 0
 		call	sub_C36F pascal, ax
@@ -2966,7 +2870,7 @@ loc_C454:
 		call	far ptr	_input_reset_sense
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_C465
-		call	sub_C244
+		call	music_flip
 		jmp	short loc_C454
 ; ---------------------------------------------------------------------------
 
@@ -2974,50 +2878,50 @@ loc_C465:
 		call	far ptr	_input_reset_sense
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_C4A0
-		push	word_12DBC
+		push	word ptr _music_sel
 		push	5
 		call	sub_BED5
-		cmp	byte ptr word_12DBC, 0
+		cmp	_music_sel, 0
 		jbe	short loc_C487
-		dec	byte ptr word_12DBC
+		dec	_music_sel
 		jmp	short loc_C48C
 ; ---------------------------------------------------------------------------
 
 loc_C487:
-		mov	byte ptr word_12DBC, 17h
+		mov	_music_sel, 17h
 
 loc_C48C:
-		cmp	byte ptr word_12DBC, 16h
+		cmp	_music_sel, 16h
 		jnz	short loc_C497
-		dec	byte ptr word_12DBC
+		dec	_music_sel
 
 loc_C497:
-		push	word_12DBC
+		push	word ptr _music_sel
 		push	3
 		call	sub_BED5
 
 loc_C4A0:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_C4D6
-		push	word_12DBC
+		push	word ptr _music_sel
 		push	5
 		call	sub_BED5
-		cmp	byte ptr word_12DBC, 17h
+		cmp	_music_sel, 17h
 		jnb	short loc_C4BD
-		inc	byte ptr word_12DBC
+		inc	_music_sel
 		jmp	short loc_C4C2
 ; ---------------------------------------------------------------------------
 
 loc_C4BD:
-		mov	byte ptr word_12DBC, 0
+		mov	_music_sel, 0
 
 loc_C4C2:
-		cmp	byte ptr word_12DBC, 16h
+		cmp	_music_sel, 16h
 		jnz	short loc_C4CD
-		inc	byte ptr word_12DBC
+		inc	_music_sel
 
 loc_C4CD:
-		push	word_12DBC
+		push	word ptr _music_sel
 		push	3
 		call	sub_BED5
 
@@ -3028,14 +2932,14 @@ loc_C4D6:
 		jz	short loc_C51D
 
 loc_C4E4:
-		cmp	byte ptr word_12DBC, 17h
+		cmp	_music_sel, 17h
 		jz	short loc_C533
 		kajacall	KAJA_SONG_FADE, 32
-		mov	al, byte ptr word_12DBC
+		mov	al, _music_sel
 		mov	music_track_playing, al
 		mov	ah, 0
 		call	sub_C36F pascal, ax
-		mov	al, byte ptr word_12DBC
+		mov	al, _music_sel
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -3047,7 +2951,7 @@ loc_C51D:
 		jnz	short loc_C533
 		cmp	_key_det, INPUT_NONE
 		jnz	loc_C454
-		call	sub_C244
+		call	music_flip
 		jmp	loc_C465
 ; ---------------------------------------------------------------------------
 
@@ -3055,13 +2959,13 @@ loc_C533:
 		call	far ptr	_input_reset_sense
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_C544
-		call	sub_C244
+		call	music_flip
 		jmp	short loc_C533
 ; ---------------------------------------------------------------------------
 
 loc_C544:
 		kajacall	KAJA_SONG_FADE, 16
-		call	sub_BF99
+		call	screen_back_B_free
 		graph_showpage 0
 		graph_accesspage al
 		push	1
@@ -6056,11 +5960,11 @@ include th04/zunsoft[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-include th02/music/polygons[bss].asm
-word_12DBC	dw ?
+include th02/music/music[bss].asm
 byte_12DBE	db ?
 		db    ?	;
-word_12DC0	dw ?
+public _screen_back_B
+_screen_back_B	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

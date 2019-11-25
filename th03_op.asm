@@ -1619,7 +1619,7 @@ arg_2		= byte ptr  6
 
 		enter	2, 0
 		mov	al, 1
-		sub	al, byte ptr word_F828+1
+		sub	al, _music_page
 		mov	[bp+var_1], al
 		graph_accesspage al
 		push	10h
@@ -1638,7 +1638,7 @@ arg_2		= byte ptr  6
 		mov	bx, ax
 		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
-		graph_accesspage byte ptr word_F828+1
+		graph_accesspage _music_page
 		push	10h
 		mov	al, [bp+arg_2]
 		mov	ah, 0
@@ -1701,103 +1701,7 @@ loc_A5AD:
 		retn	2
 sub_A590	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A5B7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_F82A, ax
-		xor	si, si
-		jmp	short loc_A5DF
-; ---------------------------------------------------------------------------
-
-loc_A5CA:
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	es, word_F82A
-		mov	es:[si], eax
-		add	si, 4
-
-loc_A5DF:
-		cmp	si, 7D00h
-		jl	short loc_A5CA
-		pop	si
-		pop	bp
-		retn
-sub_A5B7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A5E8	proc near
-		push	bp
-		mov	bp, sp
-		push	word_F82A
-		call	hmem_free
-		pop	bp
-		retn
-sub_A5E8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A5F6	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, word_F82A
-		mov	ds, ax
-		xor	di, di
-		xor	si, si
-		mov	cx, 3E80h
-		rep movsw
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_A5F6	endp
-
-include th02/music/polygons.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A899	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_A5F6
-		call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
-		call	polygons_update_and_render
-		call	grcg_off
-		graph_showpage byte ptr word_F828+1
-		mov	al, 1
-		sub	al, byte ptr word_F828+1
-		mov	byte ptr word_F828+1, al
-		graph_accesspage al
-		push	1
-		call	frame_delay_2
-		pop	bp
-		retn
-sub_A899	endp
-
+include th02/music/music.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2098,7 +2002,7 @@ sub_AB99	proc near
 		push	si
 		push	di
 		call	music_cmt_load pascal, [bp+@@track]
-		call	sub_A5F6
+		call	screen_back_B_put
 		call	sub_AA7C
 		push	1300040h
 		push	1Fh
@@ -2134,7 +2038,7 @@ loc_ABE5:
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	eax, es:[bx]
-		mov	es, word_F82A
+		mov	es, _screen_back_B
 		mov	es:[si], eax
 		add	si, 4
 
@@ -2169,7 +2073,7 @@ loc_AC15:
 		jl	short loc_AC0E
 		call	super_free
 		call	text_clear
-		mov	byte ptr word_F828+1, 1
+		mov	_music_page, 1
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_showpage 0
@@ -2181,14 +2085,14 @@ loc_AC15:
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
-		mov	byte ptr word_F828, al
-		push	word_F828
+		mov	_music_sel, al
+		push	word ptr _music_sel
 		call	sub_A590
 		push	0
 		call	graph_copy_page
 		graph_accesspage 1
 		graph_showpage 0
-		call	sub_A5B7
+		call	screen_back_B_snap
 		call	sub_A8CF
 		graph_accesspage 1
 		mov	al, music_track_playing
@@ -2205,7 +2109,7 @@ loc_ACC2:
 		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_ACD3
-		call	sub_A899
+		call	music_flip
 		jmp	short loc_ACC2
 ; ---------------------------------------------------------------------------
 
@@ -2213,50 +2117,50 @@ loc_ACD3:
 		call	input_mode_interface
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_AD0E
-		push	word_F828
+		push	word ptr _music_sel
 		push	3
 		call	sub_A51E
-		cmp	byte ptr word_F828, 0
+		cmp	_music_sel, 0
 		jbe	short loc_ACF5
-		dec	byte ptr word_F828
+		dec	_music_sel
 		jmp	short loc_ACFA
 ; ---------------------------------------------------------------------------
 
 loc_ACF5:
-		mov	byte ptr word_F828, 14h
+		mov	_music_sel, 14h
 
 loc_ACFA:
-		cmp	byte ptr word_F828, 13h
+		cmp	_music_sel, 13h
 		jnz	short loc_AD05
-		dec	byte ptr word_F828
+		dec	_music_sel
 
 loc_AD05:
-		push	word_F828
+		push	word ptr _music_sel
 		push	0Fh
 		call	sub_A51E
 
 loc_AD0E:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_AD44
-		push	word_F828
+		push	word ptr _music_sel
 		push	3
 		call	sub_A51E
-		cmp	byte ptr word_F828, 14h
+		cmp	_music_sel, 14h
 		jnb	short loc_AD2B
-		inc	byte ptr word_F828
+		inc	_music_sel
 		jmp	short loc_AD30
 ; ---------------------------------------------------------------------------
 
 loc_AD2B:
-		mov	byte ptr word_F828, 0
+		mov	_music_sel, 0
 
 loc_AD30:
-		cmp	byte ptr word_F828, 13h
+		cmp	_music_sel, 13h
 		jnz	short loc_AD3B
-		inc	byte ptr word_F828
+		inc	_music_sel
 
 loc_AD3B:
-		push	word_F828
+		push	word ptr _music_sel
 		push	0Fh
 		call	sub_A51E
 
@@ -2267,11 +2171,11 @@ loc_AD44:
 		jz	short loc_AD9A
 
 loc_AD52:
-		cmp	byte ptr word_F828, 14h
+		cmp	_music_sel, 14h
 		jz	short loc_ADB0
 		kajacall	KAJA_SONG_STOP
 		push	SND_LOAD_SONG
-		mov	al, byte ptr word_F828
+		mov	al, _music_sel
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
@@ -2279,12 +2183,12 @@ loc_AD52:
 		call	snd_load
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
-		mov	al, byte ptr word_F828
+		mov	al, _music_sel
 		mov	music_track_playing, al
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
-		call	sub_A899
-		mov	al, byte ptr word_F828
+		call	music_flip
+		mov	al, _music_sel
 		mov	ah, 0
 		call	sub_AB99 pascal, ax
 
@@ -2293,7 +2197,7 @@ loc_AD9A:
 		jnz	short loc_ADB0
 		cmp	_input_sp, INPUT_NONE
 		jnz	loc_ACC2
-		call	sub_A899
+		call	music_flip
 		jmp	loc_ACD3
 ; ---------------------------------------------------------------------------
 
@@ -2301,12 +2205,12 @@ loc_ADB0:
 		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_ADC1
-		call	sub_A899
+		call	music_flip
 		jmp	short loc_ADB0
 ; ---------------------------------------------------------------------------
 
 loc_ADC1:
-		call	sub_A5E8
+		call	screen_back_B_free
 		call	sub_AA53
 		graph_showpage 0
 		graph_accesspage al
@@ -4943,9 +4847,9 @@ include th03/hardware/input[bss].asm
 include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-include th02/music/polygons[bss].asm
-word_F828	dw ?
-word_F82A	dw ?
+include th02/music/music[bss].asm
+public _screen_back_B
+_screen_back_B	dw ?
 unk_F82C	db    ?	;
 		db    ?	;
 word_F82E	dw ?
