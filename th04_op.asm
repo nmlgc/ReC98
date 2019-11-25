@@ -616,7 +616,7 @@ loc_AB59:
 		pushd	180h
 		push	2800010h
 		call	sub_E378
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	dword ptr [bx+9Eh] ; s
@@ -850,7 +850,7 @@ loc_ADC0:
 		pushd	180h
 		push	2800010h
 		call	sub_E378
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr [bx+9Eh] ; s
@@ -2846,7 +2846,7 @@ sub_C30E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C317:
-		mov	word_FD7C, si
+		mov	_graph_putsa_fx_func, si
 		call	sub_C2C4
 		call	sub_C244
 		call	sub_C2C4
@@ -2856,7 +2856,7 @@ loc_C317:
 loc_C328:
 		cmp	si, 8
 		jl	short loc_C317
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 		call	sub_C2C4
 		call	sub_C244
 		call	sub_C2C4
@@ -2873,7 +2873,7 @@ sub_C30E	endp
 sub_C33F	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 		push	1400040h
 		push	1400140h
 		call	sub_E4F8
@@ -4783,7 +4783,7 @@ loc_D4A8:
 		mov	bx, ax
 		test	[bx+3F3Ch], dl
 		jz	short loc_D4E5
-		mov	word_FD7C, 0
+		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
 		add	ax, 0FFF8h
 		push	ax
@@ -4793,7 +4793,7 @@ loc_D4A8:
 		push	ds
 		push	offset aStar
 		call	graph_putsa_fx
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 
 loc_D4E5:
 		mov	ax, [bp+var_2]
@@ -4840,7 +4840,7 @@ loc_D52F:
 		mov	bx, ax
 		test	[bx+3F3Ch], dl
 		jz	short loc_D567
-		mov	word_FD7C, 0
+		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
 		add	ax, 0FFF8h
 		push	ax
@@ -4850,7 +4850,7 @@ loc_D52F:
 		push	ds
 		push	offset aStar
 		call	graph_putsa_fx
-		mov	word_FD7C, 2
+		mov	_graph_putsa_fx_func, 2
 
 loc_D567:
 		mov	ax, [bp+var_2]
@@ -5411,24 +5411,27 @@ graph_putsa_fx	proc far
 		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
-		mov	bx, word_FD7C
+		mov	bx, _graph_putsa_fx_func
 		add	bx, bx
 		cmp	bx, 8
 		jb	short loc_DF10
-		cmp	bx, 10h
+		cmp	bx, 16
 		jnb	short loc_DF10
-		mov	ax, [bx+0A0Ch]
-		mov	word ptr cs:loc_E008+3,	ax
+
+		mov	ax, (GLYPH_MASK_TABLE - 8)[bx]
+		mov	word ptr cs:grppsafx_glyph_mask, ax
 		mov	bx, 8
 
 loc_DF10:
-		mov	ax, [bx+0A00h]
-		mov	word ptr cs:loc_DF72+1,	ax
-		mov	ax, [bx+0A0Ah]
-		mov	word ptr cs:loc_DFC4+1,	ax
-		mov	ax, word_FD7E
-		mov	word ptr cs:loc_DF91+1,	ax
-		mov	word ptr cs:loc_DFD8+1,	ax
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_1[bx]
+		mov	word ptr cs:grppsafx_glyph_func_1, ax
+
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_2[bx]
+		mov	word ptr cs:grppsafx_glyph_func_2, ax
+
+		mov	ax, _graph_putsa_fx_spacing
+		mov	word ptr cs:grppsafx_glyph_spacing_1, ax
+		mov	word ptr cs:grppsafx_glyph_spacing_2, ax
 		push	ds
 		pop	fs
 		assume fs:_DATA
@@ -5472,8 +5475,8 @@ loc_DF62:
 		out	0A5h, al
 		in	al, 0A9h
 
-loc_DF72:
-		call	sub_DFED
+grppsafx_glyph_func_1 equ $+1
+		call	glyph_weight_2
 		mov	bh, al
 		mov	bl, 0
 		shr	ax, cl
@@ -5487,7 +5490,7 @@ loc_DF72:
 		jb	short loc_DF62
 		sub	di, 500h
 
-loc_DF91:
+grppsafx_glyph_spacing_1 equ $+1
 		mov	dx, 1234h
 
 loc_DF94:
@@ -5526,8 +5529,8 @@ loc_DFBA:
 		in	al, 0A9h
 		xor	ah, ah
 
-loc_DFC4:
-		call	sub_DFED
+grppsafx_glyph_func_2 equ $+1
+		call	glyph_weight_2
 		ror	ax, cl
 		stosw
 		add	di, 4Eh	; 'N'
@@ -5537,54 +5540,13 @@ loc_DFC4:
 		sub	di, 500h
 
 loc_DFD8:
+grppsafx_glyph_spacing_2 equ $+1
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_DF94
 graph_putsa_fx	endp
-
-; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DFE0	proc near
-		mov	dx, ax
-		add	dx, dx
-		or	ax, dx
-		retn
-sub_DFE0	endp
-
-; ---------------------------------------------------------------------------
-		mov	dx, ax
-		shl	dx, 1
-		or	ax, dx
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DFED	proc near
-		mov	dx, ax
-		mov	bp, ax
-		add	bp, bp
-		or	ax, bp
-		xor	dx, ax
-		add	dx, dx
-		not	dx
-		and	ax, dx
-		retn
-sub_DFED	endp
-
-; ---------------------------------------------------------------------------
-		call	sub_DFED
-		mov	bl, ch
-		and	bx, 3
-		add	bx, bx
-
-loc_E008:
-		and	ax, fs:[bx+1234h]
-		retn
-
+include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th02/initop.asm
@@ -6002,68 +5964,7 @@ include th04/snd/se_priority[data].asm
 include th04/snd/snd[data].asm
 		db    0
 include th04/snd/load[data].asm
-		db  71h	; q
-		db    0
-		db  6Bh	; k
-		db    0
-		db  78h	; x
-		db    0
-		db  72h	; r
-		db    0
-		db  89h
-		db    0
-		db  1Fh
-		db    0
-		db  19h
-		db    0
-		db  26h	; &
-		db    0
-		db  20h
-		db    0
-		db  37h	; 7
-		db    0
-		db  1Ch
-		db  0Ah
-		db  24h	; $
-		db  0Ah
-		db  2Ch	; ,
-		db  0Ah
-		db  34h	; 4
-		db  0Ah
-		db  88h
-		db  88h
-		db    0
-		db    0
-		db  22h	; "
-		db  22h	; "
-		db    0
-		db    0
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-word_FD7C	dw 2
-word_FD7E	dw 10h
+include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 word_FD82	dw 0
 word_FD84	dw 0

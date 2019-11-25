@@ -1153,7 +1153,7 @@ loc_A8FC:
 		push	ax
 		call	sub_A64D
 		mov	ax, [bp+var_2]
-		mov	word_EB2C, ax
+		mov	_graph_putsa_fx_func, ax
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1698,7 +1698,7 @@ var_1		= byte ptr -1
 		mov	word_124BE, 140h
 		mov	word_124C0, 1
 		mov	byte_124C2, 0Fh
-		mov	word_EB2C, 2
+		mov	_graph_putsa_fx_func, 2
 		call	sub_A4AE
 		mov	byte_1247E, 0
 
@@ -3067,7 +3067,7 @@ var_4		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		mov	word_EB2C, 2
+		mov	_graph_putsa_fx_func, 2
 		graph_accesspage 0
 		graph_showpage al
 		push	100030h
@@ -5139,24 +5139,27 @@ graph_putsa_fx	proc far
 		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
-		mov	bx, word_EB2C
+		mov	bx, _graph_putsa_fx_func
 		add	bx, bx
 		cmp	bx, 8
 		jb	short loc_D258
-		cmp	bx, 10h
+		cmp	bx, 16
 		jnb	short loc_D258
-		mov	ax, [bx+5CCh]
-		mov	word ptr cs:loc_D350+3,	ax
+
+		mov	ax, (GLYPH_MASK_TABLE - 8)[bx]
+		mov	word ptr cs:grppsafx_glyph_mask, ax
 		mov	bx, 8
 
 loc_D258:
-		mov	ax, [bx+5C0h]
-		mov	word ptr cs:loc_D2BA+1, ax
-		mov	ax, [bx+5CAh]
-		mov	word ptr cs:loc_D30C+1,	ax
-		mov	ax, word_EB2E
-		mov	word ptr cs:loc_D2D9+1, ax
-		mov	word ptr cs:loc_D320+1,	ax
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_1[bx]
+		mov	word ptr cs:grppsafx_glyph_func_1, ax
+
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_2[bx]
+		mov	word ptr cs:grppsafx_glyph_func_2, ax
+
+		mov	ax, _graph_putsa_fx_spacing
+		mov	word ptr cs:grppsafx_glyph_spacing_1, ax
+		mov	word ptr cs:grppsafx_glyph_spacing_2, ax
 		push	ds
 		pop	fs
 		assume fs:_DATA
@@ -5200,8 +5203,8 @@ loc_D2AA:
 		out	0A5h, al
 		in	al, 0A9h
 
-loc_D2BA:
-		call	sub_D335
+grppsafx_glyph_func_1 equ $+1
+		call	glyph_weight_2
 		mov	bh, al
 		mov	bl, 0
 		shr	ax, cl
@@ -5215,7 +5218,7 @@ loc_D2BA:
 		jb	short loc_D2AA
 		sub	di, 500h
 
-loc_D2D9:
+grppsafx_glyph_spacing_1 equ $+1
 		mov	dx, 1234h
 
 loc_D2DC:
@@ -5254,8 +5257,8 @@ loc_D302:
 		in	al, 0A9h
 		xor	ah, ah
 
-loc_D30C:
-		call	sub_D335
+grppsafx_glyph_func_2 equ $+1
+		call	glyph_weight_2
 		ror	ax, cl
 		stosw
 		add	di, 4Eh	; 'N'
@@ -5265,45 +5268,13 @@ loc_D30C:
 		sub	di, 500h
 
 loc_D320:
+grppsafx_glyph_spacing_2 equ $+1
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_D2DC
 graph_putsa_fx	endp
-; ---------------------------------------------------------------------------
 		nop
-		mov	dx, ax
-		add	dx, dx
-		or	ax, dx
-		retn
-; ---------------------------------------------------------------------------
-		mov	dx, ax
-		shl	dx, 1
-		or	ax, dx
-
-; =============== S U B	R O U T	I N E =======================================
-
-sub_D335	proc near
-		mov	dx, ax
-		mov	bp, ax
-		add	bp, bp
-		or	ax, bp
-		xor	dx, ax
-		add	dx, dx
-		not	dx
-		and	ax, dx
-		retn
-sub_D335	endp
-
-; ---------------------------------------------------------------------------
-		call	sub_D335
-		mov	bl, ch
-		and	bx, 3
-		add	bx, bx
-
-loc_D350:
-		and	ax, fs:[bx+1234h]
-		retn
-
+include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th02/initmain.asm
@@ -5535,68 +5506,7 @@ include th04/formats/cdg_put_plane[data].asm
 include th04/snd/snd[data].asm
 		db    0
 include th04/snd/load[data].asm
-		db  71h	; q
-		db    0
-		db  6Bh	; k
-		db    0
-		db  78h	; x
-		db    0
-		db  72h	; r
-		db    0
-		db  89h
-		db    0
-		db  1Fh
-		db    0
-		db  19h
-		db    0
-		db  26h	; &
-		db    0
-		db  20h
-		db    0
-		db  37h	; 7
-		db    0
-		db 0DCh
-		db    5
-		db 0E4h	; ÅE
-		db    5
-		db 0ECh
-		db    5
-		db 0F4h
-		db    5
-		db  88h
-		db  88h
-		db    0
-		db    0
-		db  22h	; "
-		db  22h	; "
-		db    0
-		db    0
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  11h
-		db  11h
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ™
-		db 0AAh	; ™
-		db  55h	; U
-		db  55h	; U
-word_EB2C	dw 2
-word_EB2E	dw 10h
+include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 word_EB32	dw 0
 word_EB34	dw 0

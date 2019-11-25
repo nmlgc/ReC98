@@ -520,7 +520,7 @@ loc_A69A:
 		pushd	180h
 		push	2800010h
 		call	sub_E2D8
-		mov	word_F9BE, 2
+		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	dword ptr MENU_DESC[bx] ; s
@@ -753,7 +753,7 @@ loc_A900:
 		pushd	180h
 		push	2800010h
 		call	sub_E2D8
-		mov	word_F9BE, 2
+		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
 		pushd	dword ptr MENU_DESC[bx] ; s
@@ -3199,7 +3199,7 @@ sub_C376	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C37F:
-		mov	word_F9BE, si
+		mov	_graph_putsa_fx_func, si
 		call	sub_C32D
 		call	sub_C293
 		call	sub_C32D
@@ -3209,7 +3209,7 @@ loc_C37F:
 loc_C390:
 		cmp	si, 8
 		jl	short loc_C37F
-		mov	word_F9BE, 2
+		mov	_graph_putsa_fx_func, 2
 		call	sub_C32D
 		call	sub_C293
 		call	sub_C32D
@@ -3226,7 +3226,7 @@ sub_C376	endp
 sub_C3A7	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_F9BE, 2
+		mov	_graph_putsa_fx_func, 2
 		push	1400020h
 		push	1400010h
 		call	sub_DB3C
@@ -5041,24 +5041,27 @@ graph_putsa_fx	proc far
 		mov	cx, [bp+@@x]
 		mov	al, 0Bh
 		out	68h, al
-		mov	bx, word_F9BE
+		mov	bx, _graph_putsa_fx_func
 		add	bx, bx
 		cmp	bx, 8
 		jb	short loc_D492
-		cmp	bx, 10h
+		cmp	bx, 16
 		jnb	short loc_D492
-		mov	ax, [bx+9AEh]
-		mov	word ptr cs:loc_D58A+3,	ax
+
+		mov	ax, (GLYPH_MASK_TABLE - 8)[bx]
+		mov	word ptr cs:grppsafx_glyph_mask, ax
 		mov	bx, 8
 
 loc_D492:
-		mov	ax, [bx+9A2h]
-		mov	word ptr cs:loc_D4F4+1,	ax
-		mov	ax, [bx+9ACh]
-		mov	word ptr cs:loc_D546+1,	ax
-		mov	ax, word_F9C0
-		mov	word ptr cs:loc_D513+1,	ax
-		mov	word ptr cs:loc_D55A+1,	ax
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_1[bx]
+		mov	word ptr cs:grppsafx_glyph_func_1, ax
+
+		mov	ax, GLYPH_WEIGHT_FUNC_TABLE_2[bx]
+		mov	word ptr cs:grppsafx_glyph_func_2, ax
+
+		mov	ax, _graph_putsa_fx_spacing
+		mov	word ptr cs:grppsafx_glyph_spacing_1, ax
+		mov	word ptr cs:grppsafx_glyph_spacing_2, ax
 		push	ds
 		pop	fs
 		assume fs:_DATA
@@ -5102,8 +5105,8 @@ loc_D4E4:
 		out	0A5h, al
 		in	al, 0A9h
 
-loc_D4F4:
-		call	sub_D56F
+grppsafx_glyph_func_1 equ $+1
+		call	glyph_weight_2
 		mov	bh, al
 		mov	bl, 0
 		shr	ax, cl
@@ -5117,7 +5120,7 @@ loc_D4F4:
 		jb	short loc_D4E4
 		sub	di, 500h
 
-loc_D513:
+grppsafx_glyph_spacing_1 equ $+1
 		mov	dx, 1234h
 
 loc_D516:
@@ -5156,8 +5159,8 @@ loc_D53C:
 		in	al, 0A9h
 		xor	ah, ah
 
-loc_D546:
-		call	sub_D56F
+grppsafx_glyph_func_2 equ $+1
+		call	glyph_weight_2
 		ror	ax, cl
 		stosw
 		add	di, 4Eh	; 'N'
@@ -5167,59 +5170,13 @@ loc_D546:
 		sub	di, 500h
 
 loc_D55A:
+grppsafx_glyph_spacing_2 equ $+1
 		mov	dx, 1234h
 		shr	dx, 1
 		jmp	short loc_D516
 graph_putsa_fx	endp
-
-; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D562	proc near
-		mov	dx, ax
-		add	dx, dx
-		or	ax, dx
-		retn
-sub_D562	endp
-
-; ---------------------------------------------------------------------------
-		mov	dx, ax
-		shl	dx, 1
-		or	ax, dx
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D56F	proc near
-		mov	dx, ax
-		mov	bp, ax
-		add	bp, bp
-		or	ax, bp
-		xor	dx, ax
-		add	dx, dx
-		not	dx
-		and	ax, dx
-		retn
-sub_D56F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D580	proc near
-		call	sub_D56F
-		mov	bl, ch
-		and	bx, 3
-		add	bx, bx
-
-loc_D58A:
-		and	ax, fs:[bx+1234h]
-		retn
-sub_D580	endp
-
+include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 
@@ -6159,68 +6116,7 @@ include libs/master.lib/draw_trapezoid[data].asm
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
-		db  71h	; q
-		db    0
-		db  6Bh	; k
-		db    0
-		db  78h	; x
-		db    0
-		db  72h	; r
-		db    0
-		db  89h
-		db    0
-		db  1Fh
-		db    0
-		db  19h
-		db    0
-		db  26h	; &
-		db    0
-		db  20h
-		db    0
-		db  37h	; 7
-		db    0
-		db 0BEh	; ¾
-		db    9
-		db 0C6h	; Æ
-		db    9
-		db 0CEh
-		db    9
-		db 0D6h
-		db    9
-		db  88h
-		db  88h
-		db    0
-		db    0
-		db  22h	; "
-		db  22h	; "
-		db    0
-		db    0
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-word_F9BE	dw 2
-word_F9C0	dw 10h
+include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 word_F9C4	dw 0
 word_F9C6	dw 0
