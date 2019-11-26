@@ -1,8 +1,6 @@
 #include <mbctype.h>
 #include <mbstring.h>
 
-#define GLYPH_HEIGHT 16
-
 void graph_putsa_fx(int x, int y, int fx, const unsigned char *str)
 {
 	unsigned int codepoint;

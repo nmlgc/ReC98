@@ -2,14 +2,18 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+/// Text
+/// ----
+#define GAIJI_TRAM_W 2
+#define GLYPH_HEIGHT 16
+/// ----
+
 /// Graphics
 /// --------
 #define RES_X 640
 #define RES_Y 400
 #define ROW_SIZE (RES_X / 8)
 #define PLANE_SIZE (ROW_SIZE * RES_Y)
-
-#define GAIJI_TRAM_W 2
 /// --------
 
 /// Keyboard
