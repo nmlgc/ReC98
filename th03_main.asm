@@ -1538,9 +1538,9 @@ sub_A378	proc far
 		mov	ax, ds
 		mov	es, ax
 		assume es:_DATA
-		mov	di, 1D94h
-		mov	si, 11BAh
-		mov	cx, 0Ch
+		mov	di, offset palette_1F2F4
+		mov	si, offset Palettes
+		mov	cx, size palette_t / 4
 		rep movsd
 		pop	di
 		pop	si
@@ -1558,9 +1558,9 @@ sub_A38E	proc far
 		push	di
 		mov	ax, ds
 		mov	es, ax
-		mov	di, 11BAh
-		mov	si, 1D94h
-		mov	cx, 0Ch
+		mov	di, offset Palettes
+		mov	si, offset palette_1F2F4
+		mov	cx, size palette_t / 4
 		rep movsd
 		call	far ptr	palette_show
 		pop	di
@@ -1587,11 +1587,11 @@ arg_0		= byte ptr  6
 		mov	al, [bp+arg_0]
 		or	al, al
 		jz	short loc_A3BC
-		mov	bl, 3
+		mov	bl, 1 * size rgb_t
 
 loc_A3BC:
-		lea	di, [bx+11BAh]
-		lea	si, [bx+1D94h]
+		lea	di, Palettes[bx]
+		lea	si, palette_1F2F4[bx]
 		movsw
 		movsb
 		mov	_palette_changed, 1
@@ -1616,15 +1616,15 @@ arg_2		= byte ptr  8
 		push	bp
 		mov	bp, sp
 		push	di
-		mov	cx, 3
+		mov	cx, size rgb_t
 		xor	bx, bx
 		mov	al, [bp+arg_0]
 		or	al, al
 		jz	short loc_A3E4
-		mov	bl, 3
+		mov	bl, 1 * size rgb_t
 
 loc_A3E4:
-		lea	di, [bx+11BAh]
+		lea	di, Palettes[bx]
 		mov	al, [bp+arg_2]
 
 loc_A3EB:
@@ -5574,25 +5574,25 @@ loc_CC4D:
 		jnz	short loc_CC89
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 78h ; 'x'
+		mov	Palettes[bx].r, 78h
 
 loc_CC78:
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BCh], 78h ; 'x'
+		mov	Palettes[bx].b, 78h
 		jmp	short loc_CC98
 ; ---------------------------------------------------------------------------
 
 loc_CC89:
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 78h ; 'x'
+		mov	Palettes[bx].r, 78h
 
 loc_CC98:
 		mov	_palette_changed, 1
@@ -5708,7 +5708,7 @@ loc_CD99:
 		mov	dh, 0
 		imul	dx, 3
 		mov	bx, dx
-		mov	[bx+11BAh], al
+		mov	Palettes[bx].r, al
 		mov	_palette_changed, 1
 
 loc_CDB7:
@@ -19634,19 +19634,19 @@ loc_149E8:
 		mov	[bp+var_2], dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_14A1C:
@@ -20667,27 +20667,27 @@ loc_1522B:
 loc_1527D:
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_1]
 		shl	dl, 2
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		imul	ax, 3
 		mov	dl, byte ptr word_1FE88
 		mov	dh, 0
-		imul	dx, 3
+		imul	dx, size rgb_t
 		mov	bx, dx
-		mov	[bx+11BBh], al
+		mov	Palettes[bx].g, al
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		imul	ax, 3
 		mov	dl, byte ptr word_1FE88
 		mov	dh, 0
-		imul	dx, 3
+		imul	dx, size rgb_t
 		mov	bx, dx
-		mov	[bx+11BCh], al
+		mov	Palettes[bx].b, al
 		jmp	loc_153A6
 ; ---------------------------------------------------------------------------
 
@@ -20771,19 +20771,19 @@ loc_15360:
 		mov	[bp+var_2], dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 
 loc_153A6:
 		mov	_palette_changed, 1
@@ -21822,20 +21822,20 @@ loc_15C57:
 loc_15C7E:
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_10]
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_15CB0:
@@ -24505,19 +24505,19 @@ loc_17202:
 		mov	[bp+var_2], dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 		call	egc_on
 		call	sub_1714F
@@ -24532,30 +24532,30 @@ loc_17255:
 		call	snd_se_play pascal, 16
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 64h ; 'd'
+		mov	Palettes[bx].r, 64h
 		jmp	short loc_1728A
 ; ---------------------------------------------------------------------------
 
 loc_1727B:
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 0
+		mov	Palettes[bx].r, 0
 
 loc_1728A:
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BBh], 0
+		mov	Palettes[bx].g, 0
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
 		imul	ax, 3
 		mov	bx, ax
-		mov	byte ptr [bx+11BCh], 0
+		mov	Palettes[bx].b, 0
 		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -24628,19 +24628,19 @@ loc_17332:
 		mov	[bp+var_2], dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_1737D:
@@ -26907,21 +26907,21 @@ loc_1853F:
 		mov	[bp+var_2], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_1]
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_185A3:
@@ -27174,22 +27174,22 @@ loc_187AF:
 		mov	[bp+var_4], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_4]
 		add	dl, dl
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_4]
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 		mov	word_1FB3C, 0
 		jmp	loc_18964
@@ -27203,38 +27203,38 @@ loc_18801:
 		call	snd_se_play pascal, 10
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 0FFh
+		mov	Palettes[bx].r, 0FFh
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BBh], 80h
+		mov	Palettes[bx].g, 80h
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BCh], 80h
+		mov	Palettes[bx].b, 80h
 		jmp	short loc_18872
 ; ---------------------------------------------------------------------------
 
 loc_18845:
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BAh], 0
+		mov	Palettes[bx].r, 0
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BBh], 0
+		mov	Palettes[bx].g, 0
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	byte ptr [bx+11BCh], 20h ; ' '
+		mov	Palettes[bx].b, 20h
 
 loc_18872:
 		mov	_palette_changed, 1
@@ -27314,22 +27314,22 @@ loc_18911:
 		mov	[bp+var_4], dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		add	dl, dl
 		and	dl, 0FFh
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_4]
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_18964:
@@ -27555,21 +27555,21 @@ loc_18B77:
 		mov	[bp+var_2], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_1]
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_18BB4:
@@ -27624,24 +27624,24 @@ loc_18C04:
 		mov	[bp+var_2], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		add	dl, 40h
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		add	dl, 20h	; ' '
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -27774,21 +27774,21 @@ loc_18D5B:
 		mov	[bp+var_2], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_1]
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_18DBF:
@@ -27991,21 +27991,21 @@ loc_18F89:
 		mov	[bp+var_2], al
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
 		mov	bx, ax
-		mov	[bx+11BAh], dl
+		mov	Palettes[bx].r, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	[bx+11BBh], dl
+		mov	Palettes[bx].g, dl
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
-		imul	ax, 3
+		imul	ax, size rgb_t
 		mov	dl, [bp+var_1]
 		mov	bx, ax
-		mov	[bx+11BCh], dl
+		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
 loc_18FE2:
@@ -36929,18 +36929,7 @@ word_1F2EC	dw ?
 word_1F2EE	dw ?
 public _yumeconfig
 _yumeconfig	dd ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+palette_1F2F4	palette_t <?>
 byte_1F324	db ?
 		db ?
 word_1F326	dw ?

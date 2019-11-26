@@ -2295,32 +2295,32 @@ opening_key_pressed			= byte ptr -2
 ;fps hack?
 loc_B872:
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+2E1Eh]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].r
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+3F54h], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].r, al
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+2E1Fh]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].g
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+3F55h], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].g, al
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+2E20h]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].b
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+3F56h], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].b, al
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+2E1Eh], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].r, 0
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+2E1Fh], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].g, 0
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+2E20h], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].b, 0
 		inc	si
 
 loc_B8C7:

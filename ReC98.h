@@ -11,6 +11,18 @@
 #define palette_entry_rgb_show(fn) \
 	palette_entry_rgb(fn); \
 	palette_show();
+
+// RGB color triple, used for the Palettes structure
+typedef union {
+	struct {
+		unsigned char r, g, b;
+	} c;
+	unsigned char v[3];
+} rgb_t;
+
+typedef struct {
+	rgb_t colors[16];
+} palette_t;
 // ---------------------
 
 // Macros

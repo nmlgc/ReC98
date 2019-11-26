@@ -65,6 +65,19 @@ twobyte_t ends
 ; ---------------------
 ; super_roll_put_1plane() plane_put constants
 PLANE_PUT  = 0FF00h or GC_RMW
+
+; RGB color triple, used for the Palettes structure
+rgb_t struc
+	r db ?
+	g db ?
+	b db ?
+rgb_t ends
+
+PALETTE_COLORS = 16
+
+palette_t struc
+	colors	rgb_t PALETTE_COLORS dup(<?>)
+palette_t ends
 ; ---------------------
 
 RES_X = 640

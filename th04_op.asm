@@ -2354,36 +2354,36 @@ var_2		= byte ptr -2
 
 loc_BCA8:
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+1A96h]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].r
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+2B4Ch], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].r, al
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+1A97h]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].g
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+2B4Dh], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].g, al
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+1A98h]
+		imul	bx, size rgb_t
+		mov	al, Palettes[bx].b
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+2B4Eh], al
+		imul	bx, size rgb_t
+		mov	_zunsoft_palette[bx].b, al
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A96h], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].r, 0
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A97h], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].g, 0
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A98h], 0
+		imul	bx, size rgb_t
+		mov	Palettes[bx].b, 0
 		inc	si
 
 loc_BCFD:
-		cmp	si, 0Fh
+		cmp	si, 15
 		jl	short loc_BCA8
 		call	snd_load pascal, ds, offset aLogo, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -3954,7 +3954,7 @@ sub_CCD2	proc near
 
 @@page		= byte ptr -4
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@component		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -4047,18 +4047,18 @@ loc_CE50:
 
 loc_CE8B:
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A96h], 0FFh
+		imul	bx, size rgb_t
+		mov	Palettes[bx].r, 0FFh
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A97h], 0FFh
+		imul	bx, size rgb_t
+		mov	Palettes[bx].g, 0FFh
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+1A98h], 0FFh
+		imul	bx, size rgb_t
+		mov	Palettes[bx].b, 0FFh
 		inc	si
 
 loc_CEAA:
-		cmp	si, 10h
+		cmp	si, PALETTE_COLORS
 		jl	short loc_CE8B
 		call	far ptr	palette_show
 		mov	PaletteTone, 64h ; 'd'
@@ -4070,9 +4070,9 @@ loc_CEAA:
 
 loc_CEC7:
 		mov	al, [bp+var_3]
-		mov	Palettes, al
-		mov	Palettes+1, al
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	Palettes[0 * size rgb_t].g, al
+		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
@@ -4095,36 +4095,36 @@ loc_CEF5:
 ; ---------------------------------------------------------------------------
 
 loc_CEFA:
-		mov	[bp+var_2], 0
+		mov	[bp+@@component], 0
 		jmp	short loc_CF2D
 ; ---------------------------------------------------------------------------
 
 loc_CF01:
 		mov	bx, di
-		imul	bx, 3
-		add	bx, [bp+var_2]
+		imul	bx, size rgb_t
+		add	bx, [bp+@@component]
 		mov	al, [bx+23A0h]
 		mov	bx, di
-		imul	bx, 3
-		add	bx, [bp+var_2]
-		cmp	al, [bx+1A96h]
+		imul	bx, size rgb_t
+		add	bx, [bp+@@component]
+		cmp	al, Palettes[bx].r
 		jnb	short loc_CF2A
 		mov	bx, di
-		imul	bx, 3
-		add	bx, [bp+var_2]
+		imul	bx, size rgb_t
+		add	bx, [bp+@@component]
 		mov	al, [bp+var_3]
-		mov	[bx+1A96h], al
+		mov	Palettes[bx].r, al
 
 loc_CF2A:
-		inc	[bp+var_2]
+		inc	[bp+@@component]
 
 loc_CF2D:
-		cmp	[bp+var_2], 3
+		cmp	[bp+@@component], size rgb_t
 		jl	short loc_CF01
 		inc	di
 
 loc_CF34:
-		cmp	di, 10h
+		cmp	di, PALETTE_COLORS
 		jl	short loc_CEFA
 		call	far ptr	palette_show
 		push	1

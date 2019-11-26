@@ -7808,7 +7808,7 @@ sub_E5B5	endp
 
 sub_E618	proc near
 
-var_2		= word ptr -2
+@@component		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -7817,24 +7817,24 @@ var_2		= word ptr -2
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		cmp	word_218B6, 1
 		jnz	short loc_E668
-		mov	[bp+var_2], 0
+		mov	[bp+@@component], 0
 		jmp	short loc_E64E
 ; ---------------------------------------------------------------------------
 
 loc_E638:
-		mov	bx, [bp+var_2]
-		mov	al, [bx+1A98h]
-		mov	[bx+3FDDh], al
-		mov	al, [bx+1AA1h]
-		mov	[bx+3FE0h], al
-		inc	[bp+var_2]
+		mov	bx, [bp+@@component]
+		mov	al, Palettes[0 * size rgb_t][bx]
+		mov	byte ptr rgb_21A4D[bx], al
+		mov	al, Palettes[3 * size rgb_t][bx]
+		mov	byte ptr rgb_21A50[bx], al
+		inc	[bp+@@component]
 
 loc_E64E:
-		cmp	[bp+var_2], 3
+		cmp	[bp+@@component], size rgb_t
 		jl	short loc_E638
-		mov	Palettes+9, 40h
-		mov	Palettes+10, 10h
-		mov	Palettes+11, 40h
+		mov	Palettes[3 * size rgb_t].r, 40h
+		mov	Palettes[3 * size rgb_t].g, 10h
+		mov	Palettes[3 * size rgb_t].b, 40h
 		call	far ptr	palette_show
 
 loc_E668:
@@ -7848,11 +7848,11 @@ loc_E668:
 loc_E680:
 		cmp	word_218B6, 20h	; ' '
 		jnz	short loc_E6CC
-		mov	al, byte_21A50
+		mov	al, rgb_21A50.r
 		mov	Palettes+9, al
-		mov	al, byte_21A51
+		mov	al, rgb_21A50.g
 		mov	Palettes+10, al
-		mov	al, byte_21A52
+		mov	al, rgb_21A50.b
 		mov	Palettes+11, al
 		mov	Palettes, 80h
 		mov	Palettes+1, 0
@@ -7979,11 +7979,11 @@ loc_E80E:
 loc_E821:
 		cmp	word_218B6, 88h
 		jnz	short loc_E867
-		mov	al, byte_21A4D
+		mov	al, rgb_21A4D.r
 		mov	Palettes, al
-		mov	al, byte_21A4E
+		mov	al, rgb_21A4D.g
 		mov	Palettes+1, al
-		mov	al, byte_21A4F
+		mov	al, rgb_21A4D.b
 		mov	Palettes+2, al
 		call	far ptr	palette_show
 		call	_snd_se_play c, 16
@@ -36932,12 +36932,8 @@ fp_219CA	dw ?
 		dd    ?	;
 		dd    ?	;
 byte_21A4C	db ?
-byte_21A4D	db ?
-byte_21A4E	db ?
-byte_21A4F	db ?
-byte_21A50	db ?
-byte_21A51	db ?
-byte_21A52	db ?
+rgb_21A4D	rgb_t <?>
+rgb_21A50	rgb_t <?>
 byte_21A53	db ?
 byte_21A54	db ?
 byte_21A55	db ?

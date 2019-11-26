@@ -1,6 +1,4 @@
-; Copy of the palette used during the logo, to allow non-blocking fades in
-; contrast to master.lib's blocking palette_black_in() and palette_black_out()
-; functions. (Then again, master.lib has the PaletteTone global for that...)
+public _zunsoft_palette
 _zunsoft_palette	db 48 dup(?)
 
 ; ZUN Soft logo explosion structure.

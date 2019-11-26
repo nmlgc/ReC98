@@ -1,7 +1,3 @@
-; Spawns [n] new explosions at [origin].
-; [origin] uses screen pixels, *not* the 1/16th-pixel units of the structure.
-
-; void pascal zunsoft_pyro_new(Point origin, int n, char patnum_base)
 _zunsoft_pyro_new	proc pascal near
 	local @@pyros_created:word, @@i:word
 	arg @@origin:Point, @@n:word, @@patnum_base:byte
@@ -60,7 +56,6 @@ loc_B694:
 _zunsoft_pyro_new	endp
 
 
-; void pascal zunsoft_update_and_render(void)
 _zunsoft_update_and_render	proc pascal near
 	local @@patnum:word, @@draw_y:word, @@draw_x:word, @@anim_sprite:word
 
@@ -192,7 +187,6 @@ loc_B7B9:
 _zunsoft_update_and_render	endp
 
 
-; void pascal zunsoft_palette_update_and_show(int tone)
 _zunsoft_palette_update_and_show	proc near
 	arg @@tone:word
 
@@ -209,7 +203,7 @@ loc_B7CE:
 
 loc_B7D2:
 	mov	bx, si
-	imul	bx, 3
+	imul	bx, size rgb_t
 	mov	al, _zunsoft_palette[bx+di]
 	mov	ah, 0
 	imul	@@tone
@@ -217,12 +211,12 @@ loc_B7D2:
 	cwd
 	idiv	bx
 	mov	bx, si
-	imul	bx, 3
+	imul	bx, size rgb_t
 	mov	Palettes[bx+di], al
 	inc	di
 
 loc_B7F0:
-	cmp	di, 3
+	cmp	di, size rgb_t
 	jl	short loc_B7D2
 	inc	si
 
