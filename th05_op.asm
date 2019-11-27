@@ -5792,16 +5792,16 @@ arg_6		= word ptr  0Ch
 		mov	si, [bp+arg_2]
 		mov	di, si
 		shl	si, 2
-		les	si, [si+0A84h]
+		les	si, _pi_slot_buffers[si]
 		assume es:nothing
-		imul	di, 48h
+		imul	di, size PiHeader
 		push	[bp+arg_6]
 		push	[bp+arg_4]
-		mov	ax, [di+3866h]
+		mov	ax, _pi_slot_headers._xsize[di]
 		push	ax
 		shr	ax, 1
 		push	ax
-		mov	di, [di+3868h]
+		mov	di, _pi_slot_headers._ysize[di]
 		mov	ax, [bp+arg_0]
 		call	sub_DD10
 		pop	di
@@ -5830,7 +5830,7 @@ loc_DCDD:
 
 loc_DCE5:
 		shl	si, 2
-		les	si, [si+0A84h]
+		les	si, _pi_slot_buffers[si]
 		add	si, ax
 		mov	ax, es
 		add	ax, dx

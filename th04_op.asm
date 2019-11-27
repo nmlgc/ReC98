@@ -4103,7 +4103,7 @@ loc_CF01:
 		mov	bx, di
 		imul	bx, size rgb_t
 		add	bx, [bp+@@component]
-		mov	al, [bx+23A0h]
+		mov	al, _pi_slot_headers._palette[bx]
 		mov	bx, di
 		imul	bx, size rgb_t
 		add	bx, [bp+@@component]

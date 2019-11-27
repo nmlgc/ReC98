@@ -1,2 +1,2 @@
-; void far *_pi_slot_buffers[8]
+public _pi_slot_buffers
 _pi_slot_buffers	dd 8 dup(?)

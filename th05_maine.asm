@@ -8516,16 +8516,16 @@ include th05/snd/kajaint.asm
 		mov	si, [bp+8]
 		mov	di, si
 		shl	si, 2
-		les	si, [si+6FEh]
+		les	si, _pi_slot_buffers[si]
 		assume es:nothing
-		imul	di, 48h
+		imul	di, size PiHeader
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+0Ah]
-		mov	ax, [di+27CEh]
+		mov	ax, _pi_slot_headers._xsize[di]
 		push	ax
 		shr	ax, 1
 		push	ax
-		mov	di, [di+27D0h]
+		mov	di, _pi_slot_headers._ysize[di]
 		mov	ax, [bp+6]
 		call	sub_EEB2
 		pop	di
@@ -8564,7 +8564,7 @@ loc_EE7F:
 
 loc_EE87:
 		shl	si, 2
-		les	si, [si+6FEh]
+		les	si, _pi_slot_buffers[si]
 		add	si, ax
 		mov	ax, es
 		add	ax, dx
