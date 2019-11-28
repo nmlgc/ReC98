@@ -554,14 +554,14 @@ sub_9778	endp
 sub_9AD6	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_1E6E6, 1B58h
+		cmp	_demo_frame, DEMO_N
 		jnb	short loc_9AE7
-		inc	word_1E6E6
+		inc	_demo_frame
 		jmp	short loc_9AF5
 ; ---------------------------------------------------------------------------
 
 loc_9AE7:
-		cmp	word_1E6E6, 1B58h
+		cmp	_demo_frame, DEMO_N
 		jnz	short loc_9AF5
 		mov	fp_1FBC0, offset sub_B4A8
 
@@ -771,7 +771,7 @@ loc_9C93:
 ; ---------------------------------------------------------------------------
 
 loc_9CAB:
-		mov	word_1E6E6, 0
+		mov	_demo_frame, 0
 		mov	fp_1E6EA, offset sub_9AD6
 		mov	byte_23AF8, 40h
 		mov	byte_23E3C, 0
@@ -36897,7 +36897,7 @@ byte_1E14C	db 0
 	.data?
 
 _input_mode_func	dd ?
-word_1E6E6	dw ?
+include th03/demo[bss].asm
 word_1E6E8	dw ?
 fp_1E6EA	dw ?
 include libs/master.lib/clip[bss].asm
