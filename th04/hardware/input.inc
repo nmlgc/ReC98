@@ -20,6 +20,10 @@ INPUT_MOVEMENT   = \
 
 if GAME eq 5
 INPUT_REPLAY_END = not INPUT_MOVEMENT
+
+input_reset_sense_interface	equ <_input_reset_sense_held>
+else
+input_reset_sense_interface	equ <_input_reset_sense>
 endif
 
 ; move_ret_t

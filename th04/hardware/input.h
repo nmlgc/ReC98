@@ -7,6 +7,9 @@ void input_reset_sense();
 // [shiftkey].
 void input_sense();
 
+// Input sense function used in UIs
+#define input_reset_sense_interface input_reset_sense
+
 // Waits ≥1 frames for all held inputs to be released, then waits the given
 // number of [frames] for an input to be pressed. Set [frames] to 0 or 9999
 // to wait forever.

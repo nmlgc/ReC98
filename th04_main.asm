@@ -351,7 +351,7 @@ loc_AB9E:
 		call	fp_23D90
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
-		call	main_01:sub_B2CF
+		call	main_01:_pause
 		or	ax, ax
 		jz	short loc_ABBA
 		mov	byte_266D2, 1
@@ -1006,99 +1006,7 @@ loc_B2C7:
 		retn
 sub_B29E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2CF	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_B2DC
-; ---------------------------------------------------------------------------
-
-loc_B2D7:
-		call	main_01:far ptr	_input_reset_sense
-
-loc_B2DC:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_B2D7
-		call	gaiji_putsa pascal, (26 shl 16) + 12, ds, offset gsCHUUDAN, TX_YELLOW
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
-		call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
-
-loc_B319:
-		call	input_wait_for_change pascal, 0
-		test	_key_det.lo, low INPUT_UP
-		jnz	short loc_B32E
-		test	_key_det.lo, low INPUT_DOWN
-		jz	short loc_B37E
-
-loc_B32E:
-		mov	ax, 1
-		sub	ax, si
-		mov	si, ax
-		or	si, si
-		jnz	short loc_B35A
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
-		push	(26 shl 16) + 15
-		push	ds
-		push	offset gsSHUURYOU ; strp
-		push	TX_YELLOW
-		jmp	short loc_B379
-; ---------------------------------------------------------------------------
-
-loc_B35A:
-		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_YELLOW
-		push	(26 shl 16) + 15
-		push	ds
-		push	offset gsSHUURYOU ; strp
-		push	TX_WHITE + TX_UNDERLINE
-
-loc_B379:
-		call	gaiji_putsa
-
-loc_B37E:
-		test	_key_det.hi, high INPUT_Q
-		jz	short loc_B38A
-		mov	ax, 1
-		jmp	short loc_B3EB
-; ---------------------------------------------------------------------------
-
-loc_B38A:
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B395
-		xor	si, si
-		jmp	short loc_B3AC
-; ---------------------------------------------------------------------------
-
-loc_B395:
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_B3AC
-		test	_key_det.hi, high INPUT_OK
-		jz	loc_B319
-		jmp	short loc_B3AC
-; ---------------------------------------------------------------------------
-
-loc_B3A7:
-		call	main_01:far ptr	_input_reset_sense
-
-loc_B3AC:
-		cmp	_key_det, INPUT_NONE
-		jnz	short loc_B3A7
-		call	text_putsa pascal, (26 shl 16) + 12, ds, offset asc_2151E, TX_WHITE
-		call	text_putsa pascal, (26 shl 16) + 14, ds, offset asc_21523, TX_WHITE
-		call	text_putsa pascal, (26 shl 16) + 15, ds, offset asc_21528, TX_WHITE
-		mov	ax, si
-
-loc_B3EB:
-		pop	si
-		pop	bp
-		retn
-sub_B2CF	endp
-
+include th04/pause.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38722,9 +38630,7 @@ aSt05_mpn	db 'st05.mpn',0
 aSt06_bft	db 'st06.bft',0
 aBss6_cd2	db 'BSS6.CD2',0
 aSt06_mpn	db 'st06.mpn',0
-asc_2151E	db '    ',0
-asc_21523	db '    ',0
-asc_21528	db '    ',0
+include th04/pause[data].asm
 aDemo0_rec	db 'DEMO0.REC',0
 aOp_0		db 'op',0
 aGensoems	db 'GENSOEMS',0

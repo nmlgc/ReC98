@@ -12,6 +12,9 @@ int input_reset_sense_held();
 // [shiftkey], and returns [key_det].
 int input_sense();
 
+// Input sense function used in UIs
+#define input_reset_sense_interface input_reset_sense_held
+
 // Waits for all held inputs to be released, then waits the given number of
 // [frames] for an input to be pressed and returns [key_det].
 // Set [frames] to 0 to wait forever.
