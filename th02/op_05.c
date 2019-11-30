@@ -166,7 +166,7 @@ void pascal shottype_menu(void)
 	do {
 		input_sense();
 		if(!input_locked) {
-			if(input & INPUT_LEFT) {
+			if(key_det & INPUT_LEFT) {
 				draw_shottype_desc(sel, 7);
 				frame_delay(1);
 				copy_pic_back(sel, 0);
@@ -178,7 +178,7 @@ void pascal shottype_menu(void)
 				RING_DEC(sel, SHOTTYPE_COUNT - 1);
 				DRAW_NEW_SEL();
 			}
-			if(input & INPUT_RIGHT) {
+			if(key_det & INPUT_RIGHT) {
 				copy_pic_back(sel, 0);
 				frame_delay(1);
 				pi_slot_put(pic_x[sel] + 8, pic_y[sel] + 8, sel);
@@ -190,13 +190,13 @@ void pascal shottype_menu(void)
 				RING_INC(sel, SHOTTYPE_COUNT - 1);
 				DRAW_NEW_SEL();
 			}
-			if(input & INPUT_SHOT || input & INPUT_OK) {
+			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 				mikoconfig->shottype = sel;
 				break;
 			}
 		}
 		frame_delay(1);
-		input_locked = input;
+		input_locked = key_det;
 		if(input_locked) {
 			input_delay++;
 			if(input_delay > 30) {

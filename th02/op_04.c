@@ -171,9 +171,9 @@ void pascal score_menu(void)
 
 	do {
 		input_sense();
-		if(!input_allowed && !input) {
+		if(!input_allowed && !key_det) {
 			input_allowed = 1;
-		} else if(input_allowed == 1 && input) {
+		} else if(input_allowed == 1 && key_det) {
 			break;
 		}
 		logo_render();
@@ -182,7 +182,7 @@ void pascal score_menu(void)
 		graph_showpage(page = 1 - page);
 	} while(logo_step <= score_duration);
 
-	input = 0;
+	key_det = 0;
 	frame_delay(20);
 	grc_setclip(0, 0, 639, 399);
 }

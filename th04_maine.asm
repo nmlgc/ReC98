@@ -1709,7 +1709,7 @@ var_1		= byte ptr -1
 
 loc_AE2D:
 		call	far ptr	_input_reset_sense
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_AE40
 		mov	byte_1247E, 1
 		jmp	short loc_AE45
@@ -4773,28 +4773,28 @@ loc_C9F6:
 		call	_input_sense
 		cmp	[bp+var_4], 0
 		jnz	loc_CB3B
-		test	_input.lo, low INPUT_MOVEMENT
+		test	_key_det.lo, low INPUT_MOVEMENT
 		jz	short loc_CA6A
 		push	di
 		push	[bp+var_2]
 		push	TX_WHITE
 		call	sub_C7E3
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_CA1E
 		dec	[bp+var_2]
 
 loc_CA1E:
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_CA28
 		inc	[bp+var_2]
 
 loc_CA28:
-		test	_input.lo, low INPUT_LEFT
+		test	_key_det.lo, low INPUT_LEFT
 		jz	short loc_CA30
 		dec	di
 
 loc_CA30:
-		test	_input.lo, low INPUT_RIGHT
+		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_CA38
 		inc	di
 
@@ -4829,9 +4829,9 @@ loc_CA60:
 		call	sub_C7E3
 
 loc_CA6A:
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_CA7A
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jz	loc_CB03
 
 loc_CA7A:
@@ -4906,7 +4906,7 @@ loc_CAF5:
 		call	sub_C665
 
 loc_CB03:
-		test	_input.lo, low INPUT_BOMB
+		test	_key_det.lo, low INPUT_BOMB
 		jz	short loc_CB2C
 		mov	al, byte_125B6
 		mov	ah, 0
@@ -4926,15 +4926,15 @@ loc_CB1E:
 		call	sub_C665
 
 loc_CB2C:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_CB7A
-		mov	ax, _input
+		mov	ax, _key_det
 		mov	[bp+var_4], ax
 		jmp	short loc_CB6B
 ; ---------------------------------------------------------------------------
 
 loc_CB3B:
-		mov	ax, _input
+		mov	ax, _key_det
 		cmp	ax, [bp+var_4]
 		jnz	short loc_CB59
 		inc	[bp+var_9]
@@ -4947,7 +4947,7 @@ loc_CB3B:
 ; ---------------------------------------------------------------------------
 
 loc_CB59:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_CB62
 		jmp	short loc_CB67
 ; ---------------------------------------------------------------------------

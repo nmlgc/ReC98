@@ -986,30 +986,30 @@ loc_AED6:
 		mov	byte_10DAC, 0
 
 loc_AEEB:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_AEF7
 		mov	byte_10DAC, 1
 
 loc_AEF7:
 		cmp	byte_10DAC, 0
 		jz	loc_B043
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AF0E
 		push	5
 		push	0FFFFh
 		call	sub_AE28
 
 loc_AF0E:
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AF1C
 		push	5
 		push	1
 		call	sub_AE28
 
 loc_AF1C:
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_AF2C
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jz	loc_B02B
 
 loc_AF2C:
@@ -1084,12 +1084,12 @@ loc_B021:
 		mov	byte_F3DC, 1
 
 loc_B02B:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_B037
 		mov	byte_F3DC, 1
 
 loc_B037:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_B043
 		mov	byte_10DAC, 0
 
@@ -1151,30 +1151,30 @@ loc_B08D:
 		mov	byte_10DAD, 0
 
 loc_B0A2:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_B0AE
 		mov	byte_10DAD, 1
 
 loc_B0AE:
 		cmp	byte_10DAD, 0
 		jz	loc_B35B
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B0C5
 		push	7
 		push	0FFFFh
 		call	sub_AE28
 
 loc_B0C5:
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B0D3
 		push	7
 		push	1
 		call	sub_AE28
 
 loc_B0D3:
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_B0E3
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jz	loc_B16F
 
 loc_B0E3:
@@ -1219,7 +1219,7 @@ loc_B14F:
 		mov	byte_10DA8, 0
 
 loc_B16F:
-		test	_input.lo, low INPUT_RIGHT
+		test	_key_det.lo, low INPUT_RIGHT
 		jz	loc_B250
 
 loc_B178:
@@ -1308,7 +1308,7 @@ loc_B246:
 		call	sub_ABD7
 
 loc_B250:
-		test	_input.lo, low INPUT_LEFT
+		test	_key_det.lo, low INPUT_LEFT
 		jz	loc_B339
 		mov	al, byte_F3DB
 		cbw
@@ -1404,14 +1404,14 @@ loc_B32F:
 		call	sub_ABD7
 
 loc_B339:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_B34F
 		mov	byte_F447, 0
 		mov	byte_F3DB, 4
 		mov	byte_10DA8, 0
 
 loc_B34F:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_B35B
 		mov	byte_10DAD, 0
 
@@ -1532,7 +1532,7 @@ loc_B45C:
 		call	sub_B052
 
 loc_B45F:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_B469
 		inc	si
 		jmp	short loc_B46B
@@ -2099,11 +2099,11 @@ loc_B80E:
 		call	_input_wait_for_change
 		push	1
 		call	frame_delay
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_B87A
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_B87A
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B851
 		push	[bp+var_2]
 		push	0
@@ -2123,7 +2123,7 @@ loc_B849:
 		call	sub_B698
 
 loc_B851:
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B80E
 		push	[bp+var_2]
 		push	0
@@ -2217,11 +2217,11 @@ loc_B92B:
 		call	_input_wait_for_change
 		push	1
 		call	frame_delay
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_B997
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_B997
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B96E
 		push	[bp+var_2]
 		push	0
@@ -2241,7 +2241,7 @@ loc_B966:
 		call	sub_B6E7
 
 loc_B96E:
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B92B
 		push	[bp+var_2]
 		push	0
@@ -2427,7 +2427,7 @@ loc_BD2A:
 
 loc_BD84:
 		call	_input_sense
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_BD94
 		mov	[bp+var_2], 1
 
@@ -2966,7 +2966,7 @@ sub_C3B7	proc near
 
 loc_C454:
 		call	far ptr	_input_reset_sense
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_C465
 		call	sub_C244
 		jmp	short loc_C454
@@ -2974,7 +2974,7 @@ loc_C454:
 
 loc_C465:
 		call	far ptr	_input_reset_sense
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jz	short loc_C4A0
 		push	word_12DBC
 		push	5
@@ -2999,7 +2999,7 @@ loc_C497:
 		call	sub_BED5
 
 loc_C4A0:
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_C4D6
 		push	word_12DBC
 		push	5
@@ -3024,9 +3024,9 @@ loc_C4CD:
 		call	sub_BED5
 
 loc_C4D6:
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_C4E4
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jz	short loc_C51D
 
 loc_C4E4:
@@ -3045,9 +3045,9 @@ loc_C4E4:
 		kajacall	KAJA_SONG_PLAY
 
 loc_C51D:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_C533
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	loc_C454
 		call	sub_C244
 		jmp	loc_C465
@@ -3055,7 +3055,7 @@ loc_C51D:
 
 loc_C533:
 		call	far ptr	_input_reset_sense
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jz	short loc_C544
 		call	sub_C244
 		jmp	short loc_C533
@@ -3775,15 +3775,15 @@ loc_CAE4:
 		call	far ptr	_input_reset_sense
 		push	1
 		call	frame_delay
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_CB58
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_CB58
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CB58
-		test	_input.lo, low INPUT_LEFT
+		test	_key_det.lo, low INPUT_LEFT
 		jz	short loc_CB36
 		cmp	_rank, RANK_EASY
 		jz	short loc_CB36
@@ -3796,7 +3796,7 @@ loc_CAE4:
 		call	palette_black_in
 
 loc_CB36:
-		test	_input.lo, low INPUT_RIGHT
+		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_CAE4
 		cmp	_rank, RANK_EXTRA
 		jnb	short loc_CAE4
@@ -3826,7 +3826,7 @@ loc_CBB3:
 		call	far ptr	_input_reset_sense
 		push	1
 		call	frame_delay
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CBB3
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
@@ -5140,9 +5140,9 @@ loc_D7BB:
 		call	far ptr	_input_reset_sense
 		cmp	[bp+var_1], 0
 		jnz	loc_D8DF
-		test	_input.lo, low INPUT_LEFT
+		test	_key_det.lo, low INPUT_LEFT
 		jnz	short loc_D7D6
-		test	_input.lo, low INPUT_RIGHT
+		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_D84C
 
 loc_D7D6:
@@ -5182,9 +5182,9 @@ loc_D816:
 		graph_showpage 0
 
 loc_D84C:
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_D85A
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jz	short loc_D8B2
 
 loc_D85A:
@@ -5221,7 +5221,7 @@ loc_D8B0:
 ; ---------------------------------------------------------------------------
 
 loc_D8B2:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_D8D7
 		push	1
 		call	palette_black_out
@@ -5232,13 +5232,13 @@ loc_D8B2:
 ; ---------------------------------------------------------------------------
 
 loc_D8D7:
-		mov	al, byte ptr _input
+		mov	al, _key_det.lo
 		mov	[bp+var_1], al
 		jmp	short loc_D8EA
 ; ---------------------------------------------------------------------------
 
 loc_D8DF:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_D8EA
 		mov	[bp+var_1], 0
 
@@ -5252,9 +5252,9 @@ loc_D8F4:
 		call	far ptr	_input_reset_sense
 		cmp	[bp+var_1], 0
 		jnz	loc_D9F8
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jnz	short loc_D90F
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_D986
 
 loc_D90F:
@@ -5295,9 +5295,9 @@ loc_D939:
 		call	snd_se_update
 
 loc_D986:
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_D994
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jz	short loc_D9D5
 
 loc_D994:
@@ -5319,7 +5319,7 @@ loc_D994:
 ; ---------------------------------------------------------------------------
 
 loc_D9D5:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_D9F0
 		call	sub_D1F3
 		freePISlotLarge	0
@@ -5327,13 +5327,13 @@ loc_D9D5:
 ; ---------------------------------------------------------------------------
 
 loc_D9F0:
-		mov	al, byte ptr _input
+		mov	al, _key_det.lo
 		mov	[bp+var_1], al
 		jmp	short loc_DA03
 ; ---------------------------------------------------------------------------
 
 loc_D9F8:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_DA03
 		mov	[bp+var_1], 0
 

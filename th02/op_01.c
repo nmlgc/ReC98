@@ -378,17 +378,17 @@ void main_update_and_render(void)
 		}
 		putfunc = main_put;
 	}
-	if(!input) {
+	if(!key_det) {
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		if(input & INPUT_UP) {
+		if(key_det & INPUT_UP) {
 			menu_sel_move(5, -1);
 		}
-		if(input & INPUT_DOWN) {
+		if(key_det & INPUT_DOWN) {
 			menu_sel_move(5, 1);
 		}
-		if(input & INPUT_SHOT || input & INPUT_OK) {
+		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
 			case 0:
 				start_game();
@@ -423,10 +423,10 @@ void main_update_and_render(void)
 				break;
 			}
 		}
-		if(input & INPUT_CANCEL) {
+		if(key_det & INPUT_CANCEL) {
 			quit = 1;
 		}
-		if(input) {
+		if(key_det) {
 			input_allowed = 0;
 			idle_frames = 0;
 		}
@@ -547,23 +547,23 @@ void option_update_and_render(void)
 		}
 		putfunc = option_put;
 	}
-	if(!input) {
+	if(!key_det) {
 		input_allowed = 1;
 	}
 	if(input_allowed) {
-		if(input & INPUT_UP) {
+		if(key_det & INPUT_UP) {
 			menu_sel_move(6, -1);
 		}
-		if(input & INPUT_DOWN) {
+		if(key_det & INPUT_DOWN) {
 			menu_sel_move(6, 1);
 		}
-		if(input & INPUT_RIGHT) {
+		if(key_det & INPUT_RIGHT) {
 			OPTION_CHANGE(INC);
 		}
-		if(input & INPUT_LEFT) {
+		if(key_det & INPUT_LEFT) {
 			OPTION_CHANGE(DEC);
 		}
-		if(input & INPUT_SHOT || input & INPUT_OK) {
+		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {
 			case 5:
 				rank = RANK_NORMAL;
@@ -587,10 +587,10 @@ void option_update_and_render(void)
 				break;
 			}
 		}
-		if(input & INPUT_CANCEL) {
+		if(key_det & INPUT_CANCEL) {
 			OPTION_QUIT;
 		}
-		if(input) {
+		if(key_det) {
 			input_allowed = 0;
 		}
 	}
@@ -627,7 +627,7 @@ int main(void)
 		graph_showpage(0);
 		graph_accesspage(0);
 	}
-	input = 0;
+	key_det = 0;
 
 	snd_active = snd_bgm_mode;
 	if(!mikoconfig->demo_num && snd_midi_possible) {
@@ -642,7 +642,7 @@ int main(void)
 	op_animate();
 	pi_slot_load(2, "ts3.pi");
 	pi_slot_load(1, "ts2.pi");
-	input = 0;
+	key_det = 0;
 	idle_frames = 0;
 
 	while(!quit) {

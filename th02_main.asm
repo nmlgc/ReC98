@@ -1919,7 +1919,7 @@ loc_B237:
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_B249:
-		mov	_input, 0
+		mov	_key_det, 0
 
 loc_B24F:
 		call	farfp_1F4A4
@@ -2512,16 +2512,16 @@ loc_BA3D:
 		inc	si
 		cmp	[bp+var_1], 0
 		jnz	short loc_BA5C
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jnz	short loc_BA5C
 		mov	[bp+var_1], 1
 
 loc_BA5C:
 		cmp	[bp+var_1], 1
 		jnz	loc_BB30
-		test	byte ptr _input, 1
+		test	byte ptr _key_det, 1
 		jnz	short loc_BA72
-		test	byte ptr _input, 2
+		test	byte ptr _key_det, 2
 		jz	short loc_BAC8
 
 loc_BA72:
@@ -2555,9 +2555,9 @@ loc_BA98:
 		mov	[bp+var_1], 0
 
 loc_BAC8:
-		test	byte ptr _input, INPUT_OK
+		test	byte ptr _key_det, INPUT_OK
 		jnz	short loc_BAD6
-		test	byte ptr _input, INPUT_SHOT
+		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_BB24
 
 loc_BAD6:
@@ -2575,7 +2575,7 @@ loc_BAE3:
 		mov	byte_1DB74, 0
 
 loc_BB24:
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jz	loc_BCA4
 		jmp	loc_BCA0
 ; ---------------------------------------------------------------------------
@@ -2583,11 +2583,11 @@ loc_BB24:
 loc_BB30:
 		cmp	[bp+var_1], 2
 		jnz	short loc_BB9D
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jnz	loc_BCA4
 		mov	PaletteTone, 64h	; 'd'
 		call	far ptr	palette_show
-		mov	_input, 0
+		mov	_key_det, 0
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset g11SPACES, TX_WHITE
 		call	gaiji_putsa pascal, (17 shl 16) + 14, ds, offset g11SPACES, TX_WHITE
 		call	gaiji_putsa pascal, (17 shl 16) + 15, ds, offset g11SPACES, TX_WHITE
@@ -2599,7 +2599,7 @@ loc_BB30:
 loc_BB9D:
 		cmp	[bp+var_1], 3
 		jnz	short loc_BBB2
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jnz	loc_BCA4
 		inc	[bp+var_1]
 		jmp	loc_BCA4
@@ -2608,9 +2608,9 @@ loc_BB9D:
 loc_BBB2:
 		cmp	[bp+var_1], 4
 		jnz	loc_BCA4
-		test	byte ptr _input, 1
+		test	byte ptr _key_det, 1
 		jnz	short loc_BBC8
-		test	byte ptr _input, 2
+		test	byte ptr _key_det, 2
 		jz	short loc_BC1E
 
 loc_BBC8:
@@ -2644,9 +2644,9 @@ loc_BBEE:
 		mov	[bp+var_1], 3
 
 loc_BC1E:
-		test	byte ptr _input, INPUT_OK
+		test	byte ptr _key_det, INPUT_OK
 		jnz	short loc_BC2C
-		test	byte ptr _input, INPUT_SHOT
+		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_BC99
 
 loc_BC2C:
@@ -2667,7 +2667,7 @@ loc_BC94:
 ; ---------------------------------------------------------------------------
 
 loc_BC99:
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jz	short loc_BCA4
 
 loc_BCA0:
@@ -2816,7 +2816,7 @@ loc_BDE8:
 		call	farfp_23A76
 		call	sub_10BC6
 		call	sub_41AA
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jz	short loc_BE0F
 		call	sub_B9E2
 		or	ax, ax
@@ -3217,20 +3217,20 @@ public DEMOPLAY
 DemoPlay	proc far ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jnz	short loc_C20B
 		mov	ax, _demo_frame
 		add	ax, ax
 		les	bx, _DemoBuf
 		add	bx, ax
 		mov	ax, es:[bx]
-		mov	_input, ax
+		mov	_key_det, ax
 		inc	_demo_frame
 		cmp	_demo_frame, DEMO_N - 50
 		jl	short loc_C222
 
 loc_C20B:
-		mov	_input, 0
+		mov	_key_det, 0
 		push	0Ah
 		call	palette_black_out
 		mov	byte_20607, 1
@@ -3391,7 +3391,7 @@ loc_C3E5:
 		jge	loc_C348
 		push	1Eh
 		call	frame_delay
-		mov	_input, 0
+		mov	_key_det, 0
 		jmp	short loc_C400
 ; ---------------------------------------------------------------------------
 
@@ -3399,7 +3399,7 @@ loc_C3FB:
 		call	_input_sense
 
 loc_C400:
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jz	short loc_C3FB
 		call	sub_FBE9
 		call	sub_1C9FE
@@ -3426,7 +3426,7 @@ loc_C47A:
 		call	_input_sense
 		cmp	[bp+var_2], 0
 		jnz	short loc_C493
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jnz	short loc_C493
 		mov	[bp+var_2], 1
 		jmp	short loc_C4A5
@@ -3435,19 +3435,19 @@ loc_C47A:
 loc_C493:
 		cmp	[bp+var_2], 1
 		jnz	short loc_C4A5
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jz	short loc_C4A5
 		mov	[bp+var_2], 2
 
 loc_C4A5:
-		test	byte ptr _input, 1
+		test	byte ptr _key_det, 1
 		jz	short loc_C4B8
 		mov	di, 1
 		push	0E500E1h
 		call	sub_C2F4
 
 loc_C4B8:
-		test	byte ptr _input, 2
+		test	byte ptr _key_det, 2
 		jz	short loc_C4CA
 		xor	di, di
 		push	0E100E5h
@@ -3456,11 +3456,11 @@ loc_C4B8:
 loc_C4CA:
 		cmp	[bp+var_2], 2
 		jnz	short loc_C4E5
-		test	byte ptr _input, INPUT_SHOT
+		test	byte ptr _key_det, INPUT_SHOT
 		jnz	short loc_C4EE
-		test	byte ptr _input, INPUT_OK
+		test	byte ptr _key_det, INPUT_OK
 		jnz	short loc_C4EE
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jnz	short loc_C4EE
 
 loc_C4E5:
@@ -3470,7 +3470,7 @@ loc_C4E5:
 ; ---------------------------------------------------------------------------
 
 loc_C4EE:
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jz	short loc_C4F7
 
 loc_C4F5:
@@ -9116,7 +9116,7 @@ loc_F1F2:
 loc_F1F7:
 		cmp	_player_is_hit, 0
 		jnz	loc_F43E
-		mov	ax, _input
+		mov	ax, _key_det
 		and	ax, 0F000h
 		cmp	ax, 4000h
 		jz	loc_F29E
@@ -9133,7 +9133,7 @@ loc_F21B:
 		jz	loc_F2A4
 
 loc_F222:
-		mov	bx, _input
+		mov	bx, _key_det
 		and	bx, 0Fh
 		dec	bx
 		cmp	bx, 9
@@ -9278,7 +9278,7 @@ loc_F2FB:
 		sub	ax, di
 		mov	bx, word_205F4
 		mov	[bx], ax
-		test	byte ptr _input, INPUT_SHOT
+		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_F349
 		cmp	byte_1EB0D, 0FFh
 		jnz	short loc_F336
@@ -9348,7 +9348,7 @@ loc_F3B3:
 		mov	byte_1E519, al
 		mov	al, byte_2060F
 		mov	byte_1E51A, al
-		test	_input, INPUT_DOWN or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
+		test	_key_det, INPUT_DOWN or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 		jz	short loc_F3F1
 		mov	al, byte_20610
 		add	al, 5
@@ -9361,7 +9361,7 @@ loc_F3B3:
 ; ---------------------------------------------------------------------------
 
 loc_F3F1:
-		test	_input, INPUT_UP or INPUT_DOWN or INPUT_LEFT or INPUT_RIGHT or INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
+		test	_key_det, INPUT_UP or INPUT_DOWN or INPUT_LEFT or INPUT_RIGHT or INPUT_UP_LEFT or INPUT_UP_RIGHT or INPUT_DOWN_LEFT or INPUT_DOWN_RIGHT
 		jnz	short loc_F417
 		mov	al, byte_20610
 		add	al, 0FBh
@@ -9389,7 +9389,7 @@ loc_F426:
 		dec	byte_22D4B
 
 loc_F434:
-		test	byte ptr _input, INPUT_BOMB
+		test	byte ptr _key_det, INPUT_BOMB
 		jz	short loc_F43E
 		call	sub_E280
 
@@ -9816,7 +9816,7 @@ loc_FD5A:
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
-		mov	_input, 1
+		mov	_key_det, 1
 		call	_key_delay
 		pop	si
 		leave
@@ -9955,7 +9955,7 @@ loc_FEB9:
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
-		mov	_input, 1
+		mov	_key_det, 1
 		call	_key_delay
 		pop	si
 		leave
@@ -16080,7 +16080,7 @@ loc_130CC:
 
 loc_130CF:
 		inc	di
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jz	short loc_130DE
 		mov	[bp+var_2], 1
 		jmp	short loc_130EA
@@ -33582,7 +33582,7 @@ loc_1CB6B:
 		call	sub_1C785
 		xor	di, di
 		mov	[bp+var_8], 0
-		mov	_input, 0
+		mov	_key_det, 0
 		mov	[bp+var_A], 1
 
 loc_1CB89:
@@ -33592,7 +33592,7 @@ loc_1CB8D:
 		call	_input_sense
 		cmp	[bp+var_A], 0
 		jnz	loc_1CCFE
-		test	byte ptr _input, 1
+		test	byte ptr _key_det, 1
 		jz	short loc_1CBC3
 		push	di
 		push	[bp+var_8]
@@ -33610,7 +33610,7 @@ loc_1CBB9:
 		call	sub_1C8E3
 
 loc_1CBC3:
-		test	byte ptr _input, 2
+		test	byte ptr _key_det, 2
 		jz	short loc_1CBEC
 		push	di
 		push	[bp+var_8]
@@ -33628,7 +33628,7 @@ loc_1CBE2:
 		call	sub_1C8E3
 
 loc_1CBEC:
-		test	byte ptr _input, 4
+		test	byte ptr _key_det, 4
 		jz	short loc_1CC0F
 		push	di
 		push	[bp+var_8]
@@ -33646,7 +33646,7 @@ loc_1CC05:
 		call	sub_1C8E3
 
 loc_1CC0F:
-		test	byte ptr _input, 8
+		test	byte ptr _key_det, 8
 		jz	short loc_1CC32
 		push	di
 		push	[bp+var_8]
@@ -33664,9 +33664,9 @@ loc_1CC28:
 		call	sub_1C8E3
 
 loc_1CC32:
-		test	byte ptr _input, INPUT_SHOT
+		test	byte ptr _key_det, INPUT_SHOT
 		jnz	short loc_1CC42
-		test	byte ptr _input, INPUT_OK
+		test	byte ptr _key_det, INPUT_OK
 		jz	loc_1CCD7
 
 loc_1CC42:
@@ -33751,7 +33751,7 @@ loc_1CCD0:
 		call	sub_1C914
 
 loc_1CCD7:
-		test	byte ptr _input, INPUT_BOMB
+		test	byte ptr _key_det, INPUT_BOMB
 		jz	short loc_1CCF7
 		mov	bx, [bp+var_2]
 		imul	bx, 7
@@ -33767,13 +33767,13 @@ loc_1CCF0:
 		call	sub_1C914
 
 loc_1CCF7:
-		test	byte ptr _input, INPUT_CANCEL
+		test	byte ptr _key_det, INPUT_CANCEL
 		jnz	short loc_1CD2E
 
 loc_1CCFE:
 		push	1
 		call	frame_delay
-		mov	ax, _input
+		mov	ax, _key_det
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0
 		jz	loc_1CB89

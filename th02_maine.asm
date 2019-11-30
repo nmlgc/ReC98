@@ -264,7 +264,7 @@ loc_9660:
 		add	sp, 0Ah
 		cmp	byte_F02B, 0
 		jz	short loc_96B9
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jz	short loc_96B9
 		test	di, 3
 		jz	short loc_96C1
@@ -296,7 +296,7 @@ loc_96CD:
 		call	_input_sense
 		cmp	byte_F02B, 0
 		jz	short loc_96E4
-		cmp	_input, 0
+		cmp	_key_det, 0
 		jz	short loc_96E4
 		push	0
 		jmp	short loc_96E6

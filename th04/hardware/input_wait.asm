@@ -18,7 +18,7 @@ _input_wait_for_change	proc far
 	push	1
 	nopcall	frame_delay
 	nopcall	_input_sense
-	cmp	_input, INPUT_NONE
+	cmp	_key_det, INPUT_NONE
 	jnz	short @@release_loop
 	or	si, si
 	jnz	short @@longer?
@@ -31,7 +31,7 @@ _input_wait_for_change	proc far
 	push	1
 	nopcall	frame_delay
 	nopcall	_input_sense
-	cmp	_input, INPUT_NONE
+	cmp	_key_det, INPUT_NONE
 	jnz	short @@ret
 	inc	di
 	cmp	si, 9999

@@ -1,17 +1,17 @@
 ; TH05 insists on only updating the affected byte, so...
 if GAME eq 4
 	OR_INPUT_LOW macro value
-		or	_input, value
+		or	_key_det, value
 	endm
 	OR_INPUT_HIGH macro value
-		or	_input, value
+		or	_key_det, value
 	endm
 else
 	OR_INPUT_LOW macro value
-		or	_input.lo, low value
+		or	_key_det.lo, low value
 	endm
 	OR_INPUT_HIGH macro value
-		or	_input.hi, high value
+		or	_key_det.hi, high value
 	endm
 endif
 
@@ -21,7 +21,7 @@ endif
 ; TH05:  int input_reset_sense();
 _input_reset_sense	label proc
 	xor	ax, ax
-	mov	_input, ax
+	mov	_key_det, ax
 	mov	js_stat, ax
 
 ; Updates the global input state with the current keyboard and joystick state,
@@ -133,15 +133,15 @@ _input_sense	proc far
 	mov	ah, 2
 	int	18h
 	and	al, 1
-	mov	_input_focus, al
+	mov	_shiftkey, al
 	cmp	js_bexist, 0
 	jz	short @@ret
 	call	js_sense
-	or	_input, ax
+	or	_key_det, ax
 
 @@ret:
 if GAME eq 5
-	mov	ax, _input
+	mov	ax, _key_det
 endif
 	retf
 _input_sense	endp

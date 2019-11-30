@@ -262,13 +262,13 @@ void pascal musicroom(void)
 
 	do {
 		input_sense();
-		if(input) {
+		if(key_det) {
 			music_flip();
 			continue;
 		}
 controls:
 		input_sense();
-		if(input & INPUT_UP) {
+		if(key_det & INPUT_UP) {
 			draw_track(music_sel, 3);
 			if(music_sel > 0) {
 				music_sel--;
@@ -280,7 +280,7 @@ controls:
 			}
 			draw_track(music_sel, 15);
 		}
-		if(input & INPUT_DOWN) {
+		if(key_det & INPUT_DOWN) {
 			draw_track(music_sel, 3);
 			if(music_sel < SEL_QUIT) {
 				music_sel++;
@@ -292,7 +292,7 @@ controls:
 			}
 			draw_track(music_sel, 15);
 		}
-		if(input & INPUT_SHOT || input & INPUT_OK) {
+		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			if(music_sel != SEL_QUIT) {
 				char midi_active = snd_midi_active;
 
@@ -311,17 +311,17 @@ controls:
 				break;
 			}
 		}
-		if(input & INPUT_CANCEL) {
+		if(key_det & INPUT_CANCEL) {
 			break;
 		}
-		if(!input) {
+		if(!key_det) {
 			music_flip();
 			goto controls;
 		}
 	} while(1);
 	while(1) {
 		input_sense();
-		if(input) {
+		if(key_det) {
 			music_flip();
 		} else {
 			break;

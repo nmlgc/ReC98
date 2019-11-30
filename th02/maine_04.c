@@ -170,7 +170,7 @@ void pascal score_enter(void)
 
 	col = 0;
 	row = 0;
-	input = 0;
+	key_det = 0;
 	input_locked = 1;
 	input_delay = 0;
 
@@ -180,19 +180,19 @@ void pascal score_enter(void)
 		alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
 
 	// Otherwise, this leads to more levels of indentation than I would like.
-	#define INPUTS if(input & INPUT_UP) { \
+	#define INPUTS if(key_det & INPUT_UP) { \
 		ALPHABET_CURSOR_MOVE(row, ROWS, DEC); \
 	} \
-	if(input & INPUT_DOWN) { \
+	if(key_det & INPUT_DOWN) { \
 		ALPHABET_CURSOR_MOVE(row, ROWS, INC); \
 	} \
-	if(input & INPUT_LEFT) { \
+	if(key_det & INPUT_LEFT) { \
 		ALPHABET_CURSOR_MOVE(col, COLS, DEC); \
 	} \
-	if(input & INPUT_RIGHT) { \
+	if(key_det & INPUT_RIGHT) { \
 		ALPHABET_CURSOR_MOVE(col, COLS, INC); \
 	} \
-	if(input & INPUT_SHOT || input & INPUT_OK) { \
+	if(key_det & INPUT_SHOT || key_det & INPUT_OK) { \
 		/* Yeah, it sucks that ZUN checks against the indices into the
 		 * alphabet structure rather than against the gaiji values. */ \
 		if(row != 2 || col < 13) { \
@@ -217,12 +217,12 @@ void pascal score_enter(void)
 		} \
 		score_name_puts(place, name_pos); \
 	} \
-	if(input & INPUT_BOMB) { \
+	if(key_det & INPUT_BOMB) { \
 		hi.score.g_name[place][name_pos] = gb_SP; \
 		CLAMP_DEC(name_pos, 0); \
 		score_name_puts(place, name_pos); \
 	} \
-	if(input & INPUT_CANCEL) { \
+	if(key_det & INPUT_CANCEL) { \
 		break; \
 	}
 
@@ -232,7 +232,7 @@ void pascal score_enter(void)
 			INPUTS;
 		}
 		frame_delay(1);
-		input_locked = input;
+		input_locked = key_det;
 		if(input_locked) {
 			input_delay++;
 			if(input_delay > 30 && (input_delay & 1) == 0) {

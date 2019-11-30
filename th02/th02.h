@@ -154,7 +154,7 @@ typedef enum {
 	INPUT_DOWN_RIGHT = 0x8000
 } input_t;
 
-extern input_t input;
+extern input_t key_det; /* ZUN symbol [MAGNet2010] */
 
 void input_sense(void);
 

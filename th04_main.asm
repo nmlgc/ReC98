@@ -349,7 +349,7 @@ sub_AB88	proc near
 loc_AB9E:
 		call	_input_sense
 		call	fp_23D90
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_ABBA
 		call	main_01:sub_B2CF
 		or	ax, ax
@@ -1023,7 +1023,7 @@ loc_B2D7:
 		call	main_01:far ptr	_input_reset_sense
 
 loc_B2DC:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_B2D7
 		call	gaiji_putsa pascal, (26 shl 16) + 12, ds, offset gsCHUUDAN, TX_YELLOW
 		call	gaiji_putsa pascal, (26 shl 16) + 14, ds, offset gsSAIKAI, TX_WHITE + TX_UNDERLINE
@@ -1032,9 +1032,9 @@ loc_B2DC:
 loc_B319:
 		push	0
 		call	_input_wait_for_change
-		test	_input.lo, low INPUT_UP
+		test	_key_det.lo, low INPUT_UP
 		jnz	short loc_B32E
-		test	_input.lo, low INPUT_DOWN
+		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B37E
 
 loc_B32E:
@@ -1062,23 +1062,23 @@ loc_B379:
 		call	gaiji_putsa
 
 loc_B37E:
-		test	_input.hi, high INPUT_Q
+		test	_key_det.hi, high INPUT_Q
 		jz	short loc_B38A
 		mov	ax, 1
 		jmp	short loc_B3EB
 ; ---------------------------------------------------------------------------
 
 loc_B38A:
-		test	_input.hi, high INPUT_CANCEL
+		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_B395
 		xor	si, si
 		jmp	short loc_B3AC
 ; ---------------------------------------------------------------------------
 
 loc_B395:
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jnz	short loc_B3AC
-		test	_input.hi, high INPUT_OK
+		test	_key_det.hi, high INPUT_OK
 		jz	loc_B319
 		jmp	short loc_B3AC
 ; ---------------------------------------------------------------------------
@@ -1087,7 +1087,7 @@ loc_B3A7:
 		call	main_01:far ptr	_input_reset_sense
 
 loc_B3AC:
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_B3A7
 		call	text_putsa pascal, (26 shl 16) + 12, ds, offset asc_2151E, TX_WHITE
 		call	text_putsa pascal, (26 shl 16) + 14, ds, offset asc_21523, TX_WHITE
@@ -1137,19 +1137,19 @@ public DEMOPLAY
 DemoPlay	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short @@demo_end
 		les	bx, _DemoBuf
 		add	bx, frame
 		mov	al, es:[bx]
 		mov	ah, 0
-		mov	_input, ax
+		mov	_key_det, ax
 		mov	ax, frame
 		add	ax, DEMO_N
 		mov	bx, word ptr _DemoBuf
 		add	bx, ax
 		mov	al, es:[bx]
-		mov	_input_focus, al
+		mov	_shiftkey, al
 		cmp	frame, DEMO_N - 4
 		jb	short @@demo_not_end
 
@@ -4722,7 +4722,7 @@ loc_D684:
 		push	TX_WHITE
 		call	text_putsa
 		add	word_255D0, 10h
-		cmp	_input, INPUT_NONE
+		cmp	_key_det, INPUT_NONE
 		jnz	short loc_D6D2
 		push	2
 		jmp	short loc_D6DC
@@ -6699,7 +6699,7 @@ loc_E703:
 		call	_input_sense
 		or	si, si
 		jnz	short loc_E783
-		mov	si, _input
+		mov	si, _key_det
 		test	si, 1
 		jnz	short loc_E71C
 		test	si, 2
@@ -6760,7 +6760,7 @@ loc_E775:
 ; ---------------------------------------------------------------------------
 
 loc_E783:
-		mov	si, _input
+		mov	si, _key_det
 
 loc_E787:
 		call	main_01:far ptr	_input_reset_sense
@@ -11016,7 +11016,7 @@ loc_10B11:
 		jnz	loc_10BBD
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	ax, _input
+		mov	ax, _key_det
 		and	ax, INPUT_MOVEMENT
 		mov	si, ax
 		mov	[bp+var_1], 1
@@ -11038,7 +11038,7 @@ loc_10B32:
 ; ---------------------------------------------------------------------------
 
 loc_10B58:
-		cmp	_input_focus, 0
+		cmp	_shiftkey, 0
 		jz	short loc_10B75
 		mov	ax, _player_pos.velocity.x
 		cwd
@@ -11058,7 +11058,7 @@ loc_10B75:
 		mov	word_2598C, si
 
 loc_10B82:
-		test	_input.lo, low INPUT_SHOT
+		test	_key_det.lo, low INPUT_SHOT
 		jz	short loc_10B97
 		cmp	_shot_time, 1
 		ja	short loc_10B97
@@ -11094,7 +11094,7 @@ loc_10BC7:
 		sub	_player_option_pos_cur.x, ax
 		mov	ax, _player_pos.velocity.y
 		sub	_player_option_pos_cur.y, ax
-		test	_input.lo, low INPUT_BOMB
+		test	_key_det.lo, low INPUT_BOMB
 		jz	short loc_10BF0
 		call	fp_256AA
 
