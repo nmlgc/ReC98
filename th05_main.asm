@@ -1175,8 +1175,7 @@ loc_B645:
 		call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
 
 loc_B682:
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		test	_key_det.lo, low INPUT_UP
 		jnz	short loc_B697
 		test	_key_det.lo, low INPUT_DOWN
@@ -7813,8 +7812,7 @@ loc_F227:
 		inc	word ptr dword_2C930
 		cmp	[bp+var_1], 0FFh
 		jnz	short loc_F249
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		jmp	short loc_F2AB
 ; ---------------------------------------------------------------------------
 
@@ -8542,8 +8540,7 @@ loc_FA18:
 		cmp	[bp+var_2], 14h
 		jl	short loc_F9EB
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		call	sub_118D1
 		call	sub_FAA3
 		mov	ah, 0

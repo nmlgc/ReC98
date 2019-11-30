@@ -57,6 +57,13 @@ typedef struct {
 #define RES_PARASIZE ((sizeof(resident_t) + 0xF) >> 4)
 // ------
 
+typedef union {
+	struct {
+		char lo, hi;
+	} byte;
+	int v;
+} twobyte_t;
+
 /// Typedefs
 /// --------
 // Generic callback function types. Note the difference between function

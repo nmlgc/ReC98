@@ -310,7 +310,7 @@ loc_977E:
 		call	p2_202A8
 		call	p2_202B0
 		nopcall	sub_CEB2
-		call	_input_mode_func
+		call	_input_mode
 		mov	byte ptr word_23AF0, 0
 		push	_input_mp_p1
 		push	65A6h
@@ -784,7 +784,7 @@ loc_9CD0:
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+39h], 0
 		jz	short loc_9CF0
-		setfarfp	_input_mode_func, _input_mode_attract
+		setfarfp	_input_mode, input_mode_attract
 		jmp	loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -794,7 +794,7 @@ loc_9CF0:
 		jz	short loc_9D10
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D10
-		setfarfp	_input_mode_func, _input_mode_cpu_vs_cpu
+		setfarfp	_input_mode, input_mode_cpu_vs_cpu
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -802,7 +802,7 @@ loc_9D10:
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+0Fh], 0
 		jz	short loc_9D29
-		setfarfp	_input_mode_func, _input_mode_1p_vs_cpu
+		setfarfp	_input_mode, input_mode_1p_vs_cpu
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -810,7 +810,7 @@ loc_9D29:
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+0Eh], 0
 		jz	short loc_9D42
-		setfarfp	_input_mode_func, _input_mode_cpu_vs_1p
+		setfarfp	_input_mode, input_mode_cpu_vs_1p
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -818,7 +818,7 @@ loc_9D42:
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+16h], 0
 		jnz	short loc_9D5B
-		setfarfp	_input_mode_func, _input_mode_key_vs_key
+		setfarfp	_input_mode, input_mode_key_vs_key
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
@@ -826,12 +826,12 @@ loc_9D5B:
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+16h], 1
 		jnz	short loc_9D74
-		setfarfp	_input_mode_func, _input_mode_joy_vs_key
+		setfarfp	_input_mode, input_mode_joy_vs_key
 		jmp	short loc_9D80
 ; ---------------------------------------------------------------------------
 
 loc_9D74:
-		setfarfp	_input_mode_func, _input_mode_key_vs_joy
+		setfarfp	_input_mode, input_mode_key_vs_joy
 
 loc_9D80:
 		xor	si, si
@@ -36896,7 +36896,7 @@ byte_1E14C	db 0
 
 	.data?
 
-_input_mode_func	dd ?
+include th03/hardware/input_modes[bss].asm
 include th03/demo[bss].asm
 word_1E6E8	dw ?
 fp_1E6EA	dw ?

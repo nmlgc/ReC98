@@ -2095,8 +2095,7 @@ loc_B7EB:
 		mov	[bp+var_2], 2
 
 loc_B80E:
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	1
 		call	frame_delay
 		test	_key_det.hi, high INPUT_OK
@@ -2213,8 +2212,7 @@ loc_B908:
 		mov	[bp+var_2], 1
 
 loc_B92B:
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	1
 		call	frame_delay
 		test	_key_det.hi, high INPUT_OK

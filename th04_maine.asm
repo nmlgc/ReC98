@@ -302,8 +302,7 @@ loc_A187:
 		call	graph_copy_page
 		push	1
 		call	palette_black_in
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	4
 		call	palette_black_out
 
@@ -335,8 +334,7 @@ loc_A1FE:
 		call	graph_copy_page
 		push	1
 		call	palette_black_in
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	4
 		call	palette_black_out
 		jmp	short loc_A27E
@@ -943,8 +941,7 @@ sub_A73B	proc near
 		call	sub_A815
 		cmp	byte_1247E, 0
 		jnz	short loc_A76F
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 
 loc_A76F:
 		mov	word_124BC, 50h	; 'P'
@@ -1121,8 +1118,7 @@ loc_A88F:
 		call	sub_A64D
 		cmp	byte_1247E, 0
 		jnz	short loc_A8C4
-		push	[bp+var_2]
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, [bp+var_2]
 		jmp	short loc_A8C4
 ; ---------------------------------------------------------------------------
 
@@ -1396,8 +1392,7 @@ loc_AB26:
 		call	sub_A64D
 		cmp	byte_1247E, 0
 		jnz	loc_ADB5	; default
-		push	[bp+var_2]
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, [bp+var_2]
 		jmp	loc_AD2B
 ; ---------------------------------------------------------------------------
 
@@ -3523,8 +3518,7 @@ loc_C0AE:
 
 loc_C0CB:
 		call	far ptr	loc_D1FC
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	2
 		call	palette_black_out
 		pop	si
@@ -4972,8 +4966,7 @@ loc_CB7A:
 
 loc_CB7F:
 		call	sub_C316
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 
 loc_CB89:
 		call	super_free

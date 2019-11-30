@@ -4213,8 +4213,7 @@ loc_C5BE:
 
 loc_C5C3:
 		call	sub_B6A3
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 
 loc_C5CD:
 		call	sub_EC04
@@ -5513,8 +5512,7 @@ sub_D1B1	proc near
 		push	40h
 		call	frame_delay
 		call	sub_D16F
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		push	2
 		call	palette_black_out
 		pop	bp

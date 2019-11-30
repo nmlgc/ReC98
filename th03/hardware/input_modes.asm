@@ -1,7 +1,5 @@
-; Merges the inputs for the P1 multi-player keys into the single-player state
-; after sensing.
-; void input_mode_interface();
-_input_mode_interface	proc far
+public INPUT_MODE_INTERFACE
+input_mode_interface	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -16,22 +14,21 @@ _input_mode_interface	proc far
 	or	_input_sp, ax
 	pop	bp
 	retf
-_input_mode_interface	endp
+input_mode_interface	endp
 
 
-; Completely ignores joystick input.
-; void input_mode_key_vs_key();
-_input_mode_key_vs_key	proc far
+public INPUT_MODE_KEY_VS_KEY
+input_mode_key_vs_key	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
 	pop	bp
 	retf
-_input_mode_key_vs_key	endp
+input_mode_key_vs_key	endp
 
 
-; void input_mode_joy_vs_key();
-_input_mode_joy_vs_key	proc far
+public INPUT_MODE_JOY_VS_KEY
+input_mode_joy_vs_key	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -46,11 +43,11 @@ _input_mode_joy_vs_key	proc far
 loc_EDA2:
 	pop	bp
 	retf
-_input_mode_joy_vs_key	endp
+input_mode_joy_vs_key	endp
 
 
-; void input_mode_key_vs_joy();
-_input_mode_key_vs_joy	proc far
+public INPUT_MODE_KEY_VS_JOY
+input_mode_key_vs_joy	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -65,11 +62,11 @@ _input_mode_key_vs_joy	proc far
 @@nojoy:
 	pop	bp
 	retf
-_input_mode_key_vs_joy	endp
+input_mode_key_vs_joy	endp
 
 
-; void input_mode_1p_vs_cpu();
-_input_mode_1p_vs_cpu	proc far
+public INPUT_MODE_1P_VS_CPU
+input_mode_1p_vs_cpu	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -85,11 +82,11 @@ _input_mode_1p_vs_cpu	proc far
 	mov	_input_mp_p2, INPUT_NONE
 	pop	bp
 	retf
-_input_mode_1p_vs_cpu	endp
+input_mode_1p_vs_cpu	endp
 
 
-; void input_mode_cpu_vs_1p();
-_input_mode_cpu_vs_1p	proc far
+public INPUT_MODE_CPU_VS_1P
+input_mode_cpu_vs_1p	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -106,13 +103,11 @@ loc_EE15:
 	mov	_input_mp_p1, INPUT_NONE
 	pop	bp
 	retf
-_input_mode_cpu_vs_1p	endp
+input_mode_cpu_vs_1p	endp
 
 
-; Just allows quitting via the OK or CANCEL, both of which are mapped to
-; INPUT_CANCEL.
-; void input_mode_cpu_vs_cpu();
-_input_mode_cpu_vs_cpu	proc far
+public INPUT_MODE_CPU_VS_CPU
+input_mode_cpu_vs_cpu	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -129,12 +124,11 @@ _input_mode_cpu_vs_cpu	proc far
 	mov	_input_mp_p2, INPUT_NONE
 	pop	bp
 	retf
-_input_mode_cpu_vs_cpu	endp
+input_mode_cpu_vs_cpu	endp
 
 
-; Just allows quitting via pressing any button.
-; void input_mode_attract();
-_input_mode_attract	proc far
+public INPUT_MODE_ATTRACT
+input_mode_attract	proc far
 	push	bp
 	mov	bp, sp
 	nopcall	_input_reset_sense_key_held
@@ -151,4 +145,4 @@ _input_mode_attract	proc far
 	mov	_input_mp_p2, INPUT_NONE
 	pop	bp
 	retf
-_input_mode_attract	endp
+input_mode_attract	endp

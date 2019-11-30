@@ -15,20 +15,13 @@ else
 	endm
 endif
 
-; Resets, updates, and (for TH05) returns the global input state.
-;
-; TH04: void input_reset_sense();
-; TH05:  int input_reset_sense();
+public _input_reset_sense
 _input_reset_sense	label proc
 	xor	ax, ax
 	mov	_key_det, ax
 	mov	js_stat, ax
 
-; Updates the global input state with the current keyboard and joystick state,
-; and (for TH05) returns the new one.
-;
-; TH04: void input_sense();
-; TH05:  int input_sense();
+public _input_sense
 _input_sense	proc far
 	xor	ax, ax
 	mov	es, ax

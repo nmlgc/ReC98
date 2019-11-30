@@ -1030,8 +1030,7 @@ loc_B2DC:
 		call	gaiji_putsa pascal, (26 shl 16) + 15, ds, offset gsSHUURYOU, TX_YELLOW
 
 loc_B319:
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		test	_key_det.lo, low INPUT_UP
 		jnz	short loc_B32E
 		test	_key_det.lo, low INPUT_DOWN
@@ -4325,8 +4324,7 @@ loc_D337:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	main_01:sub_D0CA
-		push	[bp+var_2]
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, [bp+var_2]
 		jmp	loc_D478
 ; ---------------------------------------------------------------------------
 
@@ -4532,8 +4530,7 @@ loc_D516:
 ; ---------------------------------------------------------------------------
 
 loc_D51D:
-		push	0		; jumptable 0000D1EC case 36
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0		; jumptable 0000D1EC case 36
 
 loc_D524:
 		mov	al, 0FFh	; jumptable 0000D1EC case 35
@@ -6606,8 +6603,7 @@ loc_E5EF:
 		cmp	[bp+var_2], 14h
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		call	main_01:sub_10D4B
 		call	main_01:sub_E67A
 		mov	ah, 0

@@ -386,7 +386,7 @@ loc_97FC:
 		call	sub_990C
 
 loc_9868:
-		call	_input_mode_interface
+		call	input_mode_interface
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_987D
 		push	1
@@ -786,7 +786,7 @@ loc_9C42:
 ; ---------------------------------------------------------------------------
 
 loc_9C4B:
-		call	_input_mode_interface
+		call	input_mode_interface
 
 loc_9C50:
 		cmp	vsync_Count1, 60h
@@ -1169,7 +1169,7 @@ loc_9FC8:
 		call	palette_black_in
 
 loc_A00B:
-		call	_input_mode_interface
+		call	input_mode_interface
 		test	_input_sp.lo, low INPUT_LEFT
 		jnz	short loc_A01E
 		test	_input_sp.lo, low INPUT_RIGHT
@@ -1856,8 +1856,7 @@ sub_A5FC	proc near
 		jl	short loc_A64B
 		cmp	byte_105CE, 0
 		jnz	short loc_A62D
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 
 loc_A62D:
 		mov	word_105D0, 50h	; 'P'
@@ -1929,8 +1928,7 @@ loc_A695:
 		call	sub_A50A
 		cmp	byte_105CE, 0
 		jnz	short loc_A6C8
-		push	[bp+var_2]
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, [bp+var_2]
 		jmp	short loc_A6C8
 ; ---------------------------------------------------------------------------
 
@@ -2252,8 +2250,7 @@ loc_A997:
 		call	sub_A50A
 		cmp	byte_105CE, 0
 		jnz	loc_AC1E	; default
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2565,7 +2562,7 @@ var_1		= byte ptr -1
 		mov	byte_105CE, 0
 
 loc_ACA3:
-		call	_input_mode_interface
+		call	input_mode_interface
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_ACB6
 		mov	byte_105CE, 1
@@ -3680,7 +3677,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_B4A8:
-		call	_input_mode_interface
+		call	input_mode_interface
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_B4F2
 		cmp	[bp+var_A], 0
@@ -4155,8 +4152,7 @@ loc_B835:
 		call	sub_B429
 
 loc_B858:
-		push	0
-		call	_input_wait_for_change
+		call	input_wait_for_change pascal, 0
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+36h], 0
 		jz	short loc_B871
@@ -5553,7 +5549,7 @@ loc_C735:
 		xor	di, di
 
 loc_C781:
-		call	_input_mode_interface
+		call	input_mode_interface
 		call	sub_BB51
 		call	sub_BCD5
 		inc	word_10BB2
@@ -6037,7 +6033,7 @@ loc_D450:
 		int	61h		; reserved for user interrupt
 
 loc_D455:
-		nopcall	_input_mode_interface
+		nopcall	input_mode_interface
 		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D468
 		test	_input_sp.hi, high INPUT_OK
@@ -6071,7 +6067,7 @@ arg_0		= word ptr  6
 		mov	vsync_Count1, 0
 
 loc_D483:
-		nopcall	_input_mode_interface
+		nopcall	input_mode_interface
 		test	_input_sp.lo, low INPUT_SHOT
 		jnz	short loc_D496
 		test	_input_sp.hi, high INPUT_OK

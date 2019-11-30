@@ -4,7 +4,7 @@
 ; being pressed. See the HOLDKEY example in the Research/ subdirectory for
 ; more explanation and sample code showing off this effect.
 ;
-; int input_reset_sense_held();
+public _input_reset_sense_held
 _input_reset_sense_held	proc far
 	call	_input_reset_sense
 	mov	cx, 1024

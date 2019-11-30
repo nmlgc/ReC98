@@ -1,8 +1,5 @@
-; Waits ≥1 frames for all held inputs to be released, then waits the given
-; number of [frames] for an input to be pressed. Set [frames] to 0 or 9999
-; to wait forever.
-; void pascal input_wait_for_change(int frames);
-_input_wait_for_change	proc far
+public INPUT_WAIT_FOR_CHANGE
+input_wait_for_change	proc far
 @@frames		= word ptr  6
 
 	push	bp
@@ -47,4 +44,4 @@ _input_wait_for_change	proc far
 	pop	si
 	pop	bp
 	retf	2
-_input_wait_for_change	endp
+input_wait_for_change	endp
