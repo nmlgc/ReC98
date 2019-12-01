@@ -1,6 +1,8 @@
 // Fixed-point format for expressing world-space coordinates, with 4 bits of
 // fractional resolution.
 
+#pragma once
+
 typedef int subpixel_t;
 
 inline subpixel_t to_sp(float screen_v) {
