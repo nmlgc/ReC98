@@ -8,3 +8,5 @@ void pascal zunsoft_pyro_new(Point screen_origin, int n, char patnum_base);
 
 void pascal zunsoft_update_and_render(void);
 void pascal zunsoft_palette_update_and_show(int tone);
+
+void pascal zunsoft(void);
