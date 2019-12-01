@@ -848,8 +848,8 @@ loc_9D85:
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_2], ax
-		imul	ax, 5
-		add	ax, 108h
+		imul	ax, size playchar_speeds_t
+		add	ax, offset _PLAYCHAR_SPEEDS
 		mov	[bp+var_8], ax
 		mov	ax, si
 		shl	ax, 7
@@ -35752,56 +35752,7 @@ main_11_TEXT	ends
 		db    3
 		db 0BCh
 		db    2
-		db  40h
-		db  40h
-		db  30h	; 0
-		db  30h	; 0
-		db  20h
-		db  48h	; H
-		db  48h	; H
-		db  36h	; 6
-		db  36h	; 6
-		db  14h
-		db  40h
-		db  40h
-		db  30h	; 0
-		db  30h	; 0
-		db  1Ch
-		db  34h	; 4
-		db  34h	; 4
-		db  2Eh	; .
-		db  2Eh	; .
-		db  0Eh
-		db  44h	; D
-		db  44h	; D
-		db  34h	; 4
-		db  34h	; 4
-		db  1Ch
-		db  38h	; 8
-		db  38h	; 8
-		db  2Ch	; ,
-		db  2Ch	; ,
-		db  20h
-		db  48h	; H
-		db  48h	; H
-		db  36h	; 6
-		db  36h	; 6
-		db  10h
-		db  50h	; P
-		db  50h	; P
-		db  40h
-		db  40h
-		db  1Ch
-		db  50h	; P
-		db  50h	; P
-		db  40h
-		db  40h
-		db  14h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/chars/speeds[data].asm
 aCOul		db '–²Žž‹ó2.dat',0
 aGameft_bft	db 'GAMEFT.bft',0
 aOp		db 'op',0
