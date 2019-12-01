@@ -875,7 +875,7 @@ loc_9D85:
 		mov	al, [bx]
 		mov	[di+17h], al
 		mov	bx, [bp+var_2]
-		cmp	bx, 8
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_9E23
 		add	bx, bx
 		jmp	cs:off_9E99[bx]
