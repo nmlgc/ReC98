@@ -1045,12 +1045,12 @@ loc_9F1D:
 
 loc_9F26:
 		mov	bx, di
-		imul	bx, 0Eh
-		mov	byte ptr [bx+66A6h], 0
+		imul	bx, size shotpair_t
+		mov	_shotpairs[bx].flag, 0
 		inc	di
 
 loc_9F31:
-		cmp	di, 20h	; ' '
+		cmp	di, SHOTPAIR_COUNT
 		jl	short loc_9F26
 		call	sub_14A76
 		call	sub_153BB
@@ -8561,18 +8561,18 @@ sub_E313	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 66A6h
+		mov	si, offset _shotpairs
 		xor	ax, ax
 		jmp	short loc_E326
 ; ---------------------------------------------------------------------------
 
 loc_E31F:
-		mov	byte ptr [si], 0
+		mov	[si+shotpair_t.flag], 0
 		inc	ax
-		add	si, 0Eh
+		add	si, size shotpair_t
 
 loc_E326:
-		cmp	ax, 20h	; ' '
+		cmp	ax, SHOTPAIR_COUNT
 		jl	short loc_E31F
 		mov	di, 3ED6h
 		xor	ax, ax
@@ -8957,9 +8957,9 @@ sub_E3F2	endp
 sub_E737	proc near
 
 var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -6
+@@left		= word ptr -4
+@@i		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -8970,14 +8970,14 @@ var_2		= word ptr -2
 		add	ax, 65A6h
 		mov	si, ax
 		mov	ax, [si+2]
-		mov	[bp+var_6], ax
+		mov	[bp+@@top], ax
 		cmp	byte ptr [si+0Dh], 0
 		jz	loc_E83B
 		cmp	byte ptr [si+0Dh], 3
 		jnz	short loc_E76D
 		mov	ax, [si]
-		add	ax, 0FC00h
-		mov	[bp+var_4], ax
+		add	ax, (-64 shl 4)
+		mov	[bp+@@left], ax
 		mov	[bp+var_8], 0
 		jmp	short loc_E7C0
 ; ---------------------------------------------------------------------------
@@ -8986,8 +8986,8 @@ loc_E76D:
 		cmp	byte ptr [si+0Dh], 2
 		jnz	short loc_E782
 		mov	ax, [si]
-		add	ax, 0FE00h
-		mov	[bp+var_4], ax
+		add	ax, (-32 shl 4)
+		mov	[bp+@@left], ax
 		mov	[bp+var_8], 2
 		jmp	short loc_E7C0
 ; ---------------------------------------------------------------------------
@@ -8998,50 +8998,50 @@ loc_E782:
 		cmp	byte ptr [si+0Dh], 4
 		jnz	short loc_E7C0
 		mov	ax, [si]
-		add	ax, 0FE80h
-		mov	[bp+var_4], ax
-		sub	[bp+var_6], 10h
+		add	ax, (-24 shl 4)
+		mov	[bp+@@left], ax
+		sub	[bp+@@top], (1 shl 4)
 		push	ax
-		push	[bp+var_6]
+		push	[bp+@@top]
 		call	sub_14B0A
-		add	[bp+var_4], 300h
-		push	[bp+var_4]
-		push	[bp+var_6]
+		add	[bp+@@left], (48 shl 4)
+		push	[bp+@@left]
+		push	[bp+@@top]
 		call	sub_14B0A
 
 loc_E7B3:
 		mov	ax, [si]
-		add	ax, 0FF00h
-		mov	[bp+var_4], ax
+		add	ax, (-16 shl 4)
+		mov	[bp+@@left], ax
 		mov	[bp+var_8], 3
 
 loc_E7C0:
-		mov	di, 66A6h
+		mov	di, offset _shotpairs
 		call	snd_se_play pascal, 1
 		jmp	short loc_E7D4
 ; ---------------------------------------------------------------------------
 
 loc_E7CC:
-		add	[bp+var_4], 200h
+		add	[bp+@@left], (32 shl 4)
 		inc	[bp+var_8]
 
 loc_E7D4:
-		cmp	[bp+var_4], 0FE00h
+		cmp	[bp+@@left], (-32 shl 4)
 		jle	short loc_E7CC
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_E835
 ; ---------------------------------------------------------------------------
 
 loc_E7E2:
-		cmp	byte ptr [di], 0
+		cmp	[di+shotpair_t.flag], 0
 		jnz	short loc_E82F
-		mov	byte ptr [di], 1
-		mov	byte ptr [di+1], 0
-		mov	ax, [bp+var_4]
-		mov	[di+2],	ax
-		mov	ax, [bp+var_6]
-		mov	[di+4],	ax
-		mov	word ptr [di+6], 0FF40h
+		mov	[di+shotpair_t.flag], 1
+		mov	[di+shotpair_t.unused_1], 0
+		mov	ax, [bp+@@left]
+		mov	[di+shotpair_t.topleft.x], ax
+		mov	ax, [bp+@@top]
+		mov	[di+shotpair_t.topleft.y], ax
+		mov	[di+shotpair_t.velocity_y], SHOT_VELOCITY
 		cmp	byte ptr word_23AF0, 0
 		jnz	short loc_E80A
 		xor	ax, ax
@@ -9049,26 +9049,26 @@ loc_E7E2:
 ; ---------------------------------------------------------------------------
 
 loc_E80A:
-		mov	ax, 28h	; '('
+		mov	ax, SHOT_SO_PID
 
 loc_E80D:
-		mov	[di+8],	ax
-		mov	byte ptr [di+0Ah], 0
+		mov	[di+shotpair_t.so_pid],	ax
+		mov	[di+shotpair_t.so_anim], 0
 		mov	al, byte ptr word_23AF0
-		mov	[di+0Ch], al
+		mov	[di+shotpair_t.pid], al
 		inc	[bp+var_8]
 		cmp	[bp+var_8], 4
 		jge	short loc_E83B
-		add	[bp+var_4], 200h
-		cmp	[bp+var_4], 1200h
+		add	[bp+@@left], (32 shl 4)
+		cmp	[bp+@@left], (PLAYFIELD_W shl 4)
 		jge	short loc_E83B
 
 loc_E82F:
-		inc	[bp+var_2]
-		add	di, 0Eh
+		inc	[bp+@@i]
+		add	di, size shotpair_t
 
 loc_E835:
-		cmp	[bp+var_2], 20h	; ' '
+		cmp	[bp+@@i], SHOTPAIR_COUNT
 		jl	short loc_E7E2
 
 loc_E83B:
@@ -9087,26 +9087,26 @@ sub_E83F	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 66A6h
+		mov	si, offset _shotpairs
 		xor	dx, dx
 		jmp	short loc_E862
 ; ---------------------------------------------------------------------------
 
 loc_E84A:
-		cmp	byte ptr [si], 0
+		cmp	[si+shotpair_t.flag], 0
 		jz	short loc_E85E
-		mov	ax, [si+6]
-		add	[si+4],	ax
-		cmp	word ptr [si+4], 0FFF0h
+		mov	ax, [si+shotpair_t.velocity_y]
+		add	[si+shotpair_t.topleft.y], ax
+		cmp	[si+shotpair_t.topleft.y], -16
 		jg	short loc_E85E
-		mov	byte ptr [si], 0
+		mov	[si+shotpair_t.flag], 0
 
 loc_E85E:
 		inc	dx
-		add	si, 0Eh
+		add	si, size shotpair_t
 
 loc_E862:
-		cmp	dx, 20h	; ' '
+		cmp	dx, SHOTPAIR_COUNT
 		jl	short loc_E84A
 		pop	si
 		pop	bp
@@ -9127,9 +9127,9 @@ sub_E86A	proc near
 		enter	6, 0
 		push	si
 		push	di
-		mov	si, 66A6h
-		mov	_sprite16_put_w, (16 / 16)
-		mov	_sprite16_put_h, 8
+		mov	si, offset _shotpairs
+		mov	_sprite16_put_w, (SHOT_W / 16)
+		mov	_sprite16_put_h, SHOT_VRAM_H
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		xor	di, di
@@ -9137,39 +9137,39 @@ sub_E86A	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E88E:
-		cmp	byte ptr [si], 0
+		cmp	[si+shotpair_t.flag], 0
 		jz	short loc_E8EB
-		mov	al, [si+0Ah]
+		mov	al, [si+shotpair_t.so_anim]
 		mov	ah, 0
-		add	ax, [si+8]
+		add	ax, [si+shotpair_t.so_pid]
 		mov	[bp+@@sprite_offset], ax
-		push	word ptr [si+2]
-		mov	al, [si+0Ch]
+		push	[si+shotpair_t.topleft.x]
+		mov	al, [si+shotpair_t.pid]
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
 		mov	[bp+@@left], ax
-		mov	ax, [si+4]
+		mov	ax, [si+shotpair_t.topleft.y]
 		sar	ax, 4
-		add	ax, 16
+		add	ax, PLAYFIELD_Y
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
 		mov	ax, [bp+@@left]
-		add	ax, 16
+		add	ax, SHOTPAIR_DISTANCE
 		call	sprite16_put pascal, ax, [bp+@@top], [bp+@@sprite_offset]
-		mov	al, [si+0Ah]
-		add	al, 2
-		mov	[si+0Ah], al
-		cmp	byte ptr [si+0Ah], 8
+		mov	al, [si+shotpair_t.so_anim]
+		add	al, SHOT_VRAM_W
+		mov	[si+shotpair_t.so_anim], al
+		cmp	[si+shotpair_t.so_anim], SHOT_SPRITE_COUNT * SHOT_VRAM_W
 		jb	short loc_E8EB
-		mov	byte ptr [si+0Ah], 0
+		mov	[si+shotpair_t.so_anim], 0
 
 loc_E8EB:
 		inc	di
-		add	si, 0Eh
+		add	si, size shotpair_t
 
 loc_E8EF:
-		cmp	di, 20h	; ' '
+		cmp	di, SHOTPAIR_COUNT
 		jl	short loc_E88E
 		pop	di
 		pop	si
@@ -21460,7 +21460,7 @@ loc_1590F:
 
 loc_15914:
 		mov	byte_26356, 0
-		mov	si, 66A6h
+		mov	si, offset _shotpairs
 		mov	ax, word_20E2E
 		add	ax, word_20E32
 		mov	word_20E36, ax
@@ -21479,21 +21479,21 @@ loc_15914:
 ; ---------------------------------------------------------------------------
 
 loc_15950:
-		cmp	byte ptr [si], 1
+		cmp	[si+shotpair_t.flag], 1
 		jnz	short loc_159AC
-		mov	al, [si+0Ch]
+		mov	al, [si+shotpair_t.pid]
 		cmp	al, byte ptr word_20E3A
 		jnz	short loc_159AC
-		mov	ax, [si+2]
-		add	ax, 100h
+		mov	ax, [si+shotpair_t.topleft.x]
+		add	ax, (16 shl 4)
 		mov	di, ax
-		mov	ax, [si+4]
-		add	ax, 80h
+		mov	ax, [si+shotpair_t.topleft.y]
+		add	ax, (8 shl 4)
 		mov	[bp+var_4], ax
-		lea	ax, [di-100h]
+		lea	ax, [di-(16 shl 4)]
 		cmp	ax, word_20E36
 		jg	short loc_159AC
-		lea	ax, [di+100h]
+		lea	ax, [di+(16 shl 4)]
 		cmp	ax, word_20E2E
 		jl	short loc_159AC
 		mov	ax, [bp+var_4]
@@ -21501,7 +21501,7 @@ loc_15950:
 		jl	short loc_159AC
 		cmp	ax, word_20E38
 		jg	short loc_159AC
-		mov	byte ptr [si], 0
+		mov	[si+shotpair_t.flag], 0
 		mov	al, [bp+var_5]
 		add	al, 2
 		mov	[bp+var_5], al
@@ -21514,10 +21514,10 @@ loc_15950:
 
 loc_159AC:
 		inc	[bp+var_2]
-		add	si, 0Eh
+		add	si, size shotpair_t
 
 loc_159B2:
-		cmp	[bp+var_2], 20h	; ' '
+		cmp	[bp+var_2], SHOTPAIR_COUNT
 		jl	short loc_15950
 		mov	byte_1FDE1, 0
 		cmp	byte_20E2C, 0
@@ -41623,120 +41623,9 @@ byte_23BF9	db ?
 word_23BFA	dw ?
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 		db    ?	;
 		db    ?	;
+include th03/shots[bss].asm
 byte_23DC6	db ?
 byte_23DC7	db ?
 byte_23DC8	db ?
