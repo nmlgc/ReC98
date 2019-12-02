@@ -1282,43 +1282,25 @@ loc_BE0B:
 		jnz	loc_BEA4
 
 loc_BE23:
-		push	0Eh
-		call	_mdrv2_se_play
-		push	456Ch
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		push	0Eh
-		call	_mdrv2_se_play
-		push	4A7Dh
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		push	0Eh
-		call	_mdrv2_se_play
-		push	217Ah
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		push	0Eh
-		call	_mdrv2_se_play
-		push	704Dh
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		push	0Eh
-		call	_mdrv2_se_play
-		push	305Bh
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		push	0Eh
-		call	_mdrv2_se_play
-		push	4541h
-		call	sub_B961
-		push	8
-		call	_frame_delay
-		add	sp, 18h
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 456Ch	; ìå (JIS CODE)
+		call	_frame_delay pascal, 8
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 4A7Dh	; ï˚ (JIS CODE)
+		call	_frame_delay pascal, 8
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 217Ah	; Åö (JIS CODE)
+		call	_frame_delay pascal, 8
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 704Dh	; ËÀ (JIS CODE)
+		call	_frame_delay pascal, 8
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 305Bh	; àŸ (JIS CODE)
+		call	_frame_delay pascal, 8
+		call	_mdrv2_se_play pascal, 14
+		call	sub_B961 pascal, 4541h	; ì` (JIS CODE)
+		call	_frame_delay pascal, 8
+		add	sp, 18h	; (only sub_B961 actually uses Pascal calling convention!)
 
 loc_BEA4:
 		mov	al, byte_34A34
