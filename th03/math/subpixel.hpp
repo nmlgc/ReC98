@@ -26,6 +26,10 @@ public:
 	void operator =(float screen_v) {
 		v = static_cast<T>(to_sp(screen_v));
 	}
+
+	T to_screen() const {
+		return v >> 4;
+	}
 };
 
 template <class T> struct SPPointBase {

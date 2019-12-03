@@ -2,10 +2,10 @@
 
 | | |
 |-|-|
-| `DX` | First 8-bit variable declared *if no other function is called* |
+| `DX` | First 8-bit variable declared *if no other function is called*<br />Second 16-bit variable declared *if no other function is called* |
 | `[bp-1]` | First 8-bit variable declared *otherwise* |
 | `SI` | First 16-bit variable declared |
-| `DI` | Second 16-bit variable declared |
+| `DI` | Second 16-bit variable declared *if other functions are called* |
 
 Example:
 
@@ -64,10 +64,16 @@ inline optimally though:
 
 ## C++
 
-* Every class method that returns `void` inlines to the ideal representation.
-* Every class method that returns `*this` inlines to the ideal representation
-  *only at the first nesting level*. Example: A class method calling an
-  overloaded operator returning `*this` will generate (needless) instructions
+Class methods inline to their ideal representation if all of these are true:
+
+* returns `void` || (returns `*this` && is at the first nesting level of
+  inlining)
+* takes no parameters || takes only built-in, scalar-type parameters
+
+Examples:
+
+* A class method (first nesting level) calling an overloaded operator (second
+  nesting level) returning `*this` will generate (needless) instructions
   equivalent to `MOV AX, *this`. Thus, any overloaded `=`, `+=`, `-=`, etc.
   operator should always return `void`.
 
@@ -75,8 +81,8 @@ inline optimally though:
   custom types with overloaded assignment operators, with the resulting code
   generation being indistinguishable from equivalent C preprocessor macros.
 
-* Returning *anything else* will first store that result in `AX`, leading any
-  branches at the call site to then refer to `AX`.
+* Returning *anything else* but `void` or `*this` will first store that result
+  in `AX`, leading any branches at the call site to then refer to `AX`.
 
   **Certainty**: Maybe Borland (not Turbo) C++ has an optimization option
   against it?

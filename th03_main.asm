@@ -289,7 +289,7 @@ loc_977E:
 		call	p2_1F332
 		call	p2_205D2
 		call	sub_B7E5
-		call	sub_E83F
+		call	shots_update
 		mov	byte ptr word_1FE88, 0
 		mov	byte ptr word_23AF0, 0
 		call	p1_2028C
@@ -350,7 +350,7 @@ loc_986C:
 		mov	byte ptr word_1FE88, 1
 		mov	byte ptr word_23AF0, 28h ; '('
 		call	p2_1F33A
-		call	sub_E86A
+		call	shots_render
 		call	sub_164DA
 		call	sub_1837C
 		call	sub_B80B
@@ -9078,105 +9078,8 @@ loc_E83B:
 		retn
 sub_E737	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E83F	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, offset _shotpairs
-		xor	dx, dx
-		jmp	short loc_E862
-; ---------------------------------------------------------------------------
-
-loc_E84A:
-		cmp	[si+shotpair_t.flag], 0
-		jz	short loc_E85E
-		mov	ax, [si+shotpair_t.velocity_y]
-		add	[si+shotpair_t.topleft.y], ax
-		cmp	[si+shotpair_t.topleft.y], -16
-		jg	short loc_E85E
-		mov	[si+shotpair_t.flag], 0
-
-loc_E85E:
-		inc	dx
-		add	si, size shotpair_t
-
-loc_E862:
-		cmp	dx, SHOTPAIR_COUNT
-		jl	short loc_E84A
-		pop	si
-		pop	bp
-		retn
-sub_E83F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E86A	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-@@sprite_offset		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	si, offset _shotpairs
-		mov	_sprite16_put_w, (SHOT_W / 16)
-		mov	_sprite16_put_h, SHOT_VRAM_H
-		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
-		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		xor	di, di
-		jmp	short loc_E8EF
-; ---------------------------------------------------------------------------
-
-loc_E88E:
-		cmp	[si+shotpair_t.flag], 0
-		jz	short loc_E8EB
-		mov	al, [si+shotpair_t.so_anim]
-		mov	ah, 0
-		add	ax, [si+shotpair_t.so_pid]
-		mov	[bp+@@sprite_offset], ax
-		push	[si+shotpair_t.topleft.x]
-		mov	al, [si+shotpair_t.pid]
-		mov	ah, 0
-		push	ax
-		nopcall	playfield_fg_x_to_screen
-		mov	[bp+@@left], ax
-		mov	ax, [si+shotpair_t.topleft.y]
-		sar	ax, 4
-		add	ax, PLAYFIELD_Y
-		mov	[bp+@@top], ax
-		call	sprite16_put pascal, [bp+@@left], ax, [bp+@@sprite_offset]
-		mov	ax, [bp+@@left]
-		add	ax, SHOTPAIR_DISTANCE
-		call	sprite16_put pascal, ax, [bp+@@top], [bp+@@sprite_offset]
-		mov	al, [si+shotpair_t.so_anim]
-		add	al, SHOT_VRAM_W
-		mov	[si+shotpair_t.so_anim], al
-		cmp	[si+shotpair_t.so_anim], SHOT_SPRITE_COUNT * SHOT_VRAM_W
-		jb	short loc_E8EB
-		mov	[si+shotpair_t.so_anim], 0
-
-loc_E8EB:
-		inc	di
-		add	si, size shotpair_t
-
-loc_E8EF:
-		cmp	di, SHOTPAIR_COUNT
-		jl	short loc_E88E
-		pop	di
-		pop	si
-		leave
-		retn
-sub_E86A	endp
-
+	SHOTS_UPDATE procdesc pascal near
+	SHOTS_RENDER procdesc pascal near
 main_01_TEXT	ends
 
 ; ===========================================================================

@@ -81,8 +81,8 @@ bin\th03\op.exe: bin\th03\op.obj th03\op_02.c
 $**
 |
 
-bin\th03\main.exe: bin\th03\main.obj th03\sprite16.cpp
-	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
+bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
+	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
 $**
 |
 

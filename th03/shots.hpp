@@ -23,3 +23,6 @@ struct shotpair_t {
 #define SHOTPAIR_COUNT 32
 
 extern shotpair_t shotpairs[SHOTPAIR_COUNT];
+
+void pascal near shots_update(void);
+void pascal near shots_render(void);
