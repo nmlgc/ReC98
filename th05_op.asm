@@ -22,6 +22,7 @@
 include ReC98.inc
 include th05/th05.inc
 include th05/music/music.inc
+include th05/music/piano.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
@@ -5133,74 +5134,26 @@ sub_D894	proc far
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	di, 1400h
+		mov	di, (PIANO_Y + (0 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		mov	di, 19A0h
+		mov	di, (PIANO_Y + (1 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		mov	di, 1F40h
+		mov	di, (PIANO_Y + (2 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		mov	di, 24E0h
+		mov	di, (PIANO_Y + (3 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		mov	di, 2A80h
+		mov	di, (PIANO_Y + (4 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		mov	di, 3020h
+		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
-		mov	al, pl_F
-		mov	di, 156Ch
-		call	piano_label_put_raw
-		mov	al, pl_M
-		mov	di, 156Dh
-		call	piano_label_put_raw
-		mov	al, pl_1
-		mov	di, 156Eh
-		call	piano_label_put_raw
-		mov	al, pl_F
-		mov	di, 1B0Ch
-		call	piano_label_put_raw
-		mov	al, pl_M
-		mov	di, 1B0Dh
-		call	piano_label_put_raw
-		mov	al, pl_2
-		mov	di, 1B0Eh
-		call	piano_label_put_raw
-		mov	al, pl_F
-		mov	di, 20ACh
-		call	piano_label_put_raw
-		mov	al, pl_M
-		mov	di, 20ADh
-		call	piano_label_put_raw
-		mov	al, pl_3
-		mov	di, 20AEh
-		call	piano_label_put_raw
-		mov	al, pl_F
-		mov	di, 264Ch
-		call	piano_label_put_raw
-		mov	al, pl_M
-		mov	di, 264Dh
-		call	piano_label_put_raw
-		mov	al, pl_4
-		mov	di, 264Eh
-		call	piano_label_put_raw
-		mov	al, pl_F
-		mov	di, 2BECh
-		call	piano_label_put_raw
-		mov	al, pl_M
-		mov	di, 2BEDh
-		call	piano_label_put_raw
-		mov	al, pl_5
-		mov	di, 2BEEh
-		call	piano_label_put_raw
-		mov	al, pl_S
-		mov	di, 318Ch
-		call	piano_label_put_raw
-		mov	al, pl_S
-		mov	di, 318Dh
-		call	piano_label_put_raw
-		mov	al, pl_G
-		mov	di, 318Eh
-		call	piano_label_put_raw
+		piano_label_puts	0, pl_F, pl_M, pl_1
+		piano_label_puts	1, pl_F, pl_M, pl_2
+		piano_label_puts	2, pl_F, pl_M, pl_3
+		piano_label_puts	3, pl_F, pl_M, pl_4
+		piano_label_puts	4, pl_F, pl_M, pl_5
+		piano_label_puts	5, pl_S, pl_S, pl_G
 		GRCG_OFF_VIA_XOR al
 		push	ds
 		mov	ah, PMD_GET_WORKAREA_ADDRESS
@@ -5227,31 +5180,31 @@ sub_D96E	proc far
 		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		mov	ax, 0A800h
 		mov	es, ax
-		mov	di, 3020h
+		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
 		lds	bx, dword_1281A
-		mov	di, 1400h
+		mov	di, (PIANO_Y + (0 * PIANO_H_PADDED)) * ROW_SIZE
 		mov	si, 0
 		call	sub_D9E2
 		add	bx, 2
-		mov	di, 19A0h
+		mov	di, (PIANO_Y + (1 * PIANO_H_PADDED)) * ROW_SIZE
 		mov	si, 1
 		call	sub_D9E2
 		add	bx, 2
-		mov	di, 1F40h
+		mov	di, (PIANO_Y + (2 * PIANO_H_PADDED)) * ROW_SIZE
 		mov	si, 2
 		call	sub_D9E2
 		add	bx, 2
-		mov	di, 24E0h
+		mov	di, (PIANO_Y + (3 * PIANO_H_PADDED)) * ROW_SIZE
 		mov	si, 3
 		call	sub_D9E2
 		add	bx, 2
-		mov	di, 2A80h
+		mov	di, (PIANO_Y + (4 * PIANO_H_PADDED)) * ROW_SIZE
 		mov	si, 4
 		call	sub_D9E2
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
-		mov	di, 3020h
+		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 		add	bx, 4
 		call	sub_DA12
 		call	near ptr sub_DA6B
