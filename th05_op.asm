@@ -5147,60 +5147,60 @@ sub_D894	proc far
 		call	sub_DA30
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
-		mov	al, 0
+		mov	al, pl_F
 		mov	di, 156Ch
-		call	sub_DB0D
-		mov	al, 1
+		call	piano_label_put_raw
+		mov	al, pl_M
 		mov	di, 156Dh
-		call	sub_DB0D
-		mov	al, 2
+		call	piano_label_put_raw
+		mov	al, pl_1
 		mov	di, 156Eh
-		call	sub_DB0D
-		mov	al, 0
+		call	piano_label_put_raw
+		mov	al, pl_F
 		mov	di, 1B0Ch
-		call	sub_DB0D
-		mov	al, 1
+		call	piano_label_put_raw
+		mov	al, pl_M
 		mov	di, 1B0Dh
-		call	sub_DB0D
-		mov	al, 3
+		call	piano_label_put_raw
+		mov	al, pl_2
 		mov	di, 1B0Eh
-		call	sub_DB0D
-		mov	al, 0
+		call	piano_label_put_raw
+		mov	al, pl_F
 		mov	di, 20ACh
-		call	sub_DB0D
-		mov	al, 1
+		call	piano_label_put_raw
+		mov	al, pl_M
 		mov	di, 20ADh
-		call	sub_DB0D
-		mov	al, 4
+		call	piano_label_put_raw
+		mov	al, pl_3
 		mov	di, 20AEh
-		call	sub_DB0D
-		mov	al, 0
+		call	piano_label_put_raw
+		mov	al, pl_F
 		mov	di, 264Ch
-		call	sub_DB0D
-		mov	al, 1
+		call	piano_label_put_raw
+		mov	al, pl_M
 		mov	di, 264Dh
-		call	sub_DB0D
-		mov	al, 5
+		call	piano_label_put_raw
+		mov	al, pl_4
 		mov	di, 264Eh
-		call	sub_DB0D
-		mov	al, 0
+		call	piano_label_put_raw
+		mov	al, pl_F
 		mov	di, 2BECh
-		call	sub_DB0D
-		mov	al, 1
+		call	piano_label_put_raw
+		mov	al, pl_M
 		mov	di, 2BEDh
-		call	sub_DB0D
-		mov	al, 6
+		call	piano_label_put_raw
+		mov	al, pl_5
 		mov	di, 2BEEh
-		call	sub_DB0D
-		mov	al, 7
+		call	piano_label_put_raw
+		mov	al, pl_S
 		mov	di, 318Ch
-		call	sub_DB0D
-		mov	al, 7
+		call	piano_label_put_raw
+		mov	al, pl_S
 		mov	di, 318Dh
-		call	sub_DB0D
-		mov	al, 8
+		call	piano_label_put_raw
+		mov	al, pl_G
 		mov	di, 318Eh
-		call	sub_DB0D
+		call	piano_label_put_raw
 		GRCG_OFF_VIA_XOR al
 		push	ds
 		mov	ah, PMD_GET_WORKAREA_ADDRESS
@@ -5459,23 +5459,7 @@ off_DAD1	dw offset loc_DA9D
 		dw 40C0h
 		dw 60C0h
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DB0D	proc near
-		xor	ah, ah
-		shl	al, 3
-		add	ax, 0A0Ah
-		mov	si, ax
-		mov	cx, 8
-
-loc_DB1A:
-		movsb
-		add	di, 4Fh	; 'O'
-		loop	loc_DB1A
-		retn
-sub_DB0D	endp
-
+include th05/music/piano_label.asm
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 1
 		db 0
 
@@ -5985,78 +5969,7 @@ include th05/mem[data].asm
 		db 0B8h	; ¸
 		db  3Bh	; ;
 		db 0B8h	; ¸
-		db  3Fh	; ?
-		db  60h
-		db 0C0h	; À
-		db 0FEh
-		db  80h
-		db  80h
-unk_F9F0	db 0C0h	; À
-		db  40h
-		db  66h
-		db 0A9h
-		db  99h
-		db  81h
-		db  81h
-		db  81h
-		db 0C3h
-		db  42h
-		db  3Ch
-		db    4
-		db    4
-		db    4
-		db    4
-		db    4
-		db  0Ch
-		db    8
-		db  3Ch	; <
-		db  42h	; B
-		db  81h
-		db    1
-		db    6
-		db  18h
-		db  61h	; a
-		db  7Eh	; ~
-		db  3Ch	; <
-		db  42h	; B
-		db    1
-		db  0Eh
-		db    1
-		db 0C1h
-		db  42h	; B
-		db  7Ch	; |
-		db  0Ch
-		db  12h
-		db  22h	; "
-		db  42h	; B
-		db  42h	; B
-		db  7Fh
-		db    2
-		db    2
-		db  3Eh	; >
-		db  40h
-		db  80h
-		db 0BCh	; ¼
-		db  42h	; B
-		db    1
-		db  82h
-		db  7Ch	; |
-		db  7Eh	; ~
-		db 0C1h
-		db  80h
-		db  70h	; p
-		db  0Eh
-		db    1
-		db  83h
-		db  7Eh	; ~
-		db  3Eh	; >
-		db  63h	; c
-		db 0C0h	; À
-		db  80h
-		db  86h
-		db 0C1h
-		db  63h	; c
-		db  3Ch	; <
+include th05/music/piano_label[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 		db    0
