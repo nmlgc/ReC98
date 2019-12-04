@@ -42,3 +42,16 @@ extern const unsigned char PIANO_LABEL_FONT[pl_COUNT][PIANO_LABEL_FONT_H];
 	piano_label_put_raw();
 
 void pascal piano_label_put_raw();
+
+// Note data
+// ---------
+extern OPEN_WORK *pmd_workadr;
+
+typedef struct {
+	char fm[5];
+	char unused[3]; // SSG?
+} piano_notes_t;
+
+extern piano_notes_t piano_notes_cur;
+extern piano_notes_t piano_notes_prev;
+// ---------

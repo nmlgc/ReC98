@@ -4,6 +4,11 @@ PIANO_H = 15
 PIANO_PADDING_BOTTOM = 3
 PIANO_H_PADDED = (PIANO_H + PIANO_PADDING_BOTTOM)
 
+piano_notes_t struc
+	fm	db 5 dup(?)
+		db 3 dup(?)
+piano_notes_t ends
+
 PIANO_LABEL_DIST_X = 32
 PIANO_LABEL_DIST_Y = 4
 

@@ -5160,8 +5160,8 @@ sub_D894	proc far
 		int	60h
 		mov	ax, ds
 		pop	ds
-		mov	word ptr dword_1281A, dx
-		mov	word ptr dword_1281A+2,	ax
+		mov	word ptr _pmd_workadr, dx
+		mov	word ptr _pmd_workadr+2, ax
 		pop	di
 		pop	si
 		retf
@@ -5182,33 +5182,33 @@ sub_D96E	proc far
 		mov	es, ax
 		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 		call	sub_DA30
-		lds	bx, dword_1281A
+		lds	bx, _pmd_workadr	; FMPart[0]
 		mov	di, (PIANO_Y + (0 * PIANO_H_PADDED)) * ROW_SIZE
-		mov	si, 0
+		mov	si, offset piano_notes_t.fm[0]
 		call	sub_D9E2
-		add	bx, 2
+		add	bx, 2	; FMPart[1]
 		mov	di, (PIANO_Y + (1 * PIANO_H_PADDED)) * ROW_SIZE
-		mov	si, 1
+		mov	si, offset piano_notes_t.fm[1]
 		call	sub_D9E2
-		add	bx, 2
+		add	bx, 2	; FMPart[2]
 		mov	di, (PIANO_Y + (2 * PIANO_H_PADDED)) * ROW_SIZE
-		mov	si, 2
+		mov	si, offset piano_notes_t.fm[2]
 		call	sub_D9E2
-		add	bx, 2
+		add	bx, 2	; FMPart[3]
 		mov	di, (PIANO_Y + (3 * PIANO_H_PADDED)) * ROW_SIZE
-		mov	si, 3
+		mov	si, offset piano_notes_t.fm[3]
 		call	sub_D9E2
-		add	bx, 2
+		add	bx, 2	; FMPart[4]
 		mov	di, (PIANO_Y + (4 * PIANO_H_PADDED)) * ROW_SIZE
-		mov	si, 4
+		mov	si, offset piano_notes_t.fm[4]
 		call	sub_D9E2
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
 		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
-		add	bx, 4
+		add	bx, 4	; SSGPart[0]
 		call	sub_DA12
 		call	near ptr sub_DA6B
-		add	bx, 2
+		add	bx, 2	; SSGPart[1]
 		call	sub_DA12
 		call	near ptr sub_DA6B
 		GRCG_OFF_VIA_XOR al
@@ -5227,19 +5227,19 @@ sub_D9E2	proc near
 		push	ds
 		push	fs
 		pop	ds
-		cmp	al, [si+382Ah]
+		cmp	al, _piano_notes_cur.fm[si]
 		jnz	short loc_D9F5
-		cmp	al, [si+3832h]
+		cmp	al, _piano_notes_prev.fm[si]
 		jz	short loc_DA10
 
 loc_D9F5:
-		mov	ah, [si+382Ah]
-		mov	[si+3832h], ah
-		mov	[si+382Ah], al
+		mov	ah, _piano_notes_cur.fm[si]
+		mov	_piano_notes_prev.fm[si], ah
+		mov	_piano_notes_cur.fm[si], al
 		call	sub_DA30
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
-		mov	al, [si+382Ah]
+		mov	al, _piano_notes_cur.fm[si]
 		call	near ptr sub_DA6B
 
 loc_DA10:
@@ -5254,7 +5254,7 @@ sub_D9E2	endp
 sub_DA12	proc near
 		push	bx
 		mov	bx, [bx]
-		mov	ax, [bx+4]
+		mov	ax, word ptr [bx+qq.leng]
 		cmp	ah, 4
 		jbe	short loc_DA1F
 		mov	ah, 4
@@ -5264,12 +5264,12 @@ loc_DA1F:
 		jbe	short loc_DA2C
 		cmp	al, 1
 		jbe	short loc_DA2C
-		mov	al, [bx+55h]
+		mov	al, [bx+qq.onkai]
 		jmp	short loc_DA2E
 ; ---------------------------------------------------------------------------
 
 loc_DA2C:
-		mov	al, 0FFh
+		mov	al, ONKAI_REST
 
 loc_DA2E:
 		pop	bx
@@ -5319,7 +5319,7 @@ sub_DA30	endp
 
 sub_DA6B	proc far
 
-		cmp	al, 0FFh
+		cmp	al, ONKAI_REST
 		jnz	short loc_DA70
 		retn
 ; ---------------------------------------------------------------------------
@@ -6598,11 +6598,7 @@ include libs/master.lib/super_put_rect[bss].asm
 include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-dword_1281A	dd ?
+include th05/music/piano[bss].asm
 include th02/snd/load[bss].asm
 word_1282C	dw ?
 word_1282E	dw ?
