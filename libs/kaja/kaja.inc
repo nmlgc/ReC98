@@ -23,6 +23,8 @@ MMD = 61h
 MMD_TICKS_PER_QUARTER_NOTE = 48
 
 ONKAI_REST = -1
+ONKAI_OCTAVE_MASK = 0F0h
+ONKAI_NOTE_MASK = 00Fh
 
 qq struc
 	     	dw ? ; 演奏中のアドレス (曲データ先頭番地+1からのoffset)

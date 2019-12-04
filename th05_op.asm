@@ -5207,10 +5207,10 @@ sub_D96E	proc far
 		mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 		add	bx, 4	; SSGPart[0]
 		call	sub_DA12
-		call	near ptr sub_DA6B
+		call	sub_DA6B
 		add	bx, 2	; SSGPart[1]
 		call	sub_DA12
-		call	near ptr sub_DA6B
+		call	sub_DA6B
 		GRCG_OFF_VIA_XOR al
 		pop	ds
 		pop	di
@@ -5240,7 +5240,7 @@ loc_D9F5:
 		mov	ah, GC_RI
 		call	grcg_setcolor_direct_noint_1
 		mov	al, _piano_notes_cur.fm[si]
-		call	near ptr sub_DA6B
+		call	sub_DA6B
 
 loc_DA10:
 		pop	ds
@@ -5286,28 +5286,28 @@ sub_DA30	proc near
 		mov	ah, GC_GI
 		call	grcg_setcolor_direct_noint_1
 		add	di, 30h	; '0'
-		mov	ax, 0EEEEh
-		mov	dl, 0Fh
+		mov	ax, PIANO_KEYS_WHITE
+		mov	dl, PIANO_H
 
-loc_DA3F:
-		mov	cx, 0Eh
+@@white_key_loop:
+		mov	cx, PIANO_VRAM_W / 2
 		rep stosw
-		add	di, 34h	; '4'
+		add	di, ROW_SIZE - PIANO_VRAM_W
 		dec	dl
-		jnz	short loc_DA3F
+		jnz	short @@white_key_loop
 		mov	ah, GC_RGI
 		call	grcg_setcolor_direct_noint_1
-		mov	si, 9EEh
+		mov	si, offset _PIANO_KEYS_BLACK
 		sub	di, 4B0h
-		mov	dl, 9
+		mov	dl, PIANO_BLACK_H
 
-loc_DA59:
-		mov	cx, 0Eh
+@@black_key_loop:
+		mov	cx, PIANO_VRAM_W / 2
 		rep movsw
-		sub	si, 1Ch
-		add	di, 34h	; '4'
+		sub	si, PIANO_VRAM_W
+		add	di, ROW_SIZE - PIANO_VRAM_W
 		dec	dl
-		jnz	short loc_DA59
+		jnz	short @@black_key_loop
 		pop	si
 		pop	di
 		retn
@@ -5317,7 +5317,7 @@ sub_DA30	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_DA6B	proc far
+sub_DA6B	proc near
 
 		cmp	al, ONKAI_REST
 		jnz	short loc_DA70
@@ -5328,50 +5328,50 @@ loc_DA70:
 		push	bx
 		push	di
 		mov	ah, al
-		and	ah, 0Fh
+		and	ah, ONKAI_NOTE_MASK
 		xor	bh, bh
 		mov	bl, ah
 		shr	al, 4
-		mov	dl, 1Ch
+		mov	dl, PIANO_OCTAVE_W
 		mul	dl
-		mov	dl, cs:[bx+801h]
+		mov	dl, cs:PIANO_KEY_PRESSED_TOP[bx]
 		add	bx, bx
-		add	ax, cs:[bx+7E9h]
+		add	ax, cs:PIANO_NOTE_X[bx]
 		mov	cx, ax
 		shr	ax, 3
 		add	di, ax
 		and	cl, 7
-		jmp	cs:off_DAD1[bx]
+		jmp	cs:BLACK_OR_WHITE[bx]
 
-loc_DA9D:
+white_key:
 		shr	dl, cl
 		mov	al, cl
-		mov	cx, 9
+		mov	cx, PIANO_BLACK_H
 
 loc_DAA4:
 		mov	es:[di], dl
-		add	di, 50h	; 'P'
+		add	di, ROW_SIZE
 		loop	loc_DAA4
 		mov	cl, al
-		mov	al, 0E0h
+		mov	al, (111b shl 5)	; bottom part of any pressed key
 		shr	al, cl
-		mov	cx, 6
+		mov	cx, PIANO_H - PIANO_BLACK_H
 
 loc_DAB5:
 		mov	es:[di], al
-		add	di, 50h	; 'P'
+		add	di, ROW_SIZE
 		loop	loc_DAB5
 		jmp	short loc_DACE
 ; ---------------------------------------------------------------------------
 
-loc_DABF:
+black_key:
 		xor	dh, dh
 		ror	dx, cl
-		mov	cx, 8
+		mov	cx, PIANO_BLACK_PRESSED_H
 
 loc_DAC6:
 		mov	es:[di], dx
-		add	di, 50h	; 'P'
+		add	di, ROW_SIZE
 		loop	loc_DAC6
 
 loc_DACE:
@@ -5381,36 +5381,48 @@ loc_DACE:
 sub_DA6B	endp
 
 ; ---------------------------------------------------------------------------
-off_DAD1	dw offset loc_DA9D
-		dw offset loc_DABF
-		dw offset loc_DA9D
-		dw offset loc_DABF
-		dw offset loc_DA9D
-		dw offset loc_DA9D
-		dw offset loc_DABF
-		dw offset loc_DA9D
-		dw offset loc_DABF
-		dw offset loc_DA9D
-		dw offset loc_DABF
-		dw offset loc_DA9D
-		dw 180h
-		dw 182h
-		dw 184h
-		dw 186h
-		dw 188h
-		dw 18Ch
-		dw 18Eh
-		dw 190h
-		dw 192h
-		dw 194h
-		dw 196h
-		dw 198h
-		dw 0C0C0h
-		dw 0C040h
-		dw 0C060h
-		dw 40C0h
-		dw 40C0h
-		dw 60C0h
+BLACK_OR_WHITE	label word
+	dw offset white_key	; C
+	dw offset black_key	; C#
+	dw offset white_key	; D
+	dw offset black_key	; D#
+	dw offset white_key	; E
+	dw offset white_key	; F
+	dw offset black_key	; F#
+	dw offset white_key	; G
+	dw offset black_key	; G#
+	dw offset white_key	; A
+	dw offset black_key	; A#
+	dw offset white_key	; B
+
+PIANO_NOTE_X	label word
+	dw PIANO_X + 0	; C
+	dw PIANO_X + 2	; C#
+	dw PIANO_X + 4	; D
+	dw PIANO_X + 6	; D#
+	dw PIANO_X + 8	; E
+	dw PIANO_X + 12	; F
+	dw PIANO_X + 14	; F#
+	dw PIANO_X + 16	; G
+	dw PIANO_X + 18	; G#
+	dw PIANO_X + 20	; A
+	dw PIANO_X + 22	; A#
+	dw PIANO_X + 24	; B
+
+; 1bpp sprite data for the top part of a pressed key, in the black key row.
+PIANO_KEY_PRESSED_TOP	label byte
+	db (110b shl 5)	; C
+	db (110b shl 5)	; C#
+	db (010b shl 5)	; D
+	db (110b shl 5)	; D#
+	db (011b shl 5)	; E
+	db (110b shl 5)	; F
+	db (110b shl 5)	; F#
+	db (010b shl 5)	; G
+	db (110b shl 5)	; G#
+	db (010b shl 5)	; A
+	db (110b shl 5)	; A#
+	db (011b shl 5)	; B
 
 include th05/music/piano_label.asm
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 1
@@ -5894,35 +5906,7 @@ word_F9C6	dw 0
 word_F9C8	dw 0
 word_F9CA	dw 0
 include th05/mem[data].asm
-		db  3Bh	; ;
-		db  83h
-		db 0BBh	; »
-		db  83h
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db  83h
-		db 0BBh	; »
-		db  83h
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db  83h
-		db 0BBh	; »
-		db  83h
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db  83h
-		db 0BBh	; »
-		db  83h
-		db 0B8h	; ¸
-		db  3Bh	; ;
-		db 0B8h	; ¸
-include th05/music/piano_label[data].asm
+include th05/music/piano[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 		db    0

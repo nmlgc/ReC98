@@ -28,6 +28,8 @@ typedef enum {
 // Work area structure names and fields taken from pmdwin.h
 // --------------------------------------------------------
 #define ONKAI_REST (-1)
+#define ONKAI_OCTAVE_MASK (0xF0)
+#define ONKAI_NOTE_MASK (0x0F)
 
 // 演奏中のデータエリア
 typedef struct qqtag {
