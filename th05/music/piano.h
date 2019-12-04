@@ -11,6 +11,8 @@
 
 #define PIANO_OCTAVES 8
 #define PIANO_OCTAVE_W (7 * PIANO_KEY_W)
+
+#define PIANO_VRAM_X (PIANO_X / 8)
 #define PIANO_VRAM_W ((PIANO_OCTAVES * PIANO_OCTAVE_W) / 8)
 
 // Sprite data
@@ -69,3 +71,6 @@ typedef struct {
 extern piano_notes_t piano_notes_cur;
 extern piano_notes_t piano_notes_prev;
 // ---------
+
+void piano_setup(void);
+void piano_render(void);
