@@ -2965,8 +2965,8 @@ loc_BF14:
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+0FF0h]
-		mov	dx, [bx+0FEEh]
+		mov	ax, word ptr _MUSIC_TITLES+2[bx]
+		mov	dx, word ptr _MUSIC_TITLES[bx]
 		mov	[bp+var_2], ax
 		mov	[bp+var_4], dx
 		add	si, 60h
@@ -3336,7 +3336,7 @@ var_1		= byte ptr -1
 		mov	byte ptr word_13E94, 0
 		mov	bx, music_game
 		add	bx, bx
-		mov	ax, [bx+14A0h]
+		mov	ax, MUSICROOM_TRACKCOUNTS[bx]
 		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
 		call	cdg_freeall
@@ -3514,7 +3514,7 @@ loc_C698:
 		mov	word_1403A, 0
 		mov	bx, music_game
 		add	bx, bx
-		mov	ax, [bx+14A0h]
+		mov	ax, MUSICROOM_TRACKCOUNTS[bx]
 		mov	musicroom_trackcount, ax
 		push	0
 		call	sub_C441
@@ -3522,7 +3522,7 @@ loc_C698:
 		call	sub_C3F9 pascal, 0
 		mov	bx, music_game
 		imul	bx, 78h
-		call	snd_load pascal, dword ptr [bx+1246h], SND_LOAD_SONG
+		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C6E3:
@@ -3564,7 +3564,7 @@ loc_C6F1:
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		call	snd_load pascal, dword ptr [bx+1246h], SND_LOAD_SONG
+		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C767:
@@ -5736,6 +5736,8 @@ MUSICROOM_GAME		dd aMUSICROOM_TH01
 		dd aMUSICROOM_TH03
 		dd aMUSICROOM_TH04
 		dd aMUSICROOM_TH05
+public _MUSIC_TITLES
+_MUSIC_TITLES	label dword
 		dd aTH01_01	; "No.1		  A Sacred Lot	       "
 		dd aTH01_02	; "No.2		   âiâìÇÃõﬁèó	       "
 		dd aTH01_03	; "No.3	   The Positive	and Negative   "
@@ -5886,6 +5888,8 @@ MUSICROOM_GAME		dd aMUSICROOM_TH01
 		dd    0
 		dd    0
 		dd    0
+public _MUSIC_FILES
+_MUSIC_FILES	label dword
 		dd aR_00		; "r_00"
 		dd aR_01		; "r_01"
 		dd aR_02		; "r_02"

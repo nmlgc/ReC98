@@ -2624,7 +2624,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+0EB6h]
+		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		graph_accesspage byte ptr word_12DBC+1
 		push	10h
@@ -2640,7 +2640,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+0EB6h]
+		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		leave
 		retn	4
@@ -3039,7 +3039,7 @@ loc_C4E4:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		call	snd_load pascal, dword ptr [bx+0F16h], SND_LOAD_SONG
+		call	snd_load pascal, dword ptr _MUSIC_FILES[bx], SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 
 loc_C51D:
@@ -5857,6 +5857,8 @@ aZun02_bft	db 'zun02.bft',0
 aZun04_bft	db 'zun04.bft',0
 aZun01_bft	db 'zun01.bft',0
 aZun03_bft	db 'zun03.bft',0
+public _MUSIC_TITLES
+_MUSIC_TITLES	label dword
 		dd aNo_1MSzlBLotus	; "No.1	  å∂ëzãΩ  Å` Lotus Land	Story"
 		dd aNo_2WitchingDr	; "No.2		Witching Dream	     "
 		dd aNo_3SeleneSLig	; "No.3		Selene's light       "
@@ -5881,6 +5883,8 @@ aZun03_bft	db 'zun03.bft',0
 		dd aNo_22MSzvPzrl	; "No.22	  å∂ëzÇÃèZêl	     "
 		dd asc_105B2		; "				     "
 		dd aB@b@vpvxvivf	; "	       Å@Å@ÇpÇïÇâÇî	     "
+public _MUSIC_FILES
+_MUSIC_FILES	label dword
 		dd aOp_2		; "op"
 		dd aSt00		; "st00"
 		dd aSt10		; "st10"

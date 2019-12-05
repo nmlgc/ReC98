@@ -1636,7 +1636,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+5F2h]
+		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		graph_accesspage byte ptr word_F828+1
 		push	10h
@@ -1653,7 +1653,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+5F2h]
+		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		leave
 		retn	4
@@ -2275,7 +2275,7 @@ loc_AD52:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+646h]
+		pushd	_MUSIC_FILES[bx]
 		call	snd_load
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
@@ -4756,6 +4756,8 @@ include libs/master.lib/respal_exist[data].asm
 include libs/master.lib/draw_trapezoid[data].asm
 include th02/formats/pfopen[data].asm
 include th03/formats/cdg[data].asm
+public _MUSIC_TITLES
+_MUSIC_TITLES	label dword
 		dd aNo_1B@cVOul		; "NO.1	    　夢は時空を越えて	   "
 		dd aNo_2B@B@Select	; "NO.2	   　 　 Selection	   "
 		dd aNo_3Umx		; "NO.3		 東方妖恋談	   "
@@ -4777,6 +4779,8 @@ include th03/formats/cdg[data].asm
 		dd aNo_19CRlvLxu	; "NO.19	 霊人の休日	   "
 		dd aB@b@		; "	      　　		   "
 		dd aB@b@vpvxvivf	; "	      　　Ｑｕｉｔ	   "
+public _MUSIC_FILES
+_MUSIC_FILES	label dword
 		dd aOp_m_0		; "op.m"
 		dd aSelect_m_0		; "select.m"
 		dd a00mm_m		; "00mm.m"
