@@ -26173,7 +26173,7 @@ loc_29ADC:
 
 loc_29AE4:
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		pop	cx
 		call	IRand
 		mov	bx, 8
@@ -26582,7 +26582,7 @@ loc_29E46:
 		cmp	byte ptr [si+1445h], 0
 		jz	loc_29FD6
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		pop	cx
 		mov	bx, si
 		shl	bx, 3
@@ -26678,7 +26678,7 @@ loc_29F5B:
 
 loc_29F62:
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		push	1
 		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
@@ -27231,7 +27231,7 @@ loc_2A4D9:
 		cmp	byte ptr [si+1465h], 0
 		jz	loc_2A68A
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		mov	bx, si
 		add	bx, bx
 		mov	bx, [bx+665Bh]
@@ -27345,7 +27345,7 @@ loc_2A59F:
 
 loc_2A618:
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		push	1
 		call	_graph_accesspage_func
 		mov	ax, 0A800h
@@ -28845,7 +28845,7 @@ loc_2B3F4:
 		cmp	byte ptr [si+1483h], 0
 		jz	loc_2B6D7
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
@@ -29031,7 +29031,7 @@ loc_2B604:
 
 loc_2B60C:
 		push	0Ch
-		call	sub_EABB
+		call	_grcg_setcolor_tdw
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 4

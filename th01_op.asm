@@ -120,7 +120,7 @@ loc_A1E5:
 		cmp	si, 50h	; 'P'
 		jl	short loc_A1CE
 		push	4
-		call	sub_B9C0
+		call	_grcg_setcolor_tdw
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -154,7 +154,7 @@ loc_A223:
 loc_A22A:
 		cmp	si, 50h	; 'P'
 		jl	short loc_A1FF
-		call	sub_BA0A
+		call	_grcg_off_func
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -677,7 +677,7 @@ arg_0		= word ptr  6
 		add	ax, dx
 		mov	si, ax
 		push	0Fh
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 		xor	di, di
 		jmp	short loc_A65C
@@ -693,7 +693,7 @@ loc_A64A:
 loc_A65C:
 		cmp	di, 14h
 		jl	short loc_A64A
-		call	sub_BA0A
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		pop	bp
@@ -2489,149 +2489,7 @@ arg_6		= byte ptr  0Ch
 		retf
 sub_B955	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B976	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		GRCG_SETMODE_CLOBBERING dx, GC_RMW
-		test	bl, 1
-		jz	short loc_B98B
-		mov	al, 0FFh
-		jmp	short loc_B98D
-; ---------------------------------------------------------------------------
-
-loc_B98B:
-		mov	al, 0
-
-loc_B98D:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 2
-		jz	short loc_B99A
-		mov	al, 0FFh
-		jmp	short loc_B99C
-; ---------------------------------------------------------------------------
-
-loc_B99A:
-		mov	al, 0
-
-loc_B99C:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 4
-		jz	short loc_B9A9
-		mov	al, 0FFh
-		jmp	short loc_B9AB
-; ---------------------------------------------------------------------------
-
-loc_B9A9:
-		mov	al, 0
-
-loc_B9AB:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 8
-		jz	short loc_B9B8
-		mov	al, 0FFh
-		jmp	short loc_B9BA
-; ---------------------------------------------------------------------------
-
-loc_B9B8:
-		mov	al, 0
-
-loc_B9BA:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		pop	bp
-		retf
-sub_B976	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B9C0	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		GRCG_SETMODE_CLOBBERING dx, GC_TDW
-		test	bl, 1
-		jz	short loc_B9D5
-		mov	al, 0FFh
-		jmp	short loc_B9D7
-; ---------------------------------------------------------------------------
-
-loc_B9D5:
-		mov	al, 0
-
-loc_B9D7:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 2
-		jz	short loc_B9E4
-		mov	al, 0FFh
-		jmp	short loc_B9E6
-; ---------------------------------------------------------------------------
-
-loc_B9E4:
-		mov	al, 0
-
-loc_B9E6:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 4
-		jz	short loc_B9F3
-		mov	al, 0FFh
-		jmp	short loc_B9F5
-; ---------------------------------------------------------------------------
-
-loc_B9F3:
-		mov	al, 0
-
-loc_B9F5:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		test	bl, 8
-		jz	short loc_BA02
-		mov	al, 0FFh
-		jmp	short loc_BA04
-; ---------------------------------------------------------------------------
-
-loc_BA02:
-		mov	al, 0
-
-loc_BA04:
-		mov	dx, 7Eh	; '~'
-		out	dx, al
-		pop	bp
-		retf
-sub_B9C0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA0A	proc far
-		push	bp
-		mov	bp, sp
-		GRCG_OFF_CLOBBERING dx
-		pop	bp
-		retf
-sub_BA0A	endp
-
+include th01/hardware/grcg_setcolor.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2824,12 +2682,12 @@ _s		= dword	ptr -4
 		enter	4, 0
 		mov	[bp+_s],	0A8000000h
 		push	0
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh	; c
 		pushd	[bp+_s]	; s
 		call	_memset
 		add	sp, 0Ah
-		call	sub_BA0A
+		call	_grcg_off_func
 		leave
 		retf
 sub_BB12	endp
@@ -2859,12 +2717,12 @@ sub_BB3C	endp
 		mov	al, [bp+6]
 		cbw
 		push	ax
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		push	7D0000FFh
 		pushd	dword ptr [bp-4]
 		call	_memset
 		add	sp, 0Ah
-		call	sub_BA0A
+		call	_grcg_off_func
 		leave
 		retf
 
@@ -3436,7 +3294,7 @@ loc_BF7E:
 		push	bp
 		mov	bp, sp
 		push	word ptr [bp+0Ah]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	bx, [bp+8]
 		imul	bx, 50h
@@ -3451,7 +3309,7 @@ loc_BF7E:
 		mov	es, ax
 		assume es:nothing
 		mov	es:[bx], dl
-		call	sub_BA0A
+		call	_grcg_off_func
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -3598,7 +3456,7 @@ loc_C070:
 		cmp	byte_129AA, 0
 		jnz	short loc_C0D4
 		push	[bp+arg_6]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_C0D4:
@@ -3652,7 +3510,7 @@ loc_C129:
 loc_C12C:
 		cmp	byte_129AA, 0
 		jnz	short loc_C137
-		call	sub_BA0A
+		call	_grcg_off_func
 
 loc_C137:
 		pop	di
@@ -3742,7 +3600,7 @@ loc_C196:
 		shl	ax, cl
 		or	[bp+var_6], ax
 		push	[bp+arg_6]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	[bp+var_2], si
 		jmp	short loc_C1ED
@@ -3759,7 +3617,7 @@ loc_C1D9:
 loc_C1ED:
 		cmp	[bp+var_2], di
 		jle	short loc_C1D9
-		call	sub_BA0A
+		call	_grcg_off_func
 
 loc_C1F6:
 		pop	di
@@ -4035,7 +3893,7 @@ loc_C437:
 		cmp	byte_129AA, 0
 		jnz	short loc_C471
 		push	[bp+arg_8]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_C471:
@@ -4318,7 +4176,7 @@ loc_C6CF:
 loc_C767:
 		cmp	byte_129AA, 0
 		jnz	short loc_C772
-		call	sub_BA0A
+		call	_grcg_off_func
 
 loc_C772:
 		pop	di
@@ -4398,7 +4256,7 @@ loc_C7D9:
 
 loc_C7EA:
 		push	[bp+arg_8]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	ax, si
 		imul	ax, 50h
@@ -4468,7 +4326,7 @@ loc_C87A:
 loc_C884:
 		cmp	[bp+var_4], di
 		jle	short loc_C80C
-		call	sub_BA0A
+		call	_grcg_off_func
 
 loc_C88D:
 		pop	di
@@ -4704,7 +4562,7 @@ loc_C9FE:
 
 loc_CA16:
 		push	[bp+arg_4]
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 		mov	dx, 68h	; 'h'
 		mov	al, 0Bh
@@ -4981,7 +4839,7 @@ loc_CC59:
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
-		call	sub_BA0A
+		call	_grcg_off_func
 		pop	di
 		pop	si
 		leave
@@ -6856,7 +6714,7 @@ arg_0		= word ptr  6
 		cbw
 		dec	ax
 		push	ax
-		call	sub_B976
+		call	_grcg_setcolor_rmw
 		pop	cx
 
 loc_DC66:
@@ -7032,7 +6890,7 @@ loc_DDDC:
 		jb	loc_DC6B
 		cmp	byte_129C9, 0
 		jz	short loc_DDF0
-		call	sub_BA0A
+		call	_grcg_off_func
 
 loc_DDF0:
 		pop	di
