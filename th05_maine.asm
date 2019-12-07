@@ -460,7 +460,7 @@ arg_6		= word ptr  0Ah
 		push	si
 		push	di
 		push	14000C8h
-		call	sub_F3FC
+		call	egc_copy_rect_1_to_0
 		pop	di
 		pop	si
 		pop	bp
@@ -1301,7 +1301,7 @@ loc_AE42:
 loc_AE64:
 		push	0A00040h
 		push	14000C8h
-		call	sub_F3FC
+		call	egc_copy_rect_1_to_0
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -8298,115 +8298,7 @@ include th05/snd/delaymea.asm
 include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F3FC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		call	sub_F478
-		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	di, bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_F433
-		inc	ax
-
-loc_F433:
-		mov	word_12F86, ax
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	bx, [bp+arg_0]
-		mov	bp, cx
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-
-loc_F447:
-		mov	cx, word_12F86
-
-loc_F44B:
-		or	di, di
-		js	short loc_F463
-		cmp	di, 7D00h
-		jnb	short loc_F463
-		mov	al, 1
-		out	0A6h, al
-		mov	dx, es:[di]
-		xor	ax, ax
-		out	0A6h, al
-		mov	es:[di], dx
-
-loc_F463:
-		add	di, 2
-		loop	loc_F44B
-		add	di, bp
-		dec	bx
-		jns	short loc_F447
-		call	egc_off
-		pop	di
-		pop	bp
-		retf	8
-sub_F3FC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F478	proc near
-		push	es
-		push	0
-		pop	es
-		pushf
-		cli
-		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	es:[495h], al
-		popf
-		pop	es
-		assume es:nothing
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		outw	EGC_ACTIVEPLANEREG, 0FFF0h
-		outw	EGC_READPLANEREG, 0FFh
-		outw	EGC_MASKREG, 0FFFFh
-		mov	dx, EGC_ADDRRESSREG
-		sub	ax, ax
-		out	dx, ax
-		outw	EGC_BITLENGTHREG, 0Fh
-		retn
-sub_F478	endp
-
+include th04/hardware/egccopyr.asm
 maine_02_TEXT	ends
 
 	.data
@@ -8876,7 +8768,7 @@ include th05/formats/pi_slot_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
-word_12F86	dw ?
+include th04/hardware/egccopyr[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

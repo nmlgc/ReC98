@@ -550,7 +550,7 @@ arg_2		= word ptr  6
 		push	100h
 		push	ax
 		push	800010h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	[bp+var_2], si
 		mov	bx, si
@@ -615,7 +615,7 @@ loc_AB59:
 		call	cdg_put pascal, 352, di, 36
 		pushd	180h
 		push	2800010h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -675,7 +675,7 @@ loc_ABF7:
 		push	0E0h
 		push	[bp+var_4]
 		push	0C00010h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 
 loc_AC08:
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
@@ -849,7 +849,7 @@ loc_ADC0:
 		call	cdg_put
 		pushd	180h
 		push	2800010h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
@@ -955,7 +955,7 @@ sub_AE96	proc near
 		mov	byte_10DAC, 0
 		push	0C000E0h
 		push	12000A0h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		xor	si, si
 		jmp	short loc_AED6
 ; ---------------------------------------------------------------------------
@@ -1120,7 +1120,7 @@ sub_B052	proc near
 		mov	byte_10DAD, 0
 		push	11000E0h
 		push	0A00090h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		xor	si, si
 		jmp	short loc_B08D
 ; ---------------------------------------------------------------------------
@@ -1583,7 +1583,7 @@ arg_2		= word ptr  6
 		shl	ax, 4
 		push	ax
 		push	10h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		push	si
 		push	di
 		push	2
@@ -1654,7 +1654,7 @@ arg_2		= word ptr  6
 		shl	ax, 4
 		push	ax
 		push	10h
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		push	si
 		push	di
 		push	6
@@ -1778,7 +1778,7 @@ arg_2		= word ptr  6
 		shl	ax, 4
 		push	ax
 		push	20h ; ' '
-		call	sub_E378
+		call	egc_copy_rect_1_to_0
 		push	si
 		push	di
 		push	5
@@ -4997,112 +4997,8 @@ include th02/initop.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E378	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		cld
-		call	sub_E3E8
-		outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	di, bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_E3B0
-		inc	ax
-
-loc_E3B0:
-		mov	word_11A54, ax
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	bx, [bp+arg_0]
-		mov	bp, cx
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-
-loc_E3C4:
-		mov	cx, word_11A54
-
-loc_E3C8:
-		mov	al, 1
-		out	0A6h, al
-		mov	dx, es:[di]
-		xor	ax, ax
-		out	0A6h, al
-		mov	ax, dx
-		stosw
-		loop	loc_E3C8
-		add	di, bp
-		dec	bx
-		jns	short loc_E3C4
-		call	egc_off
-		pop	di
-		pop	bp
-		retf	8
-sub_E378	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E3E8	proc near
-		push	es
-		push	0
-		pop	es
-		pushf
-		cli
-		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	byte ptr es:[495h], al
-		popf
-		pop	es
-		assume es:nothing
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		outw	EGC_ACTIVEPLANEREG, 0FFF0h
-		outw	EGC_READPLANEREG, 0FFh
-		outw	EGC_MASKREG, 0FFFFh
-		mov	dx, EGC_ADDRRESSREG
-		sub	ax, ax
-		out	dx, ax
-		outw	EGC_BITLENGTHREG, 0Fh
-		retn
-sub_E3E8	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/hardware/egccopyr.asm
+		even
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
@@ -5442,7 +5338,7 @@ include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
 include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
-word_11A54	dw ?
+include th04/hardware/egccopyr[bss].asm
 include th04/formats/cdg[bss].asm
 		dd    ?	;
 		dd    ?	;
