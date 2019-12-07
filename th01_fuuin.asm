@@ -494,7 +494,7 @@ loc_A229:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	si
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_A24A:
@@ -1325,7 +1325,7 @@ loc_A84F:
 		push	823h
 		push	0F0h
 		push	20h ; ' '
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	di, 8260h
 		xor	si, si
@@ -1560,28 +1560,28 @@ arg_E		= word ptr  14h
 		push	33h ; '3'
 		push	30h ; '0'
 		push	20h ; ' '
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@cB@b@sob@b ; "　　名　　前　　"
 		push	33h ; '3'
 		push	30h ; '0'
 		push	90h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@uB@b@u_b@b ; "　　得　　点　　"
 		push	33h ; '3'
 		push	30h ; '0'
 		push	160h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aGxgebGwbeglbGg ; "ステージ・ルート"
 		push	33h ; '3'
 		push	30h ; '0'
 		push	200h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		xor	si, si
 		jmp	loc_AD66
@@ -1762,7 +1762,7 @@ loc_AB36:
 		add	ax, 40h
 		push	ax
 		push	20h ; ' '
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short $+2
 
@@ -1803,7 +1803,7 @@ loc_AB77:
 		add	ax, 40h
 		push	ax
 		push	90h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		push	0
@@ -1941,7 +1941,7 @@ loc_AC6D:
 		add	ax, 40h
 		push	ax
 		push	210h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short loc_ACCD
 ; ---------------------------------------------------------------------------
@@ -1982,7 +1982,7 @@ loc_ACB5:
 		add	ax, 40h
 		push	ax
 		push	210h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_ACCD:
@@ -2005,7 +2005,7 @@ loc_ACDD:
 		add	ax, 40h
 		push	ax
 		push	230h
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		cmp	si, di
 		jnz	short loc_ACFE
@@ -8215,7 +8215,7 @@ sub_E099	endp
 
 ; Attributes: bp-based frame
 
-sub_E10C	proc far
+graph_putsa_fx	proc far
 
 var_3A		= byte ptr -3Ah
 var_1A		= word ptr -1Ah
@@ -8610,7 +8610,7 @@ loc_E41D:
 		pop	si
 		leave
 		retf
-sub_E10C	endp
+graph_putsa_fx	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9386,7 +9386,7 @@ _arglist		= byte ptr  10h
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_E10C
+		call	graph_putsa_fx
 		add	sp, 16h
 		leave
 		retf

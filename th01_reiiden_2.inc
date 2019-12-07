@@ -8724,7 +8724,7 @@ loc_20167:
 		mov	ax, es:[bx]
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_201B1:

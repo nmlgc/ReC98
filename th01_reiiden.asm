@@ -2624,19 +2624,19 @@ var_1		= byte ptr -1
 		push	offset aVovVtvrvd ; "ÇoÇ`ÇtÇrÇd"
 		push	370080h
 		push	110h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@nKjb@b@pic ; "Å@çƒäJÅ@Å@èIóπ"
 		push	370090h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aBB@b@b@b@b@b@ ;	"ÅúÅ@Å@Å@Å@Å@Å@"
 		push	70090h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	28h ; '('
 		call	sub_C8C7
@@ -2663,7 +2663,7 @@ loc_C9A2:
 		push	offset aB	; "Åú"
 		push	70090h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_1], 0
 
@@ -2678,7 +2678,7 @@ loc_C9E6:
 		push	offset aB	; "Åú"
 		push	70090h
 		push	140h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_1], 1
 
@@ -2718,19 +2718,19 @@ loc_CA39:
 		push	offset aCUcvPicVVVsvdv ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
 		push	370080h
 		push	0E0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@vdvVVVgb@b@v ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
 		push	370090h
 		push	0E0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB	; "Åú"
 		push	70090h
 		push	0E0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_1], 0
 		jmp	loc_CB5D
@@ -2752,7 +2752,7 @@ loc_CACF:
 		push	offset aB	; "Åú"
 		push	70090h
 		push	0E0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_1], 0
 
@@ -2767,7 +2767,7 @@ loc_CB13:
 		push	offset aB	; "Åú"
 		push	70090h
 		push	150h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_1], 1
 
@@ -2898,31 +2898,31 @@ sub_CC0F	proc far
 		push	offset aVgvpvovfvivovx ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
 		push	2270000h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVxvevub@b@B@ ; "ÇxÇÖÇìÅ@Å@  Å@"
 		push	2270010h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVmvpb@b@B@ ; "ÇmÇèÅ@Å@	Å@ "
 		push	2270020h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVxvevub@b@c@ ; "ÇxÇÖÇìÅ@Å@Å@  "
 		push	2210030h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVmvpb@b@c@ ; "ÇmÇèÅ@Å@Å@   "
 		push	2210040h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		call	_graph_accesspage_func
@@ -7851,7 +7851,7 @@ sub_F9D0	endp
 
 ; Attributes: bp-based frame
 
-sub_FA43	proc far
+graph_putsa_fx	proc far
 
 var_3A		= byte ptr -3Ah
 var_1A		= word ptr -1Ah
@@ -8246,7 +8246,7 @@ loc_FD54:
 		pop	si
 		leave
 		retf
-sub_FA43	endp
+graph_putsa_fx	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12846,28 +12846,28 @@ loc_127AC:
 		push	offset aVqvnvtvmvcb@vp ; "ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq"
 		push	2070000h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	ds
 		push	offset aVbvpvovzvtvbvf ; "ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI"
 		push	2070020h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	ds
 		push	offset aVrvevmvevgvfb@ ; "ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ"
 		push	2070040h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	ds
 		push	offset aCvkev	; "ñÇäEÇ÷"
 		push	2010060h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 2Eh
 		push	ds
 		push	offset aTnncv	; "ínçñÇ÷"
 		push	2030080h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		push	0F000Fh
@@ -13950,49 +13950,49 @@ arg_0		= word ptr  6
 		pushd	[bp+var_4]
 		push	2A0050h
 		push	40h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@vavnvmvtvr ; "Å@Å@ÇaÇnÇmÇtÇr"
 		push	270070h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@vsvivnveb@ ; "   Å@ÇsÇâÇçÇÖÅ@"
 		push	270080h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVbvpvovfvivovx ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
 		push	2700A0h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVavpvnvvbxvovm ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
 		push	2700C0h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@vrvsvVfvd ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
 		push	2700E0h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVavnvmvtvrb@vo ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
 		push	270100h
 		push	30h ; '0'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aVgvivfb@vyb@vj ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
 		push	2A0120h
 		push	0A0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, word_39DAC
 		imul	ax, 3
@@ -14034,7 +14034,7 @@ loc_1321E:
 		pushd	[bp+var_8]
 		push	270080h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, word_34A88
 		imul	ax, 64h
@@ -14062,7 +14062,7 @@ loc_13285:
 		pushd	[bp+var_8]
 		push	2700A0h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, _rem_lives
 		imul	ax, 0C8h
@@ -14094,7 +14094,7 @@ loc_132D0:
 		pushd	[bp+var_8]
 		push	2700C0h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, [bp+arg_0]
 		dec	ax
@@ -14123,7 +14123,7 @@ loc_13313:
 		pushd	[bp+var_8]
 		push	2700E0h
 		push	100h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	eax, dword_34A5E
 		add	_score, eax
@@ -14217,7 +14217,7 @@ loc_13313:
 		pushd	[bp+var_8]
 		push	270100h
 		push	0F0h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		call	sub_1889C
 		call	sub_D02F
@@ -15170,7 +15170,7 @@ loc_13C33:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -15182,7 +15182,7 @@ loc_13C69:
 		push	offset aVb	; "ÇÅ"
 		push	82300F0h
 		push	20h ; ' '
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	di, 8260h
 		xor	si, si
@@ -15212,7 +15212,7 @@ loc_13C89:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -15250,7 +15250,7 @@ loc_13CC8:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		inc	si
 
@@ -15285,7 +15285,7 @@ loc_13D11:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -15309,7 +15309,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		mov	si, 0Fh
 		push	ds
 		push	offset aBi	; "Å©"
@@ -15327,7 +15327,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		inc	si
 		push	ds
 		push	offset aBi_0	; "Å®"
@@ -15345,7 +15345,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		inc	si
 		push	ds
 		push	offset aPi	; "èI"
@@ -15363,7 +15363,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 28h
 		inc	si
 		pop	di
@@ -15408,25 +15408,25 @@ arg_E		= word ptr  14h
 		push	offset aB@cB@iB@ ; "Å@óÏÅ@à Å@"
 		push	330030h
 		push	20h ; ' '
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@cB@b@sob@b ; "Å@Å@ñºÅ@Å@ëOÅ@Å@"
 		push	330030h
 		push	90h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aB@b@uB@b@u_b@b ; "Å@Å@ìæÅ@Å@ì_Å@Å@"
 		push	330030h
 		push	160h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aGxgebGwbeglbGg ; "ÉXÉeÅ[ÉWÅEÉãÅ[Ég"
 		push	330030h
 		push	200h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		xor	si, si
 		jmp	loc_14082
@@ -15518,7 +15518,7 @@ loc_13ECE:
 		push	ax
 		push	[bp+var_2]
 		push	20h ; ' '
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_13EE1:
@@ -15546,7 +15546,7 @@ loc_13EFC:
 		push	ax
 		push	[bp+var_2]
 		push	90h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		pushd	0
@@ -15666,7 +15666,7 @@ loc_13FEB:
 		push	ax
 		push	[bp+var_2]
 		push	210h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_13FFF:
@@ -15677,7 +15677,7 @@ loc_13FFF:
 		push	ax
 		push	[bp+var_2]
 		push	230h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_4], 0
 		cmp	si, [bp+arg_0]
@@ -15718,7 +15718,7 @@ loc_1404B:
 		push	ax
 		push	[bp+var_2]
 		push	240h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		cmp	[bp+arg_0], si
 		jnz	short loc_14081
@@ -15902,7 +15902,7 @@ loc_141A2:
 		push	[bp+var_4]
 		push	di
 		push	si
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_141AF:
@@ -15919,7 +15919,7 @@ loc_141AF:
 		push	[bp+var_4]
 		push	di
 		push	si
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_141D2:
@@ -16113,7 +16113,7 @@ loc_1432E:
 		push	23h ; '#'
 		push	word_39460
 		push	word_3945E
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		les	bx, [bp+arg_8]
 		mov	bx, es:[bx]
@@ -16133,7 +16133,7 @@ loc_1432E:
 		push	3
 		push	word_39460
 		push	word_3945E
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		xor	ax, ax
 
@@ -16774,7 +16774,7 @@ loc_148F9:
 		push	offset aUmx_2	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
 		push	2270180h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	al, _rank
 		cbw
@@ -16792,7 +16792,7 @@ loc_14942:
 		push	offset aUmx_1	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
 		push	2270000h
 		push	0
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	al, _rank
 		cbw
@@ -16805,7 +16805,7 @@ loc_14942:
 
 loc_1496F:
 		push	0C0h ; '¿'
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		call	_graph_accesspage_func
@@ -23079,7 +23079,7 @@ loc_180F9:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aExtend	; "Extend!!"
@@ -23144,7 +23144,7 @@ loc_18184:
 		push	word ptr [bx+5370h]
 
 loc_1819C:
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_181A4:
@@ -23622,7 +23622,7 @@ loc_18509:
 
 loc_18512:
 		push	ax
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_1851B:
@@ -23795,7 +23795,7 @@ loc_18629:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	si
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 
 loc_18647:
@@ -25153,7 +25153,7 @@ var_4		= byte ptr -4
 		push	ax
 		push	270020h
 		push	260h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	100020h
 		push	260h
@@ -25225,7 +25225,7 @@ loc_19124:
 		mov	dx, 258h
 		sub	dx, ax
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		pushd	142h
 		push	200260h
@@ -25244,7 +25244,7 @@ loc_19124:
 		push	ax
 		push	270020h
 		push	260h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		call	_graph_accesspage_func
@@ -25269,7 +25269,7 @@ loc_19124:
 		mov	dx, 258h
 		sub	dx, ax
 		push	dx
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		pushd	142h
 		push	200260h
@@ -25280,7 +25280,7 @@ loc_19124:
 		push	ax
 		push	270020h
 		push	260h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	byte_39DA1, 0
 		cmp	byte_34A49, 1
@@ -25386,7 +25386,7 @@ loc_19287:
 		push	ax
 		push	270000h
 		push	200h
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		push	ss
@@ -25394,7 +25394,7 @@ loc_19287:
 		push	ax
 		push	270000h
 		push	200h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 18h
 		pop	si
 		leave
@@ -25442,7 +25442,7 @@ loc_192EB:
 		push	ax
 		push	si
 		pushd	200h
-		call	sub_FA43
+		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		pushd	14Dh
@@ -25463,7 +25463,7 @@ loc_192EB:
 		push	ax
 		push	si
 		pushd	200h
-		call	sub_FA43
+		call	graph_putsa_fx
 		add	sp, 0Ah
 		pop	si
 		leave
