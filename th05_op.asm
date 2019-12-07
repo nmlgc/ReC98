@@ -325,13 +325,13 @@ sub_A4CF	proc near
 loc_A4FB:
 		cmp	_key_det, INPUT_LEFT or INPUT_RIGHT
 		jnz	short loc_A535
-		cmp	byte_1411F, 0
+		cmp	_extra_playable_with.PLAYCHAR_REIMU, 0
 		jz	short loc_A529
-		cmp	byte_14120, 0
+		cmp	_extra_playable_with.PLAYCHAR_MARISA, 0
 		jz	short loc_A529
-		cmp	byte_14121, 0
+		cmp	_extra_playable_with.PLAYCHAR_MIMA, 0
 		jz	short loc_A529
-		cmp	byte_14122, 0
+		cmp	_extra_playable_with.PLAYCHAR_YUUKA, 0
 		jz	short loc_A529
 		les	bx, _ksoconfig
 		mov	byte ptr es:[bx+1Fh], 5
@@ -475,7 +475,7 @@ loc_A634:
 ; ---------------------------------------------------------------------------
 
 loc_A653:
-		cmp	byte_14116, 0
+		cmp	_extra_unlocked, 0
 
 loc_A658:
 		jnz	short loc_A665
@@ -820,7 +820,7 @@ loc_A98B:
 		mov	byte_F071, 0
 
 loc_A998:
-		cmp	byte_14116, 0
+		cmp	_extra_unlocked, 0
 		jnz	short loc_A9B6
 		mov	al, byte_F071
 		cbw
@@ -3959,7 +3959,7 @@ sub_CD94	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_14116, 0
+		mov	_extra_unlocked, 0
 		xor	si, si
 		jmp	short loc_CE0E
 ; ---------------------------------------------------------------------------
@@ -3975,36 +3975,36 @@ loc_CDA8:
 		or	al, al
 		jnz	short loc_CE0D
 		mov	bx, si
-		imul	bx, 5
+		imul	bx, RANK_COUNT
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
 		mov	al, byte_1409E
-		mov	[bx+5122h], al
+		mov	_cleared_with[bx], al
 		mov	bx, si
-		imul	bx, 5
+		imul	bx, RANK_COUNT
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
-		cmp	byte ptr [bx+5122h], 80h
+		cmp	_cleared_with[bx], 80h
 		jz	short loc_CDE7
 		mov	bx, si
-		imul	bx, 5
+		imul	bx, RANK_COUNT
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
-		mov	byte ptr [bx+5122h], 0
+		mov	_cleared_with[bx], 0
 
 loc_CDE7:
 		cmp	_hiscore_rank, RANK_EXTRA
 		jnb	short loc_CE02
 		mov	bx, si
-		imul	bx, 5
+		imul	bx, RANK_COUNT
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
-		mov	al, [bx+5122h]
-		or	byte_14116, al
+		mov	al, _cleared_with[bx]
+		or	_extra_unlocked, al
 
 loc_CE02:
 		inc	_hiscore_rank
@@ -4034,22 +4034,22 @@ loc_CE0E:
 
 loc_CE34:
 		mov	bx, si
-		imul	bx, 5
-		mov	al, [bx+5122h]
+		imul	bx, RANK_COUNT
+		mov	al, _cleared_with[bx].RANK_EASY
 		mov	bx, si
-		imul	bx, 5
-		or	al, [bx+5123h]
+		imul	bx, RANK_COUNT
+		or	al, _cleared_with[bx].RANK_NORMAL
 		mov	bx, si
-		imul	bx, 5
-		or	al, [bx+5124h]
+		imul	bx, RANK_COUNT
+		or	al, _cleared_with[bx].RANK_HARD
 		mov	bx, si
-		imul	bx, 5
-		or	al, [bx+5125h]
-		mov	[si+513Fh], al
+		imul	bx, RANK_COUNT
+		or	al, _cleared_with[bx].RANK_LUNATIC
+		mov	_extra_playable_with[si], al
 		inc	si
 
 loc_CE5D:
-		cmp	si, 4
+		cmp	si, PLAYCHAR_COUNT
 		jl	short loc_CE34
 		pop	si
 		pop	bp
@@ -4162,15 +4162,15 @@ arg_0		= word ptr  4
 		enter	4, 0
 		push	si
 		push	di
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_CF59
 		add	bx, bx
 		jmp	cs:off_D08D[bx]
 
-loc_CF18:
+@@reimu:
 		mov	si, 10h
 		mov	di, 30h	; '0'
 		mov	[bp+var_2], 0B0h ; '°'
@@ -4178,7 +4178,7 @@ loc_CF18:
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
-loc_CF2A:
+@@marisa:
 		mov	si, 110h
 		mov	di, 30h	; '0'
 		mov	[bp+var_2], 1B0h
@@ -4186,14 +4186,14 @@ loc_CF2A:
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
-loc_CF3C:
+@@mima:
 		mov	si, 0A0h
 		mov	di, 0E0h
 		mov	[bp+var_2], 140h
 		jmp	short loc_CF54
 ; ---------------------------------------------------------------------------
 
-loc_CF49:
+@@yuuka:
 		mov	si, 190h
 		mov	di, 0E0h
 		mov	[bp+var_2], 230h
@@ -4204,16 +4204,16 @@ loc_CF54:
 loc_CF59:
 		cmp	[bp+arg_0], 0
 		jnz	loc_D012
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+5143h], 0
+		cmp	_selectable_with[bx], 0
 		jz	short loc_CF82
 		lea	ax, [si-8]
 		push	ax
 		lea	ax, [di-8]
 		push	ax
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		add	ax, 40
 		push	ax
@@ -4258,14 +4258,14 @@ loc_CF8C:
 		push	ax
 		call	grcg_byteboxfill_x
 		GRCG_OFF_CLOBBERING dx
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
-		imul	ax, 5
+		imul	ax, RANK_COUNT
 		mov	dl, _rank
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		cmp	byte ptr [bx+5122h], 0
+		cmp	_cleared_with[bx], 0
 		jz	loc_D086
 		mov	ax, [bp+var_2]
 		add	ax, 0FFF8h
@@ -4290,14 +4290,14 @@ loc_D012:
 		push	di
 		push	800A0h
 		call	bgimage_put_rect
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+5143h], 0
+		cmp	_selectable_with[bx], 0
 		jz	short loc_D050
 		push	si
 		push	di
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		add	ax, 28h	; '('
 		push	ax
@@ -4311,34 +4311,34 @@ loc_D050:
 
 loc_D054:
 		call	cdg_put_noalpha
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
-		imul	ax, 5
+		imul	ax, RANK_COUNT
 		mov	dl, _rank
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		cmp	byte ptr [bx+5122h], 0
+		cmp	_cleared_with[bx], 0
 		jz	short loc_D07F
 		call	cdg_put pascal, [bp+var_2], [bp+var_4], 44
 
 loc_D07F:
-		push	word_14118
-		call	sub_CE65
+		call	sub_CE65 pascal, word ptr _playchar_menu_sel
 
 loc_D086:
 		pop	di
 		pop	si
 		leave
 		retn	2
+
+		db 0
+off_D08D	dw offset @@reimu
+		dw offset @@marisa
+		dw offset @@mima
+		dw offset @@yuuka
 sub_CEFF	endp
 
 ; ---------------------------------------------------------------------------
-		db 0
-off_D08D	dw offset loc_CF18
-		dw offset loc_CF2A
-		dw offset loc_CF3C
-		dw offset loc_CF49
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4350,7 +4350,7 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	PaletteTone, 0
@@ -4366,12 +4366,12 @@ var_2		= word ptr -2
 		graph_accesspage 1
 		graph_showpage 0
 		xor	si, si
-		mov	byte ptr word_14118, 0
+		mov	_playchar_menu_sel, PLAYCHAR_REIMU
 		jmp	short loc_D111
 ; ---------------------------------------------------------------------------
 
 loc_D0F7:
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		cmp	ax, [bp+var_2]
 		jz	short loc_D106
@@ -4386,13 +4386,13 @@ loc_D108:
 		push	ax
 		call	sub_CEFF
 		inc	si
-		inc	byte ptr word_14118
+		inc	_playchar_menu_sel
 
 loc_D111:
-		cmp	si, 4
+		cmp	si, PLAYCHAR_COUNT
 		jl	short loc_D0F7
 		mov	al, byte ptr [bp+var_2]
-		mov	byte ptr word_14118, al
+		mov	_playchar_menu_sel, al
 		push	0
 		call	graph_copy_page
 		push	1
@@ -4409,7 +4409,7 @@ sub_D095	endp
 
 sub_D12D	proc near
 
-var_4		= word ptr -4
+@@i		= word ptr -4
 var_1		= byte ptr -1
 
 		enter	4, 0
@@ -4418,58 +4418,59 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_D138:
-		mov	bx, [bp+var_4]
-		mov	al, [bx+513Fh]
-		mov	[bx+5143h], al
-		inc	[bp+var_4]
+		mov	bx, [bp+@@i]
+		mov	al, _extra_playable_with[bx]
+		mov	_selectable_with[bx], al
+		inc	[bp+@@i]
 
 loc_D146:
-		cmp	[bp+var_4], 4
+		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D138
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
-		jnz	short loc_D18A
+		jnz	short @@not_extra
+
 		mov	_rank, RANK_EXTRA
-		mov	byte ptr word_14118, 0FFh
-		mov	[bp+var_4], 0
+		mov	_playchar_menu_sel, -1
+		mov	[bp+@@i], 0
 		jmp	short loc_D182
 ; ---------------------------------------------------------------------------
 
 loc_D168:
-		cmp	byte ptr word_14118, 0FFh
+		cmp	_playchar_menu_sel, -1
 		jnz	short loc_D17F
-		mov	bx, [bp+var_4]
-		cmp	byte ptr [bx+5143h], 0
+		mov	bx, [bp+@@i]
+		cmp	_selectable_with[bx], 0
 		jz	short loc_D17F
-		mov	al, byte ptr [bp+var_4]
-		mov	byte ptr word_14118, al
+		mov	al, byte ptr [bp+@@i]
+		mov	_playchar_menu_sel, al
 
 loc_D17F:
-		inc	[bp+var_4]
+		inc	[bp+@@i]
 
 loc_D182:
-		cmp	[bp+var_4], 4
+		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D168
 		jmp	short loc_D1B2
 ; ---------------------------------------------------------------------------
 
-loc_D18A:
-		mov	[bp+var_4], 0
+@@not_extra:
+		mov	[bp+@@i], 0
 		jmp	short loc_D19C
 ; ---------------------------------------------------------------------------
 
 loc_D191:
-		mov	bx, [bp+var_4]
-		mov	byte ptr [bx+5143h], 1
-		inc	[bp+var_4]
+		mov	bx, [bp+@@i]
+		mov	_selectable_with[bx], 1
+		inc	[bp+@@i]
 
 loc_D19C:
-		cmp	[bp+var_4], 4
+		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D191
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	_rank, al
-		mov	byte ptr word_14118, 0
+		mov	_playchar_menu_sel, PLAYCHAR_REIMU
 
 loc_D1B2:
 		call	sub_D095
@@ -4490,7 +4491,7 @@ loc_D1D0:
 		graph_accesspage 1
 		push	1
 		call	sub_CEFF
-		xor	byte ptr word_14118, 1
+		xor	_playchar_menu_sel, 1 ; 0<->1 2<->3
 		push	0
 		call	sub_CEFF
 		mov	vsync_Count1, 0
@@ -4517,7 +4518,7 @@ loc_D231:
 		graph_accesspage 1
 		push	1
 		call	sub_CEFF
-		xor	byte ptr word_14118, 2
+		xor	_playchar_menu_sel, 2 ; 0<->2 1<->3
 		push	0
 		call	sub_CEFF
 		mov	vsync_Count1, 0
@@ -4535,19 +4536,19 @@ loc_D284:
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_D292
 		test	_key_det.lo, low INPUT_SHOT
-		jz	short loc_D2CC
+		jz	short @@unable_to_select
 
 loc_D292:
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+5143h], 0
-		jz	short loc_D2CC
+		cmp	_selectable_with[bx], 0
+		jz	short @@unable_to_select
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		les	bx, _ksoconfig
-		mov	al, byte ptr word_14118
+		mov	al, _playchar_menu_sel
 		mov	es:[bx+14h], al
 		push	1
 		call	palette_black_out
@@ -4557,7 +4558,7 @@ loc_D292:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_D2CC:
+@@unable_to_select:
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_D2E4
 		push	1
@@ -5698,24 +5699,12 @@ byte_140A2	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		db    ?	;
-		db    ?	;
-_hiscore_rank	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-byte_14116	db ?
-		db ?
-word_14118	dw ?
-_rank	db ?
-		dd    ?	;
-byte_1411F	db ?
-byte_14120	db ?
-byte_14121	db ?
-byte_14122	db ?
-		dd    ?	;
-		db    ?	;
+	extern _hiscore_rank:byte
+	extern _cleared_with:byte
+	extern _extra_unlocked:byte
+	extern _playchar_menu_sel:byte
+	extern _rank:byte
+	extern _extra_playable_with:byte
+	extern _selectable_with:byte
 
 		end
