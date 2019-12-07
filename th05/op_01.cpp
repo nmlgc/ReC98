@@ -1,6 +1,6 @@
 /* ReC98
  * -----
- * Code segment #1 of TH02's OP.EXE
+ * Code segment #1 of TH05's OP.EXE
  */
 
 extern "C" {

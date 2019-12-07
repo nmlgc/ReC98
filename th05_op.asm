@@ -168,7 +168,7 @@ sub_A39C	proc near
 		mov	es:[bx+0Dh], al
 		mov	al, es:[bx+10h]
 		mov	es:[bx+0Eh], al
-		call	sub_D12D
+		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A443
 		xor	si, si
@@ -250,7 +250,7 @@ sub_A447	proc near
 		mov	byte ptr es:[bx+13h], 6
 		mov	byte ptr es:[bx+0Dh], 3
 		mov	byte ptr es:[bx+0Eh], 3
-		call	sub_D12D
+		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A4CB
 		xor	si, si
@@ -4061,7 +4061,7 @@ sub_CD94	endp
 
 ; Attributes: bp-based frame
 
-sub_CE65	proc near
+darken_pic	proc near
 
 var_6		= dword	ptr -6
 var_2		= word ptr -2
@@ -4141,7 +4141,7 @@ loc_CEE5:
 		pop	si
 		leave
 		retn	2
-sub_CE65	endp
+darken_pic	endp
 
 ; ---------------------------------------------------------------------------
 off_CEF7	dw offset loc_CE7E
@@ -4153,11 +4153,11 @@ off_CEF7	dw offset loc_CE7E
 
 ; Attributes: bp-based frame
 
-sub_CEFF	proc near
+put_pic	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
+@@y		= word ptr -4
+@@x		= word ptr -2
+@@highlight		= word ptr  4
 
 		enter	4, 0
 		push	si
@@ -4173,36 +4173,36 @@ arg_0		= word ptr  4
 @@reimu:
 		mov	si, 10h
 		mov	di, 30h	; '0'
-		mov	[bp+var_2], 0B0h ; '°'
-		mov	[bp+var_4], 0C0h
+		mov	[bp+@@x], 0B0h
+		mov	[bp+@@y], 0C0h
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
 @@marisa:
 		mov	si, 110h
 		mov	di, 30h	; '0'
-		mov	[bp+var_2], 1B0h
-		mov	[bp+var_4], 0C0h
+		mov	[bp+@@x], 1B0h
+		mov	[bp+@@y], 0C0h
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
 @@mima:
 		mov	si, 0A0h
 		mov	di, 0E0h
-		mov	[bp+var_2], 140h
+		mov	[bp+@@x], 140h
 		jmp	short loc_CF54
 ; ---------------------------------------------------------------------------
 
 @@yuuka:
 		mov	si, 190h
 		mov	di, 0E0h
-		mov	[bp+var_2], 230h
+		mov	[bp+@@x], 230h
 
 loc_CF54:
-		mov	[bp+var_4], 170h
+		mov	[bp+@@y], 170h
 
 loc_CF59:
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@highlight], 0
 		jnz	loc_D012
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
@@ -4267,11 +4267,11 @@ loc_CF8C:
 		mov	bx, ax
 		cmp	_cleared_with[bx], 0
 		jz	loc_D086
-		mov	ax, [bp+var_2]
-		add	ax, 0FFF8h
+		mov	ax, [bp+@@x]
+		add	ax, -8
 		push	ax
-		mov	ax, [bp+var_4]
-		add	ax, 0FFF8h
+		mov	ax, [bp+@@y]
+		add	ax, -8
 		push	ax
 		push	44
 		call	cdg_put
@@ -4320,10 +4320,10 @@ loc_D054:
 		mov	bx, ax
 		cmp	_cleared_with[bx], 0
 		jz	short loc_D07F
-		call	cdg_put pascal, [bp+var_2], [bp+var_4], 44
+		call	cdg_put pascal, [bp+@@x], [bp+@@y], 44
 
 loc_D07F:
-		call	sub_CE65 pascal, word ptr _playchar_menu_sel
+		call	darken_pic pascal, word ptr _playchar_menu_sel
 
 loc_D086:
 		pop	di
@@ -4336,7 +4336,7 @@ off_D08D	dw offset @@reimu
 		dw offset @@marisa
 		dw offset @@mima
 		dw offset @@yuuka
-sub_CEFF	endp
+put_pic	endp
 
 ; ---------------------------------------------------------------------------
 
@@ -4344,15 +4344,15 @@ sub_CEFF	endp
 
 ; Attributes: bp-based frame
 
-sub_D095	proc near
+playchar_menu_init	proc near
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	2, 0
 		push	si
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
-		mov	[bp+var_2], ax
+		mov	[bp+@@i], ax
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
@@ -4360,8 +4360,7 @@ var_2		= word ptr -2
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
@@ -4373,7 +4372,7 @@ var_2		= word ptr -2
 loc_D0F7:
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
-		cmp	ax, [bp+var_2]
+		cmp	ax, [bp+@@i]
 		jz	short loc_D106
 		mov	ax, 1
 		jmp	short loc_D108
@@ -4384,14 +4383,14 @@ loc_D106:
 
 loc_D108:
 		push	ax
-		call	sub_CEFF
+		call	put_pic
 		inc	si
 		inc	_playchar_menu_sel
 
 loc_D111:
 		cmp	si, PLAYCHAR_COUNT
 		jl	short loc_D0F7
-		mov	al, byte ptr [bp+var_2]
+		mov	al, byte ptr [bp+@@i]
 		mov	_playchar_menu_sel, al
 		push	0
 		call	graph_copy_page
@@ -4400,20 +4399,20 @@ loc_D111:
 		pop	si
 		leave
 		retn
-sub_D095	endp
+playchar_menu_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_D12D	proc near
+playchar_menu	proc near
 
 @@i		= word ptr -4
-var_1		= byte ptr -1
+@@input_locked		= byte ptr -1
 
 		enter	4, 0
-		mov	[bp+var_4], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_D146
 ; ---------------------------------------------------------------------------
 
@@ -4426,6 +4425,7 @@ loc_D138:
 loc_D146:
 		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D138
+
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short @@not_extra
@@ -4467,78 +4467,69 @@ loc_D191:
 loc_D19C:
 		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D191
+
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	_rank, al
 		mov	_playchar_menu_sel, PLAYCHAR_REIMU
 
 loc_D1B2:
-		call	sub_D095
+		call	playchar_menu_init
 
 loc_D1B5:
 		call	_input_reset_sense_held
-		cmp	[bp+var_1], 0
+		cmp	[bp+@@input_locked], 0
 		jnz	loc_D2EC
 		test	_key_det.lo, low INPUT_LEFT
-		jnz	short loc_D1D0
+		jnz	short @@left_or_right_pressed
 		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_D223
 
-loc_D1D0:
+@@left_or_right_pressed:
 		call	snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		graph_accesspage 1
-		push	1
-		call	sub_CEFF
+		call	put_pic pascal, 1
 		xor	_playchar_menu_sel, 1 ; 0<->1 2<->3
-		push	0
-		call	sub_CEFF
+		call	put_pic pascal, 0
 		mov	vsync_Count1, 0
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		graph_showpage 1
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	vsync_Count1, 0
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		graph_showpage 0
 
 loc_D223:
 		test	_key_det.lo, low INPUT_UP
-		jnz	short loc_D231
+		jnz	short @@up_or_down_pressed
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_D284
 
-loc_D231:
+@@up_or_down_pressed:
 		call	snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		graph_accesspage 1
-		push	1
-		call	sub_CEFF
+		call	put_pic pascal, 1
 		xor	_playchar_menu_sel, 2 ; 0<->2 1<->3
-		push	0
-		call	sub_CEFF
+		call	put_pic pascal, 0
 		mov	vsync_Count1, 0
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		graph_showpage 1
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	vsync_Count1, 0
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		graph_showpage 0
 
 loc_D284:
 		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_D292
+		jnz	short @@z_pressed
 		test	_key_det.lo, low INPUT_SHOT
 		jz	short @@unable_to_select
 
-loc_D292:
+@@z_pressed:
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
@@ -4556,13 +4547,11 @@ loc_D292:
 		xor	ax, ax
 		leave
 		retn
-; ---------------------------------------------------------------------------
 
 @@unable_to_select:
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_D2E4
-		push	1
-		call	palette_black_out
+		call	palette_black_out pascal, 1
 		call	bgimage_free
 		mov	ax, 1
 		leave
@@ -4571,23 +4560,22 @@ loc_D292:
 
 loc_D2E4:
 		mov	al, _key_det.lo
-		mov	[bp+var_1], al
+		mov	[bp+@@input_locked], al
 		jmp	short loc_D2F7
 ; ---------------------------------------------------------------------------
 
 loc_D2EC:
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_D2F7
-		mov	[bp+var_1], 0
+		mov	[bp+@@input_locked], 0
 
 loc_D2F7:
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		jmp	loc_D1B5
 ; ---------------------------------------------------------------------------
 		leave
 		retn
-sub_D12D	endp
+playchar_menu	endp
 
 ; ---------------------------------------------------------------------------
 		db 0

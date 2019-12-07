@@ -367,7 +367,7 @@ sub_A8F1	proc near
 		mov	es:[bx+0Eh], al
 		mov	byte ptr es:[bx+12h], 30h ; '0'
 		mov	byte ptr es:[bx+13h], 30h ; '0'
-		call	sub_D708
+		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A96A
 		les	bx, _humaconfig
@@ -418,7 +418,7 @@ sub_A96C	proc near
 		mov	byte ptr es:[bx+0Eh], 2
 		mov	byte ptr es:[bx+12h], 30h ; '0'
 		mov	byte ptr es:[bx+13h], 36h ; '6'
-		call	sub_D708
+		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A9C7
 		les	bx, _humaconfig
@@ -4066,7 +4066,7 @@ sub_D1F3	endp
 
 ; Attributes: bp-based frame
 
-sub_D20A	proc near
+darken_pic	proc near
 
 var_6		= dword	ptr -6
 var_2		= word ptr -2
@@ -4129,7 +4129,7 @@ loc_D273:
 		pop	si
 		leave
 		retn	2
-sub_D20A	endp
+darken_pic	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4305,7 +4305,7 @@ sub_D3A2	proc near
 		push	41
 		call	cdg_put_noalpha
 		push	1
-		call	sub_D20A
+		call	darken_pic
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		call	grcg_byteboxfill_x pascal, ((296 / 8) shl 16) or  52, ((296 / 8) shl 16) or 287
 		call	grcg_byteboxfill_x pascal, (( 48 / 8) shl 16) or 288, ((296 / 8) shl 16) or 295
@@ -4324,7 +4324,7 @@ loc_D407:
 		push	40
 		call	cdg_put_noalpha
 		push	0
-		call	sub_D20A
+		call	darken_pic
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		call	grcg_byteboxfill_x pascal, ((584 / 8) shl 16) or  52, ((584 / 8) shl 16) or 287
 		call	grcg_byteboxfill_x pascal, ((336 / 8) shl 16) or 288, ((584 / 8) shl 16) or 295
@@ -4605,7 +4605,7 @@ sub_D650	endp
 
 ; Attributes: bp-based frame
 
-sub_D6B2	proc near
+playchar_menu_init	proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
@@ -4627,17 +4627,17 @@ sub_D6B2	proc near
 		call	palette_black_in
 		pop	bp
 		retn
-sub_D6B2	endp
+playchar_menu_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_D708	proc near
+playchar_menu	proc near
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@input_locked		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -4744,11 +4744,11 @@ loc_D7B5:
 		mov	byte_132B8, al
 
 loc_D7B8:
-		call	sub_D6B2
+		call	playchar_menu_init
 
 loc_D7BB:
 		call	far ptr	_input_reset_sense
-		cmp	[bp+var_1], 0
+		cmp	[bp+@@input_locked], 0
 		jnz	loc_D8DF
 		test	_key_det.lo, low INPUT_LEFT
 		jnz	short loc_D7D6
@@ -4843,14 +4843,14 @@ loc_D8B2:
 
 loc_D8D7:
 		mov	al, _key_det.lo
-		mov	[bp+var_1], al
+		mov	[bp+@@input_locked], al
 		jmp	short loc_D8EA
 ; ---------------------------------------------------------------------------
 
 loc_D8DF:
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_D8EA
-		mov	[bp+var_1], 0
+		mov	[bp+@@input_locked], 0
 
 loc_D8EA:
 		push	1
@@ -4860,7 +4860,7 @@ loc_D8EA:
 
 loc_D8F4:
 		call	far ptr	_input_reset_sense
-		cmp	[bp+var_1], 0
+		cmp	[bp+@@input_locked], 0
 		jnz	loc_D9F8
 		test	_key_det.lo, low INPUT_UP
 		jnz	short loc_D90F
@@ -4906,11 +4906,11 @@ loc_D939:
 
 loc_D986:
 		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_D994
+		jnz	short @@z_pressed
 		test	_key_det.lo, low INPUT_SHOT
 		jz	short loc_D9D5
 
-loc_D994:
+@@z_pressed:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
@@ -4938,14 +4938,14 @@ loc_D9D5:
 
 loc_D9F0:
 		mov	al, _key_det.lo
-		mov	[bp+var_1], al
+		mov	[bp+@@input_locked], al
 		jmp	short loc_DA03
 ; ---------------------------------------------------------------------------
 
 loc_D9F8:
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_DA03
-		mov	[bp+var_1], 0
+		mov	[bp+@@input_locked], 0
 
 loc_DA03:
 		push	1
@@ -4958,7 +4958,7 @@ loc_DA0D:
 		pop	si
 		leave
 		retn
-sub_D708	endp
+playchar_menu	endp
 		db    0
 
 op_01_TEXT	ends
