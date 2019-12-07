@@ -785,8 +785,8 @@ sub_9E16	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9E7F	proc near
+public SCORE_MENU
+score_menu	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -823,7 +823,7 @@ loc_9EA6:
 		pop	si
 		pop	bp
 		retn
-sub_9E7F	endp
+score_menu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1209,7 +1209,7 @@ loc_A1B4:
 ; ---------------------------------------------------------------------------
 
 loc_A1BB:
-		call	sub_9E7F
+		call	score_menu
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
 

@@ -963,7 +963,7 @@ loc_AAE1:
 ; ---------------------------------------------------------------------------
 
 loc_AB31:
-		call	sub_CC5C
+		call	score_menu
 		mov	byte_F0DC, 0
 		jmp	short loc_ABA8
 ; ---------------------------------------------------------------------------
@@ -1440,7 +1440,7 @@ loc_AFE1:
 loc_AFF4:
 		call	sub_BC8D
 		call	load_char_select_sprite_function
-		call	sub_CD94
+		call	score_cleared_load
 		mov	byte_11DD0, 0
 		mov	byte_F072, 0
 		mov	byte_F071, 0
@@ -3482,8 +3482,8 @@ sub_C8E2	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C9BE	proc near
+public SCORE_LOAD
+score_load	proc near
 
 arg_0		= word ptr  4
 
@@ -3527,7 +3527,7 @@ loc_CA15:
 		mov	al, 0
 		pop	bp
 		retn	2
-sub_C9BE	endp
+score_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3808,7 +3808,7 @@ off_CBD4	dw offset loc_CB1B
 
 ; Attributes: bp-based frame
 
-sub_CBDC	proc near
+score_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -3825,7 +3825,7 @@ sub_CBDC	proc near
 
 loc_CC13:
 		push	si
-		call	sub_C9BE
+		call	score_load
 		xor	di, di
 		jmp	short loc_CC21
 ; ---------------------------------------------------------------------------
@@ -3862,14 +3862,14 @@ loc_CC27:
 		pop	si
 		pop	bp
 		retn
-sub_CBDC	endp
+score_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CC5C	proc near
+public SCORE_MENU
+score_menu	proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -3884,14 +3884,12 @@ sub_CC5C	proc near
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 
 loc_CC9F:
-		call	sub_CBDC
-		push	1
-		call	palette_black_in
+		call	score_render
+		call	palette_black_in pascal, 1
 
 loc_CCA9:
 		call	_input_reset_sense_held
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		test	_key_det.hi, high INPUT_OK
 		jnz	short loc_CD17
 		test	_key_det.lo, low INPUT_SHOT
@@ -3907,9 +3905,8 @@ loc_CCA9:
 		dec	_hiscore_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_CBDC
-		push	1
-		call	palette_black_in
+		call	score_render
+		call	palette_black_in pascal, 1
 
 loc_CCF8:
 		test	_key_det.lo, low INPUT_RIGHT
@@ -3924,23 +3921,19 @@ loc_CCF8:
 
 loc_CD17:
 		kajacall	KAJA_SONG_FADE, 1
-		push	1
-		call	palette_black_out
+		call	palette_black_out pascal, 1
 		call	pi_slot_free pascal, 0
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi_1
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
-		push	1
-		call	palette_black_in
+		call	graph_copy_page pascal, 0
+		call	palette_black_in pascal, 1
 
 loc_CD64:
 		call	_input_reset_sense_held
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_CD64
 		kajacall	KAJA_SONG_STOP
@@ -3948,14 +3941,14 @@ loc_CD64:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-sub_CC5C	endp
+score_menu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CD94	proc near
+public SCORE_CLEARED_LOAD
+score_cleared_load	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -3971,7 +3964,7 @@ loc_CDA1:
 
 loc_CDA8:
 		push	si
-		call	sub_C9BE
+		call	score_load
 		or	al, al
 		jnz	short loc_CE0D
 		mov	bx, si
@@ -4054,7 +4047,7 @@ loc_CE5D:
 		pop	si
 		pop	bp
 		retn
-sub_CD94	endp
+score_cleared_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

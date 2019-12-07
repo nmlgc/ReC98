@@ -1501,7 +1501,7 @@ loc_B40D:
 
 loc_B420:
 		call	sub_CCD2
-		call	sub_CBE3
+		call	score_cleared_load
 		call	sub_CC97
 		mov	byte_10DA8, 0
 		mov	byte_F3DC, 0
@@ -2947,8 +2947,8 @@ sub_C68C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C733	proc near
+public SCORE_LOAD
+score_load	proc near
 		push	bp
 		mov	bp, sp
 		push	ds
@@ -2993,7 +2993,7 @@ loc_C79A:
 		mov	al, 0
 		pop	bp
 		retn
-sub_C733	endp
+score_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3309,8 +3309,8 @@ sub_C8F5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CA1A	proc near
+public SCORE_MENU
+score_menu	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -3353,7 +3353,7 @@ loc_CA5B:
 		pop	si
 		pop	bp
 		retn
-sub_CA1A	endp
+score_menu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3373,11 +3373,11 @@ sub_CA94	proc near
 		assume es:nothing
 		mov	al, es:[bx+0Fh]
 		mov	_rank, al
-		call	sub_C733
+		call	score_load
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
-		call	sub_CA1A
+		call	score_menu
 		push	1
 		call	palette_black_in
 
@@ -3400,8 +3400,8 @@ loc_CAE4:
 		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_C733
-		call	sub_CA1A
+		call	score_load
+		call	score_menu
 		push	1
 		call	palette_black_in
 
@@ -3413,7 +3413,7 @@ loc_CB36:
 		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	sub_C733
+		call	score_load
 		jmp	short loc_CADA
 ; ---------------------------------------------------------------------------
 
@@ -3449,8 +3449,8 @@ sub_CA94	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CBE3	proc near
+public SCORE_CLEARED_LOAD
+score_cleared_load	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -3458,7 +3458,7 @@ sub_CBE3	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CBEE:
-		call	sub_C733
+		call	score_load
 		or	al, al
 		jnz	loc_CC78
 		mov	al, _rank
@@ -3524,7 +3524,7 @@ loc_CC78:
 		call	super_entry_bfnt
 		pop	bp
 		retn
-sub_CBE3	endp
+score_cleared_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
