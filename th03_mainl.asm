@@ -2046,7 +2046,7 @@ loc_A7A2:
 
 loc_A7C4:
 		push	[bp+var_2]
-		call	sub_D47A
+		call	input_wait_for_ok
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2081,7 +2081,7 @@ loc_A7E7:
 loc_A814:
 		push	[bp+var_2]
 		push	[bp+var_4]
-		call	sub_D42D
+		call	input_wait_for_ok_or_measure
 		jmp	loc_AB63
 ; ---------------------------------------------------------------------------
 
@@ -5650,97 +5650,7 @@ sub_D16F	endp
 
 include th03/hardware/grppsafx.asm
 include th03/snd/delaymea.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D42D	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		cmp	_snd_active, 0
-		jnz	short loc_D443
-		push	[bp+arg_0]
-		nopcall	sub_D47A
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_D443:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_midi_active, 1
-		jz	short loc_D450
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_D455
-; ---------------------------------------------------------------------------
-
-loc_D450:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_D455:
-		nopcall	input_mode_interface
-		test	_input_sp.lo, low INPUT_SHOT
-		jnz	short loc_D468
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_D46F
-
-loc_D468:
-		mov	ax, 1
-		pop	bp
-		retf	4
-; ---------------------------------------------------------------------------
-
-loc_D46F:
-		cmp	ax, [bp+arg_2]
-		jb	short loc_D443
-		xor	ax, ax
-		pop	bp
-		retf	4
-sub_D42D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D47A	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	vsync_Count1, 0
-
-loc_D483:
-		nopcall	input_mode_interface
-		test	_input_sp.lo, low INPUT_SHOT
-		jnz	short loc_D496
-		test	_input_sp.hi, high INPUT_OK
-		jz	short loc_D49D
-
-loc_D496:
-		mov	ax, 1
-		pop	bp
-		retf	2
-; ---------------------------------------------------------------------------
-
-loc_D49D:
-		mov	ax, vsync_Count1
-		cmp	ax, [bp+arg_0]
-		jb	short loc_D483
-		xor	ax, ax
-		pop	bp
-		retf	2
-sub_D47A	endp
-
+include th03/hardware/input_wait_ok.asm
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
 include th03/hardware/input_modes.asm
