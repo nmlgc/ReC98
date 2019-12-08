@@ -275,8 +275,8 @@ cfg_save_exit	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9A17	proc near
+public START_GAME
+start_game	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -434,7 +434,7 @@ loc_9B9A:
 		pop	si
 		leave
 		retn
-sub_9A17	endp
+start_game	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -487,8 +487,8 @@ sub_9B9D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9BDF	proc near
+public START_VS
+start_vs	proc near
 
 var_2		= word ptr -2
 
@@ -646,7 +646,7 @@ loc_9D49:
 		pop	si
 		leave
 		retn
-sub_9BDF	endp
+start_vs	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -829,8 +829,8 @@ score_menu	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9EDD	proc near
+public MAIN_PUT
+main_put	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -901,14 +901,14 @@ loc_9F51:
 		pop	si
 		pop	bp
 		retn	4
-sub_9EDD	endp
+main_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9F57	proc near
+public OPTION_PUT
+option_put	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -1050,7 +1050,7 @@ loc_A092:
 		pop	si
 		pop	bp
 		retn	4
-sub_9F57	endp
+option_put	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -1062,53 +1062,53 @@ off_A099	dw offset loc_9FA2
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A0A1	proc near
+public MENU_SEL_MOVE
+menu_sel_move	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	1
-		call	fp_E97E
+		call	_putfunc
 		mov	al, [bp+arg_0]
-		add	byte_D951, al
-		cmp	byte_D951, 0
+		add	_menu_sel, al
+		cmp	_menu_sel, 0
 		jge	short loc_A0C3
 		mov	al, [bp+arg_2]
-		mov	byte_D951, al
+		mov	_menu_sel, al
 
 loc_A0C3:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cmp	al, [bp+arg_2]
 		jle	short loc_A0D0
-		mov	byte_D951, 0
+		mov	_menu_sel, 0
 
 loc_A0D0:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0E1h
-		call	fp_E97E
+		call	_putfunc
 		pop	bp
 		retn	4
-sub_A0A1	endp
+menu_sel_move	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A0E0	proc near
+public MAIN_UPDATE_AND_RENDER
+main_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_D954, 0
-		jnz	short loc_A133
+		cmp	_main_menu_initialized, 0
+		jnz	short @@main_initialized
 		call	text_clear
 		cmp	byte_D953, 0
 		jnz	short loc_A0FA
@@ -1116,14 +1116,14 @@ sub_A0E0	proc near
 
 loc_A0FA:
 		mov	byte_D953, 0
-		mov	byte_E97A, 0
+		mov	_main_input_allowed, 0
 		xor	si, si
 		jmp	short loc_A11E
 ; ---------------------------------------------------------------------------
 
 loc_A108:
 		push	si
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, si
 		jnz	short loc_A116
@@ -1136,36 +1136,32 @@ loc_A116:
 
 loc_A119:
 		push	ax
-		call	sub_9EDD
+		call	main_put
 		inc	si
 
 loc_A11E:
 		cmp	si, 6
 		jl	short loc_A108
-		mov	fp_E97E, offset sub_9EDD
-		mov	byte_D954, 1
-		mov	byte_E97A, 0
+		mov	_putfunc, offset main_put
+		mov	_main_menu_initialized, 1
+		mov	_main_input_allowed, 0
 
-loc_A133:
+@@main_initialized:
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_A13F
-		mov	byte_E97A, 1
+		mov	_main_input_allowed, 1
 
 loc_A13F:
-		cmp	byte_E97A, 0
-		jz	loc_A1F3
+		cmp	_main_input_allowed, 0
+		jz	@@no_main_input_allowed
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_A156
-		push	5
-		push	0FFFFh
-		call	sub_A0A1
+		call	menu_sel_move pascal, 5, -1
 
 loc_A156:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_A164
-		push	5
-		push	1
-		call	sub_A0A1
+		call	menu_sel_move pascal, 5, 1
 
 loc_A164:
 		test	_input_sp.hi, high INPUT_OK
@@ -1174,7 +1170,7 @@ loc_A164:
 		jz	short loc_A1DB
 
 loc_A172:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -1182,93 +1178,93 @@ loc_A172:
 		add	bx, bx
 		jmp	cs:off_A1F7[bx]
 
-loc_A184:
-		call	sub_9A17
+menu_sel_start:
+		call	start_game
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 
-loc_A189:
+menu_sel_vs_start:
 		les	bx, _yumeconfig
 		mov	byte ptr es:[bx+0Ch], 1
 		mov	byte ptr es:[bx+0Dh], 1
-		call	sub_9BDF
+		call	start_vs
 
 loc_A19A:
 		call	sub_B008
 		call	sub_9E16
 		call	sub_B3C3
-		mov	byte_D954, 0
-		mov	byte_E97A, 0
+		mov	_main_menu_initialized, 0
+		mov	_main_input_allowed, 0
 		mov	byte_D953, 1
-		jmp	short loc_A1F3
+		jmp	short @@no_main_input_allowed
 ; ---------------------------------------------------------------------------
 
-loc_A1B4:
+menu_sel_musicroom:
 		nopcall	musicroom
 		jmp	short loc_A19A
 ; ---------------------------------------------------------------------------
 
-loc_A1BB:
+menu_sel_hiscore:
 		call	score_menu
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
 
-loc_A1C0:
-		mov	byte_D954, 0
-		mov	byte_E97C, 1
-		mov	byte_D951, 0
+menu_sel_option:
+		mov	_main_menu_initialized, 0
+		mov	_in_option, 1
+		mov	_menu_sel, 0
 		jmp	short loc_A1DB
 ; ---------------------------------------------------------------------------
 
-loc_A1D1:
-		mov	byte_D954, 0
-		mov	byte_D952, 1
+menu_sel_quit:
+		mov	_main_menu_initialized, 0
+		mov	_quit, 1
 
 loc_A1DB:
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_A1E7
-		mov	byte_D952, 1
+		mov	_quit, 1
 
 loc_A1E7:
 		cmp	_input_sp, INPUT_NONE
-		jz	short loc_A1F3
-		mov	byte_E97A, 0
+		jz	short @@no_main_input_allowed
+		mov	_main_input_allowed, 0
 
-loc_A1F3:
+@@no_main_input_allowed:
 		pop	si
 		pop	bp
 		retn
-sub_A0E0	endp
+main_update_and_render	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-off_A1F7	dw offset loc_A184
-		dw offset loc_A189
-		dw offset loc_A1B4
-		dw offset loc_A1BB
-		dw offset loc_A1C0
-		dw offset loc_A1D1
+off_A1F7	dw offset menu_sel_start
+		dw offset menu_sel_vs_start
+		dw offset menu_sel_musicroom
+		dw offset menu_sel_hiscore
+		dw offset menu_sel_option
+		dw offset menu_sel_quit
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A203	proc near
+public OPTION_UPDATE_AND_RENDER
+option_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_D955, 0
+		cmp	_option_initialized, 0
 		jnz	short loc_A24A
 		call	text_clear
 		call	sub_B0AF
-		mov	byte_E97B, 0
+		mov	_option_input_allowed, 0
 		xor	si, si
 		jmp	short loc_A235
 ; ---------------------------------------------------------------------------
 
 loc_A21F:
 		push	si
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, si
 		jnz	short loc_A22D
@@ -1281,41 +1277,37 @@ loc_A22D:
 
 loc_A230:
 		push	ax
-		call	sub_9F57
+		call	option_put
 		inc	si
 
 loc_A235:
 		cmp	si, 4
 		jl	short loc_A21F
-		mov	fp_E97E, offset sub_9F57
-		mov	byte_D955, 1
-		mov	byte_E97B, 0
+		mov	_putfunc, offset option_put
+		mov	_option_initialized, 1
+		mov	_option_input_allowed, 0
 
 loc_A24A:
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_A256
-		mov	byte_E97B, 1
+		mov	_option_input_allowed, 1
 
 loc_A256:
-		cmp	byte_E97B, 0
+		cmp	_option_input_allowed, 0
 		jz	loc_A414
 		test	_input_sp.lo, low INPUT_UP
 		jz	short loc_A26D
-		push	3
-		push	0FFFFh
-		call	sub_A0A1
+		call	menu_sel_move pascal, 3, -1
 
 loc_A26D:
 		test	_input_sp.lo, low INPUT_DOWN
 		jz	short loc_A27B
-		push	3
-		push	1
-		call	sub_A0A1
+		call	menu_sel_move pascal, 3, 1
 
 loc_A27B:
 		test	_input_sp.lo, low INPUT_RIGHT
 		jz	loc_A31D
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		or	ax, ax
 		jz	short loc_A298
@@ -1355,11 +1347,11 @@ loc_A2DB:
 		mov	_snd_active, 0
 
 loc_A2F1:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0E1h
-		call	sub_9F57
+		call	option_put
 		jmp	short loc_A312
 ; ---------------------------------------------------------------------------
 
@@ -1371,16 +1363,16 @@ loc_A2FE:
 		mov	byte ptr es:[bx+16h], 0
 
 loc_A312:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0E1h
-		call	sub_9F57
+		call	option_put
 
 loc_A31D:
 		test	_input_sp.lo, low INPUT_LEFT
 		jz	loc_A3CC
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		or	ax, ax
 		jz	short loc_A33B
@@ -1425,11 +1417,11 @@ loc_A384:
 		mov	_snd_active, 0
 
 loc_A39A:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0E1h
-		call	sub_9F57
+		call	option_put
 		jmp	short loc_A3C1
 ; ---------------------------------------------------------------------------
 
@@ -1446,11 +1438,11 @@ loc_A3B9:
 		dec	byte ptr es:[bx+16h]
 
 loc_A3C1:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0E1h
-		call	sub_9F57
+		call	option_put
 
 loc_A3CC:
 		test	_input_sp.hi, high INPUT_OK
@@ -1459,31 +1451,31 @@ loc_A3CC:
 		jz	short loc_A3F2
 
 loc_A3DA:
-		mov	al, byte_D951
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 3
 		jnz	short loc_A3F2
-		mov	byte_D955, 0
-		mov	byte_D951, 4
-		mov	byte_E97C, 0
+		mov	_option_initialized, 0
+		mov	_menu_sel, 4
+		mov	_in_option, 0
 
 loc_A3F2:
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_A408
-		mov	byte_D955, 0
-		mov	byte_D951, 4
-		mov	byte_E97C, 0
+		mov	_option_initialized, 0
+		mov	_menu_sel, 4
+		mov	_in_option, 0
 
 loc_A408:
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_A414
-		mov	byte_E97B, 0
+		mov	_option_input_allowed, 0
 
 loc_A414:
 		pop	si
 		pop	bp
 		retn
-sub_A203	endp
+option_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1544,7 +1536,7 @@ loc_A468:
 		call	sub_B38D
 		call	sub_B3EF
 		call	sub_B3C3
-		call	sub_9BDF
+		call	start_vs
 
 loc_A497:
 		les	bx, _yumeconfig
@@ -1563,40 +1555,40 @@ loc_A4B0:
 
 loc_A4BC:
 		call	sub_9E16
-		mov	byte_E97C, 0
+		mov	_in_option, 0
 		mov	_input_sp, INPUT_NONE
-		call	sub_A0E0
+		call	main_update_and_render
 		call	sub_B3C3
 		jmp	short loc_A4FE
 ; ---------------------------------------------------------------------------
 
 loc_A4D2:
 		call	input_mode_interface
-		mov	al, byte_E97C
+		mov	al, _in_option
 		cbw
 		or	ax, ax
-		jz	short loc_A4E6
+		jz	short @@not_in_option
 		cmp	ax, 1
-		jz	short loc_A4EB
+		jz	short @@in_option
 		jmp	short loc_A4EE
 ; ---------------------------------------------------------------------------
 
-loc_A4E6:
-		call	sub_A0E0
+@@not_in_option:
+		call	main_update_and_render
 		jmp	short loc_A4EE
 ; ---------------------------------------------------------------------------
 
-loc_A4EB:
-		call	sub_A203
+@@in_option:
+		call	option_update_and_render
 
 loc_A4EE:
 		les	bx, _yumeconfig
-		inc	dword ptr es:[bx+10h]
+		inc	dword ptr es:[bx+10h]	; yumeconfig->frame++;
 		push	1
 		call	frame_delay
 
 loc_A4FE:
-		cmp	byte_D952, 0
+		cmp	_quit, 0
 		jz	short loc_A4D2
 		call	cfg_save_exit
 		call	gaiji_restore
@@ -3957,11 +3949,11 @@ gpTYPE3		db 62h,	63h, 64h, 67h, 0
 gpKEY_VS_KEY	db 68h,	69h, 6Ch, 6Dh, 68h, 69h, 0
 gpJOY_VS_KEY	db 6Ah,	6Bh, 6Ch, 6Dh, 68h, 69h, 0
 gpKEY_VS_JOY	db 68h,	69h, 6Ch, 6Dh, 6Ah, 6Bh, 0
-byte_D951	db 0
-byte_D952	db 0
+_menu_sel	db 0
+_quit	db 0
 byte_D953	db 1
-byte_D954	db 0
-byte_D955	db 0
+_main_menu_initialized	db 0
+_option_initialized	db 0
 aYume_cfg	db 'YUME.CFG',0
 ; char path[]
 path		db 'mainl',0
@@ -4166,11 +4158,11 @@ aTlsl_rgb	db 'TLSL.RGB',0
 		db 041h, 0C1h, 0E1h, 0
 	.data?
 
-byte_E97A	db ?
-byte_E97B	db ?
-byte_E97C	db ?
+_main_input_allowed	db ?
+_option_input_allowed	db ?
+_in_option	db ?
 		db ?
-fp_E97E	dw ?
+_putfunc	dw ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm

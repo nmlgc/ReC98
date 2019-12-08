@@ -154,8 +154,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A39C	proc near
+public START_GAME
+start_game	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -202,7 +202,7 @@ loc_A3FA:
 loc_A400:
 		cmp	si, 8
 		jl	short loc_A3CF
-		call	sub_BC83
+		call	main_cdg_free
 		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
@@ -233,14 +233,14 @@ loc_A443:
 		pop	si
 		pop	bp
 		retn
-sub_A39C	endp
+start_game	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A447	proc near
+public START_EXTRA
+start_extra	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -284,7 +284,7 @@ loc_A49A:
 loc_A4A0:
 		cmp	si, 8
 		jl	short loc_A46F
-		call	sub_BC83
+		call	main_cdg_free
 		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
@@ -301,14 +301,14 @@ loc_A4CB:
 		pop	si
 		pop	bp
 		retn
-sub_A447	endp
+start_extra	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A4CF	proc near
+public START_DEMO
+start_demo	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -406,7 +406,7 @@ loc_A5A8:
 loc_A5BF:
 		cmp	si, 8
 		jl	short loc_A5A8
-		call	sub_BC83
+		call	main_cdg_free
 		call	cfg_save
 		push	1
 		call	palette_black_out
@@ -423,7 +423,7 @@ loc_A5E9:
 		pop	si
 		pop	bp
 		retn
-sub_A4CF	endp
+start_demo	endp
 
 ; ---------------------------------------------------------------------------
 off_A5EC	dw offset loc_A54E
@@ -435,8 +435,8 @@ off_A5EC	dw offset loc_A54E
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A5F6	proc near
+public MAIN_PUT
+main_put	proc near
 
 var_2		= word ptr -2
 arg_0		= word ptr  4
@@ -542,7 +542,7 @@ loc_A705:
 		pop	si
 		leave
 		retn	4
-sub_A5F6	endp
+main_put	endp
 
 ; ---------------------------------------------------------------------------
 off_A70B	dw offset loc_A634
@@ -555,8 +555,8 @@ off_A70B	dw offset loc_A634
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A717	proc near
+public OPTION_PUT
+option_put	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -775,7 +775,7 @@ loc_A951:
 		pop	si
 		leave
 		retn	4
-sub_A717	endp
+option_put	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -791,72 +791,72 @@ off_A958	dw offset loc_A764
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A968	proc near
+public MENU_SEL_MOVE
+menu_sel_move	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	8
-		call	fp_11DD2
+		call	_putfunc
 		mov	al, [bp+arg_0]
-		add	byte_F071, al
-		mov	al, byte_F071
+		add	_menu_sel, al
+		mov	al, _menu_sel
 		cbw
 		or	ax, ax
 		jge	short loc_A98B
 		mov	al, [bp+arg_2]
-		mov	byte_F071, al
+		mov	_menu_sel, al
 
 loc_A98B:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cmp	al, [bp+arg_2]
 		jle	short loc_A998
-		mov	byte_F071, 0
+		mov	_menu_sel, 0
 
 loc_A998:
 		cmp	_extra_unlocked, 0
 		jnz	short loc_A9B6
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 1
 		jnz	short loc_A9B6
-		cmp	byte_11DD0, 0
+		cmp	_in_option, 0
 		jnz	short loc_A9B6
 		mov	al, [bp+arg_0]
-		add	byte_F071, al
+		add	_menu_sel, al
 
 loc_A9B6:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0Eh
-		call	fp_11DD2
+		call	_putfunc
 		call	snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		pop	bp
 		retn	4
-sub_A968	endp
+menu_sel_move	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A9D6	proc near
+public MAIN_UPDATE_AND_RENDER
+main_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_F0DC, 0
+		cmp	_main_menu_initialized, 0
 		jnz	short loc_AA2B
-		mov	byte_F073, 0
-		mov	byte_11DD4, 0
+		mov	_main_menu_unused_1, 0
+		mov	_main_input_allowed, 0
 		push	0C000FAh
 		push	12000A0h
 		call	egc_copy_rect_1_to_0
@@ -866,7 +866,7 @@ sub_A9D6	proc near
 
 loc_AA00:
 		push	si
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, si
 		jnz	short loc_AA0E
@@ -879,36 +879,32 @@ loc_AA0E:
 
 loc_AA11:
 		push	ax
-		call	sub_A5F6
+		call	main_put
 		inc	si
 
 loc_AA16:
 		cmp	si, 6
 		jl	short loc_AA00
-		mov	fp_11DD2, offset sub_A5F6
-		mov	byte_F0DC, 1
-		mov	byte_11DD4, 0
+		mov	_putfunc, offset main_put
+		mov	_main_menu_initialized, 1
+		mov	_main_input_allowed, 0
 
 loc_AA2B:
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_AA37
-		mov	byte_11DD4, 1
+		mov	_main_input_allowed, 1
 
 loc_AA37:
-		cmp	byte_11DD4, 0
+		cmp	_main_input_allowed, 0
 		jz	loc_ABC0
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AA4E
-		push	5
-		push	0FFFFh
-		call	sub_A968
+		call	menu_sel_move pascal, 5, -1
 
 loc_AA4E:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AA5C
-		push	5
-		push	1
-		call	sub_A968
+		call	menu_sel_move pascal, 5, 1
 
 loc_AA5C:
 		test	_key_det.hi, high INPUT_OK
@@ -920,7 +916,7 @@ loc_AA6C:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -929,7 +925,7 @@ loc_AA6C:
 		jmp	cs:off_ABC3[bx]
 
 loc_AA91:
-		call	sub_A39C
+		call	start_game
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -939,14 +935,14 @@ loc_AA91:
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
-		mov	byte_F0DC, 0
-		mov	byte_11DD0, 0
-		mov	byte_F071, 0
+		mov	_main_menu_initialized, 0
+		mov	_in_option, 0
+		mov	_menu_sel, 0
 		jmp	loc_ABC0
 ; ---------------------------------------------------------------------------
 
 loc_AAE1:
-		call	sub_A447
+		call	start_extra
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -956,21 +952,21 @@ loc_AAE1:
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
-		mov	byte_F0DC, 0
-		mov	byte_11DD0, 0
-		mov	byte_F071, 1
+		mov	_main_menu_initialized, 0
+		mov	_in_option, 0
+		mov	_menu_sel, 1
 		jmp	loc_ABC0
 ; ---------------------------------------------------------------------------
 
 loc_AB31:
 		call	score_menu
-		mov	byte_F0DC, 0
+		mov	_main_menu_initialized, 0
 		jmp	short loc_ABA8
 ; ---------------------------------------------------------------------------
 
 loc_AB3B:
 		call	musicroom
-		call	load_char_select_sprite_function
+		call	main_cdg_load
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aOp1_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -980,38 +976,38 @@ loc_AB3B:
 		call	graph_copy_page
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
-		mov	byte_F0DC, 0
-		mov	byte_11DD0, 0
-		mov	byte_F071, 3
+		mov	_main_menu_initialized, 0
+		mov	_in_option, 0
+		mov	_menu_sel, 3
 		jmp	short loc_ABC0
 ; ---------------------------------------------------------------------------
 
 loc_AB8D:
-		mov	byte_F0DC, 0
-		mov	byte_11DD0, 1
-		mov	byte_F071, 0
+		mov	_main_menu_initialized, 0
+		mov	_in_option, 1
+		mov	_menu_sel, 0
 		jmp	short loc_ABA8
 ; ---------------------------------------------------------------------------
 
 loc_AB9E:
-		mov	byte_F0DC, 0
-		mov	byte_F072, 1
+		mov	_main_menu_initialized, 0
+		mov	_quit, 1
 
 loc_ABA8:
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_ABB4
-		mov	byte_F072, 1
+		mov	_quit, 1
 
 loc_ABB4:
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_ABC0
-		mov	byte_11DD4, 0
+		mov	_main_input_allowed, 0
 
 loc_ABC0:
 		pop	si
 		pop	bp
 		retn
-sub_A9D6	endp
+main_update_and_render	endp
 
 ; ---------------------------------------------------------------------------
 off_ABC3	dw offset loc_AA91
@@ -1024,14 +1020,14 @@ off_ABC3	dw offset loc_AA91
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_ABCF	proc near
+public OPTION_UPDATE_AND_RENDER
+option_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_F0DD, 0
+		cmp	_option_initialized, 0
 		jnz	short loc_AC1F
-		mov	byte_11DD5, 0
+		mov	_option_input_allowed, 0
 		push	11000FAh
 		push	0A00090h
 		call	egc_copy_rect_1_to_0
@@ -1041,7 +1037,7 @@ sub_ABCF	proc near
 
 loc_ABF4:
 		push	si
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, si
 		jnz	short loc_AC02
@@ -1054,36 +1050,32 @@ loc_AC02:
 
 loc_AC05:
 		push	ax
-		call	sub_A717
+		call	option_put
 		inc	si
 
 loc_AC0A:
 		cmp	si, 8
 		jl	short loc_ABF4
-		mov	fp_11DD2, offset sub_A717
-		mov	byte_F0DD, 1
-		mov	byte_11DD5, 0
+		mov	_putfunc, offset option_put
+		mov	_option_initialized, 1
+		mov	_option_input_allowed, 0
 
 loc_AC1F:
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_AC2B
-		mov	byte_11DD5, 1
+		mov	_option_input_allowed, 1
 
 loc_AC2B:
-		cmp	byte_11DD5, 0
+		cmp	_option_input_allowed, 0
 		jz	loc_AF2E
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_AC42
-		push	7
-		push	0FFFFh
-		call	sub_A968
+		call	menu_sel_move pascal, 7, -1
 
 loc_AC42:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_AC50
-		push	7
-		push	1
-		call	sub_A968
+		call	menu_sel_move pascal, 7, 1
 
 loc_AC50:
 		test	_key_det.hi, high INPUT_OK
@@ -1092,7 +1084,7 @@ loc_AC50:
 		jz	loc_ACF8
 
 loc_AC60:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 6
 		jz	short loc_AC71
@@ -1121,7 +1113,7 @@ loc_AC71:
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		call	snd_load pascal, ds, offset aOp, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
-		mov	byte_F0DD, 0
+		mov	_option_initialized, 0
 		jmp	short loc_ACF8
 ; ---------------------------------------------------------------------------
 
@@ -1129,16 +1121,16 @@ loc_ACD8:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
-		mov	byte_F0DD, 0
-		mov	byte_F071, 4
-		mov	byte_11DD0, 0
+		mov	_option_initialized, 0
+		mov	_menu_sel, 4
+		mov	_in_option, 0
 
 loc_ACF8:
 		test	_key_det.lo, low INPUT_RIGHT
 		jz	loc_ADFF
 
 loc_AD01:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -1227,16 +1219,16 @@ loc_ADE7:
 		mov	es:[bx+16h], al
 
 loc_ADF5:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0Eh
-		call	sub_A717
+		call	option_put
 
 loc_ADFF:
 		test	_key_det.lo, low INPUT_LEFT
 		jz	loc_AF0C
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -1334,29 +1326,29 @@ loc_AEF4:
 		mov	es:[bx+16h], al
 
 loc_AF02:
-		mov	al, byte_F071
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		push	0Eh
-		call	sub_A717
+		call	option_put
 
 loc_AF0C:
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_AF22
-		mov	byte_F0DD, 0
-		mov	byte_F071, 4
-		mov	byte_11DD0, 0
+		mov	_option_initialized, 0
+		mov	_menu_sel, 4
+		mov	_in_option, 0
 
 loc_AF22:
 		cmp	_key_det, INPUT_NONE
 		jz	short loc_AF2E
-		mov	byte_11DD5, 0
+		mov	_option_input_allowed, 0
 
 loc_AF2E:
 		pop	si
 		pop	bp
 		retn
-sub_ABCF	endp
+option_update_and_render	endp
 
 ; ---------------------------------------------------------------------------
 off_AF31	dw offset loc_AE1C
@@ -1438,18 +1430,18 @@ loc_AFE1:
 		kajacall	KAJA_SONG_STOP
 
 loc_AFF4:
-		call	sub_BC8D
-		call	load_char_select_sprite_function
+		call	op_animate
+		call	main_cdg_load
 		call	score_cleared_load
-		mov	byte_11DD0, 0
-		mov	byte_F072, 0
-		mov	byte_F071, 0
+		mov	_in_option, 0
+		mov	_quit, 0
+		mov	_menu_sel, 0
 		jmp	short loc_B058
 ; ---------------------------------------------------------------------------
 
 loc_B00E:
 		call	_input_reset_sense_held
-		mov	al, byte_11DD0
+		mov	al, _in_option
 		cbw
 		or	ax, ax
 		jz	short loc_B022
@@ -1459,16 +1451,16 @@ loc_B00E:
 ; ---------------------------------------------------------------------------
 
 loc_B022:
-		call	sub_A9D6
+		call	main_update_and_render
 		cmp	si, 280h
 		jl	short loc_B035
-		call	sub_A4CF
+		call	start_demo
 		xor	si, si
 		jmp	short loc_B035
 ; ---------------------------------------------------------------------------
 
 loc_B032:
-		call	sub_ABCF
+		call	option_update_and_render
 
 loc_B035:
 		cmp	_key_det, INPUT_NONE
@@ -1491,9 +1483,9 @@ loc_B048:
 		call	frame_delay
 
 loc_B058:
-		cmp	byte_F072, 0
+		cmp	_quit, 0
 		jz	short loc_B00E
-		call	sub_BC83
+		call	main_cdg_free
 		call	cfg_save_exit
 		call	text_clear
 		call	game_exit_to_dos
@@ -2436,7 +2428,7 @@ cfg_save_exit	endp
 
 ; Attributes: bp-based frame
 
-load_char_select_sprite_function	proc near
+main_cdg_load	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_load_all pascal, 0, ds, offset aSft1_cd2
@@ -2450,27 +2442,27 @@ load_char_select_sprite_function	proc near
 		call	cdg_load_single_noalpha pascal, 45, ds, offset aSl04_cdg, 0
 		pop	bp
 		retn
-load_char_select_sprite_function	endp
+main_cdg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_BC83	proc near
+main_cdg_free	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_freeall
 		pop	bp
 		retn
-sub_BC83	endp
+main_cdg_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_BC8D	proc near
+op_animate	proc near
 
 @@page_show  	= byte ptr -2
 @@page_access	= byte ptr -1
@@ -2516,7 +2508,7 @@ loc_BD55:
 		cwd
 		idiv	bx
 		call	pi_slot_palette_apply pascal, ax
-		pushd	278;draw(0.278)
+		pushd	(0 shl 16) or 278
 		mov	ax, si
 		mov	bx, 8
 		cwd
@@ -2609,7 +2601,7 @@ loc_BE46:
 		pop	si
 		leave
 		retn
-sub_BC8D	endp
+op_animate	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -4788,9 +4780,9 @@ op_02_TEXT	ends
 	.data
 
 		db    0
-byte_F071	db 0
-byte_F072	db 0
-byte_F073	db 1
+_menu_sel	db 0
+_quit	db 0
+_main_menu_unused_1	db 1
 MENU_DESC		dd aMENU_START		; "ゲームを開始します"
 		dd aMENU_START_EXTRA	; "エキストラステージを開始します"
 		dd aMENU_HISCORE	; "現在のハイスコアを表\示します"
@@ -4817,8 +4809,8 @@ MENU_DESC		dd aMENU_START		; "ゲームを開始します"
 		dd aMENU_START_NORMAL		; "ゲームを開始します（ノーマル）"
 		dd aMENU_START_HARD		; "ゲームを開始します（ハード）"
 		dd aMENU_START_LUNATIC		; "ゲームを開始します（ルナティック）"
-byte_F0DC	db 0
-byte_F0DD	db 0
+_main_menu_initialized	db 0
+_option_initialized	db 0
 ; char aMain[]
 aMain		db 'main',0
 ; char path[]
@@ -5544,11 +5536,11 @@ aSlb1_pi	db 'slb1.pi',0
 
 public _ksoconfig
 _ksoconfig	dd ?
-byte_11DD0	db ?
+_in_option	db ?
 		db ?
-fp_11DD2	dw ?
-byte_11DD4	db ?
-byte_11DD5	db ?
+_putfunc	dw ?
+_main_input_allowed	db ?
+_option_input_allowed	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
