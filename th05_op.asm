@@ -2283,7 +2283,7 @@ opening_key_pressed			= byte ptr -2
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
-		call	sub_D688
+		call	bgimage_snap
 		graph_accesspage 1
 		call	graph_clear
 		graph_accesspage 0
@@ -2459,7 +2459,7 @@ loc_B9D7:
 		call	_zunsoft_pyro_new
 
 opening_frame_case_default:
-		call	sub_D6F0	; default
+		call	bgimage_put	; default
 		call	_zunsoft_update_and_render
 
 loc_B9E2:
@@ -2512,7 +2512,7 @@ loc_BA47:
 
 loc_BA56:
 		call	super_free
-		call	sub_D726
+		call	bgimage_free
 		pop	di
 		pop	si
 		leave
@@ -2949,7 +2949,7 @@ loc_BEF4:
 		lea	ax, [si+96]
 		push	ax
 		push	1400010h
-		call	sub_DB3C
+		call	bgimage_put_rect
 
 loc_BF05:
 		mov	al, [bp+arg_2]
@@ -3133,17 +3133,17 @@ sub_C3A7	proc near
 		mov	_graph_putsa_fx_func, 2
 		push	1400020h
 		push	1400010h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		push	14000B4h
 		push	1400090h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		call	music_flip
 		push	1400020h
 		push	1400010h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		push	14000B4h
 		push	1400090h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		pop	bp
 		retn
 sub_C3A7	endp
@@ -3168,7 +3168,7 @@ loc_C406:
 		call	screen_back_B_put
 		push	1400040h
 		push	1400100h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		cmp	byte_13E96, 0
 		jz	short loc_C42C
 		call	sub_C376
@@ -3202,19 +3202,19 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		pushd	20h ; ' '
 		push	1400010h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		pushd	60h
 		push	14000C0h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		push	si
 		call	sub_BF4D
 		call	music_flip
 		pushd	20h ; ' '
 		push	1400010h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		pushd	60h
 		push	14000C0h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		push	si
 		call	sub_BF4D
 		pop	si
@@ -3257,7 +3257,7 @@ var_1		= byte ptr -1
 		call	pi_slot_free pascal, 0
 		call	_piano_setup
 		call	screen_back_B_snap
-		call	sub_D688
+		call	bgimage_snap
 		push	word ptr _music_sel
 		call	sub_BF4D
 		push	0
@@ -3499,7 +3499,7 @@ loc_C790:
 		graph_accesspage al
 		push	1
 		call	palette_black_out
-		call	sub_D726
+		call	bgimage_free
 		call	snd_load pascal, ds, offset aH_op+2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	si
@@ -4592,12 +4592,12 @@ loc_D012:
 		lea	ax, [di-8]
 		push	ax
 		push	0E00008h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		lea	ax, [si-8]
 		push	ax
 		push	di
 		push	800A0h
-		call	sub_DB3C
+		call	bgimage_put_rect
 		mov	al, byte ptr word_14118
 		mov	ah, 0
 		mov	bx, ax
@@ -4670,7 +4670,7 @@ var_2		= word ptr -2
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
-		call	sub_D688
+		call	bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
 		xor	si, si
@@ -4859,7 +4859,7 @@ loc_D292:
 		mov	es:[bx+14h], al
 		push	1
 		call	palette_black_out
-		call	sub_D726
+		call	bgimage_free
 		xor	ax, ax
 		leave
 		retn
@@ -4870,7 +4870,7 @@ loc_D2CC:
 		jz	short loc_D2E4
 		push	1
 		call	palette_black_out
-		call	sub_D726
+		call	bgimage_free
 		mov	ax, 1
 		leave
 		retn
@@ -4917,111 +4917,7 @@ include th02/exit_dos.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D688	proc far
-		push	si
-		push	di
-		cmp	word_F9C4, 0
-		jnz	short loc_D6BD
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_F9C4, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_F9C6, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_F9C8, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_F9CA, ax
-
-loc_D6BD:
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_F9CA
-		push	0B800h
-		push	word_F9C8
-		push	0B000h
-		push	word_F9C6
-		push	0A800h
-		push	word_F9C4
-
-loc_D6DC:
-		pop	es
-		pop	ds
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_D6DC
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_D688	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D6F0	proc far
-		push	si
-		push	di
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_F9CA
-		push	0B800h
-		push	word_F9C8
-		push	0B000h
-		push	word_F9C6
-		push	0A800h
-		push	word_F9C4
-
-loc_D711:
-		pop	ds
-		pop	es
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_D711
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_D6F0	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D726	proc far
-		cmp	word_F9C4, 0
-		jz	short locret_D757
-		push	word_F9C4
-		call	hmem_free
-		push	word_F9C6
-		call	hmem_free
-		push	word_F9C8
-		call	hmem_free
-		push	word_F9CA
-		call	hmem_free
-		mov	word_F9C4, 0
-
-locret_D757:
-		retf
-sub_D726	endp
-
+include th04/bgimage.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
@@ -5029,88 +4925,7 @@ include th04/math/vector2_at.asm
 include th05/music/piano.asm
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 1
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DB3C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		push	ds
-		cld
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	word ptr cs:loc_DBA1+1,	bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_DB6F
-		inc	ax
-
-loc_DB6F:
-		mov	word ptr cs:loc_DBA6+1,	ax
-		jmp	short $+2
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	ax, [bp+arg_0]
-		mov	bp, cx
-		push	0E000h
-		push	word_F9CA
-		push	0B800h
-		push	word_F9C8
-		push	0B000h
-		push	word_F9C6
-		push	0A800h
-		push	word_F9C4
-		mov	dl, 4
-
-loc_DB9F:
-		mov	bx, ax
-
-loc_DBA1:
-		mov	di, 1234h
-		pop	ds
-		assume es:nothing
-		pop	es
-
-loc_DBA6:
-		mov	cx, 1234h
-		mov	si, di
-		rep movsw
-		add	di, bp
-		dec	bx
-		jnz	short loc_DBA6
-		dec	dl
-		jnz	short loc_DB9F
-		pop	ds
-		pop	si
-		pop	di
-		pop	bp
-		retf	8
-sub_DB3C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
 
@@ -5503,10 +5318,7 @@ include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-word_F9C4	dw 0
-word_F9C6	dw 0
-word_F9C8	dw 0
-word_F9CA	dw 0
+include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/music/piano[data].asm
 include th05/snd/load[data].asm

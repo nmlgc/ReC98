@@ -768,7 +768,7 @@ loc_A962:
 		push	240h
 		push	word_15006
 		push	100010h
-		call	sub_ECDE
+		call	bgimage_put_rect
 		or	si, si
 		jle	short loc_A9BD
 		test	_key_det.hi, high INPUT_OK
@@ -876,7 +876,7 @@ loc_AA3E:
 		graph_accesspage 1
 		push	500140h
 		push	1E00040h
-		call	sub_ECDE
+		call	bgimage_put_rect
 		mov	dx, 0A6h
 		mov	al, 0
 
@@ -1141,7 +1141,7 @@ loc_ACAA:
 		call	graph_clear
 		graph_accesspage 0
 		call	graph_clear
-		call	sub_EB66
+		call	bgimage_snap
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1166,7 +1166,7 @@ loc_ACF4:
 		push	0
 		call	graph_copy_page
 		graph_accesspage 0
-		call	sub_EB66
+		call	bgimage_snap
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1655,7 +1655,7 @@ loc_B18D:
 ; ---------------------------------------------------------------------------
 
 loc_B196:
-		call	sub_EC04
+		call	bgimage_free
 		call	pi_slot_free pascal, 0
 		pop	si
 		leave
@@ -2871,7 +2871,7 @@ loc_BB00:
 		push	si
 		push	di
 		push	820012h
-		call	sub_ECDE
+		call	bgimage_put_rect
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
@@ -3406,7 +3406,7 @@ loc_BEA6:
 		add	ax, 0FFF0h
 		push	ax
 		push	200020h
-		call	sub_ECDE
+		call	bgimage_put_rect
 
 loc_BEC8:
 		inc	di
@@ -3901,7 +3901,7 @@ loc_C2BB:
 		call	graph_putsa_fx
 
 loc_C2EB:
-		call	sub_EB66
+		call	bgimage_snap
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Ah], 0FDh
 		jb	short loc_C307
@@ -3912,7 +3912,7 @@ loc_C2EB:
 loc_C307:
 		push	1
 		call	graph_copy_page
-		call	sub_EB66
+		call	bgimage_snap
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -4216,7 +4216,7 @@ loc_C5C3:
 		call	input_wait_for_change pascal, 0
 
 loc_C5CD:
-		call	sub_EC04
+		call	bgimage_free
 		call	super_free
 		call	text_clear
 		push	1
@@ -8112,189 +8112,11 @@ include th04/snd/detmodes.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EB66	proc far
-		push	si
-		push	di
-		cmp	word_107C2, 0
-		jnz	short loc_EB9B
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_107C2, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_107C4, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_107C6, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_107C8, ax
-
-loc_EB9B:
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_107C8
-		push	0B800h
-		push	word_107C6
-		push	0B000h
-		push	word_107C4
-		push	0A800h
-		push	word_107C2
-
-loc_EBBA:
-		pop	es
-		pop	ds
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_EBBA
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_EB66	endp
-
-; ---------------------------------------------------------------------------
-		push	si
-		push	di
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_107C8
-		push	0B800h
-		push	word_107C6
-		push	0B000h
-		push	word_107C4
-		push	0A800h
-		push	word_107C2
-
-loc_EBEF:
-		pop	ds
-		pop	es
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_EBEF
-		pop	ds
-		pop	di
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EC04	proc far
-		cmp	word_107C2, 0
-		jz	short locret_EC35
-		push	word_107C2
-		call	hmem_free
-		push	word_107C4
-		call	hmem_free
-		push	word_107C6
-		call	hmem_free
-		push	word_107C8
-		call	hmem_free
-		mov	word_107C2, 0
-
-locret_EC35:
-		retf
-sub_EC04	endp
-
+include th04/bgimage.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECDE	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		push	ds
-		cld
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	word ptr cs:loc_ED43+1,	bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_ED11
-		inc	ax
-
-loc_ED11:
-		mov	word ptr cs:loc_ED48+1,	ax
-		jmp	short $+2
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	ax, [bp+arg_0]
-		mov	bp, cx
-		push	0E000h
-		push	word_107C8
-		push	0B800h
-		push	word_107C6
-		push	0B000h
-		push	word_107C4
-		push	0A800h
-		push	word_107C2
-		mov	dl, 4
-
-loc_ED41:
-		mov	bx, ax
-
-loc_ED43:
-		mov	di, 1234h
-		pop	ds
-		pop	es
-
-loc_ED48:
-		mov	cx, 1234h
-		mov	si, di
-		rep movsw
-		add	di, bp
-		dec	bx
-		jnz	short loc_ED48
-		dec	dl
-		jnz	short loc_ED41
-		pop	ds
-		pop	si
-		pop	di
-		pop	bp
-		retf	8
-sub_ECDE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
 
@@ -8625,10 +8447,7 @@ include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-word_107C2	dw 0
-word_107C4	dw 0
-word_107C6	dw 0
-word_107C8	dw 0
+include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm

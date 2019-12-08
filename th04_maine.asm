@@ -2220,7 +2220,7 @@ arg_8		= word ptr  0Ch
 		add	ax, ax
 		add	ax, [bp+arg_2]
 		push	ax
-		call	sub_D6F6
+		call	bgimage_put_rect
 		pop	si
 		pop	bp
 		retn	0Ah
@@ -2464,7 +2464,7 @@ sub_B44D	proc near
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
-		call	sub_D626
+		call	bgimage_snap
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -2513,7 +2513,7 @@ sub_B44D	proc near
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
-		call	sub_D626
+		call	bgimage_snap
 		push	4
 		call	palette_black_in
 		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
@@ -2576,7 +2576,7 @@ sub_B44D	proc near
 		call	sub_B291
 		push	3000A0h
 		call	snd_delay_until_measure
-		call	sub_D6C4
+		call	bgimage_free
 		call	cdg_freeall
 		push	4
 		call	palette_black_out
@@ -5115,186 +5115,8 @@ include th02/initmain.asm
 		db    0
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D626	proc far
-		push	si
-		push	di
-		cmp	word_EB32, 0
-		jnz	short loc_D65B
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_EB32, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_EB34, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_EB36, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_EB38, ax
-
-loc_D65B:
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_EB38
-		push	0B800h
-		push	word_EB36
-		push	0B000h
-		push	word_EB34
-		push	0A800h
-		push	word_EB32
-
-loc_D67A:
-		pop	es
-		assume es:nothing
-		pop	ds
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_D67A
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_D626	endp
-
-; ---------------------------------------------------------------------------
-		push	si
-		push	di
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_EB38
-		push	0B800h
-		push	word_EB36
-		push	0B000h
-		push	word_EB34
-		push	0A800h
-		push	word_EB32
-
-loc_D6AF:
-		pop	ds
-		pop	es
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_D6AF
-		pop	ds
-		pop	di
-		pop	si
-		retf
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_D6C4	proc far
-		cmp	word_EB32, 0
-		jz	short locret_D6F5
-		push	word_EB32
-		call	hmem_free
-		push	word_EB34
-		call	hmem_free
-		push	word_EB36
-		call	hmem_free
-		push	word_EB38
-		call	hmem_free
-		mov	word_EB32, 0
-
-locret_D6F5:
-		retf
-sub_D6C4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D6F6	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		push	ds
-		cld
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	word ptr cs:loc_D75B+1,	bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_D729
-		inc	ax
-
-loc_D729:
-		mov	word ptr cs:loc_D760+1,	ax
-		jmp	short $+2
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	ax, [bp+arg_0]
-		mov	bp, cx
-		push	0E000h
-		push	word_EB38
-		push	0B800h
-		push	word_EB36
-		push	0B000h
-		push	word_EB34
-		push	0A800h
-		push	word_EB32
-		mov	dl, 4
-
-loc_D759:
-		mov	bx, ax
-
-loc_D75B:
-		mov	di, 1234h
-		pop	ds
-		pop	es
-
-loc_D760:
-		mov	cx, 1234h
-		mov	si, di
-		rep movsw
-		add	di, bp
-		dec	bx
-		jns	short loc_D760
-		dec	dl
-		jnz	short loc_D759
-		pop	ds
-		pop	si
-		pop	di
-		pop	bp
-		retf	8
-sub_D6F6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/bgimage.asm
+include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
 maine_02_TEXT	ends
 
@@ -5342,10 +5164,7 @@ include th04/snd/snd[data].asm
 include th04/snd/load[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-word_EB32	dw 0
-word_EB34	dw 0
-word_EB36	dw 0
-word_EB38	dw 0
+include th04/bgimage[data].asm
 include th03/formats/cdg[data].asm
 		db    0
 		db    0

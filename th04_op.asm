@@ -2341,7 +2341,7 @@ var_2		= byte ptr -2
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
-		call	sub_E428
+		call	bgimage_snap
 		graph_accesspage 1
 		call	graph_clear
 		graph_accesspage 0
@@ -2517,7 +2517,7 @@ loc_BE12:
 		call	_zunsoft_pyro_new
 
 loc_BE15:
-		call	sub_E490	; default
+		call	bgimage_put	; default
 		call	_zunsoft_update_and_render
 		call	far ptr	_input_reset_sense
 
@@ -2571,7 +2571,7 @@ loc_BE87:
 
 loc_BE96:
 		call	super_free
-		call	sub_E4C6
+		call	bgimage_free
 		pop	di
 		pop	si
 		leave
@@ -2780,11 +2780,11 @@ sub_C33F	proc near
 		mov	_graph_putsa_fx_func, 2
 		push	1400040h
 		push	1400140h
-		call	sub_E4F8
+		call	bgimage_put_rect
 		call	music_flip
 		push	1400040h
 		push	1400140h
-		call	sub_E4F8
+		call	bgimage_put_rect
 		pop	bp
 		retn
 sub_C33F	endp
@@ -2809,7 +2809,7 @@ loc_C37C:
 		call	screen_back_B_put
 		push	1400040h
 		push	1400140h
-		call	sub_E4F8
+		call	bgimage_put_rect
 		cmp	byte_12DBE, 0
 		jz	short loc_C3A2
 		call	sub_C30E
@@ -2856,7 +2856,7 @@ sub_C3B7	proc near
 		call	sub_BF41
 		push	0
 		call	graph_copy_page
-		call	sub_E428
+		call	bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
 		call	screen_back_B_snap
@@ -2970,7 +2970,7 @@ loc_C544:
 		graph_accesspage al
 		push	1
 		call	palette_black_out
-		call	sub_E4C6
+		call	bgimage_free
 		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
@@ -5268,10 +5268,7 @@ include th02/hardware/frame_delay.asm
 include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
-
-; ---------------------------------------------------------------------------
 		db    0
-
 include th03/formats/hfliplut.asm
 include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
@@ -5398,192 +5395,8 @@ sub_E3E8	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E428	proc far
-		push	si
-		push	di
-		cmp	word_FD82, 0
-		jnz	short loc_E45D
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_FD82, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_FD84, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_FD86, ax
-		push	7D00h
-		call	hmem_allocbyte
-		mov	word_FD88, ax
-
-loc_E45D:
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_FD88
-		push	0B800h
-		push	word_FD86
-		push	0B000h
-		push	word_FD84
-		push	0A800h
-		push	word_FD82
-
-loc_E47C:
-		pop	es
-		pop	ds
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_E47C
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_E428	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E490	proc far
-		push	si
-		push	di
-		mov	dl, 4
-		push	ds
-		push	0E000h
-		push	word_FD88
-		push	0B800h
-		push	word_FD86
-		push	0B000h
-		push	word_FD84
-		push	0A800h
-		push	word_FD82
-
-loc_E4B1:
-		pop	ds
-		pop	es
-		xor	si, si
-		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
-		rep movsd
-		dec	dl
-		jnz	short loc_E4B1
-		pop	ds
-		pop	di
-		pop	si
-		retf
-sub_E490	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E4C6	proc far
-		cmp	word_FD82, 0
-		jz	short locret_E4F7
-		push	word_FD82
-		call	hmem_free
-		push	word_FD84
-		call	hmem_free
-		push	word_FD86
-		call	hmem_free
-		push	word_FD88
-		call	hmem_free
-		mov	word_FD82, 0
-
-locret_E4F7:
-		retf
-sub_E4C6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E4F8	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	di
-		push	si
-		push	ds
-		cld
-		mov	ax, [bp+arg_6]
-		mov	dx, [bp+arg_4]
-		mov	bx, ax
-		sar	bx, 4
-		shl	bx, 1
-		shl	dx, 6
-		add	bx, dx
-		shr	dx, 2
-		add	bx, dx
-		mov	word ptr cs:loc_E55D+1,	bx
-		and	ax, 0Fh
-		mov	cx, ax
-		add	ax, [bp+arg_2]
-		shr	ax, 4
-		or	cx, cx
-		jz	short loc_E52B
-		inc	ax
-
-loc_E52B:
-		mov	word ptr cs:loc_E562+1,	ax
-		jmp	short $+2
-		mov	cx, 28h	; '('
-		sub	cx, ax
-		shl	cx, 1
-		mov	ax, [bp+arg_0]
-		mov	bp, cx
-		push	0E000h
-		push	word_FD88
-		push	0B800h
-		push	word_FD86
-		push	0B000h
-		push	word_FD84
-		push	0A800h
-		push	word_FD82
-		mov	dl, 4
-
-loc_E55B:
-		mov	bx, ax
-
-loc_E55D:
-		mov	di, 1234h
-		pop	ds
-		pop	es
-
-loc_E562:
-		mov	cx, 1234h
-		mov	si, di
-		rep movsw
-		add	di, bp
-		dec	bx
-		jns	short loc_E562
-		dec	dl
-		jnz	short loc_E55B
-		pop	ds
-		pop	si
-		pop	di
-		pop	bp
-		retf	8
-sub_E4F8	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/bgimage.asm
+include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
 	extern FRAME_DELAY_2:proc
 op_02_TEXT	ends
@@ -5704,10 +5517,7 @@ include th04/snd/snd[data].asm
 include th04/snd/load[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-word_FD82	dw 0
-word_FD84	dw 0
-word_FD86	dw 0
-word_FD88	dw 0
+include th04/bgimage[data].asm
 include th03/formats/cdg[data].asm
 		dd aGxgegmgivevliM
 		dd aB@b@b@b@b@b@b@
