@@ -16,3 +16,5 @@ PMD_GET_WORKAREA_ADDRESS equ 10h
 kajacall	macro func, param := <0>
 	call	snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
 endm
+
+MMD_TICKS_PER_QUARTER_NOTE = 48

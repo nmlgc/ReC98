@@ -20,3 +20,7 @@ typedef enum {
 
 #define PMD 0x60
 #define MMD 0x61
+
+// MMDFUNC.DOC and https://gist.github.com/devinacker/bdc58cfdba6a1ee80449
+// both imply that this is a hardcoded property of the MMD format
+#define MMD_TICKS_PER_QUARTER_NOTE 48

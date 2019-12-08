@@ -5987,7 +5987,7 @@ loc_D412:
 ; ---------------------------------------------------------------------------
 
 loc_D41F:
-		mov	dx, 0C0h
+		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
 		int	61h		; reserved for user interrupt
 
 loc_D424:
@@ -6029,7 +6029,7 @@ loc_D443:
 ; ---------------------------------------------------------------------------
 
 loc_D450:
-		mov	dx, 0C0h
+		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
 		int	61h		; reserved for user interrupt
 
 loc_D455:

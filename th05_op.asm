@@ -5971,7 +5971,7 @@ loc_E0DD:
 ; ---------------------------------------------------------------------------
 
 loc_E0EA:
-		mov	dx, 0C0h
+		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
 		int	61h		; reserved for user interrupt
 
 loc_E0EF:
