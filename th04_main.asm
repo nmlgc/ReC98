@@ -7245,7 +7245,7 @@ loc_EC24:
 		push	[bp+var_2]
 		push	110000h
 		push	0E000h
-		call	far ptr	loc_1371A
+		call	cdg_put_plane_roll
 		inc	si
 
 loc_EC51:
@@ -15149,74 +15149,7 @@ include th02/initmain.asm
 		db    0
 
 include th04/formats/cdg_put_noalpha.asm
-loc_1371A:
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+6]
-		mov	es, ax
-		mov	si, [bp+0Ah]
-		shl	si, 4
-		add	si, offset _cdg_slots
-		mov	di, [bp+0Eh]
-		sar	di, 3
-		mov	bx, [si+4]
-		mov	ax, [bp+0Ch]
-		add	ax, bx
-		dec	ax
-		shl	ax, 6
-		add	di, ax
-		shr	ax, 2
-		add	di, ax
-		mov	ax, [si+8]
-		mov	word ptr cs:loc_13778+1, ax
-		jmp	short $+2
-		shl	ax, 2
-		add	ax, 50h	; 'P'
-		mov	dx, ax
-		push	ds
-		mov	ax, [si+0Eh]
-		mov	si, [si]
-		mov	ds, ax
-		mov	cx, [bp+8]
-		inc	cx
-		mov	ax, si
-		neg	si
-
-loc_13768:
-		add	si, ax
-		loop	loc_13768
-		cmp	di, 7D00h
-		jb	short loc_13776
-		sub	di, 7D00h
-
-loc_13776:
-		cld
-		nop
-
-loc_13778:
-		mov	cx, 1234h
-
-loc_1377B:
-		mov	eax, [si]
-		or	es:[di], eax
-		add	si, 4
-		add	di, 4
-		loop	loc_1377B
-		sub	di, dx
-		jge	short loc_13792
-		add	di, 7D00h
-
-loc_13792:
-		dec	bx
-		jnz	short loc_13778
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-
+include th04/formats/cdg_put_plane_roll.asm
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 include th04/formats/cdg_load.asm
