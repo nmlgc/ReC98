@@ -161,8 +161,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A74C	proc near
+public CFG_LOAD
+cfg_load	proc near
 
 var_C		= word ptr -0Ch
 var_A		= byte ptr -0Ah
@@ -230,14 +230,14 @@ loc_A7DE:
 locret_A7EE:
 		leave
 		retn
-sub_A74C	endp
+cfg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A7F0	proc near
+public CFG_SAVE
+cfg_save	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -290,14 +290,14 @@ var_2		= byte ptr -2
 		call	file_close
 		leave
 		retn
-sub_A7F0	endp
+cfg_save	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_A873	proc near
+public CFG_SAVE_EXIT
+cfg_save_exit	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -349,7 +349,7 @@ var_1		= byte ptr -1
 		call	file_close
 		leave
 		retn
-sub_A873	endp
+cfg_save_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -373,7 +373,7 @@ sub_A8F1	proc near
 		les	bx, _humaconfig
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
-		call	sub_A7F0
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
@@ -424,7 +424,7 @@ sub_A96C	proc near
 		les	bx, _humaconfig
 		mov	byte ptr es:[bx+3Eh], 0
 		call	sub_CCC8
-		call	sub_A7F0
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
@@ -509,7 +509,7 @@ loc_AA6E:
 		call	super_free
 		freePISlotLarge	0
 		call	sub_CCC8
-		call	sub_A7F0
+		call	cfg_save
 		call	gaiji_restore
 		call	game_exit
 		pushd	0
@@ -1468,7 +1468,7 @@ loc_B3AB:
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
-		call	sub_A74C
+		call	cfg_load
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+0Fh], 0FFh
 		jnz	short loc_B3D3
@@ -1551,7 +1551,7 @@ loc_B47B:
 		cmp	byte_F3DC, 0
 		jz	short loc_B43A
 		call	sub_CCC8
-		call	sub_A873
+		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
 		call	game_exit_to_dos

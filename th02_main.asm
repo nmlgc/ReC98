@@ -1830,22 +1830,21 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_C273
+		call	cfg_load
 		or	ax, ax
-		jz	short loc_B17E
+		jz	short @@cfg_load_is_1
 		call	_game_init_main
 		or	ax, ax
-		jz	short loc_B183
-		push	3
-		call	zun_error
+		jz	short @@game_init_main_is_0
+		call	zun_error pascal, 3
 
-loc_B17E:
+@@cfg_load_is_1:
 		mov	ax, 1
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
-loc_B183:
+@@game_init_main_is_0:
 		les	bx, mikoconfig
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 1
 		jnz	short loc_B19A
@@ -3247,10 +3246,10 @@ RANDRING_NEXT_DEF 1
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CFG_LOAD
+cfg_load	proc near
 
-sub_C273	proc near
-
-var_2		= word ptr -2
+@@resident_sgm		= word ptr -2
 
 		enter	2, 0
 		push	ds
@@ -3260,14 +3259,14 @@ var_2		= word ptr -2
 		push	0
 		call	file_seek
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@resident_sgm]
 		push	ax
 		push	2
 		call	file_read
 		call	file_close
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@resident_sgm], 0
 		jz	short loc_C2F0
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@resident_sgm]
 		mov	word ptr mikoconfig+2,	ax
 		mov	word ptr mikoconfig, 0
 		les	bx, mikoconfig
@@ -3297,7 +3296,7 @@ loc_C2F0:
 		xor	ax, ax
 		leave
 		retn
-sub_C273	endp
+cfg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -143,8 +143,8 @@ op_01_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9908	proc near
+public CFG_LOAD
+cfg_load	proc near
 
 var_A		= word ptr -0Ah
 var_8		= byte ptr -8
@@ -192,14 +192,14 @@ loc_996C:
 		mov	es:[bx+0Bh], al
 		leave
 		retn
-sub_9908	endp
+cfg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_9980	proc near
+public CFG_SAVE
+cfg_save	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -227,14 +227,14 @@ var_6		= byte ptr -6
 		call	file_close
 		leave
 		retn
-sub_9980	endp
+cfg_save	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_99C3	proc near
+public CFG_SAVE_EXIT
+cfg_save_exit	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -269,7 +269,7 @@ var_6		= byte ptr -6
 		call	file_close
 		leave
 		retn
-sub_99C3	endp
+cfg_save_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -417,7 +417,7 @@ loc_9B4E:
 		imul	ax, 19h
 		add	al, 46h	; 'F'
 		mov	es:[bx+38h], al
-		call	sub_9980
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	game_exit
@@ -629,7 +629,7 @@ loc_9D0A:
 loc_9D19:
 		cmp	[bp+var_2], 10h
 		jl	short loc_9D0A
-		call	sub_9980
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	game_exit
@@ -710,7 +710,7 @@ loc_9DDF:
 		jl	short loc_9DD3
 		push	1
 		call	palette_black_out
-		call	sub_9980
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	game_exit
@@ -807,7 +807,7 @@ loc_9E9A:
 loc_9EA6:
 		cmp	si, 10h
 		jl	short loc_9E9A
-		call	sub_9980
+		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
@@ -1535,7 +1535,7 @@ loc_A468:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	sub_9908
+		call	cfg_load
 		les	bx, _yumeconfig
 		cmp	byte ptr es:[bx+28h], 80h
 		jb	short loc_A497
@@ -1598,7 +1598,7 @@ loc_A4EE:
 loc_A4FE:
 		cmp	byte_D952, 0
 		jz	short loc_A4D2
-		call	sub_99C3
+		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
 		call	game_exit_to_dos

@@ -203,7 +203,7 @@ loc_A400:
 		cmp	si, 8
 		jl	short loc_A3CF
 		call	sub_BC83
-		call	sub_BB0E
+		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
 		les	bx, _ksoconfig
@@ -285,7 +285,7 @@ loc_A4A0:
 		cmp	si, 8
 		jl	short loc_A46F
 		call	sub_BC83
-		call	sub_BB0E
+		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
 		pushd	0
@@ -407,7 +407,7 @@ loc_A5BF:
 		cmp	si, 8
 		jl	short loc_A5A8
 		call	sub_BC83
-		call	sub_BB0E
+		call	cfg_save
 		push	1
 		call	palette_black_out
 		call	game_exit
@@ -1400,7 +1400,7 @@ _envp		= dword	ptr  0Ch
 		call	_getch
 
 loc_AF7D:
-		call	sub_BA94
+		call	cfg_load
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+11h], 0FFh
 		jnz	short loc_AF97
@@ -1494,7 +1494,7 @@ loc_B058:
 		cmp	byte_F072, 0
 		jz	short loc_B00E
 		call	sub_BC83
-		call	sub_BB91
+		call	cfg_save_exit
 		call	text_clear
 		call	game_exit_to_dos
 		call	respal_free
@@ -2258,8 +2258,8 @@ include th04/zunsoft.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BA94	proc near
+public CFG_LOAD
+cfg_load	proc near
 
 var_C		= word ptr -0Ch
 var_A		= byte ptr -0Ah
@@ -2310,14 +2310,14 @@ loc_BAFC:
 locret_BB0C:
 		leave
 		retn
-sub_BA94	endp
+cfg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BB0E	proc near
+public CFG_SAVE
+cfg_save	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
@@ -2370,14 +2370,14 @@ var_2		= byte ptr -2
 		call	file_close
 		leave
 		retn
-sub_BB0E	endp
+cfg_save	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BB91	proc near
+public CFG_SAVE_EXIT
+cfg_save_exit	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -2429,7 +2429,7 @@ var_1		= byte ptr -1
 		call	file_close
 		leave
 		retn
-sub_BB91	endp
+cfg_save_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
