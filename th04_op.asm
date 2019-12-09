@@ -2514,11 +2514,11 @@ loc_BE10:
 		push	0Ah
 
 loc_BE12:
-		call	_zunsoft_pyro_new
+		call	zunsoft_pyro_new
 
 loc_BE15:
 		call	bgimage_put	; default
-		call	_zunsoft_update_and_render
+		call	zunsoft_update_and_render
 		call	far ptr	_input_reset_sense
 
 loc_BE22:
@@ -2544,7 +2544,7 @@ loc_BE5B:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	_zunsoft_palette_update_and_show
+		call	zunsoft_palette_update_and_show
 		jmp	short loc_BE81
 ; ---------------------------------------------------------------------------
 

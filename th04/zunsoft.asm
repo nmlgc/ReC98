@@ -1,4 +1,5 @@
-_zunsoft_pyro_new	proc pascal near
+public ZUNSOFT_PYRO_NEW
+zunsoft_pyro_new	proc pascal near
 	local @@pyros_created:word, @@i:word
 	arg @@origin:Point, @@n:word, @@patnum_base:byte
 
@@ -53,10 +54,11 @@ loc_B694:
 	pop	di
 	pop	si
 	ret
-_zunsoft_pyro_new	endp
+zunsoft_pyro_new	endp
 
 
-_zunsoft_update_and_render	proc pascal near
+public ZUNSOFT_UPDATE_AND_RENDER
+zunsoft_update_and_render	proc pascal near
 	local @@patnum:word, @@draw_y:word, @@draw_x:word, @@anim_sprite:word
 
 	push	si
@@ -184,10 +186,11 @@ loc_B7B9:
 	pop	di
 	pop	si
 	ret
-_zunsoft_update_and_render	endp
+zunsoft_update_and_render	endp
 
 
-_zunsoft_palette_update_and_show	proc near
+public ZUNSOFT_PALETTE_UPDATE_AND_SHOW
+zunsoft_palette_update_and_show	proc near
 	arg @@tone:word
 
 	push	bp
@@ -228,4 +231,4 @@ loc_B7F6:
 	pop	si
 	pop	bp
 	retn	2
-_zunsoft_palette_update_and_show	endp
+zunsoft_palette_update_and_show	endp

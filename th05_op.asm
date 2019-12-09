@@ -2456,11 +2456,11 @@ loc_B9D5:
 		push	10
 
 loc_B9D7:
-		call	_zunsoft_pyro_new
+		call	zunsoft_pyro_new
 
 opening_frame_case_default:
 		call	bgimage_put	; default
-		call	_zunsoft_update_and_render
+		call	zunsoft_update_and_render
 
 loc_B9E2:
 		cmp	vsync_Count1, 2
@@ -2485,7 +2485,7 @@ loc_BA1B:
 		mov	al, [bp+opening_scr_fade]
 		mov	ah, 0
 		push	ax
-		call	_zunsoft_palette_update_and_show
+		call	zunsoft_palette_update_and_show
 		jmp	short loc_BA41
 ; ---------------------------------------------------------------------------
 
