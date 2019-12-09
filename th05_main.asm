@@ -160,9 +160,9 @@ include libs/master.lib/super_put_8.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_41B2	proc far
-		call	sub_420E
+public MPTN_LOAD_INNER
+mptn_load_inner	proc far
+		call	mptn_free
 		mov	bx, sp
 		push	si
 		push	di
@@ -212,13 +212,13 @@ sub_41B2	proc far
 		pop	di
 		pop	si
 		retf	4
-sub_41B2	endp
+mptn_load_inner	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_420E	proc far
+public MPTN_FREE
+mptn_free	proc far
 		cmp	word_23A5A, 0
 		jz	short locret_4224
 		push	word_23A5A
@@ -227,7 +227,7 @@ sub_420E	proc far
 
 locret_4224:
 		retf
-sub_420E	endp
+mptn_free	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -1008,7 +1008,7 @@ loc_B48A:
 		push	offset aSt06_mpn ; "st06.mpn"
 
 loc_B4A6:
-		call	sub_BAF8
+		call	mptn_load
 
 loc_B4A9:
 		call	map_load
@@ -1569,8 +1569,8 @@ sub_BAD2	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BAF8	proc near
+public MPTN_LOAD
+mptn_load	proc near
 
 arg_0		= dword	ptr  4
 
@@ -1579,7 +1579,7 @@ arg_0		= dword	ptr  4
 		push	si
 		push	di
 		pushd	[bp+arg_0]
-		call	sub_41B2
+		call	mptn_load_inner
 		mov	al, 1
 
 loc_BB08:
@@ -1606,12 +1606,12 @@ loc_BB12:
 		pop	ax
 		dec	al
 		jz	short loc_BB08
-		call	sub_420E
+		call	mptn_free
 		pop	di
 		pop	si
 		pop	bp
 		retn	4
-sub_BAF8	endp
+mptn_load	endp
 
 ; ---------------------------------------------------------------------------
 		nop

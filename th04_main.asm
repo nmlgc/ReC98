@@ -837,7 +837,7 @@ loc_B0B2:
 		call	stage4_setup
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
-		call	main_01:sub_B8FC
+		call	main_01:mptn_load
 		mov	_stage_render, offset stage4_render
 		jmp	short loc_B144
 ; ---------------------------------------------------------------------------
@@ -877,7 +877,7 @@ loc_B11E:
 		push	offset aSt06_mpn ; "st06.mpn"
 
 loc_B141:
-		call	main_01:sub_B8FC
+		call	main_01:mptn_load
 
 loc_B144:
 		call	main_01:map_load
@@ -1475,8 +1475,8 @@ sub_B835	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B8FC	proc near
+public MPTN_LOAD
+mptn_load	proc near
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -1488,7 +1488,7 @@ arg_0		= dword	ptr  4
 		push	di
 		push	0
 		pushd	[bp+arg_0]
-		call	sub_1328E
+		call	mptn_load_inner
 		mov	[bp+var_6], 0
 		mov	[bp+var_2], 0
 		mov	si, 240h
@@ -1528,12 +1528,12 @@ loc_B95E:
 		cmp	[bp+var_2], 4
 		jl	short loc_B91C
 		push	0
-		call	sub_131EA
+		call	mptn_free
 		pop	di
 		pop	si
 		leave
 		retn	4
-sub_B8FC	endp
+mptn_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -15011,8 +15011,8 @@ include th03/formats/hfliplut.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_131EA	proc far
+public MPTN_FREE
+mptn_free	proc far
 
 arg_0		= word ptr  6
 
@@ -15033,15 +15033,15 @@ loc_1320E:
 		pop	si
 		pop	bp
 		retf	2
-sub_131EA	endp
+mptn_free	endp
 
 include th04/hardware/input_wait.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13269	proc far
+public MPTN_PALETTE_SHOW
+mptn_palette_show	proc far
 
 arg_0		= word ptr  6
 
@@ -15060,14 +15060,14 @@ arg_0		= word ptr  6
 		call	far ptr	palette_show
 		pop	bp
 		retf	2
-sub_13269	endp
+mptn_palette_show	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1328E	proc far
+public MPTN_LOAD_INNER
+mptn_load_inner	proc far
 
 var_8		= word ptr -8
 var_6		= byte ptr -6
@@ -15106,11 +15106,11 @@ arg_4		= word ptr  0Ah
 		cmp	byte_21AF2, 0
 		jz	short loc_132E3
 		push	di
-		call	sub_13269
+		call	mptn_palette_show
 
 loc_132E3:
 		push	di
-		nopcall	sub_131EA
+		nopcall	mptn_free
 		push	[bp+var_8]
 		call	hmem_allocbyte
 		mov	[si+2],	ax
@@ -15134,7 +15134,7 @@ loc_1331A:
 		pop	si
 		leave
 		retf	6
-sub_1328E	endp
+mptn_load_inner	endp
 
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
