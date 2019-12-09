@@ -357,9 +357,9 @@ loc_A139:
 
 loc_A13E:
 		call	_mdrv2_check_board
-		call	sub_CEAD
+		call	game_init
 		call	sub_B945
-		call	sub_CF1B
+		call	game_switch_binary
 		push	0
 		push	0
 		push	ds
@@ -5746,8 +5746,8 @@ fuuin_07_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-; void __interrupt sub_CE87()
-sub_CE87	proc far
+; void __interrupt _int06_nop()
+_int06_nop	proc far
 		push	eax
 		push	ebx
 		push	ecx
@@ -5770,26 +5770,26 @@ sub_CE87	proc far
 		pop	ebx
 		pop	eax
 		iret
-sub_CE87	endp
+_int06_nop	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CEAD	proc far
+public GAME_INIT
+game_init	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_134B8, 0
-		jnz	short loc_CEFE
-		mov	byte_134B8, 1
+		cmp	_game_initialized, 0
+		jnz	short @@ret
+		mov	_game_initialized, 1
 		push	6		; interruptno
 		call	_getvect
 		pop	cx
-		mov	word ptr off_14150+2, dx
-		mov	word ptr off_14150, ax
-		push	seg fuuin_07_TEXT
-		push	offset sub_CF87	; isr
+		mov	word ptr _int06_old+2, dx
+		mov	word ptr _int06_old, ax
+		push	seg _int06_game_exit
+		push	offset _int06_game_exit	; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 6
@@ -5801,65 +5801,65 @@ sub_CEAD	proc far
 		call	sub_E984
 		call	vram_planes_set
 
-loc_CEFE:
+@@ret:
 		pop	bp
 		retf
-sub_CEAD	endp
+game_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CF00	proc far
+public GAME_EXIT
+game_exit	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_134B8, 1
-		jnz	short loc_CF19
-		mov	byte_134B8, 0
-		nopcall	sub_CF48
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		mov	_game_initialized, 0
+		nopcall	game_exit_inner
 		call	respal_free
 
-loc_CF19:
+@@ret:
 		pop	bp
 		retf
-sub_CF00	endp
+game_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CF1B	proc far
+public GAME_SWITCH_BINARY
+game_switch_binary	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_134B8, 1
-		jnz	short loc_CF46
-		nopcall	sub_CF48
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		nopcall	game_exit_inner
 		call	_z_text_25line
 		push	0
 		call	_z_text_setcursor
 		pop	cx
 		call	_z_text_clear
 		call	_z_text_show
-		mov	byte_134B8, 0
+		mov	_game_initialized, 0
 
-loc_CF46:
+@@ret:
 		pop	bp
 		retf
-sub_CF1B	endp
+game_switch_binary	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_CF48	proc far
+game_exit_inner	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_134B8, 0
-		push	seg fuuin_07_TEXT
-		push	offset sub_CE87	; isr
+		mov	_game_initialized, 0
+		push	seg _int06_nop
+		push	offset _int06_nop	; isr
 		push	6		; interruptno
 		call	_setvect
 		call	_vsync_exit
@@ -5867,21 +5867,21 @@ sub_CF48	proc far
 		call	sub_D4FE
 		call	sub_D094
 		call	egc_start
-		pushd	[off_14150] ; isr
+		pushd	[_int06_old] ; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 0Ch
 		pop	bp
 		retf
-sub_CF48	endp
+game_exit_inner	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: noreturn bp-based	frame
 
-; void __interrupt sub_CF87()
-sub_CF87	proc far
+; void __interrupt _int06_game_exit()
+_int06_game_exit	proc far
 		push	eax
 		push	ebx
 		push	ecx
@@ -5894,7 +5894,7 @@ sub_CF87	proc far
 		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
-		call	sub_CF00
+		call	game_exit
 		push	0		; status
 		call	_exit
 ; ---------------------------------------------------------------------------
@@ -5909,14 +5909,14 @@ sub_CF87	proc far
 		pop	ebx
 		pop	eax
 		iret
-sub_CF87	endp
+_int06_game_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: noreturn bp-based	frame
 
-sub_CFB9	proc far
+game_exit_print_error	proc far
 
 @@buffer		= byte ptr -104h
 var_4		= word ptr -4
@@ -5935,7 +5935,7 @@ _arglist		= byte ptr  0Ah
 		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
 		call	_vsprintf
-		call	sub_CF00
+		call	game_exit
 		push	ss
 		lea	ax, [bp+@@buffer]
 		push	ax
@@ -5946,7 +5946,7 @@ _arglist		= byte ptr  0Ah
 		add	sp, 12h
 		leave
 		retf
-sub_CFB9	endp
+game_exit_print_error	endp
 
 fuuin_07_TEXT	ends
 
@@ -10069,7 +10069,8 @@ aC		db '%c',0
 aCC_5		db '%c%c',0
 include th01/hardware/vsync[data].asm
 include th01/ztext[data].asm
-byte_134B8	db 0
+public _game_initialized
+_game_initialized	db 0
 		db 0
 unk_134BA	db    0
 		dd    0
@@ -10326,8 +10327,8 @@ include th01/hardware/vsync[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-; void (__interrupt far	*off_14150)()
-off_14150	dd ?
+; void (__interrupt far *int06_old)()
+_int06_old	dd ?
 word_14154	dw ?
 word_14156	dw ?
 		db    ?	;

@@ -2993,7 +2993,7 @@ loc_CD70:
 		jnz	short loc_CDA2
 		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
-		call	sub_E852
+		call	game_switch_binary
 		les	bx, _reiidenconfig
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
@@ -4039,7 +4039,7 @@ loc_D583:
 		mov	word_34A8A, ax
 		mov	eax, _rand
 		mov	random_seed, eax
-		call	sub_E7E4
+		call	game_init
 		call	key_start
 		push	3F003Fh
 		call	__control87
@@ -4903,7 +4903,7 @@ loc_DE47:
 		push	78h ; 'x'
 		call	_frame_delay
 		pop	cx
-		call	sub_E852
+		call	game_switch_binary
 		pushd	0
 		push	ds
 		push	offset aFuuin	; "fuuin"
@@ -5005,7 +5005,7 @@ loc_DF52:
 		les	bx, _reiidenconfig
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
-		call	sub_E852
+		call	game_switch_binary
 		pushd	0
 		push	ds
 		push	offset aReiiden	; "reiiden"
@@ -5270,7 +5270,7 @@ loc_E2A8:
 loc_E2CB:
 		call	sub_D487
 		call	sub_D4DD
-		call	sub_E852
+		call	game_switch_binary
 		call	key_end
 		call	@arc_close$qv
 		pushd	0
@@ -5372,8 +5372,8 @@ main_05_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-; void __interrupt sub_E7BE()
-sub_E7BE	proc far
+; void __interrupt _int06_nop()
+_int06_nop	proc far
 		push	eax
 		push	ebx
 		push	ecx
@@ -5396,26 +5396,26 @@ sub_E7BE	proc far
 		pop	ebx
 		pop	eax
 		iret
-sub_E7BE	endp
+_int06_nop	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E7E4	proc far
+public GAME_INIT
+game_init	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_3508E, 0
+		cmp	_game_initialized, 0
 		jnz	short loc_E835
-		mov	byte_3508E, 1
+		mov	_game_initialized, 1
 		push	6		; interruptno
 		call	_getvect
 		pop	cx
-		mov	word ptr off_3891E+2, dx
-		mov	word ptr off_3891E, ax
-		push	seg main_05_TEXT
-		push	offset sub_E8BE	; isr
+		mov	word ptr _int06_old+2, dx
+		mov	word ptr _int06_old, ax
+		push	seg _int06_game_exit
+		push	offset _int06_game_exit	; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 6
@@ -5430,62 +5430,62 @@ sub_E7E4	proc far
 loc_E835:
 		pop	bp
 		retf
-sub_E7E4	endp
+game_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E837	proc far
+public GAME_EXIT
+game_exit	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_3508E, 1
-		jnz	short loc_E850
-		mov	byte_3508E, 0
-		nopcall	sub_E87F
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		mov	_game_initialized, 0
+		nopcall	game_exit_inner
 		call	respal_free
 
-loc_E850:
+@@ret:
 		pop	bp
 		retf
-sub_E837	endp
+game_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E852	proc far
+public GAME_SWITCH_BINARY
+game_switch_binary	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_3508E, 1
-		jnz	short loc_E87D
-		nopcall	sub_E87F
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		nopcall	game_exit_inner
 		call	_z_text_25line
 		push	0
 		call	_z_text_setcursor
 		pop	cx
 		call	_z_text_clear
 		call	_z_text_show
-		mov	byte_3508E, 0
+		mov	_game_initialized, 0
 
-loc_E87D:
+@@ret:
 		pop	bp
 		retf
-sub_E852	endp
+game_switch_binary	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_E87F	proc far
+game_exit_inner	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_3508E, 0
-		push	seg main_05_TEXT
-		push	offset sub_E7BE	; isr
+		mov	_game_initialized, 0
+		push	seg _int06_nop
+		push	offset _int06_nop	; isr
 		push	6		; interruptno
 		call	_setvect
 		call	_vsync_exit
@@ -5493,21 +5493,21 @@ sub_E87F	proc far
 		call	sub_EE35
 		call	sub_E9CB
 		call	egc_start
-		pushd	[off_3891E] ; isr
+		pushd	[_int06_old] ; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 0Ch
 		pop	bp
 		retf
-sub_E87F	endp
+game_exit_inner	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: noreturn bp-based	frame
 
-; void __interrupt sub_E8BE()
-sub_E8BE	proc far
+; void __interrupt _int06_game_exit()
+_int06_game_exit	proc far
 		push	eax
 		push	ebx
 		push	ecx
@@ -5520,7 +5520,7 @@ sub_E8BE	proc far
 		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
-		call	sub_E837
+		call	game_exit
 		push	0		; status
 		call	_exit
 ; ---------------------------------------------------------------------------
@@ -5535,14 +5535,14 @@ sub_E8BE	proc far
 		pop	ebx
 		pop	eax
 		iret
-sub_E8BE	endp
+_int06_game_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: noreturn bp-based	frame
 
-sub_E8F0	proc near
+game_exit_print_error	proc near
 
 @@buffer		= byte ptr -104h
 var_4		= word ptr -4
@@ -5561,18 +5561,14 @@ arglist		= byte ptr  0Ah
 		lea	ax, [bp+@@buffer]
 		push	ax		; buffer
 		call	_vsprintf
-		call	sub_E837
+		call	game_exit
 		push	ss
 		lea	ax, [bp+@@buffer]
 		push	ax
 		call	_z_text_print
-
-loc_E91F:				; status
-		push	1
-
-loc_E921:
+		push	1	; status
 		call	_exit
-sub_E8F0	endp
+game_exit_print_error	endp
 
 main_05_TEXT	ends
 
@@ -29259,7 +29255,8 @@ aOp		db 'op',0
 		db 0
 include th01/hardware/vsync[data].asm
 include th01/ztext[data].asm
-byte_3508E	db 0
+public _game_initialized
+_game_initialized	db 0
 		db 0
 unk_35090	db    0
 		dd    0
@@ -32529,8 +32526,8 @@ include th01/hardware/vsync[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-; void (__interrupt far	*off_3891E)()
-off_3891E	dd ?
+; void (__interrupt far *int06_old)()
+_int06_old	dd ?
 word_38922	dw ?
 word_38924	dw ?
 		db    ?	;

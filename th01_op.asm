@@ -886,7 +886,7 @@ sub_A7B5	proc far
 		add	sp, 0Ch
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_B757
+		call	game_switch_binary
 		mov	al, _mode
 		cbw
 		cmp	ax, 2
@@ -985,7 +985,7 @@ sub_A8AD	proc far
 loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_B757
+		call	game_switch_binary
 		les	bx, _reiidenconfig
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.mode], 0
@@ -1921,7 +1921,7 @@ loc_B06F:
 
 loc_B0D6:
 		call	_mdrv2_check_board
-		call	sub_B6E9
+		call	game_init
 		call	sub_A240
 		mov	al, byte ptr word_12320+1
 		cbw
@@ -2078,7 +2078,7 @@ loc_B21A:
 		call	_graph_accesspage_func
 		pop	cx
 		call	sub_BB12
-		call	sub_B73C
+		call	game_exit
 		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset format	; "おつかれさまでした！！\n"
@@ -2132,8 +2132,8 @@ op_05_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-; void __interrupt sub_B6C3()
-sub_B6C3	proc far
+; void __interrupt _int06_nop()
+_int06_nop	proc far
 		push	eax
 		push	ebx
 		push	ecx
@@ -2156,26 +2156,26 @@ sub_B6C3	proc far
 		pop	ebx
 		pop	eax
 		iret
-sub_B6C3	endp
+_int06_nop	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B6E9	proc far
+public GAME_INIT
+game_init	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_12978, 0
-		jnz	short loc_B73A
-		mov	byte_12978, 1
+		cmp	_game_initialized, 0
+		jnz	short @@ret
+		mov	_game_initialized, 1
 		push	6		; interruptno
 		call	_getvect
 		pop	cx
-		mov	word_1366A, dx
-		mov	word_13667+1, ax
-		push	seg op_05_TEXT
-		push	offset sub_B7C3	; isr
+		mov	word ptr _int06_old+2, dx
+		mov	word ptr _int06_old+0, ax
+		push	seg _int06_game_exit
+		push	offset _int06_game_exit	; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 6
@@ -2187,65 +2187,65 @@ sub_B6E9	proc far
 		call	sub_D1C0
 		call	vram_planes_set
 
-loc_B73A:
+@@ret:
 		pop	bp
 		retf
-sub_B6E9	endp
+game_init	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B73C	proc far
+public GAME_EXIT
+game_exit	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_12978, 1
-		jnz	short loc_B755
-		mov	byte_12978, 0
-		nopcall	sub_B784
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		mov	_game_initialized, 0
+		nopcall	game_exit_inner
 		call	respal_free
 
-loc_B755:
+@@ret:
 		pop	bp
 		retf
-sub_B73C	endp
+game_exit	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B757	proc far
+public GAME_SWITCH_BINARY
+game_switch_binary	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_12978, 1
-		jnz	short loc_B782
-		nopcall	sub_B784
+		cmp	_game_initialized, 1
+		jnz	short @@ret
+		nopcall	game_exit_inner
 		call	_z_text_25line
 		push	0
 		call	_z_text_setcursor
 		pop	cx
 		call	_z_text_clear
 		call	_z_text_show
-		mov	byte_12978, 0
+		mov	_game_initialized, 0
 
-loc_B782:
+@@ret:
 		pop	bp
 		retf
-sub_B757	endp
+game_switch_binary	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_B784	proc far
+game_exit_inner	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_12978, 0
-		push	seg op_05_TEXT
-		push	offset sub_B6C3	; isr
+		mov	_game_initialized, 0
+		push	seg _int06_nop
+		push	offset _int06_nop	; isr
 		push	6		; interruptno
 		call	_setvect
 		call	_vsync_exit
@@ -2253,21 +2253,21 @@ sub_B784	proc far
 		call	sub_BD3A
 		call	sub_B8D0
 		call	egc_start
-		pushd	[dword ptr word_13667+1] ; isr
+		pushd	[dword ptr _int06_old] ; isr
 		push	6		; interruptno
 		call	_setvect
 		add	sp, 0Ch
 		pop	bp
 		retf
-sub_B784	endp
+game_exit_inner	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: noreturn bp-based	frame
 
-; void __interrupt sub_B7C3()
-sub_B7C3	proc near
+; void __interrupt _int06_game_exit()
+_int06_game_exit	proc near
 		push	eax
 		push	ebx
 		push	ecx
@@ -2280,11 +2280,9 @@ sub_B7C3	proc near
 		mov	bp, seg	_DATA
 		mov	ds, bp
 		mov	bp, sp
-		call	sub_B73C
+		call	game_exit
 		push	0		; status
 		call	_exit
-sub_B7C3	endp
-
 ; ---------------------------------------------------------------------------
 		pop	cx
 		pop	bp
@@ -2297,29 +2295,45 @@ sub_B7C3	endp
 		pop	ebx
 		pop	eax
 		iret
-; ---------------------------------------------------------------------------
+_int06_game_exit	endp
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: noreturn bp-based	frame
+
+game_exit_print_error	proc near
+
+@@buffer		= byte ptr -104h
+var_4		= word ptr -4
+var_2		= word ptr -2
+_format		= dword	ptr  6
+arglist		= byte ptr  0Ah
+
 		enter	104h, 0
-		lea	ax, [bp+0Ah]
-		mov	word ptr [bp-2], ss
-		mov	[bp-4],	ax
-		push	word ptr [bp-2]
-		push	ax
-		pushd	dword ptr [bp+6]
+		lea	ax, [bp+arglist]
+		mov	[bp+var_2], ss
+		mov	[bp+var_4], ax
+		push	[bp+var_2]
+		push	ax		; arglist
+		pushd	[bp+_format] ; format
 		push	ss
-		lea	ax, [bp-104h]
-		push	ax
+		lea	ax, [bp+@@buffer]
+		push	ax		; buffer
 		call	_vsprintf
-		call	sub_B73C
+		call	game_exit
 		push	ss
-		lea	ax, [bp-104h]
+		lea	ax, [bp+@@buffer]
 		push	ax
 		call	_z_text_print
-		push	1
+		push	1		; status
 		call	_exit
 ; ---------------------------------------------------------------------------
 		add	sp, 12h
 		leave
 		retf
+game_exit_print_error	endp
+
 op_05_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -7714,7 +7728,8 @@ aCon		db 'CON',0
 format		db 'おつかれさまでした！！',0Ah,0
 include th01/hardware/vsync[data].asm
 include th01/ztext[data].asm
-byte_12978	db 0
+public _game_initialized
+_game_initialized	db 0
 		db 0
 unk_1297A	db    0
 		dd    0
@@ -7944,9 +7959,8 @@ word_13627	dw ?
 		dd    ?
 		dd    ?
 word_13665	dw ?
-word_13667	dw ?
 		db ?
-word_1366A	dw ?
+_int06_old	dd ?
 word_1366C	dw ?
 word_1366E	dw ?
 		db    ?	;
