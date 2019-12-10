@@ -17,4 +17,7 @@ kajacall	macro func, param := <0>
 	call	snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)
 endm
 
+PMD = 60h
+MMD = 61h
+
 MMD_TICKS_PER_QUARTER_NOTE = 48

@@ -5944,41 +5944,7 @@ include th02/initop.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0CE	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_snd_bgm_mode, SND_BGM_OFF
-		jnz	short loc_E0DD
-		mov	ax, 0FFFFh
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_E0DD:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_E0EA
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_E0EF
-; ---------------------------------------------------------------------------
-
-loc_E0EA:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_E0EF:
-		pop	bp
-		retf
-sub_E0CE	endp
-
+include th05/snd/measure.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5994,7 +5960,7 @@ arg_2		= word ptr  8
 		push	si
 
 loc_E0F5:
-		call	sub_E0CE
+		call	_snd_bgm_measure
 		mov	si, ax
 		or	si, si
 		jge	short loc_E109

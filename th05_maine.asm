@@ -1869,18 +1869,18 @@ sub_B37C	proc near
 		mov	byte_1085E, al
 		graph_showpage al
 		inc	word_15010
-		call	sub_F23C
-		mov	word_1500E, ax
-		cmp	word_1500E, 0
+		call	_snd_bgm_measure
+		mov	measure_1500E, ax
+		cmp	measure_1500E, 0
 		jge	short loc_B3B9
 		mov	ax, word_15010
-		mov	bx, 16h
+		mov	bx, 22
 		cwd
 		idiv	bx
-		mov	word_1500E, ax
+		mov	measure_1500E, ax
 
 loc_B3B9:
-		mov	ax, word_1500E
+		mov	ax, measure_1500E
 		cmp	ax, word_15012
 		jl	short loc_B3C7
 		mov	ax, 1
@@ -7028,7 +7028,7 @@ loc_DDD8:
 ; ---------------------------------------------------------------------------
 
 loc_DE01:
-		mov	ax, word_151E0
+		mov	ax, measure_151E0
 		cmp	ax, [bp+arg_0]
 		jl	short loc_DE6C
 		cmp	[bp+arg_0], 0F9Ch
@@ -7212,7 +7212,7 @@ loc_DF50:
 ; ---------------------------------------------------------------------------
 
 loc_DF79:
-		mov	ax, word_151E0
+		mov	ax, measure_151E0
 		cmp	ax, [bp+arg_0]
 		jl	short loc_DFE4
 		cmp	[bp+arg_0], 0F9Ch
@@ -7649,15 +7649,15 @@ sub_E349	proc near
 
 loc_E37E:
 		inc	word_151E2
-		call	sub_F23C
-		mov	word_151E0, ax
-		cmp	word_151E0, 0
+		call	_snd_bgm_measure
+		mov	measure_151E0, ax
+		cmp	measure_151E0, 0
 		jge	short loc_E39D
 		mov	ax, word_151E2
-		mov	bx, 16h
+		mov	bx, 22
 		cwd
 		idiv	bx
-		mov	word_151E0, ax
+		mov	measure_151E0, ax
 
 loc_E39D:
 		pop	bp
@@ -7824,7 +7824,7 @@ loc_E565:
 loc_E573:
 		call	sub_E349
 		inc	si
-		cmp	word_151E0, 1Eh
+		cmp	measure_151E0, 30
 		jl	short loc_E565
 		call	sub_D49D
 		xor	si, si
@@ -7847,7 +7847,7 @@ loc_E594:
 		call	sub_E349
 		or	si, si
 		jz	short loc_E594
-		cmp	word_151E0, 30h	; '0'
+		cmp	measure_151E0, 48
 		jl	short loc_E594
 		xor	si, si
 		xor	di, di
@@ -8680,41 +8680,7 @@ include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F23C	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_snd_bgm_mode, SND_BGM_OFF
-		jnz	short loc_F24B
-		mov	ax, 0FFFFh
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_F24B:
-		mov	ah, KAJA_GET_SONG_MEASURE
-		cmp	_snd_bgm_mode, SND_BGM_MIDI
-		jz	short loc_F258
-		int	60h		; - FTP	Packet Driver -	BASIC FUNC - TERMINATE DRIVER FOR HANDLE
-					; BX = handle
-					; Return: CF set on error, DH =	error code
-					; CF clear if successful
-		jmp	short loc_F25D
-; ---------------------------------------------------------------------------
-
-loc_F258:
-		mov	dx, MMD_TICKS_PER_QUARTER_NOTE * 4	; yes, hardcoded to 4/4
-		int	61h		; reserved for user interrupt
-
-loc_F25D:
-		pop	bp
-		retf
-sub_F23C	endp
-
+include th05/snd/measure.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8730,7 +8696,7 @@ arg_2		= word ptr  8
 		push	si
 
 loc_F263:
-		call	sub_F23C
+		call	_snd_bgm_measure
 		mov	si, ax
 		or	si, si
 		jge	short loc_F277
@@ -11484,7 +11450,7 @@ word_15008	dw ?
 byte_1500A	db ?
 		db ?
 word_1500C	dw ?
-word_1500E	dw ?
+measure_1500E	dw ?
 word_15010	dw ?
 word_15012	dw ?
 allcast_screen_plus_one	dw ?
@@ -11630,7 +11596,7 @@ word_151D8	dw ?
 word_151DA	dw ?
 word_151DC	dw ?
 word_151DE	dw ?
-word_151E0	dw ?
+measure_151E0	dw ?
 word_151E2	dw ?
 		dd    ?	;
 		dd    ?	;
