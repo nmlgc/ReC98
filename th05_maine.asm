@@ -456,7 +456,7 @@ arg_6		= word ptr  0Ah
 		push	0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_EE68
+		call	pi_slot_put_quarter_mask
 		push	si
 		push	di
 		push	14000C8h
@@ -1807,7 +1807,7 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	sub_EE68
+		call	pi_slot_put_quarter_mask
 		call	sub_B37C
 		inc	si
 
@@ -8119,172 +8119,7 @@ include th04/math/vector2_at.asm
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+8]
-		mov	di, si
-		shl	si, 2
-		les	si, _pi_slot_buffers[si]
-		assume es:nothing
-		imul	di, size PiHeader
-		push	word ptr [bp+0Ch]
-		push	word ptr [bp+0Ah]
-		mov	ax, _pi_slot_headers._xsize[di]
-		push	ax
-		shr	ax, 1
-		push	ax
-		mov	di, _pi_slot_headers._ysize[di]
-		mov	ax, [bp+6]
-		call	sub_EEB2
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE68	proc far
-
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	ax, ax
-		xor	dx, dx
-		mov	si, [bp+arg_4]
-		mov	cl, [bp+arg_2]
-		test	cl, 1
-		jz	short loc_EE7F
-		mov	ax, 0A0h
-
-loc_EE7F:
-		test	cl, 2
-		jz	short loc_EE87
-		mov	dx, 0FA0h
-
-loc_EE87:
-		shl	si, 2
-		les	si, _pi_slot_buffers[si]
-		add	si, ax
-		mov	ax, es
-		add	ax, dx
-		mov	es, ax
-		assume es:nothing
-		mov	di, 0C8h
-		push	[bp+arg_8]
-		push	[bp+arg_6]
-		push	140h
-		push	140h
-		mov	ax, [bp+arg_0]
-		call	sub_EEB2
-		pop	di
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_EE68	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EEB2	proc near
-
-arg_0		= word ptr  2
-arg_2		= word ptr  4
-arg_4		= word ptr  6
-arg_6		= word ptr  8
-
-		shl	ax, 3
-		add	ax, 6DEh
-		mov	word_128B4, ax
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		shr	dx, 3
-		mov	ax, [bp+arg_4]
-		shl	ax, 6
-		add	dx, ax
-		shr	ax, 2
-		add	dx, ax
-		mov	word_128B8, dx
-		mov	word_128B6, 0
-
-loc_EEDA:
-		push	es
-		call	graph_pack_put_8_noclip pascal, 0, 400, es, si, [bp+arg_2]
-		push	ds
-		push	di
-		push	si
-		mov	di, word_128B8
-		add	word_128B8, 50h	; 'P'
-		cmp	word_128B8, 7D00h
-		jb	short loc_EF04
-		sub	word_128B8, 7D00h
-
-loc_EF04:
-		call	sub_EF39
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	ds, ax
-		assume ds:nothing
-		mov	si, 7D00h
-		mov	cx, [bp+arg_2]
-		shr	cx, 4
-		rep movsw
-		call	egc_off
-		pop	si
-		pop	di
-		pop	ds
-		assume ds:_DATA
-		pop	es
-		assume es:nothing
-		add	si, [bp+arg_0]
-		mov	ax, si
-		shr	ax, 4
-		mov	dx, es
-		add	dx, ax
-		mov	es, dx
-		and	si, 0Fh
-		dec	di
-		jnz	short loc_EEDA
-		retn	8
-sub_EEB2	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_EF39	proc near
-		call	egc_on
-		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
-		egc_selectpat
-		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
-		outw2	EGC_ADDRRESSREG, 0
-		outw2	EGC_BITLENGTHREG, 0Fh
-		mov	bx, word_128B4
-		mov	ax, word_128B6
-		and	ax, 3
-		shl	ax, 1
-		add	bx, ax
-		outw2	EGC_MASKREG, [bx]
-		inc	word_128B6
-		retn
-sub_EF39	endp
-
+include th05/formats/pi_slot_put_mask.asm
 include th05/formats/pi_slot_load.asm
 include th05/formats/pi_slot_put.asm
 include th05/formats/pi_slot_palette_apply.asm
@@ -8343,37 +8178,7 @@ include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
-		dw    0
-		db  11h
-		db  11h
-		db    0
-		db    0
-		db  44h	; D
-		db  44h	; D
-		db  88h
-		db  88h
-		db  11h
-		db  11h
-		db  22h	; "
-		db  22h	; "
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh	; »
-		db 0BBh	; »
-		db 0DDh
-		db 0DDh
+include th03/formats/pi_slot_put_mask[data].asm
 include th05/formats/pi_slot_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
@@ -8761,9 +8566,7 @@ include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
-word_128B4	dw ?
-word_128B6	dw ?
-word_128B8	dw ?
+include th05/formats/pi_slot_put_mask[bss].asm
 include th05/formats/pi_slot_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm

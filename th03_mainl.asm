@@ -1465,7 +1465,7 @@ loc_A2B4:
 		and	ax, 3
 		add	ax, ax
 		add	bx, ax
-		outw2	EGC_MASKREG, [bx+8E2h]
+		outw2	EGC_MASKREG, _PI_MASKS[bx]
 		mov	[bp+var_4], 7D00h
 		mov	[bp+var_2], 0
 		jmp	short loc_A31E
@@ -5798,38 +5798,7 @@ include th03/snd/se_priority[data].asm
 		db  30h	; 0
 		db    0
 aOver_pi	db 'over.pi',0
-		db 0
-		db    0
-		db  11h
-		db  11h
-		db    0
-		db    0
-		db  44h	; D
-		db  44h	; D
-		db  88h
-		db  88h
-		db  11h
-		db  11h
-		db  22h	; "
-		db  22h	; "
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh
-		db 0BBh
-		db 0DDh
-		db 0DDh
+include th03/formats/pi_slot_put_mask[data].asm
 		db  20h
 		db  20h
 		db    0

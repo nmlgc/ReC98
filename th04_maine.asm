@@ -548,7 +548,7 @@ loc_A3F7:
 		and	ax, 3
 		add	ax, ax
 		add	bx, ax
-		outw2	EGC_MASKREG, [bx+60Ch]
+		outw2	EGC_MASKREG, _PI_MASKS[bx]
 		mov	[bp+var_4], 7D00h
 		mov	[bp+var_2], 0
 		jmp	short loc_A461
@@ -5166,38 +5166,7 @@ include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 include th04/bgimage[data].asm
 include th03/formats/cdg[data].asm
-		db    0
-		db    0
-		db  11h
-		db  11h
-		db    0
-		db    0
-		db  44h	; D
-		db  44h	; D
-		db  88h
-		db  88h
-		db  11h
-		db  11h
-		db  22h	; "
-		db  22h	; "
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh	; »
-		db 0BBh	; »
-		db 0DDh
-		db 0DDh
+include th03/formats/pi_slot_put_mask[data].asm
 		db  88h
 		db  88h
 		db    0
