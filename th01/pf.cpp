@@ -15,10 +15,10 @@ typedef struct {
 	char type[2]; // •• if RLE-compressed
 	char aux; // Always 3, unused
 	char fn[FN_LEN];
-	long packsize;
-	long orgsize;
-	long offset; // of the file data within the entire archive
-	long reserved; // Always zero
+	int32_t packsize;
+	int32_t orgsize;
+	int32_t offset; // of the file data within the entire archive
+	int32_t reserved; // Always zero
 } pf_header_t;
 
 #pragma option -Z -a1
@@ -84,9 +84,9 @@ int pascal near at_pos_of(const char *fn)
 }
 
 // Get it? En*crap*tion?
-void pascal near crapt(char *buf, unsigned int size)
+void pascal near crapt(char *buf, size_t size)
 {
-	unsigned int i;
+	size_t i;
 	for(i = 0; i < size; i++) {
 		buf[i] ^= arc_key;
 	}
@@ -178,10 +178,10 @@ void pascal arc_file_load(const char *fn)
 	file_close();
 }
 
-void pascal arc_file_get(char *buf, unsigned int size)
+void pascal arc_file_get(char *buf, size_t size)
 {
 	char *p = buf;
-	unsigned int i;
+	size_t i;
 	for(i = 0; i < size; i++) {
 		if(file_pos >= file_pf->orgsize) {
 			break;

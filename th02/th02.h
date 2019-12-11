@@ -183,7 +183,7 @@ int snd_pmd_resident(void);
 int snd_mmd_resident(void);
 
 int snd_determine_mode(void);
-int snd_kaja_interrupt(int ax);
+int16_t snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
 #define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
@@ -206,17 +206,17 @@ void snd_se_update(void);
 #define CFG_FN "huuma.cfg"
 #pragma option -a1
 typedef struct {
-	char rank;
-	char bgm_mode;
-	char bombs;
-	char lives;
-	char perf;
+	int8_t rank;
+	int8_t bgm_mode;
+	int8_t bombs;
+	int8_t lives;
+	int8_t perf;
 } huuma_options_t;
 
 typedef struct {
 	huuma_options_t opts;
 	int resident_sgm;
-	char debug;
+	int8_t debug;
 } huuma_cfg_t;
 #pragma option -a.
 // ------------------
@@ -283,10 +283,10 @@ typedef struct {
 	 *
 	 * For rank #4, this field is unused.
 	 */
-	int cleared;
+	int16_t cleared;
 
-	long points[SCORE_PLACES];
-	long points_sum;
+	int32_t points[SCORE_PLACES];
+	int32_t points_sum;
 	unsigned char g_name[SCORE_PLACES][SCORE_NAME_LEN + 1];
 	unsigned char g_name_first_sum;
 	unsigned char stage[SCORE_PLACES];
@@ -297,7 +297,7 @@ typedef struct {
 
 typedef struct {
 	score_t score;
-	long score_sum; // Sum of all bytes in score, pre-encraption
+	int32_t score_sum; // Sum of all bytes in score, pre-encraption
 } score_file_t;
 
 extern char cleared_game_with[SHOTTYPE_COUNT];

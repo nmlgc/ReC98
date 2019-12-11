@@ -5,6 +5,7 @@
 
 #include <master.h>
 #include <stddef.h>
+#include "platform.h"
 #include "pc98.h"
 
 // master.lib extensions
@@ -60,9 +61,9 @@ typedef struct {
 
 typedef union {
 	struct {
-		char lo, hi;
+		int8_t lo, hi;
 	} byte;
-	int v;
+	int16_t v;
 } twobyte_t;
 
 /// Typedefs

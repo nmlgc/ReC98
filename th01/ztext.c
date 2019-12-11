@@ -111,13 +111,13 @@ void z_text_locate(char x, char y)
 
 void z_text_putsa(int x, int y, int z_atrb, const char *str)
 {
-	unsigned int codepoint;
+	uint16_t codepoint;
 	int p = ((y * text_width()) + x) * 2;
 	int hw_atrb = 1;
 
-	#define tx_chars(byte) ((char*)MK_FP(0xA000, 0) + p + byte)
-	#define tx_chars(byte) ((char*)MK_FP(0xA000, 0) + p + byte)
-	#define tx_atrbs(byte) (int*)((char*)MK_FP(0xA200, 0) + p + byte)
+	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
+	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
+	#define tx_atrbs(byte) ((int16_t*)MK_FP(0xA200, p + byte))
 
 	if(z_atrb & 1) {
 		hw_atrb += 0x20;
@@ -152,7 +152,7 @@ void z_text_putsa(int x, int y, int z_atrb, const char *str)
 				*tx_chars(1) = codepoint;
 				*tx_atrbs(0) = hw_atrb;
 			} else if(x == text_width() - 1) {
-				*(int*)tx_chars(0) = ' ';
+				*(int16_t*)tx_chars(0) = ' ';
 				*tx_atrbs(0) = hw_atrb;
 			} else {
 				*tx_chars(0) = (codepoint >> 8) + 0xE0;
@@ -166,7 +166,7 @@ void z_text_putsa(int x, int y, int z_atrb, const char *str)
 				x++;
 			}
 		} else {
-			*(int*)tx_chars(0) = *(unsigned char*)(str++);
+			*(int16_t*)tx_chars(0) = *(unsigned char*)(str++);
 			*tx_atrbs(0) = hw_atrb;
 		}
 		p += 2;

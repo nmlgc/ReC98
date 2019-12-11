@@ -3,7 +3,7 @@
 
 void graph_putsa_fx(int x, int y, int fx, const unsigned char *str)
 {
-	unsigned int codepoint;
+	uint16_t codepoint;
 	unsigned int glyph_row;
 	unsigned char far *vram;
 	int fullwidth;
