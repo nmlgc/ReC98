@@ -4,15 +4,15 @@
 void graph_putsa_fx(int x, int y, int fx, const unsigned char *str)
 {
 	uint16_t codepoint;
-	unsigned int glyph_row;
+	planar16_t glyph_row;
 	unsigned char far *vram;
 	int fullwidth;
 	int first_bit;
 	int weight = (fx >> 4) & 3;
 	int spacing = (fx >> 6) & 7;
 	int line;
-	unsigned int glyph[GLYPH_HEIGHT];
-	register unsigned int glyph_row_orig;
+	planar16_t glyph[GLYPH_HEIGHT];
+	register planar16_t glyph_row_orig;
 
 	grcg_setcolor(GC_RMW, fx);
 	OUTB(0x68, 0xB); // CG ROM dot access

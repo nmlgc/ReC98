@@ -79,29 +79,38 @@ typedef void ( far pascal * far   farfunc_t_far)(void);
 
 // PC-98 VRAM planes
 // -----------------
+// Planar 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
+typedef uint8_t planar8_t;
+typedef uint16_t planar16_t;
+typedef uint32_t planar32_t;
+// ... and the same for the rare cases where ZUN's code used signed types.
+typedef int8_t splanar8_t;
+typedef int16_t splanar16_t;
+typedef int32_t splanar32_t;
+
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
 
 typedef struct {
-	char B, R, G, E;
+	planar8_t B, R, G, E;
 } vram_planar_8_pixels_t;
 
 typedef struct {
-	int B, R, G, E;
+	planar16_t B, R, G, E;
 } vram_planar_16_pixels_t;
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
-extern char *VRAM_PLANE[PL_COUNT];
-extern char *VRAM_PLANE_B;
-extern char *VRAM_PLANE_G;
-extern char *VRAM_PLANE_R;
-extern char *VRAM_PLANE_E;
+extern planar8_t *VRAM_PLANE[PL_COUNT];
+extern planar8_t *VRAM_PLANE_B;
+extern planar8_t *VRAM_PLANE_G;
+extern planar8_t *VRAM_PLANE_R;
+extern planar8_t *VRAM_PLANE_E;
 
 #define PLANE_DWORD_BLIT(dst, src) \
-	for(p = 0; p < PLANE_SIZE; p += 4) { \
-		*(long*)((dst) + p) = *(long*)((src) + p); \
+	for(p = 0; p < PLANE_SIZE; p += (int)sizeof(planar32_t)) { \
+		*(planar32_t*)((dst) + p) = *(planar32_t*)((src) + p); \
 	}
 
 #define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)

@@ -16,7 +16,7 @@
 #define PIANO_VRAM_W ((PIANO_OCTAVES * PIANO_OCTAVE_W) / 8)
 
 // Sprite data
-extern const unsigned char PIANO_KEYS_BLACK[PIANO_VRAM_W];
+extern const planar8_t PIANO_KEYS_BLACK[PIANO_VRAM_W];
 /// --------
 
 // Using the same naming convention as for the gaiji characters...
@@ -38,7 +38,7 @@ typedef enum {
 #define PIANO_LABEL_FONT_W 8
 #define PIANO_LABEL_FONT_H 8
 
-extern const unsigned char PIANO_LABEL_FONT[pl_COUNT][PIANO_LABEL_FONT_H];
+extern const planar8_t PIANO_LABEL_FONT[pl_COUNT][PIANO_LABEL_FONT_H];
 
 #define PIANO_LABEL_DIST_X 32
 #define PIANO_LABEL_DIST_Y 4

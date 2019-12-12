@@ -24,7 +24,7 @@ void egc_copy_rect_1_to_0(int x, int y, int w, int h)
 	int row;
 	int col;
 	int row_p;
-	int bits;
+	planar16_t bits;
 	int p;
 
 	x_end += w;
@@ -33,8 +33,8 @@ void egc_copy_rect_1_to_0(int x, int y, int w, int h)
 	egc_start_copy();
 	for(row = 0; row < h; row++) {
 		for(col = x_floor, p = row_p; col < x_end; p += 2, col += 16) {
-			graph_accesspage(1); bits = *(int*)(VRAM_PLANE_B + p);
-			graph_accesspage(0); *(int*)(VRAM_PLANE_B + p) = bits;
+			graph_accesspage(1); bits = *(planar16_t*)(VRAM_PLANE_B + p);
+			graph_accesspage(0); *(planar16_t*)(VRAM_PLANE_B + p) = bits;
 		}
 		row_p += 640 / 8;
 	}

@@ -68,7 +68,7 @@ void darken_pic_at(int x, int y)
 	grcg_setcolor(GC_RMW, 0);
 	for(row = 0; row < 144; row++, row_p += 640 / 8)  {
 		for(col = 0; col < 192 / 8; col += 2) {
-			*(int*)(VRAM_PLANE_B + row_p + col) =
+			*(planar16_t*)(VRAM_PLANE_B + row_p + col) =
 				row & 1 ? 0xAAAA : 0x5555
 			;
 		}

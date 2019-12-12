@@ -26,15 +26,15 @@ void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h)
 			if(row_p >= 0) {
 				vram_planar_16_pixels_t p16;
 				graph_accesspage(1);
-				p16.B = *(int*)(VRAM_PLANE_B + p);
-				p16.R = *(int*)(VRAM_PLANE_R + p);
-				p16.G = *(int*)(VRAM_PLANE_G + p);
-				p16.E = *(int*)(VRAM_PLANE_E + p);
+				p16.B = *(planar16_t*)(VRAM_PLANE_B + p);
+				p16.R = *(planar16_t*)(VRAM_PLANE_R + p);
+				p16.G = *(planar16_t*)(VRAM_PLANE_G + p);
+				p16.E = *(planar16_t*)(VRAM_PLANE_E + p);
 				graph_accesspage(0);
-				*(int*)(VRAM_PLANE_B + p) = p16.B;
-				*(int*)(VRAM_PLANE_R + p) = p16.R;
-				*(int*)(VRAM_PLANE_G + p) = p16.G;
-				*(int*)(VRAM_PLANE_E + p) = p16.E;
+				*(planar16_t*)(VRAM_PLANE_B + p) = p16.B;
+				*(planar16_t*)(VRAM_PLANE_R + p) = p16.R;
+				*(planar16_t*)(VRAM_PLANE_G + p) = p16.G;
+				*(planar16_t*)(VRAM_PLANE_E + p) = p16.E;
 			}
 		}
 		row_p += ROW_SIZE;
