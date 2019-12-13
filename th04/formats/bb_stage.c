@@ -19,7 +19,7 @@ void pascal far bb_stage_free(void)
 #endif
 {
 	if(bb_stage_seg) {
-		hmem_free((unsigned int)bb_stage_seg);
+		hmem_free((seg_t)bb_stage_seg);
 		bb_stage_seg = 0;
 	}
 }

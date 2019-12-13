@@ -23,3 +23,9 @@ typedef unsigned long uint32_t;
 # error This code can currently only be compiled on Borland's 16-bit DOS compilers. Ideally, you'd only have to declare <stdint.h> types for your compiler here though?
 #endif
 /// ----------
+
+// Both Turbo C++ and master.lib use uint16_t for segment values throughout
+// their APIs instead of the more sensible void __seg*. Maybe, integer
+// arithmetic on segment values was widely considered more important than
+// dereferencing?
+typedef uint16_t seg_t;

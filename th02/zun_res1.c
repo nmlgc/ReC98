@@ -13,7 +13,7 @@
 
 char debug = 0;
 
-void cfg_write(int mikoconfig_sgm)
+void cfg_write(seg_t mikoconfig_sgm)
 {
 	static const huuma_options_t opts_default = {
 		RANK_NORMAL, SND_BGM_FM, 3, 2, 0
@@ -58,7 +58,7 @@ int main(int argc, const char **argv)
 	static const char INITIALIZED[] =
 		"ÇªÇÍÇ≈ÇÕÅAÇÊÇÎÇµÇ≠Ç®äËÇ¢ÇµÇ‹Ç∑\n\n";
 
-	int sgm;
+	seg_t sgm;
 	const char *res_id = MIKOConfig;
 	int i;
 	char far *mikoconfig;

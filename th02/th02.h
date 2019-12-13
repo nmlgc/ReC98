@@ -215,7 +215,7 @@ typedef struct {
 
 typedef struct {
 	huuma_options_t opts;
-	int resident_sgm;
+	void __seg *resident_sgm;
 	int8_t debug;
 } huuma_cfg_t;
 #pragma option -a.

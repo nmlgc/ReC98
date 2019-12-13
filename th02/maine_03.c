@@ -20,7 +20,7 @@ int unused_6;
 
 int pascal cfg_load(void)
 {
-	int resident_sgm;
+	seg_t resident_sgm;
 
 	file_ropen(CFG_FN);
 	file_seek(offsetof(huuma_cfg_t, resident_sgm), 0);

@@ -20,7 +20,7 @@ char snd_bgm_mode;
 static int unused_2;
 unsigned int idle_frames;
 unsigned char demo_num;
-unsigned int mikoconfig_sgm;
+void __seg *mikoconfig_sgm;
 putfunc_t near *putfunc;
 
 // No, we don't want to put these two into th02.h. Apparently, declaring

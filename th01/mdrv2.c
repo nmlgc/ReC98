@@ -8,6 +8,7 @@
 #include <io.h>
 #include <malloc.h>
 #include <string.h>
+#include "platform.h"
 
 #define	MDRV2 0xf2
 #define MDRV2_CALL(func) { \
@@ -54,7 +55,7 @@ static void near pascal mdrv2_load(const char *fn, char func)
 	if(mdrv2_have_board) {
 		int handle = open(fn, O_BINARY | O_RDONLY);
 		int length = filelength(handle);
-		int sgm;
+		seg_t sgm;
 		int ofs;
 		void far *block;
 

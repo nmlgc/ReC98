@@ -14,7 +14,7 @@ void resident_stuff_set(
 	char rank, char bgm_mode, char bombs, char start_lives_extra, long rand
 )
 {
-	unsigned res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
+	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
 	if(!res) {
 		res = resdata_create(res_id, RES_ID_STRLEN, RES_PARASIZE);
 		reiidenconfig = MK_FP(res, 0);
@@ -42,7 +42,7 @@ int resident_stuff_get(
 	int *stage
 )
 {
-	unsigned res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
+	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
 	if(res) {
 		reiidenconfig = MK_FP(res, 0);
 		*rank = reiidenconfig->rank;
@@ -59,7 +59,7 @@ int resident_stuff_get(
 
 void resident_free(void)
 {
-	unsigned res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
+	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
 	if(res) {
 		resdata_free(res);
 	}
