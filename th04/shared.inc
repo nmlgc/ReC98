@@ -2,7 +2,7 @@
 ; -----
 ; Types shared between TH04 and TH05
 
-include th03/defconv.inc
+include defconv.inc
 
 ; Formats
 ; --------
