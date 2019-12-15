@@ -25,21 +25,6 @@ int pascal mptn_load(const char *fn);
 void pascal mptn_palette_show(void);
 void pascal mptn_free(void);
 
-#define PI_SLOTS 6
-
-extern void far *pi_slot_buffers[PI_SLOTS];
-extern PiHeader pi_slot_headers[PI_SLOTS];
-
-int pi_slot_load(int slot, const char *fn);
-void pi_slot_palette_apply(int slot);
-void pi_slot_put(int x, int y, int slot);
-
-#define pi_load_put_free(slot, fn) \
-	pi_slot_load(slot, (fn)); \
-	pi_slot_palette_apply(slot); \
-	pi_slot_put(0, 0, slot); \
-	graph_pi_free(&pi_slot_headers[slot], pi_slot_buffers[slot]);
-
 // "東方封魔.録" in Shift-JIS
 #define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E"
 #define PF_KEY 0x12

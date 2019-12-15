@@ -1,7 +1,3 @@
-; Displays the n-th 320x200 [quarter], counted from the top left, of the PI
-; image in slot #[slot] at [x],[y].
-
-; int DEFCONV pi_slot_put_quarter(int x, int y, int slot, int quarter)
 proc_defconv pi_slot_put_quarter
 	arg @@x:word, @@y:word, @@slot:word, @@quarter:word
 	local @@row_num:word, @@row_buf:dword

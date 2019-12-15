@@ -4,6 +4,7 @@
  */
 
 #include "th02\th02.h"
+#include "th02/formats/pi.h"
 
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 #define SEL_QUIT TRACK_COUNT + 1

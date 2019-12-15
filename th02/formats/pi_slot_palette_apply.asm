@@ -1,4 +1,3 @@
-; int DEFCONV pi_slot_palette_apply(int slot)
 if GAME ge 3
 	align	2
 endif

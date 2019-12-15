@@ -1,7 +1,3 @@
-; Displays the PI image in slot #[slot] at [x],[y]. If the image exceeds the
-; screen resolution, it is wrapped vertically and cut off horizontally.
-
-; int DEFCONV pi_slot_put(int x, int y, int slot)
 proc_defconv pi_slot_put
 	arg @@x:word, @@y:word, @@slot:word
 if GAME ge 3

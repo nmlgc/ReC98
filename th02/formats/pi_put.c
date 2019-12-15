@@ -4,8 +4,6 @@ void pi_slot_palette_apply(int slot)
 	palette_show();
 }
 
-// Displays the PI image in slot #[slot] at [x],[y]. If the image exceeds the
-// screen resolution, it is wrapped vertically and cut off horizontally.
 void pi_slot_put(int x, int y, int slot)
 {
 	char *row_p = pi_slot_buffers[slot];

@@ -1,4 +1,3 @@
-; int __stdcall pi_load(char *fn, int slot)
 func pi_slot_load
 @@fn	= DPTR_ (cPtrSize + 2)
 @@slot	= word ptr (cPtrSize + 2 + dPtrSize)

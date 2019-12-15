@@ -1,4 +1,3 @@
-; int DEFCONV pi_slot_load(int slot, char *fn)
 proc_defconv pi_slot_load
 	arg @@slot:word, @@fn:dword
 	local @@ret

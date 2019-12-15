@@ -1,6 +1,3 @@
-; Copy of pi_slot_put() that only displays every second row in the given PI.
-
-; int DEFCONV pi_slot_put_interlace(int x, int y, int slot)
 proc_defconv pi_slot_put_interlace
 	arg @@x:word, @@y:word, @@slot:word
 	local @@row_num:word, @@row_buf:dword

@@ -1,4 +1,3 @@
-; int __cdecl pi_slot_palette_apply(int slot)
 pi_slot_palette_apply	proc
 @@slot	= word ptr cPtrSize
 

@@ -1,4 +1,3 @@
-; int __pascal pi_slot_free(int slot)
 func pi_slot_free
 @@slot	= word ptr 4
 

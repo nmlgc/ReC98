@@ -1,4 +1,3 @@
-; int DEFCONV pi_slot_put(int x, int y, int slot)
 proc_defconv pi_slot_put
 @@slot	= word ptr [bp + (cPtrSize + 2)]
 @@y	= word ptr [bp + (cPtrSize + 4)]
@@ -30,7 +29,6 @@ endp_defconv
 
 ; ---------------------------------------------------------------------------
 
-; int DEFCONV pi_slot_put_quarter(int x, int y, int slot, int quarter)
 proc_defconv pi_slot_put_quarter
 @@quarter	= byte ptr [bp + (cPtrSize + 2)]
 @@slot	= word ptr [bp + (cPtrSize + 4)]

@@ -6,6 +6,7 @@
 #include <process.h>
 #include "th02/th02.h"
 #include "th02/initexit.h"
+#include "th02/formats/pi.h"
 
 #pragma option -d
 
