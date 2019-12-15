@@ -73,32 +73,38 @@ endp_defconv
 
 ; ---------------------------------------------------------------------------
 
+; void pascal pi_slot_put_mask_rowloop(
+;	void far *pi_buf<es:si>,
+;	int h<di>,
+;	int x, int y, int w, size_t stride_packed
+; );
 pi_slot_put_rowloop	proc near
-@@stride	= word ptr [bp+2]
-@@len	= word ptr [bp+4]
+@@stride_packed	= word ptr [bp+2]
+@@w	= word ptr [bp+4]
 @@y	= word ptr [bp+6]
 @@x	= word ptr [bp+8]
+@@h equ di
 
 	mov	bp, sp
 
-@@put:
+@@put_row:
 	push	es
-	call	graph_pack_put_8_noclip pascal, @@x, @@y, es, si, @@len
+	call	graph_pack_put_8_noclip pascal, @@x, @@y, es, si, @@w
 	pop	es
 	inc	@@y
-	cmp	@@y, 400
+	cmp	@@y, RES_Y
 	jb	short @@next_row
-	sub	@@y, 400
+	sub	@@y, RES_Y
 
 @@next_row:
-	add	si, @@stride
+	add	si, @@stride_packed
 	mov	ax, si
 	shr	ax, 4
 	mov	dx, es
 	add	dx, ax
 	mov	es, dx
 	and	si, 0Fh
-	dec	di
-	jnz	short @@put
+	dec	@@h
+	jnz	short @@put_row
 	retn	8
 pi_slot_put_rowloop	endp
