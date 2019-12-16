@@ -1,7 +1,7 @@
 ; void pascal near bb_playchar_load(void);
 public BB_PLAYCHAR_LOAD
 bb_playchar_load	proc near
-	mov	al, playchar
+	mov	al, _playchar
 	add	byte ptr _bb_playchar_fn+2, al
 	call	bb_load pascal, ds, offset _bb_playchar_fn
 	mov	_bb_playchar_seg, ax

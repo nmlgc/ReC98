@@ -11,7 +11,7 @@
 ; );
 public SELECT_FOR_PLAYCHAR
 select_for_playchar	proc far
-	mov	al, playchar
+	mov	al, _playchar
 	jmp	short select_for
 select_for_playchar	endp
 	nop

@@ -562,7 +562,7 @@ sub_B063	proc near
 		mov	byte ptr es:[bx+1Ch], 0
 		mov	byte ptr es:[bx+1Ah], 37h ; '7'
 		mov	al, es:[bx+14h]
-		mov	playchar, al
+		mov	_playchar, al
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
 		mov	al, es:[bx+0Dh]
@@ -581,7 +581,7 @@ loc_B09F:
 		mov	power, 1
 		mov	dream, 1
 		call	bb_txt_load
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 3
@@ -589,34 +589,34 @@ loc_B09F:
 		add	bx, bx
 		jmp	cs:off_B22F[bx]
 
-playchar_reimu:
+@@reimu:
 		mov	_playchar_speed_aligned, 56
 		mov	_playchar_speed_diagonal, 40
 		mov	fp_2429C, offset sub_C78E
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-playchar_marisa:
+@@marisa:
 		mov	_playchar_speed_aligned, 64
 		mov	_playchar_speed_diagonal, 48
 		mov	fp_2429C, offset sub_C9DA
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-playchar_mima:
+@@mima:
 		mov	_playchar_speed_aligned, 72
 		mov	_playchar_speed_diagonal, 52
 		mov	fp_2429C, offset sub_CBFD
 		jmp	short loc_B112
 ; ---------------------------------------------------------------------------
 
-playchar_yuuka:
+@@yuuka:
 		mov	_playchar_speed_aligned, 56
 		mov	_playchar_speed_diagonal, 40
 		mov	fp_2429C, offset sub_CD94
 
 loc_B112:
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		imul	ax, 20
 		add	ax, offset SHOT_FUNCS
@@ -717,7 +717,6 @@ loc_B222:
 		pop	si
 		pop	bp
 		retn
-sub_B063	endp
 
 ; ---------------------------------------------------------------------------
 off_B225	dw offset loc_B18A
@@ -725,10 +724,11 @@ off_B225	dw offset loc_B18A
 		dw offset loc_B1C0
 		dw offset loc_B1E3
 		dw offset loc_B206
-off_B22F	dw offset playchar_reimu
-		dw offset playchar_marisa
-		dw offset playchar_mima
-		dw offset playchar_yuuka
+off_B22F	dw offset @@reimu
+		dw offset @@marisa
+		dw offset @@mima
+		dw offset @@yuuka
+sub_B063	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -803,10 +803,10 @@ loc_B2DD:
 		call	bb_curvebullet_load
 		call	EmsLoad
 		call	bb_playchar_load
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_B359
 		add	bx, bx
 		jmp	cs:off_B552[bx]
@@ -843,10 +843,10 @@ loc_B359:
 		push	ds
 		push	offset aMiko32_bft ; "miko32.bft"
 		call	super_entry_bfnt
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_B399
 		add	bx, bx
 		jmp	cs:off_B54A[bx]
@@ -892,7 +892,7 @@ loc_B3A7:
 loc_B3AE:
 		cmp	si, 0ACh ; '¬'
 		jl	short loc_B3A7
-		cmp	playchar, 3
+		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_B3C1
 		push	ds
 		push	offset aBomb3_bft ; "bomb3.bft"
@@ -1337,36 +1337,36 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_B946
 		add	bx, bx
 		jmp	cs:off_B9C4[bx]
 
-loc_B923:
+@@reimu:
 		push	2
 		push	ds
 		push	offset aKao0_cd2 ; "KAO0.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
-loc_B92B:
+@@marisa:
 		push	2
 		push	ds
 		push	offset aKao1_cd2 ; "KAO1.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
-loc_B933:
+@@mima:
 		push	2
 		push	ds
 		push	offset aKao2_cd2 ; "KAO2.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
-loc_B93B:
+@@yuuka:
 		push	2
 		push	ds
 		push	offset aKao3_cd2 ; "KAO3.cd2"
@@ -1422,13 +1422,12 @@ loc_B9B4:
 		pop	si
 		leave
 		retn
-EmsLoad	endp
 
-; ---------------------------------------------------------------------------
-off_B9C4	dw offset loc_B923
-		dw offset loc_B92B
-		dw offset loc_B933
-		dw offset loc_B93B
+off_B9C4	dw offset @@reimu
+		dw offset @@marisa
+		dw offset @@mima
+		dw offset @@yuuka
+EmsLoad	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6672,7 +6671,7 @@ sub_E7DC	proc near
 loc_E7E7:
 		mov	bx, ax
 		xor	ah, ah
-		mov	al, playchar
+		mov	al, _playchar
 		imul	ax, 5
 		add	al, _rank
 		imul	ax, 60h
@@ -6708,7 +6707,7 @@ sub_E813	proc near
 					; 2 - read & write
 		mov	bx, ax
 		xor	ah, ah
-		mov	al, playchar
+		mov	al, _playchar
 		imul	ax, 5
 		add	al, _rank
 		imul	ax, 60h
@@ -7116,14 +7115,14 @@ loc_ED9D:
 		push	ax
 		push	0Ah
 		call	file_read
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_8]
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, ss:[bx]
-		mov	dl, playchar
+		mov	dl, _playchar
 		mov	dh, 0
 		add	dx, dx
 		lea	bx, [bp+var_A]
@@ -7135,7 +7134,7 @@ loc_ED9D:
 		call	hmem_allocbyte
 		mov	word ptr dword_2C930+2,	ax
 		mov	word ptr dword_2C930, 0
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		add	ax, ax
 		lea	dx, [bp+var_A]
@@ -7911,7 +7910,7 @@ loc_F40F:
 
 loc_F41B:
 		mov	di, [bp+var_6]
-		mov	al, playchar
+		mov	al, _playchar
 
 loc_F421:
 		add	al, 30h	; '0'
@@ -7964,36 +7963,36 @@ sub_F463	proc near
 ; ---------------------------------------------------------------------------
 
 loc_F499:
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_F4D1
 		add	bx, bx
 		jmp	cs:off_F4D5[bx]
 
-loc_F4AC:
+@@reimu:
 		push	0
 		push	ds
 		push	offset aBb0_cdg	; "bb0.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
-loc_F4B4:
+@@marisa:
 		push	0
 		push	ds
 		push	offset aBb1_cdg	; "bb1.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
-loc_F4BC:
+@@mima:
 		push	0
 		push	ds
 		push	offset aBb2_cdg	; "bb2.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
-loc_F4C4:
+@@yuuka:
 		push	0
 		push	ds
 		push	offset aBb3_cdg	; "bb3.cdg"
@@ -8006,14 +8005,13 @@ loc_F4D1:
 		pop	si
 		pop	bp
 		retn
-sub_F463	endp
 
-; ---------------------------------------------------------------------------
 		db 0
-off_F4D5	dw offset loc_F4AC
-		dw offset loc_F4B4
-		dw offset loc_F4BC
-		dw offset loc_F4C4
+off_F4D5	dw offset @@reimu
+		dw offset @@marisa
+		dw offset @@mima
+		dw offset @@yuuka
+sub_F463	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8040,7 +8038,7 @@ loc_F4FA:
 loc_F501:
 		cmp	si, 0ACh ; '¬'
 		jl	short loc_F4FA
-		cmp	playchar, 3
+		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_F514
 		push	ds
 		push	offset aBomb3_bft_0 ; "bomb3.bft"
@@ -9523,15 +9521,15 @@ hud_put	proc far
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds offset gsHISCORE, TX_YELLOW
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds offset gsSCORE, TX_YELLOW
 		call	hud_score_put
-		mov	al, playchar
+		mov	al, _playchar
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, PLAYCHAR_COUNT - 1
 		ja	short loc_10796
 		add	bx, bx
 		jmp	word ptr cs:table_1083C[bx]
 
-loc_10730:
+@@reimu:
 		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsREIGEKI, TX_YELLOW
 		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsREIMU, TX_YELLOW
 		push	(62 shl 16) + 21
@@ -9540,7 +9538,7 @@ loc_10730:
 		jmp	short loc_1078E
 ; ---------------------------------------------------------------------------
 
-loc_10760:
+@@not_reimu:
 		call	gaiji_putsa pascal, (57 shl 16) + 11, ds, offset gsBOMB, TX_YELLOW
 		call	gaiji_putsa pascal, (57 shl 16) + 13, ds, offset gsPLAYER, TX_YELLOW
 		push	(62 shl 16) + 21
@@ -9599,14 +9597,15 @@ loc_1082D:
 		call	sub_1065B
 		pop	bp
 		retf
+
+		db 0
+table_1083C	dw @@reimu
+		dw @@not_reimu
+		dw @@not_reimu
+		dw @@not_reimu
 hud_put	endp
 
 ; ---------------------------------------------------------------------------
-		db 0
-table_1083C	dw loc_10730
-		dw loc_10760
-		dw loc_10760
-		dw loc_10760
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13076,7 +13075,7 @@ loc_12769:
 		add	si, ax
 
 loc_12783:
-		cmp	playchar, 1
+		cmp	_playchar, PLAYCHAR_MARISA
 		jnz	short loc_127BD
 		cmp	byte_2429B, 10h
 		jb	short loc_127BD
@@ -13101,9 +13100,9 @@ loc_12783:
 loc_127BD:
 		cmp	byte_2297E, 0
 		jz	short loc_127FA
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jbe	short loc_127D2
-		cmp	playchar, 3
+		cmp	_playchar, PLAYCHAR_YUUKA
 		jb	short loc_12821
 
 loc_127D2:
@@ -13118,7 +13117,7 @@ loc_127D2:
 ; ---------------------------------------------------------------------------
 
 loc_127E7:
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_12833
 		mov	ax, 8
 		imul	si
@@ -13130,7 +13129,7 @@ loc_127E7:
 loc_127FA:
 		cmp	stage_id, 6
 		jnz	short loc_1281A
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_1281A
 		mov	ax, 4
 		imul	si
@@ -13142,7 +13141,7 @@ loc_127FA:
 		mov	si, ax
 
 loc_1281A:
-		cmp	playchar, 3
+		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_12833
 
 loc_12821:
@@ -34818,7 +34817,8 @@ include th03/hardware/palette_changed[bss].asm
 stage_id	db ?
 _rank	db ?
 include th04/playperf[bss].asm
-playchar	db ?
+public _playchar
+_playchar	db ?
 include th04/ems[bss].asm
 byte_25FF2	db ?
 		db ?

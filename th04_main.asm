@@ -495,7 +495,7 @@ sub_AD03	proc near
 		mov	byte ptr es:[bx+30h], 37h ; '7'
 		cmp	byte ptr es:[bx+12h], 31h ; '1'
 		jnz	short loc_AD2C
-		mov	ax, 1
+		mov	ax, PLAYCHAR_MARISA
 		jmp	short loc_AD2E
 ; ---------------------------------------------------------------------------
 
@@ -503,7 +503,7 @@ loc_AD2C:
 		xor	ax, ax
 
 loc_AD2E:
-		mov	playchar, al
+		mov	_playchar, al
 		xor	si, si
 		jmp	short loc_AD3B
 ; ---------------------------------------------------------------------------
@@ -522,7 +522,7 @@ loc_AD3B:
 		mov	al, es:[bx+0Ch]
 		mov	es:[bx+0Bh], al
 		call	main_01:bb_txt_load
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_AD90
 		mov	_player_option_patnum, 38
 		les	bx, _humaconfig
@@ -715,7 +715,7 @@ loc_AF4A:
 		jz	short loc_AFD5
 		call	main_01:EmsLoad
 		call	main_01:bb_playchar_load
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_AFA0
 		push	ds
 		push	offset aMiko_bft ; "miko.bft"
@@ -816,7 +816,7 @@ loc_B071:
 
 loc_B097:
 		mov	word_2CFF4, 9
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_B0AC
 		push	8
 		push	ds
@@ -1164,7 +1164,7 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short @@not_reimu
 		push	2
 		push	ds
@@ -3730,7 +3730,7 @@ loc_CF70:
 		mov	_bgm_title_id, al
 		cmp	stage_id, 3
 		jnz	short loc_CFAC
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_CFAC
 		mov	_bgm_title_id, 10h
 
@@ -4746,7 +4746,7 @@ loc_D7C9:
 ; ---------------------------------------------------------------------------
 
 loc_D7D0:
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_D7DF
 		push	2
 		push	ds
@@ -4841,7 +4841,7 @@ loc_D83A:
 ; ---------------------------------------------------------------------------
 
 loc_D86C:
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_D87B
 		push	0
 		push	ds
@@ -9822,7 +9822,7 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_10038
 		mov	al, 0Fh
 		jmp	short loc_1003A
@@ -11421,7 +11421,7 @@ loc_10FED:
 		mov	_bgm_title_id, al
 		cmp	stage_id, 0
 		jnz	short loc_11023
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_11023
 		mov	stage_title_id, 0
 		mov	_bgm_title_id, 0
@@ -34460,7 +34460,7 @@ stage4_setup	proc far
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
 		mov	_boss_bg_render_func, offset reimu_marisa_bg_render
-		cmp	playchar, 1
+		cmp	_playchar, PLAYCHAR_MARISA
 		jnz	@@playing_as_reimu
 		setfarfp	_boss_update_func, reimu_update
 		mov	_boss_fg_render_func, offset reimu_fg_render
@@ -34508,7 +34508,7 @@ loc_1E371:
 		push	ds
 		push	offset aSt03_bmt ; "st03.bmt"
 		call	super_entry_bfnt
-		cmp	playchar, 0
+		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_1E3A0
 		push	10h
 		push	ds
@@ -40386,7 +40386,8 @@ byte_266D2	db ?
 include th03/hardware/palette_changed[bss].asm
 stage_id	db ?
 include th04/playperf[bss].asm
-playchar	db ?
+public _playchar
+_playchar	db ?
 		db ?
 include th04/drawpoint[bss].asm
 include th04/ems[bss].asm
