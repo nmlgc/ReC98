@@ -53,6 +53,7 @@ int text_extent_fx(int fx, const unsigned char *str);
 #define FX_REVERSE  	0x800
 // ----------------------
 #include "th01/hardware/grppsafx.h"
+void graph_printf_fx(int left, int top, int fx, const char *fmt, ...);
 /// ----
 
 /// Blitting

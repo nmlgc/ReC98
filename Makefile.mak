@@ -41,7 +41,7 @@ th05:: $(TH05:\=bin\th05\)
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
 
-bin\th01\op.exe: bin\th01\op.obj th01\op_02.c th01\op_03.c th01\op_04.c th01\op_06.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
+bin\th01\op.exe: bin\th01\op.obj th01\op_02.c th01\op_03.c th01\op_04.c th01\op_06.cpp th01\op_08.c th01\op_10.c th01\op_11.c th01\op_12.cpp
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eOP.EXE @&&|
 $**
 |
@@ -51,7 +51,7 @@ bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_02.c th01\main_03.c th01\ma
 $**
 |
 
-bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_08.cpp th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
+bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
 	$(CC) $(CFLAGS) -ml -3 -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |

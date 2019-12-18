@@ -1183,7 +1183,7 @@ loc_AA54:
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	sub_D5F8
+		call	_graph_printf_fx
 		add	sp, 12h
 		jmp	short loc_AAB2
 ; ---------------------------------------------------------------------------
@@ -1207,7 +1207,7 @@ loc_AA8D:
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	sub_D5F8
+		call	_graph_printf_fx
 		add	sp, 0Eh
 
 loc_AAB2:
@@ -1282,7 +1282,7 @@ arg_2		= word ptr  8
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	sub_D5F8
+		call	_graph_printf_fx
 		add	sp, 10h
 		mov	al, byte_1251D
 		cbw
@@ -1319,7 +1319,7 @@ loc_AB69:
 
 loc_AB8A:
 		push	di		; int
-		call	sub_D5F8
+		call	_graph_printf_fx
 		add	sp, 0Eh
 
 loc_AB93:
@@ -3571,49 +3571,7 @@ op_07_TEXT	ends
 
 ; Segment type:	Pure code
 op_08_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_08_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_D5F8(int, int, int, char *format, char arglist)
-sub_D5F8	proc far
-
-@@buffer		= byte ptr -104h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-_format		= dword	ptr  0Ch
-arglist		= byte ptr  10h
-
-		enter	104h, 0
-		lea	ax, [bp+arglist]
-		mov	[bp+var_2], ss
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax		; arglist
-		pushd	[bp+_format] ; format
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax		; buffer
-		call	_vsprintf
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_graph_putsa_fx
-		add	sp, 16h
-		leave
-		retf
-sub_D5F8	endp
-
+	extern _graph_printf_fx:proc
 op_08_TEXT	ends
 
 ; ===========================================================================

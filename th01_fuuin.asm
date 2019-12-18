@@ -1306,7 +1306,7 @@ loc_A814:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		inc	di
 		inc	si
@@ -1344,7 +1344,7 @@ loc_A86F:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		inc	di
 		inc	si
@@ -1383,7 +1383,7 @@ loc_A8B3:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		inc	si
 
@@ -1419,7 +1419,7 @@ loc_A901:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		inc	di
 		inc	si
@@ -1444,7 +1444,7 @@ loc_A93C:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		mov	si, 0Fh
 		push	ds
@@ -1464,7 +1464,7 @@ loc_A93C:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		inc	si
 		push	ds
@@ -1484,7 +1484,7 @@ loc_A93C:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		inc	si
 		push	ds
@@ -1504,7 +1504,7 @@ loc_A93C:
 		shl	dx, 5
 		add	dx, 20h	; ' '
 		push	dx		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		inc	si
 		pop	di
@@ -2022,7 +2022,7 @@ loc_AD38:
 		add	ax, 40h
 		push	ax		; int
 		push	240h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		cmp	di, si
 		jnz	short loc_AD65
@@ -2181,7 +2181,7 @@ loc_AE53:
 		push	[bp+var_4]	; int
 		push	di		; int
 		push	si		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		jmp	short loc_AECD
 ; ---------------------------------------------------------------------------
@@ -2196,7 +2196,7 @@ loc_AE72:
 		push	[bp+var_4]	; int
 		push	di		; int
 		push	si		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		jmp	short loc_AECD
 ; ---------------------------------------------------------------------------
@@ -2211,7 +2211,7 @@ loc_AE91:
 		push	[bp+var_4]	; int
 		push	di		; int
 		push	si		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		jmp	short loc_AECD
 ; ---------------------------------------------------------------------------
@@ -2226,7 +2226,7 @@ loc_AEB0:
 		push	[bp+var_4]	; int
 		push	di		; int
 		push	si		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 
 loc_AECD:
@@ -2243,7 +2243,7 @@ loc_AECD:
 		push	[bp+var_4]	; int
 		push	di		; int
 		push	si		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 
 loc_AEF2:
@@ -2448,7 +2448,7 @@ loc_B063:
 		push	23h ; '#'       ; int
 		push	word_14032	; int
 		push	word_14030	; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		les	bx, [bp+arg_8]
 		mov	bx, es:[bx]
@@ -2470,7 +2470,7 @@ loc_B063:
 		push	3		; int
 		push	word_14032	; int
 		push	word_14030	; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		xor	ax, ax
 		jmp	short $+2
@@ -3126,7 +3126,7 @@ arg_6		= dword	ptr  0Ch
 		push	227h		; int
 		push	0		; int
 		push	0		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	0
 		call	_graph_accesspage_func
@@ -4849,7 +4849,7 @@ loc_C419:
 		push	12h		; int
 		push	180h		; int
 		push	1E8h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		pop	di
 		pop	si
@@ -4924,7 +4924,7 @@ var_10		= byte ptr -10h
 		push	0Fh		; int
 		push	40h	; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -4936,7 +4936,7 @@ var_10		= byte ptr -10h
 		push	0Fh		; int
 		push	60h	; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -4948,7 +4948,7 @@ var_10		= byte ptr -10h
 		push	0Fh		; int
 		push	80h	; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -4958,7 +4958,7 @@ var_10		= byte ptr -10h
 		push	0Fh		; int
 		push	0A0h	; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		push	1Eh
 		call	sub_C82D
@@ -4970,7 +4970,7 @@ var_10		= byte ptr -10h
 		push	0Fh		; int
 		push	0C0h	;int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -4994,7 +4994,7 @@ loc_C59C:
 		push	0Fh		; int
 		push	0E0h	; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -5018,7 +5018,7 @@ loc_C5D5:
 		push	0Fh		; int
 		push	100h		; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -5042,7 +5042,7 @@ loc_C60E:
 		push	0Fh		; int
 		push	120h		; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -5066,7 +5066,7 @@ loc_C647:
 		push	0Fh		; int
 		push	140h		; int
 		push	128h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	1Eh
 		call	sub_C82D
@@ -5082,7 +5082,7 @@ loc_C647:
 		push	12h		; int
 		push	180h		; int
 		push	108h		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ah
 		push	32h ; '2'
 		call	sub_C82D
@@ -5594,7 +5594,7 @@ loc_C9B8:
 		shl	ax, 3
 		add	ax, [bp+arg_8]
 		push	ax		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Ch
 		push	3
 		call	sub_C82D
@@ -5651,7 +5651,7 @@ loc_C9F6:
 		shl	ax, 4
 		add	ax, [bp+arg_8]
 		push	ax		; int
-		call	sub_E9E4
+		call	_graph_printf_fx
 		add	sp, 0Eh
 		push	3
 		call	sub_C82D
@@ -6846,49 +6846,7 @@ fuuin_08_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_09_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_09_TEXT
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_E9E4(int, int, int, char *format, char arglist)
-sub_E9E4	proc far
-
-@@buffer		= byte ptr -104h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-_format		= dword	ptr  0Ch
-_arglist		= byte ptr  10h
-
-		enter	104h, 0
-		lea	ax, [bp+_arglist]
-		mov	[bp+var_2], ss
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax		; arglist
-		pushd	[bp+_format] ; format
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax		; buffer
-		call	_vsprintf
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_graph_putsa_fx
-		add	sp, 16h
-		leave
-		retf
-sub_E9E4	endp
-
+	extern _graph_printf_fx:proc
 fuuin_09_TEXT	ends
 
 ; ===========================================================================
