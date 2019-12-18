@@ -1586,7 +1586,7 @@ sub_B1B5	endp
 
 sub_B273	proc near
 
-var_2		= word ptr -2
+@@quarter		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -1601,8 +1601,8 @@ arg_2		= word ptr  6
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		mov	ax, [bx+7E0h]
-		mov	[bp+var_2], ax
+		mov	ax, word ptr _ALLCAST_BG_QUARTER[bx]
+		mov	[bp+@@quarter], ax
 		push	2
 		call	palette_black_out
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0Eh
@@ -1623,7 +1623,7 @@ loc_B2EE:
 		push	di
 		push	[bp+arg_0]
 		push	0
-		push	[bp+var_2]
+		push	[bp+@@quarter]
 		mov	ax, si
 		mov	bx, 4
 		cwd
@@ -1636,9 +1636,9 @@ loc_B2EE:
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
+		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		call	sub_B37C
-		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+var_2]
+		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -1650,7 +1650,7 @@ loc_B309:
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		pushd	dword ptr [bx+760h]
+		pushd	_ALLCAST_BG_FN[bx]
 		call	pi_load
 
 loc_B357:
@@ -1743,7 +1743,7 @@ sub_B3CB	proc near
 		mov	ah, 0
 		shl	ax, 5
 		mov	bx, ax
-		pushd	dword ptr [bx+760h]
+		pushd	_ALLCAST_BG_FN[bx]
 		call	pi_load
 		call	pi_palette_apply pascal, 0
 		call	snd_load pascal, ds, offset aExed, SND_LOAD_SONG
@@ -7659,6 +7659,8 @@ asc_1085A	db '  ', 0
 	even
 byte_1085E	db 0
 		db 0
+public _ALLCAST_BG_FN
+_ALLCAST_BG_FN	label dword
 		dd aExed01_pi		; "EXED01.pi"
 		dd aExed07_pi		; "EXED07.pi"
 		dd aExed08_pi		; "EXED08.pi"
@@ -7691,70 +7693,12 @@ byte_1085E	db 0
 		dd aExed16_pi_2		; "EXED16.pi"
 		dd aExed15_pi_2		; "EXED15.pi"
 		dd 0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    2
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    2
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    2
-		db    0
-		db    2
-		db    0
-		db    0
-		db    0
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    2
-		db    0
-		db    0
-		db    0
-		db    3
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
+public _ALLCAST_BG_QUARTER
+_ALLCAST_BG_QUARTER	label word
+		dw 1, 0, 1, 3, 0, 0, 0, 0
+		dw 1, 0, 1, 2, 1, 1, 1, 0
+		dw 1, 2, 0, 1, 0, 2, 2, 0
+		dw 1, 0, 0, 2, 0, 3, 3, 0
 ALLCAST_PTRS	dd aProjectOfTouho
 		dd aNo_1Buumx		; "		     Project of	TOUHOU	  "...
 		dd aReimuHakureiSh
