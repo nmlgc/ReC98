@@ -6,8 +6,7 @@
 #pragma codeseg main_01_TEXT
 
 extern "C" {
-#include "th05/th05.hpp"
-#include "th05/player/shot.h"
+#include "th05/i_shot.hpp"
 #define cycle _AL
 
 #define STAR_DISTANCE      (16)
