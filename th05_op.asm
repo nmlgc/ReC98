@@ -1804,178 +1804,7 @@ loc_B25E:
 		retn	4
 sub_B234	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B270	proc near
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		mov	si, 88h
-		mov	ax, [bp+arg_2]
-		or	ax, ax
-		jz	short loc_B2A0
-		cmp	ax, 1
-		jz	short loc_B293
-		cmp	ax, 2
-		jnz	short loc_B2AB
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION1 ; "ステレオＦＭ音源"
-		jmp	short loc_B2AB
-; ---------------------------------------------------------------------------
-
-loc_B293:
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION2 ; "　標準ＦＭ音源　"
-		add	si, 10h
-		jmp	short loc_B2AB
-; ---------------------------------------------------------------------------
-
-loc_B2A0:
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_BGM_OPTION3 ; "　　音楽無し　　"
-		add	si, 20h	; ' '
-
-loc_B2AB:
-		push	30h ; '0'
-		push	si
-		push	[bp+arg_0]
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
-		pop	si
-		leave
-		retn	4
-sub_B270	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2BF	proc near
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		mov	si, 88h
-		mov	ax, [bp+arg_2]
-		or	ax, ax
-		jz	short loc_B2F1
-		cmp	ax, 1
-		jz	short loc_B2DA
-		cmp	ax, 2
-		jz	short loc_B2E4
-		jmp	short loc_B2FC
-; ---------------------------------------------------------------------------
-
-loc_B2DA:
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION1 ; "　　ＦＭ音源　　"
-		jmp	short loc_B2FC
-; ---------------------------------------------------------------------------
-
-loc_B2E4:
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION2 ; "　Ｂｅｅｐ音源　"
-		add	si, 10h
-		jmp	short loc_B2FC
-; ---------------------------------------------------------------------------
-
-loc_B2F1:
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSETUP_SFX_OPTION3 ; "　 効果音無し	　"
-		add	si, 20h	; ' '
-
-loc_B2FC:
-		push	30h ; '0'
-		push	si
-		push	[bp+arg_0]
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
-		pop	si
-		leave
-		retn	4
-sub_B2BF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B310	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 88h
-		xor	si, si
-		jmp	short loc_B335
-; ---------------------------------------------------------------------------
-
-loc_B31C:
-		push	0D0h
-		push	di
-		push	0Fh
-		mov	bx, si
-		shl	bx, 2
-		pushd	[SETUP_BGM_BODY+bx]
-		call	graph_putsa_fx
-		inc	si
-		add	di, 10h
-
-loc_B335:
-		cmp	si, 9
-		jl	short loc_B31C
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_B310	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B33E	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 88h
-		xor	si, si
-		jmp	short loc_B363
-; ---------------------------------------------------------------------------
-
-loc_B34A:
-		push	0D0h
-		push	di
-		push	0Fh
-		mov	bx, si
-		shl	bx, 2
-		pushd	[SETUP_SFX_BODY+bx]
-		call	graph_putsa_fx
-		inc	si
-		add	di, 10h
-
-loc_B363:
-		cmp	si, 9
-		jl	short loc_B34A
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_B33E	endp
-
+include th04/setup.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2015,7 +1844,7 @@ loc_B3BA:
 
 loc_B3BC:
 		push	ax
-		call	sub_B270
+		call	setup_bgm_choice_put
 		inc	[bp+var_2]
 
 loc_B3C3:
@@ -2025,7 +1854,7 @@ loc_B3C3:
 		mov	word_12F32, 0Ah
 		push	0C00080h
 		call	sub_B14A
-		call	sub_B310
+		call	setup_bgm_help_put
 		mov	[bp+var_2], 2
 
 loc_B3E6:
@@ -2038,9 +1867,7 @@ loc_B3E6:
 		jnz	short loc_B452
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B429
-		push	[bp+var_2]
-		push	0
-		call	sub_B270
+		call	setup_bgm_choice_put pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 2
 		jnz	short loc_B41E
 		mov	[bp+var_2], 0
@@ -2051,16 +1878,12 @@ loc_B41E:
 		inc	[bp+var_2]
 
 loc_B421:
-		push	[bp+var_2]
-		push	0Fh
-		call	sub_B270
+		call	setup_bgm_choice_put pascal, [bp+var_2], 0Fh
 
 loc_B429:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B3E6
-		push	[bp+var_2]
-		push	0
-		call	sub_B270
+		call	setup_bgm_choice_put pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 0
 		jnz	short loc_B445
 		mov	[bp+var_2], 2
@@ -2071,9 +1894,7 @@ loc_B445:
 		dec	[bp+var_2]
 
 loc_B448:
-		push	[bp+var_2]
-		push	0Fh
-		call	sub_B270
+		call	setup_bgm_choice_put pascal, [bp+var_2], 0Fh
 		jmp	short loc_B3E6
 ; ---------------------------------------------------------------------------
 
@@ -2106,11 +1927,7 @@ var_2		= word ptr -2
 		mov	word_12F30, 1Ch
 		push	600050h
 		call	sub_B1BA
-		push	700058h
-		push	0Fh
-		push	ds
-		push	offset aSETUP_SFX_HEAD ; "　　　　効果音に使用する音源を選択して・...
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_SE_HEAD
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	200080h
@@ -2123,7 +1940,7 @@ loc_B4C9:
 		push	[bp+var_2]
 		cmp	[bp+var_2], 1
 		jnz	short loc_B4D7
-		mov	ax, 0Fh
+		mov	ax, 15
 		jmp	short loc_B4D9
 ; ---------------------------------------------------------------------------
 
@@ -2132,7 +1949,7 @@ loc_B4D7:
 
 loc_B4D9:
 		push	ax
-		call	sub_B2BF
+		call	setup_se_choice_put
 		inc	[bp+var_2]
 
 loc_B4E0:
@@ -2142,7 +1959,7 @@ loc_B4E0:
 		mov	word_12F32, 0Ah
 		push	0C00080h
 		call	sub_B14A
-		call	sub_B33E
+		call	setup_se_help_put
 		mov	[bp+var_2], 1
 
 loc_B503:
@@ -2155,9 +1972,7 @@ loc_B503:
 		jnz	short loc_B56F
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_B546
-		push	[bp+var_2]
-		push	0
-		call	sub_B2BF
+		call	setup_se_choice_put pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 2
 		jnz	short loc_B53B
 		mov	[bp+var_2], 0
@@ -2168,16 +1983,12 @@ loc_B53B:
 		inc	[bp+var_2]
 
 loc_B53E:
-		push	[bp+var_2]
-		push	0Fh
-		call	sub_B2BF
+		call	setup_se_choice_put pascal, [bp+var_2], 15
 
 loc_B546:
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_B503
-		push	[bp+var_2]
-		push	0
-		call	sub_B2BF
+		call	setup_se_choice_put pascal, [bp+var_2], 0
 		cmp	[bp+var_2], 0
 		jnz	short loc_B562
 		mov	[bp+var_2], 2
@@ -2188,9 +1999,7 @@ loc_B562:
 		dec	[bp+var_2]
 
 loc_B565:
-		push	[bp+var_2]
-		push	0Fh
-		call	sub_B2BF
+		call	setup_se_choice_put pascal, [bp+var_2], 15
 		jmp	short loc_B503
 ; ---------------------------------------------------------------------------
 
@@ -4721,52 +4530,7 @@ include th03/formats/pi_slot_put_mask[data].asm
 include th05/formats/pi_slot_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
-SETUP_BGM_BODY	dd aSETUP_BGM_BODY1
-		dd aSETUP_BGM_BODY2
-		dd aSETUP_BGM_BODY3
-		dd aSETUP_BGM_BODY4
-		dd aSETUP_BGM_BODY5
-		dd aSETUP_BGM_BODY6
-		dd aSETUP_BGM_BODY7
-		dd aSETUP_BGM_BODY8
-		dd aSETUP_TAIL
-SETUP_SFX_BODY	dd aSETUP_SFX_BODY1
-		dd aSETUP_SFX_BODY2
-		dd aSETUP_SFX_BODY3
-		dd aSETUP_SFX_BODY4
-		dd aSETUP_SFX_BODY5
-		dd aSETUP_SFX_BODY6
-		dd aSETUP_SFX_BODY7
-		dd aSETUP_SFX_BODY8
-		dd aSETUP_TAIL
-aSETUP_BGM_BODY1 db 'ステレオＦＭ音源：PC-9801-86(互換)ボード　　　',0
-aSETUP_BGM_BODY2 db '　　　　　　　　　CanBe内蔵音源など、         ',0
-aSETUP_BGM_BODY3 db '　　　　　　　ＦＭ６音＋ＳＳＧ３音＋リズム音源',0
-aSETUP_BGM_BODY4 db '　標準ＦＭ音源：  PC-9801-26K(互換)ボード     ',0
-aSETUP_BGM_BODY5 db '                  PC-9801DA等に内蔵の音源など ',0
-aSETUP_BGM_BODY6 db '　　　　　　　　　ＦＭ３音＋ＳＳＧ３音        ',0
-aSETUP_BGM_BODY7 db '　　音楽無し：　　ＦＭ音源が無い場合          ',0
-aSETUP_BGM_BODY8 db '                                              ',0
-aSETUP_TAIL	db 'なお、これらの設定はＯｐｔｉｏｎで変更可能です',0
-aSETUP_SFX_BODY1 db '　ＦＭ音源　：効果音にＦＭ音源を使用します　　',0
-aSETUP_SFX_BODY2 db '　　　　　　　ＢＧＭがステレオＦＭ音源時推奨　',0
-aSETUP_SFX_BODY3 db '　 　 　　（標準ＦＭ音源では、3chを使用します ',0
-aSETUP_SFX_BODY4 db '　 　　　　 ので、ＢＧＭが正常にきけないかも）',0
-aSETUP_SFX_BODY5 db 'Ｂｅｅｐ音源：効果音にＢｅｅｐ音源を使用します',0
-aSETUP_SFX_BODY6 db '              ＦＭ音源が無い場合使用します　　',0
-aSETUP_SFX_BODY7 db ' 効果音無し ：何らかの事情で効果音を鳴らしたく',0
-aSETUP_SFX_BODY8 db '　　　　　　　無い場合                        ',0
-aSETUP_BGM_OPTION1 db 'ステレオＦＭ音源',0
-aSETUP_BGM_OPTION2 db '　標準ＦＭ音源　',0
-aSETUP_BGM_OPTION3 db '　　音楽無し　　',0
-aSETUP_SFX_OPTION1 db '　　ＦＭ音源　　',0
-aSETUP_SFX_OPTION2 db '　Ｂｅｅｐ音源　',0
-aSETUP_SFX_OPTION3 db '　 効果音無し 　',0
-aSETUP_BGM_HEAD	db '　　　　　使用する音源を選択して下さいね☆',0
-aSETUP_SFX_HEAD	db '　　　　効果音に使用する音源を選択してね☆',0
-aMswin_bft	db 'mswin.bft',0
-aMs_pi		db 'ms.pi',0
-		db 0
+include th04/setup[data].asm
 include th04/zunsoft[data].asm
 unk_FF00	db    0
 		db    0
