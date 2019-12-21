@@ -47,6 +47,14 @@ struct shot_t {
 	}
 };
 
+extern unsigned char shot_time;
+extern shot_t near shots[];
+
+// Points to the next free entry in [shots].
+extern shot_t near *shot_ptr;
+// Index of the last valid entry in [shots].
+extern char shot_last_id;
+
 // Searches and returns the next free shot slot, or NULL if there are no more
 // free ones.
 shot_t near* pascal near shots_add(void);

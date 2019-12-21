@@ -40308,7 +40308,7 @@ _player_invincibility_time	db ?
 byte_259A3	db ?
 power	db ?
 shot_level	db ?
-public _SHOT_TIME
+public _shot_time
 _shot_time	db ?
 include th01/player_is_hit[bss].asm
 		db    ?	;

@@ -3,8 +3,6 @@
  * Types shared between TH04 and TH05
  */
 
-#define DEFCONV pascal
-
 /// Math
 /// ----
 #include "th03/math/subpixel.hpp"

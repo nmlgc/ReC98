@@ -13268,62 +13268,8 @@ loc_128FA:
 		retf
 sub_12842	endp
 
-include th05/player/shot_cycle_init.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-shot_l0	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	shot_cycle_init
-		test	al, 1
-		jz	short loc_1299E
-		call	shots_add
-		mov	si, ax
-		or	ax, ax
-		jz	short loc_1299E
-		mov	byte ptr [si+10h], 0Ah
-
-loc_1299E:
-		pop	si
-		pop	bp
-		retn
-shot_l0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-shot_l1	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	shot_cycle_init
-		test	al, 1
-		jz	short loc_129C8
-		call	shots_add
-		mov	si, ax
-		or	ax, ax
-		jz	short loc_129C8
-		add	ax, 0Ah
-		push	ax
-		push	7
-		call	randring1_next16_and
-		add	al, 0BCh
-		push	ax
-		call	shot_velocity_set
-		mov	byte ptr [si+10h], 0Ah
-
-loc_129C8:
-		pop	si
-		pop	bp
-		retn
-shot_l1	endp
-
+	SHOT_L0 procdesc pascal near
+	SHOT_L1 procdesc pascal near
 	SHOT_REIMU_L2 procdesc pascal near
 	SHOT_REIMU_L3 procdesc pascal near
 	SHOT_REIMU_L4 procdesc pascal near
@@ -40188,7 +40134,7 @@ _player_invincibility_time	db ?
 byte_2CEBD	db ?
 power	db ?
 shot_level	db ?
-public _SHOT_TIME
+public _shot_time
 _shot_time	db ?
 include th01/player_is_hit[bss].asm
 public _MISS_TIME
