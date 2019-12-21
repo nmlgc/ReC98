@@ -33,7 +33,7 @@ void pascal near shot_yuuka_l2(void)
 	SHOT_FUNC_INIT(1, SC_3X, SC_1X, i += 2);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i == 1) {
-			sai.angle = randring_angle(15, 184);
+			sai.set_random_angle(15, 184);
 			shot->damage = 9;
 		} else {
 			if(sai.i == 3) { shot->from_option_l(); sai.angle = 184; }
@@ -92,10 +92,10 @@ void pascal near shot_yuuka_l4(void)
 		} else {
 			if(sai.i == 5) {
 				shot->from_option_l();
-				sai.angle = randring_angle(7, 180);
+				sai.set_random_angle(7, 180);
 			} else {
 				shot->from_option_r();
-				sai.angle = randring_angle(7, 196);
+				sai.set_random_angle(7, 196);
 				if(option_only == 0) {
 					sai.i = 1;
 				}

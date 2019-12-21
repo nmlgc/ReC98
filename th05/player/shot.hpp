@@ -33,6 +33,10 @@ struct ShotAddIterator {
 		i += n;
 	}
 
+	void set_random_angle(char random_range = 15, char offset = 184) {
+		angle = randring_angle(random_range, offset);
+	}
+
 	unsigned char next(void) {
 		return i -= 1;
 	}
