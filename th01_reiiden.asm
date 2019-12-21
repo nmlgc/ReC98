@@ -2620,24 +2620,9 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		mov	[bp+var_1], 0
-		push	ds
-		push	offset aVovVtvrvd ; "ÇoÇ`ÇtÇrÇd"
-		push	370080h
-		push	110h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@nKjb@b@pic ; "Å@çƒäJÅ@Å@èIóπ"
-		push	370090h
-		push	100h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aBB@b@b@b@b@b@ ;	"ÅúÅ@Å@Å@Å@Å@Å@"
-		push	70090h
-		push	100h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 272, large (37h shl 16) or 128, offset aVovVtvrvd, ds ; "ÇoÇ`ÇtÇrÇd"
+		call	graph_putsa_fx c, 256, large (37h shl 16) or 144, offset aB@nKjb@b@pic, ds ; "Å@çƒäJÅ@Å@èIóπ"
+		call	graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"ÅúÅ@Å@Å@Å@Å@Å@"
 		push	28h ; '('
 		call	sub_C8C7
 		pop	cx
@@ -2659,12 +2644,7 @@ loc_C9A2:
 		push	900140h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		push	ds
-		push	offset aB	; "Åú"
-		push	70090h
-		push	100h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
@@ -2674,12 +2654,7 @@ loc_C9E6:
 		push	900100h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		push	ds
-		push	offset aB	; "Åú"
-		push	70090h
-		push	140h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 320, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
 loc_CA1A:
@@ -2714,24 +2689,9 @@ loc_CA39:
 		jz	loc_CB96
 		cmp	byte_34A51, 0
 		jz	loc_CB96
-		push	ds
-		push	offset aCUcvPicVVVsvdv ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
-		push	370080h
-		push	0E0h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@vdvVVVgb@b@v ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
-		push	370090h
-		push	0E0h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB	; "Åú"
-		push	70090h
-		push	0E0h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 224, large (37h shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
+		call	graph_putsa_fx c, 224, large (37h shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
+		call	graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 		jmp	loc_CB5D
 ; ---------------------------------------------------------------------------
@@ -2748,12 +2708,7 @@ loc_CACF:
 		push	900150h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		push	ds
-		push	offset aB	; "Åú"
-		push	70090h
-		push	0E0h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_CB13:
@@ -2763,12 +2718,7 @@ loc_CB13:
 		push	9000E0h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		push	ds
-		push	offset aB	; "Åú"
-		push	70090h
-		push	150h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 336, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
 loc_CB47:
@@ -2894,36 +2844,11 @@ sub_CC0F	proc far
 		call	_graph_accesspage_func
 		pop	cx
 		call	sub_EC80
-		push	ds
-		push	offset aVgvpvovfvivovx ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
-		push	2270000h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVxvevub@b@B@ ; "ÇxÇÖÇìÅ@Å@  Å@"
-		push	2270010h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVmvpb@b@B@ ; "ÇmÇèÅ@Å@	Å@ "
-		push	2270020h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVxvevub@b@c@ ; "ÇxÇÖÇìÅ@Å@Å@  "
-		push	2210030h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVmvpb@b@c@ ; "ÇmÇèÅ@Å@Å@   "
-		push	2210040h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 0, (227h shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
+		call	graph_putsa_fx c, 0, (227h shl 16) or 16, offset aVxvevub@b@B@, ds ; "ÇxÇÖÇìÅ@Å@  Å@"
+		call	graph_putsa_fx c, 0, (227h shl 16) or 32, offset aVmvpb@b@B@, ds ; "ÇmÇèÅ@Å@	Å@ "
+		call	graph_putsa_fx c, 0, (221h shl 16) or 48, offset aVxvevub@b@c@, ds ; "ÇxÇÖÇìÅ@Å@Å@  "
+		call	graph_putsa_fx c, 0, (221h shl 16) or 64, offset aVmvpb@b@c@, ds ; "ÇmÇèÅ@Å@Å@   "
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -12840,28 +12765,28 @@ loc_127AC:
 		call	sub_EC0D
 		push	ds
 		push	offset aVqvnvtvmvcb@vp ; "ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq"
-		push	2070000h
+		push	(207h shl 16) or 0
 		push	0
 		call	graph_putsa_fx
 		push	ds
 		push	offset aVbvpvovzvtvbvf ; "ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI"
-		push	2070020h
+		push	(207h shl 16) or 32
 		push	0
 		call	graph_putsa_fx
 		push	ds
 		push	offset aVrvevmvevgvfb@ ; "ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ"
-		push	2070040h
+		push	(207h shl 16) or 64
 		push	0
 		call	graph_putsa_fx
 		push	ds
 		push	offset aCvkev	; "ñÇäEÇ÷"
-		push	2010060h
+		push	(201h shl 16) or 96
 		push	0
 		call	graph_putsa_fx
 		add	sp, 2Eh
 		push	ds
 		push	offset aTnncv	; "ínçñÇ÷"
-		push	2030080h
+		push	(203h shl 16) or 128
 		push	0
 		call	graph_putsa_fx
 		push	0
@@ -13912,9 +13837,9 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0DFFh
+		mov	word ptr [bp+var_4], offset aSTAGE_COMPLETE
 		mov	word ptr [bp+var_8+2], ds
-		mov	word ptr [bp+var_8], 0E22h
+		mov	word ptr [bp+var_8], offset aSTAGE_COMPLETE_NUM
 		xor	si, si
 		mov	ax, [bp+arg_0]
 		mov	bx, 0Ah
@@ -13944,52 +13869,17 @@ arg_0		= word ptr  6
 		add	sp, 4
 		call	sub_12F91
 		pushd	[bp+var_4]
-		push	2A0050h
-		push	40h
+		push	(2Ah shl 16) or 80
+		push	64
 		call	graph_putsa_fx
 		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@vavnvmvtvr ; "Å@Å@ÇaÇnÇmÇtÇr"
-		push	270070h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@vsvivnveb@ ; "   Å@ÇsÇâÇçÇÖÅ@"
-		push	270080h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVbvpvovfvivovx ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
-		push	2700A0h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVavpvnvvbxvovm ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
-		push	2700C0h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@vrvsvVfvd ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
-		push	2700E0h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVavnvmvtvrb@vo ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
-		push	270100h
-		push	30h ; '0'
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVgvivfb@vyb@vj ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
-		push	2A0120h
-		push	0A0h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "Å@Å@ÇaÇnÇmÇtÇr"
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 128, offset aB@vsvivnveb@, ds ; "   Å@ÇsÇâÇçÇÖÅ@"
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 160, offset aVbvpvovfvivovx, ds ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
+		call	graph_putsa_fx c,  48, large (27h shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
+		call	graph_putsa_fx c, 160, large (2Ah shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
 		mov	ax, word_39DAC
 		imul	ax, 3
 		mov	si, ax
@@ -14028,8 +13918,8 @@ loc_1321E:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	270080h
-		push	100h
+		push	(27h shl 16) or 128
+		push	256
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, word_34A88
@@ -14056,8 +13946,8 @@ loc_13285:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	2700A0h
-		push	100h
+		push	(27h shl 16) or 160
+		push	256
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, _rem_lives
@@ -14088,8 +13978,8 @@ loc_132D0:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	2700C0h
-		push	100h
+		push	(27h shl 16) or 192
+		push	256
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, [bp+arg_0]
@@ -14117,8 +14007,8 @@ loc_13313:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	2700E0h
-		push	100h
+		push	(27h shl 16) or 224
+		push	256
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	eax, dword_34A5E
@@ -14211,8 +14101,8 @@ loc_13313:
 		call	sub_13033
 		add	sp, 6
 		pushd	[bp+var_8]
-		push	270100h
-		push	0F0h
+		push	(27h shl 16) or 256
+		push	240
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		call	sub_1889C
@@ -15154,17 +15044,17 @@ loc_13C33:
 		push	ax
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 0F0h
+		imul	ax, 24
+		add	ax, 240
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		add	sp, 0Ah
@@ -15174,12 +15064,7 @@ loc_13C33:
 loc_13C69:
 		cmp	si, 1Ah
 		jl	short loc_13C33
-		push	ds
-		push	offset aVb	; "ÇÅ"
-		push	82300F0h
-		push	20h ; ' '
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 32, large (823h shl 16) or 240, offset aVb, ds	; "ÇÅ"
 		mov	di, 8260h
 		xor	si, si
 		jmp	short loc_13CBF
@@ -15196,17 +15081,17 @@ loc_13C89:
 		push	ax
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 120h
+		imul	ax, 24
+		add	ax, 288
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		add	sp, 0Ah
@@ -15234,17 +15119,17 @@ loc_13CC8:
 		push	ax
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 150h
+		imul	ax, 24
+		add	ax, 336
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		add	sp, 0Ah
@@ -15269,17 +15154,17 @@ loc_13D11:
 		push	ax
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
+		imul	ax, 24
+		add	ax, 360
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		add	sp, 0Ah
@@ -15293,17 +15178,17 @@ loc_13D47:
 		push	offset aSp	; "SP"
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
+		imul	ax, 24
+		add	ax, 360
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		mov	si, 0Fh
@@ -15311,17 +15196,17 @@ loc_13D47:
 		push	offset aBi	; "Å©"
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
+		imul	ax, 24
+		add	ax, 360
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		inc	si
@@ -15329,17 +15214,17 @@ loc_13D47:
 		push	offset aBi_0	; "Å®"
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
+		imul	ax, 24
+		add	ax, 360
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		inc	si
@@ -15347,17 +15232,17 @@ loc_13D47:
 		push	offset aPi	; "èI"
 		push	[bp+var_2]
 		mov	ax, si
-		mov	bx, 12h
+		mov	bx, 18
 		cwd
 		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
+		imul	ax, 24
+		add	ax, 360
 		push	ax
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 5
-		add	dx, 20h	; ' '
+		add	dx, 32
 		push	dx
 		call	graph_putsa_fx
 		add	sp, 28h
@@ -15400,30 +15285,10 @@ arg_E		= word ptr  14h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aB@cB@iB@ ; "Å@óÏÅ@à Å@"
-		push	330030h
-		push	20h ; ' '
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@cB@b@sob@b ; "Å@Å@ñºÅ@Å@ëOÅ@Å@"
-		push	330030h
-		push	90h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@uB@b@u_b@b ; "Å@Å@ìæÅ@Å@ì_Å@Å@"
-		push	330030h
-		push	160h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aGxgebGwbeglbGg ; "ÉXÉeÅ[ÉWÅEÉãÅ[Ég"
-		push	330030h
-		push	200h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c,  32, large (33h shl 16) or 48, offset aB@cB@iB@, ds ; "Å@óÏÅ@à Å@"
+		call	graph_putsa_fx c, 144, large (33h shl 16) or 48, offset aB@b@cB@b@sob@b, ds ; "Å@Å@ñºÅ@Å@ëOÅ@Å@"
+		call	graph_putsa_fx c, 352, large (33h shl 16) or 48, offset aB@b@uB@b@u_b@b, ds ; "Å@Å@ìæÅ@Å@ì_Å@Å@"
+		call	graph_putsa_fx c, 512, large (33h shl 16) or 48, offset aGxgebGwbeglbGg, ds ; "ÉXÉeÅ[ÉWÅEÉãÅ[Ég"
 		xor	si, si
 		jmp	loc_14082
 ; ---------------------------------------------------------------------------
@@ -15513,7 +15378,7 @@ loc_13ECE:
 		or	ax, 20h
 		push	ax
 		push	[bp+var_2]
-		push	20h ; ' '
+		push	32
 		call	graph_putsa_fx
 		add	sp, 0Ah
 
@@ -15541,7 +15406,7 @@ loc_13EFC:
 		or	ax, 20h
 		push	ax
 		push	[bp+var_2]
-		push	90h
+		push	144
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
@@ -15661,7 +15526,7 @@ loc_13FEB:
 		or	ax, 20h
 		push	ax
 		push	[bp+var_2]
-		push	210h
+		push	528
 		call	graph_putsa_fx
 		add	sp, 0Ah
 
@@ -15672,7 +15537,7 @@ loc_13FFF:
 		or	ax, 20h
 		push	ax
 		push	[bp+var_2]
-		push	230h
+		push	560
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_4], 0
@@ -15713,16 +15578,16 @@ loc_1404B:
 		or	ax, 20h
 		push	ax
 		push	[bp+var_2]
-		push	240h
+		push	576
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		cmp	[bp+arg_0], si
 		jnz	short loc_14081
-		mov	word_3945E, 90h
+		mov	point_3945E.x, 144
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
-		mov	word_39460, ax
+		add	ax, 64
+		mov	point_3945E.y, ax
 
 loc_14081:
 		inc	si
@@ -15757,15 +15622,15 @@ sub_140A1	proc far
 var_8		= byte ptr -8
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@x		= word ptr  6
+@@y		= word ptr  8
 arg_4		= word ptr  0Ah
 
 		enter	8, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
 		mov	[bp+var_2], 0
 		push	100020h
 		push	di
@@ -15784,10 +15649,10 @@ loc_140CD:
 loc_140D0:
 		or	ax, 20h
 		mov	[bp+var_4], ax
-		cmp	di, 0F0h
+		cmp	di, 240
 		jnz	short loc_140EA
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, 8281h
@@ -15795,10 +15660,10 @@ loc_140D0:
 ; ---------------------------------------------------------------------------
 
 loc_140EA:
-		cmp	di, 108h
+		cmp	di, 264
 		jnz	short loc_140FE
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, 8293h
@@ -15806,10 +15671,10 @@ loc_140EA:
 ; ---------------------------------------------------------------------------
 
 loc_140FE:
-		cmp	di, 120h
+		cmp	di, 288
 		jnz	short loc_14112
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, 8260h
@@ -15817,10 +15682,10 @@ loc_140FE:
 ; ---------------------------------------------------------------------------
 
 loc_14112:
-		cmp	di, 138h
+		cmp	di, 312
 		jnz	short loc_14126
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, 8272h
@@ -15828,10 +15693,10 @@ loc_14112:
 ; ---------------------------------------------------------------------------
 
 loc_14126:
-		cmp	di, 150h
+		cmp	di, 336
 		jnz	short loc_14142
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -15844,12 +15709,12 @@ loc_1413D:
 ; ---------------------------------------------------------------------------
 
 loc_14142:
-		cmp	di, 168h
+		cmp	di, 360
 		jnz	short loc_1415C
-		cmp	si, 160h
+		cmp	si, 352
 		jge	short loc_1415C
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
+		lea	ax, [si-32]
+		mov	bx, 32
 		cwd
 		idiv	bx
 		add	ax, 824Fh
@@ -15857,9 +15722,9 @@ loc_14142:
 ; ---------------------------------------------------------------------------
 
 loc_1415C:
-		cmp	di, 168h
+		cmp	di, 360
 		jnz	short loc_1416E
-		cmp	si, 160h
+		cmp	si, 352
 		jnz	short loc_1416E
 		push	ds
 		push	offset aSp	; "SP"
@@ -15867,9 +15732,9 @@ loc_1415C:
 ; ---------------------------------------------------------------------------
 
 loc_1416E:
-		cmp	di, 168h
+		cmp	di, 360
 		jnz	short loc_14180
-		cmp	si, 200h
+		cmp	si, 512
 		jnz	short loc_14180
 		push	ds
 		push	offset aBi	; "Å©"
@@ -15877,9 +15742,9 @@ loc_1416E:
 ; ---------------------------------------------------------------------------
 
 loc_14180:
-		cmp	di, 168h
+		cmp	di, 360
 		jnz	short loc_14192
-		cmp	si, 220h
+		cmp	si, 544
 		jnz	short loc_14192
 		push	ds
 		push	offset aBi_0	; "Å®"
@@ -15887,9 +15752,9 @@ loc_14180:
 ; ---------------------------------------------------------------------------
 
 loc_14192:
-		cmp	di, 168h
+		cmp	di, 360
 		jnz	short loc_141AF
-		cmp	si, 240h
+		cmp	si, 576
 		jnz	short loc_141AF
 		push	ds
 		push	offset aPi	; "èI"
@@ -15912,7 +15777,7 @@ loc_141AF:
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		push	[bp+var_4]
+		push 	[bp+var_4]
 		push	di
 		push	si
 		call	graph_putsa_fx
@@ -16101,16 +15966,11 @@ loc_14322:
 
 loc_1432E:
 		push	100080h
-		push	word_39460
-		push	word_3945E
+		push	point_3945E.y
+		push	point_3945E.x
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		pushd	[bp+arg_4]
-		push	23h ; '#'
-		push	word_39460
-		push	word_3945E
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, point_3945E.x, point_3945E.y, 23h, large [bp+arg_4]
 		les	bx, [bp+arg_8]
 		mov	bx, es:[bx]
 		add	bx, bx
@@ -16127,8 +15987,8 @@ loc_1432E:
 		lea	ax, [bp+var_14]
 		push	ax
 		push	3
-		push	word_39460
-		push	word_3945E
+		push	point_3945E.y
+		push	point_3945E.x
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		xor	ax, ax
@@ -16766,12 +16626,7 @@ loc_148F9:
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_14942
-		push	ds
-		push	offset aUmx_2	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
-		push	2270180h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 0, large (227h shl 16) or 384, offset aUmx_2, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -16779,17 +16634,12 @@ loc_148F9:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]
-		push	2270180h
+		push	(227h shl 16) or 384
 		jmp	short loc_1496F
 ; ---------------------------------------------------------------------------
 
 loc_14942:
-		push	ds
-		push	offset aUmx_1	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
-		push	2270000h
-		push	0
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 0, large (227h shl 16) or 0, offset aUmx_1, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -16797,10 +16647,10 @@ loc_14942:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]
-		push	2270000h
+		push	(227h shl 16) or 0
 
 loc_1496F:
-		push	0C0h ; '¿'
+		push	192
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
@@ -23605,9 +23455,9 @@ loc_184D3:
 		push	word ptr [bx+539Ah]
 		mov	bx, si
 		imul	bx, 0Ah
-		cmp	word ptr [bx+5398h], 258h
+		cmp	word ptr [bx+5398h], 600
 		jle	short loc_18509
-		mov	ax, 258h
+		mov	ax, 600
 		jmp	short loc_18512
 ; ---------------------------------------------------------------------------
 
@@ -23787,12 +23637,7 @@ loc_18629:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		pushd	dword ptr ss:[bx]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	si
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], large dword ptr ss:[bx]
 
 loc_18647:
 		add	si, 10h
@@ -25147,8 +24992,8 @@ var_4		= byte ptr -4
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	270020h
-		push	260h
+		push	(27h shl 16) or 32
+		push	608
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	100020h
@@ -25205,20 +25050,20 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+97h]
-		push	270030h
+		pushd	aRANKS[bx]
+		push	(27h shl 16) or 48
 		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+97h]
+		pushd	aRANKS[bx]
 		push	7
 		call	sub_F9D0
 		add	sp, 6
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, 258h
+		mov	dx, 600
 		sub	dx, ax
 		push	dx
 		call	graph_putsa_fx
@@ -25238,8 +25083,8 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	270020h
-		push	260h
+		push	(27h shl 16) or 32
+		push	608
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
@@ -25249,20 +25094,20 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+97h]
-		push	270030h
+		pushd	aRANKS[bx]
+		push	(27h shl 16) or 48
 		mov	al, _rank
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+97h]
+		pushd	aRANKS[bx]
 		push	7
 		call	sub_F9D0
 		add	sp, 6
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, 258h
+		mov	dx, 600
 		sub	dx, ax
 		push	dx
 		call	graph_putsa_fx
@@ -25274,8 +25119,8 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	270020h
-		push	260h
+		push	(27h shl 16) or 32
+		push	608
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		mov	byte_39DA1, 0
@@ -25380,16 +25225,16 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	270000h
-		push	200h
+		push	(27h shl 16) or 0
+		push	512
 		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		push	270000h
-		push	200h
+		push	(27h shl 16) or 0
+		push	512
 		call	graph_putsa_fx
 		add	sp, 18h
 		pop	si
@@ -25404,18 +25249,18 @@ sub_1926B	endp
 
 sub_192D6	proc far
 
-var_6		= byte ptr -6
+@@str		= byte ptr -6
 
 		enter	6, 0
 		push	si
 		cmp	word_39DAC, 0C8h ; '»'
 		jnb	short loc_192E8
-		mov	ax, 2Ah	; '*'
+		mov	ax, 2Ah
 		jmp	short loc_192EB
 ; ---------------------------------------------------------------------------
 
 loc_192E8:
-		mov	ax, 27h	; '''
+		mov	ax, 27h
 
 loc_192EB:
 		mov	si, ax
@@ -25428,16 +25273,16 @@ loc_192EB:
 		pushd	210h
 		call	sub_109B2
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	word_39DAC
 		push	4
 		call	sub_1FF8A
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	si
-		pushd	200h
+		pushd	(0 shl 16) or 512
 		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
@@ -25449,16 +25294,16 @@ loc_192EB:
 		call	sub_109B2
 		add	sp, 2Eh
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	word_39DAC
 		push	4
 		call	sub_1FF8A
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	si
-		pushd	200h
+		pushd	(0 shl 16) or 512
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		pop	si
@@ -28986,7 +28831,7 @@ unk_34A33	db    2
 byte_34A34	db 0
 byte_34A35	db 0
 		db    0
-		dd aEasy		; "EASY"
+aRANKS	dd aEasy		; "EASY"
 		dd aNormal		; "NORMAL"
 		dd aHard		; "HARD"
 		dd aLunatic		; "LUNATIC"
@@ -29616,8 +29461,8 @@ aVv		db 'ÇV',0
 aVw		db 'ÇW',0
 aVx		db 'ÇX',0
 aB@		db 'Å@',0
-aVrvsvVfvdb@b@b	db 'ÇrÇsÇ`ÇfÇdÅ@Å@Å@Å@ÇbÇnÇlÇoÇkÇdÇsÇd',0
-aB@b@b@b@vob@	db 'Å@Å@Å@Å@ÇOÅ@',0
+aSTAGE_COMPLETE	db 'ÇrÇsÇ`ÇfÇdÅ@Å@Å@Å@ÇbÇnÇlÇoÇkÇdÇsÇd',0
+aSTAGE_COMPLETE_NUM	db 'Å@Å@Å@Å@ÇOÅ@',0
 aB@b@vavnvmvtvr	db 'Å@Å@ÇaÇnÇmÇtÇr',0
 aB@vsvivnveb@	db '   Å@ÇsÇâÇçÇÖÅ@',0
 aVbvpvovfvivovx	db 'ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì',0
@@ -33049,8 +32894,7 @@ off_39452	dd ?
 off_39456	dd ?
 ; void (*off_3945A)(void)
 off_3945A	dd ?
-word_3945E	dw ?
-word_39460	dw ?
+point_3945E	Point <?>
 ; void (*off_39462)(void)
 off_39462	dd ?
 		dd    ?

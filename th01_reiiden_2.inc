@@ -8585,7 +8585,7 @@ sub_2000C	endp
 sub_20071	proc far
 
 var_8		= byte ptr -8
-var_2		= word ptr -2
+@@x		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -8625,7 +8625,7 @@ loc_200B4:
 		add	bx, ax
 		cmp	dword ptr es:[bx], 2710h
 		jbe	short loc_200D0
-		mov	[bp+var_2], 0FFF8h
+		mov	[bp+@@x], -8
 		jmp	short loc_20101
 ; ---------------------------------------------------------------------------
 
@@ -8636,7 +8636,7 @@ loc_200D0:
 		add	bx, ax
 		cmp	dword ptr es:[bx], 3E8h
 		jbe	short loc_200EC
-		mov	[bp+var_2], 0
+		mov	[bp+@@x], 0
 		jmp	short loc_20101
 ; ---------------------------------------------------------------------------
 
@@ -8646,7 +8646,7 @@ loc_200EC:
 		les	bx, off_39EAC
 		add	bx, ax
 		cmp	dword ptr es:[bx], 64h ; 'd'
-		mov	[bp+var_2], 8
+		mov	[bp+@@x], 8
 
 loc_20101:
 		or	di, di
@@ -8675,7 +8675,7 @@ loc_20116:
 		les	bx, font
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@x]
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
@@ -8708,7 +8708,7 @@ loc_20167:
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		push	27h ; '''
+		push	27h
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E88
@@ -8722,7 +8722,7 @@ loc_20167:
 		les	bx, font
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@x]
 		push	ax
 		call	graph_putsa_fx
 		add	sp, 0Ah

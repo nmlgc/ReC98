@@ -299,21 +299,9 @@ sub_9624	endp
 sub_973E	proc near
 		push	bp
 		mov	bp, sp
-		push	500110h
-		push	2Fh ; '/'
-		push	ds
-		push	offset unk_F72C
-		call	graph_putsa_fx
-		push	500120h
-		push	2Fh ; '/'
-		push	ds
-		push	offset unk_F769
-		call	graph_putsa_fx
-		push	500130h
-		push	2Fh ; '/'
-		push	ds
-		push	offset unk_F7A6
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (80 shl 16) or 272, 2Fh, ds, offset unk_F72C
+		call	graph_putsa_fx pascal, (80 shl 16) or 288, 2Fh, ds, offset unk_F769
+		call	graph_putsa_fx pascal, (80 shl 16) or 304, 2Fh, ds, offset unk_F7A6
 		pop	bp
 		retn
 sub_973E	endp
@@ -638,14 +626,14 @@ loc_9A8E:
 		sar	ax, 1
 		add	ax, ax
 		mov	[bp+var_4], ax
-		push	500124h
-		push	2Fh ; '/'
+		push	(80 shl 16) or 292
+		push	2Fh
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
-		push	800134h
-		push	2Fh ; '/'
+		push	(128 shl 16) or 308
+		push	2Fh
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -659,14 +647,14 @@ loc_9A8E:
 		sar	ax, 1
 		add	ax, ax
 		mov	[bp+var_4], ax
-		push	1500124h
-		push	2Fh ; '/'
+		push	(336 shl 16) or 292
+		push	2Fh
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
-		push	1800134h
-		push	2Fh ; '/'
+		push	(384 shl 16) or 308
+		push	2Fh
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -1128,7 +1116,7 @@ var_2		= word ptr -2
 		mov	si, 1
 		mov	[bp+var_2], 0
 		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], 8D8h
+		mov	word ptr [bp+var_6], offset a0
 		xor	di, di
 		jmp	short loc_9FB3
 ; ---------------------------------------------------------------------------
@@ -1161,11 +1149,7 @@ loc_9FC8:
 		les	bx, [bp+var_6]
 		add	al, es:[bx]
 		mov	es:[bx], al
-		push	(576 shl 16) or 371
-		push	2Fh ; '/'
-		push	word ptr [bp+var_6+2]
-		push	bx
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		push	1
 		call	palette_black_in
 
@@ -1217,11 +1201,7 @@ loc_A069:
 		dec	byte ptr es:[bx+36h]
 		les	bx, [bp+var_6]
 		dec	byte ptr es:[bx]
-		push	(576 shl 16) or 371
-		push	2Fh ; '/'
-		push	word ptr [bp+var_6+2]
-		push	bx
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (576 shl 16) or 371, 2Fh, word ptr [bp+var_6+2], bx
 		jmp	short loc_A0C5
 ; ---------------------------------------------------------------------------
 
@@ -1848,20 +1828,20 @@ sub_A5D3	endp
 sub_A5FC	proc near
 		push	bp
 		mov	bp, sp
-		add	word_105D0, 10h
-		cmp	word_105D0, 230h
+		add	point_105D0.x, 16
+		cmp	point_105D0.x, 560
 		jl	short loc_A64B
-		add	word_105D2, 10h
-		mov	word_105D0, 90h
-		cmp	word_105D2, 180h
+		add	point_105D0.y, 16
+		mov	point_105D0.x, 144
+		cmp	point_105D0.y, 384
 		jl	short loc_A64B
 		cmp	byte_105CE, 0
 		jnz	short loc_A62D
 		call	input_wait_for_change pascal, 0
 
 loc_A62D:
-		mov	word_105D0, 50h	; 'P'
-		mov	word_105D2, 140h
+		mov	point_105D0.x, 80
+		mov	point_105D0.y, 320
 		graph_accesspage 1
 		call	sub_A45B
 		graph_accesspage 0
@@ -1911,9 +1891,9 @@ loc_A67C:
 		jmp	word ptr cs:[bx+20h] ; switch jump
 
 loc_A680:
-		add	word_105D2, 10h	; jumptable 0000A67C case 110
-		mov	word_105D0, 50h	; 'P'
-		cmp	word_105D2, 180h
+		add	point_105D0.y, 16	; jumptable 0000A67C case 110
+		mov	point_105D0.x, 80
+		cmp	point_105D0.y, 384
 		jl	loc_AC1E	; default
 
 loc_A695:
@@ -1937,8 +1917,8 @@ loc_A6C4:
 		inc	word ptr dword_105C6
 
 loc_A6C8:
-		mov	word_105D0, 50h	; 'P'
-		mov	word_105D2, 140h
+		mov	point_105D0.x, 80
+		mov	point_105D0.y, 320
 		graph_accesspage 1
 		call	sub_A45B
 		graph_accesspage 0
@@ -2222,8 +2202,8 @@ loc_A945:
 		push	ax
 		call	sub_A50A
 		graph_accesspage 1
-		push	word_105D0
-		push	word_105D2
+		push	point_105D0.x
+		push	point_105D0.y
 		mov	ax, [bp+var_2]
 		dec	ax
 		push	ax
@@ -2232,8 +2212,8 @@ loc_A945:
 		push	ax
 		call	graph_gaiji_putc
 		graph_accesspage 0
-		push	word_105D0
-		push	word_105D2
+		push	point_105D0.x
+		push	point_105D0.y
 		push	[bp+var_2]
 		mov	al, byte_105D6
 		mov	ah, 0
@@ -2552,9 +2532,9 @@ var_1		= byte ptr -1
 		enter	6, 0
 		push	si
 		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], 902h
-		mov	word_105D0, 50h	; 'P'
-		mov	word_105D2, 140h
+		mov	word ptr [bp+var_6], offset asc_EFC2
+		mov	point_105D0.x, 80
+		mov	point_105D0.y, 320
 		mov	word_105D4, 1
 		mov	byte_105D6, 0Fh
 		mov	byte_105D7, 20h	; ' '
@@ -2608,8 +2588,8 @@ loc_ACFB:
 		mov	es:[bx+1], al
 		inc	word ptr dword_105C6
 		graph_accesspage 1
-		push	word_105D0
-		push	word_105D2
+		push	point_105D0.x
+		push	point_105D0.y
 		mov	al, byte_105D6
 		or	al, byte_105D7
 		mov	ah, 0
@@ -2618,8 +2598,8 @@ loc_ACFB:
 		push	bx
 		call	graph_putsa_fx
 		graph_accesspage 0
-		push	word_105D0
-		push	word_105D2
+		push	point_105D0.x
+		push	point_105D0.y
 		mov	al, byte_105D6
 		or	al, byte_105D7
 		mov	ah, 0
@@ -3562,7 +3542,7 @@ loc_B3E0:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+906h]
+		pushd	aSCORE_PLAYCHARS[bx]
 		call	graph_putsa_fx
 		add	si, 70h	; 'p'
 		push	si
@@ -5190,23 +5170,23 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		push	16000AEh
-		push	2Fh ; '/'
+		push	(352 shl 16) or 174
+		push	2Fh
 		mov	al, byte_10BD7
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+0AE2h]
+		pushd	aVERDICT_PLAYCHARS[bx]
 		call	graph_putsa_fx
-		push	16800C7h
+		push	(360 shl 16) or 199
 		push	2Fh ; '/'
 		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	dword ptr [bx+0B06h]
+		pushd	aVERDICT_RANKS[bx]
 		call	graph_putsa_fx
-		mov	si, 198h
+		mov	si, 408
 		mov	[bp+var_4], 0
 		mov	[bp+var_2], 8
 		jmp	short loc_C319
@@ -5230,12 +5210,12 @@ loc_C2F7:
 		cmp	[bp+var_4], 0
 		jz	short loc_C316
 		push	si
-		push	0E0002Fh
+		push	(224 shl 16) or 2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
-		add	si, 10h
+		add	si, 16
 
 loc_C316:
 		dec	[bp+var_2]
@@ -5247,36 +5227,36 @@ loc_C319:
 		mov	ah, 0
 		mov	di, ax
 		push	si
-		push	0E0002Fh
+		push	(224 shl 16) or 2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
-		push	19800F8h
-		push	2Fh ; '/'
+		push	(408 shl 16) or 248
+		push	2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
 		mov	al, byte_10BD8
 		mov	ah, 0
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		mov	di, ax
-		mov	si, 198h
+		mov	si, 408
 		mov	[bp+var_4], 0
 		or	di, di
 		jz	short loc_C38D
-		sub	si, 10h
+		sub	si, 16
 		mov	[bp+var_4], 1
 		push	si
-		push	123002Fh
+		push	(291 shl 16) or 2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
-		add	si, 10h
+		add	si, 16
 
 loc_C38D:
 		mov	al, byte_10BD8
@@ -5300,12 +5280,12 @@ loc_C3B4:
 		cmp	[bp+var_4], 0
 		jz	short loc_C3D3
 		push	si
-		push	123002Fh
+		push	(291 shl 16) or 2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
-		add	si, 10h
+		add	si, 16
 
 loc_C3D3:
 		mov	al, byte_10BD8
@@ -5315,17 +5295,13 @@ loc_C3D3:
 		idiv	bx
 		mov	di, dx
 		push	si
-		push	123002Fh
+		push	(291 shl 16) or 2Fh
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+0B16h]
+		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
-		lea	ax, [si+10h]
-		push	ax
-		push	123002Fh
-		push	ds
-		push	offset aU_	; "点"
-		call	graph_putsa_fx
+		lea	ax, [si+16]
+		call	graph_putsa_fx pascal, ax, (291 shl 16) or 2Fh, ds, offset aU_	; "点"
 		pop	di
 		pop	si
 		leave
@@ -5795,14 +5771,12 @@ include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
 include th03/formats/cdg[data].asm
 include th03/snd/se_priority[data].asm
-		db  30h	; 0
-		db    0
+a0		db  '0',0
 aOver_pi	db 'over.pi',0
 include th03/formats/pi_slot_put_mask[data].asm
-		db  20h
-		db  20h
-		db    0
-		db    0
+asc_EFC2	db  '  ', 0
+	even
+aSCORE_PLAYCHARS label dword
 		dd aNoEntry		; "  No	Entry! "
 		dd aB@b@sCB@b@		; "　　靈夢　　"
 		dd aB@b@cgcvb@b@	; "　　魅魔　　"
@@ -5984,6 +5958,7 @@ off_EE4E	dd a@00ed_txt
 		db    0
 include th03/formats/cdg_put_dissolve[data].asm
 
+aVERDICT_PLAYCHARS label dword
 		dd aFocab@sC_0		; "   博麗　靈夢"
 		dd aCgCv_0		; "	魅 魔"
 		dd aCIjb@cvcan_0	; "  霧雨　魔理沙 "
@@ -5993,10 +5968,12 @@ include th03/formats/cdg_put_dissolve[data].asm
 		dd aB@tisqb@canb_0	; "　朝倉　理香子"
 		dd aCkftiB@vVfvs_0	; " 北白河　ちゆり"
 		dd aB@iknsb@cF_0	; " 　岡崎　夢美"
+aVERDICT_RANKS label dword
 		dd aVdvbvuvs		; "   Ｅａｓｙ"
 		dd aVmvpvtvnvbvm	; " Ｎｏｒｍａｌ"
 		dd aVgvbvtvd		; "   Ｈａｒｄ"
 		dd aVkvxvovbvfvivg	; "Ｌｕｎａｔｉｃ"
+aVERDICT_NUMBERS label dword
 		dd aVo			; "０"
 		dd aVp			; "１"
 		dd aVq			; "２"
@@ -6136,8 +6113,7 @@ dword_105C6	dd ?
 dword_105CA	dd ?
 byte_105CE	db ?
 		db ?
-word_105D0	dw ?
-word_105D2	dw ?
+point_105D0	Point <?>
 word_105D4	dw ?
 byte_105D6	db ?
 byte_105D7	db ?

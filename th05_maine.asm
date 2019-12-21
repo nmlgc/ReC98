@@ -599,12 +599,12 @@ sub_A7FE	endp
 sub_A826	proc near
 		push	bp
 		mov	bp, sp
-		add	word_15004, 10h
-		cmp	word_15004, 230h
+		add	point_15004.x, 16
+		cmp	point_15004.x, 560
 		jl	short loc_A864
-		add	word_15006, 10h
-		mov	word_15004, 90h	; '・
-		cmp	word_15006, 180h
+		add	point_15004.y, 16
+		mov	point_15004.x, 144
+		cmp	point_15004.y, 384
 		jl	short loc_A864
 		call	sub_A8EC
 		cmp	byte_14F8E, 0
@@ -613,8 +613,8 @@ sub_A826	proc near
 		call	sub_A92B
 
 loc_A858:
-		mov	word_15004, 50h	; 'P'
-		mov	word_15006, 140h
+		mov	point_15004.x, 80
+		mov	point_15004.y, 320
 
 loc_A864:
 		pop	bp
@@ -766,7 +766,7 @@ loc_A95C:
 loc_A962:
 		call	_input_reset_sense_held
 		push	240h
-		push	word_15006
+		push	point_15004.y
 		push	100010h
 		call	bgimage_put_rect
 		or	si, si
@@ -778,7 +778,7 @@ loc_A962:
 		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_A9BD
 		push	240h
-		push	word_15006
+		push	point_15004.y
 		mov	ax, di
 		shr	ax, 3
 		and	ax, 3
@@ -843,9 +843,9 @@ loc_A9F2:
 		jmp	word ptr cs:[bx+20h] ; switch jump
 
 loc_A9F6:
-		add	word_15006, 10h	; jumptable 0000A9F2 case 110
-		mov	word_15004, 50h	; 'P'
-		cmp	word_15006, 180h
+		add	point_15004.y, 16	; jumptable 0000A9F2 case 110
+		mov	point_15004.x, 80
+		cmp	point_15004.y, 384
 		jl	loc_AF8F	; default
 
 loc_AA0B:
@@ -871,8 +871,8 @@ loc_AA3A:
 		inc	word_14F88
 
 loc_AA3E:
-		mov	word_15004, 50h	; 'P'
-		mov	word_15006, 140h
+		mov	point_15004.x, 80
+		mov	point_15004.y, 320
 		graph_accesspage 1
 		push	500140h
 		push	1E00040h
@@ -901,7 +901,7 @@ loc_AA6A:
 		push	ax
 		call	sub_A738
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_1500A, al
+		mov	col_1500A, al
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1456,17 +1456,17 @@ word_AF96	dw    24h,   3Dh,   40h,   62h
 sub_AFD6	proc near
 
 var_A		= word ptr -0Ah
-var_8		= dword	ptr -8
+@@str		= dword	ptr -8
 var_3		= word ptr -3
 
 		enter	0Ah, 0
 		push	si
-		mov	word ptr [bp+var_8+2], ds
-		mov	word ptr [bp+var_8], 75Ah
-		mov	word_15004, 50h	; 'P'
-		mov	word_15006, 140h
+		mov	word ptr [bp+@@str+2], ds
+		mov	word ptr [bp+@@str], offset asc_1085A
+		mov	point_15004.x, 80
+		mov	point_15004.y, 320
 		mov	word_15008, 2
-		mov	byte_1500A, 0Fh
+		mov	col_1500A, 15
 		mov	_graph_putsa_fx_func, 2
 		mov	byte_14F8E, 0
 
@@ -1589,10 +1589,10 @@ loc_B0E2:
 loc_B0F4:
 		graph_showpage 0
 		graph_accesspage 1
-		push	word_15004
-		push	word_15006
+		push	point_15004.x
+		push	point_15004.y
 		push	[bp+var_3+1]
-		mov	al, byte_1500A
+		mov	al, col_1500A
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -1600,16 +1600,16 @@ loc_B0F4:
 ; ---------------------------------------------------------------------------
 
 loc_B118:
-		les	bx, [bp+var_8]
+		les	bx, [bp+@@str]
 		mov	al, byte ptr [bp+var_3]
 		mov	es:[bx], al
 		mov	bx, word_14F88
 		mov	al, [bx]
 		mov	byte ptr [bp+var_3], al
-		mov	bx, word ptr [bp+var_8]
+		mov	bx, word ptr [bp+@@str]
 		mov	es:[bx+1], al
 		inc	word_14F88
-		cmp	word_15004, 50h	; 'P'
+		cmp	point_15004.x, 80
 		jnz	short loc_B164
 		xor	si, si
 		jmp	short loc_B15B
@@ -1619,11 +1619,11 @@ loc_B140:
 		mov	bx, si
 		imul	bx, 6
 		mov	ax, [bx+4ED3h]
-		les	bx, [bp+var_8]
+		les	bx, [bp+@@str]
 		cmp	ax, es:[bx]
 		jnz	short loc_B15A
 		mov	al, [si+4ECBh]
-		mov	byte_1500A, al
+		mov	col_1500A, al
 		jmp	short loc_B164
 ; ---------------------------------------------------------------------------
 
@@ -1639,12 +1639,12 @@ loc_B15B:
 loc_B164:
 		graph_showpage 0
 		graph_accesspage 1
-		push	word_15004
-		push	word_15006
-		mov	al, byte_1500A
+		push	point_15004.x
+		push	point_15004.y
+		mov	al, col_1500A
 		mov	ah, 0
 		push	ax
-		pushd	[bp+var_8]
+		pushd	[bp+@@str]
 		call	graph_putsa_fx
 		graph_accesspage 0
 
@@ -1676,7 +1676,7 @@ word_B1A5	dw    21h,   3Fh,   68h,   74h
 
 sub_B1B5	proc near
 
-var_4		= dword	ptr -4
+@@str		= dword	ptr -4
 
 		enter	4, 0
 		push	si
@@ -1685,8 +1685,8 @@ var_4		= dword	ptr -4
 		shl	bx, 2
 		mov	ax, word ptr (ALLCAST_PTRS+2)[bx]
 		mov	dx, word ptr ALLCAST_PTRS[bx]
-		mov	word ptr [bp+var_4+2], ax
-		mov	word ptr [bp+var_4], dx
+		mov	word ptr [bp+@@str+2], ax
+		mov	word ptr [bp+@@str], dx
 		mov	bx, allcast_screen_plus_one
 		add	bx, bx
 		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
@@ -1704,17 +1704,9 @@ var_4		= dword	ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_B1F7:
-		push	40h
-		push	si
-		push	0Fh
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
 		call	sub_B37C
-		push	40h
-		push	si
-		push	0Fh
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
 		call	sub_B37C
 		dec	_graph_putsa_fx_func
 		inc	di
@@ -1723,17 +1715,9 @@ loc_B21E:
 		cmp	di, 4
 		jl	short loc_B1F7
 		mov	_graph_putsa_fx_func, 2
-		push	40h
-		push	si
-		push	0Fh
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
 		call	sub_B37C
-		push	40h
-		push	si
-		push	0Fh
-		pushd	[bp+var_4]
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
 		call	sub_B37C
 		inc	allcast_step
 		inc	allcast_line_on_screen
@@ -3889,16 +3873,8 @@ loc_C2BB:
 		mov	ah, 0
 		push	ax
 		call	sub_BCD3
-		push	7C00C4h
-		push	9
-		push	ds
-		push	offset aGxgnbGvbGhvVGv
-		call	graph_putsa_fx
-		push	7800C0h
-		push	2
-		push	ds
-		push	offset aGxgnbGvbGhvV_0
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (124 shl 16) or 196, 9, ds, offset aGxgnbGvbGhvVGv
+		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_0
 
 loc_C2EB:
 		call	bgimage_snap
@@ -4306,7 +4282,7 @@ loc_C658:
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		call	graph_gaiji_puts
 		pop	si
 		leave
@@ -4325,7 +4301,7 @@ var_3		= byte ptr -3
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= dword	ptr  4
-arg_4		= word ptr  8
+@@y		= word ptr  8
 arg_6		= word ptr  0Ah
 
 		enter	0Ch, 0
@@ -4392,20 +4368,15 @@ loc_C6F1:
 		jle	short loc_C6B9
 		mov	[bp+var_3], 0
 		push	di
-		push	[bp+arg_4]
-		push	10h
+		push	[bp+@@y]
+		push	16
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		call	graph_gaiji_puts
-		lea	ax, [di+90h]
-		push	ax
-		push	[bp+arg_4]
-		push	word_116E4
-		push	ds
-		push	offset aU__0
-		call	graph_putsa_fx
+		lea	ax, [di+144]
+		call	graph_putsa_fx pascal, ax, [bp+@@y], col_116E4, ds, offset aU__0
 		pop	di
 		pop	si
 		leave
@@ -4503,26 +4474,16 @@ loc_C7B6:
 		div	ebx
 		mov	[bp+var_2], ax
 		mov	byte_11713, 1
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		push	[bp+var_2]
 		call	sub_C5E7
 		mov	byte_11713, 0
-		lea	ax, [si+30h]
-		push	ax
-		push	di
-		push	word_116E4
-		push	ds
-		push	offset aBd
-		call	graph_putsa_fx
-		lea	ax, [si+60h]
-		push	ax
-		push	di
-		push	word_116E4
-		push	ds
-		push	offset aBu
-		call	graph_putsa_fx
+		lea	ax, [si+48]
+		call	graph_putsa_fx pascal, ax, di, col_116E4, ds, offset aBd
+		lea	ax, [si+96]
+		call	graph_putsa_fx pascal, ax, di, col_116E4, ds, offset aBu
 		pop	di
 		pop	si
 		leave
@@ -4538,14 +4499,14 @@ sub_C835	proc near
 
 var_2		= word ptr -2
 arg_0		= dword	ptr  4
-arg_4		= word ptr  8
+@@y		= word ptr  8
 arg_6		= word ptr  0Ah
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
+		mov	di, [bp+@@y]
 		mov	eax, [bp+arg_0]
 		mov	ebx, 2710h
 		xor	edx, edx
@@ -4566,19 +4527,14 @@ arg_6		= word ptr  0Ah
 		div	ebx
 		mov	[bp+var_2], ax
 		mov	byte_11713, 1
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		push	[bp+var_2]
 		call	sub_C5E7
 		mov	byte_11713, 0
-		lea	ax, [si+30h]
-		push	ax
-		push	di
-		push	word_116E4
-		push	ds
-		push	offset aBd_0
-		call	graph_putsa_fx
+		lea	ax, [si+48]
+		call	graph_putsa_fx pascal, ax, di, col_116E4, ds, offset aBd_0
 		pop	di
 		pop	si
 		leave
@@ -4702,21 +4658,21 @@ loc_C9B3:
 		imul	eax, 64h
 		mov	[bp+var_4], eax
 		add	dword_1517E, eax
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 0D8h
+		mov	ax, y_116E8
+		add	ax, 216
 		push	ax
 		pushd	[bp+var_4]
 		call	sub_C835
-		mov	ax, word_116E2
-		add	ax, 110h
+		mov	ax, x_116E2
+		add	ax, 272
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 0D8h
+		mov	ax, y_116E8
+		add	ax, 216
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aBu_0
 		call	graph_putsa_fx
@@ -4840,97 +4796,92 @@ var_4		= dword	ptr -4
 		push	si
 		mov	dword_1517E, 0
 		mov	_graph_putsa_fx_func, 2
-		push	word_116E2
-		push	word_116E8
-		push	word_116E4
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 18h
+		call	graph_putsa_fx pascal, x_116E2, y_116E8, col_116E4, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 24
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aUqiUx	; "難易度"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 30h	; '0'
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 48
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aNPiuU_	; "最終得点"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 48h	; 'H'
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 72
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aGGxi
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 60h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 96
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aGGaogcpi
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 78h	; 'x'
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 120
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aGqbGatbrmcj ; "ゲーム達成率"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 90h	; '・
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 144
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aIlcSObcj ; "悪霊退治率"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0A8h ; 'ｨ'
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 168
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aGagcgegai
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0C0h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 192
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0D8h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 216
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aLcnzvv	; "気合い"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0F0h ; '・
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 240
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aPicacovCj ; "処理落ち率"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 110h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 272
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
 		call	graph_putsa_fx
@@ -4947,11 +4898,11 @@ loc_CBDB:
 
 loc_CBE3:
 		mov	_verdict_rank, al
-		mov	ax, word_116E2
-		add	ax, 0A0h
+		mov	ax, x_116E2
+		add	ax, 160
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 18h
+		mov	ax, y_116E8
+		add	ax, 24
 		push	ax
 		push	10h
 		push	ds
@@ -4960,58 +4911,58 @@ loc_CBE3:
 		shl	ax, 3
 		add	ax, offset grEASY
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		call	graph_gaiji_puts
-		mov	ax, word_116E2
-		add	ax, 80h
+		mov	ax, x_116E2
+		add	ax, 128
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 30h	; '0'
+		mov	ax, y_116E8
+		add	ax, 48
 		push	ax
 		mov	ax, word ptr _ksoconfig
 		add	ax, 20h	; ' '
 		push	word ptr _ksoconfig+2
 		push	ax
 		call	sub_C67F
-		mov	ax, word_116E2
-		add	ax, 0E0h ; '・
+		mov	ax, x_116E2
+		add	ax, 224
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 48h	; 'H'
+		mov	ax, y_116E8
+		add	ax, 72
 		push	ax
 		les	bx, _ksoconfig
 		mov	al, es:[bx+1Bh]
 		mov	ah, 0
 		push	ax
 		call	sub_C5E7
-		mov	ax, word_116E2
-		add	ax, 0E0h ; '・
+		mov	ax, x_116E2
+		add	ax, 224
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 60h
+		mov	ax, y_116E8
+		add	ax, 96
 		push	ax
 		les	bx, _ksoconfig
 		mov	al, es:[bx+1Ch]
 		mov	ah, 0
 		push	ax
 		call	sub_C5E7
-		mov	ax, word_116E2
-		add	ax, 110h
+		mov	ax, x_116E2
+		add	ax, 272
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 48h	; 'H'
+		mov	ax, y_116E8
+		add	ax, 72
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aI
 		call	graph_putsa_fx
-		mov	ax, word_116E2
-		add	ax, 110h
+		mov	ax, x_116E2
+		add	ax, 272
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 60h
+		mov	ax, y_116E8
+		add	ax, 96
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aI_0
 		call	graph_putsa_fx
@@ -5024,11 +4975,11 @@ loc_CBE3:
 		mov	word ptr es:[bx+2Ch], 0B3B0h
 
 loc_CCB3:
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 78h	; 'x'
+		mov	ax, y_116E8
+		add	ax, 120
 		push	ax
 		push	0B3B0h
 		jmp	short loc_CCE8
@@ -5041,11 +4992,11 @@ loc_CCC6:
 		mov	word ptr es:[bx+2Ch], 3200h
 
 loc_CCD7:
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 78h	; 'x'
+		mov	ax, y_116E8
+		add	ax, 120
 		push	ax
 		push	3200h
 
@@ -5054,31 +5005,31 @@ loc_CCE8:
 		push	word ptr es:[bx+2Ch]
 		call	sub_C729
 		mov	byte_1517C, 0
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 90h	; '・
+		mov	ax, y_116E8
+		add	ax, 144
 		push	ax
 		les	bx, _ksoconfig
 		push	word ptr es:[bx+36h]
 		push	word ptr es:[bx+38h]
 		call	sub_C729
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 0A8h ; 'ｨ'
+		mov	ax, y_116E8
+		add	ax, 168
 		push	ax
 		les	bx, _ksoconfig
 		push	word ptr es:[bx+2Eh]
 		push	word ptr es:[bx+30h]
 		call	sub_C729
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 0C0h
+		mov	ax, y_116E8
+		add	ax, 192
 		push	ax
 		les	bx, _ksoconfig
 		push	word ptr es:[bx+32h]
@@ -5086,11 +5037,11 @@ loc_CCE8:
 		call	sub_C729
 		call	sub_C8AE
 		mov	byte_116EA, 1
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 0F0h ; '・
+		mov	ax, y_116E8
+		add	ax, 240
 		push	ax
 		les	bx, _ksoconfig
 		mov	eax, es:[bx+40h]
@@ -5320,21 +5271,21 @@ loc_D01A:
 		shr	eax, 1
 		cmp	eax, es:[bx+3Ch]
 		jbe	loc_D120
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 110h
+		mov	ax, y_116E8
+		add	ax, 272
 		push	ax
 		pushd	[dword_1517E]
 		call	sub_C835
-		mov	ax, word_116E2
-		add	ax, 110h
+		mov	ax, x_116E2
+		add	ax, 272
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 110h
+		mov	ax, y_116E8
+		add	ax, 272
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aU_
 		call	graph_putsa_fx
@@ -5412,21 +5363,21 @@ loc_D0E1:
 ; ---------------------------------------------------------------------------
 
 loc_D120:
-		mov	ax, word_116E2
-		add	ax, 0B0h ; 'ｰ'
+		mov	ax, x_116E2
+		add	ax, 176
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 110h
+		mov	ax, y_116E8
+		add	ax, 272
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
 		call	graph_putsa_fx
-		mov	ax, word_116E2
-		add	ax, 30h	; '0'
+		mov	ax, x_116E2
+		add	ax, 48
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 128h
+		mov	ax, y_116E8
+		add	ax, 296
 		push	ax
 		push	word_116E6
 		push	ds
@@ -5461,21 +5412,21 @@ sub_D16F	proc near
 		mov	bp, sp
 		cmp	byte_15187, 0
 		jz	short loc_D1AF
-		mov	ax, word_116E2
-		add	ax, 30h	; '0'
+		mov	ax, x_116E2
+		add	ax, 48
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 128h
+		mov	ax, y_116E8
+		add	ax, 296
 		push	ax
 		push	word_116E6
 		push	ds
 		push	offset byte_15187
 		call	graph_putsa_fx
-		mov	ax, word_116E2
-		add	ax, 30h	; '0'
+		mov	ax, x_116E2
+		add	ax, 48
 		push	ax
-		mov	ax, word_116E8
-		add	ax, 138h
+		mov	ax, y_116E8
+		add	ax, 312
 		push	ax
 		push	word_116E6
 		push	ds
@@ -5531,68 +5482,68 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		push	di
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 40h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 64
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vpcB@	; "　１面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 60h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 96
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vqcB@	; "　２面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 80h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 128
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vrcB@	; "　３面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0A0h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 160
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vscB@	; "　４面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0C0h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 192
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vtcB@	; "　５面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 0E0h ; '・
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 224
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aB@vucB@	; "　６面　"
 		call	graph_putsa_fx
-		push	word_116E2
-		mov	ax, word_116E8
-		add	ax, 120h
+		push	x_116E2
+		mov	ax, y_116E8
+		add	ax, 288
 		push	ax
-		push	word_116E4
+		push	col_116E4
 		push	ds
 		push	offset aNPiuU__0 ; "最終得点"
 		call	graph_putsa_fx
-		mov	ax, word_116E2
-		add	ax, 80h
+		mov	ax, x_116E2
+		add	ax, 128
 		mov	[bp+var_2], ax
 		xor	si, si
-		mov	ax, word_116E8
-		add	ax, 40h
+		mov	ax, y_116E8
+		add	ax, 64
 		mov	di, ax
 		jmp	short loc_D2FE
 ; ---------------------------------------------------------------------------
@@ -5615,8 +5566,8 @@ loc_D2FE:
 		cmp	si, 6
 		jl	short loc_D2E0
 		push	[bp+var_2]
-		mov	ax, word_116E8
-		add	ax, 120h
+		mov	ax, y_116E8
+		add	ax, 288
 		push	ax
 		mov	ax, word ptr _ksoconfig
 		add	ax, 20h	; ' '
@@ -7761,10 +7712,10 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	word_116E2, 20h	; ' '
-		mov	word_116E4, 0Dh
+		mov	x_116E2, 32
+		mov	col_116E4, 13
 		mov	word_116E6, 0Dh
-		mov	word_116E8, 10h
+		mov	y_116E8, 16
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -8224,10 +8175,8 @@ byte_10830	db 0
 		db 0FFh
 		db 0FFh
 		db 0FFh
-		db  20h
-		db  20h
-		db    0
-		db    0
+asc_1085A	db '  ', 0
+	even
 byte_1085E	db 0
 		db 0
 		dd aExed01_pi		; "EXED01.pi"
@@ -8474,10 +8423,10 @@ aGxgnbGvbGhvVGv	db 'スローモードでのプレイでは、スコアは記録されません',0
 aGxgnbGvbGhvV_0	db 'スローモードでのプレイでは、スコアは記録されません',0
 aName		db 'name',0
 		db 0
-word_116E2	dw 150h
-word_116E4	dw 2
+x_116E2	dw 336
+col_116E4	dw 2
 word_116E6	dw 6
-word_116E8	dw 30h
+y_116E8	dw 48
 byte_116EA	db 0
 include th04/strings/verdict[data].asm
 byte_11713	db 0
@@ -10662,10 +10611,9 @@ byte_14F8E	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-word_15004	dw ?
-word_15006	dw ?
+point_15004	Point <?>
 word_15008	dw ?
-byte_1500A	db ?
+col_1500A	db ?
 		db ?
 word_1500C	dw ?
 measure_1500E	dw ?

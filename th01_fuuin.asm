@@ -489,13 +489,7 @@ loc_A229:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		push	word ptr ss:[bx+2]
-		push	word ptr ss:[bx]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	si
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], word ptr ss:[bx], word ptr ss:[bx+2]
 
 loc_A24A:
 		add	si, 10h
@@ -1320,13 +1314,7 @@ loc_A814:
 loc_A84F:
 		cmp	si, 1Ah
 		jl	short loc_A814
-		push	ds
-		push	offset aVb	; "ａ"
-		push	823h
-		push	0F0h
-		push	20h ; ' '
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c, 32, 240, 823h, offset aVb, ds	; "ａ"
 		mov	di, 8260h
 		xor	si, si
 		jmp	short loc_A8AA
@@ -1555,34 +1543,10 @@ arg_E		= word ptr  14h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aB@cB@iB@ ; "　霊　位　"
-		push	33h ; '3'
-		push	30h ; '0'
-		push	20h ; ' '
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@cB@b@sob@b ; "　　名　　前　　"
-		push	33h ; '3'
-		push	30h ; '0'
-		push	90h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@uB@b@u_b@b ; "　　得　　点　　"
-		push	33h ; '3'
-		push	30h ; '0'
-		push	160h
-		call	graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aGxgebGwbeglbGg ; "ステージ・ルート"
-		push	33h ; '3'
-		push	30h ; '0'
-		push	200h
-		call	graph_putsa_fx
-		add	sp, 0Ah
+		call	graph_putsa_fx c,  32, 48, 33h, offset aB@cB@iB@, ds ; "　霊　位　"
+		call	graph_putsa_fx c, 144, 48, 33h, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
+		call	graph_putsa_fx c, 352, 48, 33h, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
+		call	graph_putsa_fx c, 512, 48, 33h, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
 		xor	si, si
 		jmp	loc_AD66
 ; ---------------------------------------------------------------------------
@@ -1759,9 +1723,9 @@ loc_AB36:
 		push	ax
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	20h ; ' '
+		push	32
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short $+2
@@ -1800,9 +1764,9 @@ loc_AB77:
 		push	ax
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	90h
+		push	144
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		push	0
@@ -1938,9 +1902,9 @@ loc_AC6D:
 		push	ax
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	210h
+		push	528
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short loc_ACCD
@@ -1979,9 +1943,9 @@ loc_ACB5:
 		push	ax
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	210h
+		push	528
 		call	graph_putsa_fx
 		add	sp, 0Ah
 
@@ -2002,9 +1966,9 @@ loc_ACDD:
 		push	ax
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
+		add	ax, 64
 		push	ax
-		push	230h
+		push	560
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		cmp	si, di

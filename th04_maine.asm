@@ -931,12 +931,12 @@ sub_A713	endp
 sub_A73B	proc near
 		push	bp
 		mov	bp, sp
-		add	word_124BC, 10h
-		cmp	word_124BC, 230h
+		add	point_124BC.x, 16
+		cmp	point_124BC.x, 560
 		jl	short loc_A78D
-		add	word_124BE, 10h
-		mov	word_124BC, 90h
-		cmp	word_124BE, 180h
+		add	point_124BC.y, 16
+		mov	point_124BC.x, 144
+		cmp	point_124BC.y, 384
 		jl	short loc_A78D
 		call	sub_A815
 		cmp	byte_1247E, 0
@@ -944,8 +944,8 @@ sub_A73B	proc near
 		call	input_wait_for_change pascal, 0
 
 loc_A76F:
-		mov	word_124BC, 50h	; 'P'
-		mov	word_124BE, 140h
+		mov	point_124BC.x, 80
+		mov	point_124BC.y, 320
 		graph_accesspage 1
 		call	sub_A59E
 		graph_accesspage 0
@@ -1099,9 +1099,9 @@ loc_A876:
 		jmp	word ptr cs:[bx+20h] ; switch jump
 
 loc_A87A:
-		add	word_124BE, 10h	; jumptable 0000A876 case 110
-		mov	word_124BC, 50h	; 'P'
-		cmp	word_124BE, 180h
+		add	point_124BC.y, 16	; jumptable 0000A876 case 110
+		mov	point_124BC.x, 80
+		cmp	point_124BC.y, 384
 		jl	loc_ADB5	; default
 
 loc_A88F:
@@ -1126,8 +1126,8 @@ loc_A8C0:
 		inc	word_12478
 
 loc_A8C4:
-		mov	word_124BC, 50h	; 'P'
-		mov	word_124BE, 140h
+		mov	point_124BC.x, 80
+		mov	point_124BC.y, 320
 		graph_accesspage 1
 		call	sub_A59E
 		graph_accesspage 0
@@ -1142,7 +1142,7 @@ loc_A8E5:
 		push	ax
 		call	sub_A64D
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_124C2, al
+		mov	col_124C2, al
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1373,10 +1373,10 @@ loc_AAF2:
 		push	ax
 		call	sub_A64D
 		graph_accesspage 1
-		push	word_124BC
-		push	word_124BE
+		push	point_124BC.x
+		push	point_124BC.y
 		push	[bp+var_2]
-		mov	al, byte_124C2
+		mov	al, col_124C2
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -1693,11 +1693,11 @@ var_1		= byte ptr -1
 
 		enter	6, 0
 		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], 654h
-		mov	word_124BC, 50h	; 'P'
-		mov	word_124BE, 140h
+		mov	word ptr [bp+var_6], offset asc_EB84
+		mov	point_124BC.x, 80
+		mov	point_124BC.y, 320
 		mov	word_124C0, 1
-		mov	byte_124C2, 0Fh
+		mov	col_124C2, 15
 		mov	_graph_putsa_fx_func, 2
 		call	sub_A4AE
 		mov	byte_1247E, 0
@@ -1749,9 +1749,9 @@ loc_AE82:
 		inc	word_12478
 		graph_showpage 0
 		graph_accesspage 1
-		push	word_124BC
-		push	word_124BE
-		mov	al, byte_124C2
+		push	point_124BC.x
+		push	point_124BC.y
+		mov	al, col_124C2
 		mov	ah, 0
 		push	ax
 		push	word ptr [bp+var_6+2]
@@ -2714,19 +2714,15 @@ loc_B851:
 		cmp	si, 8
 		jl	short loc_B82A
 		mov	[bp+var_4], 0
-		push	0A00060h
-		push	10h
+		push	(160 shl 16) or 96
+		push	16
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
 		mov	[bp+var_2], 1
-		push	1200060h
-		push	0Eh
-		push	ds
-		push	offset aU_	; "点"
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (288 shl 16) or 96, 14, ds, offset aU_	; "点"
 		pop	si
 		leave
 		retn
@@ -2816,26 +2812,16 @@ loc_B8FC:
 		div	ebx
 		mov	[bp+var_2], ax
 		mov	byte_EC73, 1
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		push	[bp+var_2]
 		call	sub_B787
 		mov	byte_EC73, 0
-		lea	ax, [si+30h]
-		push	ax
-		push	di
-		push	0Eh
-		push	ds
-		push	offset aBd	; "．"
-		call	graph_putsa_fx
-		lea	ax, [si+60h]
-		push	ax
-		push	di
-		push	0Eh
-		push	ds
-		push	offset aBu	; "％"
-		call	graph_putsa_fx
+		lea	ax, [si+48]
+		call	graph_putsa_fx pascal, ax, di, 14, ds, offset aBd	; "．"
+		lea	ax, [si+96]
+		call	graph_putsa_fx pascal, ax, di, 14, ds, offset aBu	; "％"
 		pop	di
 		pop	si
 		leave
@@ -2879,19 +2865,14 @@ arg_6		= word ptr  0Ah
 		div	ebx
 		mov	[bp+var_2], ax
 		mov	byte_EC73, 1
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		push	[bp+var_2]
 		call	sub_B787
 		mov	byte_EC73, 0
-		lea	ax, [si+30h]
-		push	ax
-		push	di
-		push	0Eh
-		push	ds
-		push	offset aBd_0	; "．"
-		call	graph_putsa_fx
+		lea	ax, [si+48]
+		call	graph_putsa_fx pascal, ax, di, 14, ds, offset aBd_0	; "．"
 		pop	di
 		pop	si
 		leave
@@ -3039,11 +3020,7 @@ loc_BB48:
 		push	0C00108h
 		pushd	[bp+var_4]
 		call	sub_B97B
-		push	1200108h
-		push	0Eh
-		push	ds
-		push	offset aBu_0	; "％"
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (288 shl 16) or 264, 14, ds, offset aBu_0	; "％"
 		leave
 		retn
 sub_B9F2	endp
@@ -3070,66 +3047,18 @@ var_4		= dword	ptr -4
 		mov	_graph_putsa_fx_func, 2
 		graph_accesspage 0
 		graph_showpage al
-		push	100030h
-		push	0Fh
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	graph_putsa_fx
-		push	100048h
-		push	0Fh
-		push	ds
-		push	offset aUqiUx	; "難易度"
-		call	graph_putsa_fx
-		push	100060h
-		push	0Fh
-		push	ds
-		push	offset aNPiuU_	; "最終得点"
-		call	graph_putsa_fx
-		push	100078h
-		push	0Fh
-		push	ds
-		push	offset aGGxi	; "ミス回数"
-		call	graph_putsa_fx
-		push	100090h
-		push	0Fh
-		push	ds
-		push	offset aGGaogcpi ; "ボム使用回数"
-		call	graph_putsa_fx
-		push	1000A8h
-		push	0Fh
-		push	ds
-		push	offset aGqbGatbrmcj ; "ゲーム達成率"
-		call	graph_putsa_fx
-		push	1000C0h
-		push	0Fh
-		push	ds
-		push	offset aIlcSObcj ; "悪霊退治率"
-		call	graph_putsa_fx
-		push	1000D8h
-		push	0Fh
-		push	ds
-		push	offset aGagcgegai ; "アイテム回収率"
-		call	graph_putsa_fx
-		push	1000F0h
-		push	0Fh
-		push	ds
-		push	offset aUU_gagcgeganNv ; "得点アイテム最高点率"
-		call	graph_putsa_fx
-		push	100108h
-		push	0Fh
-		push	ds
-		push	offset aLcnzvv	; "気合い"
-		call	graph_putsa_fx
-		push	100120h
-		push	0Fh
-		push	ds
-		push	offset aPicacovCj ; "処理落ち率"
-		call	graph_putsa_fx
-		push	100150h
-		push	0Fh
-		push	ds
-		push	offset aVavVVSrso ; "あなたの腕前"
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (16 shl 16) or  48, 15, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
+		call	graph_putsa_fx pascal, (16 shl 16) or  72, 15, ds, offset aUqiUx	; "難易度"
+		call	graph_putsa_fx pascal, (16 shl 16) or  96, 15, ds, offset aNPiuU_	; "最終得点"
+		call	graph_putsa_fx pascal, (16 shl 16) or 120, 15, ds, offset aGGxi	; "ミス回数"
+		call	graph_putsa_fx pascal, (16 shl 16) or 144, 15, ds, offset aGGaogcpi ; "ボム使用回数"
+		call	graph_putsa_fx pascal, (16 shl 16) or 168, 15, ds, offset aGqbGatbrmcj ; "ゲーム達成率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 192, 15, ds, offset aIlcSObcj ; "悪霊退治率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 216, 15, ds, offset aGagcgegai ; "アイテム回収率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 240, 15, ds, offset aUU_gagcgeganNv ; "得点アイテム最高点率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 264, 15, ds, offset aLcnzvv	; "気合い"
+		call	graph_putsa_fx pascal, (16 shl 16) or 288, 15, ds, offset aPicacovCj ; "処理落ち率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 336, 15, ds, offset aVavVVSrso ; "あなたの腕前"
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_BC71
@@ -3165,16 +3094,8 @@ loc_BC79:
 		mov	ah, 0
 		push	ax
 		call	sub_B787
-		push	1200078h
-		push	0Eh
-		push	ds
-		push	offset aTimes	; "回"
-		call	graph_putsa_fx
-		push	1200090h
-		push	0Eh
-		push	ds
-		push	offset aTimes_0	; "回"
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (288 shl 16) or 120, 14, ds, offset aTimes	; "回"
+		call	graph_putsa_fx pascal, (288 shl 16) or 144, 14, ds, offset aTimes_0	; "回"
 		mov	byte_124CC, 1
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
@@ -3435,11 +3356,7 @@ loc_BFD9:
 		push	0C00150h
 		pushd	[dword_124CE]
 		call	sub_B97B
-		push	1200150h
-		push	0Eh
-		push	ds
-		push	offset aPoint	; "点"
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (288 shl 16) or 336, 14, ds, offset aPoint	; "点"
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
@@ -3498,21 +3415,17 @@ loc_C084:
 		call	file_close
 		push	40h
 		call	frame_delay
-		push	400168h
-		push	0Fh
+		push	(64 shl 16) or 360
+		push	15
 		push	ds
 		push	offset unk_124D3
 		jmp	short loc_C0CB
 ; ---------------------------------------------------------------------------
 
 loc_C0AE:
-		push	0C00150h
-		push	0Eh
-		push	ds
-		push	offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
-		call	graph_putsa_fx
-		push	400168h
-		push	0Fh
+		call	graph_putsa_fx pascal, (192 shl 16) or 336, 14, ds, offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
+		push	(64 shl 16) or 360
+		push	15
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
 
@@ -4651,16 +4564,8 @@ loc_C8D9:
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
-		push	7C00C4h
-		push	9
-		push	ds
-		push	offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
-		call	graph_putsa_fx
-		push	7800C0h
-		push	2
-		push	ds
-		push	offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (124 shl 16) or 196, 9, ds, offset aGxgnbGvbGhvVGv ; "スローモードでのプレイでは、スコアは記・...
+		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
 
 loc_C909:
 		les	bx, _humaconfig
@@ -5207,10 +5112,8 @@ include th03/formats/pi_slot_put_mask[data].asm
 		db 0FFh
 		db 0FFh
 		db 0FFh
-		db  20h
-		db  20h
-		db    0
-		db    0
+asc_EB84	db '  ', 0
+	even
 aSff1_pi	db 'sff1.pi',0
 aStaff		db 'staff',0
 aSff1_cdg	db 'sff1.cdg',0
@@ -7374,10 +7277,9 @@ byte_1247E	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-word_124BC	dw ?
-word_124BE	dw ?
+point_124BC	Point <?>
 word_124C0	dw ?
-byte_124C2	db ?
+col_124C2	db ?
 		db    ?	;
 word_124C4	dw ?
 byte_124C6	db ?

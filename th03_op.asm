@@ -1615,11 +1615,11 @@ var_1  	= byte ptr -1
 		sub	al, _music_page
 		mov	[bp+var_1], al
 		graph_accesspage al
-		push	10h
+		push	16
 		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0
@@ -1632,11 +1632,11 @@ var_1  	= byte ptr -1
 		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		graph_accesspage _music_page
-		push	10h
+		push	16
 		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0

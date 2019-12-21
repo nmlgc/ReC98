@@ -619,17 +619,17 @@ loc_AB59:
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+9Eh] ; s
+		pushd	_MENU_DESC[bx]
 		call	_strlen
 		add	sp, 4
 		shl	ax, 3
-		mov	dx, 270h
+		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	180000Fh
+		push	(384 shl 16) or 15
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr [bx+9Eh]
+		pushd	_MENU_DESC[bx]
 		call	graph_putsa_fx
 
 loc_ABC4:
@@ -853,17 +853,17 @@ loc_ADC0:
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+9Eh] ; s
+		pushd	_MENU_DESC[bx]
 		call	_strlen
 		add	sp, 4
 		shl	ax, 3
-		mov	dx, 270h
+		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	180000Fh
+		push	(384 shl 16) or 15
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+9Eh]
+		pushd	_MENU_DESC[bx]
 		call	graph_putsa_fx
 
 loc_AE11:
@@ -2125,7 +2125,7 @@ var_1		= byte ptr -1
 		sub	al, _music_page
 		mov	[bp+var_1], al
 		graph_accesspage al
-		push	10h
+		push	16
 		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
@@ -2141,7 +2141,7 @@ var_1		= byte ptr -1
 		pushd	_MUSIC_TITLES[bx]
 		call	graph_putsa_fx
 		graph_accesspage _music_page
-		push	10h
+		push	16
 		mov	al, [bp+@@sel]
 		mov	ah, 0
 		shl	ax, 4
@@ -2213,11 +2213,7 @@ draw_cmt_lines	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	1400040h
-		push	7
-		push	ds
-		push	offset _music_cmt
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (320 shl 16) or 64, 7, ds, offset _music_cmt
 		mov	si, 1
 		jmp	short loc_C306
 ; ---------------------------------------------------------------------------
@@ -2227,7 +2223,7 @@ loc_C2DE:
 		imul	bx, MUSIC_CMT_LINE_LEN
 		cmp	_music_cmt[bx], ';'
 		jz	short loc_C305
-		push	140h
+		push	320
 		lea	ax, [si+4]
 		shl	ax, 4
 		push	ax
@@ -3951,15 +3947,15 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_D29B:
-		mov	di, 50h	; 'P'
+		mov	di, 80
 		jmp	short loc_D2A3
 ; ---------------------------------------------------------------------------
 
 loc_D2A0:
-		mov	di, 170h
+		mov	di, 368
 
 loc_D2A3:
-		mov	[bp+var_2], 138h
+		mov	[bp+var_2], 312
 		lea	ax, [di+8]
 		push	ax
 		mov	ax, [bp+var_2]
@@ -3968,17 +3964,17 @@ loc_D2A3:
 		push	0Fh
 		mov	bx, si
 		shl	bx, 3
-		pushd	dword ptr [bx+13D4h]
+		pushd	aPLAYCHAR_NAME_AND_TITLE[bx]
 		call	graph_putsa_fx
 		lea	ax, [di+8]
 		push	ax
 		mov	ax, [bp+var_2]
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		push	0Fh
 		mov	bx, si
 		shl	bx, 3
-		pushd	dword ptr [bx+13D8h]
+		pushd	aPLAYCHAR_TYPE[bx]
 		call	graph_putsa_fx
 		mov	ax, 1
 		sub	ax, si
@@ -3991,12 +3987,12 @@ loc_D2A3:
 ; ---------------------------------------------------------------------------
 
 loc_D2F2:
-		mov	di, 50h	; 'P'
+		mov	di, 80
 		jmp	short loc_D2FA
 ; ---------------------------------------------------------------------------
 
 loc_D2F7:
-		mov	di, 170h
+		mov	di, 368
 
 loc_D2FA:
 		lea	ax, [di+8]
@@ -4007,17 +4003,17 @@ loc_D2FA:
 		push	3
 		mov	bx, si
 		shl	bx, 3
-		pushd	dword ptr [bx+13D4h]
+		pushd	aPLAYCHAR_NAME_AND_TITLE[bx]
 		call	graph_putsa_fx
 		lea	ax, [di+8]
 		push	ax
 		mov	ax, [bp+var_2]
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		push	3
 		mov	bx, si
 		shl	bx, 3
-		pushd	dword ptr [bx+13D8h]
+		pushd	aPLAYCHAR_TYPE[bx]
 		call	graph_putsa_fx
 		pop	di
 		pop	si
@@ -4173,17 +4169,17 @@ loc_D488:
 ; ---------------------------------------------------------------------------
 
 loc_D498:
-		mov	si, 138h
+		mov	si, 312
 		mov	[bp+var_5], 1
 		jmp	short loc_D4A8
 ; ---------------------------------------------------------------------------
 
 loc_D4A1:
-		mov	si, 150h
+		mov	si, 336
 		mov	[bp+var_5], 2
 
 loc_D4A8:
-		mov	[bp+var_2], 140h
+		mov	[bp+var_2], 320
 		mov	al, byte_132B8
 		mov	ah, 0
 		imul	ax, 5
@@ -4194,11 +4190,11 @@ loc_D4A8:
 		jz	short loc_D4E5
 		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
-		add	ax, 0FFF8h
+		add	ax, -8
 		push	ax
 		lea	ax, [si+4]
 		push	ax
-		push	0Fh
+		push	15
 		push	ds
 		push	offset aStar
 		call	graph_putsa_fx
@@ -4210,7 +4206,7 @@ loc_D4E5:
 		push	ax
 		lea	ax, [si+4]
 		push	ax
-		push	0Fh
+		push	15
 		mov	al, byte_132B8
 		mov	ah, 0
 		shl	ax, 3
@@ -4218,7 +4214,7 @@ loc_D4E5:
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		pushd	dword ptr [bx+13E4h]
+		pushd	aPLAYCHAR_SHOT[bx]
 		call	graph_putsa_fx
 		mov	ax, 1
 		sub	ax, di
@@ -4231,13 +4227,13 @@ loc_D4E5:
 ; ---------------------------------------------------------------------------
 
 loc_D51F:
-		mov	si, 138h
+		mov	si, 312
 		mov	[bp+var_5], 1
 		jmp	short loc_D52F
 ; ---------------------------------------------------------------------------
 
 loc_D528:
-		mov	si, 150h
+		mov	si, 336
 		mov	[bp+var_5], 2
 
 loc_D52F:
@@ -4251,11 +4247,11 @@ loc_D52F:
 		jz	short loc_D567
 		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
-		add	ax, 0FFF8h
+		add	ax, -8
 		push	ax
 		lea	ax, [si+4]
 		push	ax
-		push	0Fh
+		push	15
 		push	ds
 		push	offset aStar
 		call	graph_putsa_fx
@@ -4275,7 +4271,7 @@ loc_D567:
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		pushd	dword ptr [bx+13E4h]
+		pushd	aPLAYCHAR_SHOT[bx]
 		call	graph_putsa_fx
 		pop	di
 		pop	si
@@ -4350,7 +4346,7 @@ sub_D595	proc near
 		push	8
 		call	grcg_round_boxfill
 		GRCG_OFF_CLOBBERING dx
-		push	98h
+		push	152
 		lea	ax, [si+4]
 		push	ax
 		push	3
@@ -4818,6 +4814,8 @@ unk_F3D1	db    0
 _menu_sel	db 0
 _quit	db 0
 _main_menu_unused_1	db 1
+public _MENU_DESC
+_MENU_DESC label dword
 		dd aGqbGav		; "ゲームを開始します"
 		dd aGgglgxgggigxge	; "エキストラステージを開始します"
 		dd aMNVGngcgxgrgav	; "現在のハイスコアを表\示します"
@@ -5043,10 +5041,13 @@ aOp0b_pi	db 'op0b.pi',0
 aOp_1		db 'op',0
 aOp1_pi_1	db 'op1.pi',0
 		db    0
+aPLAYCHAR_NAME_AND_TITLE label dword
 		dd aB@focasCBiiPcv	; "　博麗靈夢（巫女さん） "
+aPLAYCHAR_TYPE label dword
 		dd aNlfINumvmB@		; "	広範囲攻撃型　	  "
 		dd aCIjcvcanBicvc@	; " 霧雨魔理沙（魔法使い）"
 		dd aNumvcPdolm		; "	攻撃力重視型	  "
+aPLAYCHAR_SHOT label dword
 		dd aB@GtbGGvgzgbgg	; "　  サーチショット　	 "
 		dd aGpgcghgvgzgbgg	; "    ワイドショット	 "
 		dd aGcgkgebGwgzgug	; "イリュージョンレーザー"

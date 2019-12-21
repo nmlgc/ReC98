@@ -524,17 +524,17 @@ loc_A69A:
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr MENU_DESC[bx] ; s
+		pushd	_MENU_DESC[bx]
 		call	_strlen
 		add	sp, 4
 		shl	ax, 3
-		mov	dx, 270h
+		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	1800009h
+		push	(384 shl 16) or 9
 		mov	bx, [bp+var_2]
 		shl	bx, 2
-		pushd	dword ptr MENU_DESC[bx]
+		pushd	_MENU_DESC[bx]
 		call	graph_putsa_fx
 
 loc_A705:
@@ -757,17 +757,17 @@ loc_A900:
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr MENU_DESC[bx] ; s
+		pushd	_MENU_DESC[bx]
 		call	_strlen
 		add	sp, 4
 		shl	ax, 3
-		mov	dx, 270h
+		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	1800009h
+		push	(384 shl 16) or 9
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr MENU_DESC[bx]
+		pushd	_MENU_DESC[bx]
 		call	graph_putsa_fx
 
 loc_A951:
@@ -1818,11 +1818,7 @@ var_2		= word ptr -2
 		mov	word_12F30, 1Ch
 		push	600050h
 		call	sub_B1BA
-		push	700058h
-		push	0Fh
-		push	ds
-		push	offset aSETUP_BGM_HEAD ; "　　　　　使用する音源を選択して下さい・...
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_BGM_HEAD
 		mov	word_12F30, 0Ah
 		mov	word_12F32, 4
 		push	200080h
@@ -2489,8 +2485,8 @@ loc_BF14:
 		mov	dx, word ptr _MUSIC_TITLES[bx]
 		mov	[bp+var_2], ax
 		mov	[bp+var_4], dx
-		add	si, 60h
-		push	0Ch
+		add	si, 96
+		push	12
 		push	si
 		mov	al, [bp+var_5]
 		mov	ah, 0
@@ -2544,15 +2540,9 @@ loc_BF6B:
 		add	ax, 2
 		cmp	ax, si
 		jg	short loc_BF55
-		push	0C0050h
-		push	5
-		pushd	[MUSICROOM_UP]
-		call	graph_putsa_fx
-		push	0C0120h
-		push	5
-		pushd	[MUSICROOM_DOWN]
-		call	graph_putsa_fx
-		push	0C0020h
+		call	graph_putsa_fx pascal, (12 shl 16) or 80, 5, large [MUSICROOM_UP]
+		call	graph_putsa_fx pascal, (12 shl 16) or 288, 5, large [MUSICROOM_DOWN]
+		push	(12 shl 16) or 32
 		push	3
 		mov	bx, music_game
 		shl	bx, 2
@@ -2575,11 +2565,7 @@ draw_cmt_lines	proc pascal near
 
 		push	si
 		push	di
-		push	1400020h
-		push	7
-		push	ds
-		push	offset _music_cmt
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, (320 shl 16) or 32, 7, ds, offset _music_cmt
 		mov	si, offset _music_cmt + MUSIC_CMT_LINE_LEN
 		mov	di, 1
 		mov	@@y, 180
@@ -2589,12 +2575,7 @@ draw_cmt_lines	proc pascal near
 loc_C351:
 		cmp	byte ptr [si], ';'
 		jz	short loc_C365
-		push	320
-		push	@@y
-		push	7
-		push	ds
-		push	si
-		call	graph_putsa_fx
+		call	graph_putsa_fx pascal, 320, @@y, 7, ds, si
 
 loc_C365:
 		inc	di
@@ -4428,7 +4409,8 @@ op_02_TEXT	ends
 _menu_sel	db 0
 _quit	db 0
 _main_menu_unused_1	db 1
-MENU_DESC		dd aMENU_START		; "ゲームを開始します"
+public _MENU_DESC
+_MENU_DESC		dd aMENU_START		; "ゲームを開始します"
 		dd aMENU_START_EXTRA	; "エキストラステージを開始します"
 		dd aMENU_HISCORE	; "現在のハイスコアを表\示します"
 		dd aMENU_MUSICROOM		; "音楽室に入ります"

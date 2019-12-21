@@ -1019,15 +1019,15 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	ax, [bp+arg_0]
-		mov	bx, 46h	; 'F'
+		mov	bx, 70
 		cwd
 		idiv	bx
-		cmp	dx, 32h	; '2'
+		cmp	dx, 50
 		jge	short loc_A954
 		push	ds
 		push	offset aVgvhvsb@vjvdvx ; " ÇgÇhÇsÅ@ÇjÇdÇx"
-		push	2F0132h
-		push	0F4h
+		push	(2Fh shl 16) or 306
+		push	244
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		pop	bp
@@ -1051,8 +1051,8 @@ sub_A92C	endp
 sub_A96A	proc far
 
 var_14		= byte ptr -14h
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 arg_0		= word ptr  6
 arg_2		= word ptr  8
 
@@ -1066,11 +1066,11 @@ arg_2		= word ptr  8
 		push	offset off_124CD
 		mov	cx, 10h
 		call	SCOPY@
-		mov	[bp+var_2], 0F4h
+		mov	[bp+@@x], 244
 		mov	ax, si
 		imul	ax, 14h
-		add	ax, 114h
-		mov	[bp+var_4], ax
+		add	ax, 276
+		mov	[bp+@@y], ax
 		mov	bx, si
 		shl	bx, 2
 		lea	ax, [bp+var_14]
@@ -1079,8 +1079,8 @@ arg_2		= word ptr  8
 		mov	ax, [bp+arg_2]
 		or	ax, 30h
 		push	ax
-		push	[bp+var_4]
-		push	[bp+var_2]
+		push	[bp+@@y]
+		push	[bp+@@x]
 		call	graph_putsa_fx
 		add	sp, 0Ah
 		pop	si
