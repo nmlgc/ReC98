@@ -4151,8 +4151,6 @@ include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
 include th02/music/music[bss].asm
-public _screen_back_B
-_screen_back_B	dw ?
 include th03/music/cmt_back[bss].asm
 include th02/music/music_cmt[bss].asm
 word_FB84	dw ?

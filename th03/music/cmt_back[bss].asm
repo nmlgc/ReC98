@@ -1,3 +1,6 @@
+public _screen_back_B
+_screen_back_B	dw ?
+
 public _cmt_back
 _cmt_back	label dword
 cmt_back_PL_B	dd ?

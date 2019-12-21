@@ -4487,18 +4487,6 @@ include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
 include th04/hardware/egccopyr[bss].asm
 include th04/formats/cdg[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
 		dd    ?	;
@@ -4518,12 +4506,7 @@ include th04/zunsoft[bss].asm
 include th02/music/music[bss].asm
 byte_12DBE	db ?
 		db    ?	;
-public _screen_back_B
-_screen_back_B	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/music/cmt_back[bss].asm
 include th02/music/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?

@@ -4483,18 +4483,6 @@ include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th04/hardware/egccopyr[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
 		dd    ?	;
@@ -4526,12 +4514,7 @@ include th04/zunsoft[bss].asm
 include th02/music/music[bss].asm
 byte_13E96	db ?
 		db ?
-public _screen_back_B
-_screen_back_B	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/music/cmt_back[bss].asm
 include th02/music/music_cmt[bss].asm
 word_1403A	dw ?
 word_1403C	dw ?
