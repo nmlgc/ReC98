@@ -728,26 +728,19 @@ loc_AFA0:
 
 loc_AFA4:
 		call	super_entry_bfnt
-		push	ds
-		push	offset aMikod_bft ; "mikod.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aMiko32_bft ; "miko32.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aMiko16_bft ; "miko16.bft"
-		call	super_entry_bfnt
-		mov	si, 14h
+		call	super_entry_bfnt pascal, ds, offset aMikod_bft ; "mikod.bft"
+		call	super_entry_bfnt pascal, ds, offset aMiko32_bft ; "miko32.bft"
+		call	super_entry_bfnt pascal, ds, offset aMiko16_bft ; "miko16.bft"
+		mov	si, 20
 		jmp	short loc_AFD0
 ; ---------------------------------------------------------------------------
 
 loc_AFC9:
-		push	si
-		call	super_convert_tiny
+		call	super_convert_tiny pascal, si
 		inc	si
 
 loc_AFD0:
-		cmp	si, 78h	; 'x'
+		cmp	si, 120
 		jl	short loc_AFC9
 
 loc_AFD5:
@@ -772,9 +765,7 @@ loc_B003:
 		mov	al, es:[bx+12h]
 		les	bx, off_213E0
 		mov	es:[bx+2], al
-		push	ds
-		push	offset aSt00_bft ; "st00.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt00_bft ; "st00.bft"
 		call	stage1_setup
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+12h], 30h ; '0'
@@ -793,9 +784,7 @@ loc_B044:
 loc_B04B:
 		mov	word_2CFF4, 9
 		call	cdg_load_all pascal, 8, ds, offset aBss1_cd2
-		push	ds
-		push	offset aSt01_bft ; "st01.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt01_bft ; "st01.bft"
 		call	stage2_setup
 		push	ds
 		push	offset aSt01_mpn ; "st01.mpn"
@@ -805,9 +794,7 @@ loc_B04B:
 loc_B071:
 		mov	word_2CFF4, 9
 		call	cdg_load_all pascal, 8, ds, offset aBss2_cd2
-		push	ds
-		push	offset aSt02_bft ; "st02.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt02_bft ; "st02.bft"
 		call	stage3_setup
 		push	ds
 		push	offset aSt02_mpn ; "st02.mpn"
@@ -831,9 +818,7 @@ loc_B0AC:
 
 loc_B0B2:
 		call	cdg_load_all
-		push	ds
-		push	offset aSt03_bft ; "st03.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt03_bft ; "st03.bft"
 		call	stage4_setup
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
@@ -845,9 +830,7 @@ loc_B0B2:
 loc_B0D4:
 		mov	word_2CFF4, 9
 		call	cdg_load_all pascal, 8, ds, offset aBss4_cd2
-		push	ds
-		push	offset aSt04_bft ; "st04.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt04_bft ; "st04.bft"
 		call	stage5_setup
 		push	ds
 		push	offset aSt04_mpn ; "st04.mpn"
@@ -856,9 +839,7 @@ loc_B0D4:
 
 loc_B0F9:
 		mov	word_2CFF4, 9
-		push	ds
-		push	offset aSt05_bft ; "st05.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt05_bft ; "st05.bft"
 		call	cdg_load_all pascal, 8, ds, offset aBss5_cd2
 		call	stage6_setup
 		push	ds
@@ -868,9 +849,7 @@ loc_B0F9:
 
 loc_B11E:
 		mov	word_2CFF4, 9
-		push	ds
-		push	offset aSt06_bft ; "st06.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt06_bft ; "st06.bft"
 		call	cdg_load_all pascal, 8, ds, offset aBss6_cd2
 		call	stagex_setup
 		push	ds
@@ -988,8 +967,7 @@ sub_B29E	proc near
 		call	main_01:sub_CF1E
 		call	main_01:std_free
 		call	main_01:map_free
-		push	800100h
-		call	super_clean
+		call	super_clean pascal, (128 shl 16) or 256
 		mov	si, 8
 		jmp	short loc_B2C7
 ; ---------------------------------------------------------------------------
@@ -2798,7 +2776,7 @@ loc_C7E6:
 		mov	bx, 5
 		xor	dx, dx
 		div	bx
-		add	dx, 93h
+		add	dx, 147
 		push	dx
 		call	super_roll_put
 		mov	ax, _midboss_pos.cur.y
@@ -2807,7 +2785,7 @@ loc_C7E6:
 		mov	si, ax
 		push	di
 		push	ax
-		push	92h
+		push	146
 		jmp	short loc_C7DE
 ; ---------------------------------------------------------------------------
 
@@ -2819,7 +2797,7 @@ loc_C836:
 		mov	bx, 5
 		xor	dx, dx
 		div	bx
-		add	dx, 93h
+		add	dx, 147
 		push	dx
 		pushd	PLANE_PUT or GC_BRGI
 		call	super_roll_put_1plane
@@ -2851,7 +2829,7 @@ midboss1_render	endp
 
 midboss3_render	proc near
 
-var_2		= word ptr -2
+@@y		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -2870,7 +2848,7 @@ var_2		= word ptr -2
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
+		mov	[bp+@@y], ax
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_C8D2
 		call	main_01:sub_11A9A
@@ -2880,7 +2858,7 @@ var_2		= word ptr -2
 loc_C8D2:
 		cmp	_midboss_phase, 2
 		ja	short loc_C946
-		mov	si, 90h
+		mov	si, 144
 		cmp	_midboss_sprite, 1
 		jnz	short loc_C91E
 		mov	ax, _midboss_phase_frame
@@ -2917,15 +2895,12 @@ loc_C906:
 loc_C91E:
 		cmp	_midboss_damage_this_frame, 0
 		jnz	short loc_C931
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	super_roll_put
+		call	super_roll_put pascal, di, [bp+@@y], si
 		jmp	short loc_C946
 ; ---------------------------------------------------------------------------
 
 loc_C931:
-		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
+		call	super_roll_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 
 loc_C946:
@@ -2942,9 +2917,9 @@ midboss3_render	endp
 
 midbossx_render	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@patnum		= word ptr -6
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	6, 0
 		cmp	_midboss_pos.cur.y, (-16 shl 4)
@@ -2956,20 +2931,17 @@ var_2		= word ptr -2
 		mov	ax, _midboss_pos.cur.x
 		sar	ax, 4
 		add	ax, 16
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, _midboss_pos.cur.y
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		mov	al, frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 94h
-		mov	[bp+var_6], ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	ax
-		call	super_roll_put
+		add	ax, 148
+		mov	[bp+@@patnum], ax
+		call	super_roll_put pascal, [bp+@@x], [bp+@@y], ax
 
 locret_C999:
 		leave
@@ -3310,7 +3282,7 @@ include th04/tiles_render_all.asm
 
 midboss2_render	proc near
 
-var_2		= word ptr -2
+@@y		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -3323,7 +3295,7 @@ var_2		= word ptr -2
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
+		mov	[bp+@@y], ax
 		cmp	_midboss_phase, 2
 		ja	short loc_CCD2
 		cmp	_midboss_sprite, 0
@@ -3365,15 +3337,12 @@ loc_CCA8:
 loc_CCAA:
 		cmp	_midboss_damage_this_frame, 0
 		jnz	short loc_CCBD
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	super_roll_put
+		call	super_roll_put pascal, di, [bp+@@y], si
 		jmp	short loc_CCD2
 ; ---------------------------------------------------------------------------
 
 loc_CCBD:
-		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
+		call	super_roll_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 
 loc_CCD2:
@@ -3528,7 +3497,7 @@ sub_CD36	endp
 
 midboss4_render	proc near
 
-var_2		= word ptr -2
+@@y		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -3547,7 +3516,7 @@ var_2		= word ptr -2
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
+		mov	[bp+@@y], ax
 		cmp	_midboss_phase, 2
 		ja	short loc_CE85
 		mov	al, _midboss_sprite
@@ -3561,15 +3530,12 @@ var_2		= word ptr -2
 loc_CE5B:
 		cmp	_midboss_damage_this_frame, 0
 		jnz	short loc_CE6E
-		push	di
-		push	[bp+var_2]
-		push	si
-		call	super_roll_put
+		call	super_roll_put pascal, di, [bp+@@y], si
 		jmp	short loc_CE8F
 ; ---------------------------------------------------------------------------
 
 loc_CE6E:
-		call	super_roll_put_1plane pascal, di, [bp+var_2], si, large PLANE_PUT or GC_BRGI
+		call	super_roll_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 		mov	_midboss_damage_this_frame, 0
 		jmp	short loc_CE8F
 ; ---------------------------------------------------------------------------
@@ -4047,8 +4013,8 @@ sub_D1BC	proc near
 
 var_18		= byte ptr -18h
 var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@y		= word ptr -6
+@@x		= word ptr -4
 var_2		= word ptr -2
 arg_0		= byte ptr  4
 
@@ -4272,11 +4238,11 @@ loc_D3A6:
 loc_D3B0:
 		mov	word_255D6, 0	; jumptable 0000D1EC case 98
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@x]
 		push	ax
 		call	main_01:sub_D0CA
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@y]
 		push	ax
 		call	main_01:sub_D193
 		push	ss
@@ -4285,10 +4251,7 @@ loc_D3B0:
 		call	main_01:sub_D193
 		push	1
 		call	frame_delay
-		push	[bp+var_4]
-		push	[bp+var_6]
-		push	[bp+var_2]
-		call	super_roll_put
+		call	super_roll_put pascal, [bp+@@x], [bp+@@y], [bp+var_2]
 
 loc_D3E3:
 		jmp	loc_D528	; default
@@ -4372,8 +4335,7 @@ loc_D47B:
 ; ---------------------------------------------------------------------------
 
 loc_D498:
-		push	800100h	; jumptable 0000D1EC case 99
-		call	super_clean
+		call	super_clean pascal, (128 shl 16) or 256	; jumptable 0000D1EC case 99
 		jmp	short loc_D508
 ; ---------------------------------------------------------------------------
 
@@ -6836,10 +6798,7 @@ loc_E8D8:
 		mov	di, ax
 		cmp	_boss_damage_this_frame, 0
 		jnz	short loc_E906
-		push	si
-		push	ax
-		push	80h
-		call	super_put
+		call	super_put pascal, si, ax, 128
 		jmp	loc_EA5B
 ; ---------------------------------------------------------------------------
 
@@ -6860,15 +6819,12 @@ loc_E91D:
 		cwd
 		idiv	bx
 		add	ax, ax
-		add	ax, 81h
+		add	ax, 129
 		mov	[bp+var_2], ax
 		cmp	_boss_damage_this_frame, 0
 		jnz	short loc_E961
-		push	si
-		push	di
-		push	ax
-		call	super_put
-		lea	ax, [si+30h]
+		call	super_put pascal, si, di, ax
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	ax, [bp+var_2]
@@ -6884,7 +6840,7 @@ loc_E961:
 		push	[bp+var_2]
 		pushd	PLANE_PUT or GC_BRGI
 		call	super_put_1plane
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	ax, [bp+var_2]
@@ -6921,10 +6877,7 @@ loc_E98E:
 		push	dx
 		call	grcg_circlefill
 		GRCG_OFF_CLOBBERING dx
-		push	si
-		push	di
-		push	80h
-		call	super_put
+		call	super_put pascal, si, di, 128
 		jmp	short loc_EA5B
 ; ---------------------------------------------------------------------------
 
@@ -6969,10 +6922,7 @@ loc_EA0D:
 		push	ax
 		push	[bp+var_2]
 		call	grcg_circlefill
-		push	si
-		push	di
-		push	80h
-		call	super_put
+		call	super_put pascal, si, di, 128
 
 loc_EA55:
 		GRCG_OFF_CLOBBERING dx
@@ -7374,10 +7324,7 @@ loc_ED01:
 		mov	[bp+var_4], ax
 		cmp	word ptr [si+16h], 0
 		jnz	short loc_ED4B
-		push	[bp+var_2]
-		push	ax
-		push	word ptr [si+6]
-		call	super_roll_put
+		call	super_roll_put pascal, [bp+var_2], ax, word ptr [si+6]
 		jmp	short loc_ED64
 ; ---------------------------------------------------------------------------
 
@@ -10667,7 +10614,7 @@ sub_105B9	endp
 
 sub_10713	proc near
 
-var_5		= byte ptr -5
+@@patnum		= byte ptr -5
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -10691,7 +10638,7 @@ loc_10730:
 		cmp	word ptr [si+8], 1800h
 		jge	loc_107D0
 		mov	al, [si+0Eh]
-		mov	[bp+var_5], al
+		mov	[bp+@@patnum], al
 		cmp	byte ptr [si+25h], 1
 		jbe	short loc_10776
 		mov	al, [si+1]
@@ -10712,7 +10659,7 @@ loc_10730:
 
 loc_10770:
 		mov	al, [si+27h]
-		add	[bp+var_5], al
+		add	[bp+@@patnum], al
 
 loc_10776:
 		mov	ax, [si+2]
@@ -10733,7 +10680,7 @@ loc_10776:
 		jnz	short loc_107B7
 		push	di
 		push	ax
-		mov	al, [bp+var_5]
+		mov	al, [bp+@@patnum]
 		mov	ah, 0
 		push	ax
 		call	super_roll_put
@@ -10743,7 +10690,7 @@ loc_10776:
 loc_107B7:
 		push	di
 		push	[bp+var_4]
-		mov	al, [bp+var_5]
+		mov	al, [bp+@@patnum]
 		mov	ah, 0
 		push	ax
 		pushd	PLANE_PUT or GC_BRGI
@@ -11790,15 +11737,9 @@ loc_11661:
 		sar	ax, 4
 		add	ax, -32
 		mov	di, ax
-		push	si
-		push	ax
-		push	88h
-		call	super_put
-		lea	ax, [si+30h]
-		push	ax
-		push	di
-		push	89h
-		call	super_put
+		call	super_put pascal, si, ax, 136
+		lea	ax, [si+48]
+		call	super_put pascal, ax, di, 137
 
 loc_1168E:
 		pop	di
@@ -11849,12 +11790,9 @@ var_2		= word ptr -2
 		idiv	bx
 		pop	dx
 		add	dx, ax
-		add	dx, 92h
+		add	dx, 146
 		mov	[bp+var_2], dx
-		push	si
-		push	di
-		push	dx
-		call	super_put
+		call	super_put pascal, si, di, dx
 		cmp	_boss_phase, 0
 		jnz	loc_11961
 		cmp	_boss_phase_frame, 128
@@ -11931,10 +11869,7 @@ loc_1188D:
 loc_1189B:
 		cmp	_boss_damage_this_frame, 0
 		jnz	short loc_118AE
-		push	si
-		push	di
-		push	[bp+var_2]
-		call	super_put
+		call	super_put pascal, si, di, [bp+var_2]
 		jmp	short loc_118BE
 ; ---------------------------------------------------------------------------
 
@@ -12054,10 +11989,7 @@ var_2		= word ptr -2
 		pop	dx
 		add	dx, ax
 		mov	[bp+var_2], dx
-		push	si
-		push	di
-		push	dx
-		call	super_put
+		call	super_put pascal, si, di, dx
 		cmp	_boss_phase, 0
 		jnz	loc_11A90
 		cmp	_boss_phase_frame, 192
@@ -12114,10 +12046,7 @@ loc_11A12:
 		mov	[bp+var_2], dx
 		cmp	_boss_damage_this_frame, 0
 		jnz	short loc_11A57
-		push	si
-		push	di
-		push	dx
-		call	super_put
+		call	super_put pascal, si, di, dx
 		jmp	short loc_11A90
 ; ---------------------------------------------------------------------------
 
@@ -12242,8 +12171,8 @@ sub_11A9A	endp
 
 sub_11B44	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -12259,32 +12188,32 @@ loc_11B52:
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 10h
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		cmp	byte ptr [si], 1
 		jnz	short loc_11BAD
 		cmp	word ptr [si+16h], 0
 		jnz	short loc_11B8E
-		push	[bp+var_2]
+		push	[bp+@@x]
 		push	ax
 		mov	ax, [si+0Eh]
 		shr	ax, 1
 		and	ax, 3
-		add	ax, 0BAh
+		add	ax, 186
 		push	ax
 		call	super_put
 		jmp	short loc_11BCD
 ; ---------------------------------------------------------------------------
 
 loc_11B8E:
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@x]
+		push	[bp+@@y]
 		mov	ax, [si+0Eh]
 		shr	ax, 1
 		and	ax, 3
-		add	ax, 0BAh
+		add	ax, 186
 		push	ax
 		pushd	PLANE_PUT or GC_BRGI
 		call	super_put_1plane
@@ -12292,8 +12221,8 @@ loc_11B8E:
 ; ---------------------------------------------------------------------------
 
 loc_11BAD:
-		push	[bp+var_2]
-		push	[bp+var_4]
+		push	[bp+@@x]
+		push	[bp+@@y]
 		mov	al, [si]
 		mov	ah, 0
 		mov	bx, 4
@@ -12373,16 +12302,16 @@ yuuka6_fg_render	proc near
 loc_11C57:
 		cmp	byte_25A08, 0
 		jz	short loc_11C7A
-		lea	ax, [si+18h]
+		lea	ax, [si+24]
 		push	ax
-		lea	ax, [di+18h]
+		lea	ax, [di+24]
 		push	ax
 		mov	al, frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 0B6h
+		add	ax, 182
 		push	ax
 		call	super_put
 
@@ -12401,7 +12330,7 @@ loc_11C91:
 		mov	ah, 0
 		push	ax
 		call	super_put
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	al, _boss_sprite
@@ -12420,7 +12349,7 @@ loc_11CB1:
 		push	ax
 		pushd	PLANE_PUT or GC_R
 		call	super_put_1plane
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	al, _boss_sprite
@@ -12466,7 +12395,7 @@ loc_11D22:
 		mov	ah, 0
 		push	ax
 		call	super_put
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	al, _boss_sprite
@@ -12485,7 +12414,7 @@ loc_11D42:
 		push	ax
 		pushd	PLANE_PUT or GC_R
 		call	super_put_1plane
-		lea	ax, [si+30h]
+		lea	ax, [si+48]
 		push	ax
 		push	di
 		mov	al, _boss_sprite
@@ -12559,7 +12488,7 @@ sub_11DE6	endp
 
 elly_fg_render	proc near
 
-var_2		= word ptr -2
+@@patnum	= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -12610,30 +12539,27 @@ loc_11E71:
 		jnz	short loc_11EC1
 		cmp	motion_25A28.cur.x, 0
 		jl	short loc_11EC1
-		cmp	motion_25A28.cur.x, 1800h
+		cmp	motion_25A28.cur.x, (384 shl 4)
 		jge	short loc_11EC1
 		cmp	motion_25A28.cur.y, 0
 		jl	short loc_11EC1
-		cmp	motion_25A28.cur.y, 1700h
+		cmp	motion_25A28.cur.y, (368 shl 4)
 		jge	short loc_11EC1
 		mov	ax, motion_25A28.cur.x
 		sar	ax, 4
 		mov	si, ax
 		mov	ax, motion_25A28.cur.y
 		sar	ax, 4
-		add	ax, 0FFF0h
+		add	ax, -16
 		mov	di, ax
 		mov	al, frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 8Eh
-		mov	[bp+var_2], ax
-		push	si
-		push	di
-		push	ax
-		call	super_put
+		add	ax, 142
+		mov	[bp+@@patnum], ax
+		call	super_put pascal, si, di, ax
 
 loc_11EC1:
 		call	explosions_small_update_and_render
@@ -14649,9 +14575,9 @@ include th04/item/render.asm
 
 sub_12E37	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@patnum		= word ptr -6
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -14668,11 +14594,11 @@ loc_12E44:
 		jle	short loc_12E86
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_2], ax
+		add	ax, 16
+		mov	[bp+@@x], ax
 		mov	ax, [si+4]
 		sar	ax, 4
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		mov	al, byte_2D03B
 		mov	ah, 0
 		mov	dx, frame
@@ -14680,11 +14606,8 @@ loc_12E44:
 		and	dx, 7
 		shr	dx, 1
 		add	ax, dx
-		mov	[bp+var_6], ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	ax
-		call	super_roll_put
+		mov	[bp+@@patnum], ax
+		call	super_roll_put pascal, [bp+@@x], [bp+@@y], ax
 
 loc_12E86:
 		inc	di
@@ -14706,7 +14629,7 @@ sub_12E37	endp
 
 reimu_fg_render	proc near
 
-var_2		= word ptr -2
+@@patnum	= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -14745,7 +14668,7 @@ loc_12ECF:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 88h
+		add	ax, 136
 		jmp	short loc_12EFE
 ; ---------------------------------------------------------------------------
 
@@ -14754,18 +14677,15 @@ loc_12EF9:
 		mov	ah, 0
 
 loc_12EFE:
-		mov	[bp+var_2], ax
+		mov	[bp+@@patnum], ax
 		cmp	_boss_damage_this_frame, 0
 		jnz	short loc_12F14
-		push	si
-		push	di
-		push	[bp+var_2]
-		call	super_put
+		call	super_put pascal, si, di, [bp+@@patnum]
 		jmp	short loc_12F29
 ; ---------------------------------------------------------------------------
 
 loc_12F14:
-		call	super_put_1plane pascal, si, di, [bp+var_2], large PLANE_PUT or GC_BRGI
+		call	super_put_1plane pascal, si, di, [bp+@@patnum], large PLANE_PUT or GC_BRGI
 		mov	_boss_damage_this_frame, 0
 
 loc_12F29:
@@ -14823,36 +14743,36 @@ var_2		= word ptr -2
 		mov	si, ax
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	loc_1306D
-		cmp	byte ptr word_237F8, 0
+		cmp	amp_237F8, 0
 		jz	short loc_12FE7
 		push	di
 		push	ax
 		mov	al, _boss_sprite
 		mov	ah, 0
 		push	ax
-		mov	al, byte ptr word_237F8
+		mov	al, amp_237F8
 		mov	ah, 0
-		mov	dx, 50h	; 'P'
+		mov	dx, 80
 		sub	dx, ax
 		push	dx
-		push	word_237F8
+		push	word ptr amp_237F8
 		mov	al, _boss_angle
 		mov	ah, 0
 		push	ax
 		call	super_wave_put
-		lea	ax, [di+30h]
+		lea	ax, [di+48]
 		push	ax
 		push	si
 		mov	al, _boss_sprite
 		mov	ah, 0
 		inc	ax
 		push	ax
-		mov	al, byte ptr word_237F8
+		mov	al, amp_237F8
 		mov	ah, 0
-		mov	dx, 50h	; 'P'
+		mov	dx, 80
 		sub	dx, ax
 		push	dx
-		push	word_237F8
+		push	word ptr amp_237F8
 		mov	al, _boss_angle
 		mov	ah, 0
 		push	ax
@@ -14872,7 +14792,7 @@ loc_12FE7:
 		mov	ah, 0
 		push	ax
 		call	super_put
-		lea	ax, [di+30h]
+		lea	ax, [di+48]
 		push	ax
 		push	si
 		mov	al, _boss_sprite
@@ -14894,7 +14814,7 @@ loc_13011:
 		mov	ah, 0
 		push	ax
 		call	super_put
-		lea	ax, [di+30h]
+		lea	ax, [di+48]
 		push	ax
 		push	si
 		mov	al, _boss_sprite
@@ -14913,7 +14833,7 @@ loc_1303C:
 		push	ax
 		pushd	PLANE_PUT or GC_BRGI
 		call	super_put_1plane
-		lea	ax, [di+30h]
+		lea	ax, [di+48]
 		push	ax
 		push	si
 		mov	al, _boss_sprite
@@ -29781,28 +29701,28 @@ loc_1BA49:
 		add	byte ptr word_25A36+1, al
 
 loc_1BA50:
-		cmp	motion_25A28.cur.x, 400h
+		cmp	motion_25A28.cur.x, (64 shl 4)
 		jg	short loc_1BA60
 		mov	byte_25A26, 3
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA60:
-		cmp	motion_25A28.cur.x, 1400h
+		cmp	motion_25A28.cur.x, (320 shl 4)
 		jl	short loc_1BA70
 		mov	byte_25A26, 4
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA70:
-		cmp	motion_25A28.cur.y, 1300h
+		cmp	motion_25A28.cur.y, (304 shl 4)
 		jl	short loc_1BA80
 		mov	byte_25A26, 5
 		jmp	loc_1BBA4
 ; ---------------------------------------------------------------------------
 
 loc_1BA80:
-		cmp	motion_25A28.cur.y, 200h
+		cmp	motion_25A28.cur.y, (32 shl 4)
 		jg	loc_1BBA4
 		mov	byte_25A26, 6
 		jmp	loc_1BBA4
@@ -34334,9 +34254,7 @@ stage1_setup	proc far
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (16 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
-		push	ds
-		push	offset aSt00_bmt ; "st00.bmt"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
 		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	Palettes, 0FFh
@@ -34378,9 +34296,7 @@ stage2_setup	proc far
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
-		push	ds
-		push	offset aSt01_bmt ; "st01.bmt"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt01_bmt ; "st01.bmt"
 		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt01_bb
 		push	(255 shl 16) or 128
@@ -34424,9 +34340,7 @@ stage3_setup	proc far
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
-		push	ds
-		push	offset aSt02_bmt ; "st02.bmt"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt02_bmt ; "st02.bmt"
 		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullfunc_near
@@ -34505,9 +34419,7 @@ loc_1E371:
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_64_56_256_256
-		push	ds
-		push	offset aSt03_bmt ; "st03.bmt"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aSt03_bmt ; "st03.bmt"
 		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_1E3A0
 		push	10h
@@ -34947,8 +34859,7 @@ loc_1E7F2:
 loc_1E801:
 		cmp	stage_id, 6
 		jnz	loc_1E8A4
-		push	800100h
-		call	super_clean
+		call	super_clean pascal, (128 shl 16) or 256
 		call	sub_D6EB
 		cmp	byte_2D01E, 0
 		jnz	short loc_1E89B
@@ -36972,20 +36883,20 @@ loc_1F994:
 		add	_boss_pos.cur.x, ax
 		cmp	_boss_phase_frame, 32
 		jg	short loc_1F9A9
-		mov	al, byte ptr word_237F8
+		mov	al, amp_237F8
 		add	al, 2
 		jmp	short loc_1F9AE
 ; ---------------------------------------------------------------------------
 
 loc_1F9A9:
-		mov	al, byte ptr word_237F8
-		add	al, 0FEh
+		mov	al, amp_237F8
+		add	al, -2
 
 loc_1F9AE:
-		mov	byte ptr word_237F8, al
+		mov	amp_237F8, al
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F9C1
-		mov	byte ptr word_237F8, 0
+		mov	amp_237F8, 0
 		mov	al, 1
 		pop	bp
 		retn
@@ -37038,18 +36949,18 @@ loc_1FA00:
 loc_1FA07:
 		cmp	_boss_phase_frame, 64
 		jg	short loc_1FA14
-		inc	byte ptr word_237F8
+		inc	amp_237F8
 		jmp	short loc_1FA18
 ; ---------------------------------------------------------------------------
 
 loc_1FA14:
-		dec	byte ptr word_237F8
+		dec	amp_237F8
 
 loc_1FA18:
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1FA2F
 		mov	_boss_pos.cur.x, (192 shl 4)
-		mov	byte ptr word_237F8, 0
+		mov	amp_237F8, 0
 		mov	al, 1
 		pop	bp
 		retn
@@ -37958,7 +37869,7 @@ sub_20202	proc near
 		mov	bp, sp
 		cmp	byte_259EF, 0
 		jz	short loc_20220
-		cmp	byte ptr word_237F8, 0
+		cmp	amp_237F8, 0
 		jnz	short loc_20220
 		push	3000300h
 		push	0Ah
@@ -37969,7 +37880,7 @@ sub_20202	proc near
 loc_20220:
 		cmp	_boss_sprite, 0
 		jz	short loc_20233
-		cmp	byte ptr word_237F8, 0
+		cmp	amp_237F8, 0
 		jnz	short loc_20233
 		call	sub_1E64E
 		pop	bp
@@ -38487,7 +38398,7 @@ loc_206B1:
 ; ---------------------------------------------------------------------------
 
 loc_206B6:
-		cmp	byte ptr word_237F8, 0
+		cmp	amp_237F8, 0
 		jnz	short loc_206C9
 		mov	ax, _boss_pos.cur.x
 		mov	_homing_target.x, ax
@@ -39623,7 +39534,8 @@ aSt06bk2_cdg	db 'st06bk2.cdg',0
 aSt06b_bb	db 'st06b.bb',0
 byte_237F6	db 0
 byte_237F7	db 0
-word_237F8	dw 0
+amp_237F8	db 0
+	even
 
 	.data?
 

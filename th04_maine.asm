@@ -4002,7 +4002,7 @@ sub_C3B2	endp
 
 sub_C506	proc near
 
-var_4		= word ptr -4
+@@y		= word ptr -4
 var_2		= word ptr -2
 arg_0		= byte ptr  4
 arg_2		= word ptr  6
@@ -4013,25 +4013,25 @@ arg_2		= word ptr  6
 		mov	si, [bp+arg_2]
 		or	si, si
 		jnz	short loc_C518
-		mov	ax, 60h
+		mov	ax, 96
 		jmp	short loc_C520
 ; ---------------------------------------------------------------------------
 
 loc_C518:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 70h	; 'p'
+		add	ax, 112
 
 loc_C520:
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		cmp	[bp+arg_0], 0
 		jnz	short loc_C52E
-		mov	ax, 0ACh ; '¬'
+		mov	ax, 172
 		jmp	short loc_C531
 ; ---------------------------------------------------------------------------
 
 loc_C52E:
-		mov	ax, 1E0h
+		mov	ax, 480
 
 loc_C531:
 		mov	di, ax
@@ -4055,18 +4055,18 @@ loc_C54B:
 		shl	bx, 3
 		mov	al, [bx+4027h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		cmp	ax, 0Ah
+		add	ax, -160
+		cmp	ax, 10
 		jl	short loc_C589
-		lea	ax, [di-20h]
+		lea	ax, [di-32]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+4027h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	dl, [bp+arg_0]
@@ -4076,15 +4076,15 @@ loc_C54B:
 		call	super_put
 
 loc_C589:
-		lea	ax, [di-10h]
+		lea	ax, [di-16]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+4027h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	al, [bp+arg_0]
@@ -4098,7 +4098,7 @@ loc_C589:
 
 loc_C5B8:
 		push	di
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
@@ -4107,11 +4107,11 @@ loc_C5B8:
 		mov	dl, [bp+arg_0]
 		mov	dh, 0
 		add	ax, dx
-		add	ax, 0FF60h
+		add	ax, -160
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
-		add	di, 10h
+		add	di, 16
 
 loc_C5E0:
 		cmp	[bp+var_2], 0
@@ -4503,9 +4503,7 @@ var_2		= word ptr -2
 		freePISlotLarge	0
 		push	0
 		call	graph_copy_page
-		push	ds
-		push	offset aScnum2_bft ; "scnum2.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_C87A

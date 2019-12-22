@@ -1576,42 +1576,33 @@ arg_2		= word ptr  6
 		push	ax
 		push	10h
 		call	egc_copy_rect_1_to_0
-		push	si
-		push	di
-		push	2
-		call	super_put
+		call	super_put pascal, si, di, 2
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	6
 		call	super_put
-		add	si, 10h
+		add	si, 16
 		mov	[bp+var_2], 1
 		jmp	short loc_B4F5
 ; ---------------------------------------------------------------------------
 
 loc_B4DA:
-		push	si
-		push	di
-		push	0
-		call	super_put
+		call	super_put pascal, si, di, 0
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	3
 		call	super_put
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B4F5:
 		mov	ax, word_11E88
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B4DA
-		push	si
-		push	di
-		push	4
-		call	super_put
+		call	super_put pascal, si, di, 4
 		push	si
 		lea	ax, [di+8]
 		push	ax
@@ -1631,14 +1622,14 @@ sub_B49F	endp
 sub_B519	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@y		= word ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@y]
 		push	si
 		lea	ax, [di+8]
 		push	ax
@@ -1647,32 +1638,23 @@ arg_2		= word ptr  6
 		push	ax
 		push	10h
 		call	egc_copy_rect_1_to_0
-		push	si
-		push	di
-		push	6
-		call	super_put
-		add	si, 10h
+		call	super_put pascal, si, di, 6
+		add	si, 16
 		mov	[bp+var_2], 1
 		jmp	short loc_B55A
 ; ---------------------------------------------------------------------------
 
 loc_B54B:
-		push	si
-		push	di
-		push	3
-		call	super_put
+		call	super_put pascal, si, di, 3
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B55A:
 		mov	ax, word_11E88
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B54B
-		push	si
-		push	di
-		push	7
-		call	super_put
+		call	super_put pascal, si, di, 7
 		pop	di
 		pop	si
 		leave
@@ -1687,7 +1669,7 @@ sub_B519	endp
 sub_B572	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@y		= word ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
@@ -1695,34 +1677,25 @@ arg_2		= word ptr  6
 		push	di
 		mov	ax, [bp+arg_2]
 		mov	[bp+var_2], ax
-		mov	si, [bp+arg_0]
-		push	ax
-		push	si
-		push	5
-		call	super_put
-		add	[bp+var_2], 10h
+		mov	si, [bp+@@y]
+		call	super_put pascal, ax, si, 5
+		add	[bp+var_2], 16
 		mov	di, 1
 		jmp	short loc_B5A3
 ; ---------------------------------------------------------------------------
 
 loc_B593:
-		push	[bp+var_2]
-		push	si
-		push	1
-		call	super_put
+		call	super_put pascal, [bp+var_2], si, 1
 		inc	di
-		add	[bp+var_2], 10h
+		add	[bp+var_2], 16
 
 loc_B5A3:
 		mov	ax, word_11E88
 		dec	ax
 		cmp	ax, di
 		jg	short loc_B593
-		push	[bp+var_2]
-		push	si
-		push	8
-		call	super_put
-		add	si, 10h
+		call	super_put pascal, [bp+var_2], si, 8
+		add	si, 16
 		mov	di, 1
 		jmp	short loc_B5D0
 ; ---------------------------------------------------------------------------
@@ -1756,14 +1729,14 @@ sub_B572	endp
 sub_B5E2	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@y		= word ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@y]
 		push	si
 		push	di
 		mov	ax, word_11E88
@@ -1771,44 +1744,35 @@ arg_2		= word ptr  6
 		push	ax
 		push	20h ; ' '
 		call	egc_copy_rect_1_to_0
+		call	super_put pascal, si, di, 5
 		push	si
-		push	di
-		push	5
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	6
 		call	super_put
-		add	si, 10h
+		add	si, 16
 		mov	[bp+var_2], 1
 		jmp	short loc_B638
 ; ---------------------------------------------------------------------------
 
 loc_B61D:
+		call	super_put pascal, si, di, 1
 		push	si
-		push	di
-		push	1
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	3
 		call	super_put
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B638:
 		mov	ax, word_11E88
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B61D
+		call	super_put pascal, si, di, 8
 		push	si
-		push	di
-		push	8
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	7
 		call	super_put
@@ -2083,9 +2047,7 @@ sub_B9CE	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	ds
-		push	offset aMswin_bft ; "mswin.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aMswin_bft ; "mswin.bft"
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aMs_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -2805,22 +2767,22 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		mov	si, [bp+arg_0]
-		mov	[bp+var_4], 10h
+		mov	[bp+var_4], 16
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+3E17h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		cmp	ax, 0Ah
+		add	ax, -160
+		cmp	ax, 10
 		jl	short loc_C7E0
-		push	8Ch
+		push	140
 		push	di
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+3E17h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -2831,43 +2793,43 @@ loc_C7E0:
 		shl	bx, 3
 		mov	al, [bx+3EDBh]
 		mov	ah, 0
-		add	ax, 0FF60h
-		cmp	ax, 0Ah
+		add	ax, -160
+		cmp	ax, 10
 		jl	short loc_C811
-		push	1C0h
+		push	448
 		push	di
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+3EDBh]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
 		call	super_put
 
 loc_C811:
-		push	9Ch
+		push	156
 		push	di
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+3E17h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
 		call	super_put
-		push	1D0h
+		push	464
 		push	di
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+3EDBh]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
@@ -2878,7 +2840,7 @@ loc_C811:
 
 loc_C854:
 		mov	ax, [bp+var_4]
-		add	ax, 9Ch
+		add	ax, 156
 		push	ax
 		push	di
 		mov	bx, si
@@ -2886,11 +2848,11 @@ loc_C854:
 		add	bx, [bp+var_2]
 		mov	al, [bx+3E10h]
 		mov	ah, 0
-		add	ax, 0FF60h
+		add	ax, -160
 		push	ax
 		call	super_put
 		mov	ax, [bp+var_4]
-		add	ax, 1D0h
+		add	ax, 464
 		push	ax
 		push	di
 		mov	bx, si
@@ -2898,11 +2860,11 @@ loc_C854:
 		add	bx, [bp+var_2]
 		mov	al, [bx+3ED4h]
 		mov	ah, 0
-		add	ax, 0FF60h
+		add	ax, -160
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
-		add	[bp+var_4], 10h
+		add	[bp+var_4], 16
 
 loc_C899:
 		cmp	[bp+var_2], 0
@@ -3129,18 +3091,18 @@ loc_CA5B:
 		jl	short loc_CA56
 		push	9
 		call	sub_C8F5
-		push	1F00178h
+		push	(496 shl 16) or 376
 		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 0Ah
+		add	ax, 10
 		push	ax
 		call	super_put
-		push	2300178h
+		push	(560 shl 16) or 376
 		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 0Bh
+		add	ax, 11
 		push	ax
 		call	super_put
 		pop	si
@@ -3309,12 +3271,8 @@ loc_CC78:
 		les	bx, _humaconfig
 		mov	al, es:[bx+0Fh]
 		mov	_rank, al
-		push	ds
-		push	offset aScnum_bft ; "scnum.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aHi_m_bft ; "hi_m.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
+		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
 score_cleared_load	endp

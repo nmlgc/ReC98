@@ -756,25 +756,20 @@ loc_9E3C:
 loc_9E43:
 		cmp	_input_sp, INPUT_NONE
 		jz	short loc_9E24
-		push	0A00100h
-		push	0
-		call	super_put
-		mov	si, 0B0h ; '∞'
+		call	super_put pascal, large (160 shl 16) or 256, 0
+		mov	si, 176
 		jmp	short loc_9E76
 ; ---------------------------------------------------------------------------
 
 loc_9E5C:
 		push	si
 		call	sub_B10A
-		push	si
-		push	1000002h
-		call	super_put
-		push	1
-		call	frame_delay
+		call	super_put pascal, si, large (256 shl 16) or 2
+		call	frame_delay pascal, 1
 		add	si, 8
 
 loc_9E76:
-		cmp	si, 120h
+		cmp	si, 288
 		jl	short loc_9E5C
 		pop	si
 		pop	bp
@@ -1876,9 +1871,7 @@ var_2		= word ptr -2
 		push	si
 		mov	[bp+var_2], 0
 		mov	[bp+@@page], 0
-		push	ds
-		push	offset aOpwin_bft ; "opwin.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		call	pi_slot_load pascal, 0, ds, offset aTl01_pi
@@ -2031,9 +2024,7 @@ sub_B008	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aOpwin_bft ; "opwin.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
 		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
@@ -2078,22 +2069,19 @@ sub_B0AF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 120h
+		mov	si, 288
 		jmp	short loc_B0D2
 ; ---------------------------------------------------------------------------
 
 loc_B0B8:
 		push	si
 		call	sub_B10A
-		push	si
-		push	1000002h
-		call	super_put
-		push	1
-		call	frame_delay
+		call	super_put pascal, si, large (256 shl 16) or 2
+		call	frame_delay pascal, 1
 		add	si, 8
 
 loc_B0D2:
-		cmp	si, 188h
+		cmp	si, 392
 		jl	short loc_B0B8
 		pop	si
 		pop	bp
@@ -2109,7 +2097,7 @@ sub_B0DB	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 180h
+		mov	si, 384
 		jmp	short loc_B101
 ; ---------------------------------------------------------------------------
 
@@ -2117,15 +2105,12 @@ loc_B0E4:
 		lea	ax, [si+8]
 		push	ax
 		call	sub_B10A
-		push	si
-		push	1000002h
-		call	super_put
-		push	1
-		call	frame_delay
+		call	super_put pascal, si, large (256 shl 16) or 2
+		call	frame_delay pascal, 1
 		sub	si, 8
 
 loc_B101:
-		cmp	si, 118h
+		cmp	si, 280
 		jge	short loc_B0E4
 		pop	si
 		pop	bp
@@ -2643,9 +2628,7 @@ sub_B424	proc near
 		mov	random_seed, eax
 		call	text_clear
 		call	super_free
-		push	ds
-		push	offset aChname_bft ; "chname.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aChname_bft ; "chname.bft"
 		graph_accesspage 0
 		call	graph_clear
 		graph_accesspage 1
@@ -2896,19 +2879,19 @@ sub_B636	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, 88h	; 'ÅE
+		mov	di, 136
 		xor	si, si
 		jmp	short loc_B663
 ; ---------------------------------------------------------------------------
 
 loc_B642:
-		push	100h
+		push	256
 		push	di
 		mov	ax, si
 		add	ax, ax
 		push	ax
 		call	super_put
-		push	140h
+		push	320
 		push	di
 		mov	ax, si
 		add	ax, ax
@@ -2916,7 +2899,7 @@ loc_B642:
 		push	ax
 		call	super_put
 		inc	si
-		add	di, 14h
+		add	di, 20
 
 loc_B663:
 		mov	al, byte_FC68

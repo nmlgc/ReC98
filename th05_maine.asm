@@ -2474,7 +2474,7 @@ sub_B730	endp
 
 sub_B899	proc near
 
-var_4		= word ptr -4
+@@y		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -2490,65 +2490,65 @@ arg_2		= word ptr  6
 		jmp	cs:off_B9B9[bx]
 
 loc_B8B1:
-		mov	di, 0AEh ; 'ｮ'
+		mov	di, 174
 		or	si, si
 		jnz	short loc_B8BD
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8BD:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8C7:
-		mov	di, 1EEh
+		mov	di, 494
 		or	si, si
 		jnz	short loc_B8D3
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8D3:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8DD:
-		mov	di, 0AEh ; 'ｮ'
+		mov	di, 174
 		or	si, si
 		jnz	short loc_B8E9
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8E9:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8F3:
-		mov	di, 1EEh
+		mov	di, 494
 		or	si, si
 		jnz	short loc_B8FF
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_B907
 ; ---------------------------------------------------------------------------
 
 loc_B8FF:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 
 loc_B907:
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 
 loc_B90A:
 		mov	al, byte_15176
@@ -2572,18 +2572,18 @@ loc_B924:
 		shl	bx, 3
 		mov	al, [bx+4F52h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		cmp	ax, 0Ah
+		add	ax, -160
+		cmp	ax, 10
 		jl	short loc_B95E
-		lea	ax, [di-20h]
+		lea	ax, [di-32]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+4F52h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, [bp+arg_0]
@@ -2591,15 +2591,15 @@ loc_B924:
 		call	super_put
 
 loc_B95E:
-		lea	ax, [di-10h]
+		lea	ax, [di-16]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		mov	al, [bx+4F52h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	dx, [bp+arg_0]
@@ -2611,18 +2611,18 @@ loc_B95E:
 
 loc_B989:
 		push	di
-		push	[bp+var_4]
+		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
 		mov	al, [bx+4F4Bh]
 		mov	ah, 0
 		add	ax, [bp+arg_0]
-		add	ax, 0FF60h
+		add	ax, -160
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
-		add	di, 10h
+		add	di, 16
 
 loc_B9AD:
 		cmp	[bp+var_2], 0
@@ -3348,9 +3348,9 @@ sub_BE76	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -6
+@@x		= word ptr -4
+@@patnum		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -3426,21 +3426,21 @@ loc_BF06:
 		mov	eax, [si+2]
 		mov	[si+6],	eax
 		mov	ax, [si+2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
+		add	ax, -16
+		mov	[bp+@@x], ax
 		mov	ax, [si+4]
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
-		mov	[bp+var_6], ax
+		add	ax, -16
+		mov	[bp+@@y], ax
 		mov	ax, [si+14h]
 		shr	ax, 1
-		add	ax, 14h
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 18h
+		add	ax, 20
+		mov	[bp+@@patnum], ax
+		cmp	[bp+@@patnum], 24
 		jl	loc_C141
 		inc	byte ptr [si]
 
@@ -3462,19 +3462,19 @@ loc_BF3E:
 		mov	ax, [si+0Ch]
 		add	[si+4],	ax
 		mov	ax, [si+2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
+		add	ax, -8
+		mov	[bp+@@x], ax
 		mov	ax, [si+4]
 		cwd
 		idiv	bx
-		add	ax, 0FFF8h
-		mov	[bp+var_6], ax
-		cmp	[bp+var_4], 0
+		add	ax, -8
+		mov	[bp+@@y], ax
+		cmp	[bp+@@x], 0
 		jge	short loc_BF9F
-		mov	[bp+var_4], 0
+		mov	[bp+@@x], 0
 		mov	al, 80h
 		sub	al, [si+12h]
 		mov	[si+12h], al
@@ -3483,18 +3483,18 @@ loc_BF3E:
 ; ---------------------------------------------------------------------------
 
 loc_BF9F:
-		cmp	[bp+var_4], 270h
+		cmp	[bp+@@x], 624
 		jl	short loc_BFB8
-		mov	[bp+var_4], 270h
+		mov	[bp+@@x], 624
 		mov	al, 80h
 		sub	al, [si+12h]
 		mov	[si+12h], al
 		mov	word ptr [si+2], 2780h
 
 loc_BFB8:
-		cmp	[bp+var_6], 0
+		cmp	[bp+@@y], 0
 		jge	short loc_BFD2
-		mov	[bp+var_6], 0
+		mov	[bp+@@y], 0
 		mov	al, [si+12h]
 		neg	al
 		mov	[si+12h], al
@@ -3503,9 +3503,9 @@ loc_BFB8:
 ; ---------------------------------------------------------------------------
 
 loc_BFD2:
-		cmp	[bp+var_6], 180h
+		cmp	[bp+@@y], 384
 		jl	short loc_BFEB
-		mov	[bp+var_6], 180h
+		mov	[bp+@@y], 384
 		mov	al, [si+12h]
 		neg	al
 		mov	[si+12h], al
@@ -3515,8 +3515,8 @@ loc_BFEB:
 		mov	ax, [si+14h]
 		shr	ax, 2
 		and	ax, 3
-		add	ax, 1Ch
-		mov	[bp+var_2], ax
+		add	ax, 28
+		mov	[bp+@@patnum], ax
 		mov	ax, [si+10h]
 		sub	ax, [si+4]
 		push	ax
@@ -3645,9 +3645,9 @@ loc_C0CC:
 loc_C102:
 		mov	ax, [si+14h]
 		shr	ax, 2
-		add	ax, 18h
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 1Ch
+		add	ax, 24
+		mov	[bp+@@patnum], ax
+		cmp	[bp+@@patnum], 28
 		jl	short loc_C118
 		inc	byte ptr [si]
 		jmp	short loc_C152
@@ -3657,16 +3657,16 @@ loc_C118:
 		mov	eax, [si+0Eh]
 		mov	[si+6],	eax
 		mov	ax, [si+0Eh]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
+		add	ax, -16
+		mov	[bp+@@x], ax
 		mov	ax, [si+10h]
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
-		mov	[bp+var_6], ax
+		add	ax, -16
+		mov	[bp+@@y], ax
 		jmp	short loc_C141
 ; ---------------------------------------------------------------------------
 
@@ -3677,10 +3677,7 @@ loc_C13D:
 
 loc_C141:
 		inc	word ptr [si+14h]
-		push	[bp+var_4]
-		push	[bp+var_6]
-		push	[bp+var_2]
-		call	super_put_rect
+		call	super_put_rect pascal, [bp+@@x], [bp+@@y], [bp+@@patnum]
 
 loc_C152:
 		inc	di
@@ -3803,15 +3800,9 @@ var_2		= word ptr -2
 		call	pi_slot_free pascal, 0
 		push	0
 		call	graph_copy_page
-		push	ds
-		push	offset aScnum_bft ; "scnum.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aSctm0_bft ; "sctm0.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aSctm1_bft ; "sctm1.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
+		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
+		call	super_entry_bfnt pascal, ds, offset aSctm1_bft ; "sctm1.bft"
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short loc_C256
@@ -7226,8 +7217,8 @@ sub_DFEC	proc near
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -7273,21 +7264,21 @@ var_2		= word ptr -2
 loc_E053:
 		mov	bx, [bp+var_A]
 		mov	ax, [bx]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, word_151D6
-		add	ax, 0FFFCh
-		mov	[bp+var_2], ax
+		add	ax, -4
+		mov	[bp+@@x], ax
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, word_151D8
-		add	ax, 0FFFCh
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
+		add	ax, -4
+		mov	[bp+@@y], ax
+		push	[bp+@@x]
 		push	ax
 		mov	ax, di
 		mov	bx, 2
@@ -7317,20 +7308,20 @@ loc_E0A6:
 		cwd
 		idiv	bx
 		add	ax, word_151D6
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		mov	bx, [bp+var_8]
 		mov	ax, [bx+2]
 		mov	bx, 10h
 		cwd
 		idiv	bx
 		add	ax, word_151D8
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		push	GC_RMW
 		mov	ax, [bp+var_6]
 		inc	[bp+var_6]
 		push	ax
 		call	grcg_setcolor
-		call	grcg_circlefill pascal, [bp+var_2], [bp+var_4], 16
+		call	grcg_circlefill pascal, [bp+@@x], [bp+@@y], 16
 		GRCG_OFF_CLOBBERING dx
 
 loc_E0F6:
@@ -7343,18 +7334,18 @@ loc_E0FB:
 		cmp	dword ptr [si],	0FFFFC190h
 		jz	loc_E18B
 		mov	eax, [si]
-		mov	ebx, 10h
+		mov	ebx, 16
 		cdq
 		idiv	ebx
 		add	ax, word_151D6
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@x], ax
 		mov	eax, [si+4]
 		cdq
 		idiv	ebx
 		add	ax, word_151D8
-		add	ax, 0FFF0h
-		mov	[bp+var_4], ax
+		add	ax, -16
+		mov	[bp+@@y], ax
 		cmp	byte ptr [si+13h], 10h
 		jb	short loc_E161
 		mov	al, byte_151CC
@@ -7366,21 +7357,18 @@ loc_E0FB:
 		idiv	bx
 		add	dx, 8
 		mov	di, dx
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	dx
-		call	super_put_rect
+		call	super_put_rect pascal, [bp+@@x], [bp+@@y], dx
 		inc	byte_151CC
 		jmp	short loc_E18B
 ; ---------------------------------------------------------------------------
 
 loc_E161:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		mov	ax, [bp+var_2]
-		add	ax, 10h
+		mov	ax, [bp+@@x]
+		add	ax, 16
 		push	ax
-		mov	ax, [bp+var_4]
-		add	ax, 10h
+		mov	ax, [bp+@@y]
+		add	ax, 16
 		push	ax
 		mov	al, [si+13h]
 		mov	ah, 0
@@ -7428,15 +7416,15 @@ loc_E193:
 		cdq
 		idiv	ebx
 		add	ax, word_151D6
-		add	ax, 0FFFCh
-		mov	[bp+var_2], ax
+		add	ax, -4
+		mov	[bp+@@x], ax
 		mov	eax, [si+4]
 		cdq
 		idiv	ebx
 		add	ax, word_151D8
-		add	ax, 0FFFCh
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
+		add	ax, -4
+		mov	[bp+@@y], ax
+		push	[bp+@@x]
 		push	ax
 		push	word ptr [si+0Ch]
 		call	sub_2DB6
@@ -7743,19 +7731,14 @@ var_2		= word ptr -2
 		call	cdg_load_all_noalpha pascal,  8, ds, offset aStf08_cdg
 		call	cdg_load_all_noalpha pascal,  9, ds, offset aStf09_cdg
 		call	cdg_load_all_noalpha pascal, 10, ds, offset aStf10_cdg
-		push	ds
-		push	offset aStf01_bft ; "stf01.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aStf00_bft ; "stf00.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aStf01_bft ; "stf01.bft"
+		call	super_entry_bfnt pascal, ds, offset aStf00_bft ; "stf00.bft"
 		xor	si, si
 		jmp	short loc_E550
 ; ---------------------------------------------------------------------------
 
 loc_E549:
-		push	si
-		call	super_convert_tiny
+		call	super_convert_tiny pascal, si
 		inc	si
 
 loc_E550:

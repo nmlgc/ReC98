@@ -2981,9 +2981,7 @@ loc_B189:
 		graph_accesspage 0
 		mov	dx, 0A4h
 		out	dx, al
-		push	ds
-		push	offset aEndft_bft ; "endft.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aEndft_bft ; "endft.bft"
 		push	64h ; 'd'
 		call	frame_delay
 		les	bx, _mikoconfig

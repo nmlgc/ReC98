@@ -1503,14 +1503,14 @@ _main		endp
 sub_B077	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y		= word ptr  4
+@@x		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
 		push	si
 		push	di
 		mov	ax, word_12F30
@@ -1518,42 +1518,33 @@ arg_2		= word ptr  6
 		push	ax
 		push	10h
 		call	egc_copy_rect_1_to_0
-		push	si
-		push	di
-		push	2
-		call	super_put
+		call	super_put pascal, si, di, 2
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	6
 		call	super_put
-		add	si, 10h
+		add	si, 16
 		mov	[bp+var_2], 1
 		jmp	short loc_B0CD
 ; ---------------------------------------------------------------------------
 
 loc_B0B2:
-		push	si
-		push	di
-		push	0
-		call	super_put
+		call	super_put pascal, si, di, 0
 		push	si
 		lea	ax, [di+8]
 		push	ax
 		push	3
 		call	super_put
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B0CD:
 		mov	ax, word_12F30
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B0B2
-		push	si
-		push	di
-		push	4
-		call	super_put
+		call	super_put pascal, si, di, 4
 		push	si
 		lea	ax, [di+8]
 		push	ax
@@ -1573,14 +1564,14 @@ sub_B077	endp
 sub_B0F1	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y		= word ptr  4
+@@x		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
 		push	si
 		lea	ax, [di+8]
 		push	ax
@@ -1589,32 +1580,23 @@ arg_2		= word ptr  6
 		push	ax
 		push	10h
 		call	egc_copy_rect_1_to_0
-		push	si
-		push	di
-		push	6
-		call	super_put
-		add	si, 10h
+		call	super_put pascal, si, di, 6
+		add	si, 16
 		mov	[bp+var_2], 1
 		jmp	short loc_B132
 ; ---------------------------------------------------------------------------
 
 loc_B123:
-		push	si
-		push	di
-		push	3
-		call	super_put
+		call	super_put pascal, si, di, 3
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B132:
 		mov	ax, word_12F30
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B123
-		push	si
-		push	di
-		push	7
-		call	super_put
+		call	super_put pascal, si, di, 7
 		pop	di
 		pop	si
 		leave
@@ -1629,29 +1611,23 @@ sub_B0F1	endp
 sub_B14A	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y		= word ptr  4
+@@x		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@x]
 		mov	[bp+var_2], ax
-		mov	si, [bp+arg_0]
-		push	ax
-		push	si
-		push	5
-		call	super_put
+		mov	si, [bp+@@y]
+		call	super_put pascal, ax, si, 5
 		add	[bp+var_2], 10h
 		mov	di, 1
 		jmp	short loc_B17B
 ; ---------------------------------------------------------------------------
 
 loc_B16B:
-		push	[bp+var_2]
-		push	si
-		push	1
-		call	super_put
+		call	super_put pascal, [bp+var_2], si, 1
 		inc	di
 		add	[bp+var_2], 10h
 
@@ -1660,17 +1636,14 @@ loc_B17B:
 		dec	ax
 		cmp	ax, di
 		jg	short loc_B16B
-		push	[bp+var_2]
-		push	si
-		push	8
-		call	super_put
+		call	super_put pascal, [bp+var_2], si, 8
 		add	si, 10h
 		mov	di, 1
 		jmp	short loc_B1A8
 ; ---------------------------------------------------------------------------
 
 loc_B196:
-		push	[bp+arg_2]
+		push	[bp+@@x]
 		push	si
 		call	sub_B077
 		push	1
@@ -1698,14 +1671,14 @@ sub_B14A	endp
 sub_B1BA	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@y		= word ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@y]
 		push	si
 		push	di
 		mov	ax, word_12F30
@@ -1713,12 +1686,9 @@ arg_2		= word ptr  6
 		push	ax
 		push	20h ; ' '
 		call	egc_copy_rect_1_to_0
+		call	super_put pascal, si, di, 5
 		push	si
-		push	di
-		push	5
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	6
 		call	super_put
@@ -1728,29 +1698,23 @@ arg_2		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_B1F5:
+		call	super_put pascal, si, di, 1
 		push	si
-		push	di
-		push	1
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	3
 		call	super_put
 		inc	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_B210:
 		mov	ax, word_12F30
 		dec	ax
 		cmp	ax, [bp+var_2]
 		jg	short loc_B1F5
+		call	super_put pascal, si, di, 8
 		push	si
-		push	di
-		push	8
-		call	super_put
-		push	si
-		lea	ax, [di+10h]
+		lea	ax, [di+16]
 		push	ax
 		push	7
 		call	super_put
@@ -3320,7 +3284,7 @@ sub_CA1B	proc near
 
 var_2		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y		= word ptr  6
 arg_4		= word ptr  8
 
 		enter	2, 0
@@ -3332,18 +3296,18 @@ arg_4		= word ptr  8
 		shl	bx, 3
 		mov	al, [bx+5098h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		cmp	ax, 0Ah
+		add	ax, -160
+		cmp	ax, 10
 		jl	short loc_CA5B
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		push	[bp+arg_2]
+		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
 		mov	al, [bx+5098h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -3351,35 +3315,35 @@ arg_4		= word ptr  8
 
 loc_CA5B:
 		push	si
-		push	[bp+arg_2]
+		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
 		mov	al, [bx+5098h]
 		mov	ah, 0
-		add	ax, 0FF60h
-		mov	bx, 0Ah
+		add	ax, -160
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
 		call	super_put
-		add	si, 10h
+		add	si, 16
 		mov	[bp+var_2], 6
 		jmp	short loc_CAA4
 ; ---------------------------------------------------------------------------
 
 loc_CA83:
 		push	si
-		push	[bp+arg_2]
+		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
 		add	bx, [bp+var_2]
 		mov	al, [bx+5091h]
 		mov	ah, 0
-		add	ax, 0FF60h
+		add	ax, -160
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
-		add	si, 10h
+		add	si, 16
 
 loc_CAA4:
 		cmp	[bp+var_2], 0
@@ -3626,18 +3590,18 @@ loc_CC21:
 loc_CC27:
 		cmp	si, 4
 		jl	short loc_CC13
-		push	1F00178h
+		push	(496 shl 16) or 376
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		call	super_put
-		push	2300178h
+		push	(560 shl 16) or 376
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	ax, ax
-		add	ax, 15h
+		add	ax, 21
 		push	ax
 		call	super_put
 		pop	di

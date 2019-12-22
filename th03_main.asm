@@ -938,15 +938,9 @@ loc_9E23:
 loc_9E24:
 		cmp	si, 2
 		jl	loc_9D85
-		push	ds
-		push	offset aLose_bf2 ; "lose.bf2"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aRound_bf2 ; "round.bf2"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aZikicw_bf2 ; "zikicw.bf2"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aLose_bf2 ; "lose.bf2"
+		call	super_entry_bfnt pascal, ds, offset aRound_bf2 ; "round.bf2"
+		call	super_entry_bfnt pascal, ds, offset aZikicw_bf2 ; "zikicw.bf2"
 		call	sub_E266
 		nopcall	sub_A38E
 		push	0
@@ -1643,22 +1637,21 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_4]
-		pushd	[bp+arg_0]
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, large [bp+arg_0]
 		les	bx, [bp+arg_0]
 		assume es:nothing
-		mov	byte ptr es:[bx+2], 65h	; 'e'
-		mov	byte ptr es:[bx+3], 78h	; 'x'
-		mov	byte ptr es:[bx+5], 6Dh	; 'm'
-		mov	byte ptr es:[bx+6], 72h	; 'r'
-		mov	byte ptr es:[bx+7], 73h	; 's'
+		mov	byte ptr es:[bx+2], 'e'
+		mov	byte ptr es:[bx+3], 'x'
+		mov	byte ptr es:[bx+5], 'm'
+		mov	byte ptr es:[bx+6], 'r'
+		mov	byte ptr es:[bx+7], 's'
 		push	si
 		push	word ptr [bp+arg_0+2]
 		push	bx
 		call	sub_EEE2
 		les	bx, [bp+arg_0]
-		mov	byte ptr es:[bx+2], 62h	; 'b'
-		mov	byte ptr es:[bx+3], 6Dh	; 'm'
+		mov	byte ptr es:[bx+2], 'b'
+		mov	byte ptr es:[bx+3], 'm'
 		lea	ax, [si+2]
 		push	ax
 		push	word ptr [bp+arg_0+2]
@@ -3373,7 +3366,7 @@ loc_BB75:
 
 loc_BB7B:
 		mov	byte_207E2, 2
-		mov	word_20CEC, 0
+		mov	x_20CEC, 0
 
 loc_BB86:
 		cmp	byte_20CE6, 0
@@ -3815,7 +3808,7 @@ loc_BF41:
 		cmp	si, 10h
 		jl	loc_BE89
 		mov	ax, word_2087A
-		mov	word_20CEC, ax
+		mov	x_20CEC, ax
 		jmp	loc_C0D0
 ; ---------------------------------------------------------------------------
 
@@ -3830,13 +3823,13 @@ loc_BF51:
 		jl	short loc_BF92
 		cmp	word_20CE8, 40h
 		jge	short loc_BF92
-		push	0D00054h
+		push	(208 shl 16) or 84
 		mov	al, byte_207E3
 		mov	ah, 0
-		add	ax, 22h	; '"'
+		add	ax, 34
 		push	ax
 		call	super_put
-		push	2200054h
+		push	(544 shl 16) or 84
 		mov	al, byte_207E3
 		jmp	short loc_BFD0
 ; ---------------------------------------------------------------------------
@@ -3852,20 +3845,20 @@ loc_BF9B:
 		jl	short loc_BFDD
 		cmp	word_20CE8, 38h	; '8'
 		jge	short loc_BFDD
-		push	0D00054h
+		push	(208 shl 16) or 84
 		les	bx, _yumeconfig
 		mov	al, es:[bx+33h]
 		mov	ah, 0
-		add	ax, 22h	; '"'
+		add	ax, 34
 		push	ax
 		call	super_put
-		push	2200054h
+		push	(544 shl 16) or 84
 		les	bx, _yumeconfig
 		mov	al, es:[bx+33h]
 
 loc_BFD0:
 		mov	ah, 0
-		add	ax, 22h	; '"'
+		add	ax, 34
 		push	ax
 		call	super_put
 		jmp	short loc_BFF0
@@ -3876,64 +3869,58 @@ loc_BFDD:
 		jnz	short loc_BFF0
 
 loc_BFE4:
-		mov	word_20CEC, 60h
-		mov	word_20CEA, 1Eh
+		mov	x_20CEC, 96
+		mov	word_20CEA, 30
 
 loc_BFF0:
-		push	word_20CEC
-		push	54h ; 'T'
-		push	word_20CEA
-		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 20h	; ' '
+		call	super_put pascal, x_20CEC, 84, word_20CEA
+		mov	ax, x_20CEC
+		add	ax, 32
 		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		inc	ax
 		push	ax
 		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 40h
+		mov	ax, x_20CEC
+		add	ax, 64
 		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		add	ax, 2
 		push	ax
 		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 60h
+		mov	ax, x_20CEC
+		add	ax, 96
 		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		add	ax, 3
 		push	ax
 		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 140h
+		mov	ax, x_20CEC
+		add	ax, 320
+		call	super_put pascal, ax, 84, word_20CEA
+		mov	ax, x_20CEC
+		add	ax, 352
 		push	ax
-		push	54h ; 'T'
-		push	word_20CEA
-		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 160h
-		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		inc	ax
 		push	ax
 		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 180h
+		mov	ax, x_20CEC
+		add	ax, 384
 		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		add	ax, 2
 		push	ax
 		call	super_put
-		mov	ax, word_20CEC
-		add	ax, 1A0h
+		mov	ax, x_20CEC
+		add	ax, 416
 		push	ax
-		push	54h ; 'T'
+		push	84
 		mov	ax, word_20CEA
 		add	ax, 3
 		push	ax
@@ -4238,47 +4225,37 @@ var_2		= word ptr -2
 		push	di
 		mov	al, byte_20E3D
 		mov	ah, 0
-		imul	ax, 140h
-		add	ax, 60h
+		imul	ax, PLAYFIELD_W_BORDERED
+		add	ax, 96
 		mov	si, ax
-		push	ax
-		push	280012h
-		call	super_put
-		lea	ax, [si+40h]
-		push	ax
-		push	280013h
-		call	super_put
+		call	super_put pascal, ax, large (40 shl 16) or 18
+		lea	ax, [si+64]
+		call	super_put pascal, ax, large (40 shl 16) or 19
 		mov	al, byte_20E3D
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
-		imul	dx, 140h
-		add	dx, 60h
+		imul	dx, PLAYFIELD_W_BORDERED
+		add	dx, 96
 		mov	si, dx
 		mov	ax, word_23AF6
 		and	ax, 1Fh
 		mov	[bp+var_2], ax
 		cmp	[bp+var_2], 10h
 		jge	short loc_C34F
-		add	ax, 20h	; ' '
+		add	ax, 32
 		jmp	short loc_C355
 ; ---------------------------------------------------------------------------
 
 loc_C34F:
-		mov	ax, 40h
+		mov	ax, 64
 		sub	ax, [bp+var_2]
 
 loc_C355:
 		mov	di, ax
-		push	si
-		push	di
-		push	14h
-		call	super_put
-		lea	ax, [si+40h]
-		push	ax
-		push	di
-		push	15h
-		call	super_put
+		call	super_put pascal, si, di, 20
+		lea	ax, [si+64]
+		call	super_put pascal, ax, di, 21
 		pop	di
 		pop	si
 		leave
@@ -8028,8 +8005,8 @@ sub_DE95	endp
 
 sub_DF18	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -8047,12 +8024,12 @@ arg_0		= word ptr  4
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@x], ax
 		mov	ax, [si+2]
 		sar	ax, 5
-		add	ax, 0FFF8h
-		mov	[bp+var_4], ax
+		add	ax, -8
+		mov	[bp+@@y], ax
 		mov	al, [si+0Fh]
 		mov	ah, 0
 		mov	di, ax
@@ -8068,10 +8045,7 @@ loc_DF61:
 		mov	al, [si+0Eh]
 		mov	ah, 0
 		add	di, ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	di
-		call	super_put
+		call	super_put pascal, [bp+@@x], [bp+@@y], di
 
 loc_DF7D:
 		cmp	word ptr [si+18h], 100h
@@ -8105,21 +8079,18 @@ loc_DFAB:
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
-		add	ax, 0FFF0h
-		mov	[bp+var_2], ax
+		add	ax, -16
+		mov	[bp+@@x], ax
 		mov	ax, [si+2]
 		sar	ax, 5
-		add	ax, 0FFF1h
-		mov	[bp+var_4], ax
+		add	ax, -15
+		mov	[bp+@@y], ax
 		mov	ax, word_23AF6
 		shr	ax, 2
 		and	ax, 3
 		add	ax, di
 		mov	di, ax
-		push	[bp+var_2]
-		push	[bp+var_4]
-		push	ax
-		call	super_put
+		call	super_put pascal, [bp+@@x], [bp+@@y], ax
 
 loc_DFE3:
 		pop	di
@@ -8510,43 +8481,19 @@ sub_E266	proc near
 		push	bp
 		mov	bp, sp
 		graph_accesspage 1
-		push	2200148h
-		push	0
-		call	super_put
-		push	2400148h
-		push	3
-		call	super_put
-		push	2600148h
-		push	6
-		call	super_put
-		push	2200168h
-		push	9
-		call	super_put
-		push	2400168h
-		push	0Ch
-		call	super_put
-		push	2600168h
-		push	0Fh
-		call	super_put
+		call	super_put pascal, (544 shl 16) or 328, 0
+		call	super_put pascal, (576 shl 16) or 328, 3
+		call	super_put pascal, (608 shl 16) or 328, 6
+		call	super_put pascal, (544 shl 16) or 360, 9
+		call	super_put pascal, (576 shl 16) or 360, 12
+		call	super_put pascal, (608 shl 16) or 360, 15
 		graph_accesspage 0
-		push	2200148h
-		push	0
-		call	super_put
-		push	2400148h
-		push	3
-		call	super_put
-		push	2600148h
-		push	6
-		call	super_put
-		push	2200168h
-		push	9
-		call	super_put
-		push	2400168h
-		push	0Ch
-		call	super_put
-		push	2600168h
-		push	0Fh
-		call	super_put
+		call	super_put pascal, (544 shl 16) or 328, 0
+		call	super_put pascal, (576 shl 16) or 328, 3
+		call	super_put pascal, (608 shl 16) or 328, 6
+		call	super_put pascal, (544 shl 16) or 360, 9
+		call	super_put pascal, (576 shl 16) or 360, 12
+		call	super_put pascal, (608 shl 16) or 360, 15
 		pop	bp
 		retn
 sub_E266	endp
@@ -38418,7 +38365,7 @@ byte_20CE6	db ?
 		db ?
 word_20CE8	dw ?
 word_20CEA	dw ?
-word_20CEC	dw ?
+x_20CEC	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

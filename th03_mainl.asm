@@ -2984,12 +2984,8 @@ sub_AFAC	proc near
 		push	0
 		call	cdg_put
 		call	cdg_free pascal, 0
-		push	ds
-		push	offset aRegi2_bft ; "regi2.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aRegi1_bft ; "regi1.bft"
-		call	super_entry_bfnt
+		call	super_entry_bfnt pascal, ds, offset aRegi2_bft ; "regi2.bft"
+		call	super_entry_bfnt pascal, ds, offset aRegi1_bft ; "regi1.bft"
 		push	1
 		call	graph_copy_page
 		graph_accesspage 0
@@ -3191,36 +3187,33 @@ sub_B03D	endp
 
 sub_B187	proc near
 
-var_2		= word ptr -2
+@@patnum	= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	[bp+var_2], 0
-		mov	di, 140h
+		mov	[bp+@@patnum], 0
+		mov	di, 320
 		jmp	short loc_B1B5
 ; ---------------------------------------------------------------------------
 
 loc_B197:
-		mov	si, 40h
+		mov	si, 64
 		jmp	short loc_B1AC
 ; ---------------------------------------------------------------------------
 
 loc_B19C:
-		push	si
-		push	di
-		push	[bp+var_2]
-		call	super_put
-		add	si, 20h	; ' '
-		inc	[bp+var_2]
+		call	super_put pascal, si, di, [bp+@@patnum]
+		add	si, 32
+		inc	[bp+@@patnum]
 
 loc_B1AC:
-		cmp	si, 240h
+		cmp	si, 576
 		jl	short loc_B19C
-		add	di, 18h
+		add	di, 24
 
 loc_B1B5:
-		cmp	di, 170h
+		cmp	di, 368
 		jle	short loc_B197
 		pop	di
 		pop	si
@@ -3353,7 +3346,7 @@ sub_B2AD	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@y		= word ptr  8
 arg_6		= word ptr  0Ah
 
 		push	bp
@@ -3364,22 +3357,19 @@ arg_6		= word ptr  0Ah
 		mov	si, [bp+arg_2]
 		cmp	[bp+arg_0], 0
 		jz	short loc_B2C1
-		add	si, 31h	; '1'
+		add	si, 49
 
 loc_B2C1:
-		push	di
-		push	[bp+arg_4]
-		push	si
-		call	super_put
+		call	super_put pascal, di, [bp+@@y], si
 		mov	ax, [bp+arg_2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		cmp	dx, 0Eh
+		cmp	dx, 14
 		jnz	short loc_B2E9
-		lea	ax, [di+20h]
+		lea	ax, [di+32]
 		push	ax
-		push	[bp+arg_4]
+		push	[bp+@@y]
 		lea	ax, [si+1]
 		push	ax
 		call	super_put
