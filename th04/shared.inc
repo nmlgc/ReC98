@@ -3,11 +3,13 @@
 ; Types shared between TH04 and TH05
 
 include defconv.inc
+include th02/score.inc
 
 ; Formats
 ; --------
 include th04/formats/bb.inc
 include th04/formats/map.inc
+include th04/formats/scoredat.inc
 ; --------
 
 include th04/player/player.inc
@@ -34,4 +36,3 @@ include th04/math/randring.inc
 include th04/math/motion.inc
 include th04/gaiji/gaiji.inc
 include th04/hud/popup.inc
-include th02/score.inc

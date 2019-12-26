@@ -1954,47 +1954,47 @@ sub_B3CB	endp
 
 sub_B4D6	proc near
 
-var_1		= byte ptr -1
+@@byte		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	si, 4
+		mov	si, scoredat_section_t.score
 		jmp	short loc_B503
 ; ---------------------------------------------------------------------------
 
 loc_B4E0:
-		mov	al, [si+4F1Bh]
-		mov	[bp+var_1], al
-		mov	al, byte_1501B
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, [si+4F1Ah]
-		mov	dl, byte_1501A
-		add	dl, [bp+var_1]
+		mov	al, byte ptr _hi+1[si]
+		mov	[bp+@@byte], al
+		mov	al, _hi.key2
+		ror	[bp+@@byte], 3
+		xor	[bp+@@byte], al
+		mov	al, byte ptr _hi+0[si]
+		mov	dl, _hi.key1
+		add	dl, [bp+@@byte]
 		add	al, dl
-		mov	[si+4F1Ah], al
+		mov	byte ptr _hi+0[si], al
 		inc	si
 
 loc_B503:
-		cmp	si, 5Fh	; '_'
+		cmp	si, size scoredat_section_t - 1
 		jl	short loc_B4E0
-		mov	al, byte_1501A
-		add	[si+4F1Ah], al
+		mov	al, _hi.key1
+		add	byte ptr _hi+0[si], al
 		xor	cx, cx
 		mov	si, 4
 		jmp	short loc_B51F
 ; ---------------------------------------------------------------------------
 
 loc_B516:
-		mov	al, [si+4F1Ah]
+		mov	al, byte ptr _hi+0[si]
 		mov	ah, 0
 		add	cx, ax
 		inc	si
 
 loc_B51F:
-		cmp	si, 60h
+		cmp	si, size scoredat_section_t
 		jl	short loc_B516
-		mov	al, byte ptr word_1501C
+		mov	al, byte ptr _hi.sum
 		sub	al, cl
 		pop	si
 		leave
@@ -2008,48 +2008,48 @@ sub_B4D6	endp
 
 sub_B52C	proc near
 
-var_1		= byte ptr -1
+@@byte		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	word_1501C, 0
-		mov	si, 4
+		mov	_hi.sum, 0
+		mov	si, scoredat_section_t.score
 		jmp	short loc_B547
 ; ---------------------------------------------------------------------------
 
 loc_B53C:
-		mov	al, [si+4F1Ah]
+		mov	al, byte ptr _hi[si]
 		mov	ah, 0
-		add	word_1501C, ax
+		add	_hi.sum, ax
 		inc	si
 
 loc_B547:
-		cmp	si, 60h
+		cmp	si, size scoredat_section_t
 		jl	short loc_B53C
 		call	IRand
-		mov	byte_1501A, al
+		mov	_hi.key1, al
 		call	IRand
-		mov	byte_1501B, al
-		mov	[bp+var_1], 0
-		mov	si, 5Fh	; '_'
+		mov	_hi.key2, al
+		mov	[bp+@@byte], 0
+		mov	si, size scoredat_section_t - 1
 		jmp	short loc_B588
 ; ---------------------------------------------------------------------------
 
 loc_B565:
-		mov	al, [si+4F1Ah]
-		mov	dl, byte_1501A
-		add	dl, [bp+var_1]
+		mov	al, byte ptr _hi[si]
+		mov	dl, _hi.key1
+		add	dl, [bp+@@byte]
 		sub	al, dl
-		mov	[si+4F1Ah], al
-		mov	al, [si+4F1Ah]
-		mov	[bp+var_1], al
-		mov	al, byte_1501B
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
+		mov	byte ptr _hi[si], al
+		mov	al, byte ptr _hi[si]
+		mov	[bp+@@byte], al
+		mov	al, _hi.key2
+		ror	[bp+@@byte], 3
+		xor	[bp+@@byte], al
 		dec	si
 
 loc_B588:
-		cmp	si, 4
+		cmp	si, scoredat_section_t.score
 		jge	short loc_B565
 		pop	si
 		leave
@@ -2063,91 +2063,88 @@ sub_B52C	endp
 
 sub_B590	proc near
 
-var_3		= byte ptr -3
-var_2		= word ptr -2
+@@digit		= byte ptr -3
+@@i		= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	[bp+var_3], 0A8h ; '®'
-		mov	[bp+var_2], 0
+		mov	[bp+@@digit], gb_8_
+		mov	[bp+@@i], 0
 		jmp	short loc_B60E
 ; ---------------------------------------------------------------------------
 
 loc_B5A0:
-		mov	byte_15078, 12h
+		mov	_hi.score.cleared, SCOREDAT_NOT_CLEARED
 		xor	si, si
 		jmp	short loc_B5B5
 ; ---------------------------------------------------------------------------
 
 loc_B5A9:
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@i]
 		shl	bx, 3
-		mov	byte ptr [bx+si+4F4Bh],	0A0h
+		mov	_hi.score.g_points[bx+si], gb_0_
 		inc	si
 
 loc_B5B5:
-		cmp	si, 8
+		cmp	si, SCORE_DIGITS
 		jl	short loc_B5A9
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@i], 0
 		jnz	short loc_B5CD
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@i]
 		shl	bx, 3
-		mov	byte ptr [bx+4F51h], 0A1h ; '°'
+		mov	_hi.score.g_points[bx][6], gb_1_
 		jmp	short loc_B5DF
 ; ---------------------------------------------------------------------------
 
 loc_B5CD:
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@i]
 		shl	bx, 3
-		mov	al, [bp+var_3]
-		mov	[bx+4F50h], al
-		add	al, 0FEh
-		mov	[bp+var_3], al
+		mov	al, [bp+@@digit]
+		mov	_hi.score.g_points[bx][5], al
+		add	al, -2
+		mov	[bp+@@digit], al
 
 loc_B5DF:
-		mov	bx, [bp+var_2]
-		mov	al, 0A6h
-		sub	al, byte ptr [bp+var_2]
-		mov	[bx+4F73h], al
+		mov	bx, [bp+@@i]
+		mov	al, gb_6_
+		sub	al, byte ptr [bp+@@i]
+		mov	_hi.score.g_stage[bx], al
 		xor	si, si
 		jmp	short loc_B5FB
 ; ---------------------------------------------------------------------------
 
 loc_B5EF:
-		mov	bx, [bp+var_2]
-		imul	bx, 9
-		mov	byte ptr [bx+si+4F1Eh],	0C4h ; 'ƒ'
+		mov	bx, [bp+@@i]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.score.g_name[bx+si], gs_DOT
 		inc	si
 
 loc_B5FB:
-		cmp	si, 8
+		cmp	si, SCOREDAT_NAME_LEN
 		jl	short loc_B5EF
-		mov	bx, [bp+var_2]
-		imul	bx, 9
-		mov	byte ptr [bx+4F26h], 0
-		inc	[bp+var_2]
+		mov	bx, [bp+@@i]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.score.g_name[bx][SCOREDAT_NAME_LEN], 0
+		inc	[bp+@@i]
 
 loc_B60E:
-		cmp	[bp+var_2], 5
+		cmp	[bp+@@i], SCOREDAT_PLACES
 		jl	short loc_B5A0
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
 		call	file_create
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_B638
 ; ---------------------------------------------------------------------------
 
 loc_B624:
 		call	sub_B52C
-		push	ds
-		push	offset byte_1501A
-		push	60h
-		call	file_write
+		call	file_write pascal, ds, offset _hi, size scoredat_section_t
 		call	sub_B4D6
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 
 loc_B638:
-		cmp	[bp+var_2], 14h
+		cmp	[bp+@@i], RANK_COUNT * PLAYCHAR_COUNT
 		jl	short loc_B624
 		call	file_close
 		pop	si
@@ -2179,15 +2176,12 @@ arg_0		= word ptr  4
 		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
-		push	ds
-		push	offset byte_1501A
-		push	60h
-		call	file_read
+		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	file_close
 		call	sub_B4D6
 		or	al, al
@@ -2225,42 +2219,33 @@ sub_B6A3	proc near
 		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
-		push	ds
-		push	offset byte_1501A
-		push	60h
-		call	file_write
+		call	file_write pascal, ds, offset _hi, size scoredat_section_t
 		xor	si, si
 		jmp	short loc_B723
 ; ---------------------------------------------------------------------------
 
 loc_B6E2:
 		mov	ax, si
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
-		push	ds
-		push	offset byte_1501A
-		push	60h
-		call	file_read
+		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	sub_B4D6
 		call	sub_B52C
 		mov	ax, si
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		push	eax
 		push	0
 		call	file_seek
-		push	ds
-		push	offset byte_1501A
-		push	60h
-		call	file_write
+		call	file_write pascal, ds, offset _hi, size scoredat_section_t
 		inc	si
 
 loc_B723:
@@ -2299,9 +2284,9 @@ loc_B740:
 		mov	bx, [bp+var_2]
 		shl	bx, 3
 		add	bx, cx
-		mov	dl, [bx+4F4Bh]
+		mov	dl, _hi.score.g_points[bx]
 		mov	dh, 0
-		add	dx, 0FF60h
+		add	dx, -gb_0_
 		cmp	ax, dx
 		jg	short loc_B789
 		les	bx, _ksoconfig
@@ -2311,9 +2296,9 @@ loc_B740:
 		mov	bx, [bp+var_2]
 		shl	bx, 3
 		add	bx, cx
-		mov	dl, [bx+4F4Bh]
+		mov	dl, _hi.score.g_points[bx]
 		mov	dh, 0
-		add	dx, 0FF60h
+		add	dx, -gb_0_
 		cmp	ax, dx
 		jl	short loc_B799
 		dec	cx
@@ -2357,19 +2342,19 @@ loc_B7B5:
 
 loc_B7BA:
 		mov	bx, [bp+var_2]
-		imul	bx, 9
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
 		add	bx, cx
-		mov	al, [bx+4F1Eh]
+		mov	al, _hi.score.g_name[0 * (SCOREDAT_NAME_LEN + 1)][bx]
 		mov	bx, [bp+var_2]
-		imul	bx, 9
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
 		add	bx, cx
-		mov	[bx+4F27h], al
+		mov	_hi.score.g_name[1 * (SCOREDAT_NAME_LEN + 1)][bx], al
 		dec	cx
 
 loc_B7D3:
 		or	cx, cx
 		jge	short loc_B7BA
-		mov	cx, 7
+		mov	cx, SCORE_DIGITS - 1
 		jmp	short loc_B7F5
 ; ---------------------------------------------------------------------------
 
@@ -2377,19 +2362,19 @@ loc_B7DC:
 		mov	bx, [bp+var_2]
 		shl	bx, 3
 		add	bx, cx
-		mov	al, [bx+4F4Bh]
+		mov	al, _hi.score.g_points[0 * SCORE_DIGITS][bx]
 		mov	bx, [bp+var_2]
 		shl	bx, 3
 		add	bx, cx
-		mov	[bx+4F53h], al
+		mov	_hi.score.g_points[1 * SCORE_DIGITS][bx], al
 		dec	cx
 
 loc_B7F5:
 		or	cx, cx
 		jge	short loc_B7DC
 		mov	bx, [bp+var_2]
-		mov	al, [bx+4F73h]
-		mov	[bx+4F74h], al
+		mov	al, _hi.score.g_stage+0[bx]
+		mov	_hi.score.g_stage+1[bx], al
 		dec	[bp+var_2]
 
 loc_B807:
@@ -2397,23 +2382,23 @@ loc_B807:
 		mov	ah, 0
 		cmp	ax, [bp+var_2]
 		jle	short loc_B7B5
-		mov	cx, 7
+		mov	cx, (SCOREDAT_NAME_LEN - 1)
 		jmp	short loc_B828
 ; ---------------------------------------------------------------------------
 
 loc_B816:
 		mov	al, byte_15176
 		mov	ah, 0
-		imul	ax, 9
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, cx
 		mov	bx, ax
-		mov	byte ptr [bx+4F1Eh], 0C4h ; 'ƒ'
+		mov	_hi.score.g_name[bx], gs_DOT
 		dec	cx
 
 loc_B828:
 		or	cx, cx
 		jge	short loc_B816
-		mov	cx, 7
+		mov	cx, SCOREDAT_NAME_LEN - 1
 		jmp	short loc_B84F
 ; ---------------------------------------------------------------------------
 
@@ -2421,13 +2406,13 @@ loc_B831:
 		les	bx, _ksoconfig
 		add	bx, cx
 		mov	al, es:[bx+20h]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	dl, byte_15176
 		mov	dh, 0
 		shl	dx, 3
 		add	dx, cx
 		mov	bx, dx
-		mov	[bx+4F4Bh], al
+		mov	_hi.score.g_points[bx], al
 		dec	cx
 
 loc_B84F:
@@ -2439,7 +2424,7 @@ loc_B84F:
 		mov	al, byte_15176
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+4F73h], 0E9h ; 'ÅE
+		mov	_hi.score.g_stage[bx], gs_ALL
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -2449,11 +2434,11 @@ loc_B86C:
 		jnb	short loc_B88B
 		les	bx, _ksoconfig
 		mov	al, es:[bx+13h]
-		add	al, 0A1h ; '°'
+		add	al, gb_1_
 		mov	dl, byte_15176
 		mov	dh, 0
 		mov	bx, dx
-		mov	[bx+4F73h], al
+		mov	_hi.score.g_stage[bx], al
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -2462,7 +2447,7 @@ loc_B88B:
 		mov	al, byte_15176
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+4F73h], 0A1h ; '°'
+		mov	_hi.score.g_stage[bx], gb_1_
 		leave
 		retn
 sub_B730	endp
@@ -2570,9 +2555,9 @@ loc_B924:
 		mov	[bp+arg_0], ax
 		mov	bx, si
 		shl	bx, 3
-		mov	al, [bx+4F52h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		cmp	ax, 10
 		jl	short loc_B95E
 		lea	ax, [di-32]
@@ -2580,9 +2565,9 @@ loc_B924:
 		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
-		mov	al, [bx+4F52h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -2596,9 +2581,9 @@ loc_B95E:
 		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
-		mov	al, [bx+4F52h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -2615,10 +2600,10 @@ loc_B989:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, [bx+4F4Bh]
+		mov	al, _hi.score.g_points[bx]
 		mov	ah, 0
 		add	ax, [bp+arg_0]
-		add	ax, -160
+		add	ax, -gb_0_
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
@@ -2862,8 +2847,8 @@ loc_BB00:
 		push	ax
 		push	10h
 		mov	ax, [bp+arg_4]
-		imul	ax, 9
-		add	ax, 4F1Eh
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	0Eh
@@ -2873,7 +2858,7 @@ loc_BB00:
 		push	10h
 		mov	ax, [bp+arg_4]
 		imul	ax, 9
-		add	ax, 4F1Eh
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	6
@@ -2885,11 +2870,11 @@ loc_BB00:
 		push	ax
 		push	di
 		mov	bx, [bp+arg_4]
-		imul	bx, 9
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	bx, ax
-		mov	al, [bx+4F1Eh]
+		mov	al, _hi.score.g_name[bx]
 		mov	ah, 0
 		push	ax
 		push	7
@@ -3038,7 +3023,7 @@ loc_BC67:
 		call	sub_B899
 		push	si
 		push	[bp+arg_0]
-		mov	al, [si+4F73h]
+		mov	al, _hi.score.g_stage[si]
 		mov	ah, 0
 		push	ax
 		call	sub_B9C1
@@ -3059,8 +3044,8 @@ loc_BC8F:
 		push	ax
 		push	10h
 		mov	ax, si
-		imul	ax, 9
-		add	ax, 4F1Eh
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	0Eh
@@ -3069,8 +3054,8 @@ loc_BC8F:
 		push	di
 		push	10h
 		mov	ax, si
-		imul	ax, 9
-		add	ax, 4F1Eh
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	2
@@ -3638,7 +3623,7 @@ loc_C0CC:
 		imul	ax, 9
 		mov	dl, [si+1]
 		mov	bx, ax
-		mov	[bx+di+4F1Eh], dl
+		mov	_hi.score.g_name[bx+di], dl
 		jmp	short loc_C141
 ; ---------------------------------------------------------------------------
 
@@ -3874,7 +3859,7 @@ loc_C2EB:
 		jb	short loc_C307
 		cmp	byte ptr es:[bx+20h], 0
 		jnz	short loc_C307
-		mov	byte_15078, 80h
+		mov	_hi.score.cleared, SCOREDAT_CLEARED
 
 loc_C307:
 		push	1
@@ -4033,7 +4018,7 @@ loc_C469:
 		imul	ax, 9
 		add	ax, word_11622
 		mov	bx, ax
-		mov	byte ptr [bx+4F1Eh], 2
+		mov	_hi.score.g_name[bx], g_EMPTY
 		mov	bx, word_11622
 		imul	bx, 1Ch
 		cmp	byte ptr [bx+4F7Ah], 0
@@ -4106,7 +4091,7 @@ loc_C516:
 		imul	ax, 9
 		add	ax, word_11622
 		mov	bx, ax
-		mov	byte ptr [bx+4F1Eh], 2
+		mov	_hi.score.g_name[bx], g_EMPTY
 		mov	bx, word_11622
 		imul	bx, 1Ch
 		cmp	byte ptr [bx+4F7Ah], 0
@@ -10606,9 +10591,7 @@ allcast_screen_plus_one	dw ?
 allcast_step	dw ?
 byte_15018	db ?
 		db ?
-byte_1501A	db ?
-byte_1501B	db ?
-word_1501C	dw ?
+include th04/formats/scoredat[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -10631,9 +10614,6 @@ word_1501C	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		db    ?	;
-		db    ?	;
-byte_15078	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -10675,29 +10655,6 @@ byte_15078	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
 byte_15176	db ?
 _hiscore_rank	db ?
 word_15178	dw ?

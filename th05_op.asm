@@ -2952,90 +2952,90 @@ musicroom	endp
 
 sub_C7D5	proc near
 
-var_1		= byte ptr -1
+@@byte		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	si, 4
+		mov	si, scoredat_section_t.score
 		jmp	short loc_C802
 ; ---------------------------------------------------------------------------
 
 loc_C7DF:
-		mov	al, [si+5061h]
-		mov	[bp+var_1], al
-		mov	al, byte_14041
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, [si+5060h]
-		mov	dl, byte_14040
-		add	dl, [bp+var_1]
+		mov	al, byte ptr _hi+1[si]
+		mov	[bp+@@byte], al
+		mov	al, _hi.key2
+		ror	[bp+@@byte], 3
+		xor	[bp+@@byte], al
+		mov	al, byte ptr _hi+0[si]
+		mov	dl, _hi.key1
+		add	dl, [bp+@@byte]
 		add	al, dl
-		mov	[si+5060h], al
+		mov	byte ptr _hi+0[si], al
 		inc	si
 
 loc_C802:
-		cmp	si, 5Fh	; '_'
+		cmp	si, size scoredat_section_t - 1
 		jl	short loc_C7DF
-		mov	al, byte_14040
-		add	[si+5060h], al
+		mov	al, _hi.key1
+		add	byte ptr _hi+0[si], al
 		xor	cx, cx
-		mov	si, 4
+		mov	si, scoredat_section_t.score
 		jmp	short loc_C81E
 ; ---------------------------------------------------------------------------
 
 loc_C815:
-		mov	al, [si+5060h]
+		mov	al, byte ptr _hi+0[si]
 		mov	ah, 0
 		add	cx, ax
 		inc	si
 
 loc_C81E:
-		cmp	si, 60h
+		cmp	si, size scoredat_section_t
 		jl	short loc_C815
-		cmp	word_14042, cx
+		cmp	_hi.sum, cx
 		jz	short loc_C82D
 		mov	al, 1
 		jmp	short loc_C87B
 ; ---------------------------------------------------------------------------
 
 loc_C82D:
-		mov	si, 4
+		mov	si, scoredat_section_t.score
 		jmp	short loc_C855
 ; ---------------------------------------------------------------------------
 
 loc_C832:
-		mov	al, [si+50C1h]
-		mov	[bp+var_1], al
-		mov	al, byte_140A1
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, [si+50C0h]
-		mov	dl, byte_140A0
-		add	dl, [bp+var_1]
+		mov	al, byte ptr _hi2+1[si]
+		mov	[bp+@@byte], al
+		mov	al, _hi2.key2
+		ror	[bp+@@byte], 3
+		xor	[bp+@@byte], al
+		mov	al, byte ptr _hi2+0[si]
+		mov	dl, _hi2.key1
+		add	dl, [bp+@@byte]
 		add	al, dl
-		mov	[si+50C0h], al
+		mov	byte ptr _hi2+0[si], al
 		inc	si
 
 loc_C855:
-		cmp	si, 5Fh	; '_'
+		cmp	si, size scoredat_section_t - 1
 		jl	short loc_C832
-		mov	al, byte_140A0
-		add	[si+50C0h], al
+		mov	al, _hi2.key1
+		add	byte ptr _hi2+0[si], al
 		xor	cx, cx
-		mov	si, 4
+		mov	si, scoredat_section_t.score
 		jmp	short loc_C871
 ; ---------------------------------------------------------------------------
 
 loc_C868:
-		mov	al, [si+50C0h]
+		mov	al, byte ptr _hi2+0[si]
 		mov	ah, 0
 		add	cx, ax
 		inc	si
 
 loc_C871:
-		cmp	si, 60h
+		cmp	si, size scoredat_section_t
 		jl	short loc_C868
-		mov	al, byte_140A2
+		mov	al, byte ptr _hi2.sum
 		sub	al, cl
 
 loc_C87B:
@@ -3051,48 +3051,48 @@ sub_C7D5	endp
 
 sub_C87E	proc near
 
-var_1		= byte ptr -1
+@@byte		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		mov	word_14042, 0
-		mov	si, 4
+		mov	_hi.sum, 0
+		mov	si, scoredat_section_t.score
 		jmp	short loc_C899
 ; ---------------------------------------------------------------------------
 
 loc_C88E:
-		mov	al, [si+5060h]
+		mov	al, byte ptr _hi[si]
 		mov	ah, 0
-		add	word_14042, ax
+		add	_hi.sum, ax
 		inc	si
 
 loc_C899:
-		cmp	si, 60h
+		cmp	si, size scoredat_section_t
 		jl	short loc_C88E
 		call	IRand
-		mov	byte_14040, al
+		mov	_hi.key1, al
 		call	IRand
-		mov	byte_14041, al
-		mov	[bp+var_1], 0
-		mov	si, 5Fh	; '_'
+		mov	_hi.key2, al
+		mov	[bp+@@byte], 0
+		mov	si, size scoredat_section_t - 1
 		jmp	short loc_C8DA
 ; ---------------------------------------------------------------------------
 
 loc_C8B7:
-		mov	al, [si+5060h]
-		mov	dl, byte_14040
-		add	dl, [bp+var_1]
+		mov	al, byte ptr _hi[si]
+		mov	dl, _hi.key1
+		add	dl, [bp+@@byte]
 		sub	al, dl
-		mov	[si+5060h], al
-		mov	al, [si+5060h]
-		mov	[bp+var_1], al
-		mov	al, byte_14041
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
+		mov	byte ptr _hi[si], al
+		mov	al, byte ptr _hi[si]
+		mov	[bp+@@byte], al
+		mov	al, _hi.key2
+		ror	[bp+@@byte], 3
+		xor	[bp+@@byte], al
 		dec	si
 
 loc_C8DA:
-		cmp	si, 4
+		cmp	si, scoredat_section_t.score
 		jge	short loc_C8B7
 		pop	si
 		leave
@@ -3106,70 +3106,70 @@ sub_C87E	endp
 
 sub_C8E2	proc near
 
-var_3		= byte ptr -3
-var_2		= word ptr -2
+@@digit		= byte ptr -3
+@@i		= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	[bp+var_3], 0A8h ; '¨'
+		mov	[bp+@@digit], gb_8_
 		xor	si, si
 		jmp	short loc_C95A
 ; ---------------------------------------------------------------------------
 
 loc_C8EF:
-		mov	byte_1409E, 12h
-		mov	[bp+var_2], 0
+		mov	_hi.score.cleared, SCOREDAT_NOT_CLEARED
+		mov	[bp+@@i], 0
 		jmp	short loc_C90B
 ; ---------------------------------------------------------------------------
 
 loc_C8FB:
 		mov	bx, si
 		shl	bx, 3
-		add	bx, [bp+var_2]
-		mov	byte ptr [bx+5091h], 0A0h
-		inc	[bp+var_2]
+		add	bx, [bp+@@i]
+		mov	_hi.score.g_points[bx], gb_0_
+		inc	[bp+@@i]
 
 loc_C90B:
-		cmp	[bp+var_2], 8
+		cmp	[bp+@@i], SCORE_DIGITS
 		jl	short loc_C8FB
 		or	si, si
 		jnz	short loc_C921
 		mov	bx, si
 		shl	bx, 3
-		mov	byte ptr [bx+5097h], 0A1h ; '¡'
+		mov	_hi.score.g_points[bx][6], gb_1_
 		jmp	short loc_C932
 ; ---------------------------------------------------------------------------
 
 loc_C921:
 		mov	bx, si
 		shl	bx, 3
-		mov	al, [bp+var_3]
-		mov	[bx+5096h], al
-		add	al, 0FEh
-		mov	[bp+var_3], al
+		mov	al, [bp+@@digit]
+		mov	_hi.score.g_points[bx][5], al
+		add	al, -2
+		mov	[bp+@@digit], al
 
 loc_C932:
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_C949
 ; ---------------------------------------------------------------------------
 
 loc_C939:
 		mov	bx, si
-		imul	bx, 9
-		add	bx, [bp+var_2]
-		mov	byte ptr [bx+5064h], 0C4h ; 'Ä'
-		inc	[bp+var_2]
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		add	bx, [bp+@@i]
+		mov	_hi.score.g_name[bx], gs_DOT
+		inc	[bp+@@i]
 
 loc_C949:
-		cmp	[bp+var_2], 8
+		cmp	[bp+@@i], SCOREDAT_NAME_LEN
 		jl	short loc_C939
 		mov	bx, si
-		imul	bx, 9
-		mov	byte ptr [bx+506Ch], 0
+		imul	bx, (SCOREDAT_NAME_LEN + 1)
+		mov	_hi.score.g_name[bx][SCOREDAT_NAME_LEN], 0
 		inc	si
 
 loc_C95A:
-		cmp	si, 5
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_C8EF
 		push	ds
 		push	offset aGensou_scr ; "GENSOU.SCR"
@@ -3179,7 +3179,7 @@ loc_C95A:
 ; ---------------------------------------------------------------------------
 
 loc_C96C:
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_C999
 ; ---------------------------------------------------------------------------
 
@@ -3190,33 +3190,30 @@ loc_C973:
 		idiv	bx
 		cmp	dx, 4
 		jnz	short loc_C98A
-		mov	bx, [bp+var_2]
-		mov	byte ptr [bx+50B9h], 0A1h ; '¡'
+		mov	bx, [bp+@@i]
+		mov	_hi.score.g_stage[bx], gb_1_
 		jmp	short loc_C996
 ; ---------------------------------------------------------------------------
 
 loc_C98A:
-		mov	bx, [bp+var_2]
-		mov	al, 0A6h
-		sub	al, byte ptr [bp+var_2]
-		mov	[bx+50B9h], al
+		mov	bx, [bp+@@i]
+		mov	al, gb_6_
+		sub	al, byte ptr [bp+@@i]
+		mov	_hi.score.g_stage[bx], al
 
 loc_C996:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 
 loc_C999:
-		cmp	[bp+var_2], 5
+		cmp	[bp+@@i], SCOREDAT_PLACES
 		jl	short loc_C973
 		call	sub_C87E
-		push	ds
-		push	offset byte_14040
-		push	60h
-		call	file_write
+		call	file_write pascal, ds, offset _hi, size scoredat_section_t
 		call	sub_C7D5
 		inc	si
 
 loc_C9B1:
-		cmp	si, 14h
+		cmp	si, RANK_COUNT * PLAYCHAR_COUNT
 		jl	short loc_C96C
 		call	file_close
 		pop	si
@@ -3248,15 +3245,10 @@ arg_0		= word ptr  4
 		mov	dl, _hiscore_rank
 		mov	dh, 0
 		add	ax, dx
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset byte_14040
-		push	60h
-		call	file_read
+		call	file_seek pascal, large eax, 0
+		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	file_close
 		call	sub_C7D5
 		or	al, al
@@ -3294,9 +3286,9 @@ arg_4		= word ptr  8
 		mov	di, [bp+arg_0]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, [bx+5098h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		cmp	ax, 10
 		jl	short loc_CA5B
 		lea	ax, [si-16]
@@ -3304,9 +3296,9 @@ arg_4		= word ptr  8
 		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, [bx+5098h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -3318,9 +3310,9 @@ loc_CA5B:
 		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, [bx+5098h]
+		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -3337,9 +3329,9 @@ loc_CA83:
 		mov	bx, di
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, [bx+5091h]
+		mov	al, _hi.score.g_points[bx]
 		mov	ah, 0
-		add	ax, -160
+		add	ax, -gb_0_
 		push	ax
 		call	super_put
 		dec	[bp+var_2]
@@ -3506,7 +3498,7 @@ loc_CB74:
 		push	10h
 		mov	ax, [bp+arg_0]
 		imul	ax, 9
-		add	ax, 5064h
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	0Eh
@@ -3516,7 +3508,7 @@ loc_CB74:
 		push	10h
 		mov	ax, [bp+arg_0]
 		imul	ax, 9
-		add	ax, 5064h
+		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
 		push	[bp+var_2]
@@ -3530,7 +3522,7 @@ loc_CB74:
 		push	ax
 		push	di
 		mov	bx, [bp+arg_0]
-		mov	al, [bx+50B9h]
+		mov	al, _hi.score.g_stage[bx]
 		mov	ah, 0
 		push	ax
 		call	sub_CAB0
@@ -3718,14 +3710,14 @@ loc_CDA8:
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
-		mov	al, byte_1409E
+		mov	al, _hi.score.cleared
 		mov	_cleared_with[bx], al
 		mov	bx, si
 		imul	bx, RANK_COUNT
 		mov	al, _hiscore_rank
 		mov	ah, 0
 		add	bx, ax
-		cmp	_cleared_with[bx], 80h
+		cmp	_cleared_with[bx], SCOREDAT_CLEARED
 		jz	short loc_CDE7
 		mov	bx, si
 		imul	bx, RANK_COUNT
@@ -5130,61 +5122,8 @@ include th02/music/music_cmt[bss].asm
 word_1403A	dw ?
 word_1403C	dw ?
 musicroom_trackcount	dw ?
-byte_14040	db ?
-byte_14041	db ?
-word_14042	dw ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-byte_1409E	db ?
-		db ?
-byte_140A0	db ?
-byte_140A1	db ?
-byte_140A2	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+	extern _hi:scoredat_section_t
+	extern _hi2:scoredat_section_t
 	extern _hiscore_rank:byte
 	extern _cleared_with:byte
 	extern _extra_unlocked:byte

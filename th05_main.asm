@@ -6563,11 +6563,11 @@ include th04/select_for_rank.asm
 
 sub_E76C	proc near
 		push	si
-		mov	bx, 4902h
+		mov	bx, offset _hi
 		mov	si, bx
-		mov	cx, 5Bh	; '['
+		mov	cx, size scoredat_t - 1
 		mov	dx, [bx]
-		add	bx, 4
+		add	bx, scoredat_section_t.score
 
 loc_E77A:
 		mov	al, [bx+1]
@@ -6578,11 +6578,11 @@ loc_E77A:
 		inc	bx
 		loop	loc_E77A
 		add	[bx], dl
-		mov	cx, 5Ch
+		mov	cx, size scoredat_t
 		xor	bx, bx
 		xor	dx, dx
-		mov	ax, [si+2]
-		add	si, 4
+		mov	ax, [si+scoredat_section_t.sum]
+		add	si, scoredat_section_t.score
 
 loc_E798:
 		mov	bl, [si]
@@ -6600,24 +6600,24 @@ sub_E76C	endp
 
 sub_E7A3	proc near
 		push	si
-		mov	bx, 4902h
+		mov	bx, offset _hi
 		mov	si, bx
 		xor	dx, dx
 		xor	ax, ax
-		add	bx, 4
-		mov	cx, 5Ch
+		add	bx, scoredat_section_t.score
+		mov	cx, size scoredat_t
 
 loc_E7B3:
 		mov	dl, [bx]
 		add	ax, dx
 		inc	bx
 		loop	loc_E7B3
-		mov	[si+2],	ax
+		mov	[si+scoredat_section_t.sum], ax
 		call	IRand
-		mov	[si], ax
+		mov	word ptr [si+scoredat_section_t.key1], ax
 		xor	dx, dx
-		add	si, 5Fh	; '_'
-		mov	cx, 5Ch
+		add	si, size scoredat_section_t - 1
+		mov	cx, size scoredat_t
 
 loc_E7CC:
 		add	dl, al
@@ -6652,15 +6652,15 @@ loc_E7E7:
 		mov	al, _playchar
 		imul	ax, 5
 		add	al, _rank
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		mov	dx, ax
 		xor	cx, cx
 		mov	ax, 4200h
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
-		mov	ah, 3Fh	; '?'
-		mov	dx, 4902h
-		mov	cx, 60h
+		mov	ah, 3Fh
+		mov	dx, offset _hi
+		mov	cx, size scoredat_section_t
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
@@ -6688,15 +6688,15 @@ sub_E813	proc near
 		mov	al, _playchar
 		imul	ax, 5
 		add	al, _rank
-		imul	ax, 60h
+		imul	ax, size scoredat_section_t
 		mov	dx, ax
 		xor	cx, cx
 		mov	ax, 4200h
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
 		mov	ah, 40h
-		mov	dx, 4902h
-		mov	cx, 60h
+		mov	dx, offset _hi
+		mov	cx, size scoredat_section_t
 		int	21h		; DOS -	2+ - WRITE TO FILE WITH	HANDLE
 					; BX = file handle, CX = number	of bytes to write, DS:DX -> buffer
 		mov	ah, 3Eh
@@ -6718,13 +6718,13 @@ sub_E84A	proc near
 loc_E84F:
 		mov	si, dx
 		shl	si, 3
-		add	si, 493Ah
+		add	si, offset _hi.score.g_points[SCORE_DIGITS - 1]
 		mov	bx, offset _score_lebcd[SCORE_DIGITS - 1]
 		mov	cx, SCORE_DIGITS
 
 loc_E85E:
 		mov	al, [si]
-		sub	al, 0A0h
+		sub	al, gb_0_
 		cmp	al, [bx]
 		jb	short loc_E86C
 		ja	short loc_E86F
@@ -6748,42 +6748,42 @@ loc_E86F:
 ; ---------------------------------------------------------------------------
 
 loc_E880:
-		imul	di, bx,	9
+		imul	di, bx,	(SCOREDAT_NAME_LEN + 1)
 		mov	si, di
-		add	si, 4906h
-		add	di, 490Fh
+		add	si, offset _hi.score.g_name[0 * (SCOREDAT_NAME_LEN + 1)]
+		add	di, offset _hi.score.g_name[1 * (SCOREDAT_NAME_LEN + 1)]
 		movsd
 		movsd
 		mov	di, bx
 		shl	di, 3
 		mov	si, di
-		add	si, 4933h
-		add	di, 493Bh
+		add	si, offset _hi.score.g_points[0 * SCORE_DIGITS]
+		add	di, offset _hi.score.g_points[1 * SCORE_DIGITS]
 		movsd
 		movsd
-		mov	al, [bx+495Bh]
-		mov	[bx+495Ch], al
+		mov	al, _hi.score.g_stage+0[bx]
+		mov	_hi.score.g_stage+1[bx], al
 		dec	bx
 
 loc_E8AD:
 		cmp	bx, dx
 		jge	short loc_E880
-		imul	di, dx,	9
-		add	di, 4906h
-		mov	si, 17D7h
+		imul	di, dx,	(SCOREDAT_NAME_LEN + 1)
+		add	di, offset _hi.score.g_name
+		mov	si, offset gCONTINUE
 		movsd
 		movsd
 		mov	di, dx
 		shl	di, 3
-		add	di, 4933h
+		add	di, offset _hi.score.g_points
 		mov	si, offset _score_lebcd
 		movsd
 		movsd
-		sub	di, 8
-		mov	cx, 8
+		sub	di, SCORE_DIGITS
+		mov	cx, SCORE_DIGITS
 
 loc_E8D5:
-		add	byte ptr [di], 0A0h
+		add	byte ptr [di], gb_0_
 		inc	di
 		loop	loc_E8D5
 		mov	al, stage_id
@@ -6793,8 +6793,8 @@ loc_E8D5:
 
 loc_E8E4:
 		mov	di, dx
-		add	al, 0A1h
-		mov	[di+495Bh], al
+		add	al, gb_1_
+		mov	_hi.score.g_stage[di], al
 		call	sub_E813
 
 loc_E8EF:
@@ -6828,8 +6828,8 @@ sub_E8FE	proc near
 		mov	cx, SCORE_DIGITS
 
 loc_E906:
-		mov	al, [bx+4933h]
-		sub	al, 0A0h
+		mov	al, _hi.score.g_points[bx]
+		sub	al, gb_0_
 		mov	_hiscore_lebcd[bx], al
 		inc	bx
 		loop	loc_E906
@@ -33981,30 +33981,7 @@ include th05/formats/bb_load[bss].asm
 _invalidate_left_x_tile	dw ?
 include th04/sparks_add[bss].asm
 include th04/drawpoint[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th04/formats/scoredat[bss].asm
 byte_25342	db ?
 		db ?
 fp_25344	dw ?

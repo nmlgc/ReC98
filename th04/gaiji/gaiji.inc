@@ -5,3 +5,5 @@
 g_EMPTY = 2
 include th03/gaiji/bar.inc
 include th02/gaiji/boldfont.inc
+gs_DOT = 0C4h
+gs_ALL = 0E9h

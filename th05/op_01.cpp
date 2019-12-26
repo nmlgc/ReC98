@@ -7,9 +7,12 @@ extern "C" {
 
 #include "platform.h"
 #include "th01/ranks.h"
+#include "th04/formats/scoredat.h"
 #include "th05/player/chars.h"
 
-static uint8_t padding;
+scoredat_section_t hi;
+scoredat_section_t hi2;
+static uint8_t scoredat_unused;
 
 unsigned char hiscore_rank;
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
