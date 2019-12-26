@@ -3,7 +3,7 @@
  * Shared high score code
  */
 
-const char *SCORE_FN = "huuhi.dat";
+const char *SCOREDAT_FN = "huuhi.dat";
 const unsigned char gbHI_SCORE[] = {
 	gb_H_, gb_I_, gb_SP, gb_S_, gb_C_, gb_O_, gb_R_, gb_E_, 0
 };

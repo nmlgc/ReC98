@@ -245,9 +245,9 @@ extern char lives;
 #define SHOTTYPE_COUNT 3
 
 // Highscores
-// ---------
-#define SCORE_PLACES 10
-#define SCORE_NAME_LEN 6 /* excluding the terminating 0 */
+// ----------
+#define SCOREDAT_PLACES 10
+#define SCOREDAT_NAME_LEN 6 /* excluding the terminating 0 */
 #define EXTRA_CLEAR_FLAGS {1, 2, 4}
 #define GAME_CLEAR_CONSTANTS {318, 118, 218}
 #define STAGE_ALL 127
@@ -270,26 +270,26 @@ typedef struct {
 	 */
 	int16_t cleared;
 
-	int32_t points[SCORE_PLACES];
+	int32_t points[SCOREDAT_PLACES];
 	int32_t points_sum;
-	unsigned char g_name[SCORE_PLACES][SCORE_NAME_LEN + 1];
+	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
 	unsigned char g_name_first_sum;
-	unsigned char stage[SCORE_PLACES];
+	unsigned char stage[SCOREDAT_PLACES];
 	unsigned char stage_sum;
-	struct date date[SCORE_PLACES];
-	unsigned char shottype[SCORE_PLACES];
-} score_t;
+	struct date date[SCOREDAT_PLACES];
+	unsigned char shottype[SCOREDAT_PLACES];
+} scoredat_t;
 
 typedef struct {
-	score_t score;
-	int32_t score_sum; // Sum of all bytes in score, pre-encraption
-} score_file_t;
+	scoredat_t score;
+	int32_t score_sum; // Sum of all bytes in [score], pre-encraption
+} scoredat_section_t;
 
 extern char cleared_game_with[SHOTTYPE_COUNT];
 extern char cleared_extra_with[SHOTTYPE_COUNT];
 
-int pascal score_cleared_load(void);
-// ---------
+int pascal scoredat_cleared_load(void);
+// ----------
 
 // Debugging
 // ---------
@@ -299,7 +299,7 @@ typedef enum {
 	ERROR_FILE_NOT_FOUND = 2,
 	ERROR_OUT_OF_MEMORY = 3,
 	ERROR_MISSING_DRIVER = 4,
-	ERROR_HISCORE_CORRUPT = 5
+	ERROR_SCOREDAT_CORRUPT = 5
 } zun_error_t;
 
 void pascal zun_error(zun_error_t err);

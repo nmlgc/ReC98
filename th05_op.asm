@@ -1432,7 +1432,7 @@ loc_AFE1:
 loc_AFF4:
 		call	op_animate
 		call	main_cdg_load
-		call	score_cleared_load
+		call	scoredat_cleared_load
 		mov	_in_option, 0
 		mov	_quit, 0
 		mov	_menu_sel, 0
@@ -3228,8 +3228,8 @@ sub_C8E2	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_LOAD
-score_load	proc near
+public SCOREDAT_LOAD
+scoredat_load	proc near
 
 arg_0		= word ptr  4
 
@@ -3273,7 +3273,7 @@ loc_CA15:
 		mov	al, 0
 		pop	bp
 		retn	2
-score_load	endp
+scoredat_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3571,7 +3571,7 @@ score_render	proc near
 
 loc_CC13:
 		push	si
-		call	score_load
+		call	scoredat_load
 		xor	di, di
 		jmp	short loc_CC21
 ; ---------------------------------------------------------------------------
@@ -3693,8 +3693,8 @@ score_menu	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_CLEARED_LOAD
-score_cleared_load	proc near
+public SCOREDAT_CLEARED_LOAD
+scoredat_cleared_load	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -3710,7 +3710,7 @@ loc_CDA1:
 
 loc_CDA8:
 		push	si
-		call	score_load
+		call	scoredat_load
 		or	al, al
 		jnz	short loc_CE0D
 		mov	bx, si
@@ -3793,7 +3793,7 @@ loc_CE5D:
 		pop	si
 		pop	bp
 		retn
-score_cleared_load	endp
+scoredat_cleared_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -9,19 +9,19 @@
 #include "th02\scoreenc.c"
 
 long score_highest;
-score_file_t hi;
+scoredat_section_t hi;
 
-void pascal score_defaults_set(void)
+void pascal scoredat_defaults_set(void)
 {
 	int i;
-	for(i = 0; i < SCORE_PLACES; i++) {
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		int c;
 		hi.score.points[i] = 10000 - (i * 1000);
 		hi.score.stage[i] = 5 - (i >> 1);
-		for(c = 0; c < SCORE_NAME_LEN; c++) {
+		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 			hi.score.g_name[i][c] = gs_BULLET;
 		}
-		hi.score.g_name[i][SCORE_NAME_LEN] = 0;
+		hi.score.g_name[i][SCOREDAT_NAME_LEN] = 0;
 		hi.score.date[i].da_year = 1900;
 		hi.score.date[i].da_day = 1;
 		hi.score.date[i].da_mon = 1;
@@ -31,11 +31,11 @@ void pascal score_defaults_set(void)
 
 #include "th02\scorelod.c"
 
-#define score_init() \
-	if(!file_exist(SCORE_FN)) { \
-		score_defaults_set(); \
+#define scoredat_init() \
+	if(!file_exist(SCOREDAT_FN)) { \
+		scoredat_defaults_set(); \
 	} else { \
-		score_load(); \
+		scoredat_load(); \
 	}
 
 // Slightly differs from the same function in OP.EXE!
@@ -79,7 +79,7 @@ void pascal near scores_put(int place_to_highlight)
 		}
 		ALPHABET_PUTCA(0, 0, TX_GREEN | TX_REVERSE);
 	}
-	for(i = 0; i < SCORE_PLACES; i++) {
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
 		score_points_put(6+i, hi.score.points[i], atrb);
@@ -89,7 +89,7 @@ void pascal near scores_put(int place_to_highlight)
 			gaiji_putca(44, 6+i, gs_ALL, atrb);
 		}
 	}
-	for(i = 0; i < SCORE_PLACES; i++) {
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		if(i != 9) {
 			gaiji_putca(6, 6+i, GB_DIGITS+i+1, atrb);
@@ -105,7 +105,7 @@ void pascal near alphabet_putca(int col, int row, unsigned atrb)
 	ALPHABET_PUTCA(col, row, atrb);
 }
 
-void pascal near score_name_puts(int place, int char_to_highlight)
+void pascal near scoredat_name_puts(int place, int char_to_highlight)
 {
 	gaiji_putsa(10, 6 + place, (const char*)hi.score.g_name[place], TX_GREEN);
 	gaiji_putca(
@@ -116,10 +116,10 @@ void pascal near score_name_puts(int place, int char_to_highlight)
 	);
 }
 
-void pascal score_save(void)
+void pascal scoredat_save(void)
 {
-	HI_SCORE_ENCODE();
-	file_append(SCORE_FN);
+	SCOREDAT_ENCODE();
+	file_append(SCOREDAT_FN);
 	file_seek(rank * sizeof(hi), 0);
 	file_write(&hi, sizeof(hi));
 	file_close();
@@ -135,20 +135,20 @@ void pascal score_enter(void)
 	int col;
 	int input_locked;
 	unsigned char input_delay;
-	score_init();
-	if(hi.score.points[SCORE_PLACES - 1] > score) {
+	scoredat_init();
+	if(hi.score.points[SCOREDAT_PLACES - 1] > score) {
 		scores_put(-1);
 		key_delay();
 		return;
 	}
-	for(place = SCORE_PLACES - 1; place > 0; place--) {
+	for(place = SCOREDAT_PLACES - 1; place > 0; place--) {
 		if(hi.score.points[place-1] > score) {
 			break;
 		}
 	}
-	for(shift = SCORE_PLACES - 1; shift > place; shift--) {
+	for(shift = SCOREDAT_PLACES - 1; shift > place; shift--) {
 		hi.score.points[shift] = hi.score.points[shift-1];
-		for(c = 0; c < SCORE_NAME_LEN; c++) {
+		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 			hi.score.g_name[shift][c] = hi.score.g_name[shift-1][c];
 		}
 		hi.score.stage[shift] = hi.score.stage[shift-1];
@@ -161,7 +161,7 @@ void pascal score_enter(void)
 	hi.score.stage[place] = STAGE_ALL;
 	getdate(&hi.score.date[place]);
 	hi.score.shottype[place] = mikoconfig->shottype;
-	for(c = 0; c < SCORE_NAME_LEN; c++) {
+	for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 		hi.score.g_name[shift][c] = gs_BULLET;
 	}
 	scores_put(place);
@@ -213,12 +213,12 @@ void pascal score_enter(void)
 		} else if(col == 16) { \
 			break; \
 		} \
-		score_name_puts(place, name_pos); \
+		scoredat_name_puts(place, name_pos); \
 	} \
 	if(key_det & INPUT_BOMB) { \
 		hi.score.g_name[place][name_pos] = gb_SP; \
 		CLAMP_DEC(name_pos, 0); \
-		score_name_puts(place, name_pos); \
+		scoredat_name_puts(place, name_pos); \
 	} \
 	if(key_det & INPUT_CANCEL) { \
 		break; \
@@ -240,21 +240,21 @@ void pascal score_enter(void)
 			input_delay = 0;
 		}
 	} while(1);
-	score_save();
+	scoredat_save();
 }
 
 void pascal score_highest_get(void)
 {
-	score_init();
+	scoredat_init();
 	score_highest = hi.score.points[0] >= score ? hi.score.points[0] : score;
 }
 
-int pascal score_extra_unlocked(void)
+int pascal scoredat_is_extra_unlocked(void)
 {
 	int game_clear_constants[SHOTTYPE_COUNT] = GAME_CLEAR_CONSTANTS;
 	char rank_save = rank;
 	for(rank = 0; (int)rank < SHOTTYPE_COUNT; rank++) {
-		score_load();
+		scoredat_load();
 		if(game_clear_constants[rank] != hi.score.cleared) {
 			rank = rank_save;
 			return 0;

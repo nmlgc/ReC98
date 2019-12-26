@@ -22,7 +22,7 @@ const char *SHOTTYPES[] = {"高機動", "防御", "攻撃"};
 int logo_step = 0;
 char need_op_h_bft = 1;
 
-score_file_t hi;
+scoredat_section_t hi;
 char extra_unlocked;
 unsigned int score_duration;
 
@@ -72,7 +72,7 @@ void int_to_string(char *str, int val, int chars)
 	str[c] = 0;
 }
 
-void pascal near score_date_put(int y, int place, int atrb)
+void pascal near scoredat_date_put(int y, int place, int atrb)
 {
 	char str[6];
 	int_to_string(str, hi.score.date[place].da_year, 4);
@@ -96,7 +96,7 @@ void pascal near scores_put(int place_to_highlight)
 		"      お名前　　　　　　得点　　　 STAGE  TYPE   日付",
 		TX_GREEN
 	);
-	for(i = 0; i < SCORE_PLACES; i++) {
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
 		score_points_put(7+i, hi.score.points[i], atrb);
@@ -106,9 +106,9 @@ void pascal near scores_put(int place_to_highlight)
 			gaiji_putca(44, 7+i, gs_ALL, atrb);
 		}
 		shottype_put(7+i, hi.score.shottype[i], atrb);
-		score_date_put(7+i, i, atrb);
+		scoredat_date_put(7+i, i, atrb);
 	}
-	for(i = 0; i < SCORE_PLACES; i++) {
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		if(i != 9) {
 			gaiji_putca(9, 7+i, GB_DIGITS+i+1, atrb);
@@ -150,7 +150,7 @@ void pascal score_menu(void)
 	int input_allowed = 0;
 	char page = 0;
 
-	score_load();
+	scoredat_load();
 	graph_accesspage(0);	graph_clear();
 	graph_accesspage(1);	graph_clear();
 	if(need_op_h_bft) {
@@ -187,7 +187,7 @@ void pascal score_menu(void)
 	grc_setclip(0, 0, 639, 399);
 }
 
-int pascal score_cleared_load(void)
+int pascal scoredat_cleared_load(void)
 {
 	int game_clear_constants[SHOTTYPE_COUNT] = GAME_CLEAR_CONSTANTS;
 	unsigned char extra_clear_flags[SHOTTYPE_COUNT] = EXTRA_CLEAR_FLAGS;
@@ -195,7 +195,7 @@ int pascal score_cleared_load(void)
 	int shottype;
 
 	for(rank = 0; rank < 3; rank++) {
-		score_load();
+		scoredat_load();
 		if(hi.score.cleared != game_clear_constants[rank]) {
 			cleared_game_with[rank] = 0;
 			extra_unlocked = 0;
@@ -204,7 +204,7 @@ int pascal score_cleared_load(void)
 		}
 	}
 	rank = 3;
-	score_load();
+	scoredat_load();
 	for(shottype = 0; shottype < 3; shottype++) {
 		if(hi.score.cleared & extra_clear_flags[shottype]) {
 			cleared_extra_with[shottype] = 1;

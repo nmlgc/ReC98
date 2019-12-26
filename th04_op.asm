@@ -1493,7 +1493,7 @@ loc_B40D:
 
 loc_B420:
 		call	op_animate
-		call	score_cleared_load
+		call	scoredat_cleared_load
 		call	main_cdg_load
 		mov	_in_option, 0
 		mov	_quit, 0
@@ -2702,8 +2702,8 @@ sub_C68C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_LOAD
-score_load	proc near
+public SCOREDAT_LOAD
+scoredat_load	proc near
 		push	bp
 		mov	bp, sp
 		push	ds
@@ -2748,7 +2748,7 @@ loc_C79A:
 		mov	al, 0
 		pop	bp
 		retn
-score_load	endp
+scoredat_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3128,7 +3128,7 @@ sub_CA94	proc near
 		assume es:nothing
 		mov	al, es:[bx+0Fh]
 		mov	_rank, al
-		call	score_load
+		call	scoredat_load
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
@@ -3155,7 +3155,7 @@ loc_CAE4:
 		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	score_load
+		call	scoredat_load
 		call	score_menu
 		push	1
 		call	palette_black_in
@@ -3168,7 +3168,7 @@ loc_CB36:
 		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	score_load
+		call	scoredat_load
 		jmp	short loc_CADA
 ; ---------------------------------------------------------------------------
 
@@ -3204,8 +3204,8 @@ sub_CA94	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_CLEARED_LOAD
-score_cleared_load	proc near
+public SCOREDAT_CLEARED_LOAD
+scoredat_cleared_load	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -3213,7 +3213,7 @@ score_cleared_load	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CBEE:
-		call	score_load
+		call	scoredat_load
 		or	al, al
 		jnz	loc_CC78
 		mov	al, _rank
@@ -3275,7 +3275,7 @@ loc_CC78:
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
-score_cleared_load	endp
+scoredat_cleared_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

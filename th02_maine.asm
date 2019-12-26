@@ -2859,7 +2859,7 @@ sub_A8FA	endp
 sub_AFE7	proc far
 		push	bp
 		mov	bp, sp
-		call	score_extra_unlocked
+		call	scoredat_is_extra_unlocked
 		or	ax, ax
 		jz	loc_B07D
 		les	bx, _mikoconfig
@@ -2896,7 +2896,7 @@ sub_AFE7	endp
 sub_B07F	proc far
 		push	bp
 		mov	bp, sp
-		call	score_extra_unlocked
+		call	scoredat_is_extra_unlocked
 		or	ax, ax
 		jz	loc_B115
 		mov	PaletteTone, 0
@@ -3057,7 +3057,7 @@ maine_03_TEXT	ends
 ; ===========================================================================
 
 maine_04_TEXT	segment	byte public 'CODE' use16
-	extern SCORE_EXTRA_UNLOCKED:proc
+	extern SCOREDAT_IS_EXTRA_UNLOCKED:proc
 	extern SCORE_ENTER:proc
 maine_04_TEXT	ends
 

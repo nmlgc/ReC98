@@ -36,14 +36,14 @@ void cfg_write(seg_t mikoconfig_sgm)
 
 int main(int argc, const char **argv)
 {
-	int pascal score_verify(void);
+	int pascal scoredat_verify(void);
 
 	static const char MIKOConfig[] = RES_ID;
 	static const char LOGO[] =
 		"\n"
 		"\n"
 		"東方封魔録用　 常駐プログラム　ZUN_RES.com Version1.01       (c)zun 1997\n";
-	static const char ERROR_HISCORE[] =
+	static const char ERROR_SCOREDAT[] =
 		"ハイスコアファイルがおかしいの、もう一度実行してね。\n";
 	static const char ERROR_NOT_RESIDENT[] =
 		"わたし、まだいませんよぉ\n\n";
@@ -68,8 +68,8 @@ int main(int argc, const char **argv)
 	graph_clear();
 	// No, I tried all permutations of command-line switches,
 	// gotos and returns, and no pure C solution seems to work!
-	if(score_verify() == 1) __asm {
-		push offset ds:ERROR_HISCORE
+	if(scoredat_verify() == 1) __asm {
+		push offset ds:ERROR_SCOREDAT
 		jmp error_puts
 	}
 	if(argc == 2) {
@@ -117,29 +117,29 @@ error_ret:
 #pragma option -O- -k-
 
 extern char rank;
-score_file_t hi;
+scoredat_section_t hi;
 
-void pascal score_recreate(void);
-void pascal near score_load(void);
+void pascal scoredat_recreate(void);
+void pascal near scoredat_load(void);
 
 unsigned char unused_1 = 0;
-const char *SCORE_FN = "huuhi.dat";
+const char *SCOREDAT_FN = "huuhi.dat";
 unsigned char g_name_first_sum = 0;
 unsigned char stage_sum = 0;
 unsigned char unused_2 = 0;
 long points_sum = 0;
 long score_sum = 0;
 
-int pascal score_verify(void)
+int pascal scoredat_verify(void)
 {
-	if(!file_exist(SCORE_FN)) {
-		score_recreate();
+	if(!file_exist(SCOREDAT_FN)) {
+		scoredat_recreate();
 	} else {
 		for(rank = 0; rank < RANK_COUNT; rank++) {
 			register int unused;
 			register int i;
 
-			score_load();
+			scoredat_load();
 			_AL = 0;
 			g_name_first_sum = _AL;
 			stage_sum = _AL;
@@ -153,7 +153,7 @@ int pascal score_verify(void)
 			for(i = 0; i < sizeof(hi.score); i++) {
 				score_sum += *((unsigned char*)(&hi.score) + i);
 			}
-			for(i = 0; i < SCORE_PLACES; i++) {
+			for(i = 0; i < SCOREDAT_PLACES; i++) {
 				points_sum += hi.score.points[i];
 				g_name_first_sum += hi.score.g_name[i][0];
 				stage_sum += hi.score.stage[i];
@@ -170,7 +170,7 @@ int pascal score_verify(void)
 	}
 	return 0;
 delete:
-	file_delete(SCORE_FN);
+	file_delete(SCOREDAT_FN);
 	return 1;
 }
 

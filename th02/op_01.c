@@ -606,7 +606,7 @@ int main(void)
 			zun_error(ERROR_OUT_OF_MEMORY);
 			return 1;
 		}
-		extra_unlocked = score_cleared_load();
+		extra_unlocked = scoredat_cleared_load();
 		if(cfg_load() == 1) {
 			return 1;
 		}
