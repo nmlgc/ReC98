@@ -277,13 +277,13 @@ _envp		= dword	ptr  0Ch
 		call	snd_determine_modes
 		call	graph_show
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FEh
+		cmp	byte ptr es:[bx+30h], ES_CONTINUED
 		jb	loc_A1FE
 		call	sub_A0BD
 		call	sub_B44D
 		call	sub_C0F8
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FFh
+		cmp	byte ptr es:[bx+30h], ES_1CC
 		jz	short loc_A187
 		cmp	byte ptr es:[bx+0Fh], 0
 		jnz	short loc_A1E9
@@ -318,10 +318,9 @@ loc_A1E9:
 
 loc_A1FE:
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FDh
+		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnz	short loc_A274
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		call	sub_C814
 		les	bx, [bp+var_4]
 		mov	byte ptr es:[bx+5], 34h	; '4'
@@ -3102,7 +3101,7 @@ loc_BC79:
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+11h], 6
 		jz	short loc_BD0A
-		cmp	byte ptr es:[bx+30h], 0FFh
+		cmp	byte ptr es:[bx+30h], ES_1CC
 		jnz	short loc_BCFF
 		mov	word ptr es:[bx+26h], 0ABE0h
 
@@ -3114,7 +3113,7 @@ loc_BCFF:
 
 loc_BD0A:
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FDh
+		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnz	short loc_BD1B
 		mov	word ptr es:[bx+26h], 2EE0h
 
@@ -3312,7 +3311,7 @@ loc_BF59:
 
 loc_BF6F:
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FDh
+		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnb	short loc_BFA1
 		cmp	_verdict_rank, RANK_EXTRA
 		jz	short loc_BF96
@@ -3331,7 +3330,7 @@ loc_BF96:
 
 loc_BFA1:
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FEh
+		cmp	byte ptr es:[bx+30h], ES_CONTINUED
 		jnz	short loc_BFB4
 		sub	[bp+var_4], 186A0h
 
@@ -3745,7 +3744,7 @@ loc_C4D1:
 		or	cx, cx
 		jge	short loc_C4B3
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FDh
+		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jb	short loc_C4EE
 		mov	al, byte_125B6
 		mov	ah, 0
@@ -4339,9 +4338,9 @@ loc_C8D9:
 
 loc_C909:
 		les	bx, _humaconfig
-		cmp	byte ptr es:[bx+30h], 0FFh
+		cmp	byte ptr es:[bx+30h], ES_1CC
 		jz	short loc_C922
-		cmp	byte ptr es:[bx+30h], 0FDh
+		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jz	short loc_C922
 		cmp	_hiscore_rank, RANK_EASY
 		jnz	short loc_C95E

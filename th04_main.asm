@@ -494,7 +494,7 @@ sub_AD03	proc near
 		mov	word ptr es:[bx+38h], 0
 		mov	byte ptr es:[bx+31h], 0
 		mov	byte ptr es:[bx+32h], 0
-		mov	byte ptr es:[bx+30h], 37h ; '7'
+		mov	byte ptr es:[bx+30h], ES_INGAME
 		cmp	byte ptr es:[bx+12h], 31h ; '1'
 		jnz	short loc_AD2C
 		mov	ax, PLAYCHAR_MARISA
@@ -1303,12 +1303,12 @@ include th04/formats/std.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B7B9	proc far
+public END_GAME_GOOD
+end_game_good	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _humaconfig
-		mov	byte ptr es:[bx+30h], 0FFh
+		mov	byte ptr es:[bx+30h], ES_1CC
 		mov	byte ptr es:[bx+25h], 30h ; '0'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -1318,18 +1318,18 @@ sub_B7B9	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-sub_B7B9	endp
+end_game_good	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B7E4	proc far
+public END_GAME_BAD
+end_game_bad	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _humaconfig
-		mov	byte ptr es:[bx+30h], 0FEh
+		mov	byte ptr es:[bx+30h], ES_CONTINUED
 		mov	byte ptr es:[bx+25h], 31h ; '1'
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -1339,18 +1339,18 @@ sub_B7E4	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-sub_B7E4	endp
+end_game_bad	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B80F	proc far
+public END_EXTRA
+end_extra	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _humaconfig
-		mov	byte ptr es:[bx+30h], 0FDh
+		mov	byte ptr es:[bx+30h], ES_EXTRA
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
@@ -1359,7 +1359,7 @@ sub_B80F	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-sub_B80F	endp
+end_extra	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6338,7 +6338,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		cmp	stage_id, 5
 		jnz	short loc_E551
-		nopcall	main_01:sub_B7E4
+		nopcall	main_01:end_game_bad
 
 loc_E551:
 		mov	byte_25660, 20h	; ' '
@@ -6434,7 +6434,7 @@ loc_E64F:
 loc_E654:
 		les	bx, _humaconfig
 		assume es:nothing
-		mov	byte ptr es:[bx+30h], 0
+		mov	byte ptr es:[bx+30h], ES_SCORE
 		kajacall	KAJA_SONG_FADE, 4
 		push	4
 		call	palette_black_out
@@ -34657,7 +34657,7 @@ loc_1E7B5:
 loc_1E7F2:
 		call	sub_CF01
 		call	sub_D6EB
-		call	sub_B7E4
+		call	end_game_bad
 
 loc_1E801:
 		cmp	stage_id, 6
@@ -34712,14 +34712,14 @@ loc_1E8B3:
 		jnz	short loc_1E8E5
 		cmp	stage_id, 5
 		jnz	short loc_1E8C9
-		call	sub_B7B9
+		call	end_game_good
 		jmp	short loc_1E8D5
 ; ---------------------------------------------------------------------------
 
 loc_1E8C9:
 		cmp	stage_id, 6
 		jnz	short loc_1E8D5
-		call	sub_B80F
+		call	end_extra
 
 loc_1E8D5:
 		mov	_overlay_text_fp, offset sub_10E39

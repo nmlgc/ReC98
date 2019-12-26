@@ -562,7 +562,7 @@ sub_B063	proc near
 		mov	word ptr es:[bx+3Ah], 0
 		mov	byte ptr es:[bx+1Bh], 0
 		mov	byte ptr es:[bx+1Ch], 0
-		mov	byte ptr es:[bx+1Ah], 37h ; '7'
+		mov	byte ptr es:[bx+1Ah], ES_INGAME
 		mov	al, es:[bx+14h]
 		mov	_playchar, al
 		mov	al, es:[bx+0Eh]
@@ -6312,21 +6312,21 @@ sub_E41C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E448	proc far
+public END_GAME
+end_game	proc far
 		push	bp
 		mov	bp, sp
 		cmp	_continues_used, 0
 		jz	short loc_E45D
 		les	bx, _ksoconfig
 		assume es:nothing
-		mov	byte ptr es:[bx+1Ah], 0FEh
+		mov	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
 loc_E45D:
 		les	bx, _ksoconfig
-		mov	byte ptr es:[bx+1Ah], 0FFh
+		mov	byte ptr es:[bx+1Ah], ES_1CC
 
 loc_E466:
 		kajacall	KAJA_SONG_FADE, 4
@@ -6337,18 +6337,18 @@ loc_E466:
 		nopcall	GameCore
 		pop	bp
 		retf
-sub_E448	endp
+end_game	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E480	proc far
+public END_EXTRA
+end_extra	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _ksoconfig
-		mov	byte ptr es:[bx+1Ah], 0FDh
+		mov	byte ptr es:[bx+1Ah], ES_EXTRA
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
@@ -6357,7 +6357,7 @@ sub_E480	proc far
 		nopcall	GameCore
 		pop	bp
 		retf
-sub_E480	endp
+end_extra	endp
 
 include th05/player/shots_add.asm
 include th04/player/shot_velocity.asm
@@ -8383,7 +8383,7 @@ loc_FA78:
 loc_FA7D:
 		les	bx, _ksoconfig
 		assume es:nothing
-		mov	byte ptr es:[bx+1Ah], 0
+		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		kajacall	KAJA_SONG_FADE, 4
 		push	4
 		call	palette_black_out
@@ -32254,14 +32254,14 @@ loc_1FD06:
 loc_1FD0B:
 		cmp	stage_id, 5
 		jnz	short loc_1FD19
-		call	sub_E448
+		call	end_game
 		jmp	short loc_1FD25
 ; ---------------------------------------------------------------------------
 
 loc_1FD19:
 		cmp	stage_id, 6
 		jnz	short loc_1FD25
-		call	sub_E480
+		call	end_extra
 
 loc_1FD25:
 		mov	_overlay_text_fp, offset sub_119B1

@@ -163,7 +163,7 @@ start_game	proc near
 		push	si
 		push	di
 		les	bx, _ksoconfig
-		mov	byte ptr es:[bx+1Ah], 0
+		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		mov	byte ptr es:[bx+1Fh], 0
 		mov	byte ptr es:[bx+13h], 0
 		mov	al, es:[bx+0Fh]
@@ -315,7 +315,7 @@ start_demo	proc near
 		mov	bp, sp
 		push	si
 		les	bx, _ksoconfig
-		mov	byte ptr es:[bx+1Ah], 0
+		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		mov	byte ptr es:[bx+13h], 0
 		mov	byte ptr es:[bx+0Dh], 3
 		mov	byte ptr es:[bx+0Eh], 3

@@ -294,30 +294,30 @@ sub_A5A4	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FEh
+		cmp	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jnz	short loc_A5BD
 		les	bx, off_10190
-		mov	byte ptr es:[bx+3], 30h	; '0'
+		mov	byte ptr es:[bx+3], '0'
 		jmp	short loc_A5DC
 ; ---------------------------------------------------------------------------
 
 loc_A5BD:
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jnz	short loc_A5D3
 		les	bx, off_10190
-		mov	byte ptr es:[bx+3], 32h	; '2'
+		mov	byte ptr es:[bx+3], '2'
 		jmp	short loc_A5DC
 ; ---------------------------------------------------------------------------
 
 loc_A5D3:
 		les	bx, off_10190
-		mov	byte ptr es:[bx+3], 31h	; '1'
+		mov	byte ptr es:[bx+3], '1'
 
 loc_A5DC:
 		les	bx, _ksoconfig
 		mov	al, es:[bx+14h]
-		add	al, 30h	; '0'
+		add	al, '0'
 		les	bx, off_10190
 		mov	es:[bx+4], al
 		push	word ptr off_10190+2
@@ -361,10 +361,9 @@ _envp		= dword	ptr  0Ch
 		les	bx, _ksoconfig
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FEh
+		cmp	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jb	short loc_A665
 		call	sub_A5A4
 		call	sub_E41D
@@ -373,7 +372,7 @@ _envp		= dword	ptr  0Ch
 
 loc_A665:
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jnz	short loc_A67E
 		call	sub_A5A4
 		call	sub_B3CB
@@ -2219,7 +2218,7 @@ loc_B84F:
 		or	cx, cx
 		jge	short loc_B831
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jb	short loc_B86C
 		mov	al, byte_15176
 		mov	ah, 0
@@ -3655,7 +3654,7 @@ loc_C2BB:
 loc_C2EB:
 		call	bgimage_snap
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jb	short loc_C307
 		cmp	byte ptr es:[bx+20h], 0
 		jnz	short loc_C307
@@ -4472,9 +4471,9 @@ sub_CA02	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FFh
+		cmp	byte ptr es:[bx+1Ah], ES_1CC
 		jz	short loc_CA17
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jnz	short loc_CA57
 
 loc_CA17:
@@ -4521,7 +4520,7 @@ loc_CA53:
 
 loc_CA57:
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FEh
+		cmp	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jnz	short loc_CA66
 		mov	al, 2
 		pop	bp
@@ -4746,7 +4745,7 @@ loc_CBE3:
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+13h], 6
 		jz	short loc_CCC6
-		cmp	byte ptr es:[bx+1Ah], 0FEh
+		cmp	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jb	short loc_CCB3
 		mov	word ptr es:[bx+2Ch], 0B3B0h
 
@@ -4763,7 +4762,7 @@ loc_CCB3:
 
 loc_CCC6:
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jnz	short loc_CCD7
 		mov	word ptr es:[bx+2Ch], 3200h
 
@@ -5015,7 +5014,7 @@ loc_CFB9:
 
 loc_CFCF:
 		les	bx, _ksoconfig
-		cmp	byte ptr es:[bx+1Ah], 0FDh
+		cmp	byte ptr es:[bx+1Ah], ES_EXTRA
 		jnb	short loc_CFF5
 		mov	eax, dword_1517E
 		imul	eax, 7
