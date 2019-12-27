@@ -19,6 +19,8 @@
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
+BINARY = 'O'
+
 include ReC98.inc
 include th04/th04.inc
 include th04/music/music.inc

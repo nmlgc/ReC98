@@ -87,13 +87,13 @@ $**
 |
 
 bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
-	$(CC) $(CFLAGS) -ml -DGAME=4 -nbin\th04\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
 $**
 |
 
 bin\th04\scoreupd.obj: th04\scoreupd.asm
 bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj
-	$(CC) $(CFLAGS) -ml -DGAME=4 -nbin\th04\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='M' -nbin\th04\ -eMAIN.EXE @&&|
 $**
 |
 
@@ -102,12 +102,12 @@ bin\th05\hud_bar.obj: th05\hud_bar.asm
 bin\th05\scoreupd.obj: th04\scoreupd.asm
 
 bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp
-	$(CC) $(CFLAGS) -ml -DGAME=5 -nbin\th05\ -eOP.EXE @&&|
+	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -nbin\th05\ -eOP.EXE @&&|
 $**
 |
 
 bin\th05\main.exe: bin\th05\main.obj th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main012.cpp
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -nbin\th05\ -eMAIN.EXE @&&|
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -DBINARY='M' -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |
 
