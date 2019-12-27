@@ -2424,84 +2424,7 @@ sub_C34E	endp
 
 include th04/playperf.asm
 include th04/select_for_rank.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C3AA	proc near
-		mov	bx, sp
-		push	si
-		mov	bx, ss:[bx+2]
-		mov	si, bx
-		mov	cx, size scoredat_t - 1
-		mov	ah, [bx+scoredat_section_t.key2]
-		add	bx, scoredat_section_t.score
-
-loc_C3BC:
-		mov	al, [bx+1]
-		ror	al, 3
-		xor	al, ah
-		add	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		inc	bx
-		loop	loc_C3BC
-		mov	al, [si+scoredat_section_t.key1]
-		add	[bx], al
-		xor	bx, bx
-		mov	cx, size scoredat_t
-		xor	dx, dx
-		mov	ax, [si+scoredat_section_t.sum]
-		add	si, scoredat_section_t.score
-
-loc_C3DC:
-		mov	bl, [si]
-		add	dx, bx
-		inc	si
-		loop	loc_C3DC
-		sub	ax, dx
-		pop	si
-		retn	2
-sub_C3AA	endp
-		even
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C3EA	proc near
-		mov	bx, sp
-		push	si
-		mov	bx, ss:[bx+2]
-		mov	si, bx
-		xor	dx, dx
-		xor	ax, ax
-		add	bx, scoredat_section_t.score
-		mov	cx, size scoredat_t
-
-loc_C3FD:
-		mov	dl, [bx]
-		add	ax, dx
-		inc	bx
-		loop	loc_C3FD
-		mov	[si+scoredat_section_t.sum], ax
-		call	IRand
-		mov	word ptr [si+scoredat_section_t.key1], ax
-		xor	dx, dx
-		add	si, size scoredat_section_t - 1
-		mov	cx, size scoredat_t
-
-loc_C417:
-		add	dl, al
-		sub	[si], dl
-		mov	dl, [si]
-		ror	dl, 3
-		xor	dl, ah
-		dec	si
-		loop	loc_C417
-		pop	si
-		retn	2
-sub_C3EA	endp
-		even
-
+include th04/formats/scoredat_code_asm.asm
 ; ---------------------------------------------------------------------------
 word_C42A	dw 0
 
@@ -14008,105 +13931,7 @@ loc_12A05:
 		retn
 mugetsu_gengetsu_bg_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12A0A	proc near
-
-@@digit		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+@@digit], gb_9_
-		xor	si, si
-		jmp	short loc_12A7E
-; ---------------------------------------------------------------------------
-
-loc_12A18:
-		mov	_hi.score.cleared, SCOREDAT_NOT_CLEARED
-		xor	di, di
-		jmp	short loc_12A2C
-; ---------------------------------------------------------------------------
-
-loc_12A21:
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.score.g_points[bx+di], gb_0_
-		inc	di
-
-loc_12A2C:
-		cmp	di, SCORE_DIGITS
-		jl	short loc_12A21
-		or	si, si
-		jnz	short loc_12A41
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.score.g_points[bx][5], gb_1_
-		jmp	short loc_12A50
-; ---------------------------------------------------------------------------
-
-loc_12A41:
-		mov	bx, si
-		shl	bx, 3
-		mov	al, [bp+@@digit]
-		mov	_hi.score.g_points[bx][4], al
-		dec	[bp+@@digit]
-
-loc_12A50:
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dl, gb_5_
-		sub	dl, al
-		mov	_hi.score.g_stage[si], dl
-		xor	di, di
-		jmp	short loc_12A6E
-; ---------------------------------------------------------------------------
-
-loc_12A63:
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[bx+di], gs_DOT
-		inc	di
-
-loc_12A6E:
-		cmp	di, SCOREDAT_NAME_LEN
-		jl	short loc_12A63
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[bx][SCOREDAT_NAME_LEN], 0
-		inc	si
-
-loc_12A7E:
-		cmp	si, 0Ah
-		jl	short loc_12A18
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_create
-		xor	si, si
-		jmp	short loc_12AA9
-; ---------------------------------------------------------------------------
-
-loc_12A90:
-		call	main_01:sub_C3EA pascal, offset _hi
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		call	main_01:sub_C3AA pascal, offset _hi
-		inc	si
-
-loc_12AA9:
-		cmp	si, 0Ah
-		jl	short loc_12A90
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retn
-sub_12A0A	endp
-
+include th04/formats/scoredat_recreate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14137,12 +13962,12 @@ sub_12AB7	proc near
 loc_12AFE:
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	file_close
-		call	main_01:sub_C3AA pascal, offset _hi
+		call	main_01:scoredat_decode pascal, offset _hi
 		or	al, al
 		jz	short loc_12B1C
 
 loc_12B19:
-		call	main_01:sub_12A0A
+		call	main_01:scoredat_recreate
 
 loc_12B1C:
 		pop	bp
@@ -14157,7 +13982,7 @@ sub_12AB7	endp
 sub_12B1E	proc near
 		push	bp
 		mov	bp, sp
-		call	main_01:sub_C3EA pascal, offset _hi
+		call	main_01:scoredat_encode pascal, offset _hi
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append

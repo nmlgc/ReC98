@@ -3478,214 +3478,9 @@ sub_C0F8	proc near
 		retn
 sub_C0F8	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C149	proc near
-
-@@byte		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	si, scoredat_section_t.score
-		jmp	short loc_C176
-; ---------------------------------------------------------------------------
-
-loc_C153:
-		mov	al, byte ptr _hi+1[si]
-		mov	[bp+@@byte], al
-		mov	al, _hi.key2
-		ror	[bp+@@byte], 3
-		xor	[bp+@@byte], al
-		mov	al, byte ptr _hi+0[si]
-		mov	dl, _hi.key1
-		add	dl, [bp+@@byte]
-		add	al, dl
-		mov	byte ptr _hi+0[si], al
-		inc	si
-
-loc_C176:
-		cmp	si, size scoredat_section_t - 1
-		jl	short loc_C153
-		mov	al, _hi.key1
-		add	byte ptr _hi+0[si], al
-		xor	cx, cx
-		mov	si, scoredat_section_t.score
-		jmp	short loc_C193
-; ---------------------------------------------------------------------------
-
-loc_C18A:
-		mov	al, byte ptr _hi+0[si]
-		mov	ah, 0
-		add	cx, ax
-		inc	si
-
-loc_C193:
-		cmp	si, size scoredat_section_t
-		jl	short loc_C18A
-		mov	al, byte ptr _hi.sum
-		sub	al, cl
-		pop	si
-		leave
-		retn
-sub_C149	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C1A1	proc near
-
-@@byte		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	_hi.sum, 0
-		mov	si, scoredat_section_t.score
-		jmp	short loc_C1BC
-; ---------------------------------------------------------------------------
-
-loc_C1B1:
-		mov	al, byte ptr _hi[si]
-		mov	ah, 0
-		add	_hi.sum, ax
-		inc	si
-
-loc_C1BC:
-		cmp	si, size scoredat_section_t
-		jl	short loc_C1B1
-		call	IRand
-		mov	_hi.key1, al
-		call	IRand
-		mov	_hi.key2, al
-		mov	[bp+@@byte], 0
-		mov	si, size scoredat_section_t - 1
-		jmp	short loc_C1FE
-; ---------------------------------------------------------------------------
-
-loc_C1DB:
-		mov	al, byte ptr _hi[si]
-		mov	dl, _hi.key1
-		add	dl, [bp+@@byte]
-		sub	al, dl
-		mov	byte ptr _hi[si], al
-		mov	al, byte ptr _hi[si]
-		mov	[bp+@@byte], al
-		mov	al, _hi.key2
-		ror	[bp+@@byte], 3
-		xor	[bp+@@byte], al
-		dec	si
-
-loc_C1FE:
-		cmp	si, scoredat_section_t.score
-		jge	short loc_C1DB
-		pop	si
-		leave
-		retn
-sub_C1A1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C206	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+var_1], gb_9_
-		xor	si, si
-		jmp	short loc_C27A
-; ---------------------------------------------------------------------------
-
-loc_C214:
-		mov	_hi.score.cleared, SCOREDAT_NOT_CLEARED
-		xor	di, di
-		jmp	short loc_C228
-; ---------------------------------------------------------------------------
-
-loc_C21D:
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.score.g_points[bx+di], gb_0_
-		inc	di
-
-loc_C228:
-		cmp	di, SCORE_DIGITS
-		jl	short loc_C21D
-		or	si, si
-		jnz	short loc_C23D
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.score.g_points[bx][5], gb_1_
-		jmp	short loc_C24C
-; ---------------------------------------------------------------------------
-
-loc_C23D:
-		mov	bx, si
-		shl	bx, 3
-		mov	al, [bp+var_1]
-		mov	_hi.score.g_points[bx][4], al
-		dec	[bp+var_1]
-
-loc_C24C:
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dl, gb_5_
-		sub	dl, al
-		mov	_hi.score.g_stage[si], dl
-		xor	di, di
-		jmp	short loc_C26A
-; ---------------------------------------------------------------------------
-
-loc_C25F:
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[bx+di], gs_DOT
-		inc	di
-
-loc_C26A:
-		cmp	di, SCOREDAT_NAME_LEN
-		jl	short loc_C25F
-		mov	bx, si
-		imul	bx, (SCOREDAT_NAME_LEN + 1)
-		mov	_hi.score.g_name[bx][SCOREDAT_NAME_LEN], 0
-		inc	si
-
-loc_C27A:
-		cmp	si, 0Ah
-		jl	short loc_C214
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_create
-		xor	si, si
-		jmp	short loc_C29F
-; ---------------------------------------------------------------------------
-
-loc_C28C:
-		call	sub_C1A1
-		call	file_write pascal, ds, offset _hi, size scoredat_section_t
-		call	sub_C149
-		inc	si
-
-loc_C29F:
-		cmp	si, 0Ah
-		jl	short loc_C28C
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retn
-sub_C206	endp
-
+include th04/formats/scoredat_decode.asm
+include th04/formats/scoredat_encode.asm
+include th04/formats/scoredat_recreate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3719,12 +3514,12 @@ arg_0		= byte ptr  4
 loc_C2EF:
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
 		call	file_close
-		call	sub_C149
+		call	scoredat_decode
 		or	al, al
 		jz	short loc_C310
 
 loc_C307:
-		call	sub_C206
+		call	scoredat_recreate
 		mov	al, 1
 		pop	bp
 		retn	2
@@ -3745,7 +3540,7 @@ sub_C316	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_C1A1
+		call	scoredat_encode
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
@@ -3770,8 +3565,8 @@ loc_C360:
 		movzx	eax, ax
 		call	file_seek pascal, large eax, 0
 		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	sub_C149
-		call	sub_C1A1
+		call	scoredat_decode
+		call	scoredat_encode
 		mov	ax, si
 		imul	ax, size scoredat_section_t
 		movzx	eax, ax

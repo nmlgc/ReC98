@@ -6559,80 +6559,7 @@ sub_E708	endp
 include th04/playperf.asm
 include th05/select_for_playchar.asm
 include th04/select_for_rank.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E76C	proc near
-		push	si
-		mov	bx, offset _hi
-		mov	si, bx
-		mov	cx, size scoredat_t - 1
-		mov	dx, [bx]
-		add	bx, scoredat_section_t.score
-
-loc_E77A:
-		mov	al, [bx+1]
-		ror	al, 3
-		xor	al, dh
-		add	al, dl
-		add	[bx], al
-		inc	bx
-		loop	loc_E77A
-		add	[bx], dl
-		mov	cx, size scoredat_t
-		xor	bx, bx
-		xor	dx, dx
-		mov	ax, [si+scoredat_section_t.sum]
-		add	si, scoredat_section_t.score
-
-loc_E798:
-		mov	bl, [si]
-		add	dx, bx
-		inc	si
-		loop	loc_E798
-		sub	ax, dx
-		pop	si
-		retn
-sub_E76C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E7A3	proc near
-		push	si
-		mov	bx, offset _hi
-		mov	si, bx
-		xor	dx, dx
-		xor	ax, ax
-		add	bx, scoredat_section_t.score
-		mov	cx, size scoredat_t
-
-loc_E7B3:
-		mov	dl, [bx]
-		add	ax, dx
-		inc	bx
-		loop	loc_E7B3
-		mov	[si+scoredat_section_t.sum], ax
-		call	IRand
-		mov	word ptr [si+scoredat_section_t.key1], ax
-		xor	dx, dx
-		add	si, size scoredat_section_t - 1
-		mov	cx, size scoredat_t
-
-loc_E7CC:
-		add	dl, al
-		sub	[si], dl
-		mov	dl, [si]
-		ror	dl, 3
-		xor	dl, ah
-		dec	si
-		loop	loc_E7CC
-		pop	si
-		retn
-sub_E7A3	endp
-
+include th04/formats/scoredat_code_asm.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6669,7 +6596,7 @@ loc_E7E7:
 		mov	ah, 3Eh
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
-		call	sub_E76C
+		call	scoredat_decode
 		retn
 sub_E7DC	endp
 
@@ -6678,7 +6605,7 @@ sub_E7DC	endp
 
 
 sub_E813	proc near
-		call	sub_E7A3
+		call	scoredat_encode
 		mov	ax, 3D02h
 		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
@@ -6704,7 +6631,7 @@ sub_E813	proc near
 		mov	ah, 3Eh
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
-		call	sub_E76C
+		call	scoredat_decode
 		retn
 sub_E813	endp
 
