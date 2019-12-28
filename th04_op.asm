@@ -2248,13 +2248,9 @@ sub_C33F	proc near
 		push	bp
 		mov	bp, sp
 		mov	_graph_putsa_fx_func, 2
-		push	1400040h
-		push	1400140h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		call	music_flip
-		push	1400040h
-		push	1400140h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		pop	bp
 		retn
 sub_C33F	endp
@@ -2277,9 +2273,7 @@ draw_cmt	proc near
 loc_C37C:
 		call	music_cmt_load pascal, [bp+@@track]
 		call	screen_back_B_put
-		push	1400040h
-		push	1400140h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 320
 		cmp	byte_12DBE, 0
 		jz	short loc_C3A2
 		call	sub_C30E

@@ -766,10 +766,7 @@ loc_A95C:
 
 loc_A962:
 		call	_input_reset_sense_held
-		push	576
-		push	point_15004.y
-		push	100010h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, 576, point_15004.y, (16 shl 16) or 16
 		or	si, si
 		jle	short loc_A9BD
 		test	_key_det.hi, high INPUT_OK
@@ -875,9 +872,7 @@ loc_AA3E:
 		mov	point_15004.x, 80
 		mov	point_15004.y, 320
 		graph_accesspage 1
-		push	500140h
-		push	1E00040h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (80 shl 16) or 320, (480 shl 16) or 64
 		mov	dx, 0A6h
 		mov	al, 0
 
@@ -2636,10 +2631,7 @@ loc_BAFE:
 		mov	di, ax
 
 loc_BB00:
-		push	si
-		push	di
-		push	820012h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, si, di, (130 shl 16) or 18
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
@@ -3163,17 +3155,17 @@ loc_BE9B:
 
 loc_BEA6:
 		mov	ax, [si+6]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
+		add	ax, -16
 		push	ax
 		mov	ax, [si+8]
 		cwd
 		idiv	bx
-		add	ax, 0FFF0h
+		add	ax, -16
 		push	ax
-		push	200020h
+		push	(32 shl 16) or 32
 		call	bgimage_put_rect
 
 loc_BEC8:

@@ -2422,7 +2422,7 @@ loc_BEF4:
 		push	0
 		lea	ax, [si+96]
 		push	ax
-		push	1400010h
+		push	(320 shl 16) or 16
 		call	bgimage_put_rect
 
 loc_BF05:
@@ -2590,19 +2590,11 @@ sub_C3A7	proc near
 		push	bp
 		mov	bp, sp
 		mov	_graph_putsa_fx_func, 2
-		push	1400020h
-		push	1400010h
-		call	bgimage_put_rect
-		push	14000B4h
-		push	1400090h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or  32, (320 shl 16) or  16
+		call	bgimage_put_rect pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		call	music_flip
-		push	1400020h
-		push	1400010h
-		call	bgimage_put_rect
-		push	14000B4h
-		push	1400090h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or  32, (320 shl 16) or  16
+		call	bgimage_put_rect pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		pop	bp
 		retn
 sub_C3A7	endp
@@ -2625,9 +2617,7 @@ draw_cmt	proc near
 loc_C406:
 		call	music_cmt_load pascal, [bp+@@track]
 		call	screen_back_B_put
-		push	1400040h
-		push	1400100h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, (320 shl 16) or 64, (320 shl 16) or 256
 		cmp	byte_13E96, 0
 		jz	short loc_C42C
 		call	sub_C376
@@ -2659,20 +2649,12 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		pushd	20h ; ' '
-		push	1400010h
-		call	bgimage_put_rect
-		pushd	60h
-		push	14000C0h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, large (0 shl 16) or 32, (320 shl 16) or  16
+		call	bgimage_put_rect pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	draw_tracks pascal, si
 		call	music_flip
-		pushd	20h ; ' '
-		push	1400010h
-		call	bgimage_put_rect
-		pushd	60h
-		push	14000C0h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, large (0 shl 16) or 32, (320 shl 16) or  16
+		call	bgimage_put_rect pascal, large (0 shl 16) or 96, (320 shl 16) or 192
 		call	draw_tracks pascal, si
 		pop	si
 		pop	bp
@@ -3734,13 +3716,10 @@ loc_D012:
 		push	ax
 		lea	ax, [di-8]
 		push	ax
-		push	0E00008h
+		push	(224 shl 16) or 8
 		call	bgimage_put_rect
 		lea	ax, [si-8]
-		push	ax
-		push	di
-		push	800A0h
-		call	bgimage_put_rect
+		call	bgimage_put_rect pascal, ax, di, (8 shl 16) or 160
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
 		mov	bx, ax
