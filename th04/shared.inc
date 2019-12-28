@@ -34,6 +34,5 @@ include th04/hardware/grcg.inc
 include th04/hardware/input.inc
 include th04/math/randring.inc
 include th04/math/motion.inc
-include th04/gaiji/gaiji.inc
 include th04/hud/popup.inc
 include th04/end/end.inc

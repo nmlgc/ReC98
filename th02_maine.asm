@@ -154,14 +154,14 @@ var_9		= byte ptr -9
 var_8		= dword	ptr -8
 var_4		= dword	ptr -4
 arg_0		= dword	ptr  4
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@y		= word ptr  8
+@@x		= word ptr  0Ah
 
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	di, 0A0h
-		mov	[bp+var_4], 989680h
+		mov	di, gb_0_
+		mov	[bp+var_4], 10000000
 		mov	[bp+var_9], 0
 		xor	si, si
 		jmp	short loc_9638
@@ -171,7 +171,7 @@ loc_95E4:
 		mov	eax, [bp+arg_0]
 		cdq
 		idiv	[bp+var_4]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_8], edx
@@ -180,7 +180,7 @@ loc_95E4:
 		idiv	ebx
 		mov	[bp+var_4], eax
 		mov	ax, word ptr [bp+var_8]
-		add	ax, 0A0h
+		add	ax, gb_0_
 		mov	di, ax
 		cmp	[bp+var_8], 0
 		jz	short loc_961D
@@ -191,12 +191,8 @@ loc_961D:
 		jz	short loc_9637
 		mov	ax, si
 		shl	ax, 4
-		add	ax, [bp+arg_6]
-		push	ax
-		push	[bp+arg_4]
-		push	di
-		push	0Fh
-		call	graph_gaiji_putc
+		add	ax, [bp+@@x]
+		call	graph_gaiji_putc pascal, ax, [bp+@@y], di, 15
 
 loc_9637:
 		inc	si
@@ -2273,7 +2269,7 @@ rotrect	endp
 
 sub_A8FA	proc near
 
-var_4		= byte ptr -4
+@@g_str		= byte ptr -4
 
 		enter	4, 0
 		push	si
@@ -2557,8 +2553,7 @@ loc_A992:
 		pop	cx
 		call	_pi_slot_put c, 0, large 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
 		push	64h ; 'd'
@@ -2605,12 +2600,12 @@ loc_A992:
 		push	0A00040h
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	10000A0h
+		push	(256 shl 16) or 160
 		les	bx, _mikoconfig
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_putc
 		push	1000A0h
 		push	40h
@@ -2627,15 +2622,15 @@ loc_A992:
 		push	0C00040h
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	0D000C0h
-		push	10h
+		push	(208 shl 16) or 192
+		push	GAIJI_W
 		push	ds
 		mov	al, _rank
 		cbw
 		shl	ax, 3
-		add	ax, 90h
+		add	ax, offset _RANKS_CENTER
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_puts
 		push	1000C0h
 		push	40h
@@ -2652,13 +2647,13 @@ loc_A992:
 		push	0E00040h
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	10000E0h
+		push	(256 shl 16) or 224
 		les	bx, _mikoconfig
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	ah, 0
-		add	ax, 0A1h ; '¡'
+		add	ax, gb_1_
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_putc
 		push	1000E0h
 		push	40h
@@ -2675,13 +2670,13 @@ loc_A992:
 		push	1000040h
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	1000100h
+		push	(256 shl 16) or 256
 		les	bx, _mikoconfig
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	ah, 0
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_putc
 		push	100100h
 		push	40h
@@ -2714,15 +2709,15 @@ loc_AEB2:
 		add	sp, 0Ah
 		push	di
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@g_str]
 		push	ax
 		call	sub_9846
-		push	0C00120h
-		push	10h
+		push	(192 shl 16) or 288
+		push	GAIJI_W
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@g_str]
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_puts
 		cmp	di, 64h	; 'd'
 		jnz	short loc_AEEF

@@ -933,8 +933,7 @@ loc_AA91:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
@@ -950,8 +949,7 @@ loc_AAE1:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
@@ -974,8 +972,7 @@ loc_AB3B:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
@@ -1999,15 +1996,13 @@ sub_B5A6	proc near
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 		call	sub_B36C
 		push	1
 		call	frame_delay
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	sub_B489
 		push	1
 		call	palette_black_out
@@ -2258,8 +2253,7 @@ op_animate	proc near
 		graph_accesspage 0
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
-		push	1
-		call	graph_copy_page
+		call	graph_copy_page pascal, 1
 		mov	[bp+@@page_access], 1
 		mov	[bp+var_2], 0
 		graph_accesspage 0
@@ -2315,8 +2309,7 @@ loc_BDB7:
 loc_BDBE:
 		cmp	si, 8
 		jl	short loc_BDB7
-		push	1
-		call	graph_copy_page
+		call	graph_copy_page pascal, 1
 		les	bx, _ksoconfig
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_BDE8
@@ -2367,8 +2360,7 @@ loc_BE46:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		pop	si
 		leave
 		retn
@@ -2724,8 +2716,7 @@ musicroom	proc near
 		call	screen_back_B_snap
 		call	bgimage_snap
 		call	draw_tracks pascal, word ptr _music_sel
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		graph_accesspage 1
 		graph_showpage 0
 		call	pfend
@@ -3082,28 +3073,28 @@ sub_CA1B	endp
 
 sub_CAB0	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@gaiji		= word ptr  4
+@@y		= word ptr  6
+@@x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		cmp	[bp+arg_0], 0FFh
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
+		cmp	[bp+@@gaiji], 0FFh
 		jz	short loc_CADB
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	[bp+arg_0]
-		push	0Eh
+		push	[bp+@@gaiji]
+		push	14
 		call	graph_gaiji_putc
 		push	si
 		push	di
-		push	[bp+arg_0]
+		push	[bp+@@gaiji]
 		jmp	short loc_CAF3
 ; ---------------------------------------------------------------------------
 
@@ -3112,11 +3103,11 @@ loc_CADB:
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	0EF000Eh
+		push	(g_HISCORE_EMPTY shl 16) or 14
 		call	graph_gaiji_putc
 		push	si
 		push	di
-		push	0EFh ; 'ÅE
+		push	g_HISCORE_EMPTY
 
 loc_CAF3:
 		push	7
@@ -3134,7 +3125,7 @@ sub_CAB0	endp
 
 sub_CB00	proc near
 
-var_2		= word ptr -2
+@@color		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -3155,10 +3146,10 @@ loc_CB1B:
 ; ---------------------------------------------------------------------------
 
 loc_CB20:
-		mov	si, 148h
+		mov	si, 328
 
 loc_CB23:
-		mov	di, 58h	; 'X'
+		mov	di, 88
 		jmp	short loc_CB33
 ; ---------------------------------------------------------------------------
 
@@ -3168,13 +3159,13 @@ loc_CB28:
 ; ---------------------------------------------------------------------------
 
 loc_CB2D:
-		mov	si, 148h
+		mov	si, 328
 
 loc_CB30:
-		mov	di, 0E0h
+		mov	di, 224
 
 loc_CB33:
-		mov	[bp+var_2], 7
+		mov	[bp+@@color], 7
 		jmp	short loc_CB74
 ; ---------------------------------------------------------------------------
 
@@ -3191,12 +3182,12 @@ loc_CB49:
 ; ---------------------------------------------------------------------------
 
 loc_CB4E:
-		mov	si, 148h
+		mov	si, 328
 
 loc_CB51:
 		mov	ax, [bp+arg_0]
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_CB6D
 ; ---------------------------------------------------------------------------
 
@@ -3206,41 +3197,41 @@ loc_CB5C:
 ; ---------------------------------------------------------------------------
 
 loc_CB61:
-		mov	si, 148h
+		mov	si, 328
 
 loc_CB64:
 		mov	ax, [bp+arg_0]
 		shl	ax, 4
-		add	ax, 0E8h ; 'ÅE
+		add	ax, 232
 
 loc_CB6D:
 		mov	di, ax
 
 loc_CB6F:
-		mov	[bp+var_2], 2
+		mov	[bp+@@color], 2
 
 loc_CB74:
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	10h
+		push	GAIJI_W
 		mov	ax, [bp+arg_0]
-		imul	ax, 9
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
 		push	si
 		push	di
-		push	10h
+		push	GAIJI_W
 		mov	ax, [bp+arg_0]
-		imul	ax, 9
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@color]
 		call	graph_gaiji_puts
 		lea	ax, [si+96h]
 		push	ax
@@ -3852,8 +3843,7 @@ loc_D111:
 		jl	short loc_D0F7
 		mov	al, byte ptr [bp+@@i]
 		mov	_playchar_menu_sel, al
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 		pop	si

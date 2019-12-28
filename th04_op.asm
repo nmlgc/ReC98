@@ -1034,8 +1034,7 @@ loc_AF56:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
@@ -1060,8 +1059,7 @@ loc_AFBD:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 64h ; 'd'
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
@@ -2055,15 +2053,13 @@ sub_B9CE	proc near
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 		call	sub_B794
 		push	1
 		call	frame_delay
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	sub_B8B1
 		push	1
 		call	palette_black_out
@@ -2327,8 +2323,7 @@ musicroom	proc near
 		mov	al, music_track_playing
 		mov	_music_sel, al
 		call	draw_tracks pascal, word ptr _music_sel
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
@@ -2619,28 +2614,28 @@ sub_C79E	endp
 
 sub_C8A5	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@gaiji		= word ptr  4
+@@y		= word ptr  6
+@@x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		cmp	[bp+arg_0], 0FFh
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
+		cmp	[bp+@@gaiji], 0FFh
 		jz	short loc_C8D0
 		lea	ax, [si+2]
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	[bp+arg_0]
-		push	0Eh
+		push	[bp+@@gaiji]
+		push	14
 		call	graph_gaiji_putc
 		push	si
 		push	di
-		push	[bp+arg_0]
+		push	[bp+@@gaiji]
 		jmp	short loc_C8E8
 ; ---------------------------------------------------------------------------
 
@@ -2649,11 +2644,11 @@ loc_C8D0:
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	0EF000Eh
+		push	(g_HISCORE_EMPTY shl 16) or 14
 		call	graph_gaiji_putc
 		push	si
 		push	di
-		push	0EFh
+		push	g_HISCORE_EMPTY
 
 loc_C8E8:
 		push	7
@@ -2680,17 +2675,17 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	loc_C989
-		push	0A0062h
-		push	10h
+		push	(10 shl 16) or 98
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_reimu.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
-		push	80060h
-		push	10h
+		push	(8 shl 16) or 96
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_reimu.score.g_name
@@ -2698,17 +2693,17 @@ arg_0		= word ptr  4
 		push	ax
 		push	7
 		call	graph_gaiji_puts
-		push	1420062h
-		push	10h
+		push	(322 shl 16) or 98
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_marisa.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
-		push	1400060h
-		push	10h
+		push	(320 shl 16) or 96
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_marisa.score.g_name
@@ -2730,22 +2725,22 @@ arg_0		= word ptr  4
 loc_C989:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 70h	; 'p'
+		add	ax, 112
 		mov	di, ax
-		push	0Ah
+		push	10
 		add	ax, 2
 		push	ax
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_reimu.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
 		push	8
 		push	di
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_reimu.score.g_name
@@ -2753,20 +2748,20 @@ loc_C989:
 		push	ax
 		push	2
 		call	graph_gaiji_puts
-		push	142h
+		push	322
 		lea	ax, [di+2]
 		push	ax
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_marisa.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
-		push	140h
+		push	320
 		push	di
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi_marisa.score.g_name
@@ -2919,8 +2914,7 @@ loc_CB58:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 
@@ -3063,8 +3057,7 @@ var_3		= byte ptr -3
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	pi_slot_load pascal, 0, ds, offset aOp5b_pi
 		call	pi_slot_load pascal, 1, ds, offset aOp4b_pi
 		call	pi_slot_load pascal, 2, ds, offset aOp3b_pi
@@ -3137,8 +3130,7 @@ loc_CE50:
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		xor	si, si
 		jmp	short loc_CEAA
 ; ---------------------------------------------------------------------------
@@ -4109,8 +4101,7 @@ playchar_menu_init	proc near
 		push	1
 		call	sub_D338
 		call	sub_D3A2
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_black_in
 		pop	bp
@@ -4272,8 +4263,7 @@ loc_D816:
 		push	1
 		call	frame_delay
 		graph_showpage 1
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	vsync_Count1, 0
 		push	1
 		call	frame_delay
@@ -4309,8 +4299,7 @@ loc_D881:
 		call	far ptr	palette_show
 		call	pi_slot_put pascal, large 0, 0
 		call	sub_D650
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	1
 		call	palette_white_in
 
@@ -4382,8 +4371,7 @@ loc_D939:
 		push	1
 		call	frame_delay
 		graph_showpage 1
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		mov	vsync_Count1, 0
 		push	1
 		call	frame_delay

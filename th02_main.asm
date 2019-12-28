@@ -29441,8 +29441,7 @@ marisa_init	proc far
 		call	super_roll_put_tiny
 		mov	al, _page_front
 		mov	ah, 0
-		push	ax
-		call	graph_copy_page
+		call	graph_copy_page pascal, ax
 		graph_accesspage _page_back
 		graph_showpage _page_front
 		mov	byte_2287E, 2

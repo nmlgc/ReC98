@@ -766,7 +766,7 @@ loc_A95C:
 
 loc_A962:
 		call	_input_reset_sense_held
-		push	240h
+		push	576
 		push	point_15004.y
 		push	100010h
 		call	bgimage_put_rect
@@ -778,14 +778,14 @@ loc_A962:
 		jnz	short loc_A9BD
 		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_A9BD
-		push	240h
+		push	576
 		push	point_15004.y
 		mov	ax, di
 		shr	ax, 3
-		and	ax, 3
-		add	ax, 1Ch
+		and	ax, ga_RETURN_KEY_FRAMES - 1
+		add	ax, ga_RETURN_KEY
 		push	ax
-		push	0Fh
+		push	15
 		call	graph_gaiji_putc
 		inc	di
 		cmp	[bp+var_2], 0
@@ -1103,7 +1103,7 @@ loc_AC52:
 ; ---------------------------------------------------------------------------
 
 loc_AC5C:
-		push	18Ch
+		push	RES_Y - 4
 
 loc_AC5F:
 		call	graph_scrollup
@@ -1164,8 +1164,7 @@ loc_ACE1:
 
 loc_ACF4:
 		call	pi_slot_put pascal, large 0, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	bgimage_snap
 		jmp	loc_AF8F	; default
@@ -1459,6 +1458,7 @@ sub_AFD6	proc near
 var_A		= word ptr -0Ah
 @@str		= dword	ptr -8
 var_3		= word ptr -3
+@@ch		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -1536,17 +1536,17 @@ loc_B095:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_B099:
-		mov	[bp+var_3+1], 9	; jumptable 0000B095 case 116
+		mov	[bp+@@ch], 9	; jumptable 0000B095 case 116
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
 loc_B0A0:
-		mov	[bp+var_3+1], 6	; jumptable 0000B095 case 104
+		mov	[bp+@@ch], 6	; jumptable 0000B095 case 104
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
 loc_B0A7:
-		mov	[bp+var_3+1], 8	; jumptable 0000B095 case 63
+		mov	[bp+@@ch], 8	; jumptable 0000B095 case 63
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
@@ -1564,18 +1564,18 @@ loc_B0AE:
 ; ---------------------------------------------------------------------------
 
 loc_B0C9:
-		mov	[bp+var_3+1], 0Ah
+		mov	[bp+@@ch], 0Ah
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
 loc_B0D0:
-		mov	[bp+var_3+1], 0Bh
+		mov	[bp+@@ch], 0Bh
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
 loc_B0D7:
 		dec	word_14F88
-		mov	[bp+var_3+1], 7
+		mov	[bp+@@ch], 7
 		jmp	short loc_B0F4
 ; ---------------------------------------------------------------------------
 
@@ -1583,7 +1583,7 @@ loc_B0E2:
 		dec	word_14F88	; default
 		mov	word_1500C, 3
 		push	ss
-		lea	ax, [bp+var_3+1]
+		lea	ax, [bp+@@ch]
 		push	ax
 		call	sub_A738
 
@@ -1592,7 +1592,7 @@ loc_B0F4:
 		graph_accesspage 1
 		push	point_15004.x
 		push	point_15004.y
-		push	[bp+var_3+1]
+		push	[bp+@@ch]
 		mov	al, col_1500A
 		mov	ah, 0
 		push	ax
@@ -2429,9 +2429,9 @@ off_B9B9	dw offset loc_B8B1
 
 sub_B9C1	proc near
 
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  4
+@@col		= byte ptr -3
+@@y		= word ptr -2
+@@gaiji		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -2455,7 +2455,7 @@ loc_B9E1:
 		mov	al, 2
 
 loc_B9E3:
-		mov	[bp+var_3], al
+		mov	[bp+@@col], al
 		mov	bx, [bp+arg_2]
 		cmp	bx, 3
 		ja	short loc_BA4E
@@ -2473,69 +2473,69 @@ loc_B9F5:
 loc_BA01:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA0B:
-		mov	di, 266h
+		mov	di, 614
 		or	si, si
 		jnz	short loc_BA17
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA17:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA21:
-		mov	di, 126h
+		mov	di, 294
 		or	si, si
 		jnz	short loc_BA2D
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA2D:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA37:
-		mov	di, 266h
+		mov	di, 614
 		or	si, si
 		jnz	short loc_BA43
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
 loc_BA43:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 
 loc_BA4B:
-		mov	[bp+var_2], ax
+		mov	[bp+@@y], ax
 
 loc_BA4E:
 		lea	ax, [di+2]
 		push	ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@y]
 		add	ax, 2
 		push	ax
-		push	[bp+arg_0]
-		push	0Eh
+		push	[bp+@@gaiji]
+		push	14
 		call	graph_gaiji_putc
 		push	di
-		push	[bp+var_2]
-		push	[bp+arg_0]
-		mov	al, [bp+var_3]
+		push	[bp+@@y]
+		push	[bp+@@gaiji]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -2560,7 +2560,7 @@ sub_BA84	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
-arg_4		= word ptr  8
+@@place		= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -2576,61 +2576,61 @@ arg_4		= word ptr  8
 
 loc_BA9C:
 		mov	si, 8
-		cmp	[bp+arg_4], 0
+		cmp	[bp+@@place], 0
 		jnz	short loc_BAAA
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BAAA:
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BAB5:
-		mov	si, 148h
-		cmp	[bp+arg_4], 0
+		mov	si, 328
+		cmp	[bp+@@place], 0
 		jnz	short loc_BAC3
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BAC3:
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BACE:
 		mov	si, 8
-		cmp	[bp+arg_4], 0
+		cmp	[bp+@@place], 0
 		jnz	short loc_BADC
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BADC:
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BAE7:
-		mov	si, 148h
-		cmp	[bp+arg_4], 0
+		mov	si, 328
+		cmp	[bp+@@place], 0
 		jnz	short loc_BAF5
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BAFE
 ; ---------------------------------------------------------------------------
 
 loc_BAF5:
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@place]
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 
 loc_BAFE:
 		mov	di, ax
@@ -2644,19 +2644,19 @@ loc_BB00:
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	10h
-		mov	ax, [bp+arg_4]
+		push	GAIJI_W
+		mov	ax, [bp+@@place]
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
 		push	si
 		push	di
-		push	10h
-		mov	ax, [bp+arg_4]
-		imul	ax, 9
+		push	GAIJI_W
+		mov	ax, [bp+@@place]
+		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
@@ -2668,7 +2668,7 @@ loc_BB00:
 		add	ax, si
 		push	ax
 		push	di
-		mov	bx, [bp+arg_4]
+		mov	bx, [bp+@@place]
 		imul	bx, (SCOREDAT_NAME_LEN + 1)
 		mov	al, [bp+arg_0]
 		mov	ah, 0
@@ -2741,7 +2741,7 @@ off_BBE7	dw offset loc_BA9C
 
 sub_BBEF	proc near
 
-var_2		= word ptr -2
+@@x		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -2756,62 +2756,62 @@ arg_2		= word ptr  6
 		jmp	cs:off_BCCB[bx]
 
 loc_BC07:
-		mov	[bp+var_2], 8
+		mov	[bp+@@x], 8
 		or	si, si
 		jnz	short loc_BC15
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC15:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC1F:
-		mov	[bp+var_2], 148h
+		mov	[bp+@@x], 328
 		or	si, si
 		jnz	short loc_BC2D
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC2D:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC37:
-		mov	[bp+var_2], 8
+		mov	[bp+@@x], 8
 		or	si, si
 		jnz	short loc_BC45
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC45:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC4F:
-		mov	[bp+var_2], 148h
+		mov	[bp+@@x], 328
 		or	si, si
 		jnz	short loc_BC5D
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BC65
 ; ---------------------------------------------------------------------------
 
 loc_BC5D:
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 
 loc_BC65:
 		mov	di, ax
@@ -2836,22 +2836,22 @@ loc_BC67:
 		jz	short loc_BCC4
 
 loc_BC8F:
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		add	ax, 2
 		push	ax
 		lea	ax, [di+2]
 		push	ax
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
 		push	ds
 		push	ax
-		push	0Eh
+		push	14
 		call	graph_gaiji_puts
-		push	[bp+var_2]
+		push	[bp+@@x]
 		push	di
-		push	10h
+		push	GAIJI_W
 		mov	ax, si
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
 		add	ax, offset _hi.score.g_name
@@ -3582,8 +3582,7 @@ var_2		= word ptr -2
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm0_bft ; "sctm0.bft"
 		call	super_entry_bfnt pascal, ds, offset aSctm1_bft ; "sctm1.bft"
@@ -3661,8 +3660,7 @@ loc_C2EB:
 		mov	_hi.score.cleared, SCOREDAT_CLEARED
 
 loc_C307:
-		push	1
-		call	graph_copy_page
+		call	graph_copy_page pascal, 1
 		call	bgimage_snap
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
@@ -3986,20 +3984,17 @@ sub_C1DD	endp
 sub_C5E7	proc near
 
 var_6		= word ptr -6
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@g_str		= byte ptr -4
 arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@y		= word ptr  6
+@@x		= word ptr  8
 
 		enter	6, 0
 		push	si
 		xor	si, si
-		mov	[bp+var_4], 2
+		mov	[bp+@@g_str], 2
 		mov	ax, [bp+arg_0]
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		xor	dx, dx
 		div	bx
 		mov	[bp+var_6], ax
@@ -4013,17 +4008,17 @@ arg_4		= word ptr  8
 		or	si, si
 		jz	short loc_C621
 		mov	al, byte ptr [bp+var_6]
-		add	al, 0A0h
-		mov	[bp+var_4], al
+		add	al, gb_0_
+		mov	[bp+@@g_str], al
 		jmp	short loc_C625
 ; ---------------------------------------------------------------------------
 
 loc_C621:
-		mov	[bp+var_4], 2
+		mov	[bp+@@g_str], 2
 
 loc_C625:
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		xor	dx, dx
 		div	bx
 		mov	[bp+var_6], ax
@@ -4038,24 +4033,24 @@ loc_C625:
 		or	si, si
 		jz	short loc_C654
 		mov	al, byte ptr [bp+var_6]
-		add	al, 0A0h
-		mov	[bp+var_3], al
+		add	al, gb_0_
+		mov	[bp+@@g_str+1], al
 		jmp	short loc_C658
 ; ---------------------------------------------------------------------------
 
 loc_C654:
-		mov	[bp+var_3], 2
+		mov	[bp+@@g_str+1], g_EMPTY
 
 loc_C658:
 		mov	al, byte ptr [bp+arg_0]
-		add	al, 0A0h
-		mov	[bp+var_2], al
-		mov	[bp+var_1], 0
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	10h
+		add	al, gb_0_
+		mov	[bp+@@g_str+2], al
+		mov	[bp+@@g_str+3], 0
+		push	[bp+@@x]
+		push	[bp+@@y]
+		push	GAIJI_W
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@g_str]
 		push	ax
 		push	col_116E4
 		call	graph_gaiji_puts
@@ -4071,8 +4066,7 @@ sub_C5E7	endp
 
 sub_C67F	proc near
 
-var_C		= byte ptr -0Ch
-var_3		= byte ptr -3
+@@g_str		= byte ptr -0Ch
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= dword	ptr  4
@@ -4088,18 +4082,18 @@ arg_6		= word ptr  0Ah
 		jb	short loc_C6AC
 		mov	al, es:[bx+7]
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], al
-		add	al, 0A0h
-		mov	[bp+var_C], al
+		add	al, gb_0_
+		mov	[bp+@@g_str], al
 		mov	[bp+var_2], 1
 		jmp	short loc_C6B4
 ; ---------------------------------------------------------------------------
 
 loc_C6AC:
-		mov	[bp+var_C], 2
+		mov	[bp+@@g_str], g_EMPTY
 		mov	[bp+var_2], 0
 
 loc_C6B4:
@@ -4114,7 +4108,7 @@ loc_C6B9:
 		add	bx, ax
 		mov	al, es:[bx]
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], dl
@@ -4127,13 +4121,13 @@ loc_C6B9:
 
 loc_C6E2:
 		mov	al, [bp+var_1]
-		add	al, 0A0h
-		mov	[bp+si+var_C], al
+		add	al, gb_0_
+		mov	[bp+si+@@g_str], al
 		jmp	short loc_C6F0
 ; ---------------------------------------------------------------------------
 
 loc_C6EC:
-		mov	[bp+si+var_C], 2
+		mov	[bp+si+@@g_str], g_EMPTY
 
 loc_C6F0:
 		inc	si
@@ -4141,12 +4135,12 @@ loc_C6F0:
 loc_C6F1:
 		cmp	si, 8
 		jle	short loc_C6B9
-		mov	[bp+var_3], 0
+		mov	[bp+@@g_str+9], 0
 		push	di
 		push	[bp+@@y]
-		push	16
+		push	GAIJI_W
 		push	ss
-		lea	ax, [bp+var_C]
+		lea	ax, [bp+@@g_str]
 		push	ax
 		push	col_116E4
 		call	graph_gaiji_puts
@@ -4679,7 +4673,7 @@ loc_CBE3:
 		mov	ax, y_116E8
 		add	ax, 24
 		push	ax
-		push	10h
+		push	GAIJI_W
 		push	ds
 		mov	al, _verdict_rank
 		mov	ah, 0
@@ -5228,8 +5222,7 @@ sub_D1B1	proc near
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
 		graph_accesspage 0

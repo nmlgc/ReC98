@@ -610,8 +610,7 @@ var_2		= word ptr -2
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		call	sub_13CDD
 		mov	byte_207E3, 0
 		call	sub_9EBF
@@ -943,8 +942,7 @@ loc_9E24:
 		call	super_entry_bfnt pascal, ds, offset aZikicw_bf2 ; "zikicw.bf2"
 		call	sub_E266
 		nopcall	sub_A38E
-		push	0
-		call	graph_200line
+		call	graph_200line pascal, 0
 		call	sub_F0EE
 		mov	_page_back, 0
 		mov	_page_front, 1

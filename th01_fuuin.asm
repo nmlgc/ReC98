@@ -3910,8 +3910,7 @@ sub_BC7C	proc near
 		push	20h ; ' '
 		push	20h ; ' '
 		call	sub_BBF9
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		push	32h ; '2'
 		call	sub_C82D
 		pop	cx

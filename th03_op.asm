@@ -1730,8 +1730,7 @@ loc_AC15:
 		mov	al, music_track_playing
 		mov	_music_sel, al
 		call	draw_tracks pascal, word ptr _music_sel
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		graph_accesspage 1
 		graph_showpage 0
 		call	screen_back_B_snap

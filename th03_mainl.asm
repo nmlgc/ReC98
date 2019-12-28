@@ -598,8 +598,7 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	pi_slot_palette_apply pascal, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		freePISlotLarge	0
 		push	(96 shl 16) or 96
 		push	0
@@ -1933,7 +1932,7 @@ loc_A6E9:
 		push	ax
 		call	sub_A50A
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_105D6, al
+		mov	col_105D6, al
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -2173,7 +2172,7 @@ loc_A910:
 ; ---------------------------------------------------------------------------
 
 loc_A91A:
-		push	18Ch
+		push	RES_Y - 4
 
 loc_A91D:
 		call	graph_scrollup
@@ -2189,8 +2188,7 @@ loc_A933:
 		mov	ax, [bp+var_4]
 		cmp	ax, [bp+var_2]
 		jle	short loc_A910
-		push	0
-		call	graph_scrollup
+		call	graph_scrollup pascal, 0
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2207,7 +2205,7 @@ loc_A945:
 		mov	ax, [bp+var_2]
 		dec	ax
 		push	ax
-		mov	al, byte_105D6
+		mov	al, col_105D6
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -2215,7 +2213,7 @@ loc_A945:
 		push	point_105D0.x
 		push	point_105D0.y
 		push	[bp+var_2]
-		mov	al, byte_105D6
+		mov	al, col_105D6
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -2261,8 +2259,7 @@ loc_A9EB:
 
 loc_A9FE:
 		call	pi_slot_put pascal, large 0, 0
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	sub_A36B
 		jmp	loc_AC1E	; default
@@ -2536,7 +2533,7 @@ var_1		= byte ptr -1
 		mov	point_105D0.x, 80
 		mov	point_105D0.y, 320
 		mov	word_105D4, 1
-		mov	byte_105D6, 0Fh
+		mov	col_105D6, 0Fh
 		mov	byte_105D7, 20h	; ' '
 		mov	[bp+var_2], 0
 		call	sub_A36B
@@ -2590,7 +2587,7 @@ loc_ACFB:
 		graph_accesspage 1
 		push	point_105D0.x
 		push	point_105D0.y
-		mov	al, byte_105D6
+		mov	al, col_105D6
 		or	al, byte_105D7
 		mov	ah, 0
 		push	ax
@@ -2600,7 +2597,7 @@ loc_ACFB:
 		graph_accesspage 0
 		push	point_105D0.x
 		push	point_105D0.y
-		mov	al, byte_105D6
+		mov	al, col_105D6
 		or	al, byte_105D7
 		mov	ah, 0
 		push	ax
@@ -2986,8 +2983,7 @@ sub_AFAC	proc near
 		call	cdg_free pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aRegi2_bft ; "regi2.bft"
 		call	super_entry_bfnt pascal, ds, offset aRegi1_bft ; "regi1.bft"
-		push	1
-		call	graph_copy_page
+		call	graph_copy_page pascal, 1
 		graph_accesspage 0
 		pop	bp
 		retn
@@ -3558,8 +3554,7 @@ sub_B429	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		push	0
-		call	graph_copy_page
+		call	graph_copy_page pascal, 0
 		xor	si, si
 		mov	di, 68h	; 'h'
 		jmp	short loc_B447
@@ -4112,8 +4107,7 @@ loc_B81F:
 
 loc_B835:
 		call	sub_B429
-		push	1
-		call	graph_copy_page
+		call	graph_copy_page pascal, 1
 		graph_accesspage 0
 		call	sub_B187
 		push	2
@@ -6105,7 +6099,7 @@ byte_105CE	db ?
 		db ?
 point_105D0	Point <?>
 word_105D4	dw ?
-byte_105D6	db ?
+col_105D6	db ?
 byte_105D7	db ?
 word_105D8	dw ?
 public _yumeconfig
