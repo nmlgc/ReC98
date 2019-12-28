@@ -4,7 +4,8 @@
 
 ; Text
 ; ====
-GAIJI_TRAM_W = 2
+GAIJI_W = 16
+GAIJI_TRAM_W = (GAIJI_W / 8)
 GLYPH_HEIGHT = 16
 ; ====
 

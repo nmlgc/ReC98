@@ -3183,11 +3183,11 @@ sub_B747	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public P_CURSOR_PUT
+p_cursor_put	proc near
 
-sub_B8A6	proc near
-
-var_2		= word ptr -2
-arg_0		= byte ptr  4
+@@y		= word ptr -2
+@@col		= byte ptr  4
 arg_2		= word ptr  6
 
 		enter	2, 0
@@ -3197,36 +3197,36 @@ arg_2		= word ptr  6
 		mov	ax, si
 		shl	ax, 4
 		shl	ax, 3
-		add	ax, 0F0h
+		add	ax, 240
 		mov	di, ax
 		mov	al, [si+2468h]
 		cbw
-		imul	ax, 14h
-		add	ax, 80h
-		mov	[bp+var_2], ax
+		imul	ax, 20
+		add	ax, 128
+		mov	[bp+@@y], ax
 		push	di
 		push	ax
-		push	10h
+		push	GAIJI_W
 		push	ds
 		mov	ax, si
-		imul	ax, 3
-		add	ax, 0A4Dh
+		imul	ax, (gc_GAIJI_W + 1)
+		add	ax, offset _P_CURSOR_TOP
 		push	ax
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_puts
 		push	di
-		mov	ax, [bp+var_2]
-		add	ax, 10h
+		mov	ax, [bp+@@y]
+		add	ax, GLYPH_HEIGHT
 		push	ax
-		push	10h
+		push	GAIJI_W
 		push	ds
 		mov	ax, si
-		imul	ax, 3
-		add	ax, 0A53h
+		imul	ax, (gc_GAIJI_W + 1)
+		add	ax, offset _P_CURSOR_BOTTOM
 		push	ax
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@col]
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_puts
@@ -3234,7 +3234,7 @@ arg_2		= word ptr  6
 		pop	si
 		leave
 		retn	4
-sub_B8A6	endp
+p_cursor_put	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3474,7 +3474,7 @@ loc_BB22:
 
 loc_BB24:
 		push	ax
-		call	sub_B8A6
+		call	p_cursor_put
 		push	1
 		cmp	byte_FC5B, 0
 		jz	short loc_BB35
@@ -3487,7 +3487,7 @@ loc_BB35:
 
 loc_BB37:
 		push	ax
-		call	sub_B8A6
+		call	p_cursor_put
 		call	_input_reset_sense_key_held
 		call	_input_mode
 		push	_input_mp_p1
@@ -3615,7 +3615,7 @@ loc_BC8E:
 
 loc_BC90:
 		push	ax
-		call	sub_B8A6
+		call	p_cursor_put
 		cmp	byte_FC5A, 0
 		jz	short loc_BCAE
 		push	1
@@ -3630,7 +3630,7 @@ loc_BCA8:
 
 loc_BCAA:
 		push	ax
-		call	sub_B8A6
+		call	p_cursor_put
 
 loc_BCAE:
 		push	_input_sp
@@ -3748,7 +3748,7 @@ loc_BDDD:
 
 loc_BDDF:
 		push	ax
-		call	sub_B8A6
+		call	p_cursor_put
 		call	_input_reset_sense_key_held
 		call	_input_mode
 		push	_input_sp
@@ -4108,18 +4108,7 @@ off_E1FE	dd a00sl_cd2
 		db    5
 		db    5
 		db    3
-		db  12h
-		db  13h
-		db    0
-		db  16h
-		db  17h
-		db    0
-		db  14h
-		db  15h
-		db    0
-		db  18h
-		db  19h
-		db    0
+include th03/strings/p_cursor[data].asm
 		db    0
 		db    0
 a00sl_cd2	db '00SL.CD2',0

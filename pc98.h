@@ -4,7 +4,8 @@
 
 /// Text
 /// ----
-#define GAIJI_TRAM_W 2
+#define GAIJI_W 16
+#define GAIJI_TRAM_W (GAIJI_W / 8)
 #define GLYPH_HEIGHT 16
 /// ----
 
