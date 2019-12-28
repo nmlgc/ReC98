@@ -4334,17 +4334,17 @@ loc_C909:
 loc_C922:
 		mov	al, _hi.score.cleared
 		mov	[bp+var_A], al
-		cmp	[bp+var_A], 4
+		cmp	[bp+var_A], SCOREDAT_CLEARED_BOTH + 1
 		jb	short loc_C944
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_C93D
-		mov	al, 1
+		mov	al, SCOREDAT_CLEARED_A
 		jmp	short loc_C93F
 ; ---------------------------------------------------------------------------
 
 loc_C93D:
-		mov	al, 2
+		mov	al, SCOREDAT_CLEARED_B
 
 loc_C93F:
 		mov	[bp+var_A], al
@@ -4355,12 +4355,12 @@ loc_C944:
 		les	bx, _humaconfig
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_C953
-		mov	al, 1
+		mov	al, SCOREDAT_CLEARED_A
 		jmp	short loc_C955
 ; ---------------------------------------------------------------------------
 
 loc_C953:
-		mov	al, 2
+		mov	al, SCOREDAT_CLEARED_B
 
 loc_C955:
 		or	[bp+var_A], al

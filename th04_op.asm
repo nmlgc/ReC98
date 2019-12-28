@@ -2945,32 +2945,32 @@ loc_CBEE:
 		mov	ah, 0
 		mov	dl, _hi_reimu.score.cleared
 		mov	bx, ax
-		mov	[bx+3F3Ch], dl
+		mov	_cleared_with_reimu[bx], dl
 		mov	al, _rank
 		mov	ah, 0
 		mov	dl, _hi_marisa.score.cleared
 		mov	bx, ax
-		mov	[bx+3F41h], dl
+		mov	_cleared_with_marisa[bx], dl
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+3F3Ch], 3
+		cmp	_cleared_with_reimu[bx], SCOREDAT_CLEARED_BOTH
 		jbe	short loc_CC2F
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+3F3Ch], 0
+		mov	_cleared_with_reimu[bx], 0
 
 loc_CC2F:
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+3F41h], 3
+		cmp	_cleared_with_marisa[bx], SCOREDAT_CLEARED_BOTH
 		jbe	short loc_CC49
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+3F41h], 0
+		mov	_cleared_with_marisa[bx], 0
 
 loc_CC49:
 		cmp	_rank, RANK_EASY
@@ -2978,11 +2978,11 @@ loc_CC49:
 		mov	al, _rank
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+3F3Ch]
+		mov	al, _cleared_with_reimu[bx]
 		mov	dl, _rank
 		mov	dh, 0
 		mov	bx, dx
-		or	al, [bx+3F41h]
+		or	al, _cleared_with_marisa[bx]
 		or	_extra_unlocked, al
 
 loc_CC6B:
@@ -3768,7 +3768,7 @@ sub_D338	endp
 sub_D3A2	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_132B8, 0
+		cmp	playchar_132B8, PLAYCHAR_REIMU
 		jnz	short loc_D407
 		push	(40 shl 16) or 44
 		push	40
@@ -3851,23 +3851,23 @@ loc_D488:
 
 loc_D498:
 		mov	si, 312
-		mov	[bp+var_5], 1
+		mov	[bp+var_5], SCOREDAT_CLEARED_A
 		jmp	short loc_D4A8
 ; ---------------------------------------------------------------------------
 
 loc_D4A1:
 		mov	si, 336
-		mov	[bp+var_5], 2
+		mov	[bp+var_5], SCOREDAT_CLEARED_B
 
 loc_D4A8:
 		mov	[bp+var_2], 320
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
-		imul	ax, 5
+		imul	ax, RANK_COUNT
 		add	ax, [bp+var_4]
 		mov	dl, [bp+var_5]
 		mov	bx, ax
-		test	[bx+3F3Ch], dl
+		test	_cleared_with[bx], dl
 		jz	short loc_D4E5
 		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
@@ -3888,7 +3888,7 @@ loc_D4E5:
 		lea	ax, [si+4]
 		push	ax
 		push	15
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, di
@@ -3909,22 +3909,22 @@ loc_D4E5:
 
 loc_D51F:
 		mov	si, 312
-		mov	[bp+var_5], 1
+		mov	[bp+var_5], SCOREDAT_CLEARED_A
 		jmp	short loc_D52F
 ; ---------------------------------------------------------------------------
 
 loc_D528:
 		mov	si, 336
-		mov	[bp+var_5], 2
+		mov	[bp+var_5], SCOREDAT_CLEARED_B
 
 loc_D52F:
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
-		imul	ax, 5
+		imul	ax, RANK_COUNT
 		add	ax, [bp+var_4]
 		mov	dl, [bp+var_5]
 		mov	bx, ax
-		test	[bx+3F3Ch], dl
+		test	_cleared_with[bx], dl
 		jz	short loc_D567
 		mov	_graph_putsa_fx_func, 0
 		mov	ax, [bp+var_2]
@@ -3945,7 +3945,7 @@ loc_D567:
 		lea	ax, [si+4]
 		push	ax
 		push	3
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
 		shl	ax, 3
 		mov	dx, di
@@ -4048,7 +4048,7 @@ sub_D595	endp
 sub_D650	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_132B8, 0
+		cmp	playchar_132B8, PLAYCHAR_REIMU
 		jnz	short loc_D664
 		push	(184 shl 16) or 44
 		push	40
@@ -4130,8 +4130,8 @@ loc_D71D:
 
 loc_D726:
 		mov	bx, di
-		imul	bx, 5
-		mov	al, [bx+si+3F3Ch]
+		imul	bx, RANK_COUNT
+		mov	al, _cleared_with[bx+si]
 		and	al, 1
 		or	[bp+var_2], al
 		inc	si
@@ -4161,8 +4161,8 @@ loc_D74C:
 
 loc_D75A:
 		mov	bx, di
-		imul	bx, 5
-		mov	al, [bx+si+3F3Ch]
+		imul	bx, RANK_COUNT
+		mov	al, _cleared_with[bx+si]
 		and	al, 2
 		or	[bp+var_2], al
 		inc	si
@@ -4206,15 +4206,15 @@ loc_D7A1:
 		jz	short loc_D7B3
 
 loc_D7AF:
-		mov	al, 0
+		mov	al, PLAYCHAR_REIMU
 		jmp	short loc_D7B5
 ; ---------------------------------------------------------------------------
 
 loc_D7B3:
-		mov	al, 1
+		mov	al, PLAYCHAR_MARISA
 
 loc_D7B5:
-		mov	byte_132B8, al
+		mov	playchar_132B8, al
 
 loc_D7B8:
 		call	playchar_menu_init
@@ -4233,22 +4233,22 @@ loc_D7D6:
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		mov	al, 1
-		sub	al, byte_132B8
-		mov	byte_132B8, al
+		sub	al, playchar_132B8
+		mov	playchar_132B8, al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	byte ptr [bx+3F82h], 0
 		jnz	short loc_D816
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	byte ptr [bx+3F83h], 0
 		jnz	short loc_D816
 		mov	al, 1
-		sub	al, byte_132B8
-		mov	byte_132B8, al
+		sub	al, playchar_132B8
+		mov	playchar_132B8, al
 
 loc_D816:
 		graph_accesspage 1
@@ -4273,7 +4273,7 @@ loc_D85A:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -4342,7 +4342,7 @@ loc_D90F:
 		mov	al, 1
 		sub	al, byte_132B9
 		mov	byte_132B9, al
-		mov	al, byte_132B8
+		mov	al, playchar_132B8
 		mov	ah, 0
 		add	ax, ax
 		mov	dl, byte_132B9
@@ -4387,8 +4387,8 @@ loc_D986:
 		les	bx, _humaconfig
 		mov	al, byte_132B9
 		mov	es:[bx+19h], al
-		mov	al, byte_132B8
-		add	al, 30h	; '0'
+		mov	al, playchar_132B8
+		add	al, '0'
 		mov	es:[bx+12h], al
 		push	1
 		call	palette_black_out
@@ -4811,10 +4811,10 @@ _screen_back_B	dw ?
 include th02/music/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
+public _cleared_with
+_cleared_with label byte
+_cleared_with_reimu 	db RANK_COUNT dup (?)
+_cleared_with_marisa	db RANK_COUNT dup (?)
 _extra_unlocked	db ?
 		dd    ?	;
 		dd    ?	;
@@ -4829,7 +4829,7 @@ _extra_unlocked	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-byte_132B8	db ?
+playchar_132B8	db ?
 byte_132B9	db ?
 dword_132BA	dd ?
 dword_132BE	dd ?
