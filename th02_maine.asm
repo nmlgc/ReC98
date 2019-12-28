@@ -2256,7 +2256,7 @@ arg_4		= word ptr  8
 		call	sub_9942
 		push	4
 		call	frame_delay
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		pop	bp
 		retn	6
@@ -3000,7 +3000,7 @@ loc_B1C2:
 		call	sub_B07F
 
 loc_B1C6:
-		mov	PaletteTone, 32h ; '2'
+		mov	PaletteTone, 50
 		call	far ptr	palette_show
 		call	score_enter
 		mov	PaletteTone, 0

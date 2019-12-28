@@ -2134,7 +2134,7 @@ var_C		= byte ptr -0Ch
 		call	sub_1028C
 		nopcall	sub_CA1C
 		call	randring_fill
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	ax, 0D0h
 		mov	word_205E6, ax
@@ -2455,7 +2455,7 @@ sub_B98E	proc near
 		graph_accesspage _page_back
 		call	sub_4782
 		call	sub_10E0A
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		nopcall	sub_E16D
 		pop	bp
@@ -2477,7 +2477,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], 0
 		call	text_putsa pascal, (23 shl 16) + 15, off_1DB70, TX_WHITE + TX_UNDERLINE
 		call	text_putsa pascal, (23 shl 16) + 16, off_1DB6C, TX_MAGENTA
-		mov	PaletteTone, 46h	; 'F'
+		mov	PaletteTone, 70
 		call	far ptr	palette_show
 
 loc_BA1D:
@@ -2576,7 +2576,7 @@ loc_BB30:
 		jnz	short loc_BB9D
 		cmp	_key_det, 0
 		jnz	loc_BCA4
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_key_det, 0
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset g11SPACES, TX_WHITE
@@ -3331,7 +3331,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 0
 		mov	di, 1
 		nopcall	sub_E162
-		mov	PaletteTone, 32h	; '2'
+		mov	PaletteTone, 50
 		call	far ptr	palette_show
 		nopcall	sub_E16D
 		mov	si, 15h
@@ -3498,7 +3498,7 @@ loc_C516:
 		add	dx, 2
 		mov	word_1E51E, dx
 		mov	power_overflow_level, 10
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	sub_FBE9
 		mov	ax, di
@@ -7852,7 +7852,7 @@ loc_E6E8:
 		mov	Palettes+2, al
 		cmp	word_218B6, 40h
 		jnz	short loc_E745
-		mov	PaletteTone, 0C8h
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		mov	Palettes, 0FFh
 		mov	Palettes+1, 0FFh
@@ -7870,7 +7870,7 @@ loc_E74D:
 		call	sub_4090
 		cmp	word_218B6, 46h	; 'F'
 		jnz	short loc_E774
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		jmp	short loc_E7A0
 ; ---------------------------------------------------------------------------
@@ -7914,7 +7914,7 @@ loc_E7C0:
 		mov	Palettes+2, al
 		mov	ax, word_218B6
 		add	ax, ax
-		add	ax, 0FFB8h
+		add	ax, -72
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 		cmp	word_218B6, 6Fh	; 'o'
@@ -7953,7 +7953,7 @@ loc_E821:
 		mov	al, byte_21A4C
 		mov	byte_2287E, al
 		mov	byte_2066D, 1
-		mov	PaletteTone, 0C8h
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
 		jmp	short loc_E892
@@ -7964,8 +7964,8 @@ loc_E867:
 		jge	short loc_E888
 		mov	ax, word_218B6
 		imul	ax, 5
-		add	ax, 0FD58h
-		mov	dx, 0C8h
+		add	ax, -680
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -8049,7 +8049,7 @@ loc_E915:
 		jl	short loc_E94C
 		mov	ax, word_218B6
 		imul	ax, 5
-		add	ax, 0FED4h
+		add	ax, -300
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 		mov	byte_2066D, 2
@@ -8090,7 +8090,7 @@ loc_E99D:
 loc_E9A6:
 		cmp	word_218B6, 70h	; 'p'
 		jge	short loc_EA11
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		test	byte ptr word_218B6, 1
 		jz	short loc_E9F3
@@ -8121,7 +8121,7 @@ loc_EA11:
 		mov	al, byte_21A53
 		mov	byte_2287E, al
 		mov	byte_2066D, 1
-		mov	PaletteTone, 0C8h
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
 		jmp	short loc_EA60
@@ -8132,8 +8132,8 @@ loc_EA35:
 		jge	short loc_EA56
 		mov	ax, word_218B6
 		imul	ax, 5
-		add	ax, 0FDE4h
-		mov	dx, 0C8h
+		add	ax, -540
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -8317,7 +8317,7 @@ loc_EC00:
 		cmp	word_218B6, 8Ch
 		jg	short loc_EC10
 		mov	ax, word_218B6
-		add	ax, 0FF7Ch
+		add	ax, -132
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
@@ -8325,7 +8325,7 @@ loc_EC10:
 		cmp	word_218B6, 94h
 		jg	short loc_EC20
 		mov	ax, word_218B6
-		add	ax, 0FF74h
+		add	ax, -140
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
@@ -8333,13 +8333,13 @@ loc_EC20:
 		cmp	word_218B6, 9Ch
 		jg	short loc_EC30
 		mov	ax, word_218B6
-		add	ax, 0FF6Ch
+		add	ax, -148
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
 loc_EC30:
 		mov	ax, word_218B6
-		add	ax, 0FF64h
+		add	ax, -156
 
 loc_EC36:
 		push	ax
@@ -8347,10 +8347,10 @@ loc_EC36:
 		mov	ax, word_218B6
 		add	ax, ax
 		add	ax, word_218B6
-		add	ax, 0FE74h
+		add	ax, -396
 
 loc_EC46:
-		mov	dx, 0C8h
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -8364,7 +8364,7 @@ loc_EC56:
 		mov	al, byte_21A54
 		mov	byte_2287E, al
 		mov	byte_2066D, 1
-		mov	PaletteTone, 0C8h
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
 		jmp	short loc_ECA2
@@ -8436,7 +8436,7 @@ loc_ECF0:
 		mov	byte_218B4, 0
 		mov	byte_20606, 0
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
 loc_ED0E:
@@ -9640,7 +9640,7 @@ var_4		= dword	ptr -4
 		mov	cx, 6
 		call	SCOPY@
 		call	sub_FBE9
-		mov	PaletteTone, 3Eh	; '>'
+		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
 		push	ss
@@ -9802,7 +9802,7 @@ var_4		= dword	ptr -4
 		mov	cx, 6
 		call	SCOPY@
 		call	sub_FBE9
-		mov	PaletteTone, 3Eh	; '>'
+		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
 		push	ss
@@ -10164,8 +10164,8 @@ loc_10230:
 		jg	short loc_10258
 		mov	ax, [bp+arg_0]
 		and	ax, 1
-		imul	ax, 46h
-		add	ax, 64h	; 'd'
+		imul	ax, 70
+		add	ax, 100
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 
@@ -11831,8 +11831,8 @@ loc_10EC0:
 		ja	short loc_10EE4
 		mov	ax, word_20686
 		and	ax, 1
-		imul	ax, 46h
-		add	ax, 64h	; 'd'
+		imul	ax, 70
+		add	ax, 100
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 
@@ -15667,7 +15667,7 @@ var_2		= word ptr -2
 		nopcall	sub_FBE9
 		call	sub_DE4E
 		call	graph_scrollup pascal, _scroll_line
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
 		nopcall	sub_FBE9
@@ -17924,12 +17924,12 @@ loc_14055:
 		jbe	short loc_140AC
 		test	byte ptr word_1EDA4, 1
 		jz	short loc_1407D
-		mov	PaletteTone, 8Ch
+		mov	PaletteTone, 140
 		jmp	short loc_14083
 ; ---------------------------------------------------------------------------
 
 loc_1407D:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 
 loc_14083:
 		call	far ptr	palette_show
@@ -17937,7 +17937,7 @@ loc_14083:
 		add	ax, 7
 		cmp	ax, word_1EDA4
 		jnz	short loc_140AC
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	randring2_next16
 		and	ax, 3FFh
@@ -29153,7 +29153,7 @@ loc_1A54E:
 		imul	dx, 7
 		push	dx
 		call	grcg_circle
-		mov	ax, 96h
+		mov	ax, 150
 		sub	ax, si
 		mov	bx, 3
 		cwd
@@ -29207,8 +29207,8 @@ loc_1A613:
 
 loc_1A697:
 		mov	ax, si
-		imul	ax, 0Ah
-		mov	dx, 0C8h
+		imul	ax, 10
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -29217,9 +29217,9 @@ loc_1A697:
 		inc	si
 
 loc_1A6B2:
-		cmp	si, 0Ah
+		cmp	si, 10
 		jl	short loc_1A697
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		pop	si
 		pop	bp

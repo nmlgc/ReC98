@@ -349,7 +349,7 @@ loc_97FC:
 		jl	short loc_97E8
 		push	0A0040h
 		call	snd_delay_until_measure
-		mov	PaletteTone, 0C8h
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		push	(224 shl 16) or 64
 		push	6
@@ -5423,7 +5423,7 @@ loc_C4D8:
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
 		mov	byte_10BB4, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		kajacall	KAJA_SONG_PLAY
 		mov	byte_10BB6, 1
@@ -5532,7 +5532,7 @@ loc_C7AB:
 		cmp	word_10BB2, 100h
 		jle	short loc_C781
 		kajacall	KAJA_SONG_FADE, 8
-		mov	di, 64h	; 'd'
+		mov	di, 100
 		mov	word_10BB2, 0
 		jmp	short loc_C781
 ; ---------------------------------------------------------------------------

@@ -1770,7 +1770,7 @@ arg_2		= word ptr  6
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		call	sub_B37C
 		GRCG_OFF_CLOBBERING dx
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	pi_slot_palette_apply pascal, 0
 		xor	si, si
@@ -1912,7 +1912,7 @@ loc_B45F:
 		call	sub_B37C
 		or	al, al
 		jz	short loc_B45F
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		push	0A00064h
 		call	sub_B273
@@ -7519,7 +7519,7 @@ loc_E550:
 		mov	word_151E2, 0
 
 loc_E565:
-		cmp	si, 64h	; 'd'
+		cmp	si, 100
 		jg	short loc_E573
 		mov	PaletteTone, si
 		call	far ptr	palette_show
@@ -7778,7 +7778,7 @@ loc_E7BB:
 
 loc_E7C1:
 		kajacall	KAJA_SONG_FADE, 4
-		mov	si, 64h	; 'd'
+		mov	si, 100
 
 loc_E7CC:
 		mov	PaletteTone, si

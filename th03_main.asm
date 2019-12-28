@@ -225,7 +225,7 @@ loc_970F:
 		call	farfp_20F20
 
 loc_9724:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	sub_9778
 		mov	ah, 0
@@ -4039,7 +4039,7 @@ loc_C159:
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
 		mov	byte ptr [si+1Fh], 0FFh
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	byte_20E3C, 2
 		mov	al, byte ptr word_23AF0
@@ -4064,8 +4064,8 @@ loc_C159:
 loc_C1CD:
 		mov	ax, word_23AF6
 		and	ax, 1
-		imul	ax, 1Eh
-		add	ax, 64h	; 'd'
+		imul	ax, 30
+		add	ax, 100
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 
@@ -5328,8 +5328,8 @@ loc_CAA8:
 		call	frame_delay
 		mov	ax, si
 		and	ax, 1
-		imul	ax, 32h
-		add	ax, 64h	; 'd'
+		imul	ax, 50
+		add	ax, 100
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 		inc	si
@@ -20520,8 +20520,8 @@ loc_152D7:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		and	ax, 1
-		imul	ax, 50h
-		add	ax, 64h	; 'd'
+		imul	ax, 80
+		add	ax, 100
 		mov	PaletteTone, ax
 		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
@@ -20542,7 +20542,7 @@ loc_152D7:
 ; ---------------------------------------------------------------------------
 
 loc_15318:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 
 loc_15323:
@@ -21562,7 +21562,7 @@ loc_15BB9:
 		test	[bp+var_F], 7
 		jnz	short loc_15BEC
 		call	snd_se_play pascal, 5
-		mov	PaletteTone, 8Ch
+		mov	PaletteTone, 140
 		call	far ptr	palette_show
 		push	9000B80h
 		mov	al, byte ptr word_1FE88
@@ -21573,7 +21573,7 @@ loc_15BB9:
 ; ---------------------------------------------------------------------------
 
 loc_15BEC:
-		mov	PaletteTone, 3Ch	; '<'
+		mov	PaletteTone, 60
 		call	far ptr	palette_show
 
 loc_15BF7:
@@ -21622,7 +21622,7 @@ loc_15C32:
 ; ---------------------------------------------------------------------------
 
 loc_15C57:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -26620,7 +26620,7 @@ loc_18455:
 		and	ax, 3
 		cmp	ax, 2
 		jge	short loc_1848B
-		mov	PaletteTone, 3Ch	; '<'
+		mov	PaletteTone, 60
 		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -26636,7 +26636,7 @@ loc_1848B:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], -4
-		mov	PaletteTone, 78h	; 'x'
+		mov	PaletteTone, 120
 		mov	_palette_changed, 1
 
 loc_184A5:
@@ -26706,7 +26706,7 @@ loc_18526:
 ; ---------------------------------------------------------------------------
 
 loc_1853F:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -27496,7 +27496,7 @@ loc_18C95:
 		cmp	ax, 2
 		jge	short loc_18CD2
 		call	snd_se_play pascal, 10
-		mov	PaletteTone, 0AAh ; 'ª'
+		mov	PaletteTone, 170
 		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0
@@ -27512,7 +27512,7 @@ loc_18CD2:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], -4
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 
 loc_18CEC:
@@ -27573,7 +27573,7 @@ loc_18D42:
 ; ---------------------------------------------------------------------------
 
 loc_18D5B:
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		mov	al, byte ptr word_1FE88
 		mov	ah, 0

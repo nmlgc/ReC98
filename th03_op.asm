@@ -1743,7 +1743,7 @@ loc_AC15:
 		mov	al, music_track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
 loc_ACC2:
@@ -1914,7 +1914,7 @@ loc_AEA0:
 
 loc_AECB:
 		call	far ptr	palette_show
-		cmp	[bp+var_2], 64h	; 'd'
+		cmp	[bp+var_2], 100
 		jg	short loc_AEE1
 		mov	ax, [bp+var_2]
 		mov	PaletteTone, ax
@@ -1960,11 +1960,11 @@ loc_AF35:
 ; ---------------------------------------------------------------------------
 
 loc_AF40:
-		mov	PaletteTone, 0C8h	; 'È'
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
@@ -1973,7 +1973,7 @@ loc_AF40:
 loc_AF65:
 		cmp	si, 8
 		jl	short loc_AF40
-		mov	PaletteTone, 0C8h	; 'È'
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		kajacall	KAJA_SONG_PLAY
 		graph_showpage 0
@@ -1982,7 +1982,7 @@ loc_AF65:
 		call	pi_slot_put pascal, large 0, 0
 		push	1
 		call	frame_delay
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
@@ -1991,11 +1991,11 @@ loc_AF65:
 ; ---------------------------------------------------------------------------
 
 loc_AFB4:
-		mov	PaletteTone, 0C8h	; 'È'
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		push	1
 		call	frame_delay
@@ -2052,7 +2052,7 @@ loc_B094:
 		add	si, 4
 
 loc_B0A7:
-		cmp	si, 64h	; 'd'
+		cmp	si, 100
 		jle	short loc_B094
 		pop	si
 		pop	bp
@@ -3518,7 +3518,7 @@ loc_BB82:
 		jb	short loc_BBB0
 		mov	ax, word_FC62
 		imul	ax, 6
-		mov	dx, 0C8h ; 'È'
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -3665,7 +3665,7 @@ loc_BCF7:
 		jb	short loc_BD22
 		mov	ax, word_FC62
 		imul	ax, 6
-		mov	dx, 0C8h ; 'È'
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
@@ -3774,7 +3774,7 @@ loc_BE21:
 		jb	short loc_BE48
 		mov	ax, word_FC62
 		imul	ax, 6
-		mov	dx, 0C8h ; 'È'
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show

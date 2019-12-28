@@ -1035,7 +1035,7 @@ loc_AF56:
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
 		mov	_in_option, 0
@@ -1060,7 +1060,7 @@ loc_AFBD:
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
 		mov	_in_option, 0
@@ -2325,7 +2325,7 @@ musicroom	proc near
 		mov	al, music_track_playing
 		mov	ah, 0
 		call	draw_cmt pascal, ax
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
 loc_C454:
@@ -3065,7 +3065,7 @@ var_3		= byte ptr -3
 		graph_accesspage 1
 		xor	si, si
 		mov	[bp+var_3], 0
-		mov	di, 64h	; 'd'
+		mov	di, 100
 		mov	[bp+@@page], 0
 		jmp	short loc_CDC4
 ; ---------------------------------------------------------------------------
@@ -3102,7 +3102,7 @@ loc_CDB0:
 loc_CDC4:
 		cmp	si, 1Ch
 		jl	short loc_CD7A
-		mov	PaletteTone, 0C8h	; 'È'
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		graph_showpage 0
 		graph_accesspage al
@@ -3145,7 +3145,7 @@ loc_CEAA:
 		cmp	si, PALETTE_COLORS
 		jl	short loc_CE8B
 		call	far ptr	palette_show
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		xor	si, si
 		mov	[bp+var_3], 0F0h
@@ -4289,7 +4289,7 @@ loc_D87F:
 loc_D881:
 		mov	byte_132B9, al
 		graph_accesspage 1
-		mov	PaletteTone, 0C8h	; 'È'
+		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	pi_slot_put pascal, large 0, 0
 		call	sub_D650

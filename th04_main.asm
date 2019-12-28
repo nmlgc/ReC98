@@ -872,7 +872,7 @@ loc_B156:
 		jb	short loc_B156
 		push	1
 		call	palette_black_out
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	main_01:sub_10D77
 		call	main_01:tiles_render_all
@@ -4545,7 +4545,7 @@ sub_D6EB	proc far
 		mov	bp, sp
 		call	main_01:sub_D729
 		call	main_01:sub_10D4B
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
 		call	main_01:sub_D098
@@ -6353,7 +6353,7 @@ loc_E556:
 ; ---------------------------------------------------------------------------
 
 loc_E566:
-		mov	PaletteTone, 32h	; '2'
+		mov	PaletteTone, 50
 		call	far ptr	palette_show
 
 loc_E571:
@@ -6414,7 +6414,7 @@ loc_E61E:
 loc_E62E:
 		cmp	[bp+var_2], 0
 		jnz	short loc_E654
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
 loc_E63F:
@@ -9735,7 +9735,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		add	ax, 0FFD0h
 		imul	ax, 3
-		mov	dx, 0C4h
+		mov	dx, 196
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	_palette_changed, 1
@@ -9810,7 +9810,7 @@ var_2		= word ptr -2
 		mov	ah, 0
 		add	ax, 0FFD0h
 		imul	ax, 3
-		mov	dx, 0C4h
+		mov	dx, 196
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	_palette_changed, 1
@@ -9980,7 +9980,7 @@ loc_102AF:
 		mov	ah, 0
 		add	ax, 0FF50h
 		add	ax, ax
-		mov	dx, 0C8h
+		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	_palette_changed, 1
@@ -9992,7 +9992,7 @@ loc_102AF:
 
 loc_102F2:
 		mov	byte_256A8, 0
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		mov	_circles_color, GC_R
 
@@ -19811,7 +19811,7 @@ loc_168FC:
 
 loc_16907:
 		mov	_boss_mode, 0
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
@@ -23660,7 +23660,7 @@ loc_1892D:
 loc_18932:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		jmp	short loc_189A1
 ; ---------------------------------------------------------------------------
@@ -29307,7 +29307,7 @@ loc_1B877:
 loc_1B87C:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
-		mov	PaletteTone, 64h
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		jmp	short loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -33214,7 +33214,7 @@ var_4		= dword	ptr -4
 
 		enter	8, 0
 		push	si
-		mov	PaletteTone, 3Ch	; '<'
+		mov	PaletteTone, 60
 		call	far ptr	palette_show
 		call	gaiji_putsa pascal, (20 shl 16) + 4, ds, offset gpCLEAR_BONUS, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 7, ds, offset aBONUS_STAGE, TX_WHITE
@@ -33354,7 +33354,7 @@ var_4		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		mov	PaletteTone, 3Ch	; '<'
+		mov	PaletteTone, 60
 		call	far ptr	palette_show
 		mov	byte_22DA6, 0Ah
 		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
@@ -34638,7 +34638,7 @@ loc_1E778:
 ; ---------------------------------------------------------------------------
 
 loc_1E7B5:
-		mov	PaletteTone, 3Ch	; '<'
+		mov	PaletteTone, 60
 		mov	_palette_changed, 1
 		cmp	_boss_phase_frame, 0
 		jnz	loc_1E8B3
@@ -38162,7 +38162,7 @@ loc_20642:
 loc_20647:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
-		mov	PaletteTone, 64h	; 'd'
+		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		jmp	short loc_206B6
 ; ---------------------------------------------------------------------------

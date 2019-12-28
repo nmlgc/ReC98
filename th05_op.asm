@@ -934,7 +934,7 @@ loc_AA91:
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
 		mov	_in_option, 0
@@ -950,7 +950,7 @@ loc_AAE1:
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
 		mov	_in_option, 0
@@ -973,7 +973,7 @@ loc_AB3B:
 		call	pi_slot_put pascal, large 0, 0
 		call	pi_slot_free pascal, 0
 		call	graph_copy_page pascal, 0
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	_main_menu_initialized, 0
 		mov	_in_option, 0
@@ -2290,7 +2290,7 @@ loc_BD81:
 		mov	al, 1
 		sub	al, [bp+var_2]
 		mov	[bp+var_2], al
-		lea	ax, [si+24h]
+		lea	ax, [si+36]
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
 		inc	si
@@ -2708,7 +2708,7 @@ musicroom	proc near
 		mov	al, _music_sel
 		mov	ah, 0
 		call	draw_cmt pascal, ax
-		mov	PaletteTone, 64h ; 'd'
+		mov	PaletteTone, 100
 		call	far ptr	palette_show
 
 loc_C555:
