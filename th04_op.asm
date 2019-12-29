@@ -546,13 +546,10 @@ arg_2		= word ptr  6
 		push	di
 		mov	si, [bp+arg_2]
 		mov	ax, si
-		imul	ax, 14h
-		add	ax, 0E0h
+		imul	ax, 20
+		add	ax, 224
 		mov	di, ax
-		push	100h
-		push	ax
-		push	800010h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, 256, ax, (128 shl 16) or 16
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	[bp+var_2], si
 		mov	bx, si
@@ -615,9 +612,7 @@ loc_AB59:
 		jnz	short loc_ABC4
 		call	cdg_put pascal, 256, di, 35
 		call	cdg_put pascal, 352, di, 36
-		pushd	180h
-		push	2800010h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -656,7 +651,7 @@ off_ABCB	dw offset loc_AAF3
 public OPTION_PUT
 option_put	proc near
 
-var_4		= word ptr -4
+@@y		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -667,17 +662,14 @@ arg_2		= word ptr  6
 		mov	di, 0E0h
 		mov	ax, [bp+arg_2]
 		shl	ax, 4
-		add	ax, 0E0h
-		mov	[bp+var_4], ax
+		add	ax, 224
+		mov	[bp+@@y], ax
 		cmp	[bp+arg_2], 7
 		jnz	short loc_ABF7
-		mov	[bp+var_4], 154h
+		mov	[bp+@@y], 340
 
 loc_ABF7:
-		push	0E0h
-		push	[bp+var_4]
-		push	0C00010h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, 224, [bp+@@y], (192 shl 16) or 16
 
 loc_AC08:
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
@@ -834,7 +826,7 @@ loc_AD9A:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_AE11
-		call	cdg_put pascal, di, [bp+var_4], 35
+		call	cdg_put pascal, di, [bp+@@y], 35
 		cmp	di, 256
 		jnz	short loc_ADBD
 		lea	ax, [di+60h]
@@ -846,12 +838,10 @@ loc_ADBD:
 		push	384
 
 loc_ADC0:
-		push	[bp+var_4]
+		push	[bp+@@y]
 		push	36
 		call	cdg_put
-		pushd	180h
-		push	2800010h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
@@ -955,9 +945,7 @@ main_update_and_render	proc near
 		jnz	short loc_AEEB
 		mov	_main_menu_unused_1, 0
 		mov	_main_input_allowed, 0
-		push	0C000E0h
-		push	12000A0h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, (192 shl 16) or 224, (288 shl 16) or 160
 		xor	si, si
 		jmp	short loc_AED6
 ; ---------------------------------------------------------------------------
@@ -1114,9 +1102,7 @@ option_update_and_render	proc near
 		cmp	_option_initialized, 0
 		jnz	short loc_B0A2
 		mov	_option_input_allowed, 0
-		push	11000E0h
-		push	0A00090h
-		call	egc_copy_rect_1_to_0
+		call	egc_copy_rect_1_to_0 pascal, (272 shl 16) or 224, (160 shl 16) or 144
 		xor	si, si
 		jmp	short loc_B08D
 ; ---------------------------------------------------------------------------
