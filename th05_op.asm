@@ -1494,279 +1494,6 @@ loc_B058:
 		retf
 _main		endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B077	proc near
-
-var_2		= word ptr -2
-@@y		= word ptr  4
-@@x		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+@@x]
-		mov	di, [bp+@@y]
-		push	si
-		push	di
-		mov	ax, word_12F30
-		shl	ax, 4
-		push	ax
-		push	10h
-		call	egc_copy_rect_1_to_0
-		call	super_put pascal, si, di, 2
-		push	si
-		lea	ax, [di+8]
-		push	ax
-		push	6
-		call	super_put
-		add	si, 16
-		mov	[bp+var_2], 1
-		jmp	short loc_B0CD
-; ---------------------------------------------------------------------------
-
-loc_B0B2:
-		call	super_put pascal, si, di, 0
-		push	si
-		lea	ax, [di+8]
-		push	ax
-		push	3
-		call	super_put
-		inc	[bp+var_2]
-		add	si, 16
-
-loc_B0CD:
-		mov	ax, word_12F30
-		dec	ax
-		cmp	ax, [bp+var_2]
-		jg	short loc_B0B2
-		call	super_put pascal, si, di, 4
-		push	si
-		lea	ax, [di+8]
-		push	ax
-		push	7
-		call	super_put
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B077	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B0F1	proc near
-
-var_2		= word ptr -2
-@@y		= word ptr  4
-@@x		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+@@x]
-		mov	di, [bp+@@y]
-		push	si
-		lea	ax, [di+8]
-		push	ax
-		mov	ax, word_12F30
-		shl	ax, 4
-		push	ax
-		push	10h
-		call	egc_copy_rect_1_to_0
-		call	super_put pascal, si, di, 6
-		add	si, 16
-		mov	[bp+var_2], 1
-		jmp	short loc_B132
-; ---------------------------------------------------------------------------
-
-loc_B123:
-		call	super_put pascal, si, di, 3
-		inc	[bp+var_2]
-		add	si, 16
-
-loc_B132:
-		mov	ax, word_12F30
-		dec	ax
-		cmp	ax, [bp+var_2]
-		jg	short loc_B123
-		call	super_put pascal, si, di, 7
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B0F1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B14A	proc near
-
-var_2		= word ptr -2
-@@y		= word ptr  4
-@@x		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+@@x]
-		mov	[bp+var_2], ax
-		mov	si, [bp+@@y]
-		call	super_put pascal, ax, si, 5
-		add	[bp+var_2], 10h
-		mov	di, 1
-		jmp	short loc_B17B
-; ---------------------------------------------------------------------------
-
-loc_B16B:
-		call	super_put pascal, [bp+var_2], si, 1
-		inc	di
-		add	[bp+var_2], 10h
-
-loc_B17B:
-		mov	ax, word_12F30
-		dec	ax
-		cmp	ax, di
-		jg	short loc_B16B
-		call	super_put pascal, [bp+var_2], si, 8
-		add	si, 10h
-		mov	di, 1
-		jmp	short loc_B1A8
-; ---------------------------------------------------------------------------
-
-loc_B196:
-		push	[bp+@@x]
-		push	si
-		call	sub_B077
-		push	1
-		call	frame_delay
-		inc	di
-		add	si, 8
-
-loc_B1A8:
-		mov	ax, word_12F32
-		add	ax, ax
-		add	ax, 0FFFDh
-		cmp	ax, di
-		jg	short loc_B196
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B14A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B1BA	proc near
-
-var_2		= word ptr -2
-@@y		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+@@y]
-		push	si
-		push	di
-		mov	ax, word_12F30
-		shl	ax, 4
-		push	ax
-		push	20h ; ' '
-		call	egc_copy_rect_1_to_0
-		call	super_put pascal, si, di, 5
-		push	si
-		lea	ax, [di+16]
-		push	ax
-		push	6
-		call	super_put
-		add	si, 10h
-		mov	[bp+var_2], 1
-		jmp	short loc_B210
-; ---------------------------------------------------------------------------
-
-loc_B1F5:
-		call	super_put pascal, si, di, 1
-		push	si
-		lea	ax, [di+16]
-		push	ax
-		push	3
-		call	super_put
-		inc	[bp+var_2]
-		add	si, 16
-
-loc_B210:
-		mov	ax, word_12F30
-		dec	ax
-		cmp	ax, [bp+var_2]
-		jg	short loc_B1F5
-		call	super_put pascal, si, di, 8
-		push	si
-		lea	ax, [di+16]
-		push	ax
-		push	7
-		call	super_put
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B1BA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B234	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	ax, word_12F32
-		shl	ax, 4
-		add	ax, 0FFF0h
-		add	si, ax
-		mov	di, 1
-		jmp	short loc_B25E
-; ---------------------------------------------------------------------------
-
-loc_B24C:
-		push	[bp+arg_2]
-		push	si
-		call	sub_B0F1
-		push	1
-		call	frame_delay
-		inc	di
-		sub	si, 8
-
-loc_B25E:
-		mov	ax, word_12F32
-		add	ax, ax
-		add	ax, 0FFFEh
-		cmp	ax, di
-		jg	short loc_B24C
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_B234	endp
-
 include th04/setup.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1778,14 +1505,12 @@ sub_B36C	proc near
 var_2		= word ptr -2
 
 		enter	2, 0
-		mov	word_12F30, 1Ch
-		push	600050h
-		call	sub_B1BA
+		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
+		call	window_singleline pascal, (96 shl 16) or 80
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_BGM_HEAD
-		mov	word_12F30, 0Ah
-		mov	word_12F32, 4
-		push	200080h
-		call	sub_B14A
+		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 3
+		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B3C3
 ; ---------------------------------------------------------------------------
@@ -1809,10 +1534,9 @@ loc_B3BC:
 loc_B3C3:
 		cmp	[bp+var_2], 3
 		jl	short loc_B3AC
-		mov	word_12F30, 19h
-		mov	word_12F32, 0Ah
-		push	0C00080h
-		call	sub_B14A
+		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 9
+		call	window_dropdown_animate pascal, (192 shl 16) or 128
 		call	setup_bgm_help_put
 		mov	[bp+var_2], 2
 
@@ -1858,14 +1582,12 @@ loc_B448:
 ; ---------------------------------------------------------------------------
 
 loc_B452:
-		mov	word_12F30, 19h
-		mov	word_12F32, 0Ah
-		push	0C00080h
-		call	sub_B234
-		mov	word_12F30, 0Ah
-		mov	word_12F32, 4
-		push	200080h
-		call	sub_B234
+		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 9
+		call	window_rollup_animate pascal, (192 shl 16) or 128
+		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 3
+		call	window_rollup_animate pascal, ( 32 shl 16) or 128
 		les	bx, _ksoconfig
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+12h], al
@@ -1883,14 +1605,12 @@ sub_B489	proc near
 var_2		= word ptr -2
 
 		enter	2, 0
-		mov	word_12F30, 1Ch
-		push	600050h
-		call	sub_B1BA
+		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
+		call	window_singleline pascal, (96 shl 16) or 80
 		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_SE_HEAD
-		mov	word_12F30, 0Ah
-		mov	word_12F32, 4
-		push	200080h
-		call	sub_B14A
+		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 3
+		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
 		mov	[bp+var_2], 0
 		jmp	short loc_B4E0
 ; ---------------------------------------------------------------------------
@@ -1914,10 +1634,9 @@ loc_B4D9:
 loc_B4E0:
 		cmp	[bp+var_2], 3
 		jl	short loc_B4C9
-		mov	word_12F30, 19h
-		mov	word_12F32, 0Ah
-		push	0C00080h
-		call	sub_B14A
+		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 9
+		call	window_dropdown_animate pascal, (192 shl 16) or 128
 		call	setup_se_help_put
 		mov	[bp+var_2], 1
 
@@ -1963,14 +1682,12 @@ loc_B565:
 ; ---------------------------------------------------------------------------
 
 loc_B56F:
-		mov	word_12F30, 19h
-		mov	word_12F32, 0Ah
-		push	0C00080h
-		call	sub_B234
-		mov	word_12F30, 0Ah
-		mov	word_12F32, 4
-		push	200080h
-		call	sub_B234
+		mov	_window_tiles.x, (400 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 9
+		call	window_rollup_animate pascal, (192 shl 16) or 128
+		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
+		mov	_window_tiles.y, 1 + 3
+		call	window_rollup_animate pascal, ( 32 shl 16) or 128
 		les	bx, _ksoconfig
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+15h], al
@@ -4778,8 +4495,7 @@ include th04/hardware/egccopyr[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-word_12F30	dw ?
-word_12F32	dw ?
+include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
 		dd    ?	;
 		dd    ?	;
