@@ -2751,58 +2751,7 @@ loc_CAA4:
 		retn	6
 sub_CA1B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CAB0	proc near
-
-@@gaiji		= word ptr  4
-@@y		= word ptr  6
-@@x		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@x]
-		mov	di, [bp+@@y]
-		cmp	[bp+@@gaiji], 0FFh
-		jz	short loc_CADB
-		lea	ax, [si+2]
-		push	ax
-		lea	ax, [di+2]
-		push	ax
-		push	[bp+@@gaiji]
-		push	14
-		call	graph_gaiji_putc
-		push	si
-		push	di
-		push	[bp+@@gaiji]
-		jmp	short loc_CAF3
-; ---------------------------------------------------------------------------
-
-loc_CADB:
-		lea	ax, [si+2]
-		push	ax
-		lea	ax, [di+2]
-		push	ax
-		push	(g_HISCORE_EMPTY shl 16) or 14
-		call	graph_gaiji_putc
-		push	si
-		push	di
-		push	g_HISCORE_EMPTY
-
-loc_CAF3:
-		push	7
-		call	graph_gaiji_putc
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_CAB0	endp
-
+include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2930,7 +2879,7 @@ loc_CB74:
 		mov	al, _hi.score.g_stage[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_CAB0
+		call	hiscore_stage_put
 		pop	di
 		pop	si
 		leave

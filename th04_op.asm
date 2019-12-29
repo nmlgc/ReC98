@@ -2304,58 +2304,7 @@ loc_C899:
 		retn	4
 sub_C79E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C8A5	proc near
-
-@@gaiji		= word ptr  4
-@@y		= word ptr  6
-@@x		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@x]
-		mov	di, [bp+@@y]
-		cmp	[bp+@@gaiji], 0FFh
-		jz	short loc_C8D0
-		lea	ax, [si+2]
-		push	ax
-		lea	ax, [di+2]
-		push	ax
-		push	[bp+@@gaiji]
-		push	14
-		call	graph_gaiji_putc
-		push	si
-		push	di
-		push	[bp+@@gaiji]
-		jmp	short loc_C8E8
-; ---------------------------------------------------------------------------
-
-loc_C8D0:
-		lea	ax, [si+2]
-		push	ax
-		lea	ax, [di+2]
-		push	ax
-		push	(g_HISCORE_EMPTY shl 16) or 14
-		call	graph_gaiji_putc
-		push	si
-		push	di
-		push	g_HISCORE_EMPTY
-
-loc_C8E8:
-		push	7
-		call	graph_gaiji_putc
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_C8A5	endp
-
+include th04/hiscore/hiscore_stage_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2410,12 +2359,12 @@ arg_0		= word ptr  4
 		call	graph_gaiji_puts
 		push	600000h
 		call	sub_C79E
-		push	1240060h
+		push	(292 shl 16) or 96
 		mov	al, _hi_reimu.score.g_stage[si]
 		mov	ah, 0
 		push	ax
-		call	sub_C8A5
-		push	2580060h
+		call	hiscore_stage_put
+		push	(600 shl 16) or 96
 		jmp	loc_CA0A
 ; ---------------------------------------------------------------------------
 
@@ -2469,20 +2418,20 @@ loc_C989:
 		push	di
 		push	si
 		call	sub_C79E
-		push	124h
+		push	292
 		push	di
 		mov	al, _hi_reimu.score.g_stage[si]
 		mov	ah, 0
 		push	ax
-		call	sub_C8A5
-		push	258h
+		call	hiscore_stage_put
+		push	600
 		push	di
 
 loc_CA0A:
 		mov	al, _hi_marisa.score.g_stage[si]
 		mov	ah, 0
 		push	ax
-		call	sub_C8A5
+		call	hiscore_stage_put
 		pop	di
 		pop	si
 		pop	bp
