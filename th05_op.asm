@@ -563,7 +563,7 @@ arg_2		= word ptr  6
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, 0E0h
+		mov	di, 224
 		mov	ax, [bp+arg_2]
 		shl	ax, 4
 		add	ax, 250
@@ -585,7 +585,7 @@ loc_A764:
 		push	(224 shl 16) or 250
 		push	16
 		call	cdg_put_nocolors
-		push	14000FAh
+		push	(320 shl 16) or 250
 		les	bx, _ksoconfig
 		mov	al, es:[bx+11h]
 		mov	ah, 0
@@ -606,7 +606,7 @@ loc_A79C:
 		push	(224 shl 16) or 266
 		push	17
 		call	cdg_put_nocolors
-		push	140010Ah
+		push	(320 shl 16) or 266
 		les	bx, _ksoconfig
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
@@ -620,7 +620,7 @@ loc_A7C5:
 		push	(224 shl 16) or 282
 		push	18
 		call	cdg_put_nocolors
-		push	140011Ah
+		push	(320 shl 16) or 282
 		les	bx, _ksoconfig
 		mov	al, es:[bx+10h]
 		mov	ah, 0
@@ -702,7 +702,7 @@ loc_A884:
 		sub	dx, ax
 		push	dx
 		call	cdg_put_nocolors
-		mov	di, 100h
+		mov	di, 256
 		les	bx, _ksoconfig
 		mov	al, es:[bx+16h]
 		mov	ah, 0
@@ -714,7 +714,7 @@ loc_A8B2:
 		push	(272 shl 16) or 346
 		push	31
 		call	cdg_put_nocolors
-		mov	di, 100h
+		mov	di, 256
 		mov	si, 14h
 		jmp	short loc_A8DA
 ; ---------------------------------------------------------------------------
@@ -1437,7 +1437,7 @@ loc_B00E:
 
 loc_B022:
 		call	main_update_and_render
-		cmp	si, 280h
+		cmp	si, 640
 		jl	short loc_B035
 		call	start_demo
 		xor	si, si
@@ -2867,12 +2867,9 @@ loc_CB74:
 		push	ax
 		push	[bp+@@color]
 		call	graph_gaiji_puts
-		lea	ax, [si+96h]
-		push	ax
-		push	di
-		push	[bp+arg_0]
-		call	sub_CA1B
-		lea	ax, [si+11Eh]
+		lea	ax, [si+150]
+		call	sub_CA1B pascal, ax, di, [bp+arg_0]
+		lea	ax, [si+286]
 		push	ax
 		push	di
 		mov	bx, [bp+arg_0]
@@ -3164,22 +3161,22 @@ arg_0		= byte ptr  4
 		jmp	cs:off_CEF7[bx]
 
 loc_CE7E:
-		mov	si, 0F02h
+		mov	si, ( 48 * ROW_SIZE) + ( 16 / 8)
 		jmp	short loc_CE90
 ; ---------------------------------------------------------------------------
 
 loc_CE83:
-		mov	si, 0F22h
+		mov	si, ( 48 * ROW_SIZE) + (272 / 8)
 		jmp	short loc_CE90
 ; ---------------------------------------------------------------------------
 
 loc_CE88:
-		mov	si, 4614h
+		mov	si, (224 * ROW_SIZE) + (160 / 8)
 		jmp	short loc_CE90
 ; ---------------------------------------------------------------------------
 
 loc_CE8D:
-		mov	si, 4632h
+		mov	si, (224 * ROW_SIZE) + (400 / 8)
 
 loc_CE90:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -3213,13 +3210,13 @@ loc_CEC6:
 		add	si, 4
 
 loc_CEDB:
-		cmp	[bp+var_2], 1Ch
+		cmp	[bp+var_2], (224 / 8)
 		jl	short loc_CEC6
 		inc	di
-		add	si, 34h	; '4'
+		add	si, ROW_SIZE - (224 / 8)
 
 loc_CEE5:
-		cmp	di, 0A0h
+		cmp	di, 160
 		jl	short loc_CEA7
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -3256,35 +3253,35 @@ put_pic	proc near
 		jmp	cs:off_D08D[bx]
 
 @@reimu:
-		mov	si, 10h
-		mov	di, 30h	; '0'
-		mov	[bp+@@x], 0B0h
-		mov	[bp+@@y], 0C0h
+		mov	si, 16
+		mov	di, 48
+		mov	[bp+@@x], 176
+		mov	[bp+@@y], 192
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
 @@marisa:
-		mov	si, 110h
-		mov	di, 30h	; '0'
-		mov	[bp+@@x], 1B0h
-		mov	[bp+@@y], 0C0h
+		mov	si, 272
+		mov	di, 48
+		mov	[bp+@@x], 432
+		mov	[bp+@@y], 192
 		jmp	short loc_CF59
 ; ---------------------------------------------------------------------------
 
 @@mima:
-		mov	si, 0A0h
-		mov	di, 0E0h
-		mov	[bp+@@x], 140h
+		mov	si, 160
+		mov	di, 224
+		mov	[bp+@@x], 320
 		jmp	short loc_CF54
 ; ---------------------------------------------------------------------------
 
 @@yuuka:
-		mov	si, 190h
-		mov	di, 0E0h
-		mov	[bp+@@x], 230h
+		mov	si, 400
+		mov	di, 224
+		mov	[bp+@@x], 560
 
 loc_CF54:
-		mov	[bp+@@y], 170h
+		mov	[bp+@@y], 368
 
 loc_CF59:
 		cmp	[bp+@@highlight], 0
@@ -3381,7 +3378,7 @@ loc_D012:
 		push	di
 		mov	al, _playchar_menu_sel
 		mov	ah, 0
-		add	ax, 28h	; '('
+		add	ax, 40
 		push	ax
 		jmp	short loc_D054
 ; ---------------------------------------------------------------------------

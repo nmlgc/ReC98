@@ -659,7 +659,7 @@ arg_2		= word ptr  6
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, 0E0h
+		mov	di, 224
 		mov	ax, [bp+arg_2]
 		shl	ax, 4
 		add	ax, 224
@@ -704,7 +704,7 @@ loc_AC5C:
 		push	(224 shl 16) or 240
 		push	17
 		call	cdg_put_nocolors
-		push	14000F0h
+		push	(320 shl 16) or 240
 		les	bx, _humaconfig
 		mov	al, es:[bx+3Ah]
 		mov	ah, 0
@@ -718,7 +718,7 @@ loc_AC85:
 		push	(224 shl 16) or 256
 		push	18
 		call	cdg_put_nocolors
-		push	1400100h
+		push	(320 shl 16) or 256
 		les	bx, _humaconfig
 		mov	al, es:[bx+3Bh]
 		mov	ah, 0
@@ -798,7 +798,7 @@ loc_AD44:
 		sub	dx, ax
 		push	dx
 		call	cdg_put_nocolors
-		mov	di, 100h
+		mov	di, 256
 		les	bx, _humaconfig
 		mov	al, es:[bx+49h]
 		mov	ah, 0
@@ -810,7 +810,7 @@ loc_AD72:
 		push	(272 shl 16) or 320
 		push	31
 		call	cdg_put_nocolors
-		mov	di, 100h
+		mov	di, 256
 		mov	si, 14h
 		jmp	short loc_AD9A
 ; ---------------------------------------------------------------------------
@@ -819,7 +819,7 @@ loc_AD87:
 		push	(272 shl 16) or 340
 		push	15
 		call	cdg_put_nocolors
-		mov	di, 100h
+		mov	di, 256
 		mov	si, 15h
 
 loc_AD9A:
@@ -829,7 +829,7 @@ loc_AD9A:
 		call	cdg_put pascal, di, [bp+@@y], 35
 		cmp	di, 256
 		jnz	short loc_ADBD
-		lea	ax, [di+60h]
+		lea	ax, [di+96]
 		push	ax
 		jmp	short loc_ADC0
 ; ---------------------------------------------------------------------------
@@ -1500,7 +1500,7 @@ loc_B43A:
 
 loc_B44E:
 		call	main_update_and_render
-		cmp	si, 280h
+		cmp	si, 640
 		jl	short loc_B45F
 		call	start_demo
 		jmp	short loc_B45F
@@ -2784,13 +2784,13 @@ loc_CE50:
 loc_CE8B:
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	Palettes[bx].r, 0FFh
+		mov	Palettes[bx].r, 255
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	Palettes[bx].g, 0FFh
+		mov	Palettes[bx].g, 255
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	Palettes[bx].b, 0FFh
+		mov	Palettes[bx].b, 255
 		inc	si
 
 loc_CEAA:
@@ -2800,7 +2800,7 @@ loc_CEAA:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		xor	si, si
-		mov	[bp+var_3], 0F0h
+		mov	[bp+var_3], 240
 		jmp	short loc_CEE8
 ; ---------------------------------------------------------------------------
 
@@ -2814,14 +2814,14 @@ loc_CEC7:
 		call	frame_delay
 		inc	si
 		mov	al, [bp+var_3]
-		add	al, 0F0h
+		add	al, -16
 		mov	[bp+var_3], al
 
 loc_CEE8:
-		cmp	si, 0Fh
+		cmp	si, 15
 		jl	short loc_CEC7
 		xor	si, si
-		mov	[bp+var_3], 0FCh
+		mov	[bp+var_3], 252
 		jmp	short loc_CF4E
 ; ---------------------------------------------------------------------------
 
@@ -2867,11 +2867,11 @@ loc_CF34:
 		call	frame_delay
 		inc	si
 		mov	al, [bp+var_3]
-		add	al, 0FCh
+		add	al, -4
 		mov	[bp+var_3], al
 
 loc_CF4E:
-		cmp	si, 3Fh	; '?'
+		cmp	si, 63
 		jl	short loc_CEF5
 		call	pi_slot_palette_apply pascal, 0
 		pop	di
@@ -2896,16 +2896,14 @@ var_2		= word ptr -2
 		enter	0Ah, 0
 		push	si
 		push	di
-		push	7D0h
-		call	hmem_allocbyte
+		call	hmem_allocbyte pascal, (((256 / 8) * 8) + ((8 / 8) * 244)) * 4
 		mov	word ptr dword_132BA+2,	ax
 		mov	word ptr dword_132BA, 0
-		push	7D0h
-		call	hmem_allocbyte
+		call	hmem_allocbyte pascal, (((256 / 8) * 8) + ((8 / 8) * 244)) * 4
 		mov	word ptr dword_132BE+2,	ax
 		mov	word ptr dword_132BE, 0
-		mov	di, 0DC5h
-		mov	[bp+var_8], 0DE9h
+		mov	di, (44 * ROW_SIZE) + (40 / 8)
+		mov	[bp+var_8], (44 * ROW_SIZE) + (328 / 8)
 		mov	[bp+var_2], 0
 		xor	si, si
 		jmp	loc_D050
@@ -2969,11 +2967,11 @@ loc_CFA9:
 		inc	[bp+var_A]
 
 loc_D03E:
-		cmp	[bp+var_4], 20h	; ' '
+		cmp	[bp+var_4], (256 / 8)
 		jl	loc_CFA9
 		inc	[bp+var_2]
-		add	di, 50h	; 'P'
-		add	[bp+var_8], 50h	; 'P'
+		add	di, ROW_SIZE
+		add	[bp+var_8], ROW_SIZE
 
 loc_D050:
 		cmp	[bp+var_2], 8
@@ -3028,11 +3026,11 @@ loc_D060:
 		mov	es:[bx+si], al
 		inc	si
 		inc	[bp+var_2]
-		add	di, 50h	; 'P'
-		add	[bp+var_8], 50h	; 'P'
+		add	di, ROW_SIZE
+		add	[bp+var_8], ROW_SIZE
 
 loc_D0F2:
-		cmp	[bp+var_2], 0F4h
+		cmp	[bp+var_2], 244
 		jl	loc_D060
 		pop	di
 		pop	si
@@ -3056,13 +3054,13 @@ arg_0		= byte ptr  4
 		push	di
 		cmp	[bp+arg_0], 0
 		jnz	short loc_D114
-		mov	dx, 0DC5h
+		mov	dx, (44 * ROW_SIZE) + ( 40 / 8)
 		mov	eax, dword_132BA
 		jmp	short loc_D11B
 ; ---------------------------------------------------------------------------
 
 loc_D114:
-		mov	dx, 0DE9h
+		mov	dx, (44 * ROW_SIZE) + (328 / 8)
 		mov	eax, dword_132BE
 
 loc_D11B:
@@ -3114,10 +3112,10 @@ loc_D12C:
 		inc	di
 
 loc_D180:
-		cmp	[bp+var_2], 20h	; ' '
+		cmp	[bp+var_2], (256 / 8)
 		jl	short loc_D12C
 		inc	cx
-		add	dx, 50h	; 'P'
+		add	dx, ROW_SIZE
 
 loc_D18A:
 		cmp	cx, 8
@@ -3160,10 +3158,10 @@ loc_D193:
 		mov	es:[bx], al
 		inc	word ptr [bp+var_6]
 		inc	cx
-		add	dx, 50h	; 'P'
+		add	dx, ROW_SIZE
 
 loc_D1E7:
-		cmp	cx, 0F4h
+		cmp	cx, 244
 		jl	short loc_D193
 		pop	di
 		pop	si
@@ -3203,12 +3201,12 @@ arg_0		= byte ptr  4
 		push	di
 		cmp	[bp+arg_0], 0
 		jnz	short loc_D21B
-		mov	si, 1046h
+		mov	si, (52 * ROW_SIZE) + ( 48 / 8)
 		jmp	short loc_D21E
 ; ---------------------------------------------------------------------------
 
 loc_D21B:
-		mov	si, 106Ah
+		mov	si, (52 * ROW_SIZE) + (336 / 8)
 
 loc_D21E:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -3242,13 +3240,13 @@ loc_D254:
 		add	si, 4
 
 loc_D269:
-		cmp	[bp+var_2], 20h	; ' '
+		cmp	[bp+var_2], (256 / 8)
 		jl	short loc_D254
 		inc	di
-		add	si, 30h	; '0'
+		add	si, ROW_SIZE - (256 / 8)
 
 loc_D273:
-		cmp	di, 0F4h
+		cmp	di, 244
 		jl	short loc_D235
 		GRCG_OFF_CLOBBERING dx
 		pop	di
