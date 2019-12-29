@@ -4124,7 +4124,7 @@ var_2		= byte ptr -2
 
 loc_D71D:
 		mov	[bp+var_2], 0
-		mov	si, 1
+		mov	si, RANK_NORMAL
 		jmp	short loc_D735
 ; ---------------------------------------------------------------------------
 
@@ -4137,7 +4137,7 @@ loc_D726:
 		inc	si
 
 loc_D735:
-		cmp	si, 4
+		cmp	si, RANK_EXTRA
 		jl	short loc_D726
 		mov	bx, di
 		add	bx, bx
@@ -4153,9 +4153,9 @@ loc_D74A:
 
 loc_D74C:
 		pop	bx
-		mov	[bx+3F82h], al
+		mov	_selectable_with[SHOTTYPE_A][bx], al
 		mov	[bp+var_2], 0
-		mov	si, 1
+		mov	si, RANK_NORMAL
 		jmp	short loc_D769
 ; ---------------------------------------------------------------------------
 
@@ -4168,7 +4168,7 @@ loc_D75A:
 		inc	si
 
 loc_D769:
-		cmp	si, 4
+		cmp	si, RANK_EXTRA
 		jl	short loc_D75A
 		mov	bx, di
 		add	bx, bx
@@ -4184,25 +4184,25 @@ loc_D77E:
 
 loc_D780:
 		pop	bx
-		mov	[bx+3F83h], al
+		mov	_selectable_with[SHOTTYPE_B][bx], al
 		inc	di
 
 loc_D786:
-		cmp	di, 2
+		cmp	di, PLAYCHAR_COUNT
 		jl	short loc_D71D
 		jmp	short loc_D7A1
 ; ---------------------------------------------------------------------------
 
 loc_D78D:
-		mov	byte_132C2, 1
-		mov	byte_132C3, 1
-		mov	byte_132C4, 1
-		mov	byte_132C5, 1
+		mov	_selectable_with[PLAYCHAR_REIMU * PLAYCHAR_COUNT][SHOTTYPE_A], 1
+		mov	_selectable_with[PLAYCHAR_REIMU * PLAYCHAR_COUNT][SHOTTYPE_B], 1
+		mov	_selectable_with[PLAYCHAR_MARISA * PLAYCHAR_COUNT][SHOTTYPE_A], 1
+		mov	_selectable_with[PLAYCHAR_MARISA * PLAYCHAR_COUNT][SHOTTYPE_B], 1
 
 loc_D7A1:
-		cmp	byte_132C2, 0
+		cmp	_selectable_with[PLAYCHAR_REIMU * PLAYCHAR_COUNT][SHOTTYPE_A], 0
 		jnz	short loc_D7AF
-		cmp	byte_132C3, 0
+		cmp	_selectable_with[PLAYCHAR_REIMU * PLAYCHAR_COUNT][SHOTTYPE_B], 0
 		jz	short loc_D7B3
 
 loc_D7AF:
@@ -4238,13 +4238,13 @@ loc_D7D6:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	byte ptr [bx+3F82h], 0
+		cmp	_selectable_with[SHOTTYPE_A][bx], 0
 		jnz	short loc_D816
 		mov	al, playchar_132B8
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	byte ptr [bx+3F83h], 0
+		cmp	_selectable_with[SHOTTYPE_B][bx], 0
 		jnz	short loc_D816
 		mov	al, 1
 		sub	al, playchar_132B8
@@ -4277,7 +4277,7 @@ loc_D85A:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		cmp	byte ptr [bx+3F82h], 0
+		cmp	_selectable_with[bx], 0
 		jz	short loc_D87F
 		mov	al, 0
 		jmp	short loc_D881
@@ -4349,7 +4349,7 @@ loc_D90F:
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		cmp	byte ptr [bx+3F82h], 0
+		cmp	_selectable_with[bx], 0
 		jnz	short loc_D939
 		mov	al, 1
 		sub	al, byte_132B9
@@ -4833,9 +4833,6 @@ playchar_132B8	db ?
 byte_132B9	db ?
 dword_132BA	dd ?
 dword_132BE	dd ?
-byte_132C2	db ?
-byte_132C3	db ?
-byte_132C4	db ?
-byte_132C5	db ?
+	extern _selectable_with:byte
 
 		end

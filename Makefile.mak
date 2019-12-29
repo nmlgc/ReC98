@@ -86,7 +86,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
 $**
 |
 
-bin\th04\op.exe: bin\th04\op.obj th04\op_02.c
+bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp th04\op_02.c
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
 $**
 |
