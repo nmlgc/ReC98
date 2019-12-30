@@ -7685,7 +7685,7 @@ hud_graze_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0013h
-		push	word_2CFFC
+		push	_stage_graze
 		call	sub_1D519
 		pop	bp
 		retf
@@ -12510,7 +12510,7 @@ sub_11ECB	proc near
 		mov	byte_266D2, 0
 		mov	_palette_changed, 0
 		mov	_bullet_clear_trigger, 0
-		mov	word_2CFFC, 0
+		mov	_stage_graze, 0
 		mov	_circles_color, GC_R
 		call	grc_setclip pascal, large (PLAYFIELD_X shl 16) or PLAYFIELD_Y, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _shots
@@ -31431,9 +31431,9 @@ loc_1CA82:
 		push	large (((2 shl 4) shl 16) or 2)
 		nopcall	sparks_add_random
 		mov	byte ptr [si+12h], 1
-		cmp	word_2CFFC, 3E7h
+		cmp	_stage_graze, GRAZE_MAX
 		jnb	short loc_1CAC5
-		inc	word_2CFFC
+		inc	_stage_graze
 		call	hud_graze_put
 		movzx	eax, score_2CFFE
 		add	_score_delta, eax
@@ -33250,7 +33250,7 @@ var_4		= dword	ptr -4
 		push	0Bh
 		push	eax
 		call	sub_1D48E
-		mov	ax, word_2CFFC
+		mov	ax, _stage_graze
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
@@ -33401,7 +33401,7 @@ loc_1D922:
 		push	0Ah
 		push	eax
 		call	sub_1D48E
-		mov	ax, word_2CFFC
+		mov	ax, _stage_graze
 		imul	ax, 5
 		mov	si, ax
 		movzx	eax, si
@@ -34643,7 +34643,7 @@ loc_1E7B5:
 		cmp	_boss_phase_frame, 0
 		jnz	loc_1E8B3
 		les	bx, _resident
-		mov	ax, word_2CFFC
+		mov	ax, _stage_graze
 		add	es:[bx+38h], ax
 		cmp	stage_id, 5
 		jz	loc_1E8AE
@@ -45885,7 +45885,8 @@ byte_2CFF7	db ?
 byte_2CFF8	db ?
 include th04/bullet_clear[bss].asm
 		db ?
-word_2CFFC	dw ?
+public _stage_graze
+_stage_graze	dw ?
 score_2CFFE	dw ?
 fp_2D000	dw ?
 fp_2D002	dw ?
