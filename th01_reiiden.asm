@@ -2737,7 +2737,7 @@ loc_CB5D:
 loc_CB66:
 		cmp	[bp+var_1], 0
 		jz	short loc_CB96
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		inc	es:[bx+reiidenconfig_t.continues_total]
 		inc	_continues_total
 		mov	ax, es:[bx+reiidenconfig_t.stage]
@@ -2745,7 +2745,7 @@ loc_CB66:
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr _reiidenconfig
+		mov	bx, word ptr _resident
 		add	bx, ax
 		inc	es:[bx+reiidenconfig_t.continues_per_scene]
 
@@ -2783,7 +2783,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_0]
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], dx
 		jle	short loc_CBD4
 		mov	es:[bx+reiidenconfig_t.bullet_speed], dx
@@ -2791,12 +2791,12 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_CBD4:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, [bp+arg_2]
 		add	es:[bx+reiidenconfig_t.bullet_speed], ax
 
 loc_CBDF:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], -15
 		jge	short loc_CBF0
 		mov	es:[bx+reiidenconfig_t.bullet_speed], -15
@@ -2817,7 +2817,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, [bp+arg_0]
 		add	es:[bx+reiidenconfig_t.bullet_speed], ax
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], 20
@@ -2872,7 +2872,7 @@ sub_CC0F	proc far
 		mov	byte_34A51, 0
 		mov	byte_34A4E, 0
 		call	sub_B87C
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		inc	es:[bx+reiidenconfig_t.continues_total]
 		inc	_continues_total
 		mov	ax, es:[bx+reiidenconfig_t.stage]
@@ -2880,10 +2880,10 @@ sub_CC0F	proc far
 		xor	dx, dx
 		div	bx
 		add	ax, ax
-		mov	bx, word ptr _reiidenconfig
+		mov	bx, word ptr _resident
 		add	bx, ax
 		inc	es:[bx+reiidenconfig_t.continues_per_scene]
-		mov	bx, word ptr _reiidenconfig
+		mov	bx, word ptr _resident
 		mov	eax, es:[bx+reiidenconfig_t.score_highest]
 		cmp	eax, _score
 		jnb	short loc_CD2E
@@ -2891,7 +2891,7 @@ sub_CC0F	proc far
 		mov	es:[bx+reiidenconfig_t.score_highest], eax
 
 loc_CD2E:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.score], 0
 		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		add	al, 2
@@ -2916,10 +2916,10 @@ loc_CD52:
 loc_CD70:
 		cmp	si, 1
 		jnz	short loc_CDA2
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
 		call	game_switch_binary
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
 		push	ds
@@ -3217,7 +3217,7 @@ loc_D00D:
 		pop	cx
 		mov	al, byte_36C14
 		mov	_bombs, al
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.bombs], 1
 		pop	di
 		pop	si
@@ -3240,7 +3240,7 @@ sub_D02F	proc far
 		cmp	_rem_lives, 6
 		jge	short loc_D076
 		inc	_rem_lives
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, byte ptr _rem_lives
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	ax, _rem_lives
@@ -3954,7 +3954,7 @@ loc_D579:
 
 loc_D583:
 		mov	byte_36C14, 1
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	eax, es:[bx+reiidenconfig_t.score]
 		mov	_score, eax
 		mov	ebx, 61A80h
@@ -3969,7 +3969,7 @@ loc_D583:
 		push	3F003Fh
 		call	__control87
 		add	sp, 4
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.route]
 		mov	_route, al
 		cmp	es:[bx+reiidenconfig_t.mode], 0
@@ -4025,7 +4025,7 @@ loc_D644:
 		mov	_route, 0
 
 loc_D649:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 1
@@ -4037,7 +4037,7 @@ loc_D649:
 		mov	_mode_test, 1
 
 loc_D669:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.mode]
 		cbw
 		cmp	ax, 3
@@ -4133,7 +4133,7 @@ loc_D6EE:
 
 loc_D72E:
 		call	sub_D487
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.rem_lives]
 		cbw
 		mov	_rem_lives, ax
@@ -4183,7 +4183,7 @@ loc_D795:
 		mov	byte_35BEE, dl
 		mov	byte_34A49, 1
 		mov	byte_36C1E, 1
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
 		jnz	short loc_D7E0
 		mov	ax, 1
@@ -4197,7 +4197,7 @@ loc_D7E2:
 		mov	si, ax
 
 loc_D7E4:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		mov	al, _route
@@ -4812,7 +4812,7 @@ loc_DE0F:
 		cmp	ax, 1
 		jnz	short loc_DE67
 		call	sub_D487
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, _route
 		inc	al
 		mov	es:[bx+reiidenconfig_t.end_flag], al
@@ -4849,7 +4849,7 @@ loc_DE72:
 		push	0
 		call	sub_11738
 		pop	cx
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	eax, _rand
 		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	word_34A72, 0
@@ -4861,7 +4861,7 @@ loc_DE72:
 		push	5
 		call	_mdrv2_se_play
 		pop	cx
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_rem_lives
 		call	sub_1AE0D
@@ -4885,7 +4885,7 @@ loc_DEDA:
 loc_DF03:
 		inc	si
 		inc	[bp+var_2]
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		cmp	byte_34ADF, 0
@@ -4902,7 +4902,7 @@ loc_DF23:
 
 loc_DF2B:
 		pop	cx
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.bullet_speed], 0
 		jge	short loc_DF3D
 		mov	es:[bx+reiidenconfig_t.bullet_speed], 0
@@ -4918,7 +4918,7 @@ loc_DF3D:
 		jz	short loc_DF9A
 
 loc_DF52:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
 		mov	al, byte ptr _rem_lives
@@ -4927,7 +4927,7 @@ loc_DF52:
 		mov	al, _route
 		mov	es:[bx+reiidenconfig_t.route], al
 		call	_mdrv2_bgm_fade_out_nonblock
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
 		call	game_switch_binary
@@ -5156,7 +5156,7 @@ loc_E244:
 		mov	byte_34A49, 1
 
 loc_E27B:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
 		cmp	[bp+var_2], 5
@@ -5187,7 +5187,7 @@ loc_E2A8:
 		pushd	[_score]
 		call	sub_148B3
 		add	sp, 0Ah
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, [bp+var_2]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		call	sub_CC0F
@@ -14027,7 +14027,7 @@ loc_13313:
 		cwd
 		idiv	bx
 		shl	dx, 2
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		add	bx, dx
 		mov	eax, dword_34A5E
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
@@ -14532,7 +14532,7 @@ loc_13792:
 		idiv	bx
 		dec	ax
 		add	ax, ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		add	bx, ax
 		mov	ax, word ptr _continues_total
 		mov	es:[bx+reiidenconfig_t.continues_per_scene], ax
@@ -16890,7 +16890,7 @@ sub_14BD2	proc far
 		push	dx
 		push	ax
 		pop	eax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
 		call	sub_146BA
@@ -23212,7 +23212,7 @@ loc_1833B:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	[bx+539Ah], ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.p_value], 59999
 		jnb	short loc_18368
 		cmp	es:[bx+reiidenconfig_t.p_value], 10000
@@ -23225,17 +23225,17 @@ loc_1835D:
 		mov	ax, 2710h
 
 loc_18360:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		add	es:[bx+reiidenconfig_t.p_value], ax
 
 loc_18368:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.p_value], 60000
 		jb	short loc_1837A
 		mov	es:[bx+reiidenconfig_t.p_value], 65530
 
 loc_1837A:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		movzx	eax, es:[bx+reiidenconfig_t.p_value]
 		add	_score, eax
 		call	sub_1889C
@@ -23379,7 +23379,7 @@ sub_1843D	endp
 sub_18456	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pop	bp
 		retf
@@ -23442,7 +23442,7 @@ loc_184D3:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		push	es:[bx+reiidenconfig_t.p_value]
 		push	5
 		call	sub_1FF8A
@@ -23664,7 +23664,7 @@ var_4		= dword	ptr -4
 		enter	8, 0
 		push	si
 		mov	[bp+var_4], 0F4240h
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	eax, es:[bx+reiidenconfig_t.hiscore]
 		mov	[bp+var_8], eax
 		cmp	eax, _score
@@ -23787,7 +23787,7 @@ loc_18778:
 		add	sp, 12h
 		mov	eax, _score
 		mov	dword_35ABF, eax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
 
 loc_187A3:
@@ -24248,7 +24248,7 @@ loc_18B33:
 		pop	cx
 		push	1
 		pushd	0
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]
 		push	70027h
 		pushd	100h
@@ -32706,8 +32706,8 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-public _reiidenconfig
-_reiidenconfig	dd ?
+public _resident
+_resident	dd ?
 unk_391A0	db    ?	;
 		dd    ?
 		dd    ?

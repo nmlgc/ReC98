@@ -37558,7 +37558,7 @@ loc_303CD:
 
 loc_303D0:
 		add	si, ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('
@@ -37708,7 +37708,7 @@ loc_304F5:
 
 loc_304F8:
 		add	si, ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	ax, es:[bx+reiidenconfig_t.bullet_speed]
 		imul	si
 		mov	bx, 28h	; '('

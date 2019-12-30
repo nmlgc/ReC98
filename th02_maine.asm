@@ -1196,7 +1196,7 @@ loc_9D96:
 		freePISlotLarge	0
 		push	2
 		call	palette_black_out
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_9E2A
 		push	0
@@ -1204,7 +1204,7 @@ loc_9D96:
 ; ---------------------------------------------------------------------------
 
 loc_9E2A:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_9E39
 		push	2
@@ -1246,7 +1246,7 @@ loc_9E7D:
 		cmp	si, 1Ah
 		jle	short loc_9E65
 		mov	byte_F02A, 26h ; '&'
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_9F22
 		mov	si, 1Bh
@@ -1313,7 +1313,7 @@ loc_9ED8:
 ; ---------------------------------------------------------------------------
 
 loc_9F22:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	loc_9FD3
 		push	90014Ch
@@ -1379,7 +1379,7 @@ loc_9F8E:
 ; ---------------------------------------------------------------------------
 
 loc_9FD3:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	loc_A097
 		push	90014Ch
@@ -1735,7 +1735,7 @@ loc_A353:
 		call	sub_9643
 		push	0Ah
 		call	frame_delay
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_A4EC
 		push	90014Ch
@@ -1870,7 +1870,7 @@ loc_A4D3:
 ; ---------------------------------------------------------------------------
 
 loc_A4EC:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	loc_A6B6
 		push	90014Ch
@@ -2601,7 +2601,7 @@ loc_A992:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 160
-		les	bx, _mikoconfig
+		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		add	ax, gb_0_
 		push	ax
@@ -2648,7 +2648,7 @@ loc_A992:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 224
-		les	bx, _mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	ah, 0
 		add	ax, gb_1_
@@ -2671,7 +2671,7 @@ loc_A992:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 256
-		les	bx, _mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	ah, 0
 		add	ax, gb_0_
@@ -2685,7 +2685,7 @@ loc_A992:
 		push	96h
 		call	frame_delay
 		graph_accesspage 1
-		les	bx, _mikoconfig
+		les	bx, _resident
 		mov	di, es:[bx+mikoconfig_t.skill]
 		cmp	di, 64h	; 'd'
 		jle	short loc_AEAC
@@ -2857,7 +2857,7 @@ sub_AFE7	proc far
 		call	scoredat_is_extra_unlocked
 		or	ax, ax
 		jz	loc_B07D
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_B07D
 		call	_pi_slot_load c, 0, offset aAll_pi, ds
@@ -2937,7 +2937,7 @@ _envp		= dword	ptr  0Ch
 		call	cfg_load
 		or	ax, ax
 		jz	loc_B1FE
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.stage], 7Fh
 		jnz	loc_B1FE
 		call	_game_init_main
@@ -2947,7 +2947,7 @@ _envp		= dword	ptr  0Ch
 		call	gaiji_entry_bfnt
 		call	_snd_pmd_resident
 		call	_snd_mmd_resident
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 0
 		jnz	short loc_B161
 		mov	_snd_midi_active, 0
@@ -2955,7 +2955,7 @@ _envp		= dword	ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_B161:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 1
 		jnz	short loc_B173
 		mov	_snd_midi_active, 0
@@ -2963,7 +2963,7 @@ loc_B161:
 ; ---------------------------------------------------------------------------
 
 loc_B173:
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 2
 		jnz	short loc_B189
 		mov	al, _snd_midi_possible
@@ -2979,7 +2979,7 @@ loc_B189:
 		call	super_entry_bfnt pascal, ds, offset aEndft_bft ; "endft.bft"
 		push	64h ; 'd'
 		call	frame_delay
-		les	bx, _mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.rank], 4
 		jz	short loc_B1C2
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
@@ -3170,7 +3170,7 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
-extern _mikoconfig:dword
+extern _resident:dword
 extern _score:dword
 
 		end

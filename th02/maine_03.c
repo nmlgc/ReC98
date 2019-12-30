@@ -8,7 +8,7 @@
 char rank = RANK_NORMAL;
 char unused_1 = 0;
 
-resident_t *mikoconfig;
+resident_t *resident;
 char unused_2;
 char rem_lives;
 char rem_bombs;
@@ -29,10 +29,10 @@ int pascal cfg_load(void)
 	if(!resident_sgm) {
 		return 0;
 	}
-	mikoconfig = MK_FP(resident_sgm, 0);
-	rem_lives = mikoconfig->rem_lives;
-	rem_bombs = mikoconfig->rem_bombs;
-	rank = mikoconfig->rank;
-	score = mikoconfig->score;
+	resident = MK_FP(resident_sgm, 0);
+	rem_lives = resident->rem_lives;
+	rem_bombs = resident->rem_bombs;
+	rank = resident->rank;
+	score = resident->score;
 	return 1;
 }

@@ -1845,7 +1845,7 @@ _envp		= dword	ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 @@game_init_main_is_0:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 1
 		jnz	short loc_B19A
 		call	_snd_pmd_resident
@@ -1854,7 +1854,7 @@ _envp		= dword	ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_B19A:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.bgm_mode], 2
 		jnz	short loc_B1BA
 		call	_snd_pmd_resident
@@ -1866,7 +1866,7 @@ loc_B1B5:
 		call	_snd_determine_mode
 
 loc_B1BA:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_B1CA
 		nopcall	demo_load
@@ -1875,12 +1875,12 @@ loc_B1CA:
 		call	sub_B2AB
 
 loc_B1CD:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+mikoconfig_t.frame]
 		mov	random_seed, eax
 		call	sub_B3DA
 		nopcall	sub_E16D
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B237
 		mov	al, stage_id
@@ -1930,7 +1930,7 @@ loc_B24F:
 ; ---------------------------------------------------------------------------
 
 loc_B263:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B287
 		call	sub_C31F
@@ -1941,7 +1941,7 @@ loc_B263:
 ; ---------------------------------------------------------------------------
 
 loc_B27A:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, stage_id
 		mov	es:[bx+mikoconfig_t.stage], al
 		jmp	short loc_B290
@@ -1992,7 +1992,7 @@ loc_B2F5:
 		jl	short loc_B2EE
 		call	gaiji_load
 		call	sub_E178
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.perf]
 		mov	byte_2066C, al
 		setfarfp	farfp_1F4A4, sub_BCB1
@@ -2005,7 +2005,7 @@ loc_B2F5:
 ; ---------------------------------------------------------------------------
 
 loc_B32B:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
 
 loc_B333:
@@ -2146,7 +2146,7 @@ var_C		= byte ptr -0Ch
 		mov	byte_2061A, 0
 		mov	byte_1F466, 0
 		mov	byte_2066D, 1
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B4BB
 		mov	bgm_show_timer, 1
@@ -2361,7 +2361,7 @@ loc_B832:
 
 loc_B88A:
 		call	sub_4344
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B8AF
 		call	_snd_delay_until_volume stdcall, 255
@@ -2397,7 +2397,7 @@ loc_B8B5:
 		push	ds
 		push	offset aMiko_k_mpn ; "miko_k.mpn"
 		call	mptn_load
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B922
 		push	ss
@@ -2786,7 +2786,7 @@ loc_BDA2:
 		mov	bx, ax
 		mov	ss:[bx], dx
 		call	_input_sense
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jz	short loc_BDCC
 		nopcall	DemoPlay
@@ -2921,7 +2921,7 @@ loc_BEED:
 		mov	al, _page_back
 		out	0A6h, al
 		call	farfp_1F494
-		les	bx, mikoconfig
+		les	bx, _resident
 		inc	es:[bx+mikoconfig_t.frame]
 		inc	dword_20612
 		call	farfp_1F48C
@@ -3093,7 +3093,7 @@ sub_C05D	proc far
 		mov	bp, sp
 		cmp	dword_20612, 0A0h
 		jnz	short loc_C0A6
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_C09A
 		call	text_putsa pascal, (4 shl 16) + 12, ds, offset aEMPTY, TX_WHITE
@@ -3156,7 +3156,7 @@ demo_load	proc far
 		mov	word ptr _DemoBuf, 0
 		mov	power, 80
 		mov	word_20272, 0Ch
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.frame], 12h
 		cmp	es:[bx+mikoconfig_t.demo_num], 1
 		jnz	short loc_C18A
@@ -3164,33 +3164,33 @@ demo_load	proc far
 		push	ds
 		push	offset aDemo1_rec ; "DEMO1.REC"
 		call	file_ropen
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.shottype], 0
 		jmp	short loc_C1D0
 ; ---------------------------------------------------------------------------
 
 loc_C18A:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 2
 		jnz	short loc_C1AE
 		mov	stage_id, 2
 		push	ds
 		push	offset aDemo2_rec ; "DEMO2.REC"
 		call	file_ropen
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.shottype], 2
 		jmp	short loc_C1D0
 ; ---------------------------------------------------------------------------
 
 loc_C1AE:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 3
 		jnz	short loc_C1D0
 		mov	stage_id, 1
 		push	ds
 		push	offset aDemo3_rec ; "DEMO3.REC"
 		call	file_ropen
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.shottype], 1
 
 loc_C1D0:
@@ -3259,9 +3259,9 @@ cfg_load	proc near
 		cmp	[bp+@@resident_sgm], 0
 		jz	short loc_C2F0
 		mov	ax, [bp+@@resident_sgm]
-		mov	word ptr mikoconfig+2,	ax
-		mov	word ptr mikoconfig, 0
-		les	bx, mikoconfig
+		mov	word ptr _resident+2, ax
+		mov	word ptr _resident, 0
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.stage]
 		mov	stage_id, al
 		mov	al, es:[bx+mikoconfig_t.start_lives]
@@ -3395,7 +3395,7 @@ loc_C400:
 		call	sub_FBE9
 		call	sub_1C9FE
 		call	sub_FBE9
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 3
 		jnb	loc_C4F5
 		mov	al, _rank
@@ -3406,7 +3406,7 @@ loc_C400:
 		push	0E500E1h
 		call	sub_C2F4
 		call	gaiji_putsa pascal, (18 shl 16) + 20, ds, offset gCREDIT, TX_GREEN
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	ax, 0A3h ; '£'
 		sub	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	si, ax
@@ -3468,7 +3468,7 @@ loc_C4F5:
 		xor	di, di
 
 loc_C4F7:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
 		cmp	eax, _score
 		jnb	short loc_C50D
@@ -3477,11 +3477,11 @@ loc_C4F7:
 ; ---------------------------------------------------------------------------
 
 loc_C50D:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
 
 loc_C516:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	lives, al
@@ -3575,7 +3575,7 @@ loc_C5C2:
 		mov	word_205DA, 0FFFFh
 		mov	byte_20610, 0
 		mov	byte_20611, 0
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	ah, 0
 		or	ax, ax
@@ -7059,7 +7059,7 @@ hud_put	proc near
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
 		call	hud_score_put pascal, 6, large [_score]
 		push	6
-		les	bx, mikoconfig
+		les	bx, _resident
 		assume es:nothing
 		push	es:[bx+mikoconfig_t.continues_used]
 		call	hud_continues_put
@@ -7246,7 +7246,7 @@ sub_E178	proc near
 		push	438h
 		call	file_read
 		call	file_close
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E1D2
 		call	_pi_slot_load c, 1, offset aBomb1_pi, ds
@@ -7256,7 +7256,7 @@ sub_E178	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E1D2:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	short loc_E1F3
 		call	_pi_slot_load c, 1, offset aBomb3_pi, ds
@@ -7266,7 +7266,7 @@ loc_E1D2:
 ; ---------------------------------------------------------------------------
 
 loc_E1F3:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E248
 		call	_pi_slot_load c, 1, offset aBomb2_pi, ds
@@ -7301,7 +7301,7 @@ sub_E24A	proc near
 		push	bp
 		mov	bp, sp
 		freePISlotLarge	1
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E26F
 		push	word ptr dword_218BA+2
@@ -7442,7 +7442,7 @@ loc_E38A:
 		mov	byte_22D48, 1
 
 loc_E39D:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E3BA
 		cmp	word_218B6, 88h
@@ -7453,7 +7453,7 @@ loc_E39D:
 ; ---------------------------------------------------------------------------
 
 loc_E3BA:
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E3D7
 		cmp	word_218B6, 0A4h
@@ -8991,7 +8991,7 @@ loc_F13B:
 		jnz	short loc_F198
 		dec	lives
 		call	hud_lives_put
-		les	bx, mikoconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	bombs, al
@@ -9714,7 +9714,7 @@ loc_FCFB:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	ah, 0
 		mov	dx, 4
@@ -9728,7 +9728,7 @@ loc_FCFB:
 		push	ss
 		lea	ax, [bp+var_6]
 		push	ax
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	ah, 0
 		mov	dx, 4
@@ -16217,7 +16217,7 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		push	1
 		call	sub_1310B
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	loc_13304
 		xor	si, si
@@ -16236,7 +16236,7 @@ loc_13238:
 loc_13248:
 		cmp	si, 3
 		jl	short loc_13238
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	bx, 0Ah
 		xor	dx, dx
@@ -16268,7 +16268,7 @@ loc_13248:
 		mov	[bx+6013h], al
 
 loc_1329D:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	bx, 0Ah
 		xor	dx, dx
@@ -16388,7 +16388,7 @@ var_16		= byte ptr -16h
 		call	sub_13055
 		push	69h ; 'i'
 		call	sub_13055
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_13390
 		xor	si, si
@@ -16471,7 +16471,7 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		mov	eax, dword_1ED42
 		mov	[bp+var_A], eax
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_133F6
 		xor	si, si
@@ -22659,7 +22659,7 @@ evileye_end	proc far
 		call	sub_1310B
 		call	sub_FE12
 		call	_key_delay
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
 		mov	eax, _score
 		imul	eax, 10
@@ -27882,7 +27882,7 @@ sub_19949	proc near
 		cbw
 		imul	ax, 14h
 		mov	cx, ax
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
 		imul	ax, 3
 		mov	dx, 0Ah
@@ -27917,7 +27917,7 @@ loc_19997:
 
 loc_199A4:
 		add	cx, word_1E586
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.skill], cx
 		pop	si
 		pop	bp
@@ -28099,7 +28099,7 @@ sub_19C1D	proc near
 		mov	bp, sp
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
 		cmp	eax, _score
 		jnb	short loc_19C41
@@ -28108,11 +28108,11 @@ sub_19C1D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_19C41:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+mikoconfig_t.score_highest]
 
 loc_19C4A:
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	eax, _score
 		imul	eax, 0Ah
@@ -28189,7 +28189,7 @@ sub_19C8D	proc near
 		call	super_put_rect
 		call	sub_12DE0
 		call	sub_133B8
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_19D48
 		kajacall	KAJA_SONG_FADE, 10
@@ -28276,7 +28276,7 @@ mima_end	proc far
 		call	super_put_rect
 		call	sub_13439
 		add	_score, 100000
-		les	bx, mikoconfig
+		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_19E2A
 		call	sub_1CD8E
@@ -33261,7 +33261,7 @@ loc_1CA1D:
 		mov	eax, _score
 		imul	eax, 10
 		mov	_score, eax
-		les	bx, mikoconfig
+		les	bx, _resident
 		movzx	eax, es:[bx+mikoconfig_t.continues_used]
 		add	_score, eax
 		mov	eax, dword_25324
@@ -33364,7 +33364,7 @@ loc_1CB0C:
 		push	ax		; datep
 		call	_getdate
 		add	sp, 4
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	bx, [bp+var_2]
 		mov	[bx+7936h], al
@@ -33666,7 +33666,7 @@ var_6		= byte ptr -6
 		call	SCOPY@
 		mov	al, _rank
 		mov	[bp+@@rank], al
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	_rank, al
 		call	sub_1C6C7
@@ -33707,7 +33707,7 @@ var_4		= byte ptr -4
 		mov	[bp+@@rank], al
 		mov	_rank, RANK_LUNATIC
 		call	sub_1C6C7
-		les	bx, mikoconfig
+		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.shottype]
 		mov	ah, 0
 		lea	dx, [bp+var_4]
@@ -35116,7 +35116,8 @@ word_20166	dw ?
 byte_20168	db ?
 byte_20169	db ?
 include th02/math/randring[bss].asm
-mikoconfig	dd ?
+public _resident
+_resident	dd ?
 		db    ?	;
 		db    ?	;
 word_20272	dw ?

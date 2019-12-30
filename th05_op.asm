@@ -162,7 +162,7 @@ start_game	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		mov	byte ptr es:[bx+1Fh], 0
 		mov	byte ptr es:[bx+13h], 0
@@ -178,10 +178,10 @@ start_game	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A3CF:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, si
 		mov	byte ptr es:[bx+20h], 0
-		mov	bx, word ptr _ksoconfig
+		mov	bx, word ptr _resident
 		add	bx, si
 		mov	byte ptr es:[bx+44h], 0
 		xor	di, di
@@ -191,7 +191,7 @@ loc_A3CF:
 loc_A3E9:
 		mov	ax, di
 		shl	ax, 3
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, ax
 		mov	byte ptr es:[bx+si+4Ch], 0
 		inc	di
@@ -208,7 +208,7 @@ loc_A400:
 		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_A430
 		pushd	0
@@ -247,7 +247,7 @@ start_extra	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Fh], 0
 		mov	byte ptr es:[bx+13h], 6
 		mov	byte ptr es:[bx+0Dh], 3
@@ -260,10 +260,10 @@ start_extra	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A46F:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, si
 		mov	byte ptr es:[bx+20h], 0
-		mov	bx, word ptr _ksoconfig
+		mov	bx, word ptr _resident
 		add	bx, si
 		mov	byte ptr es:[bx+44h], 0
 		xor	di, di
@@ -273,7 +273,7 @@ loc_A46F:
 loc_A489:
 		mov	ax, di
 		shl	ax, 3
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, ax
 		mov	byte ptr es:[bx+si+4Ch], 0
 		inc	di
@@ -314,7 +314,7 @@ start_demo	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		mov	byte ptr es:[bx+13h], 0
 		mov	byte ptr es:[bx+0Dh], 3
@@ -335,19 +335,19 @@ loc_A4FB:
 		jz	short loc_A529
 		cmp	_extra_playable_with.PLAYCHAR_YUUKA, 0
 		jz	short loc_A529
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Fh], 5
 		jmp	short loc_A535
 ; ---------------------------------------------------------------------------
 
 loc_A529:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Fh], 0
 		jmp	loc_A5E9
 ; ---------------------------------------------------------------------------
 
 loc_A535:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Fh]
 		mov	ah, 0
 		dec	ax
@@ -358,35 +358,35 @@ loc_A535:
 		jmp	cs:off_A5EC[bx]
 
 loc_A54E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+14h], 0
 		mov	byte ptr es:[bx+1Dh], 3
 		jmp	short loc_A5A4
 ; ---------------------------------------------------------------------------
 
 loc_A55E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+14h], 1
 		mov	byte ptr es:[bx+1Dh], 1
 		jmp	short loc_A5A4
 ; ---------------------------------------------------------------------------
 
 loc_A56E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+14h], 2
 		mov	byte ptr es:[bx+1Dh], 2
 		jmp	short loc_A5A4
 ; ---------------------------------------------------------------------------
 
 loc_A57E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+14h], 3
 		mov	byte ptr es:[bx+1Dh], 4
 		jmp	short loc_A5A4
 ; ---------------------------------------------------------------------------
 
 loc_A58E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+14h], 2
 		mov	byte ptr es:[bx+1Dh], 6
 		kajacall	KAJA_SONG_FADE, 8
@@ -397,10 +397,10 @@ loc_A5A4:
 ; ---------------------------------------------------------------------------
 
 loc_A5A8:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, si
 		mov	byte ptr es:[bx+20h], 0
-		mov	bx, word ptr _ksoconfig
+		mov	bx, word ptr _resident
 		add	bx, si
 		mov	byte ptr es:[bx+44h], 0
 		inc	si
@@ -465,7 +465,7 @@ loc_A634:
 		push	(272 shl 16) or 250
 		push	10
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	ah, 0
 		add	ax, 16h
@@ -586,13 +586,13 @@ loc_A764:
 		push	16
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 250
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	ah, 0
 		add	ax, 21
 		push	ax
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	ah, 0
 		add	ax, 6
@@ -607,7 +607,7 @@ loc_A79C:
 		push	17
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 266
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Fh]
 		mov	ah, 0
 		push	ax
@@ -621,7 +621,7 @@ loc_A7C5:
 		push	18
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 282
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -634,7 +634,7 @@ loc_A7EE:
 		push	(224 shl 16) or 298
 		push	19
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+12h], 0
 		jnz	short loc_A80B
 		mov	ax, 1Ch
@@ -642,7 +642,7 @@ loc_A7EE:
 ; ---------------------------------------------------------------------------
 
 loc_A80B:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		add	ax, 18h
@@ -652,7 +652,7 @@ loc_A818:
 		push	(320 shl 16) or 298
 		push	ax
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		add	ax, 0Ch
@@ -663,7 +663,7 @@ loc_A837:
 		push	(224 shl 16) or 314
 		push	20
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+15h], 0
 		jnz	short loc_A854
 		mov	ax, 1Ch
@@ -671,7 +671,7 @@ loc_A837:
 ; ---------------------------------------------------------------------------
 
 loc_A854:
-		les	bx, _ksoconfig
+		les	bx, _resident
 
 loc_A858:
 		mov	al, es:[bx+15h]
@@ -686,7 +686,7 @@ loc_A865:
 		push	(320 shl 16) or 314
 		push	ax
 		call	cdg_put_nocolors
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+15h]
 		mov	ah, 0
 		add	ax, 0Fh
@@ -695,7 +695,7 @@ loc_A865:
 
 loc_A884:
 		push	(272 shl 16) or 330
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+16h]
 		mov	ah, 0
 		mov	dx, 33
@@ -703,7 +703,7 @@ loc_A884:
 		push	dx
 		call	cdg_put_nocolors
 		mov	di, 256
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+16h]
 		mov	ah, 0
 		add	ax, 12h
@@ -1079,7 +1079,7 @@ loc_AC60:
 ; ---------------------------------------------------------------------------
 
 loc_AC71:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+11h], 1
 		mov	byte ptr es:[bx+0Fh], 3
 		mov	byte ptr es:[bx+10h], 3
@@ -1087,7 +1087,7 @@ loc_AC71:
 		mov	byte ptr es:[bx+15h], 1
 		mov	byte ptr es:[bx+16h], 1
 		kajacall	KAJA_SONG_STOP
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1124,7 +1124,7 @@ loc_AD01:
 		jmp	cs:off_AF3D[bx]
 
 loc_AD15:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+11h]
 		cmp	byte ptr es:[bx+11h], 3
 		jbe	loc_ADF5
@@ -1133,7 +1133,7 @@ loc_AD15:
 ; ---------------------------------------------------------------------------
 
 loc_AD2E:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+0Fh]
 		cmp	byte ptr es:[bx+0Fh], 6
 		jbe	loc_ADF5
@@ -1142,7 +1142,7 @@ loc_AD2E:
 ; ---------------------------------------------------------------------------
 
 loc_AD47:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+10h]
 		cmp	byte ptr es:[bx+10h], 3
 		jbe	loc_ADF5
@@ -1151,7 +1151,7 @@ loc_AD47:
 ; ---------------------------------------------------------------------------
 
 loc_AD60:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+12h]
 		cmp	byte ptr es:[bx+12h], 3
 		jb	short loc_AD74
@@ -1159,7 +1159,7 @@ loc_AD60:
 
 loc_AD74:
 		kajacall	KAJA_SONG_STOP
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1173,7 +1173,7 @@ loc_AD74:
 ; ---------------------------------------------------------------------------
 
 loc_ADA8:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+15h], 0
 		jnz	short loc_ADBA
 		mov	byte ptr es:[bx+15h], 2
@@ -1181,11 +1181,11 @@ loc_ADA8:
 ; ---------------------------------------------------------------------------
 
 loc_ADBA:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+15h]
 
 loc_ADC2:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1198,7 +1198,7 @@ loc_ADC2:
 ; ---------------------------------------------------------------------------
 
 loc_ADE7:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, 1
 		sub	al, es:[bx+16h]
 		mov	es:[bx+16h], al
@@ -1222,43 +1222,43 @@ loc_ADFF:
 		jmp	cs:off_AF31[bx]
 
 loc_AE1C:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+11h], 0
 		jnz	short loc_AE2C
 		mov	byte ptr es:[bx+11h], 4
 
 loc_AE2C:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+11h]
 		jmp	loc_AF02
 ; ---------------------------------------------------------------------------
 
 loc_AE37:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+0Fh], 1
 		jnz	short loc_AE47
 		mov	byte ptr es:[bx+0Fh], 7
 
 loc_AE47:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+0Fh]
 		jmp	loc_AF02
 ; ---------------------------------------------------------------------------
 
 loc_AE52:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+10h], 0
 		jnz	short loc_AE62
 		mov	byte ptr es:[bx+10h], 4
 
 loc_AE62:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+10h]
 		jmp	loc_AF02
 ; ---------------------------------------------------------------------------
 
 loc_AE6D:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+12h], 0
 		jnz	short loc_AE7F
 		mov	byte ptr es:[bx+12h], 2
@@ -1266,12 +1266,12 @@ loc_AE6D:
 ; ---------------------------------------------------------------------------
 
 loc_AE7F:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+12h]
 
 loc_AE87:
 		kajacall	KAJA_SONG_STOP
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1285,14 +1285,14 @@ loc_AE87:
 ; ---------------------------------------------------------------------------
 
 loc_AEBB:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+15h]
 		cmp	byte ptr es:[bx+15h], 3
 		jb	short loc_AECF
 		mov	byte ptr es:[bx+15h], 0
 
 loc_AECF:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1305,7 +1305,7 @@ loc_AECF:
 ; ---------------------------------------------------------------------------
 
 loc_AEF4:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, 1
 		sub	al, es:[bx+16h]
 		mov	es:[bx+16h], al
@@ -1378,15 +1378,15 @@ _envp		= dword	ptr  0Ch
 
 loc_AF7D:
 		call	cfg_load
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+11h], 0FFh
 		jnz	short loc_AF97
 		call	sub_B5A6
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+11h], 1
 
 loc_AF97:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -1395,21 +1395,21 @@ loc_AF97:
 		push	ax
 		call	snd_determine_modes
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+0Ah], 0
 		jnz	short loc_AFD1
 		call	zunsoft
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+0Ah], 1
 
 loc_AFD1:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 5
 		jnz	short loc_AFE1
 		mov	byte ptr es:[bx+1Fh], 0
 
 loc_AFE1:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_AFF4
 		kajacall	KAJA_SONG_STOP
@@ -1462,7 +1462,7 @@ loc_B046:
 		xor	si, si
 
 loc_B048:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	dword ptr es:[bx+28h]
 		push	1
 		call	frame_delay
@@ -1574,7 +1574,7 @@ loc_B452:
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_rollup_animate pascal, ( 32 shl 16) or 128
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+12h], al
 		leave
@@ -1674,7 +1674,7 @@ loc_B56F:
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_rollup_animate pascal, ( 32 shl 16) or 128
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
 		mov	es:[bx+15h], al
 		leave
@@ -1738,32 +1738,32 @@ var_4		= word ptr -4
 		call	file_close
 		mov	ax, [bp+var_4]
 		mov	[bp+var_C], ax
-		mov	word ptr _ksoconfig+2, ax
-		mov	word ptr _ksoconfig, 0
-		les	bx, _ksoconfig
+		mov	word ptr _resident+2, ax
+		mov	word ptr _resident, 0
+		les	bx, _resident
 		cmp	byte ptr es:[bx+0Fh], 6
 		ja	short loc_BAD3
 		cmp	byte ptr es:[bx+0Fh], 0
 		jnz	short loc_BADC
 
 loc_BAD3:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+0Fh], 3
 
 loc_BADC:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+10h], 3
 		jbe	short loc_BAEC
 		mov	byte ptr es:[bx+10h], 3
 
 loc_BAEC:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+12h], 3
 		jb	short loc_BAFC
 		mov	byte ptr es:[bx+12h], 0
 
 loc_BAFC:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+15h], 3
 		jb	short locret_BB0C
 		mov	byte ptr es:[bx+15h], 0
@@ -1795,7 +1795,7 @@ var_2		= byte ptr -2
 		pushd	0
 		push	0
 		call	file_seek
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	[bp+var_8], al
 		mov	al, es:[bx+0Fh]
@@ -1862,7 +1862,7 @@ var_1		= byte ptr -1
 		pushd	0
 		push	0
 		call	file_seek
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	[bp+var_A], al
 		mov	al, es:[bx+0Fh]
@@ -2013,7 +2013,7 @@ loc_BDBE:
 		cmp	si, 8
 		jl	short loc_BDB7
 		call	graph_copy_page pascal, 1
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jnz	short loc_BDE8
 		call	snd_load pascal, ds, offset aOp_0, SND_LOAD_SONG
@@ -2967,7 +2967,7 @@ score_menu	proc near
 		kajacall	KAJA_SONG_FADE, -128
 		push	1
 		call	palette_black_out
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	_hiscore_rank, al
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
@@ -3101,7 +3101,7 @@ loc_CE0D:
 loc_CE0E:
 		cmp	si, 4
 		jl	short loc_CDA1
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	_hiscore_rank, al
 		push	ds
@@ -3504,7 +3504,7 @@ loc_D146:
 		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D138
 
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+13h], 6
 		jnz	short @@not_extra
 
@@ -3546,7 +3546,7 @@ loc_D19C:
 		cmp	[bp+@@i], PLAYCHAR_COUNT
 		jl	short loc_D191
 
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	_rank, al
 		mov	_playchar_menu_sel, PLAYCHAR_REIMU
@@ -3616,7 +3616,7 @@ loc_D284:
 		call	snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, _playchar_menu_sel
 		mov	es:[bx+14h], al
 		push	1
@@ -4388,8 +4388,8 @@ aSlb1_pi	db 'slb1.pi',0
 
 	.data?
 
-public _ksoconfig
-_ksoconfig	dd ?
+public _resident
+_resident	dd ?
 _in_option	db ?
 		db ?
 _putfunc	dw ?

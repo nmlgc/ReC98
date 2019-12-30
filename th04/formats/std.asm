@@ -9,7 +9,7 @@ std_load	proc near
 	push	si
 	push	di
 	call	std_free
-	les	bx, _humaconfig
+	les	bx, _resident
 	mov	al, es:[bx+13h]
 	les	bx, _std_fn
 	mov	es:[bx+3], al

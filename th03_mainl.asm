@@ -158,8 +158,8 @@ var_3		= word ptr -3
 		call	file_read
 		call	file_close
 		mov	si, [bp+var_3]
-		mov	word ptr _yumeconfig+2, si
-		mov	word ptr _yumeconfig, 0
+		mov	word ptr _resident+2, si
+		mov	word ptr _resident, 0
 		mov	ax, si
 		pop	si
 		leave
@@ -183,7 +183,7 @@ var_1		= byte ptr -1
 		call	far ptr	palette_show
 		call	cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
 		call	cdg_load_single_forcealpha pascal, 5, ds, offset aLogo5_cdg, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_965E
 		mov	al, byte_F7E3
@@ -195,7 +195,7 @@ loc_965E:
 
 loc_9661:
 		mov	[bp+var_1], al
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_969A
 		cmp	byte ptr es:[bx+33h], 6
@@ -205,7 +205,7 @@ loc_9661:
 ; ---------------------------------------------------------------------------
 
 loc_967C:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 7
 		jnz	short loc_968D
 		mov	[bp+var_2], 0Ah
@@ -213,14 +213,14 @@ loc_967C:
 ; ---------------------------------------------------------------------------
 
 loc_968D:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_96AA
 		jmp	short loc_96A5
 ; ---------------------------------------------------------------------------
 
 loc_969A:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jnz	short loc_96AA
 
@@ -401,10 +401,10 @@ sub_9887	proc near
 var_2		= word ptr -2
 
 		enter	2, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+28h], 1
 		jnz	short loc_98A1
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jz	short loc_98A6
 
@@ -415,12 +415,12 @@ loc_98A1:
 ; ---------------------------------------------------------------------------
 
 loc_98A6:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+33h]
 		mov	ah, 0
 		add	bx, ax
 		mov	al, es:[bx+29h]
-		mov	bx, word ptr _yumeconfig
+		mov	bx, word ptr _resident
 		mov	es:[bx+0Dh], al
 		cmp	byte ptr es:[bx+33h], 7
 		jnz	short loc_98CA
@@ -430,7 +430,7 @@ loc_98A6:
 ; ---------------------------------------------------------------------------
 
 loc_98CA:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 8
 		jnz	short loc_98DA
 		mov	ax, 4
@@ -439,7 +439,7 @@ loc_98CA:
 ; ---------------------------------------------------------------------------
 
 loc_98DA:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 9
 		jnz	short loc_98EA
 		mov	ax, 5
@@ -448,7 +448,7 @@ loc_98DA:
 ; ---------------------------------------------------------------------------
 
 loc_98EA:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -494,7 +494,7 @@ var_1		= byte ptr -1
 		and	ax, 1
 		push	ax
 		call	cdg_load_single_forcealpha
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		add	al, 0FFh
 		mov	[bp+var_1], al
@@ -519,7 +519,7 @@ var_1		= byte ptr -1
 		sar	ax, 1
 		mov	[bp+var_1], al
 		mov	byte_F7E5, 1
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+28h], 1
 		jz	short loc_9997
 		mov	bx, word_E504
@@ -546,7 +546,7 @@ loc_99A8:
 ; ---------------------------------------------------------------------------
 
 loc_99B7:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 6
 		jnz	short loc_99D4
 		mov	bx, word_E504
@@ -563,7 +563,7 @@ loc_99D4:
 		push	2
 		push	ds
 		push	word_E502
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+33h]
 		mov	ah, 0
 		inc	ax
@@ -616,7 +616,7 @@ loc_9A8E:
 		call	cdg_free pascal, 0
 		call	cdg_free pascal, 1
 		call	cdg_free pascal, 2
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -637,7 +637,7 @@ loc_9A8E:
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
 		call	graph_putsa_fx
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -670,7 +670,7 @@ loc_9A8E:
 		call	pi_slot_load pascal, 0, ds, offset aEn2_pi
 		call	pi_slot_put_interlace pascal, large 280, 0
 		freePISlotLarge	0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -722,7 +722,7 @@ loc_9BBD:
 
 loc_9BC2:
 		call	pi_slot_put_interlace pascal, large 304, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		dec	ax
@@ -747,7 +747,7 @@ loc_9BFB:
 		add	al, byte ptr [bp+var_4]
 		mov	[si+1],	al
 		kajacall	KAJA_SONG_STOP
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 6
 		jz	short loc_9C1E
 		push	SND_LOAD_SONG
@@ -868,7 +868,7 @@ loc_9D2D:
 loc_9D35:
 		cmp	si, 0Ch
 		jl	short loc_9D2D
-		les	bx, _yumeconfig
+		les	bx, _resident
 		add	bx, di
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
@@ -923,7 +923,7 @@ _envp		= dword	ptr  0Ch
 		call	game_init_main pascal, ds, offset aCOul
 		call	respal_exist
 		mov	_snd_midi_active, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+15h], 0
 		jz	short loc_9DAD
 		call	snd_determine_mode
@@ -936,7 +936,7 @@ loc_9DAD:
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		call	snd_se_reset
 		call	hflip_lut_generate
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+35h], 0
 		jz	short loc_9E04
 		call	sub_B7D2
@@ -952,7 +952,7 @@ loc_9DAD:
 		add	sp, 0Ch
 
 loc_9E04:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		add	al, 0FFh
 		mov	byte_F7E3, al
@@ -976,7 +976,7 @@ loc_9E3F:
 		call	sub_9624
 		call	sub_978D
 		kajacall	KAJA_SONG_STOP
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+28h], 1
 		jnz	loc_9F58
 		call	sub_9887
@@ -1121,7 +1121,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_9FA7:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		add	bx, di
 		mov	byte ptr es:[bx+18h], 0
 		inc	di
@@ -1129,7 +1129,7 @@ loc_9FA7:
 loc_9FB3:
 		cmp	di, 10h
 		jl	short loc_9FA7
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+36h], 0
 		jnz	short loc_9FC8
 		xor	ax, ax
@@ -1143,7 +1143,7 @@ loc_9FC8:
 		push	(352 shl 16) or 272
 		push	3
 		call	cdg_put_noalpha
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+36h]
 		les	bx, [bp+var_6]
 		add	al, es:[bx]
@@ -1196,7 +1196,7 @@ loc_A069:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_boxfill pascal, (576 shl 16) or 371, (592 shl 16) or 387
 		call	grcg_off
-		les	bx, _yumeconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+36h]
 		les	bx, [bp+var_6]
 		dec	byte ptr es:[bx]
@@ -1230,7 +1230,7 @@ loc_A0C5:
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
-		les	bx, _yumeconfig
+		les	bx, _resident
 		dec	byte ptr es:[bx+33h]
 		mov	byte ptr es:[bx+34h], 2
 		mov	ax, si
@@ -2886,7 +2886,7 @@ arg_0		= word ptr  4
 		mov	byte_106AB, al
 		call	IRand
 		mov	byte_10631, al
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 63h ; 'c'
 		jnz	short loc_AF2A
 		cmp	byte ptr es:[bx+36h], 3
@@ -2972,7 +2972,7 @@ sub_AFAC	proc near
 		call	pi_slot_palette_apply pascal, 0
 		call	pi_slot_put pascal, large 0, 0
 		freePISlotLarge	0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Bh]
 		mov	bx, word_ED68
 		add	[bx+3],	al
@@ -3009,7 +3009,7 @@ loc_B046:
 ; ---------------------------------------------------------------------------
 
 loc_B04B:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+18h]
 		mov	ah, 0
@@ -3021,7 +3021,7 @@ loc_B04B:
 		mov	dh, 0
 		cmp	ax, dx
 		jg	short loc_B0A1
-		les	bx, _yumeconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+18h]
 		mov	ah, 0
@@ -3125,7 +3125,7 @@ loc_B111:
 ; ---------------------------------------------------------------------------
 
 loc_B11B:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+17h]
 		add	al, 20h	; ' '
@@ -3138,13 +3138,13 @@ loc_B11B:
 loc_B133:
 		cmp	cx, 9
 		jl	short loc_B11B
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, 23h	; '#'
 		sub	al, es:[bx+36h]
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	[bx+2242h], al
-		mov	bx, word ptr _yumeconfig
+		mov	bx, word ptr _resident
 		cmp	byte ptr es:[bx+33h], 63h ; 'c'
 		jnz	short loc_B15D
 		mov	byte ptr [si+22B0h], 30h ; '0'
@@ -3152,13 +3152,13 @@ loc_B133:
 ; ---------------------------------------------------------------------------
 
 loc_B15D:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+33h]
 		add	al, 20h	; ' '
 		mov	[si+22B0h], al
 
 loc_B16B:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -4006,7 +4006,7 @@ loc_B769:
 		jl	short loc_B758
 
 loc_B76E:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -4074,17 +4074,17 @@ sub_B74E	endp
 sub_B7D2	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
 		call	snd_load c, offset aScore_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
 		push	ax
 		call	sub_AE8E
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+33h], 0FFh
 		jnz	short loc_B819
 		mov	word_106AC, 0FFFFh
@@ -4118,7 +4118,7 @@ loc_B835:
 
 loc_B858:
 		call	input_wait_for_change pascal, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+36h], 0
 		jz	short loc_B871
 		cmp	byte ptr es:[bx+33h], 63h ; 'c'
@@ -4130,7 +4130,7 @@ loc_B871:
 loc_B879:
 		push	2
 		call	palette_black_out
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Bh]
 		mov	ah, 0
 		push	ax
@@ -4140,7 +4140,7 @@ loc_B879:
 		graph_showpage al
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+36h], 0
 		jz	short loc_B8F1
 		cmp	byte ptr es:[bx+33h], 63h ; 'c'
@@ -4202,7 +4202,7 @@ var_1		= byte ptr -1
 		call	cdg_free pascal, 1
 		call	cdg_free pascal, 2
 		freePISlotLarge	0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -4248,10 +4248,10 @@ loc_B9DD:
 		call	sub_AC6E
 		call	sub_A174
 		call	sub_C40D
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+33h], 63h ; 'c'
 		call	sub_B7D2
-		les	bx, _yumeconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+36h], 3
 		jnz	short loc_BA66
 		cmp	byte ptr es:[bx+0Ch], 0Fh
@@ -5314,7 +5314,7 @@ sub_C40D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C43C:
-		les	bx, _yumeconfig
+		les	bx, _resident
 		assume es:nothing
 		add	bx, si
 		mov	al, es:[bx+17h]
@@ -5324,7 +5324,7 @@ loc_C43C:
 loc_C44B:
 		cmp	si, 9
 		jl	short loc_C43C
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	al, 3
 		sub	al, es:[bx+36h]
 		mov	byte_10BCC, al
@@ -5419,7 +5419,7 @@ loc_C4D8:
 		call	cdg_load_single_noalpha pascal, 11, ds, offset aStf12_cdg, 0
 		call	sub_BB66
 		mov	word_10BB2, 0
-		les	bx, _yumeconfig
+		les	bx, _resident
 		mov	eax, es:[bx+10h]
 		mov	random_seed, eax
 		mov	byte_10BB4, 0
@@ -6102,8 +6102,8 @@ word_105D4	dw ?
 col_105D6	db ?
 byte_105D7	db ?
 word_105D8	dw ?
-public _yumeconfig
-_yumeconfig	dd ?
+public _resident
+_resident	dd ?
 word_105DE	dw ?
 		dd    ?	;
 		dd    ?	;

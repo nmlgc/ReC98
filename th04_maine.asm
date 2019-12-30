@@ -173,8 +173,8 @@ var_4		= word ptr -4
 		call	file_read
 		call	file_close
 		mov	si, [bp+var_4]
-		mov	word ptr _humaconfig+2, si
-		mov	word ptr _humaconfig, 0
+		mov	word ptr _resident+2, si
+		mov	word ptr _resident, 0
 		mov	ax, si
 		pop	si
 		leave
@@ -215,16 +215,16 @@ sub_A08A	endp
 sub_A0BD	proc near
 		push	bp
 		mov	bp, sp
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		les	bx, off_E5C0
 		mov	es:[bx+3], al
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+19h]
 		add	al, 30h	; '0'
 		les	bx, off_E5C0
 		mov	es:[bx+4], al
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+25h]
 		les	bx, off_E5C0
 		mov	es:[bx+5], al
@@ -257,7 +257,7 @@ _envp		= dword	ptr  0Ch
 		call	sub_A059
 		or	ax, ax
 		jz	locret_A290
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
@@ -267,7 +267,7 @@ _envp		= dword	ptr  0Ch
 		push	ds
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+10h]
 		mov	ah, 0
 		push	ax
@@ -276,13 +276,13 @@ _envp		= dword	ptr  0Ch
 		push	ax
 		call	snd_determine_modes
 		call	graph_show
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_CONTINUED
 		jb	loc_A1FE
 		call	sub_A0BD
 		call	sub_B44D
 		call	sub_C0F8
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_1CC
 		jz	short loc_A187
 		cmp	byte ptr es:[bx+0Fh], 0
@@ -291,7 +291,7 @@ _envp		= dword	ptr  0Ch
 loc_A187:
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+5]
-		les	bx, _humaconfig
+		les	bx, _resident
 		add	al, es:[bx+0Fh]
 		les	bx, [bp+var_4]
 		mov	es:[bx+5], al
@@ -316,7 +316,7 @@ loc_A1E9:
 ; ---------------------------------------------------------------------------
 
 loc_A1FE:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnz	short loc_A274
 		call	frame_delay pascal, 100
@@ -2681,7 +2681,7 @@ var_1		= byte ptr -1
 loc_B82A:
 		mov	ax, 7
 		sub	ax, si
-		les	bx, _humaconfig
+		les	bx, _resident
 		add	bx, ax
 		mov	al, es:[bx+1Dh]
 		mov	[bp+var_1], al
@@ -2879,7 +2879,7 @@ var_8		= dword	ptr -8
 var_4		= dword	ptr -4
 
 		enter	8, 0
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	eax, es:[bx+14h]
 		mov	random_seed, eax
 		mov	al, es:[bx+0Ch]
@@ -2920,7 +2920,7 @@ loc_BA4A:
 		mov	[bp+var_4], 0
 
 loc_BA52:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Eh]
 		mov	ah, 0
 		or	ax, ax
@@ -2939,13 +2939,13 @@ loc_BA71:
 		add	[bp+var_4], 5DCh
 
 loc_BA79:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+49h], 0
 		jz	short loc_BA8C
 		add	[bp+var_4], 7D0h
 
 loc_BA8C:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	word ptr es:[bx+38h], 0
 		jz	short loc_BAA5
 		mov	ax, es:[bx+38h]
@@ -2955,7 +2955,7 @@ loc_BA8C:
 
 loc_BAA5:
 		mov	[bp+var_8], 0F4240h
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	ax, es:[bx+28h]
 		cmp	ax, es:[bx+2Ah]
 		jz	short loc_BAF3
@@ -2973,7 +2973,7 @@ loc_BAD8:
 		mov	[bp+var_8], 0
 
 loc_BAE0:
-		les	bx, _humaconfig
+		les	bx, _resident
 		movzx	eax, word ptr es:[bx+2Ah]
 		imul	eax, [bp+var_8]
 		mov	[bp+var_8], eax
@@ -3048,7 +3048,7 @@ var_4		= dword	ptr -4
 		call	graph_putsa_fx pascal, (16 shl 16) or 264, 15, ds, offset aLcnzvv	; "気合い"
 		call	graph_putsa_fx pascal, (16 shl 16) or 288, 15, ds, offset aPicacovCj ; "処理落ち率"
 		call	graph_putsa_fx pascal, (16 shl 16) or 336, 15, ds, offset aVavVVSrso ; "あなたの腕前"
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_BC71
 		mov	al, 4
@@ -3056,7 +3056,7 @@ var_4		= dword	ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_BC71:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Fh]
 
 loc_BC79:
@@ -3072,13 +3072,13 @@ loc_BC79:
 		call	graph_gaiji_puts
 		call	sub_B81D
 		push	0F00078h
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+31h]
 		mov	ah, 0
 		push	ax
 		call	sub_B787
 		push	0F00090h
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+32h]
 		mov	ah, 0
 		push	ax
@@ -3086,7 +3086,7 @@ loc_BC79:
 		call	graph_putsa_fx pascal, (288 shl 16) or 120, 14, ds, offset aTimes	; "回"
 		call	graph_putsa_fx pascal, (288 shl 16) or 144, 14, ds, offset aTimes_0	; "回"
 		mov	byte_124CC, 1
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+11h], 6
 		jz	short loc_BD0A
 		cmp	byte ptr es:[bx+30h], ES_1CC
@@ -3100,7 +3100,7 @@ loc_BCFF:
 ; ---------------------------------------------------------------------------
 
 loc_BD0A:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnz	short loc_BD1B
 		mov	word ptr es:[bx+26h], 2EE0h
@@ -3110,34 +3110,34 @@ loc_BD1B:
 		push	2EE0h
 
 loc_BD24:
-		les	bx, _humaconfig
+		les	bx, _resident
 		push	word ptr es:[bx+26h]
 		call	sub_B886
 		mov	byte_124CC, 0
 		push	0C000C0h
-		les	bx, _humaconfig
+		les	bx, _resident
 		push	word ptr es:[bx+34h]
 		push	word ptr es:[bx+36h]
 		call	sub_B886
 		push	0C000D8h
-		les	bx, _humaconfig
+		les	bx, _resident
 		push	word ptr es:[bx+28h]
 		push	word ptr es:[bx+2Ah]
 		call	sub_B886
 		push	0C000F0h
-		les	bx, _humaconfig
+		les	bx, _resident
 		push	word ptr es:[bx+2Ch]
 		push	word ptr es:[bx+2Eh]
 		call	sub_B886
 		call	sub_B9F2
 		push	0C00120h
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	eax, es:[bx+44h]
 		mov	ebx, 0Ah
 		xor	edx, edx
 		div	ebx
 		push	ax
-		mov	bx, word ptr _humaconfig
+		mov	bx, word ptr _resident
 		mov	eax, es:[bx+40h]
 		mov	ebx, 0Ah
 		xor	edx, edx
@@ -3149,7 +3149,7 @@ loc_BD24:
 		cdq
 		idiv	ebx
 		mov	dword_124CE, eax
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+24h], 9
 		jb	short loc_BDD4
 		add	dword_124CE, 927C0h
@@ -3157,7 +3157,7 @@ loc_BD24:
 ; ---------------------------------------------------------------------------
 
 loc_BDD4:
-		les	bx, _humaconfig
+		les	bx, _resident
 		movzx	eax, byte ptr es:[bx+23h]
 		imul	eax, 2710h
 		add	dword_124CE, eax
@@ -3207,7 +3207,7 @@ loc_BE5E:
 		mov	[bp+var_4], 16E360h
 
 loc_BE6F:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Ch]
 		mov	ah, 0
 		dec	ax
@@ -3243,7 +3243,7 @@ loc_BEC2:
 		sub	[bp+var_4], 124F8h
 
 loc_BECA:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Eh]
 		mov	ah, 0
 		or	ax, ax
@@ -3264,13 +3264,13 @@ loc_BEF2:
 		add	[bp+var_4], 0C350h
 
 loc_BF03:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+49h], 0
 		jnz	short loc_BF17
 		sub	dword_124CE, 186A0h
 
 loc_BF17:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+31h], 0Fh
 		jb	short loc_BF2D
 		sub	dword_124CE, 493E0h
@@ -3278,13 +3278,13 @@ loc_BF17:
 ; ---------------------------------------------------------------------------
 
 loc_BF2D:
-		les	bx, _humaconfig
+		les	bx, _resident
 		movzx	eax, byte ptr es:[bx+31h]
 		imul	eax, 4E20h
 		sub	dword_124CE, eax
 
 loc_BF43:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+32h], 1Eh
 		jb	short loc_BF59
 		sub	dword_124CE, 15F90h
@@ -3292,13 +3292,13 @@ loc_BF43:
 ; ---------------------------------------------------------------------------
 
 loc_BF59:
-		les	bx, _humaconfig
+		les	bx, _resident
 		movzx	eax, byte ptr es:[bx+32h]
 		imul	eax, 0BB8h
 		sub	dword_124CE, eax
 
 loc_BF6F:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jnb	short loc_BFA1
 		cmp	_verdict_rank, RANK_EXTRA
@@ -3317,7 +3317,7 @@ loc_BF96:
 ; ---------------------------------------------------------------------------
 
 loc_BFA1:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_CONTINUED
 		jnz	short loc_BFB4
 		sub	[bp+var_4], 186A0h
@@ -3337,7 +3337,7 @@ loc_BFC7:
 		mov	dword_124CE, eax
 
 loc_BFD9:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	eax, es:[bx+44h]
 		shr	eax, 1
 		cmp	eax, es:[bx+40h]
@@ -3589,7 +3589,7 @@ loc_C3BD:
 ; ---------------------------------------------------------------------------
 
 loc_C3C2:
-		les	bx, _humaconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+1Dh]
 		mov	ah, 0
@@ -3601,7 +3601,7 @@ loc_C3C2:
 		add	dx, -gb_0_
 		cmp	ax, dx
 		jg	short loc_C40B
-		les	bx, _humaconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+1Dh]
 		mov	ah, 0
@@ -3715,7 +3715,7 @@ loc_C4AA:
 ; ---------------------------------------------------------------------------
 
 loc_C4B3:
-		les	bx, _humaconfig
+		les	bx, _resident
 		add	bx, cx
 		mov	al, es:[bx+1Dh]
 		add	al, gb_0_
@@ -3730,7 +3730,7 @@ loc_C4B3:
 loc_C4D1:
 		or	cx, cx
 		jge	short loc_C4B3
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_EXTRA
 		jb	short loc_C4EE
 		mov	al, byte_125B6
@@ -3742,7 +3742,7 @@ loc_C4D1:
 ; ---------------------------------------------------------------------------
 
 loc_C4EE:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		add	al, gb_1_
 		mov	dl, byte_125B6
@@ -4261,7 +4261,7 @@ var_2		= word ptr -2
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+11h], 6
 		jnz	short loc_C87A
 		mov	al, 4
@@ -4269,12 +4269,12 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_C87A:
-		les	bx, _humaconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Fh]
 
 loc_C882:
 		mov	_hiscore_rank, al
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+12h], 31h ; '1'
 		jnz	short loc_C895
 		mov	ax, 1
@@ -4298,7 +4298,7 @@ loc_C897:
 		call	sub_C7C9
 		push	word_125B8
 		call	sub_C2AD
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+49h], 0
 		jnz	short loc_C8CB
 		cmp	_hiscore_rank, RANK_EXTRA
@@ -4323,7 +4323,7 @@ loc_C8D9:
 		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_1 ; "スローモードでのプレイでは、スコアは記・...
 
 loc_C909:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+30h], ES_1CC
 		jz	short loc_C922
 		cmp	byte ptr es:[bx+30h], ES_EXTRA
@@ -4336,7 +4336,7 @@ loc_C922:
 		mov	[bp+var_A], al
 		cmp	[bp+var_A], SCOREDAT_CLEARED_BOTH + 1
 		jb	short loc_C944
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_C93D
 		mov	al, SCOREDAT_CLEARED_A
@@ -4352,7 +4352,7 @@ loc_C93F:
 ; ---------------------------------------------------------------------------
 
 loc_C944:
-		les	bx, _humaconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+19h], 0
 		jnz	short loc_C953
 		mov	al, SCOREDAT_CLEARED_A
@@ -4939,8 +4939,8 @@ aName		db 'name',0
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
-public _humaconfig
-_humaconfig	dd ?
+public _resident
+_resident	dd ?
 		dd ?
 		dd ?
 		dd ?

@@ -3,11 +3,11 @@ public BB_PLAYCHAR_LOAD
 bb_playchar_load	proc near
 	push	bp
 	mov	bp, sp
-	les	bx, _humaconfig
+	les	bx, _resident
 	mov	al, es:[bx+12h]
 	les	bx, _bb_playchar_bb_fn
 	mov	es:[bx+2], al
-	les	bx, _humaconfig
+	les	bx, _resident
 	les	bx, _bb_playchar_cdg_fn
 	mov	es:[bx+2], al
 	call	file_ropen pascal, large [_bb_playchar_bb_fn]

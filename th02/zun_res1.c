@@ -13,7 +13,7 @@
 
 char debug = 0;
 
-void cfg_write(seg_t mikoconfig_sgm)
+void cfg_write(seg_t resident_sgm)
 {
 	static const huuma_options_t opts_default = {
 		RANK_NORMAL, SND_BGM_FM, 3, 2, 0
@@ -29,7 +29,7 @@ void cfg_write(seg_t mikoconfig_sgm)
 		handle = dos_create(fn, _A_ARCH);
 		dos_write(handle, &opts, sizeof(opts));
 	}
-	dos_write(handle, &mikoconfig_sgm, sizeof(mikoconfig_sgm));
+	dos_write(handle, &resident_sgm, sizeof(resident_sgm));
 	dos_write(handle, &debug, sizeof(debug));
 	dos_close(handle);
 }
@@ -61,7 +61,7 @@ int main(int argc, const char **argv)
 	seg_t sgm;
 	const char *res_id = MIKOConfig;
 	int i;
-	char far *mikoconfig;
+	char far *resident;
 
 	sgm = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
 	dos_puts2(LOGO);
@@ -103,10 +103,10 @@ asm		call near ptr dos_puts2
 error_ret:
 		return 1;
 	}
-	mikoconfig = MK_FP(sgm, 0);
+	resident = MK_FP(sgm, 0);
 	dos_puts2(INITIALIZED);
 	for(i = offsetof(resident_t, stage); i < sizeof(resident_t); i++) {
-		mikoconfig[i] = 0;
+		resident[i] = 0;
 	}
 	cfg_write(sgm);
 	return 0;

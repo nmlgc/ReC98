@@ -891,7 +891,7 @@ sub_A7B5	proc far
 		cbw
 		cmp	ax, 2
 		jnz	short loc_A7FC
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.mode], 1
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
@@ -901,7 +901,7 @@ loc_A7FC:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_A810
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.mode], 3
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
@@ -909,11 +909,11 @@ loc_A7FC:
 loc_A810:
 		cmp	_mode, 0
 		jnz	short loc_A820
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.mode], 0
 
 loc_A820:
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.route], 0
 		mov	es:[bx+reiidenconfig_t.stage], 0
 		mov	al, byte ptr word_12322+1
@@ -927,12 +927,12 @@ loc_A820:
 loc_A842:
 		mov	ax, si
 		add	ax, ax
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		add	bx, ax
 		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
 		mov	ax, si
 		shl	ax, 2
-		mov	bx, word ptr _reiidenconfig
+		mov	bx, word ptr _resident
 		add	bx, ax
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], 0
 		inc	si
@@ -940,7 +940,7 @@ loc_A842:
 loc_A867:
 		cmp	si, 4
 		jl	short loc_A842
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.score_highest], 0
 		mov	es:[bx+reiidenconfig_t.continues_total], 0
 		mov	es:[bx+reiidenconfig_t.end_flag], 0
@@ -975,7 +975,7 @@ sub_A8AD	proc far
 		push	word_12320
 		call	_resident_stuff_set
 		add	sp, 0Ch
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
 		mov	ax, seg	op_01_TEXT
@@ -986,7 +986,7 @@ loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	game_switch_binary
-		les	bx, _reiidenconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.mode], 0
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
@@ -8294,7 +8294,7 @@ include libs/master.lib/keystart[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-public _reiidenconfig
-_reiidenconfig	dd ?
+public _resident
+_resident	dd ?
 
 		end

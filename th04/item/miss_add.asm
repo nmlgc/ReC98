@@ -75,7 +75,7 @@ items_miss_add	proc far
 if GAME eq 5
 	cmp	lives, 1
 else
-	les	bx, _humaconfig
+	les	bx, _resident
 	cmp	byte ptr es:[bx+0Bh], 1
 endif
 	jnz	short @@set_rest

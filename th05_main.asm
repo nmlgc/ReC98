@@ -342,12 +342,12 @@ _envp		= dword	ptr  0Ch
 		jz	short loc_AEA4
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
 		call	game_init_main pascal, ds, offset aKAIKIDAN2_DAT
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	eax, es:[bx+28h]
 		mov	random_seed, eax
 		call	EmsSetup
 		call	text_clear
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+12h]
 		mov	ah, 0
 		push	ax
@@ -558,7 +558,7 @@ sub_B063	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	word ptr es:[bx+3Ah], 0
 		mov	byte ptr es:[bx+1Bh], 0
 		mov	byte ptr es:[bx+1Ch], 0
@@ -623,7 +623,7 @@ loc_B112:
 		imul	ax, 20
 		add	ax, offset SHOT_FUNCS
 		mov	playchar_shot_funcs, ax
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B145
 		cmp	byte ptr es:[bx+1Fh], 5
@@ -652,7 +652,7 @@ loc_B156:
 ; ---------------------------------------------------------------------------
 
 loc_B15D:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	_rank, al
 		mov	al, es:[bx+16h]
@@ -742,7 +742,7 @@ sub_B237	proc near
 		push	si
 		mov	word_20A84, 0
 		mov	vsync_Count2, 0
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+13h]
 		mov	stage_id, al
 		cmp	stage_id, 0
@@ -755,7 +755,7 @@ loc_B260:
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		mov	fp_2300E, offset nullfunc_near
 		call	sub_B063
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+17h], 0
 		jz	short loc_B2A5
 		mov	al, es:[bx+18h]
@@ -768,11 +768,11 @@ loc_B260:
 		mov	byte_20A71, 1
 
 loc_B2A5:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B2DD
 		call	demo_load
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Dh]
 		mov	es:[bx+13h], al
 		mov	stage_id, al
@@ -1012,7 +1012,7 @@ loc_B4BB:
 		graph_accesspage 1
 		graph_showpage 0
 		call	tiles_render_all
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_B506
 		cmp	byte ptr es:[bx+1Fh], 5
@@ -1143,7 +1143,7 @@ var_4		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short @@demo_extra
 		mov	ax, DEMO_N * 2
@@ -1160,7 +1160,7 @@ loc_B76F:
 		mov	word ptr _DemoBuf, 0
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 22Dh
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Fh]
 		add	al, 2Fh	; '/'
 		les	bx, [bp+var_4]
@@ -1185,7 +1185,7 @@ DemoPlay	proc near ; ZUN symbol [MAGNet2010]
 var_2		= word ptr -2
 
 		enter	2, 0
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short @@demo_extra
 		mov	ax, DEMO_N
@@ -1210,7 +1210,7 @@ loc_B7CC:
 		add	bx, ax
 		mov	al, es:[bx]
 		mov	_shiftkey, al
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short locret_B825
 		cmp	frame, DEMO_N - 4
@@ -1238,7 +1238,7 @@ public EMSSETUP
 EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+13h]
 		mov	stage_id, al
 		cmp	stage_id, 6
@@ -1248,7 +1248,7 @@ EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 ; ---------------------------------------------------------------------------
 
 @@game_is_not_extra:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+11h]
 		mov	_rank, al
 
@@ -1300,7 +1300,7 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		enter	4, 0
 		push	si
 		push	di
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+14h]
 		add	al, 30h	; '0'
 		les	bx, bbname
@@ -1538,8 +1538,8 @@ sub_BAD2	proc near
 		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 					; BX = file handle
 		mov	ax, word_23EEC
-		mov	word ptr _ksoconfig+2, ax
-		mov	word ptr _ksoconfig, 0
+		mov	word ptr _resident+2, ax
+		mov	word ptr _resident, 0
 		retn
 sub_BAD2	endp
 
@@ -2510,7 +2510,7 @@ loc_C4BC:
 		mov	fp_23F58, ax
 		call	snd_se_play pascal, 13
 		mov	byte_2264E, 1
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		inc	byte ptr es:[bx+1Ch]
 		push	1
@@ -6318,14 +6318,14 @@ end_game	proc far
 		mov	bp, sp
 		cmp	_continues_used, 0
 		jz	short loc_E45D
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	byte ptr es:[bx+1Ah], ES_CONTINUED
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
 loc_E45D:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Ah], ES_1CC
 
 loc_E466:
@@ -6347,7 +6347,7 @@ public END_EXTRA
 end_extra	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	byte ptr es:[bx+1Ah], ES_EXTRA
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
@@ -7684,7 +7684,7 @@ sub_F1A6	endp
 sub_F2B4	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, _ksoconfig
+		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_F333
 		cmp	byte_221EC, 0
@@ -7970,7 +7970,7 @@ sub_F6E4	proc near
 
 loc_F6EC:
 		mov	al, _score_lebcd[si]
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		add	bx, si
 		mov	es:[bx+20h], al
@@ -8005,7 +8005,7 @@ _arg0		= dword	ptr  6
 		call	ems_free
 
 loc_F71C:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	ax, word_221CE
 		mov	es:[bx+2Ch], ax
 		mov	ax, _items_spawned
@@ -8381,7 +8381,7 @@ loc_FA78:
 ; ---------------------------------------------------------------------------
 
 loc_FA7D:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	byte ptr es:[bx+1Ah], ES_SCORE
 		kajacall	KAJA_SONG_FADE, 4
@@ -8510,7 +8510,7 @@ loc_FBB5:
 		call	sub_E8F2
 		mov	power, 1
 		mov	dream, 1
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
 		mov	al, es:[bx+0Dh]
@@ -8998,7 +8998,7 @@ sub_10398	proc near
 loc_103A4:
 		cmp	dx, 1
 		jnz	short loc_103D0
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		add	bx, si
 		mov	al, es:[bx+44h]
@@ -9009,7 +9009,7 @@ loc_103A4:
 ; ---------------------------------------------------------------------------
 
 loc_103BE:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, si
 		mov	al, es:[bx+44h]
 		cmp	al, _score_lebcd[si]
@@ -9020,7 +9020,7 @@ loc_103D0:
 		cmp	dx, 2
 		jnz	short loc_103E3
 		mov	al, _score_lebcd[si]
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, si
 		mov	es:[bx+44h], al
 
@@ -11689,7 +11689,7 @@ var_1		= byte ptr -1
 		cmp	byte_2288A, 48h	; 'H'
 		jb	short loc_1195D
 		call	sub_118D1
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		cmp	byte ptr es:[bx+1Fh], 0
 		jz	short loc_11936
@@ -12266,7 +12266,7 @@ loc_12064:
 loc_12083:
 		push	4
 		nopcall	_playperf_lower
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+1Bh]
 
 loc_12092:
@@ -12322,7 +12322,7 @@ loc_120F0:
 		jbe	short loc_12142
 		dec	lives
 		nopcall	sub_10407
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Eh]
 		mov	bombs, al
 		nopcall	sub_104BB
@@ -15379,7 +15379,7 @@ arg_0		= dword	ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_1644D:
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+0Dh]
 		mov	ah, 0
 		cmp	ax, 4
@@ -15501,7 +15501,7 @@ var_4		= dword	ptr -4
 
 		enter	6, 0
 		push	si
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Bh]
 		cmp	al, byte_22274
 		jnz	short loc_16528
@@ -15514,7 +15514,7 @@ loc_16528:
 
 loc_1652A:
 		mov	[bp+var_5], al
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Bh]
 		mov	byte_22274, al
 		mov	al, es:[bx+1Ch]
@@ -15531,7 +15531,7 @@ loc_1654D:
 
 loc_1654F:
 		mov	[bp+var_6], al
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
 		mov	PaletteTone, 60
@@ -15677,7 +15677,7 @@ var_4		= dword	ptr -4
 
 		enter	0Ah, 0
 		push	si
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Bh]
 		cmp	al, byte_22274
 		jnz	short loc_16756
@@ -15690,7 +15690,7 @@ loc_16756:
 
 loc_16758:
 		mov	[bp+var_9], al
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Bh]
 		mov	byte_22274, al
 		mov	al, es:[bx+1Ch]
@@ -15707,7 +15707,7 @@ loc_1677B:
 
 loc_1677D:
 		mov	[bp+var_A], al
-		les	bx, _ksoconfig
+		les	bx, _resident
 		mov	al, es:[bx+1Ch]
 		mov	byte_22275, al
 		mov	PaletteTone, 60
@@ -32204,7 +32204,7 @@ loc_1FC95:
 		mov	_palette_changed, 1
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1FCD6
-		les	bx, _ksoconfig
+		les	bx, _resident
 		assume es:nothing
 		mov	ax, word_2C97A
 		add	es:[bx+3Ah], ax
@@ -32242,7 +32242,7 @@ loc_1FCEE:
 		mov	dl, stage_id
 		mov	dh, 0
 		shl	dx, 3
-		les	bx, _ksoconfig
+		les	bx, _resident
 		add	bx, dx
 		mov	es:[bx+si+4Ch],	al
 		inc	si
@@ -32272,7 +32272,7 @@ loc_1FD25:
 loc_1FD35:
 		cmp	_boss_phase_frame, 488
 		jnz	short loc_1FD51
-		les	bx, _ksoconfig
+		les	bx, _resident
 		inc	byte ptr es:[bx+13h]
 		mov	byte_25FE8, 2
 		push	1
@@ -33195,7 +33195,7 @@ include libs/master.lib/pfint21[bss].asm
 		db    ?	;
 word_23EEC	dw ?
 		dw ?
-_ksoconfig	dd ?
+_resident	dd ?
 map_header	map_header_t ?
 byte_23EFC	db ?
 word_23EFD	dw ?

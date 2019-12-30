@@ -21,7 +21,7 @@ char snd_bgm_mode;
 static int unused_2;
 unsigned int idle_frames;
 unsigned char demo_num;
-void __seg *mikoconfig_sgm;
+void __seg *resident_sgm;
 putfunc_t near *putfunc;
 
 // No, we don't want to put these two into th02.h. Apparently, declaring
@@ -48,13 +48,13 @@ int cfg_load(void)
 		snd_bgm_mode = cfg.opts.bgm_mode;
 		bombs = cfg.opts.bombs;
 		lives = cfg.opts.lives;
-		mikoconfig_sgm = cfg.resident_sgm;
-		if(!mikoconfig_sgm) {
+		resident_sgm = cfg.resident_sgm;
+		if(!resident_sgm) {
 			return 1;
 		}
-		mikoconfig = MK_FP(mikoconfig_sgm, 0);
-		mikoconfig->perf = cfg.opts.perf;
-		mikoconfig->debug = cfg.debug;
+		resident = MK_FP(resident_sgm, 0);
+		resident->perf = cfg.opts.perf;
+		resident->debug = cfg.debug;
 		file_close();
 
 		if(snd_bgm_mode == SND_BGM_OFF) {
@@ -82,11 +82,11 @@ void cfg_save(void)
 	cfg.opts.bgm_mode = snd_bgm_mode;
 	cfg.opts.bombs = bombs;
 	cfg.opts.lives = lives;
-	cfg.opts.perf = mikoconfig->perf;
+	cfg.opts.perf = resident->perf;
 
 	file_create(cfg_fn);
 	file_write(&cfg, offsetof(huuma_cfg_t, resident_sgm));
-	file_write(&mikoconfig_sgm, sizeof(mikoconfig_sgm));
+	file_write(&resident_sgm, sizeof(resident_sgm));
 	file_write(&cfg.debug, sizeof(cfg.debug));
 	file_close();
 }
@@ -134,7 +134,7 @@ void op_animate(void)
 	}
 	palette_100();
 
-	if(mikoconfig->demo_num == 0) {
+	if(resident->demo_num == 0) {
 		door_x = 0;
 		if(snd_midi_possible) {
 			door_x = snd_midi_active;
@@ -158,10 +158,10 @@ void op_animate(void)
 	graph_gaiji_puts(560, 380, 16, gbZUN, 6);
 	graph_copy_page(0);
 
-	if(mikoconfig->demo_num == 0) {
+	if(resident->demo_num == 0) {
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	}
-	mikoconfig->demo_num = 0;
+	resident->demo_num = 0;
 	palette_entry_rgb_show("op.rgb");
 	palette_white_in(6);
 }
@@ -173,18 +173,18 @@ void pascal near start_init(void)
 	snd_se_update();
 	frame_delay(20);
 
-	mikoconfig->rem_lives = lives;
-	mikoconfig->rem_bombs = bombs;
-	mikoconfig->start_lives = lives;
-	mikoconfig->start_bombs = bombs;
-	mikoconfig->bgm_mode = snd_bgm_mode;
-	mikoconfig->start_power = 0;
-	mikoconfig->score = 0;
-	mikoconfig->continues_used = 0;
-	mikoconfig->unused_3 = 0;
-	mikoconfig->unused_1 = 0;
-	mikoconfig->demo_num = 0;
-	mikoconfig->score_highest = 0;
+	resident->rem_lives = lives;
+	resident->rem_bombs = bombs;
+	resident->start_lives = lives;
+	resident->start_bombs = bombs;
+	resident->bgm_mode = snd_bgm_mode;
+	resident->start_power = 0;
+	resident->score = 0;
+	resident->continues_used = 0;
+	resident->unused_3 = 0;
+	resident->unused_1 = 0;
+	resident->demo_num = 0;
+	resident->score_highest = 0;
 }
 
 #define start_exec() \
@@ -196,7 +196,7 @@ void pascal near start_init(void)
 	gaiji_restore(); \
 	super_free(); \
 	game_exit(); \
-	if(mikoconfig->debug) { \
+	if(resident->debug) { \
 		execl("select", "select", 0, 0); \
 	} else { \
 		execl("main", "main", 0, 0); \
@@ -205,23 +205,23 @@ void pascal near start_init(void)
 void start_game(void)
 {
 	start_init();
-	mikoconfig->rank = rank;
-	mikoconfig->stage = 0;
+	resident->rank = rank;
+	resident->stage = 0;
 	start_exec();
 }
 
 void start_demo(void)
 {
-	mikoconfig->rem_lives = 2;
-	mikoconfig->rem_bombs = 3;
-	mikoconfig->start_lives = 2;
-	mikoconfig->start_bombs = 3;
-	mikoconfig->bgm_mode = snd_bgm_mode;
-	mikoconfig->rank = RANK_NORMAL;
-	mikoconfig->continues_used = 0;
-	mikoconfig->unused_3 = 0;
-	mikoconfig->demo_num = demo_num;
-	mikoconfig->shottype = 0;
+	resident->rem_lives = 2;
+	resident->rem_bombs = 3;
+	resident->start_lives = 2;
+	resident->start_bombs = 3;
+	resident->bgm_mode = snd_bgm_mode;
+	resident->rank = RANK_NORMAL;
+	resident->continues_used = 0;
+	resident->unused_3 = 0;
+	resident->demo_num = demo_num;
+	resident->shottype = 0;
 	cfg_save();
 	text_clear();
 	graph_pi_free(&pi_slot_headers[0], pi_slot_buffers[0]);
@@ -236,12 +236,12 @@ void start_demo(void)
 void start_extra(void)
 {
 	start_init();
-	mikoconfig->rank = RANK_EXTRA;
-	mikoconfig->stage = 5;
-	mikoconfig->rem_lives = 2;
-	mikoconfig->rem_bombs = 1;
-	mikoconfig->start_lives = 2;
-	mikoconfig->start_bombs = 1;
+	resident->rank = RANK_EXTRA;
+	resident->stage = 5;
+	resident->rem_lives = 2;
+	resident->rem_bombs = 1;
+	resident->start_lives = 2;
+	resident->start_bombs = 1;
 	start_exec();
 }
 
@@ -472,9 +472,9 @@ void pascal near option_put(int sel, unsigned int atrb)
 		graph_gaiji_putc(396, 308, bombs + GB_DIGITS, 0);
 	} else if(sel == 4) {
 		text_putsa(24, 20, PERF_TITLE, atrb);
-		text_putsa(45, 20, PERF_OPTIONS[mikoconfig->perf], atrb);
+		text_putsa(45, 20, PERF_OPTIONS[resident->perf], atrb);
 		graph_copy_rect_1_to_0(360, 324, 128, 16);
-		graph_putsa_fx(364, 324, 0, PERF_OPTIONS[mikoconfig->perf]);
+		graph_putsa_fx(364, 324, 0, PERF_OPTIONS[resident->perf]);
 	} else if(sel == 5) {
 		gaiji_putsa(35, 21, gbRESET, atrb);
 	} else if(sel == 6) {
@@ -524,7 +524,7 @@ void option_update_and_render(void)
 			RING_##direction##(bombs, 3); \
 			break; \
 		case 4: \
-			mikoconfig->perf = 1 - mikoconfig->perf; \
+			resident->perf = 1 - resident->perf; \
 			break; \
 		} \
 		option_put(menu_sel, TX_WHITE);
@@ -575,8 +575,8 @@ void option_update_and_render(void)
 				snd_kaja_func(KAJA_SONG_PLAY ,0);
 				lives = 2;
 				bombs = 3;
-				mikoconfig->unused_2 = 1;
-				mikoconfig->perf = 0;
+				resident->unused_2 = 1;
+				resident->perf = 0;
 				option_put(0, TX_YELLOW);
 				option_put(1, TX_YELLOW);
 				option_put(2, TX_YELLOW);
@@ -615,11 +615,11 @@ int main(void)
 	}
 	gaiji_backup();
 	gaiji_entry_bfnt("MIKOFT.bft");
-	if(mikoconfig->demo_num == 0) {
+	if(resident->demo_num == 0) {
 		demo_num = 1;
 		snd_kaja_func(KAJA_SONG_STOP, 0);
 	} else {
-		demo_num = mikoconfig->demo_num + 1;
+		demo_num = resident->demo_num + 1;
 		if(demo_num > 3) {
 			demo_num = 1;
 		}
@@ -631,7 +631,7 @@ int main(void)
 	key_det = 0;
 
 	snd_active = snd_bgm_mode;
-	if(!mikoconfig->demo_num && snd_midi_possible) {
+	if(!resident->demo_num && snd_midi_possible) {
 		char midi_active = snd_midi_active;
 
 		snd_midi_active = 1;
@@ -653,13 +653,13 @@ int main(void)
 		} else if(in_option == 1) {
 			option_update_and_render();
 		}
-		mikoconfig->frame++;
+		resident->frame++;
 		idle_frames++;
 		frame_delay(1);
 	}
 
-	ret = mikoconfig->op_main_retval;
-	mikoconfig_sgm = 0;
+	ret = resident->op_main_retval;
+	resident_sgm = 0;
 	cfg_save();
 	text_clear();
 	graph_clear();

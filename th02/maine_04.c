@@ -160,7 +160,7 @@ void pascal score_enter(void)
 	hi.score.points[place] = score;
 	hi.score.stage[place] = STAGE_ALL;
 	getdate(&hi.score.date[place]);
-	hi.score.shottype[place] = mikoconfig->shottype;
+	hi.score.shottype[place] = resident->shottype;
 	for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 		hi.score.g_name[shift][c] = gs_BULLET;
 	}

@@ -103,7 +103,7 @@ void pascal draw_header(void)
 	grcg_off();
 
 	graph_putsa_fx(144, 24, FX(12, 2, 0), CHOOSE);
-	if(mikoconfig->stage == 5) {
+	if(resident->stage == 5) {
 		grcg_setcolor(GC_RMW, 12); grcg_round_boxfill(24, 56, 632, 104, 8);
 		grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(16, 48, 624,  96, 8);
 		grcg_off();
@@ -131,7 +131,7 @@ void pascal shottype_menu_init(void)
 	pi_load_put_free(3, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
-	if(mikoconfig->stage != 5) {
+	if(resident->stage != 5) {
 		DRAW_CLEARED_FOR(game);
 	} else {
 		DRAW_CLEARED_FOR(extra);
@@ -139,7 +139,7 @@ void pascal shottype_menu_init(void)
 	pi_slot_put( 24, 136, 0);
 	pi_slot_put(224, 224, 1);
 	pi_slot_put(440, 136, 2);
-	mikoconfig->shottype = 1;
+	resident->shottype = 1;
 	darken_pic_at( 24, 136);
 	darken_pic_at(440, 136);
 
@@ -192,7 +192,7 @@ void pascal shottype_menu(void)
 				DRAW_NEW_SEL();
 			}
 			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
-				mikoconfig->shottype = sel;
+				resident->shottype = sel;
 				break;
 			}
 		}

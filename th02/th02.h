@@ -235,7 +235,7 @@ typedef struct {
 	long score_highest;
 } resident_t;
 
-extern resident_t *mikoconfig;
+extern resident_t *resident;
 
 extern char rank;
 extern char bombs;
