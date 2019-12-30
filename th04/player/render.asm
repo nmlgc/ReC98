@@ -42,7 +42,7 @@ player_render	proc near
 @@invincible?:
 	cmp	_player_invincibility_time, 0
 	jz	short @@render_regular
-	cmp	frame_mod4, 0
+	cmp	_stage_frame_mod4, 0
 	jnz	short @@render_regular
 	call	super_roll_put_1plane pascal, di, [bp+@@screen_y], @@patnum, large PLANE_PUT or GC_BRGI
 	jmp	short @@got_options?

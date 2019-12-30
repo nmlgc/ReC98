@@ -466,8 +466,8 @@ loc_AF88:
 		pop	dx
 		or	dx, ax
 		movsx	eax, dx
-		add	dword_221C6, eax
-		inc	dword_221CA
+		add	_total_slow_frames, eax
+		inc	_total_frames
 		cmp	byte_20A71, 0
 		jz	short loc_AFDF
 		test	_key_det.hi, high INPUT_Q
@@ -522,20 +522,20 @@ loc_B003:
 		mov	_page_front, al
 		xor	_page_back, 1
 		call	snd_se_update
-		inc	dword_25FDC
-		mov	ax, frame
+		inc	_frames_unused
+		mov	ax, _stage_frame
 		mov	dx, ax
 		inc	ax
-		mov	frame, ax
+		mov	_stage_frame, ax
 		and	ax, 0Fh
-		mov	frame_mod16, al
+		mov	_stage_frame_mod16, al
 		and	al, 7
-		mov	frame_mod8, al
+		mov	_stage_frame_mod8, al
 		and	al, 3
-		mov	frame_mod4, al
+		mov	_stage_frame_mod4, al
 		and	al, 1
-		mov	frame_mod2, al
-		test	frame, 0FFFh
+		mov	_stage_frame_mod2, al
+		test	_stage_frame, 0FFFh
 		jnz	short loc_B055
 		push	1
 		nopcall	_playperf_raise
@@ -1064,7 +1064,7 @@ sub_B55A	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_EACE
-		mov	frame, 0
+		mov	_stage_frame, 0
 		mov	byte_2C96C, 0
 		mov	_scroll_line, 0
 		mov	word_23F06, 0
@@ -1200,11 +1200,11 @@ loc_B7CC:
 		test	_key_det, INPUT_REPLAY_END
 		jnz	short loc_B80C
 		les	bx, _DemoBuf
-		add	bx, frame
+		add	bx, _stage_frame
 		mov	al, es:[bx]
 		mov	ah, 0
 		mov	_key_det, ax
-		mov	ax, frame
+		mov	ax, _stage_frame
 		add	ax, [bp+var_2]
 		mov	bx, word ptr _DemoBuf
 		add	bx, ax
@@ -1213,7 +1213,7 @@ loc_B7CC:
 		les	bx, _resident
 		cmp	byte ptr es:[bx+1Fh], 4
 		ja	short locret_B825
-		cmp	frame, DEMO_N - 4
+		cmp	_stage_frame, DEMO_N - 4
 		jb	short locret_B825
 
 loc_B80C:
@@ -2756,7 +2756,7 @@ loc_C683:
 		add	si, 8Ch
 		cmp	byte_2429B, 70h	; 'p'
 		ja	short loc_C72B
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cmp	ax, [bp+var_5+1]
 		jnz	short loc_C72B
@@ -2809,7 +2809,7 @@ sub_C73A	proc near
 loc_C777:
 		cmp	byte_2429B, 70h	; 'p'
 		ja	short loc_C78C
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_C78C
 		call	snd_se_play pascal, 9
 
@@ -4792,7 +4792,7 @@ loc_D751:
 loc_D758:
 		cmp	word ptr [si+0Ah], 0A0h
 		jge	short loc_D767
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	[si+0Ah], ax
 
@@ -4838,7 +4838,7 @@ loc_D789:
 		add	[si+2],	ax
 		cmp	word ptr [si+50h], 0FF20h
 		jle	short loc_D7AB
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_D7A6
 		mov	ax, 1
 		jmp	short loc_D7A8
@@ -4995,7 +4995,7 @@ loc_D8B7:
 loc_D8BE:
 		cmp	word ptr [si+0Ah], 0FF60h
 		jle	short loc_D8CD
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		sub	[si+0Ah], ax
 
@@ -5038,7 +5038,7 @@ loc_D8EE:
 		add	[si+2],	ax
 		cmp	word ptr [si+50h], 0E0h
 		jge	short loc_D907
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	[si+50h], ax
 
@@ -6835,12 +6835,12 @@ sub_EACE	proc near
 		xor	ax, ax
 		mov	word_2D05E, ax
 		mov	_hitshot_next_free_id, ax
-		mov	dword_25FDC, 0
-		mov	frame, 0
-		mov	frame_mod2, 0
-		mov	frame_mod4, 0
-		mov	frame_mod8, 0
-		mov	frame_mod16, 0
+		mov	_frames_unused, 0
+		mov	_stage_frame, 0
+		mov	_stage_frame_mod2, 0
+		mov	_stage_frame_mod4, 0
+		mov	_stage_frame_mod8, 0
+		mov	_stage_frame_mod16, 0
 		mov	word_25FE6, 1
 		mov	byte_25FF8, 0
 		mov	byte_25FE8, 0
@@ -7139,7 +7139,7 @@ sub_EE58	proc near
 ; ---------------------------------------------------------------------------
 
 loc_EE92:
-		inc	word_221CE
+		inc	_total_std_frames
 		mov	al, 0
 		pop	bp
 		retn
@@ -7699,7 +7699,7 @@ sub_F2B4	proc far
 		call	file_ropen
 		call	file_read pascal, large [_DemoBuf], (DEMO_N * 4) * 2
 		call	file_close
-		mov	frame, 0
+		mov	_stage_frame, 0
 		inc	byte_221EC
 		pop	bp
 		retf
@@ -8006,7 +8006,7 @@ _arg0		= dword	ptr  6
 
 loc_F71C:
 		les	bx, _resident
-		mov	ax, word_221CE
+		mov	ax, _total_std_frames
 		mov	es:[bx+2Ch], ax
 		mov	ax, _items_spawned
 		mov	es:[bx+2Eh], ax
@@ -8020,9 +8020,9 @@ loc_F71C:
 		mov	es:[bx+36h], ax
 		mov	ax, word_221C4
 		mov	es:[bx+38h], ax
-		mov	eax, dword_221C6
+		mov	eax, _total_slow_frames
 		mov	es:[bx+3Ch], eax
-		mov	eax, dword_221CA
+		mov	eax, _total_frames
 		mov	es:[bx+40h], eax
 		call	bb_txt_free
 		call	cdg_freeall
@@ -8872,7 +8872,7 @@ sub_10287	proc near
 		mov	bp, sp
 		cmp	word_2CE06, 0
 		jz	short loc_102B9
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1029D
 		mov	ax, 0FFFEh
 		jmp	short loc_102A0
@@ -8883,7 +8883,7 @@ loc_1029D:
 
 loc_102A0:
 		mov	word_2CE02, ax
-		cmp	frame_mod4, 1
+		cmp	_stage_frame_mod4, 1
 		ja	short loc_102AF
 		mov	ax, 0FFFEh
 		jmp	short loc_102B2
@@ -9526,7 +9526,7 @@ midboss1_render	proc near
 		mov	[bp+@@y], ax
 		mov	al, _midboss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod16
+		mov	dl, _stage_frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -9546,7 +9546,7 @@ midboss1_render	proc near
 		mov	[bp+@@y], ax
 		cmp	_midboss_phase, 2
 		jnz	short loc_108C2
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -9562,7 +9562,7 @@ loc_108B6:
 loc_108C2:
 		cmp	_midboss_phase, 3
 		jnz	short loc_10900
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -9630,7 +9630,7 @@ loc_10934:
 loc_10942:
 		mov	al, _boss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod8
+		mov	dl, _stage_frame_mod8
 		jmp	short loc_1095D
 ; ---------------------------------------------------------------------------
 
@@ -9639,7 +9639,7 @@ loc_1094D:
 		jnz	short loc_1096F
 		mov	al, _boss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod16
+		mov	dl, _stage_frame_mod16
 
 loc_1095D:
 		mov	dh, 0
@@ -9704,7 +9704,7 @@ midboss2_render	proc near
 		mov	[bp+@@y], ax
 		cmp	_midboss_sprite, 202
 		jnz	short loc_109E3
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -9714,7 +9714,7 @@ midboss2_render	proc near
 ; ---------------------------------------------------------------------------
 
 loc_109E3:
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -9783,7 +9783,7 @@ loc_10A57:
 loc_10A59:
 		mov	al, _boss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod16
+		mov	dl, _stage_frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -9837,7 +9837,7 @@ midboss3_render	proc near
 		mov	[bp+@@y], ax
 		cmp	_midboss_sprite, 208
 		jnz	short loc_10ADE
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -9915,17 +9915,17 @@ loc_10B2E:
 		jle	loc_10C38
 		cmp	di, 384
 		jge	loc_10C38
-		mov	ax, frame
+		mov	ax, _stage_frame
 		and	ax, 1Fh
-		cmp	ax, 10h
+		cmp	ax, 16
 		jnb	short loc_10B7B
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		mov	ah, 0
 		jmp	short loc_10B87
 ; ---------------------------------------------------------------------------
 
 loc_10B7B:
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		mov	ah, 0
 		push	ax
 		mov	ax, 10h
@@ -9941,7 +9941,7 @@ loc_10B87:
 		mov	[bp+@@patnum], ax
 		cmp	byte ptr [si], 1
 		jnz	short loc_10BA1
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	[bp+@@patnum], ax
 
@@ -9962,7 +9962,7 @@ loc_10BC7:
 		mov	di, ax
 		cmp	byte_2D07F, 1
 		jnz	short loc_10BFD
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+var_4]
@@ -10069,20 +10069,20 @@ loc_10CCA:
 		mov	si, ax
 		cmp	si, 180
 		jnz	short loc_10CDC
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		jmp	short loc_10CEC
 ; ---------------------------------------------------------------------------
 
 loc_10CDC:
 		cmp	si, 184
 		jnz	short loc_10CE9
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		jmp	short loc_10CF4
 ; ---------------------------------------------------------------------------
 
 loc_10CE9:
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 
 loc_10CEC:
 		mov	ah, 0
@@ -10137,7 +10137,7 @@ arg_0		= word ptr  4
 		jnz	short loc_10D49
 
 loc_10D3D:
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -10292,7 +10292,7 @@ midboss4_render	proc near
 		mov	di, ax
 		mov	al, _midboss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod16
+		mov	dl, _stage_frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -10429,7 +10429,7 @@ loc_10F42:
 		jnz	short loc_10F63
 
 loc_10F57:
-		mov	al, frame_mod8
+		mov	al, _stage_frame_mod8
 		mov	ah, 0
 		cwd
 		sub	ax, dx
@@ -10548,7 +10548,7 @@ loc_11001:
 loc_11029:
 		mov	al, _boss_sprite
 		mov	ah, 0
-		mov	dl, frame_mod16
+		mov	dl, _stage_frame_mod16
 		mov	dh, 0
 		mov	bx, 4
 		push	ax
@@ -10779,10 +10779,10 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
-		mov	ax, frame
+		mov	ax, _stage_frame
 		and	ax, 0FFFh
 		mov	di, ax
-		cmp	di, 3E8h
+		cmp	di, 1000
 		jge	short loc_111EF
 		push	20h ; ' '
 		call	randring1_next16_mod
@@ -11013,13 +11013,13 @@ loc_113B9:
 		jge	loc_1162C
 
 loc_113C9:
-		cmp	frame, 130h
+		cmp	_stage_frame, 304
 		jnb	loc_11475
 		mov	_scroll_active, 0
-		cmp	frame, 100h
+		cmp	_stage_frame, 256
 		jb	loc_1146F
-		mov	ax, 12Fh
-		sub	ax, frame
+		mov	ax, 303
+		sub	ax, _stage_frame
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes, al
@@ -11035,10 +11035,10 @@ loc_113C9:
 		mov	al, byte_22859
 		add	al, 2
 		mov	byte_22859, al
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_1146F
-		mov	ax, frame
-		sub	ax, 100h
+		mov	ax, _stage_frame
+		sub	ax, 256
 		shr	ax, 2
 		mov	[bp+var_2], ax
 		mov	ax, 0Bh
@@ -11076,7 +11076,7 @@ loc_1146F:
 ; ---------------------------------------------------------------------------
 
 loc_11475:
-		cmp	frame, 132h
+		cmp	_stage_frame, 306
 		jnb	short loc_114CD
 		call	graph_scrollup pascal, _scroll_line
 		xor	di, di
@@ -11138,7 +11138,7 @@ loc_114EA:
 loc_114F8:
 		cmp	word_22856, 40h
 		jge	short loc_11553
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jnz	short loc_11553
 		mov	ax, word_22856
 		imul	ax, 1Ah
@@ -11232,7 +11232,7 @@ loc_115D4:
 		cmp	[bp+var_2], 40h
 		jl	short loc_11568
 		GRCG_OFF_CLOBBERING dx
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_1162C
 		cmp	byte_2CE4C, 0
 		jnz	short loc_115FF
@@ -11549,7 +11549,7 @@ loc_1183A:
 		jg	short loc_11862
 		cmp	_boss_phase, 2
 		jb	short loc_11862
-		mov	al, frame_mod16
+		mov	al, _stage_frame_mod16
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -12274,7 +12274,7 @@ loc_12092:
 		jbe	short loc_120B1
 		cmp	_boss_phase, 0
 		jz	short loc_120A7
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_120B6
 
 loc_120A7:
@@ -12913,7 +12913,7 @@ loc_1274B:
 		mov	si, ax
 
 loc_12769:
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_12783
 		push	( 3 shl 16) or  4
 		push	(15 shl 16) or  3
@@ -13083,7 +13083,7 @@ loc_128AD:
 loc_128CA:
 		cmp	_rank, RANK_EASY
 		jnz	short loc_128D8
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_128EA
 
 loc_128D8:
@@ -15010,7 +15010,7 @@ var_1		= byte ptr -1
 		call	near ptr sub_17322
 		les	bx, _std_ip
 		mov	ax, es:[bx]
-		cmp	ax, frame
+		cmp	ax, _stage_frame
 		jnz	short locret_16063
 		add	word ptr _std_ip, 2
 		les	bx, _std_ip
@@ -15286,7 +15286,7 @@ loc_16297:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		push	ax
-		mov	ax, frame
+		mov	ax, _stage_frame
 		xor	dx, dx
 		pop	bx
 		div	bx
@@ -17057,7 +17057,7 @@ sub_17322	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _midboss_frames_until
-		cmp	ax, frame
+		cmp	ax, _stage_frame
 		jnz	short loc_17352
 		mov	_midboss_invalidate?, offset sub_D032
 		mov	ax, _midboss_render_func
@@ -17496,7 +17496,7 @@ loc_1780B:
 
 loc_17811:
 		mov	al, [si+18h]
-		add	al, frame_mod2
+		add	al, _stage_frame_mod2
 		inc	al
 		mov	[si+18h], al
 		mov	al, [si+18h]
@@ -17932,7 +17932,7 @@ loc_17BA3:
 ; ---------------------------------------------------------------------------
 
 loc_17BA9:
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_17BEB
 		mov	al, byte_2C976
 		mov	ah, 0
@@ -18270,7 +18270,7 @@ loc_17E78:
 		add	di, ax
 		cmp	[bp+var_2], di
 		jl	short loc_17EAB
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jnz	loc_17FB7
 		jmp	short loc_17EB5
 ; ---------------------------------------------------------------------------
@@ -19104,7 +19104,7 @@ loc_1863B:
 		inc	byte_2D083
 
 loc_1863F:
-		cmp	frame_mod16, 0
+		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1869C
 		mov	byte ptr word_25FFA, 10h
 		mov	al, byte_2D085
@@ -19460,7 +19460,7 @@ sub_18905	endp
 sub_18987	proc near
 		push	bp
 		mov	bp, sp
-		cmp	frame_mod16, 0
+		cmp	_stage_frame_mod16, 0
 		jnz	short loc_189FA
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 30h ; '0'
@@ -19506,7 +19506,7 @@ sub_18987	endp
 sub_189FC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_18A2D
 		mov	byte ptr word_25FFA, 10h
 		mov	byte ptr word_25FFA+1, 2Ch ; ','
@@ -21202,7 +21202,7 @@ loc_198CF:
 		jb	short loc_19921
 		cmp	word ptr [si+0Eh], 40h
 		jnb	short loc_19912
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_19912
 		mov	byte ptr word_25FFA+1, 0
 		mov	byte ptr word_25FFA, 10h
@@ -21427,7 +21427,7 @@ loc_19A9C:
 		cmp	word ptr [si+0Eh], 20h ; ' '
 		jb	short loc_19ADC
 		mov	word ptr [si+12h], 0C2h
-		test	byte ptr frame, 1Fh
+		test	byte ptr _stage_frame, 1Fh
 		jnz	short loc_19ADC
 		mov	byte ptr word_25FFA+1, 0
 		mov	eax, [si+2]
@@ -23675,7 +23675,7 @@ loc_1AE98:
 loc_1AEB7:
 		cmp	_boss_phase_frame, 12	; jumptable 0001AC18 case 254
 		jge	short loc_1AEE2
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1AECA
 		mov	ax, 0FFFCh
 		jmp	short loc_1AECD
@@ -23686,7 +23686,7 @@ loc_1AECA:
 
 loc_1AECD:
 		mov	word_2CE02, ax
-		cmp	frame_mod4, 1
+		cmp	_stage_frame_mod4, 1
 		ja	short loc_1AEDC
 		mov	ax, 0FFFCh
 		jmp	short loc_1AEDF
@@ -23815,7 +23815,7 @@ loc_1B004:
 		mov	si, ax
 
 loc_1B01C:
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_1B02E
 		mov	ax, si
 		shl	ax, 5
@@ -23860,7 +23860,7 @@ loc_1B058:
 loc_1B071:
 		mov	ax, word_2CE3A
 		mov	_midboss_pos.cur.x, ax
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_1B089
 		mov	ax, si
 		shl	ax, 5
@@ -26062,7 +26062,7 @@ loc_1C417:
 loc_1C426:
 		cmp	[bp+var_2], 70h	; 'p'
 		jg	short loc_1C445
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	word_2CE3E, ax
 		cmp	word_2CE3E, 80h
@@ -26082,7 +26082,7 @@ loc_1C445:
 ; ---------------------------------------------------------------------------
 
 loc_1C460:
-		mov	al, frame_mod2
+		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	word_2CE3E, ax
 		cmp	[bp+var_2], 0D4h
@@ -28271,7 +28271,7 @@ loc_1D8F7:
 		jle	loc_1DA17
 		cmp	_lasers[2 * size laser_t].coords.angle, 128
 		jnb	short loc_1D954
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	loc_1DA17
 		mov	al, _lasers[0 * size laser_t].coords.angle
 		inc	al
@@ -28354,7 +28354,7 @@ loc_1D9C1:
 ; ---------------------------------------------------------------------------
 
 loc_1D9D5:
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jz	short loc_1D9E4
 		mov	PaletteTone, 150
 		jmp	short loc_1D9EA
@@ -29102,7 +29102,7 @@ sub_1E022	endp
 sub_1E15D	proc near
 		push	bp
 		mov	bp, sp
-		cmp	frame_mod4, 0
+		cmp	_stage_frame_mod4, 0
 		jnz	short loc_1E195
 		cmp	byte_22854, 0
 		jnz	short loc_1E17F
@@ -29305,7 +29305,7 @@ loc_1E36F:
 loc_1E377:
 		cmp	Palettes+2, 80h
 		jnb	short loc_1E38E
-		cmp	frame_mod16, 0
+		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1E389
 		inc	Palettes+2
 
@@ -29341,7 +29341,7 @@ loc_1E3C4:
 loc_1E3D0:
 		cmp	Palettes+2, 0
 		jbe	short loc_1E3E7
-		cmp	frame_mod8, 0
+		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1E3E2
 		dec	Palettes+2
 
@@ -29362,7 +29362,7 @@ loc_1E3E7:
 loc_1E406:
 		cmp	Palettes+2, 0
 		jbe	short loc_1E41A
-		cmp	frame_mod8, 0
+		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1E42C
 		dec	Palettes+2
 		jmp	short loc_1E42C
@@ -29371,7 +29371,7 @@ loc_1E406:
 loc_1E41A:
 		cmp	Palettes, 80h
 		jnb	short loc_1E431
-		cmp	frame_mod16, 0
+		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1E42C
 		inc	Palettes
 
@@ -32157,7 +32157,7 @@ loc_1FC23:
 		jnz	short loc_1FC95
 		cmp	_boss_phase_frame, 12
 		jge	short loc_1FC55
-		cmp	frame_mod2, 0
+		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1FC3D
 		mov	ax, 0FFFCh
 		jmp	short loc_1FC40
@@ -32168,7 +32168,7 @@ loc_1FC3D:
 
 loc_1FC40:
 		mov	word_2CE02, ax
-		cmp	frame_mod4, 1
+		cmp	_stage_frame_mod4, 1
 		ja	short loc_1FC4F
 		mov	ax, 0FFFCh
 		jmp	short loc_1FC52
@@ -32815,9 +32815,7 @@ byte_221C0	db 0
 		db 0
 word_221C2	dw 0
 word_221C4	dw 0
-dword_221C6	dd 0
-dword_221CA	dd 0
-word_221CE	dw 0
+include th04/frames[data].asm
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
 		db  88h
@@ -33926,9 +33924,7 @@ bombs	db ?
 include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/tiles[bss].asm
-dword_25FDC	dd ?
-frame	dw ?
-include th03/frame_mod[bss].asm
+include th04/frames[bss].asm
 word_25FE6	dw ?
 byte_25FE8	db ?
 include th03/hardware/palette_changed[bss].asm
