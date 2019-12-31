@@ -49,3 +49,22 @@ extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][MISS_ITEM_COUNT]
 
 void pascal near items_miss_add(void);
 // --------------------------------
+
+// Collection counters
+// -------------------
+// Reset to 0 when moving to a new stage.
+extern unsigned int stage_point_items_collected;
+
+extern unsigned int items_spawned;
+extern unsigned int items_collected;
+
+#if GAME == 5
+	// Same value as [total_point_items_collected].
+	// Used for extends and end-of-game score bonus calculation.
+	extern unsigned int extend_point_items_collected;
+#endif
+
+extern unsigned int total_point_items_collected;
+// TH04 includes items collected above the PoC during a bomb, TH05 doesn't.
+extern unsigned int total_max_valued_point_items_collected;
+// -------------------

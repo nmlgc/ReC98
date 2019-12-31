@@ -1083,7 +1083,7 @@ sub_B55A	proc near
 		mov	_miss_time, 0
 		mov	_player_is_hit, 0
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
-		mov	_point_items_collected, 0
+		mov	_stage_point_items_collected, 0
 		mov	_shot_time, 0
 		mov	fp_2C92E, offset sub_EE58
 		mov	_scroll_active, 1
@@ -8010,11 +8010,11 @@ loc_F71C:
 		mov	es:[bx+2Ch], ax
 		mov	ax, _items_spawned
 		mov	es:[bx+2Eh], ax
-		mov	ax, word_22646
+		mov	ax, _items_collected
 		mov	es:[bx+30h], ax
-		mov	ax, word_2264A
+		mov	ax, _total_point_items_collected
 		mov	es:[bx+32h], ax
-		mov	ax, word_2264C
+		mov	ax, _total_max_valued_point_items_collected
 		mov	es:[bx+34h], ax
 		mov	ax, word_221C2
 		mov	es:[bx+36h], ax
@@ -9214,8 +9214,8 @@ public HUD_POINT_ITEMS_PUT
 hud_point_items_put	proc far
 		push	bp
 		mov	bp, sp
-		call	hud_int_put pascal, (62 shl 16) + 16, _point_items_collected, TX_WHITE
-		call	hud_int_put pascal, (62 shl 16) + 15, word_22648, TX_CYAN
+		call	hud_int_put pascal, (62 shl 16) + 16, _stage_point_items_collected, TX_WHITE
+		call	hud_int_put pascal, (62 shl 16) + 15, _extend_point_items_collected, TX_CYAN
 		pop	bp
 		retf
 hud_point_items_put	endp
@@ -15579,7 +15579,7 @@ loc_165F8:
 		push	(34 shl 16) + 12
 		push	eax
 		nopcall	hud_points_put
-		mov	si, _point_items_collected
+		mov	si, _stage_point_items_collected
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -15712,7 +15712,7 @@ loc_1677D:
 		mov	byte_22275, al
 		mov	PaletteTone, 60
 		call	far ptr	palette_show
-		mov	byte_226C4, 0Ah
+		mov	_extends_gained, 10
 		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 6, ds, ALL_CLEAR, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 8, ds, BONUS_DREAM, TX_WHITE
@@ -15757,14 +15757,14 @@ loc_1683E:
 		mov	al, lives
 		mov	ah, 0
 		imul	ax, 1000
-		add	ax, 64536
+		add	ax, -1000
 		mov	si, ax
 		movzx	eax, si
 		add	[bp+var_4], eax
 		push	(34 shl 16) + 12
 		push	eax
 		nopcall	hud_points_put
-		mov	si, _point_items_collected
+		mov	si, _stage_point_items_collected
 		movzx	eax, si
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
@@ -15791,7 +15791,7 @@ loc_1691E:
 		nopcall	hud_points_put
 
 loc_16939:
-		movzx	eax, word_22648
+		movzx	eax, _extend_point_items_collected
 		imul	eax, 250
 		mov	[bp+var_8], eax
 		add	[bp+var_4], eax
@@ -16571,14 +16571,14 @@ include th04/item/miss_add.asm
 sub_16F05	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_226C4
+		mov	al, _extends_gained
 		mov	ah, 0
-		imul	ax, 64h
-		add	ax, 64h	; 'd'
-		cmp	ax, word_22648
+		imul	ax, 100
+		add	ax, 100
+		cmp	ax, _extend_point_items_collected
 		ja	short loc_16F52
 		call	_playperf_raise pascal, 4
-		inc	byte_226C4
+		inc	_extends_gained
 		cmp	lives, 99
 		jnb	short loc_16F52
 		inc	lives
@@ -16699,7 +16699,7 @@ loc_1703E:
 		call	hud_dream_put
 
 loc_17043:
-		inc	word_2264C
+		inc	_total_max_valued_point_items_collected
 		mov	[bp+var_3], 1
 		jmp	short loc_1705C
 ; ---------------------------------------------------------------------------
@@ -16715,11 +16715,11 @@ loc_1704D:
 
 loc_1705C:
 		inc	byte_225CC
-		inc	word_22648
-		inc	word_2264A
-		cmp	_point_items_collected, POINT_ITEMS_MAX
+		inc	_extend_point_items_collected
+		inc	_total_point_items_collected
+		cmp	_stage_point_items_collected, POINT_ITEMS_MAX
 		jnb	short loc_17074
-		inc	_point_items_collected
+		inc	_stage_point_items_collected
 
 loc_17074:
 		call	sub_16F05
@@ -16848,7 +16848,7 @@ loc_17199:
 		call	_playperf_raise pascal, 1
 
 loc_171AF:
-		inc	word_22646
+		inc	_items_collected
 		pop	di
 		pop	si
 		leave
@@ -32921,12 +32921,7 @@ include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
 power_overflow_level	dw 0
-public _items_spawned
-_items_spawned	dw 0
-word_22646	dw 0
-word_22648	dw 0
-word_2264A	dw 0
-word_2264C	dw 0
+include th04/item/collect[data].asm
 byte_2264E	db 0
 		db 0
 include th04/item/miss_add[data].asm
@@ -32943,7 +32938,6 @@ byte_226C0	db 0
 		db 0
 byte_226C2	db 0
 		db 0
-byte_226C4	db 0
 include th04/score[data].asm
 include th04/strings/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
@@ -39958,8 +39952,8 @@ _miss_time	db ?
 dream	db ?
 public _MISS_EXPLOSION_RADIUS
 _miss_explosion_radius	dw ?
-public _POINT_ITEMS_COLLECTED
-_point_items_collected	dw ?
+public _stage_point_items_collected
+_stage_point_items_collected	dw ?
 public _MISS_EXPLOSION_ANGLE
 _miss_explosion_angle	db ?
 		dd    ?	;

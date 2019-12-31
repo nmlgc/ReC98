@@ -936,7 +936,7 @@ sub_B1D0	proc near
 		mov	_miss_time, 0
 		mov	byte_259A9, 0
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
-		mov	_point_items_collected, 0
+		mov	_stage_point_items_collected, 0
 		mov	dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
 		mov	_scroll_active, 1
@@ -6641,11 +6641,11 @@ loc_E813:
 		mov	es:[bx+26h], ax
 		mov	ax, _items_spawned
 		mov	es:[bx+28h], ax
-		mov	ax, word_236DA
+		mov	ax, _items_collected
 		mov	es:[bx+2Ah], ax
-		mov	ax, word_236DC
+		mov	ax, _total_point_items_collected
 		mov	es:[bx+2Ch], ax
-		mov	ax, word_236DE
+		mov	ax, _total_max_valued_point_items_collected
 		mov	es:[bx+2Eh], ax
 		mov	ax, word_22E9E
 		mov	es:[bx+34h], ax
@@ -7366,7 +7366,7 @@ var_1		= byte ptr -1
 		mov	bp, sp
 		sub	sp, 2
 		mov	[bp+var_1], 0
-		mov	al, byte_22DA6
+		mov	al, _extends_gained
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
@@ -7414,7 +7414,7 @@ loc_EE60:
 		jz	short locret_EEA3
 		push	4
 		nopcall	_playperf_raise
-		inc	byte_22DA6
+		inc	_extends_gained
 		les	bx, _resident
 		assume es:nothing
 		cmp	byte ptr es:[bx+0Bh], 63h ; 'c'
@@ -7465,7 +7465,7 @@ loc_EEBF:
 		mov	_score_delta, 0
 		mov	_score_delta_frame, 0
 		mov	_score_unused, 0
-		mov	byte_22DA6, 0
+		mov	_extends_gained, 0
 		mov	_hiscore_popup_shown, 0
 		pop	si
 		pop	bp
@@ -7651,7 +7651,7 @@ hud_point_items_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E000Fh
-		mov	al, _point_items_collected
+		mov	al, _stage_point_items_collected
 		mov	ah, 0
 		push	ax
 		call	sub_1D519
@@ -33258,7 +33258,7 @@ var_4		= dword	ptr -4
 		push	0Dh
 		push	eax
 		call	sub_1D48E
-		mov	al, _point_items_collected
+		mov	al, _stage_point_items_collected
 		mov	ah, 0
 		mov	si, ax
 		movzx	eax, si
@@ -33356,7 +33356,7 @@ var_4		= dword	ptr -4
 		push	si
 		mov	PaletteTone, 60
 		call	far ptr	palette_show
-		mov	byte_22DA6, 0Ah
+		mov	_extends_gained, 10
 		call	gaiji_putsa pascal, (19 shl 16) + 4, ds, offset gpCONGRATULATION, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 6, ds, offset aALL_CLEAR, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 8, ds, offset aPOWERX50_2, TX_WHITE
@@ -33433,7 +33433,7 @@ loc_1D9CE:
 		push	0Eh
 		push	eax
 		call	sub_1D48E
-		mov	al, _point_items_collected
+		mov	al, _stage_point_items_collected
 		mov	ah, 0
 		mov	si, ax
 		movzx	eax, si
@@ -33622,7 +33622,7 @@ loc_1DC33:
 		mov	al, byte_23660
 		add	al, 4
 		mov	byte_23660, al
-		inc	word_236DE
+		inc	_total_max_valued_point_items_collected
 		mov	[bp+var_1], 1
 		cmp	byte_21CC8, 0
 		jz	short loc_1DC7B
@@ -33649,9 +33649,9 @@ loc_1DC78:
 		mov	byte_23660, al
 
 loc_1DC7B:
-		inc	word_236DC
+		inc	_total_point_items_collected
 		add	si, dream_score
-		inc	_point_items_collected
+		inc	_stage_point_items_collected
 		call	hud_point_items_put
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
@@ -33789,7 +33789,7 @@ loc_1DDC9:
 		call	_playperf_raise pascal, 1
 
 loc_1DDDF:
-		inc	word_236DA
+		inc	_items_collected
 		pop	di
 		pop	si
 		leave
@@ -39079,7 +39079,6 @@ unk_22D9E	db 0DCh
 		db    1
 		db 0C2h
 		db    1
-byte_22DA6	db 0
 include th04/score[data].asm
 include th04/strings/hud[data].asm
 include th04/hud/bar_colors[data].asm
@@ -39288,11 +39287,7 @@ include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
 power_overflow_level	dw 0
-public _items_spawned
-_items_spawned	dw 0
-word_236DA	dw 0
-word_236DC	dw 0
-word_236DE	dw 0
+include th04/item/collect[data].asm
 byte_236E0	db 0
 		db 0
 include th04/item/miss_add[data].asm
@@ -40028,8 +40023,8 @@ include th01/player_is_hit[bss].asm
 byte_259A9	db ?
 public _MISS_TIME
 _miss_time	db ?
-public _POINT_ITEMS_COLLECTED
-_point_items_collected	db ?
+public _stage_point_items_collected
+_stage_point_items_collected	db ?
 include th04/player/option[bss].asm
 dream_items_collected	db ?
 		db    ?	;
