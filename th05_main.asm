@@ -1989,20 +1989,20 @@ sub_C29E	endp
 sub_C2AA	proc near
 		push	si
 		push	di
-		mov	_tile_invalidate_box.y, 8
-		mov	si, 9DA0h
-		mov	di, 118h
+		mov	_tile_invalidate_box.y, POINTNUM_H
+		mov	si, offset _pointnums
+		mov	di, POINTNUM_COUNT
 
 loc_C2B8:
-		cmp	byte ptr [si], 0
+		cmp	[si+pointnum_t.flag], 0
 		jz	short loc_C2CD
-		mov	ax, [si+8]
+		mov	ax, [si+pointnum_t.PN_width]
 		mov	_tile_invalidate_box.x, ax
-		mov	ax, [si+2]
-		call	tiles_invalidate_around pascal, word ptr [si+6], ax
+		mov	ax, [si+pointnum_t.PN_center_cur.x]
+		call	tiles_invalidate_around pascal, [si+pointnum_t.PN_center_prev_y], ax
 
 loc_C2CD:
-		add	si, 10h
+		add	si, size pointnum_t
 		dec	di
 		jnz	short loc_C2B8
 		pop	di
@@ -2019,46 +2019,46 @@ sub_C2D6	proc near
 		push	di
 		mov	word_24298, 0
 		mov	bx, 3686h
-		mov	si, 9DA0h
-		mov	di, 118h
+		mov	si, offset _pointnums
+		mov	di, POINTNUM_COUNT
 
 loc_C2E7:
-		cmp	byte ptr [si], 0
+		cmp	[si+pointnum_t.flag], 0
 		jz	short loc_C338
-		cmp	byte ptr [si], 2
+		cmp	[si+pointnum_t.flag], 2
 		jnz	short loc_C2F6
-		mov	byte ptr [si], 0
+		mov	[si+pointnum_t.flag], 0
 		jmp	short loc_C338
 ; ---------------------------------------------------------------------------
 
 loc_C2F6:
-		mov	cl, [si+1]
-		mov	ax, [si+4]
-		mov	[si+6],	ax
-		cmp	cl, 18h
+		mov	cl, [si+pointnum_t.age]
+		mov	ax, [si+pointnum_t.PN_center_cur.y]
+		mov	[si+pointnum_t.PN_center_prev_y], ax
+		cmp	cl, 24
 		jb	short loc_C307
 		sub	ax, 8
 
 loc_C307:
-		mov	[si+4],	ax
-		cmp	ax, 0FFC0h
+		mov	[si+pointnum_t.PN_center_cur.y], ax
+		cmp	ax, ((-POINTNUM_H / 2) shl 4)
 		jg	short loc_C314
-		mov	byte ptr [si], 2
+		mov	[si+pointnum_t.flag], 2
 		jmp	short loc_C338
 ; ---------------------------------------------------------------------------
 
 loc_C314:
 		inc	cl
-		mov	[si+1],	cl
-		cmp	cl, 24h	; '$'
+		mov	[si+pointnum_t.age], cl
+		cmp	cl, 36
 		jbe	short loc_C323
-		mov	byte ptr [si], 2
+		mov	[si+pointnum_t.flag], 2
 		jmp	short loc_C338
 ; ---------------------------------------------------------------------------
 
 loc_C323:
 		mov	[bx], si
-		cmp	di, 50h	; 'P'
+		cmp	di, POINTNUM_YELLOW_COUNT
 		ja	short loc_C335
 		cmp	word_24298, 0
 		jnz	short loc_C335
@@ -2068,7 +2068,7 @@ loc_C335:
 		add	bx, 2
 
 loc_C338:
-		add	si, 10h
+		add	si, size pointnum_t
 		dec	di
 		jnz	short loc_C2E7
 		mov	word ptr [bx], 0
@@ -6088,8 +6088,8 @@ sub_EACE	proc near
 		push	offset _items
 		push	size _items / 4
 		call	sub_E708
-		push	9DA0h
-		push	460h
+		push	offset _pointnums
+		push	size _pointnums / 4
 		call	sub_E708
 		push	offset _gather_circles
 		push	size _gather_circles / 4
@@ -12777,13 +12777,13 @@ include th04/main/gather_point_render.asm
 sub_1586E	proc near
 		mov	bl, byte_24065
 		inc	byte_24065
-		cmp	bl, 4Fh	; 'O'
+		cmp	bl, (POINTNUM_YELLOW_COUNT - 1)
 		jb	short loc_15880
 		mov	byte_24065, 0
 
 loc_15880:
 		xor	bh, bh
-		add	bx, 0C8h
+		add	bx, POINTNUM_WHITE_COUNT
 		jmp	short loc_1589C
 sub_1586E	endp
 
@@ -12795,27 +12795,27 @@ sub_15888	proc near
 		mov	bl, byte_24064
 		mov	bh, 0
 		inc	byte_24064
-		cmp	bl, 0C7h
+		cmp	bl, (POINTNUM_WHITE_COUNT - 1)
 		jb	short loc_1589C
 		mov	byte_24064, 0
 
 loc_1589C:
 		shl	bx, 4
-		add	bx, 9DA0h
-		mov	word ptr [bx], 1
+		add	bx, offset _pointnums
+		mov	word ptr [bx+pointnum_t.flag], 1
 		push	bp
 		mov	bp, sp
 		mov	ax, [bp+8]
-		mov	[bx+2],	ax
+		mov	[bx+pointnum_t.PN_center_cur.x], ax
 		mov	ax, [bp+6]
-		mov	[bx+4],	ax
+		mov	[bx+pointnum_t.PN_center_cur.y], ax
 		push	si
 		mov	si, bx
-		lea	ax, [bx+0Eh]
+		lea	ax, [bx+pointnum_t.PN_digits_lebcd + (POINTNUM_DIGITS - 1)]
 		push	ax
 		push	word ptr [bp+4]
 		call	sub_1F9BA
-		mov	[si+8],	ax
+		mov	[si+pointnum_t.PN_width], ax
 		pop	si
 		pop	bp
 		retn	6
@@ -30416,7 +30416,7 @@ include th04/main/bullet/bullets[bss].asm
 		db 2048 dup(?)
 include th04/main/gather[bss].asm
 include th04/main/circles[bss].asm
-		db 4480 dup(?)
+include th04/main/pointnum/pointnum[bss].asm
 include th04/main/item/items[bss].asm
 include th05/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
