@@ -32,6 +32,7 @@ int pascal far select_for_rank(
 /// Player
 /// ------
 #include "th04/player/player.h"
+#include "th04/score.h"
 /// ------
 
 /// Stages
