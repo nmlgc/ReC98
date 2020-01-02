@@ -10,7 +10,7 @@ std_load	proc near
 	push	di
 	call	std_free
 	les	bx, _resident
-	mov	al, es:[bx+13h]
+	mov	al, es:[bx+resident_t.stage_ascii]
 	les	bx, _std_fn
 	mov	es:[bx+3], al
 	call	file_ropen pascal, word ptr _std_fn+2, bx

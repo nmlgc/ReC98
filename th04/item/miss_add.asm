@@ -76,7 +76,7 @@ if GAME eq 5
 	cmp	lives, 1
 else
 	les	bx, _resident
-	cmp	byte ptr es:[bx+0Bh], 1
+	cmp	byte ptr es:[bx+resident_t.rem_lives], 1
 endif
 	jnz	short @@set_rest
 	mov	[bp+@@type], IT_FULLPOWER

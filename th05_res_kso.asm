@@ -78,12 +78,12 @@ loc_39C:
 		push	6
 		call	file_write
 		les	bx, [bp+var_14]
-		mov	byte ptr es:[bx+11h], 0FFh
-		mov	byte ptr es:[bx+0Fh], 3
-		mov	byte ptr es:[bx+10h], 3
-		mov	byte ptr es:[bx+12h], 1
-		mov	byte ptr es:[bx+15h], 1
-		mov	byte ptr es:[bx+16h], 1
+		mov	es:[bx+resident_t.rank], RANK_DEFAULT
+		mov	es:[bx+resident_t.cfg_lives], 3
+		mov	es:[bx+resident_t.credit_lives], 3
+		mov	es:[bx+resident_t.bgm_mode], 1
+		mov	es:[bx+resident_t.se_mode], 1
+		mov	es:[bx+resident_t.turbo_mode], 1
 		jmp	loc_47C
 ; ---------------------------------------------------------------------------
 
@@ -119,45 +119,45 @@ loc_3CA:
 		jnz	short loc_391
 		les	bx, [bp+var_14]
 		mov	al, [bp+var_10]
-		mov	es:[bx+11h], al
+		mov	es:[bx+resident_t.rank], al
 		mov	al, [bp+var_F]
-		mov	es:[bx+0Fh], al
+		mov	es:[bx+resident_t.cfg_lives], al
 		mov	al, [bp+var_E]
-		mov	es:[bx+10h], al
+		mov	es:[bx+resident_t.credit_lives], al
 		mov	al, [bp+var_D]
-		mov	es:[bx+12h], al
+		mov	es:[bx+resident_t.bgm_mode], al
 		mov	al, [bp+var_C]
-		mov	es:[bx+15h], al
+		mov	es:[bx+resident_t.se_mode], al
 		mov	al, [bp+var_B]
-		mov	es:[bx+16h], al
-		cmp	byte ptr es:[bx+0Fh], 6
+		mov	es:[bx+resident_t.turbo_mode], al
+		cmp	es:[bx+resident_t.cfg_lives], 6
 		jbe	short loc_43A
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
 
 loc_43A:
-		cmp	byte ptr es:[bx+0Fh], 0
+		cmp	es:[bx+resident_t.cfg_lives], 0
 		jnz	short loc_444
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
 
 loc_444:
 		les	bx, [bp+var_14]
-		cmp	byte ptr es:[bx+10h], 3
+		cmp	es:[bx+resident_t.credit_lives], 3
 		jbe	short loc_451
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
 
 loc_451:
 		les	bx, [bp+var_14]
-		cmp	byte ptr es:[bx+12h], 3
+		cmp	es:[bx+resident_t.bgm_mode], 3
 		jb	short loc_45E
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
 
 loc_45E:
 		les	bx, [bp+var_14]
-		cmp	byte ptr es:[bx+15h], 3
+		cmp	es:[bx+resident_t.se_mode], 3
 		jb	short loc_46B
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
@@ -353,7 +353,7 @@ loc_595:
 		cmp	byte_16BE, 0
 		jz	short loc_5B0
 		les	bx, [bp+var_6]
-		mov	byte ptr es:[bx+17h], 1
+		mov	es:[bx+resident_t.debug_mode], 1
 
 loc_5B0:
 		xor	ax, ax

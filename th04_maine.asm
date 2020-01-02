@@ -216,16 +216,16 @@ sub_A0BD	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	al, es:[bx+12h]
+		mov	al, es:[bx+resident_t.playchar_ascii]
 		les	bx, off_E5C0
 		mov	es:[bx+3], al
 		les	bx, _resident
-		mov	al, es:[bx+19h]
-		add	al, 30h	; '0'
+		mov	al, es:[bx+resident_t.shottype]
+		add	al, '0'
 		les	bx, off_E5C0
 		mov	es:[bx+4], al
 		les	bx, _resident
-		mov	al, es:[bx+25h]
+		mov	al, es:[bx+resident_t.end_type_ascii]
 		les	bx, off_E5C0
 		mov	es:[bx+5], al
 		push	word ptr off_E5C0+2
@@ -258,7 +258,7 @@ _envp		= dword	ptr  0Ch
 		or	ax, ax
 		jz	locret_A290
 		les	bx, _resident
-		mov	al, es:[bx+12h]
+		mov	al, es:[bx+resident_t.playchar_ascii]
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
@@ -268,31 +268,31 @@ _envp		= dword	ptr  0Ch
 		push	offset aGameft_bft ; "GAMEFT.bft"
 		call	gaiji_entry_bfnt
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
 		call	graph_show
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jb	loc_A1FE
 		call	sub_A0BD
 		call	sub_B44D
 		call	sub_C0F8
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_1CC
+		cmp	es:[bx+resident_t.end_sequence], ES_1CC
 		jz	short loc_A187
-		cmp	byte ptr es:[bx+0Fh], 0
+		cmp	es:[bx+resident_t.rank], RANK_EASY
 		jnz	short loc_A1E9
 
 loc_A187:
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+5]
 		les	bx, _resident
-		add	al, es:[bx+0Fh]
+		add	al, es:[bx+resident_t.rank]
 		les	bx, [bp+var_4]
 		mov	es:[bx+5], al
 		graph_accesspage 1
@@ -317,7 +317,7 @@ loc_A1E9:
 
 loc_A1FE:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_EXTRA
+		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_A274
 		call	frame_delay pascal, 100
 		call	sub_C814
@@ -2683,7 +2683,7 @@ loc_B82A:
 		sub	ax, si
 		les	bx, _resident
 		add	bx, ax
-		mov	al, es:[bx+1Dh]
+		mov	al, es:[bx+resident_t.score_last]
 		mov	[bp+var_1], al
 		or	[bp+var_2], al
 		cmp	[bp+var_2], 0
@@ -2880,9 +2880,9 @@ var_4		= dword	ptr -4
 
 		enter	8, 0
 		les	bx, _resident
-		mov	eax, es:[bx+14h]
+		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.credit_lives]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -2921,7 +2921,7 @@ loc_BA4A:
 
 loc_BA52:
 		les	bx, _resident
-		mov	al, es:[bx+0Eh]
+		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_BA67
@@ -2940,15 +2940,15 @@ loc_BA71:
 
 loc_BA79:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+49h], 0
+		cmp	es:[bx+resident_t.turbo_mode], 0
 		jz	short loc_BA8C
 		add	[bp+var_4], 7D0h
 
 loc_BA8C:
 		les	bx, _resident
-		cmp	word ptr es:[bx+38h], 0
+		cmp	es:[bx+resident_t.graze], 0
 		jz	short loc_BAA5
-		mov	ax, es:[bx+38h]
+		mov	ax, es:[bx+resident_t.graze]
 		add	ax, ax
 		movzx	eax, ax
 		add	[bp+var_4], eax
@@ -2956,12 +2956,12 @@ loc_BA8C:
 loc_BAA5:
 		mov	[bp+var_8], 0F4240h
 		les	bx, _resident
-		mov	ax, es:[bx+28h]
-		cmp	ax, es:[bx+2Ah]
+		mov	ax, es:[bx+resident_t.items_spawned]
+		cmp	ax, es:[bx+resident_t.items_collected]
 		jz	short loc_BAF3
-		cmp	word ptr es:[bx+28h], 0
+		cmp	es:[bx+resident_t.items_spawned], 0
 		jz	short loc_BAD8
-		movzx	ebx, word ptr es:[bx+28h]
+		movzx	ebx, es:[bx+resident_t.items_spawned]
 		mov	eax, [bp+var_8]
 		xor	edx, edx
 		div	ebx
@@ -2974,7 +2974,7 @@ loc_BAD8:
 
 loc_BAE0:
 		les	bx, _resident
-		movzx	eax, word ptr es:[bx+2Ah]
+		movzx	eax, es:[bx+resident_t.items_collected]
 		imul	eax, [bp+var_8]
 		mov	[bp+var_8], eax
 
@@ -3049,15 +3049,15 @@ var_4		= dword	ptr -4
 		call	graph_putsa_fx pascal, (16 shl 16) or 288, 15, ds, offset aPicacovCj ; "èàóùóéÇøó¶"
 		call	graph_putsa_fx pascal, (16 shl 16) or 336, 15, ds, offset aVavVVSrso ; "Ç†Ç»ÇΩÇÃòrëO"
 		les	bx, _resident
-		cmp	byte ptr es:[bx+11h], 6
+		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jnz	short loc_BC71
-		mov	al, 4
+		mov	al, RANK_EXTRA
 		jmp	short loc_BC79
 ; ---------------------------------------------------------------------------
 
 loc_BC71:
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 
 loc_BC79:
 		mov	_verdict_rank, al
@@ -3073,13 +3073,13 @@ loc_BC79:
 		call	sub_B81D
 		push	0F00078h
 		les	bx, _resident
-		mov	al, es:[bx+31h]
+		mov	al, es:[bx+resident_t.miss_count]
 		mov	ah, 0
 		push	ax
 		call	sub_B787
 		push	0F00090h
 		les	bx, _resident
-		mov	al, es:[bx+32h]
+		mov	al, es:[bx+resident_t.bombs_used]
 		mov	ah, 0
 		push	ax
 		call	sub_B787
@@ -3087,59 +3087,59 @@ loc_BC79:
 		call	graph_putsa_fx pascal, (288 shl 16) or 144, 14, ds, offset aTimes_0	; "âÒ"
 		mov	byte_124CC, 1
 		les	bx, _resident
-		cmp	byte ptr es:[bx+11h], 6
+		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jz	short loc_BD0A
-		cmp	byte ptr es:[bx+30h], ES_1CC
+		cmp	es:[bx+resident_t.end_sequence], ES_1CC
 		jnz	short loc_BCFF
-		mov	word ptr es:[bx+26h], 0ABE0h
+		mov	es:[bx+resident_t.std_frames], 44000
 
 loc_BCFF:
 		push	0C000A8h
-		push	0ABE0h
+		push	44000
 		jmp	short loc_BD24
 ; ---------------------------------------------------------------------------
 
 loc_BD0A:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_EXTRA
+		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnz	short loc_BD1B
-		mov	word ptr es:[bx+26h], 2EE0h
+		mov	es:[bx+resident_t.std_frames], 12000
 
 loc_BD1B:
 		push	0C000A8h
-		push	2EE0h
+		push	12000
 
 loc_BD24:
 		les	bx, _resident
-		push	word ptr es:[bx+26h]
+		push	es:[bx+resident_t.std_frames]
 		call	sub_B886
 		mov	byte_124CC, 0
 		push	0C000C0h
 		les	bx, _resident
-		push	word ptr es:[bx+34h]
-		push	word ptr es:[bx+36h]
+		push	es:[bx+resident_t.enemies_gone]
+		push	es:[bx+resident_t.enemies_killed]
 		call	sub_B886
 		push	0C000D8h
 		les	bx, _resident
-		push	word ptr es:[bx+28h]
-		push	word ptr es:[bx+2Ah]
+		push	es:[bx+resident_t.items_spawned]
+		push	es:[bx+resident_t.items_collected]
 		call	sub_B886
 		push	0C000F0h
 		les	bx, _resident
-		push	word ptr es:[bx+2Ch]
-		push	word ptr es:[bx+2Eh]
+		push	es:[bx+resident_t.point_items_collected]
+		push	es:[bx+resident_t.max_valued_point_items_collected]
 		call	sub_B886
 		call	sub_B9F2
 		push	0C00120h
 		les	bx, _resident
-		mov	eax, es:[bx+44h]
-		mov	ebx, 0Ah
+		mov	eax, es:[bx+resident_t.frames]
+		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
 		push	ax
 		mov	bx, word ptr _resident
-		mov	eax, es:[bx+40h]
-		mov	ebx, 0Ah
+		mov	eax, es:[bx+resident_t.slow_frames]
+		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
 		push	ax
@@ -3150,7 +3150,7 @@ loc_BD24:
 		idiv	ebx
 		mov	dword_124CE, eax
 		les	bx, _resident
-		cmp	byte ptr es:[bx+24h], 9
+		cmp	es:[bx+resident_t.score_last][7], 9
 		jb	short loc_BDD4
 		add	dword_124CE, 927C0h
 		jmp	short loc_BE08
@@ -3158,12 +3158,12 @@ loc_BD24:
 
 loc_BDD4:
 		les	bx, _resident
-		movzx	eax, byte ptr es:[bx+23h]
+		movzx	eax, es:[bx+resident_t.score_last][6]
 		imul	eax, 2710h
 		add	dword_124CE, eax
-		cmp	byte ptr es:[bx+24h], 3
+		cmp	es:[bx+resident_t.score_last][7], 3
 		jbe	short loc_BE08
-		mov	al, es:[bx+24h]
+		mov	al, es:[bx+resident_t.score_last][7]
 		mov	ah, 0
 		add	ax, 0FFFDh
 		cwde
@@ -3208,7 +3208,7 @@ loc_BE5E:
 
 loc_BE6F:
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.credit_lives]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -3244,7 +3244,7 @@ loc_BEC2:
 
 loc_BECA:
 		les	bx, _resident
-		mov	al, es:[bx+0Eh]
+		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_BEDF
@@ -3265,13 +3265,13 @@ loc_BEF2:
 
 loc_BF03:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+49h], 0
+		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_BF17
 		sub	dword_124CE, 186A0h
 
 loc_BF17:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+31h], 0Fh
+		cmp	es:[bx+resident_t.miss_count], 15
 		jb	short loc_BF2D
 		sub	dword_124CE, 493E0h
 		jmp	short loc_BF43
@@ -3279,13 +3279,13 @@ loc_BF17:
 
 loc_BF2D:
 		les	bx, _resident
-		movzx	eax, byte ptr es:[bx+31h]
+		movzx	eax, es:[bx+resident_t.miss_count]
 		imul	eax, 4E20h
 		sub	dword_124CE, eax
 
 loc_BF43:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+32h], 1Eh
+		cmp	es:[bx+resident_t.bombs_used], 30
 		jb	short loc_BF59
 		sub	dword_124CE, 15F90h
 		jmp	short loc_BF6F
@@ -3293,13 +3293,13 @@ loc_BF43:
 
 loc_BF59:
 		les	bx, _resident
-		movzx	eax, byte ptr es:[bx+32h]
+		movzx	eax, es:[bx+resident_t.bombs_used]
 		imul	eax, 0BB8h
 		sub	dword_124CE, eax
 
 loc_BF6F:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_EXTRA
+		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jnb	short loc_BFA1
 		cmp	_verdict_rank, RANK_EXTRA
 		jz	short loc_BF96
@@ -3318,7 +3318,7 @@ loc_BF96:
 
 loc_BFA1:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_CONTINUED
+		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jnz	short loc_BFB4
 		sub	[bp+var_4], 186A0h
 
@@ -3338,9 +3338,9 @@ loc_BFC7:
 
 loc_BFD9:
 		les	bx, _resident
-		mov	eax, es:[bx+44h]
+		mov	eax, es:[bx+resident_t.frames]
 		shr	eax, 1
-		cmp	eax, es:[bx+40h]
+		cmp	eax, es:[bx+resident_t.slow_frames]
 		jbe	loc_C0AE
 		push	0C00150h
 		pushd	[dword_124CE]
@@ -3591,7 +3591,7 @@ loc_C3BD:
 loc_C3C2:
 		les	bx, _resident
 		add	bx, cx
-		mov	al, es:[bx+1Dh]
+		mov	al, es:[bx+resident_t.score_last]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -3603,7 +3603,7 @@ loc_C3C2:
 		jg	short loc_C40B
 		les	bx, _resident
 		add	bx, cx
-		mov	al, es:[bx+1Dh]
+		mov	al, es:[bx+resident_t.score_last]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -3717,7 +3717,7 @@ loc_C4AA:
 loc_C4B3:
 		les	bx, _resident
 		add	bx, cx
-		mov	al, es:[bx+1Dh]
+		mov	al, es:[bx+resident_t.score_last]
 		add	al, gb_0_
 		mov	dl, byte_125B6
 		mov	dh, 0
@@ -3731,7 +3731,7 @@ loc_C4D1:
 		or	cx, cx
 		jge	short loc_C4B3
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_EXTRA
+		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jb	short loc_C4EE
 		mov	al, byte_125B6
 		mov	ah, 0
@@ -3743,7 +3743,7 @@ loc_C4D1:
 
 loc_C4EE:
 		les	bx, _resident
-		mov	al, es:[bx+11h]
+		mov	al, es:[bx+resident_t.stage]
 		add	al, gb_1_
 		mov	dl, byte_125B6
 		mov	dh, 0
@@ -4262,7 +4262,7 @@ var_2		= word ptr -2
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"
 		les	bx, _resident
-		cmp	byte ptr es:[bx+11h], 6
+		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jnz	short loc_C87A
 		mov	al, 4
 		jmp	short loc_C882
@@ -4270,12 +4270,12 @@ var_2		= word ptr -2
 
 loc_C87A:
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 
 loc_C882:
 		mov	_hiscore_rank, al
 		les	bx, _resident
-		cmp	byte ptr es:[bx+12h], 31h ; '1'
+		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
 		jnz	short loc_C895
 		mov	ax, 1
 		jmp	short loc_C897
@@ -4299,7 +4299,7 @@ loc_C897:
 		push	word_125B8
 		call	sub_C2AD
 		les	bx, _resident
-		cmp	byte ptr es:[bx+49h], 0
+		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
 		cmp	_hiscore_rank, RANK_EXTRA
 		jnz	short loc_C8D9
@@ -4324,9 +4324,9 @@ loc_C8D9:
 
 loc_C909:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+30h], ES_1CC
+		cmp	es:[bx+resident_t.end_sequence], ES_1CC
 		jz	short loc_C922
-		cmp	byte ptr es:[bx+30h], ES_EXTRA
+		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jz	short loc_C922
 		cmp	_hiscore_rank, RANK_EASY
 		jnz	short loc_C95E
@@ -4337,7 +4337,7 @@ loc_C922:
 		cmp	[bp+var_A], SCOREDAT_CLEARED_BOTH + 1
 		jb	short loc_C944
 		les	bx, _resident
-		cmp	byte ptr es:[bx+19h], 0
+		cmp	es:[bx+resident_t.shottype], SHOTTYPE_A
 		jnz	short loc_C93D
 		mov	al, SCOREDAT_CLEARED_A
 		jmp	short loc_C93F
@@ -4353,7 +4353,7 @@ loc_C93F:
 
 loc_C944:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+19h], 0
+		cmp	es:[bx+resident_t.shottype], SHOTTYPE_A
 		jnz	short loc_C953
 		mov	al, SCOREDAT_CLEARED_A
 		jmp	short loc_C955

@@ -191,43 +191,43 @@ var_4		= word ptr -4
 		mov	word ptr _resident, 0
 		les	bx, _resident
 		mov	al, [bp+var_A]
-		mov	es:[bx+0Fh], al
+		mov	es:[bx+resident_t.rank], al
 		mov	al, [bp+var_9]
-		mov	es:[bx+3Ah], al
+		mov	es:[bx+resident_t.cfg_lives], al
 		mov	al, [bp+var_8]
-		mov	es:[bx+3Bh], al
+		mov	es:[bx+resident_t.cfg_bombs], al
 		mov	al, [bp+var_7]
-		mov	es:[bx+10h], al
+		mov	es:[bx+resident_t.bgm_mode], al
 		mov	al, [bp+var_6]
-		mov	es:[bx+18h], al
+		mov	es:[bx+resident_t.se_mode], al
 		mov	al, [bp+var_5]
-		mov	es:[bx+49h], al
-		cmp	byte ptr es:[bx+3Ah], 6
+		mov	es:[bx+resident_t.turbo_mode], al
+		cmp	es:[bx+resident_t.cfg_lives], 6
 		ja	short loc_A7B5
-		cmp	byte ptr es:[bx+3Ah], 0
+		cmp	es:[bx+resident_t.cfg_lives], 0
 		jnz	short loc_A7BE
 
 loc_A7B5:
 		les	bx, _resident
-		mov	byte ptr es:[bx+3Ah], 3
+		mov	es:[bx+resident_t.cfg_lives], 3
 
 loc_A7BE:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+3Bh], 2
+		cmp	es:[bx+resident_t.cfg_bombs], 2
 		jbe	short loc_A7CE
-		mov	byte ptr es:[bx+3Bh], 2
+		mov	es:[bx+resident_t.cfg_bombs], 2
 
 loc_A7CE:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+10h], 3
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_MODE_COUNT
 		jb	short loc_A7DE
-		mov	byte ptr es:[bx+10h], 0
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 
 loc_A7DE:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+18h], 3
+		cmp	es:[bx+resident_t.se_mode], SND_SE_MODE_COUNT
 		jb	short locret_A7EE
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.se_mode], SND_SE_OFF
 
 locret_A7EE:
 		leave
@@ -257,17 +257,17 @@ var_2		= byte ptr -2
 		push	0
 		call	file_seek
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	[bp+var_8], al
-		mov	al, es:[bx+3Ah]
+		mov	al, es:[bx+resident_t.cfg_lives]
 		mov	[bp+var_7], al
-		mov	al, es:[bx+3Bh]
+		mov	al, es:[bx+resident_t.cfg_bombs]
 		mov	[bp+var_6], al
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	[bp+var_5], al
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	[bp+var_4], al
-		mov	al, es:[bx+49h]
+		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	[bp+var_3], al
 		push	ss
 		lea	ax, [bp+var_8]
@@ -324,17 +324,17 @@ var_1		= byte ptr -1
 		push	0
 		call	file_seek
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	[bp+var_A], al
-		mov	al, es:[bx+3Ah]
+		mov	al, es:[bx+resident_t.cfg_lives]
 		mov	[bp+var_9], al
-		mov	al, es:[bx+3Bh]
+		mov	al, es:[bx+resident_t.cfg_bombs]
 		mov	[bp+var_8], al
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	[bp+var_7], al
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	[bp+var_6], al
-		mov	al, es:[bx+49h]
+		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	[bp+var_5], al
 		mov	al, [bp+var_A]
 		add	al, [bp+var_9]
@@ -362,25 +362,25 @@ start_game	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	byte ptr es:[bx+11h], 0
-		mov	al, es:[bx+3Ah]
-		mov	es:[bx+0Ch], al
-		mov	al, es:[bx+3Bh]
-		mov	es:[bx+0Eh], al
-		mov	byte ptr es:[bx+12h], 30h ; '0'
-		mov	byte ptr es:[bx+13h], 30h ; '0'
+		mov	es:[bx+resident_t.stage], 0
+		mov	al, es:[bx+resident_t.cfg_lives]
+		mov	es:[bx+resident_t.credit_lives], al
+		mov	al, es:[bx+resident_t.cfg_bombs]
+		mov	es:[bx+resident_t.credit_bombs], al
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
+		mov	es:[bx+resident_t.stage_ascii], '0'
 		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A96A
 		les	bx, _resident
-		mov	byte ptr es:[bx+3Eh], 0
+		mov	es:[bx+resident_t.demo_num], 0
 		call	main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
 		call	game_exit
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Ah], 0
+		cmp	es:[bx+resident_t.debug_mode], 0
 		jnz	short loc_A957
 		pushd	0
 		push	ds
@@ -415,16 +415,16 @@ start_extra	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	byte ptr es:[bx+11h], 6
-		mov	byte ptr es:[bx+0Ch], 3
-		mov	byte ptr es:[bx+0Eh], 2
-		mov	byte ptr es:[bx+12h], 30h ; '0'
-		mov	byte ptr es:[bx+13h], 36h ; '6'
+		mov	es:[bx+resident_t.stage], STAGE_EXTRA
+		mov	es:[bx+resident_t.credit_lives], 3
+		mov	es:[bx+resident_t.credit_bombs], 2
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
+		mov	es:[bx+resident_t.stage_ascii], '6'
 		call	playchar_menu
 		or	ax, ax
 		jnz	short loc_A9C7
 		les	bx, _resident
-		mov	byte ptr es:[bx+3Eh], 0
+		mov	es:[bx+resident_t.demo_num], 0
 		call	main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
@@ -452,17 +452,17 @@ start_demo	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	byte ptr es:[bx+11h], 0
-		mov	byte ptr es:[bx+0Ch], 3
-		mov	byte ptr es:[bx+0Eh], 3
-		inc	byte ptr es:[bx+3Eh]
-		cmp	byte ptr es:[bx+3Eh], 4
+		mov	es:[bx+resident_t.stage], 0
+		mov	es:[bx+resident_t.credit_lives], 3
+		mov	es:[bx+resident_t.credit_bombs], 3
+		inc	es:[bx+resident_t.demo_num]
+		cmp	es:[bx+resident_t.demo_num], 4
 		jbe	short loc_A9EF
-		mov	byte ptr es:[bx+3Eh], 1
+		mov	es:[bx+resident_t.demo_num], 1
 
 loc_A9EF:
 		les	bx, _resident
-		mov	al, es:[bx+3Eh]
+		mov	al, es:[bx+resident_t.demo_num]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -473,37 +473,37 @@ loc_A9EF:
 
 loc_AA08:
 		les	bx, _resident
-		mov	byte ptr es:[bx+12h], 30h ; '0'
-		mov	byte ptr es:[bx+13h], 33h ; '3'
-		mov	byte ptr es:[bx+19h], 0
-		mov	byte ptr es:[bx+3Ch], 3
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
+		mov	es:[bx+resident_t.stage_ascii], '3'
+		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
+		mov	es:[bx+resident_t.demo_stage], 3
 		jmp	short loc_AA6E
 ; ---------------------------------------------------------------------------
 
 loc_AA22:
 		les	bx, _resident
-		mov	byte ptr es:[bx+12h], 31h ; '1'
-		mov	byte ptr es:[bx+13h], 30h ; '0'
-		mov	byte ptr es:[bx+19h], 0
-		mov	byte ptr es:[bx+3Ch], 0
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
+		mov	es:[bx+resident_t.stage_ascii], '0'
+		mov	es:[bx+resident_t.shottype], SHOTTYPE_A
+		mov	es:[bx+resident_t.demo_stage], 0
 		jmp	short loc_AA6E
 ; ---------------------------------------------------------------------------
 
 loc_AA3C:
 		les	bx, _resident
-		mov	byte ptr es:[bx+12h], 30h ; '0'
-		mov	byte ptr es:[bx+13h], 32h ; '2'
-		mov	byte ptr es:[bx+19h], 1
-		mov	byte ptr es:[bx+3Ch], 2
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
+		mov	es:[bx+resident_t.stage_ascii], '2'
+		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
+		mov	es:[bx+resident_t.demo_stage], 2
 		jmp	short loc_AA6E
 ; ---------------------------------------------------------------------------
 
 loc_AA56:
 		les	bx, _resident
-		mov	byte ptr es:[bx+12h], 31h ; '1'
-		mov	byte ptr es:[bx+13h], 31h ; '1'
-		mov	byte ptr es:[bx+19h], 1
-		mov	byte ptr es:[bx+3Ch], 1
+		mov	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
+		mov	es:[bx+resident_t.stage_ascii], '1'
+		mov	es:[bx+resident_t.shottype], SHOTTYPE_B
+		mov	es:[bx+resident_t.demo_stage], 1
 
 loc_AA6E:
 		push	1
@@ -563,7 +563,7 @@ loc_AAF3:
 		push	10
 		call	cdg_put_nocolors
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 		add	ax, 16h
 		mov	[bp+var_2], ax
@@ -685,13 +685,13 @@ loc_AC24:
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 224
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 		add	ax, 21
 		push	ax
 		call	cdg_put_nocolors
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 		add	ax, 6
 
@@ -706,7 +706,7 @@ loc_AC5C:
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 240
 		les	bx, _resident
-		mov	al, es:[bx+3Ah]
+		mov	al, es:[bx+resident_t.cfg_lives]
 		mov	ah, 0
 		push	ax
 		call	cdg_put_nocolors
@@ -720,7 +720,7 @@ loc_AC85:
 		call	cdg_put_nocolors
 		push	(320 shl 16) or 256
 		les	bx, _resident
-		mov	al, es:[bx+3Bh]
+		mov	al, es:[bx+resident_t.cfg_bombs]
 		mov	ah, 0
 		push	ax
 		call	cdg_put_nocolors
@@ -733,7 +733,7 @@ loc_ACAE:
 		push	19
 		call	cdg_put_nocolors
 		les	bx, _resident
-		cmp	byte ptr es:[bx+10h], 0
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_ACCB
 		mov	ax, 1Ch
 		jmp	short loc_ACD8
@@ -741,7 +741,7 @@ loc_ACAE:
 
 loc_ACCB:
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		add	ax, 18h
 
@@ -751,7 +751,7 @@ loc_ACD8:
 		push	ax
 		call	cdg_put_nocolors
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		add	ax, 0Ch
 		jmp	loc_AC57
@@ -762,7 +762,7 @@ loc_ACF7:
 		push	20
 		call	cdg_put_nocolors
 		les	bx, _resident
-		cmp	byte ptr es:[bx+18h], 0
+		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jnz	short loc_AD14
 		mov	ax, 1Ch
 		jmp	short loc_AD25
@@ -770,7 +770,7 @@ loc_ACF7:
 
 loc_AD14:
 		les	bx, _resident
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		mov	ax, 1Fh
@@ -783,7 +783,7 @@ loc_AD25:
 		push	ax
 		call	cdg_put_nocolors
 		les	bx, _resident
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		add	ax, 0Fh
 		jmp	loc_AC57
@@ -792,7 +792,7 @@ loc_AD25:
 loc_AD44:
 		push	(272 shl 16) or 304
 		les	bx, _resident
-		mov	al, es:[bx+49h]
+		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	ah, 0
 		mov	dx, 21h	; '!'
 		sub	dx, ax
@@ -800,7 +800,7 @@ loc_AD44:
 		call	cdg_put_nocolors
 		mov	di, 256
 		les	bx, _resident
-		mov	al, es:[bx+49h]
+		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	ah, 0
 		add	ax, 12h
 		jmp	loc_AC57
@@ -1167,18 +1167,18 @@ loc_B0E3:
 
 loc_B0F4:
 		les	bx, _resident
-		mov	byte ptr es:[bx+0Fh], 1
-		mov	byte ptr es:[bx+3Ah], 3
-		mov	byte ptr es:[bx+3Bh], 2
-		mov	byte ptr es:[bx+10h], 2
-		mov	byte ptr es:[bx+18h], 1
-		mov	byte ptr es:[bx+49h], 1
+		mov	es:[bx+resident_t.rank], RANK_NORMAL
+		mov	es:[bx+resident_t.cfg_lives], 3
+		mov	es:[bx+resident_t.cfg_bombs], 2
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
+		mov	es:[bx+resident_t.se_mode], SND_SE_FM
+		mov	es:[bx+resident_t.turbo_mode], 1
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
@@ -1211,45 +1211,45 @@ loc_B178:
 
 loc_B18C:
 		les	bx, _resident
-		inc	byte ptr es:[bx+0Fh]
-		cmp	byte ptr es:[bx+0Fh], 3
+		inc	es:[bx+resident_t.rank]
+		cmp	es:[bx+resident_t.rank], RANK_LUNATIC
 		jbe	loc_B246
-		mov	byte ptr es:[bx+0Fh], 0
+		mov	es:[bx+resident_t.rank], RANK_EASY
 		jmp	loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B1A5:
 		les	bx, _resident
-		inc	byte ptr es:[bx+3Ah]
-		cmp	byte ptr es:[bx+3Ah], 6
+		inc	es:[bx+resident_t.cfg_lives]
+		cmp	es:[bx+resident_t.cfg_lives], 6
 		jbe	loc_B246
-		mov	byte ptr es:[bx+3Ah], 1
+		mov	es:[bx+resident_t.cfg_lives], 1
 		jmp	loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B1BE:
 		les	bx, _resident
-		inc	byte ptr es:[bx+3Bh]
-		cmp	byte ptr es:[bx+3Bh], 2
+		inc	es:[bx+resident_t.cfg_bombs]
+		cmp	es:[bx+resident_t.cfg_bombs], 2
 		jbe	short loc_B246
-		mov	byte ptr es:[bx+3Bh], 0
+		mov	es:[bx+resident_t.cfg_bombs], 0
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B1D4:
 		les	bx, _resident
-		inc	byte ptr es:[bx+10h]
-		cmp	byte ptr es:[bx+10h], 3
+		inc	es:[bx+resident_t.bgm_mode]
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_MODE_COUNT
 		jb	short loc_B1E8
-		mov	byte ptr es:[bx+10h], 0
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 
 loc_B1E8:
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
@@ -1260,23 +1260,23 @@ loc_B1E8:
 
 loc_B21C:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+18h], 0
+		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jnz	short loc_B22E
-		mov	byte ptr es:[bx+18h], 2
+		mov	es:[bx+resident_t.se_mode], SND_SE_BEEP
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B22E:
 		les	bx, _resident
-		dec	byte ptr es:[bx+18h]
+		dec	es:[bx+resident_t.se_mode]
 		jmp	short loc_B246
 ; ---------------------------------------------------------------------------
 
 loc_B238:
 		les	bx, _resident
 		mov	al, 1
-		sub	al, es:[bx+49h]
-		mov	es:[bx+49h], al
+		sub	al, es:[bx+resident_t.turbo_mode]
+		mov	es:[bx+resident_t.turbo_mode], al
 
 loc_B246:
 		mov	al, _menu_sel
@@ -1298,59 +1298,59 @@ loc_B250:
 
 loc_B26D:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+0Fh], 0
+		cmp	es:[bx+resident_t.rank], RANK_EASY
 		jnz	short loc_B27D
-		mov	byte ptr es:[bx+0Fh], 4
+		mov	es:[bx+resident_t.rank], RANK_EXTRA
 
 loc_B27D:
 		les	bx, _resident
-		dec	byte ptr es:[bx+0Fh]
+		dec	es:[bx+resident_t.rank]
 		jmp	loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B288:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+3Ah], 1
+		cmp	es:[bx+resident_t.cfg_lives], 1
 		jnz	short loc_B298
-		mov	byte ptr es:[bx+3Ah], 7
+		mov	es:[bx+resident_t.cfg_lives], 7
 
 loc_B298:
 		les	bx, _resident
-		dec	byte ptr es:[bx+3Ah]
+		dec	es:[bx+resident_t.cfg_lives]
 		jmp	loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B2A3:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+3Bh], 0
+		cmp	es:[bx+resident_t.cfg_bombs], 0
 		jnz	short loc_B2B3
-		mov	byte ptr es:[bx+3Bh], 3
+		mov	es:[bx+resident_t.cfg_bombs], 3
 
 loc_B2B3:
 		les	bx, _resident
-		dec	byte ptr es:[bx+3Bh]
+		dec	es:[bx+resident_t.cfg_bombs]
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B2BD:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+10h], 0
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_B2CF
-		mov	byte ptr es:[bx+10h], 2
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
 		jmp	short loc_B2D7
 ; ---------------------------------------------------------------------------
 
 loc_B2CF:
 		les	bx, _resident
-		dec	byte ptr es:[bx+10h]
+		dec	es:[bx+resident_t.bgm_mode]
 
 loc_B2D7:
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
@@ -1361,18 +1361,18 @@ loc_B2D7:
 
 loc_B30B:
 		les	bx, _resident
-		inc	byte ptr es:[bx+18h]
-		cmp	byte ptr es:[bx+18h], 3
+		inc	es:[bx+resident_t.se_mode]
+		cmp	es:[bx+resident_t.se_mode], SND_SE_MODE_COUNT
 		jb	short loc_B32F
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jmp	short loc_B32F
 ; ---------------------------------------------------------------------------
 
 loc_B321:
 		les	bx, _resident
 		mov	al, 1
-		sub	al, es:[bx+49h]
-		mov	es:[bx+49h], al
+		sub	al, es:[bx+resident_t.turbo_mode]
+		mov	es:[bx+resident_t.turbo_mode], al
 
 loc_B32F:
 		mov	al, _menu_sel
@@ -1448,32 +1448,32 @@ loc_B3AB:
 		call	gaiji_entry_bfnt
 		call	cfg_load
 		les	bx, _resident
-		cmp	byte ptr es:[bx+0Fh], 0FFh
+		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
 		jnz	short loc_B3D3
 		call	sub_B9CE
 		les	bx, _resident
-		mov	byte ptr es:[bx+0Fh], 1
+		mov	es:[bx+resident_t.rank], RANK_NORMAL
 
 loc_B3D3:
 		les	bx, _resident
-		mov	al, es:[bx+10h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+18h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
 		call	snd_load pascal, ds, offset aMiko, SND_LOAD_SE
 		les	bx, _resident
-		cmp	byte ptr es:[bx+48h], 0
+		cmp	es:[bx+resident_t.zunsoft_shown], 0
 		jnz	short loc_B40D
 		call	zunsoft
 		les	bx, _resident
-		mov	byte ptr es:[bx+48h], 1
+		mov	es:[bx+resident_t.zunsoft_shown], 1
 
 loc_B40D:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+3Eh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_B420
 		kajacall	KAJA_SONG_STOP
 
@@ -1521,7 +1521,7 @@ loc_B469:
 
 loc_B46B:
 		les	bx, _resident
-		inc	dword ptr es:[bx+14h]
+		inc	es:[bx+resident_t.rand]
 		push	1
 		call	frame_delay
 
@@ -1635,7 +1635,7 @@ loc_B87A:
 		call	window_rollup_animate pascal, ( 32 shl 16) or 128
 		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+10h], al
+		mov	es:[bx+resident_t.bgm_mode], al
 		leave
 		retn
 sub_B794	endp
@@ -1735,7 +1735,7 @@ loc_B997:
 		call	window_rollup_animate pascal, ( 32 shl 16) or 128
 		les	bx, _resident
 		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+18h], al
+		mov	es:[bx+resident_t.se_mode], al
 		leave
 		retn
 sub_B8B1	endp
@@ -2504,7 +2504,7 @@ sub_CA94	proc near
 		call	palette_black_out
 		les	bx, _resident
 		assume es:nothing
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	scoredat_load
 		call	pi_slot_load pascal, 0, ds, offset aHi01_pi
@@ -2646,7 +2646,7 @@ loc_CC6F:
 
 loc_CC78:
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
@@ -2765,7 +2765,7 @@ loc_CDC4:
 		freePISlotLarge	4
 		freePISlotLarge	5
 		les	bx, _resident
-		cmp	byte ptr es:[bx+3Eh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_CE50
 		call	snd_load pascal, ds, offset aOp_1, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -3478,15 +3478,15 @@ arg_0		= word ptr  4
 		push	di
 		mov	di, [bp+arg_0]
 		les	bx, _resident
-		cmp	byte ptr es:[bx+11h], 6
+		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jnz	short loc_D47E
-		mov	ax, 4
+		mov	ax, RANK_EXTRA
 		jmp	short loc_D488
 ; ---------------------------------------------------------------------------
 
 loc_D47E:
 		les	bx, _resident
-		mov	al, es:[bx+0Fh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 
 loc_D488:
@@ -3766,7 +3766,7 @@ var_2		= byte ptr -2
 		push	si
 		push	di
 		les	bx, _resident
-		cmp	byte ptr es:[bx+11h], 6
+		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jnz	short loc_D78D
 		xor	di, di
 		jmp	short loc_D786
@@ -4036,10 +4036,10 @@ loc_D986:
 		call	snd_se_update
 		les	bx, _resident
 		mov	al, byte_132B9
-		mov	es:[bx+19h], al
+		mov	es:[bx+resident_t.shottype], al
 		mov	al, playchar_132B8
 		add	al, '0'
-		mov	es:[bx+12h], al
+		mov	es:[bx+resident_t.playchar_ascii], al
 		push	1
 		call	palette_black_out
 		call	sub_D1F3

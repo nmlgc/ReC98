@@ -4,7 +4,7 @@ bb_playchar_load	proc near
 	push	bp
 	mov	bp, sp
 	les	bx, _resident
-	mov	al, es:[bx+12h]
+	mov	al, es:[bx+resident_t.playchar_ascii]
 	les	bx, _bb_playchar_bb_fn
 	mov	es:[bx+2], al
 	les	bx, _resident

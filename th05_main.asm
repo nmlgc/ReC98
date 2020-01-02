@@ -343,15 +343,15 @@ _envp		= dword	ptr  0Ch
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
 		call	game_init_main pascal, ds, offset aKAIKIDAN2_DAT
 		les	bx, _resident
-		mov	eax, es:[bx+28h]
+		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
 		call	EmsSetup
 		call	text_clear
 		les	bx, _resident
-		mov	al, es:[bx+12h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		push	ax
-		mov	al, es:[bx+15h]
+		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
 		push	ax
 		call	snd_determine_modes
@@ -559,15 +559,15 @@ sub_B063	proc near
 		mov	bp, sp
 		push	si
 		les	bx, _resident
-		mov	word ptr es:[bx+3Ah], 0
-		mov	byte ptr es:[bx+1Bh], 0
-		mov	byte ptr es:[bx+1Ch], 0
-		mov	byte ptr es:[bx+1Ah], ES_INGAME
-		mov	al, es:[bx+14h]
+		mov	es:[bx+resident_t.graze], 0
+		mov	es:[bx+resident_t.miss_count], 0
+		mov	es:[bx+resident_t.bombs_used], 0
+		mov	es:[bx+resident_t.end_sequence], ES_INGAME
+		mov	al, es:[bx+resident_t.playchar]
 		mov	_playchar, al
-		mov	al, es:[bx+0Eh]
+		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	bombs, al
-		mov	al, es:[bx+0Dh]
+		mov	al, es:[bx+resident_t.credit_lives]
 		mov	lives, al
 		xor	si, si
 		jmp	short loc_B09F
@@ -624,9 +624,9 @@ loc_B112:
 		add	ax, offset SHOT_FUNCS
 		mov	playchar_shot_funcs, ax
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B145
-		cmp	byte ptr es:[bx+1Fh], 5
+		cmp	es:[bx+resident_t.demo_num], 5
 		jnb	short loc_B13E
 		mov	_playperf, 40
 		mov	_rank, RANK_LUNATIC
@@ -647,16 +647,16 @@ loc_B151:
 		mov	_rank, RANK_EXTRA
 
 loc_B156:
-		mov	byte_25FF2, 1
+		mov	_turbo_mode, 1
 		jmp	short loc_B16F
 ; ---------------------------------------------------------------------------
 
 loc_B15D:
 		les	bx, _resident
-		mov	al, es:[bx+11h]
+		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
-		mov	al, es:[bx+16h]
-		mov	byte_25FF2, al
+		mov	al, es:[bx+resident_t.turbo_mode]
+		mov	_turbo_mode, al
 
 loc_B16F:
 		call	sub_10398
@@ -743,7 +743,7 @@ sub_B237	proc near
 		mov	word_20A84, 0
 		mov	vsync_Count2, 0
 		les	bx, _resident
-		mov	al, es:[bx+13h]
+		mov	al, es:[bx+resident_t.stage]
 		mov	stage_id, al
 		cmp	stage_id, 0
 		jz	short loc_B260
@@ -756,27 +756,27 @@ loc_B260:
 		mov	fp_2300E, offset nullfunc_near
 		call	sub_B063
 		les	bx, _resident
-		cmp	byte ptr es:[bx+17h], 0
+		cmp	es:[bx+resident_t.debug_mode], 0
 		jz	short loc_B2A5
-		mov	al, es:[bx+18h]
-		mov	es:[bx+13h], al
-		mov	al, es:[bx+13h]
+		mov	al, es:[bx+resident_t.debug_stage]
+		mov	es:[bx+resident_t.stage], al
+		mov	al, es:[bx+resident_t.stage]
 		mov	stage_id, al
-		mov	al, es:[bx+19h]
+		mov	al, es:[bx+resident_t.debug_power]
 		mov	power, al
-		mov	byte ptr es:[bx+17h], 0
+		mov	es:[bx+resident_t.debug_mode], 0
 		mov	byte_20A71, 1
 
 loc_B2A5:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B2DD
 		call	demo_load
 		les	bx, _resident
-		mov	al, es:[bx+1Dh]
-		mov	es:[bx+13h], al
+		mov	al, es:[bx+resident_t.demo_stage]
+		mov	es:[bx+resident_t.stage], al
 		mov	stage_id, al
-		cmp	byte ptr es:[bx+1Fh], 5
+		cmp	es:[bx+resident_t.demo_num], 5
 		jz	short loc_B2CE
 		mov	power, 128
 
@@ -1013,9 +1013,9 @@ loc_B4BB:
 		graph_showpage 0
 		call	tiles_render_all
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B506
-		cmp	byte ptr es:[bx+1Fh], 5
+		cmp	es:[bx+resident_t.demo_num], 5
 		jnz	short loc_B52C
 
 loc_B506:
@@ -1144,7 +1144,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 4
+		cmp	es:[bx+resident_t.demo_num], 4
 		ja	short @@demo_extra
 		mov	ax, DEMO_N * 2
 		jmp	short loc_B76F
@@ -1161,7 +1161,7 @@ loc_B76F:
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 22Dh
 		les	bx, _resident
-		mov	al, es:[bx+1Fh]
+		mov	al, es:[bx+resident_t.demo_num]
 		add	al, 2Fh	; '/'
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
@@ -1186,7 +1186,7 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 4
+		cmp	es:[bx+resident_t.demo_num], 4
 		ja	short @@demo_extra
 		mov	ax, DEMO_N
 		jmp	short loc_B7CC
@@ -1211,7 +1211,7 @@ loc_B7CC:
 		mov	al, es:[bx]
 		mov	_shiftkey, al
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 4
+		cmp	es:[bx+resident_t.demo_num], 4
 		ja	short locret_B825
 		cmp	_stage_frame, DEMO_N - 4
 		jb	short locret_B825
@@ -1239,7 +1239,7 @@ EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	al, es:[bx+13h]
+		mov	al, es:[bx+resident_t.stage]
 		mov	stage_id, al
 		cmp	stage_id, 6
 		jnz	short @@game_is_not_extra
@@ -1249,7 +1249,7 @@ EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 
 @@game_is_not_extra:
 		les	bx, _resident
-		mov	al, es:[bx+11h]
+		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
 
 loc_B84E:
@@ -1301,8 +1301,8 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		push	si
 		push	di
 		les	bx, _resident
-		mov	al, es:[bx+14h]
-		add	al, 30h	; '0'
+		mov	al, es:[bx+resident_t.playchar]
+		add	al, '0'
 		les	bx, bbname
 		mov	es:[bx+2], al
 		call	cdg_load_all_noalpha pascal, 0, word ptr bbname+2, bx
@@ -2512,7 +2512,7 @@ loc_C4BC:
 		mov	byte_2264E, 1
 		les	bx, _resident
 		assume es:nothing
-		inc	byte ptr es:[bx+1Ch]
+		inc	es:[bx+resident_t.bombs_used]
 		push	1
 		nopcall	_playperf_lower
 
@@ -6320,13 +6320,13 @@ end_game	proc far
 		jz	short loc_E45D
 		les	bx, _resident
 		assume es:nothing
-		mov	byte ptr es:[bx+1Ah], ES_CONTINUED
+		mov	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jmp	short loc_E466
 ; ---------------------------------------------------------------------------
 
 loc_E45D:
 		les	bx, _resident
-		mov	byte ptr es:[bx+1Ah], ES_1CC
+		mov	es:[bx+resident_t.end_sequence], ES_1CC
 
 loc_E466:
 		kajacall	KAJA_SONG_FADE, 4
@@ -6348,7 +6348,7 @@ end_extra	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		mov	byte ptr es:[bx+1Ah], ES_EXTRA
+		mov	es:[bx+resident_t.end_sequence], ES_EXTRA
 		kajacall	KAJA_SONG_FADE, 4
 		push	10h
 		call	palette_black_out
@@ -6737,7 +6737,7 @@ sub_E84A	endp
 
 
 sub_E8F2	proc near
-		cmp	byte_25FF2, 0
+		cmp	_turbo_mode, 0
 		jz	short locret_E8FC
 		call	sub_E84A
 
@@ -7685,7 +7685,7 @@ sub_F2B4	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
-		cmp	byte ptr es:[bx+1Fh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_F333
 		cmp	byte_221EC, 0
 		jnz	short loc_F318
@@ -7973,7 +7973,7 @@ loc_F6EC:
 		les	bx, _resident
 		assume es:nothing
 		add	bx, si
-		mov	es:[bx+20h], al
+		mov	es:[bx+resident_t.score_last], al
 		inc	si
 
 loc_F6FB:
@@ -8007,23 +8007,23 @@ _arg0		= dword	ptr  6
 loc_F71C:
 		les	bx, _resident
 		mov	ax, _total_std_frames
-		mov	es:[bx+2Ch], ax
+		mov	es:[bx+resident_t.std_frames], ax
 		mov	ax, _items_spawned
-		mov	es:[bx+2Eh], ax
+		mov	es:[bx+resident_t.items_spawned], ax
 		mov	ax, _items_collected
-		mov	es:[bx+30h], ax
+		mov	es:[bx+resident_t.items_collected], ax
 		mov	ax, _total_point_items_collected
-		mov	es:[bx+32h], ax
+		mov	es:[bx+resident_t.point_items_collected], ax
 		mov	ax, _total_max_valued_point_items_collected
-		mov	es:[bx+34h], ax
-		mov	ax, word_221C2
-		mov	es:[bx+36h], ax
-		mov	ax, word_221C4
-		mov	es:[bx+38h], ax
+		mov	es:[bx+resident_t.max_valued_point_items_collected], ax
+		mov	ax, _enemies_gone
+		mov	es:[bx+resident_t.enemies_gone], ax
+		mov	ax, _enemies_killed
+		mov	es:[bx+resident_t.enemies_killed], ax
 		mov	eax, _total_slow_frames
-		mov	es:[bx+3Ch], eax
+		mov	es:[bx+resident_t.slow_frames], eax
 		mov	eax, _total_frames
-		mov	es:[bx+40h], eax
+		mov	es:[bx+resident_t.frames], eax
 		call	bb_txt_free
 		call	cdg_freeall
 		call	bb_stage_free
@@ -8383,7 +8383,7 @@ loc_FA78:
 loc_FA7D:
 		les	bx, _resident
 		assume es:nothing
-		mov	byte ptr es:[bx+1Ah], ES_SCORE
+		mov	es:[bx+resident_t.end_sequence], ES_SCORE
 		kajacall	KAJA_SONG_FADE, 4
 		push	4
 		call	palette_black_out
@@ -8511,9 +8511,9 @@ loc_FBB5:
 		mov	power, 1
 		mov	dream, 1
 		les	bx, _resident
-		mov	al, es:[bx+0Eh]
+		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	bombs, al
-		mov	al, es:[bx+0Dh]
+		mov	al, es:[bx+resident_t.credit_lives]
 		mov	lives, al
 		nopcall	sub_E4FC
 		nopcall	sub_10407
@@ -9001,7 +9001,7 @@ loc_103A4:
 		les	bx, _resident
 		assume es:nothing
 		add	bx, si
-		mov	al, es:[bx+44h]
+		mov	al, es:[bx+resident_t.score_highest]
 		cmp	al, _score_lebcd[si]
 		jnb	short loc_103BE
 		mov	dx, 2
@@ -9011,7 +9011,7 @@ loc_103A4:
 loc_103BE:
 		les	bx, _resident
 		add	bx, si
-		mov	al, es:[bx+44h]
+		mov	al, es:[bx+resident_t.score_highest]
 		cmp	al, _score_lebcd[si]
 		jbe	short loc_103D0
 		xor	dx, dx
@@ -9022,7 +9022,7 @@ loc_103D0:
 		mov	al, _score_lebcd[si]
 		les	bx, _resident
 		add	bx, si
-		mov	es:[bx+44h], al
+		mov	es:[bx+resident_t.score_highest], al
 
 loc_103E3:
 		mov	_score_lebcd[si], 0
@@ -11691,9 +11691,9 @@ var_1		= byte ptr -1
 		call	sub_118D1
 		les	bx, _resident
 		assume es:nothing
-		cmp	byte ptr es:[bx+1Fh], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_11936
-		cmp	byte ptr es:[bx+1Fh], 5
+		cmp	es:[bx+resident_t.demo_num], 5
 		jnz	short loc_1193E
 
 loc_11936:
@@ -12267,7 +12267,7 @@ loc_12083:
 		push	4
 		nopcall	_playperf_lower
 		les	bx, _resident
-		inc	byte ptr es:[bx+1Bh]
+		inc	es:[bx+resident_t.miss_count]
 
 loc_12092:
 		cmp	dream, 2
@@ -12323,7 +12323,7 @@ loc_120F0:
 		dec	lives
 		nopcall	sub_10407
 		les	bx, _resident
-		mov	al, es:[bx+0Eh]
+		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	bombs, al
 		nopcall	sub_104BB
 		mov	_bullet_clear_time, 32
@@ -13235,7 +13235,7 @@ loc_15317:
 ; ---------------------------------------------------------------------------
 
 loc_15319:
-		inc	word_221C2
+		inc	_enemies_gone
 		stc
 		retn
 sub_152F2	endp
@@ -15176,8 +15176,8 @@ loc_1618C:
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 7)
 		nopcall	sparks_add_random
-		inc	word_221C2
-		inc	word_221C4
+		inc	_enemies_gone
+		inc	_enemies_killed
 		jmp	loc_1624D
 ; ---------------------------------------------------------------------------
 
@@ -15380,7 +15380,7 @@ arg_0		= dword	ptr  4
 
 loc_1644D:
 		les	bx, _resident
-		mov	al, es:[bx+0Dh]
+		mov	al, es:[bx+resident_t.credit_lives]
 		mov	ah, 0
 		cmp	ax, 4
 		jz	short loc_1647C
@@ -15502,7 +15502,7 @@ var_4		= dword	ptr -4
 		enter	6, 0
 		push	si
 		les	bx, _resident
-		mov	al, es:[bx+1Bh]
+		mov	al, es:[bx+resident_t.miss_count]
 		cmp	al, byte_22274
 		jnz	short loc_16528
 		mov	ax, 1
@@ -15515,9 +15515,9 @@ loc_16528:
 loc_1652A:
 		mov	[bp+var_5], al
 		les	bx, _resident
-		mov	al, es:[bx+1Bh]
+		mov	al, es:[bx+resident_t.miss_count]
 		mov	byte_22274, al
-		mov	al, es:[bx+1Ch]
+		mov	al, es:[bx+resident_t.bombs_used]
 		cmp	al, byte_22275
 		jnz	short loc_1654D
 		cmp	[bp+var_5], 0
@@ -15532,7 +15532,7 @@ loc_1654D:
 loc_1654F:
 		mov	[bp+var_6], al
 		les	bx, _resident
-		mov	al, es:[bx+1Ch]
+		mov	al, es:[bx+resident_t.bombs_used]
 		mov	byte_22275, al
 		mov	PaletteTone, 60
 		call	far ptr	palette_show
@@ -15678,7 +15678,7 @@ var_4		= dword	ptr -4
 		enter	0Ah, 0
 		push	si
 		les	bx, _resident
-		mov	al, es:[bx+1Bh]
+		mov	al, es:[bx+resident_t.miss_count]
 		cmp	al, byte_22274
 		jnz	short loc_16756
 		mov	ax, 1
@@ -15691,9 +15691,9 @@ loc_16756:
 loc_16758:
 		mov	[bp+var_9], al
 		les	bx, _resident
-		mov	al, es:[bx+1Bh]
+		mov	al, es:[bx+resident_t.miss_count]
 		mov	byte_22274, al
-		mov	al, es:[bx+1Ch]
+		mov	al, es:[bx+resident_t.bombs_used]
 		cmp	al, byte_22275
 		jnz	short loc_1677B
 		cmp	[bp+var_9], 0
@@ -15708,7 +15708,7 @@ loc_1677B:
 loc_1677D:
 		mov	[bp+var_A], al
 		les	bx, _resident
-		mov	al, es:[bx+1Ch]
+		mov	al, es:[bx+resident_t.bombs_used]
 		mov	byte_22275, al
 		mov	PaletteTone, 60
 		call	far ptr	palette_show
@@ -18260,7 +18260,7 @@ loc_17E74:
 loc_17E78:
 		cmp	di, 190h
 		jl	loc_17C2E
-		cmp	byte_25FF2, 0
+		cmp	_turbo_mode, 0
 		jnz	loc_17FB7
 		mov	byte_25FF8, 0
 		mov	di, 2Ah	; '*'
@@ -32207,7 +32207,7 @@ loc_1FC95:
 		les	bx, _resident
 		assume es:nothing
 		mov	ax, _stage_graze
-		add	es:[bx+3Ah], ax
+		add	es:[bx+resident_t.graze], ax
 		cmp	stage_id, 5
 		jz	short loc_1FCD1
 		call	sub_F2B4
@@ -32244,7 +32244,7 @@ loc_1FCEE:
 		shl	dx, 3
 		les	bx, _resident
 		add	bx, dx
-		mov	es:[bx+si+4Ch],	al
+		mov	es:[bx+si+resident_t.stage_score], al
 		inc	si
 
 loc_1FD06:
@@ -32273,7 +32273,7 @@ loc_1FD35:
 		cmp	_boss_phase_frame, 488
 		jnz	short loc_1FD51
 		les	bx, _resident
-		inc	byte ptr es:[bx+13h]
+		inc	es:[bx+resident_t.stage]
 		mov	byte_25FE8, 2
 		push	1
 		call	frame_delay
@@ -32813,8 +32813,8 @@ aGENSOU_SCR	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 byte_221C0	db 0
 		db 0
-word_221C2	dw 0
-word_221C4	dw 0
+_enemies_gone	dw 0
+_enemies_killed	dw 0
 include th04/frames[data].asm
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
@@ -33928,7 +33928,7 @@ include th04/playperf[bss].asm
 public _playchar
 _playchar	db ?
 include th04/ems[bss].asm
-byte_25FF2	db ?
+_turbo_mode	db ?
 		db ?
 include th02/demo[bss].asm
 byte_25FF8	db ?

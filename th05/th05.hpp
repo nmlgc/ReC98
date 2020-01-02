@@ -5,6 +5,7 @@
 
 #include "ReC98.h"
 #include "th04/shared.hpp"
+#include "th05/resident.hpp"
 
 /// Formats
 /// -------

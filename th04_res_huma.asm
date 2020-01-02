@@ -266,7 +266,7 @@ loc_4CE:
 		cmp	byte_15FE, 0
 		jz	short loc_4F5
 		les	bx, [bp+var_C]
-		mov	byte ptr es:[bx+1Ah], 1
+		mov	es:[bx+resident_t.debug_mode], 1
 
 loc_4F5:
 		xor	ax, ax
