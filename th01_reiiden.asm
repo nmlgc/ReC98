@@ -1217,7 +1217,7 @@ loc_BD43:
 
 loc_BD75:
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		nopcall	sub_C433
 		add	sp, 4
 		call	sub_EC80
@@ -1378,7 +1378,7 @@ loc_BF1C:
 		mov	bx, si
 		imul	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, [bx+6F0h]
+		mov	al, _z_Palettes[bx]
 		mov	bx, si
 		imul	bx, 3
 		add	bx, [bp+var_2]
@@ -1406,7 +1406,7 @@ loc_BF50:
 		mov	bx, si
 		imul	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, [bx+6F0h]
+		mov	al, _z_Palettes[bx]
 		add	al, byte ptr [bp+var_2]
 
 loc_BF5F:
@@ -2556,7 +2556,7 @@ loc_C8D0:
 loc_C8D9:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		imul	[bp+arg_0]
 		mov	bx, 64h	; 'd'
@@ -2564,27 +2564,27 @@ loc_C8D9:
 		idiv	bx
 		mov	bx, si
 		imul	bx, 3
-		mov	[bx+di+6F0h], al
+		mov	_z_Palettes[bx+di], al
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		or	ax, ax
 		jge	short loc_C90D
 		mov	bx, si
 		imul	bx, 3
-		mov	byte ptr [bx+di+6F0h], 0
+		mov	byte ptr _z_Palettes[bx+di], 0
 
 loc_C90D:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		cmp	ax, 0Fh
 		jle	short loc_C926
 		mov	bx, si
 		imul	bx, 3
-		mov	byte ptr [bx+di+6F0h], 0Fh
+		mov	byte ptr _z_Palettes[bx+di], 0Fh
 
 loc_C926:
 		inc	di
@@ -2600,7 +2600,7 @@ loc_C92D:
 		cmp	si, 10h
 		jl	short loc_C8D0
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 		pop	di
@@ -5539,7 +5539,7 @@ inregs		= REGS ptr -10h
 		out	dx, al		; PC-98	GDC (6a):
 					;
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		nopcall	sub_EB10
 		push	0
 		nopcall	_graph_accesspage_func
@@ -5856,15 +5856,15 @@ loc_EBD2:
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_2]
-		mov	[bx+6F0h], al
+		mov	_z_Palettes[bx].r, al
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_4]
-		mov	[bx+6F1h], al
+		mov	_z_Palettes[bx].g, al
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_6]
-		mov	[bx+6F2h], al
+		mov	_z_Palettes[bx].b, al
 		push	[bp+arg_6]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
@@ -6113,7 +6113,7 @@ loc_EDB4:
 		mov	al, ss:[bx]
 		mov	bx, si
 		imul	bx, 3
-		cmp	al, [bx+di+6F0h]
+		cmp	al, _z_Palettes[bx+di]
 		jge	short loc_EDDD
 		mov	bx, si
 		imul	bx, 3
@@ -6188,7 +6188,7 @@ var_2		= word ptr -2
 		push	di
 		push	30h ; '0'       ; n
 		push	ds
-		push	offset unk_35090 ; src
+		push	offset _z_Palettes ; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
@@ -6346,7 +6346,7 @@ loc_EF25:
 		mov	al, ss:[bx]
 		mov	bx, si
 		imul	bx, 3
-		cmp	al, [bx+di+6F0h]
+		cmp	al, _z_Palettes[bx+di]
 		jle	short loc_EF4E
 		mov	bx, si
 		imul	bx, 3
@@ -6421,7 +6421,7 @@ var_2		= word ptr -2
 		push	di
 		push	30h ; '0'       ; n
 		push	ds
-		push	offset unk_35090 ; src
+		push	offset _z_Palettes ; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
@@ -6521,17 +6521,17 @@ sub_F047	proc far
 loc_F04F:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F2h]
+		mov	al, _z_Palettes[bx].b
 		cbw
 		push	ax
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F1h]
+		mov	al, _z_Palettes[bx].g
 		cbw
 		push	ax
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F0h]
+		mov	al, _z_Palettes[bx].r
 		cbw
 		push	ax
 		push	si
@@ -8563,7 +8563,7 @@ loc_100B5:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6F0h]
+		mov	al, _z_Palettes[si].r
 		mov	ss:[bx], al
 		mov	bx, di
 		imul	bx, 3
@@ -8571,7 +8571,7 @@ loc_100B5:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6F1h]
+		mov	al, _z_Palettes[si].g
 		mov	ss:[bx], al
 		mov	bx, di
 		imul	bx, 3
@@ -8579,7 +8579,7 @@ loc_100B5:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6F2h]
+		mov	al, _z_Palettes[si].b
 
 loc_100F4:
 		mov	ss:[bx], al
@@ -8613,7 +8613,7 @@ loc_10118:
 		mov	bx, [bp+var_2]
 		imul	bx, 3
 		add	bx, [bp+var_4]
-		cmp	al, [bx+6F0h]
+		cmp	al, _z_Palettes[bx]
 		jz	short loc_1017D
 		mov	bx, [bp+var_2]
 		imul	bx, 3
@@ -8624,14 +8624,14 @@ loc_10118:
 		mov	bx, [bp+var_2]
 		imul	bx, 3
 		add	bx, [bp+var_4]
-		cmp	al, [bx+6F0h]
+		cmp	al, _z_Palettes[bx]
 		jge	short loc_1015C
 		mov	al, 1
 		jmp	short loc_1015E
 ; ---------------------------------------------------------------------------
 
 loc_1015C:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_1015E:
 		mov	bx, [bp+var_2]
@@ -8867,17 +8867,17 @@ var_4		= dword	ptr -4
 loc_102D7:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F1h]
+		mov	al, _z_Palettes[bx].g
 		les	bx, [bp+var_4]
 		mov	es:[bx], al
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F0h]
+		mov	al, _z_Palettes[bx].r
 		mov	bx, word ptr [bp+var_4]
 		mov	es:[bx+1], al
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6F2h]
+		mov	al, _z_Palettes[bx].b
 		mov	bx, word ptr [bp+var_4]
 		mov	es:[bx+2], al
 		add	word ptr [bp+var_4], 3
@@ -11814,9 +11814,9 @@ arg_0		= word ptr  6
 		push	bp
 		mov	bp, sp
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		push	[bp+arg_0]
 		nopcall	sub_11A94
 		add	sp, 0Ah
@@ -12589,13 +12589,13 @@ loc_12684:
 loc_12688:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		cmp	ax, 0Fh
 		jge	short loc_126A0
 		mov	bx, si
 		imul	bx, 3
-		inc	byte ptr [bx+di+6F0h]
+		inc	byte ptr _z_Palettes[bx+di]
 
 loc_126A0:
 		inc	di
@@ -12609,7 +12609,7 @@ loc_126A7:
 		cmp	si, 10h
 		jl	short loc_12684
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 
@@ -12634,7 +12634,7 @@ loc_126CC:
 loc_126D0:
 		mov	bx, si
 		imul	bx, 3
-		mov	byte ptr [bx+di+6F0h], 0Fh
+		mov	byte ptr _z_Palettes[bx+di], 0Fh
 		inc	di
 
 loc_126DB:
@@ -12646,7 +12646,7 @@ loc_126E1:
 		cmp	si, 10h
 		jl	short loc_126CC
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		push	1
 		call	_graph_accesspage_func
@@ -12679,14 +12679,14 @@ loc_1272D:
 loc_12731:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, 3
 		cmp	al, [bx+di+5414h]
 		jle	short loc_12750
 		mov	bx, si
 		imul	bx, 3
-		dec	byte ptr [bx+di+6F0h]
+		dec	byte ptr _z_Palettes[bx+di]
 		jmp	short loc_12753
 ; ---------------------------------------------------------------------------
 
@@ -12705,7 +12705,7 @@ loc_1275A:
 		cmp	si, 10h
 		jl	short loc_1272D
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 
@@ -12731,17 +12731,17 @@ loc_1277F:
 loc_12783:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		or	ax, ax
 		jle	short loc_127A5
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
-		add	al, 0FCh
+		mov	al, _z_Palettes[bx+di]
+		add	al, -4
 		mov	bx, si
 		imul	bx, 3
-		mov	[bx+di+6F0h], al
+		mov	_z_Palettes[bx+di], al
 
 loc_127A5:
 		inc	di
@@ -12754,11 +12754,11 @@ loc_127A6:
 loc_127AC:
 		cmp	si, 10h
 		jl	short loc_1277F
-		mov	byte_350A5, 0Fh
-		mov	byte_350A6, 0Fh
-		mov	byte_350A7, 0Fh
+		mov	_z_Palettes[7 * 3].r, 0Fh
+		mov	_z_Palettes[7 * 3].g, 0Fh
+		mov	_z_Palettes[7 * 3].b, 0Fh
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		push	1
 		call	_graph_accesspage_func
@@ -13010,13 +13010,13 @@ loc_12AA5:
 loc_12AA9:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		cbw
 		cmp	ax, 0Fh
 		jge	short loc_12AC1
 		mov	bx, si
 		imul	bx, 3
-		inc	byte ptr [bx+di+6F0h]
+		inc	byte ptr _z_Palettes[bx+di]
 
 loc_12AC1:
 		inc	di
@@ -13030,7 +13030,7 @@ loc_12AC8:
 		cmp	si, 10h
 		jl	short loc_12AA5
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 
@@ -13055,7 +13055,7 @@ loc_12AED:
 loc_12AF1:
 		mov	bx, si
 		imul	bx, 3
-		mov	byte ptr [bx+di+6F0h], 0Fh
+		mov	byte ptr _z_Palettes[bx+di], 0Fh
 		inc	di
 
 loc_12AFC:
@@ -13067,7 +13067,7 @@ loc_12B02:
 		cmp	si, 10h
 		jl	short loc_12AED
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		push	1
 		call	_graph_accesspage_func
@@ -13100,14 +13100,14 @@ loc_12B4E:
 loc_12B52:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+di+6F0h]
+		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, 3
 		cmp	al, [bx+di+5414h]
 		jle	short loc_12B71
 		mov	bx, si
 		imul	bx, 3
-		dec	byte ptr [bx+di+6F0h]
+		dec	byte ptr _z_Palettes[bx+di]
 		jmp	short loc_12B74
 ; ---------------------------------------------------------------------------
 
@@ -13126,7 +13126,7 @@ loc_12B7B:
 		cmp	si, 10h
 		jl	short loc_12B4E
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 
@@ -13525,7 +13525,7 @@ loc_12EC7:
 		mov	bx, [bp+var_C]
 		imul	bx, 3
 		add	bx, [bp+var_E]
-		mov	al, [bx+6F0h]
+		mov	al, _z_Palettes[bx]
 		mov	bx, [bp+var_C]
 		imul	bx, 3
 		add	bx, [bp+var_E]
@@ -13544,17 +13544,17 @@ loc_12EC7:
 ; ---------------------------------------------------------------------------
 
 loc_12EFF:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_12F01:
 		mov	bx, [bp+var_C]
 		imul	bx, 3
 		add	bx, [bp+var_E]
-		add	al, [bx+6F0h]
+		add	al, _z_Palettes[bx]
 		mov	bx, [bp+var_C]
 		imul	bx, 3
 		add	bx, [bp+var_E]
-		mov	[bx+6F0h], al
+		mov	_z_Palettes[bx], al
 
 loc_12F1B:
 		inc	[bp+var_E]
@@ -13568,7 +13568,7 @@ loc_12F27:
 		cmp	[bp+var_C], 10h
 		jb	short loc_12EC0
 		push	ds
-		push	offset unk_35090
+		push	offset _z_Palettes
 		call	sub_EB10
 		add	sp, 4
 
@@ -29103,51 +29103,7 @@ include th01/ztext[data].asm
 public _game_initialized
 _game_initialized	db 0
 		db 0
-unk_35090	db    0
-		dd    0
-		db  0Fh
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db    0
-		db    0
-byte_3509F	db 0Fh
-		db    0
-byte_350A1	db 0Fh
-byte_350A2	db 0Fh
-byte_350A3	db 0Fh
-byte_350A4	db 0
-byte_350A5	db 0Fh
-byte_350A6	db 0Fh
-byte_350A7	db 0Fh
-		db    8
-		db    8
-		db    8
-byte_350AB	db 0
-byte_350AC	db 0
-byte_350AD	db 0Ah
-		db    0
-		db  0Ah
-		db    0
-		db    0
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db    0
-		db    0
-		db  0Ah
-		db    0
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db    0
-byte_350BD	db 0Ch
-byte_350BE	db 0Ch
-		db  0Ch
+include th01/hardware/palette[data].asm
 byte_350C0	db 0
 word_350C1	dw 80h
 aPal98Grb	db 'pal98 grb',0

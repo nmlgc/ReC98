@@ -2359,7 +2359,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 		out	dx, al		; PC-98	GDC (6a):
 					;
 		push	ds
-		push	offset unk_1297A
+		push	offset _z_Palettes
 		nopcall	sub_BA15
 		push	0
 		nopcall	_graph_accesspage_func
@@ -2664,15 +2664,15 @@ loc_BAD7:
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_2]
-		mov	[bx+6EAh], al
+		mov	_z_Palettes[bx].r, al
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_4]
-		mov	[bx+6EBh], al
+		mov	_z_Palettes[bx].g, al
 		mov	bx, si
 		imul	bx, 3
 		mov	al, byte ptr [bp+arg_6]
-		mov	[bx+6ECh], al
+		mov	_z_Palettes[bx].b, al
 		push	[bp+arg_6]
 		push	[bp+arg_4]
 		push	[bp+arg_2]
@@ -2910,7 +2910,7 @@ loc_BCB9:
 		mov	al, ss:[bx]
 		mov	bx, si
 		imul	bx, 3
-		cmp	al, [bx+di+6EAh]
+		cmp	al, _z_Palettes[bx+di]
 		jge	short loc_BCE2
 		mov	bx, si
 		imul	bx, 3
@@ -2985,7 +2985,7 @@ var_2		= word ptr -2
 		push	di
 		push	30h ; '0'       ; n
 		push	ds
-		push	offset unk_1297A ; src
+		push	offset _z_Palettes ; src
 		push	ss
 		lea	ax, [bp+dest]
 		push	ax		; dest
@@ -3125,7 +3125,7 @@ loc_BE2A:
 		mov	al, ss:[bx]
 		mov	bx, si
 		imul	bx, 3
-		cmp	al, [bx+di+6EAh]
+		cmp	al, _z_Palettes[bx+di]
 		jle	short loc_BE53
 		mov	bx, si
 		imul	bx, 3
@@ -3187,7 +3187,7 @@ loc_BE9F:
 		push	di
 		push	30h ; '0'
 		push	ds
-		push	offset unk_1297A
+		push	offset _z_Palettes
 		push	ss
 		lea	ax, [bp-32h]
 		push	ax
@@ -3280,17 +3280,17 @@ loc_BF42:
 loc_BF54:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6ECh]
+		mov	al, _z_Palettes[bx].b
 		cbw
 		push	ax
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6EBh]
+		mov	al, _z_Palettes[bx].g
 		cbw
 		push	ax
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6EAh]
+		mov	al, _z_Palettes[bx].r
 		cbw
 		push	ax
 		push	si
@@ -5182,7 +5182,7 @@ loc_CFBA:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6EAh]
+		mov	al, _z_Palettes[si].r
 		mov	ss:[bx], al
 		mov	bx, di
 		imul	bx, 3
@@ -5190,7 +5190,7 @@ loc_CFBA:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6EBh]
+		mov	al, _z_Palettes[si].g
 		mov	ss:[bx], al
 		mov	bx, di
 		imul	bx, 3
@@ -5198,7 +5198,7 @@ loc_CFBA:
 		add	bx, ax
 		mov	si, di
 		imul	si, 3
-		mov	al, [si+6ECh]
+		mov	al, _z_Palettes[si].b
 
 loc_CFF9:
 		mov	ss:[bx], al
@@ -5232,7 +5232,7 @@ loc_D01D:
 		mov	bx, [bp-2]
 		imul	bx, 3
 		add	bx, [bp-4]
-		cmp	al, [bx+6EAh]
+		cmp	al, _z_Palettes[bx]
 		jz	short palette_show2
 		mov	bx, [bp-2]
 		imul	bx, 3
@@ -5243,7 +5243,7 @@ loc_D01D:
 		mov	bx, [bp-2]
 		imul	bx, 3
 		add	bx, [bp-4]
-		cmp	al, [bx+6EAh]
+		cmp	al, _z_Palettes[bx]
 		jge	short loc_D061
 		mov	al, 1
 		jmp	short loc_D063
@@ -5474,17 +5474,17 @@ var_4		= dword	ptr -4
 loc_D1DC:
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6EBh]
+		mov	al, _z_Palettes[bx].g
 		les	bx, [bp+var_4]
 		mov	es:[bx], al
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6EAh]
+		mov	al, _z_Palettes[bx].r
 		mov	bx, word ptr [bp+var_4]
 		mov	es:[bx+1], al
 		mov	bx, si
 		imul	bx, 3
-		mov	al, [bx+6ECh]
+		mov	al, _z_Palettes[bx].b
 		mov	bx, word ptr [bp+var_4]
 		mov	es:[bx+2], al
 		add	word ptr [bp+var_4], 3
@@ -7731,51 +7731,7 @@ include th01/ztext[data].asm
 public _game_initialized
 _game_initialized	db 0
 		db 0
-unk_1297A	db    0
-		dd    0
-		db  0Fh
-		db    0
-		db  0Fh
-		db    0
-		db    0
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db    0
-		db    0
-		db  0Fh
-		db    0
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db    0
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db    8
-		db    8
-		db    8
-		db    0
-		db    0
-		db  0Ah
-		db    0
-		db  0Ah
-		db    0
-		db    0
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db    0
-		db    0
-		db  0Ah
-		db    0
-		db  0Ah
-		db  0Ah
-		db  0Ah
-		db    0
-		db  0Ch
-		db  0Ch
-		db  0Ch
+include th01/hardware/palette[data].asm
 byte_129AA	db 0
 word_129AB	dw 80h
 aPal98Grb	db 'pal98 grb',0
