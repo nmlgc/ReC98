@@ -1,3 +1,30 @@
+public _z_palette_show_single
+_z_palette_show_single	proc far
+
+@@col	= byte ptr  6
+@@r  	= byte ptr  8
+@@g  	= byte ptr  0Ah
+@@b  	= byte ptr  0Ch
+
+	push	bp
+	mov	bp, sp
+	mov	dx, 0A8h
+	mov	al, [bp+@@col]
+	out	dx, al
+	mov	dx, 0AAh
+	mov	al, [bp+@@g]
+	out	dx, al
+	mov	dx, 0ACh
+	mov	al, [bp+@@r]
+	out	dx, al
+	mov	dx, 0AEh
+	mov	al, [bp+@@b]
+	out	dx, al
+	pop	bp
+	retf
+_z_palette_show_single	endp
+
+
 public _grcg_setcolor_rmw
 _grcg_setcolor_rmw	proc far
 

@@ -805,7 +805,7 @@ sub_A719	proc far
 		push	offset aReiiden2_grp ; "REIIDEN2.grp"
 		call	sub_DAEC
 		add	sp, 4
-		call	sub_BC6D
+		call	_z_palette_black
 		call	sub_BB85
 		push	ds
 		push	offset aReiiden3_grp ; "REIIDEN3.grp"
@@ -2410,7 +2410,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 sub_B8D0	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_BC6D
+		nopcall	_z_palette_black
 		nopcall	sub_BB3C
 		push	0
 		nopcall	_graph_accesspage_func
@@ -2473,37 +2473,7 @@ inregs		= REGS ptr -10h
 sub_B91C	endp
 
 include th01/hardware/graph_page.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B955	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	dx, 0A8h ; '¨'
-		mov	al, [bp+arg_0]
-		out	dx, al
-		mov	dx, 0AAh ; 'ª'
-		mov	al, [bp+arg_4]
-		out	dx, al
-		mov	dx, 0ACh ; '¬'
-		mov	al, [bp+arg_2]
-		out	dx, al
-		mov	dx, 0AEh
-		mov	al, [bp+arg_6]
-		out	dx, al
-		pop	bp
-		retf
-sub_B955	endp
-
-include th01/hardware/grcg_setcolor.asm
+include th01/hardware/color.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2543,147 +2513,19 @@ loc_BA1D:
 		cbw
 		push	ax
 		push	si
-		nopcall	sub_BA5E
+		nopcall	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
 loc_BA56:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_BA1D
 		pop	si
 		pop	bp
 		retf
 sub_BA15	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA5E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_BA70
-		mov	ax, [bp+arg_2]
-		jmp	short loc_BA73
-; ---------------------------------------------------------------------------
-
-loc_BA70:
-		mov	ax, 0Fh
-
-loc_BA73:
-		or	ax, ax
-		jle	short loc_BA87
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_BA82
-		mov	ax, [bp+arg_2]
-		jmp	short loc_BA85
-; ---------------------------------------------------------------------------
-
-loc_BA82:
-		mov	ax, 0Fh
-
-loc_BA85:
-		jmp	short loc_BA89
-; ---------------------------------------------------------------------------
-
-loc_BA87:
-		xor	ax, ax
-
-loc_BA89:
-		mov	[bp+arg_2], ax
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_BA97
-		mov	ax, [bp+arg_4]
-		jmp	short loc_BA9A
-; ---------------------------------------------------------------------------
-
-loc_BA97:
-		mov	ax, 0Fh
-
-loc_BA9A:
-		or	ax, ax
-		jle	short loc_BAAE
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_BAA9
-		mov	ax, [bp+arg_4]
-		jmp	short loc_BAAC
-; ---------------------------------------------------------------------------
-
-loc_BAA9:
-		mov	ax, 0Fh
-
-loc_BAAC:
-		jmp	short loc_BAB0
-; ---------------------------------------------------------------------------
-
-loc_BAAE:
-		xor	ax, ax
-
-loc_BAB0:
-		mov	[bp+arg_4], ax
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_BABE
-		mov	ax, [bp+arg_6]
-		jmp	short loc_BAC1
-; ---------------------------------------------------------------------------
-
-loc_BABE:
-		mov	ax, 0Fh
-
-loc_BAC1:
-		or	ax, ax
-		jle	short loc_BAD5
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_BAD0
-		mov	ax, [bp+arg_6]
-		jmp	short loc_BAD3
-; ---------------------------------------------------------------------------
-
-loc_BAD0:
-		mov	ax, 0Fh
-
-loc_BAD3:
-		jmp	short loc_BAD7
-; ---------------------------------------------------------------------------
-
-loc_BAD5:
-		xor	ax, ax
-
-loc_BAD7:
-		mov	[bp+arg_6], ax
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_2]
-		mov	_z_Palettes[bx].r, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_4]
-		mov	_z_Palettes[bx].g, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_6]
-		mov	_z_Palettes[bx].b, al
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	si
-		call	sub_B955
-		add	sp, 8
-		pop	si
-		pop	bp
-		retf
-sub_BA5E	endp
-
+include th01/hardware/palette_set_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2836,35 +2678,7 @@ loc_BC62:
 		retf
 sub_BB85	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BC6D	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BC83
-; ---------------------------------------------------------------------------
-
-loc_BC75:
-		pushd	0
-		push	0
-		push	si
-		call	sub_B955
-		add	sp, 8
-		inc	si
-
-loc_BC83:
-		cmp	si, 10h
-		jl	short loc_BC75
-		pop	si
-		pop	bp
-		retf
-sub_BC6D	endp
-
+include th01/hardware/palette_black.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2947,7 +2761,7 @@ loc_BCE3:
 		cbw
 		push	ax
 		push	si
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -3048,7 +2862,7 @@ loc_BD86:
 		cbw
 		push	ax
 		push	si
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -3069,28 +2883,8 @@ loc_BDD1:
 		retf
 sub_BD3A	endp
 
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BDF4
-; ---------------------------------------------------------------------------
+include th01/hardware/palette_white.asm
 
-loc_BDE3:
-		push	0F000Fh
-		push	0Fh
-		push	si
-		call	sub_B955
-		add	sp, 8
-		inc	si
-
-loc_BDF4:
-		cmp	si, 10h
-		jl	short loc_BDE3
-		pop	si
-		pop	bp
-		retf
 ; ---------------------------------------------------------------------------
 		enter	32h, 0
 		push	si
@@ -3162,7 +2956,7 @@ loc_BE54:
 		cbw
 		push	ax
 		push	si
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -3250,7 +3044,7 @@ loc_BEF7:
 		cbw
 		push	ax
 		push	si
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -3294,7 +3088,7 @@ loc_BF54:
 		cbw
 		push	ax
 		push	si
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -5293,7 +5087,7 @@ palette_show5:
 		cbw
 		push	ax
 		push	word ptr [bp-2]
-		call	sub_B955
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	word ptr [bp-2]
 
@@ -5429,13 +5223,13 @@ loc_D18F:
 		cbw
 		push	ax
 		push	si
-		call	sub_BA5E
+		call	_z_palette_set_show
 		add	sp, 8
 		add	word ptr [bp-4], 3
 		inc	si
 
 loc_D1B0:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_D18F
 		xor	ax, ax
 		jmp	short loc_D1BC

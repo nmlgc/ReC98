@@ -6008,7 +6008,7 @@ sub_D04B	endp
 sub_D094	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_D431
+		nopcall	_z_palette_black
 		nopcall	sub_D300
 		push	0
 		nopcall	_graph_accesspage_func
@@ -6071,37 +6071,7 @@ inregs		= REGS ptr -10h
 sub_D0E0	endp
 
 include th01/hardware/graph_page.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D119	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	dx, 0A8h ; '¨'
-		mov	al, [bp+arg_0]
-		out	dx, al
-		mov	dx, 0AAh ; 'ª'
-		mov	al, [bp+arg_4]
-		out	dx, al
-		mov	dx, 0ACh ; '¬'
-		mov	al, [bp+arg_2]
-		out	dx, al
-		mov	dx, 0AEh ; '®'
-		mov	al, [bp+arg_6]
-		out	dx, al
-		pop	bp
-		retf
-sub_D119	endp
-
-include th01/hardware/grcg_setcolor.asm
+include th01/hardware/color.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6141,147 +6111,19 @@ loc_D1E1:
 		cbw
 		push	ax
 		push	si
-		nopcall	sub_D222
+		nopcall	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
 loc_D21A:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_D1E1
 		pop	si
 		pop	bp
 		retf
 sub_D1D9	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D222	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_D234
-		mov	ax, [bp+arg_2]
-		jmp	short loc_D237
-; ---------------------------------------------------------------------------
-
-loc_D234:
-		mov	ax, 0Fh
-
-loc_D237:
-		or	ax, ax
-		jle	short loc_D24B
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_D246
-		mov	ax, [bp+arg_2]
-		jmp	short loc_D249
-; ---------------------------------------------------------------------------
-
-loc_D246:
-		mov	ax, 0Fh
-
-loc_D249:
-		jmp	short loc_D24D
-; ---------------------------------------------------------------------------
-
-loc_D24B:
-		xor	ax, ax
-
-loc_D24D:
-		mov	[bp+arg_2], ax
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_D25B
-		mov	ax, [bp+arg_4]
-		jmp	short loc_D25E
-; ---------------------------------------------------------------------------
-
-loc_D25B:
-		mov	ax, 0Fh
-
-loc_D25E:
-		or	ax, ax
-		jle	short loc_D272
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_D26D
-		mov	ax, [bp+arg_4]
-		jmp	short loc_D270
-; ---------------------------------------------------------------------------
-
-loc_D26D:
-		mov	ax, 0Fh
-
-loc_D270:
-		jmp	short loc_D274
-; ---------------------------------------------------------------------------
-
-loc_D272:
-		xor	ax, ax
-
-loc_D274:
-		mov	[bp+arg_4], ax
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_D282
-		mov	ax, [bp+arg_6]
-		jmp	short loc_D285
-; ---------------------------------------------------------------------------
-
-loc_D282:
-		mov	ax, 0Fh
-
-loc_D285:
-		or	ax, ax
-		jle	short loc_D299
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_D294
-		mov	ax, [bp+arg_6]
-		jmp	short loc_D297
-; ---------------------------------------------------------------------------
-
-loc_D294:
-		mov	ax, 0Fh
-
-loc_D297:
-		jmp	short loc_D29B
-; ---------------------------------------------------------------------------
-
-loc_D299:
-		xor	ax, ax
-
-loc_D29B:
-		mov	[bp+arg_6], ax
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_2]
-		mov	_z_Palettes[bx].r, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_4]
-		mov	_z_Palettes[bx].g, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_6]
-		mov	_z_Palettes[bx].b, al
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	si
-		call	sub_D119
-		add	sp, 8
-		pop	si
-		pop	bp
-		retf
-sub_D222	endp
-
+include th01/hardware/palette_set_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6445,35 +6287,7 @@ loc_D426:
 		retf
 sub_D349	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D431	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_D447
-; ---------------------------------------------------------------------------
-
-loc_D439:
-		pushd	0
-		push	0
-		push	si
-		call	sub_D119
-		add	sp, 8
-		inc	si
-
-loc_D447:
-		cmp	si, 10h
-		jl	short loc_D439
-		pop	si
-		pop	bp
-		retf
-sub_D431	endp
-
+include th01/hardware/palette_black.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6556,7 +6370,7 @@ loc_D4A7:
 		cbw
 		push	ax
 		push	si
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6657,7 +6471,7 @@ loc_D54A:
 		cbw
 		push	ax
 		push	si
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6678,35 +6492,7 @@ loc_D595:
 		retf
 sub_D4FE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D59F	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_D5B8
-; ---------------------------------------------------------------------------
-
-loc_D5A7:
-		push	0F000Fh
-		push	0Fh
-		push	si
-		call	sub_D119
-		add	sp, 8
-		inc	si
-
-loc_D5B8:
-		cmp	si, 10h
-		jl	short loc_D5A7
-		pop	si
-		pop	bp
-		retf
-sub_D59F	endp
-
+include th01/hardware/palette_white.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6789,7 +6575,7 @@ loc_D618:
 		cbw
 		push	ax
 		push	si
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6890,7 +6676,7 @@ loc_D6BB:
 		cbw
 		push	ax
 		push	si
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6941,7 +6727,7 @@ loc_D718:
 		cbw
 		push	ax
 		push	si
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -9080,7 +8866,7 @@ loc_E849:
 		cbw
 		push	ax
 		push	[bp+var_2]
-		call	sub_D119
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	[bp+var_2]
 
@@ -9226,13 +9012,13 @@ loc_E953:
 		cbw
 		push	ax
 		push	si
-		call	sub_D222
+		call	_z_palette_set_show
 		add	sp, 8
 		add	word ptr [bp+var_4], 3
 		inc	si
 
 loc_E974:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_E953
 		xor	ax, ax
 		jmp	short loc_E980

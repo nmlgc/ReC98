@@ -6880,12 +6880,12 @@ loc_1F158:
 		add	ax, -4
 		push	ax
 		push	si
-		call	sub_EB59
+		call	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
 loc_1F18C:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_1F158
 		inc	byte_39E25
 		mov	word_3A6CA, 1
@@ -11819,14 +11819,14 @@ loc_21AE9:
 ; ---------------------------------------------------------------------------
 
 loc_21AF5:
-		push	0F000Fh
+		push	(0Fh shl 16) or 0Fh
 		push	0Fh
 		les	bx, [bp+arg_C]
 		add	bx, si
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_EB59
+		call	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
@@ -11891,14 +11891,14 @@ loc_21B8A:
 ; ---------------------------------------------------------------------------
 
 loc_21BAE:
-		push	0F000Fh
+		push	(0Fh shl 16) or 0Fh
 		push	0Fh
 		les	bx, [bp+arg_C]
 		add	bx, si
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax
-		call	sub_EB59
+		call	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
@@ -14351,15 +14351,15 @@ var_2		= byte ptr -2
 		jnz	loc_230BA
 		mov	word ptr dword_3982A, 110h
 		mov	word ptr dword_3982A+2,	60h
-		pushd	0
-		pushd	5
-		call	sub_EB59
-		pushd	0
-		pushd	9
-		call	sub_EB59
-		pushd	0
-		pushd	0Fh
-		call	sub_EB59
+		pushd	(0 shl 16) or 0
+		pushd	(0 shl 16) or 5
+		call	_z_palette_set_show
+		pushd	(0 shl 16) or 0
+		pushd	(0 shl 16) or 9
+		call	_z_palette_set_show
+		pushd	(0 shl 16) or 0
+		pushd	(0 shl 16) or 0Fh
+		call	_z_palette_set_show
 		add	sp, 18h
 		xor	si, si
 		mov	di, 12h
@@ -17129,18 +17129,18 @@ var_4		= dword	ptr -4
 		mov	word_3A6C2, 0
 		mov	word_3A6C0, 0
 		call	sub_232A4
-		push	0F000Fh
-		push	0F0002h
-		call	sub_EB59
-		push	0F000Fh
-		push	0F0006h
-		call	sub_EB59
-		push	0F000Fh
-		push	0F0008h
-		call	sub_EB59
-		push	0F000Fh
-		push	0F000Bh
-		call	sub_EB59
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 02h
+		call	_z_palette_set_show
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 06h
+		call	_z_palette_set_show
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 08h
+		call	_z_palette_set_show
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 0Bh
+		call	_z_palette_set_show
 		add	sp, 20h
 
 loc_24796:
@@ -30943,10 +30943,7 @@ loc_2C8AE:
 		push	offset aBoss6_grp ; "boss6.grp"
 		call	sub_10BAE
 		add	sp, 4
-		pushd	0
-		pushd	0Fh
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
 		call	sub_232A4
 		call	sub_EC80
 		push	1
@@ -30970,10 +30967,7 @@ loc_2C949:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2C980
-		push	0F000Fh
-		push	0F000Fh
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 0Fh, large (0Fh shl 16) or 0Fh
 		push	1A0h
 		call	sub_11738
 		pop	cx
@@ -31042,10 +31036,7 @@ loc_2C9DA:
 		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
 		call	sub_10BAE
 		add	sp, 4
-		pushd	0
-		pushd	6
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	sub_EC80
 		mov	byte_34A49, 1
 		call	sub_190D6
@@ -31316,10 +31307,7 @@ loc_2CC9E:
 		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
 		call	sub_10BAE
 		add	sp, 4
-		pushd	0
-		pushd	6
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	sub_232A4
 		call	sub_EC80
 		push	0
@@ -31921,9 +31909,9 @@ loc_2D16E:
 		jl	short loc_2D14D
 		push	1Eh
 		call	_frame_delay
-		push	0F000Fh
-		push	0F0009h
-		call	sub_EB59
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 09h
+		call	_z_palette_set_show
 		push	ds
 		push	offset aBoss8_d1_grp ; "boss8_d1.grp"
 		call	sub_10C71
@@ -35228,10 +35216,7 @@ loc_2F05B:
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F07F
-		push	0F000Fh
-		push	0F0009h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F07F:
 		cmp	word_3A6CA, 32h	; '2'
@@ -35478,10 +35463,7 @@ loc_2F2AB:
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F2CF
-		push	0F000Fh
-		push	0F0009h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F2CF:
 		cmp	word_3A6CA, 32h	; '2'
@@ -35727,10 +35709,7 @@ loc_2F506:
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F52A
-		push	0F000Fh
-		push	0F0009h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F52A:
 		cmp	word_3A6CA, 32h	; '2'
@@ -36007,10 +35986,7 @@ loc_2F766:
 		call	sub_2D241
 		call	sub_EC0D
 		call	_mdrv2_bgm_stop
-		pushd	0
-		pushd	0
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	7
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -36030,10 +36006,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		push	0F000Fh
-		push	0F0000h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36047,10 +36020,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		pushd	0
-		pushd	0
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36064,10 +36034,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		push	0F000Fh
-		push	0F0000h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36081,10 +36048,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		pushd	0
-		pushd	0
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36098,10 +36062,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		push	0F000Fh
-		push	0F0000h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36115,10 +36076,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		pushd	0
-		pushd	0
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36132,10 +36090,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		push	0F000Fh
-		push	0F0000h
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		push	0
 		call	sub_10CDD
 		pop	cx
@@ -36149,10 +36104,7 @@ loc_2F766:
 		push	0
 		call	sub_1117C
 		add	sp, 8
-		pushd	0
-		pushd	0
-		call	sub_EB59
-		add	sp, 8
+		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	0
 		call	sub_10CDD
 		pop	cx

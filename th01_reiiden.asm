@@ -1457,7 +1457,7 @@ loc_BF82:
 		add	dx, ax
 		push	dx
 		push	7
-		call	sub_EB59
+		call	_z_palette_set_show
 		add	sp, 8
 
 loc_BFC0:
@@ -5602,7 +5602,7 @@ sub_E982	endp
 sub_E9CB	proc far
 		push	bp
 		mov	bp, sp
-		nopcall	sub_ED68
+		nopcall	_z_palette_black
 		nopcall	sub_EC37
 		push	0
 		nopcall	_graph_accesspage_func
@@ -5665,37 +5665,7 @@ inregs		= REGS ptr -10h
 sub_EA17	endp
 
 include th01/hardware/graph_page.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA50	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	dx, 0A8h ; '¨'
-		mov	al, [bp+arg_0]
-		out	dx, al
-		mov	dx, 0AAh ; 'ª'
-		mov	al, [bp+arg_4]
-		out	dx, al
-		mov	dx, 0ACh ; '¬'
-		mov	al, [bp+arg_2]
-		out	dx, al
-		mov	dx, 0AEh ; '®'
-		mov	al, [bp+arg_6]
-		out	dx, al
-		pop	bp
-		retf
-sub_EA50	endp
-
-include th01/hardware/grcg_setcolor.asm
+include th01/hardware/color.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5735,147 +5705,19 @@ loc_EB18:
 		cbw
 		push	ax
 		push	si
-		nopcall	sub_EB59
+		nopcall	_z_palette_set_show
 		add	sp, 8
 		inc	si
 
 loc_EB51:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_EB18
 		pop	si
 		pop	bp
 		retf
 sub_EB10	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EB59	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_EB6B
-		mov	ax, [bp+arg_2]
-		jmp	short loc_EB6E
-; ---------------------------------------------------------------------------
-
-loc_EB6B:
-		mov	ax, 0Fh
-
-loc_EB6E:
-		or	ax, ax
-		jle	short loc_EB82
-		cmp	[bp+arg_2], 0Fh
-		jge	short loc_EB7D
-		mov	ax, [bp+arg_2]
-		jmp	short loc_EB80
-; ---------------------------------------------------------------------------
-
-loc_EB7D:
-		mov	ax, 0Fh
-
-loc_EB80:
-		jmp	short loc_EB84
-; ---------------------------------------------------------------------------
-
-loc_EB82:
-		xor	ax, ax
-
-loc_EB84:
-		mov	[bp+arg_2], ax
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_EB92
-		mov	ax, [bp+arg_4]
-		jmp	short loc_EB95
-; ---------------------------------------------------------------------------
-
-loc_EB92:
-		mov	ax, 0Fh
-
-loc_EB95:
-		or	ax, ax
-		jle	short loc_EBA9
-		cmp	[bp+arg_4], 0Fh
-		jge	short loc_EBA4
-		mov	ax, [bp+arg_4]
-		jmp	short loc_EBA7
-; ---------------------------------------------------------------------------
-
-loc_EBA4:
-		mov	ax, 0Fh
-
-loc_EBA7:
-		jmp	short loc_EBAB
-; ---------------------------------------------------------------------------
-
-loc_EBA9:
-		xor	ax, ax
-
-loc_EBAB:
-		mov	[bp+arg_4], ax
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_EBB9
-		mov	ax, [bp+arg_6]
-		jmp	short loc_EBBC
-; ---------------------------------------------------------------------------
-
-loc_EBB9:
-		mov	ax, 0Fh
-
-loc_EBBC:
-		or	ax, ax
-		jle	short loc_EBD0
-		cmp	[bp+arg_6], 0Fh
-		jge	short loc_EBCB
-		mov	ax, [bp+arg_6]
-		jmp	short loc_EBCE
-; ---------------------------------------------------------------------------
-
-loc_EBCB:
-		mov	ax, 0Fh
-
-loc_EBCE:
-		jmp	short loc_EBD2
-; ---------------------------------------------------------------------------
-
-loc_EBD0:
-		xor	ax, ax
-
-loc_EBD2:
-		mov	[bp+arg_6], ax
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_2]
-		mov	_z_Palettes[bx].r, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_4]
-		mov	_z_Palettes[bx].g, al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, byte ptr [bp+arg_6]
-		mov	_z_Palettes[bx].b, al
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	si
-		call	sub_EA50
-		add	sp, 8
-		pop	si
-		pop	bp
-		retf
-sub_EB59	endp
-
+include th01/hardware/palette_set_show.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6039,35 +5881,7 @@ loc_ED5D:
 		retf
 sub_EC80	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED68	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_ED7E
-; ---------------------------------------------------------------------------
-
-loc_ED70:
-		pushd	0
-		push	0
-		push	si
-		call	sub_EA50
-		add	sp, 8
-		inc	si
-
-loc_ED7E:
-		cmp	si, 10h
-		jl	short loc_ED70
-		pop	si
-		pop	bp
-		retf
-sub_ED68	endp
-
+include th01/hardware/palette_black.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6150,7 +5964,7 @@ loc_EDDE:
 		cbw
 		push	ax
 		push	si
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6251,7 +6065,7 @@ loc_EE81:
 		cbw
 		push	ax
 		push	si
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6272,35 +6086,7 @@ loc_EECC:
 		retf
 sub_EE35	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EED6	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_EEEF
-; ---------------------------------------------------------------------------
-
-loc_EEDE:
-		push	0F000Fh
-		push	0Fh
-		push	si
-		call	sub_EA50
-		add	sp, 8
-		inc	si
-
-loc_EEEF:
-		cmp	si, 10h
-		jl	short loc_EEDE
-		pop	si
-		pop	bp
-		retf
-sub_EED6	endp
-
+include th01/hardware/palette_white.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6383,7 +6169,7 @@ loc_EF4F:
 		cbw
 		push	ax
 		push	si
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6484,7 +6270,7 @@ loc_EFF2:
 		cbw
 		push	ax
 		push	si
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -6535,7 +6321,7 @@ loc_F04F:
 		cbw
 		push	ax
 		push	si
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	si
 
@@ -8674,7 +8460,7 @@ loc_10180:
 		cbw
 		push	ax
 		push	[bp+var_2]
-		call	sub_EA50
+		call	_z_palette_show_single
 		add	sp, 8
 		inc	[bp+var_2]
 
@@ -8820,13 +8606,13 @@ loc_1028A:
 		cbw
 		push	ax
 		push	si
-		call	sub_EB59
+		call	_z_palette_set_show
 		add	sp, 8
 		add	word ptr [bp+var_4], 3
 		inc	si
 
 loc_102AB:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_1028A
 		xor	ax, ax
 		jmp	short loc_102B7
@@ -12791,12 +12577,12 @@ loc_127AC:
 		call	graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
-		push	0F000Fh
-		push	0F0001h
-		call	sub_EB59
-		push	90009h
-		push	90003h
-		call	sub_EB59
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 01h
+		call	_z_palette_set_show
+		push	(09h shl 16) or 09h
+		push	(09h shl 16) or 03h
+		call	_z_palette_set_show
 		push	1000D0h
 		pushd	0
 		push	400040h
@@ -12858,12 +12644,12 @@ loc_1292E:
 		push	3012Ch
 		push	80h
 		call	sub_197E1
-		push	0F000Fh
-		push	0F0003h
-		call	sub_EB59
-		push	90009h
-		push	90001h
-		call	sub_EB59
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 03h
+		call	_z_palette_set_show
+		push	(09h shl 16) or 09h
+		push	(09h shl 16) or 01h
+		call	_z_palette_set_show
 		add	sp, 1Eh
 		mov	[bp+var_A], 1
 		jmp	short loc_129C8
@@ -12876,12 +12662,12 @@ loc_1297F:
 		push	300FAh
 		push	80h
 		call	sub_197E1
-		push	0F000Fh
-		push	0F0001h
-		call	sub_EB59
-		push	90009h
-		push	90003h
-		call	sub_EB59
+		push	(0Fh shl 16) or 0Fh
+		push	(0Fh shl 16) or 01h
+		call	_z_palette_set_show
+		push	(09h shl 16) or 09h
+		push	(09h shl 16) or 03h
+		call	_z_palette_set_show
 		add	sp, 1Eh
 		mov	[bp+var_A], 0
 
@@ -16600,7 +16386,7 @@ arg_6		= dword	ptr  0Ch
 		mov	cx, 10h
 		call	SCOPY@
 		call	sub_EC37
-		call	sub_ED68
+		call	_z_palette_black
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
