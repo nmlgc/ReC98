@@ -12,3 +12,13 @@ void z_palette_black(void);
 
 // Sets all hardware colors to #FFF, without touching z_Palettes.
 void z_palette_white(void);
+
+/// Resident palette
+/// ----------------
+// Copies the resident palette to z_Palettes and sets all hardware colors.
+// Returns 1 on success, 0 on failure.
+int z_respal_get_show(void);
+// Copies z_Palettes to the resident palette. Returns 1 on success, 0 on
+// failure.
+int z_respal_set(void);
+/// ----------------

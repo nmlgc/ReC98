@@ -2184,7 +2184,7 @@ game_init	proc far
 		call	egc_start
 		call	graph_start
 		call	respal_create
-		call	sub_D1C0
+		call	_z_respal_set
 		call	vram_planes_set
 
 @@ret:
@@ -5107,200 +5107,7 @@ loc_D0DA:
 		leave
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D0E5	proc far
-
-inregs		= REGS ptr -22h
-var_12		= byte ptr -12h
-segp		= SREGS	ptr -8
-
-		enter	22h, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_12]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aPal98Grb ; "pal98 grb"
-		mov	cx, 0Ah
-		call	SCOPY@
-		push	ss
-		lea	ax, [bp+segp]
-		push	ax		; segp
-		call	_segread
-		add	sp, 4
-		mov	byte ptr [bp+inregs+1],	52h ; 'R'
-		push	ss
-		lea	ax, [bp+segp]
-		push	ax		; segregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		call	_intdosx
-		add	sp, 0Ch
-		mov	bx, word ptr [bp+inregs+2]
-		sub	bx, 2
-		mov	es, [bp+segp+SREGS._es]
-		mov	si, es:[bx]
-
-loc_D12D:
-		mov	es, si
-		cmp	word ptr es:1, 0
-		jz	short loc_D156
-		xor	di, di
-		jmp	short loc_D147
-; ---------------------------------------------------------------------------
-
-loc_D13B:
-		mov	es, si
-		mov	al, es:[di+10h]
-		cmp	al, [bp+di+var_12]
-		jnz	short loc_D14C
-		inc	di
-
-loc_D147:
-		cmp	di, 0Ah
-		jl	short loc_D13B
-
-loc_D14C:
-		cmp	di, 0Ah
-		jnz	short loc_D156
-		lea	ax, [si+1]
-		jmp	short loc_D16F
-; ---------------------------------------------------------------------------
-
-loc_D156:
-		mov	es, si
-		cmp	byte ptr es:0, 4Dh ; 'M'
-		jz	short loc_D164
-		xor	ax, ax
-		jmp	short loc_D16F
-; ---------------------------------------------------------------------------
-
-loc_D164:
-		mov	es, si
-		mov	ax, es:3
-		inc	ax
-		add	si, ax
-		jmp	short loc_D12D
-; ---------------------------------------------------------------------------
-
-loc_D16F:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_D0E5	endp
-
-; ---------------------------------------------------------------------------
-		enter	4, 0
-		push	si
-		push	di
-		call	sub_D0E5
-		mov	di, ax
-		or	di, di
-		jz	short loc_D1B9
-		mov	[bp-2],	di
-		mov	word ptr [bp-4], 10h
-		xor	si, si
-		jmp	short loc_D1B0
-; ---------------------------------------------------------------------------
-
-loc_D18F:
-		les	bx, [bp-4]
-		mov	al, es:[bx+2]
-		cbw
-		push	ax
-		mov	al, es:[bx]
-		cbw
-		push	ax
-		mov	al, es:[bx+1]
-		cbw
-		push	ax
-		push	si
-		call	_z_palette_set_show
-		add	sp, 8
-		add	word ptr [bp-4], 3
-		inc	si
-
-loc_D1B0:
-		cmp	si, COLOR_COUNT
-		jl	short loc_D18F
-		xor	ax, ax
-		jmp	short loc_D1BC
-; ---------------------------------------------------------------------------
-
-loc_D1B9:
-		mov	ax, 1
-
-loc_D1BC:
-		pop	di
-		pop	si
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D1C0	proc far
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		push	di
-		call	sub_D0E5
-		mov	di, ax
-		or	di, di
-		jz	short loc_D219
-		mov	word ptr [bp+var_4+2], di
-		mov	word ptr [bp+var_4], 10h
-		xor	si, si
-		jmp	short loc_D210
-; ---------------------------------------------------------------------------
-
-loc_D1DC:
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].g
-		les	bx, [bp+var_4]
-		mov	es:[bx], al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].r
-		mov	bx, word ptr [bp+var_4]
-		mov	es:[bx+1], al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].b
-		mov	bx, word ptr [bp+var_4]
-		mov	es:[bx+2], al
-		add	word ptr [bp+var_4], 3
-		inc	si
-
-loc_D210:
-		cmp	si, 10h
-		jl	short loc_D1DC
-		xor	ax, ax
-		jmp	short loc_D21C
-; ---------------------------------------------------------------------------
-
-loc_D219:
-		mov	ax, 1
-
-loc_D21C:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_D1C0	endp
-
+	extern _z_respal_set:proc
 op_06_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -7528,8 +7335,7 @@ _game_initialized	db 0
 include th01/hardware/palette[data].asm
 byte_129AA	db 0
 word_129AB	dw 80h
-aPal98Grb	db 'pal98 grb',0
-		db 0
+include th01/hardware/respal[data].asm
 word_129B8	dw 1
 word_129BA	dw 1
 		dd    0

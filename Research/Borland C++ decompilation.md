@@ -20,6 +20,7 @@ Example:
 | | |
 |-|-|
 | `MOV al, var`<br />`MOV ah, 0`| `var` is *unsigned char* |
+| `MOV al, var`<br />`CBW` | `var` is *char*, `AX` is *int* |
 
 ## Arithmetic
 
@@ -48,7 +49,18 @@ case it's part of an arithmetic expression that was promoted to `int`.
 * Multiple cases with the same offset in the table, to code that doesn't
   return? Code was compiled with `-O`
 
-## Pushing byte arguments to functions
+## Function calls
+
+### `NOP` insertion
+
+Happens for every `far` call to outside of the current translation unit, even
+if both the caller and callee end up being linked into the same code segment.
+
+**Certainty:** Seems like there *might* be a way around that, apart from
+temporarily spelling out these calls in ASM until both functions are compiled
+as part of the same translation unit. Found nothing so far, though.
+
+### Pushing byte arguments to functions
 
 Borland C++ just pushes the entire word. Will cause IDA to mis-identify
 certain local variables as `word`s when they aren't.
