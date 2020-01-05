@@ -5,6 +5,7 @@
 
 extern "C"
 {
+#include "platform.h"
 #include "pc98.h"
 #include "th03/sprite16.hpp"
 #include "th03/playfld.hpp"

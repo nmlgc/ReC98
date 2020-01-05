@@ -16,4 +16,5 @@ RES_Y = 400
 ROW_SIZE = (RES_X / 8)
 ; Collides with master.lib's bfnt_entry_pat.asm
 ; PLANE_SIZE = (ROW_SIZE * RES_Y)
+COLOR_COUNT = 16
 ; ========

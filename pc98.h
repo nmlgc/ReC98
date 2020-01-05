@@ -15,6 +15,32 @@
 #define RES_Y 400
 #define ROW_SIZE (RES_X / 8)
 #define PLANE_SIZE (ROW_SIZE * RES_Y)
+
+#define COLOR_COUNT 16
+
+#pragma option -a1
+
+#ifdef __cplusplus
+	template <class ComponentType> union RGB {
+		struct {
+			ComponentType r, g, b;
+		} c;
+		ComponentType v[3];
+	};
+
+	template <class RGBType> struct Palette {
+		RGBType colors[COLOR_COUNT];
+	};
+
+	// The 16-color mode supports 4 bits per RGB component, for a total of
+	// 4,096 colors
+	typedef int8_t uint4_t;
+
+	typedef RGB<uint4_t> RGB4;
+	typedef Palette<RGB4> Palette4;
+#endif
+
+#pragma option -a.
 /// --------
 
 /// Keyboard
