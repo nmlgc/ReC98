@@ -1,0 +1,95 @@
+SCORE_FONT_W = 8
+SCORE_FONT_H = 8
+
+public _SCORE_FONT
+_SCORE_FONT label byte
+; 0
+	db   111110b
+	db  1100001b
+	db  1010001b
+	db  1001001b
+	db  1000101b
+	db  1000011b
+	db   111110b
+	db        0b
+; 1
+	db   111110b
+	db     1000b
+	db     1000b
+	db     1000b
+	db   101000b
+	db   101000b
+	db    11000b
+	db        0b
+; 2
+	db  1111111b
+	db  1000000b
+	db   100000b
+	db    11100b
+	db       11b
+	db  1000001b
+	db   111110b
+	db        0b
+; 3
+	db   111110b
+	db  1000001b
+	db        01
+	db    11110b
+	db        01
+	db  1000001b
+	db   111110b
+	db        0b
+; 4
+	db       10b
+	db       10b
+	db  1111111b
+	db   100010b
+	db    10010b
+	db     1010b
+	db      110b
+	db        0b
+; 5
+	db    11110b
+	db  1100001b
+	db        01
+	db  1100001b
+	db  1011110b
+	db  1000000b
+	db  1111110b
+	db        0b
+; 6
+	db   111110b
+	db  1000001b
+	db  1000001b
+	db  1111110b
+	db  1000000b
+	db  1000001b
+	db   111110b
+	db        0b
+; 7
+	db     1000b
+	db     1000b
+	db     1000b
+	db     1000b
+	db      110b
+	db  1000001b
+	db  1111111b
+	db        0b
+; 8
+	db   111110b
+	db  1000001b
+	db  1000001b
+	db   111110b
+	db  1000001b
+	db  1000001b
+	db   111110b
+	db        0b
+; 9
+	db   111110b
+	db  1000001b
+	db        01
+	db   111111b
+	db  1000001b
+	db  1000001b
+	db   111110b
+	db        0b

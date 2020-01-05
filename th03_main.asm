@@ -6610,7 +6610,7 @@ sub_D50E	proc near
 		push	si
 		push	di
 		mov	ah, 0
-		mov	si, 858h
+		mov	si, offset _SCORE_FONT
 		shl	ax, 3
 		add	si, ax
 		mov	ax, cx
@@ -35989,86 +35989,7 @@ word_1DDAC	dw 2AB6h
 		db  32h	; 2
 		db    0
 		db    0
-		db  3Eh	; >
-		db  61h	; a
-		db  51h	; Q
-		db  49h	; I
-		db  45h	; E
-		db  43h	; C
-		db  3Eh	; >
-		db    0
-		db  3Eh	; >
-		db    8
-		db    8
-		db    8
-		db  28h	; (
-		db  28h	; (
-		db  18h
-		db    0
-		db  7Fh
-		db  40h
-		db  20h
-		db  1Ch
-		db    3
-		db  41h	; A
-		db  3Eh	; >
-		db    0
-		db  3Eh	; >
-		db  41h	; A
-		db    1
-		db  1Eh
-		db    1
-		db  41h	; A
-		db  3Eh	; >
-		db    0
-		db    2
-		db    2
-		db  7Fh
-		db  22h	; "
-		db  12h
-		db  0Ah
-		db    6
-		db    0
-		db  1Eh
-		db  61h	; a
-		db    1
-		db  61h	; a
-		db  5Eh	; ^
-		db  40h
-		db  7Eh	; ~
-		db    0
-		db  3Eh	; >
-		db  41h	; A
-		db  41h	; A
-		db  7Eh	; ~
-		db  40h
-		db  41h	; A
-		db  3Eh	; >
-		db    0
-		db    8
-		db    8
-		db    8
-		db    8
-		db    6
-		db  41h	; A
-		db  7Fh
-		db    0
-		db  3Eh	; >
-		db  41h	; A
-		db  41h	; A
-		db  3Eh	; >
-		db  41h	; A
-		db  41h	; A
-		db  3Eh	; >
-		db    0
-		db  3Eh	; >
-		db  41h	; A
-		db    1
-		db  3Fh	; ?
-		db  41h	; A
-		db  41h	; A
-		db  3Eh	; >
-		db    0
+include th03/sprites/score.asm
 		db  10h
 		db  27h	; '
 		db 0E8h
