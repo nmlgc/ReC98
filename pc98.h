@@ -16,6 +16,8 @@
 #define ROW_SIZE (RES_X / 8)
 #define PLANE_SIZE (ROW_SIZE * RES_Y)
 
+typedef bool page_t;
+
 #define COLOR_COUNT 16
 
 #pragma option -a1

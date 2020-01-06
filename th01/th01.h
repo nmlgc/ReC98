@@ -9,14 +9,11 @@
 // --------
 void egc_copy_rect_1_to_0(int x, int y, int w, int h);
 
-void graph_accesspage_func(int page);
+#include "th01/hardware/pages.h"
+
 void grcg_setcolor_rmw(int color);
 void grcg_setcolor_tdw(int color);
 void grcg_off_func(void);
-
-#undef graph_accesspage
-#define graph_accesspage graph_accesspage_func
-
 #undef grcg_off
 #define grcg_off grcg_off_func
 // --------

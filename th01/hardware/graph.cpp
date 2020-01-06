@@ -6,6 +6,11 @@ extern "C" {
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/palette.hpp"
 
+/// Pages
+/// -----
+extern page_t page_back;
+/// -----
+
 void z_palette_fade_from(
 	uint4_t from_r, uint4_t from_g, uint4_t from_b,
 	int keep[COLOR_COUNT],

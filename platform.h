@@ -8,11 +8,9 @@
 // __TURBOC__ is #define'd on both "Borland" and "Turbo" editions, unlike
 // __BORLANDC__, which is only #define'd on the former.
 #if defined(__TURBOC__) && defined(__MSDOS__)
-# ifdef __cplusplus
 typedef char bool;
 # define false 0
 # define  true 1
-#endif
 typedef char int8_t;
 typedef short int16_t;
 typedef long int32_t;

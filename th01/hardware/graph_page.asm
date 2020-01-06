@@ -1,5 +1,4 @@
 public _graph_showpage_func, _graph_accesspage_func
-; void __cdecl graph_showpage_func(char page)
 _graph_showpage_func	proc far
 
 @@page		= byte ptr  6
@@ -12,14 +11,13 @@ _graph_showpage_func	proc far
 _graph_showpage_func	endp
 
 
-; void __cdecl _graph_accesspage_func(char page)
 _graph_accesspage_func	proc far
 @@page		= word ptr  6
 
 	push	bp
 	mov	bp, sp
 	mov	bx, [bp+@@page]
-	mov	_graph_page, bl
+	mov	_page_back, bl
 	graph_accesspage bl
 	pop	bp
 	retf

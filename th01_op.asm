@@ -2604,7 +2604,7 @@ src		= dword	ptr -4
 		mov	[bp+var_8], 0B0000000h
 		mov	[bp+var_C], 0B8000000h
 		mov	[bp+var_10], 0E0000000h
-		mov	al, _graph_page
+		mov	al, _page_back
 		xor	al, 1
 		mov	[bp+@@page_other], al
 		xor	si, si
@@ -2663,7 +2663,7 @@ loc_BBB7:
 		pushd	[bp+var_10] ; dest
 		call	_memcpy
 		add	sp, 1Eh
-		graph_accesspage _graph_page
+		graph_accesspage _page_back
 		add	word ptr [bp+src], 50h ; 'P'
 		add	word ptr [bp+var_8], 50h ; 'P'
 		add	word ptr [bp+var_C], 50h ; 'P'
@@ -4672,7 +4672,7 @@ graph_putsa_fx	endp
 		mov	dword ptr [bp-0Ah], 0B0000000h
 		mov	dword ptr [bp-0Eh], 0B8000000h
 		mov	dword ptr [bp-12h], 0E0000000h
-		mov	al, _graph_page
+		mov	al, _page_back
 		xor	al, 1
 		mov	[bp-13h], al
 		mov	ax, di
@@ -4759,7 +4759,7 @@ loc_CCF6:
 		pushd	dword ptr [bp-12h]
 		call	_memcpy
 		add	sp, 1Eh
-		graph_accesspage _graph_page
+		graph_accesspage _page_back
 		add	word ptr [bp-6], 50h ; 'P'
 		add	word ptr [bp-0Ah], 50h ; 'P'
 		add	word ptr [bp-0Eh], 50h ; 'P'
@@ -4923,7 +4923,7 @@ loc_CF49:
 		mov	ax, [bp-24h]
 		cmp	ax, [bp-2]
 		jl	loc_CE94
-		graph_accesspage _graph_page
+		graph_accesspage _page_back
 		pop	di
 		pop	si
 		leave
@@ -7342,7 +7342,7 @@ _int06_old	dd ?
 word_1366C	dw ?
 word_1366E	dw ?
 		db    ?	;
-_graph_page	db ?
+include th01/hardware/graph[bss].asm
 include th01/hardware/vram_planes[bss].asm
 		dd    ?
 		dd    ?
