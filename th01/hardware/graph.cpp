@@ -3,7 +3,67 @@
 extern "C" {
 #include <dos.h>
 #include "ReC98.h"
+#include "th01/hardware/vsync.h"
 #include "th01/hardware/palette.hpp"
+
+void z_palette_fade_from(
+	uint4_t from_r, uint4_t from_g, uint4_t from_b,
+	int keep[COLOR_COUNT],
+	unsigned int step_ms
+)
+{
+	RGB4 fadepal[COLOR_COUNT];
+	int i;
+	int col;
+	int comp;
+
+	memset(&fadepal, 0x0, sizeof(fadepal));
+	for(i = 0; i < COLOR_COUNT; i++) {
+		if(!keep[i]) {
+			fadepal[i].c.r = from_r;
+			fadepal[i].c.g = from_g;
+			fadepal[i].c.b = from_b;
+		} else {
+			fadepal[i].c.r = z_Palettes.colors[i].c.r;
+			fadepal[i].c.g = z_Palettes.colors[i].c.g;
+			fadepal[i].c.b = z_Palettes.colors[i].c.b;
+		}
+	}
+	for(i = 0; i < 16; i++) {
+		z_vsync_wait();
+		for(col = 0; col < COLOR_COUNT; col++) {
+			for(comp = 0; comp < sizeof(RGB4); comp++) {
+				if(fadepal[col].v[comp] != z_Palettes.colors[col].v[comp]) {
+					fadepal[col].v[comp] +=
+						(fadepal[col].v[comp] < z_Palettes.colors[col].v[comp])
+						?  1
+						: -1;
+				}
+			}
+			/* TODO: Replace with the decompiled call
+			 * z_palette_show_single_col(col, fadepal[col]);
+			 * once that function is part of this translation unit */
+			__asm {
+#define push_comp(comp) \
+	mov 	bx, col; \
+	db 0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */	\
+	lea 	ax, fadepal[comp]; \
+	db 0x03, 0xD8; /* Turbo C++'s preferred opcode for ADD BX, AX */ \
+	mov 	al, ss:[bx]; \
+	cbw; \
+	push	ax;
+				push_comp(2)
+				push_comp(1)
+				push_comp(0)
+				push	col
+				push	cs
+				call	near ptr z_palette_show_single
+				add 	sp, 8
+			}
+		}
+		delay(step_ms);
+	}
+}
 
 // Resident palette
 // ----------------

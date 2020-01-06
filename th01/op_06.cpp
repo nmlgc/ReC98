@@ -3,4 +3,4 @@
  * Code segment #6 of TH01's OP.EXE
  */
 
-#include "th01/hardware/respal.cpp"
+#include "th01/hardware/graph.cpp"
