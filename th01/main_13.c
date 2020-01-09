@@ -29,12 +29,12 @@ void graph_copy_hline_mask_1_to_0(int x, int y, char *mask, int w)
 	register int p = VRAM_OFFSET(x, y);
 	for(col = 0; col < w; col++, p++) {
 		if(mask[col]) {
-			graph_accesspage(1);
+			graph_accesspage_func(1);
 			px8.B = mask[col] & VRAM_PLANE_B[p];
 			px8.R = mask[col] & VRAM_PLANE_R[p];
 			px8.G = mask[col] & VRAM_PLANE_G[p];
 			px8.E = mask[col] & VRAM_PLANE_E[p];
-			graph_accesspage(0);
+			graph_accesspage_func(0);
 			grcg_setcolor_rmw(0);
 			VRAM_PLANE_B[p] = mask[col];
 			grcg_off();

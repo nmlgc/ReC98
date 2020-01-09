@@ -24,6 +24,7 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 	grcg_line(x[3], y[3], x[0], y[0]);
 }
 
+#define graph_accesspage_func graph_accesspage
 #include "th01\hardware\egccopyr.c"
 
 void pascal rotrect_animate(char rot_speed, char start_angle)

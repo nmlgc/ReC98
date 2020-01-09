@@ -31,7 +31,7 @@ void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int 
 		int p1 = row_p1;
 		for(col16 = 0; col16 < w1 / 16; col16++) {
 			int scale_p;
-			graph_accesspage(1);
+			graph_accesspage_func(1);
 			px16.B = *(planar16_t*)(VRAM_PLANE_B + p1);
 			px16.R = *(planar16_t*)(VRAM_PLANE_R + p1);
 			px16.G = *(planar16_t*)(VRAM_PLANE_G + p1);
@@ -41,7 +41,7 @@ void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int 
 				planar32_t dst32;
 				planar32_t px32_nonzero;
 
-				graph_accesspage(0);
+				graph_accesspage_func(0);
 				scale_2x(&px32_nonzero, px16_nonzero);
 				grcg_setcolor_rmw(0);
 				*(planar32_t*)(VRAM_PLANE_B + p0 + scale_p) = px32_nonzero;
