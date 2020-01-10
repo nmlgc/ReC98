@@ -15,6 +15,17 @@ Example:
 | `[bp-1]` | `char var_2;`             |
 | `[bp-2]` | `char var_3;`             |
 
+### Grouping
+
+Any structures or classes that contain more than a single scalar-type member
+are grouped according to their declaration order, and placed *after* (that is,
+further away from BP) than all scalar-type variables. This means that it's not
+possible to bundle a set of variables with the same meaning into a structure
+(e.g. pointers to all 4 VRAM planes) if a scalar-type variable is placed
+inbetween two of these structure instances on the stack: Those structure
+instances would be grouped and always placed next to each other, no matter
+where the scalar-type variable is declared in relation to them.
+
 ## Signedness
 
 | | |

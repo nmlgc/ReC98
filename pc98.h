@@ -45,6 +45,14 @@ typedef bool page_t;
 #pragma option -a.
 /// --------
 
+/// Memory segments
+/// ---------------
+#define SEG_PLANE_B 0xA800
+#define SEG_PLANE_R 0xB000
+#define SEG_PLANE_G 0xB800
+#define SEG_PLANE_E 0xE000
+/// ---------------
+
 /// Keyboard
 /// --------
 typedef enum {

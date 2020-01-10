@@ -4,12 +4,93 @@ extern "C" {
 #include <dos.h>
 #include "ReC98.h"
 #include "th01/hardware/vsync.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/palette.hpp"
+
+/// VRAM plane "structures"
+/// -----------------------
+#define Planes_declare(var) \
+	planar8_t *var##_B = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0)); \
+	planar8_t *var##_R = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_R, 0)); \
+	planar8_t *var##_G = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_G, 0)); \
+	planar8_t *var##_E = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_E, 0));
+
+#define Planes_next_row(var) \
+	var##_B += ROW_SIZE; \
+	var##_R += ROW_SIZE; \
+	var##_G += ROW_SIZE; \
+	var##_E += ROW_SIZE;
+
+#define Planes_offset(var, x, y) \
+	var##_B += (x / 8) + (y * ROW_SIZE); \
+	var##_R += (x / 8) + (y * ROW_SIZE); \
+	var##_G += (x / 8) + (y * ROW_SIZE); \
+	var##_E += (x / 8) + (y * ROW_SIZE);
+
+#define PlanarRow_declare(var) \
+	planar8_t var##_B[ROW_SIZE]; \
+	planar8_t var##_R[ROW_SIZE]; \
+	planar8_t var##_G[ROW_SIZE]; \
+	planar8_t var##_E[ROW_SIZE]; \
+
+#define PlanarRow_blit(dst, src, bytes) \
+	memcpy(dst##_B, src##_B, bytes); \
+	memcpy(dst##_R, src##_R, bytes); \
+	memcpy(dst##_G, src##_G, bytes); \
+	memcpy(dst##_E, src##_E, bytes);
+/// -----------------------
 
 /// Pages
 /// -----
 extern page_t page_back;
 /// -----
+
+void graph_copy_byterect_back_to_front(
+	int left, int top, int right, int bottom
+)
+{
+	int w = (right - left) / 8;
+	int h = (bottom - top);
+	Planes_declare(p);
+	page_t page_front = page_back ^ 1;
+	int row;
+	PlanarRow_declare(tmp);
+
+	Planes_offset(p, left, top);
+	for(row = 0; row < h; row++) {
+		PlanarRow_blit(tmp, p, w);
+		graph_accesspage(page_front);
+		PlanarRow_blit(p, tmp, w);
+		graph_accesspage(page_back);
+		Planes_next_row(p);
+	}
+}
+
+void graph_move_byterect_interpage(
+	int src_left, int src_top, int src_right, int src_bottom,
+	int dst_left, int dst_top,
+	page_t src, page_t dst
+)
+{
+	int w = (src_right - src_left) / 8;
+	int h = (src_bottom - src_top);
+	Planes_declare(src);
+	Planes_declare(dst);
+	int row;
+	PlanarRow_declare(tmp);
+
+	Planes_offset(src, src_left, src_top);
+	Planes_offset(dst, dst_left, dst_top);
+	for(row = 0; row < h; row++) {
+		PlanarRow_blit(tmp, src, w);
+		graph_accesspage(dst);
+		PlanarRow_blit(dst, tmp, w);
+		graph_accesspage(src);
+		Planes_next_row(src);
+		Planes_next_row(dst);
+	}
+	graph_accesspage(page_back);
+}
 
 void z_palette_fade_from(
 	uint4_t from_r, uint4_t from_g, uint4_t from_b,

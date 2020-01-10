@@ -9,13 +9,7 @@
 // --------
 void egc_copy_rect_1_to_0(int x, int y, int w, int h);
 
-#include "th01/hardware/pages.h"
-
-void grcg_setcolor_rmw(int color);
-void grcg_setcolor_tdw(int color);
-void grcg_off_func(void);
-#undef grcg_off
-#define grcg_off grcg_off_func
+#include "th01/hardware/graph.h"
 // --------
 
 // master.lib text function reimplementations
