@@ -6793,55 +6793,7 @@ loc_EE92:
 		retn
 sub_EE58	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE9A	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	ax, [bp+arg_4]
-		mov	dx, [bp+arg_2]
-		shr	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	bx, [bp+arg_0]
-		shl	bx, 3
-		mov	dx, 30h	; '0'
-
-loc_EECC:
-		mov	cx, 20
-		mov	ax, [bx+17F4h]
-		rep stosw
-		add	bx, 2
-		test	bx, 7
-		jnz	short loc_EEE1
-		sub	bx, 8
-
-loc_EEE1:
-		add	di, ROW_SIZE - 40
-		dec	dx
-		jnz	short loc_EECC
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	bp
-		retn	6
-sub_EE9A	endp
-
+include th04/formats/dialog_box_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6973,39 +6925,7 @@ loc_EF9C:
 		retn	4
 sub_EF74	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFAC	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	vsync_Count1, 0
-		xor	si, si
-		jmp	short loc_EFD6
-; ---------------------------------------------------------------------------
-
-loc_EFBA:
-		push	3000C0h
-		push	si
-		call	sub_EE9A
-		push	500140h
-		push	si
-		call	sub_EE9A
-		push	0Ch
-		call	frame_delay
-		inc	si
-
-loc_EFD6:
-		cmp	si, 3
-		jl	short loc_EFBA
-		pop	si
-		pop	bp
-		retn
-sub_EFAC	endp
-
+include th04/formats/dialog_box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7371,7 +7291,7 @@ loc_F333:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		call	sub_EFAC
+		call	dialog_box_fade_in
 		call	sub_EEF2
 		call	sub_F1A6
 		call	sub_F463
@@ -32328,30 +32248,7 @@ _enemies_killed	dw 0
 include th04/frames[data].asm
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0CCh
-		db 0CCh
-		db  66h	; f
-		db  66h	; f
-		db  33h	; 3
-		db  33h	; 3
-		db  99h
-		db  99h
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh
-		db 0BBh
-		db 0DDh
-		db 0DDh
+include th04/formats/dialog[data].asm
 byte_221EC	db 0
 a_dm00_tx2	db '_DM00.TX2',0
 		db '  ',0

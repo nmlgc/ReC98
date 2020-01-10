@@ -3475,55 +3475,7 @@ loc_CFB6:
 		retn
 sub_CF44	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CFBE	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	di
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	ax, [bp+arg_4]
-		mov	dx, [bp+arg_2]
-		shr	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	bx, [bp+arg_0]
-		shl	bx, 3
-		mov	dx, 30h	; '0'
-
-loc_CFF0:
-		mov	cx, 14h
-		mov	ax, [bx+1872h]
-		rep stosw
-		add	bx, 2
-		test	bx, 7
-		jnz	short loc_D005
-		sub	bx, 8
-
-loc_D005:
-		add	di, 28h	; '('
-		dec	dx
-		jnz	short loc_CFF0
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	bp
-		retn	6
-sub_CFBE	endp
-
+include th04/formats/dialog_box_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3610,39 +3562,7 @@ loc_D078:
 		retn	4
 sub_D04E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D098	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	vsync_Count1, 0
-		xor	si, si
-		jmp	short loc_D0C2
-; ---------------------------------------------------------------------------
-
-loc_D0A6:
-		push	3000C0h
-		push	si
-		call	main_01:sub_CFBE
-		push	500140h
-		push	si
-		call	main_01:sub_CFBE
-		push	0Ch
-		call	frame_delay
-		inc	si
-
-loc_D0C2:
-		cmp	si, 3
-		jl	short loc_D0A6
-		pop	si
-		pop	bp
-		retn
-sub_D098	endp
-
+include th04/formats/dialog_box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4387,7 +4307,7 @@ sub_D6EB	proc far
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		call	main_01:sub_D098
+		call	main_01:dialog_box_fade_in
 		call	main_01:sub_D016
 		call	main_01:sub_D56C
 		push	2
@@ -38421,30 +38341,7 @@ off_22BAA	dd a_dm00_txt
 					; "_DM00.TXT"
 off_22BAE	dd a_dm04b_txt
 					; "_DM04B.txt"
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0CCh
-		db 0CCh
-		db  66h	; f
-		db  66h	; f
-		db  33h	; 3
-		db  33h	; 3
-		db  99h
-		db  99h
-		db 0EEh
-		db 0EEh
-		db  77h	; w
-		db  77h	; w
-		db 0BBh
-		db 0BBh
-		db 0DDh
-		db 0DDh
+include th04/formats/dialog[data].asm
 byte_22BCA	db 0
 a_dm00_txt	db '_DM00.TXT',0
 a_dm04b_txt	db '_DM04B.txt',0
