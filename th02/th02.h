@@ -234,10 +234,10 @@ typedef struct {
 } resident_t;
 
 extern resident_t *resident;
-
+extern char unused_op_2_3; // Maybe debug mode?
 extern char rank;
-extern char bombs;
 extern char lives;
+extern char bombs;
 // ------------------
 
 #define SHOTTYPE_COUNT 3

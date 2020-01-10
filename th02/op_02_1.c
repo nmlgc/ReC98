@@ -10,6 +10,13 @@
 #pragma codeseg op_02_TEXT
 #pragma option -3
 
+resident_t *resident;
+char unused_op_2_3;
+char lives;
+char bombs;
+long unused_4;
+long unused_5;
+
 #include "th02/exit_dos.c"
 #include "th02/zunerror.c"
 #include "th02/hardware/grppsafx.c"

@@ -174,14 +174,5 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
-public _resident
-_resident	dd ?
-		db    ?	;
-public _lives
-_lives	db ?
-public _bombs
-_bombs	db ?
-		dd    ?	;
-		dd    ?	;
 
 		end
