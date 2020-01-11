@@ -42,6 +42,40 @@ extern "C" {
 	memcpy(dst##_E, src##_E, bytes);
 /// -----------------------
 
+/// Clipping
+/// --------
+#define fix_order(low, high) \
+	if(low > high) { \
+		order_tmp = low; \
+		low = high; \
+		high = order_tmp; \
+	}
+
+#define clip_min(low, high, minimum) \
+	if(low < minimum) { \
+		if(high < minimum) { \
+			return; \
+		} \
+		low = minimum; \
+	}
+
+#define clip_max(low, high, maximum) \
+	if(high > maximum) { \
+		if(low > maximum) { \
+			return; \
+		} \
+		high = maximum; \
+	}
+
+#define clip_x(left, right) \
+	clip_min(left, right, 0); \
+	clip_max(left, right, (RES_X - 1));
+
+#define clip_y(top, bottom) \
+	clip_min(top, bottom, 0); \
+	clip_max(top, bottom, (RES_Y - 1));
+/// --------
+
 /// Temporary translation unit mismatch workarounds
 /// -----------------------------------------------
 #define GRCG_SETCOLOR_RMW(col) __asm { \
@@ -72,6 +106,81 @@ extern bool graph_r_restore_from_1;
 // Not used for purely horizontal lines.
 extern planar16_t graph_r_pattern;
 /// -----------------------
+
+void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
+{
+	int x;
+	int y;
+	int full_bytes_to_put;
+	int order_tmp;
+	planar8_t left_pixels;
+	planar8_t right_pixels;
+	planar8_t *vram_row;
+
+	fix_order(left, right);
+	fix_order(top, bottom);
+	clip_x(left, right);
+	clip_y(top, bottom);
+
+	GRCG_SETCOLOR_RMW(col);
+	vram_row = (planar8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
+	for(y = top; y <= bottom; y++) {
+		full_bytes_to_put = (right >> 3) - (left >> 3);
+		left_pixels = 0xFF >> (left & 7);
+		right_pixels = 0xFF << (7 - (right & 7));
+
+		if(full_bytes_to_put == 0) {
+			vram_row[0] = (left_pixels & right_pixels);
+		} else {
+			vram_row[0] = left_pixels;
+			for(x = 1; x < full_bytes_to_put; x++) {
+				vram_row[x] = 0xFF;
+			}
+			vram_row[full_bytes_to_put] = right_pixels;
+		}
+		vram_row += ROW_SIZE;
+	}
+	GRCG_OFF();
+}
+
+void graph_r_box(int left, int top, int right, int bottom, int col)
+{
+	/* TODO: Replace with the decompiled calls
+	 *	graph_r_hline(left, right, top, col);
+	 *	graph_r_vline(left, top, bottom, col);
+	 *	graph_r_vline(right, top, bottom, col);
+	 *	graph_r_hline(left, right, bottom, col);
+	 * once those functions are part of this translation unit */
+	__asm {
+		mov 	di, left
+		mov 	si, col
+		push	si
+		push	top
+		push	right
+		push	di
+		push	cs
+		call	near ptr graph_r_hline
+		push	si
+		push	bottom
+		push	top
+		push	di
+		push	cs
+		call	near ptr graph_r_vline
+		push	si
+		push	bottom
+		push	top
+		push	right
+		push	cs
+		call	near ptr graph_r_vline
+		push	si
+		push	bottom
+		push	right
+		push	di
+		push	cs
+		call	near ptr graph_r_hline
+		add 	sp, 0x20
+	}
+}
 
 int text_extent_fx(int fx, const unsigned char *str)
 {
@@ -120,47 +229,13 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 	if(clear_bg) {
 		w = text_extent_fx(fx, str);
 		if(underline) {
-			/* TODO: Replace with the decompiled call
-			 *	z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H + 1), 0);
-			 * once that function is part of this translation unit */
-			__asm {
-				push	0
-				mov 	ax, top
-				add 	ax, GLYPH_H + 1
-				push	ax
-				db	0x8B, 0xC6
-				add 	ax, w
-				dec 	ax
-				push	ax
-				push	top
-				db	0x56
-				push	cs
-				call	near ptr z_grcg_boxfill
-				add 	sp, 10
-			}
+			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H + 1), 0);
 			/* TODO: Replace with the decompiled call
 			 *	graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
 			 * once that function is part of this translation unit */
 			goto graph_hline_call;
 		} else {
-			/* TODO: Replace with the decompiled call
-			 *	z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H - 1), 0);
-			 * once that function is part of this translation unit */
-			__asm {
-				push	0
-				mov 	ax, top
-				add 	ax, GLYPH_H - 1
-				push	ax
-				db	0x8B, 0xC6
-				add 	ax, w
-				dec 	ax
-				push	ax
-				push	top
-				db	0x56
-				push	cs
-				call	near ptr z_grcg_boxfill
-				add 	sp, 10
-			}
+			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
 		w = text_extent_fx(fx, str);
