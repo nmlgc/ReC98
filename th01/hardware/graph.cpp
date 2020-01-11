@@ -45,6 +45,18 @@ extern "C" {
 extern page_t page_back;
 /// -----
 
+/// Restorable line drawing
+/// -----------------------
+// Never read from, so it's supposedly only there for debugging purposes?
+extern Point graph_r_last_line_end;
+// `true` copies the pixels to be drawn from the same position on page 1, thus
+// restoring them with the background image. `false` (the default) draws them
+// regularly the given [col].
+extern bool graph_r_restore_from_1;
+// Not used for purely horizontal lines.
+extern planar16_t graph_r_pattern;
+/// -----------------------
+
 void graph_copy_byterect_back_to_front(
 	int left, int top, int right, int bottom
 )

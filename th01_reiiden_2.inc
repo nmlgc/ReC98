@@ -590,7 +590,7 @@ sub_1B58F	proc far
 		mov	ax, word ptr dword_3982A
 		add	ax, 1Ch
 		push	ax
-		call	sub_F236
+		call	_graph_r_vline
 		push	7018Eh
 		mov	ax, word ptr dword_3985C+2
 		add	ax, 1Ch
@@ -598,7 +598,7 @@ sub_1B58F	proc far
 		mov	ax, word ptr dword_3985C
 		add	ax, 1Ch
 		push	ax
-		call	sub_F236
+		call	_graph_r_vline
 		add	sp, 10h
 		mov	ax, word ptr dword_3982A
 		add	ax, 4
@@ -634,7 +634,7 @@ loc_1B60E:
 		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
-		call	sub_F236
+		call	_graph_r_vline
 		push	7018Eh
 		mov	ax, word_398C2
 		add	ax, 1Ch
@@ -642,7 +642,7 @@ loc_1B60E:
 		mov	ax, word_398C0
 		add	ax, 1Ch
 		push	ax
-		call	sub_F236
+		call	_graph_r_vline
 		add	sp, 10h
 		mov	ax, point_3988E.x
 		add	ax, 4
@@ -676,7 +676,7 @@ loc_1B68A:
 		mov	ax, word_398F2
 		add	ax, 1Ch
 		push	ax
-		call	sub_F236
+		call	_graph_r_vline
 		add	sp, 8
 		mov	ax, word_398F2
 		add	ax, 4
@@ -1355,7 +1355,7 @@ loc_1BD82:
 		mov	ax, word ptr dword_3982A
 		add	ax, 1Ch
 		push	ax
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		push	190h
 		mov	ax, word ptr dword_3985C
@@ -1385,7 +1385,7 @@ loc_1BDCD:
 		mov	ax, point_3988E.x
 		add	ax, 1Ch
 		push	ax
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		push	190h
 		mov	ax, word_398C0
@@ -1462,7 +1462,7 @@ loc_1BE9A:
 loc_1BEB1:
 		add	ax, 1Ch
 		push	ax
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -3911,7 +3911,7 @@ loc_1D705:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -4739,7 +4739,7 @@ loc_1DFA4:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -7190,7 +7190,7 @@ loc_1F3DD:
 		add	bx, bx
 		push	word ptr [bx+5497h]
 		push	0C80140h
-		call	sub_F342
+		call	_graph_r_line
 		add	sp, 1Ah
 		jmp	loc_1F548
 ; ---------------------------------------------------------------------------
@@ -7213,7 +7213,7 @@ loc_1F458:
 		add	bx, bx
 		push	word ptr [bx+5497h]
 		push	0C80140h
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 0Ah
 
 loc_1F495:
@@ -8186,7 +8186,7 @@ loc_1FD77:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -17767,7 +17767,7 @@ loc_24DA3:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -19397,7 +19397,7 @@ arg_4		= byte ptr  8
 		push	[bp+var_6]
 		push	[bp+var_4]
 		push	[bp+var_2]
-		call	sub_F342
+		call	_graph_r_line
 		add	sp, 0Ah
 		leave
 		retn	6
@@ -19466,7 +19466,7 @@ arg_2		= byte ptr  6
 		push	[bp+var_6]
 		push	[bp+var_4]
 		push	[bp+var_2]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		leave
 		retn	4
@@ -23798,7 +23798,7 @@ loc_285FD:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -24243,7 +24243,7 @@ loc_28967:
 		push	word_35DBB
 		push	[bp+arg_6]
 		push	[bp+arg_8]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 
 loc_2899B:
@@ -24260,7 +24260,7 @@ loc_2899B:
 		push	si
 		push	[bp+arg_6]
 		push	[bp+arg_8]
-		call	sub_F342
+		call	_graph_r_line
 		add	sp, 0Ah
 
 loc_289C2:
@@ -28185,7 +28185,7 @@ loc_2AE54:
 		add	ax, 2
 		push	ax
 		push	780140h
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		leave
 		retn
@@ -28489,7 +28489,7 @@ loc_2B0F7:
 		add	ax, 8
 		push	ax
 		push	780140h
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	word_3B04D, 0
 		jmp	loc_2B2B6
@@ -29379,7 +29379,7 @@ loc_2B97C:
 		push	ax
 		push	word_3B330
 		push	0B90140h
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		mov	ax, word_3B332
 		add	ax, 4
 		push	ax
@@ -29387,7 +29387,7 @@ loc_2B97C:
 		sub	ax, word_3B330
 		push	ax
 		push	0B90140h
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 22h
 		xor	si, si
 		jmp	short loc_2BA16
@@ -30906,7 +30906,7 @@ loc_2C868:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -31559,7 +31559,7 @@ loc_2CE36:
 		push	word_35FF4
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 
 loc_2CE7A:
@@ -31576,7 +31576,7 @@ loc_2CE7A:
 		push	si
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	sub_F342
+		call	_graph_r_line
 		add	sp, 0Ah
 
 loc_2CEA1:
@@ -34230,7 +34230,7 @@ loc_2E66E:
 		push	word_3B513
 		push	word_3B511
 		push	46019Ah
-		call	sub_F2F5
+		call	_graph_r_line_from_1
 		add	sp, 8
 		mov	word_3A6CA, 0
 
