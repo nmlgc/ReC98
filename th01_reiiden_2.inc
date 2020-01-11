@@ -4771,17 +4771,17 @@ loc_1E0EB:
 		jz	short loc_1E12D
 		cmp	si, 3
 		jge	short loc_1E114
-		mov	al, [si+71Dh]
+		mov	al, _z_Palettes[15 * 3][si]
 		cbw
 		or	ax, ax
 		jle	short loc_1E114
-		dec	byte ptr [si+71Dh]
+		dec	_z_Palettes[15 * 3][si]
 		dec	byte ptr [si+5219h]
 
 loc_1E114:
 		cmp	di, 3
 		jge	short loc_1E121
-		inc	byte ptr [di+71Dh]
+		inc	_z_Palettes[15 * 3][di]
 		inc	byte ptr [di+5219h]
 
 loc_1E121:
@@ -14279,22 +14279,22 @@ loc_22FD7:
 ; ---------------------------------------------------------------------------
 
 loc_22FE8:
-		mov	al, [si+6FFh]
+		mov	al, _z_Palettes[5 * 3][si]
 		cmp	al, [si+51FBh]
 		jge	short loc_22FF6
-		inc	byte ptr [si+6FFh]
+		inc	_z_Palettes[5 * 3][si]
 
 loc_22FF6:
-		mov	al, [si+70Bh]
+		mov	al, _z_Palettes[9 * 3][si]
 		cmp	al, [si+5207h]
 		jge	short loc_23004
-		inc	byte ptr [si+70Bh]
+		inc	_z_Palettes[9 * 3][si]
 
 loc_23004:
-		mov	al, [si+71Dh]
+		mov	al, _z_Palettes[15 * 3][si]
 		cmp	al, [si+5219h]
 		jge	short loc_23012
-		inc	byte ptr [si+71Dh]
+		inc	_z_Palettes[15 * 3][si]
 
 loc_23012:
 		inc	si
@@ -17325,27 +17325,27 @@ loc_24A9D:
 
 loc_24AB5:
 		mov	al, [si+59F4h]
-		cmp	al, [si+6F6h]
+		cmp	al, _z_Palettes[2 * 3][si]
 		jge	short loc_24AC3
-		dec	byte ptr [si+6F6h]
+		dec	_z_Palettes[2 * 3][si]
 
 loc_24AC3:
 		mov	al, [si+5A00h]
-		cmp	al, [si+702h]
+		cmp	al, _z_Palettes[6 * 3][si]
 		jge	short loc_24AD1
-		dec	byte ptr [si+702h]
+		dec	_z_Palettes[6 * 3][si]
 
 loc_24AD1:
 		mov	al, [si+5A06h]
-		cmp	al, [si+708h]
+		cmp	al, _z_Palettes[8 * 3][si]
 		jge	short loc_24ADF
-		dec	byte ptr [si+708h]
+		dec	_z_Palettes[8 * 3][si]
 
 loc_24ADF:
 		mov	al, [si+5A0Fh]
-		cmp	al, [si+711h]
+		cmp	al, _z_Palettes[11 * 3][si]
 		jge	short loc_24AED
-		dec	byte ptr [si+711h]
+		dec	_z_Palettes[11 * 3][si]
 
 loc_24AED:
 		inc	si
@@ -31464,7 +31464,7 @@ loc_2CF11:
 loc_2CF15:
 		mov	bx, di
 		imul	bx, 3
-		mov	byte ptr [bx+si+6F0h], 0
+		mov	_z_Palettes[bx+si], 0
 		inc	si
 
 loc_2CF20:
