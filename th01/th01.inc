@@ -26,6 +26,13 @@ reiidenconfig_t struc ; (sizeof=0x4B)
 	p_value dw ?
 reiidenconfig_t ends
 
+; Text
+; ----
+FX_CLEAR_BG 	= 200h
+FX_UNDERLINE	= 400h
+FX_REVERSE  	= 800h
+; ----
+
 ; Player
 ; ------
 MISS_INVINCIBILITY_FRAMES = 150

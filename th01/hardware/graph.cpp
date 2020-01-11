@@ -2,6 +2,8 @@
 
 extern "C" {
 #include <dos.h>
+#include <mbctype.h>
+#include <mbstring.h>
 #include "ReC98.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
@@ -40,6 +42,20 @@ extern "C" {
 	memcpy(dst##_E, src##_E, bytes);
 /// -----------------------
 
+/// Temporary translation unit mismatch workarounds
+/// -----------------------------------------------
+#define GRCG_SETCOLOR_RMW(col) __asm { \
+	push	col; \
+	push	cs; \
+	call	near ptr grcg_setcolor_rmw; \
+	pop 	cx; \
+}
+#define GRCG_OFF() __asm { \
+	push	cs; \
+	call	near ptr grcg_off_func; \
+}
+/// -----------------------------------------------
+
 /// Pages
 /// -----
 extern page_t page_back;
@@ -56,6 +72,142 @@ extern bool graph_r_restore_from_1;
 // Not used for purely horizontal lines.
 extern planar16_t graph_r_pattern;
 /// -----------------------
+
+int text_extent_fx(int fx, const unsigned char *str)
+{
+	register int ret = 0;
+	register int spacing = (fx / 0x40) % 8;
+	while(*str) {
+		if(_ismbblead(str[0])) {
+			uint16_t codepoint = ((char)str[0] << 8) + str[0];
+			str++;
+			str++;
+			if(codepoint < 0x8540) {
+				ret += GLYPH_FULL_W;
+			} else if(codepoint > 0x869E) {
+				ret += GLYPH_FULL_W;
+			} else {
+				ret += GLYPH_HALF_W;
+			}
+		} else {
+			ret += GLYPH_HALF_W;
+			str++;
+		}
+		ret += spacing;
+	}
+	return ret - spacing;
+}
+
+#include "th01/hardware/grppsafx.c"
+
+void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
+{
+	uint16_t codepoint;
+	planar16_t glyph_row;
+	unsigned char far *vram;
+	int fullwidth;
+	int first_bit;
+	int weight = (fx / 0x10) % 4;
+	int spacing = (fx / 0x40) % 8;
+	int clear_bg = (fx & FX_CLEAR_BG);
+	int underline = (fx & FX_UNDERLINE);
+	int reverse = (fx & FX_REVERSE);
+	int w;
+	int line;
+	planar16_t glyph[GLYPH_H];
+	planar16_t glyph_row_tmp;
+
+	if(clear_bg) {
+		w = text_extent_fx(fx, str);
+		if(underline) {
+			/* TODO: Replace with the decompiled call
+			 *	z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H + 1), 0);
+			 * once that function is part of this translation unit */
+			__asm {
+				push	0
+				mov 	ax, top
+				add 	ax, GLYPH_H + 1
+				push	ax
+				db	0x8B, 0xC6
+				add 	ax, w
+				dec 	ax
+				push	ax
+				push	top
+				db	0x56
+				push	cs
+				call	near ptr z_grcg_boxfill
+				add 	sp, 10
+			}
+			/* TODO: Replace with the decompiled call
+			 *	graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
+			 * once that function is part of this translation unit */
+			goto graph_hline_call;
+		} else {
+			/* TODO: Replace with the decompiled call
+			 *	z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H - 1), 0);
+			 * once that function is part of this translation unit */
+			__asm {
+				push	0
+				mov 	ax, top
+				add 	ax, GLYPH_H - 1
+				push	ax
+				db	0x8B, 0xC6
+				add 	ax, w
+				dec 	ax
+				push	ax
+				push	top
+				db	0x56
+				push	cs
+				call	near ptr z_grcg_boxfill
+				add 	sp, 10
+			}
+		}
+	} else if(underline) {
+		w = text_extent_fx(fx, str);
+		/* TODO: Replace with the decompiled call
+		 *	graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
+		 * once that function is part of this translation unit */
+graph_hline_call:
+		__asm {
+			push	7
+			mov 	ax, top
+			add 	ax, GLYPH_H + 1
+			push	ax
+			db	0x8B, 0xC6
+			add 	ax, w
+			dec 	ax
+			push	ax
+			db	0x56
+			push	cs
+			call	near ptr graph_r_hline
+			add 	sp, 8
+		}
+	}
+
+	GRCG_SETCOLOR_RMW(fx);
+	OUTB(0x68, 0xB); // CG ROM dot access
+
+	while(str[0]) {
+		set_vram_ptr(vram, first_bit, left, top);
+		get_glyph(glyph, codepoint, fullwidth, str, left, line);
+
+		for(line = 0; line < GLYPH_H; line++) {
+			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
+			if(reverse) {
+				if(fullwidth) {
+					glyph_row ^= 0xFFFF;
+				} else {
+					glyph_row ^= 0xFF00;
+				}
+			}
+			put_row_and_advance(vram, glyph_row, first_bit);
+		}
+		advance_left(left, fullwidth, spacing);
+	}
+
+	OUTB(0x68, 0xA); // CG ROM code access
+	GRCG_OFF();
+}
 
 void graph_copy_byterect_back_to_front(
 	int left, int top, int right, int bottom

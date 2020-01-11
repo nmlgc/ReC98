@@ -76,6 +76,29 @@ as part of the same translation unit. Found nothing so far, though.
 Borland C++ just pushes the entire word. Will cause IDA to mis-identify
 certain local variables as `word`s when they aren't.
 
+## Flags
+
+### `-O` (Optimize jumps)
+
+Inhibited by identical variable declarations within more than one scope – the
+optimizer will only merge the code *after* the last ASM reference to that
+declared variable. Yes, even though the emitted ASM would be identical:
+```c
+if(a) {
+    int v = set_v();
+    do_something_else();
+    use(v);
+} else if(underline) {
+    // Second declaration of [v]. Even though it's assigned to the same stack
+    // offset, the second `PUSH w` call will still be emitted separately.
+    // Thus, jump optimization only reuses the `CALL use` instruction.
+    // Move the `int v;` declaraion to the beginning of the function to avoid
+    // this.
+    int v = set_v();
+    use(v);
+}
+```
+
 ## Inlining
 
 Always worth a try to get rid of a potential macro. Some edge cases don't

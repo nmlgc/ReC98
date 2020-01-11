@@ -2844,11 +2844,11 @@ sub_CC0F	proc far
 		call	_graph_accesspage_func
 		pop	cx
 		call	sub_EC80
-		call	_graph_putsa_fx c, 0, (227h shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
-		call	_graph_putsa_fx c, 0, (227h shl 16) or 16, offset aVxvevub@b@B@, ds ; "ÇxÇÖÇìÅ@Å@  Å@"
-		call	_graph_putsa_fx c, 0, (227h shl 16) or 32, offset aVmvpb@b@B@, ds ; "ÇmÇèÅ@Å@	Å@ "
-		call	_graph_putsa_fx c, 0, (221h shl 16) or 48, offset aVxvevub@b@c@, ds ; "ÇxÇÖÇìÅ@Å@Å@  "
-		call	_graph_putsa_fx c, 0, (221h shl 16) or 64, offset aVmvpb@b@c@, ds ; "ÇmÇèÅ@Å@Å@   "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 16, offset aVxvevub@b@B@, ds ; "ÇxÇÖÇìÅ@Å@  Å@"
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 32, offset aVmvpb@b@B@, ds ; "ÇmÇèÅ@Å@	Å@ "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 21h) shl 16) or 48, offset aVxvevub@b@c@, ds ; "ÇxÇÖÇìÅ@Å@Å@  "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 21h) shl 16) or 64, offset aVmvpb@b@c@, ds ; "ÇmÇèÅ@Å@Å@   "
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -6440,485 +6440,8 @@ loc_F11D:
 sub_F0B3	endp
 
 include th01/hardware/graph_r.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F9D0	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	cx, cx
-		mov	ax, [bp+arg_0]
-		mov	bx, 40h
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	si, dx
-		jmp	short loc_FA32
-; ---------------------------------------------------------------------------
-
-loc_F9EA:
-		les	bx, [bp+arg_2]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 4
-		jz	short loc_FA2A
-		mov	bx, word ptr [bp+arg_2]
-		mov	al, es:[bx]
-		cbw
-		shl	ax, 8
-		mov	dl, es:[bx]
-		mov	dh, 0
-		add	ax, dx
-		mov	di, ax
-		inc	word ptr [bp+arg_2]
-		inc	word ptr [bp+arg_2]
-		cmp	di, 8540h
-		jb	short loc_FA20
-		cmp	di, 869Eh
-		jbe	short loc_FA25
-
-loc_FA20:
-		add	cx, 10h
-		jmp	short loc_FA30
-; ---------------------------------------------------------------------------
-
-loc_FA25:
-		add	cx, 8
-		jmp	short loc_FA30
-; ---------------------------------------------------------------------------
-
-loc_FA2A:
-		add	cx, 8
-		inc	word ptr [bp+arg_2]
-
-loc_FA30:
-		add	cx, si
-
-loc_FA32:
-		les	bx, [bp+arg_2]
-		cmp	byte ptr es:[bx], 0
-		jnz	short loc_F9EA
-		mov	ax, cx
-		sub	ax, si
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_F9D0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-_graph_putsa_fx	proc far
-
-var_3A		= byte ptr -3Ah
-var_1A		= word ptr -1Ah
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= dword	ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= dword	ptr  0Ch
-
-		enter	3Ah, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_E], dx
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+var_10], dx
-		mov	ax, [bp+arg_4]
-		and	ax, 200h
-		mov	[bp+var_12], ax
-		mov	ax, [bp+arg_4]
-		and	ax, 400h
-		mov	[bp+var_14], ax
-		mov	ax, [bp+arg_4]
-		and	ax, 800h
-		mov	[bp+var_16], ax
-		cmp	[bp+var_12], 0
-		jz	short loc_FAE2
-		pushd	[bp+arg_6]
-		push	[bp+arg_4]
-		call	sub_F9D0
-		add	sp, 6
-		mov	[bp+var_18], ax
-		cmp	[bp+var_14], 0
-		jz	short loc_FAC5
-		push	0
-		mov	ax, [bp+arg_2]
-		add	ax, 11h
-		push	ax
-		mov	ax, si
-		add	ax, [bp+var_18]
-		dec	ax
-		push	ax
-		push	[bp+arg_2]
-		push	si
-		call	_z_grcg_boxfill
-		add	sp, 0Ah
-		jmp	short loc_FAF9
-; ---------------------------------------------------------------------------
-
-loc_FAC5:
-		push	0
-		mov	ax, [bp+arg_2]
-		add	ax, 0Fh
-		push	ax
-		mov	ax, si
-		add	ax, [bp+var_18]
-		dec	ax
-		push	ax
-		push	[bp+arg_2]
-		push	si
-		call	_z_grcg_boxfill
-		add	sp, 0Ah
-		jmp	short loc_FB11
-; ---------------------------------------------------------------------------
-
-loc_FAE2:
-		cmp	[bp+var_14], 0
-		jz	short loc_FB11
-		pushd	[bp+arg_6]
-		push	[bp+arg_4]
-		call	sub_F9D0
-		add	sp, 6
-		mov	[bp+var_18], ax
-
-loc_FAF9:
-		push	7
-		mov	ax, [bp+arg_2]
-		add	ax, 17
-		push	ax
-		mov	ax, si
-		add	ax, [bp+var_18]
-		dec	ax
-		push	ax
-		push	si
-		call	_graph_r_hline
-		add	sp, 8
-
-loc_FB11:
-		push	[bp+arg_4]
-		call	_grcg_setcolor_rmw
-		pop	cx
-		mov	dx, 68h	; 'h'
-		mov	al, 0Bh
-		out	dx, al
-		jmp	loc_FD49
-; ---------------------------------------------------------------------------
-
-loc_FB22:
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	word ptr [bp+var_8+2], 0A800h
-		mov	word ptr [bp+var_8], dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	[bp+var_C], dx
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 4
-		jz	short loc_FB77
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		cbw
-		shl	ax, 8
-		mov	dl, es:[bx+1]
-		mov	dh, 0
-		add	ax, dx
-		push	ax
-		call	__mbcjmstojis
-		pop	cx
-		mov	[bp+var_2], ax
-		add	word ptr [bp+arg_6], 2
-		jmp	short loc_FBBD
-; ---------------------------------------------------------------------------
-
-loc_FB77:
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	bx, ax
-		test	__mbctype+1[bx], 3
-		jz	short loc_FB95
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		add	ax, 2980h
-		jmp	short loc_FBB0
-; ---------------------------------------------------------------------------
-
-loc_FB95:
-		les	bx, [bp+arg_6]
-		mov	al, es:[bx]
-		cbw
-		mov	bx, ax
-		test	byte ptr [bx+1D17h], 5Eh
-		jz	short loc_FBB5
-		mov	bx, word ptr [bp+arg_6]
-		mov	al, es:[bx]
-		mov	ah, 0
-		add	ax, 2900h
-
-loc_FBB0:
-		mov	[bp+var_2], ax
-		jmp	short loc_FBBA
-; ---------------------------------------------------------------------------
-
-loc_FBB5:
-		mov	[bp+var_2], 2B21h
-
-loc_FBBA:
-		inc	word ptr [bp+arg_6]
-
-loc_FBBD:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 0FFh
-		mov	dx, 0A1h ; '°'
-		out	dx, al
-		mov	ax, [bp+var_2]
-		shr	ax, 8
-		sub	al, 20h	; ' '
-		mov	dx, 0A3h ; '£'
-		out	dx, al
-		cmp	[bp+var_2], 2921h
-		jb	short loc_FC1E
-		cmp	[bp+var_2], 2B7Eh
-		ja	short loc_FC1E
-		cmp	si, 278h
-		jg	loc_FD54
-		mov	[bp+var_1A], 0
-		jmp	short loc_FC11
-; ---------------------------------------------------------------------------
-
-loc_FBEF:
-		mov	al, byte ptr [bp+var_1A]
-		or	al, 20h
-		mov	dx, 0A5h ; '•'
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		shl	ax, 8
-		mov	bx, [bp+var_1A]
-		add	bx, bx
-		lea	dx, [bp+var_3A]
-		add	bx, dx
-		mov	ss:[bx], ax
-		inc	[bp+var_1A]
-
-loc_FC11:
-		cmp	[bp+var_1A], 10h
-		jl	short loc_FBEF
-		mov	[bp+var_A], 0
-		jmp	short loc_FC74
-; ---------------------------------------------------------------------------
-
-loc_FC1E:
-		cmp	si, 270h
-		jg	loc_FD54
-		mov	[bp+var_1A], 0
-		jmp	short loc_FC69
-; ---------------------------------------------------------------------------
-
-loc_FC2D:
-		mov	al, byte ptr [bp+var_1A]
-		or	al, 20h
-		mov	dx, 0A5h ; '•'
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		shl	ax, 8
-		mov	bx, [bp+var_1A]
-		add	bx, bx
-		lea	dx, [bp+var_3A]
-		add	bx, dx
-		mov	ss:[bx], ax
-		mov	dx, 0A5h ; '•'
-		mov	al, byte ptr [bp+var_1A]
-		out	dx, al
-		mov	dx, 0A9h ; '©'
-		in	al, dx
-		mov	ah, 0
-		mov	bx, [bp+var_1A]
-		add	bx, bx
-		lea	dx, [bp+var_3A]
-		add	bx, dx
-		add	ss:[bx], ax
-		inc	[bp+var_1A]
-
-loc_FC69:
-		cmp	[bp+var_1A], 10h
-		jl	short loc_FC2D
-		mov	[bp+var_A], 1
-
-loc_FC74:
-		mov	[bp+var_1A], 0
-		jmp	loc_FD30
-; ---------------------------------------------------------------------------
-
-loc_FC7C:
-		mov	bx, [bp+var_1A]
-		add	bx, bx
-		lea	ax, [bp+var_3A]
-		add	bx, ax
-		mov	ax, ss:[bx]
-		mov	[bp+var_4], ax
-		mov	ax, [bp+var_E]
-		cmp	ax, 1
-		jz	short loc_FCA0
-		cmp	ax, 2
-		jz	short loc_FCB6
-		cmp	ax, 3
-		jz	short loc_FCAC
-		jmp	short loc_FCCC
-; ---------------------------------------------------------------------------
-
-loc_FCA0:
-		mov	di, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		or	[bp+var_4], ax
-		jmp	short loc_FCCC
-; ---------------------------------------------------------------------------
-
-loc_FCAC:
-		mov	di, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		or	[bp+var_4], ax
-
-loc_FCB6:
-		mov	di, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		or	[bp+var_4], ax
-		xor	di, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		not	ax
-		and	[bp+var_4], ax
-
-loc_FCCC:
-		cmp	[bp+var_16], 0
-		jz	short loc_FCE3
-		cmp	[bp+var_A], 0
-		jz	short loc_FCDE
-		xor	[bp+var_4], 0FFFFh
-		jmp	short loc_FCE3
-; ---------------------------------------------------------------------------
-
-loc_FCDE:
-		xor	[bp+var_4], 0FF00h
-
-loc_FCE3:
-		cmp	[bp+var_C], 0
-		jz	short loc_FD16
-		mov	cl, byte ptr [bp+var_C]
-		add	cl, 8
-		mov	ax, [bp+var_4]
-		shr	ax, cl
-		les	bx, [bp+var_8]
-		mov	es:[bx], al
-		mov	ax, [bp+var_4]
-		mov	cl, byte ptr [bp+var_C]
-		shr	ax, cl
-		mov	es:[bx+1], al
-		mov	cl, 8
-		sub	cl, byte ptr [bp+var_C]
-		mov	al, byte ptr [bp+var_4]
-		shl	al, cl
-		mov	es:[bx+2], al
-		jmp	short loc_FD29
-; ---------------------------------------------------------------------------
-
-loc_FD16:
-		mov	ax, [bp+var_4]
-		shr	ax, 8
-		les	bx, [bp+var_8]
-		mov	es:[bx], al
-		mov	al, byte ptr [bp+var_4]
-		mov	es:[bx+1], al
-
-loc_FD29:
-		add	word ptr [bp+var_8], 50h ; 'P'
-		inc	[bp+var_1A]
-
-loc_FD30:
-		cmp	[bp+var_1A], 10h
-		jl	loc_FC7C
-		cmp	[bp+var_A], 0
-		jz	short loc_FD41
-		add	si, 8
-
-loc_FD41:
-		mov	ax, [bp+var_10]
-		add	ax, 8
-		add	si, ax
-
-loc_FD49:
-		les	bx, [bp+arg_6]
-		cmp	byte ptr es:[bx], 0
-		jnz	loc_FB22
-
-loc_FD54:
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		leave
-		retf
-_graph_putsa_fx	endp
-
+	extern _text_extent_fx:proc
+	extern _graph_putsa_fx:proc
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc
 main_06_TEXT	ends
@@ -10764,32 +10287,12 @@ loc_127AC:
 		push	1
 		call	_graph_accesspage_func
 		call	sub_EC0D
-		push	ds
-		push	offset aVqvnvtvmvcb@vp ; "ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq"
-		push	(207h shl 16) or 0
-		push	0
-		call	_graph_putsa_fx
-		push	ds
-		push	offset aVbvpvovzvtvbvf ; "ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI"
-		push	(207h shl 16) or 32
-		push	0
-		call	_graph_putsa_fx
-		push	ds
-		push	offset aVrvevmvevgvfb@ ; "ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ"
-		push	(207h shl 16) or 64
-		push	0
-		call	_graph_putsa_fx
-		push	ds
-		push	offset aCvkev	; "ñÇäEÇ÷"
-		push	(201h shl 16) or 96
-		push	0
-		call	_graph_putsa_fx
+		call	_graph_putsa_fx stdcall, 0, large ((FX_CLEAR_BG or 7) shl 16) or 0, offset aVqvnvtvmvcb@vp, ds ; "ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq"
+		call	_graph_putsa_fx stdcall, 0, large ((FX_CLEAR_BG or 7) shl 16) or 32, offset aVbvpvovzvtvbvf, ds ; "ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI"
+		call	_graph_putsa_fx stdcall, 0, large ((FX_CLEAR_BG or 7) shl 16) or 64, offset aVrvevmvevgvfb@, ds ; "ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ"
+		call	_graph_putsa_fx stdcall, 0, large ((FX_CLEAR_BG or 1) shl 16) or 96, offset aCvkev, ds	; "ñÇäEÇ÷"
 		add	sp, 2Eh
-		push	ds
-		push	offset aTnncv	; "ínçñÇ÷"
-		push	(203h shl 16) or 128
-		push	0
-		call	_graph_putsa_fx
+		call	_graph_putsa_fx stdcall, 0, large ((FX_CLEAR_BG or 3) shl 16) or 128, offset aTnncv, ds	; "ínçñÇ÷"
 		push	0
 		call	_graph_accesspage_func
 		push	(0Fh shl 16) or 0Fh
@@ -13265,7 +12768,7 @@ var_18		= byte ptr -18h
 var_6		= byte ptr -6
 var_5		= byte ptr -5
 var_4		= byte ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 arg_0		= word ptr  6
 arg_2		= dword	ptr  8
 arg_6		= word ptr  0Ch
@@ -13309,7 +12812,7 @@ loc_13E79:
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 40h
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		mov	bx, si
 		cmp	bx, 9
 		ja	short loc_13EE1
@@ -13378,7 +12881,7 @@ loc_13ECE:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	32
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -13406,7 +12909,7 @@ loc_13EFC:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	144
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -13431,7 +12934,7 @@ loc_13F31:
 		mov	ax, di
 		or	ax, 30h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	160h
 		call	sub_18589
 		add	sp, 12h
@@ -13473,7 +12976,7 @@ loc_13F85:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	210h
 		call	sub_18589
 		add	sp, 12h
@@ -13526,7 +13029,7 @@ loc_13FEB:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	528
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -13537,7 +13040,7 @@ loc_13FFF:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	560
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -13578,7 +13081,7 @@ loc_1404B:
 		mov	ax, di
 		or	ax, 20h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	576
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -13621,7 +13124,7 @@ off_1408D	dw offset loc_13E94
 sub_140A1	proc far
 
 var_8		= byte ptr -8
-var_4		= word ptr -4
+@@fx		= word ptr -4
 var_2		= word ptr -2
 @@x		= word ptr  6
 @@y		= word ptr  8
@@ -13645,11 +13148,11 @@ arg_4		= word ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_140CD:
-		mov	ax, 803h
+		mov	ax, (FX_REVERSE or 3)
 
 loc_140D0:
 		or	ax, 20h
-		mov	[bp+var_4], ax
+		mov	[bp+@@fx], ax
 		cmp	di, 240
 		jnz	short loc_140EA
 		lea	ax, [si-32]
@@ -13761,7 +13264,7 @@ loc_14192:
 		push	offset aPi	; "èI"
 
 loc_141A2:
-		push	[bp+var_4]
+		push	[bp+@@fx]
 		push	di
 		push	si
 		call	_graph_putsa_fx
@@ -13778,7 +13281,7 @@ loc_141AF:
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		push 	[bp+var_4]
+		push 	[bp+@@fx]
 		push	di
 		push	si
 		call	_graph_putsa_fx
@@ -14627,7 +14130,7 @@ loc_148F9:
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_14942
-		call	_graph_putsa_fx c, 0, large (227h shl 16) or 384, offset aUmx_2, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
+		call	_graph_putsa_fx c, 0, large ((FX_CLEAR_BG or 27h) shl 16) or 384, offset aUmx_2, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -14635,12 +14138,12 @@ loc_148F9:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]
-		push	(227h shl 16) or 384
+		push	((FX_CLEAR_BG or 27h) shl 16) or 384
 		jmp	short loc_1496F
 ; ---------------------------------------------------------------------------
 
 loc_14942:
-		call	_graph_putsa_fx c, 0, large (227h shl 16) or 0, offset aUmx_1, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
+		call	_graph_putsa_fx c, 0, large ((FX_CLEAR_BG or 27h) shl 16) or 0, offset aUmx_1, ds	; "ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -14648,7 +14151,7 @@ loc_14942:
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]
-		push	(227h shl 16) or 0
+		push	((FX_CLEAR_BG or 27h) shl 16) or 0
 
 loc_1496F:
 		push	192
@@ -21560,9 +21063,9 @@ var_30		= byte ptr -30h
 var_8		= dword	ptr -8
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@left		= word ptr  6
+@@top		= word ptr  8
+@@fx		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= dword	ptr  0Eh
 arg_C		= dword	ptr  12h
@@ -21571,7 +21074,7 @@ arg_10		= word ptr  16h
 		enter	30h, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@left]
 		mov	[bp+var_8], 1
 		lea	ax, [bp+var_30]
 		push	ss
@@ -21600,7 +21103,7 @@ loc_185C1:
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_8], eax
-		cmp	si, 270h
+		cmp	si, (RES_X - GLYPH_FULL_W)
 		jg	short loc_18653
 		mov	eax, [bp+arg_8]
 		xor	edx, edx
@@ -21633,7 +21136,7 @@ loc_18629:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		call	_graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], large dword ptr ss:[bx]
+		call	_graph_putsa_fx c, si, [bp+@@top], [bp+@@fx], large dword ptr ss:[bx]
 
 loc_18647:
 		add	si, 10h
@@ -23052,10 +22555,7 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	aRANKS[bx]
-		push	7
-		call	sub_F9D0
-		add	sp, 6
+		call	_text_extent_fx c, 7, large aRANKS[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -23096,10 +22596,7 @@ loc_19124:
 		cbw
 		shl	ax, 2
 		mov	bx, ax
-		pushd	aRANKS[bx]
-		push	7
-		call	sub_F9D0
-		add	sp, 6
+		call	_text_extent_fx c, 7, large aRANKS[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
