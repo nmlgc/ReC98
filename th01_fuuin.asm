@@ -7020,7 +7020,7 @@ loc_E1AB:
 loc_E1C2:
 		push	7
 		mov	ax, [bp+arg_2]
-		add	ax, 11h
+		add	ax, 17
 		push	ax
 		mov	ax, si
 		add	ax, [bp+var_18]

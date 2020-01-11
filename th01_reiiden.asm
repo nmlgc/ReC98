@@ -6623,7 +6623,7 @@ loc_FAE2:
 loc_FAF9:
 		push	7
 		mov	ax, [bp+arg_2]
-		add	ax, 11h
+		add	ax, 17
 		push	ax
 		mov	ax, si
 		add	ax, [bp+var_18]
@@ -9219,19 +9219,14 @@ main_10_TEXT	segment	byte public 'CODE' use16
 
 sub_114CA	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
+@@left		= word ptr  6
+@@top		= word ptr  8
+@@right		= word ptr  0Ah
+@@bottom		= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_graph_r_line_from_1
-		add	sp, 8
+		call	_graph_r_line_from_1 c, [bp+@@left], [bp+@@top], [bp+@@right], [bp+@@bottom]
 		pop	bp
 		retf
 sub_114CA	endp
@@ -9243,32 +9238,26 @@ sub_114CA	endp
 
 sub_114E3	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@left		= word ptr  6
+@@top		= word ptr  8
+@@right		= word ptr  0Ah
+@@bottom		= word ptr  0Ch
+@@col		= word ptr  0Eh
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_6]
-		push	[bp+arg_8]
-		push	di
-		push	si
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_graph_r_line
-		add	sp, 0Ah
+		mov	si, [bp+@@right]
+		mov	di, [bp+@@bottom]
+		call	_graph_r_line c, [bp+@@left], [bp+@@top], si, di, [bp+@@col]
 		cmp	si, x_36C26
 		jle	short loc_11523
 		mov	ax, x_36C26
 		add	ax, 32
 		cmp	ax, si
 		jle	short loc_11523
-		cmp	di, 180h
+		cmp	di, 384
 		jle	short loc_11523
 		cmp	word_34A78, 0
 		jnz	short loc_11523
@@ -9288,34 +9277,27 @@ sub_114E3	endp
 
 sub_11527	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
+@@left		= word ptr  6
+@@top		= word ptr  8
+@@right		= word ptr  0Ah
+@@bottom		= word ptr  0Ch
+@@col		= word ptr  0Eh
+@@pattern		= word ptr  10h
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_6]
-		push	[bp+arg_A]
-		push	[bp+arg_8]
-		push	di
-		push	si
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_graph_r_line_patterned
-		add	sp, 0Ch
+		mov	si, [bp+@@right]
+		mov	di, [bp+@@bottom]
+		call	_graph_r_line_patterned c, [bp+@@left], [bp+@@top], si, di, [bp+@@col], [bp+@@pattern]
 		cmp	si, x_36C26
 		jle	short loc_1156A
 		mov	ax, x_36C26
 		add	ax, 32
 		cmp	ax, si
 		jle	short loc_1156A
-		cmp	di, 180h
+		cmp	di, 384
 		jle	short loc_1156A
 
 loc_1155E:
@@ -10559,11 +10541,11 @@ var_2		= word ptr -2
 		push	0
 		call	sub_11738
 		pop	cx
-		mov	ax, word ptr dword_3982A+2
-		add	ax, 30h	; '0'
+		mov	ax, point_3982A.y
+		add	ax, 48
 		mov	[bp+var_2], ax
-		mov	ax, word ptr dword_3982A+2
-		add	ax, 30h	; '0'
+		mov	ax, point_3982A.y
+		add	ax, 48
 		mov	[bp+var_4], ax
 
 loc_12640:
@@ -27888,8 +27870,7 @@ off_35DAB	dd aBoss6_a1_grp
 		dd aBoss6_a2_grp	; "BOSS6_A2.GRP"
 		dd aBoss6_a3_grp	; "BOSS6_A3.GRP"
 		dd aBoss6_a4_grp	; "BOSS6_A4.GRP"
-word_35DBB	dw 3E7h
-word_35DBD	dw 3E7h
+point_35DBB	Point <999, 999>
 		dd    0
 		dd    0
 		dd    0
@@ -28023,8 +28004,7 @@ aBoss6_a6_grp	db 'boss6_a6.grp',0
 word_35FEE	dw 9
 word_35FF0	dw 0
 word_35FF2	dw 1
-word_35FF4	dw 3E7h
-word_35FF6	dw 3E7h
+point_35FF4	Point <999, 999>
 word_35FF8	dw 0
 word_35FFA	dw 0
 unk_35FFC	db    3
@@ -31103,7 +31083,7 @@ off_39462	dd ?
 		dd    ?
 		dd    ?
 		dd    ?
-dword_3982A	dd ?
+point_3982A	Point <?>
 word_3982E	dw ?
 word_39830	dw ?
 word_39832	dw ?
@@ -31128,7 +31108,7 @@ word_39856	dw ?
 word_39858	dw ?
 byte_3985A	db ?
 byte_3985B	db ?
-dword_3985C	dd ?
+point_3985C	Point <?>
 		dd    ?
 unk_39864	db    ?	;
 		db    ?	;
@@ -31178,8 +31158,7 @@ word_398B8	dw ?
 		dd    ?
 byte_398BE	db ?
 unk_398BF	db    ?	;
-word_398C0	dw ?
-word_398C2	dw ?
+point_398C0	Point <?>
 		dd ?
 unk_398C8	db    ?	;
 		db    ?	;
@@ -31203,8 +31182,7 @@ word_398EA	dw ?
 		dd ?
 byte_398F0	db ?
 unk_398F1	db    ?	;
-word_398F2	dw ?
-word_398F4	dw ?
+point_398F2	Point <?>
 		dd    ?
 unk_398FA	db    ?	;
 		db    ?	;
@@ -31560,25 +31538,25 @@ unk_39DB4	db    ?	;
 		db    ?	;
 		db    ?	;
 word_39DE4	dw ?
-word_39DE6	dw ?
-word_39DE8	dw ?
-word_39DEA	dw ?
-word_39DEC	dw ?
-word_39DEE	dw ?
-word_39DF0	dw ?
-word_39DF2	dw ?
-word_39DF4	dw ?
-word_39DF6	dw ?
-word_39DF8	dw ?
+x_39DE6	dw ?
+x_39DE8	dw ?
+x_39DEA	dw ?
+x_39DEC	dw ?
+x_39DEE	dw ?
+y_39DF0	dw ?
+y_39DF2	dw ?
+y_39DF4	dw ?
+y_39DF6	dw ?
+y_39DF8	dw ?
 word_39DFA	dw ?
 point_39DFC	Point <?>
 y_39E00	dw ?
 x_39E02	dw ?
 word_39E04	dw ?
-word_39E06	dw ?
+x_39E06	dw ?
 word_39E08	dw ?
 word_39E0A	dw ?
-word_39E0C	dw ?
+y_39E0C	dw ?
 word_39E0E	dw ?
 word_39E10	dw ?
 word_39E12	dw ?
@@ -32883,8 +32861,7 @@ y_3B03B	dw ?
 x_3B03D	dw ?
 word_3B03F	dw ?
 word_3B041	dw ?
-word_3B043	dw ?
-word_3B045	dw ?
+point_3B043	Point <?>
 point_3B047	Point <?>
 word_3B04B	dw ?
 word_3B04D	dw ?
@@ -33077,8 +33054,7 @@ word_3B329	dw ?
 word_3B32B	dw ?
 word_3B32D	dw ?
 		db ?
-word_3B330	dw ?
-word_3B332	dw ?
+point_3B330	Point <?>
 word_3B334	dw ?
 word_3B336	dw ?
 word_3B338	dw ?
@@ -33175,8 +33151,7 @@ y_3B4FF	dw    ?	;
 		dd    ?
 		dd    ?
 		dd    ?
-word_3B511	dw ?
-word_3B513	dw ?
+point_3B511	Point <?>
 word_3B515	dw ?
 word_3B517	dw ?
 word_3B519	dw ?

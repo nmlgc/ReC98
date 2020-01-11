@@ -3365,7 +3365,7 @@ loc_C9E7:
 loc_C9FE:
 		push	7
 		mov	ax, [bp+arg_2]
-		add	ax, 11h
+		add	ax, 17
 		push	ax
 		mov	ax, si
 		add	ax, [bp+var_18]
