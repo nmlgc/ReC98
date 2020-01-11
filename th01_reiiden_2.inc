@@ -8603,7 +8603,7 @@ loc_20167:
 		mov	ax, es:[bx]
 		add	ax, [bp+@@x]
 		push	ax
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_201B1:

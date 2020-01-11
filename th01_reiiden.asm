@@ -2620,9 +2620,9 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		mov	[bp+var_1], 0
-		call	graph_putsa_fx c, 272, large (37h shl 16) or 128, offset aVovVtvrvd, ds ; "ＰＡＵＳＥ"
-		call	graph_putsa_fx c, 256, large (37h shl 16) or 144, offset aB@nKjb@b@pic, ds ; "　再開　　終了"
-		call	graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"●　　　　　　"
+		call	_graph_putsa_fx c, 272, large (37h shl 16) or 128, offset aVovVtvrvd, ds ; "ＰＡＵＳＥ"
+		call	_graph_putsa_fx c, 256, large (37h shl 16) or 144, offset aB@nKjb@b@pic, ds ; "　再開　　終了"
+		call	_graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"●　　　　　　"
 		push	28h ; '('
 		call	sub_C8C7
 		pop	cx
@@ -2644,7 +2644,7 @@ loc_C9A2:
 		push	900140h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aB, ds	; "●"
+		call	_graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
@@ -2654,7 +2654,7 @@ loc_C9E6:
 		push	900100h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	graph_putsa_fx c, 320, large ( 7h shl 16) or 144, offset aB, ds	; "●"
+		call	_graph_putsa_fx c, 320, large ( 7h shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 1
 
 loc_CA1A:
@@ -2689,9 +2689,9 @@ loc_CA39:
 		jz	loc_CB96
 		cmp	byte_34A51, 0
 		jz	loc_CB96
-		call	graph_putsa_fx c, 224, large (37h shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "本当に終了しちゃうの？"
-		call	graph_putsa_fx c, 224, large (37h shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "　うそですぅ　　はいっ"
-		call	graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "●"
+		call	_graph_putsa_fx c, 224, large (37h shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "本当に終了しちゃうの？"
+		call	_graph_putsa_fx c, 224, large (37h shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "　うそですぅ　　はいっ"
+		call	_graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 		jmp	loc_CB5D
 ; ---------------------------------------------------------------------------
@@ -2708,7 +2708,7 @@ loc_CACF:
 		push	900150h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "●"
+		call	_graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 
 loc_CB13:
@@ -2718,7 +2718,7 @@ loc_CB13:
 		push	9000E0h
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	graph_putsa_fx c, 336, large ( 7h shl 16) or 144, offset aB, ds	; "●"
+		call	_graph_putsa_fx c, 336, large ( 7h shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 1
 
 loc_CB47:
@@ -2844,11 +2844,11 @@ sub_CC0F	proc far
 		call	_graph_accesspage_func
 		pop	cx
 		call	sub_EC80
-		call	graph_putsa_fx c, 0, (227h shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
-		call	graph_putsa_fx c, 0, (227h shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
-		call	graph_putsa_fx c, 0, (227h shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
-		call	graph_putsa_fx c, 0, (221h shl 16) or 48, offset aVxvevub@b@c@, ds ; "Ｙｅｓ　　　  "
-		call	graph_putsa_fx c, 0, (221h shl 16) or 64, offset aVmvpb@b@c@, ds ; "Ｎｏ　　　   "
+		call	_graph_putsa_fx c, 0, (227h shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
+		call	_graph_putsa_fx c, 0, (227h shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
+		call	_graph_putsa_fx c, 0, (227h shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
+		call	_graph_putsa_fx c, 0, (221h shl 16) or 48, offset aVxvevub@b@c@, ds ; "Ｙｅｓ　　　  "
+		call	_graph_putsa_fx c, 0, (221h shl 16) or 64, offset aVmvpb@b@c@, ds ; "Ｎｏ　　　   "
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -6522,7 +6522,7 @@ sub_F9D0	endp
 
 ; Attributes: bp-based frame
 
-graph_putsa_fx	proc far
+_graph_putsa_fx	proc far
 
 var_3A		= byte ptr -3Ah
 var_1A		= word ptr -1Ah
@@ -6917,7 +6917,7 @@ loc_FD54:
 		pop	si
 		leave
 		retf
-graph_putsa_fx	endp
+_graph_putsa_fx	endp
 
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc
@@ -10768,28 +10768,28 @@ loc_127AC:
 		push	offset aVqvnvtvmvcb@vp ; "ＲＯＵＮＤ　１　ＣＬＥＡＲ"
 		push	(207h shl 16) or 0
 		push	0
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	ds
 		push	offset aVbvpvovzvtvbvf ; "Ｃｏｎｇｒａｔｕｌａｔｉｏｎ！！"
 		push	(207h shl 16) or 32
 		push	0
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	ds
 		push	offset aVrvevmvevgvfb@ ; "Ｓｅｌｅｃｔ　ｎｅｘｔ　Ｒｏｕｎｄ"
 		push	(207h shl 16) or 64
 		push	0
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	ds
 		push	offset aCvkev	; "魔界へ"
 		push	(201h shl 16) or 96
 		push	0
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 2Eh
 		push	ds
 		push	offset aTnncv	; "地獄へ"
 		push	(203h shl 16) or 128
 		push	0
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		push	(0Fh shl 16) or 0Fh
@@ -11872,15 +11872,15 @@ arg_0		= word ptr  6
 		pushd	[bp+var_4]
 		push	(2Ah shl 16) or 80
 		push	64
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "　　ＢＯＮＵＳ"
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 128, offset aB@vsvivnveb@, ds ; "   　Ｔｉｍｅ　"
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 160, offset aVbvpvovfvivovx, ds ; "Ｃｏｎｔｉｎｕｏｕｓ"
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "Ｂｏｍｂ＆Ｐｌａｙｅｒ"
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"　　ＳＴＡＧＥ"
-		call	graph_putsa_fx c,  48, large (27h shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ＢＯＮＵＳ　Ｐｏｉｎｔ"
-		call	graph_putsa_fx c, 160, large (2Ah shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "Ｈｉｔ　Ｚ　Ｋｅｙ"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "　　ＢＯＮＵＳ"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 128, offset aB@vsvivnveb@, ds ; "   　Ｔｉｍｅ　"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 160, offset aVbvpvovfvivovx, ds ; "Ｃｏｎｔｉｎｕｏｕｓ"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "Ｂｏｍｂ＆Ｐｌａｙｅｒ"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"　　ＳＴＡＧＥ"
+		call	_graph_putsa_fx c,  48, large (27h shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ＢＯＮＵＳ　Ｐｏｉｎｔ"
+		call	_graph_putsa_fx c, 160, large (2Ah shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "Ｈｉｔ　Ｚ　Ｋｅｙ"
 		mov	ax, word_39DAC
 		imul	ax, 3
 		mov	si, ax
@@ -11921,7 +11921,7 @@ loc_1321E:
 		pushd	[bp+var_8]
 		push	(27h shl 16) or 128
 		push	256
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, word_34A88
 		imul	ax, 64h
@@ -11949,7 +11949,7 @@ loc_13285:
 		pushd	[bp+var_8]
 		push	(27h shl 16) or 160
 		push	256
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, _rem_lives
 		imul	ax, 0C8h
@@ -11981,7 +11981,7 @@ loc_132D0:
 		pushd	[bp+var_8]
 		push	(27h shl 16) or 192
 		push	256
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, [bp+arg_0]
 		dec	ax
@@ -12010,7 +12010,7 @@ loc_13313:
 		pushd	[bp+var_8]
 		push	(27h shl 16) or 224
 		push	256
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	eax, dword_34A5E
 		add	_score, eax
@@ -12104,7 +12104,7 @@ loc_13313:
 		pushd	[bp+var_8]
 		push	(27h shl 16) or 256
 		push	240
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		call	sub_1889C
 		call	sub_D02F
@@ -13057,7 +13057,7 @@ loc_13C33:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -13065,7 +13065,7 @@ loc_13C33:
 loc_13C69:
 		cmp	si, 1Ah
 		jl	short loc_13C33
-		call	graph_putsa_fx c, 32, large (823h shl 16) or 240, offset aVb, ds	; "ａ"
+		call	_graph_putsa_fx c, 32, large (823h shl 16) or 240, offset aVb, ds	; "ａ"
 		mov	di, 8260h
 		xor	si, si
 		jmp	short loc_13CBF
@@ -13094,7 +13094,7 @@ loc_13C89:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -13132,7 +13132,7 @@ loc_13CC8:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		inc	si
 
@@ -13167,7 +13167,7 @@ loc_13D11:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		inc	di
 		inc	si
@@ -13191,7 +13191,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		mov	si, 0Fh
 		push	ds
 		push	offset aBi	; "←"
@@ -13209,7 +13209,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		inc	si
 		push	ds
 		push	offset aBi_0	; "→"
@@ -13227,7 +13227,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		inc	si
 		push	ds
 		push	offset aPi	; "終"
@@ -13245,7 +13245,7 @@ loc_13D47:
 		shl	dx, 5
 		add	dx, 32
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 28h
 		inc	si
 		pop	di
@@ -13286,10 +13286,10 @@ arg_E		= word ptr  14h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	graph_putsa_fx c,  32, large (33h shl 16) or 48, offset aB@cB@iB@, ds ; "　霊　位　"
-		call	graph_putsa_fx c, 144, large (33h shl 16) or 48, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
-		call	graph_putsa_fx c, 352, large (33h shl 16) or 48, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
-		call	graph_putsa_fx c, 512, large (33h shl 16) or 48, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
+		call	_graph_putsa_fx c,  32, large (33h shl 16) or 48, offset aB@cB@iB@, ds ; "　霊　位　"
+		call	_graph_putsa_fx c, 144, large (33h shl 16) or 48, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
+		call	_graph_putsa_fx c, 352, large (33h shl 16) or 48, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
+		call	_graph_putsa_fx c, 512, large (33h shl 16) or 48, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
 		xor	si, si
 		jmp	loc_14082
 ; ---------------------------------------------------------------------------
@@ -13380,7 +13380,7 @@ loc_13ECE:
 		push	ax
 		push	[bp+var_2]
 		push	32
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_13EE1:
@@ -13408,7 +13408,7 @@ loc_13EFC:
 		push	ax
 		push	[bp+var_2]
 		push	144
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		pushd	0
@@ -13528,7 +13528,7 @@ loc_13FEB:
 		push	ax
 		push	[bp+var_2]
 		push	528
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_13FFF:
@@ -13539,7 +13539,7 @@ loc_13FFF:
 		push	ax
 		push	[bp+var_2]
 		push	560
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	[bp+var_4], 0
 		cmp	si, [bp+arg_0]
@@ -13580,7 +13580,7 @@ loc_1404B:
 		push	ax
 		push	[bp+var_2]
 		push	576
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		cmp	[bp+arg_0], si
 		jnz	short loc_14081
@@ -13764,7 +13764,7 @@ loc_141A2:
 		push	[bp+var_4]
 		push	di
 		push	si
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_141AF:
@@ -13781,7 +13781,7 @@ loc_141AF:
 		push 	[bp+var_4]
 		push	di
 		push	si
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_141D2:
@@ -13971,7 +13971,7 @@ loc_1432E:
 		push	point_3945E.x
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	graph_putsa_fx c, point_3945E.x, point_3945E.y, 23h, large [bp+arg_4]
+		call	_graph_putsa_fx c, point_3945E.x, point_3945E.y, 23h, large [bp+arg_4]
 		les	bx, [bp+arg_8]
 		mov	bx, es:[bx]
 		add	bx, bx
@@ -13990,7 +13990,7 @@ loc_1432E:
 		push	3
 		push	point_3945E.y
 		push	point_3945E.x
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		xor	ax, ax
 
@@ -14627,7 +14627,7 @@ loc_148F9:
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_14942
-		call	graph_putsa_fx c, 0, large (227h shl 16) or 384, offset aUmx_2, ds	; "東方靈異伝　強者の記録　"
+		call	_graph_putsa_fx c, 0, large (227h shl 16) or 384, offset aUmx_2, ds	; "東方靈異伝　強者の記録　"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -14640,7 +14640,7 @@ loc_148F9:
 ; ---------------------------------------------------------------------------
 
 loc_14942:
-		call	graph_putsa_fx c, 0, large (227h shl 16) or 0, offset aUmx_1, ds	; "東方靈異伝　強者の記録"
+		call	_graph_putsa_fx c, 0, large (227h shl 16) or 0, offset aUmx_1, ds	; "東方靈異伝　強者の記録"
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -14652,7 +14652,7 @@ loc_14942:
 
 loc_1496F:
 		push	192
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		call	_graph_accesspage_func
@@ -20921,7 +20921,7 @@ loc_180F9:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aExtend	; "Extend!!"
@@ -20986,7 +20986,7 @@ loc_18184:
 		push	word ptr [bx+5370h]
 
 loc_1819C:
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_181A4:
@@ -21464,7 +21464,7 @@ loc_18509:
 
 loc_18512:
 		push	ax
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_1851B:
@@ -21633,7 +21633,7 @@ loc_18629:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		call	graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], large dword ptr ss:[bx]
+		call	_graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], large dword ptr ss:[bx]
 
 loc_18647:
 		add	si, 10h
@@ -22990,7 +22990,7 @@ var_4		= byte ptr -4
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	100020h
 		push	260h
@@ -23062,7 +23062,7 @@ loc_19124:
 		mov	dx, 600
 		sub	dx, ax
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		pushd	142h
 		push	200260h
@@ -23081,7 +23081,7 @@ loc_19124:
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		call	_graph_accesspage_func
@@ -23106,7 +23106,7 @@ loc_19124:
 		mov	dx, 600
 		sub	dx, ax
 		push	dx
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		pushd	142h
 		push	200260h
@@ -23117,7 +23117,7 @@ loc_19124:
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	byte_39DA1, 0
 		cmp	byte_34A49, 1
@@ -23223,7 +23223,7 @@ loc_19287:
 		push	ax
 		push	(27h shl 16) or 0
 		push	512
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		push	ss
@@ -23231,7 +23231,7 @@ loc_19287:
 		push	ax
 		push	(27h shl 16) or 0
 		push	512
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 18h
 		pop	si
 		leave
@@ -23279,7 +23279,7 @@ loc_192EB:
 		push	ax
 		push	si
 		pushd	(0 shl 16) or 512
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		push	0
 		call	_graph_accesspage_func
 		pushd	14Dh
@@ -23300,7 +23300,7 @@ loc_192EB:
 		push	ax
 		push	si
 		pushd	(0 shl 16) or 512
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		pop	si
 		leave

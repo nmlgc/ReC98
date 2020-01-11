@@ -489,7 +489,7 @@ loc_A229:
 		shl	bx, 2
 		lea	ax, [bp+var_30]
 		add	bx, ax
-		call	graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], word ptr ss:[bx], word ptr ss:[bx+2]
+		call	_graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], word ptr ss:[bx], word ptr ss:[bx+2]
 
 loc_A24A:
 		add	si, 10h
@@ -1314,7 +1314,7 @@ loc_A814:
 loc_A84F:
 		cmp	si, 1Ah
 		jl	short loc_A814
-		call	graph_putsa_fx c, 32, 240, 823h, offset aVb, ds	; "ａ"
+		call	_graph_putsa_fx c, 32, 240, 823h, offset aVb, ds	; "ａ"
 		mov	di, 8260h
 		xor	si, si
 		jmp	short loc_A8AA
@@ -1543,10 +1543,10 @@ arg_E		= word ptr  14h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	graph_putsa_fx c,  32, 48, 33h, offset aB@cB@iB@, ds ; "　霊　位　"
-		call	graph_putsa_fx c, 144, 48, 33h, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
-		call	graph_putsa_fx c, 352, 48, 33h, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
-		call	graph_putsa_fx c, 512, 48, 33h, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
+		call	_graph_putsa_fx c,  32, 48, 33h, offset aB@cB@iB@, ds ; "　霊　位　"
+		call	_graph_putsa_fx c, 144, 48, 33h, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
+		call	_graph_putsa_fx c, 352, 48, 33h, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
+		call	_graph_putsa_fx c, 512, 48, 33h, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
 		xor	si, si
 		jmp	loc_AD66
 ; ---------------------------------------------------------------------------
@@ -1726,7 +1726,7 @@ loc_AB36:
 		add	ax, 64
 		push	ax
 		push	32
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short $+2
 
@@ -1767,7 +1767,7 @@ loc_AB77:
 		add	ax, 64
 		push	ax
 		push	144
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0
 		push	0
@@ -1905,7 +1905,7 @@ loc_AC6D:
 		add	ax, 64
 		push	ax
 		push	528
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		jmp	short loc_ACCD
 ; ---------------------------------------------------------------------------
@@ -1946,7 +1946,7 @@ loc_ACB5:
 		add	ax, 64
 		push	ax
 		push	528
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 
 loc_ACCD:
@@ -1969,7 +1969,7 @@ loc_ACDD:
 		add	ax, 64
 		push	ax
 		push	560
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		cmp	si, di
 		jnz	short loc_ACFE
@@ -6919,7 +6919,7 @@ sub_E099	endp
 
 ; Attributes: bp-based frame
 
-graph_putsa_fx	proc far
+_graph_putsa_fx	proc far
 
 var_3A		= byte ptr -3Ah
 var_1A		= word ptr -1Ah
@@ -7314,7 +7314,7 @@ loc_E41D:
 		pop	si
 		leave
 		retf
-graph_putsa_fx	endp
+_graph_putsa_fx	endp
 
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc
@@ -7361,7 +7361,7 @@ _arglist		= byte ptr  10h
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 16h
 		leave
 		retf

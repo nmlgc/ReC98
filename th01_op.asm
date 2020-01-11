@@ -1028,7 +1028,7 @@ arg_0		= word ptr  6
 		push	offset aVgvhvsb@vjvdvx ; " ÇgÇhÇsÅ@ÇjÇdÇx"
 		push	(2Fh shl 16) or 306
 		push	244
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		pop	bp
 		retf
@@ -1081,7 +1081,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+@@y]
 		push	[bp+@@x]
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 0Ah
 		pop	si
 		leave
@@ -3264,7 +3264,7 @@ sub_C8D5	endp
 
 ; Attributes: bp-based frame
 
-graph_putsa_fx	proc far
+_graph_putsa_fx	proc far
 
 var_3A		= byte ptr -3Ah
 var_1A		= word ptr -1Ah
@@ -3659,7 +3659,7 @@ loc_CC59:
 		pop	si
 		leave
 		retf
-graph_putsa_fx	endp
+_graph_putsa_fx	endp
 
 	extern _z_respal_set:proc
 op_06_TEXT	ends
@@ -4091,7 +4091,7 @@ arglist		= byte ptr  10h
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	graph_putsa_fx
+		call	_graph_putsa_fx
 		add	sp, 16h
 		leave
 		retf
