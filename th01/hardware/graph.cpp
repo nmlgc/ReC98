@@ -102,6 +102,40 @@ _SP += stack_clear_size;
 extern page_t page_back;
 /// -----
 
+/// Points
+/// ------
+#define VRAM_SBYTE(plane, offset) \
+	*reinterpret_cast<splanar8_t *>(MK_FP(SEG_PLANE_##plane, offset))
+
+void z_grcg_pset(int x, int y, int col)
+{
+	GRCG_SETCOLOR_RMW(col);
+	VRAM_SBYTE(B, ((y * ROW_SIZE) + (x >> 3))) = (0x80 >> (x & 7));
+	GRCG_OFF();
+}
+
+int z_col_at(int x, int y)
+{
+	int ret;
+	int vram_offset = ((y * ROW_SIZE) + (x >> 3));
+	splanar16_t mask = (0x80 >> (x & 7));
+
+#define test(plane, vram_offset, mask, bit) \
+	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
+		ret |= bit; \
+	}
+
+	ret = 0;
+	test(B, vram_offset, mask, 1);
+	test(R, vram_offset, mask, 2);
+	test(G, vram_offset, mask, 4);
+	test(E, vram_offset, mask, 8);
+	return ret;
+
+#undef text
+}
+/// ------
+
 /// Restorable line drawing
 /// -----------------------
 // Never read from, so it's supposedly only there for debugging purposes?
