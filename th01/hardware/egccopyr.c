@@ -33,8 +33,8 @@ void egc_copy_rect_1_to_0(int x, int y, int w, int h)
 	egc_start_copy();
 	for(row = 0; row < h; row++) {
 		for(col = x_floor, p = row_p; col < x_end; p += 2, col += 16) {
-			graph_accesspage_func(1); bits = *(planar16_t*)(VRAM_PLANE_B + p);
-			graph_accesspage_func(0); *(planar16_t*)(VRAM_PLANE_B + p) = bits;
+			graph_accesspage_func(1); VRAM_SNAP(bits, B, p, 16);
+			graph_accesspage_func(0); VRAM_PUT(B, p, bits, 16);
 		}
 		row_p += 640 / 8;
 	}

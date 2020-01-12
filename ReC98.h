@@ -103,12 +103,33 @@ extern planar8_t *VRAM_PLANE_G;
 extern planar8_t *VRAM_PLANE_R;
 extern planar8_t *VRAM_PLANE_E;
 
+#define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
+
+#define VRAM_CHUNK(plane, offset, bit_count) \
+	*(planar##bit_count##_t *)(VRAM_PLANE_##plane + offset)
+
+#define VRAM_SNAP(dst, plane, offset, bit_count) \
+	dst = VRAM_CHUNK(plane, offset, bit_count);
+
+#define VRAM_SNAP_4(dst, offset, bit_count) \
+	VRAM_SNAP(dst.B, B, offset, bit_count); \
+	VRAM_SNAP(dst.R, R, offset, bit_count); \
+	VRAM_SNAP(dst.G, G, offset, bit_count); \
+	VRAM_SNAP(dst.E, E, offset, bit_count);
+
+#define VRAM_PUT(plane, offset, src, bit_count) \
+	VRAM_CHUNK(plane, offset, bit_count) = src;
+
+#define VRAM_PUT_4(offset, src, bit_count) \
+	VRAM_PUT(B, offset, src.B, bit_count); \
+	VRAM_PUT(R, offset, src.R, bit_count); \
+	VRAM_PUT(G, offset, src.G, bit_count); \
+	VRAM_PUT(E, offset, src.E, bit_count);
+
 #define PLANE_DWORD_BLIT(dst, src) \
 	for(p = 0; p < PLANE_SIZE; p += (int)sizeof(planar32_t)) { \
 		*(planar32_t*)((dst) + p) = *(planar32_t*)((src) + p); \
 	}
-
-#define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
 
 void pascal vram_planes_set(void);
 // -----------------

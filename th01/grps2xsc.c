@@ -32,10 +32,7 @@ void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int 
 		for(col16 = 0; col16 < w1 / 16; col16++) {
 			int scale_p;
 			graph_accesspage_func(1);
-			px16.B = *(planar16_t*)(VRAM_PLANE_B + p1);
-			px16.R = *(planar16_t*)(VRAM_PLANE_R + p1);
-			px16.G = *(planar16_t*)(VRAM_PLANE_G + p1);
-			px16.E = *(planar16_t*)(VRAM_PLANE_E + p1);
+			VRAM_SNAP_4(px16, p1, 16);
 			px16_nonzero = px16.B | px16.R | px16.G | px16.E;
 			for(scale_p = 0; scale_p < ROW_SIZE * 2; scale_p += ROW_SIZE) {
 				planar32_t dst32;
