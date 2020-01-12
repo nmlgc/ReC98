@@ -5,6 +5,7 @@ extern "C" {
 #include <mbctype.h>
 #include <mbstring.h>
 #include "ReC98.h"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.hpp"
@@ -88,6 +89,12 @@ extern "C" {
 	push	cs; \
 	call	near ptr grcg_off_func; \
 }
+#define GRAPH_ACCESSPAGE_FUNC(page, stack_clear_size) __asm { \
+	push	page; \
+	push 	cs; \
+	call	near ptr graph_accesspage_func; \
+}	\
+_SP += stack_clear_size;
 /// -----------------------------------------------
 
 /// Pages
@@ -105,6 +112,226 @@ extern Point graph_r_last_line_end;
 extern bool graph_r_restore_from_1;
 // Not used for purely horizontal lines.
 extern planar16_t graph_r_pattern;
+
+void graph_r_hline(int left, int right, int y, int col)
+{
+	int full_bytes_to_put;
+	int order_tmp;
+	planar8_t left_pixels;
+	planar8_t right_pixels;
+	planar8_t *vram_row;
+
+	fix_order(left, right);
+	clip_x(left, right);
+
+	graph_r_last_line_end.x = right;
+	graph_r_last_line_end.y = y;
+
+	vram_row = (planar8_t *)(MK_FP(GRAM_400, (y * ROW_SIZE) + (left / 8)));
+	full_bytes_to_put = (right / 8) - (left / 8);
+	left_pixels = 0xFF >> (left & 7);
+	right_pixels = 0xFF << (7 - (right & 7));
+
+	if(!graph_r_restore_from_1) {
+		GRCG_SETCOLOR_RMW(col);
+	}
+	if(graph_r_restore_from_1) {
+		egc_copy_rect_1_to_0(left, y, RES_X - left, 1);
+	} else {
+		if(full_bytes_to_put == 0) {
+			vram_row[0] = (left_pixels & right_pixels);
+		} else {
+			vram_row[0] = left_pixels;
+			for(register int x = 1; x < full_bytes_to_put; x++) {
+				vram_row[x] = 0xFF;
+			}
+			vram_row[full_bytes_to_put] = right_pixels;
+		}
+	}
+	if(!graph_r_restore_from_1) {
+		GRCG_OFF();
+	}
+}
+
+void graph_r_vline(int x, int top, int bottom, int col)
+{
+	int y;
+	int order_tmp;
+	planar16_t pattern;
+	int vram_row_offset;
+
+	fix_order(top, bottom);
+	clip_y(top, bottom);
+
+	graph_r_last_line_end.x = x;
+	graph_r_last_line_end.y = bottom;
+
+	if(graph_r_restore_from_1) {
+		egc_copy_rect_1_to_0(x, top, sizeof(pattern) * 8, bottom - top);
+		return;
+	}
+	vram_row_offset = VRAM_OFFSET(x, top);
+	pattern = graph_r_pattern >> (x & 7);
+	pattern |= graph_r_pattern << (16 - (x & 7));
+
+	GRCG_SETCOLOR_RMW(col);
+	for(y = top; y <= bottom; y++) {
+		VRAM_PUT(B, vram_row_offset, pattern, 16);
+		vram_row_offset += ROW_SIZE;
+	}
+	GRCG_OFF();
+}
+
+void graph_r_line_from_1(int left, int top, int right, int bottom)
+{
+	graph_r_restore_from_1 = true;
+	graph_r_line(left, top, right, bottom, 7);
+	graph_r_restore_from_1 = false;
+}
+
+void graph_r_line_patterned(
+	int left, int top, int right, int bottom, int col, planar16_t pattern
+)
+{
+	graph_r_pattern = pattern;
+	graph_r_line(left, top, right, bottom, col);
+	graph_r_pattern = 0x80;
+}
+
+void graph_r_line(int left, int top, int right, int bottom, int col)
+{
+	register int vram_offset;
+	int i;
+	int x_cur, y_cur;
+	int w, h;
+	int error;
+	int y_direction;
+	int order_tmp;
+	int x_vram, y_vram;
+	planar16_t pixels;
+
+	vram_planar_32_pixels_t page1;
+
+#define slope_x ((bottom - top) / (right - left))
+#define slope_y ((right - left) / (bottom - top))
+#define lerp(m, x) static_cast<int>(m * static_cast<float>(x))
+
+#define clip_lerp_min(low, high, lerp_point, slope, minimum) \
+	if(low < minimum) { \
+		if(high < minimum) { \
+			return; \
+		} \
+		lerp_point += lerp(slope, (minimum - low)); \
+		low = minimum; \
+	}
+#define clip_lerp_max(low, high, lerp_point, slope, maximum) \
+	if(high > maximum) { \
+		if(low > maximum) { \
+			return; \
+		} \
+		lerp_point -= lerp(slope, (high - maximum)); \
+		high = maximum; \
+	}
+
+#define restore_at(bit_count) \
+	GRAPH_ACCESSPAGE_FUNC(1, 0);	VRAM_SNAP_4(page1, vram_offset, 32); \
+	GRAPH_ACCESSPAGE_FUNC(0, 4);	VRAM_PUT_4(vram_offset, page1, 32);
+
+#define plot_loop(\
+	step_var, step_len, step_increment, \
+	plotted_var, plotted_len, plotted_increment \
+) \
+	error = (step_len >> 1); \
+	for(i = 0; i <= step_len; i++) { \
+		/* Advanced past the VRAM cursor? */ \
+		if((x_cur >> 3) != x_vram || (y_vram != y_cur)) { \
+			vram_offset = (y_vram * ROW_SIZE) + x_vram; \
+			if(!graph_r_restore_from_1) { \
+				VRAM_PUT(B, vram_offset, pixels, 16); \
+				pixels = 0; \
+			} else { \
+				vram_offset--; \
+				restore_at(vram_offset); \
+			} \
+			y_vram = y_cur; \
+			x_vram = (x_cur >> 3); \
+		} \
+		pixels |= (graph_r_pattern >> (x_cur & 7)); \
+		pixels |= (graph_r_pattern << (16 - (x_cur & 7))); \
+		error -= plotted_len; \
+		step_var += step_increment; \
+		if(error < 0) { \
+			error += step_len; \
+			plotted_var += plotted_increment; \
+		} \
+	} \
+	if(graph_r_restore_from_1) { \
+		goto restore_last; \
+	} \
+	goto end;
+
+	if(!graph_r_restore_from_1 && (left == right)) {
+		graph_r_vline(left, top, bottom, col);
+		return;
+	}
+	if(!graph_r_restore_from_1 && (top == bottom)) {
+		graph_r_hline(left, right, top, col);
+		return;
+	}
+	if(left > right) {
+		order_tmp = left;
+		left = right;
+		right = order_tmp;
+		order_tmp = top;
+		top = bottom;
+		bottom = order_tmp;
+	}
+
+	clip_lerp_min(left, right, top, slope_x, 0);
+	clip_lerp_max(left, right, bottom, slope_x, (RES_X - 1));
+	clip_lerp_min(top, bottom, left, slope_y, 0);
+	clip_lerp_max(top, bottom, right, slope_y, (RES_Y - 1));
+	if(bottom < 0) {
+		right += lerp(slope_y, 0 - bottom);
+		bottom = 0;
+	}
+	if(top > (RES_Y - 1)) {
+		left -= lerp(slope_y, top - (RES_Y - 1));
+		top = (RES_Y - 1);
+	}
+	graph_r_last_line_end.x = right;
+	graph_r_last_line_end.y = bottom;
+	x_cur = left;
+	y_cur = top;
+	y_direction = (top < bottom) ? 1 : -1;
+	w = right - left;
+	h = (bottom - top) * y_direction;
+	pixels = 0;
+	x_vram = (x_cur >> 3);
+	y_vram = y_cur;
+
+	if(!graph_r_restore_from_1) {
+		GRCG_SETCOLOR_RMW(col);
+	}
+	if(w > h) {
+		plot_loop(x_cur, w, 1, y_cur, h, y_direction);
+	} else {
+		plot_loop(y_cur, h, y_direction, x_cur, w, 1);
+	}
+restore_last:
+	vram_offset = VRAM_OFFSET(x_cur, y_cur) - 1;
+	restore_at(vram_offset);
+end:
+	if(!graph_r_restore_from_1) {
+		GRCG_OFF();
+	}
+
+#undef plot_loop
+#undef restore_at
+#undef clip_lerp_min
+#undef clip_lerp_max
+#undef slope
+}
 /// -----------------------
 
 void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
@@ -145,41 +372,10 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 
 void graph_r_box(int left, int top, int right, int bottom, int col)
 {
-	/* TODO: Replace with the decompiled calls
-	 *	graph_r_hline(left, right, top, col);
-	 *	graph_r_vline(left, top, bottom, col);
-	 *	graph_r_vline(right, top, bottom, col);
-	 *	graph_r_hline(left, right, bottom, col);
-	 * once those functions are part of this translation unit */
-	__asm {
-		mov 	di, left
-		mov 	si, col
-		push	si
-		push	top
-		push	right
-		push	di
-		push	cs
-		call	near ptr graph_r_hline
-		push	si
-		push	bottom
-		push	top
-		push	di
-		push	cs
-		call	near ptr graph_r_vline
-		push	si
-		push	bottom
-		push	top
-		push	right
-		push	cs
-		call	near ptr graph_r_vline
-		push	si
-		push	bottom
-		push	right
-		push	di
-		push	cs
-		call	near ptr graph_r_hline
-		add 	sp, 0x20
-	}
+	graph_r_hline(left, right, top, col);
+	graph_r_vline(left, top, bottom, col);
+	graph_r_vline(right, top, bottom, col);
+	graph_r_hline(left, right, bottom, col);
 }
 
 int text_extent_fx(int fx, const unsigned char *str)
@@ -230,33 +426,13 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 		w = text_extent_fx(fx, str);
 		if(underline) {
 			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H + 1), 0);
-			/* TODO: Replace with the decompiled call
-			 *	graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
-			 * once that function is part of this translation unit */
-			goto graph_hline_call;
+			graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
 		} else {
 			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
 		w = text_extent_fx(fx, str);
-		/* TODO: Replace with the decompiled call
-		 *	graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
-		 * once that function is part of this translation unit */
-graph_hline_call:
-		__asm {
-			push	7
-			mov 	ax, top
-			add 	ax, GLYPH_H + 1
-			push	ax
-			db	0x8B, 0xC6
-			add 	ax, w
-			dec 	ax
-			push	ax
-			db	0x56
-			push	cs
-			call	near ptr graph_r_hline
-			add 	sp, 8
-		}
+		graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
 	}
 
 	GRCG_SETCOLOR_RMW(fx);

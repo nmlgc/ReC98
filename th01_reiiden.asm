@@ -6439,7 +6439,10 @@ loc_F11D:
 		retf
 sub_F0B3	endp
 
-include th01/hardware/graph_r.asm
+	extern _graph_r_vline:proc
+	extern _graph_r_line_from_1:proc
+	extern _graph_r_line_patterned:proc
+	extern _graph_r_line:proc
 	extern _text_extent_fx:proc
 	extern _graph_putsa_fx:proc
 	extern _graph_move_byterect_interpage:proc

@@ -3176,7 +3176,6 @@ loc_C022:
 		leave
 		retf
 
-include th01/hardware/graph_r.asm
 	extern _graph_putsa_fx:proc
 	extern _z_respal_set:proc
 op_06_TEXT	ends
@@ -3262,7 +3261,7 @@ EGC_START_COPY_DEF 1, far
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public _egc_copy_rect_1_to_0
 _egc_copy_rect_1_to_0	proc far
 
 var_A		= word ptr -0Ah

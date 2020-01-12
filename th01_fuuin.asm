@@ -6836,7 +6836,6 @@ loc_D7E6:
 		retf
 sub_D77C	endp
 
-include th01/hardware/graph_r.asm
 	extern _graph_putsa_fx:proc
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc

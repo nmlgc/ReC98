@@ -95,6 +95,10 @@ typedef struct {
 	planar16_t B, R, G, E;
 } vram_planar_16_pixels_t;
 
+typedef struct {
+	planar32_t B, R, G, E;
+} vram_planar_32_pixels_t;
+
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
 extern planar8_t *VRAM_PLANE[PL_COUNT];
