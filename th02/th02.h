@@ -37,9 +37,7 @@ void pascal mptn_free(void);
 	graph_accesspage(0);	graph_clear(); \
 	graph_accesspage(0);	graph_showpage(0);
 
-#define FX(color, weight, spacing) \
-	(color | (weight & 3) << 4 | (spacing & 7) << 6)
-void graph_putsa_fx(int x, int y, int fx, const unsigned char *str);
+#include "th01/hardware/grppsafx.h"
 
 void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h);
 // -------

@@ -100,9 +100,9 @@ grppsafx_glyph_func_1 equ $+1
 	mov	es:[di], bl
 	add	di, ROW_SIZE - 2
 	inc	ch
-	cmp	ch, GLYPH_HEIGHT
+	cmp	ch, GLYPH_H
 	jb	short @@graph_double_loop_w
-	sub	di, ROW_SIZE * GLYPH_HEIGHT
+	sub	di, ROW_SIZE * GLYPH_H
 
 grppsafx_glyph_spacing_1 equ $+1
 	mov	dx, 1234h
@@ -150,9 +150,9 @@ grppsafx_glyph_func_2 equ $+1
 	stosw
 	add	di, ROW_SIZE - 2
 	inc	ch
-	cmp	ch, GLYPH_HEIGHT
+	cmp	ch, GLYPH_H
 	jb	short @@graph_double_loop
-	sub	di, ROW_SIZE * GLYPH_HEIGHT
+	sub	di, ROW_SIZE * GLYPH_H
 
 @@dont_print_space:
 grppsafx_glyph_spacing_2 equ $+1

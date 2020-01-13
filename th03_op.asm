@@ -3217,7 +3217,7 @@ arg_2		= word ptr  6
 		call	graph_gaiji_puts
 		push	di
 		mov	ax, [bp+@@y]
-		add	ax, GLYPH_HEIGHT
+		add	ax, GLYPH_H
 		push	ax
 		push	GAIJI_W
 		push	ds

@@ -6,7 +6,9 @@
 ; ====
 GAIJI_W = 16
 GAIJI_TRAM_W = (GAIJI_W / 8)
-GLYPH_HEIGHT = 16
+GLYPH_HALF_W = 8
+GLYPH_FULL_W = 16
+GLYPH_H = 16
 ; ====
 
 ; Graphics
