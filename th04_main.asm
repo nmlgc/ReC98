@@ -1794,8 +1794,8 @@ sub_BCBE	endp
 sub_BCF4	proc near
 		push	si
 		push	di
-		mov	word_25532, 0
-		mov	bx, 3ED0h
+		mov	_pointnum_first_yellow_alive, 0
+		mov	bx, offset _pointnums_alive
 		mov	si, offset _pointnums
 		mov	di, POINTNUM_COUNT
 
@@ -1837,12 +1837,12 @@ loc_BD41:
 		mov	[bx], si
 		cmp	di, POINTNUM_YELLOW_COUNT
 		ja	short loc_BD54
-		cmp	word_25532, 0
+		cmp	_pointnum_first_yellow_alive, 0
 		jnz	short loc_BD54
-		mov	word_25532, si
+		mov	_pointnum_first_yellow_alive, si
 
 loc_BD54:
-		add	bx, 2
+		add	bx, word
 
 loc_BD57:
 		add	si, size pointnum_t
@@ -1870,13 +1870,13 @@ loc_BD64:
 		sti
 		mov	ax, GRAM_400
 		mov	es, ax
-		mov	di, 3ED0h
+		mov	di, offset _pointnums_alive
 		mov	si, [di]
 		cmp	si, 0
 		jz	short loc_BDFA
 
 loc_BD81:
-		cmp	si, word_25532
+		cmp	si, _pointnum_first_yellow_alive
 		jnz	short loc_BD96
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -1890,14 +1890,14 @@ loc_BD81:
 		sti
 
 loc_BD96:
-		mov	dx, [si+2]
+		mov	dx, [si+pointnum_t.PN_center_cur.x]
 		sar	dx, 4
-		add	dx, 0Ch
-		mov	ax, [si+4]
-		add	ax, (12 shl 4)
+		add	dx, (PLAYFIELD_X - (((POINTNUM_DIGITS + 1) * POINTNUM_W) / 2))
+		mov	ax, [si+pointnum_t.PN_center_cur.y]
+		add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	bp, 4
-		add	si, 0Bh
+		add	si, (pointnum_t.PN_digits_lebcd + (POINTNUM_DIGITS - 1))
 
 loc_BDAF:
 		cmp	byte ptr [si], 0
@@ -1934,7 +1934,7 @@ loc_BDD6:
 		call	main_01:@pointnum_put
 
 loc_BDF1:
-		add	di, 2
+		add	di, word
 		mov	si, [di]
 		or	si, si
 		jnz	short loc_BD81
@@ -37157,8 +37157,7 @@ word_25109	dw ?
 include th02/math/randring[bss].asm
 byte_2520E	db ?
 byte_2520F	db ?
-		db 802 dup(?)
-word_25532	dw ?
+include th04/main/pointnum/render[bss].asm
 include th04/main/sparks_add[bss].asm
 include th04/main/item/splashes[bss].asm
 include th04/main/circles_color[bss].asm

@@ -32,6 +32,14 @@ struct pointnum_t {
 extern pointnum_t pointnums[POINTNUM_COUNT];
 /// ---------
 
+/// Rendering
+/// ---------
+// Stores pointers to all point numbers that should be rendered in the current
+// frame. Starts with the white ones, and [pointnum_first_yellow_alive]
+// indicates the first yellow one.
+extern pointnum_t near *pointnums_alive[POINTNUM_COUNT + 1];
+extern pointnum_t near *pointnum_first_yellow_alive;
+
 // Blits the given point[num] sprite to the given position. Assumptions:
 // • ES is already be set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
@@ -40,3 +48,4 @@ extern pointnum_t pointnums[POINTNUM_COUNT];
 	_CX = numeral; \
 	pointnum_put_raw(patnum);
 void __fastcall near pointnum_put_raw(int top, int left);
+/// ---------

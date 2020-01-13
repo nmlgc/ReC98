@@ -2017,8 +2017,8 @@ sub_C2AA	endp
 sub_C2D6	proc near
 		push	si
 		push	di
-		mov	word_24298, 0
-		mov	bx, 3686h
+		mov	_pointnum_first_yellow_alive, 0
+		mov	bx, offset _pointnums_alive
 		mov	si, offset _pointnums
 		mov	di, POINTNUM_COUNT
 
@@ -2060,12 +2060,12 @@ loc_C323:
 		mov	[bx], si
 		cmp	di, POINTNUM_YELLOW_COUNT
 		ja	short loc_C335
-		cmp	word_24298, 0
+		cmp	_pointnum_first_yellow_alive, 0
 		jnz	short loc_C335
-		mov	word_24298, si
+		mov	_pointnum_first_yellow_alive, si
 
 loc_C335:
-		add	bx, 2
+		add	bx, word
 
 loc_C338:
 		add	si, size pointnum_t
@@ -2086,7 +2086,7 @@ sub_C2D6	endp
 sub_C346	proc near
 		push	si
 		push	di
-		mov	di, 3686h
+		mov	di, offset _pointnums_alive
 		mov	si, [di]
 		or	si, si
 		jz	short loc_C3B6
@@ -2103,7 +2103,7 @@ sub_C346	proc near
 		sti
 
 loc_C362:
-		cmp	si, word_24298
+		cmp	si, _pointnum_first_yellow_alive
 		jnz	short loc_C377
 		mov	dx, 7Eh	; '~'
 		mov	al, 0FFh
@@ -2117,18 +2117,18 @@ loc_C362:
 		sti
 
 loc_C377:
-		mov	bp, [si+8]
+		mov	bp, [si+pointnum_t.PN_width]
 		shr	bp, 1
-		mov	dx, [si+2]
+		mov	dx, [si+pointnum_t.PN_center_cur.x]
 		sar	dx, 4
-		add	dx, 20h	; ' '
+		add	dx, PLAYFIELD_X
 		sub	dx, bp
 		shr	bp, 2
 		sub	bp, 2
-		mov	ax, [si+4]
-		add	ax, (12 shl 4)
+		mov	ax, [si+pointnum_t.PN_center_cur.y]
+		add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
-		add	si, 0Ah
+		add	si, pointnum_t.PN_digits_lebcd
 		add	si, bp
 
 loc_C39C:
@@ -2140,7 +2140,7 @@ loc_C39C:
 		jns	short loc_C39C
 		xor	cx, cx
 		call	@pointnum_put
-		add	di, 2
+		add	di, word
 		mov	si, [di]
 		or	si, si
 		jnz	short loc_C362
@@ -30346,8 +30346,7 @@ word_23F60	dw ?
 include th02/math/randring[bss].asm
 byte_24064	db ?
 byte_24065	db ?
-		db 562 dup(?)
-word_24298	dw ?
+include th04/main/pointnum/render[bss].asm
 byte_2429A	db ?
 byte_2429B	db ?
 fp_2429C	dw ?
