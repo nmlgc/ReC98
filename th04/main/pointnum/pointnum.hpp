@@ -35,7 +35,33 @@ struct pointnum_t {
 };
 
 extern pointnum_t pointnums[POINTNUM_COUNT];
+// Yes, [pointnums] is treated as a ring buffer of white numbers, followed by
+// a ring buffer of yellow numbers.
+extern unsigned char pointnum_yellow_p;
+extern unsigned char pointnum_white_p;
 
+#if GAME == 5
+	// Returns the on-screen width of [number] in pixels.
+	unsigned int pascal near pointnum_digits_set(
+		unsigned char near *last_digit, uint16_t points
+	);
+#else
+	// [times_2] is set to this value for for all newly added point numbers.
+	extern bool pointnum_times_2;
+
+	void pascal near pointnum_digits_set(
+		unsigned char near *last_digit, uint16_t points
+	);
+#endif
+
+int pascal pointnum_add_white(
+	Subpixel center_x, Subpixel center_y, uint16_t points
+);
+int pascal pointnum_add_yellow(
+	Subpixel center_x, Subpixel center_y, uint16_t points
+);
+
+void pascal near pointnums_init(void);
 void pascal near pointnums_invalidate(void);
 void pascal near pointnums_update(void);
 /// ---------

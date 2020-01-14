@@ -1,3 +1,12 @@
+public POINTNUMS_INIT
+pointnums_init	proc near
+	mov	_pointnum_white_p, 0
+	mov	_pointnum_yellow_p, 0
+	retn
+pointnums_init	endp
+	even
+
+
 public POINTNUMS_INVALIDATE
 pointnums_invalidate	proc near
 	push	si

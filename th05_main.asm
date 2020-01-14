@@ -1096,7 +1096,7 @@ sub_B55A	proc near
 		call	sub_C473
 		call	sparks_init
 		call	hud_score_put
-		call	sub_C29E
+		call	pointnums_init
 		nopcall	hud_put
 		mov	fp_23F5A, offset tiles_render_all
 		call	tiles_invalidate_reset
@@ -1970,18 +1970,6 @@ include th04/main/bullet/pellet_r.asm
 include th04/main/spark_render.asm
 include th04/main/sparks.asm
 include th04/main/item/splash_dot_render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C29E	proc near
-		mov	byte_24064, 0
-		mov	byte_24065, 0
-		retn
-sub_C29E	endp
-
-; ---------------------------------------------------------------------------
-		nop
 include th04/main/pointnum/inv_upd.asm
 include th05/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
@@ -12600,59 +12588,7 @@ off_1575F	dw offset loc_15388
 RANDRING_NEXT_DEF 2
 		db 0
 include th04/main/gather_point_render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_1586E	proc near
-		mov	bl, byte_24065
-		inc	byte_24065
-		cmp	bl, (POINTNUM_YELLOW_COUNT - 1)
-		jb	short loc_15880
-		mov	byte_24065, 0
-
-loc_15880:
-		xor	bh, bh
-		add	bx, POINTNUM_WHITE_COUNT
-		jmp	short loc_1589C
-sub_1586E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15888	proc near
-		mov	bl, byte_24064
-		mov	bh, 0
-		inc	byte_24064
-		cmp	bl, (POINTNUM_WHITE_COUNT - 1)
-		jb	short loc_1589C
-		mov	byte_24064, 0
-
-loc_1589C:
-		shl	bx, 4
-		add	bx, offset _pointnums
-		mov	word ptr [bx+pointnum_t.flag], 1
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+8]
-		mov	[bx+pointnum_t.PN_center_cur.x], ax
-		mov	ax, [bp+6]
-		mov	[bx+pointnum_t.PN_center_cur.y], ax
-		push	si
-		mov	si, bx
-		lea	ax, [bx+pointnum_t.PN_digits_lebcd + (POINTNUM_DIGITS - 1)]
-		push	ax
-		push	word ptr [bp+4]
-		call	sub_1F9BA
-		mov	[si+pointnum_t.PN_width], ax
-		pop	si
-		pop	bp
-		retn	6
-sub_15888	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/pointnum/add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14823,7 +14759,7 @@ sub_16F05	endp
 
 sub_16F54	proc near
 
-var_3		= byte ptr -3
+@@yellow		= byte ptr -3
 var_2		= word ptr -2
 arg_0		= word ptr  4
 
@@ -14831,7 +14767,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	[bp+var_3], 0
+		mov	[bp+@@yellow], 0
 		mov	al, [di+0Eh]
 		mov	ah, 0
 		mov	bx, ax
@@ -14863,7 +14799,7 @@ loc_16FAA:
 		cmp	_power_overflow_level, 42
 		jb	short loc_16FD1
 		mov	_power_overflow_level, 42
-		mov	[bp+var_3], 1
+		mov	[bp+@@yellow], 1
 		cmp	byte_2264E, 0
 		jnz	short loc_16FD1
 		cmp	_dream, 128
@@ -14888,7 +14824,7 @@ loc_16FE3:
 		sub	dx, ax
 		add	dx, 0FC80h
 		mov	[bp+var_2], dx
-		mov	si, 1400h
+		mov	si, 5120
 		jmp	short loc_1700C
 ; ---------------------------------------------------------------------------
 
@@ -14919,7 +14855,7 @@ loc_1703E:
 
 loc_17043:
 		inc	_total_max_valued_point_items_collected
-		mov	[bp+var_3], 1
+		mov	[bp+@@yellow], 1
 		jmp	short loc_1705C
 ; ---------------------------------------------------------------------------
 
@@ -14928,7 +14864,7 @@ loc_1704D:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, 0AF0h
+		mov	dx, 2800
 		sub	dx, ax
 		mov	si, dx
 
@@ -14949,8 +14885,8 @@ loc_17074:
 loc_1707F:
 		cmp	_dream, 128
 		jb	short loc_1708F
-		mov	si, 3200h
-		mov	[bp+var_3], 1
+		mov	si, 12800
+		mov	[bp+@@yellow], 1
 		jmp	short loc_17097
 ; ---------------------------------------------------------------------------
 
@@ -15003,8 +14939,8 @@ loc_170F2:
 loc_1710E:
 		cmp	_power_overflow_level, 42
 		jnz	short loc_17174
-		mov	si, 0A00h
-		mov	[bp+var_3], 1
+		mov	si, 2560
+		mov	[bp+@@yellow], 1
 		jmp	short loc_17174
 ; ---------------------------------------------------------------------------
 
@@ -15043,20 +14979,14 @@ loc_17171:
 loc_17174:
 		movzx	eax, si
 		add	_score_delta, eax
-		cmp	[bp+var_3], 0
+		cmp	[bp+@@yellow], 0
 		jnz	short loc_1718F
-		push	word ptr [di+2]
-		push	word ptr [di+4]
-		push	si
-		call	sub_15888
+		call	pointnums_add_white pascal, word ptr [di+2], word ptr [di+4], si
 		jmp	short loc_17199
 ; ---------------------------------------------------------------------------
 
 loc_1718F:
-		push	word ptr [di+2]
-		push	word ptr [di+4]
-		push	si
-		call	sub_1586E
+		call	pointnums_add_yellow pascal, word ptr [di+2], word ptr [di+4], si
 
 loc_17199:
 		cmp	byte_225CC, 20h	; ' '
@@ -15357,32 +15287,31 @@ sub_17354	endp
 
 sub_173AC	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 arg_0		= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
 		mov	ax, [bp+arg_0]
-		imul	ax, 500h
+		imul	ax, 1280
 		movzx	eax, ax
 		add	_score_delta, eax
 		mov	byte_21762, 0
 		mov	ax, _midboss_pos.cur.x
-		add	ax, 0FC00h
-		mov	[bp+var_2], ax
+		add	ax, (-64 shl 4)
+		mov	[bp+@@x], ax
 		mov	ax, _midboss_pos.cur.y
-		add	ax, 0FC00h
-		mov	[bp+var_4], ax
+		add	ax, (-64 shl 4)
+		mov	[bp+@@y], ax
 		xor	di, di
 		jmp	short loc_1740B
 ; ---------------------------------------------------------------------------
 
 loc_173DD:
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_2]
+		call	randring2_next16_mod pascal, (128 shl 4)
+		add	ax, [bp+@@x]
 		mov	si, ax
 		or	si, si
 		jge	short loc_173F0
@@ -15391,18 +15320,17 @@ loc_173DD:
 ; ---------------------------------------------------------------------------
 
 loc_173F0:
-		cmp	si, 1800h
+		cmp	si, (PLAYFIELD_W shl 4)
 		jle	short loc_173F9
-		mov	si, 1800h
+		mov	si, (PLAYFIELD_W shl 4)
 
 loc_173F9:
 		push	si
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_4]
+		call	randring2_next16_mod pascal, (128 shl 4)
+		add	ax, [bp+@@y]
 		push	ax
-		push	500h
-		call	sub_1586E
+		push	1280
+		call	pointnums_add_yellow
 		inc	di
 
 loc_1740B:
@@ -15421,8 +15349,8 @@ sub_173AC	endp
 
 sub_17416	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 arg_0		= word ptr  4
 
 		enter	4, 0
@@ -15434,18 +15362,17 @@ arg_0		= word ptr  4
 		mov	byte_21762, 0
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-64 shl 4)
-		mov	[bp+var_2], ax
+		mov	[bp+@@x], ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-64 shl 4)
-		mov	[bp+var_4], ax
+		mov	[bp+@@y], ax
 		xor	di, di
 		jmp	short loc_17476
 ; ---------------------------------------------------------------------------
 
 loc_17448:
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_2]
+		call	randring2_next16_mod pascal, (128 shl 4)
+		add	ax, [bp+@@x]
 		mov	si, ax
 		or	si, si
 		jge	short loc_1745B
@@ -15454,18 +15381,17 @@ loc_17448:
 ; ---------------------------------------------------------------------------
 
 loc_1745B:
-		cmp	si, 1800h
+		cmp	si, (PLAYFIELD_W shl 4)
 		jle	short loc_17464
-		mov	si, 1800h
+		mov	si, (PLAYFIELD_W shl 4)
 
 loc_17464:
 		push	si
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_4]
+		call	randring2_next16_mod pascal, (128 shl 4)
+		add	ax, [bp+@@y]
 		push	ax
-		push	3E8h
-		call	sub_1586E
+		push	1000
+		call	pointnums_add_yellow
 		inc	di
 
 loc_17476:
@@ -16048,7 +15974,7 @@ sub_17C04	proc far
 @@patnum		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@points		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -16353,17 +16279,17 @@ loc_17EC3:
 		idiv	bx
 		add	al, PAT_BULLET_KILL
 		mov	[bp+@@patnum], al
-		mov	[bp+var_4], 1
+		mov	[bp+@@points], 1
 		mov	[bp+var_6], 1
 		cmp	_rank, RANK_EXTRA
 		jnz	short loc_17EE9
-		mov	ax, 640h
+		mov	ax, 1600
 		jmp	short loc_17EFA
 ; ---------------------------------------------------------------------------
 
 loc_17EE9:
-		push	(3C0h shl 16) or 500h
-		push	(500h shl 16) or 500h
+		push	( 960 shl 16) or 1280
+		push	(1280 shl 16) or 1280
 		call	select_for_rank
 
 loc_17EFA:
@@ -16389,21 +16315,18 @@ loc_17F0B:
 ; ---------------------------------------------------------------------------
 
 loc_17F31:
-		movzx	eax, [bp+var_4]
+		movzx	eax, [bp+@@points]
 		add	_popup_bonus, eax
 		add	_score_delta, eax
-		push	[si+bullet_t.pos.cur.x]
-		push	[si+bullet_t.pos.cur.y]
-		push	[bp+var_4]
-		call	sub_15888
+		call	pointnums_add_white pascal, [si+bullet_t.pos.cur.x], [si+bullet_t.pos.cur.y], [bp+@@points]
 		mov	ax, [bp+var_6]
-		add	[bp+var_4], ax
+		add	[bp+@@points], ax
 		add	[bp+var_6], 3
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@points]
 		cmp	ax, [bp+var_8]
 		jbe	short loc_17F64
 		mov	ax, [bp+var_8]
-		mov	[bp+var_4], ax
+		mov	[bp+@@points], ax
 
 loc_17F64:
 		mov	[si+bullet_t.flag], 2
@@ -29246,51 +29169,7 @@ midboss5_update	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1F9BA	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		mov	bx, [bp+arg_2]
-		push	si
-		xor	bp, bp
-		mov	si, 1FBCh
-		mov	cx, 4
-
-loc_1F9CC:
-		mov	ax, dx
-		xor	dx, dx
-		div	word ptr [si]
-		mov	[bx], al
-		or	al, al
-		jz	short loc_1F9DE
-		or	bp, bp
-		jnz	short loc_1F9DE
-		mov	bp, cx
-
-loc_1F9DE:
-		dec	bx
-		add	si, 2
-		loop	loc_1F9CC
-		mov	[bx], dl
-		add	bp, 2
-		shl	bp, 3
-		mov	ax, bp
-		pop	si
-		pop	bp
-		retn	4
-sub_1F9BA	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/main/pointnum/digits.asm
 include th05/main/hud/number_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30174,8 +30053,6 @@ byte_23F5E	db ?
 		db    ?	;
 word_23F60	dw ?
 include th02/math/randring[bss].asm
-byte_24064	db ?
-byte_24065	db ?
 include th04/main/pointnum/render[bss].asm
 byte_2429A	db ?
 byte_2429B	db ?
