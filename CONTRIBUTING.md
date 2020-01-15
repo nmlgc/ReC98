@@ -63,9 +63,12 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
 * Documenting function comments exclusively go into C/C++ header files, right
   above the corresponding function prototype, *not* into ASM slices.
 
-* Newly found function prototypes, `struc`ts, and "sequence of numeric equate"
-  enums defined in ASM land should immediately be reflected in a header file
-  in C/C++ land, with the correct types and calling conventions.
+* Newly named symbols in ASM land (functions, global variables, `struc`ts, and
+  "sequence of numeric equate" enums) should immediately be reflected in C/C++
+  land, with the correct types and calling conventions. Typically, these
+  definitions would go into header files, but they can stay in .c/.cpp files
+  if they aren't part of a public interface, i.e., not used by unrelated
+  functions.
 
 * Try moving repeated sections of code into a separate `inline` function
   before grabbing the `#define` hammer. Turbo C++ will generally inline
