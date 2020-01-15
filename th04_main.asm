@@ -375,7 +375,7 @@ loc_ABD4:
 		call	fp_255AA
 
 loc_ABD8:
-		call	main_01:sub_BCF4
+		call	main_01:pointnums_update
 		call	main_01:circles_update
 		call	sparks_update
 		call	main_01:sub_10ABF
@@ -397,7 +397,7 @@ loc_ABD8:
 		call	gather_render
 		call	main_01:sparks_render
 		call	main_01:items_render
-		call	main_01:loc_BD64
+		call	main_01:pointnums_render
 		call	main_01:bullets_render
 		call	main_01:circles_render
 		GRCG_OFF_CLOBBERING dx
@@ -1752,199 +1752,8 @@ sub_BCB2	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BCBE	proc near
-		push	si
-		push	di
-		mov	_tile_invalidate_box.y, POINTNUM_H
-		mov	si, offset _pointnums
-		mov	di, POINTNUM_COUNT
-
-loc_BCCC:
-		cmp	[si+pointnum_t.flag], 0
-		jz	short loc_BCEA
-		mov	ax, [si+pointnum_t.PN_width]
-		mov	_tile_invalidate_box.x, ax
-		mov	ax, [si+pointnum_t.PN_center_cur.x]
-		cmp	[si+pointnum_t.PN_times_2], 0
-		jz	short loc_BCE3
-		add	ax, (8 shl 4)
-
-loc_BCE3:
-		call	main_01:tiles_invalidate_around pascal, [si+pointnum_t.PN_center_prev_y], ax
-
-loc_BCEA:
-		add	si, size pointnum_t
-		dec	di
-		jnz	short loc_BCCC
-		pop	di
-		pop	si
-		retn
-sub_BCBE	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BCF4	proc near
-		push	si
-		push	di
-		mov	_pointnum_first_yellow_alive, 0
-		mov	bx, offset _pointnums_alive
-		mov	si, offset _pointnums
-		mov	di, POINTNUM_COUNT
-
-loc_BD05:
-		cmp	[si+pointnum_t.flag], 0
-		jz	short loc_BD57
-		cmp	[si+pointnum_t.flag], 2
-		jnz	short loc_BD14
-		mov	[si+pointnum_t.flag], 0
-		jmp	short loc_BD57
-; ---------------------------------------------------------------------------
-
-loc_BD14:
-		mov	cl, [si+pointnum_t.age]
-		mov	ax, [si+pointnum_t.PN_center_cur.y]
-		mov	[si+pointnum_t.PN_center_prev_y], ax
-		cmp	cl, 24
-		jb	short loc_BD25
-		sub	ax, 8
-
-loc_BD25:
-		mov	[si+pointnum_t.PN_center_cur.y], ax
-		cmp	ax, ((-POINTNUM_H / 2) shl 4)
-		jg	short loc_BD32
-		mov	[si+pointnum_t.flag], 2
-		jmp	short loc_BD57
-; ---------------------------------------------------------------------------
-
-loc_BD32:
-		inc	cl
-		mov	[si+pointnum_t.age], cl
-		cmp	cl, 36
-		jbe	short loc_BD41
-		mov	[si+pointnum_t.flag], 2
-		jmp	short loc_BD57
-; ---------------------------------------------------------------------------
-
-loc_BD41:
-		mov	[bx], si
-		cmp	di, POINTNUM_YELLOW_COUNT
-		ja	short loc_BD54
-		cmp	_pointnum_first_yellow_alive, 0
-		jnz	short loc_BD54
-		mov	_pointnum_first_yellow_alive, si
-
-loc_BD54:
-		add	bx, word
-
-loc_BD57:
-		add	si, size pointnum_t
-		dec	di
-		jnz	short loc_BD05
-		mov	word ptr [bx], 0
-		pop	di
-		pop	si
-		retn
-sub_BCF4	endp
-
-; ---------------------------------------------------------------------------
-
-loc_BD64:
-		push	bp
-		push	si
-		push	di
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
-		cli
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	ax, GRAM_400
-		mov	es, ax
-		mov	di, offset _pointnums_alive
-		mov	si, [di]
-		cmp	si, 0
-		jz	short loc_BDFA
-
-loc_BD81:
-		cmp	si, _pointnum_first_yellow_alive
-		jnz	short loc_BD96
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
-		cli
-		out	dx, al
-		out	dx, al
-		xor	al, al
-		out	dx, al
-		mov	al, 0FFh
-		out	dx, al
-		sti
-
-loc_BD96:
-		mov	dx, [si+pointnum_t.PN_center_cur.x]
-		sar	dx, 4
-		add	dx, (PLAYFIELD_X - (((POINTNUM_DIGITS + 1) * POINTNUM_W) / 2))
-		mov	ax, [si+pointnum_t.PN_center_cur.y]
-		add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	bp, 4
-		add	si, (pointnum_t.PN_digits_lebcd + (POINTNUM_DIGITS - 1))
-
-loc_BDAF:
-		cmp	byte ptr [si], 0
-		jnz	short loc_BDBB
-		add	dx, 4
-		dec	si
-		dec	bp
-		jnz	short loc_BDAF
-
-loc_BDBB:
-		mov	cx, bp
-		inc	cx
-		shl	cx, 3
-		mov	word ptr cs:loc_BDD6+3, cx
-
-loc_BDC6:
-		xor	cx, cx
-		mov	cl, [si]
-		call	main_01:@pointnum_put
-		dec	si
-		dec	bp
-		jnz	short loc_BDC6
-		xor	cx, cx
-		call	main_01:@pointnum_put
-
-loc_BDD6:
-		mov	word ptr [si+5], 28h
-		cmp	byte ptr [si+7], 0
-		jz	short loc_BDF1
-		add	word ptr [si+5], 10h
-		mov	cx, POINTNUM_TIMES
-		call	main_01:@pointnum_put
-		mov	cx, POINTNUM_TIMES_2
-		call	main_01:@pointnum_put
-
-loc_BDF1:
-		add	di, word
-		mov	si, [di]
-		or	si, si
-		jnz	short loc_BD81
-
-loc_BDFA:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-
+include th04/main/pointnum/inv_upd.asm
+include th04/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2662,7 +2471,7 @@ sub_CB58	proc near
 		call	main_01:bullets_gather_invalidate
 		call	items_invalidate
 		call	sparks_invalidate
-		call	main_01:sub_BCBE
+		call	main_01:pointnums_invalidate
 		call	_midboss_invalidate?
 		call	_stage_invalidate
 		call	main_01:tiles_redraw_invalidated

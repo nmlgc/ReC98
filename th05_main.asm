@@ -415,7 +415,7 @@ loc_AEEC:
 		call	fp_23F58
 
 loc_AEF0:
-		call	sub_C2D6
+		call	pointnums_update
 		call	circles_update
 		call	sparks_update
 		call	sub_1214A
@@ -444,7 +444,7 @@ loc_AF2D:
 		call	gather_render
 		call	sparks_render
 		call	items_render
-		call	sub_C346
+		call	pointnums_render
 		call	sub_100C6
 		call	circles_render
 		GRCG_OFF_CLOBBERING dx
@@ -1879,7 +1879,7 @@ sub_BEE6	proc near
 		call	bullets_gather_invalidate
 		call	items_invalidate
 		call	sparks_invalidate
-		call	sub_C2AA
+		call	pointnums_invalidate
 		call	_midboss_invalidate?
 		call	_stage_invalidate
 		call	tiles_redraw_invalidated
@@ -1982,178 +1982,8 @@ sub_C29E	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C2AA	proc near
-		push	si
-		push	di
-		mov	_tile_invalidate_box.y, POINTNUM_H
-		mov	si, offset _pointnums
-		mov	di, POINTNUM_COUNT
-
-loc_C2B8:
-		cmp	[si+pointnum_t.flag], 0
-		jz	short loc_C2CD
-		mov	ax, [si+pointnum_t.PN_width]
-		mov	_tile_invalidate_box.x, ax
-		mov	ax, [si+pointnum_t.PN_center_cur.x]
-		call	tiles_invalidate_around pascal, [si+pointnum_t.PN_center_prev_y], ax
-
-loc_C2CD:
-		add	si, size pointnum_t
-		dec	di
-		jnz	short loc_C2B8
-		pop	di
-		pop	si
-		retn
-sub_C2AA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C2D6	proc near
-		push	si
-		push	di
-		mov	_pointnum_first_yellow_alive, 0
-		mov	bx, offset _pointnums_alive
-		mov	si, offset _pointnums
-		mov	di, POINTNUM_COUNT
-
-loc_C2E7:
-		cmp	[si+pointnum_t.flag], 0
-		jz	short loc_C338
-		cmp	[si+pointnum_t.flag], 2
-		jnz	short loc_C2F6
-		mov	[si+pointnum_t.flag], 0
-		jmp	short loc_C338
-; ---------------------------------------------------------------------------
-
-loc_C2F6:
-		mov	cl, [si+pointnum_t.age]
-		mov	ax, [si+pointnum_t.PN_center_cur.y]
-		mov	[si+pointnum_t.PN_center_prev_y], ax
-		cmp	cl, 24
-		jb	short loc_C307
-		sub	ax, 8
-
-loc_C307:
-		mov	[si+pointnum_t.PN_center_cur.y], ax
-		cmp	ax, ((-POINTNUM_H / 2) shl 4)
-		jg	short loc_C314
-		mov	[si+pointnum_t.flag], 2
-		jmp	short loc_C338
-; ---------------------------------------------------------------------------
-
-loc_C314:
-		inc	cl
-		mov	[si+pointnum_t.age], cl
-		cmp	cl, 36
-		jbe	short loc_C323
-		mov	[si+pointnum_t.flag], 2
-		jmp	short loc_C338
-; ---------------------------------------------------------------------------
-
-loc_C323:
-		mov	[bx], si
-		cmp	di, POINTNUM_YELLOW_COUNT
-		ja	short loc_C335
-		cmp	_pointnum_first_yellow_alive, 0
-		jnz	short loc_C335
-		mov	_pointnum_first_yellow_alive, si
-
-loc_C335:
-		add	bx, word
-
-loc_C338:
-		add	si, size pointnum_t
-		dec	di
-		jnz	short loc_C2E7
-		mov	word ptr [bx], 0
-		pop	di
-		pop	si
-		retn
-sub_C2D6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C346	proc near
-		push	si
-		push	di
-		mov	di, offset _pointnums_alive
-		mov	si, [di]
-		or	si, si
-		jz	short loc_C3B6
-		push	bp
-		mov	ax, GRAM_400
-		mov	es, ax
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
-		cli
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-
-loc_C362:
-		cmp	si, _pointnum_first_yellow_alive
-		jnz	short loc_C377
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
-		cli
-		out	dx, al
-		out	dx, al
-		not	al
-		out	dx, al
-		not	al
-		out	dx, al
-		sti
-
-loc_C377:
-		mov	bp, [si+pointnum_t.PN_width]
-		shr	bp, 1
-		mov	dx, [si+pointnum_t.PN_center_cur.x]
-		sar	dx, 4
-		add	dx, PLAYFIELD_X
-		sub	dx, bp
-		shr	bp, 2
-		sub	bp, 2
-		mov	ax, [si+pointnum_t.PN_center_cur.y]
-		add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
-		add	si, pointnum_t.PN_digits_lebcd
-		add	si, bp
-
-loc_C39C:
-		xor	ch, ch
-		mov	cl, [si]
-		call	@pointnum_put
-		dec	si
-		dec	bp
-		jns	short loc_C39C
-		xor	cx, cx
-		call	@pointnum_put
-		add	di, word
-		mov	si, [di]
-		or	si, si
-		jnz	short loc_C362
-		pop	bp
-
-loc_C3B6:
-		pop	di
-		pop	si
-		retn
-sub_C346	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/pointnum/inv_upd.asm
+include th05/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
 
 ; ---------------------------------------------------------------------------

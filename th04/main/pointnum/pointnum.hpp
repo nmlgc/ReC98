@@ -1,3 +1,7 @@
+#define POINTNUM_POPUP_DISTANCE (12.0f)
+#define POINTNUM_POPUP_FRAMES 24
+#define POINTNUM_FRAMES 36
+
 /// Structure
 /// ---------
 #if GAME == 5
@@ -6,6 +10,7 @@
 #else
 # define POINTNUM_DIGITS 4
 # define POINTNUM_YELLOW_COUNT 200
+# define POINTNUM_TIMES_2_W (POINTNUM_W * 2)
 #endif
 #define POINTNUM_WHITE_COUNT 200
 #define POINTNUM_COUNT (POINTNUM_WHITE_COUNT + POINTNUM_YELLOW_COUNT)
@@ -30,6 +35,9 @@ struct pointnum_t {
 };
 
 extern pointnum_t pointnums[POINTNUM_COUNT];
+
+void pascal near pointnums_invalidate(void);
+void pascal near pointnums_update(void);
 /// ---------
 
 /// Rendering
@@ -48,4 +56,6 @@ extern pointnum_t near *pointnum_first_yellow_alive;
 	_CX = numeral; \
 	pointnum_put_raw(patnum);
 void __fastcall near pointnum_put_raw(int top, int left);
+
+void pascal near pointnums_render(void);
 /// ---------
