@@ -55,10 +55,14 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
   (Counterexample: Small, insignificant amounts of pixels in e.g. entity
   movement code.)
 
-* Try rewriting `db 0` or `NOP` padding instructions in ASM land into `even`
-  or `align 2` directives. This makes mzdiffs a bit shorter in common cases
-  where a single byte was erroneously added somewhere, by providing a chance
-  for the code to catch up to its original byte positions.
+* Try rewriting padding instructions in ASM land into TASM directives:
+
+  * `db 0` / `NOP` → `even` / `align 2`
+  * `db ?` → `evendata`
+
+  This makes mzdiffs a bit shorter in common cases where a single byte was
+  erroneously added somewhere, by providing a chance for the code to catch up
+  to its original byte positions.
 
 * Documenting function comments exclusively go into C/C++ header files, right
   above the corresponding function prototype, *not* into ASM slices.
