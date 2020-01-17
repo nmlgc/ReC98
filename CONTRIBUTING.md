@@ -74,6 +74,99 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
   if they aren't part of a public interface, i.e., not used by unrelated
   functions.
 
+* Compress calls to *known* functions in ASM land to use TASM's one-line,
+  interfaced call syntax, whenever all parameters are passed via consecutive
+  `PUSH` instructions:
+
+  * `pascal`:
+    <table>
+        <tr>
+            <td>
+                <code>push param1</code><br />
+                <code>push param2</code><br />
+                <code>call foo</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>call foo pascal, param1, param2</code>
+            </td>
+        </tr>
+    </table>
+
+  * `__cdecl`, single call, single parameter:
+    <table>
+        <tr>
+            <td>
+                <code>push param1</code><br />
+                <code>call foo</code><br />
+                <code>pop  cx</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>call foo stdcall, param1</code><br />
+                <code>pop  cx</code>
+            </td>
+        </tr>
+    </table>
+
+  * `__cdecl`, single call, multiple parameters:
+    <table>
+        <tr>
+            <td>
+                <code>push param2</code><br />
+                <code>push param1</code><br />
+                <code>call foo</code><br />
+                <code>add  sp, 4</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>call foo c, param1, param2</code>
+            </td>
+        </tr>
+    </table>
+
+  * `__cdecl`, single call, 32-bit parameters (Note that you have to use
+    `large` whenever a parameter happens to be 32-bit, even if the disassembly
+    didn't need it):
+    <table>
+        <tr>
+            <td>
+                <code>push  012345678h</code><br />
+                <code>pushd param1</code><br />
+                <code>call  foo</code><br />
+                <code>add   sp, 8</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>call foo c, large param1, large 012345678h</code>
+            </td>
+        </tr>
+    </table>
+
+  * `__cdecl`, multiple calls with a single `add sp` instruction for their
+    combined parameter size at the end:
+    <table>
+        <tr>
+            <td>
+                <code>push  param2</code><br />
+                <code>push  param1</code><br />
+                <code>call  foo</code><br />
+                <code>[…]</code><br />
+                <code>push  param2</code><br />
+                <code>pushd param1</code><br />
+                <code>call  bar</code><br />
+                <code>add   sp, 0Ah</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>call foo stdcall, param1, param2</code><br />
+                <code>[…]</code><br />
+                <code>call bar stdcall, large param1, param2</code><br />
+                <code>add  sp, 10</code>
+            </td>
+        </tr>
+    </table>
+
 * Try moving repeated sections of code into a separate `inline` function
   before grabbing the `#define` hammer. Turbo C++ will generally inline
   everything declared as `inline` that doesn't contain `do`, `for`, `while`,
