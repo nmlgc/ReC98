@@ -33144,7 +33144,7 @@ SHOT_FUNCS label word
 byte_2297E	db 0
 		db 0
 include th02/hud/score_put[data].asm
-include th04/scoreupd[data].asm
+include th03/5_powers_of_10[data].asm
 include th04/hud/gaiji_row[data].asm
 		db    0
 		db    0

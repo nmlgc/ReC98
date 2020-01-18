@@ -6720,7 +6720,7 @@ arg_2		= word ptr  8
 		mov	bx, 4B74h
 		mov	word ptr [bx+6], 0
 		mov	byte ptr [bx+5], 0
-		mov	si, 8A8h
+		mov	si, offset _FIVE_DIGIT_POWERS_OF_10
 		add	bx, 4
 		mov	cx, [bp+arg_2]
 
@@ -6790,7 +6790,7 @@ arg_6		= word ptr  0Ch
 		add	ax, 0A805h
 		mov	es, ax
 		mov	cx, [bp+arg_6]
-		mov	si, 8A8h
+		mov	si, offset _FIVE_DIGIT_POWERS_OF_10
 		mov	di, [bp+arg_2]
 		mov	bl, 0
 		nop
@@ -6849,7 +6849,7 @@ arg_6		= word ptr  0Ch
 		add	ax, 0A805h
 		mov	es, ax
 		mov	cx, [bp+arg_6]
-		mov	si, 8A8h
+		mov	si, offset _FIVE_DIGIT_POWERS_OF_10
 		mov	di, [bp+arg_2]
 		mov	bl, 0
 		nop
@@ -35990,16 +35990,7 @@ word_1DDAC	dw 2AB6h
 		db    0
 		db    0
 include th03/sprites/score.asm
-		db  10h
-		db  27h	; '
-		db 0E8h
-		db    3
-		db  64h	; d
-		db    0
-		db  0Ah
-		db    0
-		db    1
-		db    0
+include th03/5_powers_of_10[data].asm
 		db  6Ch	; l
 		db    0
 		db  60h

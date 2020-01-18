@@ -39207,6 +39207,7 @@ aVivavvvvilcvb@	db 'Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence',0
 aPnpcuyszlB@bCa	db 'è≠èó„Yëzã»Å@Å` Capriccio ',0
 include th04/formats/bb_txt_load[data].asm
 word_231F2	dw 10h
+include th03/5_powers_of_10[data].asm
 include th04/scoreupd[data].asm
 include th04/hud/gaiji_row[data].asm
 word_23210	dw 0
