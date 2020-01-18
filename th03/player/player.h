@@ -1,0 +1,1 @@
+#define PLAYER_COUNT 2
