@@ -14,6 +14,8 @@
 #define PLAYFIELD2_CLIP_LEFT  (PLAYFIELD1_CLIP_RIGHT + 1)
 #define PLAYFIELD2_CLIP_RIGHT (PLAYFIELD2_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1)
 
+#define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / 8)
+
 extern int playfield_fg_shift_x[PLAYFIELD_COUNT];
 
 int pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);

@@ -454,7 +454,7 @@ loc_99B1:
 		push	1
 		nopcall	sub_C9FE
 		call	sub_BE5D
-		call	sub_15D53
+		call	_combo_update_and_render
 		call	fp_1FBC0
 		call	fp_1E6EA
 		cmp	byte_23AFA, 0
@@ -21613,47 +21613,47 @@ yumemi_bomb	endp
 
 ; Attributes: bp-based frame
 
-sub_15CB9	proc far
+combo_add	proc far
 
 var_8		= word ptr -8
 var_5		= byte ptr -5
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= byte ptr  0Ah
+@@bonus_total		= dword	ptr -4
+@@bonus		= word ptr  6
+@@pid		= byte ptr  8
+@@hits		= byte ptr  0Ah
 
 		enter	8, 0
 		push	si
 		push	di
-		mov	cl, [bp+arg_4]
-		mov	dx, [bp+arg_0]
-		mov	al, [bp+arg_2]
+		mov	cl, [bp+@@hits]
+		mov	dx, [bp+@@bonus]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 2
-		add	ax, 393Eh
+		add	ax, offset _combos
 		mov	si, ax
-		cmp	cl, 2
-		jb	short loc_15D4A
-		mov	al, [bp+arg_2]
+		cmp	cl, COMBO_HIT_MIN
+		jb	short @@ret
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 7
 		add	ax, 65A6h
 		mov	di, ax
 		movzx	eax, dx
-		mov	[bp+var_4], eax
-		movzx	eax, word ptr [si+2]
-		add	[bp+var_4], eax
-		cmp	[bp+var_4], 0FFFFh
+		mov	[bp+@@bonus_total], eax
+		movzx	eax, [si+combo_t.bonus]
+		add	[bp+@@bonus_total], eax
+		cmp	[bp+@@bonus_total], COMBO_BONUS_CAP
 		jbe	short loc_15D04
-		mov	dx, 0FFFFh
+		mov	dx, COMBO_BONUS_CAP
 		jmp	short loc_15D07
 ; ---------------------------------------------------------------------------
 
 loc_15D04:
-		mov	dx, word ptr [bp+var_4]
+		mov	dx, word ptr [bp+@@bonus_total]
 
 loc_15D07:
-		mov	[si+2],	dx
+		mov	[si+combo_t.bonus], dx
 		mov	al, [di+72h]
 		mov	[bp+var_5], al
 		cmp	[bp+var_5], cl
@@ -21668,39 +21668,39 @@ loc_15D18:
 		mov	[di+70h], dx
 
 loc_15D26:
-		cmp	cl, 63h	; 'c'
+		cmp	cl, COMBO_HIT_CAP
 		jbe	short loc_15D35
-		mov	cl, 63h	; 'c'
-		cmp	dx, 0FFFFh
+		mov	cl, COMBO_HIT_CAP
+		cmp	dx, COMBO_BONUS_CAP
 		jz	short loc_15D35
-		mov	byte ptr [si], 50h ; 'P'
+		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
 
 loc_15D35:
-		cmp	[si+1],	cl
+		cmp	[si+combo_t.hits], cl
 		jb	short loc_15D3F
-		cmp	byte ptr [si], 20h ; ' '
-		jnb	short loc_15D4A
+		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
+		jnb	short @@ret
 
 loc_15D3F:
-		mov	[si+1],	cl
-		cmp	dx, 0FFFFh
-		jz	short loc_15D4A
-		mov	byte ptr [si], 50h ; 'P'
+		mov	[si+combo_t.hits], cl
+		cmp	dx, COMBO_BONUS_CAP
+		jz	short @@ret
+		mov	[si+combo_t.COMBO_time], COMBO_FRAMES
 
-loc_15D4A:
-		mov	ax, [si+2]
+@@ret:
+		mov	ax, [si+combo_t.bonus]
 		pop	di
 		pop	si
 		leave
 		retf	6
-sub_15CB9	endp
+combo_add	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_15D53	proc far
+_combo_update_and_render	proc far
 
 var_4		= byte ptr -4
 var_3		= byte ptr -3
@@ -21709,32 +21709,32 @@ var_3		= byte ptr -3
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 393Eh
+		mov	si, offset _combos
 		mov	[bp+@@pid], 0
-		jmp	loc_15E98
+		jmp	@@player_more?
 ; ---------------------------------------------------------------------------
 
-loc_15D64:
-		cmp	byte ptr [si], 0
-		jz	loc_15E92
-		cmp	byte ptr [si], 50h ; 'P'
+@@player_loop:
+		cmp	[si+combo_t.COMBO_time], 0
+		jz	@@player_next
+		cmp	[si+combo_t.COMBO_time], COMBO_FRAMES
 		jnz	loc_15E09
 		mov	ax, [bp+@@pid]
-		imul	ax, 40
+		imul	ax, PLAYFIELD_VRAM_W_BORDERED
 		mov	di, ax
 		add	ax, 8
-		call	gaiji_putsa pascal, ax, 2, ds, offset gsHIT, TX_WHITE
+		call	gaiji_putsa pascal, ax, 2, ds, offset _gsHIT, TX_WHITE
 		lea	ax, [di+4]
-		call	gaiji_putsa pascal, ax, 3, ds, offset gBONUS_FRAME, TX_WHITE
-		mov	al, [si+1]
+		call	gaiji_putsa pascal, ax, 3, ds, offset _gBONUS_FRAME, TX_WHITE
+		mov	al, [si+combo_t.hits]
 		mov	[bp+var_4], al
 		cmp	[bp+var_4], 0Ah
 		jb	short loc_15DDB
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+var_3], al
 		lea	ax, [di+4]
 		push	ax
@@ -21746,7 +21746,7 @@ loc_15D64:
 		call	gaiji_putca
 		mov	al, [bp+var_4]
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_4], dl
@@ -21762,7 +21762,7 @@ loc_15DDB:
 
 loc_15DED:
 		mov	al, [bp+var_4]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+var_3], al
 		lea	ax, [di+6]
 		push	ax
@@ -21774,7 +21774,7 @@ loc_15DED:
 		call	gaiji_putca
 
 loc_15E09:
-		dec	byte ptr [si]
+		dec	[si+combo_t.COMBO_time]
 		cmp	[bp+@@pid], 0
 		jnz	short loc_15E16
 		mov	di, 28h	; '('
@@ -21786,7 +21786,7 @@ loc_15E16:
 
 loc_15E19:
 		mov	[bp+var_3], 0Ch
-		cmp	byte ptr [si], 20h ; ' '
+		cmp	[si+combo_t.COMBO_time], COMBO_HIT_RESET_FRAMES
 		jnb	short loc_15E27
 		mov	ax, 1
 		jmp	short loc_15E29
@@ -21817,42 +21817,34 @@ loc_15E3C:
 loc_15E45:
 		push	di
 		push	18h
-		push	word ptr [si+2]
+		push	[si+combo_t.bonus]
 		push	word ptr [bp+var_3]
 		call	sub_D608
-		cmp	byte ptr [si], 0
-		jnz	short loc_15E92
+		cmp	[si+combo_t.COMBO_time], 0
+		jnz	short @@player_next
 		mov	ax, [bp+@@pid]
-		imul	ax, 28h
+		imul	ax, PLAYFIELD_VRAM_W_BORDERED
 		mov	di, ax
 		add	ax, 4
-		push	ax
-		push	2
-		push	ds
-		push	offset asc_1DD84 ; "	    "
-		call	text_puts
+		call	text_puts pascal, ax, 2, ds, offset _aBONUS_FRAME_SPACES
 		lea	ax, [di+4]
-		push	ax
-		push	3
-		push	ds
-		push	offset asc_1DD84 ; "	    "
-		call	text_puts
-		mov	byte ptr [si+1], 0
-		call	score_add pascal, word ptr [si+2], [bp+@@pid]
-		mov	word ptr [si+2], 0
+		call	text_puts pascal, ax, 3, ds, offset _aBONUS_FRAME_SPACES
+		mov	[si+combo_t.hits], 0
+		call	score_add pascal, [si+combo_t.bonus], [bp+@@pid]
+		mov	[si+combo_t.bonus], 0
 
-loc_15E92:
+@@player_next:
 		inc	[bp+@@pid]
-		add	si, 4
+		add	si, size combo_t
 
-loc_15E98:
+@@player_more?:
 		cmp	[bp+@@pid], PLAYER_COUNT
-		jl	loc_15D64
+		jl	@@player_loop
 		pop	di
 		pop	si
 		leave
 		retf
-sub_15D53	endp
+_combo_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22211,13 +22203,13 @@ sub_1609E	endp
 
 sub_16135	proc near
 
-arg_0		= word ptr  4
+@@bonus		= word ptr  4
 arg_2		= byte ptr  6
-arg_4		= word ptr  8
+@@pid		= byte ptr  8
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte ptr [bp+arg_4]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
 		mov	dl, [bp+arg_2]
@@ -22226,9 +22218,9 @@ arg_4		= word ptr  8
 		mov	bx, ax
 		mov	al, [bx+4ADEh]
 		push	ax
-		push	[bp+arg_4]
-		push	[bp+arg_0]
-		nopcall	sub_15CB9
+		push	word ptr [bp+@@pid]
+		push	[bp+@@bonus]
+		nopcall	combo_add
 		pop	bp
 		retn	6
 sub_16135	endp
@@ -35886,9 +35878,7 @@ gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL db 8Dh, 8Eh, 8Fh, 92h, 93h, 94h, 95h
 		db 96h, 97h, 98h, 99h, 9Ah, 9Bh, 9Ch, 0
 asc_1DD5A	db '                                ',0
 		db 0
-gsHIT		db 0Ch,	0Dh, 0
-gBONUS_FRAME	db 0Ah, 0Bh, 0Eh, 0Fh,0
-asc_1DD84	db '        ',0
+include th03/player/combo[data].asm
 		db 0
 		db  86h
 		db  20h
@@ -38351,8 +38341,7 @@ byte_20E89	db ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th03/player/combo[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;

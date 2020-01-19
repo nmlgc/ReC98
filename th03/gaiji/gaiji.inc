@@ -17,3 +17,4 @@ gc_P2_BOTTOM_2 = 019h
 ; ----------------------
 
 include th03/gaiji/bar.inc
+include th02/gaiji/boldfont.inc
