@@ -22196,35 +22196,7 @@ loc_16129:
 		retf
 sub_1609E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16135	proc near
-
-@@bonus		= word ptr  4
-arg_2		= byte ptr  6
-@@pid		= byte ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+@@pid]
-		mov	ah, 0
-		shl	ax, 4
-		mov	dl, [bp+arg_2]
-		mov	dh, 0
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx+4ADEh]
-		push	ax
-		push	word ptr [bp+@@pid]
-		push	[bp+@@bonus]
-		nopcall	combo_add
-		pop	bp
-		retn	6
-sub_16135	endp
-
+include th03/player/hitcombo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22232,10 +22204,10 @@ sub_16135	endp
 
 sub_1615D	proc near
 
-var_5		= byte ptr -5
-var_4		= byte ptr -4
+@@hitcombo		= byte ptr -5
+@@hitcombo_slot		= byte ptr -4
 @@pid		= byte ptr -3
-var_2		= word ptr -2
+@@bonus_total		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -22269,22 +22241,22 @@ loc_16187:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+856h]
-		mov	[bp+var_4], al
+		mov	al, _hitcombo_ring_p[bx]
+		mov	[bp+@@hitcombo_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4ADEh], 1
+		mov	_hitcombo_ring[bx], 1
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22292,16 +22264,16 @@ loc_16187:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+856h]
+		inc	_hitcombo_ring_p[bx]
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+856h], 10h
+		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
 		jb	loc_164A2
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+856h], 0
+		mov	_hitcombo_ring_p[bx], 0
 		jmp	loc_164A2
 ; ---------------------------------------------------------------------------
 
@@ -22329,28 +22301,28 @@ loc_16212:
 loc_16257:
 		mov	bx, word_2203C
 		mov	byte ptr [bx], 9
-		mov	byte ptr word_220C2+1, 1
+		mov	byte_220C3, 1
 		cmp	byte_2203B, 0
 		jnz	short loc_162D5
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+856h]
-		mov	[bp+var_4], al
+		mov	al, _hitcombo_ring_p[bx]
+		mov	[bp+@@hitcombo_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	byte ptr [bx+4ADEh], 1
+		mov	_hitcombo_ring[bx], 1
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22358,16 +22330,16 @@ loc_16257:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+856h]
+		inc	_hitcombo_ring_p[bx]
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+856h], 10h
+		cmp	_hitcombo_ring_p[bx], HITCOMBO_RING_SIZE
 		jb	loc_16484
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+856h], 0
+		mov	_hitcombo_ring_p[bx], 0
 		jmp	loc_16484
 ; ---------------------------------------------------------------------------
 
@@ -22375,41 +22347,41 @@ loc_162D5:
 		push	word ptr [bp+@@pid]
 		push	20h ; ' '
 		call	sub_15EA4
-		mov	al, byte ptr word_220C2
-		mov	[bp+var_4], al
+		mov	al, hitcombo_slot_220C2
+		mov	[bp+@@hitcombo_slot], al
 		mov	bx, word_2203C
 		mov	[bx+1Ch], al
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4ADEh]
-		mov	[bp+var_5], al
-		cmp	[bp+var_5], 0FFh
+		mov	al, _hitcombo_ring[bx]
+		mov	[bp+@@hitcombo], al
+		cmp	[bp+@@hitcombo], 255
 		jnb	short loc_1630B
-		inc	[bp+var_5]
+		inc	[bp+@@hitcombo]
 
 loc_1630B:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
-		mov	dl, [bp+var_5]
+		mov	dl, [bp+@@hitcombo]
 		mov	bx, ax
-		mov	[bx+4ADEh], dl
+		mov	_hitcombo_ring[bx], dl
 		push	word ptr [bp+@@pid]
-		push	word ptr [bp+var_4]
-		mov	al, [bp+var_5]
+		push	word ptr [bp+@@hitcombo_slot]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
 		shl	ax, 4
 		push	ax
-		call	sub_16135
-		mov	[bp+var_2], ax
+		call	hitcombo_commit
+		mov	[bp+@@bonus_total], ax
 		push	ax
 		push	word ptr [bp+@@pid]
 		call	sub_165B5
@@ -22429,13 +22401,13 @@ loc_1630B:
 		mov	bx, 20h	; ' '
 		cwd
 		idiv	bx
-		mov	[bp+var_4], al
-		cmp	[bp+var_5], 2
+		mov	[bp+@@hitcombo_slot], al
+		cmp	[bp+@@hitcombo], 2
 		ja	short loc_1638E
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22444,9 +22416,9 @@ loc_1630B:
 ; ---------------------------------------------------------------------------
 
 loc_1638E:
-		mov	al, [bp+var_5]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		mov	bx, 9
 		sub	bx, dx
@@ -22457,7 +22429,7 @@ loc_1638E:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22466,7 +22438,7 @@ loc_1638E:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+var_4]
+		mov	bl, [bp+@@hitcombo_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -22475,9 +22447,9 @@ loc_1638E:
 ; ---------------------------------------------------------------------------
 
 loc_163DA:
-		mov	al, [bp+var_5]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, 0Eh
@@ -22487,7 +22459,7 @@ loc_163DA:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22496,12 +22468,12 @@ loc_163DA:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+var_4]
+		mov	bl, [bp+@@hitcombo_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+4B1Eh], al
-		test	[bp+var_5], 1
+		test	[bp+@@hitcombo], 1
 		jnz	short loc_1646E
 		mov	byte_23E45, 1Dh
 		nopcall	sub_17971
@@ -22512,7 +22484,7 @@ loc_1642D:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22521,7 +22493,7 @@ loc_1642D:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, [bp+var_4]
+		mov	bl, [bp+@@hitcombo_slot]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -22531,7 +22503,7 @@ loc_16459:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, [bp+var_4]
+		mov	dl, [bp+@@hitcombo_slot]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22539,7 +22511,7 @@ loc_16459:
 
 loc_1646E:
 		push	word ptr [bp+@@pid]
-		mov	al, [bp+var_4]
+		mov	al, [bp+@@hitcombo_slot]
 		mov	ah, 0
 		push	ax
 		call	sub_1816D
@@ -22685,7 +22657,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22706,7 +22678,7 @@ arg_2		= byte ptr  6
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22764,7 +22736,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22772,7 +22744,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22780,7 +22752,7 @@ arg_2		= word ptr  6
 		mov	al, cl
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -22883,9 +22855,9 @@ sub_165B5	endp
 sub_1670D	proc far
 
 var_E		= byte ptr -0Eh
-var_D		= byte ptr -0Dh
+@@hitcombo		= byte ptr -0Dh
 var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
+@@bonus		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -22963,7 +22935,7 @@ loc_16769:
 		cmp	ax, [bp+var_6]
 		jg	loc_1696E
 		mov	al, [si+1Ch]
-		mov	byte ptr word_220C2, al
+		mov	hitcombo_slot_220C2, al
 		cmp	byte_2203A, 0
 		jnz	short loc_167DF
 		inc	byte ptr [si]
@@ -22974,32 +22946,32 @@ loc_167DF:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
-		mov	al, [bx+4ADEh]
-		mov	[bp+var_D], al
-		cmp	[bp+var_D], 0FFh
+		mov	al, _hitcombo_ring[bx]
+		mov	[bp+@@hitcombo], al
+		cmp	[bp+@@hitcombo], 255
 		jnb	short loc_16801
-		inc	[bp+var_D]
+		inc	[bp+@@hitcombo]
 
 loc_16801:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
-		mov	dl, [bp+var_D]
+		mov	dl, [bp+@@hitcombo]
 		mov	bx, ax
-		mov	[bx+4ADEh], dl
+		mov	_hitcombo_ring[bx], dl
 		cmp	[bp+var_E], 1
 		jnz	short loc_1682E
-		mov	al, [bp+var_D]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
 		add	ax, ax
-		mov	[bp+var_A], ax
+		mov	[bp+@@bonus], ax
 		push	1
 		jmp	short loc_1685C
 ; ---------------------------------------------------------------------------
@@ -23007,11 +22979,11 @@ loc_16801:
 loc_1682E:
 		cmp	[bp+var_E], 6
 		jnz	short loc_16846
-		mov	al, [bp+var_D]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
 		shl	ax, 4
-		add	ax, 64h	; 'd'
-		mov	[bp+var_A], ax
+		add	ax, 100
+		mov	[bp+@@bonus], ax
 		push	40
 		jmp	short loc_1685C
 ; ---------------------------------------------------------------------------
@@ -23019,11 +22991,11 @@ loc_1682E:
 loc_16846:
 		cmp	[bp+var_E], 9
 		jnz	short loc_16865
-		mov	al, [bp+var_D]
+		mov	al, [bp+@@hitcombo]
 		mov	ah, 0
 		shl	ax, 4
-		add	ax, 1BCh
-		mov	[bp+var_A], ax
+		add	ax, 444
+		mov	[bp+@@bonus], ax
 		push	80
 
 loc_1685C:
@@ -23033,24 +23005,24 @@ loc_1685C:
 loc_16865:
 		mov	al, byte_23AF8
 		mov	ah, 0
-		add	[bp+var_A], ax
+		add	[bp+@@bonus], ax
 		cmp	byte_23AF8, 30h	; '0'
 		ja	short loc_16879
-		sar	[bp+var_A], 1
+		sar	[bp+@@bonus], 1
 		jmp	short loc_16886
 ; ---------------------------------------------------------------------------
 
 loc_16879:
 		cmp	byte_23AF8, 60h
 		jb	short loc_16886
-		mov	ax, [bp+var_A]
-		add	[bp+var_A], ax
+		mov	ax, [bp+@@bonus]
+		add	[bp+@@bonus], ax
 
 loc_16886:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 4AFEh
@@ -23058,11 +23030,11 @@ loc_16886:
 		mov	al, [bp+var_E]
 		add	[di], al
 		mov	al, [di]
-		mov	[bp+var_D], al
+		mov	[bp+@@hitcombo], al
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 4B1Eh
@@ -23083,7 +23055,7 @@ loc_168C8:
 
 loc_168D5:
 		call	sub_15EA4
-		cmp	[bp+var_D], 4
+		cmp	[bp+@@hitcombo], 4
 		jnb	short loc_168E4
 		mov	al, [di]
 		add	al, 2
@@ -23091,7 +23063,7 @@ loc_168D5:
 ; ---------------------------------------------------------------------------
 
 loc_168E4:
-		cmp	[bp+var_D], 0Ah
+		cmp	[bp+@@hitcombo], 10
 		jnb	short loc_168F2
 		mov	al, [di]
 		add	al, 5
@@ -23102,7 +23074,7 @@ loc_168EE:
 ; ---------------------------------------------------------------------------
 
 loc_168F2:
-		cmp	[bp+var_D], 14h
+		cmp	[bp+@@hitcombo], 20
 		jnb	short loc_16916
 		mov	al, [di]
 		add	al, 2
@@ -23110,7 +23082,7 @@ loc_168F2:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -23122,7 +23094,7 @@ loc_16916:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		shl	ax, 4
-		mov	dl, byte ptr word_220C2
+		mov	dl, hitcombo_slot_220C2
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -23131,18 +23103,15 @@ loc_16916:
 		mov	dl, pid_20E3A
 		mov	dh, 0
 		shl	dx, 4
-		mov	bl, byte ptr word_220C2
+		mov	bl, hitcombo_slot_220C2
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
 		mov	[bx+4B3Eh], al
 
 loc_16945:
-		push	word ptr pid_20E3A
-		push	word_220C2
-		push	[bp+var_A]
-		call	sub_16135
-		mov	[bp+var_A], ax
+		call	hitcombo_commit pascal, word ptr pid_20E3A, word ptr hitcombo_slot_220C2, [bp+@@bonus]
+		mov	[bp+@@bonus], ax
 		push	ax
 		push	word ptr pid_20E3A
 		call	sub_165B5
@@ -26300,7 +26269,7 @@ loc_1823A:
 		cmp	byte_2203B, 0
 		jz	loc_182D6
 		mov	byte ptr [bx], 9
-		mov	al, byte ptr word_220C2
+		mov	al, hitcombo_slot_220C2
 		mov	[bp+var_1], al
 		mov	[bx+1Ch], al
 		cmp	byte_2203A, 3
@@ -26363,7 +26332,7 @@ loc_182D6:
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		mov	bx, dx
-		mov	dl, [bx+856h]
+		mov	dl, _hitcombo_ring_p[bx]
 		mov	dh, 0
 		add	ax, dx
 		mov	bx, ax
@@ -26375,7 +26344,7 @@ loc_182D6:
 		shl	dx, 4
 		mov	bl, [bp+@@pid]
 		mov	bh, 0
-		mov	bl, [bx+856h]
+		mov	bl, _hitcombo_ring_p[bx]
 		mov	bh, 0
 		add	dx, bx
 		mov	bx, dx
@@ -26386,7 +26355,7 @@ loc_182D6:
 		mov	al, [bp+@@pid]
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+856h]
+		mov	al, _hitcombo_ring_p[bx]
 		mov	ah, 0
 		push	ax
 		call	sub_1816D
@@ -35918,8 +35887,7 @@ word_1DDAC	dw 2AB6h
 		db  32h	; 2
 		db  1Eh
 		db  32h	; 2
-		db    0
-		db    0
+include th03/player/hitcombo[data].asm
 include th03/sprites/score.asm
 include th03/5_powers_of_10[data].asm
 		db  6Ch	; l
@@ -39487,6 +39455,7 @@ byte_22037	db ?
 byte_2203A	db ?
 byte_2203B	db ?
 word_2203C	dw ?
+include th03/player/hitcombo[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -39512,15 +39481,8 @@ word_2203C	dw ?
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-word_220C2	dw ?
+hitcombo_slot_220C2	db ?
+byte_220C3	db ?
 include th03/player/score[bss].asm
 byte_220DC	db ?
 		db ?
