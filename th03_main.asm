@@ -650,27 +650,27 @@ loc_9B8E:
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 5
-		ja	short loc_9BC0
+		ja	short @@cpu_additional_hit_damage_in_stage_7_8_9
 		add	bx, bx
-		jmp	cs:off_9EB3[bx]
+		jmp	cs:@@cpu_additional_hit_damage[bx]
 
-loc_9BAB:
-		mov	byte_23AEA, 3
+@@cpu_additional_hit_damage_in_stage_1_2:
+		mov	_cpu_hit_damage_additional, 3
 		jmp	short loc_9BC5
 ; ---------------------------------------------------------------------------
 
-loc_9BB2:
-		mov	byte_23AEA, 2
+@@cpu_additional_hit_damage_in_stage_3_4:
+		mov	_cpu_hit_damage_additional, 2
 		jmp	short loc_9BC5
 ; ---------------------------------------------------------------------------
 
-loc_9BB9:
-		mov	byte_23AEA, 1
+@@cpu_additional_hit_damage_in_stage_5_6:
+		mov	_cpu_hit_damage_additional, 1
 		jmp	short loc_9BC5
 ; ---------------------------------------------------------------------------
 
-loc_9BC0:
-		mov	byte_23AEA, 0
+@@cpu_additional_hit_damage_in_stage_7_8_9:
+		mov	_cpu_hit_damage_additional, 0
 
 loc_9BC5:
 		les	bx, _resident
@@ -741,7 +741,7 @@ loc_9C51:
 		mov	byte_202B6, 1
 		mov	byte_202B7, 1
 		mov	byte_220DC, 0FFh
-		mov	byte_23AEA, 0
+		mov	_cpu_hit_damage_additional, 0
 		push	3
 
 loc_9C70:
@@ -957,7 +957,6 @@ loc_9E24:
 		pop	si
 		leave
 		retn
-sub_9B14	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -974,12 +973,13 @@ off_9EAB	dw offset loc_9C2B
 		dw offset loc_9C35
 		dw offset loc_9C3F
 		dw offset loc_9C49
-off_9EB3	dw offset loc_9BAB
-		dw offset loc_9BAB
-		dw offset loc_9BB2
-		dw offset loc_9BB2
-		dw offset loc_9BB9
-		dw offset loc_9BB9
+@@cpu_additional_hit_damage	dw offset @@cpu_additional_hit_damage_in_stage_1_2
+		dw offset @@cpu_additional_hit_damage_in_stage_1_2
+		dw offset @@cpu_additional_hit_damage_in_stage_3_4
+		dw offset @@cpu_additional_hit_damage_in_stage_3_4
+		dw offset @@cpu_additional_hit_damage_in_stage_5_6
+		dw offset @@cpu_additional_hit_damage_in_stage_5_6
+sub_9B14	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8331,7 +8331,7 @@ sub_E0F7	endp
 sub_E1D5	proc near
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@damage		= byte ptr -1
 arg_0		= word ptr  4
 
 		push	bp
@@ -8350,11 +8350,11 @@ arg_0		= word ptr  4
 
 loc_E1F3:
 		mov	al, [si+73h]
-		mov	[bp+var_1], al
-		add	al, byte_23AEA
+		mov	[bp+@@damage], al
+		add	al, _cpu_hit_damage_additional
 
 loc_E1FD:
-		mov	[bp+var_1], al
+		mov	[bp+@@damage], al
 		mov	byte ptr [si+73h], 3
 		mov	al, [bp+var_2]
 		cbw
@@ -8372,7 +8372,7 @@ loc_E221:
 		mov	al, [si+7]
 		cbw
 		push	ax
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@damage]
 		cbw
 		pop	dx
 		sub	dx, ax
@@ -8383,11 +8383,11 @@ loc_E221:
 		jle	short loc_E240
 		mov	al, [si+7]
 		dec	al
-		mov	[bp+var_1], al
+		mov	[bp+@@damage], al
 
 loc_E240:
 		call	sub_E24B
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@damage]
 		pop	si
 		leave
 		retn	2
@@ -41170,7 +41170,8 @@ byte_23AE5	db ?
 byte_23AE6	db ?
 byte_23AE7	db ?
 word_23AE8	dw ?
-byte_23AEA	db ?
+public _cpu_hit_damage_additional
+_cpu_hit_damage_additional	db ?
 		db    ?	;
 		db    ?	;
 		db    ?	;
