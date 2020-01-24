@@ -292,10 +292,10 @@ loc_977E:
 		call	shots_update
 		mov	_pid_current, 0
 		mov	byte ptr word_23AF0, 0
-		call	p1_2028C
+		call	_chargeshot_update_p1
 		mov	_pid_current, 1
 		mov	byte ptr word_23AF0, 28h ; '('
-		call	p2_20290
+		call	_chargeshot_update_p2
 		call	sub_BB12
 		call	sub_13CC7
 		call	sub_17A1B
@@ -357,11 +357,11 @@ loc_986C:
 		mov	_pid_current, 0
 		mov	byte ptr word_23AF0, 0
 		call	p1_1FE74
-		call	p1_20294
+		call	_chargeshot_render_p1
 		mov	_pid_current, 1
 		mov	byte ptr word_23AF0, 28h ; '('
 		call	p2_1FE80
-		call	p2_20298
+		call	_chargeshot_render_p2
 		mov	byte ptr word_23AF0, 0
 		push	65A6h
 		call	sub_DE95
@@ -1763,9 +1763,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, reimu_1A27E
 		setfarfp	p1_1FE70, reimu_1A4E0
 		setfarfp	p1_1FE74, reimu_1A5F9
-		setfarfp	p1_23B6E, reimu_14A97
-		setfarfp	p1_2028C, reimu_14B7C
-		setfarfp	p1_20294, reimu_14D83
+		setfarfp	_p1_chargeshot_add, chargeshot_add_reimu
+		setfarfp	_chargeshot_update_p1, chargeshot_update_reimu
+		setfarfp	_chargeshot_render_p1, chargeshot_render_reimu
 		setfarfp	p1_2029C, reimu_14CE3
 		setfarfp	p1_202A4, reimu_14FEE
 		setfarfp	p1_202AC, reimu_15006
@@ -1782,9 +1782,9 @@ loc_A5E2:
 		setfarfp	p2_1FE78, reimu_1A27E
 		setfarfp	p2_1FE7C, reimu_1A4E0
 		setfarfp	p2_1FE80, reimu_1A5F9
-		setfarfp	p2_23BEE, reimu_14A97
-		setfarfp	p2_20290, reimu_14B7C
-		setfarfp	p2_20298, reimu_14D83
+		setfarfp	_p2_chargeshot_add, chargeshot_add_reimu
+		setfarfp	_chargeshot_update_p2, chargeshot_update_reimu
+		setfarfp	_chargeshot_render_p2, chargeshot_render_reimu
 		setfarfp	p2_202A0, reimu_14CE3
 		setfarfp	p2_202A8, reimu_14FEE
 		setfarfp	p2_202B0, reimu_15006
@@ -1828,9 +1828,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, mima_1A62B
 		setfarfp	p1_1FE70, mima_1A745
 		setfarfp	p1_1FE74, mima_1A8D3
-		setfarfp	p1_23B6E, mima_153DC
-		setfarfp	p1_2028C, mima_154C4
-		setfarfp	p1_20294, mima_15652
+		setfarfp	_p1_chargeshot_add, chargeshot_add_mima
+		setfarfp	_chargeshot_update_p1, chargeshot_update_mima
+		setfarfp	_chargeshot_render_p1, chargeshot_render_mima
 		setfarfp	p1_2029C, mima_15597
 		setfarfp	p1_202A4, mima_158C5
 		setfarfp	p1_202AC, mima_158DD
@@ -1847,9 +1847,9 @@ loc_A77A:
 		setfarfp	p2_1FE78, mima_1A62B
 		setfarfp	p2_1FE7C, mima_1A745
 		setfarfp	p2_1FE80, mima_1A8D3
-		setfarfp	p2_23BEE, mima_153DC
-		setfarfp	p2_20290, mima_154C4
-		setfarfp	p2_20298, mima_15652
+		setfarfp	_p2_chargeshot_add, chargeshot_add_mima
+		setfarfp	_chargeshot_update_p2, chargeshot_update_mima
+		setfarfp	_chargeshot_render_p2, chargeshot_render_mima
 		setfarfp	p2_202A0, mima_15597
 		setfarfp	p2_202A8, mima_158C5
 		setfarfp	p2_202B0, mima_158DD
@@ -1893,9 +1893,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, marisa_19ABC
 		setfarfp	p1_1FE70, marisa_19C36
 		setfarfp	p1_1FE74, marisa_19D31
-		setfarfp	p1_23B6E, marisa_142DF
-		setfarfp	p1_2028C, marisa_143BE
-		setfarfp	p1_20294, marisa_14511
+		setfarfp	_p1_chargeshot_add, chargeshot_add_marisa
+		setfarfp	_chargeshot_update_p1, chargeshot_update_marisa
+		setfarfp	_chargeshot_render_p1, chargeshot_render_marisa
 		setfarfp	p1_2029C, marisa_14487
 		setfarfp	p1_202A4, marisa_14885
 		setfarfp	p1_202AC, marisa_1489D
@@ -1912,9 +1912,9 @@ loc_A912:
 		setfarfp	p2_1FE78, marisa_19ABC
 		setfarfp	p2_1FE7C, marisa_19C36
 		setfarfp	p2_1FE80, marisa_19D31
-		setfarfp	p2_23BEE, marisa_142DF
-		setfarfp	p2_20290, marisa_143BE
-		setfarfp	p2_20298, marisa_14511
+		setfarfp	_p2_chargeshot_add, chargeshot_add_marisa
+		setfarfp	_chargeshot_update_p2, chargeshot_update_marisa
+		setfarfp	_chargeshot_render_p2, chargeshot_render_marisa
 		setfarfp	p2_202A0, marisa_14487
 		setfarfp	p2_202A8, marisa_14885
 		setfarfp	p2_202B0, marisa_1489D
@@ -1958,9 +1958,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, ellen_193EF
 		setfarfp	p1_1FE70, ellen_1961D
 		setfarfp	p1_1FE74, ellen_197F3
-		setfarfp	p1_23B6E, ellen_1B674
-		setfarfp	p1_2028C, ellen_1B723
-		setfarfp	p1_20294, ellen_1B979
+		setfarfp	_p1_chargeshot_add, chargeshot_add_ellen
+		setfarfp	_chargeshot_update_p1, chargeshot_update_ellen
+		setfarfp	_chargeshot_render_p1, chargeshot_render_ellen
 		setfarfp	p1_2029C, ellen_1B903
 		setfarfp	p1_202A4, ellen_1BC1D
 		setfarfp	p1_202AC, ellen_1BC35
@@ -1977,9 +1977,9 @@ loc_AAAA:
 		setfarfp	p2_1FE78, ellen_193EF
 		setfarfp	p2_1FE7C, ellen_1961D
 		setfarfp	p2_1FE80, ellen_197F3
-		setfarfp	p2_23BEE, ellen_1B674
-		setfarfp	p2_20290, ellen_1B723
-		setfarfp	p2_20298, ellen_1B979
+		setfarfp	_p2_chargeshot_add, chargeshot_add_ellen
+		setfarfp	_chargeshot_update_p2, chargeshot_update_ellen
+		setfarfp	_chargeshot_render_p2, chargeshot_render_ellen
 		setfarfp	p2_202A0, ellen_1B903
 		setfarfp	p2_202A8, ellen_1BC1D
 		setfarfp	p2_202B0, ellen_1BC35
@@ -2023,9 +2023,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, kotohime_19D60
 		setfarfp	p1_1FE70, kotohime_19FEF
 		setfarfp	p1_1FE74, kotohime_1A14E
-		setfarfp	p1_23B6E, kotohime_1C167
-		setfarfp	p1_2028C, kotohime_1C19F
-		setfarfp	p1_20294, kotohime_1C295
+		setfarfp	_p1_chargeshot_add, chargeshot_add_kotohime
+		setfarfp	_chargeshot_update_p1, chargeshot_update_kotohime
+		setfarfp	_chargeshot_render_p1, chargeshot_render_kotohime
 		setfarfp	p1_2029C, kotohime_1C22E
 		setfarfp	p1_202A4, kotohime_1C3DA
 		setfarfp	p1_202AC, kotohime_1C3F2
@@ -2042,9 +2042,9 @@ loc_AC42:
 		setfarfp	p2_1FE78, kotohime_19D60
 		setfarfp	p2_1FE7C, kotohime_19FEF
 		setfarfp	p2_1FE80, kotohime_1A14E
-		setfarfp	p2_23BEE, kotohime_1C167
-		setfarfp	p2_20290, kotohime_1C19F
-		setfarfp	p2_20298, kotohime_1C295
+		setfarfp	_p2_chargeshot_add, chargeshot_add_kotohime
+		setfarfp	_chargeshot_update_p2, chargeshot_update_kotohime
+		setfarfp	_chargeshot_render_p2, chargeshot_render_kotohime
 		setfarfp	p2_202A0, kotohime_1C22E
 		setfarfp	p2_202A8, kotohime_1C3DA
 		setfarfp	p2_202B0, kotohime_1C3F2
@@ -2088,9 +2088,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, kana_19825
 		setfarfp	p1_1FE70, kana_19999
 		setfarfp	p1_1FE74, kana_19A8D
-		setfarfp	p1_23B6E, kana_1BC5C
-		setfarfp	p1_2028C, kana_1BCD5
-		setfarfp	p1_20294, kana_1BEF3
+		setfarfp	_p1_chargeshot_add, chargeshot_add_kana
+		setfarfp	_chargeshot_update_p1, chargeshot_update_kana
+		setfarfp	_chargeshot_render_p1, chargeshot_render_kana
 		setfarfp	p1_2029C, kana_1BE52
 		setfarfp	p1_202A4, kana_1C128
 		setfarfp	p1_202AC, kana_1C140
@@ -2107,9 +2107,9 @@ loc_ADDA:
 		setfarfp	p2_1FE78, kana_19825
 		setfarfp	p2_1FE7C, kana_19999
 		setfarfp	p2_1FE80, kana_19A8D
-		setfarfp	p2_23BEE, kana_1BC5C
-		setfarfp	p2_20290, kana_1BCD5
-		setfarfp	p2_20298, kana_1BEF3
+		setfarfp	_p2_chargeshot_add, chargeshot_add_kana
+		setfarfp	_chargeshot_update_p2, chargeshot_update_kana
+		setfarfp	_chargeshot_render_p2, chargeshot_render_kana
 		setfarfp	p2_202A0, kana_1BE52
 		setfarfp	p2_202A8, kana_1C128
 		setfarfp	p2_202B0, kana_1C140
@@ -2153,9 +2153,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, rikako_1AFA2
 		setfarfp	p1_1FE70, rikako_1B105
 		setfarfp	p1_1FE74, rikako_1B231
-		setfarfp	p1_23B6E, sub_1C419
-		setfarfp	p1_2028C, rikako_1C4C5
-		setfarfp	p1_20294, rikako_1C6E8
+		setfarfp	_p1_chargeshot_add, chargeshot_add_rikako
+		setfarfp	_chargeshot_update_p1, chargeshot_update_rikako
+		setfarfp	_chargeshot_render_p1, chargeshot_render_rikako
 		setfarfp	p1_2029C, rikako_1C66B
 		setfarfp	p1_202A4, rikako_1C8DA
 		setfarfp	p1_202AC, rikako_1C8F2
@@ -2172,9 +2172,9 @@ loc_AF72:
 		setfarfp	p2_1FE78, rikako_1AFA2
 		setfarfp	p2_1FE7C, rikako_1B105
 		setfarfp	p2_1FE80, rikako_1B231
-		setfarfp	p2_23BEE, sub_1C419
-		setfarfp	p2_20290, rikako_1C4C5
-		setfarfp	p2_20298, rikako_1C6E8
+		setfarfp	_p2_chargeshot_add, chargeshot_add_rikako
+		setfarfp	_chargeshot_update_p2, chargeshot_update_rikako
+		setfarfp	_chargeshot_render_p2, chargeshot_render_rikako
 		setfarfp	p2_202A0, rikako_1C66B
 		setfarfp	p2_202A8, rikako_1C8DA
 		setfarfp	p2_202B0, rikako_1C8F2
@@ -2218,9 +2218,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, chiyuri_18FEA
 		setfarfp	p1_1FE70, chiyuri_19260
 		setfarfp	p1_1FE74, chiyuri_1938A
-		setfarfp	p1_23B6E, chiyuri_1B277
-		setfarfp	p1_2028C, chiyuri_1B2C2
-		setfarfp	p1_20294, chiyuri_1B427
+		setfarfp	_p1_chargeshot_add, chargeshot_add_chiyuri
+		setfarfp	_chargeshot_update_p1, chargeshot_update_chiyuri
+		setfarfp	_chargeshot_render_p1, chargeshot_render_chiyuri
 		setfarfp	p1_2029C, chiyuri_1B3B0
 		setfarfp	p1_202A4, chiyuri_1B623
 		setfarfp	p1_202AC, chiyuri_1B63B
@@ -2237,9 +2237,9 @@ loc_B10A:
 		setfarfp	p2_1FE78, chiyuri_18FEA
 		setfarfp	p2_1FE7C, chiyuri_19260
 		setfarfp	p2_1FE80, chiyuri_1938A
-		setfarfp	p2_23BEE, chiyuri_1B277
-		setfarfp	p2_20290, chiyuri_1B2C2
-		setfarfp	p2_20298, chiyuri_1B427
+		setfarfp	_p2_chargeshot_add, chargeshot_add_chiyuri
+		setfarfp	_chargeshot_update_p2, chargeshot_update_chiyuri
+		setfarfp	_chargeshot_render_p2, chargeshot_render_chiyuri
 		setfarfp	p2_202A0, chiyuri_1B3B0
 		setfarfp	p2_202A8, chiyuri_1B623
 		setfarfp	p2_202B0, chiyuri_1B63B
@@ -2283,9 +2283,9 @@ arg_0		= word ptr  4
 		setfarfp	p1_1FE6C, yumemi_1A902
 		setfarfp	p1_1FE70, yumemi_1AE2E
 		setfarfp	p1_1FE74, yumemi_1AF72
-		setfarfp	p1_23B6E, yumemi_16A64
-		setfarfp	p1_2028C, yumemi_16A8D
-		setfarfp	p1_20294, yumemi_16C65
+		setfarfp	_p1_chargeshot_add, chargeshot_add_yumemi
+		setfarfp	_chargeshot_update_p1, chargeshot_update_yumemi
+		setfarfp	_chargeshot_render_p1, chargeshot_render_yumemi
 		setfarfp	p1_2029C, yumemi_16B0C
 		setfarfp	p1_202A4, yumemi_16FC0
 		setfarfp	p1_202AC, yumemi_16FD8
@@ -2302,9 +2302,9 @@ loc_B2A2:
 		setfarfp	p2_1FE78, yumemi_1A902
 		setfarfp	p2_1FE7C, yumemi_1AE2E
 		setfarfp	p2_1FE80, yumemi_1AF72
-		setfarfp	p2_23BEE, yumemi_16A64
-		setfarfp	p2_20290, yumemi_16A8D
-		setfarfp	p2_20298, yumemi_16C65
+		setfarfp	_p2_chargeshot_add, chargeshot_add_yumemi
+		setfarfp	_chargeshot_update_p2, chargeshot_update_yumemi
+		setfarfp	_chargeshot_render_p2, chargeshot_render_yumemi
 		setfarfp	p2_202A0, yumemi_16B0C
 		setfarfp	p2_202A8, yumemi_16FC0
 		setfarfp	p2_202B0, yumemi_16FD8
@@ -7349,9 +7349,7 @@ loc_DA0C:
 		mov	bx, word_23AE8
 		cmp	word ptr [bx+1Ah], 0FA0h
 		jbe	short loc_DA21
-		push	word ptr [bx]
-		push	word ptr [bx+2]
-		call	sub_1C497
+		call	rikako_1C497 pascal, word ptr [bx], word ptr [bx+2]
 
 loc_DA21:
 		mov	al, byte_23AE2
@@ -18542,11 +18540,11 @@ sub_142D0	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_MARISA
+chargeshot_add_marisa	proc far
 
-marisa_142DF	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -18572,12 +18570,12 @@ loc_1430F:
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+2],	ax
 		mov	bx, si
 		add	bx, bx
 		add	bx, word_1FE4E
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		add	ax, 0FF00h
 		mov	[bx+1Ah], ax
 		inc	si
@@ -18589,7 +18587,7 @@ loc_1432F:
 		pop	si
 		pop	bp
 		retf	4
-marisa_142DF	endp
+chargeshot_add_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18657,8 +18655,8 @@ sub_14340	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_143BE	proc far
+public CHARGESHOT_UPDATE_MARISA
+chargeshot_update_marisa	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -18742,7 +18740,7 @@ loc_14465:
 loc_14485:
 		pop	bp
 		retf
-marisa_143BE	endp
+chargeshot_update_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18826,8 +18824,8 @@ marisa_14487	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-marisa_14511	proc far
+public CHARGESHOT_RENDER_MARISA
+chargeshot_render_marisa	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -18992,7 +18990,7 @@ loc_146AB:
 		pop	si
 		leave
 		retf
-marisa_14511	endp
+chargeshot_render_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19477,12 +19475,12 @@ sub_14A76	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14A97	proc far
+public CHARGESHOT_ADD_REIMU
+chargeshot_add_reimu	proc far
 
 var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		enter	2, 0
 		mov	al, byte ptr word_23AF0
@@ -19507,12 +19505,12 @@ loc_14AC1:
 		mov	bx, dx
 		add	bx, bx
 		add	bx, word_205CA
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+2],	ax
 		mov	bx, dx
 		add	bx, bx
 		add	bx, word_205CA
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[bx+10h], ax
 		inc	dx
 
@@ -19534,7 +19532,7 @@ loc_14AFC:
 		mov	byte_205CC, 1
 		leave
 		retf	4
-reimu_14A97	endp
+chargeshot_add_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19608,8 +19606,8 @@ sub_14B0A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14B7C	proc far
+public CHARGESHOT_UPDATE_REIMU
+chargeshot_update_reimu	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -19731,7 +19729,7 @@ loc_14C81:
 		pop	si
 		leave
 		retf
-reimu_14B7C	endp
+chargeshot_update_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19862,8 +19860,8 @@ reimu_14CE3	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_14D83	proc far
+public CHARGESHOT_RENDER_REIMU
+chargeshot_render_reimu	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -19940,7 +19938,7 @@ loc_14E33:
 		pop	si
 		pop	bp
 		retf
-reimu_14D83	endp
+chargeshot_render_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20589,11 +20587,11 @@ sub_153BB	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_MIMA
+chargeshot_add_mima	proc far
 
-mima_153DC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -20625,9 +20623,9 @@ loc_15412:
 
 loc_1541D:
 		mov	bx, word_20E22
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+2],	ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[bx+4],	ax
 		push	ds
 		mov	ax, word_20E22
@@ -20657,7 +20655,7 @@ loc_15462:
 		pop	si
 		pop	bp
 		retf	4
-mima_153DC	endp
+chargeshot_add_mima	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20705,8 +20703,8 @@ sub_1546C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_154C4	proc far
+public CHARGESHOT_UPDATE_MIMA
+chargeshot_update_mima	proc far
 
 var_1		= byte ptr -1
 
@@ -20796,7 +20794,7 @@ loc_15594:
 		pop	si
 		leave
 		retf
-mima_154C4	endp
+chargeshot_update_mima	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20909,8 +20907,8 @@ sub_1561C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-mima_15652	proc far
+public CHARGESHOT_RENDER_MIMA
+chargeshot_render_mima	proc far
 
 var_2		= word ptr -2
 
@@ -20976,7 +20974,7 @@ loc_156DF:
 		pop	si
 		leave
 		retf
-mima_15652	endp
+chargeshot_render_mima	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23254,11 +23252,11 @@ sub_16A55	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_YUMEMI
+chargeshot_add_yumemi	proc far
 
-yumemi_16A64	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -23270,21 +23268,21 @@ arg_2		= word ptr  8
 		mov	si, ax
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[si+4],	ax
 		pop	si
 		pop	bp
 		retf	4
-yumemi_16A64	endp
+chargeshot_add_yumemi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16A8D	proc far
+public CHARGESHOT_UPDATE_YUMEMI
+chargeshot_update_yumemi	proc far
 
 var_1		= byte ptr -1
 
@@ -23344,7 +23342,7 @@ loc_16B09:
 		pop	si
 		leave
 		retf
-yumemi_16A8D	endp
+chargeshot_update_yumemi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23504,8 +23502,8 @@ sub_16BB5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-yumemi_16C65	proc far
+public CHARGESHOT_RENDER_YUMEMI
+chargeshot_render_yumemi	proc far
 
 var_5		= byte ptr -5
 @@top		= word ptr -4
@@ -23680,7 +23678,7 @@ loc_16DC4:
 		pop	si
 		leave
 		retf
-yumemi_16C65	endp
+chargeshot_render_yumemi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32400,11 +32398,11 @@ sub_1B260	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_CHIYURI
+chargeshot_add_chiyuri	proc far
 
-chiyuri_1B277	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -32415,9 +32413,9 @@ arg_2		= word ptr  8
 		add	ax, 1F5Ah
 		mov	si, ax
 		mov	byte ptr [si+1], 0
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[si+4],	ax
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
@@ -32442,14 +32440,14 @@ loc_1B2B8:
 		pop	si
 		pop	bp
 		retf	4
-chiyuri_1B277	endp
+chargeshot_add_chiyuri	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B2C2	proc far
+public CHARGESHOT_UPDATE_CHIYURI
+chargeshot_update_chiyuri	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32527,7 +32525,7 @@ loc_1B35B:
 		pop	si
 		pop	bp
 		retf
-chiyuri_1B2C2	endp
+chargeshot_update_chiyuri	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32641,8 +32639,8 @@ chiyuri_1B3B0	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-chiyuri_1B427	proc far
+public CHARGESHOT_RENDER_CHIYURI
+chargeshot_render_chiyuri	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -32690,7 +32688,7 @@ loc_1B489:
 		pop	si
 		pop	bp
 		retf
-chiyuri_1B427	endp
+chargeshot_render_chiyuri	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -32942,12 +32940,12 @@ sub_1B653	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1B674	proc far
+public CHARGESHOT_ADD_ELLEN
+chargeshot_add_ellen	proc far
 
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		enter	2, 0
 		mov	al, byte ptr word_23AF0
@@ -32964,9 +32962,9 @@ loc_1B68E:
 		mov	al, byte ptr [bp+var_2]
 		mov	[bx], al
 		mov	byte ptr [bx+1], 0
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+4],	ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[bx+6],	ax
 		call	randring_far_next16
 		mov	bx, word_1F868
@@ -32980,7 +32978,7 @@ loc_1B6C0:
 		jl	short loc_1B68E
 		leave
 		retf	4
-ellen_1B674	endp
+chargeshot_add_ellen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33040,8 +33038,8 @@ sub_1B6CA	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1B723	proc far
+public CHARGESHOT_UPDATE_ELLEN
+chargeshot_update_ellen	proc far
 
 var_9		= byte ptr -9
 var_8		= word ptr -8
@@ -33207,7 +33205,7 @@ loc_1B8A3:
 		pop	si
 		leave
 		retf
-ellen_1B723	endp
+chargeshot_update_ellen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33322,8 +33320,8 @@ ellen_1B903	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-ellen_1B979	proc far
+public CHARGESHOT_RENDER_ELLEN
+chargeshot_render_ellen	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -33369,7 +33367,7 @@ loc_1B9D8:
 		pop	si
 		pop	bp
 		retf
-ellen_1B979	endp
+chargeshot_render_ellen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33662,11 +33660,11 @@ sub_1BC4D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_KANA
+chargeshot_add_kana	proc far
 
-kana_1BC5C	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -33696,11 +33694,11 @@ loc_1BC8A:
 loc_1BC8E:
 		mov	bx, dx
 		add	bx, bx
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+si], ax
 		mov	bx, dx
 		add	bx, bx
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[bx+si+1Ah], ax
 		inc	dx
 
@@ -33725,14 +33723,14 @@ loc_1BCAF:
 		pop	si
 		pop	bp
 		retf	4
-kana_1BC5C	endp
+chargeshot_add_kana	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1BCD5	proc far
+public CHARGESHOT_UPDATE_KANA
+chargeshot_update_kana	proc far
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
@@ -33873,7 +33871,7 @@ loc_1BDF4:
 		pop	si
 		leave
 		retf
-kana_1BCD5	endp
+chargeshot_update_kana	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34023,8 +34021,8 @@ kana_1BE52	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kana_1BEF3	proc far
+public CHARGESHOT_RENDER_KANA
+chargeshot_render_kana	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -34075,7 +34073,7 @@ loc_1BF5F:
 		pop	si
 		pop	bp
 		retf
-kana_1BEF3	endp
+chargeshot_render_kana	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34338,11 +34336,11 @@ sub_1C158	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_KOTOHIME
+chargeshot_add_kotohime	proc far
 
-kotohime_1C167	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
@@ -34354,22 +34352,22 @@ arg_2		= word ptr  8
 		mov	bx, word_1FE6A
 		mov	byte ptr [bx], 1
 		mov	byte ptr [bx+1], 0
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@center_x]
 		mov	[bx+2],	ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[bx+4],	ax
 		mov	word ptr [bx+6], 0FFF0h
 		call	snd_se_play pascal, 6
 		pop	bp
 		retf	4
-kotohime_1C167	endp
+chargeshot_add_kotohime	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C19F	proc far
+public CHARGESHOT_UPDATE_KOTOHIME
+chargeshot_update_kotohime	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -34402,7 +34400,7 @@ loc_1C1DF:
 loc_1C1E7:
 		pop	bp
 		retf
-kotohime_1C19F	endp
+chargeshot_update_kotohime	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34492,8 +34490,8 @@ kotohime_1C22E	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-kotohime_1C295	proc far
+public CHARGESHOT_RENDER_KOTOHIME
+chargeshot_render_kotohime	proc far
 		push	bp
 		mov	bp, sp
 		mov	al, _pid_current
@@ -34523,7 +34521,7 @@ loc_1C2DB:
 loc_1C2DE:
 		pop	bp
 		retf
-kotohime_1C295	endp
+chargeshot_render_kotohime	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34709,17 +34707,17 @@ sub_1C40A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CHARGESHOT_ADD_RIKAKO
+chargeshot_add_rikako	proc far
 
-sub_1C419	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_2]
+		mov	di, [bp+@@center_x]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
@@ -34744,7 +34742,7 @@ arg_2		= word ptr  8
 
 loc_1C459:
 		mov	[si], di
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@center_y]
 		mov	[si+2],	ax
 		mov	al, cl
 		shl	al, 6
@@ -34764,37 +34762,35 @@ loc_1C46F:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, [bp+arg_0]
+		mov	dx, [bp+@@center_y]
 		mov	bx, ax
 		mov	[bx+3934h], dx
 		pop	di
 		pop	si
 		pop	bp
 		retf	4
-sub_1C419	endp
+chargeshot_add_rikako	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C497	proc far
+rikako_1C497	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_1C419
+		call	chargeshot_add_rikako pascal, [bp+@@center_x], [bp+@@center_y]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3928h], 2
 		pop	bp
 		retf	4
-sub_1C497	endp
+rikako_1C497	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34816,8 +34812,8 @@ sub_1C4B4	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C4C5	proc far
+public CHARGESHOT_UPDATE_RIKAKO
+chargeshot_update_rikako	proc far
 
 var_5		= byte ptr -5
 var_4		= word ptr -4
@@ -34980,7 +34976,7 @@ loc_1C626:
 		pop	si
 		leave
 		retf
-rikako_1C4C5	endp
+chargeshot_update_rikako	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -35092,8 +35088,8 @@ rikako_1C66B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-rikako_1C6E8	proc far
+public CHARGESHOT_RENDER_RIKAKO
+chargeshot_render_rikako	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -35138,7 +35134,7 @@ loc_1C746:
 		pop	si
 		pop	bp
 		retf
-rikako_1C6E8	endp
+chargeshot_render_rikako	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -37497,10 +37493,7 @@ _pid_current	db ?
 		dd    ?	;
 		dd    ?	;
 word_2028A	dw ?
-p1_2028C	dd ?
-p2_20290	dd ?
-p1_20294	dd ?
-p2_20298	dd ?
+include th03/player/chargeshot[bss].asm
 p1_2029C	dd ?
 p2_202A0	dd ?
 p1_202A4	dd ?
@@ -41218,7 +41211,7 @@ byte_23B24	db ?
 		db    ?	;
 word_23B6A	dw ?
 word_23B6C	dw ?
-p1_23B6E	dd ?
+_p1_chargeshot_add	dd ?
 byte_23B72	db ?
 		db ?
 word_23B74	dw ?
@@ -41261,7 +41254,7 @@ byte_23BA4	db ?
 		db    ?	;
 word_23BEA	dw ?
 word_23BEC	dw ?
-p2_23BEE	dd ?
+_p2_chargeshot_add	dd ?
 byte_23BF2	db ?
 		db ?
 word_23BF4	dw ?
