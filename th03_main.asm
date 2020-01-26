@@ -1337,8 +1337,8 @@ sub_A21F	proc near
 		inc	byte_207E3
 		call	sub_9EBF
 		call	farfp_20F28
-		mov	word_23B6A, 4110h
-		mov	word_23BEA, 4110h
+		mov	_p1_hyper, offset hyper_standby
+		mov	_p2_hyper, offset hyper_standby
 		call	snd_se_reset
 		nopcall	sub_B8F7
 		nopcall	sub_A38E
@@ -1773,8 +1773,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, reimu_113A9
 		setfarfp	p1_205CE, reimu_1508C
 		setfarfp	bomb_p1, reimu_bomb
-		mov	word_23B6C, 4129h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_reimu
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_A68D
 ; ---------------------------------------------------------------------------
 
@@ -1792,8 +1792,8 @@ loc_A5E2:
 		setfarfp	p2_1F33A, reimu_113A9
 		setfarfp	p2_205D2, reimu_1508C
 		setfarfp	bomb_p2, reimu_bomb
-		mov	word_23BEC, 4129h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_reimu
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_A68D:
@@ -1838,8 +1838,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, mima_10263
 		setfarfp	p1_205CE, mima_17043
 		setfarfp	bomb_p1, mima_bomb
-		mov	word_23B6C, 4167h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_mima
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_A825
 ; ---------------------------------------------------------------------------
 
@@ -1857,8 +1857,8 @@ loc_A77A:
 		setfarfp	p2_1F33A, mima_10263
 		setfarfp	p2_205D2, mima_17043
 		setfarfp	bomb_p2, mima_bomb
-		mov	word_23BEC, 4167h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_mima
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_A825:
@@ -1903,8 +1903,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, marisa_FAE8
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, marisa_bomb
-		mov	word_23B6C, 41A9h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_marisa
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_A9BD
 ; ---------------------------------------------------------------------------
 
@@ -1922,8 +1922,8 @@ loc_A912:
 		setfarfp	p2_1F33A, marisa_FAE8
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, marisa_bomb
-		mov	word_23BEC, 41A9h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_marisa
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_A9BD:
@@ -1968,8 +1968,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, ellen_11A01
 		setfarfp	p1_205CE, ellen_185AB
 		setfarfp	bomb_p1, ellen_bomb
-		mov	word_23B6C, 41ECh
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_ellen
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_AB55
 ; ---------------------------------------------------------------------------
 
@@ -1987,8 +1987,8 @@ loc_AAAA:
 		setfarfp	p2_1F33A, ellen_11A01
 		setfarfp	p2_205D2, ellen_185AB
 		setfarfp	bomb_p2, ellen_bomb
-		mov	word_23BEC, 41ECh
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_ellen
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_AB55:
@@ -2033,8 +2033,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, kotohime_12140
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kotohime_bomb
-		mov	word_23B6C, 421Bh
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_kotohime
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_ACED
 ; ---------------------------------------------------------------------------
 
@@ -2052,8 +2052,8 @@ loc_AC42:
 		setfarfp	p2_1F33A, kotohime_12140
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kotohime_bomb
-		mov	word_23BEC, 421Bh
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_kotohime
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_ACED:
@@ -2098,8 +2098,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, kana_132FE
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, kana_bomb
-		mov	word_23B6C, 42D5h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_kana
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_AE85
 ; ---------------------------------------------------------------------------
 
@@ -2117,8 +2117,8 @@ loc_ADDA:
 		setfarfp	p2_1F33A, kana_132FE
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, kana_bomb
-		mov	word_23BEC, 42D5h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_kana
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_AE85:
@@ -2163,8 +2163,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, rikako_1398B
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, rikako_bomb
-		mov	word_23B6C, 4313h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_rikako
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_B01D
 ; ---------------------------------------------------------------------------
 
@@ -2182,8 +2182,8 @@ loc_AF72:
 		setfarfp	p2_1F33A, rikako_1398B
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, rikako_bomb
-		mov	word_23BEC, 4313h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_rikako
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_B01D:
@@ -2228,8 +2228,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, chiyuri_12B99
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, chiyuri_bomb
-		mov	word_23B6C, 4259h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_chiyuri
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_B1B5
 ; ---------------------------------------------------------------------------
 
@@ -2247,8 +2247,8 @@ loc_B10A:
 		setfarfp	p2_1F33A, chiyuri_12B99
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, chiyuri_bomb
-		mov	word_23BEC, 4259h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_chiyuri
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_B1B5:
@@ -2293,8 +2293,8 @@ arg_0		= word ptr  4
 		setfarfp	p1_1F336, yumemi_10BAB
 		setfarfp	p1_205CE, sub_1501E
 		setfarfp	bomb_p1, yumemi_bomb
-		mov	word_23B6C, 4297h
-		mov	word_23B6A, 4110h
+		mov	_p1_hyper_func, offset hyper_yumemi
+		mov	_p1_hyper, offset hyper_standby
 		jmp	loc_B34D
 ; ---------------------------------------------------------------------------
 
@@ -2312,8 +2312,8 @@ loc_B2A2:
 		setfarfp	p2_1F33A, yumemi_10BAB
 		setfarfp	p2_205D2, sub_1501E
 		setfarfp	bomb_p2, yumemi_bomb
-		mov	word_23BEC, 4297h
-		mov	word_23BEA, 4110h
+		mov	_p2_hyper_func, offset hyper_yumemi
+		mov	_p2_hyper, offset hyper_standby
 		call	sub_A4A1
 
 loc_B34D:
@@ -7035,8 +7035,8 @@ off_D7E2	dw offset loc_D7DB
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D7F0	proc near
+public HYPER_STANDBY
+hyper_standby	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
@@ -7049,20 +7049,20 @@ sub_D7F0	proc near
 loc_D807:
 		pop	bp
 		retn
-sub_D7F0	endp
+hyper_standby	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D809	proc near
+public HYPER_REIMU
+hyper_reimu	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D81D
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7084,20 +7084,20 @@ loc_D81D:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D809	endp
+hyper_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D847	proc near
+public HYPER_MIMA
+hyper_mima	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D85B
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7120,20 +7120,20 @@ loc_D85B:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D847	endp
+hyper_mima	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D889	proc near
+public HYPER_MARISA
+hyper_marisa	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D89D
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7156,20 +7156,20 @@ loc_D89D:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D889	endp
+hyper_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D8CC	proc near
+public HYPER_ELLEN
+hyper_ellen	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D8E0
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7186,20 +7186,20 @@ loc_D8E0:
 loc_D8F9:
 		pop	bp
 		retn
-sub_D8CC	endp
+hyper_ellen	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D8FB	proc near
+public HYPER_KOTOHIME
+hyper_kotohime	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D90F
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7221,20 +7221,20 @@ loc_D90F:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D8FB	endp
+hyper_kotohime	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D939	proc near
+public HYPER_CHIYURI
+hyper_chiyuri	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D94D
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7256,20 +7256,20 @@ loc_D94D:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D939	endp
+hyper_chiyuri	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D977	proc near
+public HYPER_YUMEMI
+hyper_yumemi	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D98B
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7291,20 +7291,20 @@ loc_D98B:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D977	endp
+hyper_yumemi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D9B5	proc near
+public HYPER_KANA
+hyper_kana	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_D9C9
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7326,20 +7326,20 @@ loc_D9C9:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D9B5	endp
+hyper_kana	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D9F3	proc near
+public HYPER_RIKAKO
+hyper_rikako	proc near
 		push	bp
 		mov	bp, sp
 		mov	bx, word_23AE8
 		cmp	byte ptr [bx+1Eh], 0
 		jnz	short loc_DA0C
-		mov	word ptr [bx+64h], 4110h
+		mov	word ptr [bx+64h], offset hyper_standby
 		call	sub_1C4B4
 		pop	bp
 		retn
@@ -7366,7 +7366,7 @@ loc_DA21:
 		mov	byte_23AE5, al
 		pop	bp
 		retn
-sub_D9F3	endp
+hyper_rikako	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -41209,8 +41209,8 @@ byte_23B24	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-word_23B6A	dw ?
-word_23B6C	dw ?
+_p1_hyper	dw ?
+_p1_hyper_func	dw ?
 _p1_chargeshot_add	dd ?
 byte_23B72	db ?
 		db ?
@@ -41252,8 +41252,8 @@ byte_23BA4	db ?
 		dd    ?	;
 		dd    ?	;
 		db    ?	;
-word_23BEA	dw ?
-word_23BEC	dw ?
+_p2_hyper	dw ?
+_p2_hyper_func	dw ?
 _p2_chargeshot_add	dd ?
 byte_23BF2	db ?
 		db ?
