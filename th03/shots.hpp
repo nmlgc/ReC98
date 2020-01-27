@@ -7,6 +7,22 @@
 #define SHOT_VRAM_W (SHOT_W / 8)
 #define SHOT_VRAM_H (SHOT_H / 2)
 
+#pragma option -b-
+enum shot_mode_t {
+	SM_NONE = 0,
+	SM_1_PAIR = 1,
+	SM_2_PAIRS = 2,
+	SM_4_PAIRS = 3,
+	SM_REIMU_HYPER = 4, // 1 shot pair + 1 amulet pair
+};
+
+enum shot_active_t {
+	SA_DISABLED = 0,
+	SA_ENABLED = 1,
+	SA_BLOCKED_FOR_THIS_FRAME = 2,
+};
+#pragma option -b
+
 struct shotpair_t {
 	char flag;
 	char unused_1;

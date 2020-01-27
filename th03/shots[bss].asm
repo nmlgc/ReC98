@@ -7,6 +7,18 @@ SHOT_H = 8
 SHOT_VRAM_W = (SHOT_W / 8)
 SHOT_VRAM_H = (SHOT_H / 2)
 
+; shot_mode_t
+SM_NONE = 0
+SM_1_PAIR = 1
+SM_2_PAIRS = 2
+SM_4_PAIRS = 3
+SM_REIMU_HYPER = 4
+
+; shot_active_t
+SA_DISABLED = 0
+SA_ENABLED = 1
+SA_BLOCKED_FOR_THIS_FRAME = 2
+
 shotpair_t struc
 	flag	db ?
 	unused_1	db ?
