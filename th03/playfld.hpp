@@ -2,11 +2,14 @@
 
 #define PLAYFIELD_COUNT 2
 #define PLAYFIELD_W 288
+#define PLAYFIELD_H 368
 // For both playfields, in every direction. (CSS style!)
 // The clipped SPRITE16 display functions rely on this being at least 16!
 #define PLAYFIELD_BORDER 16
 #define PLAYFIELD_X PLAYFIELD_BORDER
 #define PLAYFIELD_Y PLAYFIELD_BORDER
+
+#define PLAYFIELD_VRAM_H (PLAYFIELD_H / 2)
 
 #define PLAYFIELD_W_BORDERED (PLAYFIELD_BORDER + PLAYFIELD_W + PLAYFIELD_BORDER)
 #define PLAYFIELD1_CLIP_LEFT 0
