@@ -28929,7 +28929,7 @@ loc_1B533:
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	cx, 4
-		mov	bx, 7E98h
+		mov	bx, offset word_1B928
 
 loc_1B541:
 		mov	ax, cs:[bx]
@@ -29101,7 +29101,7 @@ loc_1B6CC:
 		mov	ah, 0
 		mov	[bp+var_4], ax
 		mov	cx, 4
-		mov	bx, 7E88h
+		mov	bx, offset word_1B918
 
 loc_1B6DA:
 		mov	ax, cs:[bx]
@@ -29219,7 +29219,7 @@ loc_1B7C1:
 		mov	ah, 0
 		mov	[bp+var_6], ax
 		mov	cx, 4
-		mov	bx, 7E78h
+		mov	bx, offset word_1B908
 
 loc_1B7CF:
 		mov	ax, cs:[bx]
@@ -29360,17 +29360,17 @@ loc_1B8EA:
 yuuka6_update	endp
 
 ; ---------------------------------------------------------------------------
-		dw	0,     1,     2,  0FFh ; value table for switch	statement
+word_1B908		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B7E2	; jump table for switch	statement
 		dw offset loc_1B7E7
 		dw offset loc_1B7EC
 		dw offset loc_1B7F1
-		dw	0,     1,     2,  0FFh ; value table for switch	statement
+word_1B918		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B6ED	; jump table for switch	statement
 		dw offset loc_1B6F2
 		dw offset loc_1B6F7
 		dw offset loc_1B6FC
-		dw	0,     1,     2,  0FFh ; value table for switch	statement
+word_1B928		dw	0,     1,     2,  0FFh ; value table for switch	statement
 		dw offset loc_1B554	; jump table for switch	statement
 		dw offset loc_1B559
 		dw offset loc_1B55E

@@ -14656,7 +14656,7 @@ sub_15DE6	proc near
 		cmp	bl, 0Dh
 		ja	short locret_15E1C
 		sub	bl, 2
-		mov	cx, 0B9Eh
+		mov	cx, offset off_15E1E
 		jmp	short loc_15E44
 ; ---------------------------------------------------------------------------
 
@@ -14705,7 +14705,7 @@ sub_15E2A	proc near
 		cmp	bl, 0Dh
 		ja	short locret_15E73
 		sub	bl, 4
-		mov	cx, 0BF8h
+		mov	cx, offset off_15E78
 
 loc_15E44:
 		mov	ax, word ptr dword_26002
@@ -14759,7 +14759,7 @@ sub_15E82	proc near
 		movzx	bx, byte_26000
 		cmp	bl, 0Dh
 		ja	short locret_15EBE
-		mov	cx, 0C40h
+		mov	cx, offset off_15EC0
 		jmp	short loc_15E44
 ; ---------------------------------------------------------------------------
 
@@ -14799,6 +14799,7 @@ sub_15E82	endp
 ; ---------------------------------------------------------------------------
 		nop
 ; ---------------------------------------------------------------------------
+off_15EC0	label word
 		dw offset loc_15E91
 		dw offset loc_15EA8
 		dw offset loc_15EAE
