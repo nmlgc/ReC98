@@ -6463,53 +6463,53 @@ sub_E58C	endp
 sub_E5EE	proc near
 		push	si
 		push	di
-		mov	si, 5DC6h
-		mov	di, 0B4h
-		mov	_tile_invalidate_box, (8 shl 16) or 8
+		mov	si, offset _bullets
+		mov	di, PELLET_COUNT
+		mov	_tile_invalidate_box, (PELLET_W shl 16) or PELLET_H
 		cmp	_bullet_clear_trigger, 0
 		jnz	short loc_E638
 		cmp	_bullet_clear_time, 0
 		jnz	short loc_E638
 
 loc_E60D:
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.flag], 0
 		jz	short loc_E632
-		cmp	byte ptr [si+12h], 1
+		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
 		jbe	short loc_E62B
 		shl	_tile_invalidate_box, 1
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
 		shr	_tile_invalidate_box, 1
 		jmp	short loc_E632
 ; ---------------------------------------------------------------------------
 
 loc_E62B:
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
 
 loc_E632:
-		add	si, 20h	; ' '
+		add	si, size bullet_t
 		dec	di
 		jnz	short loc_E60D
 
 loc_E638:
-		add	di, 0DCh
+		add	di, BULLET16_COUNT
 		shl	_tile_invalidate_box, 1
 
 loc_E641:
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.flag], 0
 		jz	short loc_E666
-		cmp	byte ptr [si+12h], 1
+		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
 		jbe	short loc_E65F
 		shl	_tile_invalidate_box, 1
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
 		shr	_tile_invalidate_box, 1
 		jmp	short loc_E666
 ; ---------------------------------------------------------------------------
 
 loc_E65F:
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
+		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
 
 loc_E666:
-		add	si, 20h	; ' '
+		add	si, size bullet_t
 		dec	di
 		jnz	short loc_E641
 		mov	si, 9A96h
@@ -6864,8 +6864,8 @@ sub_EACE	proc near
 		push	offset _sparks
 		push	size _sparks / 4
 		call	sub_E708
-		push	5DC6h
-		push	0C80h
+		push	offset _bullets
+		push	(size _pellets + size _bullets16) / 4
 		call	sub_E708
 		push	0B290h
 		push	1A0h
@@ -8652,7 +8652,7 @@ include th04/item/splashes_render.asm
 
 sub_100C6	proc near
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -8661,48 +8661,47 @@ var_2		= word ptr -2
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		mov	si, 8FA6h
-		mov	[bp+var_2], 0
+		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
+		mov	[bp+@@i], 0
 		jmp	loc_10171
 ; ---------------------------------------------------------------------------
 
 loc_100DE:
-		cmp	byte ptr [si], 1
+		cmp	[si+bullet_t.flag], 1
 		jnz	loc_1016B
-		cmp	byte ptr [si+12h], 3
+		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_10108
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
+		mov	ax, [si+bullet_t.pos.cur.y]
+		add	ax, ((PLAYFIELD_Y - (BULLET16_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 18h
-		push	word ptr [si+18h]
-		call	z_super_roll_put_tiny
+		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
+		call	z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
 		jmp	short loc_1016B
 ; ---------------------------------------------------------------------------
 
 loc_10108:
-		cmp	word ptr [si+4], 0
+		cmp	[si+bullet_t.pos.cur.y], 0
 		jl	short loc_1016B
-		cmp	word ptr [si+4], 1700h
+		cmp	[si+bullet_t.pos.cur.y], (PLAYFIELD_H shl 4)
 		jge	short loc_1016B
-		cmp	word ptr [si+2], 0
+		cmp	[si+bullet_t.pos.cur.x], 0
 		jl	short loc_1016B
-		cmp	word ptr [si+2], 1900h
+		cmp	[si+bullet_t.pos.cur.x], ((PLAYFIELD_W + 16) shl 4) ; Huh?
 		jge	short loc_1016B
-		cmp	word ptr [si+18h], 30h ; '0'
+		cmp	[si+bullet_t.BULLET_patnum], 48
 		jl	short loc_10141
-		cmp	word ptr [si+18h], 34h ; '4'
+		cmp	[si+bullet_t.BULLET_patnum], 52
 		jl	short loc_10134
-		cmp	word ptr [si+18h], 44h ; 'D'
+		cmp	[si+bullet_t.BULLET_patnum], 68
 		jl	short loc_10141
 
 loc_10134:
-		cmp	word ptr [si+18h], 74h ; 't'
+		cmp	[si+bullet_t.BULLET_patnum], 116
 		jl	short loc_10146
-		cmp	word ptr [si+18h], 98h
+		cmp	[si+bullet_t.BULLET_patnum], 152
 		jge	short loc_10146
 
 loc_10141:
@@ -8714,26 +8713,26 @@ loc_10146:
 		mov	di, 0Fh
 
 loc_10149:
-		mov	al, [si+12h]
+		mov	al, [si+bullet_t.spawn_state]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	di, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
+		call	scroll_subpixel_y_to_vram_seg1 pascal, [si+bullet_t.pos.cur.y]
 		mov	dx, ax
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		push	di
 		call	sub_E02E
 
 loc_1016B:
-		inc	[bp+var_2]
-		sub	si, 20h	; ' '
+		inc	[bp+@@i]
+		sub	si, size bullet_t
 
 loc_10171:
-		cmp	[bp+var_2], 0DCh
+		cmp	[bp+@@i], BULLET16_COUNT
 		jl	loc_100DE
 		cmp	_bullet_clear_trigger, 0
 		jnz	short loc_101DC
@@ -8746,22 +8745,21 @@ loc_1018A:
 		mov	bx, word_2CDF8
 		add	bx, bx
 		mov	si, [bx-3D50h]
-		mov	al, [si+12h]
+		mov	al, [si+bullet_t.spawn_state]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 93h
+		add	ax, 147
 		mov	di, ax
-		mov	ax, [si+4]
+		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, (8 shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 18h
-		push	di
-		call	z_super_roll_put_tiny
+		add	ax, 24
+		call	z_super_roll_put_tiny pascal, di
 
 loc_101BD:
 		mov	ax, word_2CDF8
@@ -8774,36 +8772,35 @@ loc_101BD:
 		mov	ah, byte ptr grcgcolor_2CC8E
 		call	grcg_setcolor_direct_noint_1
 		call	sub_C0E6
-		jmp	short loc_10210
+		jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 loc_101DC:
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_10209
 ; ---------------------------------------------------------------------------
 
 loc_101E3:
-		cmp	byte ptr [si], 1
+		cmp	[si+bullet_t.flag], 1
 		jnz	short loc_10203
-		mov	ax, [si+4]
+		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, (8 shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 18h
-		push	word ptr [si+18h]
-		call	z_super_roll_put_tiny
+		add	ax, 24
+		call	z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
 
 loc_10203:
-		inc	[bp+var_2]
-		sub	si, 20h	; ' '
+		inc	[bp+@@i]
+		sub	si, size bullet_t
 
 loc_10209:
-		cmp	[bp+var_2], 0B4h
+		cmp	[bp+@@i], PELLET_COUNT
 		jl	short loc_101E3
 
-loc_10210:
+@@ret:
 		pop	di
 		pop	si
 		leave
@@ -14489,7 +14486,7 @@ sub_15C36	endp
 
 ; ---------------------------------------------------------------------------
 
-loc_15C94:
+loc_15C94	proc near
 		cmp	byte ptr word_25FFA, 11h
 		jz	short loc_15CA2
 		cmp	byte ptr word_25FFA, 1
@@ -14525,34 +14522,34 @@ loc_15CE5:
 		push	di
 		cmp	byte ptr word_25FFA+1, 0
 		jnz	short loc_15CFD
-		mov	si, 7426h
-		mov	di, 0B4h
+		mov	si, offset _pellets[(PELLET_COUNT - 1) * size bullet_t]
+		mov	di, PELLET_COUNT
 		jmp	short loc_15D03
 ; ---------------------------------------------------------------------------
 
 loc_15CFD:
-		mov	si, 8FA6h
-		mov	di, 0DCh
+		mov	si, offset _bullets16[(BULLET16_COUNT - 1) * size bullet_t]
+		mov	di, BULLET16_COUNT
 
 loc_15D03:
-		mov	dl, 0
+		mov	dl, BSS_GRAZEABLE
 		mov	al, byte ptr word_25FFA
 		and	al, 0Fh
 		cmp	al, 3
 		jz	short loc_15D16
 		cmp	al, 2
 		jnz	short loc_15D18
-		mov	dl, 4
+		mov	dl, BSS_CLOUD_FORWARDS
 		jmp	short loc_15D18
 ; ---------------------------------------------------------------------------
 
 loc_15D16:
-		mov	dl, 3
+		mov	dl, BSS_CLOUD_BACKWARDS
 
 loc_15D18:
 		cmp	byte_221C0, 0
 		jnz	short loc_15D38
-		mov	al, 2
+		mov	al, BMS_NORMAL
 		cmp	byte ptr word_26006+1, 40h
 		jb	short loc_15D2F
 		cmp	_bullet_clear_time, 0
@@ -14564,46 +14561,46 @@ loc_15D2F:
 		xor	al, al
 
 loc_15D38:
-		mov	byte ptr cs:loc_15D52+3, dl
-		mov	byte ptr cs:loc_15D65+3, al
+		mov	cs:@@spawn_state, dl
+		mov	cs:@@move_state, al
 		mov	byte_25348, 0
 		jmp	short $+2
 
 loc_15D48:
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.flag], 0
 		jnz	loc_15DD7
-		mov	byte ptr [si], 1
+		mov	[si+bullet_t.flag], 1
 
-loc_15D52:
-		mov	byte ptr [si+12h], 7Bh
+@@spawn_state	= byte ptr $+3
+		mov	[si+bullet_t.spawn_state], 123
 		mov	eax, point_25FFC
-		mov	[si+2],	eax
+		mov	dword ptr [si+bullet_t.pos.cur], eax
 		cmp	byte_221C0, 0
 		jnz	short loc_15D78
 
-loc_15D65:
-		mov	byte ptr [si+13h], 7Bh
-		mov	byte ptr [si+16h], 20h ; ' '
-		mov	al, 48h	; 'H'
+@@move_state	= byte ptr $+3
+		mov	[si+bullet_t.move_state], 123
+		mov	[si+bullet_t.slowdown_time], BMS_SLOWDOWN_FRAMES
+		mov	al, BMS_SLOWDOWN_BASE_SPEED
 		sub	al, byte ptr word_26006+1
-		mov	[si+17h], al
+		mov	[si+bullet_t.slowdown_speed_delta], al
 		jmp	short loc_15D95
 ; ---------------------------------------------------------------------------
 
 loc_15D78:
-		mov	[si+1Ah], eax
-		mov	byte ptr [si+13h], 1
-		mov	word ptr [si+1Eh], 0
-		mov	byte ptr [si+16h], 0
+		mov	dword ptr [si+bullet_t.BULLET_origin], eax
+		mov	[si+bullet_t.move_state], BMS_SPECIAL
+		mov	[si+bullet_t.distance], 0
+		mov	[si+bullet_t.turn_count], 0
 		mov	al, byte_2C977
-		mov	[si+17h], al
+		mov	[si+bullet_t.turn_angle], al
 		mov	al, byte_26001
-		mov	[si+14h], al
+		mov	[si+bullet_t.special_motion], al
 
 loc_15D95:
-		mov	byte ptr [si+1], 0
+		mov	[si+bullet_t.age], 0
 		mov	al, byte_26000
-		mov	[si+0Eh], al
+		mov	[si+bullet_t.from_pattern], al
 		call	sub_15AAA
 		mov	cl, al
 		mov	al, byte ptr word_25FFA+1
@@ -14615,20 +14612,20 @@ loc_15D95:
 		call	sub_159E6
 
 loc_15DB5:
-		mov	[si+18h], ax
+		mov	[si+bullet_t.BULLET_patnum], ax
 		mov	eax, point_2534B
-		mov	[si+0Ah], eax
+		mov	dword ptr [si+bullet_t.pos.velocity], eax
 		mov	al, byte_25349
-		mov	[si+11h], al
+		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, byte_2534A
-		mov	[si+15h], al
-		mov	[si+10h], al
+		mov	[si+bullet_t.speed_final], al
+		mov	[si+bullet_t.speed_cur], al
 		or	cl, cl
 		jnz	short loc_15DDF
 		inc	byte_25348
 
 loc_15DD7:
-		sub	si, 20h	; ' '
+		sub	si, size bullet_t
 		dec	di
 		jnz	loc_15D48
 
@@ -14636,6 +14633,7 @@ loc_15DDF:
 		pop	di
 		pop	si
 		retn
+loc_15C94	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17607,46 +17605,46 @@ include th04/item/splashes_update.asm
 sub_17973	proc near
 
 var_1		= byte ptr -1
-arg_0		= word ptr  4
+@@bullet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+18h], 34h ; '4'
+		mov	si, [bp+@@bullet]
+		cmp	[si+bullet_t.BULLET_patnum], 52
 		jl	short loc_179BC
-		cmp	word ptr [si+18h], 44h ; 'D'
+		cmp	[si+bullet_t.BULLET_patnum], 68
 		jge	short loc_1798F
-		mov	[bp+var_1], 34h	; '4'
+		mov	[bp+var_1], 52
 		jmp	short loc_179AB
 ; ---------------------------------------------------------------------------
 
 loc_1798F:
-		cmp	word ptr [si+18h], 54h ; 'T'
+		cmp	[si+bullet_t.BULLET_patnum], 84
 		jge	short loc_1799B
-		mov	[bp+var_1], 44h	; 'D'
+		mov	[bp+var_1], 68
 		jmp	short loc_179AB
 ; ---------------------------------------------------------------------------
 
 loc_1799B:
-		cmp	word ptr [si+18h], 74h ; 't'
+		cmp	[si+bullet_t.BULLET_patnum], 116
 		jge	short loc_179A7
-		mov	[bp+var_1], 54h	; 'T'
+		mov	[bp+var_1], 84
 		jmp	short loc_179AB
 ; ---------------------------------------------------------------------------
 
 loc_179A7:
-		mov	[bp+var_1], 74h	; 't'
+		mov	[bp+var_1], 116
 
 loc_179AB:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		push	word ptr [si+11h]
+		push	word ptr [si+bullet_t.BULLET_angle]
 		call	sub_159E6
 		mov	ah, 0
-		mov	[si+18h], ax
+		mov	[si+bullet_t.BULLET_patnum], ax
 
 loc_179BC:
 		pop	si
@@ -17658,66 +17656,65 @@ sub_17973	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public BULLET_TURN_X
+bullet_turn_x	proc near
 
-sub_179C1	proc near
-
-arg_0		= word ptr  4
+@@bullet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		inc	byte ptr [si+16h]
+		mov	si, [bp+@@bullet]
+		inc	[si+bullet_t.turn_count]
 		mov	al, 80h
-		sub	al, [si+11h]
-		mov	[si+11h], al
-		mov	al, [si+16h]
+		sub	al, [si+bullet_t.BULLET_angle]
+		mov	[si+bullet_t.BULLET_angle], al
+		mov	al, [si+bullet_t.turn_count]
 		cmp	al, byte_2C976
 		jb	short loc_179E0
-		mov	byte ptr [si+13h], 2
+		mov	[si+bullet_t.move_state], BMS_NORMAL
 
 loc_179E0:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		push	si
-		call	sub_17973
+		call	sub_17973 pascal, si
 		pop	si
 		pop	bp
 		retn	2
-sub_179C1	endp
+bullet_turn_x	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public BULLET_TURN_Y
+bullet_turn_y	proc near
 
-sub_179F9	proc near
-
-arg_0		= word ptr  4
+@@bullet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		inc	byte ptr [si+16h]
-		mov	al, [si+11h]
+		mov	si, [bp+@@bullet]
+		inc	[si+bullet_t.turn_count]
+		mov	al, [si+bullet_t.BULLET_angle]
 		neg	al
-		mov	[si+11h], al
-		mov	al, [si+16h]
+		mov	[si+bullet_t.BULLET_angle], al
+		mov	al, [si+bullet_t.turn_count]
 		cmp	al, byte_2C976
 		jb	short loc_17A18
-		mov	byte ptr [si+13h], 2
+		mov	[si+bullet_t.move_state], BMS_NORMAL
 
 loc_17A18:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
@@ -17726,22 +17723,22 @@ loc_17A18:
 		pop	si
 		pop	bp
 		retn	2
-sub_179F9	endp
+bullet_turn_y	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public BULLET_UPDATE_SPECIAL
+bullet_update_special	proc near
 
-sub_17A31	proc near
-
-arg_0		= word ptr  4
+@@bullet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		mov	al, [si+14h]
+		mov	si, [bp+@@bullet]
+		mov	al, [si+bullet_t.special_motion]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -17751,13 +17748,13 @@ arg_0		= word ptr  4
 		jmp	cs:off_17BF0[bx]
 
 loc_17A4E:
-		cmp	byte ptr [si+10h], 0
+		cmp	[si+bullet_t.speed_cur], 0
 		jz	short loc_17A56
 		jmp	short loc_17A8D
 ; ---------------------------------------------------------------------------
 
 loc_17A56:
-		inc	byte ptr [si+16h]
+		inc	[si+bullet_t.turn_count]
 		mov	ax, _player_pos.cur.y
 		sub	ax, [si+4]
 		push	ax
@@ -17765,109 +17762,109 @@ loc_17A56:
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
-		mov	[si+11h], al
+		mov	[si+bullet_t.BULLET_angle], al
 		push	si
 		call	sub_17973
-		mov	al, [si+15h]
-		mov	[si+10h], al
-		mov	al, [si+16h]
+		mov	al, [si+bullet_t.speed_final]
+		mov	[si+bullet_t.speed_cur], al
+		mov	al, [si+bullet_t.turn_count]
 		cmp	al, byte_2C976
 		jb	loc_17B32
 		jmp	loc_17B2E
 ; ---------------------------------------------------------------------------
 
 loc_17A87:
-		cmp	byte ptr [si+10h], 0
+		cmp	[si+bullet_t.speed_cur], 0
 		jz	short loc_17AA3
 
 loc_17A8D:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		dec	byte ptr [si+10h]
+		dec	[si+bullet_t.speed_cur]
 		jmp	loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17AA3:
-		inc	byte ptr [si+16h]
-		mov	al, [si+17h]
-		add	[si+11h], al
+		inc	[si+bullet_t.turn_count]
+		mov	al, [si+bullet_t.turn_angle]
+		add	[si+bullet_t.BULLET_angle], al
 		push	si
 		call	sub_17973
-		mov	al, [si+15h]
-		mov	[si+10h], al
-		mov	al, [si+16h]
+		mov	al, [si+bullet_t.speed_final]
+		mov	[si+bullet_t.speed_cur], al
+		mov	al, [si+bullet_t.turn_count]
 		cmp	al, byte_2C976
 		jb	short loc_17B32
 		jmp	short loc_17B2E
 ; ---------------------------------------------------------------------------
 
 loc_17AC1:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
 		mov	al, byte_2C976
-		add	[si+10h], al
+		add	[si+bullet_t.speed_cur], al
 		jmp	loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17ADA:
-		cmp	byte ptr [si+10h], 0
+		cmp	[si+bullet_t.speed_cur], 0
 		jz	short loc_17B22
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		cmp	byte ptr [si+10h], 1
+		cmp	[si+bullet_t.speed_cur], 1
 		jbe	short loc_17B00
-		mov	al, [si+10h]
-		add	al, 0FEh
-		mov	[si+10h], al
+		mov	al, [si+bullet_t.speed_cur]
+		add	al, -2
+		mov	[si+bullet_t.speed_cur], al
 		jmp	short loc_17B04
 ; ---------------------------------------------------------------------------
 
 loc_17B00:
-		mov	byte ptr [si+10h], 0
+		mov	[si+bullet_t.speed_cur], 0
 
 loc_17B04:
-		cmp	byte ptr [si+10h], 20h ; ' '
+		cmp	[si+bullet_t.speed_cur], (2 shl 4)
 		jnb	loc_17BEB
-		mov	al, [si+17h]
-		sub	al, [si+11h]
+		mov	al, [si+bullet_t.turn_angle]
+		sub	al, [si+bullet_t.BULLET_angle]
 		cbw
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	al, [si+11h]
-		mov	[si+11h], al
+		add	al, [si+bullet_t.BULLET_angle]
+		mov	[si+bullet_t.BULLET_angle], al
 		jmp	loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17B22:
-		mov	al, [si+17h]
-		mov	[si+11h], al
-		mov	al, [si+15h]
-		mov	[si+10h], al
+		mov	al, [si+bullet_t.turn_angle]
+		mov	[si+bullet_t.BULLET_angle], al
+		mov	al, [si+bullet_t.speed_final]
+		mov	[si+bullet_t.speed_cur], al
 
 loc_17B2E:
-		mov	byte ptr [si+13h], 2
+		mov	[si+bullet_t.move_state], BMS_NORMAL
 
 loc_17B32:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
@@ -17875,60 +17872,56 @@ loc_17B32:
 ; ---------------------------------------------------------------------------
 
 loc_17B45:
-		cmp	word ptr [si+2], 0
+		cmp	[si+bullet_t.pos.cur.x], 0
 		jle	short loc_17B54
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+bullet_t.pos.cur.x], (PLAYFIELD_W shl 4)
 		jl	loc_17BEB
 
 loc_17B54:
-		push	si
-		call	sub_179C1
+		call	bullet_turn_x pascal, si
 		jmp	loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17B5B:
-		cmp	word ptr [si+4], 0
+		cmp	[si+bullet_t.pos.cur.y], 0
 		jle	short loc_17BA3
-		cmp	word ptr [si+4], 1700h
+		cmp	[si+bullet_t.pos.cur.y], (PLAYFIELD_H shl 4)
 		jl	loc_17BEB
 		jmp	short loc_17BA3
 ; ---------------------------------------------------------------------------
 
 loc_17B6C:
-		cmp	word ptr [si+2], 0
+		cmp	[si+bullet_t.pos.cur.x], 0
 		jle	short loc_17B79
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+bullet_t.pos.cur.x], (PLAYFIELD_W shl 4)
 		jl	short loc_17B7D
 
 loc_17B79:
-		push	si
-		call	sub_179C1
+		call	bullet_turn_x pascal, si
 
 loc_17B7D:
-		cmp	word ptr [si+4], 0
+		cmp	[si+bullet_t.pos.cur.y], 0
 		jle	short loc_17BA3
-		cmp	word ptr [si+4], 1700h
+		cmp	[si+bullet_t.pos.cur.y], (PLAYFIELD_H shl 4)
 		jl	short loc_17BEB
 		jmp	short loc_17BA3
 ; ---------------------------------------------------------------------------
 
 loc_17B8C:
-		cmp	word ptr [si+2], 0
+		cmp	[si+bullet_t.pos.cur.x], 0
 		jle	short loc_17B99
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+bullet_t.pos.cur.x], (PLAYFIELD_W shl 4)
 		jl	short loc_17B9D
 
 loc_17B99:
-		push	si
-		call	sub_179C1
+		call	bullet_turn_x pascal, si
 
 loc_17B9D:
-		cmp	word ptr [si+4], 0
+		cmp	[si+bullet_t.pos.cur.y], 0
 		jg	short loc_17BEB
 
 loc_17BA3:
-		push	si
-		call	sub_179F9
+		call	bullet_turn_y pascal, si
 		jmp	short loc_17BEB
 ; ---------------------------------------------------------------------------
 
@@ -17937,34 +17930,33 @@ loc_17BA9:
 		jz	short loc_17BEB
 		mov	al, byte_2C976
 		mov	ah, 0
-		add	[si+0Ch], ax
+		add	[si+bullet_t.pos.velocity.y], ax
 		jmp	short loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17BBA:
-		mov	al, [si+10h]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
-		add	[si+1Eh], ax
+		add	[si+bullet_t.distance], ax
 		push	offset _drawpoint
-		push	word ptr [si+1Ah]
-		push	word ptr [si+1Ch]
-		push	word ptr [si+1Eh]
-		mov	al, [si+11h]
+		push	[si+bullet_t.BULLET_origin.x]
+		push	[si+bullet_t.BULLET_origin.y]
+		push	[si+bullet_t.distance]
+		mov	al, [si+bullet_t.BULLET_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		mov	ax, _drawpoint.x
-		sub	ax, [si+2]
-		mov	[si+0Ah], ax
+		sub	ax, [si+bullet_t.pos.cur.x]
+		mov	[si+bullet_t.pos.velocity.x], ax
 		mov	ax, _drawpoint.y
-		sub	ax, [si+4]
-		mov	[si+0Ch], ax
+		sub	ax, [si+bullet_t.pos.cur.y]
+		mov	[si+bullet_t.pos.velocity.y], ax
 
 loc_17BEB:
 		pop	si
 		pop	bp
 		retn	2
-sub_17A31	endp
 
 ; ---------------------------------------------------------------------------
 off_17BF0	dw offset loc_17A4E
@@ -17977,6 +17969,7 @@ off_17BF0	dw offset loc_17A4E
 		dw offset loc_17B8C
 		dw offset loc_17BA9
 		dw offset loc_17BBA
+bullet_update_special	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17998,7 +17991,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 0
 		mov	word_2CDF8, 0
 		mov	word_2C97E, 0
-		mov	si, 8FA6h
+		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
 		cmp	_bullet_clear_trigger, 0
 		jnz	loc_17EC3
 		xor	di, di
@@ -18006,11 +17999,11 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_17C2E:
-		cmp	byte ptr [si], 0
+		cmp	[si+bullet_t.flag], 0
 		jz	loc_17E74
-		cmp	byte ptr [si], 2
+		cmp	[si+bullet_t.flag], 2
 		jnz	short loc_17C40
-		mov	byte ptr [si], 0
+		mov	[si+bullet_t.flag], 0
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
@@ -18018,21 +18011,21 @@ loc_17C40:
 		inc	[bp+var_2]
 		cmp	_bullet_clear_time, 0
 		jz	short loc_17CA3
-		cmp	byte ptr [si+13h], 4
+		cmp	[si+bullet_t.move_state], BMS_DECAY
 		jnb	short loc_17C7B
-		mov	byte ptr [si+13h], 4
-		cmp	di, 0DCh
+		mov	[si+bullet_t.move_state], BMS_DECAY
+		cmp	di, BULLET16_COUNT
 		jge	short loc_17C5F
-		mov	ax, 0A0h
+		mov	ax, 160
 		jmp	short loc_17C62
 ; ---------------------------------------------------------------------------
 
 loc_17C5F:
-		mov	ax, 9Ch
+		mov	ax, 156
 
 loc_17C62:
-		mov	[si+18h], ax
-		cmp	byte ptr [si+1], 0
+		mov	[si+bullet_t.BULLET_patnum], ax
+		cmp	[si+bullet_t.age], 0
 		jz	short loc_17C73
 		add	_score_delta, 100
 		jmp	short loc_17CA3
@@ -18044,98 +18037,96 @@ loc_17C73:
 ; ---------------------------------------------------------------------------
 
 loc_17C7B:
-		inc	byte ptr [si+13h]
-		cmp	byte ptr [si+13h], 14h
+		inc	[si+bullet_t.move_state]
+		cmp	[si+bullet_t.move_state], BMS_DECAY_END
 		jb	short loc_17C91
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
-		mov	byte ptr [si], 2
+		lea	ax, [si+bullet_t.pos]
+		call	_motion_update_2 pascal, ax
+		mov	[si+bullet_t.flag], 2
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
 loc_17C91:
-		mov	al, [si+13h]
+		mov	al, [si+bullet_t.move_state]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_17CA3
-		inc	word ptr [si+18h]
+		inc	[si+bullet_t.BULLET_patnum]
 
 loc_17CA3:
-		inc	byte ptr [si+1]
-		cmp	byte ptr [si+12h], 2
+		inc	[si+bullet_t.age]
+		cmp	[si+bullet_t.spawn_state], BSS_ACTIVE
 		jb	loc_17D56
-		cmp	byte ptr [si+12h], 2
+		cmp	[si+bullet_t.spawn_state], BSS_ACTIVE
 		jnz	short loc_17CBB
-		mov	byte ptr [si+12h], 0
+		mov	[si+bullet_t.spawn_state], BSS_GRAZEABLE
 		jmp	loc_17D56
 ; ---------------------------------------------------------------------------
 
 loc_17CBB:
-		cmp	byte ptr [si+12h], 3
+		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		jnz	short loc_17CE1
-		mov	eax, [si+2]
-		mov	[si+6],	eax
-		mov	ax, [si+0Ah]
+		mov	eax, dword ptr [si+bullet_t.pos.cur]
+		mov	dword ptr [si+bullet_t.pos.prev], eax
+		mov	ax, [si+bullet_t.pos.velocity.x]
 		shl	ax, 3
-		sub	[si+2],	ax
-		mov	ax, [si+0Ch]
+		sub	[si+bullet_t.pos.cur.x], ax
+		mov	ax, [si+bullet_t.pos.velocity.y]
 		shl	ax, 3
-		sub	[si+4],	ax
-		mov	byte ptr [si+12h], 4
+		sub	[si+bullet_t.pos.cur.y], ax
+		mov	[si+bullet_t.spawn_state], BSS_CLOUD_FORWARDS
 		jmp	short loc_17D0D
 ; ---------------------------------------------------------------------------
 
 loc_17CE1:
-		cmp	byte ptr [si+12h], 4
+		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_FORWARDS
 		jnz	short loc_17CF0
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		lea	ax, [si+bullet_t.pos]
+		call	_motion_update_2 pascal, ax
 		jmp	short loc_17D0D
 ; ---------------------------------------------------------------------------
 
 loc_17CF0:
-		mov	eax, [si+2]
-		mov	[si+6],	eax
-		mov	ax, [si+0Ah]
+		mov	eax, dword ptr [si+bullet_t.pos.cur]
+		mov	dword ptr [si+bullet_t.pos.prev], eax
+		mov	ax, [si+bullet_t.pos.velocity.x]
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	[si+2],	ax
-		mov	ax, [si+0Ch]
+		add	[si+bullet_t.pos.cur.x], ax
+		mov	ax, [si+bullet_t.pos.velocity.y]
 		cwd
 		idiv	bx
-		add	[si+4],	ax
+		add	[si+bullet_t.pos.cur.y], ax
 
 loc_17D0D:
-		inc	byte ptr [si+12h]
-		cmp	byte ptr [si+12h], 14h
+		inc	[si+bullet_t.spawn_state]
+		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_END
 		jb	short loc_17D3D
-		cmp	word ptr [si+4], 0FF80h
+		cmp	[si+bullet_t.pos.cur.y], (-8 shl 4)
 		jl	short loc_17D30
-		cmp	word ptr [si+4], 1780h
+		cmp	[si+bullet_t.pos.cur.y], ((PLAYFIELD_H + 8) shl 4)
 		jge	short loc_17D30
-		cmp	word ptr [si+2], 0FF80h
+		cmp	[si+bullet_t.pos.cur.x], (-8 shl 4)
 		jl	short loc_17D30
-		cmp	word ptr [si+2], 1880h
+		cmp	[si+bullet_t.pos.cur.x], ((PLAYFIELD_W + 8) shl 4)
 		jl	short loc_17D36
 
 loc_17D30:
-		mov	byte ptr [si], 2
+		mov	[si+bullet_t.flag], 2
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
 loc_17D36:
-		mov	byte ptr [si+12h], 2
+		mov	[si+bullet_t.spawn_state], BSS_ACTIVE
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
 loc_17D3D:
-		cmp	di, 0DCh
+		cmp	di, BULLET16_COUNT
 		jl	loc_17E74
 		mov	bx, word_2CDF8
 		add	bx, bx
@@ -18145,44 +18136,43 @@ loc_17D3D:
 ; ---------------------------------------------------------------------------
 
 loc_17D56:
-		cmp	byte ptr [si+13h], 1
+		cmp	[si+bullet_t.move_state], BMS_SPECIAL
 		jnz	short loc_17D62
-		push	si
-		call	sub_17A31
+		call	bullet_update_special pascal, si
 		jmp	short loc_17DA3
 ; ---------------------------------------------------------------------------
 
 loc_17D62:
-		cmp	byte ptr [si+13h], 0
+		cmp	[si+bullet_t.move_state], BMS_SLOWDOWN
 		jnz	short loc_17DA3
-		dec	byte ptr [si+16h]
-		mov	al, [si+16h]
+		dec	[si+bullet_t.slowdown_time]
+		mov	al, [si+bullet_t.slowdown_time]
 		mov	ah, 0
-		mov	dl, [si+17h]
+		mov	dl, [si+bullet_t.slowdown_speed_delta]
 		mov	dh, 0
 		imul	dx
-		mov	bx, 20h	; ' '
+		mov	bx, BMS_SLOWDOWN_FRAMES
 		cwd
 		idiv	bx
-		add	al, [si+15h]
-		mov	[si+10h], al
-		cmp	byte ptr [si+16h], 0
+		add	al, [si+bullet_t.speed_final]
+		mov	[si+bullet_t.speed_cur], al
+		cmp	[si+bullet_t.slowdown_time], 0
 		jnz	short loc_17D93
-		mov	al, [si+15h]
-		mov	[si+10h], al
-		mov	byte ptr [si+13h], 2
+		mov	al, [si+bullet_t.speed_final]
+		mov	[si+bullet_t.speed_cur], al
+		mov	[si+bullet_t.move_state], BMS_NORMAL
 
 loc_17D93:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+bullet_t.pos.velocity]
 		push	ax
-		push	word ptr [si+11h]
-		mov	al, [si+10h]
+		push	word ptr [si+bullet_t.BULLET_angle]
+		mov	al, [si+bullet_t.speed_cur]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
 
 loc_17DA3:
-		lea	ax, [si+2]
+		lea	ax, [si+bullet_t.pos]
 		call	_motion_update_2 pascal, ax
 		cmp	ax, (-8 shl 4)
 		jle	short loc_17DBF
@@ -18194,7 +18184,7 @@ loc_17DA3:
 		jl	short loc_17DC5
 
 loc_17DBF:
-		mov	byte ptr [si], 2
+		mov	[si+bullet_t.flag], 2
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
@@ -18205,7 +18195,7 @@ loc_17DC5:
 		sub	dx, _player_pos.cur.y
 		cmp	_player_invincibility_time, 0
 		jnz	short loc_17E41
-		cmp	byte ptr [si+12h], 0
+		cmp	[si+bullet_t.spawn_state], BSS_GRAZEABLE
 		jz	short loc_17DFE
 		add	ax, (4 shl 4)
 		cmp	ax, (8 shl 4)
@@ -18213,7 +18203,7 @@ loc_17DC5:
 		add	dx, (4 shl 4)
 		cmp	dx, (8 shl 4)
 		ja	short loc_17E41
-		mov	byte ptr [si], 2
+		mov	[si+bullet_t.flag], 2
 		mov	_player_is_hit, 1
 		jmp	short loc_17E74
 ; ---------------------------------------------------------------------------
@@ -18225,11 +18215,11 @@ loc_17DFE:
 		add	dx, (22 shl 4)
 		cmp	dx, (44 shl 4)
 		ja	short loc_17E41
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+bullet_t.pos.cur.x]
+		push	[si+bullet_t.pos.cur.y]
 		push	large (((2 shl 4) shl 16) or 2)
 		nopcall	sparks_add_random
-		mov	byte ptr [si+12h], 1
+		mov	[si+bullet_t.spawn_state], BSS_GRAZED
 		cmp	_stage_graze, GRAZE_MAX
 		jnb	short loc_17E41
 		inc	_stage_graze
@@ -18238,15 +18228,15 @@ loc_17DFE:
 		add	_score_delta, eax
 
 loc_17E41:
-		cmp	di, 0DCh
+		cmp	di, BULLET16_COUNT
 		jl	short loc_17E74
-		mov	ax, [si+2]
+		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 1Ch
+		add	ax, 28
 		mov	bx, word_2C97E
 		shl	bx, 2
 		mov	[bx-703Ah], ax
-		mov	ax, [si+4]
+		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, (12 shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	bx, word_2C97E
@@ -18256,10 +18246,10 @@ loc_17E41:
 
 loc_17E74:
 		inc	di
-		sub	si, 20h	; ' '
+		sub	si, size bullet_t
 
 loc_17E78:
-		cmp	di, 190h
+		cmp	di, BULLET_COUNT
 		jl	loc_17C2E
 		cmp	_turbo_mode, 0
 		jnz	loc_17FB7
@@ -18316,18 +18306,17 @@ loc_17EFA:
 ; ---------------------------------------------------------------------------
 
 loc_17F0B:
-		cmp	byte ptr [si], 1
+		cmp	[si+bullet_t.flag], 1
 		jnz	short loc_17F89
-		mov	word ptr [si+0Ah], 0
-		mov	word ptr [si+0Ch], 0
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		mov	[si+bullet_t.pos.velocity.x], 0
+		mov	[si+bullet_t.pos.velocity.y], 0
+		lea	ax, [si+bullet_t.pos]
+		call	_motion_update_2 pascal, ax
 		cmp	[bp+var_9], 4Ch	; 'L'
 		jnb	short loc_17F31
 		mov	al, [bp+var_9]
 		mov	ah, 0
-		mov	[si+18h], ax
+		mov	[si+bullet_t.BULLET_patnum], ax
 		jmp	short loc_17F86
 ; ---------------------------------------------------------------------------
 
@@ -18335,8 +18324,8 @@ loc_17F31:
 		movzx	eax, [bp+var_4]
 		add	_popup_bonus, eax
 		add	_score_delta, eax
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+bullet_t.pos.cur.x]
+		push	[si+bullet_t.pos.cur.y]
 		push	[bp+var_4]
 		call	sub_15888
 		mov	ax, [bp+var_6]
@@ -18349,7 +18338,7 @@ loc_17F31:
 		mov	[bp+var_4], ax
 
 loc_17F64:
-		mov	byte ptr [si], 2
+		mov	[si+bullet_t.flag], 2
 		cmp	byte_226C0, 0
 		jz	short loc_17F86
 		mov	ax, [bp+var_2]
@@ -18358,17 +18347,17 @@ loc_17F64:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_17F86
-		call	items_add pascal, word ptr [si+2], word ptr [si+4], IT_POINT
+		call	items_add pascal, [si+bullet_t.pos.cur.x], [si+bullet_t.pos.cur.y], IT_POINT
 
 loc_17F86:
 		inc	[bp+var_2]
 
 loc_17F89:
 		inc	di
-		sub	si, 20h	; ' '
+		sub	si, size bullet_t
 
 loc_17F8D:
-		cmp	di, 190h
+		cmp	di, BULLET_COUNT
 		jl	loc_17F0B
 		cmp	_popup_bonus, 0
 		jz	short loc_17FA8
@@ -33945,6 +33934,7 @@ include th04/midboss/vars[bss].asm
 include th04/boss/vars[bss].asm
 include th05/boss/vars2[bss].asm
 include th04/sparks[bss].asm
+include th04/bullet/bullets[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
@@ -34808,3209 +34798,6 @@ include th04/sparks[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-byte_2980E	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-		db    ?	;
 dword_2A722	dd ?
 dword_2A726	dd ?
 word_2A72A	dw ?

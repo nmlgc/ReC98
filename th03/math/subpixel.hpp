@@ -43,5 +43,6 @@ template <class T> struct SPPointBase {
 typedef SubpixelBase<subpixel_t> Subpixel;
 typedef SPPointBase<Subpixel> SPPoint;
 // 8-bit (Q4.4)
+typedef SubpixelBase<unsigned char> SubpixelLength8;
 typedef SubpixelBase<char> Subpixel8;
 typedef SPPointBase<Subpixel8> SPPoint8;
