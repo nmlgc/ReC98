@@ -53,7 +53,7 @@ endif
 if GAME eq 5
 	or	di, di
 	js	short @@skip
-	cmp	di, (ROW_SIZE * RES_Y)
+	cmp	di, PLANE_SIZE
 	jnb	short @@skip
 endif
 	mov	al, 1

@@ -37,9 +37,9 @@ spark_render	proc near
 @@blit_loop:
 	movsw
 	add	di, (ROW_SIZE - SPARK_VRAM_W)
-	cmp	di, (ROW_SIZE * RES_Y)
+	cmp	di, PLANE_SIZE
 	jl	short @@next_row
-	sub	di, (ROW_SIZE * RES_Y)
+	sub	di, PLANE_SIZE
 
 @@next_row:
 	loop	@@blit_loop

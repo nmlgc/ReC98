@@ -52,7 +52,7 @@ public @spark_render
 	loop	@@blit_loop
 	or	bx, bx
 	jz	short @@ret
-	sub	di, (ROW_SIZE * RES_Y)
+	sub	di, PLANE_SIZE
 	xchg	cx, bx
 	jmp	short @@blit_loop
 

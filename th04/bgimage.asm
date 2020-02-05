@@ -4,13 +4,13 @@ bgimage_snap	proc far
 	push	di
 	cmp	bgimage_PL_B, 0
 	jnz	short @@already_allocated
-	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	call	hmem_allocbyte pascal, PLANE_SIZE
 	mov	bgimage_PL_B, ax
-	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	call	hmem_allocbyte pascal, PLANE_SIZE
 	mov	bgimage_PL_R, ax
-	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	call	hmem_allocbyte pascal, PLANE_SIZE
 	mov	bgimage_PL_G, ax
-	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	call	hmem_allocbyte pascal, PLANE_SIZE
 	mov	bgimage_PL_E, ax
 
 @@already_allocated:
@@ -30,7 +30,7 @@ bgimage_snap	proc far
 	pop	ds
 	xor	si, si
 	xor	di, di
-	mov	cx, (ROW_SIZE * RES_Y) / 4
+	mov	cx, (PLANE_SIZE / 4)
 	rep movsd
 	dec	dl
 	jnz	short @@next_plane
@@ -61,7 +61,7 @@ bgimage_put	proc far
 	pop	es
 	xor	si, si
 	xor	di, di
-	mov	cx, (ROW_SIZE * RES_Y) / 4
+	mov	cx, (PLANE_SIZE / 4)
 	rep movsd
 	dec	dl
 	jnz	short @@next_plane

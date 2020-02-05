@@ -3838,11 +3838,11 @@ sub_CFEE	proc near
 		mov	ax, 1
 		out	0A6h, ax
 		xor	di, di
-		mov	cx, (ROW_SIZE * RES_Y) / 4
+		mov	cx, (PLANE_SIZE / 4)
 		rep stosd
 		xor	ax, ax
 		out	0A6h, ax
-		mov	cx, (ROW_SIZE * RES_Y) / 4
+		mov	cx, (PLANE_SIZE / 4)
 		xor	di, di
 		rep stosd
 		pop	di

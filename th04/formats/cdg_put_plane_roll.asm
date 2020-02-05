@@ -47,9 +47,9 @@ cdg_put_plane_roll	proc far
 @@plane_src_num_to_offset:
 	add	si, ax
 	loop	@@plane_src_num_to_offset
-	cmp	di, (ROW_SIZE * RES_Y)
+	cmp	di, PLANE_SIZE
 	jb	short @@start_blitting
-	sub	di, (ROW_SIZE * RES_Y)
+	sub	di, PLANE_SIZE
 
 @@start_blitting:
 	cld
@@ -67,7 +67,7 @@ cdg_put_plane_roll	proc far
 	loop	@@blit_dword
 	sub	di, @@stride_backwards
 	jge	short @@more_rows?
-	add	di, (ROW_SIZE * RES_Y)
+	add	di, PLANE_SIZE
 
 @@more_rows?:
 	dec	@@h

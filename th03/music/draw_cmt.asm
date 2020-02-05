@@ -52,7 +52,7 @@ loc_ABE5:
 	add	si, 4
 
 loc_ABFA:
-	cmp	si, (ROW_SIZE * RES_Y)
+	cmp	si, PLANE_SIZE
 	jl	short loc_ABE5
 	pop	di
 	pop	si

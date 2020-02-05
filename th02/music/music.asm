@@ -15,7 +15,7 @@ screen_back_B_snap	proc near
 	push	bp
 	mov	bp, sp
 	push	si
-	call	hmem_allocbyte pascal, (ROW_SIZE * RES_Y)
+	call	hmem_allocbyte pascal, PLANE_SIZE
 	mov	_screen_back_B, ax
 	xor	si, si
 	jmp	short loc_A5DF
@@ -30,7 +30,7 @@ loc_A5CA:
 	add	si, 4
 
 loc_A5DF:
-	cmp	si, (ROW_SIZE * RES_Y)
+	cmp	si, PLANE_SIZE
 	jl	short loc_A5CA
 	pop	si
 	pop	bp
@@ -62,7 +62,7 @@ screen_back_B_put	proc near
 	mov	ds, ax
 	xor	di, di
 	xor	si, si
-	mov	cx, (ROW_SIZE * RES_Y) / 2
+	mov	cx, (PLANE_SIZE / 2)
 	rep movsw
 	pop	ds
 	pop	di

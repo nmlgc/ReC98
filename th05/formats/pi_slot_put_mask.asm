@@ -120,9 +120,9 @@ TEMP_ROW = RES_Y
 	push	si
 	mov	di, _pi_put_mask_vram_offset
 	add	_pi_put_mask_vram_offset, ROW_SIZE
-	cmp	_pi_put_mask_vram_offset, (ROW_SIZE * RES_Y)
+	cmp	_pi_put_mask_vram_offset, PLANE_SIZE
 	jb	short @@next_row
-	sub	_pi_put_mask_vram_offset, (ROW_SIZE * RES_Y)
+	sub	_pi_put_mask_vram_offset, PLANE_SIZE
 
 @@next_row:
 	call	pi_egc_mask
