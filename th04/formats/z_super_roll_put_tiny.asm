@@ -4,15 +4,11 @@
 ;	パターンの表示(16x16限定, 4色以内, 画面上下連続)
 ;
 ; Functions/Procedures:
-;	void z_super_roll_put_tiny( int x<ax>, int y<dx>, int num ) ;
+;	void z_super_roll_put_tiny_16x16( int left<ax>, int top<dx>, int num ) ;
 ;
 ; Parameters:
 ;	x,y	描画する座標
 ;	num	パターン番号
-;	Further assumes that the caller…
-;	• …has set ES to the beginning of VRAM (0A800h)
-;	• …and has set the GRCG to RMW mode. (Consequently, it also isn't turned
-;	  off before returning from this function.)
 ;
 ; Returns:
 ;	none
@@ -30,7 +26,7 @@
 ; Notes:
 ;	Micro-optimized version of the original master.lib function, used for
 ;	drawing all sorts of 16×16 sprites in TH04 and TH05. Changes compared to
-;	the original, in addition to the assumptions mentioned above:
+;	the original:
 ;	• Procedure distance is NEAR rather than FAR.
 ;	• X and Y coordinates are passed in AX and DX, respectively, rather than
 ;	  on the stack.
@@ -66,8 +62,8 @@ MRETURN macro
 	EVEN
 	endm
 
-public Z_SUPER_ROLL_PUT_TINY
-Z_SUPER_ROLL_PUT_TINY proc near	; super_roll_put_tiny() {
+public Z_SUPER_ROLL_PUT_TINY_16x16_RAW
+Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	even
 	mov	BX,SP
 	push	DS
@@ -215,4 +211,4 @@ Z_SUPER_ROLL_PUT_TINY proc near	; super_roll_put_tiny() {
 	je	short @@ODD_COLOR_LOOP
 
 	MRETURN
-Z_SUPER_ROLL_PUT_TINY	endp			; }
+Z_SUPER_ROLL_PUT_TINY_16x16_RAW	endp			; }

@@ -2588,7 +2588,7 @@ loc_C535:
 		retn
 sub_C50C	endp
 
-include th04/formats/super_roll_put_tiny.asm
+include th04/formats/z_super_roll_put_tiny.asm
 include th04/circles.asm
 		db    0
 
@@ -10373,9 +10373,8 @@ loc_1058D:
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 18h
-		push	cx
-		call	main_01:z_super_roll_put_tiny
+		add	ax, 24
+		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, cx
 
 loc_105A6:
 		inc	di
@@ -14265,7 +14264,7 @@ var_2		= word ptr -2
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
-		call	main_01:z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
+		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 		jmp	short @@sprite_bullet_next
 ; ---------------------------------------------------------------------------
 
@@ -14351,7 +14350,7 @@ loc_12DBE:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
-		call	main_01:z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
+		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 
 @@dot_bullet_next:
 		inc	di

@@ -6114,7 +6114,7 @@ loc_E137:
 		retn
 sub_E10E	endp
 
-include th04/formats/super_roll_put_tiny.asm
+include th04/formats/z_super_roll_put_tiny.asm
 include th04/tiles_invalidate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8678,7 +8678,7 @@ loc_100DE:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
-		call	z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
+		call	z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 		jmp	short loc_1016B
 ; ---------------------------------------------------------------------------
 
@@ -8759,7 +8759,7 @@ loc_1018A:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, 24
-		call	z_super_roll_put_tiny pascal, di
+		call	z_super_roll_put_tiny_16x16_raw pascal, di
 
 loc_101BD:
 		mov	ax, word_2CDF8
@@ -8790,7 +8790,7 @@ loc_101E3:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, 24
-		call	z_super_roll_put_tiny pascal, [si+bullet_t.BULLET_patnum]
+		call	z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 
 loc_10203:
 		inc	[bp+@@i]
@@ -11331,8 +11331,8 @@ midbossx_render	endp
 
 sub_11695	proc near
 
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
+@@left		= word ptr -0Ah
+@@patnum		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -11358,8 +11358,8 @@ loc_116A6:
 		and	si, 0FFF0h
 		mov	al, [di+1]
 		mov	ah, 0
-		add	ax, 0A8h ; '¨'
-		mov	[bp+var_8], ax
+		add	ax, 168
+		mov	[bp+@@patnum], ax
 		jmp	loc_117A6
 ; ---------------------------------------------------------------------------
 
@@ -11386,7 +11386,7 @@ loc_116F8:
 
 loc_11701:
 		mov	ax, [bp+var_6]
-		mov	[bp+var_A], ax
+		mov	[bp+@@left], ax
 		cmp	byte ptr [di+1], 0
 		jnz	short loc_11749
 		cmp	[bp+var_6], 20h ; ' '
@@ -11458,9 +11458,8 @@ loc_1178F:
 		mov	ax, GRAM_400
 		mov	es, ax
 		mov	dx, si
-		mov	ax, [bp+var_A]
-		push	[bp+var_8]
-		call	z_super_roll_put_tiny
+		mov	ax, [bp+@@left]
+		call	z_super_roll_put_tiny_16x16_raw pascal, [bp+@@patnum]
 
 loc_1179F:
 		sub	si, 10h
@@ -12774,9 +12773,8 @@ loc_125BB:
 		mov	dx, ax
 		mov	ax, [di]
 		sar	ax, 4
-		add	ax, 18h
-		push	cx
-		call	z_super_roll_put_tiny
+		add	ax, 24
+		call	z_super_roll_put_tiny_16x16_raw pascal, cx
 
 loc_125F0:
 		inc	[bp+@@i]
@@ -12805,8 +12803,7 @@ loc_125F6:
 		mov	ax, [si+hitshot_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, PLAYFIELD_X - (HITSHOT_W / 2)
-		push	cx
-		call	z_super_roll_put_tiny
+		call	z_super_roll_put_tiny_16x16_raw pascal, cx
 
 @@hitshot_next:
 		inc	[bp+@@i]

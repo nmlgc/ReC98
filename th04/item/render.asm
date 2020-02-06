@@ -23,8 +23,7 @@ items_render	proc near
 	mov	ax, [si+item_t.pos.cur.x]
 	sar	ax, 4
 	add	ax, PLAYFIELD_X - (ITEM_W / 2)
-	push	[si+item_t.ITEM_patnum]
-	call	z_super_roll_put_tiny
+	call	z_super_roll_put_tiny_16x16_raw pascal, [si+item_t.ITEM_patnum]
 
 @@next:
 	inc	di

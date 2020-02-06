@@ -64,12 +64,10 @@ player_render	proc near
 	mov	[bp+@@screen_y], ax
 	mov	ax, di
 	mov	dx, [bp+@@screen_y]
-	push	_player_option_patnum
-	call	z_super_roll_put_tiny
+	call	z_super_roll_put_tiny_16x16_raw pascal, _player_option_patnum
 	lea	ax, [di + PLAYER_OPTION_DISTANCE * 2]
 	mov	dx, [bp+@@screen_y]
-	push	_player_option_patnum
-	call	z_super_roll_put_tiny
+	call	z_super_roll_put_tiny_16x16_raw pascal, _player_option_patnum
 	GRCG_OFF_CLOBBERING dx
 	jmp	@@ret
 ; ---------------------------------------------------------------------------
