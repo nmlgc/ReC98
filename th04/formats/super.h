@@ -12,4 +12,11 @@
 	_AX = left; \
 	z_super_roll_put_tiny_16x16_raw(patnum);
 void pascal near z_super_roll_put_tiny_16x16_raw(int patnum);
+
+// Like z_super_roll_put_tiny_16x16(), but adapted for 32×32 sprites.
+#define z_super_roll_put_tiny_32x32(left, top, patnum) \
+	_DX = top; \
+	_AX = left; \
+	z_super_roll_put_tiny_32x32_raw(patnum);
+void pascal near z_super_roll_put_tiny_32x32_raw(int patnum);
 /// ------------------------------------------------------------

@@ -1,9 +1,10 @@
 ; superimpose & master library module
 ;
 ; Description:
-;	パターンの表示(16x16限定, 4色以内, 画面上下連続)
+;	パターンの表示(16x16/32x32限定, 4色以内, 画面上下連続)
 ;
 ; Functions/Procedures:
+;	void z_super_roll_put_tiny_32x32( int left<ax>, int top<dx>, int num ) ;
 ;	void z_super_roll_put_tiny_16x16( int left<ax>, int top<dx>, int num ) ;
 ;
 ; Parameters:
@@ -24,9 +25,9 @@
 ;	GRCG
 ;
 ; Notes:
-;	Micro-optimized version of the original master.lib function, used for
-;	drawing all sorts of 16×16 sprites in TH04 and TH05. Changes compared to
-;	the original:
+;	z_super_roll_put_tiny_16x16() is a micro-optimized version of master.lib's
+;	original super_roll_put_tiny(), used for drawing all sorts of 16×16
+;	sprites in TH04 and TH05. Changes compared to the original:
 ;	• Procedure distance is NEAR rather than FAR.
 ;	• X and Y coordinates are passed in AX and DX, respectively, rather than
 ;	  on the stack.
@@ -34,6 +35,7 @@
 ;	  with the changed register contents anyway.
 ;	• A small attempt to optimize the EVEN_COLOR_LOOP by jumping over the
 ;	  blitting write of the third byte if it is blank.
+;	ZUN then adapted this modified function for 32×32 pixel sprites.
 ;
 ; Compiler/Assembler:
 ;	TASM 3.0
@@ -47,7 +49,6 @@
 ;	93/ 9/19 Initial: superrpt.asm / master.lib 0.21
 ;
 
-PATTERN_HEIGHT	equ 16
 SCREEN_HEIGHT	equ 400
 SCREEN_XBYTES	equ 80
 GC_MODEREG	equ 07ch
@@ -62,6 +63,185 @@ MRETURN macro
 	EVEN
 	endm
 
+srpt32x32_vram_topleft	dw 0
+
+public Z_SUPER_ROLL_PUT_TINY_32X32_RAW
+z_super_roll_put_tiny_32x32_raw	proc near
+
+; Parameters
+@@patnum = word ptr ss:[bx+2]
+@@left equ ax
+@@top equ dx
+
+; Locals
+@@PATTERN_HEIGHT = 32
+@@first_mask equ dl
+@@rows_left equ ch
+
+	mov	bx, sp
+	push	ds
+	push	si
+	push	di
+	mov	bx, @@patnum
+	shl	bx, 1
+	mov	ds, super_patdata[bx]
+	mov	bx, @@top
+	shl	bx, 2
+	add	bx, @@top
+	shl	bx, 4
+	mov	cx, @@left
+	and	cx, 7	; CL = x & 7
+	shr	@@left, 3
+	add	bx, @@left
+	mov	cs:srpt32x32_vram_topleft, bx
+	xor	si, si
+
+	lodsw
+	cmp	al, 80h	; is this tiny sprite data?
+	jnz	short @@RETURN
+
+	mov	@@first_mask, 0FFh
+	shr	@@first_mask, cl
+	test	bl, 1
+	jnz	short @@ODD_COLOR_LOOP
+
+@@EVEN_COLOR_LOOP:
+	call	grcg_setcolor_direct
+	mov	@@rows_left, @@PATTERN_HEIGHT
+	mov	di, cs:srpt32x32_vram_topleft
+	cmp	di, (RES_Y - @@PATTERN_HEIGHT + 1) * ROW_SIZE
+	jb	short @@EVEN_YLOOP2
+
+@@EVEN_YLOOP1:
+	call	put32_even
+	cmp	di, PLANE_SIZE
+	jb	short @@EVEN_YLOOP1
+	sub	di, PLANE_SIZE
+
+	even
+@@EVEN_YLOOP2:
+	call	put32_even
+	jnz	short @@EVEN_YLOOP2
+	lodsw
+	cmp	al, 80h
+	jz	short @@EVEN_COLOR_LOOP
+
+@@RETURN:
+	MRETURN
+; ---------------------------------------------------------------------------
+
+@@ODD_COLOR_LOOP:
+	call	grcg_setcolor_direct
+	mov	@@rows_left, @@PATTERN_HEIGHT
+	mov	di, cs:srpt32x32_vram_topleft
+	cmp	di, (RES_Y - @@PATTERN_HEIGHT + 1) * ROW_SIZE
+	jb	short @@ODD_YLOOP2
+
+@@ODD_YLOOP1:
+	call	put32_odd
+	cmp	di, PLANE_SIZE
+	jb	short @@ODD_YLOOP1
+	sub	di, PLANE_SIZE
+	nop
+
+@@ODD_YLOOP2:
+	call	put32_odd
+	jnz	short @@ODD_YLOOP2
+	lodsw
+	cmp	al, 80h
+	jz	short @@ODD_COLOR_LOOP
+	MRETURN
+; ---------------------------------------------------------------------------
+
+; void __usercall near grcg_setcolor_direct(uint4_t col<ah>);
+grcg_setcolor_direct:
+	GRCG_SETCOLOR_DIRECT_INLINED ah
+	ret
+	even
+
+; ---------------------------------------------------------------------------
+
+; These put functions take:
+; • const planar32_t* row_color_pixels<ds:si>
+; • planar32_t* vram_offset<es:di>
+; • uint3_t first_bit<cl>
+; • uint8_t& rows_left<ch>
+; • planar8_t first_mask<dl>
+; [rows_left] is decremented at the end. ZF then indicates whether this was
+; the last row.
+@@first_bit equ cl
+
+@@words equ bh
+@@carry_pixels equ bl
+
+put32_even:	; if X is even
+	xor	@@carry_pixels, @@carry_pixels
+	mov	@@words, 2
+	lodsd
+
+@@EVEN_WORD_LOOP:
+	ror	ax, @@first_bit
+	mov	dh, al
+	and	al, @@first_mask
+	xor	dh, al
+	or	al, @@carry_pixels
+	mov	@@carry_pixels, dh
+	or	ax, ax
+	jz	short @@EVEN_SKIP_BLANK_WORD
+	mov	es:[di], ax
+
+@@EVEN_SKIP_BLANK_WORD:
+	add	di, word
+	shr	eax, (8 * word)
+	dec	@@words
+	jnz	short @@EVEN_WORD_LOOP
+	or	@@carry_pixels, @@carry_pixels
+	jz	short @@EVEN_SKIP_BLANK_5TH
+	mov	es:[di], @@carry_pixels
+
+@@EVEN_SKIP_BLANK_5TH:
+	add	di, (ROW_SIZE - dword)
+	dec	@@rows_left
+	retn
+	even
+
+
+put32_odd:	; if X is odd
+	mov	@@words, 2
+	lodsd	; EAX = the 32 pixels of this row
+	ror	al, @@first_bit
+	mov	@@carry_pixels, al
+	and	al, @@first_mask
+	jz	short @@ODD_SKIP_BLANK_1ST
+	mov	es:[di], al
+
+@@ODD_SKIP_BLANK_1ST:
+	xor	@@carry_pixels, al
+	inc	di
+	shr	eax, (8 * byte)
+
+@@ODD_WORD_LOOP:
+	ror	ax, @@first_bit
+	mov	dh, al
+	and	al, @@first_mask
+	xor	dh, al
+	or	al, @@carry_pixels
+	mov	@@carry_pixels, dh
+	or	ax, ax
+	jz	short @@ODD_SKIP_BLANK_WORD
+	mov	es:[di], ax
+
+@@ODD_SKIP_BLANK_WORD:
+	add	di, word
+	shr	eax, (8 * word)
+	dec	@@words
+	jnz	short @@ODD_WORD_LOOP
+	add	di, (ROW_SIZE - (dword + 1))
+	dec	@@rows_left
+	retn
+Z_SUPER_ROLL_PUT_TINY_32X32_RAW	endp
+
+
 public Z_SUPER_ROLL_PUT_TINY_16x16_RAW
 Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	even
@@ -71,6 +251,7 @@ Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	push	DI
 
 	@@num	= 2
+	@@PATTERN_HEIGHT = 16
 
 	mov	BX,SS:[BX+@@num]
 	shl	BX,1
@@ -107,9 +288,9 @@ Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	out	GC_TILEREG,AL
 	ENDM
 
-	mov	CH,PATTERN_HEIGHT
+	mov	CH,@@PATTERN_HEIGHT
 	mov	DI,BX
-	cmp	DI,(SCREEN_HEIGHT-PATTERN_HEIGHT+1)*SCREEN_XBYTES
+	cmp	DI,(SCREEN_HEIGHT-@@PATTERN_HEIGHT+1)*SCREEN_XBYTES
 	jb	short @@EVEN_YLOOP2
 
 	EVEN
@@ -167,9 +348,9 @@ Z_SUPER_ROLL_PUT_TINY_16x16_RAW proc near	; z_super_roll_put_tiny_16x16_raw() {
 	out	GC_TILEREG,AL
 	ENDM
 
-	mov	CH,PATTERN_HEIGHT
+	mov	CH,@@PATTERN_HEIGHT
 	mov	DI,BX
-	cmp	DI,(SCREEN_HEIGHT-PATTERN_HEIGHT+1)*SCREEN_XBYTES
+	cmp	DI,(SCREEN_HEIGHT-@@PATTERN_HEIGHT+1)*SCREEN_XBYTES
 	jb	short @@ODD_YLOOP2
 
 	EVEN

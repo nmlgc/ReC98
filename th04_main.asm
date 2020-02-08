@@ -2425,169 +2425,6 @@ sub_C34E	endp
 include th04/playperf.asm
 include th04/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
-; ---------------------------------------------------------------------------
-word_C42A	dw 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C42C	proc near
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, ss:[bx+2]
-		shl	bx, 1
-		mov	ds, word ptr [bx+2AC4h]
-		mov	bx, dx
-		shl	bx, 2
-		add	bx, dx
-		shl	bx, 4
-		mov	cx, ax
-		and	cx, 7
-		shr	ax, 3
-		add	bx, ax
-		mov	cs:word_C42A, bx
-		xor	si, si
-		lodsw
-		cmp	al, 80h
-		jnz	short loc_C48C
-		mov	dl, 0FFh
-		shr	dl, cl
-		test	bl, 1
-		jnz	short loc_C492
-
-loc_C464:
-		call	grcg_setcolor_direct
-		mov	ch, 20h	; ' '
-		mov	di, cs:word_C42A
-		cmp	di, 7350h
-		jb	short loc_C482
-
-loc_C474:
-		call	main_01:sub_C4DA
-		cmp	di, 7D00h
-		jb	short loc_C474
-		sub	di, 7D00h
-		nop
-
-loc_C482:
-		call	main_01:sub_C4DA
-		jnz	short loc_C482
-		lodsw
-		cmp	al, 80h
-		jz	short loc_C464
-
-loc_C48C:
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_C492:
-		call	grcg_setcolor_direct
-		mov	ch, 20h	; ' '
-		mov	di, cs:word_C42A
-		cmp	di, 7350h
-		jb	short loc_C4B0
-
-loc_C4A2:
-		call	main_01:sub_C50C
-		cmp	di, 7D00h
-		jb	short loc_C4A2
-		sub	di, 7D00h
-		nop
-
-loc_C4B0:
-		call	main_01:sub_C50C
-		jnz	short loc_C4B0
-		lodsw
-		cmp	al, 80h
-		jz	short loc_C492
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-sub_C42C	endp
-
-include th04/hardware/grcg_setcolor_direct.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C4DA	proc near
-		xor	bl, bl
-		mov	bh, 2
-		lodsd
-
-loc_C4E0:
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		xor	dh, al
-		or	al, bl
-		mov	bl, dh
-		or	ax, ax
-		jz	short loc_C4F3
-		mov	es:[di], ax
-
-loc_C4F3:
-		add	di, 2
-		shr	eax, 10h
-		dec	bh
-		jnz	short loc_C4E0
-		or	bl, bl
-		jz	short loc_C505
-		mov	es:[di], bl
-
-loc_C505:
-		add	di, 4Ch	; 'L'
-		dec	ch
-		retn
-sub_C4DA	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C50C	proc near
-		mov	bh, 2
-		lodsd
-		ror	al, cl
-		mov	bl, al
-		and	al, dl
-		jz	short loc_C51B
-		mov	es:[di], al
-
-loc_C51B:
-		xor	bl, al
-		inc	di
-		shr	eax, 8
-
-loc_C522:
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		xor	dh, al
-		or	al, bl
-		mov	bl, dh
-		or	ax, ax
-		jz	short loc_C535
-		mov	es:[di], ax
-
-loc_C535:
-		add	di, 2
-		shr	eax, 10h
-		dec	bh
-		jnz	short loc_C522
-		add	di, 4Bh	; 'K'
-		dec	ch
-		retn
-sub_C50C	endp
-
 include th04/formats/z_super_roll_put_tiny.asm
 include th04/circles.asm
 		db    0
@@ -14237,7 +14074,7 @@ sub_12CC7	endp
 public BULLETS_RENDER
 bullets_render	proc near
 
-var_2		= word ptr -2
+@@patnum		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -14286,19 +14123,19 @@ loc_12D24:
 		jnz	short loc_12D57
 
 loc_12D50:
-		mov	[bp+var_2], 13h
+		mov	[bp+@@patnum], 19
 		jmp	short loc_12D5C
 ; ---------------------------------------------------------------------------
 
 loc_12D57:
-		mov	[bp+var_2], 17h
+		mov	[bp+@@patnum], 23
 
 loc_12D5C:
 		cmp	[si+bullet_t.BULLET_patnum], 76
 		jl	short loc_12D6D
 		cmp	[si+bullet_t.BULLET_patnum], 92
 		jge	short loc_12D6D
-		mov	[bp+var_2], 13h
+		mov	[bp+@@patnum], 19
 
 loc_12D6D:
 		mov	al, [si+bullet_t.spawn_state]
@@ -14306,14 +14143,13 @@ loc_12D6D:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	[bp+var_2], ax
+		add	[bp+@@patnum], ax
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, [si+bullet_t.pos.cur.y]
 		mov	dx, ax
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, 16
-		push	[bp+var_2]
-		call	main_01:sub_C42C
+		call	main_01:z_super_roll_put_tiny_32x32_raw pascal, [bp+@@patnum]
 
 @@sprite_bullet_next:
 		inc	di

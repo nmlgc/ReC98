@@ -5951,169 +5951,6 @@ playfield_fillm_0_0_384_192__2	proc near
 		retn
 playfield_fillm_0_0_384_192__2	endp
 
-; ---------------------------------------------------------------------------
-word_E02C	dw 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E02E	proc near
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	bx, ss:[bx+2]
-		shl	bx, 1
-		mov	ds, word ptr [bx+269Eh]
-		mov	bx, dx
-		shl	bx, 2
-		add	bx, dx
-		shl	bx, 4
-		mov	cx, ax
-		and	cx, 7
-		shr	ax, 3
-		add	bx, ax
-		mov	cs:word_E02C, bx
-		xor	si, si
-		lodsw
-		cmp	al, 80h
-		jnz	short loc_E08E
-		mov	dl, 0FFh
-		shr	dl, cl
-		test	bl, 1
-		jnz	short loc_E094
-
-loc_E066:
-		call	grcg_setcolor_direct
-		mov	ch, 20h	; ' '
-		mov	di, cs:word_E02C
-		cmp	di, 7350h
-		jb	short loc_E084
-
-loc_E076:
-		call	sub_E0DC
-		cmp	di, 7D00h
-		jb	short loc_E076
-		sub	di, 7D00h
-		nop
-
-loc_E084:
-		call	sub_E0DC
-		jnz	short loc_E084
-		lodsw
-		cmp	al, 80h
-		jz	short loc_E066
-
-loc_E08E:
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_E094:
-		call	grcg_setcolor_direct
-		mov	ch, 20h	; ' '
-		mov	di, cs:word_E02C
-		cmp	di, 7350h
-		jb	short loc_E0B2
-
-loc_E0A4:
-		call	sub_E10E
-		cmp	di, 7D00h
-		jb	short loc_E0A4
-		sub	di, 7D00h
-		nop
-
-loc_E0B2:
-		call	sub_E10E
-		jnz	short loc_E0B2
-		lodsw
-		cmp	al, 80h
-		jz	short loc_E094
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-sub_E02E	endp
-
-include th04/hardware/grcg_setcolor_direct.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E0DC	proc near
-		xor	bl, bl
-		mov	bh, 2
-		lodsd
-
-loc_E0E2:
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		xor	dh, al
-		or	al, bl
-		mov	bl, dh
-		or	ax, ax
-		jz	short loc_E0F5
-		mov	es:[di], ax
-
-loc_E0F5:
-		add	di, 2
-		shr	eax, 10h
-		dec	bh
-		jnz	short loc_E0E2
-		or	bl, bl
-		jz	short loc_E107
-		mov	es:[di], bl
-
-loc_E107:
-		add	di, 4Ch	; 'L'
-		dec	ch
-		retn
-sub_E0DC	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E10E	proc near
-		mov	bh, 2
-		lodsd
-		ror	al, cl
-		mov	bl, al
-		and	al, dl
-		jz	short loc_E11D
-		mov	es:[di], al
-
-loc_E11D:
-		xor	bl, al
-		inc	di
-		shr	eax, 8
-
-loc_E124:
-		ror	ax, cl
-		mov	dh, al
-		and	al, dl
-		xor	dh, al
-		or	al, bl
-		mov	bl, dh
-		or	ax, ax
-		jz	short loc_E137
-		mov	es:[di], ax
-
-loc_E137:
-		add	di, 2
-		shr	eax, 10h
-		dec	bh
-		jnz	short loc_E124
-		add	di, 4Bh	; 'K'
-		dec	ch
-		retn
-sub_E10E	endp
-
 include th04/formats/z_super_roll_put_tiny.asm
 include th04/tiles_invalidate.asm
 
@@ -8705,12 +8542,12 @@ loc_10134:
 		jge	short loc_10146
 
 loc_10141:
-		mov	di, 0Bh
+		mov	di, 11
 		jmp	short loc_10149
 ; ---------------------------------------------------------------------------
 
 loc_10146:
-		mov	di, 0Fh
+		mov	di, 15
 
 loc_10149:
 		mov	al, [si+bullet_t.spawn_state]
@@ -8724,8 +8561,7 @@ loc_10149:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, 16
-		push	di
-		call	sub_E02E
+		call	z_super_roll_put_tiny_32x32_raw pascal, di
 
 loc_1016B:
 		inc	[bp+@@i]
@@ -10349,7 +10185,7 @@ loc_10EC7:
 		cmp	byte ptr [si], 0
 		jz	short loc_10F02
 		mov	di, [si+12h]
-		cmp	di, 0DCh
+		cmp	di, 220
 		jge	short loc_10EED
 		mov	ax, [si+0Eh]
 		and	ax, 3
@@ -10367,9 +10203,8 @@ loc_10EED:
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 10h
-		push	di
-		call	sub_E02E
+		add	ax, 16
+		call	z_super_roll_put_tiny_32x32_raw pascal, di
 
 loc_10F02:
 		inc	[bp+var_2]
@@ -10459,7 +10294,7 @@ sub_10F12	endp
 
 sub_10F90	proc near
 
-var_2		= word ptr -2
+@@patnum		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -10475,14 +10310,13 @@ loc_10FA3:
 		cmp	byte ptr [si], 0
 		jz	short loc_10FC5
 		mov	ax, [si+12h]
-		mov	[bp+var_2], ax
+		mov	[bp+@@patnum], ax
 		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 10h
-		push	[bp+var_2]
-		call	sub_E02E
+		add	ax, 16
+		call	z_super_roll_put_tiny_32x32_raw pascal, [bp+@@patnum]
 
 loc_10FC5:
 		inc	di
@@ -10623,11 +10457,10 @@ loc_110B4:
 		mov	dx, ax
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, 16
 		or	dx, dx
 		jl	short loc_110D4
-		push	word ptr [si+12h]
-		call	sub_E02E
+		call	z_super_roll_put_tiny_32x32_raw pascal, word ptr [si+12h]
 
 loc_110D4:
 		inc	di
