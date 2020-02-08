@@ -4285,7 +4285,7 @@ loc_D33C:
 		mov	di, 3
 
 loc_D366:
-		add	di, 0ACh ; '¬'
+		add	di, 172
 		jmp	short loc_D373
 ; ---------------------------------------------------------------------------
 
@@ -4320,8 +4320,7 @@ loc_D39F:
 ; ---------------------------------------------------------------------------
 
 loc_D3AD:
-		push	di
-		call	sub_E318
+		call	z_super_roll_put_16x16_mono_raw pascal, di
 		inc	word ptr [si+0Ch]
 
 loc_D3B4:
@@ -5953,169 +5952,7 @@ playfield_fillm_0_0_384_192__2	endp
 
 include th04/formats/z_super_roll_put_tiny.asm
 include th04/tiles_invalidate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E318	proc near
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	di, ax
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		shr	ax, 3
-		add	di, ax
-		mov	bx, ss:[bx+2]
-		shl	bx, 1
-		mov	ds, word ptr [bx+269Eh]
-		xor	si, si
-		mov	ch, 10h
-		and	cl, 7
-		jz	short loc_E397
-		mov	dx, 0FFFFh
-		shr	dl, cl
-		xor	dh, dl
-		test	al, 1
-		jnz	short loc_E3C7
-		cmp	di, 7850h
-		jb	short loc_E378
-
-loc_E352:
-		lodsw
-		ror	ax, cl
-		mov	bl, al
-		and	al, dl
-		or	ax, ax
-		jz	short loc_E360
-		mov	es:[di], ax
-
-loc_E360:
-		and	bl, dh
-		jz	short loc_E368
-		mov	es:[di+2], bl
-
-loc_E368:
-		add	di, ROW_SIZE
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_E352
-		sub	di, 7D00h
-		nop
-
-loc_E378:
-		lodsw
-		ror	ax, cl
-		mov	bl, al
-		and	al, dl
-		or	ax, ax
-		jz	short loc_E386
-		mov	es:[di], ax
-
-loc_E386:
-		and	bl, dh
-		jz	short loc_E38E
-		mov	es:[di+2], bl
-
-loc_E38E:
-		add	di, ROW_SIZE
-		dec	ch
-		jnz	short loc_E378
-		jmp	short loc_E415
-; ---------------------------------------------------------------------------
-
-loc_E397:
-		cmp	di, 7850h
-		jb	short loc_E3B6
-		nop
-
-loc_E39E:
-		lodsw
-		or	ax, ax
-		jz	short loc_E3A6
-		mov	es:[di], ax
-
-loc_E3A6:
-		add	di, ROW_SIZE
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_E39E
-		sub	di, 7D00h
-		nop
-
-loc_E3B6:
-		lodsw
-		or	ax, ax
-		jz	short loc_E3BE
-		mov	es:[di], ax
-
-loc_E3BE:
-		add	di, ROW_SIZE
-		dec	ch
-		jnz	short loc_E3B6
-		jmp	short loc_E415
-; ---------------------------------------------------------------------------
-
-loc_E3C7:
-		cmp	di, 7850h
-		jb	short loc_E3F6
-		nop
-
-loc_E3CE:
-		lodsw
-		ror	ax, cl
-		mov	bh, al
-		and	al, dl
-		jz	short loc_E3DA
-		mov	es:[di], al
-
-loc_E3DA:
-		and	bh, dh
-		mov	bl, ah
-		or	bx, bx
-		jz	short loc_E3E6
-		mov	es:[di+1], bx
-
-loc_E3E6:
-		add	di, ROW_SIZE
-		dec	ch
-		cmp	di, 7D00h
-		jb	short loc_E3CE
-		sub	di, 7D00h
-		nop
-
-loc_E3F6:
-		lodsw
-		ror	ax, cl
-		mov	bh, al
-		and	al, dl
-		jz	short loc_E402
-		mov	es:[di], al
-
-loc_E402:
-		and	bh, dh
-		mov	bl, ah
-		or	bx, bx
-		jz	short loc_E40E
-		mov	es:[di+1], bx
-
-loc_E40E:
-		add	di, ROW_SIZE
-		dec	ch
-		jnz	short loc_E3F6
-
-loc_E415:
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-sub_E318	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/super_roll_put_16x16_m.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11042,17 +10879,16 @@ loc_1159D:
 		mov	di, 3
 
 loc_115AD:
-		add	di, 0ACh ; '¬'
+		add	di, 172
 		mov	ax, [si+2]
 		sar	ax, 4
-		add	ax, 18h
+		add	ax, 24
 		mov	[bp+var_4], ax
 		mov	ax, [si+4]
 		add	ax, (8 shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	cx, [bp+var_4]
-		push	di
-		call	sub_E318
+		call	z_super_roll_put_16x16_mono_raw pascal, di
 
 loc_115CE:
 		inc	[bp+var_2]
