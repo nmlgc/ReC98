@@ -196,6 +196,9 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
 
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't
 * Macros defining the number of instances of an entity: `<ENTITY>_COUNT`
+* Macros defining the number of distinct sprites in an animation: `*_CELS`
+* Frame variables counting from a frame count to 0: `*_time`
+* Frame variables and other counters starting from 0: `*_frames`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 

@@ -776,7 +776,7 @@ loc_A962:
 		push	point_15004.y
 		mov	ax, di
 		shr	ax, 3
-		and	ax, ga_RETURN_KEY_FRAMES - 1
+		and	ax, ga_RETURN_KEY_CELS - 1
 		add	ax, ga_RETURN_KEY
 		push	ax
 		push	15
