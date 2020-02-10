@@ -31,7 +31,7 @@ struct shot_t {
 	}
 
 	void set_option_sprite() {
-		this->patnum_base = 22;
+		this->patnum_base = PAT_SHOT_SUB;
 	}
 
 	void set_option_sprite_and_damage(char damage) {

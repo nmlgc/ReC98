@@ -6,4 +6,6 @@ _player_option_pos_cur	Point <?>
 _player_option_pos_prev	Point <?>
 if GAME eq 4
 	_player_option_patnum	dw ?
+else
+	_player_option_patnum = PAT_OPTION
 endif

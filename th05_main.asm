@@ -23,6 +23,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th05/th05.inc
+include th05/sprites/main_pat.inc
 include th04/phase.inc
 
 	extern _execl:proc

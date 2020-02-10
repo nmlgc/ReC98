@@ -61,7 +61,7 @@ explosions_small_update_and_render	proc near
 	jbe	short @@next_sprite
 	cmp	dx, PLAYFIELD_Y + PLAYFIELD_H
 	jnb	short @@next_sprite
-	call	z_super_roll_put_tiny_16x16_raw pascal, EXPLOSION_SMALL_PATNUM
+	call	z_super_roll_put_tiny_16x16_raw pascal, PAT_EXPLOSION_SMALL
 
 @@next_sprite:
 	inc	di

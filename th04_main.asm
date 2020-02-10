@@ -23,6 +23,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th04/th04.inc
+include th04/sprites/main_pat.inc
 include th04/phase.inc
 
 	extern SCOPY@:proc
@@ -526,7 +527,7 @@ loc_AD3B:
 		call	main_01:bb_txt_load
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_AD90
-		mov	_player_option_patnum, 38
+		mov	_player_option_patnum, PAT_OPTION_REIMU
 		les	bx, _resident
 		cmp	es:[bx+resident_t.shottype], SHOTTYPE_A
 		jnz	short loc_AD7C
@@ -544,7 +545,7 @@ loc_AD82:
 ; ---------------------------------------------------------------------------
 
 loc_AD90:
-		mov	_player_option_patnum, 39
+		mov	_player_option_patnum, PAT_OPTION_MARISA
 		les	bx, _resident
 		cmp	es:[bx+resident_t.shottype], SHOTTYPE_A
 		jnz	short loc_ADA9

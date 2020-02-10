@@ -21,6 +21,7 @@
 
 include ReC98.inc
 include th02/th02.inc
+include th02/sprites/main_pat.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
@@ -3569,7 +3570,7 @@ loc_C5C2:
 		mov	byte_205E0, 0
 		mov	_player_is_hit, 0
 		mov	byte_1E517, 0
-		mov	_player_option_patnum, 72
+		mov	_player_option_patnum, PAT_OPTION_A
 		mov	word_205D8, 0FFFFh
 		mov	word_205DC, 0FFFFh
 		mov	word_205DA, 0FFFFh
@@ -34062,7 +34063,7 @@ byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
 public _PLAYER_OPTION_PATNUM
-_player_option_patnum	db 72
+_player_option_patnum	db PAT_OPTION_A
 power_overflow_level	dw 0
 word_1E51E	dw 0
 		db    0

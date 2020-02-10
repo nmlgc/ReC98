@@ -19,12 +19,6 @@ EXPLOSION_SMALL_H = 16
 EXPLOSION_SMALL_SPRITES = 64
 EXPLOSION_BIG_SPRITES = 16
 
-if GAME eq 5
-EXPLOSION_SMALL_PATNUM = 164
-else
-EXPLOSION_SMALL_PATNUM = 68
-endif
-
 public _explosions_small
 public _explosions_big
 _explosions_small	explosion_t EXPLOSION_SMALL_COUNT dup (<?>)
