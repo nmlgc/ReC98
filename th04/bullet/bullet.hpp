@@ -2,8 +2,8 @@
 /// ----------------
 #pragma option -b-
 
-#define BSS_CLOUD_FRAMES 16
-#define BMS_DECAY_FRAMES 16
+#define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
+#define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * 4)
 #define BMS_SLOWDOWN_BASE_SPEED 4.5f
 #define BMS_SLOWDOWN_FRAMES 32
 

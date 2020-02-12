@@ -14116,32 +14116,32 @@ loc_12D24:
 		cmp	[si+bullet_t.pos.cur.x], (PLAYFIELD_W shl 4)
 		jge	short @@sprite_bullet_next
 		mov	ax, [si+bullet_t.BULLET_patnum]
-		cmp	ax, 54
+		cmp	ax, PAT_BULLET16_N_OUTLINED_BALL_GREEN
 		jz	short loc_12D50
-		cmp	ax, 55
+		cmp	ax, PAT_BULLET16_N_OUTLINED_BALL_BLUE
 		jz	short loc_12D50
-		cmp	ax, 57
+		cmp	ax, PAT_BULLET16_N_BALL_BLUE
 		jnz	short loc_12D57
 
 loc_12D50:
-		mov	[bp+@@patnum], 19
+		mov	[bp+@@patnum], (PAT_CLOUD_BULLET16_BLUE - 1)
 		jmp	short loc_12D5C
 ; ---------------------------------------------------------------------------
 
 loc_12D57:
-		mov	[bp+@@patnum], 23
+		mov	[bp+@@patnum], (PAT_CLOUD_BULLET16_RED - 1)
 
 loc_12D5C:
-		cmp	[si+bullet_t.BULLET_patnum], 76
+		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_D_BLUE
 		jl	short loc_12D6D
-		cmp	[si+bullet_t.BULLET_patnum], 92
+		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_D_YELLOW
 		jge	short loc_12D6D
-		mov	[bp+@@patnum], 19
+		mov	[bp+@@patnum], (PAT_CLOUD_BULLET16_BLUE - 1)
 
 loc_12D6D:
 		mov	al, [si+bullet_t.spawn_state]
 		mov	ah, 0
-		mov	bx, 4
+		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
 		cwd
 		idiv	bx
 		add	[bp+@@patnum], ax
@@ -31041,7 +31041,7 @@ bullet_update_special	endp
 public BULLETS_UPDATE
 bullets_update	proc far
 
-var_9		= byte ptr -9
+@@patnum		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -31079,12 +31079,12 @@ loc_1C8FE:
 		mov	[si+bullet_t.move_state], BMS_DECAY
 		cmp	di, BULLET16_COUNT
 		jge	short loc_1C91D
-		mov	ax, 112
+		mov	ax, PAT_DECAY_BULLET16
 		jmp	short loc_1C920
 ; ---------------------------------------------------------------------------
 
 loc_1C91D:
-		mov	ax, 108
+		mov	ax, PAT_DECAY_PELLET
 
 loc_1C920:
 		mov	[si+bullet_t.BULLET_patnum], ax
@@ -31112,7 +31112,7 @@ loc_1C939:
 loc_1C94F:
 		mov	al, [si+bullet_t.move_state]
 		mov	ah, 0
-		mov	bx, 4
+		mov	bx, (BMS_DECAY_FRAMES / BULLET_DECAY_CELS)
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -31319,11 +31319,11 @@ loc_1CB3B:
 loc_1CB44:
 		mov	al, _bullet_clear_trigger
 		mov	ah, 0
-		mov	bx, 4
+		mov	bx, BULLET_DECAY_CELS
 		cwd
 		idiv	bx
-		add	al, 48h	; 'H'
-		mov	[bp+var_9], al
+		add	al, PAT_BULLET_KILL
+		mov	[bp+@@patnum], al
 		mov	[bp+var_4], 1
 		mov	[bp+var_6], 1
 		mov	al, _rank
@@ -31360,9 +31360,9 @@ loc_1CB91:
 		mov	[si+bullet_t.pos.velocity.y], 0
 		lea	ax, [si+bullet_t.pos]
 		call	_motion_update_2 pascal, ax
-		cmp	[bp+var_9], 76
+		cmp	[bp+@@patnum], PAT_BULLET16_D
 		jnb	short loc_1CBB7
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@patnum]
 		mov	ah, 0
 		mov	[si+bullet_t.BULLET_patnum], ax
 		jmp	short loc_1CBED
@@ -31402,7 +31402,7 @@ loc_1CBF1:
 
 loc_1CC0A:
 		inc	_bullet_clear_trigger
-		cmp	[bp+var_9], 4Ch	; 'L'
+		cmp	[bp+@@patnum], PAT_BULLET16_D
 		jb	short loc_1CC19
 		mov	_bullet_clear_trigger, 0
 
@@ -32554,7 +32554,7 @@ loc_1D33C:
 		push	di
 		call	sub_1CFC8
 		mov	[bp+var_4], al
-		cmp	byte_266E3, 4Ch	; 'L'
+		cmp	byte_266E3, PAT_BULLET16_D
 		jb	short loc_1D391
 		push	word_2D008
 		call	sub_1D218
@@ -32665,7 +32665,7 @@ loc_1D40A:
 		push	di
 		call	sub_1CFC8
 		mov	[bp+var_3], al
-		cmp	byte_266E3, 4Ch	; 'L'
+		cmp	byte_266E3, PAT_BULLET16_D
 		jb	short loc_1D460
 		push	word_2D008
 		call	sub_1D218
