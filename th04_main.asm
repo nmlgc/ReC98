@@ -32321,7 +32321,7 @@ loc_1D1A5:
 		call	vector2_near
 		mov	al, byte ptr [bp+var_2]
 		add	al, byte_266ED
-		mov	byte ptr word_2D008, al
+		mov	angle_2D008, al
 		mov	al, [bp+var_4]
 		mov	ah, 0
 		pop	si
@@ -32374,28 +32374,7 @@ loc_1D216:
 		retn
 sub_1D1CD	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D218	proc near
-
-arg_0		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		add	ax, 3
-		and	ax, 7Fh
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	bp
-		retn	2
-sub_1D218	endp
-
+include th04/bullet/patnum_for_angle.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32556,15 +32535,14 @@ loc_1D33C:
 		mov	[bp+var_4], al
 		cmp	byte_266E3, PAT_BULLET16_D
 		jb	short loc_1D391
-		push	word_2D008
-		call	sub_1D218
+		call	bullet_patnum_for_angle pascal, word ptr angle_2D008
 		mov	ah, 0
 		add	[si+bullet_t.BULLET_patnum], ax
 
 loc_1D391:
 		mov	eax, point_266E8
 		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, byte ptr word_2D008
+		mov	al, angle_2D008
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, byte_266EE
 		mov	[si+bullet_t.speed_final], al
@@ -32667,15 +32645,14 @@ loc_1D40A:
 		mov	[bp+var_3], al
 		cmp	byte_266E3, PAT_BULLET16_D
 		jb	short loc_1D460
-		push	word_2D008
-		call	sub_1D218
+		call	bullet_patnum_for_angle pascal, word ptr angle_2D008
 		mov	ah, 0
 		add	[si+bullet_t.BULLET_patnum], ax
 
 loc_1D460:
 		mov	eax, point_266E8
 		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, byte ptr word_2D008
+		mov	al, angle_2D008
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, byte_266EE
 		mov	[si+bullet_t.speed_final], al
@@ -42848,7 +42825,8 @@ fp_2D000	dw ?
 fp_2D002	dw ?
 fp_2D004	dw ?
 word_2D006	dw ?
-word_2D008	dw ?
+angle_2D008	db ?
+	evendata
 byte_2D00A	db ?
 		db ?
 dream_score	dw ?

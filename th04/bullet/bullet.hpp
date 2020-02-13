@@ -84,9 +84,20 @@ struct bullet_t {
 #if GAME == 5
 # define PELLET_COUNT 180
 # define BULLET16_COUNT 220
+
+// Returns the patnum for the directional or vector bullet sprite starting at
+// [patnum_base] that shows the given [angle].
+int pascal near bullet_patnum_for_angle(int patnum_base, unsigned char angle);
+// Updates [bullet]'s patnum based on its current angle.
+void pascal near bullet_update_patnum(bullet_t near *bullet);
+
 #else
 # define PELLET_COUNT 240
 # define BULLET16_COUNT 200
+
+// Returns the offset for a directional bullet sprite that shows the given
+// [angle].
+int pascal near bullet_patnum_for_angle(unsigned char angle);
 #endif
 
 #define BULLET_COUNT (PELLET_COUNT + BULLET16_COUNT)

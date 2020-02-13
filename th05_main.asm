@@ -13765,28 +13765,7 @@ sub_158CC	endp
 include th04/math/vector2_near.asm
 		nop
 include th04/sparks_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_159E6	proc near
-		mov	bx, sp
-		mov	al, ss:[bx+2]
-		mov	bx, ss:[bx+4]
-		add	al, 3
-		cmp	bx, PAT_BULLET16_V
-		jnb	short loc_159F9
-		and	al, 7Fh
-
-loc_159F9:
-		xor	ah, ah
-		shr	al, 3
-		add	ax, bx
-		retn	4
-sub_159E6	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/bullet/patnum_for_angle.asm
 
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
 GRCG_SETMODE_RMW_DEF 2
@@ -14074,7 +14053,7 @@ loc_15BF8:
 		mov	ax, si
 		add	al, byte ptr word_26006
 		push	ax
-		mov	byte_25349, al
+		mov	angle_25349, al
 		mov	byte_2534A, cl
 		mov	al, cl
 		mov	ah, 0
@@ -14274,15 +14253,13 @@ loc_15D95:
 		mov	ah, 0
 		cmp	al, PAT_BULLET16_D
 		jb	short loc_15DB5
-		push	ax
-		push	word ptr byte_25349
-		call	sub_159E6
+		call	bullet_patnum_for_angle pascal, ax, word ptr angle_25349
 
 loc_15DB5:
 		mov	[si+bullet_t.BULLET_patnum], ax
 		mov	eax, point_2534B
 		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, byte_25349
+		mov	al, angle_25349
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, byte_2534A
 		mov	[si+bullet_t.speed_final], al
@@ -16993,7 +16970,7 @@ loc_1769E:
 		jnz	short loc_17710
 		mov	bx, [bp+var_4]
 		mov	byte ptr [bx], 1
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		mov	[si+1],	al
 		mov	al, byte_2BC88
 		mov	[si+18h], al
@@ -17007,9 +16984,7 @@ loc_1769E:
 		mov	bx, [bp+var_4]
 		mov	al, byte ptr word_2BC82
 		mov	[bx+1],	al
-		push	0
-		push	word ptr [si+1]
-		call	sub_159E6
+		call	bullet_patnum_for_angle pascal, 0, word ptr [si+1]
 		mov	ah, 0
 		mov	[si+12h], ax
 		mov	eax, point_2BC72
@@ -17243,9 +17218,7 @@ loc_178A5:
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		push	0
-		push	word ptr [si+1]
-		call	sub_159E6
+		call	bullet_patnum_for_angle pascal, 0, word ptr [si+1]
 		mov	ah, 0
 		mov	[si+12h], ax
 
@@ -17264,61 +17237,7 @@ loc_178CB:
 sub_17726	endp
 
 include th04/item/splashes_update.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17973	proc near
-
-var_1		= byte ptr -1
-@@bullet		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		mov	si, [bp+@@bullet]
-		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_D_BLUE
-		jl	short loc_179BC
-		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_D_GREEN
-		jge	short loc_1798F
-		mov	[bp+var_1], PAT_BULLET16_D_BLUE
-		jmp	short loc_179AB
-; ---------------------------------------------------------------------------
-
-loc_1798F:
-		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_V_RED
-		jge	short loc_1799B
-		mov	[bp+var_1], PAT_BULLET16_D_GREEN
-		jmp	short loc_179AB
-; ---------------------------------------------------------------------------
-
-loc_1799B:
-		cmp	[si+bullet_t.BULLET_patnum], PAT_BULLET16_V_BLUE
-		jge	short loc_179A7
-		mov	[bp+var_1], PAT_BULLET16_V_RED
-		jmp	short loc_179AB
-; ---------------------------------------------------------------------------
-
-loc_179A7:
-		mov	[bp+var_1], PAT_BULLET16_V_BLUE
-
-loc_179AB:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		push	ax
-		push	word ptr [si+bullet_t.BULLET_angle]
-		call	sub_159E6
-		mov	ah, 0
-		mov	[si+bullet_t.BULLET_patnum], ax
-
-loc_179BC:
-		pop	si
-		leave
-		retn	2
-sub_17973	endp
-
+include th05/bullet/update_patnum.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17349,7 +17268,7 @@ loc_179E0:
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		call	sub_17973 pascal, si
+		call	bullet_update_patnum pascal, si
 		pop	si
 		pop	bp
 		retn	2
@@ -17385,8 +17304,7 @@ loc_17A18:
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		push	si
-		call	sub_17973
+		call	bullet_update_patnum pascal, si
 		pop	si
 		pop	bp
 		retn	2
@@ -17430,8 +17348,7 @@ loc_17A56:
 		push	ax
 		call	iatan2
 		mov	[si+bullet_t.BULLET_angle], al
-		push	si
-		call	sub_17973
+		call	bullet_update_patnum pascal, si
 		mov	al, [si+bullet_t.speed_final]
 		mov	[si+bullet_t.speed_cur], al
 		mov	al, [si+bullet_t.turn_count]
@@ -17460,8 +17377,7 @@ loc_17AA3:
 		inc	[si+bullet_t.turn_count]
 		mov	al, [si+bullet_t.turn_angle]
 		add	[si+bullet_t.BULLET_angle], al
-		push	si
-		call	sub_17973
+		call	bullet_update_patnum pascal, si
 		mov	al, [si+bullet_t.speed_final]
 		mov	[si+bullet_t.speed_cur], al
 		mov	al, [si+bullet_t.turn_count]
@@ -20547,7 +20463,7 @@ sub_19634	proc near
 		mov	bp, sp
 		push	600h
 		push	word_2BC80
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -20556,16 +20472,16 @@ sub_19634	proc near
 		mov	point_2BC72.x, ax
 		push	600h
 		push	word_2BC80
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
 		mov	point_2BC72.y, ax
-		mov	al, byte_2BC71
-		add	al, 0FEh
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -2
+		mov	angle_2BC71, al
 		sub	word_2BC80, 20h	; ' '
 		push	1200h
 		push	word_2BC9A
@@ -22971,7 +22887,7 @@ loc_1AB57:
 		push	point_2BC72.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_17687
 		call	snd_se_play pascal, 15
 
@@ -23016,7 +22932,7 @@ loc_1ABAE:
 		push	point_2BC72.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_17687
 		call	snd_se_play pascal, 15
 
@@ -23936,8 +23852,8 @@ loc_1B3F6:
 		mov	eax, point_2BC72
 		mov	[si+2],	eax
 		lea	ax, [si+0Ah]
-		call	vector2_near pascal, ax, word ptr byte_2BC71, [bp+var_2]
-		mov	al, byte_2BC71
+		call	vector2_near pascal, ax, word ptr angle_2BC71, [bp+var_2]
+		mov	al, angle_2BC71
 		mov	[si+1],	al
 		mov	al, byte_2BC88
 		mov	[si+18h], al
@@ -24357,23 +24273,23 @@ loc_1B799:
 		push	point_2BC72.y
 		push	0
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0F4h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -12
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0F4h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -12
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 24h	; '$'
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 36
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0Ch
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 12
+		mov	angle_2BC71, al
 		call	sub_1B3DD
 		call	snd_se_play pascal, 15
 
@@ -24439,23 +24355,23 @@ loc_1B866:
 		or	dx, dx
 		jnz	short loc_1B8A6
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 40h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 64
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 40h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 64
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 40h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 64
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 40h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 64
+		mov	angle_2BC71, al
 		mov	al, byte_2D083
-		add	byte_2BC71, al
+		add	angle_2BC71, al
 
 loc_1B8A6:
 		cmp	_boss_phase_frame, 64
@@ -25211,7 +25127,7 @@ sub_1BF4D	proc near
 		or	si, si
 		jnz	short loc_1BF9C
 		mov	byte_2BC88, 30h	; '0'
-		mov	byte_2BC71, 80h
+		mov	angle_2BC71, 128
 		mov	word_2BC84, 18h
 		mov	word_2BC80, 1
 		mov	word_2BC82, 0D4h
@@ -25231,21 +25147,21 @@ loc_1BF9C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1BFD7
-		mov	al, byte_2BC71
-		add	al, 10h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 16
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0F0h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -16
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0F0h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -16
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		add	al, 4
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 
 loc_1BFD7:
 		pop	si
@@ -25320,15 +25236,15 @@ loc_1C057:
 		push	point_2BC72.y
 		push	20h ; ' '
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0E0h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -32
+		mov	angle_2BC71, al
 		call	sub_1B3DD
-		mov	al, byte_2BC71
-		add	al, 0E0h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, -32
+		mov	angle_2BC71, al
 		call	sub_1B3DD
 
 loc_1C0AD:
@@ -25447,7 +25363,7 @@ sub_1C194	proc near
 		mov	byte_2BC88, 1Ch
 		mov	word_2BC84, 6
 		mov	word_2BC80, 1
-		mov	byte_2BC71, 80h
+		mov	angle_2BC71, 128
 		mov	word_2BC82, 0D4h
 		jmp	short loc_1C239
 ; ---------------------------------------------------------------------------
@@ -25469,7 +25385,7 @@ loc_1C1C1:
 		or	dx, dx
 		jnz	short loc_1C239
 		mov	al, byte_2D080
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_1B3DD
 		mov	al, byte_2D081
 		add	byte_2D080, al
@@ -26178,12 +26094,10 @@ loc_1C848:
 		push	point_2BC72.y
 		call	circles_add_shrinking
 		lea	ax, [si+0Ah]
-		call	vector2_near pascal, ax, word ptr byte_2BC71, [bp+var_2]
-		mov	al, byte_2BC71
+		call	vector2_near pascal, ax, word ptr angle_2BC71, [bp+var_2]
+		mov	al, angle_2BC71
 		mov	[si+1],	al
-		push	0C1h
-		push	word ptr byte_2BC71
-		call	sub_159E6
+		call	bullet_patnum_for_angle pascal, 193, word ptr angle_2BC71
 		mov	ah, 0
 		mov	[si+12h], ax
 		mov	al, byte ptr [bp+var_2]
@@ -26239,9 +26153,7 @@ loc_1C8CC:
 		dec	word ptr [si+0Eh]
 		cmp	word ptr [si+0Eh], 0
 		jnz	short loc_1C8F2
-		push	0C1h
-		push	word ptr [si+1]
-		call	sub_159E6
+		call	bullet_patnum_for_angle pascal, 193, word ptr [si+1]
 		mov	ah, 0
 		mov	[si+12h], ax
 		call	snd_se_play pascal, 3
@@ -26422,7 +26334,7 @@ sub_1CA42	proc near
 		mov	_boss_sprite, 184
 		mov	word_2BC7E, 30h	; '0'
 		mov	byte_2BC88, 50h	; 'P'
-		mov	byte_2BC71, 70h ; 'p'
+		mov	angle_2BC71, 112
 		push	1
 		call	randring2_next16_and
 		mov	byte_2D085, al
@@ -26441,31 +26353,31 @@ loc_1CA6B:
 		jnz	short loc_1CAD5
 		cmp	byte_2D085, 0
 		jz	short loc_1CA8F
-		mov	al, 80h
-		sub	al, byte_2BC71
-		mov	byte_2BC71, al
+		mov	al, 128
+		sub	al, angle_2BC71
+		mov	angle_2BC71, al
 
 loc_1CA8F:
 		push	offset point_2BC72
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		call	sub_1C82A
 		cmp	byte_2D085, 0
 		jz	short loc_1CABB
-		mov	al, 80h
-		sub	al, byte_2BC71
-		mov	byte_2BC71, al
+		mov	al, 128
+		sub	al, angle_2BC71
+		mov	angle_2BC71, al
 
 loc_1CABB:
-		mov	al, byte_2BC71
-		add	al, 0FAh
-		mov	byte_2BC71, al
-		cmp	byte_2BC71, 0Ch
+		mov	al, angle_2BC71
+		add	al, -6
+		mov	angle_2BC71, al
+		cmp	angle_2BC71, 12
 		ja	short loc_1CAD5
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -26635,7 +26547,7 @@ loc_1CC3E:
 		push	point_2BC72.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_1C82A
 
 loc_1CC7F:
@@ -26972,7 +26884,7 @@ loc_1CFFA:
 		push	point_2BC72.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_1C82A
 		inc	si
 
@@ -27063,7 +26975,7 @@ loc_1D117:
 		or	dx, dx
 		jnz	loc_1D1C4
 		mov	al, byte_2D084
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		cmp	byte_2D084, 0
 		jnz	short loc_1D142
 		mov	point_2BC72.x, (16 shl 4)
@@ -27506,7 +27418,7 @@ loc_1D553:
 		mov	eax, point_2BC72
 		mov	[si+2],	eax
 		lea	ax, [si+0Ah]
-		call	vector2_near pascal, ax, word ptr byte_2BC71, [bp+var_2]
+		call	vector2_near pascal, ax, word ptr angle_2BC71, [bp+var_2]
 		mov	ax, word_2BC82
 		mov	[si+12h], ax
 		mov	word ptr [si+10h], 300h
@@ -28076,7 +27988,7 @@ sub_1DA1C	proc near
 		call	randring2_next16_mod
 		add	ax, (32 shl 4)
 		mov	point_2BC72.y, ax
-		mov	byte_2BC71, 40h
+		mov	angle_2BC71, 64
 		push	1Fh
 		call	randring2_next16_and
 		add	al, 30h	; '0'
@@ -28172,7 +28084,7 @@ loc_1DB10:
 		push	3
 		call	randring2_next16_mod
 		shl	al, 6
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_17687
 		call	snd_se_play pascal, 3
 
@@ -28238,8 +28150,8 @@ loc_1DBCA:
 		mov	point_2BC72.y, dx
 		push	40h
 		call	randring2_next16_mod
-		add	al, 20h	; ' '
-		mov	byte_2BC71, al
+		add	al, 32
+		mov	angle_2BC71, al
 		push	3Fh ; '?'
 		call	randring2_next16_and
 		add	al, 20h	; ' '
@@ -28307,7 +28219,7 @@ loc_1DC59:
 		push	point_2BC72.y
 		push	0
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		mov	byte_2BC88, 40h
 		mov	word_2BC82, 0C9h
 		call	sub_1D53A
@@ -28539,7 +28451,7 @@ loc_1DEEA:
 		push	dx
 		push	0
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		mov	byte_2BC88, 3Ch	; '<'
 		mov	word_2BC82, 0C9h
 		call	sub_1D53A
@@ -28644,7 +28556,7 @@ sub_1E022	proc near
 		jl	loc_1E15A
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1E047
-		mov	byte_2BC71, 0
+		mov	angle_2BC71, 0
 		mov	byte_2D085, 0
 		mov	byte_2D084, 0
 
@@ -28660,14 +28572,14 @@ loc_1E047:
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(64 shl 4)
-		mov	al, byte_2BC71
+		mov	al, angle_2BC71
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		call	sub_1D53A
-		mov	al, byte_2BC71
-		add	al, 80h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 128
+		mov	angle_2BC71, al
 		push	offset point_2BC72
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
@@ -28676,9 +28588,9 @@ loc_1E047:
 		push	ax
 		call	vector2_at
 		call	sub_1D53A
-		mov	al, byte_2BC71
-		add	al, 88h
-		mov	byte_2BC71, al
+		mov	al, angle_2BC71
+		add	al, 136
+		mov	angle_2BC71, al
 		call	snd_se_play pascal, 3
 
 loc_1E0A6:
@@ -30375,7 +30287,7 @@ loc_1EF54:
 
 loc_1EF5F:
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_17687
 		call	snd_se_play pascal, 15
 
@@ -30429,7 +30341,7 @@ loc_1EFB4:
 
 loc_1EFBF:
 		call	sub_15A24
-		mov	byte_2BC71, al
+		mov	angle_2BC71, al
 		call	sub_17687
 		call	snd_se_play pascal, 15
 
@@ -30468,7 +30380,7 @@ sub_1EFED	proc near
 		mov	word ptr dword_2A722, ax
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F045
-		mov	byte_2BC71, 0C4h
+		mov	angle_2BC71, 196
 		mov	byte ptr word_26006, 20h ; ' '
 		mov	byte_2BC88, 50h	; 'P'
 		mov	byte ptr word_26006+1, 30h ; '0'
@@ -33566,7 +33478,7 @@ fp_25344	dw ?
 byte_25346	db ?
 byte_25347	db ?
 byte_25348	db ?
-byte_25349	db ?
+angle_25349	db ?
 byte_2534A	db ?
 point_2534B	Point <?>
 		db ?
@@ -35594,7 +35506,7 @@ include th04/circles[bss].asm
 		dd    ?	;
 include th04/item/items[bss].asm
 byte_2BC70	db ?
-byte_2BC71	db ?
+angle_2BC71	db ?
 point_2BC72	Point <?>
 dword_2BC76	dd ?
 		dd    ?	;
