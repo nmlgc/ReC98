@@ -25,6 +25,7 @@ include ReC98.inc
 include th04/th04.inc
 include th04/sprites/main_pat.inc
 include th04/phase.inc
+include th04/bullet/pattypes.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
@@ -15200,7 +15201,7 @@ loc_13FCC:
 		mov	al, byte_25594
 		mov	byte_266ED, al
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266F2, 0FFh
 		call	fp_2D004
 		call	fp_2D002
@@ -15479,7 +15480,7 @@ sub_142F1	proc near
 		mov	_midboss_angle, al
 		mov	byte_266E2, 2
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266EE, 28h	; '('
 		mov	byte_266ED, 0
@@ -15493,7 +15494,7 @@ loc_14339:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1436F
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 2
 		mov	byte_266F0, 0Ch
 		mov	byte_266EE, 34h	; '4'
@@ -15528,7 +15529,7 @@ sub_14383	proc near
 		mov	_midboss_phase_frame, 0
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266EE, 28h	; '('
 		call	randring2_next16
@@ -15561,7 +15562,7 @@ loc_143D6:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_14411
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 2
 		mov	byte_266F0, 12h
 		mov	byte_266EE, 2Eh	; '.'
@@ -15606,7 +15607,7 @@ loc_14435:
 		jnz	short loc_14477
 		mov	byte_266E2, 2
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EE, 20h	; ' '
 		mov	al, _midboss_angle
 		mov	byte_266ED, al
@@ -15938,7 +15939,7 @@ sub_1476F	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_14796
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -15963,7 +15964,7 @@ sub_14798	proc near
 		jnz	short loc_147D9
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -15994,7 +15995,7 @@ sub_147DB	proc near
 		jnz	short loc_14826
 		mov	byte_266E2, 2
 		mov	byte_266F2, 87h
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 0Ch
 		mov	byte_266E3, 3Bh	; ';'
@@ -16023,14 +16024,14 @@ sub_14828	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1486C
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
 		mov	byte_266ED, al
 		mov	byte_266EE, 20h	; ' '
 		call	fp_2D004
 		call	fp_2D000
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -16080,7 +16081,7 @@ loc_14891:
 
 loc_148A4:
 		call	snd_se_play pascal, 3		; jumptable 0001488D cases 290,298,306,314,390,398,406,414,490,498,506,514
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266EF, 5
 		mov	byte_266F0, 6
 		mov	byte_266ED, 0
@@ -16387,7 +16388,7 @@ sub_14AF2	proc near
 		jz	short loc_14B47
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266EE, 2Ah	; '*'
 		call	fp_2D004
 		call	fp_2D000
@@ -16399,7 +16400,7 @@ loc_14B47:
 		mov	byte_266F0, 0Ah
 
 loc_14B4C:
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 6
 		mov	byte_266EE, 24h	; '$'
 		call	fp_2D004
@@ -16444,7 +16445,7 @@ sub_14B76	proc near
 		sar	ax, 1
 		add	al, 20h	; ' '
 		mov	byte_266EE, al
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	fp_2D004
 		call	fp_2D000
@@ -16479,7 +16480,7 @@ sub_14BCD	proc near
 		jnz	short loc_14C32
 		call	snd_se_play pascal, 3
 		mov	byte_266EE, 40h
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	al, byte_255B3
 		shl	al, 5
 		add	al, 8
@@ -16546,7 +16547,7 @@ loc_14C6B:
 		jnz	short loc_14CCC
 		call	snd_se_play pascal, 3
 		mov	byte_266EE, 28h	; '('
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 10h
 		mov	al, _midboss_angle
@@ -16563,7 +16564,7 @@ loc_14C6B:
 		call	iatan2
 		mov	byte_266ED, al
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266F2, 0FFh
 
 loc_14CCC:
@@ -16860,7 +16861,7 @@ loc_14F9B:
 		jge	short loc_15000
 		test	byte ptr _midboss_phase_frame, 3
 		jnz	short loc_15025
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266EF, 2
 		mov	byte_266F0, 6
 		push	18h
@@ -16956,7 +16957,7 @@ loc_15068:
 		add	ax, -25
 		test	al, 0Fh
 		jnz	locret_1511B
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		test	byte_22B9E, 1
 		jz	short loc_150A1
 		mov	ax, _player_pos.cur.y
@@ -17053,7 +17054,7 @@ loc_15142:
 		jg	loc_151DA
 		test	byte ptr _midboss_phase_frame, 7
 		jnz	short loc_1517E
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		push	3
 		call	randring2_next16_and
 		add	al, al
@@ -17088,7 +17089,7 @@ loc_151A5:
 		test	si, 3
 		jnz	short loc_151FF
 		mov	byte_266E2, 2
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266E3, 5Ch
 		mov	ax, si
 		imul	ax, 3
@@ -17155,7 +17156,7 @@ loc_1522F:
 		jge	short loc_1528D
 		test	byte ptr _midboss_phase_frame, 2
 		jnz	short loc_152B2
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 3
 		mov	byte_266F0, 6
 		mov	byte_266EE, 3Ch	; '<'
@@ -17818,7 +17819,7 @@ loc_157EB:
 		add	ax, [si+4]
 		mov	point_266E4.y, ax
 		mov	al, [si+36h]
-		mov	byte_266EC, al
+		mov	_bullet_template.pattern, al
 		mov	al, [si+37h]
 		mov	byte_266ED, al
 		mov	al, [si+38h]
@@ -18703,7 +18704,7 @@ sub_15F97	proc near
 		mov	word_25662, ax
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Bh	; ';'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 0Bh
 		mov	byte_266F0, 5
 		mov	byte_266EE, 28h	; '('
@@ -18812,7 +18813,7 @@ sub_160A5	proc near
 		mov	byte_266ED, 0
 		mov	byte_266E2, 4
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	al, _rank
 		inc	al
 		mov	byte_266EF, al
@@ -18963,7 +18964,7 @@ loc_16228:
 		mov	byte_266E2, 2
 		mov	byte_266EE, 10h
 		mov	byte_266F2, 87h
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 7
 		mov	byte_266F0, 8
 		mov	byte_266E3, 3Bh	; ';'
@@ -19010,7 +19011,7 @@ sub_162A3	proc near
 		jnz	short loc_162D7
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Bh	; ';'
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266F0, 6
 		mov	byte_266EE, 10h
 		mov	byte_266F2, 82h
@@ -19065,7 +19066,7 @@ sub_1630D	proc near
 loc_1632F:
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 42h	; 'B'
 		mov	byte_266EE, 50h	; 'P'
@@ -19210,7 +19211,7 @@ loc_16476:
 		or	dx, dx
 		jnz	short loc_164BB
 		mov	byte_266E2, 2
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EE, 48h	; 'H'
@@ -19227,7 +19228,7 @@ loc_164BB:
 		cmp	_stage_frame_mod2, 0
 		jz	short locret_164EB
 		mov	byte_266E2, 2
-		mov	byte_266EC, 1Bh
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266EE, 20h	; ' '
 		mov	byte_266EF, 2
@@ -19296,7 +19297,7 @@ loc_1656A:
 		mov	byte_266E2, 4
 		mov	byte_266EF, 5
 		mov	byte_266F0, 1
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266E3, 39h	; '9'
 		mov	byte_266EE, 28h	; '('
 		call	fp_2D004
@@ -20295,7 +20296,7 @@ var_1		= byte ptr -1
 		jnz	short loc_16E2E
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266ED, 80h
 		mov	byte_266F0, 8
 		call	fp_2D004
@@ -20482,7 +20483,7 @@ var_1		= byte ptr -1
 		jnz	short loc_16F9F
 		mov	byte_266E2, 1
 		mov	byte_266EE, 38h	; '8'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 3
 		mov	byte_266F0, 8
 		call	fp_2D004
@@ -20519,7 +20520,7 @@ loc_16FC6:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EE, 34h	; '4'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 3
 		mov	byte_266F0, 6
 		mov	al, byte_266ED
@@ -20611,7 +20612,7 @@ var_1		= byte ptr -1
 		jnz	short loc_170C3
 		mov	byte_266E2, 1
 		mov	byte_266EE, 10h
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		call	fp_2D004
 		mov	fp_25676, offset sub_17061
 		mov	si, 0B204h
@@ -20667,7 +20668,7 @@ loc_17102:
 		call	sub_16B85
 		mov	byte_266E2, 2
 		mov	byte_266E3, 38h	; '8'
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266EF, 3
 		mov	byte_266F0, 0Ch
 		mov	byte_266ED, 0
@@ -20773,13 +20774,13 @@ loc_171D2:
 		or	dx, dx
 		jnz	short loc_1720D
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		call	fp_2D004
 		call	fp_2D000
 
 loc_1720D:
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 3
 		mov	byte_266F0, 6
 		call	fp_2D004
@@ -20835,7 +20836,7 @@ loc_1726E:
 		mov	byte_2D02D, 1
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266ED, 80h
 		mov	byte_266F0, 8
 		call	snd_se_play pascal, 15
@@ -20927,7 +20928,7 @@ var_2		= word ptr -2
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
 		mov	byte_266EE, 32h	; '2'
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266ED, 0
 		call	fp_2D004
 		mov	fp_25676, offset sub_17061
@@ -20992,7 +20993,7 @@ loc_173D3:
 		jnz	loc_1748D
 		mov	byte_266E2, 4
 		mov	byte_266E3, 3Dh	; '='
-		mov	byte_266EC, 1
+		mov	_bullet_template.pattern, BP_SINGLE_AIMED
 		mov	byte_266F2, 0FFh
 		call	fp_2D004
 		xor	si, si
@@ -21080,7 +21081,7 @@ var_1		= byte ptr -1
 		mov	byte_266E2, 2
 		mov	byte_266E3, 38h	; '8'
 		mov	byte_266EE, 5Ch
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266F2, 83h
 		call	fp_2D004
 		mov	fp_25676, offset sub_17061
@@ -21252,7 +21253,7 @@ loc_17634:
 		jnz	short loc_17675
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 10h
 		mov	byte_266F0, 5
 		mov	byte_266EE, 10h
@@ -21300,7 +21301,7 @@ var_1		= byte ptr -1
 		jnz	short loc_176D9
 		mov	byte_266E2, 2
 		mov	byte_266E3, 38h	; '8'
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266F2, 0FFh
 		mov	byte_266ED, 0C0h
 		mov	byte_266EE, 60h
@@ -21399,7 +21400,7 @@ loc_177B8:
 		jnz	short loc_177F9
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 10h
 		mov	byte_266F0, 5
 		mov	byte_266EE, 10h
@@ -21440,7 +21441,7 @@ var_1		= byte ptr -1
 		jnz	short loc_1784F
 		mov	byte_266E2, 1
 		mov	byte_266EF, 20h	; ' '
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EE, 38h	; '8'
 		call	fp_2D004
 		push	1
@@ -21522,7 +21523,7 @@ loc_178AD:
 		mov	fp_25676, offset sub_17061
 		mov	byte_266E2, 1
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	al, byte ptr _stage_frame
 		shl	al, 3
 		mov	byte_266ED, al
@@ -21547,7 +21548,7 @@ loc_178F6:
 		mov	byte_266EE, al
 		add	al, 2
 		mov	byte_2D02C, al
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266ED, 0
 		call	fp_2D004
 		call	sub_16DD7
@@ -21589,7 +21590,7 @@ loc_1795F:
 		jnz	short loc_179B8
 		mov	byte_266E2, 4
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 30h	; '0'
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		mov	byte_266EF, 10h
 		mov	byte_266F0, 5
 		mov	byte_266ED, 0
@@ -22800,7 +22801,7 @@ sub_18314	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1832E:
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 8
 		mov	byte_266EE, 20h	; ' '
 		call	randring2_next16
@@ -22872,7 +22873,7 @@ loc_183A7:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Bh	; ';'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266F2, 81h
 		mov	byte_266EE, 28h	; '('
@@ -22912,7 +22913,7 @@ loc_1841E:
 		imul	ax, 0Ch
 		add	al, 20h	; ' '
 		mov	byte_266EE, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 2
 		call	fp_2D000
 		cmp	_stage_frame_mod4, 0
@@ -22952,7 +22953,7 @@ sub_1845E	proc near
 loc_18473:
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 28h	; '('
 		mov	byte_266EE, 10h
 		call	randring2_next16
@@ -22992,7 +22993,7 @@ sub_184AC	proc near
 
 loc_184C8:
 		mov	byte_266F2, 81h
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_2CFF7, 1
 		pop	bp
 		retn
@@ -23064,7 +23065,7 @@ sub_18556	proc near
 ; ---------------------------------------------------------------------------
 
 loc_18570:
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	fp_2D004
 		pop	bp
@@ -23123,7 +23124,7 @@ sub_185E4	proc near
 		jnz	short loc_18653
 		mov	al, _boss_angle
 		mov	byte_266ED, al
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		mov	ax, _boss_phase_frame
 		mov	bx, 256
@@ -23176,7 +23177,7 @@ sub_18655	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_18682
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266E2, 2
@@ -23882,7 +23883,7 @@ loc_18C3E:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		call	fp_2D004
 		call	sub_18A79
@@ -23946,7 +23947,7 @@ loc_18CCC:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		call	fp_2D004
 		call	sub_18A79
@@ -24026,7 +24027,7 @@ loc_18D7E:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 8
 		call	fp_2D004
 		call	sub_18A79
@@ -24069,7 +24070,7 @@ loc_18DCF:
 		mov	byte_266E3, 37h	; '7'
 		mov	eax, _boss_pos.cur
 		mov	point_266E4, eax
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		mov	byte_266F2, 81h
 		mov	byte_266EE, 30h	; '0'
@@ -24168,7 +24169,7 @@ loc_18EB6:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 0Ch
 		call	fp_2D004
 		call	sub_18A79
@@ -24246,7 +24247,7 @@ loc_18F5A:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 0Ch
 		call	fp_2D004
 		call	sub_18A79
@@ -24341,7 +24342,7 @@ loc_19029:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 37h	; '7'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 6
 		call	fp_2D004
 		call	sub_18A79
@@ -24412,7 +24413,7 @@ loc_190D7:
 
 loc_190DE:
 		mov	byte_266E2, 4
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
 		mov	point_266E4.y, ax
@@ -24438,7 +24439,7 @@ loc_190DE:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1915B
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266EF, 5
 		mov	byte_266F0, 9
 		mov	byte_266ED, 0
@@ -24583,7 +24584,7 @@ loc_19279:
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
 		mov	byte_266E3, 37h	; '7'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 16h
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -24707,7 +24708,7 @@ loc_19387:
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
 		mov	byte_266E3, 37h	; '7'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 16h
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -25077,7 +25078,7 @@ loc_196C2:
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 2
 		mov	al, _boss_angle
 		mov	byte_266ED, al
@@ -25134,7 +25135,7 @@ loc_19751:
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 3
 		mov	byte_266F0, 0Ch
 		mov	byte_266F2, 0FFh
@@ -25181,7 +25182,7 @@ sub_197BB	proc near
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 20h	; ' '
 		mov	byte_266ED, 0
@@ -25218,7 +25219,7 @@ sub_19814	proc near
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 8
 		mov	byte_266EE, 1Eh
 		mov	al, byte_266ED
@@ -25312,7 +25313,7 @@ loc_19909:
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 1Bh
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
 		mov	byte_266EF, 1
 		cmp	_boss_hp, 700
 		jg	short loc_19942
@@ -25409,7 +25410,7 @@ loc_199ED:
 		cmp	_stage_frame_mod4, 0
 		jnz	loc_19AA1
 		mov	byte_266E2, 1
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	al, _boss_angle
 		add	al, 0F9h
 		mov	_boss_angle, al
@@ -25572,7 +25573,7 @@ loc_19B88:
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 40h
 		mov	byte_266ED, 0
@@ -26443,7 +26444,7 @@ loc_1A2BE:
 		mov	point_266E4.y, ax
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Ch	; '<'
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266EE, 10h
 		mov	byte_266ED, 0
@@ -26486,11 +26487,11 @@ loc_1A32D:
 		mov	ax, (1 shl 4)
 		imul	point_266E4.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 8
 		mov	byte_266EE, 10h
 		call	fp_2D000
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 4
 		mov	byte_266EE, 30h	; '0'
 		call	fp_2D000
@@ -27733,7 +27734,7 @@ loc_1AB86:
 		add	ax, (-4 shl 4)
 		mov	point_266E4.y, ax
 		mov	byte_266ED, 0
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266F2, 81h
 		mov	byte_266EF, 14h
 		mov	byte_2CFF8, 0C0h
@@ -27781,7 +27782,7 @@ loc_1ABFF:
 		cmp	_boss_phase_frame, 80
 		jg	loc_1AC96
 		mov	byte_266E2, 1
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	al, byte_2D01F
 		mov	byte_266EF, al
 		mov	al, byte ptr _boss_phase_frame
@@ -27882,7 +27883,7 @@ loc_1ACD9:
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-4 shl 4)
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 1Ch
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
 		mov	byte_266EF, 4
 		mov	byte_266F2, 88h
 		push	18h
@@ -27996,7 +27997,7 @@ sub_1ADDB	proc near
 		mov	byte_266E3, 3Ch	; '<'
 		call	randring2_next16
 		mov	byte_266ED, al
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 1Eh
 		call	fp_2D004
@@ -28017,7 +28018,7 @@ loc_1AE40:
 		mov	byte_266E2, 4
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266ED, 0
-		mov	byte_266EC, 30h	; '0'
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		mov	byte_266EF, 7
 		mov	byte_266EE, 20h	; ' '
 		mov	byte_266F0, 0Ah
@@ -28025,7 +28026,7 @@ loc_1AE40:
 		call	sub_1CFA2
 		call	snd_se_play pascal, 15
 		mov	byte_266E2, 1
-		mov	byte_266EC, 1Ch
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
 		mov	byte_266EF, 4
 		mov	byte_266EE, 18h
 
@@ -28078,7 +28079,7 @@ loc_1AEB7:
 		mov	point_266E4.y, ax
 		mov	byte_266E2, 4
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266F0, 8
 		mov	byte_266EF, 3
 		call	fp_2D004
@@ -28182,7 +28183,7 @@ loc_1AFD0:
 		mov	point_266E4.y, ax
 		mov	byte_266E2, 2
 		mov	byte_266E3, 5Ch
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		push	1Fh
 		call	randring2_next16_and
@@ -28336,7 +28337,7 @@ loc_1B13C:
 		mov	point_266E4.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 8
 		mov	byte_266EE, 90h
 		cmp	_rank, RANK_EASY
@@ -28401,7 +28402,7 @@ sub_1B1B1	proc near
 		mov	al, byte_266ED
 		add	al, 2
 		mov	byte_266ED, al
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266E2, 2
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EE, 30h	; '0'
@@ -28508,7 +28509,7 @@ var_1		= byte ptr -1
 		sub	al, byte_266E2
 		mov	byte_266E2, al
 		mov	byte_266E3, 3Ch	; '<'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 8
 		mov	al, [bp+var_1]
 		add	al, 20h	; ' '
@@ -28579,14 +28580,14 @@ loc_1B339:
 		test	byte ptr _stage_frame, 1Fh
 		jnz	short loc_1B382
 		mov	byte_266EF, 0Ah
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266ED, 40h
 		jmp	short loc_1B391
 ; ---------------------------------------------------------------------------
 
 loc_1B382:
 		mov	byte_266EF, 7
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266ED, 0
 
 loc_1B391:
@@ -29684,7 +29685,7 @@ loc_1BD64:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 5Ch
 		mov	byte_266EE, 30h	; '0'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 10h
 		call	fp_2D004
@@ -29804,7 +29805,7 @@ sub_1BE43	proc near
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 30h	; '0'
 		call	fp_2D004
 		call	sub_1CFA2
@@ -29857,7 +29858,7 @@ loc_1BEB9:
 		jnz	loc_1BF50
 		mov	byte_266E2, 1
 		mov	byte_266EE, 40h
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 2
 		mov	byte_266F0, 0Ch
 		call	fp_2D004
@@ -29886,7 +29887,7 @@ loc_1BF05:
 		jnz	short loc_1BF50
 		mov	byte_266E2, 1
 		mov	byte_266EE, 40h
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 2
 		mov	byte_266F0, 0Ch
 		call	fp_2D004
@@ -29936,7 +29937,7 @@ loc_1BF66:
 		mov	byte_266ED, 0
 		mov	byte_266E2, 1
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 8
 		call	fp_2D000
 
@@ -30001,7 +30002,7 @@ loc_1BFEB:
 		idiv	bx
 		add	al, 2Ch	; ','
 		mov	byte_266EE, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 4
 		mov	byte_266F0, 0Ch
 		mov	byte_266E3, 34h	; '4'
@@ -30044,7 +30045,7 @@ sub_1C044	proc near
 		mov	byte_266ED, 40h
 		mov	byte_266E2, 4
 		mov	byte_266EE, 40h
-		mov	byte_266EC, 1
+		mov	_bullet_template.pattern, BP_SINGLE_AIMED
 		mov	byte_266E3, 37h	; '7'
 		call	fp_2D004
 
@@ -30127,7 +30128,7 @@ loc_1C0FF:
 		idiv	bx
 		add	al, 2Ch	; ','
 		mov	byte_266EE, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 4
 		mov	byte_266F0, 0Ch
 		mov	byte_266E3, 34h	; '4'
@@ -30177,7 +30178,7 @@ sub_1C164	proc near
 		mov	byte_266ED, 0
 		mov	byte_266E2, 1
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		call	fp_2D004
 
@@ -30221,7 +30222,7 @@ sub_1C1CF	proc near
 		jnz	short loc_1C24F
 		mov	byte_266E2, 1
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -30282,7 +30283,7 @@ loc_1C26C:
 		mov	byte_266E2, 2
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266EE, 38h	; '8'
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		mov	byte_266ED, 0
 		call	fp_2D004
@@ -30294,7 +30295,7 @@ loc_1C2AD:
 		jg	short loc_1C2D1
 		mov	byte_266E2, 1
 		mov	byte_266EE, 20h	; ' '
-		mov	byte_266EC, 1Bh
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
 		mov	byte_266EF, 2
 		call	fp_2D004
 		call	fp_2D000
@@ -31432,16 +31433,16 @@ bullets_update	endp
 sub_1CC33	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	ah, 0
-		sub	ax, 1Bh
+		sub	ax, BP_RANDOM_ANGLE
 		mov	bx, ax
-		cmp	bx, 15h
-		ja	short loc_1CC89
+		cmp	bx, (BP_STACK_AIMED - BP_RANDOM_ANGLE)
+		ja	short @@ret
 		add	bx, bx
 		jmp	cs:off_1CC8C[bx]
 
-loc_1CC4C:
+@@stack:
 		mov	al, byte_266F0
 		mov	ah, 0
 		mov	bx, 4
@@ -31451,15 +31452,15 @@ loc_1CC4C:
 		sub	dl, al
 		mov	byte_266F0, dl
 		cmp	byte_266EF, 2
-		jb	short loc_1CC89
+		jb	short @@ret
 		dec	byte_266EF
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CC6E:
+@@spread:
 		cmp	byte_266EF, 3
-		jb	short loc_1CC89
+		jb	short @@ret
 		mov	al, byte_266EF
 		add	al, 0FEh
 		jmp	short loc_1CC86
@@ -31475,35 +31476,35 @@ loc_1CC7C:
 loc_1CC86:
 		mov	byte_266EF, al
 
-loc_1CC89:
+@@ret:
 		pop	bp
 		retn
-sub_1CC33	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
 off_1CC8C	dw offset loc_1CC7C
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
 		dw offset loc_1CC7C
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
-		dw offset loc_1CC89
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
 		dw offset loc_1CC7C
-		dw offset loc_1CC6E
-		dw offset loc_1CC6E
-		dw offset loc_1CC4C
-		dw offset loc_1CC4C
+		dw offset @@spread
+		dw offset @@spread
+		dw offset @@stack
+		dw offset @@stack
+sub_1CC33	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31511,18 +31512,18 @@ off_1CC8C	dw offset loc_1CC7C
 
 sub_1CCB8	proc near
 
-var_2		= word ptr -2
+@@pattern		= word ptr -2
 
 		enter	2, 0
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	ah, 0
-		mov	[bp+var_2], ax
+		mov	[bp+@@pattern], ax
 		mov	cx, 0Ah
 		mov	bx, offset word_1CD46
 
 loc_1CCCA:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
+		cmp	ax, [bp+@@pattern]
 		jz	short loc_1CCD9
 		add	bx, 2
 		loop	loc_1CCCA
@@ -31533,13 +31534,13 @@ loc_1CCD9:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
 
-loc_1CCDD:
-		mov	byte_266EC, 30h	; '0'
+@@single_aimed:
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		jmp	short loc_1CCE9
 ; ---------------------------------------------------------------------------
 
-loc_1CCE4:
-		mov	byte_266EC, 2Fh	; '/'
+@@single:
+		mov	_bullet_template.pattern, BP_STACK
 
 loc_1CCE9:
 		mov	byte_266EF, 2
@@ -31548,7 +31549,7 @@ loc_1CCE9:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CCF5:
+@@stack:
 		mov	al, byte_266F0
 		mov	ah, 0
 		cwd
@@ -31560,13 +31561,13 @@ loc_1CCF5:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CD08:
+@@spread:
 		mov	al, byte_266EF
 		add	al, 2
 		jmp	short loc_1CD40
 ; ---------------------------------------------------------------------------
 
-loc_1CD0F:
+@@ring:
 		mov	al, byte_266EF
 		mov	ah, 0
 		imul	ax, 3
@@ -31583,7 +31584,7 @@ loc_1CD0F:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CD32:
+@@random:
 		mov	al, byte_266EF
 		mov	ah, 0
 		cwd
@@ -31597,30 +31598,30 @@ loc_1CD40:
 locret_1CD43:
 		leave			; default
 		retn
-sub_1CCB8	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-word_1CD46	dw 0
-		dw 1
-		dw 1Bh
-		dw 1Ch
-		dw 26h
-		dw 2Ch
-		dw 2Dh
-		dw 2Eh
-		dw 2Fh
-		dw 30h
-		dw offset loc_1CCE4
-		dw offset loc_1CCDD
-		dw offset loc_1CD32
-		dw offset loc_1CD32
-		dw offset loc_1CD0F
-		dw offset loc_1CD0F
-		dw offset loc_1CD08
-		dw offset loc_1CD08
-		dw offset loc_1CCF5
-		dw offset loc_1CCF5
+word_1CD46	dw BP_SINGLE
+		dw BP_SINGLE_AIMED
+		dw BP_RANDOM_ANGLE
+		dw BP_RANDOM_ANGLE_AND_SPEED
+		dw BP_RING
+		dw BP_RING_AIMED
+		dw BP_SPREAD
+		dw BP_SPREAD_AIMED
+		dw BP_STACK
+		dw BP_STACK_AIMED
+		dw offset @@single
+		dw offset @@single_aimed
+		dw offset @@random
+		dw offset @@random
+		dw offset @@ring
+		dw offset @@ring
+		dw offset @@spread
+		dw offset @@spread
+		dw offset @@stack
+		dw offset @@stack
+sub_1CCB8	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31628,18 +31629,18 @@ word_1CD46	dw 0
 
 sub_1CD6E	proc near
 
-var_2		= word ptr -2
+@@pattern		= word ptr -2
 
 		enter	2, 0
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	ah, 0
-		mov	[bp+var_2], ax
+		mov	[bp+@@pattern], ax
 		mov	cx, 0Ah
 		mov	bx, offset word_1CDEA
 
 loc_1CD80:
 		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
+		cmp	ax, [bp+@@pattern]
 		jz	short loc_1CD8F
 		add	bx, 2
 		loop	loc_1CD80
@@ -31650,13 +31651,13 @@ loc_1CD8F:
 		jmp	word ptr cs:[bx+14h] ; switch jump
 ; ---------------------------------------------------------------------------
 
-loc_1CD93:
-		mov	byte_266EC, 2Eh	; '.'
+@@single_aimed:
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		jmp	short loc_1CD9F
 ; ---------------------------------------------------------------------------
 
-loc_1CD9A:
-		mov	byte_266EC, 2Dh	; '-'
+@@single:
+		mov	_bullet_template.pattern, BP_SPREAD
 
 loc_1CD9F:
 		mov	byte_266EF, 3
@@ -31665,7 +31666,7 @@ loc_1CD9F:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CDAB:
+@@stack:
 		mov	al, byte_266F0
 		mov	ah, 0
 		cwd
@@ -31678,13 +31679,13 @@ loc_1CDAB:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CDC2:
+@@spread:
 		mov	al, byte_266EF
 		add	al, 4
 		jmp	short loc_1CDE4
 ; ---------------------------------------------------------------------------
 
-loc_1CDC9:
+@@ring:
 		mov	al, byte_266EF
 		add	al, al
 		mov	byte_266EF, al
@@ -31695,7 +31696,7 @@ loc_1CDC9:
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CDDF:
+@@random:
 		mov	al, byte_266EF
 		add	al, al
 
@@ -31705,30 +31706,30 @@ loc_1CDE4:
 locret_1CDE7:
 		leave			; default
 		retn
-sub_1CD6E	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-word_1CDEA	dw 0
-		dw 1
-		dw 1Bh
-		dw 1Ch
-		dw 26h
-		dw 2Ch
-		dw 2Dh
-		dw 2Eh
-		dw 2Fh
-		dw 30h
-		dw offset loc_1CD9A
-		dw offset loc_1CD93
-		dw offset loc_1CDDF
-		dw offset loc_1CDDF
-		dw offset loc_1CDC9
-		dw offset loc_1CDC9
-		dw offset loc_1CDC2
-		dw offset loc_1CDC2
-		dw offset loc_1CDAB
-		dw offset loc_1CDAB
+word_1CDEA	dw BP_SINGLE
+		dw BP_SINGLE_AIMED
+		dw BP_RANDOM_ANGLE
+		dw BP_RANDOM_ANGLE_AND_SPEED
+		dw BP_RING
+		dw BP_RING_AIMED
+		dw BP_SPREAD
+		dw BP_SPREAD_AIMED
+		dw BP_STACK
+		dw BP_STACK_AIMED
+		dw offset @@single
+		dw offset @@single_aimed
+		dw offset @@random
+		dw offset @@random
+		dw offset @@ring
+		dw offset @@ring
+		dw offset @@spread
+		dw offset @@spread
+		dw offset @@stack
+		dw offset @@stack
+sub_1CD6E	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31737,16 +31738,16 @@ word_1CDEA	dw 0
 sub_1CE12	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	ah, 0
-		sub	ax, 26h	; '&'
+		sub	ax, BP_RING
 		mov	bx, ax
 		cmp	bx, 0Ah
-		ja	loc_1CEAD
+		ja	@@ret
 		add	bx, bx
 		jmp	cs:off_1CEAF[bx]
 
-loc_1CE2D:
+@@stack:
 		cmp	_playperf, 24
 		jb	short loc_1CE3A
 		inc	byte_266EF
@@ -31756,15 +31757,15 @@ loc_1CE2D:
 
 loc_1CE3A:
 		cmp	_playperf, 6
-		ja	short loc_1CEAD
+		ja	short @@ret
 		cmp	byte_266EF, 2
-		jb	short loc_1CEAD
+		jb	short @@ret
 		dec	byte_266EF
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
-loc_1CE4E:
+@@spread:
 		cmp	_playperf, 24
 		jb	short loc_1CE57
 		jmp	short loc_1CE81
@@ -31772,15 +31773,15 @@ loc_1CE4E:
 
 loc_1CE57:
 		cmp	_playperf, 6
-		ja	short loc_1CEAD
+		ja	short @@ret
 		cmp	byte_266EF, 3
-		jb	short loc_1CEAD
+		jb	short @@ret
 		mov	al, byte_266EF
 		add	al, 0FEh
 		jmp	short loc_1CEAA
 ; ---------------------------------------------------------------------------
 
-loc_1CE6C:
+@@ring:
 		cmp	_playperf, 24
 		jb	short loc_1CE7A
 		mov	al, byte_266EF
@@ -31800,7 +31801,7 @@ loc_1CE81:
 
 loc_1CE88:
 		cmp	byte_266EF, 5
-		jb	short loc_1CEAD
+		jb	short @@ret
 		cmp	_playperf, 10
 		ja	short loc_1CE9E
 		mov	al, byte_266EF
@@ -31809,30 +31810,30 @@ loc_1CE88:
 
 loc_1CE9E:
 		cmp	_playperf, 4
-		ja	short loc_1CEAD
+		ja	short @@ret
 		mov	al, byte_266EF
 		add	al, 0FCh
 
 loc_1CEAA:
 		mov	byte_266EF, al
 
-loc_1CEAD:
+@@ret:
 		pop	bp
 		retn
-sub_1CE12	endp
 
 ; ---------------------------------------------------------------------------
-off_1CEAF	dw offset loc_1CE6C
-		dw offset loc_1CEAD
-		dw offset loc_1CEAD
-		dw offset loc_1CEAD
-		dw offset loc_1CEAD
-		dw offset loc_1CEAD
-		dw offset loc_1CE6C
-		dw offset loc_1CE4E
-		dw offset loc_1CE4E
-		dw offset loc_1CE2D
-		dw offset loc_1CE2D
+off_1CEAF	dw offset @@ring
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ret
+		dw offset @@ring
+		dw offset @@spread
+		dw offset @@spread
+		dw offset @@stack
+		dw offset @@stack
+sub_1CE12	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32082,55 +32083,55 @@ arg_0		= word ptr  4
 		mov	[bp+var_4], 0
 		mov	al, byte_266EE
 		mov	[bp+var_3], al
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	ah, 0
-		cmp	ax, 2Ch	; ','
-		jz	loc_1D0EB
+		cmp	ax, BP_RING_AIMED
+		jz	@@ring_aimed
 		jg	short loc_1D027
-		cmp	ax, 1Bh
-		jz	loc_1D119
+		cmp	ax, BP_RANDOM_ANGLE
+		jz	@@random_angle
 		jg	short loc_1D00F
 		or	ax, ax
-		jz	loc_1D112
-		cmp	ax, 1
-		jz	loc_1D15E
-		cmp	ax, 1Ah
-		jz	loc_1D10C
-		jmp	loc_1D18D
+		jz	@@single
+		cmp	ax, BP_SINGLE_AIMED
+		jz	@@single_aimed
+		cmp	ax, BP_FORCESINGLE_RANDOM_ANGLE
+		jz	@@single_random_angle
+		jmp	@@aim
 ; ---------------------------------------------------------------------------
 
 loc_1D00F:
-		cmp	ax, 1Ch
-		jz	loc_1D12B
-		cmp	ax, 1Dh
-		jz	loc_1D148
-		cmp	ax, 26h	; '&'
-		jz	loc_1D0CA
-		jmp	loc_1D18D
+		cmp	ax, BP_RANDOM_ANGLE_AND_SPEED
+		jz	@@random_angle_and_speed
+		cmp	ax, BP_SPREAD_RANDOM_ANGLE_AIMED
+		jz	@@spread_random_angle_aimed
+		cmp	ax, BP_RING
+		jz	@@ring
+		jmp	@@aim
 ; ---------------------------------------------------------------------------
 
 loc_1D027:
-		cmp	ax, 30h	; '0'
-		jz	loc_1D164
+		cmp	ax, BP_STACK_AIMED
+		jz	@@stack
 		jg	short loc_1D044
-		cmp	ax, 2Dh	; '-'
-		jz	short loc_1D055
-		cmp	ax, 2Eh	; '.'
-		jz	short loc_1D055
-		cmp	ax, 2Fh	; '/'
-		jz	loc_1D164
-		jmp	loc_1D18D
+		cmp	ax, BP_SPREAD
+		jz	short @@spread
+		cmp	ax, BP_SPREAD_AIMED
+		jz	short @@spread
+		cmp	ax, BP_STACK
+		jz	@@stack
+		jmp	@@aim
 ; ---------------------------------------------------------------------------
 
 loc_1D044:
-		cmp	ax, 40h
-		jz	loc_1D112
-		cmp	ax, 41h	; 'A'
-		jz	loc_1D15E
-		jmp	loc_1D18D
+		cmp	ax, BP_FORCESINGLE
+		jz	@@single
+		cmp	ax, BP_FORCESINGLE_AIMED
+		jz	@@single_aimed
+		jmp	@@aim
 ; ---------------------------------------------------------------------------
 
-loc_1D055:
+@@spread:
 		test	byte_266EF, 1
 		jz	short loc_1D088
 		or	si, si
@@ -32187,12 +32188,12 @@ loc_1D0B0:
 		mov	[bp+var_4], 1
 
 loc_1D0BE:
-		cmp	byte_266EC, 2Dh	; '-'
-		jnz	loc_1D18D
-		jmp	loc_1D1A5
+		cmp	_bullet_template.pattern, BP_SPREAD
+		jnz	@@aim
+		jmp	@@static
 ; ---------------------------------------------------------------------------
 
-loc_1D0CA:
+@@ring:
 		mov	ax, si
 		shl	ax, 8
 		mov	dl, byte_266EF
@@ -32206,11 +32207,11 @@ loc_1D0CA:
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
-		jg	loc_1D1A5
-		jmp	short loc_1D112
+		jg	@@static
+		jmp	short @@single
 ; ---------------------------------------------------------------------------
 
-loc_1D0EB:
+@@ring_aimed:
 		mov	ax, si
 		shl	ax, 8
 		mov	dl, byte_266EF
@@ -32224,31 +32225,31 @@ loc_1D0EB:
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
-		jg	loc_1D18D
-		jmp	short loc_1D15E
+		jg	@@aim
+		jmp	short @@single_aimed
 ; ---------------------------------------------------------------------------
 
-loc_1D10C:
+@@single_random_angle:
 		call	randring2_next16
 		mov	[bp+var_2], ax
 
-loc_1D112:
+@@single:
 		mov	[bp+var_4], 1
-		jmp	loc_1D1A5
+		jmp	@@static
 ; ---------------------------------------------------------------------------
 
-loc_1D119:
+@@random_angle:
 		call	randring2_next16
 		mov	[bp+var_2], ax
 		mov	al, byte_266EF
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
-		jg	short loc_1D1A5
-		jmp	short loc_1D112
+		jg	short @@static
+		jmp	short @@single
 ; ---------------------------------------------------------------------------
 
-loc_1D12B:
+@@random_angle_and_speed:
 		call	randring2_next16
 		mov	[bp+var_2], ax
 		push	1Fh
@@ -32259,11 +32260,11 @@ loc_1D12B:
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
-		jg	short loc_1D1A5
-		jmp	short loc_1D112
+		jg	short @@static
+		jmp	short @@single
 ; ---------------------------------------------------------------------------
 
-loc_1D148:
+@@spread_random_angle_aimed:
 		push	1Fh
 		call	randring2_next16_and
 		mov	[bp+var_2], ax
@@ -32272,14 +32273,14 @@ loc_1D148:
 		mov	ah, 0
 		dec	ax
 		cmp	ax, si
-		jg	short loc_1D18D
+		jg	short @@aim
 
-loc_1D15E:
+@@single_aimed:
 		mov	[bp+var_4], 1
-		jmp	short loc_1D18D
+		jmp	short @@aim
 ; ---------------------------------------------------------------------------
 
-loc_1D164:
+@@stack:
 		mov	al, byte_266F0
 		mov	ah, 0
 		imul	si
@@ -32297,10 +32298,10 @@ loc_1D182:
 		mov	[bp+var_4], 1
 
 loc_1D186:
-		cmp	byte_266EC, 2Fh	; '/'
-		jz	short loc_1D1A5
+		cmp	_bullet_template.pattern, BP_STACK
+		jz	short @@static
 
-loc_1D18D:
+@@aim:
 		mov	ax, _player_pos.cur.y
 		sub	ax, point_266E4.y
 		push	ax
@@ -32310,7 +32311,7 @@ loc_1D18D:
 		call	iatan2
 		add	[bp+var_2], ax
 
-loc_1D1A5:
+@@static:
 		push	offset point_266E8
 		mov	al, byte ptr [bp+var_2]
 		add	al, byte_266ED
@@ -32499,9 +32500,9 @@ loc_1D314:
 		jz	short loc_1D338
 
 loc_1D326:
-		cmp	byte_266EC, 2Fh	; '/'
+		cmp	_bullet_template.pattern, BP_STACK
 		jz	short loc_1D338
-		cmp	byte_266EC, 30h	; '0'
+		cmp	_bullet_template.pattern, BP_STACK_AIMED
 		jz	short loc_1D338
 		mov	[bp+@@move_state], BMS_SLOWDOWN
 
@@ -32523,7 +32524,7 @@ loc_1D33C:
 		mov	[si+bullet_t.age], 0
 		mov	eax, point_266E4
 		mov	dword ptr [si+bullet_t.pos.cur], eax
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	[si+bullet_t.from_pattern], al
 		mov	al, byte_266E3
 		mov	ah, 0
@@ -32633,7 +32634,7 @@ loc_1D40A:
 		mov	[si+bullet_t.age], 0
 		mov	eax, point_266E4
 		mov	dword ptr [si+bullet_t.pos.cur], eax
-		mov	al, byte_266EC
+		mov	al, _bullet_template.pattern
 		mov	[si+bullet_t.from_pattern], al
 		mov	al, byte_266E3
 		mov	ah, 0
@@ -35105,7 +35106,7 @@ var_1		= byte ptr -1
 		push	ax
 		call	iatan2
 		mov	_boss_angle, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 6
 		mov	al, byte_2D023
 		mov	byte_266F0, al
@@ -35173,7 +35174,7 @@ var_1		= byte ptr -1
 		mov	byte_266F2, 80h
 		mov	al, byte_2D020
 		mov	byte_2CFF7, al
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266EF, 9
 		mov	byte_266F0, 6
 		call	fp_2D004
@@ -35271,7 +35272,7 @@ var_1		= byte ptr -1
 		mov	byte_266ED, 0
 		mov	byte_266F2, 82h
 		mov	byte_2CFF7, 1
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		call	fp_2D004
 		call	sub_1CFB5
@@ -35300,7 +35301,7 @@ loc_1EEF5:
 		mov	byte_266ED, al
 		mov	byte_266E2, 1
 		mov	byte_266EE, 18h
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 4
 		mov	byte_266F0, 8
 		call	fp_2D004
@@ -35359,7 +35360,7 @@ var_1		= byte ptr -1
 		call	randring2_next16_and
 		add	al, 0BCh
 		mov	byte_266ED, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	al, byte_2D021
 		mov	byte_266EF, al
 		mov	al, byte_2D022
@@ -35383,7 +35384,7 @@ var_1		= byte ptr -1
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 30h	; '0'
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		mov	al, _rank
 		add	al, 3
 		mov	byte_266EF, al
@@ -35431,7 +35432,7 @@ var_1		= byte ptr -1
 		push	ax
 		call	iatan2
 		mov	byte_266ED, al
-		mov	byte_266EC, 1Ch
+		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
 		mov	byte_266EF, 3
 		call	fp_2D004
 
@@ -35462,7 +35463,7 @@ loc_1F0B0:
 		jnz	short locret_1F10F
 		mov	byte_266E2, 5
 		mov	byte_266E3, 39h	; '9'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -35582,7 +35583,7 @@ loc_1F1AA:
 		mov	byte_266ED, al
 		mov	byte_266E2, 1
 		mov	byte_266EE, 18h
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 4
 		mov	byte_266F0, 0Ah
 		call	fp_2D004
@@ -35653,7 +35654,7 @@ loc_1F263:
 		call	randring2_next16_and
 		add	al, 10h
 		mov	byte_266EE, al
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		push	3
 		call	randring2_next16_and
 		add	al, 2
@@ -35708,7 +35709,7 @@ var_1		= byte ptr -1
 		cmp	[bp+var_1], 2
 		jnz	short loc_1F328
 		mov	byte_266E2, 4
-		mov	byte_266EC, 30h	; '0'
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		mov	al, byte_2D024
 		mov	byte_266EF, al
 		mov	byte_266F0, 0Ch
@@ -36673,7 +36674,7 @@ loc_1FABE:
 		mov	byte_266E2, 5
 		mov	byte_266E3, 3Eh	; '>'
 		mov	byte_266EE, 46h	; 'F'
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 5Ah	; 'Z'
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -36711,7 +36712,7 @@ sub_1FAF7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1FB10:
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266F0, 8
 		mov	ax, _player_pos.cur.y
 		sub	ax, point_266E4.y
@@ -36791,7 +36792,7 @@ loc_1FBA1:
 loc_1FBAD:
 		cmp	_stage_frame_mod2, 0
 		jz	loc_1FC44
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Bh	; ';'
 		push	3Fh ; '?'
@@ -36822,7 +36823,7 @@ loc_1FBAD:
 		cmp	_stage_frame_mod16, 1
 		jnz	short loc_1FC44
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266EE, 50h	; 'P'
 		call	fp_2D000
@@ -36869,7 +36870,7 @@ loc_1FC68:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_1FCE0
 		mov	byte_266F2, 81h
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	byte_266E2, 2
 		mov	byte_266E3, 3Ah	; ':'
 		push	3Fh ; '?'
@@ -36913,7 +36914,7 @@ loc_1FCE0:
 		call	randring2_next16_mod
 		add	ax, 200h
 		mov	word ptr dword_2A8C6, ax
-		mov	byte_266EC, 2Ch	; ','
+		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	byte_266EF, 10h
 		mov	byte_266EE, 40h
 		call	sub_13AB7
@@ -36949,7 +36950,7 @@ sub_1FD30	proc near
 
 loc_1FD49:
 		mov	byte_266E3, 3Eh	; '>'
-		mov	byte_266EC, 2Eh	; '.'
+		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	byte_266F2, 0FFh
 		mov	byte_266F0, 10h
 		mov	byte_266ED, 0
@@ -36989,7 +36990,7 @@ loc_1FD8F:
 ; ---------------------------------------------------------------------------
 
 loc_1FDAD:
-		mov	byte_266EC, 30h	; '0'
+		mov	_bullet_template.pattern, BP_STACK_AIMED
 		mov	byte_266EF, 8
 		mov	byte_266F0, 0Ah
 		mov	byte_266EE, 20h	; ' '
@@ -37045,7 +37046,7 @@ sub_1FDFE	proc near
 
 loc_1FE17:
 		mov	byte_266EE, 50h	; 'P'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 1
 		mov	byte_266F0, 6
 		mov	ax, _player_pos.cur.y
@@ -37101,7 +37102,7 @@ sub_1FE6A	proc near
 
 loc_1FE83:
 		mov	byte_266E3, 4Ch	; 'L'
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 0Bh
 		mov	byte_266ED, 0
@@ -37197,7 +37198,7 @@ loc_1FF2E:
 
 loc_1FF44:
 		mov	byte_266E2, 2
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266EF, 5
 		mov	byte_266F0, 18h
 		mov	byte_266ED, 0C0h
@@ -37240,7 +37241,7 @@ loc_1FFC2:
 		mov	byte_266E2, 1
 		mov	al, byte_2D02D
 		mov	byte_266ED, al
-		mov	byte_266EC, 2Fh	; '/'
+		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_266EF, 0Ch
 		mov	byte_266EE, 20h	; ' '
 		mov	byte_266F0, 8
@@ -37254,7 +37255,7 @@ loc_1FFF8:
 		mov	byte_266E3, 34h	; '4'
 		mov	byte_266E2, 2
 		mov	point_266E4.y, 0
-		mov	byte_266EC, 0
+		mov	_bullet_template.pattern, BP_SINGLE
 		mov	si, 0B204h
 		xor	di, di
 		jmp	short loc_2002B
@@ -37315,7 +37316,7 @@ sub_20050	proc near
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 10h
 		mov	byte_266E2, 2
 		mov	byte_266E3, 4Ch	; 'L'
@@ -37342,7 +37343,7 @@ sub_200B6	proc near
 		cmp	_stage_frame_mod4, 0
 		jnz	loc_2018E
 		mov	_boss_sprite, 134
-		mov	byte_266EC, 2Dh	; '-'
+		mov	_bullet_template.pattern, BP_SPREAD
 		mov	byte_266F0, 9
 		mov	byte_266EF, 8
 		mov	byte_266EE, 38h	; '8'
@@ -37451,7 +37452,7 @@ loc_201B4:
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	point_266E4.y, ax
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		call	randring2_next16
 		mov	byte_266ED, al
@@ -37509,7 +37510,7 @@ sub_2023B	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_20268
-		mov	byte_266EC, 26h	; '&'
+		mov	_bullet_template.pattern, BP_RING
 		mov	byte_266EF, 20h	; ' '
 		mov	byte_266E3, 4Ch	; 'L'
 		mov	byte_266E2, 2
@@ -39906,7 +39907,7 @@ byte_266E2	db ?
 byte_266E3	db ?
 point_266E4	Point <?>
 point_266E8	Point <?>
-byte_266EC	db ?
+include th04/bullet/template[bss].asm
 byte_266ED	db ?
 byte_266EE	db ?
 byte_266EF	db ?

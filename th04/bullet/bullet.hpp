@@ -1,3 +1,12 @@
+/// Game-specific pattern types
+/// ---------------------------
+#if GAME == 5
+# include "th05/bullet/pattypes.h"
+#else
+# include "th04/bullet/pattypes.h"
+#endif
+/// ---------------------------
+
 /// States and modes
 /// ----------------
 #pragma option -b-
