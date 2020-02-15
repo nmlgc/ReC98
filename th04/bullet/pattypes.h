@@ -1,5 +1,12 @@
 #pragma option -b-
 
+typedef union {
+	unsigned char spread_angle;
+	// In subpixels, obviously, but pre-C++11 doesn't let us use any of the
+	// Subpixel classes with their custom assignment operators in a union...
+	unsigned char stack_speed;
+} bullet_template_delta_t;
+
 // All _AIMED patterns define the 0° [angle] as the current player position,
 // relative to the bullet origin.
 typedef enum {

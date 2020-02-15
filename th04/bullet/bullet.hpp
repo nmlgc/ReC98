@@ -114,3 +114,31 @@ int pascal near bullet_patnum_for_angle(unsigned char angle);
 extern bullet_t bullets[BULLET_COUNT];
 #define pellets (&bullets[0])
 #define bullets16 (&bullets[PELLET_COUNT])
+
+struct bullet_template_t {
+	uint8_t spawn_type;
+	unsigned char patnum;	// TH05: 0 = pellet
+	SPPoint origin;
+#if GAME == 5
+	bullet_pattern_t pattern;
+	bullet_special_motion_t special_motion;
+	unsigned char spread;
+	unsigned char spread_angle_delta;
+	unsigned char stack;
+	SubpixelLength8 stack_speed_delta;
+	unsigned char angle;
+	SubpixelLength8 speed;
+#else
+	SPPoint velocity;
+	bullet_pattern_t pattern;
+	unsigned char angle;
+	SubpixelLength8 speed;
+	unsigned char count;
+	bullet_template_delta_t delta;
+	uint8_t unused_1;
+	bullet_special_motion_t special_motion;
+	uint8_t unused_2;
+#endif
+};
+
+extern bullet_template_t bullet_template;

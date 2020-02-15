@@ -12753,9 +12753,9 @@ loc_128CA:
 
 loc_128D8:
 		mov	eax, [si]
-		mov	point_25FFC, eax
+		mov	_bullet_template.BT_origin, eax
 		call	randring1_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15DE2
 
 loc_128EA:
@@ -12943,13 +12943,13 @@ sub_15330	endp
 sub_15345	proc near
 		push	si
 		push	di
-		mov	cx, 7
+		mov	cx, size _bullet_template / 2
 		add	si, 28h	; '('
 		push	es
 		push	ds
 		pop	es
 		assume es:_DATA
-		mov	di, 561Ah
+		mov	di, offset _bullet_template
 		rep movsw
 		pop	es
 		assume es:nothing
@@ -13210,9 +13210,9 @@ loc_15518:
 		mov	word_23F60, dx
 		call	sub_15345
 		mov	ax, [si+2]
-		add	point_25FFC.x, ax
+		add	_bullet_template.BT_origin.x, ax
 		mov	ax, [si+4]
-		add	point_25FFC.y, ax
+		add	_bullet_template.BT_origin.y, ax
 		push	es
 		call	fp_25344
 		mov	bx, word_23F60
@@ -13804,9 +13804,9 @@ include th05/playperf_adjust_speed.asm
 sub_15A5C	proc near
 		cmp	_bullet_clear_trigger, 0
 		jnz	short locret_15A6E
-		push	word_26006
+		push	word ptr _bullet_template.BT_angle
 		call	loc_15C94
-		pop	word_26006
+		pop	word ptr _bullet_template.BT_angle
 
 locret_15A6E:
 		retn
@@ -13822,9 +13822,9 @@ sub_15A70	proc near
 		cmp	_bullet_clear_trigger, 0
 		jnz	short locret_15A8C
 		mov	byte_221C0, 1
-		push	word_26006
+		push	word ptr _bullet_template.BT_angle
 		call	loc_15C94
-		pop	word_26006
+		pop	word ptr _bullet_template.BT_angle
 		mov	byte_221C0, 0
 
 locret_15A8C:
@@ -13864,7 +13864,7 @@ sub_15AAA	proc near
 		push	di
 		xor	si, si
 		mov	ch, byte_25348
-		mov	cl, byte ptr word_26006+1
+		mov	cl, _bullet_template.speed
 
 loc_15AB6:
 		mov	bl, _bullet_template.pattern
@@ -13875,8 +13875,8 @@ loc_15AB6:
 		xor	di, di
 		add	bx, bx
 		mov	ax, cs:off_15C16[bx]
-		mov	bl, byte ptr dword_26002
-		mov	bh, byte ptr dword_26002+2
+		mov	bl, _bullet_template.spread
+		mov	bh, _bullet_template.BT_stack
 		or	bl, bl
 		jnz	short loc_15ADD
 		inc	bl
@@ -13899,7 +13899,7 @@ loc_15ADD:
 		xor	ah, ah
 		mov	al, ch
 		div	bl
-		mov	dl, byte ptr dword_26002+3
+		mov	dl, _bullet_template.stack_speed_delta
 		mul	dl
 		add	cl, al
 		mov	al, bl
@@ -13943,7 +13943,7 @@ loc_15B33:
 		jz	short loc_15B46
 
 loc_15B38:
-		mov	al, byte ptr dword_26002+1
+		mov	al, _bullet_template.spread_angle_delta
 		add	byte_25347, al
 		mov	al, byte_25347
 		mov	si, ax
@@ -13960,7 +13960,7 @@ loc_15B46:
 loc_15B4F:
 		or	ch, ch
 		jnz	short loc_15B5F
-		mov	al, byte ptr dword_26002+1
+		mov	al, _bullet_template.spread_angle_delta
 		shr	al, 1
 		mov	byte_25347, al
 		mov	si, ax
@@ -14017,20 +14017,20 @@ loc_15B83:
 loc_15BB4:
 		mov	si, _randring_p
 		mov	si, word ptr _randring[si]
-		and	si, 0FFh
+		and	si, 255
 		inc	byte ptr _randring_p
 		jmp	short @@static
 ; ---------------------------------------------------------------------------
 
 @@stack:
-		mov	al, byte ptr dword_26002+3
+		mov	al, _bullet_template.stack_speed_delta
 		mul	ch
 		add	cl, al
 		mov	al, bh
 		dec	al
 		cmp	al, ch
 		jle	short loc_15BDA
-		cmp	cl, 0A0h
+		cmp	cl, (10 shl 4)
 		jb	short loc_15BDB
 
 loc_15BDA:
@@ -14042,8 +14042,8 @@ loc_15BDB:
 
 @@aim:
 		mov	byte_2534A, cl
-		push	point_25FFC.x
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.x
+		push	_bullet_template.BT_origin.y
 		push	si
 		call	sub_15A24
 		mov	cl, byte_2534A
@@ -14052,7 +14052,7 @@ loc_15BDB:
 @@static:
 		push	offset point_2534B
 		mov	ax, si
-		add	al, byte ptr word_26006
+		add	al, _bullet_template.BT_angle
 		push	ax
 		mov	angle_25349, al
 		mov	byte_2534A, cl
@@ -14099,8 +14099,8 @@ loc_15C44:
 ; ---------------------------------------------------------------------------
 
 loc_15C47:
-		mov	ax, point_25FFC.x
-		mov	dx, point_25FFC.y
+		mov	ax, _bullet_template.BT_origin.x
+		mov	dx, _bullet_template.BT_origin.y
 		cmp	ax, (-8 shl 4)
 		jle	short loc_15C44
 		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
@@ -14122,9 +14122,9 @@ loc_15C47:
 loc_15C81:
 		cmp	byte_25346, 0
 		jnz	short loc_15C91
-		mov	al, byte ptr word_26006+1
+		mov	al, _bullet_template.speed
 		call	@playperf_adjust_speed
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 
 loc_15C91:
 		mov	al, 0
@@ -14134,28 +14134,28 @@ sub_15C36	endp
 ; ---------------------------------------------------------------------------
 
 loc_15C94	proc near
-		cmp	byte ptr word_25FFA, 11h
+		cmp	_bullet_template.spawn_type, 11h
 		jz	short loc_15CA2
-		cmp	byte ptr word_25FFA, 1
+		cmp	_bullet_template.spawn_type, 1
 		jnz	short loc_15CE5
 
 loc_15CA2:
-		mov	eax, point_25FFC
-		mov	dword_2A722, eax
+		mov	eax, _bullet_template.BT_origin
+		mov	point_2A722, eax
 		mov	dword_2A726, 0
 		mov	word_2A72A, 400h
 		mov	byte_2A72F, 2
 		mov	byte_2A72E, 9
 		mov	word_2A72C, 8
-		push	word_25FFA
-		dec	byte ptr word_25FFA
+		push	word ptr _bullet_template.spawn_type
+		dec	_bullet_template.spawn_type
 		cmp	byte_221C0, 0
 		jz	short loc_15CDD
-		mov	byte ptr word_25FFA, 0FEh
+		mov	_bullet_template.spawn_type, 0FEh
 
 loc_15CDD:
 		call	sub_16999
-		pop	word_25FFA
+		pop	word ptr _bullet_template.spawn_type
 
 locret_15CE4:
 		retn
@@ -14167,7 +14167,7 @@ loc_15CE5:
 		jnz	short locret_15CE4
 		push	si
 		push	di
-		cmp	byte ptr word_25FFA+1, 0
+		cmp	_bullet_template.patnum, 0
 		jnz	short loc_15CFD
 		mov	si, offset _pellets[(PELLET_COUNT - 1) * size bullet_t]
 		mov	di, PELLET_COUNT
@@ -14180,7 +14180,7 @@ loc_15CFD:
 
 loc_15D03:
 		mov	dl, BSS_GRAZEABLE
-		mov	al, byte ptr word_25FFA
+		mov	al, _bullet_template.spawn_type
 		and	al, 0Fh
 		cmp	al, 3
 		jz	short loc_15D16
@@ -14197,13 +14197,13 @@ loc_15D18:
 		cmp	byte_221C0, 0
 		jnz	short loc_15D38
 		mov	al, BMS_NORMAL
-		cmp	byte ptr word_26006+1, 40h
+		cmp	_bullet_template.speed, (4 shl 4)
 		jb	short loc_15D2F
 		cmp	_bullet_clear_time, 0
 		jz	short loc_15D38
 
 loc_15D2F:
-		test	byte ptr word_25FFA, 10h
+		test	_bullet_template.spawn_type, 10h
 		jnz	short loc_15D38
 		xor	al, al
 
@@ -14220,7 +14220,7 @@ loc_15D48:
 
 @@spawn_state	= byte ptr $+3
 		mov	[si+bullet_t.spawn_state], 123
-		mov	eax, point_25FFC
+		mov	eax, _bullet_template.BT_origin
 		mov	dword ptr [si+bullet_t.pos.cur], eax
 		cmp	byte_221C0, 0
 		jnz	short loc_15D78
@@ -14229,7 +14229,7 @@ loc_15D48:
 		mov	[si+bullet_t.move_state], 123
 		mov	[si+bullet_t.slowdown_time], BMS_SLOWDOWN_FRAMES
 		mov	al, BMS_SLOWDOWN_BASE_SPEED
-		sub	al, byte ptr word_26006+1
+		sub	al, _bullet_template.speed
 		mov	[si+bullet_t.slowdown_speed_delta], al
 		jmp	short loc_15D95
 ; ---------------------------------------------------------------------------
@@ -14241,7 +14241,7 @@ loc_15D78:
 		mov	[si+bullet_t.turn_count], 0
 		mov	al, byte_2C977
 		mov	[si+bullet_t.turn_angle], al
-		mov	al, byte_26001
+		mov	al, _bullet_template.BT_special_motion
 		mov	[si+bullet_t.special_motion], al
 
 loc_15D95:
@@ -14250,7 +14250,7 @@ loc_15D95:
 		mov	[si+bullet_t.from_pattern], al
 		call	sub_15AAA
 		mov	cl, al
-		mov	al, byte ptr word_25FFA+1
+		mov	al, _bullet_template.patnum
 		mov	ah, 0
 		cmp	al, PAT_BULLET16_D
 		jb	short loc_15DB5
@@ -14306,21 +14306,21 @@ sub_15DE6	proc near
 loc_15DFD:
 		cmp	al, 3
 		jb	short @@ret
-		sub	byte ptr dword_26002, 2
+		sub	_bullet_template.spread, 2
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15E07:
 		shr	dh, 2
-		sub	byte ptr dword_26002+3,	dh
+		sub	_bullet_template.stack_speed_delta, dh
 		cmp	ah, 2
 		jb	short @@ret
-		dec	byte ptr dword_26002+2
+		dec	_bullet_template.BT_stack
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15E18:
-		shr	byte ptr dword_26002, 1
+		shr	_bullet_template.spread, 1
 
 @@ret:
 		retn
@@ -14351,8 +14351,8 @@ sub_15E2A	proc near
 		mov	cx, offset off_15E78
 
 loc_15E44:
-		mov	ax, word ptr dword_26002
-		mov	dx, word ptr dword_26002+2
+		mov	ax, word ptr _bullet_template.spread
+		mov	dx, word ptr _bullet_template.BT_stack
 		and	bl, (not BPC0_AIMED)
 		add	bx, cx
 		jmp	word ptr cs:[bx]
@@ -14360,13 +14360,13 @@ loc_15E44:
 
 loc_15E53:
 		add	_bullet_template.pattern, BPCS_STACK
-		mov	word ptr dword_26002+2,	602h
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 2
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15E5F:
 		shr	dh, 1
-		add	byte ptr dword_26002+3,	dh
+		add	_bullet_template.stack_speed_delta, dh
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -14377,7 +14377,7 @@ loc_15E66:
 		mov	al, 6
 
 loc_15E6F:
-		add	byte ptr dword_26002, al
+		add	_bullet_template.spread, al
 
 locret_15E73:
 		retn
@@ -14408,19 +14408,19 @@ sub_15E82	proc near
 
 loc_15E91:
 		add	_bullet_template.pattern, BPCC_SPREAD
-		mov	word ptr dword_26002, 603h
+		mov	word ptr _bullet_template.spread, (6 shl 8) or 3
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15E9D:
 		shr	dh, 1
-		add	byte ptr dword_26002+3,	dh
-		inc	byte ptr dword_26002+2
+		add	_bullet_template.stack_speed_delta, dh
+		inc	_bullet_template.BT_stack
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15EA8:
-		add	byte ptr dword_26002, 2
+		add	_bullet_template.spread, 2
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -14428,12 +14428,12 @@ loc_15EAE:
 		xor	ah, ah
 		mov	dl, 3
 		div	dl
-		cmp	al, 0Ch
+		cmp	al, 12
 		jbe	short loc_15EBA
-		mov	al, 0Ch
+		mov	al, 12
 
 loc_15EBA:
-		add	byte ptr dword_26002, al
+		add	_bullet_template.spread, al
 
 locret_15EBE:
 		retn
@@ -14462,16 +14462,16 @@ sub_15ECE	proc near
 		mov	al, _playperf
 		cmp	al, 38
 		jb	short loc_15EE3
-		inc	byte ptr dword_26002+2
+		inc	_bullet_template.BT_stack
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_15EE3:
 		cmp	al, 18h
 		ja	short locret_15EF2
-		cmp	byte ptr dword_26002+2,	2
+		cmp	_bullet_template.BT_stack, 2
 		jb	short locret_15EF2
-		dec	byte ptr dword_26002+2
+		dec	_bullet_template.BT_stack
 
 locret_15EF2:
 		retn
@@ -14695,9 +14695,9 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		push	di
-		mov	cx, 7
+		mov	cx, size _bullet_template / 2
 		mov	si, [bp+arg_0]
-		mov	di, 561Ah
+		mov	di, offset _bullet_template
 		push	ds
 		pop	es
 		assume es:_DATA
@@ -14859,9 +14859,9 @@ loc_161FC:
 		push	ax
 		call	sub_16065
 		mov	ax, [si+2]
-		add	point_25FFC.x, ax
+		add	_bullet_template.BT_origin.x, ax
 		mov	ax, [si+4]
-		add	point_25FFC.y, ax
+		add	_bullet_template.BT_origin.y, ax
 		call	fp_25344
 		call	sub_15A5C
 
@@ -15469,11 +15469,11 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		push	di
-		mov	cx, 7
+		mov	cx, size _bullet_template / 2
 		push	ds
 		pop	es
 		assume es:_DATA
-		mov	si, 561Ah
+		mov	si, offset _bullet_template
 		mov	di, [bp+arg_0]
 		add	di, 18h
 		rep movsw
@@ -15504,9 +15504,9 @@ loc_169A5:
 		mov	byte ptr [si], 1
 		push	si
 		call	sub_1697E
-		mov	ax, word ptr dword_2A722
+		mov	ax, point_2A722.x
 		mov	[si+2],	ax
-		mov	ax, word ptr dword_2A722+2
+		mov	ax, point_2A722.y
 		mov	[si+4],	ax
 		mov	ax, word_2A72A
 		mov	[si+0Eh], ax
@@ -15564,9 +15564,9 @@ loc_16A0E:
 		jnz	short loc_16A5F
 		mov	byte ptr [si], 1
 		mov	byte ptr [si+18h], 0FFh
-		mov	ax, word ptr dword_2A722
+		mov	ax, point_2A722.x
 		mov	[si+2],	ax
-		mov	ax, word ptr dword_2A722+2
+		mov	ax, point_2A722.y
 		mov	[si+4],	ax
 		mov	ax, word_2A72A
 		mov	[si+0Eh], ax
@@ -15658,10 +15658,10 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		push	di
-		mov	cx, 7
+		mov	cx, size _bullet_template / 2
 		push	ds
 		pop	es
-		mov	di, 561Ah
+		mov	di, offset _bullet_template
 		mov	si, [bp+arg_0]
 		add	si, 18h
 		rep movsw
@@ -15713,17 +15713,17 @@ loc_16ACB:
 		push	si
 		call	sub_16A95
 		mov	ax, [si+2]
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, [si+4]
-		mov	point_25FFC.y, ax
-		cmp	byte ptr word_25FFA, 0FEh
+		mov	_bullet_template.BT_origin.y, ax
+		cmp	_bullet_template.spawn_type, 0FEh
 		jnb	short loc_16B0F
 		call	sub_15A5C
 		jmp	short loc_16B17
 ; ---------------------------------------------------------------------------
 
 loc_16B0F:
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		call	sub_15A70
 
 loc_16B17:
@@ -18023,25 +18023,25 @@ loc_18029:
 		idiv	si
 		or	dx, dx
 		jnz	loc_180BC
-		mov	byte ptr word_25FFA, 0
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.spawn_type, 0
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 0Ah
-		mov	word ptr dword_26002, 204h
+		mov	_bullet_template.BT_special_motion, 0Ah
+		mov	word ptr _bullet_template.spread, (2 shl 8) or 4
 		mov	al, _boss_angle
-		mov	byte ptr word_26006, al
-		add	al, 20
+		mov	_bullet_template.BT_angle, al
+		add	al, 14h
 		mov	_boss_angle, al
 		call	fp_25344
 		call	sub_15A70
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	byte ptr word_25FFA, 2
-		mov	byte ptr word_26006+1, 18h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 2
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		call	fp_25344
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		push	_midboss_pos.cur.x
 		push	(32 shl 4)
 		mov	ah, 0
@@ -18049,16 +18049,16 @@ loc_18029:
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	vector1_at
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		push	_midboss_pos.cur.y
 		push	(32 shl 4)
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	point_25FFC.y, ax
+		mov	_bullet_template.BT_origin.y, ax
 		call	sub_15A5C
 
 loc_180BC:
@@ -18077,7 +18077,7 @@ midboss1_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
+		mov	_bullet_template.BT_origin, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -18229,12 +18229,12 @@ sub_1823B	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18274
-		mov	byte ptr word_25FFA, 2
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	fp_25344
 		call	sub_15A5C
 		mov	al, byte_2D085
@@ -18260,12 +18260,12 @@ sub_18276	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_182AF
-		mov	byte ptr word_25FFA, 2
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	fp_25344
 		call	sub_15A5C
 		mov	al, byte_2D084
@@ -18287,12 +18287,12 @@ sub_182B1	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_182EB
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_26006, 0
-		mov	dword_26002, 7051005h
-		mov	byte ptr word_26006+1, 10h
+		mov	_bullet_template.BT_angle, 0
+		mov	dword ptr _bullet_template.spread, (7 shl 24) or (5 shl 16) or (16 shl 8) or 5
+		mov	_bullet_template.speed, (1 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 15
@@ -18316,15 +18316,15 @@ sub_182ED	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18339
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_STACK
 		mov	al, _boss_angle
 		add	al, byte_2D083
 		add	al, 80h
-		mov	byte ptr word_26006, al
-		mov	word ptr dword_26002+2,	608h
-		mov	byte ptr word_26006+1, 10h
+		mov	_bullet_template.BT_angle, al
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
+		mov	_bullet_template.speed, (1 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 		mov	al, byte_2D083
@@ -18436,38 +18436,36 @@ sub_183F5	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1847B
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, 0
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		push	ax
 		call	randring2_next16_mod
 		sub	al, byte ptr _boss_phase_frame
-		add	al, 64
-		mov	byte ptr word_26006, al
-		mov	word ptr dword_26002, 303h
-		mov	byte_26001, 0Ah
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 10h
-		mov	byte ptr word_26006+1, al
+		add	al, 40h
+		mov	_bullet_template.BT_angle, al
+		mov	word ptr _bullet_template.spread, (3 shl 8) or 3
+		mov	_bullet_template.BT_special_motion, 0Ah
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4)
+		mov	_bullet_template.speed, al
 		call	fp_25344
 		call	sub_15A70
-		mov	byte ptr word_25FFA, 3
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 3
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		push	ax
 		call	randring2_next16_mod
 		sub	al, byte ptr _boss_phase_frame
-		add	al, 64
-		mov	byte ptr word_26006, al
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 18h
-		mov	byte ptr word_26006+1, al
+		add	al, 40h
+		mov	_bullet_template.BT_angle, al
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4) + 8
+		mov	_bullet_template.speed, al
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -18491,13 +18489,13 @@ sub_1847D	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_184BA
-		mov	byte ptr word_25FFA, 2
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_RING
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	byte ptr dword_26002, 0Ch
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	_bullet_template.spread, 12
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -18521,26 +18519,26 @@ sub_184BC	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18524
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr dword_26002, 3
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spread, 3
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_2D083
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18506
-		mov	al, byte ptr word_26006+1
+		mov	al, _bullet_template.speed
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 
 loc_18506:
 		call	fp_25344
@@ -18572,26 +18570,26 @@ sub_18526	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1858E
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr dword_26002, 3
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spread, 3
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_2D083
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18570
-		mov	al, byte ptr word_26006+1
+		mov	al, _bullet_template.speed
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 
 loc_18570:
 		call	fp_25344
@@ -18680,23 +18678,23 @@ loc_1863B:
 loc_1863F:
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1869C
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 0Ah
-		push	(261 shl 16) or 262
-		push	(263 shl 16) or 264
+		mov	_bullet_template.BT_special_motion, 0Ah
+		push	(((1 shl 8) or 5) shl 16) or ((1 shl 8) or 6)
+		push	(((1 shl 8) or 7) shl 16) or ((1 shl 8) or 8)
 		call	select_for_rank
-		mov	word ptr dword_26002, ax
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	byte ptr word_25FFA+1, 0
+		mov	word ptr _bullet_template.spread, ax
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	_bullet_template.patnum, 0
 		call	sub_15A70
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr word_26006+1, 10h
+		mov	_bullet_template.speed, (1 shl 4)
 		mov	al, byte_2D084
-		mov	byte ptr dword_26002, al
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spread, al
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		call	sub_15A5C
 		mov	al, byte_2D085
 		add	al, 0Eh
@@ -18732,10 +18730,10 @@ sara_update	proc far
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		inc	_boss_phase_frame
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		mov	eax, _boss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -18757,9 +18755,9 @@ loc_18702:
 		cmp	_boss_phase_frame, 224
 		jnz	short loc_18737
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_2A722, ax
+		mov	point_2A722.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_2A722+2,	ax
+		mov	point_2A722.y, ax
 		mov	word_2A72A, 1400h
 		mov	word_2A72C, 20h	; ' '
 		mov	byte_2A72F, 3
@@ -19036,34 +19034,34 @@ sub_18987	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_189FA
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_STACK
-		mov	word ptr dword_26002+2,	803h
-		mov	byte ptr word_26006+1, 18h
+		mov	word ptr _bullet_template.BT_stack, (8 shl 8) or 3
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	fp_25344
 		call	sub_15A5C
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, 0
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr dword_26002, 3
+		mov	_bullet_template.spread, 3
 		cmp	_midboss_hp, 600
 		jg	short loc_189DB
-		mov	byte ptr dword_26002, 6
+		mov	_bullet_template.spread, 6
 		jmp	short loc_189E8
 ; ---------------------------------------------------------------------------
 
 loc_189DB:
 		cmp	_midboss_hp, 800
 		jg	short loc_189E8
-		mov	byte ptr dword_26002, 4
+		mov	_bullet_template.spread, 4
 
 loc_189E8:
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	fp_25344
 		call	sub_15A5C
 
@@ -19082,13 +19080,13 @@ sub_189FC	proc near
 		mov	bp, sp
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_18A2D
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_STACK
-		mov	word ptr dword_26002+2,	0F03h
-		mov	byte ptr word_26006+1, 18h
+		mov	word ptr _bullet_template.BT_stack, (15 shl 8) or 3
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	fp_25344
 		call	sub_15A5C
 
@@ -19107,7 +19105,7 @@ midboss2_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
+		mov	_bullet_template.BT_origin, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -19356,24 +19354,24 @@ sub_18C94	proc near
 ; ---------------------------------------------------------------------------
 
 loc_18CB1:
-		mov	byte ptr word_25FFA, 0
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	al, byte_2D080
-		mov	byte ptr word_26006+1, al
-		mov	word ptr dword_26002, 605h
-		mov	byte_26001, 0Ah
+		mov	_bullet_template.speed, al
+		mov	word ptr _bullet_template.spread, (6 shl 8) or 5
+		mov	_bullet_template.BT_special_motion, 0Ah
 		mov	al, 1
 		sub	al, byte_2D085
 		mov	byte_2D085, al
 		cmp	byte_2D085, 0
 		jz	short loc_18CE8
-		mov	byte ptr word_26006, 20h ; ' '
+		mov	_bullet_template.BT_angle, 20h
 		jmp	short loc_18CED
 ; ---------------------------------------------------------------------------
 
 loc_18CE8:
-		mov	byte ptr word_26006, 60h
+		mov	_bullet_template.BT_angle, 60h
 
 loc_18CED:
 		call	fp_25344
@@ -19392,26 +19390,26 @@ loc_18D07:
 		or	dx, dx
 		jnz	short loc_18D52
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		cmp	byte_2D085, 0
 		jz	short loc_18D30
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 87h
 		jmp	short loc_18D35
 ; ---------------------------------------------------------------------------
 
 loc_18D30:
-		mov	al, byte ptr word_26006
-		add	al, 79h	; 'y'
+		mov	al, _bullet_template.BT_angle
+		add	al, 79h
 
 loc_18D35:
-		mov	byte ptr word_26006, al
-		mov	al, byte ptr word_26006+1
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.speed
 		add	al, 4
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -19448,15 +19446,15 @@ sub_18D54	proc near
 ; ---------------------------------------------------------------------------
 
 loc_18D6F:
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	_bullet_template.pattern, BP_STACK
-		mov	byte ptr word_26006+1, 20h ; ' '
-		push	(50Ah shl 16) or 50Ch
-		push	(60Ch shl 16) or 60Eh
+		mov	_bullet_template.speed, (2 shl 4)
+		push	(((5 shl 8) or 10) shl 16) or ((5 shl 8) or 12)
+		push	(((6 shl 8) or 12) shl 16) or ((6 shl 8) or 14)
 		call	select_for_rank
-		mov	word ptr dword_26002+2,	ax
-		mov	byte ptr word_26006, 0C0h
+		mov	word ptr _bullet_template.BT_stack, ax
+		mov	_bullet_template.BT_angle, -40h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -19471,17 +19469,17 @@ loc_18D9E:
 		call	sub_15A5C
 		cmp	byte_2D085, 0
 		jz	short loc_18DBC
-		mov	al, byte ptr word_26006
-		add	al, 0F8h
+		mov	al, _bullet_template.BT_angle
+		add	al, -8
 		jmp	short loc_18DC1
 ; ---------------------------------------------------------------------------
 
 loc_18DBC:
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 8
 
 loc_18DC1:
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 15
 		pop	bp
 		retn
@@ -19514,46 +19512,46 @@ var_1		= byte ptr -1
 		idiv	bx
 		or	dx, dx
 		jnz	loc_18EBA
-		mov	byte ptr word_25FFA, 3
+		mov	_bullet_template.spawn_type, 3
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		call	fp_25344
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.speed, (3 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18E6A
-		mov	byte ptr word_26006, 24h ; '$'
+		mov	_bullet_template.BT_angle, 24h
 		xor	si, si
 		jmp	short loc_18E63
 ; ---------------------------------------------------------------------------
 
 loc_18E21:
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		mov	[bp+var_1], al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, 40h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, [bp+var_1]
-		mov	byte ptr word_26006, al
-		mov	al, byte ptr word_26006+1
-		add	al, 0FBh
-		mov	byte ptr word_26006+1, al
-		mov	al, byte ptr word_26006
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.speed
+		add	al, -5
+		mov	_bullet_template.speed, al
+		mov	al, _bullet_template.BT_angle
 		add	al, 8
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		inc	si
 
 loc_18E63:
@@ -19563,35 +19561,35 @@ loc_18E63:
 ; ---------------------------------------------------------------------------
 
 loc_18E6A:
-		mov	byte ptr word_26006, 64h ; 'd'
+		mov	_bullet_template.BT_angle, 64h
 		xor	si, si
 		jmp	short loc_18EB5
 ; ---------------------------------------------------------------------------
 
 loc_18E73:
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		mov	[bp+var_1], al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, 0C0h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
+		mov	al, -40h
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, [bp+var_1]
-		mov	byte ptr word_26006, al
-		mov	al, byte ptr word_26006+1
-		add	al, 0FBh
-		mov	byte ptr word_26006+1, al
-		mov	al, byte ptr word_26006
+		mov	_bullet_template.BT_angle, al
+		mov	al, _bullet_template.speed
+		add	al, -5
+		mov	_bullet_template.speed, al
+		mov	al, _bullet_template.BT_angle
 		add	al, 8
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		inc	si
 
 loc_18EB5:
@@ -19703,20 +19701,20 @@ sub_18F5C	proc near
 ; ---------------------------------------------------------------------------
 
 loc_18F72:
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	_bullet_template.pattern, BP_RING_STACK_AIMED
 		mov	al, byte_2D080
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		cmp	byte_2D080, 20h	; ' '
 		jnb	short loc_18F93
 		add	al, 4
 		mov	byte_2D080, al
 
 loc_18F93:
-		mov	dword_26002, 9050818h
-		mov	byte ptr word_26006, 0
-		mov	byte_26001, 2
+		mov	dword ptr _bullet_template.spread, (9 shl 24) or (5 shl 16) or (8 shl 8) or 24
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.BT_special_motion, 2
 		mov	byte_2C976, 1
 		push	1
 		call	randring2_next16_and
@@ -19759,12 +19757,12 @@ sub_18FE2	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19038
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte_26001, 0Ah
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	word ptr dword_26002, 220h
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.BT_special_motion, 0Ah
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	word ptr _bullet_template.spread, (2 shl 8) or 32
 		call	fp_25344
 		mov	ax, _boss_phase_frame
 		mov	bx, 64
@@ -19772,12 +19770,12 @@ sub_18FE2	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19029
-		mov	byte ptr word_26006, 1Fh
+		mov	_bullet_template.BT_angle, 1Fh
 		jmp	short loc_1902E
 ; ---------------------------------------------------------------------------
 
 loc_19029:
-		mov	byte ptr word_26006, 0E1h
+		mov	_bullet_template.BT_angle, -1Fh
 
 loc_1902E:
 		call	sub_15A70
@@ -19802,10 +19800,10 @@ louise_update	proc far
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		inc	_boss_phase_frame
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		mov	eax, _boss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -20140,12 +20138,12 @@ sub_19327	proc near
 loc_19336:
 		cmp	_midboss_phase_frame, 32
 		jnz	short loc_1937A
-		mov	byte ptr word_25FFA, 2
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.spawn_type, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SPREAD_STACK
-		mov	dword_26002, 8041003h
-		mov	byte ptr word_26006, 40h
+		mov	dword ptr _bullet_template.spread, (8 shl 24) or (4 shl 16) or (16 shl 8) or 3
+		mov	_bullet_template.BT_angle, 40h
 
 loc_1935F:
 		call	fp_25344
@@ -20161,18 +20159,18 @@ loc_1935F:
 loc_1937A:
 		cmp	_midboss_phase_frame, 48
 		jnz	short loc_19396
-		mov	byte ptr word_25FFA+1, 30h ; '0'
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	dword_26002, 8040504h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	dword ptr _bullet_template.spread, (8 shl 24) or (4 shl 16) or (5 shl 8) or 4
 		jmp	short loc_1935F
 ; ---------------------------------------------------------------------------
 
 loc_19396:
 		cmp	_midboss_phase_frame, 64
 		jnz	short loc_193B2
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	dword_26002, 8040A07h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	dword ptr _bullet_template.spread, (8 shl 24) or (4 shl 16) or (10 shl 8) or 7
 		jmp	short loc_1935F
 ; ---------------------------------------------------------------------------
 
@@ -20204,12 +20202,12 @@ sub_193BE	proc near
 loc_193CD:
 		cmp	_midboss_phase_frame, 32
 		jnz	short loc_193F5
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	word ptr dword_26002+2,	808h
-		mov	byte ptr word_26006, 0
+		mov	word ptr _bullet_template.BT_stack, (8 shl 8) or 8
+		mov	_bullet_template.BT_angle, 0
 		jmp	short loc_19420
 ; ---------------------------------------------------------------------------
 
@@ -20217,14 +20215,14 @@ loc_193F5:
 		cmp	_midboss_phase_frame, 48
 		jnz	short loc_19437
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_25FFA+1, 30h ; '0'
-		push	(101h shl 16) or 402h
-		push	(303h shl 16) or 404h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
+		push	(((1 shl 8) or 1) shl 16) or ((4 shl 8) or 2)
+		push	(((3 shl 8) or 3) shl 16) or ((4 shl 8) or 4)
 
 loc_19412:
 		call	select_for_rank
-		mov	word ptr dword_26002, ax
-		mov	word ptr dword_26002+2,	808h
+		mov	word ptr _bullet_template.spread, ax
+		mov	word ptr _bullet_template.BT_stack, (8 shl 8) or 8
 
 loc_19420:
 		call	sub_15A5C
@@ -20239,9 +20237,9 @@ loc_19420:
 loc_19437:
 		cmp	_midboss_phase_frame, 64
 		jnz	short loc_19451
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		push	1010503h
-		push	5040405h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		push	(((1 shl 8) or 1) shl 16) or ((5 shl 8) or 3)
+		push	(((5 shl 8) or 4) shl 16) or ((4 shl 8) or 5)
 		jmp	short loc_19412
 ; ---------------------------------------------------------------------------
 
@@ -20273,13 +20271,13 @@ sub_1945D	proc near
 loc_1946C:
 		cmp	_midboss_phase_frame, 32
 		jnz	short loc_194B1
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 34h ; '4'
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
+		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr dword_26002, 10h
-		mov	byte ptr dword_26002+1,	8
-		mov	byte ptr word_26006, 40h
+		mov	_bullet_template.spread, 16
+		mov	_bullet_template.spread_angle_delta, 8
+		mov	_bullet_template.BT_angle, 40h
 
 loc_19496:
 		call	fp_25344
@@ -20295,17 +20293,17 @@ loc_19496:
 loc_194B1:
 		cmp	_midboss_phase_frame, 48
 		jnz	short loc_194C9
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	byte ptr dword_26002, 15h
-		mov	byte ptr dword_26002+1,	4
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	_bullet_template.spread, 21
+		mov	_bullet_template.spread_angle_delta, 4
 		jmp	short loc_19496
 ; ---------------------------------------------------------------------------
 
 loc_194C9:
 		cmp	_midboss_phase_frame, 64
 		jnz	short loc_194DC
-		mov	byte ptr dword_26002, 10h
-		mov	byte ptr dword_26002+1,	8
+		mov	_bullet_template.spread, 16
+		mov	_bullet_template.spread_angle_delta, 8
 		jmp	short loc_19496
 ; ---------------------------------------------------------------------------
 
@@ -20329,8 +20327,8 @@ midboss3_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -20778,14 +20776,14 @@ loc_198CF:
 		jnb	short loc_19912
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_19912
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
+		mov	_bullet_template.BT_origin, eax
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	fp_25344
 		call	sub_15A5C
 		mov	word ptr [si+12h], 0C2h
@@ -20834,14 +20832,14 @@ loc_19940:
 		mov	word ptr [si+12h], 0C2h
 		cmp	word ptr [si+0Eh], 20h ; ' '
 		jnz	short loc_19984
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.BT_origin, eax
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	dword_26002, 5051203h
-		mov	byte ptr word_26006, 0
+		mov	dword ptr _bullet_template.spread, (5 shl 24) or (5 shl 16) or (18 shl 8) or 3
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		jmp	short loc_19993
@@ -20891,14 +20889,14 @@ loc_199B2:
 		jnb	short loc_199F9
 		test	byte ptr [si+0Eh], 7
 		jnz	short loc_199F9
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_origin, eax
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	word ptr dword_26002, 1005h
-		mov	byte ptr word_26006, 0
+		mov	word ptr _bullet_template.spread, (16 shl 8) or 5
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		jmp	short loc_19A08
@@ -20948,14 +20946,14 @@ loc_19A27:
 		jnb	short loc_19A6E
 		test	byte ptr [si+0Eh], 7
 		jnz	short loc_19A6E
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_origin, eax
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING_AIMED
-		mov	word ptr dword_26002, 80Ch
-		mov	byte ptr word_26006, 0
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 12
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		jmp	short loc_19A7D
@@ -21003,14 +21001,14 @@ loc_19A9C:
 		mov	word ptr [si+12h], 0C2h
 		test	byte ptr _stage_frame, 1Fh
 		jnz	short loc_19ADC
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.BT_origin, eax
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	word ptr dword_26002, 0C07h
-		mov	byte ptr word_26006, 0
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 7
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 
@@ -21088,9 +21086,9 @@ sub_19B04	proc near
 loc_19B2F:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_19B9B
-		mov	byte ptr word_25FFA, 2
+		mov	_bullet_template.spawn_type, 2
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr dword_26002, 2
+		mov	_bullet_template.spread, 2
 		call	fp_25344
 		xor	si, si
 		jmp	short loc_19B8A
@@ -21099,7 +21097,7 @@ loc_19B2F:
 loc_19B4D:
 		test	si, 1
 		jz	short loc_19B57
-		mov	al, 2Ch	; ','
+		mov	al, PAT_BULLET16_N_BLUE
 		jmp	short loc_19B59
 ; ---------------------------------------------------------------------------
 
@@ -21107,21 +21105,18 @@ loc_19B57:
 		mov	al, 0
 
 loc_19B59:
-		mov	byte ptr word_25FFA+1, al
-		push	3Fh ; '?'
-		call	randring2_next16_and
-		add	al, 0Ch
-		mov	byte ptr word_26006+1, al
-		push	300h
-		call	randring2_next16_mod
+		mov	_bullet_template.patnum, al
+		call	randring2_next16_and pascal, 3Fh
+		add	al, 12
+		mov	_bullet_template.speed, al
+		call	randring2_next16_mod pascal, (48 shl 4)
 		add	ax, _boss_pos.cur.x
 		sub	ax, (24 shl 4)
-		mov	point_25FFC.x, ax
-		push	300h
-		call	randring2_next16_mod
+		mov	_bullet_template.BT_origin.x, ax
+		call	randring2_next16_mod pascal, (48 shl 4)
 		add	ax, _boss_pos.cur.y
 		sub	ax, (32 shl 4)
-		mov	point_25FFC.y, ax
+		mov	_bullet_template.BT_origin.y, ax
 		call	sub_15A5C
 		inc	si
 
@@ -21184,12 +21179,12 @@ sub_19BB8	proc near
 loc_19BE2:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_19C20
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING_STACK_AIMED
-		mov	byte ptr word_25FFA+1, 30h ; '0'
-		mov	dword_26002, 804081Ch
-		mov	byte ptr word_26006+1, 18h
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
+		mov	dword ptr _bullet_template.spread, (8 shl 24) or (4 shl 16) or (8 shl 8) or 28
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		mov	_boss_sprite, 180
@@ -21237,12 +21232,12 @@ sub_19C34	proc near
 loc_19C5E:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_19C9C
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	dword_26002, 7050807h
-		mov	byte ptr word_26006+1, 18h
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	dword ptr _bullet_template.spread, (7 shl 24) or (5 shl 16) or (8 shl 8) or 7
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		mov	_boss_sprite, 180
@@ -21334,9 +21329,9 @@ loc_19D4C:
 ; ---------------------------------------------------------------------------
 
 loc_19D56:
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SINGLE
 		call	fp_25344
 		mov	word_2CED6, 380h
@@ -21375,16 +21370,16 @@ loc_19DBD:
 		idiv	bx
 		cmp	dx, word_2CE30
 		jnb	short locret_19E10
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.BT_angle, 0
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002+2,	608h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
+		mov	_bullet_template.speed, (2 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -21422,7 +21417,7 @@ loc_19E43:
 		jnz	short loc_19EC6
 		mov	_laser_template.LASER_color, 6
 		mov	_laser_template.coords.LASER_width, 8
-		mov	eax, point_25FFC
+		mov	eax, _bullet_template.BT_origin
 		mov	_laser_template.coords.origin, eax
 		mov	_laser_template.grow_at_age, 40
 		mov	_laser_template.shootout_speed, (5 shl 4)
@@ -21443,12 +21438,12 @@ loc_19E43:
 		add	al, -32
 		mov	_laser_template.coords.angle, al
 		call	lasers_add_shoutout
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	word ptr dword_26002, 814h
-		mov	byte ptr word_26006+1, 18h
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 20
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		call	sub_15A5C
 		mov	_boss_sprite, 180
@@ -21498,18 +21493,18 @@ loc_19F0E:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19F61
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		mov	word ptr dword_26002+2,	708h
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		mov	word ptr _bullet_template.BT_stack, (7 shl 8) or 8
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	fp_25344
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		neg	al
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, byte_2D085
 		add	al, 5
@@ -21559,14 +21554,14 @@ loc_19FA9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_19FF1
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr word_25FFA+1, 30h ; '0'
-		mov	word ptr dword_26002, 714h
-		mov	byte ptr word_26006+1, 28h ; '('
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
+		mov	word ptr _bullet_template.spread, (7 shl 8) or 20
+		mov	_bullet_template.speed, (2 shl 4) + 8
 		call	fp_25344
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, byte_2D085
 		add	al, 2
@@ -21593,18 +21588,18 @@ sub_19F75	endp
 sub_1A005	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr word_26006, 40h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A042
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	word ptr dword_26002, 0A0Dh
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 13
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -21629,14 +21624,14 @@ alice_update	proc far
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		inc	_boss_phase_frame
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.spawn_type, 0
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	eax, point_25FFC
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin.y, ax
+		mov	eax, _bullet_template.BT_origin
+		mov	point_2A722, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -22168,7 +22163,7 @@ mai_yuki_1A556	proc near
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1A58D
 		mov	eax, _boss_pos.cur
-		mov	dword_2A722, eax
+		mov	point_2A722, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
 		push	ax
@@ -22213,7 +22208,7 @@ mai_yuki_1A5B3	proc near
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1A5DC
 		mov	eax, _yuki_pos.cur
-		mov	dword_2A722, eax
+		mov	point_2A722, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
 		push	ax
@@ -22249,23 +22244,21 @@ sub_1A5EB	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A641
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		push	3Fh ; '?'
-		call	randring2_next16_and
-		sub	al, 20h	; ' '
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 2Fh ; '/'
+		call	randring2_next16_and pascal, 3Fh
+		sub	al, 20h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002+2,	602h
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 10h
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 2
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4)
+		mov	_bullet_template.speed, al
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -22294,18 +22287,18 @@ sub_1A651	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1A69C
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte_26001, 1
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_25FFA+1, 74h ; 't'
+		mov	_bullet_template.BT_special_motion, 1
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 810h
-		mov	byte ptr word_26006+1, 3Ch ; '<'
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 16
+		mov	_bullet_template.speed, (3 shl 4) + 12
 		call	fp_25344
 		call	sub_15A9C
 		call	snd_se_play pascal, 3
@@ -22343,20 +22336,20 @@ loc_1A6BA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A709
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		add	al, 5
 		mov	byte_2D085, al
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 0A05h
-		mov	byte ptr word_26006+1, 32h ; '2'
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 5
+		mov	_bullet_template.speed, (3 shl 4) + 2
 		call	fp_25344
 		call	sub_15A8E
 		call	snd_se_play pascal, 3
@@ -22389,17 +22382,17 @@ sub_1A719	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A765
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr word_26006, 40h
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 0C08h
-		mov	byte ptr word_26006+1, 40h
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 8
+		mov	_bullet_template.speed, (4 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -22530,20 +22523,20 @@ loc_1A843:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A8B9
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RING
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_2D082
 		add	byte_2D085, al
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
 		mov	ax, _boss_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	byte ptr dword_26002, 4
-		mov	byte ptr word_26006+1, 26h ; '&'
+		mov	_bullet_template.BT_origin.y, ax
+		mov	_bullet_template.spread, 4
+		mov	_bullet_template.speed, (2 shl 4) + 6
 		call	fp_25344
 		call	sub_15A5C
 		mov	ax, _boss_phase_frame
@@ -22593,24 +22586,22 @@ mai_yuki_1A8C9	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A91D
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		push	3Fh ; '?'
-		call	randring2_next16_and
-		sub	al, 20h	; ' '
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		call	randring2_next16_and pascal, 3Fh
+		sub	al, 20h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 507h
-		mov	byte_26001, 0Ah
-		push	31
-		call	randring2_next16_and
-		add	al, 10h
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (5 shl 8) or 7
+		mov	_bullet_template.BT_special_motion, 0Ah
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4)
+		mov	_bullet_template.speed, al
 		call	fp_25344
 		call	sub_15A70
 
@@ -22634,18 +22625,18 @@ sub_1A921	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A966
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RING
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	byte ptr dword_26002, 20h ; ' '
-		mov	byte ptr word_26006+1, 28h ; '('
+		mov	_bullet_template.BT_origin.y, ax
+		mov	_bullet_template.spread, 32
+		mov	_bullet_template.speed, (2 shl 4) + 8
 		call	fp_25344
 		call	sub_15A5C
 
@@ -22669,17 +22660,17 @@ sub_1A96A	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A9AF
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002+2,	408h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.BT_stack, (4 shl 8) or 8
+		mov	_bullet_template.speed, (2 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 
@@ -22703,17 +22694,17 @@ mai_yuki_1A9B3	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1A9FF
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr word_26006, 40h
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 0C08h
-		mov	byte ptr word_26006+1, 40h
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 8
+		mov	_bullet_template.speed, (4 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
@@ -22738,17 +22729,17 @@ mai_yuki_1AA03	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1AA48
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002+2,	608h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
+		mov	_bullet_template.speed, (2 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 
@@ -22772,21 +22763,20 @@ mai_yuki_1AA4C	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1AA97
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, 0
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	word ptr dword_26002, 202h
-		push	31
-		call	randring2_next16_and
-		add	al, 18h
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.BT_origin.y, ax
+		mov	word ptr _bullet_template.spread, (2 shl 8) or 2
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4) + 8
+		mov	_bullet_template.speed, al
 		call	fp_25344
 		call	sub_15A5C
 
@@ -22816,20 +22806,20 @@ loc_1AAAF:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1AB1B
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RING
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_2D083
 		add	byte_2D084, al
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	ax, _yuki_pos.cur.x
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _yuki_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_25FFC.y, ax
-		mov	byte ptr dword_26002, 4
-		mov	byte ptr word_26006+1, 26h ; '&'
+		mov	_bullet_template.BT_origin.y, ax
+		mov	_bullet_template.spread, 4
+		mov	_bullet_template.speed, (2 shl 4) + 6
 		call	fp_25344
 		call	sub_15A5C
 		mov	ax, _boss_phase_frame
@@ -23476,9 +23466,9 @@ sub_1B0A4	proc near
 		cmp	_midboss_phase_frame, 16
 		jnz	short loc_1B0CE
 		call	snd_se_play pascal, 8
-		mov	byte ptr word_25FFA, 2
+		mov	_bullet_template.spawn_type, 2
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr dword_26002, 7
+		mov	_bullet_template.spread, 7
 		call	fp_25344
 		mov	_midboss_sprite, 212
 
@@ -23493,7 +23483,7 @@ loc_1B0CE:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1B139
-		mov	byte ptr word_26006+1, 8
+		mov	_bullet_template.speed, 8
 		xor	si, si
 		jmp	short loc_1B12D
 ; ---------------------------------------------------------------------------
@@ -23509,21 +23499,19 @@ loc_1B0FC:
 		mov	al, 0
 
 loc_1B0FE:
-		mov	byte ptr word_25FFA+1, al
-		push	300h
-		call	randring2_next16_mod
+		mov	_bullet_template.patnum, al
+		call	randring2_next16_mod pascal, (48 shl 4)
 		add	ax, _midboss_pos.cur.x
 		sub	ax, (24 shl 4)
-		mov	point_25FFC.x, ax
-		push	300h
-		call	randring2_next16_mod
+		mov	_bullet_template.BT_origin.x, ax
+		call	randring2_next16_mod pascal, (48 shl 4)
 		add	ax, _midboss_pos.cur.y
 		sub	ax, (32 shl 4)
-		mov	point_25FFC.y, ax
+		mov	_bullet_template.BT_origin.y, ax
 		call	sub_15A8E
-		mov	al, byte ptr word_26006+1
-		add	al, 10h
-		mov	byte ptr word_26006+1, al
+		mov	al, _bullet_template.speed
+		add	al, (1 shl 4)
+		mov	_bullet_template.speed, al
 		inc	si
 
 loc_1B12D:
@@ -23556,10 +23544,10 @@ sub_1B153	proc near
 		jnz	short loc_1B17C
 		call	snd_se_play pascal, 8
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr dword_26002, 10h
+		mov	_bullet_template.spread, 16
 		call	fp_25344
 		mov	_midboss_sprite, 212
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 
 loc_1B17C:
 		cmp	_midboss_phase_frame, 48
@@ -23578,20 +23566,20 @@ loc_1B17C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1B1B0
-		mov	byte ptr word_26006+1, 38h ; '8'
-		mov	byte ptr word_25FFA, 2
+		mov	_bullet_template.speed, (3 shl 4) + 8
+		mov	_bullet_template.spawn_type, 2
 		jmp	short loc_1B1BA
 ; ---------------------------------------------------------------------------
 
 loc_1B1B0:
-		mov	byte ptr word_26006+1, 28h ; '('
-		mov	byte ptr word_25FFA, 0
+		mov	_bullet_template.speed, (2 shl 4) + 8
+		mov	_bullet_template.spawn_type, 0
 
 loc_1B1BA:
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 4
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 3
 
 loc_1B1CC:
@@ -23617,12 +23605,12 @@ sub_1B1E5	proc near
 		cmp	_midboss_phase_frame, 16
 		jnz	short loc_1B221
 		call	snd_se_play pascal, 8
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_26006, 20h ; ' '
-		mov	dword_26002, 4040803h
-		mov	byte ptr word_26006+1, 10h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.BT_angle, 20h
+		mov	dword ptr _bullet_template.spread, (4 shl 24) or (4 shl 16) or (8 shl 8) or 3
+		mov	_bullet_template.speed, (1 shl 4)
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		call	fp_25344
 		mov	_midboss_sprite, 212
 
@@ -23638,12 +23626,12 @@ loc_1B221:
 		or	dx, dx
 		jnz	short loc_1B256
 		call	sub_15A5C
-		mov	al, byte ptr word_26006+1
-		add	al, 0Ch
-		mov	byte ptr word_26006+1, al
-		mov	al, byte ptr word_26006
-		add	al, 0F8h
-		mov	byte ptr word_26006, al
+		mov	al, _bullet_template.speed
+		add	al, 12
+		mov	_bullet_template.speed, al
+		mov	al, _bullet_template.BT_angle
+		add	al, -8
+		mov	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 15
 
 loc_1B256:
@@ -23668,8 +23656,8 @@ midboss4_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -23972,7 +23960,7 @@ loc_1B4D2:
 		cmp	word ptr [si+4], 0F00h
 		jg	short loc_1B52C
 		mov	eax, [si+2]
-		mov	point_25FFC, eax
+		mov	_bullet_template.BT_origin, eax
 		call	sub_15A5C
 
 loc_1B52C:
@@ -24019,14 +24007,14 @@ sub_1B557	proc near
 		call	randring2_next16
 		mov	byte_2D085, al
 		mov	byte_2D084, 1
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte_26001, 0Ah
-		mov	byte ptr word_25FFA+1, 32h ; '2'
+		mov	_bullet_template.BT_special_motion, 0Ah
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
 		mov	al, _rank
 		add	al, 5
-		mov	byte ptr dword_26002, al
-		mov	byte ptr word_26006+1, 36h ; '6'
+		mov	_bullet_template.spread, al
+		mov	_bullet_template.speed, (3 shl 4) + 6
 		mov	_boss_sprite, 208
 		call	fp_25344
 		jmp	loc_1B624
@@ -24042,7 +24030,7 @@ loc_1B599:
 		or	dx, dx
 		jnz	short loc_1B5E2
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	al, byte_2D084
 		add	byte_2D085, al
 		call	sub_15A70
@@ -24106,11 +24094,11 @@ sub_1B628	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 8
 		jnz	short loc_1B64D
-		mov	byte ptr word_26006, 80h
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.BT_angle, 80h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_boss_sprite, 208
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		jmp	short loc_1B6C0
 ; ---------------------------------------------------------------------------
 
@@ -24123,19 +24111,18 @@ loc_1B64D:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1B68E
-		push	1Fh
-		call	randring2_next16_and
+		call	randring2_next16_and pascal, 1Fh
 		add	al, 8
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		push	7
 		call	randring2_next16_and
-		mov	byte ptr dword_26002, al
-		mov	byte ptr dword_26002+1,	6
+		mov	_bullet_template.spread, al
+		mov	_bullet_template.spread_angle_delta, 6
 		call	fp_25344
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 6
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 3
 
 loc_1B68E:
@@ -24176,10 +24163,10 @@ sub_1B6C4	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 8
 		jnz	short loc_1B6ED
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr dword_26002, 18h
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.spread, 24
 		call	fp_25344
 		mov	_boss_sprite, 208
 		jmp	short loc_1B750
@@ -24195,11 +24182,10 @@ loc_1B6ED:
 		or	dx, dx
 		jnz	short loc_1B71B
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 20h	; ' '
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.BT_angle, al
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (2 shl 4)
+		mov	_bullet_template.speed, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 15
 
@@ -24247,11 +24233,11 @@ sub_1B754	proc near
 		push	ax
 		push	90008h
 		call	sub_16A6B
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr word_25FFA+1, 30h ; '0'
-		mov	word ptr dword_26002, 0C05h
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 5
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 		mov	_boss_sprite, 208
 		mov	byte_2BC88, 40h
@@ -24265,10 +24251,9 @@ loc_1B799:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1B7F9
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 10h
-		mov	byte ptr word_26006+1, al
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (1 shl 4)
+		mov	_bullet_template.speed, al
 		call	sub_15A5C
 		push	point_2BC72.x
 		push	point_2BC72.y
@@ -24403,12 +24388,12 @@ sub_1B8C8	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 24
 		jnz	short loc_1B8FC
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_STACK
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
-		mov	word ptr dword_26002+2,	608h
-		mov	byte ptr word_26006, 10h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
+		mov	_bullet_template.BT_angle, 10h
+		mov	_bullet_template.speed, (2 shl 4)
 		call	fp_25344
 		mov	_boss_sprite, 208
 		jmp	short loc_1B96F
@@ -24424,7 +24409,7 @@ loc_1B8FC:
 		or	dx, dx
 		jnz	short loc_1B927
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		mov	al, byte_2D084
 		add	byte_2D085, al
@@ -24480,17 +24465,17 @@ sub_1B973	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 8
 		jnz	short loc_1B9AC
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
-		mov	byte_26001, 3
+		mov	_bullet_template.BT_special_motion, 3
 		mov	byte_2C976, 1
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	al, _rank
 		add	al, al
 		add	al, 4
-		mov	byte ptr dword_26002, al
+		mov	_bullet_template.spread, al
 		mov	_boss_sprite, 208
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.speed, (2 shl 4)
 		jmp	short loc_1B9EE
 ; ---------------------------------------------------------------------------
 
@@ -24545,8 +24530,8 @@ yuki_update	proc far
 		mov	bp, sp
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	point_2BC72, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
@@ -24864,11 +24849,11 @@ sub_1BD2C	proc near
 		push	si
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1BD57
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
-		mov	byte ptr dword_26002, 2
-		mov	byte ptr word_26006, 40h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
+		mov	_bullet_template.spread, 2
+		mov	_bullet_template.BT_angle, 40h
 		mov	_boss_sprite, 192
 		jmp	short loc_1BDCB
 ; ---------------------------------------------------------------------------
@@ -24882,20 +24867,20 @@ loc_1BD57:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1BD99
-		mov	byte ptr dword_26002+1,	0Ch
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.spread_angle_delta, 12
+		mov	_bullet_template.speed, (3 shl 4)
 		xor	si, si
 		jmp	short loc_1BD8D
 ; ---------------------------------------------------------------------------
 
 loc_1BD79:
 		call	sub_15A5C
-		mov	al, byte ptr dword_26002+1
+		mov	al, _bullet_template.spread_angle_delta
 		add	al, 8
-		mov	byte ptr dword_26002+1,	al
-		mov	al, byte ptr word_26006+1
+		mov	_bullet_template.spread_angle_delta, al
+		mov	al, _bullet_template.speed
 		add	al, 6
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		inc	si
 
 loc_1BD8D:
@@ -24943,16 +24928,16 @@ sub_1BDD0	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1BE12
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_STACK
 		mov	byte_2C976, 1
-		mov	byte_26001, 2
-		mov	byte ptr word_25FFA+1, 74h ; 't'
+		mov	_bullet_template.BT_special_motion, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	al, _rank
 		add	al, 4
-		mov	byte ptr dword_26002+2,	al
-		mov	byte ptr dword_26002+3,	10h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_stack, al
+		mov	_bullet_template.stack_speed_delta, (1 shl 4)
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_boss_sprite, 192
 		mov	byte_2D085, 60h
 		jmp	loc_1BE92
@@ -24974,7 +24959,7 @@ loc_1BE12:
 		or	dx, dx
 		jnz	short loc_1BE40
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	byte_2C977, 0C0h
 		jmp	short loc_1BE4E
 ; ---------------------------------------------------------------------------
@@ -24982,7 +24967,7 @@ loc_1BE12:
 loc_1BE40:
 		mov	al, 80h
 		sub	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	byte_2C977, 40h
 
 loc_1BE4E:
@@ -25037,13 +25022,13 @@ sub_1BE96	proc near
 		mov	si, dx
 		or	si, si
 		jnz	short loc_1BED4
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 2
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	word ptr dword_26002, 0C03h
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.BT_special_motion, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 3
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 
 loc_1BED4:
@@ -25056,9 +25041,9 @@ loc_1BED4:
 		or	dx, dx
 		jnz	short loc_1BEF1
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 6
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 
 loc_1BEF1:
 		pop	si
@@ -25083,13 +25068,13 @@ sub_1BEF4	proc near
 		mov	si, dx
 		or	si, si
 		jnz	short loc_1BF31
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte_26001, 2
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	byte ptr dword_26002, 18h
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.BT_special_motion, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		mov	_bullet_template.spread, 24
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	_bullet_template.BT_angle, 0
 		call	fp_25344
 
 loc_1BF31:
@@ -25102,7 +25087,7 @@ loc_1BF31:
 		or	dx, dx
 		jnz	short loc_1BF4A
 		call	sub_15A5C
-		inc	byte ptr word_26006
+		inc	_bullet_template.BT_angle
 
 loc_1BF4A:
 		pop	si
@@ -25132,11 +25117,11 @@ sub_1BF4D	proc near
 		mov	word_2BC84, 18h
 		mov	word_2BC80, 1
 		mov	word_2BC82, 0D4h
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr dword_26002, 4
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.spread, 4
+		mov	_bullet_template.speed, (2 shl 4)
 		call	fp_25344
 
 loc_1BF9C:
@@ -25198,25 +25183,25 @@ loc_1C004:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1C0AD
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr word_25FFA+1, 2Dh ; '-'
-		mov	byte ptr dword_26002, 2
-		mov	byte ptr word_26006, 40h
-		mov	byte ptr dword_26002+1,	0Ch
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
+		mov	_bullet_template.spread, 2
+		mov	_bullet_template.BT_angle, 40h
+		mov	_bullet_template.spread_angle_delta, 12
+		mov	_bullet_template.speed, (3 shl 4)
 		xor	si, si
 		jmp	short loc_1C057
 ; ---------------------------------------------------------------------------
 
 loc_1C043:
 		call	sub_15A5C
-		mov	al, byte ptr dword_26002+1
+		mov	al, _bullet_template.spread_angle_delta
 		add	al, 8
-		mov	byte ptr dword_26002+1,	al
-		mov	al, byte ptr word_26006+1
+		mov	_bullet_template.spread_angle_delta, al
+		mov	al, _bullet_template.speed
 		add	al, 6
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		inc	si
 
 loc_1C057:
@@ -25224,9 +25209,9 @@ loc_1C057:
 		jl	short loc_1C043
 		call	snd_se_play pascal, 3
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr dword_26002, 3
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.spread, 3
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
 		cwd
@@ -25288,13 +25273,13 @@ sub_1C0E4	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1C121
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD_STACK
 		mov	byte_2C976, 1
-		mov	byte_26001, 2
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	dword_26002, 8020802h
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.BT_special_motion, 2
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		mov	dword ptr _bullet_template.spread, (8 shl 24) or (2 shl 16) or (8 shl 8) or 2
+		mov	_bullet_template.speed, (3 shl 4)
 		mov	_boss_sprite, 192
 		mov	byte_2C977, 0B6h
 		jmp	short loc_1C190
@@ -25309,12 +25294,12 @@ loc_1C121:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C15E
-		mov	byte ptr word_26006, 80h
+		mov	_bullet_template.BT_angle, 80h
 		call	sub_15A9C
 		mov	al, byte_2C977
 		neg	al
 		mov	byte_2C977, al
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.BT_angle, 0
 		call	sub_15A9C
 		mov	al, byte_2C977
 		neg	al
@@ -25374,11 +25359,11 @@ loc_1C1C1:
 		jle	short loc_1C239
 		cmp	_boss_phase_frame, 128
 		jg	short loc_1C20F
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
-		mov	byte ptr dword_26002, 8
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
+		mov	_bullet_template.spread, 8
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
@@ -25475,19 +25460,19 @@ loc_1C2AB:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C31D
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_STACK
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	word ptr dword_26002+2,	608h
-		mov	byte ptr word_26006+1, 18h
-		mov	byte_26001, 8
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.BT_special_motion, 8
 		mov	byte_2C976, 1
 		mov	al, byte_2D083
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
 		mov	al, 80h
 		sub	al, byte_2D083
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
 		mov	al, byte_2D083
 		add	al, 8
@@ -25500,11 +25485,11 @@ loc_1C316:
 		call	snd_se_play pascal, 3
 
 loc_1C31D:
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
-		mov	byte ptr dword_26002, 6
-		mov	byte ptr word_26006+1, 18h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
+		mov	_bullet_template.spread, 6
+		mov	_bullet_template.speed, (1 shl 4) + 8
 		jmp	short loc_1C347
 ; ---------------------------------------------------------------------------
 
@@ -25749,8 +25734,8 @@ sub_1C518	proc far
 		push	si
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	_laser_template.coords.origin, eax
 		mov	point_2BC72, eax
 		inc	_boss_phase_frame
@@ -26406,11 +26391,11 @@ sub_1CAD7	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1CB6F
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 13h
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 13h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr word_26006+1, 3Ch ; '<'
-		mov	byte ptr dword_26002, 10h
+		mov	_bullet_template.speed, (3 shl 4) + 12
+		mov	_bullet_template.spread, 16
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -26425,14 +26410,14 @@ loc_1CB23:
 		or	dx, dx
 		jnz	short loc_1CB5D
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		push	offset point_25FFC
+		mov	_bullet_template.BT_angle, al
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		push	ax
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -26471,10 +26456,10 @@ var_1		= byte ptr -1
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1CCD0
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	byte ptr word_26006+1, 60h
+		mov	_bullet_template.speed, (6 shl 4)
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		mov	word_2BC7E, 20h	; ' '
@@ -26496,30 +26481,30 @@ loc_1CBD2:
 		jle	short loc_1CC3E
 		test	si, 1
 		jnz	short loc_1CC3E
-		sub	point_25FFC.x, (32 shl 4)
-		sub	point_25FFC.y, (16 shl 4)
+		sub	_bullet_template.BT_origin.x, (32 shl 4)
+		sub	_bullet_template.BT_origin.y, (16 shl 4)
 		or	si, si
 		jnz	short loc_1CC1F
-		push	point_25FFC.x
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.x
+		push	_bullet_template.BT_origin.y
 		push	0
 		call	sub_15A24
 		mov	byte_2D085, al
-		mov	ax, point_25FFC.x
+		mov	ax, _bullet_template.BT_origin.x
 		add	ax, (64 shl 4)
 		push	ax
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.y
 		push	0
 		call	sub_15A24
 		mov	byte_2D084, al
 
 loc_1CC1F:
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		add	point_25FFC.x, (64 shl 4)
+		add	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -26596,11 +26581,11 @@ sub_1CCD3	proc near
 		cmp	_boss_phase_frame, 4
 		jnz	loc_1CE0B
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 0Ah
-		mov	byte ptr word_26006+1, 38h ; '8'
-		mov	word ptr dword_26002, 205h
+		mov	_bullet_template.BT_special_motion, 0Ah
+		mov	_bullet_template.speed, (3 shl 4) + 8
+		mov	word ptr _bullet_template.spread, (2 shl 8) or 5
 		call	snd_se_play pascal, 8
 		mov	byte_2D085, 60h
 		mov	byte_2D084, 40h
@@ -26615,8 +26600,8 @@ loc_1CD26:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1CDF8
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
-		push	offset point_25FFC
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
@@ -26626,9 +26611,9 @@ loc_1CD26:
 		call	vector2_at
 		mov	al, byte_2D085
 		add	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
@@ -26637,15 +26622,15 @@ loc_1CD26:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.patnum, 0
 		mov	al, byte_2D085
 		neg	al
 		mov	byte_2D085, al
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
@@ -26654,9 +26639,9 @@ loc_1CD26:
 		call	vector2_at
 		mov	al, byte_2D085
 		sub	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
@@ -26665,9 +26650,9 @@ loc_1CD26:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
 		mov	al, byte_2D085
 		neg	al
@@ -26708,12 +26693,12 @@ sub_1CE0D	proc near
 		cmp	_boss_phase_frame, 4
 		jnz	loc_1CED7
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr word_26006+1, 38h ; '8'
-		mov	byte ptr dword_26002+1,	14h
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_25FFA+1, 44h ; 'D'
+		mov	_bullet_template.speed, (3 shl 4) + 8
+		mov	_bullet_template.spread_angle_delta, 20
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		mov	byte_2D085, 80h
@@ -26728,7 +26713,7 @@ loc_1CE63:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1CEC4
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
@@ -26736,9 +26721,9 @@ loc_1CE63:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	byte ptr dword_26002, 5
+		mov	_bullet_template.spread, 5
 		call	sub_15A5C
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
@@ -26747,7 +26732,7 @@ loc_1CE63:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	byte ptr dword_26002, 4
+		mov	_bullet_template.spread, 4
 		call	sub_15A5C
 		mov	al, byte_2D085
 		add	al, 8
@@ -26787,10 +26772,10 @@ var_1		= byte ptr -1
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D081
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 74h ; 't'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	byte ptr word_26006+1, 60h
+		mov	_bullet_template.speed, (6 shl 4)
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		mov	_laser_template.LASER_age, 24
@@ -26817,30 +26802,30 @@ loc_1CF57:
 		jle	short loc_1CFC3
 		test	di, 1
 		jnz	short loc_1CFC3
-		sub	point_25FFC.x, (32 shl 4)
-		sub	point_25FFC.y, (16 shl 4)
+		sub	_bullet_template.BT_origin.x, (32 shl 4)
+		sub	_bullet_template.BT_origin.y, (16 shl 4)
 		or	di, di
 		jnz	short loc_1CFA4
-		push	point_25FFC.x
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.x
+		push	_bullet_template.BT_origin.y
 		push	0
 		call	sub_15A24
 		mov	byte_2D085, al
-		mov	ax, point_25FFC.x
+		mov	ax, _bullet_template.BT_origin.x
 		add	ax, (64 shl 4)
 		push	ax
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.y
 		push	0
 		call	sub_15A24
 		mov	byte_2D084, al
 
 loc_1CFA4:
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		add	point_25FFC.x, (64 shl 4)
+		add	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -26939,15 +26924,15 @@ yumeko_1D085	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D1C4
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 34h ; '4'
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte ptr dword_26002, 5
+		mov	_bullet_template.spread, 5
 		push	(24 shl 16) or 16
 		push	(12 shl 16) or 10
 		call	select_for_rank
-		mov	byte ptr dword_26002+1,	al
-		mov	byte ptr word_26006+1, 80h
+		mov	_bullet_template.spread_angle_delta, al
+		mov	_bullet_template.speed, (8 shl 4)
 		call	snd_se_play pascal, 8
 		mov	word_2BC7E, 20h	; ' '
 		mov	byte_2BC88, 40h
@@ -27014,23 +26999,23 @@ loc_1D17C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D1C4
-		cmp	byte ptr word_26006+1, 60h
+		cmp	_bullet_template.speed, (6 shl 4)
 		jbe	short loc_1D1B9
-		mov	byte ptr word_26006+1, 8
+		mov	_bullet_template.speed, 8
 		call	snd_se_play pascal, 15
 		inc	byte_2D083
 		cmp	byte_2D083, 5
 		ja	loc_1D110
-		push	point_25FFC.x
-		push	point_25FFC.y
+		push	_bullet_template.BT_origin.x
+		push	_bullet_template.BT_origin.y
 		push	0
 		call	sub_15A24
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 
 loc_1D1B9:
-		mov	al, byte ptr word_26006+1
+		mov	al, _bullet_template.speed
 		add	al, 8
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		call	sub_15A5C
 
 loc_1D1C4:
@@ -27056,12 +27041,12 @@ sub_1D1C6	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D269
 		mov	_boss_sprite, 184
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 74h ; 't'
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr dword_26002, 12h
-		mov	byte_26001, 2
-		mov	byte ptr word_26006+1, 26h ; '&'
+		mov	_bullet_template.spread, 18
+		mov	_bullet_template.BT_special_motion, 2
+		mov	_bullet_template.speed, (2 shl 4) + 6
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		mov	byte_2D085, 0
@@ -27079,13 +27064,13 @@ loc_1D228:
 		or	dx, dx
 		jnz	short loc_1D269
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		test	byte_2D085, 1
 		jz	short loc_1D252
 		mov	byte_2C977, 40h
 		mov	al, 80h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		jmp	short loc_1D257
 ; ---------------------------------------------------------------------------
 
@@ -27115,8 +27100,8 @@ yumeko_update	proc far
 		push	si
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	point_2BC72, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
@@ -27568,14 +27553,14 @@ sub_1D667	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1D6B2
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Dh ; '-'
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte_26001, 0Ah
+		mov	_bullet_template.BT_special_motion, 0Ah
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr dword_26002, 10h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.spread, 16
 		push	1
 		call	randring2_next16_and
 		or	ax, ax
@@ -27600,11 +27585,11 @@ loc_1D6B2:
 		or	dx, dx
 		jnz	short loc_1D6D1
 		call	sub_15A70
-		mov	al, byte ptr word_26006+1
+		mov	al, _bullet_template.speed
 		add	al, 8
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.speed, al
 		mov	al, byte_2D085
-		add	byte ptr word_26006, al
+		add	_bullet_template.BT_angle, al
 
 loc_1D6D1:
 		cmp	_boss_phase_frame, 60
@@ -27631,12 +27616,12 @@ sub_1D6E1	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1D719
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_RING
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr dword_26002, 10h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.spread, 16
 		push	(16 shl 16) or 12
 		push	( 8 shl 16) or  4
 		call	select_for_rank
@@ -27652,22 +27637,22 @@ loc_1D719:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D766
-		push	offset point_25FFC
+		push	offset _bullet_template.BT_origin
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(32 shl 4)
 		call	randring2_next16_mod
 		push	ax
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.speed, (2 shl 4)
 		call	sub_15A5C
-		mov	byte ptr word_26006+1, 40h
-		mov	al, byte ptr word_26006
+		mov	_bullet_template.speed, (4 shl 4)
+		mov	al, _bullet_template.BT_angle
 		add	al, 8
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -27704,11 +27689,11 @@ sub_1D776	proc near
 		cmp	_boss_phase_frame, 2
 		jnz	short loc_1D7DA
 		mov	_boss_sprite, 181
-		mov	byte ptr word_25FFA, 13h
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	_bullet_template.spawn_type, 13h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr word_26006+1, 3Ch ; '<'
-		mov	byte ptr dword_26002, 10h
+		mov	_bullet_template.speed, (3 shl 4) + 12
+		mov	_bullet_template.spread, 16
 		call	fp_25344
 		call	snd_se_play pascal, 8
 		pop	bp
@@ -27738,10 +27723,10 @@ sub_1D7DC	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1D805
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_26006+1, 1Ch
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.speed, (1 shl 4) + 12
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr dword_26002, 3
+		mov	_bullet_template.spread, 3
 		call	fp_25344
 		call	snd_se_play pascal, 15
 
@@ -27752,11 +27737,11 @@ loc_1D805:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D82E
-		mov	byte ptr word_25FFA+1, 34h ; '4'
-		sub	point_25FFC.x, (16 shl 4)
+		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
+		sub	_bullet_template.BT_origin.x, (16 shl 4)
 		call	sub_15A5C
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		add	point_25FFC.x, (32 shl 4)
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		add	_bullet_template.BT_origin.x, (32 shl 4)
 		call	sub_15A5C
 
 loc_1D82E:
@@ -27778,16 +27763,16 @@ sub_1D83A	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1D877
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_26006, 0
-		mov	word ptr dword_26002, 402h
-		push	(0C05h shl 16) or 0C06h
-		push	(0D06h shl 16) or 0D07h
+		mov	_bullet_template.BT_angle, 0
+		mov	word ptr _bullet_template.spread, (4 shl 8) or 2
+		push	(((12 shl 8) or 5) shl 16) or ((12 shl 8) or 6)
+		push	(((13 shl 8) or 6) shl 16) or ((13 shl 8) or 7)
 		call	select_for_rank
-		mov	word ptr dword_26002+2,	ax
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	word ptr _bullet_template.BT_stack, ax
+		mov	_bullet_template.speed, (2 shl 4)
 
 loc_1D877:
 		mov	ax, _boss_phase_frame
@@ -27872,8 +27857,8 @@ loc_1D8F7:
 loc_1D954:
 		cmp	byte_2D085, 0
 		jnz	short loc_1D9D5
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
 		call	fp_25344
 		xor	si, si
@@ -27881,25 +27866,21 @@ loc_1D954:
 ; ---------------------------------------------------------------------------
 
 loc_1D972:
-		push	(256 shl 4)
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (256 shl 4)
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
-		mov	point_25FFC.x, ax
-		push	400h
-		call	randring2_next16_mod
+		mov	_bullet_template.BT_origin.x, ax
+		call	randring2_next16_mod pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
-		mov	point_25FFC.y, dx
-		push	60h
-		call	randring2_next16_mod
-		add	al, 10h
-		mov	byte ptr word_26006, al
-		push	3Fh ; '?'
-		call	randring2_next16_and
-		add	al, 18h
-		mov	byte ptr word_26006+1, al
+		mov	_bullet_template.BT_origin.y, dx
+		call	randring2_next16_mod pascal, 96
+		add	al, 16
+		mov	_bullet_template.BT_angle, al
+		call	randring2_next16_and pascal, 3Fh
+		add	al, (1 shl 4) + 8
+		mov	_bullet_template.speed, al
 		call	sub_15A5C
 		inc	si
 
@@ -28005,26 +27986,25 @@ loc_1DA6A:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DAD0
-		push	1000h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (256 shl 4)
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
-		mov	point_25FFC.x, ax
+		mov	_bullet_template.BT_origin.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
-		mov	point_25FFC.y, dx
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 2Ch ; ','
+		mov	_bullet_template.BT_origin.y, dx
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr dword_26002, 5
+		mov	_bullet_template.spread, 5
 		push	(16 shl 16) or 12
 		push	(10 shl 16) or  8
 		call	select_for_rank
-		mov	byte ptr dword_26002+1,	al
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_26006+1, 30h ; '0'
+		mov	_bullet_template.spread_angle_delta, al
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.speed, (3 shl 4)
 		call	fp_25344
 		call	sub_15A5C
 
@@ -28066,17 +28046,16 @@ loc_1DB10:
 		mov	si, dx
 		test	si, 7
 		jnz	short loc_1DB78
-		mov	byte ptr word_25FFA+1, 2Dh ; '-'
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 30h	; '0'
-		mov	byte ptr word_26006+1, al
-		mov	word ptr dword_26002, 806h
-		mov	byte ptr word_26006, 68h ; 'h'
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (3 shl 4)
+		mov	_bullet_template.speed, al
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 6
+		mov	_bullet_template.BT_angle, 68h
 		call	sub_15A5C
-		mov	byte ptr word_26006, 18h
+		mov	_bullet_template.BT_angle, 18h
 		call	sub_15A5C
 		or	si, si
 		jnz	short loc_1DB78
@@ -28232,34 +28211,34 @@ loc_1DC93:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DCFD
-		sub	point_25FFC.x, (128 shl 4)
+		sub	_bullet_template.BT_origin.x, (128 shl 4)
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 0Ah
-		mov	word ptr dword_26002, 203h
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_26006+1, 28h ; '('
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
-		cmp	si, 40h
+		mov	_bullet_template.BT_special_motion, 0Ah
+		mov	word ptr _bullet_template.spread, (2 shl 8) or 3
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.speed, (2 shl 4) + 8
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
+		cmp	si, 64
 		jge	short loc_1DCD4
 		mov	ax, si
 		imul	ax, 3
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		jmp	short loc_1DCE1
 ; ---------------------------------------------------------------------------
 
 loc_1DCD4:
 		mov	ax, si
 		imul	ax, 3
-		mov	dl, 40h
+		mov	dl, 64
 		sub	dl, al
-		mov	byte ptr word_26006, dl
+		mov	_bullet_template.BT_angle, dl
 
 loc_1DCE1:
 		call	sub_15A70
 		mov	al, 80h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
-		add	point_25FFC.x, (256 shl 4)
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
+		add	_bullet_template.BT_origin.x, (256 shl 4)
 		call	sub_15A70
 		call	snd_se_play pascal, 15
 
@@ -28329,8 +28308,8 @@ loc_1DD72:
 		mov	byte_2D07D, 0
 
 loc_1DDC3:
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	_bullet_template.pattern, BP_SPREAD
 		cmp	byte_2D085, 40h
 		jnz	short loc_1DDE4
@@ -28341,33 +28320,33 @@ loc_1DDC3:
 loc_1DDE4:
 		cmp	byte_2D082, 0
 		jnz	short loc_1DDF2
-		mov	byte ptr dword_26002, 1
+		mov	_bullet_template.spread, 1
 		jmp	short loc_1DDF7
 ; ---------------------------------------------------------------------------
 
 loc_1DDF2:
-		mov	byte ptr dword_26002, 3
+		mov	_bullet_template.spread, 3
 
 loc_1DDF7:
-		mov	byte ptr dword_26002+1,	30h ; '0'
-		mov	byte ptr word_26006+1, 70h ; 'p'
-		add	point_25FFC.x, (96 shl 4)
+		mov	_bullet_template.spread_angle_delta, 48
+		mov	_bullet_template.speed, (7 shl 4)
+		add	_bullet_template.BT_origin.x, (96 shl 4)
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 80h
 		sub	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 80h
 		sub	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
 		cmp	byte_2D082, 0
 		jnz	short loc_1DE5D
@@ -28381,28 +28360,28 @@ loc_1DDF7:
 ; ---------------------------------------------------------------------------
 
 loc_1DE5D:
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr word_25FFA, 10h
-		mov	word ptr dword_26002, 3003h
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.spawn_type, 10h
+		mov	word ptr _bullet_template.spread, (48 shl 8) or 3
 		mov	al, byte_2D085
 		add	al, 80h
-		mov	byte ptr word_26006, al
-		add	point_25FFC.x, (192 shl 4)
+		mov	_bullet_template.BT_angle, al
+		add	_bullet_template.BT_origin.x, (192 shl 4)
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, byte_2D084
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 0
 		sub	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
-		sub	point_25FFC.x, (64 shl 4)
+		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 0
 		sub	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
 		cmp	byte_2D081, 0
 		jnz	short loc_1DED3
@@ -28610,13 +28589,13 @@ loc_1E0A6:
 		jnz	short loc_1E0F8
 		cmp	si, 80h
 		jge	short loc_1E0F8
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	byte ptr dword_26002, 0Ch
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	_bullet_template.spread, 12
 		call	sub_15A5C
 		mov	al, byte_2D085
 		add	al, 0FEh
@@ -28633,13 +28612,13 @@ loc_1E0F8:
 		jnz	short loc_1E13D
 		cmp	si, 80h
 		jl	short loc_1E13D
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RING
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_25FFA+1, 0
-		mov	byte ptr word_26006+1, 20h ; ' '
-		mov	byte ptr dword_26002, 0Ch
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.patnum, 0
+		mov	_bullet_template.speed, (2 shl 4)
+		mov	_bullet_template.spread, 12
 		call	sub_15A5C
 		mov	al, byte_2D084
 		add	al, 4
@@ -28711,8 +28690,8 @@ shinki_update	proc far
 		push	di
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	_laser_template.coords.origin, eax
 		mov	point_2BC72, eax
 		inc	_boss_phase_frame
@@ -29225,15 +29204,15 @@ loc_1E627:
 loc_1E62A:
 		cmp	_midboss_phase_frame, 114
 		jg	short loc_1E65F
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	byte_2C976, 2
-		mov	byte_26001, 3
-		mov	word ptr dword_26002, 1012h
+		mov	_bullet_template.BT_special_motion, 3
+		mov	word ptr _bullet_template.spread, (16 shl 8) or 18
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr word_26006+1, 8
-		mov	byte ptr word_25FFA+1, 2Fh ; '/'
+		mov	_bullet_template.speed, 8
+		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
 		mov	al, byte_2D083
-		add	byte ptr word_26006, al
+		add	_bullet_template.BT_angle, al
 		call	sub_15A70
 
 loc_1E65F:
@@ -29260,11 +29239,11 @@ sub_1E66F	proc near
 		mov	bp, sp
 		cmp	_page_back, 0
 		jz	short loc_1E696
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
-		mov	byte ptr word_26006+1, 10h
-		mov	word ptr dword_26002, 0A0Ch
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.speed, (1 shl 4)
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 12
+		mov	_bullet_template.patnum, 0
 		call	sub_15A5C
 
 loc_1E696:
@@ -29295,17 +29274,17 @@ sub_1E6A6	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E6FE
-		mov	byte ptr word_25FFA, 13h
+		mov	_bullet_template.spawn_type, 13h
 		mov	byte_2C976, 1
-		mov	byte_26001, 2
+		mov	_bullet_template.BT_special_motion, 2
 		mov	_bullet_template.pattern, BP_SPREAD_STACK
-		mov	dword_26002, 10040805h
-		mov	byte ptr word_26006+1, 18h
-		mov	byte ptr word_25FFA+1, 2Fh ; '/'
-		mov	byte ptr word_26006, 80h
+		mov	dword ptr _bullet_template.spread, (16 shl 24) or (4 shl 16) or (8 shl 8) or 5
+		mov	_bullet_template.speed, (1 shl 4) + 8
+		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
+		mov	_bullet_template.BT_angle, 80h
 		mov	byte_2C977, 0C8h
 		call	sub_15A70
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.BT_angle, 0
 		mov	byte_2C977, 38h	; '8'
 		call	sub_15A70
 		call	snd_se_play pascal, 3
@@ -29334,8 +29313,8 @@ midbossx_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -29581,19 +29560,17 @@ sub_1E8DA	endp
 sub_1E922	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte ptr word_25FFA, 10h
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 28h	; '('
-		mov	byte ptr word_26006+1, al
-		push	7Fh
-		call	randring2_next16_and
-		and	al, 0F8h
+		mov	_bullet_template.spawn_type, 10h
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (2 shl 4) + 8
+		mov	_bullet_template.speed, al
+		call	randring2_next16_and pascal, 7Fh
+		and	al, -8
 		sub	al, 40h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
-		mov	word ptr dword_26002, 0C05h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 5
 		call	sub_15A5C
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -29639,26 +29616,26 @@ loc_1E98B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E9F9
-		mov	byte ptr word_25FFA, 13h
-		mov	byte ptr word_26006+1, 40h
+		mov	_bullet_template.spawn_type, 13h
+		mov	_bullet_template.speed, (4 shl 4)
 		cmp	byte_2D085, 0
 		jz	short loc_1E9B0
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 2
 		jmp	short loc_1E9B5
 ; ---------------------------------------------------------------------------
 
 loc_1E9B0:
-		mov	al, byte ptr word_26006
-		add	al, 0FEh
+		mov	al, _bullet_template.BT_angle
+		add	al, -2
 
 loc_1E9B5:
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte_26001, 1
+		mov	_bullet_template.BT_special_motion, 1
 		mov	byte_2C976, 1
-		mov	word ptr dword_26002, 0A0Ch
-		mov	byte ptr word_25FFA+1, 30h ; '0'
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 12
+		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
@@ -29670,8 +29647,8 @@ loc_1E9B5:
 ; ---------------------------------------------------------------------------
 
 loc_1E9E4:
-		mov	word ptr dword_26002, 0A08h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 8
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		call	sub_15A70
 
 loc_1E9F2:
@@ -29723,17 +29700,17 @@ loc_1EA2E:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1EAE3
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, 0
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	word ptr dword_26002, 605h
-		mov	byte ptr word_26006+1, 50h ; 'P'
+		mov	word ptr _bullet_template.spread, (6 shl 8) or 5
+		mov	_bullet_template.speed, (5 shl 4)
 		mov	al, byte_2D084
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		neg	al
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		cmp	byte_2D083, 0
 		jnz	short loc_1EA96
@@ -29761,33 +29738,31 @@ loc_1EAA9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EAE3
-		push	600h
-		call	randring2_next16_mod
-		add	ax, point_25FFC.x
+		call	randring2_next16_mod pascal, (96 shl 4)
+		add	ax, _bullet_template.BT_origin.x
 		sub	ax, (48 shl 4)
-		mov	word_2CE52, ax
-		push	400h
-		call	randring2_next16_mod
-		add	ax, point_25FFC.y
+		mov	point_2CE52.x, ax
+		call	randring2_next16_mod pascal, (64 shl 4)
+		add	ax, _bullet_template.BT_origin.y
 		sub	ax, (32 shl 4)
-		mov	word_2CE54, ax
-		push	word_2CE52
+		mov	point_2CE52.y, ax
+		push	point_2CE52.x
 		push	ax
 		push	0
 		call	sub_15A24
 		mov	byte_2D085, al
 
 loc_1EAE3:
-		mov	ax, word_2CE52
-		mov	point_25FFC.x, ax
-		mov	ax, word_2CE54
-		mov	point_25FFC.y, ax
-		mov	byte ptr word_25FFA, 12h
+		mov	ax, point_2CE52.x
+		mov	_bullet_template.BT_origin.x, ax
+		mov	ax, point_2CE52.y
+		mov	_bullet_template.BT_origin.y, ax
+		mov	_bullet_template.spawn_type, 12h
 		mov	al, byte_2D085
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	byte ptr word_26006+1, 60h
-		mov	byte ptr word_25FFA+1, 54h ; 'T'
+		mov	_bullet_template.speed, (6 shl 4)
+		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		call	sub_15A5C
 
 loc_1EB0C:
@@ -29845,20 +29820,18 @@ sub_1EB52	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1EBF0
-		mov	byte ptr word_25FFA, 10h
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 0Ch
-		mov	byte ptr word_26006+1, al
-		push	7Fh
-		call	randring2_next16_and
+		mov	_bullet_template.spawn_type, 10h
+		call	randring2_next16_and pascal, 1Fh
+		add	al, 12
+		mov	_bullet_template.speed, al
+		call	randring2_next16_and pascal, 7Fh
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	byte_26001, 9
+		mov	_bullet_template.BT_special_motion, 9
 		mov	byte_2C976, 1
-		mov	byte ptr word_25FFA+1, 2Eh ; '.'
-		mov	word ptr dword_26002, 0C03h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
+		mov	word ptr _bullet_template.spread, (12 shl 8) or 3
 		call	sub_15A70
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -29867,22 +29840,20 @@ sub_1EB52	proc near
 		or	dx, dx
 		jnz	short loc_1EBF0
 		call	snd_se_play pascal, 3
-		mov	byte ptr word_25FFA, 12h
-		push	600h
-		call	randring2_next16_mod
+		mov	_bullet_template.spawn_type, 12h
+		call	randring2_next16_mod pascal, (96 shl 4)
 		sub	ax, (48 shl 4)
-		add	ax, point_25FFC.x
-		mov	point_25FFC.x, ax
-		push	400h
-		call	randring2_next16_mod
+		add	ax, _bullet_template.BT_origin.x
+		mov	_bullet_template.BT_origin.x, ax
+		call	randring2_next16_mod pascal, (64 shl 4)
 		sub	ax, (32 shl 4)
-		add	ax, point_25FFC.y
-		mov	point_25FFC.y, ax
-		mov	byte ptr word_25FFA+1, 0
+		add	ax, _bullet_template.BT_origin.y
+		mov	_bullet_template.BT_origin.y, ax
+		mov	_bullet_template.patnum, 0
 		mov	_bullet_template.pattern, BP_STACK_AIMED
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	word ptr dword_26002+2,	604h
-		mov	byte ptr word_26006, 0
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 4
+		mov	_bullet_template.BT_angle, 0
 		call	sub_15A5C
 
 loc_1EBF0:
@@ -29921,24 +29892,24 @@ loc_1EC14:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EC5B
-		mov	byte ptr word_25FFA, 13h
-		mov	byte ptr word_26006+1, 58h ; 'X'
+		mov	_bullet_template.spawn_type, 13h
+		mov	_bullet_template.speed, (5 shl 4) + 8
 		cmp	byte_2D085, 0
 		jz	short loc_1EC39
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 3
 		jmp	short loc_1EC3E
 ; ---------------------------------------------------------------------------
 
 loc_1EC39:
-		mov	al, byte ptr word_26006
-		add	al, 0FDh
+		mov	al, _bullet_template.BT_angle
+		add	al, -3
 
 loc_1EC3E:
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_RING
-		mov	word ptr dword_26002, 816h
-		mov	byte ptr word_25FFA+1, 34h ; '4'
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 22
+		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -29967,7 +29938,7 @@ sub_1EC6C	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1EC7B
-		mov	byte ptr dword_26002, 8
+		mov	_bullet_template.spread, 8
 
 loc_1EC7B:
 		mov	ax, _boss_phase_frame
@@ -29976,26 +29947,26 @@ loc_1EC7B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1ECD0
-		mov	byte ptr word_25FFA+1, 34h ; '4'
-		mov	byte ptr word_25FFA, 13h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
+		mov	_bullet_template.spawn_type, 13h
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte_26001, 8
+		mov	_bullet_template.BT_special_motion, 8
 		mov	ax, _boss_phase_frame
 		mov	bx, 128
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1ECB9
-		cmp	byte ptr dword_26002, 0Eh
+		cmp	_bullet_template.spread, 14
 		jnb	short loc_1ECB9
-		inc	byte ptr dword_26002
+		inc	_bullet_template.spread
 
 loc_1ECB9:
 		mov	byte_2C976, 1
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 2
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A70
 		call	snd_se_play pascal, 3
 
@@ -30036,13 +30007,13 @@ sub_1ECD4	proc near
 		mov	ax, word_22870
 		inc	word_22870
 		call	lasers_new_fixed_in_slot pascal, ax
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 44h ; 'D'
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
 		mov	_bullet_template.pattern, BP_RING
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	byte ptr word_26006+1, 40h
-		mov	word ptr dword_26002, 0A20h
+		mov	_bullet_template.BT_angle, al
+		mov	_bullet_template.speed, (4 shl 4)
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 32
 		call	sub_15A5C
 		jmp	short loc_1ED67
 ; ---------------------------------------------------------------------------
@@ -30127,19 +30098,18 @@ sub_1EDC1	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EE14
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte_26001, 3
+		mov	_bullet_template.BT_special_motion, 3
 		mov	byte_2C976, 2
-		mov	byte ptr word_26006+1, 40h
-		mov	word ptr dword_26002, 907h
-		mov	byte ptr word_25FFA+1, 44h ; 'D'
-		push	300h
-		call	randring2_next16_mod
+		mov	_bullet_template.speed, (4 shl 4)
+		mov	word ptr _bullet_template.spread, (9 shl 8) or 7
+		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
+		call	randring2_next16_mod pascal, (48 shl 4)
 		sub	ax, (24 shl 4)
-		add	ax, point_25FFC.x
-		mov	point_25FFC.x, ax
-		mov	byte ptr word_26006, 0
+		add	ax, _bullet_template.BT_origin.x
+		mov	_bullet_template.BT_origin.x, ax
+		mov	_bullet_template.BT_angle, 0
 		call	sub_15A70
 		call	snd_se_play pascal, 3
 
@@ -30226,12 +30196,12 @@ loc_1EEA1:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EEED
-		mov	byte ptr word_25FFA, 10h
+		mov	_bullet_template.spawn_type, 10h
 		mov	_bullet_template.pattern, BP_RING_AIMED
-		mov	byte ptr word_26006, 0
-		mov	byte ptr word_26006+1, 40h
-		mov	word ptr dword_26002, 0A20h
-		mov	byte ptr word_25FFA+1, 44h ; 'D'
+		mov	_bullet_template.BT_angle, 0
+		mov	_bullet_template.speed, (4 shl 4)
+		mov	word ptr _bullet_template.spread, (10 shl 8) or 32
+		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
 		call	sub_15A5C
 
 loc_1EEED:
@@ -30254,12 +30224,12 @@ sub_1EEF1	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EF6F
-		mov	byte ptr word_26006+1, 38h ; '8'
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.speed, (3 shl 4) + 8
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	byte ptr word_25FFA+1, 2Fh ; '/'
-		mov	byte ptr word_26006, 0
-		mov	word ptr dword_26002, 0F09h
+		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
+		mov	_bullet_template.BT_angle, 0
+		mov	word ptr _bullet_template.spread, (15 shl 8) or 9
 		call	sub_15A5C
 		mov	ax, _boss_phase_frame
 		mov	bx, 64
@@ -30375,20 +30345,20 @@ sub_1EF80	endp
 sub_1EFED	proc near
 		push	bp
 		mov	bp, sp
-		add	point_25FFC.y, (104 shl 4)
+		add	_bullet_template.BT_origin.y, (104 shl 4)
 		mov	ax, word_22872
-		mov	point_25FFC.x, ax
-		mov	word ptr dword_2A722, ax
+		mov	_bullet_template.BT_origin.x, ax
+		mov	point_2A722.x, ax
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F045
 		mov	angle_2BC71, 196
-		mov	byte ptr word_26006, 20h ; ' '
+		mov	_bullet_template.BT_angle, 20h
 		mov	byte_2BC88, 50h	; 'P'
-		mov	byte ptr word_26006+1, 30h ; '0'
-		mov	byte ptr word_25FFA, 12h
+		mov	_bullet_template.speed, (3 shl 4)
+		mov	_bullet_template.spawn_type, 12h
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	word ptr dword_26002, 803h
-		mov	byte ptr word_25FFA+1, 2Fh ; '/'
+		mov	word ptr _bullet_template.spread, (8 shl 8) or 3
+		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
 		mov	byte_2D085, 0
 		mov	byte_2D084, 0
 		mov	byte_2D083, 0
@@ -30404,8 +30374,8 @@ loc_1F045:
 		or	dx, dx
 		jnz	loc_1F137
 		mov	byte_2A72E, 0Eh
-		mov	ax, point_25FFC.y
-		mov	word ptr dword_2A722+2,	ax
+		mov	ax, _bullet_template.BT_origin.y
+		mov	point_2A722.y, ax
 		mov	word_2A72A, 1000h
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
@@ -30438,8 +30408,8 @@ loc_1F08C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F0D0
-		mov	ax, point_25FFC.y
-		mov	word ptr dword_2A722+2,	ax
+		mov	ax, _bullet_template.BT_origin.y
+		mov	point_2A722.y, ax
 		mov	word_2A72A, 800h
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
@@ -30459,16 +30429,16 @@ loc_1F0CD:
 
 loc_1F0D0:
 		mov	al, 80h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
 		mov	al, 80h
-		sub	al, byte ptr word_26006
-		mov	byte ptr word_26006, al
+		sub	al, _bullet_template.BT_angle
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A8E
 		call	snd_se_play pascal, 3
 		mov	al, byte_2D085
-		sub	byte ptr word_26006, al
+		sub	_bullet_template.BT_angle, al
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
 		cwd
@@ -30520,11 +30490,11 @@ sub_1F13B	proc near
 		jnz	short loc_1F182
 		mov	_boss_sprite, 181
 		call	snd_se_play pascal, 8
-		mov	byte ptr word_25FFA+1, 74h ; 't'
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	_bullet_template.pattern, BP_SPREAD
 		call	randring2_next16
-		mov	byte ptr word_26006, al
-		mov	word ptr dword_26002, 1505h
+		mov	_bullet_template.BT_angle, al
+		mov	word ptr _bullet_template.spread, (21 shl 8) or 5
 		mov	byte_2D085, 0
 		mov	_boss_pos.velocity.x, 0
 
@@ -30537,23 +30507,23 @@ loc_1F182:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F1D4
-		mov	ax, 0D48h
+		mov	ax, 3400
 		sub	ax, _boss_hp
 		cwde
 		shl	eax, 6
-		mov	ebx, 0D48h
+		mov	ebx, 3400
 		xor	edx, edx
 		div	ebx
-		add	al, 28h	; '('
-		mov	byte ptr word_26006+1, al
+		add	al, (2 shl 4) + 8
+		mov	_bullet_template.speed, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 80h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
-		mov	al, byte ptr word_26006
+		mov	al, _bullet_template.BT_angle
 		add	al, 87h
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 9
 
 loc_1F1D4:
@@ -30666,8 +30636,8 @@ exalice_update	proc far
 loc_1F298:
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		mov	_laser_template.coords.origin, eax
 		mov	point_2BC72, eax
 		inc	_boss_phase_frame
@@ -31145,7 +31115,7 @@ loc_1F732:
 		push	_midboss_pos.cur.y
 		push	0
 		call	sub_15A24
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31188,11 +31158,11 @@ sub_1F776	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F7AA
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 74h ; 't'
-		mov	byte ptr word_26006+1, 58h ; 'X'
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
+		mov	_bullet_template.speed, (5 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SPREAD
-		mov	word ptr dword_26002, 70Dh
+		mov	word ptr _bullet_template.spread, (7 shl 8) or 13
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -31225,23 +31195,21 @@ sub_1F7BA	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F813
-		mov	byte ptr word_25FFA, 10h
-		mov	byte ptr word_25FFA+1, 44h ; 'D'
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.spawn_type, 10h
+		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
+		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING
-		mov	byte ptr dword_26002, 10h
-		push	400h
-		call	randring2_next16_mod
-		sub	ax, 200h
-		add	ax, point_25FFC.x
-		mov	point_25FFC.x, ax
-		push	400h
-		call	randring2_next16_mod
+		mov	_bullet_template.spread, 16
+		call	randring2_next16_mod pascal, (64 shl 4)
 		sub	ax, (32 shl 4)
-		add	ax, point_25FFC.y
-		mov	point_25FFC.y, ax
+		add	ax, _bullet_template.BT_origin.x
+		mov	_bullet_template.BT_origin.x, ax
+		call	randring2_next16_mod pascal, (64 shl 4)
+		sub	ax, (32 shl 4)
+		add	ax, _bullet_template.BT_origin.y
+		mov	_bullet_template.BT_origin.y, ax
 		call	randring2_next16
-		mov	byte ptr word_26006, al
+		mov	_bullet_template.BT_angle, al
 		call	sub_15A5C
 		call	snd_se_play pascal, 3
 
@@ -31270,16 +31238,16 @@ sub_1F823	proc near
 		mov	bp, sp
 		cmp	_midboss_phase_frame, 32
 		jnz	short loc_1F86B
-		mov	byte ptr word_25FFA, 12h
-		mov	byte ptr word_25FFA+1, 0
+		mov	_bullet_template.spawn_type, 12h
+		mov	_bullet_template.patnum, 0
 		mov	_bullet_template.pattern, BP_SPREAD_STACK_AIMED
-		mov	byte ptr word_26006, 0
-		mov	dword_26002, 6050A05h
-		mov	byte ptr word_26006+1, 20h ; ' '
+		mov	_bullet_template.BT_angle, 0
+		mov	dword ptr _bullet_template.spread, (6 shl 24) or (5 shl 16) or (10 shl 8) or 5
+		mov	_bullet_template.speed, (2 shl 4)
 		call	sub_15A5C
 		mov	_bullet_template.pattern, BP_RING_STACK_AIMED
-		mov	byte ptr dword_26002+3,	4
-		mov	byte ptr dword_26002, 20h ; ' '
+		mov	_bullet_template.stack_speed_delta, 4
+		mov	_bullet_template.spread, 32
 		call	sub_15A5C
 		call	snd_se_play pascal, 15
 
@@ -31308,8 +31276,8 @@ midboss5_update	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
-		mov	point_25FFC, eax
-		mov	dword_2A722, eax
+		mov	_bullet_template.BT_origin, eax
+		mov	point_2A722, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -33503,12 +33471,7 @@ _turbo_mode	db ?
 include th02/demo[bss].asm
 byte_25FF8	db ?
 		db ?
-word_25FFA	dw ?
-point_25FFC	Point <?>
 include th04/bullet/template[bss].asm
-byte_26001	db ?
-dword_26002	dd ?
-word_26006	dw ?
 include th05/lasers[bss].asm
 include th04/midboss/vars[bss].asm
 include th04/boss/vars[bss].asm
@@ -34378,7 +34341,7 @@ include th04/bullet/bullets[bss].asm
 		dd    ?	;
 		dd    ?	;
 		dd    ?	;
-dword_2A722	dd ?
+point_2A722	Point <?>
 dword_2A726	dd ?
 word_2A72A	dw ?
 word_2A72C	dw ?
@@ -36283,8 +36246,7 @@ fp_2CE4A	dw ?
 byte_2CE4C	db ?
 		db ?
 include th04/stage_funcs[bss].asm
-word_2CE52	dw ?
-word_2CE54	dw ?
+point_2CE52	Point <?>
 byte_2CE56	db ?
 		dd    ?	;
 		dd    ?	;
