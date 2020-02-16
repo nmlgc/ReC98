@@ -41,4 +41,21 @@ typedef enum {
 	BP_FORCESINGLE_AIMED = 0x41,
 } bullet_pattern_t;
 
+/// Spawn types
+/// -----------
+/// Not an enum for consistency with TH05, which uses two components OR'd
+/// together.
+
+// Won't spawn bullets at the end of a gather animation. Effectively becomes
+// BST_BULLET16 when used outside a gather_t. (Mugetsu's 4th phase actually
+// relies on this!)
+#define BST_GATHER_ONLY 0
+
+#define BST_PELLET 1	/* ignoring [patnum] */
+#define BST_BULLET16 2
+#define BST_GATHER_PELLET 3
+#define BST_BULLET16_CLOUD_FORWARDS 4
+#define BST_BULLET16_CLOUD_BACKWARDS 5
+/// -----------
+
 #pragma option -b

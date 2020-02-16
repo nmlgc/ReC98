@@ -1,11 +1,11 @@
-/// Game-specific pattern types
-/// ---------------------------
+/// Game-specific pattern and spawn types
+/// -------------------------------------
 #if GAME == 5
 # include "th05/bullet/pattypes.h"
 #else
 # include "th04/bullet/pattypes.h"
 #endif
-/// ---------------------------
+/// -------------------------------------
 
 /// States and modes
 /// ----------------

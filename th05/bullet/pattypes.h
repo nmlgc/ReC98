@@ -44,4 +44,18 @@ typedef enum {
 	BP_FORCESINGLE_AIMED = (BPCF_SINGLE + BPC0_AIMED),
 } bullet_pattern_t;
 
+/// Spawn types
+/// -----------
+// Spawns special-moving bullets with BST_NORMAL after the gather animation.
+// Effectively becomes BST_NORMAL when used outside a gather_t.
+#define BST_GATHER_NORMAL_SPECIAL_MOVE 0xFE
+
+#define BST_NORMAL 0x00
+#define BST_GATHER_PELLET 0x01
+#define BST_CLOUD_FORWARDS 0x02
+#define BST_CLOUD_BACKWARDS 0x03
+
+#define BST_SLOWDOWN 0x10	/* can be OR'd into any of the above */
+/// -----------
+
 #pragma option -b
