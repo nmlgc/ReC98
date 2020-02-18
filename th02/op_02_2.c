@@ -3,10 +3,12 @@
  * 2nd part of code segment #2 of TH02's OP.EXE
  */
 
+#include "libs/kaja/kaja.h"
 #include "th02/th02.h"
 #include "th02/mem.h"
 #include "th02/initexit.h"
 #include "th02/formats/pi.h"
+#include "th02/snd/snd.h"
 
 #pragma codeseg op_02_TEXT
 #pragma option -3

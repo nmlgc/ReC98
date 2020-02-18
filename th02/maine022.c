@@ -3,9 +3,11 @@
  * 2nd part of code segment #2 of TH02's MAINE.EXE
  */
 
+#include "libs/kaja/kaja.h"
 #include "th02/th02.h"
 #include "th02/mem.h"
 #include "th02/formats/pi.h"
+#include "th02/snd/snd.h"
 
 #pragma codeseg maine_02_TEXT
 

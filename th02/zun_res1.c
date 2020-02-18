@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 #include "th02/th02.h"
+#include "th02/snd/snd.h"
 
 #pragma option -a1
 

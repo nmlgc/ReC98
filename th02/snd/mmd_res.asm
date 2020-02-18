@@ -1,4 +1,3 @@
-; int DEFCONV snd_mmd_resident(void)
 proc_defconv snd_mmd_resident
 	xor	ax, ax
 	mov	es, ax

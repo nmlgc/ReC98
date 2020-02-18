@@ -1,4 +1,3 @@
-; void DEFCONV snd_determine_mode()
 proc_defconv snd_determine_mode
 	mov	ah, PMD_GET_DRIVER_VERSION
 	int	60h

@@ -3,8 +3,10 @@
  * Code segment #6 of TH02's OP.EXE
  */
 
+#include "libs/kaja/kaja.h"
 #include "th02\th02.h"
 #include "th02/formats/pi.h"
+#include "th02/snd/snd.h"
 
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 #define SEL_QUIT TRACK_COUNT + 1

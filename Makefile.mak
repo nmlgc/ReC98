@@ -57,7 +57,7 @@ $**
 |
 
 bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c
-	$(CC) $(CFLAGS) -mt -lt -Z -nbin\th02\ -eZUN_RES.COM @&&|
+	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
 $**
 | masters.lib
 

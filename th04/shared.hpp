@@ -24,11 +24,6 @@ int pascal far select_for_rank(
 #include "th04/formats/bb.h"
 /// -------
 
-/// Sound
-/// -----
-#include "th02/snd/snd.h"
-/// -----
-
 /// Player
 /// ------
 #include "th04/player/player.h"

@@ -1,4 +1,3 @@
-; void snd_se_reset(void)
 func snd_se_reset
 	mov	_snd_se_frame, 0
 	mov	_snd_se_playing, -1
@@ -6,7 +5,6 @@ func snd_se_reset
 endfunc
 
 
-; void DEFCONV snd_se_play(unsigned char se)
 func SND_SE_PLAY
 	mov	bx, sp
 	mov	dx, ss:[bx+4]
@@ -32,7 +30,6 @@ func SND_SE_PLAY
 endfunc
 
 
-; void snd_se_update(void)
 func snd_se_update
 	cmp	_snd_se_mode, SND_SE_OFF
 	jz	short @@ret

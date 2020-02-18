@@ -1,4 +1,3 @@
-; int __pascal snd_kaja_interrupt(int ax)
 snd_kaja_interrupt	proc
 @@ax	= word ptr (cPtrSize + 2)
 

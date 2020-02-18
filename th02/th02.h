@@ -146,39 +146,6 @@ void pascal frame_delay_2(int frames);
 
 void key_delay(void);
 
-// Sound
-// -----
-typedef enum {
-	SND_BGM_OFF,
-	SND_BGM_FM,
-	SND_BGM_MIDI
-} snd_bgm_mode_t;
-
-#include "libs\kaja\kaja.h"
-
-extern char snd_active;
-extern char snd_interrupt_if_midi;
-extern unsigned char snd_midi_active;
-extern char snd_midi_possible;
-extern char snd_fm_possible;
-
-int snd_pmd_resident(void);
-int snd_mmd_resident(void);
-
-int snd_determine_mode(void);
-int16_t snd_kaja_interrupt(int16_t ax);
-#define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
-
-#define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
-#define SND_LOAD_SE (PMD_GET_SE_ADDRESS << 8)
-
-void snd_load(const char *fn, kaja_func_t func);
-
-void snd_se_reset(void);
-void snd_se_play(int new_se);
-void snd_se_update(void);
-// -----
-
 // Music Room
 #define MUSIC_CMT_FILE "MUSIC.TXT"
 #define MUSIC_CMT_LINE_LEN 42

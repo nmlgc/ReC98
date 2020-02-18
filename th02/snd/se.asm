@@ -1,4 +1,3 @@
-; void snd_se_reset(void)
 proc_defconv snd_se_reset
 	mov	_snd_se_frame, 0
 	mov	_snd_se_playing, -1
@@ -6,7 +5,6 @@ proc_defconv snd_se_reset
 endp_defconv
 	even
 
-; void DEFCONV snd_se_play(unsigned char se)
 retfunc macro
 	if GAME ge 3
 		ret 2
@@ -45,7 +43,6 @@ proc_defconv snd_se_play
 endp_defconv
 	even
 
-; void snd_se_update(void)
 proc_defconv snd_se_update
 	cmp	_snd_fm_possible, 0
 	jz	short @@ret

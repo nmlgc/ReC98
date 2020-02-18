@@ -1,4 +1,3 @@
-; int DEFCONV snd_pmd_resident(void)
 proc_defconv snd_pmd_resident
 	mov	_snd_interrupt_if_midi, 60h
 	mov	_snd_midi_active, 0
