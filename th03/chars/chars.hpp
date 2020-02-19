@@ -11,6 +11,23 @@ typedef enum {
 	PLAYCHAR_COUNT = 9,
 } playchars_t;
 
+// Encodes a playchars_t together with its alternate palette flag.
+#pragma option -a1
+struct playchar_paletted_t {
+	unsigned char v;
+
+	int filename_id() const {
+		return (v - 1);
+	}
+
+	playchars_t char_id() const {
+		return static_cast<playchars_t>(filename_id() / 2);
+	}
+};
+#pragma option -a.
+
+#define TO_PALETTED(playchar) ((playchar << 1) + 1)
+
 typedef struct {
 	SPPoint8 aligned;
 	SPPoint8 diagonal;
