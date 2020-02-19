@@ -1,25 +1,60 @@
+#pragma option -b-
+enum key_mode_t {
+	KM_KEY_KEY,
+	KM_JOY_KEY,
+	KM_KEY_JOY
+};
+
+enum vs_mode_t {
+	VS_1P_CPU = 0,
+	VS_1P_2P = 1,
+	VS_CPU_CPU = 2,
+};
+
+enum game_mode_t {
+	GM_NONE = 0,
+	GM_STORY = 1,
+	GM_DEMO = 0x7F,
+	GM_VS = 0x80,
+	GM_VS_1P_CPU = GM_VS + VS_1P_CPU,
+	GM_VS_1P_2P = GM_VS + VS_1P_2P,
+	GM_VS_CPU_CPU = GM_VS + VS_CPU_CPU,
+};
+#pragma option -b
+
+// Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
+// place. Also used for just showing the high scores from the main menu.
+#define STAGE_NONE -1
+#define STAGE_ALL 99
+#define STAGE_COUNT 9
+
+#define CREDIT_LIVES 2
+
+#define DEMO_COUNT 4
+
+#pragma option -a1
+#define RES_ID "YUMEConfig"
 typedef struct {
-	char id[11]; // "YUMEConfig"
-	char difficulty;
-	char playchar_paletted[2]; // ID of the player character in the same format as in playchar_palleted in player.h
-	char pl_is_cpu[2];
-	long random_seed;
-	char unused;
-	char music_mode;
-	char input_mode
-	bool game_over;
-	score_lebcd_t score_last[2];
-	char mode; /* 0x01 = Story mode
-	              0x7F = Demo mode
-	              0x80 = Player vs CPU
-	              0x81 = Player vs Player
-	              0x82 = CPU vs CPU */
-	char story_opponents[10]; // Character IDs are the same as in playchar_paletted
-	char stage_id;
-	char lifes;
-	bool story_beat; // Will cause OP.EXE to open the name registry
-	char credits_remaining;
-	bool op_fast_load;
-	char skill;
-	bool demo_active; // Doesn't get reset to 0 immediatly when the demo finishes
+	char id[RES_ID_LEN];
+	unsigned char rank;
+	playchar_paletted_t playchar_paletted[PLAYER_COUNT];
+	bool is_cpu[PLAYER_COUNT];
+	long rand;
+	int8_t unused_1;
+	unsigned char bgm_mode;
+	unsigned char key_mode;
+	unsigned char pid_winner;
+	score_lebcd_t score_last[PLAYER_COUNT];
+	unsigned char game_mode;
+	playchar_paletted_t story_opponents[STAGE_COUNT];
+	int8_t unused_2;
+	unsigned char story_stage;
+	unsigned char story_lives;
+	bool show_score_menu;
+	unsigned char rem_credits;
+	bool op_skip_animation;
+	unsigned char skill;
+	unsigned char demo_num;	// 0 = no demo active
+	int8_t unused_3[198];
 } resident_t;
+#pragma option -a.

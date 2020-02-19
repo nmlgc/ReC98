@@ -147,9 +147,9 @@ public CFG_LOAD
 cfg_load	proc near
 
 var_A		= word ptr -0Ah
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
+@@bgm_mode		= byte ptr -8
+@@key_mode		= byte ptr -7
+@@rank		= byte ptr -6
 var_3		= word ptr -3
 
 		enter	0Ah, 0
@@ -157,7 +157,7 @@ var_3		= word ptr -3
 		push	offset aYume_cfg ; "YUME.CFG"
 		call	file_ropen
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@bgm_mode]
 		push	ax
 		push	8
 		call	file_read
@@ -167,29 +167,29 @@ var_3		= word ptr -3
 		mov	word ptr _resident+2, ax
 		mov	word ptr _resident, 0
 		les	bx, _resident
-		mov	al, [bp+var_8]
-		mov	es:[bx+15h], al
+		mov	al, [bp+@@bgm_mode]
+		mov	es:[bx+resident_t.bgm_mode], al
 		call	snd_determine_mode
 		mov	byte_D880, 0
 		cmp	_snd_active, 0
 		jnz	short loc_9961
 		les	bx, _resident
-		mov	byte ptr es:[bx+15h], 0
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		mov	byte_D880, 1
 		jmp	short loc_996C
 ; ---------------------------------------------------------------------------
 
 loc_9961:
-		cmp	[bp+var_8], 0
+		cmp	[bp+@@bgm_mode], 0
 		jnz	short loc_996C
 		mov	_snd_active, 0
 
 loc_996C:
 		les	bx, _resident
-		mov	al, [bp+var_7]
-		mov	es:[bx+16h], al
-		mov	al, [bp+var_6]
-		mov	es:[bx+0Bh], al
+		mov	al, [bp+@@key_mode]
+		mov	es:[bx+resident_t.key_mode], al
+		mov	al, [bp+@@rank]
+		mov	es:[bx+resident_t.rank], al
 		leave
 		retn
 cfg_load	endp
@@ -201,9 +201,9 @@ cfg_load	endp
 public CFG_SAVE
 cfg_save	proc near
 
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
+@@bgm_mode		= byte ptr -8
+@@key_mode		= byte ptr -7
+@@rank		= byte ptr -6
 
 		enter	8, 0
 		push	ds
@@ -213,14 +213,14 @@ var_6		= byte ptr -6
 		push	0
 		call	file_seek
 		les	bx, _resident
-		mov	al, es:[bx+15h]
-		mov	[bp+var_8], al
-		mov	al, es:[bx+16h]
-		mov	[bp+var_7], al
-		mov	al, es:[bx+0Bh]
-		mov	[bp+var_6], al
+		mov	al, es:[bx+resident_t.bgm_mode]
+		mov	[bp+@@bgm_mode], al
+		mov	al, es:[bx+resident_t.key_mode]
+		mov	[bp+@@key_mode], al
+		mov	al, es:[bx+resident_t.rank]
+		mov	[bp+@@rank], al
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@bgm_mode]
 		push	ax
 		push	4
 		call	file_write
@@ -236,12 +236,12 @@ cfg_save	endp
 public CFG_SAVE_EXIT
 cfg_save_exit	proc near
 
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
+@@bgm_mode		= byte ptr -8
+@@key_mode		= byte ptr -7
+@@rank		= byte ptr -6
 
 		enter	8, 0
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@bgm_mode]
 		push	ss
 		push	ax
 		push	ds
@@ -255,14 +255,14 @@ var_6		= byte ptr -6
 		push	0
 		call	file_seek
 		les	bx, _resident
-		mov	al, es:[bx+15h]
-		mov	[bp+var_8], al
-		mov	al, es:[bx+16h]
-		mov	[bp+var_7], al
-		mov	al, es:[bx+0Bh]
-		mov	[bp+var_6], al
+		mov	al, es:[bx+resident_t.bgm_mode]
+		mov	[bp+@@bgm_mode], al
+		mov	al, es:[bx+resident_t.key_mode]
+		mov	[bp+@@key_mode], al
+		mov	al, es:[bx+resident_t.rank]
+		mov	[bp+@@rank], al
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@bgm_mode]
 		push	ax
 		push	8
 		call	file_write
@@ -284,15 +284,15 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		les	bx, _resident
-		mov	byte ptr es:[bx+39h], 0
-		mov	byte ptr es:[bx+17h], 0
-		mov	byte ptr es:[bx+33h], 0
-		mov	byte ptr es:[bx+0Eh], 0
-		mov	byte ptr es:[bx+0Fh], 1
-		mov	byte ptr es:[bx+28h], 1
-		mov	byte ptr es:[bx+34h], 2
-		mov	byte ptr es:[bx+35h], 0
-		mov	byte ptr es:[bx+0Dh], 0FFh
+		mov	es:[bx+resident_t.demo_num], 0
+		mov	es:[bx+resident_t.pid_winner], 0
+		mov	es:[bx+resident_t.story_stage], 0
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], 0
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], 1
+		mov	es:[bx+resident_t.game_mode], GM_STORY
+		mov	es:[bx+resident_t.story_lives], CREDIT_LIVES
+		mov	es:[bx+resident_t.show_score_menu], 0
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], -1
 		call	sub_BD9A
 		or	al, al
 		jz	short loc_9A59
@@ -302,7 +302,7 @@ var_2		= word ptr -2
 
 loc_9A59:
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		dec	ax
 		cwd
@@ -313,7 +313,7 @@ loc_9A59:
 		mov	ah, 0
 		mov	[bp+var_4], ax
 		mov	bx, word ptr _resident
-		mov	eax, es:[bx+10h]
+		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
 		xor	si, si
 		jmp	short loc_9ADB
@@ -339,16 +339,16 @@ loc_9A85:
 		les	bx, _resident
 		add	bx, si
 		mov	al, byte ptr [bp+var_2]
-		mov	es:[bx+29h], al
+		mov	es:[bx+resident_t.story_opponents], al
 		mov	bx, word ptr _resident
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		cmp	ax, [bp+var_2]
 		jnz	short loc_9ADA
 		add	bx, si
 		mov	al, byte ptr [bp+var_2]
 		inc	al
-		mov	es:[bx+29h], al
+		mov	es:[bx+resident_t.story_opponents], al
 
 loc_9ADA:
 		inc	si
@@ -357,23 +357,23 @@ loc_9ADB:
 		cmp	si, 6
 		jl	short loc_9A85
 		les	bx, _resident
-		mov	al, es:[bx+29h]
-		mov	es:[bx+0Dh], al
+		mov	al, es:[bx+resident_t.story_opponents]
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], al
 		mov	al, byte ptr [bp+var_4]
 		add	al, al
 		inc	al
-		mov	es:[bx+2Fh], al
-		mov	byte ptr es:[bx+30h], 0Fh
-		cmp	byte ptr es:[bx+0Ch], 0Fh
+		mov	es:[bx+resident_t.story_opponents][6], al
+		mov	es:[bx+resident_t.story_opponents][7], (1 + (PLAYCHAR_CHIYURI * 2))
+		cmp	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_CHIYURI * 2))
 		jnz	short loc_9B07
-		inc	byte ptr es:[bx+30h]
+		inc	es:[bx+resident_t.story_opponents][7]
 
 loc_9B07:
 		les	bx, _resident
-		mov	byte ptr es:[bx+31h], 11h
-		cmp	byte ptr es:[bx+0Ch], 11h
+		mov	es:[bx+resident_t.story_opponents][8], (1 + (PLAYCHAR_YUMEMI * 2))
+		cmp	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_YUMEMI * 2))
 		jnz	short loc_9B1B
-		inc	byte ptr es:[bx+31h]
+		inc	es:[bx+resident_t.story_opponents][8]
 
 loc_9B1B:
 		xor	si, si
@@ -383,7 +383,7 @@ loc_9B1B:
 loc_9B1F:
 		les	bx, _resident
 		add	bx, si
-		mov	al, es:[bx+29h]
+		mov	al, es:[bx+resident_t.story_opponents]
 		mov	ah, 0
 		dec	ax
 		cwd
@@ -394,7 +394,7 @@ loc_9B1F:
 		inc	si
 
 loc_9B39:
-		cmp	si, 9
+		cmp	si, STAGE_COUNT
 		jl	short loc_9B1F
 		xor	si, si
 		jmp	short loc_9B4E
@@ -403,20 +403,20 @@ loc_9B39:
 loc_9B42:
 		les	bx, _resident
 		add	bx, si
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.score_last], 0
 		inc	si
 
 loc_9B4E:
-		cmp	si, 10h
+		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9B42
 		les	bx, _resident
-		mov	byte ptr es:[bx+36h], 3
-		mov	byte ptr es:[bx+37h], 0
-		mov	al, es:[bx+0Bh]
+		mov	es:[bx+resident_t.rem_credits], 3
+		mov	es:[bx+resident_t.op_skip_animation], 0
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
-		imul	ax, 19h
-		add	al, 46h	; 'F'
-		mov	es:[bx+38h], al
+		imul	ax, 25
+		add	al, 70
+		mov	es:[bx+resident_t.skill], al
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
@@ -496,7 +496,7 @@ var_2		= word ptr -2
 		push	si
 		xor	si, si
 		les	bx, _resident
-		cmp	byte ptr es:[bx+28h], 80h
+		cmp	es:[bx+resident_t.game_mode], GM_VS
 		jnb	loc_9C8B
 		call	text_clear
 		call	sub_B0AF
@@ -558,13 +558,13 @@ loc_9C7E:
 
 loc_9C8B:
 		les	bx, _resident
-		mov	al, es:[bx+28h]
+		mov	al, es:[bx+resident_t.game_mode]
 		mov	ah, 0
-		add	ax, 0FF80h
+		add	ax, -GM_VS
 		mov	[bp+var_2], ax
 
 loc_9C9B:
-		cmp	[bp+var_2], 2
+		cmp	[bp+var_2], VS_CPU_CPU
 		jnz	short loc_9CA5
 		mov	al, 1
 		jmp	short loc_9CA7
@@ -575,8 +575,8 @@ loc_9CA5:
 
 loc_9CA7:
 		les	bx, _resident
-		mov	es:[bx+0Eh], al
-		cmp	[bp+var_2], 1
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], al
+		cmp	[bp+var_2], VS_1P_2P
 		jz	short loc_9CB9
 		mov	al, 1
 		jmp	short loc_9CBB
@@ -587,14 +587,14 @@ loc_9CB9:
 
 loc_9CBB:
 		les	bx, _resident
-		mov	es:[bx+0Fh], al
-		mov	byte ptr es:[bx+39h], 0
-		mov	byte ptr es:[bx+17h], 0
-		mov	byte ptr es:[bx+33h], 0
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], al
+		mov	es:[bx+resident_t.demo_num], 0
+		mov	es:[bx+resident_t.pid_winner], 0
+		mov	es:[bx+resident_t.story_stage], 0
 		mov	al, byte ptr [bp+var_2]
-		add	al, 80h
-		mov	es:[bx+28h], al
-		mov	byte ptr es:[bx+35h], 0
+		add	al, GM_VS
+		mov	es:[bx+resident_t.game_mode], al
+		mov	es:[bx+resident_t.show_score_menu], 0
 		cmp	[bp+var_2], 1
 		jnz	short loc_9CEF
 		call	sub_BA88
@@ -610,7 +610,7 @@ loc_9CEF:
 
 loc_9CF6:
 		les	bx, _resident
-		mov	byte ptr es:[bx+28h], 0
+		mov	es:[bx+resident_t.game_mode], GM_NONE
 		mov	al, 1
 		jmp	short loc_9D49
 ; ---------------------------------------------------------------------------
@@ -623,11 +623,11 @@ loc_9D03:
 loc_9D0A:
 		les	bx, _resident
 		add	bx, [bp+var_2]
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.score_last], 0
 		inc	[bp+var_2]
 
 loc_9D19:
-		cmp	[bp+var_2], 10h
+		cmp	[bp+var_2], (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9D0A
 		call	cfg_save
 		call	gaiji_restore
@@ -658,27 +658,27 @@ sub_9D4C	proc near
 		mov	bp, sp
 		push	si
 		les	bx, _resident
-		mov	byte ptr es:[bx+0Eh], 1
-		mov	byte ptr es:[bx+0Fh], 1
-		inc	byte ptr es:[bx+39h]
-		cmp	byte ptr es:[bx+39h], 4
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], 1
+		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], 1
+		inc	es:[bx+resident_t.demo_num]
+		cmp	es:[bx+resident_t.demo_num], DEMO_COUNT
 		jbe	short loc_9D6E
-		mov	byte ptr es:[bx+39h], 1
+		mov	es:[bx+resident_t.demo_num], 1
 
 loc_9D6E:
 		les	bx, _resident
-		mov	byte ptr es:[bx+17h], 0
-		mov	byte ptr es:[bx+33h], 0
-		mov	byte ptr es:[bx+28h], 7Fh
-		mov	byte ptr es:[bx+35h], 0
-		mov	al, es:[bx+39h]
+		mov	es:[bx+resident_t.pid_winner], 0
+		mov	es:[bx+resident_t.story_stage], 0
+		mov	es:[bx+resident_t.game_mode], GM_DEMO
+		mov	es:[bx+resident_t.show_score_menu], 0
+		mov	al, es:[bx+resident_t.demo_num]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	al, [bx+0C2h]
 		mov	bx, word ptr _resident
-		mov	es:[bx+0Ch], al
-		mov	al, es:[bx+39h]
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][0], al
+		mov	al, es:[bx+resident_t.demo_num]
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 0C2h ; 'Â'
@@ -687,14 +687,14 @@ loc_9D6E:
 		mov	bx, ax
 		mov	al, [bx]
 		mov	bx, word ptr _resident
-		mov	es:[bx+0Dh], al
-		mov	al, es:[bx+39h]
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], al
+		mov	al, es:[bx+resident_t.demo_num]
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	eax, [bx+0C8h]
 		mov	bx, word ptr _resident
-		mov	es:[bx+10h], eax
+		mov	es:[bx+resident_t.rand], eax
 		xor	si, si
 		jmp	short loc_9DDF
 ; ---------------------------------------------------------------------------
@@ -702,11 +702,11 @@ loc_9D6E:
 loc_9DD3:
 		les	bx, _resident
 		add	bx, si
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.score_last], 0
 		inc	si
 
 loc_9DDF:
-		cmp	si, 10h
+		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9DD3
 		push	1
 		call	palette_black_out
@@ -743,7 +743,7 @@ sub_9E16	proc near
 loc_9E24:
 		call	input_mode_interface
 		les	bx, _resident
-		inc	dword ptr es:[bx+10h]
+		inc	es:[bx+resident_t.rand]
 		inc	si
 		cmp	si, 208h
 		jle	short loc_9E3C
@@ -786,9 +786,9 @@ score_menu	proc near
 		mov	bp, sp
 		push	si
 		les	bx, _resident
-		mov	byte ptr es:[bx+33h], 0FFh
-		mov	byte ptr es:[bx+35h], 1
-		mov	byte ptr es:[bx+28h], 0
+		mov	es:[bx+resident_t.story_stage], STAGE_NONE
+		mov	es:[bx+resident_t.show_score_menu], 1
+		mov	es:[bx+resident_t.game_mode], GM_NONE
 		xor	si, si
 		jmp	short loc_9EA6
 ; ---------------------------------------------------------------------------
@@ -796,11 +796,11 @@ score_menu	proc near
 loc_9E9A:
 		les	bx, _resident
 		add	bx, si
-		mov	byte ptr es:[bx+18h], 0
+		mov	es:[bx+resident_t.score_last], 0
 		inc	si
 
 loc_9EA6:
-		cmp	si, 10h
+		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
 		jl	short loc_9E9A
 		call	cfg_save
 		call	gaiji_restore
@@ -919,36 +919,36 @@ arg_2		= word ptr  6
 		call	gaiji_putsa pascal, (25 shl 16) + 17, ds offset gpRANK, si
 		call	text_putsa pascal, (37 shl 16) + 17, ds, offset asc_D965, TX_WHITE
 		les	bx, _resident
-		mov	al, es:[bx+0Bh]
+		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 3
+		cmp	bx, RANK_LUNATIC
 		ja	loc_A092
 		add	bx, bx
 		jmp	cs:off_A099[bx]
 
-loc_9FA2:
+@@easy:
 		push	(38 shl 16) + 17
 		push	ds
 		push	offset gpEASY
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_9FAF:
+@@normal:
 		push	(37 shl 16) + 17
 		push	ds
 		push	offset gpNORMAL
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_9FBC:
+@@hard:
 		push	(38 shl 16) + 17
 		push	ds
 		push	offset gpHARD
 		jmp	loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_9FC9:
+@@lunatic:
 		push	(37 shl 16) + 17
 		push	ds
 		push	offset gpLUNATIC
@@ -960,14 +960,14 @@ loc_9FD6:
 		jnz	short loc_A02A
 		call	gaiji_putsa pascal, (25 shl 16) + 19, ds, offset gpMUSIC, si
 		les	bx, _resident
-		mov	al, es:[bx+15h]
+		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_A006
-		cmp	ax, 1
-		jz	short loc_A012
-		cmp	ax, 2
-		jz	short loc_A01E
+		cmp	ax, SND_BGM_FM
+		jz	short @@fm
+		cmp	ax, SND_BGM_MIDI
+		jz	short @@midi
 		jmp	loc_A092
 ; ---------------------------------------------------------------------------
 
@@ -978,14 +978,14 @@ loc_A006:
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_A012:
+@@fm:
 		push	(35 shl 16) + 19
 		push	ds
 		push	offset gpFM_86
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_A01E:
+@@midi:
 		push	(35 shl 16) + 19
 		push	ds
 		push	offset gpMIDI_SC88
@@ -997,32 +997,32 @@ loc_A02A:
 		jnz	short loc_A07D
 		call	gaiji_putsa pascal, (23 shl 16) + 21, ds, offset gpKEYCONFIG, si
 		les	bx, _resident
-		mov	al, es:[bx+16h]
+		mov	al, es:[bx+resident_t.key_mode]
 		mov	ah, 0
 		or	ax, ax
-		jz	short loc_A059
-		cmp	ax, 1
-		jz	short loc_A065
-		cmp	ax, 2
-		jz	short loc_A071
+		jz	short @@key_vs_key
+		cmp	ax, KM_JOY_KEY
+		jz	short @@joy_vs_key
+		cmp	ax, KM_KEY_JOY
+		jz	short @@key_vs_joy
 		jmp	short loc_A092
 ; ---------------------------------------------------------------------------
 
-loc_A059:
+@@key_vs_key:
 		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpKEY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_A065:
+@@joy_vs_key:
 		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpJOY_VS_KEY
 		jmp	short loc_A08C
 ; ---------------------------------------------------------------------------
 
-loc_A071:
+@@key_vs_joy:
 		push	(37 shl 16) + 21
 		push	ds
 		push	offset gpKEY_VS_JOY
@@ -1045,14 +1045,14 @@ loc_A092:
 		pop	si
 		pop	bp
 		retn	4
-option_put	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-off_A099	dw offset loc_9FA2
-		dw offset loc_9FAF
-		dw offset loc_9FBC
-		dw offset loc_9FC9
+off_A099	dw offset @@easy
+		dw offset @@normal
+		dw offset @@hard
+		dw offset @@lunatic
+option_put	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1180,8 +1180,8 @@ menu_sel_start:
 
 menu_sel_vs_start:
 		les	bx, _resident
-		mov	byte ptr es:[bx+0Ch], 1
-		mov	byte ptr es:[bx+0Dh], 1
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][0], (1 + (PLAYCHAR_REIMU * 2))
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], (1 + (PLAYCHAR_REIMU * 2))
 		call	start_vs
 
 loc_A19A:
@@ -1315,10 +1315,10 @@ loc_A27B:
 
 loc_A298:
 		les	bx, _resident
-		inc	byte ptr es:[bx+0Bh]
-		cmp	byte ptr es:[bx+0Bh], 3
+		inc	es:[bx+resident_t.rank]
+		cmp	es:[bx+resident_t.rank], RANK_LUNATIC
 		jbe	short loc_A312
-		mov	byte ptr es:[bx+0Bh], 0
+		mov	es:[bx+resident_t.rank], RANK_EASY
 		jmp	short loc_A312
 ; ---------------------------------------------------------------------------
 
@@ -1326,9 +1326,9 @@ loc_A2AE:
 		cmp	byte_D880, 0
 		jnz	short loc_A312
 		les	bx, _resident
-		cmp	byte ptr es:[bx+15h], 0
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_A2DB
-		mov	byte ptr es:[bx+15h], 1
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
 		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
@@ -1337,7 +1337,7 @@ loc_A2AE:
 
 loc_A2DB:
 		les	bx, _resident
-		mov	byte ptr es:[bx+15h], 0
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		kajacall	KAJA_SONG_STOP
 		mov	_snd_active, 0
 
@@ -1352,10 +1352,10 @@ loc_A2F1:
 
 loc_A2FE:
 		les	bx, _resident
-		inc	byte ptr es:[bx+16h]
-		cmp	byte ptr es:[bx+16h], 2
+		inc	es:[bx+resident_t.key_mode]
+		cmp	es:[bx+resident_t.key_mode], KM_KEY_JOY
 		jbe	short loc_A312
-		mov	byte ptr es:[bx+16h], 0
+		mov	es:[bx+resident_t.key_mode], KM_KEY_KEY
 
 loc_A312:
 		mov	al, _menu_sel
@@ -1380,15 +1380,15 @@ loc_A31D:
 
 loc_A33B:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+0Bh], 0
+		cmp	es:[bx+resident_t.rank], RANK_EASY
 		jnz	short loc_A34D
-		mov	byte ptr es:[bx+0Bh], 3
+		mov	es:[bx+resident_t.rank], RANK_LUNATIC
 		jmp	short loc_A3C1
 ; ---------------------------------------------------------------------------
 
 loc_A34D:
 		les	bx, _resident
-		dec	byte ptr es:[bx+0Bh]
+		dec	es:[bx+resident_t.rank]
 		jmp	short loc_A3C1
 ; ---------------------------------------------------------------------------
 
@@ -1396,9 +1396,9 @@ loc_A357:
 		cmp	byte_D880, 0
 		jnz	short loc_A3C1
 		les	bx, _resident
-		cmp	byte ptr es:[bx+15h], 0
+		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_A384
-		mov	byte ptr es:[bx+15h], 1
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
 		call	snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
@@ -1407,7 +1407,7 @@ loc_A357:
 
 loc_A384:
 		les	bx, _resident
-		mov	byte ptr es:[bx+15h], 0
+		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		kajacall	KAJA_SONG_STOP
 		mov	_snd_active, 0
 
@@ -1422,15 +1422,15 @@ loc_A39A:
 
 loc_A3A7:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+16h], 0
+		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_A3B9
-		mov	byte ptr es:[bx+16h], 2
+		mov	es:[bx+resident_t.key_mode], KM_KEY_JOY
 		jmp	short loc_A3C1
 ; ---------------------------------------------------------------------------
 
 loc_A3B9:
 		les	bx, _resident
-		dec	byte ptr es:[bx+16h]
+		dec	es:[bx+resident_t.key_mode]
 
 loc_A3C1:
 		mov	al, _menu_sel
@@ -1524,9 +1524,9 @@ loc_A468:
 		call	gaiji_entry_bfnt
 		call	cfg_load
 		les	bx, _resident
-		cmp	byte ptr es:[bx+28h], 80h
+		cmp	es:[bx+resident_t.game_mode], GM_VS
 		jb	short loc_A497
-		cmp	byte ptr es:[bx+39h], 0
+		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_A497
 		call	sub_B38D
 		call	sub_B3EF
@@ -1535,17 +1535,17 @@ loc_A468:
 
 loc_A497:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+37h], 0
+		cmp	es:[bx+resident_t.op_skip_animation], 0
 		jnz	short loc_A4B0
 		call	sub_ADE2
 		les	bx, _resident
-		mov	byte ptr es:[bx+37h], 1
+		mov	es:[bx+resident_t.op_skip_animation], 1
 		jmp	short loc_A4BC
 ; ---------------------------------------------------------------------------
 
 loc_A4B0:
 		les	bx, _resident
-		mov	byte ptr es:[bx+37h], 0
+		mov	es:[bx+resident_t.op_skip_animation], 0
 		call	sub_B008
 
 loc_A4BC:
@@ -1578,7 +1578,7 @@ loc_A4D2:
 
 loc_A4EE:
 		les	bx, _resident
-		inc	dword ptr es:[bx+10h]	; resident->frame++;
+		inc	es:[bx+resident_t.rand]
 		push	1
 		call	frame_delay
 
@@ -2623,7 +2623,7 @@ sub_B424	proc near
 		mov	word_FC64, 0C8h	; 'È'
 		les	bx, _resident
 		assume es:nothing
-		mov	eax, es:[bx+10h]
+		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
 		call	text_clear
 		call	super_free
@@ -2704,7 +2704,7 @@ sub_B4F3	proc near
 		push	(32 shl 16) or 96
 		cmp	byte_FC5A, 0
 		jnz	short loc_B50C
-		mov	al, byte_FC58
+		mov	al, _playchars[0]
 		cbw
 		add	ax, 2
 		jmp	short loc_B50E
@@ -2719,7 +2719,7 @@ loc_B50E:
 		push	(416 shl 16) or 96
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
-		mov	al, byte_FC59
+		mov	al, _playchars[1]
 		cbw
 		add	ax, 2
 		jmp	short loc_B52D
@@ -2746,7 +2746,7 @@ sub_B535	proc near
 		push	(32 shl 16) or 96
 		cmp	byte_FC5A, 0
 		jnz	short loc_B54E
-		mov	al, byte_FC58
+		mov	al, _playchars[0]
 		cbw
 		add	ax, 2
 		jmp	short loc_B550
@@ -2782,7 +2782,7 @@ var_2		= word ptr -2
 		push	11
 		call	cdg_put_noalpha
 		les	bx, _resident
-		cmp	byte ptr es:[bx+28h], 1
+		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B590
 		push	(416 shl 16) or 304
 		push	11
@@ -2814,7 +2814,7 @@ loc_B5AF:
 		sub	si, 0Bh
 
 loc_B5C7:
-		mov	al, byte_FC58
+		mov	al, _playchars[0]
 		cbw
 		imul	ax, 3
 		add	ax, [bp+var_2]
@@ -2824,7 +2824,7 @@ loc_B5C7:
 		cmp	ax, di
 		jl	short loc_B5AF
 		les	bx, _resident
-		cmp	byte ptr es:[bx+28h], 1
+		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B61E
 		mov	di, 5
 		mov	si, 20Ch
@@ -2844,7 +2844,7 @@ loc_B5F0:
 		sub	si, 0Bh
 
 loc_B608:
-		mov	al, byte_FC59
+		mov	al, _playchars[1]
 		cbw
 		imul	ax, 3
 		add	ax, [bp+var_2]
@@ -2923,19 +2923,19 @@ sub_B670	proc near
 		push	12
 		call	cdg_put_noalpha
 		push	(176 shl 16) or 316
-		mov	al, byte_FC58
+		mov	al, _playchars[0]
 		cbw
 		add	ax, 13
 		push	ax
 		call	cdg_put_noalpha
 		les	bx, _resident
-		cmp	byte ptr es:[bx+28h], 1
+		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B6BE
 		push	(544 shl 16) or 304
 		push	12
 		call	cdg_put_noalpha
 		push	(560 shl 16) or 316
-		mov	al, byte_FC59
+		mov	al, _playchars[1]
 		cbw
 		add	ax, 13
 		push	ax
@@ -3304,7 +3304,7 @@ loc_B974:
 		mov	al, byte ptr [bp+var_2]
 		add	al, al
 		inc	al
-		mov	es:[bx+0Ch], al
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted], al
 		push	1
 		call	palette_white_in
 		mov	bx, 1
@@ -3312,11 +3312,11 @@ loc_B974:
 		cmp	byte ptr [bx+246Ah], 0
 		jz	short loc_B9CC
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
-		cmp	al, es:[bx+0Dh]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
+		cmp	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		jnz	short loc_B9CC
 		add	bx, si
-		inc	byte ptr es:[bx+0Ch]
+		inc	es:[bx+resident_t.RESIDENT_playchar_paletted]
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -3359,7 +3359,7 @@ loc_B9FB:
 		mov	al, byte ptr [bp+var_2]
 		add	al, al
 		add	al, 2
-		mov	es:[bx+0Ch], al
+		mov	es:[bx+resident_t.RESIDENT_playchar_paletted], al
 		push	1
 		call	palette_white_in
 		mov	bx, 1
@@ -3367,11 +3367,11 @@ loc_B9FB:
 		cmp	byte ptr [bx+246Ah], 0
 		jz	short loc_BA53
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
-		cmp	al, es:[bx+0Dh]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
+		cmp	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		jnz	short loc_BA53
 		add	bx, si
-		dec	byte ptr es:[bx+0Ch]
+		dec	es:[bx+resident_t.RESIDENT_playchar_paletted]
 		push	si
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -3417,23 +3417,23 @@ sub_BA88	proc near
 		call	sub_B424
 		call	text_clear
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_FC58, al
-		mov	al, es:[bx+0Dh]
+		mov	_playchars[0], al
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_FC59, al
+		mov	_playchars[1], al
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 0
-		cmp	byte ptr es:[bx+16h], 0
+		cmp	es:[bx+resident_t.key_mode], KM_KEY_KEY
 		jnz	short loc_BAD4
 		setfarfp	_input_mode, input_mode_key_vs_key
 		jmp	short loc_BAF9
@@ -3441,7 +3441,7 @@ sub_BA88	proc near
 
 loc_BAD4:
 		les	bx, _resident
-		cmp	byte ptr es:[bx+16h], 1
+		cmp	es:[bx+resident_t.key_mode], KM_JOY_KEY
 		jnz	short loc_BAED
 		setfarfp	_input_mode, input_mode_joy_vs_key
 		jmp	short loc_BAF9
@@ -3548,7 +3548,7 @@ loc_BBD0:
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _resident
-		inc	dword ptr es:[bx+10h]
+		inc	es:[bx+resident_t.rand]
 		jmp	loc_BB06
 ; ---------------------------------------------------------------------------
 
@@ -3570,20 +3570,20 @@ sub_BC1F	proc near
 		push	si
 		call	sub_B424
 		les	bx, _resident
-		mov	al, es:[bx+0Ch]
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][0]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_FC58, al
-		mov	al, es:[bx+0Dh]
+		mov	_playchars[0], al
+		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
 		dec	ax
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte_FC59, al
+		mov	_playchars[1], al
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 0
 		setfarfp	_input_mode, input_mode_interface
@@ -3695,7 +3695,7 @@ loc_BD42:
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _resident
-		inc	dword ptr es:[bx+10h]
+		inc	es:[bx+resident_t.rand]
 		jmp	loc_BC69
 ; ---------------------------------------------------------------------------
 
@@ -3723,7 +3723,7 @@ sub_BD9A	proc near
 		push	bp
 		mov	bp, sp
 		call	sub_B424
-		mov	byte_FC58, 0
+		mov	_playchars[0], 0
 		mov	byte_FC5A, 0
 		mov	byte_FC5B, 1
 		setfarfp	_input_mode, input_mode_interface
@@ -3804,7 +3804,7 @@ loc_BE68:
 		call	grcg_off
 		inc	word_FC62
 		les	bx, _resident
-		inc	dword ptr es:[bx+10h]
+		inc	es:[bx+resident_t.rand]
 		jmp	loc_BDC1
 ; ---------------------------------------------------------------------------
 
@@ -4214,8 +4214,8 @@ byte_FC51	db ?
 word_FC52	dw ?
 public _resident
 _resident	dd ?
-byte_FC58	db ?
-byte_FC59	db ?
+public _playchars
+_playchars	db PLAYER_COUNT dup (?)
 byte_FC5A	db ?
 byte_FC5B	db ?
 byte_FC5C	db ?
