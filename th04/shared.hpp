@@ -3,6 +3,8 @@
  * Types shared between TH04 and TH05
  */
 
+#include "th04/common.h"
+
 /// Math
 /// ----
 #include "th03/math/subpixel.hpp"
@@ -32,9 +34,6 @@ int pascal far select_for_rank(
 
 /// Stages
 /// ------
-#define MAIN_STAGE_COUNT 6
-#define STAGE_EXTRA MAIN_STAGE_COUNT
-
 extern nearfunc_t_near stage_invalidate;
 extern nearfunc_t_near stage_render;
 /// ------
