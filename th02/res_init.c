@@ -1,4 +1,4 @@
-int main(int argc, const char **argv)
+int main(int argc, const unsigned char **argv)
 {
 	seg_t sgm;
 	const char *res_id = RES_ID;
@@ -41,7 +41,7 @@ int main(int argc, const char **argv)
 		dos_puts2("ì‚ê‚Ü‚¹‚ñA‚í‚½‚µ‚Ì‹êŠ‚ª‚È‚¢‚ÌI\n\n");
 		return 1;
 	}
-	resident_bytes = MK_FP(sgm, 0);
+	resident_bytes = (char far *)MK_FP(sgm, 0);
 	dos_puts2("‚»‚ê‚Å‚ÍA‚æ‚ë‚µ‚­‚¨Šè‚¢‚µ‚Ü‚·\n\n");
 	for(i = (RES_ID_STRLEN + 1); i < sizeof(resident_t); i++) {
 		resident_bytes[i] = 0;

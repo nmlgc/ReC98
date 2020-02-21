@@ -76,6 +76,11 @@ bin\th02\maine.exe: bin\th02\maine.obj th02\maine021.c th02\maine022.c th02\main
 $**
 |
 
+bin\th03\res_yume.com: th03\res_yume.cpp
+	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=3 -nbin\th03\ -eRES_YUME.COM @&&|
+$**
+| masters.lib
+
 bin\th03\op.exe: bin\th03\op.obj th03\op_02.c
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**

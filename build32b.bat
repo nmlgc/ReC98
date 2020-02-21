@@ -19,7 +19,6 @@ if errorlevel 9009 goto no_tasm32
 %ReC98_ASM% th02_maine.asm bin\th02\maine.obj
 
 %ReC98_ASM% /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
-%ReC98_ASM% th03_res_yume.asm bin\th03\res_yume.obj
 %ReC98_ASM% th03_op.asm bin\th03\op.obj
 %ReC98_ASM% th03_main.asm bin\th03\main.obj
 %ReC98_ASM% th03_mainl.asm bin\th03\mainl.obj
