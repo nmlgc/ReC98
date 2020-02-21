@@ -1,75 +1,68 @@
 /* ReC98
  * -----
- * 2nd part of ZUN_RES.COM. Initializes the high score lists.
+ * 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT.
  */
 
+#include <stddef.h>
 #include "th02/th02.h"
 
-extern scoredat_section_t hi;
-extern const char *SCOREDAT_FN;
+#pragma option -O- -k- -a1
 
-char rank;
+extern char rank;
+scoredat_section_t hi;
 
-// Slightly differs from the same function in MAINE.EXE!
-// And seriously, I wasted half a week trying to figure out how to get these
-// exact same instructions out of the compiler, and it just didn't work.
-void pascal scoredat_defaults_set(void)
+void pascal scoredat_recreate(void);
+void pascal near scoredat_load(void);
+
+const char *SCOREDAT_FN = "huuhi.dat";
+unsigned char g_name_first_sum = 0;
+unsigned char stage_sum = 0;
+unsigned char unused_2 = 0;
+long points_sum = 0;
+long score_sum = 0;
+
+int pascal scoredat_verify(void)
 {
-	_SI = 0;
-	_DI = 1000 * SCOREDAT_PLACES;
-	goto place_loop;
+	if(!file_exist(SCOREDAT_FN)) {
+		scoredat_recreate();
+	} else {
+		for(rank = 0; rank < RANK_COUNT; rank++) {
+			register int unused;
+			register int i;
 
-place_set:
-	hi.score.cleared = 0;
-	hi.score.points[_SI] = _DI;
-	_DI -= 1000;
-	hi.score.stage[_SI] = 5 - ((int)_SI >> 1);
-	_BX = _SI;
-	asm {
-		imul bx, bx, 7
-		mov cx, 6
-
-name_loop:
-		mov byte ptr hi.(scoredat_section_t)score.g_name[bx], gs_BULLET
-		inc bx
-		loop name_loop
-		mov byte ptr hi.(scoredat_section_t)score.g_name[bx], 0
+			scoredat_load();
+			_AL = 0;
+			g_name_first_sum = _AL;
+			stage_sum = _AL;
+			_AX = 0;
+			asm {
+				mov word ptr points_sum + 0, ax
+				mov word ptr points_sum + 2, ax
+				mov word ptr score_sum + 0, ax
+				mov word ptr score_sum + 2, ax
+			}
+			for(i = 0; i < sizeof(hi.score); i++) {
+				score_sum += *((unsigned char*)(&hi.score) + i);
+			}
+			for(i = 0; i < SCOREDAT_PLACES; i++) {
+				points_sum += hi.score.points[i];
+				g_name_first_sum += hi.score.g_name[i][0];
+				stage_sum += hi.score.stage[i];
+			}
+			if(
+				points_sum != hi.score.points_sum
+				|| g_name_first_sum != hi.score.g_name_first_sum
+				|| stage_sum != hi.score.stage_sum
+				|| score_sum != hi.score_sum
+			) {
+				goto delete;
+			}
+		}
 	}
-	_BX = _SI;
-	_BX <<= 2;
-	asm {
-		mov word ptr hi.(scoredat_section_t)score.date[bx].da_year, 1900
-		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_day, 1
-		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_mon, 1
-		mov byte ptr hi.(scoredat_section_t)score.shottype[si], 1
-		inc si
-
-place_loop:
-		cmp si, SCOREDAT_PLACES
-		jge end
-		jmp place_set
-	}
-end:
+	return 0;
+delete:
+	file_delete(SCOREDAT_FN);
+	return 1;
 }
 
-#include "th02/scoreenc.c"
-
-void pascal scoredat_create(void)
-{
-	SCOREDAT_ENCODE();
-	file_create(SCOREDAT_FN);
-	file_write(&hi, sizeof(hi));
-	file_write(&hi, sizeof(hi));
-	file_write(&hi, sizeof(hi));
-	file_write(&hi, sizeof(hi));
-	file_write(&hi, sizeof(hi));
-	file_close();
-}
-
-void pascal scoredat_recreate(void)
-{
-	scoredat_defaults_set();
-	scoredat_create();
-}
-
-#include "th02\scorelod.c"
+#pragma codestring "\x90"
