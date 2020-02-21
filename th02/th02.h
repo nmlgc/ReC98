@@ -151,26 +151,6 @@ void key_delay(void);
 #define MUSIC_CMT_LINE_LEN 42
 #define MUSIC_CMT_LINE_COUNT 20
 
-// Configuration file
-// ------------------
-#define CFG_FN "huuma.cfg"
-#pragma option -a1
-typedef struct {
-	int8_t rank;
-	int8_t bgm_mode;
-	int8_t bombs;
-	int8_t lives;
-	int8_t perf;
-} huuma_options_t;
-
-typedef struct {
-	huuma_options_t opts;
-	void __seg *resident_sgm;
-	int8_t debug;
-} huuma_cfg_t;
-#pragma option -a.
-// ------------------
-
 // Resident structure
 // ------------------
 #define RES_ID "MIKOConfig"

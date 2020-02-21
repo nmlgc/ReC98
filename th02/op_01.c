@@ -7,6 +7,7 @@
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
 #include "th02/initexit.h"
+#include "th02/formats/cfg.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
@@ -40,7 +41,7 @@ void pascal musicroom(void);
 
 int cfg_load(void)
 {
-	huuma_cfg_t cfg;
+	cfg_t cfg;
 	const char *cfg_fn = CFG_FN;
 
 	if(file_exist(cfg_fn)) {
@@ -77,7 +78,7 @@ int cfg_load(void)
 void cfg_save(void)
 {
 	const char *cfg_fn = CFG_FN;
-	huuma_cfg_t cfg;
+	cfg_t cfg;
 
 	cfg.debug = 0;
 	cfg.opts.rank = rank;
@@ -87,7 +88,7 @@ void cfg_save(void)
 	cfg.opts.perf = resident->perf;
 
 	file_create(cfg_fn);
-	file_write(&cfg, offsetof(huuma_cfg_t, resident_sgm));
+	file_write(&cfg, offsetof(cfg_t, resident_sgm));
 	file_write(&resident_sgm, sizeof(resident_sgm));
 	file_write(&cfg.debug, sizeof(cfg.debug));
 	file_close();
