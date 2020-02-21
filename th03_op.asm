@@ -648,84 +648,7 @@ loc_9D49:
 		retn
 start_vs	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_9D4C	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		les	bx, _resident
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][0], 1
-		mov	es:[bx+resident_t.RESIDENT_is_cpu][1], 1
-		inc	es:[bx+resident_t.demo_num]
-		cmp	es:[bx+resident_t.demo_num], DEMO_COUNT
-		jbe	short loc_9D6E
-		mov	es:[bx+resident_t.demo_num], 1
-
-loc_9D6E:
-		les	bx, _resident
-		mov	es:[bx+resident_t.pid_winner], 0
-		mov	es:[bx+resident_t.story_stage], 0
-		mov	es:[bx+resident_t.game_mode], GM_DEMO
-		mov	es:[bx+resident_t.show_score_menu], 0
-		mov	al, es:[bx+resident_t.demo_num]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	al, [bx+0C2h]
-		mov	bx, word ptr _resident
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][0], al
-		mov	al, es:[bx+resident_t.demo_num]
-		mov	ah, 0
-		add	ax, ax
-		mov	dx, 0C2h ; '¬'
-		inc	dx
-		add	ax, dx
-		mov	bx, ax
-		mov	al, [bx]
-		mov	bx, word ptr _resident
-		mov	es:[bx+resident_t.RESIDENT_playchar_paletted][1], al
-		mov	al, es:[bx+resident_t.demo_num]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		mov	eax, [bx+0C8h]
-		mov	bx, word ptr _resident
-		mov	es:[bx+resident_t.rand], eax
-		xor	si, si
-		jmp	short loc_9DDF
-; ---------------------------------------------------------------------------
-
-loc_9DD3:
-		les	bx, _resident
-		add	bx, si
-		mov	es:[bx+resident_t.score_last], 0
-		inc	si
-
-loc_9DDF:
-		cmp	si, (PLAYER_COUNT * SCORE_DIGITS)
-		jl	short loc_9DD3
-		push	1
-		call	palette_black_out
-		call	cfg_save
-		call	gaiji_restore
-		kajacall	KAJA_SONG_STOP
-		call	game_exit
-		pushd	0
-		push	ds
-		push	offset path	; "mainl"
-		push	ds
-		push	offset path	; "mainl"
-		call	_execl
-		add	sp, 0Ch
-		pop	si
-		pop	bp
-		retn
-sub_9D4C	endp
-
+include th03/start.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -747,7 +670,7 @@ loc_9E24:
 		inc	si
 		cmp	si, 208h
 		jle	short loc_9E3C
-		call	sub_9D4C
+		call	start_demo
 
 loc_9E3C:
 		push	1
@@ -3884,30 +3807,7 @@ unk_D881	db    0
 gp1P_VS_CPU	db 88h,	89h, 8Ah, 8Bh, 8Ch, 8Dh, 8Eh, 8Fh, 0
 gp1P_VS_2P	db 88h,	89h, 8Ah, 8Bh, 96h, 97h, 98h, 99h, 0
 gpCPU_VS_CPU	db 92h,	93h, 94h, 95h, 8Ch, 8Dh, 8Eh, 8Fh, 0
-		db    3
-		db    1
-		db    5
-		db  0Dh
-		db    7
-		db  0Bh
-		db    9
-		db    5
-		db  58h	; X
-		db    2
-		db    0
-		db    0
-		db 0E8h	; ÅE
-		db    3
-		db    0
-		db    0
-		db  80h
-		db  0Ch
-		db    0
-		db    0
-		db 0F4h
-		db    1
-		db    0
-		db    0
+include th03/start[data].asm
 gpSTART		db 30h,	31h, 32h, 0
 gpVS_START	db 33h,	34h, 35h, 36h, 37h, 38h, 0
 gpMUSIC_ROOM	db 41h,	42h, 43h, 44h, 45h, 46h, 47h, 0

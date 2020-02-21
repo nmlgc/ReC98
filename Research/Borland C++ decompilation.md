@@ -109,6 +109,39 @@ inline optimally though:
   [clobbering that register](#clobbering-di). Try a [class method](#C++)
   instead.
 
+## Initialization
+
+Any initialization of a variable with static storage duration (even a `const`
+one) that involves function calls (even those that would regularly inline)
+will emit a `#pragma startup` function to perform that initialization at
+runtime.
+This extends to C++ constructors, making macros the only way to initialize
+such variables with arithmetic expressions at compile time.
+
+```c
+#define FOO(x) (x << 1)
+
+inline char foo(const char x)  {
+    return FOO(x);
+}
+
+const char static_storage[3] = { FOO(1), foo(2), FOO(3) };
+```
+Resulting ASM (abbreviated):
+```asm
+  .data
+static_storage  db  2, 0, 6
+
+  .code
+@_STCON_$qv	proc	near
+	push bp
+	mov  bp, sp
+	mov  static_storage[1], 4
+	pop	 bp
+	ret
+@_STCON_$qv	endp
+```
+
 ## C++
 
 Class methods inline to their ideal representation if all of these are true:
