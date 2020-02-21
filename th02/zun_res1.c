@@ -4,8 +4,6 @@
  * configuration file required in order to run TH02.
  */
 
-#pragma inline
-
 #include <stddef.h>
 #include "th02/th02.h"
 #include "th02/snd/snd.h"
@@ -35,43 +33,24 @@ void cfg_write(seg_t resident_sgm)
 	dos_close(handle);
 }
 
+#define LOGO \
+	"東方封魔録用　 常駐プログラム　ZUN_RES.com Version1.01       (c)zun 1997"
+
 int main(int argc, const char **argv)
 {
 	int pascal scoredat_verify(void);
 
-	static const char MIKOConfig[] = RES_ID;
-	static const char LOGO[] =
-		"\n"
-		"\n"
-		"東方封魔録用　 常駐プログラム　ZUN_RES.com Version1.01       (c)zun 1997\n";
-	static const char ERROR_SCOREDAT[] =
-		"ハイスコアファイルがおかしいの、もう一度実行してね。\n";
-	static const char ERROR_NOT_RESIDENT[] =
-		"わたし、まだいませんよぉ\n\n";
-	static const char REMOVED[] =
-		"さよなら、また会えたらいいな\n\n";
-	static const char ERROR_UNKNOWN_OPTION[] =
-		"そんなオプション付けられても、困るんですけど\n\n";
-	static const char ERROR_ALREADY_RESIDENT[] =
-		"わたし、すでにいますよぉ\n\n";
-	static const char ERROR_OUT_OF_MEMORY[] =
-		"作れません、わたしの居場所がないの！\n\n";
-	static const char INITIALIZED[] =
-		"それでは、よろしくお願いします\n\n";
-
 	seg_t sgm;
-	const char *res_id = MIKOConfig;
+	const char *res_id = RES_ID;
 	int i;
 	char far *resident;
 
 	sgm = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
-	dos_puts2(LOGO);
+	dos_puts2("\n\n" LOGO "\n");
 	graph_clear();
-	// No, I tried all permutations of command-line switches,
-	// gotos and returns, and no pure C solution seems to work!
-	if(scoredat_verify() == 1) __asm {
-		push offset ds:ERROR_SCOREDAT
-		jmp error_puts
+	if(scoredat_verify() == 1) {
+		dos_puts2("ハイスコアファイルがおかしいの、もう一度実行してね。\n");
+		return 1;
 	}
 	if(argc == 2) {
 		#define arg1_is(capital, small) \
@@ -79,33 +58,32 @@ int main(int argc, const char **argv)
 			&& (argv[1][1] == (capital) || argv[1][1] == (small))
 		if(arg1_is('R', 'r')) {
 			if(!sgm) {
-				dos_puts2(ERROR_NOT_RESIDENT);
-asm				jmp error_ret
+				dos_puts2("わたし、まだいませんよぉ\n\n");
+				return 1;
 			}
 			dos_free(sgm);
-			dos_puts2(REMOVED);
+			dos_puts2("さよなら、また会えたらいいな\n\n");
 			return 0;
 		} else if(arg1_is('D', 'd')) {
 			debug = 1;
 		} else {
-			dos_puts2(ERROR_UNKNOWN_OPTION);
+			dos_puts2("そんなオプション付けられても、困るんですけど\n\n");
+			sgm = sgm; /* optimization barrier #1 */
 			return 1;
 		}
 	}
 	if(sgm) {
-		dos_puts2(ERROR_ALREADY_RESIDENT);
+		dos_puts2("わたし、すでにいますよぉ\n\n");
+		argv = argv; /* optimization barrier #2 */
 		return 1;
 	}
 	sgm = resdata_create(res_id, RES_ID_STRLEN, RES_PARASIZE);
 	if(!sgm) {
-asm		push offset ds:ERROR_OUT_OF_MEMORY
-error_puts:
-asm		call near ptr dos_puts2
-error_ret:
+		dos_puts2("作れません、わたしの居場所がないの！\n\n");
 		return 1;
 	}
 	resident = MK_FP(sgm, 0);
-	dos_puts2(INITIALIZED);
+	dos_puts2("それでは、よろしくお願いします\n\n");
 	for(i = offsetof(resident_t, stage); i < sizeof(resident_t); i++) {
 		resident[i] = 0;
 	}

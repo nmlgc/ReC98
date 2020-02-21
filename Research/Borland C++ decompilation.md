@@ -81,24 +81,29 @@ certain local variables as `word`s when they aren't.
 
 ### `-O` (Optimize jumps)
 
-Inhibited by identical variable declarations within more than one scope – the
-optimizer will only merge the code *after* the last ASM reference to that
-declared variable. Yes, even though the emitted ASM would be identical:
-```c
-if(a) {
-    int v = set_v();
-    do_something_else();
-    use(v);
-} else if(underline) {
-    // Second declaration of [v]. Even though it's assigned to the same stack
-    // offset, the second `PUSH w` call will still be emitted separately.
-    // Thus, jump optimization only reuses the `CALL use` instruction.
-    // Move the `int v;` declaraion to the beginning of the function to avoid
-    // this.
-    int v = set_v();
-    use(v);
-}
-```
+Inhibited by:
+
+* identical variable declarations within more than one scope – the
+  optimizer will only merge the code *after* the last ASM reference to that
+  declared variable. Yes, even though the emitted ASM would be identical:
+
+  ```c
+  if(a) {
+      int v = set_v();
+      do_something_else();
+      use(v);
+  } else if(underline) {
+      // Second declaration of [v]. Even though it's assigned to the same stack
+      // offset, the second `PUSH w` call will still be emitted separately.
+      // Thus, jump optimization only reuses the `CALL use` instruction.
+      // Move the `int v;` declaraion to the beginning of the function to avoid
+      // this.
+      int v = set_v();
+      use(v);
+  }
+  ```
+
+* distinct instances of assignments of local variables in registers to itself
 
 ## Inlining
 
