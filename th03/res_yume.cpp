@@ -23,4 +23,9 @@ const cfg_options_t OPTS_DEFAULT = { SND_BGM_FM, KM_KEY_KEY, RANK_NORMAL };
 #define LOGO \
 	"東方夢時空用　 常駐プログラム　RES_YUME.com Version1.00       (c)zun 1997"
 
+#define optimization_barrier_3()
+
+#define RES_INIT_BOTTOM \
+	cfg_init(sgm);
+
 #include "th02/res_init.c"

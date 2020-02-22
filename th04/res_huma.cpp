@@ -55,8 +55,13 @@ recreate:
 #define LOGO \
 	"東方幻想郷用　 常駐プログラム　RES_HUMA.com Version1.00       (c)zun 1998"
 
+#define optimization_barrier_3()
+
 #define RES_INIT_BOTTOM { \
-	resident_t far *resident = reinterpret_cast<resident_t far *>(resident_bytes); \
+	cfg_init(sgm); \
+	\
+	resident_t far *resident; \
+	resident = reinterpret_cast<resident_t far *>(resident_bytes); \
 	if(debug) { \
 		resident->debug = true; \
 	} \

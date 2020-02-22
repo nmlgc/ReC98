@@ -111,6 +111,11 @@ bin\th05\player.obj: th05\player.asm
 bin\th05\hud_bar.obj: th05\hud_bar.asm
 bin\th05\scoreupd.obj: th04\scoreupd.asm
 
+bin\th05\res_kso.com: th05\res_kso.cpp
+	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|
+$**
+| masters.lib
+
 bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -nbin\th05\ -eOP.EXE @&&|
 $**

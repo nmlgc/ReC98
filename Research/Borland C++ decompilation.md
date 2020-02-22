@@ -105,6 +105,8 @@ Inhibited by:
 
 * distinct instances of assignments of local variables in registers to itself
 
+* inlined calls to empty functions
+
 ## Inlining
 
 Always worth a try to get rid of a potential macro. Some edge cases don't
