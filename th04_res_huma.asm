@@ -321,8 +321,8 @@ include libs/BorlandC/c0[data].asm
 
 byte_15FE	db 0
 unk_15FF	db 0FFh
-		db    3
-		db    2
+		db    CFG_LIVES_DEFAULT
+		db    CFG_BOMBS_DEFAULT
 		db    1
 		db    1
 		db    1

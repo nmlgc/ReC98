@@ -202,20 +202,20 @@ var_4		= word ptr -4
 		mov	es:[bx+resident_t.se_mode], al
 		mov	al, [bp+var_5]
 		mov	es:[bx+resident_t.turbo_mode], al
-		cmp	es:[bx+resident_t.cfg_lives], 6
+		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
 		ja	short loc_A7B5
 		cmp	es:[bx+resident_t.cfg_lives], 0
 		jnz	short loc_A7BE
 
 loc_A7B5:
 		les	bx, _resident
-		mov	es:[bx+resident_t.cfg_lives], 3
+		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
 
 loc_A7BE:
 		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_bombs], 2
+		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
 		jbe	short loc_A7CE
-		mov	es:[bx+resident_t.cfg_bombs], 2
+		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
 
 loc_A7CE:
 		les	bx, _resident
@@ -1168,8 +1168,8 @@ loc_B0E3:
 loc_B0F4:
 		les	bx, _resident
 		mov	es:[bx+resident_t.rank], RANK_NORMAL
-		mov	es:[bx+resident_t.cfg_lives], 3
-		mov	es:[bx+resident_t.cfg_bombs], 2
+		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
+		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
 		mov	es:[bx+resident_t.se_mode], SND_SE_FM
 		mov	es:[bx+resident_t.turbo_mode], 1
@@ -1221,7 +1221,7 @@ loc_B18C:
 loc_B1A5:
 		les	bx, _resident
 		inc	es:[bx+resident_t.cfg_lives]
-		cmp	es:[bx+resident_t.cfg_lives], 6
+		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
 		jbe	loc_B246
 		mov	es:[bx+resident_t.cfg_lives], 1
 		jmp	loc_B246
@@ -1230,7 +1230,7 @@ loc_B1A5:
 loc_B1BE:
 		les	bx, _resident
 		inc	es:[bx+resident_t.cfg_bombs]
-		cmp	es:[bx+resident_t.cfg_bombs], 2
+		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
 		jbe	short loc_B246
 		mov	es:[bx+resident_t.cfg_bombs], 0
 		jmp	short loc_B246
@@ -1312,7 +1312,7 @@ loc_B288:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.cfg_lives], 1
 		jnz	short loc_B298
-		mov	es:[bx+resident_t.cfg_lives], 7
+		mov	es:[bx+resident_t.cfg_lives], (CFG_LIVES_MAX + 1)
 
 loc_B298:
 		les	bx, _resident
@@ -1324,7 +1324,7 @@ loc_B2A3:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.cfg_bombs], 0
 		jnz	short loc_B2B3
-		mov	es:[bx+resident_t.cfg_bombs], 3
+		mov	es:[bx+resident_t.cfg_bombs], (CFG_BOMBS_MAX + 1)
 
 loc_B2B3:
 		les	bx, _resident

@@ -79,8 +79,8 @@ loc_39C:
 		call	file_write
 		les	bx, [bp+var_14]
 		mov	es:[bx+resident_t.rank], RANK_DEFAULT
-		mov	es:[bx+resident_t.cfg_lives], 3
-		mov	es:[bx+resident_t.credit_lives], 3
+		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
+		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
 		mov	es:[bx+resident_t.bgm_mode], 1
 		mov	es:[bx+resident_t.se_mode], 1
 		mov	es:[bx+resident_t.turbo_mode], 1
@@ -123,14 +123,14 @@ loc_3CA:
 		mov	al, [bp+var_F]
 		mov	es:[bx+resident_t.cfg_lives], al
 		mov	al, [bp+var_E]
-		mov	es:[bx+resident_t.credit_lives], al
+		mov	es:[bx+resident_t.cfg_bombs], al
 		mov	al, [bp+var_D]
 		mov	es:[bx+resident_t.bgm_mode], al
 		mov	al, [bp+var_C]
 		mov	es:[bx+resident_t.se_mode], al
 		mov	al, [bp+var_B]
 		mov	es:[bx+resident_t.turbo_mode], al
-		cmp	es:[bx+resident_t.cfg_lives], 6
+		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
 		jbe	short loc_43A
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
@@ -143,7 +143,7 @@ loc_43A:
 
 loc_444:
 		les	bx, [bp+var_14]
-		cmp	es:[bx+resident_t.credit_lives], 3
+		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
 		jbe	short loc_451
 		jmp	loc_391
 ; ---------------------------------------------------------------------------
@@ -406,8 +406,8 @@ include libs/BorlandC/c0[data].asm
 
 byte_16BE	db 0
 unk_16BF	db 0FFh
-		db    3
-		db    3
+		db    CFG_LIVES_DEFAULT
+		db    CFG_BOMBS_DEFAULT
 		db    1
 		db    1
 		db    1

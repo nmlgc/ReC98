@@ -521,10 +521,10 @@ void option_update_and_render(void)
 			snd_bgm_restart(); \
 			break; \
 		case 2: \
-			RING_##direction##(lives, 4); \
+			RING_##direction##(lives, CFG_LIVES_MAX); \
 			break; \
 		case 3: \
-			RING_##direction##(bombs, 3); \
+			RING_##direction##(bombs, CFG_BOMBS_MAX); \
 			break; \
 		case 4: \
 			resident->perf = 1 - resident->perf; \
@@ -576,8 +576,8 @@ void option_update_and_render(void)
 				snd_midi_active = 0;
 				snd_determine_mode();
 				snd_kaja_func(KAJA_SONG_PLAY ,0);
-				lives = 2;
-				bombs = 3;
+				lives = CFG_LIVES_DEFAULT;
+				bombs = CFG_BOMBS_DEFAULT;
 				resident->unused_2 = 1;
 				resident->perf = 0;
 				option_put(0, TX_YELLOW);

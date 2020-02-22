@@ -1081,8 +1081,8 @@ loc_AC60:
 loc_AC71:
 		les	bx, _resident
 		mov	es:[bx+resident_t.rank], RANK_NORMAL
-		mov	es:[bx+resident_t.cfg_lives], 3
-		mov	es:[bx+resident_t.cfg_bombs], 3
+		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
+		mov	es:[bx+resident_t.cfg_bombs], CFG_LIVES_DEFAULT
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM86
 		mov	es:[bx+resident_t.se_mode], SND_SE_FM
 		mov	es:[bx+resident_t.turbo_mode], 1
@@ -1135,7 +1135,7 @@ loc_AD15:
 loc_AD2E:
 		les	bx, _resident
 		inc	es:[bx+resident_t.cfg_lives]
-		cmp	es:[bx+resident_t.cfg_lives], 6
+		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
 		jbe	loc_ADF5
 		mov	es:[bx+resident_t.cfg_lives], 1
 		jmp	loc_ADF5
@@ -1144,7 +1144,7 @@ loc_AD2E:
 loc_AD47:
 		les	bx, _resident
 		inc	es:[bx+resident_t.cfg_bombs]
-		cmp	es:[bx+resident_t.cfg_bombs], 3
+		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
 		jbe	loc_ADF5
 		mov	es:[bx+resident_t.cfg_bombs], 0
 		jmp	loc_ADF5
@@ -1237,7 +1237,7 @@ loc_AE37:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.cfg_lives], 1
 		jnz	short loc_AE47
-		mov	es:[bx+resident_t.cfg_lives], 7
+		mov	es:[bx+resident_t.cfg_lives], (CFG_LIVES_MAX + 1)
 
 loc_AE47:
 		les	bx, _resident
@@ -1249,7 +1249,7 @@ loc_AE52:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.cfg_bombs], 0
 		jnz	short loc_AE62
-		mov	es:[bx+resident_t.cfg_bombs], 4
+		mov	es:[bx+resident_t.cfg_bombs], (CFG_BOMBS_MAX + 1)
 
 loc_AE62:
 		les	bx, _resident
@@ -1741,20 +1741,20 @@ var_4		= word ptr -4
 		mov	word ptr _resident+2, ax
 		mov	word ptr _resident, 0
 		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_lives], 6
+		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
 		ja	short loc_BAD3
 		cmp	es:[bx+resident_t.cfg_lives], 0
 		jnz	short loc_BADC
 
 loc_BAD3:
 		les	bx, _resident
-		mov	es:[bx+resident_t.cfg_lives], 3
+		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
 
 loc_BADC:
 		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_bombs], 3
+		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
 		jbe	short loc_BAEC
-		mov	es:[bx+resident_t.cfg_bombs], 3
+		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
 
 loc_BAEC:
 		les	bx, _resident
