@@ -231,35 +231,7 @@ maine_01_TEXT	segment	byte public 'CODE' use16
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A545	proc near
-
-var_A		= byte ptr -0Ah
-var_4		= word ptr -4
-
-		enter	0Ah, 0
-		push	si
-		push	ds
-		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	0Ah
-		call	file_read
-		call	file_close
-		mov	si, [bp+var_4]
-		mov	word ptr _resident+2, si
-		mov	word ptr _resident, 0
-		mov	ax, si
-		pop	si
-		leave
-		retn
-sub_A545	endp
-
+include th03/formats/cfg_lres.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -343,7 +315,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_A545
+		call	cfg_load_resident
 		or	ax, ax
 		jz	loc_A693
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
@@ -7838,7 +7810,7 @@ maine_02_TEXT	ends
 
 off_10190	dd a_ed00_txt
 					; "_ED00.TXT"
-aMiko_cfg	db 'MIKO.CFG',0
+include th04/formats/cfg_lres[data].asm
 a_ed00_txt	db '_ED00.TXT',0
 aKaikidan1_dat	db '‰öãY’k1.dat',0
 aMiko		db 'miko',0

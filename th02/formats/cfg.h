@@ -18,7 +18,10 @@
 
 typedef struct {
 	cfg_options_t opts;
-	void __seg *resident_sgm;
+	resident_t __seg *resident;
 	int8_t debug;
+#if GAME >= 4
+	int8_t opts_sum; // Sum of all bytes in [opts]
+#endif
 } cfg_t;
 #pragma option -a.

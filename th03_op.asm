@@ -140,137 +140,7 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_LOAD
-cfg_load	proc near
-
-var_A		= word ptr -0Ah
-@@bgm_mode		= byte ptr -8
-@@key_mode		= byte ptr -7
-@@rank		= byte ptr -6
-var_3		= word ptr -3
-
-		enter	0Ah, 0
-		push	ds
-		push	offset aYume_cfg ; "YUME.CFG"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+@@bgm_mode]
-		push	ax
-		push	8
-		call	file_read
-		call	file_close
-		mov	ax, [bp+var_3]
-		mov	[bp+var_A], ax
-		mov	word ptr _resident+2, ax
-		mov	word ptr _resident, 0
-		les	bx, _resident
-		mov	al, [bp+@@bgm_mode]
-		mov	es:[bx+resident_t.bgm_mode], al
-		call	snd_determine_mode
-		mov	byte_D880, 0
-		cmp	_snd_active, 0
-		jnz	short loc_9961
-		les	bx, _resident
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-		mov	byte_D880, 1
-		jmp	short loc_996C
-; ---------------------------------------------------------------------------
-
-loc_9961:
-		cmp	[bp+@@bgm_mode], 0
-		jnz	short loc_996C
-		mov	_snd_active, 0
-
-loc_996C:
-		les	bx, _resident
-		mov	al, [bp+@@key_mode]
-		mov	es:[bx+resident_t.key_mode], al
-		mov	al, [bp+@@rank]
-		mov	es:[bx+resident_t.rank], al
-		leave
-		retn
-cfg_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_SAVE
-cfg_save	proc near
-
-@@bgm_mode		= byte ptr -8
-@@key_mode		= byte ptr -7
-@@rank		= byte ptr -6
-
-		enter	8, 0
-		push	ds
-		push	offset aYume_cfg ; "YUME.CFG"
-		call	file_append
-		pushd	0
-		push	0
-		call	file_seek
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	[bp+@@bgm_mode], al
-		mov	al, es:[bx+resident_t.key_mode]
-		mov	[bp+@@key_mode], al
-		mov	al, es:[bx+resident_t.rank]
-		mov	[bp+@@rank], al
-		push	ss
-		lea	ax, [bp+@@bgm_mode]
-		push	ax
-		push	4
-		call	file_write
-		call	file_close
-		leave
-		retn
-cfg_save	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_SAVE_EXIT
-cfg_save_exit	proc near
-
-@@bgm_mode		= byte ptr -8
-@@key_mode		= byte ptr -7
-@@rank		= byte ptr -6
-
-		enter	8, 0
-		lea	ax, [bp+@@bgm_mode]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_D881
-		mov	cx, 8
-		call	SCOPY@
-		push	ds
-		push	offset aYume_cfg ; "YUME.CFG"
-		call	file_append
-		pushd	0
-		push	0
-		call	file_seek
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	[bp+@@bgm_mode], al
-		mov	al, es:[bx+resident_t.key_mode]
-		mov	[bp+@@key_mode], al
-		mov	al, es:[bx+resident_t.rank]
-		mov	[bp+@@rank], al
-		push	ss
-		lea	ax, [bp+@@bgm_mode]
-		push	ax
-		push	8
-		call	file_write
-		call	file_close
-		leave
-		retn
-cfg_save_exit	endp
-
+include th03/formats/cfg.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1246,7 +1116,7 @@ loc_A298:
 ; ---------------------------------------------------------------------------
 
 loc_A2AE:
-		cmp	byte_D880, 0
+		cmp	_snd_sel_disabled, 0
 		jnz	short loc_A312
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
@@ -1316,7 +1186,7 @@ loc_A34D:
 ; ---------------------------------------------------------------------------
 
 loc_A357:
-		cmp	byte_D880, 0
+		cmp	_snd_sel_disabled, 0
 		jnz	short loc_A3C1
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
@@ -3779,15 +3649,7 @@ op_02_TEXT	ends
 
 	.data
 
-byte_D880	db 0
-unk_D881	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/formats/cfg[data].asm
 		db    0
 		db    0
 		db    0

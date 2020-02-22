@@ -160,199 +160,7 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_LOAD
-cfg_load	proc near
-
-var_C		= word ptr -0Ch
-var_A		= byte ptr -0Ah
-var_9		= byte ptr -9
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-var_4		= word ptr -4
-
-		enter	0Ch, 0
-		push	ds
-		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	0Ah
-		call	file_read
-		call	file_close
-		mov	ax, [bp+var_4]
-		mov	[bp+var_C], ax
-		mov	word ptr _resident+2, ax
-		mov	word ptr _resident, 0
-		les	bx, _resident
-		mov	al, [bp+var_A]
-		mov	es:[bx+resident_t.rank], al
-		mov	al, [bp+var_9]
-		mov	es:[bx+resident_t.cfg_lives], al
-		mov	al, [bp+var_8]
-		mov	es:[bx+resident_t.cfg_bombs], al
-		mov	al, [bp+var_7]
-		mov	es:[bx+resident_t.bgm_mode], al
-		mov	al, [bp+var_6]
-		mov	es:[bx+resident_t.se_mode], al
-		mov	al, [bp+var_5]
-		mov	es:[bx+resident_t.turbo_mode], al
-		cmp	es:[bx+resident_t.cfg_lives], CFG_LIVES_MAX
-		ja	short loc_A7B5
-		cmp	es:[bx+resident_t.cfg_lives], 0
-		jnz	short loc_A7BE
-
-loc_A7B5:
-		les	bx, _resident
-		mov	es:[bx+resident_t.cfg_lives], CFG_LIVES_DEFAULT
-
-loc_A7BE:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_MAX
-		jbe	short loc_A7CE
-		mov	es:[bx+resident_t.cfg_bombs], CFG_BOMBS_DEFAULT
-
-loc_A7CE:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_MODE_COUNT
-		jb	short loc_A7DE
-		mov	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
-
-loc_A7DE:
-		les	bx, _resident
-		cmp	es:[bx+resident_t.se_mode], SND_SE_MODE_COUNT
-		jb	short locret_A7EE
-		mov	es:[bx+resident_t.se_mode], SND_SE_OFF
-
-locret_A7EE:
-		leave
-		retn
-cfg_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_SAVE
-cfg_save	proc near
-
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-
-		enter	8, 0
-		push	ds
-		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	file_append
-		pushd	0
-		push	0
-		call	file_seek
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	[bp+var_8], al
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	[bp+var_7], al
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	[bp+var_6], al
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	[bp+var_5], al
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	[bp+var_4], al
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	[bp+var_3], al
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	6
-		call	file_write
-		pushd	9
-		push	0
-		call	file_seek
-		mov	al, [bp+var_8]
-		add	al, [bp+var_7]
-		add	al, [bp+var_6]
-		add	al, [bp+var_5]
-		add	al, [bp+var_4]
-		add	al, [bp+var_3]
-		mov	[bp+var_2], al
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	1
-		call	file_write
-		call	file_close
-		leave
-		retn
-cfg_save	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CFG_SAVE_EXIT
-cfg_save_exit	proc near
-
-var_A		= byte ptr -0Ah
-var_9		= byte ptr -9
-var_8		= byte ptr -8
-var_7		= byte ptr -7
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-var_1		= byte ptr -1
-
-		enter	0Ah, 0
-		lea	ax, [bp+var_A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_F3D1
-		mov	cx, 0Ah
-		call	SCOPY@
-		push	ds
-		push	offset aMiko_cfg ; "MIKO.CFG"
-		call	file_append
-		pushd	0
-		push	0
-		call	file_seek
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	[bp+var_A], al
-		mov	al, es:[bx+resident_t.cfg_lives]
-		mov	[bp+var_9], al
-		mov	al, es:[bx+resident_t.cfg_bombs]
-		mov	[bp+var_8], al
-		mov	al, es:[bx+resident_t.bgm_mode]
-		mov	[bp+var_7], al
-		mov	al, es:[bx+resident_t.se_mode]
-		mov	[bp+var_6], al
-		mov	al, es:[bx+resident_t.turbo_mode]
-		mov	[bp+var_5], al
-		mov	al, [bp+var_A]
-		add	al, [bp+var_9]
-		add	al, [bp+var_8]
-		add	al, [bp+var_7]
-		add	al, [bp+var_6]
-		add	al, [bp+var_5]
-		mov	[bp+var_1], al
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	0Ah
-		call	file_write
-		call	file_close
-		leave
-		retn
-cfg_save_exit	endp
-
+include th04/formats/cfg.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4127,17 +3935,7 @@ op_02_TEXT	ends
 
 	.data
 
-		db    0
-unk_F3D1	db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th03/formats/cfg[data].asm
 _menu_sel	db 0
 _quit	db 0
 _main_menu_unused_1	db 1
@@ -4171,7 +3969,8 @@ _MENU_DESC label dword
 		dd aGqbGav_3		; "ゲームを開始します（ルナティック）"
 _main_menu_initialized	db 0
 _option_initialized	db 0
-aMiko_cfg	db 'MIKO.CFG',0
+public _cfg_fn
+_cfg_fn	db 'MIKO.CFG',0
 ; char aMain[]
 aMain		db 'main',0
 ; char path[]

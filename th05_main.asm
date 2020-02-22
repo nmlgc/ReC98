@@ -339,7 +339,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	sub_BAD2
+		call	cfg_load_resident
 		or	ax, ax
 		jz	short loc_AEA4
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAIN
@@ -1518,35 +1518,7 @@ loc_BAAA:
 		retn
 sub_BA66	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BAD2	proc near
-		mov	ax, 3D00h
-		mov	dx, 85Ch
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		mov	bx, ax
-		mov	ah, 3Fh	; '?'
-		mov	dx, 3506h
-		mov	cx, 0Ah
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		mov	ax, word_23EEC
-		mov	word ptr _resident+2, ax
-		mov	word ptr _resident, 0
-		retn
-sub_BAD2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th05/formats/cfg_lres.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31948,7 +31920,7 @@ include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
-aMiko_cfg	db 'MIKO.CFG',0
+include th04/formats/cfg_lres[data].asm
 		db 0
 aSt00_map	db  'st00.map',0
 		db    0
@@ -32721,11 +32693,8 @@ word_23A5A	dw ?
 word_23A5C	dw ?
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
-		dd    ?	;
-		db    ?	;
-		db    ?	;
-word_23EEC	dw ?
-		dw ?
+include th05/formats/cfg_lres[bss].asm
+public _resident
 _resident	dd ?
 map_header	map_header_t ?
 byte_23EFC	db ?

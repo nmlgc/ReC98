@@ -137,35 +137,7 @@ mainl_01_TEXT	segment	byte public 'CODE' use16
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_95F3	proc near
-
-var_8		= byte ptr -8
-var_3		= word ptr -3
-
-		enter	8, 0
-		push	si
-		push	ds
-		push	offset aYume_cfg ; "YUME.CFG"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	8
-		call	file_read
-		call	file_close
-		mov	si, [bp+var_3]
-		mov	word ptr _resident+2, si
-		mov	word ptr _resident, 0
-		mov	ax, si
-		pop	si
-		leave
-		retn
-sub_95F3	endp
-
+include th03/formats/cfg_lres.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -917,9 +889,9 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	sub_95F3
+		call	cfg_load_resident
 		or	ax, ax
-		jz	locret_9F8B
+		jz	@@ret
 		call	game_init_main pascal, ds, offset aCOul
 		call	respal_exist
 		mov	_snd_midi_active, 0
@@ -1094,7 +1066,7 @@ loc_9F85:
 		jmp	loc_9E75
 ; ---------------------------------------------------------------------------
 
-locret_9F8B:
+@@ret:
 		leave
 		retf
 _main		endp
@@ -5704,7 +5676,7 @@ TITLE_CHIYURI		db '　  時をかける夢幻の住人    ',0
 NAME_CHIYURI	db ' 北白河　ちゆり',0
 TITLE_YUMEMI	db '　  　　　夢幻伝説　　　    ',0
 NAME_YUMEMI	db ' 　岡崎　夢美',0
-aYume_cfg	db 'YUME.CFG',0
+include th03/formats/cfg_lres[data].asm
 aLogo0_rgb	db 'logo0.rgb',0
 aLogo_cd2	db 'logo.cd2',0
 aLogo5_cdg	db 'logo5.cdg',0

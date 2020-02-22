@@ -207,9 +207,9 @@ _envp		= dword	ptr  0Ch
 		mov	bp, sp
 		push	si
 		call	game_init_main pascal, ds, offset aCOul
-		call	sub_A346
+		call	cfg_load_resident
 		or	ax, ax
-		jz	short loc_9775
+		jz	short @@ret
 		mov	_snd_midi_active, 0
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
@@ -258,7 +258,7 @@ loc_9764:
 loc_9770:
 		nopcall	sub_B454
 
-loc_9775:
+@@ret:
 		pop	si
 		pop	bp
 		retf
@@ -1460,37 +1460,7 @@ sub_A310	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A346	proc near
-
-var_8		= byte ptr -8
-var_3		= word ptr -3
-
-		enter	8, 0
-		push	si
-		push	ds
-		push	offset aYume_cfg ; "YUME.CFG"
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	8
-		call	file_read
-		call	file_close
-		mov	si, [bp+var_3]
-		mov	word ptr _resident+2, si
-		mov	word ptr _resident, 0
-		mov	ax, si
-		pop	si
-		leave
-		retn
-sub_A346	endp
-
-; ---------------------------------------------------------------------------
+include th03/formats/cfg_lres.asm
 		db 0
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -35464,7 +35434,7 @@ include libs/master.lib/draw_trapezoid[data].asm
 include th03/snd/se_state[data].asm
 include th02/formats/pfopen[data].asm
 include th03/snd/se_priority[data].asm
-aYume_cfg	db 'YUME.CFG',0
+include th03/formats/cfg_lres[data].asm
 		db 0
 byte_1DB9E	db 0FFh
 		db 0

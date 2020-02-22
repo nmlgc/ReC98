@@ -51,7 +51,7 @@ int cfg_load(void)
 		snd_bgm_mode = cfg.opts.bgm_mode;
 		bombs = cfg.opts.bombs;
 		lives = cfg.opts.lives;
-		resident_sgm = cfg.resident_sgm;
+		resident_sgm = cfg.resident;
 		if(!resident_sgm) {
 			return 1;
 		}
@@ -88,7 +88,7 @@ void cfg_save(void)
 	cfg.opts.perf = resident->perf;
 
 	file_create(cfg_fn);
-	file_write(&cfg, offsetof(cfg_t, resident_sgm));
+	file_write(&cfg, offsetof(cfg_t, resident));
 	file_write(&resident_sgm, sizeof(resident_sgm));
 	file_write(&cfg.debug, sizeof(cfg.debug));
 	file_close();

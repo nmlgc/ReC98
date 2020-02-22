@@ -24,7 +24,7 @@ int pascal cfg_load(void)
 	seg_t resident_sgm;
 
 	file_ropen(CFG_FN);
-	file_seek(offsetof(cfg_t, resident_sgm), 0);
+	file_seek(offsetof(cfg_t, resident), 0);
 	file_read(&resident_sgm, sizeof(resident_sgm));
 	file_close();
 	if(!resident_sgm) {
