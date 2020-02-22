@@ -1958,7 +1958,7 @@ op_animate	proc near
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 1
 		mov	[bp+@@page_access], 1
-		mov	[bp+var_2], 0
+		mov	[bp+@@page_show], 0
 		graph_accesspage 0
 		graph_showpage al
 		xor	si, si
@@ -1988,11 +1988,11 @@ loc_BD81:
 		push	1
 		call	frame_delay
 		graph_accesspage [bp+@@page_access]
-		graph_showpage [bp+var_2]
+		graph_showpage [bp+@@page_show]
 		mov	[bp+@@page_access], al
 		mov	al, 1
-		sub	al, [bp+var_2]
-		mov	[bp+var_2], al
+		sub	al, [bp+@@page_show]
+		mov	[bp+@@page_show], al
 		lea	ax, [si+36]
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
@@ -2048,11 +2048,11 @@ loc_BE25:
 		push	1
 		call	frame_delay
 		graph_accesspage [bp+@@page_access]
-		graph_showpage [bp+var_2]
+		graph_showpage [bp+@@page_show]
 		mov	[bp+@@page_access], al
 		mov	al, 1
-		sub	al, [bp+var_2]
-		mov	[bp+var_2], al
+		sub	al, [bp+@@page_show]
+		mov	[bp+@@page_show], al
 		inc	si
 
 loc_BE46:
