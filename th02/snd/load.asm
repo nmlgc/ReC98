@@ -4,7 +4,7 @@
 
 ; void DEFCONV snd_load(const char *fn, int func)
 proc_defconv snd_load
-@@fn	= DPTR_ (cPtrSize + 2)
+@@fn	= dword ptr (cPtrSize + 2)
 @@func	= word ptr (cPtrSize + 2 + dPtrSize)
 
 	push	bp

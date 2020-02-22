@@ -1,5 +1,5 @@
 func pi_slot_load
-@@fn	= DPTR_ (cPtrSize + 2)
+@@fn	= dword ptr (cPtrSize + 2)
 @@slot	= word ptr (cPtrSize + 2 + dPtrSize)
 
 	push	bp

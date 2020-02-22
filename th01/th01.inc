@@ -1,5 +1,32 @@
 GAME = 1
 
+BYTEREGS	struc ;	(sizeof=0x8, standard type)
+_al		db ?
+_ah		db ?
+_bl		db ?
+_bh		db ?
+_cl		db ?
+_ch		db ?
+_dl		db ?
+_dh		db ?
+BYTEREGS	ends
+
+WORDREGS	struc ;	(sizeof=0x10, standard type)
+_ax		dw ?
+_bx		dw ?
+_cx		dw ?
+_dx		dw ?
+_si		dw ?
+_di		dw ?
+_cflags		dw ?
+_flags		dw ?
+WORDREGS	ends
+
+REGS		union ;	(sizeof=0x10, standard type)
+_w		WORDREGS <?>
+_h		BYTEREGS <?>
+REGS		ends
+
 reiidenconfig_t struc ; (sizeof=0x4B)
 	id db 13 dup(?)	; = "ReiidenConfig"
 		db ?

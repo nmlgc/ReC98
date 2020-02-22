@@ -11,7 +11,7 @@
 ; void __stdcall snd_load(int func, const char *fn)
 snd_load	proc
 @@func	= word ptr (cPtrSize + 2)
-@@fn	= DPTR_ (cPtrSize + 2 + 2)
+@@fn	= dword ptr (cPtrSize + 2 + 2)
 
 	push	bp
 	mov	bp, sp

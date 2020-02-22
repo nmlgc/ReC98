@@ -14,10 +14,10 @@
 
 locals
 
-include libs/BorlandC/RULES.ASI
-include libs/BorlandC/doserror.inc
-include libs/BorlandC/errno.inc
-include libs/BorlandC/stdio.inc
+LDATA = @DataSize
+cPtrSize = (@CodeSize + 1) * 2
+dPtrSize = (@DataSize + 1) * 2
+
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc
@@ -43,18 +43,6 @@ endm
 setfarfp macro farfp, func
 	mov word ptr farfp+2, seg func
 	mov word ptr farfp, offset func
-endm
-
-pushSS_ macro
-if LDATA
-	push ss
-endif
-endm
-
-popCX_ macro
-if LDATA
-	pop cx
-endif
 endm
 
 twobyte_t struc

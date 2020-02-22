@@ -13,7 +13,7 @@
 ; void __stdcall snd_load(int func, const char *fn)
 snd_load	proc
 @@func	= word ptr (cPtrSize + 2)
-@@fn	= DPTR_ (cPtrSize + 2 + 2)
+@@fn	= dword ptr (cPtrSize + 2 + 2)
 
 	push	bp
 	mov	bp, sp
@@ -63,7 +63,7 @@ snd_load	proc
 	mov	ax, 3D00h
 	int	21h
 	jnb	short @@which_driver?
-	cmp	ax, ENOFILE
+	cmp	ax, 2 ; ENOFILE, from <errno.h>
 	jnz	short @@ret
 	mov	eax, dword ptr aSND_LOAD_EXT_FM26
 	jmp	short @@open
