@@ -47,5 +47,8 @@ int main(int argc, const unsigned char **argv)
 		resident_bytes[i] = 0;
 	}
 	cfg_init(sgm);
+#ifdef RES_INIT_BOTTOM
+	RES_INIT_BOTTOM;
+#endif
 	return 0;
 }

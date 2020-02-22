@@ -91,6 +91,11 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
 $**
 |
 
+bin\th04\res_huma.com: th04\res_huma.cpp
+	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=4 -nbin\th04\ -eRES_HUMA.COM @&&|
+$**
+| masters.lib
+
 bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp th04\op_02.c
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
 $**

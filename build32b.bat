@@ -23,7 +23,6 @@ if errorlevel 9009 goto no_tasm32
 %ReC98_ASM% th03_main.asm bin\th03\main.obj
 %ReC98_ASM% th03_mainl.asm bin\th03\mainl.obj
 
-%ReC98_ASM% th04_res_huma.asm bin\th04\res_huma.obj
 %ReC98_ASM% th04_op.asm bin\th04\op.obj
 %ReC98_ASM% th04_main.asm bin\th04\main.obj
 %ReC98_ASM% th04_maine.asm bin\th04\maine.obj
