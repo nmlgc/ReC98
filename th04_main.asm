@@ -519,7 +519,7 @@ loc_AD35:
 loc_AD3B:
 		cmp	si, SCORE_DIGITS
 		jl	short loc_AD35
-		mov	power, 1
+		mov	_power, 1
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	es:[bx+resident_t.rem_bombs], al
@@ -693,7 +693,7 @@ loc_AEF9:
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
 		mov	stage_id, al
-		mov	power, 128
+		mov	_power, 128
 		add	al, '0'
 		mov	es:[bx+resident_t.stage_ascii], al
 		mov	fp_23D90, offset DemoPlay
@@ -939,7 +939,7 @@ sub_B1D0	proc near
 		mov	byte_259A9, 0
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_stage_point_items_collected, 0
-		mov	dream_items_collected, 0
+		mov	_dream_items_collected, 0
 		mov	fp_255CA, offset sub_CF44
 		mov	_scroll_active, 1
 		call	main_01:sub_1042A
@@ -6400,8 +6400,8 @@ loc_E796:
 		or	di, di
 		jnz	short loc_E7D8
 		call	main_01:sub_12CB5
-		mov	power, 1
-		mov	dream_items_collected, 0
+		mov	_power, 1
+		mov	_dream_items_collected, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	es:[bx+resident_t.rem_bombs], al
@@ -7507,7 +7507,7 @@ hud_dream_put	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0011h
-		mov	ax, dream_score
+		mov	ax, _dream_score
 		imul	ax, 0Ah
 		push	ax
 		call	sub_1D519
@@ -7551,10 +7551,10 @@ var_A		= byte ptr -0Ah
 		mov	cx, 5
 		rep movsw
 		push	16h
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		push	ax
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		lea	dx, [bp+var_A]
 		add	ax, dx
@@ -10490,10 +10490,10 @@ var_1		= byte ptr -1
 		jnz	loc_10A25
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	power_overflow_level, 0
+		mov	_power_overflow_level, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -10505,18 +10505,18 @@ var_1		= byte ptr -1
 
 loc_109D7:
 		mov	al, [bp+var_1]
-		sub	power, al
-		cmp	dream_items_collected, 0
+		sub	_power, al
+		cmp	_dream_items_collected, 0
 		jz	short loc_109E9
-		dec	dream_items_collected
+		dec	_dream_items_collected
 
 loc_109E9:
-		mov	al, dream_items_collected
+		mov	al, _dream_items_collected
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
-		mov	dream_score, ax
+		mov	ax, _DREAM_SCORE_PER_ITEMS[bx]
+		mov	_dream_score, ax
 		nopcall	main_01:hud_dream_put
 		nopcall	main_01:sub_11DE6
 		call	snd_se_play pascal, 2
@@ -12221,7 +12221,7 @@ include th04/player/shot_velocity.asm
 sub_11DE6	proc far
 		xor	bx, bx
 		xor	ax, ax
-		mov	al, power
+		mov	al, _power
 		mov	cx, 9
 
 loc_11DF0:
@@ -12233,7 +12233,7 @@ loc_11DF0:
 loc_11DFB:
 		mov	dx, bx
 		shr	dx, 1
-		mov	shot_level, dl
+		mov	_shot_level, dl
 		add	bx, playchar_shot_funcs
 		mov	ax, [bx]
 		mov	playchar_shot_func, ax
@@ -32989,7 +32989,7 @@ var_4		= dword	ptr -4
 		push	7
 		push	eax
 		call	sub_1D48E
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		imul	ax, 5
 		mov	si, ax
@@ -32998,7 +32998,7 @@ var_4		= dword	ptr -4
 		push	9
 		push	eax
 		call	sub_1D48E
-		mov	si, dream_score
+		mov	si, _dream_score
 		movzx	eax, si
 		add	[bp+var_4], eax
 		push	0Bh
@@ -33140,7 +33140,7 @@ loc_1D922:
 		push	6
 		push	eax
 		call	sub_1D48E
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		imul	ax, 5
 		mov	si, ax
@@ -33149,7 +33149,7 @@ loc_1D922:
 		push	8
 		push	eax
 		call	sub_1D48E
-		mov	si, dream_score
+		mov	si, _dream_score
 		movzx	eax, si
 		add	[bp+var_4], eax
 		push	0Ah
@@ -33223,7 +33223,7 @@ sub_1DA1B	proc far
 		mov	byte_2D00E, al
 		call	item_splashes_init
 		mov	byte_236E0, 0
-		mov	dream_score, 0
+		mov	_dream_score, 0
 		pop	bp
 		retf
 sub_1DA1B	endp
@@ -33335,9 +33335,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_1DDE9[bx]
 
 loc_1DBD0:
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_1DC04
-		cmp	power, 127
+		cmp	_power, 127
 		jnz	short loc_1DBF5
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
@@ -33346,21 +33346,21 @@ loc_1DBD0:
 		mov	_bullet_clear_time, 20
 
 loc_1DBF5:
-		inc	power
+		inc	_power
 		call	sub_11DE6
 		mov	si, 1
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
 loc_1DC04:
-		inc	power_overflow_level
-		cmp	power_overflow_level, 42
+		inc	_power_overflow_level
+		cmp	_power_overflow_level, 42
 		jb	short loc_1DC19
-		mov	power_overflow_level, 42
+		mov	_power_overflow_level, 42
 		mov	[bp+var_1], 1
 
 loc_1DC19:
-		mov	bx, power_overflow_level
+		mov	bx, _power_overflow_level
 		add	bx, bx
 		mov	si, POWER_OVERFLOW_BONUS[bx]
 		cmp	byte_21CC8, 0
@@ -33404,25 +33404,25 @@ loc_1DC78:
 
 loc_1DC7B:
 		inc	_total_point_items_collected
-		add	si, dream_score
+		add	si, _dream_score
 		inc	_stage_point_items_collected
 		call	hud_point_items_put
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
 loc_1DC8F:
-		cmp	dream_items_collected, 6
+		cmp	_dream_items_collected, 6
 		ja	short loc_1DC9A
-		inc	dream_items_collected
+		inc	_dream_items_collected
 
 loc_1DC9A:
-		mov	al, dream_items_collected
+		mov	al, _dream_items_collected
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, DREAM_SCORE_PER_ITEMS[bx]
-		mov	dream_score, ax
-		mov	si, dream_score
+		mov	ax, _DREAM_SCORE_PER_ITEMS[bx]
+		mov	_dream_score, ax
+		mov	si, _dream_score
 		call	hud_dream_put
 		mov	al, byte_23660
 		add	al, 2
@@ -33435,14 +33435,14 @@ loc_1DC9A:
 ; ---------------------------------------------------------------------------
 
 loc_1DCCC:
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_1DD09
-		mov	al, power
+		mov	al, _power
 		add	al, 10
-		mov	power, al
-		cmp	power, 128
+		mov	_power, al
+		cmp	_power, 128
 		jb	short loc_1DCFE
-		mov	power, 128
+		mov	_power, 128
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
@@ -33456,16 +33456,16 @@ loc_1DCFE:
 ; ---------------------------------------------------------------------------
 
 loc_1DD09:
-		add	power_overflow_level, 5
-		mov	bx, power_overflow_level
+		add	_power_overflow_level, 5
+		mov	bx, _power_overflow_level
 		add	bx, bx
 		mov	si, POWER_OVERFLOW_BONUS[bx]
-		cmp	power_overflow_level, 42
+		cmp	_power_overflow_level, 42
 		jbe	short loc_1DD25
-		mov	power_overflow_level, 42
+		mov	_power_overflow_level, 42
 
 loc_1DD25:
-		cmp	power_overflow_level, 42
+		cmp	_power_overflow_level, 42
 		jnz	short loc_1DD93
 		mov	si, 0A00h
 		mov	[bp+var_1], 1
@@ -33499,7 +33499,7 @@ loc_1DD6F:
 loc_1DD7B:
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
-		mov	power, 128
+		mov	_power, 128
 		call	sub_11DE6
 
 loc_1DD90:
@@ -34243,14 +34243,14 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	power, 123
+		cmp	_power, 123
 		ja	short loc_1E6A3
 		xor	di, di
 		jmp	short loc_1E6B2
 ; ---------------------------------------------------------------------------
 
 loc_1E6A3:
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_1E6AF
 		mov	di, 1
 		jmp	short loc_1E6B2
@@ -39010,7 +39010,7 @@ byte_23661	db 0
 include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
-power_overflow_level	dw 0
+_power_overflow_level	dw 0
 include th04/item/collect[data].asm
 byte_236E0	db 0
 		db 0
@@ -39734,22 +39734,20 @@ word_2599A	dw ?
 word_2599C	dw ?
 word_2599E	dw ?
 word_259A0	dw ?
-public _PLAYER_INVINCIBILITY_TIME
+public _player_invincibility_time, _power, _shot_level, _shot_time
 _player_invincibility_time	db ?
 byte_259A3	db ?
-power	db ?
-shot_level	db ?
-public _shot_time
+_power	db ?
+_shot_level	db ?
 _shot_time	db ?
 include th01/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?
-public _MISS_TIME
+public _MISS_TIME, _stage_point_items_collected, _dream_items_collected
 _miss_time	db ?
-public _stage_point_items_collected
 _stage_point_items_collected	db ?
 include th04/player/option[bss].asm
-dream_items_collected	db ?
+_dream_items_collected	db ?
 		db    ?	;
 		db    ?	;
 public _MISS_EXPLOSION_ANGLE
@@ -42736,7 +42734,8 @@ angle_2D008	db ?
 	evendata
 byte_2D00A	db ?
 		db ?
-dream_score	dw ?
+public _dream_score
+_dream_score	dw ?
 byte_2D00E	db ?
 		db ?
 include th04/boss/funcs[bss].asm

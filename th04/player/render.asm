@@ -51,7 +51,7 @@ player_render	proc near
 	call	super_roll_put  pascal, di, [bp+@@screen_y], @@patnum
 
 @@got_options?:
-	cmp	shot_level, 2
+	cmp	_shot_level, 2
 	jb	@@ret
 	call	grcg_setmode_rmw_1
 	mov	ax, _player_option_pos_cur.x

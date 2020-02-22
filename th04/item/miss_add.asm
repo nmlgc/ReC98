@@ -73,7 +73,7 @@ items_miss_add	proc far
 
 @@last_life?:
 if GAME eq 5
-	cmp	lives, 1
+	cmp	_lives, 1
 else
 	les	bx, _resident
 	cmp	byte ptr es:[bx+resident_t.rem_lives], 1

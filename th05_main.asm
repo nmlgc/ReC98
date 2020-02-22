@@ -568,9 +568,9 @@ sub_B063	proc near
 		mov	al, es:[bx+resident_t.playchar]
 		mov	_playchar, al
 		mov	al, es:[bx+resident_t.credit_bombs]
-		mov	bombs, al
+		mov	_bombs, al
 		mov	al, es:[bx+resident_t.credit_lives]
-		mov	lives, al
+		mov	_lives, al
 		xor	si, si
 		jmp	short loc_B09F
 ; ---------------------------------------------------------------------------
@@ -582,8 +582,8 @@ loc_B099:
 loc_B09F:
 		cmp	si, SCORE_DIGITS
 		jl	short loc_B099
-		mov	power, 1
-		mov	dream, 1
+		mov	_power, 1
+		mov	_dream, 1
 		call	bb_txt_load
 		mov	al, _playchar
 		mov	ah, 0
@@ -623,8 +623,8 @@ loc_B112:
 		mov	al, _playchar
 		mov	ah, 0
 		imul	ax, 20
-		add	ax, offset SHOT_FUNCS
-		mov	playchar_shot_funcs, ax
+		add	ax, offset _SHOT_FUNCS
+		mov	_playchar_shot_funcs, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jz	short loc_B145
@@ -765,7 +765,7 @@ loc_B260:
 		mov	al, es:[bx+resident_t.stage]
 		mov	stage_id, al
 		mov	al, es:[bx+resident_t.debug_power]
-		mov	power, al
+		mov	_power, al
 		mov	es:[bx+resident_t.debug_mode], 0
 		mov	byte_20A71, 1
 
@@ -780,7 +780,7 @@ loc_B2A5:
 		mov	stage_id, al
 		cmp	es:[bx+resident_t.demo_num], 5
 		jz	short loc_B2CE
-		mov	power, 128
+		mov	_power, 128
 
 loc_B2CE:
 		mov	fp_2300E, offset DemoPlay
@@ -2483,7 +2483,7 @@ sub_C483	proc near
 		mov	bp, sp
 		cmp	byte_2429A, 0
 		jnz	loc_C518
-		cmp	bombs, 0
+		cmp	_bombs, 0
 		jz	loc_C518
 		cmp	byte_2C96C, 0
 		jnz	short loc_C518
@@ -2496,7 +2496,7 @@ sub_C483	proc near
 		mov	byte_2CEBD, 0
 
 loc_C4BC:
-		dec	bombs
+		dec	_bombs
 		nopcall	sub_104BB
 		mov	byte_2429A, 1
 		mov	byte_2429B, 0
@@ -2568,9 +2568,9 @@ sub_C52D	proc near
 		jz	short loc_C565
 
 loc_C555:
-		cmp	dream, 1
+		cmp	_dream, 1
 		jbe	short loc_C560
-		dec	dream
+		dec	_dream
 
 loc_C560:
 		nopcall	hud_dream_put
@@ -6044,7 +6044,7 @@ include th04/player/shot_velocity.asm
 sub_E4FC	proc far
 		xor	bx, bx
 		xor	ax, ax
-		mov	al, power
+		mov	al, _power
 		mov	cx, 9
 
 loc_E506:
@@ -6056,10 +6056,10 @@ loc_E506:
 loc_E511:
 		mov	dx, bx
 		shr	dx, 1
-		mov	shot_level, dl
-		add	bx, playchar_shot_funcs
+		mov	_shot_level, dl
+		add	bx, _playchar_shot_funcs
 		mov	ax, [bx]
-		mov	playchar_shot_func, ax
+		mov	_playchar_shot_func, ax
 		nopcall	hud_power_put
 		retf
 sub_E4FC	endp
@@ -8184,13 +8184,13 @@ loc_FBB5:
 		or	di, di
 		jnz	short loc_FBF5
 		call	sub_E8F2
-		mov	power, 1
-		mov	dream, 1
+		mov	_power, 1
+		mov	_dream, 1
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
-		mov	bombs, al
+		mov	_bombs, al
 		mov	al, es:[bx+resident_t.credit_lives]
-		mov	lives, al
+		mov	_lives, al
 		nopcall	sub_E4FC
 		nopcall	sub_10407
 		nopcall	sub_104BB
@@ -8725,7 +8725,7 @@ var_1		= byte ptr -1
 		mov	bp, sp
 		sub	sp, 2
 		push	si
-		mov	al, lives
+		mov	al, _lives
 		dec	al
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 6
@@ -8809,10 +8809,10 @@ var_1		= byte ptr -1
 		sub	sp, 2
 		push	si
 		mov	[bp+var_2], 0
-		cmp	bombs, 5
+		cmp	_bombs, 5
 		ja	short loc_10514
 		mov	si, 3Eh	; '>'
-		mov	al, bombs
+		mov	al, _bombs
 		mov	[bp+var_1], al
 		jmp	short loc_104ED
 ; ---------------------------------------------------------------------------
@@ -8841,7 +8841,7 @@ loc_1050C:
 ; ---------------------------------------------------------------------------
 
 loc_10514:
-		mov	al, bombs
+		mov	al, _bombs
 		mov	[bp+var_1], al
 		call	text_putsa pascal, (62 shl 16) + 11, ds, offset aB@b@bB@b@_0, TX_WHITE
 		cmp	[bp+var_1], 0Ah
@@ -8920,7 +8920,7 @@ var_2		= byte ptr -2
 		mov	[bp+var_2], al
 		cmp	byte_22720, 7Fh
 		ja	short loc_105E6
-		cmp	dream, 128
+		cmp	_dream, 128
 		jb	short loc_105E6
 		mov	_popup_id_new, POPUP_ID_DREAMBONUS_MAX
 		mov	_popup_fp, offset popup_update_and_render
@@ -8929,12 +8929,12 @@ var_2		= byte ptr -2
 		mov	_bullet_clear_time, 20
 
 loc_105E6:
-		mov	al, dream
+		mov	al, _dream
 		mov	byte_22720, al
 		push	14h
 		mov	ah, 0
 		push	ax
-		mov	al, dream
+		mov	al, _dream
 		mov	ah, 0
 		mov	bx, 10h
 		cwd
@@ -8984,10 +8984,10 @@ var_A		= byte ptr -0Ah
 		mov	cx, 5
 		rep movsw
 		push	16h
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		push	ax
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		lea	dx, [bp+var_A]
 		add	ax, dx
@@ -11908,10 +11908,10 @@ var_1		= byte ptr -1
 		jnz	short loc_12092
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	power_overflow_level, 0
+		mov	_power_overflow_level, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -11923,7 +11923,7 @@ var_1		= byte ptr -1
 
 loc_12064:
 		mov	al, [bp+var_1]
-		sub	power, al
+		sub	_power, al
 		nopcall	sub_E4FC
 		call	snd_se_play pascal, 2
 		cmp	_playperf, 38
@@ -11937,7 +11937,7 @@ loc_12083:
 		inc	es:[bx+resident_t.miss_count]
 
 loc_12092:
-		cmp	dream, 2
+		cmp	_dream, 2
 		jbe	short loc_120B1
 		cmp	_boss_phase, 0
 		jz	short loc_120A7
@@ -11945,14 +11945,14 @@ loc_12092:
 		jz	short loc_120B6
 
 loc_120A7:
-		mov	al, dream
-		add	al, 0FEh
-		mov	dream, al
+		mov	al, _dream
+		add	al, -2
+		mov	_dream, al
 		jmp	short loc_120B6
 ; ---------------------------------------------------------------------------
 
 loc_120B1:
-		mov	dream, 1
+		mov	_dream, 1
 
 loc_120B6:
 		nopcall	hud_dream_put
@@ -11962,7 +11962,7 @@ loc_120B6:
 		mov	_miss_explosion_angle, al
 		cmp	_miss_time, MISS_ANIM_FRAMES - MISS_ANIM_FLASH_AT
 		jnb	short locret_12148
-		cmp	lives, 1
+		cmp	_lives, 1
 		jbe	short loc_120F0
 		test	_miss_time, 1
 		jz	short loc_120E5
@@ -11985,13 +11985,13 @@ loc_120F0:
 		mov	_player_pos.prev.y, 368 * 16
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, -32
-		cmp	lives, 1
+		cmp	_lives, 1
 		jbe	short loc_12142
-		dec	lives
+		dec	_lives
 		nopcall	sub_10407
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
-		mov	bombs, al
+		mov	_bombs, al
 		nopcall	sub_104BB
 		mov	_bullet_clear_time, 32
 		leave
@@ -12095,7 +12095,7 @@ loc_12207:
 loc_12213:
 		cmp	_shot_time, 0
 		jz	short loc_1222E
-		call	playchar_shot_func
+		call	_playchar_shot_func
 		dec	_shot_time
 		jmp	short loc_1222E
 ; ---------------------------------------------------------------------------
@@ -14936,9 +14936,9 @@ loc_16297:
 		div	bx
 		or	dx, dx
 		jnz	short loc_162B9
-		cmp	dream, 128
+		cmp	_dream, 128
 		jnb	short loc_162B9
-		inc	dream
+		inc	_dream
 		call	hud_dream_put
 
 loc_162B9:
@@ -15206,7 +15206,7 @@ loc_165F8:
 		push	(34 shl 16) + 8
 		push	eax
 		nopcall	hud_points_put
-		mov	al, dream
+		mov	al, _dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
@@ -15381,7 +15381,7 @@ loc_1683E:
 		push	(34 shl 16) + 6
 		push	eax
 		nopcall	hud_points_put
-		mov	al, dream
+		mov	al, _dream
 		mov	ah, 0
 		imul	ax, 0Ah
 		mov	si, ax
@@ -15398,7 +15398,7 @@ loc_1683E:
 		push	(34 shl 16) + 10
 		push	eax
 		nopcall	hud_points_put
-		mov	al, lives
+		mov	al, _lives
 		mov	ah, 0
 		imul	ax, 1000
 		add	ax, -1000
@@ -16223,9 +16223,9 @@ sub_16F05	proc near
 		ja	short loc_16F52
 		call	_playperf_raise pascal, 4
 		inc	_extends_gained
-		cmp	lives, 99
+		cmp	_lives, 99
 		jnb	short loc_16F52
-		inc	lives
+		inc	_lives
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_16F3B
 		mov	_bullet_clear_time, 20
@@ -16266,9 +16266,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_171BA[bx]
 
 loc_16F76:
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_16FAA
-		cmp	power, 127
+		cmp	_power, 127
 		jnz	short loc_16F9B
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
@@ -16277,26 +16277,26 @@ loc_16F76:
 		mov	_bullet_clear_time, 20
 
 loc_16F9B:
-		inc	power
+		inc	_power
 		call	sub_E4FC
 		mov	si, 1
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
 
 loc_16FAA:
-		inc	power_overflow_level
-		cmp	power_overflow_level, 42
+		inc	_power_overflow_level
+		cmp	_power_overflow_level, 42
 		jb	short loc_16FD1
-		mov	power_overflow_level, 42
+		mov	_power_overflow_level, 42
 		mov	[bp+var_3], 1
 		cmp	byte_2264E, 0
 		jnz	short loc_16FD1
-		cmp	dream, 128
+		cmp	_dream, 128
 		jnb	short loc_16FD1
-		inc	dream
+		inc	_dream
 
 loc_16FD1:
-		mov	bx, power_overflow_level
+		mov	bx, _power_overflow_level
 		add	bx, bx
 		mov	si, POWER_OVERFLOW_BONUS[bx]
 		call	hud_dream_put
@@ -16304,9 +16304,9 @@ loc_16FD1:
 ; ---------------------------------------------------------------------------
 
 loc_16FE3:
-		cmp	dream, 128
+		cmp	_dream, 128
 		jnb	short loc_17003
-		mov	al, dream
+		mov	al, _dream
 		mov	ah, 0
 		imul	ax, 18h
 		mov	dx, [di+4]
@@ -16333,11 +16333,11 @@ loc_1700C:
 		idiv	bx
 		mov	dl, 6
 		sub	dl, al
-		add	dl, dream
-		mov	dream, dl
-		cmp	dream, 128
+		add	dl, _dream
+		mov	_dream, dl
+		cmp	_dream, 128
 		jbe	short loc_1703E
-		mov	dream, 128
+		mov	_dream, 128
 
 loc_1703E:
 		call	hud_dream_put
@@ -16372,7 +16372,7 @@ loc_17074:
 ; ---------------------------------------------------------------------------
 
 loc_1707F:
-		cmp	dream, 128
+		cmp	_dream, 128
 		jb	short loc_1708F
 		mov	si, 3200h
 		mov	[bp+var_3], 1
@@ -16381,7 +16381,7 @@ loc_1707F:
 
 loc_1708F:
 		mov	si, 1
-		mov	dream, 128
+		mov	_dream, 128
 
 loc_17097:
 		call	hud_dream_put
@@ -16396,14 +16396,14 @@ loc_17097:
 ; ---------------------------------------------------------------------------
 
 loc_170B5:
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_170F2
-		mov	al, power
+		mov	al, _power
 		add	al, 10
-		mov	power, al
-		cmp	power, 128
+		mov	_power, al
+		cmp	_power, 128
 		jb	short loc_170E7
-		mov	power, 128
+		mov	_power, 128
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
@@ -16417,16 +16417,16 @@ loc_170E7:
 ; ---------------------------------------------------------------------------
 
 loc_170F2:
-		add	power_overflow_level, 5
-		mov	bx, power_overflow_level
+		add	_power_overflow_level, 5
+		mov	bx, _power_overflow_level
 		add	bx, bx
 		mov	si, POWER_OVERFLOW_BONUS[bx]
-		cmp	power_overflow_level, 42
+		cmp	_power_overflow_level, 42
 		jbe	short loc_1710E
-		mov	power_overflow_level, 42
+		mov	_power_overflow_level, 42
 
 loc_1710E:
-		cmp	power_overflow_level, 42
+		cmp	_power_overflow_level, 42
 		jnz	short loc_17174
 		mov	si, 0A00h
 		mov	[bp+var_3], 1
@@ -16434,7 +16434,7 @@ loc_1710E:
 ; ---------------------------------------------------------------------------
 
 loc_1711E:
-		inc	bombs
+		inc	_bombs
 		mov	si, 100
 		call	sub_104BB
 		jmp	short loc_17174
@@ -16443,7 +16443,7 @@ loc_1711E:
 loc_1712C:
 		push	3
 		call	_playperf_raise
-		inc	lives
+		inc	_lives
 		call	sub_10407
 		call	snd_se_play pascal, 7
 		mov	_popup_id_new, POPUP_ID_EXTEND
@@ -16459,7 +16459,7 @@ loc_17150:
 loc_1715C:
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_popup_fp, offset popup_update_and_render
-		mov	power, 128
+		mov	_power, 128
 		call	sub_E4FC
 
 loc_17171:
@@ -16533,11 +16533,11 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_171E5:
-		cmp	dream, 1
+		cmp	_dream, 1
 		jbe	short loc_17204
-		cmp	dream, 128
+		cmp	_dream, 128
 		jnb	short loc_17204
-		dec	dream
+		dec	_dream
 		jmp	short loc_17204
 ; ---------------------------------------------------------------------------
 
@@ -31560,7 +31560,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	power, 128
+		cmp	_power, 128
 		jnb	short loc_1FB2A
 		xor	di, di
 		jmp	short loc_1FB2D
@@ -32458,7 +32458,8 @@ byte_225CC	db 0
 include th04/item/type_patnum[data].asm
 include th02/power_overflow[data].asm
 include th04/dream_score[data].asm
-power_overflow_level	dw 0
+public _power_overflow_level
+_power_overflow_level	dw 0
 include th04/item/collect[data].asm
 byte_2264E	db 0
 		db 0
@@ -32634,7 +32635,7 @@ _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 include th04/strings/demoplay[data].asm
 aPLAYFIELD_BLANK_ROW	db '                                                ',0
 		db 0
-SHOT_FUNCS label word
+_SHOT_FUNCS label word
 	; Reimu
 	dw shot_l0
 	dw shot_l1
@@ -33451,8 +33452,9 @@ angle_25349	db ?
 byte_2534A	db ?
 point_2534B	Point <?>
 		db ?
-lives	db ?
-bombs	db ?
+public _lives, _bombs
+_lives	db ?
+_bombs	db ?
 include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/tiles[bss].asm
@@ -36269,27 +36271,25 @@ word_2CE9E	dw ?
 include th04/player/pos[bss].asm
 include th05/playchar_speed[bss].asm
 include th04/player/option[bss].asm
-public _PLAYER_INVINCIBILITY_TIME
+public _player_invincibility_time, _power, _shot_level, _shot_time
 _player_invincibility_time	db ?
 byte_2CEBD	db ?
-power	db ?
-shot_level	db ?
-public _shot_time
+_power	db ?
+_shot_level	db ?
 _shot_time	db ?
 include th01/player_is_hit[bss].asm
-public _MISS_TIME
+public _MISS_TIME, _dream, _MISS_EXPLOSION_RADIUS
 _miss_time	db ?
-dream	db ?
-public _MISS_EXPLOSION_RADIUS
+_dream	db ?
 _miss_explosion_radius	dw ?
 public _stage_point_items_collected
 _stage_point_items_collected	dw ?
-public _MISS_EXPLOSION_ANGLE
+public _MISS_EXPLOSION_ANGLE, _playchar_shot_func, _playchar_shot_funcs
 _miss_explosion_angle	db ?
 		dd    ?	;
 		db    ?	;
-playchar_shot_func	dw ?
-playchar_shot_funcs	dw ?
+_playchar_shot_func	dw ?
+_playchar_shot_funcs	dw ?
 dword_2CED2	dd ?
 word_2CED6	dw ?
 word_2CED8	dw ?
