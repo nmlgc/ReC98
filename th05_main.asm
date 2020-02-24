@@ -8107,12 +8107,12 @@ include th05/lasers_update_render.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_FF79	proc near
+public CURVEBULLETS_RENDER
+curvebullets_render	proc near
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@trail_sprite		= word ptr -4
+@@bullet_i		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -8120,96 +8120,96 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_6], 0B2AAh
-		mov	di, 0BFC2h
+		mov	di, offset _curvebullet_trails
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	[bp+var_2], 1
-		jmp	loc_10037
+		mov	[bp+@@bullet_i], 1
+		jmp	@@bullets_more?
 ; ---------------------------------------------------------------------------
 
-loc_FF96:
-		cmp	byte ptr [di], 0
-		jz	loc_1002D
-		mov	ah, [di+1]
+@@bullet_loop:
+		cmp	[di+curvebullet_trail_t.flag], 0
+		jz	@@bullet_next
+		mov	ah, [di+curvebullet_trail_t.CBT_col]
 		call	grcg_setcolor_direct_noint_1
-		mov	si, 0Fh
-		jmp	short loc_FFF0
+		mov	si, (CURVEBULLET_TRAIL_NODE_COUNT - 1)
+		jmp	short @@nodes_more?
 ; ---------------------------------------------------------------------------
 
-loc_FFA8:
+@@node_loop:
 		mov	bx, si
-		mov	al, [bx+di+42h]
+		mov	al, [di+curvebullet_trail_t.node_sprite+bx]
 		mov	ah, 0
-		mov	[bp+var_4], ax
+		mov	[bp+@@trail_sprite], ax
 		shl	bx, 2
-		mov	ax, [bx+di+4]
+		mov	ax, [di+curvebullet_trail_t.node_pos.y+bx]
 		sar	ax, 4
 		mov	dx, ax
 		mov	bx, si
 		shl	bx, 2
-		mov	ax, [bx+di+2]
+		mov	ax, [di+curvebullet_trail_t.node_pos.x+bx]
 		sar	ax, 4
-		add	ax, 10h
-		cmp	dx, 0FFF0h
-		jl	short loc_FFED
-		cmp	dx, 180h
-		jge	short loc_FFED
+		add	ax, (PLAYFIELD_X - (CURVEBULLET_W / 2))
+		cmp	dx, (PLAYFIELD_Y - CURVEBULLET_H)
+		jl	short @@node_next
+		cmp	dx, PLAYFIELD_BOTTOM
+		jge	short @@node_next
 		or	ax, ax
-		jl	short loc_FFED
-		cmp	ax, 1A0h
-		jge	short loc_FFED
-		or	dx, dx
-		jge	short loc_FFE7
-		add	dx, 190h
+		jl	short @@node_next
+		cmp	ax, PLAYFIELD_RIGHT
+		jge	short @@node_next
+		or	dx, dx ; (PLAYFIELD_X - CURVEBULLET_W)
+		jge	short @@node_render
+		add	dx, RES_Y
 
-loc_FFE7:
-		mov	bx, [bp+var_4]
+@@node_render:
+		mov	bx, [bp+@@trail_sprite]
 		call	sub_DDF0
 
-loc_FFED:
+@@node_next:
 		sub	si, 2
 
-loc_FFF0:
+@@nodes_more?:
 		or	si, si
-		jg	short loc_FFA8
+		jg	short @@node_loop
 		mov	bx, [bp+var_6]
 		mov	ax, [bx+4]
 		sar	ax, 4
 		mov	dx, ax
 		mov	ax, [bx+2]
 		sar	ax, 4
-		add	ax, 10h
-		cmp	dx, 0FFF0h
-		jl	short loc_1002D
-		cmp	dx, 180h
-		jge	short loc_1002D
+		add	ax, (PLAYFIELD_X - (CURVEBULLET_W / 2))
+		cmp	dx, (PLAYFIELD_Y - CURVEBULLET_H)
+		jl	short @@bullet_next
+		cmp	dx, PLAYFIELD_BOTTOM
+		jge	short @@bullet_next
 		or	ax, ax
-		jl	short loc_1002D
-		cmp	ax, 1A0h
-		jge	short loc_1002D
-		or	dx, dx
+		jl	short @@bullet_next
+		cmp	ax, PLAYFIELD_RIGHT
+		jge	short @@bullet_next
+		or	dx, dx ; (PLAYFIELD_X - CURVEBULLET_W)
 		jge	short loc_10024
-		add	dx, 190h
+		add	dx, RES_Y
 
 loc_10024:
 		mov	bx, [bp+var_6]
 		mov	bx, [bx+12h]
 		call	sub_DDF0
 
-loc_1002D:
-		inc	[bp+var_2]
+@@bullet_next:
+		inc	[bp+@@bullet_i]
 		add	[bp+var_6], 1Ah
-		add	di, 52h	; 'R'
+		add	di, size curvebullet_trail_t
 
-loc_10037:
-		cmp	[bp+var_2], 8
-		jl	loc_FF96
+@@bullets_more?:
+		cmp	[bp+@@bullet_i], 1 + CURVEBULLET_COUNT
+		jl	@@bullet_loop
 		pop	di
 		pop	si
 		leave
 		retn
-sub_FF79	endp
+curvebullets_render	endp
 
 include th04/item/splashes_render.asm
 
@@ -10199,7 +10199,7 @@ loc_110D4:
 loc_110D8:
 		cmp	di, 40h
 		jl	short loc_11080
-		call	sub_FF79
+		call	curvebullets_render
 		pop	di
 		pop	si
 		pop	bp
@@ -11040,7 +11040,7 @@ loc_117B4:
 loc_117BA:
 		cmp	[bp+var_2], 2
 		jl	loc_116A6
-		call	sub_FF79
+		call	curvebullets_render
 		pop	di
 		pop	si
 		leave
@@ -16837,11 +16837,11 @@ include th05/lasers_control.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public CURVEBULLETS_ADD
+curvebullets_add	proc near
 
-sub_17687	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@trail		= word ptr -4
+@@i		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -16849,19 +16849,19 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, 0B2AAh
-		mov	[bp+var_4], 0BFC2h
-		mov	[bp+var_2], 1
+		mov	[bp+@@trail], offset _curvebullet_trails
+		mov	[bp+@@i], 1
 		jmp	short loc_1771A
 ; ---------------------------------------------------------------------------
 
 loc_1769E:
 		cmp	byte ptr [si], 0
 		jnz	short loc_17710
-		mov	bx, [bp+var_4]
-		cmp	byte ptr [bx], 0
+		mov	bx, [bp+@@trail]
+		cmp	[bx+curvebullet_trail_t.flag], 0
 		jnz	short loc_17710
-		mov	bx, [bp+var_4]
-		mov	byte ptr [bx], 1
+		mov	bx, [bp+@@trail]
+		mov	[bx+curvebullet_trail_t.flag], 1
 		mov	al, angle_2BC71
 		mov	[si+1],	al
 		mov	al, byte_2BC88
@@ -16873,9 +16873,9 @@ loc_1769E:
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@trail]
 		mov	al, byte ptr word_2BC82
-		mov	[bx+1],	al
+		mov	[bx+curvebullet_trail_t.CBT_col], al
 		call	bullet_patnum_for_angle pascal, 0, word ptr [si+1]
 		mov	ah, 0
 		mov	[si+12h], ax
@@ -16888,27 +16888,27 @@ loc_1769E:
 loc_176EF:
 		mov	bx, di
 		shl	bx, 2
-		add	bx, [bp+var_4]
+		add	bx, [bp+@@trail]
 		mov	eax, point_2BC72
-		mov	[bx+2],	eax
+		mov	dword ptr [bx+curvebullet_trail_t.node_pos], eax
 		mov	al, [si+12h]
-		mov	bx, [bp+var_4]
-		mov	[bx+di+42h], al
+		mov	bx, [bp+@@trail]
+		mov	[bx+di+curvebullet_trail_t.node_sprite], al
 		inc	di
 
 loc_17709:
-		cmp	di, 10h
+		cmp	di, CURVEBULLET_TRAIL_NODE_COUNT
 		jl	short loc_176EF
 		jmp	short loc_17722
 ; ---------------------------------------------------------------------------
 
 loc_17710:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	si, 1Ah
-		add	[bp+var_4], 52h	; 'R'
+		add	[bp+@@trail], size curvebullet_trail_t
 
 loc_1771A:
-		cmp	[bp+var_2], 8
+		cmp	[bp+@@i], 1 + CURVEBULLET_COUNT
 		jl	loc_1769E
 
 loc_17722:
@@ -16916,19 +16916,19 @@ loc_17722:
 		pop	si
 		leave
 		retn
-sub_17687	endp
+curvebullets_add	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_17726	proc near
+public CURVEBULLETS_UPDATE
+curvebullets_update	proc near
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@node_i		= word ptr -4
+@@bullet_i		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -16936,68 +16936,68 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	si, 0B2AAh
-		mov	di, 0BFC2h
-		mov	[bp+var_2], 1
-		jmp	loc_178CB
+		mov	di, offset _curvebullet_trails
+		mov	[bp+@@bullet_i], 1
+		jmp	@@bullets_more?
 ; ---------------------------------------------------------------------------
 
 loc_1773C:
-		cmp	byte ptr [di], 0
-		jz	loc_178C2
+		cmp	[di+curvebullet_trail_t.flag], 0
+		jz	@@bullets_next
 		inc	word ptr [si+0Eh]
-		mov	[bp+var_4], 0Fh
-		jmp	short loc_1779C
+		mov	[bp+@@node_i], (CURVEBULLET_TRAIL_NODE_COUNT - 1)
+		jmp	short @@nodes_more?
 ; ---------------------------------------------------------------------------
 
-loc_1774D:
-		mov	bx, [bp+var_4]
+@@node_loop:
+		mov	bx, [bp+@@node_i]
 		shl	bx, 2
-		mov	eax, [bx+di-2]
-		mov	bx, [bp+var_4]
+		mov	eax, dword ptr [di+curvebullet_trail_t.node_pos+(bx - size Point)]
+		mov	bx, [bp+@@node_i]
 		shl	bx, 2
-		mov	[bx+di+2], eax
-		mov	bx, [bp+var_4]
+		mov	dword ptr [di+curvebullet_trail_t.node_pos+bx], eax
+		mov	bx, [bp+@@node_i]
 		shl	bx, 2
-		mov	ax, [bx+di+2]
+		mov	ax, [bx+di+curvebullet_trail_t.node_pos.x]
 		sub	ax, _player_pos.cur.x
 		add	ax, 6 * 16
 		cmp	ax, 12 * 16
-		ja	short loc_17790
-		mov	bx, [bp+var_4]
+		ja	short @@node_next
+		mov	bx, [bp+@@node_i]
 		shl	bx, 2
-		mov	ax, [bx+di+4]
+		mov	ax, [bx+di+curvebullet_trail_t.node_pos.y]
 		sub	ax, _player_pos.cur.y
 		add	ax, 6 * 16
 		cmp	ax, 12 * 16
-		ja	short loc_17790
+		ja	short @@node_next
 		mov	_player_is_hit, 1
 
-loc_17790:
-		mov	bx, [bp+var_4]
-		mov	al, [bx+di+41h]
-		mov	[bx+di+42h], al
-		dec	[bp+var_4]
+@@node_next:
+		mov	bx, [bp+@@node_i]
+		mov	al, [di+curvebullet_trail_t.node_sprite+(bx - byte)]
+		mov	[di+curvebullet_trail_t.node_sprite+bx], al
+		dec	[bp+@@node_i]
 
-loc_1779C:
-		cmp	[bp+var_4], 0
-		jg	short loc_1774D
+@@nodes_more?:
+		cmp	[bp+@@node_i], 0
+		jg	short @@node_loop
 		mov	eax, [si+2]
-		mov	[di+2],	eax
+		mov	dword ptr [di+curvebullet_trail_t.node_pos][0], eax
 		mov	al, [si+12h]
-		mov	[di+42h], al
-		cmp	word ptr [di+3Eh], 0FF00h
+		mov	[di+curvebullet_trail_t.node_sprite][0], al
+		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].x, (-(CURVEBULLET_W / 2) shl 4)
 		jle	short loc_177CC
-		cmp	word ptr [di+3Eh], 1900h
+		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].x, ((PLAYFIELD_W + (CURVEBULLET_W / 2)) shl 4)
 		jge	short loc_177CC
-		cmp	word ptr [di+40h], 0FF00h
+		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].y, (-(CURVEBULLET_H / 2) shl 4)
 		jle	short loc_177CC
-		cmp	word ptr [di+40h], 1800h
+		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].y, ((PLAYFIELD_H + (CURVEBULLET_H / 2)) shl 4)
 		jl	short loc_177D5
 
 loc_177CC:
-		mov	byte ptr [di], 0
+		mov	[di+curvebullet_trail_t.flag], 0
 		mov	byte ptr [si], 0
-		jmp	loc_178C2
+		jmp	@@bullets_next
 ; ---------------------------------------------------------------------------
 
 loc_177D5:
@@ -17015,12 +17015,12 @@ loc_177D5:
 		mov	_player_is_hit, 1
 
 loc_177FB:
-		cmp	byte ptr [di], 1
+		cmp	[di+curvebullet_trail_t.flag], 1
 		jnz	short loc_17811
 		dec	byte ptr [si+18h]
 		cmp	byte ptr [si+18h], 4
 		ja	short loc_1780B
-		inc	byte ptr [di]
+		inc	[di+curvebullet_trail_t.flag]
 
 loc_1780B:
 		mov	[bp+var_6], 10h
@@ -17114,19 +17114,19 @@ loc_178A5:
 		mov	ah, 0
 		mov	[si+12h], ax
 
-loc_178C2:
-		inc	[bp+var_2]
+@@bullets_next:
+		inc	[bp+@@bullet_i]
 		add	si, 1Ah
-		add	di, 52h	; 'R'
+		add	di, size curvebullet_trail_t
 
-loc_178CB:
-		cmp	[bp+var_2], 8
+@@bullets_more?:
+		cmp	[bp+@@bullet_i], 1 + CURVEBULLET_COUNT
 		jl	loc_1773C
 		pop	di
 		pop	si
 		leave
 		retn
-sub_17726	endp
+curvebullets_update	endp
 
 include th04/item/splashes_update.asm
 include th05/bullet/update_patnum.asm
@@ -22770,7 +22770,7 @@ loc_1AB57:
 		push	word ptr [bp+var_1]
 		call	sub_15A24
 		mov	angle_2BC71, al
-		call	sub_17687
+		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
 loc_1AB72:
@@ -22815,7 +22815,7 @@ loc_1ABAE:
 		push	word ptr [bp+var_1]
 		call	sub_15A24
 		mov	angle_2BC71, al
-		call	sub_17687
+		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
 loc_1ABC9:
@@ -22928,7 +22928,7 @@ loc_1ACAB:
 		mov	_boss_mode_change, 0
 		mov	fp_2CE36, offset sub_1A5EB
 		mov	fp_2CE38, offset mai_yuki_1A8C9
-		mov	_boss_custombullets_render, offset sub_FF79
+		mov	_boss_custombullets_render, offset curvebullets_render
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -23214,7 +23214,7 @@ loc_1AF85:
 		mov	_boss_hp, 7900
 
 loc_1AFA7:
-		call	sub_17726	; default
+		call	curvebullets_update	; default
 		mov	ax, _boss_hp
 		add	ax, _yuki_hp
 		push	ax
@@ -27956,7 +27956,7 @@ loc_1DB10:
 		call	randring2_next16_mod
 		shl	al, 6
 		mov	angle_2BC71, al
-		call	sub_17687
+		call	curvebullets_add
 		call	snd_se_play pascal, 3
 
 loc_1DB78:
@@ -28916,7 +28916,7 @@ loc_1E522:
 
 loc_1E527:
 		call	sub_1D58B
-		call	sub_17726
+		call	curvebullets_update
 		push	_boss_hp
 		push	22800
 		call	sub_17354
@@ -30150,7 +30150,7 @@ loc_1EF54:
 loc_1EF5F:
 		call	sub_15A24
 		mov	angle_2BC71, al
-		call	sub_17687
+		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
 loc_1EF6F:
@@ -30204,7 +30204,7 @@ loc_1EFB4:
 loc_1EFBF:
 		call	sub_15A24
 		mov	angle_2BC71, al
-		call	sub_17687
+		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
 loc_1EFCF:
@@ -30891,7 +30891,7 @@ loc_1F660:
 		call	boss_death_sequence_function
 
 loc_1F666:
-		call	sub_17726
+		call	curvebullets_update
 		call	sub_1E8B0
 		push	_boss_hp
 		push	6784h
@@ -35824,170 +35824,7 @@ include th04/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
 include th05/lasers_render[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+include th05/bullet/curve[bss].asm
 include th04/item/splashes[bss].asm
 grcgcolor_2CC8E	dw ?
 		dd    ?	;
