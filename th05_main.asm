@@ -9443,40 +9443,40 @@ midboss3_render	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10B1D	proc near
+public PUPPETS_RENDER
+puppets_render	proc near
 
 @@x		= word ptr -0Ah
 @@y		= word ptr -8
 @@patnum		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -4
+@@i		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	si, 0B290h
-		mov	[bp+var_2], 0
+		mov	si, offset puppets
+		mov	[bp+@@i], 0
 		jmp	loc_10C3E
 ; ---------------------------------------------------------------------------
 
 loc_10B2E:
-		cmp	byte ptr [si], 0
+		cmp	[si+puppet_t.flag], 0
 		jz	loc_10C38
-		mov	ax, [si+2]
+		mov	ax, [si+puppet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_4], ax
-		cmp	[bp+var_4], 0
+		add	ax, (PLAYFIELD_X - (PUPPET_W / 2))
+		mov	[bp+@@left], ax
+		cmp	[bp+@@left], 0
 		jle	loc_10C38
-		cmp	[bp+var_4], 416
+		cmp	[bp+@@left], (PLAYFIELD_W + PUPPET_W)
 		jge	loc_10C38
-		mov	ax, [si+4]
+		mov	ax, [si+puppet_t.pos.cur.y]
 		sar	ax, 4
 		mov	di, ax
-		cmp	di, -16
+		cmp	di, (-PUPPET_H / 2)
 		jle	loc_10C38
-		cmp	di, 384
+		cmp	di, (PLAYFIELD_H + (PUPPET_H / 2))
 		jge	loc_10C38
 		mov	ax, _stage_frame
 		and	ax, 1Fh
@@ -9500,26 +9500,26 @@ loc_10B87:
 		sub	ax, dx
 		sar	ax, 1
 		add	di, ax
-		mov	ax, [si+12h]
+		mov	ax, [si+puppet_t.PUPPET_patnum]
 		mov	[bp+@@patnum], ax
-		cmp	byte ptr [si], 1
+		cmp	[si+puppet_t.flag], 1
 		jnz	short loc_10BA1
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	[bp+@@patnum], ax
 
 loc_10BA1:
-		cmp	word ptr [si+16h], 0
+		cmp	[si+puppet_t.PUPPET_damage_this_frame], 0
 		jnz	short loc_10BB5
-		call	super_roll_put pascal, [bp+var_4], di, [bp+@@patnum]
+		call	super_roll_put pascal, [bp+@@left], di, [bp+@@patnum]
 		jmp	short loc_10BC7
 ; ---------------------------------------------------------------------------
 
 loc_10BB5:
-		call	super_put_1plane pascal, [bp+var_4], di, [bp+@@patnum], large PLANE_PUT or GC_BRGI
+		call	super_put_1plane pascal, [bp+@@left], di, [bp+@@patnum], large PLANE_PUT or GC_BRGI
 
 loc_10BC7:
-		mov	ax, [si+4]
+		mov	ax, [si+puppet_t.pos.cur.y]
 		sar	ax, 4
 		add	ax, 10h
 		mov	di, ax
@@ -9528,9 +9528,9 @@ loc_10BC7:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@left]
 		add	ax, 16
-		call	grcg_circle pascal, ax, di, word ptr [si+10h]
+		call	grcg_circle pascal, ax, di, [si+puppet_t.radius_gather]
 		jmp	short loc_10C1F
 ; ---------------------------------------------------------------------------
 
@@ -9538,28 +9538,28 @@ loc_10BFD:
 		cmp	byte_2D07F, 2
 		jnz	short loc_10C25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@left]
 		add	ax, 16
-		call	grcg_circlefill pascal, ax, di, word ptr [si+10h]
+		call	grcg_circlefill pascal, ax, di, [si+puppet_t.radius_gather]
 
 loc_10C1F:
 		GRCG_OFF_CLOBBERING dx
 
 loc_10C25:
-		mov	bx, [bp+var_2]
+		mov	bx, [bp+@@i]
 		add	bx, bx
 		lea	ax, [bp+@@x]
 		add	bx, ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@left]
 		add	ax, 16
 		mov	ss:[bx], ax
 
 loc_10C38:
-		inc	[bp+var_2]
-		add	si, 1Ah
+		inc	[bp+@@i]
+		add	si, size puppet_t
 
 loc_10C3E:
-		cmp	[bp+var_2], 2
+		cmp	[bp+@@i], PUPPET_COUNT
 		jl	loc_10B2E
 		cmp	byte_2D07F, 2
 		jnz	short loc_10C6C
@@ -9593,7 +9593,7 @@ loc_10C96:
 		pop	si
 		leave
 		retn
-sub_10B1D	endp
+puppets_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9665,7 +9665,7 @@ loc_10D09:
 		call	super_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 
 loc_10D19:
-		call	sub_10B1D
+		call	puppets_render
 
 loc_10D1C:
 		call	explosions_small_update_and_render
@@ -20306,54 +20306,54 @@ off_1962C	dw offset loc_19569
 sub_19634	proc near
 		push	bp
 		mov	bp, sp
-		push	600h
-		push	word_2BC80
-		mov	al, angle_2BC71
+		push	(96 shl 4)
+		push	puppet0.radius_motion
+		mov	al, puppet0.PUPPET_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	vector1_at
-		mov	point_2BC72.x, ax
-		push	600h
-		push	word_2BC80
-		mov	al, angle_2BC71
+		mov	puppet0.pos.cur.x, ax
+		push	(96 shl 4)
+		push	puppet0.radius_motion
+		mov	al, puppet0.PUPPET_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	point_2BC72.y, ax
-		mov	al, angle_2BC71
+		mov	puppet0.pos.cur.y, ax
+		mov	al, puppet0.PUPPET_angle
 		add	al, -2
-		mov	angle_2BC71, al
-		sub	word_2BC80, 20h	; ' '
-		push	1200h
-		push	word_2BC9A
-		mov	al, byte_2BC8B
+		mov	puppet0.PUPPET_angle, al
+		sub	puppet0.radius_motion, (2 shl 4)
+		push	(288 shl 4)
+		push	puppet1.radius_motion
+		mov	al, puppet1.PUPPET_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	vector1_at
-		mov	point_2BC8C.x, ax
-		push	600h
-		push	word_2BC9A
-		mov	al, byte_2BC8B
+		mov	puppet1.pos.cur.x, ax
+		push	(96 shl 4)
+		push	puppet1.radius_motion
+		mov	al, puppet1.PUPPET_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	point_2BC8C.y, ax
-		mov	al, byte_2BC8B
+		mov	puppet1.pos.cur.y, ax
+		mov	al, puppet1.PUPPET_angle
 		add	al, 2
-		mov	byte_2BC8B, al
-		sub	word_2BC9A, 20h	; ' '
-		mov	eax, point_2BC72
-		mov	dword_2BC76, eax
-		mov	eax, point_2BC8C
-		mov	point_2BC90, eax
+		mov	puppet1.PUPPET_angle, al
+		sub	puppet1.radius_motion, (2 shl 4)
+		mov	eax, dword ptr puppet0.pos.cur
+		mov	dword ptr puppet0.pos.prev, eax
+		mov	eax, dword ptr puppet1.pos.cur
+		mov	dword ptr puppet1.pos.prev, eax
 		pop	bp
 		retn
 sub_19634	endp
@@ -20362,33 +20362,33 @@ sub_19634	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public PUPPETS_UPDATE
+puppets_update	proc near
 
-sub_196D3	proc near
-
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	word_2CED6, 140h
 		mov	word_2CED8, 140h
-		mov	si, 0B290h
-		mov	[bp+var_2], 0
-		jmp	loc_198AB
+		mov	si, offset puppets
+		mov	[bp+@@i], 0
+		jmp	@@more?
 ; ---------------------------------------------------------------------------
 
-loc_196F0:
-		cmp	byte ptr [si], 0
-		jz	loc_198A5
-		cmp	byte ptr [si], 1
+@@loop:
+		cmp	[si+puppet_t.flag], 0
+		jz	@@next
+		cmp	[si+puppet_t.flag], 1
 		jnz	loc_19851
-		mov	eax, [si+2]
-		cmp	eax, [si+6]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
+		cmp	eax, dword ptr [si+puppet_t.pos.prev]
 		jz	short loc_19773
-		mov	ax, [si+6]
-		sub	ax, [si+2]
+		mov	ax, [si+puppet_t.pos.prev.x]
+		sub	ax, [si+puppet_t.pos.cur.x]
 		mov	di, ax
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
 		or	ax, ax
@@ -20409,19 +20409,19 @@ loc_1971E:
 loc_1972C:
 		cwd
 		idiv	bx
-		add	[si+2],	ax
+		add	[si+puppet_t.pos.cur.x], ax
 		jmp	short loc_1973A
 ; ---------------------------------------------------------------------------
 
 loc_19734:
-		mov	ax, [si+6]
-		mov	[si+2],	ax
+		mov	ax, [si+puppet_t.pos.prev.x]
+		mov	[si+puppet_t.pos.cur.x], ax
 
 loc_1973A:
-		mov	ax, [si+8]
-		sub	ax, [si+4]
+		mov	ax, [si+puppet_t.pos.prev.y]
+		sub	ax, [si+puppet_t.pos.cur.y]
 		mov	di, ax
-		mov	bx, 20h	; ' '
+		mov	bx, (2 shl 4)
 		cwd
 		idiv	bx
 		or	ax, ax
@@ -20442,22 +20442,22 @@ loc_19750:
 loc_1975E:
 		cwd
 		idiv	bx
-		add	[si+4],	ax
+		add	[si+puppet_t.pos.cur.y], ax
 		jmp	short loc_1976C
 ; ---------------------------------------------------------------------------
 
 loc_19766:
-		mov	ax, [si+8]
-		mov	[si+4],	ax
+		mov	ax, [si+puppet_t.pos.prev.y]
+		mov	[si+puppet_t.pos.cur.y], ax
 
 loc_1976C:
-		mov	word ptr [si+12h], 0C0h
+		mov	[si+puppet_t.PUPPET_patnum], 192
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
 
 loc_19773:
-		mov	word ptr [si+12h], 0BEh
-		cmp	[bp+var_2], 0
+		mov	[si+puppet_t.PUPPET_patnum], 190
+		cmp	[bp+@@i], 0
 		jnz	short loc_19785
 		push	si
 		call	fp_2CE2A
@@ -20473,15 +20473,13 @@ loc_1978A:
 		mov	di, ax
 		or	di, di
 		jz	short loc_197D9
-		push	1400h
-		call	randring2_next16_mod
-		add	ax, 200h
-		mov	[si+6],	ax
-		push	0A00h
-		call	randring2_next16_mod
-		add	ax, 100h
-		mov	[si+8],	ax
-		cmp	[bp+var_2], 0
+		call	randring2_next16_mod pascal, (320 shl 4)
+		add	ax, (32 shl 4)
+		mov	[si+puppet_t.pos.prev.x], ax
+		call	randring2_next16_mod pascal, (160 shl 4)
+		add	ax, (16 shl 4)
+		mov	[si+puppet_t.pos.prev.y], ax
+		cmp	[bp+@@i], 0
 		jnz	short loc_197C2
 		push	3
 		call	randring2_next16_and
@@ -20501,20 +20499,20 @@ loc_197C2:
 		mov	fp_2CE2C, ax
 
 loc_197D2:
-		mov	word ptr [si+0Eh], 0
+		mov	[si+puppet_t.phase_frame], 0
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
 
 loc_197D9:
-		inc	word ptr [si+0Eh]
+		inc	[si+puppet_t.phase_frame]
 
 loc_197DC:
-		mov	ax, [si+2]
+		mov	ax, [si+puppet_t.pos.cur.x]
 		sub	ax, _player_pos.cur.x
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
 		jnb	short loc_197FF
-		mov	ax, [si+4]
+		mov	ax, [si+puppet_t.pos.cur.y]
 		sub	ax, _player_pos.cur.y
 		add	ax, 12 * 16
 		cmp	ax, 24 * 16
@@ -20524,51 +20522,51 @@ loc_197DC:
 loc_197FF:
 		cmp	byte_2D07F, 3
 		jz	short loc_1984A
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	dword_2CED2, eax
 		call	sub_126B3
-		mov	[si+16h], ax
-		cmp	word ptr [si+16h], 0
+		mov	[si+puppet_t.PUPPET_damage_this_frame], ax
+		cmp	[si+puppet_t.PUPPET_damage_this_frame], 0
 		jz	short loc_19823
 		call	snd_se_play pascal, 4
 
 loc_19823:
-		mov	ax, [si+16h]
-		sub	[si+14h], ax
-		cmp	word ptr [si+14h], 0
-		jge	short loc_198A5
-		inc	byte ptr [si]
-		mov	word ptr [si+12h], 4
-		mov	word ptr [si+16h], 0
+		mov	ax, [si+puppet_t.PUPPET_damage_this_frame]
+		sub	[si+puppet_t.PUPPET_hp_cur], ax
+		cmp	[si+puppet_t.PUPPET_hp_cur], 0
+		jge	short @@next
+		inc	[si+puppet_t.flag]
+		mov	[si+puppet_t.PUPPET_patnum], 4
+		mov	[si+puppet_t.PUPPET_damage_this_frame], 0
 		call	snd_se_play pascal, 12
 		add	_score_delta, 100
-		jmp	short loc_198A5
+		jmp	short @@next
 ; ---------------------------------------------------------------------------
 
 loc_1984A:
-		mov	word ptr [si+16h], 0
-		jmp	short loc_198A5
+		mov	[si+puppet_t.PUPPET_damage_this_frame], 0
+		jmp	short @@next
 ; ---------------------------------------------------------------------------
 
 loc_19851:
-		mov	al, [si]
+		mov	al, [si+puppet_t.flag]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_198A3
-		inc	word ptr [si+12h]
-		cmp	word ptr [si+12h], 0Ch
+		inc	[si+puppet_t.PUPPET_patnum]
+		cmp	[si+puppet_t.PUPPET_patnum], 12
 		jl	short loc_198A3
-		mov	byte ptr [si], 0
-		mov	word ptr [si+2], 0C00h
-		mov	word ptr [si+4], 0F000h
-		mov	word ptr [si+6], 0C00h
-		mov	word ptr [si+8], 0FF00h
-		mov	word ptr [si+14h], 1F4h
-		mov	word ptr [si+12h], 0C0h
-		cmp	[bp+var_2], 0
+		mov	[si+puppet_t.flag], 0
+		mov	[si+puppet_t.pos.cur.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+puppet_t.pos.cur.y], (-256 shl 4)
+		mov	[si+puppet_t.pos.prev.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+puppet_t.pos.prev.y], (-16 shl 4)
+		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
+		mov	[si+puppet_t.PUPPET_patnum], 192
+		cmp	[bp+@@i], 0
 		jnz	short loc_19897
 		mov	fp_2CE2A, offset sub_19AE3
 		jmp	short loc_1989D
@@ -20581,20 +20579,20 @@ loc_1989D:
 		sub	_boss_hp, 300
 
 loc_198A3:
-		inc	byte ptr [si]
+		inc	[si+puppet_t.flag]
 
-loc_198A5:
-		inc	[bp+var_2]
-		add	si, 1Ah
+@@next:
+		inc	[bp+@@i]
+		add	si, size puppet_t
 
-loc_198AB:
-		cmp	[bp+var_2], 2
-		jl	loc_196F0
+@@more?:
+		cmp	[bp+@@i], PUPPET_COUNT
+		jl	@@loop
 		pop	di
 		pop	si
 		leave
 		retn
-sub_196D3	endp
+puppets_update	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20603,22 +20601,20 @@ sub_196D3	endp
 
 sub_198B7	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 10h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_198CF
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_198CF:
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		cmp	[si+puppet_t.phase_frame], 32
 		jb	short loc_19921
-		cmp	word ptr [si+0Eh], 40h
+		cmp	[si+puppet_t.phase_frame], 64
 		jnb	short loc_19912
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_19912
@@ -20626,20 +20622,20 @@ loc_198CF:
 		mov	_bullet_template.spawn_type, BST_SLOWDOWN
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	_bullet_template.BT_origin, eax
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		call	fp_25344
 		call	sub_15A5C
-		mov	word ptr [si+12h], 0C2h
+		mov	[si+puppet_t.PUPPET_patnum], 194
 		jmp	short loc_19921
 ; ---------------------------------------------------------------------------
 
 loc_19912:
-		cmp	word ptr [si+0Eh], 60h
+		cmp	[si+puppet_t.phase_frame], 96
 		jb	short loc_19921
-		mov	word ptr [si+12h], 0BEh
+		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	al, 1
 		jmp	short loc_19923
 ; ---------------------------------------------------------------------------
@@ -20660,26 +20656,24 @@ sub_198B7	endp
 
 sub_19928	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 10h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19940
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19940:
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		cmp	[si+puppet_t.phase_frame], 32
 		jb	short loc_19993
-		mov	word ptr [si+12h], 0C2h
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		mov	[si+puppet_t.PUPPET_patnum], 194
+		cmp	[si+puppet_t.phase_frame], 32
 		jnz	short loc_19984
 		mov	_bullet_template.patnum, 0
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.spawn_type, BST_SLOWDOWN
 		mov	_bullet_template.speed, (1 shl 4) + 8
@@ -20692,9 +20686,9 @@ loc_19940:
 ; ---------------------------------------------------------------------------
 
 loc_19984:
-		cmp	word ptr [si+0Eh], 60h
+		cmp	[si+puppet_t.phase_frame], 96
 		jb	short loc_19993
-		mov	word ptr [si+12h], 0BEh
+		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	al, 1
 		jmp	short loc_19995
 ; ---------------------------------------------------------------------------
@@ -20715,28 +20709,26 @@ sub_19928	endp
 
 sub_1999A	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 10h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_199B2
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_199B2:
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		cmp	[si+puppet_t.phase_frame], 32
 		jb	short loc_19A08
-		mov	word ptr [si+12h], 0C2h
-		cmp	word ptr [si+0Eh], 40h
+		mov	[si+puppet_t.PUPPET_patnum], 194
+		cmp	[si+puppet_t.phase_frame], 64
 		jnb	short loc_199F9
-		test	byte ptr [si+0Eh], 7
+		test	byte ptr [si+puppet_t.phase_frame], 7
 		jnz	short loc_199F9
 		mov	_bullet_template.patnum, 0
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.spawn_type, BST_SLOWDOWN
 		mov	_bullet_template.speed, (2 shl 4)
@@ -20749,9 +20741,9 @@ loc_199B2:
 ; ---------------------------------------------------------------------------
 
 loc_199F9:
-		cmp	word ptr [si+0Eh], 60h
+		cmp	[si+puppet_t.phase_frame], 96
 		jb	short loc_19A08
-		mov	word ptr [si+12h], 0BEh
+		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	al, 1
 		jmp	short loc_19A0A
 ; ---------------------------------------------------------------------------
@@ -20772,28 +20764,26 @@ sub_1999A	endp
 
 sub_19A0F	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 10h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19A27
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19A27:
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		cmp	[si+puppet_t.phase_frame], 32
 		jb	short loc_19A7D
-		mov	word ptr [si+12h], 0C2h
-		cmp	word ptr [si+0Eh], 40h
+		mov	[si+puppet_t.PUPPET_patnum], 194
+		cmp	[si+puppet_t.phase_frame], 64
 		jnb	short loc_19A6E
-		test	byte ptr [si+0Eh], 7
+		test	byte ptr [si+puppet_t.phase_frame], 7
 		jnz	short loc_19A6E
 		mov	_bullet_template.patnum, 0
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.spawn_type, BST_SLOWDOWN
 		mov	_bullet_template.speed, (2 shl 4)
@@ -20806,9 +20796,9 @@ loc_19A27:
 ; ---------------------------------------------------------------------------
 
 loc_19A6E:
-		cmp	word ptr [si+0Eh], 60h
+		cmp	[si+puppet_t.phase_frame], 96
 		jb	short loc_19A7D
-		mov	word ptr [si+12h], 0BEh
+		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	al, 1
 		jmp	short loc_19A7F
 ; ---------------------------------------------------------------------------
@@ -20829,26 +20819,24 @@ sub_19A0F	endp
 
 sub_19A84	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 10h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 16
 		jnz	short loc_19A9C
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		call	circles_add_shrinking
+		call	circles_add_shrinking pascal, [si+puppet_t.pos.cur.x], [si+puppet_t.pos.cur.y]
 
 loc_19A9C:
-		cmp	word ptr [si+0Eh], 20h ; ' '
+		cmp	[si+puppet_t.phase_frame], 32
 		jb	short loc_19ADC
-		mov	word ptr [si+12h], 0C2h
+		mov	[si+puppet_t.PUPPET_patnum], 194
 		test	byte ptr _stage_frame, 1Fh
 		jnz	short loc_19ADC
 		mov	_bullet_template.patnum, 0
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.spawn_type, BST_SLOWDOWN
 		mov	_bullet_template.speed, (1 shl 4) + 8
@@ -20872,13 +20860,13 @@ sub_19A84	endp
 
 sub_19AE3	proc near
 
-arg_0		= word ptr  4
+@@puppet		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word ptr [si+0Eh], 60h
+		mov	si, [bp+@@puppet]
+		cmp	[si+puppet_t.phase_frame], 96
 		jb	short loc_19AF4
 		mov	al, 1
 		jmp	short loc_19AF6
@@ -21116,11 +21104,11 @@ sub_19CB0	proc near
 var_2		= word ptr -2
 
 		enter	2, 0
-		mov	eax, point_2BC72
-		cmp	eax, dword_2BC76
+		mov	eax, puppet0.pos.cur
+		cmp	eax, puppet0.pos.prev
 		jnz	locret_19E10
-		mov	eax, point_2BC8C
-		cmp	eax, point_2BC90
+		mov	eax, puppet1.pos.cur
+		cmp	eax, puppet1.pos.prev
 		jnz	locret_19E10
 		inc	word_2CE2E
 		cmp	word_2CE2E, 10h
@@ -21128,9 +21116,9 @@ var_2		= word ptr -2
 		cmp	word_2CE2E, 10h
 		jnz	short loc_19CFC
 		mov	byte_2D07F, 1
-		mov	ax, 40h
-		mov	word_2BC9A, ax
-		mov	word_2BC80, ax
+		mov	ax, 64
+		mov	puppet1.radius_gather, ax
+		mov	puppet0.radius_gather, ax
 		mov	byte_2D07E, 0C4h
 		add	word_2CE30, 20h	; ' '
 		leave
@@ -21143,11 +21131,11 @@ loc_19CFC:
 		cmp	word_2CE2E, 40h
 		jnb	short loc_19D22
 		mov	byte_2D07F, 2
-		mov	ax, 40h
+		mov	ax, 64
 		sub	ax, word_2CE2E
 		add	ax, ax
-		mov	word_2BC9A, ax
-		mov	word_2BC80, ax
+		mov	puppet1.radius_gather, ax
+		mov	puppet0.radius_gather, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -21182,7 +21170,7 @@ loc_19D56:
 		call	fp_25344
 		mov	word_2CED6, 380h
 		mov	word_2CED8, 80h
-		mov	eax, point_2BC72
+		mov	eax, puppet0.pos.cur
 		mov	dword_2CED2, eax
 		add	word ptr dword_2CED2, 400h
 		call	sub_12842
@@ -21193,10 +21181,10 @@ loc_19D56:
 
 loc_19D9D:
 		mov	ax, _player_pos.cur.x
-		sub	ax, point_2BC72.x
+		sub	ax, puppet0.pos.cur.x
 		cmp	ax, (128 shl 4)
 		jnb	short loc_19DBD
-		mov	ax, point_2BC72.y
+		mov	ax, puppet0.pos.cur.y
 		sub	ax, _player_pos.cur.y
 		add	ax, (4 shl 4)
 		cmp	ax, (8 shl 4)
@@ -21524,20 +21512,20 @@ loc_1A101:
 		call	sub_1FADD
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1A15A
-		mov	si, 0B290h
-		mov	byte ptr [si], 1
-		mov	word ptr [si+12h], 0BEh
-		mov	word ptr [si+10h], 1000h
-		mov	byte ptr [si+1], 60h
-		mov	word ptr [si+14h], 1F4h
-		mov	word ptr [si+2], 0C190h
-		add	si, 1Ah
-		mov	byte ptr [si], 1
-		mov	word ptr [si+12h], 0BEh
-		mov	word ptr [si+10h], 1000h
-		mov	byte ptr [si+1], 20h ; ' '
-		mov	word ptr [si+14h], 1F4h
-		mov	word ptr [si+2], 0C190h
+		mov	si, offset puppets
+		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.PUPPET_patnum], 190
+		mov	[si+puppet_t.radius_motion], (256 shl 4)
+		mov	[si+puppet_t.PUPPET_angle], 60h
+		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
+		mov	[si+puppet_t.pos.cur.x], (-999 shl 4)
+		add	si, size puppet_t
+		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.PUPPET_patnum], 190
+		mov	[si+puppet_t.radius_motion], (256 shl 4)
+		mov	[si+puppet_t.PUPPET_angle], 20h
+		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
+		mov	[si+puppet_t.pos.cur.x], (-999 shl 4)
 		mov	fp_2CE2A, offset sub_198B7
 		mov	fp_2CE2C, offset sub_198B7
 		jmp	loc_1A3B2
@@ -21547,7 +21535,7 @@ loc_1A15A:
 		cmp	_boss_phase_frame, 128
 		jle	loc_1A3B2
 		call	sub_19634
-		cmp	word_2BC80, 0
+		cmp	puppet0.radius_motion, 0
 		jnz	loc_1A3B2
 		inc	_boss_phase
 		mov	_boss_mode, 0
@@ -21633,12 +21621,12 @@ loc_1A23C:
 ; ---------------------------------------------------------------------------
 
 loc_1A245:
-		mov	word ptr dword_2BC76, 800h
-		mov	word ptr dword_2BC76+2,	800h
-		mov	point_2BC90.x, (256 shl 4)
-		mov	point_2BC90.y, (128 shl 4)
-		mov	word_2BC84, 1F4h
-		mov	word_2BC9E, 1F4h
+		mov	puppet0.pos.prev.x, (128 shl 4)
+		mov	puppet0.pos.prev.y, (128 shl 4)
+		mov	puppet1.pos.prev.x, (256 shl 4)
+		mov	puppet1.pos.prev.y, (128 shl 4)
+		mov	puppet0.PUPPET_hp_cur, PUPPET_HP
+		mov	puppet1.PUPPET_hp_cur, PUPPET_HP
 		mov	ax, offset sub_19AFB
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
@@ -21650,12 +21638,12 @@ loc_1A245:
 ; ---------------------------------------------------------------------------
 
 loc_1A284:
-		mov	word ptr dword_2BC76, 800h
-		mov	word ptr dword_2BC76+2,	800h
-		mov	point_2BC90.x, (256 shl 4)
-		mov	point_2BC90.y, (128 shl 4)
-		mov	word_2BC84, 1F4h
-		mov	word_2BC9E, 1F4h
+		mov	puppet0.pos.prev.x, (128 shl 4)
+		mov	puppet0.pos.prev.y, (128 shl 4)
+		mov	puppet1.pos.prev.x, (256 shl 4)
+		mov	puppet1.pos.prev.y, (128 shl 4)
+		mov	puppet0.PUPPET_hp_cur, PUPPET_HP
+		mov	puppet1.PUPPET_hp_cur, PUPPET_HP
 		mov	ax, offset sub_19AFB
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
@@ -21674,25 +21662,25 @@ loc_1A2D7:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	byte_2D07F, 0
-		mov	word ptr dword_2BC76, 1400h
-		mov	word ptr dword_2BC76+2,	600h
-		mov	point_2BC90.x, (64 shl 4)
-		mov	point_2BC90.y, (96 shl 4)
+		mov	puppet0.pos.prev.x, (320 shl 4)
+		mov	puppet0.pos.prev.y, (96 shl 4)
+		mov	puppet1.pos.prev.x, (64 shl 4)
+		mov	puppet1.pos.prev.y, (96 shl 4)
 		xor	ax, ax
-		mov	word_2BC98, ax
-		mov	word_2BC7E, ax
+		mov	puppet1.phase_frame, ax
+		mov	puppet0.phase_frame, ax
 		mov	fp_2CE2A, offset sub_19928
 		mov	fp_2CE2C, offset sub_19928
 		jmp	loc_1A3B2
 ; ---------------------------------------------------------------------------
 
 loc_1A315:
-		mov	word ptr dword_2BC76, 400h
-		mov	word ptr dword_2BC76+2,	800h
-		mov	point_2BC90.x, (320 shl 4)
-		mov	point_2BC90.y, (128 shl 4)
-		mov	word_2BC84, 1F4h
-		mov	word_2BC9E, 1F4h
+		mov	puppet0.pos.prev.x, (64 shl 4)
+		mov	puppet0.pos.prev.y,	(128 shl 4)
+		mov	puppet1.pos.prev.x, (320 shl 4)
+		mov	puppet1.pos.prev.y, (128 shl 4)
+		mov	puppet0.PUPPET_hp_cur, PUPPET_HP
+		mov	puppet1.PUPPET_hp_cur, PUPPET_HP
 		mov	ax, offset sub_19A84
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
@@ -21711,10 +21699,10 @@ loc_1A359:
 ; ---------------------------------------------------------------------------
 
 loc_1A35E:
-		mov	word ptr dword_2BC76, 400h
-		mov	word ptr dword_2BC76+2,	800h
-		mov	point_2BC90.x, (320 shl 4)
-		mov	point_2BC90.y, (128 shl 4)
+		mov	puppet0.pos.prev.x, (64 shl 4)
+		mov	puppet0.pos.prev.y, (128 shl 4)
+		mov	puppet1.pos.prev.x, (320 shl 4)
+		mov	puppet1.pos.prev.y, (128 shl 4)
 		mov	ax, offset sub_19A84
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
@@ -21729,8 +21717,8 @@ loc_1A35E:
 loc_1A396:
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
-		mov	byte_2BC70, 2
-		mov	byte_2BC8A, 2
+		mov	puppet0.flag, 2
+		mov	puppet1.flag, 2
 		jmp	short loc_1A3B2
 ; ---------------------------------------------------------------------------
 
@@ -21746,7 +21734,7 @@ loc_1A3B2:
 		jb	short loc_1A3CD
 		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jnb	short loc_1A3CD
-		call	sub_196D3
+		call	puppets_update
 
 loc_1A3CD:
 		pop	si

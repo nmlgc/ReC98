@@ -21,4 +21,32 @@ s2particle_t ends
 s2particles	equ <_custom_entities>
 ; ----------------------
 
+; Alice's puppets
+; ---------------
+PUPPET_COUNT = 2
+PUPPET_W = 32
+PUPPET_H = 32
+PUPPET_HP = 500
+
+puppet_t struc
+	flag	db ?
+	PUPPET_angle	db ?
+	pos	motion_t <?>
+	phase_frame	dw ?
+
+	radius_motion	label word
+	radius_gather	label word
+		dw ?
+
+	PUPPET_patnum	dw ?
+	PUPPET_hp_cur	dw ? ; _cur to avoid a collision with PUPPET_HP
+	PUPPET_damage_this_frame	dw ?
+		dw ?
+puppet_t ends
+
+puppets	equ <_custom_entities>
+puppet0	equ <puppets[0 * size puppet_t]>
+puppet1	equ <puppets[1 * size puppet_t]>
+; ---------------
+
 public _custom_entities
