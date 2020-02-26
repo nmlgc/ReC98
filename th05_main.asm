@@ -10289,42 +10289,7 @@ loc_1117A:
 		retn
 shinki_fg_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public STAGE2_INVALIDATE
-stage2_invalidate	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	_tile_invalidate_box.x, 8
-		mov	_tile_invalidate_box.y, 8
-		mov	si, 0B290h
-		xor	di, di
-		jmp	short loc_111AE
-; ---------------------------------------------------------------------------
-
-loc_1119C:
-		cmp	byte ptr [si], 0
-		jz	short loc_111AA
-		call	tiles_invalidate_around pascal, word ptr [si+8], word ptr [si+6]
-
-loc_111AA:
-		inc	di
-		add	si, 1Ah
-
-loc_111AE:
-		cmp	di, 40h
-		jl	short loc_1119C
-		pop	di
-		pop	si
-		pop	bp
-		retn
-stage2_invalidate	endp
-
+include th05/stage/s2part.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10333,81 +10298,78 @@ stage2_invalidate	endp
 sub_111B7	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@s2part		= word ptr  4
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@s2part]
 		mov	ax, _stage_frame
-		and	ax, 0FFFh
+		and	ax, 4095
 		mov	di, ax
 		cmp	di, 1000
 		jge	short loc_111EF
-		push	20h ; ' '
-		call	randring1_next16_mod
-		add	al, 30h	; '0'
-		mov	[si+1],	al
-		mov	al, [si+1]
+		call	randring1_next16_mod pascal, 20h
+		add	al, 30h
+		mov	[si+s2particle_t.S2P_angle], al
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
-		mov	dx, 50h	; 'P'
+		mov	dx, 50h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		add	dx, 400h
-		jmp	loc_1136A
+		add	dx, (64 shl 4)
+		jmp	@@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_111EF:
-		cmp	di, 468h
+		cmp	di, 1128
 		jge	short loc_11235
-		sub	di, 3E8h
+		sub	di, 1000
 		mov	ax, di
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 30h	; '0'
+		add	ax, 30h
 		mov	[bp+var_2], ax
-		push	20h ; ' '
-		call	randring1_next16_mod
+		call	randring1_next16_mod pascal, 20h
 		add	al, byte ptr [bp+var_2]
-		mov	[si+1],	al
+		mov	[si+s2particle_t.S2P_angle], al
 		mov	ax, di
 		shl	ax, 3
 		mov	di, ax
-		mov	al, [si+1]
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, [bp+var_2]
-		add	dx, 20h	; ' '
+		add	dx, 20h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
 		add	dx, di
-		add	dx, 400h
-		jmp	loc_1136A
+		add	dx, (64 shl 4)
+		jmp	@@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_11235:
-		cmp	di, 7D0h
+		cmp	di, 2000
 		jge	short loc_1125C
-		push	20h ; ' '
-		call	randring1_next16_mod
+		call	randring1_next16_mod pascal, 20h
 		add	al, 40h
-		mov	[si+1],	al
-		mov	al, [si+1]
+		mov	[si+s2particle_t.S2P_angle], al
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, 60h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		add	dx, 800h
-		jmp	loc_1136A
+		add	dx, (128 shl 4)
+		jmp	@@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_1125C:
-		cmp	di, 850h
+		cmp	di, 2128
 		jge	short loc_112A0
-		sub	di, 7D0h
+		sub	di, 2000
 		mov	ax, di
 		mov	bx, 8
 		cwd
@@ -10415,132 +10377,127 @@ loc_1125C:
 		mov	dx, 40h
 		sub	dx, ax
 		mov	[bp+var_2], dx
-		push	20h ; ' '
-		call	randring1_next16_mod
+		call	randring1_next16_mod pascal, 20h
 		add	al, byte ptr [bp+var_2]
-		mov	[si+1],	al
+		mov	[si+s2particle_t.S2P_angle], al
 		mov	ax, di
 		shl	ax, 3
 		mov	di, ax
-		mov	al, [si+1]
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, [bp+var_2]
-		add	dx, 20h	; ' '
+		add	dx, 20h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		mov	ax, 800h
+		mov	ax, (128 shl 4)
 		jmp	short loc_11309
 ; ---------------------------------------------------------------------------
 
 loc_112A0:
-		cmp	di, 0BB8h
+		cmp	di, 3000
 		jge	short loc_112C7
-		push	20h ; ' '
-		call	randring1_next16_mod
-		add	al, 30h	; '0'
-		mov	[si+1],	al
-		mov	al, [si+1]
+		call	randring1_next16_mod pascal, 20h
+		add	al, 30h
+		mov	[si+s2particle_t.S2P_angle], al
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
-		mov	dx, 50h	; 'P'
+		mov	dx, 50h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		add	dx, 400h
-		jmp	loc_1136A
+		add	dx, (64 shl 4)
+		jmp	@@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_112C7:
-		cmp	di, 0C38h
+		cmp	di, 3128
 		jge	short loc_1130F
-		sub	di, 0BB8h
+		sub	di, 3000
 		mov	ax, di
 		mov	bx, 8
 		cwd
 		idiv	bx
-		mov	dx, 30h	; '0'
+		mov	dx, 30h
 		sub	dx, ax
 		mov	[bp+var_2], dx
-		push	20h ; ' '
-		call	randring1_next16_mod
+		call	randring1_next16_mod pascal, 20h
 		add	al, byte ptr [bp+var_2]
-		mov	[si+1],	al
+		mov	[si+s2particle_t.S2P_angle], al
 		mov	ax, di
 		shl	ax, 3
 		mov	di, ax
-		mov	al, [si+1]
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, [bp+var_2]
-		add	dx, 20h	; ' '
+		add	dx, 20h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		mov	ax, 400h
+		mov	ax, (64 shl 4)
 
 loc_11309:
 		sub	ax, di
 		add	dx, ax
-		jmp	short loc_1136A
+		jmp	short @@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_1130F:
-		cmp	di, 0F80h
+		cmp	di, 3968
 		jge	short loc_11331
-		push	20h ; ' '
-		call	randring1_next16_mod
-		add	al, 20h	; ' '
-		mov	[si+1],	al
-		mov	al, [si+1]
+		call	randring1_next16_mod pascal, 20h
+		add	al, 20h
+		mov	[si+s2particle_t.S2P_angle], al
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, 40h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		jmp	short loc_1136A
+		jmp	short @@set_pos
 ; ---------------------------------------------------------------------------
 
 loc_11331:
-		sub	di, 0F80h
+		sub	di, 3968
 		mov	ax, di
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 20h	; ' '
+		add	ax, 20h
 		mov	[bp+var_2], ax
-		push	20h ; ' '
-		call	randring1_next16_mod
+		call	randring1_next16_mod pascal, 20h
 		add	al, byte ptr [bp+var_2]
-		mov	[si+1],	al
+		mov	[si+s2particle_t.S2P_angle], al
 		mov	ax, di
 		shl	ax, 3
 		mov	di, ax
-		mov	al, [si+1]
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
 		mov	dx, [bp+var_2]
-		add	dx, 20h	; ' '
+		add	dx, 20h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
 		add	dx, di
 
-loc_1136A:
-		mov	[si+2],	dx
+@@set_pos:
+		mov	[si+s2particle_t.pos.cur.x], dx
 		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
 		shl	dx, 4
-		add	[si+2],	dx
-		mov	word ptr [si+0Eh], 8
-		mov	word ptr [si+4], 0
+		add	[si+s2particle_t.pos.cur.x], dx
+		mov	[si+s2particle_t.zoom], 8
+		mov	[si+s2particle_t.pos.cur.y], 0
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+s2particle_t.pos.velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+s2particle_t.pos.velocity.y]
 		push	ax
-		push	word ptr [si+1]
-		push	80h
+		push	word ptr [si+s2particle_t.S2P_angle]
+		push	(8 shl 4)
 		call	vector2
 		pop	di
 		pop	si
@@ -10701,45 +10658,44 @@ loc_114F8:
 		cmp	_stage_frame_mod2, 0
 		jnz	short loc_11553
 		mov	ax, word_22856
-		imul	ax, 1Ah
-		add	ax, 0B290h
+		imul	ax, size s2particle_t
+		add	ax, offset s2particles
 		mov	si, ax
-		mov	byte ptr [si], 1
-		push	20h ; ' '
-		call	randring1_next16_mod
-		add	al, 30h	; '0'
-		mov	[si+1],	al
-		mov	al, [si+1]
+		mov	[si+s2particle_t.flag], 1
+		call	randring1_next16_mod pascal, 20h
+		add	al, 30h
+		mov	[si+s2particle_t.S2P_angle], al
+		mov	al, [si+s2particle_t.S2P_angle]
 		mov	ah, 0
-		mov	dx, 50h	; 'P'
+		mov	dx, 50h
 		sub	dx, ax
 		shl	dx, 3
 		shl	dx, 4
-		add	dx, 400h
-		mov	[si+2],	dx
-		mov	word ptr [si+4], 0
+		add	dx, (64 shl 4)
+		mov	[si+s2particle_t.pos.cur.x], dx
+		mov	[si+s2particle_t.pos.cur.y], 0
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+s2particle_t.pos.velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+s2particle_t.pos.velocity.y]
 		push	ax
-		push	word ptr [si+1]
-		push	80h
+		push	word ptr [si+s2particle_t.S2P_angle]
+		push	(8 shl 4)
 		call	vector2
 		inc	word_22856
 
 loc_11553:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	si, 0B290h
+		mov	si, offset s2particles
 		mov	[bp+var_2], 0
 		jmp	short loc_115D4
 ; ---------------------------------------------------------------------------
 
 loc_11568:
-		cmp	byte ptr [si], 0
+		cmp	[si+s2particle_t.flag], 0
 		jz	short loc_115CE
-		lea	ax, [si+2]
+		lea	ax, [si+s2particle_t.pos]
 		call	_motion_update_1 pascal, ax
 		cmp	ax, (-8 shl 4)
 		jle	short loc_11589
@@ -10751,8 +10707,7 @@ loc_11568:
 		jl	short loc_1158F
 
 loc_11589:
-		push	si
-		call	sub_111B7
+		call	sub_111B7 pascal, si
 		jmp	short loc_115CE
 ; ---------------------------------------------------------------------------
 
@@ -10761,34 +10716,34 @@ loc_1158F:
 		mov	es, ax
 		test	byte ptr [bp+var_2], 3
 		jz	short loc_1159D
-		inc	word ptr [si+0Eh]
+		inc	[si+s2particle_t.zoom]
 
 loc_1159D:
-		mov	ax, [si+0Eh]
+		mov	ax, [si+s2particle_t.zoom]
 		shr	ax, 4
 		mov	di, ax
-		cmp	di, 3
+		cmp	di, (PARTICLE_CELS - 1)
 		jl	short loc_115AD
-		mov	di, 3
+		mov	di, (PARTICLE_CELS - 1)
 
 loc_115AD:
-		add	di, 172
-		mov	ax, [si+2]
+		add	di, PAT_PARTICLE
+		mov	ax, [si+s2particle_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 24
+		add	ax, (PLAYFIELD_X - (S2PARTICLE_W / 2))
 		mov	[bp+var_4], ax
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
+		mov	ax, [si+s2particle_t.pos.cur.y]
+		add	ax, ((PLAYFIELD_Y - (S2PARTICLE_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	cx, [bp+var_4]
 		call	z_super_roll_put_16x16_mono_raw pascal, di
 
 loc_115CE:
 		inc	[bp+var_2]
-		add	si, 1Ah
+		add	si, size s2particle_t
 
 loc_115D4:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+var_2], S2PARTICLE_COUNT
 		jl	short loc_11568
 		GRCG_OFF_CLOBBERING dx
 		cmp	_stage_frame_mod4, 0

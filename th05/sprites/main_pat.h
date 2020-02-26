@@ -1,5 +1,7 @@
 #include "th04/sprites/cels.h"
 
+#define PARTICLE_CELS 4
+
 /// Stage-independent pattern numbers for the super_*() functions
 /// -------------------------------------------------------------
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
@@ -56,6 +58,9 @@ typedef enum {
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
 
 	PAT_EXPLOSION_SMALL,
+
+	PAT_PARTICLE = 172,
+	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS),
 	// ----------
 } main_patnum_t;
 /// -------------------------------------------------------------
