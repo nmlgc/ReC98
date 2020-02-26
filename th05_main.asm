@@ -8110,7 +8110,7 @@ include th05/lasers_update_render.asm
 public CURVEBULLETS_RENDER
 curvebullets_render	proc near
 
-var_6		= word ptr -6
+@@head		= word ptr -6
 @@trail_sprite		= word ptr -4
 @@bullet_i		= word ptr -2
 
@@ -8119,7 +8119,7 @@ var_6		= word ptr -6
 		sub	sp, 6
 		push	si
 		push	di
-		mov	[bp+var_6], 0B2AAh
+		mov	[bp+@@head], offset curvebullet_heads
 		mov	di, offset _curvebullet_trails
 		mov	ax, GRAM_400
 		mov	es, ax
@@ -8173,11 +8173,11 @@ var_6		= word ptr -6
 @@nodes_more?:
 		or	si, si
 		jg	short @@node_loop
-		mov	bx, [bp+var_6]
-		mov	ax, [bx+4]
+		mov	bx, [bp+@@head]
+		mov	ax, [bx+curvebullet_head_t.pos.cur.y]
 		sar	ax, 4
 		mov	dx, ax
-		mov	ax, [bx+2]
+		mov	ax, [bx+curvebullet_head_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, (PLAYFIELD_X - (CURVEBULLET_W / 2))
 		cmp	dx, (PLAYFIELD_Y - CURVEBULLET_H)
@@ -8193,13 +8193,13 @@ var_6		= word ptr -6
 		add	dx, RES_Y
 
 loc_10024:
-		mov	bx, [bp+var_6]
-		mov	bx, [bx+12h]
+		mov	bx, [bp+@@head]
+		mov	bx, [bx+curvebullet_head_t.CBH_sprite]
 		call	sub_DDF0
 
 @@bullet_next:
 		inc	[bp+@@bullet_i]
-		add	[bp+var_6], 1Ah
+		add	[bp+@@head], size curvebullet_head_t
 		add	di, size curvebullet_trail_t
 
 @@bullets_more?:
@@ -16788,91 +16788,7 @@ loc_174C5:
 sub_17486	endp
 
 include th05/lasers_control.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CURVEBULLETS_ADD
-curvebullets_add	proc near
-
-@@trail		= word ptr -4
-@@i		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	si, 0B2AAh
-		mov	[bp+@@trail], offset _curvebullet_trails
-		mov	[bp+@@i], 1
-		jmp	short loc_1771A
-; ---------------------------------------------------------------------------
-
-loc_1769E:
-		cmp	byte ptr [si], 0
-		jnz	short loc_17710
-		mov	bx, [bp+@@trail]
-		cmp	[bx+curvebullet_trail_t.flag], 0
-		jnz	short loc_17710
-		mov	bx, [bp+@@trail]
-		mov	[bx+curvebullet_trail_t.flag], 1
-		mov	al, angle_2BC71
-		mov	[si+1],	al
-		mov	al, byte_2BC88
-		mov	[si+18h], al
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [si+1]
-		mov	al, [si+18h]
-		mov	ah, 0
-		push	ax
-		call	vector2_near
-		mov	bx, [bp+@@trail]
-		mov	al, byte ptr word_2BC82
-		mov	[bx+curvebullet_trail_t.CBT_col], al
-		call	bullet_patnum_for_angle pascal, 0, word ptr [si+1]
-		mov	ah, 0
-		mov	[si+12h], ax
-		mov	eax, point_2BC72
-		mov	[si+2],	eax
-		xor	di, di
-		jmp	short loc_17709
-; ---------------------------------------------------------------------------
-
-loc_176EF:
-		mov	bx, di
-		shl	bx, 2
-		add	bx, [bp+@@trail]
-		mov	eax, point_2BC72
-		mov	dword ptr [bx+curvebullet_trail_t.node_pos], eax
-		mov	al, [si+12h]
-		mov	bx, [bp+@@trail]
-		mov	[bx+di+curvebullet_trail_t.node_sprite], al
-		inc	di
-
-loc_17709:
-		cmp	di, CURVEBULLET_TRAIL_NODE_COUNT
-		jl	short loc_176EF
-		jmp	short loc_17722
-; ---------------------------------------------------------------------------
-
-loc_17710:
-		inc	[bp+@@i]
-		add	si, 1Ah
-		add	[bp+@@trail], size curvebullet_trail_t
-
-loc_1771A:
-		cmp	[bp+@@i], 1 + CURVEBULLET_COUNT
-		jl	loc_1769E
-
-loc_17722:
-		pop	di
-		pop	si
-		leave
-		retn
-curvebullets_add	endp
-
+include th05/bullet/curvebullets_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16890,7 +16806,7 @@ var_5		= byte ptr -5
 		sub	sp, 6
 		push	si
 		push	di
-		mov	si, 0B2AAh
+		mov	si, offset curvebullet_heads
 		mov	di, offset _curvebullet_trails
 		mov	[bp+@@bullet_i], 1
 		jmp	@@bullets_more?
@@ -16899,7 +16815,7 @@ var_5		= byte ptr -5
 loc_1773C:
 		cmp	[di+curvebullet_trail_t.flag], 0
 		jz	@@bullets_next
-		inc	word ptr [si+0Eh]
+		inc	[si+curvebullet_head_t.CBH_age]
 		mov	[bp+@@node_i], (CURVEBULLET_TRAIL_NODE_COUNT - 1)
 		jmp	short @@nodes_more?
 ; ---------------------------------------------------------------------------
@@ -16936,9 +16852,9 @@ loc_1773C:
 @@nodes_more?:
 		cmp	[bp+@@node_i], 0
 		jg	short @@node_loop
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+curvebullet_head_t.pos.cur]
 		mov	dword ptr [di+curvebullet_trail_t.node_pos][0], eax
-		mov	al, [si+12h]
+		mov	al, byte ptr [si+curvebullet_head_t.CBH_sprite]
 		mov	[di+curvebullet_trail_t.node_sprite][0], al
 		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].x, (-(CURVEBULLET_W / 2) shl 4)
 		jle	short loc_177CC
@@ -16951,14 +16867,13 @@ loc_1773C:
 
 loc_177CC:
 		mov	[di+curvebullet_trail_t.flag], 0
-		mov	byte ptr [si], 0
+		mov	[si+curvebullet_head_t.flag], 0
 		jmp	@@bullets_next
 ; ---------------------------------------------------------------------------
 
 loc_177D5:
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
+		lea	ax, [si+curvebullet_head_t.pos]
+		call	_motion_update_2 pascal, ax
 		sub	ax, _player_pos.cur.x
 		sub	dx, _player_pos.cur.y
 		add	ax, 8 * 16
@@ -16972,8 +16887,8 @@ loc_177D5:
 loc_177FB:
 		cmp	[di+curvebullet_trail_t.flag], 1
 		jnz	short loc_17811
-		dec	byte ptr [si+18h]
-		cmp	byte ptr [si+18h], 4
+		dec	[si+curvebullet_head_t.CBH_speed]
+		cmp	[si+curvebullet_head_t.CBH_speed], 4
 		ja	short loc_1780B
 		inc	[di+curvebullet_trail_t.flag]
 
@@ -16983,30 +16898,30 @@ loc_1780B:
 ; ---------------------------------------------------------------------------
 
 loc_17811:
-		mov	al, [si+18h]
+		mov	al, [si++curvebullet_head_t.CBH_speed]
 		add	al, _stage_frame_mod2
 		inc	al
-		mov	[si+18h], al
-		mov	al, [si+18h]
+		mov	[si++curvebullet_head_t.CBH_speed], al
+		mov	al, [si++curvebullet_head_t.CBH_speed]
 		add	al, 20h	; ' '
 		mov	[bp+var_6], al
 
 loc_17825:
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+curvebullet_head_t.pos.cur.x]
+		push	[si+curvebullet_head_t.pos.cur.y]
 		push	0
 		call	sub_15A24
-		mov	dl, [si+1]
+		mov	dl, [si+curvebullet_head_t.CBH_angle]
 		sub	dl, al
 		mov	[bp+var_5], dl
 		cmp	[bp+var_5], 80h
 		jb	short loc_1786E
-		cmp	[bp+var_5], 0FEh
+		cmp	[bp+var_5], -2
 		jnb	short loc_17874
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		pop	dx
 		sub	ax, dx
 		mov	dl, [bp+var_6]
@@ -17022,7 +16937,7 @@ loc_17825:
 
 loc_17866:
 		mov	al, [bp+var_5]
-		add	[si+1],	al
+		add	[si+curvebullet_head_t.CBH_angle], al
 		jmp	short loc_178A5
 ; ---------------------------------------------------------------------------
 
@@ -17031,11 +16946,11 @@ loc_1786E:
 		ja	short loc_17884
 
 loc_17874:
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+curvebullet_head_t.pos.cur.x]
+		push	[si+curvebullet_head_t.pos.cur.y]
 		push	0
 		call	sub_15A24
-		mov	[si+1],	al
+		mov	[si+curvebullet_head_t.CBH_angle], al
 		jmp	short loc_178A5
 ; ---------------------------------------------------------------------------
 
@@ -17055,23 +16970,23 @@ loc_17884:
 
 loc_1789F:
 		mov	al, [bp+var_5]
-		sub	[si+1],	al
+		sub	[si+curvebullet_head_t.CBH_angle], al
 
 loc_178A5:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+curvebullet_head_t.pos.velocity]
 		push	ax
-		push	word ptr [si+1]
-		mov	al, [si+18h]
+		push	word ptr [si+curvebullet_head_t.CBH_angle]
+		mov	al, [si+curvebullet_head_t.CBH_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		call	bullet_patnum_for_angle pascal, 0, word ptr [si+1]
+		call	bullet_patnum_for_angle pascal, 0, word ptr [si+curvebullet_head_t.CBH_angle]
 		mov	ah, 0
-		mov	[si+12h], ax
+		mov	[si+curvebullet_head_t.CBH_sprite], ax
 
 @@bullets_next:
 		inc	[bp+@@bullet_i]
-		add	si, 1Ah
+		add	si, size curvebullet_head_t
 		add	di, size curvebullet_trail_t
 
 @@bullets_more?:
@@ -22694,9 +22609,9 @@ var_1		= byte ptr -1
 
 loc_1AB31:
 		mov	eax, _yuki_pos.cur
-		mov	point_2BC72, eax
-		mov	word_2BC82, 0Bh
-		mov	byte_2BC88, 20h	; ' '
+		mov	curvebullet_template.pos.cur, eax
+		mov	curvebullet_template.CBTMPL_col, 11
+		mov	curvebullet_template.CBTMPL_speed, (2 shl 4)
 		mov	ax, _boss_pos.cur.x
 		cmp	ax, _yuki_pos.cur.x
 		jl	short loc_1AB53
@@ -22708,11 +22623,11 @@ loc_1AB53:
 		mov	[bp+var_1], 0C0h
 
 loc_1AB57:
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	angle_2BC71, al
+		mov	curvebullet_template.CBTMPL_angle, al
 		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
@@ -22739,9 +22654,9 @@ var_1		= byte ptr -1
 
 loc_1AB88:
 		mov	eax, _boss_pos.cur
-		mov	point_2BC72, eax
-		mov	word_2BC82, 9
-		mov	byte_2BC88, 20h	; ' '
+		mov	curvebullet_template.pos.cur, eax
+		mov	curvebullet_template.CBTMPL_col, 9
+		mov	curvebullet_template.CBTMPL_speed, (2 shl 4)
 		mov	ax, _boss_pos.cur.x
 		cmp	ax, _yuki_pos.cur.x
 		jge	short loc_1ABAA
@@ -22753,11 +22668,11 @@ loc_1ABAA:
 		mov	[bp+var_1], 0C0h
 
 loc_1ABAE:
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	angle_2BC71, al
+		mov	curvebullet_template.CBTMPL_angle, al
 		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
@@ -27893,12 +27808,11 @@ loc_1DB10:
 		call	sub_15A5C
 		or	si, si
 		jnz	short loc_1DB78
-		mov	word_2BC82, 0Bh
-		mov	byte_2BC88, 40h
-		push	3
-		call	randring2_next16_mod
+		mov	curvebullet_template.CBTMPL_col, 11
+		mov	curvebullet_template.CBTMPL_speed, (4 shl 4)
+		call	randring2_next16_mod pascal, 3
 		shl	al, 6
-		mov	angle_2BC71, al
+		mov	curvebullet_template.CBTMPL_angle, al
 		call	curvebullets_add
 		call	snd_se_play pascal, 3
 
@@ -30071,28 +29985,28 @@ sub_1EEF1	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EF6F
-		mov	word_2BC82, 0Bh
-		mov	byte_2BC88, 30h	; '0'
+		mov	curvebullet_template.CBTMPL_col, 11
+		mov	curvebullet_template.CBTMPL_speed, (3 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 128
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EF54
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	20h ; ' '
 		jmp	short loc_1EF5F
 ; ---------------------------------------------------------------------------
 
 loc_1EF54:
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	0E0h
 
 loc_1EF5F:
 		call	sub_15A24
-		mov	angle_2BC71, al
+		mov	curvebullet_template.CBTMPL_angle, al
 		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
@@ -30125,28 +30039,28 @@ sub_1EF80	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EFCF
-		mov	word_2BC82, 0Bh
-		mov	byte_2BC88, 40h
+		mov	curvebullet_template.CBTMPL_col, 11
+		mov	curvebullet_template.CBTMPL_speed, (4 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EFB4
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	40h
 		jmp	short loc_1EFBF
 ; ---------------------------------------------------------------------------
 
 loc_1EFB4:
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	curvebullet_template.pos.cur.x
+		push	curvebullet_template.pos.cur.y
 		push	0C0h
 
 loc_1EFBF:
 		call	sub_15A24
-		mov	angle_2BC71, al
+		mov	curvebullet_template.CBTMPL_angle, al
 		call	curvebullets_add
 		call	snd_se_play pascal, 15
 
@@ -30185,9 +30099,9 @@ sub_1EFED	proc near
 		mov	point_2A722.x, ax
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F045
-		mov	angle_2BC71, 196
+		mov	curvebullet_template.CBH_angle, -3Ch
 		mov	_bullet_template.BT_angle, 20h
-		mov	byte_2BC88, 50h	; 'P'
+		mov	curvebullet_template.CBH_speed, (5 shl 4)
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_SLOWDOWN
 		mov	_bullet_template.pattern, BP_SPREAD
@@ -30473,7 +30387,7 @@ loc_1F298:
 		mov	_bullet_template.BT_origin, eax
 		mov	point_2A722, eax
 		mov	_laser_template.coords.origin, eax
-		mov	point_2BC72, eax
+		mov	curvebullet_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
 		mov	ah, 0

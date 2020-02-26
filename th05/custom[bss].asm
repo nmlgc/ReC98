@@ -49,4 +49,34 @@ puppet0	equ <puppets[0 * size puppet_t]>
 puppet1	equ <puppets[1 * size puppet_t]>
 ; ---------------
 
+; Curve bullets
+; -------------
+curvebullet_template_t struc
+		db ?
+	CBTMPL_angle	db ?
+	pos	motion_t <?>
+	CBTMPL_age	dw ?
+		dw ?
+	CBTMPL_col	dw ?
+		dd ?
+	CBTMPL_speed	db ?
+		db ?
+curvebullet_template_t ends
+
+curvebullet_head_t struc
+	flag	db ?
+	CBH_angle	db ?
+	pos	motion_t <?>
+	CBH_age	dw ?
+		dw ?
+	CBH_sprite	dw ?
+		dd ?
+	CBH_speed	db ?
+		db ?
+curvebullet_head_t ends
+
+curvebullet_template	equ <_custom_entities>
+curvebullet_heads	equ <_custom_entities[1 * size curvebullet_head_t]>
+; -------------
+
 public _custom_entities
