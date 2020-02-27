@@ -79,4 +79,27 @@ curvebullet_template	equ <_custom_entities>
 curvebullet_heads	equ <_custom_entities[1 * size curvebullet_head_t]>
 ; -------------
 
+; Mai's and Yuki's 32×32 balls
+; ----------------------------
+B4BALL_COUNT = 63
+B4BALL_W = 32
+B4BALL_H = 32
+
+b4ball_t struc
+	flag	db ?
+	B4B_angle	db ?
+	pos	motion_t <?>
+	B4B_age	dw ?
+	B4B_revenge	dw ?
+	B4B_patnum_tiny_base	dw ?
+	B4B_hp	dw ?
+	B4B_damaged_this_frame	dw ?
+	B4B_speed db ?
+		db ?
+b4ball_t ends
+
+b4ball_template	equ <_custom_entities>
+b4balls	equ <_custom_entities[1 * size b4ball_t]>
+; ------------------------------
+
 public _custom_entities

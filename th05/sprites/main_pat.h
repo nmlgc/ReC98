@@ -1,6 +1,7 @@
 #include "th04/sprites/cels.h"
 
 #define PARTICLE_CELS 4
+#define B4BALL_CELS 4
 
 /// Stage-independent pattern numbers for the super_*() functions
 /// -------------------------------------------------------------
@@ -64,3 +65,20 @@ typedef enum {
 	// ----------
 } main_patnum_t;
 /// -------------------------------------------------------------
+
+/// Stage 4
+/// -------
+typedef enum {
+	// st03.bb3
+	// --------
+	PAT_B4BALL_SNOW = 212,
+	PAT_B4BALL_SNOW_last = (PAT_B4BALL_SNOW + B4BALL_CELS - 1),
+	PAT_B4BALL_FIRE,
+	PAT_B4BALL_FIRE_last = (PAT_B4BALL_FIRE + B4BALL_CELS - 1),
+	PAT_B4BALL_SNOW_HIT,
+	PAT_B4BALL_SNOW_HIT_last = (PAT_B4BALL_SNOW_HIT + B4BALL_CELS - 1),
+	PAT_DECAY_B4BALL,
+	PAT_DECAY_B4BALL_last = (PAT_DECAY_B4BALL + BULLET_DECAY_CELS - 1),
+	// --------
+} stage4_patnum_t;
+/// -------
