@@ -102,4 +102,27 @@ b4ball_template	equ <_custom_entities>
 b4balls	equ <_custom_entities[1 * size b4ball_t]>
 ; ------------------------------
 
+; Yumeko's knives
+; ---------------
+KNIFE_COUNT = 63
+KNIFE_W = 32
+KNIFE_H = 32
+
+knife_t struc
+	flag	db ?
+	KNIFE_angle	db ?
+	pos	motion_t <?>
+	twirl_time	dw ?
+		dw ?
+	KNIFE_patnum_tiny	dw ?
+	KNIFE_decay_frames	dw ?
+		dw ?
+	KNIFE_speed	db ?
+		db ?
+knife_t ends
+
+knife_template	equ <_custom_entities>
+knives	equ <_custom_entities[1 * size knife_t]>
+; ---------------
+
 public _custom_entities

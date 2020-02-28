@@ -9960,50 +9960,7 @@ loc_10F86:
 		retn
 sub_10F12	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10F90	proc near
-
-@@patnum		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	short loc_10FC9
-; ---------------------------------------------------------------------------
-
-loc_10FA3:
-		cmp	byte ptr [si], 0
-		jz	short loc_10FC5
-		mov	ax, [si+12h]
-		mov	[bp+@@patnum], ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, word ptr [si+4]
-		mov	dx, ax
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, 16
-		call	z_super_roll_put_tiny_32x32_raw pascal, [bp+@@patnum]
-
-loc_10FC5:
-		inc	di
-		add	si, 1Ah
-
-loc_10FC9:
-		cmp	di, 40h
-		jl	short loc_10FA3
-		pop	di
-		pop	si
-		leave
-		retn
-sub_10F90	endp
-
+include th05/bullet/knives_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25658,203 +25615,7 @@ off_1C816	dw offset loc_1C54D
 		dw offset loc_1C75B
 		dw offset loc_1C784
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C82A	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	al, byte_2BC88
-		call	@playperf_adjust_speed
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		mov	_circles_color, GC_RG
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	short loc_1C89A
-; ---------------------------------------------------------------------------
-
-loc_1C848:
-		cmp	byte ptr [si], 0
-		jnz	short loc_1C896
-		mov	byte ptr [si], 1
-		mov	eax, point_2BC72
-		mov	[si+2],	eax
-		push	point_2BC72.x
-		push	point_2BC72.y
-		call	circles_add_shrinking
-		lea	ax, [si+0Ah]
-		call	vector2_near pascal, ax, word ptr angle_2BC71, [bp+var_2]
-		mov	al, angle_2BC71
-		mov	[si+1],	al
-		call	bullet_patnum_for_angle pascal, 193, word ptr angle_2BC71
-		mov	ah, 0
-		mov	[si+12h], ax
-		mov	al, byte ptr [bp+var_2]
-		mov	[si+18h], al
-		mov	ax, word_2BC7E
-		mov	[si+0Eh], ax
-		jmp	short loc_1C89F
-; ---------------------------------------------------------------------------
-
-loc_1C896:
-		inc	di
-		add	si, 1Ah
-
-loc_1C89A:
-		cmp	di, 40h
-		jl	short loc_1C848
-
-loc_1C89F:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_1C82A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1C8A3	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	loc_1C9B3
-; ---------------------------------------------------------------------------
-
-loc_1C8B1:
-		cmp	byte ptr [si], 0
-		jz	loc_1C9AF
-		cmp	_bullet_clear_time, 0
-		jz	short loc_1C8CC
-		cmp	byte ptr [si], 1
-		jnz	short loc_1C8CC
-		mov	byte ptr [si], 2
-		mov	word ptr [si+0Eh], 0
-
-loc_1C8CC:
-		cmp	word ptr [si+0Eh], 0
-		jbe	short loc_1C920
-		dec	word ptr [si+0Eh]
-		cmp	word ptr [si+0Eh], 0
-		jnz	short loc_1C8F2
-		call	bullet_patnum_for_angle pascal, 193, word ptr [si+1]
-		mov	ah, 0
-		mov	[si+12h], ax
-		call	snd_se_play pascal, 3
-		jmp	short loc_1C920
-; ---------------------------------------------------------------------------
-
-loc_1C8F2:
-		test	di, 1
-		jz	short loc_1C90C
-		add	word ptr [si+12h], 2
-		cmp	word ptr [si+12h], 0E1h
-		jl	loc_1C9AF
-		sub	word ptr [si+12h], 20h ; ' '
-		jmp	loc_1C9AF
-; ---------------------------------------------------------------------------
-
-loc_1C90C:
-		sub	word ptr [si+12h], 2
-		cmp	word ptr [si+12h], 0C1h
-		jge	loc_1C9AF
-		add	word ptr [si+12h], 20h ; ' '
-		jmp	loc_1C9AF
-; ---------------------------------------------------------------------------
-
-loc_1C920:
-		lea	ax, [si+2]
-		call	_motion_update_2 pascal, ax
-		cmp	ax, (-16 shl 4)
-		jle	short loc_1C93D
-		cmp	ax, ((PLAYFIELD_W + 16) shl 4)
-		jge	short loc_1C93D
-		cmp	dx, (-16 shl 4)
-		jle	short loc_1C93D
-		cmp	dx, ((PLAYFIELD_H + 16) shl 4)
-		jl	short loc_1C93F
-
-loc_1C93D:
-		jmp	short loc_1C9AC
-; ---------------------------------------------------------------------------
-
-loc_1C93F:
-		cmp	byte ptr [si], 2
-		jz	short loc_1C969
-		sub	ax, _player_pos.cur.x
-		sub	dx, _player_pos.cur.y
-		add	ax, 7 * 16
-		cmp	ax, 14 * 16
-		ja	short loc_1C967
-		add	dx, 7 * 16
-		cmp	dx, 14 * 16
-		ja	short loc_1C967
-		mov	_player_is_hit, 1
-		mov	byte ptr [si], 2
-		jmp	short loc_1C9AF
-; ---------------------------------------------------------------------------
-
-loc_1C967:
-		jmp	short loc_1C9AF
-; ---------------------------------------------------------------------------
-
-loc_1C969:
-		cmp	word ptr [si+12h], 0E1h
-		jge	short loc_1C992
-		mov	word ptr [si+12h], 0E1h
-		mov	ax, [si+0Ah]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[si+0Ah], ax
-		mov	ax, [si+0Ch]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[si+0Ch], ax
-		mov	word ptr [si+14h], 0
-		jmp	short loc_1C9AF
-; ---------------------------------------------------------------------------
-
-loc_1C992:
-		inc	word ptr [si+14h]
-		mov	ax, [si+14h]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1C9AF
-		inc	word ptr [si+12h]
-		cmp	word ptr [si+12h], 0E5h
-		jl	short loc_1C9AF
-
-loc_1C9AC:
-		mov	byte ptr [si], 0
-
-loc_1C9AF:
-		inc	di
-		add	si, 1Ah
-
-loc_1C9B3:
-		cmp	di, 40h
-		jl	loc_1C8B1
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_1C8A3	endp
-
+include th05/bullet/knives_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25927,9 +25688,9 @@ sub_1CA42	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1CA6B
 		mov	_boss_sprite, 184
-		mov	word_2BC7E, 30h	; '0'
-		mov	byte_2BC88, 50h	; 'P'
-		mov	angle_2BC71, 112
+		mov	knife_template.twirl_time, 48
+		mov	knife_template.KNIFE_speed, (5 shl 4)
+		mov	knife_template.KNIFE_angle, 70h
 		push	1
 		call	randring2_next16_and
 		mov	byte_2D085, al
@@ -25948,31 +25709,31 @@ loc_1CA6B:
 		jnz	short loc_1CAD5
 		cmp	byte_2D085, 0
 		jz	short loc_1CA8F
-		mov	al, 128
-		sub	al, angle_2BC71
-		mov	angle_2BC71, al
+		mov	al, 80h
+		sub	al, knife_template.KNIFE_angle
+		mov	knife_template.KNIFE_angle, al
 
 loc_1CA8F:
-		push	offset point_2BC72
+		push	offset knife_template.pos.cur
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
-		mov	al, angle_2BC71
+		mov	al, knife_template.KNIFE_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	sub_1C82A
+		call	knives_add
 		cmp	byte_2D085, 0
 		jz	short loc_1CABB
-		mov	al, 128
-		sub	al, angle_2BC71
-		mov	angle_2BC71, al
+		mov	al, 80h
+		sub	al, knife_template.KNIFE_angle
+		mov	knife_template.KNIFE_angle, al
 
 loc_1CABB:
-		mov	al, angle_2BC71
+		mov	al, knife_template.KNIFE_angle
 		add	al, -6
-		mov	angle_2BC71, al
-		cmp	angle_2BC71, 12
+		mov	knife_template.KNIFE_angle, al
+		cmp	knife_template.KNIFE_angle, 0Ch
 		ja	short loc_1CAD5
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -26071,8 +25832,8 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (6 shl 4)
 		call	fp_25344
 		call	snd_se_play pascal, 8
-		mov	word_2BC7E, 20h	; ' '
-		mov	byte_2BC88, 4Ch	; 'L'
+		mov	knife_template.twirl_time, 32
+		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
 		mov	byte_2D083, 0
 		mov	byte_2D082, 20h	; ' '
 		jmp	loc_1CCD0
@@ -26131,19 +25892,17 @@ loc_1CC3E:
 		call	randring2_next16_and
 		sub	al, 0Fh
 		mov	[bp+var_1], al
-		push	600h
-		call	randring2_next16_mod
-		mov	point_2BC72.y, ax
-		push	1600h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (96 shl 4)
+		mov	knife_template.pos.cur.y, ax
+		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
-		mov	point_2BC72.x, ax
+		mov	knife_template.pos.cur.x, ax
 		push	ax
-		push	point_2BC72.y
+		push	knife_template.pos.cur.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	angle_2BC71, al
-		call	sub_1C82A
+		mov	knife_template.KNIFE_angle, al
+		call	knives_add
 
 loc_1CC7F:
 		mov	ax, _boss_hp
@@ -26394,8 +26153,8 @@ var_1		= byte ptr -1
 		mov	_laser_template.grow_at_age, 28
 		mov	byte_2D083, 0
 		mov	byte_2D082, 20h	; ' '
-		mov	word_2BC7E, 20h	; ' '
-		mov	byte_2BC88, 4Ch	; 'L'
+		mov	knife_template.twirl_time, 32
+		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
 		jmp	loc_1D081
 ; ---------------------------------------------------------------------------
 
@@ -26468,19 +26227,17 @@ loc_1CFFA:
 		call	randring2_next16_and
 		sub	al, 0Fh
 		mov	[bp+var_1], al
-		push	600h
-		call	randring2_next16_mod
-		mov	point_2BC72.y, ax
-		push	1600h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (96 shl 4)
+		mov	knife_template.pos.cur.y, ax
+		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
-		mov	point_2BC72.x, ax
+		mov	knife_template.pos.cur.x, ax
 		push	ax
-		push	point_2BC72.y
+		push	knife_template.pos.cur.y
 		push	word ptr [bp+var_1]
 		call	sub_15A24
-		mov	angle_2BC71, al
-		call	sub_1C82A
+		mov	knife_template.KNIFE_angle, al
+		call	knives_add
 		inc	si
 
 loc_1D02B:
@@ -26543,8 +26300,8 @@ yumeko_1D085	proc near
 		mov	_bullet_template.spread_angle_delta, al
 		mov	_bullet_template.speed, (8 shl 4)
 		call	snd_se_play pascal, 8
-		mov	word_2BC7E, 20h	; ' '
-		mov	byte_2BC88, 40h
+		mov	knife_template.twirl_time, 32
+		mov	knife_template.KNIFE_speed, (4 shl 4)
 		push	200h
 		call	randring2_next16_mod
 		mov	_boss2_pos.cur.y, ax
@@ -26570,20 +26327,20 @@ loc_1D117:
 		or	dx, dx
 		jnz	loc_1D1C4
 		mov	al, byte_2D084
-		mov	angle_2BC71, al
+		mov	knife_template.KNIFE_angle, al
 		cmp	byte_2D084, 0
 		jnz	short loc_1D142
-		mov	point_2BC72.x, (16 shl 4)
+		mov	knife_template.pos.cur.x, (16 shl 4)
 		jmp	short loc_1D148
 ; ---------------------------------------------------------------------------
 
 loc_1D142:
-		mov	point_2BC72.x, (368 shl 4)
+		mov	knife_template.pos.cur.x, ((PLAYFIELD_W - 16) shl 4)
 
 loc_1D148:
 		mov	ax, _boss2_pos.cur.y
-		mov	point_2BC72.y, ax
-		call	sub_1C82A
+		mov	knife_template.pos.cur.y, ax
+		call	knives_add
 		mov	al, byte_2D085
 		mov	ah, 0
 		shl	ax, 4
@@ -26711,7 +26468,7 @@ yumeko_update	proc far
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
 		mov	point_2A722, eax
-		mov	point_2BC72, eax
+		mov	knife_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -26788,7 +26545,7 @@ loc_1D360:
 		mov	_boss_mode, 1
 		mov	_boss_mode_change, 0
 		mov	fp_2CE46, offset sub_1CA42
-		mov	_boss_custombullets_render, offset sub_10F90
+		mov	_boss_custombullets_render, offset knives_render
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -26961,7 +26718,7 @@ loc_1D50C:
 ; ---------------------------------------------------------------------------
 
 loc_1D513:
-		call	sub_1C8A3
+		call	knives_update
 		push	_boss_hp
 		push	206Ch
 		call	sub_17354
