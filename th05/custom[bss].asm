@@ -125,4 +125,28 @@ knife_template	equ <_custom_entities>
 knives	equ <_custom_entities[1 * size knife_t]>
 ; ---------------
 
+; Shinki's 32×32 balls
+; --------------------
+B6BALL_COUNT = 63
+B6BALL_W = 32
+B6BALL_H = 32
+
+b6ball_t struc
+	flag	db ?
+	B6B_angle	db ?
+	pos	motion_t <?>
+	B6B_age	dw ?
+	cloud_radius	dw ?
+	B6B_patnum_tiny	dw ?
+	B6B_decay_frames	dw ?
+		dw ?
+	B6B_speed	db ?
+		db ?
+b6ball_t ends
+
+b6ball_template	equ <_custom_entities>
+b6balls	equ <_custom_entities[1 * size b6ball_t]>
+; --------------------
+
 public _custom_entities
+_custom_entities	custom_t (CUSTOM_COUNT + 1) dup (<?>)

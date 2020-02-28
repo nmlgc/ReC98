@@ -95,3 +95,18 @@ typedef enum {
 	/// -------
 } stage5_patnum_t;
 /// -------
+
+/// Stage 6
+/// -------
+typedef enum {
+	// st05.bb4
+	// --------
+	PAT_B6BALL_BLUE_1 = 200,
+	PAT_B6BALL_PURPLE,
+	PAT_B6BALL_BLUE_2,
+	PAT_B6BALL_BLUE_3,
+	PAT_DECAY_B6BALL,
+	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1)
+	/// -------
+} stage6_patnum_t;
+/// -------

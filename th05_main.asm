@@ -10040,72 +10040,7 @@ loc_11069:
 		retn
 yumeko_fg_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11073	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	short loc_110D8
-; ---------------------------------------------------------------------------
-
-loc_11080:
-		cmp	byte ptr [si], 0
-		jz	short loc_110D4
-		cmp	byte ptr [si], 1
-		jnz	short loc_110B4
-		mov	ah, 0Fh
-		call	grcg_setcolor_direct_noint_1
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, PLAYFIELD_X
-		push	ax
-		mov	ax, [si+4]
-		sar	ax, 4
-		add	ax, PLAYFIELD_Y
-		push	ax
-		mov	ax, [si+10h]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		push	ax
-		call	grcg_circlefill
-		jmp	short loc_110D4
-; ---------------------------------------------------------------------------
-
-loc_110B4:
-		mov	ax, GRAM_400
-		mov	es, ax
-		mov	ax, [si+4]
-		sar	ax, 4
-		mov	dx, ax
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, 16
-		or	dx, dx
-		jl	short loc_110D4
-		call	z_super_roll_put_tiny_32x32_raw pascal, word ptr [si+12h]
-
-loc_110D4:
-		inc	di
-		add	si, 1Ah
-
-loc_110D8:
-		cmp	di, 40h
-		jl	short loc_11080
-		call	curvebullets_render
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_11073	endp
-
+include th05/bullet/b6balls_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26743,172 +26678,7 @@ off_1D524	dw offset loc_1D29C
 		dw offset loc_1D4BC
 		dw offset loc_1D4DD
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D53A	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	al, byte_2BC88
-		call	@playperf_adjust_speed
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	short loc_1D582
-; ---------------------------------------------------------------------------
-
-loc_1D553:
-		cmp	byte ptr [si], 0
-		jnz	short loc_1D57E
-		mov	byte ptr [si], 1
-		mov	eax, point_2BC72
-		mov	[si+2],	eax
-		lea	ax, [si+0Ah]
-		call	vector2_near pascal, ax, word ptr angle_2BC71, [bp+var_2]
-		mov	ax, word_2BC82
-		mov	[si+12h], ax
-		mov	word ptr [si+10h], 300h
-		jmp	short loc_1D587
-; ---------------------------------------------------------------------------
-
-loc_1D57E:
-		inc	di
-		add	si, 1Ah
-
-loc_1D582:
-		cmp	di, 40h
-		jl	short loc_1D553
-
-loc_1D587:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_1D53A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D58B	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 0B2AAh
-		mov	di, 1
-		jmp	loc_1D65C
-; ---------------------------------------------------------------------------
-
-loc_1D599:
-		cmp	byte ptr [si], 0
-		jz	loc_1D658
-		cmp	byte ptr [si], 1
-		jnz	short loc_1D5B4
-		sub	word ptr [si+10h], 20h ; ' '
-		cmp	word ptr [si+10h], 100h
-		jge	loc_1D658
-		inc	byte ptr [si]
-
-loc_1D5B4:
-		cmp	_bullet_clear_time, 0
-		jnz	short loc_1D5C2
-		cmp	_bullet_clear_trigger, 0
-		jz	short loc_1D5C5
-
-loc_1D5C2:
-		mov	byte ptr [si], 3
-
-loc_1D5C5:
-		inc	word ptr [si+0Eh]
-		lea	ax, [si+2]
-		call	_motion_update_2 pascal, ax
-		cmp	ax, (-16 shl 4)
-		jle	short loc_1D5E5
-		cmp	ax, ((PLAYFIELD_W + 16) shl 4)
-		jge	short loc_1D5E5
-		cmp	dx, (-16 shl 4)
-		jle	short loc_1D5E5
-		cmp	dx, ((PLAYFIELD_H + 16) shl 4)
-		jl	short loc_1D5E7
-
-loc_1D5E5:
-		jmp	short loc_1D655
-; ---------------------------------------------------------------------------
-
-loc_1D5E7:
-		cmp	byte ptr [si], 3
-		jz	short loc_1D612
-		sub	ax, _player_pos.cur.x
-		sub	dx, _player_pos.cur.y
-		add	ax, 8 * 16
-		cmp	ax, 16 * 16
-		ja	short loc_1D610
-		add	dx, 8 * 16
-		cmp	dx, 16 * 16
-		ja	short loc_1D610
-		mov	_player_is_hit, 1
-		mov	byte ptr [si], 3
-		jmp	short loc_1D658
-; ---------------------------------------------------------------------------
-
-loc_1D610:
-		jmp	short loc_1D658
-; ---------------------------------------------------------------------------
-
-loc_1D612:
-		cmp	word ptr [si+12h], 0CCh
-		jge	short loc_1D63B
-		mov	word ptr [si+12h], 0CCh
-		mov	ax, [si+0Ah]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[si+0Ah], ax
-		mov	ax, [si+0Ch]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	[si+0Ch], ax
-		mov	word ptr [si+14h], 0
-		jmp	short loc_1D658
-; ---------------------------------------------------------------------------
-
-loc_1D63B:
-		inc	word ptr [si+14h]
-		mov	ax, [si+14h]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1D658
-		inc	word ptr [si+12h]
-		cmp	word ptr [si+12h], 0D0h
-		jl	short loc_1D658
-
-loc_1D655:
-		mov	byte ptr [si], 0
-
-loc_1D658:
-		inc	di
-		add	si, 1Ah
-
-loc_1D65C:
-		cmp	di, 40h
-		jl	loc_1D599
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_1D58B	endp
-
+include th05/bullet/b6balls_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27329,20 +27099,17 @@ sub_1DA1C	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DA6A
-		push	1800h
-		call	randring2_next16_mod
-		mov	point_2BC72.x, ax
-		push	400h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	b6ball_template.pos.cur.x, ax
+		call	randring2_next16_mod pascal, (64 shl 4)
 		add	ax, (32 shl 4)
-		mov	point_2BC72.y, ax
-		mov	angle_2BC71, 64
-		push	1Fh
-		call	randring2_next16_and
-		add	al, 30h	; '0'
-		mov	byte_2BC88, al
-		mov	word_2BC82, 0C8h
-		call	sub_1D53A
+		mov	b6ball_template.pos.cur.y, ax
+		mov	b6ball_template.B6B_angle, 40h
+		call	randring2_next16_and pascal, 1Fh
+		add	al, (3 shl 4)
+		mov	b6ball_template.B6B_speed, al
+		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_BLUE_1
+		call	b6balls_add
 		call	snd_se_play pascal, 3
 
 loc_1DA6A:
@@ -27476,7 +27243,7 @@ loc_1DBB1:
 loc_1DBB8:
 		cmp	_boss_phase_frame, 192
 		jnz	short loc_1DC1D
-		mov	word_2BC82, 0C9h
+		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
 		xor	si, si
 		jmp	short loc_1DC06
 ; ---------------------------------------------------------------------------
@@ -27486,22 +27253,20 @@ loc_1DBCA:
 		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
-		mov	point_2BC72.x, ax
+		mov	b6ball_template.pos.cur.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
-		mov	point_2BC72.y, dx
-		push	40h
-		call	randring2_next16_mod
-		add	al, 32
-		mov	angle_2BC71, al
-		push	3Fh ; '?'
-		call	randring2_next16_and
-		add	al, 20h	; ' '
-		mov	byte_2BC88, al
-		call	sub_1D53A
+		mov	b6ball_template.pos.cur.y, dx
+		call	randring2_next16_mod pascal, 40h
+		add	al, 20h
+		mov	b6ball_template.B6B_angle, al
+		call	randring2_next16_and pascal, 3Fh
+		add	al, (2 shl 4)
+		mov	b6ball_template.B6B_speed, al
+		call	b6balls_add
 		inc	si
 
 loc_1DC06:
@@ -27560,14 +27325,14 @@ loc_1DC59:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DC93
-		push	point_2BC72.x
-		push	point_2BC72.y
+		push	b6ball_template.pos.cur.x
+		push	b6ball_template.pos.cur.y
 		push	0
 		call	sub_15A24
-		mov	angle_2BC71, al
-		mov	byte_2BC88, 40h
-		mov	word_2BC82, 0C9h
-		call	sub_1D53A
+		mov	b6ball_template.B6B_angle, al
+		mov	b6ball_template.B6B_speed, (4 shl 4)
+		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
+		call	b6balls_add
 
 loc_1DC93:
 		mov	ax, _boss_phase_frame
@@ -27785,21 +27550,21 @@ loc_1DEEA:
 		call	randring2_next16_mod
 		add	ax, _boss_pos.cur.x
 		sub	ax, (128 shl 4)
-		mov	point_2BC72.x, ax
+		mov	b6ball_template.pos.cur.x, ax
 		push	(64 shl 4)
 		call	randring2_next16_mod
 		mov	dx, _boss_pos.cur.y
 		sub	dx, ax
 		add	dx, (16 shl 4)
-		mov	point_2BC72.y, dx
-		push	point_2BC72.x
+		mov	b6ball_template.pos.cur.y, dx
+		push	b6ball_template.pos.cur.x
 		push	dx
 		push	0
 		call	sub_15A24
-		mov	angle_2BC71, al
-		mov	byte_2BC88, 3Ch	; '<'
-		mov	word_2BC82, 0C9h
-		call	sub_1D53A
+		mov	b6ball_template.B6B_angle, al
+		mov	b6ball_template.B6B_speed, (3 shl 4) + 12
+		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
+		call	b6balls_add
 
 loc_1DF41:
 		call	snd_se_play pascal, 3
@@ -27901,7 +27666,7 @@ sub_1E022	proc near
 		jl	loc_1E15A
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1E047
-		mov	angle_2BC71, 0
+		mov	b6ball_template.B6B_angle, 0
 		mov	byte_2D085, 0
 		mov	byte_2D084, 0
 
@@ -27912,30 +27677,30 @@ loc_1E047:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E0A6
-		mov	word_2BC82, 0C8h
-		push	offset point_2BC72
+		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_BLUE_1
+		push	offset b6ball_template.pos.cur
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(64 shl 4)
-		mov	al, angle_2BC71
+		mov	al, b6ball_template.B6B_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	sub_1D53A
-		mov	al, angle_2BC71
-		add	al, 128
-		mov	angle_2BC71, al
-		push	offset point_2BC72
+		call	b6balls_add
+		mov	al, b6ball_template.B6B_angle
+		add	al, 80h
+		mov	b6ball_template.B6B_angle, al
+		push	offset b6ball_template.pos.cur
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(64 shl 4)
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	sub_1D53A
-		mov	al, angle_2BC71
-		add	al, 136
-		mov	angle_2BC71, al
+		call	b6balls_add
+		mov	al, b6ball_template.B6B_angle
+		add	al, -78h
+		mov	b6ball_template.B6B_angle, al
 		call	snd_se_play pascal, 3
 
 loc_1E0A6:
@@ -28058,7 +27823,7 @@ shinki_update	proc far
 		mov	_bullet_template.BT_origin, eax
 		mov	point_2A722, eax
 		mov	_laser_template.coords.origin, eax
-		mov	point_2BC72, eax
+		mov	b6ball_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -28204,7 +27969,7 @@ loc_1E333:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.y, 0
-		mov	_boss_custombullets_render, offset sub_11073
+		mov	_boss_custombullets_render, offset b6balls_render
 		push	((50 shl 4) shl 16) or (35 shl 4)
 		push	((45 shl 4) shl 16) or (50 shl 4)
 		call	select_for_playchar
@@ -28389,7 +28154,7 @@ loc_1E522:
 		call	boss_death_sequence_function
 
 loc_1E527:
-		call	sub_1D58B
+		call	b6balls_update
 		call	curvebullets_update
 		push	_boss_hp
 		push	22800
@@ -34811,31 +34576,6 @@ include th04/circles[bss].asm
 		dd    ?	;
 include th04/item/items[bss].asm
 include th05/custom[bss].asm
-_custom_entities	label	custom_t
-byte_2BC70	db ?
-angle_2BC71	db ?
-point_2BC72	Point <?>
-dword_2BC76	dd ?
-		dd    ?	;
-word_2BC7E	dw ?
-word_2BC80	dw ?
-word_2BC82	dw ?
-word_2BC84	dw ?
-		dw ?
-byte_2BC88	db ?
-		db ?
-byte_2BC8A	db ?
-byte_2BC8B	db ?
-point_2BC8C	Point <?>
-point_2BC90	Point <?>
-		dd ?
-word_2BC98	dw ?
-word_2BC9A	dw ?
-		db    ?	;
-		db    ?	;
-word_2BC9E	dw ?
-		dd    ?	;
-	custom_t (CUSTOM_COUNT - 1) dup (<?>)
 include th04/player/shots[bss].asm
 		dd    ?	;
 		dd    ?	;
