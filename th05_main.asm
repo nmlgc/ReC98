@@ -8003,9 +8003,9 @@ loc_FB27:
 		or	si, si
 		jnz	short loc_FBA7
 		mov	si, _key_det
-		test	si, 1
+		test	si, INPUT_UP
 		jnz	short loc_FB40
-		test	si, 2
+		test	si, INPUT_DOWN
 		jz	short loc_FB8E
 
 loc_FB40:
@@ -8048,16 +8048,16 @@ loc_FB79:
 		call	gaiji_putsa
 
 loc_FB8E:
-		test	si, 1000h
+		test	si, INPUT_CANCEL
 		jz	short loc_FB99
 		mov	di, 1
 		jmp	short loc_FBB5
 ; ---------------------------------------------------------------------------
 
 loc_FB99:
-		test	si, 2000h
+		test	si, INPUT_OK
 		jnz	short loc_FBB5
-		test	si, 20h
+		test	si, INPUT_SHOT
 		jz	short loc_FBAB
 		jmp	short loc_FBB5
 ; ---------------------------------------------------------------------------

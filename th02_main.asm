@@ -2510,9 +2510,9 @@ loc_BA3D:
 loc_BA5C:
 		cmp	[bp+var_1], 1
 		jnz	loc_BB30
-		test	byte ptr _key_det, 1
+		test	byte ptr _key_det, INPUT_UP
 		jnz	short loc_BA72
-		test	byte ptr _key_det, 2
+		test	byte ptr _key_det, INPUT_DOWN
 		jz	short loc_BAC8
 
 loc_BA72:
@@ -2599,9 +2599,9 @@ loc_BB9D:
 loc_BBB2:
 		cmp	[bp+var_1], 4
 		jnz	loc_BCA4
-		test	byte ptr _key_det, 1
+		test	byte ptr _key_det, INPUT_UP
 		jnz	short loc_BBC8
-		test	byte ptr _key_det, 2
+		test	byte ptr _key_det, INPUT_DOWN
 		jz	short loc_BC1E
 
 loc_BBC8:
@@ -3431,14 +3431,14 @@ loc_C493:
 		mov	[bp+var_2], 2
 
 loc_C4A5:
-		test	byte ptr _key_det, 1
+		test	byte ptr _key_det, INPUT_UP
 		jz	short loc_C4B8
 		mov	di, 1
 		push	0E500E1h
 		call	sub_C2F4
 
 loc_C4B8:
-		test	byte ptr _key_det, 2
+		test	byte ptr _key_det, INPUT_DOWN
 		jz	short loc_C4CA
 		xor	di, di
 		push	0E100E5h
@@ -9074,24 +9074,24 @@ loc_F1F7:
 		cmp	_player_is_hit, 0
 		jnz	loc_F43E
 		mov	ax, _key_det
-		and	ax, 0F000h
-		cmp	ax, 4000h
+		and	ax, INPUT_MOVEMENT_DIAGONAL
+		cmp	ax, INPUT_DOWN_LEFT
 		jz	loc_F29E
 		ja	short loc_F21B
-		cmp	ax, 1000h
+		cmp	ax, INPUT_UP_LEFT
 		jz	short loc_F270
-		cmp	ax, 2000h
+		cmp	ax, INPUT_UP_RIGHT
 		jz	short loc_F288
 		jmp	short loc_F222
 ; ---------------------------------------------------------------------------
 
 loc_F21B:
-		cmp	ax, 8000h
+		cmp	ax, INPUT_DOWN_RIGHT
 		jz	loc_F2A4
 
 loc_F222:
 		mov	bx, _key_det
-		and	bx, 0Fh
+		and	bx, INPUT_MOVEMENT_ALIGNED
 		dec	bx
 		cmp	bx, 9
 		ja	loc_F2B8
@@ -33396,7 +33396,7 @@ loc_1CB8D:
 		call	_input_sense
 		cmp	[bp+var_A], 0
 		jnz	loc_1CCFE
-		test	byte ptr _key_det, 1
+		test	byte ptr _key_det, INPUT_UP
 		jz	short loc_1CBC3
 		push	di
 		push	[bp+var_8]
@@ -33414,7 +33414,7 @@ loc_1CBB9:
 		call	sub_1C8E3
 
 loc_1CBC3:
-		test	byte ptr _key_det, 2
+		test	byte ptr _key_det, INPUT_DOWN
 		jz	short loc_1CBEC
 		push	di
 		push	[bp+var_8]
@@ -33432,7 +33432,7 @@ loc_1CBE2:
 		call	sub_1C8E3
 
 loc_1CBEC:
-		test	byte ptr _key_det, 4
+		test	byte ptr _key_det, INPUT_LEFT
 		jz	short loc_1CC0F
 		push	di
 		push	[bp+var_8]
@@ -33450,7 +33450,7 @@ loc_1CC05:
 		call	sub_1C8E3
 
 loc_1CC0F:
-		test	byte ptr _key_det, 8
+		test	byte ptr _key_det, INPUT_RIGHT
 		jz	short loc_1CC32
 		push	di
 		push	[bp+var_8]

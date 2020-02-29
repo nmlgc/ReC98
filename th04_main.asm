@@ -6246,9 +6246,9 @@ loc_E703:
 		or	si, si
 		jnz	short loc_E783
 		mov	si, _key_det
-		test	si, 1
+		test	si, INPUT_UP
 		jnz	short loc_E71C
-		test	si, 2
+		test	si, INPUT_DOWN
 		jz	short loc_E76A
 
 loc_E71C:
@@ -6291,16 +6291,16 @@ loc_E755:
 		call	gaiji_putsa
 
 loc_E76A:
-		test	si, 1000h
+		test	si, INPUT_CANCEL
 		jz	short loc_E775
 		mov	di, 1
 		jmp	short loc_E796
 ; ---------------------------------------------------------------------------
 
 loc_E775:
-		test	si, 2000h
+		test	si, INPUT_OK
 		jnz	short loc_E796
-		test	si, 20h
+		test	si, INPUT_SHOT
 		jz	short loc_E787
 		jmp	short loc_E796
 ; ---------------------------------------------------------------------------

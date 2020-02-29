@@ -137,6 +137,12 @@ typedef enum {
 	INPUT_DOWN_RIGHT = 0x8000
 } input_t;
 
+#define INPUT_MOVEMENT_ALIGNED \
+	(INPUT_UP | INPUT_DOWN | INPUT_LEFT | INPUT_RIGHT)
+
+#define INPUT_MOVEMENT_DIAGONAL \
+	(INPUT_UP_LEFT | INPUT_UP_RIGHT | INPUT_DOWN_LEFT | INPUT_DOWN_RIGHT)
+
 extern input_t key_det; /* ZUN symbol [MAGNet2010] */
 
 void input_sense(void);
