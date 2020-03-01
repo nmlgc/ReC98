@@ -25,15 +25,28 @@ typedef bool page_t;
 #pragma option -a1
 
 #ifdef __cplusplus
-	template <class ComponentType> union RGB {
+	template <class ComponentType, int Range> union RGB {
 		struct {
 			ComponentType r, g, b;
 		} c;
 		ComponentType v[3];
+
+		// Yes, we actually need this function in certain cases where code
+		// generation calls for a 0 in the ComponentType.
+		static ComponentType min() {
+			return 0;
+		}
+		static ComponentType max() {
+			return (Range - 1);
+		}
 	};
 
 	template <class RGBType> struct Palette {
 		RGBType colors[COLOR_COUNT];
+
+		static int range() {
+			return RGBType::Range;
+		}
 
 		RGBType& operator [](int col) {
 			return colors[col];
@@ -44,7 +57,7 @@ typedef bool page_t;
 	// 4,096 colors
 	typedef int8_t uint4_t;
 
-	typedef RGB<uint4_t> RGB4;
+	typedef RGB<uint4_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;
 #endif
 

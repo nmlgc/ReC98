@@ -547,7 +547,7 @@ void z_palette_fade_from(
 	unsigned int step_ms
 )
 {
-	RGB4 fadepal[COLOR_COUNT];
+	Palette4 fadepal;
 	int i;
 	int col;
 	int comp;
@@ -564,12 +564,12 @@ void z_palette_fade_from(
 			fadepal[i].c.b = z_Palettes[i].c.b;
 		}
 	}
-	for(i = 0; i < 16; i++) {
+	for(i = 0; i < fadepal.range(); i++) {
 		z_vsync_wait();
 		for(col = 0; col < COLOR_COUNT; col++) {
 			for(comp = 0; comp < sizeof(RGB4); comp++) {
 				if(fadepal[col].v[comp] != z_Palettes[col].v[comp]) {
-					fadepal[col].v[comp] +=
+					fadepal.colors[col].v[comp] +=
 						(fadepal[col].v[comp] < z_Palettes[col].v[comp])
 						?  1
 						: -1;
