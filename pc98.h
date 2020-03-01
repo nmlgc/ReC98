@@ -24,6 +24,10 @@ typedef bool page_t;
 
 #pragma option -a1
 
+// The 16-color mode supports 4 bits per RGB component, for a total of
+// 4,096 colors
+typedef int8_t uint4_t;
+
 #ifdef __cplusplus
 	template <class ComponentType, int Range> union RGB {
 		struct {
@@ -52,10 +56,6 @@ typedef bool page_t;
 			return colors[col];
 		}
 	};
-
-	// The 16-color mode supports 4 bits per RGB component, for a total of
-	// 4,096 colors
-	typedef int8_t uint4_t;
 
 	typedef RGB<uint4_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;

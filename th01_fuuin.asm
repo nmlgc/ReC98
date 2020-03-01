@@ -50,8 +50,6 @@ include th01/th01.inc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _memcmp:proc
-	extern _memcpy:proc
-	extern _memset:proc
 	extern _open:proc
 	extern _printf:proc
 	extern _proc:proc
@@ -3541,7 +3539,7 @@ sub_B945	proc far
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_D2D6
+		call	_z_graph_clear
 		push	64h ; 'd'
 		call	sub_C842
 		push	ds
@@ -3758,7 +3756,7 @@ loc_BBC7:
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	0Ah
 		call	sub_C911
-		call	sub_D2D6
+		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset aSt1_mdt	; "st1.mdt"
@@ -4299,7 +4297,7 @@ arg_0		= word ptr  4
 		pop	cx
 		push	5
 		call	sub_C911
-		call	sub_D2D6
+		call	_z_graph_clear
 		push	[bp+arg_0]
 		call	sub_C78B
 		pop	cx
@@ -4323,7 +4321,7 @@ sub_C03D	proc near
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	0Ah
 		call	sub_C911
-		call	sub_D2D6
+		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset aSt1_mdt_0 ; "st1.mdt"
@@ -4881,7 +4879,7 @@ var_10		= byte ptr -10h
 		push	offset aEndm_a_grp ; "endm_a.grp"
 		call	sub_EB39
 		add	sp, 4
-		call	sub_D349
+		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -5115,7 +5113,7 @@ loc_C6C7:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_D349
+		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -5940,7 +5938,7 @@ inregs		= REGS ptr -10h
 		push	0
 		nopcall	_graph_showpage_func
 		add	sp, 12h
-		nopcall	sub_D300
+		nopcall	_z_graph_clear_0
 		mov	dx, 68h	; 'h'
 		mov	al, 0Ah
 		out	dx, al
@@ -5997,7 +5995,7 @@ sub_D094	proc far
 		push	bp
 		mov	bp, sp
 		nopcall	_z_palette_black
-		nopcall	sub_D300
+		nopcall	_z_graph_clear_0
 		push	0
 		nopcall	_graph_accesspage_func
 		push	0
@@ -6112,169 +6110,9 @@ loc_D21A:
 sub_D1D9	endp
 
 include th01/hardware/palette_set_show.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D2D6	proc far
-
-_s		= dword	ptr -4
-
-		enter	4, 0
-		mov	[bp+_s],	0A8000000h
-		push	0
-		call	_grcg_setcolor_rmw
-		push	7D0000FFh	; c
-		pushd	[bp+_s]	; s
-		call	_memset
-		add	sp, 0Ah
-		call	_grcg_off_func
-		leave
-		retf
-sub_D2D6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D300	proc far
-		push	bp
-		mov	bp, sp
-		push	2
-		call	_graph_accesspage_func
-		call	sub_D2D6
-		push	2
-		call	_graph_accesspage_func
-		add	sp, 4
-		call	sub_D2D6
-		pop	bp
-		retf
-sub_D300	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D31C	proc far
-
-_s		= dword	ptr -4
-arg_0		= byte ptr  6
-
-		enter	4, 0
-		mov	[bp+_s],	0A8000000h
-		mov	al, [bp+arg_0]
-		cbw
-		push	ax
-		call	_grcg_setcolor_rmw
-		push	7D0000FFh	; c
-		pushd	[bp+_s]	; s
-		call	_memset
-		add	sp, 0Ah
-		call	_grcg_off_func
-		leave
-		retf
-sub_D31C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D349	proc far
-
-var_152		= byte ptr -152h
-var_102		= byte ptr -102h
-var_B2		= byte ptr -0B2h
-dest		= byte ptr -62h
-@@page_other	= byte ptr -11h
-var_10		= dword	ptr -10h
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-_src		= dword	ptr -4
-
-		enter	152h, 0
-		push	si
-		mov	[bp+_src], 0A8000000h
-		mov	[bp+var_8], 0B0000000h
-		mov	[bp+var_C], 0B8000000h
-		mov	[bp+var_10], 0E0000000h
-		mov	al, _page_back
-		xor	al, 1
-		mov	[bp+@@page_other], al
-		xor	si, si
-		jmp	loc_D426
-; ---------------------------------------------------------------------------
-
-loc_D37B:
-		push	50h ; 'P'       ; n
-		pushd	[bp+_src]	; src
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; dest
-		call	_memcpy
-		push	50h ; 'P'       ; n
-		pushd	[bp+var_8] ; src
-		push	ss
-		lea	ax, [bp+var_B2]
-		push	ax		; dest
-		call	_memcpy
-		push	50h ; 'P'       ; n
-		pushd	[bp+var_C] ; src
-		push	ss
-		lea	ax, [bp+var_102]
-		push	ax		; dest
-		call	_memcpy
-		push	50h ; 'P'       ; n
-		pushd	[bp+var_10] ; src
-		push	ss
-		lea	ax, [bp+var_152]
-		push	ax		; dest
-		call	_memcpy
-		graph_accesspage [bp+@@page_other]
-		push	50h ; 'P'       ; n
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; src
-		pushd	[bp+_src]	; dest
-		call	_memcpy
-		add	sp, 32h
-		push	50h ; 'P'       ; n
-		push	ss
-		lea	ax, [bp+var_B2]
-		push	ax		; src
-		pushd	[bp+var_8] ; dest
-		call	_memcpy
-		push	50h ; 'P'       ; n
-		push	ss
-		lea	ax, [bp+var_102]
-		push	ax		; src
-		pushd	[bp+var_C] ; dest
-		call	_memcpy
-		push	50h ; 'P'       ; n
-		push	ss
-		lea	ax, [bp+var_152]
-		push	ax		; src
-		pushd	[bp+var_10] ; dest
-		call	_memcpy
-		add	sp, 1Eh
-		graph_accesspage _page_back
-		add	word ptr [bp+_src], 50h ; 'P'
-		add	word ptr [bp+var_8], 50h ; 'P'
-		add	word ptr [bp+var_C], 50h ; 'P'
-		add	word ptr [bp+var_10], 50h ; 'P'
-		inc	si
-
-loc_D426:
-		cmp	si, 190h
-		jl	loc_D37B
-		pop	si
-		leave
-		retf
-sub_D349	endp
-
+	extern _z_graph_clear:proc
+	extern _z_graph_clear_0:proc
+	extern _graph_copy_page_back_to_front:proc
 	extern _z_palette_black:proc
 	extern _z_palette_black_out:proc
 	extern _graph_putsa_fx:proc

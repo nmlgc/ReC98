@@ -26317,7 +26317,7 @@ loc_29D0E:
 		shl	bx, 2
 		pushd	dword ptr [bx+140Bh]
 		call	sub_10BAE
-		call	sub_EC80
+		call	_graph_copy_page_back_to_front
 		push	ds
 		push	offset _z_Palettes
 		call	sub_C433
@@ -30778,7 +30778,7 @@ loc_2C8AE:
 		add	sp, 4
 		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
 		call	sub_232A4
-		call	sub_EC80
+		call	_graph_copy_page_back_to_front
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -30870,7 +30870,7 @@ loc_2C9DA:
 		call	sub_10BAE
 		add	sp, 4
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
-		call	sub_EC80
+		call	_graph_copy_page_back_to_front
 		mov	byte_34A49, 1
 		call	sub_190D6
 		call	sub_1889C
@@ -31142,7 +31142,7 @@ loc_2CC9E:
 		add	sp, 4
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	sub_232A4
-		call	sub_EC80
+		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
 
@@ -31784,7 +31784,7 @@ loc_2D1DC:
 loc_2D1F0:
 		cmp	di, 10h
 		jl	short loc_2D1B6
-		call	sub_EC80
+		call	_graph_copy_page_back_to_front
 		pop	di
 		pop	si
 		leave
@@ -35747,7 +35747,7 @@ loc_2F766:
 		call	_printf
 		add	sp, 4
 		call	sub_2D241
-		call	sub_EC0D
+		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		push	7
@@ -35762,7 +35762,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	8
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35776,7 +35776,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	9
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35790,7 +35790,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Ah
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35804,7 +35804,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Bh
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35818,7 +35818,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Ch
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35832,7 +35832,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Dh
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35846,7 +35846,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Eh
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"
@@ -35860,7 +35860,7 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		call	sub_EC0D
+		call	_z_graph_clear
 		push	0Fh
 		push	ds
 		push	offset aBoss8_grz ; "boss8.grz"

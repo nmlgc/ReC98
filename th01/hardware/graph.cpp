@@ -10,6 +10,8 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.hpp"
 
+extern page_t page_back;
+
 /// VRAM plane "structures"
 /// -----------------------
 #define Planes_declare(var) \
@@ -114,10 +116,75 @@ _SP += stack_clear_size;
 }
 /// -----------------------------------------------
 
-/// Pages
-/// -----
-extern page_t page_back;
-/// -----
+/// Whole-page functions
+/// --------------------
+void z_graph_clear()
+{
+	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
+
+	/* TODO: Replace with the decompiled calls
+	 * grcg_setcolor_rmw(0);
+	 * memset(plane, 0xFF, PLANE_SIZE);
+	 * once grcg_setcolor_rmw is part of this translation unit */
+	__asm {
+		push	0;
+		push	cs;
+		call	near ptr grcg_setcolor_rmw;
+		db  	0x66, 0x68, 0xFF, 0x00, 0x00, 0x7D;
+		db  	0x66, 0xFF, 0x76, 0xFC;
+		call	far ptr memset;
+		add 	sp, 10;
+	}
+	(plane);
+	GRCG_OFF();
+}
+
+void z_graph_clear_0(void)
+{
+	// Yes, page 2, twice. Which effectively is the same as page 0... at least
+	// according to any real hardware and emulator tests I could come up with.
+	GRAPH_ACCESSPAGE_FUNC(2, 0);	z_graph_clear();
+	GRAPH_ACCESSPAGE_FUNC(2, 4);	z_graph_clear();
+}
+
+void z_graph_clear_col(uint4_t col)
+{
+	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
+
+	/* TODO: Replace with the decompiled calls
+	 * grcg_setcolor_rmw(col);
+	 * memset(plane, 0xFF, PLANE_SIZE);
+	 * once grcg_setcolor_rmw is part of this translation unit */
+	__asm {
+		mov 	al, col;
+		cbw;
+		push	ax;
+		push	cs;
+		call	near ptr grcg_setcolor_rmw;
+		db  	0x66, 0x68, 0xFF, 0x00, 0x00, 0x7D;
+		db  	0x66, 0xFF, 0x76, 0xFC;
+		call	far ptr memset;
+		add 	sp, 10;
+	}
+	(plane);
+	GRCG_OFF();
+}
+
+void graph_copy_page_back_to_front(void)
+{
+	PlanarRow_declare(tmp);
+	Planes_declare(p);
+	page_t page_front = (page_back ^ 1);
+
+	for(int y = 0; y < RES_Y; y++) {
+		PlanarRow_blit(tmp, p, ROW_SIZE);
+		graph_accesspage(page_front);
+		PlanarRow_blit(p, tmp, ROW_SIZE);
+		graph_accesspage(page_back);
+		Planes_next_row(p);
+	}
+}
+/// --------------------
 
 /// Palette fades
 /// -------------
