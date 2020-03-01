@@ -1,7 +1,8 @@
 /// Pages
 /// -----
-// Also updates [page_back].
 void graph_showpage_func(page_t page);
+
+// Also updates [page_back].
 void graph_accesspage_func(int page);
 
 // Fills the entire active page with hardware color 0 or the given [col].

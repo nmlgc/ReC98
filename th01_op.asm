@@ -2460,7 +2460,8 @@ inregs		= REGS ptr -10h
 		retf
 sub_B91C	endp
 
-include th01/hardware/graph_page.asm
+	extern _graph_showpage_func:proc
+	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc
 	extern _grcg_setcolor_tdw:proc
 	extern _grcg_off_func:proc

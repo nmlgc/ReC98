@@ -6050,7 +6050,8 @@ inregs		= REGS ptr -10h
 		retf
 sub_D0E0	endp
 
-include th01/hardware/graph_page.asm
+	extern _graph_showpage_func:proc
+	extern _graph_accesspage_func:proc
 	extern _z_palette_set_all_show:proc
 	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc

@@ -82,15 +82,19 @@ extern page_t page_back;
 	clip_max(top, bottom, (RES_Y - 1));
 /// --------
 
-/// Temporary translation unit mismatch workarounds
-/// -----------------------------------------------
-#define GRAPH_ACCESSPAGE_FUNC(page, stack_clear_size) __asm { \
-	push	page; \
-	push 	cs; \
-	call	near ptr graph_accesspage_func; \
-}	\
-_SP += stack_clear_size;
-/// -----------------------------------------------
+/// Page flipping
+/// -------------
+void graph_showpage_func(page_t page)
+{
+	outportb(0xA4, page);
+}
+
+void graph_accesspage_func(int page)
+{
+	page_back = page;
+	outportb(0xA6, page);
+}
+/// -------------
 
 /// Hardware
 /// --------
@@ -166,8 +170,8 @@ void z_graph_clear_0(void)
 {
 	// Yes, page 2, twice. Which effectively is the same as page 0... at least
 	// according to any real hardware and emulator tests I could come up with.
-	GRAPH_ACCESSPAGE_FUNC(2, 0);	z_graph_clear();
-	GRAPH_ACCESSPAGE_FUNC(2, 4);	z_graph_clear();
+	graph_accesspage_func(2);	z_graph_clear();
+	graph_accesspage_func(2);	z_graph_clear();
 }
 
 void z_graph_clear_col(uint4_t col)
@@ -446,8 +450,8 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 	}
 
 #define restore_at(bit_count) \
-	GRAPH_ACCESSPAGE_FUNC(1, 0);	VRAM_SNAP_4(page1, vram_offset, 32); \
-	GRAPH_ACCESSPAGE_FUNC(0, 4);	VRAM_PUT_4(vram_offset, page1, 32);
+	graph_accesspage_func(1);	VRAM_SNAP_4(page1, vram_offset, 32); \
+	graph_accesspage_func(0);	VRAM_PUT_4(vram_offset, page1, 32);
 
 #define plot_loop(\
 	step_var, step_len, step_increment, \
