@@ -10,6 +10,9 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.hpp"
 
+#undef grcg_off
+#define grcg_off() outportb(0x7C, 0);
+
 extern page_t page_back;
 
 /// VRAM plane "structures"
@@ -81,40 +84,72 @@ extern page_t page_back;
 
 /// Temporary translation unit mismatch workarounds
 /// -----------------------------------------------
-#define GRCG_SETCOLOR_RMW(col) __asm { \
-	push	col; \
-	push	cs; \
-	call	near ptr grcg_setcolor_rmw; \
-	pop 	cx; \
-}
-#define GRCG_OFF() __asm { \
-	push	cs; \
-	call	near ptr grcg_off_func; \
-}
 #define GRAPH_ACCESSPAGE_FUNC(page, stack_clear_size) __asm { \
 	push	page; \
 	push 	cs; \
 	call	near ptr graph_accesspage_func; \
 }	\
 _SP += stack_clear_size;
-#define FADEPAL_PUSH_COMP(pal, comp) \
-	db  	0x8B, 0xDE;	/* MOV BX, SI */ \
-	db  	0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */ \
-	lea 	ax, (pal + comp); \
-	db  	0x03, 0xD8; /* Turbo C++'s preferred opcode for ADD BX, AX */ \
-	mov 	al, ss:[bx]; \
-	cbw; \
-	push ax;
-#define Z_PALETTE_SHOW_SINGLE_FADEPAL(pal) __asm { \
-	FADEPAL_PUSH_COMP(pal, 2) \
-	FADEPAL_PUSH_COMP(pal, 1) \
-	FADEPAL_PUSH_COMP(pal, 0) \
-	db  	0x56; \
-	push	cs; \
-	call	near ptr z_palette_show_single; \
-	add 	sp, 8; \
-}
 /// -----------------------------------------------
+
+/// Hardware
+/// --------
+void z_palette_show_single(int col, int r, int g, int b)
+{
+	outportb(0xA8, col);
+	outportb(0xAA, g);
+	outportb(0xAC, r);
+	outportb(0xAE, b);
+}
+
+#define grcg_setcolor(mode, col) \
+	outportb(0x7C, mode); \
+	outportb(0x7E, (col & 1) ? 0xFF : 0x00); \
+	outportb(0x7E, (col & 2) ? 0xFF : 0x00); \
+	outportb(0x7E, (col & 4) ? 0xFF : 0x00); \
+	outportb(0x7E, (col & 8) ? 0xFF : 0x00);
+
+void grcg_setcolor_rmw(int col)
+{
+	grcg_setcolor(0xC0, col);
+}
+
+void grcg_setcolor_tdw(int col)
+{
+	grcg_setcolor(0x80, col);
+}
+
+void grcg_off_func(void)
+{
+	grcg_off();
+}
+/// --------
+
+/// Palette
+/// -------
+void z_palette_set_all_show(const Palette4& pal)
+{
+	for(int i = 0; i < COLOR_COUNT; i++) {
+		z_palette_set_show(i, pal[i].c.r, pal[i].c.g, pal[i].c.b);
+	}
+}
+
+void z_palette_set_show(int col, int r, int g, int b)
+{
+#define clamp_max(comp) ((comp) < RGB4::max() ? (comp) : RGB4::max())
+#define clamp_min(comp) ((comp) > 0 ? (comp) : 0)
+	r = clamp_min(clamp_max(r));
+	g = clamp_min(clamp_max(g));
+	b = clamp_min(clamp_max(b));
+
+	z_Palettes[col].c.r = r;
+	z_Palettes[col].c.g = g;
+	z_Palettes[col].c.b = b;
+	z_palette_show_single(col, r, g, b);
+#undef clamp_max
+#undef clamp_min
+}
+/// -------
 
 /// Whole-page functions
 /// --------------------
@@ -122,21 +157,9 @@ void z_graph_clear()
 {
 	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
 
-	/* TODO: Replace with the decompiled calls
-	 * grcg_setcolor_rmw(0);
-	 * memset(plane, 0xFF, PLANE_SIZE);
-	 * once grcg_setcolor_rmw is part of this translation unit */
-	__asm {
-		push	0;
-		push	cs;
-		call	near ptr grcg_setcolor_rmw;
-		db  	0x66, 0x68, 0xFF, 0x00, 0x00, 0x7D;
-		db  	0x66, 0xFF, 0x76, 0xFC;
-		call	far ptr memset;
-		add 	sp, 10;
-	}
-	(plane);
-	GRCG_OFF();
+	grcg_setcolor_rmw(0);
+	memset(plane, 0xFF, PLANE_SIZE);
+	grcg_off_func();
 }
 
 void z_graph_clear_0(void)
@@ -151,23 +174,9 @@ void z_graph_clear_col(uint4_t col)
 {
 	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
 
-	/* TODO: Replace with the decompiled calls
-	 * grcg_setcolor_rmw(col);
-	 * memset(plane, 0xFF, PLANE_SIZE);
-	 * once grcg_setcolor_rmw is part of this translation unit */
-	__asm {
-		mov 	al, col;
-		cbw;
-		push	ax;
-		push	cs;
-		call	near ptr grcg_setcolor_rmw;
-		db  	0x66, 0x68, 0xFF, 0x00, 0x00, 0x7D;
-		db  	0x66, 0xFF, 0x76, 0xFC;
-		call	far ptr memset;
-		add 	sp, 10;
-	}
-	(plane);
-	GRCG_OFF();
+	grcg_setcolor_rmw(col);
+	memset(plane, 0xFF, PLANE_SIZE);
+	grcg_off_func();
 }
 
 void graph_copy_page_back_to_front(void)
@@ -196,10 +205,7 @@ void graph_copy_page_back_to_front(void)
 			for(int comp = 0; comp < sizeof(RGB4); comp++) { \
 				per_comp; \
 			} \
-			/* TODO: Replace with the decompiled call \
-			 * z_palette_show_single_col(col, pal[col]); \
-			 * once that function is part of this translation unit */ \
-			Z_PALETTE_SHOW_SINGLE_FADEPAL(pal); \
+			z_palette_show_single_col(col, pal[col]); \
 		} \
 		delay(FADE_DELAY); \
 	}
@@ -207,17 +213,7 @@ void graph_copy_page_back_to_front(void)
 void z_palette_black(void)
 {
 	for(int col = 0; col < COLOR_COUNT; col++) {
-		/* TODO: Replace with the decompiled call
-		 * z_palette_show_single(col, 0, 0, 0);
-		 * once that function is part of this translation unit */
-		__asm {
-			db  	0x66, 0x6A, 0x00;
-			push	0x00;
-			db  	0x56;
-			push	cs;
-			call	near ptr z_palette_show_single;
-			add 	sp, 8;
-		}
+		z_palette_show_single(col, 0, 0, 0);
 	}
 }
 
@@ -247,17 +243,7 @@ void z_palette_black_out(void)
 void z_palette_white(void)
 {
 	for(int col = 0; col < COLOR_COUNT; col++) {
-		/* TODO: Replace with the decompiled call
-		 * z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
-		 * once that function is part of this translation unit */
-		__asm {
-			db  	0x66, 0x68, 0x0F, 0x00, 0x0F, 0x00;
-			push	0x0F;
-			db  	0x56;
-			push	cs;
-			call	near ptr z_palette_show_single;
-			add 	sp, 8;
-		}
+		z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
 	}
 }
 
@@ -288,27 +274,7 @@ void z_palette_white_out(void)
 void z_palette_show(void)
 {
 	for(int i = 0; i < COLOR_COUNT; i++) {
-		/* TODO: Replace with the decompiled call
-		 * z_palette_show_single_col(i, z_Palettes[i]);
-		 * once that function is part of this translation unit */
-		__asm {
-#define push_comp(comp) \
-	db  	0x8B, 0xDE;	/* MOV BX, SI */ \
-	db  	0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */ \
-	mov al, byte ptr (z_Palettes + comp)[bx]; \
-	cbw; \
-	push ax;
-			push_comp(2);
-			push_comp(1);
-			push_comp(0);
-			// Spelling out PUSH SI causes Turbo C++ to interpret SI as
-			// reserved, and it then moves [i] to DI rather than SI
-			db  	0x56;
-			push	cs;
-			call	near ptr z_palette_show_single;
-			add 	sp, 8;
-#undef push_comp
-		}
+		z_palette_show_single_col(i, z_Palettes[i]);
 	}
 }
 /// -------------
@@ -320,9 +286,9 @@ void z_palette_show(void)
 
 void z_grcg_pset(int x, int y, int col)
 {
-	GRCG_SETCOLOR_RMW(col);
+	grcg_setcolor_rmw(col);
 	VRAM_SBYTE(B, ((y * ROW_SIZE) + (x >> 3))) = (0x80 >> (x & 7));
-	GRCG_OFF();
+	grcg_off_func();
 }
 
 int z_col_at(int x, int y)
@@ -360,6 +326,7 @@ extern planar16_t graph_r_pattern;
 
 void graph_r_hline(int left, int right, int y, int col)
 {
+	int x;
 	int full_bytes_to_put;
 	int order_tmp;
 	planar8_t left_pixels;
@@ -378,7 +345,7 @@ void graph_r_hline(int left, int right, int y, int col)
 	right_pixels = 0xFF << (7 - (right & 7));
 
 	if(!graph_r_restore_from_1) {
-		GRCG_SETCOLOR_RMW(col);
+		grcg_setcolor_rmw(col);
 	}
 	if(graph_r_restore_from_1) {
 		egc_copy_rect_1_to_0(left, y, RES_X - left, 1);
@@ -387,14 +354,14 @@ void graph_r_hline(int left, int right, int y, int col)
 			vram_row[0] = (left_pixels & right_pixels);
 		} else {
 			vram_row[0] = left_pixels;
-			for(register int x = 1; x < full_bytes_to_put; x++) {
+			for(x = 1; x < full_bytes_to_put; x++) {
 				vram_row[x] = 0xFF;
 			}
 			vram_row[full_bytes_to_put] = right_pixels;
 		}
 	}
 	if(!graph_r_restore_from_1) {
-		GRCG_OFF();
+		grcg_off_func();
 	}
 }
 
@@ -419,12 +386,12 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	pattern = graph_r_pattern >> (x & 7);
 	pattern |= graph_r_pattern << (16 - (x & 7));
 
-	GRCG_SETCOLOR_RMW(col);
+	grcg_setcolor_rmw(col);
 	for(y = top; y <= bottom; y++) {
 		VRAM_PUT(B, vram_row_offset, pattern, 16);
 		vram_row_offset += ROW_SIZE;
 	}
-	GRCG_OFF();
+	grcg_off_func();
 }
 
 void graph_r_line_from_1(int left, int top, int right, int bottom)
@@ -556,7 +523,7 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 	y_vram = y_cur;
 
 	if(!graph_r_restore_from_1) {
-		GRCG_SETCOLOR_RMW(col);
+		grcg_setcolor_rmw(col);
 	}
 	if(w > h) {
 		plot_loop(x_cur, w, 1, y_cur, h, y_direction);
@@ -568,7 +535,7 @@ restore_last:
 	restore_at(vram_offset);
 end:
 	if(!graph_r_restore_from_1) {
-		GRCG_OFF();
+		grcg_off_func();
 	}
 
 #undef plot_loop
@@ -594,7 +561,7 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	clip_x(left, right);
 	clip_y(top, bottom);
 
-	GRCG_SETCOLOR_RMW(col);
+	grcg_setcolor_rmw(col);
 	vram_row = (planar8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
@@ -612,7 +579,7 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 		}
 		vram_row += ROW_SIZE;
 	}
-	GRCG_OFF();
+	grcg_off_func();
 }
 
 void graph_r_box(int left, int top, int right, int bottom, int col)
@@ -652,6 +619,7 @@ int text_extent_fx(int fx, const unsigned char *str)
 
 void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 {
+	register int x = left;
 	uint16_t codepoint;
 	planar16_t glyph_row;
 	unsigned char far *vram;
@@ -665,27 +633,27 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 	int w;
 	int line;
 	planar16_t glyph[GLYPH_H];
-	planar16_t glyph_row_tmp;
+	register planar16_t glyph_row_tmp;
 
 	if(clear_bg) {
 		w = text_extent_fx(fx, str);
 		if(underline) {
-			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H + 1), 0);
-			graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
+			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
+			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
 		} else {
-			z_grcg_boxfill(left, top, (left + w - 1), (top + GLYPH_H - 1), 0);
+			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
 		w = text_extent_fx(fx, str);
-		graph_r_hline(left, (left + w - 1), (top + GLYPH_H + 1), 7);
+		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
 	}
 
-	GRCG_SETCOLOR_RMW(fx);
+	grcg_setcolor_rmw(fx);
 	OUTB(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {
-		set_vram_ptr(vram, first_bit, left, top);
-		get_glyph(glyph, codepoint, fullwidth, str, left, line);
+		set_vram_ptr(vram, first_bit, x, top);
+		get_glyph(glyph, codepoint, fullwidth, str, x, line);
 
 		for(line = 0; line < GLYPH_H; line++) {
 			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
@@ -698,11 +666,11 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 			}
 			put_row_and_advance(vram, glyph_row, first_bit);
 		}
-		advance_left(left, fullwidth, spacing);
+		advance_left(x, fullwidth, spacing);
 	}
 
 	OUTB(0x68, 0xA); // CG ROM code access
-	GRCG_OFF();
+	grcg_off_func();
 }
 
 void graph_copy_byterect_back_to_front(
@@ -786,26 +754,7 @@ void z_palette_fade_from(
 						: -1;
 				}
 			}
-			/* TODO: Replace with the decompiled call
-			 * z_palette_show_single_col(col, fadepal[col]);
-			 * once that function is part of this translation unit */
-			__asm {
-#define push_comp(comp) \
-	mov 	bx, col; \
-	db 0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */	\
-	lea 	ax, fadepal[comp]; \
-	db 0x03, 0xD8; /* Turbo C++'s preferred opcode for ADD BX, AX */ \
-	mov 	al, ss:[bx]; \
-	cbw; \
-	push	ax;
-				push_comp(2)
-				push_comp(1)
-				push_comp(0)
-				push	col
-				push	cs
-				call	near ptr z_palette_show_single
-				add 	sp, 8
-			}
+			z_palette_show_single_col(col, fadepal[col]);
 		}
 		delay(step_ms);
 	}
@@ -893,27 +842,7 @@ int z_respal_get_show(void)
 	if(respal_seg) {
 		grb_t *respal = respal_seg->pal;
 		for(i = 0; i < COLOR_COUNT; i++) {
-			/* TODO: Replace with the decompiled call
-			 * z_palette_set_show(i, respal->r, respal->g, respal->b);
-			 * once that function is part of this translation unit */
-			__asm {
-				les 	bx, respal
-				mov 	al, es:[bx+2]
-				cbw
-				push	ax
-				mov 	al, es:[bx+0]
-				cbw
-				push	ax
-				mov 	al, es:[bx+1]
-				cbw
-				push	ax
-				// Spelling out PUSH SI causes Turbo C++ to interpret SI as
-				// reserved, and it then moves [i] to DI rather than SI
-				db	0x56
-				push	cs
-				call	near ptr z_palette_set_show
-				add 	sp, 8
-			}
+			z_palette_set_show(i, respal->r, respal->g, respal->b);
 			respal++;
 		}
 		return 0;

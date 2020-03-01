@@ -5125,10 +5125,7 @@ loc_C6C7:
 		mov	_z_Palettes[7 * 3].r, 0Fh
 		mov	_z_Palettes[7 * 3].g, 0Fh
 		mov	_z_Palettes[7 * 3].b, 0Fh
-		push	ds
-		push	offset _z_Palettes
-		call	sub_D1D9
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		cmp	byte_14021, 1
 		jnz	short loc_C71C
 		push	ds
@@ -5402,10 +5399,7 @@ loc_C8F1:
 loc_C8F9:
 		mov	ax, [bp+arg_0]
 		mov	word_13507, ax
-		push	ds
-		push	offset _z_Palettes
-		call	sub_D1D9
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		pop	di
 		pop	si
 		leave
@@ -5932,7 +5926,7 @@ inregs		= REGS ptr -10h
 					;
 		push	ds
 		push	offset _z_Palettes
-		nopcall	sub_D1D9
+		nopcall	_z_palette_set_all_show
 		push	0
 		nopcall	_graph_accesspage_func
 		push	0
@@ -6057,59 +6051,8 @@ inregs		= REGS ptr -10h
 sub_D0E0	endp
 
 include th01/hardware/graph_page.asm
-include th01/hardware/color.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D1D9	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_D21A
-; ---------------------------------------------------------------------------
-
-loc_D1E1:
-		mov	ax, si
-		imul	ax, 3
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx+2]
-		cbw
-		push	ax
-		mov	ax, si
-		imul	ax, 3
-		mov	bx, word ptr [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx+1]
-		cbw
-		push	ax
-		mov	ax, si
-		imul	ax, 3
-		mov	bx, word ptr [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx]
-		cbw
-		push	ax
-		push	si
-		nopcall	_z_palette_set_show
-		add	sp, 8
-		inc	si
-
-loc_D21A:
-		cmp	si, COLOR_COUNT
-		jl	short loc_D1E1
-		pop	si
-		pop	bp
-		retf
-sub_D1D9	endp
-
-include th01/hardware/palette_set_show.asm
+	extern _z_palette_set_all_show:proc
+	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
 	extern _z_graph_clear_0:proc
 	extern _graph_copy_page_back_to_front:proc

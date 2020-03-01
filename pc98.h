@@ -55,6 +55,10 @@ typedef int8_t uint4_t;
 		RGBType& operator [](int col) {
 			return colors[col];
 		}
+
+		const RGBType& operator [](int col) const {
+			return colors[col];
+		}
 	};
 
 	typedef RGB<uint4_t, 16> RGB4;

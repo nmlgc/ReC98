@@ -4,14 +4,17 @@ extern Palette4 z_Palettes;
 
 // Sets the given hardware [col] to the given RGB value.
 #define UINT4 int
-void z_palette_show_single(uint4_t col, UINT4 r, UINT4 g, UINT4 b);
+void z_palette_show_single(UINT4 col, UINT4 r, UINT4 g, UINT4 b);
 #define z_palette_show_single_col(col, rgb) \
 	z_palette_show_single(col, rgb.c.r, rgb.c.g, rgb.c.b);
 #undef UINT4
 
 // Clamps #[r][g][b] to the 4-bit 0-15 range, then sets the given [col] in
 // both z_Palettes and the hardware palette to that value.
-void z_palette_set_show(uint4_t col, int r, int g, int b);
+void z_palette_set_show(int col, int r, int g, int b);
+
+// Calls z_palette_set_show() for all colors in [pal].
+void z_palette_set_all_show(const Palette4& pal);
 
 // Sets all hardware colors to #000, without touching z_Palettes.
 void z_palette_black(void);

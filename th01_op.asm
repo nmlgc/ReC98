@@ -114,8 +114,7 @@ loc_A1CE:
 loc_A1E5:
 		cmp	si, 50h	; 'P'
 		jl	short loc_A1CE
-		push	4
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 4
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -671,8 +670,7 @@ arg_0		= word ptr  6
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		push	0Fh
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 15
 		pop	cx
 		xor	di, di
 		jmp	short loc_A65C
@@ -2350,7 +2348,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 					;
 		push	ds
 		push	offset _z_Palettes
-		nopcall	sub_BA15
+		nopcall	_z_palette_set_all_show
 		push	0
 		nopcall	_graph_accesspage_func
 		push	0
@@ -2463,59 +2461,11 @@ inregs		= REGS ptr -10h
 sub_B91C	endp
 
 include th01/hardware/graph_page.asm
-include th01/hardware/color.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA15	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BA56
-; ---------------------------------------------------------------------------
-
-loc_BA1D:
-		mov	ax, si
-		imul	ax, 3
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx+2]
-		cbw
-		push	ax
-		mov	ax, si
-		imul	ax, 3
-		mov	bx, word ptr [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx+1]
-		cbw
-		push	ax
-		mov	ax, si
-		imul	ax, 3
-		mov	bx, word ptr [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx]
-		cbw
-		push	ax
-		push	si
-		nopcall	_z_palette_set_show
-		add	sp, 8
-		inc	si
-
-loc_BA56:
-		cmp	si, COLOR_COUNT
-		jl	short loc_BA1D
-		pop	si
-		pop	bp
-		retf
-sub_BA15	endp
-
-include th01/hardware/palette_set_show.asm
+	extern _grcg_setcolor_rmw:proc
+	extern _grcg_setcolor_tdw:proc
+	extern _grcg_off_func:proc
+	extern _z_palette_set_all_show:proc
+	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
 	extern _z_graph_clear_0:proc
 	extern _graph_copy_page_back_to_front:proc
@@ -2933,7 +2883,7 @@ op_09_TEXT	segment	byte public 'CODE' use16
 
 sub_D631	proc far
 
-var_38		= byte ptr -38h
+@@palette		= byte ptr -38h
 var_33		= byte ptr -33h
 var_8		= dword	ptr -8
 var_4		= word ptr -4
@@ -2948,7 +2898,7 @@ arg_2		= dword	ptr  8
 		pushd	[bp+arg_2]
 		call	@arc_file_load$qnxc
 		push	ss
-		lea	ax, [bp+var_38]
+		lea	ax, [bp+@@palette]
 		push	ax
 		push	6
 		call	@arc_file_get$qncui
@@ -2987,16 +2937,16 @@ loc_D677:
 
 loc_D6A7:
 		push	ss
-		lea	ax, [bp+var_38]
+		lea	ax, [bp+@@palette]
 		push	ax
-		push	30h ; '0'
+		push	size palette_t
 		call	@arc_file_get$qncui
 		cmp	word_129B8, 0
 		jz	short loc_D6C7
 		push	ss
-		lea	ax, [bp+var_38]
+		lea	ax, [bp+@@palette]
 		push	ax
-		call	sub_BA15
+		call	_z_palette_set_all_show
 		add	sp, 4
 
 loc_D6C7:
@@ -3362,17 +3312,9 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_D9F8:
-		pushd	12h
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_136D2
-		push	30h ; '0'
-		call	file_read
-		push	ds
-		push	offset unk_136D2
-		call	sub_BA15
-		add	sp, 4
+		call	file_seek pascal, large 12h, 0
+		call	file_read pascal, ds, offset palette_136D2, size palette_t
+		call	_z_palette_set_all_show c, offset palette_136D2, ds
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -3400,13 +3342,8 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_DA37:
-		pushd	12h
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_136D2
-		push	30h ; '0'
-		call	file_read
+		call	file_seek pascal, large 12h, 0
+		call	file_read pascal, ds, offset palette_136D2, size palette_t
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -3476,24 +3413,24 @@ loc_DAC0:
 
 loc_DAC4:
 		mov	ax, dx
-		imul	ax, 3
+		imul	ax, size rgb_t
 		les	bx, [bp+6]
 		add	bx, ax
 		add	bx, cx
 		mov	al, es:[bx]
 		mov	bx, dx
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, cx
-		mov	[bx+1442h], al
+		mov	byte ptr palette_136D2[bx], al
 		inc	cx
 
 loc_DADF:
-		cmp	cx, 3
+		cmp	cx, size rgb_t
 		jl	short loc_DAC4
 		inc	dx
 
 loc_DAE5:
-		cmp	dx, 10h
+		cmp	dx, COLOR_COUNT
 		jl	short loc_DAC0
 		pop	bp
 		retf
@@ -3702,8 +3639,7 @@ arg_0		= word ptr  6
 		mov	al, byte_129C9
 		cbw
 		dec	ax
-		push	ax
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, ax
 		pop	cx
 
 loc_DC66:
@@ -4912,7 +4848,7 @@ include th01/hardware/vram_planes[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-unk_136D2	db    ?	;
+palette_136D2	palette_t <?>
 		dd    ?
 		dd    ?
 		dd    ?
@@ -5197,20 +5133,6 @@ unk_136D2	db    ?	;
 		dd    ?
 		dd    ?
 		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		db    ?	;
-		db    ?	;
-		db    ?	;
 ; void (*font)(void)
 font		dd ?
 include libs/master.lib/pal[bss].asm

@@ -1092,12 +1092,9 @@ loc_1BA6C:
 		jnz	short loc_1BAFD
 		inc	_z_Palettes[15 * 3].r
 		inc	_z_Palettes[15 * 3].g
-		inc	byte_39BB9
-		inc	byte_39BBA
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		inc	palette_39B8C[15 * size rgb_t].r
+		inc	palette_39B8C[15 * size rgb_t].g
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 
 loc_1BAFD:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -1359,10 +1356,7 @@ loc_1BE24:
 		mov	byte_3A6CE, 1
 		mov	word_35B54, 0
 		mov	word_3A6CA, 0
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		mov	byte ptr word_39E14+1, 0
 		mov	word_3984E, 4
@@ -1595,10 +1589,7 @@ loc_1C02D:
 		mov	word_3A6CA, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		cmp	_rank, 0
 		jnz	short loc_1C097
@@ -1978,10 +1969,7 @@ loc_1C3EB:
 		mov	word_3A6CA, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		mov	ax, RES_Y
 		sub	ax, point_3982A.y
@@ -2320,10 +2308,7 @@ loc_1C741:
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		cmp	_rank, 0
 		jnz	short loc_1C7B1
@@ -3982,10 +3967,7 @@ loc_1D88A:
 		mov	word_39E0E, 0
 
 loc_1D8C1:
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -4776,19 +4758,16 @@ loc_1E0EB:
 		or	ax, ax
 		jle	short loc_1E114
 		dec	_z_Palettes[15 * 3][si]
-		dec	byte ptr [si+5219h]
+		dec	byte ptr palette_39B8C[15 * size rgb_t][si]
 
 loc_1E114:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jge	short loc_1E121
 		inc	_z_Palettes[15 * 3][di]
-		inc	byte ptr [di+5219h]
+		inc	byte ptr palette_39B8C[15 * size rgb_t][di]
 
 loc_1E121:
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 
 loc_1E12D:
 		les	bx, [bp+arg_8]
@@ -6721,9 +6700,7 @@ loc_1F0F8:
 		push	ds
 		push	offset point_3982A
 		call	sub_1588A
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
+		call	_z_palette_set_all_show stdcall, offset palette_39B8C, ds
 		add	sp, 1Ch
 		mov	byte_39E25, 0FFh
 		mov	al, 1
@@ -6799,8 +6776,7 @@ arg_4		= word ptr  0Ah
 		shl	dx, 4
 		add	ax, dx
 		mov	di, ax
-		push	0Ah
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 10
 		pop	cx
 		xor	si, si
 		jmp	short loc_1F1EA
@@ -11374,7 +11350,7 @@ arg_2		= word ptr  8
 		mov	si, ax
 		cmp	di, 2
 		jnz	short loc_218C1
-		push	0Ah
+		push	10
 		jmp	short loc_218C7
 ; ---------------------------------------------------------------------------
 
@@ -13161,9 +13137,7 @@ sub_22731	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_232A4
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
+		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		push	1300040h
 		push	2E00000h
 		push	200040h
@@ -14280,19 +14254,19 @@ loc_22FD7:
 
 loc_22FE8:
 		mov	al, _z_Palettes[5 * 3][si]
-		cmp	al, [si+51FBh]
+		cmp	al, byte ptr palette_39B8C[5 * size rgb_t][si]
 		jge	short loc_22FF6
 		inc	_z_Palettes[5 * 3][si]
 
 loc_22FF6:
 		mov	al, _z_Palettes[9 * 3][si]
-		cmp	al, [si+5207h]
+		cmp	al, byte ptr palette_39B8C[9 * size rgb_t][si]
 		jge	short loc_23004
 		inc	_z_Palettes[9 * 3][si]
 
 loc_23004:
 		mov	al, _z_Palettes[15 * 3][si]
-		cmp	al, [si+5219h]
+		cmp	al, byte ptr palette_39B8C[15 * size rgb_t][si]
 		jge	short loc_23012
 		inc	_z_Palettes[15 * 3][si]
 
@@ -14300,12 +14274,9 @@ loc_23012:
 		inc	si
 
 loc_23013:
-		cmp	si, 3
+		cmp	si, size rgb_t
 		jl	short loc_22FE8
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_23024:
 		push	1
@@ -14603,22 +14574,22 @@ loc_232AB:
 
 loc_232AF:
 		mov	bx, dx
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, cx
 		mov	al, _z_Palettes[bx]
 		mov	bx, dx
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, cx
-		mov	[bx+59EEh], al
+		mov	byte ptr palette_3A38E[bx], al
 		inc	cx
 
 loc_232C6:
-		cmp	cx, 3
+		cmp	cx, size rgb_t
 		jl	short loc_232AF
 		inc	dx
 
 loc_232CC:
-		cmp	dx, 10h
+		cmp	dx, COLOR_COUNT
 		jl	short loc_232AB
 		pop	bp
 		retf
@@ -14632,10 +14603,7 @@ sub_232A4	endp
 sub_232D3	proc far
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset unk_3A38E
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_3A38E, ds
 		pop	bp
 		retf
 sub_232D3	endp
@@ -14775,20 +14743,20 @@ loc_2333E:
 
 loc_23342:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+di+59EEh], al
+		imul	bx, size rgb_t
+		mov	byte ptr palette_3A38E[bx+di], al
 		inc	di
 
 loc_23355:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_23342
 		inc	si
 
 loc_2335B:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_2333E
 		xor	si, si
 		jmp	short loc_2336A
@@ -17324,25 +17292,25 @@ loc_24A9D:
 ; ---------------------------------------------------------------------------
 
 loc_24AB5:
-		mov	al, [si+59F4h]
+		mov	al, byte ptr palette_3A38E[2 * size rgb_t][si]
 		cmp	al, _z_Palettes[2 * 3][si]
 		jge	short loc_24AC3
 		dec	_z_Palettes[2 * 3][si]
 
 loc_24AC3:
-		mov	al, [si+5A00h]
+		mov	al, byte ptr palette_3A38E[6 * size rgb_t][si]
 		cmp	al, _z_Palettes[6 * 3][si]
 		jge	short loc_24AD1
 		dec	_z_Palettes[6 * 3][si]
 
 loc_24AD1:
-		mov	al, [si+5A06h]
+		mov	al, byte ptr palette_3A38E[8 * size rgb_t][si]
 		cmp	al, _z_Palettes[8 * 3][si]
 		jge	short loc_24ADF
 		dec	_z_Palettes[8 * 3][si]
 
 loc_24ADF:
-		mov	al, [si+5A0Fh]
+		mov	al, byte ptr palette_3A38E[11 * size rgb_t][si]
 		cmp	al, _z_Palettes[11 * 3][si]
 		jge	short loc_24AED
 		dec	_z_Palettes[11 * 3][si]
@@ -17351,12 +17319,9 @@ loc_24AED:
 		inc	si
 
 loc_24AEE:
-		cmp	si, 3
+		cmp	si, size rgb_t
 		jl	short loc_24AB5
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_24AFF:
 		mov	ax, word_3A6CA
@@ -17438,12 +17403,9 @@ loc_24BA3:
 		jnz	short loc_24BDA
 		inc	_z_Palettes[5 * 3].r
 		dec	_z_Palettes[5 * 3].b
-		inc	byte_39B9B
-		dec	byte_39B9D
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		inc	palette_39B8C[5 * size rgb_t].r
+		dec	palette_39B8C[5 * size rgb_t].b
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 
 loc_24BDA:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -17451,10 +17413,7 @@ loc_24BDA:
 		mov	byte_3A3BE, 4
 		mov	word_3A6CA, 0
 		mov	word_35D14, 0
-		push	ds
-		push	offset unk_39B8C
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
@@ -26035,8 +25994,7 @@ loc_29ADC:
 ; ---------------------------------------------------------------------------
 
 loc_29AE4:
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		pop	cx
 		call	IRand
 		mov	bx, 8
@@ -26170,8 +26128,7 @@ loc_29BE5:
 
 loc_29BE7:
 		add	ax, word_3AC5E
-		push	ax
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, ax
 		pop	cx
 		les	bx, _VRAM_PLANE_B
 		add	bx, word_3AC5C
@@ -26195,8 +26152,7 @@ loc_29C16:
 		jl	loc_29B87
 
 loc_29C1D:
-		push	0Ch
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 12
 		pop	cx
 		xor	di, di
 		jmp	loc_29CAC
@@ -26444,8 +26400,7 @@ loc_29E32:
 loc_29E46:
 		cmp	byte ptr [si+1445h], 0
 		jz	loc_29FD6
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		pop	cx
 		mov	bx, si
 		shl	bx, 3
@@ -26488,8 +26443,7 @@ loc_29EA2:
 		mov	ax, 0C0h ; '?'
 		sar	ax, cl
 		and	[bp+var_3], al
-		push	0Ch
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 12
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 6
@@ -26540,8 +26494,7 @@ loc_29F5B:
 ; ---------------------------------------------------------------------------
 
 loc_29F62:
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
@@ -26561,8 +26514,7 @@ loc_29F62:
 		and	[bp+var_3], al
 		mov	al, [si+1445h]
 		cbw
-		push	ax
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -27093,8 +27045,7 @@ loc_2A4C5:
 loc_2A4D9:
 		cmp	byte ptr [si+1465h], 0
 		jz	loc_2A68A
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		mov	bx, si
 		add	bx, bx
 		mov	bx, [bx+665Bh]
@@ -27140,8 +27091,7 @@ loc_2A4D9:
 		mov	ax, 0C0h ; '?'
 		sar	ax, cl
 		and	[bp+var_5], al
-		push	0Ch
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 12
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -27207,8 +27157,7 @@ loc_2A59F:
 ; ---------------------------------------------------------------------------
 
 loc_2A618:
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		mov	ax, 0A800h
@@ -27229,8 +27178,7 @@ loc_2A618:
 		and	[bp+var_5], al
 		mov	al, [si+1465h]
 		cbw
-		push	ax
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 8
@@ -28681,8 +28629,7 @@ loc_2B3E0:
 loc_2B3F4:
 		cmp	byte ptr [si+1483h], 0
 		jz	loc_2B6D7
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
@@ -28734,8 +28681,7 @@ loc_2B3F4:
 		and	[bp+var_3], 80h
 
 loc_2B4A2:
-		push	0Ch
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 12
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -28867,8 +28813,7 @@ loc_2B604:
 ; ---------------------------------------------------------------------------
 
 loc_2B60C:
-		push	0Ch
-		call	_grcg_setcolor_tdw
+		call	_grcg_setcolor_tdw stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -28903,8 +28848,7 @@ loc_2B60C:
 loc_2B671:
 		mov	al, [si+1483h]
 		cbw
-		push	ax
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -30844,14 +30788,14 @@ loc_2C9C6:
 ; ---------------------------------------------------------------------------
 
 loc_2C9D4:
-		mov	byte ptr [si+4015h], 0
+		mov	byte ptr palette_38988.colors[15 * size rgb_t][si], 0
 		inc	si
 
 loc_2C9DA:
-		cmp	si, 3
+		cmp	si, size rgb_t
 		jb	short loc_2C9D4
 		push	ds
-		push	offset unk_38988
+		push	offset palette_38988
 		push	ds
 		push	offset _z_Palettes
 		push	0
@@ -31112,10 +31056,7 @@ loc_2CC5F:
 		dec	_z_Palettes[6 * 3].b
 
 loc_2CC6B:
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		call	sub_232A4
 
 loc_2CC7C:
@@ -31239,10 +31180,7 @@ loc_2CD81:
 loc_2CD87:
 		cmp	si, 10h
 		jb	short loc_2CD59
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2CD98:
 		cmp	word_3A6CA, 0E6h
@@ -31475,9 +31413,7 @@ loc_2CF20:
 loc_2CF26:
 		cmp	di, 10h
 		jl	short loc_2CF11
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
+		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
 		mov	word_39854, 1
 		push	0
@@ -31566,11 +31502,11 @@ loc_2D00A:
 
 loc_2D011:
 		mov	bx, [bp+var_4]
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, [bp+var_6]
-		mov	al, [bx+3FE8h]
+		mov	al, byte ptr palette_38988[bx]
 		mov	bx, [bp+var_4]
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, [bp+var_6]
 		cmp	al, _z_Palettes[bx]
 		jle	short loc_2D031
@@ -31593,17 +31529,14 @@ loc_2D033:
 		inc	[bp+var_6]
 
 loc_2D050:
-		cmp	[bp+var_6], 3
+		cmp	[bp+var_6], size rgb_t
 		jl	short loc_2D011
 		inc	[bp+var_4]
 
 loc_2D059:
-		cmp	[bp+var_4], 10h
+		cmp	[bp+var_4], COLOR_COUNT
 		jl	short loc_2D00A
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2D06B:
 		inc	[bp+var_8]
@@ -31773,9 +31706,7 @@ loc_2D1CF:
 		dec	_z_Palettes[9 * 3].b
 
 loc_2D1DC:
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
+		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		push	0Ah
 		call	_frame_delay
 		add	sp, 6
@@ -35011,10 +34942,7 @@ loc_2F0AC:
 		dec	_z_Palettes[9 * 3].b
 
 loc_2F0B9:
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F0C5:
 		push	280060h
@@ -35258,10 +35186,7 @@ loc_2F2FC:
 		dec	_z_Palettes[9 * 3].b
 
 loc_2F309:
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F315:
 		push	280060h
@@ -35504,10 +35429,7 @@ loc_2F557:
 		dec	_z_Palettes[9 * 3].b
 
 loc_2F564:
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F570:
 		push	280060h
@@ -35929,10 +35851,7 @@ loc_2F9DA:
 loc_2F9E0:
 		cmp	si, 10h
 		jl	short loc_2F9AF
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		push	7
 		call	_mdrv2_se_play
 		pop	cx
@@ -36020,10 +35939,7 @@ loc_2FA86:
 loc_2FA8C:
 		cmp	si, 10h
 		jl	short loc_2FA77
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		push	ds
 		push	offset a0	; "\x1B)0"
 		call	_printf
@@ -36093,11 +36009,11 @@ loc_2FB1B:
 
 loc_2FB22:
 		mov	bx, [bp+var_2]
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, [bp+var_4]
-		mov	al, [bx+3FE8h]
+		mov	al, byte ptr palette_38988[bx]
 		mov	bx, [bp+var_2]
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, [bp+var_4]
 		cmp	al, _z_Palettes[bx]
 		jle	short loc_2FB42
@@ -36120,17 +36036,14 @@ loc_2FB44:
 		inc	[bp+var_4]
 
 loc_2FB61:
-		cmp	[bp+var_4], 3
+		cmp	[bp+var_4], size rgb_t
 		jl	short loc_2FB22
 		inc	[bp+var_2]
 
 loc_2FB6A:
-		cmp	[bp+var_2], 10h
+		cmp	[bp+var_2], COLOR_COUNT
 		jl	short loc_2FB1B
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		jmp	loc_2FC06
 ; ---------------------------------------------------------------------------
 
@@ -36191,10 +36104,7 @@ loc_2FBDD:
 loc_2FBE6:
 		cmp	[bp+var_2], 10h
 		jl	short loc_2FBA1
-		push	ds
-		push	offset _z_Palettes
-		call	sub_EB10
-		add	sp, 4
+		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 		cmp	_z_Palettes[7 * 3].r, 0
 		jz	short loc_2FC1C
 		cmp	[bp+var_6], 0DCh ; '?'
@@ -37883,8 +37793,7 @@ arg_4		= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
-		push	7
-		call	_grcg_setcolor_rmw
+		call	_grcg_setcolor_rmw stdcall, 7
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		push	[bp+arg_0]
