@@ -5625,7 +5625,7 @@ sub_1E79B	proc far
 		call	sub_232A4
 		mov	word_3984E, 0
 		mov	word_39880, 1
-		call	sub_EEF7
+		call	_z_palette_white_in
 		push	1300040h
 		push	2E00000h
 		push	300040h

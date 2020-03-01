@@ -19,6 +19,15 @@ void z_palette_black(void);
 // Sets all hardware colors to #FFF, without touching z_Palettes.
 void z_palette_white(void);
 
+// Fades all hardware colors from #000 or #FFF to their value in z_Palettes.
+void z_palette_black_in(void);
+void z_palette_white_in(void);
+
+// Fades all hardware colors from their value in z_Palettes to #000 or #FFF,
+// without modifiying z_Palettes;
+void z_palette_black_out(void);
+void z_palette_white_out(void);
+
 // Fades each hardware palette color from the given RGB value to its
 // respective value in z_Palettes, blocking [step_ms] milliseconds at each of
 // the 16 fade steps. If [keep] is nonzero for a specific color number, that

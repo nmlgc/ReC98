@@ -95,12 +95,156 @@ extern "C" {
 	call	near ptr graph_accesspage_func; \
 }	\
 _SP += stack_clear_size;
+#define FADEPAL_PUSH_COMP(pal, comp) \
+	db  	0x8B, 0xDE;	/* MOV BX, SI */ \
+	db  	0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */ \
+	lea 	ax, (pal + comp); \
+	db  	0x03, 0xD8; /* Turbo C++'s preferred opcode for ADD BX, AX */ \
+	mov 	al, ss:[bx]; \
+	cbw; \
+	push ax;
+#define Z_PALETTE_SHOW_SINGLE_FADEPAL(pal) __asm { \
+	FADEPAL_PUSH_COMP(pal, 2) \
+	FADEPAL_PUSH_COMP(pal, 1) \
+	FADEPAL_PUSH_COMP(pal, 0) \
+	db  	0x56; \
+	push	cs; \
+	call	near ptr z_palette_show_single; \
+	add 	sp, 8; \
+}
 /// -----------------------------------------------
 
 /// Pages
 /// -----
 extern page_t page_back;
 /// -----
+
+/// Palette fades
+/// -------------
+#define FADE_DELAY 10
+#define fade_loop(pal, per_comp) \
+	for(int i = 0; i < pal.range(); i++) { \
+		z_vsync_wait(); \
+		for(int col = 0; col < COLOR_COUNT; col++) { \
+			for(int comp = 0; comp < sizeof(RGB4); comp++) { \
+				per_comp; \
+			} \
+			/* TODO: Replace with the decompiled call \
+			 * z_palette_show_single_col(col, pal[col]); \
+			 * once that function is part of this translation unit */ \
+			Z_PALETTE_SHOW_SINGLE_FADEPAL(pal); \
+		} \
+		delay(FADE_DELAY); \
+	}
+
+void z_palette_black(void)
+{
+	for(int col = 0; col < COLOR_COUNT; col++) {
+		/* TODO: Replace with the decompiled call
+		 * z_palette_show_single(col, 0, 0, 0);
+		 * once that function is part of this translation unit */
+		__asm {
+			db  	0x66, 0x6A, 0x00;
+			push	0x00;
+			db  	0x56;
+			push	cs;
+			call	near ptr z_palette_show_single;
+			add 	sp, 8;
+		}
+	}
+}
+
+void z_palette_black_in(void)
+{
+	Palette4 fadepal;
+	memset(&fadepal, 0, sizeof(Palette4));
+	fade_loop(fadepal,
+		if(fadepal[col].v[comp] < z_Palettes[col].v[comp]) {
+			fadepal[col].v[comp]++;
+		}
+	);
+}
+
+void z_palette_black_out(void)
+{
+	Palette4 fadepal;
+	memcpy(&fadepal, &z_Palettes, sizeof(Palette4));
+
+	fade_loop(fadepal,
+		if(fadepal[col].v[comp] > fadepal[0].min()) {
+			fadepal[col].v[comp]--;
+		}
+	);
+}
+
+void z_palette_white(void)
+{
+	for(int col = 0; col < COLOR_COUNT; col++) {
+		/* TODO: Replace with the decompiled call
+		 * z_palette_show_single(col, RGB4::max(), RGB4::max(), RGB4::max());
+		 * once that function is part of this translation unit */
+		__asm {
+			db  	0x66, 0x68, 0x0F, 0x00, 0x0F, 0x00;
+			push	0x0F;
+			db  	0x56;
+			push	cs;
+			call	near ptr z_palette_show_single;
+			add 	sp, 8;
+		}
+	}
+}
+
+void z_palette_white_in(void)
+{
+	Palette4 fadepal;
+	memset(&fadepal, fadepal[0].max(), sizeof(Palette4));
+
+	fade_loop(fadepal,
+		if(fadepal[col].v[comp] > z_Palettes[col].v[comp]) {
+			fadepal[col].v[comp]--;
+		}
+	);
+}
+
+void z_palette_white_out(void)
+{
+	Palette4 fadepal;
+	memcpy(&fadepal, &z_Palettes, sizeof(Palette4));
+
+	fade_loop(fadepal,
+		if(fadepal[col].v[comp] < fadepal[0].max()) {
+			fadepal[col].v[comp]++;
+		}
+	);
+}
+
+void z_palette_show(void)
+{
+	for(int i = 0; i < COLOR_COUNT; i++) {
+		/* TODO: Replace with the decompiled call
+		 * z_palette_show_single_col(i, z_Palettes[i]);
+		 * once that function is part of this translation unit */
+		__asm {
+#define push_comp(comp) \
+	db  	0x8B, 0xDE;	/* MOV BX, SI */ \
+	db  	0x6B, 0xDB, 0x03; /* IMUL BX, 3, which Turbo C++ can't into? */ \
+	mov al, byte ptr (z_Palettes + comp)[bx]; \
+	cbw; \
+	push ax;
+			push_comp(2);
+			push_comp(1);
+			push_comp(0);
+			// Spelling out PUSH SI causes Turbo C++ to interpret SI as
+			// reserved, and it then moves [i] to DI rather than SI
+			db  	0x56;
+			push	cs;
+			call	near ptr z_palette_show_single;
+			add 	sp, 8;
+#undef push_comp
+		}
+	}
+}
+/// -------------
 
 /// Points
 /// ------
