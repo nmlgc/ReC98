@@ -1,3 +1,15 @@
+/// BIOS
+/// ----
+// Enables the graphics layer in 640x400 mode, applies z_Palettes, and clears
+// page 0.
+void z_graph_init(void);
+// Resets all hardware colors to black and clears page 0.
+void z_graph_exit(void);
+
+void z_graph_show(void);
+void z_graph_hide(void);
+/// ----
+
 /// Pages
 /// -----
 void graph_showpage_func(page_t page);

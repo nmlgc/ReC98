@@ -82,6 +82,82 @@ extern page_t page_back;
 	clip_max(top, bottom, (RES_Y - 1));
 /// --------
 
+/// BIOS
+/// ----
+inline void graph_access_and_show_0()
+{
+	graph_accesspage_func(0);
+	graph_showpage_func(0);
+}
+
+inline void cgrom_code_and_grcg_off()
+{
+	outportb(0x68, 0xA); // CG ROM code access
+	grcg_off();
+}
+
+inline void z_graph_400line()
+{
+	REGS regs;
+
+	z_graph_hide();
+
+	// 640x400
+	regs.h.ah = 0x42;
+	regs.h.ch = 0xC0;
+	int86(0x18, &regs, &regs);
+
+	// 16-color, analog mode
+	outportb(0x6A, 1);
+}
+
+inline void z_graph_access_and_show_0()
+{
+	graph_access_and_show_0();
+	cgrom_code_and_grcg_off();
+	z_graph_show();
+}
+
+void z_graph_init()
+{
+	z_graph_400line();
+	z_palette_set_all_show(z_Palettes);
+	graph_access_and_show_0();
+	z_graph_clear_0();
+	cgrom_code_and_grcg_off();
+	z_graph_show();
+}
+
+void graph_400line_access_and_show_0()
+{
+	z_graph_400line();
+	z_graph_access_and_show_0();
+}
+
+void z_graph_exit()
+{
+	z_palette_black();
+	z_graph_clear_0();
+	graph_access_and_show_0();
+	z_graph_show();
+	cgrom_code_and_grcg_off();
+}
+
+void z_graph_show()
+{
+	REGS regs;
+	regs.h.ah = 0x40;
+	int86(0x18, &regs, &regs);
+}
+
+void z_graph_hide()
+{
+	REGS regs;
+	regs.h.ah = 0x41;
+	int86(0x18, &regs, &regs);
+}
+/// ----
+
 /// Page flipping
 /// -------------
 void graph_showpage_func(page_t page)

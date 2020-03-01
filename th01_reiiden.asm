@@ -3365,7 +3365,7 @@ loc_D118:
 		mov	[bp+var_4], 0
 		cmp	_mode_test, 1
 		jnz	loc_D317
-		call	sub_EA17
+		call	_z_graph_hide
 		push	ds
 		push	offset format	; "\x1B*"
 		call	_printf
@@ -3579,7 +3579,7 @@ sub_D323	proc far
 		mov	bp, sp
 		cmp	_mode_test, 1
 		jnz	short loc_D33E
-		call	sub_E9FC
+		call	_z_graph_show
 		push	ds
 		push	offset format	; "\x1B*"
 		call	_printf
@@ -4158,7 +4158,7 @@ loc_D795:
 		mov	word ptr dword_36C1A+2,	dx
 		mov	word ptr dword_36C1A, ax
 		call	sub_BC87
-		call	sub_E92B
+		call	_z_graph_init
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -5403,7 +5403,7 @@ game_exit_inner	proc far
 		call	_vsync_exit
 		call	_z_text_clear
 		call	_z_palette_black_out
-		call	sub_E9CB
+		call	_z_graph_exit
 		call	egc_start
 		pushd	[_int06_old] ; isr
 		push	6		; interruptno
@@ -5480,6 +5480,9 @@ arglist		= byte ptr  0Ah
 		call	_z_text_print
 		push	1	; status
 		call	_exit
+		add	sp, 12h
+		leave
+		retf
 game_exit_print_error	endp
 
 main_05_TEXT	ends
@@ -5488,169 +5491,10 @@ main_05_TEXT	ends
 
 ; Segment type:	Pure code
 main_06_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_06_TEXT
-		;org 6
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E926	proc far
-		add	sp, 12h
-		leave
-		retf
-sub_E926	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E92B	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		nopcall	sub_EA17
-		mov	byte ptr [bp+inregs+1],	42h ; 'B'
-		mov	byte ptr [bp+inregs+5],	0C0h ; 'À'
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		mov	dx, 6Ah	; 'j'
-		mov	al, 1
-		out	dx, al		; PC-98	GDC (6a):
-					;
-		push	ds
-		push	offset _z_Palettes
-		nopcall	_z_palette_set_all_show
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 12h
-		nopcall	_z_graph_clear_0
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		nopcall	sub_E9FC
-		leave
-		retf
-sub_E92B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E982	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		nopcall	sub_EA17
-		mov	byte ptr [bp+inregs+1],	42h ; 'B'
-		mov	byte ptr [bp+inregs+5],	0C0h ; 'À'
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		mov	dx, 6Ah	; 'j'
-		mov	al, 1
-		out	dx, al		; PC-98	GDC (6a):
-					;
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 0Eh
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		nopcall	sub_E9FC
-		leave
-		retf
-sub_E982	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E9CB	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_z_palette_black
-		nopcall	_z_graph_clear_0
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 4
-		nopcall	sub_E9FC
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		pop	bp
-		retf
-sub_E9CB	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E9FC	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	40h
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_E9FC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA17	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	41h ; 'A'
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_EA17	endp
-
+	extern _z_graph_init:proc
+	extern _z_graph_exit:proc
+	extern _z_graph_show:proc
+	extern _z_graph_hide:proc
 	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc

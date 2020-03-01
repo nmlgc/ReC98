@@ -2239,7 +2239,7 @@ game_exit_inner	proc far
 		call	_vsync_exit
 		call	_z_text_clear
 		call	_z_palette_black_out
-		call	sub_B8D0
+		call	_z_graph_exit
 		call	egc_start
 		pushd	[dword ptr _int06_old] ; isr
 		push	6		; interruptno
@@ -2329,137 +2329,7 @@ op_05_TEXT	ends
 
 ; Segment type:	Pure code
 op_06_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_06_TEXT
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		enter	10h, 0
-		nopcall	sub_B91C
-		mov	byte ptr [bp-0Fh], 42h ; 'B'
-		mov	byte ptr [bp-0Bh], 0C0h
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	ss
-		push	ax
-		push	18h
-		call	_int86
-		mov	dx, 6Ah	; 'j'
-		mov	al, 1
-		out	dx, al		; PC-98	GDC (6a):
-					;
-		push	ds
-		push	offset _z_Palettes
-		nopcall	_z_palette_set_all_show
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 12h
-		nopcall	_z_graph_clear_0
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		nopcall	sub_B901
-		leave
-		retf
-; ---------------------------------------------------------------------------
-		enter	10h, 0
-		nopcall	sub_B91C
-		mov	byte ptr [bp-0Fh], 42h ; 'B'
-		mov	byte ptr [bp-0Bh], 0C0h
-		push	ss
-		lea	ax, [bp-10h]
-		push	ax
-		push	ss
-		push	ax
-		push	18h
-		call	_int86
-		mov	dx, 6Ah	; 'j'
-		mov	al, 1
-		out	dx, al		; PC-98	GDC (6a):
-					;
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 0Eh
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		nopcall	sub_B901
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B8D0	proc far
-		push	bp
-		mov	bp, sp
-		nopcall	_z_palette_black
-		nopcall	_z_graph_clear_0
-		push	0
-		nopcall	_graph_accesspage_func
-		push	0
-		nopcall	_graph_showpage_func
-		add	sp, 4
-		nopcall	sub_B901
-		mov	dx, 68h	; 'h'
-		mov	al, 0Ah
-		out	dx, al
-		GRCG_OFF_CLOBBERING dx
-		pop	bp
-		retf
-sub_B8D0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B901	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	40h
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_B901	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B91C	proc far
-
-inregs		= REGS ptr -10h
-
-		enter	10h, 0
-		mov	byte ptr [bp+inregs+1],	41h ; 'A'
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; outregs
-		push	ss
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_B91C	endp
-
+	extern _z_graph_exit:proc
 	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc
