@@ -45,14 +45,12 @@ include th01/th01.inc
 	extern _fputc:proc
 	extern _fputs:proc
 	extern _fread:proc
-	extern _getvect:proc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _memcmp:proc
 	extern _open:proc
 	extern _printf:proc
 	extern _segread:proc
-	extern _setvect:proc
 	extern _strcmp:proc
 	extern _toupper:proc
 	extern _vsprintf:proc
@@ -879,7 +877,7 @@ sub_A7B5	proc far
 		add	sp, 0Ch
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	game_switch_binary
+		call	_game_switch_binary
 		mov	al, _mode
 		cbw
 		cmp	ax, 2
@@ -978,7 +976,7 @@ sub_A8AD	proc far
 loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	game_switch_binary
+		call	_game_switch_binary
 		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.mode], 0
@@ -1909,7 +1907,7 @@ loc_B06F:
 
 loc_B0D6:
 		call	_mdrv2_check_board
-		call	game_init
+		call	_game_init
 		call	sub_A240
 		mov	al, byte ptr word_12320+1
 		cbw
@@ -2066,7 +2064,7 @@ loc_B21A:
 		call	_graph_accesspage_func
 		pop	cx
 		call	_z_graph_clear
-		call	game_exit
+		call	_game_exit
 		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset format	; "おつかれさまでした！！\n"
@@ -2112,216 +2110,9 @@ op_04_TEXT	ends
 
 ; Segment type:	Pure code
 op_05_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_05_TEXT
-		;org 3
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; void __interrupt _int06_nop()
-_int06_nop	proc far
-		push	eax
-		push	ebx
-		push	ecx
-		push	edx
-		push	es
-		push	ds
-		push	esi
-		push	edi
-		push	bp
-		mov	bp, seg	_DATA
-		mov	ds, bp
-		mov	bp, sp
-		pop	bp
-		pop	edi
-		pop	esi
-		pop	ds
-		pop	es
-		pop	edx
-		pop	ecx
-		pop	ebx
-		pop	eax
-		iret
-_int06_nop	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_INIT
-game_init	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 0
-		jnz	short @@ret
-		mov	_game_initialized, 1
-		push	6		; interruptno
-		call	_getvect
-		pop	cx
-		mov	word ptr _int06_old+2, dx
-		mov	word ptr _int06_old+0, ax
-		push	seg _int06_game_exit
-		push	offset _int06_game_exit	; isr
-		push	6		; interruptno
-		call	_setvect
-		add	sp, 6
-		call	_vsync_init
-		call	_z_text_init
-		call	egc_start
-		call	graph_start
-		call	respal_create
-		call	_z_respal_set
-		call	vram_planes_set
-
-@@ret:
-		pop	bp
-		retf
-game_init	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_EXIT
-game_exit	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 1
-		jnz	short @@ret
-		mov	_game_initialized, 0
-		nopcall	game_exit_inner
-		call	respal_free
-
-@@ret:
-		pop	bp
-		retf
-game_exit	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_SWITCH_BINARY
-game_switch_binary	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 1
-		jnz	short @@ret
-		nopcall	game_exit_inner
-		call	_z_text_25line
-		push	0
-		call	_z_text_setcursor
-		pop	cx
-		call	_z_text_clear
-		call	_z_text_show
-		mov	_game_initialized, 0
-
-@@ret:
-		pop	bp
-		retf
-game_switch_binary	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-game_exit_inner	proc far
-		push	bp
-		mov	bp, sp
-		mov	_game_initialized, 0
-		push	seg _int06_nop
-		push	offset _int06_nop	; isr
-		push	6		; interruptno
-		call	_setvect
-		call	_vsync_exit
-		call	_z_text_clear
-		call	_z_palette_black_out
-		call	_z_graph_exit
-		call	egc_start
-		pushd	[dword ptr _int06_old] ; isr
-		push	6		; interruptno
-		call	_setvect
-		add	sp, 0Ch
-		pop	bp
-		retf
-game_exit_inner	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn bp-based	frame
-
-; void __interrupt _int06_game_exit()
-_int06_game_exit	proc near
-		push	eax
-		push	ebx
-		push	ecx
-		push	edx
-		push	es
-		push	ds
-		push	esi
-		push	edi
-		push	bp
-		mov	bp, seg	_DATA
-		mov	ds, bp
-		mov	bp, sp
-		call	game_exit
-		push	0		; status
-		call	_exit
-; ---------------------------------------------------------------------------
-		pop	cx
-		pop	bp
-		pop	edi
-		pop	esi
-		pop	ds
-		pop	es
-		pop	edx
-		pop	ecx
-		pop	ebx
-		pop	eax
-		iret
-_int06_game_exit	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn bp-based	frame
-
-game_exit_print_error	proc near
-
-@@buffer		= byte ptr -104h
-var_4		= word ptr -4
-var_2		= word ptr -2
-_format		= dword	ptr  6
-arglist		= byte ptr  0Ah
-
-		enter	104h, 0
-		lea	ax, [bp+arglist]
-		mov	[bp+var_2], ss
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax		; arglist
-		pushd	[bp+_format] ; format
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax		; buffer
-		call	_vsprintf
-		call	game_exit
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax
-		call	_z_text_print
-		push	1		; status
-		call	_exit
-; ---------------------------------------------------------------------------
-		add	sp, 12h
-		leave
-		retf
-game_exit_print_error	endp
-
+	extern _game_init:proc
+	extern _game_exit:proc
+	extern _game_switch_binary:proc
 op_05_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -4510,9 +4301,7 @@ aCon		db 'CON',0
 format		db 'おつかれさまでした！！',0Ah,0
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
-public _game_initialized
-_game_initialized	db 0
-		db 0
+include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
@@ -4696,7 +4485,7 @@ word_13627	dw ?
 		dd    ?
 word_13665	dw ?
 		db ?
-_int06_old	dd ?
+include th01/core/initexit[bss].asm
 include th01/hardware/graph[bss].asm
 include th01/hardware/vram_planes[bss].asm
 		dd    ?

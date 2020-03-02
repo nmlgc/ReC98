@@ -1,6 +1,22 @@
 /// Current palette
 /// ---------------
-extern Palette4 z_Palettes;
+#if defined(COLOR_COUNT) && defined(__cplusplus)
+	extern Palette4 z_Palettes;
+
+	// Calls z_palette_set_show() for all colors in [pal].
+	void z_palette_set_all_show(const Palette4& pal);
+
+	// Fades each hardware palette color from the given RGB value to its
+	// respective value in z_Palettes, blocking [step_ms] milliseconds at each of
+	// the 16 fade steps. If [keep] is nonzero for a specific color number, that
+	// color is excluded from the fade calculation and will stay at its z_Palettes
+	// value throughout the function.
+	void z_palette_fade_from(
+		uint4_t from_r, uint4_t from_g, uint4_t from_b,
+		int keep[COLOR_COUNT],
+		unsigned int step_ms
+	);
+#endif
 
 // Sets the given hardware [col] to the given RGB value.
 #define UINT4 int
@@ -12,9 +28,6 @@ void z_palette_show_single(UINT4 col, UINT4 r, UINT4 g, UINT4 b);
 // Clamps #[r][g][b] to the 4-bit 0-15 range, then sets the given [col] in
 // both z_Palettes and the hardware palette to that value.
 void z_palette_set_show(int col, int r, int g, int b);
-
-// Calls z_palette_set_show() for all colors in [pal].
-void z_palette_set_all_show(const Palette4& pal);
 
 // Sets all hardware colors to #000, without touching z_Palettes.
 void z_palette_black(void);
@@ -30,17 +43,6 @@ void z_palette_white_in(void);
 // without modifiying z_Palettes;
 void z_palette_black_out(void);
 void z_palette_white_out(void);
-
-// Fades each hardware palette color from the given RGB value to its
-// respective value in z_Palettes, blocking [step_ms] milliseconds at each of
-// the 16 fade steps. If [keep] is nonzero for a specific color number, that
-// color is excluded from the fade calculation and will stay at its z_Palettes
-// value throughout the function.
-void z_palette_fade_from(
-	uint4_t from_r, uint4_t from_g, uint4_t from_b,
-	int keep[COLOR_COUNT],
-	unsigned int step_ms
-);
 /// ---------------
 
 /// Resident palette

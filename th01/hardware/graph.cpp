@@ -8,7 +8,7 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/palette.hpp"
+#include "th01/hardware/palette.h"
 
 #undef grcg_off
 #define grcg_off() outportb(0x7C, 0);

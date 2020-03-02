@@ -52,7 +52,6 @@ include th01/th01.inc
 	extern _fclose:proc
 	extern _filelength:proc
 	extern _fopen:proc
-	extern _getvect:proc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _kbhit:proc
@@ -62,7 +61,6 @@ include th01/th01.inc
 	extern _puts:proc
 	extern _scanf:proc
 	extern _segread:proc
-	extern _setvect:proc
 	extern _strcmp:proc
 	extern _strcpy:proc
 	extern _toupper:proc
@@ -2905,7 +2903,7 @@ loc_CD70:
 		jnz	short loc_CDA2
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
-		call	game_switch_binary
+		call	_game_switch_binary
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
@@ -3951,7 +3949,7 @@ loc_D583:
 		mov	word_34A8A, ax
 		mov	eax, _rand
 		mov	random_seed, eax
-		call	game_init
+		call	_game_init
 		call	key_start
 		push	3F003Fh
 		call	__control87
@@ -4815,7 +4813,7 @@ loc_DE47:
 		push	78h ; 'x'
 		call	_frame_delay
 		pop	cx
-		call	game_switch_binary
+		call	_game_switch_binary
 		pushd	0
 		push	ds
 		push	offset aFuuin	; "fuuin"
@@ -4917,7 +4915,7 @@ loc_DF52:
 		les	bx, _resident
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
-		call	game_switch_binary
+		call	_game_switch_binary
 		pushd	0
 		push	ds
 		push	offset aReiiden	; "reiiden"
@@ -5182,7 +5180,7 @@ loc_E2A8:
 loc_E2CB:
 		call	sub_D487
 		call	sub_D4DD
-		call	game_switch_binary
+		call	_game_switch_binary
 		call	key_end
 		call	@arc_close$qv
 		pushd	0
@@ -5276,215 +5274,8 @@ main_04_TEXT	ends
 
 ; Segment type:	Pure code
 main_05_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_05_TEXT
-		;org 0Eh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; void __interrupt _int06_nop()
-_int06_nop	proc far
-		push	eax
-		push	ebx
-		push	ecx
-		push	edx
-		push	es
-		push	ds
-		push	esi
-		push	edi
-		push	bp
-		mov	bp, seg	_DATA
-		mov	ds, bp
-		mov	bp, sp
-		pop	bp
-		pop	edi
-		pop	esi
-		pop	ds
-		pop	es
-		pop	edx
-		pop	ecx
-		pop	ebx
-		pop	eax
-		iret
-_int06_nop	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_INIT
-game_init	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 0
-		jnz	short loc_E835
-		mov	_game_initialized, 1
-		push	6		; interruptno
-		call	_getvect
-		pop	cx
-		mov	word ptr _int06_old+2, dx
-		mov	word ptr _int06_old, ax
-		push	seg _int06_game_exit
-		push	offset _int06_game_exit	; isr
-		push	6		; interruptno
-		call	_setvect
-		add	sp, 6
-		call	_vsync_init
-		call	_z_text_init
-		call	egc_start
-		call	graph_start
-		call	respal_create
-		call	_z_respal_set
-		call	vram_planes_set
-
-loc_E835:
-		pop	bp
-		retf
-game_init	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_EXIT
-game_exit	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 1
-		jnz	short @@ret
-		mov	_game_initialized, 0
-		nopcall	game_exit_inner
-		call	respal_free
-
-@@ret:
-		pop	bp
-		retf
-game_exit	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GAME_SWITCH_BINARY
-game_switch_binary	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_game_initialized, 1
-		jnz	short @@ret
-		nopcall	game_exit_inner
-		call	_z_text_25line
-		push	0
-		call	_z_text_setcursor
-		pop	cx
-		call	_z_text_clear
-		call	_z_text_show
-		mov	_game_initialized, 0
-
-@@ret:
-		pop	bp
-		retf
-game_switch_binary	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-game_exit_inner	proc far
-		push	bp
-		mov	bp, sp
-		mov	_game_initialized, 0
-		push	seg _int06_nop
-		push	offset _int06_nop	; isr
-		push	6		; interruptno
-		call	_setvect
-		call	_vsync_exit
-		call	_z_text_clear
-		call	_z_palette_black_out
-		call	_z_graph_exit
-		call	egc_start
-		pushd	[_int06_old] ; isr
-		push	6		; interruptno
-		call	_setvect
-		add	sp, 0Ch
-		pop	bp
-		retf
-game_exit_inner	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn bp-based	frame
-
-; void __interrupt _int06_game_exit()
-_int06_game_exit	proc far
-		push	eax
-		push	ebx
-		push	ecx
-		push	edx
-		push	es
-		push	ds
-		push	esi
-		push	edi
-		push	bp
-		mov	bp, seg	_DATA
-		mov	ds, bp
-		mov	bp, sp
-		call	game_exit
-		push	0		; status
-		call	_exit
-; ---------------------------------------------------------------------------
-		pop	cx
-		pop	bp
-		pop	edi
-		pop	esi
-		pop	ds
-		pop	es
-		pop	edx
-		pop	ecx
-		pop	ebx
-		pop	eax
-		iret
-_int06_game_exit	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn bp-based	frame
-
-game_exit_print_error	proc near
-
-@@buffer		= byte ptr -104h
-var_4		= word ptr -4
-var_2		= word ptr -2
-_format		= dword	ptr  6
-arglist		= byte ptr  0Ah
-
-		enter	104h, 0
-		lea	ax, [bp+arglist]
-		mov	[bp+var_2], ss
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax		; arglist
-		pushd	[bp+_format] ; format
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax		; buffer
-		call	_vsprintf
-		call	game_exit
-		push	ss
-		lea	ax, [bp+@@buffer]
-		push	ax
-		call	_z_text_print
-		push	1	; status
-		call	_exit
-		add	sp, 12h
-		leave
-		retf
-game_exit_print_error	endp
-
+	extern _game_init:proc
+	extern _game_switch_binary:proc
 main_05_TEXT	ends
 
 ; ===========================================================================
@@ -25606,9 +25397,7 @@ aOp		db 'op',0
 		db 0
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
-public _game_initialized
-_game_initialized	db 0
-		db 0
+include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
@@ -28815,8 +28604,7 @@ include th01/hardware/vsync[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-; void (__interrupt far *int06_old)()
-_int06_old	dd ?
+include th01/core/initexit[bss].asm
 include th01/hardware/graph[bss].asm
 include th01/hardware/vram_planes[bss].asm
 		dd    ?
