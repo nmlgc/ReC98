@@ -5,6 +5,7 @@
  */
 
 #include "th01/th01.h"
+#include "th01/hardware/ztext.h"
 
 #include <mbctype.h>
 #include <mbstring.h>

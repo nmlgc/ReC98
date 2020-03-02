@@ -4,4 +4,4 @@
  */
 
 #include "th01/hardware/vsyncclr.c"
-#include "th01/ztext.c"
+#include "th01/hardware/ztext.c"

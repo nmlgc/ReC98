@@ -4509,7 +4509,7 @@ aCon		db 'CON',0
 ; char format[]
 format		db 'Ç®Ç¬Ç©ÇÍÇ≥Ç‹Ç≈ÇµÇΩÅIÅI',0Ah,0
 include th01/hardware/vsync[data].asm
-include th01/ztext[data].asm
+include th01/hardware/ztext[data].asm
 public _game_initialized
 _game_initialized	db 0
 		db 0

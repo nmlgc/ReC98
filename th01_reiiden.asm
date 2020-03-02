@@ -25605,7 +25605,7 @@ aTn		db '’n',0
 aOp		db 'op',0
 		db 0
 include th01/hardware/vsync[data].asm
-include th01/ztext[data].asm
+include th01/hardware/ztext[data].asm
 public _game_initialized
 _game_initialized	db 0
 		db 0
