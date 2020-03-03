@@ -34,6 +34,10 @@ typedef bool page_t;
 
 	template <class RGBType> struct Palette {
 		RGBType colors[COLOR_COUNT];
+
+		RGBType& operator [](int col) {
+			return colors[col];
+		}
 	};
 
 	// The 16-color mode supports 4 bits per RGB component, for a total of

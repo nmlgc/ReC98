@@ -559,18 +559,18 @@ void z_palette_fade_from(
 			fadepal[i].c.g = from_g;
 			fadepal[i].c.b = from_b;
 		} else {
-			fadepal[i].c.r = z_Palettes.colors[i].c.r;
-			fadepal[i].c.g = z_Palettes.colors[i].c.g;
-			fadepal[i].c.b = z_Palettes.colors[i].c.b;
+			fadepal[i].c.r = z_Palettes[i].c.r;
+			fadepal[i].c.g = z_Palettes[i].c.g;
+			fadepal[i].c.b = z_Palettes[i].c.b;
 		}
 	}
 	for(i = 0; i < 16; i++) {
 		z_vsync_wait();
 		for(col = 0; col < COLOR_COUNT; col++) {
 			for(comp = 0; comp < sizeof(RGB4); comp++) {
-				if(fadepal[col].v[comp] != z_Palettes.colors[col].v[comp]) {
+				if(fadepal[col].v[comp] != z_Palettes[col].v[comp]) {
 					fadepal[col].v[comp] +=
-						(fadepal[col].v[comp] < z_Palettes.colors[col].v[comp])
+						(fadepal[col].v[comp] < z_Palettes[col].v[comp])
 						?  1
 						: -1;
 				}
@@ -717,9 +717,9 @@ int z_respal_set(void)
 	if(respal_seg) {
 		grb_t *respal = respal_seg->pal;
 		for(i = 0; i < COLOR_COUNT; i++) {
-			respal->g = z_Palettes.colors[i].c.g;
-			respal->r = z_Palettes.colors[i].c.r;
-			respal->b = z_Palettes.colors[i].c.b;
+			respal->g = z_Palettes[i].c.g;
+			respal->r = z_Palettes[i].c.r;
+			respal->b = z_Palettes[i].c.b;
 			respal++;
 		}
 		return 0;
