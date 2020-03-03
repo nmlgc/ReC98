@@ -31549,42 +31549,14 @@ loc_2D06B:
 loc_2D079:
 		push	0
 		call	sub_11738
-		push	0
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		push	1
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	1
-		call	sub_1117C
-		push	2
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	2
-		call	sub_1117C
-		push	3
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	3
-		call	sub_1117C
-		push	4
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	4
-		call	sub_1117C
-		push	5
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	5
-		call	sub_1117C
+		call	_grz_load_single stdcall, 0, offset aBoss8_grz, ds, 0 ; "boss8.grz"
+		call	_grz_load_single stdcall, 1, offset aBoss8_grz, ds, 1 ; "boss8.grz"
+		call	_grz_load_single stdcall, 2, offset aBoss8_grz, ds, 2 ; "boss8.grz"
+		call	_grz_load_single stdcall, 3, offset aBoss8_grz, ds, 3 ; "boss8.grz"
+		call	_grz_load_single stdcall, 4, offset aBoss8_grz, ds, 4 ; "boss8.grz"
+		call	_grz_load_single stdcall, 5, offset aBoss8_grz, ds, 5 ; "boss8.grz"
 		add	sp, 32h
-		push	6
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	6
-		call	sub_1117C
+		call	_grz_load_single stdcall, 6, offset aBoss8_grz, ds, 6 ; "boss8.grz"
 		push	28h ; '('
 		call	_frame_delay
 		add	sp, 0Ah
@@ -31777,8 +31749,7 @@ sub_2D241	proc far
 ; ---------------------------------------------------------------------------
 
 loc_2D261:
-		push	si
-		call	sub_110ED
+		call	_grx_free stdcall, si
 		pop	cx
 		inc	si
 
@@ -31974,20 +31945,16 @@ sub_2D343	endp
 
 sub_2D412	proc far
 
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		push	1
-		call	_graph_accesspage_func
-		push	si
-		call	sub_10CDD
-		push	0
-		call	_graph_accesspage_func
-		push	si
-		call	sub_10CDD
+		mov	si, [bp+@@slot]
+		call	_graph_accesspage_func stdcall, 1
+		call	_grx_put stdcall, si
+		call	_graph_accesspage_func stdcall, 0
+		call	_grx_put stdcall, si
 		add	sp, 8
 		pop	si
 		pop	bp
@@ -33986,8 +33953,7 @@ sub_2E705	proc far
 		jl	loc_2E7C2
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2E728
-		push	0
-		call	sub_2D412
+		call	sub_2D412 stdcall, 0
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 4
@@ -33997,8 +33963,7 @@ loc_2E728:
 		jl	loc_2E7C2
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_2E73F
-		push	1
-		call	sub_2D412
+		call	sub_2D412 stdcall, 1
 		pop	cx
 
 loc_2E73F:
@@ -34006,8 +33971,7 @@ loc_2E73F:
 		jl	short loc_2E7C2
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2E754
-		push	2
-		call	sub_2D412
+		call	sub_2D412 stdcall, 2
 		pop	cx
 
 loc_2E754:
@@ -34015,8 +33979,7 @@ loc_2E754:
 		jl	short loc_2E7C2
 		cmp	word_3A6CA, 78h	; 'x'
 		jnz	short loc_2E769
-		push	3
-		call	sub_2D412
+		call	sub_2D412 stdcall, 3
 		pop	cx
 
 loc_2E769:
@@ -34024,8 +33987,7 @@ loc_2E769:
 		jl	short loc_2E7C2
 		cmp	word_3A6CA, 8Ch
 		jnz	short loc_2E780
-		push	4
-		call	sub_2D412
+		call	sub_2D412 stdcall, 4
 		pop	cx
 
 loc_2E780:
@@ -34033,8 +33995,7 @@ loc_2E780:
 		jl	short loc_2E7C2
 		cmp	word_3A6CA, 0A0h ; '?'
 		jnz	short loc_2E797
-		push	5
-		call	sub_2D412
+		call	sub_2D412 stdcall, 5
 		pop	cx
 
 loc_2E797:
@@ -34042,8 +34003,7 @@ loc_2E797:
 		jl	short loc_2E7C2
 		cmp	word_3A6CA, 0AAh ; '?'
 		jnz	short loc_2E7AE
-		push	6
-		call	sub_2D412
+		call	sub_2D412 stdcall, 6
 		pop	cx
 
 loc_2E7AE:
@@ -35672,129 +35632,74 @@ loc_2F766:
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		push	7
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
-		push	0
-		call	sub_10CDD
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 7 ; "boss8.grz"
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	8
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 8 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	9
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 9 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Ah
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 10 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Bh
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 11 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Ch
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 12 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Dh
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 13 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Eh
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 14 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		push	0Fh
-		push	ds
-		push	offset aBoss8_grz ; "boss8.grz"
-		push	0
-		call	sub_1117C
-		add	sp, 8
+		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 15 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		push	0
-		call	sub_10CDD
+		call	_grx_put stdcall, 0
 		pop	cx
-		push	0
-		call	sub_110ED
+		call	_grx_free stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
