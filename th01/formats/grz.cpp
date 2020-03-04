@@ -35,7 +35,8 @@ struct grx_header_t {
 	int8_t unused_1[3];
 	uint16_t rle_stream_size;
 	uint16_t planar_stream_size;
-	int8_t unused_2[52];
+	int8_t unused_2[4];
+	Palette4 palette;
 };
 
 void grx_put_stream(unsigned int slot, int planar_stream)
