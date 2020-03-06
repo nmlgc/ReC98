@@ -24,7 +24,7 @@ void egc_copy_wave_1_to_0(int x, int y, int len, int amp, int ph, int w, int h)
 
 void graph_copy_hline_mask_1_to_0(int x, int y, char *mask, int w)
 {
-	vram_planar_8_pixels_t px8;
+	planar8_t px8;
 	int col;
 	register int p = VRAM_OFFSET(x, y);
 	for(col = 0; col < w; col++, p++) {

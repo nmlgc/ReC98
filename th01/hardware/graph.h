@@ -57,7 +57,7 @@ void graph_r_line(int left, int top, int right, int bottom, int col);
 // Draws a line with an arbitrary angle and an arbitrary 16-pixel pattern
 // between the two points.
 void graph_r_line_patterned(
-	int left, int top, int right, int bottom, int col, planar16_t pattern
+	int left, int top, int right, int bottom, int col, dots16_t pattern
 );
 
 // Recovers the pixels on the given arbitrary-angle line from page 1.

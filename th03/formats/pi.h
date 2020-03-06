@@ -2,7 +2,7 @@
 
 #define PI_MASK_COUNT 4
 #define PI_MASK_H 4
-extern const planar16_t PI_MASKS[PI_MASK_COUNT][PI_MASK_H];
+extern const dots16_t PI_MASKS[PI_MASK_COUNT][PI_MASK_H];
 
 // Like pi_slot_put(), but only displays every second row in the given PI.
 int pascal pi_slot_put_interlace(int x, int y, int slot);

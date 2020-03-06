@@ -18,10 +18,10 @@ extern page_t page_back;
 /// VRAM plane "structures"
 /// -----------------------
 #define Planes_declare(var) \
-	planar8_t *var##_B = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0)); \
-	planar8_t *var##_R = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_R, 0)); \
-	planar8_t *var##_G = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_G, 0)); \
-	planar8_t *var##_E = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_E, 0));
+	dots8_t *var##_B = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0)); \
+	dots8_t *var##_R = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_R, 0)); \
+	dots8_t *var##_G = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_G, 0)); \
+	dots8_t *var##_E = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_E, 0));
 
 #define Planes_next_row(var) \
 	var##_B += ROW_SIZE; \
@@ -36,10 +36,10 @@ extern page_t page_back;
 	var##_E += (x / 8) + (y * ROW_SIZE);
 
 #define PlanarRow_declare(var) \
-	planar8_t var##_B[ROW_SIZE]; \
-	planar8_t var##_R[ROW_SIZE]; \
-	planar8_t var##_G[ROW_SIZE]; \
-	planar8_t var##_E[ROW_SIZE]; \
+	dots8_t var##_B[ROW_SIZE]; \
+	dots8_t var##_R[ROW_SIZE]; \
+	dots8_t var##_G[ROW_SIZE]; \
+	dots8_t var##_E[ROW_SIZE]; \
 
 #define PlanarRow_blit(dst, src, bytes) \
 	memcpy(dst##_B, src##_B, bytes); \
@@ -235,7 +235,7 @@ void z_palette_set_show(int col, int r, int g, int b)
 /// --------------------
 void z_graph_clear()
 {
-	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
 
 	grcg_setcolor_rmw(0);
 	memset(plane, 0xFF, PLANE_SIZE);
@@ -252,7 +252,7 @@ void z_graph_clear_0(void)
 
 void z_graph_clear_col(uint4_t col)
 {
-	planar8_t *plane = reinterpret_cast<planar8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
 
 	grcg_setcolor_rmw(col);
 	memset(plane, 0xFF, PLANE_SIZE);
@@ -362,7 +362,7 @@ void z_palette_show(void)
 /// Points
 /// ------
 #define VRAM_SBYTE(plane, offset) \
-	*reinterpret_cast<splanar8_t *>(MK_FP(SEG_PLANE_##plane, offset))
+	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
 
 void z_grcg_pset(int x, int y, int col)
 {
@@ -375,7 +375,7 @@ int z_col_at(int x, int y)
 {
 	int ret;
 	int vram_offset = ((y * ROW_SIZE) + (x >> 3));
-	splanar16_t mask = (0x80 >> (x & 7));
+	sdots16_t mask = (0x80 >> (x & 7));
 
 #define test(plane, vram_offset, mask, bit) \
 	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
@@ -402,16 +402,16 @@ extern Point graph_r_last_line_end;
 // regularly the given [col].
 extern bool graph_r_restore_from_1;
 // Not used for purely horizontal lines.
-extern planar16_t graph_r_pattern;
+extern dots16_t graph_r_pattern;
 
 void graph_r_hline(int left, int right, int y, int col)
 {
 	int x;
 	int full_bytes_to_put;
 	int order_tmp;
-	planar8_t left_pixels;
-	planar8_t right_pixels;
-	planar8_t *vram_row;
+	dots8_t left_pixels;
+	dots8_t right_pixels;
+	dots8_t *vram_row;
 
 	fix_order(left, right);
 	clip_x(left, right);
@@ -419,7 +419,7 @@ void graph_r_hline(int left, int right, int y, int col)
 	graph_r_last_line_end.x = right;
 	graph_r_last_line_end.y = y;
 
-	vram_row = (planar8_t *)(MK_FP(GRAM_400, (y * ROW_SIZE) + (left / 8)));
+	vram_row = (dots8_t *)(MK_FP(GRAM_400, (y * ROW_SIZE) + (left / 8)));
 	full_bytes_to_put = (right / 8) - (left / 8);
 	left_pixels = 0xFF >> (left & 7);
 	right_pixels = 0xFF << (7 - (right & 7));
@@ -449,7 +449,7 @@ void graph_r_vline(int x, int top, int bottom, int col)
 {
 	int y;
 	int order_tmp;
-	planar16_t pattern;
+	dots16_t pattern;
 	int vram_row_offset;
 
 	fix_order(top, bottom);
@@ -482,7 +482,7 @@ void graph_r_line_from_1(int left, int top, int right, int bottom)
 }
 
 void graph_r_line_patterned(
-	int left, int top, int right, int bottom, int col, planar16_t pattern
+	int left, int top, int right, int bottom, int col, dots16_t pattern
 )
 {
 	graph_r_pattern = pattern;
@@ -500,9 +500,9 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 	int y_direction;
 	int order_tmp;
 	int x_vram, y_vram;
-	planar16_t pixels;
+	dots16_t pixels;
 
-	vram_planar_32_pixels_t page1;
+	planar32_t page1;
 
 #define slope_x ((bottom - top) / (right - left))
 #define slope_y ((right - left) / (bottom - top))
@@ -526,8 +526,8 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 	}
 
 #define restore_at(bit_count) \
-	graph_accesspage_func(1);	VRAM_SNAP_4(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_4(vram_offset, page1, 32);
+	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
+	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32);
 
 #define plot_loop(\
 	step_var, step_len, step_increment, \
@@ -632,9 +632,9 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	int y;
 	int full_bytes_to_put;
 	int order_tmp;
-	planar8_t left_pixels;
-	planar8_t right_pixels;
-	planar8_t *vram_row;
+	dots8_t left_pixels;
+	dots8_t right_pixels;
+	dots8_t *vram_row;
 
 	fix_order(left, right);
 	fix_order(top, bottom);
@@ -642,7 +642,7 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	clip_y(top, bottom);
 
 	grcg_setcolor_rmw(col);
-	vram_row = (planar8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
+	vram_row = (dots8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
 		left_pixels = 0xFF >> (left & 7);
@@ -701,7 +701,7 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 {
 	register int x = left;
 	uint16_t codepoint;
-	planar16_t glyph_row;
+	dots16_t glyph_row;
 	unsigned char far *vram;
 	int fullwidth;
 	int first_bit;
@@ -712,8 +712,8 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 	int reverse = (fx & FX_REVERSE);
 	int w;
 	int line;
-	planar16_t glyph[GLYPH_H];
-	register planar16_t glyph_row_tmp;
+	dots16_t glyph[GLYPH_H];
+	register dots16_t glyph_row_tmp;
 
 	if(clear_bg) {
 		w = text_extent_fx(fx, str);

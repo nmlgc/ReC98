@@ -32,9 +32,9 @@ void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h)
 		int p;
 		for(col = 0, p = row_p; col < (w >> 4); col++, p += 2) {
 			if(row_p >= 0) {
-				vram_planar_16_pixels_t p16;
-				graph_accesspage(1);	VRAM_SNAP_4(p16, p, 16);
-				graph_accesspage(0);	VRAM_PUT_4(p, p16, 16);
+				planar16_t p16;
+				graph_accesspage(1);	VRAM_SNAP_PLANAR(p16, p, 16);
+				graph_accesspage(0);	VRAM_PUT_PLANAR(p, p16, 16);
 			}
 		}
 		row_p += ROW_SIZE;

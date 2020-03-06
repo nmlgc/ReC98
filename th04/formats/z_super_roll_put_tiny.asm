@@ -162,11 +162,11 @@ grcg_setcolor_direct:
 ; ---------------------------------------------------------------------------
 
 ; These put functions take:
-; • const planar32_t* row_color_pixels<ds:si>
-; • planar32_t* vram_offset<es:di>
+; • const dots32_t* row_color_pixels<ds:si>
+; • dots32_t* vram_offset<es:di>
 ; • uint3_t first_bit<cl>
 ; • uint8_t& rows_left<ch>
-; • planar8_t first_mask<dl>
+; • dots8_t first_mask<dl>
 ; [rows_left] is decremented at the end. ZF then indicates whether this was
 ; the last row.
 @@first_bit equ cl
