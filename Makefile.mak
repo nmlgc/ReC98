@@ -4,15 +4,17 @@
 
 CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -a2
 
+PIPELINE = \grzview.com
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
 TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe \zun.com
 TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe \zun.com
 TH04 = \res_huma.com \op.exe \main.exe \maine.exe
 TH05 = \res_kso.com \op.exe \main.exe \maine.exe
 
-all: th01 th02 th03 th04 th05
+all: pipeline th01 th02 th03 th04 th05
 	@echo Done. Find the executables in the bin\ subdirectory.
 
+pipeline:: $(PIPELINE:\=bin\Pipeline\)
 th01:: $(TH01:\=bin\th01\)
 th02:: $(TH02:\=bin\th02\)
 th03:: $(TH03:\=bin\th03\)
@@ -37,6 +39,10 @@ th05:: $(TH05:\=bin\th05\)
 
 .obj.com:
 	tlink /t /3 $**
+
+bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
+	mkdir bin\Pipeline
+	$(CC) $(CFLAGS) -Z -mt -lt -nbin\Pipeline\ $** masters.lib
 
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
