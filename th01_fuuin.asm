@@ -3037,8 +3037,7 @@ loc_B59A:
 ; ---------------------------------------------------------------------------
 
 loc_B5A1:
-		push	4
-		call	sub_C82D
+		call	_frame_delay stdcall, 4
 		pop	cx
 
 loc_B5A9:
@@ -3481,35 +3480,28 @@ sub_B945	proc far
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	6
-		call	sub_C939
-		push	64h ; 'd'
-		call	sub_C82D
+		call	sub_C939 pascal, 6
+		call	_frame_delay stdcall, 100
 		pop	cx
-		push	5
-		call	sub_C960
-		push	64h ; 'd'
-		call	sub_C82D
+		call	sub_C960 pascal, 5
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
 		push	64h ; 'd'
 		call	sub_C842
-		push	0Dh
-		call	sub_C82D
+		call	_frame_delay stdcall, 13
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	0Dh
-		call	sub_C82D
+		call	_frame_delay stdcall, 13
 		pop	cx
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	32h ; '2'
-		call	sub_C82D
+		call	_frame_delay stdcall, 50
 		pop	cx
 		push	ds
 		push	offset aEd1b_grp ; "ED1B.grp"
@@ -3517,23 +3509,19 @@ sub_B945	proc far
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	0Ah
-		call	sub_C82D
+		call	_frame_delay stdcall, 10
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	0Ah
-		call	sub_C82D
+		call	_frame_delay stdcall, 10
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
-		push	6
-		call	sub_C911
+		call	sub_C911 pascal, 6
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -3551,14 +3539,12 @@ loc_BA28:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	14h
-		call	sub_C82D
+		call	_frame_delay stdcall, 20
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	14h
-		call	sub_C82D
+		call	_frame_delay stdcall, 20
 		pop	cx
 		inc	si
 
@@ -3568,14 +3554,12 @@ loc_BA49:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	28h ; '('
-		call	sub_C82D
+		call	_frame_delay stdcall, 40
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	28h ; '('
-		call	sub_C82D
+		call	_frame_delay stdcall, 40
 		pop	cx
 		push	ds
 		push	offset aEd1d_grp ; "ED1D.GRP"
@@ -3583,8 +3567,7 @@ loc_BA49:
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	46h ; 'F'
-		call	sub_C82D
+		call	_frame_delay stdcall, 70
 		pop	cx
 		xor	si, si
 		jmp	loc_BB16
@@ -3661,8 +3644,7 @@ loc_BB00:
 		pop	cx
 
 loc_BB0D:
-		push	2
-		call	sub_C82D
+		call	_frame_delay stdcall, 2
 		pop	cx
 		inc	si
 
@@ -3676,14 +3658,12 @@ loc_BB1E:
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	3Ch ; '<'
-		call	sub_C82D
+		call	_frame_delay stdcall, 60
 		pop	cx
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	14h
-		call	sub_C82D
+		call	_frame_delay stdcall, 20
 		pop	cx
 		push	3
 		call	sub_C78B
@@ -3706,8 +3686,7 @@ loc_BB62:
 		add	ax, 6Eh	; 'n'
 		push	ax
 		call	sub_C842
-		push	10h
-		call	sub_C82D
+		call	_frame_delay stdcall, 16
 		pop	cx
 		inc	si
 
@@ -3722,14 +3701,12 @@ loc_BB82:
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
@@ -3752,8 +3729,7 @@ loc_BBB1:
 loc_BBC7:
 		call	sub_BC7C
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	0Ah
-		call	sub_C911
+		call	sub_C911 pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -3801,8 +3777,7 @@ loc_BC0D:
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	1
-		call	sub_C82D
+		call	_frame_delay stdcall, 1
 		pop	cx
 		test	si, 1
 		jz	short loc_BC2D
@@ -3839,8 +3814,7 @@ loc_BC4A:
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	2
-		call	sub_C82D
+		call	_frame_delay stdcall, 2
 		pop	cx
 		test	si, 1
 		jz	short loc_BC69
@@ -3881,10 +3855,8 @@ sub_BC7C	proc near
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	5
-		call	sub_C988
-		push	78h ; 'x'
-		call	sub_C82D
+		call	sub_C988 pascal, 5
+		call	_frame_delay stdcall, 120
 		pop	cx
 		cmp	byte_14021, 2
 		jnz	short loc_BCFC
@@ -3895,14 +3867,12 @@ sub_BC7C	proc near
 		push	20h ; ' '
 		call	sub_BBF9
 		call	graph_scrollup pascal, 0
-		push	32h ; '2'
-		call	sub_C82D
+		call	_frame_delay stdcall, 50
 		pop	cx
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	0E8h
 		push	13Ch
@@ -3930,14 +3900,12 @@ loc_BD09:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		inc	si
 
@@ -3952,14 +3920,12 @@ loc_BD33:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
@@ -3974,16 +3940,13 @@ loc_BD62:
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	5
-		call	sub_C988
-		push	0C8h ; 'ﾈ'
-		call	sub_C82D
+		call	sub_C988 pascal, 5
+		call	_frame_delay stdcall, 200
 		pop	cx
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	0E8h
 		push	13Ch
@@ -3999,8 +3962,7 @@ loc_BD62:
 
 loc_BDAC:
 		call	sub_C9B0
-		push	12Ch
-		call	sub_C82D
+		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
 		pop	bp
@@ -4029,14 +3991,12 @@ loc_BDD6:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
@@ -4059,14 +4019,12 @@ loc_BE17:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		inc	si
 
@@ -4083,8 +4041,7 @@ loc_BE41:
 		push	ax
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		mov	ax, si
 		imul	ax, 0Ah
@@ -4127,28 +4084,23 @@ sub_BE83	proc near
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	4
-		call	sub_C988
-		push	0FAh
-		call	sub_C82D
+		call	sub_C988 pascal, 4
+		call	_frame_delay stdcall, 250
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	0C8h ; 'ﾈ'
-		call	sub_C82D
+		call	_frame_delay stdcall, 200
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		push	100h
 		push	13Ch
@@ -4162,8 +4114,7 @@ sub_BE83	proc near
 		push	ds
 		push	offset aGoodEnding2 ; "	    Good Ending2     "
 		call	sub_C9B0
-		push	12Ch
-		call	sub_C82D
+		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	bp
 		retn
@@ -4184,10 +4135,8 @@ sub_BF07	proc near
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	4
-		call	sub_C988
-		push	12Ch
-		call	sub_C82D
+		call	sub_C988 pascal, 4
+		call	_frame_delay stdcall, 300
 		pop	cx
 		xor	si, si
 		jmp	short loc_BF51
@@ -4197,14 +4146,12 @@ loc_BF30:
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	8
-		call	sub_C82D
+		call	_frame_delay stdcall, 8
 		pop	cx
 		inc	si
 
@@ -4217,26 +4164,22 @@ loc_BF51:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	ds
 		push	offset aEd5c_grp ; "ed5c.grp"
@@ -4244,20 +4187,17 @@ loc_BF51:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		push	2
 		call	sub_C78B
 		pop	cx
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		push	100h
 		push	13Ch
@@ -4271,8 +4211,7 @@ loc_BF51:
 		push	ds
 		push	offset aGoodEnding1 ; "	    Good Ending1     "
 		call	sub_C9B0
-		push	12Ch
-		call	sub_C82D
+		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
 		pop	bp
@@ -4290,19 +4229,15 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
-		push	5
-		call	sub_C911
+		call	sub_C911 pascal, 5
 		call	_z_graph_clear
 		push	[bp+arg_0]
 		call	sub_C78B
 		pop	cx
-		push	5
-		call	sub_C939
-		push	32h ; '2'
-		call	sub_C82D
+		call	sub_C939 pascal, 5
+		call	_frame_delay stdcall, 50
 		pop	cx
 		pop	bp
 		retn	2
@@ -4317,8 +4252,7 @@ sub_C03D	proc near
 		push	bp
 		mov	bp, sp
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	0Ah
-		call	sub_C911
+		call	sub_C911 pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -4344,8 +4278,7 @@ loc_C078:
 		pop	cx
 		push	64h ; 'd'
 		call	sub_C842
-		push	32h ; '2'
-		call	sub_C82D
+		call	_frame_delay stdcall, 50
 		pop	cx
 		push	110h
 		push	13Ch
@@ -4458,8 +4391,7 @@ loc_C17B:
 
 loc_C198:
 		call	sub_C9B0
-		push	96h
-		call	sub_C82D
+		call	_frame_delay stdcall, 150
 		pop	cx
 		pop	bp
 		retn
@@ -4868,8 +4800,7 @@ var_10		= byte ptr -10h
 		push	offset off_12EC0
 		mov	cx, 10h
 		call	SCOPY@
-		push	0Ah
-		call	sub_C911
+		call	sub_C911 pascal, 10
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -4881,8 +4812,7 @@ var_10		= byte ptr -10h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	8
-		call	sub_C939
+		call	sub_C939 pascal, 8
 		push	190h
 		push	20h ; ' '
 		push	5
@@ -4901,8 +4831,7 @@ var_10		= byte ptr -10h
 		push	ds
 		push	offset a1_10	; "1.10"
 		call	sub_C9B0
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		mov	al, _rank
 		mov	ah, 0
@@ -4919,8 +4848,7 @@ var_10		= byte ptr -10h
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		push	word ptr _score_highest+2
 		push	word ptr _score_highest		; arglist
@@ -4931,8 +4859,7 @@ var_10		= byte ptr -10h
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		push	word ptr _score+2
 		push	word ptr _score	; arglist
@@ -4943,8 +4870,7 @@ var_10		= byte ptr -10h
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		push	ds
 		push	offset aGrgugegbgjgebI ; "コンティニュー回数"
@@ -4953,8 +4879,7 @@ var_10		= byte ptr -10h
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Ah
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		push	word_13EDE
 		push	word_13EDC	; arglist
@@ -4965,8 +4890,7 @@ var_10		= byte ptr -10h
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		cmp	byte_14021, 1
 		jnz	short loc_C590
@@ -4989,8 +4913,7 @@ loc_C59C:
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		cmp	byte_14021, 1
 		jnz	short loc_C5C9
@@ -5013,8 +4936,7 @@ loc_C5D5:
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		cmp	byte_14021, 1
 		jnz	short loc_C602
@@ -5037,8 +4959,7 @@ loc_C60E:
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		cmp	byte_14021, 1
 		jnz	short loc_C63B
@@ -5061,8 +4982,7 @@ loc_C647:
 		push	128h		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	1Eh
-		call	sub_C82D
+		call	_frame_delay stdcall, 30
 		pop	cx
 		push	128h
 		push	160h
@@ -5077,13 +4997,11 @@ loc_C647:
 		push	108h		; int
 		call	_graph_printf_fx
 		add	sp, 0Ah
-		push	32h ; '2'
-		call	sub_C82D
+		call	_frame_delay stdcall, 50
 		pop	cx
 		call	sub_C1A8
 		xor	si, si
-		push	64h ; 'd'
-		call	sub_C82D
+		call	_frame_delay stdcall, 100
 		pop	cx
 		call	sub_A44F
 		jmp	short loc_C6B1
@@ -5093,8 +5011,7 @@ loc_C6A1:
 		push	0
 		call	sub_A265
 		pop	cx
-		push	1
-		call	sub_C82D
+		call	_frame_delay stdcall, 1
 		pop	cx
 
 loc_C6B1:
@@ -5266,31 +5183,7 @@ loc_C81D:
 		retf
 sub_C78B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C82D	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	_vsync_frame, 0
-
-loc_C836:
-		mov	ax, _vsync_frame
-		cmp	ax, [bp+arg_0]
-		jnb	short loc_C840
-		jmp	short loc_C836
-; ---------------------------------------------------------------------------
-
-loc_C840:
-		pop	bp
-		retf
-sub_C82D	endp
-
+include th01/hardware/frame_delay_fuuin.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5411,7 +5304,7 @@ sub_C842	endp
 
 sub_C911	proc far
 
-arg_0		= word ptr  6
+@@frames		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -5426,8 +5319,7 @@ loc_C91D:
 		sub	di, 5
 		push	di
 		call	sub_C842
-		push	[bp+arg_0]
-		call	sub_C82D
+		call	_frame_delay stdcall, [bp+@@frames]
 		pop	cx
 		inc	si
 
@@ -5447,7 +5339,7 @@ sub_C911	endp
 
 sub_C939	proc far
 
-arg_0		= word ptr  6
+@@frames		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -5462,8 +5354,7 @@ loc_C944:
 		add	di, 5
 		push	di
 		call	sub_C842
-		push	[bp+arg_0]
-		call	sub_C82D
+		call	_frame_delay stdcall, [bp+@@frames]
 		pop	cx
 		inc	si
 
@@ -5483,7 +5374,7 @@ sub_C939	endp
 
 sub_C960	proc far
 
-arg_0		= word ptr  6
+@@frames		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -5498,8 +5389,7 @@ loc_C96C:
 		add	di, 5
 		push	di
 		call	sub_C842
-		push	[bp+arg_0]
-		call	sub_C82D
+		call	_frame_delay stdcall, [bp+@@frames]
 		pop	cx
 		inc	si
 
@@ -5519,7 +5409,7 @@ sub_C960	endp
 
 sub_C988	proc far
 
-arg_0		= word ptr  6
+@@frames		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -5534,8 +5424,7 @@ loc_C994:
 		sub	di, 5
 		push	di
 		call	sub_C842
-		push	[bp+arg_0]
-		call	sub_C82D
+		call	_frame_delay stdcall, [bp+@@frames]
 		pop	cx
 		inc	si
 
@@ -5583,8 +5472,7 @@ loc_C9B8:
 		push	ax		; int
 		call	_graph_printf_fx
 		add	sp, 0Ch
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		inc	si
 
@@ -5640,8 +5528,7 @@ loc_C9F6:
 		push	ax		; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
-		push	3
-		call	sub_C82D
+		call	_frame_delay stdcall, 3
 		pop	cx
 		inc	si
 
