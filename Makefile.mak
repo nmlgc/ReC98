@@ -57,7 +57,7 @@ bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_02.c th01\main_03.c th01\ma
 $**
 |
 
-bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_07.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
+bin\th01\fuuin.exe: bin\th01\fuuin.obj th01\fuuin_04.cpp th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_07.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |

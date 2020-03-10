@@ -3874,15 +3874,10 @@ sub_BC7C	proc near
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		push	0E8h
-		push	13Ch
-		push	16h
-		push	ds
-		push	offset aTryToNoContinu ; "Try to 'No continue'!!"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
+		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoContinu ; "Try to 'No continue'!!"
+		push	232
+		push	348
+		push	22
 		push	ds
 		push	offset aBadEnding2 ; "	    Bad	Ending2	    "
 		jmp	loc_BDAC
@@ -3948,20 +3943,15 @@ loc_BD62:
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		push	0E8h
-		push	13Ch
-		push	16h
-		push	ds
-		push	offset aTryToNoConti_0 ; "Try to 'No continue'!!"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
+		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoConti_0 ; "Try to 'No continue'!!"
+		push	232
+		push	348
+		push	22
 		push	ds
 		push	offset aBadEnding1 ; "	    Bad	Ending1	    "
 
 loc_BDAC:
-		call	sub_C9B0
+		call	graph_type_ank
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
@@ -4102,18 +4092,8 @@ sub_BE83	proc near
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		push	100h
-		push	13Ch
-		push	10h
-		push	ds
-		push	offset aCongratulation ; "Congratulations!"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
-		push	ds
-		push	offset aGoodEnding2 ; "	    Good Ending2     "
-		call	sub_C9B0
+		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulation ; "Congratulations!"
+		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding2 ; "     Good Ending2     "
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	bp
@@ -4199,18 +4179,8 @@ loc_BF51:
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		push	100h
-		push	13Ch
-		push	10h
-		push	ds
-		push	offset aCongratulati_0 ; "Congratulations!"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
-		push	ds
-		push	offset aGoodEnding1 ; "	    Good Ending1     "
-		call	sub_C9B0
+		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulati_0 ; "Congratulations!"
+		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding1 ; "     Good Ending1     "
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
@@ -4280,117 +4250,77 @@ loc_C078:
 		call	sub_C842
 		call	_frame_delay stdcall, 50
 		pop	cx
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage5Boss ; "STAGE 5 BOSS"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
-		push	ds
-		push	offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
-		call	sub_C9B0
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
+		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
 		push	1
 		call	sub_C009
 		cmp	byte_14021, 1
 		jnz	short loc_C0E1
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage10Boss ; "STAGE 10	BOSS"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
+		push	232
+		push	348
+		push	22
 		push	ds
 		push	offset aEvileyesYuugen ; "EvilEyes 'YuugenMagan'"
 		jmp	short loc_C0FE
 ; ---------------------------------------------------------------------------
 
 loc_C0E1:
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage10Boss_0 ;	"STAGE 10 BOSS"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	17h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss_0 ;	"STAGE 10 BOSS"
+		push	232
+		push	348
+		push	23
 		push	ds
 		push	offset aRevengefulGhos ; "Revengeful Ghost 'Mima'"
 
 loc_C0FE:
-		call	sub_C9B0
+		call	graph_type_ank
 		push	2
 		call	sub_C009
 		cmp	byte_14021, 1
 		jnz	short loc_C12E
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage15Boss ; "STAGE 15	BOSS"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
+		push	232
+		push	348
+		push	22
 		push	ds
 		push	offset aInnocenceDevil ; "Innocence Devil 'Elis'"
 		jmp	short loc_C14B
 ; ---------------------------------------------------------------------------
 
 loc_C12E:
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage15Boss_0 ;	"STAGE 15 BOSS"
-		call	sub_C9B0
-		push	100h
-		push	15Ch
-		push	11h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss_0 ;	"STAGE 15 BOSS"
+		push	256
+		push	348
+		push	17
 		push	ds
 		push	offset aHellmoonKikuri ; "HellMoon 'Kikuri'"
 
 loc_C14B:
-		call	sub_C9B0
+		call	graph_type_ank
 		push	3
 		call	sub_C009
 		cmp	byte_14021, 1
 		jnz	short loc_C17B
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage20Boss ; "STAGE 20	BOSS"
-		call	sub_C9B0
-		push	0E8h
-		push	15Ch
-		push	16h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
+		push	232
+		push	348
+		push	22
 		push	ds
 		push	offset aAngelOfDeathSa ; "Angel	of Death'Sariel'"
 		jmp	short loc_C198
 ; ---------------------------------------------------------------------------
 
 loc_C17B:
-		push	110h
-		push	13Ch
-		push	0Dh
-		push	ds
-		push	offset aStage20Boss_0 ;	"STAGE 20 BOSS"
-		call	sub_C9B0
-		push	0E0h
-		push	15Ch
-		push	18h
+		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss_0 ;	"STAGE 20 BOSS"
+		push	224
+		push	348
+		push	24
 		push	ds
 		push	offset aAstralKnightKo ; "Astral Knight	'Konngara'"
 
 loc_C198:
-		call	sub_C9B0
+		call	graph_type_ank
 		call	_frame_delay stdcall, 150
 		pop	cx
 		pop	bp
@@ -4813,24 +4743,9 @@ var_10		= byte ptr -10h
 		call	_graph_accesspage_func
 		pop	cx
 		call	sub_C939 pascal, 8
-		push	190h
-		push	20h ; ' '
-		push	5
-		push	ds
-		push	offset aUmx_1	; "ìåï˚ËÀàŸì`"
-		call	sub_C9EE
-		push	1F0h
-		push	20h ; ' '
-		push	3
-		push	ds
-		push	offset aVer	; "ver"
-		call	sub_C9B0
-		push	210h
-		push	20h ; ' '
-		push	4
-		push	ds
-		push	offset a1_10	; "1.10"
-		call	sub_C9B0
+		call	graph_type_kanji pascal, 400, 32, 5, ds, offset aUmx_1	; "ìåï˚ËÀàŸì`"
+		call	graph_type_ank pascal, 496, 32, 3, ds, offset aVer	; "ver"
+		call	graph_type_ank pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
 		call	_frame_delay stdcall, 30
 		pop	cx
 		mov	al, _rank
@@ -4984,12 +4899,7 @@ loc_C647:
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	128h
-		push	160h
-		push	1Dh
-		push	ds
-		push	offset aThankYouForPla ; "    Thank you	for Playing !! "
-		call	sub_C9B0
+		call	graph_type_ank pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
 		push	ds
 		push	offset aBBBVavVVPNjbBB ; "ÅöÅöÅöÇ†Ç»ÇΩÇÃèÃçÜÅöÅöÅö"
 		push	12h		; int
@@ -5437,109 +5347,8 @@ loc_C9A5:
 		retf	2
 sub_C988	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C9B0	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_C9E4
-; ---------------------------------------------------------------------------
-
-loc_C9B8:
-		les	bx, [bp+arg_0]
-		add	bx, si
-		mov	al, es:[bx]
-		cbw
-		push	ax		; arglist
-		push	ds
-		push	offset aC	; "%c"
-		push	0Fh		; int
-		push	[bp+arg_6]	; int
-		mov	ax, si
-		shl	ax, 3
-		add	ax, [bp+arg_8]
-		push	ax		; int
-		call	_graph_printf_fx
-		add	sp, 0Ch
-		call	_frame_delay stdcall, 3
-		pop	cx
-		inc	si
-
-loc_C9E4:
-		cmp	si, [bp+arg_4]
-		jl	short loc_C9B8
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_C9B0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C9EE	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_CA36
-; ---------------------------------------------------------------------------
-
-loc_C9F6:
-		mov	bx, si
-		add	bx, bx
-		mov	es, word ptr [bp+arg_0+2]
-		add	bx, word ptr [bp+arg_0]
-		mov	al, es:[bx+1]
-		cbw
-		push	ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		mov	al, es:[bx]
-		cbw
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_5	; "%c%c"
-		push	0Fh		; int
-		push	[bp+arg_6]	; int
-		mov	ax, si
-		shl	ax, 4
-		add	ax, [bp+arg_8]
-		push	ax		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 3
-		pop	cx
-		inc	si
-
-loc_CA36:
-		cmp	si, [bp+arg_4]
-		jl	short loc_C9F6
-		pop	si
-		pop	bp
-		retf	0Ah
-sub_C9EE	endp
-
+	extern GRAPH_TYPE_ANK:proc
+	extern GRAPH_TYPE_KANJI:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
@@ -6265,10 +6074,7 @@ aBBBVavVVPNjbBB	db 'ÅöÅöÅöÇ†Ç»ÇΩÇÃèÃçÜÅöÅöÅö',0
 aKo		db 'äÆ',0
 aKo_0		db 'äÆ',0
 		db 0
-; char aC[]
-aC		db '%c',0
-; char aCC_5[]
-aCC_5		db '%c%c',0
+include th01/end/type[data].asm
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
 include th01/core/initexit[data].asm

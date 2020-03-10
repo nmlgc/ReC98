@@ -81,6 +81,9 @@ certain local variables as `word`s when they aren't.
 
 ### `-O` (Optimize jumps)
 
+Also merges multiple `ADD SP, imm8` stack-clearing instructions after
+`__cdecl` function calls into a single one with their combined parameter size.
+
 Inhibited by:
 
 * identical variable declarations within more than one scope – the
