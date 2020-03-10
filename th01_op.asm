@@ -2975,8 +2975,8 @@ arg_0		= dword	ptr  6
 
 loc_D9F8:
 		call	file_seek pascal, large 12h, 0
-		call	file_read pascal, ds, offset palette_136D2, size palette_t
-		call	_z_palette_set_all_show c, offset palette_136D2, ds
+		call	file_read pascal, ds, offset _grp_palette, size palette_t
+		call	_z_palette_set_all_show c, offset _grp_palette, ds
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -3005,7 +3005,7 @@ arg_0		= dword	ptr  6
 
 loc_DA37:
 		call	file_seek pascal, large 12h, 0
-		call	file_read pascal, ds, offset palette_136D2, size palette_t
+		call	file_read pascal, ds, offset _grp_palette, size palette_t
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -3083,7 +3083,7 @@ loc_DAC4:
 		mov	bx, dx
 		imul	bx, size rgb_t
 		add	bx, cx
-		mov	byte ptr palette_136D2[bx], al
+		mov	byte ptr _grp_palette[bx], al
 		inc	cx
 
 loc_DADF:
@@ -3731,7 +3731,7 @@ include th01/hardware/vram_planes[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-palette_136D2	palette_t <?>
+include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

@@ -30788,14 +30788,14 @@ loc_2C9C6:
 ; ---------------------------------------------------------------------------
 
 loc_2C9D4:
-		mov	byte ptr palette_38988.colors[15 * size rgb_t][si], 0
+		mov	byte ptr _grp_palette.colors[15 * size rgb_t][si], 0
 		inc	si
 
 loc_2C9DA:
 		cmp	si, size rgb_t
 		jb	short loc_2C9D4
 		push	ds
-		push	offset palette_38988
+		push	offset _grp_palette
 		push	ds
 		push	offset _z_Palettes
 		push	0
@@ -31504,7 +31504,7 @@ loc_2D011:
 		mov	bx, [bp+var_4]
 		imul	bx, size rgb_t
 		add	bx, [bp+var_6]
-		mov	al, byte ptr palette_38988[bx]
+		mov	al, byte ptr _grp_palette[bx]
 		mov	bx, [bp+var_4]
 		imul	bx, size rgb_t
 		add	bx, [bp+var_6]
@@ -35916,7 +35916,7 @@ loc_2FB22:
 		mov	bx, [bp+var_2]
 		imul	bx, size rgb_t
 		add	bx, [bp+var_4]
-		mov	al, byte ptr palette_38988[bx]
+		mov	al, byte ptr _grp_palette[bx]
 		mov	bx, [bp+var_2]
 		imul	bx, size rgb_t
 		add	bx, [bp+var_4]

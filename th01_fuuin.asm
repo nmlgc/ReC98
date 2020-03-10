@@ -5132,8 +5132,8 @@ loc_C86B:
 		cmp	[bp+arg_0], 64h	; 'd'
 		jle	short loc_C8A9
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+di+170Ah]
+		imul	bx, size rgb_t
+		mov	al, byte ptr _grp_palette[bx+di]
 		cbw
 		mov	dx, 0Fh
 		sub	dx, ax
@@ -5148,16 +5148,16 @@ loc_C86B:
 		idiv	bx
 		mov	[bp+var_2], ax
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+di+170Ah]
+		imul	bx, size rgb_t
+		mov	al, byte ptr _grp_palette[bx+di]
 		add	al, byte ptr [bp+var_2]
 		jmp	short loc_C8DE
 ; ---------------------------------------------------------------------------
 
 loc_C8A9:
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+di+170Ah]
+		imul	bx, size rgb_t
+		mov	al, byte ptr _grp_palette[bx+di]
 		cbw
 		mov	[bp+var_2], ax
 		mov	ax, 64h	; 'd'
@@ -5170,20 +5170,20 @@ loc_C8A9:
 		idiv	bx
 		mov	[bp+var_2], ax
 		mov	bx, si
-		imul	bx, 3
-		mov	al, [bx+di+170Ah]
+		imul	bx, size rgb_t
+		mov	al, byte ptr _grp_palette[bx+di]
 		mov	dl, byte ptr [bp+var_2]
 		neg	dl
 		add	al, dl
 
 loc_C8DE:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	_z_Palettes[bx+di], al
 		inc	di
 
 loc_C8E8:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jge	short loc_C8F0
 		jmp	loc_C86B
 ; ---------------------------------------------------------------------------
@@ -5192,7 +5192,7 @@ loc_C8F0:
 		inc	si
 
 loc_C8F1:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jge	short loc_C8F9
 		jmp	loc_C867
 ; ---------------------------------------------------------------------------
@@ -5435,14 +5435,8 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_EA34:
-		push	0
-		push	12h
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_141AA
-		push	30h ; '0'
-		call	file_read
+		call	file_seek pascal, 0, 12h, 0
+		call	file_read pascal, ds, offset _grp_palette, size palette_t
 		push	word_13507
 		call	sub_C842
 		call	file_close
@@ -5477,14 +5471,8 @@ arg_2		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_EA75:
-		push	0
-		push	12h
-		push	0
-		call	file_seek
-		push	ds
-		push	offset unk_141AA
-		push	30h ; '0'
-		call	file_read
+		call	file_seek pascal, 0, 12h, 0
+		call	file_read pascal, ds, offset _grp_palette, size palette_t
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -5580,24 +5568,24 @@ loc_EB0D:
 
 loc_EB11:
 		mov	ax, dx
-		imul	ax, 3
+		imul	ax, size rgb_t
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		add	bx, cx
 		mov	al, es:[bx]
 		mov	bx, dx
-		imul	bx, 3
+		imul	bx, size rgb_t
 		add	bx, cx
-		mov	[bx+170Ah], al
+		mov	byte ptr _grp_palette[bx], al
 		inc	cx
 
 loc_EB2C:
-		cmp	cx, 3
+		cmp	cx, size rgb_t
 		jl	short loc_EB11
 		inc	dx
 
 loc_EB32:
-		cmp	dx, 10h
+		cmp	dx, COLOR_COUNT
 		jl	short loc_EB0D
 		pop	bp
 		retf
@@ -6309,7 +6297,7 @@ include th01/hardware/graph[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-unk_141AA	db    ?	;
+include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
@@ -6594,20 +6582,6 @@ unk_141AA	db    ?	;
 		dd    ?
 		dd    ?
 		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		db    ?	;
-		db    ?	;
-		db    ?	;
 ; void (*off_1464A)(void)
 off_1464A	dw ?
 word_1464C	dw ?

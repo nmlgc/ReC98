@@ -6247,8 +6247,8 @@ arg_0		= dword	ptr  6
 
 loc_10ABA:
 		call	file_seek pascal, large 18, 0
-		call	file_read pascal, ds, offset palette_38988, size palette_t
-		call	_z_palette_set_all_show c, offset palette_38988, ds
+		call	file_read pascal, ds, offset _grp_palette, size palette_t
+		call	_z_palette_set_all_show c, offset _grp_palette, ds
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -6280,7 +6280,7 @@ loc_10AF9:
 		push	0
 		call	file_seek
 		push	ds
-		push	offset palette_38988
+		push	offset _grp_palette
 		push	30h ; '0'
 		call	file_read
 		call	file_close
@@ -6378,7 +6378,7 @@ loc_10B86:
 		mov	bx, dx
 		imul	bx, size rgb_t
 		add	bx, cx
-		mov	byte ptr palette_38988[bx], al
+		mov	byte ptr _grp_palette[bx], al
 		inc	cx
 
 loc_10BA1:
@@ -9024,7 +9024,7 @@ loc_12EC7:
 		mov	bx, [bp+var_C]
 		imul	bx, size rgb_t
 		add	bx, [bp+var_E]
-		cmp	al, byte ptr palette_38988[bx]
+		cmp	al, byte ptr _grp_palette[bx]
 		jz	short loc_12F1B
 		mov	bx, [bp+var_C]
 		imul	bx, 3
@@ -9032,7 +9032,7 @@ loc_12EC7:
 		mov	bx, [bp+var_C]
 		imul	bx, 3
 		add	bx, [bp+var_E]
-		cmp	al, byte ptr palette_38988[bx]
+		cmp	al, byte ptr _grp_palette[bx]
 		jge	short loc_12EFF
 		mov	al, 1
 		jmp	short loc_12F01
@@ -27784,7 +27784,7 @@ include th01/hardware/vram_planes[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-palette_38988	palette_t <?>
+include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
