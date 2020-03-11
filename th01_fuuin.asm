@@ -3472,25 +3472,23 @@ sub_B945	proc far
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		push	0
-		call	sub_C842
+		call	grp_palette_settone pascal, 0
 		push	ds
 		push	offset aEd1a_grp ; "ED1A.grp"
 		call	sub_C73A
 		push	0
 		call	sub_C78B
 		pop	cx
-		call	sub_C939 pascal, 6
+		call	grp_palette_black_in pascal, 6
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	sub_C960 pascal, 5
+		call	grp_palette_white_out pascal, 5
 		call	_frame_delay stdcall, 100
 		pop	cx
 		push	1
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C842
+		call	grp_palette_settone pascal, 100
 		call	_frame_delay stdcall, 13
 		pop	cx
 		push	2
@@ -3521,13 +3519,12 @@ sub_B945	proc far
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	sub_C911 pascal, 6
+		call	grp_palette_black_out pascal, 6
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
 		call	_z_graph_clear
-		push	64h ; 'd'
-		call	sub_C842
+		call	grp_palette_settone pascal, 100
 		push	ds
 		push	offset aEd1c_grp ; "ED1C.GRP"
 		call	sub_C73A
@@ -3668,8 +3665,7 @@ loc_BB1E:
 		push	3
 		call	sub_C78B
 		pop	cx
-		push	69h ; 'i'
-		call	sub_C842
+		call	grp_palette_settone pascal, 105
 		push	ds
 		push	offset aEd1e_grp ; "ED1E.GRP"
 		call	sub_C73A
@@ -3683,9 +3679,8 @@ loc_BB1E:
 loc_BB62:
 		mov	ax, si
 		imul	ax, 5
-		add	ax, 6Eh	; 'n'
-		push	ax
-		call	sub_C842
+		add	ax, 110
+		call	grp_palette_settone pascal, ax
 		call	_frame_delay stdcall, 16
 		pop	cx
 		inc	si
@@ -3710,9 +3705,8 @@ loc_BB82:
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
-		add	ax, 82h
-		push	ax
-		call	sub_C842
+		add	ax, 130
+		call	grp_palette_settone pascal, ax
 		inc	si
 
 loc_BBB1:
@@ -3729,7 +3723,7 @@ loc_BBB1:
 loc_BBC7:
 		call	sub_BC7C
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_C911 pascal, 10
+		call	grp_palette_black_out pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -3781,15 +3775,15 @@ loc_BC0D:
 		pop	cx
 		test	si, 1
 		jz	short loc_BC2D
-		push	0AAh ; 'ª'
+		push	170
 		jmp	short loc_BC2F
 ; ---------------------------------------------------------------------------
 
 loc_BC2D:
-		push	64h ; 'd'
+		push	100
 
 loc_BC2F:
-		call	sub_C842
+		call	grp_palette_settone
 		inc	si
 
 loc_BC35:
@@ -3850,12 +3844,11 @@ sub_BC7C	proc near
 		push	ds
 		push	offset aEd2a_grp ; "ed2a.grp"
 		call	sub_C73A
-		push	0C8h ; 'È'
-		call	sub_C842
+		call	grp_palette_settone pascal, 200
 		push	0
 		call	sub_C78B
 		pop	cx
-		call	sub_C988 pascal, 5
+		call	grp_palette_white_in pascal, 5
 		call	_frame_delay stdcall, 120
 		pop	cx
 		cmp	byte_14021, 2
@@ -3924,9 +3917,8 @@ loc_BD33:
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
-		add	ax, 64h	; 'd'
-		push	ax
-		call	sub_C842
+		add	ax, 100
+		call	grp_palette_settone pascal, ax
 		inc	si
 
 loc_BD62:
@@ -3935,7 +3927,7 @@ loc_BD62:
 		push	2
 		call	sub_C78B
 		pop	cx
-		call	sub_C988 pascal, 5
+		call	grp_palette_white_in pascal, 5
 		call	_frame_delay stdcall, 200
 		pop	cx
 		push	3
@@ -3971,8 +3963,7 @@ sub_BDBD	proc near
 		push	ds
 		push	offset aEd3a_grp ; "ed3a.grp"
 		call	sub_C73A
-		push	0C8h ; 'È'
-		call	sub_C842
+		call	grp_palette_settone pascal, 200
 		xor	si, si
 		jmp	short loc_BE07
 ; ---------------------------------------------------------------------------
@@ -3990,17 +3981,15 @@ loc_BDD6:
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
-		mov	dx, 0C8h ; 'È'
+		mov	dx, 200
 		sub	dx, ax
-		push	dx
-		call	sub_C842
+		call	grp_palette_settone pascal, dx
 		inc	si
 
 loc_BE07:
 		cmp	si, 14h
 		jl	short loc_BDD6
-		push	64h ; 'd'
-		call	sub_C842
+		call	grp_palette_settone pascal, 100
 		xor	si, si
 		jmp	short loc_BE38
 ; ---------------------------------------------------------------------------
@@ -4034,17 +4023,15 @@ loc_BE41:
 		call	_frame_delay stdcall, 8
 		pop	cx
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 64h	; 'd'
-		push	ax
-		call	sub_C842
+		imul	ax, 10
+		add	ax, 100
+		call	grp_palette_settone pascal, ax
 		inc	si
 
 loc_BE64:
 		cmp	si, 0Ah
 		jl	short loc_BE41
-		push	0C8h ; 'È'
-		call	sub_C842
+		call	grp_palette_settone pascal, 200
 		cmp	byte_14021, 1
 		jnz	short loc_BE7D
 		call	sub_BF07
@@ -4074,7 +4061,7 @@ sub_BE83	proc near
 		push	0
 		call	sub_C78B
 		pop	cx
-		call	sub_C988 pascal, 4
+		call	grp_palette_white_in pascal, 4
 		call	_frame_delay stdcall, 250
 		pop	cx
 		push	1
@@ -4115,7 +4102,7 @@ sub_BF07	proc near
 		push	0
 		call	sub_C78B
 		pop	cx
-		call	sub_C988 pascal, 4
+		call	grp_palette_white_in pascal, 4
 		call	_frame_delay stdcall, 300
 		pop	cx
 		xor	si, si
@@ -4201,12 +4188,12 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	sub_C911 pascal, 5
+		call	grp_palette_black_out pascal, 5
 		call	_z_graph_clear
 		push	[bp+arg_0]
 		call	sub_C78B
 		pop	cx
-		call	sub_C939 pascal, 5
+		call	grp_palette_black_in pascal, 5
 		call	_frame_delay stdcall, 50
 		pop	cx
 		pop	bp
@@ -4222,7 +4209,7 @@ sub_C03D	proc near
 		push	bp
 		mov	bp, sp
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_C911 pascal, 10
+		call	grp_palette_black_out pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -4246,8 +4233,7 @@ loc_C078:
 		push	0
 		call	sub_C78B
 		pop	cx
-		push	64h ; 'd'
-		call	sub_C842
+		call	grp_palette_settone pascal, 100
 		call	_frame_delay stdcall, 50
 		pop	cx
 		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
@@ -4730,7 +4716,7 @@ var_10		= byte ptr -10h
 		push	offset off_12EC0
 		mov	cx, 10h
 		call	SCOPY@
-		call	sub_C911 pascal, 10
+		call	grp_palette_black_out pascal, 10
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -4742,7 +4728,7 @@ var_10		= byte ptr -10h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_C939 pascal, 8
+		call	grp_palette_black_in pascal, 8
 		call	graph_type_kanji pascal, 400, 32, 5, ds, offset aUmx_1	; "“Œ•ûèËˆÙ“`"
 		call	graph_type_ank pascal, 496, 32, 3, ds, offset aVer	; "ver"
 		call	graph_type_ank pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
@@ -4942,8 +4928,7 @@ loc_C6C7:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	32h ; '2'
-		call	sub_C842
+		call	grp_palette_settone pascal, 50
 		mov	_z_Palettes[3 * 3].r, 07h
 		mov	_z_Palettes[3 * 3].g, 0Fh
 		mov	_z_Palettes[3 * 3].b, 07h
@@ -5093,260 +5078,12 @@ loc_C81D:
 		retf
 sub_C78B	endp
 
-include th01/hardware/frame_delay_fuuin.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C842	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	[bp+arg_0], 0
-		jge	short loc_C855
-		mov	[bp+arg_0], 0
-		jmp	short loc_C861
-; ---------------------------------------------------------------------------
-
-loc_C855:
-		cmp	[bp+arg_0], 0C8h ; 'È'
-		jle	short loc_C861
-		mov	[bp+arg_0], 0C8h ; 'È'
-
-loc_C861:
-		mov	si, 1
-		jmp	loc_C8F1
-; ---------------------------------------------------------------------------
-
-loc_C867:
-		xor	di, di
-		jmp	short loc_C8E8
-; ---------------------------------------------------------------------------
-
-loc_C86B:
-		cmp	[bp+arg_0], 64h	; 'd'
-		jle	short loc_C8A9
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, byte ptr _grp_palette[bx+di]
-		cbw
-		mov	dx, 0Fh
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		mov	ax, [bp+arg_0]
-		add	ax, 0FF9Ch
-		imul	[bp+var_2]
-		mov	[bp+var_2], ax
-		mov	bx, 64h	; 'd'
-		mov	ax, [bp+var_2]
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, byte ptr _grp_palette[bx+di]
-		add	al, byte ptr [bp+var_2]
-		jmp	short loc_C8DE
-; ---------------------------------------------------------------------------
-
-loc_C8A9:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, byte ptr _grp_palette[bx+di]
-		cbw
-		mov	[bp+var_2], ax
-		mov	ax, 64h	; 'd'
-		sub	ax, [bp+arg_0]
-		imul	[bp+var_2]
-		mov	[bp+var_2], ax
-		mov	bx, 64h	; 'd'
-		mov	ax, [bp+var_2]
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, byte ptr _grp_palette[bx+di]
-		mov	dl, byte ptr [bp+var_2]
-		neg	dl
-		add	al, dl
-
-loc_C8DE:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	_z_Palettes[bx+di], al
-		inc	di
-
-loc_C8E8:
-		cmp	di, size rgb_t
-		jge	short loc_C8F0
-		jmp	loc_C86B
-; ---------------------------------------------------------------------------
-
-loc_C8F0:
-		inc	si
-
-loc_C8F1:
-		cmp	si, COLOR_COUNT
-		jge	short loc_C8F9
-		jmp	loc_C867
-; ---------------------------------------------------------------------------
-
-loc_C8F9:
-		mov	ax, [bp+arg_0]
-		mov	word_13507, ax
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_C842	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C911	proc far
-
-@@frames		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 64h	; 'd'
-		xor	si, si
-		jmp	short loc_C92E
-; ---------------------------------------------------------------------------
-
-loc_C91D:
-		sub	di, 5
-		push	di
-		call	sub_C842
-		call	_frame_delay stdcall, [bp+@@frames]
-		pop	cx
-		inc	si
-
-loc_C92E:
-		cmp	si, 14h
-		jl	short loc_C91D
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_C911	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C939	proc far
-
-@@frames		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	di, di
-		xor	si, si
-		jmp	short loc_C955
-; ---------------------------------------------------------------------------
-
-loc_C944:
-		add	di, 5
-		push	di
-		call	sub_C842
-		call	_frame_delay stdcall, [bp+@@frames]
-		pop	cx
-		inc	si
-
-loc_C955:
-		cmp	si, 14h
-		jl	short loc_C944
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_C939	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C960	proc far
-
-@@frames		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 64h	; 'd'
-		xor	si, si
-		jmp	short loc_C97D
-; ---------------------------------------------------------------------------
-
-loc_C96C:
-		add	di, 5
-		push	di
-		call	sub_C842
-		call	_frame_delay stdcall, [bp+@@frames]
-		pop	cx
-		inc	si
-
-loc_C97D:
-		cmp	si, 14h
-		jl	short loc_C96C
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_C960	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C988	proc far
-
-@@frames		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 0C8h ; 'È'
-		xor	si, si
-		jmp	short loc_C9A5
-; ---------------------------------------------------------------------------
-
-loc_C994:
-		sub	di, 5
-		push	di
-		call	sub_C842
-		call	_frame_delay stdcall, [bp+@@frames]
-		pop	cx
-		inc	si
-
-loc_C9A5:
-		cmp	si, 14h
-		jl	short loc_C994
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_C988	endp
-
+	extern _frame_delay:proc
+	extern GRP_PALETTE_SETTONE:proc
+	extern GRP_PALETTE_BLACK_OUT:proc
+	extern GRP_PALETTE_BLACK_IN:proc
+	extern GRP_PALETTE_WHITE_OUT:proc
+	extern GRP_PALETTE_WHITE_IN:proc
 	extern GRAPH_TYPE_ANK:proc
 	extern GRAPH_TYPE_KANJI:proc
 fuuin_04_TEXT	ends
@@ -5437,8 +5174,7 @@ arg_2		= word ptr  8
 loc_EA34:
 		call	file_seek pascal, 0, 12h, 0
 		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		push	word_13507
-		call	sub_C842
+		call	grp_palette_settone pascal, _grp_palette_tone
 		call	file_close
 		xor	ax, ax
 		pop	bp
@@ -6076,7 +5812,8 @@ word_134FA	dw 1
 		db    0
 		db    0
 		db    0
-word_13507	dw 64h
+public _grp_palette_tone
+_grp_palette_tone	dw 100
 byte_13509	db 0
 include th01/mdrv2[data].asm
 include libs/master.lib/version[data].asm

@@ -4,6 +4,7 @@
  */
 
 #include "th01/th01.h"
+#include "th01/hardware/vsync.h"
 
 #pragma option -2
 #pragma warn -aus
@@ -14,7 +15,6 @@ extern int vsync_callback_is_set;
 extern int RES_X_HALF;
 extern int RES_Y_HALF;
 
-extern int vsync_frame;
 extern int vsync_unused;
 extern void interrupt (*vsync_callback_old)(void);
 extern void (*vsync_callback)(void);

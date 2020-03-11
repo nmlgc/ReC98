@@ -1,4 +1,5 @@
-extern int vsync_frame;
+#include "th01/hardware/vsync.h"
+
 #define z_vsync_reset1() (vsync_frame = 0)
 // #define z_vsync_reset2() (vsync_unused = 0)
 
