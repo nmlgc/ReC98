@@ -33,7 +33,6 @@ include th01/th01.inc
 	extern LXLSH@:proc
 	extern LXMUL@:proc
 	extern SCOPY@:proc
-	extern __fgetc:proc
 	extern __mbcjmstojis:proc
 	extern __mbctype:byte
 	extern __setargv__:proc ; main() needs both to be set
@@ -45,7 +44,6 @@ include th01/th01.inc
 	extern _farfree:proc
 	extern _farmalloc:proc
 	extern _fclose:proc
-	extern _fgetc:proc
 	extern _filelength:proc
 	extern _fopen:proc
 	extern _int86:proc
@@ -3475,9 +3473,7 @@ sub_B945	proc far
 		add	sp, 4
 		call	_mdrv2_bgm_play
 		call	grp_palette_settone pascal, 0
-		push	ds
-		push	offset aEd1a_grp ; "ED1A.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd1a_grp ; "ED1A.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -3503,9 +3499,7 @@ sub_B945	proc far
 		pop	cx
 		call	_frame_delay stdcall, 50
 		pop	cx
-		push	ds
-		push	offset aEd1b_grp ; "ED1B.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd1b_grp ; "ED1B.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -3527,9 +3521,7 @@ sub_B945	proc far
 		pop	cx
 		call	_z_graph_clear
 		call	grp_palette_settone pascal, 100
-		push	ds
-		push	offset aEd1c_grp ; "ED1C.GRP"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
 		xor	si, si
 		jmp	short loc_BA49
 ; ---------------------------------------------------------------------------
@@ -3560,9 +3552,7 @@ loc_BA49:
 		pop	cx
 		call	_frame_delay stdcall, 40
 		pop	cx
-		push	ds
-		push	offset aEd1d_grp ; "ED1D.GRP"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
 		push	3
 		call	sub_C78B
 		pop	cx
@@ -3668,9 +3658,7 @@ loc_BB1E:
 		call	sub_C78B
 		pop	cx
 		call	grp_palette_settone pascal, 105
-		push	ds
-		push	offset aEd1e_grp ; "ED1E.GRP"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -3843,9 +3831,7 @@ sub_BC7C	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEd2a_grp ; "ed2a.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd2a_grp ; "ed2a.grp"
 		call	grp_palette_settone pascal, 200
 		push	0
 		call	sub_C78B
@@ -3879,9 +3865,7 @@ sub_BC7C	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BCFC:
-		push	ds
-		push	offset aEd4a_grp ; "ed4a.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd4a_grp ; "ed4a.grp"
 		xor	si, si
 		jmp	short loc_BD2A
 ; ---------------------------------------------------------------------------
@@ -3962,9 +3946,7 @@ sub_BDBD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEd3a_grp ; "ed3a.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd3a_grp ; "ed3a.grp"
 		call	grp_palette_settone pascal, 200
 		xor	si, si
 		jmp	short loc_BE07
@@ -4057,9 +4039,7 @@ sub_BDBD	endp
 sub_BE83	proc near
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset aEd3b_grp ; "ed3b.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd3b_grp ; "ed3b.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -4098,9 +4078,7 @@ sub_BF07	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	ds
-		push	offset aEd5a_grp ; "ed5a.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd5a_grp ; "ed5a.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -4127,9 +4105,7 @@ loc_BF30:
 loc_BF51:
 		cmp	si, 0Fh
 		jl	short loc_BF30
-		push	ds
-		push	offset aEd5b_grp ; "ed5b.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd5b_grp ; "ed5b.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -4150,9 +4126,7 @@ loc_BF51:
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		push	ds
-		push	offset aEd5c_grp ; "ed5c.grp"
-		call	sub_C73A
+		call	grp_put_palette_show_1 pascal, ds, offset aEd5c_grp ; "ed5c.grp"
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -4231,7 +4205,7 @@ loc_C074:
 		push	offset aEndb_b_grp ; "endb_b.grp"
 
 loc_C078:
-		call	sub_C73A
+		call	grp_put_palette_show_1
 		push	0
 		call	sub_C78B
 		pop	cx
@@ -4722,10 +4696,7 @@ var_10		= byte ptr -10h
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aEndm_a_grp ; "endm_a.grp"
-		call	sub_EB39
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aEndm_a_grp, ds	; "endm_a.grp"
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
@@ -4972,28 +4943,7 @@ fuuin_04_TEXT	segment	byte public 'CODE' use16
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C73A	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EB39
-		add	sp, 4
-		pop	bp
-		retf	4
-sub_C73A	endp
-
+include th01/formats/grp_put_palette_show_1.asm
 EGC_START_COPY_DEF 1, far
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5148,347 +5098,12 @@ fuuin_09_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_10_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_10_TEXT
-		;org 0Dh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA1D	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_EA34
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_EA34:
-		call	file_seek pascal, 0, 12h, 0
-		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		call	grp_palette_settone pascal, _grp_palette_tone
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_EA1D	endp
-
-; ---------------------------------------------------------------------------
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA5E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_EA75
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_EA75:
-		call	file_seek pascal, 0, 12h, 0
-		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_EA5E	endp
-
-; ---------------------------------------------------------------------------
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA96	proc far
-
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	bx, [bp+stream]
-		dec	word ptr es:[bx]
-		jl	short loc_EABB
-		les	bx, [bp+stream]
-		mov	dx, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, dx
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_EAC9
-; ---------------------------------------------------------------------------
-
-loc_EABB:
-		push	word ptr [bp+stream+2]
-		push	word ptr [bp+stream] ; stream
-		call	__fgetc
-		add	sp, 4
-
-loc_EAC9:
-		mov	di, ax
-		les	bx, [bp+stream]
-		dec	word ptr es:[bx]
-		jl	short loc_EAEB
-		les	bx, [bp+stream]
-		mov	dx, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, dx
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_EAF9
-; ---------------------------------------------------------------------------
-
-loc_EAEB:
-		push	word ptr [bp+stream+2]
-		push	word ptr [bp+stream] ; stream
-		call	__fgetc
-		add	sp, 4
-
-loc_EAF9:
-		shl	ax, 8
-		add	di, ax
-		mov	ax, di
-		jmp	short $+2
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_EA96	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EB06	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_EB32
-; ---------------------------------------------------------------------------
-
-loc_EB0D:
-		xor	cx, cx
-		jmp	short loc_EB2C
-; ---------------------------------------------------------------------------
-
-loc_EB11:
-		mov	ax, dx
-		imul	ax, size rgb_t
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		add	bx, cx
-		mov	al, es:[bx]
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	byte ptr _grp_palette[bx], al
-		inc	cx
-
-loc_EB2C:
-		cmp	cx, size rgb_t
-		jl	short loc_EB11
-		inc	dx
-
-loc_EB32:
-		cmp	dx, COLOR_COUNT
-		jl	short loc_EB0D
-		pop	bp
-		retf
-sub_EB06	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EB39	proc far
-
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		push	4000h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word_1464C, dx
-		mov	off_1464A, ax
-		cmp	_flag_palette_show, 1
-		jnz	short loc_EB5A
-		or	si, 2
-
-loc_EB5A:
-		cmp	_flag_grp_colorkey, 1
-		jnz	short loc_EB64
-		mov	si, 0F40h
-
-loc_EB64:
-		cmp	_flag_grp_put, 1
-		jnz	short loc_EB8E
-		push	si
-		push	64h ; 'd'
-		push	0
-		push	0
-		push	4000h
-		push	word_1464C
-		push	off_1464A
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	_PiLoadL
-		add	sp, 12h
-		mov	[bp+var_1], al
-
-loc_EB8E:
-		cmp	_flag_palette_show, 1
-		jnz	short loc_EBA1
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EA1D
-		jmp	short loc_EBAB
-; ---------------------------------------------------------------------------
-
-loc_EBA1:
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EA5E
-
-loc_EBAB:
-		add	sp, 4
-		push	word_1464C
-		push	off_1464A	; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	al, [bp+var_1]
-		cbw
-		jmp	short $+2
-		pop	si
-		leave
-		retf
-sub_EB39	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EBC7	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		mov	_flag_palette_show, 0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EB39
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		mov	ax, [bp+var_2]
-		leave
-		retf
-sub_EBC7	endp
-
-; ---------------------------------------------------------------------------
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EBEE	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		mov	_flag_grp_put, 0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EB39
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_grp_put, 1
-		mov	ax, [bp+var_2]
-		leave
-		retf
-sub_EBEE	endp
-
-; ---------------------------------------------------------------------------
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EC15	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		mov	_flag_grp_colorkey, 1
-		mov	_flag_palette_show, 0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_EB39
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		mov	_flag_grp_colorkey, 0
-		mov	ax, [bp+var_2]
-		leave
-		retf
-sub_EC15	endp
-
+	extern _grp_put_palette_show:proc
 fuuin_10_TEXT	ends
 
-; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 fuuin_11_TEXT	segment	byte public 'CODE' use16
-		leave
-		retf
 	extern VRAM_PLANES_SET:proc
 	extern _egc_copy_rect_1_to_0:proc
 fuuin_11_TEXT	ends
@@ -6312,9 +5927,7 @@ include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?
-; void (*off_1464A)(void)
-off_1464A	dw ?
-word_1464C	dw ?
+include th01/formats/grp_buf[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm

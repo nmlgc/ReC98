@@ -1,4 +1,27 @@
 extern Palette4 grp_palette;
+
+// Overwrites [grp_palette] with [pal].
+void grp_palette_set_all(const Palette4& pal);
+
+// Loads [grp_palette] from the .GRP file with the given [fn], and updates the
+// hardware palette with it. Returns garbage.
+int grp_palette_load_show(const char *fn);
+
+// Sane version of grp_palette_load_show(). Returns 0 on success, 1 on file
+// opening failure.
+int grp_palette_load_show_sane(const char *fn);
+
+// Displays the .GRP image loaded from [fn] on the currently accessed VRAM
+// page, using the current hardware palette. Returns the return value from
+// PiLoad.
+int grp_put(const char *fn);
+
+// Like grp_put(), but sets the hardware palette to the one in [fn]'s header.
+int grp_put_palette_show(const char *fn);
+
+// Like grp_put(), but treats color #15 as transparent.
+int grp_put_colorkey(const char *fn);
+
 #if (BINARY == 'E')
 	extern int grp_palette_tone;
 
@@ -12,4 +35,7 @@ extern Palette4 grp_palette;
 	void pascal grp_palette_black_in(unsigned int frames);
 	void pascal grp_palette_white_out(unsigned int frames);
 	void pascal grp_palette_white_in(unsigned int frames);
+
+	// Like grp_put(), but always switches to page 1 first.
+	int pascal grp_put_palette_show_1(const char *fn);
 #endif

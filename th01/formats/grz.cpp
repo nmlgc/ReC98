@@ -1,5 +1,3 @@
-#pragma option -Z
-
 extern "C" {
 
 #include <stddef.h>

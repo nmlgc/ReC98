@@ -29,7 +29,6 @@ include th01/th01.inc
 	extern @$bnwa$qui:proc
 	extern FTOL@:proc
 	extern SCOPY@:proc
-	extern __fgetc:proc
 	extern __mbcjmstojis:proc
 	extern __mbctype:byte
 	extern __mscjmstojis:proc
@@ -794,16 +793,10 @@ sub_A719	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aReiiden2_grp ; "REIIDEN2.grp"
-		call	sub_DAEC
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
 		call	_z_palette_black
 		call	_graph_copy_page_back_to_front
-		push	ds
-		push	offset aReiiden3_grp ; "REIIDEN3.grp"
-		call	sub_DB6F
-		add	sp, 4
+		call	_grp_put c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -831,10 +824,7 @@ sub_A772	proc far
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aOp_win_grp ; "op_win.grp"
-		call	sub_DBAF
-		add	sp, 4
+		call	_grp_put_colorkey c, offset aOp_win_grp, ds ; "op_win.grp"
 		call	_graph_copy_page_back_to_front
 		pop	bp
 		retf
@@ -2956,264 +2946,9 @@ loc_D9D5:
 		leave
 		retf
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D9E3	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_D9F8
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D9F8:
-		call	file_seek pascal, large 12h, 0
-		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		call	_z_palette_set_all_show c, offset _grp_palette, ds
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_D9E3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DA22	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_DA37
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_DA37:
-		call	file_seek pascal, large 12h, 0
-		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_DA22	endp
-
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	bx, [bp+6]
-		dec	word ptr es:[bx]
-		jl	short loc_DA77
-		mov	ax, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, ax
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_DA83
-; ---------------------------------------------------------------------------
-
-loc_DA77:
-		pushd	dword ptr [bp+6]
-		call	__fgetc
-		add	sp, 4
-
-loc_DA83:
-		mov	di, ax
-		les	bx, [bp+6]
-		dec	word ptr es:[bx]
-		jl	short loc_DAA2
-		mov	ax, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, ax
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_DAAE
-; ---------------------------------------------------------------------------
-
-loc_DAA2:
-		pushd	dword ptr [bp+6]
-		call	__fgetc
-		add	sp, 4
-
-loc_DAAE:
-		shl	ax, 8
-		add	di, ax
-		mov	ax, di
-		pop	di
-		pop	si
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_DAE5
-; ---------------------------------------------------------------------------
-
-loc_DAC0:
-		xor	cx, cx
-		jmp	short loc_DADF
-; ---------------------------------------------------------------------------
-
-loc_DAC4:
-		mov	ax, dx
-		imul	ax, size rgb_t
-		les	bx, [bp+6]
-		add	bx, ax
-		add	bx, cx
-		mov	al, es:[bx]
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	byte ptr _grp_palette[bx], al
-		inc	cx
-
-loc_DADF:
-		cmp	cx, size rgb_t
-		jl	short loc_DAC4
-		inc	dx
-
-loc_DAE5:
-		cmp	dx, COLOR_COUNT
-		jl	short loc_DAC0
-		pop	bp
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DAEC	proc far
-
-var_1		= byte ptr -1
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		push	4000h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr font+2, dx
-		mov	word ptr font, ax
-		cmp	_flag_palette_show, 1
-		jnz	short loc_DB0D
-		or	si, 2
-
-loc_DB0D:
-		cmp	_flag_grp_colorkey, 1
-		jnz	short loc_DB17
-		mov	si, 0F40h
-
-loc_DB17:
-		cmp	_flag_grp_put, 1
-		jnz	short loc_DB3F
-		push	si
-		push	640000h
-		pushd	4000h
-		pushd	[font]
-		pushd	[bp+arg_0]
-		call	_PiLoadL
-		add	sp, 12h
-		mov	[bp+var_1], al
-
-loc_DB3F:
-		cmp	_flag_palette_show, 1
-		jnz	short loc_DB50
-		pushd	[bp+arg_0]
-		call	sub_D9E3
-		jmp	short loc_DB58
-; ---------------------------------------------------------------------------
-
-loc_DB50:
-		pushd	[bp+arg_0]
-		call	sub_DA22
-
-loc_DB58:
-		add	sp, 4
-		pushd	[font]	; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	al, [bp+var_1]
-		cbw
-		pop	si
-		leave
-		retf
-sub_DAEC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DB6F	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	_flag_palette_show, 0
-		pushd	[bp+arg_0]
-		call	sub_DAEC
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		leave
-		retf
-sub_DB6F	endp
-
-; ---------------------------------------------------------------------------
-		enter	2, 0
-		mov	_flag_grp_put, 0
-		pushd	dword ptr [bp+6]
-		call	sub_DAEC
-		add	sp, 4
-		mov	[bp-2],	ax
-		mov	_flag_grp_put, 1
-		leave
-		retf
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DBAF	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	_flag_grp_colorkey, 1
-		mov	_flag_palette_show, 0
-		pushd	[bp+arg_0]
-		call	sub_DAEC
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		mov	_flag_grp_colorkey, 0
-		leave
-		retf
-sub_DBAF	endp
+	extern _grp_put_palette_show:proc
+	extern _grp_put:proc
+	extern _grp_put_colorkey:proc
 op_09_TEXT	ends
 
 ; ===========================================================================
@@ -3736,8 +3471,7 @@ include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 include th01/formats/grz[bss].asm
-; void (*font)(void)
-font		dd ?
+include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm

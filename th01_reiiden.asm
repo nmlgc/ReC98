@@ -35,7 +35,6 @@ include th01/th01.inc
 	extern LXMUL@:proc
 	extern SCOPY@:proc
 	extern __control87:proc
-	extern __fgetc:proc
 	extern __lrotl:proc
 	extern __lrotr:proc
 	extern __mbcjmstojis:proc
@@ -1207,9 +1206,7 @@ loc_BD43:
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_BD75
-		pushd	[bp+s1]
-		call	sub_10BAE
-		add	sp, 4
+		call	_grp_put_palette_show c, large [bp+s1]
 
 loc_BD75:
 		push	ds
@@ -6227,302 +6224,11 @@ loc_10A97:
 		retf
 sub_109B2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10AA5	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_10ABA
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_10ABA:
-		call	file_seek pascal, large 18, 0
-		call	file_read pascal, ds, offset _grp_palette, size palette_t
-		call	_z_palette_set_all_show c, offset _grp_palette, ds
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_10AA5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10AE4	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_10AF9
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_10AF9:
-		pushd	12h
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _grp_palette
-		push	30h ; '0'
-		call	file_read
-		call	file_close
-		xor	ax, ax
-		pop	bp
-		retf
-sub_10AE4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10B17	proc far
-
-stream		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		les	bx, [bp+stream]
-		dec	word ptr es:[bx]
-		jl	short loc_10B39
-		mov	ax, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, ax
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_10B45
-; ---------------------------------------------------------------------------
-
-loc_10B39:
-		pushd	[bp+stream] ; stream
-		call	__fgetc
-		add	sp, 4
-
-loc_10B45:
-		mov	di, ax
-		les	bx, [bp+stream]
-		dec	word ptr es:[bx]
-		jl	short loc_10B64
-		mov	ax, es:[bx+0Eh]
-		mov	si, es:[bx+0Ch]
-		inc	word ptr es:[bx+0Ch]
-		mov	es, ax
-		mov	al, es:[si]
-		mov	ah, 0
-		jmp	short loc_10B70
-; ---------------------------------------------------------------------------
-
-loc_10B64:
-		pushd	[bp+stream] ; stream
-		call	__fgetc
-		add	sp, 4
-
-loc_10B70:
-		shl	ax, 8
-		add	di, ax
-		mov	ax, di
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_10B17	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10B7B	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_10BA7
-; ---------------------------------------------------------------------------
-
-loc_10B82:
-		xor	cx, cx
-		jmp	short loc_10BA1
-; ---------------------------------------------------------------------------
-
-loc_10B86:
-		mov	ax, dx
-		imul	ax, size rgb_t
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		add	bx, cx
-		mov	al, es:[bx]
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	byte ptr _grp_palette[bx], al
-		inc	cx
-
-loc_10BA1:
-		cmp	cx, size rgb_t
-		jl	short loc_10B86
-		inc	dx
-
-loc_10BA7:
-		cmp	dx, COLOR_COUNT
-		jl	short loc_10B82
-		pop	bp
-		retf
-sub_10B7B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10BAE	proc far
-
-var_1		= byte ptr -1
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		push	si
-		xor	si, si
-		push	4000h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr off_38E28+2, dx
-		mov	word ptr off_38E28, ax
-		cmp	_flag_palette_show, 1
-		jnz	short loc_10BCF
-		or	si, 2
-
-loc_10BCF:
-		cmp	_flag_grp_colorkey, 1
-		jnz	short loc_10BD9
-		mov	si, 0F40h
-
-loc_10BD9:
-		cmp	_flag_grp_put, 1
-		jnz	short loc_10C01
-		push	si
-		push	640000h
-		pushd	4000h
-		pushd	[off_38E28]
-		pushd	[bp+arg_0]
-		call	_PiLoadL
-		add	sp, 12h
-		mov	[bp+var_1], al
-
-loc_10C01:
-		cmp	_flag_palette_show, 1
-		jnz	short loc_10C12
-		pushd	[bp+arg_0]
-		call	sub_10AA5
-		jmp	short loc_10C1A
-; ---------------------------------------------------------------------------
-
-loc_10C12:
-		pushd	[bp+arg_0]
-		call	sub_10AE4
-
-loc_10C1A:
-		add	sp, 4
-		pushd	[off_38E28] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	al, [bp+var_1]
-		cbw
-		pop	si
-		leave
-		retf
-sub_10BAE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10C31	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	_flag_palette_show, 0
-		pushd	[bp+arg_0]
-		call	sub_10BAE
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		leave
-		retf
-sub_10C31	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10C51	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	_flag_grp_put, 0
-		pushd	[bp+arg_0]
-		call	sub_10BAE
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_grp_put, 1
-		leave
-		retf
-sub_10C51	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10C71	proc far
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	2, 0
-		mov	_flag_grp_colorkey, 1
-		mov	_flag_palette_show, 0
-		pushd	[bp+arg_0]
-		call	sub_10BAE
-		add	sp, 4
-		mov	[bp+var_2], ax
-		mov	_flag_palette_show, 1
-		mov	_flag_grp_colorkey, 0
-		leave
-		retf
-sub_10C71	endp
-
+	extern _grp_palette_load_show_sane:proc
+	extern _grp_palette_load_show:proc
+	extern _grp_put_palette_show:proc
+	extern _grp_put:proc
+	extern _grp_put_colorkey:proc
 	extern _grx_put:proc
 	extern _grx_free:proc
 	extern _grz_load_single:proc
@@ -9095,9 +8801,7 @@ sub_12F62	proc near
 		mov	bp, sp
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset aClear3_grp ; "CLEAR3.grp"
-		call	sub_10C31
+		call	_grp_put stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
 		push	ds
 		push	offset aNumb_ptn ; "numb.ptn"
 		push	7
@@ -12096,16 +11800,12 @@ arg_6		= dword	ptr  0Ch
 		pop	cx
 		cmp	di, 1Eh
 		jge	short loc_148F0
-		push	ds
-		push	offset aGame_o_grp ; "game_o.grp"
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, offset aGame_o_grp, ds ; "game_o.grp"
 		jmp	short loc_148F9
 ; ---------------------------------------------------------------------------
 
 loc_148F0:
-		push	ds
-		push	offset aEndm_a_grp ; "endm_a.grp"
-		call	sub_10C31
+		call	_grp_put stdcall, offset aEndm_a_grp, ds ; "endm_a.grp"
 
 loc_148F9:
 		add	sp, 4
@@ -27789,8 +27489,7 @@ include th01/formats/grp_palette[bss].asm
 		dd    ?
 		dd    ?
 include th01/formats/grz[bss].asm
-; void (*off_38E28)(void)
-off_38E28	dd ?
+include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm

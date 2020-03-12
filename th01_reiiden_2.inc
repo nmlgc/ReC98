@@ -409,10 +409,7 @@ sub_1B383	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		push	ds
-		push	offset aBoss2_grp_0 ; "boss2.grp"
-		call	sub_10C51
-		add	sp, 4
+		call	_grp_palette_load_show c, offset aBoss2_grp_0, ds ; "boss2.grp"
 		call	sub_232A4
 		mov	word_3984E, 0
 		mov	word_39880, 0
@@ -5026,9 +5023,7 @@ sub_1E33A	proc far
 		push	offset point_3985C
 		call	sub_1568F
 		mov	word_39886, 0
-		push	ds
-		push	offset aBoss3_grp_0 ; "boss3.grp"
-		call	sub_10C51
+		call	_grp_palette_load_show stdcall, offset aBoss3_grp_0, ds ; "boss3.grp"
 		add	sp, 18h
 		xor	si, si
 		jmp	short loc_1E3A2
@@ -13087,9 +13082,7 @@ sub_22694	proc far
 		push	offset point_3988E
 		call	sub_1568F
 		mov	word_398B8, 0
-		push	ds
-		push	offset aBoss1_grp_0 ; "boss1.grp"
-		call	sub_10AA5
+		call	_grp_palette_load_show_sane stdcall, offset aBoss1_grp_0, ds	; "boss1.grp"
 		add	sp, 22h
 		xor	si, si
 		jmp	short loc_22717
@@ -23739,14 +23732,10 @@ sub_2869E	proc far
 		push	si
 		mov	byte_360CC, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		push	ds
-		push	offset aBoss6_l_grp ; "boss6_l.grp"
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, offset aBoss6_l_grp, ds ; "boss6_l.grp"
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset aBoss6_h_grp ; "boss6_h.grp"
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, offset aBoss6_h_grp, ds ; "boss6_h.grp"
 		push	0
 		call	_graph_accesspage_func
 		push	4
@@ -23782,8 +23771,7 @@ loc_2871C:
 		call	sub_11738
 		push	1
 		call	_graph_accesspage_func
-		pushd	[off_35DAB]
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, large [off_35DAB]
 		push	0
 		call	_graph_accesspage_func
 		push	28h ; '('
@@ -26271,8 +26259,7 @@ loc_29D0E:
 		call	_graph_accesspage_func
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		pushd	dword ptr [bx+140Bh]
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, large off_35DAB[bx]
 		call	_graph_copy_page_back_to_front
 		push	ds
 		push	offset _z_Palettes
@@ -30716,20 +30703,14 @@ loc_2C8AE:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aBoss6_grp ; "boss6.grp"
-		call	sub_10BAE
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aBoss6_grp, ds ; "boss6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
 		call	sub_232A4
 		call	_graph_copy_page_back_to_front
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aBoss6_a5_grp ; "boss6_a5.grp"
-		call	sub_10C31
-		add	sp, 4
+		call	_grp_put c, offset aBoss6_a5_grp, ds ; "boss6_a5.grp"
 		push	0
 		call	_graph_accesspage_func
 
@@ -30809,10 +30790,7 @@ loc_2C9DA:
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		push	ds
-		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
-		call	sub_10BAE
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	_graph_copy_page_back_to_front
 		mov	byte_34A49, 1
@@ -31077,10 +31055,7 @@ loc_2CC9E:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	ds
-		push	offset aBoss6_a6_grp ; "boss6_a6.grp"
-		call	sub_10BAE
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	sub_232A4
 		call	_graph_copy_page_back_to_front
@@ -31367,9 +31342,7 @@ var_2		= word ptr -2
 		push	di
 		mov	byte_360CC, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		push	ds
-		push	offset aBoss7_d1_grp ; "boss7_d1.grp"
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
 		push	ds
 		push	offset _z_Palettes
 		call	sub_C433
@@ -31377,9 +31350,7 @@ var_2		= word ptr -2
 		call	sub_2091E
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset aBoss8_a1_grp ; "boss8_a1.grp"
-		call	sub_10BAE
+		call	_grp_put_palette_show stdcall, offset aBoss8_a1_grp, ds ; "boss8_a1.grp"
 		push	0
 		call	_graph_accesspage_func
 		push	ds
@@ -31639,18 +31610,10 @@ loc_2D16E:
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 09h
 		call	_z_palette_set_show
-		push	ds
-		push	offset aBoss8_d1_grp ; "boss8_d1.grp"
-		call	sub_10C71
-		push	ds
-		push	offset aBoss8_d2_grp ; "boss8_d2.grp"
-		call	sub_10C71
-		push	ds
-		push	offset aBoss8_d3_grp ; "boss8_d3.grp"
-		call	sub_10C71
-		push	ds
-		push	offset aBoss8_d4_grp ; "boss8_d4.grp"
-		call	sub_10C71
+		call	_grp_put_colorkey stdcall, offset aBoss8_d1_grp, ds ; "boss8_d1.grp"
+		call	_grp_put_colorkey stdcall, offset aBoss8_d2_grp, ds ; "boss8_d2.grp"
+		call	_grp_put_colorkey stdcall, offset aBoss8_d3_grp, ds ; "boss8_d3.grp"
+		call	_grp_put_colorkey stdcall, offset aBoss8_d4_grp, ds ; "boss8_d4.grp"
 		add	sp, 1Ah
 		xor	di, di
 		jmp	short loc_2D1F0
@@ -35817,10 +35780,7 @@ loc_2FA5C:
 loc_2FA62:
 		cmp	di, 19h
 		jl	short loc_2FA4B
-		push	ds
-		push	offset aBoss7_d1_grp ; "boss7_d1.grp"
-		call	sub_10BAE
-		add	sp, 4
+		call	_grp_put_palette_show c, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
 		xor	si, si
 		jmp	short loc_2FA8C
 ; ---------------------------------------------------------------------------
