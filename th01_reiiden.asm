@@ -18,6 +18,8 @@
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
+BINARY = 'M'
+
 include ReC98.inc
 include th01/th01.inc
 
@@ -3353,14 +3355,14 @@ off_D0FD	dw offset loc_D0E1
 
 sub_D10B	proc far
 
-var_4		= dword	ptr -4
+@@ptn_size_total		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		mov	[bp+var_4], 0
+		mov	[bp+@@ptn_size_total], 0
 
 loc_D118:
-		mov	[bp+var_4], 0
+		mov	[bp+@@ptn_size_total], 0
 		cmp	_mode_test, 1
 		jnz	loc_D317
 		call	_z_graph_hide
@@ -3406,7 +3408,7 @@ loc_D118:
 ; ---------------------------------------------------------------------------
 
 loc_D1A9:
-		mov	al, [si+735h]
+		mov	al, _ptn_image_count[si]
 		cbw
 		cwde
 		imul	eax, 281h
@@ -3420,23 +3422,23 @@ loc_D1A9:
 		jl	short loc_D1E2
 		cmp	si, 5
 		jz	short loc_D1E2
-		mov	al, [si+735h]
+		mov	al, _ptn_image_count[si]
 		cbw
 		cwde
 		imul	eax, 281h
-		add	[bp+var_4], eax
+		add	[bp+@@ptn_size_total], eax
 
 loc_D1E2:
 		inc	si
 
 loc_D1E3:
-		cmp	si, 8
+		cmp	si, PTN_COUNT
 		jl	short loc_D1A9
 		push	ds
 		push	(offset	aB@b@b@vVVriCVi+15h) ; s
 		call	_puts
 		add	sp, 4
-		pushd	[bp+var_4]
+		pushd	[bp+@@ptn_size_total]
 		push	ds
 		push	offset aAllPtn7lu ; "all   ptn	 = %7lu\n"
 		call	_printf
@@ -3452,7 +3454,7 @@ loc_D1E3:
 		call	_printf
 		add	sp, 6
 		mov	eax, dword_36C1A
-		sub	eax, [bp+var_4]
+		sub	eax, [bp+@@ptn_size_total]
 		push	eax
 		push	ds
 		push	offset aOldPtn7lu ; "old - ptn	 = %7lu\n"
@@ -5758,7 +5760,7 @@ sub_106F3	proc far
 @@palette		= byte ptr -38h
 var_33		= byte ptr -33h
 var_8		= dword	ptr -8
-var_4		= word ptr -4
+@@image_count		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
 arg_2		= dword	ptr  8
@@ -5776,7 +5778,7 @@ arg_2		= dword	ptr  8
 		call	@arc_file_get$qncui
 		mov	al, [bp+var_33]
 		cbw
-		mov	[bp+var_4], ax
+		mov	[bp+@@image_count], ax
 		mov	bx, di
 		shl	bx, 2
 		mov	ax, [bx+4018h]
@@ -5789,7 +5791,7 @@ arg_2		= dword	ptr  8
 		add	sp, 4
 
 loc_10739:
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@image_count]
 		imul	ax, 281h
 		push	ax
 		call	@$bnwa$qui
@@ -5813,7 +5815,7 @@ loc_10769:
 		push	ax
 		push	size palette_t
 		call	@arc_file_get$qncui
-		cmp	word_350CE, 0
+		cmp	_flag_palette_show, 0
 		jz	short loc_10789
 		push	ss
 		lea	ax, [bp+@@palette]
@@ -5822,8 +5824,8 @@ loc_10769:
 		add	sp, 4
 
 loc_10789:
-		mov	al, byte ptr [bp+var_4]
-		mov	[di+735h], al
+		mov	al, byte ptr [bp+@@image_count]
+		mov	_ptn_image_count[di], al
 		mov	bx, di
 		shl	bx, 2
 		mov	ax, [bx+401Ah]
@@ -5869,7 +5871,7 @@ loc_107F4:
 
 loc_10801:
 		mov	ax, [bp+var_2]
-		cmp	ax, [bp+var_4]
+		cmp	ax, [bp+@@image_count]
 		jl	short loc_107AA
 		call	@arc_file_free$qv
 		xor	ax, ax
@@ -5919,7 +5921,7 @@ loc_1082C:
 
 loc_1084D:
 		mov	al, byte ptr [bp+arg_2]
-		mov	[si+735h], al
+		mov	_ptn_image_count[si], al
 		mov	ax, [bp+arg_2]
 		imul	ax, 281h
 		push	ax
@@ -5959,13 +5961,13 @@ arg_0		= word ptr  6
 arg_2		= dword	ptr  8
 
 		enter	2, 0
-		mov	word_350CE, 0
+		mov	_flag_palette_show, 0
 		pushd	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_106F3
 		add	sp, 6
 		mov	[bp+var_2], ax
-		mov	word_350CE, 1
+		mov	_flag_palette_show, 1
 		leave
 		retf
 sub_10888	endp
@@ -5997,7 +5999,7 @@ arg_0		= word ptr  6
 		shl	bx, 2
 		mov	word ptr [bx+401Ah], 0
 		mov	word ptr [bx+4018h], 0
-		mov	byte ptr [si+735h], 0
+		mov	_ptn_image_count[si], 0
 
 loc_108E9:
 		pop	si
@@ -6411,17 +6413,17 @@ arg_0		= dword	ptr  6
 		pop	cx
 		mov	word ptr off_38E28+2, dx
 		mov	word ptr off_38E28, ax
-		cmp	word_350CE, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_10BCF
 		or	si, 2
 
 loc_10BCF:
-		cmp	byte_350DD, 1
+		cmp	_flag_grp_colorkey, 1
 		jnz	short loc_10BD9
 		mov	si, 0F40h
 
 loc_10BD9:
-		cmp	word_350D0, 1
+		cmp	_flag_grp_put, 1
 		jnz	short loc_10C01
 		push	si
 		push	640000h
@@ -6433,7 +6435,7 @@ loc_10BD9:
 		mov	[bp+var_1], al
 
 loc_10C01:
-		cmp	word_350CE, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_10C12
 		pushd	[bp+arg_0]
 		call	sub_10AA5
@@ -6467,12 +6469,12 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 
 		enter	2, 0
-		mov	word_350CE, 0
+		mov	_flag_palette_show, 0
 		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_350CE, 1
+		mov	_flag_palette_show, 1
 		leave
 		retf
 sub_10C31	endp
@@ -6488,12 +6490,12 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 
 		enter	2, 0
-		mov	word_350D0, 0
+		mov	_flag_grp_put, 0
 		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_350D0, 1
+		mov	_flag_grp_put, 1
 		leave
 		retf
 sub_10C51	endp
@@ -6509,14 +6511,14 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 
 		enter	2, 0
-		mov	byte_350DD, 1
-		mov	word_350CE, 0
+		mov	_flag_grp_colorkey, 1
+		mov	_flag_palette_show, 0
 		pushd	[bp+arg_0]
 		call	sub_10BAE
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_350CE, 1
-		mov	byte_350DD, 0
+		mov	_flag_palette_show, 1
+		mov	_flag_grp_colorkey, 0
 		leave
 		retf
 sub_10C71	endp
@@ -24561,14 +24563,7 @@ include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
-word_350CE	dw 1
-word_350D0	dw 1
-		dd    0
-		dd    0
-		db    0
-		db    0
-		db    0
-byte_350DD	db 0
+include th01/formats/grp_ptn[data].asm
 include th01/formats/grz[data].asm
 include libs/master.lib/version[data].asm
 include libs/master.lib/tx[data].asm

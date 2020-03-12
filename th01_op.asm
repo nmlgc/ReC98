@@ -18,6 +18,8 @@
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
+BINARY = 'O'
+
 include ReC98.inc
 include th01/th01.inc
 
@@ -2548,7 +2550,7 @@ sub_D631	proc far
 @@palette		= byte ptr -38h
 var_33		= byte ptr -33h
 var_8		= dword	ptr -8
-var_4		= word ptr -4
+@@image_count		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
 arg_2		= dword	ptr  8
@@ -2566,7 +2568,7 @@ arg_2		= dword	ptr  8
 		call	@arc_file_get$qncui
 		mov	al, [bp+var_33]
 		cbw
-		mov	[bp+var_4], ax
+		mov	[bp+@@image_count], ax
 		mov	bx, di
 		shl	bx, 2
 		mov	ax, [bx+1472h]
@@ -2579,7 +2581,7 @@ arg_2		= dword	ptr  8
 		add	sp, 4
 
 loc_D677:
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@image_count]
 		imul	ax, 281h
 		push	ax
 		call	@$bnwa$qui
@@ -2603,7 +2605,7 @@ loc_D6A7:
 		push	ax
 		push	size palette_t
 		call	@arc_file_get$qncui
-		cmp	word_129B8, 0
+		cmp	_flag_palette_show, 0
 		jz	short loc_D6C7
 		push	ss
 		lea	ax, [bp+@@palette]
@@ -2612,8 +2614,8 @@ loc_D6A7:
 		add	sp, 4
 
 loc_D6C7:
-		mov	al, byte ptr [bp+var_4]
-		mov	[di+72Fh], al
+		mov	al, byte ptr [bp+@@image_count]
+		mov	_ptn_image_count[di], al
 		mov	bx, di
 		shl	bx, 2
 		mov	ax, [bx+1474h]
@@ -2659,7 +2661,7 @@ loc_D732:
 
 loc_D73F:
 		mov	ax, [bp+var_2]
-		cmp	ax, [bp+var_4]
+		cmp	ax, [bp+@@image_count]
 		jl	short loc_D6E8
 		call	@arc_file_free$qv
 		xor	ax, ax
@@ -2700,7 +2702,7 @@ loc_D76A:
 
 loc_D78B:
 		mov	al, [bp+8]
-		mov	[si+72Fh], al
+		mov	_ptn_image_count[si], al
 		mov	ax, [bp+8]
 		imul	ax, 281h
 		push	ax
@@ -2728,13 +2730,13 @@ loc_D7C3:
 		retf
 ; ---------------------------------------------------------------------------
 		enter	2, 0
-		mov	word_129B8, 0
+		mov	_flag_palette_show, 0
 		pushd	dword ptr [bp+8]
 		push	word ptr [bp+6]
 		call	sub_D631
 		add	sp, 6
 		mov	[bp-2],	ax
-		mov	word_129B8, 1
+		mov	_flag_palette_show, 1
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -2756,7 +2758,7 @@ loc_D7C3:
 		shl	bx, 2
 		mov	word ptr [bx+1474h], 0
 		mov	word ptr [bx+1472h], 0
-		mov	byte ptr [si+72Fh], 0
+		mov	_ptn_image_count[si], 0
 
 loc_D827:
 		pop	si
@@ -3114,17 +3116,17 @@ arg_0		= dword	ptr  6
 		pop	cx
 		mov	word ptr font+2, dx
 		mov	word ptr font, ax
-		cmp	word_129B8, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_DB0D
 		or	si, 2
 
 loc_DB0D:
-		cmp	byte_129C7, 1
+		cmp	_flag_grp_colorkey, 1
 		jnz	short loc_DB17
 		mov	si, 0F40h
 
 loc_DB17:
-		cmp	word_129BA, 1
+		cmp	_flag_grp_put, 1
 		jnz	short loc_DB3F
 		push	si
 		push	640000h
@@ -3136,7 +3138,7 @@ loc_DB17:
 		mov	[bp+var_1], al
 
 loc_DB3F:
-		cmp	word_129B8, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_DB50
 		pushd	[bp+arg_0]
 		call	sub_D9E3
@@ -3170,24 +3172,24 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 
 		enter	2, 0
-		mov	word_129B8, 0
+		mov	_flag_palette_show, 0
 		pushd	[bp+arg_0]
 		call	sub_DAEC
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_129B8, 1
+		mov	_flag_palette_show, 1
 		leave
 		retf
 sub_DB6F	endp
 
 ; ---------------------------------------------------------------------------
 		enter	2, 0
-		mov	word_129BA, 0
+		mov	_flag_grp_put, 0
 		pushd	dword ptr [bp+6]
 		call	sub_DAEC
 		add	sp, 4
 		mov	[bp-2],	ax
-		mov	word_129BA, 1
+		mov	_flag_grp_put, 1
 		leave
 		retf
 
@@ -3201,14 +3203,14 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 
 		enter	2, 0
-		mov	byte_129C7, 1
-		mov	word_129B8, 0
+		mov	_flag_grp_colorkey, 1
+		mov	_flag_palette_show, 0
 		pushd	[bp+arg_0]
 		call	sub_DAEC
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_129B8, 1
-		mov	byte_129C7, 0
+		mov	_flag_palette_show, 1
+		mov	_flag_grp_colorkey, 0
 		leave
 		retf
 sub_DBAF	endp
@@ -3531,14 +3533,7 @@ include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
-word_129B8	dw 1
-word_129BA	dw 1
-		dd    0
-		dd    0
-		db    0
-		db    0
-		db    0
-byte_129C7	db 0
+include th01/formats/grp_ptn[data].asm
 include th01/formats/grz[data].asm
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm

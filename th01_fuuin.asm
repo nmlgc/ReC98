@@ -18,6 +18,8 @@
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
+BINARY = 'E'
+
 include ReC98.inc
 include th01/th01.inc
 
@@ -5346,17 +5348,17 @@ arg_2		= word ptr  8
 		pop	cx
 		mov	word_1464C, dx
 		mov	off_1464A, ax
-		cmp	word_134F8, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_EB5A
 		or	si, 2
 
 loc_EB5A:
-		cmp	byte_13509, 1
+		cmp	_flag_grp_colorkey, 1
 		jnz	short loc_EB64
 		mov	si, 0F40h
 
 loc_EB64:
-		cmp	word_134FA, 1
+		cmp	_flag_grp_put, 1
 		jnz	short loc_EB8E
 		push	si
 		push	64h ; 'd'
@@ -5372,7 +5374,7 @@ loc_EB64:
 		mov	[bp+var_1], al
 
 loc_EB8E:
-		cmp	word_134F8, 1
+		cmp	_flag_palette_show, 1
 		jnz	short loc_EBA1
 		push	[bp+arg_2]
 		push	[bp+arg_0]
@@ -5411,13 +5413,13 @@ arg_0		= word ptr  6
 arg_2		= word ptr  8
 
 		enter	2, 0
-		mov	word_134F8, 0
+		mov	_flag_palette_show, 0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_EB39
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_134F8, 1
+		mov	_flag_palette_show, 1
 		mov	ax, [bp+var_2]
 		leave
 		retf
@@ -5438,13 +5440,13 @@ arg_0		= word ptr  6
 arg_2		= word ptr  8
 
 		enter	2, 0
-		mov	word_134FA, 0
+		mov	_flag_grp_put, 0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_EB39
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_134FA, 1
+		mov	_flag_grp_put, 1
 		mov	ax, [bp+var_2]
 		leave
 		retf
@@ -5465,15 +5467,15 @@ arg_0		= word ptr  6
 arg_2		= word ptr  8
 
 		enter	2, 0
-		mov	byte_13509, 1
-		mov	word_134F8, 0
+		mov	_flag_grp_colorkey, 1
+		mov	_flag_palette_show, 0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	sub_EB39
 		add	sp, 4
 		mov	[bp+var_2], ax
-		mov	word_134F8, 1
-		mov	byte_13509, 0
+		mov	_flag_palette_show, 1
+		mov	_flag_grp_colorkey, 0
 		mov	ax, [bp+var_2]
 		leave
 		retf
@@ -5805,16 +5807,7 @@ include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
-word_134F8	dw 1
-word_134FA	dw 1
-		dd    0
-		dd    0
-		db    0
-		db    0
-		db    0
-public _grp_palette_tone
-_grp_palette_tone	dw 100
-byte_13509	db 0
+include th01/formats/grp_ptn[data].asm
 include th01/mdrv2[data].asm
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
