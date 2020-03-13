@@ -5,7 +5,6 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include <master.h>
 #include "ReC98.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"

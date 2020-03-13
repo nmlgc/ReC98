@@ -3,6 +3,9 @@
  * Main include file
  */
 
+#ifndef REC98_H
+#define REC98_H
+
 #include <master.h>
 #include <stddef.h>
 #include "platform.h"
@@ -137,3 +140,5 @@ extern dots8_t *VRAM_PLANE_E;
 
 void pascal vram_planes_set(void);
 // -----------------
+
+#endif /* REC98_H */
