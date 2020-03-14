@@ -86,6 +86,10 @@ typedef int8_t sdots8_t;
 typedef int16_t sdots16_t;
 typedef int32_t sdots32_t;
 
+// Abstracted dot types, with their width defined by a macro.
+#define dots_t_(x) dots##x##_t
+#define dots_t(x) dots_t_(x)
+
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
