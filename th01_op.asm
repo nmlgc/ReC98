@@ -2307,15 +2307,15 @@ _egc_copy_rect_1_to_0	endp
 		idiv	bx
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+1474h]
-		mov	dx, [bx+1472h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, di
 		mov	bx, 40h
 		push	dx
 		cwd
 		idiv	bx
-		imul	dx, 281h
+		imul	dx, size ptn_t
 		pop	ax
 		add	ax, dx
 		pop	dx
@@ -2333,7 +2333,7 @@ loc_D416:
 		shl	dx, 2
 		les	bx, [bp-4]
 		add	bx, dx
-		mov	es:[bx+1], eax
+		mov	es:[bx+ptn_t.planes.PTN_B], eax
 		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		mov	eax, es:[bx]
@@ -2341,7 +2341,7 @@ loc_D416:
 		shl	dx, 2
 		les	bx, [bp-4]
 		add	bx, dx
-		mov	es:[bx+81h], eax
+		mov	es:[bx+ptn_t.planes.PTN_R], eax
 		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		mov	eax, es:[bx]
@@ -2349,7 +2349,7 @@ loc_D416:
 		shl	dx, 2
 		les	bx, [bp-4]
 		add	bx, dx
-		mov	es:[bx+101h], eax
+		mov	es:[bx+ptn_t.planes.PTN_G], eax
 		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		mov	eax, es:[bx]
@@ -2357,12 +2357,12 @@ loc_D416:
 		shl	dx, 2
 		les	bx, [bp-4]
 		add	bx, dx
-		mov	es:[bx+181h], eax
-		add	si, 50h	; 'P'
+		mov	es:[bx+ptn_t.planes.PTN_E], eax
+		add	si, ROW_SIZE
 		inc	cx
 
 loc_D481:
-		cmp	cx, 20h	; ' '
+		cmp	cx, PTN_H
 		jl	short loc_D416
 		pop	di
 		pop	si
@@ -2388,15 +2388,15 @@ loc_D481:
 		idiv	bx
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+1474h]
-		mov	dx, [bx+1472h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, [bp+0Ah]
 		mov	bx, 40h
 		push	dx
 		cwd
 		idiv	bx
-		imul	dx, 281h
+		imul	dx, size ptn_t
 		pop	ax
 		add	ax, dx
 		pop	dx
@@ -2446,7 +2446,7 @@ loc_D515:
 		les	bx, [bp-0Eh]
 		add	bx, ax
 		mov	eax, [bp-6]
-		and	es:[bx+1], eax
+		and	es:[bx+ptn_t.planes.PTN_B], eax
 		les	bx, _VRAM_PLANE_B
 		add	bx, di
 		mov	eax, es:[bx]
@@ -2459,9 +2459,9 @@ loc_D515:
 		shl	dx, 2
 		les	bx, [bp-0Eh]
 		add	bx, dx
-		or	es:[bx+1], eax
+		or	es:[bx+ptn_t.planes.PTN_B], eax
 		mov	eax, [bp-6]
-		and	es:[bx+81h], eax
+		and	es:[bx+ptn_t.planes.PTN_R], eax
 		les	bx, _VRAM_PLANE_R
 		add	bx, di
 		mov	eax, es:[bx]
@@ -2473,9 +2473,9 @@ loc_D515:
 		shl	dx, 2
 		les	bx, [bp-0Eh]
 		add	bx, dx
-		or	es:[bx+81h], eax
+		or	es:[bx+ptn_t.planes.PTN_R], eax
 		mov	eax, [bp-6]
-		and	es:[bx+101h], eax
+		and	es:[bx+ptn_t.planes.PTN_G], eax
 		les	bx, _VRAM_PLANE_G
 		add	bx, di
 		mov	eax, es:[bx]
@@ -2487,9 +2487,9 @@ loc_D515:
 		shl	dx, 2
 		les	bx, [bp-0Eh]
 		add	bx, dx
-		or	es:[bx+101h], eax
+		or	es:[bx+ptn_t.planes.PTN_G], eax
 		mov	eax, [bp-6]
-		and	es:[bx+181h], eax
+		and	es:[bx+ptn_t.planes.PTN_E], eax
 		les	bx, _VRAM_PLANE_E
 		add	bx, di
 		mov	eax, es:[bx]
@@ -2501,8 +2501,8 @@ loc_D515:
 		shl	dx, 2
 		les	bx, [bp-0Eh]
 		add	bx, dx
-		or	es:[bx+181h], eax
-		add	di, 50h	; 'P'
+		or	es:[bx+ptn_t.planes.PTN_E], eax
+		add	di, ROW_SIZE
 		inc	si
 
 loc_D5E8:
@@ -2561,29 +2561,27 @@ arg_2		= dword	ptr  8
 		mov	[bp+@@image_count], ax
 		mov	bx, di
 		shl	bx, 2
-		mov	ax, [bx+1472h]
-		or	ax, [bx+1474h]
+		mov	ax, word ptr _ptn_images[bx]
+		or	ax, word ptr (_ptn_images + 2)[bx]
 		jz	short loc_D677
 		mov	bx, di
 		shl	bx, 2
-		pushd	dword ptr [bx+1472h] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _ptn_images[bx]
 
 loc_D677:
 		mov	ax, [bp+@@image_count]
-		imul	ax, 281h
+		imul	ax, size ptn_t
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
 		shl	bx, 2
-		mov	[bx+1474h], dx
-		mov	[bx+1472h], ax
+		mov	word ptr (_ptn_images + 2)[bx], dx
+		mov	word ptr _ptn_images[bx], ax
 		mov	bx, di
 		shl	bx, 2
-		mov	ax, [bx+1472h]
-		or	ax, [bx+1474h]
+		mov	ax, word ptr _ptn_images[bx]
+		or	ax, word ptr (_ptn_images + 2)[bx]
 		jnz	short loc_D6A7
 		mov	ax, 0FFFDh
 		jmp	loc_D74E
@@ -2608,8 +2606,8 @@ loc_D6C7:
 		mov	_ptn_image_count[di], al
 		mov	bx, di
 		shl	bx, 2
-		mov	ax, [bx+1474h]
-		mov	dx, [bx+1472h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		mov	word ptr [bp+var_8+2], ax
 		mov	word ptr [bp+var_8], dx
 		mov	[bp+var_2], 0
@@ -2624,7 +2622,7 @@ loc_D6E8:
 		inc	ax
 		push	word ptr [bp+var_8+2]
 		push	ax
-		push	200h
+		push	size ptn_planar_t
 		call	@arc_file_get$qncui
 		xor	si, si
 		jmp	short loc_D732
@@ -2635,19 +2633,19 @@ loc_D707:
 		shl	ax, 2
 		les	bx, [bp+var_8]
 		add	bx, ax
-		mov	eax, es:[bx+1]
-		and	eax, es:[bx+81h]
-		and	eax, es:[bx+101h]
-		and	eax, es:[bx+181h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_B]
+		and	eax, es:[bx+ptn_t.planes.PTN_R]
+		and	eax, es:[bx+ptn_t.planes.PTN_G]
+		and	eax, es:[bx+ptn_t.planes.PTN_E]
 		not	eax
-		mov	es:[bx+201h], eax
+		mov	es:[bx+ptn_t.PTN_alpha], eax
 		inc	si
 
 loc_D732:
-		cmp	si, 20h	; ' '
+		cmp	si, PTN_H
 		jl	short loc_D707
 		inc	[bp+var_2]
-		add	word ptr [bp+var_8], 281h
+		add	word ptr [bp+var_8], size ptn_t
 
 loc_D73F:
 		mov	ax, [bp+var_2]
@@ -2681,31 +2679,29 @@ loc_D765:
 loc_D76A:
 		mov	bx, si
 		shl	bx, 2
-		mov	ax, [bx+1472h]
-		or	ax, [bx+1474h]
+		mov	ax, word ptr _ptn_images[bx]
+		or	ax, word ptr (_ptn_images + 2)[bx]
 		jz	short loc_D78B
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+1472h]
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _ptn_images[bx]
 
 loc_D78B:
 		mov	al, [bp+8]
 		mov	_ptn_image_count[si], al
 		mov	ax, [bp+8]
-		imul	ax, 281h
+		imul	ax, size ptn_t
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+1474h], dx
-		mov	[bx+1472h], ax
+		mov	word ptr (_ptn_images + 2)[bx], dx
+		mov	word ptr _ptn_images[bx], ax
 		mov	bx, si
 		shl	bx, 2
-		mov	ax, [bx+1472h]
-		or	ax, [bx+1474h]
+		mov	ax, word ptr _ptn_images[bx]
+		or	ax, word ptr (_ptn_images + 2)[bx]
 		jnz	short loc_D7C1
 		mov	ax, 0FFFDh
 		jmp	short loc_D7C3
@@ -2736,18 +2732,16 @@ loc_D7C3:
 		mov	si, [bp+6]
 		mov	bx, si
 		shl	bx, 2
-		mov	ax, [bx+1472h]
-		or	ax, [bx+1474h]
+		mov	ax, word ptr _ptn_images[bx]
+		or	ax, word ptr (_ptn_images + 2)[bx]
 		jz	short loc_D827
 		mov	bx, si
 		shl	bx, 2
-		pushd	dword ptr [bx+1472h]
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _ptn_images[bx]
 		mov	bx, si
 		shl	bx, 2
-		mov	word ptr [bx+1474h], 0
-		mov	word ptr [bx+1472h], 0
+		mov	word ptr (_ptn_images + 2)[bx], 0
+		mov	word ptr _ptn_images[bx], 0
 		mov	_ptn_image_count[si], 0
 
 loc_D827:
@@ -2774,15 +2768,15 @@ loc_D827:
 		idiv	bx
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+1474h]
-		mov	dx, [bx+1472h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, [bp+0Ah]
 		mov	bx, 40h
 		push	dx
 		cwd
 		idiv	bx
-		imul	dx, 281h
+		imul	dx, size ptn_t
 		pop	ax
 		add	ax, dx
 		pop	dx
@@ -2797,7 +2791,7 @@ loc_D87C:
 		shl	ax, 2
 		les	bx, [bp-4]
 		add	bx, ax
-		mov	eax, es:[bx+1]
+		mov	eax, es:[bx+ptn_t.planes.PTN_B]
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], eax
@@ -2805,7 +2799,7 @@ loc_D87C:
 		shl	ax, 2
 		les	bx, [bp-4]
 		add	bx, ax
-		mov	eax, es:[bx+81h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_R]
 		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		mov	es:[bx], eax
@@ -2813,7 +2807,7 @@ loc_D87C:
 		shl	ax, 2
 		les	bx, [bp-4]
 		add	bx, ax
-		mov	eax, es:[bx+101h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_G]
 		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		mov	es:[bx], eax
@@ -2821,15 +2815,15 @@ loc_D87C:
 		shl	ax, 2
 		les	bx, [bp-4]
 		add	bx, ax
-		mov	eax, es:[bx+181h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_E]
 		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		mov	es:[bx], eax
-		add	si, 50h	; 'P'
+		add	si, ROW_SIZE
 		inc	cx
 
 loc_D8E7:
-		cmp	cx, 20h	; ' '
+		cmp	cx, PTN_H
 		jl	short loc_D87C
 		pop	di
 		pop	si
@@ -2855,15 +2849,15 @@ loc_D8E7:
 		idiv	bx
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+1474h]
-		mov	dx, [bx+1472h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, [bp+0Ah]
 		mov	bx, 40h
 		push	dx
 		cwd
 		idiv	bx
-		imul	dx, 281h
+		imul	dx, size ptn_t
 		pop	ax
 		add	ax, dx
 		pop	dx
@@ -2900,7 +2894,7 @@ loc_D95F:
 		shl	ax, 2
 		les	bx, [bp-8]
 		add	bx, ax
-		mov	eax, es:[bx+1]
+		mov	eax, es:[bx+ptn_t.planes.PTN_B]
 		mov	cl, [bp-4]
 		shr	eax, cl
 		les	bx, _VRAM_PLANE_B
@@ -2910,7 +2904,7 @@ loc_D95F:
 		shl	ax, 2
 		les	bx, [bp-8]
 		add	bx, ax
-		mov	eax, es:[bx+81h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_R]
 		shr	eax, cl
 		les	bx, _VRAM_PLANE_R
 		add	bx, di
@@ -2919,7 +2913,7 @@ loc_D95F:
 		shl	ax, 2
 		les	bx, [bp-8]
 		add	bx, ax
-		mov	eax, es:[bx+101h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_G]
 		shr	eax, cl
 		les	bx, _VRAM_PLANE_G
 		add	bx, di
@@ -2928,12 +2922,12 @@ loc_D95F:
 		shl	ax, 2
 		les	bx, [bp-8]
 		add	bx, ax
-		mov	eax, es:[bx+181h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_E]
 		shr	eax, cl
 		les	bx, _VRAM_PLANE_E
 		add	bx, di
 		mov	es:[bx], ax
-		add	di, 50h	; 'P'
+		add	di, ROW_SIZE
 		inc	si
 
 loc_D9D5:
@@ -3462,15 +3456,7 @@ include th01/hardware/vram_planes[bss].asm
 		dd    ?
 		dd    ?
 include th01/formats/grp_palette[bss].asm
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-		dd    ?
-include th01/formats/grz[bss].asm
+include th01/formats/ptn_grz[bss].asm
 include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm

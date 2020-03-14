@@ -8959,7 +8959,7 @@ sub_20468	endp
 sub_20496	proc far
 
 var_10		= dword	ptr -10h
-var_C		= dword	ptr -0Ch
+@@ptn		= dword	ptr -0Ch
 var_8		= dword	ptr -8
 var_4		= dword	ptr -4
 arg_0		= word ptr  6
@@ -8990,24 +8990,24 @@ arg_6		= word ptr  0Ch
 		idiv	bx
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+401Ah]
-		mov	dx, [bx+4018h]
+		mov	ax, word ptr (_ptn_images + 2)[bx]
+		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, di
 		mov	bx, 40h
 		push	dx
 		cwd
 		idiv	bx
-		imul	dx, 281h
+		imul	dx, size ptn_t
 		pop	ax
 		add	ax, dx
 		pop	dx
-		mov	word ptr [bp+var_C+2], dx
-		mov	word ptr [bp+var_C], ax
+		mov	word ptr [bp+@@ptn+2], dx
+		mov	word ptr [bp+@@ptn], ax
 
 loc_204EF:
 		mov	ax, [bp+arg_6]
-		imul	ax, 281h
+		imul	ax, size ptn_t
 		mov	dx, word ptr off_39E7C+2
 		mov	bx, word ptr off_39E7C
 		add	bx, ax
@@ -9022,22 +9022,22 @@ loc_204EF:
 loc_20513:
 		mov	ax, cx
 		shl	ax, 2
-		les	bx, [bp+var_C]
+		les	bx, [bp+@@ptn]
 		add	bx, ax
-		mov	eax, es:[bx+201h]
+		mov	eax, es:[bx+ptn_t.PTN_alpha]
 		mov	[bp+var_4], eax
 		not	eax
 		mov	dx, cx
 		shl	dx, 2
 		les	bx, [bp+var_10]
 		add	bx, dx
-		and	eax, es:[bx+1]
+		and	eax, es:[bx+ptn_t.planes.PTN_B]
 		mov	[bp+var_8], eax
 		mov	ax, cx
 		shl	ax, 2
-		les	bx, [bp+var_C]
+		les	bx, [bp+@@ptn]
 		add	bx, ax
-		mov	eax, es:[bx+1]
+		mov	eax, es:[bx+ptn_t.planes.PTN_B]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
 		les	bx, _VRAM_PLANE_B
@@ -9049,13 +9049,13 @@ loc_20513:
 		shl	dx, 2
 		les	bx, [bp+var_10]
 		add	bx, dx
-		and	eax, es:[bx+81h]
+		and	eax, es:[bx+ptn_t.planes.PTN_R]
 		mov	[bp+var_8], eax
 		mov	ax, cx
 		shl	ax, 2
-		les	bx, [bp+var_C]
+		les	bx, [bp+@@ptn]
 		add	bx, ax
-		mov	eax, es:[bx+81h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_R]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
 		les	bx, _VRAM_PLANE_R
@@ -9067,13 +9067,13 @@ loc_20513:
 		shl	dx, 2
 		les	bx, [bp+var_10]
 		add	bx, dx
-		and	eax, es:[bx+101h]
+		and	eax, es:[bx+ptn_t.planes.PTN_G]
 		mov	[bp+var_8], eax
 		mov	ax, cx
 		shl	ax, 2
-		les	bx, [bp+var_C]
+		les	bx, [bp+@@ptn]
 		add	bx, ax
-		mov	eax, es:[bx+101h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_G]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
 		les	bx, _VRAM_PLANE_G
@@ -9085,23 +9085,23 @@ loc_20513:
 		shl	dx, 2
 		les	bx, [bp+var_10]
 		add	bx, dx
-		and	eax, es:[bx+181h]
+		and	eax, es:[bx+ptn_t.planes.PTN_E]
 		mov	[bp+var_8], eax
 		mov	ax, cx
 		shl	ax, 2
-		les	bx, [bp+var_C]
+		les	bx, [bp+@@ptn]
 		add	bx, ax
-		mov	eax, es:[bx+181h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_E]
 		and	eax, [bp+var_4]
 		or	eax, [bp+var_8]
 		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		mov	es:[bx], eax
-		add	si, 50h	; 'P'
+		add	si, ROW_SIZE
 		inc	cx
 
 loc_20619:
-		cmp	cx, 20h	; ' '
+		cmp	cx, PTN_H
 		jb	loc_20513
 		jmp	short loc_20696
 ; ---------------------------------------------------------------------------
@@ -9116,7 +9116,7 @@ loc_20626:
 		shl	ax, 2
 		les	bx, [bp+var_10]
 		add	bx, ax
-		mov	eax, es:[bx+1]
+		mov	eax, es:[bx+ptn_t.planes.PTN_B]
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], eax
@@ -9124,7 +9124,7 @@ loc_20626:
 		shl	ax, 2
 		les	bx, [bp+var_10]
 		add	bx, ax
-		mov	eax, es:[bx+81h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_R]
 		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		mov	es:[bx], eax
@@ -9132,7 +9132,7 @@ loc_20626:
 		shl	ax, 2
 		les	bx, [bp+var_10]
 		add	bx, ax
-		mov	eax, es:[bx+101h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_G]
 		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		mov	es:[bx], eax
@@ -9140,15 +9140,15 @@ loc_20626:
 		shl	ax, 2
 		les	bx, [bp+var_10]
 		add	bx, ax
-		mov	eax, es:[bx+181h]
+		mov	eax, es:[bx+ptn_t.planes.PTN_E]
 		les	bx, _VRAM_PLANE_E
 		add	bx, si
 		mov	es:[bx], eax
-		add	si, 50h	; 'P'
+		add	si, ROW_SIZE
 		inc	cx
 
 loc_20691:
-		cmp	cx, 20h	; ' '
+		cmp	cx, PTN_H
 		jb	short loc_20626
 
 loc_20696:
