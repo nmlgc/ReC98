@@ -2543,19 +2543,18 @@ var_8		= dword	ptr -8
 @@image_count		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
-arg_2		= dword	ptr  8
+@@fn		= dword	ptr  8
 
 		enter	38h, 0
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		pushd	[bp+arg_2]
-		call	@arc_file_load$qnxc
+		call	arc_file_load pascal, large [bp+@@fn]
 		push	ss
 		lea	ax, [bp+@@palette]
 		push	ax
 		push	6
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		mov	al, [bp+var_33]
 		cbw
 		mov	[bp+@@image_count], ax
@@ -2592,7 +2591,7 @@ loc_D6A7:
 		lea	ax, [bp+@@palette]
 		push	ax
 		push	size palette_t
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		cmp	_flag_palette_show, 0
 		jz	short loc_D6C7
 		push	ss
@@ -2615,15 +2614,10 @@ loc_D6C7:
 ; ---------------------------------------------------------------------------
 
 loc_D6E8:
-		pushd	[bp+var_8]
-		push	1
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large [bp+var_8], 1
 		mov	ax, word ptr [bp+var_8]
 		inc	ax
-		push	word ptr [bp+var_8+2]
-		push	ax
-		push	size ptn_planar_t
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, word ptr [bp+var_8+2], ax, size ptn_planar_t
 		xor	si, si
 		jmp	short loc_D732
 ; ---------------------------------------------------------------------------
@@ -2651,7 +2645,7 @@ loc_D73F:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+@@image_count]
 		jl	short loc_D6E8
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 
 loc_D74E:
@@ -2968,9 +2962,9 @@ op_11_TEXT	ends
 ; ===========================================================================
 
 op_12_TEXT	segment	byte public 'CODE' use16
-	extern @ARC_FILE_LOAD$QNXC:proc
-	extern @ARC_FILE_GET$QNCUI:proc
-	extern @ARC_FILE_FREE$QV:proc
+	extern ARC_FILE_LOAD:proc
+	extern ARC_FILE_GET:proc
+	extern ARC_FILE_FREE:proc
 op_12_TEXT	ends
 
 ; ===========================================================================

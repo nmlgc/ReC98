@@ -4,17 +4,21 @@
  * modifications for TH01
  */
 
-#include "th01/th01.h"
-#include <ctype.h>
+extern "C" {
 
-#define FN_LEN 13
+#include <ctype.h>
+#include "th01/th01.h"
+#include "th01/formats/pf.hpp"
+
+#undef arc_file_get
+
 #define MAX_NUM_FILES 64
 #define CACHE_SIZE 0x100
 
 typedef struct {
 	char type[2]; // •• if RLE-compressed
 	char aux; // Always 3, unused
-	char fn[FN_LEN];
+	char fn[PF_FN_LEN];
 	int32_t packsize;
 	int32_t orgsize;
 	int32_t offset; // of the file data within the entire archive
@@ -32,17 +36,17 @@ char arc_key;
 
 char *file_data;
 char *cache;
-char arc_fn[FN_LEN];
+char arc_fn[PF_FN_LEN];
 unsigned int file_pos;
 unsigned int cache_bytes_read;
 
-void pascal arc_open(const char *fn)
+void pascal arc_load(const char fn[PF_FN_LEN])
 {
 	int i, c;
 
 	arc_pfs = new pf_header_t[MAX_NUM_FILES];
 	file_ropen(fn);
-	for(i = 0; i < FN_LEN; i++) {
+	for(i = 0; i < PF_FN_LEN; i++) {
 		arc_fn[i] = fn[i];
 		if(fn[i] == 0) {
 			break;
@@ -54,7 +58,7 @@ void pascal arc_open(const char *fn)
 		if(arc_pfs[i].type[0] == 0) {
 			break;
 		}
-		for(c = 0; c < FN_LEN; c++) {
+		for(c = 0; c < PF_FN_LEN; c++) {
 			if(arc_pfs[i].fn[c] == 0) {
 				break;
 			}
@@ -64,15 +68,15 @@ void pascal arc_open(const char *fn)
 	arc_num_files = i;
 }
 
-void pascal arc_close(void)
+void pascal arc_free(void)
 {
 	delete[] arc_pfs;
 }
 
-int pascal near at_pos_of(const char *fn)
+int pascal near at_pos_of(const char fn[PF_FN_LEN])
 {
 	int i;
-	for(i = 0; i < FN_LEN; i++) {
+	for(i = 0; i < PF_FN_LEN; i++) {
 		if(arc_pfs[file_num].fn[i] != toupper(fn[i])) {
 			return 0;
 		}
@@ -144,7 +148,7 @@ void pascal near unrle(unsigned int input_size)
 	#undef NEXT()
 }
 
-void pascal arc_file_load(const char *fn)
+void pascal arc_file_load(const char fn[PF_FN_LEN])
 {
 	const char rle_type[] = {"••"};
 	int i;
@@ -204,4 +208,6 @@ void pascal arc_file_free(void)
 int pascal arc_file_size(void)
 {
 	return file_pf->orgsize;
+}
+
 }

@@ -4101,9 +4101,7 @@ loc_D6EE:
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
 		add	sp, 4
 		mov	_arc_key, 76h
-		push	ds
-		push	offset aUmx	; "ìåï˚ËÀàŸ.ì`"
-		call	@arc_open$qnxc
+		call	arc_load pascal, ds, offset aUmx	; "ìåï˚ËÀàŸ.ì`"
 		call	vram_planes_set
 		push	[bp+var_6]
 		call	sub_20754
@@ -5181,7 +5179,7 @@ loc_E2CB:
 		call	sub_D4DD
 		call	_game_switch_binary
 		call	key_end
-		call	@arc_close$qv
+		call	arc_free
 		pushd	0
 		push	ds
 		push	offset aOp	; "op"
@@ -5760,19 +5758,18 @@ var_33		= byte ptr -33h
 @@image_count		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
-arg_2		= dword	ptr  8
+@@fn		= dword	ptr  8
 
 		enter	38h, 0
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		pushd	[bp+arg_2]
-		call	@arc_file_load$qnxc
+		call	arc_file_load pascal, large [bp+@@fn]
 		push	ss
 		lea	ax, [bp+@@palette]
 		push	ax
 		push	6
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		mov	al, [bp+var_33]
 		cbw
 		mov	[bp+@@image_count], ax
@@ -5809,7 +5806,7 @@ loc_10769:
 		lea	ax, [bp+@@palette]
 		push	ax
 		push	size palette_t
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		cmp	_flag_palette_show, 0
 		jz	short loc_10789
 		push	ss
@@ -5832,15 +5829,10 @@ loc_10789:
 ; ---------------------------------------------------------------------------
 
 loc_107AA:
-		pushd	[bp+@@ptn]
-		push	1
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large [bp+@@ptn], 1
 		mov	ax, word ptr [bp+@@ptn]
 		inc	ax
-		push	word ptr [bp+@@ptn+2]
-		push	ax
-		push	size ptn_planar_t
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, word ptr [bp+@@ptn+2], ax, size ptn_planar_t
 		xor	si, si
 		jmp	short loc_107F4
 ; ---------------------------------------------------------------------------
@@ -5868,7 +5860,7 @@ loc_10801:
 		mov	ax, [bp+var_2]
 		cmp	ax, [bp+@@image_count]
 		jl	short loc_107AA
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 
 loc_10810:
@@ -12099,20 +12091,17 @@ var_2E		= byte ptr -2Eh
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
+@@fn		= dword	ptr  0Ah
 
 		enter	36h, 0
-
-loc_14BF4:
 		push	si
 		push	di
-		pushd	[bp+arg_4]
-		call	@arc_file_load$qnxc
+		call	arc_file_load pascal, large [bp+@@fn]
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
-		push	10h
-		call	@arc_file_get$qncui
+		push	16
+		call	arc_file_get
 		mov	al, [bp+var_32]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -12126,8 +12115,7 @@ loc_14BF4:
 		mov	ax, es:[bx+280h]
 		imul	word ptr es:[bx+282h]
 		mov	[bp+var_2], ax
-		push	40h
-		call	@arc_file_seek$qc
+		call	arc_file_seek pascal, 64
 		xor	di, di
 		jmp	loc_14E20
 ; ---------------------------------------------------------------------------
@@ -12178,38 +12166,27 @@ loc_14C45:
 		add	si, bx
 		mov	es:[si+202h], dx
 		mov	es:[si+200h], ax
-		push	word ptr es:[si+2]
-		push	word ptr es:[si]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, word ptr es:[si+2], word ptr es:[si], [bp+var_2]
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		pushd	dword ptr es:[bx+80h]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr es:[bx+80h], [bp+var_2]
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		pushd	dword ptr es:[bx+100h]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr es:[bx+100h], [bp+var_2]
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		pushd	dword ptr es:[bx+180h]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr es:[bx+180h], [bp+var_2]
 		mov	ax, di
 		shl	ax, 2
 		les	bx, [bp+arg_0]
 		add	bx, ax
-		pushd	dword ptr es:[bx+200h]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr es:[bx+200h], [bp+var_2]
 		mov	[bp+var_4], 0
 		jmp	loc_14E15
 ; ---------------------------------------------------------------------------
@@ -12298,7 +12275,7 @@ loc_14E20:
 		les	bx, [bp+arg_0]
 		cmp	es:[bx+284h], di
 		jg	loc_14C45
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -13275,19 +13252,18 @@ var_2E		= byte ptr -2Eh
 var_2C		= byte ptr -2Ch
 var_2A		= byte ptr -2Ah
 arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
+@@fn		= dword	ptr  0Ah
 arg_8		= word ptr  0Eh
 
 		enter	32h, 0
 		push	si
 		push	di
-		pushd	[bp+arg_4]
-		call	@arc_file_load$qnxc
+		call	arc_file_load pascal, large [bp+@@fn]
 		push	ss
 		lea	ax, [bp+var_32]
 		push	ax
-		push	10h
-		call	@arc_file_get$qncui
+		push	16
+		call	arc_file_get
 		mov	al, [bp+var_2E]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -13304,8 +13280,8 @@ arg_8		= word ptr  0Eh
 		push	ss
 		lea	ax, [bp+var_32]
 		push	ax
-		push	30h ; '0'
-		call	@arc_file_get$qncui
+		push	48
+		call	arc_file_get
 		cmp	byte_35A44, 0
 		jnz	loc_1583C
 		push	[bp+arg_8]
@@ -13396,41 +13372,31 @@ loc_156F5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4ADAh]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4ADAh], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4ACAh]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4ACAh], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4ACEh]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4ACEh], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4AD2h]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4AD2h], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4AD6h]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4AD6h], di
 		inc	si
 
 loc_15831:
@@ -13442,7 +13408,7 @@ loc_1583C:
 		les	bx, [bp+arg_0]
 		mov	al, byte ptr [bp+arg_8]
 		mov	es:[bx+31h], al
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -15767,19 +15733,18 @@ var_2E		= byte ptr -2Eh
 var_2C		= byte ptr -2Ch
 var_2		= word ptr -2
 arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
+@@fn		= dword	ptr  0Ah
 arg_8		= word ptr  0Eh
 
 		enter	34h, 0
 		push	si
 		push	di
-		pushd	[bp+arg_4]
-		call	@arc_file_load$qnxc
+		call	arc_file_load pascal, large [bp+@@fn]
 		push	ss
 		lea	ax, [bp+var_34]
 		push	ax
 		push	10h
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		mov	al, [bp+var_30]
 		mov	ah, 0
 		les	bx, [bp+arg_0]
@@ -15795,8 +15760,8 @@ arg_8		= word ptr  0Eh
 		push	ss
 		lea	ax, [bp+var_34]
 		push	ax
-		push	30h ; '0'
-		call	@arc_file_get$qncui
+		push	48
+		call	arc_file_get
 		cmp	byte_35A44, 0
 		jnz	loc_16D55
 		push	[bp+arg_8]
@@ -15887,9 +15852,7 @@ loc_16BBA:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4D5Ah]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4D5Ah], di
 		mov	[bp+var_2], 0
 		jmp	short loc_16CD5
 ; ---------------------------------------------------------------------------
@@ -15930,33 +15893,25 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4D4Ah]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4D4Ah], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4D4Eh]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4D4Eh], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4D52h]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4D52h], di
 		mov	bx, [bp+arg_8]
 		imul	bx, 0A0h
 		mov	ax, si
 		imul	ax, 14h
 		add	bx, ax
-		pushd	dword ptr [bx+4D56h]
-		push	di
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+4D56h], di
 		inc	si
 
 loc_16D46:
@@ -15970,7 +15925,7 @@ loc_16D55:
 		les	bx, [bp+arg_0]
 		mov	al, byte ptr [bp+arg_8]
 		mov	es:[bx+0Ah], al
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -16365,7 +16320,7 @@ main_22_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_22_TEXT
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-include th01/pf.asm
+include th01/formats/pf.asm
 main_22_TEXT	ends
 
 ; ===========================================================================
@@ -16386,35 +16341,33 @@ var_36		= byte ptr -36h
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
-arg_2		= dword	ptr  8
+@@fn		= dword	ptr  8
 
 		enter	36h, 0
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		pushd	[bp+arg_2]
-		call	@arc_file_load$qnxc
-		push	4
-		call	@arc_file_seek$qc
+		call	arc_file_load pascal, large [bp+@@fn]
+		call	arc_file_seek pascal, 4
 		push	ds
 		mov	ax, di
 		imul	ax, 26h
 		add	ax, 50BCh
 		push	ax
 		push	2
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		push	ds
 		mov	ax, di
 		imul	ax, 26h
 		add	ax, 50BEh
 		push	ax
 		push	2
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
 		push	8
-		call	@arc_file_get$qncui
+		call	arc_file_get
 		mov	al, [bp+var_36]
 		mov	ah, 0
 		mov	bx, di
@@ -16430,8 +16383,8 @@ arg_2		= dword	ptr  8
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
-		push	30h ; '0'
-		call	@arc_file_get$qncui
+		push	48
+		call	arc_file_get
 		mov	[bp+var_4], 0
 		jmp	short loc_17534
 ; ---------------------------------------------------------------------------
@@ -16470,9 +16423,7 @@ loc_174F9:
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		pushd	dword ptr [bx+50C2h]
-		push	[bp+var_2]
-		call	@arc_file_get$qncui
+		call	arc_file_get pascal, large dword ptr [bx+50C2h], [bp+var_2]
 		inc	[bp+var_4]
 
 loc_17534:
@@ -16481,7 +16432,7 @@ loc_17534:
 		mov	ax, [bx+50C0h]
 		cmp	ax, [bp+var_4]
 		jg	short loc_174C8
-		call	@arc_file_free$qv
+		call	arc_file_free
 		xor	ax, ax
 		pop	di
 		pop	si
@@ -24636,7 +24587,7 @@ aUmx_2		db 'ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^Å@',0
 aUmx_1		db 'ìåï˚ËÀàŸì`Å@ã≠é“ÇÃãLò^',0
 byte_35A44	db 0
 		db 0
-include th01/pf[data].asm
+include th01/formats/pf[data].asm
 unk_35A4A	db  18h
 		db  3Ch	; <
 		db  7Eh	; ~
@@ -28115,7 +28066,7 @@ word_39A2B	dw ?
 		db    ?	;
 byte_39A32	db ?
 		db ?
-include th01/pf[bss].asm
+include th01/formats/pf[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

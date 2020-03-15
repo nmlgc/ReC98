@@ -9272,12 +9272,12 @@ arg_0		= byte ptr  6
 		push	ss
 		lea	ax, [bp+var_26]
 		push	ax
-		call	@arc_file_load$qnxc
+		call	arc_file_load
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		push	16h
-		call	@arc_file_get$qncui
+		push	22
+		call	arc_file_get
 		mov	al, [bp+arg_0]
 		add	al, 30h	; '0'
 		mov	byte ptr aSt_grp+2, al
@@ -9294,14 +9294,14 @@ loc_2079C:
 		imul	ax, 0FFh
 		add	ax, 228Eh
 		push	ax
-		push	0FAh
-		call	@arc_file_get$qncui
+		push	250
+		call	arc_file_get
 		inc	si
 
 loc_207B0:
 		cmp	si, 5
 		jl	short loc_2079C
-		call	@arc_file_free$qv
+		call	arc_file_free
 		pop	si
 		leave
 		retf

@@ -1,4 +1,5 @@
-@arc_open$qnxc	proc far
+public ARC_LOAD
+arc_load	proc far
 
 arg_0		= dword	ptr  6
 
@@ -85,14 +86,14 @@ loc_17165:
 		pop	si
 		pop	bp
 		retf	4
-@arc_open$qnxc	endp
+arc_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-@arc_close$qv	proc far
+public ARC_FREE
+arc_free	proc far
 		push	bp
 		mov	bp, sp
 		pushd	[_arc_pfs] ; font
@@ -100,7 +101,7 @@ loc_17165:
 		add	sp, 4
 		pop	bp
 		retf
-@arc_close$qv	endp
+arc_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -307,8 +308,8 @@ loc_172C5:
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-@arc_file_load$qnxc	proc far
+public ARC_FILE_LOAD
+arc_file_load	proc far
 
 var_4		= byte ptr -4
 var_3		= byte ptr -3
@@ -409,14 +410,14 @@ loc_173D2:
 		pop	si
 		leave
 		retf	4
-@arc_file_load$qnxc	endp
+arc_file_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-@arc_file_get$qncui	proc far
+public ARC_FILE_GET
+arc_file_get	proc far
 
 var_4		= dword	ptr -4
 arg_0		= word ptr  6
@@ -450,14 +451,14 @@ loc_17415:
 locret_1741A:
 		leave
 		retf	6
-@arc_file_get$qncui	endp
+arc_file_get	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-@arc_file_seek$qc	proc far
+public ARC_FILE_SEEK
+arc_file_seek	proc far
 
 arg_0		= byte ptr  6
 
@@ -468,14 +469,14 @@ arg_0		= byte ptr  6
 		mov	_file_pos, ax
 		pop	bp
 		retf	2
-@arc_file_seek$qc	endp
+arc_file_seek	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-@arc_file_free$qv	proc far
+public ARC_FILE_FREE
+arc_file_free	proc far
 		push	bp
 		mov	bp, sp
 		pushd	[_file_data]
@@ -483,7 +484,7 @@ arg_0		= byte ptr  6
 		add	sp, 4
 		pop	bp
 		retf
-@arc_file_free$qv	endp
+arc_file_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
