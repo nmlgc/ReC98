@@ -462,7 +462,7 @@ void graph_r_vline(int x, int top, int bottom, int col)
 		egc_copy_rect_1_to_0(x, top, sizeof(pattern) * 8, bottom - top);
 		return;
 	}
-	vram_row_offset = VRAM_OFFSET(x, top);
+	vram_row_offset = vram_offset_shift(x, top);
 	pattern = graph_r_pattern >> (x & 7);
 	pattern |= graph_r_pattern << (16 - (x & 7));
 
@@ -611,7 +611,7 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 		plot_loop(y_cur, h, y_direction, x_cur, w, 1);
 	}
 restore_last:
-	vram_offset = VRAM_OFFSET(x_cur, y_cur) - 1;
+	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
 	restore_at(vram_offset);
 end:
 	if(!graph_r_restore_from_1) {

@@ -116,6 +116,13 @@ extern dots8_t *VRAM_PLANE_E;
 
 #define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
 
+#ifdef __cplusplus
+static inline unsigned int vram_offset_shift(int x, int y)
+{
+	return VRAM_OFFSET(x, y);
+}
+#endif
+
 #define VRAM_CHUNK(plane, offset, bit_count) \
 	*(dots##bit_count##_t *)(VRAM_PLANE_##plane + offset)
 
