@@ -1,7 +1,8 @@
 /// Uncompressed 16-color 32×32 sprite format
 /// -----------------------------------------
-/// Optionally supports transparency for images loaded from .PTN files,
-/// hardcoded to color #15.
+/// Provides functions for both 32×32 and 16×16 sprites, and optionally
+/// supports transparency for images loaded from .PTN files, hardcoded to
+/// color #15.
 
 #define PTN_W 32
 #define PTN_H 32
@@ -24,7 +25,7 @@ struct ptn_file_image_t {
 
 // In-memory per-image structure
 struct ptn_t : public ptn_file_image_t {
-	ptn_dots_t alpha[PTN_H];
+	ptn_dots_t alpha[PTN_H]; // Derived from color #15 at load time
 };
 #pragma option -a.
 
@@ -32,4 +33,75 @@ struct ptn_t : public ptn_file_image_t {
 
 extern ptn_t* ptn_images[PTN_SLOT_COUNT];
 extern int8_t ptn_image_count[PTN_SLOT_COUNT];
+
+// Loading and freeing
+// -------------------
+typedef enum {
+	PE_OK = 0,
+	PE_OUT_OF_MEMORY = -3,
+	PE_IMAGE_COUNT_INVALID = -9,
+} ptn_error_t;
+
+// Frees all images in [slot], then allocates new memory for the given number
+// of images.
+ptn_error_t ptn_new(int slot, int image_count);
+
+// Frees all images in [slot], then loads all images from the .PTN file with
+// the given name into the same slot, retaining the current hardware palette.
+// Also derives the alpha plane from color #15 of every image.
+void ptn_load(int slot, const char *fn);
+
+// Like ptn_load(), but sets the hardware palette to the one in [fn]'s header.
+ptn_error_t ptn_load_palette_show(int slot, const char *fn);
+
+// Frees all images in [slot].
+void ptn_free(int slot);
+// -------------------
+
+// ID system
+// ---------
+// Internal assumption for mapping a ptn_id to a slot and image.
+#define PTN_IMAGES_PER_SLOT 64
+#define PTN_SLOT(slot) ((slot) * PTN_IMAGES_PER_SLOT)
+#define PTN_ID(slot, image) (PTN_SLOT(slot) + image)
+
+static inline ptn_t* ptn_with_id(int id)
+{
+	return &ptn_images[id / PTN_IMAGES_PER_SLOT][id % PTN_IMAGES_PER_SLOT];
+}
+// ---------
+
+// 32×32 access
+// ------------
+// Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregaring its alpha
+// plane.
+void ptn_put_noalpha_8(int left, int top, int ptn_id);
+// ------------
+
+// 16×16 access
+// ------------
+// These functions subdivide a 32×32 PTN image into four 16×16 areas, numbered
+// like this:
+// | 0 | 1 |
+// | 2 | 3 |
+#define PTN_QUARTER_W 16
+#define PTN_QUARTER_H 16
+
+#define ptn_quarter_y(quarter) ((quarter & 2) ? PTN_QUARTER_H : 0)
+#define ptn_quarter_x(quarter) ((quarter & 1) ? PTN_QUARTER_W : 0)
+
+struct PTNQuarter
+{
+	int x, y;
+
+	void init(const int& quarter) {
+		y = ptn_quarter_y(quarter);
+		x = ptn_quarter_x(quarter);
+	}
+};
+
+// Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
+// diregarding its alpha plane.
+void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter);
+// ------------
 /// -----------------------------------------

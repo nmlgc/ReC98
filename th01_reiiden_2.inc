@@ -386,10 +386,7 @@ var_1		= byte ptr -1
 		push	ax
 		call	sub_15851
 		nopcall	sub_1B383
-		push	ds
-		push	offset aBoss3_m_ptn ; "boss3_m.ptn"
-		push	2
-		call	sub_10888
+		call	_ptn_load stdcall, 2, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	byte_3A1B2, 80h	; '?'
 		push	ds
 		push	offset unk_39EC4
@@ -561,8 +558,7 @@ sub_1B579	proc far
 		mov	bp, sp
 		push	0
 		call	sub_169CB
-		push	2
-		call	sub_108AB
+		call	_ptn_free stdcall, 2
 		add	sp, 4
 		pop	bp
 		retf
@@ -5052,12 +5048,8 @@ loc_1E3A2:
 		cmp	si, 10h
 		jl	short loc_1E385
 		nopcall	sub_1E79B
-		push	180002h
-		call	sub_10814
-		push	ds
-		push	offset aBoss3_m_ptn_0 ;	"boss3_m.ptn"
-		push	3
-		call	sub_10888
+		call	_ptn_new stdcall, (24 shl 16) or 2
+		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
 		push	ds
 		push	offset unk_39EC4
@@ -5327,7 +5319,7 @@ loc_1E5AB:
 ; ---------------------------------------------------------------------------
 
 loc_1E5AF:
-		lea	ax, [di+80h]
+		lea	ax, [PTN_SLOT_2+di]
 		push	ax
 		mov	ax, [bp+var_6]
 		shl	ax, 5
@@ -5337,7 +5329,7 @@ loc_1E5AF:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_108EC
+		call	_ptn_put_noalpha_8
 		add	sp, 6
 		inc	di
 		inc	si
@@ -5361,28 +5353,28 @@ loc_1E5E1:
 
 loc_1E5E8:
 		push	2
-		lea	ax, [di+80h]
+		lea	ax, [PTN_SLOT_2+di]
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 30h	; '0'
+		add	ax, 48
 		push	ax
 		mov	ax, si
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_109B2
+		call	_ptn_put_quarter_noalpha_8
 		push	3
-		lea	ax, [di+80h]
+		lea	ax, [di+PTN_SLOT_2]
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 30h	; '0'
+		add	ax, 48
 		push	ax
 		mov	ax, si
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		add	ax, 10h
 		push	ax
-		call	sub_109B2
+		call	_ptn_put_quarter_noalpha_8
 		add	sp, 10h
 		inc	di
 		inc	si
@@ -5395,16 +5387,16 @@ loc_1E628:
 ; ---------------------------------------------------------------------------
 
 loc_1E631:
-		lea	ax, [di+80h]
+		lea	ax, [PTN_SLOT_2+di]
 		push	ax
 		mov	ax, [bp+var_4]
-		add	ax, 40h
+		add	ax, 64
 		push	ax
 		mov	ax, si
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_108EC
+		call	_ptn_put_noalpha_8
 		add	sp, 6
 		inc	di
 		inc	si
@@ -5636,10 +5628,8 @@ sub_1E81D	proc far
 		call	sub_169CB
 		push	1
 		call	sub_169CB
-		push	2
-		call	sub_108AB
-		push	3
-		call	sub_108AB
+		call	_ptn_free stdcall, 2
+		call	_ptn_free stdcall, 3
 		add	sp, 8
 		pop	bp
 		retf
@@ -11429,17 +11419,17 @@ arg_2		= word ptr  8
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 14Eh
+		add	ax, (PTN_SLOT_5 + 14)
 		push	ax
-		push	30h ; '0'
+		push	48
 		mov	ax, si
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		shl	ax, 4
-		add	ax, 80h	; '?'
+		add	ax, 128
 		push	ax
-		call	sub_109B2
+		call	_ptn_put_quarter_noalpha_8
 		push	0
 		call	_graph_accesspage_func
 		mov	ax, si
@@ -11454,17 +11444,17 @@ arg_2		= word ptr  8
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 14Eh
+		add	ax, (PTN_SLOT_5 + 14)
 		push	ax
-		push	30h ; '0'
+		push	48
 		mov	ax, si
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		shl	ax, 4
-		add	ax, 80h	; '?'
+		add	ax, 128
 		push	ax
-		call	sub_109B2
+		call	_ptn_put_quarter_noalpha_8
 		add	sp, 14h
 		mov	ax, si
 		mov	bx, 2
@@ -14842,10 +14832,7 @@ loc_2336A:
 		push	offset word_3A4C3
 		call	sub_1568F
 		mov	word_3A4ED, 0
-		push	ds
-		push	offset aTamayen_ptn ; "tamayen.ptn"
-		push	2
-		call	sub_10888
+		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
 		mov	si, 1
 		jmp	loc_23541
@@ -15015,8 +15002,7 @@ sub_235E0	proc far
 		call	sub_169CB
 		push	1
 		call	sub_169CB
-		push	2
-		call	sub_108AB
+		call	_ptn_free stdcall, 2
 		add	sp, 6
 		pop	bp
 		retf
@@ -17760,7 +17746,7 @@ sub_24EC2	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
-var_6		= word ptr -6
+@@image		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -17768,7 +17754,7 @@ arg_0		= word ptr  6
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	[bp+var_6], 0
+		mov	[bp+@@image], 0
 		mov	ax, point_3982A.y
 		mov	[bp+var_8], ax
 		mov	ax, point_3982A.x
@@ -17805,8 +17791,8 @@ loc_24F09:
 ; ---------------------------------------------------------------------------
 
 loc_24F0D:
-		mov	ax, [bp+var_6]
-		add	ax, 80h	; '?'
+		mov	ax, [bp+@@image]
+		add	ax, PTN_SLOT_2
 		push	ax
 		mov	ax, di
 		shl	ax, 5
@@ -17816,9 +17802,9 @@ loc_24F0D:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_108EC
+		call	_ptn_put_noalpha_8
 		add	sp, 6
-		inc	[bp+var_6]
+		inc	[bp+@@image]
 		inc	si
 
 loc_24F32:
@@ -17873,12 +17859,8 @@ sub_24F41	proc far
 		push	offset aBoss5_gr_grc ; "boss5_gr.grc"
 		push	0
 		call	sub_1744B
-		push	0C0002h
-		call	sub_10814
-		push	ds
-		push	offset aBoss3_m_ptn_1 ;	"boss3_m.ptn"
-		push	3
-		call	sub_10888
+		call	_ptn_new stdcall, (12 shl 16) or 2
+		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
 		call	sub_232A4
 		nopcall	sub_24FE0
@@ -17982,10 +17964,8 @@ sub_250BC	proc far
 		call	sub_169CB
 		push	0
 		call	sub_17682
-		push	2
-		call	sub_108AB
-		push	3
-		call	sub_108AB
+		call	_ptn_free stdcall, 2
+		call	_ptn_free stdcall, 3
 		add	sp, 0Ch
 		pop	bp
 		retf
@@ -23831,8 +23811,7 @@ sub_28754	proc far
 		call	sub_1744B
 		call	sub_232A4
 		nopcall	sub_287D9
-		push	100002h
-		call	sub_10814
+		call	_ptn_new stdcall, (16 shl 16) or 2
 		add	sp, 0Ah
 		pop	bp
 		retf
@@ -23944,14 +23923,14 @@ sub_28852	endp
 
 sub_288B5	proc near
 
-var_6		= word ptr -6
+@@image		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	[bp+var_6], 0
+		mov	[bp+@@image], 0
 		mov	ax, word_39A29
 		mov	[bp+var_2], ax
 		mov	ax, word_39A2B
@@ -23966,8 +23945,8 @@ loc_288D0:
 ; ---------------------------------------------------------------------------
 
 loc_288D4:
-		mov	ax, [bp+var_6]
-		add	ax, 80h	; '?'
+		mov	ax, [bp+@@image]
+		add	ax, PTN_SLOT_2
 		push	ax
 		mov	ax, di
 		shl	ax, 5
@@ -23977,9 +23956,9 @@ loc_288D4:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_108EC
+		call	_ptn_put_noalpha_8
 		add	sp, 6
-		inc	[bp+var_6]
+		inc	[bp+@@image]
 		inc	si
 
 loc_288F9:
@@ -24018,8 +23997,7 @@ sub_28908	proc far
 		call	sub_17682
 		push	3
 		call	sub_17682
-		push	2
-		call	sub_108AB
+		call	_ptn_free stdcall, 2
 		add	sp, 10h
 		pop	bp
 		retf

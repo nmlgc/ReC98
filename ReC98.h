@@ -121,6 +121,11 @@ static inline unsigned int vram_offset_shift(int x, int y)
 {
 	return VRAM_OFFSET(x, y);
 }
+
+static inline unsigned int vram_offset_muldiv(int x, int y)
+{
+	return (y * ROW_SIZE) + (x / 8);
+}
 #endif
 
 #define VRAM_CHUNK(plane, offset, bit_count) \
