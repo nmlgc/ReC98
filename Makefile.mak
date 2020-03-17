@@ -47,12 +47,12 @@ bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
 
-bin\th01\op.exe: bin\th01\op.obj th01\op_02.c th01\op_03.c th01\op_04.c th01\op_05.c th01\op_06.cpp th01\op_08.c th01\op_09.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
+bin\th01\op.exe: bin\th01\op.obj th01\op_02.c th01\op_03.c th01\op_04.c th01\op_05.c th01\op_06.cpp th01\op_07.cpp th01\op_08.c th01\op_09.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
 |
 
-bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_08.cpp th01\main_12.c th01\main_13.c th01\main_14.c th01\main_16.c
+bin\th01\reiiden.exe: bin\th01\reiiden.obj th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_12.c th01\main_13.c th01\main_14.c th01\main_16.c
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |

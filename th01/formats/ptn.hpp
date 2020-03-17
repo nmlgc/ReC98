@@ -2,7 +2,8 @@
 /// -----------------------------------------
 /// Provides functions for both 32×32 and 16×16 sprites, and optionally
 /// supports transparency for images loaded from .PTN files, hardcoded to
-/// color #15.
+/// color #15. Can also be used to store the backgrounds of frequently updated
+/// VRAM regions, using the functions for raw allocation and VRAM snapping.
 
 #define PTN_W 32
 #define PTN_H 32
@@ -76,6 +77,10 @@ static inline ptn_t* ptn_with_id(int id)
 // Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregaring its alpha
 // plane.
 void ptn_put_noalpha_8(int left, int top, int ptn_id);
+
+// Overwrites the 4 color planes of [ptn_id] with the current VRAM content of
+// the 32×32 pixels starting at (⌊left/8⌋*8, top).
+void ptn_snap_8(int left, int top, int ptn_id);
 // ------------
 
 // 16×16 access
@@ -103,5 +108,9 @@ struct PTNQuarter
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
 // diregarding its alpha plane.
 void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter);
+
+// Overwrites the 4 color planes of the given [quarter] of [ptn_id] with the
+// current VRAM content of the 16×16 pixels starting at (⌊left/8⌋*8, top).
+void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter);
 // ------------
 /// -----------------------------------------

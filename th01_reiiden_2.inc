@@ -5229,7 +5229,7 @@ sub_1E4EC	endp
 
 sub_1E526	proc far
 
-var_6		= word ptr -6
+@@image		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -5240,7 +5240,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		mov	ax, point_3982A.y
 		mov	[bp+var_4], ax
-		mov	[bp+var_6], 3
+		mov	[bp+@@image], 3
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -5254,8 +5254,8 @@ loc_1E549:
 ; ---------------------------------------------------------------------------
 
 loc_1E54D:
-		mov	ax, [bp+var_6]
-		add	ax, 80h	; '?'
+		mov	ax, [bp+@@image]
+		add	ax, PTN_SLOT_2
 		push	ax
 		mov	ax, di
 		shl	ax, 5
@@ -5265,9 +5265,9 @@ loc_1E54D:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_104C2
+		call	_ptn_snap_8
 		add	sp, 6
-		inc	[bp+var_6]
+		inc	[bp+@@image]
 		inc	si
 
 loc_1E572:
@@ -11502,14 +11502,14 @@ loc_219DD:
 		mov	ax, [bp+var_2]
 		cwd
 		idiv	bx
-		add	ax, 14Eh
+		add	ax, (PTN_SLOT_5 + 14)
 		push	ax
-		push	30h ; '0'
+		push	48
 		mov	ax, [bp+var_2]
 		shl	ax, 4
-		add	ax, 80h	; '?'
+		add	ax, 128
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		mov	ax, [bp+var_2]
 		cmp	ax, word_3A1E7
@@ -11550,14 +11550,14 @@ loc_21A35:
 		mov	ax, di
 		cwd
 		idiv	bx
-		add	ax, 14Eh
+		add	ax, (PTN_SLOT_5 + 14)
 		push	ax
-		push	30h ; '0'
+		push	48
 		mov	ax, di
 		shl	ax, 4
-		add	ax, 80h	; '?'
+		add	ax, 128
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		cmp	di, word_3A1E7
 		jnb	short loc_21A64
@@ -17656,7 +17656,7 @@ sub_24E33	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
-var_6		= word ptr -6
+@@image		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
@@ -17690,7 +17690,7 @@ loc_24E6E:
 		mov	[bp+var_4], ax
 
 loc_24E71:
-		mov	[bp+var_6], 0
+		mov	[bp+@@image], 0
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -17704,8 +17704,8 @@ loc_24E82:
 ; ---------------------------------------------------------------------------
 
 loc_24E86:
-		mov	ax, [bp+var_6]
-		add	ax, 80h	; '?'
+		mov	ax, [bp+@@image]
+		add	ax, PTN_SLOT_2
 		push	ax
 		mov	ax, di
 		shl	ax, 5
@@ -17715,9 +17715,9 @@ loc_24E86:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_104C2
+		call	_ptn_snap_8
 		add	sp, 6
-		inc	[bp+var_6]
+		inc	[bp+@@image]
 		inc	si
 
 loc_24EAB:
@@ -23858,7 +23858,7 @@ sub_287D9	endp
 
 sub_28852	proc near
 
-var_6		= word ptr -6
+@@image		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -23869,7 +23869,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		mov	ax, word_39A2B
 		mov	[bp+var_4], ax
-		mov	[bp+var_6], 0
+		mov	[bp+@@image], 0
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -23883,8 +23883,8 @@ loc_28875:
 ; ---------------------------------------------------------------------------
 
 loc_28879:
-		mov	ax, [bp+var_6]
-		add	ax, 80h	; '?'
+		mov	ax, [bp+@@image]
+		add	ax, PTN_SLOT_2
 		push	ax
 		mov	ax, di
 		shl	ax, 5
@@ -23894,9 +23894,9 @@ loc_28879:
 		shl	ax, 5
 		add	ax, [bp+var_2]
 		push	ax
-		call	sub_104C2
+		call	_ptn_snap_8
 		add	sp, 6
-		inc	[bp+var_6]
+		inc	[bp+@@image]
 		inc	si
 
 loc_2889E:

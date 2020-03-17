@@ -5460,264 +5460,8 @@ loc_104B1:
 		retf
 _egc_copy_rect_1_to_0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_104C2	proc far
-
-@@ptn		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	si, dx
-		mov	ax, di
-		mov	bx, 40h
-		cwd
-		idiv	bx
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, di
-		mov	bx, 40h
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-		xor	cx, cx
-		jmp	short loc_1057C
-; ---------------------------------------------------------------------------
-
-loc_10511:
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		mov	es:[bx+ptn_t.planes.PTN_B], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		mov	es:[bx+ptn_t.planes.PTN_R], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		mov	es:[bx+ptn_t.planes.PTN_G], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	eax, es:[bx]
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		mov	es:[bx+ptn_t.planes.PTN_E], eax
-		add	si, ROW_SIZE
-		inc	cx
-
-loc_1057C:
-		cmp	cx, PTN_H
-		jl	short loc_10511
-		pop	di
-		pop	si
-		leave
-		retf
-sub_104C2	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10585	proc far
-
-@@ptn		= dword	ptr -0Eh
-var_A		= dword	ptr -0Ah
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	di, dx
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		cwd
-		idiv	bx
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-		test	[bp+arg_6], 2
-		jz	short loc_105DA
-		mov	ax, 10h
-		jmp	short loc_105DC
-; ---------------------------------------------------------------------------
-
-loc_105DA:
-		xor	ax, ax
-
-loc_105DC:
-		mov	[bp+var_2], ax
-		test	[bp+arg_6], 1
-		jz	short loc_105ED
-		mov	eax, 0FFFFh
-		jmp	short loc_105F3
-; ---------------------------------------------------------------------------
-
-loc_105ED:
-		mov	eax, 0FFFF0000h
-
-loc_105F3:
-		mov	[bp+var_6], eax
-		test	[bp+arg_6], 1
-		jz	short loc_10602
-		mov	ax, 10h
-		jmp	short loc_10604
-; ---------------------------------------------------------------------------
-
-loc_10602:
-		xor	ax, ax
-
-loc_10604:
-		cwde
-		mov	[bp+var_A], eax
-		mov	si, [bp+var_2]
-		jmp	loc_106E3
-; ---------------------------------------------------------------------------
-
-loc_10610:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, [bp+var_6]
-		and	es:[bx+ptn_t.planes.PTN_B], eax
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	eax, es:[bx]
-		mov	cl, byte ptr [bp+var_A]
-		shl	eax, cl
-		mov	edx, [bp+var_6]
-		not	edx
-		and	eax, edx
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		or	es:[bx+ptn_t.planes.PTN_B], eax
-		mov	eax, [bp+var_6]
-		and	es:[bx+ptn_t.planes.PTN_R], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		mov	eax, es:[bx]
-		shl	eax, cl
-		mov	edx, [bp+var_6]
-		not	edx
-		and	eax, edx
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		or	es:[bx+ptn_t.planes.PTN_R], eax
-		mov	eax, [bp+var_6]
-		and	es:[bx+ptn_t.planes.PTN_G], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		mov	eax, es:[bx]
-		shl	eax, cl
-		mov	edx, [bp+var_6]
-		not	edx
-		and	eax, edx
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		or	es:[bx+ptn_t.planes.PTN_G], eax
-		mov	eax, [bp+var_6]
-		and	es:[bx+ptn_t.planes.PTN_E], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		mov	eax, es:[bx]
-		shl	eax, cl
-		mov	edx, [bp+var_6]
-		not	edx
-		and	eax, edx
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+@@ptn]
-		add	bx, dx
-		or	es:[bx+ptn_t.planes.PTN_E], eax
-		add	di, ROW_SIZE
-		inc	si
-
-loc_106E3:
-		mov	ax, [bp+var_2]
-		add	ax, 10h
-		cmp	ax, si
-		jg	loc_10610
-		pop	di
-		pop	si
-		leave
-		retf
-sub_10585	endp
-
+	extern _ptn_snap_8:proc
+	extern _ptn_snap_quarter_8:proc
 main_07_TEXT	ends
 
 ; ===========================================================================
@@ -18762,14 +18506,14 @@ loc_18A3A:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 146h
+		add	ax, (PTN_SLOT_5 + 6)
 		push	ax
-		push	10h
+		push	16
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 100h
+		add	ax, 256
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -18795,12 +18539,12 @@ loc_18A60:
 
 loc_18A96:
 		push	si
-		push	1480010h
+		push	((PTN_SLOT_5 + 8) shl 16) or 16
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 190h
+		add	ax, 400
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -18859,14 +18603,14 @@ loc_18B0D:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 14Ah
+		add	ax, (PTN_SLOT_5 + 10)
 		push	ax
 		push	0
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 100h
+		add	ax, 256
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -18893,12 +18637,12 @@ loc_18B33:
 
 loc_18B6D:
 		push	si
-		push	14C0000h
+		push	((PTN_SLOT_5 + 12) shl 16) or 0
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 190h
+		add	ax, 400
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -19206,7 +18950,7 @@ loc_18DA0:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 140h
+		add	ax, PTN_SLOT_5
 		push	ax
 		mov	ax, si
 		mov	bx, 6
@@ -19218,9 +18962,9 @@ loc_18DA0:
 		cwd
 		idiv	bx
 		shl	dx, 4
-		add	dx, 80h
+		add	dx, 128
 		push	dx
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		pushd	0
 		mov	ax, si
@@ -19352,7 +19096,7 @@ loc_18EB3:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 140h
+		add	ax, PTN_SLOT_5
 		push	ax
 		mov	ax, si
 		mov	bx, 6
@@ -19364,9 +19108,9 @@ loc_18EB3:
 		cwd
 		idiv	bx
 		shl	dx, 4
-		add	dx, 80h
+		add	dx, 128
 		push	dx
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		push	0
 		call	_graph_accesspage_func
@@ -19427,14 +19171,14 @@ loc_18F39:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 144h
+		add	ax, (PTN_SLOT_5 + 4)
 		push	ax
-		push	10h
+		push	16
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, 128
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		push	10000h
 		push	10h
@@ -19554,14 +19298,14 @@ loc_1901D:
 		mov	ax, si
 		cwd
 		idiv	bx
-		add	ax, 144h
+		add	ax, (PTN_SLOT_5 + 4)
 		push	ax
-		push	10h
+		push	16
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, 128
 		push	ax
-		call	sub_10585
+		call	_ptn_snap_quarter_8
 		add	sp, 8
 		push	0
 		call	_graph_accesspage_func
@@ -19606,10 +19350,7 @@ sub_19085	proc far
 var_4		= byte ptr -4
 
 		enter	4, 0
-		pushd	142h
-		push	200260h
-		call	sub_10585
-		add	sp, 8
+		call	_ptn_snap_quarter_8 c, large (32 shl 16) or 608, large (PTN_SLOT_5 + 2)
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
@@ -19823,11 +19564,7 @@ var_6		= byte ptr -6
 ; ---------------------------------------------------------------------------
 
 loc_19274:
-		push	si
-		push	14D0000h
-		push	200h
-		call	sub_10585
-		add	sp, 8
+		call	_ptn_snap_quarter_8 c, 512, large ((PTN_SLOT_5 + 13) shl 16) or 0, si
 		inc	si
 
 loc_19287:
