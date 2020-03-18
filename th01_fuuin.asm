@@ -2019,11 +2019,11 @@ loc_AD38:
 		add	sp, 0Eh
 		cmp	di, si
 		jnz	short loc_AD65
-		mov	word_14030, 90h
+		mov	point_14030.x, 144
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
-		mov	word_14032, ax
+		add	ax, 64
+		mov	point_14030.y, ax
 
 loc_AD65:
 		inc	si
@@ -2061,22 +2061,17 @@ sub_AD86	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@left		= word ptr  6
+@@top		= word ptr  8
 arg_4		= word ptr  0Ah
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
 		mov	[bp+var_2], 0
-		push	10h
-		push	20h ; ' '
-		push	di
-		push	si
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, si, di, 32, 16
 		cmp	[bp+arg_4], 0
 		jnz	short loc_ADB0
 		mov	ax, 7
@@ -2428,19 +2423,14 @@ loc_B021:
 		inc	word ptr es:[bx]
 
 loc_B063:
-		push	10h
-		push	80h
-		push	word_14032
-		push	word_14030
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, point_14030.x, point_14030.y, 128, 16
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+_arglist] ;	arglist
 		push	ds
 		push	offset aS	; "%s"
 		push	23h ; '#'       ; int
-		push	word_14032	; int
-		push	word_14030	; int
+		push	point_14030.y	; int
+		push	point_14030.x	; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		les	bx, [bp+arg_8]
@@ -2461,8 +2451,8 @@ loc_B063:
 		push	ds
 		push	offset aS_0	; "%s"
 		push	3		; int
-		push	word_14032	; int
-		push	word_14030	; int
+		push	point_14030.y	; int
+		push	point_14030.x	; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		xor	ax, ax
@@ -5537,10 +5527,7 @@ font		dd ?
 off_14028	dd ?
 ; void (*off_1402C)(void)
 off_1402C	dd ?
-; int word_14030
-word_14030	dw ?
-; int word_14032
-word_14032	dw ?
+point_14030	Point <?>
 ; void (*off_14034)(void)
 off_14034	dd ?
 		db    ?	;

@@ -719,16 +719,8 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_A68D:
-		push	10280h
-		push	si
-		push	0
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
-		push	10280h
-		push	di
-		push	0
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, 0, si, large (1 shl 16) or RES_X
+		call	_egc_copy_rect_1_to_0 c, 0, di, large (1 shl 16) or RES_X
 
 loc_A6AF:
 		call	IRand
@@ -1013,10 +1005,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_A954:
-		push	100080h
-		push	13200F4h
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, large (306 shl 16) or 244, large (16 shl 16) or 128
 		pop	bp
 		retf
 sub_A92C	endp
@@ -1113,16 +1102,12 @@ arg_2		= word ptr  8
 		push	offset off_12509
 		mov	cx, 14h
 		call	SCOPY@
-		mov	di, 0E4h
+		mov	di, 228
 		mov	ax, si
-		imul	ax, 14h
-		add	ax, 10Ah
+		imul	ax, 20
+		add	ax, 266
 		mov	[bp+var_A], ax
-		push	1000B0h
-		push	ax
-		push	di
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AA34
 		mov	al, byte ptr word_12320
@@ -1231,21 +1216,17 @@ arg_2		= word ptr  8
 		push	offset off_12526
 		mov	cx, 3Ch	; '<'
 		call	SCOPY@
-		mov	di, 0E4h
+		mov	di, 228
 		mov	ax, si
-		imul	ax, 28h
-		add	ax, 11Eh
+		imul	ax, 40
+		add	ax, 286
 		mov	[bp+var_A], ax
-		push	1000B0h
-		push	ax
-		push	di
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AB69
-		push	1000C0h
+		push	(16 shl 16) or 192
 		mov	ax, [bp+var_A]
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		push	di
 		call	_egc_copy_rect_1_to_0
@@ -1322,10 +1303,7 @@ sub_AB97	proc far
 		mov	bp, sp
 		cmp	word_12564, 0
 		jnz	short loc_AC04
-		push	6400B0h
-		push	10A00DCh
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	50000h
 		call	sub_A96A
 		add	sp, 4
@@ -1431,10 +1409,7 @@ sub_AC84	proc far
 		mov	word_12568, 0
 		mov	word_12566, 1
 		mov	byte_12338, 4
-		push	5000B0h
-		push	11400DCh
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, large (276 shl 16) or 220, large (80 shl 16) or 176
 		push	0F0000h
 		call	sub_A9B9
 		add	sp, 4
@@ -1679,10 +1654,7 @@ sub_AEA8	proc far
 		mov	byte_12327, 0
 		mov	byte_12328, 0
 		mov	byte_12338, 1
-		push	6400B0h
-		push	10A00DCh
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
+		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	0F0000h
 		call	sub_AAB6
 		add	sp, 4
@@ -2206,85 +2178,7 @@ loc_D2C8:
 		retf
 
 include th01/hardware/vram_planes_set.asm
-EGC_START_COPY_DEF 1, far
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _egc_copy_rect_1_to_0
-_egc_copy_rect_1_to_0	proc far
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, si
-		add	si, [bp+arg_4]
-		and	di, 0FFF0h
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_6], ax
-		call	egc_start_copy_1
-		mov	[bp+var_2], 0
-		jmp	short loc_D3B6
-; ---------------------------------------------------------------------------
-
-loc_D36C:
-		mov	[bp+var_4], di
-		mov	ax, [bp+var_6]
-		mov	[bp+var_A], ax
-		jmp	short loc_D3AA
-; ---------------------------------------------------------------------------
-
-loc_D377:
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_A]
-		mov	ax, es:[bx]
-		mov	[bp+var_8], ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_A]
-		mov	ax, [bp+var_8]
-		mov	es:[bx], ax
-		add	[bp+var_A], 2
-		add	[bp+var_4], 10h
-
-loc_D3AA:
-		cmp	[bp+var_4], si
-		jl	short loc_D377
-		add	[bp+var_6], 50h	; 'P'
-		inc	[bp+var_2]
-
-loc_D3B6:
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+arg_6]
-		jl	short loc_D36C
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retf
-_egc_copy_rect_1_to_0	endp
+	extern _egc_copy_rect_1_to_0:proc
 op_07_TEXT	ends
 
 ; ===========================================================================
