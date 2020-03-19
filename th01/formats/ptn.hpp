@@ -81,6 +81,10 @@ void ptn_put_noalpha_8(int left, int top, int ptn_id);
 // Overwrites the 4 color planes of [ptn_id] with the current VRAM content of
 // the 32×32 pixels starting at (⌊left/8⌋*8, top).
 void ptn_snap_8(int left, int top, int ptn_id);
+
+// Copies the 32×32 pixels starting at (⌊left/8⌋*8, top) from VRAM page 0 to
+// VRAM page 1.
+void ptn_copy_8_0_to_1(int left, int top);
 // ------------
 
 // 16×16 access

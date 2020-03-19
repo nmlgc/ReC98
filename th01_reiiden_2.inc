@@ -9421,7 +9421,7 @@ loc_2089A:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_1031B
+		call	_ptn_copy_8_0_to_1
 		add	sp, 4
 
 loc_208BC:
@@ -9445,7 +9445,7 @@ loc_208C7:
 		les	bx, font
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_1031B
+		call	_ptn_copy_8_0_to_1
 		add	sp, 4
 		inc	si
 

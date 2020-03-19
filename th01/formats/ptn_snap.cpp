@@ -1,7 +1,5 @@
 extern "C" {
 
-#include "th01/formats/ptn.hpp"
-
 void ptn_snap_8(int left, int top, int ptn_id)
 {
 	unsigned int vram_offset = vram_offset_muldiv(left, top);

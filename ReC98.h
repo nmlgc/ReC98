@@ -86,10 +86,6 @@ typedef int8_t sdots8_t;
 typedef int16_t sdots16_t;
 typedef int32_t sdots32_t;
 
-// Abstracted dot types, with their width defined by a macro.
-#define dots_t_(x) dots##x##_t
-#define dots_t(x) dots_t_(x)
-
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
@@ -105,6 +101,12 @@ typedef struct {
 typedef struct {
 	dots32_t B, R, G, E;
 } planar32_t;
+
+// Abstracted dot and planar types, with their width defined by a macro.
+#define dots_t_(x) dots##x##_t
+#define dots_t(x) dots_t_(x)
+#define planar_t_(x) planar##x##_t
+#define planar_t(x) planar_t_(x)
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
