@@ -5105,7 +5105,7 @@ loc_E27B:
 		cmp	[bp+var_2], 5
 		jge	short loc_E295
 		mov	dx, ds
-		mov	ax, 66Bh
+		mov	ax, offset _SCOREDAT_ROUTE_SHRINE
 		jmp	short loc_E2A8
 ; ---------------------------------------------------------------------------
 
@@ -5113,13 +5113,13 @@ loc_E295:
 		cmp	_route, 0
 		jnz	short loc_E2A3
 		mov	dx, ds
-		mov	ax, 66Eh
+		mov	ax, offset _SCOREDAT_ROUTE_MAKAI
 		jmp	short loc_E2A8
 ; ---------------------------------------------------------------------------
 
 loc_E2A3:
 		mov	dx, ds
-		mov	ax, 671h
+		mov	ax, offset _SCOREDAT_ROUTE_JIGOKU
 
 loc_E2A8:
 		push	dx
@@ -8826,35 +8826,35 @@ main_19_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13956	proc far
+public _scoredat_name_byte_encode
+_scoredat_name_byte_encode	proc far
 
 arg_0		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		mov	al, [bp+arg_0]
-		add	al, 9Ch
+		add	al, SCOREDAT_NAME_KEY
 		pop	bp
 		retf
-sub_13956	endp
+_scoredat_name_byte_encode	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13960	proc far
+public _scoredat_name_byte_decode
+_scoredat_name_byte_decode	proc far
 
 arg_0		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		mov	al, [bp+arg_0]
-		add	al, 64h	; 'd'
+		add	al, (256 - SCOREDAT_NAME_KEY)
 		pop	bp
 		retf
-sub_13960	endp
+_scoredat_name_byte_decode	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8866,7 +8866,7 @@ sub_1396A	proc far
 dest		= byte ptr -22h
 var_12		= dword	ptr -12h
 var_E		= dword	ptr -0Eh
-var_A		= dword	ptr -0Ah
+@@points		= dword	ptr -0Ah
 var_6		= dword	ptr -6
 var_2		= word ptr -2
 
@@ -8926,7 +8926,7 @@ loc_139BC:
 		push	7
 		call	file_write
 		mov	[bp+var_2], 0Ah
-		mov	[bp+var_A], 3E8h
+		mov	[bp+@@points], 1000
 		xor	si, si
 		jmp	short loc_139FF
 ; ---------------------------------------------------------------------------
@@ -8935,8 +8935,7 @@ loc_139E8:
 		les	bx, [bp+var_E]
 		add	bx, si
 		mov	al, es:[bx]
-		push	ax
-		call	sub_13956
+		call	_scoredat_name_byte_encode stdcall, ax
 		pop	cx
 		les	bx, [bp+var_E]
 		add	bx, si
@@ -8944,20 +8943,18 @@ loc_139E8:
 		inc	si
 
 loc_139FF:
-		cmp	si, 10h
+		cmp	si, SCOREDAT_NAME_BYTES
 		jl	short loc_139E8
 		xor	si, si
 		jmp	short loc_13A14
 ; ---------------------------------------------------------------------------
 
 loc_13A08:
-		pushd	[bp+var_E]
-		push	10h
-		call	file_write
+		call	file_write pascal, large [bp+var_E], SCOREDAT_NAME_BYTES
 		inc	si
 
 loc_13A14:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_13A08
 		xor	si, si
 		jmp	short loc_13A36
@@ -8965,17 +8962,17 @@ loc_13A14:
 
 loc_13A1D:
 		push	ss
-		lea	ax, [bp+var_A]
+		lea	ax, [bp+@@points]
 		push	ax
 		push	4
 		call	file_write
-		mov	eax, [bp+var_A]
-		add	eax, 0FFFFFF9Ch
-		mov	[bp+var_A], eax
+		mov	eax, [bp+@@points]
+		add	eax, -100
+		mov	[bp+@@points], eax
 		inc	si
 
 loc_13A36:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_13A1D
 		xor	si, si
 		jmp	short loc_13A53
@@ -8993,7 +8990,7 @@ loc_13A3F:
 		inc	si
 
 loc_13A53:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_13A3F
 		xor	si, si
 		jmp	short loc_13A68
@@ -9006,7 +9003,7 @@ loc_13A5C:
 		inc	si
 
 loc_13A68:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_13A5C
 		call	file_close
 
@@ -9113,57 +9110,44 @@ loc_13B01:
 ; ---------------------------------------------------------------------------
 
 loc_13B07:
-		push	0A0h
-		call	@$bnwa$qui
+		call	@$bnwa$qui stdcall, size scoredat_names_t
 		pop	cx
-		mov	word ptr off_39452+2, dx
-		mov	word ptr off_39452, ax
-		push	14h
-		call	@$bnwa$qui
+		mov	word ptr _scoredat_names+2, dx
+		mov	word ptr _scoredat_names, ax
+		call	@$bnwa$qui stdcall, size scoredat_stages_t
 		pop	cx
-		mov	word ptr off_3945A+2, dx
-		mov	word ptr off_3945A, ax
-		push	14h
-		call	@$bnwa$qui
+		mov	word ptr _scoredat_stages+2, dx
+		mov	word ptr _scoredat_stages, ax
+		call	@$bnwa$qui stdcall, size scoredat_routes_t
 		pop	cx
-		mov	word ptr off_39456+2, dx
-		mov	word ptr off_39456, ax
-		push	28h ; '('
-		call	@$bnwa$qui
+		mov	word ptr _scoredat_routes+2, dx
+		mov	word ptr _scoredat_routes, ax
+		call	@$bnwa$qui stdcall, size scoredat_points_t
 		pop	cx
-		mov	word ptr off_39462+2, dx
-		mov	word ptr off_39462, ax
-		pushd	[off_39452]
-		push	0A0h
-		call	file_read
-		pushd	[off_39462]
-		push	28h ; '('
-		call	file_read
-		pushd	[off_3945A]
-		push	14h
-		call	file_read
-		pushd	[off_39456]
-		push	14h
-		call	file_read
+		mov	word ptr _scoredat_points+2, dx
+		mov	word ptr _scoredat_points, ax
+		call	file_read pascal, large [_scoredat_names], size scoredat_names_t
+		call	file_read pascal, large [_scoredat_points], size scoredat_points_t
+		call	file_read pascal, large [_scoredat_stages], size scoredat_stages_t
+		call	file_read pascal, large [_scoredat_routes], size scoredat_routes_t
 		call	file_close
 		xor	si, si
 		jmp	short loc_13B97
 ; ---------------------------------------------------------------------------
 
 loc_13B7E:
-		les	bx, off_39452
+		les	bx, _scoredat_names
 		add	bx, si
 		mov	al, es:[bx]
-		push	ax
-		call	sub_13960
+		call	_scoredat_name_byte_decode stdcall, ax
 		pop	cx
-		les	bx, off_39452
+		les	bx, _scoredat_names
 		add	bx, si
 		mov	es:[bx], al
 		inc	si
 
 loc_13B97:
-		cmp	si, 0A0h
+		cmp	si, size scoredat_names_t
 		jl	short loc_13B7E
 		xor	ax, ax
 
@@ -9182,54 +9166,18 @@ off_13BA2	dw offset loc_13A94
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13BAA	proc far
+public _scoredat_hiscore_get
+_scoredat_hiscore_get	proc far
 		push	bp
 		mov	bp, sp
-		les	bx, off_39462
+		les	bx, _scoredat_points
 		mov	dx, es:[bx+2]
 		mov	ax, es:[bx]
 		pop	bp
 		retf
-sub_13BAA	endp
+_scoredat_hiscore_get	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13BBA	proc far
-
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_13BDD
-; ---------------------------------------------------------------------------
-
-loc_13BC1:
-		mov	bx, [bp+arg_0]
-		shl	bx, 4
-		add	bx, dx
-		mov	es, word ptr off_39452+2
-		add	bx, word ptr off_39452
-		mov	al, es:[bx]
-		les	bx, [bp+arg_2]
-		add	bx, dx
-		mov	es:[bx], al
-		inc	dx
-
-loc_13BDD:
-		cmp	dx, 10h
-		jl	short loc_13BC1
-		les	bx, [bp+arg_2]
-		mov	byte ptr es:[bx+10h], 0
-		pop	bp
-		retf
-sub_13BBA	endp
-
+include th01/hiscore/scoredat_name_get.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9668,7 +9616,7 @@ loc_13EFC:
 loc_13F22:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39462
+		les	bx, _scoredat_points
 		add	bx, ax
 		mov	eax, es:[bx]
 
@@ -9686,15 +9634,15 @@ loc_13F31:
 		jz	short loc_13F5E
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
-		cmp	word ptr es:[bx], 28h ;	'('
+		cmp	word ptr es:[bx], SCOREDAT_CLEARED
 		jl	short loc_13F69
 
 loc_13F5E:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_13FA1
-		cmp	[bp+arg_6], 28h	; '('
+		cmp	[bp+arg_6], SCOREDAT_CLEARED
 		jge	short loc_13FA1
 
 loc_13F69:
@@ -9709,7 +9657,7 @@ loc_13F69:
 loc_13F78:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
 		mov	ax, es:[bx]
 
@@ -9732,15 +9680,15 @@ loc_13FA1:
 		jz	short loc_13FB6
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
-		cmp	word ptr es:[bx], 32h ;	'2'
+		cmp	word ptr es:[bx], SCOREDAT_CLEARED_MAKAI
 		jz	short loc_13FC1
 
 loc_13FB6:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_13FC7
-		cmp	[bp+arg_6], 32h	; '2'
+		cmp	[bp+arg_6], SCOREDAT_CLEARED_MAKAI
 		jnz	short loc_13FC7
 
 loc_13FC1:
@@ -9754,15 +9702,15 @@ loc_13FC7:
 		jz	short loc_13FDC
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
-		cmp	word ptr es:[bx], 3Ch ;	'<'
+		cmp	word ptr es:[bx], SCOREDAT_CLEARED_JIGOKU
 		jz	short loc_13FE7
 
 loc_13FDC:
 		cmp	si, [bp+arg_0]
 		jnz	short loc_13FFF
-		cmp	[bp+arg_6], 3Ch	; '<'
+		cmp	[bp+arg_6], SCOREDAT_CLEARED_JIGOKU
 		jnz	short loc_13FFF
 
 loc_13FE7:
@@ -9798,7 +9746,7 @@ loc_13FFF:
 loc_14025:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39456
+		les	bx, _scoredat_routes
 		add	bx, ax
 
 loc_1402F:
@@ -9813,8 +9761,8 @@ loc_1402F:
 loc_1403F:
 		mov	bx, si
 		add	bx, bx
-		mov	es, word ptr off_39456+2
-		add	bx, word ptr off_39456
+		mov	es, word ptr _scoredat_routes+2
+		add	bx, word ptr _scoredat_routes
 
 loc_1404B:
 		mov	al, es:[bx+1]
@@ -9831,11 +9779,11 @@ loc_1404B:
 		add	sp, 0Ah
 		cmp	[bp+arg_0], si
 		jnz	short loc_14081
-		mov	point_3945E.x, 144
+		mov	_name_entered_left, 144
 		mov	ax, si
 		shl	ax, 4
 		add	ax, 64
-		mov	point_3945E.y, ax
+		mov	_name_entered_top, ax
 
 loc_14081:
 		inc	si
@@ -10209,8 +10157,8 @@ loc_14322:
 		inc	word ptr es:[bx]
 
 loc_1432E:
-		call	_egc_copy_rect_1_to_0 c, point_3945E.x, point_3945E.y, large (16 shl 16) or 128
-		call	_graph_putsa_fx c, point_3945E.x, point_3945E.y, 23h, large [bp+arg_4]
+		call	_egc_copy_rect_1_to_0 c, _name_entered_left, _name_entered_top, large (16 shl 16) or 128
+		call	_graph_putsa_fx c, _name_entered_left, _name_entered_top, 23h, large [bp+arg_4]
 		les	bx, [bp+arg_8]
 		mov	bx, es:[bx]
 		add	bx, bx
@@ -10227,8 +10175,8 @@ loc_1432E:
 		lea	ax, [bp+var_14]
 		push	ax
 		push	3
-		push	point_3945E.y
-		push	point_3945E.x
+		push	_name_entered_top
+		push	_name_entered_left
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		xor	ax, ax
@@ -10550,28 +10498,20 @@ sub_14399	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_146BA	proc far
+public _scoredat_free
+_scoredat_free	proc far
 		push	bp
 		mov	bp, sp
-		pushd	[off_39452] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pushd	[off_3945A] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pushd	[off_39456] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		pushd	[off_39462] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large [_scoredat_names]
+		call	@$bdla$qnv c, large [_scoredat_stages]
+		call	@$bdla$qnv c, large [_scoredat_routes]
+		call	@$bdla$qnv c, large [_scoredat_points]
 		pop	bp
 		retf
-sub_146BA	endp
+_scoredat_free	endp
 
 
-; =============== S U B	R O U T	I N E =======================================
+ ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
@@ -10654,46 +10594,45 @@ loc_1473E:
 ; ---------------------------------------------------------------------------
 
 loc_14777:
-		les	bx, off_39452
+		les	bx, _scoredat_names
 		add	bx, si
 		mov	al, es:[bx]
-		push	ax
-		call	sub_13956
+		call	_scoredat_name_byte_encode stdcall, ax
 		pop	cx
-		les	bx, off_39452
+		les	bx, _scoredat_names
 		add	bx, si
 		mov	es:[bx], al
 		inc	si
 
 loc_14790:
-		cmp	si, 0A0h
+		cmp	si, size scoredat_names_t
 		jl	short loc_14777
-		push	0A0h
-		pushd	[off_39452]
+		push	size scoredat_names_t
+		pushd	[_scoredat_names]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
 		call	_write
 		add	sp, 8
-		push	28h ; '('
-		pushd	[off_39462]
+		push	size scoredat_points_t
+		pushd	[_scoredat_points]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
 		call	_write
 		add	sp, 8
-		push	14h
-		pushd	[off_3945A]
+		push	size scoredat_stages_t
+		pushd	[_scoredat_stages]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
 		push	ax
 		call	_write
 		add	sp, 8
-		push	14h
-		pushd	[off_39456]
+		push	size scoredat_routes_t
+		pushd	[_scoredat_routes]
 		les	bx, [bp+stream]
 		mov	al, es:[bx+4]
 		cbw
@@ -10796,13 +10735,13 @@ loc_1488F:
 		mov	bx, [bp+arg_0]
 		shl	bx, 4
 		add	bx, si
-		mov	es, word ptr off_39452+2
-		add	bx, word ptr off_39452
+		mov	es, word ptr _scoredat_names+2
+		add	bx, word ptr _scoredat_names
 		mov	es:[bx], al
 		inc	si
 
 loc_148A6:
-		cmp	si, 10h
+		cmp	si, SCOREDAT_NAME_BYTES
 		jl	short loc_1488F
 		call	sub_146F3
 		pop	di
@@ -10823,10 +10762,10 @@ var_D0		= byte ptr -0D0h
 var_C0		= byte ptr -0C0h
 var_C		= dword	ptr -0Ch
 var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-arg_0		= dword	ptr  6
+@@place		= dword	ptr -4
+@@points		= dword	ptr  6
 arg_4		= word ptr  0Ah
-arg_6		= dword	ptr  0Ch
+@@route		= dword	ptr  0Ch
 
 		enter	0D0h, 0
 		push	si
@@ -10914,46 +10853,42 @@ loc_149D4:
 		call	sub_13A7D
 		or	ax, ax
 		jnz	loc_14BCE
-		mov	[bp+var_4], 0
+		mov	[bp+@@place], 0
 		jmp	short loc_14A04
 ; ---------------------------------------------------------------------------
 
 loc_149E8:
-		mov	ax, word ptr [bp+var_4]
-		imul	ax, 12h
+		mov	ax, word ptr [bp+@@place]
+		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
 		lea	dx, [bp+var_C0]
 		add	ax, dx
-		push	ss
-		push	ax
-		push	word ptr [bp+var_4]
-		call	sub_13BBA
-		add	sp, 6
-		inc	[bp+var_4]
+		call	_scoredat_name_get c, word ptr [bp+@@place], ax, ss
+		inc	[bp+@@place]
 
 loc_14A04:
-		cmp	[bp+var_4], 0Ah
+		cmp	[bp+@@place], SCOREDAT_PLACES
 		jl	short loc_149E8
-		mov	[bp+var_4], 0
+		mov	[bp+@@place], 0
 		jmp	short loc_14A2F
 ; ---------------------------------------------------------------------------
 
 loc_14A15:
-		mov	ax, word ptr [bp+var_4]
+		mov	ax, word ptr [bp+@@place]
 		shl	ax, 2
-		les	bx, off_39462
+		les	bx, _scoredat_points
 		add	bx, ax
 		mov	eax, es:[bx]
-		cmp	eax, [bp+arg_0]
+		cmp	eax, [bp+@@points]
 		jle	short loc_14A36
-		inc	[bp+var_4]
+		inc	[bp+@@place]
 
 loc_14A2F:
-		cmp	[bp+var_4], 0Ah
+		cmp	[bp+@@place], SCOREDAT_PLACES
 		jl	short loc_14A15
 
 loc_14A36:
 		call	sub_B87C
-		cmp	[bp+var_4], 0Ah
+		cmp	[bp+@@place], SCOREDAT_PLACES
 		jge	loc_14B8D
 		mov	[bp+var_8], 9
 		jmp	loc_14AD1
@@ -10962,12 +10897,12 @@ loc_14A36:
 loc_14A4F:
 		push	ss
 		mov	ax, word ptr [bp+var_8]
-		imul	ax, 12h
+		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
 		lea	dx, [bp+var_D2]
 		add	ax, dx
 		push	ax		; src
 		mov	ax, word ptr [bp+var_8]
-		imul	ax, 12h
+		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
 		lea	dx, [bp+var_C0]
 		add	ax, dx
 		push	ss
@@ -10977,29 +10912,29 @@ loc_14A4F:
 		mov	ax, word ptr [bp+var_8]
 		dec	ax
 		shl	ax, 2
-		les	bx, off_39462
+		les	bx, _scoredat_points
 		add	bx, ax
 		mov	eax, es:[bx]
 		mov	dx, word ptr [bp+var_8]
 		shl	dx, 2
-		mov	bx, word ptr off_39462
+		mov	bx, word ptr _scoredat_points
 		add	bx, dx
 		mov	es:[bx], eax
 		mov	ax, word ptr [bp+var_8]
 		dec	ax
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	dx, word ptr [bp+var_8]
 		add	dx, dx
-		mov	bx, word ptr off_3945A
+		mov	bx, word ptr _scoredat_stages
 		add	bx, dx
 		mov	es:[bx], ax
 		mov	bx, word ptr [bp+var_8]
 		add	bx, bx
-		mov	es, word ptr off_39456+2
-		add	bx, word ptr off_39456
+		mov	es, word ptr _scoredat_routes+2
+		add	bx, word ptr _scoredat_routes
 		mov	al, es:[bx-2]
 		mov	es:[bx], al
 		mov	al, es:[bx-1]
@@ -11008,66 +10943,66 @@ loc_14A4F:
 
 loc_14AD1:
 		mov	eax, [bp+var_8]
-		cmp	eax, [bp+var_4]
+		cmp	eax, [bp+@@place]
 		jg	loc_14A4F
-		mov	[bp+var_C], 9Fh
+		mov	[bp+var_C], (size scoredat_names_t - 1)
 		jmp	short loc_14B04
 ; ---------------------------------------------------------------------------
 
 loc_14AE7:
 		mov	bx, word ptr [bp+var_C]
-		mov	es, word ptr off_39452+2
-		add	bx, word ptr off_39452
-		mov	al, es:[bx-10h]
-		mov	bx, word ptr off_39452
+		mov	es, word ptr _scoredat_names+2
+		add	bx, word ptr _scoredat_names
+		mov	al, es:[bx-SCOREDAT_NAME_BYTES]
+		mov	bx, word ptr _scoredat_names
 		add	bx, word ptr [bp+var_C]
 		mov	es:[bx], al
 		dec	[bp+var_C]
 
 loc_14B04:
-		mov	eax, [bp+var_4]
+		mov	eax, [bp+@@place]
 		shl	eax, 4
-		add	eax, 10h
+		add	eax, SCOREDAT_NAME_BYTES
 		cmp	eax, [bp+var_C]
 		jle	short loc_14AE7
 		push	ss
 		lea	ax, [bp+var_C0]
 		push	ax
-		pushd	[bp+arg_6]
+		pushd	[bp+@@route]
 		push	di
-		pushd	[bp+arg_0]
-		push	word ptr [bp+var_4]
+		pushd	[bp+@@points]
+		push	word ptr [bp+@@place]
 		call	sub_13DF5
 		add	sp, 10h
 		call	sub_13C20
-		mov	ax, word ptr [bp+var_4]
+		mov	ax, word ptr [bp+@@place]
 		shl	ax, 2
-		les	bx, off_39462
+		les	bx, _scoredat_points
 		add	bx, ax
-		mov	eax, [bp+arg_0]
+		mov	eax, [bp+@@points]
 		mov	es:[bx], eax
-		mov	ax, word ptr [bp+var_4]
+		mov	ax, word ptr [bp+@@place]
 		add	ax, ax
-		les	bx, off_3945A
+		les	bx, _scoredat_stages
 		add	bx, ax
 		mov	es:[bx], di
-		mov	ax, word ptr [bp+var_4]
+		mov	ax, word ptr [bp+@@place]
 		add	ax, ax
-		les	bx, off_39456
+		les	bx, _scoredat_routes
 		add	bx, ax
 		push	es
-		les	si, [bp+arg_6]
+		les	si, [bp+@@route]
 		mov	al, es:[si]
 		pop	es
 		mov	es:[bx], al
-		les	bx, [bp+arg_6]
+		les	bx, [bp+@@route]
 		mov	al, es:[bx+1]
-		mov	bx, word ptr [bp+var_4]
+		mov	bx, word ptr [bp+@@place]
 		add	bx, bx
-		mov	es, word ptr off_39456+2
-		add	bx, word ptr off_39456
+		mov	es, word ptr _scoredat_routes+2
+		add	bx, word ptr _scoredat_routes
 		mov	es:[bx+1], al
-		push	word ptr [bp+var_4]
+		push	word ptr [bp+@@place]
 		call	sub_1480E
 		pop	cx
 		jmp	short loc_14BC5
@@ -11077,9 +11012,9 @@ loc_14B8D:
 		push	ss
 		lea	ax, [bp+var_C0]
 		push	ax
-		pushd	[bp+arg_6]
+		pushd	[bp+@@route]
 		push	di
-		pushd	[bp+arg_0]
+		pushd	[bp+@@points]
 		push	1Eh
 		call	sub_13DF5
 		add	sp, 10h
@@ -11099,7 +11034,7 @@ loc_14BC5:
 		mov	ax, seg	main_06_TEXT
 		mov	es, ax
 		assume es:main_06_TEXT
-		call	sub_146BA
+		call	_scoredat_free
 
 loc_14BCE:
 		pop	di
@@ -11117,14 +11052,14 @@ sub_14BD2	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_13A7D
-		call	sub_13BAA
+		call	_scoredat_hiscore_get
 		push	dx
 		push	ax
 		pop	eax
 		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
-		call	sub_146BA
+		call	_scoredat_free
 		pop	bp
 		retf
 sub_14BD2	endp
@@ -23199,9 +23134,7 @@ dbl_34FF5	dq -8.0
 aFuuin		db 'fuuin',0
 ; char aReiiden[]
 aReiiden	db 'reiiden',0
-aO		db 'ŽÐ',0
-aCv		db '–‚',0
-aTn		db '’n',0
+include th01/hiscore/routes[data].asm
 ; char aOp[3]
 aOp		db 'op',0
 		db 0
@@ -26618,15 +26551,7 @@ unk_3940D	db    ?	;
 		dd    ?
 		dd    ?
 		dd    ?
-; void (*off_39452)(void)
-off_39452	dd ?
-; void (*off_39456)(void)
-off_39456	dd ?
-; void (*off_3945A)(void)
-off_3945A	dd ?
-point_3945E	Point <?>
-; void (*off_39462)(void)
-off_39462	dd ?
+include th01/hiscore/hiscore[bss].asm
 		dd    ?
 		dd    ?
 		dd    ?

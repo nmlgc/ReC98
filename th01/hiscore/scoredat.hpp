@@ -1,0 +1,46 @@
+#define SCOREDAT_MAGIC "HISCORE"
+#define SCOREDAT_PLACES 10
+#define SCOREDAT_NAME_KANJI 8
+// Actually creates slightly different assembly compared to sizeof() on a
+// int8_t array!
+#define SCOREDAT_NAME_BYTES (SCOREDAT_NAME_KANJI * 2)
+
+#define SCOREDAT_CLEARED 40
+#define SCOREDAT_CLEARED_MAKAI (SCOREDAT_CLEARED + 10)
+#define SCOREDAT_CLEARED_JIGOKU (SCOREDAT_CLEARED + 20)
+
+#define SCOREDAT_NAME_KEY 0x9C
+
+// Exclusively used to store full-width Shift-JIS code points.
+// Not null-terminated.
+union scoredat_name_t {
+	int16_t codepoint[SCOREDAT_NAME_KANJI];
+	int8_t byte[SCOREDAT_NAME_BYTES];
+};
+
+// Encodes or decodes a single name byte.
+int8_t scoredat_name_byte_encode(int8_t byte);
+int8_t scoredat_name_byte_decode(int8_t byte);
+
+// On-disk structure of the REYHI*.DAT files.
+// For reference, never actually used by the game itself
+struct scoredat_t {
+	// Not null-terminated!
+	char magic[sizeof(SCOREDAT_MAGIC) - 1];
+	scoredat_name_t name[SCOREDAT_PLACES];
+	uint32_t points[SCOREDAT_PLACES];
+	int16_t stage[SCOREDAT_PLACES];
+	twobyte_t route[SCOREDAT_PLACES];
+};
+
+extern scoredat_name_t* scoredat_names;
+extern int16_t* scoredat_stages;
+extern uint32_t* scoredat_points;
+extern twobyte_t* scoredat_routes;
+
+// Returns the high score for the currently loaded difficulty.
+uint32_t scoredat_hiscore_get();
+
+// Sets [str] to the null-terminated name at the given [place] for the
+// currently loaded difficulty.
+void scoredat_name_get(int place, char str[SCOREDAT_NAME_BYTES + 1]);
