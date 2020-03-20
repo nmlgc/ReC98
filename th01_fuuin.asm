@@ -60,6 +60,8 @@ include th01/th01.inc
 	extern _vsprintf:proc
 	extern _write:proc
 
+fuuin_02 group fuuin_02_TEXT, fuuin_02__TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -1216,6 +1218,10 @@ off_A7C7	dw offset loc_A634
 		dw offset loc_A646
 
 include th01/hiscore/scoredat_name_get.asm
+fuuin_02_TEXT	ends
+
+fuuin_02__TEXT	segment	byte public 'CODE' use16
+		assume cs:fuuin_02
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1760,7 +1766,7 @@ loc_ABC3:
 		add	ax, 40h
 		push	ax
 		push	160h
-		call	sub_A168
+		call	fuuin_02:sub_A168
 		add	sp, 12h
 		cmp	si, di
 		jz	short loc_ABEE
@@ -1816,7 +1822,7 @@ loc_AC25:
 		add	ax, 40h
 		push	ax
 		push	210h
-		call	sub_A168
+		call	fuuin_02:sub_A168
 		add	sp, 12h
 		jmp	loc_ACCD
 ; ---------------------------------------------------------------------------
@@ -2854,7 +2860,7 @@ loc_B496:
 		les	bx, _scoredat_names
 		add	bx, si
 		mov	al, es:[bx]
-		call	_scoredat_name_byte_encode pascal, ax
+		call	fuuin_02:_scoredat_name_byte_encode pascal, ax
 		pop	cx
 		les	bx, _scoredat_names
 		add	bx, si
@@ -2946,11 +2952,11 @@ loc_B559:
 		cmp	si, 10h
 		jl	short loc_B554
 		mov	[bp+var_8], 0
-		call	sub_A44F
+		call	fuuin_02:sub_A44F
 
 loc_B566:
 		push	0
-		call	sub_A265
+		call	fuuin_02:sub_A265
 		pop	cx
 		push	ss
 		lea	ax, [bp+var_6]
@@ -3096,7 +3102,7 @@ loc_B666:
 		add	sp, 0Ch
 
 loc_B67B:
-		call	sub_A61C
+		call	fuuin_02:sub_A61C
 		or	ax, ax
 		jz	short loc_B686
 		jmp	loc_B941
@@ -3113,7 +3119,7 @@ loc_B692:
 		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
 		lea	dx, [bp+var_C0]
 		add	ax, dx
-		call	_scoredat_name_get c, [bp+@@place], ax, ss
+		call	fuuin_02:_scoredat_name_get c, [bp+@@place], ax, ss
 		add	[bp+@@place], 1
 		adc	[bp+var_2], 0
 
@@ -3159,7 +3165,7 @@ loc_B6F5:
 		jb	short loc_B6CC
 
 loc_B703:
-		call	sub_A44F
+		call	fuuin_02:sub_A44F
 		cmp	[bp+var_2], 0
 		jle	short loc_B710
 		jmp	loc_B8BD
@@ -3350,7 +3356,7 @@ loc_B8BD:
 
 loc_B8E3:
 		push	0
-		call	sub_A265
+		call	fuuin_02:sub_A265
 		pop	cx
 		cmp	byte_12BA0, 0
 		jz	short loc_B8F8
@@ -3381,7 +3387,7 @@ loc_B941:
 		retf
 sub_B5D8	endp
 
-fuuin_02_TEXT	ends
+fuuin_02__TEXT	ends
 
 ; ===========================================================================
 

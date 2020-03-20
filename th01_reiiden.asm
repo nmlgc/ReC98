@@ -68,6 +68,8 @@ include th01/th01.inc
 	extern _vsprintf:proc
 	extern _write:proc
 
+main_19 group main_19_TEXT, main_19__TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -9178,6 +9180,10 @@ _scoredat_hiscore_get	proc far
 _scoredat_hiscore_get	endp
 
 include th01/hiscore/scoredat_name_get.asm
+main_19_TEXT	ends
+
+main_19__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_19
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10597,7 +10603,7 @@ loc_14777:
 		les	bx, _scoredat_names
 		add	bx, si
 		mov	al, es:[bx]
-		call	_scoredat_name_byte_encode stdcall, ax
+		call	main_19:_scoredat_name_byte_encode stdcall, ax
 		pop	cx
 		les	bx, _scoredat_names
 		add	bx, si
@@ -10850,7 +10856,7 @@ loc_149C0:
 		add	sp, 0Ch
 
 loc_149D4:
-		call	sub_13A7D
+		call	main_19:sub_13A7D
 		or	ax, ax
 		jnz	loc_14BCE
 		mov	[bp+@@place], 0
@@ -10862,7 +10868,7 @@ loc_149E8:
 		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
 		lea	dx, [bp+var_C0]
 		add	ax, dx
-		call	_scoredat_name_get c, word ptr [bp+@@place], ax, ss
+		call	main_19:_scoredat_name_get c, word ptr [bp+@@place], ax, ss
 		inc	[bp+@@place]
 
 loc_14A04:
@@ -11051,8 +11057,8 @@ sub_148B3	endp
 sub_14BD2	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_13A7D
-		call	_scoredat_hiscore_get
+		call	main_19:sub_13A7D
+		call	main_19:_scoredat_hiscore_get
 		push	dx
 		push	ax
 		pop	eax
@@ -11064,7 +11070,7 @@ sub_14BD2	proc far
 		retf
 sub_14BD2	endp
 
-main_19_TEXT	ends
+main_19__TEXT	ends
 
 ; ===========================================================================
 
