@@ -38,9 +38,20 @@ extern int16_t* scoredat_stages;
 extern uint32_t* scoredat_points;
 extern twobyte_t* scoredat_routes;
 
-// Returns the high score for the currently loaded difficulty.
+// Byte-wise access to [scoredat_names].
+inline int8_t& scoredat_name_byte(size_t byte)
+{
+	return reinterpret_cast<char *>(scoredat_names)[byte];
+}
+
+// Loads the score file for the current [rank], recreating it if necessary.
+// Returns 0 on success, 1 on failure.
+int scoredat_load();
+
+// Returns the high score for the difficulty previously loaded by
+// scoredat_load().
 uint32_t scoredat_hiscore_get();
 
 // Sets [str] to the null-terminated name at the given [place] for the
-// currently loaded difficulty.
+// difficulty previously loaded by scoredat_load().
 void scoredat_name_get(int place, char str[SCOREDAT_NAME_BYTES + 1]);

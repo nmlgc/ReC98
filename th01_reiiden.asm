@@ -8821,365 +8821,10 @@ main_18_TEXT	ends
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_19_TEXT
-		;org 6
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _scoredat_name_byte_encode
-_scoredat_name_byte_encode	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		add	al, SCOREDAT_NAME_KEY
-		pop	bp
-		retf
-_scoredat_name_byte_encode	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _scoredat_name_byte_decode
-_scoredat_name_byte_decode	proc far
-
-arg_0		= byte ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	al, [bp+arg_0]
-		add	al, (256 - SCOREDAT_NAME_KEY)
-		pop	bp
-		retf
-_scoredat_name_byte_decode	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1396A	proc far
-
-dest		= byte ptr -22h
-var_12		= dword	ptr -12h
-var_E		= dword	ptr -0Eh
-@@points		= dword	ptr -0Ah
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-
-		enter	22h, 0
-		push	si
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], offset aC ; "無"
-		mov	word ptr [bp+var_E+2], ds
-		mov	word ptr [bp+var_E], offset aUmx_0 ; "東方★靈異伝　　"
-		mov	word ptr [bp+var_12+2],	ds
-		mov	word ptr [bp+var_12], offset aHiscore ;	"HISCORE"
-		mov	al, _rank
-		cbw
-		mov	bx, ax
-		cmp	bx, RANK_LUNATIC
-		ja	short loc_139BC
-		add	bx, bx
-		jmp	cs:off_13A75[bx]
-
-loc_13999:
-		push	ds
-		push	offset aReyhies_dat ; "REYHIES.DAT"
-		jmp	short loc_139AF
-; ---------------------------------------------------------------------------
-
-loc_1399F:
-		push	ds
-		push	offset aReyhino_dat ; "REYHINO.DAT"
-		jmp	short loc_139AF
-; ---------------------------------------------------------------------------
-
-loc_139A5:
-		push	ds
-		push	offset aReyhiha_dat ; "REYHIHA.DAT"
-		jmp	short loc_139AF
-; ---------------------------------------------------------------------------
-
-loc_139AB:
-		push	ds
-		push	offset aReyhilu_dat ; "REYHILU.DAT"
-
-loc_139AF:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-
-loc_139BC:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax
-		call	file_create
-		or	ax, ax
-		jz	loc_13A72
-		pushd	[bp+var_12]
-		push	7
-		call	file_write
-		mov	[bp+var_2], 0Ah
-		mov	[bp+@@points], 1000
-		xor	si, si
-		jmp	short loc_139FF
-; ---------------------------------------------------------------------------
-
-loc_139E8:
-		les	bx, [bp+var_E]
-		add	bx, si
-		mov	al, es:[bx]
-		call	_scoredat_name_byte_encode stdcall, ax
-		pop	cx
-		les	bx, [bp+var_E]
-		add	bx, si
-		mov	es:[bx], al
-		inc	si
-
-loc_139FF:
-		cmp	si, SCOREDAT_NAME_BYTES
-		jl	short loc_139E8
-		xor	si, si
-		jmp	short loc_13A14
-; ---------------------------------------------------------------------------
-
-loc_13A08:
-		call	file_write pascal, large [bp+var_E], SCOREDAT_NAME_BYTES
-		inc	si
-
-loc_13A14:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_13A08
-		xor	si, si
-		jmp	short loc_13A36
-; ---------------------------------------------------------------------------
-
-loc_13A1D:
-		push	ss
-		lea	ax, [bp+@@points]
-		push	ax
-		push	4
-		call	file_write
-		mov	eax, [bp+@@points]
-		add	eax, -100
-		mov	[bp+@@points], eax
-		inc	si
-
-loc_13A36:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_13A1D
-		xor	si, si
-		jmp	short loc_13A53
-; ---------------------------------------------------------------------------
-
-loc_13A3F:
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	2
-		call	file_write
-		mov	ax, [bp+var_2]
-		dec	ax
-		mov	[bp+var_2], ax
-		inc	si
-
-loc_13A53:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_13A3F
-		xor	si, si
-		jmp	short loc_13A68
-; ---------------------------------------------------------------------------
-
-loc_13A5C:
-		pushd	[bp+var_6]
-		push	2
-		call	file_write
-		inc	si
-
-loc_13A68:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_13A5C
-		call	file_close
-
-loc_13A72:
-		pop	si
-		leave
-		retf
-sub_1396A	endp
-
-; ---------------------------------------------------------------------------
-off_13A75	dw offset loc_13999
-		dw offset loc_1399F
-		dw offset loc_139A5
-		dw offset loc_139AB
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13A7D	proc far
-
-dest		= byte ptr -42h
-s1		= byte ptr -32h
-
-		enter	42h, 0
-		push	si
-		mov	al, _rank
-		cbw
-		mov	bx, ax
-		cmp	bx, RANK_LUNATIC
-		ja	short loc_13AB7
-		add	bx, bx
-		jmp	cs:off_13BA2[bx]
-
-loc_13A94:
-		push	ds
-		push	offset aReyhies_dat ; "REYHIES.DAT"
-		jmp	short loc_13AAA
-; ---------------------------------------------------------------------------
-
-loc_13A9A:
-		push	ds
-		push	offset aReyhino_dat ; "REYHINO.DAT"
-		jmp	short loc_13AAA
-; ---------------------------------------------------------------------------
-
-loc_13AA0:
-		push	ds
-		push	offset aReyhiha_dat ; "REYHIHA.DAT"
-		jmp	short loc_13AAA
-; ---------------------------------------------------------------------------
-
-loc_13AA6:
-		push	ds
-		push	offset aReyhilu_dat ; "REYHILU.DAT"
-
-loc_13AAA:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-
-loc_13AB7:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax
-		call	file_exist
-		or	ax, ax
-		jnz	short loc_13AC9
-		call	sub_1396A
-
-loc_13AC9:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_13AD9
-		jmp	short loc_13B01
-; ---------------------------------------------------------------------------
-
-loc_13AD9:
-		push	ss
-		lea	ax, [bp+s1]
-		push	ax
-		push	7
-		call	file_read
-		push	4		; n
-		push	ds
-		push	offset aHiscore	; "HISCORE"
-		push	ss
-		lea	ax, [bp+s1]
-		push	ax		; s1
-		call	_memcmp
-		add	sp, 0Ah
-		or	ax, ax
-		jz	short loc_13B07
-		call	file_close
-
-loc_13B01:
-		mov	ax, 1
-		jmp	loc_13B9F
-; ---------------------------------------------------------------------------
-
-loc_13B07:
-		call	@$bnwa$qui stdcall, size scoredat_names_t
-		pop	cx
-		mov	word ptr _scoredat_names+2, dx
-		mov	word ptr _scoredat_names, ax
-		call	@$bnwa$qui stdcall, size scoredat_stages_t
-		pop	cx
-		mov	word ptr _scoredat_stages+2, dx
-		mov	word ptr _scoredat_stages, ax
-		call	@$bnwa$qui stdcall, size scoredat_routes_t
-		pop	cx
-		mov	word ptr _scoredat_routes+2, dx
-		mov	word ptr _scoredat_routes, ax
-		call	@$bnwa$qui stdcall, size scoredat_points_t
-		pop	cx
-		mov	word ptr _scoredat_points+2, dx
-		mov	word ptr _scoredat_points, ax
-		call	file_read pascal, large [_scoredat_names], size scoredat_names_t
-		call	file_read pascal, large [_scoredat_points], size scoredat_points_t
-		call	file_read pascal, large [_scoredat_stages], size scoredat_stages_t
-		call	file_read pascal, large [_scoredat_routes], size scoredat_routes_t
-		call	file_close
-		xor	si, si
-		jmp	short loc_13B97
-; ---------------------------------------------------------------------------
-
-loc_13B7E:
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	al, es:[bx]
-		call	_scoredat_name_byte_decode stdcall, ax
-		pop	cx
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	es:[bx], al
-		inc	si
-
-loc_13B97:
-		cmp	si, size scoredat_names_t
-		jl	short loc_13B7E
-		xor	ax, ax
-
-loc_13B9F:
-		pop	si
-		leave
-		retf
-sub_13A7D	endp
-
-; ---------------------------------------------------------------------------
-off_13BA2	dw offset loc_13A94
-		dw offset loc_13A9A
-		dw offset loc_13AA0
-		dw offset loc_13AA6
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _scoredat_hiscore_get
-_scoredat_hiscore_get	proc far
-		push	bp
-		mov	bp, sp
-		les	bx, _scoredat_points
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-		pop	bp
-		retf
-_scoredat_hiscore_get	endp
-
-include th01/hiscore/scoredat_name_get.asm
+	extern _scoredat_name_byte_encode:proc
+	extern _scoredat_load:proc
+	extern _scoredat_hiscore_get:proc
+	extern _scoredat_name_get:proc
 main_19_TEXT	ends
 
 main_19__TEXT	segment	byte public 'CODE' use16
@@ -10546,25 +10191,25 @@ stream		= dword	ptr -4
 
 loc_1471B:
 		push	ds
-		push	offset aReyhies_dat ; "REYHIES.DAT"
+		push	offset _SCOREDAT_FN_EASY_0 ; "REYHIES.DAT"
 		jmp	short loc_14731
 ; ---------------------------------------------------------------------------
 
 loc_14721:
 		push	ds
-		push	offset aReyhino_dat ; "REYHINO.DAT"
+		push	offset _SCOREDAT_FN_NORMAL_0 ; "REYHINO.DAT"
 		jmp	short loc_14731
 ; ---------------------------------------------------------------------------
 
 loc_14727:
 		push	ds
-		push	offset aReyhiha_dat ; "REYHIHA.DAT"
+		push	offset _SCOREDAT_FN_HARD_0 ; "REYHIHA.DAT"
 		jmp	short loc_14731
 ; ---------------------------------------------------------------------------
 
 loc_1472D:
 		push	ds
-		push	offset aReyhilu_dat ; "REYHILU.DAT"
+		push	offset _SCOREDAT_FN_LUNATIC_0 ; "REYHILU.DAT"
 
 loc_14731:
 		push	ss
@@ -10856,7 +10501,7 @@ loc_149C0:
 		add	sp, 0Ch
 
 loc_149D4:
-		call	main_19:sub_13A7D
+		call	main_19:_scoredat_load
 		or	ax, ax
 		jnz	loc_14BCE
 		mov	[bp+@@place], 0
@@ -11057,7 +10702,7 @@ sub_148B3	endp
 sub_14BD2	proc far
 		push	bp
 		mov	bp, sp
-		call	main_19:sub_13A7D
+		call	main_19:_scoredat_load
 		call	main_19:_scoredat_hiscore_get
 		push	dx
 		push	ax
@@ -22873,6 +22518,7 @@ include th01_reiiden_2.inc
 
 	.data
 
+public _rank
 _rank	db RANK_NORMAL
 byte_34A31	db 1
 _bombs	db 1
@@ -23488,14 +23134,7 @@ off_358A3	dd aB@gcbGwbB@
 		dd aB@gmbGGlb@		; "　ノーマル　"
 		dd aB@gnbGhb@b@		; "　ハード　　"
 		dd aGlgigegbgbgn	; "ルナティック"
-aC		db '無',0
-aUmx_0		db '東方★靈異伝　　',0
-aHiscore	db 'HISCORE',0
-aReyhies_dat	db 'REYHIES.DAT',0
-aReyhino_dat	db 'REYHINO.DAT',0
-aReyhiha_dat	db 'REYHIHA.DAT',0
-; char aReyhilu_dat[]
-aReyhilu_dat	db 'REYHILU.DAT',0
+include th01/hiscore/scorelod[data].asm
 aVb		db 'ａ',0
 aSp		db 'SP',0
 aBi		db '←',0
