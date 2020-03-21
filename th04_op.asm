@@ -4220,20 +4220,7 @@ include th04/hardware/egccopyr[bss].asm
 include th04/formats/cdg[bss].asm
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+		db 56 dup(?)
 include th02/music/music[bss].asm
 byte_12DBE	db ?
 		db    ?	;
@@ -4246,19 +4233,7 @@ _cleared_with label byte
 _cleared_with_reimu 	db RANK_COUNT dup (?)
 _cleared_with_marisa	db RANK_COUNT dup (?)
 _extra_unlocked	db ?
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		db    ?	;
+		db 49 dup(?)
 playchar_132B8	db ?
 byte_132B9	db ?
 dword_132BA	dd ?

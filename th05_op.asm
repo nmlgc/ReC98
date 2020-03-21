@@ -4230,32 +4230,7 @@ include libs/master.lib/pfint21[bss].asm
 include th04/hardware/egccopyr[bss].asm
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
-		dd    ?	;
+		db 104 dup(?)
 include th02/music/music[bss].asm
 byte_13E96	db ?
 		db ?
