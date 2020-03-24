@@ -72,7 +72,7 @@ bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.c th02\op_02_2.c th02
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj th02\main02_1.c th02\main02_2.c
+bin\th02\main.exe: bin\th02\main.obj th02\main02_1.c th02\main02_2.c th02\main_03.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
