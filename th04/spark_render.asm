@@ -19,7 +19,7 @@ public @spark_render
 	and	si, 7	; [x] & 7
 	mov	ax, si
 	shl	si, 7	; *= SPARK_SIZE * SPARK_SPRITES (offset of X-shifted sprite)
-	add	si, offset sSPARKS
+	add	si, offset _sSPARKS
 	and	cx, 7	; & (SPARK_SPRITES - 1)
 	shl	cx, 4	; * SPARK_SIZE
 	add	si, cx

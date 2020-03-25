@@ -30,7 +30,7 @@ spark_render	proc near
 	mov	dx, [bp+@@sprite_id]
 	shl	dx, 4	; sprite_ptr = [sprite_id] * SPARK_SIZE
 	add	ax, dx
-	add	ax, offset sSPARKS
+	add	ax, offset _sSPARKS
 	mov	si, ax
 	mov	cx, SPARK_H
 

@@ -1,13 +1,11 @@
-; 1bpp spark sprites, pre-shifted for all 8 possible X positions within a
-; single VRAM byte.
 SPARK_W = 8
 SPARK_H = 8
 SPARK_VRAM_W = (16 / 8)
 SPARK_SIZE = (SPARK_VRAM_W * SPARK_H)
-SPARK_SPRITES = 8
+SPARK_CELS = 8
 
-public sSPARKS
-label sSPARKS byte
+public _sSPARKS
+label _sSPARKS byte
 	; x + 0
 	db    10000b,       0b
 	db    10000b,       0b

@@ -86,6 +86,10 @@ typedef int8_t sdots8_t;
 typedef int16_t sdots16_t;
 typedef int32_t sdots32_t;
 
+// Defines a hardcoded 1bpp sprite, pre-shifted to all 8 start X positions
+// within a single VRAM byte.
+#define PRESHIFT 8
+
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
