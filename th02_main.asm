@@ -9444,7 +9444,7 @@ arg_2		= word ptr  6
 		mov	ax, [bp+arg_2]
 		and	ax, 7
 		shl	ax, 4
-		add	ax, 900h
+		add	ax, offset _sPELLET
 		mov	si, ax
 		mov	cx, 8
 
@@ -33852,132 +33852,7 @@ include th02/snd/se[data].asm
 _rank	db RANK_NORMAL
 stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
-		db '<',0
-		db '~',0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db  1Eh
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  3Fh	; ?
-		db    0
-		db  1Eh
-		db    0
-		db  0Fh
-		db    0
-		db  1Fh
-		db  80h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  1Fh
-		db  80h
-		db  0Fh
-		db    0
-		db    7
-		db  80h
-		db  0Fh
-		db 0C0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  0Fh
-		db 0C0h
-		db    7
-		db  80h
-		db    3
-		db 0C0h
-		db    7
-		db 0E0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db    7
-		db 0E0h
-		db    3
-		db 0C0h
-		db    1
-		db 0E0h
-		db    3
-		db 0F0h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    3
-		db 0F0h
-		db    1
-		db 0E0h
-		db    0
-		db 0F0h
-		db    1
-		db 0F8h
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    1
-		db 0F8h
-		db    0
-		db 0F0h
-		db    0
-		db  78h	; x
-		db    0
-		db 0FCh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    0
-		db 0FCh
-		db    0
-		db  78h	; x
+include th02/sprites/pellet.asm
 gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 aUqiUx		db ' “ïˆÕ“x',0

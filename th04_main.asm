@@ -2740,7 +2740,7 @@ loc_C9AC:
 		and	ax, 7
 		mov	si, ax
 		shl	si, 4
-		add	si, 179Ch
+		add	si, offset _sPELLET
 		shl	ax, 3
 		mov	cx, 6
 		or	ax, ax
@@ -2789,7 +2789,7 @@ loc_CA11:
 		add	di, 7D00h
 
 loc_CA1B:
-		add	ax, 181Ch
+		add	ax, offset _sPELLET_BOTTOM
 		mov	[bx], di
 		mov	[bx+2],	ax
 		add	bx, 4
@@ -16199,7 +16199,7 @@ sub_14A98	proc near
 		and	si, 7
 		mov	ax, si
 		shl	si, 4
-		add	si, 179Ch
+		add	si, offset _sPELLET
 		mov	cx, 8
 		cmp	bx, 188h
 		ja	short loc_14AC6
@@ -38139,198 +38139,8 @@ include th04/player/shot_velocity[data].asm
 		db  80h
 		db  20h
 		db  60h
-		db  3Ch	; <
-		db    0
-		db  7Eh	; ~
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db 0FFh
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db  1Eh
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  7Fh
-		db  80h
-		db  3Fh	; ?
-		db    0
-		db  1Eh
-		db    0
-		db  0Fh
-		db    0
-		db  1Fh
-		db  80h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  3Fh	; ?
-		db 0C0h
-		db  1Fh
-		db  80h
-		db  0Fh
-		db    0
-		db    7
-		db  80h
-		db  0Fh
-		db 0C0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  1Fh
-		db 0E0h
-		db  0Fh
-		db 0C0h
-		db    7
-		db  80h
-		db    3
-		db 0C0h
-		db    7
-		db 0E0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db  0Fh
-		db 0F0h
-		db    7
-		db 0E0h
-		db    3
-		db 0C0h
-		db    1
-		db 0E0h
-		db    3
-		db 0F0h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    7
-		db 0F8h
-		db    3
-		db 0F0h
-		db    1
-		db 0E0h
-		db    0
-		db 0F0h
-		db    1
-		db 0F8h
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    3
-		db 0FCh
-		db    1
-		db 0F8h
-		db    0
-		db 0F0h
-		db    0
-		db  78h	; x
-		db    0
-		db 0FCh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    1
-		db 0FEh
-		db    0
-		db 0FCh
-		db    0
-		db  78h	; x
-		db    1
-		db    0
-		db  83h
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Ch	; <
-		db    0
-		db    0
-		db  80h
-		db  41h	; A
-		db  80h
-		db  3Fh	; ?
-		db    0
-		db  1Eh
-		db    0
-		db    0
-		db  40h
-		db  20h
-		db 0C0h
-		db  1Fh
-		db  80h
-		db  0Fh
-		db    0
-		db    0
-		db  20h
-		db  10h
-		db  60h
-		db  0Fh
-		db 0C0h
-		db    7
-		db  80h
-		db    0
-		db  10h
-		db    8
-		db  30h	; 0
-		db    7
-		db 0E0h
-		db    3
-		db 0C0h
-		db    0
-		db    8
-		db    4
-		db  18h
-		db    3
-		db 0F0h
-		db    1
-		db 0E0h
-		db    0
-		db    4
-		db    2
-		db  0Ch
-		db    1
-		db 0F8h
-		db    0
-		db 0F0h
-		db    0
-		db    2
-		db    1
-		db    6
-		db    0
-		db 0FCh
-		db    0
-		db  78h	; x
+include th02/sprites/pellet.asm
+include th04/sprites/pelletbt.asm
 byte_22B9C	db 0
 		db 0
 byte_22B9E	db 1
