@@ -4,11 +4,11 @@
  */
 
 extern "C" {
-#include <stdlib.h>
-#include "platform.h"
+#include "ReC98.h"
 #include "th02/math/randring.h"
 
 #define RANDRING_INSTANCE 2
 #include "th02/math/randring.cpp"
 
+#include "th02/bullet/pellet_r.cpp"
 }

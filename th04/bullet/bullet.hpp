@@ -115,6 +115,31 @@ extern bullet_t bullets[BULLET_COUNT];
 #define pellets (&bullets[0])
 #define bullets16 (&bullets[PELLET_COUNT])
 
+/// Rendering
+/// ---------
+union pellet_render_t {
+	struct {
+		int left;
+		int top;
+	} top;
+	struct {
+		uint16_t vram_offset;
+		uint16_t sprite_offset;
+	} bottom;
+};
+
+extern int pellets_alive;
+extern pellet_render_t pellets_render[PELLET_COUNT];
+
+// Renders the top and bottom part of all pellets, as per [pellets_render] and
+// [pellets_alive]. Assumptions:
+// • ES is already be set to the beginning of a VRAM segment
+// • The GRCG is active, and set to the intended color
+// • pellets_render_top() is called before pellets_render_bottom()
+void near pellets_render_top();
+void near pellets_render_bottom();
+/// ---------
+
 struct bullet_template_t {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet

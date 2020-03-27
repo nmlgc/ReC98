@@ -2710,182 +2710,7 @@ midbossx_render	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C99C	proc near
-		mov	ax, word_2D006
-		or	ax, ax
-		jnz	short loc_C9A4
-		retn
-; ---------------------------------------------------------------------------
-
-loc_C9A4:
-		push	bp
-		push	si
-		push	di
-		mov	bp, ax
-		mov	bx, 86D2h
-
-loc_C9AC:
-		mov	di, [bx]
-		mov	ax, di
-		sar	di, 3
-		mov	cx, [bx+2]
-		shl	cx, 6
-		add	di, cx
-		shr	cx, 2
-		add	di, cx
-		and	ax, 7
-		mov	si, ax
-		shl	si, 4
-		add	si, offset _sPELLET
-		shl	ax, 3
-		mov	cx, 6
-		or	ax, ax
-		jz	short loc_C9F4
-		cmp	di, 7B70h
-		jb	short loc_C9EB
-
-loc_C9DC:
-		movsw
-		add	di, 4Eh	; 'N'
-		dec	cx
-		cmp	di, 7D00h
-		jb	short loc_C9DC
-		sub	di, 7D00h
-
-loc_C9EB:
-		movsw
-		add	di, 4Eh	; 'N'
-		loop	loc_C9EB
-		jmp	short loc_CA11
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C9F4:
-		cmp	di, 7B70h
-		jb	short loc_CA0A
-
-loc_C9FA:
-		movsb
-		inc	si
-		add	di, 4Fh	; 'O'
-		dec	cx
-		cmp	di, 7D00h
-		jb	short loc_C9FA
-		sub	di, 7D00h
-
-loc_CA0A:
-		movsb
-		inc	si
-		add	di, 4Fh	; 'O'
-		loop	loc_CA0A
-
-loc_CA11:
-		sub	di, 0F0h
-		jns	short loc_CA1B
-		add	di, 7D00h
-
-loc_CA1B:
-		add	ax, offset _sPELLET_BOTTOM
-		mov	[bx], di
-		mov	[bx+2],	ax
-		add	bx, 4
-		dec	bp
-		jnz	short loc_C9AC
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_C99C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CA2E	proc near
-		mov	ax, word_2D006
-		or	ax, ax
-		jnz	short loc_CA36
-		retn
-; ---------------------------------------------------------------------------
-
-loc_CA36:
-		push	bp
-		push	si
-		push	di
-		mov	bp, ax
-		mov	bx, 86D2h
-
-loc_CA3E:
-		mov	di, [bx]
-		mov	si, [bx+2]
-		xor	dx, dx
-		cmp	di, 7B70h
-		jnb	short loc_CA51
-		nop
-		mov	cx, 5
-		jmp	short loc_CA62
-; ---------------------------------------------------------------------------
-
-loc_CA51:
-		mov	ax, 7D4Fh
-		sub	ax, di
-		mov	cx, 50h	; 'P'
-		div	cx
-		mov	cx, ax
-		mov	dx, 5
-		sub	dx, cx
-
-loc_CA62:
-		mov	ax, [si]
-		jmp	short loc_CA67
-; ---------------------------------------------------------------------------
-
-loc_CA66:
-		lodsw
-
-loc_CA67:
-		or	al, al
-		jz	short loc_CA79
-		or	ah, ah
-		jz	short loc_CA74
-		mov	es:[di], ax
-		jmp	short loc_CA7D
-; ---------------------------------------------------------------------------
-
-loc_CA74:
-		mov	es:[di], al
-		jmp	short loc_CA7D
-; ---------------------------------------------------------------------------
-
-loc_CA79:
-		mov	es:[di+1], ah
-
-loc_CA7D:
-		add	di, 50h	; 'P'
-		loop	loc_CA66
-		or	dx, dx
-		jz	short loc_CA8E
-		sub	di, 7D00h
-		xchg	cx, dx
-		jmp	short loc_CA66
-; ---------------------------------------------------------------------------
-
-loc_CA8E:
-		add	bx, 4
-		dec	bp
-		jnz	short loc_CA3E
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_CA2E	endp
-
+include th04/bullet/pellet_r.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14055,10 +13880,10 @@ loc_12D6D:
 		jnz	short loc_12DBE
 		mov	ah, 0Fh
 		call	main_01:grcg_setcolor_direct_noint_1
-		call	main_01:sub_C99C
+		call	main_01:_pellets_render_top
 		mov	ah, GC_RG
 		call	main_01:grcg_setcolor_direct_noint_1
-		call	main_01:sub_CA2E
+		call	main_01:_pellets_render_bottom
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
@@ -30896,7 +30721,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_2], 0
-		mov	word_2D006, 0
+		mov	_pellets_alive, 0
 		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
 		cmp	_bullet_clear_trigger, 0
 		jnz	loc_1CB44
@@ -31113,17 +30938,17 @@ loc_1CAC5:
 		jl	short loc_1CAF8
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, 28
-		mov	bx, word_2D006
+		add	ax, (PLAYFIELD_X - (PELLET_W / 2))
+		mov	bx, _pellets_alive
 		shl	bx, 2
-		mov	[bx-792Eh], ax
+		mov	_pellets_render[bx].PRT_left, ax
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, (12 shl 4)
+		add	ax, ((PLAYFIELD_Y - (PELLET_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
-		mov	bx, word_2D006
+		mov	bx, _pellets_alive
 		shl	bx, 2
-		mov	[bx-792Ch], ax
-		inc	word_2D006
+		mov	_pellets_render[bx].PRT_top, ax
+		inc	_pellets_alive
 
 loc_1CAF8:
 		inc	di
@@ -38968,7 +38793,7 @@ include th04/midboss/vars[bss].asm
 include th04/boss/vars[bss].asm
 include th04/sparks[bss].asm
 include th04/bullet/bullets[bss].asm
-		db 1884 dup(?)
+		db 924 dup(?)
 byte_2A16E	db ?
 		db 1879 dup(?)
 point_2A8C6	Point <?>
@@ -39010,7 +38835,7 @@ score_2CFFE	dw ?
 fp_2D000	dw ?
 fp_2D002	dw ?
 fp_2D004	dw ?
-word_2D006	dw ?
+include th04/bullet/pellet_r[bss].asm
 angle_2D008	db ?
 	evendata
 byte_2D00A	db ?

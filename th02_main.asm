@@ -9416,53 +9416,8 @@ main_03__TEXT	segment	byte public 'CODE' use16
 	RANDRING2_NEXT8_AND procdesc pascal near \
 		mask:byte
 	RANDRING2_NEXT16 procdesc pascal near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FAFC	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, [bp+arg_2]
-		sar	ax, 3
-		mov	dx, [bp+arg_0]
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	ax, [bp+arg_2]
-		and	ax, 7
-		shl	ax, 4
-		add	ax, offset _sPELLET
-		mov	si, ax
-		mov	cx, 8
-
-loc_FB2C:
-		movsw
-		add	di, 4Eh	; 'N'
-		cmp	di, 7D00h
-		jl	short loc_FB3A
-		sub	di, 7D00h
-
-loc_FB3A:
-		loop	loc_FB2C
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_FAFC	endp
-
+	PELLET_RENDER procdesc pascal near \
+		left:word, top:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11499,17 +11454,17 @@ loc_10C37:
 		mov	bx, word_2174E
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	word_21740, ax
+		mov	_bullet_left, ax
 		mov	bx, word_21750
 		mov	ax, [bx]
 		sar	ax, 4
 		mov	word_21742, ax
 		mov	di, word_21742
-		cmp	word_21740, 14h
+		cmp	_bullet_left, 20
 		jle	short loc_10C6C
-		cmp	word_21740, 1A0h
+		cmp	_bullet_left, PLAYFIELD_RIGHT
 		jge	short loc_10C6C
-		cmp	di, 180h
+		cmp	di, PLAYFIELD_BOTTOM
 		jge	short loc_10C6C
 		or	di, di
 		jg	short loc_10C72
@@ -11526,11 +11481,11 @@ loc_10C72:
 		jnz	short loc_10CA9
 		mov	ax, point_205F6.x
 		add	ax, 7
-		cmp	ax, word_21740
+		cmp	ax, _bullet_left
 		jg	short loc_10CDC
 		mov	ax, point_205F6.x
 		add	ax, 17
-		cmp	ax, word_21740
+		cmp	ax, _bullet_left
 		jle	short loc_10CDC
 		mov	ax, point_205F6.y
 		add	ax, 12
@@ -11546,11 +11501,11 @@ loc_10C72:
 loc_10CA9:
 		mov	ax, point_205F6.x
 		add	ax, -3
-		cmp	ax, word_21740
+		cmp	ax, _bullet_left
 		jg	short loc_10CDC
 		mov	ax, point_205F6.x
 		add	ax, 19
-		cmp	ax, word_21740
+		cmp	ax, _bullet_left
 		jle	short loc_10CDC
 		mov	ax, point_205F6.y
 		add	ax, 4
@@ -11583,15 +11538,13 @@ loc_10CEA:
 		mov	[bp+var_4], 0
 
 loc_10D09:
-		push	word_21740
-		push	di
-		call	sub_FAFC
+		call	pellet_render pascal, _bullet_left, di
 		jmp	short loc_10D2D
 ; ---------------------------------------------------------------------------
 
 loc_10D13:
 		call	grcg_off
-		push	word_21740
+		push	_bullet_left
 		push	di
 		mov	al, [si+0Eh]
 		mov	ah, 0
@@ -34970,7 +34923,8 @@ byte_20672	db ?
 dword_20682	dd ?
 word_20686	dw ?
 		db 4280 dup(?)
-word_21740	dw ?
+public _bullet_left
+_bullet_left	dw ?
 word_21742	dw ?
 word_21744	dw ?
 word_21746	dw ?
