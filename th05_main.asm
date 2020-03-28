@@ -13140,70 +13140,7 @@ off_1575F	dw offset loc_15388
 
 RANDRING_NEXT_DEF 2
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15814	proc near
-		push	si
-		push	di
-		mov	si, ax
-		mov	bx, dx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		and	si, 7
-		mov	ax, si
-		shl	si, 4
-		add	si, offset _sPELLET
-		mov	cx, 8
-		cmp	bx, 188h
-		ja	short loc_15842
-		xor	dx, dx
-		jmp	short loc_1584B
-; ---------------------------------------------------------------------------
-
-loc_15842:
-		mov	dx, cx
-		mov	cx, 190h
-		sub	cx, bx
-		sub	dx, cx
-
-loc_1584B:
-		or	ax, ax
-		jz	short loc_15862
-		nop
-
-loc_15850:
-		movsw
-		add	di, 4Eh	; 'N'
-		loop	loc_15850
-
-loc_15856:
-		or	dx, dx
-		jz	short loc_1586B
-		sub	di, 7D00h
-		xchg	cx, dx
-		jmp	short loc_15850
-; ---------------------------------------------------------------------------
-
-loc_15862:
-		movsb
-		add	di, 4Fh	; 'O'
-		inc	si
-		loop	loc_15862
-		jmp	short loc_15856
-; ---------------------------------------------------------------------------
-
-loc_1586B:
-		pop	di
-		pop	si
-		retn
-sub_15814	endp
-
+include th04/main/gather_point_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15336,7 +15273,7 @@ loc_16B81:
 		mov	ax, _drawpoint.x
 		sar	ax, 4
 		add	ax, 28
-		call	sub_15814
+		call	@gather_point_render
 
 loc_16BC3:
 		inc	di
