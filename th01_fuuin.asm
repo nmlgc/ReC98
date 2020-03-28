@@ -378,259 +378,11 @@ fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _scoredat_name_byte_encode:proc
 	extern _scoredat_load:proc
 	extern _scoredat_name_get:proc
+	extern _alphabet_put_initial:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A801	proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+var_2], 27h	; '''
-		mov	di, 8282h
-		mov	si, 1
-		jmp	short loc_A84F
-; ---------------------------------------------------------------------------
-
-loc_A814:
-		mov	ax, di
-		and	ax, 0FFh
-		push	ax
-		mov	ax, di
-		shr	ax, 8
-		push	ax		; arglist
-		push	ds
-		push	offset aCC	; "%c%c"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 0F0h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		inc	di
-		inc	si
-
-loc_A84F:
-		cmp	si, 1Ah
-		jl	short loc_A814
-		call	_graph_putsa_fx c, 32, 240, FX_REVERSE or 23h, offset aVb, ds	; "ａ"
-		mov	di, 8260h
-		xor	si, si
-		jmp	short loc_A8AA
-; ---------------------------------------------------------------------------
-
-loc_A86F:
-		mov	ax, di
-		and	ax, 0FFh
-		push	ax
-		mov	ax, di
-		shr	ax, 8
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_0	; "%c%c"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 120h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		inc	di
-		inc	si
-
-loc_A8AA:
-		cmp	si, 1Ah
-		jl	short loc_A86F
-		xor	si, si
-		jmp	short loc_A8F5
-; ---------------------------------------------------------------------------
-
-loc_A8B3:
-		mov	bx, si
-		add	bx, bx
-		mov	di, [bx+108h]
-		mov	ax, di
-		and	ax, 0FFh
-		push	ax
-		mov	ax, di
-		shr	ax, 8
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_1	; "%c%c"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 150h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		inc	si
-
-loc_A8F5:
-		cmp	si, 12h
-		jl	short loc_A8B3
-		mov	di, 824Fh
-		xor	si, si
-		jmp	short loc_A93C
-; ---------------------------------------------------------------------------
-
-loc_A901:
-		mov	ax, di
-		and	ax, 0FFh
-		push	ax
-		mov	ax, di
-		shr	ax, 8
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_2	; "%c%c"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		inc	di
-		inc	si
-
-loc_A93C:
-		cmp	si, 0Ah
-		jl	short loc_A901
-		push	ds
-		push	offset aSp	; "SP"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		mov	si, 0Fh
-		push	ds
-		push	offset aBi	; "←"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		inc	si
-		push	ds
-		push	offset aBi_0	; "→"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		inc	si
-		push	ds
-		push	offset aPi	; "終"
-		push	[bp+var_2]	; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 168h
-		push	ax		; int
-		mov	ax, si
-		mov	bx, 12h
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 20h	; ' '
-		push	dx		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		inc	si
-		pop	di
-		pop	si
-		leave
-		retf
-sub_A801	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1264,7 +1016,7 @@ loc_AE19:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+108h]
+		mov	ax, _ALPHABET_SYMS[bx]
 		mov	[bp+var_2], ax
 		jmp	loc_AECD
 ; ---------------------------------------------------------------------------
@@ -1450,7 +1202,7 @@ loc_AF78:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+108h]
+		mov	ax, _ALPHABET_SYMS[bx]
 		mov	[bp+var_2], ax
 		jmp	loc_B021
 ; ---------------------------------------------------------------------------
@@ -2461,7 +2213,7 @@ loc_B83D:
 		push	[bp+@@place]
 		call	sub_A9FF
 		add	sp, 10h
-		call	sub_A801
+		call	_alphabet_put_initial
 		mov	ax, [bp+@@place]
 		shl	ax, 2
 		les	bx, _scoredat_points
@@ -4239,42 +3991,7 @@ arg0		db 'op',0
 		db    0
 include th01/hardware/input_main_end[data].asm
 		dd 0
- 		db  49h	; I
- 		db  81h
- 		db  48h	; H
- 		db  81h
- 		db  94h
- 		db  81h
- 		db  95h
- 		db  81h
- 		db  96h
- 		db  81h
- 		db  98h
- 		db  81h
- 		db  99h
- 		db  81h
- 		db  9Fh
- 		db  81h
- 		db  87h
- 		db  81h
- 		db  88h
- 		db  81h
- 		db  89h
- 		db  81h
- 		db  8Ah
- 		db  81h
- 		db  63h	; c
- 		db  81h
- 		db  67h	; g
- 		db  81h
- 		db  68h	; h
- 		db  81h
- 		db  5Eh	; ^
- 		db  81h
- 		db  44h	; D
- 		db  81h
- 		db  45h	; E
- 		db  81h
+include th01/hiscore/alphabet_syms[data].asm
 include th01/hardware/grppfnfx_ptrs[data].asm
 aBqbqbqbqbqbqbq	db '＿＿＿＿＿＿＿＿',0
 aB@b@b@b@b@b@b@	db '　　　　　　　　',0
@@ -4286,23 +4003,7 @@ off_12C1E	dd aB@gcbGwbB@
 		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
-; char aCC[]
-aCC		db '%c%c',0
-aVb		db 'ａ',0
-; char aCC_0[]
-aCC_0		db '%c%c',0
-; char aCC_1[]
-aCC_1		db '%c%c',0
-; char aCC_2[]
-aCC_2		db '%c%c',0
-; char aSp[]
-aSp		db 'SP',0
-; char aBi[]
-aBi		db '←',0
-; char aBi_0[]
-aBi_0		db '→',0
-; char aPi[]
-aPi		db '終',0
+include th01/hiscore/alphabet_initial[data].asm
 aB@cB@iB@	db '　霊　位　',0
 aB@b@cB@b@sob@b	db '　　名　　前　　',0
 aB@b@uB@b@u_b@b	db '　　得　　点　　',0

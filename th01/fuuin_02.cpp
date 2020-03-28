@@ -10,7 +10,7 @@ extern "C" {
 #include <stdio.h>
 #include "ReC98.h"
 #include "th01/ranks.h"
-#include "th01/hardware/grppsafx.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hiscore/scoredat.hpp"
 
@@ -74,4 +74,14 @@ extern const char FOPEN_WB[];
 #include "th01/hiscore/scorelod.cpp"
 
 #include "th01/hiscore/score_nm.cpp"
+
+#define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
+	extern const char ALPHABET_KANJI_FMT_##fmt_instance[]; \
+	graph_printf_fx( \
+		left, top, fx, \
+		ALPHABET_KANJI_FMT_##fmt_instance, kanji >> 8, kanji & 0xFF \
+	)
+
+#include "th01/hiscore/alph_p_i.cpp"
+
 }

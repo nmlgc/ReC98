@@ -8423,277 +8423,8 @@ main_19_TEXT	ends
 
 main_19__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_19
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13BEC	proc near
-
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-
-		enter	2, 0
-		push	si
-		les	bx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
-		mov	es:[bx], ax
-		mov	al, es:[bx+1]
-		mov	[bp+var_1], al
-		push	es
-		mov	si, word ptr [bp+arg_2]
-		mov	al, es:[si]
-		pop	es
-		mov	es:[bx+1], al
-		mov	es, word ptr [bp+arg_2+2]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		mov	byte ptr es:[bx+2], 0
-		pop	si
-		leave
-		retn	6
-sub_13BEC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C20	proc far
-
-var_6		= byte ptr -6
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	[bp+var_2], 27h	; '''
-		mov	di, 8282h
-		mov	si, 1
-		jmp	short loc_13C69
-; ---------------------------------------------------------------------------
-
-loc_13C33:
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	sub_13BEC
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 240
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		inc	di
-		inc	si
-
-loc_13C69:
-		cmp	si, 1Ah
-		jl	short loc_13C33
-		call	_graph_putsa_fx c, 32, large (823h shl 16) or 240, offset aVb, ds	; "ａ"
-		mov	di, 8260h
-		xor	si, si
-		jmp	short loc_13CBF
-; ---------------------------------------------------------------------------
-
-loc_13C89:
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	sub_13BEC
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 288
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		inc	di
-		inc	si
-
-loc_13CBF:
-		cmp	si, 1Ah
-		jl	short loc_13C89
-		xor	si, si
-		jmp	short loc_13D05
-; ---------------------------------------------------------------------------
-
-loc_13CC8:
-		mov	bx, si
-		add	bx, bx
-		mov	di, [bx+0EB4h]
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	sub_13BEC
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 336
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		inc	si
-
-loc_13D05:
-		cmp	si, 12h
-		jl	short loc_13CC8
-		mov	di, 824Fh
-		xor	si, si
-		jmp	short loc_13D47
-; ---------------------------------------------------------------------------
-
-loc_13D11:
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	di
-		call	sub_13BEC
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 360
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		inc	di
-		inc	si
-
-loc_13D47:
-		cmp	si, 0Ah
-		jl	short loc_13D11
-		push	ds
-		push	offset aSp	; "SP"
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 360
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		mov	si, 0Fh
-		push	ds
-		push	offset aBi	; "←"
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 360
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		inc	si
-		push	ds
-		push	offset aBi_0	; "→"
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 360
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		inc	si
-		push	ds
-		push	offset aPi	; "終"
-		push	[bp+var_2]
-		mov	ax, si
-		mov	bx, 18
-		cwd
-		idiv	bx
-		imul	ax, 24
-		add	ax, 360
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 32
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 28h
-		inc	si
-		pop	di
-		pop	si
-		leave
-		retf
-sub_13C20	endp
-
+	STR_FROM_KANJI procdesc near
+	extern _alphabet_put_initial:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9138,7 +8869,7 @@ loc_14126:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+0EB4h]
+		mov	ax, _ALPHABET_SYMS[bx]
 
 loc_1413D:
 		mov	[bp+var_2], ax
@@ -9164,7 +8895,7 @@ loc_1415C:
 		cmp	si, 352
 		jnz	short loc_1416E
 		push	ds
-		push	offset aSp	; "SP"
+		push	offset _ALPHABET_SPACE
 		jmp	short loc_141A2
 ; ---------------------------------------------------------------------------
 
@@ -9174,7 +8905,7 @@ loc_1416E:
 		cmp	si, 512
 		jnz	short loc_14180
 		push	ds
-		push	offset aBi	; "←"
+		push	offset _ALPHABET_LEFT	; "←"
 		jmp	short loc_141A2
 ; ---------------------------------------------------------------------------
 
@@ -9184,7 +8915,7 @@ loc_14180:
 		cmp	si, 544
 		jnz	short loc_14192
 		push	ds
-		push	offset aBi_0	; "→"
+		push	offset _ALPHABET_RIGHT	; "→"
 		jmp	short loc_141A2
 ; ---------------------------------------------------------------------------
 
@@ -9194,7 +8925,7 @@ loc_14192:
 		cmp	si, 576
 		jnz	short loc_141AF
 		push	ds
-		push	offset aPi	; "終"
+		push	offset _ALPHABET_ENTER	; "終"
 
 loc_141A2:
 		push	[bp+@@fx]
@@ -9210,7 +8941,7 @@ loc_141AF:
 		lea	ax, [bp+var_8]
 		push	ax
 		push	[bp+var_2]
-		call	sub_13BEC
+		call	str_from_kanji
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -9307,7 +9038,7 @@ loc_14248:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+0EB4h]
+		mov	ax, _ALPHABET_SYMS[bx]
 
 loc_1425F:
 		mov	[bp+var_2], ax
@@ -10218,7 +9949,7 @@ loc_14B04:
 		push	word ptr [bp+@@place]
 		call	sub_13DF5
 		add	sp, 10h
-		call	sub_13C20
+		call	_alphabet_put_initial
 		mov	ax, word ptr [bp+@@place]
 		shl	ax, 2
 		les	bx, _scoredat_points
@@ -61038,26 +60769,7 @@ aB@b@vrvsvVfvd	db '　　ＳＴＡＧＥ',0
 aVavnvmvtvrb@vo	db 'ＢＯＮＵＳ　Ｐｏｉｎｔ',0
 aVgvivfb@vyb@vj	db 'Ｈｉｔ　Ｚ　Ｋｅｙ',0
 		db 0
-		db  49h	; I
-		db 81h,	48h
-		db 81h,	94h
-		db 81h,	95h
-		db 81h,	96h
-		db 81h,	98h
-		db 81h,	99h
-		db 81h,	9Fh
-		db 81h,	87h
-		db 81h,	88h
-		db 81h,	89h
-		db 81h,	8Ah
-		db 81h,	63h
-		db 81h,	67h
-		db 81h,	68h
-		db 81h,	5Eh
-		db 81h,	44h
-		db 81h
-		db  45h	; E
-		db  81h
+include th01/hiscore/alphabet_syms[data].asm
 aBqbqbqbqbqbqbq	db '＿＿＿＿＿＿＿＿',0
 byte_35889	db 0
 aB@b@b@b@b@b@b@	db '　　　　　　　　',0
@@ -61068,11 +60780,7 @@ off_358A3	dd aB@gcbGwbB@
 		dd aB@gnbGhb@b@		; "　ハード　　"
 		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hiscore/scorelod[data].asm
-aVb		db 'ａ',0
-aSp		db 'SP',0
-aBi		db '←',0
-aBi_0		db '→',0
-aPi		db '終',0
+include th01/hiscore/alphabet_initial[data].asm
 aB@cB@iB@	db '　霊　位　',0
 aB@b@cB@b@sob@b	db '　　名　　前　　',0
 aB@b@uB@b@u_b@b	db '　　得　　点　　',0
