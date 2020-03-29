@@ -1,5 +1,3 @@
-#pragma option -b-
-
 /// Pattern type components
 /// -----------------------
 // 0° angle definition, relative to the bullet origin.
@@ -57,5 +55,3 @@ typedef enum {
 
 #define BST_SLOWDOWN 0x10	/* can be OR'd into any of the above */
 /// -----------
-
-#pragma option -b

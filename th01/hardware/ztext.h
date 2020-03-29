@@ -3,7 +3,9 @@
 typedef enum {
 	CURSOR_HIDE,
 	CURSOR_BLOCK,
-	CURSOR_UNDERLINE
+	CURSOR_UNDERLINE,
+
+	_z_text_cursor_t_FORCE_INT = 0xFFFF
 } z_text_cursor_t;
 
 void z_text_init(void);

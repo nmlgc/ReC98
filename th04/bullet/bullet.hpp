@@ -9,8 +9,6 @@
 
 /// States and modes
 /// ----------------
-#pragma option -b-
-
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * 4)
 #define BMS_SLOWDOWN_BASE_SPEED 4.5f
@@ -52,8 +50,6 @@ enum bullet_move_state_t {
 
 enum bullet_special_motion_t {
 };
-
-#pragma option -b
 /// ----------------
 
 struct bullet_t {

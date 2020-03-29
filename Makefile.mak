@@ -2,7 +2,7 @@
 # -----
 # Makefile for the 16-bit part of the build process
 
-CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -a2
+CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -a2 -b-
 
 PIPELINE = \grzview.com
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe

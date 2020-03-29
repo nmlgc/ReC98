@@ -10,6 +10,8 @@ enum sprite16_put_func_t {
 	// Repeatedly draws the sprite to form a gapless column, starting from the
 	// top Y coordinate given to sprite16_putx() down to the bottom of VRAM.
 	SPF_DOWNWARDS_COLUMN = 24,
+
+	_sprite16_put_func_t_FORCE_INT = 0xFFFF
 };
 
 // Draws the sprite with the given offset in the SPRITE16_SPRITE_AREA at the

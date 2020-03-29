@@ -20,7 +20,6 @@ extern const dots8_t PIANO_KEYS_BLACK[PIANO_VRAM_W];
 /// --------
 
 // Using the same naming convention as for the gaiji characters...
-#pragma option -b-
 typedef enum {
 	pl_F = 0,
 	pl_M = 1,
@@ -33,7 +32,6 @@ typedef enum {
 	pl_G = 8,
 	pl_COUNT,
 } piano_label_t;
-#pragma option -b
 
 #define PIANO_LABEL_FONT_W 8
 #define PIANO_LABEL_FONT_H 8

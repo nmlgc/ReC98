@@ -1,5 +1,3 @@
-#pragma option -b-
-
 typedef union {
 	unsigned char spread_angle;
 	// In subpixels, obviously, but pre-C++11 doesn't let us use any of the
@@ -57,5 +55,3 @@ typedef enum {
 #define BST_BULLET16_CLOUD_FORWARDS 4
 #define BST_BULLET16_CLOUD_BACKWARDS 5
 /// -----------
-
-#pragma option -b

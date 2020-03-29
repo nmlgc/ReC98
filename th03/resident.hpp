@@ -1,4 +1,3 @@
-#pragma option -b-
 enum key_mode_t {
 	KM_KEY_KEY,
 	KM_JOY_KEY,
@@ -20,7 +19,6 @@ enum game_mode_t {
 	GM_VS_1P_2P = GM_VS + VS_1P_2P,
 	GM_VS_CPU_CPU = GM_VS + VS_CPU_CPU,
 };
-#pragma option -b
 
 // Won't enter [score_last[0]] into YUME.NEM, even if it's high enough for a
 // place. Also used for just showing the high scores from the main menu.
