@@ -192,6 +192,14 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
   port developers at compile time. Self-modifying code can only do the same if
   it's kept in separate ASM files.
 
+* Don't use TCC's `-a` command-line option to force a particular code or data
+  alignment. Instead, directly spell out the alignment by adding padding
+  members to structures, and additional global variables. It's simply not
+  worth requiring every structure to work around it. For functions with
+  `switch` tables that originally were word-alignment, put a single
+  `#pragma option -a2` at the top of the translation unit, after all header
+  inclusions.
+
 ## Naming conventions
 
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't

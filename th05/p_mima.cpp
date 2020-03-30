@@ -9,6 +9,8 @@ extern "C" {
 #include "th05/i_shot.hpp"
 #define cycle _AL
 
+#pragma option -a2
+
 void pascal near shot_mima_l2(void)
 {
 	SHOT_FUNC_INIT(2, SC_6X, SC_3X, i++);

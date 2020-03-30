@@ -13,8 +13,6 @@
 #include "th03/resident.hpp"
 #include "th03/formats/cfg.h"
 
-#pragma option -a1
-
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = { SND_BGM_FM, KM_KEY_KEY, RANK_NORMAL };
 

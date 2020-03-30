@@ -9,6 +9,8 @@ extern "C" {
 #include "th05/i_shot.hpp"
 #define cycle _AL
 
+#pragma option -a2
+
 #define STAR_DISTANCE      (16)
 #define STAR_OFFSET(count) (8 - ((count / 2) * STAR_DISTANCE))
 

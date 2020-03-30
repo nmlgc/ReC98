@@ -11,13 +11,11 @@ extern int flag_palette_show;
 // -----------------------------
 #define PTN_MAGIC "HPTN"
 
-#pragma option -a-
 typedef struct {
 	char magic[sizeof(PTN_MAGIC) - 1];
 	int8_t unused_one;
 	int8_t image_count;
 } ptn_header_t;
-#pragma option -a.
 // -----------------------------
 
 ptn_error_t ptn_load_palette_show(int slot, const char *fn)

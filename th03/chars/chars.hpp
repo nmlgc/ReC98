@@ -12,7 +12,6 @@ typedef enum {
 } playchars_t;
 
 // Encodes a playchars_t together with its alternate palette flag.
-#pragma option -a1
 struct playchar_paletted_t {
 	unsigned char v;
 
@@ -24,6 +23,5 @@ struct playchar_paletted_t {
 		return static_cast<playchars_t>(filename_id() / 2);
 	}
 };
-#pragma option -a.
 
 #define TO_PALETTED(playchar) ((playchar << 1) + 1)

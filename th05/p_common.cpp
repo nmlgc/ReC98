@@ -9,6 +9,8 @@ extern "C" {
 #include "th05/i_shot.hpp"
 #include "th02/snd/snd.h"
 
+#pragma option -a2
+
 char pascal near shot_cycle_init(void)
 {
 	char cycle_flag = 0;

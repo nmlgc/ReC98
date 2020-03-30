@@ -14,7 +14,6 @@
 
 #define SCOREDAT_NAME_LEN 8
 
-#pragma option -a1
 typedef struct {
 	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
 	score_lebcd_t g_points[SCOREDAT_PLACES];
@@ -30,7 +29,6 @@ typedef struct {
 	unsigned char unused_2[SCOREDAT_PLACES];
 #endif
 } scoredat_t;
-#pragma option -a.
 
 typedef struct {
 	int8_t key1;

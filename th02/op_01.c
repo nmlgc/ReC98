@@ -11,7 +11,7 @@
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
-#pragma option -d
+#pragma option -d -a2
 
 typedef void pascal near putfunc_t(int sel, unsigned int atrb);
 

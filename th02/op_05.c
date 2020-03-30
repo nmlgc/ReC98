@@ -7,6 +7,7 @@
 #include "th02/formats/pi.h"
 
 char sel = 1;
+int8_t sel_padding = 0;
 
 const char *DESC[SHOTTYPE_COUNT][3] = {
 	" ‰A—z‹Ê‚Ì—Í‚ðŽg‚í‚È‚¢ ",

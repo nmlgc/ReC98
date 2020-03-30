@@ -1,5 +1,3 @@
-#pragma option -a1
-
 #if GAME == 2
 # define CFG_FN "huuma.cfg"
 	typedef struct {
@@ -24,4 +22,3 @@ typedef struct {
 	int8_t opts_sum; // Sum of all bytes in [opts]
 #endif
 } cfg_t;
-#pragma option -a.

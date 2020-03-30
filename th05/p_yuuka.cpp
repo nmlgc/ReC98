@@ -9,6 +9,8 @@ extern "C" {
 #include "th05/i_shot.hpp"
 #define cycle _AL
 
+#pragma option -a2
+
 #define YUUKA_INNER_L4 \
 	switch(sai.i - 1) { \
 	case 0:	sai.angle = 186;	break; \

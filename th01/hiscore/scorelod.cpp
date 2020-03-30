@@ -1,5 +1,3 @@
-#pragma option -a1
-
 extern const char SCOREDAT_ROUTE_NONE[];
 extern char scoredat_name_default[];
 extern const char SCOREDAT_MAGIC_0[];

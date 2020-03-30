@@ -22,8 +22,6 @@ typedef bool page_t;
 
 #define COLOR_COUNT 16
 
-#pragma option -a1
-
 // The 16-color mode supports 4 bits per RGB component, for a total of
 // 4,096 colors
 typedef int8_t uint4_t;
@@ -64,8 +62,6 @@ typedef int8_t uint4_t;
 	typedef RGB<uint4_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;
 #endif
-
-#pragma option -a.
 /// --------
 
 /// Memory segments

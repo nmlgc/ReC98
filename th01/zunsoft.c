@@ -18,6 +18,7 @@ char logo_num;
 char wave_len;
 char wave_phase;
 char wave_amp;
+char wave_padding;
 Point circle_pos[CIRCLE_COUNT];
 Point star_pos[STAR_COUNT];
 int frame;

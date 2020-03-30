@@ -164,6 +164,7 @@ typedef struct {
 	char id[11];	// = RES_ID
 	char stage;
 	char debug;
+	int8_t padding_1;
 	long score;
 	int continues_used;
 	char rem_bombs;
@@ -173,6 +174,7 @@ typedef struct {
 	char bgm_mode;
 	char start_bombs;
 	char start_lives;
+	int8_t padding_2;
 	long frame;
 	int unused_1;
 	char unused_2;

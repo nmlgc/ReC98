@@ -9,8 +9,6 @@
 #include "th02/snd/snd.h"
 #include "th02/formats/cfg.h"
 
-#pragma option -a1
-
 int pascal scoredat_verify(void);
 
 char debug = 0;

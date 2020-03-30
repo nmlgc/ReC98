@@ -29,7 +29,6 @@ typedef enum {
 	MODE_DEBUG = 3
 } mode_t;
 
-#pragma option -a1
 typedef struct {
 	char id[RES_ID_LEN];
 	char rank;
@@ -54,4 +53,3 @@ typedef struct {
 	long score_highest; // among all continues
 	unsigned int p_value;
 } resident_t;
-#pragma option -a2

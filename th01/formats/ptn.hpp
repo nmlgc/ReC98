@@ -10,7 +10,6 @@
 
 typedef dots_t(PTN_W) ptn_dots_t;
 
-#pragma option -a1
 struct ptn_planar_t {
 	ptn_dots_t B[PTN_H];
 	ptn_dots_t R[PTN_H];
@@ -28,7 +27,6 @@ struct ptn_file_image_t {
 struct ptn_t : public ptn_file_image_t {
 	ptn_dots_t alpha[PTN_H]; // Derived from color #15 at load time
 };
-#pragma option -a.
 
 #define PTN_SLOT_COUNT 8
 

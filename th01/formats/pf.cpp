@@ -25,7 +25,7 @@ typedef struct {
 	int32_t reserved; // Always zero
 } pf_header_t;
 
-#pragma option -Z -a1
+#pragma option -Z
 
 pf_header_t *arc_pfs;
 pf_header_t *file_pf;

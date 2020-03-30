@@ -1,4 +1,3 @@
-#pragma option -a1
 #if GAME == 3
 # define CFG_FN "yume.cfg"
 	typedef struct {
@@ -8,7 +7,6 @@
 		int16_t unused;
 	} cfg_options_t;
 #endif
-#pragma option -a.
 
 #include "th02/formats/cfg.h"
 

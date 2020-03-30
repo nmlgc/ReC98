@@ -30,7 +30,6 @@ enum game_mode_t {
 
 #define DEMO_COUNT 4
 
-#pragma option -a1
 #define RES_ID "YUMEConfig"
 typedef struct {
 	char id[RES_ID_LEN];
@@ -55,4 +54,3 @@ typedef struct {
 	unsigned char demo_num;	// 0 = no demo active
 	int8_t unused_3[198];
 } resident_t;
-#pragma option -a.

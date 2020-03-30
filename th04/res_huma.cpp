@@ -11,8 +11,6 @@
 #include "th04/snd/snd.h"
 #include "th04/formats/cfg.h"
 
-#pragma option -a1
-
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
 	RANK_DEFAULT, CFG_LIVES_DEFAULT, CFG_BOMBS_DEFAULT,

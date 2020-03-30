@@ -1,4 +1,3 @@
-#pragma option -a1
 #define RES_ID "HUMAConfig"
 typedef struct {
 	char id[RES_ID_LEN];
@@ -55,4 +54,3 @@ typedef struct {
 	unsigned char turbo_mode;
 	int8_t unused_5[182];
 } resident_t;
-#pragma option -a.

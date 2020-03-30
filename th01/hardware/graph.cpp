@@ -846,7 +846,6 @@ void z_palette_fade_from(
 struct hack { char x[sizeof(RESPAL_ID)]; }; // XXX
 extern const hack PAL98_GRB;
 
-#pragma option -a1
 // MASTER.MAN suggests that GBR ordering is some sort of standard on PC-98.
 // It does match the order of the hardware's palette register ports, after
 // all. (0AAh = green, 0ACh = red, 0AEh = blue)
@@ -875,7 +874,6 @@ struct mcb_t {
 	uint8_t m_fill[3];
 	uint8_t m_name[8];
 };
-#pragma option -a.
 
 respal_t __seg* z_respal_exist(void)
 {
