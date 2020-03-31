@@ -424,7 +424,7 @@ loc_AEF0:
 		call	_midboss_update
 		call	_boss_update
 		call	items_update
-		call	sub_16AB0
+		call	gather_update
 		call	_stage_render
 		cmp	byte_2429A, 0
 		jz	short loc_AF2D
@@ -439,7 +439,7 @@ loc_AF2D:
 		call	grcg_setmode_rmw_1
 		call	_boss_custombullets_render
 		call	lasers_render
-		call	sub_16B4E
+		call	gather_render
 		call	sparks_render
 		call	items_render
 		call	sub_C346
@@ -1874,7 +1874,7 @@ sub_BEE6	proc near
 		call	player_invalidate
 		call	sub_123AD
 		call	sub_E41C
-		call	sub_E5EE
+		call	bullets_gather_invalidate
 		call	items_invalidate
 		call	sparks_invalidate
 		call	sub_C2AA
@@ -5930,83 +5930,7 @@ sub_E58C	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E5EE	proc near
-		push	si
-		push	di
-		mov	si, offset _bullets
-		mov	di, PELLET_COUNT
-		mov	_tile_invalidate_box, (PELLET_W shl 16) or PELLET_H
-		cmp	_bullet_clear_trigger, 0
-		jnz	short loc_E638
-		cmp	_bullet_clear_time, 0
-		jnz	short loc_E638
-
-loc_E60D:
-		cmp	[si+bullet_t.flag], 0
-		jz	short loc_E632
-		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
-		jbe	short loc_E62B
-		shl	_tile_invalidate_box, 1
-		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-		shr	_tile_invalidate_box, 1
-		jmp	short loc_E632
-; ---------------------------------------------------------------------------
-
-loc_E62B:
-		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-
-loc_E632:
-		add	si, size bullet_t
-		dec	di
-		jnz	short loc_E60D
-
-loc_E638:
-		add	di, BULLET16_COUNT
-		shl	_tile_invalidate_box, 1
-
-loc_E641:
-		cmp	[si+bullet_t.flag], 0
-		jz	short loc_E666
-		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
-		jbe	short loc_E65F
-		shl	_tile_invalidate_box, 1
-		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-		shr	_tile_invalidate_box, 1
-		jmp	short loc_E666
-; ---------------------------------------------------------------------------
-
-loc_E65F:
-		call	tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-
-loc_E666:
-		add	si, size bullet_t
-		dec	di
-		jnz	short loc_E641
-		mov	si, 9A96h
-		mov	di, 10h
-
-loc_E672:
-		cmp	byte ptr [si], 0
-		jz	short loc_E68D
-		mov	ax, [si+0Eh]
-		shr	ax, 3
-		add	ax, 16
-		mov	_tile_invalidate_box.x, ax
-		mov	_tile_invalidate_box.y, ax
-		call	tiles_invalidate_around pascal, large dword ptr [si+6]
-
-loc_E68D:
-		add	si, 26h	; '&'
-		dec	di
-		jnz	short loc_E672
-		pop	di
-		pop	si
-		retn
-sub_E5EE	endp
-
+include th04/main/bullets_gather_inv.asm
 include th04/item/invalidate.asm
 include th04/hardware/grcg_modecol.asm
 
@@ -6352,15 +6276,15 @@ sub_EACE	proc near
 		push	9DA0h
 		push	460h
 		call	sub_E708
-		push	9A96h
-		push	98h
+		push	offset _gather_circles
+		push	size _gather_circles / 4
 		call	sub_E708
-		mov	word_2A72C, 8
-		mov	byte_2A72E, 9
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word ptr dword_2A726, 0
-		mov	word ptr dword_2A726+2,	0
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_velocity.x, 0
+		mov	_gather_template.GT_velocity.y, 0
 		pop	bp
 		retn
 sub_EACE	endp
@@ -13585,12 +13509,12 @@ loc_15C94	proc near
 
 loc_15CA2:
 		mov	eax, _bullet_template.BT_origin
-		mov	point_2A722, eax
-		mov	dword_2A726, 0
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	byte_2A72E, 9
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_center, eax
+		mov	_gather_template.GT_velocity, 0
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_ring_points, 8
 		push	word ptr _bullet_template.spawn_type
 		dec	_bullet_template.spawn_type
 		cmp	byte_221C0, 0
@@ -13598,7 +13522,7 @@ loc_15CA2:
 		mov	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
 
 loc_15CDD:
-		call	sub_16999
+		call	_gather_add_bullets
 		pop	word ptr _bullet_template.spawn_type
 
 locret_15CE4:
@@ -14900,154 +14824,7 @@ loc_16939:
 		retn
 sub_1673E	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1697E	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cx, size _bullet_template / 2
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	si, offset _bullet_template
-		mov	di, [bp+arg_0]
-		add	di, 18h
-		rep movsw
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_1697E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16999	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 9A96h
-		xor	di, di
-		jmp	short loc_169FA
-; ---------------------------------------------------------------------------
-
-loc_169A5:
-		cmp	byte ptr [si], 0
-		jnz	short loc_169F6
-		mov	byte ptr [si], 1
-		push	si
-		call	sub_1697E
-		mov	ax, point_2A722.x
-		mov	[si+2],	ax
-		mov	ax, point_2A722.y
-		mov	[si+4],	ax
-		mov	ax, word_2A72A
-		mov	[si+0Eh], ax
-		mov	[si+14h], ax
-		mov	ax, word ptr dword_2A726
-		mov	[si+0Ah], ax
-		mov	ax, word ptr dword_2A726+2
-		mov	[si+0Ch], ax
-		mov	byte ptr [si+12h], 0
-		mov	al, byte_2A72F
-		mov	[si+13h], al
-		mov	al, byte_2A72E
-		mov	[si+1],	al
-		mov	ax, word_2A72C
-		mov	[si+10h], ax
-		mov	ax, word_2A72A
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	[si+16h], ax
-		jmp	short loc_169FF
-; ---------------------------------------------------------------------------
-
-loc_169F6:
-		inc	di
-		add	si, 26h	; '&'
-
-loc_169FA:
-		cmp	di, 8
-		jl	short loc_169A5
-
-loc_169FF:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_16999	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16A03	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9A96h
-		xor	cx, cx
-		jmp	short loc_16A63
-; ---------------------------------------------------------------------------
-
-loc_16A0E:
-		cmp	byte ptr [si], 0
-		jnz	short loc_16A5F
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+18h], 0FFh
-		mov	ax, point_2A722.x
-		mov	[si+2],	ax
-		mov	ax, point_2A722.y
-		mov	[si+4],	ax
-		mov	ax, word_2A72A
-		mov	[si+0Eh], ax
-		mov	[si+14h], ax
-		mov	ax, word ptr dword_2A726
-		mov	[si+0Ah], ax
-		mov	ax, word ptr dword_2A726+2
-		mov	[si+0Ch], ax
-		mov	byte ptr [si+12h], 0
-		mov	al, byte_2A72F
-		mov	[si+13h], al
-		mov	al, byte_2A72E
-		mov	[si+1],	al
-		mov	ax, word_2A72C
-		mov	[si+10h], ax
-		mov	ax, word_2A72A
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	[si+16h], ax
-		jmp	short loc_16A68
-; ---------------------------------------------------------------------------
-
-loc_16A5F:
-		inc	cx
-		add	si, 26h	; '&'
-
-loc_16A63:
-		cmp	cx, 8
-		jl	short loc_16A0E
-
-loc_16A68:
-		pop	si
-		pop	bp
-		retn
-sub_16A03	endp
-
+include th04/main/gather_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15081,10 +14858,10 @@ loc_16A88:
 		mov	al, [bp+arg_0]
 
 loc_16A8B:
-		mov	byte_2A72E, al
+		mov	_gather_template.GT_col, al
 
 loc_16A8E:
-		call	sub_16A03
+		call	_gather_add_only
 		pop	bp
 		retn	6
 sub_16A6B	endp
@@ -15093,10 +14870,10 @@ sub_16A6B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public GATHER_BULLET_TEMPLATE_PUSH
+gather_bullet_template_push	proc near
 
-sub_16A95	proc near
-
-arg_0		= word ptr  4
+@@gather		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -15106,195 +14883,83 @@ arg_0		= word ptr  4
 		push	ds
 		pop	es
 		mov	di, offset _bullet_template
-		mov	si, [bp+arg_0]
-		add	si, 18h
+		mov	si, [bp+@@gather]
+		add	si, gather_t.G_bullet_template
 		rep movsw
 		pop	di
 		pop	si
 		pop	bp
 		retn	2
-sub_16A95	endp
+gather_bullet_template_push	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_16AB0	proc far
+public GATHER_UPDATE
+gather_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 9A96h
+		mov	si, offset _gather_circles
 		xor	di, di
-		jmp	short loc_16B1B
+		jmp	short @@more?
 ; ---------------------------------------------------------------------------
 
-loc_16ABC:
-		cmp	byte ptr [si], 0
-		jz	short loc_16B17
-		cmp	byte ptr [si], 2
-		jb	short loc_16ACB
-		mov	byte ptr [si], 0
-		jmp	short loc_16B17
+@@loop:
+		cmp	[si+gather_t.G_flag], 0
+		jz	short @@next
+		cmp	[si+gather_t.G_flag], 2
+		jb	short @@alive
+		mov	[si+gather_t.G_flag], 0
+		jmp	short @@next
 ; ---------------------------------------------------------------------------
 
-loc_16ACB:
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
-		mov	ax, [si+0Eh]
-		mov	[si+14h], ax
-		mov	ax, [si+16h]
-		sub	[si+0Eh], ax
-		mov	al, [si+13h]
-		add	[si+12h], al
-		cmp	word ptr [si+0Eh], 20h ; ' '
-		jge	short loc_16B17
-		mov	byte ptr [si], 2
-		cmp	byte ptr [si+18h], 0FFh
-		jz	short loc_16B17
+@@alive:
+		lea	ax, [si+gather_t.G_center]
+		call	_motion_update_2 pascal, ax
+		mov	ax, [si+gather_t.G_radius_cur]
+		mov	[si+gather_t.G_radius_prev], ax
+		mov	ax, [si+gather_t.G_radius_delta]
+		sub	[si+gather_t.G_radius_cur], ax
+		mov	al, [si+gather_t.G_angle_delta]
+		add	[si+gather_t.G_angle_cur], al
+		cmp	[si+gather_t.G_radius_cur], GATHER_RADIUS_END
+		jge	short @@next
+		mov	[si+gather_t.G_flag], 2
+		cmp	[si+gather_t.G_bullet_template.spawn_type], BST_GATHER_ONLY
+		jz	short @@next
 		push	si
-		call	sub_16A95
-		mov	ax, [si+2]
+		call	gather_bullet_template_push
+		mov	ax, [si+gather_t.G_center.x]
 		mov	_bullet_template.BT_origin.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+gather_t.G_center.y]
 		mov	_bullet_template.BT_origin.y, ax
 		cmp	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
 		jnb	short loc_16B0F
 		call	sub_15A5C
-		jmp	short loc_16B17
+		jmp	short @@next
 ; ---------------------------------------------------------------------------
 
 loc_16B0F:
 		mov	_bullet_template.spawn_type, BST_NORMAL
 		call	sub_15A70
 
-loc_16B17:
+@@next:
 		inc	di
-		add	si, 26h	; '&'
+		add	si, size gather_t
 
-loc_16B1B:
-		cmp	di, 8
-		jl	short loc_16ABC
+@@more?:
+		cmp	di, GATHER_CAP
+		jl	short @@loop
 		pop	di
 		pop	si
 		pop	bp
 		retf
-sub_16AB0	endp
+gather_update	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16B24	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_drawpoint.x, (-4 shl 4)
-		jle	short loc_16B4A
-		cmp	_drawpoint.x, (388 shl 4)
-		jge	short loc_16B4A
-		cmp	_drawpoint.y, (-4 shl 4)
-		jle	short loc_16B4A
-		cmp	_drawpoint.y, (372 shl 4)
-		jge	short loc_16B4A
-		mov	ax, 1
-		jmp	short loc_16B4C
-; ---------------------------------------------------------------------------
-
-loc_16B4A:
-		xor	ax, ax
-
-loc_16B4C:
-		pop	bp
-		retn
-sub_16B24	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16B4E	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	[bp+var_4], 0FFh
-		mov	si, 9A96h
-		mov	[bp+var_2], 0
-		jmp	short loc_16BCF
-; ---------------------------------------------------------------------------
-
-loc_16B67:
-		cmp	byte ptr [si], 1
-		jnz	short loc_16BC9
-		mov	al, [si+1]
-		cmp	al, [bp+var_4]
-		jz	short loc_16B7D
-		mov	[bp+var_4], al
-		mov	ah, [bp+var_4]
-		call	grcg_setcolor_direct_noint_2
-
-loc_16B7D:
-		xor	di, di
-		jmp	short loc_16BC4
-; ---------------------------------------------------------------------------
-
-loc_16B81:
-		mov	ax, di
-		shl	ax, 8
-		cwd
-		idiv	word ptr [si+10h]
-		add	al, [si+12h]
-		mov	[bp+var_3], al
-		push	offset _drawpoint
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	word ptr [si+0Eh]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		call	sub_16B24
-		or	al, al
-		jz	short loc_16BC3
-		mov	ax, _drawpoint.y
-		add	ax, (12 shl 4)
-		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
-		mov	dx, ax
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 28
-		call	@gather_point_render
-
-loc_16BC3:
-		inc	di
-
-loc_16BC4:
-		cmp	[si+10h], di
-		jg	short loc_16B81
-
-loc_16BC9:
-		inc	[bp+var_2]
-		add	si, 26h	; '&'
-
-loc_16BCF:
-		cmp	[bp+var_2], 8
-		jl	short loc_16B67
-		pop	di
-		pop	si
-		leave
-		retf
-sub_16B4E	endp
-
+include th04/main/gather_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18092,7 +17757,7 @@ sara_update	proc far
 		mov	_bullet_template.spawn_type, BST_NORMAL
 		mov	eax, _boss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -18114,30 +17779,30 @@ loc_18702:
 		cmp	_boss_phase_frame, 224
 		jnz	short loc_18737
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A722.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A722.y, ax
-		mov	word_2A72A, 1400h
-		mov	word_2A72C, 20h	; ' '
-		mov	byte_2A72F, 3
-		mov	byte_2A72E, 9
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_radius, (320 shl 4)
+		mov	_gather_template.GT_ring_points, 32
+		mov	_gather_template.GT_angle_delta, 3
+		mov	_gather_template.GT_col, 9
 
 loc_18737:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_18741
-		call	sub_16A03
+		call	_gather_add_only
 
 loc_18741:
 		cmp	_boss_phase_frame, 224
 		jnz	short loc_1874E
-		mov	byte_2A72E, 8
+		mov	_gather_template.GT_col, 8
 
 loc_1874E:
 		cmp	_boss_phase_frame, 256
 		jl	loc_188EE
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
@@ -19162,7 +18827,7 @@ louise_update	proc far
 		mov	_bullet_template.spawn_type, BST_NORMAL
 		mov	eax, _boss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -19176,9 +18841,9 @@ loc_19073:
 		jnz	short loc_19097
 		mov	_boss_hp, 4400
 		mov	_boss_phase_end_hp, 3000
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 
 loc_19097:
 		call	sub_1FB07
@@ -19687,7 +19352,7 @@ midboss3_update	proc far
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -20978,7 +20643,7 @@ alice_update	proc far
 		add	ax, (-8 shl 4)
 		mov	_bullet_template.BT_origin.y, ax
 		mov	eax, _bullet_template.BT_origin
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -20992,9 +20657,9 @@ loc_1A089:
 		jnz	short loc_1A0AD
 		mov	_boss_hp, 9600
 		mov	_boss_phase_end_hp, 7400
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 
 loc_1A0AD:
 		call	sub_1FB07
@@ -21510,7 +21175,7 @@ mai_yuki_1A556	proc near
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1A58D
 		mov	eax, _boss_pos.cur
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
 		push	ax
@@ -21555,7 +21220,7 @@ mai_yuki_1A5B3	proc near
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1A5DC
 		mov	eax, _yuki_pos.cur
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
 		push	ax
@@ -22340,9 +22005,9 @@ loc_1AC1C:
 		mov	_boss_phase_end_hp, 0
 		mov	_yuki_hp, 4500
 		mov	_yuki_phase_end_hp, 0
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	si, 212
 		jmp	short loc_1AC58
 ; ---------------------------------------------------------------------------
@@ -23004,7 +22669,7 @@ midboss4_update	proc far
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -23795,7 +23460,7 @@ yuki_update	proc far
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	b4ball_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
@@ -23811,9 +23476,9 @@ loc_1BA22:
 		jnz	short loc_1BA63
 		mov	_boss_hp, 7900
 		mov	_boss_phase_end_hp, 4600
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_sprite, 196
 		mov	_boss_sprite_left, 198
 		mov	_boss_sprite_right, 197
@@ -24999,7 +24664,7 @@ sub_1C518	proc far
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	_laser_template.coords.origin, eax
 		mov	b4ball_template.pos.cur, eax
 		inc	_boss_phase_frame
@@ -25016,9 +24681,9 @@ loc_1C54D:
 		jnz	short loc_1C58E
 		mov	_boss_hp, 7800
 		mov	_boss_phase_end_hp, 5800
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_sprite, 180
 		mov	_boss_sprite_left, 182
 		mov	_boss_sprite_right, 181
@@ -26165,7 +25830,7 @@ yumeko_update	proc far
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	knife_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
@@ -26181,9 +25846,9 @@ loc_1D29C:
 		jnz	short loc_1D2EF
 		mov	_boss_hp, 8300
 		mov	_boss_phase_end_hp, 7500
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_sprite, 180
 		mov	_boss_pos.velocity.x, (4 shl 4)
 		mov	si, 193
@@ -27584,7 +27249,7 @@ shinki_update	proc far
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	_laser_template.coords.origin, eax
 		mov	b6ball_template.pos.cur, eax
 		inc	_boss_phase_frame
@@ -27601,9 +27266,9 @@ loc_1E1CD:
 		jnz	short loc_1E220
 		mov	_boss_hp, 22800
 		mov	_boss_phase_end_hp, 20600
-		mov	word_2A72A, 400h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_sprite, 180
 		mov	_boss_pos.velocity.y, 0
 		mov	_boss_sprite_left, 183
@@ -28207,7 +27872,7 @@ midbossx_update	proc far
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -29241,7 +28906,7 @@ sub_1EFED	proc near
 		add	_bullet_template.BT_origin.y, (104 shl 4)
 		mov	ax, word_22872
 		mov	_bullet_template.BT_origin.x, ax
-		mov	point_2A722.x, ax
+		mov	_gather_template.GT_center.x, ax
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F045
 		mov	curvebullet_template.CBH_angle, -3Ch
@@ -29266,25 +28931,25 @@ loc_1F045:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1F137
-		mov	byte_2A72E, 0Eh
+		mov	_gather_template.GT_col, 14
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A722.y, ax
-		mov	word_2A72A, 1000h
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_radius, (256 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F081
-		mov	byte_2A72F, 2
+		mov	_gather_template.GT_angle_delta, 2
 		jmp	short loc_1F086
 ; ---------------------------------------------------------------------------
 
 loc_1F081:
-		mov	byte_2A72F, 0FEh
+		mov	_gather_template.GT_angle_delta, -2
 
 loc_1F086:
-		call	sub_16A03
+		call	_gather_add_only
 		jmp	loc_1F137
 ; ---------------------------------------------------------------------------
 
@@ -29302,23 +28967,23 @@ loc_1F08C:
 		or	dx, dx
 		jnz	short loc_1F0D0
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A722.y, ax
-		mov	word_2A72A, 800h
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_radius, (128 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F0C8
-		mov	byte_2A72F, 2
+		mov	_gather_template.GT_angle_delta, 2
 		jmp	short loc_1F0CD
 ; ---------------------------------------------------------------------------
 
 loc_1F0C8:
-		mov	byte_2A72F, 0FEh
+		mov	_gather_template.GT_angle_delta, -2
 
 loc_1F0CD:
-		call	sub_16A03
+		call	_gather_add_only
 
 loc_1F0D0:
 		mov	al, 80h
@@ -29530,7 +29195,7 @@ loc_1F298:
 		mov	eax, _boss_pos.cur
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		mov	_laser_template.coords.origin, eax
 		mov	curvebullet_template.pos.cur, eax
 		inc	_boss_phase_frame
@@ -29547,9 +29212,9 @@ loc_1F2C9:
 		jnz	short loc_1F333
 		mov	_boss_hp, 26500
 		mov	_boss_phase_end_hp, 23800
-		mov	word_2A72A, 800h
-		mov	byte_2A72F, 2
-		mov	word_2A72C, 8
+		mov	_gather_template.GT_radius, (128 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_sprite, 180
 		mov	_boss_sprite_left, 186
 		mov	_boss_sprite_right, 184
@@ -30170,7 +29835,7 @@ midboss5_update	proc far
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
 		mov	_bullet_template.BT_origin, eax
-		mov	point_2A722, eax
+		mov	_gather_template.GT_center, eax
 		inc	_midboss_phase_frame
 		mov	al, _midboss_phase
 		mov	ah, 0
@@ -31289,7 +30954,7 @@ byte_22868	db  10h
 		db    0
 		db    0
 word_22870	dw 0
-word_22872	dw 0C00h;curx?
+word_22872	dw (192 shl 4)
 off_22874	dw offset sub_1E922
 		dw offset sub_1E978
 		dw offset sub_1EB52
@@ -31492,13 +31157,8 @@ include th04/boss/vars[bss].asm
 include th05/boss/vars2[bss].asm
 include th04/sparks[bss].asm
 include th04/bullet/bullets[bss].asm
-		db 2732 dup(?)
-point_2A722	Point <?>
-dword_2A726	dd ?
-word_2A72A	dw ?
-word_2A72C	dw ?
-byte_2A72E	db ?
-byte_2A72F	db ?
+		db 2048 dup(?)
+include th04/main/gather[bss].asm
 include th04/circles[bss].asm
 		db 4480 dup(?)
 include th04/item/items[bss].asm

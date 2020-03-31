@@ -383,7 +383,7 @@ loc_ABD8:
 		call	_midboss_update
 		call	_boss_update
 		call	items_update
-		call	sub_13BCE
+		call	gather_update
 		call	_stage_render
 		call	main_01:sub_1020A
 		call	_boss_fg_render
@@ -392,7 +392,7 @@ loc_ABD8:
 		call	main_01:sub_10552
 		call	main_01:player_render
 		call	main_01:grcg_setmode_rmw_1
-		call	sub_13C5C
+		call	gather_render
 		call	main_01:sparks_render
 		call	main_01:items_render
 		call	main_01:loc_BD64
@@ -2711,78 +2711,7 @@ midbossx_render	endp
 ; ---------------------------------------------------------------------------
 		db    0
 include th04/bullet/pellet_r.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CA98	proc near
-		push	si
-		push	di
-		mov	si, offset _bullets
-		mov	di, BULLET_COUNT
-		cmp	_bullet_clear_trigger, 0
-		jnz	short loc_CACF
-		cmp	_bullet_clear_time, 0
-		jnz	short loc_CACF
-		mov	_tile_invalidate_box, (PELLET_W shl 16) or PELLET_H
-		mov	di, PELLET_COUNT
-
-loc_CABA:
-		cmp	[si+bullet_t.flag], 0
-		jz	short loc_CAC6
-		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-
-loc_CAC6:
-		add	si, size bullet_t
-		dec	di
-		jnz	short loc_CABA
-		mov	di, BULLET16_COUNT
-
-loc_CACF:
-		mov	_tile_invalidate_box, (BULLET16_W shl 16) or BULLET16_H
-
-loc_CAD8:
-		cmp	[si+bullet_t.flag], 0
-		jz	short loc_CAFD
-		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
-		jbe	short loc_CAF6
-		shl	_tile_invalidate_box, 1
-		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-		shr	_tile_invalidate_box, 1
-		jmp	short loc_CAFD
-; ---------------------------------------------------------------------------
-
-loc_CAF6:
-		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+bullet_t.pos.prev]
-
-loc_CAFD:
-		add	si, size bullet_t
-		dec	di
-		jnz	short loc_CAD8
-		mov	si, 9292h
-		mov	di, 10h
-
-loc_CB09:
-		cmp	byte ptr [si], 0
-		jz	short loc_CB24
-		mov	ax, [si+0Eh]
-		shr	ax, 3
-		add	ax, 16
-		mov	_tile_invalidate_box.x, ax
-		mov	_tile_invalidate_box.y, ax
-		call	main_01:tiles_invalidate_around pascal, large dword ptr [si+6]
-
-loc_CB24:
-		add	si, 2Ah	; '*'
-		dec	di
-		jnz	short loc_CB09
-		pop	di
-		pop	si
-		retn
-sub_CA98	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/bullets_gather_inv.asm
 include th04/tiles_invalidate_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2796,7 +2725,7 @@ sub_CB58	proc near
 		call	main_01:player_invalidate
 		call	main_01:sub_10444
 		call	main_01:sub_C74C
-		call	main_01:sub_CA98
+		call	main_01:bullets_gather_invalidate
 		call	items_invalidate
 		call	sparks_invalidate
 		call	main_01:sub_BCBE
@@ -12119,15 +12048,15 @@ sub_11ECB	proc near
 		push	9634h
 		push	640h
 		call	main_01:sub_C34E
-		push	9292h
-		push	0A8h ; '¨'
+		push	offset _gather_circles
+		push	size _gather_circles / 4
 		call	main_01:sub_C34E
-		mov	word_2A8D0, 8
-		mov	byte_2A8D2, 9
-		mov	word_2A8CE, 400h
-		mov	byte_2A8D3, 2
-		mov	word ptr dword_2A8CA, 0
-		mov	word ptr dword_2A8CA+2,	0
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_velocity.x, 0
+		mov	_gather_template.GT_velocity.y, 0
 		pop	bp
 		retn
 sub_11ECB	endp
@@ -14435,152 +14364,7 @@ main_03_TEXT	segment	byte public 'CODE' use16
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13A9C	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	si, offset _bullet_template
-		mov	di, [bp+arg_0]
-		add	di, 14h
-		mov	cx, size _bullet_template / 2
-		rep movsw
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_13A9C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13AB7	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 9292h
-		xor	di, di
-		jmp	short loc_13B18
-; ---------------------------------------------------------------------------
-
-loc_13AC3:
-		cmp	byte ptr [si], 0
-		jnz	short loc_13B14
-		mov	byte ptr [si], 1
-		push	si
-		call	sub_13A9C
-		mov	ax, point_2A8C6.x
-		mov	[si+2],	ax
-		mov	ax, point_2A8C6.y
-		mov	[si+4],	ax
-		mov	ax, word_2A8CE
-		mov	[si+0Eh], ax
-		mov	[si+26h], ax
-		mov	ax, word ptr dword_2A8CA
-		mov	[si+0Ah], ax
-		mov	ax, word ptr dword_2A8CA+2
-		mov	[si+0Ch], ax
-		mov	byte ptr [si+12h], 0
-		mov	al, byte_2A8D3
-		mov	[si+13h], al
-		mov	al, byte_2A8D2
-		mov	[si+1],	al
-		mov	ax, word_2A8D0
-		mov	[si+10h], ax
-		mov	ax, word_2A8CE
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	[si+28h], ax
-		jmp	short loc_13B1D
-; ---------------------------------------------------------------------------
-
-loc_13B14:
-		inc	di
-		add	si, 2Ah	; '*'
-
-loc_13B18:
-		cmp	di, 10h
-		jl	short loc_13AC3
-
-loc_13B1D:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_13AB7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13B21	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 9292h
-		xor	cx, cx
-		jmp	short loc_13B81
-; ---------------------------------------------------------------------------
-
-loc_13B2C:
-		cmp	byte ptr [si], 0
-		jnz	short loc_13B7D
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+14h], 0
-		mov	ax, point_2A8C6.x
-		mov	[si+2],	ax
-		mov	ax, point_2A8C6.y
-		mov	[si+4],	ax
-		mov	ax, word_2A8CE
-		mov	[si+0Eh], ax
-		mov	[si+26h], ax
-		mov	ax, word ptr dword_2A8CA
-		mov	[si+0Ah], ax
-		mov	ax, word ptr dword_2A8CA+2
-		mov	[si+0Ch], ax
-		mov	byte ptr [si+12h], 0
-		mov	al, byte_2A8D3
-		mov	[si+13h], al
-		mov	al, byte_2A8D2
-		mov	[si+1],	al
-		mov	ax, word_2A8D0
-		mov	[si+10h], ax
-		mov	ax, word_2A8CE
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		mov	[si+28h], ax
-		jmp	short loc_13B86
-; ---------------------------------------------------------------------------
-
-loc_13B7D:
-		inc	cx
-		add	si, 2Ah	; '*'
-
-loc_13B81:
-		cmp	cx, 10h
-		jl	short loc_13B2C
-
-loc_13B86:
-		pop	si
-		pop	bp
-		retn
-sub_13B21	endp
+include th04/main/gather_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14614,10 +14398,10 @@ loc_13BA6:
 		mov	al, [bp+arg_0]
 
 loc_13BA9:
-		mov	byte_2A8D2, al
+		mov	_gather_template.GT_col, al
 
 loc_13BAC:
-		call	sub_13B21
+		call	_gather_add_only
 		pop	bp
 		retn	6
 sub_13B89	endp
@@ -14626,10 +14410,10 @@ sub_13B89	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public GATHER_BULLET_TEMPLATE_PUSH
+gather_bullet_template_push	proc near
 
-sub_13BB3	proc near
-
-arg_0		= word ptr  4
+@@gather		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -14638,191 +14422,77 @@ arg_0		= word ptr  4
 		push	ds
 		pop	es
 		mov	di, offset _bullet_template
-		mov	si, [bp+arg_0]
-		add	si, 14h
+		mov	si, [bp+@@gather]
+		add	si, gather_t.G_bullet_template
 		mov	cx, size _bullet_template / 2
 		rep movsw
 		pop	di
 		pop	si
 		pop	bp
 		retn	2
-sub_13BB3	endp
+gather_bullet_template_push	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13BCE	proc far
+public GATHER_UPDATE
+gather_update	proc far
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 9292h
+		mov	si, offset _gather_circles
 		xor	di, di
-		jmp	short loc_13C29
+		jmp	short @@more?
 ; ---------------------------------------------------------------------------
 
-loc_13BDA:
-		cmp	byte ptr [si], 0
-		jz	short loc_13C25
-		cmp	byte ptr [si], 2
-		jb	short loc_13BE9
-		mov	byte ptr [si], 0
-		jmp	short loc_13C25
+@@loop:
+		cmp	[si+gather_t.G_flag], 0
+		jz	short @@next
+		cmp	[si+gather_t.G_flag], 2
+		jb	short @@alive
+		mov	[si+gather_t.G_flag], 0
+		jmp	short @@next
 ; ---------------------------------------------------------------------------
 
-loc_13BE9:
-		lea	ax, [si+2]
-		push	ax
-		call	_motion_update_2
-		mov	ax, [si+0Eh]
-		mov	[si+26h], ax
-		mov	ax, [si+28h]
-		sub	[si+0Eh], ax
-		mov	al, [si+13h]
-		add	[si+12h], al
-		cmp	word ptr [si+0Eh], 20h ; ' '
-		jge	short loc_13C25
-		mov	byte ptr [si], 2
-		cmp	byte ptr [si+14h], 0
-		jz	short loc_13C25
+@@alive:
+		lea	ax, [si+gather_t.G_center]
+		call	_motion_update_2 pascal, ax
+		mov	ax, [si+gather_t.G_radius_cur]
+		mov	[si+gather_t.G_radius_prev], ax
+		mov	ax, [si+gather_t.G_radius_delta]
+		sub	[si+gather_t.G_radius_cur], ax
+		mov	al, [si+gather_t.G_angle_delta]
+		add	[si+gather_t.G_angle_cur], al
+		cmp	[si+gather_t.G_radius_cur], GATHER_RADIUS_END
+		jge	short @@next
+		mov	[si+gather_t.G_flag], 2
+		cmp	[si+gather_t.G_bullet_template.spawn_type], BST_GATHER_ONLY
+		jz	short @@next
 		push	si
-		call	sub_13BB3
-		mov	ax, [si+2]
+		call	gather_bullet_template_push
+		mov	ax, [si+gather_t.G_center.x]
 		mov	_bullet_template.BT_origin.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+gather_t.G_center.y]
 		mov	_bullet_template.BT_origin.y, ax
 		call	fp_2D000
 
-loc_13C25:
+@@next:
 		inc	di
-		add	si, 2Ah	; '*'
+		add	si, size gather_t
 
-loc_13C29:
-		cmp	di, 10h
-		jl	short loc_13BDA
+@@more?:
+		cmp	di, GATHER_CAP
+		jl	short @@loop
 		pop	di
 		pop	si
 		pop	bp
 		retf
-sub_13BCE	endp
+gather_update	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C32	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_drawpoint.x, (-4 shl 4)
-		jle	short loc_13C58
-		cmp	_drawpoint.x, (388 shl 4)
-		jge	short loc_13C58
-		cmp	_drawpoint.y, (-4 shl 4)
-		jle	short loc_13C58
-		cmp	_drawpoint.y, (372 shl 4)
-		jge	short loc_13C58
-		mov	ax, 1
-		jmp	short loc_13C5A
-; ---------------------------------------------------------------------------
-
-loc_13C58:
-		xor	ax, ax
-
-loc_13C5A:
-		pop	bp
-		retn
-sub_13C32	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13C5C	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	[bp+var_4], 0FFh
-		mov	si, 9292h
-		mov	[bp+var_2], 0
-		jmp	short loc_13CDD
-; ---------------------------------------------------------------------------
-
-loc_13C75:
-		cmp	byte ptr [si], 1
-		jnz	short loc_13CD7
-		mov	al, [si+1]
-		cmp	al, [bp+var_4]
-		jz	short loc_13C8B
-		mov	[bp+var_4], al
-		mov	ah, [bp+var_4]
-		call	grcg_setcolor_direct_noint_2
-
-loc_13C8B:
-		xor	di, di
-		jmp	short loc_13CD2
-; ---------------------------------------------------------------------------
-
-loc_13C8F:
-		mov	ax, di
-		shl	ax, 8
-		cwd
-		idiv	word ptr [si+10h]
-		add	al, [si+12h]
-		mov	[bp+var_3], al
-		push	offset _drawpoint
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	word ptr [si+0Eh]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		call	sub_13C32
-		or	al, al
-		jz	short loc_13CD1
-		mov	ax, _drawpoint.y
-		add	ax, (12 shl 4)
-		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
-		mov	dx, ax
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 28
-		call	@gather_point_render
-
-loc_13CD1:
-		inc	di
-
-loc_13CD2:
-		cmp	[si+10h], di
-		jg	short loc_13C8F
-
-loc_13CD7:
-		inc	[bp+var_2]
-		add	si, 2Ah	; '*'
-
-loc_13CDD:
-		cmp	[bp+var_2], 10h
-		jl	short loc_13C75
-		pop	di
-		pop	si
-		leave
-		retf
-sub_13C5C	endp
-
-; ---------------------------------------------------------------------------
+include th04/main/gather_render.asm
 		db    0
-
 include th04/scroll_y_3.asm
 MOTION_UPDATE_DEF 2
 RANDRING_NEXT_DEF 2
@@ -15437,9 +15107,9 @@ loc_14552:
 		cmp	byte_2559A, 0Bh	; jumptable 00014536 case 255
 		ja	short loc_145A5
 		mov	ax, _midboss_pos.cur.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -64
 		push	ax
@@ -15484,7 +15154,7 @@ loc_145C9:
 		call	vector2 pascal, ds, offset _midboss_pos.velocity.x, ds, offset _midboss_pos.velocity.y, word ptr [bp+var_1], (2 shl 4)
 		inc	byte_2559A
 		mov	_midboss_sprite, 1
-		mov	word_2A8D0, 8
+		mov	_gather_template.GT_ring_points, 8
 
 loc_145EA:
 		cmp	_midboss_pos.cur.y, (368 shl 4)
@@ -16329,9 +15999,9 @@ loc_14DB8:
 
 loc_14DBE:
 		mov	ax, _midboss_pos.cur.x ; jumptable 00014DA2 case 255
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -48
 		push	ax
@@ -16369,8 +16039,8 @@ loc_14E0A:
 ; ---------------------------------------------------------------------------
 
 loc_14E20:
-		mov	word_2A8D0, 8
-		mov	word_2A8CE, 600h
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_radius, (96 shl 4)
 		cmp	byte_255B3, 1
 		jnz	short loc_14E5E
 		call	randring2_next16
@@ -18583,21 +18253,21 @@ loc_161F6:
 
 loc_161FA:
 		mov	ax, _bullet_template.BT_origin.x ; jumptable 000161F6 case 1
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 20h	; ' '
-		mov	byte_2A8D2, 0Bh
-		mov	word_2A8CE, 1000h
-		mov	byte_2A8D3, 3
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 32
+		mov	_gather_template.GT_col, 11
+		mov	_gather_template.GT_radius, (256 shl 4)
+		mov	_gather_template.GT_angle_delta, 3
 
 loc_1621C:
-		call	sub_13B21	; jumptable 000161F6 case 5
+		call	_gather_add_only	; jumptable 000161F6 case 5
 		jmp	short loc_1626B	; default
 ; ---------------------------------------------------------------------------
 
 loc_16221:
-		mov	byte_2A8D2, 0Ah	; jumptable 000161F6 case 3
+		mov	_gather_template.GT_col, 10	; jumptable 000161F6 case 3
 		jmp	short loc_1621C	; jumptable 000161F6 case 5
 ; ---------------------------------------------------------------------------
 
@@ -18769,7 +18439,7 @@ loc_163A9:
 		jmp	word ptr cs:[bx+28h] ; switch jump
 
 loc_163AD:
-		mov	byte_2A8D3, 3	; jumptable 000163A9 case 16
+		mov	_gather_template.GT_angle_delta, 3	; jumptable 000163A9 case 16
 		jmp	loc_16437	; default
 ; ---------------------------------------------------------------------------
 
@@ -18783,24 +18453,24 @@ loc_163C6:
 		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 
 loc_163D8:
-		mov	al, byte_2A8D3	; jumptable 000163A9 case 40
+		mov	al, _gather_template.GT_angle_delta	; jumptable 000163A9 case 40
 		neg	al
-		mov	byte_2A8D3, al
+		mov	_gather_template.GT_angle_delta, al
 		mov	ax, _bullet_template.BT_origin.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 8
-		mov	byte_2A8D2, 9
-		mov	word_2A8CE, 1000h
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_radius, (256 shl 4)
 
 loc_163FD:
-		call	sub_13B21	; jumptable 000163A9 cases 44,52,60,68,76,84
+		call	_gather_add_only	; jumptable 000163A9 cases 44,52,60,68,76,84
 		jmp	short loc_16437	; default
 ; ---------------------------------------------------------------------------
 
 loc_16402:
-		mov	byte_2A8D2, 8	; jumptable 000163A9 cases 42,50,58,66,74,82
+		mov	_gather_template.GT_col, 8	; jumptable 000163A9 cases 42,50,58,66,74,82
 		jmp	short loc_163FD	; jumptable 000163A9 cases 44,52,60,68,76,84
 ; ---------------------------------------------------------------------------
 
@@ -19426,22 +19096,22 @@ sub_16A1A	proc near
 loc_16A3F:
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-20 shl 4)
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-8 shl 4)
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 10h
-		mov	byte_2A8D3, 0FEh
-		mov	byte_2A8D2, 3
-		mov	word_2A8CE, 1000h
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_angle_delta, -2
+		mov	_gather_template.GT_col, 3
+		mov	_gather_template.GT_radius, (256 shl 4)
 		jmp	short loc_16A6E
 ; ---------------------------------------------------------------------------
 
 loc_16A69:
-		mov	byte_2A8D2, 2
+		mov	_gather_template.GT_col, 2
 
 loc_16A6E:
-		call	sub_13B21
+		call	_gather_add_only
 
 loc_16A71:
 		cmp	_boss_phase_frame, 16
@@ -20018,22 +19688,22 @@ loc_16EBF:
 
 loc_16EC3:
 		mov	ax, _boss_pos.cur.x ; jumptable 00016EBF case 32
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 20h	; ' '
-		mov	byte_2A8D3, 0FEh
-		mov	byte_2A8D2, 9
-		mov	word_2A8CE, 1000h
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 32
+		mov	_gather_template.GT_angle_delta, -2
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_radius, (256 shl 4)
 
 loc_16EE5:
-		call	sub_13B21	; jumptable 00016EBF case 36
+		call	_gather_add_only	; jumptable 00016EBF case 36
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_16EEA:
-		mov	byte_2A8D2, 8	; jumptable 00016EBF case 34
+		mov	_gather_template.GT_col, 8	; jumptable 00016EBF case 34
 		jmp	short loc_16EE5	; jumptable 00016EBF case 36
 ; ---------------------------------------------------------------------------
 
@@ -21977,10 +21647,10 @@ sub_17E59	endp
 sub_1802F	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_2A8D3, 0FEh
-		call	sub_13B21
-		mov	byte_2A8D3, 2
-		call	sub_13B21
+		mov	_gather_template.GT_angle_delta, -2
+		call	_gather_add_only
+		mov	_gather_template.GT_angle_delta, 2
+		call	_gather_add_only
 		pop	bp
 		retn
 sub_1802F	endp
@@ -22014,14 +21684,14 @@ loc_18067:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_1806B:
-		mov	word_2A8CE, 1400h ; jumptable 00018067 case 32
+		mov	_gather_template.GT_radius, (320 shl 4) ; jumptable 00018067 case 32
 		mov	ax, point_259EA.y
 		add	ax, (-10 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, point_259EA.x
-		mov	point_2A8C6.x, ax
-		mov	word_2A8D0, 10h
-		mov	byte_2A8D2, 0Eh
+		mov	_gather_template.GT_center.x, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_col, 14
 
 loc_1808B:
 		call	sub_1802F	; jumptable 00018067 case 36
@@ -22030,13 +21700,13 @@ loc_1808B:
 ; ---------------------------------------------------------------------------
 
 loc_18090:
-		mov	byte_2A8D2, 7	; jumptable 00018067 case 34
+		mov	_gather_template.GT_col, 7	; jumptable 00018067 case 34
 		jmp	short loc_1808B	; jumptable 00018067 case 36
 ; ---------------------------------------------------------------------------
 
 loc_18097:
-		push	point_2A8C6.x ; jumptable 00018067 case 48
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x ; jumptable 00018067 case 48
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		mov	_circles_color, 0Fh
 
@@ -24113,13 +23783,13 @@ loc_191B3:
 		cmp	si, 6
 		jl	short loc_191A8
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 20h	; ' '
-		mov	word_2A8CE, 1400h
-		mov	byte_2A8D3, 0FDh
-		mov	byte_2A8D2, 0Fh
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 32
+		mov	_gather_template.GT_radius, (320 shl 4)
+		mov	_gather_template.GT_angle_delta, -3
+		mov	_gather_template.GT_col, 15
 		jmp	short loc_19235
 ; ---------------------------------------------------------------------------
 
@@ -24128,12 +23798,12 @@ loc_191DC:
 		jl	short loc_19226
 		cmp	_boss_phase_frame, 296
 		jnz	short loc_191F1
-		mov	byte_2A8D2, 9
+		mov	_gather_template.GT_col, 9
 
 loc_191F1:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_191FB
-		call	sub_13B21
+		call	_gather_add_only
 
 loc_191FB:
 		cmp	_boss_phase_frame, 320
@@ -24600,8 +24270,8 @@ var_2		= word ptr -2
 		cwd
 		idiv	bx
 		mov	_boss_pos.velocity.y, ax
-		mov	word_2A8CE, 600h
-		mov	word_2A8D0, 8
+		mov	_gather_template.GT_radius, (96 shl 4)
+		mov	_gather_template.GT_ring_points, 8
 
 loc_19647:
 		cmp	_boss_phase_frame, 70
@@ -24997,10 +24667,10 @@ sub_1998B	proc near
 
 loc_199AD:
 		mov	ax, _bullet_template.BT_origin.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A8C6.y, ax
-		call	sub_13B21
+		mov	_gather_template.GT_center.y, ax
+		call	_gather_add_only
 
 loc_199BC:
 		cmp	_boss_phase_frame, 112
@@ -25098,9 +24768,9 @@ orange_update	proc far
 		mov	bp, sp
 		push	si
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -25129,14 +24799,14 @@ loc_19AEF:
 		call	snd_se_play pascal, 8
 		mov	ax, _boss_pos.cur.x
 		add	ax, (8 shl 4)
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-40 shl 4)
-		mov	point_2A8C6.y, ax
-		mov	word_2A8CE, 1400h
-		mov	word_2A8D0, 20h	; ' '
-		mov	byte_2A8D3, 3
-		mov	byte_2A8D2, 7
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_radius, (320 shl 4)
+		mov	_gather_template.GT_ring_points, 32
+		mov	_gather_template.GT_angle_delta, 3
+		mov	_gather_template.GT_col, 7
 		jmp	loc_19C02
 ; ---------------------------------------------------------------------------
 
@@ -25145,12 +24815,12 @@ loc_19B35:
 		jle	loc_19C02
 		cmp	_boss_phase_frame, 336
 		jnz	short loc_19B4C
-		mov	byte_2A8D2, 6
+		mov	_gather_template.GT_col, 6
 
 loc_19B4C:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_19B56
-		call	sub_13B21
+		call	_gather_add_only
 
 loc_19B56:
 		cmp	_boss_phase_frame, 352
@@ -25169,9 +24839,9 @@ loc_19B88:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 32
 		jl	short loc_19C02
-		mov	word_2A8CE, 400h
-		mov	byte_2A8D3, 2
-		mov	word_2A8D0, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_ring_points, 8
 		mov	_boss_phase, 2
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -25312,7 +24982,7 @@ loc_19CC8:
 		mov	Palettes, 90h
 		mov	Palettes+2, 20h	; ' '
 		mov	_palette_changed, 1
-		mov	byte_2A8D2, 9
+		mov	_gather_template.GT_col, 9
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -25336,10 +25006,10 @@ loc_19D15:
 		cmp	_boss_phase_frame, 96
 		jnz	short loc_19D2B
 		mov	ax, _bullet_template.BT_origin.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A8C6.y, ax
-		call	sub_13B21
+		mov	_gather_template.GT_center.y, ax
+		call	_gather_add_only
 
 loc_19D2B:
 		cmp	_boss_phase_frame, 112
@@ -27022,44 +26692,44 @@ loc_1A926:
 
 loc_1A92A:
 		call	snd_se_play pascal, 8		; jumptable 0001A926 case 16
-		mov	word_2A8CE, 1400h
+		mov	_gather_template.GT_radius, (320 shl 4)
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-4 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
 		add	ax, (24 shl 4)
-		mov	point_2A8C6.x, ax
-		mov	word_2A8D0, 10h
-		mov	byte_2A8D2, 9
-		mov	byte_2A8D3, 0FEh
+		mov	_gather_template.GT_center.x, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_angle_delta, -2
 
 loc_1A959:
-		call	sub_13B21	; jumptable 0001A926 case 20
-		sub	point_2A8C6.x, (44 shl 4)
-		mov	byte_2A8D3, 2
+		call	_gather_add_only	; jumptable 0001A926 case 20
+		sub	_gather_template.GT_center.x, (44 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
 
 loc_1A967:
-		call	sub_13B21
+		call	_gather_add_only
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1A96C:
-		mov	byte_2A8D2, 8	; jumptable 0001A926 case 18
-		call	sub_13B21
-		add	point_2A8C6.x, (44 shl 4)
-		mov	byte_2A8D3, 0FEh
+		mov	_gather_template.GT_col, 8	; jumptable 0001A926 case 18
+		call	_gather_add_only
+		add	_gather_template.GT_center.x, (44 shl 4)
+		mov	_gather_template.GT_angle_delta, -2
 		jmp	short loc_1A967
 ; ---------------------------------------------------------------------------
 
 loc_1A981:
-		push	point_2A8C6.x ; jumptable 0001A926 case 32
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x ; jumptable 0001A926 case 32
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
-		mov	ax, point_2A8C6.x
+		mov	ax, _gather_template.GT_center.x
 		add	ax, (44 shl 4)
 		push	ax
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		mov	_circles_color, 0Fh
 
@@ -27083,10 +26753,10 @@ word_1A9A5	dw    10h,   12h,   14h,   20h
 sub_1A9B5	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_2A8D3, 0FEh
-		call	sub_13B21
-		mov	byte_2A8D3, 2
-		call	sub_13B21
+		mov	_gather_template.GT_angle_delta, -2
+		call	_gather_add_only
+		mov	_gather_template.GT_angle_delta, 2
+		call	_gather_add_only
 		pop	bp
 		retn
 sub_1A9B5	endp
@@ -27120,14 +26790,14 @@ loc_1A9E9:
 
 loc_1A9ED:
 		call	snd_se_play pascal, 8		; jumptable 0001A9E9 case 48
-		mov	word_2A8CE, 1400h
+		mov	_gather_template.GT_radius, (320 shl 4)
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
-		mov	word_2A8D0, 8
-		mov	byte_2A8D2, 9
+		mov	_gather_template.GT_center.x, ax
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
 
 loc_1AA14:
 		call	sub_1A9B5	; jumptable 0001A9E9 case 52
@@ -27136,13 +26806,13 @@ loc_1AA14:
 ; ---------------------------------------------------------------------------
 
 loc_1AA19:
-		mov	byte_2A8D2, 8	; jumptable 0001A9E9 case 50
+		mov	_gather_template.GT_col, 8	; jumptable 0001A9E9 case 50
 		jmp	short loc_1AA14	; jumptable 0001A9E9 case 52
 ; ---------------------------------------------------------------------------
 
 loc_1AA20:
-		push	point_2A8C6.x ; jumptable 0001A9E9 case 64
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x ; jumptable 0001A9E9 case 64
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		mov	_circles_color, 0Fh
 
@@ -27188,29 +26858,29 @@ loc_1AA64:
 
 loc_1AA68:
 		call	snd_se_play pascal, 8		; jumptable 0001AA64 case 32
-		mov	word_2A8CE, 1400h
-		mov	word_2A8D0, 8
-		mov	byte_2A8D2, 9
+		mov	_gather_template.GT_radius, (320 shl 4)
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
 
 loc_1AA80:
 		mov	ax, _boss_pos.cur.y ; jumptable 0001AA64	case 36
 		add	ax, (32 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		call	sub_1A9B5
 		mov	ax, point_25A0C.y
 		add	ax, (32 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, point_25A0C.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		call	sub_1A9B5
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1AAA6:
-		mov	byte_2A8D2, 8	; jumptable 0001AA64 case 34
+		mov	_gather_template.GT_col, 8	; jumptable 0001AA64 case 34
 		jmp	short loc_1AA80	; jumptable 0001AA64 case 36
 ; ---------------------------------------------------------------------------
 
@@ -27269,13 +26939,13 @@ loc_1AB04:
 
 loc_1AB08:
 		call	snd_se_play pascal, 8		; jumptable 0001AB04 case 16
-		mov	word_2A8CE, 1400h
+		mov	_gather_template.GT_radius, (320 shl 4)
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
-		mov	word_2A8D0, 10h
-		mov	byte_2A8D2, 7
+		mov	_gather_template.GT_center.x, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_col, 7
 
 loc_1AB2C:
 		call	sub_1A9B5	; jumptable 0001AB04 case 20
@@ -27284,13 +26954,13 @@ loc_1AB2C:
 ; ---------------------------------------------------------------------------
 
 loc_1AB31:
-		mov	byte_2A8D2, 6	; jumptable 0001AB04 case 18
+		mov	_gather_template.GT_col, 6	; jumptable 0001AB04 case 18
 		jmp	short loc_1AB2C	; jumptable 0001AB04 case 20
 ; ---------------------------------------------------------------------------
 
 loc_1AB38:
-		push	point_2A8C6.x ; jumptable 0001AB04 case 32
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x ; jumptable 0001AB04 case 32
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		mov	_circles_color, 0Fh
 
@@ -28135,12 +27805,12 @@ loc_1B2ED:
 		mov	al, _bullet_template.BT_angle
 		add	al, 8
 		mov	_bullet_template.BT_angle, al
-		mov	word_2A8D0, 8
-		mov	byte_2A8D2, 9
-		mov	al, byte_2A8D3
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_col, 9
+		mov	al, _gather_template.GT_angle_delta
 		neg	al
-		mov	byte_2A8D3, al
-		call	sub_13B21
+		mov	_gather_template.GT_angle_delta, al
+		call	_gather_add_only
 
 locret_1B311:
 		leave
@@ -29348,18 +29018,18 @@ loc_1BDDE:
 
 loc_1BDE2:
 		mov	ax, _boss_pos.cur.x
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 8
-		mov	word_2A8CE, 0C00h
-		mov	byte_2A8D2, 0Fh
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_radius, (192 shl 4)
+		mov	_gather_template.GT_col, 15
 
 loc_1BDFF:
-		mov	byte_2A8D3, 0FEh
-		call	sub_13B21
-		mov	byte_2A8D3, 2
-		call	sub_13B21
+		mov	_gather_template.GT_angle_delta, -2
+		call	_gather_add_only
+		mov	_gather_template.GT_angle_delta, 2
+		call	_gather_add_only
 		jmp	short loc_1BE2E	; default
 ; ---------------------------------------------------------------------------
 
@@ -29370,7 +29040,7 @@ loc_1BE11:
 		mov	_circles_color, 0Fh
 
 loc_1BE23:
-		mov	byte_2A8D2, 7
+		mov	_gather_template.GT_col, 7
 		jmp	short loc_1BDFF
 ; ---------------------------------------------------------------------------
 
@@ -32050,14 +31720,14 @@ var_4		= byte ptr -4
 		cmp	_bullet_template.spawn_type, BST_GATHER_PELLET
 		jnz	short loc_1D2D5
 		mov	eax, _bullet_template.BT_origin
-		mov	point_2A8C6, eax
-		mov	dword_2A8CA, 0
-		mov	word_2A8CE, 400h
-		mov	byte_2A8D3, 2
-		mov	byte_2A8D2, 9
-		mov	word_2A8D0, 8
+		mov	_gather_template.GT_center, eax
+		mov	_gather_template.GT_velocity, 0
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_angle_delta, 2
+		mov	_gather_template.GT_col, 9
+		mov	_gather_template.GT_ring_points, 8
 		mov	_bullet_template.spawn_type, BST_PELLET
-		call	sub_13AB7
+		call	_gather_add_bullets
 		jmp	loc_1D3BB
 ; ---------------------------------------------------------------------------
 
@@ -34330,14 +34000,14 @@ loc_1EA6B:
 loc_1EA6F:
 		mov	ax, _boss_pos.cur.x
 		add	ax, (4 shl 4)
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-28 shl 4)
-		mov	point_2A8C6.y, ax
-		mov	word_2A8D0, 10h
-		mov	word_2A8CE, 1000h
-		mov	byte_2A8D2, 9
-		call	sub_13B21
+		mov	_gather_template.GT_center.y, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_radius, (256 shl 4)
+		mov	_gather_template.GT_col, 9
+		call	_gather_add_only
 		mov	_boss_sprite, 129
 		call	snd_se_play pascal, 8
 		mov	_circles_color, 0Fh
@@ -34345,10 +34015,10 @@ loc_1EA6F:
 ; ---------------------------------------------------------------------------
 
 loc_1EAA8:
-		mov	byte_2A8D2, 8
+		mov	_gather_template.GT_col, 8
 
 loc_1EAAD:
-		call	sub_13B21
+		call	_gather_add_only
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -34364,8 +34034,8 @@ loc_1EAB9:
 
 loc_1EAC0:
 		mov	_boss_sprite, 132
-		push	point_2A8C6.x
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
@@ -35978,10 +35648,10 @@ off_1F8D4	dw offset loc_1F3D6
 sub_1F8EE	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_2A8D3, 0FEh
-		call	sub_13B21
-		mov	byte_2A8D3, 2
-		call	sub_13B21
+		mov	_gather_template.GT_angle_delta, -2
+		call	_gather_add_only
+		mov	_gather_template.GT_angle_delta, 2
+		call	_gather_add_only
 		pop	bp
 		retn
 sub_1F8EE	endp
@@ -36015,15 +35685,15 @@ loc_1F922:
 ; ---------------------------------------------------------------------------
 
 loc_1F926:
-		mov	word_2A8CE, 1400h
+		mov	_gather_template.GT_radius, (320 shl 4)
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-48 shl 4)
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-13 shl 4)
-		mov	point_2A8C6.x, ax
-		mov	word_2A8D0, 10h
-		mov	byte_2A8D2, 0Fh
+		mov	_gather_template.GT_center.x, ax
+		mov	_gather_template.GT_ring_points, 16
+		mov	_gather_template.GT_col, 15
 
 loc_1F949:
 		call	sub_1F8EE
@@ -36032,13 +35702,13 @@ loc_1F949:
 ; ---------------------------------------------------------------------------
 
 loc_1F94E:
-		mov	byte_2A8D2, 9
+		mov	_gather_template.GT_col, 9
 		jmp	short loc_1F949
 ; ---------------------------------------------------------------------------
 
 loc_1F955:
-		push	point_2A8C6.x
-		push	point_2A8C6.y
+		push	_gather_template.GT_center.x
+		push	_gather_template.GT_center.y
 		call	circles_add_shrinking
 		mov	_circles_color, 0Fh
 
@@ -36486,19 +36156,19 @@ loc_1FC68:
 loc_1FCE0:
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_1FD2E
-		mov	word_2A8D0, 8
-		mov	word_2A8CE, 400h
-		mov	byte_2A8D2, 0Eh
+		mov	_gather_template.GT_ring_points, 8
+		mov	_gather_template.GT_radius, (64 shl 4)
+		mov	_gather_template.GT_col, 14
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2A8C6.y, ax
+		mov	_gather_template.GT_center.y, ax
 		call	randring2_next16_mod pascal, (320 shl 4)
 		add	ax, (32 shl 4)
-		mov	point_2A8C6.x, ax
+		mov	_gather_template.GT_center.x, ax
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.speed, (4 shl 4)
-		call	sub_13AB7
+		call	_gather_add_bullets
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -38733,13 +38403,8 @@ include th04/sparks[bss].asm
 include th04/bullet/bullets[bss].asm
 		db 924 dup(?)
 byte_2A16E	db ?
-		db 1879 dup(?)
-point_2A8C6	Point <?>
-dword_2A8CA	dd ?
-word_2A8CE	dw ?
-word_2A8D0	dw ?
-byte_2A8D2	db ?
-byte_2A8D3	db ?
+		db 1123 dup(?)
+include th04/main/gather[bss].asm
 include th04/circles[bss].asm
 		db 6400 dup(?)
 include th04/item/items[bss].asm

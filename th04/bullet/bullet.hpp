@@ -1,3 +1,5 @@
+#include "th04/sprites/cels.h"
+
 /// Game-specific pattern and spawn types
 /// -------------------------------------
 #if GAME == 5

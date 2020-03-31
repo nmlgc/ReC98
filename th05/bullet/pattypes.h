@@ -47,6 +47,8 @@ typedef enum {
 // Spawns special-moving bullets with BST_NORMAL after the gather animation.
 // Effectively becomes BST_NORMAL when used outside a gather_t.
 #define BST_GATHER_NORMAL_SPECIAL_MOVE 0xFE
+// Won't spawn bullets at the end of a gather animation.
+#define BST_GATHER_ONLY 0xFF
 
 #define BST_NORMAL 0x00
 #define BST_GATHER_PELLET 0x01
