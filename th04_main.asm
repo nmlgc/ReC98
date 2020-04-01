@@ -14369,47 +14369,6 @@ include th04/main/gather_add.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_13B89	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_4]
-		or	ax, ax
-		jz	short loc_13BA1
-		cmp	ax, 2
-		jz	short loc_13BA6
-		cmp	ax, 4
-		jz	short loc_13BAC
-		pop	bp
-		retn	6
-; ---------------------------------------------------------------------------
-
-loc_13BA1:
-		mov	al, [bp+arg_2]
-		jmp	short loc_13BA9
-; ---------------------------------------------------------------------------
-
-loc_13BA6:
-		mov	al, [bp+arg_0]
-
-loc_13BA9:
-		mov	_gather_template.GT_col, al
-
-loc_13BAC:
-		call	_gather_add_only
-		pop	bp
-		retn	6
-sub_13B89	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public GATHER_BULLET_TEMPLATE_PUSH
 gather_bullet_template_push	proc near
 
@@ -15112,9 +15071,7 @@ loc_14552:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -64
-		push	ax
-		push	0F0009h
-		call	sub_13B89
+		call	gather_add_only_3stack pascal, ax, large (15 shl 16) or 9
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 64
 		jz	short loc_14584
@@ -16004,9 +15961,7 @@ loc_14DBE:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -48
-		push	ax
-		push	0F0007h
-		call	sub_13B89
+		call	gather_add_only_3stack pascal, ax, large (15 shl 16) or 7
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 1
 		jz	short loc_14E20
@@ -24244,9 +24199,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		mov	ax, _boss_phase_frame
 		add	ax, -70
-		push	ax
-		push	70006h
-		call	sub_13B89
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jl	short loc_19678
 		cmp	_boss_phase_frame, 16

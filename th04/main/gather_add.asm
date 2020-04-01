@@ -144,3 +144,41 @@ _gather_add_only	proc near
 	pop	bp
 	retn
 _gather_add_only	endp
+
+
+public GATHER_ADD_ONLY_3STACK
+gather_add_only_3stack	proc near
+
+@@col_for_2_and_4		= byte ptr  4
+@@col_for_0		= byte ptr  6
+@@frame		= word ptr  8
+
+	push	bp
+	mov	bp, sp
+	mov	ax, [bp+@@frame]
+	or	ax, ax
+	jz	short @@0
+	cmp	ax, 2
+	jz	short @@2_4
+	cmp	ax, 4
+	jz	short @@add
+	pop	bp
+	retn	6
+; ---------------------------------------------------------------------------
+
+@@0:
+	mov	al, [bp+@@col_for_0]
+	jmp	short @@set_col
+; ---------------------------------------------------------------------------
+
+@@2_4:
+	mov	al, [bp+@@col_for_2_and_4]
+
+@@set_col:
+	mov	_gather_template.GT_col, al
+
+@@add:
+	call	_gather_add_only
+	pop	bp
+	retn	6
+gather_add_only_3stack	endp

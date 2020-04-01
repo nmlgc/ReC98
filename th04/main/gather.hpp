@@ -55,5 +55,13 @@ void near gather_add_bullets(void);
 // won't fire bullets at GATHER_RADIUS_END.
 void near gather_add_only(void);
 
+// Calls gather_add_only() to add one of the three circles in a 3-stack gather
+// animation, based on the value of [frame]. The three circles are added at
+// [frame] 0, 2, and 4, respectively, using the given colors. Will do nothing
+// for any other value of [frame].
+void pascal near gather_add_only_3stack(
+	int frame, uint4_t col_for_0, uint4_t col_for_2_and_4
+)
+
 void pascal gather_update(void);
 void pascal gather_render(void);

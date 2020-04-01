@@ -14829,47 +14829,6 @@ include th04/main/gather_add.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_16A6B	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_4]
-		or	ax, ax
-		jz	short loc_16A83
-		cmp	ax, 2
-		jz	short loc_16A88
-		cmp	ax, 4
-		jz	short loc_16A8E
-		pop	bp
-		retn	6
-; ---------------------------------------------------------------------------
-
-loc_16A83:
-		mov	al, [bp+arg_2]
-		jmp	short loc_16A8B
-; ---------------------------------------------------------------------------
-
-loc_16A88:
-		mov	al, [bp+arg_0]
-
-loc_16A8B:
-		mov	_gather_template.GT_col, al
-
-loc_16A8E:
-		call	_gather_add_only
-		pop	bp
-		retn	6
-sub_16A6B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public GATHER_BULLET_TEMPLATE_PUSH
 gather_bullet_template_push	proc near
 
@@ -17208,9 +17167,7 @@ sub_181E5	proc near
 		jge	short loc_1821C
 		mov	ax, _boss_phase_frame
 		dec	ax
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_18239
 		call	snd_se_play pascal, 8
@@ -17373,9 +17330,7 @@ sub_1833B	proc near
 		jge	short loc_1837B
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		cmp	_boss_phase_frame, 16
 		jnz	loc_183F3
 		call	snd_se_play pascal, 8
@@ -18317,9 +18272,7 @@ arg_0		= word ptr  4
 		mov	_boss_sprite, 184
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_18C8E
 		call	snd_se_play pascal, 8
@@ -19123,9 +19076,7 @@ sub_192F3	proc near
 		mov	bp, sp
 		mov	ax, _midboss_phase_frame
 		dec	ax
-		push	ax
-		push	0B000Ah
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (11 shl 16) or 10
 		cmp	_midboss_phase_frame, 1
 		jnz	short loc_19319
 		call	snd_se_play pascal, 8
@@ -20085,9 +20036,7 @@ sub_19B04	proc near
 		jge	short loc_19B2F
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		cmp	_boss_phase_frame, 40
 		jnz	short loc_19B9B
@@ -20178,9 +20127,7 @@ sub_19BB8	proc near
 		jge	short loc_19BE2
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		cmp	_boss_phase_frame, 40
 		jnz	short loc_19C32
@@ -20231,9 +20178,7 @@ sub_19C34	proc near
 		jge	short loc_19C5E
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		cmp	_boss_phase_frame, 40
 		jnz	short loc_19CAE
@@ -20413,9 +20358,7 @@ sub_19E12	proc near
 		jge	short loc_19E43
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		cmp	_boss_phase_frame, 40
 		jnz	loc_19ED8
@@ -20486,9 +20429,7 @@ sub_19EDA	proc near
 		jge	short loc_19F0E
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		mov	byte_2D085, 8
 		cmp	_boss_phase_frame, 40
@@ -20547,9 +20488,7 @@ sub_19F75	proc near
 		jge	short loc_19FA9
 		mov	ax, _boss_phase_frame
 		add	ax, -40
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 184
 		mov	byte_2D085, 0
 		cmp	_boss_phase_frame, 40
@@ -21178,9 +21117,7 @@ mai_yuki_1A556	proc near
 		mov	_gather_template.GT_center, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 183
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1A5B1
@@ -21223,9 +21160,7 @@ mai_yuki_1A5B3	proc near
 		mov	_gather_template.GT_center, eax
 		mov	ax, _boss_phase_frame
 		add	ax, -24
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_yuki_sprite, 183
 		pop	bp
 		retn
@@ -23159,9 +23094,7 @@ sub_1B754	proc near
 		jge	short loc_1B799
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_SLOWDOWN
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
@@ -23249,9 +23182,7 @@ sub_1B832	proc near
 		jge	short loc_1B858
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	90008h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (9 shl 16) or 8
 		mov	_boss_sprite, 208
 		mov	b4ball_template.B4B_speed, (2 shl 4)
 		jmp	short loc_1B8C4
@@ -25118,9 +25049,7 @@ sub_1CAD7	proc near
 		jge	short loc_1CB23
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1CB6F
 		mov	_boss_sprite, 184
@@ -25183,9 +25112,7 @@ var_1		= byte ptr -1
 		jge	short loc_1CBD2
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1CCD0
 		mov	_boss_sprite, 184
@@ -25306,9 +25233,7 @@ sub_1CCD3	proc near
 		jge	short loc_1CD26
 		mov	ax, _boss_phase_frame
 		dec	ax
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 4
 		jnz	loc_1CE0B
 		mov	_boss_sprite, 184
@@ -25418,9 +25343,7 @@ sub_1CE0D	proc near
 		jge	short loc_1CE63
 		mov	ax, _boss_phase_frame
 		dec	ax
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 4
 		jnz	loc_1CED7
 		mov	_boss_sprite, 184
@@ -25497,9 +25420,7 @@ var_1		= byte ptr -1
 		jge	short loc_1CF57
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D081
 		mov	_boss_sprite, 184
@@ -25647,9 +25568,7 @@ yumeko_1D085	proc near
 		jge	loc_1D117
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D1C4
 		mov	_boss_sprite, 184
@@ -25764,9 +25683,7 @@ sub_1D1C6	proc near
 		jge	short loc_1D228
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jnz	loc_1D269
 		mov	_boss_sprite, 184
@@ -26247,9 +26164,7 @@ sub_1D776	proc near
 		jge	short loc_1D7C2
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		push	70006h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 2
 		jnz	short loc_1D7DA
 		mov	_boss_sprite, 181
@@ -28083,9 +27998,7 @@ sub_1E8DA	proc near
 		mov	bp, sp
 		mov	ax, _boss_phase_frame
 		add	ax, -48
-		push	ax
-		push	60007h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (6 shl 16) or 7
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1E900
 		mov	_boss_sprite, 181
@@ -29041,9 +28954,7 @@ sub_1F13B	proc near
 		mov	bp, sp
 		mov	ax, _boss_phase_frame
 		add	ax, -64
-		push	ax
-		push	60007h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (6 shl 16) or 7
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F182
 		mov	_boss_sprite, 181
@@ -29650,9 +29561,7 @@ sub_1F6F1	proc near
 		jge	short loc_1F744
 		mov	ax, _midboss_phase_frame
 		add	ax, -16
-		push	ax
-		push	30002h
-		call	sub_16A6B
+		call	gather_add_only_3stack pascal, ax, large (3 shl 16) or 2
 		cmp	_midboss_phase_frame, 16
 		jnz	short loc_1F719
 		call	snd_se_play pascal, 8
