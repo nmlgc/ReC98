@@ -8,8 +8,8 @@
 #include "th01/ranks.h"
 #include "th02/snd/snd.h"
 #include "th03/common.h"
-#include "th03/player/score.h"
-#include "th03/chars/chars.hpp"
+#include "th03/score.h"
+#include "th03/chars.hpp"
 #include "th03/resident.hpp"
 #include "th03/formats/cfg.h"
 

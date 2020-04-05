@@ -3,9 +3,9 @@
 /// Game-specific pattern and spawn types
 /// -------------------------------------
 #if GAME == 5
-# include "th05/bullet/pattypes.h"
+# include "th05/main/bullet/pattypes.h"
 #else
-# include "th04/bullet/pattypes.h"
+# include "th04/main/bullet/pattypes.h"
 #endif
 /// -------------------------------------
 

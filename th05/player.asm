@@ -2,10 +2,10 @@
 	locals
 
 include libs/master.lib/master.inc
-include th02/playfld.inc
+include th02/main/playfld.inc
 include th04/math/motion.inc
 include th04/hardware/input.inc
-include th04/player/player.inc
+include th04/main/player/player.inc
 
 VECTOR2_AT procdesc pascal far \
 	ret:ptr Point, origin_x:word, origin_y:word, length:word, angle:byte

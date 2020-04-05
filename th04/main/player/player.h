@@ -1,4 +1,4 @@
-#include "th02/player/player.h"
+#include "th02/main/player/player.h"
 #define PLAYER_MOVE_MARGIN_LEFT 8
 #define PLAYER_MOVE_MARGIN_TOP 8
 #define PLAYER_MOVE_MARGIN_RIGHT 8

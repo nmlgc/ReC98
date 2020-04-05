@@ -10,5 +10,5 @@ extern "C" {
 #define RANDRING_INSTANCE 2
 #include "th02/math/randring.cpp"
 
-#include "th02/bullet/pellet_r.cpp"
+#include "th02/main/bullet/pellet_r.cpp"
 }

@@ -1,4 +1,4 @@
-#include "th04/player/shot.hpp"
+#include "th04/main/player/shot.hpp"
 
 // Shot types
 #define ST_NORMAL 0

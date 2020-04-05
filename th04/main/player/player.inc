@@ -1,4 +1,4 @@
-include th02/player/player.inc
+include th02/main/player/player.inc
 PLAYER_MOVE_MARGIN_LEFT = 8
 PLAYER_MOVE_MARGIN_TOP = 8
 PLAYER_MOVE_MARGIN_RIGHT = 8

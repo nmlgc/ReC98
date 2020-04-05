@@ -1,5 +1,5 @@
 GAME = 4
-include th04/player/chars.inc
+include th04/chars.inc
 include th04/mem.inc
 include th04/shared.inc
 include th04/gaiji/gaiji.inc

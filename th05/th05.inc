@@ -1,10 +1,8 @@
 GAME = 5
+include th05/chars.inc
 include th05/mem.inc
 include th04/shared.inc
 include th05/gaiji/gaiji.inc
-
-include th05/player/chars.inc
-include th05/player/shot_types.inc
 
 resident_t	struc
 	id	db 10 dup(?)

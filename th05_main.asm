@@ -23,8 +23,9 @@ BINARY = 'M'
 include ReC98.inc
 include th05/th05.inc
 include th05/sprites/main_pat.inc
-include th04/phase.inc
-include th05/bullet/pattypes.inc
+include th04/main/phase.inc
+include th05/main/bullet/pattypes.inc
+include th05/main/player/shot_types.inc
 
 	extern _execl:proc
 	extern _strlen:proc
@@ -1132,7 +1133,7 @@ loc_B630:
 		retn
 sub_B609	endp
 
-include th04/pause.asm
+include th04/main/pause.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1675,7 +1676,7 @@ loc_BBCF:
 		retn
 sub_BB9A	endp
 
-include th04/tiles_render_all.asm
+include th04/main/tiles_render_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1861,7 +1862,7 @@ loc_BDE8:
 sub_BD20	endp
 
 include th05/formats/std.asm
-include th04/tiles_invalidate_all.asm
+include th04/main/tiles_invalidate_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1940,8 +1941,8 @@ sub_BF32	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-include th04/tiles_redraw.asm
-include th04/scroll_y_1.asm
+include th04/main/tiles_redraw.asm
+include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
@@ -1964,10 +1965,10 @@ nullsub_1	proc far
 nullsub_1	endp
 		nop
 
-include th04/bullet/pellet_r.asm
-include th04/spark_render.asm
-include th04/sparks.asm
-include th04/item/splash_dot_render.asm
+include th04/main/bullet/pellet_r.asm
+include th04/main/spark_render.asm
+include th04/main/sparks.asm
+include th04/main/item/splash_dot_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3677,7 +3678,7 @@ loc_D060:
 		retn
 sub_D032	endp
 
-include th04/boss/backdrop.asm
+include th04/main/boss/backdrop.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5750,7 +5751,7 @@ playfield_fillm_0_0_384_192__2	proc near
 playfield_fillm_0_0_384_192__2	endp
 
 include th04/formats/z_super_roll_put_tiny.asm
-include th04/tiles_invalidate.asm
+include th04/main/tiles_invalidate.asm
 include th05/formats/super_roll_put_16x16_m.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5832,8 +5833,8 @@ end_extra	proc far
 		retf
 end_extra	endp
 
-include th05/player/shots_add.asm
-include th04/player/shot_velocity.asm
+include th05/main/player/shots_add.asm
+include th04/main/player/shot_velocity.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5931,7 +5932,7 @@ sub_E58C	endp
 		nop
 
 include th04/main/bullets_gather_inv.asm
-include th04/item/invalidate.asm
+include th04/main/item/invalidate.asm
 include th04/hardware/grcg_modecol.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5953,9 +5954,9 @@ sub_E708	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-include th04/playperf.asm
-include th05/select_for_playchar.asm
-include th04/select_for_rank.asm
+include th04/main/playperf.asm
+include th05/main/select_for_playchar.asm
+include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6220,7 +6221,7 @@ sub_E950	proc near
 		retn
 sub_E950	endp
 
-include th05/laser_render_hittest.asm
+include th05/main/laser_render_hittest.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6392,7 +6393,7 @@ loc_EC7A:
 		retn
 sub_EBB7	endp
 
-include th04/circles.asm
+include th04/main/circles.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7270,8 +7271,8 @@ loc_F518:
 		retn
 sub_F4DD	endp
 
-include th04/boss/explosions_small.asm
-include th04/boss/explosions_big.asm
+include th04/main/boss/explosions_small.asm
+include th04/main/boss/explosions_big.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7361,7 +7362,7 @@ loc_F71C:
 		retf	4
 GameCore	endp
 
-include th04/item/render.asm
+include th04/main/item/render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7852,7 +7853,7 @@ loc_FBF7:
 		retn
 sub_FAA3	endp
 
-include th05/lasers_update_render.asm
+include th05/main/lasers_update_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7961,7 +7962,7 @@ loc_10024:
 		retn
 curvebullets_render	endp
 
-include th04/item/splashes_render.asm
+include th04/main/item/splashes_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9641,7 +9642,7 @@ loc_10EAE:
 		retn
 midboss4_render	endp
 
-include th05/bullet/b4balls_render.asm
+include th05/main/bullet/b4balls_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9710,7 +9711,7 @@ loc_10F86:
 		retn
 sub_10F12	endp
 
-include th05/bullet/knives_render.asm
+include th05/main/bullet/knives_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9790,7 +9791,7 @@ loc_11069:
 		retn
 yumeko_fg_render	endp
 
-include th05/bullet/b6balls_render.asm
+include th05/main/bullet/b6balls_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9874,7 +9875,7 @@ loc_1117A:
 		retn
 shinki_fg_render	endp
 
-include th05/stage/s2part.asm
+include th05/main/stage/s2part.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11320,8 +11321,8 @@ loc_11DE4:
 		retn
 sub_11CBB	endp
 
-include th04/hud/popup.asm
-include th04/player/pos_update_and_clamp.asm
+include th04/main/hud/popup.asm
+include th04/main/player/pos_update_and_clamp.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11560,7 +11561,7 @@ loc_12260:
 		retn
 sub_1214A	endp
 
-include th04/player/render.asm
+include th04/main/player/render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11921,7 +11922,7 @@ loc_125F6:
 		retn
 sub_125A3	endp
 
-include th05/player/hitshot_from.asm
+include th05/main/player/hitshot_from.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12303,7 +12304,7 @@ main_03_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/scroll_y_3.asm
+include th04/main/scroll_y_3.asm
 MOTION_UPDATE_DEF 2
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13133,8 +13134,8 @@ sub_158CC	endp
 
 include th04/math/vector2_near.asm
 		nop
-include th04/sparks_add.asm
-include th05/bullet/patnum_for_angle.asm
+include th04/main/sparks_add.asm
+include th05/main/bullet/patnum_for_angle.asm
 
 GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
 GRCG_SETMODE_RMW_DEF 2
@@ -13164,7 +13165,7 @@ arg_4		= word ptr  8
 sub_15A24	endp
 
 		nop
-include th05/playperf_adjust_speed.asm
+include th05/main/playperf_adjust_speed.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14316,11 +14317,11 @@ loc_162B9:
 		retf
 sub_1607D	endp
 
-include th04/boss/explosions_reset.asm
-include th04/boss/explode_small.asm
-include th05/boss/2_explode_small.asm
-include th05/boss/explode_big.asm
-include th05/boss/2_explode_big.asm
+include th04/main/boss/explosions_reset.asm
+include th04/main/boss/explode_small.asm
+include th05/main/boss/2_explode_small.asm
+include th05/main/boss/explode_big.asm
+include th05/main/boss/2_explode_big.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15274,7 +15275,7 @@ loc_16E23:
 		retn	6
 items_add	endp
 
-include th04/item/miss_add.asm
+include th04/main/item/miss_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16009,8 +16010,8 @@ loc_174C5:
 		retn
 sub_17486	endp
 
-include th05/lasers_control.asm
-include th05/bullet/curvebullets_add.asm
+include th05/main/lasers_control.asm
+include th05/main/bullet/curvebullets_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16220,8 +16221,8 @@ loc_178A5:
 		retn
 curvebullets_update	endp
 
-include th04/item/splashes_update.asm
-include th05/bullet/update_patnum.asm
+include th04/main/item/splashes_update.asm
+include th05/main/bullet/update_patnum.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22734,7 +22735,7 @@ off_1B3BA	dw offset loc_1B2F7
 		dw offset loc_1B327
 		dw offset loc_1B32C
 
-include th05/bullet/b4balls_add.asm
+include th05/main/bullet/b4balls_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24909,7 +24910,7 @@ off_1C816	dw offset loc_1C54D
 		dw offset loc_1C75B
 		dw offset loc_1C784
 
-include th05/bullet/knives_add_update.asm
+include th05/main/bullet/knives_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26023,7 +26024,7 @@ off_1D524	dw offset loc_1D29C
 		dw offset loc_1D4BC
 		dw offset loc_1D4DD
 
-include th05/bullet/b6balls_add_update.asm
+include th05/main/bullet/b6balls_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29901,7 +29902,7 @@ sub_1F9BA	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-include th05/hud/number_put.asm
+include th05/main/hud/number_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30374,7 +30375,7 @@ aSt04_bft_0	db 'st04.bft',0
 aBss6_cd2	db 'BSS6.CD2',0
 aSt06_bft	db 'st06.bft',0
 aSt06_mpn	db 'st06.mpn',0
-include th04/pause[data].asm
+include th04/main/pause[data].asm
 aDemo0_rec	db 'DEMO0.REC',0
 aOp_1		db 'op',0
 aKaikiems	db 'KAIKIEMS',0
@@ -30621,16 +30622,16 @@ include th05/formats/bb_curvebullet[data].asm
 aMaine		db 'maine',0
 ; char aMaine_0[]
 aMaine_0	db 'maine',0
-include th04/player/shot_levels[data].asm
+include th04/main/player/shot_levels[data].asm
 include th05/formats/bb_txt_load[data].asm
-include th04/player/shot_velocity[data].asm
+include th04/main/player/shot_velocity[data].asm
 aGENSOU_SCR	db 'GENSOU.SCR',0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh, 0
 byte_221C0	db 0
 		db 0
 _enemies_gone	dw 0
 _enemies_killed	dw 0
-include th04/frames[data].asm
+include th04/main/frames[data].asm
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
 include th04/formats/dialog[data].asm
@@ -30653,7 +30654,7 @@ aSt06_16_bft	db 'st06_16.bft',0
 aBomb3_bft_0	db 'bomb3.bft',0
 aBomb0_bft_0	db 'bomb0.bft',0
 		db 0
-include th04/boss/explosions_big[data].asm
+include th04/main/boss/explosions_big[data].asm
 byte_22274	db 0
 byte_22275	db 0
 off_22276	dw offset aBOSS_FINAL_TIMEOUT
@@ -30706,18 +30707,18 @@ word_22586	dw 180h
 word_22588	dw 800h
 		db    0
 		db    0
-include th05/item/enemy_drops[data].asm
+include th05/main/item/enemy_drops[data].asm
 byte_225CC	db 0
 		db 0
-include th04/item/type_patnum[data].asm
-include th02/power_overflow[data].asm
-include th04/dream_score[data].asm
+include th04/main/item/type_patnum[data].asm
+include th02/main/power_overflow[data].asm
+include th04/main/dream_score[data].asm
 public _power_overflow_level
 _power_overflow_level	dw 0
-include th04/item/collect[data].asm
+include th04/main/item/collect[data].asm
 byte_2264E	db 0
 		db 0
-include th04/item/miss_add[data].asm
+include th04/main/item/miss_add[data].asm
 word_2268C	dw 0
 byte_2268E	db 0
 		db 0
@@ -30740,7 +30741,7 @@ word_22723	dw 6161h
 word_22725	dw 8121h
 word_22727	dw 0C1A1h
 byte_22729	db 0E1h
-include th04/hud/bar_colors[data].asm
+include th04/main/hud/bar_colors[data].asm
 word_22734	dw 202h
 word_22736	dw 202h
 word_22738	dw 202h
@@ -30881,7 +30882,7 @@ public _popup_frame
 _popup_frame	db 0
 		db 0
 include th04/formats/bb_txt[data].asm
-include th04/hud/popup[data].asm
+include th04/main/hud/popup[data].asm
 byte_228EC	db 0
 		db 0
 public _PLAYFIELD_BLANK_ROW
@@ -30936,9 +30937,9 @@ _SHOT_FUNCS label word
 	dw shot_yuuka_l9
 byte_2297E	db 0
 		db 0
-include th02/hud/score_put[data].asm
-include th03/5_powers_of_10[data].asm
-include th04/hud/gaiji_row[data].asm
+include th02/main/hud/score_put[data].asm
+include th03/main/5_powers_of_10[data].asm
+include th04/main/hud/gaiji_row[data].asm
 		db    0
 		db    0
 		db    3
@@ -30988,7 +30989,7 @@ byte_23F04	db ?
 		db ?
 word_23F06	dw ?
 include th04/formats/std[bss].asm
-include th04/tiles_invalidate[bss].asm
+include th04/main/tiles_invalidate[bss].asm
 _boss_bg_render	dw ?
 fp_23F58	dw ?
 fp_23F5A	dw ?
@@ -31015,7 +31016,7 @@ point_24490	Point <?>
 point_24494	Point <?>
 byte_24498	db ?
 		db ?
-include th04/boss/backdrop[bss].asm
+include th04/main/boss/backdrop[bss].asm
 word_2449C	dw ?
 		db 124 dup(?)
 byte_2451A	db ?
@@ -31025,8 +31026,8 @@ byte_245A8	db ?
 include th05/formats/bb_curvebullet[bss].asm
 include th05/formats/bb_load[bss].asm
 _invalidate_left_x_tile	dw ?
-include th04/sparks_add[bss].asm
-include th04/drawpoint[bss].asm
+include th04/main/sparks_add[bss].asm
+include th04/main/drawpoint[bss].asm
 include th04/formats/scoredat[bss].asm
 byte_25342	db ?
 		db ?
@@ -31043,83 +31044,83 @@ _lives	db ?
 _bombs	db ?
 include th02/hardware/pages[bss].asm
 map_seg	dw ?
-include th04/tiles[bss].asm
-include th04/frames[bss].asm
+include th04/main/tiles[bss].asm
+include th04/main/frames[bss].asm
 word_25FE6	dw ?
 byte_25FE8	db ?
 include th03/hardware/palette_changed[bss].asm
 stage_id	db ?
 _rank	db ?
-include th04/playperf[bss].asm
+include th04/main/playperf[bss].asm
 public _playchar
 _playchar	db ?
-include th04/ems[bss].asm
+include th04/main/ems[bss].asm
 _turbo_mode	db ?
 		db ?
-include th02/demo[bss].asm
+include th02/main/demo[bss].asm
 byte_25FF8	db ?
 		db ?
-include th04/bullet/template[bss].asm
-include th05/lasers[bss].asm
-include th04/midboss/vars[bss].asm
-include th04/boss/vars[bss].asm
-include th05/boss/vars2[bss].asm
-include th04/sparks[bss].asm
-include th04/bullet/bullets[bss].asm
+include th04/main/bullet/template[bss].asm
+include th05/main/lasers[bss].asm
+include th04/main/midboss/vars[bss].asm
+include th04/main/boss/vars[bss].asm
+include th05/main/boss/vars2[bss].asm
+include th04/main/sparks[bss].asm
+include th04/main/bullet/bullets[bss].asm
 		db 2048 dup(?)
 include th04/main/gather[bss].asm
-include th04/circles[bss].asm
+include th04/main/circles[bss].asm
 		db 4480 dup(?)
-include th04/item/items[bss].asm
-include th05/custom[bss].asm
-include th04/player/shots[bss].asm
+include th04/main/item/items[bss].asm
+include th05/main/custom[bss].asm
+include th04/main/player/shots[bss].asm
 		db 72 dup(?)
-include th05/player/hitshots[bss].asm
-include th04/homing_target[bss].asm
+include th05/main/player/hitshots[bss].asm
+include th04/main/homing_target[bss].asm
 public _stage_vm
 _stage_vm	dd ?
 word_2C92A	dw ?
-include th04/circles_color[bss].asm
+include th04/main/circles_color[bss].asm
 fp_2C92E	dw ?
 dword_2C930	dd ?
 word_2C934	dw ?
 word_2C936	dw ?
 word_2C938	dw ?
 		db 2 dup(?)
-include th04/boss/explosions[bss].asm
+include th04/main/boss/explosions[bss].asm
 byte_2C96C	db ?
 		db ?
-include th05/boss/sprites[bss].asm
+include th05/main/boss/sprites[bss].asm
 byte_2C974	db ?
 		db ?
 byte_2C976	db ?
 byte_2C977	db ?
-include th04/bullet_clear[bss].asm
+include th04/main/bullet/clear[bss].asm
 public _stage_graze
 _stage_graze	dw ?
 score_2C97C	dw ?
-include th04/bullet/pellet_r[bss].asm
+include th04/main/bullet/pellet_r[bss].asm
 		db 6 dup(?)
 word_2C986	dw ?
 word_2C988	dw ?
 byte_2C98A	db ?
 		db ?
-include th04/midboss/funcs[bss].asm
+include th04/main/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
-include th05/lasers_render[bss].asm
-include th05/bullet/curve[bss].asm
-include th04/item/splashes[bss].asm
+include th05/main/lasers_render[bss].asm
+include th05/main/bullet/curve[bss].asm
+include th04/main/item/splashes[bss].asm
 public _pellet_bottom_col
 _pellet_bottom_col	dw ?
 		db 360 dup(?)
 word_2CDF8	dw ?
-include th04/scroll[bss].asm
+include th04/main/scroll[bss].asm
 word_2CE02	dw ?
 word_2CE04	dw ?
 word_2CE06	dw ?
 		db 2 dup(?)
-include th04/score[bss].asm
+include th04/main/score[bss].asm
 		db 2 dup(?)
 fp_2CE24	dw ?
 word_2CE26	dw ?
@@ -31143,7 +31144,7 @@ fp_2CE48	dw ?
 fp_2CE4A	dw ?
 byte_2CE4C	db ?
 		db ?
-include th04/stage_funcs[bss].asm
+include th04/main/stage/funcs[bss].asm
 point_2CE52	Point <?>
 byte_2CE56	db ?
 		db 13 dup(?)
@@ -31154,23 +31155,23 @@ word_2CE6A	dw ?
 word_2CE6C	dw ?
 word_2CE6E	dw ?
 
-include th04/hud/popup[bss].asm
+include th04/main/hud/popup[bss].asm
 
 public _stage_title, _stage_bgm_title, _boss_bgm_title
 _stage_title    	dd ?
 _stage_bgm_title	dd ?
 _boss_bgm_title 	dd ?
 word_2CE9E	dw ?
-include th04/player/pos[bss].asm
-include th05/playchar_speed[bss].asm
-include th04/player/option[bss].asm
+include th04/main/player/pos[bss].asm
+include th05/main/player/speed[bss].asm
+include th04/main/player/option[bss].asm
 public _player_invincibility_time, _power, _shot_level, _shot_time
 _player_invincibility_time	db ?
 byte_2CEBD	db ?
 _power	db ?
 _shot_level	db ?
 _shot_time	db ?
-include th01/player_is_hit[bss].asm
+include th01/main/player_is_hit[bss].asm
 public _MISS_TIME, _dream, _MISS_EXPLOSION_RADIUS
 _miss_time	db ?
 _dream	db ?
@@ -31187,13 +31188,13 @@ word_2CED6	dw ?
 word_2CED8	dw ?
 		db 384 dup(?)
 word_2D05A	dw ?
-include th05/player/hitshot_from[bss].asm
+include th05/main/player/hitshot_from[bss].asm
 word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
-include th04/player/shots_add[bss].asm
-include th04/boss/funcs[bss].asm
-include th05/boss/b5_intervals[bss].asm
+include th04/main/player/shots_add[bss].asm
+include th04/main/boss/funcs[bss].asm
+include th05/main/boss/b5_intervals[bss].asm
 		db 5 dup(?)
 byte_2D07D	db ?
 byte_2D07E	db ?
@@ -31205,6 +31206,6 @@ byte_2D083	db ?
 byte_2D084	db ?
 byte_2D085	db ?
 include th04/formats/bb_stage[bss].asm
-include th04/boss/hitbox[bss].asm
+include th04/main/boss/hitbox[bss].asm
 
 		end

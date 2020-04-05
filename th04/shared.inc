@@ -13,7 +13,7 @@ include th04/formats/map.inc
 include th04/formats/scoredat.inc
 ; --------
 
-include th04/player/player.inc
+include th04/main/player/player.inc
 
 ; Bombs
 ; -----
@@ -32,10 +32,11 @@ STAGE_START_INVINCIBILITY_FRAMES = 64
 BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255
 ; ------
 
-include th02/hud/hud.inc
+include th02/main/playfld.inc
+include th02/main/hud/hud.inc
 include th04/hardware/grcg.inc
 include th04/hardware/input.inc
 include th04/math/randring.inc
 include th04/math/motion.inc
-include th04/hud/popup.inc
+include th04/main/hud/popup.inc
 include th04/end/end.inc

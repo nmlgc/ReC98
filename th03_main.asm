@@ -20,7 +20,7 @@
 
 include ReC98.inc
 include th03/th03.inc
-include th03/playfld.inc
+include th03/main/playfld.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
@@ -1391,7 +1391,7 @@ loc_A2C6:
 		retn	2
 sub_A289	endp
 
-include th03/playfield_fg_x.asm
+include th03/main/playfield_fg_x.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6673,7 +6673,7 @@ loc_D5AA:
 		retf
 sub_D5A2	endp
 
-include th03/player/score_add.asm
+include th03/main/player/score_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21813,7 +21813,7 @@ loc_15E45:
 		retf
 _combo_update_and_render	endp
 
-include th03/player/gauge_avail_add.asm
+include th03/main/player/gauge_avail_add.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22129,7 +22129,7 @@ loc_16129:
 		retf
 sub_1609E	endp
 
-include th03/player/hitcombo.asm
+include th03/main/player/hitcombo.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35397,7 +35397,7 @@ main_11_TEXT	ends
 		db    3
 		db 0BCh
 		db    2
-include th03/chars/speeds[data].asm
+include th03/main/chars/speeds[data].asm
 aCOul		db '–²Žž‹ó2.dat',0
 aGameft_bft	db 'GAMEFT.bft',0
 aOp		db 'op',0
@@ -35774,7 +35774,7 @@ gpYOUR_LIFE_IS_IN_PERIL_BE_CAREFUL db 8Dh, 8Eh, 8Fh, 92h, 93h, 94h, 95h
 		db 96h, 97h, 98h, 99h, 9Ah, 9Bh, 9Ch, 0
 asc_1DD5A	db '                                ',0
 		db 0
-include th03/player/combo[data].asm
+include th03/main/player/combo[data].asm
 		db 0
 		db  86h
 		db  20h
@@ -35814,9 +35814,9 @@ word_1DDAC	dw 2AB6h
 		db  32h	; 2
 		db  1Eh
 		db  32h	; 2
-include th03/player/hitcombo[data].asm
+include th03/main/player/hitcombo[data].asm
 include th03/sprites/score.asm
-include th03/5_powers_of_10[data].asm
+include th03/main/5_powers_of_10[data].asm
 		db  6Ch	; l
 		db    0
 		db  60h
@@ -36402,7 +36402,7 @@ byte_1E14C	db 0
 	.data?
 
 include th03/hardware/input_modes[bss].asm
-include th03/demo[bss].asm
+include th03/main/demo[bss].asm
 word_1E6E8	dw ?
 fp_1E6EA	dw ?
 include libs/master.lib/clip[bss].asm
@@ -36536,7 +36536,7 @@ _pid_current	db ?
 	evendata
 		db 1024 dup(?)
 word_2028A	dw ?
-include th03/player/chargeshot[bss].asm
+include th03/main/player/chargeshot[bss].asm
 p1_2029C	dd ?
 p2_202A0	dd ?
 p1_202A4	dd ?
@@ -36605,7 +36605,7 @@ word_20E86	dw ?
 byte_20E88	db ?
 byte_20E89	db ?
 		db 20 dup(?)
-include th03/player/combo[bss].asm
+include th03/main/player/combo[bss].asm
 		db 120 dup(?)
 byte_20F1E	db ?
 		db ?
@@ -36639,11 +36639,11 @@ byte_22037	db ?
 byte_2203A	db ?
 byte_2203B	db ?
 word_2203C	dw ?
-include th03/player/hitcombo[bss].asm
+include th03/main/player/hitcombo[bss].asm
 		db 100 dup(?)
 hitcombo_slot_220C2	db ?
 byte_220C3	db ?
-include th03/player/score[bss].asm
+include th03/main/player/score[bss].asm
 byte_220DC	db ?
 		db 3 dup(?)
 byte_220E0	db ?
@@ -36678,12 +36678,12 @@ byte_23AF8	db ?
 byte_23AF9	db ?
 byte_23AFA	db ?
 		db ?
-include th03/playfield_fg_x[bss].asm
+include th03/main/playfield_fg_x[bss].asm
 byte_23B00	db ?
 include th03/hardware/palette_changed[bss].asm
-include th03/frame_mod[bss].asm
-include th03/player/players[bss].asm
-include th03/shots[bss].asm
+include th03/main/frame_mod[bss].asm
+include th03/main/player/players[bss].asm
+include th03/main/player/shots[bss].asm
 byte_23DC6	db ?
 byte_23DC7	db ?
 byte_23DC8	db ?
@@ -36700,7 +36700,7 @@ score_23DEA	dw ?
 word_23DEC	dw ?
 word_23DEE	dw ?
 score_23DF0	dd ?
-include th03/player/win[bss].asm
+include th03/main/player/win[bss].asm
 byte_23DF9	db ?
 		db 64 dup(?)
 word_23E3A	dw ?

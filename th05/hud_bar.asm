@@ -2,7 +2,7 @@
 	locals
 
 include libs/master.lib/master.inc
-include th02/hud/hud.inc
+include th02/main/hud/hud.inc
 include th04/gaiji/gaiji.inc
 
 extrn _hud_gaiji_row:byte:HUD_TRAM_W

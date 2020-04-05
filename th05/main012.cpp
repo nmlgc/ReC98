@@ -18,9 +18,9 @@ void pascal near playfield_fillm_64_56_256_256(void);
 void pascal near playfield_fillm_0_0_384_192__1(void);
 void pascal near playfield_fillm_0_104_384_192(void);
 
-#include "th04/boss/reset.cpp"
+#include "th04/main/boss/reset.cpp"
 #include "th04/formats/bb_stage.c"
-#include "th05/stage/setup.cpp"
+#include "th05/main/stage/setup.cpp"
 
 // Adds the entire score delta at once to the current score.
 void pascal score_delta_commit(void)

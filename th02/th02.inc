@@ -5,7 +5,6 @@ include th02/mem.inc
 include th02/hardware/input.inc
 include th02/math/randring.inc
 include th02/gaiji/boldfont.inc
-include th02/hud/hud.inc
 include th02/score.inc
 
 kajacall	macro func, param := <0>

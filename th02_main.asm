@@ -20,6 +20,8 @@
 
 include ReC98.inc
 include th02/th02.inc
+include th02/main/playfld.inc
+include th02/main/hud/hud.inc
 include th02/sprites/main_pat.inc
 
 	extern SCOPY@:proc
@@ -726,7 +728,7 @@ sub_4090	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-include th02/spark_render.asm
+include th02/main/spark_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6650,7 +6652,7 @@ loc_DC31:
 sub_DAF0	endp
 
 include th02/gaiji/loadfree.asm
-include th02/hud/score_put.asm
+include th02/main/hud/score_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33719,7 +33721,7 @@ off_1DB7A	dd aVdvVVBbvVVVV
 off_1DB7E	dd aB@b@vVvbavtvVV
 					; "　　はい、やめます。　"
 dword_1DB82	dd 0
-include th02/demo[data].asm
+include th02/main/demo[data].asm
 aTH02_02	db '　 博麗　～Eastern Wind ',0
 aTH02_03	db '　  She',27h,'s in a temper!! ',0
 aTH02_04	db '　   End of Daylight　  ',0
@@ -33898,7 +33900,7 @@ word_1E51E	dw 0
 		db  47h	; G
 		db  57h	; W
 		db    0
-include th02/power_overflow[data].asm
+include th02/main/power_overflow[data].asm
 word_1E586	dw 0
 word_1E588	dw 0BCB0h
 word_1E58A	dw 0D4C8h
@@ -33940,7 +33942,7 @@ bombs	db 3
 		db    5
 word_1E5B6	dw 0
 dword_1E5B8	dd 9C40h
-include th02/hud/score_put[data].asm
+include th02/main/hud/score_put[data].asm
 word_1E5D8	dw 4140h
 word_1E5DA	dw 4342h
 word_1E5DC	dw 44h
@@ -34780,7 +34782,7 @@ byte_1F46E	db ?
 		db ?
 farfp_1F470	dd ?
 farfp_1F474	dd ?
-include th02/boss_funcs[bss].asm
+include th02/main/boss/funcs[bss].asm
 farfp_1F48C	dd ?
 farfp_1F490	dd ?
 farfp_1F494	dd ?
@@ -34788,7 +34790,7 @@ farfp_1F498	dd ?
 _boss_bg_render_func	dd ?
 farfp_1F4A0	dd ?
 farfp_1F4A4	dd ?
-include th02/demo[bss].asm
+include th02/main/demo[bss].asm
 byte_1F4AC	db ?
 unk_1F4AD	db    ?	;
 		db 47 dup(?)
@@ -34866,14 +34868,14 @@ word_205F4	dw ?
 point_205F6	Point <?>
 		db 8 dup(?)
 playchar_shot_func	dw ?
-include th01/player_is_hit[bss].asm
+include th01/main/player_is_hit[bss].asm
 public _PLAYER_INVINCIBILITY_TIME
 _player_invincibility_time	db ?
 byte_20606	db ?
 byte_20607	db ?
 byte_20608	db ?
 byte_20609	db ?
-include th02/playchar_speed[bss].asm
+include th02/main/player/speed[bss].asm
 byte_2060E	db ?
 byte_2060F	db ?
 byte_20610	db ?
@@ -34988,7 +34990,7 @@ word_22862	dw ?
 word_22864	dw ?
 		db 24 dup(?)
 byte_2287E	db ?
-include th02/tiles[bss].asm
+include th02/main/tiles[bss].asm
 		db 625 dup(?)
 byte_22D48	db ?
 		db ?

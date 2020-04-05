@@ -8,7 +8,7 @@ extern "C" {
 #include "platform.h"
 #include "th01/ranks.h"
 #include "th04/formats/scoredat.h"
-#include "th05/player/chars.h"
+#include "th05/chars.h"
 
 scoredat_section_t hi;
 scoredat_section_t hi2;

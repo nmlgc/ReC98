@@ -27,7 +27,6 @@ include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
 include pc98.inc
 include th01/hardware/egc.inc
-include th02/playfld.inc
 include th02/formats/pi_slots.inc
 include th03/formats/cdg.inc
 
@@ -68,15 +67,6 @@ palette_t struc
 	colors	rgb_t PALETTE_COLORS dup(<?>)
 palette_t ends
 ; ---------------------
-
-TILE_W = 16
-TILE_H = 16
-TILE_VRAM_W = (TILE_W / 8)
-TILES_Y = 1 + (PLAYFIELD_H / TILE_H) + 1
-TILES_X = (PLAYFIELD_W / TILE_W)
-
-TILE_FLAG_H = (TILE_H / 2)
-TILE_FLAGS_Y = TILES_Y * (TILE_H / TILE_FLAG_H)
 
 ; Rank definitions
 RANK_EASY = 0

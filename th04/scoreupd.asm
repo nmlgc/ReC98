@@ -2,8 +2,8 @@
 	locals
 
 include libs/master.lib/master.inc
-include th02/hud/hud.inc
-include th04/hud/popup.inc
+include th02/main/hud/hud.inc
+include th04/main/hud/popup.inc
 include th02/score.inc
 include th02/gaiji/boldfont.inc
 

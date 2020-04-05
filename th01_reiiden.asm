@@ -60999,7 +60999,7 @@ byte_34A4B	db 0
 byte_34A4C	db 0
 byte_34A4D	db 0
 byte_34A4E	db 0
-include th01/player_is_hit[bss].asm
+include th01/main/player_is_hit[bss].asm
 byte_34A50	db 0
 byte_34A51	db 0
 byte_34A52	db 0

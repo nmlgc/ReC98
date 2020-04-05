@@ -8,8 +8,8 @@ extern "C"
 #include "platform.h"
 #include "pc98.h"
 #include "th03/sprite16.hpp"
-#include "th03/playfld.hpp"
-#include "th03/shots.hpp"
+#include "th03/main/playfld.hpp"
+#include "th03/main/player/shots.hpp"
 
 void pascal near shots_update(void)
 {
