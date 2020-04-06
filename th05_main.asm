@@ -20708,7 +20708,7 @@ loc_1A1E7:
 		jz	loc_1A3B2
 		push	7
 		call	sub_17416
-		call	sub_1FB19
+		call	_boss_items_drop
 
 loc_1A1F8:
 		inc	byte_2D07D
@@ -29072,7 +29072,7 @@ arg_2		= word ptr  6
 		jnz	short loc_1F25F
 		mov	byte_226C0, 1
 		mov	_bullet_clear_trigger, 1
-		call	sub_1FB19
+		call	_boss_items_drop
 
 loc_1F25F:
 		mov	_boss_phase_timed_out, 1
@@ -30015,64 +30015,7 @@ sub_1FB07	proc near
 		retn
 sub_1FB07	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FB19	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		cmp	_power, 128
-		jnb	short loc_1FB2A
-		xor	di, di
-		jmp	short loc_1FB2D
-; ---------------------------------------------------------------------------
-
-loc_1FB2A:
-		mov	di, 1
-
-loc_1FB2D:
-		mov	ax, _boss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+var_2], ax
-		mov	ax, _boss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+var_4], ax
-		xor	si, si
-		jmp	short loc_1FB65
-; ---------------------------------------------------------------------------
-
-loc_1FB43:
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_2]
-		push	ax
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_4]
-		push	ax
-		mov	bx, di
-		imul	bx, 5
-		mov	al, [bx+si+1FD0h]
-		push	ax
-		call	items_add
-		inc	si
-
-loc_1FB65:
-		cmp	si, 5
-		jl	short loc_1FB43
-		pop	di
-		pop	si
-		leave
-		retn
-sub_1FB19	endp
-
+include th04/main/boss/end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30097,7 +30040,7 @@ arg_2		= word ptr  6
 		mov	_bullet_clear_time, 20
 
 loc_1FB91:
-		call	sub_1FB19
+		call	_boss_items_drop
 
 loc_1FB94:
 		mov	_boss_phase_timed_out, 1
@@ -30940,16 +30883,7 @@ byte_2297E	db 0
 include th02/main/hud/score_put[data].asm
 include th03/main/5_powers_of_10[data].asm
 include th04/main/hud/gaiji_row[data].asm
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
+	extern _BOSS_ITEM_DROPS:byte
 	extern _boss_phase_timed_out:byte
 
 	.data?

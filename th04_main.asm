@@ -18724,7 +18724,7 @@ loc_16723:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_16742:
 		cmp	_bullet_clear_time, 20
@@ -18767,7 +18767,7 @@ loc_16793:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_167AF:
 		cmp	_bullet_clear_time, 20
@@ -18848,7 +18848,7 @@ loc_1683E:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1685D:
 		cmp	_bullet_clear_time, 20
@@ -21133,7 +21133,7 @@ loc_17C0E:
 		jnz	loc_17CA4
 
 loc_17C21:
-		call	sub_1E692
+		call	_boss_items_drop
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_17C30
 		mov	_bullet_clear_time, 20
@@ -22441,7 +22441,7 @@ arg_0		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	sub_1E692
+		call	_boss_items_drop
 		call	boss_explode_small pascal, [bp+@@type]
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
@@ -28042,7 +28042,7 @@ loc_1B580:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1B59A:
 		pushd	1DB0h
@@ -28100,7 +28100,7 @@ loc_1B600:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1B623:
 		pushd	1518h
@@ -28234,7 +28234,7 @@ loc_1B748:
 		jg	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1B75B:
 		cmp	_boss_phase, 8
@@ -28328,7 +28328,7 @@ loc_1B80B:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1B81C:
 		push	30000h
@@ -29880,7 +29880,7 @@ loc_1C5DE:
 		jg	loc_1C67A
 
 loc_1C5F1:
-		call	sub_1E692
+		call	_boss_items_drop
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1C600
 		mov	_bullet_clear_time, 20
@@ -33505,71 +33505,7 @@ sub_1E67C	proc near
 		retn
 sub_1E67C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E692	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		cmp	_power, 123
-		ja	short loc_1E6A3
-		xor	di, di
-		jmp	short loc_1E6B2
-; ---------------------------------------------------------------------------
-
-loc_1E6A3:
-		cmp	_power, 128
-		jnb	short loc_1E6AF
-		mov	di, 1
-		jmp	short loc_1E6B2
-; ---------------------------------------------------------------------------
-
-loc_1E6AF:
-		mov	di, 2
-
-loc_1E6B2:
-		mov	ax, _boss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+var_2], ax
-		mov	ax, _boss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+var_4], ax
-		xor	si, si
-		jmp	short loc_1E6EA
-; ---------------------------------------------------------------------------
-
-loc_1E6C8:
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_2]
-		push	ax
-		push	800h
-		call	randring2_next16_mod
-		add	ax, [bp+var_4]
-		push	ax
-		mov	bx, di
-		imul	bx, 5
-		mov	al, [bx+si+23DEh]
-		push	ax
-		call	items_add
-		inc	si
-
-loc_1E6EA:
-		cmp	si, 5
-		jl	short loc_1E6C8
-		pop	di
-		pop	si
-		leave
-		retn
-sub_1E692	endp
-
+include th04/main/boss/end.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33594,7 +33530,7 @@ arg_2		= word ptr  6
 		mov	_bullet_clear_time, 20
 
 loc_1E716:
-		call	sub_1E692
+		call	_boss_items_drop
 
 loc_1E719:
 		mov	_boss_phase_timed_out, 1
@@ -38077,22 +38013,7 @@ include th04/main/item/collect[data].asm
 byte_236E0	db 0
 		db 0
 include th04/main/item/miss_add[data].asm
-		db    0
-		db    0
-		db    3
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    1
-		db    1
-		db    1
-include th04/main/boss/phase_timed_out[data].asm
+include th04/main/boss/end[data].asm
 aSt00_bmt	db 'st00.bmt',0
 aSt00bk_cdg	db 'st00bk.cdg',0
 aSt00_bb	db 'st00.bb',0
