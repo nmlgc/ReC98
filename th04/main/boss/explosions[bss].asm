@@ -1,14 +1,10 @@
 explosion_t struc
 	flag	db ?
 	age	db ?
-	; Stored in 1/16th-pixel playfield coordinates.
 	center	Point <?>
 	EXPLOSION_radius_cur	Point <?>
 	EXPLOSION_radius_delta	Point <?>
 		db ?
-	; Offset to add to the angle for the Y coordinate, turning the circle into
-	; a slanted ellipse. See https://www.desmos.com/calculator/faeefi6w1u for
-	; a plot of the effect.
 	angle_offset	db ?
 explosion_t ends
 
@@ -18,6 +14,13 @@ EXPLOSION_SMALL_W = 16
 EXPLOSION_SMALL_H = 16
 EXPLOSION_SMALL_SPRITES = 64
 EXPLOSION_BIG_SPRITES = 16
+
+; explode_type_t
+ET_NONE = -1
+ET_NW_SE = 1
+ET_SW_NE = 2
+ET_HORIZONTAL = 3
+ET_VERTICAL = 4
 
 public _explosions_small
 public _explosions_big

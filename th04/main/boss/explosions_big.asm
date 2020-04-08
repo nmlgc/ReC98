@@ -1,4 +1,3 @@
-; void pascal near explosions_big_update_and_render(void);
 public EXPLOSIONS_BIG_UPDATE_AND_RENDER
 explosions_big_update_and_render	proc near
 

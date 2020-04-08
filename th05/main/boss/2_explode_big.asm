@@ -1,4 +1,3 @@
-; void pascal near boss2_explode_big(void);
 public BOSS2_EXPLODE_BIG
 boss2_explode_big	proc near
 

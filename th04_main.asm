@@ -18775,7 +18775,7 @@ loc_167AF:
 		mov	_bullet_clear_time, 20
 
 loc_167BB:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode_change, 0
@@ -18886,7 +18886,7 @@ loc_168A8:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 288
 		jl	loc_169B8
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_168C9
 		mov	_bullet_clear_time, 20
@@ -18928,7 +18928,7 @@ loc_1691A:
 		jl	loc_169B8
 
 loc_1692E:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 1000
 		jge	short loc_16946
@@ -18948,7 +18948,7 @@ loc_16953:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_16963
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_16963:
 		cmp	_boss_phase_frame, 32
@@ -21085,7 +21085,7 @@ loc_17B98:
 		mov	_boss_mode_change, 1
 
 loc_17BA4:
-		call	boss_explode_small pascal, 3
+		call	boss_explode_small pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 
@@ -21152,7 +21152,7 @@ loc_17C44:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_17C54
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_17C54:
 		cmp	_boss_phase_frame, 32
@@ -22690,7 +22690,7 @@ loc_188BD:
 		call	sub_18556
 		cmp	_boss_phase_frame, 0
 		jnz	loc_189A1
-		call	boss_explode_small pascal, 3
+		call	boss_explode_small pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_sprite, 129
@@ -22719,7 +22719,7 @@ loc_18904:
 		jl	loc_189A1
 
 loc_18915:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 4000
 		jge	short loc_1892D
@@ -22742,7 +22742,7 @@ loc_1894A:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1895A
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1895A:
 		cmp	_boss_phase_frame, 32
@@ -24077,7 +24077,7 @@ loc_194C1:
 loc_194D2:
 		inc	_boss_phase
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		cmp	_boss_phase_frame, 600
 		jge	short loc_194FB
 		mov	_boss_mode_change, 1
@@ -24123,7 +24123,7 @@ loc_19548:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1955E
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1955E:
 		cmp	_boss_phase_frame, 32
@@ -25027,7 +25027,7 @@ loc_19DBE:
 		mov	_boss_mode_change, 0
 
 loc_19DC3:
-		call	boss_explode_small pascal, 3
+		call	boss_explode_small pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -25065,7 +25065,7 @@ loc_19E27:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_19E3D
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_19E3D:
 		cmp	_boss_phase_frame, 32
@@ -28131,7 +28131,7 @@ loc_1B652:
 		jl	loc_1B8EA
 		cmp	_boss_pos.cur.y, (80 shl 4)
 		jnz	loc_1B8EA
-		call	boss_explode_small pascal, 2
+		call	boss_explode_small pascal, ET_SW_NE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1B681
 		mov	_bullet_clear_time, 20
@@ -28356,7 +28356,7 @@ loc_1B84B:
 		jl	loc_1B8EA
 
 loc_1B85F:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 2500
 		jge	short loc_1B877
@@ -28379,7 +28379,7 @@ loc_1B894:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1B8A4
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1B8A4:
 		cmp	_boss_phase_frame, 32
@@ -29852,7 +29852,7 @@ loc_1C585:
 loc_1C591:
 		inc	_boss_phase
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 
 loc_1C5B1:
@@ -29901,7 +29901,7 @@ loc_1C61F:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1C62F
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1C62F:
 		cmp	_boss_phase_frame, 32
@@ -35445,7 +35445,7 @@ loc_1F802:
 		jl	loc_1F8A5
 
 loc_1F822:
-		call	boss_explode_small pascal, 3
+		call	boss_explode_small pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_mode_change, 0
 		cmp	_boss_phase_frame, 1000
@@ -35461,7 +35461,7 @@ loc_1F845:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1F855
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1F855:
 		cmp	_boss_phase_frame, 32
@@ -37082,7 +37082,7 @@ loc_20619:
 		jl	loc_206B6
 
 loc_2062A:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 5000
 		jge	short loc_20642
@@ -37105,7 +37105,7 @@ loc_2065F:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_2066F
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_2066F:
 		cmp	_boss_phase_frame, 32

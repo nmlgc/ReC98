@@ -20717,7 +20717,7 @@ loc_1A1F8:
 		mov	_bullet_clear_time, 20
 
 loc_1A208:
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode_change, 0
@@ -20771,7 +20771,7 @@ loc_1A284:
 		jl	loc_1A3B2
 		push	5
 		call	sub_17416
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A2D7
 		mov	_bullet_clear_time, 20
@@ -22017,7 +22017,7 @@ loc_1ACF1:
 
 loc_1AD0D:
 		call	snd_se_play pascal, 15
-		call	boss_explode_small pascal, 1
+		call	boss_explode_small pascal, ET_NW_SE
 		call	boss2_explode_small pascal, 2
 		jmp	short loc_1AD29
 ; ---------------------------------------------------------------------------
@@ -22147,7 +22147,7 @@ loc_1AE4F:
 		jnz	short loc_1AE6C
 		cmp	_boss2_mode_change, 0
 		jnz	short loc_1AE64
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		jmp	short loc_1AE69
 ; ---------------------------------------------------------------------------
 
@@ -23458,7 +23458,7 @@ loc_1BAAD:
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		call	circles_add_growing
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	fp_2CE42, offset sub_1B557
 		mov	_boss_sprite_left, 206
 		mov	_boss_sprite_right, 205
@@ -23664,7 +23664,7 @@ loc_1BCDB:
 		mov	_boss_mode_change, 1
 
 loc_1BCE7:
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		call	b4balls_reset
@@ -24655,7 +24655,7 @@ loc_1C5D8:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 1
 		mov	_boss_mode_change, 0
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		call	circles_add_growing
@@ -24871,7 +24871,7 @@ loc_1C7D7:
 		mov	_boss_mode_change, 1
 
 loc_1C7E3:
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		call	b4balls_reset
@@ -25985,7 +25985,7 @@ loc_1D4DD:
 		mov	_boss_mode_change, 1
 
 loc_1D4F4:
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
@@ -27487,7 +27487,7 @@ loc_1E4F9:
 		mov	_boss_mode_change, 1
 
 loc_1E510:
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jmp	short loc_1E527
@@ -29457,7 +29457,7 @@ loc_1F626:
 		mov	_boss_mode_change, 1
 
 loc_1F643:
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
@@ -30080,7 +30080,7 @@ n1000		= word ptr  4
 loc_1FBE1:
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1FBED
-		call	boss_explode_small pascal, 4
+		call	boss_explode_small pascal, ET_VERTICAL
 
 loc_1FBED:
 		cmp	_boss_phase_frame, 32
