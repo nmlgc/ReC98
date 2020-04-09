@@ -25848,16 +25848,16 @@ arg_2		= word ptr  6
 		mov	di, [bp+arg_0]
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1A457
-		cmp	byte_25A06, 0
+		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
 		jz	short loc_1A461
-		call	sub_1A7BC
+		call	_yuuka6_anim_vanish
 		jmp	short loc_1A461
 ; ---------------------------------------------------------------------------
 
 loc_1A457:
-		cmp	byte_25A06, 0
+		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
 		jnz	short loc_1A461
-		call	sub_1A831
+		call	_yuuka6_anim_appear
 
 loc_1A461:
 		mov	ax, _boss_phase_frame
@@ -25948,9 +25948,9 @@ sub_1A4A8	endp
 sub_1A503	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25A06, 0
+		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
 		jnz	short loc_1A512
-		call	sub_1A831
+		call	_yuuka6_anim_appear
 		jmp	short loc_1A539
 ; ---------------------------------------------------------------------------
 
@@ -25981,641 +25981,7 @@ loc_1A539:
 		retn
 sub_1A503	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A53D	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	byte_25A06, 1
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 5		; switch 5 cases
-		mov	bx, offset word_1A598
-
-loc_1A556:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A565
-		add	bx, 2
-		loop	loc_1A556
-		jmp	short loc_1A594	; default
-; ---------------------------------------------------------------------------
-
-loc_1A565:
-		jmp	word ptr cs:[bx+0Ah] ; switch jump
-
-loc_1A569:
-		mov	_boss_sprite, 128 ; jumptable 0001A565 case 1
-		jmp	short loc_1A594	; default
-; ---------------------------------------------------------------------------
-
-loc_1A570:
-		mov	_boss_sprite, 130 ; jumptable 0001A565 case 7
-		jmp	short loc_1A594	; default
-; ---------------------------------------------------------------------------
-
-loc_1A577:
-		mov	_boss_sprite, 132 ; jumptable 0001A565 case 13
-		jmp	short loc_1A594	; default
-; ---------------------------------------------------------------------------
-
-loc_1A57E:
-		mov	_boss_sprite, 134 ; jumptable 0001A565 case 19
-		jmp	short loc_1A594	; default
-; ---------------------------------------------------------------------------
-
-loc_1A585:
-		mov	word_25A0A, 0	; jumptable 0001A565 case 25
-		mov	byte_25A06, 2
-
-loc_1A590:
-		mov	al, 1		; jumptable 0001EA6B case 13291
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A594:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A53D	endp
-
-; ---------------------------------------------------------------------------
-word_1A598	dw	1,     7,   0Dh,   13h
-		dw    19h		; value	table for switch statement
-		dw offset loc_1A569	; jump table for switch	statement
-		dw offset loc_1A570
-		dw offset loc_1A577
-		dw offset loc_1A57E
-		dw offset loc_1A585
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A5AC	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	byte_25A06, 2
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 5		; switch 5 cases
-		mov	bx, offset word_1A608
-
-loc_1A5C5:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A5D4
-		add	bx, 2
-		loop	loc_1A5C5
-		jmp	short loc_1A603	; default
-; ---------------------------------------------------------------------------
-
-loc_1A5D4:
-		jmp	word ptr cs:[bx+0Ah] ; switch jump
-
-loc_1A5D8:
-		mov	_boss_sprite, 134 ; jumptable 0001A5D4 case 1
-		jmp	short loc_1A603	; default
-; ---------------------------------------------------------------------------
-
-loc_1A5DF:
-		mov	_boss_sprite, 132 ; jumptable 0001A5D4 case 7
-		jmp	short loc_1A603	; default
-; ---------------------------------------------------------------------------
-
-loc_1A5E6:
-		mov	_boss_sprite, 130 ; jumptable 0001A5D4 case 13
-		jmp	short loc_1A603	; default
-; ---------------------------------------------------------------------------
-
-loc_1A5ED:
-		mov	_boss_sprite, 128 ; jumptable 0001A5D4 case 19
-		jmp	short loc_1A603	; default
-; ---------------------------------------------------------------------------
-
-loc_1A5F4:
-		mov	word_25A0A, 0	; jumptable 0001A5D4 case 25
-		mov	byte_25A06, 1
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A603:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A5AC	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-word_1A608	dw	1,     7,   0Dh,   13h
-		dw    19h		; value	table for switch statement
-		dw offset loc_1A5D8	; jump table for switch	statement
-		dw offset loc_1A5DF
-		dw offset loc_1A5E6
-		dw offset loc_1A5ED
-		dw offset loc_1A5F4
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A61C	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 5		; switch 5 cases
-		mov	bx, offset word_1A672
-
-loc_1A630:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A63F
-		add	bx, 2
-		loop	loc_1A630
-		jmp	short loc_1A66E	; default
-; ---------------------------------------------------------------------------
-
-loc_1A63F:
-		jmp	word ptr cs:[bx+0Ah] ; switch jump
-
-loc_1A643:
-		mov	_boss_sprite, 134 ; jumptable 0001A63F case 1
-		jmp	short loc_1A66E	; default
-; ---------------------------------------------------------------------------
-
-loc_1A64A:
-		mov	_boss_sprite, 136 ; jumptable 0001A63F case 7
-		jmp	short loc_1A66E	; default
-; ---------------------------------------------------------------------------
-
-loc_1A651:
-		mov	_boss_sprite, 152 ; jumptable 0001A63F case 13
-		jmp	short loc_1A66E	; default
-; ---------------------------------------------------------------------------
-
-loc_1A658:
-		mov	_boss_sprite, 138 ; jumptable 0001A63F case 19
-		jmp	short loc_1A66E	; default
-; ---------------------------------------------------------------------------
-
-loc_1A65F:
-		mov	word_25A0A, 0	; jumptable 0001A63F case 25
-		mov	byte_25A06, 3
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A66E:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A61C	endp
-
-; ---------------------------------------------------------------------------
-word_1A672	dw	1,     7,   0Dh,   13h
-		dw    19h		; value	table for switch statement
-		dw offset loc_1A643	; jump table for switch	statement
-		dw offset loc_1A64A
-		dw offset loc_1A651
-		dw offset loc_1A658
-		dw offset loc_1A65F
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A686	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_1A6D5
-
-loc_1A69A:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A6A9
-		add	bx, 2
-		loop	loc_1A69A
-		jmp	short loc_1A6D1	; default
-; ---------------------------------------------------------------------------
-
-loc_1A6A9:
-		jmp	word ptr cs:[bx+8] ; switch jump
-
-loc_1A6AD:
-		mov	_boss_sprite, 134 ; jumptable 0001A6A9 case 1
-		jmp	short loc_1A6D1	; default
-; ---------------------------------------------------------------------------
-
-loc_1A6B4:
-		mov	_boss_sprite, 136 ; jumptable 0001A6A9 case 7
-		jmp	short loc_1A6D1	; default
-; ---------------------------------------------------------------------------
-
-loc_1A6BB:
-		mov	_boss_sprite, 150 ; jumptable 0001A6A9 case 13
-		jmp	short loc_1A6D1	; default
-; ---------------------------------------------------------------------------
-
-loc_1A6C2:
-		mov	word_25A0A, 0	; jumptable 0001A6A9 case 19
-		mov	byte_25A06, 4
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A6D1:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A686	endp
-
-; ---------------------------------------------------------------------------
-word_1A6D5	dw	1,     7,   0Dh,   13h
-					; value	table for switch statement
-		dw offset loc_1A6AD	; jump table for switch	statement
-		dw offset loc_1A6B4
-		dw offset loc_1A6BB
-		dw offset loc_1A6C2
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A6E5	proc near
-		push	bp
-		mov	bp, sp
-		inc	word_25A0A
-		mov	bx, word_25A0A
-		dec	bx
-		cmp	bx, 27h	; '''
-		ja	short loc_1A767
-		add	bx, bx
-		jmp	cs:off_1A76C[bx]
-
-loc_1A6FD:
-		mov	_boss_sprite, 150
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A704:
-		mov	_boss_sprite, 152
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A70B:
-		mov	_boss_sprite, 154
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A712:
-		mov	_boss_sprite, 156
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A719:
-		mov	_boss_sprite, 158
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A720:
-		mov	_boss_sprite, 160
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A727:
-		mov	_boss_sprite, 162
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A72E:
-		mov	_boss_sprite, 164
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A735:
-		mov	_boss_sprite, 166
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A73C:
-		mov	_boss_sprite, 168
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A743:
-		mov	_boss_sprite, 170
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A74A:
-		mov	_boss_sprite, 172
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A751:
-		mov	_boss_sprite, 134
-		jmp	short loc_1A767
-; ---------------------------------------------------------------------------
-
-loc_1A758:
-		mov	word_25A0A, 0
-		mov	byte_25A06, 2
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A767:
-		mov	al, 0
-		pop	bp
-		retn
-sub_1A6E5	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_1A76C	dw offset loc_1A6FD
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A704
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A70B
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A712
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A719
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A720
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A727
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A72E
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A735
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A73C
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A743
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A74A
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A751
-		dw offset loc_1A767
-		dw offset loc_1A767
-		dw offset loc_1A758
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A7BC	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 6		; switch 6 cases
-		mov	bx, offset word_1A819
-
-loc_1A7D0:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A7DF
-		add	bx, 2
-		loop	loc_1A7D0
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A7DF:
-		jmp	word ptr cs:[bx+0Ch] ; switch jump
-
-loc_1A7E3:
-		mov	_boss_sprite, 174 ; jumptable 0001A7DF case 1
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A7EA:
-		mov	_boss_sprite, 176 ; jumptable 0001A7DF case 8
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A7F1:
-		mov	_boss_sprite, 178 ; jumptable 0001A7DF case 15
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A7F8:
-		mov	_boss_sprite, 180 ; jumptable 0001A7DF case 22
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A7FF:
-		mov	_boss_sprite, 0	; jumptable 0001A7DF case 29
-		jmp	short loc_1A815	; default
-; ---------------------------------------------------------------------------
-
-loc_1A806:
-		mov	word_25A0A, 0	; jumptable 0001A7DF case 36
-		mov	byte_25A06, 0
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A815:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A7BC	endp
-
-; ---------------------------------------------------------------------------
-word_1A819	dw	1,     8,   0Fh,   16h
-		dw    1Dh,   24h	; value	table for switch statement
-		dw offset loc_1A7E3	; jump table for switch	statement
-		dw offset loc_1A7EA
-		dw offset loc_1A7F1
-		dw offset loc_1A7F8
-		dw offset loc_1A7FF
-		dw offset loc_1A806
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A831	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 6		; switch 6 cases
-		mov	bx, offset word_1A88F
-
-loc_1A845:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A854
-		add	bx, 2
-		loop	loc_1A845
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A854:
-		jmp	word ptr cs:[bx+0Ch] ; switch jump
-
-loc_1A858:
-		mov	_boss_sprite, 180 ; jumptable 0001A854 case 1
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A85F:
-		mov	_boss_sprite, 178 ; jumptable 0001A854 case 8
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A866:
-		mov	_boss_sprite, 176 ; '°' ; jumptable 0001A854 case 15
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A86D:
-		mov	_boss_sprite, 174 ; jumptable 0001A854 case 22
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A874:
-		mov	_boss_sprite, 128 ; jumptable 0001A854 case 29
-		jmp	short loc_1A88A	; default
-; ---------------------------------------------------------------------------
-
-loc_1A87B:
-		mov	word_25A0A, 0	; jumptable 0001A854 case 36
-					; jumptable 0001F539 case 65142
-		mov	byte_25A06, 1
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A88A:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A831	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-word_1A88F	dw	1,     8,   0Fh,   16h
-		dw    1Dh,   24h	; value	table for switch statement
-		dw offset loc_1A858	; jump table for switch	statement
-		dw offset loc_1A85F
-		dw offset loc_1A866
-		dw offset loc_1A86D
-		dw offset loc_1A874
-		dw offset loc_1A87B
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A8A7	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		inc	word_25A0A
-		mov	ax, word_25A0A
-		mov	[bp+var_2], ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_1A8F7
-
-loc_1A8BB:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_2]
-		jz	short loc_1A8CA
-		add	bx, 2
-		loop	loc_1A8BB
-		jmp	short loc_1A8F2	; default
-; ---------------------------------------------------------------------------
-
-loc_1A8CA:
-		jmp	word ptr cs:[bx+8] ; switch jump
-
-loc_1A8CE:
-		mov	_boss_sprite, 128 ; jumptable 0001A8CA case 1
-		jmp	short loc_1A8F2	; default
-; ---------------------------------------------------------------------------
-
-loc_1A8D5:
-		mov	_boss_sprite, 142 ; jumptable 0001A8CA case 7
-		jmp	short loc_1A8F2	; default
-; ---------------------------------------------------------------------------
-
-loc_1A8DC:
-		mov	_boss_sprite, 144; jumptable 0001A8CA case 13
-		jmp	short loc_1A8F2	; default
-; ---------------------------------------------------------------------------
-
-loc_1A8E3:
-		mov	word_25A0A, 0	; jumptable 0001A8CA case 19
-		mov	byte_25A06, 8
-		mov	al, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A8F2:
-		mov	al, 0		; default
-		leave
-		retn
-sub_1A8A7	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-word_1A8F7	dw	1,     7,   0Dh,   13h
-					; value	table for switch statement
-		dw offset loc_1A8CE	; jump table for switch	statement
-		dw offset loc_1A8D5
-		dw offset loc_1A8DC
-		dw offset loc_1A8E3
+include th04/main/boss/b6_anim.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26938,9 +26304,9 @@ word_1AB4D	dw    10h,   12h,   14h,   20h
 sub_1AB5D	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25A06, 1
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		jnz	short loc_1AB6A
-		call	sub_1A53D
+		call	_yuuka6_anim_parasol_back_close
 
 loc_1AB6A:
 		call	sub_1A907
@@ -27002,16 +26368,16 @@ var_1		= byte ptr -1
 		enter	2, 0
 		cmp	_boss_phase_frame, 48
 		jge	short loc_1ABFF
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	loc_1AC96
-		call	sub_1A686
+		call	_yuuka6_anim_parasol_back_pull_left
 		jmp	loc_1AC96
 ; ---------------------------------------------------------------------------
 
 loc_1ABFF:
-		cmp	byte_25A06, 4
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_LEFT
 		jnz	loc_1AC96
-		call	sub_1A6E5
+		call	_yuuka6_anim_parasol_left_spin_back
 		cmp	_boss_phase_frame, 80
 		jg	loc_1AC96
 		mov	_bullet_template.spawn_type, BST_PELLET
@@ -27094,9 +26460,9 @@ sub_1ABE5	endp
 sub_1ACCC	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	short loc_1ACD9
-		call	sub_1A5AC
+		call	_yuuka6_anim_parasol_back_open
 
 loc_1ACD9:
 		cmp	_boss_phase_frame, 48
@@ -27160,16 +26526,16 @@ sub_1AD6F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AD91
-		cmp	byte_25A06, 1
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		jnz	short loc_1AD85
-		call	sub_1A53D
+		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1ADCC
 ; ---------------------------------------------------------------------------
 
 loc_1AD85:
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	short loc_1ADCC
-		call	sub_1A61C
+		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	short loc_1ADCC
 ; ---------------------------------------------------------------------------
 
@@ -27185,14 +26551,14 @@ loc_1AD91:
 loc_1ADA6:
 		cmp	_boss_phase_frame, 288
 		jl	short loc_1ADCC
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jz	short loc_1ADBA
-		call	sub_1A6E5
+		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1ADCC
 ; ---------------------------------------------------------------------------
 
 loc_1ADBA:
-		call	sub_1A5AC
+		call	_yuuka6_anim_parasol_back_open
 		or	al, al
 		jz	short loc_1ADCC
 		mov	_boss_phase_frame, 0
@@ -27281,16 +26647,16 @@ sub_1AE8F	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AEB7
-		cmp	byte_25A06, 1
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		jnz	short loc_1AEA5
-		call	sub_1A53D
+		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AEAF
 ; ---------------------------------------------------------------------------
 
 loc_1AEA5:
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	short loc_1AEAF
-		call	sub_1A61C
+		call	_yuuka6_anim_parasol_back_pull_forward
 
 loc_1AEAF:
 		mov	_bullet_template.speed, (1 shl 4)
@@ -27334,14 +26700,14 @@ loc_1AEB7:
 loc_1AF33:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1AF59
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jz	short loc_1AF47
-		call	sub_1A6E5
+		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1AF59
 ; ---------------------------------------------------------------------------
 
 loc_1AF47:
-		call	sub_1A5AC
+		call	_yuuka6_anim_parasol_back_open
 		or	al, al
 		jz	short loc_1AF59
 		mov	_boss_phase_frame, 0
@@ -27386,16 +26752,16 @@ sub_1AFA8	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1AFD0
-		cmp	byte_25A06, 1
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		jnz	short loc_1AFBE
-		call	sub_1A53D
+		call	_yuuka6_anim_parasol_back_close
 		jmp	short loc_1AFC8
 ; ---------------------------------------------------------------------------
 
 loc_1AFBE:
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	short loc_1AFC8
-		call	sub_1A61C
+		call	_yuuka6_anim_parasol_back_pull_forward
 
 loc_1AFC8:
 		mov	byte_2D02D, 2
@@ -27453,14 +26819,14 @@ loc_1AFD0:
 loc_1B06E:
 		cmp	_boss_phase_frame, 128
 		jl	short loc_1B094
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jz	short loc_1B082
-		call	sub_1A6E5
+		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B094
 ; ---------------------------------------------------------------------------
 
 loc_1B082:
-		call	sub_1A5AC
+		call	_yuuka6_anim_parasol_back_open
 		or	al, al
 		jz	short loc_1B094
 		mov	_boss_phase_frame, 0
@@ -27482,9 +26848,9 @@ sub_1B099	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
 		jg	short loc_1B0AF
-		cmp	byte_25A06, 8
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_SHIELD
 		jz	short loc_1B125
-		call	sub_1A8A7
+		call	_yuuka6_anim_parasol_shield
 		jmp	short loc_1B125
 ; ---------------------------------------------------------------------------
 
@@ -27780,16 +27146,16 @@ sub_1B313	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1B339
-		cmp	byte_25A06, 1
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		jnz	short loc_1B32A
-		call	sub_1A53D
+		call	_yuuka6_anim_parasol_back_close
 		jmp	loc_1B3DD
 ; ---------------------------------------------------------------------------
 
 loc_1B32A:
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jnz	loc_1B3DD
-		call	sub_1A61C
+		call	_yuuka6_anim_parasol_back_pull_forward
 		jmp	loc_1B3DD
 ; ---------------------------------------------------------------------------
 
@@ -27835,14 +27201,14 @@ loc_1B391:
 loc_1B3B7:
 		cmp	_boss_phase_frame, 192
 		jl	short loc_1B3DD
-		cmp	byte_25A06, 2
+		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		jz	short loc_1B3CB
-		call	sub_1A6E5
+		call	_yuuka6_anim_parasol_left_spin_back
 		jmp	short loc_1B3DD
 ; ---------------------------------------------------------------------------
 
 loc_1B3CB:
-		call	sub_1A5AC
+		call	_yuuka6_anim_parasol_back_open
 		or	al, al
 		jz	short loc_1B3DD
 		mov	_boss_phase_frame, 0
@@ -27919,10 +27285,10 @@ loc_1B43E:
 		mov	_boss_hp, ax
 		mov	ax, [bp+arg_0]
 		mov	_boss_phase_end_hp, ax
-		mov	word_25A0A, 0
+		mov	_yuuka6_anim_frame, 0
 		mov	_boss_sprite, 128
-		mov	word_25A0A, 0
-		mov	byte_25A06, 1
+		mov	_yuuka6_anim_frame, 0
+		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		pop	bp
 		retn	4
 sub_1B42F	endp
@@ -27979,8 +27345,8 @@ loc_1B4EB:
 		mov	_boss_hp, 13300
 		mov	_boss_phase_end_hp, 10600
 		mov	_boss_phase_frame, 0
-		mov	word_25A0A, 0
-		mov	byte_25A06, 1
+		mov	_yuuka6_anim_frame, 0
+		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		push	1
 		call	randring2_next16_and
 		mov	byte_25A07, al
@@ -28111,9 +27477,9 @@ loc_1B623:
 
 loc_1B634:
 		inc	_boss_phase_frame
-		cmp	byte_25A06, 0
+		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
 		jz	short loc_1B645
-		call	sub_1A7BC
+		call	_yuuka6_anim_vanish
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -28139,7 +27505,7 @@ loc_1B652:
 loc_1B681:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	word_25A0A, 0
+		mov	_yuuka6_anim_frame, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -28152,8 +27518,8 @@ loc_1B694:
 		mov	_boss_mode_change, 0
 		mov	_boss_mode, 0FFh
 		mov	_boss_phase_frame, 0
-		mov	word_25A0A, 0
-		mov	byte_25A06, 2
+		mov	_yuuka6_anim_frame, 0
+		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		mov	byte_25A02, 0FFh
 		jmp	loc_1B8EA
@@ -28271,8 +27637,8 @@ loc_1B78E:
 		mov	_boss_mode_change, 0
 		mov	_boss_mode, 0
 		mov	_boss_phase_frame, 0
-		mov	word_25A0A, 0
-		mov	byte_25A06, 2
+		mov	_yuuka6_anim_frame, 0
+		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -38233,11 +37599,13 @@ byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?
 		db ?
-byte_25A06	db ?
+public _yuuka6_sprite_state
+_yuuka6_sprite_state	db ?
 byte_25A07	db ?
 byte_25A08	db ?
 		db ?
-word_25A0A	dw ?
+public _yuuka6_anim_frame
+_yuuka6_anim_frame	dw ?
 point_25A0C	Point <?>
 		db 11 dup(?)
 byte_25A1B	db ?
