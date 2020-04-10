@@ -4078,7 +4078,7 @@ arg_4		= word ptr  8
 		mov	dh, bl
 		mov	si, [bp+numeral]
 		shl	si, 3
-		add	si, offset NUMERALS
+		add	si, offset _sPOINTNUMS
 		mov	cx, 8
 		cmp	ax, 0
 		jnz	short loc_C9F3
@@ -33834,26 +33834,7 @@ asc_1E47E	db '                ',0
 		db    0
 		db    1
 		db    0
-NUMERALS	db    0, 38h, 44h, 82h,	82h, 82h, 44h, 38h
-		db    0,   0,	0,   6,	7Eh,   0,   0,	 0
-		db    0, 0Ch, 3Ch,   0,	  0,   6, 7Eh,	 0
-		db    6, 7Eh,	0,   6,	3Ch,   0,   3,0FFh
-		db    0, 7Eh, 5Ah, 7Eh,	42h, 42h, 7Eh,	 0
-		db    0, 7Eh,	8, 10h,	7Ch, 24h, 44h,0FFh
-		db    0, 18h, 7Eh,   0,	  0, 24h, 42h,	 0
-		db    0, 20h, 7Eh, 20h,	20h, 3Ch,   0,	 0
-		db    0,   4, 24h, 22h,	42h, 41h,   0,	 0
-		db    0, 10h, 3Eh, 24h,	26h, 4Ah, 8Eh,	 0
-		db    0,   0, 24h, 18h,	18h, 24h,   0,	 0
-		db    0, 18h, 18h,   0,0FFh,   0, 18h, 18h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
+include th02/sprites/pointnum.asm
 byte_1E500	db 4
 byte_1E501	db 0
 byte_1E502	db 0
