@@ -22429,33 +22429,7 @@ loc_18682:
 		retn
 sub_18655	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18684	proc near
-
-arg_0		= word ptr  4
-@@type		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	_boss_items_drop
-		call	boss_explode_small pascal, [bp+@@type]
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
-		mov	ax, _boss_phase_end_hp
-		mov	_boss_hp, ax
-		mov	ax, [bp+arg_0]
-		mov	_boss_phase_end_hp, ax
-		mov	byte_259EE, 0
-		pop	bp
-		retn	4
-sub_18684	endp
-
+include th04/main/boss/bx_1.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22559,7 +22533,7 @@ loc_18797:
 		mov	_boss_mode_change, 2
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.x, 0
-		mov	byte_259EE, 0
+		mov	_mugetsu_phase2_mode, 0
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -22638,13 +22612,13 @@ loc_1881A:
 
 loc_18844:
 		mov	_boss_phase_frame, 0
-		inc	byte_259EE
-		mov	al, byte_259EE
+		inc	_mugetsu_phase2_mode
+		mov	al, _mugetsu_phase2_mode
 		and	al, 7
 		mov	_boss_mode, al
 
 loc_18856:
-		cmp	byte_259EE, 20h	; ' ' ; default
+		cmp	_mugetsu_phase2_mode, 32 ; default
 		jb	short loc_1886E
 		cmp	_boss_mode, 0FFh
 		jz	short loc_1886E
@@ -22653,7 +22627,7 @@ loc_18856:
 		call	sub_18655
 
 loc_1886E:
-		cmp	byte_259EE, 24h	; '$'
+		cmp	_mugetsu_phase2_mode, 36
 		jnb	short loc_18883
 		call	sub_186B9
 		or	al, al
@@ -22667,8 +22641,7 @@ loc_18883:
 		mov	_bullet_clear_time, 20
 
 loc_1888F:
-		pushd	0
-		call	sub_18684
+		call	mugetsu_phase2_end pascal, large (0 shl 16) or 0
 		mov	point_259EA.x, (192 shl 4)
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
@@ -23786,8 +23759,7 @@ loc_1923B:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 32
 		jl	loc_195A9
-		push	0FFFF0CE4h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NONE shl 16) or 3300
 		mov	_boss_mode, 3
 		mov	_boss_angle, 192
 		call	snd_se_play pascal, 6
@@ -23876,8 +23848,7 @@ loc_19309:
 		call	sub_19FD8
 
 loc_19317:
-		push	10802h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 2050
 		mov	byte_2CFF8, 40h
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
@@ -23914,7 +23885,7 @@ loc_19353:
 		call	sub_19FD8
 
 loc_19369:
-		push	20226h
+		push	(ET_SW_NE shl 16) or 550
 		jmp	loc_1942B
 ; ---------------------------------------------------------------------------
 
@@ -24000,10 +23971,10 @@ loc_19417:
 		call	sub_19FD8
 
 loc_19425:
-		push	30000h
+		push	(ET_HORIZONTAL shl 16) or 0
 
 loc_1942B:
-		call	sub_1E6F3
+		call	boss_phase_end
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
 
@@ -24888,8 +24859,7 @@ loc_19C61:
 		call	sub_19FD8
 
 loc_19C6F:
-		push	101C2h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 450
 		mov	Palettes, 70h	; 'p'
 		mov	Palettes+2, 70h	; 'p'
 		mov	_palette_changed, 1
@@ -24927,8 +24897,7 @@ loc_19CB2:
 		call	sub_19FD8
 
 loc_19CC8:
-		push	10000h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 0
 		mov	al, _boss_sprite
 		add	al, 4
 		mov	_boss_sprite, al
@@ -27259,40 +27228,7 @@ loc_1B42B:
 		retn
 sub_1B3E2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B42F	proc near
-
-arg_0		= word ptr  4
-@@type		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	_bullet_clear_time, 20
-		jnb	short loc_1B43E
-		mov	_bullet_clear_time, 20
-
-loc_1B43E:
-		call	boss_explode_small pascal, [bp+@@type]
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
-		mov	_boss_mode, 0
-		mov	ax, _boss_phase_end_hp
-		mov	_boss_hp, ax
-		mov	ax, [bp+arg_0]
-		mov	_boss_phase_end_hp, ax
-		mov	_yuuka6_anim_frame, 0
-		mov	_boss_sprite, 128
-		mov	_yuuka6_anim_frame, 0
-		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
-		pop	bp
-		retn	4
-sub_1B42F	endp
-
+include th04/main/boss/b6.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27411,8 +27347,7 @@ loc_1B580:
 		call	_boss_items_drop
 
 loc_1B59A:
-		pushd	1DB0h
-		call	sub_1B42F
+		call	yuuka6_phase_end pascal, large (0 shl 16) or 7600
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -27469,8 +27404,7 @@ loc_1B600:
 		call	_boss_items_drop
 
 loc_1B623:
-		pushd	1518h
-		call	sub_1B42F
+		call	yuuka6_phase_end pascal, large (0 shl 16) or 5400
 		mov	byte_25A08, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -27605,15 +27539,15 @@ loc_1B748:
 loc_1B75B:
 		cmp	_boss_phase, 8
 		jnz	short loc_1B76A
-		pushd	0D48h
+		pushd	(0 shl 16) or 3400
 		jmp	short loc_1B770
 ; ---------------------------------------------------------------------------
 
 loc_1B76A:
-		pushd	4B0h
+		pushd	(0 shl 16) or 1200
 
 loc_1B770:
-		call	sub_1B42F
+		call	yuuka6_phase_end
 		cmp	_boss_phase, 9
 		jnz	short loc_1B77F
 		mov	byte_25A08, 1
@@ -27697,8 +27631,7 @@ loc_1B80B:
 		call	_boss_items_drop
 
 loc_1B81C:
-		push	30000h
-		call	sub_1B42F
+		call	yuuka6_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
 		mov	_boss_sprite, 146
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -29036,8 +28969,7 @@ loc_1C400:
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.x, 0
-		push	0FFFF0000h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NONE shl 16) or 0
 		mov	byte_25A24, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -32877,47 +32809,6 @@ include th04/main/boss/end.asm
 
 ; Attributes: bp-based frame
 
-sub_1E6F3	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_2]
-		cmp	si, 0FFFFh
-		jz	short loc_1E719
-		call	boss_explode_small pascal, si
-		cmp	_boss_phase_timed_out, 0
-		jnz	short loc_1E719
-		cmp	_bullet_clear_time, 20
-		jnb	short loc_1E716
-		mov	_bullet_clear_time, 20
-
-loc_1E716:
-		call	_boss_items_drop
-
-loc_1E719:
-		mov	_boss_phase_timed_out, 1
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
-		mov	ax, _boss_phase_end_hp
-		mov	_boss_hp, ax
-		mov	ax, [bp+arg_0]
-		mov	_boss_phase_end_hp, ax
-		pop	si
-		pop	bp
-		retn	4
-sub_1E6F3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_1E743	proc near
 		push	bp
 		mov	bp, sp
@@ -34353,8 +34244,7 @@ loc_1F421:
 		jl	loc_1F8A5
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_phase_end_hp, 9100
-		push	0FFFF1EDCh
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NONE shl 16) or 7900
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -34394,7 +34284,7 @@ loc_1F46F:
 		call	sub_19FD8
 
 loc_1F487:
-		pushd	189Ch
+		pushd	(0 shl 16) or 6300
 		jmp	loc_1F621
 ; ---------------------------------------------------------------------------
 
@@ -34516,8 +34406,7 @@ loc_1F579:
 		call	sub_19FD8
 
 loc_1F591:
-		push	11194h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 4500
 		mov	_boss_pos.velocity.x, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -34585,10 +34474,10 @@ loc_1F603:
 		call	sub_19FD8
 
 loc_1F61B:
-		push	20A8Ch
+		push	(ET_SW_NE shl 16) or 2700
 
 loc_1F621:
-		call	sub_1E6F3
+		call	boss_phase_end
 		mov	_boss_sprite, 129
 		mov	byte_2D03C, 0
 		jmp	loc_1F8A5
@@ -34687,8 +34576,7 @@ loc_1F6E9:
 		call	sub_19FD8
 
 loc_1F701:
-		push	30384h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 900
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		jmp	loc_1F8A5
@@ -34730,8 +34618,7 @@ loc_1F73A:
 		call	sub_19FD8
 
 loc_1F752:
-		push	40000h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		mov	Palettes, 3Ch	; '<'
@@ -36155,7 +36042,7 @@ loc_2039A:
 		call	sub_19FD8
 
 loc_203AF:
-		pushd	319Ch
+		pushd	(0 shl 16) or 12700
 		jmp	loc_205AA
 ; ---------------------------------------------------------------------------
 
@@ -36234,7 +36121,7 @@ loc_20441:
 		call	sub_19FD8
 
 loc_20456:
-		push	322C4h
+		push	(ET_HORIZONTAL shl 16) or 8900
 		jmp	loc_205AA
 ; ---------------------------------------------------------------------------
 
@@ -36313,7 +36200,7 @@ loc_204E8:
 		call	sub_19FD8
 
 loc_204FD:
-		push	3157Ch
+		push	(ET_HORIZONTAL shl 16) or 5500
 		jmp	loc_205AA
 ; ---------------------------------------------------------------------------
 
@@ -36392,10 +36279,10 @@ loc_2058F:
 		call	sub_19FD8
 
 loc_205A4:
-		push	30BB8h
+		push	(ET_HORIZONTAL shl 16) or 3000
 
 loc_205AA:
-		call	sub_1E6F3
+		call	boss_phase_end
 		mov	_boss_mode, 0FFh
 		mov	word_2D05A, 0C00h
 		jmp	loc_206B6
@@ -36422,8 +36309,7 @@ loc_205D4:
 		call	sub_19FD8
 
 loc_205ED:
-		push	40000h
-		call	sub_1E6F3
+		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_mode, 0FFh
 		mov	word_2D05A, 0C00h
 		mov	byte_2D02D, 10h
@@ -37590,7 +37476,8 @@ byte_259E6	db ?
 		db ?
 fp_259E8	dw ?
 point_259EA	Point <?>
-byte_259EE	db ?
+public _mugetsu_phase2_mode
+_mugetsu_phase2_mode	db ?
 byte_259EF	db ?
 byte_259F0	db ?
 byte_259F1	db ?

@@ -38,3 +38,6 @@ void pascal explosions_small_reset(void);
 /// ----------
 
 void near boss_items_drop();
+void pascal near boss_phase_end(
+	explode_type_t explode_type, int next_phase_end_hp
+);

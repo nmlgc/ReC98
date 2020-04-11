@@ -16907,7 +16907,7 @@ loc_17F31:
 
 loc_17F64:
 		mov	[si+bullet_t.flag], 2
-		cmp	byte_226C0, 0
+		cmp	_bullet_clear_drop_point_items, 0
 		jz	short loc_17F86
 		mov	ax, [bp+var_2]
 		mov	bx, 4
@@ -17837,8 +17837,7 @@ loc_18819:
 		call	sub_17416
 
 loc_18827:
-		push	101C2h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 450
 		mov	byte_2D07F, 50h	; 'P'
 		jmp	loc_188EE
 ; ---------------------------------------------------------------------------
@@ -17897,8 +17896,7 @@ loc_1889D:
 		call	sub_17416
 
 loc_188A9:
-		push	20000h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 0
 		jmp	short loc_188EE
 ; ---------------------------------------------------------------------------
 
@@ -18867,7 +18865,7 @@ loc_19132:
 		call	sub_17416
 
 loc_19140:
-		push	1076Ch
+		push	(ET_NW_SE shl 16) or 1900
 		jmp	loc_191FD
 ; ---------------------------------------------------------------------------
 
@@ -18897,8 +18895,7 @@ loc_19179:
 		call	sub_17416
 
 loc_19187:
-		push	201F4h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 500
 		mov	byte_2D084, 0
 		mov	byte_2D080, 14h
 		jmp	loc_19263
@@ -18950,10 +18947,10 @@ loc_191EB:
 		call	sub_17416
 
 loc_191F7:
-		push	10000h
+		push	(ET_NW_SE shl 16) or 0
 
 loc_191FD:
-		call	boss_end_phase_function
+		call	boss_phase_end
 		jmp	short loc_19263
 ; ---------------------------------------------------------------------------
 
@@ -23511,7 +23508,7 @@ loc_1BB6D:
 		call	sub_17416
 
 loc_1BB7B:
-		push	10C80h
+		push	(ET_NW_SE shl 16) or 3200
 		jmp	loc_1BC4E
 ; ---------------------------------------------------------------------------
 
@@ -23570,7 +23567,7 @@ loc_1BBFA:
 		call	sub_17416
 
 loc_1BC08:
-		push	204B0h
+		push	(ET_SW_NE shl 16) or 1200
 		jmp	short loc_1BC4E
 ; ---------------------------------------------------------------------------
 
@@ -23596,10 +23593,10 @@ loc_1BC2F:
 		call	sub_17416
 
 loc_1BC48:
-		push	30000h
+		push	(ET_HORIZONTAL shl 16) or 0
 
 loc_1BC4E:
-		call	boss_end_phase_function
+		call	boss_phase_end
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -24709,7 +24706,7 @@ loc_1C67C:
 		call	sub_17416
 
 loc_1C68A:
-		push	10AF0h
+		push	(ET_NW_SE shl 16) or 2800
 		jmp	loc_1C755
 ; ---------------------------------------------------------------------------
 
@@ -24746,7 +24743,7 @@ loc_1C6CF:
 loc_1C6D4:
 		cmp	si, 0Ah
 		jl	short loc_1C6CF
-		push	304B0h
+		push	(ET_HORIZONTAL shl 16) or 1200
 		jmp	short loc_1C755
 ; ---------------------------------------------------------------------------
 
@@ -24802,10 +24799,10 @@ loc_1C741:
 		call	sub_17416
 
 loc_1C74F:
-		push	10000h
+		push	(ET_NW_SE shl 16) or 0
 
 loc_1C755:
-		call	boss_end_phase_function
+		call	boss_phase_end
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -25889,12 +25886,12 @@ loc_1D3F3:
 loc_1D40A:
 		cmp	_boss_phase, 2
 		jnz	short loc_1D41A
-		pushd	1644h
+		pushd	(0 shl 16) or 5700
 		jmp	loc_1D4B7
 ; ---------------------------------------------------------------------------
 
 loc_1D41A:
-		push	30A8Ch
+		push	(ET_HORIZONTAL shl 16) or 2700
 		jmp	loc_1D4B7
 ; ---------------------------------------------------------------------------
 
@@ -25930,15 +25927,13 @@ loc_1D458:
 loc_1D472:
 		cmp	_boss_phase, 4
 		jnz	short loc_1D48A
-		push	11194h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 4500
 		mov	fp_2CE46, offset sub_1CCD3
 		jmp	short loc_1D493
 ; ---------------------------------------------------------------------------
 
 loc_1D48A:
-		push	104B0h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 1200
 
 loc_1D493:
 		mov	_boss_mode, 1
@@ -25956,10 +25951,10 @@ loc_1D49A:
 		call	sub_17416
 
 loc_1D4B1:
-		push	10000h
+		push	(ET_NW_SE shl 16) or 0
 
 loc_1D4B7:
-		call	boss_end_phase_function
+		call	boss_phase_end
 		jmp	short loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -27281,16 +27276,14 @@ loc_1E2DC:
 loc_1E2EA:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E308
-		push	147E0h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 18400
 		mov	_boss_mode, 1
 		mov	fp_2CE48, offset sub_1D7DC
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
 loc_1E308:
-		push	13908h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 14600
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
@@ -27349,15 +27342,13 @@ loc_1E38E:
 loc_1E3AB:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E3C4
-		push	22D50h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 11600
 		mov	fp_2CE4A, offset sub_1DAD2
 		jmp	loc_1E47B
 ; ---------------------------------------------------------------------------
 
 loc_1E3C4:
-		push	32198h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 8600
 		jmp	loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -27426,8 +27417,7 @@ loc_1E45A:
 loc_1E465:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E488
-		push	20AF0h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 2800
 		mov	fp_2CE4A, offset sub_1DD00
 
 loc_1E47B:
@@ -27439,8 +27429,7 @@ loc_1E481:
 ; ---------------------------------------------------------------------------
 
 loc_1E488:
-		push	30000h
-		call	boss_end_phase_function
+		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
 		mov	word_2CE06, 10h
 		call	lasers_stop_in_slot pascal, 0
 		call	lasers_stop_in_slot pascal, 1
@@ -29051,44 +29040,7 @@ loc_1F237:
 		retf
 sub_1F21A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1F23B	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_2]
-		cmp	si, 0FFFFh
-		jz	short loc_1F25F
-		call	boss_explode_small pascal, si
-		cmp	_boss_phase_timed_out, 0
-		jnz	short loc_1F25F
-		mov	byte_226C0, 1
-		mov	_bullet_clear_trigger, 1
-		call	_boss_items_drop
-
-loc_1F25F:
-		mov	_boss_phase_timed_out, 1
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
-		mov	ax, _boss_phase_end_hp
-		mov	_boss_hp, ax
-		mov	ax, [bp+arg_0]
-		mov	_boss_phase_end_hp, ax
-		pop	si
-		pop	bp
-		retn	4
-sub_1F23B	endp
-
+include th05/main/boss/bx.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29235,29 +29187,25 @@ loc_1F412:
 		jmp	cs:off_1F681[bx]
 
 loc_1F427:
-		pushd	5208h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, large (0 shl 16) or 21000
 		mov	fp_2CE66, offset sub_1EA14
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F439:
-		push	13AFCh
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_NW_SE shl 16) or 15100
 		mov	fp_2CE66, offset sub_1EC6C
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F44B:
-		push	22580h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_SW_NE shl 16) or 9600
 		mov	fp_2CE66, offset sub_1EE2F
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F45D:
-		push	30D48h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_HORIZONTAL shl 16) or 3400
 		mov	fp_2CE66, offset sub_1EFED
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
@@ -29314,29 +29262,25 @@ loc_1F4D4:
 		jmp	cs:off_1F679[bx]
 
 loc_1F4E7:
-		push	146B4h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_NW_SE shl 16) or 18100
 		mov	fp_2CE66, offset sub_1EB52
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F4F8:
-		push	23138h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_SW_NE shl 16) or 12600
 		mov	fp_2CE66, offset sub_1ECD4
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F509:
-		push	31A90h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_HORIZONTAL shl 16) or 6800
 		mov	fp_2CE66, offset sub_1EEF1
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F51A:
-		push	40000h
-		call	sub_1F23B
+		call	exalice_phase_end pascal, (ET_VERTICAL shl 16) or 0
 
 loc_1F523:
 		mov	_pellet_bottom_col, GC_RG
@@ -29461,7 +29405,7 @@ loc_1F643:
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
-		mov	byte_226C0, 0
+		mov	_bullet_clear_drop_point_items, 0
 		jmp	short loc_1F666
 ; ---------------------------------------------------------------------------
 
@@ -30016,47 +29960,6 @@ sub_1FB07	proc near
 sub_1FB07	endp
 
 include th04/main/boss/end.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-boss_end_phase_function	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_2]
-		cmp	si, 0FFFFh
-		jz	short loc_1FB94
-		call	boss_explode_small pascal, si
-		cmp	_boss_phase_timed_out, 0
-		jnz	short loc_1FB94
-		cmp	_bullet_clear_time, 20
-		jnb	short loc_1FB91
-		mov	_bullet_clear_time, 20
-
-loc_1FB91:
-		call	_boss_items_drop
-
-loc_1FB94:
-		mov	_boss_phase_timed_out, 1
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
-		mov	ax, _boss_phase_end_hp
-		mov	_boss_hp, ax
-		mov	ax, [bp+arg_0]
-		mov	_boss_phase_end_hp, ax
-		pop	si
-		pop	bp
-		retn	4
-boss_end_phase_function	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30671,7 +30574,8 @@ asc_226B6	db '  ',0
 ; char aMaine_1[]
 aMaine_1	db 'maine',0
 		db 0
-byte_226C0	db 0
+public _bullet_clear_drop_point_items
+_bullet_clear_drop_point_items	db 0
 		db 0
 byte_226C2	db 0
 		db 0

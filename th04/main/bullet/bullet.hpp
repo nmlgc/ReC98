@@ -105,6 +105,9 @@ void pascal near bullet_update_patnum(bullet_t near *bullet);
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
 int pascal near bullet_patnum_for_angle(unsigned char angle);
+
+// Turns every 4th bullet into a point item when clearing bullets.
+extern bool bullet_clear_drop_point_items;
 #endif
 
 #define BULLET_COUNT (PELLET_COUNT + BULLET16_COUNT)

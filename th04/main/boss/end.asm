@@ -70,3 +70,41 @@ _boss_items_drop	proc near
 	leave
 	retn
 _boss_items_drop	endp
+
+
+public BOSS_PHASE_END
+boss_phase_end	proc near
+
+@@next_phase_end_hp		= word ptr  4
+@@explode_type		= word ptr  6
+
+	push	bp
+	mov	bp, sp
+	push	si
+	mov	si, [bp+@@explode_type]
+	cmp	si, ET_NONE
+	jz	short @@set
+	call	boss_explode_small pascal, si
+	cmp	_boss_phase_timed_out, 0
+	jnz	short @@set
+	cmp	_bullet_clear_time, 20
+	jnb	short @@already_clearing
+	mov	_bullet_clear_time, 20
+
+@@already_clearing:
+	call	_boss_items_drop
+
+@@set:
+	mov	_boss_phase_timed_out, 1
+	inc	_boss_phase
+	mov	_boss_phase_frame, 0
+	mov	_boss_mode, 0
+	mov	_boss_mode_change, 0
+	mov	ax, _boss_phase_end_hp
+	mov	_boss_hp, ax
+	mov	ax, [bp+@@next_phase_end_hp]
+	mov	_boss_phase_end_hp, ax
+	pop	si
+	pop	bp
+	retn	4
+boss_phase_end	endp
