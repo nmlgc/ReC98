@@ -25,6 +25,7 @@ include th05/th05.inc
 
 	extern _execl:proc
 	extern _tolower:proc
+	extern __ctype:byte
 
 ; ===========================================================================
 
@@ -462,7 +463,7 @@ arg_0		= dword	ptr  4
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A77F
 		les	bx, [bp+arg_0]
 		mov	ax, word_1500C
@@ -476,7 +477,7 @@ loc_A77F:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A7A3
 		mov	al, cl
 		mov	ah, 0
@@ -492,7 +493,7 @@ loc_A7A3:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A7D3
 		mov	al, cl
 		mov	ah, 0
@@ -1166,7 +1167,7 @@ loc_AD47:
 		inc	word_14F88
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AD7A
 
 loc_AD5F:
@@ -1300,7 +1301,7 @@ loc_AEBD:
 		inc	word_14F88
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AEF0
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_AEF0
@@ -1451,7 +1452,7 @@ loc_B01D:
 		inc	word_14F88
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+1A39h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_B005
 		cmp	byte ptr [bp+var_3], 20h ; ' '
 		jz	short loc_B005

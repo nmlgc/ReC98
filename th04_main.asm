@@ -31,6 +31,7 @@ include th04/main/bullet/pattypes.inc
 	extern _memcpy:proc
 	extern _strlen:proc
 	extern _tolower:proc
+	extern __ctype:byte
 
 	.seq
 main_01 group main_01_TEXT, main_011_TEXT
@@ -3342,7 +3343,7 @@ arg_0		= dword	ptr  4
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_D114
 		les	bx, [bp+arg_0]
 		mov	ax, word_255D6
@@ -3356,7 +3357,7 @@ loc_D114:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_D138
 		mov	al, cl
 		mov	ah, 0
@@ -3372,7 +3373,7 @@ loc_D138:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_D168
 		mov	al, cl
 		mov	ah, 0
@@ -3728,7 +3729,7 @@ loc_D426:
 		inc	word ptr dword_255CC
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D45A
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_D45A
@@ -3791,7 +3792,7 @@ loc_D4C0:
 		inc	word ptr dword_255CC
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D4F4
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_D4F4
@@ -3895,7 +3896,7 @@ loc_D57A:
 		inc	word ptr dword_255CC
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D57A
 		cmp	[bp+var_1], 20h	; ' '
 		jz	short loc_D57A
@@ -3982,7 +3983,7 @@ loc_D63F:
 		inc	word ptr dword_255CC
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+2719h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_D63F
 		cmp	[bp+var_1], 20h	; ' '
 		jz	short loc_D63F

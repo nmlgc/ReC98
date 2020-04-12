@@ -26,6 +26,7 @@ include th04/th04.inc
 	extern _execl:proc
 	extern _memcpy:proc
 	extern _tolower:proc
+	extern __ctype:byte
 
 ; ===========================================================================
 
@@ -797,7 +798,7 @@ arg_0		= dword	ptr  4
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A694
 		les	bx, [bp+arg_0]
 		mov	ax, word_124C4
@@ -811,7 +812,7 @@ loc_A694:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A6B8
 		mov	al, cl
 		mov	ah, 0
@@ -827,7 +828,7 @@ loc_A6B8:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A6E8
 		mov	al, cl
 		mov	ah, 0
@@ -1431,7 +1432,7 @@ loc_ABE5:
 		inc	word_12478
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AC18
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_AC18
@@ -1577,7 +1578,7 @@ loc_AD41:
 		inc	word_12478
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AD74
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_AD74
@@ -1689,7 +1690,7 @@ loc_AE45:
 		inc	word_12478
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0B69h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AE2D
 		cmp	[bp+var_1], 20h	; ' '
 		jz	short loc_AE2D

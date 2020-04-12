@@ -1694,7 +1694,7 @@ arg_0		= dword	ptr  4
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A554
 		les	bx, [bp+arg_0]
 		mov	ax, word_105D8
@@ -1708,7 +1708,7 @@ loc_A554:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A578
 		mov	al, cl
 		mov	ah, 0
@@ -1724,7 +1724,7 @@ loc_A578:
 		mov	al, [bp+var_2]
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 2
+		test	(__ctype + 1)[bx], _IS_DIG
 		jnz	short loc_A5A8
 		mov	al, cl
 		mov	ah, 0
@@ -2269,7 +2269,7 @@ loc_AA56:
 		inc	word ptr dword_105C6
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AA8A
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_AA8A
@@ -2407,7 +2407,7 @@ loc_ABA6:
 		inc	word ptr dword_105C6
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_ABDA
 		cmp	[bp+arg_0], 20h	; ' '
 		jz	short loc_ABDA
@@ -2528,7 +2528,7 @@ loc_ACBB:
 		inc	word ptr dword_105C6
 		mov	ah, 0
 		mov	bx, ax
-		test	byte ptr [bx+0F05h], 20h
+		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_ACA3
 		cmp	[bp+var_1], 20h	; ' '
 		jz	short loc_ACA3

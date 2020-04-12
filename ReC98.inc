@@ -18,6 +18,10 @@ LDATA = @DataSize
 cPtrSize = (@CodeSize + 1) * 2
 dPtrSize = (@DataSize + 1) * 2
 
+; ctype character classes
+_IS_DIG = 02h
+_IS_CTL = 20h
+
 include libs/master.lib/func.inc
 include libs/master.lib/super.inc
 include libs/master.lib/bgm.inc

@@ -38,7 +38,6 @@ include th01/th01.inc
 	extern __lrotl:proc
 	extern __lrotr:proc
 	extern __mbcjmstojis:proc
-	extern __mbctype:byte
 	extern __turboFloat
 	extern _close:proc
 	extern _coreleft:proc

@@ -34,7 +34,6 @@ include th01/th01.inc
 	extern LXMUL@:proc
 	extern SCOPY@:proc
 	extern __mbcjmstojis:proc
-	extern __mbctype:byte
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
 	extern _access:proc
