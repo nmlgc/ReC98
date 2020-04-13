@@ -23,6 +23,7 @@ BINARY = 'M'
 include ReC98.inc
 include th04/th04.inc
 include th04/sprites/main_pat.inc
+include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/bullet/pattypes.inc
 

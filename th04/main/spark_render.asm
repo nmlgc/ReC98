@@ -23,38 +23,8 @@ public @spark_render
 	and	cx, 7	; & (SPARK_SPRITES - 1)
 	shl	cx, 4	; * SPARK_SIZE
 	add	si, cx
-	cmp	bx, RES_Y - SPARK_H
-	ja	short @@ywrap_needed
-	mov	cx, SPARK_H	; CX = # of rows copied *before* Y wrap
-	xor	bx, bx     	; BX = # of rows copied *after* Y wrap
-	jmp	short @@blit_loop
 
-@@ywrap_needed:
-	mov	cx, RES_Y
-	sub	cx, bx
-	mov	bx, SPARK_H
-	sub	bx, cx
-
-@@blit_loop:
-	lodsw
-	or	ah, ah
-	jz	short @@8px
-	mov	es:[di], ax
-	jmp	short @@next_row
-
-@@8px:
-	or	al, al
-	jz	short @@next_row
-	mov	es:[di], al
-
-@@next_row:
-	add	di, ROW_SIZE
-	loop	@@blit_loop
-	or	bx, bx
-	jz	short @@ret
-	sub	di, PLANE_SIZE
-	xchg	cx, bx
-	jmp	short @@blit_loop
+	blit_dots16_empty2opt_emptyopt_roll	<bx>, SPARK_H
 
 @@ret:
 	pop	di

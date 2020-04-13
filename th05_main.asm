@@ -23,6 +23,7 @@ BINARY = 'M'
 include ReC98.inc
 include th05/th05.inc
 include th05/sprites/main_pat.inc
+include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th05/main/bullet/pattypes.inc
 include th05/main/player/shot_types.inc
