@@ -1916,22 +1916,22 @@ loc_BDBB:
 loc_BDC6:
 		xor	cx, cx
 		mov	cl, [si]
-		call	main_01:numerals_draw
+		call	main_01:@pointnum_put
 		dec	si
 		dec	bp
 		jnz	short loc_BDC6
 		xor	cx, cx
-		call	main_01:numerals_draw
+		call	main_01:@pointnum_put
 
 loc_BDD6:
 		mov	word ptr [si+5], 28h
 		cmp	byte ptr [si+7], 0
 		jz	short loc_BDF1
 		add	word ptr [si+5], 10h
-		mov	cx, 0Ah
-		call	main_01:numerals_draw
-		mov	cx, 0Bh
-		call	main_01:numerals_draw
+		mov	cx, POINTNUM_TIMES
+		call	main_01:@pointnum_put
+		mov	cx, POINTNUM_TIMES_2
+		call	main_01:@pointnum_put
 
 loc_BDF1:
 		add	di, 2
@@ -1945,75 +1945,7 @@ loc_BDFA:
 		pop	bp
 		retn
 
-; =============== S U B	R O U T	I N E =======================================
-
-; (identical to the th05 version)
-
-numerals_draw	proc near
-		push	si
-		push	di
-		push	ax
-		push	dx
-		mov	si, dx
-		mov	bx, ax
-		sar	dx, 3
-		shl	ax, 6
-		add	dx, ax
-		shr	ax, 2
-		add	dx, ax
-		mov	di, dx
-		and	si, 7
-		mov	ax, si
-		shl	si, 4
-		add	si, offset _sPOINTNUMS
-		shl	cx, 7
-		add	si, cx
-		cmp	bx, 188h
-		ja	short loc_BE33
-		mov	cx, 8
-		xor	bx, bx
-		jmp	short loc_BE3E
-; ---------------------------------------------------------------------------
-
-loc_BE33:
-		mov	cx, 190h	; value	table for switch statement
-		sub	cx, bx
-		mov	bx, 8
-		sub	bx, cx		; jump table for switch	statement
-		nop
-
-loc_BE3E:
-		lodsw
-		or	ah, ah
-		jz	short loc_BE48
-		mov	es:[di], ax
-		jmp	short loc_BE4F
-; ---------------------------------------------------------------------------
-
-loc_BE48:
-		or	al, al
-		jz	short loc_BE4F
-		mov	es:[di], al
-
-loc_BE4F:
-		add	di, 50h	; 'P'
-		loop	loc_BE3E
-		or	bx, bx
-		jz	short loc_BE60
-		sub	di, 7D00h
-		xchg	cx, bx
-		jmp	short loc_BE3E
-; ---------------------------------------------------------------------------
-
-loc_BE60:
-		pop	dx
-		pop	ax
-		add	dx, 8
-		pop	di
-		pop	si
-		retn
-numerals_draw	endp
-
+include th04/main/pointnum/num_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

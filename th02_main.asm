@@ -3735,26 +3735,26 @@ loc_C772:
 		jmp	cs:off_C7C0[bx]
 
 loc_C78E:
-		mov	byte_20340, 0Ch
-		mov	byte_20341, 0Ch
+		mov	_pointnum_operator, POINTNUM_EMPTY
+		mov	_pointnum_operand, POINTNUM_EMPTY
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C79A:
-		mov	byte_20340, 0Ah
-		mov	byte_20341, 2
+		mov	_pointnum_operator, POINTNUM_TIMES
+		mov	_pointnum_operand, 2
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C7A6:
-		mov	byte_20340, 0Ah
-		mov	byte_20341, 4
+		mov	_pointnum_operator, POINTNUM_TIMES
+		mov	_pointnum_operand, 4
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C7B2:
-		mov	byte_20340, 0Ah
-		mov	byte_20341, 8
+		mov	_pointnum_operator, POINTNUM_TIMES
+		mov	_pointnum_operand, 8
 
 loc_C7BC:
 		pop	si
@@ -3893,10 +3893,10 @@ sub_C81D	endp
 
 sub_C88D	proc near
 
-var_2		= byte ptr -2
+@@numeral		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@top		= word ptr  6
 arg_4		= word ptr  8
 
 		push	bp
@@ -3916,14 +3916,14 @@ loc_C8A0:
 		mov	ax, [bp+arg_0]
 		xor	dx, dx
 		div	word ptr [bx+0A20h]
-		mov	[bp+var_2], al
+		mov	[bp+@@numeral], al
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bp+arg_0]
 		xor	dx, dx
 		div	word ptr [bx+0A20h]
 		mov	[bp+arg_0], dx
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@numeral], 0
 		jnz	short loc_C8CC
 		cmp	[bp+var_1], 0
 		jz	short loc_C8DC
@@ -3931,37 +3931,37 @@ loc_C8A0:
 loc_C8CC:
 		mov	[bp+var_1], 1
 		push	di
-		push	[bp+arg_2]
-		mov	al, [bp+var_2]
+		push	[bp+@@top]
+		mov	al, [bp+@@numeral]
 		cbw
 		push	ax
-		call	numerals_draw
+		call	pointnum_put
 
 loc_C8DC:
 		inc	si
-		add	di, 8
+		add	di, POINTNUM_W
 
 loc_C8E0:
 		cmp	si, 4
 		jl	short loc_C8A0
 		push	di
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		push	0
-		call	numerals_draw
-		lea	ax, [di+8]
+		call	pointnum_put
+		lea	ax, [di+(POINTNUM_W * 1)]
 		push	ax
-		push	[bp+arg_2]
-		mov	al, byte_20340
+		push	[bp+@@top]
+		mov	al, _pointnum_operator
 		mov	ah, 0
 		push	ax
-		call	numerals_draw
-		lea	ax, [di+10h]
+		call	pointnum_put
+		lea	ax, [di+(POINTNUM_W * 2)]
 		push	ax
-		push	[bp+arg_2]
-		mov	al, byte_20341
+		push	[bp+@@top]
+		mov	al, _pointnum_operand
 		mov	ah, 0
 		push	ax
-		call	numerals_draw
+		call	pointnum_put
 		pop	di
 		pop	si
 		leave
@@ -4047,80 +4047,7 @@ sub_C914	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	numerals_draw(int numeral, int,	int)
-numerals_draw	proc near
-
-numeral		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	0, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	ax, [bp+arg_4]
-		and	ax, 7
-		mov	dl, al
-		mov	bl, 8
-		sub	bl, al
-		mov	dh, bl
-		mov	si, [bp+numeral]
-		shl	si, 3
-		add	si, offset _sPOINTNUMS
-		mov	cx, 8
-		cmp	ax, 0
-		jnz	short loc_C9F3
-
-loc_C9E1:
-		movsb
-		add	di, 4Fh	; 'O'
-		cmp	di, 7D00h
-		jl	short loc_C9EF
-		sub	di, 7D00h
-
-loc_C9EF:
-		loop	loc_C9E1
-		jmp	short loc_CA16
-; ---------------------------------------------------------------------------
-
-loc_C9F3:
-		mov	al, [si]
-		mov	ah, al
-		mov	bx, cx
-		mov	cl, dl
-		shr	al, cl
-		mov	cl, dh
-		shl	ah, cl
-		mov	cx, bx
-		mov	es:[di], ax
-		add	di, 80
-		cmp	di, 7D00h
-		jl	short loc_CA13
-		sub	di, 7D00h
-
-loc_CA13:
-		inc	si
-		loop	loc_C9F3
-
-loc_CA16:
-		pop	di
-		pop	si
-		leave
-		retn	6
-numerals_draw	endp
-
+include th02/main/pointnum/num_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34816,8 +34743,7 @@ word_20272	dw ?
 word_20274	dw ?
 byte_20276	db ?
 		db 201 dup(?)
-byte_20340	db ?
-byte_20341	db ?
+include th02/main/pointnum/pointnum[bss].asm
 byte_20342	db ?
 byte_20343	db ?
 _scroll_line	dw ?

@@ -2134,12 +2134,12 @@ loc_C377:
 loc_C39C:
 		xor	ch, ch
 		mov	cl, [si]
-		call	numerals_draw
+		call	@pointnum_put
 		dec	si
 		dec	bp
 		jns	short loc_C39C
 		xor	cx, cx
-		call	numerals_draw
+		call	@pointnum_put
 		add	di, 2
 		mov	si, [di]
 		or	si, si
@@ -2154,75 +2154,7 @@ sub_C346	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; (identical to the th04 version)
-
-numerals_draw	proc near
-		push	si
-		push	di
-		push	ax
-		push	dx
-		mov	si, dx
-		mov	bx, ax
-		sar	dx, 3
-		shl	ax, 6
-		add	dx, ax
-		shr	ax, 2
-		add	dx, ax
-		mov	di, dx
-		and	si, 7
-		mov	ax, si
-		shl	si, 4
-		add	si, offset _sPOINTNUMS
-		shl	cx, 7
-		add	si, cx
-		cmp	bx, 188h
-		ja	short loc_C3EF
-		mov	cx, 8
-		xor	bx, bx
-		jmp	short loc_C3FA
-; ---------------------------------------------------------------------------
-
-loc_C3EF:
-		mov	cx, 190h
-		sub	cx, bx
-		mov	bx, 8
-		sub	bx, cx
-		nop
-
-loc_C3FA:
-		lodsw
-		or	ah, ah
-		jz	short loc_C404
-		mov	es:[di], ax
-		jmp	short loc_C40B
-; ---------------------------------------------------------------------------
-
-loc_C404:
-		or	al, al
-		jz	short loc_C40B
-		mov	es:[di], al
-
-loc_C40B:
-		add	di, 50h	; 'P'
-		loop	loc_C3FA
-		or	bx, bx
-		jz	short loc_C41C
-		sub	di, 7D00h
-		xchg	cx, bx
-		jmp	short loc_C3FA
-; ---------------------------------------------------------------------------
-
-loc_C41C:
-		pop	dx
-		pop	ax
-		add	dx, 8
-		pop	di
-		pop	si
-		retn
-numerals_draw	endp
+include th04/main/pointnum/num_put.asm
 
 ; ---------------------------------------------------------------------------
 		enter	2, 0
