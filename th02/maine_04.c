@@ -3,10 +3,10 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
-#include "th02\th02.h"
+#include "th02/th02.h"
 #include "th02/score.h"
-#include "th02\score.c"
-#include "th02\scoreenc.c"
+#include "th02/score.c"
+#include "th02/scoreenc.c"
 
 long score_highest;
 scoredat_section_t hi;
@@ -29,7 +29,7 @@ void pascal scoredat_defaults_set(void)
 	}
 }
 
-#include "th02\scorelod.c"
+#include "th02/scorelod.c"
 
 #define scoredat_init() \
 	if(!file_exist(SCOREDAT_FN)) { \

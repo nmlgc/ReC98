@@ -72,4 +72,4 @@ void pascal scoredat_recreate(void)
 	scoredat_create();
 }
 
-#include "th02\scorelod.c"
+#include "th02/scorelod.c"

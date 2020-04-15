@@ -4,7 +4,7 @@
  */
 
 #include "libs/kaja/kaja.h"
-#include "th02\th02.h"
+#include "th02/th02.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
@@ -205,7 +205,7 @@ void pascal near cmt_back_snap(void)
 	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);
 }
 
-#include "th02\music\cmt_load.c"
+#include "th02/music/cmt_load.c"
 
 void pascal near cmt_back_free(void)
 {

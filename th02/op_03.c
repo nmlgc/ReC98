@@ -3,7 +3,7 @@
  * Code segment #3 of TH02's OP.EXE
  */
 
-#include "th02\th02.h"
+#include "th02/th02.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 

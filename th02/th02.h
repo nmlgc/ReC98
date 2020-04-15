@@ -4,7 +4,7 @@
  */
 
 #include "ReC98.h"
-#include "th01\ranks.h"
+#include "th01/ranks.h"
 
 // Formats
 // -------

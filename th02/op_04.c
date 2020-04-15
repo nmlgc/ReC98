@@ -5,12 +5,12 @@
 
 #include <mbctype.h>
 #include <mbstring.h>
-#include "th02\th02.h"
+#include "th02/th02.h"
 
 char rank = RANK_NORMAL;
 int8_t rank_padding = 0;
 
-#include "th02\score.c"
+#include "th02/score.c"
 
 const unsigned char gbcRANKS[4][8] = {
 	gb_SP, gb_E_, gb_A_, gb_S_, gb_Y_, gb_SP, gb_SP, 0,
@@ -29,7 +29,7 @@ char extra_unlocked;
 int8_t extra_unlocked_padding;
 unsigned int score_duration;
 
-#include "th02\scorelod.c"
+#include "th02/scorelod.c"
 
 // Slightly differs from the same function in MAINE.EXE!
 void pascal near score_points_put(unsigned y, long points, unsigned atrb)
