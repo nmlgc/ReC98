@@ -129,7 +129,7 @@ union pellet_render_t {
 	} bottom;
 };
 
-extern int pellets_alive;
+extern int pellets_render_count;
 extern pellet_render_t pellets_render[PELLET_COUNT];
 
 // Renders the top and bottom part of all pellets, as per [pellets_render] and

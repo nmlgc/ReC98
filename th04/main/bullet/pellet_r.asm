@@ -3,7 +3,7 @@ PELLET_BOTTOM_Y = (PELLET_H - PELLET_BOTTOM_H)
 
 public _pellets_render_top
 _pellets_render_top	proc near
-	mov	ax, _pellets_alive
+	mov	ax, _pellets_render_count
 	or	ax, ax
 	jnz	short @@at_least_one_alive
 	retn
@@ -96,7 +96,7 @@ _pellets_render_bottom	proc near
 
 @@rows_after_roll equ <dx>
 
-	mov	ax, _pellets_alive
+	mov	ax, _pellets_render_count
 	or	ax, ax
 	jnz	short @@at_least_one_alive
 	retn

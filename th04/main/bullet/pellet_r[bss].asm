@@ -1,2 +1,2 @@
-public _pellets_alive
-_pellets_alive	dw ?
+public _pellets_render_count
+_pellets_render_count	dw ?

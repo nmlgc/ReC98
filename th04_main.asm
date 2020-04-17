@@ -29231,7 +29231,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_2], 0
-		mov	_pellets_alive, 0
+		mov	_pellets_render_count, 0
 		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
 		cmp	_bullet_clear_trigger, 0
 		jnz	loc_1CB44
@@ -29449,16 +29449,16 @@ loc_1CAC5:
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
 		add	ax, (PLAYFIELD_X - (PELLET_W / 2))
-		mov	bx, _pellets_alive
+		mov	bx, _pellets_render_count
 		shl	bx, 2
 		mov	_pellets_render[bx].PRT_left, ax
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_Y - (PELLET_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
-		mov	bx, _pellets_alive
+		mov	bx, _pellets_render_count
 		shl	bx, 2
 		mov	_pellets_render[bx].PRT_top, ax
-		inc	_pellets_alive
+		inc	_pellets_render_count
 
 loc_1CAF8:
 		inc	di
