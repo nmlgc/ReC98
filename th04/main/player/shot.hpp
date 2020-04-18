@@ -47,14 +47,28 @@ struct shot_t {
 	}
 };
 
+#if (GAME == 4)
+# define SHOT_COUNT 68
+#endif
+
 extern unsigned char shot_time;
-extern shot_t near shots[];
+extern shot_t near shots[SHOT_COUNT];
 
 // Points to the next free entry in [shots].
 extern shot_t near *shot_ptr;
 // Index of the last valid entry in [shots].
 extern char shot_last_id;
 
+// Only used for hit detection in TH04. TH05 also uses it in shots_render().
+struct shot_alive_t {
+	SPPoint pos;
+	shot_t near *shot;
+};
+extern unsigned int shots_alive_count;
+extern shot_alive_t shots_alive[SHOT_COUNT];
+
 // Searches and returns the next free shot slot, or NULL if there are no more
 // free ones.
 shot_t near* pascal near shots_add(void);
+// Also renders hitshots in TH05.
+void pascal near shots_render(void);

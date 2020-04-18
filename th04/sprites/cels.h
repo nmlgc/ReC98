@@ -1,5 +1,6 @@
 /// Animation frame counts
 /// ----------------------
+#define HITSHOT_CELS 4
 #define BULLET_CLOUD_CELS 4
 #define BULLET_DECAY_CELS 4
 

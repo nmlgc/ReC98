@@ -436,7 +436,7 @@ loc_AF2D:
 		call	_boss_fg_render
 		call	_midboss_render
 		call	sub_EBB7
-		call	sub_125A3
+		call	shots_render
 		call	player_render
 		call	grcg_setmode_rmw_1
 		call	_boss_custombullets_render
@@ -11149,15 +11149,15 @@ sub_123AD	endp
 sub_1240B	proc near
 
 var_5		= byte ptr -5
-var_4		= word ptr -4
+@@sa		= word ptr -4
 @@i		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	word_2D05A, 0
+		mov	_shots_alive_count, 0
 		mov	si, offset _shots
-		mov	[bp+var_4], 0C4FAh
+		mov	[bp+@@sa], offset _shots_alive
 		mov	[bp+@@i], 0
 		jmp	loc_12537
 ; ---------------------------------------------------------------------------
@@ -11287,12 +11287,12 @@ loc_12516:
 ; ---------------------------------------------------------------------------
 
 loc_1251B:
-		mov	bx, [bp+var_4]
-		mov	[bx], ax
-		mov	[bx+2],	dx
-		mov	[bx+4],	si
-		add	[bp+var_4], 6
-		inc	word_2D05A
+		mov	bx, [bp+@@sa]
+		mov	[bx+shot_alive_t.SA_pos.x], ax
+		mov	[bx+shot_alive_t.SA_pos.y], dx
+		mov	[bx+shot_alive_t.SA_shot], si
+		add	[bp+@@sa], size shot_alive_t
+		inc	_shots_alive_count
 		inc	byte ptr [si+1]
 
 loc_12531:
@@ -11365,10 +11365,10 @@ table_1259B	dw shots_update_homing
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public SHOTS_RENDER
+shots_render	proc near
 
-sub_125A3	proc near
-
-var_4		= word ptr -4
+@@shot		= word ptr -4
 @@i		= word ptr -2
 
 		enter	4, 0
@@ -11378,40 +11378,40 @@ var_4		= word ptr -4
 		mov	es, ax
 		assume es:nothing
 		call	grcg_setmode_rmw_1
-		mov	di, 0C4FAh
+		mov	di, offset _shots_alive
 		mov	[bp+@@i], 0
-		jmp	short loc_125F6
+		jmp	short @@shots_more?
 ; ---------------------------------------------------------------------------
 
-loc_125BB:
-		cmp	word ptr [di], 0C190h
-		jz	short loc_125F0
-		mov	ax, [di+4]
-		mov	[bp+var_4], ax
+@@shot_loop:
+		cmp	[di+shot_alive_t.SA_pos.x], SA_HIT
+		jz	short @@shot_next
+		mov	ax, [di+shot_alive_t.SA_shot]
+		mov	[bp+@@shot], ax
 		mov	ch, 0
-		mov	bx, [bp+var_4]
-		mov	cl, [bx+0Eh]
-		mov	al, [bx+1]
+		mov	bx, [bp+@@shot]
+		mov	cl, [bx+shot_t.patnum_base]
+		mov	al, [bx+shot_t.SHOT_age]
 		and	al, 1
 		add	al, cl
 		mov	cl, al
-		mov	ax, [di+2]
-		add	ax, (8 shl 4)
+		mov	ax, [di+shot_alive_t.SA_pos.y]
+		add	ax, ((PLAYFIELD_Y - (SHOT_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [di]
+		mov	ax, [di+shot_alive_t.SA_pos.x]
 		sar	ax, 4
-		add	ax, 24
+		add	ax, (PLAYFIELD_X - (SHOT_W / 2))
 		call	z_super_roll_put_tiny_16x16_raw pascal, cx
 
-loc_125F0:
+@@shot_next:
 		inc	[bp+@@i]
-		add	di, 6
+		add	di, size shot_alive_t
 
-loc_125F6:
+@@shots_more?:
 		mov	ax, [bp+@@i]
-		cmp	ax, word_2D05A
-		jb	short loc_125BB
+		cmp	ax, _shots_alive_count
+		jb	short @@shot_loop
 		mov	si, offset _hitshots
 		mov	[bp+@@i], 0
 		jmp	short @@hitshot_more?
@@ -11445,7 +11445,7 @@ loc_125F6:
 		pop	si
 		leave
 		retn
-sub_125A3	endp
+shots_render	endp
 
 include th05/main/player/hitshot_from.asm
 
@@ -11460,7 +11460,7 @@ var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	0Ch, 0
 		push	si
@@ -11479,23 +11479,23 @@ var_2		= word ptr -2
 		mov	[bp+var_A], ax
 		xor	si, si
 		mov	[bp+var_B], 0
-		mov	di, 0C4FAh
-		mov	[bp+var_2], 0
-		jmp	short loc_1274B
+		mov	di, offset _shots_alive
+		mov	[bp+@@i], 0
+		jmp	short @@shots_more?
 ; ---------------------------------------------------------------------------
 
-loc_126ED:
-		mov	ax, [di]
+@@shot_loop:
+		mov	ax, [di+shot_alive_t.SA_pos.x]
 		sub	ax, [bp+var_4]
 		cmp	ax, [bp+var_8]
-		ja	short loc_12745
-		mov	ax, [di+2]
+		ja	short @@shot_next
+		mov	ax, [di+shot_alive_t.SA_pos.y]
 		sub	ax, [bp+var_6]
 		cmp	ax, [bp+var_A]
-		ja	short loc_12745
+		ja	short @@shot_next
 		inc	[bp+var_B]
-		mov	bx, [di+4]
-		mov	al, [bx+10h]
+		mov	bx, [di+shot_alive_t.SA_shot]
+		mov	al, [bx+shot_t.damage]
 		mov	ah, 0
 		mov	dl, [bp+var_B]
 		mov	dh, 0
@@ -11512,20 +11512,20 @@ loc_1271E:
 		inc	byte_2D060
 		test	byte_2D060, 1
 		jz	short loc_1273B
-		call	sparks_add_random pascal, word ptr [di], word ptr [di+2], large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [di+shot_alive_t.SA_pos.x], [di+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
 
 loc_1273B:
-		call	hitshot_from pascal, word ptr [di+4]
-		mov	word ptr [di], 0C190h
+		call	hitshot_from pascal, [di+shot_alive_t.SA_shot]
+		mov	[di+shot_alive_t.SA_pos.x], SA_HIT
 
-loc_12745:
-		inc	[bp+var_2]
-		add	di, 6
+@@shot_next:
+		inc	[bp+@@i]
+		add	di, size shot_alive_t
 
-loc_1274B:
-		mov	ax, [bp+var_2]
-		cmp	ax, word_2D05A
-		jb	short loc_126ED
+@@shots_more?:
+		mov	ax, [bp+@@i]
+		cmp	ax, _shots_alive_count
+		jb	short @@shot_loop
 		cmp	byte_2429A, 0
 		jz	short loc_127BD
 		cmp	byte_2297E, 0
@@ -11648,7 +11648,7 @@ var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	0Ch, 0
 		push	si
@@ -11667,23 +11667,23 @@ var_2		= word ptr -2
 		mov	[bp+var_A], ax
 		xor	di, di
 		mov	[bp+var_B], 0
-		mov	si, 0C4FAh
-		mov	[bp+var_2], 0
-		jmp	short loc_128FA
+		mov	si, offset _shots_alive
+		mov	[bp+@@i], 0
+		jmp	short @@shots_more?
 ; ---------------------------------------------------------------------------
 
-loc_1287C:
-		mov	ax, [si]
+@@shot_loop:
+		mov	ax, [si+shot_alive_t.SA_pos.x]
 		sub	ax, [bp+var_4]
 		cmp	ax, [bp+var_8]
-		ja	short loc_128F4
-		mov	ax, [si+2]
+		ja	short @@shot_next
+		mov	ax, [si+shot_alive_t.SA_pos.y]
 		sub	ax, [bp+var_6]
 		cmp	ax, [bp+var_A]
-		ja	short loc_128F4
+		ja	short @@shot_next
 		inc	[bp+var_B]
-		mov	bx, [si+4]
-		mov	al, [bx+10h]
+		mov	bx, [si+shot_alive_t.SA_shot]
+		mov	al, [bx+shot_t.damage]
 		mov	ah, 0
 		mov	dl, [bp+var_B]
 		mov	dh, 0
@@ -11700,7 +11700,7 @@ loc_128AD:
 		inc	byte_2D060
 		test	byte_2D060, 1
 		jz	short loc_128CA
-		call	sparks_add_random pascal, word ptr [si], word ptr [si+2], large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [si+shot_alive_t.SA_pos.x], [si+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
 
 loc_128CA:
 		cmp	_rank, RANK_EASY
@@ -11709,24 +11709,24 @@ loc_128CA:
 		jnz	short loc_128EA
 
 loc_128D8:
-		mov	eax, [si]
+		mov	eax, dword ptr [si+shot_alive_t.SA_pos]
 		mov	_bullet_template.BT_origin, eax
 		call	randring1_next16
 		mov	_bullet_template.BT_angle, al
 		call	sub_15DE2
 
 loc_128EA:
-		call	hitshot_from pascal, word ptr [si+4]
-		mov	word ptr [si], 0C190h
+		call	hitshot_from pascal, [si+shot_alive_t.SA_shot]
+		mov	[si+shot_alive_t.SA_pos.x], SA_HIT
 
-loc_128F4:
-		inc	[bp+var_2]
-		add	si, 6
+@@shot_next:
+		inc	[bp+@@i]
+		add	si, size shot_alive_t
 
-loc_128FA:
-		mov	ax, [bp+var_2]
-		cmp	ax, word_2D05A
-		jb	loc_1287C
+@@shots_more?:
+		mov	ax, [bp+@@i]
+		cmp	ax, _shots_alive_count
+		jb	@@shot_loop
 		movzx	eax, di
 		add	_score_delta, eax
 		mov	ax, di
@@ -30238,8 +30238,7 @@ _playchar_shot_funcs	dw ?
 dword_2CED2	dd ?
 word_2CED6	dw ?
 word_2CED8	dw ?
-		db 384 dup(?)
-word_2D05A	dw ?
+include th04/main/player/shots_alive[bss].asm
 include th05/main/player/hitshot_from[bss].asm
 word_2D05E	dw ?
 byte_2D060	db ?
