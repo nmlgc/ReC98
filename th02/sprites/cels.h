@@ -1,0 +1,1 @@
+#define ENEMY_KILL_CELS 8

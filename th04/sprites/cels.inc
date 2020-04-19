@@ -1,3 +1,5 @@
+include th02/sprites/cels.inc
+
 HITSHOT_CELS = 4
 BULLET_CLOUD_CELS = 4
 BULLET_DECAY_CELS = 4

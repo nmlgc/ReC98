@@ -1,5 +1,7 @@
 /// Animation frame counts
 /// ----------------------
+#include "th02/sprites/cels.h"
+
 #define HITSHOT_CELS 4
 #define BULLET_CLOUD_CELS 4
 #define BULLET_DECAY_CELS 4

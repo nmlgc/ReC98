@@ -1,4 +1,8 @@
 ; item_type_t
+if GAME eq 5
+	IT_NONE = -2
+endif
+IT_ENEMY_DROP_NEXT = -1
 IT_POWER = 0
 IT_POINT = 1
 IT_DREAM = 2
