@@ -5467,74 +5467,7 @@ loc_E511:
 sub_E4FC	endp
 
 include th05/formats/bb_txt_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E58C	proc near
-		push	si
-		push	di
-		push	ds
-		mov	bx, dx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		shl	cx, 7
-		mov	si, cx
-		mov	ax, _bb_txt_seg
-		mov	ds, ax
-		cmp	bx, 170h
-		ja	short loc_E5CB
-		mov	cx, 20h	; ' '
-		nop
-
-loc_E5B4:
-		lodsd
-		or	eax, eax
-		jz	short loc_E5C4
-		stosd
-		add	di, 4Ch	; 'L'
-		loop	loc_E5B4
-		jmp	short loc_E5E9
-; ---------------------------------------------------------------------------
-
-loc_E5C4:
-		add	di, 50h	; 'P'
-		loop	loc_E5B4
-		jmp	short loc_E5E9
-; ---------------------------------------------------------------------------
-
-loc_E5CB:
-		mov	ax, 20h	; ' '
-		mov	cx, 190h
-		sub	cx, bx
-		sub	ax, cx
-
-loc_E5D5:
-		movsd
-		add	di, 4Ch	; 'L'
-		loop	loc_E5D5
-		sub	di, 7D00h
-		mov	cx, ax
-
-loc_E5E2:
-		movsd
-		add	di, 4Ch	; 'L'
-		loop	loc_E5E2
-
-loc_E5E9:
-		pop	ds
-		pop	di
-		pop	si
-		retn
-sub_E58C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+include th04/formats/bb_txt_put.asm
 include th04/main/bullets_gather_inv.asm
 include th04/main/item/invalidate.asm
 include th04/hardware/grcg_modecol.asm
@@ -10370,7 +10303,7 @@ loc_11A49:
 		mov	cx, ax
 		mov	dx, [bp+@@y]
 		mov	ax, si
-		call	sub_E58C
+		call	@bb_txt_put_8_raw
 		add	si, 10h
 
 loc_11A5B:

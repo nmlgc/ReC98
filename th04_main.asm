@@ -2051,73 +2051,7 @@ sub_C01A	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C09A	proc near
-		push	si
-		push	di
-		push	ds
-		mov	bx, dx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		shl	cx, 7
-		mov	si, cx
-		mov	ax, _bb_txt_seg
-		mov	ds, ax
-		cmp	bx, 170h
-		ja	short loc_C0D9
-		mov	cx, 20h	; ' '
-		nop
-
-loc_C0C2:
-		lodsd
-		or	eax, eax
-		jz	short loc_C0D2
-		stosd
-		add	di, 4Ch	; 'L'
-		loop	loc_C0C2
-		jmp	short loc_C0F7
-; ---------------------------------------------------------------------------
-
-loc_C0D2:
-		add	di, 50h	; 'P'
-		loop	loc_C0C2
-		jmp	short loc_C0F7
-; ---------------------------------------------------------------------------
-
-loc_C0D9:
-		mov	ax, 20h	; ' '
-		mov	cx, 190h
-		sub	cx, bx
-		sub	ax, cx
-
-loc_C0E3:
-		movsd
-		add	di, 4Ch	; 'L'
-		loop	loc_C0E3
-		sub	di, 7D00h
-		mov	cx, ax
-
-loc_C0F0:
-		movsd
-		add	di, 4Ch	; 'L'
-		loop	loc_C0F0
-
-loc_C0F7:
-		pop	ds
-		pop	di
-		pop	si
-		retn
-sub_C09A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/bb_txt_put.asm
 include th04/main/item/invalidate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10267,7 +10201,7 @@ loc_10ED1:
 		mov	cx, ax
 		mov	dx, [bp+@@y]
 		mov	ax, si
-		call	main_01:sub_C09A
+		call	main_01:@bb_txt_put_8_raw
 		add	si, 10h
 
 loc_10EE3:

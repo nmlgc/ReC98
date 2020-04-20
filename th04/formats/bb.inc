@@ -1,1 +1,5 @@
 BB_SIZE = 2048
+
+BB_TXT_W = 32
+BB_TXT_H = 32
+BB_TXT_VRAM_W = (BB_TXT_W / 8)
