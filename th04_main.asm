@@ -711,7 +711,7 @@ loc_AF4A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	main_01:sub_12024
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		call	main_01:sub_B1D0
 		nopcall	main_01:hud_put
 		call	main_01:sub_B616
@@ -877,7 +877,7 @@ loc_B156:
 		call	palette_black_out
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	main_01:sub_10D77
+		call	main_01:_playfield_tram_black
 		call	main_01:tiles_render_all
 		mov	_page_back, 1
 		mov	_page_front, 0
@@ -3677,7 +3677,7 @@ loc_D6DC:
 ; ---------------------------------------------------------------------------
 
 loc_D6E4:
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		pop	di
 		pop	si
 		leave
@@ -3693,7 +3693,7 @@ sub_D6EB	proc far
 		push	bp
 		mov	bp, sp
 		call	main_01:sub_D729
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
@@ -5337,7 +5337,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 24h	; '$'
 		jb	short loc_E47B
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E4CD
@@ -5413,7 +5413,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 0
 		jnz	short loc_E4EB
-		call	main_01:sub_10D77
+		call	main_01:_playfield_tram_black
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E53D
@@ -5545,7 +5545,7 @@ loc_E5EF:
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
 		call	input_wait_for_change pascal, 0
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		call	main_01:sub_E67A
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -5576,7 +5576,7 @@ loc_E63F:
 ; ---------------------------------------------------------------------------
 
 loc_E64F:
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		jmp	short loc_E675
 ; ---------------------------------------------------------------------------
 
@@ -9930,80 +9930,8 @@ loc_10BFA:
 sub_10ABF	endp
 
 include th04/main/player/render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10D4B	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 1
-		jmp	short loc_10D6E
-; ---------------------------------------------------------------------------
-
-loc_10D55:
-		mov	di, 4
-		jmp	short loc_10D68
-; ---------------------------------------------------------------------------
-
-loc_10D5A:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
-		inc	di
-
-loc_10D68:
-		cmp	di, 52
-		jl	short loc_10D5A
-		inc	si
-
-loc_10D6E:
-		cmp	si, 24
-		jl	short loc_10D55
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_10D4B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10D77	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 1
-		jmp	short loc_10D9A
-; ---------------------------------------------------------------------------
-
-loc_10D81:
-		mov	di, 4
-		jmp	short loc_10D94
-; ---------------------------------------------------------------------------
-
-loc_10D86:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		inc	di
-
-loc_10D94:
-		cmp	di, 52
-		jl	short loc_10D86
-		inc	si
-
-loc_10D9A:
-		cmp	si, 24
-		jl	short loc_10D81
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_10D77	endp
-
+playfield_tram_loop_func	_playfield_tram_wipe, near, <TX_WHITE>
+playfield_tram_loop_func	_playfield_tram_black, near, <TX_BLACK + TX_REVERSE>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10018,7 +9946,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 48h	; 'H'
 		jb	short loc_10DE5
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_10DC6
@@ -10104,7 +10032,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 0
 		jnz	short loc_10E51
-		call	main_01:sub_10D77
+		call	main_01:_playfield_tram_black
 		mov	_overlay_text_fp, offset nullfunc_near
 		jmp	short loc_10EA1
 ; ---------------------------------------------------------------------------
@@ -10257,7 +10185,7 @@ sub_10F36	proc near
 		jb	loc_10FED
 		cmp	_popup_byte_unknown, 0C0h
 		jnz	short loc_10F53
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		mov	byte_22EF6, 0
 		jmp	short loc_10F5E
 ; ---------------------------------------------------------------------------
@@ -10490,7 +10418,7 @@ sub_11195	proc near
 		jb	short loc_11211
 		cmp	byte_22EA3, 0C0h
 		jnz	short loc_111B0
-		call	main_01:sub_10D4B
+		call	main_01:_playfield_tram_wipe
 		mov	byte_22EF6, 0
 		jmp	short loc_111BB
 ; ---------------------------------------------------------------------------

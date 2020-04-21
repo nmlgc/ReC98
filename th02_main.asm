@@ -2124,7 +2124,7 @@ var_C		= byte ptr -0Ch
 		call	graph_clear
 		graph_showpage 0
 		call	hud_put
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		call	_pi_slot_palette_apply stdcall, 0
 		call	_pi_slot_palette_apply stdcall, 0
 		call	_pi_slot_put stdcall, 96, large 144
@@ -3396,9 +3396,9 @@ loc_C3FB:
 loc_C400:
 		cmp	_key_det, 0
 		jz	short loc_C3FB
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		call	sub_1C9FE
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 3
 		jnb	loc_C4F5
@@ -3504,7 +3504,7 @@ loc_C516:
 		mov	power_overflow_level, 10
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		mov	ax, di
 		pop	di
 		pop	si
@@ -8208,7 +8208,7 @@ loc_EB5D:
 		inc	byte_21A55
 		cmp	byte_21A55, 12h
 		jb	short loc_EB7C
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		mov	word_218B6, 84h
 
 loc_EB7C:
@@ -9434,43 +9434,7 @@ loc_FBDF:
 		retn	0Ah
 sub_FB42	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FBE9	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, 1
-		jmp	short loc_FC0C
-; ---------------------------------------------------------------------------
-
-loc_FBF3:
-		mov	di, 4
-		jmp	short loc_FC06
-; ---------------------------------------------------------------------------
-
-loc_FBF8:
-		call	text_putca pascal, di, si, (' ' shl 16) + TX_WHITE
-		inc	di
-
-loc_FC06:
-		cmp	di, 52
-		jl	short loc_FBF8
-		inc	si
-
-loc_FC0C:
-		cmp	si, 24
-		jl	short loc_FBF3
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_FBE9	endp
-
+playfield_tram_loop_func	_playfield_tram_wipe, far, <TX_WHITE>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9531,7 +9495,7 @@ var_4		= dword	ptr -4
 		push	offset gBONUS
 		mov	cx, 6
 		call	SCOPY@
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
@@ -9693,7 +9657,7 @@ var_4		= dword	ptr -4
 		push	offset gBONUS_0
 		mov	cx, 6
 		call	SCOPY@
-		call	sub_FBE9
+		call	_playfield_tram_wipe
 		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
@@ -15551,13 +15515,13 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, 32
-		nopcall	sub_FBE9
+		nopcall	_playfield_tram_wipe
 		call	sub_DE4E
 		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		nopcall	sub_FBE9
+		nopcall	_playfield_tram_wipe
 		mov	si, 320
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -15627,7 +15591,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, 20h	; ' '
-		nopcall	sub_FBE9
+		nopcall	_playfield_tram_wipe
 		mov	si, 320
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -16431,7 +16395,7 @@ sub_13414	endp
 sub_13439	proc near
 		push	bp
 		mov	bp, sp
-		nopcall	sub_FBE9
+		nopcall	_playfield_tram_wipe
 		kajacall	KAJA_SONG_STOP
 		pop	cx
 		push	69h ; 'i'

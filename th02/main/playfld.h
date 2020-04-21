@@ -13,5 +13,13 @@
 #define PLAYFIELD_VRAM_RIGHT (PLAYFIELD_RIGHT / 8)
 
 #define PLAYFIELD_TRAM_X (PLAYFIELD_X / 8)
+#define PLAYFIELD_TRAM_Y (PLAYFIELD_Y / 16)
 #define PLAYFIELD_TRAM_W (PLAYFIELD_W / 8)
 #define PLAYFIELD_TRAM_RIGHT (PLAYFIELD_RIGHT / 8)
+#define PLAYFIELD_TRAM_BOTTOM (PLAYFIELD_BOTTOM / 16)
+
+#if (GAME == 2)
+	// Fills the playfield's area on the text RAM with transparency.
+	// (Future games use a near function.)
+	void far playfield_tram_wipe(void);
+#endif

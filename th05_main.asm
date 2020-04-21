@@ -798,7 +798,7 @@ loc_B2DD:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	sub_CFEE
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		call	sub_B55A
 		nopcall	hud_put
 		call	sub_BA66
@@ -1008,7 +1008,7 @@ loc_B4BB:
 		call	palette_black_out
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	sub_118F3
+		call	_playfield_tram_black
 		call	tiles_render_all
 		mov	_page_back, 1
 		mov	_page_front, 0
@@ -6423,7 +6423,7 @@ loc_F2AB:
 ; ---------------------------------------------------------------------------
 
 loc_F2AE:
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		pop	si
 		leave
 		retn
@@ -6472,7 +6472,7 @@ loc_F318:
 
 loc_F333:
 		call	cdg_free pascal, 0
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
@@ -6895,7 +6895,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_2C99C, 24h	; '$'
 		jb	short loc_F8B0
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F902
@@ -6971,7 +6971,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_2C99C, 0
 		jnz	short loc_F920
-		call	sub_118F3
+		call	_playfield_tram_black
 		mov	_overlay_text_fp, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F972
@@ -7098,7 +7098,7 @@ loc_FA18:
 		jl	short loc_F9EB
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds offset gGAMEOVER, TX_WHITE
 		call	input_wait_for_change pascal, 0
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		call	sub_FAA3
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -7129,7 +7129,7 @@ loc_FA68:
 ; ---------------------------------------------------------------------------
 
 loc_FA78:
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		jmp	short loc_FA9E
 ; ---------------------------------------------------------------------------
 
@@ -10051,56 +10051,8 @@ loc_118CD:
 		retn
 midboss5_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_118D1	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 1
-		jmp	short loc_118EB
-; ---------------------------------------------------------------------------
-
-loc_118DA:
-		call	text_putsa pascal, 4, si, _PLAYFIELD_BLANK_ROW, TX_WHITE
-		inc	si
-
-loc_118EB:
-		cmp	si, 24
-		jl	short loc_118DA
-		pop	si
-		pop	bp
-		retn
-sub_118D1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_118F3	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 1
-		jmp	short loc_1190C
-; ---------------------------------------------------------------------------
-
-loc_118FC:
-		call	text_putsa pascal, 4, si, _PLAYFIELD_BLANK_ROW, TX_BLACK + TX_REVERSE
-		inc	si
-
-loc_1190C:
-		cmp	si, 24
-		jl	short loc_118FC
-		pop	si
-		pop	bp
-		retn
-sub_118F3	endp
-
+playfield_tram_loop_func	_playfield_tram_wipe, near, <TX_WHITE>
+playfield_tram_loop_func	_playfield_tram_black, near, <TX_BLACK + TX_REVERSE>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10115,7 +10067,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_2288A, 48h	; 'H'
 		jb	short loc_1195D
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		les	bx, _resident
 		assume es:nothing
 		cmp	es:[bx+resident_t.demo_num], 0
@@ -10206,7 +10158,7 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_2288A, 0
 		jnz	short loc_119C9
-		call	sub_118F3
+		call	_playfield_tram_black
 		mov	_overlay_text_fp, offset nullfunc_near
 		jmp	short loc_11A19
 ; ---------------------------------------------------------------------------
@@ -10359,7 +10311,7 @@ sub_11AAE	proc near
 		jb	loc_11B65
 		cmp	_popup_byte_unknown, 0C0h
 		jnz	short loc_11ACB
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		mov	byte_228EC, 0
 		jmp	short loc_11AD6
 ; ---------------------------------------------------------------------------
@@ -10553,7 +10505,7 @@ sub_11CBB	proc near
 		jb	short loc_11D37
 		cmp	byte_2288B, 0C0h
 		jnz	short loc_11CD6
-		call	sub_118D1
+		call	_playfield_tram_wipe
 		mov	byte_228EC, 0
 		jmp	short loc_11CE1
 ; ---------------------------------------------------------------------------
