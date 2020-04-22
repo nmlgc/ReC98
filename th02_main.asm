@@ -1910,11 +1910,11 @@ loc_B202:
 loc_B213:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		mov	al, stage_title_halflen
+		mov	al, _stage_title_halflen
 		mov	ah, 0
 		mov	dx, 1Ch
 		sub	dx, ax
-		call	text_putsa pascal, dx, 13, ds, stage_title_str, TX_WHITE
+		call	text_putsa pascal, dx, 13, ds, _stage_title, TX_WHITE
 		jmp	short loc_B249
 ; ---------------------------------------------------------------------------
 
@@ -2156,7 +2156,7 @@ var_C		= byte ptr -0Ch
 		mov	bgm_show_timer, 1
 		mov	al, stage_id
 		add	al, al
-		mov	bgm_title_id, al
+		mov	_bgm_title_id, al
 		mov	al, stage_id
 		add	al, al
 		inc	al
@@ -2197,13 +2197,13 @@ loc_B4D7:
 		cbw
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, STAGE_TITLE[bx]
-		mov	stage_title_str, ax
+		mov	ax, _STAGE_TITLES[bx]
+		mov	_stage_title, ax
 		mov	al, stage_id
 		cbw
 		mov	bx, ax
-		mov	al, STAGE_TITLE_HALFLENGTHS[bx]
-		mov	stage_title_halflen, al
+		mov	al, _STAGE_TITLE_HALFLENGTHS[bx]
+		mov	_stage_title_halflen, al
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -3080,7 +3080,7 @@ loc_C015:
 		mov	byte_20343, 0FFh
 		mov	bgm_show_timer, 1
 		mov	al, byte_1F46E
-		mov	bgm_title_id, al
+		mov	_bgm_title_id, al
 
 loc_C05B:
 		pop	bp
@@ -3126,11 +3126,11 @@ bgm_show	proc near
 		call	gaiji_putca pascal, (24 shl 16) + 23, (0D8h shl 16) + TX_YELLOW
 		push	(26 shl 16) + 23
 		push	ds
-		mov	al, bgm_title_id
+		mov	al, _bgm_title_id
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr BGM_TITLE[bx]
+		push	word ptr _BGM_TITLES[bx]
 		push	TX_WHITE
 		call	text_putsa
 
@@ -33571,7 +33571,9 @@ gStage1		db 0BCh, 0BDh, 0AAh, 0B0h, 0AEh, 0A1h, 0, 0
 		db 0, 0, 0, 0, 0, 0, 0, 0
 gEXTRA_STAGE	db 0AEh, 0C1h, 0BDh, 0BBh, 0AAh, 0CFh, 0CFh, 0BCh, 0BDh
 		db	0AAh, 0B0h, 0AEh, 0, 0, 0, 0
-BGM_TITLE		dw offset aTH02_02
+public _BGM_TITLES, _STAGE_TITLES, _STAGE_TITLE_HALFLENGTHS
+_BGM_TITLES	label word
+		dw offset aTH02_02
 		dw offset aTH02_03
 		dw offset aTH02_04
 		dw offset aTH02_05
@@ -33583,13 +33585,15 @@ BGM_TITLE		dw offset aTH02_02
 		dw offset aTH02_11
 		dw offset aTH02_12
 		dw offset aTH02_13
-STAGE_TITLE		dw offset aSTAGE1_TITLE
+_STAGE_TITLES	label word
+		dw offset aSTAGE1_TITLE
 		dw offset aSTAGE2_TITLE
 		dw offset aSTAGE3_TITLE
 		dw offset aSTAGE4_TITLE
 		dw offset aSTAGE5_TITLE
 		dw offset aEXTRA_TITLE
-STAGE_TITLE_HALFLENGTHS		db  0Ah
+_STAGE_TITLE_HALFLENGTHS	label byte
+		db  0Ah
 		db  0Dh
 		db  0Bh
 		db  0Ch
@@ -34645,11 +34649,12 @@ aBoss3_m	db 'boss3.m',0
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 byte_1F466	db ?
 stage1_gaiji_halflen	db ?
-stage_title_halflen	db ?
-		db ?
-stage_title_str	dw ?
+public _stage_title, _stage_title_halflen, _bgm_title_id
+_stage_title_halflen	db ?
+	evendata
+_stage_title	dw ?
 bgm_show_timer	db ?
-bgm_title_id	db ?
+_bgm_title_id	db ?
 byte_1F46E	db ?
 		db ?
 farfp_1F470	dd ?

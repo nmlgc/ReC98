@@ -10225,19 +10225,19 @@ loc_10F99:
 loc_10FA1:
 		call	main_01:sub_10EA5
 		mov	ax, 30h	; '0'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	1680h
-		push	bgm_title_len
+		push	_stage_bgm_title_len
 		call	main_01:sub_10EA5
-		mov	ax, stage_title_len
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10245,7 +10245,7 @@ loc_10FA1:
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	stage_title_len
+		push	_stage_title_len
 		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_1118F
@@ -10257,7 +10257,7 @@ loc_10FED:
 		mov	byte_22EF6, 10h
 		mov	al, stage_id
 		inc	al
-		mov	stage_title_id, al
+		mov	_stage_title_id, al
 		mov	al, stage_id
 		add	al, al
 		inc	al
@@ -10266,26 +10266,22 @@ loc_10FED:
 		jnz	short loc_11023
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_11023
-		mov	stage_title_id, 0
+		mov	_stage_title_id, 0
 		mov	_bgm_title_id, 0
 
 loc_11023:
-		mov	al, stage_title_id
+		mov	al, _stage_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	STAGE_TITLE[bx]
-		call	_strlen
-		add	sp, 4
-		mov	stage_title_len, ax
+		call	_strlen c, large _STAGE_TITLES[bx]
+		mov	_stage_title_len, ax
 		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	BGM_TITLE[bx]
-		call	_strlen
-		add	sp, 4
-		mov	bgm_title_len, ax
+		call	_strlen c, large _BGM_TITLES[bx]
+		mov	_stage_bgm_title_len, ax
 
 loc_11057:
 		cmp	byte_22EF6, 10h
@@ -10320,7 +10316,7 @@ loc_11097:
 loc_110A1:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		mov	ax, stage_title_len
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10328,25 +10324,25 @@ loc_110A1:
 		sub	dx, ax
 		push	dx
 		push	13
-		mov	al, stage_title_id
+		mov	al, _stage_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	STAGE_TITLE[bx]
+		pushd	_STAGE_TITLES[bx]
 		push	TX_WHITE
 		call	text_putsa
 		mov	ax, 30h	; '0'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	23
 		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	BGM_TITLE[bx]
+		pushd	_BGM_TITLES[bx]
 		push	TX_WHITE
 		call	text_putsa
 
@@ -10368,19 +10364,19 @@ loc_11120:
 loc_11128:
 		call	main_01:sub_10EA5
 		mov	ax, 30h	; '0'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, bgm_title_len
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	1680h
-		push	bgm_title_len
+		push	_stage_bgm_title_len
 		call	main_01:sub_10EA5
-		mov	ax, stage_title_len
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10388,7 +10384,7 @@ loc_11128:
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	stage_title_len
+		push	_stage_title_len
 		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		test	_popup_byte_unknown, 3
@@ -10444,17 +10440,17 @@ loc_111D8:
 		mov	ah, GC_G
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_259C6
+		push	_boss_bgm_title_len
 		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_112D2
@@ -10468,10 +10464,8 @@ loc_11211:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	BGM_TITLE[bx]
-		call	_strlen
-		add	sp, 4
-		mov	word_259C6, ax
+		call	_strlen c, large _BGM_TITLES[bx]
+		mov	_boss_bgm_title_len, ax
 
 loc_11237:
 		cmp	byte_22EF6, 10h
@@ -10479,17 +10473,17 @@ loc_11237:
 		cmp	byte_22EF6, 16h
 		jnz	short loc_1127E
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	23
 		mov	al, _bgm_title_id
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		pushd	BGM_TITLE[bx]
+		pushd	_BGM_TITLES[bx]
 		push	TX_WHITE
 		call	text_putsa
 
@@ -10498,17 +10492,17 @@ loc_1127E:
 		mov	ah, GC_G
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
 		call	main_01:grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_259C6
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_259C6
+		push	_boss_bgm_title_len
 		call	main_01:sub_10EA5
 		GRCG_OFF_CLOBBERING dx
 		test	byte_22EA3, 3
@@ -36380,7 +36374,9 @@ byte_22EF6	db 0
 		db 0
 public _PLAYFIELD_BLANK_ROW
 _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
-STAGE_TITLE		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
+public _STAGE_TITLES, _BGM_TITLES
+_STAGE_TITLES	label dword
+		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
 		dd aMCsb@bPhantomN	; "å∂ñÈÅ@Å` Phantom Night"
 		dd aMKib@bLakeOfBl	; "åÕäâÅ@Å` Lake of Blood"
 		dd aCChb@bDarkness	; "ñªóHÅ@Å` Darkness "
@@ -36388,7 +36384,8 @@ STAGE_TITLE		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
 		dd aMSzb@bPhantasm	; "å∂ëzÅ@Å` Phantasmagoria "
 		dd aTMvb@bRaspberr	; "í«åÇÅ@Å` Raspberry Trap "
 		dd aVVVcvVvmnvRViv	; "Ç∑ÇŒÇÁÇµÇ¢åNÇ…ê√Ç©Ç»ù˜ÇËÇÅ@Å` Puckish "...
-BGM_TITLE		dd aWitchingDream	; "Witching Dream"
+_BGM_TITLES		label dword
+		dd aWitchingDream	; "Witching Dream"
 		dd aSeleneSLight	; "Selene's light"
 		dd aSxp			; "ëïè¸êÌÅ@Å` Decoration Battle"
 		dd aBreakTheSabbat	; "Break the Sabbath"
@@ -36716,11 +36713,6 @@ _miss_explosion_angle	db ?
 public _MISS_EXPLOSION_RADIUS
 _miss_explosion_radius	dw ?
 		db 4 dup(?)
-stage_title_len	dw ?
-bgm_title_len	dw ?
-stage_title_id	db ?
-		db ?
-word_259C6	dw ?
 include th04/main/hud/popup[bss].asm
 byte_259E6	db ?
 		db ?

@@ -10351,19 +10351,19 @@ loc_11B11:
 loc_11B19:
 		call	sub_11A1D
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_2CE6C
+		push	_stage_bgm_title_len
 		call	sub_11A1D
-		mov	ax, word_2CE6A
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10371,7 +10371,7 @@ loc_11B19:
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	word_2CE6A
+		push	_stage_title_len
 		call	sub_11A1D
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_11CB5
@@ -10381,14 +10381,10 @@ loc_11B65:
 		cmp	_popup_byte_unknown, 0
 		jnz	short loc_11B91
 		mov	byte_228EC, 10h
-		pushd	[_stage_title]
-		call	_strlen
-		add	sp, 4
-		mov	word_2CE6A, ax
-		pushd	[_stage_bgm_title]
-		call	_strlen
-		add	sp, 4
-		mov	word_2CE6C, ax
+		call	_strlen c, large [_stage_title]
+		mov	_stage_title_len, ax
+		call	_strlen c, large [_stage_bgm_title]
+		mov	_stage_bgm_title_len, ax
 
 loc_11B91:
 		cmp	byte_228EC, 10h
@@ -10423,7 +10419,7 @@ loc_11BD1:
 loc_11BDB:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		mov	ax, word_2CE6A
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10431,10 +10427,10 @@ loc_11BDB:
 		sub	dx, ax
 		call	text_putsa pascal, dx, 13, _stage_title, TX_WHITE
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		call	text_putsa pascal, ax, 23, _stage_bgm_title, TX_WHITE
 
 loc_11C2D:
@@ -10455,19 +10451,19 @@ loc_11C46:
 loc_11C4E:
 		call	sub_11A1D
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6C
+		sub	ax, _stage_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_2CE6C
+		push	_stage_bgm_title_len
 		call	sub_11A1D
-		mov	ax, word_2CE6A
+		mov	ax, _stage_title_len
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -10475,7 +10471,7 @@ loc_11C4E:
 		sub	dx, ax
 		push	dx
 		push	0C80h
-		push	word_2CE6A
+		push	_stage_title_len
 		call	sub_11A1D
 		GRCG_OFF_CLOBBERING dx
 		test	_popup_byte_unknown, 3
@@ -10531,17 +10527,17 @@ loc_11CFE:
 		mov	ah, GC_G
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_2CE6E
+		push	_boss_bgm_title_len
 		call	sub_11A1D
 		GRCG_OFF_CLOBBERING dx
 		jmp	loc_11DE4
@@ -10551,10 +10547,8 @@ loc_11D37:
 		cmp	byte_2288B, 0
 		jnz	short loc_11D53
 		mov	byte_228EC, 10h
-		pushd	[_boss_bgm_title]
-		call	_strlen
-		add	sp, 4
-		mov	word_2CE6E, ax
+		call	_strlen c, large [_boss_bgm_title]
+		mov	_boss_bgm_title_len, ax
 
 loc_11D53:
 		cmp	byte_228EC, 10h
@@ -10562,10 +10556,10 @@ loc_11D53:
 		cmp	byte_228EC, 16h
 		jnz	short loc_11D90
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		call	text_putsa pascal, ax, 23, _boss_bgm_title, TX_WHITE
 
 loc_11D90:
@@ -10573,17 +10567,17 @@ loc_11D90:
 		mov	ah, GC_G
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 30h	; '0'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	sub_11A1D
 		mov	ah, 0Fh
 		call	grcg_setcolor_direct_noint_1
 		mov	ax, 33h	; '3'
-		sub	ax, word_2CE6E
+		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	1680h
-		push	word_2CE6E
+		push	_boss_bgm_title_len
 		call	sub_11A1D
 		GRCG_OFF_CLOBBERING dx
 		test	byte_2288B, 3
@@ -29963,9 +29957,6 @@ byte_2CE56	db ?
 patnum_2CE64	dw ?
 fp_2CE66	dw ?
 fp_2CE68	dw ?
-word_2CE6A	dw ?
-word_2CE6C	dw ?
-word_2CE6E	dw ?
 
 include th04/main/hud/popup[bss].asm
 
