@@ -35,7 +35,7 @@ include th04/main/bullet/pattypes.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group main_01_TEXT, main_011_TEXT
+main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT
 
 ; ===========================================================================
 
@@ -256,7 +256,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_01_TEXT	segment	word public 'CODE' use16
+main_0_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -10519,6 +10519,9 @@ loc_112D2:
 		pop	bp
 		retn
 sub_11195	endp
+main_0_TEXT	ends
+
+main_01_TEXT	segment	byte public 'CODE' use16
 
 include th04/main/hud/popup.asm
 include th04/formats/bb_txt_load.asm
@@ -10642,7 +10645,7 @@ main_01_TEXT	ends
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
 
-main_011_TEXT	segment	byte public 'CODE' use16
+main_012_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13649,7 +13652,7 @@ loc_130E9:
 		retn
 gengetsu_fg_render	endp
 
-main_011_TEXT	ends
+main_012_TEXT	ends
 
 ; ===========================================================================
 

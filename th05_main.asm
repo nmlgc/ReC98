@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large main_02_TEXT
+		.model large
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -30,6 +30,9 @@ include th05/main/player/shot_types.inc
 
 	extern _execl:proc
 	extern _strlen:proc
+
+	.seq
+main_01 group main_0_TEXT, main_01_TEXT
 
 ; ===========================================================================
 
@@ -302,8 +305,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_01_TEXT	segment	word public 'CODE' use16
-		assume cs:main_01_TEXT
+main_0_TEXT	segment	word public 'CODE' use16
+		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -10594,6 +10597,9 @@ loc_11DE4:
 		pop	bp
 		retn
 sub_11CBB	endp
+main_0_TEXT	ends
+
+main_01_TEXT	segment	byte public 'CODE' use16
 
 include th04/main/hud/popup.asm
 include th04/main/player/pos_update_and_clamp.asm

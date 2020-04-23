@@ -10,8 +10,11 @@ include th04/main/player/player.inc
 VECTOR2_AT procdesc pascal far \
 	ret:ptr Point, origin_x:word, origin_y:word, length:word, angle:byte
 
-TILES_INVALIDATE_AROUND procdesc pascal near \
-	center:Point
+main_01 group main_0_TEXT, main_01_TEXT
+main_0_TEXT	segment byte public 'CODE' use16
+	TILES_INVALIDATE_AROUND procdesc pascal near \
+		center:Point
+main_0_TEXT ends
 
 extrn _tile_invalidate_box:Point
 extrn _miss_time:byte
@@ -27,7 +30,7 @@ extrn _playchar_speed_diagonal:word
 ; ----------------------------------------------------------------------------
 
 main_01_TEXT	segment	word public 'CODE' use16
-	assume cs:main_01_TEXT
+	assume cs:main_01
 
 ; void pascal near player_invalidate(void);
 public PLAYER_INVALIDATE

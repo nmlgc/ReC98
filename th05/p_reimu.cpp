@@ -3,7 +3,7 @@
  * Reimu's shot control functions
  */
 
-#pragma codeseg main_01_TEXT
+#pragma codeseg main_01_TEXT main_01
 
 extern "C" {
 #include "th05/i_shot.hpp"

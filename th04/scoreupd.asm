@@ -34,15 +34,21 @@ endif
 if GAME eq 4
 	extrn _score_unused:byte
 	extrn _temp_lebcd:byte
-	SCORE_EXTEND_UPDATE procdesc near
+
+	main_01 group main_0_TEXT
+	main_0_TEXT	segment byte public 'CODE' use16
+		SCORE_EXTEND_UPDATE procdesc near
+	main_0_TEXT ends
 else
 	_temp_lebcd equ _hud_gaiji_row
 endif
 
+main_01 group main_01_TEXT
+
 ; ----------------------------------------------------------------------------
 
 main_01_TEXT	segment	word public 'CODE' use16
-	assume cs:main_01_TEXT
+	assume cs:main_01
 
 ; ============================================================================
 
