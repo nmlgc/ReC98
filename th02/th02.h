@@ -6,6 +6,8 @@
 #include "ReC98.h"
 #include "th01/ranks.h"
 
+#undef grcg_off
+
 // Formats
 // -------
 typedef struct {
