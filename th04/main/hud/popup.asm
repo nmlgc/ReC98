@@ -1,4 +1,3 @@
-; void pascal near popup_update_and_render(void);
 public POPUP_UPDATE_AND_RENDER
 popup_update_and_render	proc near
 
@@ -67,7 +66,7 @@ popup_update_and_render	proc near
 	jb	short @@shift_needed?
 	call	text_putsa pascal, (PLAYFIELD_TRAM_X shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
 	mov	_popup_frame, 0
-	mov	_popup_fp, offset nullfunc_near
+	mov	_popup, offset nullfunc_near
 	leave
 	retn
 ; ---------------------------------------------------------------------------

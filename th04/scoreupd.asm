@@ -28,7 +28,7 @@ endif
 	extrn _hud_gaiji_row:byte:SCORE_DIGITS
 
 	extrn _popup_id_new:byte
-	extrn _popup_fp:word
+	extrn _popup:word
 	POPUP_UPDATE_AND_RENDER procdesc near
 
 if GAME eq 4
@@ -156,7 +156,7 @@ endif
 	jz	short @@subtract_frame_delta_and_render
 	mov	_hiscore_popup_shown, 1
 	mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-	mov	_popup_fp, offset popup_update_and_render
+	mov	_popup, offset popup_update_and_render
 
 @@subtract_frame_delta_and_render:
 	mov	eax, _score_delta_frame

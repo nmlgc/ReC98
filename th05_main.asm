@@ -451,8 +451,8 @@ loc_AF2D:
 		call	sub_100C6
 		call	circles_render
 		GRCG_OFF_CLOBBERING dx
-		call	_overlay_text_fp
-		call	_popup_fp
+		call	_overlay_text
+		call	_popup
 		call	sub_10287
 		call	far ptr	_input_reset_sense
 		mov	al, byte_25FF8
@@ -1037,8 +1037,8 @@ loc_B506:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B52C:
-		mov	_overlay_text_fp, offset sub_11914
-		mov	_popup_fp, offset nullfunc_near
+		mov	_overlay_text, offset sub_11914
+		mov	_popup, offset nullfunc_near
 		pop	si
 		pop	bp
 		retn
@@ -5968,7 +5968,7 @@ sub_EE58	proc near
 		mov	_boss_update, eax
 		mov	ax, _boss_fg_render_func
 		mov	_boss_fg_render, ax
-		mov	_overlay_text_fp, offset sub_11CBB
+		mov	_overlay_text, offset sub_11CBB
 		mov	al, 1
 		pop	bp
 		retn
@@ -6899,7 +6899,7 @@ var_1		= byte ptr -1
 		cmp	byte_2C99C, 24h	; '$'
 		jb	short loc_F8B0
 		call	_playfield_tram_wipe
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F902
 ; ---------------------------------------------------------------------------
@@ -6975,7 +6975,7 @@ var_1		= byte ptr -1
 		cmp	byte_2C99C, 0
 		jnz	short loc_F920
 		call	_playfield_tram_black
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_F972
 ; ---------------------------------------------------------------------------
@@ -7896,7 +7896,7 @@ var_2		= byte ptr -2
 		cmp	_dream, 128
 		jb	short loc_105E6
 		mov	_popup_id_new, POPUP_ID_DREAMBONUS_MAX
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_105E6
 		mov	_bullet_clear_time, 20
@@ -10079,12 +10079,12 @@ var_1		= byte ptr -1
 		jnz	short loc_1193E
 
 loc_11936:
-		mov	_overlay_text_fp, offset sub_11AAE
+		mov	_overlay_text, offset sub_11AAE
 		jmp	short loc_11956
 ; ---------------------------------------------------------------------------
 
 loc_1193E:
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
@@ -10162,7 +10162,7 @@ var_1		= byte ptr -1
 		cmp	byte_2288A, 0
 		jnz	short loc_119C9
 		call	_playfield_tram_black
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		jmp	short loc_11A19
 ; ---------------------------------------------------------------------------
 
@@ -10329,7 +10329,7 @@ loc_11AD6:
 		jb	short loc_11AF8
 		test	_popup_byte_unknown, 1
 		jz	loc_11CB5
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		mov	_popup_byte_unknown, 0
 		mov	byte_228EC, 0
 		pop	bp
@@ -10519,7 +10519,7 @@ loc_11CE1:
 		jb	short loc_11CFE
 		test	byte_2288B, 1
 		jz	loc_11DE4
-		mov	_overlay_text_fp, offset nullfunc_near
+		mov	_overlay_text, offset nullfunc_near
 		mov	byte_2288B, 0
 		pop	bp
 		retn
@@ -14498,7 +14498,7 @@ sub_16F05	proc near
 loc_16F3B:
 		call	sub_10407
 		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		call	snd_se_play pascal, 7
 
 loc_16F52:
@@ -14536,7 +14536,7 @@ loc_16F76:
 		cmp	_power, 127
 		jnz	short loc_16F9B
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_16F9B
 		mov	_bullet_clear_time, 20
@@ -14670,7 +14670,7 @@ loc_170B5:
 		jb	short loc_170E7
 		mov	_power, 128
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_170E7
 		mov	_bullet_clear_time, 20
@@ -14712,7 +14712,7 @@ loc_1712C:
 		call	sub_10407
 		call	snd_se_play pascal, 7
 		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		jmp	short loc_17171
 ; ---------------------------------------------------------------------------
 
@@ -14723,7 +14723,7 @@ loc_17150:
 
 loc_1715C:
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 		mov	_power, 128
 		call	sub_E4FC
 
@@ -16107,7 +16107,7 @@ loc_17F8D:
 		cmp	_popup_bonus, 0
 		jz	short loc_17FA8
 		mov	_popup_id_new, POPUP_ID_BONUS
-		mov	_popup_fp, offset popup_update_and_render
+		mov	_popup, offset popup_update_and_render
 
 loc_17FA8:
 		inc	_bullet_clear_trigger
@@ -21431,7 +21431,7 @@ loc_1AF66:
 
 loc_1AF85:
 		call	sub_F2B4
-		mov	_overlay_text_fp, offset sub_11CBB
+		mov	_overlay_text, offset sub_11CBB
 		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
 		mov	_boss_fg_render, offset sub_10F12
@@ -29194,7 +29194,7 @@ loc_1FD19:
 		call	end_extra
 
 loc_1FD25:
-		mov	_overlay_text_fp, offset sub_119B1
+		mov	_overlay_text, offset sub_119B1
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
