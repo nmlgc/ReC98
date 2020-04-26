@@ -12,7 +12,7 @@ explosions_small_update_and_render	proc near
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
-	call	grcg_setmode_rmw_1
+	call	_grcg_setmode_rmw_seg1
 	mov	si, offset _explosions_small
 	mov	[bp+@@i], 0
 	jmp	@@more_explosions?

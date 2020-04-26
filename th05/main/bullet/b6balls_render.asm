@@ -15,7 +15,7 @@ b6balls_render	proc near
 	cmp	[si+b6ball_t.flag], 1
 	jnz	short @@no_cloud
 	mov	ah, 0Fh
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	ax, [si+b6ball_t.pos.cur.x]
 	sar	ax, 4
 	add	ax, PLAYFIELD_X

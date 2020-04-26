@@ -52,7 +52,7 @@ sparks_render	proc near
 	push	si
 	push	di
 	mov	ah, GC_BR
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing

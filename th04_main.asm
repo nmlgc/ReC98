@@ -393,7 +393,7 @@ loc_ABD8:
 		call	main_01:enemies_render
 		call	main_01:shots_render
 		call	main_01:player_render
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		call	gather_render
 		call	main_01:sparks_render
 		call	main_01:items_render
@@ -5119,7 +5119,7 @@ loc_E276:
 		mov	al, _stage_frame_mod2
 		add	al, 8
 		mov	ah, al
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	si, word ptr dword_2560C+2
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
 		mov	dx, ax
@@ -5933,9 +5933,9 @@ loc_E98E:
 		sar	ax, 4
 		add	ax, -16
 		mov	di, ax
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, _boss_phase_frame
 		add	ax, ax
 		mov	dx, 80
@@ -5963,9 +5963,9 @@ loc_E9DD:
 		sar	ax, 4
 		add	ax, 16
 		mov	di, ax
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	grcg_circlefill pascal, si, di, 16
 		jmp	short loc_EA55
 ; ---------------------------------------------------------------------------
@@ -5980,9 +5980,9 @@ loc_EA0D:
 		sar	ax, 4
 		add	ax, -16
 		mov	di, ax
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, _boss_phase_frame
 		shl	ax, 3
 		add	ax, 16
@@ -6328,9 +6328,9 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_RG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	di, 1
 		jmp	short loc_ECC7
 ; ---------------------------------------------------------------------------
@@ -8871,7 +8871,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		call	main_01:grcg_setmode_tdw
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
@@ -8923,9 +8923,9 @@ loc_10096:
 		call	snd_se_play pascal, 9
 
 loc_100FE:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_B
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		push	0
 		call	main_01:sub_1030D
 		GRCG_OFF_CLOBBERING dx
@@ -8946,7 +8946,7 @@ var_2		= word ptr -2
 		push	si
 		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 56
@@ -9027,9 +9027,9 @@ loc_101D7:
 		call	snd_se_play pascal, 9
 
 loc_101F4:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BRG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		push	1
 		call	main_01:sub_1030D
 		GRCG_OFF_CLOBBERING dx
@@ -9490,7 +9490,7 @@ shots_render	proc near
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		cmp	word_25608, 20h	; ' '
 		jbe	short loc_10569
 		call	main_01:sub_E1F4
@@ -10208,9 +10208,9 @@ loc_10F5E:
 ; ---------------------------------------------------------------------------
 
 loc_10F80:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		cmp	stage_id, 5
 		jnb	short loc_10F99
 		push	150A80h
@@ -10230,7 +10230,7 @@ loc_10FA1:
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 33h	; '3'
 		sub	ax, _stage_bgm_title_len
 		push	ax
@@ -10347,9 +10347,9 @@ loc_110A1:
 		call	text_putsa
 
 loc_11107:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		cmp	stage_id, 5
 		jnb	short loc_11120
 		push	150A80h
@@ -10369,7 +10369,7 @@ loc_11128:
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 33h	; '3'
 		sub	ax, _stage_bgm_title_len
 		push	ax
@@ -10436,16 +10436,16 @@ loc_111BB:
 ; ---------------------------------------------------------------------------
 
 loc_111D8:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 30h	; '0'
 		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 33h	; '3'
 		sub	ax, _boss_bgm_title_len
 		push	ax
@@ -10488,16 +10488,16 @@ loc_11237:
 		call	text_putsa
 
 loc_1127E:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 30h	; '0'
 		sub	ax, _boss_bgm_title_len
 		push	ax
 		push	16800002h
 		call	main_01:sub_10EA5
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	ax, 33h	; '3'
 		sub	ax, _boss_bgm_title_len
 		push	ax
@@ -10696,12 +10696,12 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		add	si, 20h	; ' '
 		add	di, 18h
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_I
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	grcg_circle pascal, si, di, [bp+var_2]
 		mov	ah, GC_BI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		push	si
 		push	di
 		mov	ax, [bp+var_2]
@@ -10770,9 +10770,9 @@ loc_118AE:
 		call	super_put_1plane pascal, si, di, [bp+var_2], large PLANE_PUT or GC_BRGI
 
 loc_118BE:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_RG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	[bp+var_A], 0B204h
 		mov	[bp+var_4], 0
 		jmp	short loc_11932
@@ -10893,12 +10893,12 @@ var_2		= word ptr -2
 		mov	[bp+var_2], ax
 		add	si, 24
 		add	di, 8
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	grcg_circle pascal, si, di, [bp+var_2]
 		mov	ah, GC_RG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		push	si
 		push	di
 		mov	ax, [bp+var_2]
@@ -11137,14 +11137,14 @@ loc_11BD1:
 		jl	loc_11B52
 		cmp	byte ptr [si], 0
 		jz	short loc_11C16
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	grcg_circlefill pascal, word ptr [si+2], word ptr [si+4], word ptr [si+10h]
 		cmp	byte ptr [si], 1
 		jz	short loc_11C16
 		mov	ah, [si+18h]
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		mov	ax, [si+12h]
@@ -11965,7 +11965,7 @@ loc_122EB:
 loc_12309:
 		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
 		push	(96 shl 16) or 72
@@ -12043,7 +12043,7 @@ loc_12378:
 loc_12396:
 		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_BRGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_96_112_288_256
 		GRCG_OFF_CLOBBERING dx
 		push	(128 shl 16) or 128
@@ -12200,7 +12200,7 @@ loc_1248C:
 		mov	fp_2CF2C, offset sub_123F1
 
 loc_12492:
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		cmp	byte_2CDD1, 80h
 		jnb	short loc_124A1
 		mov	al, byte_2CDD1
@@ -12216,7 +12216,7 @@ loc_124A7:
 		cmp	byte_2CDD0, 10h
 		jnb	short loc_124D7
 		mov	ah, GC_BRG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		test	byte_2CDD0, 1
 		jz	short loc_124C5
 		mov	al, [bp+var_9]
@@ -12239,7 +12239,7 @@ loc_124D2:
 
 loc_124D7:
 		mov	ah, GC_RG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		cmp	byte_23242, 0
 		jnz	short loc_12508
 		mov	Palettes, 0
@@ -12711,7 +12711,7 @@ var_1		= byte ptr -1
 		cmp	_boss_phase, 0
 		jnz	short loc_12921
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
 		cmp	_boss_phase_frame, 2
@@ -12752,7 +12752,7 @@ loc_12921:
 		idiv	bx
 		mov	[bp+var_1], al
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		cmp	[bp+var_1], 8
 		jnb	short loc_12944
 		call	main_01:playfield_fill
@@ -12781,7 +12781,7 @@ loc_12958:
 
 loc_12964:
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fill
 		GRCG_OFF_CLOBBERING dx
 
@@ -12834,7 +12834,7 @@ loc_12996:
 loc_129B4:
 		call	main_01:grcg_setmode_tdw
 		mov	ah, GC_RGI
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_0_384_192
 		GRCG_OFF_CLOBBERING dx
 		push	(32 shl 16) or 16
@@ -13268,10 +13268,10 @@ loc_12D6D:
 		cmp	_bullet_clear_time, 0
 		jnz	short loc_12DBE
 		mov	ah, 0Fh
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:_pellets_render_top
 		mov	ah, GC_RG
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:_pellets_render_bottom
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -13612,7 +13612,7 @@ loc_13083:
 		jl	short loc_130E9
 		cmp	_boss_phase_frame, 96
 		jge	short loc_130E9
-		call	main_01:grcg_setmode_rmw_1
+		call	_grcg_setmode_rmw_seg1
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_130B6
 		mov	ah, GC_RG
@@ -13623,7 +13623,7 @@ loc_130B6:
 		mov	ah, 0Fh
 
 loc_130B8:
-		call	main_01:grcg_setcolor_direct_noint_1
+		call	_grcg_setcolor_direct_seg1_raw
 		mov	[bp+var_2], 0B204h
 		xor	si, si
 		jmp	short loc_130E4
@@ -13920,8 +13920,8 @@ include th04/main/pointnum/add.asm
 include th04/math/vector2_near.asm
 		nop
 include th04/main/sparks_add.asm
-GRCG_SETCOLOR_DIRECT_NOINT_DEF 2
-GRCG_SETMODE_RMW_DEF 2
+GRCG_SETCOLOR_DIRECT_DEF 3
+GRCG_SETMODE_RMW_DEF 3
 include th04/main/item/splashes_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================

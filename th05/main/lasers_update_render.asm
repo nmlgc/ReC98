@@ -224,7 +224,7 @@ lasers_render	proc near
 	cmp	[si+laser_t.coords.LASER_width], 3
 	jb	short @@draw_inner_circle?
 	mov	ah, [si+laser_t.LASER_color]
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_outer_ray?
 	push	[bp+@@draw_x]
@@ -265,7 +265,7 @@ lasers_render	proc near
 
 @@draw_inner_circle?:
 	mov	ah, 15
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_inner_ray_or_line?
 	push	[bp+@@draw_x]
@@ -329,7 +329,7 @@ lasers_render	proc near
 
 @@decay:
 	mov	ah, 15
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	shl	[bp+@@radius], 3
 	push	offset _drawpoint
 	push	[si+laser_t.coords.origin.x]

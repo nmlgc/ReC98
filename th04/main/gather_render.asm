@@ -50,7 +50,7 @@ gather_render	proc far
 	jz	short @@same_color
 	mov	[bp+@@col], al
 	mov	ah, [bp+@@col]
-	call	grcg_setcolor_direct_noint_2
+	call	_grcg_setcolor_direct_seg3_raw
 
 @@same_color:
 	xor	di, di

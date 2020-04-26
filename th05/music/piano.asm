@@ -19,7 +19,7 @@ _piano_setup	proc far
 	mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
 	mov	ah, GC_RI
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	piano_label_puts	0, pl_F, pl_M, pl_1
 	piano_label_puts	1, pl_F, pl_M, pl_2
 	piano_label_puts	2, pl_F, pl_M, pl_3
@@ -73,7 +73,7 @@ _piano_render	proc far
 	mov	si, offset piano_notes_t.fm[4]
 	call	piano_part_render
 	mov	ah, GC_RI
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
 	add	bx, 4	; SSGPart[0]
 	call	piano_get_note
@@ -111,7 +111,7 @@ piano_part_render	proc near
 	mov	_piano_notes_cur.fm[si], al
 	call	piano_draw_part_keys
 	mov	ah, GC_RI
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	al, _piano_notes_cur.fm[si]
 	call	piano_draw_pressed_key
 
@@ -155,7 +155,7 @@ piano_draw_part_keys	proc near
 	push	di
 	push	si
 	mov	ah, GC_GI
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	add	di, PIANO_VRAM_X
 	mov	ax, PIANO_KEYS_WHITE
 	mov	dl, PIANO_H
@@ -167,7 +167,7 @@ piano_draw_part_keys	proc near
 	dec	dl
 	jnz	short @@white_key_loop
 	mov	ah, GC_RGI
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	si, offset _PIANO_KEYS_BLACK
 	sub	di, ROW_SIZE * PIANO_H
 	mov	dl, PIANO_BLACK_H

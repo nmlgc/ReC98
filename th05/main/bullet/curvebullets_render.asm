@@ -50,7 +50,7 @@ endm
 	cmp	[di+curvebullet_trail_t.flag], 0
 	jz	@@bullet_next
 	mov	ah, [di+curvebullet_trail_t.CBT_col]
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	mov	si, (CURVEBULLET_TRAIL_NODE_COUNT - 1)
 	jmp	short @@nodes_more?
 ; ---------------------------------------------------------------------------

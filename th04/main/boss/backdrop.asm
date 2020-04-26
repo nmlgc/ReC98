@@ -14,7 +14,7 @@ boss_backdrop_render	proc near
 	call	cdg_put_noalpha pascal, [bp+@@x], [bp+@@y], 16
 	call	grcg_setmode_tdw
 	mov	ah, [bp+@@color]
-	call	grcg_setcolor_direct_noint_1
+	call	_grcg_setcolor_direct_seg1_raw
 	call	_boss_backdrop_colorfill
 	GRCG_OFF_CLOBBERING dx
 	pop	bp

@@ -170,7 +170,7 @@ arg_4		= word ptr  0Ah
 		nop
 
 loc_2E02:
-		GRCG_SETCOLOR_DIRECT_INLINED ah
+		GRCG_SETCOLOR_DIRECT ah
 		mov	ch, dl
 
 loc_2E1C:

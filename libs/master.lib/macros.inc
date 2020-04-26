@@ -120,19 +120,7 @@ endm
 
 ; GRCG color setting macros
 ; -------------------------
-; In contrast to master.lib's own grcg_setcolor(), these keep the current
-; GRCG mode.
-GRCG_SETCOLOR_DIRECT_CLOBBERING macro port_reg:req, col_reg:req
-	mov	port_reg, 7Eh
-	rept 4
-		shr	ah, 1
-		sbb	al, al
-		out	dx, al
-	endm
-endm
-
-; Yup, regular GRCG_SETCOLOR_DIRECT is an exported function, so...
-GRCG_SETCOLOR_DIRECT_INLINED macro col_reg:req
+GRCG_SETCOLOR_DIRECT macro col_reg:req
 	rept 4
 		shr	col_reg, 1
 		sbb	al, al

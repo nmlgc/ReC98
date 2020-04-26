@@ -3505,7 +3505,7 @@ include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th05/music/piano.asm
-GRCG_SETCOLOR_DIRECT_NOINT_DEF 1
+GRCG_SETCOLOR_DIRECT_DEF 1
 		db 0
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm

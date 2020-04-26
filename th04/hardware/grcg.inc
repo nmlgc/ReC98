@@ -1,26 +1,25 @@
-; Redefined versions of master.lib's grcg_setmode() and grcg_setcolor().
-
-GRCG_SETMODE_RMW_DEF macro instance
-	; void pascal near grcg_setmode_rmw(void);
-	public GRCG_SETMODE_RMW_&instance
-	grcg_setmode_rmw_&instance	proc near
+GRCG_SETMODE_RMW_DEF macro sgm
+	public _grcg_setmode_rmw_seg&sgm
+	_grcg_setmode_rmw_seg&sgm	proc near
 		GRCG_SETMODE_VIA_MOV al, GC_RMW
 		ret
-	grcg_setmode_rmw_&instance	endp
+	_grcg_setmode_rmw_seg&sgm	endp
 		nop
 endm
 
-GRCG_SETCOLOR_DIRECT_NOINT_DEF macro instance
-	; Takes the GC_* color parameter in AH.
-
-	; void pascal near grcg_setcolor_direct_noint(void);
-	public GRCG_SETCOLOR_DIRECT_NOINT_&instance
-	grcg_setcolor_direct_noint_&instance	proc near
+GRCG_SETCOLOR_DIRECT_DEF macro sgm
+	public _grcg_setcolor_direct_seg&sgm&_raw
+	_grcg_setcolor_direct_seg&sgm&_raw	proc near
 		cli
-		GRCG_SETCOLOR_DIRECT_CLOBBERING dx, ah
+		mov	dx, 7Eh
+		rept 4
+			shr	ah, 1
+			sbb	al, al
+			out	dx, al
+		endm
 		sti
 		ret
-	grcg_setcolor_direct_noint_&instance	endp
+	_grcg_setcolor_direct_seg&sgm&_raw	endp
 endm
 
 ; Convenience macro to prepare ES:DI.

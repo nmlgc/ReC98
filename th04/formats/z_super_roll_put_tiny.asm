@@ -106,7 +106,7 @@ z_super_roll_put_tiny_32x32_raw	proc near
 	jnz	short @@ODD_COLOR_LOOP
 
 @@EVEN_COLOR_LOOP:
-	call	grcg_setcolor_direct
+	call	@@grcg_setcolor
 	mov	@@rows_left, @@PATTERN_HEIGHT
 	mov	di, cs:srpt32x32_vram_topleft
 	cmp	di, (RES_Y - @@PATTERN_HEIGHT + 1) * ROW_SIZE
@@ -131,7 +131,7 @@ z_super_roll_put_tiny_32x32_raw	proc near
 ; ---------------------------------------------------------------------------
 
 @@ODD_COLOR_LOOP:
-	call	grcg_setcolor_direct
+	call	@@grcg_setcolor
 	mov	@@rows_left, @@PATTERN_HEIGHT
 	mov	di, cs:srpt32x32_vram_topleft
 	cmp	di, (RES_Y - @@PATTERN_HEIGHT + 1) * ROW_SIZE
@@ -153,9 +153,9 @@ z_super_roll_put_tiny_32x32_raw	proc near
 	MRETURN
 ; ---------------------------------------------------------------------------
 
-; void __usercall near grcg_setcolor_direct(uint4_t col<ah>);
-grcg_setcolor_direct:
-	GRCG_SETCOLOR_DIRECT_INLINED ah
+; void __usercall near @@grcg_setcolor(uint4_t col<ah>);
+@@grcg_setcolor:
+	GRCG_SETCOLOR_DIRECT ah
 	ret
 	even
 

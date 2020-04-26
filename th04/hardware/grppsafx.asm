@@ -13,7 +13,7 @@ graph_putsa_fx	proc far
 	push	ds
 	mov	dx, [bp+@@color]
 	GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-	GRCG_SETCOLOR_DIRECT_INLINED dx
+	GRCG_SETCOLOR_DIRECT dx
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
