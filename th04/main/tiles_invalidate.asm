@@ -1,7 +1,3 @@
-; Marks all stage background tiles for redrawing that lie in the area covered
-; by [tile_invalidate_box] around [center] (in playfield space and 16th-pixel
-; units).
-
 ; void pascal near tiles_invalidate_around(Point center);
 public TILES_INVALIDATE_AROUND
 tiles_invalidate_around	proc near

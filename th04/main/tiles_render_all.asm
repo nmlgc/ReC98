@@ -1,6 +1,3 @@
-; Blits all tiles in the ring buffer to the playfield in VRAM.
-
-; void pascal near tiles_render_all(void);
 public TILES_RENDER_ALL
 tiles_render_all	proc near
 	push	si

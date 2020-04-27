@@ -1,6 +1,4 @@
 public TILES_INVALIDATE_RESET, TILES_INVALIDATE_ALL
-
-; void pascal near tiles_invalidate_reset(void);
 tiles_invalidate_reset	proc near
 	push	di
 	mov	ax, ds
@@ -16,7 +14,6 @@ tiles_invalidate_reset	endp
 	nop
 
 
-; void pascal near tiles_invalidate_all(void);
 tiles_invalidate_all	proc near
 	push	di
 	mov	ax, ds
