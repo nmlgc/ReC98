@@ -1,3 +1,3 @@
 ; A random shared point variable used for drawing various things.
-public _DRAWPOINT
+public _drawpoint
 _drawpoint	Point <?>

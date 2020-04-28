@@ -3,6 +3,7 @@
 # Makefile for the 16-bit part of the build process
 
 CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -b-
+AFLAGS = /ml
 
 PIPELINE = \grzview.com
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
@@ -22,16 +23,16 @@ th04:: $(TH04:\=bin\th04\)
 th05:: $(TH05:\=bin\th05\)
 
 {th05}.asm{bin\th05}.obj:
-	$(AS) /dGAME=5 $**, $@
+	$(AS) $(AFLAGS) /dGAME=5 $**, $@
 
 # Shared TH04/TH05 assembly units
 # -------------------------------
 # Need to go into separate .obj directories since they will have different
 # AFLAGS per game.
 {th04}.asm{bin\th04}.obj:
-	$(AS) /dGAME=4 $**, $@
+	$(AS) $(AFLAGS) /dGAME=4 $**, $@
 {th04}.asm{bin\th05}.obj:
-	$(AS) /dGAME=5 $**, $@
+	$(AS) $(AFLAGS) /dGAME=5 $**, $@
 # -------------------------------
 
 .obj.exe:

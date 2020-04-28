@@ -29981,13 +29981,13 @@ _power	db ?
 _shot_level	db ?
 _shot_time	db ?
 include th01/main/player_is_hit[bss].asm
-public _MISS_TIME, _dream, _MISS_EXPLOSION_RADIUS
+public _miss_time, _dream, _miss_explosion_radius
 _miss_time	db ?
 _dream	db ?
 _miss_explosion_radius	dw ?
 public _stage_point_items_collected
 _stage_point_items_collected	dw ?
-public _MISS_EXPLOSION_ANGLE, _playchar_shot_func, _playchar_shot_funcs
+public _miss_explosion_angle, _playchar_shot_func, _playchar_shot_funcs
 _miss_explosion_angle	db ?
 		db 5 dup(?)
 _playchar_shot_func	dw ?

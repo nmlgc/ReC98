@@ -33756,7 +33756,7 @@ byte_1E517	db 0
 byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
-public _PLAYER_OPTION_PATNUM
+public _player_option_patnum
 _player_option_patnum	db PAT_OPTION_A
 power_overflow_level	dw 0
 word_1E51E	dw 0
@@ -34745,7 +34745,7 @@ point_205F6	Point <?>
 		db 8 dup(?)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
-public _PLAYER_INVINCIBILITY_TIME
+public _player_invincibility_time
 _player_invincibility_time	db ?
 byte_20606	db ?
 byte_20607	db ?
@@ -34821,7 +34821,7 @@ word_21896	dw ?
 word_21898	dw ?
 word_2189A	dw ?
 word_2189C	dw ?
-public _POINT_ITEMS_COLLECTED
+public _point_items_collected
 _point_items_collected	dw ?
 byte_218A0	db ?
 byte_218A1	db ?

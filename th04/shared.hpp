@@ -101,7 +101,6 @@ void pascal far explosions_small_reset(void);
 
 /// Score
 /// -----
-#define score_delta SCORE_DELTA
 extern unsigned long score_delta;
 
 void pascal near score_update_and_render(void);

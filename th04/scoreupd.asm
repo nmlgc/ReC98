@@ -35,20 +35,20 @@ if GAME eq 4
 	extrn _score_unused:byte
 	extrn _temp_lebcd:byte
 
-	main_01 group main_0_TEXT
-	main_0_TEXT	segment byte public 'CODE' use16
+	MAIN_01 group MAIN_0_TEXT
+	MAIN_0_TEXT	segment byte public 'CODE' use16
 		SCORE_EXTEND_UPDATE procdesc near
-	main_0_TEXT ends
+	MAIN_0_TEXT ends
 else
 	_temp_lebcd equ _hud_gaiji_row
 endif
 
-main_01 group main_01_TEXT
+MAIN_01 group MAIN_01_TEXT
 
 ; ----------------------------------------------------------------------------
 
-main_01_TEXT	segment	word public 'CODE' use16
-	assume cs:main_01
+MAIN_01_TEXT	segment	word public 'CODE' use16
+	assume cs:MAIN_01
 
 ; ============================================================================
 
@@ -57,7 +57,7 @@ main_01_TEXT	segment	word public 'CODE' use16
 
 ; void pascal near hud_score_put(void);
 public HUD_SCORE_PUT
-hud_score_put	proc pascal near
+HUD_SCORE_PUT	proc pascal near
 @@gaiji_p equ bx
 @@score_p equ si
 @@y equ di
@@ -79,7 +79,7 @@ hud_score_put	proc pascal near
 	inc	@@gaiji_p
 	dec	@@score_p
 	loop	@@digit_loop
-	call	gaiji_putsa pascal, HUD_X, @@y, ds, offset _hud_gaiji_row, TX_WHITE
+	call	GAIJI_PUTSA pascal, HUD_X, @@y, ds, offset _hud_gaiji_row, TX_WHITE
 	add	@@y, 2
 
 	; Put exactly two lines, high score at (56, 4), and current score at
@@ -103,13 +103,13 @@ hud_score_put	proc pascal near
 	pop	si
 	pop	di
 	ret
-hud_score_put	endp
+HUD_SCORE_PUT	endp
 
 ; ============================================================================
 
 ; void pascal near score_update_and_render(void);
 public SCORE_UPDATE_AND_RENDER
-score_update_and_render	proc near
+SCORE_UPDATE_AND_RENDER	proc near
 
 ; The TH04 version is functionally identical, just less optimized.
 if GAME eq 5
@@ -156,15 +156,15 @@ endif
 	jz	short @@subtract_frame_delta_and_render
 	mov	_hiscore_popup_shown, 1
 	mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-	mov	_popup, offset popup_update_and_render
+	mov	_popup, offset POPUP_UPDATE_AND_RENDER
 
 @@subtract_frame_delta_and_render:
 	mov	eax, _score_delta_frame
 	sub	_score_delta, eax
-	call	hud_score_put
+	call	HUD_SCORE_PUT
 if GAME eq 4
 	mov	_score_unused, 0
-	call	score_extend_update
+	call	SCORE_EXTEND_UPDATE
 endif
 
 @@ret:
@@ -300,7 +300,7 @@ endif
 	pop	di
 	pop	si
 	jmp	@@render
-score_update_and_render	endp
-main_01_TEXT	ends
+SCORE_UPDATE_AND_RENDER	endp
+MAIN_01_TEXT	ends
 
 	end

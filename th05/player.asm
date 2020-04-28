@@ -10,11 +10,11 @@ include th04/main/player/player.inc
 VECTOR2_AT procdesc pascal far \
 	ret:ptr Point, origin_x:word, origin_y:word, length:word, angle:byte
 
-main_01 group main_0_TEXT, main_01_TEXT
-main_0_TEXT	segment byte public 'CODE' use16
+MAIN_01 group MAIN_0_TEXT, MAIN_01_TEXT
+MAIN_0_TEXT	segment byte public 'CODE' use16
 	TILES_INVALIDATE_AROUND procdesc pascal near \
 		center:Point
-main_0_TEXT ends
+MAIN_0_TEXT ends
 
 extrn _tile_invalidate_box:Point
 extrn _miss_time:byte
@@ -29,12 +29,12 @@ extrn _playchar_speed_diagonal:word
 
 ; ----------------------------------------------------------------------------
 
-main_01_TEXT	segment	word public 'CODE' use16
-	assume cs:main_01
+MAIN_01_TEXT	segment	word public 'CODE' use16
+	assume cs:MAIN_01
 
 ; void pascal near player_invalidate(void);
 public PLAYER_INVALIDATE
-player_invalidate	proc pascal near
+PLAYER_INVALIDATE	proc pascal near
 	mov	_tile_invalidate_box.y, PLAYER_H
 	cmp	_miss_time, 0
 	jz	short @@alive
@@ -55,9 +55,9 @@ player_invalidate	proc pascal near
 
 @@invalidate:
 	push	ax
-	call	vector2_at pascal, offset _drawpoint, _player_pos.cur.x, _player_pos.cur.y, di, ax
+	call	VECTOR2_AT pascal, offset _drawpoint, _player_pos.cur.x, _player_pos.cur.y, di, ax
 	MISS_EXPLOSION_CLIP	 @@next
-	call	tiles_invalidate_around pascal, large [_drawpoint]
+	call	TILES_INVALIDATE_AROUND pascal, large [_drawpoint]
 
 @@next:
 	pop	ax
@@ -70,14 +70,14 @@ player_invalidate	proc pascal near
 
 @@alive:
 	mov	_tile_invalidate_box.x, PLAYER_W
-	call	tiles_invalidate_around pascal, large [_player_pos.prev]
+	call	TILES_INVALIDATE_AROUND pascal, large [_player_pos.prev]
 	mov	_tile_invalidate_box.x, PLAYER_OPTION_W + PLAYER_W + PLAYER_OPTION_W
 	mov	_tile_invalidate_box.y, PLAYER_OPTION_H
-	call	tiles_invalidate_around pascal, large [_player_option_pos_prev]
+	call	TILES_INVALIDATE_AROUND pascal, large [_player_option_pos_prev]
 
 @@ret:
 	retn
-player_invalidate	endp
+PLAYER_INVALIDATE	endp
 
 
 	even
@@ -85,7 +85,7 @@ player_invalidate	endp
 
 ; move_ret_t pascal near player_move(int input);
 public PLAYER_MOVE
-player_move	proc near
+PLAYER_MOVE	proc near
 @@input	= word ptr ss:[bx+2]
 
 @@diagonal_x equ ax
@@ -183,7 +183,7 @@ player_move	proc near
 	dw @@invalid
 	dw @@invalid
 	dw @@down_right
-player_move	endp
-main_01_TEXT	ends
+PLAYER_MOVE	endp
+MAIN_01_TEXT	ends
 
 	end

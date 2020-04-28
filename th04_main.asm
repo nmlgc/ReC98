@@ -36705,15 +36705,14 @@ _shot_time	db ?
 include th01/main/player_is_hit[bss].asm
 		db    ?	;
 byte_259A9	db ?
-public _MISS_TIME, _stage_point_items_collected, _dream_items_collected
+public _miss_time, _stage_point_items_collected, _dream_items_collected
 _miss_time	db ?
 _stage_point_items_collected	db ?
 include th04/main/player/option[bss].asm
 _dream_items_collected	db ?
 		db 2 dup(?)
-public _MISS_EXPLOSION_ANGLE
+public _miss_explosion_angle, _miss_explosion_radius
 _miss_explosion_angle	db ?
-public _MISS_EXPLOSION_RADIUS
 _miss_explosion_radius	dw ?
 		db 4 dup(?)
 include th04/main/hud/popup[bss].asm

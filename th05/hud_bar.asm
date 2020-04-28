@@ -9,14 +9,14 @@ extrn _hud_gaiji_row:byte:HUD_TRAM_W
 
 ; ----------------------------------------------------------------------------
 
-main_01_TEXT	segment	word public 'CODE' use16
-	assume cs:main_01_TEXT
+MAIN_01_TEXT	segment	word public 'CODE' use16
+	assume cs:MAIN_01_TEXT
 
 ; void pascal near hud_bar_put(
 ; 	unsigned int y, unsigned char value, unsigned int atrb
 ; );
 public HUD_BAR_PUT
-hud_bar_put	proc near
+HUD_BAR_PUT	proc near
 @@atrb	= word ptr ss:[bx+2]
 @@value	= byte ptr ss:[bx+4]
 @@y    	= word ptr ss:[bx+6]
@@ -66,10 +66,10 @@ hud_bar_put	proc near
 	rep stosb
 
 @@put:
-	call	gaiji_putsa
+	call	GAIJI_PUTSA
 	pop	di
 	retn	6
-hud_bar_put	endp
-main_01_TEXT	ends
+HUD_BAR_PUT	endp
+MAIN_01_TEXT	ends
 
 	end
