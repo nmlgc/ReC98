@@ -1,4 +1,3 @@
-; unsigned char __fastcall playperf_adjust_speed(unsigned char speed)
 public @playperf_adjust_speed
 @playperf_adjust_speed	proc near
 	shr	al, 1

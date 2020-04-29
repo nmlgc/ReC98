@@ -8,7 +8,7 @@ std_load	proc near
 	push	di
 	push	ds
 	call	std_free
-	mov	al, stage_id
+	mov	al, _stage_id
 	add	al, '0'
 	mov	byte ptr _std_fn+3, al
 	mov	dx, offset _std_fn

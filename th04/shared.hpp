@@ -12,14 +12,6 @@
 #include "th03/math/randring.h"
 /// ----
 
-/// Rank
-/// ----
-int pascal far select_for_rank(
-	int for_easy, int for_normal,
-	int for_hard, int for_lunatic
-);
-/// ----
-
 /// Formats
 /// -------
 #include "th03/formats/cdg.h"

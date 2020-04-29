@@ -9,3 +9,5 @@ typedef enum {
 	SHOTTYPE_B = 1,
 	SHOTTYPE_COUNT,
 } shottype_t;
+
+extern playchars_t playchar;

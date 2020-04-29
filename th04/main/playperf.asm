@@ -1,5 +1,5 @@
-; void playperf_raise(char delta);
-_playperf_raise	proc far
+public PLAYPERF_RAISE
+playperf_raise	proc far
 delta	= byte ptr 4
 
 	mov	bx, sp
@@ -12,12 +12,12 @@ delta	= byte ptr 4
 @@ret:
 	mov	_playperf, al
 	retf	2
-_playperf_raise	endp
+playperf_raise	endp
 	even
 
 
-; void playperf_lower(char delta);
-_playperf_lower	proc far
+public PLAYPERF_LOWER
+playperf_lower	proc far
 delta	= byte ptr 4
 
 	mov	bx, sp
@@ -30,4 +30,4 @@ delta	= byte ptr 4
 @@ret:
 	mov	_playperf, al
 	retf	2
-_playperf_lower	endp
+playperf_lower	endp

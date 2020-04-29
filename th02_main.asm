@@ -1887,7 +1887,7 @@ loc_B1CD:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B237
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		cmp	ax, 5
 		jnz	short loc_B202
@@ -1946,7 +1946,7 @@ loc_B263:
 
 loc_B27A:
 		les	bx, _resident
-		mov	al, stage_id
+		mov	al, _stage_id
 		mov	es:[bx+mikoconfig_t.stage], al
 		jmp	short loc_B290
 ; ---------------------------------------------------------------------------
@@ -2015,7 +2015,7 @@ loc_B32B:
 loc_B333:
 		movzx	eax, ax
 		mov	_score, eax
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		mov	bx, 5
 		cwd
@@ -2088,7 +2088,7 @@ arg_0		= dword	ptr  4
 		mov	byte ptr es:[bx+2], 'a'
 		mov	byte ptr es:[bx+3], 'g'
 		mov	byte ptr es:[bx+4], 'e'
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, '0'
 		mov	es:[bx+5], al
 		mov	byte ptr es:[bx+6], '.'
@@ -2154,10 +2154,10 @@ var_C		= byte ptr -0Ch
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B4BB
 		mov	bgm_show_timer, 1
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, al
 		mov	_bgm_title_id, al
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, al
 		inc	al
 		mov	byte_1F46E, al
@@ -2186,20 +2186,20 @@ loc_B4D7:
 		cmp	si, 80h
 		jge	short loc_B4C5
 		mov	stage1_gaiji_halflen, 6
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		mov	bx, 5
 		cwd
 		idiv	bx
 		add	dl, 0A1h
 		mov	gStage1+5, dl
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		add	ax, ax
 		mov	bx, ax
 		mov	ax, _STAGE_TITLES[bx]
 		mov	_stage_title, ax
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		mov	bx, ax
 		mov	al, _STAGE_TITLE_HALFLENGTHS[bx]
@@ -2273,7 +2273,7 @@ loc_B4D7:
 		call	sub_C5B0
 		mov	byte_20342, 1
 		mov	byte_1E500, 4
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		mov	bx, ax
 		cmp	bx, 5
@@ -3016,7 +3016,7 @@ sub_BF9C	proc far
 		mov	bp, sp
 		cmp	byte_1F466, 2
 		jnz	short loc_BFCC
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		cmp	ax, 2
 		jnz	short loc_BFC3
@@ -3049,7 +3049,7 @@ sub_BFD0	proc far
 		cmp	byte_1E501, 1
 		jnz	loc_C05B
 		mov	byte_1F466, 1
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		cmp	ax, 3
 		jnz	short loc_BFF8
@@ -3058,7 +3058,7 @@ sub_BFD0	proc far
 ; ---------------------------------------------------------------------------
 
 loc_BFF8:
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		cmp	ax, 2
 		jnz	short loc_C015
@@ -3164,7 +3164,7 @@ demo_load	proc far
 		mov	es:[bx+mikoconfig_t.frame], 12h
 		cmp	es:[bx+mikoconfig_t.demo_num], 1
 		jnz	short loc_C18A
-		mov	stage_id, 3
+		mov	_stage_id, 3
 		push	ds
 		push	offset aDemo1_rec ; "DEMO1.REC"
 		call	file_ropen
@@ -3177,7 +3177,7 @@ loc_C18A:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 2
 		jnz	short loc_C1AE
-		mov	stage_id, 2
+		mov	_stage_id, 2
 		push	ds
 		push	offset aDemo2_rec ; "DEMO2.REC"
 		call	file_ropen
@@ -3190,7 +3190,7 @@ loc_C1AE:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 3
 		jnz	short loc_C1D0
-		mov	stage_id, 1
+		mov	_stage_id, 1
 		push	ds
 		push	offset aDemo3_rec ; "DEMO3.REC"
 		call	file_ropen
@@ -3267,7 +3267,7 @@ cfg_load	proc near
 		mov	word ptr _resident, 0
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.stage]
-		mov	stage_id, al
+		mov	_stage_id, al
 		mov	al, es:[bx+mikoconfig_t.start_lives]
 		mov	lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
@@ -3494,7 +3494,7 @@ loc_C516:
 		mov	power, 1
 		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		mov	bx, 5
 		cwd
@@ -14654,7 +14654,7 @@ stones_end	proc far
 		call	sub_1310B
 		call	sub_FC53
 		call	sub_E162
-		inc	stage_id
+		inc	_stage_id
 		pop	bp
 		retf
 stones_end	endp
@@ -15343,7 +15343,7 @@ var_4		= dword	ptr -4
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 12FBh
 		les	bx, [bp+var_4]
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+5], al
 		push	word ptr [bp+var_4+2]
@@ -15899,7 +15899,7 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		add	ax, ax
 		add	ax, di
@@ -15918,7 +15918,7 @@ loc_13123:
 		inc	si
 
 loc_13134:
-		mov	al, stage_id
+		mov	al, _stage_id
 		cbw
 		add	ax, ax
 		mov	bx, ax
@@ -17221,7 +17221,7 @@ rika_end	proc far
 		call	sub_FC53
 		call	_key_delay
 		call	sub_E162
-		inc	stage_id
+		inc	_stage_id
 		mov	word_1EB0A, 0
 		mov	word_1EDA4, 0
 		pop	bp
@@ -19830,7 +19830,7 @@ meira_end	proc far
 		call	sub_FC53
 		call	_key_delay
 		call	sub_E162
-		inc	stage_id
+		inc	_stage_id
 		mov	word_1EB0A, 0
 		pop	bp
 		retf
@@ -32087,7 +32087,7 @@ marisa_end	proc far
 
 loc_1C27C:
 		call	sub_E162
-		inc	stage_id
+		inc	_stage_id
 		pop	bp
 
 locret_1C286:
@@ -32302,8 +32302,8 @@ var_2		= word ptr -2
 		mov	word ptr [bp-0Ch], ds
 		mov	word ptr [bp+dest+2], 111Ah
 		les	bx, [bp+dest+2]
-		mov	al, stage_id
-		add	al, 30h	; '0'
+		mov	al, _stage_id
+		add	al, '0'
 		mov	es:[bx+5], al
 		push	word ptr [bp-0Ch]
 		push	bx
@@ -33189,7 +33189,7 @@ loc_1CB0C:
 		mov	eax, _score
 		mov	[bx+7890h], eax
 		mov	bx, [bp+var_2]
-		mov	al, stage_id
+		mov	al, _stage_id
 		inc	al
 		mov	[bx+7903h], al
 		mov	ax, [bp+var_2]
@@ -33699,8 +33699,9 @@ include th02/snd/se[data].asm
 		db 0E0h
 		db 0F0h
 		db 0F8h
+public _rank, _stage_id
 _rank	db RANK_NORMAL
-stage_id	db 0
+_stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
 include th02/sprites/pellet.asm
 gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0

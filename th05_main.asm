@@ -544,7 +544,7 @@ loc_B003:
 		test	_stage_frame, 0FFFh
 		jnz	short loc_B055
 		push	1
-		nopcall	_playperf_raise
+		nopcall	playperf_raise
 		jmp	short $+2
 
 loc_B055:
@@ -646,7 +646,7 @@ loc_B13E:
 
 loc_B145:
 		mov	_playperf, 32
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_B15D
 
 loc_B151:
@@ -750,10 +750,10 @@ sub_B237	proc near
 		mov	vsync_Count2, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.stage]
-		mov	stage_id, al
-		cmp	stage_id, 0
+		mov	_stage_id, al
+		cmp	_stage_id, 0
 		jz	short loc_B260
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_B2DD
 
 loc_B260:
@@ -767,7 +767,7 @@ loc_B260:
 		mov	al, es:[bx+resident_t.debug_stage]
 		mov	es:[bx+resident_t.stage], al
 		mov	al, es:[bx+resident_t.stage]
-		mov	stage_id, al
+		mov	_stage_id, al
 		mov	al, es:[bx+resident_t.debug_power]
 		mov	_power, al
 		mov	es:[bx+resident_t.debug_mode], 0
@@ -781,7 +781,7 @@ loc_B2A5:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
-		mov	stage_id, al
+		mov	_stage_id, al
 		cmp	es:[bx+resident_t.demo_num], 5
 		jz	short loc_B2CE
 		mov	_power, 128
@@ -910,7 +910,7 @@ loc_B3C5:
 loc_B3CA:
 		nopcall	sub_BF27
 		mov	_pellet_bottom_col, GC_RG
-		mov	al, stage_id
+		mov	al, _stage_id
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 6
@@ -1027,7 +1027,7 @@ loc_B4BB:
 loc_B506:
 		les	bx, off_20A86
 		mov	byte ptr es:[bx+2], 30h	; '0'
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+3], al
 		push	word ptr off_20A86+2
@@ -1246,8 +1246,8 @@ EmsSetup	proc near ; ZUN symbol [MAGNet2010]
 		mov	bp, sp
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.stage]
-		mov	stage_id, al
-		cmp	stage_id, 6
+		mov	_stage_id, al
+		cmp	_stage_id, 6
 		jnz	short @@game_is_not_extra
 		mov	_rank, RANK_EXTRA
 		jmp	short loc_B84E
@@ -1580,7 +1580,7 @@ mptn_load	endp
 map_load	proc near
 		push	si
 		call	map_free
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, 30h	; '0'
 		mov	aSt00_map+3, al
 		mov	ax, 3D00h
@@ -1849,7 +1849,7 @@ loc_BDB7:
 		mov	byte_23F04, al
 		mov	al, [bp+var_1]
 		add	byte_23EFC, al
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_BD81
 		cmp	_scroll_active, 0
 		jz	short loc_BD81
@@ -2068,7 +2068,7 @@ loc_C4BC:
 		assume es:nothing
 		inc	es:[bx+resident_t.bombs_used]
 		push	1
-		nopcall	_playperf_lower
+		nopcall	playperf_lower
 
 loc_C518:
 		pop	bp
@@ -2418,7 +2418,7 @@ loc_C7D8:
 		cmp	byte_2429B, 80h
 		jnz	short loc_C7F9
 		call	snd_se_play pascal, 15
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_C7F2
 		mov	_scroll_active, 1
 
@@ -2444,7 +2444,7 @@ loc_C800:
 		mov	_palette_changed, 1
 		cmp	byte_2429B, 82h
 		jnz	short loc_C849
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_C849
 		call	graph_scrollup pascal, _scroll_line
 		jmp	loc_C7AB
@@ -2667,7 +2667,7 @@ loc_CA05:
 		cmp	byte_2429B, 50h	; 'P'
 		jnz	short loc_CA26
 		call	snd_se_play pascal, 15
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CA1F
 		mov	_scroll_active, 1
 
@@ -2693,7 +2693,7 @@ loc_CA2D:
 		mov	_palette_changed, 1
 		cmp	byte_2429B, 52h	; 'R'
 		jnz	short loc_CA75
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CA75
 		call	graph_scrollup pascal, _scroll_line
 		jmp	short loc_CA75
@@ -2878,7 +2878,7 @@ loc_CC28:
 		cmp	byte_2429B, 40h
 		jnz	short loc_CC49
 		call	snd_se_play pascal, 15
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CC42
 		mov	_scroll_active, 1
 
@@ -2904,7 +2904,7 @@ loc_CC50:
 		mov	_palette_changed, 1
 		cmp	byte_2429B, 42h	; 'B'
 		jnz	short loc_CC98
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CC98
 		call	graph_scrollup pascal, _scroll_line
 		jmp	short loc_CC98
@@ -3080,7 +3080,7 @@ loc_CDDE:
 		cmp	byte_2429B, 0A0h
 		jnz	short loc_CDFF
 		call	snd_se_play pascal, 15
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CDF8
 		mov	_scroll_active, 1
 
@@ -3106,7 +3106,7 @@ loc_CE06:
 		mov	_palette_changed, 1
 		cmp	byte_2429B, 0A1h
 		jnz	short loc_CE4F
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_CE4F
 		call	graph_scrollup pascal, _scroll_line
 		jmp	loc_CDB1
@@ -5653,7 +5653,7 @@ loc_E8D5:
 		add	byte ptr [di], gb_0_
 		inc	di
 		loop	loc_E8D5
-		mov	al, stage_id
+		mov	al, _stage_id
 		cmp	al, 6
 		jnz	short loc_E8E4
 		xor	al, al
@@ -5906,7 +5906,7 @@ sub_EE17	proc near
 		mov	bp, sp
 		les	bx, off_221D0
 		assume es:nothing
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, 30h	; '0'
 		mov	es:[bx+4], al
 		push	word ptr off_221D0+2
@@ -6188,7 +6188,7 @@ loc_F068:
 ; ---------------------------------------------------------------------------
 
 loc_F07C:
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jz	short loc_F091
 		call	super_clean pascal, (180 shl 16) or 320
 		jmp	loc_F181
@@ -6561,7 +6561,7 @@ loc_F3A4:
 loc_F40F:
 		cmp	word_2C938, 0
 		jz	short loc_F41B
-		mov	al, stage_id
+		mov	al, _stage_id
 		jmp	short loc_F421
 ; ---------------------------------------------------------------------------
 
@@ -7166,7 +7166,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jz	loc_FBF5
 		xor	di, di
 		mov	si, 1
@@ -7463,7 +7463,7 @@ sub_100C6	endp
 sub_10214	proc near
 		push	bp
 		mov	bp, sp
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jnz	short loc_10223
 		mov	_scroll_active, 0
 
@@ -7478,7 +7478,7 @@ loc_10223:
 		jz	short loc_1024F
 		cmp	_scroll_active, 0
 		jz	short loc_1024F
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_1024F
 		call	graph_scrollup pascal, dx
 
@@ -10340,7 +10340,7 @@ loc_11AF8:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
 		call	_grcg_setcolor_direct_seg1_raw
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jnb	short loc_11B11
 		push	150A80h
 		push	0Eh
@@ -10394,10 +10394,10 @@ loc_11B91:
 		jb	loc_11CB5
 		cmp	byte_228EC, 16h
 		jnz	loc_11C2D
-		mov	al, stage_id
+		mov	al, _stage_id
 		add	al, 0A1h
 		mov	gStage_1+6, al
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jnz	short loc_11BBE
 		push	(17 shl 16) + 11
 		push	ds
@@ -10406,7 +10406,7 @@ loc_11B91:
 ; ---------------------------------------------------------------------------
 
 loc_11BBE:
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_11BD1
 		push	(17 shl 16) + 11
 		push	ds
@@ -10440,7 +10440,7 @@ loc_11C2D:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_G
 		call	_grcg_setcolor_direct_seg1_raw
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jnb	short loc_11C46
 		push	150A80h
 		push	0Eh
@@ -10644,7 +10644,7 @@ loc_12064:
 
 loc_12083:
 		push	4
-		nopcall	_playperf_lower
+		nopcall	playperf_lower
 		les	bx, _resident
 		inc	es:[bx+resident_t.miss_count]
 
@@ -11329,7 +11329,7 @@ loc_127BD:
 		jb	short loc_12821
 
 loc_127D2:
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_127E7
 		mov	ax, 5
 		imul	si
@@ -11350,7 +11350,7 @@ loc_127E7:
 ; ---------------------------------------------------------------------------
 
 loc_127FA:
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_1281A
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_1281A
@@ -13478,7 +13478,7 @@ loc_1626C:
 		mov	[bp+var_2], dl
 
 loc_16279:
-		mov	al, stage_id
+		mov	al, _stage_id
 		shl	al, 4
 		mov	dl, [bp+var_2]
 		sub	dl, al
@@ -13761,7 +13761,7 @@ loc_165DF:
 
 loc_165F8:
 		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
-		mov	al, stage_id
+		mov	al, _stage_id
 		mov	ah, 0
 		imul	ax, 64h
 		add	ax, 64h	; 'd'
@@ -13796,7 +13796,7 @@ loc_165F8:
 		push	si
 		push	TX_WHITE
 		nopcall	hud_int_put
-		mov	al, stage_id
+		mov	al, _stage_id
 		mov	ah, 0
 		imul	ax, 5000
 		add	ax, 10000
@@ -13838,7 +13838,7 @@ loc_166E9:
 		push	1
 
 loc_166F5:
-		call	_playperf_raise
+		call	playperf_raise
 		jmp	short loc_1671B
 ; ---------------------------------------------------------------------------
 
@@ -13855,7 +13855,7 @@ loc_1670A:
 		push	1
 
 loc_16716:
-		call	_playperf_lower
+		call	playperf_lower
 
 loc_1671B:
 		push	ss
@@ -14486,7 +14486,7 @@ sub_16F05	proc near
 		add	ax, 100
 		cmp	ax, _extend_point_items_collected
 		ja	short loc_16F52
-		call	_playperf_raise pascal, 4
+		call	playperf_raise pascal, 4
 		inc	_extends_gained
 		cmp	_lives, 99
 		jnb	short loc_16F52
@@ -14707,7 +14707,7 @@ loc_1711E:
 
 loc_1712C:
 		push	3
-		call	_playperf_raise
+		call	playperf_raise
 		inc	_lives
 		call	sub_10407
 		call	snd_se_play pascal, 7
@@ -14748,7 +14748,7 @@ loc_17199:
 		mov	al, byte_225CC
 		add	al, 0E0h
 		mov	byte_225CC, al
-		call	_playperf_raise pascal, 1
+		call	playperf_raise pascal, 1
 
 loc_171AF:
 		inc	_items_collected
@@ -14809,7 +14809,7 @@ loc_171FD:
 		push	4
 
 loc_171FF:
-		call	_playperf_lower
+		call	playperf_lower
 
 loc_17204:
 		call	hud_dream_put
@@ -29138,10 +29138,10 @@ loc_1FC95:
 		assume es:nothing
 		mov	ax, _stage_graze
 		add	es:[bx+resident_t.graze], ax
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jz	short loc_1FCD1
 		call	sub_F2B4
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jz	short loc_1FCCB
 		call	sub_16510
 		jmp	loc_1FD51
@@ -29161,7 +29161,7 @@ loc_1FCD6:
 		cmp	_boss_phase_frame, 416;stuck at frame 416 until all score has been added
 		jnz	short loc_1FD35
 		call	score_delta_commit
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnb	short loc_1FD0B
 		xor	si, si
 		jmp	short loc_1FD06
@@ -29169,7 +29169,7 @@ loc_1FCD6:
 
 loc_1FCEE:
 		mov	al, _score_lebcd[si]
-		mov	dl, stage_id
+		mov	dl, _stage_id
 		mov	dh, 0
 		shl	dx, 3
 		les	bx, _resident
@@ -29182,14 +29182,14 @@ loc_1FD06:
 		jl	short loc_1FCEE
 
 loc_1FD0B:
-		cmp	stage_id, 5
+		cmp	_stage_id, 5
 		jnz	short loc_1FD19
 		call	end_game
 		jmp	short loc_1FD25
 ; ---------------------------------------------------------------------------
 
 loc_1FD19:
-		cmp	stage_id, 6
+		cmp	_stage_id, 6
 		jnz	short loc_1FD25
 		call	end_extra
 
@@ -29855,11 +29855,7 @@ include th04/main/frames[bss].asm
 word_25FE6	dw ?
 byte_25FE8	db ?
 include th03/hardware/palette_changed[bss].asm
-stage_id	db ?
-_rank	db ?
-include th04/main/playperf[bss].asm
-public _playchar
-_playchar	db ?
+include th04/main/play[bss].asm
 include th04/main/ems[bss].asm
 _turbo_mode	db ?
 		db ?

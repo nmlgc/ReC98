@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "th05/th05.hpp"
+#include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"
 
 void pascal  far nullsub_1(void);
