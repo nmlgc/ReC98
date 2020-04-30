@@ -1074,8 +1074,8 @@ sub_B55A	proc near
 		mov	byte_2C96C, 0
 		mov	_scroll_line, 0
 		mov	word_23F06, 0
-		mov	_scroll_line_on_plane[0 * 2], 0
-		mov	_scroll_line_on_plane[1 * 2], 0
+		mov	_scroll_line_on_page[0 * 2], 0
+		mov	_scroll_line_on_page[1 * 2], 0
 		mov	_scroll_subpixel_line, 0
 		mov	byte_23EFC, 0
 		mov	byte_23F04, 0
@@ -7473,7 +7473,7 @@ loc_10223:
 		add	ax, ax
 		mov	dx, _scroll_line
 		mov	bx, ax
-		mov	_scroll_line_on_plane[bx], dx
+		mov	_scroll_line_on_page[bx], dx
 		cmp	byte_23F04, 0
 		jz	short loc_1024F
 		cmp	_scroll_active, 0

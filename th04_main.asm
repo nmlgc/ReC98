@@ -920,8 +920,8 @@ sub_B1D0	proc near
 		mov	byte_2D00A, 0
 		mov	_scroll_line, 0
 		mov	word_25100, 0
-		mov	_scroll_line_on_plane[0 * 2], 0
-		mov	_scroll_line_on_plane[1 * 2], 0
+		mov	_scroll_line_on_page[0 * 2], 0
+		mov	_scroll_line_on_page[1 * 2], 0
 		mov	_scroll_subpixel_line, 0
 		mov	byte_25104, 0
 		mov	byte_250FE, 0
@@ -2516,7 +2516,7 @@ sub_CCD6	proc near
 		add	ax, ax
 		mov	dx, _scroll_line
 		mov	bx, ax
-		mov	_scroll_line_on_plane[bx], dx
+		mov	_scroll_line_on_page[bx], dx
 		cmp	byte_250FE, 0
 		jz	short loc_CCFE
 		cmp	_scroll_active, 0

@@ -53,7 +53,7 @@ tiles_invalidate_around	proc near
 	mov	bh, 0
 	mov	bl, _page_back
 	add	bx, bx
-	add	ax, _scroll_line_on_plane[bx]
+	add	ax, _scroll_line_on_page[bx]
 	jns	short @@scroll_wrap?
 	add	ax, RES_Y
 	jmp	short @@invalidate

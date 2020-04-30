@@ -1,7 +1,3 @@
-; Transforms the 1/16-pixel on-screen Y coordinate [sy] to its corresponding
-; VRAM line given the current scrolling offset.
-
-; int pascal near scroll_subpixel_y_to_vram(int sy);
 public SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1
 scroll_subpixel_y_to_vram_seg1	proc near
 @@sy	= word ptr 2

@@ -1,4 +1,3 @@
-; See scroll_subpixel_y_to_vram_seg1().
 public SCROLL_SUBPIXEL_Y_TO_VRAM_SEG3
 scroll_subpixel_y_to_vram_seg3	proc near
 @@sy	= word ptr 2
@@ -26,7 +25,6 @@ scroll_subpixel_y_to_vram_seg3	proc near
 scroll_subpixel_y_to_vram_seg3	endp
 
 
-; Like the one above, but transforming even if scrolling is disabled.
 public SCROLL_SUBPIXEL_Y_TO_VRAM_ALWAYS
 scroll_subpixel_y_to_vram_always	proc near
 @@sy	= word ptr 2
