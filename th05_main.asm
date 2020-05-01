@@ -1875,7 +1875,7 @@ include th04/main/tiles_invalidate_all.asm
 sub_BEE6	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_11A65
+		call	popup_titles_invalidate
 		call	player_invalidate
 		call	sub_123AD
 		call	enemies_invalidate
@@ -5951,7 +5951,7 @@ sub_EE58	proc near
 		mov	_boss_update, eax
 		mov	ax, _boss_fg_render_func
 		mov	_boss_fg_render, ax
-		mov	_overlay_text, offset sub_11CBB
+		mov	_overlay_text, offset popup_boss_bgm_update_and_render
 		mov	al, 1
 		pop	bp
 		retn
@@ -10062,7 +10062,7 @@ var_1		= byte ptr -1
 		jnz	short loc_1193E
 
 loc_11936:
-		mov	_overlay_text, offset sub_11AAE
+		mov	_overlay_text, offset popup_titles_update_and_render
 		jmp	short loc_11956
 ; ---------------------------------------------------------------------------
 
@@ -10071,7 +10071,7 @@ loc_1193E:
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
-		mov	_popup_byte_unknown, 0
+		mov	_popup_titles_frame, 0
 		jmp	short loc_119AD
 ; ---------------------------------------------------------------------------
 
@@ -10201,386 +10201,11 @@ loc_11A19:
 		leave
 		retn
 sub_119B1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11A1D	proc near
-
-arg_0		= word ptr  4
-@@y		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		dec	si
-		add	di, si
-		mov	ax, 8
-		imul	di
-		mov	di, ax
-		mov	ax, 8
-		imul	si
-		mov	si, ax
-		call	scroll_subpixel_y_to_vram_seg1 pascal, [bp+@@y]
-		mov	[bp+@@y], ax
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		jmp	short loc_11A5B
-; ---------------------------------------------------------------------------
-
-loc_11A49:
-		mov	al, byte_228EC
-		mov	ah, 0
-		mov	cx, ax
-		mov	dx, [bp+@@y]
-		mov	ax, si
-		call	@bb_txt_put_8_raw
-		add	si, 10h
-
-loc_11A5B:
-		cmp	si, di
-		jl	short loc_11A49
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_11A1D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11A65	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		mov	al, _popup_byte_unknown
-		add	al, byte_2288B
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short locret_11AAC
-		cmp	[bp+var_1], 0C0h
-		jnb	short loc_11A85
-		cmp	[bp+var_1], 22h	; '"'
-		ja	short locret_11AAC
-
-loc_11A85:
-		mov	_tile_invalidate_box.x, PLAYFIELD_W
-		mov	_tile_invalidate_box.y, 32
-		call	tiles_invalidate_around pascal, large ((168 shl 4) shl 16) or (192 shl 4)
-		call	tiles_invalidate_around pascal, large ((200 shl 4) shl 16) or (192 shl 4)
-		call	tiles_invalidate_around pascal, large ((360 shl 4) shl 16) or (192 shl 4)
-
-locret_11AAC:
-		leave
-		retn
-sub_11A65	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11AAE	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_popup_byte_unknown, 0C0h
-		jb	loc_11B65
-		cmp	_popup_byte_unknown, 0C0h
-		jnz	short loc_11ACB
-		call	_playfield_tram_wipe
-		mov	byte_228EC, 0
-		jmp	short loc_11AD6
-; ---------------------------------------------------------------------------
-
-loc_11ACB:
-		test	_popup_byte_unknown, 1
-		jnz	short loc_11AD6
-		inc	byte_228EC
-
-loc_11AD6:
-		cmp	byte_228EC, 10h
-		jb	short loc_11AF8
-		test	_popup_byte_unknown, 1
-		jz	loc_11CB5
-		mov	_overlay_text, offset nullfunc_near
-		mov	_popup_byte_unknown, 0
-		mov	byte_228EC, 0
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_11AF8:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_G
-		call	_grcg_setcolor_direct_seg1_raw
-		cmp	_stage_id, 5
-		jnb	short loc_11B11
-		push	150A80h
-		push	0Eh
-		jmp	short loc_11B19
-; ---------------------------------------------------------------------------
-
-loc_11B11:
-		push	110A80h
-		push	16h
-
-loc_11B19:
-		call	sub_11A1D
-		mov	ax, 30h	; '0'
-		sub	ax, _stage_bgm_title_len
-		push	ax
-		push	16800002h
-		call	sub_11A1D
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 33h	; '3'
-		sub	ax, _stage_bgm_title_len
-		push	ax
-		push	1680h
-		push	_stage_bgm_title_len
-		call	sub_11A1D
-		mov	ax, _stage_title_len
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, 1Ch
-		sub	dx, ax
-		push	dx
-		push	0C80h
-		push	_stage_title_len
-		call	sub_11A1D
-		GRCG_OFF_CLOBBERING dx
-		jmp	loc_11CB5
-; ---------------------------------------------------------------------------
-
-loc_11B65:
-		cmp	_popup_byte_unknown, 0
-		jnz	short loc_11B91
-		mov	byte_228EC, 10h
-		call	_strlen c, large [_stage_title]
-		mov	_stage_title_len, ax
-		call	_strlen c, large [_stage_bgm_title]
-		mov	_stage_bgm_title_len, ax
-
-loc_11B91:
-		cmp	byte_228EC, 10h
-		jb	loc_11CB5
-		cmp	byte_228EC, 16h
-		jnz	loc_11C2D
-		mov	al, _stage_id
-		add	al, 0A1h
-		mov	gStage_1+6, al
-		cmp	_stage_id, 5
-		jnz	short loc_11BBE
-		push	(17 shl 16) + 11
-		push	ds
-		push	offset gFINAL_STAGE
-		jmp	short loc_11BDB
-; ---------------------------------------------------------------------------
-
-loc_11BBE:
-		cmp	_stage_id, 6
-		jnz	short loc_11BD1
-		push	(17 shl 16) + 11
-		push	ds
-		push	offset gEXTRA_STAGE
-		jmp	short loc_11BDB
-; ---------------------------------------------------------------------------
-
-loc_11BD1:
-		push	(21 shl 16) + 11
-		push	ds
-		push	offset gStage_1
-
-loc_11BDB:
-		push	TX_YELLOW
-		call	gaiji_putsa
-		mov	ax, _stage_title_len
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, 1Ch
-		sub	dx, ax
-		call	text_putsa pascal, dx, 13, _stage_title, TX_WHITE
-		mov	ax, 30h	; '0'
-		sub	ax, _stage_bgm_title_len
-		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
-		mov	ax, 33h	; '3'
-		sub	ax, _stage_bgm_title_len
-		call	text_putsa pascal, ax, 23, _stage_bgm_title, TX_WHITE
-
-loc_11C2D:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_G
-		call	_grcg_setcolor_direct_seg1_raw
-		cmp	_stage_id, 5
-		jnb	short loc_11C46
-		push	150A80h
-		push	0Eh
-		jmp	short loc_11C4E
-; ---------------------------------------------------------------------------
-
-loc_11C46:
-		push	110A80h
-		push	16h
-
-loc_11C4E:
-		call	sub_11A1D
-		mov	ax, 30h	; '0'
-		sub	ax, _stage_bgm_title_len
-		push	ax
-		push	16800002h
-		call	sub_11A1D
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 33h	; '3'
-		sub	ax, _stage_bgm_title_len
-		push	ax
-		push	1680h
-		push	_stage_bgm_title_len
-		call	sub_11A1D
-		mov	ax, _stage_title_len
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, 1Ch
-		sub	dx, ax
-		push	dx
-		push	0C80h
-		push	_stage_title_len
-		call	sub_11A1D
-		GRCG_OFF_CLOBBERING dx
-		test	_popup_byte_unknown, 3
-		jnz	short loc_11CB5
-		cmp	_popup_byte_unknown, 0
-		jz	short loc_11CB5
-		inc	byte_228EC
-		cmp	byte_228EC, 18h
-		jb	short loc_11CB5
-		mov	byte_228EC, 0
-
-loc_11CB5:
-		inc	_popup_byte_unknown
-		pop	bp
-		retn
-sub_11AAE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11CBB	proc near
-		push	bp
-		mov	bp, sp
-		cmp	byte_2288B, 0C0h
-		jb	short loc_11D37
-		cmp	byte_2288B, 0C0h
-		jnz	short loc_11CD6
-		call	_playfield_tram_wipe
-		mov	byte_228EC, 0
-		jmp	short loc_11CE1
-; ---------------------------------------------------------------------------
-
-loc_11CD6:
-		test	byte_2288B, 1
-		jnz	short loc_11CE1
-		inc	byte_228EC
-
-loc_11CE1:
-		cmp	byte_228EC, 10h
-		jb	short loc_11CFE
-		test	byte_2288B, 1
-		jz	loc_11DE4
-		mov	_overlay_text, offset nullfunc_near
-		mov	byte_2288B, 0
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_11CFE:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_G
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 30h	; '0'
-		sub	ax, _boss_bgm_title_len
-		push	ax
-		push	16800002h
-		call	sub_11A1D
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 33h	; '3'
-		sub	ax, _boss_bgm_title_len
-		push	ax
-		push	1680h
-		push	_boss_bgm_title_len
-		call	sub_11A1D
-		GRCG_OFF_CLOBBERING dx
-		jmp	loc_11DE4
-; ---------------------------------------------------------------------------
-
-loc_11D37:
-		cmp	byte_2288B, 0
-		jnz	short loc_11D53
-		mov	byte_228EC, 10h
-		call	_strlen c, large [_boss_bgm_title]
-		mov	_boss_bgm_title_len, ax
-
-loc_11D53:
-		cmp	byte_228EC, 10h
-		jb	loc_11DE4
-		cmp	byte_228EC, 16h
-		jnz	short loc_11D90
-		mov	ax, 30h	; '0'
-		sub	ax, _boss_bgm_title_len
-		call	gaiji_putca pascal, ax, (23 shl 16) + 3, TX_YELLOW
-		mov	ax, 33h	; '3'
-		sub	ax, _boss_bgm_title_len
-		call	text_putsa pascal, ax, 23, _boss_bgm_title, TX_WHITE
-
-loc_11D90:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_G
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 30h	; '0'
-		sub	ax, _boss_bgm_title_len
-		push	ax
-		push	16800002h
-		call	sub_11A1D
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, 33h	; '3'
-		sub	ax, _boss_bgm_title_len
-		push	ax
-		push	1680h
-		push	_boss_bgm_title_len
-		call	sub_11A1D
-		GRCG_OFF_CLOBBERING dx
-		test	byte_2288B, 3
-		jnz	short loc_11DE4
-		cmp	byte_2288B, 0
-		jz	short loc_11DE4
-		inc	byte_228EC
-		cmp	byte_228EC, 18h
-		jb	short loc_11DE4
-		mov	byte_228EC, 0
-
-loc_11DE4:
-		inc	byte_2288B
-		pop	bp
-		retn
-sub_11CBB	endp
 main_0_TEXT	ends
+
+	POPUP_TITLES_INVALIDATE procdesc near
+	POPUP_TITLES_UPDATE_AND_RENDER procdesc near
+	POPUP_BOSS_BGM_UPDATE_AND_RENDER procdesc near
 
 main_01_TEXT	segment	byte public 'CODE' use16
 
@@ -21414,7 +21039,7 @@ loc_1AF66:
 
 loc_1AF85:
 		call	sub_F2B4
-		mov	_overlay_text, offset sub_11CBB
+		mov	_overlay_text, offset popup_boss_bgm_update_and_render
 		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
 		mov	_boss_fg_render, offset sub_10F12
@@ -29678,14 +29303,12 @@ off_22884	dw offset sub_1F776
 		dw offset sub_1F7BA
 		dw offset sub_1F823
 byte_2288A	db 0
-byte_2288B	db 0
-public _popup_frame
+public _popup_frame, _popup_boss_bgm_frame
+_popup_boss_bgm_frame	db 0
 _popup_frame	db 0
 		db 0
 include th04/formats/bb_txt[data].asm
 include th04/main/hud/popup[data].asm
-byte_228EC	db 0
-		db 0
 public _PLAYFIELD_BLANK_ROW
 _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 include th04/strings/demoplay[data].asm
@@ -29942,7 +29565,6 @@ byte_2CE56	db ?
 patnum_2CE64	dw ?
 fp_2CE66	dw ?
 fp_2CE68	dw ?
-
 include th04/main/hud/popup[bss].asm
 
 public _stage_title, _stage_bgm_title, _boss_bgm_title

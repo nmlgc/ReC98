@@ -1,6 +1,7 @@
-gStage_1	db 0BCh, 0BDh, 0AAh, 0B0h, 0AEh, 2, 0A1h, 0
-gFINAL_STAGE	db 0AFh, 0B2h, 0B7h, 0AAh, 0B5h, 2, 0BCh, 0BDh,	0AAh, 0B0h, 0AEh, 0
-gEXTRA_STAGE	db 0AEh, 0C1h, 0BDh, 0BBh, 0AAh, 2, 0BCh, 0BDh,	0AAh, 0B0h, 0AEh, 0
+public _gStage_1, _gFINAL_STAGE, _gEXTRA_STAGE
+_gStage_1	db 0BCh, 0BDh, 0AAh, 0B0h, 0AEh, 2, 0A1h, 0
+_gFINAL_STAGE	db 0AFh, 0B2h, 0B7h, 0AAh, 0B5h, 2, 0BCh, 0BDh,	0AAh, 0B0h, 0AEh, 0
+_gEXTRA_STAGE	db 0AEh, 0C1h, 0BDh, 0BBh, 0AAh, 2, 0BCh, 0BDh,	0AAh, 0B0h, 0AEh, 0
 gpHISCORE_ENTRY	db 40h,	41h, 42h, 43h, 44h, 45h, 46h, 47h, 0
 gpEXTEND	db 48h,	49h, 4Ah, 4Bh, 4Ch, 0
 gpBONUS		db 58h,	59h, 5Ah, 5Bh, 0
@@ -19,3 +20,7 @@ _POPUP_STRINGS	label dword
 if GAME eq 5
 	dd gpDREAMBONUS_MAX
 endif
+
+public _popup_dissolve_sprite
+_popup_dissolve_sprite	db 0
+	evendata
