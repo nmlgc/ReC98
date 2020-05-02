@@ -6,6 +6,7 @@
 #include <mbctype.h>
 #include <mbstring.h>
 #include "th02/th02.h"
+#include "th02/gaiji/gaiji.h"
 
 char rank = RANK_NORMAL;
 int8_t rank_padding = 0;
@@ -34,7 +35,7 @@ unsigned int score_duration;
 // Slightly differs from the same function in MAINE.EXE!
 void pascal near score_points_put(unsigned y, long points, unsigned atrb)
 {
-	unsigned digit = GB_DIGITS;
+	unsigned digit = gb_0_;
 	long divisor = 10000000;
 	long result;
 	char putting = 0;
@@ -42,7 +43,7 @@ void pascal near score_points_put(unsigned y, long points, unsigned atrb)
 	for(i = 0; i < 8; i++) {
 		result = divisor ? (points / divisor) % 10 : points % 10;
 		divisor /= 10;
-		digit = result + GB_DIGITS;
+		digit = result + gb_0_;
 		if(result) {
 			putting = 1;
 		}
@@ -104,7 +105,7 @@ void pascal near scores_put(int place_to_highlight)
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
 		score_points_put(7+i, hi.score.points[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
-			gaiji_putca(44, 7+i, hi.score.stage[i] + GB_DIGITS, atrb);
+			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0_, atrb);
 		} else {
 			gaiji_putca(44, 7+i, gs_ALL, atrb);
 		}
@@ -114,7 +115,7 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		if(i != 9) {
-			gaiji_putca(9, 7+i, GB_DIGITS+i+1, atrb);
+			gaiji_putca(9, 7+i, gb_1_ + i, atrb);
 		} else {
 			gaiji_putca(8, 16, gb_1_, atrb);
 			gaiji_putca(10, 16, gb_0_, atrb);

@@ -4,6 +4,7 @@
  */
 
 #include "th02/th02.h"
+#include "th02/gaiji/gaiji.h"
 #include "th02/score.h"
 #include "th02/score.c"
 #include "th02/scoreenc.c"
@@ -49,7 +50,7 @@ void pascal score_points_put(unsigned y, long points, unsigned atrb)
 	for(x = 26; x < 26 + (8 * 2); x += 2) {
 		result = (points / divisor) % 10;
 		divisor /= 10;
-		digit = result + GB_DIGITS;
+		digit = result + gb_0_;
 		if(result) {
 			putting = 1;
 		}
@@ -84,7 +85,7 @@ void pascal near scores_put(int place_to_highlight)
 		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
 		score_points_put(6+i, hi.score.points[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
-			gaiji_putca(44, 6+i, hi.score.stage[i] + GB_DIGITS, atrb);
+			gaiji_putca(44, 6+i, hi.score.stage[i] + gb_0_, atrb);
 		} else {
 			gaiji_putca(44, 6+i, gs_ALL, atrb);
 		}
@@ -92,7 +93,7 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		if(i != 9) {
-			gaiji_putca(6, 6+i, GB_DIGITS+i+1, atrb);
+			gaiji_putca(6, 6+i, gb_1_ + i, atrb);
 		} else {
 			gaiji_putca(4, 15, gb_1_, atrb);
 			gaiji_putca(6, 15, gb_0_, atrb);

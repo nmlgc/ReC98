@@ -10,6 +10,7 @@
 #include "th02/formats/cfg.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+#include "th02/gaiji/gaiji.h"
 
 #pragma option -d -a2
 
@@ -465,14 +466,14 @@ void pascal near option_put(int sel, unsigned int atrb)
 		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[snd_bgm_mode], 0);
 	} else if(sel == 2) {
 		gaiji_putsa(24, 18, gbPLAYER, atrb);
-		gaiji_putca(49, 18, lives + 1 + GB_DIGITS, atrb);
+		gaiji_putca(49, 18, lives + 1 + gb_0_, atrb);
 		graph_copy_rect_1_to_0(392, 292, 32, 16);
-		graph_gaiji_putc(396, 292, lives + 1 + GB_DIGITS, 0);
+		graph_gaiji_putc(396, 292, lives + 1 + gb_0_, 0);
 	} else if(sel == 3) {
 		gaiji_putsa(24, 19, gbBOMB, atrb);
-		gaiji_putca(49, 19, bombs + GB_DIGITS, atrb);
+		gaiji_putca(49, 19, bombs + gb_0_, atrb);
 		graph_copy_rect_1_to_0(392, 308, 32, 16);
-		graph_gaiji_putc(396, 308, bombs + GB_DIGITS, 0);
+		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
 	} else if(sel == 4) {
 		text_putsa(24, 20, PERF_TITLE, atrb);
 		text_putsa(45, 20, PERF_OPTIONS[resident->perf], atrb);
