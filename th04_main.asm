@@ -1719,27 +1719,8 @@ include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
-	nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-public NULLFUNC_NEAR
-nullfunc_near	proc near
-		retn
-nullfunc_near	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-nullsub_2	proc far
-		retf
-nullsub_2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+	even
+include th04/main/null.asm
 include th04/main/pointnum/inv_upd.asm
 include th04/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
@@ -18036,7 +18017,7 @@ var_2		= word ptr -2
 loc_16638:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_16651
-		setfarfp	_stage_vm, nullsub_2
+		setfarfp	_stage_vm, nullfunc_far
 		mov	_midboss_frames_until, 0
 
 loc_16651:
@@ -20771,7 +20752,7 @@ loc_17E18:
 		les	bx, _std_ip
 		cmp	word ptr es:[bx], 0
 		jnz	short locret_17E3C
-		setfarfp	_stage_vm, nullsub_2
+		setfarfp	_stage_vm, nullfunc_far
 
 locret_17E3C:
 		leave
@@ -21899,7 +21880,7 @@ loc_18706:
 loc_1872F:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_1876B
-		setfarfp	_stage_vm, nullsub_2
+		setfarfp	_stage_vm, nullfunc_far
 		mov	_midboss_frames_until, 0
 		mov	fp_259E8, offset sub_180BB
 		mov	byte_259EF, 0
@@ -24474,7 +24455,7 @@ sub_19EBC	proc far
 		mov	bp, sp
 		mov	_midboss_invalidate?, offset nullfunc_near
 		mov	_midboss_render, offset nullfunc_near
-		setfarfp	_midboss_update, nullsub_2
+		setfarfp	_midboss_update, nullfunc_far
 		mov	_midboss_active, 0
 		mov	_midboss_hp, 0
 		pop	bp
@@ -26621,7 +26602,7 @@ var_2		= word ptr -2
 loc_1B497:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_1B4BA
-		setfarfp	_stage_vm, nullsub_2
+		setfarfp	_stage_vm, nullfunc_far
 		mov	_midboss_frames_until, 0
 		mov	byte_25A08, 0
 		mov	byte_25A1B, 0
@@ -31698,7 +31679,7 @@ items_update	endp
 boss_reset	proc near
 		push	bp
 		mov	bp, sp
-		setfarfp	_boss_update, nullsub_2
+		setfarfp	_boss_update, nullfunc_far
 		mov	_boss_fg_render, offset nullfunc_near
 		mov	_boss_phase, 0
 		mov	_boss_mode, 0
@@ -31941,7 +31922,7 @@ stage4_setup	endp
 stage5_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, nullsub_2
+		setfarfp	_midboss_update_func, nullfunc_far
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
 		call	boss_reset
@@ -31980,7 +31961,7 @@ stage5_setup	endp
 stage6_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, nullsub_2
+		setfarfp	_midboss_update_func, nullfunc_far
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
 		call	boss_reset

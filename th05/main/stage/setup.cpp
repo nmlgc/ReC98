@@ -153,7 +153,7 @@ void pascal near stage5_setup(void)
 
 void pascal near stage6_setup(void)
 {
-	midboss_update_func = nullsub_1;
+	midboss_update_func = nullfunc_far;
 	midboss_render_func = nullfunc_near;
 	midboss.frames_until = 30000;
 

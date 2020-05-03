@@ -7,11 +7,9 @@
 
 extern "C" {
 #include "th05/th05.hpp"
+#include "th04/main/null.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"
-
-void pascal  far nullsub_1(void);
-void pascal near nullfunc_near(void);
 
 void pascal near playfield_fillm_32_0_320_192(void);
 void pascal near playfield_fillm_0_0_384_192__2(void);

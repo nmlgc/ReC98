@@ -1950,25 +1950,8 @@ include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF 1
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-public NULLFUNC_NEAR
-nullfunc_near	proc near
-		retn
-nullfunc_near	endp
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-public NULLSUB_1
-nullsub_1	proc far
-		retf
-nullsub_1	endp
-		nop
-
+	even
+include th04/main/null.asm
 include th04/main/bullet/pellet_r.asm
 include th04/main/spark_render.asm
 include th04/main/sparks.asm
@@ -13242,7 +13225,7 @@ loc_1603F:
 		les	bx, _std_ip
 		cmp	word ptr es:[bx], 0
 		jnz	short locret_16063
-		setfarfp	_stage_vm, nullsub_1
+		setfarfp	_stage_vm, nullfunc_far
 
 locret_16063:
 		leave
@@ -14945,7 +14928,7 @@ sub_172FF	proc far
 		mov	bp, sp
 		mov	_midboss_invalidate?, offset nullfunc_near
 		mov	_midboss_render, offset nullfunc_near
-		setfarfp	_midboss_update, nullsub_1
+		setfarfp	_midboss_update, nullfunc_far
 		mov	_midboss_hp, 0
 		pop	bp
 		retf
