@@ -55,6 +55,8 @@ include th01/th01.inc
 	extern _toupper:proc
 	extern _vsprintf:proc
 
+op_01 group op_01_TEXT, op_01__TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -89,71 +91,12 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
+op_01_TEXT	ends
+
+op_01__TEXT	segment	byte public 'CODE' use16
+		assume cs:op_01
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-		enter	2, 0
-		push	si
-		push	di
-		xor	si, si
-		jmp	short loc_A1E5
-; ---------------------------------------------------------------------------
-
-loc_A1CE:
-		push	190h
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, si
-		shl	bx, 2
-		mov	[bx+118Eh], dx
-		mov	[bx+118Ch], ax
-		inc	si
-
-loc_A1E5:
-		cmp	si, 50h	; 'P'
-		jl	short loc_A1CE
-		call	_grcg_setcolor_tdw stdcall, 4
-		push	1
-		call	_graph_accesspage_func
-		add	sp, 4
-		xor	si, si
-		jmp	short loc_A22A
-; ---------------------------------------------------------------------------
-
-loc_A1FF:
-		xor	di, di
-		mov	[bp-2],	si
-		jmp	short loc_A223
-; ---------------------------------------------------------------------------
-
-loc_A206:
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp-2]
-		mov	al, es:[bx]
-		mov	bx, si
-		shl	bx, 2
-		les	bx, [bx+118Ch]
-		add	bx, di
-		mov	es:[bx], al
-		inc	di
-		add	word ptr [bp-2], 50h ; 'P'
-
-loc_A223:
-		cmp	di, 190h
-		jl	short loc_A206
-		inc	si
-
-loc_A22A:
-		cmp	si, 50h	; 'P'
-		jl	short loc_A1FF
-		call	_grcg_off_func
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pop	di
-		pop	si
-		leave
-		retf
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -952,9 +895,9 @@ sub_A8AD	proc far
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
-		mov	ax, seg	op_01_TEXT
+		mov	ax, seg	op_01
 		mov	es, ax
-		assume es:op_01_TEXT
+		assume es:op_01
 
 loc_A8E1:
 		call	sub_A79D
@@ -2040,7 +1983,7 @@ loc_B25D:
 		leave
 		retf
 _main		endp
-op_01_TEXT	ends
+op_01__TEXT	ends
 
 ; ===========================================================================
 
@@ -2460,7 +2403,8 @@ include th01/mdrv2[data].asm
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 dword_13418	dd ?
-		db 320 dup(?)
+public _columns
+_columns	dd ROW_SIZE dup (?)
 include th01/hardware/vsync[bss].asm
 		db 191 dup (?)
 word_13627	dw ?
