@@ -22,6 +22,7 @@ BINARY = 'O'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/formats/cfg.inc
 
 	option emulator
 
@@ -39,12 +40,7 @@ include th01/th01.inc
 	extern _exit:proc
 	extern _farfree:proc
 	extern _farmalloc:proc
-	extern _fclose:proc
 	extern _filelength:proc
-	extern _fopen:proc
-	extern _fputc:proc
-	extern _fputs:proc
-	extern _fread:proc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _memcmp:proc
@@ -98,147 +94,8 @@ op_01__TEXT	segment	byte public 'CODE' use16
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A240	proc far
-
-_ptr		= byte ptr -12h
-var_B		= byte ptr -0Bh
-var_A		= byte ptr -0Ah
-var_9		= byte ptr -9
-var_8		= byte ptr -8
-stream		= dword	ptr -6
-var_1		= byte ptr -1
-
-		enter	12h, 0
-		mov	[bp+var_1], 0
-		push	ds
-		push	offset aRB	; "rb"
-		push	ds
-		push	offset path	; "reiiden.cfg"
-		call	_fopen
-		add	sp, 8
-		mov	word ptr [bp+stream+2],	dx
-		mov	word ptr [bp+stream], ax
-		or	ax, dx
-		jnz	short loc_A266
-
-loc_A262:
-		mov	[bp+var_1], 1
-
-loc_A266:
-		cmp	[bp+var_1], 0
-		jnz	short loc_A2CE
-		pushd	[bp+stream] ; stream
-		push	0B0001h	; size
-		push	ss
-		lea	ax, [bp+_ptr]
-		push	ax		; ptr
-		call	_fread
-		add	sp, 0Ch
-		push	7		; n
-		push	ds
-		push	offset s	; "REIIDEN"
-		push	ss
-		lea	ax, [bp+_ptr]
-		push	ax		; s1
-		call	_memcmp
-		add	sp, 0Ah
-		or	ax, ax
-		jz	short loc_A2A8
-		pushd	[bp+stream] ; stream
-		call	_fclose
-		add	sp, 4
-		jmp	short loc_A262
-; ---------------------------------------------------------------------------
-
-loc_A2A8:
-		mov	al, [bp+var_B]
-		mov	byte ptr word_12320, al
-		mov	al, [bp+var_A]
-		mov	byte ptr word_12320+1, al
-		mov	al, [bp+var_9]
-		mov	byte ptr word_12322, al
-		mov	al, [bp+var_8]
-		mov	byte ptr word_12322+1, al
-		pushd	[bp+stream] ; stream
-		call	_fclose
-		add	sp, 4
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A2CE:
-		mov	byte ptr word_12320, 1
-		mov	byte ptr word_12320+1, 1
-		mov	byte ptr word_12322, 1
-		mov	byte ptr word_12322+1, 2
-		leave
-		retf
-sub_A240	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A2E4	proc far
-
-stream		= dword	ptr -6
-var_1		= byte ptr -1
-
-		enter	6, 0
-		mov	[bp+var_1], 0
-		push	ds
-		push	offset aWb	; "wb"
-		push	ds
-		push	offset path	; "reiiden.cfg"
-		call	_fopen
-		add	sp, 8
-		mov	word ptr [bp+stream+2],	dx
-		mov	word ptr [bp+stream], ax
-		or	ax, dx
-		jnz	short loc_A30A
-		mov	[bp+var_1], 1
-
-loc_A30A:
-		cmp	[bp+var_1], 0
-		jnz	short locret_A361
-		pushd	[bp+stream] ; stream
-		push	ds
-		push	offset s	; "REIIDEN"
-		call	_fputs
-		pushd	[bp+stream] ; stream
-		mov	al, byte ptr word_12320
-		cbw
-		push	ax		; c
-		call	_fputc
-		pushd	[bp+stream] ; stream
-		mov	al, byte ptr word_12320+1
-		cbw
-		push	ax		; c
-		call	_fputc
-		pushd	[bp+stream] ; stream
-		mov	al, byte ptr word_12322
-		cbw
-		push	ax		; c
-		call	_fputc
-		pushd	[bp+stream] ; stream
-		mov	al, byte ptr word_12322+1
-		cbw
-		push	ax		; c
-		call	_fputc
-		pushd	[bp+stream] ; stream
-		call	_fclose
-		add	sp, 24h
-
-locret_A361:
-		leave
-		retf
-sub_A2E4	endp
-
+	extern _cfg_load:proc
+	extern _cfg_save:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -793,14 +650,8 @@ sub_A7B5	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_A2E4
-		pushd	[dword_13418]
-		push	word_12322+1
-		push	word_12322
-		push	word_12320+1
-		push	word_12320
-		call	_resident_stuff_set
-		add	sp, 0Ch
+		call	_cfg_save
+		call	_resident_stuff_set c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	_game_switch_binary
@@ -833,7 +684,7 @@ loc_A820:
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.route], 0
 		mov	es:[bx+reiidenconfig_t.stage], 0
-		mov	al, byte ptr word_12322+1
+		mov	al, _opts.O_lives_extra
 		add	al, 2
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	es:[bx+reiidenconfig_t.p_value], 0
@@ -884,14 +735,8 @@ sub_A7B5	endp
 sub_A8AD	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_A2E4
-		pushd	[dword_13418]
-		push	word_12322+1
-		push	word_12322
-		push	word_12320+1
-		push	word_12320
-		call	_resident_stuff_set
-		add	sp, 0Ch
+		call	_cfg_save
+		call	_resident_stuff_set c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
@@ -907,19 +752,13 @@ loc_A8E1:
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.mode], 0
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
-		mov	al, byte ptr word_12322+1
+		mov	al, _opts.O_lives_extra
 		add	al, 2
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	es:[bx+reiidenconfig_t.unused_1], 0
 		mov	es:[bx+reiidenconfig_t.bullet_speed], -4
 		mov	es:[bx+reiidenconfig_t.p_value], 0
-		pushd	0
-		push	ds
-		push	offset s	; "REIIDEN"
-		push	ds
-		push	offset s	; "REIIDEN"
-		call	_execl
-		add	sp, 0Ch
+		call	_execl c, offset _REIIDEN, ds, offset _REIIDEN, ds, large 0
 		pop	bp
 		retf
 sub_A8AD	endp
@@ -1052,7 +891,7 @@ arg_2		= word ptr  8
 		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AA34
-		mov	al, byte ptr word_12320
+		mov	al, _opts.O_rank
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_2E]
@@ -1062,7 +901,7 @@ arg_2		= word ptr  8
 loc_AA34:
 		cmp	si, 1
 		jnz	short loc_AA45
-		mov	al, byte ptr word_12320+1
+		mov	al, _opts.O_bgm_mode
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_8]
@@ -1072,7 +911,7 @@ loc_AA34:
 loc_AA45:
 		cmp	si, 2
 		jnz	short loc_AA83
-		mov	al, byte ptr word_12322+1
+		mov	al, _opts.O_lives_extra
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_42]
@@ -1406,32 +1245,32 @@ loc_AD25:
 ; ---------------------------------------------------------------------------
 
 loc_AD49:
-		dec	byte ptr word_12320
-		mov	al, byte ptr word_12320
+		dec	_opts.O_rank
+		mov	al, _opts.O_rank
 		cbw
 		or	ax, ax
 		jge	short loc_AD80
-		mov	byte ptr word_12320, 3
+		mov	_opts.O_rank, RANK_LUNATIC
 		jmp	short loc_AD80
 ; ---------------------------------------------------------------------------
 
 loc_AD5C:
-		dec	byte ptr word_12320+1
-		mov	al, byte ptr word_12320+1
+		dec	_opts.O_bgm_mode
+		mov	al, _opts.O_bgm_mode
 		cbw
 		or	ax, ax
 		jge	short loc_AD80
-		mov	byte ptr word_12320+1, 1
+		mov	_opts.O_bgm_mode, 1
 		jmp	short loc_AD80
 ; ---------------------------------------------------------------------------
 
 loc_AD6F:
-		dec	byte ptr word_12322+1
-		mov	al, byte ptr word_12322+1
+		dec	_opts.O_lives_extra
+		mov	al, _opts.O_lives_extra
 		cbw
 		or	ax, ax
 		jge	short loc_AD80
-		mov	byte ptr word_12322+1, 4
+		mov	_opts.O_lives_extra, CFG_LIVES_EXTRA_MAX
 
 loc_AD80:
 		push	0Fh
@@ -1466,32 +1305,32 @@ loc_AD9C:
 ; ---------------------------------------------------------------------------
 
 loc_ADC0:
-		inc	byte ptr word_12320
-		mov	al, byte ptr word_12320
+		inc	_opts.O_rank
+		mov	al, _opts.O_rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jle	short loc_ADFA
-		mov	byte ptr word_12320, 0
+		mov	_opts.O_rank, RANK_EASY
 		jmp	short loc_ADFA
 ; ---------------------------------------------------------------------------
 
 loc_ADD4:
-		inc	byte ptr word_12320+1
-		mov	al, byte ptr word_12320+1
+		inc	_opts.O_bgm_mode
+		mov	al, _opts.O_bgm_mode
 		cbw
 		cmp	ax, 1
 		jle	short loc_ADFA
-		mov	byte ptr word_12320+1, 0
+		mov	_opts.O_bgm_mode, 0
 		jmp	short loc_ADFA
 ; ---------------------------------------------------------------------------
 
 loc_ADE8:
-		inc	byte ptr word_12322+1
-		mov	al, byte ptr word_12322+1
+		inc	_opts.O_lives_extra
+		mov	al, _opts.O_lives_extra
 		cbw
-		cmp	ax, 4
+		cmp	ax, CFG_LIVES_EXTRA_MAX
 		jle	short loc_ADFA
-		mov	byte ptr word_12322+1, 0
+		mov	_opts.O_lives_extra, 0
 
 loc_ADFA:
 		push	0Fh
@@ -1814,8 +1653,8 @@ loc_B06F:
 loc_B0D6:
 		call	_mdrv2_check_board
 		call	_game_init
-		call	sub_A240
-		mov	al, byte ptr word_12320+1
+		call	_cfg_load
+		mov	al, _opts.O_bgm_mode
 		cbw
 		mov	si, ax
 		mov	byte ptr [bp+inregs+1],	3
@@ -1856,7 +1695,7 @@ loc_B135:
 		or	ax, ax
 		jz	short loc_B126
 		call	sub_A772
-		mov	eax, dword_13418
+		mov	eax, _rand
 		mov	random_seed, eax
 		jmp	loc_B21A
 ; ---------------------------------------------------------------------------
@@ -1894,18 +1733,18 @@ loc_B185:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_B1D8
-		mov	al, byte ptr word_12320+1
+		mov	al, _opts.O_bgm_mode
 		cbw
 		cmp	ax, si
 		jz	short loc_B1C9
-		cmp	byte ptr word_12320+1, 0
+		cmp	_opts.O_bgm_mode, 0
 		jnz	short loc_B1A4
 		call	_mdrv2_bgm_stop
 		jmp	short loc_B1C3
 ; ---------------------------------------------------------------------------
 
 loc_B1A4:
-		mov	al, byte ptr word_12320+1
+		mov	al, _opts.O_bgm_mode
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B1C3
@@ -1917,7 +1756,7 @@ loc_B1A4:
 		call	_mdrv2_bgm_play
 
 loc_B1C3:
-		mov	al, byte ptr word_12320+1
+		mov	al, _opts.O_bgm_mode
 		cbw
 		mov	si, ax
 
@@ -1950,7 +1789,7 @@ loc_B1EE:
 		mov	word ptr es:[0526h], dx
 		mov	es, ax
 		mov	byte ptr es:[0528h], 0
-		inc	dword_13418
+		inc	_rand
 		push	1
 		call	_frame_delay
 		pop	cx
@@ -1958,7 +1797,7 @@ loc_B1EE:
 loc_B21A:
 		cmp	byte_1232C, 0
 		jz	loc_B14D
-		call	sub_A2E4
+		call	_cfg_save
 		mov	byte_1232F, 1
 		call	_mdrv2_bgm_stop
 		call	sub_A79D
@@ -2097,8 +1936,8 @@ op_12_TEXT	ends
 
 	.data
 
-word_12320	dw 101h
-word_12322	dw 201h
+public _opts
+_opts	cfg_options_t <CFG_RANK_DEFAULT, CFG_BGM_MODE_DEFAULT, CFG_BOMBS_DEFAULT, CFG_LIVES_EXTRA_DEFAULT>
 _mode	db 0
 byte_12325	db 0
 byte_12326	db 0
@@ -2302,13 +2141,7 @@ word_125AA	dw 0
 word_125AC	dw 0
 word_125AE	dw 0
 word_125B0	dw 0
-; char path[]
-path		db 'reiiden.cfg',0
-aRB		db 'rb',0
-; char s[]
-s		db 'REIIDEN',0
-; char aWb[]
-aWb		db 'wb',0
+include th01/formats/cfg[data].asm
 ; char aReimu_mdt[]
 aReimu_mdt	db 'reimu.mdt',0
 aReiiden2_grp	db 'REIIDEN2.grp',0
@@ -2402,7 +2235,8 @@ include th01/mdrv2[data].asm
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
-dword_13418	dd ?
+public _rand
+_rand	dd ?
 public _columns
 _columns	dd ROW_SIZE dup (?)
 include th01/hardware/vsync[bss].asm
