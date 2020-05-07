@@ -14,6 +14,8 @@ extern "C" {
 #include "th01/hardware/input.hpp"
 #include "th01/hiscore/scoredat.hpp"
 
+#include "th01/hardware/grppfnfx.cpp"
+
 // Input
 // -----
 void input_sense(bool16 reset_repeat)

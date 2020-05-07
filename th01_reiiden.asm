@@ -69,6 +69,7 @@ include th01/th01.inc
 
 main_01 group main_01_TEXT, main_01__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
+main_25 group main_25_TEXT, main_25__TEXT
 
 ; ===========================================================================
 
@@ -8849,8 +8850,8 @@ loc_13EFC:
 		push	144
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	0
-		pushd	0
+		push	0	; put_leading_zeroes
+		pushd	0	; num_prev
 		cmp	[bp+arg_0], si
 		jnz	short loc_13F22
 		mov	eax, [bp+arg_2]
@@ -8865,14 +8866,14 @@ loc_13F22:
 		mov	eax, es:[bx]
 
 loc_13F31:
-		push	eax
-		push	7
+		push	eax	; num
+		push	7	; digits
 		mov	ax, di
 		or	ax, 30h
-		push	ax
-		push	[bp+@@top]
-		push	160h
-		call	sub_18589
+		push	ax	; fx
+		push	[bp+@@top]	; top
+		push	352	; left
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		cmp	si, [bp+arg_0]
 		jz	short loc_13F5E
@@ -8890,8 +8891,8 @@ loc_13F5E:
 		jge	short loc_13FA1
 
 loc_13F69:
-		push	0
-		pushd	0
+		push	0	; put_leading_zeroes
+		pushd	0	; num_prev
 		cmp	si, [bp+arg_0]
 		jnz	short loc_13F78
 		mov	ax, [bp+arg_6]
@@ -8907,14 +8908,14 @@ loc_13F78:
 
 loc_13F85:
 		cwde
-		push	eax
-		push	2
+		push	eax	; num
+		push	2	; digits
 		mov	ax, di
 		or	ax, 20h
-		push	ax
-		push	[bp+@@top]
-		push	210h
-		call	sub_18589
+		push	ax	; fx
+		push	[bp+@@top]	; top
+		push	528	; left
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		jmp	short loc_13FFF
 ; ---------------------------------------------------------------------------
@@ -16895,107 +16896,13 @@ main_24_TEXT	ends
 
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_25_TEXT
+	extern _graph_putfwnum_fx:proc
+main_25_TEXT	ends
+
+main_25__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18589	proc far
-
-var_30		= byte ptr -30h
-var_8		= dword	ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@left		= word ptr  6
-@@top		= word ptr  8
-@@fx		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= dword	ptr  0Eh
-arg_C		= dword	ptr  12h
-arg_10		= word ptr  16h
-
-		enter	30h, 0
-		push	si
-		push	di
-		mov	si, [bp+@@left]
-		mov	[bp+var_8], 1
-		lea	ax, [bp+var_30]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_35A97
-		mov	cx, 28h	; '('
-		call	SCOPY@
-		xor	di, di
-		jmp	short loc_185BC
-; ---------------------------------------------------------------------------
-
-loc_185AF:
-		mov	eax, [bp+var_8]
-		imul	eax, 0Ah
-		mov	[bp+var_8], eax
-		inc	di
-
-loc_185BC:
-		cmp	di, [bp+arg_6]
-		jl	short loc_185AF
-
-loc_185C1:
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_8]
-		xor	edx, edx
-		div	ebx
-		mov	[bp+var_8], eax
-		cmp	si, (RES_X - GLYPH_FULL_W)
-		jg	short loc_18653
-		mov	eax, [bp+arg_8]
-		xor	edx, edx
-		div	[bp+var_8]
-		mov	ebx, 0Ah
-		xor	edx, edx
-		div	ebx
-		mov	[bp+var_2], dx
-		mov	eax, [bp+arg_C]
-		xor	edx, edx
-		div	[bp+var_8]
-		xor	edx, edx
-		div	ebx
-		mov	[bp+var_4], dx
-		cmp	[bp+var_2], 0
-		jz	short loc_18614
-		mov	[bp+arg_10], 1
-
-loc_18614:
-		cmp	[bp+arg_10], 0
-		jz	short loc_18647
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+var_4]
-		jnz	short loc_18629
-		cmp	[bp+arg_C], 0
-		jnz	short loc_18647
-
-loc_18629:
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		lea	ax, [bp+var_30]
-		add	bx, ax
-		call	_graph_putsa_fx c, si, [bp+@@top], [bp+@@fx], large dword ptr ss:[bx]
-
-loc_18647:
-		add	si, 10h
-		cmp	[bp+var_8], 1
-		ja	loc_185C1
-
-loc_18653:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_18589	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17093,7 +17000,7 @@ loc_18723:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
+		push	1	; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_18740
 		xor	eax, eax
@@ -17104,16 +17011,16 @@ loc_18740:
 		mov	eax, dword_35ABF
 
 loc_18744:
-		push	eax
-		pushd	[_score]
-		push	70027h
-		pushd	100h
-		call	sub_18589
+		push	eax	; num_prev
+		pushd	[_score]	; num
+		push	(7 shl 16) or 27h	; (digits) or (fx)
+		pushd	(0 shl 16) or 256	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
+		push	1	; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_18774
 		xor	eax, eax
@@ -17124,11 +17031,11 @@ loc_18774:
 		mov	eax, dword_35ABF
 
 loc_18778:
-		push	eax
-		pushd	[_score]
-		push	70027h
-		pushd	100h
-		call	sub_18589
+		push	eax	; num_prev
+		pushd	[_score]	; num
+		push	(7 shl 16) or 27h	; (digits) or (fx)
+		pushd	(0 shl 16) or 256	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		mov	eax, _score
 		mov	dword_35ABF, eax
@@ -17213,7 +17120,7 @@ loc_1881F:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
+		push	1	; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_18839
 		xor	ax, ax
@@ -17225,17 +17132,17 @@ loc_18839:
 
 loc_1883C:
 		cwde
-		push	eax
+		push	eax	; num_prev
 		movsx	eax, word_34A84
-		push	eax
-		push	20027h
-		pushd	190h
-		call	sub_18589
+		push	eax	; num
+		push	(2 shl 16) or 27h	; (digits) or (fx)
+		pushd	(0 shl 16) or 400	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
+		push	1 ; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_18870
 		xor	ax, ax
@@ -17247,12 +17154,12 @@ loc_18870:
 
 loc_18873:
 		cwde
-		push	eax
+		push	eax	; num_prev
 		movsx	eax, word_34A84
-		push	eax
-		push	20027h
-		pushd	190h
-		call	sub_18589
+		push	eax	; num
+		push	(2 shl 16) or 27h	; (digits) or (fx)
+		pushd	(0 shl 16) or 400	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		mov	ax, word_34A84
 		mov	word_39DA4, ax
@@ -17340,7 +17247,7 @@ loc_18928:
 loc_1893C:
 		cmp	si, 7
 		jl	short loc_188CD
-		push	1
+		push	1	; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_1894F
 		xor	eax, eax
@@ -17351,11 +17258,11 @@ loc_1894F:
 		mov	eax, dword_39DA6
 
 loc_18953:
-		push	eax
-		pushd	[_score]
-		push	70037h
-		push	100100h
-		call	sub_18589
+		push	eax	; num_prev
+		pushd	[_score]	; num
+		push	(7 shl 16) or 37h	; (digits) or (fx)
+		push	(16 shl 16) or 256	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		xor	si, si
 		jmp	short loc_189B6
@@ -17401,7 +17308,7 @@ loc_189AB:
 loc_189B6:
 		cmp	si, 2
 		jl	short loc_18971
-		push	1
+		push	1	; put_leading_zeroes
 		cmp	byte_35A96, 1
 		jnz	short loc_189C8
 		xor	ax, ax
@@ -17413,12 +17320,12 @@ loc_189C8:
 
 loc_189CB:
 		cwde
-		push	eax
+		push	eax	; num_prev
 		movsx	eax, word_34A84
-		push	eax
-		push	20037h
-		push	100190h
-		call	sub_18589
+		push	eax	; num
+		push	(2 shl 16) or 37h	; (digits) or (fx)
+		push	(16 shl 16) or 400	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		dec	[bp+var_2]
 
@@ -17494,13 +17401,7 @@ loc_18A60:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
-		pushd	0
-		pushd	[_score]
-		push	70037h
-		push	100100h
-		call	sub_18589
-		add	sp, 12h
+		call	_graph_putfwnum_fx c, large (16 shl 16) or 256, large (7 shl 16) or 37h, large [_score], large 0, 1
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -17549,13 +17450,7 @@ loc_18AD8:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
-		pushd	63h ; 'c'
-		pushd	0
-		push	20037h
-		push	100190h
-		call	sub_18589
-		add	sp, 12h
+		call	_graph_putfwnum_fx c, large (16 shl 16) or 400, large (2 shl 16) or 37h, large 0, large 99, 1
 		or	di, di
 		jz	loc_18B95
 		push	1
@@ -17591,13 +17486,13 @@ loc_18B33:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
-		pushd	0
+		push	1	; put_leading_zeroes
+		pushd	0	; num_prev
 		les	bx, _resident
-		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]
-		push	70027h
-		pushd	100h
-		call	sub_18589
+		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]	; num
+		push	(7 shl 16) or 27h	; (digits) or (fx)
+		pushd	(0 shl 16) or 256	; (top) or (left)
+		call	_graph_putfwnum_fx
 		add	sp, 12h
 		push	1
 		call	_graph_accesspage_func
@@ -17647,13 +17542,7 @@ loc_18BB2:
 		jl	short loc_18B99
 
 loc_18BB7:
-		push	1
-		pushd	63h ; 'c'
-		pushd	0
-		push	20027h
-		pushd	190h
-		call	sub_18589
-		add	sp, 12h
+		call	_graph_putfwnum_fx c, large (0 shl 16) or 400, large (2 shl 16) or 27h, large 0, large 99, 1
 		push	0B00000h
 		push	100h
 		nopcall	sub_18CD3
@@ -18475,7 +18364,7 @@ loc_19229:
 		retf
 sub_190D6	endp
 
-main_25_TEXT	ends
+main_25__TEXT	ends
 
 ; ===========================================================================
 
@@ -61274,28 +61163,9 @@ aExtend		db 'Extend!!',0
 aVpf		db 'ÇP‰›',0
 		db 0
 byte_35A96	db 0
-off_35A97	dd aVo_0
-					; "ÇO"
-		dd aVp_0		; "ÇP"
-		dd aVq_0		; "ÇQ"
-		dd aVr_0		; "ÇR"
-		dd aVs_0		; "ÇS"
-		dd aVt_0		; "ÇT"
-		dd aVu_0		; "ÇU"
-		dd aVv_0		; "ÇV"
-		dd aVw_0		; "ÇW"
-		dd aVx_0		; "ÇX"
+include th01/hardware/grppfnfx_ptrs[data].asm
 dword_35ABF	dd 0
-aVo_0		db 'ÇO',0
-aVp_0		db 'ÇP',0
-aVq_0		db 'ÇQ',0
-aVr_0		db 'ÇR',0
-aVs_0		db 'ÇS',0
-aVt_0		db 'ÇT',0
-aVu_0		db 'ÇU',0
-aVv_0		db 'ÇV',0
-aVw_0		db 'ÇW',0
-aVx_0		db 'ÇX',0
+include th01/hardware/grppfnfx[data].asm
 		db    0
 		db 0E8h
 		db    3

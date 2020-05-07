@@ -372,140 +372,7 @@ fuuin_01_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_02_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_02_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A168	proc far
-
-var_30		= byte ptr -30h
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-arg_10		= word ptr  16h
-
-		enter	30h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	[bp+var_6], 0
-		mov	[bp+var_8], 1
-		lea	ax, [bp+var_30]
-		push	ss
-		push	ax
-		push	ds
-		push	offset FULLWIDTH_NUMBERS
-		mov	cx, 28h	; '('
-		call	SCOPY@
-		xor	di, di
-		jmp	short loc_A1A7
-; ---------------------------------------------------------------------------
-
-loc_A190:
-		xor	cx, cx
-		mov	bx, 0Ah
-		mov	dx, [bp+var_6]
-		mov	ax, [bp+var_8]
-		call	LXMUL@
-		mov	[bp+var_6], dx
-		mov	[bp+var_8], ax
-		inc	di
-
-loc_A1A7:
-		cmp	di, [bp+arg_6]
-		jl	short loc_A190
-
-loc_A1AC:
-		push	0
-		push	0Ah
-		push	[bp+var_6]
-		push	[bp+var_8]
-		call	far ptr F_LUDIV@
-		mov	[bp+var_6], dx
-		mov	[bp+var_8], ax
-		cmp	si, 270h
-		jle	short loc_A1CA
-		jmp	loc_A261
-; ---------------------------------------------------------------------------
-
-loc_A1CA:
-		push	0
-		push	0Ah
-		push	[bp+var_6]
-		push	[bp+var_8]
-		push	[bp+arg_A]
-		push	[bp+arg_8]
-		call	far ptr F_LUDIV@
-		push	dx
-		push	ax
-		call	far ptr LUMOD@
-		mov	[bp+var_2], ax
-		push	0
-		push	0Ah
-		push	[bp+var_6]
-		push	[bp+var_8]
-		push	[bp+arg_E]
-		push	[bp+arg_C]
-		call	far ptr F_LUDIV@
-		push	dx
-		push	ax
-		call	far ptr LUMOD@
-		mov	[bp+var_4], ax
-		cmp	[bp+var_2], 0
-		jz	short loc_A213
-		mov	[bp+arg_10], 1
-
-loc_A213:
-		cmp	[bp+arg_10], 0
-		jz	short loc_A24A
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+var_4]
-		jnz	short loc_A229
-		mov	ax, [bp+arg_C]
-		or	ax, [bp+arg_E]
-		jnz	short loc_A24A
-
-loc_A229:
-		mov	bx, [bp+var_2]
-		shl	bx, 2
-		lea	ax, [bp+var_30]
-		add	bx, ax
-		call	_graph_putsa_fx c, si, [bp+arg_2], [bp+arg_4], word ptr ss:[bx], word ptr ss:[bx+2]
-
-loc_A24A:
-		add	si, 10h
-		cmp	[bp+var_6], 0
-		jbe	short loc_A256
-		jmp	loc_A1AC
-; ---------------------------------------------------------------------------
-
-loc_A256:
-		jnz	short loc_A261
-		cmp	[bp+var_8], 1
-		jbe	short loc_A261
-		jmp	loc_A1AC
-; ---------------------------------------------------------------------------
-
-loc_A261:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_A168	endp
-
+	extern _graph_putfwnum_fx:proc
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
 	extern _scoredat_name_byte_encode:proc
@@ -768,7 +635,6 @@ sub_A801	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
 sub_A9FF	proc far
 
 var_12		= byte ptr -12h
@@ -1020,9 +886,9 @@ loc_AB77:
 		push	144
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	0
-		push	0
-		push	0
+		push	0	; put_leading_zeroes
+		push	0	; num_prev (high)
+		push	0	; num_prev (low)
 		cmp	di, si
 		jnz	short loc_ABA1
 		mov	dx, [bp+arg_4]
@@ -1039,9 +905,9 @@ loc_ABA1:
 		mov	ax, es:[bx]
 
 loc_ABB3:
-		push	dx
-		push	ax
-		push	7
+		push	dx	; num (high)
+		push	ax	; num (low)
+		push	7	; digits
 		cmp	si, di
 		jnz	short loc_ABC0
 		mov	ax, 3
@@ -1053,13 +919,13 @@ loc_ABC0:
 
 loc_ABC3:
 		or	ax, 30h
-		push	ax
+		push	ax	; fx
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
-		push	ax
-		push	160h
-		call	fuuin_02:sub_A168
+		add	ax, 64
+		push	ax	; top
+		push	352	; left
+		call	fuuin_02:_graph_putfwnum_fx
 		add	sp, 12h
 		cmp	si, di
 		jz	short loc_ABEE
@@ -1077,9 +943,9 @@ loc_ABEE:
 		jge	short loc_AC3F
 
 loc_ABF8:
-		push	0
-		push	0
-		push	0
+		push	0	; put_leading_zeroes
+		push	0	; num_prev (high)
+		push	0	; num_prev (low)
 		cmp	si, di
 		jnz	short loc_AC07
 		mov	ax, [bp+arg_6]
@@ -1095,9 +961,9 @@ loc_AC07:
 
 loc_AC14:
 		cwd
-		push	dx
-		push	ax
-		push	2
+		push	dx	; num (high)
+		push	ax	; num (low)
+		push	2	; digits
 		cmp	si, di
 		jnz	short loc_AC22
 		mov	ax, 3
@@ -1109,13 +975,13 @@ loc_AC22:
 
 loc_AC25:
 		or	ax, 20h
-		push	ax
+		push	ax	; fx
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 40h
-		push	ax
-		push	210h
-		call	fuuin_02:sub_A168
+		add	ax, 64
+		push	ax	; top
+		push	528	; left
+		call	fuuin_02:_graph_putfwnum_fx
 		add	sp, 12h
 		jmp	loc_ACCD
 ; ---------------------------------------------------------------------------
@@ -4373,44 +4239,43 @@ arg0		db 'op',0
 		db    0
 include th01/hardware/input_main_end[data].asm
 		dd 0
-		db  49h	; I
-		db  81h
-		db  48h	; H
-		db  81h
-		db  94h
-		db  81h
-		db  95h
-		db  81h
-		db  96h
-		db  81h
-		db  98h
-		db  81h
-		db  99h
-		db  81h
-		db  9Fh
-		db  81h
-		db  87h
-		db  81h
-		db  88h
-		db  81h
-		db  89h
-		db  81h
-		db  8Ah
-		db  81h
-		db  63h	; c
-		db  81h
-		db  67h	; g
-		db  81h
-		db  68h	; h
-		db  81h
-		db  5Eh	; ^
-		db  81h
-		db  44h	; D
-		db  81h
-		db  45h	; E
-		db  81h
-FULLWIDTH_NUMBERS	dd aFW_0, aFW_1, aFW_2, aFW_3, aFW_4
-	dd aFW_5, aFW_6, aFW_7, aFW_8, aFW_9
+ 		db  49h	; I
+ 		db  81h
+ 		db  48h	; H
+ 		db  81h
+ 		db  94h
+ 		db  81h
+ 		db  95h
+ 		db  81h
+ 		db  96h
+ 		db  81h
+ 		db  98h
+ 		db  81h
+ 		db  99h
+ 		db  81h
+ 		db  9Fh
+ 		db  81h
+ 		db  87h
+ 		db  81h
+ 		db  88h
+ 		db  81h
+ 		db  89h
+ 		db  81h
+ 		db  8Ah
+ 		db  81h
+ 		db  63h	; c
+ 		db  81h
+ 		db  67h	; g
+ 		db  81h
+ 		db  68h	; h
+ 		db  81h
+ 		db  5Eh	; ^
+ 		db  81h
+ 		db  44h	; D
+ 		db  81h
+ 		db  45h	; E
+ 		db  81h
+include th01/hardware/grppfnfx_ptrs[data].asm
 aBqbqbqbqbqbqbq	db 'ÅQÅQÅQÅQÅQÅQÅQÅQ',0
 aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@Å@',0
 aHiscore_0	db 'HISCORE',0
@@ -4419,16 +4284,7 @@ off_12C1E	dd aB@gcbGwbB@
 		dd aB@gmbGGlb@		; "Å@ÉmÅ[É}ÉãÅ@"
 		dd aB@gnbGhb@b@		; "Å@ÉnÅ[ÉhÅ@Å@"
 		dd aGlgigegbgbgn	; "ÉãÉiÉeÉBÉbÉN"
-aFW_0		db 'ÇO',0
-aFW_1		db 'ÇP',0
-aFW_2		db 'ÇQ',0
-aFW_3		db 'ÇR',0
-aFW_4		db 'ÇS',0
-aFW_5		db 'ÇT',0
-aFW_6		db 'ÇU',0
-aFW_7		db 'ÇV',0
-aFW_8		db 'ÇW',0
-aFW_9		db 'ÇX',0
+include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 ; char aCC[]
 aCC		db '%c%c',0
