@@ -9,6 +9,7 @@
 // __BORLANDC__, which is only #define'd on the former.
 #if defined(__TURBOC__) && defined(__MSDOS__)
 typedef char bool;
+typedef int bool16;
 # define false 0
 # define  true 1
 typedef char int8_t;

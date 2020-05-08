@@ -10,6 +10,7 @@ extern "C" {
 #include "ReC98.h"
 #include "th01/ranks.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/input.hpp"
 #include "th01/formats/cfg.hpp"
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
@@ -96,5 +97,120 @@ void cfg_save(void)
 	}
 }
 /// ------------------------------
+
+/// Input
+/// -----
+#undef RING_INC
+#undef RING_DEC
+
+#define RING_INC(val, ring_end) \
+	(val) += 1; \
+	if((val) > (ring_end)) { \
+		(val) = 0; \
+	}
+
+#define RING_DEC(val, ring_end) \
+	(val) -= 1; \
+	if((val) < 0) { \
+		(val) = ring_end; \
+	}
+
+#define input_update_bool(var, cur_sensed) \
+	if(cur_sensed) input_func_bool(var)
+
+#define input_onchange_ring(prev_slot, cur_sensed, ring_func) \
+	if(cur_sensed) { \
+		if(!input_prev[prev_slot]) { \
+			ring_func; \
+			input_prev[prev_slot] = true; \
+		} \
+	} else { \
+		input_prev[prev_slot] = false; \
+	}
+
+extern char menu_sel;
+extern bool input_left;
+extern bool input_cancel;
+extern bool input_right;
+extern unsigned char option_rows;
+
+inline void keygroup_sense(REGS& out, REGS& in, char group_id)
+{
+	in.h.ah = 0x04;
+	in.h.al = group_id;
+	int86(0x18, &in, &out);
+}
+
+inline void ok_shot_cancel_sense(REGS& out, REGS& in)
+{
+	keygroup_sense(out, in, 3);
+	input_update_bool(input_ok, (out.h.ah & K3_RETURN));
+
+	keygroup_sense(out, in, 5);
+	input_update_bool(input_shot, (out.h.ah & K5_Z));
+
+	keygroup_sense(out, in, 0);
+	input_update_bool(input_cancel, (out.h.ah & K0_ESC));
+}
+
+void main_input_sense(void)
+{
+	REGS in;
+	REGS out1, out2;
+	// TODO: Should just be `static` once the variable can be declared here
+	#define input_prev main_input_prev
+	extern bool16 input_prev[2];
+
+	keygroup_sense(out1, in, 7);
+	keygroup_sense(out2, in, 8);
+
+	input_onchange_ring(0,
+		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
+		RING_DEC(menu_sel, 3)
+	);
+
+	keygroup_sense(out2, in, 9);
+
+	input_onchange_ring(1,
+		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
+		RING_INC(menu_sel, 3)
+	);
+
+	ok_shot_cancel_sense(out1, in);
+}
+
+void option_input_sense(void)
+{
+	REGS in;
+	REGS out1, out2;
+	// TODO: Should just be `static` once the variable can be declared here
+	#undef  input_prev
+	#define input_prev option_input_prev
+	extern bool16 input_prev[2];
+
+	keygroup_sense(out1, in, 7);
+	keygroup_sense(out2, in, 8);
+
+	input_onchange_ring(0,
+		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
+		RING_DEC(menu_sel, option_rows)
+	);
+	input_update_bool(
+		input_left, (out1.h.ah & K7_ARROW_LEFT) || (out2.h.ah & K8_NUM_4)
+	);
+
+	keygroup_sense(out2, in, 9);
+
+	input_onchange_ring(1,
+		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
+		RING_INC(menu_sel, option_rows)
+	);
+	input_update_bool(
+		input_right, (out1.h.ah & K7_ARROW_RIGHT) || (out2.h.ah & K9_NUM_6)
+	);
+
+	ok_shot_cancel_sense(out1, in);
+}
+/// -----
 
 }

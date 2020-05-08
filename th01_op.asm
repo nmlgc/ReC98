@@ -96,359 +96,8 @@ op_01__TEXT	segment	byte public 'CODE' use16
 
 	extern _cfg_load:proc
 	extern _cfg_save:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A363	proc far
-
-var_30		= byte ptr -30h
-var_2F		= byte ptr -2Fh
-outregs		= REGS ptr -20h
-inregs		= REGS ptr -10h
-
-		enter	30h, 0
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 7
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 8
-		push	ss
-		lea	ax, [bp+var_30]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 14h
-		test	byte ptr [bp+outregs+1], 4
-		jnz	short loc_A3A8
-		test	[bp+var_2F], 8
-		jz	short loc_A3C9
-
-loc_A3A8:
-		cmp	word_12334, 0
-		jnz	short loc_A3CF
-		mov	al, byte_12325
-		dec	al
-		mov	byte_12325, al
-		cbw
-		or	ax, ax
-		jge	short loc_A3C1
-		mov	byte_12325, 3
-
-loc_A3C1:
-		mov	word_12334, 1
-		jmp	short loc_A3CF
-; ---------------------------------------------------------------------------
-
-loc_A3C9:
-		mov	word_12334, 0
-
-loc_A3CF:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 9
-		push	ss
-		lea	ax, [bp+var_30]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 20h
-		jnz	short loc_A3F7
-		test	[bp+var_2F], 8
-		jz	short loc_A419
-
-loc_A3F7:
-		cmp	word_12336, 0
-		jnz	short loc_A41F
-		mov	al, byte_12325
-		inc	al
-		mov	byte_12325, al
-		cbw
-		cmp	ax, 3
-		jle	short loc_A411
-		mov	byte_12325, 0
-
-loc_A411:
-		mov	word_12336, 1
-		jmp	short loc_A41F
-; ---------------------------------------------------------------------------
-
-loc_A419:
-		mov	word_12336, 0
-
-loc_A41F:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 3
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 10h
-		jz	short loc_A448
-		mov	byte_12327, 1
-		jmp	short loc_A44D
-; ---------------------------------------------------------------------------
-
-loc_A448:
-		mov	byte_12327, 0
-
-loc_A44D:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 5
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 2
-		jz	short loc_A476
-		mov	byte_12328, 1
-		jmp	short loc_A47B
-; ---------------------------------------------------------------------------
-
-loc_A476:
-		mov	byte_12328, 0
-
-loc_A47B:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 0
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 1
-		jz	short loc_A4A4
-		mov	byte_12329, 1
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A4A4:
-		mov	byte_12329, 0
-		leave
-		retf
-sub_A363	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A4AB	proc far
-
-var_30		= byte ptr -30h
-var_2F		= byte ptr -2Fh
-outregs		= REGS ptr -20h
-inregs		= REGS ptr -10h
-
-		enter	30h, 0
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 7
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 8
-		push	ss
-		lea	ax, [bp+var_30]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 14h
-		test	byte ptr [bp+outregs+1], 4
-		jnz	short loc_A4F0
-		test	[bp+var_2F], 8
-		jz	short loc_A512
-
-loc_A4F0:
-		cmp	word_12339, 0
-		jnz	short loc_A518
-		mov	al, byte_12325
-		dec	al
-		mov	byte_12325, al
-		cbw
-		or	ax, ax
-		jge	short loc_A50A
-		mov	al, byte_12338
-		mov	byte_12325, al
-
-loc_A50A:
-		mov	word_12339, 1
-		jmp	short loc_A518
-; ---------------------------------------------------------------------------
-
-loc_A512:
-		mov	word_12339, 0
-
-loc_A518:
-		test	byte ptr [bp+outregs+1], 8
-		jnz	short loc_A524
-		test	[bp+var_2F], 40h
-		jz	short loc_A52B
-
-loc_A524:
-		mov	byte_12326, 1
-		jmp	short loc_A530
-; ---------------------------------------------------------------------------
-
-loc_A52B:
-		mov	byte_12326, 0
-
-loc_A530:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 9
-		push	ss
-		lea	ax, [bp+var_30]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 20h
-		jnz	short loc_A558
-		test	[bp+var_2F], 8
-		jz	short loc_A57F
-
-loc_A558:
-		cmp	word_1233B, 0
-		jnz	short loc_A585
-		mov	al, byte_12325
-		inc	al
-		mov	byte_12325, al
-		cbw
-		mov	dl, byte_12338
-		mov	dh, 0
-		cmp	ax, dx
-		jle	short loc_A577
-		mov	byte_12325, 0
-
-loc_A577:
-		mov	word_1233B, 1
-		jmp	short loc_A585
-; ---------------------------------------------------------------------------
-
-loc_A57F:
-		mov	word_1233B, 0
-
-loc_A585:
-		test	byte ptr [bp+outregs+1], 10h
-		jnz	short loc_A591
-		test	[bp+var_2F], 1
-		jz	short loc_A598
-
-loc_A591:
-		mov	byte_1232B, 1
-		jmp	short loc_A59D
-; ---------------------------------------------------------------------------
-
-loc_A598:
-		mov	byte_1232B, 0
-
-loc_A59D:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 3
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 10h
-		jz	short loc_A5C6
-		mov	byte_12327, 1
-		jmp	short loc_A5CB
-; ---------------------------------------------------------------------------
-
-loc_A5C6:
-		mov	byte_12327, 0
-
-loc_A5CB:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 5
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 2
-		jz	short loc_A5F4
-		mov	byte_12328, 1
-		jmp	short loc_A5F9
-; ---------------------------------------------------------------------------
-
-loc_A5F4:
-		mov	byte_12328, 0
-
-loc_A5F9:
-		mov	byte ptr [bp+inregs+1],	4
-		mov	byte ptr [bp+inregs], 0
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		test	byte ptr [bp+outregs+1], 1
-		jz	short loc_A622
-		mov	byte_12329, 1
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A622:
-		mov	byte_12329, 0
-		leave
-		retf
-sub_A4AB	endp
-
+	extern _main_input_sense:proc
+	extern _option_input_sense:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1098,18 +747,18 @@ sub_AB97	proc far
 		call	sub_A96A
 		add	sp, 4
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_A96A
 		add	sp, 4
 		mov	word_12564, 1
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		mov	word_12562, ax
 
 loc_AC04:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, word_12562
 		jz	short loc_AC30
@@ -1118,23 +767,23 @@ loc_AC04:
 		call	sub_A96A
 		add	sp, 4
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_A96A
 		add	sp, 4
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		mov	word_12562, ax
 
 loc_AC30:
-		cmp	byte_12327, 0
+		cmp	_input_ok, 0
 		jnz	short loc_AC3E
-		cmp	byte_12328, 0
+		cmp	_input_shot, 0
 		jz	short loc_AC6E
 
 loc_AC3E:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
 		cmp	bx, 3
@@ -1162,7 +811,7 @@ loc_AC69:
 		mov	byte_1232C, 1
 
 loc_AC6E:
-		cmp	byte_12329, 0
+		cmp	_input_cancel, 0
 		jz	short loc_AC7A
 		mov	byte_1232C, 1
 
@@ -1186,10 +835,10 @@ sub_AC84	proc far
 		mov	bp, sp
 		cmp	word_12566, 0
 		jnz	short loc_ACF9
-		mov	byte_12325, 0
+		mov	_menu_sel, 0
 		mov	word_12568, 0
 		mov	word_12566, 1
-		mov	byte_12338, 4
+		mov	_option_rows, 4
 		call	_egc_copy_rect_1_to_0 c, large (276 shl 16) or 220, large (80 shl 16) or 176
 		push	0F0000h
 		call	sub_A9B9
@@ -1208,7 +857,7 @@ sub_AC84	proc far
 		add	sp, 4
 
 loc_ACF9:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, word_12568
 		jz	short loc_AD25
@@ -1217,23 +866,23 @@ loc_ACF9:
 		call	sub_A9B9
 		add	sp, 4
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_A9B9
 		add	sp, 4
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		mov	word_12568, ax
 
 loc_AD25:
-		mov	al, byte_12326
+		mov	al, _input_left
 		cbw
 		cmp	ax, 1
 		jnz	short loc_AD96
 		cmp	word_1256A, 0
 		jnz	short loc_AD9C
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		or	ax, ax
 		jz	short loc_AD49
@@ -1274,7 +923,7 @@ loc_AD6F:
 
 loc_AD80:
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_A9B9
@@ -1287,13 +936,13 @@ loc_AD96:
 		mov	word_1256A, 0
 
 loc_AD9C:
-		mov	al, byte_1232B
+		mov	al, _input_right
 		cbw
 		cmp	ax, 1
 		jnz	short loc_AE10
 		cmp	word_1256C, 0
 		jnz	short loc_AE16
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		or	ax, ax
 		jz	short loc_ADC0
@@ -1334,7 +983,7 @@ loc_ADE8:
 
 loc_ADFA:
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_A9B9
@@ -1347,40 +996,40 @@ loc_AE10:
 		mov	word_1256C, 0
 
 loc_AE16:
-		cmp	byte_12327, 0
+		cmp	_input_ok, 0
 		jnz	short loc_AE24
-		cmp	byte_12328, 0
+		cmp	_input_shot, 0
 		jz	short loc_AE2D
 
 loc_AE24:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 4
 		jz	short loc_AE34
 
 loc_AE2D:
-		cmp	byte_12329, 0
+		cmp	_input_cancel, 0
 		jz	short loc_AE44
 
 loc_AE34:
 		mov	byte_1232A, 3
 		mov	word_12566, 0
-		mov	byte_12325, 2
+		mov	_menu_sel, 2
 
 loc_AE44:
-		cmp	byte_12327, 0
+		cmp	_input_ok, 0
 		jnz	short loc_AE52
-		cmp	byte_12328, 0
+		cmp	_input_shot, 0
 		jz	short loc_AE6B
 
 loc_AE52:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 3
 		jnz	short loc_AE6B
 		mov	byte_1232A, 2
 		mov	word_12566, 0
-		mov	byte_12325, 0
+		mov	_menu_sel, 0
 
 loc_AE6B:
 		pop	bp
@@ -1429,12 +1078,12 @@ sub_AEA8	proc far
 		mov	bp, sp
 		cmp	word_125AA, 0
 		jnz	short loc_AF00
-		mov	byte_12325, 0
+		mov	_menu_sel, 0
 		mov	word_125AC, 0
 		mov	word_125AA, 1
-		mov	byte_12327, 0
-		mov	byte_12328, 0
-		mov	byte_12338, 1
+		mov	_input_ok, 0
+		mov	_input_shot, 0
+		mov	_option_rows, 1
 		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	0F0000h
 		call	sub_AAB6
@@ -1444,7 +1093,7 @@ sub_AEA8	proc far
 		add	sp, 4
 
 loc_AF00:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, word_125AC
 		jz	short loc_AF2C
@@ -1453,23 +1102,23 @@ loc_AF00:
 		call	sub_AAB6
 		add	sp, 4
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_AAB6
 		add	sp, 4
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		mov	word_125AC, ax
 
 loc_AF2C:
-		mov	al, byte_12326
+		mov	al, _input_left
 		cbw
 		cmp	ax, 1
 		jnz	short loc_AF69
 		cmp	word_125AE, 0
 		jnz	short loc_AF6F
-		cmp	byte_12325, 0
+		cmp	_menu_sel, 0
 		jnz	short loc_AF53
 		dec	byte_1251D
 		cmp	byte_1251D, 0
@@ -1478,7 +1127,7 @@ loc_AF2C:
 
 loc_AF53:
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_AAB6
@@ -1491,13 +1140,13 @@ loc_AF69:
 		mov	word_125AE, 0
 
 loc_AF6F:
-		mov	al, byte_1232B
+		mov	al, _input_right
 		cbw
 		cmp	ax, 1
 		jnz	short loc_AFAC
 		cmp	word_125B0, 0
 		jnz	short loc_AFB2
-		cmp	byte_12325, 0
+		cmp	_menu_sel, 0
 		jnz	short loc_AF96
 		inc	byte_1251D
 		cmp	byte_1251D, 0Fh
@@ -1506,7 +1155,7 @@ loc_AF6F:
 
 loc_AF96:
 		push	0Fh
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		push	ax
 		call	sub_AAB6
@@ -1519,34 +1168,34 @@ loc_AFAC:
 		mov	word_125B0, 0
 
 loc_AFB2:
-		cmp	byte_12327, 0
+		cmp	_input_ok, 0
 		jnz	short loc_AFC0
-		cmp	byte_12328, 0
+		cmp	_input_shot, 0
 		jz	short loc_AFC9
 
 loc_AFC0:
-		mov	al, byte_12325
+		mov	al, _menu_sel
 		cbw
 		cmp	ax, 1
 		jz	short loc_AFD0
 
 loc_AFC9:
-		cmp	byte_12329, 0
+		cmp	_input_cancel, 0
 		jz	short loc_AFE0
 
 loc_AFD0:
 		mov	byte_1232A, 4
 		mov	word_125AA, 0
-		mov	byte_12325, 3
+		mov	_menu_sel, 3
 
 loc_AFE0:
-		cmp	byte_12327, 0
+		cmp	_input_ok, 0
 		jnz	short loc_AFEE
-		cmp	byte_12328, 0
+		cmp	_input_shot, 0
 		jz	short loc_AFF9
 
 loc_AFEE:
-		cmp	byte_12325, 0
+		cmp	_menu_sel, 0
 		jnz	short loc_AFF9
 		call	sub_AE6D
 
@@ -1703,7 +1352,7 @@ loc_B135:
 loc_B14D:
 		cmp	byte_1232A, 0
 		jnz	short loc_B15F
-		call	sub_A363
+		call	_main_input_sense
 		call	sub_AB97
 		jmp	loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1713,7 +1362,7 @@ loc_B15F:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B172
-		call	sub_A4AB
+		call	_option_input_sense
 		call	sub_AC84
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1723,7 +1372,7 @@ loc_B172:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_B185
-		call	sub_A4AB
+		call	_option_input_sense
 		call	sub_AEA8
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1939,23 +1588,24 @@ op_12_TEXT	ends
 public _opts
 _opts	cfg_options_t <CFG_RANK_DEFAULT, CFG_BGM_MODE_DEFAULT, CFG_BOMBS_DEFAULT, CFG_LIVES_EXTRA_DEFAULT>
 _mode	db 0
-byte_12325	db 0
-byte_12326	db 0
-byte_12327	db 0
-byte_12328	db 0
-byte_12329	db 0
+public _menu_sel, _option_rows
+public _input_left, _input_right, _input_ok, _input_shot, _input_cancel
+public _main_input_prev, _option_input_prev
+_menu_sel	db 0
+_input_left	db 0
+_input_ok	db 0
+_input_shot	db 0
+_input_cancel	db 0
 byte_1232A	db 0
-byte_1232B	db 0
+_input_right	db 0
 byte_1232C	db 0
 byte_1232D	db 0
 byte_1232E	db 0
 byte_1232F	db 0
 dword_12330	dd 0
-word_12334	dw 0
-word_12336	dw 0
-byte_12338	db 3
-word_12339	dw 0
-word_1233B	dw 0
+_main_input_prev	dw 2 dup (0)
+_option_rows	db 3
+_option_input_prev	dw 2 dup (0)
 unk_1233D	db    0
 		dd    0
 		dd    0
