@@ -118,6 +118,8 @@ inline optimally though:
 * Assignments to a pointer in `SI` – that pointer is moved to `DI`,
   [clobbering that register](#clobbering-di). Try a [class method](#C++)
   instead.
+* Nested `if` statements – inlining will always generate a useless
+  `JMP SHORT $+2` at the end of the last branch.
 
 ## Initialization
 
