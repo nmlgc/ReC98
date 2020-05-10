@@ -21,6 +21,14 @@ extern unsigned char paused;
 extern bool done;
 extern bool input_bomb;
 
+// Updates all input-related variables if the held state of their associated
+// keys changed compared to the last input.
+void input_sense(bool16 reset_repeat);
+
+// Resets all input-related variables, then updates them according to the
+// keyboard state.
+void input_reset_sense(void);
+
 #define input_func_flag(var, flag) { var |= flag; } else { var &= ~flag; }
 
 #define input_onchange(prev_slot, cur_sensed, if_pressed) \
