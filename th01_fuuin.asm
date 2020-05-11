@@ -68,7 +68,6 @@ _TEXT		segment	word public 'CODE' use16
 		assume cs:_TEXT
 		assume es:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include libs/piloadc/piloadc.asm
 include libs/master.lib/graph_400line.asm
 include libs/master.lib/graph_clear.asm
 include libs/master.lib/graph_show.asm
