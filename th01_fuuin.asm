@@ -506,246 +506,8 @@ loc_A261:
 		retf
 sub_A168	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A265	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	4, 0
-		cmp	[bp+arg_0], 1
-		jnz	short loc_A2A5
-		mov	byte_14039, 0
-		mov	byte_1403A, 0
-		mov	byte_1403B, 0
-		mov	byte_1403C, 0
-		mov	byte_1403D, 0
-		mov	byte_1403E, 0
-		mov	byte_1403F, 0
-		mov	byte_14040, 0
-		mov	byte_14041, 0
-		mov	byte_14042, 0
-		leave
-		retf
-; ---------------------------------------------------------------------------
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A2A5:
-		push	7
-		call	key_sense
-		mov	[bp+var_2], ax
-		push	5
-		call	key_sense
-		mov	[bp+var_4], ax
-		push	7
-		call	key_sense
-		or	[bp+var_2], ax
-		push	5
-		call	key_sense
-		or	[bp+var_4], ax
-		mov	al, byte_14039
-		mov	ah, 0
-		mov	dx, [bp+var_2]
-		and	dx, 4
-		cmp	ax, dx
-		jz	short loc_A2EE
-		test	byte ptr [bp+var_2], 4
-		jz	short loc_A2E9
-		mov	byte_12BA2, 1
-		jmp	short loc_A2EE
-; ---------------------------------------------------------------------------
-
-loc_A2E9:
-		mov	byte_12BA2, 0
-
-loc_A2EE:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 4
-		mov	byte_14039, al
-		mov	al, byte_1403A
-		mov	ah, 0
-		mov	dx, [bp+var_2]
-		and	dx, 20h
-		cmp	ax, dx
-		jz	short loc_A317
-		test	byte ptr [bp+var_2], 20h
-		jz	short loc_A312
-		mov	byte_12BA3, 1
-		jmp	short loc_A317
-; ---------------------------------------------------------------------------
-
-loc_A312:
-		mov	byte_12BA3, 0
-
-loc_A317:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 20h
-		mov	byte_1403A, al
-		mov	al, byte_1403B
-		mov	ah, 0
-		mov	dx, [bp+var_2]
-		and	dx, 8
-		cmp	ax, dx
-		jz	short loc_A340
-		test	byte ptr [bp+var_2], 8
-		jz	short loc_A33B
-		or	byte_12B99, 2
-		jmp	short loc_A340
-; ---------------------------------------------------------------------------
-
-loc_A33B:
-		and	byte_12B99, 0FDh
-
-loc_A340:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 8
-		mov	byte_1403B, al
-		mov	al, byte_1403C
-		mov	ah, 0
-		mov	dx, [bp+var_2]
-		and	dx, 10h
-		cmp	ax, dx
-		jz	short loc_A369
-		test	byte ptr [bp+var_2], 10h
-		jz	short loc_A364
-		or	byte_12B99, 1
-		jmp	short loc_A369
-; ---------------------------------------------------------------------------
-
-loc_A364:
-		and	byte_12B99, 0FEh
-
-loc_A369:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 10h
-		mov	byte_1403C, al
-		mov	al, byte_1403D
-		mov	ah, 0
-		mov	dx, [bp+var_4]
-		and	dx, 2
-		cmp	ax, dx
-		jz	short loc_A392
-		test	byte ptr [bp+var_4], 2
-		jz	short loc_A38D
-		mov	byte_12B9C, 1
-		jmp	short loc_A392
-; ---------------------------------------------------------------------------
-
-loc_A38D:
-		mov	byte_12B9C, 0
-
-loc_A392:
-		mov	al, byte ptr [bp+var_4]
-		and	al, 2
-		mov	byte_1403D, al
-		mov	al, byte_1403E
-		mov	ah, 0
-		mov	dx, [bp+var_4]
-		and	dx, 4
-		cmp	ax, dx
-		jz	short loc_A3BB
-		test	byte ptr [bp+var_4], 4
-		jz	short loc_A3B6
-		mov	byte_12BA1, 1
-		jmp	short loc_A3BB
-; ---------------------------------------------------------------------------
-
-loc_A3B6:
-		mov	byte_12BA1, 0
-
-loc_A3BB:
-		mov	al, byte ptr [bp+var_4]
-		and	al, 4
-		mov	byte_1403E, al
-		push	0
-		call	key_sense
-		mov	[bp+var_2], ax
-		push	3
-		call	key_sense
-		mov	[bp+var_4], ax
-		push	0
-		call	key_sense
-		or	[bp+var_2], ax
-		push	3
-		call	key_sense
-		or	[bp+var_4], ax
-		mov	al, byte_1403F
-		mov	ah, 0
-		mov	dx, [bp+var_2]
-		and	dx, 1
-		cmp	ax, dx
-		jz	short loc_A409
-		test	byte ptr [bp+var_2], 1
-		jz	short loc_A409
-		mov	al, 1
-		sub	al, byte_12B9F
-		mov	byte_12B9F, al
-
-loc_A409:
-		mov	al, byte ptr [bp+var_2]
-		and	al, 1
-		mov	byte_1403F, al
-		mov	al, byte_14040
-		mov	ah, 0
-		mov	dx, [bp+var_4]
-		and	dx, 10h
-		cmp	ax, dx
-		jz	short loc_A445
-		test	byte ptr [bp+var_4], 10h
-		jz	short loc_A440
-		cmp	byte_12B9F, 1
-		jnz	short loc_A439
-		cmp	byte_12B9C, 1
-		jnz	short loc_A439
-		mov	byte_12B9D, 1
-
-loc_A439:
-		mov	byte_12BA0, 1
-		jmp	short loc_A445
-; ---------------------------------------------------------------------------
-
-loc_A440:
-		mov	byte_12BA0, 0
-
-loc_A445:
-		mov	al, byte ptr [bp+var_4]
-		and	al, 10h
-		mov	byte_14040, al
-		leave
-		retf
-sub_A265	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A44F	proc far
-		push	bp
-		mov	bp, sp
-		mov	byte_12B99, 0
-		mov	byte_12BA2, 0
-		mov	byte_12BA3, 0
-		mov	byte_12BA0, 0
-		mov	byte_12B9F, 0
-		mov	byte_12B9C, 0
-		mov	byte_12BA1, 0
-		mov	byte_12B9A, 0
-		mov	byte_12B9B, 0
-		push	1
-		call	sub_A265
-		pop	cx
-		pop	bp
-		retf
-sub_A44F	endp
-
+	extern _input_sense:proc
+	extern _input_reset_sense:proc
 	extern _scoredat_name_byte_encode:proc
 	extern _scoredat_load:proc
 	extern _scoredat_name_get:proc
@@ -1977,7 +1739,7 @@ arg_C		= dword	ptr  12h
 
 		push	bp
 		mov	bp, sp
-		cmp	byte_12BA2, 1
+		cmp	_input_up, 1
 		jz	short loc_B0E6
 		jmp	loc_B18F
 ; ---------------------------------------------------------------------------
@@ -2039,12 +1801,12 @@ loc_B172:
 		push	word ptr es:[bx]
 		call	sub_AD86
 		add	sp, 6
-		mov	byte_12BA2, 0
+		mov	_input_up, 0
 		jmp	loc_B408
 ; ---------------------------------------------------------------------------
 
 loc_B18F:
-		cmp	byte_12BA3, 1
+		cmp	_input_down, 1
 		jz	short loc_B199
 		jmp	loc_B242
 ; ---------------------------------------------------------------------------
@@ -2106,12 +1868,12 @@ loc_B225:
 		push	word ptr es:[bx]
 		call	sub_AD86
 		add	sp, 6
-		mov	byte_12BA3, 0
+		mov	_input_down, 0
 		jmp	loc_B408
 ; ---------------------------------------------------------------------------
 
 loc_B242:
-		cmp	byte_12B99, 2
+		cmp	_input_lr, INPUT_LEFT
 		jz	short loc_B24C
 		jmp	loc_B2F4
 ; ---------------------------------------------------------------------------
@@ -2173,12 +1935,12 @@ loc_B2D7:
 		push	word ptr es:[bx]
 		call	sub_AD86
 		add	sp, 6
-		mov	byte_12B99, 0
+		mov	_input_lr, 0
 		jmp	loc_B408
 ; ---------------------------------------------------------------------------
 
 loc_B2F4:
-		cmp	byte_12B99, 1
+		cmp	_input_lr, INPUT_RIGHT
 		jz	short loc_B2FE
 		jmp	loc_B3A6
 ; ---------------------------------------------------------------------------
@@ -2240,12 +2002,12 @@ loc_B38A:
 		push	word ptr es:[bx]
 		call	sub_AD86
 		add	sp, 6
-		mov	byte_12B99, 0
+		mov	_input_lr, 0
 		jmp	short loc_B408
 ; ---------------------------------------------------------------------------
 
 loc_B3A6:
-		cmp	byte_12B9C, 1
+		cmp	_input_shot, 1
 		jnz	short loc_B3DC
 		push	word ptr [bp+arg_C+2]
 		push	word ptr [bp+arg_C] ; __int32
@@ -2265,12 +2027,12 @@ loc_B3A6:
 ; ---------------------------------------------------------------------------
 
 loc_B3D5:
-		mov	byte_12B9C, 0
+		mov	_input_shot, 0
 		jmp	short loc_B408
 ; ---------------------------------------------------------------------------
 
 loc_B3DC:
-		cmp	byte_12BA1, 1
+		cmp	_input_strike, 1
 		jnz	short loc_B403
 		push	word ptr [bp+arg_C+2]
 		push	word ptr [bp+arg_C] ; __int32
@@ -2280,7 +2042,7 @@ loc_B3DC:
 		push	200h		; int
 		call	sub_AEF6
 		add	sp, 0Ch
-		mov	byte_12BA1, 0
+		mov	_input_strike, 0
 		jmp	short loc_B408
 ; ---------------------------------------------------------------------------
 
@@ -2483,11 +2245,10 @@ loc_B559:
 		cmp	si, 10h
 		jl	short loc_B554
 		mov	[bp+var_8], 0
-		call	fuuin_02:sub_A44F
+		call	fuuin_02:_input_reset_sense
 
 loc_B566:
-		push	0
-		call	fuuin_02:sub_A265
+		call	fuuin_02:_input_sense stdcall, 0
 		pop	cx
 		push	ss
 		lea	ax, [bp+var_6]
@@ -2510,7 +2271,7 @@ loc_B566:
 ; ---------------------------------------------------------------------------
 
 loc_B591:
-		cmp	byte_12BA0, 0
+		cmp	_input_ok, 0
 		jz	short loc_B59A
 		jmp	short loc_B5AB
 ; ---------------------------------------------------------------------------
@@ -2530,7 +2291,7 @@ loc_B5A9:
 ; ---------------------------------------------------------------------------
 
 loc_B5AB:
-		mov	byte_12BA0, 0
+		mov	_input_ok, 0
 		xor	si, si
 		jmp	short loc_B5CB
 ; ---------------------------------------------------------------------------
@@ -2696,7 +2457,7 @@ loc_B6F5:
 		jb	short loc_B6CC
 
 loc_B703:
-		call	fuuin_02:sub_A44F
+		call	fuuin_02:_input_reset_sense
 		cmp	[bp+var_2], 0
 		jle	short loc_B710
 		jmp	loc_B8BD
@@ -2882,16 +2643,15 @@ loc_B8BD:
 		push	1Eh
 		call	sub_A9FF
 		add	sp, 10h
-		mov	byte_12BA0, 1
-		mov	byte_12B9C, 1
+		mov	_input_ok, 1
+		mov	_input_shot, 1
 
 loc_B8E3:
-		push	0
-		call	fuuin_02:sub_A265
+		call	fuuin_02:_input_sense stdcall, 0
 		pop	cx
-		cmp	byte_12BA0, 0
+		cmp	_input_ok, 0
 		jz	short loc_B8F8
-		cmp	byte_12B9C, 0
+		cmp	_input_shot, 0
 		jnz	short loc_B8FA
 
 loc_B8F8:
@@ -4341,13 +4101,12 @@ loc_C647:
 		xor	si, si
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	sub_A44F
+		call	_input_reset_sense
 		jmp	short loc_C6B1
 ; ---------------------------------------------------------------------------
 
 loc_C6A1:
-		push	0
-		call	sub_A265
+		call	_input_sense stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 1
 		pop	cx
@@ -4357,9 +4116,9 @@ loc_C6B1:
 		inc	si
 		cmp	ax, 7D0h
 		jge	short loc_C6C7
-		cmp	byte_12BA0, 0
+		cmp	_input_ok, 0
 		jnz	short loc_C6C7
-		cmp	byte_12B9C, 0
+		cmp	_input_shot, 0
 		jz	short loc_C6A1
 
 loc_C6C7:
@@ -4612,17 +4371,7 @@ path		db 'op',0
 ; char arg0[3]
 arg0		db 'op',0
 		db    0
-byte_12B99	db 0
-byte_12B9A	db 0
-byte_12B9B	db 0
-byte_12B9C	db 0
-byte_12B9D	db 0
-		db    0
-byte_12B9F	db 0
-byte_12BA0	db 0
-byte_12BA1	db 0
-byte_12BA2	db 0
-byte_12BA3	db 0
+include th01/hardware/input_main_end[data].asm
 		dd 0
 		db  49h	; I
 		db  81h
@@ -4908,17 +4657,9 @@ _rank	db ?
 		db ?
 include th01/hiscore/hiscore[bss].asm
 		db    ?	;
-byte_14039	db ?
-byte_1403A	db ?
-byte_1403B	db ?
-byte_1403C	db ?
-byte_1403D	db ?
-byte_1403E	db ?
-byte_1403F	db ?
-byte_14040	db ?
-byte_14041	db ?
-byte_14042	db ?
-		db ?
+public _input_prev
+_input_prev	db 10 dup(?)
+		evendata
 include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
