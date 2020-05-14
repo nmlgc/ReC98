@@ -79,6 +79,29 @@ certain local variables as `word`s when they aren't.
 
 ## Flags
 
+### `-3` (80386 Instructions) + `-Z` (Suppress register reloads)
+
+Bundles two consecutive 16-bit function parameters into a single 32-bit one,
+passed via a single 32-bit `PUSH`. Currently confirmed to happen for literals
+and structure members whose memory layout matches the parameter list and
+calling convention. Signedness doesn't matter.
+
+```c
+// Works for all storage durations
+struct {          int  x, y; } p;
+struct { unsigned int  x, y; } q;
+
+void __cdecl foo_s(int x, int y);
+void __cdecl foo_u(unsigned int x, unsigned int y);
+
+foo_s(640, 400); // PUSH LARGE 1900280h
+foo_u(640, 400); // PUSH LARGE 1900280h
+foo_s(p.x, p.y); // PUSH LARGE [p]
+foo_u(p.x, p.y); // PUSH LARGE [p]
+foo_s(q.x, q.y); // PUSH LARGE [p]
+foo_u(q.x, q.y); // PUSH LARGE [p]
+```
+
 ### `-O` (Optimize jumps)
 
 Also merges multiple `ADD SP, imm8` stack-clearing instructions after

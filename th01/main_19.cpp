@@ -46,6 +46,13 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	graph_putsa_fx(left, top, fx, kanji_str);
 #define graph_printf_fx graph_putsa_fx
 
-#include "th01/hiscore/alph_p_i.cpp"
+#define regist_route_put(left, top, fx, char_1, char_2) \
+	unsigned char route[sizeof(twobyte_t) + 1]; \
+	route[2] = '\0'; \
+	route[0] = char_1; \
+	route[1] = char_2; \
+	graph_putsa_fx(left, top, fx, route); \
+
+#include "th01/hiscore/regist.cpp"
 
 }

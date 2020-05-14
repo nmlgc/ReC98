@@ -371,562 +371,17 @@ fuuin_01_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_02_TEXT	segment	byte public 'CODE' use16
-	extern _graph_putfwnum_fx:proc
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
 	extern _scoredat_name_byte_encode:proc
 	extern _scoredat_load:proc
 	extern _scoredat_name_get:proc
 	extern _alphabet_put_initial:proc
+	extern _regist_put_initial:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-sub_A9FF	proc far
-
-var_12		= byte ptr -12h
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= dword	ptr  0Eh
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-
-		enter	12h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		lea	ax, [bp+var_12]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aBqbqbqbqbqbqbq ; "＿＿＿＿＿＿＿＿"
-		mov	cx, 11h
-		call	SCOPY@
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_putsa_fx c,  32, 48, 33h, offset aB@cB@iB@, ds ; "　霊　位　"
-		call	_graph_putsa_fx c, 144, 48, 33h, offset aB@b@cB@b@sob@b, ds ; "　　名　　前　　"
-		call	_graph_putsa_fx c, 352, 48, 33h, offset aB@b@uB@b@u_b@b, ds ; "　　得　　点　　"
-		call	_graph_putsa_fx c, 512, 48, 33h, offset aGxgebGwbeglbGg, ds ; "ステージ・ルート"
-		xor	si, si
-		jmp	loc_AD66
-; ---------------------------------------------------------------------------
-
-loc_AA71:
-		mov	bx, si
-		cmp	bx, 9
-		jbe	short loc_AA7B
-		jmp	loc_AB4F
-; ---------------------------------------------------------------------------
-
-loc_AA7B:
-		add	bx, bx
-		jmp	cs:off_AD72[bx]
-
-loc_AA82:
-		push	ds
-		push	offset aB@sB@r_b@ ; "　靈　神　"
-		cmp	si, di
-		jnz	short loc_AA8F
-		mov	ax, 3
-		jmp	short loc_AA92
-; ---------------------------------------------------------------------------
-
-loc_AA8F:
-		mov	ax, 7
-
-loc_AA92:
-		jmp	loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AA95:
-		push	ds
-		push	offset aSMRgcId	; "太元帥明王"
-		cmp	si, di
-		jnz	short loc_AAA2
-		mov	ax, 3
-		jmp	short loc_AAA5
-; ---------------------------------------------------------------------------
-
-loc_AAA2:
-		mov	ax, 7
-
-loc_AAA5:
-		jmp	loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AAA8:
-		push	ds
-		push	offset aB@uvb@rxb@ ; "　天　仙　"
-		cmp	si, di
-		jnz	short loc_AAB5
-		mov	ax, 3
-		jmp	short loc_AAB8
-; ---------------------------------------------------------------------------
-
-loc_AAB5:
-		mov	ax, 7
-
-loc_AAB8:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AABA:
-		push	ds
-		push	offset aB@r_b@rxb@ ; "　神　仙　"
-		cmp	si, di
-		jnz	short loc_AAC7
-		mov	ax, 3
-		jmp	short loc_AACA
-; ---------------------------------------------------------------------------
-
-loc_AAC7:
-		mov	ax, 7
-
-loc_AACA:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AACC:
-		push	ds
-		push	offset aB@tnb@rxb@ ; "　地　仙　"
-		cmp	si, di
-		jnz	short loc_AAD9
-		mov	ax, 3
-		jmp	short loc_AADC
-; ---------------------------------------------------------------------------
-
-loc_AAD9:
-		mov	ax, 7
-
-loc_AADC:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AADE:
-		push	ds
-		push	offset aB@rlb@rxb@ ; "　人　仙　"
-		cmp	si, di
-		jnz	short loc_AAEB
-		mov	ax, 3
-		jmp	short loc_AAEE
-; ---------------------------------------------------------------------------
-
-loc_AAEB:
-		mov	ax, 7
-
-loc_AAEE:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AAF0:
-		push	ds
-		push	offset aB@rxb@pcb@ ; "　仙　女　"
-		cmp	si, di
-		jnz	short loc_AAFD
-		mov	ax, 3
-		jmp	short loc_AB00
-; ---------------------------------------------------------------------------
-
-loc_AAFD:
-		mov	ax, 7
-
-loc_AB00:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AB02:
-		push	ds
-		push	offset aIab@czb@ot ; "陰　陽　師"
-		cmp	si, di
-		jnz	short loc_AB0F
-		mov	ax, 3
-		jmp	short loc_AB12
-; ---------------------------------------------------------------------------
-
-loc_AB0F:
-		mov	ax, 7
-
-loc_AB12:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AB14:
-		push	ds
-		push	offset aSB@fB@ot ; "靈　媒　師"
-		cmp	si, di
-		jnz	short loc_AB21
-		mov	ax, 3
-		jmp	short loc_AB24
-; ---------------------------------------------------------------------------
-
-loc_AB21:
-		mov	ax, 7
-
-loc_AB24:
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AB26:
-		push	ds
-		push	offset aPcb@lB@o ; "修　業　者"
-		cmp	si, di
-		jnz	short loc_AB33
-		mov	ax, 3
-		jmp	short loc_AB36
-; ---------------------------------------------------------------------------
-
-loc_AB33:
-		mov	ax, 7
-
-loc_AB36:
-		or	ax, 20h
-		push	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax
-		push	32
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		jmp	short $+2
-
-loc_AB4F:
-		cmp	si, di
-		jnz	short loc_AB5A
-		mov	dx, ss
-		lea	ax, [bp+var_12]
-		jmp	short loc_AB69
-; ---------------------------------------------------------------------------
-
-loc_AB5A:
-		mov	ax, si
-		imul	ax, 12h
-		mov	dx, [bp+arg_E]
-		push	ax
-		mov	ax, [bp+arg_C]
-		pop	bx
-		add	ax, bx
-
-loc_AB69:
-		push	dx
-		push	ax
-		cmp	si, di
-		jnz	short loc_AB74
-		mov	ax, 3
-		jmp	short loc_AB77
-; ---------------------------------------------------------------------------
-
-loc_AB74:
-		mov	ax, 7
-
-loc_AB77:
-		or	ax, 20h
-		push	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax
-		push	144
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	0	; put_leading_zeroes
-		push	0	; num_prev (high)
-		push	0	; num_prev (low)
-		cmp	di, si
-		jnz	short loc_ABA1
-		mov	dx, [bp+arg_4]
-		mov	ax, [bp+arg_2]
-		jmp	short loc_ABB3
-; ---------------------------------------------------------------------------
-
-loc_ABA1:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-
-loc_ABB3:
-		push	dx	; num (high)
-		push	ax	; num (low)
-		push	7	; digits
-		cmp	si, di
-		jnz	short loc_ABC0
-		mov	ax, 3
-		jmp	short loc_ABC3
-; ---------------------------------------------------------------------------
-
-loc_ABC0:
-		mov	ax, 7
-
-loc_ABC3:
-		or	ax, 30h
-		push	ax	; fx
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax	; top
-		push	352	; left
-		call	fuuin_02:_graph_putfwnum_fx
-		add	sp, 12h
-		cmp	si, di
-		jz	short loc_ABEE
-		mov	ax, si
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		cmp	word ptr es:[bx], SCOREDAT_CLEARED
-		jl	short loc_ABF8
-
-loc_ABEE:
-		cmp	si, di
-		jnz	short loc_AC3F
-		cmp	[bp+arg_6], SCOREDAT_CLEARED
-		jge	short loc_AC3F
-
-loc_ABF8:
-		push	0	; put_leading_zeroes
-		push	0	; num_prev (high)
-		push	0	; num_prev (low)
-		cmp	si, di
-		jnz	short loc_AC07
-		mov	ax, [bp+arg_6]
-		jmp	short loc_AC14
-; ---------------------------------------------------------------------------
-
-loc_AC07:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		mov	ax, es:[bx]
-
-loc_AC14:
-		cwd
-		push	dx	; num (high)
-		push	ax	; num (low)
-		push	2	; digits
-		cmp	si, di
-		jnz	short loc_AC22
-		mov	ax, 3
-		jmp	short loc_AC25
-; ---------------------------------------------------------------------------
-
-loc_AC22:
-		mov	ax, 7
-
-loc_AC25:
-		or	ax, 20h
-		push	ax	; fx
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax	; top
-		push	528	; left
-		call	fuuin_02:_graph_putfwnum_fx
-		add	sp, 12h
-		jmp	loc_ACCD
-; ---------------------------------------------------------------------------
-
-loc_AC3F:
-		cmp	si, di
-		jz	short loc_AC53
-		mov	ax, si
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		cmp	word ptr es:[bx], SCOREDAT_CLEARED_MAKAI
-		jz	short loc_AC5D
-
-loc_AC53:
-		cmp	si, di
-		jnz	short loc_AC87
-		cmp	[bp+arg_6], SCOREDAT_CLEARED_MAKAI
-		jnz	short loc_AC87
-
-loc_AC5D:
-		push	ds
-		push	offset aCvke	; "魔界"
-		cmp	si, di
-		jnz	short loc_AC6A
-		mov	ax, 3
-		jmp	short loc_AC6D
-; ---------------------------------------------------------------------------
-
-loc_AC6A:
-		mov	ax, 7
-
-loc_AC6D:
-		or	ax, 20h
-		push	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax
-		push	528
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		jmp	short loc_ACCD
-; ---------------------------------------------------------------------------
-
-loc_AC87:
-		cmp	si, di
-		jz	short loc_AC9B
-		mov	ax, si
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		cmp	word ptr es:[bx], SCOREDAT_CLEARED_JIGOKU
-		jz	short loc_ACA5
-
-loc_AC9B:
-		cmp	si, di
-		jnz	short loc_ACCD
-		cmp	[bp+arg_6], SCOREDAT_CLEARED_JIGOKU
-		jnz	short loc_ACCD
-
-loc_ACA5:
-		push	ds
-		push	offset aTnnc	; "地獄"
-		cmp	si, di
-		jnz	short loc_ACB2
-		mov	ax, 3
-		jmp	short loc_ACB5
-; ---------------------------------------------------------------------------
-
-loc_ACB2:
-		mov	ax, 7
-
-loc_ACB5:
-		or	ax, 20h
-		push	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax
-		push	528
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-
-loc_ACCD:
-		push	ds
-		push	offset aB	; "－"
-		cmp	si, di
-		jnz	short loc_ACDA
-		mov	ax, 3
-		jmp	short loc_ACDD
-; ---------------------------------------------------------------------------
-
-loc_ACDA:
-		mov	ax, 7
-
-loc_ACDD:
-		or	ax, 20h
-		push	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		push	ax
-		push	560
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		cmp	si, di
-		jnz	short loc_ACFE
-		les	bx, [bp+arg_8]
-		jmp	short loc_AD0A
-; ---------------------------------------------------------------------------
-
-loc_ACFE:
-		mov	bx, si
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-
-loc_AD0A:
-		mov	al, es:[bx+1]
-		cbw
-		push	ax
-		cmp	si, di
-		jnz	short loc_AD19
-		les	bx, [bp+arg_8]
-		jmp	short loc_AD23
-; ---------------------------------------------------------------------------
-
-loc_AD19:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _scoredat_routes
-		add	bx, ax
-
-loc_AD23:
-		mov	al, es:[bx]
-		cbw
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_3	; "%c%c"
-		cmp	si, di
-		jnz	short loc_AD35
-		mov	ax, 3
-		jmp	short loc_AD38
-; ---------------------------------------------------------------------------
-
-loc_AD35:
-		mov	ax, 7
-
-loc_AD38:
-		or	ax, 20h
-		push	ax		; int
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 40h
-		push	ax		; int
-		push	240h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		cmp	di, si
-		jnz	short loc_AD65
-		mov	_name_entered_left, 144
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 64
-		mov	_name_entered_top, ax
-
-loc_AD65:
-		inc	si
-
-loc_AD66:
-		cmp	si, SCOREDAT_PLACES
-		jge	short loc_AD6E
-		jmp	loc_AA71
-; ---------------------------------------------------------------------------
-
-loc_AD6E:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_A9FF	endp
-
-; ---------------------------------------------------------------------------
-off_AD72	dw offset loc_AA82
-		dw offset loc_AA95
-		dw offset loc_AAA8
-		dw offset loc_AABA
-		dw offset loc_AACC
-		dw offset loc_AADE
-		dw offset loc_AAF0
-		dw offset loc_AB02
-		dw offset loc_AB14
-		dw offset loc_AB26
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1298,14 +753,14 @@ loc_B021:
 		inc	word ptr es:[bx]
 
 loc_B063:
-		call	_egc_copy_rect_1_to_0 c, _name_entered_left, _name_entered_top, 128, 16
+		call	_egc_copy_rect_1_to_0 c, _entered_name_left, _entered_name_top, 128, 16
 		push	word ptr [bp+0Ch]
 		push	word ptr [bp+_arglist] ;	arglist
 		push	ds
 		push	offset aS	; "%s"
 		push	23h ; '#'       ; int
-		push	_name_entered_top	; int
-		push	_name_entered_left	; int
+		push	_entered_name_top	; int
+		push	_entered_name_left	; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		les	bx, [bp+arg_8]
@@ -1326,8 +781,8 @@ loc_B063:
 		push	ds
 		push	offset aS_0	; "%s"
 		push	3		; int
-		push	_name_entered_top	; int
-		push	_name_entered_left	; int
+		push	_entered_name_top	; int
+		push	_entered_name_left	; int
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		xor	ax, ax
@@ -1949,8 +1404,7 @@ var_8		= word ptr -8
 var_6		= word ptr -6
 @@place		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@points	= dword ptr  6
 arg_4		= word ptr  0Ah
 @@route		= dword	ptr  0Ch
 
@@ -2052,10 +1506,10 @@ loc_B6CC:
 		add	bx, ax
 		mov	dx, es:[bx+2]
 		mov	ax, es:[bx]
-		cmp	dx, [bp+arg_2]
+		cmp	dx, word ptr [bp+@@points+2]
 		jg	short loc_B6ED
 		jnz	short loc_B6EB
-		cmp	ax, [bp+arg_0]
+		cmp	ax, word ptr [bp+@@points]
 		ja	short loc_B6ED
 
 loc_B6EB:
@@ -2207,18 +1661,18 @@ loc_B83D:
 		push	word ptr [bp+@@route+2]
 		push	word ptr [bp+@@route]
 		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
+		push	word ptr [bp+@@points+2]
+		push	word ptr [bp+@@points]
 		push	[bp+@@place]
-		call	sub_A9FF
+		call	_regist_put_initial
 		add	sp, 10h
 		call	_alphabet_put_initial
 		mov	ax, [bp+@@place]
 		shl	ax, 2
 		les	bx, _scoredat_points
 		add	bx, ax
-		mov	dx, [bp+arg_2]
-		mov	ax, [bp+arg_0]
+		mov	dx, word ptr [bp+@@points+2]
+		mov	ax, word ptr [bp+@@points]
 		mov	es:[bx+2], dx
 		mov	es:[bx], ax
 		mov	ax, [bp+@@place]
@@ -2255,10 +1709,10 @@ loc_B8BD:
 		push	word ptr [bp+@@route+2]
 		push	word ptr [bp+@@route]
 		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
+		push	word ptr [bp+@@points+2]
+		push	word ptr [bp+@@points]
 		push	1Eh
-		call	sub_A9FF
+		call	_regist_put_initial
 		add	sp, 10h
 		mov	_input_ok, 1
 		mov	_input_shot, 1
@@ -3992,7 +3446,8 @@ include th01/hardware/input_main_end[data].asm
 		dd 0
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hardware/grppfnfx_ptrs[data].asm
-aBqbqbqbqbqbqbq	db '＿＿＿＿＿＿＿＿',0
+public _REGIST_NAME_BLANK
+_REGIST_NAME_BLANK	db '＿＿＿＿＿＿＿＿',0
 aB@b@b@b@b@b@b@	db '　　　　　　　　',0
 aHiscore_0	db 'HISCORE',0
 off_12C1E	dd aB@gcbGwbB@
@@ -4002,26 +3457,7 @@ off_12C1E	dd aB@gcbGwbB@
 		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
-include th01/hiscore/alphabet_initial[data].asm
-aB@cB@iB@	db '　霊　位　',0
-aB@b@cB@b@sob@b	db '　　名　　前　　',0
-aB@b@uB@b@u_b@b	db '　　得　　点　　',0
-aGxgebGwbeglbGg	db 'ステージ・ルート',0
-aB@sB@r_b@	db '　靈　神　',0
-aSMRgcId	db '太元帥明王',0
-aB@uvb@rxb@	db '　天　仙　',0
-aB@r_b@rxb@	db '　神　仙　',0
-aB@tnb@rxb@	db '　地　仙　',0
-aB@rlb@rxb@	db '　人　仙　',0
-aB@rxb@pcb@	db '　仙　女　',0
-aIab@czb@ot	db '陰　陽　師',0
-aSB@fB@ot	db '靈　媒　師',0
-aPcb@lB@o	db '修　業　者',0
-aCvke		db '魔界',0
-aTnnc		db '地獄',0
-aB		db '－',0
-; char aCC_3[]
-aCC_3		db '%c%c',0
+include th01/hiscore/regist[data].asm
 ; char aSp_0[]
 aSp_0		db 'SP',0
 ; char aBi_1[]

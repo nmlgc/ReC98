@@ -4,6 +4,7 @@
 // Actually creates slightly different assembly compared to sizeof() on a
 // int8_t array!
 #define SCOREDAT_NAME_BYTES (SCOREDAT_NAME_KANJI * 2)
+#define SCOREDAT_ROUTE_LEN 2
 
 #define SCOREDAT_CLEARED 40
 #define SCOREDAT_CLEARED_MAKAI (SCOREDAT_CLEARED + 10)
@@ -43,6 +44,20 @@ inline int8_t& scoredat_name_byte(size_t byte)
 {
 	return reinterpret_cast<char *>(scoredat_names)[byte];
 }
+
+// Byte-wise access to [scoredat_routes].
+inline int8_t& scoredat_route_byte(int place, int byte)
+{
+	return reinterpret_cast<int8_t *>(scoredat_routes)[
+		(place * SCOREDAT_ROUTE_LEN) + byte
+	];
+}
+
+// Null-terminated version of scoredat_name_t, used internally.
+union scoredat_name_z_t {
+	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
+	int8_t byte[SCOREDAT_NAME_BYTES + 1];
+};
 
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.

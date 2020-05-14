@@ -82,6 +82,10 @@ extern const char FOPEN_WB[];
 		ALPHABET_KANJI_FMT_##fmt_instance, kanji >> 8, kanji & 0xFF \
 	)
 
-#include "th01/hiscore/alph_p_i.cpp"
+#define regist_route_put(left, top, fx, char_1, char_2) \
+	extern const char REGIST_ROUTE_FMT[]; \
+	graph_printf_fx(left, top, fx, REGIST_ROUTE_FMT, char_1, char_2);
+
+#include "th01/hiscore/regist.cpp"
 
 }

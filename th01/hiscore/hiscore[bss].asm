@@ -25,10 +25,10 @@ scoredat_routes_t struc
 scoredat_routes_t ends
 
 public _scoredat_names, _scoredat_routes, _scoredat_stages, _scoredat_points
-public _name_entered_left, _name_entered_top
+public _entered_name_left, _entered_name_top
 _scoredat_names	dd ?
 _scoredat_routes	dd ?
 _scoredat_stages	dd ?
-_name_entered_left	dw ?
-_name_entered_top	dw ?
+_entered_name_left	dw ?
+_entered_name_top	dw ?
 _scoredat_points	dd ?
