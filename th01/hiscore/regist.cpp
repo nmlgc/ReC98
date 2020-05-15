@@ -1,3 +1,5 @@
+#include "th01/hardware/egc.h"
+
 #define COL_SELECTED 3
 #define COL_REGULAR 7
 
@@ -89,9 +91,18 @@ extern const uint16_t ALPHABET_SYMS[];
 
 // Rows
 #define LOWER_TOP (ALPHABET_TOP)
+#define LOWER2_TOP (LOWER_TOP + relative_top(1))
 #define UPPER_TOP (LOWER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
+#define UPPER2_TOP (UPPER_TOP + relative_top(1))
 #define SYM_TOP (UPPER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
 #define NUM_TOP (SYM_TOP + relative_top(row_ceil(SYM_COUNT)))
+
+// Columns
+#define SPACE_LEFT left_for(NUM_COUNT)
+#define LEFT_COLUMN (KANJI_PER_ROW - 3)
+#define LEFT_LEFT  left_for(LEFT_COLUMN + 0)
+#define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
+#define ENTER_LEFT left_for(LEFT_COLUMN + 2)
 
 inline uint16_t kanji_swap(uint16_t kanji)
 {
@@ -134,7 +145,7 @@ void alphabet_put_initial()
 		alphabet_putca_fx(NUM_TOP, i, fx, 3, kanji);
 		kanji++;
 	}
-	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_SPACE);	i = (KANJI_PER_ROW - 3);
+	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
 	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_LEFT); 	i++;
 	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_RIGHT);	i++;
 	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_ENTER);	i++;
@@ -268,5 +279,64 @@ void regist_put_initial(
 		#undef place_col
 		#undef fx_text
 		#undef stage_expr
+	}
+}
+
+#define alphabet_left_to_column(left) \
+	((left - left_for(0)) / KANJI_PADDED_W)
+
+#define alphabet_left_to_kanji(left, kanji_at_0) \
+	(alphabet_left_to_column(left) + kanji_swap(kanji_at_0))
+
+#define alphabet_if(kanji, left, top, on_space, on_left, on_right, on_enter) \
+	if(top == LOWER_TOP) { \
+		kanji = alphabet_left_to_kanji(left, 'ÇÅ'); \
+	} else if(top == LOWER2_TOP) { \
+		kanji = alphabet_left_to_kanji(left, 'ÇÅ') + KANJI_PER_ROW; \
+	} else if(top == UPPER_TOP) { \
+		kanji = alphabet_left_to_kanji(left, 'Ç`'); \
+	} else if(top == UPPER2_TOP) { \
+		kanji = alphabet_left_to_kanji(left, 'Ç`') + KANJI_PER_ROW; \
+	} else if(top == SYM_TOP) { \
+		kanji = ALPHABET_SYMS[alphabet_left_to_column(left)]; \
+	} else if(top == NUM_TOP && left < SPACE_LEFT) { \
+		kanji = alphabet_left_to_kanji(left, 'ÇO'); \
+	} else if((top == NUM_TOP) && (left == SPACE_LEFT)) { \
+		on_space \
+	} else if((top == NUM_TOP) && (left == LEFT_LEFT)) { \
+		on_left \
+	} else if((top == NUM_TOP) && (left == RIGHT_LEFT)) { \
+		on_right \
+	} else if((top == NUM_TOP) && (left == ENTER_LEFT)) { \
+		on_enter \
+	}
+
+void alphabet_put_at(int left, int top, bool16 is_selected)
+{
+	// Placement matters with -O-!
+	extern const char ALPHABET_SPACE_0[];
+	extern const char ALPHABET_LEFT_0[];
+	extern const char ALPHABET_RIGHT_0[];
+	extern const char ALPHABET_ENTER_0[];
+
+	int16_t kanji = '\0';
+
+	egc_copy_rect_1_to_0(left, top, KANJI_PADDED_W, GLYPH_H);
+
+	int fx = FX(
+		!is_selected ? (COL_REGULAR) : (FX_REVERSE | COL_SELECTED), 2, 0
+	);
+
+	alphabet_if(kanji, left, top,
+		{ graph_printf_fx(left, top, fx, ALPHABET_SPACE_0); },
+		{ graph_printf_fx(left, top, fx, ALPHABET_LEFT_0); },
+		{ graph_printf_fx(left, top, fx, ALPHABET_RIGHT_0); },
+		{ graph_printf_fx(left, top, fx, ALPHABET_ENTER_0); }
+	);
+	if(kanji != '\0') {
+		#if (BINARY == 'M')
+			char kanji_str[3];
+		#endif
+		graph_putkanji_fx(left, top, fx, 4, kanji);
 	}
 }

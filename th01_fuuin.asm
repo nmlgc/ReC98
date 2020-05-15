@@ -378,199 +378,11 @@ fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _scoredat_name_get:proc
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
+	extern _alphabet_put_at:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AD86	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@left		= word ptr  6
-@@top		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	si, [bp+@@left]
-		mov	di, [bp+@@top]
-		mov	[bp+var_2], 0
-		call	_egc_copy_rect_1_to_0 c, si, di, 32, 16
-		cmp	[bp+arg_4], 0
-		jnz	short loc_ADB0
-		mov	ax, 7
-		jmp	short loc_ADB3
-; ---------------------------------------------------------------------------
-
-loc_ADB0:
-		mov	ax, 803h
-
-loc_ADB3:
-		or	ax, 20h
-		mov	[bp+var_4], ax
-		cmp	di, 0F0h
-		jnz	short loc_ADD1
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8281h
-		mov	[bp+var_2], ax
-		jmp	loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_ADD1:
-		cmp	di, 108h
-		jnz	short loc_ADE9
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8293h
-		mov	[bp+var_2], ax
-		jmp	loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_ADE9:
-		cmp	di, 120h
-		jnz	short loc_AE01
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8260h
-		mov	[bp+var_2], ax
-		jmp	loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE01:
-		cmp	di, 138h
-		jnz	short loc_AE19
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8272h
-		mov	[bp+var_2], ax
-		jmp	loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE19:
-		cmp	di, 150h
-		jnz	short loc_AE36
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, _ALPHABET_SYMS[bx]
-		mov	[bp+var_2], ax
-		jmp	loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE36:
-		cmp	di, 168h
-		jnz	short loc_AE53
-		cmp	si, 160h
-		jge	short loc_AE53
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 824Fh
-		mov	[bp+var_2], ax
-		jmp	short loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE53:
-		cmp	di, 168h
-		jnz	short loc_AE72
-		cmp	si, 160h
-		jnz	short loc_AE72
-		push	ds
-		push	offset aSp_0	; "SP"
-		push	[bp+var_4]	; int
-		push	di		; int
-		push	si		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		jmp	short loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE72:
-		cmp	di, 168h
-		jnz	short loc_AE91
-		cmp	si, 200h
-		jnz	short loc_AE91
-		push	ds
-		push	offset aBi_1	; "Å©"
-		push	[bp+var_4]	; int
-		push	di		; int
-		push	si		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		jmp	short loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AE91:
-		cmp	di, 168h
-		jnz	short loc_AEB0
-		cmp	si, 220h
-		jnz	short loc_AEB0
-		push	ds
-		push	offset aBi_2	; "Å®"
-		push	[bp+var_4]	; int
-		push	di		; int
-		push	si		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-		jmp	short loc_AECD
-; ---------------------------------------------------------------------------
-
-loc_AEB0:
-		cmp	di, 168h
-		jnz	short loc_AECD
-		cmp	si, 240h
-		jnz	short loc_AECD
-		push	ds
-		push	offset aPi_0	; "èI"
-		push	[bp+var_4]	; int
-		push	di		; int
-		push	si		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
-
-loc_AECD:
-		cmp	[bp+var_2], 0
-		jz	short loc_AEF2
-		mov	ax, [bp+var_2]
-		and	ax, 0FFh
-		push	ax
-		mov	ax, [bp+var_2]
-		sar	ax, 8
-		push	ax		; arglist
-		push	ds
-		push	offset aCC_4	; "%c%c"
-		push	[bp+var_4]	; int
-		push	di		; int
-		push	si		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-
-loc_AEF2:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_AD86	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -803,8 +615,8 @@ sub_AEF6	endp
 ; int __cdecl __far sub_B0D9(__int32, __int32, char arglist, int, __int32)
 sub_B0D9	proc far
 
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
+@@left		= dword	ptr  6
+@@top		= dword	ptr  0Ah
 _arglist		= byte ptr  0Eh
 arg_A		= word ptr  10h
 arg_C		= dword	ptr  12h
@@ -818,60 +630,60 @@ arg_C		= dword	ptr  12h
 
 loc_B0E6:
 		push	0
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
-		les	bx, [bp+arg_4]
-		sub	word ptr es:[bx], 18h
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 0F0h
+		les	bx, [bp+@@top]
+		sub	word ptr es:[bx], 24
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 240
 		jge	short loc_B114
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 360
 
 loc_B114:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 108h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 264
 		jnz	short loc_B130
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B130
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0F0h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 240
 
 loc_B130:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 138h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 312
 		jnz	short loc_B14C
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B14C
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 120h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 288
 
 loc_B14C:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 360
 		jnz	short loc_B172
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 160h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 352
 		jle	short loc_B172
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 200h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 512
 		jge	short loc_B172
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 150h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 336
 
 loc_B172:
 		push	1
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
 		mov	_input_up, 0
 		jmp	loc_B408
@@ -885,60 +697,60 @@ loc_B18F:
 
 loc_B199:
 		push	0
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
-		les	bx, [bp+arg_4]
-		add	word ptr es:[bx], 18h
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		add	word ptr es:[bx], 24
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 360
 		jle	short loc_B1C7
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0F0h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 240
 
 loc_B1C7:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 108h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 264
 		jnz	short loc_B1E3
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B1E3
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 120h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 288
 
 loc_B1E3:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 138h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 312
 		jnz	short loc_B1FF
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B1FF
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 150h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 336
 
 loc_B1FF:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 360
 		jnz	short loc_B225
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 160h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 352
 		jle	short loc_B225
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 200h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 512
 		jge	short loc_B225
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0F0h
+		les	bx, [bp+@@top]
+		mov	word ptr es:[bx], 240
 
 loc_B225:
 		push	1
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
 		mov	_input_down, 0
 		jmp	loc_B408
@@ -952,60 +764,60 @@ loc_B242:
 
 loc_B24C:
 		push	0
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
-		les	bx, [bp+arg_0]
-		sub	word ptr es:[bx], 20h ;	' '
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 20h ;	' '
+		les	bx, [bp+@@left]
+		sub	word ptr es:[bx], 32
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 32
 		jge	short loc_B279
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 240h
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 576
 
 loc_B279:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 108h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 264
 		jnz	short loc_B295
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B295
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 100h
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 256
 
 loc_B295:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 138h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 312
 		jnz	short loc_B2B1
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B2B1
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 100h
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 256
 
 loc_B2B1:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 360
 		jnz	short loc_B2D7
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 160h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 352
 		jle	short loc_B2D7
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 200h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 512
 		jge	short loc_B2D7
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 160h
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 352
 
 loc_B2D7:
 		push	1
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
 		mov	_input_lr, 0
 		jmp	loc_B408
@@ -1019,60 +831,60 @@ loc_B2F4:
 
 loc_B2FE:
 		push	0
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
-		les	bx, [bp+arg_0]
-		add	word ptr es:[bx], 20h ;	' '
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 240h
+		les	bx, [bp+@@left]
+		add	word ptr es:[bx], 32
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 576
 		jle	short loc_B32C
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 20h ;	' '
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 32
 
 loc_B32C:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 108h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 264
 		jnz	short loc_B348
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B348
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 20h ;	' '
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 32
 
 loc_B348:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 138h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 312
 		jnz	short loc_B364
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 120h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 288
 		jl	short loc_B364
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 20h ;	' '
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 32
 
 loc_B364:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 168h
+		les	bx, [bp+@@top]
+		cmp	word ptr es:[bx], 360
 		jnz	short loc_B38A
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 160h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 352
 		jle	short loc_B38A
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 200h
+		les	bx, [bp+@@left]
+		cmp	word ptr es:[bx], 512
 		jge	short loc_B38A
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 200h
+		les	bx, [bp+@@left]
+		mov	word ptr es:[bx], 512
 
 loc_B38A:
 		push	1
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_AD86
+		call	_alphabet_put_at
 		add	sp, 6
 		mov	_input_lr, 0
 		jmp	short loc_B408
@@ -1085,9 +897,9 @@ loc_B3A6:
 		push	word ptr [bp+arg_C] ; __int32
 		push	[bp+arg_A]	; int
 		push	word ptr [bp+_arglist] ;	arglist
-		les	bx, [bp+arg_4]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx] ; int
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx] ; int
 		call	sub_AEF6
 		add	sp, 0Ch
@@ -3458,16 +3270,6 @@ off_12C1E	dd aB@gcbGwbB@
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-; char aSp_0[]
-aSp_0		db 'SP',0
-; char aBi_1[]
-aBi_1		db 'Å©',0
-; char aBi_2[]
-aBi_2		db 'Å®',0
-; char aPi_0[]
-aPi_0		db 'èI',0
-; char aCC_4[]
-aCC_4		db '%c%c',0
 ; char aS[]
 aS		db '%s',0
 ; char aS_0[]
