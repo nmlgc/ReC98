@@ -8425,212 +8425,7 @@ main_19__TEXT	segment	byte public 'CODE' use16
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
 	extern _alphabet_put_at:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_141D6	proc far
-
-var_14		= byte ptr -14h
-var_13		= byte ptr -13h
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		enter	14h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
-		mov	[bp+var_2], 0
-		lea	ax, [bp+var_14]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "Å@Å@Å@Å@Å@Å@Å@Å@"
-		mov	cx, 11h
-		call	SCOPY@
-		cmp	di, 0F0h
-		jnz	short loc_1420C
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8281h
-		jmp	short loc_1425F
-; ---------------------------------------------------------------------------
-
-loc_1420C:
-		cmp	di, 108h
-		jnz	short loc_14220
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8293h
-		jmp	short loc_1425F
-; ---------------------------------------------------------------------------
-
-loc_14220:
-		cmp	di, 120h
-		jnz	short loc_14234
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8260h
-		jmp	short loc_1425F
-; ---------------------------------------------------------------------------
-
-loc_14234:
-		cmp	di, 138h
-		jnz	short loc_14248
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8272h
-		jmp	short loc_1425F
-; ---------------------------------------------------------------------------
-
-loc_14248:
-		cmp	di, 150h
-		jnz	short loc_14264
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, _ALPHABET_SYMS[bx]
-
-loc_1425F:
-		mov	[bp+var_2], ax
-		jmp	short loc_142E1
-; ---------------------------------------------------------------------------
-
-loc_14264:
-		cmp	di, 168h
-		jnz	short loc_1427E
-		cmp	si, 160h
-		jge	short loc_1427E
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 824Fh
-		jmp	short loc_1425F
-; ---------------------------------------------------------------------------
-
-loc_1427E:
-		cmp	di, 168h
-		jnz	short loc_14291
-		cmp	si, 160h
-		jnz	short loc_14291
-		mov	[bp+var_2], 8140h
-		jmp	short loc_142E1
-; ---------------------------------------------------------------------------
-
-loc_14291:
-		cmp	di, 168h
-		jnz	short loc_142B0
-		cmp	si, 200h
-		jnz	short loc_142B0
-		les	bx, [bp+arg_8]
-		dec	word ptr es:[bx]
-		cmp	word ptr es:[bx], 0
-		jge	short loc_142E1
-		mov	word ptr es:[bx], 0
-		jmp	short loc_142E1
-; ---------------------------------------------------------------------------
-
-loc_142B0:
-		cmp	di, 168h
-		jnz	short loc_142CF
-		cmp	si, 220h
-		jnz	short loc_142CF
-		les	bx, [bp+arg_8]
-		inc	word ptr es:[bx]
-		cmp	word ptr es:[bx], 7
-		jle	short loc_142E1
-		mov	word ptr es:[bx], 7
-		jmp	short loc_142E1
-; ---------------------------------------------------------------------------
-
-loc_142CF:
-		cmp	di, 168h
-		jnz	short loc_142E1
-		cmp	si, 240h
-		jnz	short loc_142E1
-		mov	ax, 1
-		jmp	loc_14395
-; ---------------------------------------------------------------------------
-
-loc_142E1:
-		cmp	[bp+var_2], 0
-		jz	short loc_1432E
-		mov	ax, [bp+var_2]
-		sar	ax, 8
-		les	bx, [bp+arg_8]
-		mov	dx, es:[bx]
-		add	dx, dx
-		les	bx, [bp+arg_4]
-		add	bx, dx
-		mov	es:[bx], al
-		les	bx, [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		mov	es, word ptr [bp+arg_4+2]
-		add	bx, word ptr [bp+arg_4]
-		mov	al, byte ptr [bp+var_2]
-		and	al, 0FFh
-		mov	es:[bx+1], al
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 7
-		jnz	short loc_14322
-		mov	byte_35889, 1
-
-loc_14322:
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 7
-		jge	short loc_1432E
-		inc	word ptr es:[bx]
-
-loc_1432E:
-		call	_egc_copy_rect_1_to_0 c, _entered_name_left, _entered_name_top, large (16 shl 16) or 128
-		call	_graph_putsa_fx c, _entered_name_left, _entered_name_top, 23h, large [bp+arg_4]
-		les	bx, [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		lea	ax, [bp+var_14]
-		add	bx, ax
-		mov	byte ptr ss:[bx], 81h
-		mov	bx, word ptr [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		lea	ax, [bp+var_13]
-		add	bx, ax
-		mov	byte ptr ss:[bx], 51h ;	'Q'
-		push	ss
-		lea	ax, [bp+var_14]
-		push	ax
-		push	3
-		push	_entered_name_top
-		push	_entered_name_left
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		xor	ax, ax
-
-loc_14395:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_141D6	endp
-
+	extern _regist_on_shot:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8640,8 +8435,8 @@ sub_14399	proc far
 
 @@left		= dword	ptr  6
 @@top		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-arg_C		= dword	ptr  12h
+@@entered_name		= dword	ptr  0Eh
+@@entered_name_cursor		= dword	ptr  12h
 
 		push	bp
 		mov	bp, sp
@@ -8871,13 +8666,13 @@ loc_145FC:
 loc_14619:
 		cmp	_input_shot, 1
 		jnz	short loc_1468E
-		pushd	[bp+arg_C]
-		pushd	[bp+arg_8]
+		pushd	[bp+@@entered_name_cursor]
+		pushd	[bp+@@entered_name]
 		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
 		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_141D6
+		call	_regist_on_shot
 		add	sp, 0Ch
 		or	ax, ax
 		jz	short loc_14644
@@ -8887,7 +8682,7 @@ loc_14619:
 ; ---------------------------------------------------------------------------
 
 loc_14644:
-		cmp	byte_35889, 0
+		cmp	_regist_jump_to_enter, 0
 		jz	short loc_14687
 		push	0
 		les	bx, [bp+@@top]
@@ -8906,7 +8701,7 @@ loc_14644:
 		push	word ptr es:[bx]
 		call	_alphabet_put_at
 		add	sp, 6
-		mov	byte_35889, 0
+		mov	_regist_jump_to_enter, 0
 
 loc_14687:
 		mov	_input_shot, 0
@@ -8916,11 +8711,7 @@ loc_14687:
 loc_1468E:
 		cmp	_input_strike, 1
 		jnz	short loc_146B1
-		pushd	[bp+arg_C]
-		pushd	[bp+arg_8]
-		push	1680200h
-		call	sub_141D6
-		add	sp, 0Ch
+		call	_regist_on_shot c, large (360 shl 16) or 512, large [bp+@@entered_name], large [bp+@@entered_name_cursor]
 		mov	_input_strike, 0
 		jmp	short loc_146B6
 ; ---------------------------------------------------------------------------
@@ -60237,10 +60028,7 @@ aVavnvmvtvrb@vo	db 'ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî',0
 aVgvivfb@vyb@vj	db 'ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô',0
 		db 0
 include th01/hiscore/alphabet_syms[data].asm
-public _REGIST_NAME_BLANK
-_REGIST_NAME_BLANK	db 'ÅQÅQÅQÅQÅQÅQÅQÅQ',0
-byte_35889	db 0
-aB@b@b@b@b@b@b@	db 'Å@Å@Å@Å@Å@Å@Å@Å@',0
+include th01/hiscore/regist_name[data].asm
 aHiscore_0	db 'HISCORE',0
 off_358A3	dd aB@gcbGwbB@
 					; "Å@ÉCÅ[ÉWÅ[Å@"

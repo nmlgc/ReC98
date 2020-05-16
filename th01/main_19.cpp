@@ -46,6 +46,9 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	graph_putsa_fx(left, top, fx, kanji_str);
 #define graph_printf_fx graph_putsa_fx
 
+#define graph_printf_s_fx(left, top, fx, fmt_instance, str) \
+	graph_putsa_fx(left, top, fx, str);
+
 #define regist_route_put(left, top, fx, char_1, char_2) \
 	unsigned char route[sizeof(twobyte_t) + 1]; \
 	route[2] = '\0'; \

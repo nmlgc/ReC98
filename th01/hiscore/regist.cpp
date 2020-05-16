@@ -108,6 +108,16 @@ inline uint16_t kanji_swap(uint16_t kanji)
 {
 	return (kanji << 8) | (kanji >> 8);
 }
+
+inline unsigned char kanji_hi(int16_t kanji)
+{
+	return (kanji >> 8);
+}
+
+inline unsigned char kanji_lo(int16_t kanji)
+{
+	return (kanji & 0xFF);
+}
 /// --------
 
 void alphabet_put_initial()
@@ -339,4 +349,68 @@ void alphabet_put_at(int left, int top, bool16 is_selected)
 		#endif
 		graph_putkanji_fx(left, top, fx, 4, kanji);
 	}
+}
+
+#if (BINARY == 'M')
+	extern bool regist_jump_to_enter;
+#endif
+
+#define set_kanji_at(name, pos, kanji) \
+	name.byte[(pos * 2) + 0] = kanji_hi(kanji); \
+	name.byte[(pos * 2) + 1] = kanji_lo(kanji);
+
+int regist_on_shot(
+	int left, int top,
+	scoredat_name_z_t& entered_name, int& entered_name_cursor
+)
+{
+	int16_t kanji = '\0';
+	struct hack {
+		unsigned char byte[SCOREDAT_NAME_BYTES + 1];
+	};
+	extern const hack REGIST_NAME_SPACES;
+	hack cursor_str = REGIST_NAME_SPACES;
+
+	alphabet_if(kanji, left, top,
+		{ kanji = kanji_swap('Å@'); },
+		{ CLAMP_DEC(entered_name_cursor, 0); },
+		{ CLAMP_INC(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
+		{ return 1; }
+	);
+
+	if(kanji != '\0') {
+		set_kanji_at(entered_name, entered_name_cursor, kanji);
+		#if (BINARY == 'M')
+			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
+				regist_jump_to_enter = true;
+			}
+		#endif
+		if(entered_name_cursor < (SCOREDAT_NAME_KANJI - 1)) {
+			entered_name_cursor++;
+		}
+	}
+
+	egc_copy_rect_1_to_0(
+		entered_name_left,
+		entered_name_top,
+		(SCOREDAT_NAME_KANJI * GLYPH_FULL_W),
+		GLYPH_H
+	);
+	graph_printf_s_fx(
+		entered_name_left,
+		entered_name_top,
+		FX(COL_SELECTED, 2, 0),
+		0,
+		entered_name.byte
+	);
+
+	set_kanji_at(cursor_str, entered_name_cursor, kanji_swap('ÅQ'));
+	graph_printf_s_fx(
+		entered_name_left,
+		entered_name_top,
+		FX(COL_SELECTED, 0, 0),
+		1,
+		cursor_str.byte
+	);
+	return 0;
 }

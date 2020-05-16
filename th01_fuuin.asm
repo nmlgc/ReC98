@@ -379,234 +379,11 @@ fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
 	extern _alphabet_put_at:proc
+	extern _regist_on_shot:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_AEF6(int, int, char arglist, int, __int32)
-sub_AEF6	proc far
-
-var_14		= byte ptr -14h
-var_13		= byte ptr -13h
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-_arglist		= byte ptr  0Ah
-arg_8		= dword	ptr  0Eh
-
-		enter	14h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
-		mov	[bp+var_2], 0
-		lea	ax, [bp+var_14]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　　"
-		mov	cx, 11h
-		call	SCOPY@
-		cmp	di, 0F0h
-		jnz	short loc_AF30
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8281h
-		mov	[bp+var_2], ax
-		jmp	loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AF30:
-		cmp	di, 108h
-		jnz	short loc_AF48
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8293h
-		mov	[bp+var_2], ax
-		jmp	loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AF48:
-		cmp	di, 120h
-		jnz	short loc_AF60
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8260h
-		mov	[bp+var_2], ax
-		jmp	loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AF60:
-		cmp	di, 138h
-		jnz	short loc_AF78
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 8272h
-		mov	[bp+var_2], ax
-		jmp	loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AF78:
-		cmp	di, 150h
-		jnz	short loc_AF95
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, _ALPHABET_SYMS[bx]
-		mov	[bp+var_2], ax
-		jmp	loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AF95:
-		cmp	di, 168h
-		jnz	short loc_AFB2
-		cmp	si, 160h
-		jge	short loc_AFB2
-		lea	ax, [si-20h]
-		mov	bx, 20h	; ' '
-		cwd
-		idiv	bx
-		add	ax, 824Fh
-		mov	[bp+var_2], ax
-		jmp	short loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AFB2:
-		cmp	di, 168h
-		jnz	short loc_AFC5
-		cmp	si, 160h
-		jnz	short loc_AFC5
-		mov	[bp+var_2], 8140h
-		jmp	short loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AFC5:
-		cmp	di, 168h
-		jnz	short loc_AFEA
-		cmp	si, 200h
-		jnz	short loc_AFEA
-		les	bx, [bp+arg_8]
-		dec	word ptr es:[bx]
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 0
-		jge	short loc_AFE8
-		les	bx, [bp+arg_8]
-		mov	word ptr es:[bx], 0
-
-loc_AFE8:
-		jmp	short loc_B021
-; ---------------------------------------------------------------------------
-
-loc_AFEA:
-		cmp	di, 168h
-		jnz	short loc_B00F
-		cmp	si, 220h
-		jnz	short loc_B00F
-		les	bx, [bp+arg_8]
-		inc	word ptr es:[bx]
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 7
-		jle	short loc_B00D
-		les	bx, [bp+arg_8]
-		mov	word ptr es:[bx], 7
-
-loc_B00D:
-		jmp	short loc_B021
-; ---------------------------------------------------------------------------
-
-loc_B00F:
-		cmp	di, 168h
-		jnz	short loc_B021
-		cmp	si, 240h
-		jnz	short loc_B021
-		mov	ax, 1
-		jmp	loc_B0D5
-; ---------------------------------------------------------------------------
-
-loc_B021:
-		cmp	[bp+var_2], 0
-		jz	short loc_B063
-		mov	ax, [bp+var_2]
-		sar	ax, 8
-		les	bx, [bp+arg_8]
-		mov	dx, es:[bx]
-		add	dx, dx
-		les	bx, dword ptr [bp+_arglist]
-		add	bx, dx
-		mov	es:[bx], al
-		les	bx, [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		mov	es, word ptr [bp+0Ch]
-		add	bx, word ptr [bp+_arglist]
-		mov	al, byte ptr [bp+var_2]
-		and	al, 0FFh
-		mov	es:[bx+1], al
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 7
-		jge	short loc_B063
-		les	bx, [bp+arg_8]
-		inc	word ptr es:[bx]
-
-loc_B063:
-		call	_egc_copy_rect_1_to_0 c, _entered_name_left, _entered_name_top, 128, 16
-		push	word ptr [bp+0Ch]
-		push	word ptr [bp+_arglist] ;	arglist
-		push	ds
-		push	offset aS	; "%s"
-		push	23h ; '#'       ; int
-		push	_entered_name_top	; int
-		push	_entered_name_left	; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		les	bx, [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		lea	ax, [bp+var_14]
-		add	bx, ax
-		mov	byte ptr ss:[bx], 81h
-		les	bx, [bp+arg_8]
-		mov	bx, es:[bx]
-		add	bx, bx
-		lea	ax, [bp+var_13]
-		add	bx, ax
-		mov	byte ptr ss:[bx], 51h ;	'Q'
-		push	ss
-		lea	ax, [bp+var_14]
-		push	ax		; arglist
-		push	ds
-		push	offset aS_0	; "%s"
-		push	3		; int
-		push	_entered_name_top	; int
-		push	_entered_name_left	; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		xor	ax, ax
-		jmp	short $+2
-
-loc_B0D5:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_AEF6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -617,9 +394,8 @@ sub_B0D9	proc far
 
 @@left		= dword	ptr  6
 @@top		= dword	ptr  0Ah
-_arglist		= byte ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= dword	ptr  12h
+@@entered_name		= dword ptr  0Eh
+@@entered_name_cursor		= dword	ptr  12h
 
 		push	bp
 		mov	bp, sp
@@ -893,15 +669,15 @@ loc_B38A:
 loc_B3A6:
 		cmp	_input_shot, 1
 		jnz	short loc_B3DC
-		push	word ptr [bp+arg_C+2]
-		push	word ptr [bp+arg_C] ; __int32
-		push	[bp+arg_A]	; int
-		push	word ptr [bp+_arglist] ;	arglist
+		push	word ptr [bp+@@entered_name_cursor+2]
+		push	word ptr [bp+@@entered_name_cursor] ; __int32
+		push	word ptr [bp+@@entered_name+2]	; int
+		push	word ptr [bp+@@entered_name] ;	arglist
 		les	bx, [bp+@@top]
 		push	word ptr es:[bx] ; int
 		les	bx, [bp+@@left]
 		push	word ptr es:[bx] ; int
-		call	sub_AEF6
+		call	_regist_on_shot
 		add	sp, 0Ch
 		or	ax, ax
 		jz	short loc_B3D5
@@ -918,14 +694,7 @@ loc_B3D5:
 loc_B3DC:
 		cmp	_input_strike, 1
 		jnz	short loc_B403
-		push	word ptr [bp+arg_C+2]
-		push	word ptr [bp+arg_C] ; __int32
-		push	[bp+arg_A]	; int
-		push	word ptr [bp+_arglist] ;	arglist
-		push	168h		; int
-		push	200h		; int
-		call	sub_AEF6
-		add	sp, 0Ch
+		call	_regist_on_shot c, 512, 360, word ptr [bp+@@entered_name], word ptr [bp+@@entered_name+2], word ptr [bp+@@entered_name_cursor], word ptr [bp+@@entered_name_cursor+2]
 		mov	_input_strike, 0
 		jmp	short loc_B408
 ; ---------------------------------------------------------------------------
@@ -3216,7 +2985,6 @@ fuuin_10_TEXT	ends
 
 fuuin_11_TEXT	segment	byte public 'CODE' use16
 	extern VRAM_PLANES_SET:proc
-	extern _egc_copy_rect_1_to_0:proc
 fuuin_11_TEXT	ends
 
 ; ===========================================================================
@@ -3258,9 +3026,7 @@ include th01/hardware/input_main_end[data].asm
 		dd 0
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hardware/grppfnfx_ptrs[data].asm
-public _REGIST_NAME_BLANK
-_REGIST_NAME_BLANK	db '＿＿＿＿＿＿＿＿',0
-aB@b@b@b@b@b@b@	db '　　　　　　　　',0
+include th01/hiscore/regist_name[data].asm
 aHiscore_0	db 'HISCORE',0
 off_12C1E	dd aB@gcbGwbB@
 					; "　イージー　"
@@ -3270,10 +3036,6 @@ off_12C1E	dd aB@gcbGwbB@
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-; char aS[]
-aS		db '%s',0
-; char aS_0[]
-aS_0		db '%s',0
 aReyhies_dat_1	db 'REYHIES.DAT',0
 aReyhino_dat_1	db 'REYHINO.DAT',0
 aReyhiha_dat_1	db 'REYHIHA.DAT',0

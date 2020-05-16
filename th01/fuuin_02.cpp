@@ -82,6 +82,10 @@ extern const char FOPEN_WB[];
 		ALPHABET_KANJI_FMT_##fmt_instance, kanji >> 8, kanji & 0xFF \
 	)
 
+#define graph_printf_s_fx(left, top, fx, fmt_instance, str) \
+	extern const char REGIST_STRING_FMT_##fmt_instance[]; \
+	graph_printf_fx(left, top, fx, REGIST_STRING_FMT_##fmt_instance, str);
+
 #define regist_route_put(left, top, fx, char_1, char_2) \
 	extern const char REGIST_ROUTE_FMT[]; \
 	graph_printf_fx(left, top, fx, REGIST_ROUTE_FMT, char_1, char_2);
