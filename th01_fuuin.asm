@@ -378,342 +378,11 @@ fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _scoredat_name_get:proc
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
-	extern _alphabet_put_at:proc
-	extern _regist_on_shot:proc
+	extern _regist_on_input:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_B0D9(__int32, __int32, char arglist, int, __int32)
-sub_B0D9	proc far
-
-@@left		= dword	ptr  6
-@@top		= dword	ptr  0Ah
-@@entered_name		= dword ptr  0Eh
-@@entered_name_cursor		= dword	ptr  12h
-
-		push	bp
-		mov	bp, sp
-		cmp	_input_up, 1
-		jz	short loc_B0E6
-		jmp	loc_B18F
-; ---------------------------------------------------------------------------
-
-loc_B0E6:
-		push	0
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		les	bx, [bp+@@top]
-		sub	word ptr es:[bx], 24
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 240
-		jge	short loc_B114
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 360
-
-loc_B114:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 264
-		jnz	short loc_B130
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B130
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 240
-
-loc_B130:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 312
-		jnz	short loc_B14C
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B14C
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 288
-
-loc_B14C:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 360
-		jnz	short loc_B172
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 352
-		jle	short loc_B172
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 512
-		jge	short loc_B172
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 336
-
-loc_B172:
-		push	1
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		mov	_input_up, 0
-		jmp	loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B18F:
-		cmp	_input_down, 1
-		jz	short loc_B199
-		jmp	loc_B242
-; ---------------------------------------------------------------------------
-
-loc_B199:
-		push	0
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		les	bx, [bp+@@top]
-		add	word ptr es:[bx], 24
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 360
-		jle	short loc_B1C7
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 240
-
-loc_B1C7:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 264
-		jnz	short loc_B1E3
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B1E3
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 288
-
-loc_B1E3:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 312
-		jnz	short loc_B1FF
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B1FF
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 336
-
-loc_B1FF:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 360
-		jnz	short loc_B225
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 352
-		jle	short loc_B225
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 512
-		jge	short loc_B225
-		les	bx, [bp+@@top]
-		mov	word ptr es:[bx], 240
-
-loc_B225:
-		push	1
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		mov	_input_down, 0
-		jmp	loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B242:
-		cmp	_input_lr, INPUT_LEFT
-		jz	short loc_B24C
-		jmp	loc_B2F4
-; ---------------------------------------------------------------------------
-
-loc_B24C:
-		push	0
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		les	bx, [bp+@@left]
-		sub	word ptr es:[bx], 32
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 32
-		jge	short loc_B279
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 576
-
-loc_B279:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 264
-		jnz	short loc_B295
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B295
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 256
-
-loc_B295:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 312
-		jnz	short loc_B2B1
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B2B1
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 256
-
-loc_B2B1:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 360
-		jnz	short loc_B2D7
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 352
-		jle	short loc_B2D7
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 512
-		jge	short loc_B2D7
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 352
-
-loc_B2D7:
-		push	1
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		mov	_input_lr, 0
-		jmp	loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B2F4:
-		cmp	_input_lr, INPUT_RIGHT
-		jz	short loc_B2FE
-		jmp	loc_B3A6
-; ---------------------------------------------------------------------------
-
-loc_B2FE:
-		push	0
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		les	bx, [bp+@@left]
-		add	word ptr es:[bx], 32
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 576
-		jle	short loc_B32C
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 32
-
-loc_B32C:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 264
-		jnz	short loc_B348
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B348
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 32
-
-loc_B348:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 312
-		jnz	short loc_B364
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 288
-		jl	short loc_B364
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 32
-
-loc_B364:
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 360
-		jnz	short loc_B38A
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 352
-		jle	short loc_B38A
-		les	bx, [bp+@@left]
-		cmp	word ptr es:[bx], 512
-		jge	short loc_B38A
-		les	bx, [bp+@@left]
-		mov	word ptr es:[bx], 512
-
-loc_B38A:
-		push	1
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_alphabet_put_at
-		add	sp, 6
-		mov	_input_lr, 0
-		jmp	short loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B3A6:
-		cmp	_input_shot, 1
-		jnz	short loc_B3DC
-		push	word ptr [bp+@@entered_name_cursor+2]
-		push	word ptr [bp+@@entered_name_cursor] ; __int32
-		push	word ptr [bp+@@entered_name+2]	; int
-		push	word ptr [bp+@@entered_name] ;	arglist
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx] ; int
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx] ; int
-		call	_regist_on_shot
-		add	sp, 0Ch
-		or	ax, ax
-		jz	short loc_B3D5
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B3D5:
-		mov	_input_shot, 0
-		jmp	short loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B3DC:
-		cmp	_input_strike, 1
-		jnz	short loc_B403
-		call	_regist_on_shot c, 512, 360, word ptr [bp+@@entered_name], word ptr [bp+@@entered_name+2], word ptr [bp+@@entered_name_cursor], word ptr [bp+@@entered_name_cursor+2]
-		mov	_input_strike, 0
-		jmp	short loc_B408
-; ---------------------------------------------------------------------------
-
-loc_B403:
-		mov	ax, 2
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_B408:
-		xor	ax, ax
-		pop	bp
-		retf
-sub_B0D9	endp
-
-; ---------------------------------------------------------------------------
-		pop	bp
-		retf
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -875,23 +544,25 @@ off_B533	dw offset loc_B437
 
 sub_B53B	proc far
 
-_arglist		= byte ptr -18h
+@@entered_name		= byte ptr -18h
 var_8		= byte ptr -8
-var_6		= dword	ptr -6
+@@entered_name_cursor		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	18h, 0
 		push	si
 		push	di
-		mov	word ptr [bp+var_6], 0
-		mov	word ptr [bp-2], 20h ; ' '
-		mov	word ptr [bp+var_6+2], 0F0h
+		mov	[bp+@@entered_name_cursor], 0
+		mov	[bp+@@left], 32
+		mov	[bp+@@top], 240
 		xor	si, si
 		jmp	short loc_B559
 ; ---------------------------------------------------------------------------
 
 loc_B554:
-		mov	[bp+si+_arglist], 20h ; ' '
+		mov	[bp+si+@@entered_name],	' '
 		inc	si
 
 loc_B559:
@@ -904,18 +575,18 @@ loc_B566:
 		call	fuuin_02:_input_sense stdcall, 0
 		pop	cx
 		push	ss
-		lea	ax, [bp+var_6]
-		push	ax		; __int32
-		push	ss		; int
-		lea	ax, [bp+_arglist]
-		push	ax		; arglist
+		lea	ax, [bp+@@entered_name_cursor]
+		push	ax
 		push	ss
-		lea	ax, [bp+var_6+2]
-		push	ax		; __int32
+		lea	ax, [bp+@@entered_name]
+		push	ax
 		push	ss
-		lea	ax, [bp-2]
-		push	ax		; __int32
-		call	sub_B0D9
+		lea	ax, [bp+@@top]
+		push	ax
+		push	ss
+		lea	ax, [bp+@@left]
+		push	ax
+		call	_regist_on_input
 		add	sp, 10h
 		mov	di, ax
 		cmp	di, 1
@@ -950,7 +621,7 @@ loc_B5AB:
 ; ---------------------------------------------------------------------------
 
 loc_B5B4:
-		mov	al, [bp+si+_arglist]
+		mov	al, [bp+si+@@entered_name]
 		mov	bx, [bp+arg_0]
 		shl	bx, 4
 		add	bx, si

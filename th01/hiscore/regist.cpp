@@ -1,4 +1,5 @@
 #include "th01/hardware/egc.h"
+#include "th01/hardware/input.hpp"
 
 #define COL_SELECTED 3
 #define COL_REGULAR 7
@@ -98,6 +99,7 @@ extern const uint16_t ALPHABET_SYMS[];
 #define NUM_TOP (SYM_TOP + relative_top(row_ceil(SYM_COUNT)))
 
 // Columns
+#define A_TO_Z_2_END_LEFT left_for(A_TO_Z_COUNT - KANJI_PER_ROW)
 #define SPACE_LEFT left_for(NUM_COUNT)
 #define LEFT_COLUMN (KANJI_PER_ROW - 3)
 #define LEFT_LEFT  left_for(LEFT_COLUMN + 0)
@@ -413,4 +415,118 @@ int regist_on_shot(
 		cursor_str.byte
 	);
 	return 0;
+}
+
+#pragma option -b
+enum regist_input_ret_t {
+	RI_REGULAR = 0,
+	RI_ENTER = 1,
+	RI_NONE = 2
+};
+#pragma option -b.
+
+regist_input_ret_t regist_on_input(
+	int& left, int& top,
+	scoredat_name_z_t& entered_name, int& entered_name_cursor
+)
+{
+	if(input_up == true) {
+		alphabet_put_at(left, top, false);
+
+		top -= KANJI_PADDED_H;
+		if(top < LOWER_TOP) {
+			top = NUM_TOP;
+		}
+		if(top == LOWER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			top = LOWER_TOP;
+		}
+		if(top == UPPER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			top = UPPER_TOP;
+		}
+		if(top == NUM_TOP && left > SPACE_LEFT && left < LEFT_LEFT) {
+			top = SYM_TOP;
+		}
+
+		alphabet_put_at(left, top, true);
+		input_up = false;
+	} else if(input_down == true) {
+		alphabet_put_at(left, top, false);
+
+		top += KANJI_PADDED_H;
+		if(top > NUM_TOP) {
+			top = LOWER_TOP;
+		}
+		if(top == LOWER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			top = UPPER_TOP;
+		}
+		if(top == UPPER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			top = SYM_TOP;
+		}
+		if(top == NUM_TOP && left > SPACE_LEFT && left < LEFT_LEFT) {
+			top = LOWER_TOP;
+		}
+
+		alphabet_put_at(left, top, true);
+		input_down = false;
+	} else if(input_lr == INPUT_LEFT) {
+		alphabet_put_at(left, top, false);
+
+		left -= KANJI_PADDED_W;
+		if(left < left_for(0)) {
+			left = left_for(KANJI_PER_ROW - 1);
+		}
+		if(top == LOWER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			left = left_for(A_TO_Z_COUNT - 1);
+		}
+		if(top == UPPER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			left = left_for(A_TO_Z_COUNT - 1);
+		}
+		if(top == NUM_TOP && left > SPACE_LEFT && left < LEFT_LEFT) {
+			left = SPACE_LEFT;
+		}
+
+		alphabet_put_at(left, top, true);
+		input_lr = 0;
+	} else if(input_lr == INPUT_RIGHT) {
+		alphabet_put_at(left, top, false);
+
+		left += KANJI_PADDED_W;
+		if(left > left_for(KANJI_PER_ROW - 1)) {
+			left = left_for(0);
+		}
+		if(top == LOWER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			left = left_for(0);
+		}
+		if(top == UPPER2_TOP && left >= A_TO_Z_2_END_LEFT) {
+			left = left_for(0);
+		}
+		if(top == NUM_TOP && left > SPACE_LEFT && left < LEFT_LEFT) {
+			left = LEFT_LEFT;
+		}
+
+		alphabet_put_at(left, top, true);
+		input_lr = 0;
+	} else if(input_shot == true) {
+		if(regist_on_shot(left, top, entered_name, entered_name_cursor)) {
+			return RI_ENTER;
+		}
+		#if (BINARY == 'M')
+			if(regist_jump_to_enter) {
+				alphabet_put_at(left, top, false);
+
+				left = ENTER_LEFT;
+				top = NUM_TOP;
+
+				alphabet_put_at(left, top, true);
+				regist_jump_to_enter = false;
+			}
+		#endif
+		input_shot = false;
+	} else if(input_strike == true) {
+		regist_on_shot(LEFT_LEFT, NUM_TOP, entered_name, entered_name_cursor);
+		input_strike = false;
+	} else {
+		return RI_NONE;
+	}
+	return RI_REGULAR;
 }

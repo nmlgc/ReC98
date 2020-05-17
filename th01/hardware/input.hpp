@@ -11,10 +11,10 @@ extern bool input_ok;
 #define INPUT_RIGHT 0x01
 #define INPUT_LEFT 0x02
 
-extern bool input_up;
-extern bool input_down;
+extern unsigned char input_up;
+extern unsigned char input_down;
 extern unsigned char input_lr;
-extern bool input_strike;
+extern unsigned char input_strike;
 extern bool input_mem_enter;
 extern bool input_mem_leave;
 extern unsigned char paused;
