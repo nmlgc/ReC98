@@ -530,3 +530,48 @@ regist_input_ret_t regist_on_input(
 	}
 	return RI_REGULAR;
 }
+
+#if (BINARY == 'E')
+	inline void scoredat_free(void)
+#else
+	void scoredat_free(void)
+#endif
+{
+	delete[] scoredat_names;
+	delete[] scoredat_stages;
+	delete[] scoredat_routes;
+	delete[] scoredat_points;
+}
+
+void scoredat_save(void)
+{
+	extern const char SCOREDAT_FN_EASY_2[];
+	extern const char SCOREDAT_FN_NORMAL_2[];
+	extern const char SCOREDAT_FN_HARD_2[];
+	extern const char SCOREDAT_FN_LUNATIC_2[];
+	extern const char SCOREDAT_FOPEN_WB[];
+
+	struct hack {
+		char x[sizeof(SCOREDAT_MAGIC)];
+	};
+	#undef SCOREDAT_MAGIC
+	extern const hack SCOREDAT_MAGIC;
+
+	FILE* fp;
+	const hack magic = SCOREDAT_MAGIC;
+	char fn[16];
+	scoredat_fn(fn, 2);
+
+	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == NULL) {
+		return;
+	}
+	write(fileno(fp), magic.x, sizeof(SCOREDAT_MAGIC) - 1);
+	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
+		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
+	}
+	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
+	write(fileno(fp), scoredat_points, sizeof(uint32_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
+	fclose(fp);
+}

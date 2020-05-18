@@ -6,6 +6,8 @@
 #pragma option -3 -Z -d
 
 extern "C" {
+#include <io.h>
+#include <stdio.h>
 #include "ReC98.h"
 #include "th01/ranks.h"
 #include "th01/hardware/graph.h"

@@ -42,9 +42,7 @@ include th01/th01.inc
 	extern _exit:proc
 	extern _farfree:proc
 	extern _farmalloc:proc
-	extern _fclose:proc
 	extern _filelength:proc
-	extern _fopen:proc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _memcmp:proc
@@ -57,7 +55,6 @@ include th01/th01.inc
 	extern _strcmp:proc
 	extern _strcpy:proc
 	extern _vsprintf:proc
-	extern _write:proc
 
 fuuin_02 group fuuin_02_TEXT, fuuin_02__TEXT
 
@@ -373,170 +370,16 @@ fuuin_01_TEXT	ends
 fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
-	extern _scoredat_name_byte_encode:proc
 	extern _scoredat_load:proc
 	extern _scoredat_name_get:proc
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
 	extern _regist_on_input:proc
+	extern _scoredat_save:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B40E	proc far
-
-dest		= byte ptr -1Ch
-var_C		= byte ptr -0Ch
-stream		= dword	ptr -4
-
-		enter	1Ch, 0
-		push	si
-		lea	ax, [bp+var_C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aHiscore_0 ; "HISCORE"
-		mov	cx, 8
-		call	SCOPY@
-		mov	al, _rank
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, RANK_LUNATIC
-		ja	short loc_B45C
-		add	bx, bx
-		jmp	cs:off_B533[bx]
-
-loc_B437:
-		push	ds
-		push	offset aReyhies_dat_1 ;	"REYHIES.DAT"
-		jmp	short loc_B44D
-; ---------------------------------------------------------------------------
-
-loc_B43D:
-		push	ds
-		push	offset aReyhino_dat_1 ;	"REYHINO.DAT"
-		jmp	short loc_B44D
-; ---------------------------------------------------------------------------
-
-loc_B443:
-		push	ds
-		push	offset aReyhiha_dat_1 ;	"REYHIHA.DAT"
-		jmp	short loc_B44D
-; ---------------------------------------------------------------------------
-
-loc_B449:
-		push	ds
-		push	offset aReyhilu_dat_1 ;	"REYHILU.DAT"
-
-loc_B44D:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		jmp	short $+2
-
-loc_B45C:
-		push	ds
-		push	offset aWb_0	; "wb"
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; path
-		call	_fopen
-		add	sp, 8
-		mov	word ptr [bp+stream+2],	dx
-		mov	word ptr [bp+stream], ax
-		or	ax, dx
-		jnz	short loc_B47A
-		jmp	loc_B530
-; ---------------------------------------------------------------------------
-
-loc_B47A:
-		push	7
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		xor	si, si
-		jmp	short loc_B4AF
-; ---------------------------------------------------------------------------
-
-loc_B496:
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	al, es:[bx]
-		call	fuuin_02:_scoredat_name_byte_encode pascal, ax
-		pop	cx
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	es:[bx], al
-		inc	si
-
-loc_B4AF:
-		cmp	si, size scoredat_names_t
-		jl	short loc_B496
-		push	size scoredat_names_t
-		push	word ptr _scoredat_names+2
-		push	word ptr _scoredat_names
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_points_t
-		push	word ptr _scoredat_points+2
-		push	word ptr _scoredat_points
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_stages_t
-		push	word ptr _scoredat_stages+2
-		push	word ptr _scoredat_stages
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_routes_t
-		push	word ptr _scoredat_routes+2
-		push	word ptr _scoredat_routes
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	word ptr [bp+stream+2]
-		push	word ptr [bp+stream] ; stream
-		call	_fclose
-		add	sp, 4
-
-loc_B530:
-		pop	si
-		leave
-		retf
-sub_B40E	endp
-
-; ---------------------------------------------------------------------------
-off_B533	dw offset loc_B437
-		dw offset loc_B43D
-		dw offset loc_B443
-		dw offset loc_B449
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -633,7 +476,7 @@ loc_B5B4:
 loc_B5CB:
 		cmp	si, SCOREDAT_NAME_BYTES
 		jl	short loc_B5B4
-		call	sub_B40E
+		call	_scoredat_save
 		pop	di
 		pop	si
 		leave
@@ -2698,7 +2541,6 @@ include th01/hardware/input_main_end[data].asm
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hardware/grppfnfx_ptrs[data].asm
 include th01/hiscore/regist_name[data].asm
-aHiscore_0	db 'HISCORE',0
 off_12C1E	dd aB@gcbGwbB@
 					; "　イージー　"
 		dd aB@gmbGGlb@		; "　ノーマル　"
@@ -2707,13 +2549,6 @@ off_12C1E	dd aB@gcbGwbB@
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-aReyhies_dat_1	db 'REYHIES.DAT',0
-aReyhino_dat_1	db 'REYHINO.DAT',0
-aReyhiha_dat_1	db 'REYHIHA.DAT',0
-; char aReyhilu_dat_1[]
-aReyhilu_dat_1	db 'REYHILU.DAT',0
-; char aWb_0[]
-aWb_0		db 'wb',0
 aB@gcbGwbB@	db '　イージー　',0
 aB@gmbGGlb@	db '　ノーマル　',0
 aB@gnbGhb@b@	db '　ハード　　',0

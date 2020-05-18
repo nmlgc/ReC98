@@ -49,9 +49,7 @@ include th01/th01.inc
 	extern _farheapcheck:proc
 	extern _farheapchecknode:proc
 	extern _farmalloc:proc
-	extern _fclose:proc
 	extern _filelength:proc
-	extern _fopen:proc
 	extern _int86:proc
 	extern _intdosx:proc
 	extern _kbhit:proc
@@ -65,7 +63,6 @@ include th01/th01.inc
 	extern _strcpy:proc
 	extern _toupper:proc
 	extern _vsprintf:proc
-	extern _write:proc
 
 main_01 group main_01_TEXT, main_01__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
@@ -8414,7 +8411,6 @@ main_18_TEXT	ends
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-	extern _scoredat_name_byte_encode:proc
 	extern _scoredat_load:proc
 	extern _scoredat_hiscore_get:proc
 	extern _scoredat_name_get:proc
@@ -8425,166 +8421,8 @@ main_19__TEXT	segment	byte public 'CODE' use16
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
 	extern _regist_on_input:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _scoredat_free
-_scoredat_free	proc far
-		push	bp
-		mov	bp, sp
-		call	@$bdla$qnv c, large [_scoredat_names]
-		call	@$bdla$qnv c, large [_scoredat_stages]
-		call	@$bdla$qnv c, large [_scoredat_routes]
-		call	@$bdla$qnv c, large [_scoredat_points]
-		pop	bp
-		retf
-_scoredat_free	endp
-
-
- ; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_146F3	proc far
-
-dest		= byte ptr -1Ch
-var_C		= byte ptr -0Ch
-stream		= dword	ptr -4
-
-		enter	1Ch, 0
-		push	si
-		lea	ax, [bp+var_C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aHiscore_0 ; "HISCORE"
-		mov	cx, 8
-		call	SCOPY@
-		mov	al, _rank
-		cbw
-		mov	bx, ax
-		cmp	bx, RANK_LUNATIC
-		ja	short loc_1473E
-		add	bx, bx
-		jmp	cs:off_14806[bx]
-
-loc_1471B:
-		push	ds
-		push	offset _SCOREDAT_FN_EASY_0 ; "REYHIES.DAT"
-		jmp	short loc_14731
-; ---------------------------------------------------------------------------
-
-loc_14721:
-		push	ds
-		push	offset _SCOREDAT_FN_NORMAL_0 ; "REYHINO.DAT"
-		jmp	short loc_14731
-; ---------------------------------------------------------------------------
-
-loc_14727:
-		push	ds
-		push	offset _SCOREDAT_FN_HARD_0 ; "REYHIHA.DAT"
-		jmp	short loc_14731
-; ---------------------------------------------------------------------------
-
-loc_1472D:
-		push	ds
-		push	offset _SCOREDAT_FN_LUNATIC_0 ; "REYHILU.DAT"
-
-loc_14731:
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-
-loc_1473E:
-		push	ds
-		push	offset aWB	; "wb"
-		push	ss
-		lea	ax, [bp+dest]
-		push	ax		; path
-		call	_fopen
-		add	sp, 8
-		mov	word ptr [bp+stream+2],	dx
-		mov	word ptr [bp+stream], ax
-		or	ax, dx
-		jz	loc_14803
-		push	7
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		xor	si, si
-		jmp	short loc_14790
-; ---------------------------------------------------------------------------
-
-loc_14777:
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	al, es:[bx]
-		call	main_19:_scoredat_name_byte_encode stdcall, ax
-		pop	cx
-		les	bx, _scoredat_names
-		add	bx, si
-		mov	es:[bx], al
-		inc	si
-
-loc_14790:
-		cmp	si, size scoredat_names_t
-		jl	short loc_14777
-		push	size scoredat_names_t
-		pushd	[_scoredat_names]
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_points_t
-		pushd	[_scoredat_points]
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_stages_t
-		pushd	[_scoredat_stages]
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		push	size scoredat_routes_t
-		pushd	[_scoredat_routes]
-		les	bx, [bp+stream]
-		mov	al, es:[bx+4]
-		cbw
-		push	ax
-		call	_write
-		add	sp, 8
-		pushd	[bp+stream] ; stream
-		call	_fclose
-		add	sp, 4
-
-loc_14803:
-		pop	si
-		leave
-		retf
-sub_146F3	endp
-
-; ---------------------------------------------------------------------------
-off_14806	dw offset loc_1471B
-		dw offset loc_14721
-		dw offset loc_14727
-		dw offset loc_1472D
+	extern _scoredat_free:proc
+	extern _scoredat_save:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8673,7 +8511,7 @@ loc_1488F:
 loc_148A6:
 		cmp	si, SCOREDAT_NAME_BYTES
 		jl	short loc_1488F
-		call	sub_146F3
+		call	_scoredat_save
 		pop	di
 		pop	si
 		leave
@@ -59726,7 +59564,6 @@ aVgvivfb@vyb@vj	db 'Ｈｉｔ　Ｚ　Ｋｅｙ',0
 		db 0
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hiscore/regist_name[data].asm
-aHiscore_0	db 'HISCORE',0
 off_358A3	dd aB@gcbGwbB@
 					; "　イージー　"
 		dd aB@gmbGGlb@		; "　ノーマル　"
@@ -59734,7 +59571,6 @@ off_358A3	dd aB@gcbGwbB@
 		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-aWB		db 'wb',0
 aB@gcbGwbB@	db '　イージー　',0
 aB@gmbGGlb@	db '　ノーマル　',0
 aB@gnbGhb@b@	db '　ハード　　',0

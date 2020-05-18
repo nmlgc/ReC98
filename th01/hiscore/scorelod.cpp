@@ -112,20 +112,19 @@ int scoredat_load()
 		return 1;
 	}
 
-	scoredat_names = new scoredat_name_t[SCOREDAT_PLACES];
+	scoredat_names = new int8_t[SCOREDAT_NAMES_SIZE];
 	scoredat_stages = new int16_t[SCOREDAT_PLACES];
 	scoredat_routes = new twobyte_t[SCOREDAT_PLACES];
 	scoredat_points = new uint32_t[SCOREDAT_PLACES];
 
-	scoredat_read(scoredat_names, sizeof(scoredat_name_t) * SCOREDAT_PLACES);
+	scoredat_read(scoredat_names, SCOREDAT_NAMES_SIZE);
 	scoredat_read(scoredat_points, sizeof(uint32_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
 	scoredat_close();
 
-	for(int i = 0; i < sizeof(scoredat_name_t) * SCOREDAT_PLACES; i++) {
-		scoredat_name_byte(i) =
-			scoredat_name_byte_decode(scoredat_name_byte(i));
+	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
+		scoredat_names[i] = scoredat_name_byte_decode(scoredat_names[i]);
 	}
 	scoredat_sti();
 	return 0;

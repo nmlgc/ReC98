@@ -4,6 +4,7 @@
 // Actually creates slightly different assembly compared to sizeof() on a
 // int8_t array!
 #define SCOREDAT_NAME_BYTES (SCOREDAT_NAME_KANJI * 2)
+#define SCOREDAT_NAMES_SIZE (SCOREDAT_PLACES * SCOREDAT_NAME_BYTES)
 #define SCOREDAT_ROUTE_LEN 2
 
 #define SCOREDAT_CLEARED 40
@@ -34,16 +35,10 @@ struct scoredat_t {
 	twobyte_t route[SCOREDAT_PLACES];
 };
 
-extern scoredat_name_t* scoredat_names;
+extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 extern int16_t* scoredat_stages;
 extern uint32_t* scoredat_points;
 extern twobyte_t* scoredat_routes;
-
-// Byte-wise access to [scoredat_names].
-inline int8_t& scoredat_name_byte(size_t byte)
-{
-	return reinterpret_cast<char *>(scoredat_names)[byte];
-}
 
 // Byte-wise access to [scoredat_routes].
 inline int8_t& scoredat_route_byte(int place, int byte)
