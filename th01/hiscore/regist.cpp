@@ -1,5 +1,6 @@
 #include "th01/hardware/egc.h"
 #include "th01/hardware/input.hpp"
+#include "th01/hardware/vsync.h"
 
 #define COL_SELECTED 3
 #define COL_REGULAR 7
@@ -574,4 +575,53 @@ void scoredat_save(void)
 	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
 	fclose(fp);
+}
+
+void regist_name_enter(int entered_place)
+{
+	scoredat_name_z_t entered_name;
+	regist_input_timeout_declare();
+	int left;
+	int top;
+	int entered_name_cursor;
+	int i;
+
+	entered_name_cursor = 0;
+	regist_input_timeout_reset();
+	left = left_for(0);
+	top = ALPHABET_TOP;
+
+	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
+		entered_name.byte[i] = ' ';
+	}
+	entered_name.byte[SCOREDAT_NAME_BYTES] = '\0';
+
+	input_reset_sense();
+	while(1) {
+		input_sense(false);
+		int input_ret = regist_on_input(
+			left, top, entered_name, entered_name_cursor
+		);
+		// Code generation for FUUIN.EXE forces these to be in separate
+		// statements...
+		if(input_ret == RI_ENTER) {
+			break;
+		}
+		if(input_ok) {
+			break;
+		}
+		regist_input_timeout_if_reached({ break; });
+		if(input_ret == RI_NONE) {
+			continue;
+		}
+		frame_delay(4);
+		regist_input_timeout_inc();
+	}
+	input_ok = false;
+	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
+		scoredat_names[
+			(entered_place * SCOREDAT_NAME_BYTES) + i
+		] = entered_name.byte[i];
+	}
+	scoredat_save();
 }

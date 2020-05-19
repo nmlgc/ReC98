@@ -8420,104 +8420,8 @@ main_19__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_19
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
-	extern _regist_on_input:proc
 	extern _scoredat_free:proc
-	extern _scoredat_save:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1480E	proc far
-
-@@entered_name		= byte ptr -1Ah
-var_A		= byte ptr -0Ah
-var_8		= word ptr -8
-@@entered_name_cursor		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	1Ah, 0
-		push	si
-		push	di
-		mov	[bp+@@entered_name_cursor], 0
-		xor	di, di
-		mov	[bp+@@left], 32
-		mov	[bp+@@top], 240
-		xor	si, si
-		jmp	short loc_1482E
-; ---------------------------------------------------------------------------
-
-loc_14829:
-		mov	[bp+si+@@entered_name],	' '
-		inc	si
-
-loc_1482E:
-		cmp	si, 10h
-		jl	short loc_14829
-		mov	[bp+var_A], 0
-		call	_input_reset_sense
-
-loc_1483C:
-		call	_input_sense stdcall, 0
-		pop	cx
-		push	ss
-		lea	ax, [bp+@@entered_name_cursor]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@entered_name]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@top]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@left]
-		push	ax
-		call	_regist_on_input
-		add	sp, 10h
-		mov	[bp+var_8], ax
-		cmp	[bp+var_8], 1
-		jz	short loc_14886
-		cmp	_input_ok, 0
-		jnz	short loc_14886
-		cmp	di, 3E8h
-		ja	short loc_14886
-		cmp	[bp+var_8], 2
-		jz	short loc_1483C
-		push	4
-		call	_frame_delay
-		pop	cx
-		inc	di
-		jmp	short loc_1483C
-; ---------------------------------------------------------------------------
-
-loc_14886:
-		mov	_input_ok, 0
-		xor	si, si
-		jmp	short loc_148A6
-; ---------------------------------------------------------------------------
-
-loc_1488F:
-		mov	al, [bp+si+@@entered_name]
-		mov	bx, [bp+arg_0]
-		shl	bx, 4
-		add	bx, si
-		mov	es, word ptr _scoredat_names+2
-		add	bx, word ptr _scoredat_names
-		mov	es:[bx], al
-		inc	si
-
-loc_148A6:
-		cmp	si, SCOREDAT_NAME_BYTES
-		jl	short loc_1488F
-		call	_scoredat_save
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1480E	endp
-
+	extern _regist_name_enter:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8770,8 +8674,7 @@ loc_14B04:
 		mov	es, word ptr _scoredat_routes+2
 		add	bx, word ptr _scoredat_routes
 		mov	es:[bx+1], al
-		push	word ptr [bp+@@place]
-		call	sub_1480E
+		call	_regist_name_enter stdcall, word ptr [bp+@@place]
 		pop	cx
 		jmp	short loc_14BC5
 ; ---------------------------------------------------------------------------

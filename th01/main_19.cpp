@@ -63,6 +63,16 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 #define ALPHABET_RIGHT_0 ALPHABET_RIGHT
 #define ALPHABET_ENTER_0 ALPHABET_ENTER
 
+// A completely hidden timeout that force-enters a high score name after
+// 1000... *keyboard inputs*? Not frames? Why. Like, how do even you
+// realistically get to such a number.
+// (Best guess: It's a hidden easter egg to amuse players who place drinking
+// glasses on cursor keys. Or beer bottles.)
+#define regist_input_timeout_declare() unsigned int timeout;
+#define regist_input_timeout_reset() timeout = 0;
+#define regist_input_timeout_inc() timeout++;
+#define regist_input_timeout_if_reached(then) if(timeout > 1000) then
+
 #include "th01/hiscore/regist.cpp"
 
 }

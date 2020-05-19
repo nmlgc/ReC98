@@ -374,115 +374,11 @@ fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _scoredat_name_get:proc
 	extern _alphabet_put_initial:proc
 	extern _regist_put_initial:proc
-	extern _regist_on_input:proc
-	extern _scoredat_save:proc
+	extern _regist_name_enter:proc
 fuuin_02_TEXT	ends
 
 fuuin_02__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B53B	proc far
-
-@@entered_name		= byte ptr -18h
-var_8		= byte ptr -8
-@@entered_name_cursor		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	18h, 0
-		push	si
-		push	di
-		mov	[bp+@@entered_name_cursor], 0
-		mov	[bp+@@left], 32
-		mov	[bp+@@top], 240
-		xor	si, si
-		jmp	short loc_B559
-; ---------------------------------------------------------------------------
-
-loc_B554:
-		mov	[bp+si+@@entered_name],	' '
-		inc	si
-
-loc_B559:
-		cmp	si, 10h
-		jl	short loc_B554
-		mov	[bp+var_8], 0
-		call	fuuin_02:_input_reset_sense
-
-loc_B566:
-		call	fuuin_02:_input_sense stdcall, 0
-		pop	cx
-		push	ss
-		lea	ax, [bp+@@entered_name_cursor]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@entered_name]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@top]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@left]
-		push	ax
-		call	_regist_on_input
-		add	sp, 10h
-		mov	di, ax
-		cmp	di, 1
-		jnz	short loc_B591
-		jmp	short loc_B5AB
-; ---------------------------------------------------------------------------
-
-loc_B591:
-		cmp	_input_ok, 0
-		jz	short loc_B59A
-		jmp	short loc_B5AB
-; ---------------------------------------------------------------------------
-
-loc_B59A:
-		cmp	di, 2
-		jnz	short loc_B5A1
-		jmp	short loc_B5A9
-; ---------------------------------------------------------------------------
-
-loc_B5A1:
-		call	_frame_delay stdcall, 4
-		pop	cx
-
-loc_B5A9:
-		jmp	short loc_B566
-; ---------------------------------------------------------------------------
-
-loc_B5AB:
-		mov	_input_ok, 0
-		xor	si, si
-		jmp	short loc_B5CB
-; ---------------------------------------------------------------------------
-
-loc_B5B4:
-		mov	al, [bp+si+@@entered_name]
-		mov	bx, [bp+arg_0]
-		shl	bx, 4
-		add	bx, si
-		mov	es, word ptr _scoredat_names+2
-		add	bx, word ptr _scoredat_names
-		mov	es:[bx], al
-		inc	si
-
-loc_B5CB:
-		cmp	si, SCOREDAT_NAME_BYTES
-		jl	short loc_B5B4
-		call	_scoredat_save
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B53B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -791,8 +687,7 @@ loc_B83D:
 		mov	es, word ptr _scoredat_routes+2
 		add	bx, word ptr _scoredat_routes
 		mov	es:[bx+1], al
-		push	[bp+@@place]
-		call	sub_B53B
+		call	_regist_name_enter stdcall, [bp+@@place]
 		pop	cx
 		jmp	short loc_B8FC
 ; ---------------------------------------------------------------------------

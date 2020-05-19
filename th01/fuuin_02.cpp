@@ -90,6 +90,11 @@ extern const char FOPEN_WB[];
 	extern const char REGIST_ROUTE_FMT[]; \
 	graph_printf_fx(left, top, fx, REGIST_ROUTE_FMT, char_1, char_2);
 
+#define regist_input_timeout_declare()
+#define regist_input_timeout_reset()
+#define regist_input_timeout_inc()
+#define regist_input_timeout_if_reached(then)
+
 #include "th01/hiscore/regist.cpp"
 
 }
