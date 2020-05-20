@@ -7,4 +7,4 @@
 
 #pragma option -Z
 
-#include "th01/grps2xsc.c"
+#include "th01/hardware/grp2xscs.c"

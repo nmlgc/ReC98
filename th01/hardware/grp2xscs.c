@@ -17,19 +17,22 @@ void scale_2x(dots32_t *dst32, sdots16_t src16)
 	mask = 0xFF00FF00;	*dst32 |= _lrotr(dst_local & mask, 8);
 }
 
-void graph_slow_2xscale_rect_1_to_0(int x0, int y0, int x1, int y1, int w1, int h1)
+void graph_2xscale_byterect_1_to_0_slow(
+	int left_0, int top_0,
+	int left_1, int top_1, int w_1, int h_1
+)
 {
-	int row_p1 = (x1 / 8) + (y1 * ROW_SIZE);
-	int row_p0 = (x0 / 8) + (y0 * ROW_SIZE);
+	int row_p1 = (left_1 / 8) + (top_1 * ROW_SIZE);
+	int row_p0 = (left_0 / 8) + (top_0 * ROW_SIZE);
 	int col16;
 	int row;
 	planar16_t px16;
 	dots16_t px16_nonzero;
 
-	for(row = 0; row < h1; row++) {
+	for(row = 0; row < h_1; row++) {
 		int p0 = row_p0;
 		int p1 = row_p1;
-		for(col16 = 0; col16 < w1 / 16; col16++) {
+		for(col16 = 0; col16 < w_1 / 16; col16++) {
 			int scale_p;
 			graph_accesspage_func(1);
 			VRAM_SNAP_PLANAR(px16, p1, 16);

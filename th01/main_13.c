@@ -9,7 +9,7 @@
 #pragma option -O-
 #pragma option -Z-
 
-#include "th01/grps2xsc.c"
+#include "th01/hardware/grp2xscs.c"
 
 void egc_copy_wave_1_to_0(int x, int y, int len, int amp, int ph, int w, int h)
 {

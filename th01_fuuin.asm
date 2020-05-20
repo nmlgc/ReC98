@@ -439,7 +439,7 @@ arg_4		= word ptr  0Ah
 		push	0
 		push	0
 		push	30h ; '0'
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		call	_graph_move_byterect_interpage c, 0, 384, 288, RES_Y, 0, 384, 0, 1
 		jmp	short loc_B67B
@@ -452,7 +452,7 @@ loc_B666:
 		push	0
 		push	0
 		push	30h ; '0'
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 
 loc_B67B:
@@ -2400,7 +2400,7 @@ fuuin_11_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_12_TEXT	segment	byte public 'CODE' use16
-	extern _graph_slow_2xscale_rect_1_to_0:proc
+	extern _graph_2xscale_byterect_1_to_0_sl:proc
 fuuin_12_TEXT	ends
 
 ; ===========================================================================

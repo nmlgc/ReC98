@@ -2411,17 +2411,17 @@ sub_CC0F	proc far
 		push	100090h
 		pushd	0
 		push	4000A0h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		push	100030h
 		push	100000h
 		push	0C80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		push	100030h
 		push	400000h
 		push	0E80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		mov	si, 1
 		mov	_input_ok, 0
@@ -2514,12 +2514,12 @@ loc_CDD8:
 		push	100030h
 		push	100000h
 		push	0C80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		push	100030h
 		push	400000h
 		push	0E80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 
 loc_CE16:
@@ -2529,12 +2529,12 @@ loc_CE16:
 		push	100030h
 		push	300000h
 		push	0C80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		push	100030h
 		push	200000h
 		push	0E80120h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		jmp	loc_CD52
 ; ---------------------------------------------------------------------------
@@ -5942,7 +5942,7 @@ loc_11C08:
 		retf
 sub_11A94	endp
 
-	extern _graph_slow_2xscale_rect_1_to_0:proc
+	extern _graph_2xscale_byterect_1_to_0_sl:proc
 	extern _graph_copy_hline_mask_1_to_0:proc
 	extern _egc_copy_wave_1_to_0:proc
 main_13_TEXT	ends
@@ -6670,24 +6670,24 @@ loc_127AC:
 		push	1000D0h
 		pushd	0
 		push	400040h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 28h
 		push	100100h
 		push	200000h
 		push	600020h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		push	100110h
 		push	400000h
 		push	0B40020h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		push	100030h
 		push	600000h
 		push	0FA0100h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		push	100030h
 		push	800000h
 		push	12C0100h
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 30h
 		call	_graph_copy_page_back_to_front
 		push	300FAh
@@ -8508,7 +8508,7 @@ loc_1496F:
 		push	100120h
 		push	1800000h
 		pushd	30h ; '0'
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 		call	_graph_move_byterect_interpage c, large (384 shl 16) or 0, large (RES_Y shl 16) or 288, large (384 shl 16) or 0, large (1 shl 16) or 0
 		jmp	short loc_149D4
@@ -8518,7 +8518,7 @@ loc_149C0:
 		push	100120h
 		pushd	0
 		pushd	30h ; '0'
-		call	_graph_slow_2xscale_rect_1_to_0
+		call	_graph_2xscale_byterect_1_to_0_sl
 		add	sp, 0Ch
 
 loc_149D4:
