@@ -109,13 +109,12 @@ void graph_copy_byterect_back_to_front(
 
 // Moves the given source rectangle from
 //     (⌊left/8⌋*8, top)
-// to
+// on the [src] page to
 //     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
-// on the [src] page to the given position
-// in the [dst] page. Already assumes [src] to be the currently accessed page.
+// on the [dst] page. Already assumes [src] to be the currently accessed page.
 void graph_move_byterect_interpage(
 	int src_left, int src_top, int src_right, int src_bottom,
 	int dst_left, int dst_top,
-	page_t src, page_t dst
+	int src, int dst
 );
 /// --------

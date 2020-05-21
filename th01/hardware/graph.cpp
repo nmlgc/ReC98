@@ -777,7 +777,7 @@ void graph_copy_byterect_back_to_front(
 void graph_move_byterect_interpage(
 	int src_left, int src_top, int src_right, int src_bottom,
 	int dst_left, int dst_top,
-	page_t src, page_t dst
+	int src, int dst
 )
 {
 	int w = (src_right - src_left) / 8;
