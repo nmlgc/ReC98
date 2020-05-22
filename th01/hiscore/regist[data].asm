@@ -61,3 +61,19 @@ if BINARY eq 'E'
 endif
 public _SCOREDAT_FOPEN_WB
 _SCOREDAT_FOPEN_WB	db 'wb',0
+_REGIST_TITLE_RANK_EASY   	db '　イージー　',0
+_REGIST_TITLE_RANK_NORMAL 	db '　ノーマル　',0
+_REGIST_TITLE_RANK_HARD   	db '　ハード　　',0
+_REGIST_TITLE_RANK_LUNATIC	db 'ルナティック',0
+
+if BINARY eq 'E'
+	public _REGIST_TITLE_FMT
+	_REGIST_TITLE_FMT		db '東方靈異伝　強者の記録　%s',0
+else
+	public _REGIST_BG_NOT_CLEARED, _REGIST_BG_CLEARED
+	public _REGIST_TITLE_1, _REGIST_TITLE_2
+	_REGIST_BG_NOT_CLEARED	db 'game_o.grp',0
+	_REGIST_BG_CLEARED    	db 'endm_a.grp',0
+	_REGIST_TITLE_1	db '東方靈異伝　強者の記録　',0
+	_REGIST_TITLE_2	db '東方靈異伝　強者の記録',0
+endif

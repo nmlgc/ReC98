@@ -30,7 +30,6 @@ include th01/th01.inc
 	extern FTOL@:proc
 	extern F_LUDIV@:proc
 	extern LUMOD@:proc
-	extern LXLSH@:proc
 	extern LXMUL@:proc
 	extern SCOPY@:proc
 	extern __mbcjmstojis:proc
@@ -55,8 +54,6 @@ include th01/th01.inc
 	extern _strcmp:proc
 	extern _strcpy:proc
 	extern _vsprintf:proc
-
-fuuin_02 group fuuin_02_TEXT, fuuin_02__TEXT
 
 ; ===========================================================================
 
@@ -370,376 +367,8 @@ fuuin_01_TEXT	ends
 fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
-	extern _scoredat_load:proc
-	extern _scoredat_name_get:proc
-	extern _alphabet_put_initial:proc
-	extern _regist_put_initial:proc
-	extern _regist_name_enter:proc
+	extern _regist:proc
 fuuin_02_TEXT	ends
-
-fuuin_02__TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_02
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B5D8	proc far
-
-var_D2		= byte ptr -0D2h
-var_D0		= byte ptr -0D0h
-var_C0		= byte ptr -0C0h
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-@@place		= word ptr -4
-var_2		= word ptr -2
-@@points	= dword ptr  6
-arg_4		= word ptr  0Ah
-@@route		= dword	ptr  0Ch
-
-		enter	0D0h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		lea	ax, [bp+var_D0]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12C1E
-		mov	cx, 10h
-		call	SCOPY@
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	al, _rank
-		mov	ah, 0
-		shl	ax, 2
-		lea	dx, [bp+var_D0]
-		add	ax, dx
-		mov	bx, ax
-		push	word ptr ss:[bx+2]
-		push	word ptr ss:[bx] ; arglist
-		push	ds
-		push	offset aUmx	; "東方靈異伝　強者の記録　%s"
-		push	227h		; int
-		push	0		; int
-		push	0		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		cmp	di, 1Eh
-		jge	short loc_B666
-		push	10h
-		push	120h
-		push	180h
-		push	0
-		push	0
-		push	30h ; '0'
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		call	_graph_move_byterect_interpage c, 0, 384, 288, RES_Y, 0, 384, 0, 1
-		jmp	short loc_B67B
-; ---------------------------------------------------------------------------
-
-loc_B666:
-		push	10h
-		push	120h
-		push	0
-		push	0
-		push	0
-		push	30h ; '0'
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-
-loc_B67B:
-		call	fuuin_02:_scoredat_load
-		or	ax, ax
-		jz	short loc_B686
-		jmp	loc_B941
-; ---------------------------------------------------------------------------
-
-loc_B686:
-		mov	[bp+var_2], 0
-		mov	[bp+@@place], 0
-		jmp	short loc_B6B2
-; ---------------------------------------------------------------------------
-
-loc_B692:
-		mov	ax, [bp+@@place]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_C0]
-		add	ax, dx
-		call	fuuin_02:_scoredat_name_get c, [bp+@@place], ax, ss
-		add	[bp+@@place], 1
-		adc	[bp+var_2], 0
-
-loc_B6B2:
-		cmp	[bp+var_2], 0
-		jl	short loc_B692
-		jnz	short loc_B6C0
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jb	short loc_B692
-
-loc_B6C0:
-		mov	[bp+var_2], 0
-		mov	[bp+@@place], 0
-		jmp	short loc_B6F5
-; ---------------------------------------------------------------------------
-
-loc_B6CC:
-		mov	ax, [bp+@@place]
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-		cmp	dx, word ptr [bp+@@points+2]
-		jg	short loc_B6ED
-		jnz	short loc_B6EB
-		cmp	ax, word ptr [bp+@@points]
-		ja	short loc_B6ED
-
-loc_B6EB:
-		jmp	short loc_B703
-; ---------------------------------------------------------------------------
-
-loc_B6ED:
-		add	[bp+@@place], 1
-		adc	[bp+var_2], 0
-
-loc_B6F5:
-		cmp	[bp+var_2], 0
-		jl	short loc_B6CC
-		jnz	short loc_B703
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jb	short loc_B6CC
-
-loc_B703:
-		call	fuuin_02:_input_reset_sense
-		cmp	[bp+var_2], 0
-		jle	short loc_B710
-		jmp	loc_B8BD
-; ---------------------------------------------------------------------------
-
-loc_B710:
-		jl	short loc_B71B
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jb	short loc_B71B
-		jmp	loc_B8BD
-; ---------------------------------------------------------------------------
-
-loc_B71B:
-		mov	[bp+var_6], 0
-		mov	[bp+var_8], (SCOREDAT_PLACES - 1)
-		jmp	loc_B7D9
-; ---------------------------------------------------------------------------
-
-loc_B728:
-		push	ss
-		mov	ax, [bp+var_8]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_D2]
-		add	ax, dx
-		push	ax		; src
-		mov	ax, [bp+var_8]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_C0]
-		add	ax, dx
-		push	ss
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		mov	ax, [bp+var_8]
-		dec	ax
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	dx, es:[bx+2]
-		mov	ax, es:[bx]
-		mov	bx, [bp+var_8]
-		shl	bx, 2
-		les	si, _scoredat_points
-		add	si, bx
-		mov	es:[si+2], dx
-		mov	es:[si], ax
-		mov	ax, [bp+var_8]
-		dec	ax
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	dx, [bp+var_8]
-		add	dx, dx
-		les	bx, _scoredat_stages
-		add	bx, dx
-		mov	es:[bx], ax
-		mov	bx, [bp+var_8]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	al, es:[bx-2]
-		mov	dx, [bp+var_8]
-		add	dx, dx
-		les	bx, _scoredat_routes
-		add	bx, dx
-		mov	es:[bx], al
-		mov	bx, [bp+var_8]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	al, es:[bx-1]
-		mov	bx, [bp+var_8]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	es:[bx+1], al
-		sub	[bp+var_8], 1
-		sbb	[bp+var_6], 0
-
-loc_B7D9:
-		mov	dx, [bp+var_6]
-		mov	ax, [bp+var_8]
-		cmp	dx, [bp+var_2]
-		jle	short loc_B7E7
-		jmp	loc_B728
-; ---------------------------------------------------------------------------
-
-loc_B7E7:
-		jnz	short loc_B7F1
-		cmp	ax, [bp+@@place]
-		jbe	short loc_B7F1
-		jmp	loc_B728
-; ---------------------------------------------------------------------------
-
-loc_B7F1:
-		mov	[bp+var_A], 0
-		mov	[bp+var_C], (size scoredat_names_t - 1)
-		jmp	short loc_B81E
-; ---------------------------------------------------------------------------
-
-loc_B7FD:
-		mov	bx, [bp+var_C]
-		mov	es, word ptr _scoredat_names+2
-		add	bx, word ptr _scoredat_names
-		mov	al, es:[bx-SCOREDAT_NAME_BYTES]
-		les	bx, _scoredat_names
-		add	bx, [bp+var_C]
-		mov	es:[bx], al
-		sub	[bp+var_C], 1
-		sbb	[bp+var_A], 0
-
-loc_B81E:
-		mov	dx, [bp+var_2]
-		mov	ax, [bp+@@place]
-		mov	cl, 4
-		call	far ptr LXLSH@
-		add	ax, 10h
-		adc	dx, 0
-		cmp	dx, [bp+var_A]
-		jl	short loc_B7FD
-		jg	short loc_B83D
-		cmp	ax, [bp+var_C]
-		jbe	short loc_B7FD
-
-loc_B83D:
-		push	ss
-		lea	ax, [bp+var_C0]
-		push	ax
-		push	word ptr [bp+@@route+2]
-		push	word ptr [bp+@@route]
-		push	di
-		push	word ptr [bp+@@points+2]
-		push	word ptr [bp+@@points]
-		push	[bp+@@place]
-		call	_regist_put_initial
-		add	sp, 10h
-		call	_alphabet_put_initial
-		mov	ax, [bp+@@place]
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	dx, word ptr [bp+@@points+2]
-		mov	ax, word ptr [bp+@@points]
-		mov	es:[bx+2], dx
-		mov	es:[bx], ax
-		mov	ax, [bp+@@place]
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		mov	es:[bx], di
-		mov	ax, [bp+@@place]
-		add	ax, ax
-		les	bx, _scoredat_routes
-		add	bx, ax
-		push	es
-		les	si, [bp+@@route]
-		mov	al, es:[si]
-		pop	es
-		mov	es:[bx], al
-		les	bx, [bp+@@route]
-		mov	al, es:[bx+1]
-		mov	bx, [bp+@@place]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	es:[bx+1], al
-		call	_regist_name_enter stdcall, [bp+@@place]
-		pop	cx
-		jmp	short loc_B8FC
-; ---------------------------------------------------------------------------
-
-loc_B8BD:
-		push	ss
-		lea	ax, [bp+var_C0]
-		push	ax
-		push	word ptr [bp+@@route+2]
-		push	word ptr [bp+@@route]
-		push	di
-		push	word ptr [bp+@@points+2]
-		push	word ptr [bp+@@points]
-		push	1Eh
-		call	_regist_put_initial
-		add	sp, 10h
-		mov	_input_ok, 1
-		mov	_input_shot, 1
-
-loc_B8E3:
-		call	fuuin_02:_input_sense stdcall, 0
-		pop	cx
-		cmp	_input_ok, 0
-		jz	short loc_B8F8
-		cmp	_input_shot, 0
-		jnz	short loc_B8FA
-
-loc_B8F8:
-		jmp	short loc_B8FC
-; ---------------------------------------------------------------------------
-
-loc_B8FA:
-		jmp	short loc_B8E3
-; ---------------------------------------------------------------------------
-
-loc_B8FC:
-		mov	ax, seg	fuuin_08_TEXT
-		mov	es, ax
-		assume es:fuuin_08_TEXT
-		call	@$bdla$qnv c, word ptr _scoredat_names, word ptr _scoredat_names+2
-		call	@$bdla$qnv c, word ptr _scoredat_stages, word ptr _scoredat_stages+2
-		call	@$bdla$qnv c, word ptr _scoredat_routes, word ptr _scoredat_routes+2
-		call	@$bdla$qnv c, word ptr _scoredat_points, word ptr _scoredat_points+2
-
-loc_B941:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B5D8	endp
-
-fuuin_02__TEXT	ends
 
 ; ===========================================================================
 
@@ -2202,19 +1831,19 @@ loc_C6C7:
 		jnz	short loc_C71C
 		push	ds
 		push	offset aKo	; "完"
-		push	32h ; '2'
+		push	SCOREDAT_CLEARED_MAKAI
 		jmp	short loc_C722
 ; ---------------------------------------------------------------------------
 
 loc_C71C:
 		push	ds
 		push	offset aKo_0	; "完"
-		push	3Ch ; '<'
+		push	SCOREDAT_CLEARED_JIGOKU
 
 loc_C722:
 		push	word ptr _score+2
 		push	word ptr _score
-		call	sub_B5D8
+		call	_regist
 		add	sp, 0Ah
 		call	sub_A076
 		pop	si
@@ -2400,7 +2029,6 @@ fuuin_11_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_12_TEXT	segment	byte public 'CODE' use16
-	extern _graph_2xscale_byterect_1_to_0_sl:proc
 fuuin_12_TEXT	ends
 
 ; ===========================================================================
@@ -2436,20 +2064,9 @@ include th01/hardware/input_main_end[data].asm
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hardware/grppfnfx_ptrs[data].asm
 include th01/hiscore/regist_name[data].asm
-off_12C1E	dd aB@gcbGwbB@
-					; "　イージー　"
-		dd aB@gmbGGlb@		; "　ノーマル　"
-		dd aB@gnbGhb@b@		; "　ハード　　"
-		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-aB@gcbGwbB@	db '　イージー　',0
-aB@gmbGGlb@	db '　ノーマル　',0
-aB@gnbGhb@b@	db '　ハード　　',0
-aGlgigegbgbgn	db 'ルナティック',0
-; char aUmx[3]
-aUmx		db '東方靈異伝　強者の記録　%s',0
 		dd aB@gvguglbB@		; "　モンキー　"
 		dd aB@cRlio		; "　類人猿"
 		dd aGzgvgtgsgggugx	; "ホモサピエンス"

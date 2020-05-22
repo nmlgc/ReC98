@@ -37,15 +37,16 @@ struct scoredat_t {
 
 extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 extern int16_t* scoredat_stages;
-extern uint32_t* scoredat_points;
-extern twobyte_t* scoredat_routes;
+extern int32_t* scoredat_points;
+extern int8_t* scoredat_routes; // Yeah, technically a twobyte_t.
 
 // Byte-wise access to [scoredat_routes].
 inline int8_t& scoredat_route_byte(int place, int byte)
 {
-	return reinterpret_cast<int8_t *>(scoredat_routes)[
-		(place * SCOREDAT_ROUTE_LEN) + byte
-	];
+	if(byte == 0) {
+		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
+	}
+	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
 }
 
 // Null-terminated version of scoredat_name_t, used internally.

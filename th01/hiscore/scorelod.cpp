@@ -114,13 +114,13 @@ int scoredat_load()
 
 	scoredat_names = new int8_t[SCOREDAT_NAMES_SIZE];
 	scoredat_stages = new int16_t[SCOREDAT_PLACES];
-	scoredat_routes = new twobyte_t[SCOREDAT_PLACES];
-	scoredat_points = new uint32_t[SCOREDAT_PLACES];
+	scoredat_routes = new int8_t[SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES];
+	scoredat_points = new int32_t[SCOREDAT_PLACES];
 
 	scoredat_read(scoredat_names, SCOREDAT_NAMES_SIZE);
-	scoredat_read(scoredat_points, sizeof(uint32_t) * SCOREDAT_PLACES);
+	scoredat_read(scoredat_points, sizeof(int32_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
-	scoredat_read(scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
+	scoredat_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
 	scoredat_close();
 
 	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {

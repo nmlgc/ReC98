@@ -3460,7 +3460,7 @@ var_C		= word ptr -0Ch
 s1		= dword	ptr -0Ah
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@stage		= word ptr -2
 _argc		= word ptr  6
 _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
@@ -3468,7 +3468,7 @@ _envp		= dword	ptr  0Ch
 		enter	1Eh, 0
 		push	si
 		push	di
-		mov	[bp+var_2], 0
+		mov	[bp+@@stage], 0
 		xor	si, si
 		mov	[bp+var_4], 0
 		call	_mdrv2_resident
@@ -3479,7 +3479,7 @@ _envp		= dword	ptr  0Ch
 
 loc_D54F:
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@stage]
 		push	ax
 		push	ds
 		push	offset _continues_total
@@ -3537,7 +3537,7 @@ loc_D583:
 		call	_puts
 		add	sp, 4
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@stage]
 		push	ax
 		push	ds
 		push	offset aD	; "%d"
@@ -3553,7 +3553,7 @@ loc_D583:
 		push	offset aD	; "%d"
 		call	_scanf
 		add	sp, 8
-		cmp	[bp+var_2], 5
+		cmp	[bp+@@stage], 5
 		jge	short loc_D62C
 		jmp	short loc_D644
 ; ---------------------------------------------------------------------------
@@ -3609,14 +3609,14 @@ loc_D68E:
 		call	_mdrv2_check_board
 
 loc_D69C:
-		cmp	[bp+var_2], 5
+		cmp	[bp+@@stage], 5
 		jge	short loc_D6A6
 		xor	ax, ax
 		jmp	short loc_D6EE
 ; ---------------------------------------------------------------------------
 
 loc_D6A6:
-		cmp	[bp+var_2], 0Ah
+		cmp	[bp+@@stage], 10
 		jge	short loc_D6BD
 		cmp	_route, 0
 		jnz	short loc_D6B8
@@ -3630,7 +3630,7 @@ loc_D6B8:
 ; ---------------------------------------------------------------------------
 
 loc_D6BD:
-		cmp	[bp+var_2], 0Fh
+		cmp	[bp+@@stage], 15
 		jge	short loc_D6D4
 		cmp	_route, 0
 		jnz	short loc_D6CF
@@ -3644,7 +3644,7 @@ loc_D6CF:
 ; ---------------------------------------------------------------------------
 
 loc_D6D4:
-		cmp	[bp+var_2], 14h
+		cmp	[bp+@@stage], 20
 		jge	short loc_D6EB
 		cmp	_route, 0
 		jnz	short loc_D6E6
@@ -3748,7 +3748,7 @@ loc_D7E2:
 
 loc_D7E4:
 		les	bx, _resident
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		mov	al, _route
 		mov	es:[bx+reiidenconfig_t.route], al
@@ -3770,7 +3770,7 @@ loc_D7E4:
 		mov	word_360CA, 0
 		mov	word_34A78, 0
 		mov	_player_invincibility_time, 0
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	[bp+var_E], ax
 		mov	cx, 4		; switch 4 cases
 		mov	bx, offset word_E309
@@ -3977,7 +3977,7 @@ loc_DA2A:
 		pop	cx
 
 loc_DA49:
-		mov	al, byte ptr [bp+var_2]
+		mov	al, byte ptr [bp+@@stage]
 		inc	al
 		mov	byte_34A34, al
 		mov	al, byte_34ADF
@@ -3990,7 +3990,7 @@ loc_DA49:
 		jz	short loc_DA7B
 		push	di		; int
 		pushd	[bp+s1]	; s1
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -4040,13 +4040,13 @@ loc_DAD7:
 		mov	dword_36C20, 0
 		mov	point_36C28.x, 600
 		mov	point_36C28.y, 280
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	bx, 5
 		cwd
 		idiv	bx
 		or	dx, dx
 		jz	short loc_DB04
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		cwd
 		idiv	bx
 		cmp	dx, 4
@@ -4329,7 +4329,7 @@ loc_DD6B:
 		push	offset unk_3940D
 		call	sub_12347
 		add	sp, 4
-		push	[bp+var_2]
+		push	[bp+@@stage]
 		call	sub_C766
 		cmp	_paused, 1
 		jnz	short loc_DDF8
@@ -4422,9 +4422,9 @@ loc_DEDA:
 
 loc_DF03:
 		inc	si
-		inc	[bp+var_2]
+		inc	[bp+@@stage]
 		les	bx, _resident
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		cmp	byte_34ADF, 0
 		jz	short loc_DF23
@@ -4435,7 +4435,7 @@ loc_DF03:
 ; ---------------------------------------------------------------------------
 
 loc_DF23:
-		push	[bp+var_2]
+		push	[bp+@@stage]
 		call	sub_13101
 
 loc_DF2B:
@@ -4446,7 +4446,7 @@ loc_DF2B:
 		mov	es:[bx+reiidenconfig_t.bullet_speed], 0
 
 loc_DF3D:
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -4697,7 +4697,7 @@ loc_E27B:
 		les	bx, _resident
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
-		cmp	[bp+var_2], 5
+		cmp	[bp+@@stage], 5
 		jge	short loc_E295
 		mov	dx, ds
 		mov	ax, offset _SCOREDAT_ROUTE_SHRINE
@@ -4719,14 +4719,14 @@ loc_E2A3:
 loc_E2A8:
 		push	dx
 		push	ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		inc	ax
 		push	ax
 		pushd	[_score]
-		call	sub_148B3
+		call	_regist
 		add	sp, 0Ah
 		les	bx, _resident
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@stage]
 		mov	es:[bx+reiidenconfig_t.stage], ax
 		call	sub_CC0F
 
@@ -8413,306 +8413,12 @@ main_18_TEXT	ends
 main_19_TEXT	segment	byte public 'CODE' use16
 	extern _scoredat_load:proc
 	extern _scoredat_hiscore_get:proc
-	extern _scoredat_name_get:proc
 main_19_TEXT	ends
 
 main_19__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_19
-	extern _alphabet_put_initial:proc
-	extern _regist_put_initial:proc
 	extern _scoredat_free:proc
-	extern _regist_name_enter:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_148B3	proc far
-
-var_D2		= byte ptr -0D2h
-var_D0		= byte ptr -0D0h
-var_C0		= byte ptr -0C0h
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-@@place		= dword	ptr -4
-@@points		= dword	ptr  6
-arg_4		= word ptr  0Ah
-@@route		= dword	ptr  0Ch
-
-		enter	0D0h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		lea	ax, [bp+var_D0]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_358A3
-		mov	cx, 10h
-		call	SCOPY@
-		call	_z_graph_clear_0
-		call	_z_palette_black
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		cmp	di, 1Eh
-		jge	short loc_148F0
-		call	_grp_put_palette_show stdcall, offset aGame_o_grp, ds ; "game_o.grp"
-		jmp	short loc_148F9
-; ---------------------------------------------------------------------------
-
-loc_148F0:
-		call	_grp_put stdcall, offset aEndm_a_grp, ds ; "endm_a.grp"
-
-loc_148F9:
-		add	sp, 4
-		call	_graph_copy_page_back_to_front
-		call	_z_palette_black_in
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		cmp	di, 1Eh
-		jge	short loc_14942
-		call	_graph_putsa_fx c, 0, large ((FX_CLEAR_BG or 27h) shl 16) or 384, offset aUmx_2, ds	; "東方靈異伝　強者の記録　"
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_D0]
-		add	ax, dx
-		mov	bx, ax
-		pushd	dword ptr ss:[bx]
-		push	((FX_CLEAR_BG or 27h) shl 16) or 384
-		jmp	short loc_1496F
-; ---------------------------------------------------------------------------
-
-loc_14942:
-		call	_graph_putsa_fx c, 0, large ((FX_CLEAR_BG or 27h) shl 16) or 0, offset aUmx_1, ds	; "東方靈異伝　強者の記録"
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_D0]
-		add	ax, dx
-		mov	bx, ax
-		pushd	dword ptr ss:[bx]
-		push	((FX_CLEAR_BG or 27h) shl 16) or 0
-
-loc_1496F:
-		push	192
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		cmp	di, 1Eh
-		jge	short loc_149C0
-		push	100120h
-		push	1800000h
-		pushd	30h ; '0'
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		call	_graph_move_byterect_interpage c, large (384 shl 16) or 0, large (RES_Y shl 16) or 288, large (384 shl 16) or 0, large (1 shl 16) or 0
-		jmp	short loc_149D4
-; ---------------------------------------------------------------------------
-
-loc_149C0:
-		push	100120h
-		pushd	0
-		pushd	30h ; '0'
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-
-loc_149D4:
-		call	main_19:_scoredat_load
-		or	ax, ax
-		jnz	loc_14BCE
-		mov	[bp+@@place], 0
-		jmp	short loc_14A04
-; ---------------------------------------------------------------------------
-
-loc_149E8:
-		mov	ax, word ptr [bp+@@place]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_C0]
-		add	ax, dx
-		call	main_19:_scoredat_name_get c, word ptr [bp+@@place], ax, ss
-		inc	[bp+@@place]
-
-loc_14A04:
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jl	short loc_149E8
-		mov	[bp+@@place], 0
-		jmp	short loc_14A2F
-; ---------------------------------------------------------------------------
-
-loc_14A15:
-		mov	ax, word ptr [bp+@@place]
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	eax, es:[bx]
-		cmp	eax, [bp+@@points]
-		jle	short loc_14A36
-		inc	[bp+@@place]
-
-loc_14A2F:
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jl	short loc_14A15
-
-loc_14A36:
-		call	_input_reset_sense
-		cmp	[bp+@@place], SCOREDAT_PLACES
-		jge	loc_14B8D
-		mov	[bp+var_8], 9
-		jmp	loc_14AD1
-; ---------------------------------------------------------------------------
-
-loc_14A4F:
-		push	ss
-		mov	ax, word ptr [bp+var_8]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_D2]
-		add	ax, dx
-		push	ax		; src
-		mov	ax, word ptr [bp+var_8]
-		imul	ax, ((SCOREDAT_NAME_KANJI + 1) * word)
-		lea	dx, [bp+var_C0]
-		add	ax, dx
-		push	ss
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		mov	ax, word ptr [bp+var_8]
-		dec	ax
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	eax, es:[bx]
-		mov	dx, word ptr [bp+var_8]
-		shl	dx, 2
-		mov	bx, word ptr _scoredat_points
-		add	bx, dx
-		mov	es:[bx], eax
-		mov	ax, word ptr [bp+var_8]
-		dec	ax
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	dx, word ptr [bp+var_8]
-		add	dx, dx
-		mov	bx, word ptr _scoredat_stages
-		add	bx, dx
-		mov	es:[bx], ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	al, es:[bx-2]
-		mov	es:[bx], al
-		mov	al, es:[bx-1]
-		mov	es:[bx+1], al
-		dec	[bp+var_8]
-
-loc_14AD1:
-		mov	eax, [bp+var_8]
-		cmp	eax, [bp+@@place]
-		jg	loc_14A4F
-		mov	[bp+var_C], (size scoredat_names_t - 1)
-		jmp	short loc_14B04
-; ---------------------------------------------------------------------------
-
-loc_14AE7:
-		mov	bx, word ptr [bp+var_C]
-		mov	es, word ptr _scoredat_names+2
-		add	bx, word ptr _scoredat_names
-		mov	al, es:[bx-SCOREDAT_NAME_BYTES]
-		mov	bx, word ptr _scoredat_names
-		add	bx, word ptr [bp+var_C]
-		mov	es:[bx], al
-		dec	[bp+var_C]
-
-loc_14B04:
-		mov	eax, [bp+@@place]
-		shl	eax, 4
-		add	eax, SCOREDAT_NAME_BYTES
-		cmp	eax, [bp+var_C]
-		jle	short loc_14AE7
-		push	ss
-		lea	ax, [bp+var_C0]
-		push	ax
-		pushd	[bp+@@route]
-		push	di
-		pushd	[bp+@@points]
-		push	word ptr [bp+@@place]
-		call	_regist_put_initial
-		add	sp, 10h
-		call	_alphabet_put_initial
-		mov	ax, word ptr [bp+@@place]
-		shl	ax, 2
-		les	bx, _scoredat_points
-		add	bx, ax
-		mov	eax, [bp+@@points]
-		mov	es:[bx], eax
-		mov	ax, word ptr [bp+@@place]
-		add	ax, ax
-		les	bx, _scoredat_stages
-		add	bx, ax
-		mov	es:[bx], di
-		mov	ax, word ptr [bp+@@place]
-		add	ax, ax
-		les	bx, _scoredat_routes
-		add	bx, ax
-		push	es
-		les	si, [bp+@@route]
-		mov	al, es:[si]
-		pop	es
-		mov	es:[bx], al
-		les	bx, [bp+@@route]
-		mov	al, es:[bx+1]
-		mov	bx, word ptr [bp+@@place]
-		add	bx, bx
-		mov	es, word ptr _scoredat_routes+2
-		add	bx, word ptr _scoredat_routes
-		mov	es:[bx+1], al
-		call	_regist_name_enter stdcall, word ptr [bp+@@place]
-		pop	cx
-		jmp	short loc_14BC5
-; ---------------------------------------------------------------------------
-
-loc_14B8D:
-		push	ss
-		lea	ax, [bp+var_C0]
-		push	ax
-		pushd	[bp+@@route]
-		push	di
-		pushd	[bp+@@points]
-		push	1Eh
-		call	_regist_put_initial
-		add	sp, 10h
-		mov	_input_ok, 1
-		mov	_input_shot, 1
-
-loc_14BAF:
-		call	_input_sense stdcall, 0
-		pop	cx
-		cmp	_input_ok, 0
-		jz	short loc_14BC5
-		cmp	_input_shot, 0
-		jnz	short loc_14BAF
-
-loc_14BC5:
-		mov	ax, seg	main_06_TEXT
-		mov	es, ax
-		assume es:main_06_TEXT
-		call	_scoredat_free
-
-loc_14BCE:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_148B3	endp
-
+	extern _regist:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -59467,21 +59173,8 @@ aVgvivfb@vyb@vj	db 'Ｈｉｔ　Ｚ　Ｋｅｙ',0
 		db 0
 include th01/hiscore/alphabet_syms[data].asm
 include th01/hiscore/regist_name[data].asm
-off_358A3	dd aB@gcbGwbB@
-					; "　イージー　"
-		dd aB@gmbGGlb@		; "　ノーマル　"
-		dd aB@gnbGhb@b@		; "　ハード　　"
-		dd aGlgigegbgbgn	; "ルナティック"
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-aB@gcbGwbB@	db '　イージー　',0
-aB@gmbGGlb@	db '　ノーマル　',0
-aB@gnbGhb@b@	db '　ハード　　',0
-aGlgigegbgbgn	db 'ルナティック',0
-aGame_o_grp	db 'game_o.grp',0
-aEndm_a_grp	db 'endm_a.grp',0
-aUmx_2		db '東方靈異伝　強者の記録　',0
-aUmx_1		db '東方靈異伝　強者の記録',0
 byte_35A44	db 0
 		db 0
 include th01/formats/pf[data].asm

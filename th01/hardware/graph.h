@@ -24,7 +24,7 @@ void z_graph_clear_col(uint4_t col);
 // Fills page #0 with hardware color 0.
 void z_graph_clear_0(void);
 
-void graph_copy_page_front_to_back(void);
+void graph_copy_page_back_to_front(void);
 /// -----
 
 /// GRCG

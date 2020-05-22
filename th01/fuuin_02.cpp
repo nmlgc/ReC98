@@ -95,6 +95,15 @@ extern const char FOPEN_WB[];
 #define regist_input_timeout_inc()
 #define regist_input_timeout_if_reached(then)
 
+inline void regist_bg_put(const int16_t stage)
+{
+}
+
+#define regist_title_put(left, stage, ranks, fx) { \
+	extern const char REGIST_TITLE_FMT[]; \
+	graph_printf_fx(left, TITLE_TOP, fx, REGIST_TITLE_FMT, ranks[rank]); \
+}
+
 #include "th01/hiscore/regist.cpp"
 
 }

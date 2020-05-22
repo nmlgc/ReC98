@@ -1,9 +1,19 @@
 #include "th01/hardware/egc.h"
+#include "th01/hardware/grp2xscs.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/vsync.h"
 
 #define COL_SELECTED 3
 #define COL_REGULAR 7
+
+#define TITLE_LEFT 48
+#define TITLE_TOP 0
+static const int TITLE_BACK_LEFT = 0;
+static const int TITLE_BACK_TOP = (RES_Y - GLYPH_H);
+static const int TITLE_BACK_W = 288;
+static const int TITLE_BACK_H = GLYPH_H;
+static const int TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
+static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
@@ -280,7 +290,7 @@ void regist_put_initial(
 			top,
 			fx_text,
 			(i == entered_place)
-				? entered_route[0] : scoredat_routes[i].byte.lo,
+				? entered_route[0] : scoredat_routes[i * SCOREDAT_ROUTE_LEN],
 			(i == entered_place)
 				? entered_route[1] : scoredat_route_byte(i, 1)
 		);
@@ -589,7 +599,7 @@ void regist_name_enter(int entered_place)
 	entered_name_cursor = 0;
 	regist_input_timeout_reset();
 	left = left_for(0);
-	top = ALPHABET_TOP;
+	top = LOWER_TOP;
 
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
 		entered_name.byte[i] = ' ';
@@ -624,4 +634,104 @@ void regist_name_enter(int entered_place)
 		] = entered_name.byte[i];
 	}
 	scoredat_save();
+}
+
+static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
+static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
+
+void regist(
+	int32_t points, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
+)
+{
+	struct hack {
+		const char *r[4];
+	};
+	extern const hack REGIST_TITLE_RANKS;
+
+	scoredat_name_z_t names[SCOREDAT_PLACES];
+	const hack RANKS = REGIST_TITLE_RANKS;
+	long place;
+
+	regist_bg_put(stage);
+
+	graph_accesspage_func(1);
+
+	regist_title_put(
+		TITLE_BACK_LEFT, stage, RANKS.r, (FX_CLEAR_BG | FX(COL_REGULAR, 2, 0))
+	);
+	// On page 1, the title should now at (TITLE_BACK_LEFT, TITLE_BACK_TOP) if
+	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
+
+	graph_accesspage_func(0);
+	if(stage < SCOREDAT_NOT_CLEARED) {
+		graph_2xscale_byterect_1_to_0_slow(
+			TITLE_LEFT, TITLE_TOP,
+			TITLE_BACK_LEFT, TITLE_BACK_TOP, TITLE_BACK_W, TITLE_BACK_H
+		);
+		graph_move_byterect_interpage(
+			TITLE_BACK_LEFT, TITLE_BACK_TOP,
+			TITLE_BACK_RIGHT, TITLE_BACK_BOTTOM,
+			TITLE_BACK_LEFT, TITLE_BACK_TOP,
+			0, 1
+		);
+	} else {
+		graph_2xscale_byterect_1_to_0_slow(
+			TITLE_LEFT, TITLE_TOP,
+			TITLE_BACK_LEFT, TITLE_TOP, TITLE_BACK_W, TITLE_BACK_H
+		);
+	}
+
+	if(scoredat_load()) {
+		return;
+	}
+	for(place = 0; place < SCOREDAT_PLACES; place++) {
+		scoredat_name_get(place, names[place].byte);
+	}
+	for(place = 0; place < SCOREDAT_PLACES; place++) {
+		if(points >= scoredat_points[place]) {
+			break;
+		}
+	}
+
+	input_reset_sense();
+
+	if(place < SCOREDAT_PLACES) {
+		for(long shift = (SCOREDAT_PLACES - 1); shift > place; shift--) {
+			strcpy(names[shift].byte, names[shift - 1].byte);
+			scoredat_points[shift] = scoredat_points[shift - 1];
+			scoredat_stages[shift] = scoredat_stages[shift - 1];
+			scoredat_route_byte(shift, 0) = scoredat_route_byte(shift, -2);
+			scoredat_route_byte(shift, 1) = scoredat_route_byte(shift, -1);
+		}
+		long p = (SCOREDAT_NAMES_SIZE - 1);
+		while(((place * SCOREDAT_NAME_BYTES) + SCOREDAT_NAME_BYTES) <= p) {
+			scoredat_names[p] = scoredat_names[p - SCOREDAT_NAME_BYTES];
+			p--;
+		}
+		regist_put_initial(place, points, stage, route, names);
+		alphabet_put_initial();
+
+		scoredat_points[place] = points;
+		scoredat_stages[place] = stage;
+		scoredat_route_byte(place, 0) = route[0];
+		scoredat_route_byte(place, 1) = route[1];
+
+		// Writes the new name to scoredat_names[] and calls scoredat_save()
+		regist_name_enter(place);
+
+		_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
+		scoredat_free();
+		return;
+	}
+	regist_put_initial(PLACE_NONE, points, stage, route, names);
+	input_ok = true;
+	input_shot = true;
+	while(1) {
+		input_sense(false);
+		if(!input_ok || !input_shot) {
+			break;
+		}
+	}
+	_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
+	scoredat_free();
 }

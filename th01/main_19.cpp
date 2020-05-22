@@ -10,6 +10,8 @@ extern "C" {
 #include <stdio.h>
 #include "ReC98.h"
 #include "th01/ranks.h"
+#include "th01/formats/grp.h"
+#include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
 #include "th01/hiscore/scoredat.hpp"
 
@@ -72,6 +74,34 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 #define regist_input_timeout_reset() timeout = 0;
 #define regist_input_timeout_inc() timeout++;
 #define regist_input_timeout_if_reached(then) if(timeout > 1000) then
+
+#define regist_bg_put(stage) { \
+	extern const char REGIST_BG_NOT_CLEARED[]; \
+	extern const char REGIST_BG_CLEARED[]; \
+	z_graph_clear_0(); \
+	z_palette_black(); \
+	graph_accesspage_func(1); \
+	\
+	if(stage < SCOREDAT_NOT_CLEARED) { \
+		grp_put_palette_show(REGIST_BG_NOT_CLEARED); \
+	} else { \
+		grp_put(REGIST_BG_CLEARED); \
+	} \
+	graph_copy_page_back_to_front(); \
+	z_palette_black_in(); \
+}
+
+#define regist_title_put(left, stage, ranks, fx) { \
+	extern const char REGIST_TITLE_1[]; \
+	extern const char REGIST_TITLE_2[]; \
+	if(stage < SCOREDAT_NOT_CLEARED) { \
+		graph_putsa_fx(left +   0, TITLE_BACK_TOP, fx, REGIST_TITLE_1); \
+		graph_putsa_fx(left + 192, TITLE_BACK_TOP, fx, ranks[rank]); \
+	} else { \
+		graph_putsa_fx(left +   0, TITLE_TOP, fx, REGIST_TITLE_2); \
+		graph_putsa_fx(left + 192, TITLE_TOP, fx, ranks[rank]); \
+	} \
+}
 
 #include "th01/hiscore/regist.cpp"
 
