@@ -108,8 +108,9 @@ foo_c(100, 200); // PUSH 200; PUSH 100
 
 ### `-O` (Optimize jumps)
 
-Also merges multiple `ADD SP, imm8` stack-clearing instructions after
-`__cdecl` function calls into a single one with their combined parameter size.
+Also merges individual `ADD SP, imm8` or `POP CX` stack-clearing instructions
+after `__cdecl` function calls into a single one with their combined parameter
+size.
 
 Inhibited by:
 

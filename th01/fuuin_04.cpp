@@ -18,6 +18,8 @@ extern "C" {
 
 #define TONE_STEP_PER_FRAME 5
 
+#include "th01/end/pic.cpp"
+
 inline void optimization_barrier() {}
 
 // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.

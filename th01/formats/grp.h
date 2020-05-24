@@ -35,7 +35,4 @@ int grp_put_colorkey(const char *fn);
 	void pascal grp_palette_black_in(unsigned int frames);
 	void pascal grp_palette_white_out(unsigned int frames);
 	void pascal grp_palette_white_in(unsigned int frames);
-
-	// Like grp_put(), but always switches to page 1 first.
-	int pascal grp_put_palette_show_1(const char *fn);
 #endif
