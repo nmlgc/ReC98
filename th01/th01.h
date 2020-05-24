@@ -35,7 +35,7 @@ typedef struct {
 	char bgm_mode; // 0 = off, 1 = FM
 	char bombs;
 	char start_lives_extra; // Add 2 for the actual number of lives
-	char end_flag;
+	char end_flag; /* ZUN symbol [Strings] */
 	char unused_1;
 	char route;
 	char rem_lives;
@@ -46,7 +46,7 @@ typedef struct {
 	long rand;
 	long score;
 	long continues_total;
-	int continues_per_scene[SCENE_COUNT];
+	unsigned int continues_per_scene[SCENE_COUNT];
 	long bonus_per_stage[STAGES_PER_SCENE]; // of the current scene
 	int stage;
 	long hiscore;

@@ -55,6 +55,8 @@ include th01/th01.inc
 	extern _strcpy:proc
 	extern _vsprintf:proc
 
+fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -88,206 +90,13 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 fuuin_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_01_TEXT
-		;org 9
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
+fuuin_01_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
+fuuin_01__TEXT	segment	byte public 'CODE' use16
+		assume cs:fuuin_01
 
-; Attributes: bp-based frame
-
-sub_9F49	proc far
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		push	di
-		push	ds
-		push	offset aReiidenconfig ;	"ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	di, ax
-		or	di, di
-		jnz	short loc_9F65
-		jmp	loc_A05D
-; ---------------------------------------------------------------------------
-
-loc_9F65:
-		mov	word ptr [bp+reiidenconfig+2], di
-		mov	word ptr [bp+reiidenconfig], 0
-		les	bx, [bp+reiidenconfig]
-		cmp	es:[bx+reiidenconfig_t.end_flag], 0
-		jnz	short loc_9F7A
-		jmp	loc_A053
-; ---------------------------------------------------------------------------
-
-loc_9F7A:
-		les	bx, [bp+reiidenconfig]
-		mov	dx, word ptr es:[bx+reiidenconfig_t.score+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.score]
-		mov	word ptr _score+2, dx
-		mov	word ptr _score, ax
-		mov	word ptr _continues_total+2, 0
-		mov	word ptr _continues_total, 0
-		les	bx, [bp+reiidenconfig]
-		mov	al, es:[bx+reiidenconfig_t.end_flag]
-		mov	byte_14021, al
-		les	bx, [bp+reiidenconfig]
-		mov	al, es:[bx+reiidenconfig_t.rank]
-		mov	_rank, al
-		les	bx, [bp+reiidenconfig]
-		mov	dx, word ptr es:[bx+reiidenconfig_t.score_highest+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.score_highest]
-		mov	word ptr _score_highest+2, dx
-		mov	word ptr _score_highest, ax
-		xor	si, si
-		jmp	short loc_A003
-; ---------------------------------------------------------------------------
-
-loc_9FC2:
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+reiidenconfig]
-		add	bx, ax
-		mov	ax, es:[bx+reiidenconfig_t.continues_per_scene]
-		mov	bx, si
-		shl	bx, 2
-		mov	word ptr [bx+143Eh], 0
-		mov	[bx+143Ch], ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+reiidenconfig]
-		add	bx, ax
-		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
-		mov	bx, si
-		shl	bx, 2
-		mov	dx, [bx+143Eh]
-		mov	ax, [bx+143Ch]
-		add	word ptr _continues_total, ax
-		adc	word ptr _continues_total+2, dx
-		inc	si
-
-loc_A003:
-		cmp	si, 4
-		jl	short loc_9FC2
-		les	bx, [bp+reiidenconfig]
-		mov	dx, word ptr es:[bx+reiidenconfig_t.rand+2]
-		mov	ax, word ptr es:[bx+reiidenconfig_t.rand]
-		mov	word ptr random_seed+2, dx
-		mov	word ptr random_seed, ax
-		les	bx, [bp+reiidenconfig]
-		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
-		mov	byte_14020, al
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score], 0
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.score_highest+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score_highest], 0
-		jmp	short loc_A05B
-; ---------------------------------------------------------------------------
-
-loc_A053:
-		push	ds
-		push	offset aErrorEnd_flagI ; "ERROR	: end_flag is not ture !!"
-		jmp	short loc_A061
-; ---------------------------------------------------------------------------
-		jmp	short loc_A069
-; ---------------------------------------------------------------------------
-
-loc_A05B:
-		jmp	short loc_A06D
-; ---------------------------------------------------------------------------
-
-loc_A05D:
-		push	ds
-		push	offset s	; "ERROR : cfg_id is not alloc!!"
-
-loc_A061:
-		call	_puts
-		add	sp, 4
-
-loc_A069:
-		xor	ax, ax
-		jmp	short loc_A072
-; ---------------------------------------------------------------------------
-
-loc_A06D:
-		mov	ax, 1
-		jmp	short $+2
-
-loc_A072:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_9F49	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A076	proc far
-
-reiidenconfig		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		push	di
-		push	ds
-		push	offset aReiidenconfi_0 ; "ReiidenConfig"
-		push	0Dh
-		push	5
-		call	resdata_exist
-		mov	di, ax
-		or	di, di
-		jz	short loc_A0EE
-		mov	word ptr [bp+reiidenconfig+2], di
-		mov	word ptr [bp+reiidenconfig], 0
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.score+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score], 0
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.continues_total], 0
-		les	bx, [bp+reiidenconfig]
-		mov	es:[bx+reiidenconfig_t.end_flag], 0
-		les	bx, [bp+reiidenconfig]
-		mov	word ptr es:[bx+reiidenconfig_t.score_highest+2], 0
-		mov	word ptr es:[bx+reiidenconfig_t.score_highest], 0
-		xor	si, si
-		jmp	short loc_A0E0
-; ---------------------------------------------------------------------------
-
-loc_A0D0:
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+reiidenconfig]
-		add	bx, ax
-		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
-		inc	si
-
-loc_A0E0:
-		cmp	si, 4
-		jl	short loc_A0D0
-		les	bx, [bp+reiidenconfig]
-		mov	es:[bx+reiidenconfig_t.stage], 0
-
-loc_A0EE:
-		mov	ax, 1
-		jmp	short $+2
-		pop	di
-		pop	si
-		leave
-		retf
-sub_A076	endp
-
+	extern _end_init:proc
+	extern _end_resident_clear:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -317,7 +126,7 @@ loc_A105:
 		cbw
 		cmp	ax, 74h	; 't'
 		jz	short loc_A121
-		call	sub_9F49
+		call	_end_init
 		or	ax, ax
 		jnz	short loc_A11F
 		pop	bp
@@ -335,12 +144,12 @@ loc_A121:
 		cbw
 		cmp	ax, 31h	; '1'
 		jnz	short loc_A139
-		mov	byte_14021, 1
+		mov	_end_flag, 1
 		jmp	short loc_A13E
 ; ---------------------------------------------------------------------------
 
 loc_A139:
-		mov	byte_14021, 2
+		mov	_end_flag, 2
 
 loc_A13E:
 		call	_mdrv2_check_board
@@ -359,7 +168,7 @@ loc_A13E:
 		retf
 _main		endp
 
-fuuin_01_TEXT	ends
+fuuin_01__TEXT	ends
 
 ; ===========================================================================
 
@@ -727,7 +536,7 @@ sub_BC7C	proc near
 		call	grp_palette_white_in pascal, 5
 		call	_frame_delay stdcall, 120
 		pop	cx
-		cmp	byte_14021, 2
+		cmp	_end_flag, 2
 		jnz	short loc_BCFC
 		push	40h
 		push	10h
@@ -892,7 +701,7 @@ loc_BE64:
 		cmp	si, 0Ah
 		jl	short loc_BE41
 		call	grp_palette_settone pascal, 200
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_BE7D
 		call	sub_BF07
 		jmp	short loc_BE80
@@ -1054,7 +863,7 @@ sub_C03D	proc near
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C074
 		push	ds
 		push	offset aEndb_a_grp ; "endb_a.grp"
@@ -1075,7 +884,7 @@ loc_C078:
 		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
 		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
 		call	sub_C009 pascal, 1
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C0E1
 		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
 		push	232
@@ -1097,7 +906,7 @@ loc_C0E1:
 loc_C0FE:
 		call	graph_type_ank
 		call	sub_C009 pascal, 2
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C12E
 		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
 		push	232
@@ -1119,7 +928,7 @@ loc_C12E:
 loc_C14B:
 		call	graph_type_ank
 		call	sub_C009 pascal, 3
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C17B
 		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
 		push	232
@@ -1431,12 +1240,12 @@ loc_C390:
 		sub	si, 0Ah
 
 loc_C39A:
-		cmp	byte_14021, 2
+		cmp	_end_flag, 2
 		jnz	short loc_C3A4
 		add	si, 5
 
 loc_C3A4:
-		mov	al, byte_14020
+		mov	al, _start_lives_extra
 		cbw
 		cmp	ax, 4
 		jnz	short loc_C3B2
@@ -1445,7 +1254,7 @@ loc_C3A4:
 ; ---------------------------------------------------------------------------
 
 loc_C3B2:
-		mov	al, byte_14020
+		mov	al, _start_lives_extra
 		cbw
 		cmp	ax, 3
 		jnz	short loc_C3C0
@@ -1454,7 +1263,7 @@ loc_C3B2:
 ; ---------------------------------------------------------------------------
 
 loc_C3C0:
-		mov	al, byte_14020
+		mov	al, _start_lives_extra
 		cbw
 		cmp	ax, 1
 		jnz	short loc_C3CE
@@ -1463,7 +1272,7 @@ loc_C3C0:
 ; ---------------------------------------------------------------------------
 
 loc_C3CE:
-		cmp	byte_14020, 0
+		cmp	_start_lives_extra, 0
 		jnz	short loc_C3D8
 		add	si, 0Ah
 
@@ -1612,8 +1421,8 @@ var_10		= byte ptr -10h
 		add	sp, 0Ah
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	word_13EDE
-		push	word_13EDC	; arglist
+		push	word ptr _continues_per_scene[0 * dword] + 2
+		push	word ptr _continues_per_scene[0 * dword]
 		push	ds
 		push	offset aB@r_oB@b@b@b@b ; "Å@ê_é–Å@Å@Å@Å@ÅiÇPñ Å`ÇTñ Åj Å@ %3lu"
 		push	0Fh		; int
@@ -1623,18 +1432,18 @@ var_10		= byte ptr -10h
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C590
-		push	word_13EE2
-		push	word_13EE0
+		push	word ptr _continues_per_scene[1 * dword] + 2
+		push	word ptr _continues_per_scene[1 * dword]
 		push	ds
 		push	offset aB@gqbGgb@b@b@b ; "Å@ÉQÅ[ÉgÅ@Å@Å@ÅiÇUñ Å`ÇPÇOñ Åj  %3lu"
 		jmp	short loc_C59C
 ; ---------------------------------------------------------------------------
 
 loc_C590:
-		push	word_13EE2
-		push	word_13EE0	; arglist
+		push	word ptr _continues_per_scene[1 * dword] + 2
+		push	word ptr _continues_per_scene[1 * dword]
 		push	ds
 		push	offset aB@tkb@b@b@b@b@ ; "Å@‚KÅ@Å@Å@Å@Å@ÅiÇUñ Å`ÇPÇOñ Åj  %3lu"
 
@@ -1646,18 +1455,18 @@ loc_C59C:
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C5C9
-		push	word_13EE6
-		push	word_13EE4
+		push	word ptr _continues_per_scene[2 * dword] + 2
+		push	word ptr _continues_per_scene[2 * dword]
 		push	ds
 		push	offset aGfgbgivFpBivpv ; "  ÉîÉBÉiÇÃîpö–ÅiÇPÇPñ Å`ÇPÇTñ Åj%3lu"
 		jmp	short loc_C5D5
 ; ---------------------------------------------------------------------------
 
 loc_C5C9:
-		push	word_13EE6
-		push	word_13EE4	; arglist
+		push	word ptr _continues_per_scene[2 * dword] + 2
+		push	word ptr _continues_per_scene[2 * dword]
 		push	ds
 		push	offset aB@ikvXekeb@b@b ; "Å@âäÇÃïÖäEÅ@Å@ÅiÇPÇPñ Å`ÇPÇTñ Åj%3lu"
 
@@ -1669,18 +1478,18 @@ loc_C5D5:
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C602
-		push	word_13EEA
-		push	word_13EE8
+		push	word ptr _continues_per_scene[3 * dword] + 2
+		push	word ptr _continues_per_scene[3 * dword]
 		push	ds
 		push	offset aSVVVsr_uabivpv ; "  ë¬ÇøÇΩÇÈê_ìaÅiÇPÇTñ Å`ÇQÇOñ Åj%3lu"
 		jmp	short loc_C60E
 ; ---------------------------------------------------------------------------
 
 loc_C602:
-		push	word_13EEA
-		push	word_13EE8	; arglist
+		push	word ptr _continues_per_scene[3 * dword] + 2
+		push	word ptr _continues_per_scene[3 * dword]
 		push	ds
 		push	offset aB@rVivVsr_uabi ; "Å@ê√Ç©Ç»ÇÈê_ìaÅiÇPÇTñ Å`ÇQÇOñ Åj%3lu"
 
@@ -1692,7 +1501,7 @@ loc_C60E:
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C63B
 		push	word ptr _continues_total+2
 		push	word ptr _continues_total
@@ -1765,7 +1574,7 @@ loc_C6C7:
 		mov	_z_Palettes[7 * 3].g, 0Fh
 		mov	_z_Palettes[7 * 3].b, 0Fh
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		cmp	byte_14021, 1
+		cmp	_end_flag, 1
 		jnz	short loc_C71C
 		push	ds
 		push	offset aKo	; "äÆ"
@@ -1783,7 +1592,7 @@ loc_C722:
 		push	word ptr _score
 		call	_regist
 		add	sp, 0Ah
-		call	sub_A076
+		call	_end_resident_clear
 		pop	si
 		leave
 		retf
@@ -1896,13 +1705,14 @@ fuuin_13_TEXT	ends
 
 	.data
 
+public _score, _score_highest
+public _RES_ID_0, _RES_ID_1, _ERROR_END_FLAG, _ERROR_NO_RESDATA
 _score	dd 100000
 _score_highest	dd 100000
-aReiidenconfig	db 'ReiidenConfig',0
-aErrorEnd_flagI	db 'ERROR : end_flag is not ture !!',0
-; char s[]
-s		db 'ERROR : cfg_id is not alloc!!',0
-aReiidenconfi_0	db 'ReiidenConfig',0
+_RES_ID_0	db 'ReiidenConfig',0
+_ERROR_END_FLAG  	db 'ERROR : end_flag is not ture !!',0
+_ERROR_NO_RESDATA	db 'ERROR : cfg_id is not alloc!!',0
+_RES_ID_1	db 'ReiidenConfig',0
 ; char path[]
 path		db 'op',0
 ; char arg0[3]
@@ -2059,23 +1869,13 @@ include libs/master.lib/rand[data].asm
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
+public _continues_total, _continues_per_scene
 _continues_total	dd ?
-; char word_13EDC[]
-word_13EDC	dw ?
-word_13EDE	dw ?
-; char word_13EE0[]
-word_13EE0	dw ?
-word_13EE2	dw ?
-; char word_13EE4[]
-word_13EE4	dw ?
-word_13EE6	dw ?
-; char word_13EE8[]
-word_13EE8	dw ?
-word_13EEA	dw ?
+_continues_per_scene	dd SCENE_COUNT dup(?)
 		db 308 dup(?)
-byte_14020	db ?
-byte_14021	db ?
-public _rank
+public _start_lives_extra, _end_flag, _rank
+_start_lives_extra	db ?
+_end_flag	db ? ; ZUN symbol [Strings]
 _rank	db ?
 		db ?
 include th01/hiscore/hiscore[bss].asm

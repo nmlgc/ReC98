@@ -27,6 +27,8 @@ _w		WORDREGS <?>
 _h		BYTEREGS <?>
 REGS		ends
 
+SCENE_COUNT = 4
+
 reiidenconfig_t struc ; (sizeof=0x4B)
 	id db 13 dup(?)	; = "ReiidenConfig"
 		db ?

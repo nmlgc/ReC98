@@ -220,6 +220,8 @@ declaration of the identifier in question.
 
 Currently, we know about the following [references]:
 
+* `[Strings]`: The symbol name is mentioned in error or debug messages. Can be
+  easily verified by grepping over the ReC98 source tree.
 * `[MAGNet2010]`: Interview with ZUN for the NHK BS2 TV program MAG・ネット
   (MAG.Net), originally broadcast 2010-05-02. At 09m36s, ZUN's monitor briefly
   displays a piece of TH04's `MAIN.EXE`, handling demo recording and the setup
