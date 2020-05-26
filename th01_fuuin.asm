@@ -1325,15 +1325,7 @@ loc_C419:
 		mov	ax, di
 		shl	ax, 2
 		add	bx, ax
-		push	word ptr [bx+3DAh]
-		push	word ptr [bx+3D8h] ; arglist
-		push	ds
-		push	offset aS_1	; "%s"
-		push	12h		; int
-		push	180h		; int
-		push	1E8h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
+		call	_graph_printf_fx c, 488, 384, 12h, offset aS_1, ds, word ptr _VERDICT_TITLES[bx], word ptr _VERDICT_TITLES[bx]+2 ; "%s"
 		pop	di
 		pop	si
 		leave
@@ -1379,57 +1371,19 @@ var_10		= byte ptr -10h
 		lea	dx, [bp+var_10]
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr ss:[bx+2]
-		push	word ptr ss:[bx] ; arglist
-		push	ds
-		push	offset aUqiUxb@b@b@b@b ; "難易度　　　　　　　　　　  %s"
-		push	0Fh		; int
-		push	40h	; int
-		push	128h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
+		call	_graph_printf_fx c, 296, 64, 0Fh, offset aUqiUxb@b@b@b@b, ds, word ptr ss:[bx], word ptr ss:[bx+2]	; "難易度　　　　　　　　　　  %s"
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	word ptr _score_highest+2
-		push	word ptr _score_highest		; arglist
-		push	ds
-		push	offset aNbi	; "今回の最高得点　　　　　　  %7lu"
-		push	0Fh		; int
-		push	60h	; int
-		push	128h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
+		call	_graph_printf_fx c, 296, 96, 0Fh, offset aNbi, ds, word ptr _score_highest, word ptr _score_highest+2	; "今回の最高得点　　　　　　  %7lu"
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	word ptr _score+2
-		push	word ptr _score	; arglist
-		push	ds
-		push	offset aNPiuU_b@b@b@b@ ; "最終得点　　　　　　　　　  %7lu"
-		push	0Fh		; int
-		push	80h	; int
-		push	128h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
+		call	_graph_printf_fx c, 296, 128, 0Fh, offset aNPiuU_b@b@b@b@, ds, word ptr _score, word ptr _score+2	; "最終得点　　　　　　　　　  %7lu"
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	ds
-		push	offset aGrgugegbgjgebI ; "コンティニュー回数"
-		push	0Fh		; int
-		push	0A0h	; int
-		push	128h		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
+		call	_graph_printf_fx c, 296, 160, 0Fh, offset aGrgugegbgjgebI, ds	; "コンティニュー回数"
 		call	_frame_delay stdcall, 30
 		pop	cx
-		push	word ptr _continues_per_scene[0 * dword] + 2
-		push	word ptr _continues_per_scene[0 * dword]
-		push	ds
-		push	offset aB@r_oB@b@b@b@b ; "　神社　　　　（１面～５面） 　 %3lu"
-		push	0Fh		; int
-		push	0C0h	;int
-		push	128h		; int
-		call	_graph_printf_fx
-		add	sp, 0Eh
+		call	_graph_printf_fx c, 296, 192, 0Fh, offset aB@r_oB@b@b@b@b, ds, word ptr _continues_per_scene[0 * dword], word ptr _continues_per_scene[0 * dword] + 2	; "　神社　　　　（１面～５面） 　 %3lu"
 		call	_frame_delay stdcall, 30
 		pop	cx
 		cmp	_end_flag, 1
@@ -1448,9 +1402,9 @@ loc_C590:
 		push	offset aB@tkb@b@b@b@b@ ; "　祠　　　　　（６面～１０面）  %3lu"
 
 loc_C59C:
-		push	0Fh		; int
-		push	0E0h	; int
-		push	128h		; int
+		push	0Fh
+		push	224
+		push	296
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
@@ -1471,9 +1425,9 @@ loc_C5C9:
 		push	offset aB@ikvXekeb@b@b ; "　炎の腐界　　（１１面～１５面）%3lu"
 
 loc_C5D5:
-		push	0Fh		; int
-		push	100h		; int
-		push	128h		; int
+		push	0Fh
+		push	256
+		push	296
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
@@ -1494,9 +1448,9 @@ loc_C602:
 		push	offset aB@rVivVsr_uabi ; "　静かなる神殿（１５面～２０面）%3lu"
 
 loc_C60E:
-		push	0Fh		; int
-		push	120h		; int
-		push	128h		; int
+		push	0Fh
+		push	288
+		push	296
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
@@ -1517,21 +1471,15 @@ loc_C63B:
 		push	offset aB@tnncglbGgsnn ; "　地獄ルート総合　　　　　　　%5lu"
 
 loc_C647:
-		push	0Fh		; int
-		push	140h		; int
-		push	128h		; int
+		push	0Fh
+		push	320
+		push	296
 		call	_graph_printf_fx
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
 		call	graph_type_ank pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
-		push	ds
-		push	offset aBBBVavVVPNjbBB ; "★★★あなたの称号★★★"
-		push	12h		; int
-		push	180h		; int
-		push	108h		; int
-		call	_graph_printf_fx
-		add	sp, 0Ah
+		call	_graph_printf_fx c, 264, 384, 12h, offset aBBBVavVVPNjbBB, ds	; "★★★あなたの称号★★★"
 		call	_frame_delay stdcall, 50
 		pop	cx
 		call	sub_C1A8
@@ -1726,6 +1674,7 @@ include th01/hiscore/regist_name[data].asm
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
+_VERDICT_TITLES label dword
 		dd aB@gvguglbB@		; "　モンキー　"
 		dd aB@cRlio		; "　類人猿"
 		dd aGzgvgtgsgggugx	; "ホモサピエンス"
