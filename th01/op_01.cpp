@@ -9,8 +9,10 @@ extern "C" {
 #include <stdio.h>
 #include "ReC98.h"
 #include "th01/ranks.h"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
+#include "th01/hardware/vsync.h"
 #include "th01/formats/cfg.hpp"
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
@@ -212,5 +214,57 @@ void option_input_sense(void)
 	ok_shot_cancel_sense(out1, in);
 }
 /// -----
+
+/// White line animation
+/// --------------------
+void whiteline_put(int y)
+{
+	size_t vram_offset = vram_offset_shift(0, y);
+	int x;
+
+	grcg_setcolor_rmw(15);
+	x = 0;
+	while(x < (ROW_SIZE / sizeof(dots32_t))) {
+		VRAM_CHUNK(B, vram_offset, 32) = 0xFFFFFFFF;
+		x++;
+		vram_offset += sizeof(dots32_t);
+	}
+	grcg_off();
+}
+
+void whitelines_animate(void)
+{
+	struct hack {
+		bool y[RES_Y];
+	};
+	extern const hack WHITELINES_DRAWN_AT;
+
+	unsigned int i = 0;
+	int y1 = 0;
+	int y2 = 0;
+	hack drawn_at = WHITELINES_DRAWN_AT;
+	while(i++ < (RES_Y / 4)) {
+		egc_copy_rect_1_to_0(0, y1, RES_X, 1);
+		egc_copy_rect_1_to_0(0, y2, RES_X, 1);
+
+		do {
+			y1 = (rand() % RES_Y);
+		} while(drawn_at.y[y1]);
+		drawn_at.y[y1] = true;
+
+		do {
+			y2 = (rand() % RES_Y);
+		} while(drawn_at.y[y2]);
+		drawn_at.y[y2] = true;
+
+		whiteline_put(y1);
+		whiteline_put(y2);
+		frame_delay(1);
+	}
+	graph_accesspage_func(1);
+	graph_copy_page_back_to_front();
+	graph_accesspage_func(0);
+}
+/// --------------------
 
 }
