@@ -1499,7 +1499,7 @@ loc_C6A1:
 loc_C6B1:
 		mov	ax, si
 		inc	si
-		cmp	ax, 7D0h
+		cmp	ax, 2000
 		jge	short loc_C6C7
 		cmp	_input_ok, 0
 		jnz	short loc_C6C7

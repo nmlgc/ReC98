@@ -1096,7 +1096,7 @@ _main		proc far
 
 outregs		= REGS ptr -2Ch
 inregs		= REGS ptr -1Ch
-var_C		= word ptr -0Ch
+@@kb_buf		= word ptr -0Ch
 var_9		= byte ptr -9
 var_8		= dword	ptr -8
 var_4		= dword	ptr -4
@@ -1201,13 +1201,13 @@ loc_B0D6:
 		call	sub_A719
 		xor	ax, ax
 		mov	es, ax
-		mov	al, es:0500h
-		or	al, 20h
+		mov	al, es:((50h shl 4) + 00h) ; BIOS_FLAG
+		or	al, 20h ; Do not beep when key buffer overflows
 		mov	[bp+var_9], al
 		xor	ax, ax
 		mov	dl, [bp+var_9]
 		mov	es, ax
-		mov	es:0500h, dl
+		mov	es:((50h shl 4) + 00h), dl  ; BIOS_FLAG
 		jmp	short loc_B135
 ; ---------------------------------------------------------------------------
 
@@ -1311,14 +1311,14 @@ loc_B1D8:
 loc_B1EE:
 		xor	ax, ax
 		mov	es, ax
-		mov	ax, word ptr es:[0524h]
-		mov	[bp+var_C], ax
+		mov	ax, word ptr es:[((50h shl 4) + 24h)] ; KB_BUF_HEAD
+		mov	[bp+@@kb_buf], ax
 		xor	ax, ax
-		mov	dx, [bp+var_C]
+		mov	dx, [bp+@@kb_buf]
 		mov	es, ax
-		mov	word ptr es:[0526h], dx
+		mov	word ptr es:[((50h shl 4) + 26h)], dx ; KB_BUF_TAIL
 		mov	es, ax
-		mov	byte ptr es:[0528h], 0
+		mov	byte ptr es:[((50h shl 4) + 28h)], 0 ; KB_COUNT
 		inc	_rand
 		push	1
 		call	_frame_delay
