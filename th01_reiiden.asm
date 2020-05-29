@@ -9563,40 +9563,40 @@ loc_155FC:
 
 loc_15600:
 		mov	bx, dx
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, cx
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4ADCh], 0
-		mov	word ptr [bx+4ADAh], 0
+		mov	word ptr (_bos_images[bx].BOS_alpha+2), 0
+		mov	word ptr (_bos_images[bx].BOS_alpha+0), 0
 		mov	bx, dx
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, cx
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4ACCh], 0
-		mov	word ptr [bx+4ACAh], 0
+		mov	word ptr (_bos_images[bx].BOS_B+2), 0
+		mov	word ptr (_bos_images[bx].BOS_B+0), 0
 		mov	bx, dx
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, cx
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD0h], 0
-		mov	word ptr [bx+4ACEh], 0
+		mov	word ptr (_bos_images[bx].BOS_R+2), 0
+		mov	word ptr (_bos_images[bx].BOS_R+0), 0
 		mov	bx, dx
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, cx
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD4h], 0
-		mov	word ptr [bx+4AD2h], 0
+		mov	word ptr (_bos_images[bx].BOS_G+2), 0
+		mov	word ptr (_bos_images[bx].BOS_G+0), 0
 		mov	bx, dx
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, cx
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD8h], 0
-		mov	word ptr [bx+4AD6h], 0
+		mov	word ptr (_bos_images[bx].BOS_E+2), 0
+		mov	word ptr (_bos_images[bx].BOS_E+0), 0
 		inc	cx
 
 loc_1567E:
@@ -9624,7 +9624,7 @@ var_2C		= byte ptr -2Ch
 var_2A		= byte ptr -2Ah
 arg_0		= dword	ptr  6
 @@fn		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
+@@slot		= word ptr  0Eh
 
 		enter	32h, 0
 		push	si
@@ -9655,7 +9655,7 @@ arg_8		= word ptr  0Eh
 		call	arc_file_get
 		cmp	byte_35A44, 0
 		jnz	loc_1583C
-		push	[bp+arg_8]
+		push	[bp+@@slot]
 		nopcall	sub_169CB
 		pop	cx
 		xor	si, si
@@ -9671,13 +9671,13 @@ loc_156F5:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4ADCh], dx
-		mov	[bx+4ADAh], ax
+		mov	word ptr (_bos_images[bx].BOS_alpha+2), dx
+		mov	word ptr (_bos_images[bx].BOS_alpha+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9686,13 +9686,13 @@ loc_156F5:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4ACCh], dx
-		mov	[bx+4ACAh], ax
+		mov	word ptr (_bos_images[bx].BOS_B+2), dx
+		mov	word ptr (_bos_images[bx].BOS_B+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9701,13 +9701,13 @@ loc_156F5:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4AD0h], dx
-		mov	[bx+4ACEh], ax
+		mov	word ptr (_bos_images[bx].BOS_R+2), dx
+		mov	word ptr (_bos_images[bx].BOS_R+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9716,13 +9716,13 @@ loc_156F5:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4AD4h], dx
-		mov	[bx+4AD2h], ax
+		mov	word ptr (_bos_images[bx].BOS_G+2), dx
+		mov	word ptr (_bos_images[bx].BOS_G+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9731,43 +9731,43 @@ loc_156F5:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4AD8h], dx
-		mov	[bx+4AD6h], ax
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	word ptr (_bos_images[bx].BOS_E+2), dx
+		mov	word ptr (_bos_images[bx].BOS_E+0), ax
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4ADAh], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_images[bx].BOS_alpha, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4ACAh], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_images[bx].BOS_B, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4ACEh], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_images[bx].BOS_R, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4AD2h], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_images[bx].BOS_G, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4AD6h], di
+		call	arc_file_get pascal, large _bos_images[bx].BOS_E, di
 		inc	si
 
 loc_15831:
@@ -9777,7 +9777,7 @@ loc_15831:
 
 loc_1583C:
 		les	bx, [bp+arg_0]
-		mov	al, byte ptr [bp+arg_8]
+		mov	al, byte ptr [bp+@@slot]
 		mov	es:[bx+31h], al
 		call	arc_file_free
 		xor	ax, ax
@@ -9829,7 +9829,7 @@ sub_15851	endp
 
 sub_1588A	proc far
 
-var_C		= dword	ptr -0Ch
+@@bos		= dword	ptr -0Ch
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -9837,7 +9837,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 
 		enter	0Ch, 0
 		push	si
@@ -9854,15 +9854,15 @@ arg_8		= word ptr  0Eh
 		les	bx, [bp+arg_0]
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+arg_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_C+2], ds
-		mov	word ptr [bp+var_C], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+arg_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_15A33
 		mov	[bp+var_4], 0
 		jmp	loc_15A25
@@ -9899,8 +9899,8 @@ loc_15900:
 		idiv	bx
 		cmp	ax, [bp+var_8]
 		jnz	loc_159FD
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -9910,8 +9910,8 @@ loc_15900:
 		jz	loc_159FD
 		call	_grcg_setcolor_rmw stdcall, 0
 		pop	cx
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -9921,15 +9921,15 @@ loc_15900:
 		add	bx, di
 		mov	es:[bx], ax
 		call	_grcg_off_func
-		les	bx, [bp+var_C]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_15979
-		les	bx, [bp+var_C]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -9939,15 +9939,15 @@ loc_15900:
 		or	es:[bx], ax
 
 loc_15979:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_159A5
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -9957,15 +9957,15 @@ loc_15979:
 		or	es:[bx], ax
 
 loc_159A5:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_159D1
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -9975,15 +9975,15 @@ loc_159A5:
 		or	es:[bx], ax
 
 loc_159D1:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_159FD
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -10035,7 +10035,7 @@ var_16		= word ptr -16h
 var_14		= word ptr -14h
 var_12		= word ptr -12h
 var_10		= word ptr -10h
-var_E		= dword	ptr -0Eh
+@@bos		= dword	ptr -0Eh
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
 var_8		= word ptr -8
@@ -10045,7 +10045,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 arg_A		= word ptr  10h
 
 		enter	18h, 0
@@ -10070,15 +10070,15 @@ arg_A		= word ptr  10h
 		les	bx, [bp+arg_0]
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+arg_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_E+2], ds
-		mov	word ptr [bp+var_E], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+arg_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_15C7C
 		mov	di, [bp+var_2]
 		cmp	[bp+arg_4], 0
@@ -10117,37 +10117,37 @@ loc_15ACF:
 		idiv	bx
 		cmp	ax, [bp+var_8]
 		jnz	loc_15C60
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_6]
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		not	ax
 		mov	[bp+var_18], ax
-		les	bx, [bp+var_E]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, [bp+var_6]
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_16], ax
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, [bp+var_6]
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_14], ax
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, [bp+var_6]
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_12], ax
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, [bp+var_6]
 		add	ax, ax
 		add	bx, ax
@@ -10380,7 +10380,7 @@ var_1E		= word ptr -1Eh
 var_1C		= word ptr -1Ch
 var_1A		= word ptr -1Ah
 var_18		= word ptr -18h
-var_16		= dword	ptr -16h
+@@bos		= dword	ptr -16h
 var_12		= word ptr -12h
 var_10		= word ptr -10h
 var_E		= word ptr -0Eh
@@ -10393,7 +10393,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 arg_A		= word ptr  10h
 
 		enter	20h, 0
@@ -10418,15 +10418,15 @@ arg_A		= word ptr  10h
 		les	bx, [bp+arg_0]
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+arg_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_16+2],	ds
-		mov	word ptr [bp+var_16], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+arg_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_15F46
 		mov	si, [bp+var_2]
 		cmp	[bp+arg_4], 0
@@ -10465,36 +10465,36 @@ loc_15D71:
 		idiv	bx
 		cmp	ax, [bp+var_7+1]
 		jnz	loc_15F2C
-		les	bx, [bp+var_16]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_20], ax
-		les	bx, [bp+var_16]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_1E], ax
-		les	bx, [bp+var_16]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_1C], ax
-		les	bx, [bp+var_16]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	[bp+var_1A], ax
-		les	bx, [bp+var_16]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10653,7 +10653,7 @@ sub_15CDD	endp
 
 sub_15F4A	proc far
 
-var_14		= dword	ptr -14h
+@@bos		= dword	ptr -14h
 var_10		= word ptr -10h
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
@@ -10665,7 +10665,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 
 		enter	14h, 0
 		push	si
@@ -10682,15 +10682,15 @@ arg_8		= word ptr  0Eh
 		les	bx, [bp+arg_0]
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+arg_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_14+2],	ds
-		mov	word ptr [bp+var_14], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+arg_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_1612A
 		mov	[bp+var_4], 0
 		jmp	loc_1611C
@@ -10737,15 +10737,15 @@ loc_15FC0:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_1606F
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10754,8 +10754,8 @@ loc_15FC0:
 		add	bx, si
 		and	ax, es:[bx]
 		mov	[bp+var_10], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10764,8 +10764,8 @@ loc_15FC0:
 		add	bx, si
 		and	ax, es:[bx]
 		mov	[bp+var_E], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10774,8 +10774,8 @@ loc_15FC0:
 		add	bx, si
 		and	ax, es:[bx]
 		mov	[bp+var_C], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10798,8 +10798,8 @@ loc_1607D:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_14]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10808,8 +10808,8 @@ loc_1607D:
 		les	bx, _VRAM_PLANE_B
 		add	bx, si
 		mov	es:[bx], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10818,8 +10818,8 @@ loc_1607D:
 		les	bx, _VRAM_PLANE_R
 		add	bx, si
 		mov	es:[bx], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10828,8 +10828,8 @@ loc_1607D:
 		les	bx, _VRAM_PLANE_G
 		add	bx, si
 		mov	es:[bx], ax
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -10877,7 +10877,7 @@ sub_15F4A	endp
 
 sub_1612E	proc far
 
-var_E		= dword	ptr -0Eh
+@@bos		= dword	ptr -0Eh
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
@@ -10886,7 +10886,7 @@ var_2		= word ptr -2
 arg_0		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 
 		enter	0Eh, 0
 		push	si
@@ -10903,15 +10903,15 @@ arg_8		= word ptr  0Eh
 		les	bx, [bp+arg_0]
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+arg_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_E+2], ds
-		mov	word ptr [bp+var_E], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+arg_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_16340
 		mov	[bp+var_4], 0
 		jmp	loc_1632A
@@ -10959,8 +10959,8 @@ loc_161A7:
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -10970,8 +10970,8 @@ loc_161A7:
 		add	bx, si
 		mov	es:[bx], ax
 		call	_grcg_off_func
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -10990,8 +10990,8 @@ loc_161A7:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -11014,8 +11014,8 @@ loc_1624F:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -11038,8 +11038,8 @@ loc_1628A:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -11062,8 +11062,8 @@ loc_162C5:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		les	bx, [bp+var_E]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, [bp+var_8]
 		add	ax, ax
 		add	bx, ax
@@ -11353,12 +11353,12 @@ sub_1640C	endp
 
 sub_164E6	proc far
 
-var_14		= dword	ptr -14h
+@@bos		= dword	ptr -14h
 var_10		= word ptr -10h
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
+@@image		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -11381,16 +11381,16 @@ arg_6		= word ptr  0Ch
 		mov	[bp+var_2], ax
 		xor	di, di
 		mov	ax, es:[bx+24h]
-		mov	[bp+var_8], ax
+		mov	[bp+@@image], ax
 		mov	al, es:[bx+31h]
 		mov	ah, 0
-		imul	ax, 0A0h
-		mov	dx, [bp+var_8]
-		imul	dx, 14h
+		imul	ax, size bos_t
+		mov	dx, [bp+@@image]
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4ACAh
-		mov	word ptr [bp+var_14+2],	ds
-		mov	word ptr [bp+var_14], ax
+		add	ax, offset _bos_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	ax, [bp+arg_4]
 		sar	ax, 3
 		mov	dx, [bp+arg_6]
@@ -11415,7 +11415,7 @@ arg_6		= word ptr  0Ch
 		mov	di, dx
 		mov	bx, word ptr [bp+arg_0]
 		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+var_8]
+		cmp	ax, [bp+@@image]
 		jle	loc_166CE
 		mov	[bp+var_4], 0
 		jmp	loc_166C6
@@ -11456,8 +11456,8 @@ loc_16596:
 		push	ax
 		pushd	[_VRAM_PLANE_B]
 		push	si
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11468,8 +11468,8 @@ loc_16596:
 		push	ax
 		pushd	[_VRAM_PLANE_R]
 		push	si
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11480,8 +11480,8 @@ loc_16596:
 		push	ax
 		pushd	[_VRAM_PLANE_G]
 		push	si
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11492,8 +11492,8 @@ loc_16596:
 		push	ax
 		pushd	[_VRAM_PLANE_E]
 		push	si
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11502,18 +11502,18 @@ loc_16596:
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
-		les	bx, [bp+var_14]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr es:[bx]
+		push	word ptr es:[bx+bos_image_t.BOS_B]
 		pushd	[_VRAM_PLANE_B]
 		push	si
 		push	[bp+var_10]
 		call	sub_15C99
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11522,8 +11522,8 @@ loc_16596:
 		push	si
 		push	[bp+var_E]
 		call	sub_15C99
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11532,8 +11532,8 @@ loc_16596:
 		push	si
 		push	[bp+var_C]
 		call	sub_15C99
-		les	bx, [bp+var_14]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
@@ -11951,130 +11951,120 @@ arg_0		= word ptr  6
 
 loc_169D8:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4ADAh]
-		or	ax, [bx+4ADCh]
+		mov	ax, word ptr (_bos_images[bx].BOS_alpha+0)
+		or	ax, word ptr (_bos_images[bx].BOS_alpha+2)
 		jz	short loc_16A09
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4ADAh] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_images[bx].BOS_alpha
 
 loc_16A09:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4ADCh], 0
-		mov	word ptr [bx+4ADAh], 0
+		mov	word ptr (_bos_images[bx].BOS_alpha+2), 0
+		mov	word ptr (_bos_images[bx].BOS_alpha+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4ACAh]
-		or	ax, [bx+4ACCh]
+		mov	ax, word ptr (_bos_images[bx].BOS_B+0)
+		or	ax, word ptr (_bos_images[bx].BOS_B+2)
 		jz	short loc_16A53
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4ACAh] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_images[bx].BOS_B
 
 loc_16A53:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4ACCh], 0
-		mov	word ptr [bx+4ACAh], 0
+		mov	word ptr (_bos_images[bx].BOS_B+2), 0
+		mov	word ptr (_bos_images[bx].BOS_B+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4ACEh]
-		or	ax, [bx+4AD0h]
+		mov	ax, word ptr (_bos_images[bx].BOS_R+0)
+		or	ax, word ptr (_bos_images[bx].BOS_R+2)
 		jz	short loc_16A9D
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4ACEh] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_images[bx].BOS_R
 
 loc_16A9D:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD0h], 0
-		mov	word ptr [bx+4ACEh], 0
+		mov	word ptr (_bos_images[bx].BOS_R+2), 0
+		mov	word ptr (_bos_images[bx].BOS_R+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4AD2h]
-		or	ax, [bx+4AD4h]
+		mov	ax, word ptr (_bos_images[bx].BOS_G+0)
+		or	ax, word ptr (_bos_images[bx].BOS_G+2)
 		jz	short loc_16AE7
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4AD2h] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_images[bx].BOS_G
 
 loc_16AE7:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD4h], 0
-		mov	word ptr [bx+4AD2h], 0
+		mov	word ptr (_bos_images[bx].BOS_G+2), 0
+		mov	word ptr (_bos_images[bx].BOS_G+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4AD6h]
-		or	ax, [bx+4AD8h]
+		mov	ax, word ptr (_bos_images[bx].BOS_E+0)
+		or	ax, word ptr (_bos_images[bx].BOS_E+2)
 		jz	short loc_16B31
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4AD6h] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_images[bx].BOS_E
 
 loc_16B31:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4AD8h], 0
-		mov	word ptr [bx+4AD6h], 0
+		mov	word ptr (_bos_images[bx].BOS_E+2), 0
+		mov	word ptr (_bos_images[bx].BOS_E+0), 0
 		inc	si
 
 loc_16B4B:
@@ -12100,7 +12090,7 @@ var_2C		= byte ptr -2Ch
 var_2		= word ptr -2
 arg_0		= dword	ptr  6
 @@fn		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
+@@slot		= word ptr  0Eh
 
 		enter	34h, 0
 		push	si
@@ -12130,7 +12120,7 @@ arg_8		= word ptr  0Eh
 		call	arc_file_get
 		cmp	byte_35A44, 0
 		jnz	loc_16D55
-		push	[bp+arg_8]
+		push	[bp+@@slot]
 		nopcall	sub_16F1B
 		pop	cx
 		xor	si, si
@@ -12146,13 +12136,13 @@ loc_16BBA:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4D5Ch], dx
-		mov	[bx+4D5Ah], ax
+		mov	word ptr (_bos_fast_images[bx].BOS_alpha+2), dx
+		mov	word ptr (_bos_fast_images[bx].BOS_alpha+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -12161,13 +12151,13 @@ loc_16BBA:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4D4Ch], dx
-		mov	[bx+4D4Ah], ax
+		mov	word ptr (_bos_fast_images[bx].BOS_B+2), dx
+		mov	word ptr (_bos_fast_images[bx].BOS_B+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -12176,13 +12166,13 @@ loc_16BBA:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4D50h], dx
-		mov	[bx+4D4Eh], ax
+		mov	word ptr (_bos_fast_images[bx].BOS_R+2), dx
+		mov	word ptr (_bos_fast_images[bx].BOS_R+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -12191,13 +12181,13 @@ loc_16BBA:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4D54h], dx
-		mov	[bx+4D52h], ax
+		mov	word ptr (_bos_fast_images[bx].BOS_G+2), dx
+		mov	word ptr (_bos_fast_images[bx].BOS_G+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -12206,41 +12196,41 @@ loc_16BBA:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	cx, si
-		imul	cx, 14h
+		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	[bx+4D58h], dx
-		mov	[bx+4D56h], ax
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	word ptr (_bos_fast_images[bx].BOS_E+2), dx
+		mov	word ptr (_bos_fast_images[bx].BOS_E+0), ax
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4D5Ah], di
+		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_alpha, di
 		mov	[bp+var_2], 0
 		jmp	short loc_16CD5
 ; ---------------------------------------------------------------------------
 
 loc_16C98:
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		les	bx, [bx+4D5Ah]
+		les	bx, _bos_fast_images[bx].BOS_alpha
 		mov	ax, [bp+var_2]
 		add	ax, ax
 		add	bx, ax
 		mov	ax, es:[bx]
 		not	ax
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	dx, si
-		imul	dx, 14h
+		imul	dx, size bos_image_t
 		add	bx, dx
-		mov	bx, [bx+4D5Ah]
+		mov	bx, word ptr (_bos_fast_images[bx].BOS_alpha+0)
 		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	bx, dx
@@ -12254,30 +12244,30 @@ loc_16CD5:
 		sar	ax, 1
 		cmp	ax, [bp+var_2]
 		jg	short loc_16C98
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4D4Ah], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_B, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4D4Eh], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_R, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4D52h], di
-		mov	bx, [bp+arg_8]
-		imul	bx, 0A0h
+		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_G, di
+		mov	bx, [bp+@@slot]
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+4D56h], di
+		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_E, di
 		inc	si
 
 loc_16D46:
@@ -12289,7 +12279,7 @@ loc_16D46:
 
 loc_16D55:
 		les	bx, [bp+arg_0]
-		mov	al, byte ptr [bp+arg_8]
+		mov	al, byte ptr [bp+@@slot]
 		mov	es:[bx+0Ah], al
 		call	arc_file_free
 		xor	ax, ax
@@ -12306,7 +12296,7 @@ sub_16B56	endp
 
 sub_16D6A	proc far
 
-var_C		= dword	ptr -0Ch
+@@bos		= dword	ptr -0Ch
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -12329,14 +12319,14 @@ arg_0		= dword	ptr  6
 		xor	si, si
 		mov	al, es:[bx+0Ah]
 		mov	ah, 0
-		imul	ax, 0A0h
+		imul	ax, size bos_t
 		mov	dl, es:[bx+9]
 		mov	dh, 0
-		imul	dx, 14h
+		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, 4D4Ah
-		mov	word ptr [bp+var_C+2], ds
-		mov	word ptr [bp+var_C], ax
+		add	ax, offset _bos_fast_images
+		mov	word ptr [bp+@@bos+2], ds
+		mov	word ptr [bp+@@bos], ax
 		mov	al, es:[bx+9]
 		cmp	al, es:[bx+8]
 		jnb	loc_16F17
@@ -12376,8 +12366,8 @@ loc_16DEB:
 		idiv	bx
 		cmp	ax, [bp+var_8]
 		jnz	loc_16EE1
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12385,8 +12375,8 @@ loc_16DEB:
 		jz	short loc_16E33
 		call	_grcg_setcolor_rmw stdcall, 0
 		pop	cx
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+10h]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_alpha]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12397,15 +12387,15 @@ loc_16DEB:
 		call	_grcg_off_func
 
 loc_16E33:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_16E5D
-		les	bx, [bp+var_C]
-		les	bx, es:[bx]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_B]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12415,15 +12405,15 @@ loc_16E33:
 		or	es:[bx], ax
 
 loc_16E5D:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_16E89
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+4]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12433,15 +12423,15 @@ loc_16E5D:
 		or	es:[bx], ax
 
 loc_16E89:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_16EB5
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+8]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12451,15 +12441,15 @@ loc_16E89:
 		or	es:[bx], ax
 
 loc_16EB5:
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_16EE1
-		les	bx, [bp+var_C]
-		les	bx, es:[bx+0Ch]
+		les	bx, [bp+@@bos]
+		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
@@ -12519,87 +12509,85 @@ arg_0		= word ptr  6
 
 loc_16F28:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, [bx+4D5Ah]
-		or	ax, [bx+4D5Ch]
+		mov	ax, word ptr (_bos_fast_images[bx].BOS_alpha+0)
+		or	ax, word ptr (_bos_fast_images[bx].BOS_alpha+2)
 		jz	short loc_16F59
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4D5Ah] ; font
-		call	@$bdla$qnv
-		add	sp, 4
+		call	@$bdla$qnv c, large _bos_fast_images[bx].BOS_alpha
 
 loc_16F59:
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4D5Ch], 0
-		mov	word ptr [bx+4D5Ah], 0
+		mov	word ptr (_bos_fast_images[bx].BOS_alpha+2), 0
+		mov	word ptr (_bos_fast_images[bx].BOS_alpha+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4D4Ah] ; font
+		pushd	_bos_fast_images[bx].BOS_B ; font
 		call	@$bdla$qnv
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4D4Ch], 0
-		mov	word ptr [bx+4D4Ah], 0
+		mov	word ptr (_bos_fast_images[bx].BOS_B+2), 0
+		mov	word ptr (_bos_fast_images[bx].BOS_B+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4D4Eh] ; font
+		pushd	_bos_fast_images[bx].BOS_R ; font
 		call	@$bdla$qnv
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4D50h], 0
-		mov	word ptr [bx+4D4Eh], 0
+		mov	word ptr (_bos_fast_images[bx].BOS_R+2), 0
+		mov	word ptr (_bos_fast_images[bx].BOS_R+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4D52h] ; font
+		pushd	_bos_fast_images[bx].BOS_G ; font
 		call	@$bdla$qnv
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4D54h], 0
-		mov	word ptr [bx+4D52h], 0
+		mov	word ptr (_bos_fast_images[bx].BOS_G+2), 0
+		mov	word ptr (_bos_fast_images[bx].BOS_G+0), 0
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	dword ptr [bx+4D56h] ; font
+		pushd	_bos_fast_images[bx].BOS_E ; font
 		call	@$bdla$qnv
 		add	sp, 10h
 		mov	bx, di
-		imul	bx, 0A0h
+		imul	bx, size bos_t
 		mov	ax, si
-		imul	ax, 14h
+		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr [bx+4D58h], 0
-		mov	word ptr [bx+4D56h], 0
+		mov	word ptr (_bos_fast_images[bx].BOS_E+2), 0
+		mov	word ptr (_bos_fast_images[bx].BOS_E+0), 0
 		inc	si
 
 loc_17036:
@@ -60168,7 +60156,8 @@ unk_393C8	db    ?	;
 unk_3940D	db    ?	;
 		db 68 dup(?)
 include th01/hiscore/hiscore[bss].asm
-		db 964 dup(?)
+		db 4 dup(?)
+include th01/formats/bos[bss].asm
 point_3982A	Point <?>
 word_3982E	dw ?
 word_39830	dw ?
