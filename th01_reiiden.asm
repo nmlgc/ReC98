@@ -2408,21 +2408,9 @@ sub_CC0F	proc far
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	100090h
-		pushd	0
-		push	4000A0h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		push	100030h
-		push	100000h
-		push	0C80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		push	100030h
-		push	400000h
-		push	0E80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
+		call	_graph_2xscale_byterect_1_to_0_sl c, large ( 64 shl 16) or 160, large ( 0 shl 16) or 0, large (16 shl 16) or 144
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or  48
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or  48
 		mov	si, 1
 		mov	_input_ok, 0
 		mov	_paused, 0
@@ -2511,31 +2499,15 @@ loc_CDD8:
 		cmp	_input_up, 1
 		jnz	short loc_CE16
 		mov	si, 1
-		push	100030h
-		push	100000h
-		push	0C80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		push	100030h
-		push	400000h
-		push	0E80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or 48
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or 48
 
 loc_CE16:
 		cmp	_input_down, 1
 		jnz	loc_CD52
 		xor	si, si
-		push	100030h
-		push	300000h
-		push	0C80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
-		push	100030h
-		push	200000h
-		push	0E80120h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		add	sp, 0Ch
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (48 shl 16) or 0, large (16 shl 16) or 48
+		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (32 shl 16) or 0, large (16 shl 16) or 48
 		jmp	loc_CD52
 ; ---------------------------------------------------------------------------
 
@@ -6667,27 +6639,12 @@ loc_127AC:
 		push	(09h shl 16) or 09h
 		push	(09h shl 16) or 03h
 		call	_z_palette_set_show
-		push	1000D0h
-		pushd	0
-		push	400040h
-		call	_graph_2xscale_byterect_1_to_0_sl
+		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large ( 64 shl 16) or  64, large (  0 shl 16) or 0, large (16 shl 16) or 208
 		add	sp, 28h
-		push	100100h
-		push	200000h
-		push	600020h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		push	100110h
-		push	400000h
-		push	0B40020h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		push	100030h
-		push	600000h
-		push	0FA0100h
-		call	_graph_2xscale_byterect_1_to_0_sl
-		push	100030h
-		push	800000h
-		push	12C0100h
-		call	_graph_2xscale_byterect_1_to_0_sl
+		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large ( 96 shl 16) or  32, large ( 32 shl 16) or 0, large (16 shl 16) or 256
+		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (180 shl 16) or  32, large ( 64 shl 16) or 0, large (16 shl 16) or 272
+		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (250 shl 16) or 256, large ( 96 shl 16) or 0, large (16 shl 16) or  48
+		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (300 shl 16) or 256, large (128 shl 16) or 0, large (16 shl 16) or  48
 		add	sp, 30h
 		call	_graph_copy_page_back_to_front
 		push	300FAh
