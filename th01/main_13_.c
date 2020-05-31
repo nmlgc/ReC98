@@ -1,6 +1,6 @@
 /* ReC98
  * -----
- * Code segment #13 of TH01's REIIDEN.EXE
+ * 2nd part of code segment #13 of TH01's REIIDEN.EXE
  */
 
 #include "th01/th01.h"

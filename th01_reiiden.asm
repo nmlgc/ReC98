@@ -65,6 +65,7 @@ include th01/th01.inc
 	extern _vsprintf:proc
 
 main_01 group main_01_TEXT, main_01__TEXT
+main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 
@@ -1291,7 +1292,7 @@ loc_C1D0:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_C1E2
-		push	188h
+		push	(RES_Y - 8)
 		jmp	short loc_C214
 ; ---------------------------------------------------------------------------
 
@@ -1308,7 +1309,7 @@ loc_C1E2:
 		idiv	bx
 		cmp	dx, 8
 		jnz	short loc_C203
-		push	180h
+		push	(RES_Y - 16)
 		jmp	short loc_C214
 ; ---------------------------------------------------------------------------
 
@@ -1321,10 +1322,10 @@ loc_C203:
 		jnz	short loc_C21C
 
 loc_C211:
-		push	190h
+		push	RES_Y
 
 loc_C214:
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup
 		pop	cx
 		jmp	short loc_C235
 ; ---------------------------------------------------------------------------
@@ -1512,8 +1513,7 @@ loc_C3E7:
 loc_C3EE:
 		cmp	[bp+arg_0], 8Ch
 		jnz	short loc_C42E
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		push	1
 		call	_graph_accesspage_func
@@ -2604,10 +2604,9 @@ loc_CEE9:
 		cwd
 		idiv	bx
 		shl	dx, 3
-		mov	ax, 190h
+		mov	ax, RES_Y
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 		xor	si, si
 		jmp	short loc_CF31
@@ -2739,8 +2738,7 @@ loc_CFF8:
 loc_D00D:
 		cmp	di, 10h
 		jl	loc_CEE9
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	al, byte_36C14
 		mov	_bombs, al
@@ -4356,8 +4354,7 @@ loc_DE72:
 		cmp	_done, 0
 		jz	loc_DC64
 		mov	byte_34A47, 0
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		les	bx, _resident
 		mov	eax, _rand
@@ -5279,136 +5276,14 @@ main_12_TEXT	ends
 
 ; Segment type:	Pure code
 main_13_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_13_TEXT
+main_13_TEXT	ends
+
+main_13__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_13
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11738	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	cx, [bp+arg_0]
-		mov	bx, 190h
-		mov	ax, cx
-		cwd
-		idiv	bx
-		mov	cx, dx
-		mov	ax, cx
-		imul	ax, 28h
-		mov	si, ax
-		mov	ax, 190h
-		sub	ax, cx
-		shl	ax, 4
-		mov	di, ax
-		mov	[bp+var_2], 0
-		mov	ax, cx
-		shl	ax, 4
-		mov	[bp+var_4], ax
-		xor	ax, ax
-		mov	es, ax
-		test	byte ptr es:[054Dh], 4
-		jnz	short loc_1177C
-		mov	[bp+var_6], 0
-		jmp	short loc_11781
-; ---------------------------------------------------------------------------
-
-loc_1177C:
-		mov	[bp+var_6], 40h
-
-loc_11781:
-		mov	dx, 0A0h
-		in	al, dx		; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jnz	short loc_11781
-
-loc_11789:
-		mov	dx, 0A0h
-		in	al, dx		; PIC 2	 same as 0020 for PIC 1
-		test	al, 20h
-		jz	short loc_11789
-
-loc_11791:
-		mov	dx, 0A0h
-		in	al, dx		; PIC 2	 same as 0020 for PIC 1
-		test	al, 4
-		jz	short loc_11791
-		mov	dx, 0A2h ; '¢'
-		mov	ax, 70h	; 'p'
-		out	dx, ax
-		mov	ax, si
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		push	dx
-		mov	dx, 0A0h
-		pop	ax
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, si
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		mov	dx, 0A0h
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, di
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		push	dx
-		mov	dx, 0A0h
-		pop	ax
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, di
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		add	al, byte ptr [bp+var_6]
-		mov	dx, 0A0h
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, [bp+var_2]
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		push	dx
-		mov	dx, 0A0h
-		pop	ax
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, [bp+var_2]
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		mov	dx, 0A0h
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, [bp+var_4]
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		push	dx
-		mov	dx, 0A0h
-		pop	ax
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		mov	ax, [bp+var_4]
-		mov	bx, 100h
-		cwd
-		idiv	bx
-		add	al, byte ptr [bp+var_6]
-		mov	dx, 0A0h
-		out	dx, al		; PIC 2	 same as 0020 for PIC 1
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11738	endp
-
+	extern _z_vsync_wait_and_scrollup:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5917,7 +5792,7 @@ sub_11A94	endp
 	extern _graph_2xscale_byterect_1_to_0_sl:proc
 	extern _graph_copy_hline_mask_1_to_0:proc
 	extern _egc_copy_wave_1_to_0:proc
-main_13_TEXT	ends
+main_13__TEXT	ends
 
 ; ===========================================================================
 
@@ -6409,8 +6284,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_8], 0
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	ax, point_3982A.y
 		add	ax, 48
@@ -6780,8 +6654,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_8], 0
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	ax, point_36C28.y
 		add	ax, 16
@@ -19884,10 +19757,9 @@ loc_1AE65:
 		cwd
 		idiv	bx
 		shl	dx, 3
-		mov	ax, 190h
+		mov	ax, RES_Y
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 		push	2
 		call	_frame_delay
@@ -19895,10 +19767,9 @@ loc_1AE65:
 		inc	si
 
 loc_1AE85:
-		cmp	si, 10h
+		cmp	si, 16
 		jl	short loc_1AE65
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		push	(48 shl 16) or 48
 		push	352
@@ -40798,10 +40669,9 @@ loc_26A94:
 		cwd
 		idiv	bx
 		add	dx, dx
-		mov	ax, 190h
+		mov	ax, RES_Y
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 
 loc_26ABF:
@@ -40825,8 +40695,7 @@ loc_26ABF:
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		push	190h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 		mov	ax, 1
@@ -40970,10 +40839,9 @@ loc_26C11:
 		cwd
 		idiv	bx
 		add	dx, dx
-		mov	ax, 190h
+		mov	ax, RES_Y
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 
 loc_26C3C:
@@ -41034,8 +40902,7 @@ loc_26C85:
 		push	ds
 		push	offset point_3985C
 		call	sub_1689D
-		push	190h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 24h
 		mov	word_3A6CA, 0
 		xor	ax, ax
@@ -43779,13 +43646,12 @@ sub_2869E	proc far
 		add	sp, 16h
 		call	_mdrv2_bgm_play
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		mov	si, 18Fh
+		mov	si, (RES_Y - 1)
 		jmp	short loc_2871C
 ; ---------------------------------------------------------------------------
 
 loc_28703:
-		push	si
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, si
 		push	1
 		push	si
 		call	sub_11816
@@ -43797,8 +43663,7 @@ loc_28703:
 loc_2871C:
 		or	si, si
 		jge	short loc_28703
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		push	1
 		call	_graph_accesspage_func
 		call	_grp_put_palette_show stdcall, large [off_35DAB]
@@ -46281,8 +46146,7 @@ loc_29D0E:
 		mov	word_3A6CA, 31h	; '1'
 		cmp	word_3AC60, 3
 		jl	short loc_29D85
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		push	1
 		call	_graph_accesspage_func
 		mov	bx, [bp+arg_0]
@@ -47413,7 +47277,7 @@ sub_2A896	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2A8B2
-		push	18Ch
+		push	(RES_Y - 4)
 		jmp	short loc_2A8C3
 ; ---------------------------------------------------------------------------
 
@@ -47424,10 +47288,10 @@ loc_2A8B2:
 		idiv	bx
 		cmp	dx, 4
 		jnz	short loc_2A8C9
-		push	194h
+		push	(RES_Y + 4)
 
 loc_2A8C3:
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup
 		pop	cx
 
 loc_2A8C9:
@@ -47447,8 +47311,7 @@ loc_2A8C9:
 loc_2A8E0:
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2A8F5
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	word_3A6CA, 0
 
@@ -50750,8 +50613,7 @@ loc_2C949:
 		or	dx, dx
 		jnz	short loc_2C980
 		call	_z_palette_set_show c, large (0Fh shl 16) or 0Fh, large (0Fh shl 16) or 0Fh
-		push	1A0h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, (RES_Y + 16)
 		pop	cx
 
 loc_2C980:
@@ -50762,8 +50624,7 @@ loc_2C980:
 		cmp	dx, 1
 		jnz	short loc_2C99C
 		call	sub_232D3
-		push	182h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, (RES_Y - 14)
 		pop	cx
 
 loc_2C99C:
@@ -50781,8 +50642,7 @@ loc_2C9B1:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_2C9C6
 		call	sub_232D3
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 
 loc_2C9C6:
@@ -50820,8 +50680,7 @@ loc_2C9DA:
 		mov	byte_34A49, 1
 		call	sub_190D6
 		call	sub_1889C
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	word_3A6CA, 0
 		mov	word_3B433, 0
@@ -51097,8 +50956,7 @@ loc_2CCDC:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2CCFF
-		push	1A0h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, (RES_Y + 16)
 		pop	cx
 
 loc_2CCFF:
@@ -51108,8 +50966,7 @@ loc_2CCFF:
 		idiv	bx
 		cmp	dx, 1
 		jnz	short loc_2CD16
-		push	182h
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, (RES_Y - 14)
 		pop	cx
 
 loc_2CD16:
@@ -51192,8 +51049,7 @@ loc_2CDA0:
 ; ---------------------------------------------------------------------------
 
 loc_2CDAA:
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		call	sub_28908
 		xor	si, si
@@ -51436,18 +51292,17 @@ loc_2CF26:
 		add	sp, 22h
 		mov	word_398B8, 0
 		xor	di, di
-		mov	si, 20h	; ' '
+		mov	si, 32
 		mov	[bp+var_2], 0
 		mov	[bp+var_8], 0
 
 loc_2CFA2:
-		push	di
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, di
 		pop	cx
 		add	di, si
 		cmp	[bp+var_2], 0
 		jnz	short loc_2CFBA
-		cmp	di, 64h	; 'd'
+		cmp	di, ((RES_Y / 4) * 1)
 		jle	short loc_2CFBA
 		inc	[bp+var_2]
 		dec	si
@@ -51455,7 +51310,7 @@ loc_2CFA2:
 loc_2CFBA:
 		cmp	[bp+var_2], 1
 		jnz	short loc_2CFCA
-		cmp	di, 0C8h ; '?'
+		cmp	di, ((RES_Y / 4) * 2)
 		jle	short loc_2CFCA
 		inc	[bp+var_2]
 		dec	si
@@ -51463,7 +51318,7 @@ loc_2CFBA:
 loc_2CFCA:
 		cmp	[bp+var_2], 2
 		jnz	short loc_2CFDA
-		cmp	di, 12Ch
+		cmp	di, ((RES_Y / 4) * 3)
 		jle	short loc_2CFDA
 		inc	[bp+var_2]
 		dec	si
@@ -51471,11 +51326,11 @@ loc_2CFCA:
 loc_2CFDA:
 		cmp	[bp+var_2], 3
 		jnz	short loc_2CFF0
-		cmp	di, 190h
+		cmp	di, RES_Y
 		jle	short loc_2CFF0
 		mov	[bp+var_2], 0
 		dec	si
-		sub	di, 190h
+		sub	di, RES_Y
 
 loc_2CFF0:
 		or	si, si
@@ -51542,8 +51397,7 @@ loc_2D06B:
 ; ---------------------------------------------------------------------------
 
 loc_2D079:
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		call	_grz_load_single stdcall, 0, offset aBoss8_grz, ds, 0 ; "boss8.grz"
 		call	_grz_load_single stdcall, 1, offset aBoss8_grz, ds, 1 ; "boss8.grz"
 		call	_grz_load_single stdcall, 2, offset aBoss8_grz, ds, 2 ; "boss8.grz"
@@ -51565,10 +51419,9 @@ loc_2D0EC:
 		cwd
 		idiv	bx
 		shl	dx, 5
-		mov	ax, 1A0h
+		mov	ax, (RES_Y + 16)
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 		mov	ax, si
 		mov	bx, 8
@@ -51587,22 +51440,21 @@ loc_2D117:
 		inc	si
 
 loc_2D120:
-		cmp	si, 20h	; ' '
+		cmp	si, 32
 		jl	short loc_2D0EC
-		mov	di, 190h
+		mov	di, RES_Y
 		jmp	short loc_2D145
 ; ---------------------------------------------------------------------------
 
 loc_2D12A:
-		push	di
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, di
 		push	20h ; ' '
 		push	di
 		call	sub_11816
 		push	1
 		call	_frame_delay
 		add	sp, 8
-		sub	di, 20h	; ' '
+		sub	di, 32
 
 loc_2D145:
 		or	di, di
@@ -51617,17 +51469,16 @@ loc_2D14D:
 		cwd
 		idiv	bx
 		shl	dx, 4
-		mov	ax, 1A0h
+		mov	ax, (RES_Y + 16)
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		push	1
 		call	_frame_delay
 		add	sp, 4
 		inc	si
 
 loc_2D16E:
-		cmp	si, 20h	; ' '
+		cmp	si, 32
 		jl	short loc_2D14D
 		push	1Eh
 		call	_frame_delay
@@ -55745,11 +55596,10 @@ loc_2F9F9:
 		mov	bx, 2
 		cwd
 		idiv	bx
-		imul	dx, -10h
-		mov	ax, 198h
+		imul	dx, -16
+		mov	ax, (RES_Y + 8)
 		sub	ax, dx
-		push	ax
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
 		cmp	word_3A6CA, 40h
 		jg	short loc_2FA23
@@ -55858,17 +55708,16 @@ loc_2FADC:
 		cmp	di, 19h
 		jl	short loc_2FAC5
 		xor	si, si
-		mov	di, 20h	; ' '
+		mov	di, 32
 		mov	[bp+var_6], 0
 
 loc_2FAEB:
-		push	si
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, si
 		pop	cx
 		add	si, di
-		cmp	si, 190h
+		cmp	si, RES_Y
 		jle	short loc_2FAFE
-		sub	si, 190h
+		sub	si, RES_Y
 
 loc_2FAFE:
 		cmp	[bp+var_6], 96h
@@ -56005,8 +55854,7 @@ loc_2FC0E:
 ; ---------------------------------------------------------------------------
 
 loc_2FC1C:
-		push	0
-		call	sub_11738
+		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		xor	si, si
 		jmp	short loc_2FC32
