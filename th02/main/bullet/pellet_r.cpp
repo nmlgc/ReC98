@@ -1,4 +1,4 @@
-#include "th02/sprites/pellet.h"
+#include "th01/sprites/pellet.h"
 
 void pascal near pellet_render(int left, int top)
 {

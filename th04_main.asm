@@ -35519,7 +35519,7 @@ include th04/main/player/shot_velocity[data].asm
 		db  80h
 		db  20h
 		db  60h
-include th02/sprites/pellet.asm
+include th01/sprites/pellet.asm
 include th04/sprites/pelletbt.asm
 byte_22B9C	db 0
 		db 0

@@ -33703,7 +33703,7 @@ public _rank, _stage_id
 _rank	db RANK_NORMAL
 _stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
-include th02/sprites/pellet.asm
+include th01/sprites/pellet.asm
 gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 aUqiUx		db ' “ïˆÕ“x',0

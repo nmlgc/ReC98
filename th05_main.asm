@@ -29020,7 +29020,7 @@ include th04/formats/std[data].asm
 off_2129C	dw offset sub_15A5C
 		dw offset sub_15A8E
 		dw offset sub_15A70
-include th02/sprites/pellet.asm
+include th01/sprites/pellet.asm
 include th04/sprites/pelletbt.asm
 include th02/sprites/sparks.asm
 byte_21762	db 0
