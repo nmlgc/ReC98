@@ -22,6 +22,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/main/playfld.inc
 
 	option emulator
 
@@ -68,6 +69,7 @@ main_01 group main_01_TEXT, main_01__TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
+main_27 group main_27_TEXT, main_27__TEXT
 main_38 group main_38_TEXT, main_38__TEXT
 
 ; ===========================================================================
@@ -821,7 +823,7 @@ loc_BD88:
 		push	0
 		call	_graph_accesspage_func
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 0Ah
 
@@ -847,7 +849,7 @@ loc_BDC2:
 		push	0
 		call	_graph_accesspage_func
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 0Eh
 		call	sub_17E1E
@@ -952,7 +954,7 @@ arg_0		= word ptr  6
 		call	sub_30E54
 		add	sp, 4
 		push	430170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		xor	si, si
@@ -1675,7 +1677,7 @@ loc_C50B:
 		mov	bx, 30h	; '0'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
+		add	dx, _player_left
 		add	dx, -8
 		mov	bx, si
 		add	bx, bx
@@ -2570,7 +2572,7 @@ loc_CEA5:
 		add	ax, 56h	; 'V'
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		xor	di, di
@@ -2582,7 +2584,7 @@ loc_CEBC:
 		add	bx, bx
 		lea	ax, [bp+var_A]
 		add	bx, ax
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	ss:[bx], ax
 		mov	bx, di
 		add	bx, bx
@@ -3215,16 +3217,16 @@ loc_D3E1:
 		push	offset a20h	; "\x1B[2;0H"
 		call	_printf
 		add	sp, 4
-		mov	ax, word_38810
-		cmp	ax, x_36C26
+		mov	ax, _player_left_prev
+		cmp	ax, _player_left
 		jz	short loc_D414
-		push	x_36C26
+		push	_player_left
 		push	ds
 		push	offset aGx3d	; "gx =	%3d"
 		call	_printf
 		add	sp, 6
-		mov	ax, x_36C26
-		mov	word_38810, ax
+		mov	ax, _player_left
+		mov	_player_left_prev, ax
 
 loc_D414:
 		push	ds
@@ -3660,7 +3662,7 @@ loc_D72E:
 		mov	_rem_lives, ax
 		mov	al, es:[bx+reiidenconfig_t.bombs]
 		mov	_bombs, al
-		mov	x_36C26, 304
+		mov	_player_left, PLAYER_LEFT_START
 		cmp	byte_34A31, 0
 		jz	short loc_D776
 		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
@@ -4024,7 +4026,7 @@ loc_DAD7:
 		jnz	short loc_DB0A
 
 loc_DB04:
-		mov	x_36C26, 304
+		mov	_player_left, PLAYER_LEFT_START
 
 loc_DB0A:
 		fld	dbl_34FF5
@@ -4043,7 +4045,7 @@ loc_DB3E:
 		call	sub_19E48
 		pop	cx
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		push	3
@@ -5125,9 +5127,9 @@ sub_114E3	proc far
 		mov	si, [bp+@@right]
 		mov	di, [bp+@@bottom]
 		call	_graph_r_line c, [bp+@@left], [bp+@@top], si, di, [bp+@@col]
-		cmp	si, x_36C26
+		cmp	si, _player_left
 		jle	short loc_11523
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 32
 		cmp	ax, si
 		jle	short loc_11523
@@ -5165,9 +5167,9 @@ sub_11527	proc far
 		mov	si, [bp+@@right]
 		mov	di, [bp+@@bottom]
 		call	_graph_r_line_patterned c, [bp+@@left], [bp+@@top], si, di, [bp+@@col], [bp+@@pattern]
-		cmp	si, x_36C26
+		cmp	si, _player_left
 		jle	short loc_1156A
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 32
 		cmp	ax, si
 		jle	short loc_1156A
@@ -5998,11 +6000,11 @@ loc_12237:
 		jz	short loc_12299
 		cmp	di, 178h
 		jle	short loc_12299
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 4
 		cmp	ax, si
 		jg	short loc_12299
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 24
 		cmp	ax, si
 		jle	short loc_12299
@@ -6396,7 +6398,7 @@ loc_126E1:
 		push	0
 		call	_graph_accesspage_func
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 0Eh
 
@@ -6766,7 +6768,7 @@ loc_12B02:
 		push	0
 		call	_graph_accesspage_func
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 0Eh
 
@@ -13735,13 +13737,13 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -24
 		cmp	[bx+5370h], ax
 		jle	loc_17E1B
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 24
 		cmp	[bx+5370h], ax
 		jge	loc_17E1B
@@ -14452,13 +14454,13 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -24
 		cmp	[bx+5398h], ax
 		jle	loc_183A0
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 24
 		cmp	[bx+5398h], ax
 		jge	loc_183A0
@@ -16917,39 +16919,14 @@ main_26_TEXT	ends
 
 ; Segment type:	Pure code
 main_27_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_27_TEXT
+main_27_TEXT	ends
+
+main_27__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_27
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1967E	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		add	x_36C26, ax
-		cmp	x_36C26, 0
-		jge	short loc_19697
-		mov	x_36C26, 0
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_19697:
-		cmp	x_36C26, 608
-		jl	short loc_196A5
-		mov	x_36C26, 608
-
-loc_196A5:
-		pop	bp
-		retf
-sub_1967E	endp
-
+	extern _player_move_and_clamp:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17931,7 +17908,7 @@ loc_19F4C:
 		mov	byte_35B47, 0
 		mov	_input_bomb, 0
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	byte_39DB3, 40h
@@ -17942,7 +17919,7 @@ loc_19F77:
 		cmp	dword_34A62, 3Ch ; '<'
 		jbe	short loc_19F90
 		push	430170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 
@@ -18001,14 +17978,14 @@ loc_1A00F:
 		cbw
 		push	ax
 		push	368
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
 
 loc_1A02B:
 		push	[bp+var_2]
 		push	368
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte ptr [bp+var_2]
@@ -18025,13 +18002,13 @@ loc_1A04A:
 		cbw
 		push	ax
 		push	368
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
-		add	x_36C26, 4
-		cmp	x_36C26, 608
+		add	_player_left, 4
+		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1A075
-		mov	x_36C26, 608
+		mov	_player_left, PLAYER_LEFT_MAX
 
 loc_1A075:
 		mov	al, byte_35B42
@@ -18051,7 +18028,7 @@ loc_1A089:
 loc_1A08C:
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte_35B42
@@ -18080,13 +18057,13 @@ loc_1A0BA:
 		cbw
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
-		sub	x_36C26, 4
-		cmp	x_36C26, 0
+		sub	_player_left, 4
+		cmp	_player_left, PLAYER_LEFT_MIN
 		jg	short loc_1A0E4
-		mov	x_36C26, 0
+		mov	_player_left, PLAYER_LEFT_MIN
 
 loc_1A0E4:
 		mov	al, byte_35B42
@@ -18106,7 +18083,7 @@ loc_1A0F8:
 loc_1A0FB:
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte_35B42
@@ -18134,7 +18111,7 @@ loc_1A127:
 		cbw
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
 		mov	byte_35B44, 1
@@ -18161,7 +18138,7 @@ loc_1A173:
 loc_1A178:
 		push	[bp+var_2]
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte ptr [bp+var_2]
@@ -18175,7 +18152,7 @@ loc_1A191:
 		cmp	ax, 1
 		jnz	short loc_1A1B2
 		push	4E0170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	byte_39DB3, 4Eh	; 'N'
@@ -18188,7 +18165,7 @@ loc_1A1B2:
 		cmp	ax, 2
 		jnz	short loc_1A1D1
 		push	440170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	byte_39DB3, 44h	; 'D'
@@ -18200,7 +18177,7 @@ loc_1A1D1:
 		cbw
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
 		cmp	_input_lr, 0
@@ -18244,7 +18221,7 @@ loc_1A24A:
 loc_1A24D:
 		push	ax
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18267,7 +18244,7 @@ loc_1A26C:
 		cmp	byte_35B43, 0
 		jnz	short loc_1A29E
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
@@ -18299,13 +18276,13 @@ loc_1A2C4:
 		cbw
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
-		add	x_36C26, 4
-		cmp	x_36C26, 608
+		add	_player_left, 4
+		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1A2F8
-		mov	x_36C26, 608
+		mov	_player_left, PLAYER_LEFT_MAX
 
 loc_1A2F8:
 		mov	al, byte_35B43
@@ -18314,7 +18291,7 @@ loc_1A2F8:
 		add	ax, 4Eh	; 'N'
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte_35B43
@@ -18345,13 +18322,13 @@ loc_1A32F:
 		cbw
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_196A7
 		add	sp, 6
-		sub	x_36C26, 4
-		cmp	x_36C26, 0
+		sub	_player_left, 4
+		cmp	_player_left, PLAYER_LEFT_MIN
 		jge	short loc_1A364
-		mov	x_36C26, 0
+		mov	_player_left, PLAYER_LEFT_MIN
 
 loc_1A364:
 		mov	al, byte_35B43
@@ -18360,7 +18337,7 @@ loc_1A364:
 		add	ax, 44h	; 'D'
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte_35B43
@@ -18374,7 +18351,7 @@ loc_1A364:
 
 loc_1A390:
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
@@ -18457,11 +18434,11 @@ loc_1A43F:
 		push	ax
 		push	[bp+var_2]
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18499,7 +18476,7 @@ loc_1A49F:
 		idiv	bx
 		push	ax
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18516,11 +18493,11 @@ loc_1A4C9:
 		cbw
 		cmp	ax, 1
 		jnz	loc_1A5EE
-		mov	si, x_36C26
-		add	x_36C26, 6
-		cmp	x_36C26, 608
+		mov	si, _player_left
+		add	_player_left, 6
+		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1A4EB
-		mov	x_36C26, 608
+		mov	_player_left, PLAYER_LEFT_MAX
 
 loc_1A4EB:
 		mov	al, byte_35B43
@@ -18542,7 +18519,7 @@ loc_1A4EB:
 		lea	ax, [si-8]
 		push	ax
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18573,7 +18550,7 @@ loc_1A542:
 		add	dx, 2
 		push	dx
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18637,11 +18614,11 @@ loc_1A5EE:
 		cbw
 		cmp	ax, 2
 		jnz	loc_1A70B
-		mov	si, x_36C26
-		sub	x_36C26, 6
-		cmp	x_36C26, 0
+		mov	si, _player_left
+		sub	_player_left, 6
+		cmp	_player_left, PLAYER_LEFT_MIN
 		jge	short loc_1A60F
-		mov	x_36C26, 0
+		mov	_player_left, PLAYER_LEFT_MIN
 
 loc_1A60F:
 		mov	al, byte_35B43
@@ -18661,7 +18638,7 @@ loc_1A60F:
 		lea	ax, [si-8]
 		push	ax
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18691,7 +18668,7 @@ loc_1A660:
 		idiv	bx
 		push	dx
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18901,7 +18878,7 @@ loc_1A806:
 loc_1A80A:
 		push	[bp+var_2]
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -18951,7 +18928,7 @@ loc_1A855:
 
 loc_1A865:
 		mov	[bp+var_2], ax
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		mov	si, ax
 		push	2
@@ -18998,13 +18975,13 @@ loc_1A8A3:
 
 loc_1A8B3:
 		mov	[bp+var_2], ax
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		mov	si, ax
-		push	0FFFEh
+		push	-2
 
 loc_1A8C0:
-		call	sub_1967E
+		call	_player_move_and_clamp
 		pop	cx
 		push	di
 		push	[bp+var_2]
@@ -19015,9 +18992,8 @@ loc_1A8C0:
 
 loc_1A8D0:
 		mov	[bp+var_2], 5
-		mov	si, x_36C26
-		push	6
-		call	sub_1967E
+		mov	si, _player_left
+		call	_player_move_and_clamp stdcall, 6
 		pop	cx
 		push	50005h
 		jmp	short loc_1A8FE
@@ -19025,9 +19001,8 @@ loc_1A8D0:
 
 loc_1A8E8:
 		mov	[bp+var_2], 4
-		mov	si, x_36C26
-		push	-6
-		call	sub_1967E
+		mov	si, _player_left
+		call	_player_move_and_clamp stdcall, -6
 		pop	cx
 		push	40004h
 
@@ -19036,7 +19011,7 @@ loc_1A8FE:
 		lea	ax, [si-8]
 		push	ax
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -19083,13 +19058,13 @@ loc_1A94B:
 loc_1A94F:
 		push	[bp+var_2]
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 
 loc_1A95C:
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -19142,7 +19117,7 @@ loc_1A9C0:
 		cmp	ax, 1
 		jnz	short loc_1A9DC
 		push	170h
-		push	x_36C26
+		push	_player_left
 		push	ds
 		push	offset unk_386B8
 		call	sub_2FC44
@@ -19154,7 +19129,7 @@ loc_1A9DC:
 		cmp	ax, 4
 		jnz	short loc_1A9FB
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 16
 		push	ax
 		push	ds
@@ -19168,7 +19143,7 @@ loc_1A9FB:
 		cmp	ax, 7
 		jnz	short loc_1AA1A
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
@@ -19182,7 +19157,7 @@ loc_1AA1A:
 		cmp	ax, 0Ah
 		jnz	short loc_1AA39
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -19196,7 +19171,7 @@ loc_1AA39:
 		cmp	ax, 0Dh
 		jnz	short loc_1AA58
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
@@ -19210,7 +19185,7 @@ loc_1AA58:
 		cmp	ax, 10h
 		jnz	short loc_1AA77
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 24
 		push	ax
 		push	ds
@@ -19224,7 +19199,7 @@ loc_1AA77:
 		cmp	ax, 13h
 		jnz	short loc_1AA96
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
@@ -19259,7 +19234,7 @@ loc_1AAA9:
 loc_1AACA:
 		push	[bp+var_2]
 		push	160h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -19270,7 +19245,7 @@ loc_1AACA:
 loc_1AADD:
 		push	[bp+var_2]
 		push	170h
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
@@ -19520,20 +19495,20 @@ arg_0		= word ptr  6
 		cmp	byte_35B28, 0
 		jnz	loc_1AE0A
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		jge	short loc_1ACA1
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		imul	ax, -1
 		jmp	short loc_1ACA8
 ; ---------------------------------------------------------------------------
 
 loc_1ACA1:
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 
 loc_1ACA8:
-		cmp	ax, 18h
+		cmp	ax, 24
 		jge	loc_1AE0A
 		mov	ax, point_36C28.y
 		add	ax, -368
@@ -19559,17 +19534,17 @@ loc_1ACD7:
 		cmp	si, 64h	; 'd'
 		jge	loc_1AD81
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		jge	short loc_1ACF3
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		imul	ax, -1
 		jmp	short loc_1ACFA
 ; ---------------------------------------------------------------------------
 
 loc_1ACF3:
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 
 loc_1ACFA:
 		cmp	ax, 40
@@ -19590,10 +19565,10 @@ loc_1AD14:
 loc_1AD1A:
 		cmp	ax, 20h	; ' '
 		jge	loc_1AE0A
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		sub	ax, point_36C28.x
 		jg	short loc_1AD5E
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		sub	ax, point_36C28.x
 		jnz	short loc_1AD66
 		mov	word_34A7C, 0
@@ -19635,17 +19610,17 @@ loc_1AD6C:
 
 loc_1AD81:
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		jge	short loc_1AD96
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		imul	ax, -1
 		jmp	short loc_1AD9D
 ; ---------------------------------------------------------------------------
 
 loc_1AD96:
 		mov	ax, point_36C28.x
-		sub	ax, x_36C26
+		sub	ax, _player_left
 
 loc_1AD9D:
 		cmp	ax, 40
@@ -19722,7 +19697,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		call	_egc_copy_rect_1_to_0 c, x_36C26, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
 		push	3
 		push	point_36C28.y
 		push	point_36C28.x
@@ -19745,7 +19720,7 @@ loc_1AE4F:
 		add	ax, 56h	; 'V'
 		push	ax
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		xor	si, si
@@ -19774,7 +19749,7 @@ loc_1AE85:
 		pop	cx
 		push	(48 shl 16) or 48
 		push	352
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		call	_egc_copy_rect_1_to_0
@@ -19790,33 +19765,33 @@ loc_1AE85:
 		push	0
 		call	sub_19E48
 		pop	cx
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 160
 		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 608
+		cmp	[bp+var_2], PLAYER_LEFT_MAX
 		jl	short loc_1AEDE
-		mov	[bp+var_2], 608
+		mov	[bp+var_2], PLAYER_LEFT_MAX
 
 loc_1AEDE:
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, -160
 		mov	[bp+var_4], ax
-		cmp	[bp+var_4], 0
+		cmp	[bp+var_4], PLAYER_LEFT_MIN
 		jge	short loc_1AEF2
-		mov	[bp+var_4], 0
+		mov	[bp+var_4], PLAYER_LEFT_MIN
 
 loc_1AEF2:
-		mov	di, x_36C26
+		mov	di, _player_left
 		xor	si, si
 		jmp	loc_1AFC8
 ; ---------------------------------------------------------------------------
 
 loc_1AEFB:
-		call	_egc_copy_rect_1_to_0 c, x_36C26, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
 		call	_egc_copy_rect_1_to_0 c, di, 368, large (32 shl 16) or 32
 		cmp	si, 0Ah
 		jge	short loc_1AF2C
-		mov	ax, 10h
+		mov	ax, 16
 		jmp	short loc_1AF38
 ; ---------------------------------------------------------------------------
 
@@ -19828,7 +19803,7 @@ loc_1AF2C:
 		idiv	bx
 
 loc_1AF38:
-		add	x_36C26, ax
+		add	_player_left, ax
 		cmp	si, 0Ah
 		jge	short loc_1AF46
 		mov	ax, 0FFF0h
@@ -19844,9 +19819,9 @@ loc_1AF46:
 
 loc_1AF52:
 		add	di, ax
-		cmp	x_36C26, 608
+		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1AF62
-		mov	x_36C26, 608
+		mov	_player_left, PLAYER_LEFT_MAX
 
 loc_1AF62:
 		or	di, di
@@ -19866,7 +19841,7 @@ loc_1AF68:
 		add	dx, 54h	; 'T'
 		push	dx
 		push	170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		add	sp, 6
 		mov	ax, si
@@ -19902,7 +19877,7 @@ loc_1AFC0:
 loc_1AFC8:
 		cmp	si, 1Eh
 		jl	loc_1AEFB
-		call	_egc_copy_rect_1_to_0 c, x_36C26, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
 		call	_egc_copy_rect_1_to_0 c, di, 368, large (32 shl 16) or 32
 		mov	ax, _rem_lives
 		inc	ax
@@ -19942,7 +19917,7 @@ loc_1B033:
 		retf
 sub_1AE0D	endp
 
-main_27_TEXT	ends
+main_27__TEXT	ends
 
 ; ===========================================================================
 
@@ -20539,21 +20514,21 @@ sub_1B58F	proc far
 		add	sp, 10h
 		mov	ax, point_3982A.x
 		add	ax, 4
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jge	short loc_1B5F1
 		mov	ax, point_3982A.x
 		add	ax, 20
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jg	short loc_1B609
 
 loc_1B5F1:
 		mov	ax, point_3985C.x
 		add	ax, 4
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jge	short loc_1B60E
 		mov	ax, point_3985C.x
 		add	ax, 44
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jle	short loc_1B60E
 
 loc_1B609:
@@ -20583,21 +20558,21 @@ loc_1B60E:
 		add	sp, 10h
 		mov	ax, point_3988E.x
 		add	ax, 4
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jge	short loc_1B66D
 		mov	ax, point_3988E.x
-		add	ax, 14h
-		cmp	ax, x_36C26
+		add	ax, 20
+		cmp	ax, _player_left
 		jg	short loc_1B685
 
 loc_1B66D:
 		mov	ax, point_398C0.x
 		add	ax, 4
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jge	short loc_1B68A
 		mov	ax, point_398C0.x
-		add	ax, 14h
-		cmp	ax, x_36C26
+		add	ax, 20
+		cmp	ax, _player_left
 		jle	short loc_1B68A
 
 loc_1B685:
@@ -20617,11 +20592,11 @@ loc_1B68A:
 		add	sp, 8
 		mov	ax, point_398F2.x
 		add	ax, 4
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jge	short loc_1B6CB
 		mov	ax, point_398F2.x
-		add	ax, 14h
-		cmp	ax, x_36C26
+		add	ax, 20
+		cmp	ax, _player_left
 		jle	short loc_1B6CB
 		mov	_done, 1
 
@@ -21373,7 +21348,7 @@ loc_1BEC0:
 		add	sp, 18h
 		mov	ax, point_3982A.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF11
 		mov	word_3984E, 4
@@ -21383,7 +21358,7 @@ loc_1BEC0:
 loc_1BF11:
 		mov	ax, point_3982A.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF2A
@@ -21397,7 +21372,7 @@ loc_1BF2A:
 loc_1BF30:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF47
 		mov	word_39880, 4
@@ -21407,7 +21382,7 @@ loc_1BF30:
 loc_1BF47:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF60
@@ -21585,9 +21560,9 @@ loc_1C0CA:
 		call	sub_16733
 		add	sp, 18h
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		sub	ax, x_36C26
-		cmp	ax, 20h	; ' '
+		add	ax, 32
+		sub	ax, _player_left
+		cmp	ax, 32
 		jle	short loc_1C11B
 		mov	word_398B2, 4
 		jmp	short loc_1C13A
@@ -21595,10 +21570,10 @@ loc_1C0CA:
 
 loc_1C11B:
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		mov	dx, x_36C26
+		add	ax, 32
+		mov	dx, _player_left
 		sub	dx, ax
-		cmp	dx, 20h	; ' '
+		cmp	dx, 32
 		jle	short loc_1C134
 		mov	word_398B2, 5
 		jmp	short loc_1C13A
@@ -21610,7 +21585,7 @@ loc_1C134:
 loc_1C13A:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C151
 		mov	word_398E4, 4
@@ -21620,7 +21595,7 @@ loc_1C13A:
 loc_1C151:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C16A
@@ -21663,8 +21638,8 @@ loc_1C1AF:
 		shl	dx, 2
 		inc	dx
 		mov	word_39E08, dx
-		mov	ax, x_36C26
-		add	ax, 0FFF8h
+		mov	ax, _player_left
+		add	ax, -8
 		mov	word_39E0A, ax
 		mov	ax, RES_Y
 		sub	ax, point_3988E.y
@@ -21975,7 +21950,7 @@ loc_1C493:
 		add	sp, 18h
 		mov	ax, point_3982A.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C4EC
 		mov	word_3984E, 4
@@ -21985,7 +21960,7 @@ loc_1C493:
 loc_1C4EC:
 		mov	ax, point_3982A.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C505
@@ -21999,7 +21974,7 @@ loc_1C505:
 loc_1C50B:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C522
 		mov	word_39880, 4
@@ -22009,7 +21984,7 @@ loc_1C50B:
 loc_1C522:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C53B
@@ -22304,9 +22279,9 @@ loc_1C7E4:
 		call	sub_16733
 		add	sp, 18h
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		sub	ax, x_36C26
-		cmp	ax, 20h	; ' '
+		add	ax, 32
+		sub	ax, _player_left
+		cmp	ax, 32
 		jle	short loc_1C835
 		mov	word_398B2, 4
 		jmp	short loc_1C854
@@ -22314,10 +22289,10 @@ loc_1C7E4:
 
 loc_1C835:
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		mov	dx, x_36C26
+		add	ax, 32
+		mov	dx, _player_left
 		sub	dx, ax
-		cmp	dx, 20h	; ' '
+		cmp	dx, 32
 		jle	short loc_1C84E
 		mov	word_398B2, 5
 		jmp	short loc_1C854
@@ -22329,7 +22304,7 @@ loc_1C84E:
 loc_1C854:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C86B
 		mov	word_398E4, 4
@@ -22339,7 +22314,7 @@ loc_1C854:
 loc_1C86B:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C884
@@ -22380,8 +22355,8 @@ loc_1C8C2:
 		shl	dx, 2
 		inc	dx
 		mov	word_39E08, dx
-		mov	ax, x_36C26
-		add	ax, 0FFF8h
+		mov	ax, _player_left
+		add	ax, -8
 		mov	word_39E0A, ax
 		mov	ax, 190h
 		sub	ax, point_3988E.y
@@ -23113,7 +23088,7 @@ loc_1D08C:
 		add	sp, 0Ch
 		mov	ax, point_3982A.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D116
 		mov	word_3984E, 4
@@ -23123,7 +23098,7 @@ loc_1D08C:
 loc_1D116:
 		mov	ax, point_3982A.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D12F
@@ -23137,7 +23112,7 @@ loc_1D12F:
 loc_1D135:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D14C
 		mov	word_39880, 4
@@ -23147,7 +23122,7 @@ loc_1D135:
 loc_1D14C:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D165
@@ -23160,9 +23135,9 @@ loc_1D165:
 
 loc_1D16B:
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		sub	ax, x_36C26
-		cmp	ax, 20h	; ' '
+		add	ax, 32
+		sub	ax, _player_left
+		cmp	ax, 32
 		jle	short loc_1D182
 		mov	word_398B2, 4
 		jmp	short loc_1D1A1
@@ -23170,10 +23145,10 @@ loc_1D16B:
 
 loc_1D182:
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		mov	dx, x_36C26
+		add	ax, 32
+		mov	dx, _player_left
 		sub	dx, ax
-		cmp	dx, 20h	; ' '
+		cmp	dx, 32
 		jle	short loc_1D19B
 		mov	word_398B2, 5
 		jmp	short loc_1D1A1
@@ -23185,7 +23160,7 @@ loc_1D19B:
 loc_1D1A1:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1B8
 		mov	word_398E4, 4
@@ -23195,7 +23170,7 @@ loc_1D1A1:
 loc_1D1B8:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D1D1
@@ -23209,7 +23184,7 @@ loc_1D1D1:
 loc_1D1D7:
 		mov	ax, point_398F2.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1EE
 		mov	word_39916, 4
@@ -23219,7 +23194,7 @@ loc_1D1D7:
 loc_1D1EE:
 		mov	ax, point_398F2.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D207
@@ -23240,7 +23215,7 @@ loc_1D21D:
 		cmp	word_39E08, 0
 		jnz	short loc_1D230
 		mov	word_39E08, 1
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	word_39E0A, ax
 
 loc_1D230:
@@ -24032,7 +24007,7 @@ loc_1DA05:
 		jz	short loc_1DA42
 		mov	ax, point_3982A.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA23
 		mov	word_3984E, 4
@@ -24042,7 +24017,7 @@ loc_1DA05:
 loc_1DA23:
 		mov	ax, point_3982A.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA3C
@@ -24058,7 +24033,7 @@ loc_1DA42:
 		jz	short loc_1DA7F
 		mov	ax, point_3985C.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA60
 		mov	word_39880, 4
@@ -24068,7 +24043,7 @@ loc_1DA42:
 loc_1DA60:
 		mov	ax, point_3985C.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA79
@@ -24083,9 +24058,9 @@ loc_1DA7F:
 		test	byte ptr word_39E14, 4
 		jz	short loc_1DABC
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		sub	ax, x_36C26
-		cmp	ax, 20h	; ' '
+		add	ax, 32
+		sub	ax, _player_left
+		cmp	ax, 32
 		jle	short loc_1DA9D
 		mov	word_398B2, 4
 		jmp	short loc_1DABC
@@ -24093,10 +24068,10 @@ loc_1DA7F:
 
 loc_1DA9D:
 		mov	ax, point_3988E.x
-		add	ax, 20h	; ' '
-		mov	dx, x_36C26
+		add	ax, 32
+		mov	dx, _player_left
 		sub	dx, ax
-		cmp	dx, 20h	; ' '
+		cmp	dx, 32
 		jle	short loc_1DAB6
 		mov	word_398B2, 5
 		jmp	short loc_1DABC
@@ -24110,7 +24085,7 @@ loc_1DABC:
 		jz	short loc_1DAF9
 		mov	ax, point_398C0.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DADA
 		mov	word_398E4, 4
@@ -24120,7 +24095,7 @@ loc_1DABC:
 loc_1DADA:
 		mov	ax, point_398C0.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DAF3
@@ -24136,7 +24111,7 @@ loc_1DAF9:
 		jz	short loc_1DB36
 		mov	ax, point_398F2.x
 		add	ax, 32
-		sub	ax, x_36C26
+		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DB17
 		mov	word_39916, 4
@@ -24146,7 +24121,7 @@ loc_1DAF9:
 loc_1DB17:
 		mov	ax, point_398F2.x
 		add	ax, 32
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DB30
@@ -24298,7 +24273,7 @@ loc_1DC6D:
 		push	ds
 		push	offset x_39E02
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_39DFC.y
 		push	point_39DFC.x
 		call	_vector_between
@@ -24369,7 +24344,7 @@ loc_1DDAD:
 		push	ds
 		push	offset x_39E02
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_39DFC.y
 		push	point_39DFC.x
 		call	_vector_between
@@ -24392,7 +24367,7 @@ loc_1DDD4:
 		push	ds
 		push	offset x_39E02
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_39DFC.y
 		push	point_39DFC.x
 		call	_vector_between
@@ -25860,8 +25835,8 @@ loc_1EA31:
 		add	bx, bx
 		lea	ax, [bp+var_8]
 		add	bx, ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, ss:[bx]
 		push	ax
 		call	iatan2
@@ -26039,7 +26014,7 @@ loc_1EB64:
 loc_1EBC7:
 		cmp	word_3A6CA, 0E0h
 		jnz	short loc_1EBD8
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	x_39E20, ax
 		jmp	loc_1EC70
 ; ---------------------------------------------------------------------------
@@ -27022,14 +26997,14 @@ loc_1F495:
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5497h]
-		add	ax, 0FFD8h
-		cmp	ax, x_36C26
+		add	ax, -40
+		cmp	ax, _player_left
 		jge	short loc_1F4ED
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5497h]
 		add	ax, 8
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jle	short loc_1F4ED
 		mov	_done, 1
 
@@ -27601,8 +27576,8 @@ loc_1F9DA:
 		push	140007h
 		push	word_39E18
 		push	190h
-		mov	ax, x_36C26
-		add	ax, 0Eh
+		mov	ax, _player_left
+		add	ax, 14
 		push	ax
 		mov	bx, [bp+var_2]
 		add	bx, bx
@@ -32388,14 +32363,14 @@ loc_221D4:
 		add	bx, ax
 		mov	ax, es:[bx]
 		sar	ax, 4
-		mov	dx, x_36C26
-		add	dx, 0FFF8h
+		mov	dx, _player_left
+		add	dx, -8
 		cmp	ax, dx
 		jle	short loc_2222B
 		mov	ax, es:[bx]
 		sar	ax, 4
-		mov	dx, x_36C26
-		add	dx, 18h
+		mov	dx, _player_left
+		add	dx, 24
 		cmp	ax, dx
 		jge	short loc_2222B
 		mov	ax, es:[bx+64h]
@@ -33551,7 +33526,7 @@ loc_22ABA:
 		push	ds
 		push	offset point_3A389.x
 		push	368
-		push	x_36C26
+		push	_player_left
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -33597,10 +33572,10 @@ loc_22B60:
 		cmp	word_34A78, 0
 		jnz	short loc_22B86
 		mov	ax, point_3982A.x
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jg	short loc_22B86
-		add	ax, 40h
-		cmp	ax, x_36C26
+		add	ax, 64
+		cmp	ax, _player_left
 		jl	short loc_22B86
 		cmp	point_3982A.y, 272
 		jl	short loc_22B86
@@ -35089,12 +35064,12 @@ arg_2		= word ptr  6
 		cmp	word_34A78, 1
 		jz	short loc_2370F
 		mov	ax, dx
-		add	ax, 0FFF0h
-		cmp	ax, x_36C26
+		add	ax, -16
+		cmp	ax, _player_left
 		jg	short loc_2370F
 		mov	ax, dx
 		add	ax, [bp+arg_0]
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jl	short loc_2370F
 		mov	_done, 1
 		mov	ax, 1
@@ -35958,8 +35933,8 @@ loc_23E9A:
 		add	ax, 0E0h
 		mov	[bp+var_4], ax
 		push	0A4h ; '?'
-		mov	ax, x_36C26
-		add	ax, 0FED4h
+		mov	ax, _player_left
+		add	ax, -300
 		push	ax
 		call	iatan2
 		mov	byte ptr [bp+var_7], al
@@ -36216,8 +36191,8 @@ sub_240DE	proc near
 		push	80014h
 		push	0A0032h
 		push	190h
-		mov	ax, x_36C26
-		add	ax, 3Ch	; '<'
+		mov	ax, _player_left
+		add	ax, 60
 		push	ax
 		push	930133h
 		push	ds
@@ -36226,8 +36201,8 @@ sub_240DE	proc near
 		push	80014h
 		push	0A0032h
 		push	190h
-		mov	ax, x_36C26
-		add	ax, 0FFC4h
+		mov	ax, _player_left
+		add	ax, -60
 		push	ax
 		push	930150h
 		push	ds
@@ -36472,8 +36447,8 @@ sub_24316	proc near
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36495,8 +36470,8 @@ loc_24378:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36518,8 +36493,8 @@ loc_243B7:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36541,8 +36516,8 @@ loc_243F6:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36564,8 +36539,8 @@ loc_24434:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36587,8 +36562,8 @@ loc_24472:
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
-		add	dx, x_36C26
-		add	dx, 0FFC4h
+		add	dx, _player_left
+		add	dx, -60
 		push	dx
 		push	930133h
 		push	ds
@@ -36984,7 +36959,7 @@ loc_24857:
 
 loc_24871:
 		push	400170h
-		push	x_36C26
+		push	_player_left
 		call	sub_197E1
 		push	3
 		push	point_36C28.y
@@ -41603,7 +41578,7 @@ loc_272E1:
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	word_3A76D, ax
 
 loc_27317:
@@ -41748,12 +41723,12 @@ loc_274C6:
 		cmp	word_34A78, 0
 		jnz	short loc_274F2
 		mov	ax, word_3A76D
-		add	ax, 68h	; 'h'
-		cmp	ax, x_36C26
+		add	ax, 104
+		cmp	ax, _player_left
 		jle	short loc_274E5
 		mov	ax, word_3A76D
-		add	ax, 0FF80h
-		cmp	ax, x_36C26
+		add	ax, -128
+		cmp	ax, _player_left
 		jl	short loc_274F2
 
 loc_274E5:
@@ -42286,7 +42261,7 @@ loc_27A65:
 		push	80014h
 		push	70032h
 		push	190h
-		push	x_36C26
+		push	_player_left
 		mov	ax, point_3982A.y
 		add	ax, 28
 		push	ax
@@ -44432,8 +44407,8 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		mov	ax, x_36C26
-		add	ax, 0FFF8h
+		mov	ax, _player_left
+		add	ax, -8
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
 		fcompp
@@ -44445,7 +44420,7 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
@@ -46474,7 +46449,7 @@ loc_2A031:
 		push	ds
 		push	offset x_3AF3C
 		push	380
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 12
 		push	ax
 		push	(64 shl 16) or 340
@@ -46681,13 +46656,13 @@ loc_2A2BA:
 		jnz	short loc_2A2EB
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		cmp	ax, x_36C26
+		add	ax, 32
+		cmp	ax, _player_left
 		jle	short loc_2A2EB
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		add	ax, 0FFC0h
-		cmp	ax, x_36C26
+		add	ax, -64
+		cmp	ax, _player_left
 		jge	short loc_2A2EB
 		cmp	word_35E03, 3
 		jl	short loc_2A2EB
@@ -47114,11 +47089,11 @@ loc_2A6B0:
 		push	ds
 		push	offset x_3B03D
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_3B037.y
 		push	point_3B037.x
 		call	_vector_between
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	word_3B03F, ax
 		push	480044h
 		push	40003Ch
@@ -47130,7 +47105,7 @@ loc_2A6B0:
 		push	7
 		push	word_3A780
 		push	190h
-		push	x_36C26
+		push	_player_left
 		push	7801CCh
 		push	ds
 		push	offset unk_391A0
@@ -47191,7 +47166,7 @@ loc_2A79B:
 		push	ds
 		push	offset x_3B03D
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_3B037.y
 		push	point_3B037.x
 		call	_vector_between
@@ -47200,7 +47175,7 @@ loc_2A79B:
 		push	7
 		push	word_3A780
 		push	190h
-		push	x_36C26
+		push	_player_left
 		push	point_3B037.y
 		push	point_3B037.x
 		push	ds
@@ -47221,7 +47196,7 @@ loc_2A7FC:
 		push	ds
 		push	offset x_3B03D
 		push	RES_Y
-		push	x_36C26
+		push	_player_left
 		push	point_3B037.y
 		push	point_3B037.x
 		call	_vector_between
@@ -47230,7 +47205,7 @@ loc_2A7FC:
 		push	7
 		push	word_3A780
 		push	190h
-		push	x_36C26
+		push	_player_left
 		push	point_3B037.y
 		push	point_3B037.x
 		push	ds
@@ -48171,8 +48146,8 @@ loc_2B125:
 ; ---------------------------------------------------------------------------
 
 loc_2B14D:
-		mov	ax, x_36C26
-		add	ax, 10h
+		mov	ax, _player_left
+		add	ax, 16
 		sub	ax, word_3B04D
 		mov	[bp+var_4], ax
 		cwd
@@ -48195,9 +48170,9 @@ loc_2B14D:
 		add	sp, 14h
 
 loc_2B188:
-		mov	ax, x_36C26
-		add	ax, 10h
-		mov	dx, 27Fh
+		mov	ax, _player_left
+		add	ax, 16
+		mov	dx, (PLAYFIELD_RIGHT - 1)
 		sub	dx, word_3B04D
 		sub	ax, dx
 		mov	[bp+var_6], ax
@@ -49758,7 +49733,7 @@ loc_2C06B:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jle	short loc_2C0BC
 		mov	bx, si
 		add	bx, bx
@@ -49766,8 +49741,8 @@ loc_2C06B:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		mov	dx, x_36C26
-		add	dx, 18h
+		mov	dx, _player_left
+		add	dx, 24
 		cmp	ax, dx
 		jge	short loc_2C0BC
 		cmp	word_34A78, 0
@@ -50573,7 +50548,7 @@ loc_2C8AE:
 		jb	short loc_2C868
 		mov	point_36C28.x, 600
 		mov	point_36C28.y, 280
-		mov	x_36C26, 304
+		mov	_player_left, PLAYER_LEFT_START
 		fld	dbl_35FAA
 		fstp	dbl_34A9C
 		fwait
@@ -52341,8 +52316,8 @@ loc_2D935:
 		mov	ax, 180h
 		sub	ax, word_3B46B
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B457
 		push	ax
 		call	iatan2
@@ -52441,7 +52416,7 @@ loc_2DA02:
 		jnz	short loc_2DA39
 		mov	bx, si
 		add	bx, bx
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	[bx+6AEBh], ax
 
 loc_2DA39:
@@ -52548,12 +52523,12 @@ loc_2DAF6:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, [bx+6AB7h]
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jle	short loc_2DB6C
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
-		add	ax, 18h
+		mov	ax, _player_left
+		add	ax, 24
 		cmp	[bx+6AB7h], ax
 		jge	short loc_2DB6C
 		mov	bx, si
@@ -52599,8 +52574,8 @@ loc_2DB95:
 		mov	ax, 180h
 		sub	ax, word_3B475
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B461
 		push	ax
 		call	iatan2
@@ -53030,8 +53005,8 @@ loc_2DF55:
 		or	dx, dx
 		jnz	short loc_2DFBA
 		push	0B8h ; '?'
-		mov	ax, x_36C26
-		add	ax, 0FEEAh
+		mov	ax, _player_left
+		add	ax, -278
 		push	ax
 		call	iatan2
 		mov	byte ptr word_3B49C, al
@@ -53123,8 +53098,8 @@ loc_2E01D:
 		mov	ax, 180h
 		sub	ax, word_3B4C9
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B4A1
 		push	ax
 		call	iatan2
@@ -53235,7 +53210,7 @@ loc_2E106:
 		jnz	short loc_2E13D
 		mov	bx, si
 		add	bx, bx
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		mov	[bx+6B69h], ax
 
 loc_2E13D:
@@ -53342,12 +53317,12 @@ loc_2E1FA:
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, [bx+6B01h]
-		cmp	ax, x_36C26
+		cmp	ax, _player_left
 		jle	short loc_2E270
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	ax, x_36C26
-		add	ax, 18h
+		mov	ax, _player_left
+		add	ax, 24
 		cmp	[bx+6B01h], ax
 		jge	short loc_2E270
 		mov	bx, si
@@ -53393,8 +53368,8 @@ loc_2E299:
 		mov	ax, 180h
 		sub	ax, word_3B4D3
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B4AB
 		push	ax
 		call	iatan2
@@ -53448,8 +53423,8 @@ loc_2E311:
 		mov	ax, 180h
 		sub	ax, word_3B4DD
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B4B5
 		push	ax
 		call	iatan2
@@ -53503,8 +53478,8 @@ loc_2E38B:
 		mov	ax, 180h
 		sub	ax, word_3B4E7
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, word_3B4BF
 		push	ax
 		call	iatan2
@@ -54548,14 +54523,14 @@ loc_2EED9:
 loc_2EEFE:
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2EF13
 		mov	ax, 1
 		jmp	short loc_2EF22
 ; ---------------------------------------------------------------------------
 
 loc_2EF13:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2EF1F
 		xor	ax, ax
 		jmp	short loc_2EF22
@@ -54678,14 +54653,14 @@ loc_2F02C:
 		jnz	loc_2F136
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F04C
 		mov	ax, 1
 		jmp	short loc_2F05B
 ; ---------------------------------------------------------------------------
 
 loc_2F04C:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F058
 		xor	ax, ax
 		jmp	short loc_2F05B
@@ -54785,14 +54760,14 @@ loc_2F136:
 		jnz	loc_2F27C
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F156
 		mov	ax, 1
 		jmp	short loc_2F165
 ; ---------------------------------------------------------------------------
 
 loc_2F156:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F162
 		xor	ax, ax
 		jmp	short loc_2F165
@@ -54922,14 +54897,14 @@ loc_2F27C:
 		jnz	loc_2F386
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F29C
 		mov	ax, 1
 		jmp	short loc_2F2AB
 ; ---------------------------------------------------------------------------
 
 loc_2F29C:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F2A8
 		xor	ax, ax
 		jmp	short loc_2F2AB
@@ -55029,14 +55004,14 @@ loc_2F386:
 		jnz	loc_2F4D7
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F3A6
 		mov	ax, 1
 		jmp	short loc_2F3B5
 ; ---------------------------------------------------------------------------
 
 loc_2F3A6:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F3B2
 		xor	ax, ax
 		jmp	short loc_2F3B5
@@ -55165,14 +55140,14 @@ loc_2F4D7:
 		jnz	loc_2F600
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F4F7
 		mov	ax, 1
 		jmp	short loc_2F506
 ; ---------------------------------------------------------------------------
 
 loc_2F4F7:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F503
 		xor	ax, ax
 		jmp	short loc_2F506
@@ -55281,14 +55256,14 @@ loc_2F600:
 		jnz	loc_2FC40
 		inc	word_3A6CA
 		inc	word_3B52B
-		cmp	x_36C26, 198
+		cmp	_player_left, 198
 		jge	short loc_2F620
 		mov	ax, 1
 		jmp	short loc_2F62F
 ; ---------------------------------------------------------------------------
 
 loc_2F620:
-		cmp	x_36C26, 396
+		cmp	_player_left, 396
 		jle	short loc_2F62C
 		xor	ax, ax
 		jmp	short loc_2F62F
@@ -56496,8 +56471,8 @@ arg_E		= byte ptr  14h
 		mov	ax, 180h
 		sub	ax, [bp+arg_2]
 		push	ax
-		mov	ax, x_36C26
-		add	ax, 0Ch
+		mov	ax, _player_left
+		add	ax, 12
 		sub	ax, [bp+arg_0]
 		push	ax
 		call	iatan2
@@ -56575,7 +56550,7 @@ loc_3015A:
 		pushd	[bp+arg_4]
 		pushd	[bp+arg_0]
 		push	384
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	[bp+arg_12]
@@ -57268,7 +57243,7 @@ loc_306B4:
 		add	ax, 10h
 		push	ax
 		push	384
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		mov	ax, [bx+4]
@@ -57383,7 +57358,7 @@ loc_30809:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	384
-		mov	ax, x_36C26
+		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		mov	ax, [bx+4]
@@ -57625,17 +57600,17 @@ loc_30A47:
 loc_30A5E:
 		cmp	byte_34A57, 1
 		jnz	loc_30AF6
-		mov	ax, x_36C26
-		add	ax, 0FFF8h
+		mov	ax, _player_left
+		add	ax, -8
 		mov	dx, di
 		sub	dx, ax
 		cmp	dx, 30h	; '0'
 		jge	short loc_30AA0
-		mov	ax, x_36C26
-		add	ax, 0FFF8h
+		mov	ax, _player_left
+		add	ax, -8
 		mov	dx, di
 		sub	dx, ax
-		cmp	dx, 0FFF8h
+		cmp	dx, -8
 		jle	short loc_30AA0
 		mov	ax, [bp+arg_6]
 		add	ax, 0FEA0h
@@ -57658,8 +57633,8 @@ loc_30AA2:
 		mov	bx, word_3B530
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, x_36C26
-		add	dx, 0Ch
+		mov	dx, _player_left
+		add	dx, 12
 		cmp	ax, dx
 		jg	short loc_30AC2
 		mov	[bp+var_1], 80h	; '?'
@@ -58193,14 +58168,14 @@ sub_30F06	proc far
 		mov	bx, word_3B530
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, x_36C26
+		mov	dx, _player_left
 		add	dx, 4
 		cmp	ax, dx
 		jl	short loc_30F6C
 		mov	ax, [bx+2]
 		sar	ax, 4
-		mov	dx, x_36C26
-		add	dx, 14h
+		mov	dx, _player_left
+		add	dx, 20
 		cmp	ax, dx
 		jg	short loc_30F6C
 		mov	ax, [bx+4]
@@ -59470,9 +59445,7 @@ byte_36C1E	db ?
 public _mode_debug
 _mode_debug	db ?
 dword_36C20	dd ?
-public _PLAYER_INVINCIBILITY_TIME
-_player_invincibility_time	dw ?
-x_36C26	dw ?
+include th01/main/player/player[bss].asm
 point_36C28	Point <?>
 word_36C2C	dw ?
 		db 1275 dup(?)
@@ -59518,7 +59491,8 @@ word_387DA	dw ?
 		db 46 dup(?)
 dword_3880A	dd ?
 word_3880E	dw ?
-word_38810	dw ?
+public _player_left_prev
+_player_left_prev	dw ?
 include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
