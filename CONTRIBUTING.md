@@ -27,6 +27,8 @@ binary, as compared using [mzdiff].** The only allowed exceptions are:
 1) different encodings of identical x86 instructions within code segments
 2) padding with `00` bytes at the end of the file.
 
+These cases should gradually be removed as development goes along, though.
+
 ## Taste issues
 
 * Use tabs for indentation.

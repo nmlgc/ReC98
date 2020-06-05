@@ -68,6 +68,7 @@ main_01 group main_01_TEXT, main_01__TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
+main_38 group main_38_TEXT, main_38__TEXT
 
 ; ===========================================================================
 
@@ -55883,7 +55884,7 @@ main_37_TEXT	ends
 
 ; Segment type:	Pure code
 main_38_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_38_TEXT
+		assume cs:main_38
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -57453,80 +57454,10 @@ off_30895	dw offset loc_30656
 		dw offset loc_30773
 		dw offset loc_307A7
 		dw offset loc_30809
+main_38_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_308A1	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	ax, [bp+arg_0]
-		and	ax, 7
-		shl	ax, 4
-		mov	bx, [bp+arg_4]
-		shl	bx, 7
-		add	ax, bx
-		add	ax, 172Fh
-		mov	si, ax
-		mov	cx, 8
-
-loc_308D9:
-		movsw
-		add	di, 4Eh	; 'N'
-		cmp	di, 7D00h
-		jge	short loc_308E5
-		loop	loc_308D9
-
-loc_308E5:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_308A1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_308E9	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		call	_grcg_setcolor_rmw stdcall, 7
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_308A1
-		add	sp, 8
-		call	_grcg_off_func
-		pop	bp
-		retf
-sub_308E9	endp
-
+main_38__TEXT	segment	byte public 'CODE' use16
+	extern _pellet_render:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -58031,7 +57962,7 @@ loc_30D42:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		call	sub_308E9
+		call	_pellet_render
 		add	sp, 6
 		jmp	short loc_30D66
 ; ---------------------------------------------------------------------------
@@ -58381,7 +58312,7 @@ sub_30F70	endp
 
 ; ---------------------------------------------------------------------------
 		dw 0
-main_38_TEXT	ends
+main_38__TEXT	ends
 
 	.data
 
@@ -59507,217 +59438,7 @@ word_360CA	dw 0
 byte_360CC	db 0
 word_360CD	dw 0
 include th01/sprites/pellet.asm
-		db  18h
-		db    0
-		db  24h	; $
-		db    0
-		db  42h	; B
-		db    0
-		db  81h
-		db    0
-		db  81h
-		db    0
-		db  42h	; B
-		db    0
-		db  24h	; $
-		db    0
-		db  18h
-		db    0
-		db  0Ch
-		db    0
-		db  12h
-		db    0
-		db  21h	; !
-		db    0
-		db  40h
-		db  80h
-		db  40h
-		db  80h
-		db  21h	; !
-		db    0
-		db  12h
-		db    0
-		db  0Ch
-		db    0
-		db    6
-		db    0
-		db    9
-		db    0
-		db  10h
-		db  80h
-		db  20h
-		db  40h
-		db  20h
-		db  40h
-		db  10h
-		db  80h
-		db    9
-		db    0
-		db    6
-		db    0
-		db    3
-		db    0
-		db    4
-		db  80h
-		db    8
-		db  40h
-		db  10h
-		db  20h
-		db  10h
-		db  20h
-		db    8
-		db  40h
-		db    4
-		db  80h
-		db    3
-		db    0
-		db    1
-		db  80h
-		db    2
-		db  40h
-		db    4
-		db  20h
-		db    8
-		db  10h
-		db    8
-		db  10h
-		db    4
-		db  20h
-		db    2
-		db  40h
-		db    1
-		db  80h
-		db    0
-		db 0C0h	; À
-		db    1
-		db  20h
-		db    2
-		db  10h
-		db    4
-		db    8
-		db    4
-		db    8
-		db    2
-		db  10h
-		db    1
-		db  20h
-		db    0
-		db 0C0h	; À
-		db    0
-		db  60h
-		db    0
-		db  90h
-		db    1
-		db    8
-		db    2
-		db    4
-		db    2
-		db    4
-		db    1
-		db    8
-		db    0
-		db  90h
-		db    0
-		db  60h
-		db    0
-		db  30h	; 0
-		db    0
-		db  48h	; H
-		db    0
-		db  84h
-		db    1
-		db    2
-		db    1
-		db    2
-		db    0
-		db  84h
-		db    0
-		db  48h	; H
-		db    0
-		db  30h	; 0
-		db    0
-		db    0
-		db  24h	; $
-		db    0
-		db  42h	; B
-		dd    0
-		db    0
-		db  42h	; B
-		db    0
-		db  24h	; $
-		dd    0
-		db    0
-		db  12h
-		db    0
-		db  21h	; !
-		dd    0
-		db    0
-		db  21h	; !
-		db    0
-		db  12h
-		dd    0
-		db    0
-		db    9
-		db    0
-		db  10h
-		db  80h
-		dd    0
-		db  10h
-		db  80h
-		db    9
-		dd    0
-		db    0
-		db    4
-		db  80h
-		db    8
-		db  40h
-		dd    0
-		db    8
-		db  40h
-		db    4
-		db  80h
-		dd    0
-		db    2
-		db  40h
-		db    4
-		db  20h
-		dd    0
-		db    4
-		db  20h
-		db    2
-		db  40h
-		dd    0
-		db    1
-		db  20h
-		db    2
-		db  10h
-		dd    0
-		db    2
-		db  10h
-		db    1
-		db  20h
-		dd    0
-		db    0
-		db  90h
-		db    1
-		db    8
-		dd    0
-		db    1
-		db    8
-		db    0
-		db  90h
-		dd    0
-		db    0
-		db  48h	; H
-		db    0
-		db  84h
-		dd    0
-		db    0
-		db  84h
-		db    0
-		db  48h	; H
-		db    0
-		db    0
+include th01/sprites/pellet_d.asm
 flt_3624F	dd 1.5
 		db 0
 _INIT_	segment word public 'INITDATA' use16
