@@ -4826,7 +4826,7 @@ main_06_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_black_out:proc
 	extern _z_palette_white_in:proc
 	extern _graph_r_vline:proc
-	extern _graph_r_line_from_1:proc
+	extern _graph_r_line_unput:proc
 	extern _graph_r_line_patterned:proc
 	extern _graph_r_line:proc
 	extern _text_extent_fx:proc
@@ -5102,7 +5102,7 @@ sub_114CA	proc far
 
 		push	bp
 		mov	bp, sp
-		call	_graph_r_line_from_1 c, [bp+@@left], [bp+@@top], [bp+@@right], [bp+@@bottom]
+		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], [bp+@@right], [bp+@@bottom]
 		pop	bp
 		retf
 sub_114CA	endp
@@ -5793,8 +5793,8 @@ loc_11C08:
 sub_11A94	endp
 
 	extern _graph_2xscale_byterect_1_to_0_sl:proc
-	extern _graph_copy_hline_mask_1_to_0:proc
-	extern _egc_copy_wave_1_to_0:proc
+	extern _graph_hline_unput_masked:proc
+	extern _egc_wave_unput:proc
 main_13__TEXT	ends
 
 ; ===========================================================================
@@ -9159,7 +9159,7 @@ loc_153CE:
 		push	0
 
 loc_153E6:
-		call	_graph_copy_hline_mask_1_to_0
+		call	_graph_hline_unput_masked
 		add	sp, 0Ah
 		mov	[bp+var_12], 0
 		jmp	loc_1553C
@@ -13616,7 +13616,7 @@ loc_17C37:
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		inc	si
 
@@ -13641,7 +13641,7 @@ loc_17C72:
 		push	word ptr es:[bx]
 
 loc_17C9E:
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 
 loc_17CA3:
 		add	sp, 8
@@ -21219,7 +21219,7 @@ loc_1BD82:
 		mov	ax, point_3982A.x
 		add	ax, 28
 		push	ax
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		push	RES_Y
 		mov	ax, point_3985C.x
@@ -21249,7 +21249,7 @@ loc_1BDCD:
 		mov	ax, point_3988E.x
 		add	ax, 28
 		push	ax
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		push	RES_Y
 		mov	ax, point_398C0.x
@@ -21323,7 +21323,7 @@ loc_1BE9A:
 loc_1BEB1:
 		add	ax, 28
 		push	ax
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -23727,7 +23727,7 @@ loc_1D705:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -24512,7 +24512,7 @@ loc_1DFA4:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -26972,7 +26972,7 @@ loc_1F458:
 		add	bx, bx
 		push	word ptr [bx+5497h]
 		push	(200 shl 16) or 320
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 0Ah
 
 loc_1F495:
@@ -27945,7 +27945,7 @@ loc_1FD77:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -37487,7 +37487,7 @@ loc_24DA3:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -39173,7 +39173,7 @@ arg_2		= byte ptr  6
 		add	ax, point_3982A.y
 		add	ax, 48
 		mov	[bp+@@bottom], ax
-		call	_graph_r_line_from_1 c, [bp+@@left], [bp+@@top], [bp+@@right], ax
+		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], [bp+@@right], ax
 		leave
 		retn	4
 sub_25CFD	endp
@@ -42917,20 +42917,20 @@ loc_2802A:
 		push	word_39834
 		mov	ax, w_39832
 		shl	ax, 3
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		mov	ax, word_3A773
-		add	ax, 0FFFCh
+		add	ax, -4
 		imul	ax, 6
 		push	ax
 		mov	ax, 68h	; 'h'
 		sub	ax, word_3A773
 		push	ax
 		mov	ax, word_3A773
-		add	ax, 0FFFEh
+		add	ax, -2
 		push	ax
 		pushd	[point_3982A]
-		call	_egc_copy_wave_1_to_0
+		call	_egc_wave_unput
 		add	sp, 0Eh
 
 loc_28082:
@@ -42958,7 +42958,7 @@ loc_280AE:
 		push	word_39834
 		mov	ax, w_39832
 		shl	ax, 3
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		push	word_3A773
 		mov	ax, 64h	; 'd'
@@ -42970,7 +42970,7 @@ loc_280AE:
 
 loc_280D6:
 		pushd	[point_3982A]
-		call	_egc_copy_wave_1_to_0
+		call	_egc_wave_unput
 		mov	word_39856, 0
 		mov	word_3984E, 0
 		push	30000h
@@ -43497,7 +43497,7 @@ loc_285FD:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -43929,7 +43929,7 @@ loc_28967:
 		jl	short loc_2899B
 		cmp	point_35DBB.y, RES_Y
 		jge	short loc_2899B
-		call	_graph_r_line_from_1 c, [bp+@@left], [bp+@@top], point_35DBB.x, point_35DBB.y
+		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], point_35DBB.x, point_35DBB.y
 
 loc_2899B:
 		or	si, si
@@ -47824,7 +47824,7 @@ loc_2AE54:
 		add	ax, 2
 		push	ax
 		push	(120 shl 16) or 320
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		leave
 		retn
@@ -48124,7 +48124,7 @@ loc_2B0F7:
 		add	ax, 8
 		push	ax
 		push	(120 shl 16) or 320
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	word_3B04D, 0
 		jmp	loc_2B2B6
@@ -49006,7 +49006,7 @@ loc_2B97C:
 		push	ax
 		push	point_3B330.x
 		push	(185 shl 16) or 320
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		mov	ax, point_3B330.y
 		add	ax, 4
 		push	ax
@@ -49014,7 +49014,7 @@ loc_2B97C:
 		sub	ax, point_3B330.x
 		push	ax
 		push	(185 shl 16) or 320
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 22h
 		xor	si, si
 		jmp	short loc_2BA16
@@ -50533,7 +50533,7 @@ loc_2C868:
 		mov	bx, si
 		imul	bx, 45h
 		push	word ptr [bx+4808h]
-		call	_graph_r_line_from_1
+		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 45h
@@ -51157,7 +51157,7 @@ loc_2CE36:
 		jl	short loc_2CE7A
 		cmp	point_35FF4.y, RES_Y
 		jge	short loc_2CE7A
-		call	_graph_r_line_from_1 c, [bp+@@left], [bp+@@top], point_35FF4.x, point_35FF4.y
+		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], point_35FF4.x, point_35FF4.y
 
 loc_2CE7A:
 		or	si, si
@@ -53698,7 +53698,7 @@ loc_2E66E:
 		cmp	word_3A6CA, 168h
 		jnz	short loc_2E697
 		sub	point_3B511.y, 8
-		call	_graph_r_line_from_1 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y
+		call	_graph_r_line_unput c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y
 		mov	word_3A6CA, 0
 
 loc_2E697:

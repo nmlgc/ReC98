@@ -61,7 +61,7 @@ void graph_r_line_patterned(
 );
 
 // Recovers the pixels on the given arbitrary-angle line from page 1.
-void graph_r_line_from_1(int left, int top, int right, int bottom);
+void graph_r_line_unput(int left, int top, int right, int bottom);
 
 // Draws the outline of a rectangle.
 void graph_r_box(int left, int top, int right, int bottom, int col);

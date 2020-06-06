@@ -400,7 +400,7 @@ extern Point graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
 // regularly the given [col].
-extern bool graph_r_restore_from_1;
+extern bool graph_r_unput;
 // Not used for purely horizontal lines.
 extern dots16_t graph_r_pattern;
 
@@ -424,10 +424,10 @@ void graph_r_hline(int left, int right, int y, int col)
 	left_pixels = 0xFF >> (left & 7);
 	right_pixels = 0xFF << (7 - (right & 7));
 
-	if(!graph_r_restore_from_1) {
+	if(!graph_r_unput) {
 		grcg_setcolor_rmw(col);
 	}
-	if(graph_r_restore_from_1) {
+	if(graph_r_unput) {
 		egc_copy_rect_1_to_0(left, y, RES_X - left, 1);
 	} else {
 		if(full_bytes_to_put == 0) {
@@ -440,7 +440,7 @@ void graph_r_hline(int left, int right, int y, int col)
 			vram_row[full_bytes_to_put] = right_pixels;
 		}
 	}
-	if(!graph_r_restore_from_1) {
+	if(!graph_r_unput) {
 		grcg_off_func();
 	}
 }
@@ -458,7 +458,7 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	graph_r_last_line_end.x = x;
 	graph_r_last_line_end.y = bottom;
 
-	if(graph_r_restore_from_1) {
+	if(graph_r_unput) {
 		egc_copy_rect_1_to_0(x, top, sizeof(pattern) * 8, bottom - top);
 		return;
 	}
@@ -474,11 +474,11 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	grcg_off_func();
 }
 
-void graph_r_line_from_1(int left, int top, int right, int bottom)
+void graph_r_line_unput(int left, int top, int right, int bottom)
 {
-	graph_r_restore_from_1 = true;
+	graph_r_unput = true;
 	graph_r_line(left, top, right, bottom, 7);
-	graph_r_restore_from_1 = false;
+	graph_r_unput = false;
 }
 
 void graph_r_line_patterned(
@@ -538,7 +538,7 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 		/* Advanced past the VRAM cursor? */ \
 		if((x_cur >> 3) != x_vram || (y_vram != y_cur)) { \
 			vram_offset = (y_vram * ROW_SIZE) + x_vram; \
-			if(!graph_r_restore_from_1) { \
+			if(!graph_r_unput) { \
 				VRAM_PUT(B, vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
@@ -557,16 +557,16 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 			plotted_var += plotted_increment; \
 		} \
 	} \
-	if(graph_r_restore_from_1) { \
+	if(graph_r_unput) { \
 		goto restore_last; \
 	} \
 	goto end;
 
-	if(!graph_r_restore_from_1 && (left == right)) {
+	if(!graph_r_unput && (left == right)) {
 		graph_r_vline(left, top, bottom, col);
 		return;
 	}
-	if(!graph_r_restore_from_1 && (top == bottom)) {
+	if(!graph_r_unput && (top == bottom)) {
 		graph_r_hline(left, right, top, col);
 		return;
 	}
@@ -602,7 +602,7 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 	x_vram = (x_cur >> 3);
 	y_vram = y_cur;
 
-	if(!graph_r_restore_from_1) {
+	if(!graph_r_unput) {
 		grcg_setcolor_rmw(col);
 	}
 	if(w > h) {
@@ -614,7 +614,7 @@ restore_last:
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
 	restore_at(vram_offset);
 end:
-	if(!graph_r_restore_from_1) {
+	if(!graph_r_unput) {
 		grcg_off_func();
 	}
 
