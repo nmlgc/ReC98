@@ -3,6 +3,8 @@
  * Code segment #27 of TH01's REIIDEN.EXE
  */
 
+#pragma option -3 -Z
+
 extern "C" {
 #include "ReC98.h"
 

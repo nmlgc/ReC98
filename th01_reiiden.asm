@@ -822,9 +822,7 @@ loc_BD88:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		push	400170h
-		push	_player_left
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Ah
 
 loc_BDAD:
@@ -848,9 +846,7 @@ loc_BDC2:
 		call	_graph_accesspage_func
 		push	0
 		call	_graph_accesspage_func
-		push	400170h
-		push	_player_left
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Eh
 		call	sub_17E1E
 		call	sub_183A3
@@ -953,10 +949,7 @@ arg_0		= word ptr  6
 		push	offset unk_37635
 		call	sub_30E54
 		add	sp, 4
-		push	430170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, (43h shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
 ; ---------------------------------------------------------------------------
@@ -2097,11 +2090,7 @@ loc_C88B:
 		cwd
 		idiv	bx
 		add	ax, 3
-		push	ax
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_36C28.x, point_36C28.y, ax
 
 loc_C8B6:
 		mov	ax, point_36C28.x
@@ -2546,11 +2535,7 @@ var_2		= word ptr -2
 		call	SCOPY@
 		call	sub_17EB8
 		call	sub_1843D
-		push	3
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_36C28.x, point_36C28.y, 3
 		call	IRand
 		mov	bx, 8
 		cwd
@@ -2565,12 +2550,8 @@ loc_CEA3:
 		xor	ax, ax
 
 loc_CEA5:
-		add	ax, 56h	; 'V'
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		add	ax, 56h
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		xor	di, di
 		jmp	short loc_CEDA
 ; ---------------------------------------------------------------------------
@@ -2704,7 +2685,7 @@ loc_CFBC:
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 54h	; 'T'
+		add	dx, 54h
 		push	dx
 		mov	bx, si
 		add	bx, bx
@@ -2716,7 +2697,7 @@ loc_CFBC:
 		lea	ax, [bp+var_A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 
 loc_CFF7:
@@ -4040,15 +4021,8 @@ loc_DB3E:
 		push	0
 		call	sub_19E48
 		pop	cx
-		push	400170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
-		push	3
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, large (40h shl 16) or _player_top
+		call	_ptn_put_8 c, point_36C28.x, point_36C28.y, 3
 		mov	word_34A74, 0
 		mov	_input_lr, 0
 		mov	_input_shot, 0
@@ -6393,9 +6367,7 @@ loc_126E1:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		push	400170h
-		push	_player_left
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Eh
 
 loc_12714:
@@ -6520,9 +6492,7 @@ loc_127AC:
 		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (300 shl 16) or 256, large (128 shl 16) or 0, large (16 shl 16) or  48
 		add	sp, 30h
 		call	_graph_copy_page_back_to_front
-		push	300FAh
-		push	80h
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 250
 		add	sp, 6
 		mov	[bp+var_A], 0
 		mov	_input_shot, 0
@@ -6552,9 +6522,7 @@ loc_1292E:
 		cmp	[bp+var_A], 0
 		jnz	short loc_1297F
 		call	_egc_copy_rect_1_to_0 stdcall, large (250 shl 16) or 128, large (32 shl 16) or 32
-		push	3012Ch
-		push	80h
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 300
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 03h
 		call	_z_palette_set_show
@@ -6568,9 +6536,7 @@ loc_1292E:
 
 loc_1297F:
 		call	_egc_copy_rect_1_to_0 stdcall, large (300 shl 16) or 128, large (32 shl 16) or 32
-		push	300FAh
-		push	80h
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 250
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 01h
 		call	_z_palette_set_show
@@ -6763,9 +6729,7 @@ loc_12B02:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		push	400170h
-		push	_player_left
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Eh
 
 loc_12B35:
@@ -6867,7 +6831,7 @@ arg_4		= word ptr  8
 		shl	ax, 4
 		add	ax, 0E0h
 		mov	[bp+var_4], ax
-		mov	byte_35B29, 1
+		mov	_ptn_unput_before_alpha_put, 1
 		xor	si, si
 		jmp	short loc_12C27
 ; ---------------------------------------------------------------------------
@@ -6939,7 +6903,7 @@ loc_12C2C:
 		push	[bp+var_4]
 		call	sub_19A62
 		add	sp, 8
-		mov	byte_35B29, 0
+		mov	_ptn_unput_before_alpha_put, 0
 		pop	di
 		pop	si
 		leave
@@ -7836,19 +7800,15 @@ arg_0		= word ptr  6
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		add	ax, 1C0h
-		push	ax
-		push	0E00E0h
-		call	sub_197E1
+		add	ax, (7 * PTN_IMAGES_PER_SLOT)
+		call	_ptn_put_8 stdcall, (14 shl 16) or 224, ax
 		add	sp, 6
 		mov	ax, [bp+arg_0]
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		add	dx, 1C0h
-		push	dx
-		push	0E0100h
-		call	sub_197E1
+		add	dx, (7 * PTN_IMAGES_PER_SLOT)
+		call	_ptn_put_8 stdcall, (14 shl 16) or 256, dx
 		add	sp, 6
 		push	1Eh
 		call	_frame_delay
@@ -13852,14 +13812,14 @@ loc_17E26:
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	short loc_17E60
-		push	20h ; ' '
+		push	20h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5372h]
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 
 loc_17E60:
@@ -14086,7 +14046,7 @@ loc_18001:
 		push	word ptr es:[bx]
 		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		jmp	short loc_18029
 ; ---------------------------------------------------------------------------
@@ -14574,14 +14534,14 @@ loc_183AB:
 		cbw
 		cmp	ax, 63h	; 'c'
 		jge	short loc_183E5
-		push	21h ; '!'
+		push	21h
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+539Ah]
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5398h]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 
 loc_183E5:
@@ -16924,128 +16884,7 @@ main_27__TEXT	segment	byte public 'CODE' use16
 
 	extern _player_move_and_clamp:proc
 	extern _ptn_unput_8:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_197E1	proc far
-
-@@ptn		= dword	ptr -8
-@@alpha		= dword	ptr -4
-@@left		= word ptr  6
-@@top		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	[bp+@@alpha], 0
-		mov	ax, [bp+@@left]
-		sar	ax, 3
-		mov	dx, [bp+@@top]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+@@top]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	bx, [bp+arg_4]
-		sar	bx, 6
-		shl	bx, 2
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-		cmp	byte_35B29, 0
-		jz	short loc_1984C
-		call	_egc_copy_rect_1_to_0 c, [bp+@@left], [bp+@@top], large (32 shl 16) or 32
-
-loc_1984C:
-		xor	si, si
-		jmp	loc_1990A
-; ---------------------------------------------------------------------------
-
-loc_19851:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.PTN_alpha]
-		mov	[bp+@@alpha], eax
-		cmp	[bp+@@alpha], 0
-		jz	loc_19900
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	eax, [bp+@@alpha]
-		mov	es:[bx], eax
-		call	_grcg_off_func
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_B]
-		and	eax, [bp+@@alpha]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx], eax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_R]
-		and	eax, [bp+@@alpha]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx], eax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_G]
-		and	eax, [bp+@@alpha]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx], eax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_E]
-		and	eax, [bp+@@alpha]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx], eax
-
-loc_19900:
-		add	di, ROW_SIZE
-		cmp	di, PLANE_SIZE
-		ja	short loc_19911
-		inc	si
-
-loc_1990A:
-		cmp	si, PTN_H
-		jb	loc_19851
-
-loc_19911:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_197E1	endp
-
+	extern _ptn_put_8:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17271,7 +17110,7 @@ loc_19ACD:
 
 loc_19ACF:
 		mov	[bp+var_6], ax
-		cmp	byte_35B29, 0
+		cmp	_ptn_unput_before_alpha_put, 0
 		jz	short loc_19AED
 		call	_egc_copy_rect_1_to_0 c, [bp+@@left], [bp+@@top], large (16 shl 16) or 16
 
@@ -17661,7 +17500,7 @@ sub_19E48	proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@ptn_id		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	6, 0
@@ -17776,10 +17615,7 @@ loc_19F4C:
 		jz	short loc_19F77
 		mov	byte_35B47, 0
 		mov	_input_bomb, 0
-		push	400170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, large (40h shl 16) or _player_top
 		mov	_player_ptn_id, 40h
 		jmp	short loc_19F90
 ; ---------------------------------------------------------------------------
@@ -17787,10 +17623,7 @@ loc_19F4C:
 loc_19F77:
 		cmp	dword_34A62, 3Ch ; '<'
 		jbe	short loc_19F90
-		push	430170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, large (43h shl 16) or _player_top
 
 loc_19F90:
 		mov	_input_shot, 0
@@ -17831,29 +17664,25 @@ loc_19FDB:
 		jnz	short loc_1A042
 		cmp	byte_35B45, 0
 		jz	short loc_1A00A
-		mov	[bp+var_2], 40h
+		mov	[bp+@@ptn_id], 40h
 		jmp	short loc_1A00F
 ; ---------------------------------------------------------------------------
 
 loc_1A00A:
-		mov	[bp+var_2], 4Ah	; 'J'
+		mov	[bp+@@ptn_id], 4Ah
 
 loc_1A00F:
 		mov	al, _player_ptn_id
 		cbw
-		cmp	ax, [bp+var_2]
+		cmp	ax, [bp+@@ptn_id]
 		jz	short loc_1A02B
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
 
 loc_1A02B:
-		push	[bp+var_2]
-		push	368
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
-		mov	al, byte ptr [bp+var_2]
+		call	_ptn_put_8 c, _player_left, _player_top, [bp+@@ptn_id]
+		mov	al, byte ptr [bp+@@ptn_id]
 		mov	_player_ptn_id, al
 
 loc_1A042:
@@ -17879,19 +17708,15 @@ loc_1A075:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A089
-		mov	ax, 4Bh	; 'K'
+		mov	ax, 4Bh
 		jmp	short loc_1A08C
 ; ---------------------------------------------------------------------------
 
 loc_1A089:
-		mov	ax, 4Ch	; 'L'
+		mov	ax, 4Ch
 
 loc_1A08C:
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B42
 		cbw
 		mov	bx, 8
@@ -17938,11 +17763,7 @@ loc_1A0F8:
 		mov	ax, 42h	; 'B'
 
 loc_1A0FB:
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B42
 		cbw
 		mov	bx, 8
@@ -17981,20 +17802,16 @@ loc_1A15E:
 		jnz	short loc_1A191
 		cmp	byte_35B45, 0
 		jz	short loc_1A173
-		mov	[bp+var_2], 43h	; 'C'
+		mov	[bp+@@ptn_id], 43h
 		jmp	short loc_1A178
 ; ---------------------------------------------------------------------------
 
 loc_1A173:
-		mov	[bp+var_2], 4Dh	; 'M'
+		mov	[bp+@@ptn_id], 4Dh
 
 loc_1A178:
-		push	[bp+var_2]
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
-		mov	al, byte ptr [bp+var_2]
+		call	_ptn_put_8 c, _player_left, _player_top, [bp+@@ptn_id]
+		mov	al, byte ptr [bp+@@ptn_id]
 		mov	_player_ptn_id, al
 		jmp	short loc_1A1D1
 ; ---------------------------------------------------------------------------
@@ -18004,10 +17821,7 @@ loc_1A191:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1A1B2
-		push	4E0170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, large (4Eh shl 16) or _player_top
 		mov	_player_ptn_id, 4Eh
 		jmp	short loc_1A1D1
 ; ---------------------------------------------------------------------------
@@ -18017,10 +17831,7 @@ loc_1A1B2:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1A1D1
-		push	440170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, _player_left, large (44h shl 16) or _player_top
 		mov	_player_ptn_id, 44h
 
 loc_1A1D1:
@@ -18133,12 +17944,8 @@ loc_1A2F8:
 		mov	al, byte_35B43
 		cbw
 		and	ax, 3
-		add	ax, 4Eh	; 'N'
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		add	ax, 4Eh
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B43
 		cbw
 		mov	bx, 3
@@ -18175,12 +17982,8 @@ loc_1A364:
 		mov	al, byte_35B43
 		cbw
 		and	ax, 3
-		add	ax, 44h	; 'D'
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		add	ax, 44h
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B43
 		and	al, 3
 		add	al, 44h
@@ -18269,11 +18072,11 @@ loc_1A43F:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	[bp+var_2], ax
+		mov	[bp+@@ptn_id], ax
 		dec	ax
 		mov	si, ax
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	160h
 		mov	ax, _player_left
 		add	ax, -8
@@ -18662,8 +18465,8 @@ loc_1A7A5:
 		add	ax, 0Eh
 
 loc_1A7B5:
-		mov	[bp+var_2], ax
-		cmp	si, [bp+var_2]
+		mov	[bp+@@ptn_id], ax
+		cmp	si, [bp+@@ptn_id]
 		jz	short loc_1A80A
 		jmp	short loc_1A806
 ; ---------------------------------------------------------------------------
@@ -18707,8 +18510,8 @@ loc_1A7EE:
 		add	ax, 8
 
 loc_1A7FE:
-		mov	[bp+var_2], ax
-		cmp	si, [bp+var_2]
+		mov	[bp+@@ptn_id], ax
+		cmp	si, [bp+@@ptn_id]
 		jz	short loc_1A80A
 
 loc_1A806:
@@ -18717,7 +18520,7 @@ loc_1A806:
 ; ---------------------------------------------------------------------------
 
 loc_1A80A:
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	160h
 		mov	ax, _player_left
 		add	ax, -8
@@ -18768,7 +18571,7 @@ loc_1A855:
 		add	ax, 0Eh
 
 loc_1A865:
-		mov	[bp+var_2], ax
+		mov	[bp+@@ptn_id], ax
 		mov	ax, _player_left
 		add	ax, -8
 		mov	si, ax
@@ -18815,7 +18618,7 @@ loc_1A8A3:
 		add	ax, 8
 
 loc_1A8B3:
-		mov	[bp+var_2], ax
+		mov	[bp+@@ptn_id], ax
 		mov	ax, _player_left
 		add	ax, -8
 		mov	si, ax
@@ -18825,14 +18628,14 @@ loc_1A8C0:
 		call	_player_move_and_clamp
 		pop	cx
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	160h
 		push	si
 		jmp	loc_1A95C
 ; ---------------------------------------------------------------------------
 
 loc_1A8D0:
-		mov	[bp+var_2], 5
+		mov	[bp+@@ptn_id], 5
 		mov	si, _player_left
 		call	_player_move_and_clamp stdcall, 6
 		pop	cx
@@ -18841,7 +18644,7 @@ loc_1A8D0:
 ; ---------------------------------------------------------------------------
 
 loc_1A8E8:
-		mov	[bp+var_2], 4
+		mov	[bp+@@ptn_id], 4
 		mov	si, _player_left
 		call	_player_move_and_clamp stdcall, -6
 		pop	cx
@@ -18893,11 +18696,11 @@ loc_1A931:
 		add	ax, 14h
 
 loc_1A94B:
-		mov	[bp+var_2], ax
+		mov	[bp+@@ptn_id], ax
 		push	di
 
 loc_1A94F:
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	160h
 		mov	ax, _player_left
 		add	ax, -8
@@ -19073,7 +18876,7 @@ loc_1AAA9:
 		jmp	cs:off_1AC3E[bx]
 
 loc_1AACA:
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	160h
 		mov	ax, _player_left
 		add	ax, -8
@@ -19084,7 +18887,7 @@ loc_1AACA:
 ; ---------------------------------------------------------------------------
 
 loc_1AADD:
-		push	[bp+var_2]
+		push	[bp+@@ptn_id]
 		push	170h
 		mov	ax, _player_left
 		add	ax, -8
@@ -19539,11 +19342,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
-		push	3
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_36C28.x, point_36C28.y, 3
 		call	IRand
 		mov	bx, 8
 		cwd
@@ -19558,12 +19357,8 @@ loc_1AE4D:
 		xor	ax, ax
 
 loc_1AE4F:
-		add	ax, 56h	; 'V'
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		add	ax, 56h
+		call	_ptn_put_8 c, _player_left, _player_top, ax
 		xor	si, si
 		jmp	short loc_1AE85
 ; ---------------------------------------------------------------------------
@@ -19670,31 +19465,19 @@ loc_1AF62:
 		xor	di, di
 
 loc_1AF68:
-		push	3
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_36C28.x, point_36C28.y, 3
 		mov	ax, si
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 54h	; 'T'
-		push	dx
-		push	170h
-		push	_player_left
-		call	sub_197E1
-		add	sp, 6
+		add	dx, 54h
+		call	_ptn_put_8 c, _player_left, _player_top, dx
 		mov	ax, si
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 54h	; 'T'
-		push	dx
-		push	170h
-		push	di
-		call	sub_197E1
-		add	sp, 6
+		add	dx, 54h
+		call	_ptn_put_8 c, di, _player_top, dx
 		cmp	si, 6
 		jge	short loc_1AFB4
 		mov	ax, 1
@@ -29065,7 +28848,7 @@ sub_20754	endp
 sub_207BD	proc far
 
 arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@ptn_id		= word ptr  8
 arg_4		= dword	ptr  0Ah
 
 		push	bp
@@ -29112,7 +28895,7 @@ arg_4		= dword	ptr  0Ah
 		push	word ptr es:[bx]
 		call	sub_2069A
 		add	sp, 6
-		push	[bp+arg_2]
+		push	[bp+@@ptn_id]
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
@@ -29125,7 +28908,7 @@ arg_4		= dword	ptr  0Ah
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		les	bx, [bp+arg_4]
 		inc	word ptr es:[bx]
@@ -29711,7 +29494,7 @@ loc_20CA0:
 		les	bx, font
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		inc	si
 
@@ -29792,7 +29575,7 @@ loc_20D15:
 		les	bx, font
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 
 loc_20D89:
@@ -30519,7 +30302,7 @@ loc_21364:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		push	0
 		call	_graph_accesspage_func
@@ -30535,7 +30318,7 @@ loc_21364:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -30649,7 +30432,7 @@ loc_21467:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -30681,7 +30464,7 @@ loc_214D3:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		push	0
 		call	_graph_accesspage_func
@@ -30697,7 +30480,7 @@ loc_214D3:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -30752,11 +30535,7 @@ arg_2		= word ptr  8
 		mov	word_39EBD, 0
 		cmp	word_34A86, 0
 		jz	loc_21815
-		push	1Dh
-		push	point_39EB9.y
-		push	point_39EB9.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_39EB9.x, point_39EB9.y, 1Dh
 		jmp	loc_217F2
 ; ---------------------------------------------------------------------------
 
@@ -30802,7 +30581,7 @@ loc_2160F:
 		push	word ptr es:[bx]
 
 loc_21629:
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		jmp	loc_21815
 ; ---------------------------------------------------------------------------
@@ -30862,7 +30641,7 @@ loc_21670:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_197E1
+		call	_ptn_put_8
 		add	sp, 6
 		xor	di, di
 		mov	[bp+var_2], 0
@@ -30940,11 +30719,7 @@ loc_21777:
 		cmp	word ptr es:[bx], 28h ;	'('
 		jnz	short loc_217FA
 		call	_egc_copy_rect_1_to_0 c, point_39EB9.x, point_39EB9.y, large (32 shl 16) or 32
-		push	1Dh
-		push	point_39EB9.y
-		push	point_39EB9.x
-		call	sub_197E1
-		add	sp, 6
+		call	_ptn_put_8 c, point_39EB9.x, point_39EB9.y, 1Dh
 		call	IRand
 		mov	bx, 5
 		cwd
@@ -35031,7 +34806,7 @@ arg_6		= word ptr  0Ah
 		mov	di, [bp+arg_4]
 		les	bx, [bp+arg_0]
 		inc	byte ptr es:[bx]
-		mov	byte_35B29, 1
+		mov	_ptn_unput_before_alpha_put, 1
 		mov	al, es:[bx]
 		cbw
 		cmp	ax, 5
@@ -35504,7 +35279,7 @@ loc_23C3D:
 		mov	byte ptr es:[bx], 0
 
 loc_23C44:
-		mov	byte_35B29, 0
+		mov	_ptn_unput_before_alpha_put, 0
 		pop	di
 		pop	si
 		pop	bp
@@ -36799,13 +36574,8 @@ loc_24857:
 ; ---------------------------------------------------------------------------
 
 loc_24871:
-		push	400170h
-		push	_player_left
-		call	sub_197E1
-		push	3
-		push	point_36C28.y
-		push	point_36C28.x
-		call	sub_197E1
+		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, point_36C28.x, point_36C28.y, 3
 		push	1
 		call	_frame_delay
 		add	sp, 0Eh
@@ -58854,7 +58624,7 @@ include th01/hardware/grppfnfx[data].asm
 		db  40h
 		db  1Fh
 byte_35B28	db 0
-byte_35B29	db 0
+include th01/formats/ptn_main[data].asm
 dword_35B2A	dd 0
 dword_35B2E	dd 0
 dword_35B32	dd 0

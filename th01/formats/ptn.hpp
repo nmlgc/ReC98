@@ -73,6 +73,11 @@ static inline ptn_t* ptn_with_id(int id)
 }
 // ---------
 
+// If true, the affected 32×32 or 16×16 area is restored from VRAM page 1
+// before a byte-aligned alpha put operation.
+// (Because calling egc_copy_rect_1_to_0() yourself is way too much to ask?)
+extern bool ptn_unput_before_alpha_put;
+
 // 32×32 access
 // ------------
 // Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregaring its alpha
@@ -91,6 +96,9 @@ void ptn_copy_8_0_to_1(int left, int top);
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
 // the given [ptn_id].
 void ptn_unput_8(int left, int top, int ptn_id);
+
+// Displays the given [ptn_id] at (⌊left/8⌋*8, top).
+void ptn_put_8(int left, int top, int ptn_id);
 // ------------
 
 // 16×16 access
