@@ -135,5 +135,8 @@ void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter);
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
 // the given [quarter] of [ptn_id].
 void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter);
+
+// Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top).
+void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter);
 // ------------
 /// -----------------------------------------

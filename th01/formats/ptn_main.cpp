@@ -36,6 +36,12 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	VRAM_CHUNK(G, vram_offset, w) |= (ptn->planes.G[y] & mask); \
 	VRAM_CHUNK(E, vram_offset, w) |= (ptn->planes.E[y] & mask);
 
+#define ptn_or_quarter_masked(vram_offset, w, ptn, q, mask) \
+	VRAM_CHUNK(B, vram_offset, w) |= ((ptn->planes.B[y] >> q.x) & mask); \
+	VRAM_CHUNK(R, vram_offset, w) |= ((ptn->planes.R[y] >> q.x) & mask); \
+	VRAM_CHUNK(G, vram_offset, w) |= ((ptn->planes.G[y] >> q.x) & mask); \
+	VRAM_CHUNK(E, vram_offset, w) |= ((ptn->planes.E[y] >> q.x) & mask);
+
 void ptn_unput_8(int left, int top, int ptn_id)
 {
 	ptn_dots_t mask = 0;
@@ -109,6 +115,31 @@ void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter)
 			vram_snap_masked(page1, vram_offset, PTN_QUARTER_W, mask);
 			graph_accesspage_func(0);
 			vram_or(vram_offset, PTN_QUARTER_W, page1);
+		}
+		vram_offset += ROW_SIZE;
+		// No vram_offset bounds check here?!
+	}
+}
+
+void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter)
+{
+	sdots_t(PTN_QUARTER_W) mask;
+	unsigned int y;
+	PTNQuarter q;
+	sdots_t(PTN_W) mask_full = 0;
+	uint16_t vram_offset = vram_offset_shift(left, top);
+	ptn_t *ptn = ptn_with_id_shift(ptn_id);
+
+	q.init(quarter);
+	if(ptn_unput_before_alpha_put) {
+		egc_copy_rect_1_to_0(left, top, PTN_QUARTER_W, PTN_QUARTER_H);
+	}
+	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
+		mask_full = ptn->alpha[y];
+		mask = (mask_full >> q.x);
+		if(mask) {
+			grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
+			ptn_or_quarter_masked(vram_offset, PTN_QUARTER_W, ptn, q, mask);
 		}
 		vram_offset += ROW_SIZE;
 		// No vram_offset bounds check here?!

@@ -6816,9 +6816,9 @@ main_18_TEXT	segment	byte public 'CODE' use16
 
 sub_12BAB	proc near
 
-var_4		= word ptr -4
+@@left		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@top		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -6829,8 +6829,8 @@ arg_4		= word ptr  8
 		mov	[bp+var_2], 0
 		mov	ax, [bp+arg_2]
 		shl	ax, 4
-		add	ax, 0E0h
-		mov	[bp+var_4], ax
+		add	ax, 224
+		mov	[bp+@@left], ax
 		mov	_ptn_unput_before_alpha_put, 1
 		xor	si, si
 		jmp	short loc_12C27
@@ -6850,11 +6850,11 @@ loc_12BCE:
 		mov	ax, dx
 		cwd
 		idiv	bx
-		add	ax, 1CAh
+		add	ax, ((7 * PTN_IMAGES_PER_SLOT) + 10)
 		push	ax
-		push	[bp+arg_0]
-		push	[bp+var_4]
-		call	sub_19A62
+		push	[bp+@@top]
+		push	[bp+@@left]
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		mov	ax, si
 		mov	bx, 0Ah
@@ -6897,11 +6897,11 @@ loc_12C2C:
 		mov	ax, dx
 		cwd
 		idiv	bx
-		add	ax, 1CAh
+		add	ax, ((7 * PTN_IMAGES_PER_SLOT) + 10)
 		push	ax
-		push	[bp+arg_0]
-		push	[bp+var_4]
-		call	sub_19A62
+		push	[bp+@@top]
+		push	[bp+@@left]
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		mov	_ptn_unput_before_alpha_put, 0
 		pop	di
@@ -15747,9 +15747,9 @@ loc_18DA0:
 		cwd
 		idiv	bx
 		shl	dx, 4
-		add	dx, 80h
+		add	dx, 128
 		push	dx
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -15896,9 +15896,9 @@ loc_18EB3:
 		cwd
 		idiv	bx
 		shl	dx, 4
-		add	dx, 80h
+		add	dx, 128
 		push	dx
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -15950,13 +15950,13 @@ loc_18F39:
 		push	ax
 		call	_ptn_snap_quarter_8
 		add	sp, 8
-		push	10000h
+		push	0 or (1 shl 16)
 		push	10h
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, 128
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -16080,13 +16080,13 @@ loc_1901D:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	10000h
-		push	10h
+		push	0 or (1 shl 16)
+		push	16
 		mov	ax, si
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, 128
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		inc	si
 
@@ -16886,160 +16886,7 @@ main_27__TEXT	segment	byte public 'CODE' use16
 	extern _ptn_unput_8:proc
 	extern _ptn_put_8:proc
 	extern _ptn_unput_quarter_8:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19A62	proc far
-
-@@ptn		= dword	ptr -0Eh
-@@alpha		= dword	ptr -0Ah
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@left		= word ptr  6
-@@top		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		mov	[bp+@@alpha], 0
-		mov	ax, [bp+@@left]
-		sar	ax, 3
-		mov	dx, [bp+@@top]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+@@top]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	bx, [bp+arg_4]
-		sar	bx, 6
-		shl	bx, 2
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-		test	[bp+arg_6], 2
-		jz	short loc_19ABD
-		mov	ax, 10h
-		jmp	short loc_19ABF
-; ---------------------------------------------------------------------------
-
-loc_19ABD:
-		xor	ax, ax
-
-loc_19ABF:
-		mov	[bp+var_4], ax
-		test	[bp+arg_6], 1
-		jz	short loc_19ACD
-		mov	ax, 10h
-		jmp	short loc_19ACF
-; ---------------------------------------------------------------------------
-
-loc_19ACD:
-		xor	ax, ax
-
-loc_19ACF:
-		mov	[bp+var_6], ax
-		cmp	_ptn_unput_before_alpha_put, 0
-		jz	short loc_19AED
-		call	_egc_copy_rect_1_to_0 c, [bp+@@left], [bp+@@top], large (16 shl 16) or 16
-
-loc_19AED:
-		mov	si, [bp+var_4]
-		jmp	loc_19BB3
-; ---------------------------------------------------------------------------
-
-loc_19AF3:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.PTN_alpha]
-		mov	[bp+@@alpha], eax
-		mov	cl, byte ptr [bp+var_6]
-		sar	eax, cl
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], 0
-		jz	loc_19BAF
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	ax, [bp+var_2]
-		mov	es:[bx], ax
-		call	_grcg_off_func
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_B]
-		mov	cl, byte ptr [bp+var_6]
-		shr	eax, cl
-		and	ax, [bp+var_2]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx], ax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_R]
-		shr	eax, cl
-		and	ax, [bp+var_2]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx], ax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_G]
-		shr	eax, cl
-		and	ax, [bp+var_2]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx], ax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_E]
-		shr	eax, cl
-		and	ax, [bp+var_2]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx], ax
-
-loc_19BAF:
-		add	di, ROW_SIZE
-		inc	si
-
-loc_19BB3:
-		mov	ax, [bp+var_4]
-		add	ax, 10h
-		cmp	ax, si
-		ja	loc_19AF3
-		pop	di
-		pop	si
-		leave
-		retf
-sub_19A62	endp
-
+	extern _ptn_put_quarter_8:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34605,26 +34452,22 @@ sub_23715	endp
 
 sub_2376D	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@quarter		= word ptr  4
+@@ptn_id		= word ptr  6
+@@top		= word ptr  8
+@@left		= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
 		push	(16 shl 16) or 16
 		push	di
 		push	si
 		call	_egc_copy_rect_1_to_0
-		push	[bp+arg_0]
-		push	[bp+arg_2]
-		push	di
-		push	si
-		call	sub_19A62
+		call	_ptn_put_quarter_8 stdcall, si, di, [bp+@@ptn_id], [bp+@@quarter]
 		add	sp, 10h
 		pop	di
 		pop	si
@@ -34656,10 +34499,7 @@ arg_6		= word ptr  0Ah
 		cbw
 		cmp	ax, 5
 		jge	short loc_237DA
-		pushd	80h ; '?'
-		push	di
-		push	si
-		call	sub_19A62
+		call	_ptn_put_quarter_8 stdcall, si, di, large 80h or (0 shl 16)
 		push	si
 		push	0
 		call	sub_236E0
@@ -34675,11 +34515,7 @@ loc_237DA:
 		cbw
 		cmp	ax, 0Ah
 		jge	short loc_237FF
-		push	10080h
-		push	di
-		push	si
-		call	sub_19A62
-		add	sp, 8
+		call	_ptn_put_quarter_8 c, si, di, large 80h or (1 shl 16)
 		push	si
 		push	0
 		call	sub_236E0
@@ -34692,20 +34528,20 @@ loc_237FF:
 		cbw
 		cmp	ax, 0Fh
 		jge	short loc_2383B
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
 		push	20h ; ' '
 		call	sub_236E0
-		push	10080h
+		push	80h or (1 shl 16)
 		lea	ax, [di-8]
 		push	ax
 		push	si
-		call	sub_19A62
-		pushd	80h ; '?'
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
 		push	di
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 10h
 		push	0
 		jmp	short loc_23875
@@ -34717,25 +34553,25 @@ loc_2383B:
 		cbw
 		cmp	ax, 14h
 		jge	short loc_23881
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
 		push	20h ; ' '
 		call	sub_236E0
-		push	10080h
-		lea	ax, [di-10h]
+		push	80h or (1 shl 16)
+		lea	ax, [di-16]
 		push	ax
 		push	si
-		call	sub_19A62
-		push	10080h
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
 		push	di
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 10h
 		push	1
 
 loc_23875:
-		push	80h ; '?'
+		push	80h
 		push	di
 		mov	ax, si
 		add	ax, 10h
@@ -34752,31 +34588,31 @@ loc_23881:
 		push	ax
 		push	40h
 		call	sub_236E0
-		push	10080h
-		lea	ax, [di-18h]
+		push	80h or (1 shl 16)
+		lea	ax, [di-24]
 		push	ax
 		push	si
-		call	sub_19A62
-		push	10080h
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		push	10080h
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 18h
 
 loc_238CF:
-		pushd	80h ; '?'
+		pushd	80h or (0 shl 16)
 		push	di
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		push	0
 		jmp	loc_23C36
@@ -34792,28 +34628,28 @@ loc_238E7:
 		push	ax
 		push	40h
 		call	sub_236E0
-		pushd	80h ; '?'
-		lea	ax, [di-20h]
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-32]
 		push	ax
 		push	si
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-10h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-10h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		push	10080h
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
 		push	di
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
 		push	1
 		jmp	loc_23C36
@@ -34829,29 +34665,29 @@ loc_2394A:
 		push	ax
 		push	40h
 		call	sub_236E0
-		pushd	80h ; '?'
-		lea	ax, [di-18h]
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-24]
 		push	ax
 		push	si
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		push	10080h
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
 		push	1
 
@@ -34872,29 +34708,29 @@ loc_239B8:
 		push	ax
 		push	40h
 		call	sub_236E0
-		pushd	80h ; '?'
-		lea	ax, [di-10h]
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-16]
 		push	ax
 		push	si
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-20h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-32]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-20h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-32]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-10h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
 		push	1
 
@@ -34915,47 +34751,47 @@ loc_23A25:
 		push	ax
 		push	40h
 		call	sub_236E0
-		pushd	80h ; '?'
+		pushd	80h or (0 shl 16)
 		lea	ax, [di-8]
 		push	ax
 		push	si
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		push	10080h
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		push	80h or (1 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
 		push	1
 
 loc_23A88:
-		push	80h ; '?'
+		push	80h
 		mov	ax, di
-		add	ax, 0FFE8h
+		add	ax, -24
 
 loc_23A90:
 		push	ax
 
 loc_23A91:
 		mov	ax, si
-		add	ax, 20h	; ' '
+		add	ax, 32
 
 loc_23A96:
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		jmp	loc_23C44
 ; ---------------------------------------------------------------------------
@@ -34970,32 +34806,32 @@ loc_23AA2:
 		push	ax
 		push	40h
 		call	sub_236E0
-		pushd	80h ; '?'
+		pushd	80h or (0 shl 16)
 		push	di
 		push	si
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-10h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-10h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-20h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-32]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
-		pushd	80h ; '?'
+		pushd	80h or (0 shl 16)
 		mov	ax, di
-		add	ax, 0FFE0h
+		add	ax, -32
 		jmp	short loc_23A90
 ; ---------------------------------------------------------------------------
 
@@ -35009,28 +34845,25 @@ loc_23B0D:
 		push	ax
 		push	40h
 		call	sub_236E0
-		push	30080h
-		push	di
-		push	si
-		call	sub_19A62
+		call	_ptn_put_quarter_8 stdcall, si, di, 80h or (3 shl 16)
 		pushd	80h ; '?'
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-18h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-24]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 20h
 		push	0
 		jmp	loc_23A88
@@ -35046,22 +34879,22 @@ loc_23B70:
 		push	ax
 		push	40h
 		call	sub_236E0
+		pushd	80h or (0 shl 16)
+		push	di
+		lea	ax, [si-16]
+		push	ax
+		call	_ptn_put_quarter_8
 		pushd	80h ; '?'
 		push	di
-		lea	ax, [si-10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		push	di
-		lea	ax, [si+10h]
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
+		lea	ax, [di-16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
-		lea	ax, [di-10h]
+		lea	ax, [si-32]
 		push	ax
-		lea	ax, [si-20h]
-		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 18h
 		push	0
 		jmp	loc_23A1B
@@ -35073,22 +34906,22 @@ loc_23BC0:
 		cbw
 		cmp	ax, 41h	; 'A'
 		jge	short loc_23C07
-		push	30080h
+		push	80h or (3 shl 16)
 		push	di
-		lea	ax, [si-10h]
+		lea	ax, [si-16]
 		push	ax
-		call	sub_19A62
-		push	30080h
+		call	_ptn_put_quarter_8
+		push	80h or (3 shl 16)
 		push	di
-		lea	ax, [si+10h]
+		lea	ax, [si+16]
 		push	ax
-		call	sub_19A62
-		pushd	80h ; '?'
+		call	_ptn_put_quarter_8
+		pushd	80h or (0 shl 16)
 		lea	ax, [di-8]
 		push	ax
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 18h
 		push	0
 		jmp	loc_239AD
@@ -35105,16 +34938,16 @@ loc_23C07:
 		cbw
 		cmp	ax, 4Bh	; 'K'
 		jge	short loc_23C3D
-		push	30080h
+		push	80h or (3 shl 16)
 		push	di
-		lea	ax, [si-20h]
+		lea	ax, [si-32]
 		push	ax
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 		push	3
 
 loc_23C36:
-		push	80h ; '?'
+		push	80h
 		push	di
 		jmp	loc_23A91
 ; ---------------------------------------------------------------------------
@@ -55571,7 +55404,7 @@ loc_2FE27:
 		add	bx, ax
 		push	word ptr es:[bx+10h]
 		push	word ptr es:[bx]
-		call	sub_19A62
+		call	_ptn_put_quarter_8
 		add	sp, 8
 
 loc_2FE41:
