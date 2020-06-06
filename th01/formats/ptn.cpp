@@ -57,15 +57,11 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 		arc_file_get(ptn->unused_zero);
 		arc_file_get(ptn->planes);
 		for(y = 0; y < PTN_H; y++) {
-			// Color #15 (1111) is always the transparent one, meaning that
-			// transparent dots are 1 in all 4 bitplanes. The alpha mask
-			// therefore simply is the negation of ANDing all bitplanes
-			// together. Nifty!
-			ptn->alpha[y] = ~(
-				ptn->planes.B[y]
-				& ptn->planes.R[y]
-				& ptn->planes.G[y]
-				& ptn->planes.E[y]
+			ptn->alpha[y] = ptn_alpha_from(
+				ptn->planes.B[y],
+				ptn->planes.R[y],
+				ptn->planes.G[y],
+				ptn->planes.E[y]
 			);
 		}
 	}

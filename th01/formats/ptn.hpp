@@ -5,6 +5,18 @@
 /// color #15. Can also be used to store the backgrounds of frequently updated
 /// VRAM regions, using the functions for raw allocation and VRAM snapping.
 
+}
+
+// Color #15 (1111) is always the transparent one, meaning that transparent
+// dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
+// negation of ANDing all bitplanes together. Nifty!
+template <class T> inline T ptn_alpha_from(T B, T R, T G, T E)
+{
+	return ~((B) & (R) & (G) & (E));
+}
+
+extern "C" {
+
 #define PTN_W 32
 #define PTN_H 32
 
