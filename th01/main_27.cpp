@@ -4,9 +4,9 @@
  */
 
 extern "C" {
-#include "platform.h"
-#include "pc98.h"
+#include "ReC98.h"
 
 #include "th01/main/player/move.cpp"
+#include "th01/formats/ptn_main.cpp"
 
 }

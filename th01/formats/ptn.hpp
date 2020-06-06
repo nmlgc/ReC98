@@ -66,6 +66,7 @@ void ptn_free(int slot);
 #define PTN_SLOT(slot) ((slot) * PTN_IMAGES_PER_SLOT)
 #define PTN_ID(slot, image) (PTN_SLOT(slot) + image)
 
+// MODDERS: Make [id] unsigned
 static inline ptn_t* ptn_with_id(int id)
 {
 	return &ptn_images[id / PTN_IMAGES_PER_SLOT][id % PTN_IMAGES_PER_SLOT];
@@ -85,6 +86,11 @@ void ptn_snap_8(int left, int top, int ptn_id);
 // Copies the 32×32 pixels starting at (⌊left/8⌋*8, top) from VRAM page 0 to
 // VRAM page 1.
 void ptn_copy_8_0_to_1(int left, int top);
+
+// Restores the 32×32 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
+// the same (background) pixels from VRAM page 1, applying the alpha mask from
+// the given [ptn_id].
+void ptn_unput_8(int left, int top, int ptn_id);
 // ------------
 
 // 16×16 access

@@ -2076,11 +2076,7 @@ loc_C855:
 		cwd
 		idiv	bx
 		add	ax, 3
-		push	ax
-		push	point_34A8E.y
-		push	point_34A8E.x
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, point_34A8E.x, point_34A8E.y, ax
 
 loc_C879:
 		mov	ax, si
@@ -13950,11 +13946,11 @@ sub_17ED1	proc far
 arg_0		= word ptr  6
 arg_2		= dword	ptr  8
 arg_6		= dword	ptr  0Ch
-arg_A		= dword	ptr  10h
-arg_E		= dword	ptr  14h
+@@left		= dword	ptr  10h
+@@top		= dword	ptr  14h
 arg_12		= dword	ptr  18h
 arg_16		= dword	ptr  1Ch
-arg_1A		= word ptr  20h
+@@ptn_id		= word ptr  20h
 arg_1C		= dword	ptr  22h
 arg_20		= dword	ptr  26h
 
@@ -13963,7 +13959,7 @@ arg_20		= dword	ptr  26h
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		mov	si, [bp+arg_1A]
+		mov	si, [bp+@@ptn_id]
 		push	di
 		call	[bp+arg_6]
 		pop	cx
@@ -13982,13 +13978,13 @@ arg_20		= dword	ptr  26h
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
-		les	bx, [bp+arg_A]
+		les	bx, [bp+@@left]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
@@ -14015,13 +14011,13 @@ loc_17F3C:
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
-		les	bx, [bp+arg_A]
+		les	bx, [bp+@@left]
 		mov	ax, es:[bx]
-		add	ax, 10h
+		add	ax, 16
 		push	ax
 		call	sub_1786D
 		add	sp, 10h
@@ -14035,15 +14031,15 @@ loc_17F73:
 		cmp	ax, 2
 		jnz	short loc_17FB8
 		push	si
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_A]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_196A7
+		call	_ptn_unput_8
 		add	sp, 6
 		les	bx, [bp+arg_12]
 		mov	ax, es:[bx]
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		add	es:[bx], ax
 		cmp	word ptr es:[bx], 170h
 		jl	short loc_18001
@@ -14061,21 +14057,21 @@ loc_17FB8:
 		cmp	ax, 3
 		jnz	short loc_18018
 		push	si
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_A]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
-		call	sub_196A7
+		call	_ptn_unput_8
 		add	sp, 6
 
 loc_17FD9:
 		les	bx, [bp+arg_12]
 		mov	ax, es:[bx]
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		add	es:[bx], ax
 		les	bx, [bp+arg_12]
 		inc	word ptr es:[bx]
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		cmp	word ptr es:[bx], 190h
 		jl	short loc_18001
 		les	bx, [bp+arg_2]
@@ -14086,9 +14082,9 @@ loc_17FD9:
 
 loc_18001:
 		push	si
-		les	bx, [bp+arg_E]
+		les	bx, [bp+@@top]
 		push	word ptr es:[bx]
-		les	bx, [bp+arg_A]
+		les	bx, [bp+@@left]
 		push	word ptr es:[bx]
 		call	sub_197E1
 		add	sp, 6
@@ -16927,134 +16923,7 @@ main_27__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 	extern _player_move_and_clamp:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_196A7	proc far
-
-var_18		= dword	ptr -18h
-var_14		= dword	ptr -14h
-var_10		= dword	ptr -10h
-var_C		= dword	ptr -0Ch
-@@ptn		= dword	ptr -8
-@@alpha		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	18h, 0
-		push	si
-		push	di
-		mov	[bp+@@alpha], 0
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		mov	bx, [bp+arg_4]
-		sar	bx, 6
-		shl	bx, 2
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, [bp+arg_4]
-		mov	bx, 40h
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-		xor	di, di
-		jmp	loc_197D6
-; ---------------------------------------------------------------------------
-
-loc_196FC:
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.PTN_alpha]
-		mov	[bp+@@alpha], eax
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		cmp	[bp+@@alpha], 0
-		jz	loc_197CC
-		call	_grcg_setcolor_rmw stdcall, 0
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, [bp+@@alpha]
-		mov	es:[bx], eax
-		call	_grcg_off_func
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, es:[bx]
-		and	eax, [bp+@@alpha]
-		mov	[bp+var_18], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	eax, es:[bx]
-		and	eax, [bp+@@alpha]
-		mov	[bp+var_14], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	eax, es:[bx]
-		and	eax, [bp+@@alpha]
-		mov	[bp+var_10], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	eax, es:[bx]
-		and	eax, [bp+@@alpha]
-		mov	[bp+var_C], eax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 6
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	eax, [bp+var_18]
-		or	es:[bx], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	eax, [bp+var_14]
-		or	es:[bx], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	eax, [bp+var_10]
-		or	es:[bx], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	eax, [bp+var_C]
-		or	es:[bx], eax
-
-loc_197CC:
-		add	si, ROW_SIZE
-		cmp	si, PLANE_SIZE
-		ja	short loc_197DD
-		inc	di
-
-loc_197D6:
-		cmp	di, PTN_H
-		jb	loc_196FC
-
-loc_197DD:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_196A7	endp
-
+	extern _ptn_unput_8:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17809,7 +17678,7 @@ arg_0		= word ptr  6
 		mov	byte_34A58, 0
 		mov	byte_34A59, 0
 		mov	byte_34A57, 0
-		mov	byte_39DB3, 40h
+		mov	_player_ptn_id, 40h
 		cmp	_rank, RANK_EASY
 		jnz	short loc_19E93
 		mov	al, 0Fh
@@ -17911,7 +17780,7 @@ loc_19F4C:
 		push	_player_left
 		call	sub_197E1
 		add	sp, 6
-		mov	byte_39DB3, 40h
+		mov	_player_ptn_id, 40h
 		jmp	short loc_19F90
 ; ---------------------------------------------------------------------------
 
@@ -17970,17 +17839,13 @@ loc_1A00A:
 		mov	[bp+var_2], 4Ah	; 'J'
 
 loc_1A00F:
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
 		cmp	ax, [bp+var_2]
 		jz	short loc_1A02B
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	368
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 
 loc_1A02B:
 		push	[bp+var_2]
@@ -17989,7 +17854,7 @@ loc_1A02B:
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_39DB3, al
+		mov	_player_ptn_id, al
 
 loc_1A042:
 		mov	byte_39DB2, 0
@@ -17998,13 +17863,9 @@ loc_1A042:
 
 loc_1A04A:
 		mov	byte_35B45, 0
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	368
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		add	_player_left, 4
 		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1A075
@@ -18038,28 +17899,24 @@ loc_1A08C:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A0AE
-		mov	al, 4Bh	; 'K'
+		mov	al, 4Bh
 		jmp	short loc_1A0B0
 ; ---------------------------------------------------------------------------
 
 loc_1A0AE:
-		mov	al, 4Ch	; 'L'
+		mov	al, 4Ch
 
 loc_1A0B0:
-		mov	byte_39DB3, al
+		mov	_player_ptn_id, al
 		mov	byte_39DB2, 1
 		jmp	short loc_1A127
 ; ---------------------------------------------------------------------------
 
 loc_1A0BA:
 		mov	byte_35B45, 1
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		sub	_player_left, 4
 		cmp	_player_left, PLAYER_LEFT_MIN
 		jg	short loc_1A0E4
@@ -18093,27 +17950,23 @@ loc_1A0FB:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A11D
-		mov	al, 41h	; 'A'
+		mov	al, 41h
 		jmp	short loc_1A11F
 ; ---------------------------------------------------------------------------
 
 loc_1A11D:
-		mov	al, 42h	; 'B'
+		mov	al, 42h
 
 loc_1A11F:
-		mov	byte_39DB3, al
+		mov	_player_ptn_id, al
 		mov	byte_39DB2, 2
 
 loc_1A127:
 		cmp	_input_shot, 1
 		jnz	loc_1A1D1
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		mov	byte_35B44, 1
 		mov	byte_35B43, 0
 		mov	al, _input_lr
@@ -18142,7 +17995,7 @@ loc_1A178:
 		call	sub_197E1
 		add	sp, 6
 		mov	al, byte ptr [bp+var_2]
-		mov	byte_39DB3, al
+		mov	_player_ptn_id, al
 		jmp	short loc_1A1D1
 ; ---------------------------------------------------------------------------
 
@@ -18155,7 +18008,7 @@ loc_1A191:
 		push	_player_left
 		call	sub_197E1
 		add	sp, 6
-		mov	byte_39DB3, 4Eh	; 'N'
+		mov	_player_ptn_id, 4Eh
 		jmp	short loc_1A1D1
 ; ---------------------------------------------------------------------------
 
@@ -18168,18 +18021,14 @@ loc_1A1B2:
 		push	_player_left
 		call	sub_197E1
 		add	sp, 6
-		mov	byte_39DB3, 44h	; 'D'
+		mov	_player_ptn_id, 44h
 
 loc_1A1D1:
 		cmp	_input_strike, 1
 		jnz	loc_1AC2A
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		cmp	_input_lr, 0
 		jz	short loc_1A1FB
 		cmp	_input_lr, (INPUT_LEFT or INPUT_RIGHT)
@@ -18272,13 +18121,9 @@ loc_1A2C4:
 		cmp	ax, 1
 		jnz	short loc_1A32F
 		mov	byte_35B45, 0
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		add	_player_left, 4
 		cmp	_player_left, PLAYER_LEFT_MAX
 		jl	short loc_1A2F8
@@ -18299,8 +18144,8 @@ loc_1A2F8:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	dl, 4Eh	; 'N'
-		mov	byte_39DB3, dl
+		add	dl, 4Eh
+		mov	_player_ptn_id, dl
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 1
@@ -18318,13 +18163,9 @@ loc_1A32F:
 		db 07fh
 		db 000h
 		mov	byte_35B45, 1
-		mov	al, byte_39DB3
+		mov	al, _player_ptn_id
 		cbw
-		push	ax
-		push	170h
-		push	_player_left
-		call	sub_196A7
-		add	sp, 6
+		call	_ptn_unput_8 c, _player_left, _player_top, ax
 		sub	_player_left, 4
 		cmp	_player_left, PLAYER_LEFT_MIN
 		jge	short loc_1A364
@@ -18342,8 +18183,8 @@ loc_1A364:
 		add	sp, 6
 		mov	al, byte_35B43
 		and	al, 3
-		add	al, 44h	; 'D'
-		mov	byte_39DB3, al
+		add	al, 44h
+		mov	_player_ptn_id, al
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 1
@@ -19697,7 +19538,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
 		push	3
 		push	point_36C28.y
 		push	point_36C28.x
@@ -19787,8 +19628,8 @@ loc_1AEF2:
 ; ---------------------------------------------------------------------------
 
 loc_1AEFB:
-		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0 c, di, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, di, _player_top, large (32 shl 16) or 32
 		cmp	si, 0Ah
 		jge	short loc_1AF2C
 		mov	ax, 16
@@ -19877,8 +19718,8 @@ loc_1AFC0:
 loc_1AFC8:
 		cmp	si, 1Eh
 		jl	loc_1AEFB
-		call	_egc_copy_rect_1_to_0 c, _player_left, 368, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0 c, di, 368, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, di, _player_top, large (32 shl 16) or 32
 		mov	ax, _rem_lives
 		inc	ax
 		push	ax
@@ -59674,7 +59515,8 @@ word_39DAE	dw ?
 byte_39DB0	db ?
 		db ?
 byte_39DB2	db ?
-byte_39DB3	db ?
+public _player_ptn_id
+_player_ptn_id	db ?
 unk_39DB4	db    ?	;
 		db 47 dup (?)
 word_39DE4	dw ?
