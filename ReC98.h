@@ -109,6 +109,8 @@ typedef struct {
 // Abstracted dot and planar types, with their width defined by a macro.
 #define dots_t_(x) dots##x##_t
 #define dots_t(x) dots_t_(x)
+#define sdots_t_(x) sdots##x##_t
+#define sdots_t(x) sdots_t_(x)
 #define planar_t_(x) planar##x##_t
 #define planar_t(x) planar_t_(x)
 

@@ -130,5 +130,10 @@ void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter);
 // Overwrites the 4 color planes of the given [quarter] of [ptn_id] with the
 // current VRAM content of the 16×16 pixels starting at (⌊left/8⌋*8, top).
 void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter);
+
+// Restores the 16×16 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
+// the same (background) pixels from VRAM page 1, applying the alpha mask from
+// the given [quarter] of [ptn_id].
+void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter);
 // ------------
 /// -----------------------------------------

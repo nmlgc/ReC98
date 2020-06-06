@@ -85,3 +85,32 @@ void ptn_put_8(int left, int top, int ptn_id)
 		}
 	}
 }
+
+void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter)
+{
+	sdots_t(PTN_QUARTER_W) mask;
+	unsigned int y;
+	PTNQuarter q;
+	planar_t(PTN_QUARTER_W) page1;
+	sdots_t(PTN_W) mask_full = 0;
+	uint16_t vram_offset = vram_offset_shift(left, top);
+	ptn_t *ptn = ptn_with_id_shift(ptn_id);
+
+	q.init(quarter);
+	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
+		mask_full = ptn->alpha[y];
+
+		graph_accesspage_func(0);
+
+		mask = (mask_full >> q.x);
+		if(mask) {
+			grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
+			graph_accesspage_func(1);
+			vram_snap_masked(page1, vram_offset, PTN_QUARTER_W, mask);
+			graph_accesspage_func(0);
+			vram_or(vram_offset, PTN_QUARTER_W, page1);
+		}
+		vram_offset += ROW_SIZE;
+		// No vram_offset bounds check here?!
+	}
+}
