@@ -42,6 +42,11 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	VRAM_CHUNK(G, vram_offset, w) |= ((ptn->planes.G[y] >> q.x) & mask); \
 	VRAM_CHUNK(E, vram_offset, w) |= ((ptn->planes.E[y] >> q.x) & mask);
 
+#define or_masked(plane, offset, w, dots, mask) \
+	if(dots) { \
+		VRAM_CHUNK(plane, offset, w) |= (dots & mask); \
+	}
+
 void ptn_unput_8(int left, int top, int ptn_id)
 {
 	ptn_dots_t mask = 0;
@@ -143,5 +148,103 @@ void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter)
 		}
 		vram_offset += ROW_SIZE;
 		// No vram_offset bounds check here?!
+	}
+}
+
+void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
+{
+	union dots16_unaligned_t {
+		dots8_t d8[3];
+		dots32_t d32;
+
+		void set(const dots16_t& dots, const char& first_bit) {
+			d8[0] = ((dots & 0xFF) >> first_bit);
+			d8[1] = (
+				((dots & 0xFF) << (8 - first_bit)) |
+				((dots & 0xFF00) >> (8 + first_bit))
+			);
+			d8[2] = ((dots & 0xFF00) >> first_bit);
+		}
+
+		void set(
+			const dots16_t& dots,
+			const char& first_bit,
+			const dots16_unaligned_t& mask
+		) {
+			d8[0] = (((dots & 0xFF) >> first_bit) & mask.d8[0]);
+			d8[1] = ((
+				((dots & 0xFF) << (8 - first_bit)) |
+				((dots & 0xFF00) >> (8 + first_bit))
+			) & mask.d8[1]);
+			d8[2] = (((dots & 0xFF00) >> first_bit) & mask.d8[2]);
+		}
+	};
+
+	struct vram_planes_t {
+		dots8_t *P[PL_COUNT];
+	};
+
+	extern vram_planes_t ptnpq_vram;
+	extern dots16_unaligned_t ptnpq_mask_unaligned_zero;
+	extern dots16_unaligned_t ptnpq_dots_unaligned_zero;
+
+	unsigned int plane;
+	unsigned int y;
+	dots_t(PTN_QUARTER_W) mask;
+	PTNQuarter q;
+	char first_bit = (left % 8);
+	dots16_unaligned_t mask_unaligned = ptnpq_mask_unaligned_zero;
+	dots16_unaligned_t dots_unaligned = ptnpq_dots_unaligned_zero;
+	dots_t(PTN_QUARTER_W) sprite[PL_COUNT];
+	dots_t(PTN_QUARTER_W) dots;
+
+	uint16_t vram_offset = vram_offset_shift(left, top);
+	ptn_t *ptn = ptn_with_id_shift(ptn_id);
+
+	ptnpq_vram.P[PL_B] = VRAM_PLANE_B;
+	ptnpq_vram.P[PL_R] = VRAM_PLANE_R;
+	ptnpq_vram.P[PL_G] = VRAM_PLANE_G;
+	ptnpq_vram.P[PL_E] = VRAM_PLANE_E;
+
+	vram_planes_t vram_local = ptnpq_vram;
+
+	// Yes, should have been || rather than &&...
+	if((left < 0) && (left > (RES_X - PTN_QUARTER_W))) {
+		return;
+	}
+	q.init(quarter);
+	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
+		for(plane = 0; plane < PL_COUNT; plane++) {
+			sprite[plane] = (ptn->P[plane][y] >> q.x);
+		}
+		mask = ptn_alpha_from(sprite[0], sprite[1], sprite[2], sprite[3]);
+
+		if(first_bit == 0) {
+			if(mask != 0) {
+				grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
+				or_masked(B, vram_offset, PTN_QUARTER_W, sprite[0], mask);
+				or_masked(R, vram_offset, PTN_QUARTER_W, sprite[1], mask);
+				or_masked(G, vram_offset, PTN_QUARTER_W, sprite[2], mask);
+				or_masked(E, vram_offset, PTN_QUARTER_W, sprite[3], mask);
+			}
+		} else {
+			if(mask != 0) {
+				mask_unaligned.set(mask, first_bit);
+				grcg_clear_masked(vram_offset, 32, mask_unaligned.d32);
+				for(plane = 0; plane < PL_COUNT; plane++) {
+					dots = sprite[plane];
+					if(dots) {
+						dots_unaligned.set(dots, first_bit, mask_unaligned);
+						*reinterpret_cast<dots32_t far *>(
+							vram_local.P[plane] + vram_offset
+						) |= dots_unaligned.d32;
+					}
+				}
+			}
+		}
+		vram_offset += ROW_SIZE;
+		if(vram_offset > PLANE_SIZE) {
+			break;
+		}
 	}
 }

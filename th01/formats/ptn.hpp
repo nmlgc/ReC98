@@ -32,7 +32,10 @@ struct ptn_planar_t {
 // On-disk per-image structure
 struct ptn_file_image_t {
 	int8_t unused_zero;
-	ptn_planar_t planes;
+	union {
+		ptn_planar_t planes;
+		ptn_dots_t P[PL_COUNT][PTN_H];
+	};
 };
 
 // In-memory per-image structure
@@ -150,5 +153,8 @@ void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter);
 
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top).
 void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter);
+
+// Displays the given [quarter] of the given [ptn_id] at (left, top).
+void ptn_put_quarter(int left, int top, int ptn_id, int quarter);
 // ------------
 /// -----------------------------------------

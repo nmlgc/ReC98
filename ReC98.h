@@ -117,6 +117,8 @@ typedef struct {
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
 extern dots8_t *VRAM_PLANE[PL_COUNT];
+// And no. expressing these as a struct won't generate the same ASM.
+// Been there, tried that.
 extern dots8_t *VRAM_PLANE_B;
 extern dots8_t *VRAM_PLANE_G;
 extern dots8_t *VRAM_PLANE_R;
