@@ -33,7 +33,7 @@ where the scalar-type variable is declared in relation to them.
 | `MOV al, var`<br />`MOV ah, 0`| `var` is *unsigned char* |
 | `MOV al, var`<br />`CBW` | `var` is *char*, `AX` is *int* |
 
-## Arithmetic
+## Integer arithmetic
 
 | | |
 |-|-|
@@ -54,6 +54,39 @@ must be spelled out to silence the `Possibly incorrect assignment` warning.
 
 `SUB` means that `??` is unsigned. Might require suffixing `imm` with `u` in
 case it's part of an arithmetic expression that was promoted to `int`.
+
+## Floating-point arithmetic
+
+* Since the x87 FPU can only load from memory, all temporary results of
+  arithmetic are spilled to one single compiler-generated variable (`fpu_tmp`)
+  on the stack, which is reused across all of the function:
+
+  | | |
+  |-|-|
+  | `MOV  AX, myint`<br />`INC  AX`<br />`MOV  fpu_tmp, ax`<br />`FILD fpu_tmp`<br />`FSTP ret` | `float ret = (myint + 1)` |
+
+* The same `fpu_tmp` variable is also used as the destination for `FNSTSW`,
+  used in comparisons.
+
+* Performing arithmetic or comparisons between `float` and `double` variables
+  *always* `FLD`s the `float` first, before emitting the corresponding FPU
+  instruction for the `double`, regardless of how the variables are placed in
+  the expression. The instruction order only matches the expression order for
+  literals:
+
+  ```c++
+  char ret;
+  float f;
+  double d;
+
+  ret = (f > d);     // FLD f,     FCOMP d
+  ret = (d > f);     // FLD f,     FCOMP d
+
+  ret = (d > 3.14f); // FLD d,     FCOMP 3.14f
+  ret = (3.14f > d); // FLD 3.14f, FCOMP d
+  ret = (f > 3.14);  // FLD f,     FCOMP 3.14 + 4
+  ret = (3.14 > f);  // FLD 3.14,  FCOMP f + 4
+  ```
 
 ## `switch` statements
 

@@ -65,7 +65,7 @@ include th01/main/playfld.inc
 	extern _toupper:proc
 	extern _vsprintf:proc
 
-main_01 group main_01_TEXT, main_01__TEXT
+main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
@@ -1744,221 +1744,13 @@ loc_C5B1:
 		pop	bp
 		retf
 sub_C466	endp
+main_01__TEXT	ends
 
+main_01___TEXT	segment	byte public 'CODE' use16
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C5B4	proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	ax, word_36C2C
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fadd	dbl_34A9C
-		fstp	dbl_34A94
-		fld	dbl_34A94
-		fcomp	flt_34B64
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jbe	short loc_C5EF
-		fld	flt_34B64
-		jmp	short loc_C60A
-; ---------------------------------------------------------------------------
-
-loc_C5EF:
-		fld	dbl_34A94
-		fcomp	dbl_34B68
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnb	short loc_C611
-		fld	dbl_34B68
-
-loc_C60A:
-		fstp	dbl_34A94
-		fwait
-
-loc_C611:
-		mov	ax, word_36C2C
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fadd	dbl_34A9C
-		call	ftol@
-		leave
-		retf
-sub_C5B4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_C62D(double, int)
-sub_C62D	proc far
-
-var_2		= word ptr -2
-arg_0		= qword	ptr  6
-arg_8		= word ptr  0Eh
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_8]
-		or	si, si
-		jnz	short loc_C68D
-		fld	dbl_34A94
-		fchs
-		fmul	dbl_34B70
-		fstp	dbl_34A9C
-		fwait
-		cmp	word_34A7C, 0
-		jnz	short loc_C68D
-		cmp	word_36C2C, 11h
-		jge	short loc_C670
-		call	IRand
-		mov	bx, 32h	; '2'
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C670
-		mov	word_34A7C, 1
-
-loc_C670:
-		cmp	word_36C2C, 11h
-		jge	short loc_C68D
-		call	IRand
-		mov	bx, 32h	; '2'
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_C68D
-		mov	word_34A7C, 2
-
-loc_C68D:
-		cmp	si, 1
-		jnz	short loc_C6B4
-		mov	ax, word_36C2C
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fld	dbl_34A94
-		fchs
-		fsubrp	st(1), st
-		fstp	dbl_34A9C
-		fwait
-
-loc_C6B4:
-		cmp	si, 2
-		jnz	short loc_C6CF
-		fld	dbl_34A94
-		fdiv	flt_34B78
-		fadd	dbl_34B7C
-		fstp	dbl_34A9C
-		fwait
-
-loc_C6CF:
-		cmp	si, 3
-		jnz	short loc_C6DF
-		fld	[bp+arg_0]
-		fstp	dbl_34A9C
-		fwait
-
-loc_C6DF:
-		mov	word_36C2C, 0
-		pop	si
-		leave
-		retf
-sub_C62D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C6E8	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		dec	bx
-		cmp	bx, 3
-		ja	short loc_C715
-		add	bx, bx
-		jmp	cs:off_C75E[bx]
-
-loc_C6FB:
-		sub	_orb_cur_left, 4
-		jmp	short loc_C715
-; ---------------------------------------------------------------------------
-
-loc_C702:
-		add	_orb_cur_left, 4
-		jmp	short loc_C715
-; ---------------------------------------------------------------------------
-
-loc_C709:
-		sub	_orb_cur_left, 8
-		jmp	short loc_C715
-; ---------------------------------------------------------------------------
-
-loc_C710:
-		add	_orb_cur_left, 8
-
-loc_C715:
-		cmp	_orb_cur_left, 0
-		jg	short loc_C738
-		cmp	word_34A7C, 1
-		jnz	short loc_C72B
-		mov	word_34A7C, 2
-		jmp	short loc_C738
-; ---------------------------------------------------------------------------
-
-loc_C72B:
-		cmp	word_34A7C, 3
-		jnz	short loc_C738
-		mov	word_34A7C, 4
-
-loc_C738:
-		cmp	_orb_cur_left, ORB_LEFT_MAX
-		jl	short loc_C75C
-		cmp	word_34A7C, 2
-		jnz	short loc_C74F
-		mov	word_34A7C, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_C74F:
-		cmp	word_34A7C, 4
-		jnz	short loc_C75C
-		mov	word_34A7C, 3
-
-loc_C75C:
-		pop	bp
-		retf
-sub_C6E8	endp
-
-; ---------------------------------------------------------------------------
-off_C75E	dw offset loc_C6FB
-		dw offset loc_C702
-		dw offset loc_C709
-		dw offset loc_C710
+	extern _orb_velocity_y_update:proc
+	extern _orb_force_new:proc
+	extern _orb_move_x:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1975,24 +1767,23 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		cmp	word_34A86, 0
 		jnz	loc_C816
-		push	word_34A7C
-		call	sub_C6E8
+		call	_orb_move_x stdcall, _orb_velocity_x
 		pop	cx
-		call	sub_C5B4
+		call	_orb_velocity_y_update
 		add	_orb_cur_top, ax
 		inc	word_34A92
-		cmp	word_34A7C, 1
+		cmp	_orb_velocity_x, OVX_4_LEFT
 		jz	short loc_C799
-		cmp	word_34A7C, 3
+		cmp	_orb_velocity_x, OVX_8_LEFT
 		jnz	short loc_C79D
 
 loc_C799:
 		inc	word_34A7E
 
 loc_C79D:
-		cmp	word_34A7C, 2
+		cmp	_orb_velocity_x, OVX_4_RIGHT
 		jz	short loc_C7AB
-		cmp	word_34A7C, 4
+		cmp	_orb_velocity_x, OVX_8_RIGHT
 		jnz	short loc_C7AF
 
 loc_C7AB:
@@ -2011,12 +1802,12 @@ loc_C7BC:
 loc_C7C9:
 		cmp	_orb_cur_top, ORB_TOP_MAX
 		jle	short loc_C7F4
-		push	0		; int
-		fld	dbl_34B70
+		push	OF_BOUNCE_FROM_GROUND
+		fld	_ORB_COEFFICIENT_OF_RESTITUTION
 		sub	sp, 8
 		fstp	[bp+var_C]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		mov	_orb_cur_top, ORB_TOP_MAX
 		mov	word_34A84, 0
@@ -2024,12 +1815,12 @@ loc_C7C9:
 loc_C7F4:
 		cmp	_orb_cur_top, ORB_TOP_MIN
 		jge	short loc_C816
-		push	1		; int
+		push	OF_BOUNCE_FROM_TOP
 		fldz
 		sub	sp, 8
 		fstp	[bp+var_C]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		mov	_orb_cur_top, ORB_TOP_MIN
 
@@ -4007,10 +3798,10 @@ loc_DB04:
 
 loc_DB0A:
 		fld	dbl_34FF5
-		fstp	dbl_34A9C
+		fstp	_orb_force
 		fwait
-		mov	word_36C2C, 0
-		mov	word_34A7C, 1
+		mov	_orb_force_frame, 0
+		mov	_orb_velocity_x, OVX_4_LEFT
 		mov	_orb_prev_left, ORB_LEFT_START
 		mov	_orb_prev_top, ORB_TOP_START
 		mov	byte_34A57, 0
@@ -4165,7 +3956,7 @@ loc_DCCA:
 		call	sub_181AC
 		call	sub_1851E
 		inc	dword_36C20
-		inc	word_36C2C
+		inc	_orb_force_frame
 		inc	dword_34A62
 		inc	_bomb_doubletap_frames
 		test	byte ptr _rand, 3
@@ -4735,7 +4526,7 @@ sub_E319	proc far
 		retf
 sub_E319	endp
 
-main_01__TEXT	ends
+main_01___TEXT	ends
 
 ; ===========================================================================
 
@@ -18612,14 +18403,14 @@ loc_1AD1A:
 		mov	ax, _player_left
 		sub	ax, _orb_cur_left
 		jnz	short loc_1AD66
-		mov	word_34A7C, 0
+		mov	_orb_velocity_x, OVX_0
 		call	IRand
 		mov	bx, 8
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1AD4E
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 
 loc_1AD4E:
 		call	IRand
@@ -18630,15 +18421,15 @@ loc_1AD4E:
 		jnz	short loc_1AD6C
 
 loc_1AD5E:
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 		jmp	short loc_1AD6C
 ; ---------------------------------------------------------------------------
 
 loc_1AD66:
-		mov	word_34A7C, 2
+		mov	_orb_velocity_x, OVX_4_RIGHT
 
 loc_1AD6C:
-		push	3
+		push	OF_IMMEDIATE
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -18684,38 +18475,38 @@ loc_1ADBB:
 		jge	short loc_1AE0A
 		cmp	si, 65h	; 'e'
 		jnz	short loc_1ADCD
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
 loc_1ADCD:
 		cmp	si, 66h	; 'f'
 		jnz	short loc_1ADDA
-		mov	word_34A7C, 2
+		mov	_orb_velocity_x, OVX_4_RIGHT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
 loc_1ADDA:
 		cmp	si, 67h	; 'g'
 		jnz	short loc_1ADE7
-		mov	word_34A7C, 4
+		mov	_orb_velocity_x, OVX_8_RIGHT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
 loc_1ADE7:
 		cmp	si, 68h	; 'h'
 		jnz	short loc_1ADF2
-		mov	word_34A7C, 3
+		mov	_orb_velocity_x, OVX_8_LEFT
 
 loc_1ADF2:
-		push	3		; int
+		push	OF_IMMEDIATE
 		fld	dbl_35B49
 
 loc_1ADF9:
 		sub	sp, 8
 		fstp	[bp+var_E]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 
 loc_1AE0A:
@@ -29184,28 +28975,28 @@ loc_20F14:
 
 loc_20F24:
 		mov	_orb_cur_top, ax
-		cmp	word_34A7C, 2
+		cmp	_orb_velocity_x, OVX_4_RIGHT
 		jnz	short loc_20F3C
 		cmp	[bp+var_6], 0
 		jge	short loc_20F3C
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 		jmp	short loc_20F4F
 ; ---------------------------------------------------------------------------
 
 loc_20F3C:
-		cmp	word_34A7C, 1
+		cmp	_orb_velocity_x, OVX_4_LEFT
 		jnz	short loc_20F4F
 		cmp	[bp+var_6], 0
 		jle	short loc_20F4F
-		mov	word_34A7C, 2
+		mov	_orb_velocity_x, OVX_4_RIGHT
 
 loc_20F4F:
-		push	0		; int
+		push	OF_BOUNCE_FROM_GROUND
 		fld	flt_35C9A
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 
 loc_20F67:
@@ -29348,13 +29139,13 @@ loc_21060:
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_210B1
 		inc	word ptr es:[bx]
-		push	3		; int
-		fld	dbl_34A94
+		push	OF_IMMEDIATE
+		fld	_orb_velocity_y
 		fchs
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 
 loc_210B1:
@@ -29388,13 +29179,13 @@ loc_210C6:
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_21117
 		inc	word ptr es:[bx]
-		push	3		; int
-		fld	dbl_34A94
+		push	OF_IMMEDIATE
+		fld	_orb_velocity_y
 		fchs
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 
 loc_21117:
@@ -29431,42 +29222,42 @@ loc_2112C:
 		jnz	short loc_211CD
 		inc	word ptr es:[bx]
 		mov	byte_39EB2, 1
-		cmp	word_34A7C, 0
+		cmp	_orb_velocity_x, OVX_0
 		jnz	short loc_21198
-		push	3		; int
-		fld	dbl_34A94
+		push	OF_IMMEDIATE
+		fld	_orb_velocity_y
 		fchs
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		jmp	short loc_211CD
 ; ---------------------------------------------------------------------------
 
 loc_21198:
-		cmp	word_34A7C, 1
+		cmp	_orb_velocity_x, OVX_4_LEFT
 		jnz	short loc_211A4
 		mov	ax, 2
 		jmp	short loc_211CA
 ; ---------------------------------------------------------------------------
 
 loc_211A4:
-		cmp	word_34A7C, 2
+		cmp	_orb_velocity_x, OVX_4_RIGHT
 		jnz	short loc_211B0
 		mov	ax, 1
 		jmp	short loc_211CA
 ; ---------------------------------------------------------------------------
 
 loc_211B0:
-		cmp	word_34A7C, 3
+		cmp	_orb_velocity_x, OVX_8_LEFT
 		jnz	short loc_211BC
 		mov	ax, 4
 		jmp	short loc_211CA
 ; ---------------------------------------------------------------------------
 
 loc_211BC:
-		cmp	word_34A7C, 4
+		cmp	_orb_velocity_x, OVX_8_RIGHT
 		jnz	short loc_211C8
 		mov	ax, 3
 		jmp	short loc_211CA
@@ -29476,7 +29267,7 @@ loc_211C8:
 		xor	ax, ax
 
 loc_211CA:
-		mov	word_34A7C, ax
+		mov	_orb_velocity_x, ax
 
 loc_211CD:
 		mov	ax, si
@@ -29512,42 +29303,42 @@ loc_211E2:
 		jnz	short loc_21283
 		inc	word ptr es:[bx]
 		mov	byte_39EB2, 1
-		cmp	word_34A7C, 0
+		cmp	_orb_velocity_x, OVX_0
 		jnz	short loc_2124E
-		push	3		; int
-		fld	dbl_34A94
+		push	OF_IMMEDIATE
+		fld	_orb_velocity_y
 		fchs
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		jmp	short loc_21283
 ; ---------------------------------------------------------------------------
 
 loc_2124E:
-		cmp	word_34A7C, 1
+		cmp	_orb_velocity_x, OVX_4_LEFT
 		jnz	short loc_2125A
 		mov	ax, 2
 		jmp	short loc_21280
 ; ---------------------------------------------------------------------------
 
 loc_2125A:
-		cmp	word_34A7C, 2
+		cmp	_orb_velocity_x, OVX_4_RIGHT
 		jnz	short loc_21266
 		mov	ax, 1
 		jmp	short loc_21280
 ; ---------------------------------------------------------------------------
 
 loc_21266:
-		cmp	word_34A7C, 3
+		cmp	_orb_velocity_x, OVX_8_LEFT
 		jnz	short loc_21272
 		mov	ax, 4
 		jmp	short loc_21280
 ; ---------------------------------------------------------------------------
 
 loc_21272:
-		cmp	word_34A7C, 4
+		cmp	_orb_velocity_x, OVX_8_RIGHT
 		jnz	short loc_2127E
 		mov	ax, 3
 		jmp	short loc_21280
@@ -29557,7 +29348,7 @@ loc_2127E:
 		xor	ax, ax
 
 loc_21280:
-		mov	word_34A7C, ax
+		mov	_orb_velocity_x, ax
 
 loc_21283:
 		mov	ax, si
@@ -30121,8 +29912,8 @@ loc_21777:
 		mov	bx, 5
 		cwd
 		idiv	bx
-		mov	word_34A7C, dx
-		push	3		; int
+		mov	_orb_velocity_x, dx
+		push	OF_IMMEDIATE
 		call	IRand
 		mov	bx, 13h
 		cwd
@@ -30133,7 +29924,7 @@ loc_21777:
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		mov	ax, point_39EB9.x
 		mov	_orb_cur_left, ax
@@ -30595,26 +30386,26 @@ loc_21B11:
 		dec	word ptr es:[bx]
 		les	bx, [bp+arg_4]
 		mov	word ptr es:[bx], 1
-		cmp	word_34A7C, 1
+		cmp	_orb_velocity_x, OVX_4_LEFT
 		jz	short loc_21B53
-		cmp	word_34A7C, 3
+		cmp	_orb_velocity_x, OVX_8_LEFT
 		jz	short loc_21B53
-		cmp	word_34A7C, 2
+		cmp	_orb_velocity_x, OVX_4_RIGHT
 		jz	short loc_21B5B
-		cmp	word_34A7C, 4
+		cmp	_orb_velocity_x, OVX_8_RIGHT
 		jz	short loc_21B5B
-		cmp	word_34A7C, 0
+		cmp	_orb_velocity_x, OVX_0
 		jnz	short loc_21B61
 		cmp	_orb_cur_left, (PLAYFIELD_CENTER - (ORB_W / 2))
 		jge	short loc_21B5B
 
 loc_21B53:
-		mov	word_34A7C, 2
+		mov	_orb_velocity_x, OVX_4_RIGHT
 		jmp	short loc_21B61
 ; ---------------------------------------------------------------------------
 
 loc_21B5B:
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 
 loc_21B61:
 		movsx	eax, [bp+arg_12]
@@ -49544,10 +49335,10 @@ loc_2C8AE:
 		mov	_orb_cur_top, ORB_TOP_START
 		mov	_player_left, PLAYER_LEFT_START
 		fld	dbl_35FAA
-		fstp	dbl_34A9C
+		fstp	_orb_force
 		fwait
-		mov	word_36C2C, 0
-		mov	word_34A7C, 1
+		mov	_orb_force_frame, 0
+		mov	_orb_velocity_x, OVX_4_LEFT
 		mov	byte_34A57, 0
 		mov	byte_34A58, 0
 		push	0
@@ -55170,7 +54961,7 @@ arg_8		= word ptr  0Eh
 		sub	ax, di
 		cmp	ax, 8
 		jle	short loc_2FEB2
-		mov	word_34A7C, 1
+		mov	_orb_velocity_x, OVX_4_LEFT
 		jmp	short loc_2FEE6
 ; ---------------------------------------------------------------------------
 
@@ -55183,7 +54974,7 @@ loc_2FEB2:
 		sub	ax, di
 		cmp	ax, 8
 		jnz	short loc_2FECD
-		mov	word_34A7C, 0
+		mov	_orb_velocity_x, OVX_0
 		jmp	short loc_2FEE6
 ; ---------------------------------------------------------------------------
 
@@ -55196,23 +54987,22 @@ loc_2FECD:
 		sub	ax, di
 		cmp	ax, 0FFF0h
 		jle	short loc_2FEE6
-		mov	word_34A7C, 2
+		mov	_orb_velocity_x, OVX_4_RIGHT
 
 loc_2FEE6:
-		push	2		; int
+		push	OF_SHOT
 		fldz
 		sub	sp, 8
 		fstp	[bp+var_E]
 		fwait
-		call	sub_C62D
+		call	_orb_force_new
 		add	sp, 0Ah
 		les	bx, [bp+arg_0]
 		add	bx, si
 		mov	byte ptr es:[bx+30h], 0
-		push	word_34A7C
-		call	sub_C6E8
+		call	_orb_move_x stdcall, _orb_velocity_x
 		pop	cx
-		call	sub_C5B4
+		call	_orb_velocity_y_update
 		add	_orb_cur_top, ax
 		mov	ax, 1
 		jmp	short loc_2FF20
@@ -57321,7 +57111,8 @@ word_34A74	dw 0
 		dw 0
 word_34A78	dw 0
 		dw 0
-word_34A7C	dw 0
+public _orb_velocity_x
+_orb_velocity_x	dw 0
 word_34A7E	dw 0
 _rem_lives	dw 4
 word_34A82	dw 0
@@ -57334,8 +57125,7 @@ public _orb_prev_left, _orb_prev_top
 _orb_prev_left	dw ORB_LEFT_START
 _orb_prev_top 	dw  ORB_TOP_START
 word_34A92	dw 0
-dbl_34A94	dq 0.0
-dbl_34A9C	dq 0.0
+include th01/main/player/orb[data].asm
 byte_34AA4	db 0
 unk_34AA5	db  0Fh
 		db  0Fh
@@ -57413,11 +57203,13 @@ a0m		db 1Bh,'[0m',0
 s2		db 'empty.grf',0
 aKuzi1_grc	db 'kuzi1.grc',0
 aKuzi2_grc	db 'kuzi2.grc',0
-flt_34B64	dd 16.0
-dbl_34B68	dq -16.0
-dbl_34B70	dq 0.78
-flt_34B78	dd 2.0
-dbl_34B7C	dq -10.0
+public _ORB_VELOCITY_Y_MAX, _ORB_VELOCITY_Y_MIN
+public _ORB_COEFFICIENT_OF_RESTITUTION, _ORB_FORCE_2_0, _ORB_FORCE_SHOT_BASE
+_ORB_VELOCITY_Y_MAX	dd 16.0
+_ORB_VELOCITY_Y_MIN	dq -16.0
+_ORB_COEFFICIENT_OF_RESTITUTION	dq 0.78
+_ORB_FORCE_2_0	dd 2.0
+_ORB_FORCE_SHOT_BASE	dq -10.0
 aVovVtvrvd	db 'ＰＡＵＳＥ',0
 aB@nKjb@b@pic	db '　再開　　終了',0
 aBB@b@b@b@b@b@	db '●　　　　　　',0
@@ -58437,7 +58229,6 @@ _mode_debug	db ?
 dword_36C20	dd ?
 include th01/main/player/player[bss].asm
 include th01/main/player/orb[bss].asm
-word_36C2C	dw ?
 		db 1275 dup(?)
 unk_37129	db    ?	;
 		db 645 dup(?)
