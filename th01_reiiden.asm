@@ -70,7 +70,7 @@ main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
-main_38 group main_38_TEXT, main_38__TEXT
+main_38 group main_38_TEXT, main_38__TEXT, main_38___TEXT
 
 ; ===========================================================================
 
@@ -17081,13 +17081,13 @@ loc_1A26C:
 		jnz	short loc_1A2C4
 		cmp	byte_35B43, 0
 		jnz	short loc_1A29E
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 		jmp	loc_1A3B9
 ; ---------------------------------------------------------------------------
@@ -17172,13 +17172,13 @@ loc_1A364:
 		jl	short loc_1A3B9
 
 loc_1A390:
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 		mov	dword_34A62, 0
 		mov	_input_shot, 0
@@ -17938,25 +17938,20 @@ loc_1A9C0:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1A9DC
-		push	170h
-		push	_player_left
-		push	ds
-		push	offset _Shots
-		call	CShots_2FC44
-		add	sp, 8
+		call	@CShots@add$qii c, offset _Shots, ds, _player_left, _player_top
 
 loc_1A9DC:
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 4
 		jnz	short loc_1A9FB
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 16
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1A9FB:
@@ -17964,13 +17959,13 @@ loc_1A9FB:
 		cbw
 		cmp	ax, 7
 		jnz	short loc_1AA1A
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1AA1A:
@@ -17978,13 +17973,13 @@ loc_1AA1A:
 		cbw
 		cmp	ax, 0Ah
 		jnz	short loc_1AA39
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1AA39:
@@ -17992,13 +17987,13 @@ loc_1AA39:
 		cbw
 		cmp	ax, 0Dh
 		jnz	short loc_1AA58
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1AA58:
@@ -18006,13 +18001,13 @@ loc_1AA58:
 		cbw
 		cmp	ax, 10h
 		jnz	short loc_1AA77
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 24
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1AA77:
@@ -18020,13 +18015,13 @@ loc_1AA77:
 		cbw
 		cmp	ax, 13h
 		jnz	short loc_1AA96
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, 8
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FC44
+		call	@CShots@add$qii
 		add	sp, 8
 
 loc_1AA96:
@@ -54628,75 +54623,14 @@ main_37_TEXT	ends
 
 ; Segment type:	Pure code
 main_38_TEXT	segment	byte public 'CODE' use16
+main_38_TEXT	ends
+
+main_38__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_38
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-CShots_2FC44	proc far
-
-@@CShots		= dword	ptr  6
-@@left		= word ptr  0Ah
-@@top		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+@@left]
-		or	di, di
-		jl	short loc_2FCA9
-		cmp	di, (PLAYFIELD_RIGHT - 1)
-		jg	short loc_2FCA9
-		xor	si, si
-		jmp	short loc_2FCA4
-; ---------------------------------------------------------------------------
-
-loc_2FC5A:
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_moving], 1
-		jz	short loc_2FCA3
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_decay_frame], 0
-		jnz	short loc_2FCA3
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+@@CShots]
-		add	bx, ax
-		mov	es:[bx+CShots.SHOT_left], di
-		mov	ax, [bp+@@top]
-		mov	es:[bx+CShots.SHOT_top], ax
-		mov	bx, word ptr [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_moving], 1
-		push	1
-		call	_mdrv2_se_play
-		pop	cx
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_decay_frame], 0
-		jmp	short loc_2FCA9
-; ---------------------------------------------------------------------------
-
-loc_2FCA3:
-		inc	si
-
-loc_2FCA4:
-		cmp	si, SHOT_COUNT
-		jl	short loc_2FC5A
-
-loc_2FCA9:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-CShots_2FC44	endp
-
+	extern @CShots@add$qii:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -56197,9 +56131,9 @@ off_30895	dw offset loc_30656
 		dw offset loc_30773
 		dw offset loc_307A7
 		dw offset loc_30809
-main_38_TEXT	ends
+main_38__TEXT	ends
 
-main_38__TEXT	segment	byte public 'CODE' use16
+main_38___TEXT	segment	byte public 'CODE' use16
 	extern _pellet_render:proc
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -57052,7 +56986,7 @@ sub_30F70	endp
 
 ; ---------------------------------------------------------------------------
 		dw 0
-main_38__TEXT	ends
+main_38___TEXT	ends
 
 	.data
 

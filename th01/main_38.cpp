@@ -1,12 +1,13 @@
 /* ReC98
  * -----
- * Code segment #38 of TH01's REIIDEN.EXE
+ * 1st part of code segment #38 of TH01's REIIDEN.EXE
  */
 
+#pragma option -Z
+
 extern "C" {
-#include "ReC98.h"
-#include "th01/hardware/graph.h"
+#include "platform.h"
+#include "pc98.h"
 
-#include "th01/main/bullet/pellet.cpp"
-
+#include "th01/main/player/shots.cpp"
 }

@@ -112,6 +112,35 @@ certain local variables as `word`s when they aren't.
 
 ## Flags
 
+### `-Z` (Suppress register reloads)
+
+* The tracked contents of `ES` are reset after a conditional statement. If the
+  original code had more `LES` instructions than necessary, this indicates a
+  specific layout of conditional branches:
+
+  ```c++
+  struct foo {
+    char a, b;
+
+    char es_not_reset();
+    char es_reset();
+  };
+
+  char foo::es_not_reset() {
+    return (
+      a    // LES BX, [bp+this]
+      && b // `this` still remembered in ES, not reloaded
+    );
+  }
+
+  char foo::es_reset() {
+    if(a) return 1; // LES BX, [bp+this]
+    // Tracked contents of ES are reset
+    if(b) return 1; // LES BX, [bp+this]
+    return 0;
+  }
+  ```
+
 ### `-3` (80386 Instructions) + `-Z` (Suppress register reloads)
 
 Bundles two consecutive 16-bit function parameters into a single 32-bit one,
