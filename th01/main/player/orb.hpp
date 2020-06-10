@@ -11,6 +11,7 @@ static const int  ORB_TOP_START = ( ORB_TOP_MAX - 88);
 
 extern int  orb_cur_left,  orb_cur_top;
 extern int orb_prev_left, orb_prev_top;
+extern bool16 orb_in_portal;
 
 /// Physics
 /// -------

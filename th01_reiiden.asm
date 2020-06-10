@@ -1765,7 +1765,7 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		cmp	word_34A86, 0
+		cmp	_orb_in_portal, 0
 		jnz	loc_C816
 		call	_orb_move_x stdcall, _orb_velocity_x
 		pop	cx
@@ -1846,14 +1846,14 @@ loc_C816:
 		pop	cx
 
 loc_C846:
-		cmp	word_34A86, 0
+		cmp	_orb_in_portal, 0
 		jnz	short loc_C855
 		push	0
 		call	sub_1AC6E
 		pop	cx
 
 loc_C855:
-		cmp	word_34A86, 0
+		cmp	_orb_in_portal, 0
 		jnz	short loc_C879
 		mov	ax, word_34A7E
 		mov	bx, 3
@@ -1872,7 +1872,7 @@ loc_C879:
 		call	sub_201BE
 
 loc_C88B:
-		cmp	word_34A86, 0
+		cmp	_orb_in_portal, 0
 		jnz	short loc_C8B6
 		cmp	_done, 0
 		jnz	short loc_C8B6
@@ -3767,7 +3767,7 @@ loc_DA9E:
 		mov	word_34A8C, ax
 		call	sub_190D6
 		mov	word_34A88, 0
-		mov	word_34A86, 0
+		mov	_orb_in_portal, 0
 		mov	dword_34A62, 0
 		mov	word_386B3, 7
 		cmp	_mode_debug, 1
@@ -4211,7 +4211,7 @@ loc_DF52:
 		add	sp, 0Ch
 
 loc_DF9A:
-		mov	word_34A86, 0
+		mov	_orb_in_portal, 0
 		cmp	byte_34ADF, 0
 		jnz	short loc_DFBC
 		push	1
@@ -29720,15 +29720,15 @@ arg_2		= word ptr  8
 		cmp	[bp+arg_2], 1
 		jnz	short loc_215B0
 		mov	word_39EB7, 0
-		mov	word_39EBD, 0
-		cmp	word_34A86, 0
+		mov	_portals_blocked, 0
+		cmp	_orb_in_portal, 0
 		jz	loc_21815
-		call	_ptn_put_8 c, point_39EB9.x, point_39EB9.y, 1Dh
+		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
 		jmp	loc_217F2
 ; ---------------------------------------------------------------------------
 
 loc_215B0:
-		cmp	word_39EBD, 1
+		cmp	_portals_blocked, 1
 		jnz	short loc_215BF
 		cmp	word_39EB7, si
 		jnz	loc_21815
@@ -29749,10 +29749,10 @@ loc_215D2:
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_21634
-		mov	word_34A86, 1
+		mov	_orb_in_portal, 1
 		mov	word ptr es:[bx], 1
 		mov	word_39EB7, si
-		mov	word_39EBD, 1
+		mov	_portals_blocked, 1
 		call	_egc_copy_rect_1_to_0 c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
 		push	1Eh
 
@@ -29871,19 +29871,19 @@ loc_2170D:
 		les	bx, off_39E9A
 		add	bx, ax
 		mov	ax, es:[bx]
-		mov	point_39EB9.x, ax
+		mov	_portal_dst_left, ax
 		mov	ax, di
 		add	ax, ax
 		les	bx, off_39E9E
 		add	bx, ax
 		mov	ax, es:[bx]
-		mov	point_39EB9.y, ax
-		call	_egc_copy_rect_1_to_0 c, point_39EB9.x, ax, large (32 shl 16) or 32
+		mov	_portal_dst_top, ax
+		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, ax, large (32 shl 16) or 32
 		push	1Fh
 
 loc_21742:
-		push	point_39EB9.y
-		push	point_39EB9.x
+		push	_portal_dst_top
+		push	_portal_dst_left
 		jmp	loc_21629
 ; ---------------------------------------------------------------------------
 
@@ -29894,7 +29894,7 @@ loc_2174D:
 		add	bx, ax
 		cmp	word ptr es:[bx], 1Eh
 		jnz	short loc_21777
-		call	_egc_copy_rect_1_to_0 c, point_39EB9.x, point_39EB9.y, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		push	1Eh
 		jmp	short loc_21742
 ; ---------------------------------------------------------------------------
@@ -29906,8 +29906,8 @@ loc_21777:
 		add	bx, ax
 		cmp	word ptr es:[bx], 28h ;	'('
 		jnz	short loc_217FA
-		call	_egc_copy_rect_1_to_0 c, point_39EB9.x, point_39EB9.y, large (32 shl 16) or 32
-		call	_ptn_put_8 c, point_39EB9.x, point_39EB9.y, 1Dh
+		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
+		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
 		call	IRand
 		mov	bx, 5
 		cwd
@@ -29926,13 +29926,13 @@ loc_21777:
 		fwait
 		call	_orb_force_new
 		add	sp, 0Ah
-		mov	ax, point_39EB9.x
+		mov	ax, _portal_dst_left
 		mov	_orb_cur_left, ax
-		mov	ax, point_39EB9.y
+		mov	ax, _portal_dst_top
 		mov	_orb_cur_top, ax
 
 loc_217F2:
-		mov	word_34A86, 0
+		mov	_orb_in_portal, 0
 		jmp	short loc_21815
 ; ---------------------------------------------------------------------------
 
@@ -29944,7 +29944,7 @@ loc_217FA:
 		cmp	word ptr es:[bx], 3Ch ;	'<'
 		jnz	short loc_21815
 		mov	word ptr es:[bx], 0
-		mov	word_39EBD, 0
+		mov	_portals_blocked, 0
 
 loc_21815:
 		pop	di
@@ -54813,7 +54813,7 @@ loc_2FD31:
 		les	bx, [bp+arg_0]
 		add	bx, ax
 		sub	word ptr es:[bx+10h], 0Ch
-		cmp	word_34A86, 0
+		cmp	_orb_in_portal, 0
 		jnz	short loc_2FD8C
 		push	_orb_cur_top
 		push	_orb_cur_left
@@ -57117,7 +57117,8 @@ word_34A7E	dw 0
 _rem_lives	dw 4
 word_34A82	dw 0
 word_34A84	dw 0
-word_34A86	dw 0
+public _orb_in_portal
+_orb_in_portal	dw 0
 word_34A88	dw 0
 word_34A8A	dw 1
 word_34A8C	dw 1
@@ -58557,8 +58558,7 @@ byte_39EB2	db ?
 ; void (*off_39EB3)(void)
 off_39EB3	dd ?
 word_39EB7	dw ?
-point_39EB9	Point <?>
-word_39EBD	dw ?
+include th01/main/portals[bss].asm
 		db 5 dup(?)
 unk_39EC4	db    ?	;
 		db 749 dup(?)
