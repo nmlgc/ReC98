@@ -3501,10 +3501,7 @@ loc_D7E4:
 		push	offset unk_37635
 		call	sub_30DEE
 		add	sp, 4
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FCAD
-		add	sp, 4
+		call	CShots_2FCAD c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], 1250h
 		mov	byte_34ADF, 0
@@ -4411,10 +4408,7 @@ loc_E224:
 loc_E244:
 		inc	si
 		call	sub_CE5C
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FCAD
-		add	sp, 4
+		call	CShots_2FCAD c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -4511,17 +4505,16 @@ sub_E319	proc far
 		push	offset unk_37635
 		call	sub_30047
 		add	sp, 4
-		mov	word_386D8, 50h	; 'P'
-		mov	word_386DA, 60h
-		mov	word_386DC, 70h	; 'p'
-		mov	byte_386E8, 0
-		mov	byte_386E9, 0
-		mov	byte_386EA, 0
-		mov	byte_386EB, 0
-		mov	byte_386EC, 0
-		mov	byte_386ED, 0
-		mov	byte_386EE, 0
-		mov	byte_386EF, 0
+		mov	_Shots.SHOT_unknown[0 * word], 50h
+		mov	_Shots.SHOT_unknown[1 * word], 60h
+		mov	_Shots.SHOT_unknown[2 * word], 70h
+
+		@@i = 0
+		rept SHOT_COUNT
+			mov	_Shots.SHOT_moving[@@i], 0
+			@@i = @@i + 1
+		endm
+
 		pop	bp
 		retf
 sub_E319	endp
@@ -7574,10 +7567,7 @@ arg_0		= word ptr  6
 		enter	6, 0
 		push	si
 		push	di
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FCAD
-		add	sp, 4
+		call	CShots_2FCAD c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -17096,8 +17086,8 @@ loc_1A26C:
 		add	ax, 8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 		jmp	loc_1A3B9
 ; ---------------------------------------------------------------------------
@@ -17187,8 +17177,8 @@ loc_1A390:
 		add	ax, 8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 		mov	dword_34A62, 0
 		mov	_input_shot, 0
@@ -17951,8 +17941,8 @@ loc_1A9C0:
 		push	170h
 		push	_player_left
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1A9DC:
@@ -17965,8 +17955,8 @@ loc_1A9DC:
 		add	ax, 16
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1A9FB:
@@ -17979,8 +17969,8 @@ loc_1A9FB:
 		add	ax, 8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1AA1A:
@@ -17993,8 +17983,8 @@ loc_1AA1A:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1AA39:
@@ -18007,8 +17997,8 @@ loc_1AA39:
 		add	ax, 8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1AA58:
@@ -18021,8 +18011,8 @@ loc_1AA58:
 		add	ax, 24
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1AA77:
@@ -18035,8 +18025,8 @@ loc_1AA77:
 		add	ax, 8
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FC44
+		push	offset _Shots
+		call	CShots_2FC44
 		add	sp, 8
 
 loc_1AA96:
@@ -18578,10 +18568,7 @@ loc_1AE85:
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FCAD
-		add	sp, 4
+		call	CShots_2FCAD c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30E54
@@ -30342,8 +30329,8 @@ loc_21AAE:
 		push	[bp+arg_1C]
 		push	[bp+arg_1A]
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FFC1
+		push	offset _Shots
+		call	CShots_2FFC1
 		add	sp, 0Ch
 		cmp	[bp+arg_18], 1
 		jnz	short loc_21AD5
@@ -49289,10 +49276,7 @@ loc_2C835:
 		jnz	loc_2CAA8
 		mov	word_3A6CA, 0
 		mov	word_3B433, 18Fh
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FCAD
-		add	sp, 4
+		call	CShots_2FCAD c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -54652,50 +54636,50 @@ main_38_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_2FC44	proc far
+CShots_2FC44	proc far
 
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
+@@CShots		= dword	ptr  6
+@@left		= word ptr  0Ah
+@@top		= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
+		mov	di, [bp+@@left]
 		or	di, di
 		jl	short loc_2FCA9
-		cmp	di, 27Fh
+		cmp	di, (PLAYFIELD_RIGHT - 1)
 		jg	short loc_2FCA9
 		xor	si, si
 		jmp	short loc_2FCA4
 ; ---------------------------------------------------------------------------
 
 loc_2FC5A:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 1
+		cmp	es:[bx+CShots.SHOT_moving], 1
 		jz	short loc_2FCA3
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+38h], 0
+		cmp	es:[bx+CShots.SHOT_decay_frame], 0
 		jnz	short loc_2FCA3
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		mov	es:[bx], di
-		mov	ax, [bp+arg_6]
-		mov	es:[bx+10h], ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CShots.SHOT_left], di
+		mov	ax, [bp+@@top]
+		mov	es:[bx+CShots.SHOT_top], ax
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 1
+		mov	es:[bx+CShots.SHOT_moving], 1
 		push	1
 		call	_mdrv2_se_play
 		pop	cx
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+38h], 0
+		mov	es:[bx+CShots.SHOT_decay_frame], 0
 		jmp	short loc_2FCA9
 ; ---------------------------------------------------------------------------
 
@@ -54703,7 +54687,7 @@ loc_2FCA3:
 		inc	si
 
 loc_2FCA4:
-		cmp	si, 8
+		cmp	si, SHOT_COUNT
 		jl	short loc_2FC5A
 
 loc_2FCA9:
@@ -54711,16 +54695,16 @@ loc_2FCA9:
 		pop	si
 		pop	bp
 		retf
-sub_2FC44	endp
+CShots_2FC44	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2FCAD	proc far
+CShots_2FCAD	proc far
 
-arg_0		= dword	ptr  6
+@@CShots		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -54730,62 +54714,62 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_2FCB5:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 0
+		cmp	es:[bx+CShots.SHOT_moving], 0
 		jz	short loc_2FCEB
 		push	(16 shl 16) or 16
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, ax
-		push	word ptr es:[bx+10h]
-		push	word ptr es:[bx]
+		push	es:[bx+CShots.SHOT_top]
+		push	es:[bx+CShots.SHOT_left]
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
+		mov	es:[bx+CShots.SHOT_moving], 0
 		jmp	short loc_2FD1F
 ; ---------------------------------------------------------------------------
 
 loc_2FCEB:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+38h], 0
+		cmp	es:[bx+CShots.SHOT_decay_frame], 0
 		jz	short loc_2FD1F
 		push	(16 shl 16) or 16
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, ax
-		push	word ptr es:[bx+10h]
-		push	word ptr es:[bx]
+		push	es:[bx+CShots.SHOT_top]
+		push	es:[bx+CShots.SHOT_left]
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+38h], 0
+		mov	es:[bx+CShots.SHOT_decay_frame], 0
 
 loc_2FD1F:
 		inc	si
 
 loc_2FD20:
-		cmp	si, 8
+		cmp	si, SHOT_COUNT
 		jl	short loc_2FCB5
 		pop	si
 		pop	bp
 		retf
-sub_2FCAD	endp
+CShots_2FCAD	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2FD28	proc far
+CShots_2FD28	proc far
 
-arg_0		= dword	ptr  6
+@@CShots		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -54795,31 +54779,31 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_2FD31:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 1
+		cmp	es:[bx+CShots.SHOT_moving], 1
 		jnz	short loc_2FDAE
 		push	(16 shl 16) or 16
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, ax
-		push	word ptr es:[bx+10h]
-		push	word ptr es:[bx]
+		push	es:[bx+CShots.SHOT_top]
+		push	es:[bx+CShots.SHOT_left]
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		sub	word ptr es:[bx+10h], 0Ch
+		sub	es:[bx+CShots.SHOT_top], 12
 		cmp	_orb_in_portal, 0
 		jnz	short loc_2FD8C
 		push	_orb_cur_top
 		push	_orb_cur_left
 		push	si
-		pushd	[bp+arg_0]
-		nopcall	sub_2FE4C
+		pushd	[bp+@@CShots]
+		nopcall	CShots_2FE4C
 		add	sp, 0Ah
 		cmp	ax, 1
 		jz	loc_2FE41
@@ -54827,29 +54811,29 @@ loc_2FD31:
 loc_2FD8C:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		cmp	word ptr es:[bx+10h], 40h
+		cmp	es:[bx+CShots.SHOT_top], PLAYFIELD_TOP
 		jl	short loc_2FDA1
 		push	0
 		jmp	loc_2FE27
 ; ---------------------------------------------------------------------------
 
 loc_2FDA1:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
+		mov	es:[bx+CShots.SHOT_moving], 0
 		jmp	loc_2FE41
 ; ---------------------------------------------------------------------------
 
 loc_2FDAE:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+38h], 0
+		cmp	es:[bx+CShots.SHOT_decay_frame], 0
 		jz	loc_2FE41
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	al, es:[bx+38h]
+		mov	al, es:[bx+CShots.SHOT_decay_frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -54859,32 +54843,32 @@ loc_2FDAE:
 		push	1
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, ax
-		push	word ptr es:[bx+10h]
-		push	word ptr es:[bx]
+		push	es:[bx+CShots.SHOT_top]
+		push	es:[bx+CShots.SHOT_left]
 		call	_ptn_unput_quarter_8
 		add	sp, 8
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		inc	byte ptr es:[bx+38h]
-		mov	bx, word ptr [bp+arg_0]
+		inc	es:[bx+CShots.SHOT_decay_frame]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+38h], 7
+		cmp	es:[bx+CShots.SHOT_decay_frame], 7
 		jbe	short loc_2FE14
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+38h], 0
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CShots.SHOT_decay_frame], 0
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
+		mov	es:[bx+CShots.SHOT_moving], 0
 		jmp	short loc_2FE41
 ; ---------------------------------------------------------------------------
 
 loc_2FE14:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	al, es:[bx+38h]
+		mov	al, es:[bx+CShots.SHOT_decay_frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -54896,10 +54880,10 @@ loc_2FE27:
 		push	1
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		push	word ptr es:[bx+10h]
-		push	word ptr es:[bx]
+		push	es:[bx+CShots.SHOT_top]
+		push	es:[bx+CShots.SHOT_left]
 		call	_ptn_put_quarter_8
 		add	sp, 8
 
@@ -54907,22 +54891,22 @@ loc_2FE41:
 		inc	si
 
 loc_2FE42:
-		cmp	si, 8
+		cmp	si, SHOT_COUNT
 		jl	loc_2FD31
 		pop	si
 		pop	bp
 		retf
-sub_2FD28	endp
+CShots_2FD28	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2FE4C	proc far
+CShots_2FE4C	proc far
 
 var_E		= qword	ptr -0Eh
-arg_0		= dword	ptr  6
+@@CShots		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= word ptr  0Eh
@@ -54933,31 +54917,31 @@ arg_8		= word ptr  0Eh
 		push	di
 		mov	si, [bp+arg_4]
 		mov	di, [bp+arg_6]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 0
+		cmp	es:[bx+CShots.SHOT_moving], 0
 		jz	loc_2FF1E
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
-		cmp	ax, 20h	; ' '
+		cmp	ax, 32
 		jge	loc_2FF1E
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
-		cmp	ax, 0FFF0h
+		cmp	ax, -16
 		jle	loc_2FF1E
-		mov	ax, es:[bx+10h]
+		mov	ax, es:[bx+CShots.SHOT_top]
 		sub	ax, [bp+arg_8]
-		cmp	ax, 20h	; ' '
+		cmp	ax, 32
 		jge	loc_2FF1E
-		mov	ax, es:[bx+10h]
+		mov	ax, es:[bx+CShots.SHOT_top]
 		sub	ax, [bp+arg_8]
-		cmp	ax, 0FFF0h
+		cmp	ax, -16
 		jle	short loc_2FF1E
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
 		cmp	ax, 8
 		jle	short loc_2FEB2
@@ -54968,9 +54952,9 @@ arg_8		= word ptr  0Eh
 loc_2FEB2:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
 		cmp	ax, 8
 		jnz	short loc_2FECD
@@ -54981,11 +54965,11 @@ loc_2FEB2:
 loc_2FECD:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
-		cmp	ax, 0FFF0h
+		cmp	ax, -16
 		jle	short loc_2FEE6
 		mov	_orb_velocity_x, OVX_4_RIGHT
 
@@ -54997,9 +54981,9 @@ loc_2FEE6:
 		fwait
 		call	_orb_force_new
 		add	sp, 0Ah
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
+		mov	es:[bx+CShots.SHOT_moving], 0
 		call	_orb_move_x stdcall, _orb_velocity_x
 		pop	cx
 		call	_orb_velocity_y_update
@@ -55016,16 +55000,16 @@ loc_2FF20:
 		pop	si
 		pop	bp
 		retf
-sub_2FE4C	endp
+CShots_2FE4C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2FF24	proc far
+CShots_2FF24	proc far
 
-arg_0		= dword	ptr  6
+@@CShots		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 
@@ -55039,41 +55023,41 @@ arg_6		= word ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_2FF31:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 0
+		cmp	es:[bx+CShots.SHOT_moving], 0
 		jz	short loc_2FFB3
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+38h], 1
+		cmp	es:[bx+CShots.SHOT_decay_frame], 1
 		jz	short loc_2FFB3
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
 		cmp	ax, 6
 		jg	short loc_2FFB3
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CShots.SHOT_left]
 		sub	ax, di
-		cmp	ax, 0FFF2h
+		cmp	ax, -14
 		jl	short loc_2FFB3
-		mov	ax, es:[bx+10h]
+		mov	ax, es:[bx+CShots.SHOT_top]
 		sub	ax, [bp+arg_6]
 		cmp	ax, 6
 		jg	short loc_2FFB3
-		mov	ax, es:[bx+10h]
+		mov	ax, es:[bx+CShots.SHOT_top]
 		sub	ax, [bp+arg_6]
-		cmp	ax, 0FFF2h
+		cmp	ax, -14
 		jl	short loc_2FFB3
-		call	_egc_copy_rect_1_to_0 stdcall, word ptr es:[bx], word ptr es:[bx+10h], large (16 shl 16) or 16
-		les	bx, [bp+arg_0]
+		call	_egc_copy_rect_1_to_0 stdcall, es:[bx+CShots.SHOT_left], es:[bx+CShots.SHOT_top], large (16 shl 16) or 16
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CShots.SHOT_moving], 0
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+38h], 1
+		mov	es:[bx+CShots.SHOT_decay_frame], 1
 		push	10h
 		call	_mdrv2_se_play
 		add	sp, 0Ah
@@ -55085,7 +55069,7 @@ loc_2FFB3:
 		inc	si
 
 loc_2FFB4:
-		cmp	si, 8
+		cmp	si, SHOT_COUNT
 		jl	loc_2FF31
 		xor	ax, ax
 
@@ -55094,16 +55078,16 @@ loc_2FFBD:
 		pop	si
 		pop	bp
 		retf
-sub_2FF24	endp
+CShots_2FF24	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2FFC1	proc far
+CShots_2FFC1	proc far
 
-arg_0		= dword	ptr  6
+@@CShots		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= word ptr  0Eh
@@ -55119,34 +55103,34 @@ arg_A		= word ptr  10h
 ; ---------------------------------------------------------------------------
 
 loc_2FFCD:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		cmp	byte ptr es:[bx+30h], 0
+		cmp	es:[bx+CShots.SHOT_moving], 0
 		jz	short loc_3003B
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CShots]
 		add	bx, ax
-		cmp	es:[bx], di
+		cmp	es:[bx+CShots.SHOT_left], di
 		jl	short loc_3003B
 		mov	ax, di
 		add	ax, [bp+arg_8]
-		cmp	es:[bx], ax
+		cmp	es:[bx+CShots.SHOT_left], ax
 		jg	short loc_3003B
-		mov	ax, es:[bx+10h]
+		mov	ax, es:[bx+CShots.SHOT_top]
 		cmp	ax, [bp+arg_6]
 		jl	short loc_3003B
 		mov	ax, [bp+arg_6]
 		add	ax, [bp+arg_A]
-		cmp	es:[bx+10h], ax
+		cmp	es:[bx+CShots.SHOT_top], ax
 		jg	short loc_3003B
-		call	_egc_copy_rect_1_to_0 stdcall, word ptr es:[bx], word ptr es:[bx+10h], large (16 shl 16) or 16
-		les	bx, [bp+arg_0]
+		call	_egc_copy_rect_1_to_0 stdcall, es:[bx+CShots.SHOT_left], es:[bx+CShots.SHOT_top], large (16 shl 16) or 16
+		les	bx, [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+30h], 0
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CShots.SHOT_moving], 0
+		mov	bx, word ptr [bp+@@CShots]
 		add	bx, si
-		mov	byte ptr es:[bx+38h], 1
+		mov	es:[bx+CShots.SHOT_decay_frame], 1
 		push	10h
 		call	_mdrv2_se_play
 		add	sp, 0Ah
@@ -55158,7 +55142,7 @@ loc_3003B:
 		inc	si
 
 loc_3003C:
-		cmp	si, 8
+		cmp	si, SHOT_COUNT
 		jl	short loc_2FFCD
 		xor	ax, ax
 
@@ -55167,7 +55151,7 @@ loc_30043:
 		pop	si
 		pop	bp
 		retf
-sub_2FFC1	endp
+CShots_2FFC1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -56237,33 +56221,33 @@ arg_6		= word ptr  0Ch
 ; ---------------------------------------------------------------------------
 
 loc_30918:
-		mov	al, [si+3D48h]
+		mov	al, _Shots.SHOT_moving[si]
 		mov	ah, 0
 		cmp	ax, 1
 		jnz	short loc_3096F
 		mov	bx, si
 		add	bx, bx
 		mov	ax, di
-		sub	ax, [bx+3D18h]
-		cmp	ax, 10h
+		sub	ax, _Shots.SHOT_left[bx]
+		cmp	ax, 16
 		jge	short loc_30966
 		mov	bx, si
 		add	bx, bx
 		mov	ax, di
-		sub	ax, [bx+3D18h]
-		cmp	ax, 0FFF8h
+		sub	ax, _Shots.SHOT_left[bx]
+		cmp	ax, -8
 		jle	short loc_30966
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bp+arg_6]
-		sub	ax, [bx+3D28h]
-		cmp	ax, 10h
+		sub	ax, _Shots.SHOT_top[bx]
+		cmp	ax, 16
 		jge	short loc_30966
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bp+arg_6]
-		sub	ax, [bx+3D28h]
-		cmp	ax, 0FFF8h
+		sub	ax, _Shots.SHOT_top[bx]
+		cmp	ax, -8
 		jle	short loc_30966
 		mov	ax, 1
 		jmp	short loc_30968
@@ -56280,26 +56264,26 @@ loc_3096F:
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [di+8]
-		sub	ax, [bx+3D18h]
-		cmp	ax, 10h
+		sub	ax, _Shots.SHOT_left[bx]
+		cmp	ax, 16
 		jge	short loc_309B4
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [di+8]
-		sub	ax, [bx+3D18h]
-		cmp	ax, 0FFF8h
+		sub	ax, _Shots.SHOT_left[bx]
+		cmp	ax, -8
 		jle	short loc_309B4
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bp+arg_6]
-		sub	ax, [bx+3D28h]
-		cmp	ax, 10h
+		sub	ax, _Shots.SHOT_top[bx]
+		cmp	ax, 16
 		jge	short loc_309B4
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bp+arg_6]
-		sub	ax, [bx+3D28h]
-		cmp	ax, 0FFF8h
+		sub	ax, _Shots.SHOT_top[bx]
+		cmp	ax, -8
 		jle	short loc_309B4
 		mov	ax, 1
 		jmp	short loc_309B6
@@ -56314,7 +56298,7 @@ loc_309B6:
 		inc	si
 
 loc_309BE:
-		cmp	si, 3
+		cmp	si, 3	; ???
 		jl	loc_30918
 		mov	bx, word_3B530
 		cmp	word ptr [bx+1Eh], 0
@@ -56589,8 +56573,8 @@ loc_30BDF:
 		sar	ax, 4
 		push	ax
 		push	ds
-		push	offset unk_386B8
-		call	sub_2FF24
+		push	offset _Shots
+		call	CShots_2FF24
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_30C46
@@ -56645,10 +56629,7 @@ loc_30C99:
 loc_30C9F:
 		cmp	si, 64h	; 'd'
 		jl	loc_30B54
-		push	ds
-		push	offset unk_386B8
-		call	sub_2FD28
-		add	sp, 4
+		call	CShots_2FD28 c, offset _Shots, ds
 		mov	ax, word ptr [bp+arg_0]
 		mov	word_3B530, ax
 		xor	si, si
@@ -58240,21 +58221,8 @@ unk_37635	db    ?	;
 word_386B3	dw ?
 		db 2 dup(?)
 byte_386B7	db ?
-unk_386B8	db    ?	;
-		db 31 dup(?)
-word_386D8	dw ?
-word_386DA	dw ?
-word_386DC	dw ?
-		db 10 dup(?)
-byte_386E8	db ?
-byte_386E9	db ?
-byte_386EA	db ?
-byte_386EB	db ?
-byte_386EC	db ?
-byte_386ED	db ?
-byte_386EE	db ?
-byte_386EF	db ?
-		db 12 dup(?)
+include th01/main/player/shots[bss].asm
+		db 4 dup(?)
 public _input_prev
 _input_prev	db 16 dup (?)
 		db 21 dup(?)
