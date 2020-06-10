@@ -57597,7 +57597,7 @@ unk_355EC	db    0
 		db 0FCh
 		db    1
 		db 0FEh
-include th01/mdrv2[data].asm
+include th01/snd/mdrv2[data].asm
 aVqvnvtvmvcb@vp	db '‚q‚n‚t‚m‚c@‚P@‚b‚k‚d‚`‚q',0
 aVbvpvovzvtvbvf	db '‚b‚‚‚‡‚’‚‚”‚•‚Œ‚‚”‚‰‚‚II',0
 aVrvevmvevgvfb@	db '‚r‚…‚Œ‚…‚ƒ‚”@‚‚…‚˜‚”@‚q‚‚•‚‚„',0

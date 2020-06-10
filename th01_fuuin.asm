@@ -1804,7 +1804,7 @@ include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
 include th01/formats/grp_ptn[data].asm
-include th01/mdrv2[data].asm
+include th01/snd/mdrv2[data].asm
 include libs/master.lib/version[data].asm
 include libs/master.lib/grp[data].asm
 include libs/master.lib/pal[data].asm

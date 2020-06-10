@@ -1650,7 +1650,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
 public _res_id
 _res_id	db 'ReiidenConfig',0
-include th01/mdrv2[data].asm
+include th01/snd/mdrv2[data].asm
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
