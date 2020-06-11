@@ -2902,7 +2902,7 @@ _test_show_game	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public sub_D340
 sub_D340	proc far
 		push	bp
 		mov	bp, sp
@@ -2929,11 +2929,9 @@ loc_D37C:
 		push	ds
 		push	offset a360h	; "\x1B[3;60H"
 		call	_printf
-		add	sp, 4
 		push	ds
 		push	offset aHeapCheak ; "HEAP Cheak	 "
 		call	_printf
-		add	sp, 4
 		call	_farheapcheck
 		cmp	ax, 0FFFFh
 		jz	short loc_D3BE
@@ -2984,7 +2982,6 @@ loc_D3E1:
 		push	ds
 		push	offset a20h	; "\x1B[2;0H"
 		call	_printf
-		add	sp, 4
 		mov	ax, _player_left_prev
 		cmp	ax, _player_left
 		jz	short loc_D414
@@ -3000,7 +2997,6 @@ loc_D414:
 		push	ds
 		push	offset a40h	; "\x1B[4;0H"
 		call	_printf
-		add	sp, 4
 		mov	al, _done
 		mov	ah, 0
 		push	ax
@@ -3008,24 +3004,16 @@ loc_D414:
 		mov	ah, 0
 		push	ax
 		mov	al, _input_strike
-		mov	ah, 0
 		push	ax
 		mov	al, _input_shot
-		mov	ah, 0
 		push	ax
 		mov	al, _input_lr
-		mov	ah, 0
 		push	ax
 		call	_kbhit
 		push	ax
 		push	ds
 		push	offset aKbhitDDirDSpDS ; " kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d"...
 		call	_printf
-		add	sp, 10h
-		push	ds
-		push	offset a50h	; "\x1B[5;0H"
-		call	_printf
-		add	sp, 4
 		pushd	[dword_36C20]
 		push	_bomb_doubletap_frames
 		pushd	[_rand]
@@ -3033,7 +3021,15 @@ loc_D414:
 		push	ds
 		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
 		call	_printf
-		add	sp, 12h
+		pushd	dword ptr [_orb_velocity_y+4]
+		pushd	dword ptr [_orb_velocity_y+0]
+		push	_orb_velocity_x
+		pushd	dword ptr [_orb_force+4]
+		pushd	dword ptr [_orb_force+0]
+		push	ds
+		push	offset ORB_DEBUG_FMT
+		call	_printf
+		add	sp, 48h
 		pop	bp
 		retf
 sub_D340	endp
@@ -56727,12 +56723,12 @@ a30h		db 1Bh,'[3;0H',0
 ; char a360h[]
 a360h		db 1Bh,'[3;60H',0
 ; char aHeapCheak[]
-aHeapCheak	db 'HEAP Cheak  ',0
-aEmpty		db 'EMPTY   ',0
+aHeapCheak	db 'HEAP Cheak ',0
+aEmpty		db 'EMPTY  ',0
 ; char aOk[]
-aOk		db 'OK      ',0
+aOk		db 'OK     ',0
 ; char aCorrupt[]
-aCorrupt	db 'CORRUPT ',0
+aCorrupt	db 'CORRUPT',0
 ; char a20h[]
 a20h		db 1Bh,'[2;0H',0
 ; char aGx3d[]
@@ -56740,13 +56736,12 @@ aGx3d		db 'gx = %3d',0
 ; char a40h[]
 a40h		db 1Bh,'[4;0H',0
 ; char aKbhitDDirDSpDS[]
-aKbhitDDirDSpDS	db ' kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d',0Ah,0
-; char a50h[]
-a50h		db 1Bh,'[5;0H',0
+aKbhitDDirDSpDS	db 'kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d',0Ah,0
 ; char aMain7luRand7lu[]
-aMain7luRand7lu	db ' main:%7lu, rand:%7lu, bomb:%d, timer:%7lu',0Ah,0
+aMain7luRand7lu	db 'main:%7lu, rand:%7lu, bomb:%d, timer:%7lu',0Ah,0
+ORB_DEBUG_FMT   db 'force:%7.3f, vel_x:%d, vel_y:%7.3f',0Ah,0
 ; char aGogbgGtg[]
-aGogbgGtg@gcglv	db 'バッチファイルから起動してよ',0
+aGogbgGtg@gcglv	db 'Run OP first',0
 ; char aCGzgmgngg[]
 aCGzgmgngg	db '面セレクト',0Ah,0
 ; char aCRf[]
@@ -56756,9 +56751,9 @@ aD		db '%d',0
 ; char aSelect_flag[]
 aSelect_flag	db 'select_flag',0
 ; char aGegxgggvbGhbib[]
-aGegxgggvbGhbib	db 'テストモード！！',0Ah,0
+aGegxgggvbGhbib	db 'Test Mode!!',0Ah,0
 ; char aGfgogbgogvbGhb[]
-aGfgogbgogvbGhb	db 'デバッグモード！！',0Ah,0
+aGfgogbgogvbGhb	db 'Debug Mode!!    ',0Ah,0
 aUmx		db '東方靈異.伝',0
 ; char aInit_mdt[]
 aInit_mdt	db 'init.mdt',0
