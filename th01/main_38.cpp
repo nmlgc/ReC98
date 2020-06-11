@@ -8,6 +8,7 @@
 extern "C" {
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
 
 #include "th01/main/player/shots.cpp"
 }

@@ -10,6 +10,7 @@ struct CShots {
 	unsigned char decay_frame[SHOT_COUNT];
 
 	void add(int new_left, int new_top);
+	void unput_and_reset_all(void);
 };
 
 extern CShots Shots;

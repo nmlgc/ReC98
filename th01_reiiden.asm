@@ -3501,7 +3501,7 @@ loc_D7E4:
 		push	offset unk_37635
 		call	sub_30DEE
 		add	sp, 4
-		call	CShots_2FCAD c, offset _Shots, ds
+		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], 1250h
 		mov	byte_34ADF, 0
@@ -4408,7 +4408,7 @@ loc_E224:
 loc_E244:
 		inc	si
 		call	sub_CE5C
-		call	CShots_2FCAD c, offset _Shots, ds
+		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -7567,7 +7567,7 @@ arg_0		= word ptr  6
 		enter	6, 0
 		push	si
 		push	di
-		call	CShots_2FCAD c, offset _Shots, ds
+		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -18563,7 +18563,7 @@ loc_1AE85:
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
-		call	CShots_2FCAD c, offset _Shots, ds
+		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30E54
@@ -49271,7 +49271,7 @@ loc_2C835:
 		jnz	loc_2CAA8
 		mov	word_3A6CA, 0
 		mov	word_3B433, 18Fh
-		call	CShots_2FCAD c, offset _Shots, ds
+		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		push	ds
 		push	offset unk_37635
 		call	sub_30DEE
@@ -54631,71 +54631,7 @@ main_38__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 	extern @CShots@add$qii:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-CShots_2FCAD	proc far
-
-@@CShots		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_2FD20
-; ---------------------------------------------------------------------------
-
-loc_2FCB5:
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_moving], 0
-		jz	short loc_2FCEB
-		push	(16 shl 16) or 16
-		mov	ax, si
-		add	ax, ax
-		mov	bx, word ptr [bp+@@CShots]
-		add	bx, ax
-		push	es:[bx+CShots.SHOT_top]
-		push	es:[bx+CShots.SHOT_left]
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_moving], 0
-		jmp	short loc_2FD1F
-; ---------------------------------------------------------------------------
-
-loc_2FCEB:
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_decay_frame], 0
-		jz	short loc_2FD1F
-		push	(16 shl 16) or 16
-		mov	ax, si
-		add	ax, ax
-		mov	bx, word ptr [bp+@@CShots]
-		add	bx, ax
-		push	es:[bx+CShots.SHOT_top]
-		push	es:[bx+CShots.SHOT_left]
-		call	_egc_copy_rect_1_to_0
-		add	sp, 8
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_decay_frame], 0
-
-loc_2FD1F:
-		inc	si
-
-loc_2FD20:
-		cmp	si, SHOT_COUNT
-		jl	short loc_2FCB5
-		pop	si
-		pop	bp
-		retf
-CShots_2FCAD	endp
-
+	extern @CShots@unput_and_reset_all$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
