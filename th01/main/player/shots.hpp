@@ -11,6 +11,11 @@ struct CShots {
 
 	void add(int new_left, int new_top);
 	void unput_and_reset_all(void);
+	void unput_update_render(void);
+
+	// Processes any collision between *the given* shot and the Orb, placed at
+	// the given position, and returns true if they did collide.
+	bool16 hittest_orb(int i, int orb_left, int orb_top);
 };
 
 extern CShots Shots;
