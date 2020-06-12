@@ -6,6 +6,7 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shots.hpp"
 
+static const int SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_W = PTN_QUARTER_W;
 static const int SHOT_H = PTN_QUARTER_H;
 static const int SHOT_DECAY_FRAMES = 7;
@@ -112,6 +113,53 @@ bool16 CShots::hittest_orb(int i, int orb_left, int orb_top)
 		orb_move_x(orb_velocity_x);
 		orb_cur_top += orb_velocity_y_update();
 		return true;
+	}
+	return false;
+}
+
+#define on_hit(i) \
+	sloppy_unput(i); \
+	moving[i] = false; \
+	decay_frame[i] = 1; \
+	mdrv2_se_play(16);
+
+bool16 CShots::hittest_pellet(int pellet_left, int pellet_top)
+{
+	for(int i = 0; i < SHOT_COUNT; i++) {
+		if(moving[i] == false) {
+			continue;
+		}
+		if(
+			decay_frame[i] != true
+			&& ((left[i] - pellet_left) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
+			&& ((left[i] - pellet_left) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
+			&& ((top[i] - pellet_top) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
+			&& ((top[i] - pellet_top) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
+		) {
+			on_hit(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool16 CShots::hittest_boss(
+	int hitbox_left, int hitbox_top, int hitbox_w, int hitbox_h
+)
+{
+	for(int i = 0; i < SHOT_COUNT; i++) {
+		if(moving[i] == false) {
+			continue;
+		}
+		if(
+			(left[i] >= hitbox_left)
+			&& (left[i] <= (hitbox_left + hitbox_w))
+			&& (top[i] >= hitbox_top)
+			&& (top[i] <= (hitbox_top + hitbox_h))
+		) {
+			on_hit(i);
+			return true;
+		}
 	}
 	return false;
 }

@@ -20189,8 +20189,8 @@ loc_1BF60:
 
 loc_1BF66:
 		call	sub_1B6D9
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -20567,8 +20567,8 @@ loc_1C2FF:
 		inc	byte ptr word_39E14
 
 loc_1C327:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -20905,8 +20905,8 @@ loc_1C65A:
 		mov	byte ptr word_39E16, 0
 
 loc_1C67D:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -21287,8 +21287,8 @@ loc_1CA10:
 		inc	byte ptr word_39E14
 
 loc_1CA38:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -21726,8 +21726,8 @@ loc_1CF52:
 		add	x_39E06, 16
 
 loc_1CF57:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -22417,8 +22417,8 @@ loc_1D2F6:
 		mov	word_39E08, 3
 
 loc_1D63F:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -23199,8 +23199,8 @@ loc_1DE37:
 		add	sp, 28h
 
 loc_1DED5:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		push	ds
 		push	offset point_3982A
 		call	sub_16970
@@ -26554,7 +26554,7 @@ loc_1FB9C:
 		mov	word_39E78, 63h	; 'c'
 
 loc_1FBAC:
-		push	300060h
+		push	(48 shl 16) or 96
 		mov	ax, point_3982A.y
 		add	ax, 48	; '0'
 		push	ax
@@ -26675,7 +26675,7 @@ loc_1FCF4:
 		mov	word_39E78, ax
 
 loc_1FCF7:
-		push	300060h
+		push	(48 shl 16) or 96
 		mov	ax, point_3982A.y
 		add	ax, 48
 		push	ax
@@ -30300,10 +30300,10 @@ arg_10		= byte ptr  16h
 arg_12		= word ptr  18h
 arg_14		= dword	ptr  1Ah
 arg_18		= byte ptr  1Eh
-arg_1A		= word ptr  20h
-arg_1C		= word ptr  22h
-arg_1E		= word ptr  24h
-arg_20		= word ptr  26h
+@@hitbox_left		= word ptr  20h
+@@hitbox_top		= word ptr  22h
+@@hitbox_w		= word ptr  24h
+@@hitbox_h		= word ptr  26h
 
 		push	bp
 		mov	bp, sp
@@ -30319,14 +30319,7 @@ arg_20		= word ptr  26h
 		add	sp, 4
 
 loc_21AAE:
-		push	[bp+arg_20]
-		push	[bp+arg_1E]
-		push	[bp+arg_1C]
-		push	[bp+arg_1A]
-		push	ds
-		push	offset _Shots
-		call	CShots_2FFC1
-		add	sp, 0Ch
+		call	@CShots@hittest_boss$qiiii c, offset _Shots, ds, [bp+@@hitbox_left], [bp+@@hitbox_top], [bp+@@hitbox_w], [bp+@@hitbox_h]
 		cmp	[bp+arg_18], 1
 		jnz	short loc_21AD5
 		les	bx, [bp+arg_4]
@@ -33057,7 +33050,7 @@ loc_23115:
 		mov	word_35CE0, ax
 
 loc_23118:
-		push	300060h
+		push	(48 shl 16) or 96
 		mov	ax, point_3982A.y
 		add	ax, 32	; ' '
 		push	ax
@@ -33157,7 +33150,7 @@ loc_2320A:
 		mov	word_35CE0, dx
 
 loc_2320E:
-		push	300060h
+		push	(48 shl 16) or 96
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -36002,8 +35995,8 @@ loc_24B3E:
 		inc	word_3A6CA
 		inc	word_3A6C2
 		call	sub_23D19
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
@@ -36086,8 +36079,8 @@ loc_24C27:
 
 loc_24C2A:
 		mov	word_35D14, ax
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
@@ -36124,8 +36117,8 @@ loc_24C81:
 		inc	word_3A6C2
 		call	sub_24041
 		call	sub_240DE
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
@@ -36207,8 +36200,8 @@ loc_24D4C:
 		mov	word_3A6C8, 1
 
 loc_24D59:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
@@ -41871,7 +41864,7 @@ loc_2823F:
 		mov	word_3A779, 0
 
 loc_28258:
-		push	300040h
+		push	(48 shl 16) or 64
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -41999,7 +41992,7 @@ loc_28396:
 		mov	word_3A779, 0
 
 loc_283AF:
-		push	300040h
+		push	(48 shl 16) or 64
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -48867,8 +48860,8 @@ loc_2C439:
 		inc	word_35E97
 
 loc_2C440:
-		push	200040h
-		push	68013Ah
+		push	(32 shl 16) or 64
+		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -48960,8 +48953,8 @@ loc_2C51E:
 		inc	word_35E97
 
 loc_2C533:
-		push	200040h
-		push	68013Ah
+		push	(32 shl 16) or 64
+		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -49078,8 +49071,8 @@ loc_2C648:
 		inc	word_35E97
 
 loc_2C64F:
-		push	200040h
-		push	68013Ah
+		push	(32 shl 16) or 64
+		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -49199,8 +49192,8 @@ loc_2C77D:
 		inc	word_35E97
 
 loc_2C784:
-		push	200040h
-		push	68013Ah
+		push	(32 shl 16) or 64
+		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -49576,8 +49569,8 @@ loc_2CBBB:
 		inc	word_35E97
 
 loc_2CBC2:
-		push	200040h
-		push	68013Ah
+		push	(32 shl 16) or 64
+		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -53362,8 +53355,8 @@ loc_2EF97:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2EFAB:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2EFDB
 		cmp	_orb_cur_left, 352
@@ -53475,8 +53468,8 @@ loc_2F0B9:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F0C5:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F0F5
 		cmp	_orb_cur_left, 352
@@ -53606,8 +53599,8 @@ loc_2F1E7:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F1FB:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F22B
 		cmp	_orb_cur_left, 352
@@ -53719,8 +53712,8 @@ loc_2F309:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F315:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F345
 		cmp	_orb_cur_left, 352
@@ -53843,8 +53836,8 @@ loc_2F42A:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F43E:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F46E
 		cmp	_orb_cur_left, 352
@@ -53962,8 +53955,8 @@ loc_2F564:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F570:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F5A0
 		cmp	_orb_cur_left, 352
@@ -54158,8 +54151,8 @@ loc_2F720:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F734:
-		push	280060h
-		push	780120h
+		push	(40 shl 16) or 96
+		push	(120 shl 16) or 288
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F764
 		cmp	_orb_cur_left, 352
@@ -54633,157 +54626,8 @@ main_38__TEXT	segment	byte public 'CODE' use16
 	extern @CShots@add$qii:proc
 	extern @CShots@unput_and_reset_all$qv:proc
 	extern @CShots@unput_update_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-CShots_2FF24	proc far
-
-@@CShots		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		xor	si, si
-		jmp	loc_2FFB4
-; ---------------------------------------------------------------------------
-
-loc_2FF31:
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_moving], 0
-		jz	short loc_2FFB3
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_decay_frame], 1
-		jz	short loc_2FFB3
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+@@CShots]
-		add	bx, ax
-		mov	ax, es:[bx+CShots.SHOT_left]
-		sub	ax, di
-		cmp	ax, 6
-		jg	short loc_2FFB3
-		mov	ax, es:[bx+CShots.SHOT_left]
-		sub	ax, di
-		cmp	ax, -14
-		jl	short loc_2FFB3
-		mov	ax, es:[bx+CShots.SHOT_top]
-		sub	ax, [bp+arg_6]
-		cmp	ax, 6
-		jg	short loc_2FFB3
-		mov	ax, es:[bx+CShots.SHOT_top]
-		sub	ax, [bp+arg_6]
-		cmp	ax, -14
-		jl	short loc_2FFB3
-		call	_egc_copy_rect_1_to_0 stdcall, es:[bx+CShots.SHOT_left], es:[bx+CShots.SHOT_top], large (16 shl 16) or 16
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_moving], 0
-		mov	bx, word ptr [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_decay_frame], 1
-		push	10h
-		call	_mdrv2_se_play
-		add	sp, 0Ah
-		mov	ax, 1
-		jmp	short loc_2FFBD
-; ---------------------------------------------------------------------------
-
-loc_2FFB3:
-		inc	si
-
-loc_2FFB4:
-		cmp	si, SHOT_COUNT
-		jl	loc_2FF31
-		xor	ax, ax
-
-loc_2FFBD:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-CShots_2FF24	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-CShots_2FFC1	proc far
-
-@@CShots		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		xor	si, si
-		jmp	short loc_3003C
-; ---------------------------------------------------------------------------
-
-loc_2FFCD:
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		cmp	es:[bx+CShots.SHOT_moving], 0
-		jz	short loc_3003B
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+@@CShots]
-		add	bx, ax
-		cmp	es:[bx+CShots.SHOT_left], di
-		jl	short loc_3003B
-		mov	ax, di
-		add	ax, [bp+arg_8]
-		cmp	es:[bx+CShots.SHOT_left], ax
-		jg	short loc_3003B
-		mov	ax, es:[bx+CShots.SHOT_top]
-		cmp	ax, [bp+arg_6]
-		jl	short loc_3003B
-		mov	ax, [bp+arg_6]
-		add	ax, [bp+arg_A]
-		cmp	es:[bx+CShots.SHOT_top], ax
-		jg	short loc_3003B
-		call	_egc_copy_rect_1_to_0 stdcall, es:[bx+CShots.SHOT_left], es:[bx+CShots.SHOT_top], large (16 shl 16) or 16
-		les	bx, [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_moving], 0
-		mov	bx, word ptr [bp+@@CShots]
-		add	bx, si
-		mov	es:[bx+CShots.SHOT_decay_frame], 1
-		push	10h
-		call	_mdrv2_se_play
-		add	sp, 0Ah
-		mov	ax, 1
-		jmp	short loc_30043
-; ---------------------------------------------------------------------------
-
-loc_3003B:
-		inc	si
-
-loc_3003C:
-		cmp	si, SHOT_COUNT
-		jl	short loc_2FFCD
-		xor	ax, ax
-
-loc_30043:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-CShots_2FFC1	endp
-
+	extern @CShots@hittest_pellet$qii:proc
+	extern @CShots@hittest_boss$qiiii:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -56205,7 +56049,7 @@ loc_30BDF:
 		push	ax
 		push	ds
 		push	offset _Shots
-		call	CShots_2FF24
+		call	@CShots@hittest_pellet$qii
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_30C46

@@ -16,6 +16,16 @@ struct CShots {
 	// Processes any collision between *the given* shot and the Orb, placed at
 	// the given position, and returns true if they did collide.
 	bool16 hittest_orb(int i, int orb_left, int orb_top);
+
+	// Processes any collision between *any* shot and a pellet, placed at the
+	// given position, and returns true if they did collide.
+	bool16 hittest_pellet(int pellet_left, int pellet_top);
+
+	// Processes any collision between *any* shot and a boss with the given
+	// hitbox, and returns true if they did collide.
+	bool16 hittest_boss(
+		int hitbox_left, int hitbox_top, int hitbox_w, int hitbox_h
+	);
 };
 
 extern CShots Shots;
