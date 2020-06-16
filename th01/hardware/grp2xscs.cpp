@@ -22,8 +22,8 @@ void graph_2xscale_byterect_1_to_0_slow(
 	int left_1, int top_1, int w_1, int h_1
 )
 {
-	int row_p1 = (left_1 / 8) + (top_1 * ROW_SIZE);
-	int row_p0 = (left_0 / 8) + (top_0 * ROW_SIZE);
+	int row_p1 = vram_offset_divmul(left_1, top_1);
+	int row_p0 = vram_offset_divmul(left_0, top_0);
 	int col16;
 	int row;
 	Planar<dots16_t> px16;

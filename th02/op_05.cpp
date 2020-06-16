@@ -69,7 +69,7 @@ void copy_pic_back(int sel, int highlight)
 
 void darken_pic_at(int x, int y)
 {
-	int row_p = VRAM_OFFSET(x, y);
+	int row_p = vram_offset_shift(x, y);
 	int row, col;
 
 	grcg_setcolor(GC_RMW, 0);

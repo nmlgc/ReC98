@@ -20,13 +20,13 @@ long unused_5;
 
 #include "th02/exit_dos.c"
 #include "th02/zunerror.c"
-#include "th02/hardware/grppsafx.c"
+#include "th02/hardware/grppsafx.cpp"
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
 
 void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h)
 {
-	int row_p = VRAM_OFFSET(x, y);
+	int row_p = vram_offset_shift(x, y);
 	int row;
 	for(row = 0; row < h; row++) {
 		int col;

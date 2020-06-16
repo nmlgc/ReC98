@@ -1,6 +1,6 @@
 #include <mbctype.h>
 #include <mbstring.h>
-#include "th01/hardware/grppsafx.c"
+#include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 {

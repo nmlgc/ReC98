@@ -64,12 +64,11 @@ extern dots8_t *VRAM_PLANE_G;
 extern dots8_t *VRAM_PLANE_R;
 extern dots8_t *VRAM_PLANE_E;
 
-#define VRAM_OFFSET(x, y) ((x) >> 3) + (y << 6) + (y << 4)
-
 #ifdef __cplusplus
+// MODDERS: Replace with a single function
 static inline unsigned int vram_offset_shift(int x, int y)
 {
-	return VRAM_OFFSET(x, y);
+	return (x >> 3) + (y << 6) + (y << 4);
 }
 
 static inline unsigned int vram_offset_muldiv(int x, int y)
@@ -80,6 +79,11 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 static inline unsigned int vram_offset_divmul(int x, int y)
 {
 	return (x / 8) + (y * ROW_SIZE);
+}
+
+static inline unsigned int vram_offset_mulshift(int x, int y)
+{
+	return (y * ROW_SIZE) + (x >> 3);
 }
 #endif
 

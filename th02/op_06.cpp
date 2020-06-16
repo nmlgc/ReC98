@@ -177,7 +177,7 @@ void pascal near music_flip(void)
 	ps = 0; \
 	for(y = 64; y < 80; y++) { \
 		for(x = 160; x < 480; x += (4 * 8)) { \
-			pd = VRAM_OFFSET(x, y); \
+			pd = vram_offset_shift(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
 			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \
@@ -187,7 +187,7 @@ void pascal near music_flip(void)
 	} \
 	for(y = 80; y < 384; y++) { \
 		for(x = 304; x < 624; x += (4 * 8)) { \
-			pd = VRAM_OFFSET(x, y); \
+			pd = vram_offset_shift(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
 			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \

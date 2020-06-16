@@ -30,10 +30,10 @@ extern page_t page_back;
 	var##_E += ROW_SIZE;
 
 #define Planes_offset(var, x, y) \
-	var##_B += (x / 8) + (y * ROW_SIZE); \
-	var##_R += (x / 8) + (y * ROW_SIZE); \
-	var##_G += (x / 8) + (y * ROW_SIZE); \
-	var##_E += (x / 8) + (y * ROW_SIZE);
+	var##_B += vram_offset_divmul(x, y); \
+	var##_R += vram_offset_divmul(x, y); \
+	var##_G += vram_offset_divmul(x, y); \
+	var##_E += vram_offset_divmul(x, y);
 
 #define PlanarRow_declare(var) \
 	dots8_t var##_B[ROW_SIZE]; \
@@ -367,14 +367,14 @@ void z_palette_show(void)
 void z_grcg_pset(int x, int y, int col)
 {
 	grcg_setcolor_rmw(col);
-	VRAM_SBYTE(B, ((y * ROW_SIZE) + (x >> 3))) = (0x80 >> (x & 7));
+	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & 7));
 	grcg_off_func();
 }
 
 int z_graph_readdot(int x, int y)
 {
 	int ret;
-	int vram_offset = ((y * ROW_SIZE) + (x >> 3));
+	int16_t vram_offset = vram_offset_mulshift(x, y);
 	sdots16_t mask = (0x80 >> (x & 7));
 
 #define test(plane, vram_offset, mask, bit) \
@@ -419,7 +419,7 @@ void graph_r_hline(int left, int right, int y, int col)
 	graph_r_last_line_end.x = right;
 	graph_r_last_line_end.y = y;
 
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, (y * ROW_SIZE) + (left / 8)));
+	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_muldiv(left, y)));
 	full_bytes_to_put = (right / 8) - (left / 8);
 	left_pixels = 0xFF >> (left & 7);
 	right_pixels = 0xFF << (7 - (right & 7));
@@ -642,7 +642,7 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	clip_y(top, bottom);
 
 	grcg_setcolor_rmw(col);
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
+	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
 		left_pixels = 0xFF >> (left & 7);
@@ -695,7 +695,7 @@ int text_extent_fx(int fx, const unsigned char *str)
 	return ret - spacing;
 }
 
-#include "th01/hardware/grppsafx.c"
+#include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 {

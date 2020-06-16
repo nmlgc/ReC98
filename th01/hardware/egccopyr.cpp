@@ -12,7 +12,7 @@ void egc_copy_rect_1_to_0_16(int x, int y, int w, int h)
 
 	x_end += w;
 	x_floor &= 0xFFF0;
-	row_p = VRAM_OFFSET(x_floor, y);
+	row_p = vram_offset_shift(x_floor, y);
 	egc_start_copy();
 	for(row = 0; row < h; row++) {
 		for(col = x_floor, p = row_p; col < x_end; p += 2, col += 16) {

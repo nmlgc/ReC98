@@ -1,7 +1,7 @@
 // Shared parts from all graph_putsa_fx() implementations
 
 #define set_vram_ptr(vram, first_bit, left, top) \
-	vram = (dots8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left / 8))); \
+	vram = (dots8_t *)(MK_FP(GRAM_400, vram_offset_muldiv(left, top))); \
 	first_bit = left % 8; \
 
 #define get_glyph(glyph, codepoint, fullwidth, str, left, line) \
