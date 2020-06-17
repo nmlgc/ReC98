@@ -42,7 +42,7 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col);
 /// ------
 void z_grcg_pset(int x, int y, int col);
 // Returns the color value at the given point on the current VRAM page.
-int z_col_at(int x, int y);
+int z_graph_readdot(int x, int y);
 /// ------
 
 /// Restorable line drawing

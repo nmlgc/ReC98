@@ -371,7 +371,7 @@ void z_grcg_pset(int x, int y, int col)
 	grcg_off_func();
 }
 
-int z_col_at(int x, int y)
+int z_graph_readdot(int x, int y)
 {
 	int ret;
 	int vram_offset = ((y * ROW_SIZE) + (x >> 3));
