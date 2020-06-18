@@ -20,7 +20,7 @@ struct item_t {
 	unsigned char type;
 	char unknown;
 	int patnum;	// Assumed to be a 16×16 sprite.
-	int pulled_to_player;	// Yup, a 16-bit bool.
+	bool16 pulled_to_player;
 };
 
 #define ITEM_W 16

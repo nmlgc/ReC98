@@ -54,6 +54,6 @@ void grx_put_stream(unsigned int slot, int planar_stream);
 void grx_put_col(unsigned int slot, uint4_t col);
 // -------
 
-// Frees both the RLE and any BRGE8 streams in the given GRX [slot].
+// Frees both the RLE and any planar streams in the given GRX [slot].
 void grx_free(unsigned int slot);
 /// ----------------------------------------------------------

@@ -2,7 +2,7 @@
 
 // Vectors
 // -------
-// (different calling convention and parameter order than the TH03 one)
+// (different calling convention than the TH03 one)
 int pascal far vector1_at(int angle, int length, int origin);
 
 int pascal near vector2_near(Point near *ret, int angle, int length);

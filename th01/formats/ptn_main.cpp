@@ -208,7 +208,7 @@ void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
 
 	vram_planes_t vram_local = ptnpq_vram;
 
-	// Yes, should have been || rather than &&...
+	// MODDERS: Yes, should have been || rather than &&...
 	if((left < 0) && (left > (RES_X - PTN_QUARTER_W))) {
 		return;
 	}

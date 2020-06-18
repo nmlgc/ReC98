@@ -1,6 +1,6 @@
 extern unsigned long frames_unused;
 
-// Stage-relative frame counter. Reset to 0 when moving to a new one.
+// Stage-relative frame counter. Reset to 0 when moving to a new stage.
 extern unsigned int stage_frame;
 extern unsigned char stage_frame_mod2;
 extern unsigned char stage_frame_mod4;

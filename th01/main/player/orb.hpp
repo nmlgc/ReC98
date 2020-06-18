@@ -42,15 +42,15 @@ extern orb_velocity_x_t orb_velocity_x;
 extern double orb_velocity_y;
 
 // Applies a new force of the given type onto the orb. Sets [orb_force], and
-// reses [orb_force_frame].
+// resets [orb_force_frame].
 void orb_force_new(double immediate, orb_force_t force);
 
 // Updates [orb_velocity_y] with the currently active force, and returns the
 // orb's velocity for this frame, in pixels to be added to [orb_cur_top].
 int orb_velocity_y_update(void);
 
-// Updates [orb_cur_left] *and* the global [orb_velocity_x] (!) to bounce the
-// orb off the left or right edge of the playfield, if necessary, depending on
-// the passed [velocity_x].
+// Updates [orb_cur_left] depending on the passed [velocity_x], *as well as*
+// the global [orb_velocity_x] (!) to bounce the orb off the left or right
+// edge of the playfield, if necessary.
 void orb_move_x(orb_velocity_x_t velocity_x);
 /// -------

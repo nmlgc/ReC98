@@ -69,13 +69,13 @@ void graph_r_box(int left, int top, int right, int bottom, int col);
 
 /// Text
 /// ----
-// Calculates the width of [str], displayed with the given [fx]
+// Calculates the width of [str], displayed with the given [fx].
 int text_extent_fx(int fx, const unsigned char *str);
 
 // TH01-exclusive effects
 // ----------------------
 // Puts a black background behind the text. Useful if the text is rendered
-// onto the back page and should then 2✕ scaled onto the front page.
+// onto the back page and should then be 2✕ scaled onto the front page.
 #define FX_CLEAR_BG 	0x200
 
 #define FX_UNDERLINE 	0x400

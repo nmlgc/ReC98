@@ -22,7 +22,7 @@ extern bos_t bos_images[BOS_SLOT_COUNT];
 
 // Fast
 // ----
-// These… only have functions to direct byte-aligned blitting onto page 0, in
+// These… only have functions for direct byte-aligned blitting onto page 0, in
 // exchange for the alpha plane being pre-negated at load time? No idea why.
 // That 1-instruction negation is certainly not what makes the original code
 // slow.

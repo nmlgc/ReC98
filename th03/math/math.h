@@ -1,7 +1,7 @@
 // Vectors
 // -------
 #if GAME == 3
-// (different calling convention parameter order than the TH04/TH05 one)
+// (different calling convention than the TH04/TH05 one)
 int __cdecl far vector1_at(int angle, int length, int origin)
 #endif
 

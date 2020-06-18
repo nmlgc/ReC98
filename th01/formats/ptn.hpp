@@ -2,8 +2,8 @@
 /// -----------------------------------------
 /// Provides functions for both 32×32 and 16×16 sprites, and optionally
 /// supports transparency for images loaded from .PTN files, hardcoded to
-/// color #15. Can also be used to store the backgrounds of frequently updated
-/// VRAM regions, using the functions for raw allocation and VRAM snapping.
+/// color #15. With functions for raw allocation and VRAM snapping, this can
+/// also be used to store the backgrounds of frequently updated VRAM regions.
 
 }
 
@@ -95,7 +95,7 @@ extern bool ptn_unput_before_alpha_put;
 
 // 32×32 access
 // ------------
-// Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregaring its alpha
+// Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregarding its alpha
 // plane.
 void ptn_put_noalpha_8(int left, int top, int ptn_id);
 

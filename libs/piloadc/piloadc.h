@@ -2,7 +2,7 @@
 
 #define PILOAD_OPT_COLORKEY(col) ((col << 8) | 0x40)
 
-// PiLoad also returns values >0 indicate DOS file I/O errors.
+// PiLoad also returns values >0 to indicate DOS file I/O errors.
 #define PILOAD_ERR_OK 0
 #define PILOAD_ERR_BUFFER_TOO_SMALL -8
 #define PILOAD_ERR_NO_PI -31

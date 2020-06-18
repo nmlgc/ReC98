@@ -399,7 +399,7 @@ int z_graph_readdot(int x, int y)
 extern Point graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
-// regularly the given [col].
+// regularly in the given [col].
 extern bool graph_r_unput;
 // Not used for purely horizontal lines.
 extern dots16_t graph_r_pattern;

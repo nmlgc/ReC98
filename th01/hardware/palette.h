@@ -7,10 +7,10 @@
 	void z_palette_set_all_show(const Palette4& pal);
 
 	// Fades each hardware palette color from the given RGB value to its
-	// respective value in z_Palettes, blocking [step_ms] milliseconds at each of
-	// the 16 fade steps. If [keep] is nonzero for a specific color number, that
-	// color is excluded from the fade calculation and will stay at its z_Palettes
-	// value throughout the function.
+	// respective value in z_Palettes, blocking [step_ms] milliseconds at each
+	// of the 16 fade steps. If [keep] is nonzero for a specific color number,
+	// that color is excluded from the fade calculation and will stay at its
+	// z_Palettes value throughout the function.
 	void z_palette_fade_from(
 		uint4_t from_r, uint4_t from_g, uint4_t from_b,
 		int keep[COLOR_COUNT],

@@ -63,7 +63,8 @@ typedef struct {
 	unsigned char spell_ready_frames;
 
 	// A CPU player will charge up a gauge attack once ([gauge_avail] >> 4)
-	// has reached the (random) value at [cpu_charge_at_avail_ring_p].
+	// has reached the (random) value at [cpu_charge_at_avail_ring_p] of this
+	// array.
 	gauge_perbyte_t cpu_charge_at_avail_ring[CHARGE_AT_AVAIL_RING_SIZE];
 
 	nearfunc_t_near hyper;	// Either hyper_standby() or [hyper_func].
