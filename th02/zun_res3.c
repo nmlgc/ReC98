@@ -26,7 +26,7 @@ place_set:
 	_DI -= 1000;
 	hi.score.stage[_SI] = 5 - ((int)_SI >> 1);
 	_BX = _SI;
-	asm {
+	__asm {
 		imul bx, bx, 7
 		mov cx, 6
 
@@ -38,7 +38,7 @@ name_loop:
 	}
 	_BX = _SI;
 	_BX <<= 2;
-	asm {
+	__asm {
 		mov word ptr hi.(scoredat_section_t)score.date[bx].da_year, 1900
 		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_day, 1
 		mov byte ptr hi.(scoredat_section_t)score.date[bx].da_mon, 1

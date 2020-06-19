@@ -151,13 +151,13 @@ void stars_render_and_update(void)
 
 void wait(void)
 {
-	do {
-		__asm out 0x5F, al
-		__asm in  al, 0xA0
+	do __asm {
+		out 0x5F, al;
+		in  al, 0xA0;
 	} while((_AL & 0x20) != 0);
-	do {
-		__asm out 0x5F, al
-		__asm in  al, 0xA0
+	do __asm {
+		out 0x5F, al;
+		in  al, 0xA0;
 	} while((_AL & 0x20) == 0);
 }
 

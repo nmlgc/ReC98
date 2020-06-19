@@ -109,8 +109,8 @@ put:
 					return;
 				}
 				_BX += _CX;
-				asm cmp bx, SPRITE16_RES_Y;
-				asm jge end;
+				__asm cmp	bx, SPRITE16_RES_Y;
+				__asm jge	end;
 			}
 		} else if(putpos_right < clip_left) {
 			return;

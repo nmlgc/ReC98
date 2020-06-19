@@ -107,7 +107,7 @@ void input_sense(bool16 reset_repeat)
 			/* TODO: Replace with the decompiled call
 			 * 	test_mem();
 			 * once that function is part of this translation unit */
-			asm { nop; push cs; call near ptr test_mem; }
+			__asm { nop; push cs; call near ptr test_mem; }
 		} else {
 			input_mem_enter = false;
 		});
@@ -121,7 +121,7 @@ void input_sense(bool16 reset_repeat)
 			/* TODO: Replace with the decompiled call
 			 * 	test_show_game();
 			 * once that function is part of this translation unit */
-			asm { nop; push cs; call near ptr test_show_game; }
+			__asm { nop; push cs; call near ptr test_show_game; }
 		} else {
 			input_mem_leave = false;
 		});

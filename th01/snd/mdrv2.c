@@ -11,9 +11,9 @@
 #include "platform.h"
 
 #define	MDRV2 0xf2
-#define MDRV2_CALL(func) { \
-	__asm { mov	ah, func } \
-	__asm { int	MDRV2 } \
+#define MDRV2_CALL(func) __asm { \
+	mov	ah, func; \
+	int	MDRV2; \
 }
 
 typedef enum {

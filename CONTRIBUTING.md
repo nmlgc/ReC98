@@ -48,6 +48,11 @@ These cases should gradually be removed as development goes along, though.
   with a common source) that defines their signedness. If a variable is used
   in both signed and unsigned contexts, declare it as the more common one.
 
+## Compatibility
+
+* Use `__asm` as the keyword for inline assembly. This form works in Borland
+C++, Open Watcom, and Visual C++, which will ease future third-party ports.
+
 ## Code organization
 
 * Try to avoid repeating numeric constants – after all, easy moddability

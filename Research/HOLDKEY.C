@@ -44,7 +44,7 @@ void frame(void)
 		states[states_recorded++] = (input >> 2) & 0xF;
 
 		while(delayloop && vsync_Count1 < 1) {
-			_asm out 0x5F, AL;
+			__asm out 0x5F, AL;
 			delayloop--;
 		}
 	} while(vsync_Count1 < 1);

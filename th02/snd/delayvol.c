@@ -7,9 +7,9 @@ loop:
 	} else {
 		geninterrupt(MMD);
 	}
-__asm	cmp al, volume
-__asm	jz end
-__asm	jmp loop
+	__asm	cmp al, volume;
+	__asm	jz end;
+	__asm	jmp loop;
 end:
 }
 #pragma codestring "\x90"

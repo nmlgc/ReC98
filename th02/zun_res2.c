@@ -35,7 +35,7 @@ int pascal scoredat_verify(void)
 			g_name_first_sum = _AL;
 			stage_sum = _AL;
 			_AX = 0;
-			asm {
+			__asm {
 				mov word ptr points_sum + 0, ax
 				mov word ptr points_sum + 2, ax
 				mov word ptr score_sum + 0, ax
