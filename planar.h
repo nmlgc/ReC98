@@ -70,11 +70,19 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 #define VRAM_SNAP(dst, plane, offset, bit_count) \
 	dst = VRAM_CHUNK(plane, offset, bit_count);
 
+// And no, code generation prohibits these from being turned into nice
+// templated class methods. Been there, tried that.
 #define VRAM_SNAP_PLANAR(dst, offset, bit_count) \
 	VRAM_SNAP(dst.B, B, offset, bit_count); \
 	VRAM_SNAP(dst.R, R, offset, bit_count); \
 	VRAM_SNAP(dst.G, G, offset, bit_count); \
 	VRAM_SNAP(dst.E, E, offset, bit_count);
+
+#define vram_snap_planar_masked(dst, offset, bit_count, mask) \
+	dst.B = VRAM_CHUNK(B, offset, bit_count) & mask; \
+	dst.R = VRAM_CHUNK(R, offset, bit_count) & mask; \
+	dst.G = VRAM_CHUNK(G, offset, bit_count) & mask; \
+	dst.E = VRAM_CHUNK(E, offset, bit_count) & mask;
 
 #define VRAM_PUT(plane, offset, src, bit_count) \
 	VRAM_CHUNK(plane, offset, bit_count) = src;
@@ -84,6 +92,18 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 	VRAM_PUT(R, offset, src.R, bit_count); \
 	VRAM_PUT(G, offset, src.G, bit_count); \
 	VRAM_PUT(E, offset, src.E, bit_count);
+
+#define vram_or_masked_emptyopt(plane, offset, bit_count, src, mask) \
+	if(src) { \
+		VRAM_CHUNK(plane, offset, bit_count) |= (src & mask); \
+	}
+
+#define vram_or_planar(offset, src, bit_count) \
+	VRAM_CHUNK(B, offset, bit_count) |= src.B; \
+	VRAM_CHUNK(R, offset, bit_count) |= src.R; \
+	VRAM_CHUNK(G, offset, bit_count) |= src.G; \
+	VRAM_CHUNK(E, offset, bit_count) |= src.E;
+
 
 #define PLANE_DWORD_BLIT(dst, src) \
 	for(p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \

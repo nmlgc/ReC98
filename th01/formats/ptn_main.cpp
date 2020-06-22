@@ -18,18 +18,6 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	VRAM_PUT(B, vram_offset, mask, w); \
 	grcg_off();
 
-#define vram_snap_masked(planar_dots, vram_offset, w, mask) \
-	planar_dots.B = VRAM_CHUNK(B, vram_offset, w) & mask; \
-	planar_dots.R = VRAM_CHUNK(R, vram_offset, w) & mask; \
-	planar_dots.G = VRAM_CHUNK(G, vram_offset, w) & mask; \
-	planar_dots.E = VRAM_CHUNK(E, vram_offset, w) & mask;
-
-#define vram_or(vram_offset, w, planar) \
-	VRAM_CHUNK(B, vram_offset, w) |= planar.B; \
-	VRAM_CHUNK(R, vram_offset, w) |= planar.R; \
-	VRAM_CHUNK(G, vram_offset, w) |= planar.G; \
-	VRAM_CHUNK(E, vram_offset, w) |= planar.E;
-
 #define ptn_or_masked(vram_offset, w, ptn, mask) \
 	VRAM_CHUNK(B, vram_offset, w) |= (ptn->planes.B[y] & mask); \
 	VRAM_CHUNK(R, vram_offset, w) |= (ptn->planes.R[y] & mask); \
@@ -41,11 +29,6 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	VRAM_CHUNK(R, vram_offset, w) |= ((ptn->planes.R[y] >> q.x) & mask); \
 	VRAM_CHUNK(G, vram_offset, w) |= ((ptn->planes.G[y] >> q.x) & mask); \
 	VRAM_CHUNK(E, vram_offset, w) |= ((ptn->planes.E[y] >> q.x) & mask);
-
-#define or_masked(plane, offset, w, dots, mask) \
-	if(dots) { \
-		VRAM_CHUNK(plane, offset, w) |= (dots & mask); \
-	}
 
 void ptn_unput_8(int left, int top, int ptn_id)
 {
@@ -62,10 +45,10 @@ void ptn_unput_8(int left, int top, int ptn_id)
 			grcg_clear_masked(vram_offset, PTN_W, mask);
 
 			graph_accesspage_func(1);
-			vram_snap_masked(page1, vram_offset, PTN_W, mask);
+			vram_snap_planar_masked(page1, vram_offset, PTN_W, mask);
 
 			graph_accesspage_func(0);
-			vram_or(vram_offset, PTN_W, page1);
+			vram_or_planar(vram_offset, page1, PTN_W);
 		}
 		vram_offset += ROW_SIZE;
 		if(vram_offset > PLANE_SIZE) {
@@ -117,9 +100,9 @@ void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter)
 		if(mask) {
 			grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
 			graph_accesspage_func(1);
-			vram_snap_masked(page1, vram_offset, PTN_QUARTER_W, mask);
+			vram_snap_planar_masked(page1, vram_offset, PTN_QUARTER_W, mask);
 			graph_accesspage_func(0);
-			vram_or(vram_offset, PTN_QUARTER_W, page1);
+			vram_or_planar(vram_offset, page1, PTN_QUARTER_W);
 		}
 		vram_offset += ROW_SIZE;
 		// No vram_offset bounds check here?!
@@ -221,11 +204,13 @@ void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
 
 		if(first_bit == 0) {
 			if(mask != 0) {
-				grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
-				or_masked(B, vram_offset, PTN_QUARTER_W, sprite[0], mask);
-				or_masked(R, vram_offset, PTN_QUARTER_W, sprite[1], mask);
-				or_masked(G, vram_offset, PTN_QUARTER_W, sprite[2], mask);
-				or_masked(E, vram_offset, PTN_QUARTER_W, sprite[3], mask);
+				#define w PTN_QUARTER_W
+				grcg_clear_masked(vram_offset, w, mask);
+				vram_or_masked_emptyopt(B, vram_offset, w, sprite[0], mask);
+				vram_or_masked_emptyopt(R, vram_offset, w, sprite[1], mask);
+				vram_or_masked_emptyopt(G, vram_offset, w, sprite[2], mask);
+				vram_or_masked_emptyopt(E, vram_offset, w, sprite[3], mask);
+				#undef w
 			}
 		} else {
 			if(mask != 0) {
