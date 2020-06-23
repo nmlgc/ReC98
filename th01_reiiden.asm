@@ -4623,216 +4623,8 @@ main_08_TEXT	ends
 
 ; Segment type:	Pure code
 main_09_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_09_TEXT
-		;org 0Eh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1133E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-@@col		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		call	_grcg_setcolor_rmw stdcall, [bp+@@col]
-		pop	cx
-		xor	si, si
-		jmp	short loc_11398
-; ---------------------------------------------------------------------------
-
-loc_11368:
-		mov	bx, [bp+arg_6]
-		shl	bx, 5
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr [bx+0BFEh], 0
-		jz	short loc_11394
-		mov	bx, [bp+arg_6]
-		shl	bx, 5
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+0BFEh]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], ax
-
-loc_11394:
-		inc	si
-		add	di, 50h	; 'P'
-
-loc_11398:
-		cmp	si, 10h
-		jl	short loc_11368
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_1133E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_113A6	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		push	[bp+arg_4]
-		push	0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	sub_1133E
-		add	sp, 8
-		xor	di, di
-		jmp	loc_114BE
-; ---------------------------------------------------------------------------
-
-loc_113DB:
-		mov	bx, [bp+arg_4]
-		shl	bx, 5
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr [bx+0BFEh], 0
-		jnz	short loc_113F1
-		jmp	loc_114BA
-; ---------------------------------------------------------------------------
-
-loc_113F1:
-		push	1
-		call	_graph_accesspage_func
-		mov	bx, [bp+arg_4]
-		shl	bx, 5
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+0BFEh]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_8], ax
-		mov	bx, [bp+arg_4]
-		shl	bx, 5
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+0BFEh]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_6], ax
-		mov	bx, [bp+arg_4]
-		shl	bx, 5
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+0BFEh]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_4], ax
-		mov	bx, [bp+arg_4]
-		shl	bx, 5
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, [bx+0BFEh]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_2], ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		cmp	[bp+var_8], 0
-		jz	short loc_11484
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, [bp+var_8]
-		or	es:[bx], ax
-
-loc_11484:
-		cmp	[bp+var_6], 0
-		jz	short loc_11496
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	ax, [bp+var_6]
-		or	es:[bx], ax
-
-loc_11496:
-		cmp	[bp+var_4], 0
-		jz	short loc_114A8
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	ax, [bp+var_4]
-		or	es:[bx], ax
-
-loc_114A8:
-		cmp	[bp+var_2], 0
-		jz	short loc_114BA
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	ax, [bp+var_2]
-		or	es:[bx], ax
-
-loc_114BA:
-		inc	di
-		add	si, 50h	; 'P'
-
-loc_114BE:
-		cmp	di, 10h
-		jge	short loc_114C6
-
-loc_114C3:
-		jmp	loc_113DB
-; ---------------------------------------------------------------------------
-
-loc_114C6:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_113A6	endp
-
+	extern _pellet_cloud_put_8:proc
+	extern _pellet_cloud_unput_8:proc
 main_09_TEXT	ends
 
 ; ===========================================================================
@@ -56476,11 +56268,7 @@ loc_30F9A:
 		mov	bx, word_3B530
 		cmp	word ptr [bx+20h], 5
 		jnz	short loc_30FB6
-		push	0
-		push	word ptr [bx+24h]
-		push	word ptr [bx+22h]
-		call	sub_113A6
-		add	sp, 6
+		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 0
 		jmp	short loc_30FFE
 ; ---------------------------------------------------------------------------
 
@@ -56495,7 +56283,7 @@ loc_30FC2:
 		mov	bx, word_3B530
 		push	word ptr [bx+24h]
 		push	word ptr [bx+22h]
-		call	sub_1133E
+		call	_pellet_cloud_put_8
 		add	sp, 8
 		jmp	short loc_30FFE
 ; ---------------------------------------------------------------------------
@@ -56504,11 +56292,7 @@ loc_30FD8:
 		mov	bx, word_3B530
 		cmp	word ptr [bx+20h], 9
 		jnz	short loc_30FFE
-		push	1
-		push	word ptr [bx+24h]
-		push	word ptr [bx+22h]
-		call	sub_113A6
-		add	sp, 6
+		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 1
 		mov	bx, word_3B530
 		mov	word ptr [bx+20h], 0
 		mov	byte ptr [bx], 1
@@ -56823,70 +56607,7 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/rand[data].asm
-		db    7
-		db 0E0h
-		db  18h
-		db  18h
-		db  30h	; 0
-		db  0Ch
-		db  50h	; P
-		db    5
-		db  40h
-		db    2
-		db  80h
-		db    1
-		db  80h
-		db    1
-		db  81h
-		db  81h
-		db  81h
-		db  81h
-		db  80h
-		db    1
-		db  80h
-		db    1
-		db  40h
-		db    2
-		db  50h	; P
-		db    5
-		db 0C0h	; À
-		db  0Ch
-		db  18h
-		db  18h
-		db    7
-		db 0E0h
-		db    1
-		db  80h
-		db    8
-		db  10h
-		db  10h
-		db    4
-		db  40h
-		db    2
-		db    0
-		db    0
-		db  84h
-		db    1
-		db    0
-		db  10h
-		db    0
-		db    1
-		db  80h
-		db    1
-		db  88h
-		db    0
-		db  80h
-		db  20h
-		db    0
-		db    0
-		db  40h
-		db    2
-		db    0
-		db    0
-		db  18h
-		db    8
-		db    3
-		db  20h
+include th01/sprites/pellet_c.asp
 public _res_id
 _res_id	db 'ReiidenConfig',0
 unk_355EC	db    0

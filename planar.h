@@ -93,6 +93,11 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 	VRAM_PUT(G, offset, src.G, bit_count); \
 	VRAM_PUT(E, offset, src.E, bit_count);
 
+#define vram_or_emptyopt(plane, offset, src, bit_count) \
+	if(src) { \
+		VRAM_CHUNK(plane, offset, bit_count) |= src; \
+	}
+
 #define vram_or_masked_emptyopt(plane, offset, bit_count, src, mask) \
 	if(src) { \
 		VRAM_CHUNK(plane, offset, bit_count) |= (src & mask); \
@@ -104,6 +109,11 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 	VRAM_CHUNK(G, offset, bit_count) |= src.G; \
 	VRAM_CHUNK(E, offset, bit_count) |= src.E;
 
+#define vram_or_planar_emptyopt(offset, src, bit_count) \
+	vram_or_emptyopt(B, offset, src.B, bit_count); \
+	vram_or_emptyopt(R, offset, src.R, bit_count); \
+	vram_or_emptyopt(G, offset, src.G, bit_count); \
+	vram_or_emptyopt(E, offset, src.E, bit_count);
 
 #define PLANE_DWORD_BLIT(dst, src) \
 	for(p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \
