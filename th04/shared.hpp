@@ -7,7 +7,7 @@
 
 /// Math
 /// ----
-#include "th03/math/subpixel.hpp"
+#include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
 #include "th03/math/randring.h"
 /// ----

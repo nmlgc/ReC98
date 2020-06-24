@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "th03/math/subpixel.hpp"
+#include "th01/math/subpixel.hpp"
 #include "th03/math/randring.h"
 #include "th04/math/motion.hpp"
 #include "th04/main/player/player.h"
