@@ -129,9 +129,11 @@ bool16 CShots::hittest_pellet(int pellet_left, int pellet_top)
 		if(moving[i] == false) {
 			continue;
 		}
+		if(decay_frame[i] == 1) {
+			continue;
+		}
 		if(
-			decay_frame[i] != true
-			&& ((left[i] - pellet_left) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
+			((left[i] - pellet_left) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
 			&& ((left[i] - pellet_left) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
 			&& ((top[i] - pellet_top) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
 			&& ((top[i] - pellet_top) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
