@@ -266,7 +266,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
         if (read(fd,tmprow,srcstride) != srcstride) goto fioerr;
 
         if (bpp == 1)
-            memcpy(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+            memcpy(t->bmp + (row * t->bmp_stride),tmprow,srcstride);
         else if (bpp == 24)
             memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
         else if (bpp == 32)
