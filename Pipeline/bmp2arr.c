@@ -32,7 +32,8 @@
 enum rec98_bmp2arr_output_type {
     REC98_OUT_C=0,
     REC98_OUT_ASM,
-    REC98_OUT_OMF
+    REC98_OUT_OMF,
+    REC98_OUT_BIN
 };
 
 /* the task at hand */
@@ -381,6 +382,8 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
                     tsk->output_type = REC98_OUT_OMF;
                 else if (!strcmp(a,"asm"))
                     tsk->output_type = REC98_OUT_ASM;
+                else if (!strcmp(a,"bin"))
+                    tsk->output_type = REC98_OUT_BIN;
                 else if (!strcmp(a,"c"))
                     tsk->output_type = REC98_OUT_C;
                 else
